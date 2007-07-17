@@ -1,0 +1,21 @@
+TO:DO
+
+Stealthy: me? I'm just trying to get this shit up and smooth
+Hessinger: want to make a GUI for this new version?
+Hazard: start implementing Stealthy bookmarks
+Neutro: Working on finding best ore mining location, on refine and sell
+
+I(neutro) need
+* Addition for bookmarks location (I(Neutro) am working on this)
+* queue'ing skills / auto learning (Almost done)
+* depends on cargo functions by ama but inventory in an array (id, name, location, type, etc)
+* swapping guns, changing shields, repairing
+
+GUI UPDATE:
+[04:58] <@Hessinger> Anyways
+[04:58] <@Hessinger> if i may not start this gui until ama gets cargo done and were up to speed and away from pixel clicking
+[04:59] <@Hessinger> i had problems setting up the options page because there was no real easy way datatype to store x,y coords.
+[04:59] <@Hessinger> soo....... if he doesn't get cargo done in next few days for w/e reason or has problems
+
+DONE
+<Neutro> i plan on adding a few core item to split it up, oMining, oCombat, oBase (refer to when you are instation))

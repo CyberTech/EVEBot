@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<ISUI>
+	<Window name='EvEbot'> 
+		<Visible>1</Visible>
+		<Title>EvEBot</Title>
+		<X>250</X> 
+		<Y>200</Y> 
+		<Width>200</Width> 
+		<Height>115</Height>
+		<TitleBar>
+			<Height>16</Height>
+			<Border>3</Border>
+			<BorderColor>FF333333</BorderColor>
+			<BackgroundColor>FF555555</BackgroundColor>
+			<Width>100%</Width>
+			<text>EvEBot</text>
+		</TitleBar>
+		<Children>
+			<TabControl Name='EvEBotTab'>
+				<X>0</X>
+				<Y>0</Y>
+				<Width>100%</Width>
+				<Height>100%</Height>
+				<FrameTexture />
+				<Tabs>
+					<Tab Name='Main'>
+						<commandbutton name='Pause EvEBot'> 
+							<X>5</X> 
+							<Y>6</Y>
+							<Width>50</Width>
+							<Height>20</Height>
+							<Text>Pause</Text>
+							<OnLeftClick>
+								EVE:Execute[CmdStopShip]
+								Script[EvEBot]:Pause
+								Echo Paused
+							</OnLeftClick>
+						</commandbutton>
+						<commandbutton name='Resume EvEBot'> 
+							<X>60</X> 
+							<Y>6</Y>
+							<Width>50</Width>
+							<Height>20</Height>
+							<Text>Resume</Text>
+							<OnLeftClick>
+								Script[EvEBot]:Resume
+								Echo Resume
+							</OnLeftClick>
+						</commandbutton>
+						<commandbutton name='Exit EvEBot'> 
+							<X>115</X> 
+							<Y>6</Y>
+							<Width>50</Width>
+							<Height>20</Height>
+							<Text>Exit</Text>
+							<OnLeftClick>
+								endscript evebot
+							</OnLeftClick>
+						</commandbutton>
+						<text name='Running Time is'>
+							<X>10</X> 
+							<Y>35</Y> 
+							<Width>100</Width> 
+							<Height>20</Height>
+							<Text>Running Time :</Text>
+						</text>
+						<Text name='EvE Bot Running Time'> 
+							<X>110</X> 
+							<Y>35</Y> 
+							<Width>100</Width> 
+							<Height>20</Height> 
+							<Text>${Math.Calc[(${Script[EvEBot].RunningTime}/1000/60/60)%60].Int.LeadingZeroes[2]}:${Math.Calc[(${Script[EvEBot].RunningTime}/1000/60)%60].Int.LeadingZeroes[2]}:${Math.Calc[(${Script[EvEBot].RunningTime}/1000)%60].Int.LeadingZeroes[2]}</Text> 
+						</Text> 
+					</Tab>
+					<Tab Name='About'>
+					<Text name='oi'>
+						<X>1</X>
+						<Y>5</Y>
+						<Width>249</Width>
+						<Height>10</Height>
+						<Text>GET OUT OF HERE</Text>
+					</Text>
+					</Tab>
+				</Tabs>
+			</tabcontrol>
+		</Children>
+						
+	</Window>
+</ISUI>

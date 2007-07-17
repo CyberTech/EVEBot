@@ -1,0 +1,115 @@
+                   ___.           __                  |
+   _______  __ ____\_ |__   _____/  |_                | 
+ _/ __ \  \/ // __ \| __ \ /  _ \   __\               |
+ \  ___/\   /\  ___/| \_\ (  <_> )  |                 |
+  \___  >\_/  \___  >___  /\____/|__|                 |
+      \/          \/    \/                            |
+        --  V. 0.81 Alpha --                          |
+                                                      |
+------------------------------------------------------*
+
+CHANGELOG:
+
+
+
+
+0.81
+- .....
+- .....
+
+
+0.801.6
+- Missing bracket in oSpace.iss
+- Something is still fucked in SetBotState() (EVEBot.iss)
+
+
+0.801.5
+- Lazor Execution put back in loop due to crashes
+
+
+0.801.4
+- Fixed Deactivating Lazors in Loop by taking out of Loop
+- Added Logging
+- Various Other Changes to HUD and Evebot.iss
+
+
+0.801.3:
+- Doesn't include Neutros Wait Changes
+- Added own wait changes
+- Has mining file update from .2
+- Runs over an hour in both trials.
+- First run was 1 hour 2 mins (fixed bug)
+- Second run was 1 hour 15 mins, then servers went down like they do every night.
+- Mael think's a newb...
+- Mael can suck my dick.
+- :P lol
+- http://tinyurl.com/2g9mqh Information on how I got around the D/C Problem =).. enjoy..
+- YOUR ALL NEWBS!!!
+
+
+0.801.2
+- Will now select another asteroid if the one you are currently mining is destroyed
+- Will now consider 139.999/140 as 'ship is full' (used .Round)
+- Changed timers a bit
+
+
+0.801
+- Added Minor GUI Changes, thanks to hazard.. newb...
+- Added HUD
+
+
+0.8
+-Complete re-write of some functions
+-Ama pitched in and changed waits
+
+
+0.712
+- Almost fixed Defend when attacked (commented atm)
+- Now uses 1 and 2 high power slot (for mining)
+- Now uses med and low power slot 1 (for protection)
+- Corrected a Typo for the roid id
+- Removed the COMBAT state
+- Add the logic for a queue script
+
+
+0.711
+-Basic UI implemented
+-Hazard's .png's included
+
+
+0.701
+-Fixed Looping Issue Moving Cargo To Station Items
+
+
+0.7
+- Includes a total rewrite of the past Evebot form (from scratch)
+- Add objects in the core folder, please read the object info
+- You will probably want to keep your oPixel and change oBase for the colors ;)
+- Enjoy and read the to do list
+
+
+0.68
+- Total rewrite of the bot
+- Defend when attack does not work right now, unless you start the bot while people are attacking you
+- Never crashed with me *i think*
+
+
+0.65
+- Fixed Some D/C Bugs Caused by Warp Issues
+- Added Mockup BoneKit GUI
+- Added Call and Functions to evebot.iss for GUI
+- Added Return on First Unloading Drag to keep from looping
+- Added Longer Delays to make time to get out of warp.
+- Added Dock and Undock Fix to stop d/cs
+
+
+0.61 
+-Basic Revisions by Tehtsuo
+
+
+0.5
+-Original bot by Tehtsuo
+
+
+
+

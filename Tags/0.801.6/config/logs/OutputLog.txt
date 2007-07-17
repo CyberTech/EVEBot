@@ -1,0 +1,552 @@
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 14:37:57  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[14:37:57] Started EVEBot 0.8
+[14:37:59] Eve Bot starting
+[14:38:19] Completed Main Function
+[14:38:19] I'm in the station
+[14:38:19] Transfering item1 to hangar
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 14:39:13  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[14:39:13] Started EVEBot 0.8
+[14:39:15] Eve Bot starting
+[14:39:15] Completed Main Function
+[14:39:15] Bot is now Paused
+[14:39:15] Please Press Play
+[14:39:23] I'm in the station
+[14:39:23] Transfering item1 to hangar
+[14:39:31] Transfering item2 to hangar
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 14:40:41  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[14:40:41] Started EVEBot 0.8
+[14:40:43] Eve Bot starting
+[14:40:43] Completed Main Function
+[14:40:43] Bot is now Paused
+[14:40:43] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 14:42:01  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[14:42:01] Started EVEBot 0.8..
+[14:42:01] Please Hold Loading Main Function..
+[14:42:03] Completed Main Function
+[14:42:03] Bot is now Paused
+[14:42:03] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 14:43:42  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[14:43:42] Started EVEBot 0.8..
+[14:43:42] Please Hold Loading Main Function..
+[14:43:44] Completed Main Function
+[14:43:44] Bot is now Paused
+[14:43:44] Please Press Play
+[14:43:47] I'm in the station
+[14:43:47] Transfering item1 to hangar
+[14:43:55] Transfering item2 to hangar
+[14:44:03] Transfering item3 to hangar
+[14:44:11] Stacking all...
+[14:44:20] Staking done
+[14:44:22] Undocking
+[14:44:22] Waiting...
+[14:44:42] Mining
+[14:44:42] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:00:31  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:00:31] Started EVEBot 0.8..
+[15:00:31] Please Hold Loading Main Function..
+[15:00:33] Completed Main Function
+[15:00:33] Bot is now Paused
+[15:00:33] Please Press Play
+[15:00:33] Mining
+[15:00:33] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:00:35] About to warp, this is a log check
+[15:00:45] Warping, waiting...
+[15:01:08] Waiting ends
+[15:01:13] Warp Command Given
+[15:01:13] Roid Set
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:01:43  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:01:43] Started EVEBot 0.8..
+[15:01:43] Please Hold Loading Main Function..
+[15:01:45] Completed Main Function
+[15:01:45] Bot is now Paused
+[15:01:45] Please Press Play
+[15:02:59] Mining
+[15:02:59] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:03:01] About to warp, this is a log check
+[15:03:11] Warping, waiting...
+[15:03:11] Waiting ends
+[15:03:16] Warp Command Given
+[15:03:16] Roid Set
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:07:00  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:07:00] Started EVEBot 0.8..
+[15:07:00] Please Hold Loading Main Function..
+[15:07:02] Completed Main Function
+[15:07:02] Bot is now Paused
+[15:07:02] Please Press Play
+[15:07:13] Mining
+[15:07:13] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:07:15] About to warp, this is a log check
+[15:07:25] Warping, waiting...
+[15:07:25] Waiting ends
+[15:07:30] Warp Command Given
+[15:07:30] Roid Set
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:08:16  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:08:16] Started EVEBot 0.8..
+[15:08:16] Please Hold Loading Main Function..
+[15:08:18] Completed Main Function
+[15:08:18] Bot is now Paused
+[15:08:18] Please Press Play
+[15:08:22] Mining
+[15:08:22] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:08:24] About to warp, this is a log check
+[15:08:34] Warping, waiting...
+[15:08:59] Waiting ends
+[15:09:04] Warp Command Given
+[15:09:04] Roid Set
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:09:33  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:09:33] Started EVEBot 0.8..
+[15:09:33] Please Hold Loading Main Function..
+[15:09:35] Completed Main Function
+[15:09:35] Bot is now Paused
+[15:09:35] Please Press Play
+[15:09:36] Mining
+[15:09:37] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:09:39] About to warp, this is a log check
+[15:09:49] Warping, waiting...
+[15:09:49] Waiting ends
+[15:09:54] Warp Command Given
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:10:56  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:10:56] Started EVEBot 0.8..
+[15:10:56] Please Hold Loading Main Function..
+[15:10:58] Completed Main Function
+[15:10:58] Bot is now Paused
+[15:10:58] Please Press Play
+[15:11:01] Mining
+[15:11:01] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:11:03] About to warp, this is a log check
+[15:11:13] Warping, waiting...
+[15:11:13] Waiting ends
+[15:11:18] Warp Command Given
+[15:11:19] About to set Roid
+[15:11:19] We've Set Roid
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:12:55  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:12:55] Started EVEBot 0.8..
+[15:12:55] Please Hold Loading Main Function..
+[15:12:57] Completed Main Function
+[15:12:57] Bot is now Paused
+[15:12:57] Please Press Play
+[15:13:00] Mining
+[15:13:00] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:13:02] About to warp, this is a log check
+[15:13:12] Warping, waiting...
+[15:13:12] Waiting ends
+[15:13:17] Warp Command Given
+[15:13:18] About to set Roid
+[15:13:18] We've Set Roid
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:18:11  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:18:11] Started EVEBot 0.8..
+[15:18:11] Please Hold Loading Main Function..
+[15:18:13] Completed Main Function
+[15:18:13] Bot is now Paused
+[15:18:13] Please Press Play
+[15:18:15] Mining
+[15:18:16] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:18:18] About to warp, this is a log check
+[15:18:28] Warping, waiting...
+[15:18:28] Waiting ends
+[15:18:33] Warp Command Given
+[15:18:34] About to set Roid
+[15:18:34] We've Set Roid
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:18:54  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:18:54] Started EVEBot 0.8..
+[15:18:54] Please Hold Loading Main Function..
+[15:18:56] Completed Main Function
+[15:18:56] Bot is now Paused
+[15:18:56] Please Press Play
+[15:19:08] Mining
+[15:19:08] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:19:10] About to warp, this is a log check
+[15:19:20] Warping, waiting...
+[15:19:20] Waiting ends
+[15:19:25] Warp Command Given
+[15:19:26] About to set Roid
+[15:19:26] We've Set Roid
+[15:19:27] Setting roid to Asteroid (Veldspar) with id 73817554
+[15:19:27] Entering Orbit with 73817554, waiting...
+[15:20:53] Finish waiting, in orbit now
+[15:20:54] Locking roid target
+[15:20:58] IMMA FIRIN MAH LAZOR!
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:23:06  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:23:06] Started EVEBot 0.8..
+[15:23:06] Please Hold Loading Main Function..
+[15:23:08] Completed Main Function
+[15:23:08] Bot is now Paused
+[15:23:08] Please Press Play
+[15:23:11] Mining
+[15:23:11] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:23:13] About to warp, this is a log check
+[15:23:23] Warping, waiting...
+[15:23:46] Waiting ends
+[15:23:51] Warp Command Given
+[15:23:52] About to set Roid
+[15:23:52] We've Set Roid
+[15:23:52] Setting roid to Asteroid (Veldspar) with id 73817496
+[15:23:52] Entering Orbit with 73817496, waiting...
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:25:06  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:25:06] Started EVEBot 0.8..
+[15:25:06] Please Hold Loading Main Function..
+[15:25:08] Completed Main Function
+[15:25:08] Bot is now Paused
+[15:25:08] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:25:19  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:25:19] Started EVEBot 0.8..
+[15:25:19] Please Hold Loading Main Function..
+[15:25:21] Completed Main Function
+[15:25:21] Bot is now Paused
+[15:25:21] Please Press Play
+[15:25:23] Mining
+[15:25:23] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:25:25] About to warp, this is a log check
+[15:25:35] Warping, waiting...
+[15:25:35] Waiting ends
+[15:25:40] Warp Command Given
+[15:25:41] About to set Roid
+[15:25:41] We've Set Roid
+[15:25:42] Setting roid to Asteroid (Concentrated Veldspar) with id 73817471
+[15:25:42] Entering Orbit with 73817471, waiting...
+[15:26:05] Finish waiting, in orbit now
+[15:26:05] Locking roid target
+[15:26:10] IMMA FIRIN MAH LAZOR!
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 22:41:15  
+  Evebot Session for  Copypaste 
+-------------------------------------------------
+[22:41:15] Started EVEBot 0.8..
+[22:41:15] Please Hold Loading Main Function..
+[22:41:17] Completed Main Function
+[22:41:17] Bot is now Paused
+[22:41:17] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 22:41:40  
+  Evebot Session for  Copypaste 
+-------------------------------------------------
+[22:41:40] Started EVEBot 0.8..
+[22:41:40] Please Hold Loading Main Function..
+[22:41:42] Completed Main Function
+[22:41:42] Bot is now Paused
+[22:41:42] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 22:48:09  
+  Evebot Session for  Copypaste 
+-------------------------------------------------
+[22:48:09] Started EVEBot 0.8..
+[22:48:09] Please Hold Loading Main Function..
+[22:48:11] Completed Main Function
+[22:48:11] Bot is now Paused
+[22:48:11] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 22:51:19  
+  Evebot Session for  Copypaste 
+-------------------------------------------------
+[22:51:19] Started EVEBot 0.8..
+[22:51:19] Please Hold Loading Main Function..
+[22:51:21] Completed Main Function
+[22:51:21] Bot is now Paused
+[22:51:21] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 22:55:51  
+  Evebot Session for  Copypaste 
+-------------------------------------------------
+[22:55:51] Started EVEBot 0.8..
+[22:55:51] Please Hold Loading Main Function..
+[22:55:53] Completed Main Function
+[22:55:53] Bot is now Paused
+[22:55:53] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 22:56:50  
+  Evebot Session for  Copypaste 
+-------------------------------------------------
+[22:56:50] Started EVEBot 0.8..
+[22:56:50] Please Hold Loading Main Function..
+[22:56:52] Completed Main Function
+[22:56:52] Bot is now Paused
+[22:56:52] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 22:57:49  
+  Evebot Session for  Copypaste 
+-------------------------------------------------
+[22:57:49] Started EVEBot 0.8..
+[22:57:49] Please Hold Loading Main Function..
+[22:57:51] Completed Main Function
+[22:57:51] Bot is now Paused
+[22:57:51] Please Press Play
+[22:57:53] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:57:53] My ship is full
+[22:57:53] The distance is greater than 10000, warp to base
+[22:58:03] Warping, waiting...
+[22:58:29] Finished warping...
+[22:58:36] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:36] My ship is full
+[22:58:38] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:38] My ship is full
+[22:58:39] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:39] My ship is full
+[22:58:41] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:41] My ship is full
+[22:58:42] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:42] My ship is full
+[22:58:44] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:44] My ship is full
+[22:58:45] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:45] My ship is full
+[22:58:47] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:47] My ship is full
+[22:58:48] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:48] My ship is full
+[22:58:50] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:50] My ship is full
+[22:58:51] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:51] My ship is full
+[22:58:53] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:53] My ship is full
+[22:58:54] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:54] My ship is full
+[22:58:56] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:56] My ship is full
+[22:58:57] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:57] My ship is full
+[22:58:59] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:59] My ship is full
+[22:59:00] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:59:00] My ship is full
+[22:59:02] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:59:02] My ship is full
+[22:59:03] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:59:03] My ship is full
+[22:59:05] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:59:05] My ship is full
+[22:59:06] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:59:06] My ship is full
+[22:59:08] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:59:08] My ship is full
+[22:59:10] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:59:10] My ship is full
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 23:01:43  
+  Evebot Session for  Copypaste 
+-------------------------------------------------
+[23:01:43] Started EVEBot 0.8..
+[23:01:43] Please Hold Loading Main Function..
+[23:01:45] Completed Main Function
+[23:01:45] Bot is now Paused
+[23:01:45] Please Press Play
+[23:01:47] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[23:01:47] My ship is full
+[23:01:47] Approaching Base
+[23:01:49] In Docking Range ... Docking
+[23:01:49] Docking, waiting...
+[23:02:03] Finished Docking
+[23:02:05] Setting main station NULL with ID 0
+[23:02:05] My ship is full
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 23:05:22  
+  Evebot Session for  Copypaste 
+-------------------------------------------------
+[23:05:22] Started EVEBot 0.8..
+[23:05:22] Please Hold Loading Main Function..
+[23:05:24] Completed Main Function
+[23:05:24] Bot is now Paused
+[23:05:24] Please Press Play
+[23:05:29] Setting main station NULL with ID 0
+[23:05:29] My ship is full
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 23:06:24  
+  Evebot Session for  Copypaste 
+-------------------------------------------------
+[23:06:24] Started EVEBot 0.8..
+[23:06:24] Please Hold Loading Main Function..
+[23:06:26] Completed Main Function
+[23:06:26] Bot is now Paused
+[23:06:26] Please Press Play
+[23:06:28] Setting main station NULL with ID 0
+[23:06:28] My ship is full
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 23:14:43  
+  Evebot Session for  Copypaste 
+-------------------------------------------------
+[23:14:43] Started EVEBot 0.8..
+[23:14:43] Please Hold Loading Main Function..
+[23:14:45] Completed Main Function
+[23:14:45] Bot is now Paused
+[23:14:45] Please Press Play
+[23:14:46] I'm in the station
+[23:14:46] Transfering item1 to hangar
+[23:14:54] Transfering item2 to hangar
+[23:15:02] Transfering item3 to hangar
+[23:15:10] Stacking all...
+[23:15:18] Staking done
+[23:15:20] Undocking
+[23:15:20] Waiting...
+[23:15:37] Mining
+[23:15:37] Setting roid belt Vay II - Asteroid Belt 1 with id 40336333
+[23:15:40] About to warp, this is a log check
+[23:15:50] Warping, waiting...
+[23:16:16] Finished warping...
+[23:16:21] Warp Command Given
+[23:16:22] About to set Roid
+[23:16:22] We've Set Roid
+[23:16:22] End waiting, cargo is full
+[23:16:22] Unlocking target
+[23:16:23] Setting roid to Asteroid (Veldspar) with id 74294898 -- calling Orbit...
+[23:16:23] Entering Orbit with 74294898, waiting...
+[23:17:28] Finish waiting, in orbit now
+[23:17:28] Locking roid target
+[23:17:33] IMMA FIRIN MAH LAZOR!
+[23:17:35] End waiting, cargo is full
+[23:17:35] Unlocking target
+[23:17:40] End waiting, cargo is full
+[23:17:40] Unlocking target
+[23:17:40] Setting roid to Asteroid (Veldspar) with id 74294930 -- calling Orbit...
+[23:17:40] Entering Orbit with 74294930, waiting...
+[23:17:40] Finish waiting, in orbit now
+[23:17:40] Locking roid target
+[23:17:45] IMMA FIRIN MAH LAZOR!
+[23:17:47] End waiting, cargo is full
+[23:17:47] Unlocking target
+[23:17:52] End waiting, cargo is full
+[23:17:52] Unlocking target
+[23:17:53] Setting roid to Asteroid (Concentrated Veldspar) with id 74294940 -- calling Orbit...
+[23:17:53] Entering Orbit with 74294940, waiting...
+[23:17:53] Finish waiting, in orbit now
+[23:17:53] Locking roid target
+[23:17:58] IMMA FIRIN MAH LAZOR!
+[23:18:00] End waiting, cargo is full
+[23:18:00] Unlocking target
+[23:18:05] End waiting, cargo is full
+[23:18:05] Unlocking target
+[23:18:05] Setting roid to Asteroid (Condensed Scordite) with id 74294905 -- calling Orbit...
+[23:18:05] Entering Orbit with 74294905, waiting...
+[23:18:05] Finish waiting, in orbit now
+[23:18:05] Locking roid target
+[23:18:10] IMMA FIRIN MAH LAZOR!
+[23:18:12] End waiting, cargo is full
+[23:18:12] Unlocking target
+[23:18:17] End waiting, cargo is full
+[23:18:17] Unlocking target
+[23:18:18] Setting roid to Asteroid (Plagioclase) with id 74294945 -- calling Orbit...
+[23:18:18] Entering Orbit with 74294945, waiting...
+[23:18:18] Finish waiting, in orbit now
+[23:18:18] Locking roid target
+[23:18:23] IMMA FIRIN MAH LAZOR!
+[23:18:25] End waiting, cargo is full
+[23:18:25] Unlocking target
+[23:18:30] End waiting, cargo is full
+[23:18:30] Unlocking target
+[23:18:30] Setting roid to Asteroid (Plagioclase) with id 74294950 -- calling Orbit...
+[23:18:30] Entering Orbit with 74294950, waiting...
+[23:18:30] Finish waiting, in orbit now
+[23:18:30] Locking roid target
+[23:18:35] IMMA FIRIN MAH LAZOR!
+[23:18:37] End waiting, cargo is full
+[23:18:37] Unlocking target
+[23:18:42] End waiting, cargo is full
+[23:18:42] Unlocking target
+[23:18:42] Setting roid to Asteroid (Plagioclase) with id 74294950 -- calling Orbit...
+[23:18:42] Entering Orbit with 74294950, waiting...
+[23:18:43] Finish waiting, in orbit now
+[23:18:43] Locking roid target
+[23:18:48] IMMA FIRIN MAH LAZOR!
+[23:18:50] End waiting, cargo is full
+[23:18:50] Unlocking target
+[23:18:55] End waiting, cargo is full
+[23:18:55] Unlocking target
+[23:18:55] Setting roid to Asteroid (Plagioclase) with id 74294950 -- calling Orbit...
+[23:18:55] Entering Orbit with 74294950, waiting...
+[23:18:55] Finish waiting, in orbit now
+[23:18:55] Locking roid target
+[23:19:00] IMMA FIRIN MAH LAZOR!
+[23:19:02] End waiting, cargo is full
+[23:19:02] Unlocking target
+[23:19:07] End waiting, cargo is full
+[23:19:07] Unlocking target
+[23:19:07] Setting roid to Asteroid (Concentrated Veldspar) with id 74294907 -- calling Orbit...
+[23:19:07] Entering Orbit with 74294907, waiting...
+[23:19:07] Finish waiting, in orbit now
+[23:19:07] Locking roid target
+[23:19:13] IMMA FIRIN MAH LAZOR!
+[23:19:15] End waiting, cargo is full
+[23:19:15] Unlocking target
+[23:19:20] End waiting, cargo is full
+[23:19:20] Unlocking target
+[23:19:20] Setting roid to Asteroid (Concentrated Veldspar) with id 74294907 -- calling Orbit...
+[23:19:20] Entering Orbit with 74294907, waiting...
+[23:19:20] Finish waiting, in orbit now
+[23:19:20] Locking roid target
+[23:19:25] IMMA FIRIN MAH LAZOR!
+[23:19:27] End waiting, cargo is full
+[23:19:27] Unlocking target
+[23:19:32] End waiting, cargo is full
+[23:19:32] Unlocking target
+[23:19:32] Setting roid to Asteroid (Veldspar) with id 74294898 -- calling Orbit...
+[23:19:32] Entering Orbit with 74294898, waiting...
+[23:19:32] Finish waiting, in orbit now
+[23:19:32] Locking roid target
+[23:19:37] IMMA FIRIN MAH LAZOR!
+[23:19:39] End waiting, cargo is full
+[23:19:39] Unlocking target
+[23:19:45] End waiting, cargo is full
+[23:19:45] Unlocking target
+[23:19:45] Setting roid to Asteroid (Veldspar) with id 74294934 -- calling Orbit...
+[23:19:45] Entering Orbit with 74294934, waiting...
+[23:19:45] Finish waiting, in orbit now
+[23:19:45] Locking roid target
+[23:19:50] IMMA FIRIN MAH LAZOR!
+[23:19:52] End waiting, cargo is full
+[23:19:52] Unlocking target
+[23:19:57] End waiting, cargo is full
+[23:19:57] Unlocking target
+[23:19:57] Setting roid to Asteroid (Plagioclase) with id 74294884 -- calling Orbit...
+[23:19:59] Entering Orbit with 74294884, waiting...
+[23:19:59] Finish waiting, in orbit now
+[23:19:59] Locking roid target

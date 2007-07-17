@@ -1,0 +1,1274 @@
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 01:55:51  
+  Evebot Session for  Copypaste 
+-------------------------------------------------
+[01:55:51] Started EVEBot 0.8..
+[01:55:51] Please Hold Loading Main Function..
+[01:55:53] Completed Main Function
+[01:55:53] Bot is now Paused
+[01:55:53] Please Press Play
+[01:55:54] Mining
+[01:55:54] Setting roid belt Vay II - Asteroid Belt 1 with id 40336333
+[01:55:56] About to warp, this is a log check
+[01:56:06] Warping, waiting...
+[01:56:08] Finished warping...
+[01:56:13] Warp Command Given
+[01:56:13] Setting roid to Asteroid (Plagioclase) with id 74294968 -- calling Orbit...
+[01:56:14] Entering Orbit with 74294968, waiting...
+[01:56:34] Finish waiting, in orbit now
+[01:56:35] Locking roid target
+[01:56:40] IMMA FIRIN MAH LAZOR!
+[01:57:42] End waiting, cargo is full
+[01:57:43] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[01:57:43] My ship is full
+[01:57:43] The distance is greater than 10000, calling ReturnToBase
+[01:57:44] The distance is greater than 10000, warp to base
+[01:57:54] Warping, waiting...
+[01:58:24] Finished warping...
+[01:58:31] Approaching Base
+[01:58:39] In Docking Range ... Docking
+[01:58:39] Docking, waiting...
+[01:58:49] Finished Docking
+[01:58:55] I'm in the station
+[01:58:55] Transfering item1 to hangar
+[01:59:03] Transfering item2 to hangar
+[01:59:11] Transfering item3 to hangar
+[01:59:19] Stacking all...
+[01:59:27] Staking done
+[01:59:29] Undocking
+[01:59:29] Waiting...
+[01:59:46] Mining
+[01:59:46] Setting roid belt Vay II - Asteroid Belt 1 with id 40336333
+[01:59:48] About to warp, this is a log check
+[01:59:58] Warping, waiting...
+[02:00:27] Finished warping...
+[02:00:32] Warp Command Given
+[02:00:32] Setting roid to Asteroid (Concentrated Veldspar) with id 74294910 -- calling Orbit...
+[02:00:33] Entering Orbit with 74294910, waiting...
+[02:01:42] Finish waiting, in orbit now
+[02:01:42] Locking roid target
+[02:01:47] IMMA FIRIN MAH LAZOR!
+[02:04:50] End waiting, cargo is full
+[02:04:51] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[02:04:51] My ship is full
+[02:04:51] The distance is greater than 10000, calling ReturnToBase
+[02:04:51] The distance is greater than 10000, warp to base
+[02:05:01] Warping, waiting...
+[02:05:30] Finished warping...
+[02:05:37] Approaching Base
+[02:05:47] In Docking Range ... Docking
+[02:05:47] Docking, waiting...
+[02:05:55] Finished Docking
+[02:06:00] I'm in the station
+[02:06:00] Transfering item1 to hangar
+[02:06:08] Transfering item2 to hangar
+[02:06:16] Transfering item3 to hangar
+[02:06:24] Stacking all...
+[02:06:32] Staking done
+[02:06:34] Undocking
+[02:06:34] Waiting...
+[02:06:51] Mining
+[02:06:51] Setting roid belt Vay II - Asteroid Belt 1 with id 40336333
+[02:06:53] About to warp, this is a log check
+[02:07:03] Warping, waiting...
+[02:07:31] Finished warping...
+[02:07:36] Warp Command Given
+[02:07:36] Setting roid to Asteroid (Concentrated Veldspar) with id 74294910 -- calling Orbit...
+[02:07:37] Entering Orbit with 74294910, waiting...
+[02:08:48] Finish waiting, in orbit now
+[02:08:48] Locking roid target
+[02:08:53] IMMA FIRIN MAH LAZOR!
+[02:11:57] End waiting, cargo is full
+[02:11:59] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[02:11:59] My ship is full
+[02:11:59] The distance is greater than 10000, calling ReturnToBase
+[02:11:59] The distance is greater than 10000, warp to base
+[02:12:09] Warping, waiting...
+[02:12:37] Finished warping...
+[02:12:44] Approaching Base
+[02:12:46] In Docking Range ... Docking
+[02:12:46] Docking, waiting...
+[02:12:54] Finished Docking
+[02:13:00] I'm in the station
+[02:13:00] Transfering item1 to hangar
+[02:13:08] Transfering item2 to hangar
+[02:13:16] Transfering item3 to hangar
+[02:13:24] Stacking all...
+[02:13:32] Staking done
+[02:13:34] Undocking
+[02:13:34] Waiting...
+[02:13:51] Mining
+[02:13:51] Setting roid belt Vay II - Asteroid Belt 1 with id 40336333
+[02:13:53] About to warp, this is a log check
+[02:14:03] Warping, waiting...
+[02:14:32] Finished warping...
+[02:14:37] Warp Command Given
+[02:14:37] Setting roid to Asteroid (Veldspar) with id 74294863 -- calling Orbit...
+[02:14:38] Entering Orbit with 74294863, waiting...
+[02:15:51] Finish waiting, in orbit now
+[02:15:51] Locking roid target
+[02:15:56] IMMA FIRIN MAH LAZOR!
+[02:19:00] End waiting, cargo is full
+[02:19:02] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[02:19:02] My ship is full
+[02:19:02] The distance is greater than 10000, calling ReturnToBase
+[02:19:02] The distance is greater than 10000, warp to base
+[02:19:12] Warping, waiting...
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 09:43:50  
+  Evebot Session for  Josh Fowler2 
+-------------------------------------------------
+[09:43:50] Started EVEBot 0.8..
+[09:43:50] Please Hold Loading Main Function..
+[09:43:52] Completed Main Function
+[09:43:52] Bot is now Paused
+[09:43:52] Please Press Play
+[09:44:52] I'm in the station
+[09:44:52] Transfering item1 to hangar
+[09:45:00] Transfering item2 to hangar
+[09:45:08] Transfering item3 to hangar
+[09:45:16] Stacking all...
+[09:45:24] Staking done
+[09:45:26] Undocking
+[09:45:26] Waiting...
+[09:45:48] Mining
+[09:45:48] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[09:45:50] About to warp, this is a log check
+[09:46:00] Warping, waiting...
+[09:47:00] Finished warping...
+[09:47:05] Warp Command Given
+[09:47:05] Setting roid to Asteroid (Condensed Scordite) with id 72974456 -- calling Orbit...
+[09:47:06] Entering Orbit with 72974456, waiting...
+[09:51:48] Finish waiting, in orbit now
+[09:51:48] Locking roid target
+[09:51:54] IMMA FIRIN MAH LAZOR!
+[09:57:56] Entering Orbit with 72974473, waiting...
+[09:57:58] Finish waiting, in orbit now
+[09:57:58] Locking roid target
+[09:58:03] IMMA FIRIN MAH LAZOR!
+[10:01:03] End waiting, cargo is full
+[10:01:05] Setting main station Hatakani VII - Moon 18 - Sukuuvestaa Corporation Production Plant with ID 60002869
+[10:01:05] My ship is full
+[10:01:05] Calling ReturnToBase
+[10:01:05] The distance is greater than 10000, warp to base
+[10:01:15] Warping, waiting...
+[10:01:49] Finished warping...
+[10:01:56] Approaching Base
+[10:01:58] In Docking Range ... Docking
+[10:01:58] Docking, waiting...
+[10:02:06] Finished Docking
+[10:02:12] I'm in the station
+[10:02:12] Transfering item1 to hangar
+[10:02:20] Transfering item2 to hangar
+[10:02:29] Transfering item3 to hangar
+[10:02:37] Stacking all...
+[10:02:45] Staking done
+[10:02:47] Undocking
+[10:02:47] Waiting...
+[10:03:07] Mining
+[10:03:07] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[10:03:09] About to warp, this is a log check
+[10:03:19] Warping, waiting...
+[10:04:18] Finished warping...
+[10:04:23] Warp Command Given
+[10:04:24] Setting roid to Asteroid (Scordite) with id 72974431 -- calling Orbit...
+[10:04:25] Entering Orbit with 72974431, waiting...
+[10:08:40] Finish waiting, in orbit now
+[10:08:40] Locking roid target
+[10:08:45] IMMA FIRIN MAH LAZOR!
+[10:11:49] Entering Orbit with 72974423, waiting...
+[10:11:51] Finish waiting, in orbit now
+[10:11:51] Locking roid target
+[10:11:56] IMMA FIRIN MAH LAZOR!
+[10:18:01] End waiting, cargo is full
+[10:18:03] Setting main station Hatakani VII - Moon 18 - Sukuuvestaa Corporation Production Plant with ID 60002869
+[10:18:03] My ship is full
+[10:18:03] Calling ReturnToBase
+[10:18:03] The distance is greater than 10000, warp to base
+[10:18:13] Warping, waiting...
+[10:19:07] Finished warping...
+[10:19:14] Approaching Base
+[10:19:16] In Docking Range ... Docking
+[10:19:16] Docking, waiting...
+[10:19:24] Finished Docking
+[10:19:30] I'm in the station
+[10:19:30] Transfering item1 to hangar
+[10:19:39] Transfering item2 to hangar
+[10:19:48] Transfering item3 to hangar
+[10:19:56] Stacking all...
+[10:20:04] Staking done
+[10:20:06] Undocking
+[10:20:06] Waiting...
+[10:20:28] Mining
+[10:20:28] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[10:20:30] About to warp, this is a log check
+[10:20:40] Warping, waiting...
+[10:21:37] Finished warping...
+[10:21:42] Warp Command Given
+[10:21:43] Setting roid to Asteroid (Scordite) with id 72974429 -- calling Orbit...
+[10:21:44] Entering Orbit with 72974429, waiting...
+[10:25:34] Finish waiting, in orbit now
+[10:25:35] Locking roid target
+[10:25:40] IMMA FIRIN MAH LAZOR!
+[10:28:41] End waiting, cargo is full
+[10:28:42] Mining
+[10:28:42] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[10:28:44] About to warp, this is a log check
+[10:28:54] Warping, waiting...
+[10:28:56] Finished warping...
+[10:29:01] Warp Command Given
+[10:29:02] Setting roid to Asteroid (Scordite) with id 72974413 -- calling Orbit...
+[10:29:03] Entering Orbit with 72974413, waiting...
+[10:29:05] Finish waiting, in orbit now
+[10:29:05] Locking roid target
+[10:29:10] IMMA FIRIN MAH LAZOR!
+[10:35:14] Entering Orbit with 72974522, waiting...
+[10:35:16] Finish waiting, in orbit now
+[10:35:16] Locking roid target
+[10:35:21] IMMA FIRIN MAH LAZOR!
+[10:38:01] End waiting, cargo is full
+[10:38:03] Setting main station Hatakani VII - Moon 18 - Sukuuvestaa Corporation Production Plant with ID 60002869
+[10:38:03] My ship is full
+[10:38:03] Calling ReturnToBase
+[10:38:03] The distance is greater than 10000, warp to base
+[10:38:13] Warping, waiting...
+[10:39:08] Finished warping...
+[10:39:15] Approaching Base
+[10:39:17] In Docking Range ... Docking
+[10:39:17] Docking, waiting...
+[10:39:28] Finished Docking
+[10:39:33] I'm in the station
+[10:39:34] Transfering item1 to hangar
+[10:39:42] Transfering item2 to hangar
+[10:39:50] Transfering item3 to hangar
+[10:39:58] Stacking all...
+[10:40:06] Staking done
+[10:40:08] Undocking
+[10:40:08] Waiting...
+[10:40:31] Mining
+[10:40:31] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[10:40:33] About to warp, this is a log check
+[10:40:43] Warping, waiting...
+[10:41:41] Finished warping...
+[10:41:46] Warp Command Given
+[10:41:46] Setting roid to Asteroid (Condensed Scordite) with id 72974463 -- calling Orbit...
+[10:41:47] Entering Orbit with 72974463, waiting...
+[10:45:33] Finish waiting, in orbit now
+[10:45:34] Locking roid target
+[10:45:39] IMMA FIRIN MAH LAZOR!
+[10:48:44] Entering Orbit with 72974509, waiting...
+[10:48:46] Finish waiting, in orbit now
+[10:48:46] Locking roid target
+[10:48:51] IMMA FIRIN MAH LAZOR!
+[10:54:56] End waiting, cargo is full
+[10:54:58] Setting main station Hatakani VII - Moon 18 - Sukuuvestaa Corporation Production Plant with ID 60002869
+[10:54:58] My ship is full
+[10:54:58] Calling ReturnToBase
+[10:54:58] The distance is greater than 10000, warp to base
+[10:55:08] Warping, waiting...
+[10:55:57] Finished warping...
+[10:56:04] Approaching Base
+[10:56:06] In Docking Range ... Docking
+[10:56:06] Docking, waiting...
+[10:56:14] Finished Docking
+[10:56:20] I'm in the station
+[10:56:20] Transfering item1 to hangar
+[10:56:28] Transfering item2 to hangar
+[10:56:37] Transfering item3 to hangar
+[10:56:45] Stacking all...
+[10:56:53] Staking done
+[10:56:55] Undocking
+[10:56:55] Waiting...
+[10:57:41] Mining
+[10:57:41] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[10:57:43] About to warp, this is a log check
+[10:57:53] Warping, waiting...
+[10:58:40] Finished warping...
+[10:58:45] Warp Command Given
+[10:58:45] Setting roid to Asteroid (Condensed Scordite) with id 72974436 -- calling Orbit...
+[10:58:47] Entering Orbit with 72974436, waiting...
+[11:03:45] Finish waiting, in orbit now
+[11:03:45] Locking roid target
+[11:03:50] IMMA FIRIN MAH LAZOR!
+[11:06:54] Entering Orbit with 72974450, waiting...
+[11:06:56] Finish waiting, in orbit now
+[11:06:56] Locking roid target
+[11:07:01] IMMA FIRIN MAH LAZOR!
+[11:10:02] End waiting, cargo is full
+[11:10:03] Mining
+[11:10:03] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[11:10:06] About to warp, this is a log check
+[11:10:16] Warping, waiting...
+[11:10:18] Finished warping...
+[11:10:23] Warp Command Given
+[11:10:23] Setting roid to Asteroid (Scordite) with id 72974529 -- calling Orbit...
+[11:10:24] Entering Orbit with 72974529, waiting...
+[11:10:26] Finish waiting, in orbit now
+[11:10:26] Locking roid target
+[11:10:31] IMMA FIRIN MAH LAZOR!
+[11:13:40] End waiting, cargo is full
+[11:13:42] Mining
+[11:13:42] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[11:13:44] About to warp, this is a log check
+[11:13:54] Warping, waiting...
+[11:13:56] Finished warping...
+[11:14:01] Warp Command Given
+[11:14:01] Setting roid to Asteroid (Scordite) with id 72974534 -- calling Orbit...
+[11:14:02] Entering Orbit with 72974534, waiting...
+[11:14:04] Finish waiting, in orbit now
+[11:14:04] Locking roid target
+[11:14:09] IMMA FIRIN MAH LAZOR!
+[11:17:12] End waiting, cargo is full
+[11:17:14] Setting main station Hatakani VII - Moon 18 - Sukuuvestaa Corporation Production Plant with ID 60002869
+[11:17:14] My ship is full
+[11:17:14] Calling ReturnToBase
+[11:17:14] The distance is greater than 10000, warp to base
+[11:17:24] Warping, waiting...
+[11:18:17] Finished warping...
+[11:18:24] Approaching Base
+[11:20:35] In Docking Range ... Docking
+[11:20:35] Docking, waiting...
+[11:20:45] Finished Docking
+[11:20:51] I'm in the station
+[11:20:51] Transfering item1 to hangar
+[11:20:59] Transfering item2 to hangar
+[11:21:08] Transfering item3 to hangar
+[11:21:16] Stacking all...
+[11:21:24] Staking done
+[11:21:26] Undocking
+[11:21:26] Waiting...
+[11:21:48] Mining
+[11:21:48] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[11:21:50] About to warp, this is a log check
+[11:22:00] Warping, waiting...
+[11:22:57] Finished warping...
+[11:23:02] Warp Command Given
+[11:23:02] Setting roid to Asteroid (Scordite) with id 72974470 -- calling Orbit...
+[11:23:03] Entering Orbit with 72974470, waiting...
+[11:26:53] Finish waiting, in orbit now
+[11:26:53] Locking roid target
+[11:27:00] IMMA FIRIN MAH LAZOR!
+[11:33:02] Entering Orbit with 72974539, waiting...
+[11:33:04] Finish waiting, in orbit now
+[11:33:04] Locking roid target
+[11:33:09] IMMA FIRIN MAH LAZOR!
+[11:34:07] End waiting, cargo is full
+[11:34:08] Setting main station Hatakani VII - Moon 18 - Sukuuvestaa Corporation Production Plant with ID 60002869
+[11:34:08] My ship is full
+[11:34:08] Calling ReturnToBase
+[11:34:08] The distance is greater than 10000, warp to base
+[11:34:19] Warping, waiting...
+[11:35:13] Finished warping...
+[11:35:21] Approaching Base
+[11:35:23] In Docking Range ... Docking
+[11:35:23] Docking, waiting...
+[11:35:33] Finished Docking
+[11:35:39] I'm in the station
+[11:35:39] Transfering item1 to hangar
+[11:35:47] Transfering item2 to hangar
+[11:35:55] Transfering item3 to hangar
+[11:36:03] Stacking all...
+[11:36:11] Staking done
+[11:36:13] Undocking
+[11:36:13] Waiting...
+[11:36:41] Setting main station Hatakani VII - Moon 18 - Sukuuvestaa Corporation Production Plant with ID 60002869
+[11:36:41] My ship is full
+[11:36:41] Approaching Base
+[11:36:43] In Docking Range ... Docking
+[11:36:43] Docking, waiting...
+[11:36:51] Finished Docking
+[11:36:57] I'm in the station
+[11:36:57] Transfering item1 to hangar
+[11:37:05] Transfering item2 to hangar
+[11:37:13] Transfering item3 to hangar
+[11:37:21] Stacking all...
+[11:37:29] Staking done
+[11:37:31] Undocking
+[11:37:31] Waiting...
+[11:37:53] Mining
+[11:37:53] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[11:37:55] About to warp, this is a log check
+[11:38:05] Warping, waiting...
+[11:39:03] Finished warping...
+[11:39:08] Warp Command Given
+[11:39:09] Setting roid to Asteroid (Condensed Scordite) with id 72974473 -- calling Orbit...
+[11:39:10] Entering Orbit with 72974473, waiting...
+[11:43:09] Finish waiting, in orbit now
+[11:43:09] Locking roid target
+[11:43:14] IMMA FIRIN MAH LAZOR!
+[11:58:39] Entering Orbit with 72974527, waiting...
+[11:58:41] Finish waiting, in orbit now
+[11:58:41] Locking roid target
+[11:58:46] IMMA FIRIN MAH LAZOR!
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 12:03:14  
+  Evebot Session for  Josh Fowler2 
+-------------------------------------------------
+[12:03:14] Started EVEBot 0.8..
+[12:03:14] Please Hold Loading Main Function..
+[12:03:16] Completed Main Function
+[12:03:16] Bot is now Paused
+[12:03:16] Please Press Play
+[12:03:17] Setting main station Hatakani VII - Moon 18 - Sukuuvestaa Corporation Production Plant with ID 60002869
+[12:03:17] My ship is full
+[12:03:17] Calling ReturnToBase
+[12:03:17] The distance is greater than 10000, warp to base
+[12:03:27] Warping, waiting...
+[12:04:14] Finished warping...
+[12:04:21] Approaching Base
+[12:04:23] In Docking Range ... Docking
+[12:04:23] Docking, waiting...
+[12:04:31] Finished Docking
+[12:04:37] I'm in the station
+[12:04:37] Transfering item1 to hangar
+[12:04:45] Transfering item2 to hangar
+[12:04:53] Transfering item3 to hangar
+[12:05:01] Stacking all...
+[12:05:09] Staking done
+[12:05:11] Undocking
+[12:05:11] Waiting...
+[12:05:32] Mining
+[12:05:33] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[12:05:35] About to warp, this is a log check
+[12:05:45] Warping, waiting...
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 12:06:45  
+  Evebot Session for  Josh Fowler2 
+-------------------------------------------------
+[12:06:45] Started EVEBot 0.8..
+[12:06:45] Please Hold Loading Main Function..
+[12:06:47] Completed Main Function
+[12:06:47] Bot is now Paused
+[12:06:47] Please Press Play
+[12:07:02] Mining
+[12:07:02] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[12:07:04] About to warp, this is a log check
+[12:07:14] Warping, waiting...
+[12:07:16] Finished warping...
+[12:07:21] Warp Command Given
+[12:07:21] Setting roid to Asteroid (Pyroxeres) with id 72974505 -- calling Orbit...
+[12:07:22] Entering Orbit with 72974505, waiting...
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 12:08:07  
+  Evebot Session for  Josh Fowler2 
+-------------------------------------------------
+[12:08:07] Started EVEBot 0.8..
+[12:08:07] Please Hold Loading Main Function..
+[12:08:09] Completed Main Function
+[12:08:09] Bot is now Paused
+[12:08:09] Please Press Play
+[12:08:12] Mining
+[12:08:12] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[12:08:14] About to warp, this is a log check
+[12:08:24] Warping, waiting...
+[12:08:26] Finished warping...
+[12:08:31] Warp Command Given
+[12:08:31] Setting roid to Asteroid (Massive Scordite) with id 72974460 -- calling Orbit...
+[12:08:32] Entering Orbit with 72974460, waiting...
+[12:12:18] Finish waiting, in orbit now
+[12:12:19] Locking roid target
+[12:12:24] IMMA FIRIN MAH LAZOR!
+[12:15:27] End waiting, cargo is full
+[12:15:29] Mining
+[12:15:29] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[12:15:31] About to warp, this is a log check
+[12:15:42] Warping, waiting...
+[12:15:44] Finished warping...
+[12:15:49] Warp Command Given
+[12:15:49] Setting roid to Asteroid (Scordite) with id 72974541 -- calling Orbit...
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 12:22:51  
+  Evebot Session for  Josh Fowler2 
+-------------------------------------------------
+[12:22:51] Started EVEBot 0.8..
+[12:22:51] Please Hold Loading Main Function..
+[12:22:53] Completed Main Function
+[12:22:53] Bot is now Paused
+[12:22:53] Please Press Play
+[12:27:52] Mining
+[12:27:52] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[12:27:54] About to warp, this is a log check
+[12:28:04] Warping, waiting...
+[12:28:06] Finished warping...
+[12:28:11] Warp Command Given
+[12:28:11] Setting roid to Asteroid (Scordite) with id 72974481 -- calling Orbit...
+[12:28:12] Entering Orbit with 72974481, waiting...
+[12:28:14] Finish waiting, in orbit now
+[12:28:14] Locking roid target
+[12:28:19] IMMA FIRIN MAH LAZOR!
+[12:31:25] Entering Orbit with 72974541, waiting...
+[12:31:27] Finish waiting, in orbit now
+[12:31:27] Locking roid target
+[12:31:32] IMMA FIRIN MAH LAZOR!
+[12:32:45] End waiting, cargo is full
+[12:32:46] Setting main station Hatakani VII - Moon 18 - Sukuuvestaa Corporation Production Plant with ID 60002869
+[12:32:46] My ship is full
+[12:32:46] Calling ReturnToBase
+[12:32:46] The distance is greater than 10000, warp to base
+[12:32:56] Warping, waiting...
+[12:33:48] Finished warping...
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 12:44:48  
+  Evebot Session for  Josh Fowler2 
+-------------------------------------------------
+[12:44:48] Started EVEBot 0.8..
+[12:44:48] Please Hold Loading Main Function..
+[12:44:50] Completed Main Function
+[12:44:50] Bot is now Paused
+[12:44:50] Please Press Play
+[12:44:53] Setting main station Hatakani VII - Moon 18 - Sukuuvestaa Corporation Production Plant with ID 60002869
+[12:44:53] My ship is full
+[12:44:53] Calling ReturnToBase
+[12:44:53] The distance is greater than 10000, warp to base
+[12:45:03] Warping, waiting...
+[12:45:45] Finished warping...
+[12:45:55] Approaching Base
+[12:45:57] In Docking Range ... Docking
+[12:45:57] Docking, waiting...
+[12:46:08] Finished Docking
+[12:46:14] I'm in the station
+[12:46:14] Transfering item1 to hangar
+[12:46:22] Transfering item2 to hangar
+[12:46:30] Transfering item3 to hangar
+[12:46:38] Stacking all...
+[12:46:46] Staking done
+[12:46:48] Undocking
+[12:46:48] Waiting...
+[12:47:08] Mining
+[12:47:08] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[12:47:10] About to warp, this is a log check
+[12:47:20] Warping, waiting...
+[12:48:21] Finished warping...
+[12:48:26] Warp Command Given
+[12:48:26] Setting roid to Asteroid (Scordite) with id 72974541 -- calling Orbit...
+[12:48:27] Entering Orbit with 72974541, waiting...
+[12:52:56] Finish waiting, in orbit now
+[12:52:56] Locking roid target
+[12:53:01] IMMA FIRIN MAH LAZOR!
+[12:56:03] End waiting, cargo is full
+[12:56:04] Mining
+[12:56:05] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[12:56:07] About to warp, this is a log check
+[12:56:17] Warping, waiting...
+[12:56:19] Finished warping...
+[12:56:24] Warp Command Given
+[12:56:24] Setting roid to Asteroid (Scordite) with id 72974513 -- calling Orbit...
+[12:56:25] Entering Orbit with 72974513, waiting...
+[12:56:27] Finish waiting, in orbit now
+[12:56:28] Locking roid target
+[12:56:33] IMMA FIRIN MAH LAZOR!
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 11:36:24  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[11:36:24] Started EVEBot 0.8..
+[11:36:24] Please Hold Loading Main Function..
+[11:36:26] Completed Main Function
+[11:36:26] Bot is now Paused
+[11:36:26] Please Press Play
+[11:36:39] I'm in the station
+[11:36:39] Opening Hangar
+[11:36:42] Stacking Items
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 11:38:54  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[11:38:54] Started EVEBot 0.8..
+[11:38:54] Please Hold Loading Main Function..
+[11:38:56] Completed Main Function
+[11:38:56] Bot is now Paused
+[11:38:56] Please Press Play
+[11:38:57] I'm in the station
+[11:38:57] Opening Hangar
+[11:39:01] Stacking Items
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 12:37:33  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[12:37:33] Started EVEBot 0.8..
+[12:37:33] Please Hold Loading Main Function..
+[12:37:35] Completed Main Function
+[12:37:35] Bot is now Paused
+[12:37:35] Please Press Play
+[12:37:36] I'm in the station
+[12:37:36] Opening Hangar
+[12:37:39] Stacking Items
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 12:38:18  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[12:38:18] Started EVEBot 0.8..
+[12:38:18] Please Hold Loading Main Function..
+[12:38:20] Completed Main Function
+[12:38:20] Bot is now Paused
+[12:38:20] Please Press Play
+[12:38:20] I'm in the station
+[12:38:20] Opening Hangar
+[12:38:23] 1
+[12:38:23] 2
+[12:38:23] Stacking Items
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 12:39:20  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[12:39:20] Started EVEBot 0.8..
+[12:39:20] Please Hold Loading Main Function..
+[12:39:22] Completed Main Function
+[12:39:22] Bot is now Paused
+[12:39:22] Please Press Play
+[12:39:23] I'm in the station
+[12:39:23] Opening Hangar
+[12:39:25] 1
+[12:39:25] 2
+[12:39:25] Stacking Items
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 12:43:28  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[12:43:28] Started EVEBot 0.8..
+[12:43:28] Please Hold Loading Main Function..
+[12:43:30] Completed Main Function
+[12:43:30] Bot is now Paused
+[12:43:30] Please Press Play
+[12:43:31] I'm in the station
+[12:43:31] Opening Hangar
+[12:43:34] 1
+[12:43:34] 2
+[12:43:34] Stacking Items
+[12:43:34] Stacking Items2
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 12:44:39  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[12:44:39] Started EVEBot 0.8..
+[12:44:39] Please Hold Loading Main Function..
+[12:44:41] Completed Main Function
+[12:44:41] Bot is now Paused
+[12:44:41] Please Press Play
+[12:44:42] I'm in the station
+[12:44:42] Opening Hangar
+[12:44:44] 1
+[12:44:44] 2
+[12:44:44] Stacking Items
+[12:44:44] Stacking Items2
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 12:46:18  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[12:46:18] Started EVEBot 0.8..
+[12:46:18] Please Hold Loading Main Function..
+[12:46:21] Completed Main Function
+[12:46:21] Bot is now Paused
+[12:46:21] Please Press Play
+[12:46:22] I'm in the station
+[12:46:22] Opening Hangar
+[12:46:24] Stacking Items
+[12:46:28] Done Transfering
+[12:46:28] Undocking
+[12:46:28] Waiting...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 12:49:12  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[12:49:12] Started EVEBot 0.8..
+[12:49:12] Please Hold Loading Main Function..
+[12:49:14] Completed Main Function
+[12:49:14] Bot is now Paused
+[12:49:14] Please Press Play
+[12:49:15] I'm in the station
+[12:49:15] Opening Hangar
+[12:49:18] 3
+[12:49:19] Stacking Items
+[12:49:23] Undocking
+[12:49:23] Waiting...
+[12:49:38] Setting main station Hatakani VII - Moon 18 - Sukuuvestaa Corporation Production Plant with ID 60002869
+[12:49:38] My ship is full
+[12:49:38] Approaching Base
+[12:49:40] In Docking Range ... Docking
+[12:49:40] Docking, waiting...
+[12:49:50] Finished Docking
+[12:49:56] I'm in the station
+[12:49:56] Opening Ship Cargo
+[12:49:59] Opening Hangar
+[12:50:01] 3
+[12:50:02] Stacking Items
+[12:50:06] Undocking
+[12:50:06] Waiting...
+[12:50:24] Mining
+[12:50:24] Setting roid belt Hatakani VIII - Asteroid Belt 4 with id 40175472
+[12:50:26] About to warp, this is a log check
+[12:50:36] Warping, waiting...
+[12:51:39] Finished warping...
+[12:51:44] Warp Command Given
+[12:51:44] Setting roid to Asteroid (Scordite) with id 71984622 -- calling Orbit...
+[12:51:45] Entering Orbit with 71984622, waiting...
+[12:54:28] Finish waiting, in orbit now
+[12:54:28] Locking roid target
+[12:54:36] Checking for Laser
+[12:54:36] Found Laser
+[12:54:36] IMMA FIRIN MAH LAZOR!
+[12:54:40] Checking for Laser
+[12:54:40] Found Laser
+[12:54:40] IMMA FIRIN MAH LAZOR!
+[12:54:43] No Lasers in Slot 2
+[13:00:44] Entering Orbit with 71984647, waiting...
+[13:00:46] Finish waiting, in orbit now
+[13:00:46] Locking roid target
+[13:00:54] Checking for Laser
+[13:00:54] Found Laser
+[13:00:54] IMMA FIRIN MAH LAZOR!
+[13:00:58] Checking for Laser
+[13:00:58] Found Laser
+[13:00:58] IMMA FIRIN MAH LAZOR!
+[13:01:01] No Lasers in Slot 2
+[13:04:01] End waiting, cargo is full
+[13:04:02] Setting main station Hatakani VII - Moon 18 - Sukuuvestaa Corporation Production Plant with ID 60002869
+[13:04:02] My ship is full
+[13:04:02] Calling ReturnToBase
+[13:04:02] The distance is greater than 10000, warp to base
+[13:04:12] Warping, waiting...
+[13:05:04] Finished warping...
+[13:05:14] Approaching Base
+[13:05:16] In Docking Range ... Docking
+[13:05:16] Docking, waiting...
+[13:05:24] Finished Docking
+[13:05:30] I'm in the station
+[13:05:30] Opening Ship Cargo
+[13:05:33] Opening Hangar
+[13:05:35] 3
+[13:05:37] Stacking Items
+[13:05:41] Undocking
+[13:05:41] Waiting...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 13:06:45  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[13:06:45] Started EVEBot 0.8..
+[13:06:45] Please Hold Loading Main Function..
+[13:06:47] Completed Main Function
+[13:06:47] Bot is now Paused
+[13:06:47] Please Press Play
+[13:06:48] Setting main station Hatakani VII - Moon 18 - Sukuuvestaa Corporation Production Plant with ID 60002869
+[13:06:48] My ship is full
+[13:06:48] Approaching Base
+[13:06:50] In Docking Range ... Docking
+[13:06:50] Docking, waiting...
+[13:07:00] Finished Docking
+[13:07:05] I'm in the station
+[13:07:05] Opening Ship Cargo
+[13:07:10] Opening Hangar
+[13:07:13] Stacking Items
+[13:07:17] Undocking
+[13:07:17] Waiting...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 13:08:29  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[13:08:29] Started EVEBot 0.8..
+[13:08:29] Please Hold Loading Main Function..
+[13:08:31] Completed Main Function
+[13:08:31] Bot is now Paused
+[13:08:31] Please Press Play
+[13:08:32] I'm in the station
+[13:08:32] Opening Ship Cargo
+[13:08:39] Opening Hangar
+[13:08:42] Stacking Items
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 13:10:47  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[13:10:47] Started EVEBot 0.8..
+[13:10:47] Please Hold Loading Main Function..
+[13:10:49] Completed Main Function
+[13:10:49] Bot is now Paused
+[13:10:49] Please Press Play
+[13:10:56] I'm in the station
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 13:13:09  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[13:13:09] Started EVEBot 0.8..
+[13:13:09] Please Hold Loading Main Function..
+[13:13:11] Completed Main Function
+[13:13:11] Bot is now Paused
+[13:13:11] Please Press Play
+[13:13:13] I'm in the station
+[13:13:13] Opening Hangar
+[13:13:15] Moving 1
+[13:13:20] Undocking
+[13:13:20] Waiting...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 13:16:08  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[13:16:08] Started EVEBot 0.8..
+[13:16:08] Please Hold Loading Main Function..
+[13:16:10] Completed Main Function
+[13:16:10] Bot is now Paused
+[13:16:10] Please Press Play
+[13:16:11] I'm in the station
+[13:16:11] Opening Cargo
+[13:16:15] Opening Hangar
+[13:16:18] Moving 1
+[13:16:19] Stacking All
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 13:24:23  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[13:24:23] Started EVEBot 0.8..
+[13:24:23] Please Hold Loading Main Function..
+[13:24:25] Completed Main Function
+[13:24:25] Bot is now Paused
+[13:24:25] Please Press Play
+[13:24:26] I'm in the station
+[13:24:26] Opening Hangar
+[13:24:29] 1
+[13:24:29] Moving 0
+[13:24:30] Moving 1
+[13:24:31] Stacking All
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 13:29:44  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[13:29:44] Started EVEBot 0.8..
+[13:29:44] Please Hold Loading Main Function..
+[13:29:46] Completed Main Function
+[13:29:46] Bot is now Paused
+[13:29:46] Please Press Play
+[13:29:47] I'm in the station
+[13:29:47] Opening Hangar
+[13:29:50] 0
+[13:29:50] Moving 0
+[13:29:53] Stacking All
+[13:29:56] Undocking
+[13:29:56] Waiting...
+[13:30:11] Setting main station Hatakani VII - Moon 18 - Sukuuvestaa Corporation Production Plant with ID 60002869
+[13:30:11] My ship is full
+[13:30:11] Approaching Base
+[13:30:13] In Docking Range ... Docking
+[13:30:13] Docking, waiting...
+[13:30:23] Finished Docking
+[13:30:29] I'm in the station
+[13:30:29] Opening Cargo
+[13:30:31] Opening Hangar
+[13:30:33] 0
+[13:30:33] Moving 0
+[13:30:36] Stacking All
+[13:30:39] Undocking
+[13:30:39] Waiting...
+[13:30:54] Mining
+[13:30:54] Setting roid belt Hatakani VIII - Asteroid Belt 4 with id 40175472
+[13:30:56] About to warp, this is a log check
+[13:31:06] Warping, waiting...
+[13:32:11] Finished warping...
+[13:32:16] Warp Command Given
+[13:32:16] Setting roid to Asteroid (Scordite) with id 71984590 -- calling Orbit...
+[13:32:17] Entering Orbit with 71984590, waiting...
+[13:34:30] Finish waiting, in orbit now
+[13:34:30] Locking roid target
+[13:34:38] Checking for Laser
+[13:34:38] Found Laser
+[13:34:38] IMMA FIRIN MAH LAZOR!
+[13:34:42] Checking for Laser
+[13:34:42] Found Laser
+[13:34:42] IMMA FIRIN MAH LAZOR!
+[13:34:45] No Lasers in Slot 2
+[13:40:40] End waiting, cargo is full
+[13:40:41] Mining
+[13:40:41] Setting roid belt Hatakani VIII - Asteroid Belt 4 with id 40175472
+[13:40:43] About to warp, this is a log check
+[13:40:53] Warping, waiting...
+[13:40:55] Finished warping...
+[13:41:00] Warp Command Given
+[13:41:01] Setting roid to Asteroid (Massive Scordite) with id 71984555 -- calling Orbit...
+[13:41:02] Entering Orbit with 71984555, waiting...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 13:52:41  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[13:52:41] Started EVEBot 0.8..
+[13:52:41] Please Hold Loading Main Function..
+[13:52:43] Completed Main Function
+[13:52:43] Bot is now Paused
+[13:52:43] Please Press Play
+[13:52:44] Mining
+[13:52:44] Setting roid belt Hatakani VIII - Asteroid Belt 4 with id 40175472
+[13:52:46] About to warp, this is a log check
+[13:52:56] Warping, waiting...
+[13:52:58] Finished warping...
+[13:53:03] Warp Command Given
+[13:53:04] Setting roid to Asteroid (Massive Scordite) with id 71984555 -- calling Orbit...
+[13:53:05] Entering Orbit with 71984555, waiting...
+[13:53:07] Finish waiting, in orbit now
+[13:53:07] Locking roid target
+[13:53:15] Checking for Laser
+[13:53:15] Found Laser
+[13:53:15] IMMA FIRIN MAH LAZOR!
+[13:53:19] Checking for Laser
+[13:53:19] Found Laser
+[13:53:19] IMMA FIRIN MAH LAZOR!
+[13:53:22] No Lasers in Slot 2
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 13:57:34  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[13:57:34] Started EVEBot 0.8..
+[13:57:34] Please Hold Loading Main Function..
+[13:57:36] Completed Main Function
+[13:57:36] Bot is now Paused
+[13:57:36] Please Press Play
+[13:57:40] Setting main station Hatakani VII - Moon 18 - Sukuuvestaa Corporation Production Plant with ID 60002869
+[13:57:40] My ship is full
+[13:57:40] Calling ReturnToBase
+[13:57:40] The distance is greater than 10000, warp to base
+[13:57:50] Warping, waiting...
+[13:58:41] Finished warping...
+[13:58:46] Approaching Base
+[13:58:48] In Docking Range ... Docking
+[13:58:48] Docking, waiting...
+[13:58:57] Finished Docking
+[13:59:03] I'm in the station
+[13:59:03] Opening Cargo
+[13:59:05] Opening Cargo
+[13:59:07] Opening Hangar
+[13:59:09] 0
+[13:59:09] Moving NULL
+[13:59:13] Stacking All in Hangar
+[13:59:16] Undocking
+[13:59:16] Waiting...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 14:00:34  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[14:00:34] Started EVEBot 0.8..
+[14:00:34] Please Hold Loading Main Function..
+[14:00:36] Completed Main Function
+[14:00:36] Bot is now Paused
+[14:00:36] Please Press Play
+[14:00:41] Setting main station Hatakani VII - Moon 18 - Sukuuvestaa Corporation Production Plant with ID 60002869
+[14:00:41] My ship is full
+[14:00:41] Approaching Base
+[14:00:43] In Docking Range ... Docking
+[14:00:43] Docking, waiting...
+[14:00:49] Finished Docking
+[14:00:55] I'm in the station
+[14:00:55] Opening Cargo
+[14:00:57] Opening Cargo
+[14:00:59] Opening Hangar
+[14:01:01] 2
+[14:01:01] Moving Massive Scordite
+[14:01:03] Moving Scordite
+[14:01:06] Stacking All in Hangar
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 14:03:03  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[14:03:03] Started EVEBot 0.8..
+[14:03:03] Please Hold Loading Main Function..
+[14:03:05] Completed Main Function
+[14:03:05] Bot is now Paused
+[14:03:05] Please Press Play
+[14:03:08] I'm in the station
+[14:03:08] Opening Hangar
+[14:03:10] Cargo Count: 1
+[14:03:14] Stacking All in Hangar
+[14:03:17] Undocking
+[14:03:17] Waiting...
+[14:03:37] Mining
+[14:03:37] Setting roid belt Hatakani VIII - Asteroid Belt 4 with id 40175472
+[14:03:39] About to warp, this is a log check
+[14:03:49] Warping, waiting...
+[14:04:52] Finished warping...
+[14:04:52] Warp Command Given
+[14:04:52] Setting roid to Asteroid (Massive Scordite) with id 71984555 -- calling Orbit...
+[14:04:52] Entering Orbit with 71984555, waiting...
+[14:07:16] Finish waiting, in orbit now
+[14:07:16] Locking roid target
+[14:07:24] Checking for Laser
+[14:07:24] Found Laser
+[14:07:25] IMMA FIRIN MAH LAZOR!
+[14:07:29] Checking for Laser
+[14:07:29] Found Laser
+[14:07:29] IMMA FIRIN MAH LAZOR!
+[14:07:32] No Lasers in Slot 2
+[14:10:38] Entering Orbit with 71984544, waiting...
+[14:10:39] Finish waiting, in orbit now
+[14:10:39] Locking roid target
+[14:10:47] Checking for Laser
+[14:10:47] Found Laser
+[14:10:47] Laser is already active
+[14:10:51] Checking for Laser
+[14:10:51] Found Laser
+[14:10:51] IMMA FIRIN MAH LAZOR!
+[14:10:54] No Lasers in Slot 2
+[14:14:17] End waiting, cargo is full
+[14:14:19] Setting main station Hatakani VII - Moon 18 - Sukuuvestaa Corporation Production Plant with ID 60002869
+[14:14:19] My ship is full
+[14:14:19] Calling ReturnToBase
+[14:14:19] The distance is greater than 10000, warp to base
+[14:14:29] Warping, waiting...
+[14:15:16] Finished warping...
+[14:15:21] Approaching Base
+[14:15:23] In Docking Range ... Docking
+[14:15:23] Docking, waiting...
+[14:15:30] Finished Docking
+[14:15:35] I'm in the station
+[14:15:35] Opening Cargo
+[14:15:37] Opening Cargo
+[14:15:39] Opening Hangar
+[14:15:42] Cargo Count: 2
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 14:17:18  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[14:17:18] Started EVEBot 0.8..
+[14:17:18] Please Hold Loading Main Function..
+[14:17:20] Completed Main Function
+[14:17:20] Bot is now Paused
+[14:17:21] Please Press Play
+[14:17:22] I'm in the station
+[14:17:22] Opening Hangar
+[14:17:23] Cargo Count: 2
+[14:17:23] Unloading Cargo[1]: Scordite
+[14:17:24] Unloading Cargo[1]: Scordite
+[14:17:24] Unloading Cargo[1]: Scordite
+[14:17:24] Unloading Cargo[1]: Scordite
+[14:17:24] Unloading Cargo[1]: Scordite
+[14:17:24] Unloading Cargo[1]: Scordite
+[14:17:24] Unloading Cargo[1]: Scordite
+[14:17:24] Unloading Cargo[1]: Scordite
+[14:17:24] Unloading Cargo[1]: Scordite
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 14:20:34  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[14:20:34] Started EVEBot 0.8..
+[14:20:34] Please Hold Loading Main Function..
+[14:20:36] Completed Main Function
+[14:20:36] Bot is now Paused
+[14:20:36] Please Press Play
+[14:20:38] I'm in the station
+[14:20:38] Opening Hangar
+[14:20:39] Cargo Count: 2
+[14:20:41] Unloading Cargo[1]: Scordite
+[14:20:44] Unloading Cargo[1]: Massive Scordite
+[14:20:47] Unloading Cargo[1]: Massive Scordite
+[14:20:50] Unloading Cargo[1]: Massive Scordite
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 14:23:16  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[14:23:16] Started EVEBot 0.8..
+[14:23:16] Please Hold Loading Main Function..
+[14:23:18] Completed Main Function
+[14:23:18] Bot is now Paused
+[14:23:18] Please Press Play
+[14:23:20] I'm in the station
+[14:23:20] Opening Hangar
+[14:23:22] Cargo Count: 4
+[14:23:22] Unloading Cargo[1]: NULL
+[14:23:25] Unloading Cargo[1]: NULL
+[14:23:28] Unloading Cargo[1]: NULL
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 14:24:32  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[14:24:32] Started EVEBot 0.8..
+[14:24:32] Please Hold Loading Main Function..
+[14:24:34] Completed Main Function
+[14:24:34] Bot is now Paused
+[14:24:34] Please Press Play
+[14:24:35] I'm in the station
+[14:24:35] Opening Hangar
+[14:24:36] Cargo Count: 3
+[14:24:36] Unloading Cargo[1]: Scordite
+[14:24:39] Unloading Cargo[1]: Scordite
+[14:24:42] Unloading Cargo[1]: Scordite
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 14:27:48  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[14:27:48] Started EVEBot 0.8..
+[14:27:48] Please Hold Loading Main Function..
+[14:27:50] Completed Main Function
+[14:27:50] Bot is now Paused
+[14:27:50] Please Press Play
+[14:27:52] I'm in the station
+[14:27:52] Opening Hangar
+[14:27:53] Cargo Count: 3
+[14:27:53] Moving 0: NULL
+[14:27:54] Moving 1: Tritanium
+[14:27:56] Moving 2: Massive Scordite
+[14:27:57] Moving 3: NULL
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 14:29:26  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[14:29:26] Started EVEBot 0.8..
+[14:29:26] Please Hold Loading Main Function..
+[14:29:28] Completed Main Function
+[14:29:28] Bot is now Paused
+[14:29:28] Please Press Play
+[14:29:31] I'm in the station
+[14:29:31] Opening Hangar
+[14:29:33] Cargo Count: 4
+[14:29:33] Moving 1: Scordite
+[14:29:34] Moving 2: Tritanium
+[14:29:36] Moving 3: NULL
+[14:29:37] Moving 4: NULL
+[14:29:41] Stacking All in Hangar
+[14:29:42] Undocking
+[14:29:42] Waiting...
+[14:30:27] Setting main station Hatakani VII - Moon 18 - Sukuuvestaa Corporation Production Plant with ID 60002869
+[14:30:27] My ship is full
+[14:30:27] Approaching Base
+[14:30:30] In Docking Range ... Docking
+[14:30:30] Docking, waiting...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 14:32:25  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[14:32:25] Started EVEBot 0.8..
+[14:32:25] Please Hold Loading Main Function..
+[14:32:27] Completed Main Function
+[14:32:27] Bot is now Paused
+[14:32:27] Please Press Play
+[14:32:29] Setting main station Hatakani VII - Moon 18 - Sukuuvestaa Corporation Production Plant with ID 60002869
+[14:32:29] My ship is full
+[14:32:29] Approaching Base
+[14:32:32] In Docking Range ... Docking
+[14:32:32] Docking, waiting...
+[14:32:44] Finished Docking
+[14:32:50] I'm in the station
+[14:32:50] Opening Cargo
+[14:32:52] Opening Hangar
+[14:32:53] Cargo Count: 0
+[14:32:53] Moving 1: NULL
+[14:32:58] Stacking All in Hangar
+[14:32:59] Undocking
+[14:32:59] Waiting...
+[14:33:12] Mining
+[14:33:12] Setting roid belt Hatakani VIII - Asteroid Belt 4 with id 40175472
+[14:33:14] About to warp, this is a log check
+[14:33:24] Warping, waiting...
+[14:34:31] Finished warping...
+[14:34:31] Warp Command Given
+[14:34:31] Setting roid to Asteroid (Scordite) with id 71984617 -- calling Orbit...
+[14:34:31] Entering Orbit with 71984617, waiting...
+[14:36:49] Finish waiting, in orbit now
+[14:36:49] Locking roid target
+[14:36:57] Checking for Laser
+[14:36:57] Found Laser
+[14:37:00] IMMA FIRIN MAH LAZOR!
+[14:37:02] IMMA FIRIN MAH LAZOR!
+[14:37:06] Checking for Laser
+[14:37:06] Found Laser
+[14:37:09] IMMA FIRIN MAH LAZOR!
+[14:37:12] IMMA FIRIN MAH LAZOR!
+[14:37:15] No Lasers in Slot 2
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 14:38:18  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[14:38:18] Started EVEBot 0.8..
+[14:38:18] Please Hold Loading Main Function..
+[14:38:20] Completed Main Function
+[14:38:20] Bot is now Paused
+[14:38:20] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 14:38:51  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[14:38:51] Started EVEBot 0.8..
+[14:38:51] Please Hold Loading Main Function..
+[14:38:53] Completed Main Function
+[14:38:53] Bot is now Paused
+[14:38:53] Please Press Play
+[14:38:54] Mining
+[14:38:54] Setting roid belt Hatakani VIII - Asteroid Belt 4 with id 40175472
+[14:38:56] About to warp, this is a log check
+[14:39:06] Warping, waiting...
+[14:39:09] Finished warping...
+[14:39:09] Warp Command Given
+[14:39:09] Setting roid to Asteroid (Scordite) with id 71984586 -- calling Orbit...
+[14:39:09] Entering Orbit with 71984586, waiting...
+[14:39:09] Finish waiting, in orbit now
+[14:39:09] Locking roid target
+[14:39:17] Checking for Laser
+[14:39:17] Found Laser
+[14:39:19] IMMA FIRIN MAH LAZOR!
+[14:39:25] Checking for Laser
+[14:39:25] Found Laser
+[14:39:27] IMMA FIRIN MAH LAZOR!
+[14:39:32] No Lasers in Slot 2
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 14:42:17  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[14:42:17] Started EVEBot 0.8..
+[14:42:17] Please Hold Loading Main Function..
+[14:42:19] Completed Main Function
+[14:42:19] Bot is now Paused
+[14:42:19] Please Press Play
+[14:42:21] Mining
+[14:42:21] Setting roid belt Hatakani VIII - Asteroid Belt 4 with id 40175472
+[14:42:23] About to warp, this is a log check
+[14:42:33] Warping, waiting...
+[14:42:35] Finished warping...
+[14:42:35] Warp Command Given
+[14:42:35] Setting roid to Asteroid (Scordite) with id 71984665 -- calling Orbit...
+[14:42:35] Entering Orbit with 71984665, waiting...
+[14:42:35] Finish waiting, in orbit now
+[14:42:35] Locking roid target
+[14:42:43] Checking for Laser
+[14:42:43] Found Laser
+[14:42:46] IMMA FIRIN MAH LAZOR!
+[14:42:50] Checking for Laser
+[14:42:50] Found Laser
+[14:42:52] IMMA FIRIN MAH LAZOR!
+[14:42:55] No Lasers in Slot 2
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 14:43:50  
+  Evebot Session for  Josh Fowler 
+-------------------------------------------------
+[14:43:50] Started EVEBot 0.8..
+[14:43:50] Please Hold Loading Main Function..
+[14:43:52] Completed Main Function
+[14:43:52] Bot is now Paused
+[14:43:52] Please Press Play
+[14:43:58] Mining
+[14:43:58] Setting roid belt Hatakani VIII - Asteroid Belt 4 with id 40175472
+[14:44:00] About to warp, this is a log check
+[14:44:10] Warping, waiting...
+[14:44:12] Finished warping...
+[14:44:12] Warp Command Given
+[14:44:12] Setting roid to Asteroid (Condensed Scordite) with id 71984571 -- calling Orbit...
+[14:44:12] Entering Orbit with 71984571, waiting...
+[14:44:12] Finish waiting, in orbit now
+[14:44:12] Locking roid target
+[14:44:20] Checking for Laser
+[14:44:20] Found Laser
+[14:44:23] IMMA FIRIN MAH LAZOR!
+[14:44:27] Checking for Laser
+[14:44:27] Found Laser
+[14:44:29] IMMA FIRIN MAH LAZOR!
+[14:44:32] No Lasers in Slot 2
+[14:47:30] End waiting, cargo is full
+[14:47:31] Mining
+[14:47:32] Setting roid belt Hatakani VIII - Asteroid Belt 4 with id 40175472
+[14:47:34] About to warp, this is a log check
+[14:47:44] Warping, waiting...
+[14:47:46] Finished warping...
+[14:47:46] Warp Command Given
+[14:47:47] Setting roid to Asteroid (Scordite) with id 71984544 -- calling Orbit...
+[14:47:47] Entering Orbit with 71984544, waiting...
+[14:47:47] Finish waiting, in orbit now
+[14:47:47] Locking roid target
+[14:47:57] Checking for Laser
+[14:47:57] Found Laser
+[14:47:57] Laser is already active, turning off
+[14:48:00] IMMA FIRIN MAH LAZOR!
+[14:48:04] Checking for Laser
+[14:48:04] Found Laser
+[14:48:06] IMMA FIRIN MAH LAZOR!
+[14:48:09] No Lasers in Slot 2

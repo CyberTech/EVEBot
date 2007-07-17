@@ -1,0 +1,3881 @@
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 14:37:57  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[14:37:57] Started EVEBot 0.8
+[14:37:59] Eve Bot starting
+[14:38:19] Completed Main Function
+[14:38:19] I'm in the station
+[14:38:19] Transfering item1 to hangar
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 14:39:13  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[14:39:13] Started EVEBot 0.8
+[14:39:15] Eve Bot starting
+[14:39:15] Completed Main Function
+[14:39:15] Bot is now Paused
+[14:39:15] Please Press Play
+[14:39:23] I'm in the station
+[14:39:23] Transfering item1 to hangar
+[14:39:31] Transfering item2 to hangar
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 14:40:41  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[14:40:41] Started EVEBot 0.8
+[14:40:43] Eve Bot starting
+[14:40:43] Completed Main Function
+[14:40:43] Bot is now Paused
+[14:40:43] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 14:42:01  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[14:42:01] Started EVEBot 0.8..
+[14:42:01] Please Hold Loading Main Function..
+[14:42:03] Completed Main Function
+[14:42:03] Bot is now Paused
+[14:42:03] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 14:43:42  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[14:43:42] Started EVEBot 0.8..
+[14:43:42] Please Hold Loading Main Function..
+[14:43:44] Completed Main Function
+[14:43:44] Bot is now Paused
+[14:43:44] Please Press Play
+[14:43:47] I'm in the station
+[14:43:47] Transfering item1 to hangar
+[14:43:55] Transfering item2 to hangar
+[14:44:03] Transfering item3 to hangar
+[14:44:11] Stacking all...
+[14:44:20] Staking done
+[14:44:22] Undocking
+[14:44:22] Waiting...
+[14:44:42] Mining
+[14:44:42] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:00:31  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:00:31] Started EVEBot 0.8..
+[15:00:31] Please Hold Loading Main Function..
+[15:00:33] Completed Main Function
+[15:00:33] Bot is now Paused
+[15:00:33] Please Press Play
+[15:00:33] Mining
+[15:00:33] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:00:35] About to warp, this is a log check
+[15:00:45] Warping, waiting...
+[15:01:08] Waiting ends
+[15:01:13] Warp Command Given
+[15:01:13] Roid Set
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:01:43  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:01:43] Started EVEBot 0.8..
+[15:01:43] Please Hold Loading Main Function..
+[15:01:45] Completed Main Function
+[15:01:45] Bot is now Paused
+[15:01:45] Please Press Play
+[15:02:59] Mining
+[15:02:59] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:03:01] About to warp, this is a log check
+[15:03:11] Warping, waiting...
+[15:03:11] Waiting ends
+[15:03:16] Warp Command Given
+[15:03:16] Roid Set
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:07:00  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:07:00] Started EVEBot 0.8..
+[15:07:00] Please Hold Loading Main Function..
+[15:07:02] Completed Main Function
+[15:07:02] Bot is now Paused
+[15:07:02] Please Press Play
+[15:07:13] Mining
+[15:07:13] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:07:15] About to warp, this is a log check
+[15:07:25] Warping, waiting...
+[15:07:25] Waiting ends
+[15:07:30] Warp Command Given
+[15:07:30] Roid Set
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:08:16  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:08:16] Started EVEBot 0.8..
+[15:08:16] Please Hold Loading Main Function..
+[15:08:18] Completed Main Function
+[15:08:18] Bot is now Paused
+[15:08:18] Please Press Play
+[15:08:22] Mining
+[15:08:22] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:08:24] About to warp, this is a log check
+[15:08:34] Warping, waiting...
+[15:08:59] Waiting ends
+[15:09:04] Warp Command Given
+[15:09:04] Roid Set
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:09:33  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:09:33] Started EVEBot 0.8..
+[15:09:33] Please Hold Loading Main Function..
+[15:09:35] Completed Main Function
+[15:09:35] Bot is now Paused
+[15:09:35] Please Press Play
+[15:09:36] Mining
+[15:09:37] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:09:39] About to warp, this is a log check
+[15:09:49] Warping, waiting...
+[15:09:49] Waiting ends
+[15:09:54] Warp Command Given
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:10:56  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:10:56] Started EVEBot 0.8..
+[15:10:56] Please Hold Loading Main Function..
+[15:10:58] Completed Main Function
+[15:10:58] Bot is now Paused
+[15:10:58] Please Press Play
+[15:11:01] Mining
+[15:11:01] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:11:03] About to warp, this is a log check
+[15:11:13] Warping, waiting...
+[15:11:13] Waiting ends
+[15:11:18] Warp Command Given
+[15:11:19] About to set Roid
+[15:11:19] We've Set Roid
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:12:55  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:12:55] Started EVEBot 0.8..
+[15:12:55] Please Hold Loading Main Function..
+[15:12:57] Completed Main Function
+[15:12:57] Bot is now Paused
+[15:12:57] Please Press Play
+[15:13:00] Mining
+[15:13:00] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:13:02] About to warp, this is a log check
+[15:13:12] Warping, waiting...
+[15:13:12] Waiting ends
+[15:13:17] Warp Command Given
+[15:13:18] About to set Roid
+[15:13:18] We've Set Roid
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:18:11  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:18:11] Started EVEBot 0.8..
+[15:18:11] Please Hold Loading Main Function..
+[15:18:13] Completed Main Function
+[15:18:13] Bot is now Paused
+[15:18:13] Please Press Play
+[15:18:15] Mining
+[15:18:16] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:18:18] About to warp, this is a log check
+[15:18:28] Warping, waiting...
+[15:18:28] Waiting ends
+[15:18:33] Warp Command Given
+[15:18:34] About to set Roid
+[15:18:34] We've Set Roid
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:18:54  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:18:54] Started EVEBot 0.8..
+[15:18:54] Please Hold Loading Main Function..
+[15:18:56] Completed Main Function
+[15:18:56] Bot is now Paused
+[15:18:56] Please Press Play
+[15:19:08] Mining
+[15:19:08] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:19:10] About to warp, this is a log check
+[15:19:20] Warping, waiting...
+[15:19:20] Waiting ends
+[15:19:25] Warp Command Given
+[15:19:26] About to set Roid
+[15:19:26] We've Set Roid
+[15:19:27] Setting roid to Asteroid (Veldspar) with id 73817554
+[15:19:27] Entering Orbit with 73817554, waiting...
+[15:20:53] Finish waiting, in orbit now
+[15:20:54] Locking roid target
+[15:20:58] IMMA FIRIN MAH LAZOR!
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:23:06  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:23:06] Started EVEBot 0.8..
+[15:23:06] Please Hold Loading Main Function..
+[15:23:08] Completed Main Function
+[15:23:08] Bot is now Paused
+[15:23:08] Please Press Play
+[15:23:11] Mining
+[15:23:11] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:23:13] About to warp, this is a log check
+[15:23:23] Warping, waiting...
+[15:23:46] Waiting ends
+[15:23:51] Warp Command Given
+[15:23:52] About to set Roid
+[15:23:52] We've Set Roid
+[15:23:52] Setting roid to Asteroid (Veldspar) with id 73817496
+[15:23:52] Entering Orbit with 73817496, waiting...
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:25:06  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:25:06] Started EVEBot 0.8..
+[15:25:06] Please Hold Loading Main Function..
+[15:25:08] Completed Main Function
+[15:25:08] Bot is now Paused
+[15:25:08] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:25:19  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:25:19] Started EVEBot 0.8..
+[15:25:19] Please Hold Loading Main Function..
+[15:25:21] Completed Main Function
+[15:25:21] Bot is now Paused
+[15:25:21] Please Press Play
+[15:25:23] Mining
+[15:25:23] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:25:25] About to warp, this is a log check
+[15:25:35] Warping, waiting...
+[15:25:35] Waiting ends
+[15:25:40] Warp Command Given
+[15:25:41] About to set Roid
+[15:25:41] We've Set Roid
+[15:25:42] Setting roid to Asteroid (Concentrated Veldspar) with id 73817471
+[15:25:42] Entering Orbit with 73817471, waiting...
+[15:26:05] Finish waiting, in orbit now
+[15:26:05] Locking roid target
+[15:26:10] IMMA FIRIN MAH LAZOR!
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 22:41:15  
+  Evebot Session for  Copypaste 
+-------------------------------------------------
+[22:41:15] Started EVEBot 0.8..
+[22:41:15] Please Hold Loading Main Function..
+[22:41:17] Completed Main Function
+[22:41:17] Bot is now Paused
+[22:41:17] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 22:41:40  
+  Evebot Session for  Copypaste 
+-------------------------------------------------
+[22:41:40] Started EVEBot 0.8..
+[22:41:40] Please Hold Loading Main Function..
+[22:41:42] Completed Main Function
+[22:41:42] Bot is now Paused
+[22:41:42] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 22:48:09  
+  Evebot Session for  Copypaste 
+-------------------------------------------------
+[22:48:09] Started EVEBot 0.8..
+[22:48:09] Please Hold Loading Main Function..
+[22:48:11] Completed Main Function
+[22:48:11] Bot is now Paused
+[22:48:11] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 22:51:19  
+  Evebot Session for  Copypaste 
+-------------------------------------------------
+[22:51:19] Started EVEBot 0.8..
+[22:51:19] Please Hold Loading Main Function..
+[22:51:21] Completed Main Function
+[22:51:21] Bot is now Paused
+[22:51:21] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 22:55:51  
+  Evebot Session for  Copypaste 
+-------------------------------------------------
+[22:55:51] Started EVEBot 0.8..
+[22:55:51] Please Hold Loading Main Function..
+[22:55:53] Completed Main Function
+[22:55:53] Bot is now Paused
+[22:55:53] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 22:56:50  
+  Evebot Session for  Copypaste 
+-------------------------------------------------
+[22:56:50] Started EVEBot 0.8..
+[22:56:50] Please Hold Loading Main Function..
+[22:56:52] Completed Main Function
+[22:56:52] Bot is now Paused
+[22:56:52] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 22:57:49  
+  Evebot Session for  Copypaste 
+-------------------------------------------------
+[22:57:49] Started EVEBot 0.8..
+[22:57:49] Please Hold Loading Main Function..
+[22:57:51] Completed Main Function
+[22:57:51] Bot is now Paused
+[22:57:51] Please Press Play
+[22:57:53] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:57:53] My ship is full
+[22:57:53] The distance is greater than 10000, warp to base
+[22:58:03] Warping, waiting...
+[22:58:29] Finished warping...
+[22:58:36] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:36] My ship is full
+[22:58:38] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:38] My ship is full
+[22:58:39] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:39] My ship is full
+[22:58:41] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:41] My ship is full
+[22:58:42] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:42] My ship is full
+[22:58:44] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:44] My ship is full
+[22:58:45] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:45] My ship is full
+[22:58:47] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:47] My ship is full
+[22:58:48] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:48] My ship is full
+[22:58:50] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:50] My ship is full
+[22:58:51] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:51] My ship is full
+[22:58:53] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:53] My ship is full
+[22:58:54] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:54] My ship is full
+[22:58:56] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:56] My ship is full
+[22:58:57] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:57] My ship is full
+[22:58:59] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:58:59] My ship is full
+[22:59:00] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:59:00] My ship is full
+[22:59:02] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:59:02] My ship is full
+[22:59:03] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:59:03] My ship is full
+[22:59:05] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:59:05] My ship is full
+[22:59:06] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:59:06] My ship is full
+[22:59:08] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:59:08] My ship is full
+[22:59:10] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[22:59:10] My ship is full
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 23:01:43  
+  Evebot Session for  Copypaste 
+-------------------------------------------------
+[23:01:43] Started EVEBot 0.8..
+[23:01:43] Please Hold Loading Main Function..
+[23:01:45] Completed Main Function
+[23:01:45] Bot is now Paused
+[23:01:45] Please Press Play
+[23:01:47] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[23:01:47] My ship is full
+[23:01:47] Approaching Base
+[23:01:49] In Docking Range ... Docking
+[23:01:49] Docking, waiting...
+[23:02:03] Finished Docking
+[23:02:05] Setting main station NULL with ID 0
+[23:02:05] My ship is full
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 23:05:22  
+  Evebot Session for  Copypaste 
+-------------------------------------------------
+[23:05:22] Started EVEBot 0.8..
+[23:05:22] Please Hold Loading Main Function..
+[23:05:24] Completed Main Function
+[23:05:24] Bot is now Paused
+[23:05:24] Please Press Play
+[23:05:29] Setting main station NULL with ID 0
+[23:05:29] My ship is full
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 23:06:24  
+  Evebot Session for  Copypaste 
+-------------------------------------------------
+[23:06:24] Started EVEBot 0.8..
+[23:06:24] Please Hold Loading Main Function..
+[23:06:26] Completed Main Function
+[23:06:26] Bot is now Paused
+[23:06:26] Please Press Play
+[23:06:28] Setting main station NULL with ID 0
+[23:06:28] My ship is full
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 23:14:43  
+  Evebot Session for  Copypaste 
+-------------------------------------------------
+[23:14:43] Started EVEBot 0.8..
+[23:14:43] Please Hold Loading Main Function..
+[23:14:45] Completed Main Function
+[23:14:45] Bot is now Paused
+[23:14:45] Please Press Play
+[23:14:46] I'm in the station
+[23:14:46] Transfering item1 to hangar
+[23:14:54] Transfering item2 to hangar
+[23:15:02] Transfering item3 to hangar
+[23:15:10] Stacking all...
+[23:15:18] Staking done
+[23:15:20] Undocking
+[23:15:20] Waiting...
+[23:15:37] Mining
+[23:15:37] Setting roid belt Vay II - Asteroid Belt 1 with id 40336333
+[23:15:40] About to warp, this is a log check
+[23:15:50] Warping, waiting...
+[23:16:16] Finished warping...
+[23:16:21] Warp Command Given
+[23:16:22] About to set Roid
+[23:16:22] We've Set Roid
+[23:16:22] End waiting, cargo is full
+[23:16:22] Unlocking target
+[23:16:23] Setting roid to Asteroid (Veldspar) with id 74294898 -- calling Orbit...
+[23:16:23] Entering Orbit with 74294898, waiting...
+[23:17:28] Finish waiting, in orbit now
+[23:17:28] Locking roid target
+[23:17:33] IMMA FIRIN MAH LAZOR!
+[23:17:35] End waiting, cargo is full
+[23:17:35] Unlocking target
+[23:17:40] End waiting, cargo is full
+[23:17:40] Unlocking target
+[23:17:40] Setting roid to Asteroid (Veldspar) with id 74294930 -- calling Orbit...
+[23:17:40] Entering Orbit with 74294930, waiting...
+[23:17:40] Finish waiting, in orbit now
+[23:17:40] Locking roid target
+[23:17:45] IMMA FIRIN MAH LAZOR!
+[23:17:47] End waiting, cargo is full
+[23:17:47] Unlocking target
+[23:17:52] End waiting, cargo is full
+[23:17:52] Unlocking target
+[23:17:53] Setting roid to Asteroid (Concentrated Veldspar) with id 74294940 -- calling Orbit...
+[23:17:53] Entering Orbit with 74294940, waiting...
+[23:17:53] Finish waiting, in orbit now
+[23:17:53] Locking roid target
+[23:17:58] IMMA FIRIN MAH LAZOR!
+[23:18:00] End waiting, cargo is full
+[23:18:00] Unlocking target
+[23:18:05] End waiting, cargo is full
+[23:18:05] Unlocking target
+[23:18:05] Setting roid to Asteroid (Condensed Scordite) with id 74294905 -- calling Orbit...
+[23:18:05] Entering Orbit with 74294905, waiting...
+[23:18:05] Finish waiting, in orbit now
+[23:18:05] Locking roid target
+[23:18:10] IMMA FIRIN MAH LAZOR!
+[23:18:12] End waiting, cargo is full
+[23:18:12] Unlocking target
+[23:18:17] End waiting, cargo is full
+[23:18:17] Unlocking target
+[23:18:18] Setting roid to Asteroid (Plagioclase) with id 74294945 -- calling Orbit...
+[23:18:18] Entering Orbit with 74294945, waiting...
+[23:18:18] Finish waiting, in orbit now
+[23:18:18] Locking roid target
+[23:18:23] IMMA FIRIN MAH LAZOR!
+[23:18:25] End waiting, cargo is full
+[23:18:25] Unlocking target
+[23:18:30] End waiting, cargo is full
+[23:18:30] Unlocking target
+[23:18:30] Setting roid to Asteroid (Plagioclase) with id 74294950 -- calling Orbit...
+[23:18:30] Entering Orbit with 74294950, waiting...
+[23:18:30] Finish waiting, in orbit now
+[23:18:30] Locking roid target
+[23:18:35] IMMA FIRIN MAH LAZOR!
+[23:18:37] End waiting, cargo is full
+[23:18:37] Unlocking target
+[23:18:42] End waiting, cargo is full
+[23:18:42] Unlocking target
+[23:18:42] Setting roid to Asteroid (Plagioclase) with id 74294950 -- calling Orbit...
+[23:18:42] Entering Orbit with 74294950, waiting...
+[23:18:43] Finish waiting, in orbit now
+[23:18:43] Locking roid target
+[23:18:48] IMMA FIRIN MAH LAZOR!
+[23:18:50] End waiting, cargo is full
+[23:18:50] Unlocking target
+[23:18:55] End waiting, cargo is full
+[23:18:55] Unlocking target
+[23:18:55] Setting roid to Asteroid (Plagioclase) with id 74294950 -- calling Orbit...
+[23:18:55] Entering Orbit with 74294950, waiting...
+[23:18:55] Finish waiting, in orbit now
+[23:18:55] Locking roid target
+[23:19:00] IMMA FIRIN MAH LAZOR!
+[23:19:02] End waiting, cargo is full
+[23:19:02] Unlocking target
+[23:19:07] End waiting, cargo is full
+[23:19:07] Unlocking target
+[23:19:07] Setting roid to Asteroid (Concentrated Veldspar) with id 74294907 -- calling Orbit...
+[23:19:07] Entering Orbit with 74294907, waiting...
+[23:19:07] Finish waiting, in orbit now
+[23:19:07] Locking roid target
+[23:19:13] IMMA FIRIN MAH LAZOR!
+[23:19:15] End waiting, cargo is full
+[23:19:15] Unlocking target
+[23:19:20] End waiting, cargo is full
+[23:19:20] Unlocking target
+[23:19:20] Setting roid to Asteroid (Concentrated Veldspar) with id 74294907 -- calling Orbit...
+[23:19:20] Entering Orbit with 74294907, waiting...
+[23:19:20] Finish waiting, in orbit now
+[23:19:20] Locking roid target
+[23:19:25] IMMA FIRIN MAH LAZOR!
+[23:19:27] End waiting, cargo is full
+[23:19:27] Unlocking target
+[23:19:32] End waiting, cargo is full
+[23:19:32] Unlocking target
+[23:19:32] Setting roid to Asteroid (Veldspar) with id 74294898 -- calling Orbit...
+[23:19:32] Entering Orbit with 74294898, waiting...
+[23:19:32] Finish waiting, in orbit now
+[23:19:32] Locking roid target
+[23:19:37] IMMA FIRIN MAH LAZOR!
+[23:19:39] End waiting, cargo is full
+[23:19:39] Unlocking target
+[23:19:45] End waiting, cargo is full
+[23:19:45] Unlocking target
+[23:19:45] Setting roid to Asteroid (Veldspar) with id 74294934 -- calling Orbit...
+[23:19:45] Entering Orbit with 74294934, waiting...
+[23:19:45] Finish waiting, in orbit now
+[23:19:45] Locking roid target
+[23:19:50] IMMA FIRIN MAH LAZOR!
+[23:19:52] End waiting, cargo is full
+[23:19:52] Unlocking target
+[23:19:57] End waiting, cargo is full
+[23:19:57] Unlocking target
+[23:19:57] Setting roid to Asteroid (Plagioclase) with id 74294884 -- calling Orbit...
+[23:19:59] Entering Orbit with 74294884, waiting...
+[23:19:59] Finish waiting, in orbit now
+[23:19:59] Locking roid target
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 21:46:28  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[21:46:28] Started EVEBot 0.8..
+[21:46:28] Please Hold Loading Main Function..
+[21:46:30] Completed Main Function
+[21:46:30] Bot is now Paused
+[21:46:30] Please Press Play
+[21:46:56] Mining
+[21:46:56] Setting roid belt Cistuvaert III - Asteroid Belt 1 with id 40335452
+[21:46:58] About to warp, this is a log check
+[21:47:08] Warping, waiting...
+[21:47:10] Finished warping...
+[21:47:15] Warp Command Given
+[21:47:15] Setting roid to Asteroid (Veldspar) with id 74262269 -- calling Orbit...
+[21:47:16] Entering Orbit with 74262269, waiting...
+[21:47:16] Finish waiting, in orbit now
+[21:47:16] Locking roid target
+[21:47:22] Debug: UpdateHudStatus Activate Laser
+[21:47:23] Debug: Called Activate Laser
+[21:47:24] Debug: About to check if my ships module is great then 0
+[21:47:25] Debug: It found a laser! Moving on!
+[21:47:26] Debug: About to Look For a Laser
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 21:49:17  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[21:49:17] Started EVEBot 0.8..
+[21:49:17] Please Hold Loading Main Function..
+[21:49:19] Completed Main Function
+[21:49:19] Bot is now Paused
+[21:49:19] Please Press Play
+[21:49:21] Mining
+[21:49:21] Setting roid belt Cistuvaert III - Asteroid Belt 1 with id 40335452
+[21:49:23] About to warp, this is a log check
+[21:49:33] Warping, waiting...
+[21:49:35] Finished warping...
+[21:49:40] Warp Command Given
+[21:49:41] Setting roid to Asteroid (Veldspar) with id 74262318 -- calling Orbit...
+[21:49:42] Entering Orbit with 74262318, waiting...
+[21:49:42] Finish waiting, in orbit now
+[21:49:42] Locking roid target
+[21:49:48] Debug: UpdateHudStatus Activate Laser
+[21:49:49] Debug: Called Activate Laser
+[21:49:50] Debug: About to check if my ships module is great then 0
+[21:49:51] Debug: It found a laser! Moving on!
+[21:49:52] Debug: About to Look For a Laser
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 21:54:11  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[21:54:11] Started EVEBot 0.8..
+[21:54:11] Please Hold Loading Main Function..
+[21:54:13] Completed Main Function
+[21:54:13] Bot is now Paused
+[21:54:13] Please Press Play
+[21:54:14] Mining
+[21:54:14] Setting roid belt Cistuvaert III - Asteroid Belt 1 with id 40335452
+[21:54:16] About to warp, this is a log check
+[21:54:26] Warping, waiting...
+[21:54:28] Finished warping...
+[21:54:33] Warp Command Given
+[21:54:33] Setting roid to Asteroid (Veldspar) with id 74262285 -- calling Orbit...
+[21:54:35] Entering Orbit with 74262285, waiting...
+[21:54:35] Finish waiting, in orbit now
+[21:54:35] Locking roid target
+[21:54:41] Debug: UpdateHudStatus Activate Laser
+[21:54:42] Debug: Called Activate Laser
+[21:54:43] Debug: About to check if my ships module is great then 0
+[21:54:44] Debug: It found a laser! Moving on!
+[21:54:45] Debug: About to Look For a Laser
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 21:58:03  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[21:58:03] Started EVEBot 0.8..
+[21:58:03] Please Hold Loading Main Function..
+[21:58:05] Completed Main Function
+[21:58:05] Bot is now Paused
+[21:58:05] Please Press Play
+[21:58:09] Mining
+[21:58:09] Setting roid belt Cistuvaert III - Asteroid Belt 1 with id 40335452
+[21:58:11] About to warp, this is a log check
+[21:58:21] Warping, waiting...
+[21:58:23] Finished warping...
+[21:58:28] Warp Command Given
+[21:58:29] Setting roid to Asteroid (Veldspar) with id 74262227 -- calling Orbit...
+[21:58:30] Entering Orbit with 74262227, waiting...
+[21:58:30] Finish waiting, in orbit now
+[21:58:30] Locking roid target
+[21:58:36] Debug: UpdateHudStatus Activate Laser
+[21:58:37] Debug: Called Activate Laser
+[21:58:38] Debug: About to check if my ships module is great then 0
+[21:58:39] Debug: It found a laser! Moving on!
+[21:58:40] Debug: About to Look For a Laser
+[21:58:43] Debug: MiningType = String Ore
+[21:58:43] Debug: Lasername = String Basic Miner
+[21:58:43] Debug
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 22:02:10  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[22:02:10] Started EVEBot 0.8..
+[22:02:10] Please Hold Loading Main Function..
+[22:02:12] Completed Main Function
+[22:02:12] Bot is now Paused
+[22:02:12] Please Press Play
+[22:02:13] Mining
+[22:02:13] Setting roid belt Cistuvaert III - Asteroid Belt 1 with id 40335452
+[22:02:15] About to warp, this is a log check
+[22:02:25] Warping, waiting...
+[22:02:27] Finished warping...
+[22:02:32] Warp Command Given
+[22:02:33] Setting roid to Asteroid (Veldspar) with id 74262280 -- calling Orbit...
+[22:02:34] Entering Orbit with 74262280, waiting...
+[22:02:34] Finish waiting, in orbit now
+[22:02:34] Locking roid target
+[22:02:40] Debug: UpdateHudStatus Activate Laser
+[22:02:41] Debug: Called Activate Laser
+[22:02:42] Debug: About to check if my ships module is great then 0
+[22:02:43] Debug: It found a laser! Moving on!
+[22:02:44] Debug: About to Look For a Laser
+[22:02:47] Debug: FindLasers(int 1)
+[22:02:47] Debug: MiningType = Ore
+[22:02:47] Debug: Lasername = NULL
+[22:02:47] Debug
+[22:02:47] Debug: ourlaser = NULL
+[22:02:47] Checking for Laser
+[22:02:47] Found Mining Laser
+[22:02:50] Debug: Finished Call FindLasers 1
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 22:03:59  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[22:03:59] Started EVEBot 0.8..
+[22:03:59] Please Hold Loading Main Function..
+[22:04:01] Completed Main Function
+[22:04:01] Bot is now Paused
+[22:04:01] Please Press Play
+[22:04:02] Mining
+[22:04:02] Setting roid belt Cistuvaert III - Asteroid Belt 1 with id 40335452
+[22:04:04] About to warp, this is a log check
+[22:04:14] Warping, waiting...
+[22:04:16] Finished warping...
+[22:04:21] Warp Command Given
+[22:04:21] Setting roid to Asteroid (Veldspar) with id 74262321 -- calling Orbit...
+[22:04:22] Entering Orbit with 74262321, waiting...
+[22:04:22] Finish waiting, in orbit now
+[22:04:22] Locking roid target
+[22:04:28] Debug: UpdateHudStatus Activate Laser
+[22:04:29] Debug: Called Activate Laser
+[22:04:30] Debug: About to check if my ships module is great then 0
+[22:04:31] Debug: It found a laser! Moving on!
+[22:04:32] Debug: About to Look For a Laser
+[22:04:35] Debug: FindLasers(int 0)
+[22:04:35] Debug: MiningType = Ore
+[22:04:35] Debug: Lasername = Basic Miner
+[22:04:35] Debug
+[22:04:35] Debug: ourlaser = NULL
+[22:04:35] Checking for Laser
+[22:04:35] Found Mining Laser
+[22:04:39] Debug: Finished Call FindLasers 0
+[22:07:49] End waiting, cargo is full
+[22:07:51] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[22:07:51] My ship is full
+[22:07:51] The distance is greater than 10000, calling ReturnToBase
+[22:07:51] The distance is greater than 10000, warp to base
+[22:08:01] Warping, waiting...
+[22:08:34] Finished warping...
+[22:08:41] Approaching Base
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 22:15:17  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[22:15:17] Started EVEBot 0.8..
+[22:15:17] Please Hold Loading Main Function..
+[22:15:19] Completed Main Function
+[22:15:19] Bot is now Paused
+[22:15:19] Please Press Play
+[22:15:21] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[22:15:21] My ship is full
+[22:15:21] Approaching Base
+[22:15:23] Debug: 60014719 Approached
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 22:17:56  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[22:17:56] Started EVEBot 0.8..
+[22:17:56] Please Hold Loading Main Function..
+[22:17:58] Completed Main Function
+[22:17:58] Bot is now Paused
+[22:17:58] Please Press Play
+[22:17:59] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[22:17:59] My ship is full
+[22:17:59] Approaching Base
+[22:18:01] Debug: 60014719 Approached
+[22:18:13] In Docking Range ... Docking
+[22:18:13] Docking, waiting...
+[22:18:29] Finished Docking
+[22:18:34] I'm in the station
+[22:18:34] Transfering item1 to hangar
+[22:18:43] Transfering item2 to hangar
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 22:30:07  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[22:30:07] Started EVEBot 0.8..
+[22:30:07] Please Hold Loading Main Function..
+[22:30:09] Completed Main Function
+[22:30:09] Bot is now Paused
+[22:30:09] Please Press Play
+[22:30:13] I'm in the station
+[22:30:13] Transfering item1 to hangar
+[22:30:21] Transfering item2 to hangar
+[22:30:30] Transfering item3 to hangar
+[22:30:38] Stacking all...
+[22:30:46] Staking done
+[22:30:48] Undocking
+[22:30:48] Waiting...
+[22:31:11] Mining
+[22:31:11] Setting roid belt Cistuvaert III - Asteroid Belt 1 with id 40335452
+[22:31:13] About to warp, this is a log check
+[22:31:23] Warping, waiting...
+[22:32:07] Finished warping...
+[22:32:12] Warp Command Given
+[22:32:13] Setting roid to Asteroid (Veldspar) with id 74262248 -- calling Orbit...
+[22:32:14] Entering Orbit with 74262248, waiting...
+[22:33:14] Finish waiting, in orbit now
+[22:33:14] Locking roid target
+[22:33:20] Debug: UpdateHudStatus Activate Laser
+[22:33:21] Debug: Called Activate Laser
+[22:33:23] Debug: About to check if my ships module is great then 0
+[22:33:24] Debug: It found a laser! Moving on!
+[22:33:25] Debug: About to Look For a Laser
+[22:33:28] Debug: FindLasers(int 0)
+[22:33:28] Debug: MiningType = Ore
+[22:33:28] Debug: Lasername = Basic Miner
+[22:33:28] Debug
+[22:33:28] Debug: ourlaser = NULL
+[22:33:28] Checking for Laser
+[22:33:28] Found Mining Laser
+[22:33:31] Debug: Finished Call FindLasers 0
+[22:37:41] End waiting, cargo is full
+[22:37:42] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[22:37:42] My ship is full
+[22:37:42] The distance is greater than 10000, calling ReturnToBase
+[22:37:42] The distance is greater than 10000, warp to base
+[22:37:52] Warping, waiting...
+[22:38:27] Finished warping...
+[22:38:34] Approaching Base
+[22:38:46] In Docking Range ... Docking
+[22:38:46] Docking, waiting...
+[22:38:56] Finished Docking
+[22:39:01] I'm in the station
+[22:39:02] Transfering item1 to hangar
+[22:39:10] Transfering item2 to hangar
+[22:39:18] Transfering item3 to hangar
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 23:22:44  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[23:22:44] Started EVEBot 0.8..
+[23:22:44] Please Hold Loading Main Function..
+[23:22:46] Completed Main Function
+[23:22:46] Bot is now Paused
+[23:22:46] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 01:12:11  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[01:12:11] Started EVEBot 0.8..
+[01:12:11] Please Hold Loading Main Function..
+[01:12:13] Completed Main Function
+[01:12:13] Bot is now Paused
+[01:12:13] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 01:30:34  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[01:30:34] Started EVEBot 0.8..
+[01:30:34] Please Hold Loading Main Function..
+[01:30:36] Completed Main Function
+[01:30:36] Bot is now Paused
+[01:30:36] Please Press Play
+[01:30:37] I'm in the station
+[01:30:37] Transfering item1 to hangar
+[01:30:46] Transfering item2 to hangar
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 01:48:16  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[01:48:16] Started EVEBot 0.8..
+[01:48:16] Please Hold Loading Main Function..
+[01:48:18] Completed Main Function
+[01:48:18] Bot is now Paused
+[01:48:18] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 01:49:26  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[01:49:26] Started EVEBot 0.8..
+[01:49:26] Please Hold Loading Main Function..
+[01:49:28] Completed Main Function
+[01:49:28] Bot is now Paused
+[01:49:28] Please Press Play
+[01:49:44] I'm in the station
+[01:49:44] Stacking all...
+[01:49:52] Staking done
+[01:49:54] Undocking
+[01:49:54] Waiting...
+[01:50:12] Mining
+[01:50:12] Setting roid belt Vay II - Asteroid Belt 1 with id 40336333
+[01:50:14] About to warp, this is a log check
+[01:50:24] Warping, waiting...
+[01:50:52] Finished warping...
+[01:50:57] Warp Command Given
+[01:50:57] Setting roid to Asteroid (Scordite) with id 74294966 -- calling Orbit...
+[01:50:58] Entering Orbit with 74294966, waiting...
+[01:51:33] Finish waiting, in orbit now
+[01:51:33] Locking roid target
+[01:51:39] Debug: UpdateHudStatus Activate Laser
+[01:51:39] Checking for Laser
+[01:51:39] Found Mining Laser
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 01:58:52  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[01:58:52] Started EVEBot 0.8..
+[01:58:52] Please Hold Loading Main Function..
+[01:58:54] Completed Main Function
+[01:58:54] Bot is now Paused
+[01:58:54] Please Press Play
+[01:58:57] Mining
+[01:58:57] Setting roid belt Vay II - Asteroid Belt 1 with id 40336333
+[01:58:59] About to warp, this is a log check
+[01:59:09] Warping, waiting...
+[01:59:11] Finished warping...
+[01:59:16] Warp Command Given
+[01:59:16] Setting roid to Asteroid (Massive Scordite) with id 74294961 -- calling Orbit...
+[01:59:17] End waiting, cargo is full
+[01:59:19] Mining
+[01:59:19] Setting roid belt Vay II - Asteroid Belt 1 with id 40336333
+[01:59:21] About to warp, this is a log check
+[01:59:31] Warping, waiting...
+[01:59:33] Finished warping...
+[01:59:38] Warp Command Given
+[01:59:38] Setting roid to Asteroid (Condensed Scordite) with id 74294936 -- calling Orbit...
+[01:59:39] End waiting, cargo is full
+[01:59:41] Mining
+[01:59:41] Setting roid belt Vay II - Asteroid Belt 1 with id 40336333
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 02:03:11  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[02:03:11] Started EVEBot 0.8..
+[02:03:11] Please Hold Loading Main Function..
+[02:03:13] Completed Main Function
+[02:03:13] Bot is now Paused
+[02:03:13] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 02:05:38  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[02:05:38] Started EVEBot 0.8..
+[02:05:38] Please Hold Loading Main Function..
+[02:05:40] Completed Main Function
+[02:05:40] Bot is now Paused
+[02:05:40] Please Press Play
+[02:05:42] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[02:05:42] My ship is full
+[02:05:43] The distance is greater than 10000, calling ReturnToBase
+[02:05:43] The distance is greater than 10000, warp to base
+[02:05:53] Warping, waiting...
+[02:06:19] Finished warping...
+[02:06:26] Approaching Base
+[02:06:28] In Docking Range ... Docking
+[02:06:28] Docking, waiting...
+[02:06:38] Finished Docking
+[02:06:44] I'm in the station
+[02:06:44] Transfering item1 to hangar
+[02:06:49] Stacking all...
+[02:06:57] Staking done
+[02:07:00] Undocking
+[02:07:00] Waiting...
+[02:07:19] Mining
+[02:07:19] Setting roid belt Vay II - Asteroid Belt 1 with id 40336333
+[02:07:21] About to warp, this is a log check
+[02:07:31] Warping, waiting...
+[02:07:58] Finished warping...
+[02:08:03] Warp Command Given
+[02:08:03] Setting roid to Asteroid (Scordite) with id 74294966 -- calling Orbit...
+[02:08:05] Entering Orbit with 74294966, waiting...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 03:22:30  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[03:22:30] Started EVEBot 0.8..
+[03:22:30] Please Hold Loading Main Function..
+[03:22:32] Completed Main Function
+[03:22:32] Bot is now Paused
+[03:22:32] Please Press Play
+[03:22:46] Mining
+[03:22:46] Setting roid belt Cistuvaert VI - Asteroid Belt 1 with id 40335517
+[03:22:48] About to warp, this is a log check
+[03:22:58] Warping, waiting...
+[03:23:34] Finished warping...
+[03:23:39] Warp Command Given
+[03:23:40] Setting roid to Asteroid (Concentrated Veldspar) with id 74217389 -- calling Orbit...
+[03:23:41] Entering Orbit with 74217389, waiting...
+[03:24:38] Finish waiting, in orbit now
+[03:24:38] Locking roid target
+[03:24:44] Debug: UpdateHudStatus Activate Laser
+[03:24:44] Checking for Laser
+[03:24:44] Found Mining Laser
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 03:26:20  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[03:26:20] Started EVEBot 0.8..
+[03:26:20] Please Hold Loading Main Function..
+[03:26:22] Completed Main Function
+[03:26:22] Bot is now Paused
+[03:26:22] Please Press Play
+[03:26:25] Mining
+[03:26:26] Setting roid belt Cistuvaert VI - Asteroid Belt 1 with id 40335517
+[03:26:28] About to warp, this is a log check
+[03:26:38] Warping, waiting...
+[03:26:40] Finished warping...
+[03:26:45] Warp Command Given
+[03:26:45] Setting roid to Asteroid (Concentrated Veldspar) with id 74217389 -- calling Orbit...
+[03:26:46] Entering Orbit with 74217389, waiting...
+[03:26:46] Finish waiting, in orbit now
+[03:26:46] Locking roid target
+[03:26:52] Debug: UpdateHudStatus Activate Laser
+[03:26:52] Checking for Laser
+[03:26:52] Found Mining Laser
+[03:26:52] Powering Up Laser 0
+[03:26:53] Powering Up Laser 1
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 03:27:58  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[03:27:58] Started EVEBot 0.8..
+[03:27:58] Please Hold Loading Main Function..
+[03:28:00] Completed Main Function
+[03:28:00] Bot is now Paused
+[03:28:00] Please Press Play
+[03:28:02] Mining
+[03:28:02] Setting roid belt Cistuvaert VI - Asteroid Belt 1 with id 40335517
+[03:28:04] About to warp, this is a log check
+[03:28:14] Warping, waiting...
+[03:28:16] Finished warping...
+[03:28:21] Warp Command Given
+[03:28:22] Setting roid to Asteroid (Concentrated Veldspar) with id 74217389 -- calling Orbit...
+[03:28:43] Entering Orbit with 74217389, waiting...
+[03:28:43] Finish waiting, in orbit now
+[03:28:43] Locking roid target
+[03:28:49] Debug: UpdateHudStatus Activate Laser
+[03:28:49] Checking for Laser
+[03:28:49] Found Mining Laser
+[03:28:49] Powering Up Laser 1
+[03:28:50] Powering Up Laser 2
+[03:29:54] End waiting, cargo is full
+[03:29:55] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[03:29:55] My ship is full
+[03:29:55] The distance is greater than 10000, calling ReturnToBase
+[03:29:55] The distance is greater than 10000, warp to base
+[03:30:05] Warping, waiting...
+[03:30:42] Finished warping...
+[03:30:49] Approaching Base
+[03:30:51] In Docking Range ... Docking
+[03:30:51] Docking, waiting...
+[03:31:01] Finished Docking
+[03:31:07] I'm in the station
+[03:31:07] Stacking all...
+[03:31:15] Staking done
+[03:31:17] Undocking
+[03:31:17] Waiting...
+[03:31:36] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[03:31:36] My ship is full
+[03:31:37] Approaching Base
+[03:31:39] In Docking Range ... Docking
+[03:31:39] Docking, waiting...
+[03:31:49] Finished Docking
+[03:31:54] I'm in the station
+[03:31:54] Transfering item1 to hangar
+[03:32:00] Stacking all...
+[03:32:08] Staking done
+[03:32:10] Undocking
+[03:32:10] Waiting...
+[03:32:30] Mining
+[03:32:30] Setting roid belt Cistuvaert III - Asteroid Belt 1 with id 40335452
+[03:32:32] About to warp, this is a log check
+[03:32:42] Warping, waiting...
+[03:33:14] Finished warping...
+[03:33:19] Warp Command Given
+[03:33:20] Setting roid to Asteroid (Veldspar) with id 74262323 -- calling Orbit...
+[03:33:21] Entering Orbit with 74262323, waiting...
+[03:34:28] Finish waiting, in orbit now
+[03:34:28] Locking roid target
+[03:34:34] Debug: UpdateHudStatus Activate Laser
+[03:34:34] Checking for Laser
+[03:34:34] Found Mining Laser
+[03:34:34] Powering Up Laser 1
+[03:34:35] Powering Up Laser 2
+[03:37:34] End waiting, cargo is full
+[03:37:36] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[03:37:36] My ship is full
+[03:37:36] The distance is greater than 10000, calling ReturnToBase
+[03:37:36] The distance is greater than 10000, warp to base
+[03:37:46] Warping, waiting...
+[03:38:19] Finished warping...
+[03:38:26] Approaching Base
+[03:38:36] In Docking Range ... Docking
+[03:38:36] Docking, waiting...
+[03:38:47] Finished Docking
+[03:38:52] I'm in the station
+[03:38:52] Transfering item1 to hangar
+[03:38:58] Stacking all...
+[03:39:06] Staking done
+[03:39:08] Undocking
+[03:39:08] Waiting...
+[03:39:29] Mining
+[03:39:29] Setting roid belt NULL with id 2100162138
+[03:39:31] About to warp, this is a log check
+[03:39:42] Warping, waiting...
+[03:39:44] Finished warping...
+[03:39:49] Warp Command Given
+[03:39:49] Setting roid to NULL with id 2100162161 -- calling Orbit...
+[03:39:50] Entering Orbit with 2100162161, waiting...
+[03:39:50] Finish waiting, in orbit now
+[03:39:50] Locking roid target
+[03:40:06] Debug: UpdateHudStatus Activate Laser
+[03:40:06] Checking for Laser
+[03:40:06] Found Mining Laser
+[03:40:06] Powering Up Laser 1
+[03:40:07] Powering Up Laser 2
+[03:40:12] Entering Orbit with 582628622, waiting...
+[03:40:12] Finish waiting, in orbit now
+[03:40:12] Locking roid target
+[03:40:36] Debug: UpdateHudStatus Activate Laser
+[03:40:36] Checking for Laser
+[03:40:36] Found Mining Laser
+[03:40:36] Powering Up Laser 1
+[03:40:37] Powering Up Laser 2
+[03:40:42] Entering Orbit with 582627602, waiting...
+[03:40:42] Finish waiting, in orbit now
+[03:40:42] Locking roid target
+[03:41:00] Debug: UpdateHudStatus Activate Laser
+[03:41:00] Checking for Laser
+[03:41:00] Found Mining Laser
+[03:41:00] Powering Up Laser 1
+[03:41:01] Powering Up Laser 2
+[03:41:23] Entering Orbit with 582912710, waiting...
+[03:41:23] Finish waiting, in orbit now
+[03:41:23] Locking roid target
+[03:41:54] Debug: UpdateHudStatus Activate Laser
+[03:41:54] Checking for Laser
+[03:41:54] Found Mining Laser
+[03:41:54] Powering Up Laser 1
+[03:41:55] Powering Up Laser 2
+[03:41:59] Entering Orbit with 583378322, waiting...
+[03:41:59] Finish waiting, in orbit now
+[03:41:59] Locking roid target
+[03:42:05] Debug: UpdateHudStatus Activate Laser
+[03:42:05] Checking for Laser
+[03:42:05] Found Mining Laser
+[03:42:05] Powering Up Laser 1
+[03:42:06] Powering Up Laser 2
+[03:42:22] Entering Orbit with 583655750, waiting...
+[03:42:22] Finish waiting, in orbit now
+[03:42:22] Locking roid target
+[03:42:55] Debug: UpdateHudStatus Activate Laser
+[03:42:55] Checking for Laser
+[03:42:55] Found Mining Laser
+[03:42:55] Powering Up Laser 1
+[03:42:56] Powering Up Laser 2
+[03:43:48] Entering Orbit with 583377967, waiting...
+[03:43:48] Finish waiting, in orbit now
+[03:43:48] Locking roid target
+[03:44:18] Debug: UpdateHudStatus Activate Laser
+[03:44:18] Checking for Laser
+[03:44:18] Found Mining Laser
+[03:44:18] Powering Up Laser 1
+[03:44:19] Powering Up Laser 2
+[03:46:05] Entering Orbit with 2100152298, waiting...
+[03:46:05] Finish waiting, in orbit now
+[03:46:05] Locking roid target
+[03:46:38] Debug: UpdateHudStatus Activate Laser
+[03:46:38] Checking for Laser
+[03:46:38] Found Mining Laser
+[03:46:38] Powering Up Laser 1
+[03:46:39] Powering Up Laser 2
+[03:46:56] Entering Orbit with 574550833, waiting...
+[03:46:56] Finish waiting, in orbit now
+[03:46:56] Locking roid target
+[03:47:35] Debug: UpdateHudStatus Activate Laser
+[03:47:35] Checking for Laser
+[03:47:35] Found Mining Laser
+[03:47:35] Powering Up Laser 1
+[03:47:36] Powering Up Laser 2
+[03:47:41] Entering Orbit with 582628762, waiting...
+[03:47:41] Finish waiting, in orbit now
+[03:47:41] Locking roid target
+[03:48:01] Debug: UpdateHudStatus Activate Laser
+[03:48:01] Checking for Laser
+[03:48:01] Found Mining Laser
+[03:48:01] Powering Up Laser 1
+[03:48:02] Powering Up Laser 2
+[03:48:09] Entering Orbit with 582103635, waiting...
+[03:48:40] Finish waiting, in orbit now
+[03:48:40] Locking roid target
+[03:48:44] Debug: UpdateHudStatus Activate Laser
+[03:48:44] Checking for Laser
+[03:48:44] Found Mining Laser
+[03:48:44] Powering Up Laser 1
+[03:48:45] Powering Up Laser 2
+[03:48:49] Entering Orbit with 2100148161, waiting...
+[03:49:03] Finish waiting, in orbit now
+[03:49:03] Locking roid target
+[03:49:07] Debug: UpdateHudStatus Activate Laser
+[03:49:07] Checking for Laser
+[03:49:07] Found Mining Laser
+[03:49:07] Powering Up Laser 1
+[03:49:08] Powering Up Laser 2
+[03:49:12] Entering Orbit with 2100147396, waiting...
+[03:49:18] Finish waiting, in orbit now
+[03:49:18] Locking roid target
+[03:49:22] Debug: UpdateHudStatus Activate Laser
+[03:49:22] Checking for Laser
+[03:49:22] Found Mining Laser
+[03:49:22] Powering Up Laser 1
+[03:49:23] Powering Up Laser 2
+[03:50:07] Entering Orbit with 582104123, waiting...
+[03:50:35] Finish waiting, in orbit now
+[03:50:35] Locking roid target
+[03:50:39] Debug: UpdateHudStatus Activate Laser
+[03:50:39] Checking for Laser
+[03:50:39] Found Mining Laser
+[03:50:39] Powering Up Laser 1
+[03:50:40] Powering Up Laser 2
+[03:51:05] Entering Orbit with 582369079, waiting...
+[03:51:35] Finish waiting, in orbit now
+[03:51:35] Locking roid target
+[03:51:39] Debug: UpdateHudStatus Activate Laser
+[03:51:39] Checking for Laser
+[03:51:39] Found Mining Laser
+[03:51:39] Powering Up Laser 1
+[03:51:40] Powering Up Laser 2
+[03:54:04] Entering Orbit with 1159657789, waiting...
+[03:54:17] Finish waiting, in orbit now
+[03:54:17] Locking roid target
+[03:54:21] Debug: UpdateHudStatus Activate Laser
+[03:54:21] Checking for Laser
+[03:54:21] Found Mining Laser
+[03:54:21] Powering Up Laser 1
+[03:54:22] Powering Up Laser 2
+[03:55:10] Entering Orbit with 1159657789, waiting...
+[03:58:44] Finish waiting, in orbit now
+[03:58:44] Locking roid target
+[03:58:48] Debug: UpdateHudStatus Activate Laser
+[03:58:50] End waiting, cargo is full
+[03:58:52] I'm in the station
+[03:58:52] Stacking all...
+[03:59:00] Staking done
+[03:59:02] Undocking
+[03:59:02] Waiting...
+[03:59:25] Mining
+[03:59:25] Setting roid belt Cistuvaert III - Asteroid Belt 1 with id 40335452
+[03:59:27] About to warp, this is a log check
+[03:59:37] Warping, waiting...
+[04:00:09] Finished warping...
+[04:00:14] Warp Command Given
+[04:00:14] Setting roid to Asteroid (Veldspar) with id 74262248 -- calling Orbit...
+[04:00:15] Entering Orbit with 74262248, waiting...
+[04:01:19] Finish waiting, in orbit now
+[04:01:19] Locking roid target
+[04:01:25] Debug: UpdateHudStatus Activate Laser
+[04:01:25] Checking for Laser
+[04:01:25] Found Mining Laser
+[04:01:25] Powering Up Laser 1
+[04:01:26] Powering Up Laser 2
+[04:04:30] End waiting, cargo is full
+[04:04:32] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[04:04:32] My ship is full
+[04:04:32] The distance is greater than 10000, calling ReturnToBase
+[04:04:32] The distance is greater than 10000, warp to base
+[04:04:42] Warping, waiting...
+[04:05:16] Finished warping...
+[04:05:23] Approaching Base
+[04:05:25] In Docking Range ... Docking
+[04:05:25] Docking, waiting...
+[04:05:35] Finished Docking
+[04:05:41] I'm in the station
+[04:05:41] Transfering item1 to hangar
+[04:05:46] Stacking all...
+[04:05:54] Staking done
+[04:05:56] Undocking
+[04:05:56] Waiting...
+[04:06:16] Mining
+[04:06:16] Setting roid belt Cistuvaert III - Asteroid Belt 1 with id 40335452
+[04:06:18] About to warp, this is a log check
+[04:06:29] Warping, waiting...
+[04:07:01] Finished warping...
+[04:07:06] Warp Command Given
+[04:07:06] Setting roid to Asteroid (Veldspar) with id 74262279 -- calling Orbit...
+[04:07:07] Entering Orbit with 74262279, waiting...
+[04:08:11] Finish waiting, in orbit now
+[04:08:11] Locking roid target
+[04:08:17] Debug: UpdateHudStatus Activate Laser
+[04:08:17] Checking for Laser
+[04:08:17] Found Mining Laser
+[04:08:17] Powering Up Laser 1
+[04:08:18] Powering Up Laser 2
+[04:11:22] End waiting, cargo is full
+[04:11:24] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[04:11:24] My ship is full
+[04:11:24] The distance is greater than 10000, calling ReturnToBase
+[04:11:24] The distance is greater than 10000, warp to base
+[04:11:34] Warping, waiting...
+[04:12:08] Finished warping...
+[04:12:15] Approaching Base
+[04:12:17] In Docking Range ... Docking
+[04:12:17] Docking, waiting...
+[04:12:28] Finished Docking
+[04:12:33] I'm in the station
+[04:12:33] Transfering item1 to hangar
+[04:12:39] Stacking all...
+[04:12:47] Staking done
+[04:12:49] Undocking
+[04:12:49] Waiting...
+[04:13:11] Mining
+[04:13:11] Setting roid belt Cistuvaert III - Asteroid Belt 1 with id 40335452
+[04:13:13] About to warp, this is a log check
+[04:13:23] Warping, waiting...
+[04:13:56] Finished warping...
+[04:14:01] Warp Command Given
+[04:14:01] Setting roid to NULL with id 2100147340 -- calling Orbit...
+[04:14:02] Entering Orbit with 2100147340, waiting...
+[04:14:22] Finish waiting, in orbit now
+[04:14:22] Locking roid target
+[04:14:26] Debug: UpdateHudStatus Activate Laser
+[04:14:26] Checking for Laser
+[04:14:26] Found Mining Laser
+[04:14:26] Powering Up Laser 1
+[04:14:27] Powering Up Laser 2
+[04:14:31] Entering Orbit with 74262309, waiting...
+[04:15:40] Finish waiting, in orbit now
+[04:15:40] Locking roid target
+[04:15:52] Debug: UpdateHudStatus Activate Laser
+[04:15:52] Checking for Laser
+[04:15:52] Found Mining Laser
+[04:15:52] Powering Up Laser 1
+[04:15:53] Powering Up Laser 2
+[04:42:18] End waiting, cargo is full
+[04:42:19] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[04:42:19] My ship is full
+[04:42:19] The distance is greater than 10000, calling ReturnToBase
+[04:42:19] The distance is greater than 10000, warp to base
+[04:42:29] Warping, waiting...
+[04:43:03] Finished warping...
+[04:43:10] Approaching Base
+[04:43:12] In Docking Range ... Docking
+[04:43:12] Docking, waiting...
+[04:43:22] Finished Docking
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 05:00:41  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[05:00:41] Started EVEBot 0.8..
+[05:00:41] Please Hold Loading Main Function..
+[05:00:43] Completed Main Function
+[05:00:43] Bot is now Paused
+[05:00:43] Please Press Play
+[05:00:45] I'm in the station
+[05:00:56] Stacking all...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 05:10:33  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[05:10:33] Started EVEBot 0.8..
+[05:10:33] Please Hold Loading Main Function..
+[05:10:35] Completed Main Function
+[05:10:35] Bot is now Paused
+[05:10:35] Please Press Play
+[05:10:38] I'm in the station
+[05:10:42] Undocking
+[05:10:42] Waiting...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 05:18:29  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[05:18:29] Started EVEBot 0.8..
+[05:18:29] Please Hold Loading Main Function..
+[05:18:31] Completed Main Function
+[05:18:31] Bot is now Paused
+[05:18:31] Please Press Play
+[05:18:32] Mining
+[05:18:32] Setting roid belt Cistuvaert III - Asteroid Belt 1 with id 40335452
+[05:18:34] About to warp, this is a log check
+[05:18:44] Warping, waiting...
+[05:19:15] Finished warping...
+[05:19:20] Warp Command Given
+[05:19:20] Setting roid to Asteroid (Veldspar) with id 74262323 -- calling Orbit...
+[05:19:21] Entering Orbit with 74262323, waiting...
+[05:20:24] Finish waiting, in orbit now
+[05:20:24] Locking roid target
+[05:20:30] Debug: UpdateHudStatus Activate Laser
+[05:20:30] Checking for Laser
+[05:20:30] Found Mining Laser
+[05:20:30] Powering Up Laser 1
+[05:20:31] Powering Up Laser 2
+[05:23:31] End waiting, cargo is full
+[05:23:32] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[05:23:32] My ship is full
+[05:23:32] The distance is greater than 10000, calling ReturnToBase
+[05:23:32] The distance is greater than 10000, warp to base
+[05:23:43] Warping, waiting...
+[05:24:15] Finished warping...
+[05:24:23] Approaching Base
+[05:24:33] In Docking Range ... Docking
+[05:24:33] Docking, waiting...
+[05:24:41] Finished Docking
+[05:24:46] I'm in the station
+[05:24:54] Undocking
+[05:24:54] Waiting...
+[05:25:12] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[05:25:12] My ship is full
+[05:25:12] Approaching Base
+[05:25:14] In Docking Range ... Docking
+[05:25:14] Docking, waiting...
+[05:25:22] Finished Docking
+[05:25:28] I'm in the station
+[05:25:35] Undocking
+[05:25:35] Waiting...
+[05:25:54] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[05:25:54] My ship is full
+[05:25:54] Approaching Base
+[05:25:56] In Docking Range ... Docking
+[05:25:56] Docking, waiting...
+[05:26:06] Finished Docking
+[05:26:11] I'm in the station
+[05:26:19] Undocking
+[05:26:19] Waiting...
+[05:26:37] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[05:26:37] My ship is full
+[05:26:37] Approaching Base
+[05:26:39] In Docking Range ... Docking
+[05:26:39] Docking, waiting...
+[05:26:49] Finished Docking
+[05:27:01] I'm in the station
+[05:27:05] Undocking
+[05:27:05] Waiting...
+[05:27:29] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[05:27:29] My ship is full
+[05:27:29] Approaching Base
+[05:27:31] In Docking Range ... Docking
+[05:27:31] Docking, waiting...
+[05:27:39] Finished Docking
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 05:27:47  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[05:27:47] Started EVEBot 0.8..
+[05:27:47] Please Hold Loading Main Function..
+[05:27:49] Completed Main Function
+[05:27:49] Bot is now Paused
+[05:27:49] Please Press Play
+[05:27:51] I'm in the station
+[05:27:58] Undocking
+[05:27:58] Waiting...
+[05:28:16] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[05:28:16] My ship is full
+[05:28:16] Approaching Base
+[05:28:18] In Docking Range ... Docking
+[05:28:19] Docking, waiting...
+[05:28:29] Finished Docking
+[05:28:34] I'm in the station
+[05:28:42] Undocking
+[05:28:42] Waiting...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 05:40:46  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[05:40:46] Started EVEBot 0.8..
+[05:40:46] Please Hold Loading Main Function..
+[05:40:49] Completed Main Function
+[05:40:49] Bot is now Paused
+[05:40:49] Please Press Play
+[05:51:02] I'm in the station
+[05:51:06] Undocking
+[05:51:06] Waiting...
+[05:51:24] Mining
+[05:51:24] Setting roid belt Cistuvaert III - Asteroid Belt 1 with id 40335452
+[05:51:26] About to warp, this is a log check
+[05:51:36] Warping, waiting...
+[05:52:08] Finished warping...
+[05:52:13] Warp Command Given
+[05:52:13] Setting roid to Asteroid (Veldspar) with id 74262269 -- calling Orbit...
+[05:52:14] Entering Orbit with 74262269, waiting...
+[05:53:20] Finish waiting, in orbit now
+[05:53:20] Locking roid target
+[05:53:26] Debug: UpdateHudStatus Activate Laser
+[05:53:26] Checking for Laser
+[05:53:26] Found Mining Laser
+[05:53:26] Powering Up Laser 1
+[05:53:27] Powering Up Laser 2
+[05:55:51] End waiting, cargo is full
+[05:55:53] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[05:55:53] My ship is full
+[05:55:53] The distance is greater than 10000, calling ReturnToBase
+[05:55:53] The distance is greater than 10000, warp to base
+[05:56:03] Warping, waiting...
+[05:56:35] Finished warping...
+[05:56:42] Approaching Base
+[05:56:53] In Docking Range ... Docking
+[05:56:53] Docking, waiting...
+[05:57:03] Finished Docking
+[05:57:08] I'm in the station
+[05:57:16] Undocking
+[05:57:16] Waiting...
+[05:58:17] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[05:58:17] My ship is full
+[05:58:17] Approaching Base
+[05:58:19] In Docking Range ... Docking
+[05:58:19] Docking, waiting...
+[05:59:28] Finished Docking
+[05:59:40] I'm in the station
+[05:59:47] Undocking
+[05:59:47] Waiting...
+[06:00:05] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[06:00:05] My ship is full
+[06:00:05] Approaching Base
+[06:00:07] In Docking Range ... Docking
+[06:00:07] Docking, waiting...
+[06:00:18] Finished Docking
+[06:00:23] I'm in the station
+[06:00:30] Undocking
+[06:00:30] Waiting...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 06:00:54  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[06:00:54] Started EVEBot 0.8..
+[06:00:54] Please Hold Loading Main Function..
+[06:00:56] Completed Main Function
+[06:00:56] Bot is now Paused
+[06:00:56] Please Press Play
+[06:00:56] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[06:00:56] My ship is full
+[06:00:56] Approaching Base
+[06:00:58] In Docking Range ... Docking
+[06:00:58] Docking, waiting...
+[06:01:09] Finished Docking
+[06:01:15] I'm in the station
+[06:01:22] Undocking
+[06:01:22] Waiting...
+[06:01:40] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[06:01:40] My ship is full
+[06:01:40] Approaching Base
+[06:01:43] In Docking Range ... Docking
+[06:01:43] Docking, waiting...
+[06:01:53] Finished Docking
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 06:06:26  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[06:06:26] Started EVEBot 0.8..
+[06:06:26] Please Hold Loading Main Function..
+[06:06:28] Completed Main Function
+[06:06:28] Bot is now Paused
+[06:06:28] Please Press Play
+[06:06:30] I'm in the station
+[06:12:39] Undocking
+[06:12:39] Waiting...
+[06:12:57] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[06:12:57] My ship is full
+[06:12:57] Approaching Base
+[06:12:59] In Docking Range ... Docking
+[06:12:59] Docking, waiting...
+[06:13:09] Finished Docking
+[06:15:03] I'm in the station
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 06:18:21  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[06:18:21] Started EVEBot 0.8..
+[06:18:21] Please Hold Loading Main Function..
+[06:18:23] Completed Main Function
+[06:18:23] Bot is now Paused
+[06:18:23] Please Press Play
+[06:18:25] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[06:18:25] My ship is full
+[06:18:25] Approaching Base
+[06:18:27] In Docking Range ... Docking
+[06:18:27] Docking, waiting...
+[06:18:37] Finished Docking
+[06:18:43] I'm in the station
+[06:23:00] Undocking
+[06:23:00] Waiting...
+[06:23:19] Mining
+[06:23:19] Setting roid belt Cistuvaert III - Asteroid Belt 1 with id 40335452
+[06:23:21] About to warp, this is a log check
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 06:25:03  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[06:25:03] Started EVEBot 0.8..
+[06:25:03] Please Hold Loading Main Function..
+[06:25:05] Completed Main Function
+[06:25:05] Bot is now Paused
+[06:25:05] Please Press Play
+[06:25:12] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[06:25:12] My ship is full
+[06:25:12] Approaching Base
+[06:25:14] In Docking Range ... Docking
+[06:25:14] Docking, waiting...
+[06:26:54] Finished Docking
+[06:27:00] I'm in the station
+[07:06:40] Undocking
+[07:06:40] Waiting...
+[07:06:50] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[07:06:50] My ship is full
+[07:06:50] Approaching Base
+[07:06:52] In Docking Range ... Docking
+[07:06:52] Docking, waiting...
+[07:07:02] Finished Docking
+[07:07:08] I'm in the station
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 07:07:27  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[07:07:27] Started EVEBot 0.8..
+[07:07:27] Please Hold Loading Main Function..
+[07:07:29] Completed Main Function
+[07:07:29] Bot is now Paused
+[07:07:29] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 07:07:45  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[07:07:45] Started EVEBot 0.8..
+[07:07:45] Please Hold Loading Main Function..
+[07:07:47] Completed Main Function
+[07:07:47] Bot is now Paused
+[07:07:47] Please Press Play
+[07:07:48] I'm in the station
+[07:07:51] Undocking
+[07:07:51] Waiting...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 07:09:17  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[07:09:17] Started EVEBot 0.8..
+[07:09:17] Please Hold Loading Main Function..
+[07:09:19] Completed Main Function
+[07:09:19] Bot is now Paused
+[07:09:19] Please Press Play
+[07:09:20] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[07:09:20] My ship is full
+[07:09:20] Approaching Base
+[07:09:22] In Docking Range ... Docking
+[07:09:22] Docking, waiting...
+[07:09:31] Finished Docking
+[07:09:36] I'm in the station
+[07:09:44] Undocking
+[07:09:44] Waiting...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 07:11:18  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[07:11:18] Started EVEBot 0.8..
+[07:11:18] Please Hold Loading Main Function..
+[07:11:20] Completed Main Function
+[07:11:20] Bot is now Paused
+[07:11:20] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 07:11:26  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[07:11:26] Started EVEBot 0.8..
+[07:11:26] Please Hold Loading Main Function..
+[07:11:28] Completed Main Function
+[07:11:28] Bot is now Paused
+[07:11:28] Please Press Play
+[07:11:34] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[07:11:34] My ship is full
+[07:11:34] Approaching Base
+[07:11:36] In Docking Range ... Docking
+[07:11:36] Docking, waiting...
+[07:11:47] Finished Docking
+[07:11:53] I'm in the station
+[07:12:03] Undocking
+[07:12:03] Waiting...
+[07:12:22] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[07:12:22] My ship is full
+[07:12:22] Approaching Base
+[07:12:25] In Docking Range ... Docking
+[07:12:25] Docking, waiting...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 07:14:35  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[07:14:35] Started EVEBot 0.8..
+[07:14:35] Please Hold Loading Main Function..
+[07:14:37] Completed Main Function
+[07:14:37] Bot is now Paused
+[07:14:37] Please Press Play
+[07:14:37] I'm in the station
+[07:14:53] Undocking
+[07:14:53] Waiting...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 07:15:41  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[07:15:41] Started EVEBot 0.8..
+[07:15:41] Please Hold Loading Main Function..
+[07:15:43] Completed Main Function
+[07:15:43] Bot is now Paused
+[07:15:43] Please Press Play
+[07:15:43] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[07:15:43] My ship is full
+[07:15:43] Approaching Base
+[07:15:45] In Docking Range ... Docking
+[07:15:45] Docking, waiting...
+[07:15:55] Finished Docking
+[07:16:01] I'm in the station
+[07:16:23] Undocking
+[07:16:23] Waiting...
+[07:16:48] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[07:16:48] My ship is full
+[07:16:48] Approaching Base
+[07:16:50] In Docking Range ... Docking
+[07:16:50] Docking, waiting...
+[07:16:58] Finished Docking
+[07:17:03] I'm in the station
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 07:18:23  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[07:18:23] Started EVEBot 0.8..
+[07:18:23] Please Hold Loading Main Function..
+[07:18:25] Completed Main Function
+[07:18:25] Bot is now Paused
+[07:18:25] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 07:19:43  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[07:19:43] Started EVEBot 0.8..
+[07:19:43] Please Hold Loading Main Function..
+[07:19:45] Completed Main Function
+[07:19:45] Bot is now Paused
+[07:19:45] Please Press Play
+[07:19:46] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[07:19:46] My ship is full
+[07:19:46] Approaching Base
+[07:19:48] In Docking Range ... Docking
+[07:19:48] Docking, waiting...
+[07:20:01] Finished Docking
+[07:20:06] I'm in the station
+[07:20:22] Undocking
+[07:20:22] Waiting...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 07:24:12  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[07:24:12] Started EVEBot 0.8..
+[07:24:12] Please Hold Loading Main Function..
+[07:24:14] Completed Main Function
+[07:24:14] Bot is now Paused
+[07:24:14] Please Press Play
+[07:24:17] I'm in the station
+[07:24:21] Undocking
+[07:24:21] Waiting...
+[07:24:43] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[07:24:43] My ship is full
+[07:24:43] Approaching Base
+[07:24:45] In Docking Range ... Docking
+[07:24:45] Docking, waiting...
+[07:24:56] Finished Docking
+[07:25:01] I'm in the station
+[07:25:12] Undocking
+[07:25:12] Waiting...
+[07:25:31] Mining
+[07:25:31] Setting roid belt Cistuvaert III - Asteroid Belt 1 with id 40335452
+[07:25:33] About to warp, this is a log check
+[07:25:43] Warping, waiting...
+[07:26:15] Finished warping...
+[07:26:20] Warp Command Given
+[07:26:21] Setting roid to Asteroid (Veldspar) with id 74262323 -- calling Orbit...
+[07:26:22] Entering Orbit with 74262323, waiting...
+[07:27:27] Finish waiting, in orbit now
+[07:27:27] Locking roid target
+[07:27:33] Debug: UpdateHudStatus Activate Laser
+[07:27:33] Checking for Laser
+[07:27:33] Found Mining Laser
+[07:27:33] Powering Up Laser 1
+[07:27:34] Powering Up Laser 2
+[07:30:33] End waiting, cargo is full
+[07:30:35] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[07:30:35] My ship is full
+[07:30:35] The distance is greater than 10000, calling ReturnToBase
+[07:30:35] The distance is greater than 10000, warp to base
+[07:30:45] Warping, waiting...
+[07:31:18] Finished warping...
+[07:31:25] Approaching Base
+[07:31:27] In Docking Range ... Docking
+[07:31:27] Docking, waiting...
+[07:31:36] Finished Docking
+[07:31:42] I'm in the station
+[07:31:53] Undocking
+[07:31:53] Waiting...
+[07:32:15] Mining
+[07:32:15] Setting roid belt Cistuvaert III - Asteroid Belt 1 with id 40335452
+[07:32:17] About to warp, this is a log check
+[07:32:27] Warping, waiting...
+[07:32:58] Finished warping...
+[07:33:03] Warp Command Given
+[07:33:03] Setting roid to Asteroid (Veldspar) with id 74262299 -- calling Orbit...
+[07:33:04] Entering Orbit with 74262299, waiting...
+[07:33:22] Finish waiting, in orbit now
+[07:33:22] Locking roid target
+[07:33:26] Debug: UpdateHudStatus Activate Laser
+[07:33:26] Checking for Laser
+[07:33:26] Found Mining Laser
+[07:33:26] Powering Up Laser 1
+[07:33:27] Powering Up Laser 2
+[07:33:32] Entering Orbit with 74262204, waiting...
+[07:34:15] Finish waiting, in orbit now
+[07:34:15] Locking roid target
+[07:34:21] Debug: UpdateHudStatus Activate Laser
+[07:34:21] Checking for Laser
+[07:34:21] Found Mining Laser
+[07:34:21] Powering Up Laser 1
+[07:34:22] Powering Up Laser 2
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 07:39:16  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[07:39:16] Started EVEBot 0.8..
+[07:39:16] Please Hold Loading Main Function..
+[07:39:18] Completed Main Function
+[07:39:18] Bot is now Paused
+[07:39:18] Please Press Play
+[07:39:19] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[07:39:19] My ship is full
+[07:39:19] The distance is greater than 10000, calling ReturnToBase
+[07:39:19] The distance is greater than 10000, warp to base
+[07:39:29] Warping, waiting...
+[07:40:02] Finished warping...
+[07:40:09] Approaching Base
+[07:40:11] In Docking Range ... Docking
+[07:40:11] Docking, waiting...
+[07:40:21] Finished Docking
+[07:40:26] I'm in the station
+[07:40:38] Undocking
+[07:40:38] Waiting...
+[07:40:56] Mining
+[07:40:56] Setting roid belt Cistuvaert III - Asteroid Belt 1 with id 40335452
+[07:40:58] About to warp, this is a log check
+[07:41:08] Warping, waiting...
+[07:41:41] Finished warping...
+[07:41:46] Warp Command Given
+[07:41:47] Setting roid to Asteroid (Veldspar) with id 74262309 -- calling Orbit...
+[07:41:48] Entering Orbit with 74262309, waiting...
+[07:43:03] Finish waiting, in orbit now
+[07:43:03] Locking roid target
+[07:43:09] Debug: UpdateHudStatus Activate Laser
+[07:43:09] Checking for Laser
+[07:43:09] Found Mining Laser
+[07:43:09] Powering Up Laser 1
+[07:43:10] Powering Up Laser 2
+[07:45:15] Entering Orbit with 74262328, waiting...
+[07:45:15] Finish waiting, in orbit now
+[07:45:15] Locking roid target
+[07:45:21] Debug: UpdateHudStatus Activate Laser
+[07:45:21] Checking for Laser
+[07:45:21] Found Mining Laser
+[07:45:21] Powering Up Laser 1
+[07:45:22] Powering Up Laser 2
+[07:46:26] End waiting, cargo is full
+[07:46:27] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[07:46:27] My ship is full
+[07:46:27] The distance is greater than 10000, calling ReturnToBase
+[07:46:27] The distance is greater than 10000, warp to base
+[07:46:37] Warping, waiting...
+[07:47:10] Finished warping...
+[07:47:17] Approaching Base
+[07:47:19] In Docking Range ... Docking
+[07:47:19] Docking, waiting...
+[07:47:27] Finished Docking
+[07:47:33] I'm in the station
+[07:47:44] Undocking
+[07:47:44] Waiting...
+[07:48:02] Mining
+[07:48:02] Setting roid belt Cistuvaert III - Asteroid Belt 1 with id 40335452
+[07:48:04] About to warp, this is a log check
+[07:48:14] Warping, waiting...
+[07:48:46] Finished warping...
+[07:48:51] Warp Command Given
+[07:48:52] Setting roid to Asteroid (Veldspar) with id 74262323 -- calling Orbit...
+[07:48:53] Entering Orbit with 74262323, waiting...
+[07:50:02] Finish waiting, in orbit now
+[07:50:02] Locking roid target
+[07:50:08] Debug: UpdateHudStatus Activate Laser
+[07:50:08] Checking for Laser
+[07:50:08] Found Mining Laser
+[07:50:08] Powering Up Laser 1
+[07:50:09] Powering Up Laser 2
+[07:52:09] End waiting, cargo is full
+[07:52:10] Mining
+[07:52:10] Setting roid belt Cistuvaert III - Asteroid Belt 1 with id 40335452
+[07:52:12] About to warp, this is a log check
+[07:52:23] Warping, waiting...
+[07:52:25] Finished warping...
+[07:52:30] Warp Command Given
+[07:52:30] Setting roid to Asteroid (Veldspar) with id 74262328 -- calling Orbit...
+[07:52:31] Entering Orbit with 74262328, waiting...
+[07:52:31] Finish waiting, in orbit now
+[07:52:31] Locking roid target
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 07:55:43  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[07:55:43] Started EVEBot 0.8..
+[07:55:43] Please Hold Loading Main Function..
+[07:55:45] Completed Main Function
+[07:55:45] Bot is now Paused
+[07:55:45] Please Press Play
+[07:58:13] Mining
+[07:58:14] Setting roid belt Cistuvaert III - Asteroid Belt 1 with id 40335452
+[07:58:16] About to warp, this is a log check
+[07:58:26] Warping, waiting...
+[07:58:28] Finished warping...
+[07:58:33] Warp Command Given
+[07:58:33] Setting roid to Asteroid (Veldspar) with id 74262328 -- calling Orbit...
+[07:58:34] Entering Orbit with 74262328, waiting...
+[07:58:58] Finish waiting, in orbit now
+[07:58:58] Locking roid target
+[07:59:04] Debug: UpdateHudStatus Activate Laser
+[07:59:04] Checking for Laser
+[07:59:04] Found Mining Laser
+[07:59:04] Powering Up Laser 1
+[07:59:05] Powering Up Laser 2
+[07:59:59] End waiting, cargo is full
+[08:00:00] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[08:00:00] My ship is full
+[08:00:00] The distance is greater than 10000, calling ReturnToBase
+[08:00:00] The distance is greater than 10000, warp to base
+[08:00:10] Warping, waiting...
+[08:00:43] Finished warping...
+[08:00:50] Approaching Base
+[08:00:52] In Docking Range ... Docking
+[08:00:52] Docking, waiting...
+[08:01:00] Finished Docking
+[08:01:05] I'm in the station
+[08:01:17] Undocking
+[08:01:17] Waiting...
+[08:01:37] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[08:01:37] My ship is full
+[08:01:37] Approaching Base
+[08:01:39] In Docking Range ... Docking
+[08:01:39] Docking, waiting...
+[08:01:49] Finished Docking
+[08:01:54] I'm in the station
+[08:02:06] Undocking
+[08:02:06] Waiting...
+[08:02:24] Mining
+[08:02:24] Setting roid belt Cistuvaert III - Asteroid Belt 1 with id 40335452
+[08:02:26] About to warp, this is a log check
+[08:02:37] Warping, waiting...
+[08:03:09] Finished warping...
+[08:03:14] Warp Command Given
+[08:03:14] Setting roid to Asteroid (Veldspar) with id 74262248 -- calling Orbit...
+[08:03:15] Entering Orbit with 74262248, waiting...
+[08:04:28] Finish waiting, in orbit now
+[08:04:28] Locking roid target
+[08:04:34] Debug: UpdateHudStatus Activate Laser
+[08:04:34] Checking for Laser
+[08:04:34] Found Mining Laser
+[08:04:34] Powering Up Laser 1
+[08:04:35] Powering Up Laser 2
+[08:07:10] End waiting, cargo is full
+[08:07:11] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[08:07:11] My ship is full
+[08:07:11] The distance is greater than 10000, calling ReturnToBase
+[08:07:11] The distance is greater than 10000, warp to base
+[08:07:21] Warping, waiting...
+[08:07:52] Finished warping...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 08:36:16  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[08:36:16] Started EVEBot 0.8..
+[08:36:16] Please Hold Loading Main Function..
+[08:36:18] Completed Main Function
+[08:36:18] Bot is now Paused
+[08:36:18] Please Press Play
+[08:36:20] I'm in the station
+[08:36:27] Undocking
+[08:36:27] Waiting...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 08:37:39  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[08:37:39] Started EVEBot 0.8..
+[08:37:39] Please Hold Loading Main Function..
+[08:37:41] Completed Main Function
+[08:37:41] Bot is now Paused
+[08:37:41] Please Press Play
+[08:37:43] Mining
+[08:37:43] Setting roid belt Cistuvaert I - Asteroid Belt 1 with id 40335429
+[08:37:45] About to warp, this is a log check
+[08:38:48] Warping, waiting...
+[08:38:50] Finished warping...
+[08:38:55] Warp Command Given
+[08:38:55] Setting roid to Cistuvaert V - Moon 12 - Center for Advanced Studies School with id 60014719 -- calling Orbit...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 08:39:11  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[08:39:11] Started EVEBot 0.8..
+[08:39:11] Please Hold Loading Main Function..
+[08:39:13] Completed Main Function
+[08:39:13] Bot is now Paused
+[08:39:13] Please Press Play
+[08:39:19] Mining
+[08:39:19] Setting roid belt Cistuvaert I - Asteroid Belt 1 with id 40335429
+[08:39:21] About to warp, this is a log check
+[08:39:31] Warping, waiting...
+[08:40:01] Finished warping...
+[08:40:06] Warp Command Given
+[08:40:07] Setting roid to Miner'I with id 579283486 -- calling Orbit...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 08:45:05  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[08:45:05] Started EVEBot 0.8..
+[08:45:05] Please Hold Loading Main Function..
+[08:45:07] Completed Main Function
+[08:45:07] Bot is now Paused
+[08:45:07] Please Press Play
+[08:45:10] Mining
+[08:45:10] Setting roid belt Cistuvaert III - Asteroid Belt 1 with id 40335452
+[08:45:12] About to warp, this is a log check
+[08:45:22] Warping, waiting...
+[08:45:52] Finished warping...
+[08:45:57] Warp Command Given
+[08:45:57] Setting roid to Asteroid (Veldspar) with id 74262211 -- calling Orbit...
+[08:45:58] Entering Orbit with 74262211, waiting...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 09:02:57  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[09:02:57] Started EVEBot 0.8..
+[09:02:57] Please Hold Loading Main Function..
+[09:02:59] Completed Main Function
+[09:02:59] Bot is now Paused
+[09:02:59] Please Press Play
+[09:03:01] Mining
+[09:03:01] Setting roid belt Cistuvaert VII - Asteroid Belt 2 with id 40335524
+[09:03:03] About to warp, this is a log check
+[09:03:13] Warping, waiting...
+[09:03:15] Finished warping...
+[09:03:20] Warp Command Given
+[09:03:20] Setting roid to Asteroid (Veldspar) with id 74263841 -- calling Orbit...
+[09:03:21] Entering Orbit with 74263841, waiting...
+[09:04:16] Finish waiting, in orbit now
+[09:04:16] Locking roid target
+[09:04:22] Debug: UpdateHudStatus Activate Laser
+[09:04:22] Checking for Laser
+[09:04:22] Found Mining Laser
+[09:04:22] Powering Up Laser 1
+[09:04:23] Powering Up Laser 2
+[09:06:27] End waiting, cargo is full
+[09:06:29] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[09:06:29] My ship is full
+[09:06:29] The distance is greater than 10000, calling ReturnToBase
+[09:06:29] The distance is greater than 10000, warp to base
+[09:06:39] Warping, waiting...
+[09:07:18] Finished warping...
+[09:07:25] Approaching Base
+[09:07:35] In Docking Range ... Docking
+[09:07:35] Docking, waiting...
+[09:07:44] Finished Docking
+[09:07:49] I'm in the station
+[09:08:00] Undocking
+[09:08:00] Waiting...
+[09:08:18] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[09:08:18] My ship is full
+[09:08:18] Approaching Base
+[09:08:20] In Docking Range ... Docking
+[09:08:20] Docking, waiting...
+[09:08:31] Finished Docking
+[09:08:36] I'm in the station
+[09:08:47] Undocking
+[09:08:47] Waiting...
+[09:09:05] Mining
+[09:09:05] Setting roid belt Cistuvaert VII - Asteroid Belt 2 with id 40335524
+[09:09:08] About to warp, this is a log check
+[09:09:18] Warping, waiting...
+[09:09:54] Finished warping...
+[09:09:59] Warp Command Given
+[09:09:59] Setting roid to Asteroid (Veldspar) with id 74263841 -- calling Orbit...
+[09:10:00] Entering Orbit with 74263841, waiting...
+[09:10:53] Finish waiting, in orbit now
+[09:10:53] Locking roid target
+[09:10:59] Debug: UpdateHudStatus Activate Laser
+[09:10:59] Checking for Laser
+[09:10:59] Found Mining Laser
+[09:10:59] Powering Up Laser 1
+[09:11:00] Powering Up Laser 2
+[09:13:04] End waiting, cargo is full
+[09:13:06] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[09:13:06] My ship is full
+[09:13:06] The distance is greater than 10000, calling ReturnToBase
+[09:13:06] The distance is greater than 10000, warp to base
+[09:13:16] Warping, waiting...
+[09:13:55] Finished warping...
+[09:14:02] Approaching Base
+[09:14:13] In Docking Range ... Docking
+[09:14:13] Docking, waiting...
+[09:14:23] Finished Docking
+[09:14:28] I'm in the station
+[09:14:39] Undocking
+[09:14:40] Waiting...
+[09:14:56] Mining
+[09:14:56] Setting roid belt Cistuvaert VII - Asteroid Belt 2 with id 40335524
+[09:14:58] About to warp, this is a log check
+[09:15:09] Warping, waiting...
+[09:15:45] Finished warping...
+[09:15:50] Warp Command Given
+[09:15:50] Setting roid to Asteroid (Veldspar) with id 74263837 -- calling Orbit...
+[09:15:51] Entering Orbit with 74263837, waiting...
+[09:16:50] Finish waiting, in orbit now
+[09:16:50] Locking roid target
+[09:16:56] Debug: UpdateHudStatus Activate Laser
+[09:16:56] Checking for Laser
+[09:16:56] Found Mining Laser
+[09:16:56] Powering Up Laser 1
+[09:16:57] Powering Up Laser 2
+[09:19:01] End waiting, cargo is full
+[09:19:02] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[09:19:02] My ship is full
+[09:19:03] The distance is greater than 10000, calling ReturnToBase
+[09:19:03] The distance is greater than 10000, warp to base
+[09:19:13] Warping, waiting...
+[09:19:53] Finished warping...
+[09:20:00] Approaching Base
+[09:20:08] In Docking Range ... Docking
+[09:20:08] Docking, waiting...
+[09:20:18] Finished Docking
+[09:20:24] I'm in the station
+[09:20:35] Undocking
+[09:20:35] Waiting...
+[09:20:53] Mining
+[09:20:53] Setting roid belt Cistuvaert VII - Asteroid Belt 2 with id 40335524
+[09:20:55] About to warp, this is a log check
+[09:21:05] Warping, waiting...
+[09:21:42] Finished warping...
+[09:21:47] Warp Command Given
+[09:21:47] Setting roid to Asteroid (Veldspar) with id 74263841 -- calling Orbit...
+[09:21:48] Entering Orbit with 74263841, waiting...
+[09:22:45] Finish waiting, in orbit now
+[09:22:45] Locking roid target
+[09:22:51] Debug: UpdateHudStatus Activate Laser
+[09:22:51] Checking for Laser
+[09:22:51] Found Mining Laser
+[09:22:51] Powering Up Laser 1
+[09:22:52] Powering Up Laser 2
+[09:24:55] End waiting, cargo is full
+[09:24:57] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[09:24:57] My ship is full
+[09:24:57] The distance is greater than 10000, calling ReturnToBase
+[09:24:57] The distance is greater than 10000, warp to base
+[09:25:07] Warping, waiting...
+[09:25:48] Finished warping...
+[09:25:55] Approaching Base
+[09:25:57] In Docking Range ... Docking
+[09:25:57] Docking, waiting...
+[09:26:07] Finished Docking
+[09:26:12] I'm in the station
+[09:26:24] Undocking
+[09:26:24] Waiting...
+[09:26:43] Mining
+[09:26:43] Setting roid belt Cistuvaert VII - Asteroid Belt 2 with id 40335524
+[09:26:45] About to warp, this is a log check
+[09:26:56] Warping, waiting...
+[09:27:32] Finished warping...
+[09:27:37] Warp Command Given
+[09:27:37] Setting roid to Asteroid (Veldspar) with id 74263841 -- calling Orbit...
+[09:27:38] Entering Orbit with 74263841, waiting...
+[09:28:39] Finish waiting, in orbit now
+[09:28:39] Locking roid target
+[09:28:45] Debug: UpdateHudStatus Activate Laser
+[09:28:45] Checking for Laser
+[09:28:45] Found Mining Laser
+[09:28:45] Powering Up Laser 1
+[09:28:46] Powering Up Laser 2
+[09:30:50] End waiting, cargo is full
+[09:30:52] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[09:30:52] My ship is full
+[09:30:52] The distance is greater than 10000, calling ReturnToBase
+[09:30:52] The distance is greater than 10000, warp to base
+[09:31:02] Warping, waiting...
+[09:31:42] Finished warping...
+[09:31:49] Approaching Base
+[09:31:51] In Docking Range ... Docking
+[09:31:51] Docking, waiting...
+[09:32:01] Finished Docking
+[09:32:07] I'm in the station
+[09:32:18] Undocking
+[09:32:18] Waiting...
+[09:32:36] Mining
+[09:32:37] Setting roid belt Cistuvaert VII - Asteroid Belt 2 with id 40335524
+[09:32:39] About to warp, this is a log check
+[09:32:49] Warping, waiting...
+[09:33:25] Finished warping...
+[09:33:30] Warp Command Given
+[09:33:30] Setting roid to Asteroid (Veldspar) with id 74263841 -- calling Orbit...
+[09:33:31] Entering Orbit with 74263841, waiting...
+[09:34:24] Finish waiting, in orbit now
+[09:34:24] Locking roid target
+[09:34:30] Debug: UpdateHudStatus Activate Laser
+[09:34:30] Checking for Laser
+[09:34:30] Found Mining Laser
+[09:34:30] Powering Up Laser 1
+[09:34:31] Powering Up Laser 2
+[09:36:35] End waiting, cargo is full
+[09:36:37] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[09:36:37] My ship is full
+[09:36:37] The distance is greater than 10000, calling ReturnToBase
+[09:36:37] The distance is greater than 10000, warp to base
+[09:36:47] Warping, waiting...
+[09:37:27] Finished warping...
+[09:37:34] Approaching Base
+[09:37:36] In Docking Range ... Docking
+[09:37:36] Docking, waiting...
+[09:37:44] Finished Docking
+[09:37:50] I'm in the station
+[09:38:01] Undocking
+[09:38:01] Waiting...
+[09:38:19] Mining
+[09:38:19] Setting roid belt Cistuvaert VII - Asteroid Belt 2 with id 40335524
+[09:38:21] About to warp, this is a log check
+[09:38:32] Warping, waiting...
+[09:39:08] Finished warping...
+[09:39:13] Warp Command Given
+[09:39:13] Setting roid to Asteroid (Veldspar) with id 74263841 -- calling Orbit...
+[09:39:14] Entering Orbit with 74263841, waiting...
+[09:40:13] Finish waiting, in orbit now
+[09:40:13] Locking roid target
+[09:40:19] Debug: UpdateHudStatus Activate Laser
+[09:40:19] Checking for Laser
+[09:40:19] Found Mining Laser
+[09:40:19] Powering Up Laser 1
+[09:40:20] Powering Up Laser 2
+[09:41:26] Entering Orbit with 74263754, waiting...
+[09:41:26] Finish waiting, in orbit now
+[09:41:26] Locking roid target
+[09:41:32] Debug: UpdateHudStatus Activate Laser
+[09:41:32] Checking for Laser
+[09:41:32] Found Mining Laser
+[09:41:32] Powering Up Laser 1
+[09:41:33] Powering Up Laser 2
+[09:43:37] End waiting, cargo is full
+[09:43:38] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[09:43:38] My ship is full
+[09:43:38] The distance is greater than 10000, calling ReturnToBase
+[09:43:39] The distance is greater than 10000, warp to base
+[09:43:49] Warping, waiting...
+[09:44:28] Finished warping...
+[09:44:35] Approaching Base
+[09:44:37] In Docking Range ... Docking
+[09:44:37] Docking, waiting...
+[09:44:47] Finished Docking
+[09:44:52] I'm in the station
+[09:45:04] Undocking
+[09:45:04] Waiting...
+[09:45:21] Mining
+[09:45:21] Setting roid belt Cistuvaert VII - Asteroid Belt 2 with id 40335524
+[09:45:23] About to warp, this is a log check
+[09:45:33] Warping, waiting...
+[09:46:10] Finished warping...
+[09:46:15] Warp Command Given
+[09:46:15] Setting roid to Asteroid (Veldspar) with id 74263837 -- calling Orbit...
+[09:46:16] Entering Orbit with 74263837, waiting...
+[09:47:11] Finish waiting, in orbit now
+[09:47:11] Locking roid target
+[09:47:17] Debug: UpdateHudStatus Activate Laser
+[09:47:17] Checking for Laser
+[09:47:17] Found Mining Laser
+[09:47:17] Powering Up Laser 1
+[09:47:18] Powering Up Laser 2
+[09:50:18] End waiting, cargo is full
+[09:50:19] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[09:50:19] My ship is full
+[09:50:19] The distance is greater than 10000, calling ReturnToBase
+[09:50:19] The distance is greater than 10000, warp to base
+[09:50:29] Warping, waiting...
+[09:51:08] Finished warping...
+[09:51:15] Approaching Base
+[09:51:29] In Docking Range ... Docking
+[09:51:29] Docking, waiting...
+[09:51:39] Finished Docking
+[09:51:44] I'm in the station
+[09:51:56] Undocking
+[09:51:56] Waiting...
+[09:52:14] Mining
+[09:52:14] Setting roid belt Cistuvaert VII - Asteroid Belt 2 with id 40335524
+[09:52:16] About to warp, this is a log check
+[09:52:26] Warping, waiting...
+[09:53:03] Finished warping...
+[09:53:08] Warp Command Given
+[09:53:08] Setting roid to Asteroid (Veldspar) with id 74263751 -- calling Orbit...
+[09:53:09] Entering Orbit with 74263751, waiting...
+[09:54:02] Finish waiting, in orbit now
+[09:54:02] Locking roid target
+[09:54:08] Debug: UpdateHudStatus Activate Laser
+[09:54:08] Checking for Laser
+[09:54:08] Found Mining Laser
+[09:54:08] Powering Up Laser 1
+[09:54:09] Powering Up Laser 2
+[09:56:18] End waiting, cargo is full
+[09:56:19] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[09:56:19] My ship is full
+[09:56:19] The distance is greater than 10000, calling ReturnToBase
+[09:56:19] The distance is greater than 10000, warp to base
+[09:56:29] Warping, waiting...
+[09:57:08] Finished warping...
+[09:57:15] Approaching Base
+[09:57:17] In Docking Range ... Docking
+[09:57:17] Docking, waiting...
+[09:57:27] Finished Docking
+[09:57:33] I'm in the station
+[09:57:44] Undocking
+[09:57:44] Waiting...
+[09:58:01] Mining
+[09:58:01] Setting roid belt Cistuvaert VII - Asteroid Belt 2 with id 40335524
+[09:58:03] About to warp, this is a log check
+[09:58:13] Warping, waiting...
+[09:58:50] Finished warping...
+[09:58:55] Warp Command Given
+[09:58:55] Setting roid to Asteroid (Veldspar) with id 74263837 -- calling Orbit...
+[09:58:56] Entering Orbit with 74263837, waiting...
+[10:00:03] Finish waiting, in orbit now
+[10:00:03] Locking roid target
+[10:00:09] Debug: UpdateHudStatus Activate Laser
+[10:00:09] Checking for Laser
+[10:00:09] Found Mining Laser
+[10:00:09] Powering Up Laser 1
+[10:00:10] Powering Up Laser 2
+[10:02:14] End waiting, cargo is full
+[10:02:16] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[10:02:16] My ship is full
+[10:02:16] The distance is greater than 10000, calling ReturnToBase
+[10:02:16] The distance is greater than 10000, warp to base
+[10:02:26] Warping, waiting...
+[10:03:05] Finished warping...
+[10:03:12] Approaching Base
+[10:03:22] In Docking Range ... Docking
+[10:03:22] Docking, waiting...
+[10:03:30] Finished Docking
+[10:03:36] I'm in the station
+[10:03:47] Undocking
+[10:03:47] Waiting...
+[10:04:04] Mining
+[10:04:04] Setting roid belt Cistuvaert VII - Asteroid Belt 2 with id 40335524
+[10:04:06] About to warp, this is a log check
+[10:04:17] Warping, waiting...
+[10:04:55] Finished warping...
+[10:05:00] Warp Command Given
+[10:05:00] Setting roid to Asteroid (Veldspar) with id 74263821 -- calling Orbit...
+[10:05:01] Entering Orbit with 74263821, waiting...
+[10:05:55] Finish waiting, in orbit now
+[10:05:55] Locking roid target
+[10:06:01] Debug: UpdateHudStatus Activate Laser
+[10:06:01] Checking for Laser
+[10:06:01] Found Mining Laser
+[10:06:01] Powering Up Laser 1
+[10:06:02] Powering Up Laser 2
+[10:08:06] End waiting, cargo is full
+[10:08:07] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[10:08:07] My ship is full
+[10:08:07] The distance is greater than 10000, calling ReturnToBase
+[10:08:08] The distance is greater than 10000, warp to base
+[10:08:18] Warping, waiting...
+[10:08:58] Finished warping...
+[10:09:05] Approaching Base
+[10:09:08] In Docking Range ... Docking
+[10:09:08] Docking, waiting...
+[10:09:18] Finished Docking
+[10:09:24] I'm in the station
+[10:09:35] Undocking
+[10:09:35] Waiting...
+[10:09:55] Mining
+[10:09:56] Setting roid belt Cistuvaert VII - Asteroid Belt 2 with id 40335524
+[10:09:58] About to warp, this is a log check
+[10:10:08] Warping, waiting...
+[10:10:44] Finished warping...
+[10:10:49] Warp Command Given
+[10:10:49] Setting roid to Asteroid (Veldspar) with id 74263754 -- calling Orbit...
+[10:10:50] Entering Orbit with 74263754, waiting...
+[10:11:53] Finish waiting, in orbit now
+[10:11:53] Locking roid target
+[10:11:59] Debug: UpdateHudStatus Activate Laser
+[10:11:59] Checking for Laser
+[10:11:59] Found Mining Laser
+[10:11:59] Powering Up Laser 1
+[10:12:00] Powering Up Laser 2
+[10:14:04] End waiting, cargo is full
+[10:14:06] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[10:14:06] My ship is full
+[10:14:06] The distance is greater than 10000, calling ReturnToBase
+[10:14:06] The distance is greater than 10000, warp to base
+[10:14:16] Warping, waiting...
+[10:14:55] Finished warping...
+[10:15:02] Approaching Base
+[10:15:04] In Docking Range ... Docking
+[10:15:04] Docking, waiting...
+[10:15:14] Finished Docking
+[10:15:20] I'm in the station
+[10:15:31] Undocking
+[10:15:31] Waiting...
+[10:15:49] Mining
+[10:15:49] Setting roid belt Cistuvaert VII - Asteroid Belt 2 with id 40335524
+[10:15:51] About to warp, this is a log check
+[10:16:01] Warping, waiting...
+[10:16:38] Finished warping...
+[10:16:43] Warp Command Given
+[10:16:43] Setting roid to Asteroid (Veldspar) with id 74263837 -- calling Orbit...
+[10:16:44] Entering Orbit with 74263837, waiting...
+[10:17:43] Finish waiting, in orbit now
+[10:17:43] Locking roid target
+[10:17:49] Debug: UpdateHudStatus Activate Laser
+[10:17:49] Checking for Laser
+[10:17:49] Found Mining Laser
+[10:17:49] Powering Up Laser 1
+[10:17:50] Powering Up Laser 2
+[10:19:54] End waiting, cargo is full
+[10:19:56] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[10:19:56] My ship is full
+[10:19:56] The distance is greater than 10000, calling ReturnToBase
+[10:19:56] The distance is greater than 10000, warp to base
+[10:20:06] Warping, waiting...
+[10:20:44] Finished warping...
+[10:20:51] Approaching Base
+[10:21:03] In Docking Range ... Docking
+[10:21:03] Docking, waiting...
+[10:21:13] Finished Docking
+[10:21:19] I'm in the station
+[10:21:30] Undocking
+[10:21:30] Waiting...
+[10:21:47] Mining
+[10:21:48] Setting roid belt Cistuvaert VII - Asteroid Belt 2 with id 40335524
+[10:21:50] About to warp, this is a log check
+[10:22:00] Warping, waiting...
+[10:22:36] Finished warping...
+[10:22:41] Warp Command Given
+[10:22:41] Setting roid to Asteroid (Veldspar) with id 74263837 -- calling Orbit...
+[10:22:42] Entering Orbit with 74263837, waiting...
+[10:23:37] Finish waiting, in orbit now
+[10:23:37] Locking roid target
+[10:23:43] Debug: UpdateHudStatus Activate Laser
+[10:23:43] Checking for Laser
+[10:23:43] Found Mining Laser
+[10:23:43] Powering Up Laser 1
+[10:23:44] Powering Up Laser 2
+[10:25:49] Entering Orbit with 74263742, waiting...
+[10:25:49] Finish waiting, in orbit now
+[10:25:49] Locking roid target
+[10:25:55] Debug: UpdateHudStatus Activate Laser
+[10:25:55] Checking for Laser
+[10:25:55] Found Mining Laser
+[10:25:55] Powering Up Laser 1
+[10:25:56] Powering Up Laser 2
+[10:27:00] End waiting, cargo is full
+[10:27:02] Setting main station Cistuvaert V - Moon 12 - Center for Advanced Studies School with ID 60014719
+[10:27:02] My ship is full
+[10:27:02] The distance is greater than 10000, calling ReturnToBase
+[10:27:02] The distance is greater than 10000, warp to base
+[10:27:12] Warping, waiting...
+[10:27:48] Finished warping...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 18:44:05  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[18:44:05] Started EVEBot 0.8..
+[18:44:05] Please Hold Loading Main Function..
+[18:44:07] Completed Main Function
+[18:44:07] Bot is now Paused
+[18:44:07] Please Press Play
+[18:44:10] Setting main station Dodixie IX - Moon 20 - Federation Navy Assembly Plant with ID 60011866
+[18:44:10] My ship is full
+[18:44:10] Approaching Base
+[18:44:12] In Docking Range ... Docking
+[18:44:12] Docking, waiting...
+[18:44:22] Finished Docking
+[18:44:27] I'm in the station
+[18:44:39] Undocking
+[18:44:39] Waiting...
+[18:44:56] Mining
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 19:08:56  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[19:08:56] Started EVEBot 0.8..
+[19:08:56] Please Hold Loading Main Function..
+[19:08:58] Completed Main Function
+[19:08:58] Bot is now Paused
+[19:08:58] Please Press Play
+[19:10:43] Mining
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 19:11:05  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[19:11:05] Started EVEBot 0.8..
+[19:11:05] Please Hold Loading Main Function..
+[19:11:07] Completed Main Function
+[19:11:07] Bot is now Paused
+[19:11:07] Please Press Play
+[19:11:10] Mining
+[19:11:10] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[19:11:13] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[19:11:23] Warping, waiting...
+[19:11:55] Finished warping...
+[19:12:00] Setting roid to Asteroid (Scordite) with id 72640036 -- calling Orbit...
+[19:12:01] Entering Orbit with 72640036, waiting...
+[19:12:27] Finish waiting, in orbit now
+[19:12:27] Locking roid target
+[19:12:32] Checking for Laser
+[19:12:32] Found Mining Laser
+[19:12:32] Powering Up Laser 1
+[19:12:33] Powering Up Laser 2
+[19:14:38] End waiting, cargo is full
+[19:14:39] Setting main station Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with ID 60009676
+[19:14:39] My ship is full
+[19:14:39] The distance is greater than 10000, calling ReturnToBase
+[19:14:50] Warping, waiting...
+[19:15:23] Finished warping...
+[19:15:30] Approaching Base
+[19:15:40] In Docking Range ... Docking
+[19:15:40] Docking, waiting...
+[19:15:52] Finished Docking
+[19:15:58] I'm in the station
+[19:16:09] Undocking
+[19:16:09] Waiting...
+[19:16:26] Setting main station Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with ID 60009676
+[19:16:26] My ship is full
+[19:16:26] Approaching Base
+[19:16:28] In Docking Range ... Docking
+[19:16:28] Docking, waiting...
+[19:16:36] Finished Docking
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 19:33:27  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[19:33:27] Started EVEBot 0.8..
+[19:33:27] Please Hold Loading Main Function..
+[19:33:29] Completed Main Function
+[19:33:29] Bot is now Paused
+[19:33:29] Please Press Play
+[19:33:33] I'm in the station
+[19:33:37] Undocking
+[19:33:37] Waiting...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 19:35:40  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[19:35:40] Started EVEBot 0.8..
+[19:35:40] Please Hold Loading Main Function..
+[19:35:42] Completed Main Function
+[19:35:42] Bot is now Paused
+[19:35:42] Please Press Play
+[19:35:45] I'm in the station
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 19:36:10  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[19:36:10] Started EVEBot 0.8..
+[19:36:10] Please Hold Loading Main Function..
+[19:36:12] Completed Main Function
+[19:36:12] Bot is now Paused
+[19:36:12] Please Press Play
+[19:36:13] I'm in the station
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 19:37:14  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[19:37:14] Started EVEBot 0.8..
+[19:37:14] Please Hold Loading Main Function..
+[19:37:16] Completed Main Function
+[19:37:16] Bot is now Paused
+[19:37:16] Please Press Play
+[19:37:21] I'm in the station
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 20:02:01  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[20:02:01] Started EVEBot 0.8..
+[20:02:01] Please Hold Loading Main Function..
+[20:02:03] Completed Main Function
+[20:02:03] Bot is now Paused
+[20:02:03] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 20:02:06  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[20:02:06] Started EVEBot 0.8..
+[20:02:06] Please Hold Loading Main Function..
+[20:02:08] Completed Main Function
+[20:02:08] Bot is now Paused
+[20:02:08] Please Press Play
+[20:02:11] I'm in the station
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 20:36:48  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[20:36:48] Started EVEBot 0.8..
+[20:36:48] Please Hold Loading Main Function..
+[20:36:50] Completed Main Function
+[20:36:50] Bot is now Paused
+[20:36:50] Please Press Play
+[20:36:51] Mining
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 20:38:20  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[20:38:20] Started EVEBot 0.8..
+[20:38:20] Please Hold Loading Main Function..
+[20:38:22] Completed Main Function
+[20:38:22] Bot is now Paused
+[20:38:22] Please Press Play
+[20:38:23] Mining
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 20:41:00  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[20:41:00] Started EVEBot 0.8..
+[20:41:00] Please Hold Loading Main Function..
+[20:41:02] Completed Main Function
+[20:41:02] Bot is now Paused
+[20:41:02] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 20:41:17  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[20:41:17] Started EVEBot 0.8..
+[20:41:17] Please Hold Loading Main Function..
+[20:41:19] Completed Main Function
+[20:41:19] Bot is now Paused
+[20:41:19] Please Press Play
+[20:41:20] Mining
+[20:41:20] DEBUG: BeltCount 0
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 20:47:13  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[20:47:13] Started EVEBot 0.8..
+[20:47:13] Please Hold Loading Main Function..
+[20:47:15] Completed Main Function
+[20:47:15] Bot is now Paused
+[20:47:15] Please Press Play
+[20:47:17] Mining
+[20:47:17] DEBUG: BeltCount 0
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 20:47:28  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[20:47:28] Started EVEBot 0.8..
+[20:47:28] Please Hold Loading Main Function..
+[20:47:30] Completed Main Function
+[20:47:30] Bot is now Paused
+[20:47:30] Please Press Play
+[20:47:31] Mining
+[20:47:31] DEBUG: BeltCount 0
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 20:48:19  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[20:48:19] Started EVEBot 0.8..
+[20:48:19] Please Hold Loading Main Function..
+[20:48:21] Completed Main Function
+[20:48:21] Bot is now Paused
+[20:48:21] Please Press Play
+[20:48:23] Mining
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 20:49:36  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[20:49:36] Started EVEBot 0.8..
+[20:49:36] Please Hold Loading Main Function..
+[20:49:38] Completed Main Function
+[20:49:38] Bot is now Paused
+[20:49:38] Please Press Play
+[20:49:39] Mining
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 20:49:57  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[20:49:57] Started EVEBot 0.8..
+[20:49:57] Please Hold Loading Main Function..
+[20:49:59] Completed Main Function
+[20:49:59] Bot is now Paused
+[20:49:59] Please Press Play
+[20:49:59] Mining
+[20:49:59] DEBUG: BeltCount 0
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 20:56:09  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[20:56:09] Started EVEBot 0.8..
+[20:56:09] Please Hold Loading Main Function..
+[20:56:11] Completed Main Function
+[20:56:11] Bot is now Paused
+[20:56:11] Please Press Play
+[20:56:12] Mining
+[20:56:12] DEBUG: BeltCount 8
+[20:56:12] Setting roid belt Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with id 60009676
+[21:10:53] Warping to roid belt: Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery
+[21:10:53] Setting roid to Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with id 60009676 -- calling Orbit...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 21:11:07  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[21:11:07] Started EVEBot 0.8..
+[21:11:07] Please Hold Loading Main Function..
+[21:11:09] Completed Main Function
+[21:11:09] Bot is now Paused
+[21:11:09] Please Press Play
+[21:11:09] Mining
+[21:11:09] DEBUG: BeltCount 8
+[21:11:09] Setting roid belt Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with id 60009676
+[21:11:11] Warping to roid belt: Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery
+[21:11:11] Setting roid to Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with id 60009676 -- calling Orbit...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 21:15:09  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[21:15:09] Started EVEBot 0.8..
+[21:15:09] Please Hold Loading Main Function..
+[21:15:11] Completed Main Function
+[21:15:11] Bot is now Paused
+[21:15:11] Please Press Play
+[21:15:12] Mining
+[21:15:12] DEBUG: BeltCount 8
+[21:15:12] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[21:15:14] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[21:15:14] Setting roid to Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with id 60009676 -- calling Orbit...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 21:21:42  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[21:21:42] Started EVEBot 0.8..
+[21:21:42] Please Hold Loading Main Function..
+[21:21:44] Completed Main Function
+[21:21:44] Bot is now Paused
+[21:21:44] Please Press Play
+[21:21:45] Mining
+[21:21:45] DEBUG: BeltCount 8
+[21:21:45] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[21:21:47] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[21:21:57] Warping, waiting...
+[21:22:27] Finished warping...
+[21:22:32] Setting roid to Asteroid (Scordite) with id 72640036 -- calling Orbit...
+[21:22:33] Entering Orbit with 72640036, waiting...
+[21:22:48] Finish waiting, in orbit now
+[21:22:48] Locking roid target
+[21:22:53] Checking for Laser
+[21:22:53] Found Mining Laser
+[21:22:53] Powering Up Laser 1
+[21:22:54] Powering Up Laser 2
+[21:24:53] End waiting, cargo is full
+[21:24:55] Setting main station Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with ID 60009676
+[21:24:55] My ship is full
+[21:24:55] The distance is greater than 10000, calling ReturnToBase
+[21:25:06] Warping, waiting...
+[21:25:40] Finished warping...
+[21:25:48] Approaching Base
+[21:25:52] In Docking Range ... Docking
+[21:25:52] Docking, waiting...
+[21:26:00] Finished Docking
+[21:26:05] I'm in the station
+[21:26:12] Unloading Cargo[1]: Scordite
+[21:26:12] Unloading Cargo[1]: Scordite
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 21:28:07  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[21:28:07] Started EVEBot 0.8..
+[21:28:07] Please Hold Loading Main Function..
+[21:28:09] Completed Main Function
+[21:28:09] Bot is now Paused
+[21:28:09] Please Press Play
+[21:28:11] I'm in the station
+[21:28:13] Unloading Cargo[1]: Scordite
+[21:28:13] Unloading Cargo[1]: Scordite
+[21:28:13] Unloading Cargo[1]: Scordite
+[21:28:13] Unloading Cargo[1]: Scordite
+[21:28:13] Unloading Cargo[1]: Scordite
+[21:28:13] Unloading Cargo[1]: Scordite
+[21:28:14] Unloading Cargo[1]: Scordite
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 21:29:45  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[21:29:45] Started EVEBot 0.8..
+[21:29:45] Please Hold Loading Main Function..
+[21:29:47] Completed Main Function
+[21:29:47] Bot is now Paused
+[21:29:47] Please Press Play
+[21:29:52] I'm in the station
+[21:29:54] Unloading Cargo[1]: Scordite
+[21:29:56] Undocking
+[21:29:56] Waiting...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 21:31:40  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[21:31:40] Started EVEBot 0.8..
+[21:31:40] Please Hold Loading Main Function..
+[21:31:42] Completed Main Function
+[21:31:42] Bot is now Paused
+[21:31:42] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 21:33:01  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[21:33:01] Started EVEBot 0.8..
+[21:33:01] Please Hold Loading Main Function..
+[21:33:03] Completed Main Function
+[21:33:03] Bot is now Paused
+[21:33:03] Please Press Play
+[21:33:04] I'm in the station
+[21:33:06] Unloading Cargo[1]: Scordite
+[21:33:13] Undocking
+[21:33:13] Waiting...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 21:35:00  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[21:35:00] Started EVEBot 0.8..
+[21:35:00] Please Hold Loading Main Function..
+[21:35:02] Completed Main Function
+[21:35:02] Bot is now Paused
+[21:35:02] Please Press Play
+[21:35:02] Setting main station Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with ID 60009676
+[21:35:02] My ship is full
+[21:35:02] Approaching Base
+[21:35:04] In Docking Range ... Docking
+[21:35:04] Docking, waiting...
+[21:35:14] Finished Docking
+[21:35:20] I'm in the station
+[21:35:26] Unloading Cargo[1]: Scordite
+[21:35:28] Undocking
+[21:35:28] Waiting...
+[21:35:45] Mining
+[21:35:45] DEBUG: BeltCount 8
+[21:35:45] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[21:35:47] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[21:35:57] Warping, waiting...
+[21:36:28] Finished warping...
+[21:36:33] Setting roid to Asteroid (Scordite) with id 72640036 -- calling Orbit...
+[21:36:34] Entering Orbit with 72640036, waiting...
+[21:37:03] Finish waiting, in orbit now
+[21:37:03] Locking roid target
+[21:37:08] Checking for Laser
+[21:37:08] Found Mining Laser
+[21:37:08] Powering Up Laser 1
+[21:37:09] Powering Up Laser 2
+[21:39:08] End waiting, cargo is full
+[21:39:10] Setting main station Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with ID 60009676
+[21:39:10] My ship is full
+[21:39:10] The distance is greater than 10000, calling ReturnToBase
+[21:39:20] Warping, waiting...
+[21:39:53] Finished warping...
+[21:40:00] Approaching Base
+[21:40:12] In Docking Range ... Docking
+[21:40:12] Docking, waiting...
+[21:40:22] Finished Docking
+[21:40:28] I'm in the station
+[21:40:34] Unloading Cargo[1]: Scordite
+[21:40:37] Undocking
+[21:40:37] Waiting...
+[21:40:51] Mining
+[21:40:51] DEBUG: BeltCount 8
+[21:40:51] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[21:40:53] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[21:41:04] Warping, waiting...
+[21:41:34] Finished warping...
+[21:41:39] Setting roid to Asteroid (Scordite) with id 72640036 -- calling Orbit...
+[21:41:40] Entering Orbit with 72640036, waiting...
+[21:42:13] Finish waiting, in orbit now
+[21:42:13] Locking roid target
+[21:42:18] Checking for Laser
+[21:42:18] Found Mining Laser
+[21:42:18] Powering Up Laser 1
+[21:42:19] Powering Up Laser 2
+[21:44:23] End waiting, cargo is full
+[21:44:24] Setting main station Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with ID 60009676
+[21:44:24] My ship is full
+[21:44:25] The distance is greater than 10000, calling ReturnToBase
+[21:44:35] Warping, waiting...
+[21:45:09] Finished warping...
+[21:45:16] Approaching Base
+[21:49:18] In Docking Range ... Docking
+[21:49:18] Docking, waiting...
+[21:49:28] Finished Docking
+[21:49:34] I'm in the station
+[21:49:41] Unloading Cargo[1]: Scordite
+[22:13:38] Undocking
+[22:13:38] Waiting...
+[22:13:54] Mining
+[22:13:54] DEBUG: BeltCount 8
+[22:13:54] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[22:13:56] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[22:14:06] Warping, waiting...
+[22:14:38] Finished warping...
+[22:14:43] Setting roid to Asteroid (Scordite) with id 72640036 -- calling Orbit...
+[22:14:45] Entering Orbit with 72640036, waiting...
+[22:15:09] Finish waiting, in orbit now
+[22:15:09] Locking roid target
+[22:15:14] Checking for Laser
+[22:15:14] Found Mining Laser
+[22:15:14] Powering Up Laser 1
+[22:15:15] Powering Up Laser 2
+[22:17:16] End waiting, cargo is full
+[22:17:17] Setting main station Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with ID 60009676
+[22:17:17] My ship is full
+[22:17:18] The distance is greater than 10000, calling ReturnToBase
+[22:17:28] Warping, waiting...
+[22:18:03] Finished warping...
+[22:18:10] Approaching Base
+[22:18:12] In Docking Range ... Docking
+[22:18:12] Docking, waiting...
+[22:18:20] Finished Docking
+[22:18:26] I'm in the station
+[22:18:32] Unloading Cargo[1]: Scordite
+[22:18:34] Undocking
+[22:18:34] Waiting...
+[22:18:52] Setting main station Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with ID 60009676
+[22:18:52] My ship is full
+[22:18:52] Approaching Base
+[22:18:54] In Docking Range ... Docking
+[22:18:54] Docking, waiting...
+[22:19:03] Finished Docking
+[22:19:08] I'm in the station
+[22:19:15] Unloading Cargo[1]: Scordite
+[22:19:17] Undocking
+[22:19:17] Waiting...
+[22:19:36] Mining
+[22:19:36] DEBUG: BeltCount 8
+[22:19:36] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[22:19:38] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[22:19:48] Warping, waiting...
+[22:20:20] Finished warping...
+[22:20:26] Setting roid to Asteroid (Scordite) with id 72640036 -- calling Orbit...
+[22:20:27] Entering Orbit with 72640036, waiting...
+[22:20:41] Finish waiting, in orbit now
+[22:20:41] Locking roid target
+[22:20:46] Checking for Laser
+[22:20:46] Found Mining Laser
+[22:20:46] Powering Up Laser 1
+[22:20:47] Powering Up Laser 2
+[22:21:51] End waiting, cargo is full
+[22:21:52] Setting main station Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with ID 60009676
+[22:21:52] My ship is full
+[22:21:53] The distance is greater than 10000, calling ReturnToBase
+[22:22:03] Warping, waiting...
+[22:22:38] Finished warping...
+[22:22:45] Approaching Base
+[22:22:47] In Docking Range ... Docking
+[22:22:47] Docking, waiting...
+[22:22:58] Finished Docking
+[22:23:03] I'm in the station
+[22:23:10] Unloading Cargo[1]: Scordite
+[22:23:13] Undocking
+[22:23:13] Waiting...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 22:28:00  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[22:28:00] Started EVEBot 0.8..
+[22:28:00] Please Hold Loading Main Function..
+[22:28:02] Completed Main Function
+[22:28:02] Bot is now Paused
+[22:28:02] Please Press Play
+[22:28:08] I'm in the station
+[22:28:13] Undocking
+[22:28:13] Waiting...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 22:29:13  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[22:29:13] Started EVEBot 0.8..
+[22:29:13] Please Hold Loading Main Function..
+[22:29:15] Completed Main Function
+[22:29:15] Bot is now Paused
+[22:29:15] Please Press Play
+[22:29:15] Mining
+[22:29:15] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[22:29:17] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[22:29:27] Warping, waiting...
+[22:30:00] Finished warping...
+[22:30:05] DEBUG: RoidCount 0
+[22:30:05] Setting roid to NULL with id NULL -- calling Orbit...
+[22:30:07] Locking roid target
+[22:30:10] Checking for Laser
+[22:30:10] Found Mining Laser
+[22:30:10] Powering Up Laser 1
+[22:30:11] Powering Up Laser 2
+[22:30:14] Locking roid target
+[22:30:18] Checking for Laser
+[22:30:18] Found Mining Laser
+[22:30:18] Powering Up Laser 1
+[22:30:19] Powering Up Laser 2
+[22:30:22] Locking roid target
+[22:30:25] Checking for Laser
+[22:30:25] Found Mining Laser
+[22:30:25] Powering Up Laser 1
+[22:30:26] Powering Up Laser 2
+[22:30:29] Locking roid target
+[22:30:32] Checking for Laser
+[22:30:32] Found Mining Laser
+[22:30:32] Powering Up Laser 1
+[22:30:33] Powering Up Laser 2
+[22:30:36] Locking roid target
+[22:30:39] Checking for Laser
+[22:30:39] Found Mining Laser
+[22:30:39] Powering Up Laser 1
+[22:30:40] Powering Up Laser 2
+[22:30:43] Locking roid target
+[22:30:46] Checking for Laser
+[22:30:46] Found Mining Laser
+[22:30:46] Powering Up Laser 1
+[22:30:47] Powering Up Laser 2
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 22:32:52  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[22:32:52] Started EVEBot 0.8..
+[22:32:52] Please Hold Loading Main Function..
+[22:32:54] Completed Main Function
+[22:32:54] Bot is now Paused
+[22:32:54] Please Press Play
+[22:32:55] Mining
+[22:32:55] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[22:32:57] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[22:33:07] Warping, waiting...
+[22:33:09] Finished warping...
+[22:33:14] DEBUG: RoidCount 17
+[22:33:14] Setting roid to Asteroid (Scordite) with id 72639962 -- calling Orbit...
+[22:33:15] Entering Orbit with 72639962, waiting...
+[22:34:04] Finish waiting, in orbit now
+[22:34:04] Locking roid target
+[22:34:09] Checking for Laser
+[22:34:09] Found Mining Laser
+[22:34:09] Powering Up Laser 1
+[22:34:10] Powering Up Laser 2
+[22:35:45] End waiting, cargo is full
+[22:35:47] Setting main station Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with ID 60009676
+[22:35:47] My ship is full
+[22:35:47] The distance is greater than 10000, calling ReturnToBase
+[22:35:57] Warping, waiting...
+[22:36:34] Finished warping...
+[22:36:41] Approaching Base
+[22:36:43] In Docking Range ... Docking
+[22:36:43] Docking, waiting...
+[22:36:55] Finished Docking
+[22:37:01] I'm in the station
+[22:37:07] Unloading Cargo[1]: Scordite
+[22:37:10] Undocking
+[22:37:10] Waiting...
+[22:37:26] Setting main station Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with ID 60009676
+[22:37:26] My ship is full
+[22:37:26] Approaching Base
+[22:37:28] In Docking Range ... Docking
+[22:37:28] Docking, waiting...
+[22:37:37] Finished Docking
+[22:37:42] I'm in the station
+[22:37:49] Unloading Cargo[1]: Scordite
+[22:37:51] Undocking
+[22:37:51] Waiting...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 22:39:10  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[22:39:10] Started EVEBot 0.8..
+[22:39:10] Please Hold Loading Main Function..
+[22:39:12] Completed Main Function
+[22:39:12] Bot is now Paused
+[22:39:12] Please Press Play
+[22:39:14] Mining
+[22:39:14] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[22:39:16] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[22:39:26] Warping, waiting...
+[22:39:59] Finished warping...
+[22:40:04] DEBUG: RoidCount 17
+[22:40:04] Setting roid to Asteroid (Scordite) with id 72640036 -- calling Orbit...
+[22:40:05] Entering Orbit with 72640036, waiting...
+[22:40:38] Finish waiting, in orbit now
+[22:40:38] Locking roid target
+[22:40:43] Checking for Laser
+[22:40:43] Found Mining Laser
+[22:40:43] Powering Up Laser 1
+[22:40:44] Powering Up Laser 2
+[22:41:48] Locking roid target
+[22:41:51] Checking for Laser
+[22:41:51] Found Mining Laser
+[22:41:51] Powering Up Laser 1
+[22:41:52] Powering Up Laser 2
+[22:41:55] Locking roid target
+[22:41:58] Checking for Laser
+[22:41:58] Found Mining Laser
+[22:41:58] Powering Up Laser 1
+[22:41:59] Powering Up Laser 2
+[22:42:02] Locking roid target
+[22:42:06] Checking for Laser
+[22:42:06] Found Mining Laser
+[22:42:06] Powering Up Laser 1
+[22:42:07] Powering Up Laser 2
+[22:56:37] Locking roid target
+[22:56:40] Checking for Laser
+[22:56:40] Found Mining Laser
+[22:56:40] Powering Up Laser 1
+[22:56:41] Powering Up Laser 2
+[22:56:44] Locking roid target
+[22:56:47] Checking for Laser
+[22:56:47] Found Mining Laser
+[22:56:47] Powering Up Laser 1
+[22:56:48] Powering Up Laser 2
+[22:56:51] Locking roid target
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 23:03:11  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[23:03:11] Started EVEBot 0.8..
+[23:03:11] Please Hold Loading Main Function..
+[23:03:13] Completed Main Function
+[23:03:13] Bot is now Paused
+[23:03:13] Please Press Play
+[23:03:14] Mining
+[23:03:14] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[23:03:16] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 23:05:35  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[23:05:35] Started EVEBot 0.8..
+[23:05:35] Please Hold Loading Main Function..
+[23:05:37] Completed Main Function
+[23:05:37] Bot is now Paused
+[23:05:37] Please Press Play
+[23:05:37] Mining
+[23:05:37] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[23:05:39] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 23:07:00  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[23:07:00] Started EVEBot 0.8..
+[23:07:00] Please Hold Loading Main Function..
+[23:07:02] Completed Main Function
+[23:07:02] Bot is now Paused
+[23:07:02] Please Press Play
+[23:07:03] Mining
+[23:07:03] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[23:07:05] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[23:07:05] DEBUG: RoidCount 16
+[23:07:05] Setting roid to NULL with id NULL -- calling Orbit...
+[23:07:06] DEBUG: RoidCount 16
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 23:11:18  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[23:11:18] Started EVEBot 0.8..
+[23:11:18] Please Hold Loading Main Function..
+[23:11:20] Completed Main Function
+[23:11:20] Bot is now Paused
+[23:11:20] Please Press Play
+[23:11:21] Mining
+[23:11:21] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[23:11:23] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[23:11:23] DEBUG: RoidCount 16
+"[23:11:23] "DEBUG: Roid[1] NULL"
+[23:11:23] Setting roid to NULL with id NULL -- calling Orbit...
+[23:11:25] DEBUG: RoidCount 16
+"[23:11:25] "DEBUG: Roid[1] NULL"
+[23:11:26] DEBUG: RoidCount 16
+"[23:11:26] "DEBUG: Roid[1] NULL"
+[23:11:27] DEBUG: RoidCount 16
+"[23:11:27] "DEBUG: Roid[1] NULL"
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 23:12:21  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[23:12:21] Started EVEBot 0.8..
+[23:12:21] Please Hold Loading Main Function..
+[23:12:23] Completed Main Function
+[23:12:23] Bot is now Paused
+[23:12:23] Please Press Play
+[23:12:24] Mining
+[23:12:24] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[23:12:26] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[23:12:26] DEBUG: RoidCount 16
+"[23:12:26] "DEBUG: Roid[1] NULL"
+[23:12:26] Setting roid to NULL with id NULL -- calling Orbit...
+[23:12:27] DEBUG: RoidCount 16
+"[23:12:27] "DEBUG: Roid[1] NULL"
+[23:12:29] DEBUG: RoidCount 16
+"[23:12:29] "DEBUG: Roid[1] NULL"
+[23:12:30] DEBUG: RoidCount 16
+"[23:12:30] "DEBUG: Roid[1] NULL"
+[23:12:31] DEBUG: RoidCount 16
+"[23:12:31] "DEBUG: Roid[1] NULL"
+[23:12:32] DEBUG: RoidCount 16
+"[23:12:32] "DEBUG: Roid[1] NULL"
+[23:12:33] DEBUG: RoidCount 16
+"[23:12:33] "DEBUG: Roid[1] NULL"
+[23:12:34] DEBUG: RoidCount 16
+"[23:12:34] "DEBUG: Roid[1] NULL"
+[23:12:35] DEBUG: RoidCount 16
+"[23:12:35] "DEBUG: Roid[1] NULL"
+[23:12:37] DEBUG: RoidCount 16
+"[23:12:37] "DEBUG: Roid[1] NULL"
+[23:12:38] DEBUG: RoidCount 16
+"[23:12:38] "DEBUG: Roid[1] NULL"
+[23:12:39] DEBUG: RoidCount 16
+"[23:12:39] "DEBUG: Roid[1] NULL"
+[23:12:40] DEBUG: RoidCount 16
+"[23:12:40] "DEBUG: Roid[1] NULL"
+[23:12:41] DEBUG: RoidCount 16
+"[23:12:41] "DEBUG: Roid[1] NULL"
+[23:12:42] DEBUG: RoidCount 16
+"[23:12:42] "DEBUG: Roid[1] NULL"
+[23:12:44] DEBUG: RoidCount 16
+"[23:12:44] "DEBUG: Roid[1] NULL"
+[23:12:45] DEBUG: RoidCount 16
+"[23:12:45] "DEBUG: Roid[1] NULL"
+[23:12:46] DEBUG: RoidCount 16
+"[23:12:46] "DEBUG: Roid[1] NULL"
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 23:12:48  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[23:12:48] Started EVEBot 0.8..
+[23:12:48] Please Hold Loading Main Function..
+[23:12:50] Completed Main Function
+[23:12:50] Bot is now Paused
+[23:12:50] Please Press Play
+[23:12:51] Mining
+[23:12:51] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[23:12:53] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[23:12:53] DEBUG: RoidCount 16
+[23:12:53] DEBUG: Roid[1] NULL
+[23:12:53] Setting roid to NULL with id NULL -- calling Orbit...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 23:13:20  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[23:13:20] Started EVEBot 0.8..
+[23:13:20] Please Hold Loading Main Function..
+[23:13:22] Completed Main Function
+[23:13:22] Bot is now Paused
+[23:13:22] Please Press Play
+[23:13:22] Mining
+[23:13:23] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[23:13:25] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[23:13:25] DEBUG: RoidCount 16
+[23:13:25] DEBUG: Roids[1] 72640018
+[23:13:25] Setting roid to NULL with id NULL -- calling Orbit...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 23:14:00  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[23:14:00] Started EVEBot 0.8..
+[23:14:00] Please Hold Loading Main Function..
+[23:14:02] Completed Main Function
+[23:14:02] Bot is now Paused
+[23:14:02] Please Press Play
+[23:14:03] Mining
+[23:14:03] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[23:14:05] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[23:14:05] DEBUG: RoidCount 16
+[23:14:05] DEBUG: Roids[1] 72640018
+[23:14:05] Setting roid to Asteroid (Scordite) with id 72640018 -- calling Orbit...
+[23:14:06] Entering Orbit with 72640018, waiting...
+[23:14:06] Finish waiting, in orbit now
+[23:14:06] Locking roid target
+[23:14:11] Checking for Laser
+[23:14:11] Found Mining Laser
+[23:14:11] Powering Up Laser 1
+[23:14:12] Powering Up Laser 2
+[23:15:16] End waiting, cargo is full
+[23:15:17] Setting main station Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with ID 60009676
+[23:15:17] My ship is full
+[23:15:17] The distance is greater than 10000, calling ReturnToBase
+[23:15:28] Warping, waiting...
+[23:16:02] Finished warping...
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 23:21:56  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[23:21:56] Started EVEBot 0.8..
+[23:21:56] Please Hold Loading Main Function..
+[23:21:58] Completed Main Function
+[23:21:58] Bot is now Paused
+[23:21:58] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 23:22:11  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[23:22:11] Started EVEBot 0.8..
+[23:22:11] Please Hold Loading Main Function..
+[23:22:13] Completed Main Function
+[23:22:13] Bot is now Paused
+[23:22:13] Please Press Play
+[23:22:16] Setting main station Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with ID 60009676
+[23:22:16] My ship is full
+[23:22:16] Approaching Base
+[23:22:26] In Docking Range ... Docking
+[23:22:26] Docking, waiting...
+[23:22:34] Finished Docking
+[23:22:40] I'm in the station
+[23:22:46] Unloading Cargo[1]: Scordite
+[23:23:02] Unloading Cargo[1]: Scordite
+[23:23:13] Unloading Cargo[1]: Scordite
+[23:23:19] Undocking
+[23:23:19] Waiting...
+[23:23:41] Mining
+[23:23:41] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[23:23:43] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[23:23:53] Warping, waiting...
+[23:24:24] Finished warping...
+[23:24:29] Setting roid to Asteroid (Scordite) with id 72640018 -- calling Orbit...
+[23:24:30] Entering Orbit with 72640018, waiting...
+[23:25:01] Finish waiting, in orbit now
+[23:25:01] Locking roid target
+[23:25:06] Checking for Laser
+[23:25:06] Found Mining Laser
+[23:25:06] Powering Up Laser 1
+[23:25:07] Powering Up Laser 2
+[23:27:11] End waiting, cargo is full
+[23:27:13] Setting main station Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with ID 60009676
+[23:27:13] My ship is full
+[23:27:13] The distance is greater than 10000, calling ReturnToBase
+[23:27:23] Warping, waiting...
+[23:27:58] Finished warping...
+[23:28:05] Approaching Base
+[23:28:07] In Docking Range ... Docking
+[23:28:07] Docking, waiting...
+[23:28:17] Finished Docking
+[23:28:22] I'm in the station
+[23:28:29] Unloading Cargo[1]: Scordite
+[23:28:34] Undocking
+[23:28:34] Waiting...
+[23:28:51] Mining
+[23:28:51] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[23:28:53] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[23:29:04] Warping, waiting...
+[23:29:39] Finished warping...
+[23:29:44] Setting roid to Asteroid (Scordite) with id 72640018 -- calling Orbit...
+[23:29:45] Entering Orbit with 72640018, waiting...
+[23:30:09] Finish waiting, in orbit now
+[23:30:09] Locking roid target
+[23:30:14] Checking for Laser
+[23:30:14] Found Mining Laser
+[23:30:14] Powering Up Laser 1
+[23:30:15] Powering Up Laser 2
+[23:32:20] End waiting, cargo is full
+[23:32:22] Setting main station Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with ID 60009676
+[23:32:22] My ship is full
+[23:32:22] The distance is greater than 10000, calling ReturnToBase
+[23:32:32] Warping, waiting...
+[23:33:06] Finished warping...
+[23:33:13] Approaching Base
+[23:33:16] In Docking Range ... Docking
+[23:33:16] Docking, waiting...
+[23:33:24] Finished Docking
+[23:33:29] I'm in the station
+[23:33:36] Unloading Cargo[1]: Scordite
+[23:33:41] Undocking
+[23:33:41] Waiting...
+[23:33:58] Mining
+[23:33:58] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[23:34:00] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[23:34:10] Warping, waiting...
+[23:34:43] Finished warping...
+[23:34:48] Setting roid to Asteroid (Scordite) with id 72640018 -- calling Orbit...
+[23:34:49] Entering Orbit with 72640018, waiting...
+[23:35:08] Finish waiting, in orbit now
+[23:35:08] Locking roid target
+[23:35:13] Checking for Laser
+[23:35:13] Found Mining Laser
+[23:35:13] Powering Up Laser 1
+[23:35:14] Powering Up Laser 2
+[23:37:13] End waiting, cargo is full
+[23:37:15] Setting main station Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with ID 60009676
+[23:37:15] My ship is full
+[23:37:15] The distance is greater than 10000, calling ReturnToBase
+[23:37:25] Warping, waiting...
+[23:38:00] Finished warping...
+[23:38:07] Approaching Base
+[23:38:09] In Docking Range ... Docking
+[23:38:09] Docking, waiting...
+[23:38:19] Finished Docking
+[23:38:25] I'm in the station
+[23:38:31] Unloading Cargo[1]: Scordite
+[23:38:37] Undocking
+[23:38:37] Waiting...
+[23:38:56] Mining
+[23:38:57] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[23:38:59] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[23:39:09] Warping, waiting...
+[23:39:40] Finished warping...
+[23:39:45] Setting roid to Asteroid (Scordite) with id 72640018 -- calling Orbit...
+[23:39:46] Entering Orbit with 72640018, waiting...
+[23:40:07] Finish waiting, in orbit now
+[23:40:07] Locking roid target
+[23:40:12] Checking for Laser
+[23:40:12] Found Mining Laser
+[23:40:12] Powering Up Laser 1
+[23:40:13] Powering Up Laser 2
+[23:41:14] End waiting, cargo is full
+[23:41:15] Mining
+[23:41:15] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[23:41:17] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[23:41:17] Setting roid to Asteroid (Scordite) with id 72640018 -- calling Orbit...
+[23:42:14] End waiting, cargo is full
+[23:42:17] Setting main station Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with ID 60009676
+[23:42:17] My ship is full
+[23:42:17] The distance is greater than 10000, calling ReturnToBase
+[23:42:27] Warping, waiting...
+[23:43:02] Finished warping...
+[23:43:09] Approaching Base
+[23:43:11] In Docking Range ... Docking
+[23:43:11] Docking, waiting...
+[23:43:20] Finished Docking
+[23:43:26] I'm in the station
+[23:43:33] Unloading Cargo[1]: Scordite
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 23:52:08  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[23:52:08] Started EVEBot 0.8..
+[23:52:08] Please Hold Loading Main Function..
+[23:52:10] Completed Main Function
+[23:52:10] Bot is now Paused
+[23:52:10] Please Press Play
+[23:52:12] I'm in the station
+[23:52:18] Undocking
+[23:52:18] Waiting...
+[23:52:35] Mining
+[23:52:35] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[23:52:37] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[23:52:47] Warping, waiting...
+[23:53:18] Finished warping...
+[23:53:23] Setting roid to Asteroid (Scordite) with id 72640018 -- calling Orbit...
+[23:53:24] Entering Orbit with 72640018, waiting...
+[23:53:40] Finish waiting, in orbit now
+[23:53:40] Locking roid target
+[23:53:45] Checking for Laser
+[23:53:45] Found Mining Laser
+[23:53:45] Powering Up Laser 1
+[23:53:46] Powering Up Laser 2
+[23:55:51] End waiting, cargo is full
+[23:55:52] Setting main station Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with ID 60009676
+[23:55:52] My ship is full
+[23:55:53] The distance is greater than 10000, calling ReturnToBase
+[23:56:03] Warping, waiting...
+[23:56:37] Finished warping...
+[23:56:44] Approaching Base
+[23:56:47] In Docking Range ... Docking
+[23:56:47] Docking, waiting...
+[23:56:55] Finished Docking
+[23:57:00] I'm in the station
+[23:57:07] Unloading Cargo[1]: Scordite
+-------------------------------------------------
+  Evebot Session time 07/11/2007 at 23:59:18  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[23:59:18] Started EVEBot 0.8..
+[23:59:18] Please Hold Loading Main Function..
+[23:59:20] Completed Main Function
+[23:59:20] Bot is now Paused
+[23:59:20] Please Press Play
+[23:59:21] I'm in the station
+-------------------------------------------------
+  Evebot Session time 07/12/2007 at 00:00:57  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[00:00:57] Started EVEBot 0.8..
+[00:00:57] Please Hold Loading Main Function..
+[00:00:59] Completed Main Function
+[00:00:59] Bot is now Paused
+[00:00:59] Please Press Play
+[00:01:00] I'm in the station
+[00:01:07] Undocking
+[00:01:07] Waiting...
+[00:01:29] Mining
+[00:01:29] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[00:01:31] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[00:01:41] Warping, waiting...
+-------------------------------------------------
+  Evebot Session time 07/12/2007 at 00:02:04  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[00:02:04] Started EVEBot 0.8..
+[00:02:04] Please Hold Loading Main Function..
+[00:02:06] Completed Main Function
+[00:02:06] Bot is now Paused
+[00:02:06] Please Press Play
+[00:02:19] Mining
+[00:02:19] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[00:02:21] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[00:02:21] Setting roid to Asteroid (Scordite) with id 72640018 -- calling Orbit...
+[00:02:22] Entering Orbit with 72640018, waiting...
+[00:02:48] Finish waiting, in orbit now
+[00:02:48] Locking roid target
+[00:02:53] Checking for Laser
+[00:02:53] Found Mining Laser
+[00:02:53] Powering Up Laser 1
+[00:02:54] Powering Up Laser 2
+-------------------------------------------------
+  Evebot Session time 07/12/2007 at 00:15:02  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[00:15:02] Started EVEBot 0.8..
+[00:15:02] Please Hold Loading Main Function..
+[00:15:04] Completed Main Function
+[00:15:04] Bot is now Paused
+[00:15:04] Please Press Play
+[00:15:09] Mining
+[00:15:09] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[00:15:11] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[00:15:11] Setting roid to Asteroid (Scordite) with id 72639962 -- calling Orbit...
+[00:15:12] Entering Orbit with 72639962, waiting...
+-------------------------------------------------
+  Evebot Session time 07/12/2007 at 00:16:47  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[00:16:47] Started EVEBot 0.8..
+[00:16:47] Please Hold Loading Main Function..
+[00:16:49] Completed Main Function
+[00:16:49] Bot is now Paused
+[00:16:49] Please Press Play
+[00:16:49] Mining
+[00:16:49] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[00:16:51] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[00:16:51] Setting roid to Asteroid (Scordite) with id 72639962 -- calling Orbit...
+[00:16:52] Entering Orbit with 72639962, waiting...
+[00:17:11] Finish waiting, in orbit now
+[00:17:11] Locking roid target
+[00:17:18] Checking for Laser
+[00:17:18] Found Mining Laser
+[00:17:18] Powering Up Laser 1
+[00:17:19] Powering Up Laser 2
+[00:18:22] End waiting, cargo is full
+[00:18:24] Setting main station Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with ID 60009676
+[00:18:24] My ship is full
+[00:18:24] The distance is greater than 10000, calling ReturnToBase
+[00:18:34] Warping, waiting...
+[00:19:09] Finished warping...
+[00:19:16] Approaching Base
+[00:19:18] In Docking Range ... Docking
+[00:19:18] Docking, waiting...
+[00:19:26] Finished Docking
+[00:19:31] I'm in the station
+[00:19:38] Unloading Cargo[1]: Scordite
+[00:19:47] Unloading Cargo[1]: Scordite
+[00:19:54] Undocking
+[00:19:54] Waiting...
+[00:20:14] Mining
+[00:20:14] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[00:20:16] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[00:20:26] Warping, waiting...
+[00:20:57] Finished warping...
+[00:21:02] Setting roid to Asteroid (Scordite) with id 72639962 -- calling Orbit...
+[00:21:03] Entering Orbit with 72639962, waiting...
+[00:21:28] Finish waiting, in orbit now
+[00:21:28] Locking roid target
+[00:21:33] Checking for Laser
+[00:21:33] Found Mining Laser
+[00:21:33] Powering Up Laser 1
+[00:21:34] Powering Up Laser 2
+[00:23:38] End waiting, cargo is full
+[00:23:40] Setting main station Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with ID 60009676
+[00:23:40] My ship is full
+[00:23:40] The distance is greater than 10000, calling ReturnToBase
+[00:23:50] Warping, waiting...
+[00:24:24] Finished warping...
+[00:24:31] Approaching Base
+[00:24:33] In Docking Range ... Docking
+[00:24:33] Docking, waiting...
+[00:24:42] Finished Docking
+[00:24:47] I'm in the station
+[00:24:54] Unloading Cargo[1]: Scordite
+[00:25:00] Undocking
+[00:25:00] Waiting...
+[00:25:20] Mining
+[00:25:20] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[00:25:22] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[00:25:32] Warping, waiting...
+[00:26:03] Finished warping...
+[00:26:08] Setting roid to Asteroid (Scordite) with id 72639962 -- calling Orbit...
+[00:26:09] Entering Orbit with 72639962, waiting...
+[00:26:40] Finish waiting, in orbit now
+[00:26:40] Locking roid target
+[00:26:45] Checking for Laser
+[00:26:45] Found Mining Laser
+[00:26:45] Powering Up Laser 1
+[00:26:46] Powering Up Laser 2
+[00:28:50] End waiting, cargo is full
+[00:28:52] Setting main station Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with ID 60009676
+[00:28:52] My ship is full
+[00:28:52] The distance is greater than 10000, calling ReturnToBase
+[00:29:02] Warping, waiting...
+[00:29:36] Finished warping...
+[00:29:43] Approaching Base
+[00:32:40] In Docking Range ... Docking
+[00:32:40] Docking, waiting...
+[00:32:50] Finished Docking
+[00:32:56] I'm in the station
+[00:33:02] Unloading Cargo[1]: Scordite
+[00:33:08] Undocking
+[00:33:08] Waiting...
+[00:33:34] Mining
+[00:33:34] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[00:33:36] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[00:33:46] Warping, waiting...
+[00:34:17] Finished warping...
+[00:34:22] Setting roid to Asteroid (Scordite) with id 72639962 -- calling Orbit...
+[00:34:23] Entering Orbit with 72639962, waiting...
+[00:34:48] Finish waiting, in orbit now
+[00:34:48] Locking roid target
+[00:34:53] Checking for Laser
+[00:34:53] Found Mining Laser
+[00:34:53] Powering Up Laser 1
+[00:34:54] Powering Up Laser 2
+[00:36:58] End waiting, cargo is full
+[00:36:59] Setting main station Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with ID 60009676
+[00:36:59] My ship is full
+[00:36:59] The distance is greater than 10000, calling ReturnToBase
+[00:37:11] Warping, waiting...
+[00:37:45] Finished warping...
+[00:37:52] Approaching Base
+[00:37:54] In Docking Range ... Docking
+[00:37:54] Docking, waiting...
+[00:38:04] Finished Docking
+[00:38:10] I'm in the station
+[00:38:17] Unloading Cargo[1]: Scordite
+[00:38:23] Undocking
+[00:38:23] Waiting...
+[00:38:43] Mining
+[00:38:43] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[00:38:45] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[00:38:55] Warping, waiting...
+[00:39:26] Finished warping...
+[00:39:31] Setting roid to Asteroid (Scordite) with id 72639962 -- calling Orbit...
+[00:39:32] Entering Orbit with 72639962, waiting...
+[00:40:03] Finish waiting, in orbit now
+[00:40:03] Locking roid target
+[00:40:08] Checking for Laser
+[00:40:08] Found Mining Laser
+[00:40:08] Powering Up Laser 1
+[00:40:09] Powering Up Laser 2
+[00:42:13] End waiting, cargo is full
+[00:42:15] Setting main station Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with ID 60009676
+[00:42:15] My ship is full
+[00:42:15] The distance is greater than 10000, calling ReturnToBase
+[00:42:25] Warping, waiting...
+[00:42:59] Finished warping...
+[00:43:06] Approaching Base
+[00:43:08] In Docking Range ... Docking
+[00:43:08] Docking, waiting...
+[00:43:19] Finished Docking
+[00:43:24] I'm in the station
+[00:43:31] Unloading Cargo[1]: Scordite
+[00:43:37] Undocking
+[00:43:37] Waiting...
+[00:43:57] Mining
+[00:43:57] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[00:43:59] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[00:44:10] Warping, waiting...
+[00:44:40] Finished warping...
+[00:44:45] Setting roid to Asteroid (Scordite) with id 72639962 -- calling Orbit...
+[00:44:46] Entering Orbit with 72639962, waiting...
+[00:45:16] Finish waiting, in orbit now
+[00:45:16] Locking roid target
+[00:45:21] Checking for Laser
+[00:45:21] Found Mining Laser
+[00:45:21] Powering Up Laser 1
+[00:45:22] Powering Up Laser 2
+[00:47:26] End waiting, cargo is full
+[00:47:28] Setting main station Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with ID 60009676
+[00:47:28] My ship is full
+[00:47:28] The distance is greater than 10000, calling ReturnToBase
+[00:47:38] Warping, waiting...
+[00:48:12] Finished warping...
+[00:48:19] Approaching Base
+[00:48:21] In Docking Range ... Docking
+[00:48:21] Docking, waiting...
+[00:48:29] Finished Docking
+[00:48:35] I'm in the station
+[00:48:41] Unloading Cargo[1]: Scordite
+[00:48:47] Undocking
+[00:48:47] Waiting...
+[00:49:08] Mining
+[00:49:08] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[00:49:10] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[00:49:20] Warping, waiting...
+[00:49:51] Finished warping...
+[00:49:56] Setting roid to Asteroid (Scordite) with id 72639962 -- calling Orbit...
+[00:49:57] Entering Orbit with 72639962, waiting...
+[00:50:23] Finish waiting, in orbit now
+[00:50:23] Locking roid target
+[00:50:28] Checking for Laser
+[00:50:28] Found Mining Laser
+[00:50:28] Powering Up Laser 1
+[00:50:29] Powering Up Laser 2
+[00:52:33] End waiting, cargo is full
+[00:52:35] Setting main station Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with ID 60009676
+[00:52:35] My ship is full
+[00:52:35] The distance is greater than 10000, calling ReturnToBase
+[00:52:45] Warping, waiting...
+[00:53:21] Finished warping...
+[00:53:28] Approaching Base
+[00:53:42] In Docking Range ... Docking
+[00:53:42] Docking, waiting...
+[00:53:51] Finished Docking
+[00:53:56] I'm in the station
+[00:54:03] Unloading Cargo[1]: Scordite
+[00:54:09] Undocking
+[00:54:09] Waiting...
+[00:54:30] Mining
+[00:54:30] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[00:54:32] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[00:54:42] Warping, waiting...
+[00:55:12] Finished warping...
+[00:55:17] Setting roid to Asteroid (Scordite) with id 72639962 -- calling Orbit...
+[00:55:18] Entering Orbit with 72639962, waiting...
+[00:55:49] Finish waiting, in orbit now
+[00:55:49] Locking roid target
+[00:55:54] Checking for Laser
+[00:55:54] Found Mining Laser
+[00:55:54] Powering Up Laser 1
+[00:55:55] Powering Up Laser 2
+[00:57:59] End waiting, cargo is full
+[00:58:00] Setting main station Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with ID 60009676
+[00:58:00] My ship is full
+[00:58:00] The distance is greater than 10000, calling ReturnToBase
+[00:58:11] Warping, waiting...
+[00:58:45] Finished warping...
+[00:58:52] Approaching Base
+[00:58:54] In Docking Range ... Docking
+[00:58:54] Docking, waiting...
+[00:59:04] Finished Docking
+[00:59:10] I'm in the station
+[00:59:16] Unloading Cargo[1]: Scordite
+-------------------------------------------------
+  Evebot Session time 07/12/2007 at 01:50:47  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[01:50:47] Started EVEBot 0.8..
+[01:50:47] Please Hold Loading Main Function..
+-------------------------------------------------
+  Evebot Session time 07/12/2007 at 01:51:35  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[01:51:35] Started EVEBot 0.8..
+[01:51:35] Please Hold Loading Main Function..
+[01:51:37] Completed Main Function
+[01:51:37] Bot is now Paused
+[01:51:37] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/12/2007 at 01:52:00  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[01:52:00] Started EVEBot 0.8..
+[01:52:00] Please Hold Loading Main Function..
+-------------------------------------------------
+  Evebot Session time 07/12/2007 at 01:54:17  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[01:54:17] Started EVEBot 0.8..
+[01:54:17] Please Hold Loading Main Function..
+[01:54:19] Completed Main Function
+[01:54:19] Bot is now Paused
+[01:54:19] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/12/2007 at 01:54:31  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[01:54:31] Started EVEBot 0.8..
+[01:54:31] Please Hold Loading Main Function..
+[01:54:33] Completed Main Function
+[01:54:33] Bot is now Paused
+[01:54:33] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/12/2007 at 01:54:39  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[01:54:39] Started EVEBot 0.8..
+[01:54:39] Please Hold Loading Main Function..
+-------------------------------------------------
+  Evebot Session time 07/12/2007 at 02:03:38  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[02:03:38] Started EVEBot 0.8..
+[02:03:38] Please Hold Loading Main Function..
+[02:03:40] Completed Main Function
+[02:03:40] Bot is now Paused
+[02:03:40] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/12/2007 at 02:04:31  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[02:04:31] Started EVEBot 0.8..
+[02:04:31] Please Hold Loading Main Function..
+[02:04:33] Completed Main Function
+[02:04:33] Bot is now Paused
+[02:04:33] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/12/2007 at 02:16:51  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[02:16:51] Started EVEBot 0.8..
+[02:16:51] Please Hold Loading Main Function..
+[02:16:53] Completed Main Function
+[02:16:53] Bot is now Paused
+[02:16:53] Please Press Play
+[02:17:16] Mining
+[02:17:16] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[02:17:18] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[02:17:28] Warping, waiting...
+[02:18:01] Finished warping...
+[02:18:06] No Asteroids Available in Belt
+[02:18:06] Setting roid to NULL with id NULL -- calling Orbit...
+[02:18:07] DEBUG: RoidCount 0
+[02:18:07] DEBUG: RoidCount 0
+[02:18:07] DEBUG: Asteroid Type: Plagioclase
+[02:18:08] Entering Orbit with 72639978, waiting...
+[02:18:30] Finish waiting, in orbit now
+[02:18:30] Locking roid target
+[02:18:35] Checking for Laser
+[02:18:35] Found Mining Laser
+[02:18:35] Powering Up Laser 1
+[02:18:36] Powering Up Laser 2
+-------------------------------------------------
+  Evebot Session time 07/12/2007 at 02:19:47  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[02:19:47] Started EVEBot 0.8..
+[02:19:47] Please Hold Loading Main Function..
+[02:19:49] Completed Main Function
+[02:19:49] Bot is now Paused
+[02:19:49] Please Press Play
+[02:19:51] Mining
+[02:19:51] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[02:19:53] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[02:19:53] No Asteroids Available in Belt
+[02:19:53] Setting roid to NULL with id NULL -- calling Orbit...
+[02:19:54] DEBUG: RoidCount 0
+[02:19:54] DEBUG: RoidCount 0
+[02:19:54] DEBUG: Asteroid Type: Scordite
+[02:20:10] Entering Orbit with 72639978, waiting...
+[02:20:10] Finish waiting, in orbit now
+[02:20:10] Locking roid target
+-------------------------------------------------
+  Evebot Session time 07/12/2007 at 02:20:25  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[02:20:25] Started EVEBot 0.8..
+[02:20:25] Please Hold Loading Main Function..
+[02:20:27] Completed Main Function
+[02:20:27] Bot is now Paused
+[02:20:27] Please Press Play
+[02:20:28] Mining
+[02:20:28] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[02:20:30] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[02:20:30] No Asteroids Available in Belt
+[02:20:30] Setting roid to NULL with id NULL -- calling Orbit...
+[02:20:31] DEBUG: RoidCount 0
+[02:20:31] DEBUG: RoidCount 0
+[02:20:31] DEBUG: Asteroid Type: Scordite
+[02:20:32] Entering Orbit with 72639978, waiting...
+[02:20:32] Finish waiting, in orbit now
+[02:20:32] Locking roid target
+[02:20:37] Checking for Laser
+[02:20:37] Found Mining Laser
+[02:20:37] Powering Up Laser 1
+[02:20:38] Powering Up Laser 2
+[02:21:42] End waiting, cargo is full
+[02:21:44] Setting main station Agrallarier VIII - Moon 3 - Astral Mining Inc. Refinery with ID 60009676
+[02:21:44] My ship is full
+[02:21:44] The distance is greater than 10000, calling ReturnToBase
+[02:21:54] Warping, waiting...
+[02:22:26] Finished warping...
+[02:22:34] Approaching Base
+[02:22:36] In Docking Range ... Docking
+[02:22:36] Docking, waiting...
+-------------------------------------------------
+  Evebot Session time 07/12/2007 at 02:23:34  
+  Evebot Session for  Miner'I 
+-------------------------------------------------
+[02:23:34] Started EVEBot 0.8..
+[02:23:34] Please Hold Loading Main Function..
+[02:23:36] Completed Main Function
+[02:23:36] Bot is now Paused
+[02:23:36] Please Press Play
+[02:23:37] I'm in the station
+[02:23:44] Unloading Cargo[1]: Scordite
+[02:23:50] Undocking
+[02:23:50] Waiting...
+[02:24:11] Mining
+[02:24:11] Setting roid belt Agrallarier V - Asteroid Belt 1 with id 40169215
+[02:24:13] Warping to roid belt: Agrallarier V - Asteroid Belt 1
+[02:24:23] Warping, waiting...
+[02:24:53] Finished warping...
+[02:24:58] Setting roid to Asteroid (Scordite) with id 72639978 -- calling Orbit...
+[02:24:59] Entering Orbit with 72639978, waiting...
+[02:25:34] Finish waiting, in orbit now
+[02:25:34] Locking roid target
+[02:25:39] Checking for Laser
+[02:25:39] Found Mining Laser
+[02:25:39] Powering Up Laser 1
+[02:25:40] Powering Up Laser 2

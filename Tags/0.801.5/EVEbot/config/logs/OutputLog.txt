@@ -1,0 +1,260 @@
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 14:37:57  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[14:37:57] Started EVEBot 0.8
+[14:37:59] Eve Bot starting
+[14:38:19] Completed Main Function
+[14:38:19] I'm in the station
+[14:38:19] Transfering item1 to hangar
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 14:39:13  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[14:39:13] Started EVEBot 0.8
+[14:39:15] Eve Bot starting
+[14:39:15] Completed Main Function
+[14:39:15] Bot is now Paused
+[14:39:15] Please Press Play
+[14:39:23] I'm in the station
+[14:39:23] Transfering item1 to hangar
+[14:39:31] Transfering item2 to hangar
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 14:40:41  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[14:40:41] Started EVEBot 0.8
+[14:40:43] Eve Bot starting
+[14:40:43] Completed Main Function
+[14:40:43] Bot is now Paused
+[14:40:43] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 14:42:01  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[14:42:01] Started EVEBot 0.8..
+[14:42:01] Please Hold Loading Main Function..
+[14:42:03] Completed Main Function
+[14:42:03] Bot is now Paused
+[14:42:03] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 14:43:42  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[14:43:42] Started EVEBot 0.8..
+[14:43:42] Please Hold Loading Main Function..
+[14:43:44] Completed Main Function
+[14:43:44] Bot is now Paused
+[14:43:44] Please Press Play
+[14:43:47] I'm in the station
+[14:43:47] Transfering item1 to hangar
+[14:43:55] Transfering item2 to hangar
+[14:44:03] Transfering item3 to hangar
+[14:44:11] Stacking all...
+[14:44:20] Staking done
+[14:44:22] Undocking
+[14:44:22] Waiting...
+[14:44:42] Mining
+[14:44:42] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:00:31  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:00:31] Started EVEBot 0.8..
+[15:00:31] Please Hold Loading Main Function..
+[15:00:33] Completed Main Function
+[15:00:33] Bot is now Paused
+[15:00:33] Please Press Play
+[15:00:33] Mining
+[15:00:33] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:00:35] About to warp, this is a log check
+[15:00:45] Warping, waiting...
+[15:01:08] Waiting ends
+[15:01:13] Warp Command Given
+[15:01:13] Roid Set
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:01:43  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:01:43] Started EVEBot 0.8..
+[15:01:43] Please Hold Loading Main Function..
+[15:01:45] Completed Main Function
+[15:01:45] Bot is now Paused
+[15:01:45] Please Press Play
+[15:02:59] Mining
+[15:02:59] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:03:01] About to warp, this is a log check
+[15:03:11] Warping, waiting...
+[15:03:11] Waiting ends
+[15:03:16] Warp Command Given
+[15:03:16] Roid Set
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:07:00  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:07:00] Started EVEBot 0.8..
+[15:07:00] Please Hold Loading Main Function..
+[15:07:02] Completed Main Function
+[15:07:02] Bot is now Paused
+[15:07:02] Please Press Play
+[15:07:13] Mining
+[15:07:13] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:07:15] About to warp, this is a log check
+[15:07:25] Warping, waiting...
+[15:07:25] Waiting ends
+[15:07:30] Warp Command Given
+[15:07:30] Roid Set
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:08:16  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:08:16] Started EVEBot 0.8..
+[15:08:16] Please Hold Loading Main Function..
+[15:08:18] Completed Main Function
+[15:08:18] Bot is now Paused
+[15:08:18] Please Press Play
+[15:08:22] Mining
+[15:08:22] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:08:24] About to warp, this is a log check
+[15:08:34] Warping, waiting...
+[15:08:59] Waiting ends
+[15:09:04] Warp Command Given
+[15:09:04] Roid Set
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:09:33  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:09:33] Started EVEBot 0.8..
+[15:09:33] Please Hold Loading Main Function..
+[15:09:35] Completed Main Function
+[15:09:35] Bot is now Paused
+[15:09:35] Please Press Play
+[15:09:36] Mining
+[15:09:37] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:09:39] About to warp, this is a log check
+[15:09:49] Warping, waiting...
+[15:09:49] Waiting ends
+[15:09:54] Warp Command Given
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:10:56  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:10:56] Started EVEBot 0.8..
+[15:10:56] Please Hold Loading Main Function..
+[15:10:58] Completed Main Function
+[15:10:58] Bot is now Paused
+[15:10:58] Please Press Play
+[15:11:01] Mining
+[15:11:01] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:11:03] About to warp, this is a log check
+[15:11:13] Warping, waiting...
+[15:11:13] Waiting ends
+[15:11:18] Warp Command Given
+[15:11:19] About to set Roid
+[15:11:19] We've Set Roid
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:12:55  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:12:55] Started EVEBot 0.8..
+[15:12:55] Please Hold Loading Main Function..
+[15:12:57] Completed Main Function
+[15:12:57] Bot is now Paused
+[15:12:57] Please Press Play
+[15:13:00] Mining
+[15:13:00] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:13:02] About to warp, this is a log check
+[15:13:12] Warping, waiting...
+[15:13:12] Waiting ends
+[15:13:17] Warp Command Given
+[15:13:18] About to set Roid
+[15:13:18] We've Set Roid
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:18:11  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:18:11] Started EVEBot 0.8..
+[15:18:11] Please Hold Loading Main Function..
+[15:18:13] Completed Main Function
+[15:18:13] Bot is now Paused
+[15:18:13] Please Press Play
+[15:18:15] Mining
+[15:18:16] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:18:18] About to warp, this is a log check
+[15:18:28] Warping, waiting...
+[15:18:28] Waiting ends
+[15:18:33] Warp Command Given
+[15:18:34] About to set Roid
+[15:18:34] We've Set Roid
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:18:54  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:18:54] Started EVEBot 0.8..
+[15:18:54] Please Hold Loading Main Function..
+[15:18:56] Completed Main Function
+[15:18:56] Bot is now Paused
+[15:18:56] Please Press Play
+[15:19:08] Mining
+[15:19:08] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:19:10] About to warp, this is a log check
+[15:19:20] Warping, waiting...
+[15:19:20] Waiting ends
+[15:19:25] Warp Command Given
+[15:19:26] About to set Roid
+[15:19:26] We've Set Roid
+[15:19:27] Setting roid to Asteroid (Veldspar) with id 73817554
+[15:19:27] Entering Orbit with 73817554, waiting...
+[15:20:53] Finish waiting, in orbit now
+[15:20:54] Locking roid target
+[15:20:58] IMMA FIRIN MAH LAZOR!
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:23:06  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:23:06] Started EVEBot 0.8..
+[15:23:06] Please Hold Loading Main Function..
+[15:23:08] Completed Main Function
+[15:23:08] Bot is now Paused
+[15:23:08] Please Press Play
+[15:23:11] Mining
+[15:23:11] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:23:13] About to warp, this is a log check
+[15:23:23] Warping, waiting...
+[15:23:46] Waiting ends
+[15:23:51] Warp Command Given
+[15:23:52] About to set Roid
+[15:23:52] We've Set Roid
+[15:23:52] Setting roid to Asteroid (Veldspar) with id 73817496
+[15:23:52] Entering Orbit with 73817496, waiting...
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:25:06  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:25:06] Started EVEBot 0.8..
+[15:25:06] Please Hold Loading Main Function..
+[15:25:08] Completed Main Function
+[15:25:08] Bot is now Paused
+[15:25:08] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/08/2007 at 15:25:19  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:25:19] Started EVEBot 0.8..
+[15:25:19] Please Hold Loading Main Function..
+[15:25:21] Completed Main Function
+[15:25:21] Bot is now Paused
+[15:25:21] Please Press Play
+[15:25:23] Mining
+[15:25:23] Setting roid belt Ethernity VI - Asteroid Belt 8 with id 40192556
+[15:25:25] About to warp, this is a log check
+[15:25:35] Warping, waiting...
+[15:25:35] Waiting ends
+[15:25:40] Warp Command Given
+[15:25:41] About to set Roid
+[15:25:41] We've Set Roid
+[15:25:42] Setting roid to Asteroid (Concentrated Veldspar) with id 73817471
+[15:25:42] Entering Orbit with 73817471, waiting...
+[15:26:05] Finish waiting, in orbit now
+[15:26:05] Locking roid target
+[15:26:10] IMMA FIRIN MAH LAZOR!
