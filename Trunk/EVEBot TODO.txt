@@ -1,21 +1,21 @@
 TO:DO
 
-Stealthy: me? I'm just trying to get this shit up and smooth
-Hessinger: want to make a GUI for this new version?
-Hazard: start implementing Stealthy bookmarks
-Neutro: Working on finding best ore mining location, on refine and sell
+Hessinger: In vacation
+Neutro: Add the option to use a jetcan or not and add support, implementing an event for mutli-bot support
+Ronin: MIA
+Override: Working on the queue/learning skills
+Halon: Not coding, no time or will
+Cyber: Rewriting oMinning and transforming the code into module
+Teht: Working on a hauler script
+Plecks: - have a look at the list down there and pick something or just work on something -
+Altered: - have a look at the list down there and pick something or just work on something -
 
-I(neutro) need
-* Addition for bookmarks location (I(Neutro) am working on this)
-* queue'ing skills / auto learning (Almost done)
-* depends on cargo functions by ama but inventory in an array (id, name, location, type, etc)
-* swapping guns, changing shields, repairing
-
-GUI UPDATE:
-[04:58] <@Hessinger> Anyways
-[04:58] <@Hessinger> if i may not start this gui until ama gets cargo done and were up to speed and away from pixel clicking
-[04:59] <@Hessinger> i had problems setting up the options page because there was no real easy way datatype to store x,y coords.
-[04:59] <@Hessinger> soo....... if he doesn't get cargo done in next few days for w/e reason or has problems
-
-DONE
-<Neutro> i plan on adding a few core item to split it up, oMining, oCombat, oBase (refer to when you are instation))
+I(Neutro) need
+* Addition for bookmarks location (waiting for Ama to add Bookmark support to ISXEVE)
+* queue'ing skills / auto learning (Almost done, just need to implement it)
+* depends on cargo functions by ama but inventory in an array (id, name, location, type, etc) - On wait - 
+* swapping guns, changing shields, repairing - on wait - 
+* Chatter support (via IRC, MSN, AOL) - waiting for Ama to add Chat support to ISXEVE -
+* Optimisation (+modular) - Cyber is doing it
+* Pvp combat bot (warpto miner(s), check, destroy if enemies, warpto transporter(s), destroy if enemy, go back to base, repair, etc)
+* Create a script that will automatically reconnect you after downtime (serverside)
