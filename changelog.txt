@@ -4,18 +4,61 @@
  \  ___/\   /\  ___/| \_\ (  <_> )  |                 |
   \___  >\_/  \___  >___  /\____/|__|                 |
       \/          \/    \/                            |
-        --  V. 0.81 Alpha --                          |
+        --  V. 0.89.1 Stable Beta --                  |
                                                       |
 ------------------------------------------------------*
+
 
 CHANGELOG:
 
 
+0.899.1 
+- Drone Support
+- Various Fixes
+- GUI Stabilization
 
 
-0.81
-- .....
-- .....
+0.88
+- Numerous Fixed for oCombat... still needs more testing =)
+- Changed Undock in oSpace.iss
+- Changed oMining.iss to support Combat better
+- Added a few more features to the GUI to prep for the gui Update
+- EVEBot.iss changed 1 last time for combat hopefully
+
+
+0.87
+- Add 200 Lines of Code in Combat.iss, not gonna list everything I did, assholes.
+- Fixed Where Cargo Sometimes wouldn't get put in the station.
+- Added and Fixed several things in oMining
+- Added Combat Support for EVEbot.iss
+- Continous Updates to the GUI, nothing major yet.. rev from me
+- Updated Skin.xml for future updates
+- Fixed Various Bugs in oStation.iss
+- fuck.. who knows what else... I know there are some problems probably in oCombat still, since its not fully tested
+- I love you... Good night!
+- Hessinger
+
+
+0.86
+- Deleted oPixel.iss
+- Added Basic Combat Support (Should prevent us from getting our ships from being destroyed)
+
+
+0.85
+- No more pixel defining!!!
+
+
+0.84 
+- Add a exists if for oStation (thanks to Cyber)
+- Only activate 2 shields (more was killing my capacity, feel free to change it back to the GetModule value)
+- Added a check if your stationloc == NULL
+
+
+0.83
+- Added CheckOrbit
+- Added a member CheckEntity (commented just for the structure)
+- Fixed docking
+- Temporary changed orbit roid to approach
 
 
 0.801.6
@@ -111,5 +154,6 @@ CHANGELOG:
 -Original bot by Tehtsuo
 
 
-
-
+ _________________________
+| Last Updated: 7/17/07.  |
+|_________________________|

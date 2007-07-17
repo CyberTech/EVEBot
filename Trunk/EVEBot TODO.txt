@@ -5,6 +5,7 @@ Neutro: Add the option to use a jetcan or not and add support, implementing an e
 Ronin: MIA
 Override: Working on the queue/learning skills
 Halon: Not coding, no time or will
+Hazard: Insult EVEBOt and get klined from IRC
 Cyber: Rewriting oMinning and transforming the code into module
 Teht: Working on a hauler script
 Plecks: - have a look at the list down there and pick something or just work on something -
