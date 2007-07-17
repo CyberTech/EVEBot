@@ -120,7 +120,7 @@ function Mine()
 	
 	while ${Me.Ship.UsedCargoCapacity} <= ${Math.Calc[${Me.Ship.CargoCapacity}*0.90]}
 	{
-		if (${Me.ToEntity.ShieldPct} > 35)
+		if (${Me.ToEntity.ShieldPct} > ${MinShieldPct})
 		{
 	  	;call UpdateHudStatus "Update: Cargo Capacity at ${Me.Ship.UsedCargoCapacity} of ${Me.Ship.CargoCapacity}"
 			wait 10

@@ -56,7 +56,7 @@
 				<Tabs>
 					<Tab Name='Main'>
 						<commandbutton name='Pause EvEBot'>
-							<X>275</X>
+							<X>75</X>
 							<Y>5</Y>
 							<Width>65</Width>
 							<Height>25</Height>
@@ -68,7 +68,7 @@
 							</OnLeftClick>
 						</commandbutton>
 						<commandbutton name='Play	EvEBot'>
-							<X>205</X>
+							<X>5</X>
 							<Y>5</Y>
 							<Width>65</Width>
 							<Height>25</Height>
@@ -78,8 +78,18 @@
 								Echo Resume
 							</OnLeftClick>
 						</commandbutton>
+						<commandbutton name='Force Return'> 
+							<X>145</X>
+							<Y>5</Y>
+							<Width>65</Width>
+							<Height>25</Height>
+							<Text>Return</Text> 
+							<OnLeftClick>
+							forcedreturn
+							</OnLeftClick>
+						</commandbutton>
 						<commandbutton name='Exit	EvEBot'>
-							<X>345</X>
+							<X>348</X>
 							<Y>5</Y>
 							<Width>65</Width>
 							<Height>25</Height>
@@ -146,42 +156,42 @@
 						</text>
 						<text	name='Name'>
 							<X>7</X>
-							<Y>5</Y>
+							<Y>30</Y>
 							<Width>100</Width>
 							<Height>20</Height>
 							<Text>Name:</Text>
 						</text>
 						<text	name='MyName'>
 							<X>50</X>
-							<Y>5</Y>
+							<Y>30</Y>
 							<Width>100</Width>
 							<Height>20</Height>
 							<text>${EVEBOT_CharacterName}</text>
 						</text>
 						<text	name='Race'>
 							<X>7</X>
-							<Y>20</Y>
+							<Y>45</Y>
 							<Width>100</Width>
 							<Height>20</Height>
 							<Text>Race:</Text>
 						</text>
 						<text	name='MyRace'>
 							<X>50</X>
-							<Y>20</Y>
+							<Y>45</Y>
 							<Width>150</Width>
 							<Height>20</Height>
 							<text>${EVEBOT_MyRace}</text>
 						</text>
 						<text	name='Corporation'>
 							<X>7</X>
-							<Y>35</Y>
+							<Y>60</Y>
 							<Width>100</Width>
 							<Height>20</Height>
 							<Text>Corporation:</Text>
 						</text>
 						<text	name='MyCorp'>
 							<X>105</X>
-							<Y>35</Y>
+							<Y>60</Y>
 							<Width>100</Width>
 							<Height>20</Height>
 							<text>${EVEBOT_MyCorp}</text>
@@ -194,99 +204,41 @@
 						</console>
 					</Tab>
 					
-					<Tab Name='Mining'>
-						<text	name='CargoHoldItem1'>
-						<Visible>0</Visible>
-							<X>10</X>
-							<Y>15</Y>
-							<Width>300</Width>
-							<Height>20</Height>
-							<Text>Cargo	Hold Item	1: </Text>
-						</text>
-						<Textentry name='Define	CargoHoldItem1x'>
-						<Visible>0</Visible>
-							<X>155</X>
-							<Y>11</Y>
-							<Width>30</Width>
-							<Height>18</Height>
-
-							<OnLoad>
-							This:SetText[${Script[evebot].VariableScope.CargoHoldItem1x}]
-							</OnLoad>
-						</Textentry>
-						<Textentry name='Define	CargoHoldItem1y'>
-						<Visible>0</Visible>
-							<X>190</X>
-							<Y>11</Y>
-							<Width>30</Width>
-							<Height>18</Height>
-
-							<OnLoad>
-							This:SetText[${Script[evebot].VariableScope.CargoHoldItem1y}]
-							</OnLoad>
-						</Textentry>
-						<text	name='CargoHoldItem2'>
-						<Visible>0</Visible>
-							<X>10</X>
-							<Y>35</Y>
-							<Width>300</Width>
-							<Height>20</Height>
-							<Text>Cargo	Hold Item	2: </Text>
-						</text>
-						<Textentry name='Define	CargoHoldItem2x'>
-						<Visible>0</Visible>
-							<X>155</X>
-							<Y>31</Y>
-							<Width>30</Width>
-							<Height>18</Height>
-
-							<OnLoad>
-							This:SetText[${Script[evebot].VariableScope.CargoHoldItem2x}]
-							</OnLoad>
-						</Textentry>
-						<Textentry name='Define	CargoHoldItem2y'>
-						<Visible>0</Visible>
-							<X>190</X>
-							<Y>31</Y>
-							<Width>30</Width>
-							<Height>18</Height>
-
-							<OnLoad>
-							This:SetText[${Script[evebot].VariableScope.CargoHoldItem2y}]
-							</OnLoad>
-						</Textentry>
-						<text	name='CargoHoldItem3'>
-						<Visible>0</Visible>
-							<X>10</X>
-							<Y>55</Y>
-							<Width>300</Width>
-							<Height>20</Height>
-							<Text>Cargo	Hold Item	3: </Text>
-						</text>
-						<Textentry name='Define	CargoHoldItem3y'>
-						<Visible>0</Visible>
-							<X>190</X>
-							<Y>51</Y>
-							<Width>30</Width>
-							<Height>18</Height>
-
-							<OnLoad>
-							This:SetText[${Script[evebot].VariableScope.CargoHoldItem3y}]
-							</OnLoad>
-						</Textentry>
-						<Textentry name='Define	CargoHoldItem3x'>
-						<Visible>0</Visible>
-							<X>155</X>
-							<Y>51</Y>
-							<Width>30</Width>
-							<Height>18</Height>
-
-							<OnLoad>
-							This:SetText[${Script[evebot].VariableScope.CargoHoldItem3x}]
-							</OnLoad>
-						</Textentry>
-					</Tab>
+					<Tab name='Mining'>
+					</tab>
 					<Tab name='Combat'>
+						  <Text name='MinShield'>
+									<X>40</X>
+									<Y>10</Y>
+									<Width>140</Width>
+									<Height>10</Height>
+									<Text>Minimum Shield</Text>
+								</Text>
+							 <Textentry name='MinShieldPctInput'>		
+									<X>6</X>							
+									<Y>10</Y>						
+									<Width>32</Width>						
+									<Height>18</Height>
+									<OnChange>
+									This:SetText[${MinShieldPct}]
+									</OnChange>				
+								</Textentry>
+							  <Text name='MinStructure'>
+									<X>40</X>
+									<Y>30</Y>
+									<Width>140</Width>
+									<Height>10</Height>
+									<Text>Minimum Structure</Text>
+								</Text>
+							 <Textentry name='MinStructurePctInput'>		
+									<X>6</X>							
+									<Y>30</Y>						
+									<Width>32</Width>						
+									<Height>18</Height>
+									<OnChange>
+									This:SetText[${MinStructurePct}]
+									</OnChange>				
+								</Textentry>
 					</tab>
 					<Tab name='Market'>
 					</tab>

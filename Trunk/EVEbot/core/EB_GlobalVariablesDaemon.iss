@@ -3,7 +3,12 @@ variable(global) string EVEBOT_CharacterName
 variable(global) string EVEBOT_MyTarget
 variable(global) string EVEBOT_MyRace
 variable(global) string EVEBOT_MyCorp
-variable(global) int EVEBOT_TotalRuns = 0						/* Total Times We've had to transefer to hanger */
+variable(global) int EVEBOT_TotalRuns = 0						/* Total Times We've had to transefer to hanger */	
+variable(script) bool ForcedReturn = FALSE					/* A variable for forced return */
+variable(global) int MinShieldPct = 50              /* What sheilds need to reach before entering combat */
+variable(global) int MinStructurePct = 80              /* Min Structure that we should have, if we get into combat */
+
+;variable(global) 
 
 
 function main(string ParentName)

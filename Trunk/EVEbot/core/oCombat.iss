@@ -107,9 +107,9 @@ call UpdateHudStatus "So we're fighting it looks like.. now we gotta wait till t
 do
 {
   wait 50
-  if (${Me.Ship.StructurePct} < 70)
+  if (${Me.Ship.StructurePct} < ${MinStructurePct})
    {
-    call UpdateHudStatus "This is too risky now, we've got under 70% Structure HP"
+    call UpdateHudStatus "This is too risky now, we've got under ${MinStructurePct}% Structure HP"
    	call UpdateHudStatus "Lets get out of here"
     call Dock
     wait 50

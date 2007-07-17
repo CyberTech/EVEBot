@@ -51,7 +51,7 @@ function SetBotState()
 	  return
 	}
 	
-	if (${Me.ToEntity.ShieldPct} < 35)
+	if (${Me.ToEntity.ShieldPct} < ${MinShieldPct})
 		{
 		botstate:Set["COMBAT"]
 		return
@@ -63,7 +63,7 @@ function SetBotState()
 		return
 	}
 	
-	if ${Me.Ship.UsedCargoCapacity} > ${Math.Calc[${Me.Ship.CargoCapacity}*0.90]}
+	if (${Me.Ship.UsedCargoCapacity} > ${Math.Calc[${Me.Ship.CargoCapacity}*0.90]} || ${ForcedSell})
 	{
 	  botstate:Set["CARGOFULL"]
 	  return
@@ -154,10 +154,16 @@ function main()
 				break
 			case RUNNING
 				call Dock
+				ForcedReturn:Set[FALSE]
 				wait 40
 				break
 		}
 		
 		wait 15
 	}
+}
+
+atom(global) forcedreturn()
+{
+	ForcedReturn:Set[TRUE]
 }
