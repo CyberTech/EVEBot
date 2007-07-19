@@ -156,6 +156,7 @@ function ShieldNotification()
 		{
 			call UpdateHudStatus "Theres nothing targeting us!"
 			call UpdateHudStatus "Lets wait and see if our Shield Regens"
+			EVE:Execute[CmdStopShip]
 		  do
 		  {
 			wait 20

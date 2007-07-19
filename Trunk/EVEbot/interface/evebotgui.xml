@@ -221,7 +221,7 @@
 									<Height>18</Height>
 									<OnChange>
 									This:SetText[${MinShieldPct}]
-									</OnChange>				
+									</OnChange>
 								</Textentry>
 							  <Text name='MinStructure'>
 									<X>40</X>
