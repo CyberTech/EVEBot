@@ -90,7 +90,7 @@ objectdef obj_Asteroids
 		{
 			do
 			{
-				;echo "DEBUG: obj_Asteroids: Checking for Ore Type ${This.OreTypeIterator.Value}"
+				echo "DEBUG: obj_Asteroids: Checking for Ore Type ${This.OreTypeIterator.Value}"
 				This.AstroidList:Clear
 				EVE:DoGetEntities[This.AstroidList,CategoryID,${This.AsteroidCategoryID},${This.OreTypeIterator.Value}]
 				wait 0.5
@@ -174,7 +174,7 @@ function Mine()
 	;don't use that if you have offensive med or low slot...
 	call ActivateDefense
 	call Ship.OpenCargo
-	Ship.Drones:LaunchAll
+	;Ship.Drones:LaunchAll
 	
 	; TODO - Change this to use the known mining laser slots instead of hardcoding slot 0.
 	while ${Ship.CargoFreeSpace} >= ${Ship.CargoMinimumFreeSpace}

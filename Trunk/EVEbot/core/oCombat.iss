@@ -227,22 +227,3 @@ function DeactivateLasers()
    while ${i:Inc} <= ${ModulesCount}
    
 }
-
-; Can be call if ness.; other wise has no point of being here for the moment.
-
-function ReturnDrones()
-{
-        variable index:int DronesInSpaceList
-        variable int DronesInSpaceCount
-        DronesInSpaceCount:Set[${EVE.GetEntityIDs[MyDrones,OwnerID,${Me.CharID},CategoryID,18]}]
- 
-        while ${DronesInSpaceCount} > 0
-        {
-                variable index:int DronesInSpaceList
-                variable int DronesInSpaceCount
-                DronesInSpaceCount:Set[${EVE.GetEntityIDs[MyDrones,OwnerID,${Me.CharID},CategoryID,18]}]
-                echo Drones in space:: ${DronesInSpaceCount}
-                EVE:DronesReturnToDroneBay[DronesInSpaceList]
-                wait 200
-        }
-} 

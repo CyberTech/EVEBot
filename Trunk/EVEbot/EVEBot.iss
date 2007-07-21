@@ -10,8 +10,6 @@
 #include core/obj_EVEBotUI.iss
 
 ;; Declare all script or global variables here
-; Used for throwaway return calls
-variable int JunkInt
 variable int stationloc
 variable int belt
 variable bool play
@@ -20,7 +18,7 @@ variable float GoalDistance
 variable oSkills Skills
 
 ; Script Settings & Setting Set Rerences
-variable settingsetref EVEBotSettings
+variable settingsetref EVEBotSettingsRef
 variable settingsetref OreTypes
 
 ; Script-Defined Objects
@@ -35,16 +33,17 @@ function LoadEvebotGUI()
 	ui -load interface/eveskin/eveskin.xml
 	ui -load interface/evebotgui.xml
 	call SetupHudStatus
-	call UpdateHudStatus "Started EVEBot ${Version}.."
-	call UpdateHudStatus "Please Hold Loading Main Function.."
+	call UpdateHudStatus "Starting EVEBot ${Version}."
+	wait 20 ${UIElement[evebot](exists)}
 }
 
 function atexit()
 {
 	LavishSettings[EVEBotSettings]:Export[${Script.CurrentDirectory}/config/evebot.xml]
-	LavishSettings[EVEBotSettings]:Remove
 	ui -unload ./interface/eveskin/eveskin.xml
 	ui -unload ./interface/evebotgui.xml
+	LavishSettings[EVEBotSettings]:Remove
+	;redirect profile.txt Script:DumpProfiling
 }
 
 function SetBotState()
@@ -56,10 +55,10 @@ function SetBotState()
 	}
 	
 	if (${Me.ToEntity.ShieldPct} < ${MinShieldPct})
-		{
+	{
 		botstate:Set["COMBAT"]
 		return
-		}
+	}
 		
 	if ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace}
 	{
@@ -67,20 +66,25 @@ function SetBotState()
 		return
 	}
 	
-	if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${ForcedSell})
+	if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${ForcedSell}
 	{
 		botstate:Set["CARGOFULL"]
 		return
 	}
+
 	botstate:Set["None"]
 }
 
 function main()
 {
+	;Script:Unsquelch
+	;Script:EnableDebugLogging[debug.txt]
+	;Script[EVEBot]:EnableProfiling
+
 	Turbo 20
 	if !${ISXEVE(exists)}
 	{
-		echo ISXEVE must be loaded to use this script.
+		echo "ISXEVE must be loaded to use this script."
 		return
 	}
    
@@ -88,30 +92,25 @@ function main()
 	{
 		waitframe
 	}
-	
-  ; Start the daemon that sets global variables (for use with the HUD, etc)
-  ;run "./core/EB_GlobalVariablesDaemon.iss" ${Script.Filename}
-  	
 
-	call LoadEvebotGUI
-	wait 20 ${UIElement[evebot](exists)}
 	;Console EVEStatus@Main@EVEBotTab@EvEBot
 
 	; Initialize the settings sets.
 	LavishSettings:AddSet[EVEBotSettings]
 	LavishSettings[EVEBotSettings]:Import[${Script.CurrentDirectory}/config/evebot.xml]
-	
+
 	; Assign settingsref shortcuts
-	EVEBotSettings:Set[${LavishSettings[EVEBotSettings]}]
+	EVEBotSettingsRef:Set[${LavishSettings[EVEBotSettings]}]
 	OreTypes:Set[${LavishSettings[EVEBotSettings].FindSet[Ore Types]}]
-	;OreTypes:CommentSet# Set[text]
 		
+	call LoadEvebotGUI
 	Ship:UpdateModuleList[]
 	
 	EVE:Execute[CmdStopShip]
 	call UpdateHudStatus "Please be sure that your Ships' Cargo Hold is *CLOSED*"
 	call UpdateHudStatus "Completed Main Function"
 	call UpdateHudStatus "Bot is now Paused - Please press Play"
+
 	Script[EVEBot]:Pause
 	play:Set[TRUE]
 

@@ -18,7 +18,7 @@ objectdef obj_Drones
 		Me.Ship:LaunchAllDrones
 	}
 		
-	member DronesInSpace()
+	member:int DronesInSpace()
 	{
 		return ${EVE.GetEntityIDs[This.DroneList,OwnerID,${Me.CharID},CategoryID,${CategoryID_Drones}]}
 	}
@@ -268,7 +268,7 @@ objectdef obj_Ship
 	{
 		if !${Me.Ship(exists)}
 		{
-			return
+			return 0
 		}
 
 		This.ModuleList_MiningLaser:GetIterator[This.ModulesIterator]
@@ -292,7 +292,7 @@ objectdef obj_Ship
 	{
 		if !${Me.Ship(exists)}
 		{
-			return
+			return 0
 		}
 
 		This.ModuleList_MiningLaser:GetIterator[This.ModulesIterator]
@@ -332,6 +332,7 @@ objectdef obj_Ship
 
 		return
 	}
+	
 	; Returns TRUE if we've got a laser mining this entity already
 	member:bool IsMiningAstroidID(int EntityID)
 	{
@@ -347,6 +348,7 @@ objectdef obj_Ship
 			if ${This.ModulesIterator.Value.LastTarget(exists)} && \ 
 				${This.ModulesIterator.Value.LastTarget.ID} == ${EntityID}
 			{
+				echo "DEBUG: Already mining ID: ${This.ModulesIterator.Value.LastTarget.ID} == ${EntityID}
 				return TRUE
 			}
 		}
@@ -389,7 +391,7 @@ objectdef obj_Ship
 	function ChangeMiningLaserCrystal(string OreType, string SlotName)
 	{
 		; We might need to change loaded crystal
-		LoadedAmmo:Set[${This.LoadedMiningLaserCrystal}]
+		LoadedAmmo:Set[${This.LoadedMiningLaserCrystal[${SlotName}}]
 		if !${AsteroidName.Find[${LoadedAmmo}]}
 		{
 			variable index:item CrystalList
@@ -405,8 +407,7 @@ objectdef obj_Ship
 						
 				if !${OreType.Find[${CrystalType}]}
 				{
-					echo "Switching Crystal for slot ${SlotName} to ${OreType}"
-					continue
+					echo "Switching Crystal for slot ${SlotName} from ${LoadedAmmo} to ${OreType}"
 					Me.Ship.Module[${SlotName}]:ChangeAmmo[${CrystalIterator.Value.ID}]
 					; This takes 2 seconds ingame, let's give it 50% more
 					wait 30
@@ -432,6 +433,7 @@ objectdef obj_Ship
 			if ${This.ModulesIterator.Value.IsActive} && \
 				!${This.ModulesIterator.Value.LastTarget(exists)}
 			{
+				echo "${This.ModulesIterator.Value.Name} has non-existent target, deactivating"
 				This.ModulesIterator.Value:Click
 			}
 		}
@@ -487,7 +489,7 @@ objectdef obj_Ship
 		{
 			variable float OriginalDistance = ${Entity[${EntityID}].Distance}
 			Entity[${EntityID}]:Approach
-			wait 100
+			wait 130
 			call UpdateHudStatus "Approaching: ${Entity[${EntityID}].Name} - 10 Second wait"
 
 			if ${Entity[${EntityID}](exists)} && \
@@ -510,7 +512,7 @@ objectdef obj_Ship
 		{
 			call UpdateHudStatus "Opening Ship Cargo Hold"
 			EVE:Execute[OpenCargoHoldOfActiveShip]
-			wait 40
+			wait 50
 			This.CargoIsOpen:Set[TRUE]
 		}
 	}
@@ -521,22 +523,24 @@ objectdef obj_Ship
 		{
 			call UpdateHudStatus "Closing Ship Cargo Hold"
 			EVE:Execute[OpenCargoHoldOfActiveShip]
-			wait 40
+			wait 50
 			This.CargoIsOpen:Set[FALSE]
 		}
 	}
 
 	function Undock()
 	{
-		call UpdateHudStatus "Undocking"
+		call UpdateHudStatus "Undock: Waiting while ship exits the station"
 		EVE:Execute[CmdExitStation]	
-		call UpdateHudStatus "Waiting while ship exits the station"
 		do
 		{
 			wait 50
 		}
 		while ${Me.InStation}
-		wait 30
+		wait 50
+		
+		Me:SetVelocity[100]
+		wait 100
 
 		This:UpdateModuleList[]
 	}
