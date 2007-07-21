@@ -1,63 +1,3 @@
-function Undock()
-{
-	call UpdateHudStatus "Undocking"
-	EVE:Execute[CmdExitStation]	
-	call UpdateHudStatus "Waiting while ship exits the station"
-	do
-	{
-		wait 20
-	}
-	while ${Me.InStation}
-	wait 20
-}
-
-function WarpTo(int Id)
-{
-   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-   ; Bring Drones Back In!
-   variable index:int MyDrones
-   variable int DronesInSpaceCount
-   DronesInSpaceCount:Set[${EVE.GetEntityIDs[MyDrones,OwnerID,${Me.CharID},CategoryID,18]}]
-  
-   while (${DronesInSpaceCount} > 0)
-   {
-   echo Drones in space:: ${DronesInSpaceCount}
-   EVE:DronesReturnToDroneBay[MyDrones]
-   wait 200
-   DronesInSpaceCount:Set[${EVE.GetEntityIDs[MyDrones,OwnerID,${Me.CharID},CategoryID,18]}]
-   wait 10
-   }
-   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-  ;;;;;;;;;;;;;;;;;;
-  ;;; Sanity Checks
-	if (${Id} <= 0)
-	{
-	   echo "Error: oSpace::WarpTo --> Id is <= 0 (${Id})"
-	   play:Set[FALSE]
-	   return
-	}
-	if (!${Entity[ID,${Id}](exists)})
-	{
-	   echo "Error: oSpace::WarpTo --> No entity matched the ID given."
-	   play:Set[FALSE]
-	   return
-	}
-	 ;;;;;;;;;;;;;;;;;;
-	 
-	Entity[ID,${Id}]:WarpTo
-	call UpdateHudStatus "Entity ${Id} : WarpTo succesfully called ... waiting for arrival"
-	wait 120
-	do
-	{
-		wait 20
-	}
-	while (${Me.ToEntity.Mode} == 3)
-	
-	call UpdateHudStatus "Finished warping..."
-	
-}
-
 function ReturnToBase(int Id)
 {        
   ; RETURNTOBASE CONTINUED
@@ -70,7 +10,7 @@ function ReturnToBase(int Id)
 	   play:Set[FALSE]
 	   return
 	}
-	if (!${Entity[ID,${Id}](exists)})
+	if (!${Entity[${Id}](exists)})
 	{
 	   echo "Error: oSpace::ReturnToBase --> No entity matched the ID given."
 	   play:Set[FALSE]
@@ -79,10 +19,10 @@ function ReturnToBase(int Id)
 	;;;;;;;;;;;;;;;;;;
 
 
-	if ${Entity[ID,${Id}].Distance} >= 10000
+	if ${Entity[${Id}].Distance} >= 10000
 	{
 	  call UpdateHudStatus "The distance is greater than 10000, warp to base"
-		call WarpTo ${Id}
+		call Ship.WarpToID ${Id}
 	}
 }
 	
@@ -91,7 +31,7 @@ function Dock()
   variable int WaitCount = 0
 
 	stationloc:Set[${Entity[CategoryID,3].ID}]
-	call UpdateHudStatus "Setting main station ${Entity[id,${stationloc}].Name} with ID ${stationloc}"
+	call UpdateHudStatus "Setting main station ${Entity[${stationloc}].Name} with ID ${stationloc}"
 	wait 10
   ;;;;;;;;;;;;;;;;;;
   ;;; Sanity Checks
@@ -100,7 +40,7 @@ function Dock()
 	   echo "Error: oSpace::Dock --> Id is <= 0 (${stationloc}) Getting a new one..."
 		stationloc:Set[${Entity[CategoryID,3].ID}]
 	}
-	if (!${Entity[ID,${stationloc}].Name(exists)})
+	if (!${Entity[${stationloc}].Name(exists)})
 	{
 	   echo "Error: oSpace::Dock --> No entity matched the ID given, getting another one..."
 	   stationloc:Set[${Entity[CategoryID,3].ID}]
@@ -109,7 +49,7 @@ function Dock()
 
 while !${Me.InStation}
 {
-	if ${Entity[ID,${stationloc}].Distance} >= 10000
+	if ${Entity[${stationloc}].Distance} >= 10000
 	{
 	  call UpdateHudStatus "Calling ReturnToBase"
 		call ReturnToBase ${stationloc}
@@ -117,23 +57,22 @@ while !${Me.InStation}
 		{ 
 		   wait 20
 		}
-		while ${Entity[ID,${stationloc}].Distance} >= 10000
+		while ${Entity[${stationloc}].Distance} >= 10000
 	}
-	elseif (${Entity[ID,${stationloc}].Distance} < 10000 && ${Entity[ID,${stationloc}].Distance} > 100)
+	elseif (${Entity[${stationloc}].Distance} < 10000 && ${Entity[${stationloc}].Distance} > 100)
 	{
 		call UpdateHudStatus "Approaching Base"
-		Entity[ID,${stationloc}]:Approach
+		Entity[${stationloc}]:Approach
 		do
 		{
 			wait 20
 		}
-		while ${Entity[ID,${stationloc}].Distance} > 100
+		while ${Entity[${stationloc}].Distance} > 100
 	}
-	elseif (${Entity[ID,${stationloc}].Distance} <= 100 && ${Me.ToEntity.Mode} != 3)
+	elseif (${Entity[${stationloc}].Distance} <= 100 && ${Me.ToEntity.Mode} != 3)
 	{
 		call UpdateHudStatus "In Docking Range ... Docking"
-		Entity[ID,${stationloc}]:Dock
-		call UpdateHudStatus "Docking, waiting..."
+		Entity[${stationloc}]:Dock
 		do
 		{
 		   wait 20
@@ -182,7 +121,7 @@ function Orbit(int Id, int Distance)
 	   play:Set[FALSE]
 	   return
 	}
-	if (!${Entity[ID,${Id}](exists)})
+	if (!${Entity[${Id}](exists)})
 	{
 	   echo "Error: oSpace::Orbit --> No entity matched the ID given."
 	   play:Set[FALSE]
@@ -190,7 +129,7 @@ function Orbit(int Id, int Distance)
 	}
 	;;;;;;;;;;;;;;;;;;
  
-	Entity[ID,${Id}]:Orbit[${Distance}]
+	Entity[${Id}]:Orbit[${Distance}]
  
 	GoalDistance:Set[${Math.Calc[${Distance}+1000]}]
 	call UpdateHudStatus "Entering Orbit with ${Id}, waiting until distance is <= ${GoalDistance}"
@@ -199,9 +138,9 @@ function Orbit(int Id, int Distance)
 	{
 	  wait 20
 	}	
-	while ${Entity[ID,${Id}].Distance} > ${GoalDistance}
+	while ${Entity[${Id}].Distance} > ${GoalDistance}
  
-	call UpdateHudStatus "Wait Complete.  Distance to roid is ${Entity[ID,${Id}].Distance}"
+	call UpdateHudStatus "Wait Complete.  Distance to roid is ${Entity[${Id}].Distance}"
 	; ************ possibility of a crash here ***********
 	wait 20
 	call UpdateHudStatus "After the final wait"
@@ -210,9 +149,9 @@ function Orbit(int Id, int Distance)
 
 function CheckOrbit(int id, int Distance)
 {
-	if ${Entity[ID,${id}].Distance} > ${GoalDistance}
+	if ${Entity[${id}].Distance} > ${GoalDistance}
 	{
 	call UpdateHudStatus "Wtf getting out of orbit, calling orbit again..."
-	Entity[ID,${id}]:Orbit[${Distance}]
+	Entity[${id}]:Orbit[${Distance}]
 	}
 }

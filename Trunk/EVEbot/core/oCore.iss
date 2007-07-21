@@ -72,7 +72,7 @@ function UpdateHudStatus(string StatusMessage)
 ; need a testing function for entity...
 ;member EntityCheck(int id, string VarName, int CategId)
 ;{
-;	while (!${Entity[Id,${id}].Name(exists)} || !${Entity[Id,${id}].ID(exists)})
+;	while (!${Entity[${id}].Name(exists)} || !${Entity[${id}].ID(exists)})
 ;	{
 ;	call UpdateHudStatus "Wow... entity is fucked up... getting a new one."
 ;	${VarName}:Set[${Entity[CategoryID,${CategId}]}]

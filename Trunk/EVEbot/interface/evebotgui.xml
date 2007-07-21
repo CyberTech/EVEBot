@@ -1,4 +1,4 @@
-<?xml	version="1.0"	encoding="UTF-8"?>
+﻿<?xml	version="1.0"	encoding="UTF-8"?>
 <ISUI>
 	<Window	name='EvEbot'>
 		<Title>EVEBot</Title>
@@ -64,7 +64,7 @@
 							<OnLeftClick>
 								EVE:Execute[CmdStopShip]
 								Script[EvEBot]:Pause
-								Echo Paused
+								Echo EVEBot: Paused
 							</OnLeftClick>
 						</commandbutton>
 						<commandbutton name='Play	EvEBot'>
@@ -75,7 +75,7 @@
 							<Text>Play</Text>
 							<OnLeftClick>
 								Script[EvEBot]:Resume
-								Echo Resume
+								Echo EVEBot: Resume
 							</OnLeftClick>
 						</commandbutton>
 						<commandbutton name='Force Return'> 
@@ -138,7 +138,7 @@
 							<Y>60</Y>
 							<Width>150</Width>
 							<Height>20</Height>
-							<text>${EVEBOT_MyTarget}</text>
+							<text>${Script[evebot].VariableScope.UI.MyTarget}</text>
 						</text>
 						<text	name='Runs'>
 							<X>205</X>
@@ -152,7 +152,7 @@
 							<Y>75</Y>
 							<Width>100</Width>
 							<Height>20</Height>
-							<text>${EVEBOT_TotalRuns}</text>
+							<text>${Script[evebot].VariableScope.UI.TotalRuns}</text>
 						</text>
 						<text	name='Name'>
 							<X>7</X>
@@ -166,7 +166,7 @@
 							<Y>30</Y>
 							<Width>100</Width>
 							<Height>20</Height>
-							<text>${EVEBOT_CharacterName}</text>
+							<text>${Script[evebot].VariableScope.UI.CharacterName}</text>
 						</text>
 						<text	name='Race'>
 							<X>7</X>
@@ -180,7 +180,7 @@
 							<Y>45</Y>
 							<Width>150</Width>
 							<Height>20</Height>
-							<text>${EVEBOT_MyRace}</text>
+							<text>${Script[evebot].VariableScope.UI.MyRace}</text>
 						</text>
 						<text	name='Corporation'>
 							<X>7</X>
@@ -194,7 +194,7 @@
 							<Y>60</Y>
 							<Width>100</Width>
 							<Height>20</Height>
-							<text>${EVEBOT_MyCorp}</text>
+							<text>${Script[evebot].VariableScope.UI.MyCorp}</text>
 						</text>
 						
 						<console Name="EVEStatus">

@@ -19,7 +19,7 @@ ModulenCount:Set[${Me.Ship.GetModules[Modulen]}]
 		call UpdateHudStatus "Well go take a nap"
 		call DeactivateLasers
 		Call Orbit ${EntitiesTargetingMe.Get[${i}].ID} 1500
-		Entity[ID,${EntitiesTargetingMe.Get[${i}].ID}]:LockTarget
+		Entity[${EntitiesTargetingMe.Get[${i}].ID}]:LockTarget
 		wait 60
 		call CombatLasers
 		}
@@ -121,7 +121,7 @@ while (${Me.GetTargets} > 0)
 if (${Me.GetTargetedBy} > 0)
  {
  	call UpdateHudStatus "Something else is targeting us, lets check it out"
- 	call ShieldNotification()
+ 	call ShieldNotification
  }
  else
  {
@@ -226,13 +226,6 @@ function DeactivateLasers()
    }
    while ${i:Inc} <= ${ModulesCount}
    
-}
-
-function LaunchDrones()
-{
-	call UpdateHudStatus "Launching drones..."
-	Me.Ship:LaunchAllDrones
-	wait 20
 }
 
 ; Can be call if ness.; other wise has no point of being here for the moment.
