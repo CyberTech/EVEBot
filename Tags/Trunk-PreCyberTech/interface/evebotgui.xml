@@ -1,0 +1,361 @@
+<?xml	version="1.0"	encoding="UTF-8"?>
+<ISUI>
+	<Window	name='EvEbot'>
+		<Title>EVEBot</Title>
+		<Visible>1</Visible>
+		<X>250</X>
+		<Y>200</Y>
+		<Width>417</Width>
+		<Height>300</Height>
+		<TitleBar>
+			<Height>16</Height>
+			<Border>3</Border>
+			<BorderColor>FF333333</BorderColor>
+			<BackgroundColor>FF555555</BackgroundColor>
+			<Width>100%</Width>
+						<Children>
+				<text	name='TitleName' >
+				<X>2</X>
+				<Y>2</Y>
+				<Width>100%</Width>
+				<Height>100%</Height>
+				<text>		EVEBot v.${Script[evebot].VariableScope.Version}</text>
+				</text>
+				<button	Name='Close' template='eve.window.TitleBar.Close'>
+					<OnLeftClick>
+						endscript	evebot
+					</OnLeftClick>
+				</button>
+				<button	Name='Minimize'	template='eve.window.TitleBar.Minimize'>
+					<OnLeftClick>
+						UIElement[eveBot].FindUsableChild[TitleBotStatus,text]:Show
+						UIElement[eveBot].FindUsableChild[TitleBotStatusCap,text]:Show
+						UIElement[eveBot].FindUsableChild[TitleBotXPStatus,text]:Show
+						UIElement[eveBot].FindUsableChild[TitleBotXPCap,text]:Show
+					</OnLeftClick>
+				</button>
+				<button	Name='Maximize'	template='eve.window.TitleBar.Maximize'>
+					<OnLeftClick>
+						UIElement[eveBot].FindUsableChild[TitleBotStatus,text]:Hide
+						UIElement[eveBot].FindUsableChild[TitleBotXPStatus,text]:Hide
+						UIElement[eveBot].FindUsableChild[TitleBotXPCap,text]:Hide
+						UIElement[eveBot].FindUsableChild[TitleBotStatusCap,text]:Hide
+					</OnLeftClick>
+				</button>
+
+			</Children>
+		</TitleBar>
+
+		<Children	Name='EvebotChild'>
+			<TabControl	Name='EvEBotTab'>
+				<X>0</X>
+				<Y>0</Y>
+				<Width>100%</Width>
+				<Height>100%</Height>
+				<FrameTexture	/>
+				<Tabs>
+					<Tab Name='Main'>
+						<commandbutton name='Pause EvEBot'>
+							<X>75</X>
+							<Y>5</Y>
+							<Width>65</Width>
+							<Height>25</Height>
+							<Text>Pause</Text>
+							<OnLeftClick>
+								EVE:Execute[CmdStopShip]
+								Script[EvEBot]:Pause
+								Echo Paused
+							</OnLeftClick>
+						</commandbutton>
+						<commandbutton name='Play	EvEBot'>
+							<X>5</X>
+							<Y>5</Y>
+							<Width>65</Width>
+							<Height>25</Height>
+							<Text>Play</Text>
+							<OnLeftClick>
+								Script[EvEBot]:Resume
+								Echo Resume
+							</OnLeftClick>
+						</commandbutton>
+						<commandbutton name='Force Return'> 
+							<X>145</X>
+							<Y>5</Y>
+							<Width>65</Width>
+							<Height>25</Height>
+							<Text>Return</Text> 
+							<OnLeftClick>
+							forcedreturn
+							</OnLeftClick>
+						</commandbutton>
+						<commandbutton name='Exit	EvEBot'>
+							<X>348</X>
+							<Y>5</Y>
+							<Width>65</Width>
+							<Height>25</Height>
+							<Text>Exit</Text>
+							<OnLeftClick>
+								endscript	evebot
+							</OnLeftClick>
+						</commandbutton>
+						<text	name='Running	Time is'>
+							<X>205</X>
+							<Y>30</Y>
+							<Width>100</Width>
+							<Height>20</Height>
+							<Text>Time:	</Text>
+						</text>
+						<Text	name='EvE	Bot	Running	Time'>
+							<X>250</X>
+							<Y>30</Y>
+							<Width>100</Width>
+							<Height>20</Height>
+							<Text>${Math.Calc[(${Script[EvEBot].RunningTime}/1000/60/60)%60].Int.LeadingZeroes[2]}:${Math.Calc[(${Script[EvEBot].RunningTime}/1000/60)%60].Int.LeadingZeroes[2]}:${Math.Calc[(${Script[EvEBot].RunningTime}/1000)%60].Int.LeadingZeroes[2]}</Text>
+						</Text>
+						<text	name='Status'>
+							<X>205</X>
+							<Y>45</Y>
+							<Width>100</Width>
+							<Height>20</Height>
+							<Text>State:</Text>
+						</text>
+						<text	name='Status Code'>
+							<X>254</X>
+							<Y>45</Y>
+							<Width>100</Width>
+							<Height>20</Height>
+							<text>${Script[evebot].VariableScope.botstate}</text>
+						</text>
+						<text	name='Target'>
+							<X>205</X>
+							<Y>60</Y>
+							<Width>100</Width>
+							<Height>20</Height>
+							<Text>Target:</Text>
+						</text>
+						<text	name='MyTarget'>
+							<X>260</X>
+							<Y>60</Y>
+							<Width>150</Width>
+							<Height>20</Height>
+							<text>${EVEBOT_MyTarget}</text>
+						</text>
+						<text	name='Runs'>
+							<X>205</X>
+							<Y>75</Y>
+							<Width>100</Width>
+							<Height>20</Height>
+							<Text>Runs:</Text>
+						</text>
+						<text	name='MyRuns'>
+							<X>245</X>
+							<Y>75</Y>
+							<Width>100</Width>
+							<Height>20</Height>
+							<text>${EVEBOT_TotalRuns}</text>
+						</text>
+						<text	name='Name'>
+							<X>7</X>
+							<Y>30</Y>
+							<Width>100</Width>
+							<Height>20</Height>
+							<Text>Name:</Text>
+						</text>
+						<text	name='MyName'>
+							<X>50</X>
+							<Y>30</Y>
+							<Width>100</Width>
+							<Height>20</Height>
+							<text>${EVEBOT_CharacterName}</text>
+						</text>
+						<text	name='Race'>
+							<X>7</X>
+							<Y>45</Y>
+							<Width>100</Width>
+							<Height>20</Height>
+							<Text>Race:</Text>
+						</text>
+						<text	name='MyRace'>
+							<X>50</X>
+							<Y>45</Y>
+							<Width>150</Width>
+							<Height>20</Height>
+							<text>${EVEBOT_MyRace}</text>
+						</text>
+						<text	name='Corporation'>
+							<X>7</X>
+							<Y>60</Y>
+							<Width>100</Width>
+							<Height>20</Height>
+							<Text>Corporation:</Text>
+						</text>
+						<text	name='MyCorp'>
+							<X>105</X>
+							<Y>60</Y>
+							<Width>100</Width>
+							<Height>20</Height>
+							<text>${EVEBOT_MyCorp}</text>
+						</text>
+						
+						<console Name="EVEStatus">
+							<Y>r100</Y>
+							<Width>100%</Width>
+							<Height>100</Height>
+						</console>
+					</Tab>
+					
+					<Tab name='Mining'>
+					</tab>
+					<Tab name='Combat'>
+						  <Text name='MinShield'>
+									<X>40</X>
+									<Y>10</Y>
+									<Width>140</Width>
+									<Height>10</Height>
+									<Text>Minimum Shield</Text>
+								</Text>
+							 <Textentry name='MinShieldPctInput'>		
+									<X>6</X>							
+									<Y>10</Y>						
+									<Width>32</Width>						
+									<Height>18</Height>
+									<OnChange>
+									This:SetText[${MinShieldPct}]
+									</OnChange>
+								</Textentry>
+							  <Text name='MinStructure'>
+									<X>40</X>
+									<Y>30</Y>
+									<Width>140</Width>
+									<Height>10</Height>
+									<Text>Minimum Structure</Text>
+								</Text>
+							 <Textentry name='MinStructurePctInput'>		
+									<X>6</X>							
+									<Y>30</Y>						
+									<Width>32</Width>						
+									<Height>18</Height>
+									<OnChange>
+									This:SetText[${MinStructurePct}]
+									</OnChange>				
+								</Textentry>
+					</tab>
+					<Tab name='Market'>
+					</tab>
+					<tab name='Fitting'>
+					</tab>
+					<tab name='Skills'>
+						<commandbutton name='queueskill'>
+							<X>210</X>
+							<Y>5</Y>
+							<Width>97</Width>
+							<Height>25</Height>
+							<text>Queue</text>
+							<Command></Command>
+						</commandbutton>
+						<commandbutton name='removeskill'>
+							<X>313</X>
+							<Y>5</Y>
+							<Width>97</Width>
+							<Height>25</Height>
+							<text>Remove</text>
+							<Command></Command>
+						</commandbutton>
+						<listbox name='skills'>
+							<X>5</X>
+							<Y>5</Y>
+							<Width>200</Width>
+							<Height>258</Height>
+							<Items>
+							AddItem[${Me.Skill[1]}]
+
+							</Items>
+						</listbox>
+						<listbox name='intraining'>
+							<X>210</X>
+							<Y>40</Y>
+							<Width>200</Width>
+							<Height>223</Height>
+							<Items>
+							</Items>
+						</listbox>
+					</tab>
+					<Tab Name='About'>
+					<Text	name='oi'>
+						<X>1</X>
+						<Y>5</Y>
+						<Width>400</Width>
+						<Height>10</Height>
+						<Text>Special	thanks to	RickRoll!</Text>
+					</Text>
+					<Text	name='developers'>
+						<X>1</X>
+						<Y>35</Y>
+						<Width>400</Width>
+						<Height>10</Height>
+						<Text>"Developers! Developers! Developers! Developers!</Text>
+					</Text>
+					<Text	name='developers2'>
+						<X>1</X>
+						<Y>45</Y>
+						<Width>400</Width>
+						<Height>10</Height>
+						<Text>Developers!	Developers!	Developers!	Developers!</Text>
+					</Text>
+					<Text	name='developers3'>
+						<X>1</X>
+						<Y>55</Y>
+						<Width>400</Width>
+						<Height>10</Height>
+						<Text>Developers!	Developers!	Developers!	Developers!</Text>
+					</Text>
+					<Text	name='developers4'>
+						<X>1</X>
+						<Y>65</Y>
+						<Width>400</Width>
+						<Height>10</Height>
+						<Text>*LOAD	SCREAMING*</Text>
+					</Text>
+					<Text	name='developers5'>
+						<X>1</X>
+						<Y>75</Y>
+						<Width>400</Width>
+						<Height>10</Height>
+						<Text>COME ON!!!</Text>
+					</Text>
+					<Text	name='developers6'>
+						<X>1</X>
+						<Y>85</Y>
+						<Width>400</Width>
+						<Height>10</Height>
+						<Text>WOOOOOOOOOOOOOT"</Text>
+					</Text>
+					<Text	name='developers7'>
+						<X>250</X>
+						<Y>105</Y>
+						<Width>400</Width>
+						<Height>10</Height>
+						<Text>-	 Steve Ballmer</Text>
+					</Text>
+					<Text	name='developers8'>
+						<X>5</X>
+						<Y>145</Y>
+						<Width>400</Width>
+						<Height>10</Height>
+						<Text>EVEBot was created by:</Text>
+					</Text>
+					<Text	name='developers9'>
+						<X>5</X>
+						<Y>155</Y>
+						<Width>400</Width>
+						<Height>10</Height>
+						<Text>Neutro,	Tehtsuo, thehazard,	Stealthy,	Hessinger</Text>
+					</Text>
+
+					</Tab>
+				</Tabs>
+			</tabcontrol>
+		</Children>
+
+	</Window>
+</ISUI>
