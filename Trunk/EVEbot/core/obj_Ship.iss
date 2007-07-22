@@ -112,7 +112,6 @@ objectdef obj_Ship
 		if ${Me.InStation}
 		{
 			; GetModules cannot be used in station as of 07/15/2007
-			echo "DEBUG: obj_Ship:UpdateModulesList(): In Station, aborting"
 			return
 		}
 		
@@ -327,15 +326,17 @@ objectdef obj_Ship
 			{
 				continue
 			}
+			echo if ${This.ModulesIterator.Value.ToItem.Slot} ${SlotName}
 			if ${This.ModulesIterator.Value.ToItem.Slot.Equal[${SlotName}]} && \
 				${This.ModulesIterator.Value.Charge(exists)}
 			{
+				echo LoadedMiningLaserCrystal returning ${This.ModulesIterator.Value.Charge.Name.Token[1, " "]}
 				return ${This.ModulesIterator.Value.Charge.Name.Token[1, " "]}
 			}
 		}
 		while ${This.ModulesIterator:Next(exists)}
 
-		return
+		return "NOCHARGE"
 	}
 	
 	; Returns TRUE if we've got a laser mining this entity already
@@ -351,9 +352,9 @@ objectdef obj_Ship
 		do
 		{
 			if ${This.ModulesIterator.Value.LastTarget(exists)} && \ 
-				${This.ModulesIterator.Value.LastTarget.ID} == ${EntityID}
+				${This.ModulesIterator.Value.LastTarget.ID} == ${EntityID} && \
+				( ${This.ModulesIterator.Value.IsActive} || ${This.ModulesIterator.Value.IsGoingOnline} )
 			{
-				echo "DEBUG: Already mining ID: ${This.ModulesIterator.Value.LastTarget.ID} == ${EntityID}
 				return TRUE
 			}
 		}
@@ -396,8 +397,9 @@ objectdef obj_Ship
 	function ChangeMiningLaserCrystal(string OreType, string SlotName)
 	{
 		; We might need to change loaded crystal
-		LoadedAmmo:Set[${This.LoadedMiningLaserCrystal[${SlotName}}]
-		if !${AsteroidName.Find[${LoadedAmmo}]}
+
+		LoadedAmmo:Set[${This.LoadedMiningLaserCrystal[${SlotName}]}]
+		if ${OreType.Find[${LoadedAmmo}](exists)}
 		{
 			variable index:item CrystalList
 			variable iterator CrystalIterator
@@ -410,9 +412,9 @@ objectdef obj_Ship
 				variable string CrystalType
 				CrystalType:Set[${CrystalIterator.Value.Name.Token[1, " "]}]
 						
-				if !${OreType.Find[${CrystalType}]}
+				if ${OreType.Find[${CrystalType}](exists)}
 				{
-					echo "Switching Crystal for slot ${SlotName} from ${LoadedAmmo} to ${OreType}"
+					echo "Switching Crystal in ${SlotName} from ${LoadedAmmo} to ${CrystalIterator.Value.Name}"
 					Me.Ship.Module[${SlotName}]:ChangeAmmo[${CrystalIterator.Value.ID}]
 					; This takes 2 seconds ingame, let's give it 50% more
 					wait 30
@@ -472,13 +474,13 @@ objectdef obj_Ship
 				if ${This.ModulesIterator.Value.SpecialtyCrystalMiningAmount(exists)}
 				{
 					variable string OreType
-					OreType:Set[${Me.ActiveTarget.Name}]
-					call ChangeMiningLaserCrystal ${OreType}
+					OreType:Set[${Me.ActiveTarget.Name.Token[2,"("]}]
+					call This.ChangeMiningLaserCrystal "${OreType}" ${This.ModulesIterator.Value.ToItem.Slot}
 				}
 
 				call UpdateHudStatus "Activating: ${This.ModulesIterator.Value.ToItem.Slot}: ${This.ModulesIterator.Value.ToItem.Name}"
 				This.ModulesIterator.Value:Click
-				wait 20
+				wait 25
 				return
 			}
 			wait 10

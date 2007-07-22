@@ -45,7 +45,7 @@ objectdef obj_Cargo
 
 	function TransferOreToHangar()
 	{	
-		call This.OpenHolds
+		call Ship.OpenCargo
 		
 		Me.Ship:DoGetCargo[This.MyCargo]
 		
@@ -78,6 +78,7 @@ objectdef obj_Cargo
 
 		if ${This.CargoToTransfer.Used} > 0
 		{
+			call Station.OpenHangar
 			call This.TransferAllToHangar
 		}
 		else

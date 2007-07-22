@@ -7,7 +7,6 @@
 
 BUGS:
 	Shield Booster sometimes ends up disabled. This is a must-have, verify it every so often.
-	Multiple lasers on 1 roid still happens, some kind of timing issue.  Shouldn't happen unless maxtargets < lasercount
 		
 */
 objectdef obj_Asteroids
@@ -166,6 +165,7 @@ function Mine()
 {
 	Asteroids:CheckBeltBookMarks[]
 	variable index:entity LockedTargets
+	variable iterator Target
 
 	; Find an asteroid field, or stay at current one if we're near one.
 	call Asteroids.MoveToField FALSE
@@ -180,36 +180,31 @@ function Mine()
 	; TODO - Change this to use the known mining laser slots instead of hardcoding slot 0.
 	while ${Ship.CargoFreeSpace} >= ${Ship.CargoMinimumFreeSpace}
 	{				
-		if ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers} && \
-			( ${Me.GetTargets} > ${Ship.TotalActivatedMiningLasers} || \
-			  ${Ship.TotalMiningLasers} > ${Math.Calc[${Ship.MaxLockedTargets} - 1]} )			
+		if ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers}
 		{
 			; We've got idle lasers, and available targets. Do something with them.
 
 			Me:DoGetTargets[LockedTargets]
-			variable iterator TargetIterator
-			LockedTargets:GetIterator[TargetIterator]
-
-			if ${TargetIterator:First(exists)}
+			LockedTargets:GetIterator[Target]
+			if ${Target:First(exists)}
 			do
 			{
-				if ${TargetIterator.Value.CategoryID} != ${Asteroids.AsteroidCategoryID}
+				if ${Target.Value.CategoryID} != ${Asteroids.AsteroidCategoryID}
 				{
 					continue
 				}
-
 				variable int TargetID
-				TargetID:Set[${TargetIterator.Value.ID}]
-				if !${Ship.IsMiningAstroidID(${TargetID})}
+				TargetID:Set[${Target.Value.ID}]
+				if !${Ship.IsMiningAstroidID[${TargetID}]}
 				{
-					TargetIterator.Value:MakeActiveTarget
+					Target.Value:MakeActiveTarget
 					wait 20
 
-					if ${TargetIterator.Value(exists)} && \
-						${TargetIterator.Value.Distance} > ${Ship.OptimalMiningRange}
+					if ${Target.Value(exists)} && \
+						${Target.Value.Distance} > ${Ship.OptimalMiningRange}
 					{
-						while ${TargetIterator.Value(exists)} && \
-								${TargetIterator.Value.Distance} > ${Ship.OptimalMiningRange}
+						while ${Target.Value(exists)} && \
+								${Target.Value.Distance} > ${Ship.OptimalMiningRange}
 						{
 							call Ship.Approach ${TargetID}
 						}
@@ -217,11 +212,9 @@ function Mine()
 						EVE:Execute[CmdStopShip]
 					}
 					call Ship.ActivateFreeMiningLaser
-					wait 30
-					break
 				}
 			}
-			while ${TargetIterator:Next(exists)}
+			while ${Target:Next(exists)}
 			
 			; TODO - Put multiple lasers on a roid as a fallback if we end up with more lasers than targets -- CyberTech
 		}
