@@ -19,12 +19,21 @@ objectdef obj_EVEBotUI
 	
 	method Initialize()
 	{
+		ui -load interface/eveskin/eveskin.xml
+		ui -load interface/evebotgui.xml
+
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		This.CharacterName:Set[${Me.Name}]
 		This.MyRace:Set[${Me.ToPilot.Type}]
 		This.MyCorp:Set[${Me.Corporation}]
 	}
 
+	method Shutdown()
+	{
+		Event[OnFrame]:DetachAtom[This:Pulse]
+		ui -unload interface/evebotgui.xml
+		ui -unload interface/eveskin/eveskin.xml
+	}
 
 	method Pulse()
 	{

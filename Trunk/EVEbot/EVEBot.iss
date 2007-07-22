@@ -4,6 +4,7 @@
 #include core/oMining.iss
 #include core/oCore.iss
 
+#include core/obj_Configuration.iss
 #include core/obj_Ship.iss
 #include core/obj_Station.iss
 #include core/obj_Cargo.iss
@@ -11,17 +12,15 @@
 
 ;; Declare all script or global variables here
 variable int stationloc
-variable int belt
 variable bool play
 variable string botstate
 variable float GoalDistance
 variable oSkills Skills
 
-; Script Settings & Setting Set Rerences
-variable settingsetref EVEBotSettingsRef
-variable settingsetref OreTypes
+
 
 ; Script-Defined Objects
+variable obj_Configuration Config
 variable obj_Asteroids Asteroids
 variable obj_Ship Ship
 variable obj_Station Station
@@ -30,8 +29,6 @@ variable obj_EVEBotUI UI
 
 function LoadEvebotGUI()
 {
-	ui -load interface/eveskin/eveskin.xml
-	ui -load interface/evebotgui.xml
 	call SetupHudStatus
 	call UpdateHudStatus "Starting EVEBot ${Version}."
 	wait 20 ${UIElement[evebot](exists)}
@@ -39,10 +36,6 @@ function LoadEvebotGUI()
 
 function atexit()
 {
-	LavishSettings[EVEBotSettings]:Export[${Script.CurrentDirectory}/config/evebot.xml]
-	ui -unload ./interface/eveskin/eveskin.xml
-	ui -unload ./interface/evebotgui.xml
-	LavishSettings[EVEBotSettings]:Remove
 	;redirect profile.txt Script:DumpProfiling
 }
 
@@ -92,26 +85,15 @@ function main()
 	{
 		waitframe
 	}
-
-	;Console EVEStatus@Main@EVEBotTab@EvEBot
-
-	; Initialize the settings sets.
-	LavishSettings:AddSet[EVEBotSettings]
-	LavishSettings[EVEBotSettings]:Import[${Script.CurrentDirectory}/config/evebot.xml]
-
-	; Assign settingsref shortcuts
-	EVEBotSettingsRef:Set[${LavishSettings[EVEBotSettings]}]
-	OreTypes:Set[${LavishSettings[EVEBotSettings].FindSet[Ore Types]}]
 		
 	call LoadEvebotGUI
 	Ship:UpdateModuleList[]
 	
 	EVE:Execute[CmdStopShip]
 	call UpdateHudStatus "Please be sure that your Ships' Cargo Hold is *CLOSED*"
-	call UpdateHudStatus "Completed Main Function"
 	call UpdateHudStatus "Bot is now Paused - Please press Play"
-
 	Script[EVEBot]:Pause
+
 	play:Set[TRUE]
 
   	while ${play}

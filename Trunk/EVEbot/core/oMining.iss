@@ -84,22 +84,22 @@ objectdef obj_Asteroids
 	
 	function UpdateList()
 	{
-		OreTypes:GetSettingIterator[This.OreTypeIterator]
+		Config.OreTypesRef:GetSettingIterator[This.OreTypeIterator]
 		
 		if ${This.OreTypeIterator:First(exists)}
 		{
 			do
 			{
-				echo "DEBUG: obj_Asteroids: Checking for Ore Type ${This.OreTypeIterator.Value}"
+				echo "DEBUG: obj_Asteroids: Checking for Ore Type ${This.OreTypeIterator.Key}"
 				This.AstroidList:Clear
-				EVE:DoGetEntities[This.AstroidList,CategoryID,${This.AsteroidCategoryID},${This.OreTypeIterator.Value}]
+				EVE:DoGetEntities[This.AstroidList,CategoryID,${This.AsteroidCategoryID},${This.OreTypeIterator.Key}]
 				wait 0.5
 			}
 			while ${This.AstroidList.Used} == 0 && ${This.OreTypeIterator:Next(exists)}
 			
 			if ${This.AstroidList.Used}
 			{
-					echo "DEBUG: obj_Asteroids:UpdateList - Found ${This.AstroidList.Used} ${This.OreTypeIterator.Value} asteroids"
+					echo "DEBUG: obj_Asteroids:UpdateList - Found ${This.AstroidList.Used} ${This.OreTypeIterator.Key} asteroids"
 			}
 		}
 		else
@@ -168,13 +168,14 @@ function Mine()
 	variable index:entity LockedTargets
 
 	; Find an asteroid field, or stay at current one if we're near one.
-	call Asteroids.UpdateList
 	call Asteroids.MoveToField FALSE
 	
 	;don't use that if you have offensive med or low slot...
 	call ActivateDefense
 	call Ship.OpenCargo
 	;Ship.Drones:LaunchAll
+
+	call Asteroids.UpdateList
 	
 	; TODO - Change this to use the known mining laser slots instead of hardcoding slot 0.
 	while ${Ship.CargoFreeSpace} >= ${Ship.CargoMinimumFreeSpace}
@@ -217,6 +218,7 @@ function Mine()
 					}
 					call Ship.ActivateFreeMiningLaser
 					wait 30
+					break
 				}
 			}
 			while ${TargetIterator:Next(exists)}

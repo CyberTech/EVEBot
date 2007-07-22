@@ -60,6 +60,11 @@ objectdef obj_Ship
 		This:CalculateMaxLockedTargets
 	}
 	
+	method Shutdown()
+	{
+		Event[OnFrame]:DetachAtom[This:Pulse]
+	}
+
 	method Pulse()
 	{
 		FrameCounter:Inc
@@ -468,9 +473,7 @@ objectdef obj_Ship
 				{
 					variable string OreType
 					OreType:Set[${Me.ActiveTarget.Name}]
-
-					;TODO - Module.Charge is broken, so cant use this right now.
-					;call ChangeMiningLaserCrystal ${OreType}
+					call ChangeMiningLaserCrystal ${OreType}
 				}
 
 				call UpdateHudStatus "Activating: ${This.ModulesIterator.Value.ToItem.Slot}: ${This.ModulesIterator.Value.ToItem.Name}"
@@ -543,12 +546,6 @@ objectdef obj_Ship
 		wait 100
 
 		This:UpdateModuleList[]
-	}
-
-	method CheckAvailableMiningLaserCrystals()
-	{
-		;GetAvailableAmmo[<index:item>]
-		
 	}
 	
 	function WarpToID(int Id)
