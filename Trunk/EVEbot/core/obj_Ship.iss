@@ -365,16 +365,18 @@ objectdef obj_Ship
 	
 	method UnlockAllTargets()
 	{
-			Me:DoGetTargets[LockedTargets]
-			variable iterator TargetIterator
-			LockedTargets:GetIterator[TargetIterator]
+		variable index:entity LockedTargets
+		variable iterator Target
 
-			if ${TargetIterator:First(exists)}
-			do
-			{
-				TargetIterator.Value:UnlockTarget
-			}
-			while ${TargetIterator:Next(exists)}
+		Me:DoGetTargets[LockedTargets]
+		LockedTargets:GetIterator[Target]
+
+		if ${Target:First(exists)}
+		do
+		{
+			Target.Value:UnlockTarget
+		}
+		while ${Target:Next(exists)}
 	}
 
 	method CalculateMaxLockedTargets()
