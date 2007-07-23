@@ -313,28 +313,27 @@ objectdef obj_Ship
 	{
 		if !${Me.Ship(exists)}
 		{
-			return
+			return "NOCHARGE"
 		}
 
-		variable index:item CrystalList
+		variable iterator Module
 
-		This.ModuleList_MiningLaser:GetIterator[This.ModulesIterator]
-		if ${This.ModulesIterator:First(exists)}
+		This.ModuleList_MiningLaser:GetIteratorModule]
+		if ${Module:First(exists)}
 		do
 		{
-			if !${This.ModulesIterator.Value.SpecialtyCrystalMiningAmount(exists)}
+			if !${Module.Value.SpecialtyCrystalMiningAmount(exists)}
 			{
 				continue
 			}
-			echo if ${This.ModulesIterator.Value.ToItem.Slot} ${SlotName}
-			if ${This.ModulesIterator.Value.ToItem.Slot.Equal[${SlotName}]} && \
-				${This.ModulesIterator.Value.Charge(exists)}
+			if ${Module.Value.ToItem.Slot.Equal[${SlotName}]} && \
+				${Module.Value.Charge(exists)}
 			{
-				echo LoadedMiningLaserCrystal returning ${This.ModulesIterator.Value.Charge.Name.Token[1, " "]}
-				return ${This.ModulesIterator.Value.Charge.Name.Token[1, " "]}
+				echo "obj_Ship:LoadedMiningLaserCrystal Returning ${Module.Value.Charge.Name.Token[1, " "]}
+				return ${Module.Value.Charge.Name.Token[1, " "]}
 			}
 		}
-		while ${This.ModulesIterator:Next(exists)}
+		while ${Module:Next(exists)}
 
 		return "NOCHARGE"
 	}
@@ -399,10 +398,12 @@ objectdef obj_Ship
 	function ChangeMiningLaserCrystal(string OreType, string SlotName)
 	{
 		; We might need to change loaded crystal
-
+		variable string LoadedAmmo
+	
 		LoadedAmmo:Set[${This.LoadedMiningLaserCrystal[${SlotName}]}]
-		if ${OreType.Find[${LoadedAmmo}](exists)}
+		if !${OreType.Find[${LoadedAmmo}](exists)}
 		{
+			echo "Current crystal in ${SlotName} is ${LoadedAmmo}, looking for ${OreType}"
 			variable index:item CrystalList
 			variable iterator CrystalIterator
 			This.ModulesIterator.Value:DoGetAvailableAmmo[CrystalList]
@@ -416,13 +417,15 @@ objectdef obj_Ship
 						
 				if ${OreType.Find[${CrystalType}](exists)}
 				{
-					echo "Switching Crystal in ${SlotName} from ${LoadedAmmo} to ${CrystalIterator.Value.Name}"
+					call UpdateHudStatus "Switching Crystal in ${SlotName} from ${LoadedAmmo} to ${CrystalIterator.Value.Name}"
 					Me.Ship.Module[${SlotName}]:ChangeAmmo[${CrystalIterator.Value.ID}]
 					; This takes 2 seconds ingame, let's give it 50% more
 					wait 30
+					return
 				}
 			}
 			while ${CrystalIterator:Next(exists)}
+			call UpdateHudStatus  "Warning: No crystal found for ore type ${OreType}, efficiency reduced"
 		}
 	}
 	

@@ -89,7 +89,7 @@ objectdef obj_Asteroids
 		{
 			do
 			{
-				echo "DEBUG: obj_Asteroids: Checking for Ore Type ${This.OreTypeIterator.Key}"
+				;echo "DEBUG: obj_Asteroids: Checking for Ore Type ${This.OreTypeIterator.Key}"
 				This.AstroidList:Clear
 				EVE:DoGetEntities[This.AstroidList,CategoryID,${This.AsteroidCategoryID},${This.OreTypeIterator.Key}]
 				wait 0.5
