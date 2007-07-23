@@ -1,15 +1,19 @@
 TO:DO
 
 Hessinger: In vacation
-Neutro: Add the option to use a jetcan or not and add support, implementing an event for mutli-bot support
-Ronin: MIA
+
+Neutro: implementing an event for mutli-bot support
 Override: Working on the queue/learning skills
-Halon: Not coding, no time or will
 Hazard: Insult EVEBOt and get klined from IRC
-Cyber: Rewriting oMinning and transforming the code into module
-Teht: Working on a hauler script
-Plecks: - have a look at the list down there and pick something or just work on something -
-Altered: - have a look at the list down there and pick something or just work on something -
+Teht: Working on a hauler script. Work is isolated from EVEBot, leverage.
+Plecks: Wrote oskills.  Still needs tied into bot.
+Altered: UI Updates
+CyberTech: Adding Hauler module to EVEBot itself
+CyberTech: Adding toggle to transport mined ore or jettison it
+CyberTech: Adding UI option for Miner or Hauler mode - Altered may have progress on this UI, my work will be basic.
+CyberTech: Bookmarking of previous location; use it to return to last mining spot.
+CyberTech: Change roid selection method, do 1 GetEntity call for all nearby astroids then iterate and exclude manually.
+GliderPro: obj_Hauler 
 
 I(Neutro) need
 * Addition for bookmarks location (waiting for Ama to add Bookmark support to ISXEVE)
