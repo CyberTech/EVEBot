@@ -17,37 +17,54 @@ objectdef obj_Asteroids
 	variable iterator OreTypeIterator
 	variable index:bookmark BeltBookMarkList
 	variable iterator BeltBookMarkIterator
+	variable int LastBookMarkIndex
+	variable int LastBeltIndex
+	variable bool UsingBookMarks = FALSE
 	
 	method Initialize()
 	{	
+		call UpdateHudStatus "obj_Asteroids: Initialized"
 	}
 	
-	function MoveToBeltBookMark()
+	function MoveToLastMiningPosition()
+	{
+		
+	}
+
+	function MoveToRandomBeltBookMark()
 	{	
 		variable int curBelt	
 		EVE:DoGetBookmarks[BeltBookMarkList]
 		
+		variable int RandomBelt
+
+		RandomBelt:Set[${Math.Rand[${BeltBookMarkList.Used}]:Inc[1]}]
+
 		while ${BeltBookMarkList.Used} > 0
 		{
-			curBelt:Set[${Math.Rand[${BeltBookMarkList.Used}]:Inc[1]}]
+			RandomBelt:Set[${Math.Rand[${BeltBookMarkList.Used}]:Inc[1]}]
+
 			variable string Label
-			Label:Set[${BeltBookMarkList[${curBelt}].Label}]
+
 			if ${BeltBookMarkList[${curBelt}].SolarSystemID} != ${Me.SolarSystemID}
 			{
 				continue
 			}
-			
+
+			Label:Set[${BeltBookMarkList[${curBelt}].Label}]
 			if ${Label.Token[1," "].Equal["Belt:"]} || ${Label.Token[1," "].Equal["Belt"]}
 			{
 				call UpdateHudStatus "Warping to Bookmark ${Label}"
 				call Ship.WarpPrepare
 				BeltBookMarkList[${curBelt}]:WarpTo
 				call Ship.WarpWait
+				This.LastBookMarkIndex:Set[${RandomBelt}]
+				This.UsingMookMarks:Set[TRUE]
 				return
 			}
 		}
 	}
-	
+		
 	function MoveToField(bool ForceMove)
 	{
 		;call MoveToBeltBookMark
@@ -67,6 +84,8 @@ objectdef obj_Asteroids
 				curBelt:Set[${Math.Rand[${Belts.Used}]:Inc[1]}]
 				call UpdateHudStatus "Warping to Asteroid Belt: ${Belts[${curBelt}].Name}"
 				call Ship.WarpToID ${Belts[${curBelt}]}
+				This.UsingMookMarks:Set[TRUE]
+				This.LastBeltIndex:Set[${curBelt}]
 			}
 			else
 			{
@@ -144,7 +163,8 @@ objectdef obj_Asteroids
 				call This.UpdateList
 				if ${Ship.TotalActivatedMiningLasers} == 0				
 				{
-					echo "obj_Asteroids: TargetNext: No Asteroids in Targeting Range & lasers idle - Approaching nearest"
+					variable float64 Distance = ${AsteroidIterator.Value.Distance}
+					call UpdateHudStatus "obj_Asteroids: TargetNext: No Asteroids in Targeting Range & Lasers Idle - Approaching nearest:${Distance} less than ${Math.Calc[${Distance}/${Me.Ship.MaxVelocity}]} Seconds"
 					AsteroidIterator:First
 					call Ship.Approach ${AsteroidIterator.Value}
 				}
@@ -161,73 +181,106 @@ objectdef obj_Asteroids
 	}
 }
 
-function Mine()
+objectdef obj_Miner
 {
-	Asteroids:CheckBeltBookMarks[]
 	variable index:entity LockedTargets
 	variable iterator Target
-
-	; Find an asteroid field, or stay at current one if we're near one.
-	call Asteroids.MoveToField FALSE
+	variable int TotalTrips = 0						/* Total Times we've had to transfer to hanger */
+	variable time TripStartTime
+	variable int PreviousTripSeconds = 0
+	variable int TotalTripSeconds = 0
+	variable int AverageTripSeconds = 0
 	
-	;don't use that if you have offensive med or low slot...
-	call ActivateDefense
-	call Ship.OpenCargo
-	Ship.Drones:LaunchAll
-
-	call Asteroids.UpdateList
+	method Initialize()
+	{
+		This.TripStartTime:Set[${Time.Timestamp}]
+		call UpdateHudStatus "obj_Miner: Initialized"
+	}
 	
-	; TODO - Change this to use the known mining laser slots instead of hardcoding slot 0.
-	while ${Ship.CargoFreeSpace} >= ${Ship.CargoMinimumFreeSpace}
-	{				
-		if ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers}
-		{
-			; We've got idle lasers, and available targets. Do something with them.
+	; Enable defenses, launch drones
+	function Prepare_Environment()
+	{
+		Ship:ActivateShieldRegenModules[]
+		Ship.Drones:LaunchAll[]
+		call Ship.OpenCargo
+	}
+	
+	function Cleanup_Environment()
+	{
+		call Ship.Drones.ReturnAllToDroneBay
+		Ship:UnlockAllTargets[]
+		call Ship.CloseCargo
 
-			Me:DoGetTargets[LockedTargets]
-			LockedTargets:GetIterator[Target]
-			if ${Target:First(exists)}
-			do
+	}
+	
+	function Mine()
+	{
+		
+		This.RunStartTime:Set[${Time.Timestamp}]
+		; Find an asteroid field, or stay at current one if we're near one.
+		call Asteroids.MoveToField FALSE
+		call This.Prepare_Environment
+		call Asteroids.UpdateList
+		
+		while ${Ship.CargoFreeSpace} >= ${Ship.CargoMinimumFreeSpace}
+		{				
+			if ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers}
 			{
-				if ${Target.Value.CategoryID} != ${Asteroids.AsteroidCategoryID}
+				; We've got idle lasers, and available targets. Do something with them.
+	
+				Me:DoGetTargets[LockedTargets]
+				LockedTargets:GetIterator[Target]
+				if ${Target:First(exists)}
+				do
 				{
-					continue
-				}
-				variable int TargetID
-				TargetID:Set[${Target.Value.ID}]
-				if !${Ship.IsMiningAstroidID[${TargetID}]}
-				{
-					Target.Value:MakeActiveTarget
-					wait 20
-
-					if ${Target.Value(exists)} && \
-						${Target.Value.Distance} > ${Ship.OptimalMiningRange}
+					if ${Target.Value.CategoryID} != ${Asteroids.AsteroidCategoryID}
 					{
-						while ${Target.Value(exists)} && \
-								${Target.Value.Distance} > ${Ship.OptimalMiningRange}
-						{
-							call Ship.Approach ${TargetID}
-						}
-						
-						EVE:Execute[CmdStopShip]
+						continue
 					}
-					call Ship.ActivateFreeMiningLaser
+					variable int TargetID
+					TargetID:Set[${Target.Value.ID}]
+					if !${Ship.IsMiningAstroidID[${TargetID}]}
+					{
+						Target.Value:MakeActiveTarget
+						wait 20
+	
+						if ${Target.Value(exists)} && \
+							${Target.Value.Distance} > ${Ship.OptimalMiningRange}
+						{
+							while ${Target.Value(exists)} && \
+									${Target.Value.Distance} > ${Ship.OptimalMiningRange}
+							{
+								call Ship.Approach ${TargetID}
+							}
+							
+							EVE:Execute[CmdStopShip]
+						}
+						call Ship.ActivateFreeMiningLaser
+					}
 				}
+				while ${Target:Next(exists)}
+				
+				; TODO - Put multiple lasers on a roid as a fallback if we end up with more lasers than targets -- CyberTech
 			}
-			while ${Target:Next(exists)}
-			
-			; TODO - Put multiple lasers on a roid as a fallback if we end up with more lasers than targets -- CyberTech
+	
+			if ${Me.GetTargets} < ${Ship.SafeMaxLockedTargets}
+			{
+				echo Target Locking: ${Me.GetTargets} out of ${Ship.SafeMaxLockedTargets}
+				call Asteroids.TargetNext
+			}
 		}
-
-		if ${Me.GetTargets} < ${Ship.SafeMaxLockedTargets}
-		{
-			echo Target Locking: ${Me.GetTargets} out of ${Ship.SafeMaxLockedTargets}
-			call Asteroids.TargetNext
-		}
+	
+		call This.Cleanup_Environment
+		This.TotalTrips:Inc
+		This.PreviousTripSeconds:Set[${This.TripDuration}]
+		This.TotalTripSeconds:Inc[${This.PreviousTripSeconds}]
+		This.AverageTripSeconds:Set[${Math.Calc[${This.TotalTripSeconds/${This.TotalTrips}]}]
+		
+		call UpdateHudStatus "Cargo Hold has reached threshold, returning"
 	}
 
-	call Ship.Drones.ReturnAllToDroneBay
-	Ship:UnlockAllTargets[]
-	call Ship.CloseCargo
-	call UpdateHudStatus "Cargo Hold has reached threshold, returning"
+	member:int TripDuration()
+	{
+		return ${Math.Calc[${Time.Timestamp} - ${This.TripStartTime.Timestamp}]}
+	}
 }

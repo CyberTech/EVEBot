@@ -5,8 +5,8 @@
 		<Visible>1</Visible>
 		<X>250</X>
 		<Y>200</Y>
-		<Width>417</Width>
-		<Height>300</Height>
+		<Width>450</Width>
+		<Height>250</Height>
 		<TitleBar>
 			<Height>16</Height>
 			<Border>3</Border>
@@ -55,7 +55,7 @@
 				<FrameTexture	/>
 				<Tabs>
 					<Tab Name='Main'>
-						<commandbutton name='Pause EvEBot'>
+						<commandbutton name='Pause EVEBot'>
 							<X>75</X>
 							<Y>5</Y>
 							<Width>65</Width>
@@ -67,50 +67,50 @@
 								Echo EVEBot: Paused
 							</OnLeftClick>
 						</commandbutton>
-						<commandbutton name='Play	EvEBot'>
+						<commandbutton name='start_evebot'>
 							<X>5</X>
 							<Y>5</Y>
 							<Width>65</Width>
 							<Height>25</Height>
-							<Text>Play</Text>
+							<Text>Start</Text>
 							<OnLeftClick>
 								Script[EvEBot]:Resume
 								Echo EVEBot: Resume
 							</OnLeftClick>
 						</commandbutton>
-						<commandbutton name='Force Return'> 
+						<commandbutton name='return_to_station'> 
 							<X>145</X>
 							<Y>5</Y>
 							<Width>65</Width>
 							<Height>25</Height>
 							<Text>Return</Text> 
 							<OnLeftClick>
-							forcedreturn
+								forcedreturn
 							</OnLeftClick>
 						</commandbutton>
-						<commandbutton name='Exit	EvEBot'>
+						<commandbutton name='exit_evebot'>
 							<X>348</X>
 							<Y>5</Y>
 							<Width>65</Width>
 							<Height>25</Height>
 							<Text>Exit</Text>
 							<OnLeftClick>
-								endscript	evebot
+								endscript evebot
 							</OnLeftClick>
 						</commandbutton>
-						<text	name='Running	Time is'>
+						<text	name='script_runtime'>
 							<X>205</X>
 							<Y>30</Y>
-							<Width>100</Width>
+							<Width>115</Width>
 							<Height>20</Height>
-							<Text>Time:	</Text>
+							<Text>Script Runtime:</Text>
 						</text>
-						<Text	name='EvE	Bot	Running	Time'>
-							<X>250</X>
+						<Text	name='script_runtime_data'>
+							<X>325</X>
 							<Y>30</Y>
 							<Width>100</Width>
 							<Height>20</Height>
-							<Text>${Math.Calc[(${Script[EvEBot].RunningTime}/1000/60/60)%60].Int.LeadingZeroes[2]}:${Math.Calc[(${Script[EvEBot].RunningTime}/1000/60)%60].Int.LeadingZeroes[2]}:${Math.Calc[(${Script[EvEBot].RunningTime}/1000)%60].Int.LeadingZeroes[2]}</Text>
+							<Text>${Script[evebot].VariableScope.UI.Runtime}</Text>
 						</Text>
 						<text	name='Status'>
 							<X>205</X>
@@ -140,63 +140,48 @@
 							<Height>20</Height>
 							<text>${Script[evebot].VariableScope.UI.MyTarget}</text>
 						</text>
-						<text	name='Runs'>
+						<text	name='Trips'>
 							<X>205</X>
 							<Y>75</Y>
 							<Width>100</Width>
 							<Height>20</Height>
 							<Text>Runs:</Text>
 						</text>
-						<text	name='MyRuns'>
+						<text	name='Trips_Data'>
 							<X>245</X>
 							<Y>75</Y>
 							<Width>100</Width>
 							<Height>20</Height>
-							<text>${Script[evebot].VariableScope.UI.TotalRuns}</text>
+							<text>${Script[evebot].VariableScope.Miner.TotalTrips}</text>
 						</text>
-						<text	name='Name'>
+						<text	name='avg_time'>
 							<X>7</X>
 							<Y>30</Y>
-							<Width>100</Width>
+							<Width>175</Width>
 							<Height>20</Height>
-							<Text>Name:</Text>
+							<Text>Time For Current Trip:</Text>
 						</text>
-						<text	name='MyName'>
-							<X>50</X>
-							<Y>30</Y>
-							<Width>100</Width>
-							<Height>20</Height>
-							<text>${Script[evebot].VariableScope.UI.CharacterName}</text>
-						</text>
-						<text	name='Race'>
-							<X>7</X>
+						<text	name='avg_time_data'>
+							<X>10</X>
 							<Y>45</Y>
 							<Width>100</Width>
 							<Height>20</Height>
-							<Text>Race:</Text>
+							<text>${Script[evebot].VariableScope.Miner.TripDuration} Sec</text>
 						</text>
-						<text	name='MyRace'>
-							<X>50</X>
-							<Y>45</Y>
+						<text	name='Average Time/Trip'>
+							<X>7</X>
+							<Y>60</Y>
+							<Width>175</Width>
+							<Height>20</Height>
+							<Text>Average Time per Trip:</Text>
+						</text>
+						<text	name='Average Time/Trip Data'>
+							<X>10</X>
+							<Y>75</Y>
 							<Width>150</Width>
 							<Height>20</Height>
-							<text>${Script[evebot].VariableScope.UI.MyRace}</text>
-						</text>
-						<text	name='Corporation'>
-							<X>7</X>
-							<Y>60</Y>
-							<Width>100</Width>
-							<Height>20</Height>
-							<Text>Corporation:</Text>
-						</text>
-						<text	name='MyCorp'>
-							<X>105</X>
-							<Y>60</Y>
-							<Width>100</Width>
-							<Height>20</Height>
-							<text>${Script[evebot].VariableScope.UI.MyCorp}</text>
-						</text>
-						
+							<text>${Script[evebot].VariableScope.Miner.AverageTripSeconds}</text>
+						</text>						
 						<console Name="EVEStatus">
 							<Y>r100</Y>
 							<Width>100%</Width>

@@ -12,6 +12,11 @@ objectdef obj_Drones
 	variable index:int DroneList
 	variable int CategoryID_Drones = 18
 	
+	method Initialize()
+	{
+		call UpdateHudStatus "obj_Drones: Initialized"
+	}
+
 	method LaunchAll()
 	{
 		call UpdateHudStatus "Launching drones..."
@@ -58,6 +63,7 @@ objectdef obj_Ship
 	{
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		This:CalculateMaxLockedTargets
+		call UpdateHudStatus "obj_Asteroids: Initialized"
 	}
 	
 	method Shutdown()
@@ -123,29 +129,31 @@ objectdef obj_Ship
 			return
 		}
 
+		variable iterator Module
+
 		echo "Module Inventory:"
-		This.ModuleList:GetIterator[This.ModulesIterator]
-		if ${This.ModulesIterator:First(exists)}
+		This.ModuleList:GetIterator[Module]
+		if ${Module:First(exists)}
 		do
 		{
 			variable int GroupID
-			GroupID:Set[${This.ModulesIterator.Value.ToItem.GroupID}]
+			GroupID:Set[${Module.Value.ToItem.GroupID}]
 			variable int TypeID
-			TypeID:Set[${This.ModulesIterator.Value.ToItem.TypeID}]
+			TypeID:Set[${Module.Value.ToItem.TypeID}]
 
-			;echo "    Slot: ${This.ModulesIterator.Value.ToItem.Slot}  ${This.ModulesIterator.Value.ToItem.Name}"
-			if !${This.ModulesIterator.Value.IsActivatable}
+			;echo "    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"
+			if !${Module.Value.IsActivatable}
 			{
-				This.ModuleList_Passive:Insert[${This.ModulesIterator.Value}]
+				This.ModuleList_Passive:Insert[${Module.Value}]
 				continue
 			}
 
-			;echo "          Group: ${This.ModulesIterator.Value.ToItem.Group}  ${GroupID}"
-			;echo "          Type: ${This.ModulesIterator.Value.ToItem.Type}  ${TypeID}"
+			;echo "          Group: ${Module.Value.ToItem.Group}  ${GroupID}"
+			;echo "          Type: ${Module.Value.ToItem.Type}  ${TypeID}"
 			
-			if ${This.ModulesIterator.Value.MiningAmount(exists)}
+			if ${Module.Value.MiningAmount(exists)}
 			{
-				This.ModuleList_MiningLaser:Insert[${This.ModulesIterator.Value}]
+				This.ModuleList_MiningLaser:Insert[${Module.Value}]
 				continue
 			}
 			
@@ -161,7 +169,7 @@ objectdef obj_Ship
 					break
 				; Shield Booster
 				case 40
-					This.ModuleList_Regen_Shield:Insert[${This.ModulesIterator.Value}]
+					This.ModuleList_Regen_Shield:Insert[${Module.Value}]
 					continue
 					break
 				default
@@ -169,34 +177,34 @@ objectdef obj_Ship
 			}
 
 		}
-		while ${This.ModulesIterator:Next(exists)}
+		while ${Module:Next(exists)}
 
 		echo "Passive Modules:"
-		This.ModuleList_Passive:GetIterator[This.ModulesIterator]
-		if ${This.ModulesIterator:First(exists)}
+		This.ModuleList_Passive:GetIterator[Module]
+		if ${Module:First(exists)}
 		do
 		{
-			echo "    Slot: ${This.ModulesIterator.Value.ToItem.Slot}  ${This.ModulesIterator.Value.ToItem.Name}"
+			echo "    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"
 		}
-		while ${This.ModulesIterator:Next(exists)}
+		while ${Module:Next(exists)}
 
 		echo "Mining Modules:"
-		This.ModuleList_MiningLaser:GetIterator[This.ModulesIterator]
-		if ${This.ModulesIterator:First(exists)}
+		This.ModuleList_MiningLaser:GetIterator[Module]
+		if ${Module:First(exists)}
 		do
 		{
-			echo "    Slot: ${This.ModulesIterator.Value.ToItem.Slot}  ${This.ModulesIterator.Value.ToItem.Name}"
+			echo "    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"
 		}
-		while ${This.ModulesIterator:Next(exists)}
+		while ${Module:Next(exists)}
 
 		echo "Shield Regen Modules:"
-		This.ModuleList_Regen_Shield:GetIterator[This.ModulesIterator]
-		if ${This.ModulesIterator:First(exists)}
+		This.ModuleList_Regen_Shield:GetIterator[Module]
+		if ${Module:First(exists)}
 		do
 		{
-			echo "    Slot: ${This.ModulesIterator.Value.ToItem.Slot}  ${This.ModulesIterator.Value.ToItem.Name}"
+			echo "    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"
 		}
-		while ${This.ModulesIterator:Next(exists)}
+		while ${Module:Next(exists)}
 	}
 	
 	method UpdateBaselineUsedCargo()
@@ -247,21 +255,22 @@ objectdef obj_Ship
 		}
 
 		variable int count
+		variable iterator Module
 		
-		This.ModuleList_MiningLaser:GetIterator[This.ModulesIterator]
-		if ${This.ModulesIterator:First(exists)}
+		This.ModuleList_MiningLaser:GetIterator[Module]
+		if ${Module:First(exists)}
 		do
 		{
-			if ${This.ModulesIterator.Value.IsActive} || \
-				${This.ModulesIterator.Value.IsGoingOnline} || \
-				${This.ModulesIterator.Value.IsDeactivating} || \
-				${This.ModulesIterator.Value.IsChangingAmmo} || \
-				${This.ModulesIterator.Value.IsReloadingAmmo}
+			if ${Module.Value.IsActive} || \
+				${Module.Value.IsGoingOnline} || \
+				${Module.Value.IsDeactivating} || \
+				${Module.Value.IsChangingAmmo} || \
+				${Module.Value.IsReloadingAmmo}
 			{
 				count:Inc
 			}
 		}
-		while ${This.ModulesIterator:Next(exists)}
+		while ${Module:Next(exists)}
 
 		return ${count}		
 	}
@@ -275,16 +284,18 @@ objectdef obj_Ship
 			return 0
 		}
 
-		This.ModuleList_MiningLaser:GetIterator[This.ModulesIterator]
-		if ${This.ModulesIterator:First(exists)}
+		variable iterator Module
+
+		This.ModuleList_MiningLaser:GetIterator[Module]
+		if ${Module:First(exists)}
 		{
-			if ${This.ModulesIterator.Value.SpecialtyCrystalMiningAmount(exists)}
+			if ${Module.Value.SpecialtyCrystalMiningAmount(exists)}
 			{
-				return ${This.ModulesIterator.Value.SpecialtyCrystalMiningAmount}
+				return ${Module.Value.SpecialtyCrystalMiningAmount}
 			}
 			else
 			{
-				return ${This.ModulesIterator.Value.MiningAmount}
+				return ${Module.Value.MiningAmount}
 			}
 		}
 		return 0
@@ -299,10 +310,12 @@ objectdef obj_Ship
 			return 0
 		}
 
-		This.ModuleList_MiningLaser:GetIterator[This.ModulesIterator]
-		if ${This.ModulesIterator:First(exists)}
+		variable iterator Module
+
+		This.ModuleList_MiningLaser:GetIterator[Module]
+		if ${Module:First(exists)}
 		{
-			return ${This.ModulesIterator.Value.OptimalRange}
+			return ${Module.Value.OptimalRange}
 		}
 
 		return 0
@@ -316,6 +329,13 @@ objectdef obj_Ship
 			return "NOCHARGE"
 		}
 
+		
+		if ${Me.Ship.Module[${SlotName}].Charge(exists)}
+		{
+			return ${Me.Ship.Module[${SlotName}].Charge.Name.Token[1, " "]}
+		}
+		return "NOCHARGE"
+		
 		variable iterator Module
 
 		This.ModuleList_MiningLaser:GetIteratorModule]
@@ -346,18 +366,20 @@ objectdef obj_Ship
 			return
 		}
 
-		This.ModuleList_MiningLaser:GetIterator[This.ModulesIterator]
-		if ${This.ModulesIterator:First(exists)}
+		variable iterator Module
+
+		This.ModuleList_MiningLaser:GetIterator[Module]
+		if ${Module:First(exists)}
 		do
 		{
-			if ${This.ModulesIterator.Value.LastTarget(exists)} && \ 
-				${This.ModulesIterator.Value.LastTarget.ID} == ${EntityID} && \
-				( ${This.ModulesIterator.Value.IsActive} || ${This.ModulesIterator.Value.IsGoingOnline} )
+			if ${Module.Value.LastTarget(exists)} && \ 
+				${Module.Value.LastTarget.ID} == ${EntityID} && \
+				( ${Module.Value.IsActive} || ${Module.Value.IsGoingOnline} )
 			{
 				return TRUE
 			}
 		}
-		while ${This.ModulesIterator:Next(exists)}
+		while ${Module:Next(exists)}
 		
 		return FALSE
 	}		
@@ -403,10 +425,12 @@ objectdef obj_Ship
 		LoadedAmmo:Set[${This.LoadedMiningLaserCrystal[${SlotName}]}]
 		if !${OreType.Find[${LoadedAmmo}](exists)}
 		{
-			echo "Current crystal in ${SlotName} is ${LoadedAmmo}, looking for ${OreType}"
+			echo "DEBUG: Current crystal in ${SlotName} is ${LoadedAmmo}, looking for ${OreType}"
 			variable index:item CrystalList
 			variable iterator CrystalIterator
-			This.ModulesIterator.Value:DoGetAvailableAmmo[CrystalList]
+			variable iterator Module
+			
+			Module.Value:DoGetAvailableAmmo[CrystalList]
 						
 			CrystalList:GetIterator[CrystalIterator]
 			if ${CrystalIterator:First(exists)}
@@ -414,7 +438,8 @@ objectdef obj_Ship
 			{
 				variable string CrystalType
 				CrystalType:Set[${CrystalIterator.Value.Name.Token[1, " "]}]
-						
+				
+				echo Testing ${OreType} contains ${CrystalType}
 				if ${OreType.Find[${CrystalType}](exists)}
 				{
 					call UpdateHudStatus "Switching Crystal in ${SlotName} from ${LoadedAmmo} to ${CrystalIterator.Value.Name}"
@@ -438,18 +463,20 @@ objectdef obj_Ship
 			return
 		}
 		
-		This.ModuleList_MiningLaser:GetIterator[This.ModulesIterator]
-		if ${This.ModulesIterator:First(exists)}
+		variable iterator Module
+
+		This.ModuleList_MiningLaser:GetIterator[Module]
+		if ${Module:First(exists)}
 		do
 		{
-			if ${This.ModulesIterator.Value.IsActive} && \
-				!${This.ModulesIterator.Value.LastTarget(exists)}
+			if ${Module.Value.IsActive} && \
+				!${Module.Value.LastTarget(exists)}
 			{
-				echo "${This.ModulesIterator.Value.Name} has non-existent target, deactivating"
-				This.ModulesIterator.Value:Click
+				echo "${Module.Value.Name} has non-existent target, deactivating"
+				Module.Value:Click
 			}
 		}
-		while ${This.ModulesIterator:Next(exists)}
+		while ${Module:Next(exists)}
 
 	}
 	
@@ -465,32 +492,35 @@ objectdef obj_Ship
 			call UpdateHudStatus "Error: Mining Lasers may only be used on Asteroids"
 			return
 		}
+
+		variable iterator Module
 		
-		This.ModuleList_MiningLaser:GetIterator[This.ModulesIterator]
-		if ${This.ModulesIterator:First(exists)}
+		This.ModuleList_MiningLaser:GetIterator[Module]
+		if ${Module:First(exists)}
 		do
 		{
-			if !${This.ModulesIterator.Value.IsActive} && \
-				!${This.ModulesIterator.Value.IsGoingOnline} && \
-				!${This.ModulesIterator.Value.IsDeactivating} && \
-				!${This.ModulesIterator.Value.IsChangingAmmo} &&\
-				!${This.ModulesIterator.Value.IsReloadingAmmo}
+			if !${Module.Value.IsActive} && \
+				!${Module.Value.IsGoingOnline} && \
+				!${Module.Value.IsDeactivating} && \
+				!${Module.Value.IsChangingAmmo} &&\
+				!${Module.Value.IsReloadingAmmo}
 			{
-				if ${This.ModulesIterator.Value.SpecialtyCrystalMiningAmount(exists)}
+				if ${Module.Value.SpecialtyCrystalMiningAmount(exists)}
 				{
 					variable string OreType
 					OreType:Set[${Me.ActiveTarget.Name.Token[2,"("]}]
-					call This.ChangeMiningLaserCrystal "${OreType}" ${This.ModulesIterator.Value.ToItem.Slot}
+					OreType:Set[${OreType.Replace[(,]}]
+					call This.ChangeMiningLaserCrystal "${OreType}" ${Module.Value.ToItem.Slot}
 				}
 
-				call UpdateHudStatus "Activating: ${This.ModulesIterator.Value.ToItem.Slot}: ${This.ModulesIterator.Value.ToItem.Name}"
-				This.ModulesIterator.Value:Click
+				call UpdateHudStatus "Activating: ${Module.Value.ToItem.Slot}: ${Module.Value.ToItem.Name}"
+				Module.Value:Click
 				wait 25
 				return
 			}
 			wait 10
 		}
-		while ${This.ModulesIterator:Next(exists)}
+		while ${Module:Next(exists)}
 	}
 
 	function Approach(int EntityID)
@@ -499,8 +529,8 @@ objectdef obj_Ship
 		{
 			variable float OriginalDistance = ${Entity[${EntityID}].Distance}
 			Entity[${EntityID}]:Approach
+			call UpdateHudStatus "Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc[${Entity[${EntityID}].Distance}/${Me.Ship.MaxVelocity}]} Seconds away"
 			wait 130
-			call UpdateHudStatus "Approaching: ${Entity[${EntityID}].Name} - 10 Second wait"
 
 			if ${Entity[${EntityID}](exists)} && \
 				${OriginalDistance} < ${Entity[${EntityID}].Distance}
@@ -540,14 +570,16 @@ objectdef obj_Ship
 
 	function Undock()
 	{
-		call UpdateHudStatus "Undock: Waiting while ship exits the station"
+		Config:SetHomeStation[
+		call UpdateHudStatus "Undock: Waiting while ship exits the station (13 sec)"
 		EVE:Execute[CmdExitStation]	
 		do
 		{
-			wait 50
+			wait 130 ${Entity[CategoryID,3].ID(exists)}
 		}
 		while ${Me.InStation}
-		wait 50
+		
+		Config:SetMinerHomeStation[${Entity[CategoryID,3].Name}]
 		
 		Me:SetVelocity[100]
 		wait 100
@@ -601,5 +633,27 @@ objectdef obj_Ship
 	
 		call UpdateHudStatus "Finished warping (hopefully)"
 	}	
+
+	method ActivateShieldRegenModules()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+		
+		variable iterator Module
+		
+		This.ModuleList_Regen_Shield:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			if !${Module.Value.IsActive}
+			{
+				call UpdateHudStatus "Activating ${Module.Value.ToItem.Name}"
+				Module.Value:Click
+			}
+		}
+		while ${Module:Next(exists)}
+	}
 
 }

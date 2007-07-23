@@ -6,7 +6,6 @@ objectdef obj_EVEBotUI
 	variable string MyTarget
 	variable string MyRace
 	variable string MyCorp
-	variable int TotalRuns = 0						/* Total Times we've had to transfer to hanger */
 
 ; TODO This doesn't belong here. - CyberTech
 	variable bool ForcedReturn = FALSE					/* A variable for forced return */
@@ -26,6 +25,7 @@ objectdef obj_EVEBotUI
 		This.CharacterName:Set[${Me.Name}]
 		This.MyRace:Set[${Me.ToPilot.Type}]
 		This.MyCorp:Set[${Me.Corporation}]
+		call UpdateHudStatus "obj_EVEBotUI: Initialized"		
 	}
 
 	method Shutdown()
@@ -60,4 +60,13 @@ objectdef obj_EVEBotUI
 			This.MyTarget:Set[None]
 		}
    }
+   
+	member Runtime()
+	{
+		variable string Hours = ${Math.Calc[(${Script.RunningTime}/1000/60/60)%60].Int.LeadingZeroes[2]}
+		variable string Minutes = ${Math.Calc[(${Script.RunningTime}/1000/60)%60].Int.LeadingZeroes[2]}
+		variable string Seconds = ${Math.Calc[(${Script.RunningTime}/1000)%60].Int.LeadingZeroes[2]}
+		
+		return "${Hours}:${Minutes}:${Seconds}"
+	}
 }

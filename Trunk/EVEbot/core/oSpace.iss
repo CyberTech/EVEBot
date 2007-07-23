@@ -28,51 +28,45 @@ function ReturnToBase(int Id)
 	
 function Dock()
 {
-  variable int WaitCount = 0
+	variable int WaitCount = 0
+	variable int StationID = ${Entity[CategoryID,3,${Config.MinerHomeStation}].ID}
 
-	stationloc:Set[${Entity[CategoryID,3].ID}]
-	call UpdateHudStatus "Setting main station ${Entity[${stationloc}].Name} with ID ${stationloc}"
-	wait 10
+	call UpdateHudStatus "Docking at ${StationID}:${Config.MinerHomeStation}
+
   ;;;;;;;;;;;;;;;;;;
   ;;; Sanity Checks
-	if (${stationloc} <= 0)
+	if (${StationID} <= 0)
 	{
-	   echo "Error: oSpace::Dock --> Id is <= 0 (${stationloc}) Getting a new one..."
-		stationloc:Set[${Entity[CategoryID,3].ID}]
+		call UpdateHudStatus "Error: oSpace::Dock --> MingerHomeStation is unset, going to nearest base
+		StationID:Set[${Entity[CategoryID,3].ID}]
 	}
-	if (!${Entity[${stationloc}].Name(exists)})
-	{
-	   echo "Error: oSpace::Dock --> No entity matched the ID given, getting another one..."
-	   stationloc:Set[${Entity[CategoryID,3].ID}]
-	}
-	;;;;;;;;;;;;;;;;;;
 
 while !${Me.InStation}
 {
-	if ${Entity[${stationloc}].Distance} >= 10000
+	if ${Entity[${StationID}].Distance} >= 10000
 	{
 	  call UpdateHudStatus "Calling ReturnToBase"
-		call ReturnToBase ${stationloc}
+		call ReturnToBase ${StationID}
 		do
 		{ 
 		   wait 20
 		}
-		while ${Entity[${stationloc}].Distance} >= 10000
+		while ${Entity[${StationID}].Distance} >= 10000
 	}
-	elseif (${Entity[${stationloc}].Distance} < 10000 && ${Entity[${stationloc}].Distance} > 100)
+	elseif (${Entity[${StationID}].Distance} < 10000 && ${Entity[${StationID}].Distance} > 100)
 	{
 		call UpdateHudStatus "Approaching Base"
-		Entity[${stationloc}]:Approach
+		Entity[${StationID}]:Approach
 		do
 		{
 			wait 20
 		}
-		while ${Entity[${stationloc}].Distance} > 100
+		while ${Entity[${StationID}].Distance} > 100
 	}
-	elseif (${Entity[${stationloc}].Distance} <= 100 && ${Me.ToEntity.Mode} != 3)
+	elseif (${Entity[${StationID}].Distance} <= 100 && ${Me.ToEntity.Mode} != 3)
 	{
 		call UpdateHudStatus "In Docking Range ... Docking"
-		Entity[${stationloc}]:Dock
+		Entity[${StationID}]:Dock
 		do
 		{
 		   wait 20

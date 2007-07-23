@@ -13,6 +13,7 @@ objectdef obj_Configuration
 			echo "WARNING: MinerConfig setting not detected, assigning default values"
 			This:Set_Default_Values[]
 		}
+		call UpdateHudStatus "obj_Station: Initialized"		
 	}
 	
 	method Shutdown()
@@ -94,7 +95,12 @@ objectdef obj_Configuration
 		LavishSettings[EVEBotSettings]:Export[${CONFIG_FILE}]
 	}
 	
-	method SetHomeStation(string StationName)
+	member MinerHomeStation(string StationName)
+	{
+		This.MinerConfigRef.FindSetting[Home Station]
+	}
+
+	method SetMinerHomeStation(string StationName)
 	{
 		This.MinerConfigRef:AddSetting[Home Station,${StationName}]
 	}

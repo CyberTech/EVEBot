@@ -5,6 +5,7 @@ objectdef obj_Cargo
 
 	method Initialize()
 	{
+		call UpdateHudStatus "obj_Cargo: Initialized"
 	}
 
 	function OpenHolds()
@@ -87,7 +88,6 @@ objectdef obj_Cargo
 		}
 		
 		CargoToTransfer:Clear[]
-		UI.TotalRuns:Inc
  
 	    ; After everything is done ...let's clean up the stacks.
 	    Me.Station:StackAllHangarItems

@@ -11,21 +11,23 @@
 #include core/obj_EVEBotUI.iss
 
 ;; Declare all script or global variables here
-variable int stationloc
 variable bool play
 variable string botstate
 variable float GoalDistance
-variable oSkills Skills
+variable obj_Skills Skills
 
 
 
 ; Script-Defined Objects
+variable obj_EVEBotUI UI
 variable obj_Configuration Config
 variable obj_Asteroids Asteroids
 variable obj_Ship Ship
 variable obj_Station Station
 variable obj_Cargo Cargo
-variable obj_EVEBotUI UI
+variable obj_Miner Miner
+;variable obj_Hauler Hauler
+;variable obj_Salvager Salvager
 
 function LoadEvebotGUI()
 {
@@ -91,7 +93,7 @@ function main()
 	
 	EVE:Execute[CmdStopShip]
 	call UpdateHudStatus "Please be sure that your Ships' Cargo Hold is *CLOSED*"
-	call UpdateHudStatus "Bot is now Paused - Please press Play"
+	call UpdateHudStatus "Paused - Please press Start"
 
 
 	Script[EVEBot]:Pause
@@ -115,7 +117,7 @@ function main()
 				break
 			case MINE
 				call UpdateHudStatus "Mining"
-				call Mine
+				call Miner.Mine
 				break
 			case CARGOFULL
 				call UpdateHudStatus "My ship is full"

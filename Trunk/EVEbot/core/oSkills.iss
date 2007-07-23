@@ -17,10 +17,15 @@
 		
 */
 
-objectdef oSkills
+objectdef obj_Skills
 {
 	variable file SkillFile = "SkillsToTrain.txt"
 	
+	method Initialize()
+	{
+		call UpdateHudStatus "obj_Skills: Initialized"
+	}
+
 	method Train(string SkillName)
 	{
 		if !${Me.Skill[${SkillName}](exists)}
