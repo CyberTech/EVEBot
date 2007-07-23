@@ -95,9 +95,9 @@ objectdef obj_Configuration
 		LavishSettings[EVEBotSettings]:Export[${CONFIG_FILE}]
 	}
 	
-	member MinerHomeStation(string StationName)
+	member:string MinerHomeStation(string StationName)
 	{
-		This.MinerConfigRef.FindSetting[Home Station]
+		return ${This.MinerConfigRef.FindSetting[Home Station]}
 	}
 
 	method SetMinerHomeStation(string StationName)
