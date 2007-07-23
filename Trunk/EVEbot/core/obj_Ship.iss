@@ -20,7 +20,7 @@ objectdef obj_Drones
 		
 	member:int DronesInSpace()
 	{
-		return ${EVE.GetEntityIDs[This.DroneList,OwnerID,${Me.CharID},CategoryID,${CategoryID_Drones}]}
+		return ${EVE.GetEntityIDs[This.DroneList,OwnerID,${Me.CharID},CategoryID,${This.CategoryID_Drones}]}
 	}
    
 	function ReturnAllToDroneBay()

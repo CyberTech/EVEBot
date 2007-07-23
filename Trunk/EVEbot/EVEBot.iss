@@ -92,6 +92,8 @@ function main()
 	EVE:Execute[CmdStopShip]
 	call UpdateHudStatus "Please be sure that your Ships' Cargo Hold is *CLOSED*"
 	call UpdateHudStatus "Bot is now Paused - Please press Play"
+
+
 	Script[EVEBot]:Pause
 
 	play:Set[TRUE]

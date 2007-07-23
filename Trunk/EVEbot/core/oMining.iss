@@ -173,7 +173,7 @@ function Mine()
 	;don't use that if you have offensive med or low slot...
 	call ActivateDefense
 	call Ship.OpenCargo
-	;Ship.Drones:LaunchAll
+	Ship.Drones:LaunchAll
 
 	call Asteroids.UpdateList
 	
@@ -225,7 +225,8 @@ function Mine()
 			call Asteroids.TargetNext
 		}
 	}
-	Ship.Drones:ReturnAllToDroneBay
+
+	call Ship.Drones.ReturnAllToDroneBay
 	Ship:UnlockAllTargets[]
 	call Ship.CloseCargo
 	call UpdateHudStatus "Cargo Hold has reached threshold, returning"
