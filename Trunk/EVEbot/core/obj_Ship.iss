@@ -619,7 +619,7 @@ objectdef obj_Ship
 	function WarpPrepare()
 	{ 
 		call UpdateHudStatus "Preparing for warp"
-		This.Drones:ReturnAllToDroneBay
+		call This.Drones.ReturnAllToDroneBay
 	}
 	
 	function WarpWait()
