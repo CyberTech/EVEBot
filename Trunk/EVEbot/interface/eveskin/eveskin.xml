@@ -1,34 +1,110 @@
 <ISUI>	
-	<template name='eve.window.TitleBar.Minimize.Texture' Filename='eveskin/MinimiseWindow-Up.png' />
-	<template name='eve.window.TitleBar.Minimize.TexturePressed' Filename='eveskin/MinimiseWindow-Down.png'/>
-	<template name='eve.window.TitleBar.Maximize.Texture' Filename='eveskin/MaximiseWindow-Up.png' />
-	<template name='eve.window.TitleBar.Maximize.TexturePressed' Filename='eveskin/MaximiseWindow-Down.png' />
-	<template name='eve.window.TitleBar.Close.Texture' Filename='eveskin/CloseWindow-Up.png' />
-	<template name='eve.window.TitleBar.Close.TexturePressed' Filename='eveskin/CloseWindow-Down.png' />
+	<template name='EVESkin.Window.TitleBar.Texture' Filename='eveskin/MainGUI/MainWindow-TopTitleBar.png' />
+	<template name='EVEskin.Window.TitleBar.Minimize.Texture' Filename='eveskin/MainGUI/button_minimize.png' />
+	<template name='EVEskin.Window.TitleBar.Maximize.Texture' Filename='eveskin/MainGUI/button_minimize.png' />
+	<template name='EVESkin.Window.TitleBar.Close.Texture' Filename='eveskin/MainGUI/button_close.png' />
+	<template name='EVESkin.Window.TitleBar.PauseButton.Texture' Filename='eveskin/MainGUI/button_pause.png' />
+	<template name='EVESkin.Window.TitleBar.PlayButton.Texture' Filename='eveskin/MainGUI/button_play.png' />
+
+	<template name='EVESkin.Window.Main.Texture' Filename='eveskin/MainGUI/MainWindow-Bottom.png' />
+	<template name='EVESkin.Window.Main.OptionsButton.Texture' Filename='eveskin/MainGUI/button_options.png' />
+
+	<template name='EVESkin.Window.EVEBotOptionsUI.Texture' Filename='eveskin/EVEBotOptionsUI/optionswindow_main.png' />
+	<template name='EVESkin.Window.EVEBotOptionsUI.TitleBar.Texture' Filename='eveskin/EVEBotOptionsUI/optionswindow_titlebar.png' />
+
+	<template name='EVESkin.Window.EVEBotOptionsUI.TabButtonTexture' Filename='eveskin/EVEBotOptionsUI/button_empty.png' />
+	<template name='EVESkin.Window.EVEBotOptionsUI.TabButtonSelectedtTexture' Filename='eveskin/EVEBotOptionsUI/button_empty.png' />
+	<template name='EVESkin.Window.EVEBotOptionsUI.TabButtonHoverTexture' Filename='eveskin/EVEBotOptionsUI/button_empty.png' />
+
+	<template name='EVESkin.Font.Description'>	
+		<Name>Arial</Name>
+		<Size>9</Size>
+		<Color>FFFF9900</Color>
+	</template>
+
+	<template name='EVESkin.Font.Value'>	
+		<Name>Verdana</Name>
+		<Size>9</Size>
+		<Color>FFFF9900</Color>
+	</template>
+
 <!-- Close Window -->
-	<template name='eve.Window.TitleBar.Close'>
-		<X>r16</X>
-		<Y>0</Y>
+	<template name='EVESkin.Window.TitleBar.Close'>
+		<X>r21</X>
+		<Y>4</Y>
 		<Width>16</Width>
 		<Height>16</Height>
-		<Texture Template='eve.window.TitleBar.Close.Texture' />
-		<TexturePressed Template='eve.Window.TitleBar.Close.TexturePressed' />
+		<Texture Template='EVESkin.Window.TitleBar.Close.Texture' />
 	</template>
 <!-- Min/Max Window -->
-	<template name='eve.Window.TitleBar.Minimize'>
-		<X>r32</X>
-		<Y>0</Y>
+	<template name='EVESkin.Window.TitleBar.Minimize'>
+		<X>r37</X>
+		<Y>4</Y>
 		<Width>16</Width>
 		<Height>16</Height>
-		<Texture Template='eve.Window.TitleBar.Minimize.Texture' />
-		<TexturePressed Template='eve.Window.TitleBar.Minimize.TexturePressed' />
+		<Texture Template='EVESkin.Window.TitleBar.Minimize.Texture' />
 	</template>
-	<template name='eve.Window.TitleBar.Maximize'>
-		<X>r32</X>
+	<template name='EVESkin.Window.TitleBar.Maximize'>
+		<X>r37</X>
+		<Y>4</Y>
+		<Width>16</Width>
+		<Height>16</Height>
+		<Texture Template='EVESkin.Window.TitleBar.Maximize.Texture' />
+	</template>
+	<template name='EVESkin.Window.Titlebar'>
+		<X>0</X>
+		<Y>0</Y>
+		<Texture Template='EVESkin.Window.Titlebar.Texture' />
+	</template>
+	<template name='EVESkin.Window.TitleBar.PauseButton'>
+		<X>r37</X>
+		<Y>4</Y>
+		<Width>16</Width>
+		<Height>16</Height>
+		<Texture Template='EVESkin.Window.TitleBar.PauseButton.Texture' />
+	</template>
+	<template name='EVESkin.Window.TitleBar.PlayButton'>
+		<X>r37</X>
+		<Y>4</Y>
+		<Width>16</Width>
+		<Height>16</Height>
+		<Texture Template='EVESkin.Window.TitleBar.PlayButton.Texture' />
+	</template>
+
+
+	<template name='EVESkin.Window.Main'>
+		<X>0</X>
+		<Y>0</Y>
+		<Texture Template='EVESkin.Window.Main.Texture' />
+	</template>
+	<template name='EVESkin.Window.Main.OptionsButton'>
+		<X>0</X>
 		<Y>0</Y>
 		<Width>16</Width>
 		<Height>16</Height>
-		<Texture Template='eve.window.TitleBar.Maximize.Texture' />
-		<TexturePressed Template='eve.Window.TitleBar.Maximize.TexturePressed' />
+		<Texture Template='EVESkin.Window.Main.OptionsButton.Texture' />
+	</template>
+
+	<template name='EVESkin.EVEBotOptionsUI'>
+		<X>0</X>
+		<Y>0</Y>
+		<Texture Template='EVESkin.Window.EVEBotOptionsUI.Texture' />
+	</template>
+	
+	<template name='EVESkin.Window.EVEBotOptionsUI.Titlebar'>
+		<X>0</X>
+		<Y>0</Y>
+		<Texture Template='EVESkin.Window.EVEBotOptionsUI.Titlebar.Texture' />
+	</template>
+
+	<template name='EVESkin.EVEBotOptionsUI.TabControl'>
+		<Font template='Button.Font' />
+		<BorderColor />
+		<FrameBorderColor></FrameBorderColor>
+		<FrameBackgroundColor></FrameBackgroundColor>
+		<SelectedTextColor>FF000000</SelectedTextColor>
+		<FrameTexture Template='EVESkin.Window.EVEBotOptionsUI.Texture' />
+		<TabTexture Template='EVESkin.Window.EVEBotOptionsUI.TabButtonTexture' />
+		<TabSelectedTexture Template='EVESkin.Window.EVEBotOptionsUI.TabButtonTexture' />
 	</template>
 </ISUI>
