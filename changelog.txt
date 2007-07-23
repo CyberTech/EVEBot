@@ -1,15 +1,35 @@
-                   ___.           __                  |
-   _______  __ ____\_ |__   _____/  |_                | 
- _/ __ \  \/ // __ \| __ \ /  _ \   __\               |
- \  ___/\   /\  ___/| \_\ (  <_> )  |                 |
-  \___  >\_/  \___  >___  /\____/|__|                 |
-      \/          \/    \/                            |
-        --  V. 0.89.1 Stable Beta --                  |
-                                                      |
-------------------------------------------------------*
 
 
-CHANGELOG:
+ .______________________________________________________.
+ |                   ___.           __                  |
+ |   _______  __ ____\_ |__   _____/  |_                | 
+ | _/ __ \  \/ // __ \| __ \ /  _ \   __\               |
+ | \  ___/\   /\  ___/| \_\ (  <_> )  |                 |
+ |  \___  >\_/  \___  >___  /\____/|__|                 |
+ |      \/          \/    \/                            |
+ |        --  V. 0.91 Stable Beta --                    |
+ |                                                      |
+ .------------------------------------------------------.
+
+*********************************************************
+                     CHANGELOG:                          
+*********************************************************
+
+
+0.91
+- Fixed drones not being recalled in some cases
+
+
+0.90
+- Lots of changes.  Fixes to mining, to crystal selection, changes to UI display. Home station is now saved on undock, and saved to config file by name, not by ID.
+- Created obj_Mining, added Trip-related counters to it that now display on the UI page- Trip duration, trip count, trip avg duration.
+- Moved Mine() function into obj_mining and broke it up as appropriate.
+- Fixed crystal changing
+- Drone launching/recalling fixed/turned on by default
+- Fixed unlockalltargets method
+- Added obj_Configuration, an object to hold config variables and store them to disk in evebot.xml
+- Added shutdown events to the objects which have initialize events.
+- removed redundant code from oCombat.iss
 
 
 0.899.1 
@@ -155,5 +175,5 @@ CHANGELOG:
 
 
  _________________________
-| Last Updated: 7/17/07.  |
+| Last Updated: 7/23/07.  |
 |_________________________|
