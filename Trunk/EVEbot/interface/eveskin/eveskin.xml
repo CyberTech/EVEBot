@@ -9,12 +9,12 @@
 	<template name='EVESkin.Window.Main.Texture' Filename='eveskin/MainGUI/MainWindow-Bottom.png' />
 	<template name='EVESkin.Window.Main.OptionsButton.Texture' Filename='eveskin/MainGUI/button_options.png' />
 
-	<template name='EVESkin.Window.EVEBotOptionsUI.Texture' Filename='eveskin/EVEBotOptionsUI/optionswindow_main.png' />
-	<template name='EVESkin.Window.EVEBotOptionsUI.TitleBar.Texture' Filename='eveskin/EVEBotOptionsUI/optionswindow_titlebar.png' />
+	<template name='EVESkin.Window.EVEBotOptionsUI.Texture' Filename='eveskin/OptionsGUI/optionswindow_main.png' />
+	<template name='EVESkin.Window.EVEBotOptionsUI.TitleBar.Texture' Filename='eveskin/OptionsGUI/optionswindow_titlebar.png' />
 
-	<template name='EVESkin.Window.EVEBotOptionsUI.TabButtonTexture' Filename='eveskin/EVEBotOptionsUI/button_empty.png' />
-	<template name='EVESkin.Window.EVEBotOptionsUI.TabButtonSelectedtTexture' Filename='eveskin/EVEBotOptionsUI/button_empty.png' />
-	<template name='EVESkin.Window.EVEBotOptionsUI.TabButtonHoverTexture' Filename='eveskin/EVEBotOptionsUI/button_empty.png' />
+	<template name='EVESkin.Window.EVEBotOptionsUI.TabButtonTexture' Filename='eveskin/OptionsGUI/button_empty.png' />
+	<template name='EVESkin.Window.EVEBotOptionsUI.TabButtonSelectedtTexture' Filename='eveskin/OptionsGUI/button_empty.png' />
+	<template name='EVESkin.Window.EVEBotOptionsUI.TabButtonHoverTexture' Filename='eveskin/OptionsGUI/button_empty.png' />
 
 	<template name='EVESkin.Font.Description'>	
 		<Name>Arial</Name>
