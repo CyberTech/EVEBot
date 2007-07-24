@@ -4,7 +4,7 @@
 	<template name='EVEskin.Window.TitleBar.Maximize.Texture' Filename='eveskin/MainGUI/button_minimize.png' />
 	<template name='EVESkin.Window.TitleBar.Close.Texture' Filename='eveskin/MainGUI/button_close.png' />
 	<template name='EVESkin.Window.TitleBar.PauseButton.Texture' Filename='eveskin/MainGUI/button_pause.png' />
-	<template name='EVESkin.Window.TitleBar.RunButton.Texture' Filename='eveskin/MainGUI/button_play.png' />
+	<template name='EVESkin.Window.TitleBar.RunButton.Texture' Filename='eveskin/MainGUI/button_run.png' />
 
 	<template name='EVESkin.Window.Texture' Filename='eveskin/MainGUI/tab_frametexture.png' />
 
