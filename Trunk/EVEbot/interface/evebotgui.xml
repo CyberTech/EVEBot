@@ -230,18 +230,25 @@
 					</tab>
 					<Tab Name='About'>
 						<text name='developers1'>
-							<X>5</X>
-							<Y>145</Y>
+							<X>50</X>
+							<Y>50</Y>
 							<Width>400</Width>
 							<Height>10</Height>
 							<Text>EVEBot was created by:</Text>
 						</Text>
 						<text name='developers2'>
-							<X>5</X>
-							<Y>155</Y>
+							<X>50</X>
+							<Y>80</Y>
 							<Width>400</Width>
 							<Height>10</Height>
-							<Text>Neutro, Tehtsuo, thehazard, Stealthy,	Hessinger, Altered</Text>
+							<Text>Neutro, Tehtsuo, thehazard, Stealthy,</Text>
+						</Text>
+						<text name='developers3'>
+							<X>50</X>
+							<Y>95</Y>
+							<Width>400</Width>
+							<Height>10</Height>
+							<Text>... Hessinger, Altered, CyberTech</Text>
 						</Text>
 					</Tab>
 				</Tabs>
