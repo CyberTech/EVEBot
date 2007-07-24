@@ -1,40 +1,39 @@
-﻿<?xml	version="1.0"	encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <ISUI>
-	<Window	name='EVEBot'>
-		<BackgroundColor></BackgroundColor>
-		<Border>0</Border>
-		<Title>EVEBot</Title>
+	<window name='EVEBot'>
 		<Visible>1</Visible>
-		<X>250</X>
-		<Y>200</Y>
-		<Width>169</Width>
-		<Height>133</Height>
+		<BackGroundColor></BackGroundColor>
+		<Border>0</Border>
+		<X>200</X>
+		<Y>300</Y>
+		<Width>500</Width>
+		<Height>326</Height>
+		<Title>EVEBot Options</Title>
 		<TitleBar template='EVESkin.Window.TitleBar'>
 			<Width>100%</Width>
 			<Height>20</Height>
 			<Border>0</Border>
 			<Children>
-				<commandbutton name='Start EVEBot' template='EVESkin.Window.TitleBar.PlayButton'>
-					<X>5</X>
-					<Y>4</Y>
-					<Width>46</Width>
-					<Height>16</Height>
+				<commandbutton name='Run EVEBot' template='EVESkin.Window.TitleBar.RunButton'>
 					<OnLeftClick>
 						Script[EVEBot]:Resume
 						Echo EVEBot: Resume
 					</OnLeftClick>
 				</commandbutton>
 				<commandbutton name='Pause EVEBot' template='EVESkin.Window.TitleBar.PauseButton'>
-					<X>51</X>
-					<Y>4</Y>
-					<Width>46</Width>
-					<Height>16</Height>
 					<OnLeftClick>
 						EVE:Execute[CmdStopShip]
 						Script[EVEBot]:Pause
 						Echo EVEBot: Paused
 					</OnLeftClick>
 				</commandbutton>
+				<text name='EVEBot_TitleBar_Title' template='EVESkin.Font.TitleBar'>
+					<X>210</X>
+					<Y>3</Y>
+					<Width>100</Width>
+					<Height>20</Height>
+					<Text>EVEBot v.${Script[EVEBot].VariableScope.Version}</Text>
+				</text>				
 				<button	Name='Minimize'	template='EVESkin.Window.TitleBar.Minimize'>
 					<OnLeftClick>
 						UIElement[EVEBot].FindUsableChild[TitleBotStatus,text]:Show
@@ -58,145 +57,91 @@
 				</button>
 			</Children>
 		</TitleBar>
-		
-		<Children>
-			<frame name='EVEBot_bottom' template='EVESkin.Window.Main'>
+		<Children name="EVEBot_Children">
+			<TabControl	Name='EVEBotOptionsTab' template='EVESkin.TabControl'>
 				<X>0</X>
 				<Y>4</Y>
-				<Height>113</Height>
-				<Width>100%</Width>
-				<Border>0</Border>
-				<BackgroundColor></BackgroundColor>
-				<Children>
-					<text name='TitleName' >
-					<X>15</X>
-					<Y>8</Y>
-					<Width>100%</Width>
-					<Height>67</Height>
-					<text>EVEBot v.${Script[EVEBot].VariableScope.Version}</text>
-					</text>
-					<text name='script_runtime' template='EVESkin.Font.Description'>
-						<X>25</X>
-						<Y>30</Y>
-						<Width>115</Width>
-						<Height>20</Height>
-						<Text>Script Runtime:</Text>
-					</text>
-					<Text name='script_runtime_data' template='EVESkin.Font.Value'>
-						<X>90</X>
-						<Y>30</Y>
-						<Width>100</Width>
-						<Height>20</Height>	
-						<Text>${Script[EVEBot].VariableScope.UI.Runtime}</Text>
-					</Text>
-
-					<text name='state' template='EVESkin.Font.Description'>
-						<X>25</X>
-						<Y>45</Y>
-						<Width>100</Width>
-						<Height>20</Height>
-						<Text>State:</Text>
-					</text>
-					<text name='state_data' template='EVESkin.Font.Value'>
-						<X>90</X>
-						<Y>45</Y>
-						<Width>100</Width>
-						<Height>20</Height>
-						<text>${Script[EVEBot].VariableScope.botstate}</text>
-					</text>
-
-					<button name='EVEBot Options' template='EVESkin.Window.Main.OptionsButton'>
-						<X>55</X>
-						<Y>84</Y>
-						<Width>59</Width>
-						<Height>16</Height>
-						<onleftclick>UIElement -toggle EVEBotOptionsUI</onleftclick>
-					</button>
-				</Children>
-			</frame>
-		</Children>
-	</Window>
-
-	<window name='EVEBotOptionsUI'>
-		<Visible>0</Visible>
-		<BackgroundColor></BackgroundColor>
-		<Border>0</Border>
-		<X>200</X>
-		<Y>200</Y>
-		<Width>500</Width>
-		<Height>326</Height>
-		<Title>EVEBot Options</Title>
-		<TitleBar template='EVESkin.Window.EVEBotOptionsUI.TitleBar'>
-			<Width>100%</Width>
-			<Height>16</Height>
-			<Border>0</Border>
-			<Children>
-				<text name='EVEBotOptionsUI_TitleBar_Title' template='EVESkin.Font.Description'>
-				<X>210</X>
-				<Y>3</Y>
-				<Width>100</Width>
-				<Height>20</Height>
-				<Text>EVEBot Options</Text>
-				</text>				
-			</Children>
-		</TitleBar>
-		<Children>
-			<TabControl	Name='EVEBotOptionsTab' template='EVESkin.EVEBotOptionsUI.TabControl'>
-				<Draggable>false</Draggable>
-				<BackgroundColor></BackgroundColor>
-				<Border>0</Border>
-				<X>0</X>
-				<Y>10</Y>
 				<Width>100%</Width>
 				<Height>100%</Height>
 				<Tabs>
 					<Tab Name='Status'>
-							<text	name='Trips'>
+							<text name='script_runtime' template='EVESkin.Font.Description'>
+								<X>5</X>
+								<Y>5</Y>
+								<Width>115</Width>
+								<Height>20</Height>
+								<Text>Script Runtime:</Text>
+							</text>
+							<Text name='script_runtime_data' template='EVESkin.Font.Value'>
+								<X>90</X>
+								<Y>30</Y>
+								<Width>100</Width>
+								<Height>20</Height>	
+								<Text>${Script[EVEBot].VariableScope.UI.Runtime}</Text>
+							</Text>
+
+							<text name='state' template='EVESkin.Font.Description'>
+								<X>25</X>
+								<Y>45</Y>
+								<Width>100</Width>
+								<Height>20</Height>
+								<Text>State:</Text>
+							</text>
+							<text name='state_data' template='EVESkin.Font.Value'>
+								<X>90</X>
+								<Y>45</Y>
+								<Width>100</Width>
+								<Height>20</Height>
+								<text>${Script[EVEBot].VariableScope.botstate}</text>
+							</text>
+
+							<text name='Trips'>
 								<X>205</X>
 								<Y>75</Y>
 								<Width>100</Width>
 								<Height>20</Height>
 								<Text>Runs:</Text>
 							</text>
-							<text	name='Trips_Data'>
+							<text name='Trips_Data'>
 								<X>245</X>
 								<Y>75</Y>
 								<Width>100</Width>
 								<Height>20</Height>
 								<text>${Script[EVEBot].VariableScope.Miner.TotalTrips}</text>
 							</text>
-							<text	name='avg_time'>
+							<text name='avg_time'>
 								<X>7</X>
 								<Y>30</Y>
 								<Width>175</Width>
 								<Height>20</Height>
 								<Text>Time For Current Trip:</Text>
 							</text>
-							<text	name='avg_time_data'>
+							<text name='avg_time_data'>
 								<X>10</X>
 								<Y>45</Y>
 								<Width>100</Width>
 								<Height>20</Height>
 								<text>${Script[EVEBot].VariableScope.Miner.TripDuration} Sec</text>
 							</text>
-							<text	name='Average Time/Trip'>
+							<text name='Average Time/Trip'>
 								<X>7</X>
 								<Y>60</Y>
 								<Width>175</Width>
 								<Height>20</Height>
 								<Text>Average Time per Trip:</Text>
 							</text>
-							<text	name='Average Time/Trip Data'>
+							<text name='Average Time/Trip Data'>
 								<X>10</X>
 								<Y>75</Y>
 								<Width>150</Width>
 								<Height>20</Height>
 								<text>${Script[EVEBot].VariableScope.Miner.AverageTripSeconds}</text>
 							</text>						
-								<console Name="StatusConsole">
-								<Y>r100</Y>
-								<Width>100%</Width>
-								<Height>100</Height>
+							<console Name="StatusConsole" template='EVESkin.Console'>
+								<X>5</X>
+								<Y>r120</Y>
+								<Width>97.5%</Width>
+								<Height>115</Height>
 							</console>		
 					</Tab>
 					
@@ -284,21 +229,20 @@
 						</listbox>
 					</tab>
 					<Tab Name='About'>
-					<Text	name='developers1'>
-						<X>5</X>
-						<Y>145</Y>
-						<Width>400</Width>
-						<Height>10</Height>
-						<Text>EVEBot was created by:</Text>
-					</Text>
-					<Text	name='developers2'>
-						<X>5</X>
-						<Y>155</Y>
-						<Width>400</Width>
-						<Height>10</Height>
-						<Text>Neutro, Tehtsuo, thehazard, Stealthy,	Hessinger, Altered</Text>
-					</Text>
-    	
+						<text name='developers1'>
+							<X>5</X>
+							<Y>145</Y>
+							<Width>400</Width>
+							<Height>10</Height>
+							<Text>EVEBot was created by:</Text>
+						</Text>
+						<text name='developers2'>
+							<X>5</X>
+							<Y>155</Y>
+							<Width>400</Width>
+							<Height>10</Height>
+							<Text>Neutro, Tehtsuo, thehazard, Stealthy,	Hessinger, Altered</Text>
+						</Text>
 					</Tab>
 				</Tabs>
 			</tabcontrol>

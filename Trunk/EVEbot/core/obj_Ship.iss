@@ -63,7 +63,7 @@ objectdef obj_Ship
 	{
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		This:CalculateMaxLockedTargets
-		call UpdateHudStatus "obj_Asteroids: Initialized"
+		call UpdateHudStatus "obj_Ship: Initialized"
 	}
 	
 	method Shutdown()

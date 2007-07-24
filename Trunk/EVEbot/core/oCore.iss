@@ -11,7 +11,7 @@ function SetupHudStatus()
 
 function UpdateHudStatus(string StatusMessage)
 {
-	UIElement[StatusConsole@Status@EvEBotOptionsTab@EVEBotOptionsUI]:Echo["${Time}: ${StatusMessage}"]
+	UIElement[StatusConsole@Status@EvEBotOptionsTab@EVEBot]:Echo["${Time}: ${StatusMessage}"]
 	redirect -append "./config/logs/OutputLog.txt" Echo "[${Time.Time24}] ${StatusMessage}"
 
 	#ifdef DEBUG

@@ -92,7 +92,7 @@ function main()
 	Ship:UpdateModuleList[]
 	
 	EVE:Execute[CmdStopShip]
-	call UpdateHudStatus "Please be sure that your Ships' Cargo Hold is *CLOSED*"
+	call UpdateHudStatus "Ensure that your ships' Cargo Hold is Closed"
 	call UpdateHudStatus "Paused - Please press Start"
 
 
