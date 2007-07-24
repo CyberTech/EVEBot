@@ -103,16 +103,6 @@ objectdef obj_Ship
 		return ${Math.Calc[${Me.Ship.CargoCapacity}-${Me.Ship.UsedCargoCapacity}]}
 	}
 
-	member:float CargoFreeSpace()
-	{
-		if !${Me.Ship(exists)}
-		{
-			return
-		}
-
-		return ${Math.Calc[${Me.Ship.CargoCapacity}-${Me.Ship.UsedCargoCapacity}]}
-	}
-
 	method UpdateModuleList()
 	{
 		if ${Me.InStation}
@@ -551,7 +541,8 @@ objectdef obj_Ship
 		if !${This.CargoIsOpen}
 		{
 			call UpdateHudStatus "Opening Ship Cargo Hold"
-			EVE:Execute[OpenCargoHoldOfActiveShip]
+			;EVE:Execute[OpenCargoHoldOfActiveShip]
+			Me.ToEntity:OpenCargo
 			wait 50
 			This.CargoIsOpen:Set[TRUE]
 		}
