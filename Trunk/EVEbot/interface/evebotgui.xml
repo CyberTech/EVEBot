@@ -42,7 +42,7 @@
 						UIElement[EVEBot].FindUsableChild[TitleBotXPCap,text]:Show
 					</OnLeftClick>
 				</button>
-				<button	Name='Maximize'	template='EVESkin.Window.TitleBar.Maximize'>
+				<button	Name='Maximize'	template='EVESkin.Window.TitleBar.Minimize'>
 					<OnLeftClick>
 						UIElement[EVEBot].FindUsableChild[TitleBotStatus,text]:Hide
 						UIElement[EVEBot].FindUsableChild[TitleBotXPStatus,text]:Hide
