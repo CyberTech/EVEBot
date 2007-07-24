@@ -15,12 +15,11 @@
                      CHANGELOG:                          
 *********************************************************
 
+Trunk
+- UI Rewrite
 
 0.91
 - Fixed drones not being recalled in some cases
-
-
-0.90
 - Lots of changes.  Fixes to mining, to crystal selection, changes to UI display. Home station is now saved on undock, and saved to config file by name, not by ID.
 - Created obj_Mining, added Trip-related counters to it that now display on the UI page- Trip duration, trip count, trip avg duration.
 - Moved Mine() function into obj_mining and broke it up as appropriate.
@@ -32,10 +31,34 @@
 - removed redundant code from oCombat.iss
 
 
-0.899.1 
+0.899.1-0.90: Complete rewrite of mining code, drone code, asteroid selection code, cargo handling, etc.  This should set the core of the future bot nicely.
 - Drone Support
-- Various Fixes
 - GUI Stabilization
+- Targeting fixed
+- Multiple lasers on 1 roid fixed
+- Swapping crystals for t2 mining lasers implemented, working.
+- Station hangar isn't opened till we verify we have stuff to move.
+- Added obj_Configuration, an object to hold config variables and store them to disk in evebot.xml
+- Added shutdown events to the objects which have initialize events.
+- Fixed not targeting asteroids when it warped to belt.  Fixed emptying of config file, unexplained lavishsettings burp that will need followup.
+- Changed a few waits.
+- Added more debug output.
+- Worked more on T2 mining crystal auto change
+- Fixed math error typo in SetbotState.
+- Removed redundant code from oCombat.iss
+- Removed extra xml files
+- Created central config file, evebot.xml, currently only stores ORE info.
+- Created obj_Asteroid
+- Created obj_Ship
+- Created obj_Drones
+- Created obj_EVEBotUI
+- Created obj_Cargo
+- Created obj_Station
+- All function calls which could be converted to methods or members have been, for those functions.
+- Note that very little changes have occured in oCombat, except where necessary for it to call a function which was moved.
+- Rewrote cargo transfer routines, they should be 100% reliable now, and extensible for other cargo types in the future.
+- Created basic use of bookmarked asteroid locations, any bookmarks that start with Belt: or Belt will be iterated thru at random.  This is not up to par yet, I wouldn't use it.  Need to integrate bookmark iteration with blacklisting for empty (or empty of desired) ore types and fall back to overview list of belts if so (which should also be added to blacklist).
+- Rewrote EB_GlobalVariablesDaemon.iss, see obj_EVEMONUI.iss for an example of how to do this without making a 2nd script.
 
 
 0.88

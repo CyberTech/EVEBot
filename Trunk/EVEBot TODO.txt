@@ -24,3 +24,17 @@ I(Neutro) need
 * Optimisation (+modular) - Cyber is doing it
 * Pvp combat bot (warpto miner(s), check, destroy if enemies, warpto transporter(s), destroy if enemy, go back to base, repair, etc)
 * Create a script that will automatically reconnect you after downtime (serverside)
+
+
+User Interface Notes for Altered:
+	[02:22] <CyberTech> https://www.isxgames.com/EVEBot/Trunk/EVEbot/interface/eveskin/ui_sample.png
+	[02:22] <CyberTech> it needs a little work still
+	[02:22] <CyberTech> but everything works
+	[02:22] <CyberTech> all it needs is visual touchup work
+	[02:23] <CyberTech> tab menu item colours, i like em, others might not
+	[02:23] <CyberTech> the empty space on the sides of the tab control, could be filled in with background, could be ignored.
+	[02:24] <CyberTech> the file tab_frametexture.png (previously optionswindow_main.png) needs redone
+	[02:24] <CyberTech> to re-include the art you had around the corners, but remove the empty space at the top
+	[02:24] <CyberTech> i spent 2 hours trying to remove that space in lavishgui before i figured out it must be in the png :)
+	[02:25] <CyberTech> the Play button needs redone as "Run"
+	[02:25] <CyberTech> Run, Pause, minimize and X buttons need redone for 20 high title instead of 16
