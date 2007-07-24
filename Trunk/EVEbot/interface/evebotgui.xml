@@ -66,73 +66,73 @@
 				<Tabs>
 					<Tab Name='Status'>
 							<text name='script_runtime' template='EVESkin.Font.Description'>
-								<X>5</X>
-								<Y>5</Y>
+								<X>10</X>
+								<Y>10</Y>
 								<Width>115</Width>
 								<Height>20</Height>
 								<Text>Script Runtime:</Text>
 							</text>
 							<Text name='script_runtime_data' template='EVESkin.Font.Value'>
-								<X>90</X>
-								<Y>30</Y>
+								<X>150</X>
+								<Y>10</Y>
 								<Width>100</Width>
 								<Height>20</Height>	
 								<Text>${Script[EVEBot].VariableScope.UI.Runtime}</Text>
 							</Text>
 
 							<text name='state' template='EVESkin.Font.Description'>
-								<X>25</X>
-								<Y>45</Y>
+								<X>10</X>
+								<Y>25</Y>
 								<Width>100</Width>
 								<Height>20</Height>
 								<Text>State:</Text>
 							</text>
 							<text name='state_data' template='EVESkin.Font.Value'>
-								<X>90</X>
-								<Y>45</Y>
+								<X>150</X>
+								<Y>25</Y>
 								<Width>100</Width>
 								<Height>20</Height>
 								<text>${Script[EVEBot].VariableScope.botstate}</text>
 							</text>
 
-							<text name='Trips'>
-								<X>205</X>
-								<Y>75</Y>
+							<text name='Trips' template='EVESkin.Font.Description'>
+								<X>10</X>
+								<Y>40</Y>
 								<Width>100</Width>
 								<Height>20</Height>
 								<Text>Runs:</Text>
 							</text>
-							<text name='Trips_Data'>
-								<X>245</X>
-								<Y>75</Y>
+							<text name='Trips_Data' template='EVESkin.Font.Value'>
+								<X>150</X>
+								<Y>40</Y>
 								<Width>100</Width>
 								<Height>20</Height>
 								<text>${Script[EVEBot].VariableScope.Miner.TotalTrips}</text>
 							</text>
-							<text name='avg_time'>
-								<X>7</X>
-								<Y>30</Y>
+							<text name='avg_time' template='EVESkin.Font.Description'>
+								<X>10</X>
+								<Y>55</Y>
 								<Width>175</Width>
 								<Height>20</Height>
 								<Text>Time For Current Trip:</Text>
 							</text>
-							<text name='avg_time_data'>
-								<X>10</X>
-								<Y>45</Y>
+							<text name='avg_time_data' template='EVESkin.Font.Value'>
+								<X>150</X>
+								<Y>55</Y>
 								<Width>100</Width>
 								<Height>20</Height>
 								<text>${Script[EVEBot].VariableScope.Miner.TripDuration} Sec</text>
 							</text>
-							<text name='Average Time/Trip'>
-								<X>7</X>
-								<Y>60</Y>
+							<text name='Average Time/Trip' template='EVESkin.Font.Description'>
+								<X>10</X>
+								<Y>70</Y>
 								<Width>175</Width>
 								<Height>20</Height>
 								<Text>Average Time per Trip:</Text>
 							</text>
-							<text name='Average Time/Trip Data'>
-								<X>10</X>
-								<Y>75</Y>
+							<text name='Average Time/Trip Data' template='EVESkin.Font.Value'>
+								<X>150</X>
+								<Y>70</Y>
 								<Width>150</Width>
 								<Height>20</Height>
 								<text>${Script[EVEBot].VariableScope.Miner.AverageTripSeconds}</text>

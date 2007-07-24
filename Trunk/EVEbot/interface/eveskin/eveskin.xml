@@ -109,7 +109,7 @@
 	
 	<template name='EVESkin.Console'>
 		<Border>0</Border>
-		<Font template='ConsoleFont' />
+		<Font template='Console.Font' />
 		<SelectionColor>FFD4D0C8</SelectionColor>
     	<ScrollBar>console.ScrollBar</ScrollBar>
     	<BackBufferSize>2000</BackBufferSize>		
