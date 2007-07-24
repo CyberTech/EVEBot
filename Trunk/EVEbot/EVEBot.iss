@@ -8,6 +8,7 @@
 #include core/obj_Ship.iss
 #include core/obj_Station.iss
 #include core/obj_Cargo.iss
+#include core/obj_Hauler.iss
 #include core/obj_EVEBotUI.iss
 
 ;; Declare all script or global variables here
@@ -15,8 +16,6 @@ variable bool play
 variable string botstate
 variable float GoalDistance
 variable obj_Skills Skills
-
-
 
 ; Script-Defined Objects
 variable obj_EVEBotUI UI
@@ -26,7 +25,6 @@ variable obj_Ship Ship
 variable obj_Station Station
 variable obj_Cargo Cargo
 variable obj_Miner Miner
-;variable obj_Hauler Hauler
 ;variable obj_Salvager Salvager
 
 function LoadEvebotGUI()
@@ -100,6 +98,14 @@ function main()
 
 	play:Set[TRUE]
 
+	/* The hauler object takes two parameters.     */
+	/* The first is the name of the person you     */
+	/* are hauling for.  The second is the name    */
+	/* of a corporation you are hauling for.       */
+	/* Only one of the two parameters may be used. */
+	;Declare Hauler obj_OreHauler "Test User" ""
+	;Declare Hauler obj_OreHauler "" "TestCorp"
+
   	while ${play}
 	{
 		call SetBotState
@@ -117,7 +123,11 @@ function main()
 				break
 			case MINE
 				call UpdateHudStatus "Mining"
+				/* Comment out the call to Miner.Mine and  */
+				/* replace with "call Hauler.Haul" to turn */
+				/* this bot into a hauler bot.             */
 				call Miner.Mine
+				;call Hauler.Haul
 				break
 			case CARGOFULL
 				call UpdateHudStatus "My ship is full"
