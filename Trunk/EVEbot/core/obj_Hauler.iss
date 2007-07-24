@@ -52,6 +52,69 @@ objectdef obj_Hauler
 	{
 		/* the base obj_Hauler class does not use events */
 	}
+
+	member:int NearestMatchingJetCan()
+	{
+		variable index:int JetCan
+		variable int JetCanCount
+		variable int JetCanCounter
+		variable string tempString
+			
+		JetCanCounter:Set[1]
+		JetCanCount:Set[${EVE.GetEntityIDs[JetCan,GroupID,12]}]
+		do
+		{
+			if ${Entity[${JetCan.Get[${JetCanCounter}]}](exists)}
+			{
+ 				if ${m_playerName.Length} 
+ 				{
+ 					tempString:Set[${Entity[${JetCan.Get[${JetCanCounter}]}].Owner.Name}]
+ 					echo "DEBUG: owner ${tempString}"
+ 					if ${tempString.Equal[${m_playerName}]}
+ 					{
+	 					echo "DEBUG: owner matched"
+						echo "DEBUG: ${Entity[${JetCan.Get[${JetCanCounter}]}]}"
+						echo "DEBUG: ${Entity[${JetCan.Get[${JetCanCounter}]}].ID}"
+						return ${Entity[${JetCan.Get[${JetCanCounter}]}].ID}
+ 					}
+ 				}
+ 				elseif ${m_corpName.Length} 
+ 				{
+ 					tempString:Set[${Entity[${JetCan.Get[${JetCanCounter}]}].Owner.Corporation}]
+ 					echo "DEBUG: corp ${tempString}"
+ 					if ${tempString.Equal[${m_corpName}]}
+ 					{
+	 					echo "DEBUG: corp matched"
+						return ${Entity[${JetCan.Get[${JetCanCounter}]}].ID}
+ 					}
+ 				}
+ 				else
+ 				{
+					echo "No matching jetcans found"
+ 				} 				
+			}
+			else
+			{
+				echo "No jetcans found"
+			}
+		}
+		while ${JetCanCounter:Inc} <= ${JetCanCount}
+		
+		return 0	/* no can found */
+	}
+	
+	function ApproachEntity(int id)
+	{
+		if ${Entity[${id}](exists)}
+		{
+			while ${Entity[${id}].Distance} > 1200
+			{
+				call Ship.Approach ${id}			
+			}
+		}
+		EVE:Execute[CmdStopShip]
+		wait 50		
+	}	
 }
 
 objectdef obj_OreHauler inherits obj_Hauler
@@ -59,6 +122,15 @@ objectdef obj_OreHauler inherits obj_Hauler
 	method Initialize(string player, string corp)
 	{
 		This[parent]:Initialize[${player},${corp}]		
+		
+		if ${m_playerName.Length} 
+		{
+			call UpdateHudStatus "obj_OreHauler: Initialized. Hauling for ${m_playerName}."	
+		}
+		elseif ${m_corpName.Length} 
+		{
+			call UpdateHudStatus "obj_OreHauler: Initialized. Hauling for ${m_corpName}."	
+		}
 	}
 
 	method Shutdown()
@@ -125,90 +197,127 @@ objectdef obj_OreHauler inherits obj_Hauler
 		echo "DEBUG: obj_OreHauler:TestEventHandler..."
 	}
 	
-	method ApproachEntity(int id)
+	member:float OreVolume(string oreName)
 	{
-		if ${Entity[${id}](exists)}
+		if ${oreName.Find["Veldspar"]}
 		{
-			while ${Entity[${id}].Distance} > 1200
-			{
-				call Ship.Approach ${id}			
-			}
+			return 0.1
 		}
-		EVE:Execute[CmdStopShip]
-		wait 50		
+		elseif ${oreName.Find["Scordite"]}
+		{
+			return 0.15
+		}
+		elseif ${oreName.Find["Pyroxeres"]}
+		{
+			return 0.3
+		}
+		
+		return 1.0	/* default return value */
 	}
 	
-	method LootEntity(int id)
-	{
-	}
-
-	method GoPickupOre()
+	function LootEntity(int id)
 	{
 		variable index:item ContainerCargo
 		variable int ContainerCargoCount
 		variable int i = 1
-		variable string tempString
+		variable int quantity
+		variable float volume
+
+		echo "DEBUG: obj_OreHauler.LootEntity ${id}"
 		
-		variable index:int JetCan
-		variable int JetCanCount
-		variable int JetCanCounter = 1
+		i:Set[1]
+		ContainerCargoCount:Set[${Entity[${id}].GetCargo[ContainerCargo]}]
+		do
+		{
+			quantity:Set[${ContainerCargo.Get[${i}].Quantity}]
+			volume:Set[${This.OreVolume[${ContainerCargo.Get[${i}].Name}]}]
+			echo "DEBUG: ${quantity}"
+			echo "DEBUG: ${volume}"
+			if (${quantity} * ${volume}) > ${Ship.CargoFreeSpace}
+			{
+				quantity:Set[${Ship.CargoFreeSpace} / ${volume}]
+				echo "DEBUG: ${quantity}"
+			}
+			ContainerCargo.Get[${i}]:MoveTo[MyShip,${quantity}]
+			wait 30
 			
-		Asteroids:CheckBeltBookMarks[]
-		call Asteroids.MoveToField FALSE
+			echo "DEBUG: ${Ship.CargoFreeSpace} ... ${Ship.CargoMinimumFreeSpace}"
+			if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
+			{
+				break
+			}
+		}
+		while ${i:Inc} <= ${ContainerCargoCount}
+
+		Me.Ship:StackAllCargo
+		wait 50
+		
+	}
+
+	/* The MoveToField function is being used in place of */
+	/* a WarpToGang function.  The target belt is hard-   */
+	/* coded for now.                                     */
+	function MoveToField(bool ForceMove)
+	{
+		variable int curBelt
+		variable index:entity Belts
+		variable iterator BeltIterator
+	
+		EVE:DoGetEntities[Belts,GroupID,9]
+		Belts:GetIterator[BeltIterator]
+		if ${BeltIterator:First(exists)}
+		{
+			if ${ForceMove} || ${BeltIterator.Value.Distance} > 25000
+			{
+				; We're not at a field already, so find one
+				curBelt:Set[1]
+				call UpdateHudStatus "Warping to Asteroid Belt: ${Belts[${curBelt}].Name}"
+				call Ship.WarpToID ${Belts[${curBelt}]}
+				This.UsingMookMarks:Set[TRUE]
+				This.LastBeltIndex:Set[${curBelt}]
+			}
+			else
+			{
+				call UpdateHudStatus "Staying at Asteroid Belt: ${BeltIterator.Value.Name}"
+			}		
+		}
+		else
+		{
+			echo "ERROR: oMining:Mine --> No asteroid belts in the area..."
+			play:Set[FALSE]
+			return
+		}
+	}
+
+	function Haul()
+	{
+		variable int id
+		
+		call This.MoveToField FALSE
 	
 		call Ship.OpenCargo
 		
 		while ${Ship.CargoFreeSpace} >= ${Ship.CargoMinimumFreeSpace}
 		{				
-			JetCanCounter:Set[1]
-			JetCanCount:Set[${EVE.GetEntityIDs[JetCan,GroupID,12]}]
-			do
+			id:Set[${This.NearestMatchingJetCan}]
+
+			echo "DEBUG: can ID = ${id}"
+			if ${Entity[${id}](exists)}
 			{
-				if ${Entity[${JetCan.Get[${JetCanCounter}]}](exists)}
+ 				call This.ApproachEntity ${id}
+				Entity[${id}]:OpenCargo
+				wait 30	
+				call This.LootEntity ${id}
+				if ${Entity[${id}](exists)}
 				{
-	 				if ${m_playerName.Length} 
-	 				{
-	 					tempString:Set[${Entity[${JetCan.Get[${JetCanCounter}]}].Owner.Name}]
-	 					echo "DEBUG: owner ${tempString}"
-	 					if ${tempString} != ${m_playerName}
-	 					{
-		 					continue
-	 					}
-	 				}
-	 				elseif ${m_corpName.Length} 
-	 				{
-	 					tempString:Set[${Entity[${JetCan.Get[${JetCanCounter}]}].Owner.Corporation}]
-	 					echo "DEBUG: corp ${tempString}"
-	 					if ${tempString} != ${m_corpName}
-	 					{
-		 					continue
-	 					}
-	 				}
-	 				else
-	 				{
-	 					continue
-	 				}
-	 				
-	 				/* if we get here we found a match */
-	 				This:ApproachEntity[${JetCan.Get[${JetCanCounter}]}]
-					Entity[${JetCan.Get[${JetCanCounter}]:OpenCargo
-					wait 30	
-					This:LootEntity[${JetCan.Get[${JetCanCounter}]}]
-					if ${Entity[${JetCan.Get[${JetCanCounter}](exists)}
-					{
-						Entity[${JetCan.Get[${JetCanCounter}]:CloseCargo
-					}					
-					if ${Ship.CargoFreeSpace} >= ${Ship.CargoMinimumFreeSpace}
-					{
-						break
-					}
-				}
-				else
+					Entity[${id}]:CloseCargo
+				}					
+				if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
 				{
-					echo "No jetcans found"
+					break
 				}
 			}
-			while ${JetCanCounter:Inc} <= ${JetCanCount}
+			wait 100
 		}		
 		
 		call UpdateHudStatus "Cargo Hold has reached threshold"
