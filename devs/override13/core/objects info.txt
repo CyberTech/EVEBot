@@ -5,7 +5,7 @@
 * Everything related to combat pvp/pve
 * Includes : waits for locktarget, cmdusemainpower whatever
 
-- oBase.iss -
+- oStation.iss -
 * Everything related to what you want to do while InStation
 * Includes transfering items from cargo to hangar
 * Will include : refining
@@ -34,3 +34,6 @@
 - oMining.iss -
 * Everything related to mining
 * Includes mining
+
+- oBase.iss -
+* Base of the declaration variables?... ask stealthy
