@@ -46,9 +46,12 @@ objectdef obj_Cargo
 
 	function TransferOreToHangar()
 	{	
-		call Ship.OpenCargo
-		
-		Me.Ship:DoGetCargo[This.MyCargo]
+		do
+		{
+			call Ship.OpenCargo
+			Me.Ship:DoGetCargo[This.MyCargo]
+		}
+		while ${This.MyCargo.Used} == 0
 		
 		variable iterator ThisCargo
 		
