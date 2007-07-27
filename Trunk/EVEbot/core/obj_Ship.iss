@@ -295,7 +295,7 @@ objectdef obj_Ship
 	}
 
 	; Note: This doesn't return ALL the mining amounts, just one.
-	; It should perhaps be changed to return the smallest optimal range
+	; Returns the laser mining range minus 10%
 	member:int OptimalMiningRange()
 	{
 		if !${Me.Ship(exists)}
@@ -308,7 +308,7 @@ objectdef obj_Ship
 		This.ModuleList_MiningLaser:GetIterator[Module]
 		if ${Module:First(exists)}
 		{
-			return ${Module.Value.OptimalRange}
+			return ${Math.Calc[${Module.Value.OptimalRange}*0.90]}
 		}
 
 		return 0
@@ -421,9 +421,8 @@ objectdef obj_Ship
 			echo "DEBUG: Current crystal in ${SlotName} is ${LoadedAmmo}, looking for ${OreType}"
 			variable index:item CrystalList
 			variable iterator CrystalIterator
-			variable iterator Module
 			
-			Module.Value:DoGetAvailableAmmo[CrystalList]
+			Me.Ship.Module[${SlotName}]:DoGetAvailableAmmo[CrystalList]
 						
 			CrystalList:GetIterator[CrystalIterator]
 			if ${CrystalIterator:First(exists)}
@@ -544,8 +543,8 @@ objectdef obj_Ship
 		if !${This.CargoIsOpen}
 		{
 			call UpdateHudStatus "Opening Ship Cargo Hold"
-			;EVE:Execute[OpenCargoHoldOfActiveShip]
-			Me.ToEntity:OpenCargo
+			EVE:Execute[OpenCargoHoldOfActiveShip]
+			;Me.ToEntity:OpenCargo
 			wait 50
 			This.CargoIsOpen:Set[TRUE]
 		}
@@ -614,6 +613,11 @@ objectdef obj_Ship
 	{ 
 		call UpdateHudStatus "Preparing for warp"
 		call This.Drones.ReturnAllToDroneBay
+	}
+	
+	member:bool InWarp()
+	{
+		return (${Me.ToEntity.Mode} == 3)
 	}
 	
 	function WarpWait()
