@@ -17,6 +17,13 @@
 
 Trunk
 - UI Rewrite
+- Fixed crystal switching. Again. :) Works now!
+- Changed optimal range to be module.optimalrange -10% for a safety margin.
+- Fixed pingpong between asteroids due to range, as noted by override
+- Asteroids are now targeted only if they are within 1.5 * optimal range of our active target.
+- Added fix from override for a situation where we'd think their were no asteroids left. in the universe.
+- Totally redid the config object, there are now module-specific config options, they handle their own default setting initialization, and provide wrapped access to the config options in the lavishsettings array
+- Added ORE_Volume list of hardcoded volumes for the various ore types.
 
 0.91
 - Fixed drones not being recalled in some cases
