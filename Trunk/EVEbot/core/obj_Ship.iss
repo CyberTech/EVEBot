@@ -521,7 +521,7 @@ objectdef obj_Ship
 		{
 			variable float OriginalDistance = ${Entity[${EntityID}].Distance}
 			Entity[${EntityID}]:Approach
-			call UpdateHudStatus "Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc[${Entity[${EntityID}].Distance}/${Me.Ship.MaxVelocity}]} Seconds away"
+			call UpdateHudStatus "Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc[${Entity[${EntityID}].Distance}/${Me.Ship.MaxVelocity}].Ceil} Seconds away"
 			wait 130
 
 			if ${Entity[${EntityID}](exists)} && \
@@ -563,7 +563,6 @@ objectdef obj_Ship
 
 	function Undock()
 	{
-		Config:SetHomeStation[
 		call UpdateHudStatus "Undock: Waiting while ship exits the station (13 sec)"
 		EVE:Execute[CmdExitStation]	
 		do
@@ -572,7 +571,7 @@ objectdef obj_Ship
 		}
 		while ${Me.InStation}
 		
-		Config:SetMinerHomeStation[${Entity[CategoryID,3].Name}]
+		Config.Common:SetHomeStation[${Entity[CategoryID,3].Name}]
 		
 		Me:SetVelocity[100]
 		wait 100

@@ -7,7 +7,9 @@
 
 BUGS:
 	Shield Booster sometimes ends up disabled. This is a must-have, verify it every so often.
-		
+
+	we don't differentiate between ice fields and ore fields, need to match field type to laser type.
+			
 */
 objectdef obj_Asteroids
 {
@@ -15,6 +17,10 @@ objectdef obj_Asteroids
 	
 	variable index:entity AstroidList
 	variable iterator OreTypeIterator
+
+	; Should only be referenced inside NextAsteroid()
+	variable iterator NextAsteroidIterator
+
 	variable index:bookmark BeltBookMarkList
 	variable iterator BeltBookMarkIterator
 	variable int LastBookMarkIndex
@@ -26,11 +32,6 @@ objectdef obj_Asteroids
 		call UpdateHudStatus "obj_Asteroids: Initialized"
 	}
 	
-	function MoveToLastMiningPosition()
-	{
-		
-	}
-
 	function MoveToRandomBeltBookMark()
 	{	
 		variable int curBelt	
@@ -102,7 +103,7 @@ objectdef obj_Asteroids
 	
 	function UpdateList()
 	{
-		Config.OreTypesRef:GetSettingIterator[This.OreTypeIterator]
+		Config.Miner.OreTypesRef:GetSettingIterator[This.OreTypeIterator]
 		
 		if ${This.OreTypeIterator:First(exists)}
 		{
@@ -117,6 +118,7 @@ objectdef obj_Asteroids
 			
 			if ${This.AstroidList.Used}
 			{
+					AsteroidList:GetSettingIterator[This.NextAsteroidIterator]
 					echo "DEBUG: obj_Asteroids:UpdateList - Found ${This.AstroidList.Used} ${This.OreTypeIterator.Key} asteroids"
 			}
 		}
@@ -126,11 +128,21 @@ objectdef obj_Asteroids
 		}
 	}
 	
+	method NextAsteroid()
+	{
+		AsteroidList:GetSettingIterator
+	}
+	
 	function:bool TargetNext()
 	{
 		variable iterator AsteroidIterator
 
-		This.AstroidList:GetIterator[AsteroidIterator]
+		if ${AsteroidList.Used} == 0
+		{
+			call This.UpdateList
+		}
+
+		This.AstroidList:GetIterator[AsteroidIterator]		
 		if ${AsteroidIterator:First(exists)}
 		{
 			do
@@ -138,9 +150,10 @@ objectdef obj_Asteroids
 				if ${Entity[${AsteroidIterator.Value}](exists)} && \
 					!${AsteroidIterator.Value.IsLockedTarget} && \
 					!${AsteroidIterator.Value.BeingTargeted} && \
-					${AsteroidIterator.Value.Distance} < ${Me.Ship.MaxTargetRange}
+					${AsteroidIterator.Value.Distance} < ${Me.Ship.MaxTargetRange} && \
+					( !${Me.ActiveTarget(exists)} || ${AsteroidIterator.Value.DistanceTo[${Me.ActiveTarget.ID}]} <= ${Math.Calc[${Ship.OptimalMiningRange}*1.5]} )
 				{
-					break
+						break
 				}
 			}
 			while ${AsteroidIterator:Next(exists)}
@@ -152,20 +165,20 @@ objectdef obj_Asteroids
 				{
 					return TRUE
 				}
-				call UpdateHudStatus "Locking Asteroid ${AsteroidIterator.Value.Name}"
+				call UpdateHudStatus "Locking Asteroid ${AsteroidIterator.Value.Name} (${AsteroidIterator.Value.Distance.Ceil}m)"
 				AsteroidIterator.Value:LockTarget
-				wait 20
-				return TRUE
+				wait 30
 				call This.UpdateList
+				return TRUE
 			}
 			else
 			{
 				call This.UpdateList
 				if ${Ship.TotalActivatedMiningLasers} == 0				
 				{
-					variable float64 Distance = ${AsteroidIterator.Value.Distance}
-					call UpdateHudStatus "obj_Asteroids: TargetNext: No Asteroids in Targeting Range & Lasers Idle - Approaching nearest:${Distance} less than ${Math.Calc[${Distance}/${Me.Ship.MaxVelocity}]} Seconds"
 					AsteroidIterator:First
+					variable float64 Distance = ${AsteroidIterator.Value.Distance.Ceil}
+					call UpdateHudStatus "obj_Asteroids: TargetNext: No Asteroids in Targeting Range & Lasers Idle - Approaching nearest: ${Distance}m ETA: ${Math.Calc[${Distance}/${Me.Ship.MaxVelocity}].Ceil}s"
 					call Ship.Approach ${AsteroidIterator.Value}
 				}
 				return FALSE
@@ -224,7 +237,7 @@ objectdef obj_Miner
 		
 		while ${Ship.CargoFreeSpace} >= ${Ship.CargoMinimumFreeSpace}
 		{				
-			if ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers}
+			if !${Ship.InWarp} && ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers}
 			{
 				; We've got idle lasers, and available targets. Do something with them.
 	
@@ -282,5 +295,9 @@ objectdef obj_Miner
 	member:int TripDuration()
 	{
 		return ${Math.Calc[${Time.Timestamp} - ${This.TripStartTime.Timestamp}]}
+	}
+	
+	member:float VolumePerCycle(string AsteroidType)
+	{
 	}
 }

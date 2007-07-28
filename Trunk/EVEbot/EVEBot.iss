@@ -90,9 +90,8 @@ function main()
 	Ship:UpdateModuleList[]
 	
 	EVE:Execute[CmdStopShip]
-	call UpdateHudStatus "Ensure that your ships' Cargo Hold is Closed"
-	call UpdateHudStatus "Paused - Please press Start"
-
+	call UpdateHudStatus "Ensure that your ships' Cargo Hold is closed"
+	call UpdateHudStatus "-=Paused: Press Run-="
 
 	Script[EVEBot]:Pause
 

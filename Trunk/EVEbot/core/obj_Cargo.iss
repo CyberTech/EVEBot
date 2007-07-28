@@ -46,12 +46,8 @@ objectdef obj_Cargo
 
 	function TransferOreToHangar()
 	{	
-		do
-		{
-			call Ship.OpenCargo
-			Me.Ship:DoGetCargo[This.MyCargo]
-		}
-		while ${This.MyCargo.Used} == 0
+		call Ship.OpenCargo
+		Me.Ship:DoGetCargo[This.MyCargo]
 		
 		variable iterator ThisCargo
 		
@@ -65,7 +61,7 @@ objectdef obj_Cargo
 			CategoryID:Set[${ThisCargo.Value.CategoryID}]
 			Name:Set[${ThisCargo.Value.Name}]
 
-			echo "DEBUG: obj_Cargo:TransferToHangar: CategoryID: ${CategoryID} ${Name} - ${ThisCargo.Value.Quantity}"			
+			;echo "DEBUG: obj_Cargo:TransferToHangar: CategoryID: ${CategoryID} ${Name} - ${ThisCargo.Value.Quantity}"			
 			switch ${CategoryID}
 			{
 				case 4

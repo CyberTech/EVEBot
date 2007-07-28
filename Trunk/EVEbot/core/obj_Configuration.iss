@@ -1,19 +1,45 @@
+/*
+	Configuration Classes
+	
+	Main object for interacting with the config file, and for wrapping access to the config items.
+	
+	-- CyberTech
+	
+	Description:
+	obj_Configuration defines the config file and the root.  It contains an instantiation of obj_Configuration_MODE, 
+	where MODE is Hauler,Miner, Combat, etc.  obj_Configuration_MODE is responsible for setting it's own default
+	values and for providing access members and update methods for the config items.
+	
+	Instructions:
+		To add a new module, add a variable to obj_Configuration, name it with the thought that it will be accessed 
+		as Config.Module (ie, Config.Miner).  Create the class, and it's members and methods, following the example
+		of the existing classes below.
+*/
+
 objectdef obj_Configuration
+{
+	; BaseConfig _MUST_ be instantiated before anything else
+	variable obj_Configuration_BaseConfig BaseConfig
+	
+	variable obj_Configuration_Common Common
+	variable obj_Configuration_Combat Combat
+	variable obj_Configuration_Miner Miner
+	variable obj_Configuration_Hauler Hauler
+	variable obj_Configuration_Salvager Salvager
+}
+
+objectdef obj_Configuration_BaseConfig
 {
 	variable string CONFIG_FILE = "${Script.CurrentDirectory}/config/evebot.xml"
 	
 	method Initialize()
 	{	
 		LavishSettings[EVEBotSettings]:Clear
+
 		LavishSettings:AddSet[EVEBotSettings]
 		LavishSettings[EVEBotSettings]:Import[${CONFIG_FILE}]
 
-		if !${LavishSettings[EVEBotSettings].FindSet[MinerConfig](exists)}
-		{
-			echo "WARNING: MinerConfig setting not detected, assigning default values"
-			This:Set_Default_Values[]
-		}
-		call UpdateHudStatus "obj_Station: Initialized"		
+		call UpdateHudStatus "obj_Configuration_BaseConfig: Initialized"
 	}
 	
 	method Shutdown()
@@ -22,13 +48,89 @@ objectdef obj_Configuration
 		LavishSettings[EVEBotSettings]:Clear
 	}
 	
+	method Save()
+	{
+		LavishSettings[EVEBotSettings]:Export[${CONFIG_FILE}]
+	}	
+}
+
+objectdef obj_Configuration_Common
+{
+	variable string SetName = "Common"
+	
+	method Initialize()
+	{	
+		if !${LavishSettings[EVEBotSettings].FindSet[${This.SetName}](exists)}
+		{
+			call UpdateHudStatus "Warning: ${This.SetName} settings missing - initializing"
+			This:Set_Default_Values[]
+		}
+		call UpdateHudStatus "obj_Configuration_Common: Initialized"		
+	}
+	
+	member:settingsetref CommonRef()
+	{
+		return ${LavishSettings[EVEBotSettings].FindSet[${This.SetName}]}
+	}
+	
 	method Set_Default_Values()
 	{
-		LavishSettings[EVEBotSettings]:AddSet[MinerConfig]
+		LavishSettings[EVEBotSettings]:AddSet[${This.SetName}]
+		This.CommonRef:AddSetting[Home Station,1]
+	}
 
-		This.MinerConfigRef:AddSetting[Home Station,1]
-		This.MinerConfigRef:AddSetting[UseCombatDrones,FALSE]
-		This.MinerConfigRef:AddSet[ORE_Types]
+	member:string HomeStation()
+	{
+		return ${This.CommonRef.FindSetting[Home Station, NOTSET]}
+	}
+
+	method SetHomeStation(string StationName)
+	{
+		This.CommonRef:AddSetting[Home Station,${StationName}]
+	}
+}
+
+objectdef obj_Configuration_Miner
+{
+	variable string SetName = "Miner"
+
+	method Initialize()
+	{	
+		if !${LavishSettings[EVEBotSettings].FindSet[${This.SetName}](exists)}
+		{
+			call UpdateHudStatus "Warning: ${This.SetName} settings missing - initializing"
+			This:Set_Default_Values[]
+		}
+		call UpdateHudStatus "obj_Configuration_Miner: Initialized"		
+	}
+
+	member:settingsetref MinerRef()
+	{
+		return ${LavishSettings[EVEBotSettings].FindSet[${This.SetName}]}
+	}
+
+	member:settingsetref OreTypesRef()
+	{
+		return ${LavishSettings[EVEBotSettings].FindSet[${This.SetName}].FindSet[Ore_Types]}
+	}
+	
+	member:settingsetref OreVolumesRef()
+	{
+		return ${LavishSettings[EVEBotSettings].FindSet[${This.SetName}].FindSet[Ore_Volumes]}
+	}
+
+	method Set_Default_Values()
+	{
+		LavishSettings[EVEBotSettings]:AddSet[${This.SetName}]
+
+		This.MinerRef:AddSet[ORE_Types]
+		This.MinerRef:AddSet[ORE_Volumes]
+		This.MinerRef:AddSetting[Restrict To Belt, NO]
+		This.MinerRef:AddSetting[Restrict To Ore Type, NONE]
+		This.MinerRef:AddSetting[Include Veldspar, FALSE]
+		This.MinerRef:AddSetting[Stick To Spot, FALSE]
+		This.MinerRef:AddSetting[Avoid Players Distance, 10000]
+		This.MinerRef:AddSetting[Distribute Lasers, TRUE]
 
 		This.OreTypesRef:AddSetting[Vitreous Mercoxit, 1]
 		This.OreTypesRef:AddSetting[Magma Mercoxit, 1]
@@ -78,30 +180,112 @@ objectdef obj_Configuration
 		This.OreTypesRef:AddSetting[Dense Veldspar, 1]
 		This.OreTypesRef:AddSetting[Concentrated Veldspar, 1]
 		This.OreTypesRef:AddSetting[Veldspar, 1]
-	}
-	
-	member:settingsetref MinerConfigRef()
-	{
-		return ${LavishSettings[EVEBotSettings].FindSet[MinerConfig]}
-	}
-
-	member:settingsetref OreTypesRef()
-	{
-		return ${LavishSettings[EVEBotSettings].FindSet[MinerConfig].FindSet[Ore_Types]}
-	}
-	
-	method Save()
-	{
-		LavishSettings[EVEBotSettings]:Export[${CONFIG_FILE}]
-	}
-	
-	member:string MinerHomeStation(string StationName)
-	{
-		return ${This.MinerConfigRef.FindSetting[Home Station]}
+		
+		This.OreVolumesRef:AddSetting[Mercoxit,40]
+		This.OreVolumesRef:AddSetting[Arkanor,16]
+		This.OreVolumesRef:AddSetting[Bistot,16]
+		This.OreVolumesRef:AddSetting[Crokite,16]
+		This.OreVolumesRef:AddSetting[Spodumain,16]
+		This.OreVolumesRef:AddSetting[Dark Ochre,8]
+		This.OreVolumesRef:AddSetting[Gneiss,5]
+		This.OreVolumesRef:AddSetting[Hedbergite,3]
+		This.OreVolumesRef:AddSetting[Hemorphite,3]
+		This.OreVolumesRef:AddSetting[Jaspet,2]
+		This.OreVolumesRef:AddSetting[Kernite,1.2]
+		This.OreVolumesRef:AddSetting[Omber,0.6]
+		This.OreVolumesRef:AddSetting[Plagioclase,0.35]
+		This.OreVolumesRef:AddSetting[Pyroxeres,0.3]
+		This.OreVolumesRef:AddSetting[Scordite,0.15]
+		This.OreVolumesRef:AddSetting[Veldspar,0.1]
 	}
 
-	method SetMinerHomeStation(string StationName)
-	{
-		This.MinerConfigRef:AddSetting[Home Station,${StationName}]
+	; TODO - members/methods for these - CyberTech
+	
+	;		This.MinerRef:AddSetting[Restrict To Belt, NO]
+	;		This.MinerRef:AddSetting[Restrict To Ore Type, NONE]
+	;		This.MinerRef:AddSetting[Include Veldspar, FALSE]
+	;		This.MinerRef:AddSetting[Stick To Spot, FALSE]
+	;		This.MinerRef:AddSetting[Avoid Players Distance, 10000]
+	;		This.MinerRef:AddSetting[Distribute Lasers, TRUE]	
+}
+
+objectdef obj_Configuration_Combat
+{
+	variable string SetName = "Combat"
+
+	method Initialize()
+	{	
+		if !${LavishSettings[EVEBotSettings].FindSet[${This.SetName}](exists)}
+		{
+			call UpdateHudStatus "Warning: ${This.SetName} settings missing - initializing"
+			This:Set_Default_Values[]
+		}
+		call UpdateHudStatus "obj_Configuration_Combat: Initialized"		
 	}
+
+	member:settingsetref CombatRef()
+	{
+		return ${LavishSettings[EVEBotSettings].FindSet[${This.SetName}]}
+	}
+
+	method Set_Default_Values()
+	{
+		LavishSettings[EVEBotSettings]:AddSet[${This.SetName}]
+
+		This.CombatRef:AddSetting[UseCombatDrones,FALSE]
+	}
+}
+
+objectdef obj_Configuration_Hauler
+{
+	variable string SetName = "Hauler"
+
+	method Initialize()
+	{	
+		if !${LavishSettings[EVEBotSettings].FindSet[${This.SetName}](exists)}
+		{
+			call UpdateHudStatus "Warning: ${This.SetName} settings missing - initializing"
+			This:Set_Default_Values[]
+		}
+		call UpdateHudStatus "obj_Configuration_Hauler: Initialized"		
+	}
+
+	member:settingsetref HaulerRef()
+	{
+		return ${LavishSettings[EVEBotSettings].FindSet[${This.SetName}]}
+	}
+
+	method Set_Default_Values()
+	{
+		LavishSettings[EVEBotSettings]:AddSet[${This.SetName}]
+
+	}
+
+}
+
+objectdef obj_Configuration_Salvager
+{
+	variable string SetName = "Salvager"
+
+	method Initialize()
+	{	
+		if !${LavishSettings[EVEBotSettings].FindSet[${This.SetName}](exists)}
+		{
+			call UpdateHudStatus "Warning: ${This.SetName} settings missing - initializing"
+			This:Set_Default_Values[]
+		}
+		call UpdateHudStatus "obj_Configuration_Salvager: Initialized"
+	}
+
+	member:settingsetref SalvagerRef()
+	{
+		return ${LavishSettings[EVEBotSettings].FindSet[${This.SetName}]}
+	}
+
+	method Set_Default_Values()
+	{
+		LavishSettings[EVEBotSettings]:AddSet[${This.SetName}]
+
+	}
+	
 }

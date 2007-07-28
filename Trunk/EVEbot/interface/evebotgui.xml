@@ -65,7 +65,7 @@
 				<Height>100%</Height>
 				<Tabs>
 					<Tab Name='Status'>
-							<text name='script_runtime' template='EVESkin.Font.Description'>
+							<text name='script_runtime'>
 								<X>10</X>
 								<Y>10</Y>
 								<Width>115</Width>
@@ -85,7 +85,7 @@
 								<Y>25</Y>
 								<Width>100</Width>
 								<Height>20</Height>
-								<Text>State:</Text>
+								<Text>Action:</Text>
 							</text>
 							<text name='state_data' template='EVESkin.Font.Value'>
 								<X>150</X>
@@ -94,13 +94,12 @@
 								<Height>20</Height>
 								<text>${Script[EVEBot].VariableScope.botstate}</text>
 							</text>
-
 							<text name='Trips' template='EVESkin.Font.Description'>
 								<X>10</X>
 								<Y>40</Y>
 								<Width>100</Width>
 								<Height>20</Height>
-								<Text>Runs:</Text>
+								<Text>Runs this Session:</Text>
 							</text>
 							<text name='Trips_Data' template='EVESkin.Font.Value'>
 								<X>150</X>
@@ -149,7 +148,7 @@
 					</Tab>
     	
 					<Tab name='Mining'>
-					</tab>
+					</Tab>
     	
 					<Tab name='Combat'>
 						  <Text name='MinShield'>
@@ -199,7 +198,8 @@
 							<Width>97</Width>
 							<Height>25</Height>
 							<text>Queue</text>
-							<Command></Command>
+							<Command>
+</Command>
 						</commandbutton>
 						<commandbutton name='removeskill'>
 							<X>313</X>
@@ -207,7 +207,8 @@
 							<Width>97</Width>
 							<Height>25</Height>
 							<text>Remove</text>
-							<Command></Command>
+							<Command>
+</Command>
 						</commandbutton>
 						<listbox name='skills'>
 							<X>5</X>
