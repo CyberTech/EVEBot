@@ -234,7 +234,7 @@ objectdef obj_Miner
 	function Mine()
 	{
 		
-		This.RunStartTime:Set[${Time.Timestamp}]
+		This.TripStartTime:Set[${Time.Timestamp}]
 		; Find an asteroid field, or stay at current one if we're near one.
 		call Asteroids.MoveToField FALSE
 		call This.Prepare_Environment

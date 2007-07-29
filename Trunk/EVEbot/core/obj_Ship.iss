@@ -583,7 +583,6 @@ objectdef obj_Ship
 	function Undock()
 	{
 		call UpdateHudStatus "Undock: Waiting while ship exits the station (13 sec)"
-		Miner.RunStartTime:Set[${Time.Timestamp}]
 
 		EVE:Execute[CmdExitStation]	
 		do
