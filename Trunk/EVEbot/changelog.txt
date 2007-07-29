@@ -14,7 +14,7 @@
 
 Trunk
 
-0.92-Revision 55
+0.92-Revision 58
 - UI Rewrite
 - Fixed crystal switching. Again. :) Works now!
 - Changed optimal range to be module.optimalrange -10% for a safety margin.
