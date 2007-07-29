@@ -538,32 +538,53 @@ objectdef obj_Ship
 		}
 	}			
 
+	member IsCargoOpen()
+	{
+		if ${EVEWindow[MyShipCargo](exists)}
+		{
+			return TRUE
+		}
+		else
+		{
+			return FALSE
+		}
+	}
+	
 	function OpenCargo()
 	{
-		if !${This.CargoIsOpen}
+		if !${This.IsCargoOpen}
 		{
-			call UpdateHudStatus "Opening Ship Cargo Hold"
+			call UpdateHudStatus "Opening Ship Cargohold"
 			EVE:Execute[OpenCargoHoldOfActiveShip]
-			;Me.ToEntity:OpenCargo
-			wait 50
-			This.CargoIsOpen:Set[TRUE]
+			wait CARGO_WINDOW_WAITTIME
+			while !${This.IsCargoOpen}
+			{
+				wait 0.5
+			}
+			wait 10
 		}
 	}
 
 	function CloseCargo()
 	{
-		if ${This.CargoIsOpen}
+		if ${This.IsCargoOpen}
 		{
-			call UpdateHudStatus "Closing Ship Cargo Hold"
-			EVE:Execute[OpenCargoHoldOfActiveShip]
-			wait 50
-			This.CargoIsOpen:Set[FALSE]
+			call UpdateHudStatus "Closing Ship Cargohold"
+			EVEWindow[MyShipCargo]:Close
+			wait CARGO_WINDOW_WAITTIME
+			while ${This.IsCargoOpen}
+			{
+				wait 0.5
+			}
+			wait 10
 		}
 	}
 
 	function Undock()
 	{
 		call UpdateHudStatus "Undock: Waiting while ship exits the station (13 sec)"
+		Miner.RunStartTime:Set[${Time.Timestamp}]
+
 		EVE:Execute[CmdExitStation]	
 		do
 		{

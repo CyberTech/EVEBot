@@ -1,3 +1,5 @@
+#include core/defines.iss
+
 #include core/oCombat.iss
 #include core/oSkills.iss
 #include core/oSpace.iss

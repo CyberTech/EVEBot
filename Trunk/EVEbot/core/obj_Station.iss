@@ -5,17 +5,45 @@ objectdef obj_Station
 		call UpdateHudStatus "obj_Station: Initialized"
 	}
 	
+	member IsHangarOpen()
+	{
+		if ${EVEWindow[hangarFloor](exists)}
+		{
+			return TRUE
+		}
+		else
+		{
+			return FALSE
+		}		
+	}
+	
 	function OpenHangar()
 	{
-		call UpdateHudStatus "Opening Cargo Hangar"
-		EVE:Execute[OpenHangarFloor]
-		wait 25
+		if !${This.IsHangarOpen}
+		{
+			call UpdateHudStatus "Opening Cargo Hangar"
+			EVE:Execute[OpenHangarFloor]
+			wait CARGO_WINDOW_WAITTIME
+			while !${This.IsHangarOpen}
+			{
+				wait 0.5
+			}
+			wait 10
+		}
 	}	
 
 	function CloseHangar()
 	{
-		call UpdateHudStatus "Closing Cargo Hangar"
-		EVE:Execute[OpenHangarFloor]
-		wait 25
+		if ${This.IsHangarOpen}
+		{
+			call UpdateHudStatus "Closing Cargo Hangar"
+			EVEWindow[hangarFloor]:Close
+			wait CARGO_WINDOW_WAITTIME
+			while ${This.IsHangarOpen}
+			{
+				wait 0.5
+			}
+			wait 10
+		}
 	}	
 }

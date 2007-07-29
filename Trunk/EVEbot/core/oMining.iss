@@ -287,8 +287,7 @@ objectdef obj_Miner
 		This.TotalTrips:Inc
 		This.PreviousTripSeconds:Set[${This.TripDuration}]
 		This.TotalTripSeconds:Inc[${This.PreviousTripSeconds}]
-		This.AverageTripSeconds:Set[${Math.Calc[${This.TotalTripSeconds/${This.TotalTrips}]}]
-		
+		This.AverageTripSeconds:Set[${Math.Calc[${This.TotalTripSeconds}/${This.TotalTrips}]}]		
 		call UpdateHudStatus "Cargo Hold has reached threshold, returning"
 	}
 
