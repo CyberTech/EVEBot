@@ -38,6 +38,7 @@ User Interface Notes for Altered:
 	[02:24] <CyberTech> i spent 2 hours trying to remove that space in lavishgui before i figured out it must be in the png :)
 	[02:25] <CyberTech> the Play button needs redone as "Run"
 	[02:25] <CyberTech> Run, Pause, minimize and X buttons need redone for 20 high title instead of 16
+	Altered: Return (or equiv_ button next to Pause which wiil be for forcing return to station
 	
 	
 	UI work (thehazard working on)
@@ -54,3 +55,5 @@ User Interface Notes for Altered:
 		
 	combat page, i need:
 		 Use Drone Defense (checkbox)
+		 Safespot bookmark prefix (textfield)
+		 Run on Red/Neutral Standing Presence (Checkbox)
