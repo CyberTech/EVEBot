@@ -82,7 +82,12 @@ objectdef obj_Asteroids
 			if ${ForceMove} || ${BeltIterator.Value.Distance} > 25000
 			{
 				; We're not at a field already, so find one
-				curBelt:Set[${Math.Rand[${Belts.Used}]:Inc[1]}]
+				do
+				{
+					curBelt:Set[${Math.Rand[${Belts.Used}]:Inc[1]}]
+				}
+				while !${Belts[${curBelt}].Name.Find[ASTEROID BELT](exists)}
+				
 				call UpdateHudStatus "Warping to Asteroid Belt: ${Belts[${curBelt}].Name}"
 				call Ship.WarpToID ${Belts[${curBelt}]}
 				This.UsingMookMarks:Set[TRUE]
