@@ -29,6 +29,7 @@ Trunk
 - Fixed avg time per run calc
 - Fixed time this run calc to reset on undock
 - Added defines.iss, to store numeric defines.
+- Added check to make sure we're warping to an ore belt.  For now, ice belts are ignored. will add toggle soon.
 
 0.91
 - Fixed drones not being recalled in some cases
