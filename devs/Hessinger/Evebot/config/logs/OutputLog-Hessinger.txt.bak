@@ -1,0 +1,99 @@
+[12:09:43] obj_Skills: Initialized
+[12:09:43] obj_EVEBotUI: Initialized
+[12:09:43] obj_Configuration_BaseConfig: Initialized
+[12:09:43] obj_Configuration_Common: Initialized
+[12:09:43] obj_Configuration_Combat: Initialized
+[12:09:43] obj_Configuration_Miner: Initialized
+[12:09:43] Warning: Hauler settings missing - initializing
+[12:09:43] obj_Configuration_Hauler: Initialized
+[12:09:43] Warning: Salvager settings missing - initializing
+[12:09:43] obj_Configuration_Salvager: Initialized
+[12:09:43] obj_Asteroids: Initialized
+[12:09:43] obj_Drones: Initialized
+[12:09:43] obj_Ship: Initialized
+[12:09:43] obj_Station: Initialized
+[12:09:43] obj_Cargo: Initialized
+[12:09:43] obj_Miner: Initialized
+[12:09:43] obj_Combat: Initialized
+-------------------------------------------------
+  Evebot Session time 07/30/2007 at 12:09:43  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[12:09:43] Starting EVEBot 0.92.
+[12:09:43] Ensure that your ships' Cargo Hold is closed
+[12:09:43] -=Paused: Press Run-=
+[12:09:46] Mining
+[12:09:46] Warping to Asteroid Belt: Balle VIII - Asteroid Belt 2
+[12:09:46] Preparing for warp
+[12:09:47] Warping to Balle VIII - Asteroid Belt 2
+[12:10:34] Finished warping (hopefully)
+[12:10:34] Launching drones...
+[12:10:34] Opening Ship Cargohold
+[12:10:46] Locking Asteroid Asteroid (Golden Omber) (24544m)
+[12:14:05] obj_Skills: Initialized
+[12:14:05] obj_EVEBotUI: Initialized
+[12:14:05] obj_Configuration_BaseConfig: Initialized
+[12:14:05] obj_Configuration_Common: Initialized
+[12:14:05] obj_Configuration_Combat: Initialized
+[12:14:05] obj_Configuration_Miner: Initialized
+[12:14:05] Warning: Hauler settings missing - initializing
+[12:14:05] obj_Configuration_Hauler: Initialized
+[12:14:05] Warning: Salvager settings missing - initializing
+[12:14:05] obj_Configuration_Salvager: Initialized
+[12:14:05] obj_Asteroids: Initialized
+[12:14:05] obj_Drones: Initialized
+[12:14:05] obj_Ship: Initialized
+[12:14:05] obj_Station: Initialized
+[12:14:05] obj_Cargo: Initialized
+[12:14:05] obj_Miner: Initialized
+[12:14:05] obj_Combat: Initialized
+-------------------------------------------------
+  Evebot Session time 07/30/2007 at 12:14:05  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[12:14:05] Starting EVEBot 0.92.
+[12:14:05] Ensure that your ships' Cargo Hold is closed
+[12:14:05] -=Paused: Press Run-=
+[12:14:08] Mining
+[12:14:08] Staying at Asteroid Belt: Balle VII - Asteroid Belt 2
+[12:14:08] Launching drones...
+[12:14:17] Locking Asteroid Asteroid (Golden Omber) (21983m)
+[12:14:26] Approaching: Asteroid (Golden Omber) - 92 Seconds away
+[12:14:39] Approaching: Asteroid (Golden Omber) - 85 Seconds away
+[12:14:52] Approaching: Asteroid (Golden Omber) - 73 Seconds away
+[12:14:57] Entered Combat
+[12:14:57] DEBUG: 2100063851
+[12:14:57] Combat Target is Locked
+[12:14:57] Target 2100063851 should be active and locked
+[12:18:17] obj_Skills: Initialized
+[12:18:17] obj_EVEBotUI: Initialized
+[12:18:17] obj_Configuration_BaseConfig: Initialized
+[12:18:17] obj_Configuration_Common: Initialized
+[12:18:17] obj_Configuration_Combat: Initialized
+[12:18:17] obj_Configuration_Miner: Initialized
+[12:18:17] Warning: Hauler settings missing - initializing
+[12:18:17] obj_Configuration_Hauler: Initialized
+[12:18:17] Warning: Salvager settings missing - initializing
+[12:18:17] obj_Configuration_Salvager: Initialized
+[12:18:17] obj_Asteroids: Initialized
+[12:18:17] obj_Drones: Initialized
+[12:18:17] obj_Ship: Initialized
+[12:18:17] obj_Station: Initialized
+[12:18:17] obj_Cargo: Initialized
+[12:18:17] obj_Miner: Initialized
+[12:18:17] obj_Combat: Initialized
+-------------------------------------------------
+  Evebot Session time 07/30/2007 at 12:18:17  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[12:18:17] Starting EVEBot 0.92.
+[12:18:17] Ensure that your ships' Cargo Hold is closed
+[12:18:17] -=Paused: Press Run-=
+[12:18:20] Mining
+[12:18:21] Staying at Asteroid Belt: Balle VII - Asteroid Belt 2
+[12:18:21] Launching drones...
+[12:18:21] Opening Ship Cargohold
+[12:18:32] Locking Asteroid Asteroid (Golden Omber) (13623m)
+[12:18:44] Approaching: Asteroid (Golden Omber) - 57 Seconds away
+[12:18:57] Approaching: Asteroid (Golden Omber) - 50 Seconds away
+[12:19:10] Activating: HiSlot1: Miner II

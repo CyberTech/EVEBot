@@ -1,0 +1,69 @@
+[12:24:17] obj_Skills: Initialized
+[12:24:17] obj_EVEBotUI: Initialized
+[12:24:17] obj_Configuration_BaseConfig: Initialized
+[12:24:17] obj_Configuration_Common: Initialized
+[12:24:17] obj_Configuration_Combat: Initialized
+[12:24:17] obj_Configuration_Miner: Initialized
+[12:24:17] Warning: Hauler settings missing - initializing
+[12:24:17] obj_Configuration_Hauler: Initialized
+[12:24:17] Warning: Salvager settings missing - initializing
+[12:24:17] obj_Configuration_Salvager: Initialized
+[12:24:17] obj_Asteroids: Initialized
+[12:24:17] obj_Drones: Initialized
+[12:24:17] obj_Ship: Initialized
+[12:24:17] obj_Station: Initialized
+[12:24:17] obj_Cargo: Initialized
+[12:24:17] obj_Miner: Initialized
+[12:24:17] obj_Combat: Initialized
+-------------------------------------------------
+  Evebot Session time 07/30/2007 at 12:24:17  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[12:24:17] Starting EVEBot 0.92.
+[12:24:17] Ensure that your ships' Cargo Hold is closed
+[12:24:17] -=Paused: Press Run-=
+[12:24:19] Mining
+[12:24:20] Staying at Asteroid Belt: Balle VII - Asteroid Belt 3
+[12:24:20] Launching drones...
+[12:24:20] Opening Ship Cargohold
+[12:24:29] Locking Asteroid Asteroid (Golden Omber) (22351m)
+[12:24:38] Approaching: Asteroid (Golden Omber) - 94 Seconds away
+[12:24:51] Approaching: Asteroid (Golden Omber) - 93 Seconds away
+[12:25:04] Approaching: Asteroid (Golden Omber) - 90 Seconds away
+[12:25:05] Entered Combat
+[12:25:05] DEBUG: 2100062628
+[12:25:05] Combat Target is Locked
+[12:25:05] Target 2100062628 should be active and locked
+[12:38:39] obj_Skills: Initialized
+[12:38:39] obj_EVEBotUI: Initialized
+[12:38:39] obj_Configuration_BaseConfig: Initialized
+[12:38:39] obj_Configuration_Common: Initialized
+[12:38:39] obj_Configuration_Combat: Initialized
+[12:38:39] obj_Configuration_Miner: Initialized
+[12:38:39] Warning: Hauler settings missing - initializing
+[12:38:39] obj_Configuration_Hauler: Initialized
+[12:38:39] Warning: Salvager settings missing - initializing
+[12:38:39] obj_Configuration_Salvager: Initialized
+[12:38:39] obj_Asteroids: Initialized
+[12:38:39] obj_Drones: Initialized
+[12:38:39] obj_Ship: Initialized
+[12:38:39] obj_Station: Initialized
+[12:38:39] obj_Cargo: Initialized
+[12:38:39] obj_Miner: Initialized
+[12:38:39] obj_Combat: Initialized
+-------------------------------------------------
+  Evebot Session time 07/30/2007 at 12:38:39  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[12:38:39] Starting EVEBot 0.92.
+[12:38:39] Ensure that your ships' Cargo Hold is closed
+[12:38:39] -=Paused: Press Run-=
+[12:38:42] Mining
+[12:38:42] Staying at Asteroid Belt: Balle VII - Asteroid Belt 4
+[12:38:42] Launching drones...
+[12:38:42] Opening Ship Cargohold
+[12:38:52] Locking Asteroid Asteroid (Golden Omber) (18684m)
+[12:39:00] Entered Combat
+[12:39:00] DEBUG: 2100067739
+[12:39:00] Combat Target is Locked
+[12:39:00] Target 2100067739 should be active and locked

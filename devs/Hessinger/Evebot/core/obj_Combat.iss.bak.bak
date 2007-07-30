@@ -1,0 +1,81 @@
+/* 
+   Only Releasing Whats Stable
+   
+*/
+
+
+objectdef obj_Combat
+{
+	;Target that we will be fighting
+	variable bool InCombat = FLASE
+	variable int FrameCounter
+		
+	method Initialize()
+	{	
+		Event[OnFrame]:AttachAtom[This:Pulse]
+		call UpdateHudStatus "obj_Combat: Initialized"
+	}
+	
+	method Shutdown()
+	{
+		Event[OnFrame]:DetachAtom[This:Pulse]
+	}
+	
+	method Pulse()
+	{
+		echo UpdateHudStatus "${FrameCounter}"
+		FrameCounter:Inc
+						
+		if ${FrameCounter} >= 20
+		{
+			call UpdateHudStatus "${InCombat}"
+			if ${InCombat}== FALSE
+		 	{
+				if (${Me.ToEntity.ShieldPct} < 99)
+				{
+					This:InCombatState
+					call This.Fight
+					echo "Detected Us In Combat"
+				}
+			}
+			FrameCounter:Set[0]
+		}
+	}
+	
+	method InCombatState()
+	{
+		InCombat:Set[TRUE]
+	}
+	
+	
+	function Fight()
+	{
+		variable index:entity EntitiesTargetingMe
+		variable int i
+		variable int CombatTarget
+		
+		for (i:Set[1] ; ${i} <= ${Me.GetTargetedBy[EntitiesTargetingMe]} ; i:Inc)
+		{
+		Entity[${EntitiesTargetingMe.Get[${i}].ID}]:LockTarget
+		wait 40
+		Entity[${EntitiesTargetingMe.Get[${i}].ID}]:MakeActiveTarget
+		echo "Target ${EntitiesTargetingMe.Get[${i}].ID} should be active and locked"
+		Set:CombatTarget[${EntitiesTargetingMe.Get[${i}].ID}]
+		
+		;Defense if we have Drones
+		if (${Drones.DronesInSpace} > 0)
+		{
+  	Eve:DronesEngageMyTarget[Drones.DroneList]
+  	}
+
+		;Defense if we have Laser 
+		;call LaserCombat
+		}
+		
+		do
+		{
+			wait 10
+		}
+		while (${Me.GetTargetedBy} == 0)
+	}
+}
