@@ -17,7 +17,7 @@ objectdef obj_Cargo
 	function CloseHolds()
 	{
 		call Ship.CloseCargo
-		call Station.OpenHangar
+		call Station.CloseHangar
 	}
 	
 	; Transfer ALL items in MyCargo index
@@ -46,6 +46,10 @@ objectdef obj_Cargo
 
 	function TransferOreToHangar()
 	{	
+		if ${Ship.IsCargoOpen}
+		{
+			call Ship.CloseCargo
+		}
 		call Ship.OpenCargo
 		Me.Ship:DoGetCargo[This.MyCargo]
 		
