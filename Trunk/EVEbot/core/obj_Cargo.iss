@@ -46,10 +46,10 @@ objectdef obj_Cargo
 
 	function TransferOreToHangar()
 	{	
-		if !${Me.InStation}
+		while !${Me.InStation}
 		{
+			call UpdateHudStatus "obj_Cargo: Waiting for InStation..."
 			wait 10
-			return
 		}
 		
 		if ${Ship.IsCargoOpen}

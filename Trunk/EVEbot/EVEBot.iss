@@ -60,11 +60,6 @@ function SetBotState()
 	
 	if ${Me.InStation}
 	{
-		if ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace}
-		{
-	  		botstate:Set["CARGOEMPTY"]
-	  		return
-	  	}
   		botstate:Set["BASE"]
   		return
 	}
@@ -140,8 +135,8 @@ function main()
 				Call Dock
 				break
 			case BASE
-				call UpdateHudStatus "I'm in the station"
 				call Cargo.TransferOreToHangar
+				call Ship.Undock
 				break
 			case COMBAT
 				call UpdateHudStatus "FIRE ZE MISSILES!!!"
@@ -155,11 +150,7 @@ function main()
 				call Miner.Mine
 				;call Hauler.Haul
 				break
-			case CARGOEMPTY
-				call Ship.Undock
-				break
 			case CARGOFULL
-				call UpdateHudStatus "My ship is full"
 				call Dock
 				break
 			case RUNNING
