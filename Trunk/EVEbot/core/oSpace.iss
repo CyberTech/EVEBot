@@ -31,13 +31,13 @@ function Dock()
 	variable int WaitCount = 0
 	variable int StationID = ${Entity[CategoryID,3,${Config.Common.HomeStation}].ID}
 
-	call UpdateHudStatus "Docking at ${StationID}:${Config.Common.HomeStation}
+	call UpdateHudStatus "Docking at ${StationID}:${Config.Common.HomeStation}"
 
   ;;;;;;;;;;;;;;;;;;
   ;;; Sanity Checks
 	if (${StationID} <= 0)
 	{
-		call UpdateHudStatus "Error: oSpace::Dock --> Home Station unknown, going to nearest base
+		call UpdateHudStatus "Error: oSpace::Dock --> Home Station unknown, going to nearest base"
 		StationID:Set[${Entity[CategoryID,3].ID}]
 	}
 
