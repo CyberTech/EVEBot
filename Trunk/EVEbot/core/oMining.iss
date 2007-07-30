@@ -278,6 +278,16 @@ objectdef obj_Miner
 
 	}
 	
+	function Statslog()
+	{
+		variable string Hours = ${Math.Calc[(${Script.RunningTime}/1000/60/60)%60].Int.LeadingZeroes[2]}
+		variable string Minutes = ${Math.Calc[(${Script.RunningTime}/1000/60)%60].Int.LeadingZeroes[2]}
+		variable string Seconds = ${Math.Calc[(${Script.RunningTime}/1000)%60].Int.LeadingZeroes[2]}
+		
+		call UpdateStatStatus "Run ${This.TotalTrips} Done - Took ${This.PreviousTripSeconds} Seconds"
+		call UpdateStatStatus "Total Run Time: ${Hours}:${Minutes}:${Seconds} - Average Run Time: ${Math.Calc[${This.TotalTripSeconds}/${This.TotalTrips}]} Seconds"
+	} 
+	
 	function Mine()
 	{
 		
@@ -339,8 +349,10 @@ objectdef obj_Miner
 		This.TotalTrips:Inc
 		This.PreviousTripSeconds:Set[${This.TripDuration}]
 		This.TotalTripSeconds:Inc[${This.PreviousTripSeconds}]
-		This.AverageTripSeconds:Set[${Math.Calc[${This.TotalTripSeconds}/${This.TotalTrips}]}]		
+		This.AverageTripSeconds:Set[${Math.Calc[${This.TotalTripSeconds}/${This.TotalTrips}]}]
 		call UpdateHudStatus "Cargo Hold has reached threshold, returning"
+		call This.Statslog
+
 	}
 
 	member:int TripDuration()
@@ -351,4 +363,6 @@ objectdef obj_Miner
 	member:float VolumePerCycle(string AsteroidType)
 	{
 	}
+	
+
 }

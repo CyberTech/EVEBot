@@ -13,8 +13,9 @@
 *********************************************************
 
 Trunk
-- Added a check in the obj_Ship.iss file in the function WarpToID that if it didn't make it to the destintion in the first warp it warps again.
+- Fixed the obj_Ship.iss file in the function WarpToID that if it didn't make it to the destintion in the first warp it warps again.
 - Added to the oCore.iss to have the character's name as part of the log file name incase you have more then one bot going on the same computer for better logging.
+- Added a statslog file to log your runs and average time.
 
 0.92-Revision 58
 - UI Rewrite

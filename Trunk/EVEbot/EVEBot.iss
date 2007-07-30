@@ -33,6 +33,8 @@ function LoadEvebotGUI()
 {
 	call SetupHudStatus
 	call UpdateHudStatus "Starting EVEBot ${Version}."
+	call SetupStatStatus
+	call UpdateStatStatus "Starting EVEBot ${Version}."
 	wait 20 ${UIElement[evebot](exists)}
 }
 

@@ -18,3 +18,17 @@ function UpdateHudStatus(string StatusMessage)
 		call Debug "${StatusMessage}"
 	#endif
 }
+
+function SetupStatStatus()
+{
+	redirect -append "./config/logs/StatsLog-${Me.Name}.txt" echo "-------------------------------------------------"
+	redirect -append "./config/logs/StatsLog-${Me.Name}.txt" echo "  Evebot Session time ${Time.Date} at ${Time.Time24}  "
+	redirect -append "./config/logs/StatsLog-${Me.Name}.txt" echo "  Evebot Session for  ${Me.Name} "
+	redirect -append "./config/logs/StatsLog-${Me.Name}.txt" echo "-------------------------------------------------"
+
+}
+
+function UpdateStatStatus(string StatusMessage)
+{
+	redirect -append "./config/logs/StatsLog-${Me.Name}.txt" Echo "[${Time.Time24}] ${StatusMessage}"
+}
