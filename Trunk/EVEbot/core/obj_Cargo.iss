@@ -46,6 +46,12 @@ objectdef obj_Cargo
 
 	function TransferOreToHangar()
 	{	
+		if !${Me.InStation}
+		{
+			wait 10
+			return
+		}
+		
 		if ${Ship.IsCargoOpen}
 		{
 			call Ship.CloseCargo
