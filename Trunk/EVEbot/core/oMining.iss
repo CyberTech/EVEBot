@@ -21,6 +21,9 @@ objectdef obj_Asteroids
 	; Should only be referenced inside NextAsteroid()
 	variable iterator NextAsteroidIterator
 
+	variable index:string EmptyBeltList
+	variable iterator EmptyBelt
+	
 	variable index:bookmark BeltBookMarkList
 	variable iterator BeltBookMarkIterator
 	variable int LastBookMarkIndex
@@ -30,6 +33,39 @@ objectdef obj_Asteroids
 	method Initialize()
 	{	
 		call UpdateHudStatus "obj_Asteroids: Initialized"
+	}
+	
+	
+	; Checks the belt name against the empty belt list.
+	member IsBeltEmpty(string BeltName)
+	{
+		if !${BeltName(exists)}
+		{
+			return FALSE
+		}		
+
+		EmptyBeltList:GetIterator[EmptyBelt]
+		if ${EmptyBelt:First(exists)}
+		do
+		{
+			if ${EmptyBelt.Value.Equal[${BeltName}]}
+			{
+				echo "DEBUG: obj_Asteroid:IsBeltEmpty - ${BeltName} - TRUE"
+				return TRUE
+			}
+		}
+		while ${EmptyBelt:Next(exists)}
+		return FALSE
+	}
+	
+	; Adds the named belt to the empty belt list
+	method BeltIsEmpty(string BeltName)
+	{
+		if ${BeltName(exists)}
+		{
+			EmptyBeltList:Insert[${BeltName}]
+			call UpdateHudStatus "Excluding empty belt ${BeltName}"
+		}
 	}
 	
 	function MoveToRandomBeltBookMark()
@@ -74,8 +110,9 @@ objectdef obj_Asteroids
 		variable int curBelt
 		variable index:entity Belts
 		variable iterator BeltIterator
+		variable int TryCount
 	
-		EVE:DoGetEntities[Belts,GroupID,9]
+		EVE:DoGetEntities[Belts,GroupID, GROUPID_ASTEROID_BELT]
 		Belts:GetIterator[BeltIterator]
 		if ${BeltIterator:First(exists)}
 		{
@@ -85,8 +122,16 @@ objectdef obj_Asteroids
 				do
 				{
 					curBelt:Set[${Math.Rand[${Belts.Used}]:Inc[1]}]
+					TryCount:Inc
+					if ${TryCount} > ${Math.Calc[${Belts.Used} * 10]}
+					{
+						call UpdateHudStatus "All belts empty!"
+						Miner.Abort:Set[TRUE]
+						return
+					}
 				}
-				while !${Belts[${curBelt}].Name.Find[ASTEROID BELT](exists)}
+				while ( !${Belts[${curBelt}].Name.Find[ASTEROID BELT](exists)} || \
+						${This.IsBeltEmpty[${Belts[${curBelt}].Name}]} )
 				
 				call UpdateHudStatus "Warping to Asteroid Belt: ${Belts[${curBelt}].Name}"
 				call Ship.WarpToID ${Belts[${curBelt}]}
@@ -192,6 +237,7 @@ objectdef obj_Asteroids
 		else
 		{
 			echo "DEBUG: obj_Asteroids: No Asteroids within overview range"
+			This:BeltIsEmpty["${Entity[GroupID, GROUPID_ASTEROID_BELT]}"]
 			call This.MoveToField TRUE
 			return FALSE
 		}
@@ -208,7 +254,8 @@ objectdef obj_Miner
 	variable int PreviousTripSeconds = 0
 	variable int TotalTripSeconds = 0
 	variable int AverageTripSeconds = 0
-	
+	variable int Abort = FALSE
+		
 	method Initialize()
 	{
 		This.TripStartTime:Set[${Time.Timestamp}]
@@ -240,7 +287,7 @@ objectdef obj_Miner
 		call This.Prepare_Environment
 		call Asteroids.UpdateList
 		
-		while ${Ship.CargoFreeSpace} >= ${Ship.CargoMinimumFreeSpace}
+		while !${Miner.Abort} && ${Ship.CargoFreeSpace} >= ${Ship.CargoMinimumFreeSpace}
 		{				
 			if !${Ship.InWarp} && ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers}
 			{

@@ -43,6 +43,19 @@ function atexit()
 
 function SetBotState()
 {
+	
+	if ${Miner.Abort} && !${Me.InStation}
+	{
+		botstate:Set["ABORT"]
+		return
+	}
+
+	if ${Miner.Abort}
+	{
+		botstate:Set["IDLE"]
+		return
+	}
+	
 	if ${Me.InStation}
 	{
 	  botstate:Set["BASE"]
@@ -113,6 +126,12 @@ function main()
 		
 		switch ${botstate}
 		{
+			case IDLE
+				break
+			case ABORT
+				call UpdateHudStatus "Aborting operation: Returning to base"
+				Call Dock
+				break
 			case BASE
 				call UpdateHudStatus "I'm in the station"
 				call Cargo.TransferOreToHangar

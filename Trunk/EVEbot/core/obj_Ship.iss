@@ -34,7 +34,7 @@ objectdef obj_Drones
 		{
 			call UpdateHudStatus "Recalling ${This.DroneList.Used} drones"
 			EVE:DronesReturnToDroneBay[This.DroneList]
-			wait 250
+			wait 30
 		}
 	}
 }
@@ -462,7 +462,7 @@ objectdef obj_Ship
 		do
 		{
 			if ${Module.Value.IsActive} && \
-				!${Module.Value.LastTarget(exists)}
+				( !${Module.Value.LastTarget(exists)} || !${Entity[id,${Module.Value.LastTarget.ID}](exists)} )
 			{
 				echo "${Module.Value.Name} has non-existent target, deactivating"
 				Module.Value:Click
@@ -556,7 +556,7 @@ objectdef obj_Ship
 		{
 			call UpdateHudStatus "Opening Ship Cargohold"
 			EVE:Execute[OpenCargoHoldOfActiveShip]
-			wait CARGO_WINDOW_WAITTIME
+			wait WAIT_CARGO_WINDOW
 			while !${This.IsCargoOpen}
 			{
 				wait 0.5
@@ -571,7 +571,7 @@ objectdef obj_Ship
 		{
 			call UpdateHudStatus "Closing Ship Cargohold"
 			EVEWindow[MyShipCargo]:Close
-			wait CARGO_WINDOW_WAITTIME
+			wait WAIT_CARGO_WINDOW
 			while ${This.IsCargoOpen}
 			{
 				wait 0.5
@@ -585,11 +585,12 @@ objectdef obj_Ship
 		call UpdateHudStatus "Undock: Waiting while ship exits the station (13 sec)"
 
 		EVE:Execute[CmdExitStation]	
+		wait WAIT_UNDOCK
 		do
 		{
-			wait 130 ${Entity[CategoryID,3].ID(exists)}
+			wait 10
 		}
-		while ${Me.InStation}
+		while (${Me.InStation} || !${EVEWindow[Local](exists)})
 		
 		Config.Common:SetHomeStation[${Entity[CategoryID,3].Name}]
 		

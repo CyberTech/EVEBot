@@ -23,7 +23,7 @@ objectdef obj_Station
 		{
 			call UpdateHudStatus "Opening Cargo Hangar"
 			EVE:Execute[OpenHangarFloor]
-			wait CARGO_WINDOW_WAITTIME
+			wait WAIT_CARGO_WINDOW
 			while !${This.IsHangarOpen}
 			{
 				wait 0.5
@@ -38,7 +38,7 @@ objectdef obj_Station
 		{
 			call UpdateHudStatus "Closing Cargo Hangar"
 			EVEWindow[hangarFloor]:Close
-			wait CARGO_WINDOW_WAITTIME
+			wait WAIT_CARGO_WINDOW
 			while ${This.IsHangarOpen}
 			{
 				wait 0.5
