@@ -615,9 +615,12 @@ objectdef obj_Ship
 		}
 
 		call This.WarpPrepare
-		call UpdateHudStatus "Warping to ${Entity[${Id}].Name}"
-		Entity[${Id}]:WarpTo
-		call This.WarpWait
+		while ${Entity[${Id}].Distance} >= 10000
+		{
+			call UpdateHudStatus "Warping to ${Entity[${Id}].Name}"
+			Entity[${Id}]:WarpTo
+			call This.WarpWait
+		}
 	}	
 
 	function WarpToBookMark(bookmark Dest)
