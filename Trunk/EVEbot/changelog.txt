@@ -16,6 +16,18 @@ Trunk
 - Fixed the obj_Ship.iss file in the function WarpToID that if it didn't make it to the destintion in the first warp it warps again.
 - Added to the oCore.iss to have the character's name as part of the log file name incase you have more then one bot going on the same computer for better logging.
 - Added a statslog file to log your runs and average time.
+- Fixed trip timer
+- Added More defines to defines.iss
+- Tuned drone return routine - still needs to have a catch for when you left your drones in space.
+- Tuned ValidateModuleTarget
+- Tuned undock to remove entity check every frame, and use EVEWindow[Local]
+- Added blacklisting for empty asteroid belts.  Bot will not return to a belt that has been detected as empty
+	 If every asteroid belt in the system becomes blacklisted, bot will enter ABORT state, dock, and sit in IDLE state.
+- New routines: Asteroid.IsBeltEmpty, Asteroid:BeltIsEmpty, 
+- Fixed bug where cargo wouldn't be detected if you docked with the cargo window open.
+- Fixed Missing quotes
+- Changed TransferOreToHangar to be more vigilant about being in the hangar.
+- Added more bot states to properly separate BASE state from cargoempty state.
 
 0.92-Revision 58
 - UI Rewrite
