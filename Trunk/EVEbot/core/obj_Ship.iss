@@ -43,6 +43,7 @@ objectdef obj_Ship
 {
 	variable int MODE_WARPING = 3
 	
+	variable int FrameCounter
 	variable int Calculated_MaxLockedTargets
 	variable float BaselineUsedCargo
 	variable bool CargoIsOpen
@@ -74,8 +75,9 @@ objectdef obj_Ship
 	method Pulse()
 	{
 		FrameCounter:Inc
-		
-		if ${FrameCounter} >= 300
+
+		variable int IntervalInSeconds = 5
+		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 		{
 			This:ValidateModuleTargets
 			FrameCounter:Set[0]
@@ -464,7 +466,7 @@ objectdef obj_Ship
 			if ${Module.Value.IsActive} && \
 				( !${Module.Value.LastTarget(exists)} || !${Entity[id,${Module.Value.LastTarget.ID}](exists)} )
 			{
-				echo "${Module.Value.Name} has non-existent target, deactivating"
+				echo "${Module.Value.ToItem.Slot}:${Module.Value.ToItem.Name} has no target: Deactivating"
 				Module.Value:Click
 			}
 		}

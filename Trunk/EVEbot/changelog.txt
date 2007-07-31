@@ -28,6 +28,11 @@ Trunk
 - Fixed Missing quotes
 - Changed TransferOreToHangar to be more vigilant about being in the hangar.
 - Added more bot states to properly separate BASE state from cargoempty state.
+- Added fallback to concentrate fire of multiple lasers on a single asteroid if there are insufficient asteroids in targeting range.
+- Fixed ValidateModuleTargets pulse call
+- Rewrote obj_Ship:Pulse to run every 5 seconds, regardless of FPS.
+- Changed "are we already at a field" check to be 45k from warp in, instead of 25k.
+- Changed max distance between potential asteroid targets to be 1.3 optimal range instead of 1.5.
 
 0.92-Revision 58
 - UI Rewrite

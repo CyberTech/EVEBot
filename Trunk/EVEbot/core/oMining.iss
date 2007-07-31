@@ -116,7 +116,7 @@ objectdef obj_Asteroids
 		Belts:GetIterator[BeltIterator]
 		if ${BeltIterator:First(exists)}
 		{
-			if ${ForceMove} || ${BeltIterator.Value.Distance} > 25000
+			if ${ForceMove} || ${BeltIterator.Value.Distance} > 45000
 			{
 				; We're not at a field already, so find one
 				do
@@ -201,7 +201,7 @@ objectdef obj_Asteroids
 					!${AsteroidIterator.Value.IsLockedTarget} && \
 					!${AsteroidIterator.Value.BeingTargeted} && \
 					${AsteroidIterator.Value.Distance} < ${Me.Ship.MaxTargetRange} && \
-					( !${Me.ActiveTarget(exists)} || ${AsteroidIterator.Value.DistanceTo[${Me.ActiveTarget.ID}]} <= ${Math.Calc[${Ship.OptimalMiningRange}*1.5]} )
+					( !${Me.ActiveTarget(exists)} || ${AsteroidIterator.Value.DistanceTo[${Me.ActiveTarget.ID}]} <= ${Math.Calc[${Ship.OptimalMiningRange}* 1.3]} )
 				{
 						break
 				}
@@ -226,9 +226,10 @@ objectdef obj_Asteroids
 				call This.UpdateList
 				if ${Ship.TotalActivatedMiningLasers} == 0				
 				{
+					This.AstroidList:GetIterator[AsteroidIterator]
 					AsteroidIterator:First
-					variable float64 Distance = ${AsteroidIterator.Value.Distance.Ceil}
-					call UpdateHudStatus "obj_Asteroids: TargetNext: No Asteroids in Targeting Range & Lasers Idle - Approaching nearest: ${Distance}m ETA: ${Math.Calc[${Distance}/${Me.Ship.MaxVelocity}].Ceil}s"
+					variable int64 Distance = ${AsteroidIterator.Value.Distance.Ceil}
+					call UpdateHudStatus "obj_Asteroids: TargetNext: No Asteroids in range & All lasers idle - Approaching nearest: ${Distance}m ETA: ${Math.Calc[${Distance}/${Me.Ship.MaxVelocity}].Ceil}s"
 					call Ship.Approach ${AsteroidIterator.Value}
 				}
 				return FALSE
@@ -239,7 +240,7 @@ objectdef obj_Asteroids
 			echo "DEBUG: obj_Asteroids: No Asteroids within overview range"
 			This:BeltIsEmpty["${Entity[GroupID, GROUPID_ASTEROID_BELT]}"]
 			call This.MoveToField TRUE
-			return FALSE
+			return TRUE
 		}
 		return FALSE
 	}
@@ -255,7 +256,10 @@ objectdef obj_Miner
 	variable int TotalTripSeconds = 0
 	variable int AverageTripSeconds = 0
 	variable int Abort = FALSE
-		
+
+	; Are we running out of asteroids to target?
+	variable bool InsufficientAsteroids = FALSE
+	
 	method Initialize()
 	{
 		This.TripStartTime:Set[${Time.Timestamp}]
@@ -314,7 +318,8 @@ objectdef obj_Miner
 					}
 					variable int TargetID
 					TargetID:Set[${Target.Value.ID}]
-					if !${Ship.IsMiningAstroidID[${TargetID}]}
+					if ( ${This.InsufficientAsteroids} || \
+						!${Ship.IsMiningAstroidID[${TargetID}]} )
 					{
 						Target.Value:MakeActiveTarget
 						wait 20
@@ -342,6 +347,7 @@ objectdef obj_Miner
 			{
 				echo Target Locking: ${Me.GetTargets} out of ${Ship.SafeMaxLockedTargets}
 				call Asteroids.TargetNext
+				This.InsufficientAsteroids:Set[!${Return}]
 			}
 		}
 	
