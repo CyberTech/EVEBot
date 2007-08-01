@@ -1,4 +1,4 @@
-variable string Version = 0.92
+variable string Version = "0.92 $Rev$"
 
 function SetupHudStatus()
 {
