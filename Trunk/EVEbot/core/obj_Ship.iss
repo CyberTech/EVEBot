@@ -76,7 +76,7 @@ objectdef obj_Ship
 	{
 		FrameCounter:Inc
 
-		variable int IntervalInSeconds = 5
+		variable int IntervalInSeconds = 8
 		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 		{
 			This:ValidateModuleTargets
@@ -464,6 +464,7 @@ objectdef obj_Ship
 		do
 		{
 			if ${Module.Value.IsActive} && \
+				!${Module.Value.IsDeactivating} && \
 				( !${Module.Value.LastTarget(exists)} || !${Entity[id,${Module.Value.LastTarget.ID}](exists)} )
 			{
 				echo "${Module.Value.ToItem.Slot}:${Module.Value.ToItem.Name} has no target: Deactivating"
@@ -679,4 +680,13 @@ objectdef obj_Ship
 		while ${Module:Next(exists)}
 	}
 
+	function LockTarget(int64 TargetID)
+	{
+		if ${Entity[${TargetID}](exists)}
+		{
+			call UpdateHudStatus "Locking ${Entity[${TargetID}].Name}: " ${Misc.MetersToKM_Str[${Entity[${TargetID}].Distance}]}"
+			Entity[${TargetID}]:LockTarget
+			wait 30
+		}
+	}
 }

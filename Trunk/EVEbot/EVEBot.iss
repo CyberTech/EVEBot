@@ -6,6 +6,7 @@
 #include core/oMining.iss
 #include core/oCore.iss
 
+#include core/obj_Misc.iss
 #include core/obj_Configuration.iss
 #include core/obj_Ship.iss
 #include core/obj_Station.iss
@@ -28,6 +29,7 @@ variable obj_Station Station
 variable obj_Cargo Cargo
 variable obj_Miner Miner
 ;variable obj_Salvager Salvager
+variable obj_Misc Misc
 
 function LoadEvebotGUI()
 {

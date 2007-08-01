@@ -1,3 +1,12 @@
+/*
+	Station class
+	
+	Object to contain members related to in-station activities.
+	
+	-- CyberTech
+	
+*/
+
 objectdef obj_Station
 {
 	method Initialize()

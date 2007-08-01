@@ -1,3 +1,15 @@
+/*
+	Cargo Class
+	
+	Interacting with Cargo of ship, hangar, and containers, and moving it.
+	
+	-- CyberTech
+
+BUGS:
+	
+			
+*/
+
 objectdef obj_Cargo
 {
 	variable index:item MyCargo

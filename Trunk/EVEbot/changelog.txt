@@ -33,6 +33,11 @@ Trunk
 - Rewrote obj_Ship:Pulse to run every 5 seconds, regardless of FPS.
 - Changed "are we already at a field" check to be 45k from warp in, instead of 25k.
 - Changed max distance between potential asteroid targets to be 1.3 optimal range instead of 1.5.
+-Added comments
+-Added Ship:LockTarget
+-Tuned ValidateModuleTargets
+-Added obj_Misc
+-Added Misc.MetersToKM_Str, to convert meters to a "#.## km" string.
 
 0.92-Revision 58
 - UI Rewrite

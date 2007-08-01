@@ -1,7 +1,7 @@
 /*
-	Asteroids class
+	Asteroids & Miner classes
 	
-	Main object for interacting with Asteroids
+	Interacting with Asteroids & Mining of them
 	
 	-- CyberTech
 
@@ -11,6 +11,7 @@ BUGS:
 	we don't differentiate between ice fields and ore fields, need to match field type to laser type.
 			
 */
+
 objectdef obj_Asteroids
 {
 	variable int AsteroidCategoryID = 25
@@ -215,7 +216,7 @@ objectdef obj_Asteroids
 				{
 					return TRUE
 				}
-				call UpdateHudStatus "Locking Asteroid ${AsteroidIterator.Value.Name} (${AsteroidIterator.Value.Distance.Ceil}m)"
+				call UpdateHudStatus "Locking Asteroid ${AsteroidIterator.Value.Name}: ${Misc.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"
 				AsteroidIterator.Value:LockTarget
 				wait 30
 				call This.UpdateList
@@ -228,8 +229,9 @@ objectdef obj_Asteroids
 				{
 					This.AstroidList:GetIterator[AsteroidIterator]
 					AsteroidIterator:First
-					variable int64 Distance = ${AsteroidIterator.Value.Distance.Ceil}
-					call UpdateHudStatus "obj_Asteroids: TargetNext: No Asteroids in range & All lasers idle - Approaching nearest: ${Distance}m ETA: ${Math.Calc[${Distance}/${Me.Ship.MaxVelocity}].Ceil}s"
+					variable int64 Distance
+					Distance:Set[${AsteroidIterator.Value.Distance.Ceil}]
+					call UpdateHudStatus "obj_Asteroids: TargetNext: No Asteroids in range & All lasers idle - Approaching nearest: ${Misc.MetersToKM_Str[${Distance}]} ETA: ${Math.Calc[${Distance}/${Me.Ship.MaxVelocity}].Ceil}s"
 					call Ship.Approach ${AsteroidIterator.Value}
 				}
 				return FALSE
