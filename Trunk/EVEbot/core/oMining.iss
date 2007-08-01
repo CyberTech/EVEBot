@@ -71,7 +71,6 @@ objectdef obj_Asteroids
 	
 	function MoveToRandomBeltBookMark()
 	{	
-		variable int curBelt	
 		EVE:DoGetBookmarks[BeltBookMarkList]
 		
 		variable int RandomBelt
@@ -82,22 +81,21 @@ objectdef obj_Asteroids
 		{
 			RandomBelt:Set[${Math.Rand[${BeltBookMarkList.Used}]:Inc[1]}]
 
-			variable string Label
-
-			if ${BeltBookMarkList[${curBelt}].SolarSystemID} != ${Me.SolarSystemID}
+			if ${BeltBookMarkList[${RandomBelt}].SolarSystemID} != ${Me.SolarSystemID}
 			{
 				continue
 			}
 
-			Label:Set[${BeltBookMarkList[${curBelt}].Label}]
+			variable string Label
+			Label:Set[${BeltBookMarkList[${RandomBelt}].Label}]
 			if ${Label.Token[1," "].Equal["Belt:"]} || ${Label.Token[1," "].Equal["Belt"]}
 			{
 				call UpdateHudStatus "Warping to Bookmark ${Label}"
 				call Ship.WarpPrepare
-				BeltBookMarkList[${curBelt}]:WarpTo
+				BeltBookMarkList[${RandomBelt}]:WarpTo
 				call Ship.WarpWait
 				This.LastBookMarkIndex:Set[${RandomBelt}]
-				This.UsingMookMarks:Set[TRUE]
+				This.UsingBookMarks:Set[TRUE]
 				return
 			}
 		}
