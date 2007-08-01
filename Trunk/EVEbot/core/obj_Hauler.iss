@@ -105,15 +105,8 @@ objectdef obj_Hauler
 	
 	function ApproachEntity(int id)
 	{
-		if ${Entity[${id}](exists)}
-		{
-			while ${Entity[${id}].Distance} > 1200
-			{
-				call Ship.Approach ${id}			
-			}
-		}
+		call Ship.Approach ${id} LOOT_RANGE
 		EVE:Execute[CmdStopShip]
-		wait 50		
 	}	
 }
 

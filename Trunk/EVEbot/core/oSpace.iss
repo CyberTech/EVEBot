@@ -56,7 +56,7 @@ while !${Me.InStation}
 	elseif (${Entity[${StationID}].Distance} < 10000 && ${Entity[${StationID}].Distance} > 100)
 	{
 		call UpdateHudStatus "Approaching Base"
-		Entity[${StationID}]:Approach
+		Entity[${StationID}]:Approach 
 		do
 		{
 			wait 20

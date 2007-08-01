@@ -518,26 +518,40 @@ objectdef obj_Ship
 		while ${Module:Next(exists)}
 	}
 
-	function Approach(int EntityID)
+	; Approaches EntityID to within 10% of Distance, then stops ship.  Momentum will handle the rest.
+	function Approach(int EntityID, int64 Distance)
 	{
 		if ${Entity[${EntityID}](exists)}
 		{
-			variable float OriginalDistance = ${Entity[${EntityID}].Distance}
-			Entity[${EntityID}]:Approach
-			call UpdateHudStatus "Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc[${Entity[${EntityID}].Distance}/${Me.Ship.MaxVelocity}].Ceil} Seconds away"
-			wait 130
-
-			if ${Entity[${EntityID}](exists)} && \
-				${OriginalDistance} < ${Entity[${EntityID}].Distance}
+			variable float64 OriginalDistance = ${Entity[${EntityID}].Distance}
+			If ${OriginalDistance} < ${Distance}
 			{
-				echo "DEBUG: obj_Ship:Approach: ${Entity[${EntityID}].Name} is getting further away!  Is it moving? Are we stuck, or colliding?"
+				return
 			}
 			
-			if ${Entity[${EntityID}](exists)} && \
-				${OriginalDistance} == ${Entity[${EntityID}].Distance}
+			call UpdateHudStatus "Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc[(${Entity[${EntityID}].Distance} - ${Distance}) / ${Me.Ship.MaxVelocity}].Ceil} Seconds away"
+
+			do
 			{
-				echo "DEBUG: obj_Ship:Approach: We may be stuck or colliding"
+				Entity[${EntityID}]:Approach
+				wait 20
+
+				if ${Entity[${EntityID}](exists)} && \
+					${OriginalDistance} < ${Entity[${EntityID}].Distance}
+				{
+					echo "DEBUG: obj_Ship:Approach: ${Entity[${EntityID}].Name} is getting further away!  Is it moving? Are we stuck, or colliding?"
+				}
+			
+				if ${Entity[${EntityID}](exists)} && \
+					${OriginalDistance} == ${Entity[${EntityID}].Distance}
+				{
+					echo "DEBUG: obj_Ship:Approach: We may be stuck or colliding"
+					return
+				}
+				echo ${Entity[${EntityID}].Distance} > ${Math.Calc[${Distance} + (${Distance}*0.05)]}
 			}
+			while ${Entity[${EntityID}].Distance} > ${Math.Calc[${Distance} + (${Distance}*0.05)]}
+			EVE:Execute[CmdStopShip]
 		}
 	}			
 

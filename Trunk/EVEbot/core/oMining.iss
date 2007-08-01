@@ -228,11 +228,11 @@ objectdef obj_Asteroids
 				if ${Ship.TotalActivatedMiningLasers} == 0				
 				{
 					This.AstroidList:GetIterator[AsteroidIterator]
-					AsteroidIterator:First
-					variable int64 Distance
-					Distance:Set[${AsteroidIterator.Value.Distance.Ceil}]
-					call UpdateHudStatus "obj_Asteroids: TargetNext: No Asteroids in range & All lasers idle - Approaching nearest: ${Misc.MetersToKM_Str[${Distance}]} ETA: ${Math.Calc[${Distance}/${Me.Ship.MaxVelocity}].Ceil}s"
-					call Ship.Approach ${AsteroidIterator.Value}
+					if ${AsteroidIterator:First(exists)}
+					{
+						call UpdateHudStatus "obj_Asteroids: TargetNext: No Asteroids in range & All lasers idle: Approaching nearest"
+						call Ship.Approach ${AsteroidIterator.Value} ${Ship.OptimalMiningRange}
+					}
 				}
 				return FALSE
 			}
@@ -303,9 +303,11 @@ objectdef obj_Miner
 		call This.Prepare_Environment
 		call Asteroids.UpdateList
 		
-		while !${Miner.Abort} && ${Ship.CargoFreeSpace} >= ${Ship.CargoMinimumFreeSpace}
+		while !${Miner.Abort} && \
+				${Ship.CargoFreeSpace} >= ${Ship.CargoMinimumFreeSpace}
 		{				
-			if !${Ship.InWarp} && ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers}
+			if !${Ship.InWarp} && \
+				${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers}
 			{
 				; We've got idle lasers, and available targets. Do something with them.
 	
@@ -320,23 +322,14 @@ objectdef obj_Miner
 					}
 					variable int TargetID
 					TargetID:Set[${Target.Value.ID}]
+					
 					if ( ${This.InsufficientAsteroids} || \
 						!${Ship.IsMiningAstroidID[${TargetID}]} )
 					{
 						Target.Value:MakeActiveTarget
 						wait 20
 	
-						if ${Target.Value(exists)} && \
-							${Target.Value.Distance} > ${Ship.OptimalMiningRange}
-						{
-							while ${Target.Value(exists)} && \
-									${Target.Value.Distance} > ${Ship.OptimalMiningRange}
-							{
-								call Ship.Approach ${TargetID}
-							}
-							
-							EVE:Execute[CmdStopShip]
-						}
+						call Ship.Approach ${TargetID} ${Ship.OptimalMiningRange}
 						call Ship.ActivateFreeMiningLaser
 					}
 				}
@@ -370,6 +363,7 @@ objectdef obj_Miner
 	
 	member:float VolumePerCycle(string AsteroidType)
 	{
+		
 	}
 	
 
