@@ -28,9 +28,9 @@
 					</OnLeftClick>
 				</commandbutton>
 				<text name='EVEBot_TitleBar_Title' template='EVESkin.Font.TitleBar'>
-					<X>210</X>
+					<X>200</X>
 					<Y>3</Y>
-					<Width>100</Width>
+					<Width>120</Width>
 					<Height>20</Height>
 					<Text>EVEBot v.${Script[EVEBot].VariableScope.Version}</Text>
 				</text>				
