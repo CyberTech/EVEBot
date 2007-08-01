@@ -548,7 +548,6 @@ objectdef obj_Ship
 					echo "DEBUG: obj_Ship:Approach: We may be stuck or colliding"
 					return
 				}
-				echo ${Entity[${EntityID}].Distance} > ${Math.Calc[${Distance} + (${Distance}*0.05)]}
 			}
 			while ${Entity[${EntityID}].Distance} > ${Math.Calc[${Distance} + (${Distance}*0.05)]}
 			EVE:Execute[CmdStopShip]

@@ -105,7 +105,7 @@ objectdef obj_Asteroids
 		
 	function MoveToField(bool ForceMove)
 	{
-		;call MoveToBeltBookMark
+		;call This.MoveToRandomBeltBookMark
 		;return
 		
 		variable int curBelt
