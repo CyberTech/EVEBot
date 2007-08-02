@@ -116,6 +116,15 @@ objectdef obj_Ship
 			return
 		}
 		
+		This.ModuleList:Clear
+		This.ModuleList_MiningLaser:Clear
+		This.ModuleList_CombatWeapon:Clear
+		This.ModuleList_ActiveResists:Clear
+		This.ModuleList_Regen_Shield:Clear
+		This.ModuleList_Regen_Armor:Clear
+		This.ModuleList_AB_MWD:Clear
+		This.ModuleList_Passive:Clear
+
 		Me.Ship:DoGetModules[This.ModuleList]
 		
 		if !${This.ModuleList.Used}
@@ -123,7 +132,7 @@ objectdef obj_Ship
 			echo "DEBUG: obj_Ship:UpdateModuleList - No modules found"
 			return
 		}
-
+	
 		variable iterator Module
 
 		echo "Module Inventory:"
