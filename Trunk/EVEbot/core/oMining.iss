@@ -196,7 +196,7 @@ objectdef obj_Asteroids
 		{
 			do
 			{
-				if ${Entity[${AsteroidIterator.Value}](exists)} && \
+			  if ${Entity[${AsteroidIterator.Value}](exists)} && \
 					!${AsteroidIterator.Value.IsLockedTarget} && \
 					!${AsteroidIterator.Value.BeingTargeted} && \
 					${AsteroidIterator.Value.Distance} < ${Me.Ship.MaxTargetRange} && \
@@ -216,7 +216,11 @@ objectdef obj_Asteroids
 				}
 				call UpdateHudStatus "Locking Asteroid ${AsteroidIterator.Value.Name}: ${Misc.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"
 				AsteroidIterator.Value:LockTarget
-				wait 30
+				do
+				{
+				  wait 30
+				}
+				while ${GetTargeting} > 0
 				call This.UpdateList
 				return TRUE
 			}
@@ -338,6 +342,11 @@ objectdef obj_Miner
 	
 			if ${Me.GetTargets} < ${Ship.SafeMaxLockedTargets}
 			{
+				do
+				{
+				 	wait 20
+				}
+				while ${GetTargeting} > 0			
 				echo Target Locking: ${Me.GetTargets} out of ${Ship.SafeMaxLockedTargets}
 				call Asteroids.TargetNext
 				This.InsufficientAsteroids:Set[!${Return}]
