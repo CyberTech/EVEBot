@@ -220,7 +220,7 @@ objectdef obj_Asteroids
 				{
 				  wait 30
 				}
-				while ${GetTargeting} > 0
+				while ${Me.GetTargeting} > 0
 				call This.UpdateList
 				return TRUE
 			}
@@ -346,7 +346,7 @@ objectdef obj_Miner
 				{
 				 	wait 20
 				}
-				while ${GetTargeting} > 0			
+				while ${Me.GetTargeting} > 0			
 				echo Target Locking: ${Me.GetTargets} out of ${Ship.SafeMaxLockedTargets}
 				call Asteroids.TargetNext
 				This.InsufficientAsteroids:Set[!${Return}]
