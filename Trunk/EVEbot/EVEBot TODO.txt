@@ -15,7 +15,7 @@ CyberTech: Bookmarking of previous location; use it to return to last mining spo
 CyberTech: Change roid selection method, do 1 GetEntity call for all nearby astroids then iterate and exclude manually.
 GliderPro: obj_Hauler 
 
-I(Neutro) need
+
 * Addition for bookmarks location (waiting for Ama to add Bookmark support to ISXEVE)
 * queue'ing skills / auto learning (Almost done, just need to implement it)
 * depends on cargo functions by ama but inventory in an array (id, name, location, type, etc) - On wait - 
@@ -24,6 +24,7 @@ I(Neutro) need
 * Optimisation (+modular) - Cyber is doing it
 * Pvp combat bot (warpto miner(s), check, destroy if enemies, warpto transporter(s), destroy if enemy, go back to base, repair, etc)
 * Create a script that will automatically reconnect you after downtime (serverside)
+
 
 
 User Interface Notes for Altered:
@@ -40,8 +41,22 @@ User Interface Notes for Altered:
 	[02:25] <CyberTech> Run, Pause, minimize and X buttons need redone for 20 high title instead of 16
 	Altered: Return (or equiv_ button next to Pause which wiil be for forcing return to station
 	
-	
-	UI work (thehazard working on)
+
+Misc requests
+	% shield for shiedl booster activation
+	use the 200km bookmark request from da_teach
+	activate mwd/ab
+	Cuttoff for slowboating.. if roid is > 20 seconds away, warp to a new belt. Do not use if in 200km mode.
+	Add an option to prefer moving to a lower roid type instead of warping in the above case
+	new roid alg:
+		target 10 of the best asteroids in the field
+		using fromid, check for all asteroids within 25k of each of the 10
+		using the new weighting from the config file, add up the total weight count of each of the 10 + surround asteroids
+		head for the highest concentration area.
+
+<Da_Teach> gimme red/neutral detection and let me weight the rats in a belt and not mine in that belt if rat weight above x
+
+UI work (thehazard working on)
 	
 	<CyberTech> need: 
 	miner page: 
@@ -57,3 +72,4 @@ User Interface Notes for Altered:
 		 Use Drone Defense (checkbox)
 		 Safespot bookmark prefix (textfield)
 		 Run on Red/Neutral Standing Presence (Checkbox)
+		 Percent shield at which to activate shield booster
