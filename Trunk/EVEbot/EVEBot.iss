@@ -1,35 +1,44 @@
 #include core/defines.iss
 
+/* unconverted files */
 #include core/oCombat.iss
 #include core/oSkills.iss
 #include core/oSpace.iss
-#include core/oMining.iss
 #include core/oCore.iss
 
+/* Base Requirements */
 #include core/obj_Misc.iss
 #include core/obj_Configuration.iss
+
+/* Support File Includes */
+#include core/obj_Asteroids.iss
 #include core/obj_Ship.iss
 #include core/obj_Station.iss
 #include core/obj_Cargo.iss
-#include core/obj_Hauler.iss
 #include core/obj_EVEBotUI.iss
 
-;; Declare all script or global variables here
+/* Behavior/Mode Includes */
+#include core/obj_Hauler.iss
+#include core/obj_Miner.iss
+
+/* Declare all script or global variables here */
 variable bool play
 variable string botstate
 variable float GoalDistance
-variable obj_Skills Skills
 
-; Script-Defined Objects
+/* Script-Defined Support Objects */
 variable obj_EVEBotUI UI
+variable obj_Misc Misc
 variable obj_Configuration Config
 variable obj_Asteroids Asteroids
 variable obj_Ship Ship
 variable obj_Station Station
 variable obj_Cargo Cargo
+variable obj_Skills Skills
+
+/* Script-Defined Behavior Objects */
 variable obj_Miner Miner
 ;variable obj_Salvager Salvager
-variable obj_Misc Misc
 
 function LoadEvebotGUI()
 {
