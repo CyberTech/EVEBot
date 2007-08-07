@@ -33,7 +33,7 @@ objectdef obj_Miner
 	; Enable defenses, launch drones
 	function Prepare_Environment()
 	{
-		Ship:ActivateShieldRegenModules[]
+		Ship:Activate_Shield_Booster[]
 		Ship.Drones:LaunchAll[]
 		call Ship.OpenCargo
 	}

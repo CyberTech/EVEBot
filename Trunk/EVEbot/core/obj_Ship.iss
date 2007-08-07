@@ -168,14 +168,14 @@ objectdef obj_Ship
 
 			switch ${GroupID}
 			{
-				; Frequency Mining Laser
-				case 483
+				case GROUPID_FREQUENCY_MINING_LASER
 					break
-				; Shield Booster
-				case 40
+				case GROUPID_SHIELD_BOOSTER
 					This.ModuleList_Regen_Shield:Insert[${Module.Value}]
 					continue
-					break
+				case GROUPID_AFTERBURNER
+					This.ModuleList_AB_MWD:Insert[${Module.Value}]
+					continue
 				default
 					continue
 			}
@@ -209,6 +209,19 @@ objectdef obj_Ship
 			echo "    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"
 		}
 		while ${Module:Next(exists)}
+
+		echo "AfterBurner Modules:"
+		This.ModuleList_AB_MWD:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			echo "    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"
+		}
+		while ${Module:Next(exists)}
+		if ${This.ModuleList_AB_MWD.Used} > 1
+		{
+			call UpdateHudStatus "Warning: More than 1 Afterburner or MWD was detected, I will only use the first one."
+		}
 	}
 	
 	method UpdateBaselineUsedCargo()
@@ -434,7 +447,7 @@ objectdef obj_Ship
 			variable iterator CrystalIterator
 			
 			Me.Ship.Module[${SlotName}]:DoGetAvailableAmmo[CrystalList]
-						
+			
 			CrystalList:GetIterator[CrystalIterator]
 			if ${CrystalIterator:First(exists)}
 			do
@@ -539,7 +552,7 @@ objectdef obj_Ship
 			}
 			
 			call UpdateHudStatus "Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc[(${Entity[${EntityID}].Distance} - ${Distance}) / ${Me.Ship.MaxVelocity}].Ceil} Seconds away"
-
+			This:Activate_AfterBurner[]
 			do
 			{
 				Entity[${EntityID}]:Approach
@@ -560,6 +573,7 @@ objectdef obj_Ship
 			}
 			while ${Entity[${EntityID}].Distance} > ${Math.Calc[${Distance} + (${Distance}*0.05)]}
 			EVE:Execute[CmdStopShip]
+			This:Deactivate_AfterBurner[]
 		}
 	}			
 
@@ -680,7 +694,47 @@ objectdef obj_Ship
 		call UpdateHudStatus "Finished warping (hopefully)"
 	}	
 
-	method ActivateShieldRegenModules()
+	method Activate_AfterBurner()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+		
+		variable iterator Module
+		
+		This.ModuleList_AB_MWD:GetIterator[Module]
+		if ${Module:First(exists)}
+		{
+			if !${Module.Value.IsActive}
+			{
+				call UpdateHudStatus "Activating ${Module.Value.ToItem.Name}"
+				Module.Value:Click
+			}
+		}
+	}
+
+	method Deactivate_AfterBurner()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+		
+		variable iterator Module
+		
+		This.ModuleList_AB_MWD:GetIterator[Module]
+		if ${Module:First(exists)}
+		{
+			if ${Module.Value.IsActive}
+			{
+				call UpdateHudStatus "Deactivating ${Module.Value.ToItem.Name}"
+				Module.Value:Click
+			}
+		}
+	}
+
+	method Activate_Shield_Booster()
 	{
 		if !${Me.Ship(exists)}
 		{
