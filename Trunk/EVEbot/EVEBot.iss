@@ -25,6 +25,7 @@
 variable bool play
 variable string botstate
 variable float GoalDistance
+variable bool ForcedReturn
 
 /* Script-Defined Support Objects */
 variable obj_EVEBotUI UI
@@ -57,6 +58,12 @@ function atexit()
 function SetBotState()
 {
 	
+	if ${ForcedReturn}
+	{
+		botstate:Set["RUNNING"]
+		return
+	}
+
 	if ${Miner.Abort} && !${Me.InStation}
 	{
 		botstate:Set["ABORT"]
@@ -165,6 +172,7 @@ function main()
 				call Dock
 				break
 			case RUNNING
+				call UpdateHudStatus "Running Away"
 				call Dock
 				ForcedReturn:Set[FALSE]
 				break
@@ -176,5 +184,6 @@ function main()
 
 atom(global) forcedreturn()
 {
+	/* echo "forcedreturn" */
 	ForcedReturn:Set[TRUE]
 }
