@@ -16,8 +16,13 @@ objectdef obj_Hauler
 	/* The name of the corp we are hauling for (null if using m_playerName) */
 	variable string m_corpName
 	
+	/* When this flag is set to TRUE the hauler should return to base */
+	variable bool m_abort
+	
 	method Initialize(string player, string corp)
 	{	
+		m_abort:Set[FALSE]
+		
 		if (${player.Length} && ${corp.Length})
 		{
 			echo "ERROR: obj_Hauler:Initialize -- cannot use a player and a corp name.  One must be blank"
@@ -190,24 +195,6 @@ objectdef obj_OreHauler inherits obj_Hauler
 		echo "DEBUG: obj_OreHauler:TestEventHandler..."
 	}
 	
-	member:float OreVolume(string oreName)
-	{
-		if ${oreName.Find["Veldspar"]}
-		{
-			return 0.1
-		}
-		elseif ${oreName.Find["Scordite"]}
-		{
-			return 0.15
-		}
-		elseif ${oreName.Find["Pyroxeres"]}
-		{
-			return 0.3
-		}
-		
-		return 1.0	/* default return value */
-	}
-	
 	function LootEntity(int id)
 	{
 		variable index:item ContainerCargo
@@ -223,7 +210,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		do
 		{
 			quantity:Set[${ContainerCargo.Get[${i}].Quantity}]
-			volume:Set[${This.OreVolume[${ContainerCargo.Get[${i}].Name}]}]
+			volume:Set[${ContainerCargo.Get[${i}].Volume}]
 			echo "DEBUG: ${quantity}"
 			echo "DEBUG: ${volume}"
 			if (${quantity} * ${volume}) > ${Ship.CargoFreeSpace}
@@ -285,12 +272,17 @@ objectdef obj_OreHauler inherits obj_Hauler
 	function Haul()
 	{
 		variable int id
+		variable int count
+		
+		m_abort:Set[FALSE]
 		
 		call This.MoveToField FALSE
 	
 		call Ship.OpenCargo
 		
-		while ${Ship.CargoFreeSpace} >= ${Ship.CargoMinimumFreeSpace}
+		/* wait in belt until cargo full or agressed */
+		while !${This.m_abort} && \
+				${Ship.CargoFreeSpace} >= ${Ship.CargoMinimumFreeSpace}
 		{				
 			id:Set[${This.NearestMatchingJetCan}]
 
@@ -310,10 +302,25 @@ objectdef obj_OreHauler inherits obj_Hauler
 					break
 				}
 			}
-			wait 100
+			
+			/* only loot cans every 10 minutes */
+			count:Set[0]
+			while ${count} < 60		/* 60 * 10 seconds = 10 minutes */
+			{
+				wait 100
+				count:Inc
+				
+				if ${Me.GetTargetedBy} > 0
+				{
+					call UpdateHudStatus "Hauler is under attack!  Bug out."
+					m_abort:Set[TRUE]
+					forcedreturn	/* cause the state machine to return us to base */
+					break
+				}
+			}			
 		}		
 		
-		call UpdateHudStatus "Cargo Hold has reached threshold"
+		call UpdateHudStatus "Done hauling."
 	
 		call Ship.CloseCargo
 	}
