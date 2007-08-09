@@ -518,7 +518,7 @@ function main(... SalvageLocationLabels)
 					     while !${Me.AutoPilotOn(exists)}
 					   }
 					}
-   				
+   					while !${Me.AutoPilotOn}
    				wait 20
    				do
    				{
