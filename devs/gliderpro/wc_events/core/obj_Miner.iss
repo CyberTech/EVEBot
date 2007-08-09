@@ -30,6 +30,54 @@ objectdef obj_Miner
 		call UpdateHudStatus "obj_Miner: Initialized"
 	}
 	
+	function SetBotState()
+	{
+		
+		if ${ForcedReturn}
+		{
+			botstate:Set["RUNNING"]
+			return
+		}
+	
+		if ${Miner.Abort} && !${Me.InStation}
+		{
+			botstate:Set["ABORT"]
+			return
+		}
+	
+		if ${Miner.Abort}
+		{
+			botstate:Set["IDLE"]
+			return
+		}
+		
+		if ${Me.InStation}
+		{
+	  		botstate:Set["BASE"]
+	  		return
+		}
+		
+		if (${Me.ToEntity.ShieldPct} < ${MinShieldPct})
+		{
+			botstate:Set["COMBAT"]
+			return
+		}
+			
+		if ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace}
+		{
+		 	botstate:Set["MINE"]
+			return
+		}
+		
+		if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${ForcedSell}
+		{
+			botstate:Set["CARGOFULL"]
+			return
+		}
+	
+		botstate:Set["None"]
+	}
+
 	; Enable defenses, launch drones
 	function Prepare_Environment()
 	{
