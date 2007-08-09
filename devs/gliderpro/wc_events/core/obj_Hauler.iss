@@ -117,6 +117,11 @@ objectdef obj_Hauler
 
 objectdef obj_OreHauler inherits obj_Hauler
 {
+	/* This variable is set by a remote event.  When it is non-zero, */
+	/* the bot will undock and seek out the gang memeber.  After the */
+	/* member's cargo has been loaded the bot will zero this out.    */
+	variable int m_gangMemberID
+	
 	method Initialize(string player, string corp)
 	{
 		This[parent]:Initialize[${player},${corp}]		
@@ -147,11 +152,50 @@ objectdef obj_OreHauler inherits obj_Hauler
 	}
 	
 	/* A miner's jetcan is full.  Let's go get the ore.  */
-	method MinerFull()
+	method MinerFull(int charID)
 	{
-		echo "DEBUG: obj_OreHauler:MinerFull..."
+		echo "DEBUG: obj_OreHauler:MinerFull... ${charID}"
+		
+		m_gangMemberID:Set[${charID}]
 	}	
 	
+	function SetBotState()
+	{
+		
+		if ${ForcedReturn}
+		{
+			botstate:Set["RUNNING"]
+			return
+		}
+	
+		if ${Me.InStation}
+		{
+	  		botstate:Set["BASE"]
+	  		return
+		}
+		
+		if (${Me.ToEntity.ShieldPct} < ${MinShieldPct})
+		{
+			botstate:Set["COMBAT"]
+			return
+		}
+					
+		if ${m_gangMemberID}
+		{
+		 	botstate:Set["HAUL"]
+			return
+		}
+		
+		if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${ForcedSell}
+		{
+			botstate:Set["CARGOFULL"]
+			m_gangMemberID:Set[0]
+			return
+		}
+	
+		botstate:Set["None"]
+	}
+
 	function LootEntity(int id)
 	{
 		variable index:item ContainerCargo
