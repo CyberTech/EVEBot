@@ -115,13 +115,7 @@ function main()
 	variable int id
 	variable int canOpen = 0
 
-	/* The hauler object takes two parameters.     */
-	/* The first is the name of the person you     */
-	/* are hauling for.  The second is the name    */
-	/* of a corporation you are hauling for.       */
-	/* Only one of the two parameters may be used. */
-	Declare Hauler obj_Hauler ${Me.Name} ""
-	;Declare Hauler obj_OreHauler "" "TestCorp"
+	Declare Hauler obj_Hauler "" ""
 
 	canOpen:Set[0]
 	do
@@ -150,7 +144,7 @@ function main()
 				echo "JetCan contains ${Entity[${ContainerName}].UsedCargoCapacity} m^3 of stuff."
 				if ${Entity[${ContainerName}].UsedCargoCapacity} > QUANTITY_THRESHOLD
 				{
-					relay all local -event EVEBot_Miner_Full ${Entity[GroupID, 9].ID}
+					relay all -event EVEBot_Miner_Full ${Me.CharID}
 				}
 				
 			}  
