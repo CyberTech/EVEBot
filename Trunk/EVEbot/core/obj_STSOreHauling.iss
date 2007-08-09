@@ -1,16 +1,13 @@
-/*
-	Station-to-Station Ore Hauling (originally written by Amadeus)
-
-BUGS:
-	
-			
-*/
-
-
-
+;; Declare all script or global variables here
 variable(script) index:item MyCargo
 variable(script) index:item HangarCargo
 variable(script) index:item CargoToTransfer
+
+variable(script) int iTimeStarted
+variable(script) string sTimeStarted
+variable(script) int iTimeEnded
+variable(script) string sTimeEnded
+variable(script) int TripsCount
 
 variable(script) bool EverythingHauled
 
@@ -18,6 +15,19 @@ function atexit()
 {
  	echo "EVE Ore Hauler Script -- Ended"
 	return
+}
+
+function SpewFinalStatistics()
+{
+  echo "- EVE Ore Hauler Final Statistics:"
+  echo "--- Started: ${sTimeStarted}"
+  echo "--- Ended: ${sTimeEnded}"
+  echo "--- Duration: ${ISXEVE.SecsToString[${Math.Calc[${iTimeEnded} - ${iTimeStarted}]}]}"
+  if (${TripsCount} > 0)
+  {
+  	echo "--- Trips: ${TripsCount}"
+  	echo "--- Average Time Per Trip: ${ISXEVE.SecsToString[${Math.Calc[${Math.Calc[${iTimeEnded} - ${iTimeStarted}]} / ${TripsCount}]}]}"	
+  }
 }
 
 function TransferOreToHangar()
@@ -249,7 +259,10 @@ function main(string Origin, string Destination, string ReturnToOrigin)
 	}
   
   echo " \n \n \n** EVE Ore Hauler Script by Amadeus ** \n \n"
-
+  iTimeStarted:Set[${Time.Timestamp}]
+  sTimeStarted:Set[${Time.Time24}]
+  TripsCount:Set[0]
+  
   ;;; Main Loop ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   do
   {
@@ -349,8 +362,13 @@ function main(string Origin, string Destination, string ReturnToOrigin)
 
 			if (${EverythingHauled} && !${ReturnToOrigin.Equal[TRUE]})
 			{
-			   echo "- Finished Transporting Ore ... remaining at destination station."
-			   return
+			  echo "- Finished Transporting Ore ... remaining at destination station."
+			  
+			  ;; Stats
+			  iTimeEnded:Set[${Time.Timestamp}]
+			  sTimeEnded:Set[${Time.Time24}]
+			 	call SpewFinalStatistics 
+			  return
 			}
 	
 			;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Return to Origin ;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -443,9 +461,15 @@ function main(string Origin, string Destination, string ReturnToOrigin)
 			}
 			wait 20
 			echo "- Now docked within origin station."	
+			
+			TripsCount:Inc
   }
   while !${EverythingHauled}
   
- 
+  ;; Stats
+  iTimeEnded:Set[${Time.Timestamp}]
+  sTimeEnded:Set[${Time.Time24}]
+  call SpewFinalStatistics
+  
   return
 }
