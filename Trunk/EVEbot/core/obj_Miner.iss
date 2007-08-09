@@ -73,6 +73,10 @@ objectdef obj_Miner
 			{
 				; We've got idle lasers, and available targets. Do something with them.
 	
+				while ${Me.GetTargeting} > 0
+				{
+				 	wait 10
+				}				
 				Me:DoGetTargets[LockedTargets]
 				LockedTargets:GetIterator[Target]
 				if ${Target:First(exists)}
@@ -96,18 +100,11 @@ objectdef obj_Miner
 					}
 				}
 				while ${Target:Next(exists)}
-				
-				; TODO - Put multiple lasers on a roid as a fallback if we end up with more lasers than targets -- CyberTech
 			}
 	
-			if ${Me.GetTargets} < ${Ship.SafeMaxLockedTargets}
-			{
-				do
-				{
-				 	wait 20
-				}
-				while ${Me.GetTargeting} > 0			
-				echo Target Locking: ${Me.GetTargets} out of ${Ship.SafeMaxLockedTargets}
+			if ${Math.Calc[${Me.GetTargets} + ${Me.GetTargeting}]} < ${Ship.SafeMaxLockedTargets}
+			{			
+				echo Target Locking: ${Math.Calc[${Me.GetTargets} + ${Me.GetTargeting}]} out of ${Ship.SafeMaxLockedTargets}
 				call Asteroids.TargetNext
 				This.InsufficientAsteroids:Set[!${Return}]
 			}
