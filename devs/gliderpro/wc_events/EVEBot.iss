@@ -39,6 +39,7 @@ variable obj_Skills Skills
 
 /* Script-Defined Behavior Objects */
 variable obj_Miner Miner
+variable obj_OreHauler Hauler 
 ;variable obj_Salvager Salvager
 
 function LoadEvebotGUI()
@@ -53,54 +54,6 @@ function LoadEvebotGUI()
 function atexit()
 {
 	;redirect profile.txt Script:DumpProfiling
-}
-
-function SetBotState()
-{
-	
-	if ${ForcedReturn}
-	{
-		botstate:Set["RUNNING"]
-		return
-	}
-
-	if ${Miner.Abort} && !${Me.InStation}
-	{
-		botstate:Set["ABORT"]
-		return
-	}
-
-	if ${Miner.Abort}
-	{
-		botstate:Set["IDLE"]
-		return
-	}
-	
-	if ${Me.InStation}
-	{
-  		botstate:Set["BASE"]
-  		return
-	}
-	
-	if (${Me.ToEntity.ShieldPct} < ${MinShieldPct})
-	{
-		botstate:Set["COMBAT"]
-		return
-	}
-		
-	if ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace}
-	{
-	 	botstate:Set["MINE"]
-		return
-	}
-	
-	if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${ForcedSell}
-	{
-		botstate:Set["CARGOFULL"]
-		return
-	}
-
-	botstate:Set["None"]
 }
 
 function main()
@@ -132,17 +85,13 @@ function main()
 
 	play:Set[TRUE]
 
-	/* The hauler object takes two parameters.     */
-	/* The first is the name of the person you     */
-	/* are hauling for.  The second is the name    */
-	/* of a corporation you are hauling for.       */
-	/* Only one of the two parameters may be used. */
-	;Declare Hauler obj_OreHauler "Test User" ""
-	;Declare Hauler obj_OreHauler "" "TestCorp"
+	variable string BotType
+	;BotType:Set["Miner"]
+	BotType:Set["Hauler"]
 
   	while ${play}
 	{
-		call SetBotState
+		${BotType}:SetBotState
 		
 		switch ${botstate}
 		{
@@ -162,11 +111,11 @@ function main()
 				break
 			case MINE
 				call UpdateHudStatus "Mining"
-				/* Comment out the call to Miner.Mine and  */
-				/* replace with "call Hauler.Haul" to turn */
-				/* this bot into a hauler bot.             */
 				call Miner.Mine
-				;call Hauler.Haul
+				break
+			case HAUL
+				call UpdateHudStatus "Hauling"
+				call Hauler.Haul
 				break
 			case CARGOFULL
 				call Dock
