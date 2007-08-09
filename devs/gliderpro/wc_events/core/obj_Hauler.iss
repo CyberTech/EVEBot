@@ -133,67 +133,24 @@ objectdef obj_OreHauler inherits obj_Hauler
 
 	method Shutdown()
 	{
-		Event[Docked]:DetachAtom[This:ShipDocked]
-		Event[Undocked]:DetachAtom[This:ShipUndocked]				
-		Event[Warping]:DetachAtom[This:ShipWarping]	
-		Event[Stopped]:DetachAtom[This:ShipStopped]	
-		Event[UnderAttack]:DetachAtom[This:ShipUnderAttack]	
-		Event[TestEvent]:DetachAtom[This:TestEventHandler]	
+		Event[EVEBot_Miner_Full]:DetachAtom[This:MinerFull]
 	}
 
 	/* SetupEvents will attach atoms to all of the events used by the bot */
 	method SetupEvents()
 	{
 		This[parent]:SetupEvents[]
-		
 		/* override any events setup by the base class */
-		Event[Docked]:AttachAtom[This:ShipDocked]
-		Event[Undocked]:AttachAtom[This:ShipUndocked]	
-		Event[Warping]:AttachAtom[This:ShipWarping]	
-		Event[Stopped]:AttachAtom[This:ShipStopped]	
-		Event[UnderAttack]:AttachAtom[This:ShipUnderAttack]	
-		Event[TestEvent]:AttachAtom[This:TestEventHandler]	
+
+		LavishScript:RegisterEvent[EVEBot_Miner_Full]
+		Event[EVEBot_Miner_Full]:AttachAtom[This:MinerFull]
 	}
 	
-	/* The ship docked event handler is called when the  */
-	/* ship transitions from a undocked to docked state. */
-	method ShipDocked()
+	/* A miner's jetcan is full.  Let's go get the ore.  */
+	method MinerFull()
 	{
-		echo "DEBUG: obj_OreHauler:ShipDocked..."
-	}
-	
-	/* The ship docked event handler is called when the  */
-	/* ship transitions from a docked to undocked state. */
-	method ShipUndocked()
-	{
-		echo "DEBUG: obj_OreHauler:ShipUndocked..."
-	}
-
-	/* The ship docked event handler is called when the  */
-	/* ship transitions from a stopped to a warping state. */
-	method ShipWarping()
-	{
-		echo "DEBUG: obj_OreHauler:ShipWarping..."
-	}
-
-	/* The ship docked event handler is called when the  */
-	/* ship transitions from a warping to a stopped state. */
-	method ShipStopped()
-	{
-		echo "DEBUG: obj_OreHauler:ShipStopped..."
-	}
-
-	/* The ship docked event handler is called when the  */
-	/* ship comes under attack. */
-	method ShipUnderAttack()
-	{
-		echo "DEBUG: obj_OreHauler:ShipUnderAttack..."
-	}
-
-	method TestEventHandler()
-	{
-		echo "DEBUG: obj_OreHauler:TestEventHandler..."
-	}
+		echo "DEBUG: obj_OreHauler:MinerFull..."
+	}	
 	
 	function LootEntity(int id)
 	{
