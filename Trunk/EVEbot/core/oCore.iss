@@ -32,3 +32,4 @@ function UpdateStatStatus(string StatusMessage)
 {
 	redirect -append "./config/logs/StatsLog-${Me.Name}.txt" Echo "[${Time.Time24}] ${StatusMessage}"
 }
+ 
