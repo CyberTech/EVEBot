@@ -129,7 +129,7 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Restrict To Ore Type, NONE]
 		This.MinerRef:AddSetting[Include Veldspar, FALSE]
 		This.MinerRef:AddSetting[Stick To Spot, FALSE]
-		This.MinerRef:AddSetting[Use JetCan, FALSE]
+		This.MinerRef:AddSetting[Use JetCan, 0]
 		This.MinerRef:AddSetting[Avoid Players Distance, 10000]
 		This.MinerRef:AddSetting[Distribute Lasers, TRUE]
 
@@ -208,6 +208,23 @@ objectdef obj_Configuration_Miner
 	;		This.MinerRef:AddSetting[Stick To Spot, FALSE]
 	;		This.MinerRef:AddSetting[Avoid Players Distance, 10000]
 	;		This.MinerRef:AddSetting[Distribute Lasers, TRUE]	
+
+	member:bool UseJetCan()
+	{
+		return ${This.MinerRef.FindSetting[Use JetCan, NOTSET]}
+	}
+
+	method SetUseJetCan(bool useJetCan)
+	{	/* The GUI likes to have this setting as an int */
+		if ${useJetCan}
+		{
+			This.MinerRef:AddSetting[Use JetCan,1]
+		}
+		else
+		{
+			This.MinerRef:AddSetting[Use JetCan,0]
+		}
+	}
 }
 
 objectdef obj_Configuration_Combat
