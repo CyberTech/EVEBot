@@ -20,6 +20,8 @@ objectdef obj_Miner
 	variable int TotalTripSeconds = 0
 	variable int AverageTripSeconds = 0
 	variable int Abort = FALSE
+	
+	
 
 	; Are we running out of asteroids to target?
 	variable bool InsufficientAsteroids = FALSE
@@ -101,8 +103,8 @@ objectdef obj_Miner
 		variable string Minutes = ${Math.Calc[(${Script.RunningTime}/1000/60)%60].Int.LeadingZeroes[2]}
 		variable string Seconds = ${Math.Calc[(${Script.RunningTime}/1000)%60].Int.LeadingZeroes[2]}
 		
-		call UpdateStatStatus "Run ${This.TotalTrips} Done - Took ${This.PreviousTripSeconds} Seconds"
-		call UpdateStatStatus "Total Run Time: ${Hours}:${Minutes}:${Seconds} - Average Run Time: ${Math.Calc[${This.TotalTripSeconds}/${This.TotalTrips}]} Seconds"
+		call UpdateStatStatus "Run ${This.TotalTrips} Done - Took ${ISXEVE.SecsToString[${This.PreviousTripSeconds}]}"
+		call UpdateStatStatus "Total Run Time: ${Hours}:${Minutes}:${Seconds} - Average Run Time: ${ISXEVE.SecsToString[${Math.Calc[${This.TotalTripSeconds}/${This.TotalTrips}]}]}"
 	} 
 	
 	function Mine()
@@ -173,6 +175,7 @@ objectdef obj_Miner
 	{
 		return ${Math.Calc[${Time.Timestamp} - ${This.TripStartTime.Timestamp}]}
 	}
+	
 	
 	member:float VolumePerCycle(string AsteroidType)
 	{
