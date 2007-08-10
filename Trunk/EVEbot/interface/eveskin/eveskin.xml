@@ -42,6 +42,15 @@
 		<Color>FFFF9900</Color>
 	</template>
 
+  <!-- Tooltip -->
+  <template name='tooltip.Font' Template='Default Font' />
+  <template name='tooltip'>
+    <Font Template='tooltip.Font' />
+    <BackgroundColor>FF333333</BackgroundColor>
+    <Border>1</Border>
+    <BorderColor>FFCCCCCC</BorderColor>
+    <AlwaysOnTop />
+  </template>
   <!-- Checkbox -->
   <template name='checkbox.Texture' Filename='eveskin/MainGUI/CheckBox.png'>
     <Right>16</Right>
