@@ -15,17 +15,26 @@ objectdef obj_EVEBotUI
 	variable int MinStructurePct = 80              /* Min Structure that we should have, if we get into combat */
 
 	variable int FrameCounter
-	
+	variable int FrameCounterMsgBoxes
+
+	variable string LogFile
+	variable string StatsLogFile
+		
 	method Initialize()
 	{
 		ui -load interface/eveskin/eveskin.xml
 		ui -load interface/evebotgui.xml
 
-		Event[OnFrame]:AttachAtom[This:Pulse]
 		This.CharacterName:Set[${Me.Name}]
 		This.MyRace:Set[${Me.ToPilot.Type}]
 		This.MyCorp:Set[${Me.Corporation}]
-		call UpdateHudStatus "obj_EVEBotUI: Initialized"		
+		This.LogFile:Set["./config/logs/${Me.Name}-log.txt"]
+		This.StatsLogFile:Set["./config/logs/${Me.Name}-stats.txt"]
+
+		This:InitializeLogs
+
+		Event[OnFrame]:AttachAtom[This:Pulse]
+		This:UpdateConsole["obj_EVEBotUI: Initialized"]
 	}
 
 	method Shutdown()
@@ -38,12 +47,22 @@ objectdef obj_EVEBotUI
 	method Pulse()
 	{
 		FrameCounter:Inc
+		FrameCounterMsgBoxes:Inc
 		
-		if ${FrameCounter} >= 80
+		variable int IntervalInSeconds = 1
+		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 		{
 			This:Update_Display_Values
 			FrameCounter:Set[0]
 		}
+		
+		IntervalInSeconds:Set[10]
+		if ${FrameCounterMsgBoxes} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
+		{
+			EVE:CloseAllMessageBoxes
+			FrameCounterMsgBoxes:Set[0]
+		}
+
 	}
 
 	method Update_Display_Values()
@@ -69,4 +88,31 @@ objectdef obj_EVEBotUI
 		
 		return "${Hours}:${Minutes}:${Seconds}"
 	}
+
+	method UpdateConsole(string StatusMessage)
+	{
+		if ${StatusMessage(exists)}
+		{
+			UIElement[StatusConsole@Status@EvEBotOptionsTab@EVEBot]:Echo["${Time.Time24}: ${StatusMessage}"]
+			redirect -append "${This.LogFile}" Echo "[${Time.Time24}] ${StatusMessage}"
+		}
+	}
+	
+	method InitializeLogs()
+	{
+
+		redirect -append "${This.LogFile}" echo "-------------------------------------------------"
+		redirect -append "${This.LogFile}" echo "  Evebot Session time ${Time.Date} at ${Time.Time24}"
+		redirect -append "${This.LogFile}" echo "  Evebot Session for  ${Me.Name}"
+		redirect -append "${This.LogFile}" echo "  ${Version}"
+		redirect -append "${This.LogFile}" echo "-------------------------------------------------"
+
+		This:UpdateConsole["Starting EVEBot ${Version}"]
+
+		redirect -append "${This.StatsLogFile}" echo "-------------------------------------------------"
+		redirect -append "${This.StatsLogFile}" echo "  Evebot Session time ${Time.Date} at ${Time.Time24}"
+		redirect -append "${This.StatsLogFile}" echo "  Evebot Session for  ${Me.Name}"
+		redirect -append "${This.StatsLogFile}" echo "  ${Version}"
+		redirect -append "${This.StatsLogFile}" echo "-------------------------------------------------"
+	}	
 }

@@ -30,9 +30,9 @@ objectdef obj_Miner
 		call UpdateHudStatus "obj_Miner: Initialized"
 	}
 	
-	function SetBotState()
+	method SetBotState()
 	{
-		
+		echo In SetBotState
 		if ${ForcedReturn}
 		{
 			botstate:Set["RUNNING"]
@@ -76,6 +76,7 @@ objectdef obj_Miner
 		}
 	
 		botstate:Set["None"]
+		return
 	}
 
 	; Enable defenses, launch drones
@@ -151,10 +152,10 @@ objectdef obj_Miner
 			}
 	
 			if ${Math.Calc[${Me.GetTargets} + ${Me.GetTargeting}]} < ${Ship.SafeMaxLockedTargets}
-			{			
-				echo Target Locking: ${Math.Calc[${Me.GetTargets} + ${Me.GetTargeting}]} out of ${Ship.SafeMaxLockedTargets}
+			{
 				call Asteroids.TargetNext
 				This.InsufficientAsteroids:Set[!${Return}]
+				echo Target Locking: ${Math.Calc[${Me.GetTargets} + ${Me.GetTargeting}].Int} out of ${Ship.SafeMaxLockedTargets} (Limited Asteroids: ${This.InsufficientAsteroids})
 			}
 		}
 	

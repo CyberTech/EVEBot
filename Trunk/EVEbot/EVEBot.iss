@@ -42,15 +42,6 @@ variable obj_Miner Miner
 variable obj_OreHauler Hauler 
 ;variable obj_Salvager Salvager
 
-function LoadEvebotGUI()
-{
-	call SetupHudStatus
-	call UpdateHudStatus "Starting EVEBot ${Version}."
-	call SetupStatStatus
-	call UpdateStatStatus "Starting EVEBot ${Version}."
-	wait 20 ${UIElement[evebot](exists)}
-}
-
 function atexit()
 {
 	;redirect profile.txt Script:DumpProfiling
@@ -62,6 +53,7 @@ function main()
 	;Script:EnableDebugLogging[debug.txt]
 	;Script[EVEBot]:EnableProfiling
 
+	/* Set Turbo to lowest value to try and avoid overloading the EVE Python engine */
 	Turbo 20
 	if !${ISXEVE(exists)}
 	{
@@ -74,13 +66,11 @@ function main()
 		waitframe
 	}
 		
-	call LoadEvebotGUI
 	Ship:UpdateModuleList[]
 	
 	EVE:Execute[CmdStopShip]
-	call UpdateHudStatus "Ensure that your ships' Cargo Hold is closed"
-	call UpdateHudStatus "-=Paused: Press Run-="
 
+	UI:UpdateConsole["-=Paused: Press Run-="]
 	Script[EVEBot]:Pause
 
 	play:Set[TRUE]
@@ -88,17 +78,20 @@ function main()
 	variable string BotType
 	;BotType:Set["Miner"]
 	BotType:Set["Hauler"]
-
+	variable int temp
+	
   	while ${play}
 	{
-		${BotType}:SetBotState
+		;${BotType}:SetBotState not working
+		
+		Miner:SetBotState
 		
 		switch ${botstate}
 		{
 			case IDLE
 				break
 			case ABORT
-				call UpdateHudStatus "Aborting operation: Returning to base"
+				UI:UpdateConsole["Aborting operation: Returning to base"]
 				Call Dock
 				break
 			case BASE
@@ -106,11 +99,11 @@ function main()
 				call Ship.Undock
 				break
 			case COMBAT
-				call UpdateHudStatus "FIRE ZE MISSILES!!!"
+				UI:UpdateConsole["FIRE ZE MISSILES!!!"]
 				call ShieldNotification
 				break
 			case MINE
-				call UpdateHudStatus "Mining"
+				UI:UpdateConsole["Mining"]
 				call Miner.Mine
 				break
 			case HAUL

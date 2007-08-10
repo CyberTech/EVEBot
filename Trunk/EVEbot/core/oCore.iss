@@ -1,13 +1,5 @@
-variable string Version = "0.93 $Rev$"
+variable string Version = "EVEBot 0.93 $Rev$"
 
-function SetupHudStatus()
-{
-	redirect -append "./config/logs/OutputLog-${Me.Name}.txt" echo "-------------------------------------------------"
-	redirect -append "./config/logs/OutputLog-${Me.Name}.txt" echo "  Evebot Session time ${Time.Date} at ${Time.Time24}  "
-	redirect -append "./config/logs/OutputLog-${Me.Name}.txt" echo "  Evebot Session for  ${Me.Name} "
-	redirect -append "./config/logs/OutputLog-${Me.Name}.txt" echo "-------------------------------------------------"
-
-}
 
 function UpdateHudStatus(string StatusMessage)
 {
@@ -19,14 +11,7 @@ function UpdateHudStatus(string StatusMessage)
 	#endif
 }
 
-function SetupStatStatus()
-{
-	redirect -append "./config/logs/StatsLog-${Me.Name}.txt" echo "-------------------------------------------------"
-	redirect -append "./config/logs/StatsLog-${Me.Name}.txt" echo "  Evebot Session time ${Time.Date} at ${Time.Time24}  "
-	redirect -append "./config/logs/StatsLog-${Me.Name}.txt" echo "  Evebot Session for  ${Me.Name} "
-	redirect -append "./config/logs/StatsLog-${Me.Name}.txt" echo "-------------------------------------------------"
 
-}
 
 function UpdateStatStatus(string StatusMessage)
 {

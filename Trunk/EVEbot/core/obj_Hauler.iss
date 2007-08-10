@@ -41,7 +41,7 @@ objectdef obj_Hauler
 			
 			if (!${player.Length} && !${corp.Length})
 			{
-				echo "WARNING: obj_Hauler:Initialize -- player and corp name are blank.  Defaulting to Me.Corporation"
+				echo "WARNING: obj_Hauler:Initialize -- player and corp name are blank.  Defaulting to ${Me.Corporation}"
 				m_corpName:Set[${Me.Corporation}]
 			} 
 		}
