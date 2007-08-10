@@ -148,24 +148,48 @@
 					</Tab>
     	
 					<Tab name='Mining'>
-<!--
-						<checkbox name='cbUseJetCan'>
-							<X>10</X>
-							<Y>10</Y>
-  						    <Height>16</Height>
-						    <Width>100</Width>
-							<Text>Use JetCan (stay in belt)</Text>
-						</checkbox>
--->
-						<commandcheckbox Name='cbUseJetCan'>
+						<commandcheckbox Name='cbIncludeVeldspar'>
 							<X>10</X>
 							<Y>10</Y>
 							<Height>20</Height>
 							<Width>100</Width>
+							<Text>Include Veldspar</Text>
+							<Command>Script[EVEBot].VariableScope.Config.Miner:SetIncludeVeldspar[1]</Command>
+							<CommandChecked>Script[EVEBot].VariableScope.Config.Miner:SetIncludeVeldspar[0]</CommandChecked>
+							<Data>${Script[EVEBot].VariableScope.Config.Miner.IncludeVeldspar}</Data>
+							<AutoTooltip>Add description here</AutoTooltip>
+						</commandcheckbox>
+						<commandcheckbox Name='cbStickToSpot'>
+							<X>10</X>
+							<Y>30</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Stick To Spot (Cyber describe??)</Text>
+							<Command>Script[EVEBot].VariableScope.Config.Miner:SetStickToSpot[1]</Command>
+							<CommandChecked>Script[EVEBot].VariableScope.Config.Miner:SetStickToSpot[0]</CommandChecked>
+							<Data>${Script[EVEBot].VariableScope.Config.Miner.StickToSpot}</Data>
+							<AutoTooltip>Add description here</AutoTooltip>
+						</commandcheckbox>
+						<commandcheckbox Name='cbDistributeLasers'>
+							<X>10</X>
+							<Y>50</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Distribute Lasers (Cyber describe??)</Text>
+							<Command>Script[EVEBot].VariableScope.Config.Miner:SetDistributeLasers[1]</Command>
+							<CommandChecked>Script[EVEBot].VariableScope.Config.Miner:SetDistributeLasers[0]</CommandChecked>
+							<Data>${Script[EVEBot].VariableScope.Config.Miner.DistributeLasers}</Data>
+							<AutoTooltip>Add description here</AutoTooltip>
+						</commandcheckbox>
+						<commandcheckbox Name='cbUseJetCan'>
+							<X>10</X>
+							<Y>70</Y>
+							<Height>20</Height>
+							<Width>100</Width>
 							<Text>Use JetCan (stay in belt)</Text>
-							<Command>LavishSettings[EVEBotSettings].FindSet[Miner]:AddSetting[Use JetCan,1]</Command>
-							<CommandChecked>LavishSettings[EVEBotSettings].FindSet[Miner]:AddSetting[Use JetCan,0]</CommandChecked>
-							<Data>${LavishSettings[EVEBotSettings].FindSet[Miner].FindSetting[Use JetCan]}</Data>
+							<Command>Script[EVEBot].VariableScope.Config.Miner:SetUseJetCan[1]</Command>
+							<CommandChecked>Script[EVEBot].VariableScope.Config.Miner:SetUseJetCan[0]</CommandChecked>
+							<Data>${Script[EVEBot].VariableScope.Config.Miner.UseJetCan}</Data>
 							<AutoTooltip>Check to jettison ore into a can while mining.  Uncheck to return to base when cargo hold is full.</AutoTooltip>
 						</commandcheckbox>
 					</Tab>

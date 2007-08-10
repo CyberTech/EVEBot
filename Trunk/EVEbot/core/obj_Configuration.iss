@@ -204,26 +204,46 @@ objectdef obj_Configuration_Miner
 	
 	;		This.MinerRef:AddSetting[Restrict To Belt, NO]
 	;		This.MinerRef:AddSetting[Restrict To Ore Type, NONE]
-	;		This.MinerRef:AddSetting[Include Veldspar, FALSE]
-	;		This.MinerRef:AddSetting[Stick To Spot, FALSE]
 	;		This.MinerRef:AddSetting[Avoid Players Distance, 10000]
-	;		This.MinerRef:AddSetting[Distribute Lasers, TRUE]	
 
-	member:bool UseJetCan()
+	member:int IncludeVeldspar()
+	{
+		return ${This.MinerRef.FindSetting[Include Veldspar, NOTSET]}
+	}
+
+	method SetIncludeVeldspar(int includeVeldspar)
+	{	
+		This.MinerRef:AddSetting[Include Veldspar,${includeVeldspar}]
+	}
+
+	member:int StickToSpot()
+	{
+		return ${This.MinerRef.FindSetting[Stick To Spot, NOTSET]}
+	}
+
+	method SetStickToSpot(int stickToSpot)
+	{	
+		This.MinerRef:AddSetting[Stick To Spot,${stickToSpot}]
+	}
+
+	member:int DistributeLasers()
+	{
+		return ${This.MinerRef.FindSetting[Distribute Lasers, NOTSET]}
+	}
+
+	method SetDistributeLasers(int distributeLasers)
+	{	
+		This.MinerRef:AddSetting[Distribute Lasers,${distributeLasers}]
+	}
+
+	member:int UseJetCan()
 	{
 		return ${This.MinerRef.FindSetting[Use JetCan, NOTSET]}
 	}
 
-	method SetUseJetCan(bool useJetCan)
-	{	/* The GUI likes to have this setting as an int */
-		if ${useJetCan}
-		{
-			This.MinerRef:AddSetting[Use JetCan,1]
-		}
-		else
-		{
-			This.MinerRef:AddSetting[Use JetCan,0]
-		}
+	method SetUseJetCan(int useJetCan)
+	{	
+		This.MinerRef:AddSetting[Use JetCan,${useJetCan}]
 	}
 }
 
