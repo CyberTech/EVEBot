@@ -87,7 +87,7 @@ function main()
 	/* be encapulated in a bot class instead.       */
   	while ${play}
 	{
-		call ${BotType}:ProcessState
+		call ${BotType}.ProcessState
 		wait 15
 	}
 }
