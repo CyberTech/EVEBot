@@ -455,11 +455,11 @@ objectdef obj_Ship
 				variable string CrystalType
 				CrystalType:Set[${CrystalIterator.Value.Name.Token[1, " "]}]
 				
-				echo Testing ${OreType} contains ${CrystalType}
+				;echo "DEBUG: ChangeMiningLaserCrystal Testing ${OreType} contains ${CrystalType}"
 				if ${OreType.Find[${CrystalType}](exists)}
 				{
 					call UpdateHudStatus "Switching Crystal in ${SlotName} from ${LoadedAmmo} to ${CrystalIterator.Value.Name}"
-					Me.Ship.Module[${SlotName}]:ChangeAmmo[${CrystalIterator.Value.ID}]
+					Me.Ship.Module[${SlotName}]:ChangeAmmo[${CrystalIterator.Value.ID},1]
 					; This takes 2 seconds ingame, let's give it 50% more
 					wait 30
 					return
