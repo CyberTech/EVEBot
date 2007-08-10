@@ -129,6 +129,7 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Restrict To Ore Type, NONE]
 		This.MinerRef:AddSetting[Include Veldspar, FALSE]
 		This.MinerRef:AddSetting[Stick To Spot, FALSE]
+		This.MinerRef:AddSetting[Use JetCan, FALSE]
 		This.MinerRef:AddSetting[Avoid Players Distance, 10000]
 		This.MinerRef:AddSetting[Distribute Lasers, TRUE]
 

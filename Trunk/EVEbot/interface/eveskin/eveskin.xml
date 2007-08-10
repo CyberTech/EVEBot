@@ -85,6 +85,46 @@
     <TextureCheckedHover Template='checkbox.TextureCheckedHover' />
     <TextureCheckedPressed Template='checkbox.TextureCheckedPressed' />
   </template>
+  <!-- CommandCheckbox -->
+  <template name='commandcheckbox.Texture' Filename='CheckBox.png'>
+    <Right>16</Right>
+    <Bottom>16</Bottom>
+  </template>
+  <template name='commandcheckbox.TextureHover' Filename='CheckBox.png'>
+    <Left>16</Left>
+    <Right>32</Right>
+    <Bottom>16</Bottom>
+  </template>
+  <template name='commandcheckbox.TexturePressed' Filename='CheckBox.png'>
+    <Left>32</Left>
+    <Right>48</Right>
+    <Bottom>16</Bottom>
+  </template>
+  <template name='commandcheckbox.TextureChecked' Filename='CheckBox.png'>
+    <Left>48</Left>
+    <Right>64</Right>
+    <Bottom>16</Bottom>
+  </template>
+  <template name='commandcheckbox.TextureCheckedHover' Filename='CheckBox.png'>
+    <Left>32</Left>
+    <Right>48</Right>
+    <Bottom>16</Bottom>
+  </template>
+  <template name='commandcheckbox.TextureCheckedPressed' Filename='CheckBox.png'>
+    <Left>16</Left>
+    <Right>32</Right>
+    <Bottom>16</Bottom>
+  </template>
+  <template name='commandcheckbox.Font' Template='checkbox.Font' />
+  <template name='commandcheckbox' Template='checkbox'>
+    <Font Template='commandcheckbox.Font' />
+    <Texture Template='commandcheckbox.Texture' />
+    <TextureHover Template='commandcheckbox.TextureHover' />
+    <TexturePressed Template='commandcheckbox.TexturePressed' />
+    <TextureChecked Template='commandcheckbox.TextureChecked' />
+    <TextureCheckedHover Template='commandcheckbox.TextureCheckedHover' />
+    <TextureCheckedPressed Template='commandcheckbox.TextureCheckedPressed' />
+  </template>
 
 <!-- Min/Max Window -->
 	<template name='EVESkin.Window.TitleBar.Minimize'>
