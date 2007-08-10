@@ -153,33 +153,33 @@
 							<Y>10</Y>
 							<Height>20</Height>
 							<Width>100</Width>
-							<Text>Include Veldspar</Text>
-							<Command>Script[EVEBot].VariableScope.Config.Miner:SetIncludeVeldspar[1]</Command>
-							<CommandChecked>Script[EVEBot].VariableScope.Config.Miner:SetIncludeVeldspar[0]</CommandChecked>
-							<Data>${Script[EVEBot].VariableScope.Config.Miner.IncludeVeldspar}</Data>
-							<AutoTooltip>Add description here</AutoTooltip>
+							<Text>Ignore veldspar</Text>
+							<Command>Script[EVEBot].VariableScope.Config.Miner:SetIncludeVeldspar[0]</Command>
+							<CommandChecked>Script[EVEBot].VariableScope.Config.Miner:SetIncludeVeldspar[1]</CommandChecked>
+							<Data>!${Script[EVEBot].VariableScope.Config.Miner.IncludeVeldspar}</Data>
+							<AutoTooltip>Check to ignore veldspar when mining.</AutoTooltip>
 						</commandcheckbox>
 						<commandcheckbox Name='cbStickToSpot'>
 							<X>10</X>
 							<Y>30</Y>
 							<Height>20</Height>
 							<Width>100</Width>
-							<Text>Stick To Spot (Cyber describe??)</Text>
+							<Text>Return to previous belt</Text>
 							<Command>Script[EVEBot].VariableScope.Config.Miner:SetStickToSpot[1]</Command>
 							<CommandChecked>Script[EVEBot].VariableScope.Config.Miner:SetStickToSpot[0]</CommandChecked>
 							<Data>${Script[EVEBot].VariableScope.Config.Miner.StickToSpot}</Data>
-							<AutoTooltip>Add description here</AutoTooltip>
+							<AutoTooltip>When checked a belt will be chosen at random and used until empty.  Uncheck to use a random belt every time.</AutoTooltip>
 						</commandcheckbox>
 						<commandcheckbox Name='cbDistributeLasers'>
 							<X>10</X>
 							<Y>50</Y>
 							<Height>20</Height>
 							<Width>100</Width>
-							<Text>Distribute Lasers (Cyber describe??)</Text>
+							<Text>One laser per asteroid</Text>
 							<Command>Script[EVEBot].VariableScope.Config.Miner:SetDistributeLasers[1]</Command>
 							<CommandChecked>Script[EVEBot].VariableScope.Config.Miner:SetDistributeLasers[0]</CommandChecked>
 							<Data>${Script[EVEBot].VariableScope.Config.Miner.DistributeLasers}</Data>
-							<AutoTooltip>Add description here</AutoTooltip>
+							<AutoTooltip>When checked only one laser will be activated per locked asteroid.  Uncheck to focus all lasers on a single asteroid.</AutoTooltip>
 						</commandcheckbox>
 						<commandcheckbox Name='cbUseJetCan'>
 							<X>10</X>
