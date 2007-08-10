@@ -34,7 +34,6 @@ objectdef obj_Miner
 	
 	method SetBotState()
 	{
-		echo In SetBotState
 		if ${ForcedReturn}
 		{
 			botstate:Set["RUNNING"]

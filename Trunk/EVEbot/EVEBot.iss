@@ -76,15 +76,12 @@ function main()
 	play:Set[TRUE]
 
 	variable string BotType
-	;BotType:Set["Miner"]
-	BotType:Set["Hauler"]
-	variable int temp
+	BotType:Set["Miner"]
+	;BotType:Set["Hauler"]
 	
   	while ${play}
 	{
-		;${BotType}:SetBotState not working
-		
-		Miner:SetBotState
+		noop ${${BotType}:SetBotState}
 		
 		switch ${botstate}
 		{
