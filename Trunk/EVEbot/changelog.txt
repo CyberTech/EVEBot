@@ -15,7 +15,7 @@
 Trunk
 - A first pass at removing the bot logic from EVEBot.iss and pushing it into the bot classes.
 
-0.93 Revision 111
+0.93 Revision 114
 - Fixed the obj_Ship.iss file in the function WarpToID that if it didn't make it to the destintion in the first warp it warps again.
 - Added to the oCore.iss to have the character's name as part of the log file name incase you have more then one bot going on the same computer for better logging.
 - Added a statslog file to log your runs and average time.
