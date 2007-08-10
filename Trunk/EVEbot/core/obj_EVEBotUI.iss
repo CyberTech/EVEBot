@@ -56,10 +56,11 @@ objectdef obj_EVEBotUI
 			FrameCounter:Set[0]
 		}
 		
-		IntervalInSeconds:Set[10]
+		IntervalInSeconds:Set[15]
 		if ${FrameCounterMsgBoxes} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 		{
 			EVE:CloseAllMessageBoxes
+			EVE:CloseAllChatInvites
 			FrameCounterMsgBoxes:Set[0]
 		}
 

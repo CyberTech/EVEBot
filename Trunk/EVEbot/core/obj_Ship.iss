@@ -9,7 +9,7 @@
 
 objectdef obj_Drones
 {
-	variable index:int DroneList
+	variable index:int ActiveDroneIDList
 	variable int CategoryID_Drones = 18
 	
 	method Initialize()
@@ -25,16 +25,16 @@ objectdef obj_Drones
 		
 	member:int DronesInSpace()
 	{
-		return ${EVE.GetEntityIDs[This.DroneList,OwnerID,${Me.CharID},CategoryID,${This.CategoryID_Drones}]}
+		return ${Me.GetActiveDroneIDs[This.ActiveDroneIDList]}
 	}
    
 	function ReturnAllToDroneBay()
 	{
 		while ${This.DronesInSpace} > 0
 		{
-			call UpdateHudStatus "Recalling ${This.DroneList.Used} drones"
-			EVE:DronesReturnToDroneBay[This.DroneList]
-			wait 30
+			UI:UpdateConsole["Recalling ${This.ActiveDroneIDList.Used} Drones"]
+			EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
+			wait 50
 		}
 	}
 }
