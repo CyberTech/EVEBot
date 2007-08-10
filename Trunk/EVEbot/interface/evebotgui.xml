@@ -118,9 +118,9 @@
 							<text name='avg_time_data' template='EVESkin.Font.Value'>
 								<X>150</X>
 								<Y>55</Y>
-								<Width>100</Width>
+								<Width>150</Width>
 								<Height>20</Height>
-								<text>${Script[EVEBot].VariableScope.Miner.TripDuration} Sec</text>
+								<text>${ISXEVE.SecsToString[${Script[EVEBot].VariableScope.Miner.TripDuration}]}</text>
 							</text>
 							<text name='Average Time/Trip' template='EVESkin.Font.Description'>
 								<X>10</X>
@@ -134,7 +134,7 @@
 								<Y>70</Y>
 								<Width>150</Width>
 								<Height>20</Height>
-								<text>${Script[EVEBot].VariableScope.Miner.AverageTripSeconds}</text>
+								<text>${ISXEVE.SecsToString[${Script[EVEBot].VariableScope.Miner.AverageTripSeconds}]}</text>
 							</text>						
 							<console Name="StatusConsole" template='EVESkin.Console'>
 								<X>5</X>
