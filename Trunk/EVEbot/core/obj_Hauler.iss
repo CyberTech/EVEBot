@@ -117,6 +117,11 @@ objectdef obj_Hauler
 
 objectdef obj_OreHauler inherits obj_Hauler
 {
+	/* This variable is set by a remote event.  When it is non-zero, */
+	/* the bot will undock and seek out the gang memeber.  After the */
+	/* member's cargo has been loaded the bot will zero this out.    */
+	variable int m_gangMemberID
+	
 	method Initialize(string player, string corp)
 	{
 		This[parent]:Initialize[${player},${corp}]		
@@ -133,68 +138,64 @@ objectdef obj_OreHauler inherits obj_Hauler
 
 	method Shutdown()
 	{
-		Event[Docked]:DetachAtom[This:ShipDocked]
-		Event[Undocked]:DetachAtom[This:ShipUndocked]				
-		Event[Warping]:DetachAtom[This:ShipWarping]	
-		Event[Stopped]:DetachAtom[This:ShipStopped]	
-		Event[UnderAttack]:DetachAtom[This:ShipUnderAttack]	
-		Event[TestEvent]:DetachAtom[This:TestEventHandler]	
+		Event[EVEBot_Miner_Full]:DetachAtom[This:MinerFull]
 	}
 
 	/* SetupEvents will attach atoms to all of the events used by the bot */
 	method SetupEvents()
 	{
 		This[parent]:SetupEvents[]
-		
 		/* override any events setup by the base class */
-		Event[Docked]:AttachAtom[This:ShipDocked]
-		Event[Undocked]:AttachAtom[This:ShipUndocked]	
-		Event[Warping]:AttachAtom[This:ShipWarping]	
-		Event[Stopped]:AttachAtom[This:ShipStopped]	
-		Event[UnderAttack]:AttachAtom[This:ShipUnderAttack]	
-		Event[TestEvent]:AttachAtom[This:TestEventHandler]	
+
+		LavishScript:RegisterEvent[EVEBot_Miner_Full]
+		Event[EVEBot_Miner_Full]:AttachAtom[This:MinerFull]
 	}
 	
-	/* The ship docked event handler is called when the  */
-	/* ship transitions from a undocked to docked state. */
-	method ShipDocked()
+	/* A miner's jetcan is full.  Let's go get the ore.  */
+	method MinerFull(int charID)
 	{
-		echo "DEBUG: obj_OreHauler:ShipDocked..."
-	}
+		echo "DEBUG: obj_OreHauler:MinerFull... ${charID}"
+		
+		m_gangMemberID:Set[${charID}]
+	}	
 	
-	/* The ship docked event handler is called when the  */
-	/* ship transitions from a docked to undocked state. */
-	method ShipUndocked()
+	function SetBotState()
 	{
-		echo "DEBUG: obj_OreHauler:ShipUndocked..."
-	}
-
-	/* The ship docked event handler is called when the  */
-	/* ship transitions from a stopped to a warping state. */
-	method ShipWarping()
-	{
-		echo "DEBUG: obj_OreHauler:ShipWarping..."
-	}
-
-	/* The ship docked event handler is called when the  */
-	/* ship transitions from a warping to a stopped state. */
-	method ShipStopped()
-	{
-		echo "DEBUG: obj_OreHauler:ShipStopped..."
-	}
-
-	/* The ship docked event handler is called when the  */
-	/* ship comes under attack. */
-	method ShipUnderAttack()
-	{
-		echo "DEBUG: obj_OreHauler:ShipUnderAttack..."
-	}
-
-	method TestEventHandler()
-	{
-		echo "DEBUG: obj_OreHauler:TestEventHandler..."
-	}
+		
+		if ${ForcedReturn}
+		{
+			botstate:Set["RUNNING"]
+			return
+		}
 	
+		if ${Me.InStation}
+		{
+	  		botstate:Set["BASE"]
+	  		return
+		}
+		
+		if (${Me.ToEntity.ShieldPct} < ${MinShieldPct})
+		{
+			botstate:Set["COMBAT"]
+			return
+		}
+					
+		if ${m_gangMemberID}
+		{
+		 	botstate:Set["HAUL"]
+			return
+		}
+		
+		if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${ForcedSell}
+		{
+			botstate:Set["CARGOFULL"]
+			m_gangMemberID:Set[0]
+			return
+		}
+	
+		botstate:Set["None"]
+	}
+
 	function LootEntity(int id)
 	{
 		variable index:item ContainerCargo
