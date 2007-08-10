@@ -13,6 +13,9 @@
 *********************************************************
 
 Trunk
+- A first pass at removing the bot logic from EVEBot.iss and pushing it into the bot classes.
+
+0.93 Revision 111
 - Fixed the obj_Ship.iss file in the function WarpToID that if it didn't make it to the destintion in the first warp it warps again.
 - Added to the oCore.iss to have the character's name as part of the log file name incase you have more then one bot going on the same computer for better logging.
 - Added a statslog file to log your runs and average time.
@@ -33,11 +36,24 @@ Trunk
 - Rewrote obj_Ship:Pulse to run every 5 seconds, regardless of FPS.
 - Changed "are we already at a field" check to be 45k from warp in, instead of 25k.
 - Changed max distance between potential asteroid targets to be 1.3 optimal range instead of 1.5.
--Added comments
--Added Ship:LockTarget
--Tuned ValidateModuleTargets
--Added obj_Misc
--Added Misc.MetersToKM_Str, to convert meters to a "#.## km" string.
+- Added comments
+- Added Ship:LockTarget
+- Tuned ValidateModuleTargets
+- Added obj_Misc
+- Added Misc.MetersToKM_Str, to convert meters to a "#.## km" string.
+- Extended Ship:Approach to approach only to the requested distance.
+- Made use of ship:locktarget
+- fixed MovetoRandomBeltbookMark
+- Fix bug with not clearing indexes between calls to updatemodulelist
+- Fixed problem with targeting too many at once.
+- Renamed oMining.iss to obj_Miner.iss
+- Split obj_Asteroids into it's own file.
+- Added obj_Asteroids.iss
+- Afterburner/MWD support.
+- Hauler inprogress (not working yet)
+	Now uses item.Volume for cargo space calculations.
+	Now flees if attacked in the belt.
+- Lowering the max distance between asteroids to help stop rare pingpong issues.
 
 0.92-Revision 58
 - UI Rewrite
