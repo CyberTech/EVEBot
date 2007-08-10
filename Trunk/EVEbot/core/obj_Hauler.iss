@@ -121,6 +121,9 @@ objectdef obj_OreHauler inherits obj_Hauler
 	/* the bot will undock and seek out the gang memeber.  After the */
 	/* member's cargo has been loaded the bot will zero this out.    */
 	variable int m_gangMemberID
+
+	/* the bot logic is currently based on a state machine
+	variable string m_botState	
 	
 	method Initialize(string player, string corp)
 	{
@@ -164,36 +167,36 @@ objectdef obj_OreHauler inherits obj_Hauler
 		
 		if ${ForcedReturn}
 		{
-			botstate:Set["RUNNING"]
+			m_botState:Set["RUNNING"]
 			return
 		}
 	
 		if ${Me.InStation}
 		{
-	  		botstate:Set["BASE"]
+	  		m_botState:Set["BASE"]
 	  		return
 		}
 		
 		if (${Me.ToEntity.ShieldPct} < ${MinShieldPct})
 		{
-			botstate:Set["COMBAT"]
+			m_botState:Set["COMBAT"]
 			return
 		}
 					
 		if ${m_gangMemberID}
 		{
-		 	botstate:Set["HAUL"]
+		 	m_botState:Set["HAUL"]
 			return
 		}
 		
 		if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${ForcedSell}
 		{
-			botstate:Set["CARGOFULL"]
+			m_botState:Set["CARGOFULL"]
 			m_gangMemberID:Set[0]
 			return
 		}
 	
-		botstate:Set["None"]
+		m_botState:Set["None"]
 	}
 
 	function LootEntity(int id)

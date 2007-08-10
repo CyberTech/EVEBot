@@ -20,9 +20,8 @@ objectdef obj_Miner
 	variable int TotalTripSeconds = 0
 	variable int AverageTripSeconds = 0
 	variable int Abort = FALSE
+	variable string m_botState	
 	
-	
-
 	; Are we running out of asteroids to target?
 	variable bool InsufficientAsteroids = FALSE
 	
@@ -32,51 +31,93 @@ objectdef obj_Miner
 		call UpdateHudStatus "obj_Miner: Initialized"
 	}
 	
+	function ProcessState()
+	{
+		This:SetBotState[]
+		
+		/* update the global bot state (which is displayed on the UI) */
+		botstate:Set[${m_botState}]
+		
+		switch ${m_botState}
+		{
+			case IDLE
+				break
+			case ABORT
+				UI:UpdateConsole["Aborting operation: Returning to base"]
+				Call Dock
+				break
+			case BASE
+				call Cargo.TransferOreToHangar
+				call Ship.Undock
+				break
+			case COMBAT
+				UI:UpdateConsole["FIRE ZE MISSILES!!!"]
+				call ShieldNotification
+				break
+			case MINE
+				UI:UpdateConsole["Mining"]
+				call Miner.Mine
+				break
+			case HAUL
+				call UpdateHudStatus "Hauling"
+				call Hauler.Haul
+				break
+			case CARGOFULL
+				call Dock
+				break
+			case RUNNING
+				call UpdateHudStatus "Running Away"
+				call Dock
+				ForcedReturn:Set[FALSE]
+				break
+		}	
+	}
+	
 	method SetBotState()
 	{
 		if ${ForcedReturn}
 		{
-			botstate:Set["RUNNING"]
+			m_botState:Set["RUNNING"]
 			return
 		}
 	
 		if ${Miner.Abort} && !${Me.InStation}
 		{
-			botstate:Set["ABORT"]
+			m_botState:Set["ABORT"]
 			return
 		}
 	
 		if ${Miner.Abort}
 		{
-			botstate:Set["IDLE"]
+			m_botState:Set["IDLE"]
 			return
 		}
 		
 		if ${Me.InStation}
 		{
-	  		botstate:Set["BASE"]
+	  		m_botState:Set["BASE"]
 	  		return
 		}
 		
 		if (${Me.ToEntity.ShieldPct} < ${MinShieldPct})
 		{
-			botstate:Set["COMBAT"]
+			m_botState:Set["COMBAT"]
 			return
 		}
 			
 		if ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace}
 		{
-		 	botstate:Set["MINE"]
+		 	m_botState:Set["MINE"]
 			return
 		}
 		
 		if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${ForcedSell}
 		{
-			botstate:Set["CARGOFULL"]
+			m_botState:Set["CARGOFULL"]
 			return
 		}
 	
-		botstate:Set["None"]
+		m_botState:Set["None"]
 		return
 	}
 

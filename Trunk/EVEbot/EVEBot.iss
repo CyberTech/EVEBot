@@ -23,9 +23,12 @@
 
 /* Declare all script or global variables here */
 variable bool play
-variable string botstate
 variable float GoalDistance
 variable bool ForcedReturn
+
+/* This variable is updated by the bot classes and */
+/* is used to display the current state on the UI. */
+variable string botstate 
 
 /* Script-Defined Support Objects */
 variable obj_EVEBotUI UI
@@ -79,44 +82,12 @@ function main()
 	BotType:Set["Miner"]
 	;BotType:Set["Hauler"]
 	
+	/* This is the main processing loop for EVEBOT  */
+	/* Please do not add bot logic here.  It should */
+	/* be encapulated in a bot class instead.       */
   	while ${play}
 	{
-		noop ${${BotType}:SetBotState}
-		
-		switch ${botstate}
-		{
-			case IDLE
-				break
-			case ABORT
-				UI:UpdateConsole["Aborting operation: Returning to base"]
-				Call Dock
-				break
-			case BASE
-				call Cargo.TransferOreToHangar
-				call Ship.Undock
-				break
-			case COMBAT
-				UI:UpdateConsole["FIRE ZE MISSILES!!!"]
-				call ShieldNotification
-				break
-			case MINE
-				UI:UpdateConsole["Mining"]
-				call Miner.Mine
-				break
-			case HAUL
-				call UpdateHudStatus "Hauling"
-				call Hauler.Haul
-				break
-			case CARGOFULL
-				call Dock
-				break
-			case RUNNING
-				call UpdateHudStatus "Running Away"
-				call Dock
-				ForcedReturn:Set[FALSE]
-				break
-		}
-		
+		call ${BotType}:ProcessState
 		wait 15
 	}
 }
