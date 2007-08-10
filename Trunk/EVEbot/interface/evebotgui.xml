@@ -148,6 +148,13 @@
 					</Tab>
     	
 					<Tab name='Mining'>
+						<checkbox name='cbUseJetCan'>
+							<X>10</X>
+							<Y>10</Y>
+  						    <Height>16</Height>
+						    <Width>100</Width>
+							<Text>Use JetCan (stay in belt)</Text>
+						</checkbox>
 					</Tab>
     	
 					<Tab name='Combat'>

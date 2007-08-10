@@ -42,6 +42,50 @@
 		<Color>FFFF9900</Color>
 	</template>
 
+  <!-- Checkbox -->
+  <template name='checkbox.Texture' Filename='eveskin/MainGUI/CheckBox.png'>
+    <Right>16</Right>
+    <Bottom>16</Bottom>
+  </template>
+  <template name='checkbox.TextureHover' Filename='eveskin/MainGUI/CheckBox.png'>
+    <Left>16</Left>
+    <Right>32</Right>
+    <Bottom>16</Bottom>
+  </template>
+  <template name='checkbox.TexturePressed' Filename='eveskin/MainGUI/CheckBox.png'>
+    <Left>32</Left>
+    <Right>48</Right>
+    <Bottom>16</Bottom>
+  </template>
+  <template name='checkbox.TextureChecked' Filename='eveskin/MainGUI/CheckBox.png'>
+    <Left>48</Left>
+    <Right>64</Right>
+    <Bottom>16</Bottom>
+  </template>
+  <template name='checkbox.TextureCheckedHover' Filename='eveskin/MainGUI/CheckBox.png'>
+    <Left>32</Left>
+    <Right>48</Right>
+    <Bottom>16</Bottom>
+  </template>
+  <template name='checkbox.TextureCheckedPressed' Filename='eveskin/MainGUI/CheckBox.png'>
+    <Left>16</Left>
+    <Right>32</Right>
+    <Bottom>16</Bottom>
+  </template>
+  <template name='checkbox.Font' Template='Default Font'>
+    <Name>tahoma</Name>
+    <Size>14</Size>
+  </template>
+  <template name='checkbox'>
+    <Font Template='checkbox.Font' />
+    <Texture Template='checkbox.Texture' />
+    <TextureHover Template='checkbox.TextureHover' />
+    <TexturePressed Template='checkbox.TexturePressed' />
+    <TextureChecked Template='checkbox.TextureChecked' />
+    <TextureCheckedHover Template='checkbox.TextureCheckedHover' />
+    <TextureCheckedPressed Template='checkbox.TextureCheckedPressed' />
+  </template>
+
 <!-- Min/Max Window -->
 	<template name='EVESkin.Window.TitleBar.Minimize'>
 		<X>r40</X>
