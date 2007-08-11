@@ -1,0 +1,131 @@
+-------------------------------------------------
+  Evebot Session time 08/11/2007 at 10:14:35
+  Evebot Session for  Hessinger
+  EVEBot 0.93 $Rev: 122 $
+-------------------------------------------------
+[10:14:35] Starting EVEBot EVEBot 0.93 $Rev: 122 $
+[10:14:35] obj_EVEBotUI: Initialized
+[10:14:35] obj_Misc: Initialized
+[10:14:35] obj_Configuration_BaseConfig: Initialized
+[10:14:35] obj_Configuration_Common: Initialized
+[10:14:35] obj_Configuration_Combat: Initialized
+[10:14:35] obj_Configuration_Miner: Initialized
+[10:14:35] Warning: Hauler settings missing - initializing
+[10:14:35] obj_Configuration_Hauler: Initialized
+[10:14:35] Warning: Salvager settings missing - initializing
+[10:14:35] obj_Configuration_Salvager: Initialized
+[10:14:35] obj_Asteroids: Initialized
+[10:14:35] obj_Drones: Initialized
+[10:14:35] obj_Ship: Initialized
+[10:14:35] obj_Station: Initialized
+[10:14:35] obj_Cargo: Initialized
+[10:14:35] obj_Skills: Initialized
+[10:14:35] obj_Combat: Initialized
+[10:14:35] obj_Miner: Initialized
+[10:14:35] -=Paused: Press Run-=
+[10:14:37] Mining
+[10:14:37] Staying at Asteroid Belt: Vylade V - Asteroid Belt 7
+[10:14:37] Launching drones...
+[10:14:42] Entered Combat
+[10:14:42] Pausing Bot to Deal with Combat
+[10:14:42] Test Test Test
+[10:14:42] Locking Target Serpentis Spy: 8.00 km
+-------------------------------------------------
+  Evebot Session time 08/11/2007 at 10:19:03
+  Evebot Session for  Hessinger
+  EVEBot 0.93 $Rev: 122 $
+-------------------------------------------------
+[10:19:03] Starting EVEBot EVEBot 0.93 $Rev: 122 $
+[10:19:03] obj_EVEBotUI: Initialized
+[10:19:03] obj_Misc: Initialized
+[10:19:03] obj_Configuration_BaseConfig: Initialized
+[10:19:03] obj_Configuration_Common: Initialized
+[10:19:03] obj_Configuration_Combat: Initialized
+[10:19:03] obj_Configuration_Miner: Initialized
+[10:19:03] Warning: Hauler settings missing - initializing
+[10:19:03] obj_Configuration_Hauler: Initialized
+[10:19:04] Warning: Salvager settings missing - initializing
+[10:19:04] obj_Configuration_Salvager: Initialized
+[10:19:04] obj_Asteroids: Initialized
+[10:19:04] obj_Drones: Initialized
+[10:19:04] obj_Ship: Initialized
+[10:19:04] obj_Station: Initialized
+[10:19:04] obj_Cargo: Initialized
+[10:19:04] obj_Skills: Initialized
+[10:19:04] obj_Combat: Initialized
+[10:19:04] obj_Miner: Initialized
+[10:19:04] -=Paused: Press Run-=
+[10:19:05] Mining
+[10:19:05] Staying at Asteroid Belt: Vylade V - Asteroid Belt 7
+[10:19:05] Launching drones...
+[10:19:10] Entered Combat
+[10:19:10] Pausing Bot to Deal with Combat
+[10:19:10] Test Test Test
+[10:19:10] Locking Target Serpentis Spy: 1.08 km
+-------------------------------------------------
+  Evebot Session time 08/11/2007 at 10:22:07
+  Evebot Session for  Hessinger
+  EVEBot 0.93 $Rev: 122 $
+-------------------------------------------------
+[10:22:07] Starting EVEBot EVEBot 0.93 $Rev: 122 $
+[10:22:07] obj_EVEBotUI: Initialized
+[10:22:07] obj_Misc: Initialized
+[10:22:07] obj_Configuration_BaseConfig: Initialized
+[10:22:07] obj_Configuration_Common: Initialized
+[10:22:07] obj_Configuration_Combat: Initialized
+[10:22:07] obj_Configuration_Miner: Initialized
+[10:22:07] Warning: Hauler settings missing - initializing
+[10:22:07] obj_Configuration_Hauler: Initialized
+[10:22:07] Warning: Salvager settings missing - initializing
+[10:22:07] obj_Configuration_Salvager: Initialized
+[10:22:07] obj_Asteroids: Initialized
+[10:22:07] obj_Drones: Initialized
+[10:22:07] obj_Ship: Initialized
+[10:22:07] obj_Station: Initialized
+[10:22:07] obj_Cargo: Initialized
+[10:22:07] obj_Skills: Initialized
+[10:22:07] obj_Combat: Initialized
+[10:22:07] obj_Miner: Initialized
+[10:22:07] -=Paused: Press Run-=
+[10:22:09] Mining
+[10:22:09] Staying at Asteroid Belt: Vylade V - Asteroid Belt 7
+[10:22:09] Launching drones...
+[10:22:14] Entered Combat
+[10:22:14] Pausing Bot to Deal with Combat
+[10:22:14] Test Test Test
+[10:22:14] Debug: Getting Target
+[10:22:14] Locking Target Serpentis Spy: 2.14 km
+-------------------------------------------------
+  Evebot Session time 08/11/2007 at 10:28:40
+  Evebot Session for  Hessinger
+  EVEBot 0.93 $Rev: 122 $
+-------------------------------------------------
+[10:28:40] Starting EVEBot EVEBot 0.93 $Rev: 122 $
+[10:28:40] obj_EVEBotUI: Initialized
+[10:28:40] obj_Misc: Initialized
+[10:28:40] obj_Configuration_BaseConfig: Initialized
+[10:28:40] obj_Configuration_Common: Initialized
+[10:28:40] obj_Configuration_Combat: Initialized
+[10:28:40] obj_Configuration_Miner: Initialized
+[10:28:40] Warning: Hauler settings missing - initializing
+[10:28:40] obj_Configuration_Hauler: Initialized
+[10:28:40] Warning: Salvager settings missing - initializing
+[10:28:40] obj_Configuration_Salvager: Initialized
+[10:28:40] obj_Asteroids: Initialized
+[10:28:40] obj_Drones: Initialized
+[10:28:40] obj_Ship: Initialized
+[10:28:40] obj_Station: Initialized
+[10:28:40] obj_Cargo: Initialized
+[10:28:40] obj_Skills: Initialized
+[10:28:40] obj_Combat: Initialized
+[10:28:40] obj_Miner: Initialized
+[10:28:40] -=Paused: Press Run-=
+[10:28:42] Mining
+[10:28:42] Staying at Asteroid Belt: Vylade V - Asteroid Belt 7
+[10:28:42] Launching drones...
+[10:28:42] Opening Ship Cargohold
+[10:28:47] Entered Combat
+[10:28:47] Pausing Bot to Deal with Combat
+[10:28:47] Test Test Test
+[10:28:47] Debug: Getting Target
+[10:28:47] Locking Target Serpentis Spy: 8.90 km

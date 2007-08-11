@@ -1,0 +1,354 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ISUI>
+	<window name='EVEBot'>
+		<Visible>1</Visible>
+		<BackGroundColor></BackGroundColor>
+		<Border>0</Border>
+		<X>200</X>
+		<Y>300</Y>
+		<Width>500</Width>
+		<Height>326</Height>
+		<Title>EVEBot Options</Title>
+		<TitleBar template='EVESkin.Window.TitleBar'>
+			<Width>100%</Width>
+			<Height>20</Height>
+			<Border>0</Border>
+			<Children>
+				<commandbutton name='Run EVEBot' template='EVESkin.Window.TitleBar.RunButton'>
+					<OnLeftClick>
+						Script[EVEBot]:Resume
+						Echo EVEBot: Resume
+					</OnLeftClick>
+				</commandbutton>
+				<commandbutton name='Pause EVEBot' template='EVESkin.Window.TitleBar.PauseButton'>
+					<OnLeftClick>
+						EVE:Execute[CmdStopShip]
+						Script[EVEBot]:Pause
+						Echo EVEBot: Paused
+					</OnLeftClick>
+				</commandbutton>
+				<text name='EVEBot_TitleBar_Title' template='EVESkin.Font.TitleBar'>
+					<X>200</X>
+					<Y>3</Y>
+					<Width>120</Width>
+					<Height>20</Height>
+					<Text>${Script[EVEBot].VariableScope.Version}</Text>
+				</text>				
+				<button	Name='Minimize'	template='EVESkin.Window.TitleBar.Minimize'>
+					<OnLeftClick>
+						UIElement[EVEBot].FindUsableChild[TitleBotStatus,text]:Show
+						UIElement[EVEBot].FindUsableChild[TitleBotStatusCap,text]:Show
+						UIElement[EVEBot].FindUsableChild[TitleBotXPStatus,text]:Show
+						UIElement[EVEBot].FindUsableChild[TitleBotXPCap,text]:Show
+					</OnLeftClick>
+				</button>
+				<button	Name='Maximize'	template='EVESkin.Window.TitleBar.Minimize'>
+					<OnLeftClick>
+						UIElement[EVEBot].FindUsableChild[TitleBotStatus,text]:Hide
+						UIElement[EVEBot].FindUsableChild[TitleBotXPStatus,text]:Hide
+						UIElement[EVEBot].FindUsableChild[TitleBotXPCap,text]:Hide
+						UIElement[EVEBot].FindUsableChild[TitleBotStatusCap,text]:Hide
+					</OnLeftClick>
+				</button>
+				<button	Name='Close' template='EVESkin.Window.TitleBar.Close'>
+					<OnLeftClick>
+						endscript EVEBot
+					</OnLeftClick>
+				</button>
+			</Children>
+		</TitleBar>
+		<Children name="EVEBot_Children">
+			<TabControl	Name='EVEBotOptionsTab' template='EVESkin.TabControl'>
+				<X>0</X>
+				<Y>4</Y>
+				<Width>100%</Width>
+				<Height>100%</Height>
+				<Tabs>
+					<Tab Name='Status'>
+							<text name='script_runtime'>
+								<X>10</X>
+								<Y>10</Y>
+								<Width>115</Width>
+								<Height>20</Height>
+								<Text>Script Runtime:</Text>
+							</text>
+							<Text name='script_runtime_data' template='EVESkin.Font.Value'>
+								<X>150</X>
+								<Y>10</Y>
+								<Width>100</Width>
+								<Height>20</Height>	
+								<Text>${Script[EVEBot].VariableScope.UI.Runtime}</Text>
+							</Text>
+
+							<text name='state' template='EVESkin.Font.Description'>
+								<X>10</X>
+								<Y>25</Y>
+								<Width>100</Width>
+								<Height>20</Height>
+								<Text>Action:</Text>
+							</text>
+							<text name='state_data' template='EVESkin.Font.Value'>
+								<X>150</X>
+								<Y>25</Y>
+								<Width>100</Width>
+								<Height>20</Height>
+								<text>${Script[EVEBot].VariableScope.botstate}</text>
+							</text>
+							<text name='Trips' template='EVESkin.Font.Description'>
+								<X>10</X>
+								<Y>40</Y>
+								<Width>100</Width>
+								<Height>20</Height>
+								<Text>Runs this Session:</Text>
+							</text>
+							<text name='Trips_Data' template='EVESkin.Font.Value'>
+								<X>150</X>
+								<Y>40</Y>
+								<Width>100</Width>
+								<Height>20</Height>
+								<text>${Script[EVEBot].VariableScope.Miner.TotalTrips}</text>
+							</text>
+							<text name='avg_time' template='EVESkin.Font.Description'>
+								<X>10</X>
+								<Y>55</Y>
+								<Width>175</Width>
+								<Height>20</Height>
+								<Text>Time For Current Trip:</Text>
+							</text>
+							<text name='avg_time_data' template='EVESkin.Font.Value'>
+								<X>150</X>
+								<Y>55</Y>
+								<Width>150</Width>
+								<Height>20</Height>
+								<text>${ISXEVE.SecsToString[${Script[EVEBot].VariableScope.Miner.TripDuration}]}</text>
+							</text>
+							<text name='Average Time/Trip' template='EVESkin.Font.Description'>
+								<X>10</X>
+								<Y>70</Y>
+								<Width>175</Width>
+								<Height>20</Height>
+								<Text>Average Time per Trip:</Text>
+							</text>
+							<text name='Average Time/Trip Data' template='EVESkin.Font.Value'>
+								<X>150</X>
+								<Y>70</Y>
+								<Width>150</Width>
+								<Height>20</Height>
+								<text>${ISXEVE.SecsToString[${Script[EVEBot].VariableScope.Miner.AverageTripSeconds}]}</text>
+							</text>						
+							<console Name="StatusConsole" template='EVESkin.Console'>
+								<X>5</X>
+								<Y>r120</Y>
+								<Width>97.5%</Width>
+								<Height>115</Height>
+							</console>		
+					</Tab>
+					
+					<Tab Name='Main'>
+					</Tab>
+    	
+					<Tab name='Mining'>
+						<commandcheckbox Name='cbIncludeVeldspar'>
+							<X>10</X>
+							<Y>10</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Ignore veldspar</Text>
+							<Command>Script[EVEBot].VariableScope.Config.Miner:SetIncludeVeldspar[0]</Command>
+							<CommandChecked>Script[EVEBot].VariableScope.Config.Miner:SetIncludeVeldspar[1]</CommandChecked>
+							<Data>!${Script[EVEBot].VariableScope.Config.Miner.IncludeVeldspar}</Data>
+							<AutoTooltip>Check to ignore veldspar when mining.</AutoTooltip>
+						</commandcheckbox>
+						<commandcheckbox Name='cbStickToSpot'>
+							<X>10</X>
+							<Y>30</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Return to previous belt</Text>
+							<Command>Script[EVEBot].VariableScope.Config.Miner:SetStickToSpot[1]</Command>
+							<CommandChecked>Script[EVEBot].VariableScope.Config.Miner:SetStickToSpot[0]</CommandChecked>
+							<Data>${Script[EVEBot].VariableScope.Config.Miner.StickToSpot}</Data>
+							<AutoTooltip>When checked a belt will be chosen at random and used until empty.  Uncheck to use a random belt every time.</AutoTooltip>
+						</commandcheckbox>
+						<commandcheckbox Name='cbDistributeLasers'>
+							<X>10</X>
+							<Y>50</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>One laser per asteroid</Text>
+							<Command>Script[EVEBot].VariableScope.Config.Miner:SetDistributeLasers[1]</Command>
+							<CommandChecked>Script[EVEBot].VariableScope.Config.Miner:SetDistributeLasers[0]</CommandChecked>
+							<Data>${Script[EVEBot].VariableScope.Config.Miner.DistributeLasers}</Data>
+							<AutoTooltip>When checked only one laser will be activated per locked asteroid.  Uncheck to focus all lasers on a single asteroid.</AutoTooltip>
+						</commandcheckbox>
+						<commandcheckbox Name='cbUseJetCan'>
+							<X>10</X>
+							<Y>70</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Use JetCan (stay in belt)</Text>
+							<Command>Script[EVEBot].VariableScope.Config.Miner:SetUseJetCan[1]</Command>
+							<CommandChecked>Script[EVEBot].VariableScope.Config.Miner:SetUseJetCan[0]</CommandChecked>
+							<Data>${Script[EVEBot].VariableScope.Config.Miner.UseJetCan}</Data>
+							<AutoTooltip>Check to jettison ore into a can while mining.  Uncheck to return to base when cargo hold is full.</AutoTooltip>
+						</commandcheckbox>
+						<combobox name='comboOreTypes'>
+							<X>340</X>
+							<Y>10</Y>
+							<Width>150</Width> 
+							<Height>20</Height> 
+							<FullHeight>200</FullHeight>
+							<ButtonWidth>20</ButtonWidth>
+							<Items>
+								<Item Value='1'>Mercoxit</Item>
+								<Item Value='2'>Arkanor</Item>
+								<Item Value='3'>Bistot</Item>
+								<Item Value='4'>Crokite</Item>
+								<Item Value='5'>Spodumain</Item>
+								<Item Value='6'>Dark Ochre</Item>
+								<Item Value='7'>Gneiss</Item>
+								<Item Value='8'>Hedbergite</Item>
+								<Item Value='9'>Hemorphite</Item>
+								<Item Value='10'>Jaspet</Item>
+								<Item Value='11'>Kernite</Item>
+								<Item Value='12'>Omber</Item>
+								<Item Value='13'>Plagioclase</Item>
+								<Item Value='14'>Pyroxeres</Item>
+								<Item Value='15'>Scordite</Item>
+								<Item Value='16'>Veldspar</Item>
+							</Items>
+						</combobox>
+						<listbox name='TestListBox'>
+							<X>340</X>
+							<Y>160</Y>
+							<Width>150</Width>
+							<Height>120</Height>
+							<SelectMultiple>1</SelectMultiple>
+							<Sort>Value</Sort>
+							<Items>
+								<Item Value='1'>Mercoxit</Item>
+								<Item Value='2'>Arkanor</Item>
+								<Item Value='3'>Bistot</Item>
+								<Item Value='4'>Crokite</Item>
+								<Item Value='5'>Spodumain</Item>
+								<Item Value='6'>Dark Ochre</Item>
+								<Item Value='7'>Gneiss</Item>
+								<Item Value='8'>Hedbergite</Item>
+								<Item Value='9'>Hemorphite</Item>
+								<Item Value='10'>Jaspet</Item>
+								<Item Value='11'>Kernite</Item>
+								<Item Value='12'>Omber</Item>
+								<Item Value='13'>Plagioclase</Item>
+								<Item Value='14'>Pyroxeres</Item>
+								<Item Value='15'>Scordite</Item>
+								<Item Value='16'>Veldspar</Item>
+							</Items>
+						</listbox>    	
+					</Tab>
+					<Tab name='Combat'>
+						  <Text name='MinShield'>
+									<X>40</X>
+									<Y>10</Y>
+									<Width>140</Width>
+									<Height>10</Height>
+									<Text>Minimum Shield</Text>
+								</Text>
+							 <Textentry name='MinShieldPctInput'>		
+									<X>6</X>							
+									<Y>10</Y>						
+									<Width>32</Width>						
+									<Height>18</Height>
+									<OnChange>
+									This:SetText[${MinShieldPct}]
+									</OnChange>				
+								</Textentry>
+							  <Text name='MinStructure'>
+									<X>40</X>
+									<Y>30</Y>
+									<Width>140</Width>
+									<Height>10</Height>
+									<Text>Minimum Structure</Text>
+								</Text>
+							 <Textentry name='MinStructurePctInput'>		
+									<X>6</X>							
+									<Y>30</Y>						
+									<Width>32</Width>						
+									<Height>18</Height>
+									<OnChange>
+									This:SetText[${MinStructurePct}]
+									</OnChange>				
+								</Textentry>
+					</tab>
+    	
+					<Tab name='Market'>
+					</tab>
+					
+					<tab name='Fitting'>
+					</tab>
+					
+					<tab name='Skills'>
+						<commandbutton name='queueskill'>
+							<X>210</X>
+							<Y>5</Y>
+							<Width>97</Width>
+							<Height>25</Height>
+							<text>Queue</text>
+							<Command>
+</Command>
+						</commandbutton>
+						<commandbutton name='removeskill'>
+							<X>313</X>
+							<Y>5</Y>
+							<Width>97</Width>
+							<Height>25</Height>
+							<text>Remove</text>
+							<Command>
+</Command>
+						</commandbutton>
+						<listbox name='skills'>
+							<X>5</X>
+							<Y>5</Y>
+							<Width>200</Width>
+							<Height>258</Height>
+							<Items>
+							AddItem[${Me.Skill[1]}]
+    	
+							</Items>
+						</listbox>
+						<listbox name='intraining'>
+							<X>210</X>
+							<Y>40</Y>
+							<Width>200</Width>
+							<Height>223</Height>
+							<Items>
+							</Items>
+						</listbox>
+					</tab>
+					<Tab Name='About'>
+						<text name='developers1'>
+							<X>50</X>
+							<Y>50</Y>
+							<Width>400</Width>
+							<Height>10</Height>
+							<Text>EVEBot was created by:</Text>
+						</Text>
+						<text name='developers2'>
+							<X>50</X>
+							<Y>80</Y>
+							<Width>400</Width>
+							<Height>10</Height>
+							<Text>Neutro, Tehtsuo, thehazard, Stealthy,</Text>
+						</Text>
+						<text name='developers3'>
+							<X>50</X>
+							<Y>95</Y>
+							<Width>400</Width>
+							<Height>10</Height>
+							<Text>... Hessinger, Altered, CyberTech</Text>
+						</Text>
+					</Tab>
+				</Tabs>
+			</tabcontrol>
+		</Children>
+	</window> 
+</ISUI>
