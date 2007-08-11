@@ -42,14 +42,59 @@
 		<Color>FFFF9900</Color>
 	</template>
 
-  <!-- Tooltip -->
-  <template name='tooltip.Font' Template='Default Font' />
-  <template name='tooltip'>
-    <Font Template='tooltip.Font' />
-    <BackgroundColor>FF333333</BackgroundColor>
+  <!-- ListBox -->
+  <template name='listbox.Texture' Filename='ListBox.png'>
     <Border>1</Border>
-    <BorderColor>FFCCCCCC</BorderColor>
-    <AlwaysOnTop />
+  </template>
+  <template name='listbox.Font' Template='Default Font' />
+  <template name='listbox'>
+    <Font Template='listbox.Font' />
+    <BackgroundColor>FF000000</BackgroundColor>
+    <SelectionColor>FF000066</SelectionColor>
+    <BorderColor>FFD4D0C8</BorderColor>
+    <Border>1</Border>
+    <SelectMultiple>0</SelectMultiple>
+    <Sort>None</Sort>
+    <!-- None, User, Text, Value -->
+    <Texture Template='listbox.Texture' />
+    <ScrollBar>listbox.ScrollBar</ScrollBar>
+  </template>
+  <!-- ComboBox -->
+  <template name='combobox.Texture' Filename='Combobox.png'>
+    <Left>0</Left>
+    <Right>16</Right>
+    <Top>0</Top>
+    <Bottom>16</Bottom>
+    <Border>2</Border>
+  </template>
+  <template name='combobox.ButtonTexture' Filename='Combobox.png'>
+    <Left>16</Left>
+    <Right>32</Right>
+    <Top>0</Top>
+    <Bottom>16</Bottom>
+  </template>
+  <template name='combobox.ListBoxTexture' Filename='Combobox.png'>
+    <Left>32</Left>
+    <Right>48</Right>
+    <Top>0</Top>
+    <Bottom>16</Bottom>
+    <Border>2</Border>
+  </template>
+  <template name='combobox.ListBox' Template='listbox'>
+    <Border>1</Border>
+    <Texture Template='combobox.ListBoxTexture' ColorMask='FF0000FF'/>
+    <SelectionColor>FF000000</SelectionColor>
+  </template>
+  <template name='combobox.Font' Template='Default Font' />
+  <template name='combobox'>
+    <Font Template='combobox.Font' />
+    <FullHeight>100</FullHeight>
+    <Border>1</Border>
+    <Texture Template='combobox.Texture' ColorMask='FF0000FF' />
+    <ButtonTexture Template='combobox.ButtonTexture' />
+    <ListBox Template='combobox.listbox' />
+    <ButtonWidth>16</ButtonWidth>
+    <ScrollBar>combobox.ScrollBar</ScrollBar>
   </template>
   <!-- Checkbox -->
   <template name='checkbox.Texture' Filename='eveskin/MainGUI/CheckBox.png'>
