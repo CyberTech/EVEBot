@@ -10,6 +10,7 @@ variable(script) string sTimeEnded
 variable(script) int TripsCount
 
 variable(script) bool EverythingHauled
+variable(script) int Counter
 
 function atexit()
 {
@@ -266,6 +267,7 @@ function main(string Origin, string Destination, string ReturnToOrigin)
   ;;; Main Loop ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   do
   {
+      TripsCount:Inc
   	 	; We should be starting the script while in the "Origin" station... that's the responsibility of the user
   	 	call TransferOreToShip
   	 
@@ -273,17 +275,33 @@ function main(string Origin, string Destination, string ReturnToOrigin)
 	   	echo "- Undocking from station..."
 	   	EVE:Execute[CmdExitStation]	
 	   	wait 150
+	   	Counter:Set[0]
 	   	if (${Me.InStation})
 	   	{
 	   		do
 	   		{
 	   			wait 20
+	   			Counter:Inc[20]
+	   			if (${Counter} > 300)
+	   			{
+	   			  echo "- Undocking atttempt failed ... trying again." 
+	   				EVE:Execute[CmdExitStation]
+	   				Counter:Set[0]
+	   			}
 	   		}
 	   		while (${Me.InStation} || !${EVEWindow[Local](exists)})
 	   	}
-	   	wait 5
+	   	wait 15
 	   
 	   	; Set autopilot and head to Destination station
+	  	if (!${EVE.Bookmark[${Destination}](exists)})
+	  	{
+	  		do
+	  		{
+	  			wait 20
+	  		}
+	  		while (!${EVE.Bookmark[${Destination}](exists)})	   
+	  	}	
 	  	echo "- Setting autopilot destination: ${EVE.Bookmark[${Destination}]}"
 			EVE.Bookmark[${Destination}]:SetDestination
 			wait 5
@@ -332,26 +350,20 @@ function main(string Origin, string Destination, string ReturnToOrigin)
 					}
 					while (${EVE.Bookmark[${Destination}].ToEntity.Distance} > 50)
 					
+					Counter:Set[0]
 					EVE.Bookmark[${Destination}].ToEntity:Dock			
 					do
 					{
 					   wait 20
-					   WaitCount:Inc[20]
+					   Counter:Inc[20]
+					   if (${Counter} > 200)
+					   {
+					      echo" - Docking atttempt failed ... trying again."
+					      EVE.Bookmark[${Destination}].ToEntity:Dock	
+					      Counter:Set[0]
+					   }
 					}
-					while (!${Me.InStation} && ${WaitCount} < 200)
-					WaitCount:Set[0]
-					if (!${Me.InStation})
-					{
-					  echo "- First Attempt at docking with failed...trying again."
-					  Entity[CategoryID,3]:Dock
-						do
-						{
-					  	 wait 20
-					  	 WaitCount:Inc[20]
-						}
-						while (!${Me.InStation} && ${WaitCount} < 200)
-						WaitCount:Set[0]
-					}							
+					while (!${Me.InStation})					
 				}
 			}
 			wait 20
@@ -378,17 +390,33 @@ function main(string Origin, string Destination, string ReturnToOrigin)
 	   	echo "- Undocking from station..."
 	   	EVE:Execute[CmdExitStation]	
 	   	wait 150
+	   	Counter:Set[0]
 	   	if (${Me.InStation})
 	   	{
 	   		do
 	   		{
 	   			wait 20
+	   			Counter:Inc[20]
+	   			if (${Counter} > 300)
+	   			{
+	          echo "- Undocking atttempt failed ... trying again."  			
+	   				EVE:Execute[CmdExitStation]
+	   				Counter:Set[0]
+	   			}	   			
 	   		}
 	   		while (${Me.InStation} || !${EVEWindow[Local](exists)})
 	   	}
-	   	wait 5
+	   	wait 15
 	   
 	   	; Set autopilot and head to Origin station
+	  	if (!${EVE.Bookmark[${Origin}](exists)})
+	  	{
+	  		do
+	  		{
+	  			wait 20
+	  		}
+	  		while (!${EVE.Bookmark[${Origin}](exists)})	   
+	  	}	  	
 	  	echo "- Setting autopilot destination: ${EVE.Bookmark[${Origin}]}"
 			EVE.Bookmark[${Origin}]:SetDestination
 			wait 5
@@ -437,32 +465,24 @@ function main(string Origin, string Destination, string ReturnToOrigin)
 					}
 					while (${EVE.Bookmark[${Origin}].ToEntity.Distance} > 50)
 					
-					EVE.Bookmark[${Origin}].ToEntity:Dock			
+					EVE.Bookmark[${Origin}].ToEntity:Dock		
+					Counter:Set[0]	
 					do
 					{
 					   wait 20
-					   WaitCount:Inc[20]
+					   Counter:Inc[20]
+					   if (${Counter} > 200)
+					   {
+					      echo" - Docking atttempt failed ... trying again."
+					      EVE.Bookmark[${Destination}].ToEntity:Dock	
+					      Counter:Set[0]
+					   }
 					}
-					while (!${Me.InStation} && ${WaitCount} < 200)
-					WaitCount:Set[0]
-					if (!${Me.InStation})
-					{
-					  echo "- First Attempt at docking with failed...trying again."
-					  Entity[CategoryID,3]:Dock
-						do
-						{
-					  	 wait 20
-					  	 WaitCount:Inc[20]
-						}
-						while (!${Me.InStation} && ${WaitCount} < 200)
-						WaitCount:Set[0]
-					}							
+					while (!${Me.InStation})					
 				}
 			}
 			wait 20
 			echo "- Now docked within origin station."	
-			
-			TripsCount:Inc
   }
   while !${EverythingHauled}
   
