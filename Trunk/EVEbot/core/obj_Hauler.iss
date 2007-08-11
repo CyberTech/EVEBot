@@ -162,7 +162,46 @@ objectdef obj_OreHauler inherits obj_Hauler
 		m_gangMemberID:Set[${charID}]
 	}	
 	
-	function SetBotState()
+	/* this function is called repeatedly by the main loop in EveBot.iss */
+	function ProcessState()
+	{
+		This:SetBotState[]
+		
+		/* update the global bot state (which is displayed on the UI) */
+		botstate:Set[${m_botState}]
+		
+		switch ${m_botState}
+		{
+			case IDLE
+				break
+			case ABORT
+				UI:UpdateConsole["Aborting operation: Returning to base"]
+				Call Dock
+				break
+			case BASE
+				call Cargo.TransferOreToHangar
+				call Ship.Undock
+				break
+			case COMBAT
+				UI:UpdateConsole["FIRE ZE MISSILES!!!"]
+				call ShieldNotification
+				break
+			case HAUL
+				call UpdateHudStatus "Hauling"
+				call This.Haul
+				break
+			case CARGOFULL
+				call Dock
+				break
+			case RUNNING
+				call UpdateHudStatus "Running Away"
+				call Dock
+				ForcedReturn:Set[FALSE]
+				break
+		}	
+	}
+	
+	method SetBotState()
 	{
 		
 		if ${ForcedReturn}
