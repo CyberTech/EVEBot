@@ -197,14 +197,13 @@ objectdef obj_Miner
 			{
 				call Asteroids.TargetNext
 				This.ConcentrateFire:Set[!${Return}]
-				echo DEBUG: Target Locking: ${Math.Calc[${Me.GetTargets} + ${Me.GetTargeting}].Int} out of ${Ship.SafeMaxLockedTargets} (Limited Asteroids: ${This.ConcentrateFire})
+				;echo DEBUG: Target Locking: ${Math.Calc[${Me.GetTargets} + ${Me.GetTargeting}].Int} out of ${Ship.SafeMaxLockedTargets} (Limited Asteroids: ${This.ConcentrateFire})
 			}
 			else
 			{
 				if ( ${Me.GetTargets} >= ${Ship.SafeMaxLockedTargets} && \
 					 ${Ship.TotalMiningLasers} > ${Ship.SafeMaxLockedTargets} )
 				{
-					echo DEBUG: Lasers > Targets, Concentrating Fire
 					This.ConcentrateFire:Set[TRUE]
 				}					
 			}
