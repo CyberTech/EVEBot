@@ -1,11 +1,4 @@
-/*
-	Wreck Salvaging (originally written by Amadeus)
-
-BUGS:
-	
-			
-*/
-
+;; Declare all script or global variables here
 variable(script) int NumSalvageLocations
 variable(script) index:bookmark MyBookmarks
 variable(script) int MyBookmarksCount
@@ -34,6 +27,7 @@ variable(script) index:entity Targets
 variable(script) bool LeftStation
 variable(script) bool Continue
 variable(script) bool SalvagerHomeBaseFound
+variable(script) int Counter
 
 variable(script) bool SalvageYardFound
 
@@ -482,13 +476,21 @@ function main(... SalvageLocationLabels)
 	   			   echo "- Undocking from station..."
 	   			   EVE:Execute[CmdExitStation]	
 	   			   wait 150
+	   			   Counter:Set[0]
 	   			   if (${Me.InStation})
 	   			   {
 	   			   		do
 	   			   		{
 	   			   			wait 20
+	   			   			Counter:Inc[20]
+					   			if (${Counter} > 300)
+					   			{
+					   			  echo "- Undocking atttempt failed ... trying again." 
+					   				EVE:Execute[CmdExitStation]
+					   				Counter:Set[0]
+					   			}	   			   			
 	   			   		}
-	   			   		while (${Me.InStation} || !${EVEWindow[Local](exists)})
+	   			   		while (${Me.InStation} || !${EVEWindow[Local](exists)} || !${Me.InStation(exists)})
 	   			   }
 	   			   wait 5
 	   			   LeftStation:Set[TRUE]
@@ -498,7 +500,7 @@ function main(... SalvageLocationLabels)
 	   			wait 1
    			}
    			
-   			;;; Set destination and then activate autopilot (if we're not in that system to begin with)
+   			;;; Set destination and then activate autopilot (if we're not in that system to begin with)    			
    			if (${MyBookmarks[${j}].SolarSystemID} != ${Me.SolarSystemID})
    			{
    			  echo "- Setting Destination and activating auto pilot for salvage operation ${i} (${MyBookmarks.Get[${j}].Label})."
@@ -518,7 +520,7 @@ function main(... SalvageLocationLabels)
 					     while !${Me.AutoPilotOn(exists)}
 					   }
 					}
-   					while ${Me.AutoPilotOn}
+   				while ${Me.AutoPilotOn}
    				wait 20
    				do
    				{
@@ -587,7 +589,7 @@ function main(... SalvageLocationLabels)
 				     while !${Me.AutoPilotOn(exists)}
 				   }
 				}
-   				while ${Me.AutoPilotOn} 				
+ 				while ${Me.AutoPilotOn}
  				wait 20
  				do
  				{
@@ -619,26 +621,20 @@ function main(... SalvageLocationLabels)
 					}
 					while (${MyBookmarks[${j}].ToEntity.Distance} > 50)
 					
-					MyBookmarks[${j}].ToEntity:Dock			
+					MyBookmarks[${j}].ToEntity:Dock
+					Counter:Set[0]			
 					do
 					{
 					   wait 20
-					   WaitCount:Inc[20]
+					   Counter:Inc[20]
+					   if (${Counter} > 200)
+					   {
+					      echo" - Docking atttempt failed ... trying again."
+					      EVE.Bookmark[${Destination}].ToEntity:Dock	
+					      Counter:Set[0]
+					   }
 					}
-					while (!${Me.InStation} && ${WaitCount} < 200)
-					WaitCount:Set[0]
-					if (!${Me.InStation})
-					{
-					  echo "- First Attempt at docking with failed...trying again."
-					  Entity[CategoryID,3]:Dock
-						do
-						{
-					  	 wait 20
-					  	 WaitCount:Inc[20]
-						}
-						while (!${Me.InStation} && ${WaitCount} < 200)
-						WaitCount:Set[0]
-					}							
+					while (!${Me.InStation})					
 				}
 			}
 		}

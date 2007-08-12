@@ -289,7 +289,7 @@ function main(string Origin, string Destination, string ReturnToOrigin)
 	   				Counter:Set[0]
 	   			}
 	   		}
-	   		while (${Me.InStation} || !${EVEWindow[Local](exists)})
+	   		while (${Me.InStation} || !${EVEWindow[Local](exists)} || !${Me.InStation(exists)})
 	   	}
 	   	wait 15
 	   
@@ -404,7 +404,7 @@ function main(string Origin, string Destination, string ReturnToOrigin)
 	   				Counter:Set[0]
 	   			}	   			
 	   		}
-	   		while (${Me.InStation} || !${EVEWindow[Local](exists)})
+	   		while (${Me.InStation} || !${EVEWindow[Local](exists)} || !${Me.InStation(exists)})
 	   	}
 	   	wait 15
 	   
