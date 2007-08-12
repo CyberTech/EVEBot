@@ -621,20 +621,28 @@ objectdef obj_Ship
 
 	function Undock()
 	{
+	  variable int Counter
 		call UpdateHudStatus "Undock: Waiting while ship exits the station (13 sec)"
 
 		EVE:Execute[CmdExitStation]	
 		wait WAIT_UNDOCK
+		Counter:Set[0]
 		do
 		{
 			wait 10
+			Counter:Inc[10]
+			if ${Counter} > 200
+			{
+			   Counter:Set[0]
+			   EVE:Execute[CmdExitStation]	
+			}
 		}
-		while (${Me.InStation} || !${EVEWindow[Local](exists)})
+		while (${Me.InStation} || !${EVEWindow[Local](exists)} || !${Me.InStation(exists)})
 		
 		Config.Common:SetHomeStation[${Entity[CategoryID,3].Name}]
 		
 		Me:SetVelocity[100]
-		wait 100
+		wait 50
 
 		This:UpdateModuleList[]
 	}

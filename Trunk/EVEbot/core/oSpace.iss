@@ -1,31 +1,3 @@
-function ReturnToBase(int Id)
-{        
-  ; RETURNTOBASE CONTINUED
-
-  ;;;;;;;;;;;;;;;;;;
-  ;;; Sanity Checks
-	if (${Id} <= 0)
-	{
-	   echo "Error: oSpace::ReturnToBase --> Id is <= 0 (${Id})"
-	   play:Set[FALSE]
-	   return
-	}
-	if (!${Entity[${Id}](exists)})
-	{
-	   echo "Error: oSpace::ReturnToBase --> No entity matched the ID given."
-	   play:Set[FALSE]
-	   return
-	}
-	;;;;;;;;;;;;;;;;;;
-
-
-	if ${Entity[${Id}].Distance} >= 10000
-	{
-	  call UpdateHudStatus "The distance is greater than 10000, warp to base"
-		call Ship.WarpToID ${Id}
-	}
-}
-	
 function Dock()
 {
 	variable int WaitCount = 0
@@ -41,68 +13,42 @@ function Dock()
 		StationID:Set[${Entity[CategoryID,3].ID}]
 	}
 
-while !${Me.InStation}
-{
 	if ${Entity[${StationID}].Distance} >= 10000
 	{
-	  call UpdateHudStatus "Calling ReturnToBase"
-		call ReturnToBase ${StationID}
+	  call UpdateHudStatus "Warping to Station"
+		call Ship.WarpToID ${StationID}
 		do
 		{ 
 		   wait 20
 		}
 		while ${Entity[${StationID}].Distance} >= 10000
 	}
-	elseif (${Entity[${StationID}].Distance} < 10000 && ${Entity[${StationID}].Distance} > 100)
-	{
-		call UpdateHudStatus "Approaching Base"
-		Entity[${StationID}]:Approach 
-		do
-		{
-			wait 20
-		}
-		while ${Entity[${StationID}].Distance} > 100
-	}
-	elseif (${Entity[${StationID}].Distance} <= 100 && ${Me.ToEntity.Mode} != 3)
-	{
-		call UpdateHudStatus "In Docking Range ... Docking"
-		Entity[${StationID}]:Dock
-		do
-		{
-		   wait 20
-		   WaitCount:Inc[20]
-		}
-		while (!${Me.InStation} && ${WaitCount} < 200)
-		WaitCount:Set[0]
-		if (!${Me.InStation})
-		{
-		  call UpdateHudStatus "First Attempt at docking with failed...trying again."
-		  Entity[CategoryID,3]:Dock
-			do
-			{
-		  	 wait 20
-		  	 WaitCount:Inc[20]
-			}
-			while (!${Me.InStation} && ${WaitCount} < 200)
-			WaitCount:Set[0]
-		}
-		if (!${Me.InStation})
-		{
-		  call UpdateHudStatus "Second Attempt at docking with failed...trying one last time."
-		  Entity[CategoryID,3]:Dock
-			do
-			{
-		  	 wait 20
-		  	 WaitCount:Inc[20]
-			}
-			while (!${Me.InStation} && ${WaitCount} < 200)
-			WaitCount:Set[0]
-		}		
-		wait 20
-		call UpdateHudStatus "Finished Docking"
-	}
-}
 
+	Entity[${StationID}]:Approach
+	do
+	{
+		wait 20
+	}
+	while (${Entity[${StationID}].Distance} > 100)
+	
+	Counter:Set[0]
+	call UpdateHudStatus "In Docking Range ... Docking"
+	Entity[${StationID}]:Dock			
+	do
+	{
+	   wait 20
+	   Counter:Inc[20]
+	   if (${Counter} > 200)
+	   {
+	      call UpdateHudStatus " - Docking atttempt failed ... trying again."
+	      Entity[${StationID}]:Dock	
+	      Counter:Set[0]
+	   }
+	}
+	while (!${Me.InStation})					
+
+	wait 20
+	call UpdateHudStatus "Finished Docking"
 }
 
 function Orbit(int Id, int Distance)
