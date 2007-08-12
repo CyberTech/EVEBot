@@ -1,6 +1,6 @@
 function Dock()
 {
-	variable int WaitCount = 0
+	variable int Counter = 0
 	variable int StationID = ${Entity[CategoryID,3,${Config.Common.HomeStation}].ID}
 
 	call UpdateHudStatus "Docking at ${StationID}:${Config.Common.HomeStation}"
