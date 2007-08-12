@@ -166,7 +166,7 @@ objectdef obj_Asteroids
 			if ${This.AstroidList.Used}
 			{
 					AsteroidList:GetSettingIterator[This.NextAsteroidIterator]
-					echo "DEBUG: obj_Asteroids:UpdateList - Found ${This.AstroidList.Used} ${This.OreTypeIterator.Key} asteroids"
+					;echo "DEBUG: obj_Asteroids:UpdateList - Found ${This.AstroidList.Used} ${This.OreTypeIterator.Key} asteroids"
 			}
 		}
 		else

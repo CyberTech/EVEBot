@@ -52,6 +52,8 @@ CyberTech:
 		using fromid, check for all asteroids within 25k of each of the 10
 		using the new weighting from the config file, add up the total weight count of each of the 10 + surround asteroids
 		head for the highest concentration area.
+	check minimum range from all miners, not just one
+	add mining drone support
 	
 Requests:
 <Da_Teach> gimme red/neutral detection and let me weight the rats in a belt and not mine in that belt if rat weight above x
