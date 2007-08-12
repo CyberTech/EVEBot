@@ -156,11 +156,9 @@ objectdef obj_Miner
 		call This.Prepare_Environment
 		call Asteroids.UpdateList
 		
-		while !${Miner.Abort} && \
-				${Ship.CargoFreeSpace} >= ${Ship.CargoMinimumFreeSpace}
+		while (!${Miner.Abort} && ${Ship.CargoFreeSpace} >= ${Ship.CargoMinimumFreeSpace})
 		{				
-			if !${Ship.InWarp} && \
-				${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers}
+			if (!${Ship.InWarp} && ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers})
 			{
 				; We've got idle lasers, and available targets. Do something with them.
 	
@@ -180,8 +178,7 @@ objectdef obj_Miner
 					variable int TargetID
 					TargetID:Set[${Target.Value.ID}]
 					
-					if ( ${This.InsufficientAsteroids} || \
-						!${Ship.IsMiningAstroidID[${TargetID}]} )
+					if ( ${This.InsufficientAsteroids} || !${Ship.IsMiningAstroidID[${TargetID}]} )
 					{
 						Target.Value:MakeActiveTarget
 						wait 20
@@ -191,6 +188,20 @@ objectdef obj_Miner
 					}
 				}
 				while ${Target:Next(exists)}
+				
+				; hack for people with 3 lasers
+				if (${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers})
+				{
+					if (${LockedTargets.Used} == 2 && ${Ship.TotalMiningLasers} == 3)
+					{
+						do
+						{
+							call Ship.ActivateFreeMiningLaser
+							wait 5
+						}
+						while ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers}
+					}
+				}
 			}
 	
 			if ${Math.Calc[${Me.GetTargets} + ${Me.GetTargeting}]} < ${Ship.SafeMaxLockedTargets}
