@@ -361,7 +361,7 @@ function main(string Origin, string Destination, string ReturnToOrigin)
 					   Counter:Inc[20]
 					   if (${Counter} > 200)
 					   {
-					      echo" - Docking atttempt failed ... trying again."
+					      echo " - Docking atttempt failed ... trying again."
 					      EVE.Bookmark[${Destination}].ToEntity:Dock	
 					      Counter:Set[0]
 					   }
@@ -479,7 +479,7 @@ function main(string Origin, string Destination, string ReturnToOrigin)
 					   Counter:Inc[20]
 					   if (${Counter} > 200)
 					   {
-					      echo" - Docking atttempt failed ... trying again."
+					      echo " - Docking atttempt failed ... trying again."
 					      EVE.Bookmark[${Destination}].ToEntity:Dock	
 					      Counter:Set[0]
 					   }
