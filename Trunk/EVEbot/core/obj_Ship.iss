@@ -236,21 +236,17 @@ objectdef obj_Ship
 		return ${This.Calculated_MaxLockedTargets}
 	}
 	
-	; "Safe" max locked targets is defined as max locked targets - 2
+	; "Safe" max locked targets is defined as max locked targets - 1
 	; for a buffer of targets so that hostiles may be targeted.
 	; Always return at least 1
 	member:int SafeMaxLockedTargets()
 	{
 		variable int result
 		result:Set[${This.Calculated_MaxLockedTargets}]
-		if ${result} > 2
+		if ${result} > 3
 		{
 			result:Dec
 		}
-		if ${result} > 2
-		{
-			result:Dec
-		}		
 		return ${result}
 	}
 
@@ -496,7 +492,68 @@ objectdef obj_Ship
 		while ${Module:Next(exists)}
 
 	}
+
+
+/*
+CycleMiningLaser: HiSlot1 Activate: FALSE
+Error: Math sequence not available
+Dumping script stack
+--------------------
+-->C:/Program Files/InnerSpace/Scripts/evebot/core/obj_Ship.iss:516 Atom000000B1() if !${Activate} &&(!${Me.Ship.Module[${Slot}].IsActive} ||${Me.Ship.Module[${Slot}].IsGoingOnline}
+||${Me.Ship.Module[${Slot}].IsDeactivating} ||${Me.Ship.Module[${Slot}].IsChangingAmmo} ||${Me.Ship.Module[${Slot}].IsReloadingAmmo}
+C:/Program Files/InnerSpace/Scripts/evebot/core/obj_Ship.iss:584 ActivateFreeMiningLaser() wait 10
+C:/Program Files/InnerSpace/Scripts/evebot/core/obj_Miner.iss:190 Mine() call Ship.ActivateFreeMiningLaser
+C:/Program Files/InnerSpace/Scripts/evebot/core/obj_Miner.iss:59 ProcessState() call Miner.Mine
+C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.ProcessState
+	*/
 	
+	method CycleMiningLaser(string Slot, bool Activate)
+	{
+		echo CycleMiningLaser: ${Slot} Activate: ${Activate}
+		if ${Activate} && \
+			( ${Me.Ship.Module[${Slot}].IsActive} || \
+			  ${Me.Ship.Module[${Slot}].IsGoingOnline} || \
+			  ${Me.Ship.Module[${Slot}].IsDeactivating} || \
+			  ${Me.Ship.Module[${Slot}].IsChangingAmmo} || \
+			  ${Me.Ship.Module[${Slot}].IsReloadingAmmo}
+			)
+		{
+			echo "obj_Ship:CycleMiningLaser: Tried to Activate the module, but it's already active or changing state."
+			return
+		}
+				
+		if !${Activate} && \
+			(!${Me.Ship.Module[${Slot}].IsActive} || \
+			  ${Me.Ship.Module[${Slot}].IsGoingOnline} || \
+			  ${Me.Ship.Module[${Slot}].IsDeactivating} || \
+			  ${Me.Ship.Module[${Slot}].IsChangingAmmo} || \
+			  ${Me.Ship.Module[${Slot}].IsReloadingAmmo}
+			)
+		{
+			echo "obj_Ship:CycleMiningLaser: Tried to Deactivate the module, but it's already active or changing state."
+			return
+		}
+
+		if ${Activate} && \
+			( !${Module.Value.LastTarget(exists)} || !${Entity[id,${{Me.Ship.Module[${Slot}].LastTarget.ID}](exists)} )
+		{
+			echo "obj_Ship:CycleMiningLaser: Target doesn't exist"
+			return
+		}
+		
+		Me.Ship.Module[${Slot}]:Click
+		if ${Activate}
+		{
+			; Delay from 18 to 45 seconds before deactivating
+			TimedCommand ${Math.Rand[35]:Inc[18]} Script[EVEBot].Variable[Ship]:CycleMiningLaser[${Slot}, !${Activate}]
+		}
+		else
+		{
+			; Delay for the time it takes the laser to deactivate and be ready for reactivation
+			TimedCommand 20 Script[EVEBot].Variable[Ship]:CycleMiningLaser[${Slot}, !${Activate}]
+		}
+	}
+
 	function ActivateFreeMiningLaser()
 	{
 		if !${Me.Ship(exists)}
@@ -522,17 +579,20 @@ objectdef obj_Ship
 				!${Module.Value.IsChangingAmmo} &&\
 				!${Module.Value.IsReloadingAmmo}
 			{
+				variable string Slot
+				Slot:Set[${Module.Value.ToItem.Slot}]
 				if ${Module.Value.SpecialtyCrystalMiningAmount(exists)}
 				{
 					variable string OreType
 					OreType:Set[${Me.ActiveTarget.Name.Token[2,"("]}]
 					OreType:Set[${OreType.Replace[(,]}]
-					call This.ChangeMiningLaserCrystal "${OreType}" ${Module.Value.ToItem.Slot}
+					call This.ChangeMiningLaserCrystal "${OreType}" ${Slot}
 				}
 
 				call UpdateHudStatus "Activating: ${Module.Value.ToItem.Slot}: ${Module.Value.ToItem.Name}"
 				Module.Value:Click
 				wait 25
+				;TimedCommand ${Math.Rand[35]:Inc[18]} Script[EVEBot].Variable[Ship]:CycleMiningLaser[${Slot}, FALSE]
 				return
 			}
 			wait 10
