@@ -670,13 +670,92 @@ objectdef obj_Ship
 		}
 	}	
 
-	function WarpToBookMark(bookmark Dest)
+  function GoToBookMark(string DestinationBookmarkLabel)
+  {
+		if (!${EVE.Bookmark[${DestinationBookmarkLabel}](exists)})
+		{  
+  		call UpdateHudStatus "ERROR:  Destination Bookmark, '${DestinationBookmarkLabel}', does not exist!"
+  		return
+  	}
+  	
+	 	if (${Me.InStation})
+	 	{
+	   	call Ship.UnDock
+	  }
+	  
+	 	if (${EVE.Bookmark[${DestinationBookmarkLabel}].SolarSystemID} != ${Me.SolarSystemID})
+	 	{
+	  	call UpdateHudStatus "Setting autopilot destination: ${EVE.Bookmark[${DestinationBookmarkLabel}]}"
+			EVE.Bookmark[${DestinationBookmarkLabel}]:SetDestination
+			wait 5
+			call UpdateHudStatus "Activating autopilot and waiting until arrival..."
+			EVE:Execute[CmdToggleAutopilot]
+			do
+			{
+			   wait 50
+			   if !${Me.AutoPilotOn(exists)}
+			   {
+			     do
+			     {
+			        wait 5
+			     }
+			     while !${Me.AutoPilotOn(exists)}
+			   }
+			}
+			while ${Me.AutoPilotOn}
+			wait 20
+			do
+			{
+			   wait 10
+			}
+			while !${Me.ToEntity.IsCloaked}
+			wait 5
+		}
+		
+		call UpdateHudStatus "Warping to destination"	   
+		EVE.Bookmark[${DestinationBookmarkLabel}]:WarpTo
+		wait 120
+		do
+		{
+			wait 20
+		}
+		while (${Me.ToEntity.Mode} == 3)	
+		wait 20
+		
+		if ${EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity(exists)}
+		{
+			call UpdateHudStatus "Docking with destination station"
+			if (${EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity.CategoryID} == 3)
+			{
+				EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity:Approach
+				do
+				{
+					wait 20
+				}
+				while (${EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity.Distance} > 50)
+				
+				EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity:Dock			
+				Counter:Set[0]
+				do
+				{
+				   wait 20
+				   Counter:Inc[20]
+				   if (${Counter} > 200)
+				   {
+				      call UpdateHudStatus "Docking atttempt failed ... trying again."
+				      EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity:Dock	
+				      Counter:Set[0]
+				   }
+				}
+				while (!${Me.InStation})					
+			}
+		}
+		wait 20  
+  }
+  
+	function WarpToBookMark(string DestinationBookmarkLabel)
 	{ 
-		; TODO - doesn't work, need TLO Bookmark[ID] so we can access bookmarks by passing IDs
-		call This.WarpPrepare
-		call UpdateHudStatus "Warping to ${Dest.Value.Label}"
-		Dest.Value:WarpTo
-		call This.WarpWait
+		call GoToBookmark ${DestinationBookmarkLabel}
 	}	
 
 	function WarpPrepare()
