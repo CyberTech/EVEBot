@@ -293,8 +293,7 @@ function main(string Origin, string Destination, string ReturnToOrigin)
 	   	}
 	   	wait 15
 	   
-	   	; Set autopilot and head to Destination station
-	  	if (!${EVE.Bookmark[${Destination}](exists)})
+	   	if (!${EVE.Bookmark[${Destination}](exists)})
 	  	{
 	  		do
 	  		{
@@ -302,31 +301,35 @@ function main(string Origin, string Destination, string ReturnToOrigin)
 	  		}
 	  		while (!${EVE.Bookmark[${Destination}](exists)})	   
 	  	}	
-	  	echo "- Setting autopilot destination: ${EVE.Bookmark[${Destination}]}"
-			EVE.Bookmark[${Destination}]:SetDestination
-			wait 5
-			echo "- Activating autopilot and waiting until arrival..."
-			EVE:Execute[CmdToggleAutopilot]
-			do
-			{
-			   wait 50
-			   if !${Me.AutoPilotOn(exists)}
-			   {
-			     do
-			     {
-			        wait 5
-			     }
-			     while !${Me.AutoPilotOn(exists)}
-			   }
+			;;; Set destination and then activate autopilot (if we're not in that system to begin with)    			
+   		if (${EVE.Bookmark[${Destination}].SolarSystemID} != ${Me.SolarSystemID})	  	
+   		{
+		  	echo "- Setting autopilot destination: ${EVE.Bookmark[${Destination}]}"
+				EVE.Bookmark[${Destination}]:SetDestination
+				wait 5
+				echo "- Activating autopilot and waiting until arrival..."
+				EVE:Execute[CmdToggleAutopilot]
+				do
+				{
+				   wait 50
+				   if !${Me.AutoPilotOn(exists)}
+				   {
+				     do
+				     {
+				        wait 5
+				     }
+				     while !${Me.AutoPilotOn(exists)}
+				   }
+				}
+				while ${Me.AutoPilotOn}
+				wait 20
+				do
+				{
+				   wait 10
+				}
+				while !${Me.ToEntity.IsCloaked}
+				wait 5
 			}
-			while ${Me.AutoPilotOn}
-			wait 20
-			do
-			{
-			   wait 10
-			}
-			while !${Me.ToEntity.IsCloaked}
-			wait 5
 			
 			; Dock with Destination station
 			echo "- Warping to destination station"	   
@@ -408,7 +411,6 @@ function main(string Origin, string Destination, string ReturnToOrigin)
 	   	}
 	   	wait 15
 	   
-	   	; Set autopilot and head to Origin station
 	  	if (!${EVE.Bookmark[${Origin}](exists)})
 	  	{
 	  		do
@@ -417,31 +419,35 @@ function main(string Origin, string Destination, string ReturnToOrigin)
 	  		}
 	  		while (!${EVE.Bookmark[${Origin}](exists)})	   
 	  	}	  	
-	  	echo "- Setting autopilot destination: ${EVE.Bookmark[${Origin}]}"
-			EVE.Bookmark[${Origin}]:SetDestination
-			wait 5
-			echo "- Activating autopilot and waiting until arrival..."
-			EVE:Execute[CmdToggleAutopilot]
-			do
-			{
-			   wait 50
-			   if !${Me.AutoPilotOn(exists)}
-			   {
-			     do
-			     {
-			        wait 5
-			     }
-			     while !${Me.AutoPilotOn(exists)}
-			   }
+			;;; Set destination and then activate autopilot (if we're not in that system to begin with)    			
+   		if (${EVE.Bookmark[${Origin}].SolarSystemID} != ${Me.SolarSystemID})	  	
+   		{	  	
+		  	echo "- Setting autopilot destination: ${EVE.Bookmark[${Origin}]}"
+				EVE.Bookmark[${Origin}]:SetDestination
+				wait 5
+				echo "- Activating autopilot and waiting until arrival..."
+				EVE:Execute[CmdToggleAutopilot]
+				do
+				{
+				   wait 50
+				   if !${Me.AutoPilotOn(exists)}
+				   {
+				     do
+				     {
+				        wait 5
+				     }
+				     while !${Me.AutoPilotOn(exists)}
+				   }
+				}
+				while ${Me.AutoPilotOn}
+				wait 20
+				do
+				{
+				   wait 10
+				}
+				while !${Me.ToEntity.IsCloaked}
+				wait 5
 			}
-			while ${Me.AutoPilotOn}
-			wait 20
-			do
-			{
-			   wait 10
-			}
-			while !${Me.ToEntity.IsCloaked}
-			wait 5
 			
 			; Dock with Origin station
 			echo "- Warping to origin station"	   
