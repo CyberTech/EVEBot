@@ -37,6 +37,12 @@ objectdef obj_Drones
 			wait 50
 		}
 	}
+	
+	function ActivateMiningDrones()
+	{		
+	UpdateHudStatus "Engaging Mining Drones"
+	EVE:DronesMineRepeatedly[This.ActiveDroneIDList]
+	}
 }
 
 objectdef obj_Ship

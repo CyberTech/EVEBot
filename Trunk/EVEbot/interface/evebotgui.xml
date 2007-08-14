@@ -192,6 +192,17 @@
 							<Data>${Script[EVEBot].VariableScope.Config.Miner.UseJetCan}</Data>
 							<AutoTooltip>Check to jettison ore into a can while mining.  Uncheck to return to base when cargo hold is full.</AutoTooltip>
 						</commandcheckbox>
+						<commandcheckbox name='cbMiningDrones'>
+							<X>10</X>
+							<Y>90</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Use Mining Drones </text>
+							<Command>Script[EVEBot].VariableScope.Config.Miner:SetMiningDrones[1]</Command>
+							<CommandChecked>Script[EVEBot].VariableScope.Config.Miner:SetMiningDrones[0]</CommandChecked>
+							<Data>${Script[EVEBot].VariableScope.Config.Miner.MiningDrones}</Data>
+							<AutoTooltip>When checked mining drones will be used in replacement of combat drones</AutoTooltip>
+						</commandcheckbox>
 						<combobox name='comboOreTypes'>
 							<X>340</X>
 							<Y>10</Y>

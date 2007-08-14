@@ -147,6 +147,21 @@ objectdef obj_Miner
 		call UpdateStatStatus "Total Run Time: ${Hours}:${Minutes}:${Seconds} - Average Run Time: ${ISXEVE.SecsToString[${Math.Calc[${This.TotalTripSeconds}/${This.TotalTrips}]}]}"
 	} 
 	
+	method DroneMining()
+	{
+		
+		
+		while (!${Miner.Abort} && \
+				${Ship.CargoFreeSpace} >= ${DroneCargoMin})
+		{	
+			wait 50
+			echo "Debug: Test"
+		}
+		
+		call UpdateHudStatus "Recalling Mining Drones"
+		EVE:DronesReturnToDroneBay[Ship.ActiveDroneIDList]
+	}
+	
 	function Mine()
 	{
 		
@@ -155,10 +170,20 @@ objectdef obj_Miner
 		call Asteroids.MoveToField FALSE
 		call This.Prepare_Environment
 		call Asteroids.UpdateList
+		variable int DroneCargoMin = ${Math.Calc[(${Ship.CargoMinimumFreeSpace}*1.4)]}
 		
 		while (!${Miner.Abort} && \
 				${Ship.CargoFreeSpace} >= ${Ship.CargoMinimumFreeSpace})
-		{				
+		{	
+	
+		if (${Config.Miner.MiningDrones} > 0 && \
+		${Ship.CargoFreeSpace} >= ${DroneCargoMin} && \
+		${Ship.Drones.DronesInSpace}) 
+		{
+			echo "Debug: Recalling Mining Drones"
+			call Ship.Drones.ReturnAllToDroneBay
+		}
+		
 			if (!${Ship.InWarp} && \
 				${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers})
 			{
@@ -188,6 +213,12 @@ objectdef obj_Miner
 	
 						call Ship.Approach ${TargetID} ${Ship.OptimalMiningRange}
 						call Ship.ActivateFreeMiningLaser
+						
+						if (${Ship.Drones.DronesInSpace} > 0 && \
+							${Config.Miner.MiningDrones} > 0)
+						{
+						call Ship.Drones.ActivateMiningDrones
+						}
 					}
 				}
 				while ${Target:Next(exists)}

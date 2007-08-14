@@ -132,6 +132,7 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Use JetCan, 0]
 		This.MinerRef:AddSetting[Avoid Players Distance, 10000]
 		This.MinerRef:AddSetting[Distribute Lasers, TRUE]
+		Thid.MinerRef:AddSetting[Mining Drones, FALSE]
 
 		This.OreTypesRef:AddSetting[Vitreous Mercoxit, 1]
 		This.OreTypesRef:AddSetting[Magma Mercoxit, 1]
@@ -245,6 +246,16 @@ objectdef obj_Configuration_Miner
 	{	
 		This.MinerRef:AddSetting[Use JetCan,${useJetCan}]
 	}
+	
+	member:int MiningDrones()
+	{
+		return ${This.MinerRef.FindSetting[Mining Drones, NOTSET]}
+	}
+	
+	method SetMiningDrones(int miningDrones)
+	{
+		This.MinerRef:AddSetting[Mining Drones,${miningDrones}]
+	} 
 }
 
 objectdef obj_Configuration_Combat
