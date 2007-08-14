@@ -507,50 +507,56 @@ C:/Program Files/InnerSpace/Scripts/evebot/core/obj_Miner.iss:59 ProcessState() 
 C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.ProcessState
 	*/
 	
-	method CycleMiningLaser(string Slot, bool Activate)
+	method CycleMiningLaser(string Activate, string Slot)
 	{
 		echo CycleMiningLaser: ${Slot} Activate: ${Activate}
-		if ${Activate} && \
+		if ${Activate.Equal[ON]} && \
 			( ${Me.Ship.Module[${Slot}].IsActive} || \
 			  ${Me.Ship.Module[${Slot}].IsGoingOnline} || \
 			  ${Me.Ship.Module[${Slot}].IsDeactivating} || \
 			  ${Me.Ship.Module[${Slot}].IsChangingAmmo} || \
-			  ${Me.Ship.Module[${Slot}].IsReloadingAmmo}
+			  ${Me.Ship.Module[${Slot}].IsReloadingAmmo} \
 			)
 		{
 			echo "obj_Ship:CycleMiningLaser: Tried to Activate the module, but it's already active or changing state."
 			return
 		}
 				
-		if !${Activate} && \
+		if ${Activate.Equal[OFF]} && \
 			(!${Me.Ship.Module[${Slot}].IsActive} || \
 			  ${Me.Ship.Module[${Slot}].IsGoingOnline} || \
 			  ${Me.Ship.Module[${Slot}].IsDeactivating} || \
 			  ${Me.Ship.Module[${Slot}].IsChangingAmmo} || \
-			  ${Me.Ship.Module[${Slot}].IsReloadingAmmo}
+			  ${Me.Ship.Module[${Slot}].IsReloadingAmmo} \
 			)
 		{
 			echo "obj_Ship:CycleMiningLaser: Tried to Deactivate the module, but it's already active or changing state."
 			return
 		}
 
-		if ${Activate} && \
-			( !${Module.Value.LastTarget(exists)} || !${Entity[id,${{Me.Ship.Module[${Slot}].LastTarget.ID}](exists)} )
+		if ${Activate.Equal[ON]} && \
+			(	!${Me.Ship.Module[${Slot}].LastTarget(exists)} || \
+				!${Entity[id,${Me.Ship.Module[${Slot}].LastTarget.ID}](exists)} \
+			)
 		{
 			echo "obj_Ship:CycleMiningLaser: Target doesn't exist"
 			return
 		}
-		
+
 		Me.Ship.Module[${Slot}]:Click
-		if ${Activate}
+		if ${Activate.Equal[ON]}
 		{
 			; Delay from 18 to 45 seconds before deactivating
-			TimedCommand ${Math.Rand[35]:Inc[18]} Script[EVEBot].Variable[Ship]:CycleMiningLaser[${Slot}, !${Activate}]
+			TimedCommand ${Math.Rand[65]:Inc[30]} Script[EVEBot].Variable[Ship]:CycleMiningLaser[OFF, ${Slot}]
+			echo "next: off"
+			return
 		}
 		else
 		{
 			; Delay for the time it takes the laser to deactivate and be ready for reactivation
-			TimedCommand 20 Script[EVEBot].Variable[Ship]:CycleMiningLaser[${Slot}, !${Activate}]
+			TimedCommand 20 Script[EVEBot].Variable[Ship]:CycleMiningLaser[ON, "${Slot}"]
+			echo "next: on"
+			return
 		}
 	}
 
@@ -592,7 +598,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				call UpdateHudStatus "Activating: ${Module.Value.ToItem.Slot}: ${Module.Value.ToItem.Name}"
 				Module.Value:Click
 				wait 25
-				;TimedCommand ${Math.Rand[35]:Inc[18]} Script[EVEBot].Variable[Ship]:CycleMiningLaser[${Slot}, FALSE]
+				;TimedCommand ${Math.Rand[35]:Inc[18]} Script[EVEBot].Variable[Ship]:CycleMiningLaser[OFF, ${Slot}]
 				return
 			}
 			wait 10
