@@ -1,6 +1,6 @@
 variable string Version = "EVEBot 0.93 $Rev$"
 
-
+ 
 function UpdateHudStatus(string StatusMessage)
 {
 	UIElement[StatusConsole@Status@EvEBotOptionsTab@EVEBot]:Echo["${Time}: ${StatusMessage}"]
