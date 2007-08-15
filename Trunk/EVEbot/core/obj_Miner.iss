@@ -176,14 +176,6 @@ objectdef obj_Miner
 				${Ship.CargoFreeSpace} >= ${Ship.CargoMinimumFreeSpace})
 		{	
 	
-		if (${Config.Miner.MiningDrones} > 0 && \
-		${Ship.CargoFreeSpace} >= ${DroneCargoMin} && \
-		${Ship.Drones.DronesInSpace}) 
-		{
-			echo "Debug: Recalling Mining Drones"
-			call Ship.Drones.ReturnAllToDroneBay
-		}
-		
 			if (!${Ship.InWarp} && \
 				${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers})
 			{
