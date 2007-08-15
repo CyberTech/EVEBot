@@ -40,8 +40,17 @@ objectdef obj_Drones
 	
 	function ActivateMiningDrones()
 	{		
-		UI:UpdateConsole[""Engaging Mining Drones"]
+		UI:UpdateConsole["Engaging Mining Drones"]
 		EVE:DronesMineRepeatedly[This.ActiveDroneIDList]
+	}
+	
+	function SendDrone()
+	{
+		if (${This.DronesInSpace} > 0)
+		{
+		UI:UpdateConsole["Engaging Combat Drones"]
+		Eve:DronesEngageMyTarget[This.ActiveDroneIDList]
+		}
 	}
 }
 
@@ -88,6 +97,14 @@ objectdef obj_Ship
 			This:ValidateModuleTargets
 			FrameCounter:Set[0]
 		}
+		
+			;if ${Combat.InCombat}== FALSE
+		 	;{		 		
+			;	if (${Me.Ship.ShieldPct} < 100 && ${Me.GetTargetedBy} > 0)
+			;	{
+			;		Combat:InCombatState
+			;	}
+	 		;}
 
 	}
 	
@@ -245,6 +262,7 @@ objectdef obj_Ship
 	; "Safe" max locked targets is defined as max locked targets - 1
 	; for a buffer of targets so that hostiles may be targeted.
 	; Always return at least 1
+	
 	member:int SafeMaxLockedTargets()
 	{
 		variable int result

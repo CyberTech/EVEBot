@@ -20,6 +20,7 @@
 /* Behavior/Mode Includes */
 #include core/obj_Hauler.iss
 #include core/obj_Miner.iss
+#include core/obj_Combat.iss
 
 /* Declare all script or global variables here */
 variable bool play
@@ -43,6 +44,7 @@ variable obj_Skills Skills
 /* Script-Defined Behavior Objects */
 variable obj_Miner Miner
 variable obj_OreHauler Hauler 
+variable obj_Combat Combat
 ;variable obj_Salvager Salvager
 
 function atexit()

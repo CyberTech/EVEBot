@@ -213,6 +213,14 @@ objectdef obj_Asteroids
 					return TRUE
 				}
 				call UpdateHudStatus "Locking Asteroid ${AsteroidIterator.Value.Name}: ${Misc.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"
+				
+				while ${Combat.CombatPause}== TRUE
+				{
+					wait 30
+					echo "DEBUG: Obj_Asteroids In Combat Pause Loop"
+				}
+				
+				
 				AsteroidIterator.Value:LockTarget
 				do
 				{

@@ -200,6 +200,13 @@ objectdef obj_Miner
 					if ( ${This.ConcentrateFire} || \
 						!${Ship.IsMiningAstroidID[${TargetID}]} )
 					{
+						while ${Combat.CombatPause}== TRUE
+						{
+							wait 50
+							echo "DEBUG: Obj_Miner In Combat Pause Loop"
+						}
+						
+						
 						Target.Value:MakeActiveTarget
 						wait 20
 	
