@@ -40,8 +40,8 @@ objectdef obj_Drones
 	
 	function ActivateMiningDrones()
 	{		
-	UpdateHudStatus "Engaging Mining Drones"
-	EVE:DronesMineRepeatedly[This.ActiveDroneIDList]
+		UI:UpdateConsole[""Engaging Mining Drones"]
+		EVE:DronesMineRepeatedly[This.ActiveDroneIDList]
 	}
 }
 
