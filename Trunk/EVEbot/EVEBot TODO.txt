@@ -1,6 +1,24 @@
-TO:DO
+--------------------------------------------------------------------------------------------
 
-Hessinger: In vacation
+Last Updated: Sunday, August 19, 2007 7:29 Arizona NDT
+
+Notice All Developers: Please keep this update to date.
+
+Active Developers: Hessinger, Cybertech, Gliderpro, Altered
+Inactive Developers: Teht, Neutro, Plecks, Override
+
+
+ - In Queue and Feature Requests (Priority Status: 10 High - 1 Low)
+ 
+ - In Development
+ Obj_Combat - Hessinger and Cybertech: Being Written (Current State: Needs Debugging)
+ Obj_Hauler - GliderPro and Cybertech: (Current State: Awaiting Obj_Gang Development)
+ Obj_Gang - GliderPro: (Current State: In Progress [?])
+ Obj_Miner - Cybertech: Jetcan Mining (Current State: Awaiting Release of Hauler Support [?])
+ 
+---------------------------------------------------------------------------------------------
+
+(Older to.do list, pending deletion)
 
 Neutro: implementing an event for mutli-bot support
 Override: Working on the queue/learning skills
