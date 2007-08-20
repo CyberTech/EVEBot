@@ -329,13 +329,11 @@
 							<Height>18</Height>
 							<MaxLength>2</MaxLength>
 							<OnLoad>
-								echo \${Script[EVEBot].VariableScope.Config.Combat.MinimumDronesInSpace} = ${Script[EVEBot].VariableScope.Config.Combat.MinimumDronesInSpace}
 								This:SetText[${Script[EVEBot].VariableScope.Config.Combat.MinimumDronesInSpace}]
 							</OnLoad>
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									echo ${This.Text}
 									Script[EVEBot].VariableScope.Config.Combat:SetMinimumDronesInSpace[${Int[${This.Text}]}]
 								}
 							</OnChange>
