@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<InnerSpaceSettings>
+	
+	<!-- Regular Lasers -->
+	<Set Name="T1RLasers">
+	<!-- T1 -->
+	<Setting Name="1">Basic Miner</Setting>
+	<Setting Name="2">Cu Vapor Particle Bore Stream I</Setting>
+	<Setting Name="3">Deep Core Mining Laser I</Setting>
+	<Setting Name="4">Dual Diode Mining Laser I</Setting>
+	<Setting Name="5">EP-R Argon Ion Basic Excavation Pulse</Setting>
+	<Setting Name="6">EP-S Gaussian I Excavation Pulse</Setting>
+	<Setting Name="7">Gallente Mining Laser</Setting>
+	<Setting Name="8">Miner I</Setting>
+	<Setting Name="9">Miner II</Setting>
+	<Setting Name="10">Rubin Basic Particle Bore System</Setting>
+	<Setting Name="11">Single Diode Basic Mining Laser</Setting>
+	<Setting Name="12">Strip Miner I</Setting>
+	<Setting Name="13">Strip Miner II</Setting>
+	<Setting Name="14">XeCl Drilling Beam I</Setting>
+  <Setting Name="15">Xenon Basic Drilling Beam</Setting>
+  </Set>
+  
+  <Set Name="T2RLasers">
+	<!-- T2 -->
+	<Setting Name="1">Modulated Deep Core Miner II</Setting>
+	<Setting Name="2">Modulated Deep Core Strip Miner II</Setting>
+	<Setting Name="3">Modulated Strip Miner II</Setting>
+	</Set>
+
+<!-- Ice Lasers -->
+  <Set Name="T1ILasers">
+	<!-- T1 -->
+	<Setting Name="1">Ice Harvester I</Setting>
+	<Setting Name="2">Mining Foreman Link - Ice Harvesting</Setting>
+  </Set>
+  
+  <Set Name="T2ILasers">
+	<!-- T2 -->
+	<Setting Name="1">Ice Harvester II</Setting>
+	</Set>
+</InnerSpaceSettings>

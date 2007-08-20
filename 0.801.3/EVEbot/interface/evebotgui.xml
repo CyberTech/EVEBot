@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<ISUI>
+	<Window name='EvEbot'> 
+		<Title>EVEBot</Title>
+		<Visible>1</Visible>
+		<X>250</X> 
+		<Y>200</Y> 
+		<Width>417</Width> 
+		<Height>300</Height>
+		<TitleBar>		
+			<Height>16</Height>
+			<Border>3</Border>
+			<BorderColor>FF333333</BorderColor>
+			<BackgroundColor>FF555555</BackgroundColor>
+			<Width>100%</Width>
+      			<Children>
+				<text name='TitleName' >
+				<X>2</X>
+				<Y>2</Y>
+				<Width>100%</Width>
+				<Height>100%</Height>
+				<text>		EVEBot v.${Script[evebot].VariableScope.Version}</text>
+				</text>
+				<button Name='Close' template='eve.window.TitleBar.Close'>
+					<OnLeftClick>
+						endscript evebot
+					</OnLeftClick>
+				</button>
+				<button Name='Minimize' template='eve.window.TitleBar.Minimize'>
+					<OnLeftClick>
+						UIElement[eveBot].FindUsableChild[TitleBotStatus,text]:Show
+						UIElement[eveBot].FindUsableChild[TitleBotStatusCap,text]:Show
+						UIElement[eveBot].FindUsableChild[TitleBotXPStatus,text]:Show
+						UIElement[eveBot].FindUsableChild[TitleBotXPCap,text]:Show
+					</OnLeftClick>
+				</button>
+				<button Name='Maximize' template='eve.window.TitleBar.Maximize'>
+					<OnLeftClick>
+						UIElement[eveBot].FindUsableChild[TitleBotStatus,text]:Hide
+						UIElement[eveBot].FindUsableChild[TitleBotXPStatus,text]:Hide
+						UIElement[eveBot].FindUsableChild[TitleBotXPCap,text]:Hide
+						UIElement[eveBot].FindUsableChild[TitleBotStatusCap,text]:Hide
+					</OnLeftClick>
+				</button>
+
+			</Children>
+		</TitleBar>
+
+		<Children>
+			<TabControl Name='EvEBotTab'>
+				<X>0</X>
+				<Y>0</Y>
+				<Width>100%</Width>
+				<Height>100%</Height>
+				<FrameTexture />
+				<Tabs>
+					<Tab Name='Main'>
+						<commandbutton name='Pause EvEBot'> 
+							<X>275</X> 
+							<Y>5</Y>
+							<Width>65</Width>
+							<Height>25</Height>
+							<Text>Pause</Text>
+							<OnLeftClick>
+								EVE:Execute[CmdStopShip]
+								Script[EvEBot]:Pause
+								Echo Paused
+							</OnLeftClick>
+						</commandbutton>
+						<commandbutton name='Play EvEBot'> 
+							<X>205</X> 
+							<Y>5</Y>
+							<Width>65</Width>
+							<Height>25</Height>
+							<Text>Play</Text>
+							<OnLeftClick>
+								Script[EvEBot]:Resume
+								Echo Resume
+							</OnLeftClick>
+						</commandbutton>
+						<commandbutton name='Exit EvEBot'> 
+							<X>345</X> 
+							<Y>5</Y>
+							<Width>65</Width>
+							<Height>25</Height>
+							<Text>Exit</Text>
+							<OnLeftClick>
+								endscript evebot
+							</OnLeftClick>
+						</commandbutton>
+						<text name='Running Time is'>
+							<X>7</X> 
+							<Y>5</Y> 
+							<Width>100</Width> 
+							<Height>20</Height>
+							<Text>Time: </Text>
+						</text>
+						<Text name='EvE Bot Running Time'> 
+							<X>50</X> 
+							<Y>5</Y> 
+							<Width>100</Width> 
+							<Height>20</Height> 
+							<Text>${Math.Calc[(${Script[EvEBot].RunningTime}/1000/60/60)%60].Int.LeadingZeroes[2]}:${Math.Calc[(${Script[EvEBot].RunningTime}/1000/60)%60].Int.LeadingZeroes[2]}:${Math.Calc[(${Script[EvEBot].RunningTime}/1000)%60].Int.LeadingZeroes[2]}</Text> 
+						</Text>
+						<text name='Status'>
+							<X>7</X> 
+							<Y>20</Y> 
+							<Width>100</Width> 
+							<Height>20</Height>
+							<Text>State:</Text>
+						</text>
+						<text name='Status Code'>
+							<X>55</X> 
+							<Y>20</Y> 
+							<Width>100</Width> 
+							<Height>20</Height>
+							<text>${Script[evebot].VariableScope.botstate}</text>
+						</text>
+						<console Name="EVEStatus">
+							<Y>r100</Y>
+							<Width>100%</Width> 
+							<Height>100</Height> 
+						</console>
+					</Tab>
+					<Tab Name='Mining'>
+						<text name='CargoHoldItem1'>
+						<Visible>0</Visible>
+							<X>10</X> 
+							<Y>15</Y> 
+							<Width>300</Width> 
+							<Height>20</Height>
+							<Text>Cargo Hold Item 1: </Text>
+						</text>
+						<Textentry name='Define CargoHoldItem1x'>
+						<Visible>0</Visible>		
+							<X>155</X>							
+							<Y>11</Y>						
+							<Width>30</Width>						
+							<Height>18</Height>
+
+							<OnLoad>
+							This:SetText[${Script[evebot].VariableScope.CargoHoldItem1x}]
+							</OnLoad>					
+						</Textentry>
+						<Textentry name='Define CargoHoldItem1y'>
+						<Visible>0</Visible>		
+							<X>190</X>							
+							<Y>11</Y>						
+							<Width>30</Width>						
+							<Height>18</Height>
+
+							<OnLoad>
+							This:SetText[${Script[evebot].VariableScope.CargoHoldItem1y}]
+							</OnLoad>					
+						</Textentry>
+						<text name='CargoHoldItem2'>
+						<Visible>0</Visible>
+							<X>10</X> 
+							<Y>35</Y> 
+							<Width>300</Width> 
+							<Height>20</Height>
+							<Text>Cargo Hold Item 2: </Text>
+						</text>
+						<Textentry name='Define CargoHoldItem2x'>
+						<Visible>0</Visible>		
+							<X>155</X>							
+							<Y>31</Y>						
+							<Width>30</Width>						
+							<Height>18</Height>
+
+							<OnLoad>
+							This:SetText[${Script[evebot].VariableScope.CargoHoldItem2x}]
+							</OnLoad>					
+						</Textentry>
+						<Textentry name='Define CargoHoldItem2y'>
+						<Visible>0</Visible>		
+							<X>190</X>							
+							<Y>31</Y>						
+							<Width>30</Width>						
+							<Height>18</Height>
+
+							<OnLoad>
+							This:SetText[${Script[evebot].VariableScope.CargoHoldItem2y}]
+							</OnLoad>					
+						</Textentry>
+						<text name='CargoHoldItem3'>
+						<Visible>0</Visible>
+							<X>10</X> 
+							<Y>55</Y> 
+							<Width>300</Width> 
+							<Height>20</Height>
+							<Text>Cargo Hold Item 3: </Text>
+						</text>
+						<Textentry name='Define CargoHoldItem3y'>
+						<Visible>0</Visible>		
+							<X>190</X>							
+							<Y>51</Y>						
+							<Width>30</Width>						
+							<Height>18</Height>
+
+							<OnLoad>
+							This:SetText[${Script[evebot].VariableScope.CargoHoldItem3y}]
+							</OnLoad>					
+						</Textentry>
+						<Textentry name='Define CargoHoldItem3x'>
+						<Visible>0</Visible>		
+							<X>155</X>							
+							<Y>51</Y>						
+							<Width>30</Width>						
+							<Height>18</Height>
+
+							<OnLoad>
+							This:SetText[${Script[evebot].VariableScope.CargoHoldItem3x}]
+							</OnLoad>					
+						</Textentry>
+					</Tab>
+					<Tab name='Combat'>
+					</tab>
+					<Tab name='Market'>
+					</tab>
+					<tab name='Fitting'>
+					</tab>
+					<tab name='Skills'>
+					</tab>
+					<Tab Name='About'>
+					<Text name='oi'>
+						<X>1</X>
+						<Y>5</Y>
+						<Width>400</Width>
+						<Height>10</Height>
+						<Text>Special thanks to RickRoll!</Text>
+					</Text>
+					<Text name='developers'>
+						<X>1</X>
+						<Y>35</Y>
+						<Width>400</Width>
+						<Height>10</Height>
+						<Text>"Developers! Developers! Developers! Developers!</Text>
+					</Text>
+					<Text name='developers2'>
+						<X>1</X>
+						<Y>45</Y>
+						<Width>400</Width>
+						<Height>10</Height>
+						<Text>Developers! Developers! Developers! Developers!</Text>
+					</Text>
+					<Text name='developers3'>
+						<X>1</X>
+						<Y>55</Y>
+						<Width>400</Width>
+						<Height>10</Height>
+						<Text>Developers! Developers! Developers! Developers!</Text>
+					</Text>
+					<Text name='developers4'>
+						<X>1</X>
+						<Y>65</Y>
+						<Width>400</Width>
+						<Height>10</Height>
+						<Text>*LOAD SCREAMING*</Text>
+					</Text>
+					<Text name='developers5'>
+						<X>1</X>
+						<Y>75</Y>
+						<Width>400</Width>
+						<Height>10</Height>
+						<Text>COME ON!!!</Text>
+					</Text>
+					<Text name='developers6'>
+						<X>1</X>
+						<Y>85</Y>
+						<Width>400</Width>
+						<Height>10</Height>
+						<Text>WOOOOOOOOOOOOOT"</Text>
+					</Text>
+					<Text name='developers7'>
+						<X>250</X>
+						<Y>105</Y>
+						<Width>400</Width>
+						<Height>10</Height>
+						<Text>-  Steve Ballmer</Text>
+					</Text>
+					<Text name='developers8'>
+						<X>5</X>
+						<Y>145</Y>
+						<Width>400</Width>
+						<Height>10</Height>
+						<Text>EVEBot was created by:</Text>
+					</Text>
+					<Text name='developers9'>
+						<X>5</X>
+						<Y>155</Y>
+						<Width>400</Width>
+						<Height>10</Height>
+						<Text>Neutro, Tehtsuo, thehazard, Stealthy, Hessinger</Text>
+					</Text>
+
+					</Tab>
+				</Tabs>
+			</tabcontrol>
+		</Children>
+						
+	</Window>
+</ISUI>

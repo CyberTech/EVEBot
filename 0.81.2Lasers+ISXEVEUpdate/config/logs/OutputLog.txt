@@ -1,0 +1,3002 @@
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 01:55:51  
+  Evebot Session for  Copypaste 
+-------------------------------------------------
+[01:55:51] Started EVEBot 0.8..
+[01:55:51] Please Hold Loading Main Function..
+[01:55:53] Completed Main Function
+[01:55:53] Bot is now Paused
+[01:55:53] Please Press Play
+[01:55:54] Mining
+[01:55:54] Setting roid belt Vay II - Asteroid Belt 1 with id 40336333
+[01:55:56] About to warp, this is a log check
+[01:56:06] Warping, waiting...
+[01:56:08] Finished warping...
+[01:56:13] Warp Command Given
+[01:56:13] Setting roid to Asteroid (Plagioclase) with id 74294968 -- calling Orbit...
+[01:56:14] Entering Orbit with 74294968, waiting...
+[01:56:34] Finish waiting, in orbit now
+[01:56:35] Locking roid target
+[01:56:40] IMMA FIRIN MAH LAZOR!
+[01:57:42] End waiting, cargo is full
+[01:57:43] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[01:57:43] My ship is full
+[01:57:43] The distance is greater than 10000, calling ReturnToBase
+[01:57:44] The distance is greater than 10000, warp to base
+[01:57:54] Warping, waiting...
+[01:58:24] Finished warping...
+[01:58:31] Approaching Base
+[01:58:39] In Docking Range ... Docking
+[01:58:39] Docking, waiting...
+[01:58:49] Finished Docking
+[01:58:55] I'm in the station
+[01:58:55] Transfering item1 to hangar
+[01:59:03] Transfering item2 to hangar
+[01:59:11] Transfering item3 to hangar
+[01:59:19] Stacking all...
+[01:59:27] Staking done
+[01:59:29] Undocking
+[01:59:29] Waiting...
+[01:59:46] Mining
+[01:59:46] Setting roid belt Vay II - Asteroid Belt 1 with id 40336333
+[01:59:48] About to warp, this is a log check
+[01:59:58] Warping, waiting...
+[02:00:27] Finished warping...
+[02:00:32] Warp Command Given
+[02:00:32] Setting roid to Asteroid (Concentrated Veldspar) with id 74294910 -- calling Orbit...
+[02:00:33] Entering Orbit with 74294910, waiting...
+[02:01:42] Finish waiting, in orbit now
+[02:01:42] Locking roid target
+[02:01:47] IMMA FIRIN MAH LAZOR!
+[02:04:50] End waiting, cargo is full
+[02:04:51] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[02:04:51] My ship is full
+[02:04:51] The distance is greater than 10000, calling ReturnToBase
+[02:04:51] The distance is greater than 10000, warp to base
+[02:05:01] Warping, waiting...
+[02:05:30] Finished warping...
+[02:05:37] Approaching Base
+[02:05:47] In Docking Range ... Docking
+[02:05:47] Docking, waiting...
+[02:05:55] Finished Docking
+[02:06:00] I'm in the station
+[02:06:00] Transfering item1 to hangar
+[02:06:08] Transfering item2 to hangar
+[02:06:16] Transfering item3 to hangar
+[02:06:24] Stacking all...
+[02:06:32] Staking done
+[02:06:34] Undocking
+[02:06:34] Waiting...
+[02:06:51] Mining
+[02:06:51] Setting roid belt Vay II - Asteroid Belt 1 with id 40336333
+[02:06:53] About to warp, this is a log check
+[02:07:03] Warping, waiting...
+[02:07:31] Finished warping...
+[02:07:36] Warp Command Given
+[02:07:36] Setting roid to Asteroid (Concentrated Veldspar) with id 74294910 -- calling Orbit...
+[02:07:37] Entering Orbit with 74294910, waiting...
+[02:08:48] Finish waiting, in orbit now
+[02:08:48] Locking roid target
+[02:08:53] IMMA FIRIN MAH LAZOR!
+[02:11:57] End waiting, cargo is full
+[02:11:59] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[02:11:59] My ship is full
+[02:11:59] The distance is greater than 10000, calling ReturnToBase
+[02:11:59] The distance is greater than 10000, warp to base
+[02:12:09] Warping, waiting...
+[02:12:37] Finished warping...
+[02:12:44] Approaching Base
+[02:12:46] In Docking Range ... Docking
+[02:12:46] Docking, waiting...
+[02:12:54] Finished Docking
+[02:13:00] I'm in the station
+[02:13:00] Transfering item1 to hangar
+[02:13:08] Transfering item2 to hangar
+[02:13:16] Transfering item3 to hangar
+[02:13:24] Stacking all...
+[02:13:32] Staking done
+[02:13:34] Undocking
+[02:13:34] Waiting...
+[02:13:51] Mining
+[02:13:51] Setting roid belt Vay II - Asteroid Belt 1 with id 40336333
+[02:13:53] About to warp, this is a log check
+[02:14:03] Warping, waiting...
+[02:14:32] Finished warping...
+[02:14:37] Warp Command Given
+[02:14:37] Setting roid to Asteroid (Veldspar) with id 74294863 -- calling Orbit...
+[02:14:38] Entering Orbit with 74294863, waiting...
+[02:15:51] Finish waiting, in orbit now
+[02:15:51] Locking roid target
+[02:15:56] IMMA FIRIN MAH LAZOR!
+[02:19:00] End waiting, cargo is full
+[02:19:02] Setting main station Vay I - Core Complexion Inc. Factory with ID 60005578
+[02:19:02] My ship is full
+[02:19:02] The distance is greater than 10000, calling ReturnToBase
+[02:19:02] The distance is greater than 10000, warp to base
+[02:19:12] Warping, waiting...
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 09:43:50  
+  Evebot Session for  Josh Fowler2 
+-------------------------------------------------
+[09:43:50] Started EVEBot 0.8..
+[09:43:50] Please Hold Loading Main Function..
+[09:43:52] Completed Main Function
+[09:43:52] Bot is now Paused
+[09:43:52] Please Press Play
+[09:44:52] I'm in the station
+[09:44:52] Transfering item1 to hangar
+[09:45:00] Transfering item2 to hangar
+[09:45:08] Transfering item3 to hangar
+[09:45:16] Stacking all...
+[09:45:24] Staking done
+[09:45:26] Undocking
+[09:45:26] Waiting...
+[09:45:48] Mining
+[09:45:48] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[09:45:50] About to warp, this is a log check
+[09:46:00] Warping, waiting...
+[09:47:00] Finished warping...
+[09:47:05] Warp Command Given
+[09:47:05] Setting roid to Asteroid (Condensed Scordite) with id 72974456 -- calling Orbit...
+[09:47:06] Entering Orbit with 72974456, waiting...
+[09:51:48] Finish waiting, in orbit now
+[09:51:48] Locking roid target
+[09:51:54] IMMA FIRIN MAH LAZOR!
+[09:57:56] Entering Orbit with 72974473, waiting...
+[09:57:58] Finish waiting, in orbit now
+[09:57:58] Locking roid target
+[09:58:03] IMMA FIRIN MAH LAZOR!
+[10:01:03] End waiting, cargo is full
+[10:01:05] Setting main station Hatakani VII - Moon 18 - Sukuuvestaa Corporation Production Plant with ID 60002869
+[10:01:05] My ship is full
+[10:01:05] Calling ReturnToBase
+[10:01:05] The distance is greater than 10000, warp to base
+[10:01:15] Warping, waiting...
+[10:01:49] Finished warping...
+[10:01:56] Approaching Base
+[10:01:58] In Docking Range ... Docking
+[10:01:58] Docking, waiting...
+[10:02:06] Finished Docking
+[10:02:12] I'm in the station
+[10:02:12] Transfering item1 to hangar
+[10:02:20] Transfering item2 to hangar
+[10:02:29] Transfering item3 to hangar
+[10:02:37] Stacking all...
+[10:02:45] Staking done
+[10:02:47] Undocking
+[10:02:47] Waiting...
+[10:03:07] Mining
+[10:03:07] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[10:03:09] About to warp, this is a log check
+[10:03:19] Warping, waiting...
+[10:04:18] Finished warping...
+[10:04:23] Warp Command Given
+[10:04:24] Setting roid to Asteroid (Scordite) with id 72974431 -- calling Orbit...
+[10:04:25] Entering Orbit with 72974431, waiting...
+[10:08:40] Finish waiting, in orbit now
+[10:08:40] Locking roid target
+[10:08:45] IMMA FIRIN MAH LAZOR!
+[10:11:49] Entering Orbit with 72974423, waiting...
+[10:11:51] Finish waiting, in orbit now
+[10:11:51] Locking roid target
+[10:11:56] IMMA FIRIN MAH LAZOR!
+[10:18:01] End waiting, cargo is full
+[10:18:03] Setting main station Hatakani VII - Moon 18 - Sukuuvestaa Corporation Production Plant with ID 60002869
+[10:18:03] My ship is full
+[10:18:03] Calling ReturnToBase
+[10:18:03] The distance is greater than 10000, warp to base
+[10:18:13] Warping, waiting...
+[10:19:07] Finished warping...
+[10:19:14] Approaching Base
+[10:19:16] In Docking Range ... Docking
+[10:19:16] Docking, waiting...
+[10:19:24] Finished Docking
+[10:19:30] I'm in the station
+[10:19:30] Transfering item1 to hangar
+[10:19:39] Transfering item2 to hangar
+[10:19:48] Transfering item3 to hangar
+[10:19:56] Stacking all...
+[10:20:04] Staking done
+[10:20:06] Undocking
+[10:20:06] Waiting...
+[10:20:28] Mining
+[10:20:28] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[10:20:30] About to warp, this is a log check
+[10:20:40] Warping, waiting...
+[10:21:37] Finished warping...
+[10:21:42] Warp Command Given
+[10:21:43] Setting roid to Asteroid (Scordite) with id 72974429 -- calling Orbit...
+[10:21:44] Entering Orbit with 72974429, waiting...
+[10:25:34] Finish waiting, in orbit now
+[10:25:35] Locking roid target
+[10:25:40] IMMA FIRIN MAH LAZOR!
+[10:28:41] End waiting, cargo is full
+[10:28:42] Mining
+[10:28:42] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[10:28:44] About to warp, this is a log check
+[10:28:54] Warping, waiting...
+[10:28:56] Finished warping...
+[10:29:01] Warp Command Given
+[10:29:02] Setting roid to Asteroid (Scordite) with id 72974413 -- calling Orbit...
+[10:29:03] Entering Orbit with 72974413, waiting...
+[10:29:05] Finish waiting, in orbit now
+[10:29:05] Locking roid target
+[10:29:10] IMMA FIRIN MAH LAZOR!
+[10:35:14] Entering Orbit with 72974522, waiting...
+[10:35:16] Finish waiting, in orbit now
+[10:35:16] Locking roid target
+[10:35:21] IMMA FIRIN MAH LAZOR!
+[10:38:01] End waiting, cargo is full
+[10:38:03] Setting main station Hatakani VII - Moon 18 - Sukuuvestaa Corporation Production Plant with ID 60002869
+[10:38:03] My ship is full
+[10:38:03] Calling ReturnToBase
+[10:38:03] The distance is greater than 10000, warp to base
+[10:38:13] Warping, waiting...
+[10:39:08] Finished warping...
+[10:39:15] Approaching Base
+[10:39:17] In Docking Range ... Docking
+[10:39:17] Docking, waiting...
+[10:39:28] Finished Docking
+[10:39:33] I'm in the station
+[10:39:34] Transfering item1 to hangar
+[10:39:42] Transfering item2 to hangar
+[10:39:50] Transfering item3 to hangar
+[10:39:58] Stacking all...
+[10:40:06] Staking done
+[10:40:08] Undocking
+[10:40:08] Waiting...
+[10:40:31] Mining
+[10:40:31] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[10:40:33] About to warp, this is a log check
+[10:40:43] Warping, waiting...
+[10:41:41] Finished warping...
+[10:41:46] Warp Command Given
+[10:41:46] Setting roid to Asteroid (Condensed Scordite) with id 72974463 -- calling Orbit...
+[10:41:47] Entering Orbit with 72974463, waiting...
+[10:45:33] Finish waiting, in orbit now
+[10:45:34] Locking roid target
+[10:45:39] IMMA FIRIN MAH LAZOR!
+[10:48:44] Entering Orbit with 72974509, waiting...
+[10:48:46] Finish waiting, in orbit now
+[10:48:46] Locking roid target
+[10:48:51] IMMA FIRIN MAH LAZOR!
+[10:54:56] End waiting, cargo is full
+[10:54:58] Setting main station Hatakani VII - Moon 18 - Sukuuvestaa Corporation Production Plant with ID 60002869
+[10:54:58] My ship is full
+[10:54:58] Calling ReturnToBase
+[10:54:58] The distance is greater than 10000, warp to base
+[10:55:08] Warping, waiting...
+[10:55:57] Finished warping...
+[10:56:04] Approaching Base
+[10:56:06] In Docking Range ... Docking
+[10:56:06] Docking, waiting...
+[10:56:14] Finished Docking
+[10:56:20] I'm in the station
+[10:56:20] Transfering item1 to hangar
+[10:56:28] Transfering item2 to hangar
+[10:56:37] Transfering item3 to hangar
+[10:56:45] Stacking all...
+[10:56:53] Staking done
+[10:56:55] Undocking
+[10:56:55] Waiting...
+[10:57:41] Mining
+[10:57:41] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[10:57:43] About to warp, this is a log check
+[10:57:53] Warping, waiting...
+[10:58:40] Finished warping...
+[10:58:45] Warp Command Given
+[10:58:45] Setting roid to Asteroid (Condensed Scordite) with id 72974436 -- calling Orbit...
+[10:58:47] Entering Orbit with 72974436, waiting...
+[11:03:45] Finish waiting, in orbit now
+[11:03:45] Locking roid target
+[11:03:50] IMMA FIRIN MAH LAZOR!
+[11:06:54] Entering Orbit with 72974450, waiting...
+[11:06:56] Finish waiting, in orbit now
+[11:06:56] Locking roid target
+[11:07:01] IMMA FIRIN MAH LAZOR!
+[11:10:02] End waiting, cargo is full
+[11:10:03] Mining
+[11:10:03] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[11:10:06] About to warp, this is a log check
+[11:10:16] Warping, waiting...
+[11:10:18] Finished warping...
+[11:10:23] Warp Command Given
+[11:10:23] Setting roid to Asteroid (Scordite) with id 72974529 -- calling Orbit...
+[11:10:24] Entering Orbit with 72974529, waiting...
+[11:10:26] Finish waiting, in orbit now
+[11:10:26] Locking roid target
+[11:10:31] IMMA FIRIN MAH LAZOR!
+[11:13:40] End waiting, cargo is full
+[11:13:42] Mining
+[11:13:42] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[11:13:44] About to warp, this is a log check
+[11:13:54] Warping, waiting...
+[11:13:56] Finished warping...
+[11:14:01] Warp Command Given
+[11:14:01] Setting roid to Asteroid (Scordite) with id 72974534 -- calling Orbit...
+[11:14:02] Entering Orbit with 72974534, waiting...
+[11:14:04] Finish waiting, in orbit now
+[11:14:04] Locking roid target
+[11:14:09] IMMA FIRIN MAH LAZOR!
+[11:17:12] End waiting, cargo is full
+[11:17:14] Setting main station Hatakani VII - Moon 18 - Sukuuvestaa Corporation Production Plant with ID 60002869
+[11:17:14] My ship is full
+[11:17:14] Calling ReturnToBase
+[11:17:14] The distance is greater than 10000, warp to base
+[11:17:24] Warping, waiting...
+[11:18:17] Finished warping...
+[11:18:24] Approaching Base
+[11:20:35] In Docking Range ... Docking
+[11:20:35] Docking, waiting...
+[11:20:45] Finished Docking
+[11:20:51] I'm in the station
+[11:20:51] Transfering item1 to hangar
+[11:20:59] Transfering item2 to hangar
+[11:21:08] Transfering item3 to hangar
+[11:21:16] Stacking all...
+[11:21:24] Staking done
+[11:21:26] Undocking
+[11:21:26] Waiting...
+[11:21:48] Mining
+[11:21:48] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[11:21:50] About to warp, this is a log check
+[11:22:00] Warping, waiting...
+[11:22:57] Finished warping...
+[11:23:02] Warp Command Given
+[11:23:02] Setting roid to Asteroid (Scordite) with id 72974470 -- calling Orbit...
+[11:23:03] Entering Orbit with 72974470, waiting...
+[11:26:53] Finish waiting, in orbit now
+[11:26:53] Locking roid target
+[11:27:00] IMMA FIRIN MAH LAZOR!
+[11:33:02] Entering Orbit with 72974539, waiting...
+[11:33:04] Finish waiting, in orbit now
+[11:33:04] Locking roid target
+[11:33:09] IMMA FIRIN MAH LAZOR!
+[11:34:07] End waiting, cargo is full
+[11:34:08] Setting main station Hatakani VII - Moon 18 - Sukuuvestaa Corporation Production Plant with ID 60002869
+[11:34:08] My ship is full
+[11:34:08] Calling ReturnToBase
+[11:34:08] The distance is greater than 10000, warp to base
+[11:34:19] Warping, waiting...
+[11:35:13] Finished warping...
+[11:35:21] Approaching Base
+[11:35:23] In Docking Range ... Docking
+[11:35:23] Docking, waiting...
+[11:35:33] Finished Docking
+[11:35:39] I'm in the station
+[11:35:39] Transfering item1 to hangar
+[11:35:47] Transfering item2 to hangar
+[11:35:55] Transfering item3 to hangar
+[11:36:03] Stacking all...
+[11:36:11] Staking done
+[11:36:13] Undocking
+[11:36:13] Waiting...
+[11:36:41] Setting main station Hatakani VII - Moon 18 - Sukuuvestaa Corporation Production Plant with ID 60002869
+[11:36:41] My ship is full
+[11:36:41] Approaching Base
+[11:36:43] In Docking Range ... Docking
+[11:36:43] Docking, waiting...
+[11:36:51] Finished Docking
+[11:36:57] I'm in the station
+[11:36:57] Transfering item1 to hangar
+[11:37:05] Transfering item2 to hangar
+[11:37:13] Transfering item3 to hangar
+[11:37:21] Stacking all...
+[11:37:29] Staking done
+[11:37:31] Undocking
+[11:37:31] Waiting...
+[11:37:53] Mining
+[11:37:53] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[11:37:55] About to warp, this is a log check
+[11:38:05] Warping, waiting...
+[11:39:03] Finished warping...
+[11:39:08] Warp Command Given
+[11:39:09] Setting roid to Asteroid (Condensed Scordite) with id 72974473 -- calling Orbit...
+[11:39:10] Entering Orbit with 72974473, waiting...
+[11:43:09] Finish waiting, in orbit now
+[11:43:09] Locking roid target
+[11:43:14] IMMA FIRIN MAH LAZOR!
+[11:58:39] Entering Orbit with 72974527, waiting...
+[11:58:41] Finish waiting, in orbit now
+[11:58:41] Locking roid target
+[11:58:46] IMMA FIRIN MAH LAZOR!
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 12:03:14  
+  Evebot Session for  Josh Fowler2 
+-------------------------------------------------
+[12:03:14] Started EVEBot 0.8..
+[12:03:14] Please Hold Loading Main Function..
+[12:03:16] Completed Main Function
+[12:03:16] Bot is now Paused
+[12:03:16] Please Press Play
+[12:03:17] Setting main station Hatakani VII - Moon 18 - Sukuuvestaa Corporation Production Plant with ID 60002869
+[12:03:17] My ship is full
+[12:03:17] Calling ReturnToBase
+[12:03:17] The distance is greater than 10000, warp to base
+[12:03:27] Warping, waiting...
+[12:04:14] Finished warping...
+[12:04:21] Approaching Base
+[12:04:23] In Docking Range ... Docking
+[12:04:23] Docking, waiting...
+[12:04:31] Finished Docking
+[12:04:37] I'm in the station
+[12:04:37] Transfering item1 to hangar
+[12:04:45] Transfering item2 to hangar
+[12:04:53] Transfering item3 to hangar
+[12:05:01] Stacking all...
+[12:05:09] Staking done
+[12:05:11] Undocking
+[12:05:11] Waiting...
+[12:05:32] Mining
+[12:05:33] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[12:05:35] About to warp, this is a log check
+[12:05:45] Warping, waiting...
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 12:06:45  
+  Evebot Session for  Josh Fowler2 
+-------------------------------------------------
+[12:06:45] Started EVEBot 0.8..
+[12:06:45] Please Hold Loading Main Function..
+[12:06:47] Completed Main Function
+[12:06:47] Bot is now Paused
+[12:06:47] Please Press Play
+[12:07:02] Mining
+[12:07:02] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[12:07:04] About to warp, this is a log check
+[12:07:14] Warping, waiting...
+[12:07:16] Finished warping...
+[12:07:21] Warp Command Given
+[12:07:21] Setting roid to Asteroid (Pyroxeres) with id 72974505 -- calling Orbit...
+[12:07:22] Entering Orbit with 72974505, waiting...
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 12:08:07  
+  Evebot Session for  Josh Fowler2 
+-------------------------------------------------
+[12:08:07] Started EVEBot 0.8..
+[12:08:07] Please Hold Loading Main Function..
+[12:08:09] Completed Main Function
+[12:08:09] Bot is now Paused
+[12:08:09] Please Press Play
+[12:08:12] Mining
+[12:08:12] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[12:08:14] About to warp, this is a log check
+[12:08:24] Warping, waiting...
+[12:08:26] Finished warping...
+[12:08:31] Warp Command Given
+[12:08:31] Setting roid to Asteroid (Massive Scordite) with id 72974460 -- calling Orbit...
+[12:08:32] Entering Orbit with 72974460, waiting...
+[12:12:18] Finish waiting, in orbit now
+[12:12:19] Locking roid target
+[12:12:24] IMMA FIRIN MAH LAZOR!
+[12:15:27] End waiting, cargo is full
+[12:15:29] Mining
+[12:15:29] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[12:15:31] About to warp, this is a log check
+[12:15:42] Warping, waiting...
+[12:15:44] Finished warping...
+[12:15:49] Warp Command Given
+[12:15:49] Setting roid to Asteroid (Scordite) with id 72974541 -- calling Orbit...
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 12:22:51  
+  Evebot Session for  Josh Fowler2 
+-------------------------------------------------
+[12:22:51] Started EVEBot 0.8..
+[12:22:51] Please Hold Loading Main Function..
+[12:22:53] Completed Main Function
+[12:22:53] Bot is now Paused
+[12:22:53] Please Press Play
+[12:27:52] Mining
+[12:27:52] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[12:27:54] About to warp, this is a log check
+[12:28:04] Warping, waiting...
+[12:28:06] Finished warping...
+[12:28:11] Warp Command Given
+[12:28:11] Setting roid to Asteroid (Scordite) with id 72974481 -- calling Orbit...
+[12:28:12] Entering Orbit with 72974481, waiting...
+[12:28:14] Finish waiting, in orbit now
+[12:28:14] Locking roid target
+[12:28:19] IMMA FIRIN MAH LAZOR!
+[12:31:25] Entering Orbit with 72974541, waiting...
+[12:31:27] Finish waiting, in orbit now
+[12:31:27] Locking roid target
+[12:31:32] IMMA FIRIN MAH LAZOR!
+[12:32:45] End waiting, cargo is full
+[12:32:46] Setting main station Hatakani VII - Moon 18 - Sukuuvestaa Corporation Production Plant with ID 60002869
+[12:32:46] My ship is full
+[12:32:46] Calling ReturnToBase
+[12:32:46] The distance is greater than 10000, warp to base
+[12:32:56] Warping, waiting...
+[12:33:48] Finished warping...
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 12:44:48  
+  Evebot Session for  Josh Fowler2 
+-------------------------------------------------
+[12:44:48] Started EVEBot 0.8..
+[12:44:48] Please Hold Loading Main Function..
+[12:44:50] Completed Main Function
+[12:44:50] Bot is now Paused
+[12:44:50] Please Press Play
+[12:44:53] Setting main station Hatakani VII - Moon 18 - Sukuuvestaa Corporation Production Plant with ID 60002869
+[12:44:53] My ship is full
+[12:44:53] Calling ReturnToBase
+[12:44:53] The distance is greater than 10000, warp to base
+[12:45:03] Warping, waiting...
+[12:45:45] Finished warping...
+[12:45:55] Approaching Base
+[12:45:57] In Docking Range ... Docking
+[12:45:57] Docking, waiting...
+[12:46:08] Finished Docking
+[12:46:14] I'm in the station
+[12:46:14] Transfering item1 to hangar
+[12:46:22] Transfering item2 to hangar
+[12:46:30] Transfering item3 to hangar
+[12:46:38] Stacking all...
+[12:46:46] Staking done
+[12:46:48] Undocking
+[12:46:48] Waiting...
+[12:47:08] Mining
+[12:47:08] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[12:47:10] About to warp, this is a log check
+[12:47:20] Warping, waiting...
+[12:48:21] Finished warping...
+[12:48:26] Warp Command Given
+[12:48:26] Setting roid to Asteroid (Scordite) with id 72974541 -- calling Orbit...
+[12:48:27] Entering Orbit with 72974541, waiting...
+[12:52:56] Finish waiting, in orbit now
+[12:52:56] Locking roid target
+[12:53:01] IMMA FIRIN MAH LAZOR!
+[12:56:03] End waiting, cargo is full
+[12:56:04] Mining
+[12:56:05] Setting roid belt Hatakani VIII - Asteroid Belt 2 with id 40175465
+[12:56:07] About to warp, this is a log check
+[12:56:17] Warping, waiting...
+[12:56:19] Finished warping...
+[12:56:24] Warp Command Given
+[12:56:24] Setting roid to Asteroid (Scordite) with id 72974513 -- calling Orbit...
+[12:56:25] Entering Orbit with 72974513, waiting...
+[12:56:27] Finish waiting, in orbit now
+[12:56:28] Locking roid target
+[12:56:33] IMMA FIRIN MAH LAZOR!
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 12:03:34  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[12:03:34] Started EVEBot 0.8..
+[12:03:34] Please Hold Loading Main Function..
+[12:03:36] Completed Main Function
+[12:03:36] Bot is now Paused
+[12:03:36] Please Press Play
+[12:03:39] Mining
+[12:03:39] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[12:03:41] About to warp, this is a log check
+[12:03:51] Warping, waiting...
+[12:04:15] Finished warping...
+[12:04:20] Warp Command Given
+[12:04:20] Setting roid to Asteroid (Scordite) with id 72868005 -- calling Orbit...
+[12:04:22] Entering Orbit with 72868005, waiting...
+[12:05:20] Finish waiting, in orbit now
+[12:05:20] Locking roid target
+[12:05:28] IMMA FIRIN MAH LAZOR!
+[12:15:34] End waiting, cargo is full
+[12:15:36] Setting main station Vittenyn VI - Moon 13 - Federation Navy Assembly Plant with ID 60011848
+[12:15:37] My ship is full
+[12:15:37] Calling ReturnToBase
+[12:15:37] The distance is greater than 10000, warp to base
+[12:15:47] Warping, waiting...
+[12:16:10] Finished warping...
+[12:16:20] Approaching Base
+[12:22:21] In Docking Range ... Docking
+[12:22:21] Docking, waiting...
+[12:22:32] Finished Docking
+[12:22:37] I'm in the station
+[12:22:37] Transfering item1 to hangar
+[12:22:45] Transfering item2 to hangar
+[12:22:53] Transfering item3 to hangar
+[12:23:02] Stacking all...
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 12:23:21  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[12:23:21] Started EVEBot 0.8..
+[12:23:21] Please Hold Loading Main Function..
+[12:23:23] Completed Main Function
+[12:23:23] Bot is now Paused
+[12:23:23] Please Press Play
+[12:23:24] I'm in the station
+[12:23:24] Transfering item1 to hangar
+[12:23:32] Transfering item2 to hangar
+[12:23:40] Transfering item3 to hangar
+[12:23:48] Stacking all...
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 12:47:24  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[12:47:24] Started EVEBot 0.8..
+[12:47:24] Please Hold Loading Main Function..
+[12:47:26] Completed Main Function
+[12:47:27] Bot is now Paused
+[12:47:27] Please Press Play
+[12:47:27] Mining
+[12:47:27] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[12:47:29] About to warp, this is a log check
+[12:47:39] Warping, waiting...
+[12:48:02] Finished warping...
+[12:48:07] Warp Command Given
+[12:48:08] Setting roid to Asteroid (Scordite) with id 72868004 -- calling Orbit...
+[12:48:09] Entering Orbit with 72868004, waiting...
+[12:49:05] Finish waiting, in orbit now
+[12:49:06] Locking roid target
+[12:49:13] IMMA FIRIN MAH LAZOR!
+[12:53:27] End waiting, cargo is full
+[12:53:28] Mining
+[12:53:29] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[12:53:31] About to warp, this is a log check
+[12:53:41] Warping, waiting...
+[12:53:43] Finished warping...
+[12:53:48] Warp Command Given
+[12:53:48] Setting roid to Asteroid (Scordite) with id 72868004 -- calling Orbit...
+[12:58:05] End waiting, cargo is full
+[12:58:07] Setting main station Vittenyn VI - Moon 13 - Federation Navy Assembly Plant with ID 60011848
+[12:58:07] My ship is full
+[12:58:07] Calling ReturnToBase
+[12:58:07] The distance is greater than 10000, warp to base
+[12:58:17] Warping, waiting...
+[12:58:44] Finished warping...
+[12:58:54] Approaching Base
+[12:59:09] In Docking Range ... Docking
+[12:59:09] Docking, waiting...
+[12:59:20] Finished Docking
+[12:59:26] I'm in the station
+[12:59:26] Transfering item1 to hangar
+[12:59:34] Transfering item2 to hangar
+[12:59:42] Transfering item3 to hangar
+[12:59:52] Stacking all...
+[13:00:00] Staking done
+[13:00:02] Undocking
+[13:00:02] Waiting...
+[13:00:26] Setting main station Vittenyn VI - Moon 13 - Federation Navy Assembly Plant with ID 60011848
+[13:00:26] My ship is full
+[13:00:26] Approaching Base
+[13:00:29] In Docking Range ... Docking
+[13:00:29] Docking, waiting...
+[13:00:40] Finished Docking
+[13:00:45] I'm in the station
+[13:00:45] Transfering item1 to hangar
+[13:00:54] Transfering item2 to hangar
+[13:01:02] Transfering item3 to hangar
+[13:01:10] Stacking all...
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 13:01:29  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[13:01:29] Started EVEBot 0.8..
+[13:01:29] Please Hold Loading Main Function..
+[13:01:31] Completed Main Function
+[13:01:31] Bot is now Paused
+[13:01:31] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 13:01:35  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[13:01:35] Started EVEBot 0.8..
+[13:01:35] Please Hold Loading Main Function..
+[13:01:37] Completed Main Function
+[13:01:37] Bot is now Paused
+[13:01:37] Please Press Play
+[13:01:42] I'm in the station
+[13:01:42] Transfering item1 to hangar
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 13:02:01  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[13:02:01] Started EVEBot 0.8..
+[13:02:01] Please Hold Loading Main Function..
+[13:02:03] Completed Main Function
+[13:02:03] Bot is now Paused
+[13:02:03] Please Press Play
+[13:02:04] I'm in the station
+[13:02:04] Transfering item1 to hangar
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 13:02:12  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[13:02:12] Started EVEBot 0.8..
+[13:02:12] Please Hold Loading Main Function..
+[13:02:14] Completed Main Function
+[13:02:14] Bot is now Paused
+[13:02:14] Please Press Play
+[13:02:15] I'm in the station
+[13:02:15] Transfering item1 to hangar
+[13:02:24] Transfering item2 to hangar
+[13:02:32] Transfering item3 to hangar
+[13:02:40] Stacking all...
+[13:02:48] Staking done
+[13:02:52] Undocking
+[13:02:52] Waiting...
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 13:05:33  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[13:05:33] Started EVEBot 0.8..
+[13:05:33] Please Hold Loading Main Function..
+[13:05:35] Completed Main Function
+[13:05:35] Bot is now Paused
+[13:05:35] Please Press Play
+[13:05:36] Mining
+[13:05:37] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[13:05:39] About to warp, this is a log check
+[13:05:49] Warping, waiting...
+[13:06:12] Finished warping...
+[13:06:17] Warp Command Given
+[13:06:17] Setting roid to Asteroid (Scordite) with id 72868080 -- calling Orbit...
+[13:06:19] Entering Orbit with 72868080, waiting...
+[13:07:10] Finish waiting, in orbit now
+[13:07:10] Locking roid target
+[13:07:16] IMMA FIRIN MAH LAZOR!
+[13:08:51] End waiting, cargo is full
+[13:08:53] Mining
+[13:08:53] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[13:08:55] About to warp, this is a log check
+[13:09:05] Warping, waiting...
+[13:09:07] Finished warping...
+[13:09:12] Warp Command Given
+[13:09:13] Setting roid to Asteroid (Scordite) with id 72868085 -- calling Orbit...
+[13:09:14] Entering Orbit with 72868085, waiting...
+[13:09:16] Finish waiting, in orbit now
+[13:09:16] Locking roid target
+[13:09:21] IMMA FIRIN MAH LAZOR!
+[13:34:21] End waiting, cargo is full
+[13:34:23] Mining
+[13:34:23] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[13:34:25] About to warp, this is a log check
+[13:34:35] Warping, waiting...
+[13:34:37] Finished warping...
+[13:34:42] Warp Command Given
+[13:34:42] Setting roid to Asteroid (Scordite) with id 72868005 -- calling Orbit...
+[13:34:43] Entering Orbit with 72868005, waiting...
+[13:34:45] Finish waiting, in orbit now
+[13:34:45] Locking roid target
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 13:39:35  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[13:39:35] Started EVEBot 0.8..
+[13:39:35] Please Hold Loading Main Function..
+[13:39:37] Completed Main Function
+[13:39:37] Bot is now Paused
+[13:39:37] Please Press Play
+[13:39:39] Setting main station Vittenyn VI - Moon 13 - Federation Navy Assembly Plant with ID 60011848
+[13:39:39] My ship is full
+[13:39:39] Calling ReturnToBase
+[13:39:39] The distance is greater than 10000, warp to base
+[13:39:50] Warping, waiting...
+[13:40:15] Finished warping...
+[13:40:27] Approaching Base
+[13:40:30] In Docking Range ... Docking
+[13:40:30] Docking, waiting...
+[13:40:34] Finished Docking
+[13:40:40] I'm in the station
+[13:40:40] Transfering item1 to hangar
+[13:40:48] Transfering item2 to hangar
+[13:40:56] Transfering item3 to hangar
+[13:41:04] Stacking all...
+[13:41:13] Staking done
+[13:41:15] Undocking
+[13:41:15] Waiting...
+[13:41:34] Setting main station Vittenyn VI - Moon 13 - Federation Navy Assembly Plant with ID 60011848
+[13:41:34] My ship is full
+[13:41:34] Approaching Base
+[13:41:36] In Docking Range ... Docking
+[13:41:36] Docking, waiting...
+[13:41:47] Finished Docking
+[13:41:52] I'm in the station
+[13:41:52] Transfering item1 to hangar
+[13:42:01] Transfering item2 to hangar
+[13:42:09] Transfering item3 to hangar
+[13:42:17] Stacking all...
+[13:42:25] Staking done
+[13:42:27] Undocking
+[13:42:27] Waiting...
+[13:42:48] Mining
+[13:42:48] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[13:42:50] About to warp, this is a log check
+[13:43:00] Warping, waiting...
+[13:43:27] Finished warping...
+[13:43:32] Warp Command Given
+[13:43:32] Setting roid to Asteroid (Scordite) with id 72868004 -- calling Orbit...
+[13:43:33] Entering Orbit with 72868004, waiting...
+[13:44:41] Finish waiting, in orbit now
+[13:44:41] Locking roid target
+[13:44:49] IMMA FIRIN MAH LAZOR!
+[13:47:48] End waiting, cargo is full
+[13:47:50] Setting main station Vittenyn VI - Moon 13 - Federation Navy Assembly Plant with ID 60011848
+[13:47:50] My ship is full
+[13:47:50] Calling ReturnToBase
+[13:47:50] The distance is greater than 10000, warp to base
+[13:48:00] Warping, waiting...
+[13:48:27] Finished warping...
+[13:48:37] Approaching Base
+[13:48:53] In Docking Range ... Docking
+[13:48:53] Docking, waiting...
+[13:49:02] Finished Docking
+[13:49:08] I'm in the station
+[13:49:08] Transfering item1 to hangar
+[13:49:16] Transfering item2 to hangar
+[13:49:24] Transfering item3 to hangar
+[13:49:32] Stacking all...
+[13:49:40] Staking done
+[13:49:42] Undocking
+[13:49:42] Waiting...
+[13:50:02] Mining
+[13:50:02] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[13:50:04] About to warp, this is a log check
+[13:50:14] Warping, waiting...
+[13:50:38] Finished warping...
+[13:50:43] Warp Command Given
+[13:50:43] Setting roid to Asteroid (Scordite) with id 72868080 -- calling Orbit...
+[13:50:44] Entering Orbit with 72868080, waiting...
+[13:51:40] Finish waiting, in orbit now
+[13:51:40] Locking roid target
+[13:51:47] IMMA FIRIN MAH LAZOR!
+[13:55:47] End waiting, cargo is full
+[13:55:49] Mining
+[13:55:49] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[13:55:51] About to warp, this is a log check
+[13:56:01] Warping, waiting...
+[13:56:03] Finished warping...
+[13:56:08] Warp Command Given
+[13:56:08] Setting roid to Asteroid (Scordite) with id 72868085 -- calling Orbit...
+[13:56:09] Entering Orbit with 72868085, waiting...
+[13:56:11] Finish waiting, in orbit now
+[13:56:11] Locking roid target
+[13:56:19] IMMA FIRIN MAH LAZOR!
+[14:12:46] End waiting, cargo is full
+[14:12:47] Setting main station Vittenyn VI - Moon 13 - Federation Navy Assembly Plant with ID 60011848
+[14:12:47] My ship is full
+[14:12:48] Calling ReturnToBase
+[14:12:48] The distance is greater than 10000, warp to base
+[14:12:58] Warping, waiting...
+[14:13:25] Finished warping...
+[14:13:35] Approaching Base
+[14:13:53] In Docking Range ... Docking
+[14:13:53] Docking, waiting...
+[14:14:06] Finished Docking
+[14:14:11] I'm in the station
+[14:14:11] Transfering item1 to hangar
+[14:14:21] Transfering item2 to hangar
+[14:14:30] Transfering item3 to hangar
+[14:14:38] Stacking all...
+[14:14:46] Staking done
+[14:14:48] Undocking
+[14:14:48] Waiting...
+[14:15:12] Setting main station Vittenyn VI - Moon 13 - Federation Navy Assembly Plant with ID 60011848
+[14:15:12] My ship is full
+[14:15:13] Approaching Base
+[14:15:17] In Docking Range ... Docking
+[14:15:17] Docking, waiting...
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 17:08:31  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[17:08:31] Started EVEBot 0.8..
+[17:08:31] Please Hold Loading Main Function..
+[17:08:33] Completed Main Function
+[17:08:33] Bot is now Paused
+[17:08:33] Please Press Play
+[17:08:37] Mining
+[17:08:37] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[17:08:39] About to warp, this is a log check
+[17:08:49] Warping, waiting...
+[17:09:19] Finished warping...
+[17:09:24] Warp Command Given
+[17:09:25] Setting roid to Asteroid (Scordite) with id 72868054 -- calling Orbit...
+[17:09:26] Entering Orbit with 72868054, waiting...
+[17:10:19] Finish waiting, in orbit now
+[17:10:19] Locking roid target
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 17:41:18  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[17:41:18] Started EVEBot 0.8..
+[17:41:18] Please Hold Loading Main Function..
+[17:41:20] Completed Main Function
+[17:41:20] Bot is now Paused
+[17:41:20] Please Press Play
+[17:41:21] Mining
+[17:41:21] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[17:41:23] About to warp, this is a log check
+[17:41:33] Warping, waiting...
+[17:41:35] Finished warping...
+[17:41:40] Warp Command Given
+[17:41:41] Setting roid to Asteroid (Dense Veldspar) with id 72868094 -- calling Orbit...
+[17:41:42] Entering Orbit with 72868094, waiting...
+[17:42:04] Finish waiting, in orbit now
+[17:42:05] Locking roid target
+[17:47:13] End waiting, cargo is full
+[17:47:14] Mining
+[17:47:14] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[17:47:16] About to warp, this is a log check
+[17:47:27] Warping, waiting...
+[17:47:29] Finished warping...
+[17:47:34] Warp Command Given
+[17:47:35] Setting roid to Asteroid (Dense Veldspar) with id 72868094 -- calling Orbit...
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 17:54:11  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[17:54:11] Started EVEBot 0.8..
+[17:54:11] Please Hold Loading Main Function..
+[17:54:13] Completed Main Function
+[17:54:13] Bot is now Paused
+[17:54:13] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 17:54:31  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[17:54:31] Started EVEBot 0.8..
+[17:54:31] Please Hold Loading Main Function..
+[17:54:33] Completed Main Function
+[17:54:33] Bot is now Paused
+[17:54:33] Please Press Play
+[17:54:35] Mining
+[17:54:35] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[17:54:37] About to warp, this is a log check
+[17:54:47] Warping, waiting...
+[17:54:49] Finished warping...
+[17:54:54] Warp Command Given
+[17:54:54] Setting roid to Asteroid (Dense Veldspar) with id 72868094 -- calling Orbit...
+[17:55:26] Entering Orbit with 72868094, waiting...
+[17:56:30] Finish waiting, in orbit now
+[17:56:30] Locking roid target
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 17:56:40  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[17:56:40] Started EVEBot 0.8..
+[17:56:40] Please Hold Loading Main Function..
+[17:56:42] Completed Main Function
+[17:56:42] Bot is now Paused
+[17:56:42] Please Press Play
+[17:56:44] Mining
+[17:56:44] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[17:56:46] About to warp, this is a log check
+[17:56:56] Warping, waiting...
+[17:56:59] Finished warping...
+[17:57:04] Warp Command Given
+[17:57:04] Setting roid to Asteroid (Dense Veldspar) with id 72868094 -- calling Orbit...
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 18:18:11  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[18:18:11] Started EVEBot 0.8..
+[18:18:11] Please Hold Loading Main Function..
+[18:18:13] Completed Main Function
+[18:18:13] Bot is now Paused
+[18:18:13] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 18:52:50  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[18:52:50] Started EVEBot 0.8..
+[18:52:50] Please Hold Loading Main Function..
+[18:52:52] Completed Main Function
+[18:52:52] Bot is now Paused
+[18:52:52] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 18:54:08  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[18:54:08] Started EVEBot 0.8..
+[18:54:08] Please Hold Loading Main Function..
+[18:54:10] Completed Main Function
+[18:54:10] Bot is now Paused
+[18:54:10] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 18:54:21  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[18:54:21] Started EVEBot 0.8..
+[18:54:21] Please Hold Loading Main Function..
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 18:54:45  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[18:54:45] Started EVEBot 0.8..
+[18:54:45] Please Hold Loading Main Function..
+[18:54:47] Completed Main Function
+[18:54:47] Bot is now Paused
+[18:54:47] Please Press Play
+[18:54:49] Mining
+[18:54:49] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[18:54:51] About to warp, this is a log check
+[18:55:01] Warping, waiting...
+[18:55:13] Finished warping...
+[18:55:18] Warp Command Given
+[18:55:19] Setting roid to Asteroid (Veldspar) with id 72868047 -- calling Orbit...
+[18:55:20] Entering Orbit with 72868047, waiting...
+[18:56:12] Finish waiting, in orbit now
+[18:56:13] Locking roid target
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 18:57:06  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[18:57:06] Started EVEBot 0.8..
+[18:57:06] Please Hold Loading Main Function..
+[18:57:08] Completed Main Function
+[18:57:08] Bot is now Paused
+[18:57:08] Please Press Play
+[18:58:04] Mining
+[18:58:04] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[18:58:06] About to warp, this is a log check
+[18:58:16] Warping, waiting...
+[18:58:19] Finished warping...
+[18:58:24] Warp Command Given
+[18:58:24] Setting roid to Asteroid (Veldspar) with id 72868091 -- calling Orbit...
+[18:58:25] Entering Orbit with 72868091, waiting...
+[18:58:27] Finish waiting, in orbit now
+[18:58:27] Locking roid target
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 18:59:50  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[18:59:50] Started EVEBot 0.8..
+[18:59:50] Please Hold Loading Main Function..
+[18:59:52] Completed Main Function
+[18:59:52] Bot is now Paused
+[18:59:52] Please Press Play
+[18:59:54] Mining
+[18:59:54] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[18:59:56] About to warp, this is a log check
+[19:00:06] Warping, waiting...
+[19:00:08] Finished warping...
+[19:00:13] Warp Command Given
+[19:00:14] Setting roid to Asteroid (Veldspar) with id 72868073 -- calling Orbit...
+[19:00:15] Entering Orbit with 72868073, waiting...
+[19:00:17] Finish waiting, in orbit now
+[19:00:17] Locking roid target
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 19:03:56  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[19:03:56] Started EVEBot 0.8..
+[19:03:56] Please Hold Loading Main Function..
+[19:03:59] Completed Main Function
+[19:03:59] Bot is now Paused
+[19:03:59] Please Press Play
+[19:04:03] Mining
+[19:04:03] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[19:04:05] About to warp, this is a log check
+[19:04:15] Warping, waiting...
+[19:04:18] Finished warping...
+[19:04:23] Warp Command Given
+[19:04:23] Setting roid to Asteroid (Veldspar) with id 72868052 -- calling Orbit...
+[19:04:24] Entering Orbit with 72868052, waiting...
+[19:04:26] Finish waiting, in orbit now
+[19:04:26] Locking roid target
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 19:06:37  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[19:06:37] Started EVEBot 0.8..
+[19:06:37] Please Hold Loading Main Function..
+[19:06:39] Completed Main Function
+[19:06:39] Bot is now Paused
+[19:06:39] Please Press Play
+[19:06:40] Mining
+[19:06:40] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[19:06:42] About to warp, this is a log check
+[19:06:53] Warping, waiting...
+[19:06:55] Finished warping...
+[19:07:00] Warp Command Given
+[19:07:00] Setting roid to Asteroid (Veldspar) with id 72868046 -- calling Orbit...
+[19:07:01] Entering Orbit with 72868046, waiting...
+[19:07:03] Finish waiting, in orbit now
+[19:07:03] Locking roid target
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 22:16:22  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[22:16:22] Started EVEBot 0.8..
+[22:16:22] Please Hold Loading Main Function..
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 22:27:25  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[22:27:25] Started EVEBot 0.8..
+[22:27:25] Please Hold Loading Main Function..
+[22:27:27] Completed Main Function
+[22:27:27] Bot is now Paused
+[22:27:27] Please Press Play
+[22:27:27] Mining
+[22:27:27] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[22:27:29] About to warp, this is a log check
+[22:27:39] Warping, waiting...
+[22:27:41] Finished warping...
+[22:27:46] Warp Command Given
+[22:27:46] Setting roid to Asteroid (Veldspar) with id 72868047 -- calling Orbit...
+[22:27:47] Entering Orbit with 72868047, waiting...
+[22:27:49] Finish waiting, in orbit now
+[22:27:49] Locking roid target
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 22:34:08  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[22:34:08] Started EVEBot 0.8..
+[22:34:08] Please Hold Loading Main Function..
+[22:34:10] Completed Main Function
+[22:34:10] Bot is now Paused
+[22:34:10] Please Press Play
+[22:34:11] Mining
+[22:34:11] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[22:34:13] About to warp, this is a log check
+[22:34:23] Warping, waiting...
+[22:34:25] Finished warping...
+[22:34:30] Warp Command Given
+[22:34:30] Setting roid to Asteroid (Veldspar) with id 72868046 -- calling Orbit...
+[22:34:31] Entering Orbit with 72868046, waiting...
+[22:34:33] Finish waiting, in orbit now
+[22:34:34] Locking roid target
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 22:38:27  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[22:38:27] Started EVEBot 0.8..
+[22:38:27] Please Hold Loading Main Function..
+[22:38:29] Completed Main Function
+[22:38:29] Bot is now Paused
+[22:38:29] Please Press Play
+[22:38:31] Mining
+[22:38:31] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[22:38:33] About to warp, this is a log check
+[22:38:43] Warping, waiting...
+[22:38:45] Finished warping...
+[22:38:50] Warp Command Given
+[22:38:50] Setting roid to Asteroid (Veldspar) with id 72868046 -- calling Orbit...
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 22:40:35  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[22:40:35] Started EVEBot 0.8..
+[22:40:35] Please Hold Loading Main Function..
+[22:40:37] Completed Main Function
+[22:40:37] Bot is now Paused
+[22:40:37] Please Press Play
+[22:40:40] Mining
+[22:40:40] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[22:40:42] About to warp, this is a log check
+[22:40:52] Warping, waiting...
+[22:40:54] Finished warping...
+[22:40:59] Warp Command Given
+[22:40:59] Setting roid to Asteroid (Veldspar) with id 72868047 -- calling Orbit...
+[22:41:01] Entering Orbit with 72868047, waiting...
+[22:41:03] Finish waiting, in orbit now
+[22:41:03] Locking roid target
+[22:41:09] Debug: UpdateHudStatus Activate Laser
+[22:41:10] Debug: Called Activate Laser
+[22:41:11] Debug: About to check if my ships module is great then 0
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 22:45:24  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[22:45:24] Started EVEBot 0.8..
+[22:45:24] Please Hold Loading Main Function..
+[22:45:26] Completed Main Function
+[22:45:26] Bot is now Paused
+[22:45:26] Please Press Play
+[22:45:27] Mining
+[22:45:27] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[22:45:29] About to warp, this is a log check
+[22:45:39] Warping, waiting...
+[22:45:41] Finished warping...
+[22:45:46] Warp Command Given
+[22:45:47] Setting roid to Asteroid (Veldspar) with id 72868046 -- calling Orbit...
+[22:45:48] Entering Orbit with 72868046, waiting...
+[22:45:50] Finish waiting, in orbit now
+[22:45:50] Locking roid target
+[22:45:56] Debug: UpdateHudStatus Activate Laser
+[22:45:57] Debug: Called Activate Laser
+[22:45:58] Debug: About to check if my ships module is great then 0
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 22:47:31  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[22:47:31] Started EVEBot 0.8..
+[22:47:31] Please Hold Loading Main Function..
+[22:47:33] Completed Main Function
+[22:47:33] Bot is now Paused
+[22:47:33] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 22:47:50  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[22:47:50] Started EVEBot 0.8..
+[22:47:50] Please Hold Loading Main Function..
+[22:47:52] Completed Main Function
+[22:47:52] Bot is now Paused
+[22:47:52] Please Press Play
+[22:47:53] Mining
+[22:47:53] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[22:47:55] About to warp, this is a log check
+[22:48:05] Warping, waiting...
+[22:48:07] Finished warping...
+[22:48:12] Warp Command Given
+[22:48:12] Setting roid to Asteroid (Veldspar) with id 72868052 -- calling Orbit...
+[22:48:14] Entering Orbit with 72868052, waiting...
+[22:48:16] Finish waiting, in orbit now
+[22:48:16] Locking roid target
+[22:48:24] Debug: UpdateHudStatus Activate Laser
+[22:48:25] Debug: Called Activate Laser
+[22:48:26] Debug: About to check if my ships module is great then 0
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 22:54:35  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[22:54:35] Started EVEBot 0.8..
+[22:54:35] Please Hold Loading Main Function..
+[22:54:37] Completed Main Function
+[22:54:37] Bot is now Paused
+[22:54:37] Please Press Play
+[22:54:40] Mining
+[22:54:40] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[22:54:42] About to warp, this is a log check
+[22:54:52] Warping, waiting...
+[22:54:54] Finished warping...
+[22:54:59] Warp Command Given
+[22:55:00] Setting roid to Asteroid (Veldspar) with id 72868109 -- calling Orbit...
+[22:55:01] Entering Orbit with 72868109, waiting...
+[22:55:03] Finish waiting, in orbit now
+[22:55:03] Locking roid target
+[22:55:11] Debug: UpdateHudStatus Activate Laser
+[22:55:12] Debug: Called Activate Laser
+[22:55:13] Debug: About to check if my ships module is great then 0
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 22:57:33  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[22:57:33] Started EVEBot 0.8..
+[22:57:33] Please Hold Loading Main Function..
+[22:57:35] Completed Main Function
+[22:57:35] Bot is now Paused
+[22:57:35] Please Press Play
+[22:57:37] Mining
+[22:57:37] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[22:57:39] About to warp, this is a log check
+[22:57:49] Warping, waiting...
+[22:57:52] Finished warping...
+[22:57:57] Warp Command Given
+[22:57:57] Setting roid to Asteroid (Veldspar) with id 72868073 -- calling Orbit...
+[22:57:58] Entering Orbit with 72868073, waiting...
+[22:58:00] Finish waiting, in orbit now
+[22:58:00] Locking roid target
+[22:58:08] Debug: UpdateHudStatus Activate Laser
+[22:58:09] Debug: Called Activate Laser
+[22:58:10] Debug: About to check if my ships module is great then 0
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 23:04:20  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[23:04:20] Started EVEBot 0.8..
+[23:04:20] Please Hold Loading Main Function..
+[23:04:23] Completed Main Function
+[23:04:23] Bot is now Paused
+[23:04:23] Please Press Play
+[23:04:37] Mining
+[23:04:37] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[23:04:39] About to warp, this is a log check
+[23:04:49] Warping, waiting...
+[23:04:51] Finished warping...
+[23:04:56] Warp Command Given
+[23:04:57] Setting roid to Asteroid (Veldspar) with id 72868047 -- calling Orbit...
+[23:04:58] Entering Orbit with 72868047, waiting...
+[23:05:00] Finish waiting, in orbit now
+[23:05:00] Locking roid target
+[23:05:08] Debug: UpdateHudStatus Activate Laser
+[23:05:09] Debug: Called Activate Laser
+[23:05:10] Debug: About to check if my ships module is great then 0
+[23:05:11] Debug: It found a laser! Moving on!
+[23:05:12] Debug: About to Look For a Laser
+[23:05:15] Debug: Called FindLasers
+[23:05:16] Debug: Opening Lasers.xml
+[23:05:18] Debug: Opened Lasers.xml
+[23:05:19] Debug: Checking for Lasers in XML
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 23:23:21  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[23:23:21] Started EVEBot 0.8..
+[23:23:21] Please Hold Loading Main Function..
+[23:23:24] Completed Main Function
+[23:23:24] Bot is now Paused
+[23:23:24] Please Press Play
+[23:23:33] Mining
+[23:23:33] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[23:23:35] About to warp, this is a log check
+[23:23:45] Warping, waiting...
+[23:23:47] Finished warping...
+[23:23:52] Warp Command Given
+[23:23:52] Setting roid to Asteroid (Veldspar) with id 72868073 -- calling Orbit...
+[23:23:53] Entering Orbit with 72868073, waiting...
+[23:23:55] Finish waiting, in orbit now
+[23:23:55] Locking roid target
+[23:24:01] Debug: UpdateHudStatus Activate Laser
+[23:24:02] Debug: Called Activate Laser
+[23:24:03] Debug: About to check if my ships module is great then 0
+[23:24:04] Debug: It found a laser! Moving on!
+[23:24:05] Debug: About to Look For a Laser
+[23:24:08] Debug: Called FindLasers
+[23:24:10] Debug: Opening Lasers.xml
+[23:24:12] Debug: Opened Lasers.xml
+[23:24:13] Debug: Checking for Lasers in XML
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 23:25:46  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[23:25:46] Started EVEBot 0.8..
+[23:25:46] Please Hold Loading Main Function..
+[23:25:48] Completed Main Function
+[23:25:48] Bot is now Paused
+[23:25:48] Please Press Play
+[23:25:49] Mining
+[23:25:49] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[23:25:51] About to warp, this is a log check
+[23:26:01] Warping, waiting...
+[23:26:03] Finished warping...
+[23:26:08] Warp Command Given
+[23:26:09] Setting roid to Asteroid (Veldspar) with id 72868075 -- calling Orbit...
+[23:26:10] Entering Orbit with 72868075, waiting...
+[23:26:12] Finish waiting, in orbit now
+[23:26:12] Locking roid target
+[23:26:18] Debug: UpdateHudStatus Activate Laser
+[23:26:19] Debug: Called Activate Laser
+[23:26:20] Debug: About to check if my ships module is great then 0
+[23:26:21] Debug: It found a laser! Moving on!
+[23:26:24] Debug: About to Look For a Laser
+[23:26:27] Debug: Called FindLasers
+[23:26:28] Debug: Opening Lasers.xml
+[23:26:30] Debug: Opened Lasers.xml
+[23:26:31] Debug: Checking for Lasers in XML
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 23:48:33  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[23:48:33] Started EVEBot 0.8..
+[23:48:33] Please Hold Loading Main Function..
+[23:48:35] Completed Main Function
+[23:48:35] Bot is now Paused
+[23:48:35] Please Press Play
+[23:48:48] Mining
+[23:48:48] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[23:48:50] About to warp, this is a log check
+[23:49:01] Warping, waiting...
+[23:49:03] Finished warping...
+[23:49:08] Warp Command Given
+[23:49:08] Setting roid to Asteroid (Veldspar) with id 72868103 -- calling Orbit...
+[23:49:09] Entering Orbit with 72868103, waiting...
+[23:49:11] Finish waiting, in orbit now
+[23:49:11] Locking roid target
+[23:49:17] Debug: UpdateHudStatus Activate Laser
+[23:49:18] Debug: Called Activate Laser
+[23:49:19] Debug: About to check if my ships module is great then 0
+[23:49:20] Debug: It found a laser! Moving on!
+[23:49:21] Debug: About to Look For a Laser
+-------------------------------------------------
+  Evebot Session time 07/09/2007 at 23:50:39  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[23:50:40] Started EVEBot 0.8..
+[23:50:40] Please Hold Loading Main Function..
+[23:50:42] Completed Main Function
+[23:50:42] Bot is now Paused
+[23:50:42] Please Press Play
+[23:50:42] Mining
+[23:50:42] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[23:50:44] About to warp, this is a log check
+[23:50:55] Warping, waiting...
+[23:50:57] Finished warping...
+[23:51:02] Warp Command Given
+[23:51:02] Setting roid to Asteroid (Veldspar) with id 72868073 -- calling Orbit...
+[23:51:03] Entering Orbit with 72868073, waiting...
+[23:51:05] Finish waiting, in orbit now
+[23:51:05] Locking roid target
+[23:51:12] Debug: UpdateHudStatus Activate Laser
+[23:51:13] Debug: Called Activate Laser
+[23:51:14] Debug: About to check if my ships module is great then 0
+[23:51:15] Debug: It found a laser! Moving on!
+[23:51:16] Debug: About to Look For a Laser
+[23:51:19] Debug: Called FindLasers
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 00:07:32  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[00:07:32] Started EVEBot 0.8..
+[00:07:32] Please Hold Loading Main Function..
+[00:07:35] Completed Main Function
+[00:07:35] Bot is now Paused
+[00:07:35] Please Press Play
+[00:07:36] Mining
+[00:07:36] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[00:07:38] About to warp, this is a log check
+[00:07:48] Warping, waiting...
+[00:07:50] Finished warping...
+[00:07:55] Warp Command Given
+[00:07:56] Setting roid to Asteroid (Veldspar) with id 72868096 -- calling Orbit...
+[00:07:57] Entering Orbit with 72868096, waiting...
+[00:07:59] Finish waiting, in orbit now
+[00:07:59] Locking roid target
+[00:08:07] Debug: UpdateHudStatus Activate Laser
+[00:08:08] Debug: Called Activate Laser
+[00:08:10] Debug: About to check if my ships module is great then 0
+[00:08:11] Debug: It found a laser! Moving on!
+[00:08:12] Debug: About to Look For a Laser
+[00:08:15] Debug: Called FindLasers
+[00:08:16] Debug: Opening Lasers.xml
+[00:08:18] Debug: Opened Lasers.xml
+[00:08:19] Debug: Checking for Lasers in XML
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 00:12:05  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[00:12:05] Started EVEBot 0.8..
+[00:12:05] Please Hold Loading Main Function..
+[00:12:07] Completed Main Function
+[00:12:07] Bot is now Paused
+[00:12:07] Please Press Play
+[00:12:23] Mining
+[00:12:23] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[00:12:26] About to warp, this is a log check
+[00:12:36] Warping, waiting...
+[00:12:38] Finished warping...
+[00:12:43] Warp Command Given
+[00:12:44] Setting roid to Asteroid (Veldspar) with id 72868002 -- calling Orbit...
+[00:12:45] Entering Orbit with 72868002, waiting...
+[00:12:47] Finish waiting, in orbit now
+[00:12:47] Locking roid target
+[00:12:53] Debug: UpdateHudStatus Activate Laser
+[00:12:54] Debug: Called Activate Laser
+[00:12:55] Debug: About to check if my ships module is great then 0
+[00:12:56] Debug: It found a laser! Moving on!
+[00:12:57] Debug: About to Look For a Laser
+[00:13:00] Debug: Called FindLasers
+[00:13:01] Debug: Opening Lasers.xml
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 00:17:00  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[00:17:00] Started EVEBot 0.8..
+[00:17:00] Please Hold Loading Main Function..
+[00:17:02] Completed Main Function
+[00:17:02] Bot is now Paused
+[00:17:02] Please Press Play
+[00:17:03] Mining
+[00:17:04] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[00:17:06] About to warp, this is a log check
+[00:17:16] Warping, waiting...
+[00:17:18] Finished warping...
+[00:17:23] Warp Command Given
+[00:17:23] Setting roid to Asteroid (Veldspar) with id 72868002 -- calling Orbit...
+[00:17:57] Entering Orbit with 72868002, waiting...
+[00:17:59] Finish waiting, in orbit now
+[00:17:59] Locking roid target
+[00:18:08] Debug: UpdateHudStatus Activate Laser
+[00:18:09] Debug: Called Activate Laser
+[00:18:10] Debug: About to check if my ships module is great then 0
+[00:18:11] Debug: It found a laser! Moving on!
+[00:18:12] Debug: About to Look For a Laser
+[00:18:15] Debug: Called FindLasers
+[00:18:16] Debug: Checking for Lasers in XML
+[00:18:17] Didn't find Mining Laser
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 01:30:23  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[01:30:23] Started EVEBot 0.8..
+[01:30:23] Please Hold Loading Main Function..
+[01:30:25] Completed Main Function
+[01:30:25] Bot is now Paused
+[01:30:25] Please Press Play
+[01:30:28] Mining
+[01:30:28] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[01:30:30] About to warp, this is a log check
+[01:30:40] Warping, waiting...
+[01:30:53] Finished warping...
+[01:30:58] Warp Command Given
+[01:30:58] Setting roid to Asteroid (Veldspar) with id 72868047 -- calling Orbit...
+[01:30:59] Entering Orbit with 72868047, waiting...
+[01:32:00] Finish waiting, in orbit now
+[01:32:00] Locking roid target
+[01:32:06] Debug: UpdateHudStatus Activate Laser
+[01:32:07] Debug: Called Activate Laser
+[01:32:08] Debug: About to check if my ships module is great then 0
+[01:32:09] Debug: It found a laser! Moving on!
+[01:32:10] Debug: About to Look For a Laser
+[01:32:13] Debug: Called FindLasers
+[01:32:14] Debug: Checking for Lasers in XML
+[01:32:15] Didn't find Mining Laser
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 01:44:01  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[01:44:01] Started EVEBot 0.8..
+[01:44:01] Please Hold Loading Main Function..
+[01:44:03] Completed Main Function
+[01:44:03] Bot is now Paused
+[01:44:03] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 01:45:09  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[01:45:09] Started EVEBot 0.8..
+[01:45:09] Please Hold Loading Main Function..
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 01:46:16  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[01:46:16] Started EVEBot 0.8..
+[01:46:16] Please Hold Loading Main Function..
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 01:46:39  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[01:46:39] Started EVEBot 0.8..
+[01:46:39] Please Hold Loading Main Function..
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 01:46:58  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[01:46:58] Started EVEBot 0.8..
+[01:46:58] Please Hold Loading Main Function..
+[01:47:00] Completed Main Function
+[01:47:00] Bot is now Paused
+[01:47:00] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 01:47:29  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[01:47:29] Started EVEBot 0.8..
+[01:47:29] Please Hold Loading Main Function..
+[01:47:32] Completed Main Function
+[01:47:32] Bot is now Paused
+[01:47:32] Please Press Play
+[01:47:34] Mining
+[01:47:34] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[01:47:36] About to warp, this is a log check
+[01:47:46] Warping, waiting...
+[01:47:48] Finished warping...
+[01:47:53] Warp Command Given
+[01:47:53] Setting roid to Asteroid (Veldspar) with id 72868047 -- calling Orbit...
+[01:48:25] Entering Orbit with 72868047, waiting...
+[01:48:37] Finish waiting, in orbit now
+[01:48:37] Locking roid target
+[01:48:46] Debug: UpdateHudStatus Activate Laser
+[01:48:47] Debug: Called Activate Laser
+[01:48:48] Debug: About to check if my ships module is great then 0
+[01:48:49] Debug: It found a laser! Moving on!
+[01:48:50] Debug: About to Look For a Laser
+[01:48:53] Didn't find Mining Laser
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 01:49:53  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[01:49:53] Started EVEBot 0.8..
+[01:49:54] Please Hold Loading Main Function..
+[01:49:56] Completed Main Function
+[01:49:56] Bot is now Paused
+[01:49:56] Please Press Play
+[01:49:57] Mining
+[01:49:57] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[01:49:59] About to warp, this is a log check
+[01:50:09] Warping, waiting...
+[01:50:11] Finished warping...
+[01:50:16] Warp Command Given
+[01:50:17] Setting roid to Asteroid (Veldspar) with id 72868028 -- calling Orbit...
+[01:50:18] Entering Orbit with 72868028, waiting...
+[01:50:20] Finish waiting, in orbit now
+[01:50:20] Locking roid target
+[01:50:26] Debug: UpdateHudStatus Activate Laser
+[01:50:27] Debug: Called Activate Laser
+[01:50:28] Debug: About to check if my ships module is great then 0
+[01:50:29] Debug: It found a laser! Moving on!
+[01:50:30] Debug: About to Look For a Laser
+[01:50:33] Didn't find Mining Laser
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 07:47:33  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[07:47:33] Started EVEBot 0.8..
+[07:47:33] Please Hold Loading Main Function..
+[07:47:35] Completed Main Function
+[07:47:35] Bot is now Paused
+[07:47:35] Please Press Play
+[07:47:37] Mining
+[07:47:37] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[07:47:39] About to warp, this is a log check
+[07:47:49] Warping, waiting...
+[07:48:12] Finished warping...
+[07:48:17] Warp Command Given
+[07:48:17] Setting roid to Asteroid (Condensed Scordite) with id 72868042 -- calling Orbit...
+[07:48:18] Entering Orbit with 72868042, waiting...
+[07:49:18] Finish waiting, in orbit now
+[07:49:18] Locking roid target
+[07:49:26] Debug: UpdateHudStatus Activate Laser
+[07:49:27] Debug: Called Activate Laser
+[07:49:28] Debug: About to check if my ships module is great then 0
+[07:49:29] Debug: It found a laser! Moving on!
+[07:49:30] Debug: About to Look For a Laser
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 08:03:17  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[08:03:17] Started EVEBot 0.8..
+[08:03:17] Please Hold Loading Main Function..
+[08:03:19] Completed Main Function
+[08:03:19] Bot is now Paused
+[08:03:19] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 08:06:11  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[08:06:11] Started EVEBot 0.8..
+[08:06:11] Please Hold Loading Main Function..
+[08:06:13] Completed Main Function
+[08:06:13] Bot is now Paused
+[08:06:13] Please Press Play
+[08:06:14] Mining
+[08:06:14] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[08:06:16] About to warp, this is a log check
+[08:06:26] Warping, waiting...
+[08:06:28] Finished warping...
+[08:06:33] Warp Command Given
+[08:06:34] Setting roid to Asteroid (Scordite) with id 72868004 -- calling Orbit...
+[08:06:35] Entering Orbit with 72868004, waiting...
+[08:06:37] Finish waiting, in orbit now
+[08:06:37] Locking roid target
+[08:06:45] Debug: UpdateHudStatus Activate Laser
+[08:06:46] Debug: Called Activate Laser
+[08:06:47] Debug: About to check if my ships module is great then 0
+[08:06:48] Debug: It found a laser! Moving on!
+[08:06:49] Debug: About to Look For a Laser
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 08:09:13  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[08:09:13] Started EVEBot 0.8..
+[08:09:13] Please Hold Loading Main Function..
+[08:09:15] Completed Main Function
+[08:09:15] Bot is now Paused
+[08:09:15] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 08:09:44  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[08:09:44] Started EVEBot 0.8..
+[08:09:44] Please Hold Loading Main Function..
+[08:09:46] Completed Main Function
+[08:09:46] Bot is now Paused
+[08:09:46] Please Press Play
+[08:09:53] Mining
+[08:09:54] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[08:09:56] About to warp, this is a log check
+[08:10:06] Warping, waiting...
+[08:10:08] Finished warping...
+[08:10:13] Warp Command Given
+[08:10:13] Setting roid to Asteroid (Scordite) with id 72868004 -- calling Orbit...
+[08:10:14] Entering Orbit with 72868004, waiting...
+[08:10:17] Finish waiting, in orbit now
+[08:10:17] Locking roid target
+[08:10:23] Debug: UpdateHudStatus Activate Laser
+[08:10:24] Debug: Called Activate Laser
+[08:10:25] Debug: About to check if my ships module is great then 0
+[08:10:26] Debug: It found a laser! Moving on!
+[08:10:27] Debug: About to Look For a Laser
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 08:11:18  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[08:11:18] Started EVEBot 0.8..
+[08:11:18] Please Hold Loading Main Function..
+[08:11:21] Completed Main Function
+[08:11:21] Bot is now Paused
+[08:11:21] Please Press Play
+[08:11:22] Mining
+[08:11:22] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[08:11:24] About to warp, this is a log check
+[08:11:34] Warping, waiting...
+[08:11:36] Finished warping...
+[08:11:41] Warp Command Given
+[08:11:42] Setting roid to Asteroid (Massive Scordite) with id 72868012 -- calling Orbit...
+[08:11:43] Entering Orbit with 72868012, waiting...
+[08:11:45] Finish waiting, in orbit now
+[08:11:45] Locking roid target
+[08:11:51] Debug: UpdateHudStatus Activate Laser
+[08:11:52] Debug: Called Activate Laser
+[08:11:54] Debug: About to check if my ships module is great then 0
+[08:11:55] Debug: It found a laser! Moving on!
+[08:11:56] Debug: About to Look For a Laser
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 08:15:33  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[08:15:33] Started EVEBot 0.8..
+[08:15:33] Please Hold Loading Main Function..
+[08:15:35] Completed Main Function
+[08:15:35] Bot is now Paused
+[08:15:35] Please Press Play
+[08:15:36] Mining
+[08:15:36] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[08:15:39] About to warp, this is a log check
+[08:15:49] Warping, waiting...
+[08:15:51] Finished warping...
+[08:15:56] Warp Command Given
+[08:15:56] Setting roid to Asteroid (Scordite) with id 72868004 -- calling Orbit...
+[08:15:57] Entering Orbit with 72868004, waiting...
+[08:15:59] Finish waiting, in orbit now
+[08:15:59] Locking roid target
+[08:16:06] Debug: UpdateHudStatus Activate Laser
+[08:16:07] Debug: Called Activate Laser
+[08:16:08] Debug: About to check if my ships module is great then 0
+[08:16:09] Debug: It found a laser! Moving on!
+[08:16:10] Debug: About to Look For a Laser
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 08:20:50  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[08:20:50] Started EVEBot 0.8..
+[08:20:50] Please Hold Loading Main Function..
+[08:20:52] Completed Main Function
+[08:20:52] Bot is now Paused
+[08:20:52] Please Press Play
+[08:20:54] Mining
+[08:20:54] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[08:20:56] About to warp, this is a log check
+[08:21:06] Warping, waiting...
+[08:21:08] Finished warping...
+[08:21:13] Warp Command Given
+[08:21:14] Setting roid to Asteroid (Scordite) with id 72868004 -- calling Orbit...
+[08:21:15] Entering Orbit with 72868004, waiting...
+[08:21:17] Finish waiting, in orbit now
+[08:21:17] Locking roid target
+[08:21:24] Debug: UpdateHudStatus Activate Laser
+[08:21:25] Debug: Called Activate Laser
+[08:21:26] Debug: About to check if my ships module is great then 0
+[08:21:27] Debug: It found a laser! Moving on!
+[08:21:28] Debug: About to Look For a Laser
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 08:29:48  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[08:29:48] Started EVEBot 0.8..
+[08:29:48] Please Hold Loading Main Function..
+[08:29:50] Completed Main Function
+[08:29:50] Bot is now Paused
+[08:29:50] Please Press Play
+[08:29:51] Mining
+[08:29:51] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[08:29:53] About to warp, this is a log check
+[08:30:03] Warping, waiting...
+[08:30:05] Finished warping...
+[08:30:10] Warp Command Given
+[08:30:10] Setting roid to Asteroid (Massive Scordite) with id 72868012 -- calling Orbit...
+[08:30:12] Entering Orbit with 72868012, waiting...
+[08:30:14] Finish waiting, in orbit now
+[08:30:14] Locking roid target
+[08:30:20] Debug: UpdateHudStatus Activate Laser
+[08:30:21] Debug: Called Activate Laser
+[08:30:22] Debug: About to check if my ships module is great then 0
+[08:30:24] Debug: It found a laser! Moving on!
+[08:30:25] Debug: About to Look For a Laser
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 08:33:09  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[08:33:09] Started EVEBot 0.8..
+[08:33:09] Please Hold Loading Main Function..
+[08:33:11] Completed Main Function
+[08:33:11] Bot is now Paused
+[08:33:11] Please Press Play
+[08:33:11] Mining
+[08:33:12] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[08:33:14] About to warp, this is a log check
+[08:33:24] Warping, waiting...
+[08:33:26] Finished warping...
+[08:33:31] Warp Command Given
+[08:33:31] Setting roid to Asteroid (Scordite) with id 72868004 -- calling Orbit...
+[08:33:33] Entering Orbit with 72868004, waiting...
+[08:33:35] Finish waiting, in orbit now
+[08:33:35] Locking roid target
+[08:33:42] Debug: UpdateHudStatus Activate Laser
+[08:33:43] Debug: Called Activate Laser
+[08:33:44] Debug: About to check if my ships module is great then 0
+[08:33:45] Debug: It found a laser! Moving on!
+[08:33:46] Debug: About to Look For a Laser
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 12:21:54  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[12:21:54] Started EVEBot 0.8..
+[12:21:54] Please Hold Loading Main Function..
+[12:21:56] Completed Main Function
+[12:21:56] Bot is now Paused
+[12:21:56] Please Press Play
+[12:22:01] Mining
+[12:22:01] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[12:22:03] About to warp, this is a log check
+[12:22:13] Warping, waiting...
+[12:22:15] Finished warping...
+[12:22:20] Warp Command Given
+[12:22:20] Setting roid to Asteroid (Scordite) with id 72868004 -- calling Orbit...
+[12:22:22] Entering Orbit with 72868004, waiting...
+[12:22:24] Finish waiting, in orbit now
+[12:22:24] Locking roid target
+[12:22:30] Debug: UpdateHudStatus Activate Laser
+[12:22:31] Debug: Called Activate Laser
+[12:22:32] Debug: About to check if my ships module is great then 0
+[12:22:33] Debug: It found a laser! Moving on!
+[12:22:34] Debug: About to Look For a Laser
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 12:24:25  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[12:24:25] Started EVEBot 0.8..
+[12:24:25] Please Hold Loading Main Function..
+[12:24:27] Completed Main Function
+[12:24:27] Bot is now Paused
+[12:24:27] Please Press Play
+[12:24:28] Mining
+[12:24:28] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[12:24:30] About to warp, this is a log check
+[12:24:40] Warping, waiting...
+[12:24:46] Finished warping...
+[12:24:51] Warp Command Given
+[12:24:51] Setting roid to Asteroid (Scordite) with id 72868004 -- calling Orbit...
+[12:24:52] Entering Orbit with 72868004, waiting...
+[12:24:54] Finish waiting, in orbit now
+[12:24:55] Locking roid target
+[12:25:01] Debug: UpdateHudStatus Activate Laser
+[12:25:02] Debug: Called Activate Laser
+[12:25:03] Debug: About to check if my ships module is great then 0
+[12:25:04] Debug: It found a laser! Moving on!
+[12:25:05] Debug: About to Look For a Laser
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 12:31:19  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[12:31:19] Started EVEBot 0.8..
+[12:31:20] Please Hold Loading Main Function..
+[12:31:22] Completed Main Function
+[12:31:22] Bot is now Paused
+[12:31:22] Please Press Play
+[12:31:23] Mining
+[12:31:23] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[12:31:25] About to warp, this is a log check
+[12:31:35] Warping, waiting...
+[12:31:37] Finished warping...
+[12:31:48] Warp Command Given
+[12:31:48] Setting roid to Asteroid (Condensed Scordite) with id 72868042 -- calling Orbit...
+[12:31:49] Entering Orbit with 72868042, waiting...
+[12:31:51] Finish waiting, in orbit now
+[12:31:51] Locking roid target
+[12:32:00] Debug: UpdateHudStatus Activate Laser
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 12:34:34  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[12:34:34] Started EVEBot 0.8..
+[12:34:34] Please Hold Loading Main Function..
+[12:34:36] Completed Main Function
+[12:34:36] Bot is now Paused
+[12:34:36] Please Press Play
+[12:34:37] Mining
+[12:34:37] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[12:34:39] About to warp, this is a log check
+[12:34:49] Warping, waiting...
+[12:34:51] Finished warping...
+[12:34:56] Warp Command Given
+[12:34:56] Setting roid to Asteroid (Scordite) with id 72868004 -- calling Orbit...
+[12:34:58] Entering Orbit with 72868004, waiting...
+[12:35:00] Finish waiting, in orbit now
+[12:35:00] Locking roid target
+[12:35:08] Debug: UpdateHudStatus Activate Laser
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 12:37:18  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[12:37:18] Started EVEBot 0.8..
+[12:37:18] Please Hold Loading Main Function..
+[12:37:20] Completed Main Function
+[12:37:21] Bot is now Paused
+[12:37:21] Please Press Play
+[12:37:33] Mining
+[12:37:33] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[12:37:35] About to warp, this is a log check
+[12:37:47] Warping, waiting...
+[12:37:49] Finished warping...
+[12:37:55] Warp Command Given
+[12:37:55] Setting roid to Asteroid (Condensed Scordite) with id 72868036 -- calling Orbit...
+[12:37:56] Entering Orbit with 72868036, waiting...
+[12:37:58] Finish waiting, in orbit now
+[12:38:01] Locking roid target
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 12:39:34  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[12:39:34] Started EVEBot 0.8..
+[12:39:34] Please Hold Loading Main Function..
+[12:39:36] Completed Main Function
+[12:39:36] Bot is now Paused
+[12:39:36] Please Press Play
+[12:39:37] Mining
+[12:39:37] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[12:39:39] About to warp, this is a log check
+[12:39:49] Warping, waiting...
+[12:39:51] Finished warping...
+[12:39:57] Warp Command Given
+[12:39:57] Setting roid to Asteroid (Condensed Scordite) with id 72868044 -- calling Orbit...
+[12:39:58] Entering Orbit with 72868044, waiting...
+[12:40:00] Finish waiting, in orbit now
+[12:40:00] Locking roid target
+[12:40:08] Debug: UpdateHudStatus Activate Laser
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 13:27:58  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[13:27:58] Started EVEBot 0.8..
+[13:27:58] Please Hold Loading Main Function..
+[13:28:00] Completed Main Function
+[13:28:00] Bot is now Paused
+[13:28:00] Please Press Play
+[13:28:06] Mining
+[13:28:06] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[13:28:08] About to warp, this is a log check
+[13:28:18] Warping, waiting...
+[13:28:20] Finished warping...
+[13:28:25] Warp Command Given
+[13:28:25] Setting roid to Asteroid (Scordite) with id 72868004 -- calling Orbit...
+[13:28:26] Entering Orbit with 72868004, waiting...
+[13:28:28] Finish waiting, in orbit now
+[13:28:28] Locking roid target
+[13:28:35] Debug: UpdateHudStatus Activate Laser
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 13:29:25  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[13:29:25] Started EVEBot 0.8..
+[13:29:25] Please Hold Loading Main Function..
+[13:29:27] Completed Main Function
+[13:29:27] Bot is now Paused
+[13:29:27] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 13:34:04  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[13:34:04] Started EVEBot 0.8..
+[13:34:04] Please Hold Loading Main Function..
+[13:34:06] Completed Main Function
+[13:34:06] Bot is now Paused
+[13:34:06] Please Press Play
+[13:34:14] Mining
+[13:34:14] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[13:34:16] About to warp, this is a log check
+[13:34:27] Warping, waiting...
+[13:34:29] Finished warping...
+[13:34:34] Warp Command Given
+[13:34:34] Setting roid to Asteroid (Condensed Scordite) with id 72868044 -- calling Orbit...
+[13:34:35] Entering Orbit with 72868044, waiting...
+[13:34:37] Finish waiting, in orbit now
+[13:34:37] Locking roid target
+[13:34:43] Debug: UpdateHudStatus Activate Laser
+[13:34:45] Debug: Called Activate Laser
+[13:34:46] Debug: About to check if my ships module is great then 0
+[13:34:47] Debug: It found a laser! Moving on!
+[13:34:48] Debug: About to Look For a Laser
+[13:34:51] Debug: FindLasers(int 0)
+[13:34:51] Debug: MiningType = Ore
+[13:34:51] Debug: Lasername = Basic Miner
+[13:34:51] Debug
+[13:34:51] Debug: ourlaser = NULL
+[13:34:51] Checking for Laser
+[13:34:51] Found Mining Laser
+[13:34:52] Debug: Finished Call FindLasers 0
+[13:35:50] End waiting, cargo is full
+[13:35:52] Mining
+[13:35:52] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[13:35:54] About to warp, this is a log check
+[13:36:04] Warping, waiting...
+[13:36:06] Finished warping...
+[13:36:12] Warp Command Given
+[13:36:12] Setting roid to Asteroid (Condensed Scordite) with id 72868044 -- calling Orbit...
+[13:36:18] Entering Orbit with 72868044, waiting...
+[13:36:20] Finish waiting, in orbit now
+[13:36:20] Locking roid target
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 13:52:48  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[13:52:48] Started EVEBot 0.8..
+[13:52:48] Please Hold Loading Main Function..
+[13:52:50] Completed Main Function
+[13:52:50] Bot is now Paused
+[13:52:50] Please Press Play
+[13:52:51] Setting main station Vittenyn VI - Moon 13 - Federation Navy Assembly Plant with ID 60011848
+[13:52:51] My ship is full
+[13:52:51] Calling ReturnToBase
+[13:52:51] The distance is greater than 10000, warp to base
+[13:53:01] Warping, waiting...
+[13:53:28] Finished warping...
+[13:53:38] Approaching Base
+[13:53:54] In Docking Range ... Docking
+[13:53:54] Docking, waiting...
+[13:54:07] Finished Docking
+[13:54:13] I'm in the station
+[13:54:13] Transfering item1 to hangar
+[13:54:21] Transfering item2 to hangar
+[13:54:29] Transfering item3 to hangar
+[13:54:37] Stacking all...
+[13:54:45] Staking done
+[13:54:47] Undocking
+[13:54:47] Waiting...
+[13:55:11] Mining
+[13:55:11] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[13:55:13] About to warp, this is a log check
+[13:55:23] Warping, waiting...
+[13:55:48] Finished warping...
+[13:55:53] Warp Command Given
+[13:55:53] Setting roid to Asteroid (Condensed Scordite) with id 72868042 -- calling Orbit...
+[13:55:55] Entering Orbit with 72868042, waiting...
+[13:56:43] Finish waiting, in orbit now
+[13:56:43] Locking roid target
+[13:56:49] Checking for Laser
+[13:56:49] Found Mining Laser
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 13:56:57  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[13:56:57] Started EVEBot 0.8..
+[13:56:57] Please Hold Loading Main Function..
+[13:56:59] Completed Main Function
+[13:56:59] Bot is now Paused
+[13:56:59] Please Press Play
+[13:56:59] Mining
+[13:57:00] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[13:57:02] About to warp, this is a log check
+[13:57:12] Warping, waiting...
+[13:57:14] Finished warping...
+[13:57:19] Warp Command Given
+[13:57:19] Setting roid to Asteroid (Condensed Scordite) with id 72868044 -- calling Orbit...
+[13:57:20] Entering Orbit with 72868044, waiting...
+[13:57:22] Finish waiting, in orbit now
+[13:57:22] Locking roid target
+[13:57:29] Checking for Laser
+[13:57:29] Found Mining Laser
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 13:58:49  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[13:58:49] Started EVEBot 0.8..
+[13:58:49] Please Hold Loading Main Function..
+[13:58:51] Completed Main Function
+[13:58:51] Bot is now Paused
+[13:58:51] Please Press Play
+[13:58:52] Mining
+[13:58:53] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[13:58:55] About to warp, this is a log check
+[13:59:05] Warping, waiting...
+[13:59:07] Finished warping...
+[13:59:12] Warp Command Given
+[13:59:12] Setting roid to Asteroid (Massive Scordite) with id 72868012 -- calling Orbit...
+[13:59:13] Entering Orbit with 72868012, waiting...
+[13:59:16] Finish waiting, in orbit now
+[13:59:19] Locking roid target
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 14:02:12  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[14:02:12] Started EVEBot 0.8..
+[14:02:12] Please Hold Loading Main Function..
+[14:02:14] Completed Main Function
+[14:02:14] Bot is now Paused
+[14:02:14] Please Press Play
+[14:02:15] Mining
+[14:02:15] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[14:02:18] About to warp, this is a log check
+[14:02:28] Warping, waiting...
+[14:02:30] Finished warping...
+[14:02:35] Warp Command Given
+[14:02:35] Setting roid to Asteroid (Condensed Scordite) with id 72868036 -- calling Orbit...
+[14:02:36] Entering Orbit with 72868036, waiting...
+[14:02:38] Finish waiting, in orbit now
+[14:02:38] Locking roid target
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 14:05:41  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[14:05:41] Started EVEBot 0.8..
+[14:05:41] Please Hold Loading Main Function..
+[14:05:43] Completed Main Function
+[14:05:43] Bot is now Paused
+[14:05:43] Please Press Play
+[14:05:45] Mining
+[14:05:45] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[14:05:47] About to warp, this is a log check
+[14:05:57] Warping, waiting...
+[14:05:59] Finished warping...
+[14:06:04] Warp Command Given
+[14:06:05] Setting roid to Asteroid (Condensed Scordite) with id 72868036 -- calling Orbit...
+[14:06:06] Entering Orbit with 72868036, waiting...
+[14:06:08] Finish waiting, in orbit now
+[14:06:08] Locking roid target
+[14:06:14] Debug: UpdateHudStatus Activate Laser
+[14:06:14] 2
+[14:06:14] 3
+[14:06:14] 4
+[14:06:14] 5
+[14:06:15] 6
+[14:06:15] Checking for Laser
+[14:06:15] Found Mining Laser
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 14:09:05  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[14:09:05] Started EVEBot 0.8..
+[14:09:05] Please Hold Loading Main Function..
+[14:09:07] Completed Main Function
+[14:09:07] Bot is now Paused
+[14:09:07] Please Press Play
+[14:09:08] Mining
+[14:09:09] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[14:09:11] About to warp, this is a log check
+[14:09:21] Warping, waiting...
+[14:09:23] Finished warping...
+[14:09:28] Warp Command Given
+[14:09:28] Setting roid to Asteroid (Condensed Scordite) with id 72868044 -- calling Orbit...
+[14:09:29] Entering Orbit with 72868044, waiting...
+[14:09:31] Finish waiting, in orbit now
+[14:09:31] Locking roid target
+[14:09:37] Debug: UpdateHudStatus Activate Laser
+[14:09:37] 2
+[14:09:37] 3
+[14:09:37] 4
+[14:09:38] 5
+[14:09:39] 6
+[14:09:39] Checking for Laser
+[14:09:39] Found Mining Laser
+[14:11:40] End waiting, cargo is full
+[14:11:41] Mining
+[14:11:41] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[14:11:43] About to warp, this is a log check
+[14:11:54] Warping, waiting...
+[14:11:56] Finished warping...
+[14:12:01] Warp Command Given
+[14:12:01] Setting roid to Asteroid (Condensed Scordite) with id 72868042 -- calling Orbit...
+[14:12:03] Entering Orbit with 72868042, waiting...
+[14:12:05] Finish waiting, in orbit now
+[14:12:05] Locking roid target
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 14:38:28  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[14:38:28] Started EVEBot 0.8..
+[14:38:28] Please Hold Loading Main Function..
+[14:38:30] Completed Main Function
+[14:38:30] Bot is now Paused
+[14:38:30] Please Press Play
+[14:38:31] Mining
+[14:38:31] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[14:38:33] About to warp, this is a log check
+[14:38:44] Warping, waiting...
+[14:39:06] Finished warping...
+[14:39:11] Warp Command Given
+[14:39:11] Setting roid to Asteroid (Condensed Scordite) with id 72868042 -- calling Orbit...
+[14:39:13] Entering Orbit with 72868042, waiting...
+[14:40:06] Finish waiting, in orbit now
+[14:40:06] Locking roid target
+[14:40:12] Debug: UpdateHudStatus Activate Laser
+[14:40:12] 2
+[14:40:12] 3
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 14:42:51  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[14:42:51] Started EVEBot 0.8..
+[14:42:51] Please Hold Loading Main Function..
+[14:42:54] Completed Main Function
+[14:42:54] Bot is now Paused
+[14:42:54] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 14:44:52  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[14:44:52] Started EVEBot 0.8..
+[14:44:52] Please Hold Loading Main Function..
+[14:44:54] Completed Main Function
+[14:44:54] Bot is now Paused
+[14:44:54] Please Press Play
+[14:44:56] Mining
+[14:44:56] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[14:44:58] About to warp, this is a log check
+[14:45:08] Warping, waiting...
+[14:45:10] Finished warping...
+[14:45:15] Warp Command Given
+[14:45:16] Setting roid to Asteroid (Condensed Scordite) with id 72868044 -- calling Orbit...
+[14:45:17] Entering Orbit with 72868044, waiting...
+[14:45:19] Finish waiting, in orbit now
+[14:45:19] Locking roid target
+[14:45:27] Debug: UpdateHudStatus Activate Laser
+[14:45:27] 2
+[14:45:27] 3
+[14:45:27] 4
+[14:45:27] 5
+[14:45:28] 6
+[14:45:28] Checking for Laser
+[14:45:28] Found Mining Laser
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 14:46:23  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[14:46:23] Started EVEBot 0.8..
+[14:46:23] Please Hold Loading Main Function..
+[14:46:25] Completed Main Function
+[14:46:25] Bot is now Paused
+[14:46:25] Please Press Play
+[14:46:27] Mining
+[14:46:27] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[14:46:29] About to warp, this is a log check
+[14:46:39] Warping, waiting...
+[14:46:41] Finished warping...
+[14:46:46] Warp Command Given
+[14:46:46] Setting roid to Asteroid (Scordite) with id 72868004 -- calling Orbit...
+[14:46:47] Entering Orbit with 72868004, waiting...
+[14:46:50] Finish waiting, in orbit now
+[14:46:50] Locking roid target
+[14:46:56] Debug: UpdateHudStatus Activate Laser
+[14:46:56] 2
+[14:46:56] 3
+[14:46:56] 4
+[14:46:56] 5
+[14:46:57] 6
+[14:46:57] Checking for Laser
+[14:46:57] Found Mining Laser
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 14:47:32  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[14:47:32] Started EVEBot 0.8..
+[14:47:32] Please Hold Loading Main Function..
+[14:47:34] Completed Main Function
+[14:47:34] Bot is now Paused
+[14:47:34] Please Press Play
+[14:47:37] Mining
+[14:47:37] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[14:47:39] About to warp, this is a log check
+[14:47:50] Warping, waiting...
+[14:47:52] Finished warping...
+[14:47:57] Warp Command Given
+[14:47:57] Setting roid to Asteroid (Scordite) with id 72868004 -- calling Orbit...
+[14:47:58] Entering Orbit with 72868004, waiting...
+[14:48:00] Finish waiting, in orbit now
+[14:48:00] Locking roid target
+[14:48:09] Debug: UpdateHudStatus Activate Laser
+[14:48:09] 2
+[14:48:09] 3
+[14:48:09] 4
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 14:49:18  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[14:49:18] Started EVEBot 0.8..
+[14:49:18] Please Hold Loading Main Function..
+[14:49:20] Completed Main Function
+[14:49:20] Bot is now Paused
+[14:49:20] Please Press Play
+[14:49:21] Mining
+[14:49:21] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[14:49:23] About to warp, this is a log check
+[14:49:33] Warping, waiting...
+[14:49:35] Finished warping...
+[14:49:40] Warp Command Given
+[14:49:41] Setting roid to Asteroid (Massive Scordite) with id 72868012 -- calling Orbit...
+[14:49:42] Entering Orbit with 72868012, waiting...
+[14:49:44] Finish waiting, in orbit now
+[14:49:44] Locking roid target
+[14:49:50] Debug: UpdateHudStatus Activate Laser
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 14:51:15  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[14:51:15] Started EVEBot 0.8..
+[14:51:15] Please Hold Loading Main Function..
+[14:51:17] Completed Main Function
+[14:51:17] Bot is now Paused
+[14:51:17] Please Press Play
+[14:51:18] Mining
+[14:51:18] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[14:51:20] About to warp, this is a log check
+[14:51:30] Warping, waiting...
+[14:51:32] Finished warping...
+[14:51:37] Warp Command Given
+[14:51:37] Setting roid to Asteroid (Scordite) with id 72868004 -- calling Orbit...
+[14:51:39] Entering Orbit with 72868004, waiting...
+[14:51:41] Finish waiting, in orbit now
+[14:51:41] Locking roid target
+[14:51:49] Debug: UpdateHudStatus Activate Laser
+[14:51:49] 2
+[14:51:49] 3
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 14:53:08  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[14:53:08] Started EVEBot 0.8..
+[14:53:08] Please Hold Loading Main Function..
+[14:53:10] Completed Main Function
+[14:53:10] Bot is now Paused
+[14:53:10] Please Press Play
+[14:53:11] Mining
+[14:53:11] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[14:53:13] About to warp, this is a log check
+[14:53:23] Warping, waiting...
+[14:53:26] Finished warping...
+[14:53:31] Warp Command Given
+[14:53:31] Setting roid to Asteroid (Condensed Scordite) with id 72868042 -- calling Orbit...
+[14:53:32] Entering Orbit with 72868042, waiting...
+[14:53:34] Finish waiting, in orbit now
+[14:53:34] Locking roid target
+[14:53:40] Debug: UpdateHudStatus Activate Laser
+[14:53:40] 2
+[14:53:40] 3
+[14:53:40] 5
+[14:53:41] 6
+[14:53:41] Checking for Laser
+[14:53:41] Found Mining Laser
+[14:55:42] End waiting, cargo is full
+[14:55:44] Mining
+[14:55:44] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[14:55:46] About to warp, this is a log check
+[14:55:56] Warping, waiting...
+[14:55:58] Finished warping...
+[14:56:03] Warp Command Given
+[14:56:04] Setting roid to Asteroid (Condensed Scordite) with id 72868042 -- calling Orbit...
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 15:00:00  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:00:00] Started EVEBot 0.8..
+[15:00:00] Please Hold Loading Main Function..
+[15:00:02] Completed Main Function
+[15:00:02] Bot is now Paused
+[15:00:02] Please Press Play
+[15:00:03] Mining
+[15:00:03] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[15:00:05] About to warp, this is a log check
+[15:00:15] Warping, waiting...
+[15:00:18] Finished warping...
+[15:00:23] Warp Command Given
+[15:00:23] Setting roid to Asteroid (Condensed Scordite) with id 72868042 -- calling Orbit...
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 15:05:33  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:05:33] Started EVEBot 0.8..
+[15:05:33] Please Hold Loading Main Function..
+[15:05:35] Completed Main Function
+[15:05:35] Bot is now Paused
+[15:05:35] Please Press Play
+[15:05:36] Mining
+[15:05:36] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[15:05:38] About to warp, this is a log check
+[15:05:48] Warping, waiting...
+[15:05:50] Finished warping...
+[15:05:55] Warp Command Given
+[15:05:56] Setting roid to Asteroid (Condensed Scordite) with id 72868042 -- calling Orbit...
+[15:05:57] Entering Orbit with 72868042, waiting...
+[15:05:59] Finish waiting, in orbit now
+[15:05:59] Locking roid target
+[15:06:05] Debug: UpdateHudStatus Activate Laser
+[15:06:05] 2
+[15:06:05] 3
+[15:06:05] 5
+[15:06:06] 6
+[15:06:06] Checking for Laser
+[15:06:06] Found NULL
+[15:06:06] Powering up NULL
+[15:06:08] 2
+[15:06:08] 3
+[15:06:08] No Lasers in Slot 2
+[15:06:12] 2
+[15:06:12] 3
+[15:06:12] No Lasers in Slot 3
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 15:07:17  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:07:17] Started EVEBot 0.8..
+[15:07:17] Please Hold Loading Main Function..
+[15:07:19] Completed Main Function
+[15:07:19] Bot is now Paused
+[15:07:19] Please Press Play
+[15:07:20] Mining
+[15:07:21] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[15:07:23] About to warp, this is a log check
+[15:07:33] Warping, waiting...
+[15:07:35] Finished warping...
+[15:07:40] Warp Command Given
+[15:07:40] Setting roid to Asteroid (Scordite) with id 72868004 -- calling Orbit...
+[15:07:41] Entering Orbit with 72868004, waiting...
+[15:07:44] Finish waiting, in orbit now
+[15:07:44] Locking roid target
+[15:07:52] Debug: UpdateHudStatus Activate Laser
+[15:07:52] 2
+[15:07:52] 3
+[15:07:52] 5
+[15:07:53] 6
+[15:07:53] Checking for Laser
+[15:07:53] Found NULL
+[15:07:53] Powering up Laser
+[15:07:55] 2
+[15:07:55] 3
+[15:07:55] No Lasers in Slot 2
+[15:07:58] 2
+[15:07:58] 3
+[15:07:58] No Lasers in Slot 3
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 15:08:08  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:08:08] Started EVEBot 0.8..
+[15:08:08] Please Hold Loading Main Function..
+[15:08:10] Completed Main Function
+[15:08:10] Bot is now Paused
+[15:08:10] Please Press Play
+[15:08:16] Mining
+[15:08:16] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[15:08:18] About to warp, this is a log check
+[15:08:29] Warping, waiting...
+[15:08:31] Finished warping...
+[15:08:36] Warp Command Given
+[15:08:36] Setting roid to Asteroid (Scordite) with id 72868004 -- calling Orbit...
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 15:09:39  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:09:39] Started EVEBot 0.8..
+[15:09:39] Please Hold Loading Main Function..
+[15:09:41] Completed Main Function
+[15:09:41] Bot is now Paused
+[15:09:41] Please Press Play
+[15:09:45] Mining
+[15:09:45] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[15:09:47] About to warp, this is a log check
+[15:09:57] Warping, waiting...
+[15:09:59] Finished warping...
+[15:10:04] Warp Command Given
+[15:10:05] Setting roid to Asteroid (Scordite) with id 72868004 -- calling Orbit...
+[15:10:06] Entering Orbit with 72868004, waiting...
+[15:10:08] Finish waiting, in orbit now
+[15:10:08] Locking roid target
+[15:10:14] Debug: UpdateHudStatus Activate Laser
+[15:10:14] 2
+[15:10:14] 3
+[15:10:14] 5
+[15:10:15] 6
+[15:10:15] Checking for Laser
+[15:10:15] Found NULL
+[15:10:15] Powering up Laser
+[15:10:17] 2
+[15:10:17] 3
+[15:10:17] No Lasers in Slot 2
+[15:10:20] 2
+[15:10:20] 3
+[15:10:20] No Lasers in Slot 3
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 15:11:06  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:11:06] Started EVEBot 0.8..
+[15:11:06] Please Hold Loading Main Function..
+[15:11:09] Completed Main Function
+[15:11:09] Bot is now Paused
+[15:11:09] Please Press Play
+[15:11:17] Mining
+[15:11:17] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[15:11:19] About to warp, this is a log check
+[15:11:29] Warping, waiting...
+[15:11:31] Finished warping...
+[15:11:36] Warp Command Given
+[15:11:37] Setting roid to Asteroid (Scordite) with id 72868004 -- calling Orbit...
+[15:11:38] Entering Orbit with 72868004, waiting...
+[15:11:40] Finish waiting, in orbit now
+[15:11:40] Locking roid target
+[15:11:46] Debug: UpdateHudStatus Activate Laser
+[15:11:46] 2
+[15:11:46] 3
+[15:11:46] 5
+[15:11:47] 6
+[15:11:47] Checking for Laser
+[15:11:47] Found Laser
+[15:11:47] Powering up Laser
+[15:11:49] 2
+[15:11:49] 3
+[15:11:49] 5
+[15:11:50] 6
+[15:11:50] Checking for Laser
+[15:11:50] Found Laser
+[15:11:50] Powering up Laser
+[15:11:53] 2
+[15:11:53] 3
+[15:11:53] No Lasers in Slot 2
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 15:12:35  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:12:35] Started EVEBot 0.8..
+[15:12:35] Please Hold Loading Main Function..
+[15:12:37] Completed Main Function
+[15:12:37] Bot is now Paused
+[15:12:37] Please Press Play
+[15:12:37] Mining
+[15:12:38] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[15:12:40] About to warp, this is a log check
+[15:12:50] Warping, waiting...
+[15:12:52] Finished warping...
+[15:12:57] Warp Command Given
+[15:12:57] Setting roid to Asteroid (Scordite) with id 72868004 -- calling Orbit...
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 15:13:16  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:13:16] Started EVEBot 0.8..
+[15:13:16] Please Hold Loading Main Function..
+[15:13:19] Completed Main Function
+[15:13:19] Bot is now Paused
+[15:13:19] Please Press Play
+[15:13:24] Mining
+[15:13:24] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[15:13:26] About to warp, this is a log check
+[15:13:37] Warping, waiting...
+[15:13:39] Finished warping...
+[15:13:44] Warp Command Given
+[15:13:44] Setting roid to Asteroid (Scordite) with id 72868004 -- calling Orbit...
+[15:13:45] End waiting, cargo is full
+[15:13:47] Setting main station Vittenyn VI - Moon 13 - Federation Navy Assembly Plant with ID 60011848
+[15:13:47] My ship is full
+[15:13:47] Calling ReturnToBase
+[15:13:47] The distance is greater than 10000, warp to base
+[15:13:57] Warping, waiting...
+[15:14:22] Finished warping...
+[15:14:32] Approaching Base
+[15:14:34] In Docking Range ... Docking
+[15:14:34] Docking, waiting...
+[15:14:50] Finished Docking
+[15:14:55] I'm in the station
+[15:14:55] Transfering item1 to hangar
+[15:15:04] Transfering item2 to hangar
+[15:15:12] Transfering item3 to hangar
+[15:15:20] Stacking all...
+[15:15:28] Staking done
+[15:15:30] Undocking
+[15:15:30] Waiting...
+[15:15:52] Mining
+[15:15:52] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[15:15:54] About to warp, this is a log check
+[15:16:04] Warping, waiting...
+[15:16:29] Finished warping...
+[15:16:34] Warp Command Given
+[15:16:34] Setting roid to Asteroid (Condensed Scordite) with id 72868036 -- calling Orbit...
+[15:16:36] Entering Orbit with 72868036, waiting...
+[15:17:31] Finish waiting, in orbit now
+[15:17:31] Locking roid target
+[15:17:37] Debug: UpdateHudStatus Activate Laser
+[15:17:37] 2
+[15:17:37] 3
+[15:17:37] 5
+[15:17:38] 6
+[15:17:38] Checking for Laser
+[15:17:38] Found Laser
+[15:17:38] Powering up Laser
+[15:17:40] 2
+[15:17:40] 3
+[15:17:40] 5
+[15:17:41] 6
+[15:17:41] Checking for Laser
+[15:17:41] Found Laser
+[15:17:41] Powering up Laser
+[15:17:44] 2
+[15:17:44] 3
+[15:17:44] No Lasers in Slot 2
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 15:17:55  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:17:55] Started EVEBot 0.8..
+[15:17:55] Please Hold Loading Main Function..
+[15:17:57] Completed Main Function
+[15:17:57] Bot is now Paused
+[15:17:57] Please Press Play
+[15:17:58] Mining
+[15:17:58] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[15:18:00] About to warp, this is a log check
+[15:18:10] Warping, waiting...
+[15:18:12] Finished warping...
+[15:18:17] Warp Command Given
+[15:18:17] Setting roid to Asteroid (Scordite) with id 72868004 -- calling Orbit...
+[15:18:19] Entering Orbit with 72868004, waiting...
+[15:18:21] Finish waiting, in orbit now
+[15:18:21] Locking roid target
+[15:18:29] Debug: UpdateHudStatus Activate Laser
+[15:18:29] 2
+[15:18:29] 3
+[15:18:29] 5
+[15:18:30] 6
+[15:18:30] Checking for Laser
+[15:18:30] Found Laser
+"[15:18:30] "Laser is already active}"
+[15:18:32] 2
+[15:18:32] 3
+[15:18:32] 5
+[15:18:33] 6
+[15:18:33] Checking for Laser
+[15:18:33] Found Laser
+[15:18:33] Powering up Laser
+[15:18:36] 2
+[15:18:36] 3
+[15:18:36] No Lasers in Slot 2
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 15:19:27  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:19:28] Started EVEBot 0.8..
+[15:19:28] Please Hold Loading Main Function..
+[15:19:30] Completed Main Function
+[15:19:30] Bot is now Paused
+[15:19:30] Please Press Play
+[15:19:31] Mining
+[15:19:31] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[15:19:33] About to warp, this is a log check
+[15:19:43] Warping, waiting...
+[15:19:45] Finished warping...
+[15:19:50] Warp Command Given
+[15:19:50] Setting roid to Asteroid (Scordite) with id 72868004 -- calling Orbit...
+[15:20:19] Entering Orbit with 72868004, waiting...
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 15:24:18  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:24:18] Started EVEBot 0.8..
+[15:24:18] Please Hold Loading Main Function..
+[15:24:20] Completed Main Function
+[15:24:20] Bot is now Paused
+[15:24:20] Please Press Play
+[15:24:25] Mining
+[15:24:25] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[15:24:27] About to warp, this is a log check
+[15:24:38] Warping, waiting...
+[15:24:40] Finished warping...
+[15:24:45] Warp Command Given
+[15:24:45] Setting roid to Asteroid (Scordite) with id 72868004 -- calling Orbit...
+[15:24:49] Entering Orbit with 72868004, waiting...
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 15:30:51  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:30:51] Started EVEBot 0.8..
+[15:30:51] Please Hold Loading Main Function..
+[15:30:53] Completed Main Function
+[15:30:53] Bot is now Paused
+[15:30:53] Please Press Play
+[15:30:54] Mining
+[15:30:54] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[15:30:56] About to warp, this is a log check
+[15:31:07] Warping, waiting...
+[15:31:09] Finished warping...
+[15:31:14] Warp Command Given
+[15:31:14] Setting roid to Asteroid (Massive Scordite) with id 72868012 -- calling Orbit...
+[15:31:15] Entering Orbit with 72868012, waiting...
+[15:31:17] Finish waiting, in orbit now
+[15:31:17] Locking roid target
+[15:31:23] Debug: UpdateHudStatus Activate Laser
+[15:31:23] 2
+[15:31:23] 3
+[15:31:23] 5
+[15:31:24] 6
+[15:31:25] Checking for Laser
+[15:31:25] Found Laser
+[15:31:25] Powering up Laser
+[15:31:27] 2
+[15:31:27] 3
+[15:31:27] 5
+[15:31:28] 6
+[15:31:28] Checking for Laser
+[15:31:28] Found Laser
+[15:31:28] Powering up Laser
+[15:31:31] 2
+[15:31:31] 3
+[15:31:31] No Lasers in Slot 2
+[15:32:29] End waiting, cargo is full
+[15:32:30] Mining
+[15:32:31] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[15:32:33] About to warp, this is a log check
+[15:32:43] Warping, waiting...
+[15:32:45] Finished warping...
+[15:32:50] Warp Command Given
+[15:32:50] Setting roid to Asteroid (Scordite) with id 72868004 -- calling Orbit...
+[15:32:52] Entering Orbit with 72868004, waiting...
+[15:32:54] Finish waiting, in orbit now
+[15:32:54] Locking roid target
+[15:33:02] Debug: UpdateHudStatus Activate Laser
+[15:33:02] 2
+[15:33:02] 3
+[15:33:02] 5
+[15:33:03] 6
+[15:33:03] Checking for Laser
+[15:33:03] Found Laser
+[15:33:03] Laser is already active
+[15:33:05] 2
+[15:33:05] 3
+[15:33:05] 5
+[15:33:06] 6
+[15:33:06] Checking for Laser
+[15:33:06] Found Laser
+[15:33:06] Laser is already active
+[15:33:09] 2
+[15:33:09] 3
+[15:33:09] No Lasers in Slot 2
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 15:34:25  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[15:34:25] Started EVEBot 0.8..
+[15:34:25] Please Hold Loading Main Function..
+[15:34:27] Completed Main Function
+[15:34:27] Bot is now Paused
+[15:34:27] Please Press Play
+[15:34:28] Mining
+[15:34:28] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[15:34:30] About to warp, this is a log check
+[15:34:41] Warping, waiting...
+[15:34:43] Finished warping...
+[15:34:48] Warp Command Given
+[15:34:48] Setting roid to Asteroid (Scordite) with id 72868004 -- calling Orbit...
+[15:34:49] Entering Orbit with 72868004, waiting...
+[15:34:51] Finish waiting, in orbit now
+[15:34:51] Locking roid target
+[15:34:57] Debug: UpdateHudStatus Activate Laser
+[15:34:57] 2
+[15:34:57] 3
+[15:34:57] 5
+[15:34:58] 6
+[15:34:58] Checking for Laser
+[15:34:58] Found Laser
+[15:34:58] Powering up Laser
+[15:35:01] 2
+[15:35:01] 3
+[15:35:01] 5
+[15:35:02] 6
+[15:35:02] Checking for Laser
+[15:35:02] Found Laser
+[15:35:02] Powering up Laser
+[15:35:05] 2
+[15:35:05] 3
+[15:35:05] No Lasers in Slot 2
+[15:36:03] End waiting, cargo is full
+[15:36:05] Mining
+[15:36:05] Setting roid belt Vittenyn VI - Asteroid Belt 2 with id 40173447
+[15:36:07] About to warp, this is a log check
+[15:36:17] Warping, waiting...
+[15:36:19] Finished warping...
+[15:36:24] Warp Command Given
+[15:36:24] Setting roid to Asteroid (Scordite) with id 72868004 -- calling Orbit...
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 21:11:38  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[21:11:38] Started EVEBot 0.8..
+[21:11:38] Please Hold Loading Main Function..
+[21:11:40] Completed Main Function
+[21:11:40] Bot is now Paused
+[21:11:40] Please Press Play
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 21:11:45  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[21:11:45] Started EVEBot 0.8..
+[21:11:45] Please Hold Loading Main Function..
+[21:11:47] Completed Main Function
+[21:11:47] Bot is now Paused
+[21:11:47] Please Press Play
+[21:11:49] Mining
+[21:11:49] Setting roid belt Mirilene IX - Asteroid Belt 2 with id 40173583
+[21:11:51] About to warp, this is a log check
+[21:12:01] Warping, waiting...
+[21:12:26] Finished warping...
+[21:12:31] Warp Command Given
+[21:12:31] Setting roid to Asteroid (Scordite) with id 72874790 -- calling Orbit...
+[21:12:33] Entering Orbit with 72874790, waiting...
+[21:13:42] Finish waiting, in orbit now
+[21:13:42] Locking roid target
+[21:13:51] Checking for Laser
+[21:13:51] Found Laser
+[21:13:51] Powering up Laser
+[21:13:55] Checking for Laser
+[21:13:55] Found Laser
+[21:13:55] Powering up Laser
+[21:13:58] No Lasers in Slot 2
+[21:15:56] End waiting, cargo is full
+[21:15:57] Mining
+[21:15:58] Setting roid belt Mirilene IX - Asteroid Belt 2 with id 40173583
+[21:16:00] About to warp, this is a log check
+[21:16:10] Warping, waiting...
+[21:16:12] Finished warping...
+[21:16:17] Warp Command Given
+[21:16:18] Setting roid to Asteroid (Scordite) with id 72874790 -- calling Orbit...
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 21:21:40  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[21:21:40] Started EVEBot 0.8..
+[21:21:40] Please Hold Loading Main Function..
+[21:21:42] Completed Main Function
+[21:21:42] Bot is now Paused
+[21:21:42] Please Press Play
+[21:21:44] Mining
+[21:21:44] Setting roid belt Mirilene IX - Asteroid Belt 2 with id 40173583
+[21:21:46] About to warp, this is a log check
+[21:21:56] Warping, waiting...
+[21:21:58] Finished warping...
+[21:22:03] Warp Command Given
+[21:22:04] Setting roid to Asteroid (Scordite) with id 72874790 -- calling Orbit...
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 21:22:53  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[21:22:53] Started EVEBot 0.8..
+[21:22:53] Please Hold Loading Main Function..
+[21:22:55] Completed Main Function
+[21:22:55] Bot is now Paused
+[21:22:55] Please Press Play
+[21:22:55] Mining
+[21:22:55] Setting roid belt Mirilene IX - Asteroid Belt 2 with id 40173583
+[21:22:57] About to warp, this is a log check
+[21:23:08] Warping, waiting...
+[21:23:10] Finished warping...
+[21:23:15] Warp Command Given
+[21:23:16] Setting roid to Asteroid (Scordite) with id 72874790 -- calling Orbit...
+[21:24:10] Entering Orbit with 72874790, waiting...
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 22:00:09  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[22:00:09] Started EVEBot 0.81x..
+[22:00:09] Please Hold Loading Main Function..
+[22:00:11] Completed Main Function
+[22:00:11] Bot is now Paused
+[22:00:11] Please Press Play
+[22:00:11] Mining
+[22:00:12] Setting roid belt Mirilene IX - Asteroid Belt 2 with id 40173583
+[22:00:14] About to warp, this is a log check
+[22:00:24] Warping, waiting...
+[22:00:26] Finished warping...
+[22:00:31] Warp Command Given
+[22:00:31] Setting roid to Asteroid (Scordite) with id 72874770 -- calling Orbit...
+[22:00:32] Entering Orbit with 72874770, waiting...
+[22:00:34] Finish waiting, in orbit now
+[22:00:34] Locking roid target
+[22:00:43] Checking for Laser
+[22:00:43] Found Laser
+[22:00:43] Powering up Laser
+[22:00:47] Checking for Laser
+[22:00:47] Found Laser
+[22:00:47] Powering up Laser
+[22:00:50] No Lasers in Slot 2
+[22:02:03] End waiting, cargo is full
+[22:02:04] Mining
+[22:02:05] Setting roid belt Mirilene IX - Asteroid Belt 2 with id 40173583
+[22:02:07] About to warp, this is a log check
+[22:02:17] Warping, waiting...
+[22:02:20] Finished warping...
+[22:02:25] Warp Command Given
+[22:02:25] Setting roid to Asteroid (Scordite) with id 72874790 -- calling Orbit...
+[22:02:26] Entering Orbit with 72874790, waiting...
+[22:02:29] Finish waiting, in orbit now
+[22:02:29] Locking roid target
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 22:02:38  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[22:02:39] Started EVEBot 0.81x..
+[22:02:39] Please Hold Loading Main Function..
+[22:02:41] Completed Main Function
+[22:02:41] Bot is now Paused
+[22:02:41] Please Press Play
+[22:02:44] Mining
+[22:02:44] Setting roid belt Mirilene IX - Asteroid Belt 2 with id 40173583
+[22:02:46] About to warp, this is a log check
+[22:02:57] Warping, waiting...
+[22:02:59] Finished warping...
+[22:03:04] Warp Command Given
+[22:03:04] Setting roid to Asteroid (Scordite) with id 72874790 -- calling Orbit...
+[22:04:19] Entering Orbit with 72874790, waiting...
+[22:05:37] Finish waiting, in orbit now
+[22:05:37] Locking roid target
+[22:05:46] Checking for Laser
+[22:05:46] Found Laser
+[22:05:46] Powering up Laser
+[22:05:50] Checking for Laser
+[22:05:50] Found Laser
+[22:05:50] Powering up Laser
+[22:05:53] No Lasers in Slot 2
+[22:07:47] End waiting, cargo is full
+[22:07:49] Setting main station Mirilene IV - Moon 1 - Federation Navy Logistic Support with ID 60011854
+[22:07:49] My ship is full
+[22:07:49] Calling ReturnToBase
+[22:07:49] The distance is greater than 10000, warp to base
+[22:07:59] Warping, waiting...
+[22:08:40] Finished warping...
+[22:08:50] Approaching Base
+[22:08:55] In Docking Range ... Docking
+[22:08:55] Docking, waiting...
+[22:09:06] Finished Docking
+[22:09:12] I'm in the station
+[22:09:12] Transfering item1 to hangar
+[22:09:20] Transfering item2 to hangar
+[22:09:28] Transfering item3 to hangar
+[22:09:37] Stacking all...
+[22:09:45] Staking done
+[22:09:47] Undocking
+[22:09:47] Waiting...
+[22:10:06] Mining
+[22:10:07] Setting roid belt Mirilene II - Asteroid Belt 1 with id 40173487
+[22:10:09] About to warp, this is a log check
+[22:10:19] Warping, waiting...
+[22:10:46] Finished warping...
+[22:10:51] Warp Command Given
+[22:10:52] Setting roid to Asteroid (Condensed Scordite) with id 72869704 -- calling Orbit...
+[22:10:53] Entering Orbit with 72869704, waiting...
+[22:12:07] Finish waiting, in orbit now
+[22:12:07] Locking roid target
+[22:12:16] Checking for Laser
+[22:12:16] Found Laser
+[22:12:16] Powering up Laser
+[22:12:20] Checking for Laser
+[22:12:20] Found Laser
+[22:12:20] Powering up Laser
+[22:12:23] No Lasers in Slot 2
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 22:44:18  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[22:44:18] Started EVEBot 0.81x..
+[22:44:18] Please Hold Loading Main Function..
+[22:44:20] Completed Main Function
+[22:44:20] Bot is now Paused
+[22:44:20] Please Press Play
+[22:44:21] Mining
+[22:44:21] Setting roid belt Eglennaert I - Asteroid Belt 1 with id 40169355
+[22:44:23] About to warp, this is a log check
+[22:44:33] Warping, waiting...
+[22:44:57] Finished warping...
+[22:45:03] Warp Command Given
+[22:45:03] Setting roid to Asteroid (Condensed Scordite) with id 72646155 -- calling Orbit...
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 22:46:15  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[22:46:15] Started EVEBot 0.81x..
+[22:46:15] Please Hold Loading Main Function..
+[22:46:17] Completed Main Function
+[22:46:17] Bot is now Paused
+[22:46:17] Please Press Play
+[22:46:18] Mining
+[22:46:18] Setting roid belt Eglennaert I - Asteroid Belt 1 with id 40169355
+[22:46:20] About to warp, this is a log check
+[22:46:30] Warping, waiting...
+[22:46:34] Finished warping...
+[22:46:39] Warp Command Given
+[22:46:39] Setting roid to Asteroid (Condensed Scordite) with id 72646155 -- calling Orbit...
+[22:46:41] Entering Orbit with 72646155, waiting...
+-------------------------------------------------
+  Evebot Session time 07/10/2007 at 22:47:29  
+  Evebot Session for  Hessinger 
+-------------------------------------------------
+[22:47:29] Started EVEBot 0.81x..
+[22:47:29] Please Hold Loading Main Function..
+[22:47:33] Completed Main Function
+[22:47:33] Bot is now Paused
+[22:47:33] Please Press Play
