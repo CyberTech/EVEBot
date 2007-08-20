@@ -216,7 +216,7 @@ objectdef obj_Miner
 						call Ship.ActivateFreeMiningLaser
 						
 						if (${Ship.Drones.DronesInSpace} > 0 && \
-							${Config.Miner.MiningDrones} > 0)
+							${Config.Miner.UseMiningDrones})
 						{
 						call Ship.Drones.ActivateMiningDrones
 						}
