@@ -11,23 +11,40 @@ objectdef obj_Drones
 {
 	variable index:int ActiveDroneIDList
 	variable int CategoryID_Drones = 18
+	variable int LaunchedDrones = 0
 	
 	method Initialize()
 	{
-		call UpdateHudStatus "obj_Drones: Initialized"
+		UI:UpdateConsole["obj_Drones: Initialized"]
 	}
 
 	method LaunchAll()
 	{
-		call UpdateHudStatus "Launching drones..."
-		Me.Ship:LaunchAllDrones
+		if ${Me.Ship.GetDrones} > 0
+		{
+			UI:UpdateConsole["Launching drones..."]
+			Me.Ship:LaunchAllDrones
+			This.LaunchedDrones:Set[${This.DronesInSpace}]
+		}
 	}
 		
+	member:int DronesInBay()
+	{
+		return ${Me.GetActiveDroneIDs[This.ActiveDroneIDList]}
+	}
+
 	member:int DronesInSpace()
 	{
 		return ${Me.GetActiveDroneIDs[This.ActiveDroneIDList]}
 	}
    
+   	member:bool DroneShortage()
+   	{
+		return (${Me.Ship.DronebayCapacity} > 0 && \
+   				${Me.Ship.GetDrones} == 0 && \
+   				${This.DronesInSpace} < ${Config.Combat.MinimumDronesInSpace})
+   	}
+   	
 	function ReturnAllToDroneBay()
 	{
 		while ${This.DronesInSpace} > 0
@@ -48,8 +65,8 @@ objectdef obj_Drones
 	{
 		if (${This.DronesInSpace} > 0)
 		{
-		UI:UpdateConsole["Engaging Combat Drones"]
-		Eve:DronesEngageMyTarget[This.ActiveDroneIDList]
+			UI:UpdateConsole["Engaging Combat Drones"]
+			Eve:DronesEngageMyTarget[This.ActiveDroneIDList]
 		}
 	}
 }
@@ -79,7 +96,7 @@ objectdef obj_Ship
 	{
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		This:CalculateMaxLockedTargets
-		call UpdateHudStatus "obj_Ship: Initialized"
+		UI:UpdateConsole["obj_Ship: Initialized"]
 	}
 	
 	method Shutdown()
@@ -91,21 +108,15 @@ objectdef obj_Ship
 	{
 		FrameCounter:Inc
 
-		variable int IntervalInSeconds = 8
-		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
+		if (${Me.InStation(exists)} && !${Me.InStation})
 		{
-			This:ValidateModuleTargets
-			FrameCounter:Set[0]
+			variable int IntervalInSeconds = 8
+			if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
+			{
+				This:ValidateModuleTargets
+				FrameCounter:Set[0]
+			}
 		}
-		
-			;if ${Combat.InCombat}== FALSE
-		 	;{		 		
-			;	if (${Me.Ship.ShieldPct} < 100 && ${Me.GetTargetedBy} > 0)
-			;	{
-			;		Combat:InCombatState
-			;	}
-	 		;}
-
 	}
 	
 	member:float CargoMinimumFreeSpace()
@@ -243,7 +254,7 @@ objectdef obj_Ship
 		while ${Module:Next(exists)}
 		if ${This.ModuleList_AB_MWD.Used} > 1
 		{
-			call UpdateHudStatus "Warning: More than 1 Afterburner or MWD was detected, I will only use the first one."
+			UI:UpdateConsole["Warning: More than 1 Afterburner or MWD was detected, I will only use the first one."]
 		}
 	}
 	
@@ -478,7 +489,7 @@ objectdef obj_Ship
 				;echo "DEBUG: ChangeMiningLaserCrystal Testing ${OreType} contains ${CrystalType}"
 				if ${OreType.Find[${CrystalType}](exists)}
 				{
-					call UpdateHudStatus "Switching Crystal in ${SlotName} from ${LoadedAmmo} to ${CrystalIterator.Value.Name}"
+					UI:UpdateConsole["Switching Crystal in ${SlotName} from ${LoadedAmmo} to ${CrystalIterator.Value.Name}"]
 					Me.Ship.Module[${SlotName}]:ChangeAmmo[${CrystalIterator.Value.ID},1]
 					; This takes 2 seconds ingame, let's give it 50% more
 					wait 30
@@ -593,7 +604,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 
 		if ${Me.ActiveTarget.CategoryID} != ${Asteroids.AsteroidCategoryID}
 		{
-			call UpdateHudStatus "Error: Mining Lasers may only be used on Asteroids"
+			UI:UpdateConsole["Error: Mining Lasers may only be used on Asteroids"]
 			return
 		}
 
@@ -619,7 +630,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 					call This.ChangeMiningLaserCrystal "${OreType}" ${Slot}
 				}
 
-				call UpdateHudStatus "Activating: ${Module.Value.ToItem.Slot}: ${Module.Value.ToItem.Name}"
+				UI:UpdateConsole["Activating: ${Module.Value.ToItem.Slot}: ${Module.Value.ToItem.Name}"]
 				Module.Value:Click
 				wait 25
 				;TimedCommand ${Math.Rand[35]:Inc[18]} Script[EVEBot].Variable[Ship]:CycleMiningLaser[OFF, ${Slot}]
@@ -641,7 +652,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				return
 			}
 			
-			call UpdateHudStatus "Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc[(${Entity[${EntityID}].Distance} - ${Distance}) / ${Me.Ship.MaxVelocity}].Ceil} Seconds away"
+			UI:UpdateConsole["Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc[(${Entity[${EntityID}].Distance} - ${Distance}) / ${Me.Ship.MaxVelocity}].Ceil} Seconds away"]
 			This:Activate_AfterBurner[]
 			do
 			{
@@ -683,7 +694,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 	{
 		if !${This.IsCargoOpen}
 		{
-			call UpdateHudStatus "Opening Ship Cargohold"
+			UI:UpdateConsole["Opening Ship Cargohold"]
 			EVE:Execute[OpenCargoHoldOfActiveShip]
 			wait WAIT_CARGO_WINDOW
 			while !${This.IsCargoOpen}
@@ -698,7 +709,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 	{
 		if ${This.IsCargoOpen}
 		{
-			call UpdateHudStatus "Closing Ship Cargohold"
+			UI:UpdateConsole["Closing Ship Cargohold"]
 			EVEWindow[MyShipCargo]:Close
 			wait WAIT_CARGO_WINDOW
 			while ${This.IsCargoOpen}
@@ -712,7 +723,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 	function Undock()
 	{
 	  variable int Counter
-		call UpdateHudStatus "Undock: Waiting while ship exits the station (13 sec)"
+		UI:UpdateConsole["Undock: Waiting while ship exits the station (13 sec)"]
 
 		EVE:Execute[CmdExitStation]	
 		wait WAIT_UNDOCK
@@ -754,7 +765,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		call This.WarpPrepare
 		while ${Entity[${Id}].Distance} >= 10000
 		{
-			call UpdateHudStatus "Warping to ${Entity[${Id}].Name}"
+			UI:UpdateConsole["Warping to ${Entity[${Id}].Name}"]
 			Entity[${Id}]:WarpTo
 			call This.WarpWait
 		}
@@ -764,7 +775,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
   {
 		if (!${EVE.Bookmark[${DestinationBookmarkLabel}](exists)})
 		{  
-  		call UpdateHudStatus "ERROR:  Destination Bookmark, '${DestinationBookmarkLabel}', does not exist!"
+  		UI:UpdateConsole["ERROR:  Destination Bookmark, '${DestinationBookmarkLabel}', does not exist!"]
   		return
   	}
   	
@@ -775,10 +786,10 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 	  
 	 	if (${EVE.Bookmark[${DestinationBookmarkLabel}].SolarSystemID} != ${Me.SolarSystemID})
 	 	{
-	  	call UpdateHudStatus "Setting autopilot destination: ${EVE.Bookmark[${DestinationBookmarkLabel}]}"
+	  	UI:UpdateConsole["Setting autopilot destination: ${EVE.Bookmark[${DestinationBookmarkLabel}]}"]
 			EVE.Bookmark[${DestinationBookmarkLabel}]:SetDestination
 			wait 5
-			call UpdateHudStatus "Activating autopilot and waiting until arrival..."
+			UI:UpdateConsole["Activating autopilot and waiting until arrival..."]
 			EVE:Execute[CmdToggleAutopilot]
 			do
 			{
@@ -802,7 +813,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			wait 5
 		}
 		
-		call UpdateHudStatus "Warping to destination"	   
+		UI:UpdateConsole["Warping to destination"]
 		EVE.Bookmark[${DestinationBookmarkLabel}]:WarpTo
 		wait 120
 		do
@@ -814,7 +825,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		
 		if ${EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity(exists)}
 		{
-			call UpdateHudStatus "Docking with destination station"
+			UI:UpdateConsole["Docking with destination station"]
 			if (${EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity.CategoryID} == 3)
 			{
 				EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity:Approach
@@ -832,7 +843,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				   Counter:Inc[20]
 				   if (${Counter} > 200)
 				   {
-				      call UpdateHudStatus "Docking atttempt failed ... trying again."
+				      UI:UpdateConsole["Docking atttempt failed ... trying again."]
 				      EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity:Dock	
 				      Counter:Set[0]
 				   }
@@ -850,7 +861,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 
 	function WarpPrepare()
 	{ 
-		call UpdateHudStatus "Preparing for warp"
+		UI:UpdateConsole["Preparing for warp"]
 		call This.Drones.ReturnAllToDroneBay
 	}
 	
@@ -868,7 +879,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			wait 20
 		}
 	
-		call UpdateHudStatus "Finished warping (hopefully)"
+		UI:UpdateConsole["Finished warping (hopefully)"]
 	}	
 
 	method Activate_AfterBurner()
@@ -885,7 +896,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			if !${Module.Value.IsActive}
 			{
-				call UpdateHudStatus "Activating ${Module.Value.ToItem.Name}"
+				UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
 				Module.Value:Click
 			}
 		}
@@ -905,7 +916,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			if ${Module.Value.IsActive}
 			{
-				call UpdateHudStatus "Deactivating ${Module.Value.ToItem.Name}"
+				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}"]
 				Module.Value:Click
 			}
 		}
@@ -926,7 +937,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			if !${Module.Value.IsActive}
 			{
-				call UpdateHudStatus "Activating ${Module.Value.ToItem.Name}"
+				UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
 				Module.Value:Click
 			}
 		}
@@ -937,7 +948,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 	{
 		if ${Entity[${TargetID}](exists)}
 		{
-			call UpdateHudStatus "Locking ${Entity[${TargetID}].Name}: " ${Misc.MetersToKM_Str[${Entity[${TargetID}].Distance}]}"
+			UI:UpdateConsole["Locking ${Entity[${TargetID}].Name}: " ${Misc.MetersToKM_Str[${Entity[${TargetID}].Distance}]}"]
 			Entity[${TargetID}]:LockTarget
 			wait 30
 		}

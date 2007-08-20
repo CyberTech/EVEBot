@@ -148,61 +148,94 @@
 					</Tab>
     	
 					<Tab name='Mining'>
-						<commandcheckbox Name='cbIncludeVeldspar'>
+						<checkbox Name='cbIncludeVeldspar'>
 							<X>10</X>
 							<Y>10</Y>
 							<Height>20</Height>
 							<Width>100</Width>
-							<Text>Ignore veldspar</Text>
-							<Command>Script[EVEBot].VariableScope.Config.Miner:SetIncludeVeldspar[0]</Command>
-							<CommandChecked>Script[EVEBot].VariableScope.Config.Miner:SetIncludeVeldspar[1]</CommandChecked>
-							<Data>!${Script[EVEBot].VariableScope.Config.Miner.IncludeVeldspar}</Data>
-							<AutoTooltip>Check to ignore veldspar when mining.</AutoTooltip>
-						</commandcheckbox>
-						<commandcheckbox Name='cbStickToSpot'>
+							<Text>Mine Veldspar</Text>
+							<AutoTooltip>Include Veldspar when mining?</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Miner.IncludeVeldspar}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+									Script[EVEBot].VariableScope.Config.Miner:SetIncludeVeldspar[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox Name='cbStickToSpot'>
 							<X>10</X>
 							<Y>30</Y>
 							<Height>20</Height>
 							<Width>100</Width>
 							<Text>Return to previous belt</Text>
-							<Command>Script[EVEBot].VariableScope.Config.Miner:SetStickToSpot[1]</Command>
-							<CommandChecked>Script[EVEBot].VariableScope.Config.Miner:SetStickToSpot[0]</CommandChecked>
-							<Data>${Script[EVEBot].VariableScope.Config.Miner.StickToSpot}</Data>
 							<AutoTooltip>When checked a belt will be chosen at random and used until empty.  Uncheck to use a random belt every time.</AutoTooltip>
-						</commandcheckbox>
-						<commandcheckbox Name='cbDistributeLasers'>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Miner.StickToSpot}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+									Script[EVEBot].VariableScope.Config.Miner:SetStickToSpot[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox Name='cbDistributeLasers'>
 							<X>10</X>
 							<Y>50</Y>
 							<Height>20</Height>
 							<Width>100</Width>
 							<Text>One laser per asteroid</Text>
-							<Command>Script[EVEBot].VariableScope.Config.Miner:SetDistributeLasers[1]</Command>
-							<CommandChecked>Script[EVEBot].VariableScope.Config.Miner:SetDistributeLasers[0]</CommandChecked>
-							<Data>${Script[EVEBot].VariableScope.Config.Miner.DistributeLasers}</Data>
-							<AutoTooltip>When checked only one laser will be activated per locked asteroid.  Uncheck to focus all lasers on a single asteroid.</AutoTooltip>
-						</commandcheckbox>
-						<commandcheckbox Name='cbUseJetCan'>
+							<AutoTooltip>When checked only one laser will be activated per locked asteroid.  Uncheck to focus all lasers on a single asteroid.  In general, this should be checked.</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Miner.DistributeLasers}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+									Script[EVEBot].VariableScope.Config.Miner:SetDistributeLasers[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox Name='cbUseJetCan'>
 							<X>10</X>
 							<Y>70</Y>
 							<Height>20</Height>
 							<Width>100</Width>
 							<Text>Use JetCan (stay in belt)</Text>
-							<Command>Script[EVEBot].VariableScope.Config.Miner:SetUseJetCan[1]</Command>
-							<CommandChecked>Script[EVEBot].VariableScope.Config.Miner:SetUseJetCan[0]</CommandChecked>
+							<Command>Script[EVEBot].VariableScope.Config.Miner:SetUseJetCan[FALSE]</Command>
+							<CommandChecked>Script[EVEBot].VariableScope.Config.Miner:SetUseJetCan[TRUE]</CommandChecked>
 							<Data>${Script[EVEBot].VariableScope.Config.Miner.UseJetCan}</Data>
 							<AutoTooltip>Check to jettison ore into a can while mining.  Uncheck to return to base when cargo hold is full.</AutoTooltip>
-						</commandcheckbox>
-						<commandcheckbox name='cbMiningDrones'>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Miner.UseJetCan}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+									Script[EVEBot].VariableScope.Config.Miner:SetUseJetCan[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox name='cbMiningDrones'>
 							<X>10</X>
 							<Y>90</Y>
 							<Height>20</Height>
 							<Width>100</Width>
 							<Text>Use Mining Drones </text>
-							<Command>Script[EVEBot].VariableScope.Config.Miner:SetMiningDrones[1]</Command>
-							<CommandChecked>Script[EVEBot].VariableScope.Config.Miner:SetMiningDrones[0]</CommandChecked>
-							<Data>${Script[EVEBot].VariableScope.Config.Miner.MiningDrones}</Data>
-							<AutoTooltip>When checked mining drones will be used in replacement of combat drones</AutoTooltip>
-						</commandcheckbox>
+							<AutoTooltip>When checked mining drones will be used instead of combat drones</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Miner.UseMiningDrones}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+									Script[EVEBot].VariableScope.Config.Miner:SetUseMiningDrones[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
 						<combobox name='comboOreTypes'>
 							<X>340</X>
 							<Y>10</Y>
@@ -257,38 +290,64 @@
 						</listbox>    	
 					</Tab>
 					<Tab name='Combat'>
-						  <Text name='MinShield'>
-									<X>40</X>
-									<Y>10</Y>
-									<Width>140</Width>
-									<Height>10</Height>
-									<Text>Minimum Shield</Text>
-								</Text>
-							 <Textentry name='MinShieldPctInput'>		
-									<X>6</X>							
-									<Y>10</Y>						
-									<Width>32</Width>						
-									<Height>18</Height>
-									<OnChange>
-									This:SetText[${MinShieldPct}]
-									</OnChange>				
-								</Textentry>
-							  <Text name='MinStructure'>
-									<X>40</X>
-									<Y>30</Y>
-									<Width>140</Width>
-									<Height>10</Height>
-									<Text>Minimum Structure</Text>
-								</Text>
-							 <Textentry name='MinStructurePctInput'>		
-									<X>6</X>							
-									<Y>30</Y>						
-									<Width>32</Width>						
-									<Height>18</Height>
-									<OnChange>
-									This:SetText[${MinStructurePct}]
-									</OnChange>				
-								</Textentry>
+						<Textentry name='MinShieldPctInput'>		
+							<X>10</X>							
+							<Y>10</Y>						
+							<Width>32</Width>						
+							<Height>18</Height>
+							<MaxLength>3</MaxLength>
+							<OnChange>
+							</OnChange>				
+						</Textentry>
+						<Text name='MinShield'>
+							<X>44</X>
+							<Y>10</Y>
+							<Width>140</Width>
+							<Height>10</Height>
+							<Text>Minimum Shield</Text>
+						</Text>
+						<Textentry name='MinStructurePctInput'>
+							<X>10</X>							
+							<Y>30</Y>						
+							<Width>32</Width>						
+							<Height>18</Height>
+							<MaxLength>3</MaxLength>
+							<OnChange>
+							</OnChange>				
+						</Textentry>
+						<Text name='MinStructure'>
+							<X>44</X>
+							<Y>30</Y>
+							<Width>140</Width>
+							<Height>10</Height>
+							<Text>Minimum Structure</Text>
+						</Text>
+						<Textentry name='MinimumDronesInSpace'>
+							<X>10</X>							
+							<Y>50</Y>						
+							<Width>32</Width>						
+							<Height>18</Height>
+							<MaxLength>2</MaxLength>
+							<OnLoad>
+								echo \${Script[EVEBot].VariableScope.Config.Combat.MinimumDronesInSpace} = ${Script[EVEBot].VariableScope.Config.Combat.MinimumDronesInSpace}
+								This:SetText[${Script[EVEBot].VariableScope.Config.Combat.MinimumDronesInSpace}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+									echo ${This.Text}
+									Script[EVEBot].VariableScope.Config.Combat:SetMinimumDronesInSpace[${Int[${This.Text}]}]
+								}
+							</OnChange>
+						</Textentry>
+						<Text name='MinimumDronesInSpaceText'>
+							<X>44</X>
+							<Y>50</Y>
+							<Width>200</Width>
+							<Height>10</Height>
+							<Text>Minimum Drones in Space</Text>
+							<AutoTooltip>We will return to base when available dronecount falls below this number</AutoTooltip>
+						</Text>
 					</tab>
     	
 					<Tab name='Market'>
@@ -305,7 +364,7 @@
 							<Height>25</Height>
 							<text>Queue</text>
 							<Command>
-</Command>
+							</Command>
 						</commandbutton>
 						<commandbutton name='removeskill'>
 							<X>313</X>
@@ -314,7 +373,7 @@
 							<Height>25</Height>
 							<text>Remove</text>
 							<Command>
-</Command>
+							</Command>
 						</commandbutton>
 						<listbox name='skills'>
 							<X>5</X>
@@ -322,8 +381,7 @@
 							<Width>200</Width>
 							<Height>258</Height>
 							<Items>
-							AddItem[${Me.Skill[1]}]
-    	
+								AddItem[${Me.Skill[1]}]
 							</Items>
 						</listbox>
 						<listbox name='intraining'>

@@ -15,7 +15,7 @@ objectdef obj_Gang
 {
 	method Initialize()
 	{
-		call UpdateHudStatus "obj_Gang: Initialized"
+		UI:UpdateConsole["obj_Gang: Initialized"]
 	}
 
 	/* 	

@@ -11,7 +11,7 @@ objectdef obj_Misc
 {
 	method Initialize()
 	{
-		call UpdateHudStatus "obj_Misc: Initialized"
+		UI:UpdateConsole["obj_Misc: Initialized"]
 	}
 	
 	member:string MetersToKM_Str(float64 Meters)

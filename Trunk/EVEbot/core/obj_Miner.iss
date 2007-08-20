@@ -28,7 +28,7 @@ objectdef obj_Miner
 	method Initialize()
 	{
 		This.TripStartTime:Set[${Time.Timestamp}]
-		call UpdateHudStatus "obj_Miner: Initialized"
+		UI:UpdateConsole["obj_Miner: Initialized"]
 	}
 	
 	function ProcessState()
@@ -59,14 +59,14 @@ objectdef obj_Miner
 				call Miner.Mine
 				break
 			case HAUL
-				call UpdateHudStatus "Hauling"
+				UI:UpdateConsole["Hauling"]
 				call Hauler.Haul
 				break
 			case CARGOFULL
 				call Dock
 				break
 			case RUNNING
-				call UpdateHudStatus "Running Away"
+				UI:UpdateConsole["Running Away"]
 				call Dock
 				ForcedReturn:Set[FALSE]
 				break
@@ -143,8 +143,8 @@ objectdef obj_Miner
 		variable string Minutes = ${Math.Calc[(${Script.RunningTime}/1000/60)%60].Int.LeadingZeroes[2]}
 		variable string Seconds = ${Math.Calc[(${Script.RunningTime}/1000)%60].Int.LeadingZeroes[2]}
 		
-		call UpdateStatStatus "Run ${This.TotalTrips} Done - Took ${ISXEVE.SecsToString[${This.PreviousTripSeconds}]}"
-		call UpdateStatStatus "Total Run Time: ${Hours}:${Minutes}:${Seconds} - Average Run Time: ${ISXEVE.SecsToString[${Math.Calc[${This.TotalTripSeconds}/${This.TotalTrips}]}]}"
+		UI:UpdateStatStatus["Run ${This.TotalTrips} Done - Took ${ISXEVE.SecsToString[${This.PreviousTripSeconds}]}"]
+		UI:UpdateStatStatus["Total Run Time: ${Hours}:${Minutes}:${Seconds} - Average Run Time: ${ISXEVE.SecsToString[${Math.Calc[${This.TotalTripSeconds}/${This.TotalTrips}]}]}"]
 	} 
 	
 	method DroneMining()
@@ -158,7 +158,7 @@ objectdef obj_Miner
 			echo "Debug: Test"
 		}
 		
-		call UpdateHudStatus "Recalling Mining Drones"
+		UI:UpdateConsole["Recalling Mining Drones"]
 		EVE:DronesReturnToDroneBay[Ship.ActiveDroneIDList]
 	}
 	
@@ -172,10 +172,12 @@ objectdef obj_Miner
 		call Asteroids.UpdateList
 		variable int DroneCargoMin = ${Math.Calc[(${Ship.CargoMinimumFreeSpace}*1.4)]}
 		
-		while (!${Miner.Abort} && \
-				${Ship.CargoFreeSpace} >= ${Ship.CargoMinimumFreeSpace})
+		while ( !${Miner.Abort} && \
+				${Ship.CargoFreeSpace} >= ${Ship.CargoMinimumFreeSpace} )
 		{	
 	
+			; TODO - Add Ship.Drones.DroneShortage check in here with proper falback -- CyberTech
+			
 			if (!${Ship.InWarp} && \
 				${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers})
 			{
@@ -244,7 +246,7 @@ objectdef obj_Miner
 		This.PreviousTripSeconds:Set[${This.TripDuration}]
 		This.TotalTripSeconds:Inc[${This.PreviousTripSeconds}]
 		This.AverageTripSeconds:Set[${Math.Calc[${This.TotalTripSeconds}/${This.TotalTrips}]}]
-		call UpdateHudStatus "Cargo Hold has reached threshold, returning"
+		UI:UpdateConsole["Cargo Hold has reached threshold, returning"]
 		call This.Statslog
 
 	}

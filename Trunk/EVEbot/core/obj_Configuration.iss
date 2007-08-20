@@ -7,8 +7,10 @@
 	
 	Description:
 	obj_Configuration defines the config file and the root.  It contains an instantiation of obj_Configuration_MODE, 
-	where MODE is Hauler,Miner, Combat, etc.  obj_Configuration_MODE is responsible for setting it's own default
-	values and for providing access members and update methods for the config items.
+	where MODE is Hauler,Miner, Combat, etc.
+	
+	Each obj_Configuration_MODE is responsible for setting it's own default	values and for providing access members
+	and update methods for the config items. ALL configuration items should receive both a member and a method.
 	
 	Instructions:
 		To add a new module, add a variable to obj_Configuration, name it with the thought that it will be accessed 
@@ -17,7 +19,7 @@
 */
 
 objectdef obj_Configuration
-{
+{	
 	; BaseConfig _MUST_ be instantiated before anything else
 	variable obj_Configuration_BaseConfig BaseConfig
 	
@@ -39,7 +41,7 @@ objectdef obj_Configuration_BaseConfig
 		LavishSettings:AddSet[EVEBotSettings]
 		LavishSettings[EVEBotSettings]:Import[${CONFIG_FILE}]
 
-		call UpdateHudStatus "obj_Configuration_BaseConfig: Initialized"
+		UI:UpdateConsole["obj_Configuration_BaseConfig: Initialized"]
 	}
 	
 	method Shutdown()
@@ -62,10 +64,10 @@ objectdef obj_Configuration_Common
 	{	
 		if !${LavishSettings[EVEBotSettings].FindSet[${This.SetName}](exists)}
 		{
-			call UpdateHudStatus "Warning: ${This.SetName} settings missing - initializing"
+			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
 		}
-		call UpdateHudStatus "obj_Configuration_Common: Initialized"		
+		UI:UpdateConsole["obj_Configuration_Common: Initialized"]
 	}
 	
 	member:settingsetref CommonRef()
@@ -76,7 +78,9 @@ objectdef obj_Configuration_Common
 	method Set_Default_Values()
 	{
 		LavishSettings[EVEBotSettings]:AddSet[${This.SetName}]
+		
 		This.CommonRef:AddSetting[Home Station,1]
+		This.CommonRef:AddSetting[Use Development Build,FALSE]
 	}
 
 	member:string HomeStation()
@@ -88,6 +92,16 @@ objectdef obj_Configuration_Common
 	{
 		This.CommonRef:AddSetting[Home Station,${StationName}]
 	}
+
+	member:bool UseDevelopmentBuild()
+	{
+		return ${This.CommonRef.FindSetting[Use Development Build, FALSE]}
+	}
+
+	method SetUseDevelopmentBuild(bool setting)
+	{
+		This.CommonRef:AddSetting[Home Station,${setting}]
+	}
 }
 
 objectdef obj_Configuration_Miner
@@ -98,10 +112,10 @@ objectdef obj_Configuration_Miner
 	{	
 		if !${LavishSettings[EVEBotSettings].FindSet[${This.SetName}](exists)}
 		{
-			call UpdateHudStatus "Warning: ${This.SetName} settings missing - initializing"
+			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
 		}
-		call UpdateHudStatus "obj_Configuration_Miner: Initialized"		
+		UI:UpdateConsole["obj_Configuration_Miner: Initialized"]
 	}
 
 	member:settingsetref MinerRef()
@@ -127,12 +141,12 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSet[ORE_Volumes]
 		This.MinerRef:AddSetting[Restrict To Belt, NO]
 		This.MinerRef:AddSetting[Restrict To Ore Type, NONE]
-		This.MinerRef:AddSetting[Include Veldspar, FALSE]
+		This.MinerRef:AddSetting[Include Veldspar, TRUE]
 		This.MinerRef:AddSetting[Stick To Spot, FALSE]
 		This.MinerRef:AddSetting[Use JetCan, 0]
 		This.MinerRef:AddSetting[Avoid Players Distance, 10000]
 		This.MinerRef:AddSetting[Distribute Lasers, TRUE]
-		Thid.MinerRef:AddSetting[Mining Drones, FALSE]
+		Thid.MinerRef:AddSetting[Use Mining Drones, FALSE]
 
 		This.OreTypesRef:AddSetting[Vitreous Mercoxit, 1]
 		This.OreTypesRef:AddSetting[Magma Mercoxit, 1]
@@ -207,9 +221,9 @@ objectdef obj_Configuration_Miner
 	;		This.MinerRef:AddSetting[Restrict To Ore Type, NONE]
 	;		This.MinerRef:AddSetting[Avoid Players Distance, 10000]
 
-	member:int IncludeVeldspar()
+	member:bool IncludeVeldspar()
 	{
-		return ${This.MinerRef.FindSetting[Include Veldspar, NOTSET]}
+		return ${This.MinerRef.FindSetting[Include Veldspar, TRUE]}
 	}
 
 	method SetIncludeVeldspar(int includeVeldspar)
@@ -217,9 +231,9 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Include Veldspar,${includeVeldspar}]
 	}
 
-	member:int StickToSpot()
+	member:bool StickToSpot()
 	{
-		return ${This.MinerRef.FindSetting[Stick To Spot, NOTSET]}
+		return ${This.MinerRef.FindSetting[Stick To Spot, FALSE]}
 	}
 
 	method SetStickToSpot(int stickToSpot)
@@ -227,9 +241,9 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Stick To Spot,${stickToSpot}]
 	}
 
-	member:int DistributeLasers()
+	member:bool DistributeLasers()
 	{
-		return ${This.MinerRef.FindSetting[Distribute Lasers, NOTSET]}
+		return ${This.MinerRef.FindSetting[Distribute Lasers, TRUE]}
 	}
 
 	method SetDistributeLasers(int distributeLasers)
@@ -237,9 +251,9 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Distribute Lasers,${distributeLasers}]
 	}
 
-	member:int UseJetCan()
+	member:bool UseJetCan()
 	{
-		return ${This.MinerRef.FindSetting[Use JetCan, NOTSET]}
+		return ${This.MinerRef.FindSetting[Use JetCan, FALSE]}
 	}
 
 	method SetUseJetCan(int useJetCan)
@@ -247,14 +261,14 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Use JetCan,${useJetCan}]
 	}
 	
-	member:int MiningDrones()
+	member:bool UseMiningDrones()
 	{
-		return ${This.MinerRef.FindSetting[Mining Drones, NOTSET]}
+		return ${This.MinerRef.FindSetting[Mining Drones, FALSE]}
 	}
 	
-	method SetMiningDrones(int miningDrones)
+	method SetUseMiningDrones(int miningDrones)
 	{
-		This.MinerRef:AddSetting[Mining Drones,${miningDrones}]
+		This.MinerRef:AddSetting[Use Mining Drones,${miningDrones}]
 	} 
 }
 
@@ -266,10 +280,10 @@ objectdef obj_Configuration_Combat
 	{	
 		if !${LavishSettings[EVEBotSettings].FindSet[${This.SetName}](exists)}
 		{
-			call UpdateHudStatus "Warning: ${This.SetName} settings missing - initializing"
+			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
 		}
-		call UpdateHudStatus "obj_Configuration_Combat: Initialized"		
+		UI:UpdateConsole["obj_Configuration_Combat: Initialized"]
 	}
 
 	member:settingsetref CombatRef()
@@ -282,7 +296,28 @@ objectdef obj_Configuration_Combat
 		LavishSettings[EVEBotSettings]:AddSet[${This.SetName}]
 
 		This.CombatRef:AddSetting[UseCombatDrones,FALSE]
+		This.CombatRef:AddSetting[MinimumDronesInSpace,3]
 	}
+	
+	member:bool UseCombatDrones()
+	{
+		return ${This.CombatRef.FindSetting[UseCombatDrones, FALSE]}
+	}
+	
+	method SetUseCombatDrones(bool value)
+	{
+		This.CombatRef:AddSetting[UseCombatDrones,${value}]
+	} 
+
+	member:int MinimumDronesInSpace()
+	{
+		return ${This.CombatRef.FindSetting[MinimumDronesInSpace, 3]}
+	}
+	
+	method SetMinimumDronesInSpace(int value)
+	{
+		This.CombatRef:AddSetting[MinimumDronesInSpace,${value}]
+	} 	
 }
 
 objectdef obj_Configuration_Hauler
@@ -293,10 +328,10 @@ objectdef obj_Configuration_Hauler
 	{	
 		if !${LavishSettings[EVEBotSettings].FindSet[${This.SetName}](exists)}
 		{
-			call UpdateHudStatus "Warning: ${This.SetName} settings missing - initializing"
+			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
 		}
-		call UpdateHudStatus "obj_Configuration_Hauler: Initialized"		
+		UI:UpdateConsole["obj_Configuration_Hauler: Initialized"]
 	}
 
 	member:settingsetref HaulerRef()
@@ -320,10 +355,10 @@ objectdef obj_Configuration_Salvager
 	{	
 		if !${LavishSettings[EVEBotSettings].FindSet[${This.SetName}](exists)}
 		{
-			call UpdateHudStatus "Warning: ${This.SetName} settings missing - initializing"
+			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
 		}
-		call UpdateHudStatus "obj_Configuration_Salvager: Initialized"
+		UI:UpdateConsole["obj_Configuration_Salvager: Initialized"]
 	}
 
 	member:settingsetref SalvagerRef()

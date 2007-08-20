@@ -19,17 +19,19 @@ objectdef obj_EVEBotUI
 
 	variable string LogFile
 	variable string StatsLogFile
-		
+	variable bool Reloaded = FALSE
+	variable queue:string ConsoleBuffer
+			
 	method Initialize()
 	{
-		ui -load interface/eveskin/eveskin.xml
-		ui -load interface/evebotgui.xml
-
 		This.CharacterName:Set[${Me.Name}]
 		This.MyRace:Set[${Me.ToPilot.Type}]
 		This.MyCorp:Set[${Me.Corporation}]
 		This.LogFile:Set["./config/logs/${Me.Name}-log.txt"]
 		This.StatsLogFile:Set["./config/logs/${Me.Name}-stats.txt"]
+
+		ui -load interface/eveskin/eveskin.xml
+		ui -load interface/evebotgui.xml
 
 		This:InitializeLogs
 
@@ -37,6 +39,17 @@ objectdef obj_EVEBotUI
 		This:UpdateConsole["obj_EVEBotUI: Initialized"]
 	}
 
+	method Reload()
+	{
+		ui -reload interface/evebotgui.xml
+		This.Reloaded:Set[TRUE]
+		while ${This.ConsoleBuffer.Peek(exists)}
+		{
+			This:UpdateConsole[${This.ConsoleBuffer.Peek}]
+			This.ConsoleBuffer:Dequeue
+		}
+	}
+	
 	method Shutdown()
 	{
 		Event[OnFrame]:DetachAtom[This:Pulse]
@@ -92,12 +105,29 @@ objectdef obj_EVEBotUI
 
 	method UpdateConsole(string StatusMessage)
 	{
+		variable string msg
+		
 		if ${StatusMessage(exists)}
 		{
-			UIElement[StatusConsole@Status@EvEBotOptionsTab@EVEBot]:Echo["${Time.Time24}: ${StatusMessage}"]
-			redirect -append "${This.LogFile}" Echo "[${Time.Time24}] ${StatusMessage}"
+			msg:Set["${Time.Time24}: ${StatusMessage}"]
+			if ${This.Reloaded}
+			{
+				UIElement[StatusConsole@Status@EvEBotOptionsTab@EVEBot]:Echo[${msg}]
+				redirect -append "${This.LogFile}" Echo ${msg}
+			}
+			else
+			{
+				; Just queue the lines till we reload the UI after config data is loaded
+				This.ConsoleBuffer:Queue[${msg}]
+			}
 		}
 	}
+
+
+	method UpdateStatStatus(string StatusMessage)
+	{
+		redirect -append "${This.StatsLogFile}" Echo "[${Time.Time24}] ${StatusMessage}"
+	}	
 	
 	method InitializeLogs()
 	{

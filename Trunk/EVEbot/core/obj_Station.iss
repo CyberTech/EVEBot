@@ -11,7 +11,7 @@ objectdef obj_Station
 {
 	method Initialize()
 	{
-		call UpdateHudStatus "obj_Station: Initialized"
+		UI:UpdateConsole["obj_Station: Initialized"]
 	}
 	
 	member IsHangarOpen()
@@ -30,7 +30,7 @@ objectdef obj_Station
 	{
 		if !${This.IsHangarOpen}
 		{
-			call UpdateHudStatus "Opening Cargo Hangar"
+			UI:UpdateConsole["Opening Cargo Hangar"]
 			EVE:Execute[OpenHangarFloor]
 			wait WAIT_CARGO_WINDOW
 			while !${This.IsHangarOpen}
@@ -45,7 +45,7 @@ objectdef obj_Station
 	{
 		if ${This.IsHangarOpen}
 		{
-			call UpdateHudStatus "Closing Cargo Hangar"
+			UI:UpdateConsole["Closing Cargo Hangar"]
 			EVEWindow[hangarFloor]:Close
 			wait WAIT_CARGO_WINDOW
 			while ${This.IsHangarOpen}

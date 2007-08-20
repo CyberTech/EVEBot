@@ -17,7 +17,7 @@ objectdef obj_Cargo
 
 	method Initialize()
 	{
-		call UpdateHudStatus "obj_Cargo: Initialized"
+		UI:UpdateConsole["obj_Cargo: Initialized"]
 	}
 
 	function OpenHolds()
@@ -40,7 +40,7 @@ objectdef obj_Cargo
 			return
 		}
       
-		call UpdateHudStatus "DEBUG: obj_Cargo:TransferToHangar: This.CargoToTransfer Populated, Size: ${This.CargoToTransfer.Used}"
+		UI:UpdateConsole["DEBUG: obj_Cargo:TransferToHangar: This.CargoToTransfer Populated, Size: ${This.CargoToTransfer.Used}"]
 
 		variable iterator CargoIterator
 		This.CargoToTransfer:GetIterator[CargoIterator]
@@ -48,7 +48,7 @@ objectdef obj_Cargo
 		if ${CargoIterator:First(exists)}
 		do
 		{
-			call UpdateHudStatus "obj_Cargo:TransferToHangar: Unloading Cargo: ${CargoIterator.Value.Name}"
+			UI:UpdateConsole["obj_Cargo:TransferToHangar: Unloading Cargo: ${CargoIterator.Value.Name}"]
 			CargoIterator.Value:MoveTo[Hangar]
 			wait 30
 		}
@@ -60,7 +60,7 @@ objectdef obj_Cargo
 	{	
 		while !${Me.InStation}
 		{
-			call UpdateHudStatus "obj_Cargo: Waiting for InStation..."
+			UI:UpdateConsole["obj_Cargo: Waiting for InStation..."]
 			wait 10
 		}
 		
@@ -105,7 +105,7 @@ objectdef obj_Cargo
 		}
 		else
 		{
-			call UpdateHudStatus "DEBUG: obj_Cargo:TransferOreToHangar: Nothing found to move"
+			UI:UpdateConsole["DEBUG: obj_Cargo:TransferOreToHangar: Nothing found to move"]
 		}
 		
 		CargoToTransfer:Clear[]

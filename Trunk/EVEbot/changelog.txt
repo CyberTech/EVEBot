@@ -22,6 +22,22 @@ Trunk
 - Fixed problem where ming laser crystal wouldn't be loaded if the laser had no crystal already.
 - Amadeus fixed DoGetAvailableAmmo in the extension, so crystal switching works now.
 - Removed extra "evebot" from the UI title.
+- Added new defines to defines.iss, appname, version, svn rev # is split out and reassembled nicely.
+- Added AutoPatcher initial support (new file, obj_AutoPatcher.iss)
+- Refactored everything to use UI:UpdateConsole
+- Removed oCore.iss
+- Drones will only attempt to launch if you have some
+- Added check for drone shortage. When finished, will return to base if insufficient drones are available
+- Added Minimum Drones In Space combat tab option to the UI
+- UI: fixed up checkboxes to use checkbox instead of commandcheckbox, fixed overlay text
+- UI: fixed reversed checked/unchecked for checkboxes
+- Fixed Ship:Pulse to only execute if outside station
+- Added UI.CommandBuffer, to buffer log messages which occur before main() is called. Once main() is called, 
+  we call ui -reload, which properly populates all the elements with data from the Config.* objects.  The 
+  commandbuffer is then replayed back to the statuswindow so we can see the log msgs from before the reload.
+- SVN: Moved /Tags/* to /tags/Historical/*
+- SVN: Tagged previous beta release as /tags/0.93
+- SVN: SVN work is in preparation for autopatching of release and development versions of EVEBot
 
 0.93 Revision 114
 - Fixed the obj_Ship.iss file in the function WarpToID that if it didn't make it to the destintion in the first warp it warps again.

@@ -7,16 +7,16 @@ variable index:module Modulen
 ModulenCount:Set[${Me.Ship.GetModules[Modulen]}]
    if (${ModulenCount} < 1)
    {
-       call UpdateHudStatus "ERROR:  You appear to have no modules on this ship!  How did that happen you moron?!?!"
+       UI:UpdateConsole["ERROR:  You appear to have no modules on this ship!"]
        call Dock
        wait 60
 	  	 return      
    }
 
-		call UpdateHudStatus "But I am le tired"
+		UI:UpdateConsole["But I am le tired"]
 		for (i:Set[1] ; ${i} <= ${Me.GetTargetedBy[EntitiesTargetingMe]} ; i:Inc)
 		{
-		call UpdateHudStatus "Well go take a nap"
+		UI:UpdateConsole["Well go take a nap"]
 		call DeactivateLasers
 		Call Orbit ${EntitiesTargetingMe.Get[${i}].ID} 1500
 		Entity[${EntitiesTargetingMe.Get[${i}].ID}]:LockTarget
@@ -28,7 +28,7 @@ ModulenCount:Set[${Me.Ship.GetModules[Modulen]}]
 function CombatLasers()
 {
 
-	call UpdateHudStatus "THEN FIRE ZE MISSILES"
+	UI:UpdateConsole["THEN FIRE ZE MISSILES"]
 	variable int ModulexCount = 0
    variable index:module Modulex
    variable int i = 1
@@ -37,7 +37,7 @@ function CombatLasers()
    variable index:int MyDrones
    variable int DronesInSpaceCount
    DronesInSpaceCount:Set[${EVE.GetEntityIDs[MyDrones,OwnerID,${Me.CharID},CategoryID,18]}]
-   call UpdateHudStatus "THEM CHINESE SONS OF A BITCHES ARE GOING DOWN!" 
+   UI:UpdateConsole["THEM CHINESE SONS OF A BITCHES ARE GOING DOWN!"]
    ModulexCount:Set[${Me.Ship.GetModules[Modulex]}]
    wait 20
       
@@ -47,18 +47,18 @@ function CombatLasers()
       {
           if !${Modulex.Get[${i}].IsActive}
           {	
-						call UpdateHudStatus "Now we've got like Missiles flying everywhere"
+						UI:UpdateConsole["Now we've got like Missiles flying everywhere"]
           }
           else
           {
-           	call UpdateHudStatus "Firing: ${Modules.Get[${i}].ToItem.Name}"
+           	UI:UpdateConsole["Firing: ${Modules.Get[${i}].ToItem.Name}"]
           	Me.Ship.Module[${i}]:Click
           	wait 5
           }
       }
       else
       {
-				Call UpdateHudStatus "${i} Not a combat module"
+				UI:UpdateConsole["${i} Not a combat module"]
 				wait 2
       }
       wait 20
@@ -74,7 +74,7 @@ function CombatLasers()
    {
    		if (${Me.Ship.Module[${u}].RateOfFire} > 0)
       	{
-      		call UpdateHudStatus "We've just comfirmed we are in combat...
+      		UI:UpdateConsole["We've just comfirmed we are in combat...]
       		call InCombat
       		wait 10
       		break
@@ -88,12 +88,12 @@ function CombatLasers()
    	
    if (${DronesInSpaceCount} > 0)
    {
-    call UpdateHudStatus "We've just comfirmed we are in combat...
+    UI:UpdateConsole["We've just comfirmed we are in combat...]
    	call InCombat
    }
    else
    {			   			
-   call UpdateHudStatus "Guess we don't have any combat lasers or drones"
+   UI:UpdateConsole["Guess we don't have any combat lasers or drones"]
 	 call Dock
    wait 60
    return
@@ -102,15 +102,15 @@ function CombatLasers()
 
 function InCombat()
 {
-call UpdateHudStatus "So we're fighting it looks like.. now we gotta wait till this all over!"
+UI:UpdateConsole["So we're fighting it looks like.. now we gotta wait till this all over!"]
 
 do
 {
   wait 50
   if (${Me.Ship.StructurePct} < ${MinStructurePct})
    {
-    call UpdateHudStatus "This is too risky now, we've got under ${MinStructurePct}% Structure HP"
-   	call UpdateHudStatus "Lets get out of here"
+    UI:UpdateConsole["This is too risky now, we've got under ${MinStructurePct}% Structure HP"]
+   	UI:UpdateConsole["Lets get out of here"]
     call Dock
     wait 50
     return
@@ -120,12 +120,12 @@ while (${Me.GetTargets} > 0)
 
 if (${Me.GetTargetedBy} > 0)
  {
- 	call UpdateHudStatus "Something else is targeting us, lets check it out"
+ 	UI:UpdateConsole["Something else is targeting us, lets check it out"]
  	call ShieldNotification
  }
  else
  {
- call UpdateHudStatus "Looks like we pwned some newbs.. PEW PEW!!"
+ UI:UpdateConsole["Looks like we pwned some newbs.. PEW PEW!!"]
  return
  }
  
@@ -138,10 +138,10 @@ function ShieldNotification()
 
 	if ${Entity.Owner.Name(exists)}
 	{
-		call UpdateHudStatus "SHIT! We're getting owned by a player! RUN!"
+		UI:UpdateConsole["SHIT! We're getting owned by a player! RUN!"]
 		call Dock
 		wait 3000
-		call UpdateHudStatus "Ok, 5 Minutes Up"
+		UI:UpdateConsole["Ok, 5 Minutes Up"]
 		return
 	}
 	else
@@ -149,13 +149,13 @@ function ShieldNotification()
 		if (${Me.GetTargetedBy} > 0)
 		{ 
 			wait 10
-			call UpdateHudStatus "Lets own this sucker"
+			UI:UpdateConsole["Lets own this sucker"]
 			call DefendAndDestroy
 		}
 		else
 		{
-			call UpdateHudStatus "Theres nothing targeting us!"
-			call UpdateHudStatus "Lets wait and see if our Shield Regens"
+			UI:UpdateConsole["Theres nothing targeting us!"]
+			UI:UpdateConsole["Lets wait and see if our Shield Regens"]
 			EVE:Execute[CmdStopShip]
 		  do
 		  {
@@ -177,12 +177,12 @@ variable int i
 		{
 			if ${Me.Ship.Module[MedSlot${i}].IsActive}
 			{
-			call UpdateHudStatus "Med power slot ${i} is already active"
+			UI:UpdateConsole["Med power slot ${i} is already active"]
 			}
 			else
 			{
 			Me.Ship.Module[MedSlot${i}]:Click
-			call UpdateHudStatus "Powering up Med power slot ${i}"
+			UI:UpdateConsole["Powering up Med power slot ${i}"]
 			}
 		}
 		
@@ -190,12 +190,12 @@ variable int i
 		{
 			if ${Me.Ship.Module[LoSlot${i}].IsActive}
 			{
-			call UpdateHudStatus "Low power slot ${i} is already active"
+			UI:UpdateConsole["Low power slot ${i} is already active"]
 			}
 			else
 			{
 			Me.Ship.Module[LoSlot${i}]:Click
-			call UpdateHudStatus "Powering up Low power slot ${i}"
+			UI:UpdateConsole["Powering up Low power slot ${i}"]
 			}
 		}
 	wait 10
@@ -219,7 +219,7 @@ function DeactivateLasers()
       }
       else
       {
- 			call UpdateHudStatus "Deactivating Old Laser because of the way that idiot hessinger wrote our combat routine"
+ 			UI:UpdateConsole["Deactivating Old Laser because of the way that idiot hessinger wrote our combat routine"]
       Modules.Get[${i}]:Click
       wait 5
       }

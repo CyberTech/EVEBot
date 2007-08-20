@@ -4,9 +4,9 @@
 #include core/oCombat.iss
 #include core/oSkills.iss
 #include core/oSpace.iss
-#include core/oCore.iss
 
 /* Base Requirements */
+#include core/obj_AutoPatcher.iss
 #include core/obj_Misc.iss
 #include core/obj_Configuration.iss
 
@@ -35,6 +35,9 @@ variable string botstate
 variable obj_EVEBotUI UI
 variable obj_Misc Misc
 variable obj_Configuration Config
+;variable obj_AutoPatcher AutoPatcher
+
+/* Core Objects */
 variable obj_Asteroids Asteroids
 variable obj_Ship Ship
 variable obj_Station Station
@@ -43,7 +46,7 @@ variable obj_Skills Skills
 
 /* Script-Defined Behavior Objects */
 variable obj_Miner Miner
-variable obj_OreHauler Hauler 
+variable obj_OreHauler Hauler
 variable obj_Combat Combat
 ;variable obj_Salvager Salvager
 
@@ -54,6 +57,7 @@ function atexit()
 
 function main()
 {
+	UI:Reload
 	;Script:Unsquelch
 	;Script:EnableDebugLogging[debug.txt]
 	;Script[EVEBot]:EnableProfiling

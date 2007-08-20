@@ -31,7 +31,7 @@ objectdef obj_Asteroids
 	
 	method Initialize()
 	{	
-		call UpdateHudStatus "obj_Asteroids: Initialized"
+		UI:UpdateConsole["obj_Asteroids: Initialized"]
 	}
 	
 	
@@ -63,7 +63,7 @@ objectdef obj_Asteroids
 		if ${BeltName(exists)}
 		{
 			EmptyBeltList:Insert[${BeltName}]
-			call UpdateHudStatus "Excluding empty belt ${BeltName}"
+			UI:UpdateConsole["Excluding empty belt ${BeltName}"]
 		}
 	}
 	
@@ -88,7 +88,7 @@ objectdef obj_Asteroids
 			Label:Set[${BeltBookMarkList[${RandomBelt}].Label}]
 			if ${Label.Token[1," "].Equal["Belt:"]} || ${Label.Token[1," "].Equal["Belt"]}
 			{
-				call UpdateHudStatus "Warping to Bookmark ${Label}"
+				UI:UpdateConsole["Warping to Bookmark ${Label}"]
 				call Ship.WarpPrepare
 				BeltBookMarkList[${RandomBelt}]:WarpTo
 				call Ship.WarpWait
@@ -122,7 +122,7 @@ objectdef obj_Asteroids
 					TryCount:Inc
 					if ${TryCount} > ${Math.Calc[${Belts.Used} * 10]}
 					{
-						call UpdateHudStatus "All belts empty!"
+						UI:UpdateConsole["All belts empty!"]
 						Miner.Abort:Set[TRUE]
 						return
 					}
@@ -130,14 +130,14 @@ objectdef obj_Asteroids
 				while ( !${Belts[${curBelt}].Name.Find[ASTEROID BELT](exists)} || \
 						${This.IsBeltEmpty[${Belts[${curBelt}].Name}]} )
 				
-				call UpdateHudStatus "Warping to Asteroid Belt: ${Belts[${curBelt}].Name}"
+				UI:UpdateConsole["Warping to Asteroid Belt: ${Belts[${curBelt}].Name}"]
 				call Ship.WarpToID ${Belts[${curBelt}]}
 				This.UsingMookMarks:Set[TRUE]
 				This.LastBeltIndex:Set[${curBelt}]
 			}
 			else
 			{
-				call UpdateHudStatus "Staying at Asteroid Belt: ${BeltIterator.Value.Name}"
+				UI:UpdateConsole["Staying at Asteroid Belt: ${BeltIterator.Value.Name}"]
 			}		
 		}
 		else
@@ -212,7 +212,7 @@ objectdef obj_Asteroids
 				{
 					return TRUE
 				}
-				call UpdateHudStatus "Locking Asteroid ${AsteroidIterator.Value.Name}: ${Misc.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"
+				UI:UpdateConsole["Locking Asteroid ${AsteroidIterator.Value.Name}: ${Misc.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"]
 				
 				while ${Combat.CombatPause}== TRUE
 				{
@@ -238,7 +238,7 @@ objectdef obj_Asteroids
 					This.AstroidList:GetIterator[AsteroidIterator]
 					if ${AsteroidIterator:First(exists)}
 					{
-						call UpdateHudStatus "obj_Asteroids: TargetNext: No Asteroids in range & All lasers idle: Approaching nearest"
+						UI:UpdateConsole["obj_Asteroids: TargetNext: No Asteroids in range & All lasers idle: Approaching nearest"]
 						call Ship.Approach ${AsteroidIterator.Value} ${Ship.OptimalMiningRange}
 					}
 				}

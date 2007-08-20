@@ -122,7 +122,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 	/* member's cargo has been loaded the bot will zero this out.    */
 	variable int m_gangMemberID
 
-	/* the bot logic is currently based on a state machine
+	/* the bot logic is currently based on a state machine */
 	variable string m_botState	
 	
 	method Initialize(string player, string corp)
@@ -131,11 +131,11 @@ objectdef obj_OreHauler inherits obj_Hauler
 		
 		if ${m_playerName.Length} 
 		{
-			call UpdateHudStatus "obj_OreHauler: Initialized. Hauling for ${m_playerName}."	
+			UI:UpdateConsole["obj_OreHauler: Initialized. Hauling for ${m_playerName}."]
 		}
 		elseif ${m_corpName.Length} 
 		{
-			call UpdateHudStatus "obj_OreHauler: Initialized. Hauling for ${m_corpName}."	
+			UI:UpdateConsole["obj_OreHauler: Initialized. Hauling for ${m_corpName}."]
 		}
 	}
 
@@ -187,14 +187,14 @@ objectdef obj_OreHauler inherits obj_Hauler
 				call ShieldNotification
 				break
 			case HAUL
-				call UpdateHudStatus "Hauling"
+				UI:UpdateConsole["Hauling"]
 				call This.Haul
 				break
 			case CARGOFULL
 				call Dock
 				break
 			case RUNNING
-				call UpdateHudStatus "Running Away"
+				UI:UpdateConsole["Running Away"]
 				call Dock
 				ForcedReturn:Set[FALSE]
 				break
@@ -294,14 +294,14 @@ objectdef obj_OreHauler inherits obj_Hauler
 			{
 				; We're not at a field already, so find one
 				curBelt:Set[1]
-				call UpdateHudStatus "Warping to Asteroid Belt: ${Belts[${curBelt}].Name}"
+				UI:UpdateConsole["Warping to Asteroid Belt: ${Belts[${curBelt}].Name}"]
 				call Ship.WarpToID ${Belts[${curBelt}]}
 				This.UsingMookMarks:Set[TRUE]
 				This.LastBeltIndex:Set[${curBelt}]
 			}
 			else
 			{
-				call UpdateHudStatus "Staying at Asteroid Belt: ${BeltIterator.Value.Name}"
+				UI:UpdateConsole["Staying at Asteroid Belt: ${BeltIterator.Value.Name}"]
 			}		
 		}
 		else
@@ -355,7 +355,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 				
 				if ${Me.GetTargetedBy} > 0
 				{
-					call UpdateHudStatus "Hauler is under attack!  Bug out."
+					UI:UpdateConsole["Hauler is under attack!  Bug out."]
 					m_abort:Set[TRUE]
 					forcedreturn	/* cause the state machine to return us to base */
 					break
@@ -363,7 +363,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 			}			
 		}		
 		
-		call UpdateHudStatus "Done hauling."
+		UI:UpdateConsole["Done hauling."]
 	
 		call Ship.CloseCargo
 	}

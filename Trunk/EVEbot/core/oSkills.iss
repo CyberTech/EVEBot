@@ -23,7 +23,7 @@ objectdef obj_Skills
 	
 	method Initialize()
 	{
-		call UpdateHudStatus "obj_Skills: Initialized"
+		UI:UpdateConsole["obj_Skills: Initialized"]
 	}
 
 	method Train(string SkillName)

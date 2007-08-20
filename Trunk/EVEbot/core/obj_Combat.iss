@@ -14,7 +14,7 @@ objectdef obj_Combat
 		
 	method Initialize()
 	{	
-		call UpdateHudStatus "obj_Combat: Initialized"
+		UI:UpdateConsole["obj_Combat: Initialized"]
 	}
 	
 	method Shutdown()
@@ -24,26 +24,26 @@ objectdef obj_Combat
 	
 	method InCombatState()
 	{
-		Call UpdateHudStatus "Now In Combat"
+		UI:UpdateConsole["Now In Combat"]
 		Call This.Fight
 		InCombat:Set[TRUE]
 	}
 	
 	method ExitCombatState()
 	{
-		Call UpdateHudStatus "Debug: ExitCombatState"
+		UI:UpdateConsole["Debug: ExitCombatState"]
 		InCombat:Set[FALSE]
 	}
 	
 	method Pause()
 	{
-		Call UpdateHudStatus "Pausing Bot to Deal with Combat"
+		UI:UpdateConsole["Pausing Bot to Deal with Combat"]
 		CombatPause:Set[TRUE]
 	}
 	
 	method UnPause()
 	{
-		call UpdateHudStatus "Bot Resumed"
+		UI:UpdateConsole["Bot Resumed"]
 		CombatPause:Set[FALSE]
 	}
 	
@@ -94,7 +94,7 @@ objectdef obj_Combat
 				{
 					return TRUE
 				}
-				call UpdateHudStatus "Locking Target ${TargetIterator.Value.Name}: ${Misc.MetersToKM_Str[${TargetIterator.Value.Distance}]}"
+				UI:UpdateConsole["Locking Target ${TargetIterator.Value.Name}: ${Misc.MetersToKM_Str[${TargetIterator.Value.Distance}]}"]
 		
 		
 				wait 20				
