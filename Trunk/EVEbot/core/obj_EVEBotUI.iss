@@ -20,6 +20,21 @@ objectdef obj_EVEBotUI
 			
 	method Initialize()
 	{
+		if !${ISXEVE(exists)}
+		{
+			echo "ISXEVE must be loaded to use this script."
+			Script[EVEBot]:EndScript
+		}
+   
+		if !${ISXEVE.IsReady}
+		{
+			echo "ISXEVE Not Ready, waiting..."
+			while !${ISXEVE.IsReady}
+			{
+				waitframe
+			}
+		}
+
 		This.CharacterName:Set[${Me.Name}]
 		This.MyRace:Set[${Me.ToPilot.Type}]
 		This.MyCorp:Set[${Me.Corporation}]

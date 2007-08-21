@@ -63,7 +63,9 @@ objectdef obj_Cargo
 			UI:UpdateConsole["obj_Cargo: Waiting for InStation..."]
 			wait 10
 		}
-		
+
+		UI:UpdateConsole["Transfering all ore to hangar."
+
 		if ${Ship.IsCargoOpen}
 		{
 			call Ship.CloseCargo

@@ -94,6 +94,9 @@ objectdef obj_Ship
 
 	method Initialize()
 	{
+		This:StopShip[]
+		This:UpdateModuleList[]
+
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		This:CalculateMaxLockedTargets
 		UI:UpdateConsole["obj_Ship: Initialized"]
@@ -582,14 +585,14 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		if ${Activate.Equal[ON]}
 		{
 			; Delay from 18 to 45 seconds before deactivating
-			TimedCommand ${Math.Rand[65]:Inc[30]} Script[EVEBot].Variable[Ship]:CycleMiningLaser[OFF, ${Slot}]
+			TimedCommand ${Math.Rand[65]:Inc[30]} Script[EVEBot].ExecuteAtom[Ship:CycleMiningLaser, OFF, ${Slot}]
 			echo "next: off"
 			return
 		}
 		else
 		{
 			; Delay for the time it takes the laser to deactivate and be ready for reactivation
-			TimedCommand 20 Script[EVEBot].Variable[Ship]:CycleMiningLaser[ON, "${Slot}"]
+			TimedCommand 20 Script[EVEBot].ExecuteAtom[Ship:CycleMiningLaser, ON, "${Slot}"]
 			echo "next: on"
 			return
 		}
@@ -633,7 +636,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				UI:UpdateConsole["Activating: ${Module.Value.ToItem.Slot}: ${Module.Value.ToItem.Name}"]
 				Module.Value:Click
 				wait 25
-				;TimedCommand ${Math.Rand[35]:Inc[18]} Script[EVEBot].Variable[Ship]:CycleMiningLaser[OFF, ${Slot}]
+				;TimedCommand ${Math.Rand[35]:Inc[18]} Script[EVEBot].ExecuteAtom[Ship:CycleMiningLaser, OFF, ${Slot}]
 				return
 			}
 			wait 10
@@ -641,6 +644,11 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		while ${Module:Next(exists)}
 	}
 
+	method StopShip()
+	{
+		EVE:Execute[CmdStopShip]
+	}
+	
 	; Approaches EntityID to within 10% of Distance, then stops ship.  Momentum will handle the rest.
 	function Approach(int EntityID, int64 Distance)
 	{
@@ -771,37 +779,37 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		}
 	}	
 
-  function GoToBookMark(string DestinationBookmarkLabel)
-  {
+	function GoToBookMark(string DestinationBookmarkLabel)
+	{
 		if (!${EVE.Bookmark[${DestinationBookmarkLabel}](exists)})
 		{  
-  		UI:UpdateConsole["ERROR:  Destination Bookmark, '${DestinationBookmarkLabel}', does not exist!"]
-  		return
-  	}
-  	
-	 	if (${Me.InStation})
-	 	{
-	   	call Ship.UnDock
-	  }
-	  
-	 	if (${EVE.Bookmark[${DestinationBookmarkLabel}].SolarSystemID} != ${Me.SolarSystemID})
-	 	{
-	  	UI:UpdateConsole["Setting autopilot destination: ${EVE.Bookmark[${DestinationBookmarkLabel}]}"]
+			UI:UpdateConsole["ERROR:  Destination Bookmark, '${DestinationBookmarkLabel}', does not exist!"]
+			return
+		}
+	
+		if (${Me.InStation})
+		{
+			call Ship.UnDock
+		}
+	
+		if (${EVE.Bookmark[${DestinationBookmarkLabel}].SolarSystemID} != ${Me.SolarSystemID})
+		{
+			UI:UpdateConsole["Setting autopilot destination: ${EVE.Bookmark[${DestinationBookmarkLabel}]}"]
 			EVE.Bookmark[${DestinationBookmarkLabel}]:SetDestination
 			wait 5
 			UI:UpdateConsole["Activating autopilot and waiting until arrival..."]
 			EVE:Execute[CmdToggleAutopilot]
 			do
 			{
-			   wait 50
-			   if !${Me.AutoPilotOn(exists)}
-			   {
-			     do
-			     {
-			        wait 5
-			     }
-			     while !${Me.AutoPilotOn(exists)}
-			   }
+				wait 50
+				if !${Me.AutoPilotOn(exists)}
+				{
+					do
+					{
+						wait 5
+					}
+					while !${Me.AutoPilotOn(exists)}
+				}
 			}
 			while ${Me.AutoPilotOn}
 			wait 20
@@ -839,23 +847,23 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				Counter:Set[0]
 				do
 				{
-				   wait 20
-				   Counter:Inc[20]
-				   if (${Counter} > 200)
-				   {
-				      UI:UpdateConsole["Docking atttempt failed ... trying again."]
-				      EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity:Dock	
-				      Counter:Set[0]
-				   }
+					wait 20
+					Counter:Inc[20]
+					if (${Counter} > 200)
+					{
+						UI:UpdateConsole["Docking atttempt failed ... trying again."]
+						EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity:Dock	
+						Counter:Set[0]
+					}
 				}
 				while (!${Me.InStation})					
 			}
 		}
 		wait 20  
-  }
-  
+	}
+
 	function WarpToBookMark(string DestinationBookmarkLabel)
-	{ 
+	{
 		call GoToBookmark ${DestinationBookmarkLabel}
 	}	
 

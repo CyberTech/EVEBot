@@ -24,16 +24,12 @@
 
 /* Declare all script or global variables here */
 variable bool play
-variable float GoalDistance
 variable bool ForcedReturn
-
-/* This variable is updated by the bot classes and */
-/* is used to display the current state on the UI. */
-variable string botstate 
 
 /* Script-Defined Support Objects */
 variable obj_EVEBotUI UI
 variable obj_Misc Misc
+variable obj_Configuration_BaseConfig BaseConfig
 variable obj_Configuration Config
 ;variable obj_AutoPatcher AutoPatcher
 
@@ -45,6 +41,7 @@ variable obj_Cargo Cargo
 variable obj_Skills Skills
 
 /* Script-Defined Behavior Objects */
+variable index:string BotModules
 variable obj_Miner Miner
 variable obj_OreHauler Hauler
 variable obj_Combat Combat
@@ -57,44 +54,34 @@ function atexit()
 
 function main()
 {
-	UI:Reload
 	;Script:Unsquelch
 	;Script:EnableDebugLogging[debug.txt]
 	;Script[EVEBot]:EnableProfiling
 
 	/* Set Turbo to lowest value to try and avoid overloading the EVE Python engine */
 	Turbo 20
-	if !${ISXEVE(exists)}
-	{
-		echo "ISXEVE must be loaded to use this script."
-		return
-	}
-   
-	while !${ISXEVE.IsReady}
-	{
-		waitframe
-	}
 		
-	Ship:UpdateModuleList[]
-	
-	EVE:Execute[CmdStopShip]
-
+	UI:Reload
 	UI:UpdateConsole["-=Paused: Press Run-="]
 	Script[EVEBot]:Pause
-
-	play:Set[TRUE]
-
-	variable string BotType
-	BotType:Set["Miner"]
-	;BotType:Set["Hauler"]
 	
-	/* This is the main processing loop for EVEBOT  */
-	/* Please do not add bot logic here.  It should */
-	/* be encapulated in a bot class instead.       */
-  	while ${play}
+	variable iterator BotModule
+	BotModules:GetIterator[BotModule]
+	while TRUE
 	{
-		call ${BotType}.ProcessState
-		wait 15
+		if ${BotModule:First(exists)}
+		do
+		{
+			call ${BotModule.Value}.ProcessState
+			wait 10
+			while !${play}
+			{
+				wait 10
+			}
+		}
+		
+		while ${BotModule:Next(exists)}
+		waitframe
 	}
 }
 

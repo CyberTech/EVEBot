@@ -18,29 +18,19 @@
 		of the existing classes below.
 */
 
-objectdef obj_Configuration
-{	
-	; BaseConfig _MUST_ be instantiated before anything else
-	variable obj_Configuration_BaseConfig BaseConfig
-	
-	variable obj_Configuration_Common Common
-	variable obj_Configuration_Combat Combat
-	variable obj_Configuration_Miner Miner
-	variable obj_Configuration_Hauler Hauler
-	variable obj_Configuration_Salvager Salvager
-}
-
 objectdef obj_Configuration_BaseConfig
 {
 	variable string CONFIG_FILE = "${Script.CurrentDirectory}/config/evebot.xml"
+	variable settingsetref BaseRef
 	
 	method Initialize()
 	{	
 		LavishSettings[EVEBotSettings]:Clear
-
 		LavishSettings:AddSet[EVEBotSettings]
+		LavishSettings[EVEBotSettings]:AddSet[${Me.Name}]
 		LavishSettings[EVEBotSettings]:Import[${CONFIG_FILE}]
-
+	
+		BaseRef:Set[${LavishSettings[EVEBotSettings].FindSet[${Me.Name}]}]
 		UI:UpdateConsole["obj_Configuration_BaseConfig: Initialized"]
 	}
 	
@@ -49,11 +39,25 @@ objectdef obj_Configuration_BaseConfig
 		This:Save[]
 		LavishSettings[EVEBotSettings]:Clear
 	}
-	
+
 	method Save()
 	{
 		LavishSettings[EVEBotSettings]:Export[${CONFIG_FILE}]
-	}	
+	}		
+}
+
+objectdef obj_Configuration
+{
+	variable obj_Configuration_Common Common
+	variable obj_Configuration_Combat Combat
+	variable obj_Configuration_Miner Miner
+	variable obj_Configuration_Hauler Hauler
+	variable obj_Configuration_Salvager Salvager
+	
+	method Save()
+	{
+		BaseConfig:Save[]
+	}		
 }
 
 objectdef obj_Configuration_Common
@@ -62,7 +66,7 @@ objectdef obj_Configuration_Common
 	
 	method Initialize()
 	{	
-		if !${LavishSettings[EVEBotSettings].FindSet[${This.SetName}](exists)}
+		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
 		{
 			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
@@ -72,15 +76,38 @@ objectdef obj_Configuration_Common
 	
 	member:settingsetref CommonRef()
 	{
-		return ${LavishSettings[EVEBotSettings].FindSet[${This.SetName}]}
+		return ${BaseConfig.BaseRef.FindSet[${This.SetName}]}
 	}
 	
 	method Set_Default_Values()
 	{
-		LavishSettings[EVEBotSettings]:AddSet[${This.SetName}]
+		BaseConfig.BaseRef:AddSet[${This.SetName}]
 		
+		; We use both so we have an ID to use to set the default selection in the UI.
+		This.CommonRef:AddSetting[Bot Mode,1]
+		This.CommonRef:AddSetting[Bot Mode Name,MINER]
 		This.CommonRef:AddSetting[Home Station,1]
 		This.CommonRef:AddSetting[Use Development Build,FALSE]
+	}
+
+	member:int BotMode()
+	{
+		return ${This.CommonRef.FindSetting[Bot Mode, MINER]}
+	}
+
+	method SetBotMode(int value)
+	{
+		This.CommonRef:AddSetting[Bot Mode, ${value}]
+	}
+
+	member:string BotModeName()
+	{
+		return ${This.CommonRef.FindSetting[Bot Mode Name, MINER]}
+	}
+
+	method SetBotModeName(string value)
+	{
+		This.CommonRef:AddSetting[Bot Mode Name,${value}]
 	}
 
 	member:string HomeStation()
@@ -110,7 +137,7 @@ objectdef obj_Configuration_Miner
 
 	method Initialize()
 	{	
-		if !${LavishSettings[EVEBotSettings].FindSet[${This.SetName}](exists)}
+		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
 		{
 			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
@@ -120,22 +147,22 @@ objectdef obj_Configuration_Miner
 
 	member:settingsetref MinerRef()
 	{
-		return ${LavishSettings[EVEBotSettings].FindSet[${This.SetName}]}
+		return ${BaseConfig.BaseRef.FindSet[${This.SetName}]}
 	}
 
 	member:settingsetref OreTypesRef()
 	{
-		return ${LavishSettings[EVEBotSettings].FindSet[${This.SetName}].FindSet[Ore_Types]}
+		return ${BaseConfig.BaseRef.FindSet[${This.SetName}].FindSet[Ore_Types]}
 	}
 	
 	member:settingsetref OreVolumesRef()
 	{
-		return ${LavishSettings[EVEBotSettings].FindSet[${This.SetName}].FindSet[Ore_Volumes]}
+		return ${BaseConfig.BaseRef.FindSet[${This.SetName}].FindSet[Ore_Volumes]}
 	}
 
 	method Set_Default_Values()
 	{
-		LavishSettings[EVEBotSettings]:AddSet[${This.SetName}]
+		BaseConfig.BaseRef:AddSet[${This.SetName}]
 
 		This.MinerRef:AddSet[ORE_Types]
 		This.MinerRef:AddSet[ORE_Volumes]
@@ -143,7 +170,7 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Restrict To Ore Type, NONE]
 		This.MinerRef:AddSetting[Include Veldspar, TRUE]
 		This.MinerRef:AddSetting[Stick To Spot, FALSE]
-		This.MinerRef:AddSetting[Use JetCan, 0]
+		This.MinerRef:AddSetting[Use JetCan, FALSE]
 		This.MinerRef:AddSetting[Avoid Players Distance, 10000]
 		This.MinerRef:AddSetting[Distribute Lasers, TRUE]
 		Thid.MinerRef:AddSetting[Use Mining Drones, FALSE]
@@ -278,7 +305,7 @@ objectdef obj_Configuration_Combat
 
 	method Initialize()
 	{	
-		if !${LavishSettings[EVEBotSettings].FindSet[${This.SetName}](exists)}
+		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
 		{
 			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
@@ -288,12 +315,12 @@ objectdef obj_Configuration_Combat
 
 	member:settingsetref CombatRef()
 	{
-		return ${LavishSettings[EVEBotSettings].FindSet[${This.SetName}]}
+		return ${BaseConfig.BaseRef.FindSet[${This.SetName}]}
 	}
 
 	method Set_Default_Values()
 	{
-		LavishSettings[EVEBotSettings]:AddSet[${This.SetName}]
+		BaseConfig.BaseRef:AddSet[${This.SetName}]
 
 		This.CombatRef:AddSetting[UseCombatDrones,FALSE]
 		This.CombatRef:AddSetting[MinimumDronesInSpace,3]
@@ -338,7 +365,7 @@ objectdef obj_Configuration_Hauler
 
 	method Initialize()
 	{	
-		if !${LavishSettings[EVEBotSettings].FindSet[${This.SetName}](exists)}
+		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
 		{
 			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
@@ -348,12 +375,12 @@ objectdef obj_Configuration_Hauler
 
 	member:settingsetref HaulerRef()
 	{
-		return ${LavishSettings[EVEBotSettings].FindSet[${This.SetName}]}
+		return ${BaseConfig.BaseRef.FindSet[${This.SetName}]}
 	}
 
 	method Set_Default_Values()
 	{
-		LavishSettings[EVEBotSettings]:AddSet[${This.SetName}]
+		BaseConfig.BaseRef:AddSet[${This.SetName}]
 
 	}
 
@@ -365,7 +392,7 @@ objectdef obj_Configuration_Salvager
 
 	method Initialize()
 	{	
-		if !${LavishSettings[EVEBotSettings].FindSet[${This.SetName}](exists)}
+		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
 		{
 			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
@@ -375,12 +402,12 @@ objectdef obj_Configuration_Salvager
 
 	member:settingsetref SalvagerRef()
 	{
-		return ${LavishSettings[EVEBotSettings].FindSet[${This.SetName}]}
+		return ${BaseConfig.BaseRef.FindSet[${This.SetName}]}
 	}
 
 	method Set_Default_Values()
 	{
-		LavishSettings[EVEBotSettings]:AddSet[${This.SetName}]
+		BaseConfig.BaseRef:AddSet[${This.SetName}]
 
 	}
 	

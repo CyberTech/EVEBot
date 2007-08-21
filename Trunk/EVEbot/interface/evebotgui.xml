@@ -92,7 +92,7 @@
 								<Y>25</Y>
 								<Width>100</Width>
 								<Height>20</Height>
-								<text>${Script[EVEBot].VariableScope.botstate}</text>
+								<text>${Script[EVEBot].VariableScope.Config.Common.BotModeName}</text>
 							</text>
 							<text name='Trips' template='EVESkin.Font.Description'>
 								<X>10</X>
@@ -145,9 +145,43 @@
 					</Tab>
 					
 					<Tab Name='Main'>
+						<Text name='EVEBotModeLabel'>
+							<X>10</X>
+							<Y>10</Y>
+							<Width>70</Width>
+							<Height>10</Height>
+							<Text>Bot Mode</Text>
+						</Text>
+						<combobox name='EVEBotMode'>
+							<X>80</X>
+							<Y>10</Y>
+							<Width>250</Width> 
+							<Height>15</Height> 
+							<FullHeight>200</FullHeight>
+							<ButtonWidth>20</ButtonWidth>
+							<Items>
+								<Item Value='1'>Miner</Item>
+								<Item Value='2'>Hauler</Item>
+								<Item Value='3'>Freighter</Item>
+								<Item Value='4'>Salvager</Item>
+							</Items>
+							<OnSelect>
+								Script[EVEBot].VariableScope.Config.Common:SetBotMode[${This.SelectedItem.Value}]
+								Script[EVEBot].VariableScope.Config.Common:SetBotModeName[${This.SelectedItem.Text}]
+								UIElement[Miner@EvEBotOptionsTab@EVEBot]:Hide
+								UIElement[Hauler@EvEBotOptionsTab@EVEBot]:Hide
+								UIElement[Freighter@EvEBotOptionsTab@EVEBot]:Hide
+								UIElement[Salvager@EvEBotOptionsTab@EVEBot]:Hide
+								
+								UIElement[${This.SelectedItem.Text}@EvEBotOptionsTab@EVEBot]:Show
+							</OnSelect>							
+							<OnLoad>
+								This:SetSelection[${Script[EVEBot].VariableScope.Config.Common.BotMode}]
+							</OnLoad>
+						</combobox>					
 					</Tab>
     	
-					<Tab name='Mining'>
+					<Tab name='Miner'>
 						<checkbox Name='cbIncludeVeldspar'>
 							<X>10</X>
 							<Y>10</Y>
@@ -340,10 +374,13 @@
 						</Text>
 					</tab>
     	
-					<Tab name='Market'>
+					<Tab name='Salvager'>
 					</tab>
 					
-					<tab name='Fitting'>
+					<tab name='Hauler'>
+					</tab>
+
+					<tab name='Freighter'>
 					</tab>
 					
 					<tab name='Skills'>

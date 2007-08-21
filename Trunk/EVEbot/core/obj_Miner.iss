@@ -20,7 +20,8 @@ objectdef obj_Miner
 	variable int TotalTripSeconds = 0
 	variable int AverageTripSeconds = 0
 	variable int Abort = FALSE
-	variable string m_botState	
+	variable string CurrentState	
+	variable int FrameCounter
 	
 	; Are we running out of asteroids to target?
 	variable bool ConcentrateFire = FALSE
@@ -28,22 +29,46 @@ objectdef obj_Miner
 	method Initialize()
 	{
 		This.TripStartTime:Set[${Time.Timestamp}]
+		BotModules:Insert["Miner"]
+		Event[OnFrame]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_Miner: Initialized"]
 	}
 	
-	function ProcessState()
+	method Shutdown()
 	{
-		This:SetBotState[]
-		
-		/* update the global bot state (which is displayed on the UI) */
-		botstate:Set[${m_botState}]
-		
-		switch ${m_botState}
+		Event[OnFrame]:DetachAtom[This:Pulse]
+	}
+	
+	method Pulse()
+	{
+		if !${Config.Common.BotModeName.Equal[Miner]}
+		{
+			; There's no reason at all for the miner to check state if it's not a miner
+			return
+		}
+		FrameCounter:Inc
+
+		variable int IntervalInSeconds = 2
+		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
+		{
+			This:SetState[]
+			FrameCounter:Set[0]
+		}
+	}
+	
+	function ProcessState()
+	{			
+		if !${Config.Common.BotModeName.Equal[Miner]}
+		{
+			; There's no reason at all for the miner to check state if it's not a miner
+			return
+		}
+
+		switch ${This.CurrentState}
 		{
 			case IDLE
 				break
 			case ABORT
-				UI:UpdateConsole["Aborting operation: Returning to base"]
 				Call Dock
 				break
 			case BASE
@@ -55,8 +80,7 @@ objectdef obj_Miner
 				call Combat.Fight
 				break
 			case MINE
-				UI:UpdateConsole["Mining"]
-				call Miner.Mine
+				call This.Mine
 				break
 			case HAUL
 				UI:UpdateConsole["Hauling"]
@@ -73,52 +97,51 @@ objectdef obj_Miner
 		}	
 	}
 	
-	method SetBotState()
+	method SetState()
 	{
 		if ${ForcedReturn}
 		{
-			m_botState:Set["RUNNING"]
+			This.CurrentState:Set["RUNNING"]
 			return
 		}
 	
-		if ${Miner.Abort} && !${Me.InStation}
+		if ${This.Abort} && !${Me.InStation}
 		{
-			m_botState:Set["ABORT"]
+			This.CurrentState:Set["ABORT"]
 			return
 		}
 	
-		if ${Miner.Abort}
+		if ${This.Abort}
 		{
-			m_botState:Set["IDLE"]
+			This.CurrentState:Set["IDLE"]
 			return
 		}
 		
 		if ${Me.InStation}
 		{
-	  		m_botState:Set["BASE"]
+	  		This.CurrentState:Set["BASE"]
 	  		return
 		}
 		
 		if !${Combat.CombatState}
 		{
-			m_botState:Set["COMBAT"]
+			This.CurrentState:Set["COMBAT"]
 			return
 		}
 			
 		if ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace}
 		{
-		 	m_botState:Set["MINE"]
+		 	This.CurrentState:Set["MINE"]
 			return
 		}
 		
 		if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${ForcedSell}
 		{
-			m_botState:Set["CARGOFULL"]
+			This.CurrentState:Set["CARGOFULL"]
 			return
 		}
 	
-		m_botState:Set["None"]
-		return
+		This.CurrentState:Set["Unknown"]
 	}
 
 	; Enable defenses, launch drones
@@ -172,6 +195,8 @@ objectdef obj_Miner
 		call This.Prepare_Environment
 		call Asteroids.UpdateList
 		variable int DroneCargoMin = ${Math.Calc[(${Ship.CargoMinimumFreeSpace}*1.4)]}
+		
+		UI:UpdateConsole["Mining"]
 		
 		while ( !${Miner.Abort} && \
 					${Combat.CombatState} && \

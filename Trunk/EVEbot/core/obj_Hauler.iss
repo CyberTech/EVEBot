@@ -123,7 +123,8 @@ objectdef obj_OreHauler inherits obj_Hauler
 	variable int m_gangMemberID
 
 	/* the bot logic is currently based on a state machine */
-	variable string m_botState	
+	variable string CurrentState
+	variable int FrameCounter
 	
 	method Initialize(string player, string corp)
 	{
@@ -137,10 +138,30 @@ objectdef obj_OreHauler inherits obj_Hauler
 		{
 			UI:UpdateConsole["obj_OreHauler: Initialized. Hauling for ${m_corpName}."]
 		}
+		Event[OnFrame]:AttachAtom[This:Pulse]
+		BotModules:Insert["Hauler"]
 	}
 
+	
+	method Pulse()
+	{
+		if !${Config.Common.BotModeName.Equal[Hauler]}
+		{
+			return
+		}
+		FrameCounter:Inc
+
+		variable int IntervalInSeconds = 2
+		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
+		{
+			This:SetState[]
+			FrameCounter:Set[0]
+		}
+	}
+		
 	method Shutdown()
 	{
+		Event[OnFrame]:DetachAtom[This:Pulse]		
 		Event[EVEBot_Miner_Full]:DetachAtom[This:MinerFull]
 	}
 
@@ -164,13 +185,8 @@ objectdef obj_OreHauler inherits obj_Hauler
 	
 	/* this function is called repeatedly by the main loop in EveBot.iss */
 	function ProcessState()
-	{
-		This:SetBotState[]
-		
-		/* update the global bot state (which is displayed on the UI) */
-		botstate:Set[${m_botState}]
-		
-		switch ${m_botState}
+	{				
+		switch ${This.CurrentState}
 		{
 			case IDLE
 				break
@@ -201,41 +217,40 @@ objectdef obj_OreHauler inherits obj_Hauler
 		}	
 	}
 	
-	method SetBotState()
+	method SetState()
 	{
-		
 		if ${ForcedReturn}
 		{
-			m_botState:Set["RUNNING"]
+			This.CurrentState:Set["RUNNING"]
 			return
 		}
 	
 		if ${Me.InStation}
 		{
-	  		m_botState:Set["BASE"]
+	  		This.CurrentState:Set["BASE"]
 	  		return
 		}
 		
 		if (${Me.ToEntity.ShieldPct} < ${MinShieldPct})
 		{
-			m_botState:Set["COMBAT"]
+			This.CurrentState:Set["COMBAT"]
 			return
 		}
 					
 		if ${m_gangMemberID}
 		{
-		 	m_botState:Set["HAUL"]
+		 	This.CurrentState:Set["HAUL"]
 			return
 		}
 		
 		if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${ForcedSell}
 		{
-			m_botState:Set["CARGOFULL"]
+			This.CurrentState:Set["CARGOFULL"]
 			m_gangMemberID:Set[0]
 			return
 		}
 	
-		m_botState:Set["None"]
+		This.CurrentState:Set["Unknown"]
 	}
 
 	function LootEntity(int id)
