@@ -1,12 +1,17 @@
 /* 
   Monday, August 20, 2007
+  Currently Written in Development State to support only that of the miner.
 */
 
-
-;//New Attempt//
 objectdef obj_Combat
 {
+	;Support Objects
+	variable obj_Defensive Defense
+	variable obj_Offensive Offense
+	
+	;Combat Object Variables
 	variable index:entity TargetList
+	
 	method Initialize()
 	{
 		UI:UpdateConsole["obj_Combat: Initialized"]
@@ -138,5 +143,21 @@ objectdef obj_Combat
 		}	
 		UI:UpdateConsole["GG! We didn't get our shit blown up this time"]
 		return
+	}
+}
+
+objectdef obj_Defensive
+{
+	method Initialize()
+	{
+		UI:UpdateConsole["obj_Defensive: Initialized"]
+	}
+}
+
+objectdef obj_Offensive
+{
+	method Initialize()
+	{
+		UI:UpdateConsole["obj_Defensive: Initialized"]
 	}
 }

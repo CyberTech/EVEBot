@@ -1,7 +1,6 @@
 #include core/defines.iss
 
 /* unconverted files */
-#include core/oCombat.iss
 #include core/oSkills.iss
 #include core/oSpace.iss
 
@@ -16,11 +15,12 @@
 #include core/obj_Station.iss
 #include core/obj_Cargo.iss
 #include core/obj_EVEBotUI.iss
+#include core/obj_Combat.iss
 
 /* Behavior/Mode Includes */
 #include core/obj_Hauler.iss
 #include core/obj_Miner.iss
-#include core/obj_Combat.iss
+#include core/obj_Fighter.iss
 
 /* Declare all script or global variables here */
 variable bool play
@@ -39,12 +39,13 @@ variable obj_Ship Ship
 variable obj_Station Station
 variable obj_Cargo Cargo
 variable obj_Skills Skills
+variable obj_Combat Combat
 
 /* Script-Defined Behavior Objects */
 variable index:string BotModules
 variable obj_Miner Miner
 variable obj_OreHauler Hauler
-variable obj_Combat Combat
+variable obj_CombatFighter Fighter
 ;variable obj_Salvager Salvager
 
 function atexit()
