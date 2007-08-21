@@ -75,10 +75,6 @@ objectdef obj_Miner
 				call Cargo.TransferOreToHangar
 				call Ship.Undock
 				break
-			case COMBAT
-				UI:UpdateConsole["Fighting"]
-				call Combat.Fight
-				break
 			case MINE
 				call This.Mine
 				break
@@ -122,13 +118,7 @@ objectdef obj_Miner
 	  		This.CurrentState:Set["BASE"]
 	  		return
 		}
-		
-		if !${Combat.CombatState}
-		{
-			This.CurrentState:Set["COMBAT"]
-			return
-		}
-			
+				
 		if ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace}
 		{
 		 	This.CurrentState:Set["MINE"]
@@ -154,8 +144,8 @@ objectdef obj_Miner
 	
 	function Cleanup_Environment()
 	{
-		call Ship.Drones.ReturnAllToDroneBay
 		Ship:UnlockAllTargets[]
+		call Ship.Drones.ReturnAllToDroneBay
 		call Ship.CloseCargo
 
 	}
@@ -169,23 +159,7 @@ objectdef obj_Miner
 		UI:UpdateStatStatus["Run ${This.TotalTrips} Done - Took ${ISXEVE.SecsToString[${This.PreviousTripSeconds}]}"]
 		UI:UpdateStatStatus["Total Run Time: ${Hours}:${Minutes}:${Seconds} - Average Run Time: ${ISXEVE.SecsToString[${Math.Calc[${This.TotalTripSeconds}/${This.TotalTrips}]}]}"]
 	} 
-	
-	method DroneMining()
-	{
 		
-		
-		while (!${Miner.Abort} && \
-					${Combat.CombatState} && \
-				${Ship.CargoFreeSpace} >= ${DroneCargoMin})
-		{	
-			wait 50
-			echo "Debug: Test"
-		}
-		
-		UI:UpdateConsole["Recalling Mining Drones"]
-		EVE:DronesReturnToDroneBay[Ship.ActiveDroneIDList]
-	}
-	
 	function Mine()
 	{
 		
@@ -199,14 +173,12 @@ objectdef obj_Miner
 		UI:UpdateConsole["Mining"]
 		
 		while ( !${Miner.Abort} && \
-					${Combat.CombatState} && \
 				${Ship.CargoFreeSpace} >= ${Ship.CargoMinimumFreeSpace})
 		{	
 	
 			; TODO - Add Ship.Drones.DroneShortage check in here with proper falback -- CyberTech
 			
 			if (!${Ship.InWarp} && \
-				${Combat.CombatState} && \
 				${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers})
 			{
 				; We've got idle lasers, and available targets. Do something with them.
@@ -262,12 +234,7 @@ objectdef obj_Miner
 				}					
 			}
 		}
-		
-		if !${Combat.CombatState}
-		{
-		return
-		}
-		
+				
 		call This.Cleanup_Environment
 		This.TotalTrips:Inc
 		This.PreviousTripSeconds:Set[${This.TripDuration}]
