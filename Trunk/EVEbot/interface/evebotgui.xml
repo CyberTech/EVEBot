@@ -296,7 +296,14 @@
 							<Width>32</Width>						
 							<Height>18</Height>
 							<MaxLength>3</MaxLength>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Combat.MinimumArmorPct}]
+							</OnLoad>
 							<OnChange>
+							if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Combat:SetMinimumArmorPct[${Int[${This.Text}]}]
+								}
 							</OnChange>				
 						</Textentry>
 						<Text name='MinShield'>
@@ -304,27 +311,12 @@
 							<Y>10</Y>
 							<Width>140</Width>
 							<Height>10</Height>
-							<Text>Minimum Shield</Text>
-						</Text>
-						<Textentry name='MinStructurePctInput'>
-							<X>10</X>							
-							<Y>30</Y>						
-							<Width>32</Width>						
-							<Height>18</Height>
-							<MaxLength>3</MaxLength>
-							<OnChange>
-							</OnChange>				
-						</Textentry>
-						<Text name='MinStructure'>
-							<X>44</X>
-							<Y>30</Y>
-							<Width>140</Width>
-							<Height>10</Height>
-							<Text>Minimum Structure</Text>
+							<Text>Minimum Armor</Text>
+							<AutoTooltip>Lowest Armor Pct Allowed before Running</AutoTooltip>
 						</Text>
 						<Textentry name='MinimumDronesInSpace'>
 							<X>10</X>							
-							<Y>50</Y>						
+							<Y>30</Y>						
 							<Width>32</Width>						
 							<Height>18</Height>
 							<MaxLength>2</MaxLength>
@@ -340,7 +332,7 @@
 						</Textentry>
 						<Text name='MinimumDronesInSpaceText'>
 							<X>44</X>
-							<Y>50</Y>
+							<Y>30</Y>
 							<Width>200</Width>
 							<Height>10</Height>
 							<Text>Minimum Drones in Space</Text>

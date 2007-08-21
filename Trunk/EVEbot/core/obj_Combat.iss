@@ -1,56 +1,42 @@
 /* 
-	Acidently deleted the old one and its back up, this one I pulled from an old file and made all the changes
-	I think I made before, may have some bugs still in it that I had to correct before.
-   Hess   
+  Monday, August 20, 2007
 */
 
+
+;//New Attempt//
 objectdef obj_Combat
 {
-	variable bool InCombat = FALSE
-	variable bool Running = FALSE
-	variable bool CombatPause = FALSE
 	variable index:entity TargetList
-	variable iterator NextTargetIterator
-		
 	method Initialize()
-	{	
+	{
 		UI:UpdateConsole["obj_Combat: Initialized"]
 	}
 	
 	method Shutdown()
 	{
-		/* Nothing to shutdown */
 	}
 	
-	method InCombatState()
+	;Current Reference for bot state... not great because of the pct thing... 
+	; need to find a better way to identify combat state
+	member:bool CombatState()
 	{
-		UI:UpdateConsole["Now In Combat"]
-		Call This.Fight
-		InCombat:Set[TRUE]
-	}
-	
-	method ExitCombatState()
-	{
-		UI:UpdateConsole["Debug: ExitCombatState"]
-		InCombat:Set[FALSE]
-	}
-	
-	method Pause()
-	{
-		UI:UpdateConsole["Pausing Bot to Deal with Combat"]
-		CombatPause:Set[TRUE]
-	}
-	
-	method UnPause()
-	{
-		UI:UpdateConsole["Bot Resumed"]
-		CombatPause:Set[FALSE]
+		if ${Me.Ship.ShieldPct} < 100 && ${Me.GetTargetedBy} > 0
+		{
+			return FALSE
+		}
+		return TRUE
 	}
 	
 	function UpdateList()
 	{	
 		This.TargetList:Clear
-		Me:DoGetTargetedBy[This.TargetList]
+		
+			do
+			{
+				echo "DEBUG: obj_Combat:Trying to update list"
+				Me:DoGetTargetedBy[This.TargetList]
+			}
+			while ${This.TargetList.Used} == 0
 		
 		if ${This.TargetList.Used}
 			{
@@ -58,23 +44,18 @@ objectdef obj_Combat
 			}
 	}
 	
-	method NextTarget()
-	{
-		TargetList:GetSettingIterator
-	}
-	
-	function:bool TargetNext()
+	function TargetNext()
 	{
 		variable iterator TargetIterator
 			
-			
 			if ${This.TargetList.Used} == 0
 			{
+			echo "DEBUG: Obj_Combat; No List Found, Trying to update now"
 			call This.UpdateList
 			}
 			
-			This.TargetList:GetIterator[TargetIterator]		
-		if ${TargetIterator:First(exists)}
+			This.TargetList:GetIterator[TargetIterator]	
+			if ${TargetIterator:First(exists)}
 		{
 			do
 			{
@@ -89,71 +70,73 @@ objectdef obj_Combat
 			
 			if ${Entity[${TargetIterator.Value}](exists)}
 			{
-				if ${TargetIterator.Value.IsLockedTarget} || \
-					${TargetIterator.Value.BeingTargeted}
-				{
-					return TRUE
-				}
-				UI:UpdateConsole["Locking Target ${TargetIterator.Value.Name}: ${Misc.MetersToKM_Str[${TargetIterator.Value.Distance}]}"]
-		
-		
-				wait 20				
+				UI:UpdateConsole["Locking Target ${TargetIterator.Value.Name}: ${Misc.MetersToKM_Str[${TargetIterator.Value.Distance}]}"]			
 				TargetIterator.Value:LockTarget
-				echo "DEBUG: Locking Target"
-				do
+				while !${TargetIterator.Value.IsLockedTarget}
 				{
 				  wait 30
+				  echo "Debug: Awaiting Lock"
 				}
-				while !${TargetIterator.Value.IsLockedTarget}
+				echo "DEBUG: ${TargetIterator.Value.Name} Locked"
 				call This.UpdateList
-				return TRUE
 			}
-			return FALSE
 		}
 	}
-	
+		
 	function Fight()
 	{
-		This:Pause
-		call This.TargetNext
-		
+		variable index:entity LockedTargets
+		variable iterator Target
+		call This.UpdateList
+		if ${Ship.Drones.DronesInSpace} == 0
+		{
+		Ship.Drones:LaunchAll[]
+		}
+		wait 10
 		while ${Me.GetTargetedBy} > 0
-		{			
-				Me:DoGetTargets[LockedTargets]
-				LockedTargets:GetIterator[Target]
-				if ${Target:First(exists)}
-				do
+		{
+			if ${Math.Calc[${Me.GetTargets} + ${Me.GetTargeting}]} < ${Ship.MaxLockedTargets}
 				{
-					if ${Target.Value.CategoryID} == ${Asteroids.AsteroidCategoryID}
-					{
-						continue
-					}
+				call This.TargetNext
+				}
+
+			while ${Me.GetTargeting} > 0
+			{
+			wait 10	
+			}
+			
+			Me:DoGetTargets[LockedTargets]
+			LockedTargets:GetIterator[Target]
+			wait 10
+			if ${Target:First(exists)}
+			do
+			{	
+				if ${Target.Value.CategoryID} == ${Asteroids.AsteroidCategoryID}
+				{
+					continue
+				}
 					variable int TargetID
 					TargetID:Set[${Target.Value.ID}]
+
 					Target.Value:MakeActiveTarget
 					wait 20
-	
 					call Ship.Drones.SendDrones
-					;To do
-					;call Ship.CombatLasers
-				}
-				while ${Target:Next(exists)}
-				
-			if ${Math.Calc[${Me.GetTargets} + ${Me.GetTargeting}]} < ${Ship.MaxLockedTargets}
-			{
-				call This.TargetNext
-			}		
+					
+					while ${Target.Value.IsLockedTarget}
+					{
+						wait 10
+						if ${Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct}
+						{
+							Miner.Abort:Set[TRUE]
+							UI:UpdateConsole["Shit! Shit! We gotta run fast.. Lets hope we survive this."]
+							call Ship.Drones.ReturnAllToDroneBay
+							return
+						}	
+					}
+			}
+			while ${Target:Next(exists)}
 		}	
-		
-		This:UnPause
-	
-		while ${Me.GetTargetedBy} == 0 && \
-			 ${Me.Ship.ShieldPct} < 100
-		{
-				wait 10
-		}
-			
-		This:ExitCombatState
-			
-		}
+		UI:UpdateConsole["GG! We didn't get our shit blown up this time"]
+		return
+	}
 }

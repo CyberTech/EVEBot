@@ -51,8 +51,8 @@ objectdef obj_Miner
 				call Ship.Undock
 				break
 			case COMBAT
-				UI:UpdateConsole["FIRE ZE MISSILES!!!"]
-				call ShieldNotification
+				UI:UpdateConsole["Fighting"]
+				call Combat.Fight
 				break
 			case MINE
 				UI:UpdateConsole["Mining"]
@@ -99,7 +99,7 @@ objectdef obj_Miner
 	  		return
 		}
 		
-		if (${Me.ToEntity.ShieldPct} < ${MinShieldPct})
+		if !${Combat.CombatState}
 		{
 			m_botState:Set["COMBAT"]
 			return
@@ -152,6 +152,7 @@ objectdef obj_Miner
 		
 		
 		while (!${Miner.Abort} && \
+					${Combat.CombatState} && \
 				${Ship.CargoFreeSpace} >= ${DroneCargoMin})
 		{	
 			wait 50
@@ -173,12 +174,14 @@ objectdef obj_Miner
 		variable int DroneCargoMin = ${Math.Calc[(${Ship.CargoMinimumFreeSpace}*1.4)]}
 		
 		while ( !${Miner.Abort} && \
-				${Ship.CargoFreeSpace} >= ${Ship.CargoMinimumFreeSpace} )
+					${Combat.CombatState} && \
+				${Ship.CargoFreeSpace} >= ${Ship.CargoMinimumFreeSpace})
 		{	
 	
 			; TODO - Add Ship.Drones.DroneShortage check in here with proper falback -- CyberTech
 			
 			if (!${Ship.InWarp} && \
+				${Combat.CombatState} && \
 				${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers})
 			{
 				; We've got idle lasers, and available targets. Do something with them.
@@ -201,13 +204,7 @@ objectdef obj_Miner
 					
 					if ( ${This.ConcentrateFire} || \
 						!${Ship.IsMiningAstroidID[${TargetID}]} )
-					{
-						while ${Combat.CombatPause}== TRUE
-						{
-							wait 50
-							echo "DEBUG: Obj_Miner In Combat Pause Loop"
-						}
-						
+					{	
 						
 						Target.Value:MakeActiveTarget
 						wait 20
@@ -240,7 +237,12 @@ objectdef obj_Miner
 				}					
 			}
 		}
-	
+		
+		if !${Combat.CombatState}
+		{
+		return
+		}
+		
 		call This.Cleanup_Environment
 		This.TotalTrips:Inc
 		This.PreviousTripSeconds:Set[${This.TripDuration}]

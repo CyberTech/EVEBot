@@ -61,12 +61,12 @@ objectdef obj_Drones
 		EVE:DronesMineRepeatedly[This.ActiveDroneIDList]
 	}
 	
-	function SendDrone()
+	function SendDrones()
 	{
 		if (${This.DronesInSpace} > 0)
 		{
 			UI:UpdateConsole["Engaging Combat Drones"]
-			Eve:DronesEngageMyTarget[This.ActiveDroneIDList]
+			EVE:DronesEngageMyTarget[This.ActiveDroneIDList]
 		}
 	}
 }

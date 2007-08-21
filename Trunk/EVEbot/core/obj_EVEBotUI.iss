@@ -10,10 +10,6 @@ objectdef obj_EVEBotUI
 ; TODO This doesn't belong here. - CyberTech
 	variable bool ForcedReturn = FALSE					/* A variable for forced return */
 
-; TODO These don't belong here - CyberTech
-	variable int MinShieldPct = 50              /* What shields need to reach before entering combat */
-	variable int MinStructurePct = 80              /* Min Structure that we should have, if we get into combat */
-
 	variable int FrameCounter
 	variable int FrameCounterMsgBoxes
 
