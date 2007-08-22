@@ -70,6 +70,8 @@ objectdef obj_Miner
 				break
 			case ABORT
 				Call Dock
+				call UI:UpdateConsole["Warning: Aborted, script paused. Check logs for reasons"
+				Script:Pause
 				break
 			case BASE
 				call Cargo.TransferOreToHangar
@@ -147,7 +149,6 @@ objectdef obj_Miner
 		Ship:UnlockAllTargets[]
 		call Ship.Drones.ReturnAllToDroneBay
 		call Ship.CloseCargo
-
 	}
 	
 	function Statslog()
@@ -172,11 +173,31 @@ objectdef obj_Miner
 		
 		UI:UpdateConsole["Mining"]
 		
-		while ( !${Miner.Abort} && \
+		while ( !${This.Abort} && \
 				${Ship.CargoFreeSpace} >= ${Ship.CargoMinimumFreeSpace})
 		{	
 	
-			; TODO - Add Ship.Drones.DroneShortage check in here with proper falback -- CyberTech
+			if ${Ship.DroneShortage}
+			{
+				/* TODO - This should pick up drones from station instead of just docking */
+				UI:UpdateConsole["Warning: Drone Shortage, docking"]
+				This.Abort:Set[TRUE]
+				return
+			}
+			
+			if (${Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
+				${Me.Ship.ShieldPct} < ${Config.Combat.MinimumShieldPct})
+			{
+				/*
+					TODO - This should be checked in a defensive class that runs regardless of which bot module is active
+					instead of being checked in each module
+				*/
+				UI:UpdateConsole["Armor is at ${Me.Ship.ArmorPct}"]
+				UI:UpdateConsole["Shield is at ${Me.Ship.ArmorPct}"]
+				UI:UpdateConsole["Aborting due to defensive status"]
+				This.Abort:Set[TRUE]
+				return
+			}
 			
 			if (!${Ship.InWarp} && \
 				${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers})
@@ -199,7 +220,8 @@ objectdef obj_Miner
 					variable int TargetID
 					TargetID:Set[${Target.Value.ID}]
 					
-					if ( ${This.ConcentrateFire} || \
+					if (${This.ConcentrateFire} || \
+						!${Config.Miner.DistributeLasers} || \
 						!${Ship.IsMiningAstroidID[${TargetID}]} )
 					{	
 						

@@ -42,7 +42,13 @@ Trunk
    - Fail Safe Run [UI Combat Child]
    - Drone Combat
    - Combat Targeting
-
+- Removed combat elements from obj_Miner (for now, until obj_Combat is further along)
+- Added MinimumShieldPercent, linked to UI
+- Changed Minimum Armor/Shield percent UI elements from textentry to slider, with dynamic label change to show value
+- Added miner abort on drone shortage
+- Added miner abort on armor or shield low
+- Added use of Config.Miner.Distribute lasers setting (who would ever want to set it to false??)
+- If we're emergency warping, Drone recall will only wait 1 second for drones to enter ship before allowing warp to begin
    
 0.93 Revision 114
 - Fixed the obj_Ship.iss file in the function WarpToID that if it didn't make it to the destintion in the first warp it warps again.

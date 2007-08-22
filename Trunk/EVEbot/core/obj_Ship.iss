@@ -38,12 +38,12 @@ objectdef obj_Drones
 		return ${Me.GetActiveDroneIDs[This.ActiveDroneIDList]}
 	}
    
-   	member:bool DroneShortage()
-   	{
+	member:bool DroneShortage()
+	{
 		return (${Me.Ship.DronebayCapacity} > 0 && \
    				${Me.Ship.GetDrones} == 0 && \
    				${This.DronesInSpace} < ${Config.Combat.MinimumDronesInSpace})
-   	}
+	}
    	
 	function ReturnAllToDroneBay()
 	{
@@ -51,6 +51,13 @@ objectdef obj_Drones
 		{
 			UI:UpdateConsole["Recalling ${This.ActiveDroneIDList.Used} Drones"]
 			EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
+			if (${Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
+				${Me.Ship.ShieldPct} < ${Config.Combat.MinimumShieldPct})
+			{
+				; We don't wait for drones if we're on emergency warp out
+				wait 10
+				return
+			}
 			wait 50
 		}
 	}

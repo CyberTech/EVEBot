@@ -222,7 +222,7 @@
 							<Y>50</Y>
 							<Height>20</Height>
 							<Width>100</Width>
-							<Text>One laser per asteroid</Text>
+							<Text>Distributed Laser Targeting</Text>
 							<AutoTooltip>When checked only one laser will be activated per locked asteroid.  Uncheck to focus all lasers on a single asteroid.  In general, this should be checked.</AutoTooltip>
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Miner.DistributeLasers}
@@ -325,33 +325,53 @@
 						</listbox>    	
 					</Tab>
 					<Tab name='Combat'>
-						<Textentry name='MinShieldPctInput'>		
+						<slider name='MinArmorPct'>
 							<X>10</X>							
 							<Y>10</Y>						
-							<Width>32</Width>						
+							<Width>40</Width>						
 							<Height>18</Height>
-							<MaxLength>3</MaxLength>
+							<Range>100</Range>
 							<OnLoad>
-								This:SetText[${Script[EVEBot].VariableScope.Config.Combat.MinimumArmorPct}]
+								This:SetValue[${Script[EVEBot].VariableScope.Config.Combat.MinimumArmorPct}]
 							</OnLoad>
 							<OnChange>
-							if ${This.Text.Length} > 0
-								{
-									Script[EVEBot].VariableScope.Config.Combat:SetMinimumArmorPct[${Int[${This.Text}]}]
-								}
+								Script[EVEBot].VariableScope.Config.Combat:MinimumArmorPct[${Int[${This.Value}]}]
+								UIElement[MinArmorPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Armor: ${This.Value}"]
 							</OnChange>				
-						</Textentry>
-						<Text name='MinShield'>
-							<X>44</X>
+						</slider>
+						<Text name='MinArmorPctLabel'>
+							<X>55</X>
 							<Y>10</Y>
-							<Width>140</Width>
+							<Width>150</Width>
 							<Height>10</Height>
 							<Text>Minimum Armor</Text>
+							<AutoTooltip>Lowest Shield Percent allowed before docking</AutoTooltip>
+						</Text>
+						<slider name='MinShieldPct'>
+							<X>10</X>							
+							<Y>30</Y>						
+							<Width>40</Width>						
+							<Height>18</Height>
+							<Range>100</Range>
+							<OnLoad>
+								This:SetValue[${Script[EVEBot].VariableScope.Config.Combat.MinimumShieldPct}]
+							</OnLoad>
+							<OnChange>
+								Script[EVEBot].VariableScope.Config.Combat:SetMinimumShieldPct[${Int[${This.Value}]}]
+								UIElement[MinShieldPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Shield: ${This.Value}"]
+							</OnChange>				
+						</slider>
+						<Text name='MinShieldPctLabel'>
+							<X>55</X>
+							<Y>30</Y>
+							<Width>150</Width>
+							<Height>10</Height>
+							<Text>Minimum Shield</Text>
 							<AutoTooltip>Lowest Armor Pct Allowed before Running</AutoTooltip>
 						</Text>
 						<Textentry name='MinimumDronesInSpace'>
 							<X>10</X>							
-							<Y>30</Y>						
+							<Y>50</Y>						
 							<Width>32</Width>						
 							<Height>18</Height>
 							<MaxLength>2</MaxLength>
@@ -367,7 +387,7 @@
 						</Textentry>
 						<Text name='MinimumDronesInSpaceText'>
 							<X>44</X>
-							<Y>30</Y>
+							<Y>50</Y>
 							<Width>200</Width>
 							<Height>10</Height>
 							<Text>Minimum Drones in Space</Text>

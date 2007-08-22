@@ -64,7 +64,7 @@ function main()
 		
 	UI:Reload
 	UI:UpdateConsole["-=Paused: Press Run-="]
-	Script[EVEBot]:Pause
+	Script:Pause
 	
 	variable iterator BotModule
 	BotModules:GetIterator[BotModule]

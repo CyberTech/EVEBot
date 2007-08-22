@@ -324,7 +324,8 @@ objectdef obj_Configuration_Combat
 
 		This.CombatRef:AddSetting[UseCombatDrones,FALSE]
 		This.CombatRef:AddSetting[MinimumDronesInSpace,3]
-		This.CombatRef:AddSetting[MinimumArmorPct, 25]
+		This.CombatRef:AddSetting[MinimumArmorPct, 35]
+		This.CombatRef:AddSetting[MinimumShieldPct, 25]
 	}
 	
 	member:bool UseCombatDrones()
@@ -349,7 +350,7 @@ objectdef obj_Configuration_Combat
 	
 	member:int MinimumArmorPct()
 	{
-		return ${This.CombatRef.FindSetting[MinimumArmorPct, 25]}
+		return ${This.CombatRef.FindSetting[MinimumArmorPct, 35]}
 	}
 	
 	method SetMinimumArmorPct(int value)
@@ -357,6 +358,15 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[MinimumArmorPct, ${value}]
 	}
 	
+	member:int MinimumShieldPct()
+	{
+		return ${This.CombatRef.FindSetting[MinimumShieldPct, 25]}
+	}
+	
+	method SetMinimumShieldPct(int value)
+	{
+		This.CombatRef:AddSetting[MinimumShieldPct, ${value}]
+	}
 }
 
 objectdef obj_Configuration_Hauler
