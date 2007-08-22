@@ -507,7 +507,7 @@ objectdef obj_Ship
 				}
 			}
 			while ${CrystalIterator:Next(exists)}
-			call UpdateHudStatus  "Warning: No crystal found for ore type ${OreType}, efficiency reduced"
+			UI:UpdateConsole["Warning: No crystal found for ore type ${OreType}, efficiency reduced"]
 		}
 	}
 	
