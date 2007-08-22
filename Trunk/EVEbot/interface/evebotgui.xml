@@ -17,6 +17,7 @@
 				<commandbutton name='Run EVEBot' template='EVESkin.Window.TitleBar.RunButton'>
 					<OnLeftClick>
 						Script[EVEBot]:Resume
+						Script[EVEBot].VariableScope.play:Set[TRUE]
 						Echo EVEBot: Resume
 					</OnLeftClick>
 				</commandbutton>
@@ -24,6 +25,7 @@
 					<OnLeftClick>
 						EVE:Execute[CmdStopShip]
 						Script[EVEBot]:Pause
+						Script[EVEBot].VariableScope.play:Set[FALSE]
 						Echo EVEBot: Paused
 					</OnLeftClick>
 				</commandbutton>
@@ -169,12 +171,12 @@
 							<OnSelect>
 								Script[EVEBot].VariableScope.Config.Common:SetBotMode[${This.SelectedItem.Value}]
 								Script[EVEBot].VariableScope.Config.Common:SetBotModeName[${This.SelectedItem.Text}]
-								UIElement[Miner@EvEBotOptionsTab@EVEBot]:Hide
-								UIElement[Hauler@EvEBotOptionsTab@EVEBot]:Hide
-								UIElement[Freighter@EvEBotOptionsTab@EVEBot]:Hide
-								UIElement[Salvager@EvEBotOptionsTab@EVEBot]:Hide
+								;UIElement[Miner@EvEBotOptionsTab@EVEBot]:Hide
+								;UIElement[Hauler@EvEBotOptionsTab@EVEBot]:Hide
+								;UIElement[Freighter@EvEBotOptionsTab@EVEBot]:Hide
+								;UIElement[Salvager@EvEBotOptionsTab@EVEBot]:Hide
 								
-								UIElement[${This.SelectedItem.Text}@EvEBotOptionsTab@EVEBot]:Show
+								;UIElement[${This.SelectedItem.Text}@EvEBotOptionsTab@EVEBot]:Show
 							</OnSelect>							
 							<OnLoad>
 								This:SetSelection[${Script[EVEBot].VariableScope.Config.Common.BotMode}]

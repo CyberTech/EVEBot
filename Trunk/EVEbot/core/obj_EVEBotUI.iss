@@ -120,16 +120,17 @@ objectdef obj_EVEBotUI
 		
 		if ${StatusMessage(exists)}
 		{
-			msg:Set["${Time.Time24}: ${StatusMessage}"]
 			if ${This.Reloaded}
 			{
+				msg:Set["${Time.Time24}: ${StatusMessage}"]
+
 				UIElement[StatusConsole@Status@EvEBotOptionsTab@EVEBot]:Echo[${msg}]
 				redirect -append "${This.LogFile}" Echo ${msg}
 			}
 			else
 			{
 				; Just queue the lines till we reload the UI after config data is loaded
-				This.ConsoleBuffer:Queue[${msg}]
+				This.ConsoleBuffer:Queue[${StatusMessage}]
 			}
 		}
 	}

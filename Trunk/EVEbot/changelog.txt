@@ -49,7 +49,10 @@ Trunk
 - Added miner abort on armor or shield low
 - Added use of Config.Miner.Distribute lasers setting (who would ever want to set it to false??)
 - If we're emergency warping, Drone recall will only wait 1 second for drones to enter ship before allowing warp to begin
-   
+- More work on the autopatcher
+- Removed duplication of timestamp for startup msgs
+- Fix problem with bot not performing actions, introduced in rev 168
+
 0.93 Revision 114
 - Fixed the obj_Ship.iss file in the function WarpToID that if it didn't make it to the destintion in the first warp it warps again.
 - Added to the oCore.iss to have the character's name as part of the log file name incase you have more then one bot going on the same computer for better logging.

@@ -23,7 +23,7 @@
 #include core/obj_Fighter.iss
 
 /* Declare all script or global variables here */
-variable bool play
+variable bool play = FALSE
 variable bool ForcedReturn
 
 /* Script-Defined Support Objects */
@@ -80,7 +80,6 @@ function main()
 				wait 10
 			}
 		}
-		
 		while ${BotModule:Next(exists)}
 		waitframe
 	}

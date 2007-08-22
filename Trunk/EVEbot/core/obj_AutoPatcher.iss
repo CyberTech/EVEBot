@@ -30,6 +30,7 @@ objectdef obj_AutoPatcher
 			dotnet ${APP_NAME} isxGamesPatcher ${APP_NAME} ${APP_VERSION} ${APP_MANIFEST}
 		}
 
+		TimedCommand 60 Script[EVEBot].VariableScope.AutoPatcher:EVEBot_ForceComplete
 		while !${This.UpdaterFinished}
 		{
 			wait 10
@@ -45,20 +46,26 @@ objectdef obj_AutoPatcher
 	}
 
 	/* Detect Script auto-updated files */
-	member EVEBot_onUpdatedFile(string FilePath)
+	method EVEBot_onUpdatedFile(string FilePath)
 	{
 		echo "obj_AutoUpdater: Updated file ${FilePath}"
 		This.UpdatePerformed:Set[TRUE]
 	}
 
-	member EVEBot_onUpdateError(string Error)
+	method EVEBot_onUpdateError(string Error)
 	{
 		echo "obj_AutoUpdater:Error: ${Error}"
 	}
 
-	member EVEBot_onUpdateComplete()
+	method EVEBot_onUpdateComplete()
 	{
 		echo "obj_AutoUpdater: Updated of ${APP_NAME} complete"
+		This.UpdaterFinished:Set[TRUE]
+	}
+
+	method EVEBot_ForceComplete()
+	{
+		echo "obj_AutoUpdater: Updated of ${APP_NAME} aborted, timed out after 60 seconds"
 		This.UpdaterFinished:Set[TRUE]
 	}
 
