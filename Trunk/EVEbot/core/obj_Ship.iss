@@ -12,10 +12,42 @@ objectdef obj_Drones
 	variable index:int ActiveDroneIDList
 	variable int CategoryID_Drones = 18
 	variable int LaunchedDrones = 0
+	variable bool WaitingForDrones = FALSE
+	variable bool DronesReady = FALSE
 	
 	method Initialize()
 	{
+		Event[OnFrame]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_Drones: Initialized"]
+	}
+	method Shutdown()
+	{
+		Event[OnFrame]:DetachAtom[This:Pulse]
+	}
+
+	method Pulse()
+	{
+		if ${This.WaitingForDrones}
+		{
+			FrameCounter:Inc
+
+			if (${Me.InStation(exists)} && !${Me.InStation})
+			{
+				variable int IntervalInSeconds = 4
+				if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
+				{
+					This.LaunchedDrones:Set[${This.DronesInSpace}]
+					if  ${This.LaunchedDrones} > 0
+					{
+						This.WaitingForDrones:Set[FALSE]
+						This.DronesReady:Set[TRUE]
+						
+						UI:UpdateConsole["${This.LaunchedDrones} drones ready"]
+					}
+					FrameCounter:Set[0]
+				}
+			}
+		}
 	}
 
 	method LaunchAll()
@@ -24,7 +56,7 @@ objectdef obj_Drones
 		{
 			UI:UpdateConsole["Launching drones..."]
 			Me.Ship:LaunchAllDrones
-			This.LaunchedDrones:Set[${This.DronesInSpace}]
+			This.WaitingForDrones:Set[TRUE]
 		}
 	}
 		
@@ -40,11 +72,15 @@ objectdef obj_Drones
    
 	member:bool DroneShortage()
 	{
+		if !${This.DronesReady}
+		{
+			return
+		}
+		
 		if (${Me.Ship.DronebayCapacity} > 0 && \
    			${Me.Ship.GetDrones} == 0 && \
    			${This.DronesInSpace} < ${Config.Combat.MinimumDronesInSpace})
    		{
-   			wait 25
    			if ${This.DronesInSpace} < ${Config.Combat.MinimumDronesInSpace}
    			{
    				return TRUE
@@ -71,13 +107,23 @@ objectdef obj_Drones
 	}
 	
 	function ActivateMiningDrones()
-	{		
+	{	
+		if !${This.DronesReady}
+		{
+			return
+		}
+					
 		UI:UpdateConsole["Engaging Mining Drones"]
 		EVE:DronesMineRepeatedly[This.ActiveDroneIDList]
 	}
 	
 	function SendDrones()
 	{
+		if !${This.DronesReady}
+		{
+			return
+		}
+
 		if (${This.DronesInSpace} > 0)
 		{
 			UI:UpdateConsole["Engaging Combat Drones"]
