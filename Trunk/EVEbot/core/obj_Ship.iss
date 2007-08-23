@@ -867,14 +867,15 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				Counter:Set[0]
 				do
 				{
-					wait 20
-					Counter:Inc[20]
-					if (${Counter} > 200)
-					{
-						UI:UpdateConsole["Docking atttempt failed ... trying again."]
-						EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity:Dock	
-						Counter:Set[0]
-					}
+				   wait 20
+				   Counter:Inc[20]
+				   if (${Counter} > 200)
+				   {
+				      UI:UpdateConsole["Docking atttempt failed ... trying again."]
+				      ;EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity:Dock	
+				      Entity[CategoryID,3]:Dock
+				      Counter:Set[0]
+				   }
 				}
 				while (!${Me.InStation})					
 			}
