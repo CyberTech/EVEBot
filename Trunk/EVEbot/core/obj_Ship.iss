@@ -44,7 +44,7 @@ objectdef obj_Drones
    			${Me.Ship.GetDrones} == 0 && \
    			${This.DronesInSpace} < ${Config.Combat.MinimumDronesInSpace})
    		{
-   			wait 10
+   			wait 25
    			if ${This.DronesInSpace} < ${Config.Combat.MinimumDronesInSpace}
    			{
    				return TRUE
