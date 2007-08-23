@@ -45,7 +45,7 @@ objectdef obj_Drones
    			${This.DronesInSpace} < ${Config.Combat.MinimumDronesInSpace})
    		{
    			wait 10
-   			if ${This.DronesInSpace} < ${Config.Combat.MinimumDronesInSpace})
+   			if ${This.DronesInSpace} < ${Config.Combat.MinimumDronesInSpace}
    			{
    				return TRUE
    			}
