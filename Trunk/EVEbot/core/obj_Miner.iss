@@ -70,7 +70,7 @@ objectdef obj_Miner
 				break
 			case ABORT
 				Call Dock
-				call UI:UpdateConsole["Warning: Aborted, script paused. Check logs for reasons"
+				call UI:UpdateConsole["Warning: Aborted, script paused. Check logs for reasons"]
 				Script:Pause
 				break
 			case BASE
@@ -174,13 +174,13 @@ objectdef obj_Miner
 		UI:UpdateConsole["Mining"]
 		
 		while ( !${This.Abort} && \
-				${Ship.CargoFreeSpace} >= ${Ship.CargoMinimumFreeSpace})
+				!${Ship.CargoFull} )
 		{	
 	
-			if ${Ship.DroneShortage}
+			if ${Ship.Drones.DroneShortage}
 			{
 				/* TODO - This should pick up drones from station instead of just docking */
-				UI:UpdateConsole["Warning: Drone Shortage, docking"]
+				UI:UpdateConsole["Warning: Drone shortage detected, docking"]
 				This.Abort:Set[TRUE]
 				return
 			}
@@ -227,14 +227,16 @@ objectdef obj_Miner
 						
 						Target.Value:MakeActiveTarget
 						wait 20
-	
-						call Ship.Approach ${TargetID} ${Ship.OptimalMiningRange}
-						call Ship.ActivateFreeMiningLaser
-						
-						if (${Ship.Drones.DronesInSpace} > 0 && \
-							${Config.Miner.UseMiningDrones})
+						if !${Ship.CargoFull}
 						{
-						call Ship.Drones.ActivateMiningDrones
+							call Ship.Approach ${TargetID} ${Ship.OptimalMiningRange}
+							call Ship.ActivateFreeMiningLaser
+						
+							if (${Ship.Drones.DronesInSpace} > 0 && \
+								${Config.Miner.UseMiningDrones})
+							{
+								call Ship.Drones.ActivateMiningDrones
+							}
 						}
 					}
 				}

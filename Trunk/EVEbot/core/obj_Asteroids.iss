@@ -235,6 +235,10 @@ objectdef obj_Asteroids
 				call This.UpdateList
 				if ${Ship.TotalActivatedMiningLasers} == 0				
 				{
+					if ${Ship.CargoFull}
+					{
+						return FALSE
+					}
 					This.AstroidList:GetIterator[AsteroidIterator]
 					if ${AsteroidIterator:First(exists)}
 					{

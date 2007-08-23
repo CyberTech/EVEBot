@@ -40,9 +40,13 @@ objectdef obj_Drones
    
 	member:bool DroneShortage()
 	{
-		return (${Me.Ship.DronebayCapacity} > 0 && \
-   				${Me.Ship.GetDrones} == 0 && \
-   				${This.DronesInSpace} < ${Config.Combat.MinimumDronesInSpace})
+		if (${Me.Ship.DronebayCapacity} > 0 && \
+   			${Me.Ship.GetDrones} == 0 && \
+   			${This.DronesInSpace} < ${Config.Combat.MinimumDronesInSpace})
+   		{
+   			return TRUE
+   		}
+   		return FALSE
 	}
    	
 	function ReturnAllToDroneBay()
@@ -136,7 +140,7 @@ objectdef obj_Ship
 			return
 		}
 
-		return ${Math.Calc[${Me.Ship.CargoCapacity}*0.01]}
+		return ${Math.Calc[${Me.Ship.CargoCapacity}*0.02]}
 	}
 	
 	member:float CargoFreeSpace()
@@ -152,6 +156,15 @@ objectdef obj_Ship
 		return ${Math.Calc[${Me.Ship.CargoCapacity}-${Me.Ship.UsedCargoCapacity}]}
 	}
 
+	member:bool CargoFull()
+	{
+		if ${Ship.CargoFreeSpace} <= ${Ship.CargoMinimumFreeSpace}
+		{
+			return TRUE
+		}
+		return FALSE
+	}
+	
 	method UpdateModuleList()
 	{
 		if ${Me.InStation}
