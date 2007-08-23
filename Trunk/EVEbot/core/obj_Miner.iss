@@ -70,7 +70,7 @@ objectdef obj_Miner
 				break
 			case ABORT
 				Call Dock
-				call UI:UpdateConsole["Warning: Aborted, script paused. Check logs for reasons"]
+				UI:UpdateConsole["Warning: Aborted, script paused. Check logs for reasons"]
 				Script:Pause
 				break
 			case BASE
@@ -146,7 +146,6 @@ objectdef obj_Miner
 	
 	function Cleanup_Environment()
 	{
-		Ship:UnlockAllTargets[]
 		call Ship.Drones.ReturnAllToDroneBay
 		call Ship.CloseCargo
 	}

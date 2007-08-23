@@ -44,7 +44,11 @@ objectdef obj_Drones
    			${Me.Ship.GetDrones} == 0 && \
    			${This.DronesInSpace} < ${Config.Combat.MinimumDronesInSpace})
    		{
-   			return TRUE
+   			wait 10
+   			if ${This.DronesInSpace} < ${Config.Combat.MinimumDronesInSpace})
+   			{
+   				return TRUE
+   			}
    		}
    		return FALSE
 	}
@@ -464,6 +468,10 @@ objectdef obj_Ship
 		LockedTargets:GetIterator[Target]
 
 		if ${Target:First(exists)}
+		{
+			UI:ConsoleUpdate["Unlocking all targets"]
+		}
+		
 		do
 		{
 			Target.Value:UnlockTarget
@@ -548,7 +556,6 @@ objectdef obj_Ship
 			}
 		}
 		while ${Module:Next(exists)}
-
 	}
 
 
@@ -618,6 +625,34 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		}
 	}
 
+	method DeactivateAllMiningLasers()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+		
+		variable iterator Module
+
+		This.ModuleList_MiningLaser:GetIterator[Module]
+		if ${Module:First(exists)}
+		{
+			if ${Module.Value.IsActive} && \
+				!${Module.Value.IsDeactivating}
+			{
+				UI:UpdateConsole["Deactivating all mining lasers..."]
+			}
+		}
+		do
+		{
+			if ${Module.Value.IsActive} && \
+				!${Module.Value.IsDeactivating}
+			{
+				Module.Value:Click
+			}
+		}
+		while ${Module:Next(exists)}
+	}
 	function ActivateFreeMiningLaser()
 	{
 		if !${Me.Ship(exists)}
@@ -891,6 +926,8 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 	function WarpPrepare()
 	{ 
 		UI:UpdateConsole["Preparing for warp"]
+		This:DeactivateAllMiningLasers[]
+		This:UnlockAllTargets[]
 		call This.Drones.ReturnAllToDroneBay
 	}
 	
