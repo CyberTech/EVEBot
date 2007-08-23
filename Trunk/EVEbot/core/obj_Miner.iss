@@ -213,6 +213,11 @@ objectdef obj_Miner
 				if ${Target:First(exists)}
 				do
 				{
+					if ${Ship.CargoFull}
+					{
+						break
+					}
+
 					if ${Target.Value.CategoryID} != ${Asteroids.AsteroidCategoryID}
 					{
 						continue
@@ -227,16 +232,17 @@ objectdef obj_Miner
 						
 						Target.Value:MakeActiveTarget
 						wait 20
-						if !${Ship.CargoFull}
+						if ${Ship.CargoFull}
 						{
-							call Ship.Approach ${TargetID} ${Ship.OptimalMiningRange}
-							call Ship.ActivateFreeMiningLaser
+							break
+						}
+						call Ship.Approach ${TargetID} ${Ship.OptimalMiningRange}
+						call Ship.ActivateFreeMiningLaser
 						
-							if (${Ship.Drones.DronesInSpace} > 0 && \
-								${Config.Miner.UseMiningDrones})
-							{
-								call Ship.Drones.ActivateMiningDrones
-							}
+						if (${Ship.Drones.DronesInSpace} > 0 && \
+							${Config.Miner.UseMiningDrones})
+						{
+							call Ship.Drones.ActivateMiningDrones
 						}
 					}
 				}
@@ -257,6 +263,7 @@ objectdef obj_Miner
 					This.ConcentrateFire:Set[TRUE]
 				}					
 			}
+			wait 10
 		}
 				
 		call This.Cleanup_Environment
