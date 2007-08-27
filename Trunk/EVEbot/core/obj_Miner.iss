@@ -185,14 +185,14 @@ objectdef obj_Miner
 				return
 			}
 			
-			if (!${Me.Ship.ArmorPct(exists)} || !${Me.Ship.ShieldPct(exists)})
+			if ( !${Me.Ship.ArmorPct(exists)} || !${Me.Ship.ShieldPct(exists)} )
 			{
 				do
 				{
 					UI:UpdateConsole["Me.Ship.ArmorPct OR Me.Ship.ShieldPct was NULL.  Waiting 2 seconds and checking again..."]
 					wait 20
 					Counter:Inc[20]
-					if ($(Counter} > 600)
+					if ${Counter} > 600
 					{
 						UI:UpdateConsole["Me.Ship.ArmorPct OR Me.Ship.ShieldPct returned NULL for longer than a minute, aborting..."]
 						This.Abort:Set[TRUE]
@@ -202,14 +202,14 @@ objectdef obj_Miner
 				while (!${Me.Ship.ArmorPct(exists)} || !${Me.Ship.ShieldPct(exists)})
 				
 				Counter:Set[0]
-				if (${Me.Ship.ArmorPct} < 0 || ${Me.Ship.ShieldPct} < 0)
+				if ( ${Me.Ship.ArmorPct} < 0 || ${Me.Ship.ShieldPct} < 0 )
 				{
 					do
 					{
 						UI:UpdateConsole["Me.Ship.ArmorPct OR Me.Ship.ShieldPct was less than zero.  Waiting 2 seconds and checking again..."]
 						wait 20
 						Counter:Inc[20]
-						if ($(Counter} > 600)
+						if ${Counter} > 600
 						{
 							UI:UpdateConsole["Me.Ship.ArmorPct OR Me.Ship.ShieldPct returned a value less than zero for longer than a minute, aborting..."]
 							This.Abort:Set[TRUE]
