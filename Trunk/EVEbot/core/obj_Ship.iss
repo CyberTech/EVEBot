@@ -880,7 +880,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		}
 	}	
 
-	function GoToBookMark(string DestinationBookmarkLabel)
+	function WarpToBookMark(string DestinationBookmarkLabel)
 	{
 		if (!${EVE.Bookmark[${DestinationBookmarkLabel}](exists)})
 		{  
@@ -963,11 +963,6 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		}
 		wait 20  
 	}
-
-	function WarpToBookMark(string DestinationBookmarkLabel)
-	{
-		call GoToBookmark ${DestinationBookmarkLabel}
-	}	
 
 	function WarpPrepare()
 	{ 

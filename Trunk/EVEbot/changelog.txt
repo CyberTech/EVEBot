@@ -12,26 +12,52 @@
                      CHANGELOG:                          
 *********************************************************
 
-Trunk
+Changes Currently in Trunk
+New Features:
+- Close all message and chat boxes every 15 seconds
+- Added check for drone shortage. When finished, will return to base if insufficient drones are available
+- Added Minimum Drones In Space combat tab option to the UI
+- Added MinimumShieldPercent, linked to UI
+- Added use of Config.Miner.Distribute lasers setting (who would ever want to set it to false??)
+- Optional Mining drone support
+- Added Bot Mode selection to Main tab of UI
+- Moved configuration options to be character-specific. Multiple characters will be stored per config file.
+- Added UI option "Bookmark Last Position" for mining operations.
+- obj_Miner: Added support for bookmarking last position and returning to it after emptying cargo
+
+Behavior Fixes/Changes:
+- Use new ActiveDrone index to recall only active drones, instead of all drones owened by you.
+- Added miner abort on drone shortage
+- Added miner abort on armor or shield low
+- If we're emergency warping, Drone recall will only wait 1 second for drones to enter ship before allowing warp to begin
+- More checks for cargo full so it responds faster
+- Pre-warp check now deactivates all mining lasers and unlocks targets
+- Fixed problem with all lasers not getting acitvated on 2 roids
+- Belt bookmarks must start with Belt: now
+
+Bug Fixes:
+- Amadeus fixed DoGetAvailableAmmo in the extension, so crystal switching works now.
+- Fixed problem where ming laser crystal wouldn't be loaded if the laser had no crystal already.
+- Removed extra "evebot" from the UI title.
+- Drones will only attempt to launch if you have some
+- Fixed Ship:Pulse to only execute if outside station
+- UI: fixed reversed checked/unchecked for checkboxes
+- Fix problem with bot not performing actions, introduced in rev 168
+- Removed missed UpdateHudStatus call
+- Fixed race condtion in drone shortage check vs launching drones
+- Updated many of the UI options to link to proper config values
+- Changed check for isxeve to ensure we don't try to load without it.
+
+Architecture Work:
 - A first pass at removing the bot logic from EVEBot.iss and pushing it into the bot classes.
 - Created UI:UpdateConsole to replace function UpdateHUdStatus
 - Moved more ui-related functions into the ui object
 - fixed miner not working after initial hauler object update.
-- Close all message and chat boxes every 15 seconds
-- Use new ActiveDrone index to recall only active drones, instead of all drones owened by you.
-- Fixed problem where ming laser crystal wouldn't be loaded if the laser had no crystal already.
-- Amadeus fixed DoGetAvailableAmmo in the extension, so crystal switching works now.
-- Removed extra "evebot" from the UI title.
 - Added new defines to defines.iss, appname, version, svn rev # is split out and reassembled nicely.
 - Added AutoPatcher initial support (new file, obj_AutoPatcher.iss)
 - Refactored everything to use UI:UpdateConsole
 - Removed oCore.iss
-- Drones will only attempt to launch if you have some
-- Added check for drone shortage. When finished, will return to base if insufficient drones are available
-- Added Minimum Drones In Space combat tab option to the UI
 - UI: fixed up checkboxes to use checkbox instead of commandcheckbox, fixed overlay text
-- UI: fixed reversed checked/unchecked for checkboxes
-- Fixed Ship:Pulse to only execute if outside station
 - Added UI.CommandBuffer, to buffer log messages which occur before main() is called. Once main() is called, 
   we call ui -reload, which properly populates all the elements with data from the Config.* objects.  The 
   commandbuffer is then replayed back to the statuswindow so we can see the log msgs from before the reload.
@@ -39,28 +65,29 @@ Trunk
 - SVN: Tagged previous beta release as /tags/0.93
 - SVN: SVN work is in preparation for autopatching of release and development versions of EVEBot
  - Basic Combat Object Introduction
-   - Fail Safe Run [UI Combat Child]
-   - Drone Combat
-   - Combat Targeting
+	- Fail Safe Run [UI Combat Child]
+	- Drone Combat
+	- Combat Targeting
+	- Added Skeleton for Fighter Bot (Included XML Update)
+	- Added Skeleton for Branches of Combat: Defense and Offense
 - Removed combat elements from obj_Miner (for now, until obj_Combat is further along)
-- Added MinimumShieldPercent, linked to UI
 - Changed Minimum Armor/Shield percent UI elements from textentry to slider, with dynamic label change to show value
-- Added miner abort on drone shortage
-- Added miner abort on armor or shield low
-- Added use of Config.Miner.Distribute lasers setting (who would ever want to set it to false??)
-- If we're emergency warping, Drone recall will only wait 1 second for drones to enter ship before allowing warp to begin
 - More work on the autopatcher
 - Removed duplication of timestamp for startup msgs
-- Fix problem with bot not performing actions, introduced in rev 168
-- More checks for cargo full so it responds faster
 - Typo in ui line had script end on abort condition
 - Consolidated Cargo full checks with bool Ship.CargoFull
 - Fixed drone shortage check and tested.
-- Removed missed UpdateHudStatus call
-- Fixed race condtion in drone shortage check vs launching drones
-- Pre-warp check now deactivates all mining lasers and unlocks targets
 - (really) Fixed script end when miner hits ABORT state
-
+- initial pass at miner laser short cycling code
+- Removed generate_lasers_set.iss
+- Moved all bot logic into the bot modules
+- Moved most of the remaining non-object globals into bot modules.
+		Bot modules register when loaded, and set their state independent of one another.
+		All bot modules are given a chance to process their state every 2 seconds
+- Added obj_Bookmarks.iss
+- Created obj_Bookmarks (instantiated as Bookmarks) to handle temporary bookmark management
+- added Config.Miner.BookmarkLastPosition
+- Renamed Ship.GotoBookMark, Ship.WarpToBookMark
 
 0.93 Revision 114
 - Fixed the obj_Ship.iss file in the function WarpToID that if it didn't make it to the destintion in the first warp it warps again.

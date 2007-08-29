@@ -170,6 +170,7 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Restrict To Ore Type, NONE]
 		This.MinerRef:AddSetting[Include Veldspar, TRUE]
 		This.MinerRef:AddSetting[Stick To Spot, FALSE]
+		This.MinerRef:AddSetting[Bookmark Last Position, FALSE]
 		This.MinerRef:AddSetting[Use JetCan, FALSE]
 		This.MinerRef:AddSetting[Avoid Players Distance, 10000]
 		This.MinerRef:AddSetting[Distribute Lasers, TRUE]
@@ -253,9 +254,9 @@ objectdef obj_Configuration_Miner
 		return ${This.MinerRef.FindSetting[Include Veldspar, TRUE]}
 	}
 
-	method SetIncludeVeldspar(int includeVeldspar)
+	method SetIncludeVeldspar(bool value)
 	{	
-		This.MinerRef:AddSetting[Include Veldspar,${includeVeldspar}]
+		This.MinerRef:AddSetting[Include Veldspar, ${value}]
 	}
 
 	member:bool StickToSpot()
@@ -263,9 +264,19 @@ objectdef obj_Configuration_Miner
 		return ${This.MinerRef.FindSetting[Stick To Spot, FALSE]}
 	}
 
-	method SetStickToSpot(int stickToSpot)
+	method SetStickToSpot(bool value)
 	{	
-		This.MinerRef:AddSetting[Stick To Spot,${stickToSpot}]
+		This.MinerRef:AddSetting[Stick To Spot, ${value}]
+	}
+
+	member:bool BookMarkLastPosition()
+	{
+		return ${This.MinerRef.FindSetting[Bookmark Last Position, TRUE]}
+	}
+
+	method SetBookMarkLastPosition(bool value)
+	{	
+		This.MinerRef:AddSetting[Bookmark Last Position, ${value}]
 	}
 
 	member:bool DistributeLasers()
@@ -273,9 +284,9 @@ objectdef obj_Configuration_Miner
 		return ${This.MinerRef.FindSetting[Distribute Lasers, TRUE]}
 	}
 
-	method SetDistributeLasers(int distributeLasers)
+	method SetDistributeLasers(bool value)
 	{	
-		This.MinerRef:AddSetting[Distribute Lasers,${distributeLasers}]
+		This.MinerRef:AddSetting[Distribute Lasers, ${value}]
 	}
 
 	member:bool UseJetCan()
@@ -283,9 +294,9 @@ objectdef obj_Configuration_Miner
 		return ${This.MinerRef.FindSetting[Use JetCan, FALSE]}
 	}
 
-	method SetUseJetCan(int useJetCan)
+	method SetUseJetCan(bool value)
 	{	
-		This.MinerRef:AddSetting[Use JetCan,${useJetCan}]
+		This.MinerRef:AddSetting[Use JetCan, ${value}]
 	}
 	
 	member:bool UseMiningDrones()
@@ -293,9 +304,9 @@ objectdef obj_Configuration_Miner
 		return ${This.MinerRef.FindSetting[Mining Drones, FALSE]}
 	}
 	
-	method SetUseMiningDrones(int miningDrones)
+	method SetUseMiningDrones(bool value)
 	{
-		This.MinerRef:AddSetting[Use Mining Drones,${miningDrones}]
+		This.MinerRef:AddSetting[Use Mining Drones, ${value}]
 	} 
 }
 

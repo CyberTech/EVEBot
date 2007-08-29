@@ -33,7 +33,6 @@ User Interface Notes for Altered:
 CyberTech:
 	Adding Hauler module to EVEBot itself
 	Adding toggle to transport mined ore or jettison it
-	Bookmarking of previous location; use it to return to last mining spot.
 	Change roid selection method, do 1 GetEntity call for all nearby astroids then iterate and exclude manually.
 	% shield for shield booster activation
 	Activation of shield and armor resist modules when attacked
@@ -46,7 +45,7 @@ CyberTech:
 		using the new weighting from the config file, add up the total weight count of each of the 10 + surround asteroids
 		head for the highest concentration area.
 	check minimum range from all targets, not just one
-	add mining drone support
+	improve mining drone support
 	
 Requests:
 <Da_Teach> gimme red/neutral detection and let me weight the rats in a belt and not mine in that belt if rat weight above x

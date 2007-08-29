@@ -86,7 +86,7 @@ objectdef obj_Asteroids
 
 			variable string Label
 			Label:Set[${BeltBookMarkList[${RandomBelt}].Label}]
-			if ${Label.Token[1," "].Equal["Belt:"]} || ${Label.Token[1," "].Equal["Belt"]}
+			if ${Label.Left[5].Equal["Belt:"]}
 			{
 				UI:UpdateConsole["Warping to Bookmark ${Label}"]
 				call Ship.WarpPrepare
@@ -103,6 +103,16 @@ objectdef obj_Asteroids
 	{
 		;call This.MoveToRandomBeltBookMark
 		;return
+		
+		if (${Config.Miner.BookMarkLastPosition} && \
+			${Bookmarks.StoredLocationExists})
+		{
+			/* We have a stored location, we should return to it. */
+			UI:UpdateConsole["Returning to last location (${Bookmarks.StoredLocation})"]
+			call Ship.WarpToBookMark ${Bookmarks.StoredLocation}]
+			Bookmarks:RemoveStoredLocation
+			return
+		}
 		
 		variable int curBelt
 		variable index:entity Belts

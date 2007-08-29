@@ -16,6 +16,7 @@
 #include core/obj_Cargo.iss
 #include core/obj_EVEBotUI.iss
 #include core/obj_Combat.iss
+#include core/obj_Bookmarks.iss
 
 /* Behavior/Mode Includes */
 #include core/obj_Hauler.iss
@@ -40,6 +41,7 @@ variable obj_Station Station
 variable obj_Cargo Cargo
 variable obj_Skills Skills
 variable obj_Combat Combat
+variable obj_Bookmarks Bookmarks
 
 /* Script-Defined Behavior Objects */
 variable index:string BotModules

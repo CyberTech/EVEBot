@@ -202,21 +202,21 @@
 									Script[EVEBot].VariableScope.Config.Miner:SetIncludeVeldspar[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
-						<checkbox Name='cbStickToSpot'>
+						<checkbox Name='cbBookMarkLastPosition'>
 							<X>10</X>
 							<Y>30</Y>
 							<Height>20</Height>
 							<Width>100</Width>
-							<Text>Return to previous belt</Text>
-							<AutoTooltip>When checked a belt will be chosen at random and used until empty.  Uncheck to use a random belt every time.</AutoTooltip>
+							<Text>Bookmark Last Position</Text>
+							<AutoTooltip>Will bookmark the last mining location when the hold fills, and return to that spot after emptying the hold.</AutoTooltip>
 							<OnLoad>
-								if ${Script[EVEBot].VariableScope.Config.Miner.StickToSpot}
+								if ${Script[EVEBot].VariableScope.Config.Miner.BookMarkLastPosition}
 								{
 									This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
-									Script[EVEBot].VariableScope.Config.Miner:SetStickToSpot[${This.Checked}]
+									Script[EVEBot].VariableScope.Config.Miner:SetBookMarkLastPosition[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
 						<checkbox Name='cbDistributeLasers'>
