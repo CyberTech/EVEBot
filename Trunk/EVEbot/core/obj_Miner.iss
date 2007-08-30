@@ -301,7 +301,10 @@ objectdef obj_Miner
 			wait 10
 		}
 				
-		Bookmarks:StoreLocation
+		if ${Config.Miner.BookMarkLastPosition}
+		{
+			Bookmarks:StoreLocation
+		}
 		call This.Cleanup_Environment
 		This.TotalTrips:Inc
 		This.PreviousTripSeconds:Set[${This.TripDuration}]
