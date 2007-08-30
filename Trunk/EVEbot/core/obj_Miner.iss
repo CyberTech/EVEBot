@@ -22,6 +22,7 @@ objectdef obj_Miner
 	variable int Abort = FALSE
 	variable string CurrentState	
 	variable int FrameCounter
+	variable bool CombatAbort = FALSE
 	
 	; Are we running out of asteroids to target?
 	variable bool ConcentrateFire = FALSE
@@ -70,8 +71,7 @@ objectdef obj_Miner
 				break
 			case ABORT
 				Call Dock
-				UI:UpdateConsole["Warning: Aborted, script paused. Check logs for reasons"]
-				Script:Pause
+				Call This.Abort_Check
 				break
 			case BASE
 				call Cargo.TransferOreToHangar
@@ -137,6 +137,49 @@ objectdef obj_Miner
 	}
 
 	; Enable defenses, launch drones
+	
+	function Abort_Check()
+	{ 
+		; abort check, this will allow the bot to continue botting if it is a temp abort or something that can
+		; if there is no abort type it will pause the script like before and wait... 
+		
+		if ${This.CombatAbort}
+			{
+				UI:UpdateConsole["Warning: Aborted. Combat type abort."]
+				
+				if ((${Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct}) && ${Ship.ArmorRepairUnits} == 0)
+				{
+					UI:UpdateConsole["Warning: Aborted. Script paused due to Armor Precentage."]
+					Script:Pause
+				}
+
+				; To.Do NEED TO ADD CHECK FOR HULL REPAIRER in SHIP OBJECT.
+				if ((${Me.Ship.StructurePct} < 100))
+				{
+					UI:UpdateConsole["Warning: Aborted. Script paused due to Structure Precentage."]
+					Script:Pause
+				}
+				
+				if ${Me.Ship.ShieldPct} < 100
+				{
+					UI:UpdateConsole["Warning: Aborted. Waiting for Shields to Regen."]
+					
+					while ${Me.Ship.ShieldPct} < 95
+					{
+						wait 20
+					}
+				}
+				
+				UI:UpdateConsole["Returning Abort to False and Continuing to Bot"]
+				This.Abort:Set[FALSE]
+				This.CombatAbort:Set[FALSE]
+				Return
+			}
+		
+		UI:UpdateConsole["Warning: Aborted - Script Paused - Check Logs "]
+		Script:Pause
+	}
+	
 	function Prepare_Environment()
 	{
 		Ship:Activate_Shield_Booster[]
@@ -231,6 +274,7 @@ objectdef obj_Miner
 				UI:UpdateConsole["Shield is at ${Me.Ship.ArmorPct}"]
 				UI:UpdateConsole["Aborting due to defensive status"]
 				This.Abort:Set[TRUE]
+				This.CombatAbort:Set[TRUE]
 				return
 			}
 			
