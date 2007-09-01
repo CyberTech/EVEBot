@@ -1,57 +1,51 @@
 --------------------------------------------------------------------------------------------
+BEST VIEWED IN ULTRAEDIT
+--------------------------------------------------------------------------------------------
 
-Last Updated: Sunday, August 19, 2007 7:29 Arizona NDT
+Last Updated: Sunday, August 31, 2007 9:52 Arizona NDT
 
 Notice All Developers: Please keep this update to date.
 
-Active Developers: Hessinger, Cybertech, Gliderpro, Altered
-Inactive Developers: Teht, Neutro, Plecks, Override
+Active Developers: Hessinger, Cybertech, Amadeus
+Inactive Developers: Teht, Neutro, Plecks, Override, Gliderpro, Altered
 
 
- - In Queue and Feature Requests (Priority Status: 10 High - 1 Low)
+ Priority - In Queue and Feature Requests 				(Status: Developers)
  
- - In Development
- Obj_Combat - Hessinger and Cybertech: Being Written (Current State: Needs Debugging)
- Obj_Hauler - GliderPro and Cybertech: (Current State: Awaiting Obj_Gang Development)
- Obj_Gang - GliderPro: (Current State: In Progress [?])
- Obj_Miner - Cybertech: Jetcan Mining (Current State: Awaiting Release of Hauler Support [?])
+ High - Bot Communication Support 								(In Development: CyberTech, Amadeus)
+ High - Reconnection Script												()
+ Med - Hauler Script Completetion									(In Development: CyberTech)(?)
+ Med - Re-Equipt Ship With Drones 								(Completed Awaiting Release: Hessinger)
+ Med - % Shield Activation 												()
+ Med - Red/Neutral Detection 											()
+ Low - Cuttoff for slowboating										()
+ Low - Toggle Jettison Mining											()
+ Low - Working Skill/Queueing w/ UI support 			()
+ Low - Fighter (PVP) Bot 													(In Development: Hessinger)
+ Low - Improved Mining Drone Support							()
+ Low - Swapping Guns															()
+ Low - Changing Shields														()
+ Low - Repairing (In-Station)											()
+ 
+ 
+ 
+ 
+ 
+
  
 ---------------------------------------------------------------------------------------------
-
-TODO List:
-
-Neutro: implementing an event for mutli-bot support
-Override: Working on the queue/learning skills
-Teht: Working on a hauler script. Work is isolated from EVEBot, leverage.
-Plecks: Wrote oskills.  Still needs tied into bot.
-GliderPro: obj_Hauler 
-
-
-User Interface Notes for Altered:
-	Altered: Return (or equiv_ button next to Pause which wiil be for forcing return to station
+	Old File - Please Convert if you know the status of any of the following..
 	
-CyberTech:
-	Adding Hauler module to EVEBot itself
-	Adding toggle to transport mined ore or jettison it
-	Change roid selection method, do 1 GetEntity call for all nearby astroids then iterate and exclude manually.
 	% shield for shield booster activation
 	Activation of shield and armor resist modules when attacked
 	use the 200km bookmark request from da_teach
-	Cuttoff for slowboating.. if roid is > 20 seconds away, warp to a new belt. Do not use if in 200km mode.
-	Add an option to prefer moving to a lower roid type instead of warping in the above case
+
 	new roid alg:
 		target 10 of the best asteroids in the field
 		using fromid, check for all asteroids within 25k of each of the 10
 		using the new weighting from the config file, add up the total weight count of each of the 10 + surround asteroids
 		head for the highest concentration area.
-	check minimum range from all targets, not just one
-	improve mining drone support
-	
-Requests:
-<Da_Teach> gimme red/neutral detection and let me weight the rats in a belt and not mine in that belt if rat weight above x
 
-UI work (thehazard working on)
-	
 	<CyberTech> need: 
 	miner page: 
 		concentrate fire (checkbox), 
@@ -68,8 +62,4 @@ UI work (thehazard working on)
 		 Run on Red/Neutral Standing Presence (Checkbox)
 		 Percent shield at which to activate shield booster
 		 
-Future non-priority work
-	* swapping guns, changing shields, repairing - on wait - 
-	* Chatter support (via IRC, MSN, AOL) - waiting for Ama to add Chat support to ISXEVE -
 	* Pvp combat bot (warpto miner(s), check, destroy if enemies, warpto transporter(s), destroy if enemy, go back to base, repair, etc)
-	* Create a script that will automatically reconnect you after downtime (serverside)
