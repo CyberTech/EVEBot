@@ -88,6 +88,41 @@ objectdef obj_Drones
    		}
    		return FALSE
 	}
+	
+	; Returns the number of Drones in our station hanger.
+	member:int DronesInStation()
+	{
+		return ${Station.DronesInStation.Used}
+	}
+	
+	function StationToBay()
+	{
+		variable int DroneQuantitiyToMove = (${Config.Common.DronesInBay} - ${This.DronesInBay})
+		if ${This.DronesInStation} == 0 || \
+			!${Me.Ship(exists)}
+		{
+			return
+		}
+		
+		EVE:Execute[OpenDroneBayOfActiveShip]
+		wait 15
+		
+		variable iterator CargoIterator
+		Station.DronesInStation:GetIterator[CargoIterator]
+		
+	if ${CargoIterator:First(exists)}
+		do
+		{
+			UI:UpdateConsole["obj_Drones:TransferToDroneBay: ${CargoIterator.Value.Name}"]
+			CargoIterator.Value:MoveTo[DroneBay,1]
+			wait 30
+		}
+		while ${CargoIterator:Next(exists)}
+		wait 10
+		EVEWindow[MyDroneBay]:Close
+		wait 10
+	}
+		
    	
 	function ReturnAllToDroneBay()
 	{

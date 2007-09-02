@@ -1,7 +1,6 @@
 #include core/defines.iss
 
 /* unconverted files */
-#include core/oSkills.iss
 #include core/oSpace.iss
 
 /* Base Requirements */
@@ -10,6 +9,7 @@
 #include core/obj_Configuration.iss
 
 /* Support File Includes */
+#include core/obj_Skills.iss
 #include core/obj_Asteroids.iss
 #include core/obj_Ship.iss
 #include core/obj_Station.iss

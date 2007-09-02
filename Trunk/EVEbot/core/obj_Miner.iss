@@ -75,6 +75,7 @@ objectdef obj_Miner
 				break
 			case BASE
 				call Cargo.TransferOreToHangar
+				;call Station.CheckList
 				call Ship.Undock
 				break
 			case MINE
@@ -140,6 +141,7 @@ objectdef obj_Miner
 	
 	function Abort_Check()
 	{ 
+		call Config.Common.IncAbortCount
 		; abort check, this will allow the bot to continue botting if it is a temp abort or something that can
 		; if there is no abort type it will pause the script like before and wait... 
 		
@@ -157,13 +159,13 @@ objectdef obj_Miner
 				if ((${Me.Ship.StructurePct} < 100))
 				{
 					UI:UpdateConsole["Warning: Aborted. Script paused due to Structure Precentage."]
+					
 					Script:Pause
 				}
 				
 				if ${Me.Ship.ShieldPct} < 100
 				{
 					UI:UpdateConsole["Warning: Aborted. Waiting for Shields to Regen."]
-					
 					while ${Me.Ship.ShieldPct} < 95
 					{
 						wait 20
@@ -175,7 +177,7 @@ objectdef obj_Miner
 				This.CombatAbort:Set[FALSE]
 				Return
 			}
-		
+			
 		UI:UpdateConsole["Warning: Aborted - Script Paused - Check Logs "]
 		Script:Pause
 	}

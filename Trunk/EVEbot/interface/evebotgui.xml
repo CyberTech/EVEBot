@@ -110,33 +110,75 @@
 								<Height>20</Height>
 								<text>${Script[EVEBot].VariableScope.Miner.TotalTrips}</text>
 							</text>
-							<text name='avg_time' template='EVESkin.Font.Description'>
+							<text name='Aborts' template='EVESkin.Font.Description'>
 								<X>10</X>
 								<Y>55</Y>
+								<Width>100</Width>
+								<Height>20</Height>
+								<Text>Aborts this Session:</Text>
+							</text>
+							<text name='Aborts_Data' template='EVESkin.Font.Value'>
+								<X>150</X>
+								<Y>55</Y>
+								<Width>100</Width>
+								<Height>20</Height>
+								<text>${Script[EVEBot].VariableScope.Config.Common.OurAbortCount}</text>
+							</text>
+							<text name='avg_time' template='EVESkin.Font.Description'>
+								<X>10</X>
+								<Y>70</Y>
 								<Width>175</Width>
 								<Height>20</Height>
 								<Text>Time For Current Trip:</Text>
 							</text>
 							<text name='avg_time_data' template='EVESkin.Font.Value'>
 								<X>150</X>
-								<Y>55</Y>
+								<Y>70</Y>
 								<Width>150</Width>
 								<Height>20</Height>
 								<text>${ISXEVE.SecsToString[${Script[EVEBot].VariableScope.Miner.TripDuration}]}</text>
 							</text>
 							<text name='Average Time/Trip' template='EVESkin.Font.Description'>
 								<X>10</X>
-								<Y>70</Y>
+								<Y>85</Y>
 								<Width>175</Width>
 								<Height>20</Height>
 								<Text>Average Time per Trip:</Text>
 							</text>
 							<text name='Average Time/Trip Data' template='EVESkin.Font.Value'>
 								<X>150</X>
-								<Y>70</Y>
+								<Y>85</Y>
 								<Width>150</Width>
 								<Height>20</Height>
 								<text>${ISXEVE.SecsToString[${Script[EVEBot].VariableScope.Miner.AverageTripSeconds}]}</text>
+							</text>
+							<text name='Currently Training' template='EVESkin.Font.Description'>
+								<X>10</X>
+								<Y>115</Y>
+								<Width>175</Width>
+								<Height>20</Height>
+								<Text>Currently Training:</Text>
+							</text>
+							<text name='CurrentlyTrainingDATA' template='EVESkin.Font.Value'>
+								<X>150</X>
+								<Y>115</Y>
+								<Width>150</Width>
+								<Height>20</Height>
+								<text>${Script[EVEBot].VariableScope.Skills.CurrentlyTraining}</text>
+							</text>
+							<text name='Next to be trained' template='EVESkin.Font.Description'>
+								<X>10</X>
+								<Y>130</Y>
+								<Width>175</Width>
+								<Height>20</Height>
+								<Text>Next Queued:</Text>
+							</text>
+							<text name='nexttobetrainedDATA' template='EVESkin.Font.Value'>
+								<X>150</X>
+								<Y>130</Y>
+								<Width>150</Width>
+								<Height>20</Height>
+								<text>${Script[EVEBot].VariableScope.Skills.NextSkill}</text>
 							</text>						
 							<console Name="StatusConsole" template='EVESkin.Console'>
 								<X>5</X>
@@ -181,7 +223,31 @@
 							<OnLoad>
 								This:SetSelection[${Script[EVEBot].VariableScope.Config.Common.BotMode}]
 							</OnLoad>
-						</combobox>					
+						</combobox>
+						<Textentry name='MinimumDronesInBay'>
+							<X>10</X>							
+							<Y>30</Y>						
+							<Width>32</Width>						
+							<Height>18</Height>
+							<MaxLength>2</MaxLength>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Common.DronesInBay}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Common:SetDronesInBay[${Int[${This.Text}]}]
+								}
+							</OnChange>
+						</Textentry>
+						<Text name='MinimumDronesInSpaceText'>
+							<X>44</X>
+							<Y>30</Y>
+							<Width>200</Width>
+							<Height>10</Height>
+							<Text>Minimum Drones in Bay</Text>
+							<AutoTooltip>This will set the amount of drones you want in your drone bay.</AutoTooltip>
+						</Text>					
 					</Tab>
     	
 					<Tab name='Miner'>
@@ -406,43 +472,7 @@
 					<tab name='Freighter'>
 					</tab>
 					
-					<tab name='Skills'>
-						<commandbutton name='queueskill'>
-							<X>210</X>
-							<Y>5</Y>
-							<Width>97</Width>
-							<Height>25</Height>
-							<text>Queue</text>
-							<Command>
-							</Command>
-						</commandbutton>
-						<commandbutton name='removeskill'>
-							<X>313</X>
-							<Y>5</Y>
-							<Width>97</Width>
-							<Height>25</Height>
-							<text>Remove</text>
-							<Command>
-							</Command>
-						</commandbutton>
-						<listbox name='skills'>
-							<X>5</X>
-							<Y>5</Y>
-							<Width>200</Width>
-							<Height>258</Height>
-							<Items>
-								AddItem[${Me.Skill[1]}]
-							</Items>
-						</listbox>
-						<listbox name='intraining'>
-							<X>210</X>
-							<Y>40</Y>
-							<Width>200</Width>
-							<Height>223</Height>
-							<Items>
-							</Items>
-						</listbox>
-					</tab>
+					
 					<Tab Name='About'>
 						<text name='developers1'>
 							<X>50</X>
@@ -456,7 +486,7 @@
 							<Y>80</Y>
 							<Width>400</Width>
 							<Height>10</Height>
-							<Text>Neutro, Tehtsuo, thehazard, Stealthy,</Text>
+							<Text>Neutro, Tehtsuo, Stealthy,</Text>
 						</Text>
 						<text name='developers3'>
 							<X>50</X>

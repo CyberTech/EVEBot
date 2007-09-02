@@ -64,7 +64,7 @@ objectdef obj_Cargo
 			wait 10
 		}
 
-		UI:UpdateConsole["Transfering all ore to hangar."
+		UI:UpdateConsole["Transfering all ore to hangar."]
 
 		if ${Ship.IsCargoOpen}
 		{
@@ -116,7 +116,6 @@ objectdef obj_Cargo
 	    Me.Station:StackAllHangarItems
 	    Ship:UpdateBaselineUsedCargo[]
 	    wait 25
-
 		call This.CloseHolds
 	}
 }

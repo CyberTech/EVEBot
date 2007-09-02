@@ -63,6 +63,7 @@ objectdef obj_Configuration
 objectdef obj_Configuration_Common
 {
 	variable string SetName = "Common"
+	variable int AboutCount = 0
 	
 	method Initialize()
 	{	
@@ -88,6 +89,7 @@ objectdef obj_Configuration_Common
 		This.CommonRef:AddSetting[Bot Mode Name,MINER]
 		This.CommonRef:AddSetting[Home Station,1]
 		This.CommonRef:AddSetting[Use Development Build,FALSE]
+		This.CommonRef:AddSetting[Drones In Bay,0]
 	}
 
 	member:int BotMode()
@@ -103,6 +105,16 @@ objectdef obj_Configuration_Common
 	member:string BotModeName()
 	{
 		return ${This.CommonRef.FindSetting[Bot Mode Name, MINER]}
+	}
+	
+	method SetDronesInBay(int value)
+	{
+		This.CommonRef:AddSetting[Drones In Bay,${value}]
+	}
+
+	member:int DronesInBay()
+	{
+		return ${This.CommonRef.FindSetting[Drones In Bay, NOTSET]}
 	}
 
 	method SetBotModeName(string value)
@@ -129,6 +141,17 @@ objectdef obj_Configuration_Common
 	{
 		This.CommonRef:AddSetting[Home Station,${setting}]
 	}
+	
+	member:int OurAbortCount()
+	{
+		return ${AbortCount}
+	}
+	
+	function IncAbortCount()
+	{
+		This.AbortCount:Inc
+	}
+
 }
 
 objectdef obj_Configuration_Miner
