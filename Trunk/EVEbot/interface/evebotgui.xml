@@ -307,7 +307,7 @@
 							<Y>70</Y>
 							<Height>20</Height>
 							<Width>100</Width>
-							<Text>Use JetCan (stay in belt)</Text>
+							<Text>Use JetCan</Text>
 							<Command>Script[EVEBot].VariableScope.Config.Miner:SetUseJetCan[FALSE]</Command>
 							<CommandChecked>Script[EVEBot].VariableScope.Config.Miner:SetUseJetCan[TRUE]</CommandChecked>
 							<Data>${Script[EVEBot].VariableScope.Config.Miner.UseJetCan}</Data>

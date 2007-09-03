@@ -56,6 +56,75 @@ objectdef obj_Cargo
 		wait 10
 	}
 
+	function TransferOreToJetCan()
+	{
+		UI:UpdateConsole["Transfering all ore to JetCan."]
+
+		call Ship.OpenCargo
+		Me.Ship:DoGetCargo[This.MyCargo]
+		
+		variable iterator ThisCargo
+		
+		This.MyCargo:GetIterator[ThisCargo]
+		if ${ThisCargo:First(exists)}
+		do
+		{
+			variable int CategoryID
+			variable string Name
+
+			CategoryID:Set[${ThisCargo.Value.CategoryID}]
+			;Name:Set[${ThisCargo.Value.Name}]
+			;echo "DEBUG: obj_Cargo:TransferOreToJetCan: CategoryID: ${CategoryID} ${Name} - ${ThisCargo.Value.Quantity}"
+			switch ${CategoryID}
+			{
+				case 4
+					This.CargoToTransfer:Insert[${ThisCargo.Value}]
+					break
+				case 25
+					This.CargoToTransfer:Insert[${ThisCargo.Value}]
+					break
+				default
+					break
+			}
+		}
+		while ${ThisCargo:Next(exists)}
+
+		if ${This.CargoToTransfer.Used} > 0
+		{
+			This.CargoToTransfer:GetIterator[ThisCargo]
+
+			if ${JetCan.IsReady}
+			{
+				call JetCan.Open
+			}
+
+			if ${ThisCargo:First(exists)}
+			do
+			{
+				if !${JetCan.IsReady}
+				{	
+					ThisCargo.Value:Jettison
+					call JetCan.WaitForCan
+					JetCan:Rename
+					call JetCan.Open
+				}
+				else
+				{
+					ThisCargo.Value:MoveTo[${JetCan.ActiveCan}]
+				}
+			}
+			while ${ThisCargo:Next(exists)}
+			JetCan:StackAllCargo
+			call JetCan.Close
+		}
+		else
+		{
+			UI:UpdateConsole["DEBUG: obj_Cargo:TransferOreToJetCan: Nothing found to move"]
+		}
+		
+		CargoToTransfer:Clear[]		
+	}
+	
 	function TransferOreToHangar()
 	{	
 		while !${Me.InStation}

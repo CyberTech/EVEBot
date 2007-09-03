@@ -26,4 +26,14 @@ variable string Version = "${APP_NAME} ${APP_VERSION} Revision ${SVN_REVISION.To
 #define GROUPID_MINING_CRYSTAL 482
 #define GROUPID_FREQUENCY_MINING_LASER 483
 
+/* Same group and type for secure cargo containers as well */
+#define GROUPID_CARGO_CONTAINER 12
+#define TYPEID_CARGO_CONTAINER 23
+
+#define GROUPID_WRECK 186
+
+#define WINDOW_WRECK "WRECK [2]"
+#define WINDOW_CONTAINER "FLOATING CARGO \[1\]"
+
 #define LOOT_RANGE 1450
+#define JETCAN_RANGE 750

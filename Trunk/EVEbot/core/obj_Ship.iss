@@ -177,16 +177,15 @@ objectdef obj_Ship
 	variable bool CargoIsOpen
 	variable index:module ModuleList
 	variable index:module ModuleList_MiningLaser
-	variable index:module ModuleList_CombatWeapon
+	variable index:module ModuleList_Weapon
 	variable index:module ModuleList_ActiveResists
 	variable index:module ModuleList_Regen_Shield
-	variable index:module ModuleList_Regen_Armor
+	variable index:module ModuleList_Repair_Armor
+	variable index:module ModuleList_Repair_Hull
 	variable index:module ModuleList_AB_MWD
 	variable index:module ModuleList_Passive
-	variable index:module ModuleList_Armor_Repair
-	variable index:module ModuleList_Hull_Repair
-	variable bool ArmorRepair = FALSE
-	variable bool HullRepair = FALSE
+	variable bool Repairing_Armor = FALSE
+	variable bool Repairing_Hull = FALSE
 
 	variable iterator ModulesIterator
 
@@ -219,24 +218,23 @@ objectdef obj_Ship
 				This:ValidateModuleTargets
 				FrameCounter:Set[0]
 					
-					;Ship Armor Repair
-					if ${This.ArmorRepairUnits} > 0
-						{
-							if ${Me.Ship.ArmorPct} < 100
-								{
-								This:ActivateArmorRepair
-								This.ArmorRepair:Set[TRUE]
-								}
+				;Ship Armor Repair
+				if ${This.Total_Armor_Reps} > 0
+				{
+					if ${Me.Ship.ArmorPct} < 100
+					{
+						This:ActivateRepairing_Armor
+					}
 						
-							if ${This.ArmorRepair}
-							{
-								if ${Me.Ship.ArmorPct} == 100
-								{
-									This:DeactivateArmorRepair
-									This.ArmorRepair:Set[FALSE]
-								}
-							}
+					if ${This.Repairing_Armor}
+					{
+						if ${Me.Ship.ArmorPct} == 100
+						{
+							This:DeactivateRepairing_Armor
+							This.Repairing_Armor:Set[FALSE]
 						}
+					}
+				}
 			}
 		}
 	}
@@ -257,6 +255,7 @@ objectdef obj_Ship
 		{
 			return
 		}
+
 		if ${Me.Ship.UsedCargoCapacity} < 0
 		{
 			return ${Me.Ship.CargoCapacity}
@@ -266,6 +265,11 @@ objectdef obj_Ship
 
 	member:bool CargoFull()
 	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
 		if ${Ship.CargoFreeSpace} <= ${Ship.CargoMinimumFreeSpace}
 		{
 			return TRUE
@@ -273,6 +277,20 @@ objectdef obj_Ship
 		return FALSE
 	}
 	
+	member:bool CargoHalfFull()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		if ${Ship.CargoFreeSpace} <= ${Math.Calc[${Me.Ship.CargoCapacity}*0.50]}
+		{
+			return TRUE
+		}
+		return FALSE
+	}
+
 	method UpdateModuleList()
 	{
 		if ${Me.InStation}
@@ -283,14 +301,14 @@ objectdef obj_Ship
 		
 		This.ModuleList:Clear
 		This.ModuleList_MiningLaser:Clear
-		This.ModuleList_CombatWeapon:Clear
+		This.ModuleList_Weapon:Clear
 		This.ModuleList_ActiveResists:Clear
 		This.ModuleList_Regen_Shield:Clear
-		This.ModuleList_Regen_Armor:Clear
+		This.ModuleList_Repair_Armor:Clear
 		This.ModuleList_AB_MWD:Clear
 		This.ModuleList_Passive:Clear
-		This.ModuleList_Armor_Repair:Clear
-		This.ModuleList_Hull_Repair:Clear
+		This.ModuleList_Repair_Armor:Clear
+		This.ModuleList_Repair_Hull:Clear
 		
 
 		Me.Ship:DoGetModules[This.ModuleList]
@@ -313,15 +331,15 @@ objectdef obj_Ship
 			variable int TypeID
 			TypeID:Set[${Module.Value.ToItem.TypeID}]
 
-			;echo "    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"
 			if !${Module.Value.IsActivatable}
 			{
 				This.ModuleList_Passive:Insert[${Module.Value}]
 				continue
 			}
 
-			echo "          Group: ${Module.Value.ToItem.Group}  ${GroupID}"
-			;echo "          Type: ${Module.Value.ToItem.Type}  ${TypeID}"
+			;echo "DEBUG: Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"
+			;echo " DEBUG: Group: ${Module.Value.ToItem.Group}  ${GroupID}"
+			;echo " DEBUG: Type: ${Module.Value.ToItem.Type}  ${TypeID}"
 			
 			if ${Module.Value.MiningAmount(exists)}
 			{
@@ -330,7 +348,7 @@ objectdef obj_Ship
 			}
 			
 			; TODO - Populate these arrays
-			;This.ModuleList_CombatWeapon
+			;This.ModuleList_Weapon
 			;This.ModuleList_ActiveResists
 			;This.ModuleList_AB_MWD
 			switch ${GroupID}
@@ -344,10 +362,10 @@ objectdef obj_Ship
 					This.ModuleList_AB_MWD:Insert[${Module.Value}]
 					continue
 				case 62
-					This.ModuleList_Armor_Repair:Insert[${Module.Value}]
+					This.ModuleList_Repair_Armor:Insert[${Module.Value}]
 					continue
 				case NONE
-					This.ModuleList_Hull_Repair:Insert[${Module.Value}]
+					This.ModuleList_Repair_Hull:Insert[${Module.Value}]
 				  continue
 				default
 					continue
@@ -375,7 +393,7 @@ objectdef obj_Ship
 		while ${Module:Next(exists)}
 		
 		echo "Armor Repair Modules:"
-		This.ModuleList_Armor_Repair:GetIterator[Module]
+		This.ModuleList_Repair_Armor:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
@@ -1084,32 +1102,35 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		}
 	}
 	
-	member:int ArmorRepairUnits()
+	member:int Total_Armor_Reps()
 	{
-		return ${This.ModuleList_Armor_Repair.Used}
+		return ${This.ModuleList_Repair_Armor.Used}
 	}
 	
-	method ActivateArmorRepair()
+	method Activate_Armor_Reps()
 	{
-		if !${Me.Ship(exists)}
+		if !${Me.Ship(exists) || }
 		{
 			return
 		}
 		
 		variable iterator Module
 		
-		This.ModuleList_Armor_Repair:GetIterator[Module]
+		This.ModuleList_Repair_Armor:GetIterator[Module]
 		if ${Module:First(exists)}
+		do
 		{
 			if !${Module.Value.IsActive}
 			{
-			UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
-			Module.Value:Click
+				UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
+				Module.Value:Click
+				This.Repairing_Armor:Set[TRUE]
 			}
 		}
+		while ${Module:Next(exists)}
 	}
 	
-	method DeactivateArmorRepair()
+	method Deactivate_Armor_Reps()
 	{
 		if !${Me.Ship(exists)}
 		{
@@ -1118,7 +1139,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		
 		variable iterator Module
 		
-		This.ModuleList_Armor_Repair:GetIterator[Module]
+		This.ModuleList_Repair_Armor:GetIterator[Module]
 		if ${Module:First(exists)}
 		{
 			if ${Module.Value.IsActive}

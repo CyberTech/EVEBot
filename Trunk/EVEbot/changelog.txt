@@ -24,6 +24,7 @@ New Features:
 - Moved configuration options to be character-specific. Multiple characters will be stored per config file.
 - Added UI option "Bookmark Last Position" for mining operations.
 - obj_Miner: Added support for bookmarking last position and returning to it after emptying cargo
+- obj_Miner: Jetcan support.  Check "Use JetCan" on the UI to jettison ore instead of hauling it when full.
 
 Behavior Fixes/Changes:
 - Use new ActiveDrone index to recall only active drones, instead of all drones owened by you.
@@ -47,6 +48,7 @@ Bug Fixes:
 - Fixed race condtion in drone shortage check vs launching drones
 - Updated many of the UI options to link to proper config values
 - Changed check for isxeve to ensure we don't try to load without it.
+- Added some missing safety checks to a few obj_Ship methods
 
 Architecture Work:
 - A first pass at removing the bot logic from EVEBot.iss and pushing it into the bot classes.
@@ -88,6 +90,10 @@ Architecture Work:
 - Created obj_Bookmarks (instantiated as Bookmarks) to handle temporary bookmark management
 - added Config.Miner.BookmarkLastPosition
 - Renamed Ship.GotoBookMark, Ship.WarpToBookMark
+- Added obj_JetCan
+- added Cargo.TransferOreToJetcan
+- Added obj_Ship:CargoHalfFull
+- Updated UI element for Use JetCan
 
 0.93 Revision 114
 - Fixed the obj_Ship.iss file in the function WarpToID that if it didn't make it to the destintion in the first warp it warps again.

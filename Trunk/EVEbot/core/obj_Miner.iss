@@ -137,8 +137,6 @@ objectdef obj_Miner
 		This.CurrentState:Set["Unknown"]
 	}
 
-	; Enable defenses, launch drones
-	
 	function Abort_Check()
 	{ 
 		call Config.Common.IncAbortCount
@@ -182,6 +180,7 @@ objectdef obj_Miner
 		Script:Pause
 	}
 	
+	; Enable defenses, launch drones	
 	function Prepare_Environment()
 	{
 		Ship:Activate_Shield_Booster[]
@@ -230,6 +229,12 @@ objectdef obj_Miner
 				return
 			}
 			
+			if ${Config.Miner.UseJetCan} && ${Ship.CargoHalfFull}
+			{
+				call Cargo.TransferOreToJetCan
+			}
+			
+			/* TODO - CyberTech: clean up this code when ArmorPct/ShieldPct wierdness is gone */
 			if ( !${Me.Ship.ArmorPct(exists)} || !${Me.Ship.ShieldPct(exists)} )
 			{
 				do
@@ -269,7 +274,7 @@ objectdef obj_Miner
 				${Me.Ship.ShieldPct} < ${Config.Combat.MinimumShieldPct})
 			{
 				/*
-					TODO - This should be checked in a defensive class that runs regardless of which bot module is active
+					TODO - CyberTech: This should be checked in a defensive class that runs regardless of which bot module is active
 					instead of being checked in each module
 				*/
 				UI:UpdateConsole["Armor is at ${Me.Ship.ArmorPct}"]
@@ -284,7 +289,6 @@ objectdef obj_Miner
 				${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers})
 			{
 				; We've got idle lasers, and available targets. Do something with them.
-	
 				while ${Me.GetTargeting} > 0
 				{
 				 	wait 10
