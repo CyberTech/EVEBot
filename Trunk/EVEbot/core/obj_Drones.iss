@@ -14,7 +14,7 @@ objectdef obj_Drones
 	variable int LaunchedDrones = 0
 	variable bool WaitingForDrones = FALSE
 	variable bool DronesReady = FALSE
-	variabel int FrameCounter
+	variable int FrameCounter
 	
 	method Initialize()
 	{
