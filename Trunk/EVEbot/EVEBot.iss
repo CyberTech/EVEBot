@@ -11,6 +11,7 @@
 /* Support File Includes */
 #include core/obj_Skills.iss
 #include core/obj_Asteroids.iss
+#include core/obj_Drones.iss
 #include core/obj_Ship.iss
 #include core/obj_Station.iss
 #include core/obj_Cargo.iss

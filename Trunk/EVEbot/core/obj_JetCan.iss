@@ -56,8 +56,7 @@ objectdef obj_JetCan
 	
 	member:bool AccessAllowed(int ID)
 	{
-		if ${ID} == 0 && \
-			${This.ActiveCan} > 0
+		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
 			ID:Set[${This.ActiveCan}]
 		}
@@ -100,8 +99,7 @@ objectdef obj_JetCan
 	
 	method Rename(int ID)
 	{
-		if ${ID} == 0 && \
-			${This.ActiveCan} > 0
+		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
 			ID:Set[${This.ActiveCan}]
 		}
@@ -135,8 +133,7 @@ objectdef obj_JetCan
 			return
 		}
 		
-		if ${ID} == 0 && \
-			${This.ActiveCan} > 0
+		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
 			ID:Set[${This.ActiveCan}]
 		}
@@ -152,14 +149,13 @@ objectdef obj_JetCan
 
 	member IsCargoOpen(int ID)
 	{
-		if ${ID} == 0 && \
-			${This.ActiveCan} > 0
+		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
 			ID:Set[${This.ActiveCan}]
 		}
 		
-		/* if ${EVEWindow[ByCaption, WINDOW_CONTAINER](exists)} */
-		if ${Entity[${ID}].LootWindow(exists)}
+		;if ${Entity[${ID}].LootWindow(exists)}
+		if ${EVEWindow[ByCaption, WINDOW_CONTAINER](exists)}
 		{
 			return TRUE
 		}
@@ -176,8 +172,7 @@ objectdef obj_JetCan
 			return
 		}
 		
-		if ${ID} == 0 && \
-			${This.ActiveCan} > 0
+		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
 			ID:Set[${This.ActiveCan}]
 		}
@@ -208,8 +203,7 @@ objectdef obj_JetCan
 			return
 		}
 		
-		if ${ID} == 0 && \
-			${This.ActiveCan} > 0
+		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
 			ID:Set[${This.ActiveCan}]
 		}
