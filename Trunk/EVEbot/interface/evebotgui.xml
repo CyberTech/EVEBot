@@ -459,7 +459,7 @@
 							<Width>200</Width>
 							<Height>10</Height>
 							<Text>Minimum Drones in Space</Text>
-							<AutoTooltip>We will return to base when available dronecount falls below this number</AutoTooltip>
+							<AutoTooltip>We will return to base when available drones falls below this number</AutoTooltip>
 						</Text>
 					</tab>
     	
@@ -471,31 +471,6 @@
 
 					<tab name='Freighter'>
 					</tab>
-					
-					
-					<Tab Name='About'>
-						<text name='developers1'>
-							<X>50</X>
-							<Y>50</Y>
-							<Width>400</Width>
-							<Height>10</Height>
-							<Text>EVEBot was created by:</Text>
-						</Text>
-						<text name='developers2'>
-							<X>50</X>
-							<Y>80</Y>
-							<Width>400</Width>
-							<Height>10</Height>
-							<Text>Neutro, Tehtsuo, Stealthy,</Text>
-						</Text>
-						<text name='developers3'>
-							<X>50</X>
-							<Y>95</Y>
-							<Width>400</Width>
-							<Height>10</Height>
-							<Text>... Hessinger, Altered, CyberTech</Text>
-						</Text>
-					</Tab>
 				</Tabs>
 			</tabcontrol>
 		</Children>

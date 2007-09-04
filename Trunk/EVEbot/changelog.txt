@@ -49,6 +49,8 @@ Bug Fixes:
 - Updated many of the UI options to link to proper config values
 - Changed check for isxeve to ensure we don't try to load without it.
 - Added some missing safety checks to a few obj_Ship methods
+- Jetcan support: check distance on existing/known cans as well
+- Jetcan support: fix rename function
 
 Architecture Work:
 - A first pass at removing the bot logic from EVEBot.iss and pushing it into the bot classes.

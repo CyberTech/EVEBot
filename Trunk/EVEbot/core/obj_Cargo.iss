@@ -102,7 +102,7 @@ objectdef obj_Cargo
 			do
 			{
 				if !${JetCan.IsReady}
-				{	
+				{
 					ThisCargo.Value:Jettison
 					call JetCan.WaitForCan
 					JetCan:Rename

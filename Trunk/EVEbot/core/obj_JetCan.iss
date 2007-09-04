@@ -25,22 +25,21 @@ objectdef obj_JetCan
 	member:int CurrentCan()
 	{
 		if ${This.ActiveCan} > 0 && \
-			${Entity[${This.ActiveCan}](exists)}
+			${Entity[${This.ActiveCan}](exists)} && \
+			${Entity[${This.ActiveCan}].Distance} <= LOOT_RANGE)
 		{
-			echo DEBUG: JetCan.CurrentCan returning last used canid ${CanID}
 			return ${This.ActiveCan}
 		}
 
-		variable int CanID = ${Entity[GroupID, GROUPID_CARGO_CONTAINER, Radius, JETCAN_RANGE].ID}
+		variable int CanID = ${Entity[GroupID, GROUPID_CARGO_CONTAINER, Radius, LOOT_RANGE].ID}
 		if (${CanID(exists)} && \
 			${CanID} > 0 && \
 			${This.AccessAllowed[${CanID}]})
 		{
-			echo DEBUG: JetCan.CurrentCan returning ${CanID}
 			This.ActiveCan:Set[${CanID}]
 			return ${CanID}
 		}
-		echo DEBUG: JetCan.CurrentCan returning -1
+		
 		This.ActiveCan:Set[-1]
 		return ${This.ActiveCan}
 	}
@@ -52,7 +51,6 @@ objectdef obj_JetCan
 			return TRUE
 		}
 
-		echo IsReady: FALSE
 		return FALSE
 	}
 	
@@ -66,7 +64,6 @@ objectdef obj_JetCan
 
 		if !${Entity[${ID}](exists)}
 		{
-			echo "DEBUG: JetCan.AccessAllowed: EntityID ${ID} does not exist"
 			return FALSE
 		}
 		
@@ -78,11 +75,9 @@ objectdef obj_JetCan
 			${Entity[${ID}].CorporationID} == ${Me.CorporationID} || \
 			${Local[${OwnerID}].ToGangMember(exists)} ) 
 		{
-			echo "DEBUG: JetCan.AccessAllowed: true"
 			return TRUE
 		}
 
-		echo "DEBUG: JetCan.AccessAllowed: false"
 		return FALSE
 	}
 	
@@ -119,14 +114,16 @@ objectdef obj_JetCan
 		
 		variable string NewName = "${Me.Name}"
 		
-		if ( ${Me.Corporation(exists)} && ${Me.Corporation.Length} > 0 )
+		if (${Me.Corporation(exists)} && \
+			${Me.Corporation.Length} > 0 )
 		{
-			NewName:Set["${Me.Corporation} EVE:Time[short]"]
+			NewName:Set["${Me.Corporation} ${EVE.Time[short]}"]
 		}
 		else
 		{
-			NewName:Set["${Me.Name} EVE:Time[short]"]
+			NewName:Set["${Me.Name} ${EVE.Time[short]}"]
 		}
+		
 		UI:UpdateConsole["JetCan:Rename: Renaming can to ${NewName}"]
 		Entity[${ID}]:SetName[${NewName}]
 	}
@@ -197,14 +194,23 @@ objectdef obj_JetCan
 		}
 	}	
 
-	function Close()
+	function Close(int ID=0)
 	{
-		/* THIS CRASHES EVE RIGHT NOW */
-		return
+		if ${This.IsCargoOpen}
+		{
+			return
+		}
+		
+		if ${ID} == 0 && \
+			${This.ActiveCan} > 0
+		{
+			ID:Set[${This.ActiveCan}]
+		}
+
 		if ${This.IsCargoOpen}
 		{
 			UI:UpdateConsole["Closing JetCan"]
-			EVEWindow[ByCaption, WINDOW_CONTAINER]:Close
+			Entity[${ID}]:CloseCargo
 			wait WAIT_CARGO_WINDOW
 			while ${This.IsCargoOpen}
 			{
