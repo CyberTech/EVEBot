@@ -150,9 +150,16 @@ objectdef obj_JetCan
 		Entity[${ID}]:StackAllCargo
 	}
 
-	member IsCargoOpen()
+	member IsCargoOpen(int ID)
 	{
-		if ${EVEWindow[ByCaption, WINDOW_CONTAINER](exists)}
+		if ${ID} == 0 && \
+			${This.ActiveCan} > 0
+		{
+			ID:Set[${This.ActiveCan}]
+		}
+		
+		/* if ${EVEWindow[ByCaption, WINDOW_CONTAINER](exists)} */
+		if ${Entity[${ID}].LootWindow(exists)}
 		{
 			return TRUE
 		}

@@ -40,7 +40,7 @@ objectdef obj_Cargo
 			return
 		}
       
-		UI:UpdateConsole["DEBUG: obj_Cargo:TransferToHangar: This.CargoToTransfer Populated, Size: ${This.CargoToTransfer.Used}"]
+		;UI:UpdateConsole["DEBUG: obj_Cargo:TransferToHangar: This.CargoToTransfer Populated, Size: ${This.CargoToTransfer.Used}"]
 
 		variable iterator CargoIterator
 		This.CargoToTransfer:GetIterator[CargoIterator]
@@ -48,7 +48,7 @@ objectdef obj_Cargo
 		if ${CargoIterator:First(exists)}
 		do
 		{
-			UI:UpdateConsole["obj_Cargo:TransferToHangar: Unloading Cargo: ${CargoIterator.Value.Name}"]
+			UI:UpdateConsole["TransferToHangar: Unloading Cargo: ${CargoIterator.Value.Name}"]
 			CargoIterator.Value:MoveTo[Hangar]
 			wait 30
 		}
@@ -58,7 +58,7 @@ objectdef obj_Cargo
 
 	function TransferOreToJetCan()
 	{
-		UI:UpdateConsole["Transfering all ore to JetCan."]
+		UI:UpdateConsole["Transferring Ore and Minerals to JetCan."]
 
 		call Ship.OpenCargo
 		Me.Ship:DoGetCargo[This.MyCargo]
@@ -133,7 +133,7 @@ objectdef obj_Cargo
 			wait 10
 		}
 
-		UI:UpdateConsole["Transfering all ore to hangar."]
+		UI:UpdateConsole["Transferring Ore and Minerals to Station Hangar."]
 
 		if ${Ship.IsCargoOpen}
 		{
