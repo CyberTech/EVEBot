@@ -154,8 +154,7 @@ objectdef obj_JetCan
 			ID:Set[${This.ActiveCan}]
 		}
 		
-		;if ${Entity[${ID}].LootWindow(exists)}
-		if ${EVEWindow[ByCaption, WINDOW_CONTAINER](exists)}
+		if ${Entity[${ID}].LootWindow(exists)}
 		{
 			return TRUE
 		}
