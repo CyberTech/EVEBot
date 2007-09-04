@@ -14,7 +14,6 @@ CyberTech	Med		Interbot Communication Support
 CyberTech	Med		% Shield Activation for booster
 CyberTech	Med		Red/Neutral Detection
 CyberTech	Med		200km bookmark usage - warp to 200km, scan, warp to roid, mine, warp back to 200km. Requires new roid alg.
-Hessinger	Med		Working Skill/Queueing w/ UI support
 			Med		Activate shield/armor resists only when hostiles are present
 CyberTech	Low		Cuttoff for slowboating time/distance. Do not use this if in 200km mode.
 Hessinger	Low		Fighter (PVE/Ratting) Bot
@@ -22,8 +21,8 @@ CyberTech	Low		Improved Mining Drone Support
 			Low		Swapping Guns
  			Low		Reconnection Script
 			Low		Belt weighting based on rat contents. Requires hardcoded list of rat weights for rats which are not default weight.
-			Low		UI: Button: Return to station immediately & idle
-			Low		UI: Button: Return to station & idle after hold is full
+Hessinger Low		UI: Button: Return to station immediately & idle
+Hessinger	Low		UI: Button: Return to station & idle after hold is full
 			Lowest	PVP Combat
 
 --------------------------------------------------------
@@ -36,6 +35,7 @@ Need ISXEVE Changes (Amadeus):
 --------------------------------------------------------
  			Low		Repairing (In-Station) - Repairing pops up a confirm dialog, need isx support.
 Hessinger	Done	Restock Ship With Drones - Waiting for Item:MoveTo[DroneBay]
+Hessinger	Done  Skill/Queueing (w/ UI) Support - Need IsTraining to be fixed? (Need to speak to Amadeus)
 --------------------------------------------------------
 
 Statistics:
