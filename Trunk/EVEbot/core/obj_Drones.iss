@@ -15,6 +15,7 @@ objectdef obj_Drones
 	variable bool WaitingForDrones = FALSE
 	variable bool DronesReady = FALSE
 	variable int FrameCounterDrones
+	variable int ShortageCount
 	
 	method Initialize()
 	{
@@ -86,10 +87,15 @@ objectdef obj_Drones
    			echo Me.Ship.GetDrones ${Me.Ship.GetDrones}
    			echo This.DronesInSpace < Config.Combat.MinimumDronesInSpace ${This.DronesInSpace} < ${Config.Combat.MinimumDronesInSpace}
 
-   			if ${This.DronesInSpace} < ${Config.Combat.MinimumDronesInSpace}
+			ShortageCount:Inc
+   			if ${ShortageCount} > 10
    			{
    				return TRUE
    			}
+   		}
+   		else
+   		{
+   			ShortageCount:Set[0]
    		}
    		return FALSE
 	}
