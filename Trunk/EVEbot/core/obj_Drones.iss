@@ -14,7 +14,7 @@ objectdef obj_Drones
 	variable int LaunchedDrones = 0
 	variable bool WaitingForDrones = FALSE
 	variable bool DronesReady = FALSE
-	variable int FrameCounter
+	variable int FrameCounterDrones
 	
 	method Initialize()
 	{
@@ -30,12 +30,12 @@ objectdef obj_Drones
 	{
 		if ${This.WaitingForDrones}
 		{
-			FrameCounter:Inc
+			FrameCounterDrones:Inc
 
 			if (${Me.InStation(exists)} && !${Me.InStation})
 			{
 				variable int IntervalInSeconds = 4
-				if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
+				if ${FrameCounterDrones} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 				{
 					This.LaunchedDrones:Set[${This.DronesInSpace}]
 					if  ${This.LaunchedDrones} > 0
@@ -43,9 +43,9 @@ objectdef obj_Drones
 						This.WaitingForDrones:Set[FALSE]
 						This.DronesReady:Set[TRUE]
 						
-						UI:UpdateConsole["${This.LaunchedDrones} drones ready"]
+						UI:UpdateConsole["${This.LaunchedDrones} drones deployed]
 					}					
-					FrameCounter:Set[0]
+					FrameCounterDrones:Set[0]
 				}
 			}
 		}
@@ -82,6 +82,10 @@ objectdef obj_Drones
    			${Me.Ship.GetDrones} == 0 && \
    			${This.DronesInSpace} < ${Config.Combat.MinimumDronesInSpace})
    		{
+			echo Me.Ship.DronebayCapacity ${Me.Ship.DronebayCapacity}
+   			echo Me.Ship.GetDrones ${Me.Ship.GetDrones}
+   			echo This.DronesInSpace < Config.Combat.MinimumDronesInSpace ${This.DronesInSpace} < ${Config.Combat.MinimumDronesInSpace}
+
    			if ${This.DronesInSpace} < ${Config.Combat.MinimumDronesInSpace}
    			{
    				return TRUE
