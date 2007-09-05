@@ -44,7 +44,7 @@ objectdef obj_Drones
 						This.WaitingForDrones:Set[FALSE]
 						This.DronesReady:Set[TRUE]
 						
-						UI:UpdateConsole["${This.LaunchedDrones} drones deployed]
+						UI:UpdateConsole["${This.LaunchedDrones} drones deployed"]
 					}					
 					FrameCounterDrones:Set[0]
 				}
@@ -117,7 +117,7 @@ objectdef obj_Drones
 		variable iterator CargoIterator
 		Station.DronesInStation:GetIterator[CargoIterator]
 		
-	if ${CargoIterator:First(exists)}
+		if ${CargoIterator:First(exists)}
 		do
 		{
 			UI:UpdateConsole["obj_Drones:TransferToDroneBay: ${CargoIterator.Value.Name}"]
