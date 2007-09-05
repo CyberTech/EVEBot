@@ -83,10 +83,6 @@ objectdef obj_Drones
    			${Me.Ship.GetDrones} == 0 && \
    			${This.DronesInSpace} < ${Config.Combat.MinimumDronesInSpace})
    		{
-			echo Me.Ship.DronebayCapacity ${Me.Ship.DronebayCapacity}
-   			echo Me.Ship.GetDrones ${Me.Ship.GetDrones}
-   			echo This.DronesInSpace < Config.Combat.MinimumDronesInSpace ${This.DronesInSpace} < ${Config.Combat.MinimumDronesInSpace}
-
 			ShortageCount:Inc
    			if ${ShortageCount} > 10
    			{
