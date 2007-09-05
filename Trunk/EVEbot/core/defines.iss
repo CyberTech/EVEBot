@@ -7,6 +7,10 @@
 	
 */
 
+/*
+	I'm a comment to force SVN_REVISION update on checkin.
+
+*/
 variable string APP_NAME = "EVEBot"
 variable string APP_VERSION = "0.96"
 variable string APP_PATH = "EVEBot/EVEBot.iss"
