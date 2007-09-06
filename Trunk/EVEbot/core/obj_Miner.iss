@@ -19,7 +19,6 @@ objectdef obj_Miner
 	variable int PreviousTripSeconds = 0
 	variable int TotalTripSeconds = 0
 	variable int AverageTripSeconds = 0
-	variable int Abort = FALSE
 	variable string CurrentState	
 	variable int FrameCounter
 	variable bool CombatAbort = FALSE
@@ -91,26 +90,20 @@ objectdef obj_Miner
 			case RUNNING
 				UI:UpdateConsole["Running Away"]
 				call Dock
-				ForcedReturn:Set[FALSE]
+				EVEBot.ReturnToStation:Set[TRUE]
 				break
 		}	
 	}
 	
 	method SetState()
 	{
-		if ${ForcedReturn}
-		{
-			This.CurrentState:Set["RUNNING"]
-			return
-		}
-	
-		if ${This.Abort} && !${Me.InStation}
+		if ${EVEBot.ReturnToStation} && !${Me.InStation}
 		{
 			This.CurrentState:Set["ABORT"]
 			return
 		}
 	
-		if ${This.Abort}
+		if ${EVEBot.ReturnToStation}
 		{
 			This.CurrentState:Set["IDLE"]
 			return
@@ -128,7 +121,7 @@ objectdef obj_Miner
 			return
 		}
 		
-		if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${ForcedSell}
+		if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${EVEBot.ReturnToStation}
 		{
 			This.CurrentState:Set["CARGOFULL"]
 			return
@@ -145,7 +138,7 @@ objectdef obj_Miner
 		
 		if ${This.CombatAbort}
 			{
-				UI:UpdateConsole["Warning: Aborted. Combat type abort."]
+				UI:UpdateConsole["Warning: Paused. Combat type abort."]
 				
 				if ((${Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct}) && ${Ship.ArmorRepairUnits} == 0)
 				{
@@ -170,8 +163,8 @@ objectdef obj_Miner
 					}
 				}
 				
-				UI:UpdateConsole["Returning Abort to False and Continuing to Bot"]
-				This.Abort:Set[FALSE]
+				UI:UpdateConsole["Continuing"]
+				EVEBot.ReturnToBase:Set[FALSE]
 				This.CombatAbort:Set[FALSE]
 				Return
 			}
@@ -217,7 +210,7 @@ objectdef obj_Miner
 		
 		UI:UpdateConsole["Mining"]
 		
-		while ( !${This.Abort} && \
+		while ( !${EVEBot.ReturnToStation} && \
 				!${Ship.CargoFull} )
 		{	
 	
@@ -225,7 +218,7 @@ objectdef obj_Miner
 			{
 				/* TODO - This should pick up drones from station instead of just docking */
 				UI:UpdateConsole["Warning: Drone shortage detected, docking"]
-				This.Abort:Set[TRUE]
+				EVEBot.ReturnToStation:Set[TRUE]
 				return
 			}
 			
@@ -245,7 +238,7 @@ objectdef obj_Miner
 					if ${Counter} > 600
 					{
 						UI:UpdateConsole["Me.Ship.ArmorPct OR Me.Ship.ShieldPct returned NULL for longer than a minute, aborting..."]
-						This.Abort:Set[TRUE]
+						EVEBot.ReturnToStation:Set[TRUE]
 						return
 					}
 				}
@@ -262,7 +255,7 @@ objectdef obj_Miner
 						if ${Counter} > 600
 						{
 							UI:UpdateConsole["Me.Ship.ArmorPct OR Me.Ship.ShieldPct returned a value less than zero for longer than a minute, aborting..."]
-							This.Abort:Set[TRUE]
+							EVEBot.ReturnToStation:Set[TRUE]
 							return
 						}					
 					}
@@ -280,7 +273,8 @@ objectdef obj_Miner
 				UI:UpdateConsole["Armor is at ${Me.Ship.ArmorPct}"]
 				UI:UpdateConsole["Shield is at ${Me.Ship.ArmorPct}"]
 				UI:UpdateConsole["Aborting due to defensive status"]
-				This.Abort:Set[TRUE]
+				
+				EVEBot.ReturnToStation:Set[TRUE]
 				This.CombatAbort:Set[TRUE]
 				return
 			}

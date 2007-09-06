@@ -133,7 +133,7 @@ objectdef obj_Asteroids
 					if ${TryCount} > ${Math.Calc[${Belts.Used} * 10]}
 					{
 						UI:UpdateConsole["All belts empty!"]
-						Miner.Abort:Set[TRUE]
+						EVEBot.ReturnToStation:Set[TRUE]
 						return
 					}
 				}
@@ -222,7 +222,7 @@ objectdef obj_Asteroids
 				{
 					return TRUE
 				}
-				UI:UpdateConsole["Locking Asteroid ${AsteroidIterator.Value.Name}: ${Misc.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"]
+				UI:UpdateConsole["Locking Asteroid ${AsteroidIterator.Value.Name}: ${EVEBot.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"]
 				
 				while ${Combat.CombatPause}== TRUE
 				{

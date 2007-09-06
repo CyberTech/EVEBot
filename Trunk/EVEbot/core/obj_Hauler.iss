@@ -15,14 +15,9 @@ objectdef obj_Hauler
 	
 	/* The name of the corp we are hauling for (null if using m_playerName) */
 	variable string m_corpName
-	
-	/* When this flag is set to TRUE the hauler should return to base */
-	variable bool m_abort
-	
-	method Initialize(string player, string corp)
-	{	
-		m_abort:Set[FALSE]
 		
+	method Initialize(string player, string corp)
+	{			
 		if (${player.Length} && ${corp.Length})
 		{
 			echo "ERROR: obj_Hauler:Initialize -- cannot use a player and a corp name.  One must be blank"
@@ -212,16 +207,22 @@ objectdef obj_OreHauler inherits obj_Hauler
 			case RUNNING
 				UI:UpdateConsole["Running Away"]
 				call Dock
-				ForcedReturn:Set[FALSE]
+				EVEBot.ReturnToStation:Set[FALSE]
 				break
 		}	
 	}
 	
 	method SetState()
 	{
-		if ${ForcedReturn}
+		if ${EVEBot.ReturnToStation} && !${Me.InStation}
 		{
-			This.CurrentState:Set["RUNNING"]
+			This.CurrentState:Set["ABORT"]
+			return
+		}
+	
+		if ${EVEBot.ReturnToStationt}
+		{
+			This.CurrentState:Set["IDLE"]
 			return
 		}
 	
@@ -243,7 +244,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 			return
 		}
 		
-		if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${ForcedSell}
+		if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${EVEBot.ReturnToStation}
 		{
 			This.CurrentState:Set["CARGOFULL"]
 			m_gangMemberID:Set[0]
@@ -332,14 +333,12 @@ objectdef obj_OreHauler inherits obj_Hauler
 		variable int id
 		variable int count
 		
-		m_abort:Set[FALSE]
-		
 		call This.MoveToField FALSE
 	
 		call Ship.OpenCargo
 		
 		/* wait in belt until cargo full or agressed */
-		while !${This.m_abort} && \
+		while !${EVEBot:ReturnToStation} && \
 				${Ship.CargoFreeSpace} >= ${Ship.CargoMinimumFreeSpace}
 		{				
 			id:Set[${This.NearestMatchingJetCan}]
@@ -371,8 +370,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 				if ${Me.GetTargetedBy} > 0
 				{
 					UI:UpdateConsole["Hauler is under attack!  Bug out."]
-					m_abort:Set[TRUE]
-					forcedreturn	/* cause the state machine to return us to base */
+					EVEBot:ReturnToStation:Set[TRUE]	/* cause the state machine to return us to base */
 					break
 				}
 			}			

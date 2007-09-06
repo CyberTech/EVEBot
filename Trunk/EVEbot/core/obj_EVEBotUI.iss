@@ -7,9 +7,6 @@ objectdef obj_EVEBotUI
 	variable string MyRace
 	variable string MyCorp
 
-; TODO This doesn't belong here. - CyberTech
-	variable bool ForcedReturn = FALSE					/* A variable for forced return */
-
 	variable int FrameCounter
 	variable int FrameCounterMsgBoxes
 

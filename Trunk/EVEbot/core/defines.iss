@@ -8,7 +8,7 @@
 */
 
 /*
-	I'm a comment to force SVN_REVISION update on checkin.
+	I'm a comment to force SVN_REVISION update on checkin...
 
 */
 variable string APP_NAME = "EVEBot"

@@ -70,7 +70,6 @@ objectdef obj_JetCan
 
 		if (${Entity[${ID}].HaveLootRights} || \
 			${OwnerID} == ${Me.CharID} || \
-			${OwnerID} == ${Me.CharID} || \
 			${Entity[${ID}].CorporationID} == ${Me.CorporationID} || \
 			${Local[${OwnerID}].ToGangMember(exists)} ) 
 		{

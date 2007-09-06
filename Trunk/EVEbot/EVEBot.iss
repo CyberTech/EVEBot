@@ -5,7 +5,7 @@
 
 /* Base Requirements */
 #include core/obj_AutoPatcher.iss
-#include core/obj_Misc.iss
+#include core/obj_EVEBot.iss
 #include core/obj_Configuration.iss
 
 /* Support File Includes */
@@ -27,11 +27,10 @@
 
 /* Declare all script or global variables here */
 variable bool play = FALSE
-variable bool ForcedReturn
 
 /* Script-Defined Support Objects */
 variable obj_EVEBotUI UI
-variable obj_Misc Misc
+variable obj_EVEBot EVEBot
 variable obj_Configuration_BaseConfig BaseConfig
 variable obj_Configuration Config
 ;variable obj_AutoPatcher AutoPatcher
@@ -66,7 +65,7 @@ function main()
 
 	/* Set Turbo to lowest value to try and avoid overloading the EVE Python engine */
 	Turbo 20
-		
+			
 	UI:Reload
 	UI:UpdateConsole["-=Paused: Press Run-="]
 	Script:Pause
@@ -89,10 +88,4 @@ function main()
 		while ${BotModule:Next(exists)}
 		waitframe
 	}
-}
-
-atom(global) forcedreturn()
-{
-	/* echo "forcedreturn" */
-	ForcedReturn:Set[TRUE]
 }

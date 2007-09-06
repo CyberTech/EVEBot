@@ -11,14 +11,9 @@ objectdef obj_Fighter
 	
 	/* The name of the corp we are fighting for (null if using m_playerName) */
 	variable string m_corpName
-	
-	/* When this flag is set to TRUE the fighter should return to base */
-	variable bool m_abort
-	
-	method Initialize(string player, string corp)
-	{	
-		m_abort:Set[FALSE]
 		
+	method Initialize(string player, string corp)
+	{			
 		if (${player.Length} && ${corp.Length})
 		{
 			echo "ERROR: obj_Fighter:Initialize -- cannot use a player and a corp name.  One must be blank"
@@ -131,7 +126,7 @@ objectdef obj_CombatFighter inherits obj_Fighter
 			case RUNNING
 				UI:UpdateConsole["Running Away"]
 				call Dock
-				ForcedReturn:Set[FALSE]
+				EVEBot.ReturnToStation:Set[FALSE]
 				break
 		}	
 	}
@@ -145,19 +140,25 @@ objectdef obj_CombatFighter inherits obj_Fighter
 			return
 		}
 		
-		if ${ForcedReturn}
-		{
-			This.CurrentState:Set["RUNNING"]
-			return
-		}
-	
-		if ${This.Abort} && !${Me.InStation}
+		if ${EVEBot.ReturnToStation} && !${Me.InStation}
 		{
 			This.CurrentState:Set["ABORT"]
 			return
 		}
 	
-		if ${This.Abort}
+		if ${EVEBot.ReturnToStationt}
+		{
+			This.CurrentState:Set["IDLE"]
+			return
+		}
+	
+		if ${EVEBot.ReturnToStation} && !${Me.InStation}
+		{
+			This.CurrentState:Set["ABORT"]
+			return
+		}
+	
+		if ${EVEBot.ReturnToStationt}
 		{
 			This.CurrentState:Set["IDLE"]
 			return

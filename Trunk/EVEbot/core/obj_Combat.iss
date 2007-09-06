@@ -143,7 +143,7 @@ objectdef obj_Combat
 			
 			if ${Entity[${TargetIterator.Value}](exists)}
 			{
-				UI:UpdateConsole["Locking Target ${TargetIterator.Value.Name}: ${Misc.MetersToKM_Str[${TargetIterator.Value.Distance}]}"]			
+				UI:UpdateConsole["Locking Target ${TargetIterator.Value.Name}: ${EVEBot.MetersToKM_Str[${TargetIterator.Value.Distance}]}"]			
 				TargetIterator.Value:LockTarget
 				while !${TargetIterator.Value.IsLockedTarget}
 				{
@@ -202,8 +202,8 @@ objectdef obj_Combat
 						if (${Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct}) || \
 						(${Me.Ship.ShieldPct} > ${Config.Combat.MinimumShieldPct})
 						{
-							${Config.Common.BotModeName}.Abort:Set[TRUE]
-							UI:UpdateConsole["Setting ${Config.Common.BotModeName} to Abort Mode"]
+							EVEBot.ReturnToStation:Set[TRUE]
+							UI:UpdateConsole["Setting Return to Station"]
 							call Ship.Drones.ReturnAllToDroneBay
 							wait 200
 							This:ExitCombatState

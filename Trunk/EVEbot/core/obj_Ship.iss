@@ -1036,7 +1036,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 	{
 		if ${Entity[${TargetID}](exists)}
 		{
-			UI:UpdateConsole["Locking ${Entity[${TargetID}].Name}: " ${Misc.MetersToKM_Str[${Entity[${TargetID}].Distance}]}"]
+			UI:UpdateConsole["Locking ${Entity[${TargetID}].Name}: " ${EVEBot.MetersToKM_Str[${Entity[${TargetID}].Distance}]}"]
 			Entity[${TargetID}]:LockTarget
 			wait 30
 		}
