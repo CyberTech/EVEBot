@@ -24,7 +24,7 @@ objectdef obj_JetCan
 	; Returns -1 for no can, or the entity ID
 	member:int CurrentCan()
 	{
-		if ${This.ActiveCan} > 0 && \
+		if (${This.ActiveCan} > 0 && \
 			${Entity[${This.ActiveCan}](exists)} && \
 			${Entity[${This.ActiveCan}].Distance} <= LOOT_RANGE)
 		{
