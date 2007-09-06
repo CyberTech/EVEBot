@@ -29,7 +29,7 @@ objectdef obj_EVEBot
 		variable int IntervalInSeconds = 4
 		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 		{
-			if !${This.ReturnToStation)
+			if !${This.ReturnToStation}
 			{
 				if (${This.GameHour} == 10 && \
 					${This.GameMinute} >= 50) 
