@@ -5,7 +5,6 @@ Who			Priority
 --------------------------------------------------------
 CyberTech	High	UI: Checkbox - no miner movement
 CyberTech	High	Tech 2 crystal prioritization
-CyberTech	High	Dock and idle before downtime
 CyberTech	High	Check range to possible target from all current targets instead of just first
 CyberTech	High	obj_Target
 CyberTech	High	Hauler Script Completion
@@ -21,7 +20,7 @@ CyberTech	Low		Improved Mining Drone Support
 			Low		Swapping Guns
  			Low		Reconnection Script
 			Low		Belt weighting based on rat contents. Requires hardcoded list of rat weights for rats which are not default weight.
-Hessinger Low		UI: Button: Return to station immediately & idle
+Hessinger 	Low		UI: Button: Return to station immediately & idle
 Hessinger	Low		UI: Button: Return to station & idle after hold is full
 			Lowest	PVP Combat
 
