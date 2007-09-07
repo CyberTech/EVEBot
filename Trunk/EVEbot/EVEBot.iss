@@ -19,6 +19,7 @@
 #include core/obj_Combat.iss
 #include core/obj_Bookmarks.iss
 #include core/obj_Jetcan.iss
+#include core/obj_Social.iss
 
 /* Behavior/Mode Includes */
 #include core/obj_Hauler.iss
@@ -44,6 +45,7 @@ variable obj_Skills Skills
 variable obj_Combat Combat
 variable obj_Bookmarks Bookmarks
 variable obj_JetCan JetCan
+variable obj_Social Social
 
 /* Script-Defined Behavior Objects */
 variable index:string BotModules
@@ -69,6 +71,7 @@ function main()
 	UI:Reload
 	UI:UpdateConsole["-=Paused: Press Run-="]
 	Script:Pause
+	
 	
 	variable iterator BotModule
 	BotModules:GetIterator[BotModule]

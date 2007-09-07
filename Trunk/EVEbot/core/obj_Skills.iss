@@ -10,12 +10,13 @@ objectdef obj_Skills
 	{
 		UI:UpdateConsole["obj_Skills: Initialized"]
 		This:GetOtherSkills
-		Event[OnFrame]:AttachAtom[This:Pulse]
+		;Dunno how to get isxeve to stay up to date with currently training.
+		;Event[OnFrame]:AttachAtom[This:Pulse]
 	}
 	
 	method Shutdown()
 	{
-		Event[OnFrame]:DetachAtom[This:Pulse]
+		;Event[OnFrame]:DetachAtom[This:Pulse]
 	}
 	
 	method Pulse()
@@ -24,7 +25,7 @@ objectdef obj_Skills
 		variable int IntervalInSeconds = 5
 		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 		{
-			if ${This.ReadLine.Equal[${This.CurrentlyTraining}]} && !${This.ReadLine.Equal[None]}
+			if (${This.CurrentlyTraining.Equal[None]} && !${This.NextSkill.Equal[None]})
 			{
 				This:Train[${This.NextInLine}]
 			}
@@ -51,6 +52,7 @@ objectdef obj_Skills
 		variable int i
 		
 		variable iterator Skills
+		
 		This.OwnedSkills:GetIterator[Skills]
 		
 		for (i:Set[1] ; ${i} <= ${This.OwnedSkills.Used} ; i:Inc)	
@@ -130,7 +132,7 @@ objectdef obj_Skills
 				ReadSkillLevel:Set[${This.SkillLevel[${ReadLine}]}]
 				for (i:Set[1] ; ${i} <= ${Me.GetSkills} ; i:Inc)
 				{
-					if ${SkillList[${i}].Name.Equal[${ReadSkillName}]} && ${SkillList[${i}].Level} < ${ReadSkillLevel}
+					if ${SkillList[${i}].Name.Equal[${ReadSkillName}]}	
 					{
 						This.NextInLine:Set[${SkillList[${i}].Name}]
 					}

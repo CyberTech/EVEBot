@@ -19,6 +19,7 @@ objectdef obj_Miner
 	variable int PreviousTripSeconds = 0
 	variable int TotalTripSeconds = 0
 	variable int AverageTripSeconds = 0
+	variable bool Abort = FALSE
 	variable string CurrentState	
 	variable int FrameCounter
 	variable bool CombatAbort = FALSE
