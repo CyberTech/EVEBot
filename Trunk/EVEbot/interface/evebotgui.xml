@@ -381,6 +381,17 @@
 							<FullHeight>200</FullHeight>
 							<ButtonWidth>20</ButtonWidth>
 							<Items>
+								<Item Value='-10'>-10</Item>
+								<Item Value='-9'>-9</Item>
+								<Item Value='-8'>-8</Item>
+								<Item Value='-7'>-7</Item>
+								<Item Value='-6'>-6</Item>
+								<Item Value='-5'>-5</Item>
+								<Item Value='-4'>-4</Item>
+								<Item Value='-3'>-3</Item>
+								<Item Value='-2'>-2</Item>
+								<Item Value='-1'>-1</Item>
+								<Item Value='0'>0</Item>
 								<Item Value='1'>1</Item>
 								<Item Value='2'>2</Item>
 								<Item Value='3'>3</Item>

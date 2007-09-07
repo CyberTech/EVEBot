@@ -81,8 +81,6 @@ objectdef obj_Miner
 			case MINE
 				call This.Mine
 				break
-			case MOVE
-				call Astroids.ForceMove
 			case HAUL
 				UI:UpdateConsole["Hauling"]
 				call Hauler.Haul
@@ -116,11 +114,6 @@ objectdef obj_Miner
 		{
 	  		This.CurrentState:Set["BASE"]
 	  		return
-		}
-		
-		if
-		{
-			
 		}
 				
 		if ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace}
