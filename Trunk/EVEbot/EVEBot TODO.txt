@@ -11,7 +11,7 @@ CyberTech	High	Hauler Script Completion
 CyberTech	High	New asteroid selection algorithm
 CyberTech	Med		Interbot Communication Support
 CyberTech	Med		% Shield Activation for booster
-CyberTech	Med		Red/Neutral Detection
+CyberTech/Hessinger	Med		Red/Neutral Detection (Dunno what other options to add cyber, look @ social.iss and I added options to the UI and added the if statements to miner script!)
 CyberTech	Med		200km bookmark usage - warp to 200km, scan, warp to roid, mine, warp back to 200km. Requires new roid alg.
 			Med		Activate shield/armor resists only when hostiles are present
 CyberTech	Low		Cuttoff for slowboating time/distance. Do not use this if in 200km mode.
@@ -20,7 +20,7 @@ CyberTech	Low		Improved Mining Drone Support
 			Low		Swapping Guns
  			Low		Reconnection Script
 			Low		Belt weighting based on rat contents. Requires hardcoded list of rat weights for rats which are not default weight.
-Hessinger 	Low		UI: Button: Return to station immediately & idle
+Hessinger Low		UI: Button: Return to station immediately & idle
 Hessinger	Low		UI: Button: Return to station & idle after hold is full
 			Lowest	PVP Combat
 

@@ -81,6 +81,8 @@ objectdef obj_Miner
 			case MINE
 				call This.Mine
 				break
+			case MOVE
+				call Astroids.ForceMove
 			case HAUL
 				UI:UpdateConsole["Hauling"]
 				call Hauler.Haul
@@ -114,6 +116,11 @@ objectdef obj_Miner
 		{
 	  		This.CurrentState:Set["BASE"]
 	  		return
+		}
+		
+		if
+		{
+			
 		}
 				
 		if ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace}
@@ -221,6 +228,15 @@ objectdef obj_Miner
 				UI:UpdateConsole["Warning: Drone shortage detected, docking"]
 				EVEBot.ReturnToStation:Set[TRUE]
 				return
+			}
+			
+			if (${Config.Miner.MineAlone} && ${Social.PlayerDetection}) || \
+			(${Config.Miner.StandingDetection} && ${Social.StandingDetection[${Config.Miner.LowestStanding}]})
+			{
+				UI:UpdateConsole["Warning: Detected another player that might be hostile, Moving Now!"]
+				call This.Cleanup_Environment
+				call Asteroids.MoveToField TRUE
+				call This.Prepare_Environment
 			}
 			
 			if ${Config.Miner.UseJetCan} && ${Ship.CargoHalfFull}

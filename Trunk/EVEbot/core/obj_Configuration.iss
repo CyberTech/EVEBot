@@ -197,7 +197,10 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Use JetCan, FALSE]
 		This.MinerRef:AddSetting[Avoid Players Distance, 10000]
 		This.MinerRef:AddSetting[Distribute Lasers, TRUE]
-		Thid.MinerRef:AddSetting[Use Mining Drones, FALSE]
+		This.MinerRef:AddSetting[Use Mining Drones, FALSE]
+		This.MinerRef:AddSetting[Mine Alone, FALSE]
+		This.MinerRef:AddSetting[Standing Detection, FALSE]
+		This.MinerRef:AddSetting[Lowest Standing, 0]
 
 		This.OreTypesRef:AddSetting[Vitreous Mercoxit, 1]
 		This.OreTypesRef:AddSetting[Magma Mercoxit, 1]
@@ -331,6 +334,38 @@ objectdef obj_Configuration_Miner
 	{
 		This.MinerRef:AddSetting[Use Mining Drones, ${value}]
 	} 
+	
+	member:bool MineAlone()
+	{
+		return ${This.MinerRef.FindSetting[Mine Alone, FALSE]}
+	}
+	
+	method SetMineAlone(bool value)
+	{	
+		This.MinerRef:AddSetting[Mine Alone, ${value}]
+	}
+	
+	member:bool StandingDetection()
+	{
+		return ${This.MinerRef.FindSetting[Standing Detection, FALSE]}
+	}
+	
+	method SetStandingDetection(bool value)
+	{	
+		This.MinerRef:AddSetting[Standing Detection, ${value}]
+	}
+	
+	member:int LowestStanding()
+	{
+		return ${This.MinerRef.FindSetting[Lowest Standing, 0]}
+	}
+	
+	method SetStandingDetection(int value)
+	{
+		This.MinerRef:AddSetting[Lowest Standing, ${value}]
+	}
+	
+	
 }
 
 objectdef obj_Configuration_Combat

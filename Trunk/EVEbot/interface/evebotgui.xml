@@ -339,6 +339,66 @@
 									Script[EVEBot].VariableScope.Config.Miner:SetUseMiningDrones[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
+						<checkbox name='cbMineAlone'>
+							<X>10</X>
+							<Y>110</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Mine Alone</text>
+							<AutoTooltip>When checked you will move to another field when and if a player enters yours. (Doesn't Include Gang Members)</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Miner.MineAlone}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+									Script[EVEBot].VariableScope.Config.Miner:SetMineAlone[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox name='cbStandingDetection'>
+							<X>10</X>
+							<Y>130</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Mine Alone: Standing Detection</text>
+							<AutoTooltip>When checked you will move to another field when and if a player enters yours and is below the standing you set. (Doesn't Include Gang Members)</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Miner.StandingDetection}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+									Script[EVEBot].VariableScope.Config.Miner:SetStandingDetection[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<combobox name='cbLowestStanding'>
+							<X>210</X>
+							<Y>130</Y>
+							<Width>50</Width> 
+							<Height>15</Height> 
+							<FullHeight>200</FullHeight>
+							<ButtonWidth>20</ButtonWidth>
+							<Items>
+								<Item Value='1'>1</Item>
+								<Item Value='2'>2</Item>
+								<Item Value='3'>3</Item>
+								<Item Value='4'>4</Item>
+								<Item Value='5'>5</Item>
+								<Item Value='6'>6</Item>
+								<Item Value='7'>7</Item>
+								<Item Value='8'>8</Item>
+								<Item Value='9'>9</Item>
+								<Item Value='10'>10</Item>
+							</Items>
+							<OnSelect>
+								Script[EVEBot].VariableScope.Config.Miner:SetStandingDetection[${This.SelectedItem.Value}]
+							</OnSelect>							
+							<OnLoad>
+								This:SetSelection[${Script[EVEBot].VariableScope.Config.Miner.StandingDetection}]
+							</OnLoad>
+						</combobox>
 						<combobox name='comboOreTypes'>
 							<X>340</X>
 							<Y>10</Y>
