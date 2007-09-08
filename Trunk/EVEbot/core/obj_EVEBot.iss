@@ -11,6 +11,7 @@ objectdef obj_EVEBot
 {
 	variable bool ReturnToStation = FALSE
 	variable bool Paused = FALSE
+	variable int FrameCounter
 	
 	method Initialize()
 	{
@@ -31,9 +32,10 @@ objectdef obj_EVEBot
 		{
 			if !${This.ReturnToStation}
 			{
-				if (${This.GameHour} == 10 && \
-					${This.GameMinute} >= 50) 
+				if (${This.GameHour} == 16 && \
+					${This.GameMinute} >= 25) 
 				{
+					UI:UpdateConsole["EVE downtime approaching, pausing operations"]
 					UI:ConsoleLog["EVE downtime approaching, pausing operations"]
 					This.ReturnToStation:Set[TRUE]
 				}
