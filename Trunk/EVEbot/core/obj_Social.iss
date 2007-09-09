@@ -34,6 +34,7 @@ objectdef obj_Social
 	{
 		FrameCounter:Inc
 
+		/* TODO : CyberTech - This is on-demand stuff. don't store it, get it as needed. */
 		if (${Me.InStation(exists)} && !${Me.InStation})
 		{
 			variable int IntervalInSeconds = 5
@@ -66,8 +67,9 @@ objectdef obj_Social
 			do
 			{
 				if ${PilotIterator.Value.IsPC} && \
-				 !${PilotIterator.Value.Owner.ToGangMember} && \
-				 (${Me.ShipID} != ${PilotIterator.Value})
+				 	${Me.ShipID} != ${PilotIterator.Value} && \
+				 	${PilotIterator.Value.ToEntity.Distance} < ${Config.Miner.AvoidPlayerRange} && \
+				 	!${PilotIterator.Value.Owner.ToGangMember}
 				{
 					return TRUE
 				}
@@ -117,8 +119,8 @@ objectdef obj_Social
 			do
 			{
 				if (${Me.ShipID} != ${PilotIterator.Value}) && \
-				!${PilotIterator.Value.Owner.ToGangMember} && \
-				${PilotITerator.Value.Owner.Standing} < ${Stand}
+					!${PilotIterator.Value.Owner.ToGangMember} && \
+					${PilotITerator.Value.Owner.Standing} < ${Stand}
 				{
 					return TRUE
 				}

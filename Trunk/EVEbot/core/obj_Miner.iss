@@ -219,13 +219,20 @@ objectdef obj_Miner
 				return
 			}
 			
-			if (${Config.Miner.MineAlone} && ${Social.PlayerDetection}) || \
-			(${Config.Miner.StandingDetection} && ${Social.StandingDetection[${Config.Miner.LowestStanding}]})
+			if ${Social.PlayerDetection}
 			{
-				UI:UpdateConsole["Warning: Detected another player that might be hostile, Moving Now!"]
+				UI:UpdateConsole["Avoiding player: Changing belts"]
 				call This.Cleanup_Environment
 				call Asteroids.MoveToField TRUE
 				call This.Prepare_Environment
+			}
+
+			/* TODO: CyberTech: Move this to the state machine, have it check for when the system is clear */
+			if ${Config.Miner.StandingDetection} && \
+				${Social.StandingDetection[${Config.Miner.LowestStanding}]}
+			{
+				EVEBot.ReturnToStation:Set[TRUE]
+				UI:UpdateConsole["Warning: Low Standing player in system, docking"]
 			}
 			
 			if ${Config.Miner.UseJetCan} && ${Ship.CargoHalfFull}
@@ -285,14 +292,20 @@ objectdef obj_Miner
 				return
 			}
 			
-			if (!${Ship.InWarp} && \
-				${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers})
+			if ${Ship.InWarp}
+			{
+				wait 10
+				continue
+			}
+			
+			if ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers}
 			{
 				; We've got idle lasers, and available targets. Do something with them.
 				while ${Me.GetTargeting} > 0
 				{
 				 	wait 10
-				}				
+				}
+
 				Me:DoGetTargets[LockedTargets]
 				LockedTargets:GetIterator[Target]
 				if ${Target:First(exists)}
@@ -312,7 +325,7 @@ objectdef obj_Miner
 					
 					if (${This.ConcentrateFire} || \
 						!${Config.Miner.DistributeLasers} || \
-						!${Ship.IsMiningAstroidID[${TargetID}]} )
+						!${Ship.IsMiningAsteroidID[${TargetID}]} )
 					{	
 						
 						Target.Value:MakeActiveTarget

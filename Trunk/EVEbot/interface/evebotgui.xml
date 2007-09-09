@@ -248,7 +248,7 @@
 								}
 							</OnChange>
 						</Textentry>
-						<Text name='MinimumDronesInSpaceText'>
+						<Text name='MinimumDronesInBayText'>
 							<X>44</X>
 							<Y>30</Y>
 							<Width>200</Width>
@@ -347,23 +347,29 @@
 									Script[EVEBot].VariableScope.Config.Miner:SetUseMiningDrones[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
-						<checkbox name='cbMineAlone'>
-							<X>10</X>
-							<Y>110</Y>
-							<Height>20</Height>
-							<Width>100</Width>
-							<Text>Mine Alone</text>
-							<AutoTooltip>When checked you will move to another field when and if a player enters yours. (Doesn't Include Gang Members)</AutoTooltip>
+						<slider name='AvoidPlayerRange'>
+							<X>10</X>							
+							<Y>110</Y>						
+							<Width>40</Width>						
+							<Height>18</Height>
+							<Range>100000</Range>
 							<OnLoad>
-								if ${Script[EVEBot].VariableScope.Config.Miner.MineAlone}
-								{
-									This:SetChecked
-								}
+								This:SetValue[${Script[EVEBot].VariableScope.Config.Miner.AvoidPlayerRange}]
+								UIElement[AvoidPlayerRangeLabel@Miner@EvEBotOptionsTab@EVEBot]:SetText["Min. Distance to Players: ${Script[EVEBot].VariableScope.EVEBot.MetersToKM_Str[${This.Value}]}"]
 							</OnLoad>
-							<OnLeftClick>
-									Script[EVEBot].VariableScope.Config.Miner:SetMineAlone[${This.Checked}]
-							</OnLeftClick>
-						</checkbox>
+							<OnChange>
+								Script[EVEBot].VariableScope.Config.Miner:SetAvoidPlayerRange[${Int[${This.Value}]}]
+								UIElement[AvoidPlayerRangeLabel@Miner@EvEBotOptionsTab@EVEBot]:SetText["Min. Distance to Players: ${Script[EVEBot].VariableScope.EVEBot.MetersToKM_Str[${This.Value}]}"]
+							</OnChange>				
+						</slider>						
+						<Text name='AvoidPlayerRangeLabel'>
+							<X>55</X>
+							<Y>110</Y>
+							<Width>300</Width>
+							<Height>10</Height>
+							<Text>Min. Distance to Players: 0km</Text>
+							<AutoTooltip>Minimum distance we will keep other players at</AutoTooltip>
+						</Text>
 						<checkbox name='cbStandingDetection'>
 							<X>10</X>
 							<Y>130</Y>
@@ -472,14 +478,6 @@
 						</listbox>    	
 					</Tab>
 					<Tab name='Combat'>
-						<Text name='MinArmorPctLabel'>
-							<X>55</X>
-							<Y>10</Y>
-							<Width>150</Width>
-							<Height>10</Height>
-							<Text>Minimum Armor: NULL</Text>
-							<AutoTooltip>Lowest Shield Percent allowed before docking</AutoTooltip>
-						</Text>
 						<slider name='MinArmorPct'>
 							<X>10</X>							
 							<Y>10</Y>						
@@ -495,13 +493,13 @@
 								UIElement[MinArmorPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Armor: ${This.Value}"]
 							</OnChange>				
 						</slider>
-						<Text name='MinShieldPctLabel'>
+						<Text name='MinArmorPctLabel'>
 							<X>55</X>
-							<Y>30</Y>
+							<Y>10</Y>
 							<Width>150</Width>
 							<Height>10</Height>
-							<Text>Minimum Shield: NULL</Text>
-							<AutoTooltip>Lowest Armor Pct Allowed before Running</AutoTooltip>
+							<Text>Minimum Armor: NULL</Text>
+							<AutoTooltip>Lowest Shield Percent allowed before docking</AutoTooltip>
 						</Text>
 						<slider name='MinShieldPct'>
 							<X>10</X>							
@@ -518,29 +516,31 @@
 								UIElement[MinShieldPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Shield: ${This.Value}"]
 							</OnChange>				
 						</slider>
-						<Text name='ShieldBactLabel'>
+						<Text name='MinShieldPctLabel'>
 							<X>55</X>
-							<Y>50</Y>
-							<Width>240</Width>
+							<Y>30</Y>
+							<Width>150</Width>
 							<Height>10</Height>
-							<Text>Shield Booster Activation: NULL</Text>
-							<AutoTooltip>When shield boosters will be activated.</AutoTooltip>
+							<Text>Minimum Shield: NULL</Text>
+							<AutoTooltip>Lowest Armor Pct Allowed before Running</AutoTooltip>
 						</Text>
-						<slider name='ShieldBact'>
-							<X>10</X>							
-							<Y>50</Y>						
-							<Width>40</Width>						
-							<Height>18</Height>
-							<Range>100</Range>
+						<checkbox name='cbAlwaysShieldBoost'>
+							<X>10</X>
+							<Y>50</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Always Shield Boost</text>
+							<AutoTooltip>If checked, the shield boost will be on full-time, instead of on-demand.</AutoTooltip>
 							<OnLoad>
-								This:SetValue[${Script[EVEBot].VariableScope.Config.Combat.ShieldBAct}]
-								UIElement[ShieldBactLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Shield Booster Activation: ${This.Value}"]
+								if ${Script[EVEBot].VariableScope.Config.Combat.AlwaysShieldBoost}
+								{
+									This:SetChecked
+								}
 							</OnLoad>
-							<OnChange>
-								Script[EVEBot].VariableScope.Config.Combat:SetShieldBAct[${Int[${This.Value}]}]
-								UIElement[ShieldBactLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Shield Booster Activation: ${This.Value}"]
-							</OnChange>				
-						</slider>
+							<OnLeftClick>
+									Script[EVEBot].VariableScope.Config.Combat:SetAlwaysShieldBoost[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
 						<Textentry name='MinimumDronesInSpace'>
 							<X>10</X>							
 							<Y>70</Y>						

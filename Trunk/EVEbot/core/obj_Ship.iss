@@ -78,14 +78,16 @@ objectdef obj_Ship
 				;Shield Boosters
 				;echo "Debug: Obj_Ship: Possible Hostiles: ${Social.PossibleHostiles}"
 				;echo "Debug: Obj_Ship: Shield Booster Activation: ${Config.Combat.ShieldBAct}"
-				if ${Social.PossibleHostiles} && \
-				${Me.Ship.ShieldPct} < ${Config.Combat.ShieldBAct}
+				/* TODO: CyberTech - This should be an option, not forced. */
+				if ${Social.PossibleHostiles} || \
+					${Me.Ship.ShieldPct} < 100 || \
+					${Config.Combat.AlwaysShieldBoost}
 				{
-					Ship:Activate_Shield_Booster[]
+					This:Activate_Shield_Booster[]
 				}
 				else
 				{
-					Ship:Deactivate_Shield_Booster[]
+					This:Deactivate_Shield_Booster[]
 				}
 				
 				FrameCounter:Set[0]
@@ -427,7 +429,7 @@ objectdef obj_Ship
 	}
 	
 	; Returns TRUE if we've got a laser mining this entity already
-	member:bool IsMiningAstroidID(int EntityID)
+	member:bool IsMiningAsteroidID(int EntityID)
 	{
 		if !${Me.Ship(exists)}
 		{

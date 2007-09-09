@@ -195,10 +195,9 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Stick To Spot, FALSE]
 		This.MinerRef:AddSetting[Bookmark Last Position, FALSE]
 		This.MinerRef:AddSetting[Use JetCan, FALSE]
-		This.MinerRef:AddSetting[Avoid Players Distance, 10000]
 		This.MinerRef:AddSetting[Distribute Lasers, TRUE]
 		This.MinerRef:AddSetting[Use Mining Drones, FALSE]
-		This.MinerRef:AddSetting[Mine Alone, FALSE]
+		This.MinerRef:AddSetting[Avoid Player Range, 10000]
 		This.MinerRef:AddSetting[Standing Detection, FALSE]
 		This.MinerRef:AddSetting[Lowest Standing, 0]
 
@@ -252,7 +251,7 @@ objectdef obj_Configuration_Miner
 		This.OreTypesRef:AddSetting[Veldspar, 1]
 		
 		This.OreVolumesRef:AddSetting[Mercoxit,40]
-		This.OreVolumesRef:AddSetting[Arkanor,16]
+		This.OreVolumesRef:AddSetting[Arkonor,16]
 		This.OreVolumesRef:AddSetting[Bistot,16]
 		This.OreVolumesRef:AddSetting[Crokite,16]
 		This.OreVolumesRef:AddSetting[Spodumain,16]
@@ -335,14 +334,14 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Use Mining Drones, ${value}]
 	} 
 	
-	member:bool MineAlone()
+	member:int AvoidPlayerRange()
 	{
-		return ${This.MinerRef.FindSetting[Mine Alone, FALSE]}
+		return ${This.MinerRef.FindSetting[Avoid Player Range, 10000]}
 	}
 	
-	method SetMineAlone(bool value)
+	method SetAvoidPlayerRange(int value)
 	{	
-		This.MinerRef:AddSetting[Mine Alone, ${value}]
+		This.MinerRef:AddSetting[Avoid Player Range, ${value}]
 	}
 	
 	member:bool StandingDetection()
@@ -395,7 +394,7 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[MinimumDronesInSpace,3]
 		This.CombatRef:AddSetting[MinimumArmorPct, 35]
 		This.CombatRef:AddSetting[MinimumShieldPct, 25]
-		This.CombatRef:AddSetting[Shield Booster Activation,100]
+		This.CombatRef:AddSetting[AlwaysShieldBoost, FALSE]
 	}
 	
 	member:bool UseCombatDrones()
@@ -437,15 +436,15 @@ objectdef obj_Configuration_Combat
 	{
 		This.CombatRef:AddSetting[MinimumShieldPct, ${value}]
 	}
-	
-	member:int ShieldBAct()
+
+	member:bool AlwaysShieldBoost()
 	{
-		return ${This.CombatRef.FindSetting[Shield Booster Activation, 100]}
+		return ${This.CombatRef.FindSetting[AlwaysShieldBoost, FALSE]}
 	}
 	
-	method SetShieldBAct(int value)
+	method SetAlwaysShieldBoost(bool value)
 	{
-		This.CombatRef:AddSetting[Shield Booster Activation, ${value}]
+		This.CombatRef:AddSetting[AlwaysShieldBoost, ${value}]
 	}
 }
 

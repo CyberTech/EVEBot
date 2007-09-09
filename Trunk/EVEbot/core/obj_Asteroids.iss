@@ -1,20 +1,27 @@
 /*
 	Asteroids Class
+		Handles selection & prioritization of asteroid fields and asteroids, as well as targeting of same.
 	
-	Handles selection & prioritization of asteroid fields and asteroids, as well as targeting of same.
-	
+	AsteroidGroup Class
+		Handles information about a group of asteroids for weighting purposes
+		
 	-- CyberTech
-
+	
 BUGS:
 	we don't differentiate between ice fields and ore fields, need to match field type to laser type.
 			
 */
 
+objectdef obj_AsteroidGroup
+{
+}
+
 objectdef obj_Asteroids
 {
 	variable int AsteroidCategoryID = 25
 	
-	variable index:entity AstroidList
+	variable index:entity BestAsteroidList
+	variable index:entity AsteroidList
 	variable iterator OreTypeIterator
 
 	; Should only be referenced inside NextAsteroid()
@@ -158,6 +165,44 @@ objectdef obj_Asteroids
 		}
 	}
 	
+	method Find_Best_Asteroids()
+	{
+		Config.Miner.OreTypesRef:GetSettingIterator[This.OreTypeIterator]
+		
+		if ${This.OreTypeIterator:First(exists)}
+		{
+			do
+			{
+				;echo "DEBUG: obj_Asteroids: Checking for Ore Type ${This.OreTypeIterator.Key}"
+				This.AsteroidList:Clear
+				EVE:DoGetEntities[This.AsteroidList,CategoryID,${This.AsteroidCategoryID},${This.OreTypeIterator.Key}]
+
+				This.AsteroidList:GetIterator[AsteroidIterator]		
+				if ${AsteroidIterator:First(exists)}
+				do
+				{	
+					
+					This.BestAsteroidList:Insert[${AsteroidIterator.Value}]
+				}
+				while ${This.Asteroidlist:Next(exists)}
+				
+				This.BestAsteroidList:Insert[${This.AsteroidList
+				wait 0.5
+			}
+			while ( (${This.BestAsteroidList.Used} < 10) && (${This.OreTypeIterator:Next(exists)}) )
+			
+			if ${This.AsteroidList.Used}
+			{
+					;echo "DEBUG: obj_Asteroids:UpdateList - Found ${This.AsteroidList.Used} ${This.OreTypeIterator.Key} asteroids"
+			}
+		}
+		else
+		{
+			echo "WARNING: obj_Asteroids: Ore Type list is empty, please check config"
+		}
+		
+	}
+
 	function UpdateList()
 	{
 		Config.Miner.OreTypesRef:GetSettingIterator[This.OreTypeIterator]
@@ -167,16 +212,15 @@ objectdef obj_Asteroids
 			do
 			{
 				;echo "DEBUG: obj_Asteroids: Checking for Ore Type ${This.OreTypeIterator.Key}"
-				This.AstroidList:Clear
-				EVE:DoGetEntities[This.AstroidList,CategoryID,${This.AsteroidCategoryID},${This.OreTypeIterator.Key}]
+				This.AsteroidList:Clear
+				EVE:DoGetEntities[This.AsteroidList,CategoryID,${This.AsteroidCategoryID},${This.OreTypeIterator.Key}]
 				wait 0.5
 			}
-			while ${This.AstroidList.Used} == 0 && ${This.OreTypeIterator:Next(exists)}
+			while ${This.AsteroidList.Used} == 0 && ${This.OreTypeIterator:Next(exists)}
 			
-			if ${This.AstroidList.Used}
+			if ${This.AsteroidList.Used}
 			{
-					AsteroidList:GetSettingIterator[This.NextAsteroidIterator]
-					;echo "DEBUG: obj_Asteroids:UpdateList - Found ${This.AstroidList.Used} ${This.OreTypeIterator.Key} asteroids"
+					;echo "DEBUG: obj_Asteroids:UpdateList - Found ${This.AsteroidList.Used} ${This.OreTypeIterator.Key} asteroids"
 			}
 		}
 		else
@@ -199,7 +243,7 @@ objectdef obj_Asteroids
 			call This.UpdateList
 		}
 
-		This.AstroidList:GetIterator[AsteroidIterator]		
+		This.AsteroidList:GetIterator[AsteroidIterator]		
 		if ${AsteroidIterator:First(exists)}
 		{
 			do
@@ -249,11 +293,21 @@ objectdef obj_Asteroids
 					{
 						return FALSE
 					}
-					This.AstroidList:GetIterator[AsteroidIterator]
+					This.AsteroidList:GetIterator[AsteroidIterator]
 					if ${AsteroidIterator:First(exists)}
 					{
-						UI:UpdateConsole["obj_Asteroids: TargetNext: No Asteroids in range & All lasers idle: Approaching nearest"]
-						call Ship.Approach ${AsteroidIterator.Value} ${Ship.OptimalMiningRange}
+						/* TODO: CyberTech - Make this configurable in the future */
+						if ${AsteroidIterator.Value.Distance} < ${Math.Calc[${Ship.OptimalMiningRange} * 3]}
+						{
+							UI:UpdateConsole["obj_Asteroids: TargetNext: No Asteroids in range & All lasers idle: Approaching nearest"]
+							call Ship.Approach ${AsteroidIterator.Value} ${Ship.OptimalMiningRange}
+						}
+						else
+						{
+							/* The nearest asteroid is farfar away.  Let's just warp out. */
+							call This.MoveToField TRUE
+							return TRUE
+						}
 					}
 				}
 				return FALSE
