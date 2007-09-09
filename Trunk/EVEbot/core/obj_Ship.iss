@@ -56,7 +56,6 @@ objectdef obj_Ship
 			if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 			{
 				This:ValidateModuleTargets
-				FrameCounter:Set[0]
 					
 				;Ship Armor Repair
 				if ${This.Total_Armor_Reps} > 0
@@ -75,6 +74,21 @@ objectdef obj_Ship
 						}
 					}
 				}
+				
+				;Shield Boosters
+				;echo "Debug: Obj_Ship: Possible Hostiles: ${Social.PossibleHostiles}"
+				;echo "Debug: Obj_Ship: Shield Booster Activation: ${Config.Combat.ShieldBAct}"
+				if ${Social.PossibleHostiles} && \
+				${Me.Ship.ShieldPct} < ${Config.Combat.ShieldBAct}
+				{
+					Ship:Activate_Shield_Booster[]
+				}
+				else
+				{
+					Ship:Deactivate_Shield_Booster[]
+				}
+				
+				FrameCounter:Set[0]
 			}
 		}
 	}
@@ -211,7 +225,7 @@ objectdef obj_Ship
 					continue
 			}
 
-		}
+		} 
 		while ${Module:Next(exists)}
 
 		echo "Passive Modules:"
@@ -1026,6 +1040,28 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			if !${Module.Value.IsActive}
 			{
 				UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
+				Module.Value:Click
+			}
+		}	
+		while ${Module:Next(exists)}
+	}
+	
+	method Deactivate_Shield_Booster()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+		
+		variable iterator Module
+		
+		This.ModuleList_Regen_Shield:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			if ${Module.Value.IsActive}
+			{
+				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}"]
 				Module.Value:Click
 			}
 		}

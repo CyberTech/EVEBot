@@ -213,6 +213,14 @@
 							<OnSelect>
 								Script[EVEBot].VariableScope.Config.Common:SetBotMode[${This.SelectedItem.Value}]
 								Script[EVEBot].VariableScope.Config.Common:SetBotModeName[${This.SelectedItem.Text}]
+								if !${Config.Common.BotModeName.Equal[Salvager]}
+    						{
+    							UIElement[Salvager@EvEBotOptionsTab@EVEBot]:Hide
+    						}
+    						if ${Config.Common.BotModeName.Equal[Salvager]}
+    						{
+    							UIElement[Salvager@EvEBotOptionsTab@EVEBot]:Show
+    						}
 								;UIElement[Miner@EvEBotOptionsTab@EVEBot]:Hide
 								;UIElement[Hauler@EvEBotOptionsTab@EVEBot]:Hide
 								;UIElement[Freighter@EvEBotOptionsTab@EVEBot]:Hide
@@ -464,6 +472,14 @@
 						</listbox>    	
 					</Tab>
 					<Tab name='Combat'>
+						<Text name='MinArmorPctLabel'>
+							<X>55</X>
+							<Y>10</Y>
+							<Width>150</Width>
+							<Height>10</Height>
+							<Text>Minimum Armor: NULL</Text>
+							<AutoTooltip>Lowest Shield Percent allowed before docking</AutoTooltip>
+						</Text>
 						<slider name='MinArmorPct'>
 							<X>10</X>							
 							<Y>10</Y>						
@@ -472,19 +488,20 @@
 							<Range>100</Range>
 							<OnLoad>
 								This:SetValue[${Script[EVEBot].VariableScope.Config.Combat.MinimumArmorPct}]
+								UIElement[MinArmorPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Armor: ${This.Value}"]
 							</OnLoad>
 							<OnChange>
-								Script[EVEBot].VariableScope.Config.Combat:MinimumArmorPct[${Int[${This.Value}]}]
+								Script[EVEBot].VariableScope.Config.Combat:SetMinimumArmorPct[${Int[${This.Value}]}]
 								UIElement[MinArmorPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Armor: ${This.Value}"]
 							</OnChange>				
 						</slider>
-						<Text name='MinArmorPctLabel'>
+						<Text name='MinShieldPctLabel'>
 							<X>55</X>
-							<Y>10</Y>
+							<Y>30</Y>
 							<Width>150</Width>
 							<Height>10</Height>
-							<Text>Minimum Armor</Text>
-							<AutoTooltip>Lowest Shield Percent allowed before docking</AutoTooltip>
+							<Text>Minimum Shield: NULL</Text>
+							<AutoTooltip>Lowest Armor Pct Allowed before Running</AutoTooltip>
 						</Text>
 						<slider name='MinShieldPct'>
 							<X>10</X>							
@@ -494,23 +511,39 @@
 							<Range>100</Range>
 							<OnLoad>
 								This:SetValue[${Script[EVEBot].VariableScope.Config.Combat.MinimumShieldPct}]
+								UIElement[MinShieldPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Shield: ${This.Value}"]
 							</OnLoad>
 							<OnChange>
 								Script[EVEBot].VariableScope.Config.Combat:SetMinimumShieldPct[${Int[${This.Value}]}]
 								UIElement[MinShieldPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Shield: ${This.Value}"]
 							</OnChange>				
 						</slider>
-						<Text name='MinShieldPctLabel'>
+						<Text name='ShieldBactLabel'>
 							<X>55</X>
-							<Y>30</Y>
-							<Width>150</Width>
+							<Y>50</Y>
+							<Width>240</Width>
 							<Height>10</Height>
-							<Text>Minimum Shield</Text>
-							<AutoTooltip>Lowest Armor Pct Allowed before Running</AutoTooltip>
+							<Text>Shield Booster Activation: NULL</Text>
+							<AutoTooltip>When shield boosters will be activated.</AutoTooltip>
 						</Text>
-						<Textentry name='MinimumDronesInSpace'>
+						<slider name='ShieldBact'>
 							<X>10</X>							
 							<Y>50</Y>						
+							<Width>40</Width>						
+							<Height>18</Height>
+							<Range>100</Range>
+							<OnLoad>
+								This:SetValue[${Script[EVEBot].VariableScope.Config.Combat.ShieldBAct}]
+								UIElement[ShieldBactLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Shield Booster Activation: ${This.Value}"]
+							</OnLoad>
+							<OnChange>
+								Script[EVEBot].VariableScope.Config.Combat:SetShieldBAct[${Int[${This.Value}]}]
+								UIElement[ShieldBactLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Shield Booster Activation: ${This.Value}"]
+							</OnChange>				
+						</slider>
+						<Textentry name='MinimumDronesInSpace'>
+							<X>10</X>							
+							<Y>70</Y>						
 							<Width>32</Width>						
 							<Height>18</Height>
 							<MaxLength>2</MaxLength>
@@ -526,14 +559,14 @@
 						</Textentry>
 						<Text name='MinimumDronesInSpaceText'>
 							<X>44</X>
-							<Y>50</Y>
+							<Y>70</Y>
 							<Width>200</Width>
 							<Height>10</Height>
 							<Text>Minimum Drones in Space</Text>
 							<AutoTooltip>We will return to base when available drones falls below this number</AutoTooltip>
 						</Text>
 					</tab>
-    	
+					
 					<Tab name='Salvager'>
 					</tab>
 					

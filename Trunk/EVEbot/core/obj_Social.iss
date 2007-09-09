@@ -7,14 +7,16 @@ This contains all stuff dealing with other players around us. - Hessinger
 	Members
 		- (bool) PlayerDetection(): Returns TRUE if a Player is near us. (Notes: Ignores Gang Members)
 		- (bool) NPCDetection(): Returns TRUE if an NPC is near us.
-		- (bool) WithinDectection(int Distance): Returns True if there are pilots within the distance passed to the member.
-		- (bool) StandingDetection(int Standing): Returns True if there are pilots below the standing passed to the member.
+		- (bool) PilotsWithinDectection(int Distance): Returns True if there are pilots within the distance passed to the member. (Notes: Only works for players)
+		- (bool) StandingDetection(int Standing): Returns True if there are pilots below the standing passed to the member. (Notes: Only works for players)
+		- (bool) PossibleHostiles(): Returns True if there are ships targeting us.
 */
 
 objectdef obj_Social
 {
 	;Variables 
 	variable index:entity PilotIndex
+	variable index:entity EntityIndex
 	variable int FrameCounter
 	
 	method Initialize()
@@ -37,15 +39,16 @@ objectdef obj_Social
 			variable int IntervalInSeconds = 5
 			if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 			{
-				This:GetPlayers
+				This:GetLists
 				FrameCounter:Set[0]
 			}
 		}
 	}
 	
-	method GetPlayers()
+	method GetLists()
 	{
 		EVE:DoGetEntities[PilotIndex,CategoryID,6]
+		EVE:DoGetEntities[EntityIndex,CategoryID,11]
 	}
 	
 	member:bool PlayerDetection()
@@ -76,24 +79,24 @@ objectdef obj_Social
 	
 	member:bool NPCDetection()
 	{
-		if !${This.PilotIndex.Used}
+		if !${This.EntityIndex.Used}
 		{
 			return FALSE
 		}
 		
-		variable iterator PilotIterator
-		This.PilotIndex:GetIterator[PilotIterator]
+		variable iterator EntityIterator
+		This.EntityIndex:GetIterator[EntityIterator]
 		
-		if ${PilotIterator:First(exists)}
+		if ${EntityIterator:First(exists)}
 		{
 			do
 			{
-				if ${PilotIterator.Value.IsNPC}
+				if ${EntityIterator.Value.IsNPC}
 				{
 					return TRUE
 				}
 			}
-			while ${PilotIterator:Next(exists)}
+			while ${EntityIterator:Next(exists)}
 		}
 		
 		return FALSE
@@ -127,7 +130,7 @@ objectdef obj_Social
 		return FALSE
 	}
 	
-	member:bool WithinDectection(int Dist)
+	member:bool PilotsWithinDectection(int Dist)
 	{
 		if !${This.PilotIndex.Used}
 		{
@@ -153,7 +156,47 @@ objectdef obj_Social
 		
 		return FALSE
 	}
+	
+	member:bool PossibleHostiles()
+	{
+		if !${This.EntityIndex.Used} && !${This.PilotIndex.Used}
+		{
+			return FALSE
+		}
 		
+		variable iterator EntityIterator
+		This.EntityIndex:GetIterator[EntityIterator]
+		
+		if ${EntityIterator:First(exists)}
+		{
+			do
+			{
+				if ${EntityIterator.Value.IsTargetingMe}
+				{
+					return TRUE
+				}
+			}
+			while ${EntityIterator:Next(exists)}
+		}
+		
+		variable iterator PilotIterator
+		This.PilotIndex:GetIterator[PilotIterator]
+		
+		if ${PilotIterator:First(exists)}
+		{
+			do
+			{
+				if ${PilotIterator.Value.IsTargetingMe}
+				{
+					return TRUE
+				}
+			}
+			while ${PilotIterator:Next(exists)}
+		}
+		
+		return FALSE
+	}
+	
 }
 	
 	

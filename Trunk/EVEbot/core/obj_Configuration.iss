@@ -395,6 +395,7 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[MinimumDronesInSpace,3]
 		This.CombatRef:AddSetting[MinimumArmorPct, 35]
 		This.CombatRef:AddSetting[MinimumShieldPct, 25]
+		This.CombatRef:AddSetting[Shield Booster Activation,100]
 	}
 	
 	member:bool UseCombatDrones()
@@ -435,6 +436,16 @@ objectdef obj_Configuration_Combat
 	method SetMinimumShieldPct(int value)
 	{
 		This.CombatRef:AddSetting[MinimumShieldPct, ${value}]
+	}
+	
+	member:int ShieldBAct()
+	{
+		return ${This.CombatRef.FindSetting[Shield Booster Activation, 100]}
+	}
+	
+	method SetShieldBAct(int value)
+	{
+		This.CombatRef:AddSetting[Shield Booster Activation, ${value}]
 	}
 }
 

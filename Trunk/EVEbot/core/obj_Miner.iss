@@ -5,9 +5,6 @@
 	
 	-- CyberTech
 
-BUGS:
-	Shield Booster sometimes ends up disabled. This is a must-have, verify it every so often.
-
 */
 
 objectdef obj_Miner
@@ -177,7 +174,6 @@ objectdef obj_Miner
 	; Enable defenses, launch drones	
 	function Prepare_Environment()
 	{
-		Ship:Activate_Shield_Booster[]
 		Ship.Drones:LaunchAll[]
 		call Ship.OpenCargo
 	}
