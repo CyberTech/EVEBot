@@ -1,66 +1,66 @@
 Last Updated: $Id$
 
 --------------------------------------------------------
-Who				Priority
+Who       Priority
 --------------------------------------------------------
-CyberTech	High	UI: Checkbox - no miner movement
-CyberTech	High	Tech 2 crystal prioritization
-CyberTech	High	Check range to possible target from all current targets instead of just first
-CyberTech	High	obj_Target
-CyberTech	High	Hauler Script Completion
-CyberTech	High	New asteroid selection algorithm
-CyberTech	Med		Interbot Communication Support
-CyberTech	Med		200km bookmark usage - warp to 200km, scan, warp to roid, mine, warp back to 200km. Requires new roid alg.
-CyberTech	Low		Cuttoff for slowboating time/distance. Do not use this if in 200km mode.
-Hessinger Low		Fighter (PVE/Ratting) Bot
-CyberTech	Low		Improved Mining Drone Support
-          Low		Swapping Guns
-          Low		Reconnection Script
-          Low		Belt weighting based on rat contents. Requires hardcoded list of rat weights for rats which are not default weight.
-Hessinger Low		UI: Button: Return to station immediately & idle
-Hessinger Low 	UI: Button: Return to station & idle after hold is full
-          Lowest	PVP Combat
+CyberTech High  UI: Checkbox - no miner movement
+CyberTech High  Tech 2 crystal prioritization
+CyberTech High  Check range to possible target from all current targets instead of just first
+CyberTech High  obj_Target
+CyberTech High  Hauler Script Completion
+CyberTech High  New asteroid selection algorithm
+CyberTech Med   Interbot Communication Support
+CyberTech Med   200km bookmark usage - warp to 200km, scan, warp to roid, mine, warp back to 200km. Requires new roid alg.
+CyberTech Low   Cuttoff for slowboating time/distance. Do not use this if in 200km mode.
+Hessinger Low   Fighter (PVE/Ratting) Bot
+CyberTech Low   Improved Mining Drone Support
+          Low   Swapping Guns
+          Low   Reconnection Script
+          Low   Belt weighting based on rat contents. Requires hardcoded list of rat weights for rats which are not default weight.
+Hessinger Low   UI: Button: Return to station immediately & idle
+Hessinger Low   UI: Button: Return to station & idle after hold is full
+          Lowest  PVP Combat
 
 --------------------------------------------------------
 In Testing
 --------------------------------------------------------
-CyberTech	Done	Jetcan mining Option
-CyberTech/Hessinger	Med		Red/Neutral Detection (Dunno what other options to add cyber, look @ social.iss and I added options to the UI and added the if statements to miner script!)
-Hessinger Done	Activate shield resists only when hostiles are present
-Hessinger	Done	% Shield Activation for booster
+CyberTech Done  Jetcan mining Option
+CyberTech/Hessinger Med   Red/Neutral Detection (Dunno what other options to add cyber, look @ social.iss and I added options to the UI and added the if statements to miner script!)
+Hessinger Done  Activate shield resists only when hostiles are present
+Hessinger Done  % Shield Activation for booster
 
 
 --------------------------------------------------------
 Need ISXEVE Changes (Amadeus):
 --------------------------------------------------------
- 			Low		Repairing (In-Station) - Repairing pops up a confirm dialog, need isx support.
-Hessinger	Done	Restock Ship With Drones - Waiting for Item:MoveTo[DroneBay]
-Hessinger	Done  Skill/Queueing (w/ UI) Support - Need IsTraining to be fixed? (Need to speak to Amadeus)
+      Low   Repairing (In-Station) - Repairing pops up a confirm dialog, need isx support.
+Hessinger Done  Restock Ship With Drones - Waiting for Item:MoveTo[DroneBay]
+Hessinger Done  Skill/Queueing (w/ UI) Support - Need IsTraining to be fixed? (Need to speak to Amadeus)
 --------------------------------------------------------
 
 Statistics:
- 	a counter showing how many times the can was emptied.
- 		Note: we may not be near the can when it's emptied, so may not be able to tell in some/most cases
-	a log showing who was within 2km of the can when it was emptied
-		Note: we may not be near the can when it's emptied, so may not be able to tell in some/most cases
-	a log of anyone turning red nearby
+  a counter showing how many times the can was emptied.
+    Note: we may not be near the can when it's emptied, so may not be able to tell in some/most cases
+  a log showing who was within 2km of the can when it was emptied
+    Note: we may not be near the can when it's emptied, so may not be able to tell in some/most cases
+  a log of anyone turning red nearby
   
 CyberTech Notes:  
-	New Asteroid selection algorithm
-		Change roid selection method, do 1 GetEntity call for all nearby astroids then iterate and exclude manually.
-		target 10 of the best asteroids in the field
-		using fromid, check for all asteroids within 25k of each of the 10
-		using the new weighting from the config file, add up the total weight count of each of the 10 + surround asteroids
-		head for the highest concentration area.
+  New Asteroid selection algorithm
+    Change roid selection method, do 1 GetEntity call for all nearby astroids then iterate and exclude manually.
+    target 10 of the best asteroids in the field
+    using fromid, check for all asteroids within 25k of each of the 10
+    using the new weighting from the config file, add up the total weight count of each of the 10 + surround asteroids
+    head for the highest concentration area.
 
-	miner page: 
-		Restrict Ore To: (dropdown), 
-		Restrict Belt to: (dropdown), 
-		"Avoid Players" (checkbox)
-		
-	combat page, i need:
-		 Safespot bookmark prefix (textfield)
-		 belt bookmark prefix (textfield)
-		 200km bookmark prefix (textfield)
-		 Run on Red/Neutral Standing Presence (Checkbox)
-		 Percent shield at which to activate shield booster
+  miner page: 
+    Restrict Ore To: (dropdown), 
+    Restrict Belt to: (dropdown), 
+    "Avoid Players" (checkbox)
+    
+  combat page, i need:
+     Safespot bookmark prefix (textfield)
+     belt bookmark prefix (textfield)
+     200km bookmark prefix (textfield)
+     Run on Red/Neutral Standing Presence (Checkbox)
+     Percent shield at which to activate shield booster
