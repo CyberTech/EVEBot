@@ -34,13 +34,13 @@ objectdef obj_Bookmarks
 	{
 		if ${This.StoredLocationExists}
 		{
-			EVE.Bookmark[${This.StoredLocation}]:Remove
+			EVE.Bookmark["${This.StoredLocation}"]:Remove
 		}
 	}
 	
 	member StoredLocationExists()
 	{
-		return ${EVE.Bookmark[${This.StoredLocation}](exists)}
+		return ${EVE.Bookmark["${This.StoredLocation}"](exists)}
 	}
 	
 	method CreateEntityBookMark(int32 ID, bool Temporary=FALSE, string Label="Default")
@@ -60,7 +60,7 @@ objectdef obj_Bookmarks
 		}
 		;UI:UpdateConsole["CreateBookMark: Label - ${Label}"]
 		
-		EVE:CreateBookmark[${Label}]
+		EVE:CreateBookmark["${Label}"]
 		
 	}
 
@@ -72,7 +72,7 @@ objectdef obj_Bookmarks
 			Label:Set["${Me.Name} ${Math.Rand[500000]:Inc[100000]}]
 		}
 		
-		EVE:CreateBookmark[${Label}]
+		EVE:CreateBookmark["${Label}"]
 		if ${Temporary}
 		{
 			;UI:UpdateConsole["CreateBookMark: Label - ${Label} (Temporary)"]
