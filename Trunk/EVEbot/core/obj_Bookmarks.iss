@@ -40,7 +40,11 @@ objectdef obj_Bookmarks
 	
 	member StoredLocationExists()
 	{
-		return ${EVE.Bookmark["${This.StoredLocation}"](exists)}
+		if ${This.StoredLocation.Length} > 0
+		{
+			return ${EVE.Bookmark["${This.StoredLocation}"](exists)}
+		}
+		return FALSE
 	}
 	
 	method CreateEntityBookMark(int32 ID, bool Temporary=FALSE, string Label="Default")
