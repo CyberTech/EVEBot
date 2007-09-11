@@ -68,7 +68,7 @@ objectdef obj_Social
 			{
 				if ${PilotIterator.Value.IsPC} && \
 				 	${Me.ShipID} != ${PilotIterator.Value} && \
-				 	${PilotIterator.Value.ToEntity.Distance} < ${Config.Miner.AvoidPlayerRange} && \
+				 	${PilotIterator.Value.Distance} < ${Config.Miner.AvoidPlayerRange} && \
 				 	!${PilotIterator.Value.Owner.ToGangMember}
 				{
 					return TRUE
