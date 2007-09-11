@@ -162,7 +162,7 @@ objectdef obj_Miner
 				}
 				
 				UI:UpdateConsole["Continuing"]
-				EVEBot.ReturnToBase:Set[FALSE]
+				EVEBot.ReturnToStation:Set[FALSE]
 				This.CombatAbort:Set[FALSE]
 				Return
 			}
