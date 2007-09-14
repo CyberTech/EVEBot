@@ -355,7 +355,6 @@
 							<Range>100000</Range>
 							<OnLoad>
 								This:SetValue[${Script[EVEBot].VariableScope.Config.Miner.AvoidPlayerRange}]
-								UIElement[AvoidPlayerRangeLabel@Miner@EvEBotOptionsTab@EVEBot]:SetText["Min. Distance to Players: ${Script[EVEBot].VariableScope.EVEBot.MetersToKM_Str[${This.Value}]}"]
 							</OnLoad>
 							<OnChange>
 								Script[EVEBot].VariableScope.Config.Miner:SetAvoidPlayerRange[${Int[${This.Value}]}]
@@ -369,6 +368,9 @@
 							<Height>10</Height>
 							<Text>Min. Distance to Players: 0km</Text>
 							<AutoTooltip>Minimum distance we will keep other players at</AutoTooltip>
+							<OnLoad>
+								This:SetText["Min. Distance to Players: ${Script[EVEBot].VariableScope.EVEBot.MetersToKM_Str[${UIElement[AvoidPlayerRange@Miner@EvEBotOptionsTab@EVEBot].Value}]}"]
+							</OnLoad>
 						</Text>
 						<checkbox name='cbStandingDetection'>
 							<X>10</X>
@@ -498,8 +500,11 @@
 							<Y>10</Y>
 							<Width>150</Width>
 							<Height>10</Height>
-							<Text>Minimum Armor: NULL</Text>
+							<Text>Minimum Armor: 0</Text>
 							<AutoTooltip>Lowest Shield Percent allowed before docking</AutoTooltip>
+							<OnLoad>
+								This:SetText["Minimum Armor: ${UIElement[MinArmorPct@Combat@EvEBotOptionsTab@EVEBot].Value}"]
+							</OnLoad>
 						</Text>
 						<slider name='MinShieldPct'>
 							<X>10</X>							
@@ -521,8 +526,11 @@
 							<Y>30</Y>
 							<Width>150</Width>
 							<Height>10</Height>
-							<Text>Minimum Shield: NULL</Text>
+							<Text>Minimum Shield: 0</Text>
 							<AutoTooltip>Lowest Armor Pct Allowed before Running</AutoTooltip>
+							<OnLoad>
+								This:SetText["Minimum Shield: ${UIElement[MinShieldPct@Combat@EvEBotOptionsTab@EVEBot].Value}"]
+							</OnLoad>
 						</Text>
 						<checkbox name='cbAlwaysShieldBoost'>
 							<X>10</X>
