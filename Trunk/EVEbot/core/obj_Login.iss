@@ -8,8 +8,11 @@ function main()
 	if !${ISXEVE(exists)}
 		call LoadISXEVE
 
-	while ${Login.Serverstatus.NotEqual[LIVE]}
-		wait 3000
+	while ${Login.ServerStatus.NotEqual[LIVE]}
+	{
+		echo Server not online, waiting...
+		wait 6000
+	}
 
 	Login:SetUsername[${EveOnline_UserName}]
 	wait 10
@@ -28,6 +31,10 @@ function main()
 		wait 50
 
 	run evebot/evebot
+
+	wait 100
+	Script[EVEBot]:Resume
+	Script[EVEBot].VariableScope.play:Set[TRUE]
 }
 
 function LoadISXEVE()
