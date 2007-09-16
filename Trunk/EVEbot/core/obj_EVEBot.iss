@@ -9,6 +9,8 @@
 
 objectdef obj_EVEBot
 {
+	;variable obj_Login AutoLogin
+
 	variable bool ReturnToStation = FALSE
 	variable bool Paused = FALSE
 	variable int FrameCounter
@@ -26,6 +28,11 @@ objectdef obj_EVEBot
 
 	method Pulse()
 	{
+		if !${Me.Name(exists)}
+		{
+			return
+		}
+		
 		FrameCounter:Inc
 		variable int IntervalInSeconds = 4
 		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
@@ -44,6 +51,16 @@ objectdef obj_EVEBot
 		}
 	}
 		
+	method Pause()
+	{
+		This.Paused:Set[TRUE]
+	}
+	
+	method Resume()
+	{
+		This.Paused:Set[FALSE]
+	}
+	
 	member:int GameHour()
 	{
 		variable string Hour = ${EVE.Time[short].Token[1, :]}

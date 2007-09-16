@@ -32,6 +32,11 @@ objectdef obj_Social
 
 	method Pulse()
 	{
+		if ${EVEBot.Paused}
+		{
+			return
+		}
+
 		FrameCounter:Inc
 
 		/* TODO : CyberTech - This is on-demand stuff. don't store it, get it as needed. */

@@ -1,73 +1,134 @@
+/*
+	Login class
+	
+	Object to contain autologin code
+	
+	-- CyberTech
+	
+	Referenced code from Altered during object creation.
 
+	TODO: Solve invalid config loaded at fresh startup b/c me.name is null during obj_config.
 
-function main()
+*/
+
+objectdef obj_Login
 {
-	declare EveOnline_UserName	string	script	"username"
-	declare EveOnline_PassWord	string	script	"password"
-
-	if !${ISXEVE(exists)}
-		call LoadISXEVE
-
-	while ${Login.ServerStatus.NotEqual[LIVE]}
+	variable int FrameCounter
+	variable int LoginTimer = 0
+	variable string CurrentState
+	
+	method Initialize()
 	{
-		echo Server not online, waiting...
-		wait 6000
+		Event[OnFrame]:AttachAtom[This:Pulse]
+		UI:UpdateConsole["obj_Login: Initialized"]
 	}
 
-	Login:SetUsername[${EveOnline_UserName}]
-	wait 10
-	Login:SetPassword[${EveOnline_PassWord}]
-	wait 10
-	Login:Connect
-	wait 10
+	method Shutdown()
+	{
+		Event[OnFrame]:DetachAtom[This:Pulse]
+	}
+
+	method Pulse()
+	{
+		FrameCounter:Inc
+		
+		variable int IntervalInSeconds = 4
+		if ${This.LoginTimer} > 0
+		{
+			IntervalInSeconds:Set[${This.LoginTimer}]
+		}
+		
+		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
+		{
+			if ${Login(exists)}
+			{
+				EVEBot:Pause
+				if ${Config.Common.AutoLoginCharID} > 0
+				{
+					echo ${This.CurrentState}
+					call This.DoLogin
+				}
+			}
+			else
+			{
+				if ${Me.Name(exists)}
+				{
+					Config.Common:SetAutoLoginCharID[${Me.CharID}]
+				}
+			}
+			
+			FrameCounter:Set[0]
+		}
+	}
 	
-	while !${CharSelect(exists)}
-		wait 50
-	
-	if ${CharSelect(exists)}
-		CharSelect:ClickCharacter
+	function DoLogin()
+	{
+		if !${Login(exists)}
+		{
+			return
+		}
+		
+		EVE:CloseAllMessageBoxes
 
-	while !${Me.Name(exists)}
-		wait 50
-
-	run evebot/evebot
-
-	wait 100
-	Script[EVEBot]:Resume
-	Script[EVEBot].VariableScope.play:Set[TRUE]
-}
-
-function LoadISXEVE()
-{
-	  variable int Timer = 0
-
-	  if (${ISXEVE(exists)})
-	    return
-	    
-	  echo off  
-	  do
-	  {   
-	  	wait 15
-	    if (${ISXEVE.IsLoading})
-	      return
-	  	if (${ISXEVE.IsReady})
-	  	  return
-	  	
-	  	extension isxeve
-	    Timer:Set[0]
-	    
-	    if (${ISXEVE.IsLoading})
-	      return
-	    
-	    do
-	    {
-	       if (${ISXEVE.IsLoading})
-	           return
-	           
-	       Timer:Inc
-	       waitframe
-	    }
-	    while (!${ISXEVE(exists)} && ${Timer} < 100)
-	  }
-	  while (!${ISXEVE(exists)})
+		switch ${This.CurrentState}
+		{
+			case START
+			case SERVERDOWN
+				if ${Login.Serverstatus.NotEqual[LIVE]}
+				{
+					This.CurrentState:Set["SERVERDOWN"]
+					This.LoginTimer:Set[150]
+					return
+				}
+				else
+				{
+					This.CurrentState:Set["SERVERUP"]
+				}
+				break
+			case SERVERUP
+				Login:SetUsername[${Config.Common.LoginName}]
+				This.CurrentState:Set["LOGIN_ENTERED"]
+				This.LoginTimer:Set[2]
+				return
+				break
+			case LOGIN_ENTERED
+				Login:SetPassword[${Config.Common.LoginPassword}]
+				This.CurrentState:Set["PASS_ENTERED"]
+				This.LoginTimer:Set[2]
+				return
+				break
+			case PASS_ENTERED
+				Login:Connect
+				This.CurrentState:Set["CONNECTING"]
+				This.LoginTimer:Set[60]
+				return
+				break
+			case CONNECTING
+				if (!${Login.IsConnecting} || !${CharSelect(exists)})
+				{
+					This.CurrentState:Set["START"]
+					This.LoginTimer:Set[60]
+					return
+				}
+				if ${CharSelect(exists)}
+				{
+					CharSelect:ClickCharacter[${Config.Common.AutoLoginCharID}]
+					This.LoginTimer:Set[60]
+					return
+				}
+				if !${Me.Name(exists)}
+				{
+					This.LoginTimer:Set[10]
+					return
+				}
+				This.CurrentState:Set["INSPACE"]
+				This.LoginTimer:Set[300]
+				return
+				break
+			case INSPACE
+				EVEBot:Resume
+				return
+				break
+		}
+	}
 }

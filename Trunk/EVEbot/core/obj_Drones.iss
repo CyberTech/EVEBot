@@ -30,6 +30,11 @@ objectdef obj_Drones
 
 	method Pulse()
 	{
+		if ${EVEBot.Paused}
+		{
+			return
+		}
+
 		if ${This.WaitingForDrones}
 		{
 			FrameCounterDrones:Inc
@@ -105,7 +110,7 @@ objectdef obj_Drones
 	
 	function StationToBay()
 	{
-		variable int DroneQuantitiyToMove = (${Config.Common.DronesInBay} - ${This.DronesInBay})
+		variable int DroneQuantitiyToMove = ${Math.Calc[${Config.Common.DronesInBay} - ${This.DronesInBay}]}
 		if ${This.DronesInStation} == 0 || \
 			!${Me.Ship(exists)}
 		{

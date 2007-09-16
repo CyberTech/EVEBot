@@ -90,6 +90,10 @@ objectdef obj_Configuration_Common
 		This.CommonRef:AddSetting[Home Station,1]
 		This.CommonRef:AddSetting[Use Development Build,FALSE]
 		This.CommonRef:AddSetting[Drones In Bay,0]
+		This.CommonRef:AddSetting[Login Name, ""]
+		This.CommonRef:AddSetting[Login Password, ""]
+		This.CommonRef:AddSetting[AutoLogin, TRUE]
+		This.CommonRef:AddSetting[AutoLoginCharID, 0]
 	}
 
 	member:int BotMode()
@@ -127,9 +131,9 @@ objectdef obj_Configuration_Common
 		return ${This.CommonRef.FindSetting[Home Station, NOTSET]}
 	}
 
-	method SetHomeStation(string StationName)
+	method SetHomeStation(string value)
 	{
-		This.CommonRef:AddSetting[Home Station,${StationName}]
+		This.CommonRef:AddSetting[Home Station,${value}]
 	}
 
 	member:bool UseDevelopmentBuild()
@@ -137,11 +141,52 @@ objectdef obj_Configuration_Common
 		return ${This.CommonRef.FindSetting[Use Development Build, FALSE]}
 	}
 
-	method SetUseDevelopmentBuild(bool setting)
+	method SetUseDevelopmentBuild(bool value)
 	{
-		This.CommonRef:AddSetting[Home Station,${setting}]
+		This.CommonRef:AddSetting[Home Station,${value}]
 	}
 	
+	/* TODO - Encrypt this as much as lavishcript will allow */
+	member:string LoginName()
+	{
+		return ${This.CommonRef.FindSetting[Login Name, ""]}
+	}
+
+	method SetLoginName(string value)
+	{
+		This.CommonRef:AddSetting[Login Name, ${value}]
+	}
+
+	member:string LoginPassword()
+	{
+		return ${This.CommonRef.FindSetting[Login Password, ""]}
+	}
+
+	method SetLoginPassword(string value)
+	{
+		This.CommonRef:AddSetting[Login Password,${value}]
+	}
+
+	member:bool AutoLogin()
+	{
+		return ${This.CommonRef.FindSetting[AutoLogin, TRUE]}
+	}
+
+	method SetAutoLogin(bool value)
+	{
+		This.CommonRef:AddSetting[AutoLogin,${value}]
+	}
+
+	member:int64 AutoLoginCharID()
+	{
+		return ${This.CommonRef.FindSetting[AutoLoginCharID, 0]}
+	}
+
+	method SetAutoLoginCharID(int64 value)
+	{
+		This.CommonRef:AddSetting[AutoLoginCharID,${value}]
+	}
+
 	member:int OurAbortCount()
 	{
 		return ${AbortCount}
@@ -165,7 +210,11 @@ objectdef obj_Configuration_Miner
 			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
 		}
-		UI:UpdateConsole["obj_Configuration_Miner: Initialized"]
+		if !${BaseConfig.BaseRef.FindSet[${This.SetName}].FindSet[Ice_Types](exists)}
+		{
+			UI:UpdateConsole["obj_Configuration_Miner: Initialized ICE Types"]
+			This:Set_Default_Values_Ice[]
+		}
 	}
 
 	member:settingsetref MinerRef()
@@ -178,6 +227,11 @@ objectdef obj_Configuration_Miner
 		return ${BaseConfig.BaseRef.FindSet[${This.SetName}].FindSet[Ore_Types]}
 	}
 	
+	member:settingsetref IceTypesRef()
+	{
+		return ${BaseConfig.BaseRef.FindSet[${This.SetName}].FindSet[Ice_Types]}
+	}
+
 	member:settingsetref OreVolumesRef()
 	{
 		return ${BaseConfig.BaseRef.FindSet[${This.SetName}].FindSet[Ore_Volumes]}
@@ -200,6 +254,7 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Avoid Player Range, 10000]
 		This.MinerRef:AddSetting[Standing Detection, FALSE]
 		This.MinerRef:AddSetting[Lowest Standing, 0]
+		This.MinerRef:AddSetting[Ice Mining, 0]
 
 		This.OreTypesRef:AddSetting[Vitreous Mercoxit, 1]
 		This.OreTypesRef:AddSetting[Magma Mercoxit, 1]
@@ -249,6 +304,8 @@ objectdef obj_Configuration_Miner
 		This.OreTypesRef:AddSetting[Dense Veldspar, 1]
 		This.OreTypesRef:AddSetting[Concentrated Veldspar, 1]
 		This.OreTypesRef:AddSetting[Veldspar, 1]
+
+		This:Set_Default_Values_Ice[]
 		
 		This.OreVolumesRef:AddSetting[Mercoxit,40]
 		This.OreVolumesRef:AddSetting[Arkonor,16]
@@ -268,6 +325,24 @@ objectdef obj_Configuration_Miner
 		This.OreVolumesRef:AddSetting[Veldspar,0.1]
 	}
 
+	method Set_Default_Values_Ice()
+	{
+		This.MinerRef:AddSet[ICE_Types]
+
+		This.IceTypesRef:AddSetting[Dark Glitter, 1]
+		This.IceTypesRef:AddSetting[Gelidus, 1]
+		This.IceTypesRef:AddSetting[Glare Crust, 1]
+		This.IceTypesRef:AddSetting[Krystallos, 1]
+		This.IceTypesRef:AddSetting[Clear Icicle, 1]
+		This.IceTypesRef:AddSetting[Smooth Glacial Mass, 1]
+		This.IceTypesRef:AddSetting[Glacial Mass, 1]
+		This.IceTypesRef:AddSetting[Pristine White Glaze, 1]
+		This.IceTypesRef:AddSetting[White Glaze, 1]
+		This.IceTypesRef:AddSetting[Thick Blue Ice, 1]
+		This.IceTypesRef:AddSetting[Enriched Clear Icicle, 1]
+		This.IceTypesRef:AddSetting[Blue Ice, 1]
+	}
+	
 	; TODO - members/methods for these - CyberTech
 	
 	;		This.MinerRef:AddSetting[Restrict To Belt, NO]
@@ -364,6 +439,15 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Lowest Standing, ${value}]
 	}
 	
+	member:bool IceMining()
+	{
+		return ${This.MinerRef.FindSetting[Ice Mining, 0]}
+	}
+	
+	method SetStandingDetection(bool value)
+	{
+		This.MinerRef:AddSetting[Ice Mining, ${value}]
+	}
 	
 }
 

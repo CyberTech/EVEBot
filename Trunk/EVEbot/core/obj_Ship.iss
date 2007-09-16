@@ -48,6 +48,10 @@ objectdef obj_Ship
 
 	method Pulse()
 	{
+		if ${EVEBot.Paused}
+		{
+			return
+		}
 		FrameCounter:Inc
 
 		if (${Me.InStation(exists)} && !${Me.InStation})
@@ -727,10 +731,11 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 					${OriginalDistance} == ${Entity[${EntityID}].Distance}
 				{
 					echo "DEBUG: obj_Ship:Approach: We may be stuck or colliding"
+					EVE:Execute[CmdStopShip]
 					return
 				}
 			}
-			while ${Entity[${EntityID}].Distance} > ${Math.Calc[${Distance} + (${Distance}*0.05)]}
+			while ${Entity[${EntityID}].Distance} > ${Math.Calc[${Distance} * 1.05]}
 			EVE:Execute[CmdStopShip]
 			This:Deactivate_AfterBurner[]
 		}

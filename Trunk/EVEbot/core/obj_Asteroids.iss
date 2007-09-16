@@ -40,8 +40,7 @@ objectdef obj_Asteroids
 	{	
 		UI:UpdateConsole["obj_Asteroids: Initialized"]
 	}
-	
-	
+		
 	; Checks the belt name against the empty belt list.
 	member IsBeltEmpty(string BeltName)
 	{
@@ -125,12 +124,22 @@ objectdef obj_Asteroids
 		variable index:entity Belts
 		variable iterator BeltIterator
 		variable int TryCount
-	
+		variable string beltsubstring
+		
+		if ${Config.Miner.IceMining}
+		{
+			beltsubstring:Set["ICE FIELD"]
+		}
+		else
+		{
+			beltsubstring:Set["ASTEROID BELT"]
+		}
+		
 		EVE:DoGetEntities[Belts,GroupID, GROUPID_ASTEROID_BELT]
 		Belts:GetIterator[BeltIterator]
 		if ${BeltIterator:First(exists)}
 		{
-			if ${ForceMove} || ${BeltIterator.Value.Distance} > 45000
+			if ${ForceMove} || ${BeltIterator.Value.Distance} > 55000
 			{
 				; We're not at a field already, so find one
 				do
@@ -144,7 +153,7 @@ objectdef obj_Asteroids
 						return
 					}
 				}
-				while ( !${Belts[${curBelt}].Name.Find[ASTEROID BELT](exists)} || \
+				while ( !${Belts[${curBelt}].Name.Find[${beltsubstring}](exists)} || \
 						${This.IsBeltEmpty[${Belts[${curBelt}].Name}]} )
 				
 				UI:UpdateConsole["Warping to Asteroid Belt: ${Belts[${curBelt}].Name}"]
@@ -159,8 +168,8 @@ objectdef obj_Asteroids
 		}
 		else
 		{
-			echo "ERROR: oMining:Mine --> No asteroid belts in the area..."
-			play:Set[FALSE]
+			UI:UpdateConsole["ERROR: oMining:Mine --> No asteroid belts in the area..."]
+			EVEBot.ReturnToStation:Set[TRUE]
 			return
 		}
 	}
@@ -205,7 +214,14 @@ objectdef obj_Asteroids
 
 	function UpdateList()
 	{
-		Config.Miner.OreTypesRef:GetSettingIterator[This.OreTypeIterator]
+		if ${Config.Miner.IceMining}
+		{
+			Config.Miner.IceTypesRef:GetSettingIterator[This.OreTypeIterator]
+		}
+		else
+		{
+			Config.Miner.OreTypesRef:GetSettingIterator[This.OreTypeIterator]
+		}
 		
 		if ${This.OreTypeIterator:First(exists)}
 		{

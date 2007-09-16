@@ -28,7 +28,7 @@ In Testing
 --------------------------------------------------------
 Need ISXEVE Changes (Amadeus):
 --------------------------------------------------------
-Hessinger				Low		Repairing (In-Station) - Repairing pops up a confirm dialog, need isx support.
+Hessinger			Low		Repairing (In-Station) - Repairing pops up a confirm dialog, need isx support.
 Hessinger			Done	Restock Ship With Drones - Waiting for Item:MoveTo[DroneBay]
 Hessinger			Done	Skill/Queueing (w/ UI) Support - Need IsTraining to be fixed? (Need to speak to Amadeus)
 CyberTech/Hessinger Done	Red/Neutral Detection Needs fixes from amadeus

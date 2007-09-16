@@ -20,14 +20,12 @@
 #include core/obj_Bookmarks.iss
 #include core/obj_Jetcan.iss
 #include core/obj_Social.iss
+#include core/obj_Login.iss
 
 /* Behavior/Mode Includes */
 #include core/obj_Hauler.iss
 #include core/obj_Miner.iss
 #include core/obj_Fighter.iss
-
-/* Declare all script or global variables here */
-variable bool play = FALSE
 
 /* Script-Defined Support Objects */
 variable obj_EVEBotUI UI
@@ -72,6 +70,10 @@ function main()
 	UI:UpdateConsole["-=Paused: Press Run-="]
 	Script:Pause
 	
+	while ${EVEBot.Paused}
+	{
+		wait 10
+	}
 	
 	variable iterator BotModule
 	BotModules:GetIterator[BotModule]
@@ -81,12 +83,12 @@ function main()
 		if ${BotModule:First(exists)}
 		do
 		{
-			call ${BotModule.Value}.ProcessState
-			wait 10
-			while !${play}
+			while ${EVEBot.Paused}
 			{
 				wait 10
 			}
+			call ${BotModule.Value}.ProcessState
+			wait 10
 		}
 		while ${BotModule:Next(exists)}
 		waitframe

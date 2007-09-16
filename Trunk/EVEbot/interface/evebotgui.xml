@@ -17,15 +17,15 @@
 				<commandbutton name='Run EVEBot' template='EVESkin.Window.TitleBar.RunButton'>
 					<OnLeftClick>
 						Script[EVEBot]:Resume
-						Script[EVEBot].VariableScope.play:Set[TRUE]
-						Echo EVEBot: Resume
+						Script[EVEBot].VariableScope.EVEBot:Resume
+						Echo EVEBot: Resumed
 					</OnLeftClick>
 				</commandbutton>
 				<commandbutton name='Pause EVEBot' template='EVESkin.Window.TitleBar.PauseButton'>
 					<OnLeftClick>
 						EVE:Execute[CmdStopShip]
 						Script[EVEBot]:Pause
-						Script[EVEBot].VariableScope.play:Set[FALSE]
+						Script[EVEBot].VariableScope.EVEBot:Pause
 						Echo EVEBot: Paused
 					</OnLeftClick>
 				</commandbutton>
@@ -213,20 +213,6 @@
 							<OnSelect>
 								Script[EVEBot].VariableScope.Config.Common:SetBotMode[${This.SelectedItem.Value}]
 								Script[EVEBot].VariableScope.Config.Common:SetBotModeName[${This.SelectedItem.Text}]
-								if !${Config.Common.BotModeName.Equal[Salvager]}
-    						{
-    							UIElement[Salvager@EvEBotOptionsTab@EVEBot]:Hide
-    						}
-    						if ${Config.Common.BotModeName.Equal[Salvager]}
-    						{
-    							UIElement[Salvager@EvEBotOptionsTab@EVEBot]:Show
-    						}
-								;UIElement[Miner@EvEBotOptionsTab@EVEBot]:Hide
-								;UIElement[Hauler@EvEBotOptionsTab@EVEBot]:Hide
-								;UIElement[Freighter@EvEBotOptionsTab@EVEBot]:Hide
-								;UIElement[Salvager@EvEBotOptionsTab@EVEBot]:Hide
-								
-								;UIElement[${This.SelectedItem.Text}@EvEBotOptionsTab@EVEBot]:Show
 							</OnSelect>							
 							<OnLoad>
 								This:SetSelection[${Script[EVEBot].VariableScope.Config.Common.BotMode}]
@@ -256,6 +242,72 @@
 							<Text>Minimum Drones in Bay</Text>
 							<AutoTooltip>This will set the amount of drones you want in your drone bay.</AutoTooltip>
 						</Text>					
+						<checkbox Name='cbAutoLogin'>
+							<X>10</X>
+							<Y>50</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Auto Login</Text>
+							<AutoTooltip>Auto Login when at Login window</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Common.AutoLogin}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+									Script[EVEBot].VariableScope.Config.Common:SetAutoLogin[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<Text name='LoginNameText'>
+							<X>10</X>
+							<Y>70</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<Text>EVE Login</Text>
+							<AutoTooltip>The EVE Login name for ${Me.Name}</AutoTooltip>
+						</Text>					
+						<Textentry name='LoginName'>
+							<X>120</X>
+							<Y>70</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<MaxLength>25</MaxLength>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Common.LoginName}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Common:SetLoginName[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+						<Text name='LoginPasswordText'>
+							<X>10</X>
+							<Y>90</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<Text>EVE Password</Text>
+							<AutoTooltip>The EVE Login Password for ${Me.Name}</AutoTooltip>
+						</Text>					
+						<Textentry name='LoginPassword'>
+							<X>120</X>
+							<Y>90</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<MaxLength>25</MaxLength>
+							<PasswordCharacter>*</PasswordCharacter>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Common.LoginPassword}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Common:SetLoginPassword[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
 					</Tab>
     	
 					<Tab name='Miner'>
@@ -426,6 +478,26 @@
 								This:SetSelection[${Script[EVEBot].VariableScope.Config.Miner.StandingDetection}]
 							</OnLoad>
 						</combobox>
+						<checkbox Name='cbIceMining'>
+							<X>10</X>
+							<Y>150</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Ice Mining</Text>
+							<Command>Script[EVEBot].VariableScope.Config.Miner:SetIceMining[FALSE]</Command>
+							<CommandChecked>Script[EVEBot].VariableScope.Config.Miner:SetIceMining[TRUE]</CommandChecked>
+							<Data>${Script[EVEBot].VariableScope.Config.Miner.IceMining}</Data>
+							<AutoTooltip>Check to mine ICE Fields instead of Asteroid Fields.</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Miner.IceMining}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+									Script[EVEBot].VariableScope.Config.Miner:SetIceMining[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
 						<combobox name='comboOreTypes'>
 							<X>340</X>
 							<Y>10</Y>

@@ -39,6 +39,11 @@ objectdef obj_Miner
 	
 	method Pulse()
 	{
+		if ${EVEBot.Paused}
+		{
+			return
+		}
+
 		if !${Config.Common.BotModeName.Equal[Miner]}
 		{
 			; There's no reason at all for the miner to check state if it's not a miner
@@ -323,9 +328,11 @@ objectdef obj_Miner
 					variable int TargetID
 					TargetID:Set[${Target.Value.ID}]
 					
+					/* TODO: CyberTech - this concentrates fire fine if there's only 1 target, but if there's multiple targets it still prefers to distribute. Ice mining shouldn't distribute */
 					if (${This.ConcentrateFire} || \
+						${Config.Miner.IceMining} || \
 						!${Config.Miner.DistributeLasers} || \
-						!${Ship.IsMiningAsteroidID[${TargetID}]} )
+						!${Ship.IsMiningAsteroidID[${TargetID}]})
 					{	
 						
 						Target.Value:MakeActiveTarget
@@ -347,19 +354,23 @@ objectdef obj_Miner
 				while ${Target:Next(exists)}
 			}
 	
-			if ${Math.Calc[${Me.GetTargets} + ${Me.GetTargeting}]} < ${Ship.SafeMaxLockedTargets}
+			if (!${Config.Miner.IceMining} || \
+				(${Ship.TotalActivatedMiningLasers} == 0))
 			{
-				call Asteroids.TargetNext
-				This.ConcentrateFire:Set[!${Return}]
-				;echo DEBUG: Target Locking: ${Math.Calc[${Me.GetTargets} + ${Me.GetTargeting}].Int} out of ${Ship.SafeMaxLockedTargets} (Limited Asteroids: ${This.ConcentrateFire})
-			}
-			else
-			{
-				if ( ${Me.GetTargets} >= ${Ship.SafeMaxLockedTargets} && \
-					 ${Ship.TotalMiningLasers} > ${Ship.SafeMaxLockedTargets} )
+				if ${Math.Calc[${Me.GetTargets} + ${Me.GetTargeting}]} < ${Ship.SafeMaxLockedTargets}
 				{
-					This.ConcentrateFire:Set[TRUE]
-				}					
+					call Asteroids.TargetNext
+					This.ConcentrateFire:Set[!${Return}]
+					;echo DEBUG: Target Locking: ${Math.Calc[${Me.GetTargets} + ${Me.GetTargeting}].Int} out of ${Ship.SafeMaxLockedTargets} (Limited Asteroids: ${This.ConcentrateFire})
+				}
+				else
+				{
+					if ( ${Me.GetTargets} >= ${Ship.SafeMaxLockedTargets} && \
+						 ${Ship.TotalMiningLasers} > ${Ship.SafeMaxLockedTargets} )
+					{
+						This.ConcentrateFire:Set[TRUE]
+					}					
+				}
 			}
 			wait 10
 		}
