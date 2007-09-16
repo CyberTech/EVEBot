@@ -25,16 +25,26 @@ New Features:
 - Added UI option "Bookmark Last Position" for mining operations.
 - obj_Miner: Added support for bookmarking last position and returning to it after emptying cargo
 - obj_Miner: Jetcan support.  Check "Use JetCan" on the UI to jettison ore instead of hauling it when full.
+- Added downtime support.  Script will return to station at 10 minutes before downtime.
+- Added Player Avoidance Range - bot will warp to a new belt if a player is detected inside the given range.
+- Added Player Avoidance for Standing Detection (Needs Testing, but appears to be functional)
+- Add checkbox for "Always Shield Boost"
+- Shield boost will activate if always shield boost, hostiles nearby, or shield < 100%
+- Add slowboating check - if distance to roid is more than 3 * laser range, move belts.
+- Added ICE Mining support - check Ice Mining on the mining tab to seek ice belts.
+	Note that ice mining implicitly turns off multiple mining target selection, and turns off distribute lasers. This is by intentional and by design.  
+	This was a fairly major change to a lot of systems, so if there are any problems with standard mining, speak up.
+
 
 Behavior Fixes/Changes:
-- Use new ActiveDrone index to recall only active drones, instead of all drones owened by you.
+- Use new ActiveDrone index to recall only active drones, instead of all drones owned by you.
 - Added miner abort on drone shortage
 - Added miner abort on armor or shield low
 - If we're emergency warping, Drone recall will only wait 1 second for drones to enter ship before allowing warp to begin
 - More checks for cargo full so it responds faster
 - Pre-warp check now deactivates all mining lasers and unlocks targets
-- Fixed problem with all lasers not getting acitvated on 2 roids
 - Belt bookmarks must start with Belt: now
+- Drones will be told to return to bay on script shutdown.. we won't wait for them, tho.
 
 Bug Fixes:
 - Amadeus fixed DoGetAvailableAmmo in the extension, so crystal switching works now.
@@ -45,13 +55,31 @@ Bug Fixes:
 - UI: fixed reversed checked/unchecked for checkboxes
 - Fix problem with bot not performing actions, introduced in rev 168
 - Removed missed UpdateHudStatus call
+- Fixed drone shortage check and tested.
+- (really) Fixed script end when miner hits ABORT state
 - Fixed race condtion in drone shortage check vs launching drones
+- Fixed problem with all lasers not getting acitvated on 2 roids
 - Updated many of the UI options to link to proper config values
 - Changed check for isxeve to ensure we don't try to load without it.
 - Added some missing safety checks to a few obj_Ship methods
 - Jetcan support: check distance on existing/known cans as well
 - Jetcan support: fix rename function
 - Fix missing declare in obj_Drones, probably the cause of peoples missed drone launches.
+- Fix spurious drone shortage aborts.
+- Typo in logmsg in obj_drones
+- Typo in ui line had script end on abort condition
+- Fix missing open parenthenis in obj_jetcan
+- Fix ) instead of } in obj_evebot
+- Fixed typos in obj_Skills.iss
+- Fixed typo in obj_configuration
+- Fix mining mainloop so it won't attempt lock while in warp.
+- Fixed problem with dynamic bookmark usage where if you had a bookmark with your characters first name (or whole name, for single-name chars) it might use that bookmark instead of the dynamic one.
+- Fix wrong variable name causing bot not to unpause after an abort condition is fixed.
+- Fixing unexpected case where bookmarks are deleted by the user while the bot is operating.
+- Fix slider text so it's initialized properly on load for combat and miner tabs
+- Fix: All Pulse methods now check EVEBot.Paused
+- Fix: Hopefully fixed case where ship would approach an asteroid to 0km
+- Fix: if there are no belts in the area, return to station, don't just sit there
 
 Architecture Work:
 - A first pass at removing the bot logic from EVEBot.iss and pushing it into the bot classes.
@@ -79,10 +107,7 @@ Architecture Work:
 - Changed Minimum Armor/Shield percent UI elements from textentry to slider, with dynamic label change to show value
 - More work on the autopatcher
 - Removed duplication of timestamp for startup msgs
-- Typo in ui line had script end on abort condition
 - Consolidated Cargo full checks with bool Ship.CargoFull
-- Fixed drone shortage check and tested.
-- (really) Fixed script end when miner hits ABORT state
 - initial pass at miner laser short cycling code
 - Removed generate_lasers_set.iss
 - Moved all bot logic into the bot modules
@@ -98,6 +123,19 @@ Architecture Work:
 - Added obj_Ship:CargoHalfFull
 - Updated UI element for Use JetCan
 - Separate obj_Ship and obj_Drones into separate files
+-Changed jetcan window check function to use the new Entity.LootWindow member
+-obj_Login.iss added for autoconnect functionality.
+ 	 Not integrated yet.
+- Added GameHour and GameMinute to obj_Misc
+- Renamed obj_Misc to obj_EVEBot.iss, same with the objects.
+	It now performs downtime shutdowns, and handles the return to base duties for all abort actions.
+- Removed all ForcedReturn and m_abort members and actions, and moved them to use EVEBot.ReturnToStation.
+- Added Obj_Social.iss to prepare for player/npc  detection options
+- Separate the logic for hessingers addition of player and standing detection.  Player detection just requires a belt change.  Standing detection requires docking.
+- Fix: Rename all Astroid -> Asteroid. No functional effect.
+- AutoLogin script turned into an fps-timed pulse-based state engine.  Not enabled yet.
+- UI: Added Login name, password fields, and use auto login checkbox
+- Arch: Converted all ${play} to EVEBot.Paused. Removed ${play}
 
 0.93 Revision 114
 - Fixed the obj_Ship.iss file in the function WarpToID that if it didn't make it to the destintion in the first warp it warps again.
