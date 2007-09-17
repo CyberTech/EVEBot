@@ -339,7 +339,11 @@ objectdef obj_Miner
 					{	
 						
 						Target.Value:MakeActiveTarget
-						wait 20
+						while ${Target.Value.ID} != ${Me.ActiveTarget.ID}
+						{
+							wait 5
+						}
+						
 						if ${Ship.CargoFull}
 						{
 							break
@@ -375,7 +379,7 @@ objectdef obj_Miner
 					}					
 				}
 			}
-			wait 10
+			wait 5
 		}
 				
 		if ${Config.Miner.BookMarkLastPosition}
