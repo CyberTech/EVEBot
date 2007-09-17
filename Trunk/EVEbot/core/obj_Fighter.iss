@@ -6,36 +6,9 @@ Skeleton for Fighter
 */
 objectdef obj_Fighter
 {
-	/* The name of the player we are fighting for (null if using m_corpName) */
-	variable string m_playerName
-	
-	/* The name of the corp we are fighting for (null if using m_playerName) */
-	variable string m_corpName
-		
-	method Initialize(string player, string corp)
+	method Initialize()
 	{			
-		if (${player.Length} && ${corp.Length})
-		{
-			echo "ERROR: obj_Fighter:Initialize -- cannot use a player and a corp name.  One must be blank"
-		}
-		else
-		{			
-			if ${player.Length}
-			{
-				m_playerName:Set[${player}]
-			}
-			
-			if ${corp.Length}
-			{
-				m_corpName:Set[${corp}]
-			}
-			
-			if (!${player.Length} && !${corp.Length})
-			{
-				echo "WARNING: obj_Fighter:Initialize -- player and corp name are blank.  Defaulting to ${Me.Corporation}"
-				m_corpName:Set[${Me.Corporation}]
-			} 
-		}
+		UI:UpdateConsole["obj_Fighter: Initialized"]
 	}
 	
 	method Shutdown()
@@ -54,7 +27,7 @@ objectdef obj_Fighter
 objectdef obj_CombatFighter inherits obj_Fighter
 {
 	/* This variable is set by a remote event.  When it is non-zero, */
-	/* the bot will undock and seek out the gang memeber.  After the */
+	/* the bot will undock and seek out the gang member.  After the */
 	/* member is safe the bot will zero this out.                    */
 	variable int m_gangMemberID
 
@@ -62,18 +35,9 @@ objectdef obj_CombatFighter inherits obj_Fighter
 	variable string CurrentState
 	variable int FrameCounter
 	
-	method Initialize(string player, string corp)
+	method Initialize()
 	{
-		This[parent]:Initialize[${player},${corp}]		
-		
-		if ${m_playerName.Length} 
-		{
-			UI:UpdateConsole["obj_Fighter: Initialized. Fighting for ${m_playerName}."]
-		}
-		elseif ${m_corpName.Length} 
-		{
-			UI:UpdateConsole["obj_Fighter: Initialized. Fighting for ${m_corpName}."]
-		}
+		UI:UpdateConsole["obj_CombatFighter: Initialized"]
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		BotModules:Insert["Fighter"]
 	}

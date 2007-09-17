@@ -144,21 +144,21 @@ objectdef obj_Miner
 				
 				if ((${Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct}) && ${Ship.ArmorRepairUnits} == 0)
 				{
-					UI:UpdateConsole["Warning: Aborted. Script paused due to Armor Precentage."]
+					UI:UpdateConsole["Warning: Script paused due to Armor Precentage."]
 					Script:Pause
 				}
 
 				; To.Do NEED TO ADD CHECK FOR HULL REPAIRER in SHIP OBJECT.
 				if ((${Me.Ship.StructurePct} < 100))
 				{
-					UI:UpdateConsole["Warning: Aborted. Script paused due to Structure Precentage."]
+					UI:UpdateConsole["Warning: Aborted. Script paused due to Structure Percentage."]
 					
 					Script:Pause
 				}
 				
 				if ${Me.Ship.ShieldPct} < 100
 				{
-					UI:UpdateConsole["Warning: Aborted. Waiting for Shields to Regen."]
+					UI:UpdateConsole["Warning: Waiting for Shields to Regen."]
 					while ${Me.Ship.ShieldPct} < 95
 					{
 						wait 20
@@ -178,7 +178,10 @@ objectdef obj_Miner
 	; Enable defenses, launch drones	
 	function Prepare_Environment()
 	{
-		Ship.Drones:LaunchAll[]
+		if ${Config.Combat.LaunchCombatDrones}
+		{
+			Ship.Drones:LaunchAll[]
+		}
 		call Ship.OpenCargo
 	}
 	
@@ -215,7 +218,8 @@ objectdef obj_Miner
 				!${Ship.CargoFull} )
 		{	
 	
-			if ${Ship.Drones.DroneShortage}
+			if ${Config.Combat.LaunchCombatDrones} && \
+				${Ship.Drones.CombatDroneShortage}
 			{
 				/* TODO - This should pick up drones from station instead of just docking */
 				UI:UpdateConsole["Warning: Drone shortage detected, docking"]

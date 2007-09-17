@@ -98,7 +98,7 @@ objectdef obj_Configuration_Common
 
 	member:int BotMode()
 	{
-		return ${This.CommonRef.FindSetting[Bot Mode, MINER]}
+		return ${This.CommonRef.FindSetting[Bot Mode, 1]}
 	}
 
 	method SetBotMode(int value)
@@ -111,9 +111,9 @@ objectdef obj_Configuration_Common
 		return ${This.CommonRef.FindSetting[Bot Mode Name, MINER]}
 	}
 	
-	method SetDronesInBay(int value)
+	method SetBotModeName(string value)
 	{
-		This.CommonRef:AddSetting[Drones In Bay,${value}]
+		This.CommonRef:AddSetting[Bot Mode Name,${value}]
 	}
 
 	member:int DronesInBay()
@@ -121,9 +121,9 @@ objectdef obj_Configuration_Common
 		return ${This.CommonRef.FindSetting[Drones In Bay, NOTSET]}
 	}
 
-	method SetBotModeName(string value)
+	method SetDronesInBay(int value)
 	{
-		This.CommonRef:AddSetting[Bot Mode Name,${value}]
+		This.CommonRef:AddSetting[Drones In Bay,${value}]
 	}
 
 	member:string HomeStation()
@@ -246,8 +246,7 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Restrict To Belt, NO]
 		This.MinerRef:AddSetting[Restrict To Ore Type, NONE]
 		This.MinerRef:AddSetting[Include Veldspar, TRUE]
-		This.MinerRef:AddSetting[Stick To Spot, FALSE]
-		This.MinerRef:AddSetting[Bookmark Last Position, FALSE]
+		This.MinerRef:AddSetting[Bookmark Last Position, TRUE]
 		This.MinerRef:AddSetting[Use JetCan, FALSE]
 		This.MinerRef:AddSetting[Distribute Lasers, TRUE]
 		This.MinerRef:AddSetting[Use Mining Drones, FALSE]
@@ -347,7 +346,6 @@ objectdef obj_Configuration_Miner
 	
 	;		This.MinerRef:AddSetting[Restrict To Belt, NO]
 	;		This.MinerRef:AddSetting[Restrict To Ore Type, NONE]
-	;		This.MinerRef:AddSetting[Avoid Players Distance, 10000]
 
 	member:bool IncludeVeldspar()
 	{
@@ -357,16 +355,6 @@ objectdef obj_Configuration_Miner
 	method SetIncludeVeldspar(bool value)
 	{	
 		This.MinerRef:AddSetting[Include Veldspar, ${value}]
-	}
-
-	member:bool StickToSpot()
-	{
-		return ${This.MinerRef.FindSetting[Stick To Spot, FALSE]}
-	}
-
-	method SetStickToSpot(bool value)
-	{	
-		This.MinerRef:AddSetting[Stick To Spot, ${value}]
 	}
 
 	member:bool BookMarkLastPosition()
@@ -474,21 +462,21 @@ objectdef obj_Configuration_Combat
 	{
 		BaseConfig.BaseRef:AddSet[${This.SetName}]
 
-		This.CombatRef:AddSetting[UseCombatDrones,FALSE]
 		This.CombatRef:AddSetting[MinimumDronesInSpace,3]
 		This.CombatRef:AddSetting[MinimumArmorPct, 35]
 		This.CombatRef:AddSetting[MinimumShieldPct, 25]
 		This.CombatRef:AddSetting[AlwaysShieldBoost, FALSE]
+		This.CombatRef:AddSetting[Launch Combat Drones, TRUE]
 	}
 	
-	member:bool UseCombatDrones()
+	member:bool LaunchCombatDrones()
 	{
-		return ${This.CombatRef.FindSetting[UseCombatDrones, FALSE]}
+		return ${This.CombatRef.FindSetting[Launch Combat Drones, TRUE]}
 	}
 	
-	method SetUseCombatDrones(bool value)
+	method SetLaunchCombatDrones(bool value)
 	{
-		This.CombatRef:AddSetting[UseCombatDrones,${value}]
+		This.CombatRef:AddSetting[Launch Combat Drones, ${value}]
 	} 
 
 	member:int MinimumDronesInSpace()
@@ -554,7 +542,28 @@ objectdef obj_Configuration_Hauler
 	method Set_Default_Values()
 	{
 		BaseConfig.BaseRef:AddSet[${This.SetName}]
+		This.HaulerRef:AddSetting[Hauler Mode,1]
+		This.HaulerRef:AddSetting[Hauler Mode Name, "Service Gang Members"]
+	}
 
+	member:int HaulerMode()
+	{
+		return ${This.HaulerRef.FindSetting[Hauler Mode, 1]}
+	}
+
+	method SetHaulerMode(int value)
+	{
+		This.HaulerRef:AddSetting[Hauler Mode, ${value}]
+	}
+
+	member:string HaulerModeName()
+	{
+		return ${This.HaulerRef.FindSetting[Hauler Mode Name, "Service Gang Members"]}
+	}
+	
+	method SetHaulerModeName(string value)
+	{
+		This.HaulerRef:AddSetting[Hauler Mode Name,${value}]
 	}
 
 }
@@ -565,6 +574,7 @@ objectdef obj_Configuration_Salvager
 
 	method Initialize()
 	{	
+		return
 		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
 		{
 			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]

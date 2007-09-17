@@ -16,30 +16,9 @@ objectdef obj_Hauler
 	/* The name of the corp we are hauling for (null if using m_playerName) */
 	variable string m_corpName
 		
-	method Initialize(string player, string corp)
+	method Initialize()
 	{			
-		if (${player.Length} && ${corp.Length})
-		{
-			echo "ERROR: obj_Hauler:Initialize -- cannot use a player and a corp name.  One must be blank"
-		}
-		else
-		{			
-			if ${player.Length}
-			{
-				m_playerName:Set[${player}]
-			}
-			
-			if ${corp.Length}
-			{
-				m_corpName:Set[${corp}]
-			}
-			
-			if (!${player.Length} && !${corp.Length})
-			{
-				echo "WARNING: obj_Hauler:Initialize -- player and corp name are blank.  Defaulting to ${Me.Corporation}"
-				m_corpName:Set[${Me.Corporation}]
-			} 
-		}
+		UI:UpdateConsole["obj_Hauler: Initialized"]
 	}
 	
 	method Shutdown()
@@ -123,16 +102,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 	
 	method Initialize(string player, string corp)
 	{
-		This[parent]:Initialize[${player},${corp}]		
-		
-		if ${m_playerName.Length} 
-		{
-			UI:UpdateConsole["obj_OreHauler: Initialized. Hauling for ${m_playerName}."]
-		}
-		elseif ${m_corpName.Length} 
-		{
-			UI:UpdateConsole["obj_OreHauler: Initialized. Hauling for ${m_corpName}."]
-		}
+		UI:UpdateConsole["obj_OreHauler: Initialized"]
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		BotModules:Insert["Hauler"]
 	}

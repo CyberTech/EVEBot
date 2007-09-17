@@ -75,6 +75,8 @@ objectdef obj_Asteroids
 	
 	function MoveToRandomBeltBookMark()
 	{	
+		/* TODO: cybertech - when this is revamped, be sure to handle ice vs ore bookmark types */
+		
 		EVE:DoGetBookmarks[BeltBookMarkList]
 		
 		variable int RandomBelt

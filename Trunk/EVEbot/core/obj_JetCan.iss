@@ -8,13 +8,13 @@
 	-- CyberTech
 
 BUGS:
-	
+	TODO: Does not check to see if a can is full.
 			
 */
 
 objectdef obj_JetCan
 {
-	variable int ActiveCan = -1
+	variable int64 ActiveCan = -1
 	
 	method Initialize()
 	{
@@ -22,31 +22,54 @@ objectdef obj_JetCan
 	}
 	
 	; Returns -1 for no can, or the entity ID
-	member:int CurrentCan()
+	member:int CurrentCan(bool CheckFreeSpace = FALSE)
 	{
 		if (${This.ActiveCan} > 0 && \
 			${Entity[${This.ActiveCan}](exists)} && \
 			${Entity[${This.ActiveCan}].Distance} <= LOOT_RANGE)
 		{
-			return ${This.ActiveCan}
+			if !${CheckFreeSpace} || \
+				!${This.CargoFull}
+			{
+				return ${This.ActiveCan}
+			}
 		}
 
-		variable int CanID = ${Entity[GroupID, GROUPID_CARGO_CONTAINER, Radius, LOOT_RANGE].ID}
-		if (${CanID(exists)} && \
-			${CanID} > 0 && \
-			${This.AccessAllowed[${CanID}]})
+		if (${This.ActiveCan} > 0
 		{
-			This.ActiveCan:Set[${CanID}]
-			return ${CanID}
+			/* The can no longer exists, so try to compensate for an Eve bug and close the loot window for it. */
+			EVEWindow[loot_${This.ActiveCan}]:Close
+		}
+		
+		variable index:entity Cans
+		variable iterator Can
+		EVE:DoGetEntities[Cans, GroupID, GROUPID_CARGO_CONTAINER, Radius, LOOT_RANGE]
+		
+		Cans:GetIterator[Can]
+		
+		if ${Can:First(exists)}
+		{
+			do
+			{
+				if (${Can.Value.ID(exists)} && \
+					${Can.Value.ID} > 0 && \
+					${This.AccessAllowed[${Can.Value.ID}]} && \
+					${Can.Value.ID} != ${This.ActiveCan})
+				{
+					This.ActiveCan:Set[${Can.Value.ID}]
+					return ${This.ActiveCan}
+				}
+			}
+			while ${Can:Next(exists)}
 		}
 		
 		This.ActiveCan:Set[-1]
 		return ${This.ActiveCan}
 	}
 	
-	member:bool IsReady()
+	member:bool IsReady(bool CheckFreeSpace = FALSE)
 	{
-		if ${This.CurrentCan} > 0
+		if ${This.CurrentCan[${CheckFreeSpace}]} > 0
 		{
 			return TRUE
 		}
@@ -54,7 +77,7 @@ objectdef obj_JetCan
 		return FALSE
 	}
 	
-	member:bool AccessAllowed(int ID)
+	member:bool AccessAllowed(int64 ID)
 	{
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
@@ -96,7 +119,7 @@ objectdef obj_JetCan
 			
 	}
 	
-	method Rename(int ID)
+	method Rename(int64 ID)
 	{
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
@@ -125,16 +148,16 @@ objectdef obj_JetCan
 		Entity[${ID}]:SetName[${NewName}]
 	}
 	
-	method StackAllCargo(int ID)
+	method StackAllCargo(int64 ID)
 	{
-		if !${This.IsCargoOpen}
-		{
-			return
-		}
-		
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
 			ID:Set[${This.ActiveCan}]
+		}
+		
+		if !${This.IsCargoOpen[${ID}]}
+		{
+			return
 		}
 		
 		if !${This.AccessAllowed[${ID}]}
@@ -146,7 +169,7 @@ objectdef obj_JetCan
 		Entity[${ID}]:StackAllCargo
 	}
 
-	member IsCargoOpen(int ID)
+	member IsCargoOpen(int64 ID)
 	{
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
@@ -163,18 +186,90 @@ objectdef obj_JetCan
 		}		
 	}
 	
-	function Open(int ID=0)
+	member:float CargoMinimumFreeSpace()
 	{
-		if ${This.IsCargoOpen}
-		{
-			return
-		}
-		
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
 			ID:Set[${This.ActiveCan}]
 		}
 		
+		if !${This.IsCargoOpen[${ID}]}
+		{
+			return FALSE
+		}
+
+		return ${Math.Calc[${Entity[${ID}].CargoCapacity}*0.05]}
+	}
+	
+	member:float CargoFreeSpace()
+	{
+		if (${ID} == 0 && ${This.ActiveCan} > 0)
+		{
+			ID:Set[${This.ActiveCan}]
+		}
+		
+		if !${This.IsCargoOpen[${ID}]}
+		{
+			return FALSE
+		}
+
+		if ${Entity[${ID}].UsedCargoCapacity} < 0
+		{
+			return ${Entity[${ID}].CargoCapacity}
+		}
+		return ${Math.Calc[${Entity[${ID}].CargoCapacity}-${Entity[${ID}].UsedCargoCapacity}]}
+	}
+
+	member:bool CargoFull()
+	{
+		if (${ID} == 0 && ${This.ActiveCan} > 0)
+		{
+			ID:Set[${This.ActiveCan}]
+		}
+		
+		if !${This.IsCargoOpen[${ID}]}
+		{
+			return FALSE
+		}
+
+		if ${This.CargoFreeSpace} <= ${This.CargoMinimumFreeSpace}
+		{
+			return TRUE
+		}
+		return FALSE
+	}
+	
+	member:bool CargoHalfFull()
+	{
+		if (${ID} == 0 && ${This.ActiveCan} > 0)
+		{
+			ID:Set[${This.ActiveCan}]
+		}
+		
+		if !${This.IsCargoOpen[${ID}]}
+		{
+			return FALSE
+		}
+
+		if ${This.CargoFreeSpace} <= ${Math.Calc[${Entity[${ID}].CargoCapacity}*0.50]}
+		{
+			return TRUE
+		}
+		return FALSE
+	}
+	
+	function Open(int64 ID=0)
+	{
+		if (${ID} == 0 && ${This.ActiveCan} > 0)
+		{
+			ID:Set[${This.ActiveCan}]
+		}
+		
+		if ${This.IsCargoOpen[${ID}]}
+		{
+			return
+		}
+
 		if !${This.AccessAllowed[${ID}]}
 		{
 			UI:UpdateConsole["JetCan:Open: Access to ${ID} is not allowed"]
@@ -194,19 +289,14 @@ objectdef obj_JetCan
 		}
 	}	
 
-	function Close(int ID=0)
-	{
-		if ${This.IsCargoOpen}
-		{
-			return
-		}
-		
+	function Close(int64 ID=0)
+	{		
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
 			ID:Set[${This.ActiveCan}]
 		}
 
-		if ${This.IsCargoOpen}
+		if ${This.IsCargoOpen[${ID}]}
 		{
 			UI:UpdateConsole["Closing JetCan"]
 			Entity[${ID}]:CloseCargo

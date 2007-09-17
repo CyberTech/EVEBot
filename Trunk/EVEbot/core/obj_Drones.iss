@@ -78,7 +78,7 @@ objectdef obj_Drones
 		return ${Me.GetActiveDroneIDs[This.ActiveDroneIDList]}
 	}
    
-	member:bool DroneShortage()
+	member:bool CombatDroneShortage()
 	{
 		if !${This.DronesReady}
 		{

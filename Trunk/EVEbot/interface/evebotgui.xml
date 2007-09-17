@@ -610,7 +610,7 @@
 							<Height>20</Height>
 							<Width>100</Width>
 							<Text>Always Shield Boost</text>
-							<AutoTooltip>If checked, the shield boost will be on full-time, instead of on-demand.</AutoTooltip>
+							<AutoTooltip>Turn Shield Booster on full-time, instead of on-demand.</AutoTooltip>
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Combat.AlwaysShieldBoost}
 								{
@@ -645,12 +645,56 @@
 							<Text>Minimum Drones in Space</Text>
 							<AutoTooltip>We will return to base when available drones falls below this number</AutoTooltip>
 						</Text>
+						<checkbox name='cbLaunchCombatDrones'>
+							<X>10</X>
+							<Y>90</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Launch Combat Drones</text>
+							<AutoTooltip>Launch and Use Combat Drones</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Combat.LaunchCombatDrones}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+									Script[EVEBot].VariableScope.Config.Combat:SetLaunchCombatDrones[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
 					</tab>
 					
 					<Tab name='Salvager'>
 					</tab>
 					
 					<tab name='Hauler'>
+						<Text name='HaulerModeLabel'>
+							<X>10</X>
+							<Y>10</Y>
+							<Width>70</Width>
+							<Height>10</Height>
+							<Text>Mode: </Text>
+						</Text>
+						<combobox name='HaulerMode'>
+							<X>80</X>
+							<Y>10</Y>
+							<Width>250</Width> 
+							<Height>15</Height> 
+							<FullHeight>200</FullHeight>
+							<ButtonWidth>20</ButtonWidth>
+							<Items>
+								<Item Value='1'>Service Gang Members</Item>
+								<Item Value='2'>Service All Belts</Item>
+								<Item Value='3'>Service On-Demand</Item>
+							</Items>
+							<OnSelect>
+								Script[EVEBot].VariableScope.Config.Hauler:SetBotMode[${This.SelectedItem.Value}]
+								Script[EVEBot].VariableScope.Config.Hauler:SetBotModeName[${This.SelectedItem.Text}]
+							</OnSelect>
+							<OnLoad>
+								This:SetSelection[${Script[EVEBot].VariableScope.Config.Common.BotMode}]
+							</OnLoad>
+						</combobox>
 					</tab>
 
 					<tab name='Freighter'>

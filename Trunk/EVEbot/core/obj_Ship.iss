@@ -130,7 +130,7 @@ objectdef obj_Ship
 			return
 		}
 
-		if ${Ship.CargoFreeSpace} <= ${Ship.CargoMinimumFreeSpace}
+		if ${This.CargoFreeSpace} <= ${This.CargoMinimumFreeSpace}
 		{
 			return TRUE
 		}
@@ -144,7 +144,7 @@ objectdef obj_Ship
 			return
 		}
 
-		if ${Ship.CargoFreeSpace} <= ${Math.Calc[${Me.Ship.CargoCapacity}*0.50]}
+		if ${This.CargoFreeSpace} <= ${Math.Calc[${Me.Ship.CargoCapacity}*0.50]}
 		{
 			return TRUE
 		}

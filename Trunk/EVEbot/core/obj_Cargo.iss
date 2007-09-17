@@ -93,7 +93,7 @@ objectdef obj_Cargo
 		{
 			This.CargoToTransfer:GetIterator[ThisCargo]
 
-			if ${JetCan.IsReady}
+			if ${JetCan.IsReady[TRUE]} && !${JetCan.IsCargoOpen}
 			{
 				call JetCan.Open
 			}
@@ -101,7 +101,7 @@ objectdef obj_Cargo
 			if ${ThisCargo:First(exists)}
 			do
 			{
-				if !${JetCan.IsReady}
+				if !${JetCan.IsReady[TRUE]}
 				{
 					ThisCargo.Value:Jettison
 					call JetCan.WaitForCan
@@ -115,7 +115,6 @@ objectdef obj_Cargo
 			}
 			while ${ThisCargo:Next(exists)}
 			JetCan:StackAllCargo
-			call JetCan.Close
 		}
 		else
 		{
