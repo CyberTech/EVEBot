@@ -93,28 +93,26 @@ objectdef obj_Cargo
 		{
 			This.CargoToTransfer:GetIterator[ThisCargo]
 
-			if ${JetCan.IsReady[TRUE]} && !${JetCan.IsCargoOpen}
-			{
-				call JetCan.Open
-			}
-
 			if ${ThisCargo:First(exists)}
-			do
 			{
-				if !${JetCan.IsReady[TRUE]}
+
+				do
 				{
-					ThisCargo.Value:Jettison
-					call JetCan.WaitForCan
-					JetCan:Rename
-					call JetCan.Open
+					if ${JetCan.IsReady[TRUE]}
+					{
+						call JetCan.Open ${JetCan.ActiveCan}
+						ThisCargo.Value:MoveTo[${JetCan.ActiveCan}]
+					}
+					else
+					{
+						ThisCargo.Value:Jettison
+						call JetCan.WaitForCan
+						JetCan:Rename
+					}
 				}
-				else
-				{
-					ThisCargo.Value:MoveTo[${JetCan.ActiveCan}]
-				}
+				while ${ThisCargo:Next(exists)}
+				JetCan:StackAllCargo
 			}
-			while ${ThisCargo:Next(exists)}
-			JetCan:StackAllCargo
 		}
 		else
 		{

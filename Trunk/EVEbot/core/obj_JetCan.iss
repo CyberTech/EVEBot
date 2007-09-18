@@ -28,8 +28,7 @@ objectdef obj_JetCan
 			${Entity[${This.ActiveCan}](exists)} && \
 			${Entity[${This.ActiveCan}].Distance} <= LOOT_RANGE)
 		{
-			if !${CheckFreeSpace} || \
-				!${This.CargoFull}
+			if !${CheckFreeSpace} || !${This.CargoFull[${This.ActiveCan}]}
 			{
 				return ${This.ActiveCan}
 			}
@@ -119,7 +118,7 @@ objectdef obj_JetCan
 			
 	}
 	
-	method Rename(int64 ID)
+	method Rename(int64 ID=0)
 	{
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
@@ -148,7 +147,7 @@ objectdef obj_JetCan
 		Entity[${ID}]:SetName[${NewName}]
 	}
 	
-	method StackAllCargo(int64 ID)
+	method StackAllCargo(int64 ID=0)
 	{
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
@@ -169,7 +168,7 @@ objectdef obj_JetCan
 		Entity[${ID}]:StackAllCargo
 	}
 
-	member IsCargoOpen(int64 ID)
+	member IsCargoOpen(int64 ID=0)
 	{
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
@@ -186,7 +185,7 @@ objectdef obj_JetCan
 		}		
 	}
 	
-	member:float CargoMinimumFreeSpace()
+	member:float CargoMinimumFreeSpace(int64 ID=0)
 	{
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
@@ -201,7 +200,7 @@ objectdef obj_JetCan
 		return ${Math.Calc[${Entity[${ID}].CargoCapacity}*0.05]}
 	}
 	
-	member:float CargoFreeSpace()
+	member:float CargoFreeSpace(int64 ID=0)
 	{
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
@@ -220,7 +219,7 @@ objectdef obj_JetCan
 		return ${Math.Calc[${Entity[${ID}].CargoCapacity}-${Entity[${ID}].UsedCargoCapacity}]}
 	}
 
-	member:bool CargoFull()
+	member:bool CargoFull(int64 ID=0)
 	{
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
@@ -232,14 +231,14 @@ objectdef obj_JetCan
 			return FALSE
 		}
 
-		if ${This.CargoFreeSpace} <= ${This.CargoMinimumFreeSpace}
+		if ${This.CargoFreeSpace[${ID}]} <= ${This.CargoMinimumFreeSpace[${ID}]}
 		{
 			return TRUE
 		}
 		return FALSE
 	}
 	
-	member:bool CargoHalfFull()
+	member:bool CargoHalfFull(int64 ID=0)
 	{
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
@@ -251,7 +250,7 @@ objectdef obj_JetCan
 			return FALSE
 		}
 
-		if ${This.CargoFreeSpace} <= ${Math.Calc[${Entity[${ID}].CargoCapacity}*0.50]}
+		if ${This.CargoFreeSpace[${ID}]} <= ${Math.Calc[${Entity[${ID}].CargoCapacity}*0.50]}
 		{
 			return TRUE
 		}
@@ -281,7 +280,7 @@ objectdef obj_JetCan
 			UI:UpdateConsole["Opening JetCan"]
 			Entity[${ID}]:OpenCargo
 			wait WAIT_CARGO_WINDOW
-			while !${This.IsCargoOpen}
+			while !${This.IsCargoOpen[${ID}]}
 			{
 				wait 0.5
 			}
@@ -301,7 +300,7 @@ objectdef obj_JetCan
 			UI:UpdateConsole["Closing JetCan"]
 			Entity[${ID}]:CloseCargo
 			wait WAIT_CARGO_WINDOW
-			while ${This.IsCargoOpen}
+			while ${This.IsCargoOpen[${ID}]}
 			{
 				wait 0.5
 			}
