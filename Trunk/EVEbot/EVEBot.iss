@@ -4,7 +4,6 @@
 #include core/oSpace.iss
 
 /* Base Requirements */
-#include core/obj_AutoPatcher.iss
 #include core/obj_EVEBot.iss
 #include core/obj_Configuration.iss
 
@@ -20,7 +19,6 @@
 #include core/obj_Bookmarks.iss
 #include core/obj_Jetcan.iss
 #include core/obj_Social.iss
-#include core/obj_Login.iss
 
 /* Behavior/Mode Includes */
 #include core/obj_Hauler.iss
@@ -28,11 +26,10 @@
 #include core/obj_Fighter.iss
 
 /* Script-Defined Support Objects */
-variable obj_EVEBotUI UI
 variable obj_EVEBot EVEBot
+variable obj_EVEBotUI UI
 variable obj_Configuration_BaseConfig BaseConfig
 variable obj_Configuration Config
-;variable obj_AutoPatcher AutoPatcher
 
 /* Core Objects */
 variable obj_Asteroids Asteroids

@@ -9,14 +9,18 @@
 
 objectdef obj_EVEBot
 {
-	;variable obj_Login AutoLogin
-
 	variable bool ReturnToStation = FALSE
 	variable bool Paused = FALSE
 	variable int FrameCounter
 	
 	method Initialize()
 	{
+		if !${ISXEVE(exists)}
+		{
+			echo "ISXEVE must be loaded to use ${APP_NAME}."
+			Script:End
+		}
+		echo "Starting ${Version}"
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_EVEBot: Initialized"]
 	}
@@ -28,9 +32,13 @@ objectdef obj_EVEBot
 
 	method Pulse()
 	{
-		if !${Me.Name(exists)}
+		if !${ISXEVE(exists)} || \
+			${Login(exists)} || \
+			${CharSelect(exists)}
 		{
-			return
+			echo "EVEBot: Out of game, exiting to launcher"
+			run EVEBot/Launcher.iss
+			Script:End
 		}
 		
 		FrameCounter:Inc

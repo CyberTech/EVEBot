@@ -52,6 +52,7 @@ objectdef obj_Ship
 		{
 			return
 		}
+		
 		FrameCounter:Inc
 
 		if (${Me.InStation(exists)} && !${Me.InStation})

@@ -21,6 +21,11 @@ objectdef obj_Skills
 	
 	method Pulse()
 	{
+		if ${EVEBot.Paused}
+		{
+			return
+		}
+
 		FrameCounter:Inc
 		variable int IntervalInSeconds = 5
 		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}

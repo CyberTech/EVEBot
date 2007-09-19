@@ -29,6 +29,11 @@ objectdef obj_Combat
 	
 	method Pulse()
 	{
+		if ${EVEBot.Paused}
+		{
+			return
+		}
+
 		FrameCounter:Inc
 
 		if (${Me.InStation(exists)} && !${Me.InStation})

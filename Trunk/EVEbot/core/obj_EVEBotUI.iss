@@ -17,21 +17,6 @@ objectdef obj_EVEBotUI
 			
 	method Initialize()
 	{
-		if !${ISXEVE(exists)}
-		{
-			echo "ISXEVE must be loaded to use this script."
-			Script[EVEBot]:EndScript
-		}
-   
-		if !${ISXEVE.IsReady}
-		{
-			echo "ISXEVE Not Ready, waiting..."
-			while !${ISXEVE.IsReady}
-			{
-				waitframe
-			}
-		}
-
 		This.CharacterName:Set[${Me.Name}]
 		This.MyRace:Set[${Me.ToPilot.Type}]
 		This.MyCorp:Set[${Me.Corporation}]
@@ -77,12 +62,21 @@ objectdef obj_EVEBotUI
 			FrameCounter:Set[0]
 		}
 		
+		if ${EVEBot.Paused}
+		{
+			return
+		}
+
 		IntervalInSeconds:Set[15]
 		if ${FrameCounterMsgBoxes} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 		{
 			EVE:CloseAllMessageBoxes
 			EVE:CloseAllChatInvites
 			FrameCounterMsgBoxes:Set[0]
+			if ${Me.Name(exists)}
+			{
+				Config.Common:SetAutoLoginCharID[${Me.CharID}]
+			}
 		}
 
 	}

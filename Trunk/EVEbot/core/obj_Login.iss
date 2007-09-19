@@ -19,8 +19,12 @@ objectdef obj_Login
 	
 	method Initialize()
 	{
-		Event[OnFrame]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_Login: Initialized"]
+	}
+	
+	method Start()
+	{
+		Event[OnFrame]:AttachAtom[This:Pulse]
 	}
 
 	method Shutdown()
@@ -42,26 +46,52 @@ objectdef obj_Login
 		{
 			if ${Login(exists)}
 			{
-				EVEBot:Pause
-				if ${Config.Common.AutoLoginCharID} > 0
-				{
-					echo ${This.CurrentState}
-					call This.DoLogin
-				}
-			}
-			else
-			{
-				if ${Me.Name(exists)}
-				{
-					Config.Common:SetAutoLoginCharID[${Me.CharID}]
-				}
+				echo ${This.CurrentState}
+				This:DoLogin
 			}
 			
 			FrameCounter:Set[0]
 		}
 	}
 	
-	function DoLogin()
+	function LoadExtension()
+	{
+		variable int Timer = 0
+		variable string EXTNAME = "ISXEVE"
+		
+		if ${${EXTNAME}(exists)}
+		{
+			return
+		}
+	    echo "obj_Login: Loading Extension ${EXTNAME}"
+		do
+		{   
+			wait 50
+			if !${${EXTNAME}.IsLoading} && !${${EXTNAME}.IsReady}
+			{
+				extension -unload ${EXTNAME}
+				extension ${EXTNAME}
+			} 	
+
+			Timer:Set[0]
+	    
+			do
+			{
+				if (${${EXTNAME}.IsReady})
+				{
+					return
+				}
+	           
+				Timer:Inc
+				waitframe
+			}
+			while (${Timer} < 200)
+			echo "obj_Login:LoadExtension: Loading extension ${EXTNAME} timed out, retrying"
+		}
+		while (!${${EXTNAME}(exists)})
+	 }
+	
+	method DoLogin()
 	{
 		if !${Login(exists)}
 		{
@@ -126,7 +156,7 @@ objectdef obj_Login
 				return
 				break
 			case INSPACE
-				EVEBot:Resume
+				run EVEBot/EVEBot.iss
 				return
 				break
 		}

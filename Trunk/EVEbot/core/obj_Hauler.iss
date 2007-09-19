@@ -110,6 +110,11 @@ objectdef obj_OreHauler inherits obj_Hauler
 	
 	method Pulse()
 	{
+		if ${EVEBot.Paused}
+		{
+			return
+		}
+
 		if !${Config.Common.BotModeName.Equal[Hauler]}
 		{
 			return

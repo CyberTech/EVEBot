@@ -49,6 +49,11 @@ objectdef obj_CombatFighter inherits obj_Fighter
 	
 	method Pulse()
 	{
+		if ${EVEBot.Paused}
+		{
+			return
+		}
+
 		if !${Config.Common.BotModeName.Equal[Fighter]}
 		{
 			return
