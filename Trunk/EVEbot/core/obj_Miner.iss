@@ -227,6 +227,13 @@ objectdef obj_Miner
 				return
 			}
 			
+			if ${Me.Ship.MaxLockedTargets} == 0 && \
+				${Ship.Drones.DronesInSpace} == 0
+			{
+				UI:UpdateConsole["Warning: Ship target jammed, no drones available. Changing Belts"]
+				call Asteroids.MoveToField TRUE
+			}
+			
 			if ${Social.PlayerDetection}
 			{
 				UI:UpdateConsole["Avoiding player: Changing belts"]
