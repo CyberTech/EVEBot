@@ -8,7 +8,7 @@
 */
 
 #include core/defines.iss
-#include core/obj_Login.iss
+#include Support/obj_Login.iss
 #include Support/obj_AutoPatcher.iss
 variable obj_Login LoginHandler
 
