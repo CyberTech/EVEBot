@@ -1,5 +1,5 @@
 /*
-	Login class
+	LoginHandler class
 	
 	Object to contain autologin code
 	
@@ -11,7 +11,7 @@
 
 */
 
-objectdef obj_Login
+objectdef obj_LoginHandler
 {
 	variable int FrameCounter
 	variable int LoginTimer = 0

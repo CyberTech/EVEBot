@@ -8,9 +8,9 @@
 */
 
 #include core/defines.iss
-#include Support/obj_Login.iss
+#include Support/obj_LoginHandler.iss
 #include Support/obj_AutoPatcher.iss
-variable obj_Login LoginHandler
+variable obj_LoginHandler LoginHandler
 
 /* Defined here for obj_Login to use temporarily */
 objectdef obj_UI
