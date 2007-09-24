@@ -277,7 +277,8 @@ objectdef obj_Asteroids
 			}
 			while ${AsteroidIterator:Next(exists)}
 
-			if ${Entity[${AsteroidIterator.Value}](exists)}
+			if ${AsteroidIterator.Value(exists)} && \
+				${Entity[${AsteroidIterator.Value}](exists)}
 			{
 				if ${AsteroidIterator.Value.IsLockedTarget} || \
 					${AsteroidIterator.Value.BeingTargeted}
