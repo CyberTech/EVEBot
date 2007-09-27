@@ -422,7 +422,7 @@ objectdef obj_Configuration_Miner
 		return ${This.MinerRef.FindSetting[Lowest Standing, 0]}
 	}
 	
-	method SetStandingDetection(int value)
+	method SetLowestStanding(int value)
 	{
 		This.MinerRef:AddSetting[Lowest Standing, ${value}]
 	}
@@ -432,7 +432,7 @@ objectdef obj_Configuration_Miner
 		return ${This.MinerRef.FindSetting[Ice Mining, 0]}
 	}
 	
-	method SetStandingDetection(bool value)
+	method SetIceMining(bool value)
 	{
 		This.MinerRef:AddSetting[Ice Mining, ${value}]
 	}
