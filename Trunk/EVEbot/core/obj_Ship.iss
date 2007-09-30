@@ -114,7 +114,7 @@ objectdef obj_Ship
 	{
 		if !${Me.Ship(exists)}
 		{
-			return
+			return 0
 		}
 
 		if ${Me.Ship.UsedCargoCapacity} < 0
@@ -128,7 +128,7 @@ objectdef obj_Ship
 	{
 		if !${Me.Ship(exists)}
 		{
-			return
+			return FALSE
 		}
 
 		if ${This.CargoFreeSpace} <= ${This.CargoMinimumFreeSpace}
@@ -142,7 +142,7 @@ objectdef obj_Ship
 	{
 		if !${Me.Ship(exists)}
 		{
-			return
+			return FALSE
 		}
 
 		if ${This.CargoFreeSpace} <= ${Math.Calc[${Me.Ship.CargoCapacity}*0.50]}
