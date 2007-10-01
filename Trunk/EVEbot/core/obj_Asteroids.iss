@@ -197,7 +197,7 @@ objectdef obj_Asteroids
 				}
 				while ${This.Asteroidlist:Next(exists)}
 				
-				This.BestAsteroidList:Insert[${This.AsteroidList
+				;This.BestAsteroidList:Insert[${This.AsteroidList
 				wait 0.5
 			}
 			while ( (${This.BestAsteroidList.Used} < 10) && (${This.OreTypeIterator:Next(exists)}) )

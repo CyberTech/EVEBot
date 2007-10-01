@@ -203,12 +203,14 @@ objectdef obj_Miner
 		
 	function Mine()
 	{
+		variable int TargetJammedCounter=0
 		
 		This.TripStartTime:Set[${Time.Timestamp}]
 		; Find an asteroid field, or stay at current one if we're near one.
 		call Asteroids.MoveToField FALSE
 		call This.Prepare_Environment
 		call Asteroids.UpdateList
+
 		variable int DroneCargoMin = ${Math.Calc[(${Ship.CargoMinimumFreeSpace}*1.4)]}
 		variable int Counter = 0
 		
@@ -227,11 +229,27 @@ objectdef obj_Miner
 				return
 			}
 			
-			if ${Me.Ship.MaxLockedTargets} == 0 && \
-				${Ship.Drones.DronesInSpace} == 0
+			if ${Config.Combat.LaunchCombatDrones} && \
+				${Ship.Drones.DronesInSpace} == 0 && \
+				!${Ship.InWarp}
 			{
-				UI:UpdateConsole["Warning: Ship target jammed, no drones available. Changing Belts"]
-				call Asteroids.MoveToField TRUE
+				Ship.Drones:LaunchAll[]
+			}
+			
+			if ${Me.Ship.MaxLockedTargets} == 0 && \
+				 ${Ship.Drones.DronesInSpace} == 0
+			{
+				TargetJammedCounter:Inc
+				if ${TargetJammedCounter} > 200
+				{
+					TargetJammedCounter:Set[0]
+					UI:UpdateConsole["Warning: Ship target jammed, no drones available. Changing Belts"]
+					call Asteroids.MoveToField TRUE
+				}
+			}
+			else
+			{
+				TargetJammedCounter:Set[0]
 			}
 			
 			if ${Social.PlayerDetection}

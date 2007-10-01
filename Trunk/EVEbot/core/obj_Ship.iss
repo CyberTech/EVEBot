@@ -929,7 +929,11 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 	
 	member:bool InWarp()
 	{
-		return (${Me.ToEntity.Mode} == 3)
+		if ${Me.ToEntity.Mode} == 3
+		{
+			return TRUE
+		}
+		return FALSE
 	}
 	
 	function WarpWait()
