@@ -275,13 +275,22 @@ objectdef obj_JetCan
 			return
 		}
 
-		if !${This.IsCargoOpen}
+		if !${This.IsCargoOpen} && \
+			${Entity[${ID}](exists}}
 		{
 			UI:UpdateConsole["Opening JetCan"]
 			Entity[${ID}]:OpenCargo
 			wait WAIT_CARGO_WINDOW
+			
+			variable float TimeOut = 0
 			while !${This.IsCargoOpen[${ID}]}
 			{
+				TimeOut:Inc[0.5]
+				if ${TimeOut} > 20
+				{
+					UI:UpdateConsole["JetCan.Open timed out (40 seconds)"]
+					break
+				}
 				wait 0.5
 			}
 			wait 10
