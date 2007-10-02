@@ -276,7 +276,7 @@ objectdef obj_JetCan
 		}
 
 		if !${This.IsCargoOpen} && \
-			${Entity[${ID}](exists}}
+			${Entity[${ID}](exists)}
 		{
 			UI:UpdateConsole["Opening JetCan"]
 			Entity[${ID}]:OpenCargo
