@@ -254,6 +254,8 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Standing Detection, FALSE]
 		This.MinerRef:AddSetting[Lowest Standing, 0]
 		This.MinerRef:AddSetting[Ice Mining, 0]
+		This.MinerRef:AddSetting[Delivery Location Type, Station]
+		This.MinerRef:AddSetting[Delivery Location,]
 
 		This.OreTypesRef:AddSetting[Vitreous Mercoxit, 1]
 		This.OreTypesRef:AddSetting[Magma Mercoxit, 1]
@@ -437,6 +439,25 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Ice Mining, ${value}]
 	}
 	
+	member:string DeliveryLocationType()
+	{
+		return ${This.MinerRef.FindSetting[Delivery Location Type, STATION]}
+	}
+	
+	method SetDeliveryLocationType(string value)
+	{
+		This.MinerRef:AddSetting[Delivery Location Type, ${value}]
+	}
+
+	member:string DeliveryLocation()
+	{
+		return ${This.MinerRef.FindSetting[Delivery Location, ${Config.Common.HomeStation}]}
+	}
+	
+	method SetDeliveryLocation(string value)
+	{
+		This.MinerRef:AddSetting[IDelivery Location, ${value}]
+	}
 }
 
 objectdef obj_Configuration_Combat

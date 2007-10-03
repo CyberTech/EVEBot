@@ -87,7 +87,15 @@ objectdef obj_Miner
 				call Hauler.Haul
 				break
 			case CARGOFULL
-				call Dock
+				switch ${Config.Miner.DeliveryLocationType}
+				{
+					case STATION
+						call Dock
+						break
+					case POS
+						call Ship.WarpToBookMark "${Config.Miner.DeliveryLocation}"
+						break		
+				}
 				break
 			case RUNNING
 				UI:UpdateConsole["Running Away"]
