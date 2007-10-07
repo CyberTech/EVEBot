@@ -61,11 +61,13 @@ objectdef obj_EVEBot
 		
 	method Pause()
 	{
+		UI:UpdateConsole["Paused"]
 		This.Paused:Set[TRUE]
 	}
 	
 	method Resume()
 	{
+		UI:UpdateConsole["Resumed"]
 		This.Paused:Set[FALSE]
 	}
 	

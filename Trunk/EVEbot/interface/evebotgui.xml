@@ -498,58 +498,64 @@
 									Script[EVEBot].VariableScope.Config.Miner:SetIceMining[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
-						<combobox name='comboOreTypes'>
-							<X>340</X>
-							<Y>10</Y>
+						<Text name='DeliveryLocationTypeLabel'>
+							<X>10</X>
+							<Y>170</Y>
+							<Width>250</Width>
+							<Height>18</Height>
+							<Text>ORE Delivery Configuration</Text>
+						</Text>					
+						<Text name='DeliveryLocationTypeText'>
+							<X>15</X>
+							<Y>190</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<Text>Location Type</Text>
+							<AutoTooltip>Type of the destination to delivery to, such as POS, Station, Outpost, etc</AutoTooltip>
+						</Text>					
+						<combobox name='DeliveryLocationType'>
+							<X>130</X>
+							<Y>190</Y>
 							<Width>150</Width> 
-							<Height>20</Height> 
+							<Height>15</Height> 
 							<FullHeight>200</FullHeight>
 							<ButtonWidth>20</ButtonWidth>
 							<Items>
-								<Item Value='1'>Mercoxit</Item>
-								<Item Value='2'>Arkanor</Item>
-								<Item Value='3'>Bistot</Item>
-								<Item Value='4'>Crokite</Item>
-								<Item Value='5'>Spodumain</Item>
-								<Item Value='6'>Dark Ochre</Item>
-								<Item Value='7'>Gneiss</Item>
-								<Item Value='8'>Hedbergite</Item>
-								<Item Value='9'>Hemorphite</Item>
-								<Item Value='10'>Jaspet</Item>
-								<Item Value='11'>Kernite</Item>
-								<Item Value='12'>Omber</Item>
-								<Item Value='13'>Plagioclase</Item>
-								<Item Value='14'>Pyroxeres</Item>
-								<Item Value='15'>Scordite</Item>
-								<Item Value='16'>Veldspar</Item>
+								<Item Value='1'>Station</Item>
+								<Item Value='2'>POS Hanger</Item>
+								<Item Value='3'>Outpost</Item>
 							</Items>
+							<OnSelect>
+								Script[EVEBot].VariableScope.Config.Miner:SetDeliveryLocationType[${This.SelectedItem.Value}]
+								Script[EVEBot].VariableScope.Config.Miner:SetDeliveryLocationTypeName[${This.SelectedItem.Text}]
+							</OnSelect>							
+							<OnLoad>
+								This:SetSelection[${Script[EVEBot].VariableScope.Config.Miner.DeliveryLocationType}]
+							</OnLoad>
 						</combobox>
-						<listbox name='TestListBox'>
-							<X>340</X>
-							<Y>160</Y>
-							<Width>150</Width>
-							<Height>120</Height>
-							<SelectMultiple>1</SelectMultiple>
-							<Sort>Value</Sort>
-							<Items>
-								<Item Value='1'>Mercoxit</Item>
-								<Item Value='2'>Arkanor</Item>
-								<Item Value='3'>Bistot</Item>
-								<Item Value='4'>Crokite</Item>
-								<Item Value='5'>Spodumain</Item>
-								<Item Value='6'>Dark Ochre</Item>
-								<Item Value='7'>Gneiss</Item>
-								<Item Value='8'>Hedbergite</Item>
-								<Item Value='9'>Hemorphite</Item>
-								<Item Value='10'>Jaspet</Item>
-								<Item Value='11'>Kernite</Item>
-								<Item Value='12'>Omber</Item>
-								<Item Value='13'>Plagioclase</Item>
-								<Item Value='14'>Pyroxeres</Item>
-								<Item Value='15'>Scordite</Item>
-								<Item Value='16'>Veldspar</Item>
-							</Items>
-						</listbox>    	
+						<Text name='DeliveryLocationText'>
+							<X>15</X>
+							<Y>210</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<Text>Location Name</Text>
+							<AutoTooltip>Either enter the delivery location here, or it will default to the last station we undock at</AutoTooltip>
+						</Text>					
+						<Textentry name='DeliveryLocation'>
+							<X>130</X>
+							<Y>210</Y>
+							<Width>350</Width>
+							<Height>18</Height>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Miner.DeliveryLocation}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Miner:SetDeliveryLocation[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
 					</Tab>
 					<Tab name='Combat'>
 						<slider name='MinArmorPct'>

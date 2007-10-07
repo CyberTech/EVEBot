@@ -254,7 +254,8 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Standing Detection, FALSE]
 		This.MinerRef:AddSetting[Lowest Standing, 0]
 		This.MinerRef:AddSetting[Ice Mining, 0]
-		This.MinerRef:AddSetting[Delivery Location Type, Station]
+		This.MinerRef:AddSetting[Delivery Location Type, 1]
+		This.MinerRef:AddSetting[Delivery Location Type Name, Station]
 		This.MinerRef:AddSetting[Delivery Location,]
 
 		This.OreTypesRef:AddSetting[Vitreous Mercoxit, 1]
@@ -439,14 +440,24 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Ice Mining, ${value}]
 	}
 	
-	member:string DeliveryLocationType()
+	member:int DeliveryLocationType()
 	{
-		return ${This.MinerRef.FindSetting[Delivery Location Type, STATION]}
+		return ${This.MinerRef.FindSetting[Delivery Location Type, 1]}
 	}
 	
-	method SetDeliveryLocationType(string value)
+	method SetDeliveryLocationType(int value)
 	{
 		This.MinerRef:AddSetting[Delivery Location Type, ${value}]
+	}
+
+	member:string DeliveryLocationTypeName()
+	{
+		return ${This.MinerRef.FindSetting[Delivery Location Type Name, STATION]}
+	}
+	
+	method SetDeliveryLocationTypeName(string value)
+	{
+		This.MinerRef:AddSetting[Delivery Location Type Name, ${value}]
 	}
 
 	member:string DeliveryLocation()
@@ -456,7 +467,7 @@ objectdef obj_Configuration_Miner
 	
 	method SetDeliveryLocation(string value)
 	{
-		This.MinerRef:AddSetting[IDelivery Location, ${value}]
+		This.MinerRef:AddSetting[Delivery Location, ${value}]
 	}
 }
 

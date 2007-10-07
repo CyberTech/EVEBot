@@ -101,6 +101,31 @@ objectdef obj_Cargo
 		}
 	}
 
+	function TransferListToPOSHangar()
+	{
+		variable iterator CargoIterator
+		This.CargoToTransfer:GetIterator[CargoIterator]
+		
+		if ${CargoIterator:First(exists)}
+		{
+			do
+			{
+				if ${JetCan.IsReady[TRUE]}
+				{
+					call JetCan.Open ${JetCan.ActiveCan}
+					UI:UpdateConsole["TransferListToPOSHangar: Transferring Cargo: ${CargoIterator.Value.Name}"]
+					CargoIterator.Value:MoveTo[${JetCan.ActiveCan},${CargoIterator.Value.Quantity},Corporation Folder 1]
+				}
+			}
+			while ${CargoIterator:Next(exists)}
+			JetCan:StackAllCargo
+		}
+		else
+		{
+			UI:UpdateConsole["DEBUG: obj_Cargo:TransferListToJetCan: Nothing found to move"]
+		}
+	}
+
 	function TransferListToJetCan()
 	{
 		variable iterator CargoIterator
@@ -133,6 +158,32 @@ objectdef obj_Cargo
 		}
 	}
 	
+	function TransferOreToPOSHangar()
+	{
+		UI:UpdateConsole["Transferring Ore to POS Hangar"]
+		
+		if !${Entity[TypeID, 17621](exists)}
+		{
+			UI:ConsoleUpdate["No Hangar Array found"]
+		}
+
+		; TODO - can't use jetcan code ehre, need to abstract it out a bit more, corp cargo arrays are type GROUPID_CORPORATE_HANGAR_ARRAY 
+		if ${JetCan.IsReady}
+		{
+			if ${Entity[${JetCan.ActiveCan}].Distance} > 2500
+			{
+				call Ship.Approach ${JetCan.ActiveCan} 2500
+			}
+		}
+
+		call Ship.OpenCargo
+
+		This:FindShipCargo[CATEGORYID_ORE]
+		call This.TransferListToPOSHangar
+		
+		This.CargoToTransfer:Clear[]
+	}
+
 	function TransferOreToJetCan()
 	{
 		UI:UpdateConsole["Transferring Ore to JetCan"]

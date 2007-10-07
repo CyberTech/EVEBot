@@ -87,13 +87,19 @@ objectdef obj_Miner
 				call Hauler.Haul
 				break
 			case CARGOFULL
-				switch ${Config.Miner.DeliveryLocationType}
+				switch ${Config.Miner.DeliveryLocationTypeName}
 				{
-					case STATION
+					case Station
 						call Dock
 						break
-					case POS
+					case POS Hanger
+						UI:UpdateConsole["Warping to ${Config.Miner.DeliveryLocation}"]
 						call Ship.WarpToBookMark "${Config.Miner.DeliveryLocation}"
+						call Cargo.TransferOreToPOSHangar
+						break		
+					case Outpost
+						UI:UpdateConsole["Outpost ore delivery not implemented - docking"]
+						call Dock
 						break		
 				}
 				break
@@ -227,6 +233,12 @@ objectdef obj_Miner
 		while ( !${EVEBot.ReturnToStation} && \
 				!${Ship.CargoFull} )
 		{	
+			if ${Ship.TotalMiningLasers} == 0
+			{
+				UI:UpdateConsole["Warning: No mining lasers detected, docking"]
+				EVEBot.ReturnToStation:Set[TRUE]
+				return
+			}
 	
 			if ${Config.Combat.LaunchCombatDrones} && \
 				${Ship.Drones.CombatDroneShortage}

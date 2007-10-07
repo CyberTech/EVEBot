@@ -176,7 +176,8 @@ objectdef obj_Ship
 		
 		if !${This.ModuleList.Used}
 		{
-			echo "DEBUG: obj_Ship:UpdateModuleList - No modules found"
+			echo "DEBUG: obj_Ship:UpdateModuleList - No modules found. Paused."
+			EVEBot:Pause
 			return
 		}
 	
@@ -839,7 +840,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 	{
 		if (!${EVE.Bookmark[${DestinationBookmarkLabel}](exists)})
 		{  
-			UI:UpdateConsole["ERROR:  Destination Bookmark, '${DestinationBookmarkLabel}', does not exist!"]
+			UI:UpdateConsole["ERROR: Bookmark: '${DestinationBookmarkLabel}' does not exist!"]
 			return
 		}
 	

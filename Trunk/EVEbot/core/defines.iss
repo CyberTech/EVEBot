@@ -31,6 +31,7 @@ variable string Version = "${APP_NAME} ${APP_VERSION} Revision ${SVN_REVISION.To
 #define GROUPID_FREQUENCY_MINING_LASER 483
 
 /* Same group and type for secure cargo containers as well */
+#define GROUPID_CORPORATE_HANGAR_ARRAY 471
 #define GROUPID_CARGO_CONTAINER 12
 #define TYPEID_CARGO_CONTAINER 23
 
