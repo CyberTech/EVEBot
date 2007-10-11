@@ -336,8 +336,9 @@ objectdef obj_Miner
 					TODO - CyberTech: This should be checked in a defensive class that runs regardless of which bot module is active
 					instead of being checked in each module
 				*/
-				UI:UpdateConsole["Armor is at ${Me.Ship.ArmorPct}"]
-				UI:UpdateConsole["Shield is at ${Me.Ship.ArmorPct}"]
+
+				UI:UpdateConsole["Armor is at ${Me.Ship.ArmorPct}: ${Me.Ship.Armor}/${Me.Ship.MaxArmor}"]
+				UI:UpdateConsole["Shield is at ${Me.Ship.ShieldPct}: ${Me.Ship.Shield}/${Me.Ship.MaxShield}"]
 				UI:UpdateConsole["Aborting due to defensive status"]
 				
 				EVEBot.ReturnToStation:Set[TRUE]
