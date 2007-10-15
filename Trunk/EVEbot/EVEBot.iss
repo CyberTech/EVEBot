@@ -19,6 +19,7 @@
 #include core/obj_Bookmarks.iss
 #include core/obj_Jetcan.iss
 #include core/obj_Social.iss
+#include core/obj_Gang.iss
 
 /* Behavior/Mode Includes */
 #include core/obj_Hauler.iss
@@ -41,6 +42,7 @@ variable obj_Combat Combat
 variable obj_Bookmarks Bookmarks
 variable obj_JetCan JetCan
 variable obj_Social Social
+variable obj_Gang Gang
 
 /* Script-Defined Behavior Objects */
 variable index:string BotModules
