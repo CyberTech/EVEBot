@@ -57,12 +57,6 @@ objectdef obj_JetCan
 					${Can.Value.ID} != ${This.ActiveCan} && \
 					${Can.Value.Distance} <= LOOT_RANGE)
 				{
-					if ${This.ActiveCan} > 0
-					{	/* switching cans, notify hauler */
-						tempString:Set["${Me.CharID},${Entity[${This.ActiveCan}].ID}"]
-						relay all -event EVEBot_Miner_Full ${tempString}			
-					}
-
 					This.ActiveCan:Set[${Can.Value.ID}]
 					return ${This.ActiveCan}
 				}
@@ -70,12 +64,6 @@ objectdef obj_JetCan
 			while ${Can:Next(exists)}
 		}
 		
-		if ${This.ActiveCan} > 0
-		{	/* switching cans, notify hauler */
-			tempString:Set["${Me.CharID},${Entity[${This.ActiveCan}].ID}"]
-			relay all -event EVEBot_Miner_Full ${tempString}			
-		}
-
 		This.ActiveCan:Set[-1]
 		return ${This.ActiveCan}
 	}
