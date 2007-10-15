@@ -32,7 +32,38 @@ objectdef obj_Hauler
 		/* the base obj_Hauler class does not use events */
 	}
 
-	member:int NearestMatchingJetCan()
+	member:int NearestMatchingJetCan(int id)
+	{
+		variable index:int JetCan
+		variable int JetCanCount
+		variable int JetCanCounter
+		variable string tempString
+			
+		JetCanCounter:Set[1]
+		JetCanCount:Set[${EVE.GetEntityIDs[JetCan,GroupID,12]}]
+		do
+		{
+			if ${Entity[${JetCan.Get[${JetCanCounter}]}](exists)}
+			{
+ 				if ${Entity[${JetCan.Get[${JetCanCounter}]}].Owner.CharID} == ${id}
+ 				{
+ 					echo "DEBUG: owner matched"
+					echo "DEBUG: ${Entity[${JetCan.Get[${JetCanCounter}]}]}"
+					echo "DEBUG: ${Entity[${JetCan.Get[${JetCanCounter}]}].ID}"
+					return ${Entity[${JetCan.Get[${JetCanCounter}]}].ID}
+ 				}
+			}
+			else
+			{
+				echo "No jetcans found"
+			}
+		}
+		while ${JetCanCounter:Inc} <= ${JetCanCount}
+		
+		return 0	/* no can found */
+	}
+	
+	member:int OldNearestMatchingJetCan()
 	{
 		variable index:int JetCan
 		variable int JetCanCount
@@ -95,7 +126,8 @@ objectdef obj_OreHauler inherits obj_Hauler
 	/* the bot will undock and seek out the gang memeber.  After the */
 	/* member's cargo has been loaded the bot will zero this out.    */
 	variable int m_gangMemberID
-	variable int m_jetCanID
+	variable int m_SystemID
+	variable int m_BeltID
 
 	/* the bot logic is currently based on a state machine */
 	variable string CurrentState
@@ -106,7 +138,8 @@ objectdef obj_OreHauler inherits obj_Hauler
 	method Initialize(string player, string corp)
 	{
 		m_gangMemberID:Set[-1]
-		m_jetCanID:Set[-1]
+		m_SystemID:Set[-1]
+		m_BeltID:Set[-1]
 		m_CheckedCargo:Set[FALSE]
 		UI:UpdateConsole["obj_OreHauler: Initialized"]
 		Event[OnFrame]:AttachAtom[This:Pulse]
@@ -158,15 +191,18 @@ objectdef obj_OreHauler inherits obj_Hauler
 		echo "DEBUG: obj_OreHauler:MinerFull... ${haulParams}"
 		
 		variable int charID = -1
-		variable int itemID = -1
+		variable int systemID = -1
+		variable int beltID = -1
 		
 		charID:Set[${haulParams.Token[1,","]}]
-		itemID:Set[${haulParams.Token[2,","]}]
+		systemID:Set[${haulParams.Token[2,","]}]
+		beltID:Set[${haulParams.Token[3,","]}]
 		
-		echo "DEBUG: obj_OreHauler:MinerFull... ${charID} ${itemID}"
+		echo "DEBUG: obj_OreHauler:MinerFull... ${charID} ${systemID} ${beltID}"
 
 		m_gangMemberID:Set[${charID}]
-		m_jetCanID:Set[${itemID}]		
+		m_SystemID:Set[${systemID}]		
+		m_BeltID:Set[${beltID}]				
 	}	
 	
 	/* this function is called repeatedly by the main loop in EveBot.iss */
@@ -244,7 +280,8 @@ objectdef obj_OreHauler inherits obj_Hauler
 		{
 			This.CurrentState:Set["CARGOFULL"]
 			m_gangMemberID:Set[-1]
-			m_jetCanID:Set[-1]		
+			m_SystemID:Set[-1]		
+			m_BeltID:Set[-1]		
 			return
 		}
 	
@@ -303,26 +340,48 @@ objectdef obj_OreHauler inherits obj_Hauler
 
 	function Haul()
 	{		
-		if ${m_gangMemberID} > 0 && ${m_jetCanID} > 0
+		variable int id
+		variable int count
+		
+		if ${m_gangMemberID} > 0 && ${m_SystemID} == ${Me.SolarSystemID}
 		{
 			UI:UpdateConsole["Warping to gang member."]
 			Gang:WarpToGangMember[${m_gangMemberID}]
 			call Ship.WarpWait
 
 			call Ship.OpenCargo
-			
-			if ${Entity[${m_jetCanID}](exists)}
+		
+			id:Set[${This.NearestMatchingJetCan[${m_gangMemberID}]}]
+
+			echo "DEBUG: can ID = ${id}"
+			if ${Entity[${id}](exists)}
+
 			{
-				UI:UpdateConsole["Found can."]
-				call This.ApproachEntity ${m_jetCanID}
-				Entity[${m_jetCanID}]:OpenCargo
+ 				call This.ApproachEntity ${id}
+				Entity[${id}]:OpenCargo
+
 				wait 30	
-				call This.LootEntity ${m_jetCanID}
-				if ${Entity[${m_jetCanID}](exists)}
+				call This.LootEntity ${id}
+				if ${Entity[${id}](exists)}
 				{
-					Entity[${m_jetCanID}]:CloseCargo
+					Entity[${id}]:CloseCargo
 				}					
 			}
+			
+		/*	
+			if ${Entity[${m_SystemID}](exists)}
+			{
+				UI:UpdateConsole["Found can."]
+				call This.ApproachEntity ${m_SystemID}
+				Entity[${m_SystemID}]:OpenCargo
+				wait 30	
+				call This.LootEntity ${m_SystemID}
+				if ${Entity[${m_SystemID}](exists)}
+				{
+					Entity[${m_SystemID}]:CloseCargo
+				}					
+			}
+		*/			
 			
 			/* TODO: add code to loot and salvage any nearby wrecks */
 		}
@@ -331,7 +390,8 @@ objectdef obj_OreHauler inherits obj_Hauler
 		
 		EVEBot.ReturnToStation:Set[TRUE]
 		m_gangMemberID:Set[-1]
-		m_jetCanID:Set[-1]		
+		m_SystemID:Set[-1]		
+		m_BeltID:Set[-1]		
 		call Ship.CloseCargo
 	}	
 }
