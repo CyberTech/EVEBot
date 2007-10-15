@@ -13,9 +13,24 @@
 
 objectdef obj_Gang
 {
+	variable int GangMemberIndex = 1
+	variable index:gangmember GangMembers
+	variable int GangMemberCount
+
 	method Initialize()
 	{
+		GangMemberCount:Set[${Me.GetGang[GangMembers]}]
+		echo Populating gang member list:: ${GangMemberCount} members total
 		UI:UpdateConsole["obj_Gang: Initialized"]
+		
+		/* BEGIN TEST CODE */
+		variable int i = 1
+		do
+		{ 
+			echo Gang member ${i} - ${GangMembers.Get[${i}].ToPilot.Name}
+		}
+		while ${i:Inc} <= ${GangMemberCount}
+		/* END TEST CODE */
 	}
 
 	/* 	
@@ -26,11 +41,64 @@ objectdef obj_Gang
 	{
 	}
 	
-	/*
-		Determine if the player is in your system and warp
-		to them.
-	*/
-	method WarpToPlayer(int id, int distance)
+	method UpdateGangList()
 	{
+		GangMemberIndex:Set[1]
+		GangMemberCount:Set[${Me.GetGang[GangMembers]}]
+		echo Populating gang member list:: ${GangMemberCount} members total
+	}
+	
+	method WarpToMember( int idx, int distance )
+	{
+		GangMembers.Get[${idx}]:WarpTo[${distance}]
+	}
+	
+	method WarpToGangMember( int charID )
+	{
+		This:UpdateGangList[]
+		
+		variable int i = 1
+		do
+		{ 
+			if ${GangMembers.Get[${i}].CharID} == ${charID}
+			{
+				GangMembers.Get[${i}]:WarpTo
+				break
+			}
+		}
+		while ${i:Inc} <= ${GangMemberCount}
+	}
+
+	method WarpToNextMember(int distance = 0)
+	{		
+		GangMemberIndex:Inc
+		
+		if ${GangMembers.Get[${GangMemberIndex}].CharID} == ${Me.CharID}
+		{
+			GangMemberIndex:Inc
+		}
+		
+		if ${GangMemberIndex} > ${GangMemberCount}
+		{
+			GangMemberIndex:Set[1]
+		}
+		
+		This:WarpToMember[${GangMembers.Get[${GangMemberIndex}].CharID},${distance}]
 	}	
+
+	method WarpToPreviousMember(int distance = 0)
+	{
+		if ${GangMembers.Get[${GangMemberIndex}].CharID} == ${Me.CharID}
+		{
+			GangMemberIndex:Inc
+		}
+		
+		if ${GangMemberIndex} > ${GangMemberCount}
+		{
+			GangMemberIndex:Set[1]
+		}
+		
+		This:WarpToMember[${GangMembers.Get[${GangMemberIndex}].CharID},${distance}]
+	}	
+	
 }
