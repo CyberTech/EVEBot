@@ -266,13 +266,31 @@ objectdef obj_Asteroids
 		{
 			do
 			{
-			  if ${Entity[${AsteroidIterator.Value}](exists)} && \
+				if ${Config.Miner.UseJetCan}
+				{	/* use different selection criteria when JC mining */
+					/* avoid moving away from the jetcan */
+					if ${Entity[${AsteroidIterator.Value}](exists)} && \
+					!${AsteroidIterator.Value.IsLockedTarget} && \
+					!${AsteroidIterator.Value.BeingTargeted} && \
+					${AsteroidIterator.Value.Distance} < ${Me.Ship.MaxTargetRange}
+					{
+						if !${Me.ActiveTarget(exists)}
+						{
+							break
+						}
+						elseif ${AsteroidIterator.Value.Distance} <= ${Ship.OptimalMiningRange}
+						{
+							break
+						}						
+					}
+				}
+				elseif ${Entity[${AsteroidIterator.Value}](exists)} && \
 					!${AsteroidIterator.Value.IsLockedTarget} && \
 					!${AsteroidIterator.Value.BeingTargeted} && \
 					${AsteroidIterator.Value.Distance} < ${Me.Ship.MaxTargetRange} && \
 					( !${Me.ActiveTarget(exists)} || ${AsteroidIterator.Value.DistanceTo[${Me.ActiveTarget.ID}]} <= ${Math.Calc[${Ship.OptimalMiningRange}* 1.1]} )
 				{
-						break
+					break
 				}
 			}
 			while ${AsteroidIterator:Next(exists)}
