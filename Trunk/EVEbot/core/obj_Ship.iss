@@ -317,6 +317,7 @@ objectdef obj_Ship
 	{	
 		if !${Me.Ship(exists)}
 		{
+			echo "obj_Ship:TotalMiningLasers returning 0!!!
 			return 0
 		}
 
