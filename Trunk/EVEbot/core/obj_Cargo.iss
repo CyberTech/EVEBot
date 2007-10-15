@@ -153,7 +153,8 @@ objectdef obj_Cargo
 					UI:UpdateConsole["TransferListToJetCan: Ejecting Cargo: ${CargoIterator.Value.Name}"]
 					CargoIterator.Value:Jettison
 					call JetCan.WaitForCan
-					/* Dead botter giveaway...  JetCan:Rename */
+					/* This isn't a botter giveaway; I don't know a single miner who doesn't rename cans - failure to do so affects can life. */
+					JetCan:Rename
 				}
 			}
 			while ${CargoIterator:Next(exists)}

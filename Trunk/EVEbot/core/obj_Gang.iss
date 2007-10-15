@@ -20,14 +20,14 @@ objectdef obj_Gang
 	method Initialize()
 	{
 		GangMemberCount:Set[${Me.GetGang[GangMembers]}]
-		echo Populating gang member list:: ${GangMemberCount} members total
+		echo DEBUG: Populating gang member list:: ${GangMemberCount} members total
 		UI:UpdateConsole["obj_Gang: Initialized"]
 		
 		/* BEGIN TEST CODE */
 		variable int i = 1
 		do
 		{ 
-			echo Gang member ${i} - ${GangMembers.Get[${i}].ToPilot.Name}
+			echo DEBUG: Gang member ${i} - ${GangMembers.Get[${i}].ToPilot.Name}
 		}
 		while ${i:Inc} <= ${GangMemberCount}
 		/* END TEST CODE */
@@ -45,7 +45,7 @@ objectdef obj_Gang
 	{
 		GangMemberIndex:Set[1]
 		GangMemberCount:Set[${Me.GetGang[GangMembers]}]
-		echo Populating gang member list:: ${GangMemberCount} members total
+		echo DEBUG: Populating gang member list:: ${GangMemberCount} members total
 	}
 	
 	method WarpToMember( int idx, int distance )

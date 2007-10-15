@@ -81,8 +81,8 @@ objectdef obj_Ship
 				}
 				
 				;Shield Boosters
-				;echo "Debug: Obj_Ship: Possible Hostiles: ${Social.PossibleHostiles}"
-				;echo "Debug: Obj_Ship: Shield Booster Activation: ${Config.Combat.ShieldBAct}"
+				;UI:UpdateConsole["Debug: Obj_Ship: Possible Hostiles: ${Social.PossibleHostiles}"]
+				;UI:UpdateConsole["Debug: Obj_Ship: Shield Booster Activation: ${Config.Combat.ShieldBAct}"]
 				/* TODO: CyberTech - This should be an option, not forced. */
 				if ${Social.PossibleHostiles} || \
 					${Me.Ship.ShieldPct} < 100 || \
@@ -157,6 +157,7 @@ objectdef obj_Ship
 		if ${Me.InStation}
 		{
 			; GetModules cannot be used in station as of 07/15/2007
+			UI:UpdateConsole["DEBUG: obj_Ship:UpdateModuleList called while in station"]
 			return
 		}
 		
@@ -176,14 +177,14 @@ objectdef obj_Ship
 		
 		if !${This.ModuleList.Used}
 		{
-			echo "DEBUG: obj_Ship:UpdateModuleList - No modules found. Paused."
+			UI:UpdateConsole["DEBUG: obj_Ship:UpdateModuleList - No modules found. Paused."]
 			EVEBot:Pause
 			return
 		}
 	
 		variable iterator Module
 
-		echo "Module Inventory:"
+		UI:UpdateConsole["Module Inventory:"]
 		This.ModuleList:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
@@ -236,50 +237,51 @@ objectdef obj_Ship
 		} 
 		while ${Module:Next(exists)}
 
-		echo "Passive Modules:"
+		UI:UpdateConsole["Passive Modules:"]
 		This.ModuleList_Passive:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
-			echo "    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"]
 		}
 		while ${Module:Next(exists)}
 
-		echo "Mining Modules:"
+		UI:UpdateConsole["Mining Modules:"]
 		This.ModuleList_MiningLaser:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
-			echo "    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"]
 		}
 		while ${Module:Next(exists)}
 		
-		echo "Armor Repair Modules:"
+		UI:UpdateConsole["Armor Repair Modules:"]
 		This.ModuleList_Repair_Armor:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
-			echo "    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"]
 		}
 		while ${Module:Next(exists)}
 		
-		echo "Shield Regen Modules:"
+		UI:UpdateConsole["Shield Regen Modules:"]
 		This.ModuleList_Regen_Shield:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
-			echo "    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"]
 		}
 		while ${Module:Next(exists)}
 
-		echo "AfterBurner Modules:"
+		UI:UpdateConsole["AfterBurner Modules:"]
 		This.ModuleList_AB_MWD:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
-			echo "    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"]
 		}
 		while ${Module:Next(exists)}
+
 		if ${This.ModuleList_AB_MWD.Used} > 1
 		{
 			UI:UpdateConsole["Warning: More than 1 Afterburner or MWD was detected, I will only use the first one."]
@@ -317,7 +319,6 @@ objectdef obj_Ship
 	{	
 		if !${Me.Ship(exists)}
 		{
-			echo "obj_Ship:TotalMiningLasers returning 0!!!
 			return 0
 		}
 
@@ -426,7 +427,7 @@ objectdef obj_Ship
 			if ${Module.Value.ToItem.Slot.Equal[${SlotName}]} && \
 				${Module.Value.Charge(exists)}
 			{
-				echo "obj_Ship:LoadedMiningLaserCrystal Returning ${Module.Value.Charge.Name.Token[1, " "]}
+				;UI:UpdateConsole["DEBUG: obj_Ship:LoadedMiningLaserCrystal Returning ${Module.Value.Charge.Name.Token[1, " "]}]
 				return ${Module.Value.Charge.Name.Token[1, " "]}
 			}
 		}
@@ -506,7 +507,7 @@ objectdef obj_Ship
 		LoadedAmmo:Set[${This.LoadedMiningLaserCrystal[${SlotName}]}]
 		if !${OreType.Find[${LoadedAmmo}](exists)}
 		{
-			echo "DEBUG: Current crystal in ${SlotName} is ${LoadedAmmo}, looking for ${OreType}"
+			UI:UpdateConsole["Current crystal in ${SlotName} is ${LoadedAmmo}, looking for ${OreType}"]
 			variable index:item CrystalList
 			variable iterator CrystalIterator
 			
@@ -553,7 +554,7 @@ objectdef obj_Ship
 				!${Module.Value.IsDeactivating} && \
 				( !${Module.Value.LastTarget(exists)} || !${Entity[id,${Module.Value.LastTarget.ID}](exists)} )
 			{
-				echo "${Module.Value.ToItem.Slot}:${Module.Value.ToItem.Name} has no target: Deactivating"
+				UI:UpdateConsole["${Module.Value.ToItem.Slot}:${Module.Value.ToItem.Name} has no target: Deactivating"]
 				Module.Value:Click
 			}
 		}
@@ -686,7 +687,9 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				{
 					variable string OreType
 					OreType:Set[${Me.ActiveTarget.Name.Token[2,"("]}]
-					OreType:Set[${OreType.Replace[(,]}]
+					OreType:Set[${OreType.Token[1,")"]}]
+					;OreType:Set[${OreType.Replace["(",]}]
+					;OreType:Set[${OreType.Replace[")",]}]
 					call This.ChangeMiningLaserCrystal "${OreType}" ${Slot}
 				}
 
@@ -722,18 +725,18 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			do
 			{
 				Entity[${EntityID}]:Approach
-				wait 20
+				wait 50
 
 				if ${Entity[${EntityID}](exists)} && \
 					${OriginalDistance} < ${Entity[${EntityID}].Distance}
 				{
-					echo "DEBUG: obj_Ship:Approach: ${Entity[${EntityID}].Name} is getting further away!  Is it moving? Are we stuck, or colliding?"
+					UI:UpdateConsole["DEBUG: obj_Ship:Approach: ${Entity[${EntityID}].Name} is getting further away!  Is it moving? Are we stuck, or colliding?"]
 				}
 			
 				if ${Entity[${EntityID}](exists)} && \
 					${OriginalDistance} == ${Entity[${EntityID}].Distance}
 				{
-					echo "DEBUG: obj_Ship:Approach: We may be stuck or colliding"
+					UI:UpdateConsole["DEBUG: obj_Ship:Approach: We may be stuck or colliding"]
 					EVE:Execute[CmdStopShip]
 					return
 				}
@@ -809,7 +812,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		Config.Common:SetHomeStation[${Entity[CategoryID,3].Name}]
 		
 		Me:SetVelocity[100]
-		wait 50
+		wait 100
 
 		This:UpdateModuleList[]
 	}
@@ -818,13 +821,13 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 	{ 
 		if (${Id} <= 0)
 		{
-			echo "Error: obj_Ship:WarpToID: Id is <= 0 (${Id})"
+			UI:UpdateConsole["Error: obj_Ship:WarpToID: Id is <= 0 (${Id})"]
 			return
 		}
 		
 		if !${Entity[${Id}](exists)}
 		{
-			echo "Error: obj_Ship:WarpToID: No entity matched the ID given."
+			UI:UpdateConsole["Error: obj_Ship:WarpToID: No entity matched the ID given."]
 			return
 		}
 
