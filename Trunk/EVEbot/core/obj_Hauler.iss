@@ -95,15 +95,22 @@ objectdef obj_OreHauler inherits obj_Hauler
 	/* the bot will undock and seek out the gang memeber.  After the */
 	/* member's cargo has been loaded the bot will zero this out.    */
 	variable int m_gangMemberID
+	variable int m_jetCanID
 
 	/* the bot logic is currently based on a state machine */
 	variable string CurrentState
 	variable int FrameCounter
 	
+	variable bool m_CheckedCargo
+	
 	method Initialize(string player, string corp)
 	{
+		m_gangMemberID:Set[-1]
+		m_jetCanID:Set[-1]
+		m_CheckedCargo:Set[FALSE]
 		UI:UpdateConsole["obj_OreHauler: Initialized"]
 		Event[OnFrame]:AttachAtom[This:Pulse]
+		This:SetupEvents[]
 		BotModules:Insert["Hauler"]
 	}
 
@@ -146,11 +153,20 @@ objectdef obj_OreHauler inherits obj_Hauler
 	}
 	
 	/* A miner's jetcan is full.  Let's go get the ore.  */
-	method MinerFull(int charID)
+	method MinerFull(string haulParams)
 	{
-		echo "DEBUG: obj_OreHauler:MinerFull... ${charID}"
+		echo "DEBUG: obj_OreHauler:MinerFull... ${haulParams}"
 		
+		variable int charID = -1
+		variable int itemID = -1
+		
+		charID:Set[${haulParams.Token[1,","]}]
+		itemID:Set[${haulParams.Token[2,","]}]
+		
+		echo "DEBUG: obj_OreHauler:MinerFull... ${charID} ${itemID}"
+
 		m_gangMemberID:Set[${charID}]
+		m_jetCanID:Set[${itemID}]		
 	}	
 	
 	/* this function is called repeatedly by the main loop in EveBot.iss */
@@ -165,8 +181,11 @@ objectdef obj_OreHauler inherits obj_Hauler
 				Call Dock
 				break
 			case BASE
-				call Cargo.TransferOreToHangar
-				call Ship.Undock
+				if !${m_CheckedCargo}
+				{
+					call Cargo.TransferOreToHangar
+					m_CheckedCargo:Set[TRUE]
+				}
 				break
 			case COMBAT
 				UI:UpdateConsole["FIRE ZE MISSILES!!!"]
@@ -174,6 +193,8 @@ objectdef obj_OreHauler inherits obj_Hauler
 				break
 			case HAUL
 				UI:UpdateConsole["Hauling"]
+				m_CheckedCargo:Set[FALSE]
+				call Ship.Undock
 				call This.Haul
 				break
 			case CARGOFULL
@@ -195,13 +216,19 @@ objectdef obj_OreHauler inherits obj_Hauler
 			return
 		}
 	
-		if ${EVEBot.ReturnToStationt}
+		if ${EVEBot.ReturnToStation}
 		{
 			This.CurrentState:Set["IDLE"]
 			return
 		}
 	
-		if ${Me.InStation}
+		if ${m_gangMemberID} > 0
+		{
+		 	This.CurrentState:Set["HAUL"]
+			return
+		}
+		
+		if ${Me.InStation} && ${m_gangMemberID} <= 0
 		{
 	  		This.CurrentState:Set["BASE"]
 	  		return
@@ -213,16 +240,11 @@ objectdef obj_OreHauler inherits obj_Hauler
 			return
 		}
 					
-		if ${m_gangMemberID}
-		{
-		 	This.CurrentState:Set["HAUL"]
-			return
-		}
-		
 		if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${EVEBot.ReturnToStation}
 		{
 			This.CurrentState:Set["CARGOFULL"]
-			m_gangMemberID:Set[0]
+			m_gangMemberID:Set[-1]
+			m_jetCanID:Set[-1]		
 			return
 		}
 	
@@ -273,86 +295,44 @@ objectdef obj_OreHauler inherits obj_Hauler
 	/* coded for now.                                     */
 	function MoveToField(bool ForceMove)
 	{
-		variable int curBelt
-		variable index:entity Belts
-		variable iterator BeltIterator
-	
-		EVE:DoGetEntities[Belts,GroupID,9]
-		Belts:GetIterator[BeltIterator]
-		if ${BeltIterator:First(exists)}
+		if ${Config.Hauler.HaulerMode.Equal["Service Gang Members"]}
 		{
-			if ${ForceMove} || ${BeltIterator.Value.Distance} > 25000
-			{
-				; We're not at a field already, so find one
-				curBelt:Set[1]
-				UI:UpdateConsole["Warping to Asteroid Belt: ${Belts[${curBelt}].Name}"]
-				call Ship.WarpToID ${Belts[${curBelt}]}
-				This.UsingMookMarks:Set[TRUE]
-				This.LastBeltIndex:Set[${curBelt}]
-			}
-			else
-			{
-				UI:UpdateConsole["Staying at Asteroid Belt: ${BeltIterator.Value.Name}"]
-			}		
-		}
-		else
-		{
-			echo "ERROR: oMining:Mine --> No asteroid belts in the area..."
-			play:Set[FALSE]
-			return
-		}
+			UI:UpdateConsole["Hauler moving to gang member"]
+		}		
 	}
 
 	function Haul()
-	{
-		variable int id
-		variable int count
-		
-		call This.MoveToField FALSE
-	
-		call Ship.OpenCargo
-		
-		/* wait in belt until cargo full or agressed */
-		while !${EVEBot:ReturnToStation} && \
-				${Ship.CargoFreeSpace} >= ${Ship.CargoMinimumFreeSpace}
-		{				
-			id:Set[${This.NearestMatchingJetCan}]
+	{		
+		if ${m_gangMemberID} > 0 && ${m_jetCanID} > 0
+		{
+			UI:UpdateConsole["Warping to gang member."]
+			Gang:WarpToGangMember[${m_gangMemberID}]
+			call Ship.WarpWait
 
-			echo "DEBUG: can ID = ${id}"
-			if ${Entity[${id}](exists)}
+			call Ship.OpenCargo
+			
+			if ${Entity[${m_jetCanID}](exists)}
 			{
- 				call This.ApproachEntity ${id}
-				Entity[${id}]:OpenCargo
+				UI:UpdateConsole["Found can."]
+				call This.ApproachEntity ${m_jetCanID}
+				Entity[${m_jetCanID}]:OpenCargo
 				wait 30	
-				call This.LootEntity ${id}
-				if ${Entity[${id}](exists)}
+				call This.LootEntity ${m_jetCanID}
+				if ${Entity[${m_jetCanID}](exists)}
 				{
-					Entity[${id}]:CloseCargo
+					Entity[${m_jetCanID}]:CloseCargo
 				}					
-				if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
-				{
-					break
-				}
 			}
 			
-			/* only loot cans every 10 minutes */
-			count:Set[0]
-			while ${count} < 60		/* 60 * 10 seconds = 10 minutes */
-			{
-				wait 100
-				count:Inc
-				
-				if ${Me.GetTargetedBy} > 0
-				{
-					UI:UpdateConsole["Hauler is under attack!  Bug out."]
-					EVEBot:ReturnToStation:Set[TRUE]	/* cause the state machine to return us to base */
-					break
-				}
-			}			
-		}		
+			/* TODO: add code to loot and salvage any nearby wrecks */
+		}
 		
 		UI:UpdateConsole["Done hauling."]
-	
+		
+		EVEBot.ReturnToStation:Set[TRUE]
+		m_gangMemberID:Set[-1]
+		m_jetCanID:Set[-1]		
 		call Ship.CloseCargo
-	}
+	}	
 }
+
