@@ -34,7 +34,7 @@ objectdef obj_JetCan
 			}
 		}
 
-		if (${This.ActiveCan} > 0
+		if ${This.ActiveCan} > 0
 		{
 			/* The can no longer exists, so try to compensate for an Eve bug and close the loot window for it. */
 			EVEWindow[loot_${This.ActiveCan}]:Close
@@ -43,6 +43,7 @@ objectdef obj_JetCan
 		variable index:entity Cans
 		variable iterator Can
 		EVE:DoGetEntities[Cans, GroupID, GROUPID_CARGO_CONTAINER, Radius, LOOT_RANGE]
+		variable string tempString
 		
 		Cans:GetIterator[Can]
 		
@@ -53,8 +54,15 @@ objectdef obj_JetCan
 				if (${Can.Value.ID(exists)} && \
 					${Can.Value.ID} > 0 && \
 					${This.AccessAllowed[${Can.Value.ID}]} && \
-					${Can.Value.ID} != ${This.ActiveCan})
+					${Can.Value.ID} != ${This.ActiveCan} && \
+					${Can.Value.Distance} <= LOOT_RANGE)
 				{
+					if ${This.ActiveCan} > 0
+					{	/* switching cans, notify hauler */
+						tempString:Set["${Me.CharID},${Entity[${This.ActiveCan}].ID}"]
+						relay all -event EVEBot_Miner_Full ${tempString}			
+					}
+
 					This.ActiveCan:Set[${Can.Value.ID}]
 					return ${This.ActiveCan}
 				}
@@ -62,6 +70,12 @@ objectdef obj_JetCan
 			while ${Can:Next(exists)}
 		}
 		
+		if ${This.ActiveCan} > 0
+		{	/* switching cans, notify hauler */
+			tempString:Set["${Me.CharID},${Entity[${This.ActiveCan}].ID}"]
+			relay all -event EVEBot_Miner_Full ${tempString}			
+		}
+
 		This.ActiveCan:Set[-1]
 		return ${This.ActiveCan}
 	}
