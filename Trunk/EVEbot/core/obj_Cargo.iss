@@ -140,13 +140,20 @@ objectdef obj_Cargo
 					call JetCan.Open ${JetCan.ActiveCan}
 					UI:UpdateConsole["TransferListToJetCan: Transferring Cargo: ${CargoIterator.Value.Name}"]
 					CargoIterator.Value:MoveTo[${JetCan.ActiveCan}]
+					
+					if ${JetCan.CargoHalfFull[]}
+					{	/* can is half full, notify hauler */
+						variable string tempString
+						tempString:Set["${Me.CharID},${Entity[${JetCan.ActiveCan}].ID}"]
+						relay all -event EVEBot_Miner_Full ${tempString}			
+					}
 				}
 				else
 				{
 					UI:UpdateConsole["TransferListToJetCan: Ejecting Cargo: ${CargoIterator.Value.Name}"]
 					CargoIterator.Value:Jettison
 					call JetCan.WaitForCan
-					JetCan:Rename
+					/* Dead botter giveaway...  JetCan:Rename */
 				}
 			}
 			while ${CargoIterator:Next(exists)}
