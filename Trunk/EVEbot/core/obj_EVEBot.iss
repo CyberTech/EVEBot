@@ -36,9 +36,9 @@ objectdef obj_EVEBot
 			${Login(exists)} || \
 			${CharSelect(exists)}
 		{
-			echo "EVEBot: Out of game, exiting to launcher"
-			run EVEBot/Launcher.iss
-			Script:End
+			echo "EVEBot: Out of game"
+			;run EVEBot/Launcher.iss charid or charname
+			;Script:End
 		}
 		
 		FrameCounter:Inc
