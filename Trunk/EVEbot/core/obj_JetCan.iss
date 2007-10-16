@@ -25,10 +25,17 @@ objectdef obj_JetCan
 	member:int CurrentCan(bool CheckFreeSpace = FALSE)
 	{
 		if (${This.ActiveCan} > 0 && \
-			${Entity[${This.ActiveCan}](exists)} && \
-			${Entity[${This.ActiveCan}].Distance} <= LOOT_RANGE)
+			${Entity[${This.ActiveCan}](exists)}
 		{
-			if !${CheckFreeSpace} || !${This.CargoFull[${This.ActiveCan}]}
+			if ((${Entity[${This.ActiveCan}].Distance} >= LOOT_RANGE) || \
+				(${CheckFreeSpace} && ${This.CargoFull[${This.ActiveCan}]}))
+			{
+				/* The can we WERE using is full, or has moved out of range; notify the hauler(s) */
+				variable string tempString
+				tempString:Set["${Me.CharID},${Me.SolarSystemID},${Entity[GroupID, GROUPID_ASTEROID_BELT].ID}"]
+				relay all -event EVEBot_Miner_Full ${tempString}
+			}
+			else
 			{
 				return ${This.ActiveCan}
 			}
@@ -36,7 +43,7 @@ objectdef obj_JetCan
 
 		if ${This.ActiveCan} > 0
 		{
-			/* The can no longer exists, so try to compensate for an Eve bug and close the loot window for it. */
+			/* The can no longer exists, since we passed above checks, so try to compensate for an Eve bug and close the loot window for it. */
 			EVEWindow[loot_${This.ActiveCan}]:Close
 		}
 		
