@@ -133,7 +133,8 @@ objectdef obj_OreHauler inherits obj_Hauler
 	variable string CurrentState
 	variable int FrameCounter
 	
-	variable bool m_CheckedCargo
+	variable index:bookmark SafeSpotList
+	variable int LastSafeSpotIndex
 	
 	method Initialize(string player, string corp)
 	{
@@ -217,24 +218,17 @@ objectdef obj_OreHauler inherits obj_Hauler
 				Call Dock
 				break
 			case BASE
-				if !${m_CheckedCargo}
-				{
-					call Cargo.TransferOreToHangar
-					m_CheckedCargo:Set[TRUE]
-				}
-				break
-			case COMBAT
-				UI:UpdateConsole["FIRE ZE MISSILES!!!"]
-				call ShieldNotification
+				call Cargo.TransferOreToHangar
+				call Ship.Undock
 				break
 			case HAUL
-				UI:UpdateConsole["Hauling"]
-				m_CheckedCargo:Set[FALSE]
-				call Ship.Undock
 				call This.Haul
 				break
 			case CARGOFULL
 				call Dock
+				m_gangMemberID:Set[-1]
+				m_SystemID:Set[-1]		
+				m_BeltID:Set[-1]		
 				break
 			case RUNNING
 				UI:UpdateConsole["Running Away"]
@@ -244,48 +238,33 @@ objectdef obj_OreHauler inherits obj_Hauler
 		}	
 	}
 	
+	/* NOTE: The order of these if statements is important!! */
 	method SetState()
 	{
 		if ${EVEBot.ReturnToStation} && !${Me.InStation}
 		{
 			This.CurrentState:Set["ABORT"]
-			return
 		}
-	
-		if ${EVEBot.ReturnToStation}
+		elseif ${EVEBot.ReturnToStation}
 		{
 			This.CurrentState:Set["IDLE"]
-			return
 		}
-	
-		if ${m_gangMemberID} > 0
-		{
-		 	This.CurrentState:Set["HAUL"]
-			return
-		}
-		
-		if ${Me.InStation} && ${m_gangMemberID} <= 0
+		elseif ${Me.InStation}
 		{
 	  		This.CurrentState:Set["BASE"]
-	  		return
 		}
-		
-		if (${Me.ToEntity.ShieldPct} < ${MinShieldPct})
+		elseif ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace}
 		{
-			This.CurrentState:Set["COMBAT"]
-			return
+		 	This.CurrentState:Set["HAUL"]
 		}
-					
-		if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${EVEBot.ReturnToStation}
+		elseif ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
 		{
 			This.CurrentState:Set["CARGOFULL"]
-			m_gangMemberID:Set[-1]
-			m_SystemID:Set[-1]		
-			m_BeltID:Set[-1]		
-			return
 		}
-	
-		This.CurrentState:Set["Unknown"]
+		else
+		{
+			This.CurrentState:Set["Unknown"]
+		}
 	}
 
 	function LootEntity(int id)
@@ -338,26 +317,52 @@ objectdef obj_OreHauler inherits obj_Hauler
 		}		
 	}
 
+	/* The Haul function will be called repeatedly until   */
+	/* we leave the HAUL state due to downtime, agression, */
+	/* or a full cargo hold.  The Haul function should do  */
+	/* one (and only one) of the following actions each    */
+	/* it is called.									   */
+	/*                                                     */ 
+	/* 1) Warp to gang member and loot nearby cans         */ 
+	/* 2) Warp to next safespot                            */ 
+	/* 3) Travel to new system (if required)               */ 
+	/*                                                     */ 
 	function Haul()
 	{		
-		variable int id
-		variable int count
-		
 		if ${m_gangMemberID} > 0 && ${m_SystemID} == ${Me.SolarSystemID}
 		{
-			UI:UpdateConsole["Warping to gang member."]
-			Gang:WarpToGangMember[${m_gangMemberID}]
-			call Ship.WarpWait
-
-			call Ship.OpenCargo
+			call This.WarpToGangMemberAndLoot ${m_gangMemberID}
+		}
+		else
+		{
+			call This.WarpToNextSafeSpot
+		}
+	}
+	
+	function WarpToGangMemberAndLoot(int charID)
+	{
+		variable int id = 0
 		
-			id:Set[${This.NearestMatchingJetCan[${m_gangMemberID}]}]
+		if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
+		{	/* if we are already full ignore this request */
+			return
+		}
+		
+		UI:UpdateConsole["Warping to gang member."]
+		Gang:WarpToGangMember[${charID}]
+		call Ship.WarpWait
+
+		call Ship.OpenCargo
+	
+		do
+		{
+			id:Set[${This.NearestMatchingJetCan[${charID}]}]
 
 			echo "DEBUG: can ID = ${id}"
 			if ${Entity[${id}](exists)}
 
 			{
- 				call This.ApproachEntity ${id}
+				call This.ApproachEntity ${id}
 				Entity[${id}]:OpenCargo
 
 				wait 30	
@@ -365,34 +370,62 @@ objectdef obj_OreHauler inherits obj_Hauler
 				if ${Entity[${id}](exists)}
 				{
 					Entity[${id}]:CloseCargo
-				}					
-			}
-			
-		/*	
-			if ${Entity[${m_SystemID}](exists)}
-			{
-				UI:UpdateConsole["Found can."]
-				call This.ApproachEntity ${m_SystemID}
-				Entity[${m_SystemID}]:OpenCargo
-				wait 30	
-				call This.LootEntity ${m_SystemID}
-				if ${Entity[${m_SystemID}](exists)}
+				}
+
+				if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
 				{
-					Entity[${m_SystemID}]:CloseCargo
-				}					
+					break
+				}
 			}
-		*/			
-			
-			/* TODO: add code to loot and salvage any nearby wrecks */
-		}
+		} 
+		while ${Entity[${id}](exists)}
 		
-		UI:UpdateConsole["Done hauling."]
-		
-		EVEBot.ReturnToStation:Set[TRUE]
+		/* TODO: add code to loot and salvage any nearby wrecks */
+
 		m_gangMemberID:Set[-1]
 		m_SystemID:Set[-1]		
 		m_BeltID:Set[-1]		
 		call Ship.CloseCargo
-	}	
+	}
+	
+	function WarpToNextSafeSpot()
+	{
+		;UI:UpdateConsole["Warping to safe spot."]
+		
+		variable int idx = 1
+		variable int bmCount
+		This.SafeSpotList:Clear
+		bmCount:Set[${EVE.GetBookmarks[SafeSpotList]}]
+
+		idx:Set[1]
+		do
+		{
+			if ${SafeSpotList.Get[${idx}].SolarSystemID} != ${Me.SolarSystemID}
+			{
+				continue
+			}
+					
+			if ${LastSafeSpotIndex} >= ${idx}
+			{
+				continue
+			}
+
+			variable string Label
+			Label:Set[${SafeSpotList[${idx}].Label}]
+			if ${Label.Left[2].Equal["SS"]}
+			{
+				UI:UpdateConsole["Warping to Bookmark ${Label}"]
+				call Ship.WarpPrepare
+				SafeSpotList[${idx}]:WarpTo
+				call Ship.WarpWait
+				LastSafeSpotIndex:Set[${idx}]
+				return
+			}
+		}
+		while ${idx:Inc} <= ${bmCount}
+		
+		/* none found, reset last index */
+		LastSafeSpotIndex:Set[1]
+	}
 }
 
