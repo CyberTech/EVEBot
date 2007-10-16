@@ -275,6 +275,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 
 		UI:ConsoleUpdate["DEBUG: obj_OreHauler.LootEntity ${id}"]
 		
+		Entity[${id}]:DoGetCargo[ContainerCargo]
 		ContainerCargo:GetIterator[Cargo]
 		if ${Cargo:First(exists)}
 		{
@@ -294,7 +295,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 				UI:ConsoleUpdate["Hauler: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
 				if ${QuantityToMove} > 0
 				{
-					Cargo:MoveTo[MyShip,${QuantityToMove}]
+					Cargo.Value:MoveTo[MyShip,${QuantityToMove}]
 					wait 30
 				}
 								
