@@ -5,6 +5,12 @@
 	
 	-- CyberTech
 	
+	%CyberTechWork> they are separate scripts from evebot itself; it's intended that it'll store it's 
+	own config (config/launcher.xml) which stores name, charid, pass.  If desired char name is unknown
+	 at launcher.iss call, then popup a dialog populated with the list of known characters and let the
+	  user select.  Once logged in, evebot is called.  When evebot detects it's gotten logged out, it 
+	  recalls launcher with the character that evebot was running as.
+
 */
 
 #include core/defines.iss
