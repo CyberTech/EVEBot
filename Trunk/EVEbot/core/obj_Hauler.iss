@@ -306,7 +306,8 @@ objectdef obj_OreHauler inherits obj_Hauler
 					UI:UpdateConsole["DEBUG: obj_Hauler.LootEntity: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"
 					break
 				}
-			} while ${Cargo:Next(exists)}
+			} 
+			while ${Cargo:Next(exists)}
 		}
 
 		Me.Ship:StackAllCargo
