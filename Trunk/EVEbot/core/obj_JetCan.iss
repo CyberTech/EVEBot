@@ -25,7 +25,7 @@ objectdef obj_JetCan
 	member:int CurrentCan(bool CheckFreeSpace = FALSE)
 	{
 		if (${This.ActiveCan} > 0 && \
-			${Entity[${This.ActiveCan}](exists)}
+			${Entity[${This.ActiveCan}](exists)})
 		{
 			if ((${Entity[${This.ActiveCan}].Distance} >= LOOT_RANGE) || \
 				(${CheckFreeSpace} && ${This.CargoFull[${This.ActiveCan}]}))
@@ -50,7 +50,6 @@ objectdef obj_JetCan
 		variable index:entity Cans
 		variable iterator Can
 		EVE:DoGetEntities[Cans, GroupID, GROUPID_CARGO_CONTAINER, Radius, LOOT_RANGE]
-		variable string tempString
 		
 		Cans:GetIterator[Can]
 		
