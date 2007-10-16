@@ -270,40 +270,47 @@ objectdef obj_OreHauler inherits obj_Hauler
 	function LootEntity(int id)
 	{
 		variable index:item ContainerCargo
-		variable int ContainerCargoCount
-		variable int i = 1
-		variable int quantity
-		variable float volume
+		variable iterator Cargo
+		variable int QuantityToMove
 
-		echo "DEBUG: obj_OreHauler.LootEntity ${id}"
+		UI:ConsoleUpdate["DEBUG: obj_OreHauler.LootEntity ${id}"]
 		
-		i:Set[1]
-		ContainerCargoCount:Set[${Entity[${id}].GetCargo[ContainerCargo]}]
-		do
+		ContainerCargo:GetIterator[Cargo]
+		if ${Cargo:First(exists)}
 		{
-			quantity:Set[${ContainerCargo.Get[${i}].Quantity}]
-			volume:Set[${ContainerCargo.Get[${i}].Volume}]
-			echo "DEBUG: ${quantity}"
-			echo "DEBUG: ${volume}"
-			if (${quantity} * ${volume}) > ${Ship.CargoFreeSpace}
+			do
 			{
-				quantity:Set[${Ship.CargoFreeSpace} / ${volume}]
-				echo "DEBUG: ${quantity}"
-			}
-			ContainerCargo.Get[${i}]:MoveTo[MyShip,${quantity}]
-			wait 30
-			
-			echo "DEBUG: ${Ship.CargoFreeSpace} ... ${Ship.CargoMinimumFreeSpace}"
-			if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
-			{
-				break
-			}
+				UI:ConsoleUpdate["Hauler: Found ${Cargo.Value.Quantity} x ${Cargo.Value.Name} - ${Math.Calc[${Cargo.Value.Quantity} * ${Cargo.Value.Volume}]}m3"]
+				if (${Cargo.Value.Quantity} * ${Cargo.Value.Volume}) > ${Ship.CargoFreeSpace}
+				{
+					/* Move only what will fit, minus 1 to account for CCP rounding errors. */
+					QuantityToMove:Set[${Ship.CargoFreeSpace} / ${Cargo.Value.Volume} - 1]
+				}
+				else
+				{
+					QuantityToMove:Set[${Cargo.Value.Quantity}]
+				}
+
+				UI:ConsoleUpdate["Hauler: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
+				if ${QuantityToMove} > 0
+				{
+					Cargo:MoveTo[MyShip,${QuantityToMove}]
+					wait 30
+				}
+								
+				if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
+				{
+					/* TODO - this needs to keep a queue of bookmarks, named for the can ie, "Can CORP hh:mm", of partially looted cans */
+					/* Be sure its names, and not ID.  We shouldn't store anything in a bookmark name that we shouldnt know */
+					
+					UI:UpdateConsole["DEBUG: obj_Hauler.LootEntity: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"
+					break
+				}
+			} while ${Cargo:Next(exists)}
 		}
-		while ${i:Inc} <= ${ContainerCargoCount}
 
 		Me.Ship:StackAllCargo
-		wait 50
-		
+		wait 10
 	}
 
 	/* The MoveToField function is being used in place of */

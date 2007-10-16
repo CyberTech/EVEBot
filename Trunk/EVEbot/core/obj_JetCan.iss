@@ -8,7 +8,6 @@
 	-- CyberTech
 
 BUGS:
-	TODO: Does not check to see if a can is full.
 			
 */
 
@@ -31,9 +30,7 @@ objectdef obj_JetCan
 				(${CheckFreeSpace} && ${This.CargoFull[${This.ActiveCan}]}))
 			{
 				/* The can we WERE using is full, or has moved out of range; notify the hauler(s) */
-				variable string tempString
-				tempString:Set["${Me.CharID},${Me.SolarSystemID},${Entity[GroupID, GROUPID_ASTEROID_BELT].ID}"]
-				relay all -event EVEBot_Miner_Full ${tempString}
+				Miner:NotifyHaulers[]
 			}
 			else
 			{

@@ -291,10 +291,7 @@ objectdef obj_Miner
 			if ${Config.Miner.UseJetCan} && ${Ship.CargoHalfFull}
 			{
 				call Cargo.TransferOreToJetCan
-				/* notify hauler there is ore in space */
-				variable string tempString
-				tempString:Set["${Me.CharID},${Me.SolarSystemID},${Entity[GroupID, GROUPID_ASTEROID_BELT].ID}"]
-				relay all -event EVEBot_Miner_Full ${tempString}			
+				This:NotifyHaulers[]
 			}
 			
 			/* TODO - CyberTech: clean up this code when ArmorPct/ShieldPct wierdness is gone */
@@ -457,5 +454,12 @@ objectdef obj_Miner
 		
 	}
 	
-
+	method NotifyHaulers()
+	{
+		/* notify hauler there is ore in space */
+		variable string tempString
+		tempString:Set["${Me.CharID},${Me.SolarSystemID},${Entity[GroupID, GROUPID_ASTEROID_BELT].ID}"]
+		relay all -event EVEBot_Miner_Full ${tempString}
+	}
+	
 }
