@@ -133,8 +133,11 @@ objectdef obj_OreHauler inherits obj_Hauler
 	variable string CurrentState
 	variable int FrameCounter
 	
-	variable index:bookmark SafeSpotList
-	variable int LastSafeSpotIndex
+	variable index:bookmark SafeSpots
+	variable iterator SafeSpotIterator
+	
+	variable index:gangmember GangMembers
+	variable iterator GangMemberIterator
 	
 	method Initialize(string player, string corp)
 	{
@@ -332,7 +335,6 @@ objectdef obj_OreHauler inherits obj_Hauler
 		}
 	}
 
-
 	/* The HaulOnDemand function will be called repeatedly   */
 	/* until we leave the HAUL state due to downtime,        */
 	/* agression, or a full cargo hold.  The Haul function   */
@@ -355,6 +357,9 @@ objectdef obj_OreHauler inherits obj_Hauler
 		}
 	}
 
+	/* 1) Warp to gang member and loot nearby cans           */ 
+	/* 2) Repeat until cargo hold is full                    */ 
+	/*                                                       */ 
 	function HaulForGang()
 	{		
     	UI:UpdateConsole["Service Gang Members mode not implemented!"]
@@ -416,44 +421,62 @@ objectdef obj_OreHauler inherits obj_Hauler
 		call Ship.CloseCargo
 	}
 	
+
+	method BuildSafeSpotList()
+	{
+		SafeSpots:Clear
+		EVE:DoGetBookmarks[SafeSpots]
+	
+		variable int idx
+		idx:Set[${SafeSpots.Used}]
+		
+		while ${idx} > 0
+		{
+			variable string Label
+			Label:Set[${SafeSpots.Get[${idx}].Label}]
+			if ${Label.Left[2].NotEqual["SS"]}
+			{
+				SafeSpots:Remove[${idx}]
+			}				
+			elseif ${SafeSpots.Get[${idx}].SolarSystemID} != ${Me.SolarSystemID}
+			{
+				SafeSpots:Remove[${idx}]
+			}
+			
+			idx:Dec
+		}		
+		SafeSpots:Collapse
+		SafeSpots:GetIterator[SafeSpotIterator]
+		
+		UI:UpdateConsole["BuildSafeSpotList found ${SafeSpots.Used} safespots in this system."]
+	}
+	
 	function WarpToNextSafeSpot()
 	{
-		;UI:UpdateConsole["Warping to safe spot."]
-		
-		variable int idx = 1
-		variable int bmCount
-		This.SafeSpotList:Clear
-		bmCount:Set[${EVE.GetBookmarks[SafeSpotList]}]
-
-		idx:Set[1]
-		do
+		if ${SafeSpots.Used} == 0 
 		{
-			if ${SafeSpotList.Get[${idx}].SolarSystemID} != ${Me.SolarSystemID}
-			{
-				continue
-			}
-					
-			if ${LastSafeSpotIndex} >= ${idx}
-			{
-				continue
-			}
-
-			variable string Label
-			Label:Set[${SafeSpotList[${idx}].Label}]
-			if ${Label.Left[2].Equal["SS"]}
-			{
-				UI:UpdateConsole["Warping to Bookmark ${Label}"]
-				call Ship.WarpPrepare
-				SafeSpotList[${idx}]:WarpTo
-				call Ship.WarpWait
-				LastSafeSpotIndex:Set[${idx}]
-				return
-			}
-		}
-		while ${idx:Inc} <= ${bmCount}
+			This:BuildSafeSpotList
+		}		
 		
-		/* none found, reset last index */
-		LastSafeSpotIndex:Set[1]
+		if ${SafeSpots.Get[1](exists)} && ${SafeSpots.Get[1].SolarSystemID} != ${Me.SolarSystemID}
+		{
+			This:BuildSafeSpotList
+		}
+		
+		if !${SafeSpotIterator:Next(exists)}
+		{
+			SafeSpotIterator:First
+		}
+		
+		if ${SafeSpotIterator.Value(exists)}
+		{
+			variable bookmark safeSpot
+			safeSpot:Set[${SafeSpotIterator.Value}]
+			UI:UpdateConsole["Warping to Bookmark ${safeSpot.Label}"]
+			call Ship.WarpPrepare
+			safeSpot:WarpTo
+			call Ship.WarpWait
+		}
 	}
 }
 
