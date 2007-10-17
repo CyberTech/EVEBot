@@ -55,6 +55,11 @@ objectdef obj_EVEBotUI
 		FrameCounter:Inc
 		FrameCounterMsgBoxes:Inc
 		
+		if !${Me.Name(exists)}
+		{
+			return
+		}
+		
 		variable int IntervalInSeconds = 1
 		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 		{
