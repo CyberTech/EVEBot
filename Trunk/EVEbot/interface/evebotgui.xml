@@ -694,11 +694,11 @@
 								<Item Value='3'>Service On-Demand</Item>
 							</Items>
 							<OnSelect>
-								Script[EVEBot].VariableScope.Config.Hauler:SetBotMode[${This.SelectedItem.Value}]
-								Script[EVEBot].VariableScope.Config.Hauler:SetBotModeName[${This.SelectedItem.Text}]
+								Script[EVEBot].VariableScope.Config.Hauler:SetHaulerMode[${This.SelectedItem.Value}]
+								Script[EVEBot].VariableScope.Config.Hauler:SetHaulerModeName[${This.SelectedItem.Text}]
 							</OnSelect>
 							<OnLoad>
-								This:SetSelection[${Script[EVEBot].VariableScope.Config.Common.BotMode}]
+								This:SetSelection[${Script[EVEBot].VariableScope.Config.Hauler.HaulerMode}]
 							</OnLoad>
 						</combobox>
 					</tab>
