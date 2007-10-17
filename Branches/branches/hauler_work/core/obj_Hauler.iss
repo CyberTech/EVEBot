@@ -315,35 +315,28 @@ objectdef obj_OreHauler inherits obj_Hauler
 		wait 10
 	}
 
-
-	function Haul()
+	/* The MoveToField function is being used in place of */
+	/* a WarpToGang function.  The target belt is hard-   */
+	/* coded for now.                                     */
+	function MoveToField(bool ForceMove)
 	{
-		switch ${Config.Hauler.HaulerModeName}
+		if ${Config.Hauler.HaulerMode.Equal["Service Gang Members"]}
 		{
-			case Service On-Demand
-				call This.HaulOnDemand
-				break
-			case Service Gang Members
-				call This.HaulForGang
-				break
-			case Service All Belts
-				call This.HaulAllBelts
-				break
-		}
+			UI:UpdateConsole["Hauler moving to gang member"]
+		}		
 	}
 
-
-	/* The HaulOnDemand function will be called repeatedly   */
-	/* until we leave the HAUL state due to downtime,        */
-	/* agression, or a full cargo hold.  The Haul function   */
-	/* should do one (and only one) of the following actions */
-	/* each it is called.									 */
-	/*                                                       */ 
-	/* 1) Warp to gang member and loot nearby cans           */ 
-	/* 2) Warp to next safespot                              */ 
-	/* 3) Travel to new system (if required)                 */ 
-	/*                                                       */ 
-	function HaulOnDemand()
+	/* The Haul function will be called repeatedly until   */
+	/* we leave the HAUL state due to downtime, agression, */
+	/* or a full cargo hold.  The Haul function should do  */
+	/* one (and only one) of the following actions each    */
+	/* it is called.									   */
+	/*                                                     */ 
+	/* 1) Warp to gang member and loot nearby cans         */ 
+	/* 2) Warp to next safespot                            */ 
+	/* 3) Travel to new system (if required)               */ 
+	/*                                                     */ 
+	function Haul()
 	{		
 		if ${m_gangMemberID} > 0 && ${m_SystemID} == ${Me.SolarSystemID}
 		{
@@ -354,19 +347,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 			call This.WarpToNextSafeSpot
 		}
 	}
-
-	function HaulForGang()
-	{		
-    	UI:UpdateConsole["Service Gang Members mode not implemented!"]
-		EVEBot.ReturnToStation:Set[TRUE]
-	}
 	
-	function HaulAllBelts()
-	{		
-    	UI:UpdateConsole["Service All Belts mode not implemented!"]
-		EVEBot.ReturnToStation:Set[TRUE]
-	}
-
 	function WarpToGangMemberAndLoot(int charID)
 	{
 		variable int id = 0
