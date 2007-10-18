@@ -322,3 +322,56 @@ objectdef obj_JetCan
 		}
 	}	
 }
+
+objectdef obj_CorpHangerArray inherits obj_JetCan
+{
+	; Returns -1 for no can, or the entity ID
+	member:int CurrentCan(bool CheckFreeSpace = FALSE)
+	{
+		if (${This.ActiveCan} > 0 && \
+			${Entity[${This.ActiveCan}](exists)})
+		{
+			if ${CheckFreeSpace} && ${This.CargoFull[${This.ActiveCan}]}
+			{
+				/* The hangar array is full; what to do what to do! */
+				UI:UpdateConsole["oops... Corporate Hangar Array is full. I have no solution for this!"]
+			}
+			else
+			{
+				return ${This.ActiveCan}
+			}
+		}
+
+		if ${This.ActiveCan} > 0
+		{
+			/* The can no longer exists, since we passed above checks, so try to compensate for an Eve bug and close the loot window for it. */
+			EVEWindow[loot_${This.ActiveCan}]:Close
+		}
+		
+		variable index:entity Cans
+		variable iterator Can
+		EVE:DoGetEntities[Cans, GroupID, GROUPID_CORPORATE_HANGAR_ARRAY]
+		
+		Cans:GetIterator[Can]
+		
+		if ${Can:First(exists)}
+		{
+			do
+			{
+				if (${Can.Value.ID(exists)} && \
+					${Can.Value.ID} > 0 && \
+					${This.AccessAllowed[${Can.Value.ID}]} && \
+					${Can.Value.ID} != ${This.ActiveCan} && \
+				{
+					This.ActiveCan:Set[${Can.Value.ID}]
+					return ${This.ActiveCan}
+				}
+			}
+			while ${Can:Next(exists)}
+		}
+		
+		
+		This.ActiveCan:Set[-1]
+		return ${This.ActiveCan}
+	}	
+}

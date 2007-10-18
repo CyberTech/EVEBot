@@ -20,6 +20,7 @@
 #include core/obj_Jetcan.iss
 #include core/obj_Social.iss
 #include core/obj_Gang.iss
+#include core/obj_Target.iss
 
 /* Behavior/Mode Includes */
 #include core/obj_Hauler.iss
@@ -41,6 +42,7 @@ variable obj_Skills Skills
 variable obj_Combat Combat
 variable obj_Bookmarks Bookmarks
 variable obj_JetCan JetCan
+variable obj_CorpHangerArray CorpHangarArray
 variable obj_Social Social
 variable obj_Gang Gang
 

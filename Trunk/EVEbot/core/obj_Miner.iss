@@ -92,14 +92,15 @@ objectdef obj_Miner
 					case Station
 						call Dock
 						break
-					case POS Hanger
+					case CorpHangarArray
 						UI:UpdateConsole["Warping to ${Config.Miner.DeliveryLocation}"]
 						call Ship.WarpToBookMark "${Config.Miner.DeliveryLocation}"
-						call Cargo.TransferOreToPOSHangar
+						call Cargo.TransferOreToCorpHangarArray
 						break		
-					case Outpost
-						UI:UpdateConsole["Outpost ore delivery not implemented - docking"]
-						call Dock
+					case Jetcan
+						UI:UpdateConsole["Warning: Cargo filled during jetcan mining, delays may occur"]
+						call Cargo.TransferOreToJetCan
+						This:NotifyHaulers[]
 						break		
 				}
 				break
@@ -288,7 +289,7 @@ objectdef obj_Miner
 				UI:UpdateConsole["Warning: Low Standing player in system, docking"]
 			}
 			
-			if ${Config.Miner.UseJetCan} && ${Ship.CargoHalfFull}
+			if ${Config.Miner.DeliveryLocationTypeName.Equal[Jetcan]} && ${Ship.CargoHalfFull}
 			{
 				call Cargo.TransferOreToJetCan
 				This:NotifyHaulers[]

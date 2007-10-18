@@ -709,7 +709,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		EVE:Execute[CmdStopShip]
 	}
 	
-	; Approaches EntityID to within 10% of Distance, then stops ship.  Momentum will handle the rest.
+	; Approaches EntityID to within 5% of Distance, then stops ship.  Momentum will handle the rest.
 	function Approach(int EntityID, int64 Distance)
 	{
 		if ${Entity[${EntityID}](exists)}

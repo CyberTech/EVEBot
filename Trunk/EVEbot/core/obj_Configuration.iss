@@ -247,7 +247,6 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Restrict To Ore Type, NONE]
 		This.MinerRef:AddSetting[Include Veldspar, TRUE]
 		This.MinerRef:AddSetting[Bookmark Last Position, TRUE]
-		This.MinerRef:AddSetting[Use JetCan, FALSE]
 		This.MinerRef:AddSetting[Distribute Lasers, TRUE]
 		This.MinerRef:AddSetting[Use Mining Drones, FALSE]
 		This.MinerRef:AddSetting[Avoid Player Range, 10000]
@@ -378,16 +377,6 @@ objectdef obj_Configuration_Miner
 	method SetDistributeLasers(bool value)
 	{	
 		This.MinerRef:AddSetting[Distribute Lasers, ${value}]
-	}
-
-	member:bool UseJetCan()
-	{
-		return ${This.MinerRef.FindSetting[Use JetCan, FALSE]}
-	}
-
-	method SetUseJetCan(bool value)
-	{	
-		This.MinerRef:AddSetting[Use JetCan, ${value}]
 	}
 	
 	member:bool UseMiningDrones()

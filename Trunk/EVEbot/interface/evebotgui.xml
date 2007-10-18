@@ -362,26 +362,6 @@
 									Script[EVEBot].VariableScope.Config.Miner:SetDistributeLasers[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
-						<checkbox Name='cbUseJetCan'>
-							<X>10</X>
-							<Y>70</Y>
-							<Height>20</Height>
-							<Width>100</Width>
-							<Text>Use JetCan</Text>
-							<Command>Script[EVEBot].VariableScope.Config.Miner:SetUseJetCan[FALSE]</Command>
-							<CommandChecked>Script[EVEBot].VariableScope.Config.Miner:SetUseJetCan[TRUE]</CommandChecked>
-							<Data>${Script[EVEBot].VariableScope.Config.Miner.UseJetCan}</Data>
-							<AutoTooltip>Check to jettison ore into a can while mining.  Uncheck to return to base when cargo hold is full.</AutoTooltip>
-							<OnLoad>
-								if ${Script[EVEBot].VariableScope.Config.Miner.UseJetCan}
-								{
-									This:SetChecked
-								}
-							</OnLoad>
-							<OnLeftClick>
-									Script[EVEBot].VariableScope.Config.Miner:SetUseJetCan[${This.Checked}]
-							</OnLeftClick>
-						</checkbox>
 						<checkbox name='cbMiningDrones'>
 							<X>10</X>
 							<Y>90</Y>
@@ -522,8 +502,8 @@
 							<ButtonWidth>20</ButtonWidth>
 							<Items>
 								<Item Value='1'>Station</Item>
-								<Item Value='2'>POS Hanger</Item>
-								<Item Value='3'>Outpost</Item>
+								<Item Value='2'>Hangar Array</Item>
+								<Item Value='3'>Jetcan</Item>
 							</Items>
 							<OnSelect>
 								Script[EVEBot].VariableScope.Config.Miner:SetDeliveryLocationType[${This.SelectedItem.Value}]

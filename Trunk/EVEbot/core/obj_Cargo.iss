@@ -101,7 +101,7 @@ objectdef obj_Cargo
 		}
 	}
 
-	function TransferListToPOSHangar()
+	function TransferListToCorpHangarArray()
 	{
 		variable iterator CargoIterator
 		This.CargoToTransfer:GetIterator[CargoIterator]
@@ -112,17 +112,17 @@ objectdef obj_Cargo
 			{
 				if ${JetCan.IsReady[TRUE]}
 				{
-					call JetCan.Open ${JetCan.ActiveCan}
-					UI:UpdateConsole["TransferListToPOSHangar: Transferring Cargo: ${CargoIterator.Value.Name}"]
+					call JetCan.Open ${CorpHangarArray.ActiveCan}
+					UI:UpdateConsole["TransferListToCorpHangarArray: Transferring Cargo: ${CargoIterator.Value.Name}"]
 					CargoIterator.Value:MoveTo[${JetCan.ActiveCan},${CargoIterator.Value.Quantity},Corporation Folder 1]
 				}
 			}
 			while ${CargoIterator:Next(exists)}
-			JetCan:StackAllCargo
+			CorpHangarArray:StackAllCargo
 		}
 		else
 		{
-			UI:UpdateConsole["DEBUG: obj_Cargo:TransferListToJetCan: Nothing found to move"]
+			UI:UpdateConsole["DEBUG: obj_Cargo:TransferListToCorpHangarArray: Nothing found to move"]
 		}
 	}
 
@@ -159,28 +159,25 @@ objectdef obj_Cargo
 		}
 	}
 	
-	function TransferOreToPOSHangar()
-	{
-		UI:UpdateConsole["Transferring Ore to POS Hangar"]
-		
-		if !${Entity[TypeID, 17621](exists)}
+	function TransferOreToCorpHangarArray()
+	{		
+		if ${CorpHangarArray.IsReady}
 		{
-			UI:ConsoleUpdate["No Hangar Array found"]
-		}
-
-		; TODO - can't use jetcan code ehre, need to abstract it out a bit more, corp cargo arrays are type GROUPID_CORPORATE_HANGAR_ARRAY 
-		if ${JetCan.IsReady}
-		{
-			if ${Entity[${JetCan.ActiveCan}].Distance} > 2500
+			if ${Entity[${CorpHangarArray.ActiveCan}].Distance} > CORP_HANGAR_LOOT_RANGE
 			{
-				call Ship.Approach ${JetCan.ActiveCan} 2500
+				call Ship.Approach ${CorpHangarArray.ActiveCan} CORP_HANGAR_LOOT_RANGE
 			}
+		}
+		else
+		{
+			UI:ConsoleUpdate["No Hangar Array found - nothing moved"]
+			return
 		}
 
 		call Ship.OpenCargo
 
 		This:FindShipCargo[CATEGORYID_ORE]
-		call This.TransferListToPOSHangar
+		call This.TransferListToCorpHangarArray
 		
 		This.CargoToTransfer:Clear[]
 	}
@@ -197,7 +194,7 @@ objectdef obj_Cargo
 		This.CargoToTransfer:Clear[]
 	}
 	
-	function TransferOreToHangar()
+	function TransferOreToCorpHangarArray()
 	{	
 		while !${Me.InStation}
 		{
@@ -205,7 +202,7 @@ objectdef obj_Cargo
 			wait 10
 		}
 
-		UI:UpdateConsole["Transferring Ore to Station Hangar"]
+		UI:UpdateConsole["Transferring Ore to Corporate Hangar Array"]
 
 		if ${Ship.IsCargoOpen}
 		{
@@ -216,6 +213,7 @@ objectdef obj_Cargo
 		call Ship.OpenCargo
 		
 		This:FindShipCargo[CATEGORYID_ORE]
+		
 		call This.TransferListToHangar
 		
 		This.CargoToTransfer:Clear[]
