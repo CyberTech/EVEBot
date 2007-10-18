@@ -361,7 +361,7 @@ objectdef obj_CorpHangerArray inherits obj_JetCan
 				if (${Can.Value.ID(exists)} && \
 					${Can.Value.ID} > 0 && \
 					${This.AccessAllowed[${Can.Value.ID}]} && \
-					${Can.Value.ID} != ${This.ActiveCan} && \
+					${Can.Value.ID} != ${This.ActiveCan})
 				{
 					This.ActiveCan:Set[${Can.Value.ID}]
 					return ${This.ActiveCan}

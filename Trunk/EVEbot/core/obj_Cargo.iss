@@ -194,7 +194,7 @@ objectdef obj_Cargo
 		This.CargoToTransfer:Clear[]
 	}
 	
-	function TransferOreToCorpHangarArray()
+	function TransferOreToHangar()
 	{	
 		while !${Me.InStation}
 		{
@@ -202,7 +202,7 @@ objectdef obj_Cargo
 			wait 10
 		}
 
-		UI:UpdateConsole["Transferring Ore to Corporate Hangar Array"]
+		UI:UpdateConsole["Transferring Ore to Station Hangar"]
 
 		if ${Ship.IsCargoOpen}
 		{
