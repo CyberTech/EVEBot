@@ -640,12 +640,14 @@ objectdef obj_Configuration_Customization
 	method Set_Default_Values()
 	{
 		BaseConfig.BaseRef:AddSet[${This.SetName}]
-		This.CustomizationRef:AddSetting[Safe Spot Prefix,"SS"]
+		This.CustomizationRef:AddSetting[Safe Spot Prefix,"Safe:"]
+		This.CustomizationRef:AddSetting[Ore Belt Prefix,"Belt:"]
+		This.CustomizationRef:AddSetting[Ice Belt Prefix,"Ice Belt:"]
 	}
 	
 	member:string SafeSpotPrefix()
 	{
-		return ${This.CustomizationRef.FindSetting[Safe Spot Prefix,"SS"]}
+		return ${This.CustomizationRef.FindSetting[Safe Spot Prefix,"Safe:"]}
 	}
 	
 	method SetSafeSpotPrefix(string value)
@@ -653,5 +655,24 @@ objectdef obj_Configuration_Customization
 		This.CustomizationRef:AddSetting[Safe Spot Prefix,${value}]
 	}
 	
+	member:string OreBeltPrefix()
+	{
+		return ${This.CustomizationRef.FindSetting[Ore Belt Prefix,"Belt:"]}
+	}
+	
+	method SetOreBeltPrefix(string value)
+	{
+		This.CustomizationRef:AddSetting[Ore Belt Prefix,${value}]
+	}
+
+	member:string IceBeltPrefix()
+	{
+		return ${This.CustomizationRef.FindSetting[Ore Belt Prefix,"Ice Belt:"]}
+	}
+	
+	method SetIceBeltPrefix(string value)
+	{
+		This.CustomizationRef:AddSetting[Ice Belt Prefix,${value}]
+	}
 }
 

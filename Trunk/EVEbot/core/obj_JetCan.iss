@@ -190,6 +190,23 @@ objectdef obj_JetCan
 		}		
 	}
 	
+	member:float CargoCapacity(int64 ID=0)
+	{
+		if (${ID} == 0 && ${This.ActiveCan} > 0)
+		{
+			ID:Set[${This.ActiveCan}]
+		}
+		
+		if !${This.IsCargoOpen[${ID}]}
+		{
+			return FALSE
+		}
+
+		/* TODO: hard coded capacity b/c of isxeve cargocapcity breakage */
+		;return ${Entity[${ID}].CargoCapacity}
+		return 27500
+	}
+	
 	member:float CargoMinimumFreeSpace(int64 ID=0)
 	{
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
@@ -202,7 +219,8 @@ objectdef obj_JetCan
 			return FALSE
 		}
 
-		return ${Math.Calc[${Entity[${ID}].CargoCapacity}*0.05]}
+		
+		return ${Math.Calc[${This.CargoCapacity}*0.05]}
 	}
 	
 	member:float CargoFreeSpace(int64 ID=0)
@@ -219,9 +237,9 @@ objectdef obj_JetCan
 
 		if ${Entity[${ID}].UsedCargoCapacity} < 0
 		{
-			return ${Entity[${ID}].CargoCapacity}
+			return ${This.CargoCapacity}
 		}
-		return ${Math.Calc[${Entity[${ID}].CargoCapacity}-${Entity[${ID}].UsedCargoCapacity}]}
+		return ${Math.Calc[${This.CargoCapacity}-${Entity[${ID}].UsedCargoCapacity}]}
 	}
 
 	member:bool CargoFull(int64 ID=0)
@@ -255,7 +273,7 @@ objectdef obj_JetCan
 			return FALSE
 		}
 
-		if ${This.CargoFreeSpace[${ID}]} <= ${Math.Calc[${Entity[${ID}].CargoCapacity}*0.50]}
+		if ${This.CargoFreeSpace[${ID}]} <= ${Math.Calc[${This.CargoCapacity}*0.50]}
 		{
 			return TRUE
 		}
@@ -333,8 +351,10 @@ objectdef obj_CorpHangerArray inherits obj_JetCan
 		{
 			if ${CheckFreeSpace} && ${This.CargoFull[${This.ActiveCan}]}
 			{
-				/* The hangar array is full; what to do what to do! */
-				UI:UpdateConsole["oops... Corporate Hangar Array is full. I have no solution for this!"]
+				;UI:UpdateConsole["oops... Corporate Hangar Array is full. I have no solution for this!"]
+
+				/* TODO - when we can properly check the cargo full state of pos hangers, remove this */
+				return ${This.ActiveCan}
 			}
 			else
 			{
@@ -374,4 +394,22 @@ objectdef obj_CorpHangerArray inherits obj_JetCan
 		This.ActiveCan:Set[-1]
 		return ${This.ActiveCan}
 	}	
+
+	member:float CargoCapacity(int64 ID=0)
+	{
+		if (${ID} == 0 && ${This.ActiveCan} > 0)
+		{
+			ID:Set[${This.ActiveCan}]
+		}
+		
+		if !${This.IsCargoOpen[${ID}]}
+		{
+			return FALSE
+		}
+
+		/* TODO: hard coded capacity b/c of isxeve cargocapcity breakage */
+		;return ${Entity[${ID}].CargoCapacity}
+		return 1400000
+	}
+
 }
