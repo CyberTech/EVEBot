@@ -136,8 +136,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 	variable index:bookmark SafeSpots
 	variable iterator SafeSpotIterator
 	
-	variable index:gangmember GangMembers
-	variable iterator GangMemberIterator
+	variable queue:gangmember GangMembers
 	
 	method Initialize(string player, string corp)
 	{
@@ -357,8 +356,21 @@ objectdef obj_OreHauler inherits obj_Hauler
 	/*                                                       */ 
 	function HaulForGang()
 	{		
-    	UI:UpdateConsole["Service Gang Members mode not implemented!"]
-		EVEBot.ReturnToStation:Set[TRUE]
+		if ${GangMembers.Used} == 0 
+		{
+			This:BuildGangMemberList
+		}		
+		
+		if ${GangMembers.Peek(exists)} && ${GangMembers.Peek.SolarSystemID} != ${Me.SolarSystemID}
+		{
+			; TODO: travel to system
+		}
+		
+		if ${GangMembers.Peek(exists)}
+		{
+			call This.WarpToGangMemberAndLoot ${GangMembers.Peek.CharID}
+			GangMembers:Dequeue
+		}
 	}
 	
 	function HaulAllBelts()
@@ -414,6 +426,27 @@ objectdef obj_OreHauler inherits obj_Hauler
 		m_SystemID:Set[-1]		
 		m_BeltID:Set[-1]		
 		call Ship.CloseCargo
+	}
+
+	method BuildGangMemberList()
+	{
+		variable index:gangmember gang
+		GangMembers:Clear
+		Me:DoGetGang[gang]
+	
+		variable int idx
+		idx:Set[${gang.Used}]
+		
+		while ${idx} > 0
+		{
+			if ${gang.Get[${idx}].CharID} != ${Me.CharID}
+			{
+				GangMembers:Queue[${gang.Get[${idx}]}]	
+			}
+			idx:Dec
+		}		
+		
+		UI:UpdateConsole["BuildGangMemberList found ${GangMembers.Used} other gang members."]
 	}
 	
 
