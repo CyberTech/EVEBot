@@ -53,6 +53,7 @@ objectdef obj_Configuration
 	variable obj_Configuration_Miner Miner
 	variable obj_Configuration_Hauler Hauler
 	variable obj_Configuration_Salvager Salvager
+	variable obj_Configuration_Customization Customization
 	
 	method Save()
 	{
@@ -616,3 +617,41 @@ objectdef obj_Configuration_Salvager
 	}
 	
 }
+
+objectdef obj_Configuration_Customization
+{
+	variable string SetName = "Customization"
+
+	method Initialize()
+	{	
+		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
+		{
+			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
+			This:Set_Default_Values[]
+		}
+		UI:UpdateConsole["obj_Configuration_Customization: Initialized"]
+	}
+
+	member:settingsetref CustomizationRef()
+	{
+		return ${BaseConfig.BaseRef.FindSet[${This.SetName}]}
+	}
+
+	method Set_Default_Values()
+	{
+		BaseConfig.BaseRef:AddSet[${This.SetName}]
+		This.CustomizationRef:AddSetting[Safe Spot Prefix,"SS"]
+	}
+	
+	member:string SafeSpotPrefix()
+	{
+		return ${This.CustomizationRef.FindSetting[Safe Spot Prefix,"SS"]}
+	}
+	
+	method SetSafeSpotPrefix(string value)
+	{
+		This.CustomizationRef:AddSetting[Safe Spot Prefix,${value}]
+	}
+	
+}
+

@@ -233,11 +233,6 @@ objectdef obj_OreHauler inherits obj_Hauler
 				m_SystemID:Set[-1]		
 				m_BeltID:Set[-1]		
 				break
-			case RUNNING
-				UI:UpdateConsole["Running Away"]
-				call Dock
-				EVEBot.ReturnToStation:Set[FALSE]
-				break
 		}	
 	}
 	
@@ -432,12 +427,15 @@ objectdef obj_OreHauler inherits obj_Hauler
 		
 		while ${idx} > 0
 		{
+			variable string Prefix
+			Prefix:Set[${Config.Customization.SafeSpotPrefix}]
+			
 			variable string Label
-			Label:Set[${SafeSpots.Get[${idx}].Label}]
-			if ${Label.Left[2].NotEqual["SS"]}
+			Label:Set[${SafeSpots.Get[${idx}].Label}]			
+			if ${Label.Left[${Prefix.Length}].NotEqual[${Prefix}]}
 			{
 				SafeSpots:Remove[${idx}]
-			}				
+			}
 			elseif ${SafeSpots.Get[${idx}].SolarSystemID} != ${Me.SolarSystemID}
 			{
 				SafeSpots:Remove[${idx}]

@@ -685,6 +685,40 @@
 
 					<tab name='Freighter'>
 					</tab>
+
+					<tab name='Customization'>
+						<Text name='Label1'>
+							<X>10</X>
+							<Y>10</Y>
+							<Width>200</Width>
+							<Height>10</Height>
+							<Text>Bookmark Prefixes</Text>
+						</Text>
+						<Text name='SafeSpotsLabel'>
+							<X>25</X>
+							<Y>25</Y>
+							<Width>200</Width>
+							<Height>10</Height>
+							<Text>Safe Spots</Text>
+							<AutoTooltip>The prefix that must start a bookmark for it to be concidered a safe spot bookmark.</AutoTooltip>
+						</Text>
+						<Textentry name='SafeSpotPrefix'>
+							<X>230</X>							
+							<Y>25</Y>						
+							<Width>100</Width>						
+							<Height>18</Height>
+							<MaxLength>10</MaxLength>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Customization.SafeSpotPrefix}]
+							</OnLoad>
+							<OnChange>							
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Customization:SetSafeSpotPrefix[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+					</tab>
 				</Tabs>
 			</tabcontrol>
 		</Children>
