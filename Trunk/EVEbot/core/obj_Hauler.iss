@@ -359,6 +359,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		if ${GangMembers.Used} == 0 
 		{
 			This:BuildGangMemberList
+			call This.WarpToNextSafeSpot
 		}		
 		
 		if ${GangMembers.Peek(exists)} && ${GangMembers.Peek.SolarSystemID} != ${Me.SolarSystemID}
