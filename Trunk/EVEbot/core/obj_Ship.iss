@@ -840,29 +840,34 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		}
 	}	
 
-	function WarpToBookMark(string DestinationBookmarkLabel)
+	function WarpToBookMarkName(string DestinationBookmarkLabel)
 	{
 		if (!${EVE.Bookmark[${DestinationBookmarkLabel}](exists)})
 		{  
 			UI:UpdateConsole["ERROR: Bookmark: '${DestinationBookmarkLabel}' does not exist!"]
 			return
 		}
+		
+		call This.WarpToBookMark ${EVE.Bookmark[${DestinationBookmarkLabel}].ID}
+	}
 	
+	function WarpToBookMark(bookmark DestinationBookmark)
+	{
 		if (${Me.InStation})
 		{
 			call Ship.UnDock
 		}
 	
-		if ${EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity(exists)} && \
-			${EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity.Distance} < WARP_RANGE
+		if ${DestinationBookmark.ToEntity(exists)} && \
+			${DestinationBookmark.ToEntity.Distance} < WARP_RANGE
 		{
 			return
 		}
 		
-		if (${EVE.Bookmark[${DestinationBookmarkLabel}].SolarSystemID} != ${Me.SolarSystemID})
+		if (${DestinationBookmark.SolarSystemID} != ${Me.SolarSystemID})
 		{
-			UI:UpdateConsole["Setting autopilot destination: ${EVE.Bookmark[${DestinationBookmarkLabel}]}"]
-			EVE.Bookmark[${DestinationBookmarkLabel}]:SetDestination
+			UI:UpdateConsole["Setting autopilot destination: ${DestinationBookmark.Label}]}"]
+			DestinationBookmark:SetDestination
 			wait 5
 			UI:UpdateConsole["Activating autopilot and waiting until arrival..."]
 			EVE:Execute[CmdToggleAutopilot]
@@ -888,8 +893,8 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			wait 5
 		}
 
-		UI:UpdateConsole["Warping to bookmark ${DestinationBookmarkLabel}"]
-		EVE.Bookmark[${DestinationBookmarkLabel}]:WarpTo
+		UI:UpdateConsole["Warping to bookmark ${DestinationBookmark.Label}"]
+		DestinationBookmark:WarpTo
 		wait 120
 		do
 		{
@@ -898,15 +903,15 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		while (${Me.ToEntity.Mode} == 3)	
 		wait 20
 		
-		if ${EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity(exists)}
+		if ${DestinationBookmark.ToEntity(exists)}
 		{
 			UI:UpdateConsole["Docking with destination station"]
-			switch ${EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity.CategoryID}
+			switch ${DestinationBookmark.ToEntity.CategoryID}
 			{
 				case 3
-					call This.Approach ${EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity.ID} DOCKING_RANGE
+					call This.Approach ${DestinationBookmark.ToEntity.ID} DOCKING_RANGE
 				
-					EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity:Dock			
+					DestinationBookmark.ToEntity:Dock
 					Counter:Set[0]
 					do
 					{
@@ -915,7 +920,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 					   if (${Counter} > 200)
 					   {
 					      UI:UpdateConsole["Docking atttempt failed ... trying again."]
-					      ;EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity:Dock	
+					      ;DestinationBookmark.ToEntity:Dock	
 					      Entity[CategoryID,3]:Dock
 					      Counter:Set[0]
 					   }
@@ -924,10 +929,10 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 					break
 			}
 
-			switch ${EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity.CategoryID}
+			switch ${DestinationBookmark.ToEntity.CategoryID}
 			{
 				case TYPEID_CORPORATE_HANGAR_ARRAY
-					call This.Approach ${EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity.ID} CORP_HANGAR_LOOT_RANGE
+					call This.Approach ${DestinationBookmark.ToEntity.ID} CORP_HANGAR_LOOT_RANGE
 					break
 			}
 		}

@@ -115,7 +115,6 @@ objectdef obj_Cargo
 					call CorpHangarArray.Open ${CorpHangarArray.ActiveCan}
 					UI:UpdateConsole["TransferListToCorpHangarArray: Transferring Cargo: ${CargoIterator.Value.Name}"]
 					CargoIterator.Value:MoveTo[${CorpHangarArray.ActiveCan},${CargoIterator.Value.Quantity},Corporation Folder 1]
-					echo Container Free Space: ${CorpHangarArray.CargoFreeSpace}
 				}
 			}
 			while ${CargoIterator:Next(exists)}
@@ -141,7 +140,6 @@ objectdef obj_Cargo
 					call JetCan.Open ${JetCan.ActiveCan}
 					UI:UpdateConsole["TransferListToJetCan: Transferring Cargo: ${CargoIterator.Value.Name}"]
 					CargoIterator.Value:MoveTo[${JetCan.ActiveCan}]
-					echo Container Free Space: ${JetCan.CargoFreeSpace}
 				}
 				else
 				{

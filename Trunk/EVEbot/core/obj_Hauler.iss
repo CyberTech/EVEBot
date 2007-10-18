@@ -468,7 +468,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		
 		if ${SafeSpotIterator.Value(exists)}
 		{
-			call Ship.WarpToBookMark "${SafeSpotIterator.Value.Label}"
+			call Ship.WarpToBookMark ${SafeSpotIterator.Value.ID}
 		}
 	}
 }

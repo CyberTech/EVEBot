@@ -667,7 +667,7 @@ objectdef obj_Configuration_Customization
 
 	member:string IceBeltPrefix()
 	{
-		return ${This.CustomizationRef.FindSetting[Ore Belt Prefix,"Ice Belt:"]}
+		return ${This.CustomizationRef.FindSetting[Ice Belt Prefix,"Ice Belt:"]}
 	}
 	
 	method SetIceBeltPrefix(string value)

@@ -117,7 +117,7 @@ objectdef obj_Asteroids
 		{
 			/* We have a stored location, we should return to it. */
 			UI:UpdateConsole["Returning to last location (${Bookmarks.StoredLocation})"]
-			call Ship.WarpToBookMark "${Bookmarks.StoredLocation}"
+			call Ship.WarpToBookMarkName "${Bookmarks.StoredLocation}"
 			Bookmarks:RemoveStoredLocation
 			return
 		}

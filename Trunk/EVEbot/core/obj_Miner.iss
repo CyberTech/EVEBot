@@ -93,7 +93,7 @@ objectdef obj_Miner
 						call Dock
 						break
 					case Hangar Array
-						call Ship.WarpToBookMark "${Config.Miner.DeliveryLocation}"
+						call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
 						call Cargo.TransferOreToCorpHangarArray
 						break		
 					case Jetcan
