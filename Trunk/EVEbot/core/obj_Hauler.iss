@@ -361,16 +361,17 @@ objectdef obj_OreHauler inherits obj_Hauler
 			This:BuildGangMemberList
 			call This.WarpToNextSafeSpot
 		}		
-		
-		if ${GangMembers.Peek(exists)} && ${GangMembers.Peek.SolarSystemID} != ${Me.SolarSystemID}
+		else
 		{
-			; TODO: travel to system
-		}
-		
-		if ${GangMembers.Peek(exists)}
-		{
-			call This.WarpToGangMemberAndLoot ${GangMembers.Peek.CharID}
-			GangMembers:Dequeue
+			if ${GangMembers.Peek(exists)} && ${GangMembers.Peek.SolarSystemID} != ${Me.SolarSystemID}
+			{
+				; TODO: travel to system
+			}
+			elseif ${GangMembers.Peek(exists)}
+			{
+				call This.WarpToGangMemberAndLoot ${GangMembers.Peek.CharID}
+				GangMembers:Dequeue
+			}
 		}
 	}
 	
