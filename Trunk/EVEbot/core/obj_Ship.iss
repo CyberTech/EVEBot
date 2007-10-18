@@ -853,6 +853,12 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			call Ship.UnDock
 		}
 	
+		if ${EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity(exists)} && \
+			${EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity.Distance} < WARP_RANGE
+		{
+			return
+		}
+		
 		if (${EVE.Bookmark[${DestinationBookmarkLabel}].SolarSystemID} != ${Me.SolarSystemID})
 		{
 			UI:UpdateConsole["Setting autopilot destination: ${EVE.Bookmark[${DestinationBookmarkLabel}]}"]
@@ -881,8 +887,8 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			while !${Me.ToEntity.IsCloaked}
 			wait 5
 		}
-		
-		UI:UpdateConsole["Warping to destination"]
+
+		UI:UpdateConsole["Warping to bookmark ${DestinationBookmarkLabel}"]
 		EVE.Bookmark[${DestinationBookmarkLabel}]:WarpTo
 		wait 120
 		do
@@ -895,30 +901,34 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		if ${EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity(exists)}
 		{
 			UI:UpdateConsole["Docking with destination station"]
-			if (${EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity.CategoryID} == 3)
+			switch ${EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity.CategoryID}
 			{
-				EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity:Approach
-				do
-				{
-					wait 20
-				}
-				while (${EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity.Distance} > 50)
+				case 3
+					call This.Approach ${EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity.ID} DOCKING_RANGE
 				
-				EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity:Dock			
-				Counter:Set[0]
-				do
-				{
-				   wait 20
-				   Counter:Inc[20]
-				   if (${Counter} > 200)
-				   {
-				      UI:UpdateConsole["Docking atttempt failed ... trying again."]
-				      ;EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity:Dock	
-				      Entity[CategoryID,3]:Dock
-				      Counter:Set[0]
-				   }
-				}
-				while (!${Me.InStation})					
+					EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity:Dock			
+					Counter:Set[0]
+					do
+					{
+					   wait 20
+					   Counter:Inc[20]
+					   if (${Counter} > 200)
+					   {
+					      UI:UpdateConsole["Docking atttempt failed ... trying again."]
+					      ;EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity:Dock	
+					      Entity[CategoryID,3]:Dock
+					      Counter:Set[0]
+					   }
+					}
+					while (!${Me.InStation})
+					break
+			}
+
+			switch ${EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity.CategoryID}
+			{
+				case TYPEID_CORPORATE_HANGAR_ARRAY
+					call This.Approach ${EVE.Bookmark[${DestinationBookmarkLabel}].ToEntity.ID} CORP_HANGAR_LOOT_RANGE
+					break
 			}
 		}
 		wait 20  

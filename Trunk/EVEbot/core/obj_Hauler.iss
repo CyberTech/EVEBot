@@ -470,12 +470,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		
 		if ${SafeSpotIterator.Value(exists)}
 		{
-			variable bookmark safeSpot
-			safeSpot:Set[${SafeSpotIterator.Value}]
-			UI:UpdateConsole["Warping to Bookmark ${safeSpot.Label}"]
-			call Ship.WarpPrepare
-			safeSpot:WarpTo
-			call Ship.WarpWait
+			call Ship.WarpToBookMark "${SafeSpotIterator.Value.Label}"
 		}
 	}
 }

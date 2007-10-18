@@ -92,8 +92,7 @@ objectdef obj_Miner
 					case Station
 						call Dock
 						break
-					case CorpHangarArray
-						UI:UpdateConsole["Warping to ${Config.Miner.DeliveryLocation}"]
+					case Hangar Array
 						call Ship.WarpToBookMark "${Config.Miner.DeliveryLocation}"
 						call Cargo.TransferOreToCorpHangarArray
 						break		
