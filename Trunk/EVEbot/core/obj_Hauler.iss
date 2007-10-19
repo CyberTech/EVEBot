@@ -363,11 +363,8 @@ objectdef obj_OreHauler inherits obj_Hauler
 		}		
 		else
 		{
-			if ${GangMembers.Peek(exists)} && ${GangMembers.Peek.SolarSystemID} != ${Me.SolarSystemID}
-			{
-				; TODO: travel to system
-			}
-			elseif ${GangMembers.Peek(exists)}
+			if ${GangMembers.Peek(exists)} && \
+				${Local[${GangMembers.Peek.CharID}](exists)}
 			{
 				call This.WarpToGangMemberAndLoot ${GangMembers.Peek.CharID}
 				GangMembers:Dequeue
