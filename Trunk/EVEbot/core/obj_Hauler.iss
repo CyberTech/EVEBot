@@ -460,7 +460,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		while ${idx} > 0
 		{
 			variable string Prefix
-			Prefix:Set[${Config.Customization.SafeSpotPrefix}]
+			Prefix:Set[${Config.Labels.SafeSpotPrefix}]
 			
 			variable string Label
 			Label:Set[${SafeSpots.Get[${idx}].Label}]			
