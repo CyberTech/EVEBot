@@ -227,7 +227,20 @@ objectdef obj_OreHauler inherits obj_Hauler
 				call This.Haul
 				break
 			case CARGOFULL
-				call Dock
+				switch ${Config.Miner.DeliveryLocationTypeName}
+				{
+					case Station
+						call Dock
+						break
+					case Hangar Array
+						call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
+						call Cargo.TransferOreToCorpHangarArray
+						break		
+					case Jetcan
+						UI:UpdateConsole["Error: ORE Delivery location may not be jetcan when in hauler mode - docking"]
+						EVEBot.ReturnToStation:Set[TRUE]
+						break
+				}
 				m_gangMemberID:Set[-1]
 				m_SystemID:Set[-1]		
 				m_BeltID:Set[-1]		
