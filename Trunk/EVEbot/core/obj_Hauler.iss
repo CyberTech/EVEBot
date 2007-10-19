@@ -377,7 +377,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		else
 		{
 			if ${GangMembers.Peek(exists)} && \
-				${Local[${GangMembers.Peek.CharID}](exists)}
+				${Local[${GangMembers.Peek.ToPilot.Name}](exists)}
 			{
 				call This.WarpToGangMemberAndLoot ${GangMembers.Peek.CharID}
 				GangMembers:Dequeue
