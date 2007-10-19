@@ -686,7 +686,7 @@
 					<tab name='Freighter'>
 					</tab>
 
-					<tab name='Customization'>
+					<tab name='Labels'>
 						<Text name='Label1'>
 							<X>10</X>
 							<Y>10</Y>
@@ -700,7 +700,7 @@
 							<Width>200</Width>
 							<Height>10</Height>
 							<Text>Safe Spots</Text>
-							<AutoTooltip>The prefix that must start a bookmark for it to be concidered a safe spot bookmark.</AutoTooltip>
+							<AutoTooltip>The prefix for safe spot bookmark names.</AutoTooltip>
 						</Text>
 						<Textentry name='SafeSpotPrefix'>
 							<X>230</X>							
@@ -709,12 +709,60 @@
 							<Height>18</Height>
 							<MaxLength>10</MaxLength>
 							<OnLoad>
-								This:SetText[${Script[EVEBot].VariableScope.Config.Customization.SafeSpotPrefix}]
+								This:SetText[${Script[EVEBot].VariableScope.Config.Labels.SafeSpotPrefix}]
 							</OnLoad>
 							<OnChange>							
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Customization:SetSafeSpotPrefix[${This.Text}]
+									Script[EVEBot].VariableScope.Config.Labels:SetSafeSpotPrefix[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+						<Text name='BeltBookMarkLabel'>
+							<X>25</X>
+							<Y>40</Y>
+							<Width>200</Width>
+							<Height>10</Height>
+							<Text>Ore Belts</Text>
+							<AutoTooltip>The prefix for ore belt bookmark names.</AutoTooltip>
+						</Text>
+						<Textentry name='BeltBookMarkPrefix'>
+							<X>230</X>							
+							<Y>40</Y>						
+							<Width>100</Width>						
+							<Height>18</Height>
+							<MaxLength>10</MaxLength>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Labels.OreBeltPrefix}]
+							</OnLoad>
+							<OnChange>							
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Labels:SetOreBeltPrefix[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+						<Text name='IceBeltBookMarkLabel'>
+							<X>25</X>
+							<Y>55</Y>
+							<Width>200</Width>
+							<Height>10</Height>
+							<Text>Ice Belts</Text>
+							<AutoTooltip>The prefix for ice belt bookmark names.</AutoTooltip>
+						</Text>
+						<Textentry name='IceBeltBookMarkPrefix'>
+							<X>230</X>							
+							<Y>55</Y>						
+							<Width>100</Width>						
+							<Height>18</Height>
+							<MaxLength>10</MaxLength>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Labels.IceBeltPrefix}]
+							</OnLoad>
+							<OnChange>							
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Labels:SetIceBeltPrefix[${This.Text}]
 								}
 							</OnChange>
 						</Textentry>

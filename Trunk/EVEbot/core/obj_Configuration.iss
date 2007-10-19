@@ -53,7 +53,7 @@ objectdef obj_Configuration
 	variable obj_Configuration_Miner Miner
 	variable obj_Configuration_Hauler Hauler
 	variable obj_Configuration_Salvager Salvager
-	variable obj_Configuration_Customization Customization
+	variable obj_Configuration_Labels Labels
 	
 	method Save()
 	{
@@ -618,9 +618,9 @@ objectdef obj_Configuration_Salvager
 	
 }
 
-objectdef obj_Configuration_Customization
+objectdef obj_Configuration_Labels
 {
-	variable string SetName = "Customization"
+	variable string SetName = "Labels"
 
 	method Initialize()
 	{	
@@ -629,10 +629,10 @@ objectdef obj_Configuration_Customization
 			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
 		}
-		UI:UpdateConsole["obj_Configuration_Customization: Initialized"]
+		UI:UpdateConsole["obj_Configuration_Labels: Initialized"]
 	}
 
-	member:settingsetref CustomizationRef()
+	member:settingsetref LabelsRef()
 	{
 		return ${BaseConfig.BaseRef.FindSet[${This.SetName}]}
 	}
@@ -640,39 +640,39 @@ objectdef obj_Configuration_Customization
 	method Set_Default_Values()
 	{
 		BaseConfig.BaseRef:AddSet[${This.SetName}]
-		This.CustomizationRef:AddSetting[Safe Spot Prefix,"Safe:"]
-		This.CustomizationRef:AddSetting[Ore Belt Prefix,"Belt:"]
-		This.CustomizationRef:AddSetting[Ice Belt Prefix,"Ice Belt:"]
+		This.LabelsRef:AddSetting[Safe Spot Prefix,"Safe:"]
+		This.LabelsRef:AddSetting[Ore Belt Prefix,"Belt:"]
+		This.LabelsRef:AddSetting[Ice Belt Prefix,"Ice Belt:"]
 	}
 	
 	member:string SafeSpotPrefix()
 	{
-		return ${This.CustomizationRef.FindSetting[Safe Spot Prefix,"Safe:"]}
+		return ${This.LabelsRef.FindSetting[Safe Spot Prefix,"Safe:"]}
 	}
 	
 	method SetSafeSpotPrefix(string value)
 	{
-		This.CustomizationRef:AddSetting[Safe Spot Prefix,${value}]
+		This.LabelsRef:AddSetting[Safe Spot Prefix,${value}]
 	}
 	
 	member:string OreBeltPrefix()
 	{
-		return ${This.CustomizationRef.FindSetting[Ore Belt Prefix,"Belt:"]}
+		return ${This.LabelsRef.FindSetting[Ore Belt Prefix,"Belt:"]}
 	}
 	
 	method SetOreBeltPrefix(string value)
 	{
-		This.CustomizationRef:AddSetting[Ore Belt Prefix,${value}]
+		This.LabelsRef:AddSetting[Ore Belt Prefix,${value}]
 	}
 
 	member:string IceBeltPrefix()
 	{
-		return ${This.CustomizationRef.FindSetting[Ice Belt Prefix,"Ice Belt:"]}
+		return ${This.LabelsRef.FindSetting[Ice Belt Prefix,"Ice Belt:"]}
 	}
 	
 	method SetIceBeltPrefix(string value)
 	{
-		This.CustomizationRef:AddSetting[Ice Belt Prefix,${value}]
+		This.LabelsRef:AddSetting[Ice Belt Prefix,${value}]
 	}
 }
 

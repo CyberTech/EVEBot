@@ -75,8 +75,6 @@ objectdef obj_Asteroids
 	
 	function MoveToRandomBeltBookMark()
 	{	
-		/* TODO: cybertech - when this is revamped, be sure to handle ice vs ore bookmark types */
-		
 		EVE:DoGetBookmarks[BeltBookMarkList]
 		
 		variable int RandomBelt
@@ -94,7 +92,17 @@ objectdef obj_Asteroids
 
 			variable string Label
 			Label:Set[${BeltBookMarkList[${RandomBelt}].Label}]
-			if ${Label.Left[5].Equal["Belt:"]}
+			variable string prefix
+			if ${Config.Miner.IceMining}
+			{
+				prefix:Set[${Config.Labels.IceBeltPrefix}]
+			}
+			else
+			{
+				prefix:Set[${Config.Labels.OreBeltPrefix}]
+			}
+
+			if ${Label.Left[${prefix.Length}.Equal[${prefix}]}
 			{
 				UI:UpdateConsole["Warping to Bookmark ${Label}"]
 				call Ship.WarpPrepare
