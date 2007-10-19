@@ -905,10 +905,13 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		
 		if ${DestinationBookmark.ToEntity(exists)}
 		{
-			UI:UpdateConsole["Docking with destination station"]
 			switch ${DestinationBookmark.ToEntity.CategoryID}
 			{
+				case 2
+					; stargate
+					break
 				case 3
+					UI:UpdateConsole["Docking with destination station"]
 					call This.Approach ${DestinationBookmark.ToEntity.ID} DOCKING_RANGE
 				
 					DestinationBookmark.ToEntity:Dock
