@@ -92,6 +92,7 @@ objectdef obj_Asteroids
 
 			variable string Label
 			Label:Set[${BeltBookMarkList[${RandomBelt}].Label}]
+
 			variable string prefix
 			if ${Config.Miner.IceMining}
 			{
@@ -102,7 +103,7 @@ objectdef obj_Asteroids
 				prefix:Set[${Config.Labels.OreBeltPrefix}]
 			}
 
-			if ${Label.Left[${prefix.Length}.Equal[${prefix}]}
+			if ${Label.Left[${prefix.Length}].Equal[${prefix}]}
 			{
 				UI:UpdateConsole["Warping to Bookmark ${Label}"]
 				call Ship.WarpPrepare
