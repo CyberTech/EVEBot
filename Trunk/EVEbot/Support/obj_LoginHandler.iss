@@ -9,6 +9,9 @@
 
 	TODO: Solve invalid config loaded at fresh startup b/c me.name is null during obj_config.
 
+	Modified by TruPoet in such a way that it will work no matter if you're at the login screen,
+	charselect, or in the game itself.
+
 */
 
 objectdef obj_LoginHandler
@@ -16,15 +19,23 @@ objectdef obj_LoginHandler
 	variable int FrameCounter
 	variable int LoginTimer = 0
 	variable string CurrentState
+	variable bool Finished = FALSE
+
+	; Added these in so no magic numbers are used
+	variable int startWaitTime = 0
+	variable int loginWaitTime = 2
+	variable int connectWaitTime = 60
+	variable int inspaceWaitTime = 120
 	
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_Login: Initialized"]
+		echo obj_Login: Initialized
+		This.CurrentState:Set[START]
 	}
-	
+
 	method Start()
 	{
-		Event[OnFrame]:AttachAtom[This:Pulse]
+		Event[OnFrame]:AttachAtom[This:Pulse]		
 	}
 
 	method Shutdown()
@@ -44,11 +55,8 @@ objectdef obj_LoginHandler
 		
 		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 		{
-			if ${Login(exists)}
-			{
-				echo ${This.CurrentState}
-				This:DoLogin
-			}
+			;echo DEBUG: Pulse: ${This.LoginTimer} - ${This.CurrentState}
+			This:DoLogin
 			
 			FrameCounter:Set[0]
 		}
@@ -63,7 +71,7 @@ objectdef obj_LoginHandler
 		{
 			return
 		}
-	    echo "obj_Login: Loading Extension ${EXTNAME}"
+	    	;echo "DEBUG: obj_Login: Loading Extension ${EXTNAME}"
 		do
 		{   
 			wait 50
@@ -93,22 +101,31 @@ objectdef obj_LoginHandler
 	
 	method DoLogin()
 	{
-		if !${Login(exists)}
-		{
-			return
-		}
-		
 		EVE:CloseAllMessageBoxes
 
+		;echo DEBUG: Current state: ${This.CurrentState}
 		switch ${This.CurrentState}
 		{
 			case START
+				if ${CharSelect(exists)}
+				{
+					This.CurrentState:Set["CONNECTING"]
+					This.LoginTimer:Set[${This.connectWaitTime}]
+					break
+				}
+				if !${Login(exists)} && !${CharSelect(exists)}
+				{
+					This.CurrentState:Set["INSPACE"]
+					This.LoginTimer:Set[${This.inspaceWaitTime}]
+					break
+				}
 			case SERVERDOWN
-				if ${Login.Serverstatus.NotEqual[LIVE]}
+				; echo DEBUG: Server Status: ${Login.ServerStatus}
+				if ${Login.ServerStatus.NotEqual[LIVE]}
 				{
 					This.CurrentState:Set["SERVERDOWN"]
-					This.LoginTimer:Set[150]
-					return
+					This.LoginTimer:Set[${This.connectWaitTime}]
+					break
 				}
 				else
 				{
@@ -118,45 +135,37 @@ objectdef obj_LoginHandler
 			case SERVERUP
 				Login:SetUsername[${Config.Common.LoginName}]
 				This.CurrentState:Set["LOGIN_ENTERED"]
-				This.LoginTimer:Set[2]
-				return
+				This.LoginTimer:Set[${This.loginWaitTime}]
 				break
 			case LOGIN_ENTERED
 				Login:SetPassword[${Config.Common.LoginPassword}]
 				This.CurrentState:Set["PASS_ENTERED"]
-				This.LoginTimer:Set[2]
-				return
+				This.LoginTimer:Set[${This.loginWaitTime}]
 				break
 			case PASS_ENTERED
 				Login:Connect
 				This.CurrentState:Set["CONNECTING"]
-				This.LoginTimer:Set[60]
-				return
+				This.LoginTimer:Set[${This.connectWaitTime}]
 				break
 			case CONNECTING
-				if (!${Login.IsConnecting} || !${CharSelect(exists)})
-				{
-					This.CurrentState:Set["START"]
-					This.LoginTimer:Set[60]
-					return
-				}
 				if ${CharSelect(exists)}
 				{
+					;echo DEBUG: AutoLoginCharID: ${Config.Common.AutoLoginCharID}
 					CharSelect:ClickCharacter[${Config.Common.AutoLoginCharID}]
-					This.LoginTimer:Set[60]
-					return
+					This.LoginTimer:Set[${This.connectWaitTime}]
+					break
 				}
 				if !${Me.Name(exists)}
 				{
-					This.LoginTimer:Set[10]
-					return
+					This.LoginTimer:Set[${This.connectWaitTime}]
+					break
 				}
 				This.CurrentState:Set["INSPACE"]
-				This.LoginTimer:Set[300]
-				return
+				This.LoginTimer:Set[${This.inspaceWaitTime}]
 				break
 			case INSPACE
-				run EVEBot/EVEBot.iss
+				run EVEBot.iss
+				This.Finished:Set[TRUE]
 				return
 				break
 		}

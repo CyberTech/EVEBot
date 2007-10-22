@@ -11,12 +11,18 @@
 	  user select.  Once logged in, evebot is called.  When evebot detects it's gotten logged out, it 
 	  recalls launcher with the character that evebot was running as.
 
+	Modified by TruPoet to use a config file for login / password sets
+	TODO: Setup a GUI to interface with the config file
+
 */
 
 #include core/defines.iss
 #include Support/obj_LoginHandler.iss
 #include Support/obj_AutoPatcher.iss
+#include Support/obj_Configuration.iss
 variable obj_LoginHandler LoginHandler
+variable obj_Configuration_BaseConfig BaseConfig
+variable obj_Configuration Config
 
 /* Defined here for obj_Login to use temporarily */
 objectdef obj_UI
@@ -38,11 +44,31 @@ function main()
 {
 	if !${ISXEVE(exists)}
 	{
+		;echo DEBUG: ISXEVE not loaded, loading it now
 		call LoginHandler.LoadExtension
+		wait 200
 	}
+
+	if (${Config.Common.LoginName.Equal[""]} || \ 
+		${Config.Common.LoginPassword.Equal[""]} || \ 
+		${Config.Common.LoginName.Equal[NULL]} || \ 
+		${Config.Common.LoginPassword.Equal[NULL]} || \
+		${Config.Common.AutoLoginCharID} == 0 || )
+	{
+		echo No login, pw, or CharID found in config
+		; do config gui here, the next line will save a blank template for a config if none exists
+		Config:Save
+		return
+	}
+	;echo DEBUG: ${Config.Common.LoginName} / ${Config.Common.LoginPassword} / ${Config.Common.AutoLoginCharID}
 
 	if ${ISXEVE(exists)}
 	{
-		;Login:DoLogin
+		LoginHandler:Start
+		LoginHandler:DoLogin
+	}
+	while !${LoginHandler.Finished}
+	{
+		waitframe
 	}
 }
