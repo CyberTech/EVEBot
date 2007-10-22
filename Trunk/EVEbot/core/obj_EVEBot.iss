@@ -51,7 +51,6 @@ objectdef obj_EVEBot
 					${This.GameMinute} >= 50) 
 				{
 					UI:UpdateConsole["EVE downtime approaching, pausing operations"]
-					UI:ConsoleLog["EVE downtime approaching, pausing operations"]
 					This.ReturnToStation:Set[TRUE]
 				}
 			}
