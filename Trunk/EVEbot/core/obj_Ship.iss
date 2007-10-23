@@ -1112,4 +1112,12 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			wait 30
 		}
 	}
+
+	function StackAll()
+	{
+		if ${This.IsCargoOpen}
+		{
+			Me.Ship:StackAllCargo
+		}
+	}
 }
