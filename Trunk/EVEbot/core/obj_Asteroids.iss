@@ -118,8 +118,11 @@ objectdef obj_Asteroids
 		
 	function MoveToField(bool ForceMove)
 	{
-		;call This.MoveToRandomBeltBookMark
-		;return
+		if ${Config.Miner.UseFieldBookmarks}
+		{
+			call This.MoveToRandomBeltBookMark
+			return
+		}
 		
 		if (${Config.Miner.BookMarkLastPosition} && \
 			${Bookmarks.StoredLocationExists})

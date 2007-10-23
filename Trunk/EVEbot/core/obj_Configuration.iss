@@ -257,6 +257,7 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Delivery Location Type, 1]
 		This.MinerRef:AddSetting[Delivery Location Type Name, Station]
 		This.MinerRef:AddSetting[Delivery Location,]
+		This.MinerRef:AddSetting[Use Field Bookmarks, TRUE]
 
 		This.OreTypesRef:AddSetting[Vitreous Mercoxit, 1]
 		This.OreTypesRef:AddSetting[Magma Mercoxit, 1]
@@ -458,6 +459,16 @@ objectdef obj_Configuration_Miner
 	method SetDeliveryLocation(string value)
 	{
 		This.MinerRef:AddSetting[Delivery Location, ${value}]
+	}
+	
+	member:bool UseFieldBookmarks()
+	{
+		return ${This.MinerRef.FindSetting[Use Field Bookmarks, TRUE]}
+	}
+
+	method SetUseFieldBookmarks(bool value)
+	{	
+		This.MinerRef:AddSetting[Use Field Bookmarks, ${value}]
 	}
 }
 
