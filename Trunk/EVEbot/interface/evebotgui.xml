@@ -367,16 +367,16 @@
 							<Y>70</Y>
 							<Height>20</Height>
 							<Width>100</Width>
-							<Text>Use Field Bookmarks</Text>
-							<AutoTooltip>When checked the miner will warp to asteroid belt bookmarks instead of the belts themselves.  This is usefull for mining in hidden exploration sites or in systems where the field warp in point is far from the asteroids.</AutoTooltip>
+							<Text>Use Belt Bookmarks</Text>
+							<AutoTooltip>When checked the miner will warp to asteroid belt bookmarks instead of the belts themselves.  See the labels tab for bookmark prefix requirements.</AutoTooltip>
 							<OnLoad>
-								if ${Script[EVEBot].VariableScope.Config.Miner.UseFieldBookmarks'}
+								if ${Script[EVEBot].VariableScope.Config.Miner.UseFieldBookmarks}
 								{
 									This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
-									Script[EVEBot].VariableScope.Config.Miner:SetUseFieldBookmarks'[${This.Checked}]
+									Script[EVEBot].VariableScope.Config.Miner:SetUseFieldBookmarks[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
 						<checkbox name='cbMiningDrones'>
