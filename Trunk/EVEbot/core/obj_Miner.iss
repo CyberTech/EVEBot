@@ -20,10 +20,6 @@ objectdef obj_Miner
 	variable int FrameCounter
 	variable bool CombatAbort = FALSE
 
-	variable index:being Buddies
-	variable int BuddiesCount = 0
-	variable int MAX_BUDDIES = 1
-	
 	; Are we running out of asteroids to target?
 	variable bool ConcentrateFire = FALSE
 	
@@ -32,12 +28,7 @@ objectdef obj_Miner
 		This.TripStartTime:Set[${Time.Timestamp}]
 		BotModules:Insert["Miner"]
 		Event[OnFrame]:AttachAtom[This:Pulse]
-		EVE:Execute[OpenPeopleAndPlaces]
-		EVE:Execute[CmdCloseAllWindows]
 		UI:UpdateConsole["obj_Miner: Initialized"]
-
-		This.BuddiesCount:Set[${EVE.GetBuddies[This.Buddies]}]
-                UI:UpdateConsole["Populating Buddies List:: ${This.BuddiesCount} buddies total"]
 	}
 	
 	method Shutdown()
@@ -439,27 +430,6 @@ objectdef obj_Miner
 				}
 			}
 			wait 5
-
-			; Every minute, stack the cargo to make sure we are connected.
-			; Also, check for a buddy (or more depending on MAX_BUDDIES) 
-			if (${Math.Calc[${This.TripDuration} % 60]} == 0) 
-			{
-				;UI:UpdateConsole["DEBUG: Duration: ${This.TripDuration} - Stacking cargo..."]
-				Call Ship.StackAll
-				;UI:UpdateConsole["DEBUG: Duration: ${This.TripDuration} - Checking buddies..."]
-			   	if (${BuddiesCount} > 0)
-			   	{
-					BuddyCounter:Set[1]
-					do 
-					{
-						buddyTest:Set[${This.Buddies.Get[${BuddyCounter}].Name}]
-						buddyOnline:Set[${This.Buddies.Get[${BuddyCounter}].IsOnline}]
-						;UI:UpdateConsole["DEBUG: ${buddyTest} (Online: ${buddyOnline})"]
-					}
-					while ${BuddyCounter:Inc} <= ${This.MAX_BUDDIES}
-			   	}
-				wait 5
-			}
 		}
 				
 		if ${Config.Miner.BookMarkLastPosition}
