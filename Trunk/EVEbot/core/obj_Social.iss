@@ -109,7 +109,7 @@ objectdef obj_Social
 		return FALSE
 	}
 	
-	member:bool StandingDetection(int Stand)
+	member:bool StandingDetection(int Standing)
 	{
 		if !${This.PilotIndex.Used}
 		{
@@ -123,12 +123,36 @@ objectdef obj_Social
 		{
 			do
 			{
-				if (${Me.ShipID} != ${PilotIterator.Value}) && \
-					!${PilotIterator.Value.Owner.ToGangMember} && \
-					${PilotITerator.Value.Owner.Standing} < ${Stand}
+				if (${Me.ShipID} == ${PilotIterator.Value}) && \
+					${PilotIterator.Value.Owner.ToGangMember(exists)} && \
 				{
+					return FALSE
+				}
+
+				/* Check Standing */
+				if	${EVE.Standing[${Me.CharID},${PilotITerator.Value.Owner.CharID}]} < ${Standing} || \
+					${EVE.Standing[${Me.CorpID},${PilotITerator.Value.Owner.CharID}]} < ${Standing} || \
+					${EVE.Standing[${Me.AllianceID},${PilotITerator.Value.Owner.CharID}]} < ${Standing} || \
+					${EVE.Standing[${Me.CharID},${PilotITerator.Value.Owner.CorpID}]} < ${Standing} || \
+					${EVE.Standing[${Me.CorpID},${PilotITerator.Value.Owner.CorpID}]} < ${Standing} || \
+					${EVE.Standing[${Me.AllianceID},${PilotITerator.Value.Owner.CorpID}]} < ${Standing} || \
+					${EVE.Standing[${Me.CharID},${PilotITerator.Value.Owner.AllianceID}]} < ${Standing} || \
+					${EVE.Standing[${Me.CorpID},${PilotITerator.Value.Owner.AllianceID}]} < ${Standing} || \
+					${EVE.Standing[${Me.AllianceID},${PilotITerator.Value.Owner.AllianceID}]} < ${Standing} || \
+					${EVE.Standing[${PilotITerator.Value.Owner.CharID},${Me.CharID}]} < ${Standing} || \
+					${EVE.Standing[${PilotITerator.Value.Owner.CorpID},${Me.CharID}]} < ${Standing} || \
+					${EVE.Standing[${PilotITerator.Value.Owner.AllianceID},${Me.CharID}]} < ${Standing} || \
+					${EVE.Standing[${PilotITerator.Value.Owner.CharID},${Me.CorpID}]} < ${Standing} || \
+					${EVE.Standing[${PilotITerator.Value.Owner.CorpID},${Me.CorpID}]} < ${Standing} || \
+					${EVE.Standing[${PilotITerator.Value.Owner.AllianceID},${Me.CorpID}]} < ${Standing} || \
+					${EVE.Standing[${PilotITerator.Value.Owner.CharID},${Me.AllianceID}]} < ${Standing} || \
+					${EVE.Standing[${PilotITerator.Value.Owner.CorpID},${Me.AllianceID}]} < ${Standing} || \
+					${EVE.Standing[${PilotITerator.Value.Owner.AllianceID},${Me.AllianceID}]} < ${Standing}
+				{
+					/* Yep, I'm laughing right now as well -- CyberTech */
 					return TRUE
 				}
+
 			}
 			while ${PilotIterator:Next(exists)}
 			
@@ -137,7 +161,7 @@ objectdef obj_Social
 		return FALSE
 	}
 	
-	member:bool PilotsWithinDectection(int Dist)
+	member:bool PilotsWithinDetection(int Dist)
 	{
 		if !${This.PilotIndex.Used}
 		{
