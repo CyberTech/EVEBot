@@ -124,7 +124,7 @@ objectdef obj_Social
 			do
 			{
 				if (${Me.ShipID} == ${PilotIterator.Value}) && \
-					${PilotIterator.Value.Owner.ToGangMember(exists)} && \
+					${PilotIterator.Value.Owner.ToGangMember(exists)}
 				{
 					return FALSE
 				}
@@ -152,7 +152,6 @@ objectdef obj_Social
 					/* Yep, I'm laughing right now as well -- CyberTech */
 					return TRUE
 				}
-
 			}
 			while ${PilotIterator:Next(exists)}
 			
