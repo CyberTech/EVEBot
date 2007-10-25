@@ -698,6 +698,73 @@
 								This:SetSelection[${Script[EVEBot].VariableScope.Config.Hauler.HaulerMode}]
 							</OnLoad>
 						</combobox>
+						<checkbox Name='cbMultisystemSupport'>
+							<X>10</X>
+							<Y>30</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Support Multi-System Hauling</Text>
+							<AutoTooltip>
+								When checked the hauler will drop-off ore at bookmarked station (or POS) which may be in another system.
+							</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Hauler.MultiSystemSupport}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+									Script[EVEBot].VariableScope.Config.Hauler:SetMultiSystemSupport[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<Text name='DropOffLabel'>
+							<X>10</X>
+							<Y>55</Y>
+							<Width>180</Width>
+							<Height>10</Height>
+							<Text>Drop Off Bookmark</Text>
+							<AutoTooltip>The bookmark name for the drop off location.</AutoTooltip>
+						</Text>
+						<Textentry name='DropOffBookmark'>
+							<X>200</X>							
+							<Y>55</Y>						
+							<Width>150</Width>						
+							<Height>18</Height>
+							<MaxLength>10</MaxLength>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Hauler.DropOffBookmark}]
+							</OnLoad>
+							<OnChange>							
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Hauler:SetDropOffBookmark[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>						
+						<Text name='MiningSystemLabel'>
+							<X>10</X>
+							<Y>80</Y>
+							<Width>180</Width>
+							<Height>10</Height>
+							<Text>Mining System Bookmark</Text>
+							<AutoTooltip>The bookmark name for the mining system location.</AutoTooltip>
+						</Text>
+						<Textentry name='MiningSystemBookmark'>
+							<X>200</X>							
+							<Y>80</Y>						
+							<Width>150</Width>						
+							<Height>18</Height>
+							<MaxLength>10</MaxLength>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Hauler.MiningSystemBookmark}]
+							</OnLoad>
+							<OnChange>							
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Hauler:SetMiningSystemBookmark[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>						
 					</tab>
 
 					<tab name='Freighter'>

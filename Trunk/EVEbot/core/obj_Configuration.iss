@@ -577,6 +577,9 @@ objectdef obj_Configuration_Hauler
 		BaseConfig.BaseRef:AddSet[${This.SetName}]
 		This.HaulerRef:AddSetting[Hauler Mode,1]
 		This.HaulerRef:AddSetting[Hauler Mode Name, "Service Gang Members"]
+		This.HaulerRef:AddSetting[Multi System Support, FALSE]
+		This.HaulerRef:AddSetting[Drop Off Bookmark, ""]
+		This.HaulerRef:AddSetting[Mining System Bookmark, ""]
 	}
 
 	member:int HaulerMode()
@@ -599,6 +602,35 @@ objectdef obj_Configuration_Hauler
 		This.HaulerRef:AddSetting[Hauler Mode Name,${value}]
 	}
 
+	member:bool MultiSystemSupport()
+	{
+		return ${This.HaulerRef.FindSetting[Multi System Support, FALSE]
+	}
+	
+	method SetMultiSystemSupport(bool value)
+	{
+		This.HaulerRef:AddSetting[Multi System Support, ${value}]
+	}
+
+	member:string DropOffBookmark()
+	{
+		return ${This.HaulerRef.FindSetting[Drop Off Bookmark, ""]}
+	}
+	
+	method SetDropOffBookmark(string value)
+	{
+		This.HaulerRef:AddSetting[Drop Off Bookmark,${value}]
+	}
+
+	member:string MiningSystemBookmark()
+	{
+		return ${This.HaulerRef.FindSetting[Mining System Bookmark, ""]}
+	}
+	
+	method SetMiningSystemBookmark(string value)
+	{
+		This.HaulerRef:AddSetting[Mining System Bookmark,${value}]
+	}
 }
 
 objectdef obj_Configuration_Salvager
