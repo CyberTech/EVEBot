@@ -243,7 +243,14 @@ objectdef obj_Asteroids
 			{
 				;echo "DEBUG: obj_Asteroids: Checking for Ore Type ${This.OreTypeIterator.Key}"
 				This.AsteroidList:Clear
-				EVE:DoGetEntities[This.AsteroidList,CategoryID,${This.AsteroidCategoryID},${This.OreTypeIterator.Key}]
+				if ${This.OreTypeIterator.Key.Find[Veldspar]} != NULL && ${Config.Miner.IncludeVeldspar}
+				{
+					EVE:DoGetEntities[This.AsteroidList,CategoryID,${This.AsteroidCategoryID},${This.OreTypeIterator.Key}]
+				}
+				elseif ${This.OreTypeIterator.Key.Find[Veldspar]} == NULL
+				{
+					EVE:DoGetEntities[This.AsteroidList,CategoryID,${This.AsteroidCategoryID},${This.OreTypeIterator.Key}]
+				}
 				wait 0.5
 			}
 			while ${This.AsteroidList.Used} == 0 && ${This.OreTypeIterator:Next(exists)}
