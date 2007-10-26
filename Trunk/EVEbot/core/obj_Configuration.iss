@@ -54,6 +54,7 @@ objectdef obj_Configuration
 	variable obj_Configuration_Hauler Hauler
 	variable obj_Configuration_Salvager Salvager
 	variable obj_Configuration_Labels Labels
+	variable obj_Configuration_Freighter Freighter
 	
 	method Save()
 	{
@@ -718,4 +719,52 @@ objectdef obj_Configuration_Labels
 		This.LabelsRef:AddSetting[Ice Belt Prefix,${value}]
 	}
 }
+
+objectdef obj_Configuration_Freighter
+{
+	variable string SetName = "Freighter"
+
+	method Initialize()
+	{	
+		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
+		{
+			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
+			This:Set_Default_Values[]
+		}
+		UI:UpdateConsole["obj_Configuration_Freighter: Initialized"]
+	}
+
+	member:settingsetref FreighterRef()
+	{
+		return ${BaseConfig.BaseRef.FindSet[${This.SetName}]}
+	}
+
+	method Set_Default_Values()
+	{
+		BaseConfig.BaseRef:AddSet[${This.SetName}]
+		This.FreighterRef:AddSetting[Destination,""]
+		This.FreighterRef:AddSetting[Source Prefix,""]
+	}
+	
+	member:string Destination()
+	{
+		return ${This.FreighterRef.FindSetting[Destination,""]}
+	}
+	
+	method SetDestination(string value)
+	{
+		This.FreighterRef:AddSetting[Destination,${value}]
+	}
+	
+	member:string SourcePrefix()
+	{
+		return ${This.FreighterRef.FindSetting[Source Prefix,""]}
+	}
+	
+	method SetSourcePrefix(string value)
+	{
+		This.FreighterRef:AddSetting[Source Prefix,${value}]
+	}
+}
+
 

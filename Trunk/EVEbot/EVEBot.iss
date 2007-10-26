@@ -26,6 +26,7 @@
 #include core/obj_Hauler.iss
 #include core/obj_Miner.iss
 #include core/obj_Fighter.iss
+#include core/obj_Freighter.iss
 
 /* Script-Defined Support Objects */
 variable obj_EVEBot EVEBot
@@ -51,6 +52,7 @@ variable index:string BotModules
 variable obj_Miner Miner
 variable obj_OreHauler Hauler
 variable obj_CombatFighter Fighter
+variable obj_Freighter Freighter
 ;variable obj_Salvager Salvager
 
 function atexit()

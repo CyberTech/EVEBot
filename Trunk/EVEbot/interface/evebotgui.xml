@@ -768,6 +768,54 @@
 					</tab>
 
 					<tab name='Freighter'>
+						<Text name='lblDestination'>
+							<X>10</X>
+							<Y>15</Y>
+							<Width>200</Width>
+							<Height>10</Height>
+							<Text>Destination</Text>
+							<AutoTooltip>The destination bookmark name.</AutoTooltip>
+						</Text>
+						<Textentry name='teDestination'>
+							<X>200</X>							
+							<Y>15</Y>						
+							<Width>280</Width>						
+							<Height>18</Height>
+							<MaxLength>150</MaxLength>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Freighter.Destination}]
+							</OnLoad>
+							<OnChange>							
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Freighter:SetDestination[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+						<Text name='lblSourcePrefix'>
+							<X>10</X>
+							<Y>40</Y>
+							<Width>200</Width>
+							<Height>10</Height>
+							<Text>Source Bookmark Prefix</Text>
+							<AutoTooltip>The prefix for source bookmark names.</AutoTooltip>
+						</Text>
+						<Textentry name='teSourcePrefix'>
+							<X>200</X>							
+							<Y>40</Y>						
+							<Width>100</Width>						
+							<Height>18</Height>
+							<MaxLength>10</MaxLength>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Freighter.SourcePrefix}]
+							</OnLoad>
+							<OnChange>							
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Freighter:SetSourcePrefix[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
 					</tab>
 
 					<tab name='Labels'>

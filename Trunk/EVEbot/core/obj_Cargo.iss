@@ -14,10 +14,16 @@ objectdef obj_Cargo
 {
 	variable index:item MyCargo
 	variable index:item CargoToTransfer
+	variable bool m_LastTransferComplete
 
 	method Initialize()
 	{
 		UI:UpdateConsole["obj_Cargo: Initialized"]
+	}
+
+	member:bool LastTransferComplete()
+	{
+		return ${m_LastTransferComplete}
 	}
 
 	function OpenHolds()
@@ -158,6 +164,49 @@ objectdef obj_Cargo
 			UI:UpdateConsole["DEBUG: obj_Cargo:TransferListToJetCan: Nothing found to move"]
 		}
 	}
+
+	function TransferListToShip()
+	{
+		variable int QuantityToMove
+		variable iterator CargoIterator
+		This.CargoToTransfer:GetIterator[CargoIterator]
+		
+		if ${CargoIterator:First(exists)}
+		{
+			call Ship.OpenCargo
+			do
+			{
+				if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${Ship.CargoFreeSpace}
+				{
+					/* Move only what will fit, minus 1 to account for CCP rounding errors. */
+					QuantityToMove:Set[${Ship.CargoFreeSpace} / ${CargoIterator.Value.Volume} - 1]
+				}
+				else
+				{
+					QuantityToMove:Set[${CargoIterator.Value.Quantity}]
+				}
+
+				UI:UpdateConsole["TransferListToShip: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
+				if ${QuantityToMove} > 0
+				{
+					CargoIterator.Value:MoveTo[MyShip,${QuantityToMove}]
+					wait 30
+				}
+								
+				if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
+				{
+					UI:UpdateConsole["DEBUG: TransferListToShip: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
+					break
+				}
+			}
+			while ${CargoIterator:Next(exists)}
+			wait 10
+		}
+		else
+		{
+			UI:UpdateConsole["DEBUG: obj_Cargo:TransferListToShip: Nothing found to move"]
+		}
+	}
 	
 	function TransferOreToCorpHangarArray()
 	{		
@@ -221,5 +270,78 @@ objectdef obj_Cargo
 		Ship:UpdateBaselineUsedCargo[]
 		wait 25
 		call This.CloseHolds
+	}
+	
+	function TransferCargoToHangar()
+	{	
+		while !${Me.InStation}
+		{
+			UI:UpdateConsole["obj_Cargo: Waiting for InStation..."]
+			wait 10
+		}
+
+		UI:UpdateConsole["Transferring Cargo to Station Hangar"]
+
+		if ${This.IsCargoOpen}
+		{
+			; Need to cycle the the cargohold after docking to update the list.
+			call This.CloseCargo
+		}
+		
+		call This.OpenHolds
+		
+		/* FOR NOW move all cargo.  Add filtering later */
+		Me.Ship:DoGetCargo[This.CargoToTransfer]
+		
+		call This.TransferListToHangar
+		
+		This.CargoToTransfer:Clear[]
+		Me.Station:StackAllHangarItems
+		Ship:UpdateBaselineUsedCargo[]
+		wait 25
+		call This.CloseHolds
+	}
+
+	function TransferCargoToShip()
+	{	
+		if !${Me.InStation}
+		{
+			/* TODO - Support picking up from entities in space */
+			m_LastTransferComplete:Set[TRUE]
+		}
+		else
+		{
+			UI:UpdateConsole["Transferring Cargo from Station Hangar"]
+	
+			/* Need to cycle the the cargohold after docking to update the list. */
+			call This.CloseHolds
+			call This.OpenHolds
+
+			/* FOR NOW move all cargo.  Add filtering later */
+			Me.Station:DoGetHangarItems[This.CargoToTransfer]
+
+			call This.TransferListToShip
+			
+			This.CargoToTransfer:Clear[]
+			Me.Ship:StackAllCargo
+			Ship:UpdateBaselineUsedCargo[]
+			wait 25
+			call This.CloseHolds
+			
+			/* Check for leftover items in the station */
+			/* FOR NOW check all cargo.  Add filtering later */
+			Me.Station:DoGetHangarItems[This.CargoToTransfer]
+			if ${This.CargoToTransfer.Used} > 0
+			{
+				This.CargoToTransfer:Clear[]
+				UI:UpdateConsole["Could not carry all the cargo from the station hangar"]				
+				m_LastTransferComplete:Set[FALSE]
+			}
+			else
+			{
+				UI:UpdateConsole["Transfered all cargo from the station hangar"]				
+				m_LastTransferComplete:Set[TRUE]
+			}
+		}
 	}
 }
