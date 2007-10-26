@@ -90,7 +90,15 @@ objectdef obj_Miner
 				switch ${Config.Miner.DeliveryLocationTypeName}
 				{
 					case Station
-						call Dock
+						if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && \
+						   ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
+						{
+							call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
+						}
+						else
+						{
+							call Dock
+						}
 						break
 					case Hangar Array
 						call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
