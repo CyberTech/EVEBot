@@ -893,15 +893,20 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			wait 5
 		}
 
-		UI:UpdateConsole["Warping to bookmark ${DestinationBookmark.Label}"]
-		DestinationBookmark:WarpTo
-		wait 120
-		do
+		while (${DestinationBookmark.ToEntity(exists)} && \
+			${DestinationBookmark.ToEntity.Distance} > WARP_RANGE)
 		{
+			echo ${DestinationBookmark.ToEntity.Distance} > WARP_RANGE
+			UI:UpdateConsole["Warping to bookmark ${DestinationBookmark.Label}"]
+			DestinationBookmark:WarpTo
+			wait 120
+			do
+			{
+				wait 20
+			}
+			while (${Me.ToEntity.Mode} == 3)	
 			wait 20
 		}
-		while (${Me.ToEntity.Mode} == 3)	
-		wait 20
 		
 		if ${DestinationBookmark.ToEntity(exists)}
 		{
