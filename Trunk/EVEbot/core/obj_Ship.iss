@@ -858,11 +858,17 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			call Ship.UnDock
 		}
 	
-		if ${DestinationBookmark.ToEntity(exists)} && \
-			${DestinationBookmark.ToEntity.Distance} < WARP_RANGE
-		{
-			return
-		}
+		/* TESTING BEGIN
+		 * If we are already next to the bookmarked location, 
+		 * let the code below approach or dock instead of 
+		 * returning.
+		 *	if ${DestinationBookmark.ToEntity(exists)} && \
+		 *		${DestinationBookmark.ToEntity.Distance} < WARP_RANGE
+		 *	{
+		 *		return
+		 *	}
+		 * TESTING END
+		 */		
 		
 		if (${DestinationBookmark.SolarSystemID} != ${Me.SolarSystemID})
 		{
@@ -896,10 +902,12 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		while (${DestinationBookmark.ToEntity(exists)} && \
 			${DestinationBookmark.ToEntity.Distance} > WARP_RANGE)
 		{
-			echo ${DestinationBookmark.ToEntity.Distance} > WARP_RANGE
 			UI:UpdateConsole["Warping to bookmark ${DestinationBookmark.Label}"]
 			DestinationBookmark:WarpTo
-			wait 120
+			
+			;; TODO - verify we entered warp
+			
+			wait 150
 			do
 			{
 				wait 20
