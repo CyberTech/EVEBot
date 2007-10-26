@@ -314,7 +314,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 					/* TODO - this needs to keep a queue of bookmarks, named for the can ie, "Can CORP hh:mm", of partially looted cans */
 					/* Be sure its names, and not ID.  We shouldn't store anything in a bookmark name that we shouldnt know */
 					
-					UI:UpdateConsole["DEBUG: obj_Hauler.LootEntity: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"
+					UI:UpdateConsole["DEBUG: obj_Hauler.LootEntity: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
 					break
 				}
 			} 
