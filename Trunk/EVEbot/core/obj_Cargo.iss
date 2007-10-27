@@ -51,12 +51,12 @@ objectdef obj_Cargo
 			variable int CategoryID
 
 			CategoryID:Set[${CargoIterator.Value.CategoryID}]
-			;UI:UpdateConsole["DEBUG: obj_Cargo:FindAllShipCargo: CategoryID: ${CategoryID} ${CargoIterator.Value.Name} - ${CargoIterator.Value.Quantity} (CargoToTransfer.Used: ${This.CargoToTransfer.Used})"]
+			UI:UpdateConsole["DEBUG: obj_Cargo:FindAllShipCargo: CategoryID: ${CategoryID} ${CargoIterator.Value.Name} - ${CargoIterator.Value.Quantity} (CargoToTransfer.Used: ${This.CargoToTransfer.Used})"]
 			This.CargoToTransfer:Insert[${CargoIterator.Value}]
 		}
 		while ${CargoIterator:Next(exists)}
 		
-		;UI:UpdateConsole["DEBUG: obj_Cargo:FindAllShipCargo: This.CargoToTransfer Populated: ${This.CargoToTransfer.Used}"]
+		UI:UpdateConsole["DEBUG: obj_Cargo:FindAllShipCargo: This.CargoToTransfer Populated: ${This.CargoToTransfer.Used}"]
 	}
 		
 	method FindShipCargo(int CategoryIDToMove)
@@ -287,7 +287,7 @@ objectdef obj_Cargo
 		call This.OpenHolds
 
 		/* FOR NOW move all cargo.  Add filtering later */
-		Me.Ship:DoGetCargo[This.CargoToTransfer]
+		This:FindAllShipCargo
 		
 		call This.TransferListToHangar
 		
@@ -316,27 +316,35 @@ objectdef obj_Cargo
 			/* FOR NOW move all cargo.  Add filtering later */
 			Me.Station:DoGetHangarItems[This.CargoToTransfer]
 
-			call This.TransferListToShip
-			
-			This.CargoToTransfer:Clear[]
-			Me.Ship:StackAllCargo
-			Ship:UpdateBaselineUsedCargo[]
-			wait 25
-			call This.CloseHolds
-			
-			/* Check for leftover items in the station */
-			/* FOR NOW check all cargo.  Add filtering later */
-			Me.Station:DoGetHangarItems[This.CargoToTransfer]
 			if ${This.CargoToTransfer.Used} > 0
 			{
+				call This.TransferListToShip
+				
 				This.CargoToTransfer:Clear[]
-				UI:UpdateConsole["Could not carry all the cargo from the station hangar"]				
-				m_LastTransferComplete:Set[FALSE]
+				Me.Ship:StackAllCargo
+				Ship:UpdateBaselineUsedCargo[]
+				wait 25
+				call This.CloseHolds
+				
+				/* Check for leftover items in the station */
+				/* FOR NOW check all cargo.  Add filtering later */
+				Me.Station:DoGetHangarItems[This.CargoToTransfer]
+				if ${This.CargoToTransfer.Used} > 0
+				{
+					This.CargoToTransfer:Clear[]
+					UI:UpdateConsole["Could not carry all the cargo from the station hangar"]				
+					m_LastTransferComplete:Set[FALSE]
+				}
+				else
+				{
+					UI:UpdateConsole["Transfered all cargo from the station hangar"]				
+					m_LastTransferComplete:Set[TRUE]
+				}
 			}
 			else
-			{
-				UI:UpdateConsole["Transfered all cargo from the station hangar"]				
-				m_LastTransferComplete:Set[TRUE]
+			{	/* Only set m_LastTransferComplete if we actually transfered something */
+				UI:UpdateConsole["Couldn't find any cargo in the station hangar"]				
+				m_LastTransferComplete:Set[FALSE]
 			}
 		}
 	}
