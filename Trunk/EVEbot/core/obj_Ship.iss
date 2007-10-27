@@ -942,9 +942,9 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 					{
 					   wait 20
 					   Counter:Inc[20]
-					   if (${Counter} > 30)
+					   if (${Counter} > 22)
 					   {
-					      UI:UpdateConsole["Docking atttempt failed ... trying again."]
+					      UI:UpdateConsole["Retrying to dock with destination station"]
 					      ;DestinationBookmark.ToEntity:Dock	
 					      Entity[CategoryID,3]:Dock
 					      Counter:Set[0]
