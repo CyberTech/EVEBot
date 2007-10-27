@@ -605,7 +605,7 @@ objectdef obj_Configuration_Hauler
 
 	member:bool MultiSystemSupport()
 	{
-		return ${This.HaulerRef.FindSetting[Multi System Support, FALSE]
+		return ${This.HaulerRef.FindSetting[Multi System Support, FALSE]}
 	}
 	
 	method SetMultiSystemSupport(bool value)
