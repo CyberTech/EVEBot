@@ -588,9 +588,9 @@ objectdef obj_Configuration_Hauler
 		return ${This.HaulerRef.FindSetting[Hauler Mode, 1]}
 	}
 
-	method SetHaulerMode(int value)
+	method SetHaulerMode(int Mode)
 	{
-		This.HaulerRef:AddSetting[Hauler Mode, ${value}]
+		This.HaulerRef:AddSetting[Hauler Mode, ${Mode}]
 	}
 
 	member:string HaulerModeName()
@@ -598,9 +598,9 @@ objectdef obj_Configuration_Hauler
 		return ${This.HaulerRef.FindSetting[Hauler Mode Name, "Service Gang Members"]}
 	}
 	
-	method SetHaulerModeName(string value)
+	method SetHaulerModeName(string Mode)
 	{
-		This.HaulerRef:AddSetting[Hauler Mode Name,${value}]
+		This.HaulerRef:AddSetting[Hauler Mode Name,${Mode}]
 	}
 
 	member:bool MultiSystemSupport()
@@ -618,9 +618,9 @@ objectdef obj_Configuration_Hauler
 		return ${This.HaulerRef.FindSetting[Drop Off Bookmark, ""]}
 	}
 	
-	method SetDropOffBookmark(string value)
+	method SetDropOffBookmark(string Bookmark)
 	{
-		This.HaulerRef:AddSetting[Drop Off Bookmark,${value}]
+		This.HaulerRef:AddSetting[Drop Off Bookmark,${Bookmark}]
 	}
 
 	member:string MiningSystemBookmark()
@@ -628,9 +628,9 @@ objectdef obj_Configuration_Hauler
 		return ${This.HaulerRef.FindSetting[Mining System Bookmark, ""]}
 	}
 	
-	method SetMiningSystemBookmark(string value)
+	method SetMiningSystemBookmark(string Bookmark)
 	{
-		This.HaulerRef:AddSetting[Mining System Bookmark,${value}]
+		This.HaulerRef:AddSetting[Mining System Bookmark,${Bookmark}]
 	}
 }
 
