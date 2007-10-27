@@ -83,17 +83,9 @@ objectdef obj_Freighter
 				}
 				break
 			case BASE
-				if ${m_DestinationID} > 0
-				{
-					call This.PickupOrDropoff
-				}					
+				call This.PickupOrDropoff
 				call Ship.Undock
 				call Ship.OpenCargo
-				if ${EVE.Bookmark[${Config.Freighter.Destination}](exists)}
-				{
-					m_DestinationID:Set[${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity.ID}]
-					;echo "\${m_DestinationID} = ${m_DestinationID}"
-				}										
 				break
 			case TRANSPORT
 				call This.Transport
@@ -110,6 +102,11 @@ objectdef obj_Freighter
 	/* NOTE: The order of these if statements is important!! */
 	method SetState()
 	{
+		if ${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity(exists)}
+		{
+			m_DestinationID:Set[${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity.ID}]
+		}										
+
 		if ${EVEBot.ReturnToStation} && !${Me.InStation}
 		{
 			This.CurrentState:Set["ABORT"]
