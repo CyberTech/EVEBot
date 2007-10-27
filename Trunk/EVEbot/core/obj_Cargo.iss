@@ -340,4 +340,8 @@ objectdef obj_Cargo
 			}
 		}
 	}
+	
+	function TransferSpawnContainerCargoToShip()
+	{
+	}
 }

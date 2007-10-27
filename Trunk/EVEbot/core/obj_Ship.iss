@@ -857,18 +857,6 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			call Ship.UnDock
 		}
-	
-		/* TESTING BEGIN
-		 * If we are already next to the bookmarked location, 
-		 * let the code below approach or dock instead of 
-		 * returning.
-		 *	if ${DestinationBookmark.ToEntity(exists)} && \
-		 *		${DestinationBookmark.ToEntity.Distance} < WARP_RANGE
-		 *	{
-		 *		return
-		 *	}
-		 * TESTING END
-		 */		
 		
 		if (${DestinationBookmark.SolarSystemID} != ${Me.SolarSystemID})
 		{
@@ -899,21 +887,42 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			wait 5
 		}
 
-		while (${DestinationBookmark.ToEntity(exists)} && \
-			${DestinationBookmark.ToEntity.Distance} > WARP_RANGE)
+		if ${DestinationBookmark.ToEntity(exists)} && \
+			${DestinationBookmark.ToEntity.CategoryID} == CATEGORYID_STATION
 		{
+			/* This is a station bookmark, we can use .Distance properly */
+
+			while ${DestinationBookmark.ToEntity.Distance} > WARP_RANGE
+			{
+				UI:UpdateConsole["Warping to bookmark ${DestinationBookmark.Label}"]
+				DestinationBookmark:WarpTo
+				call This.WarpWait
+				;; TODO - verify we entered warp
+			}
+		}
+		elseif ${DestinationBookmark.TypeID != 5}
+		{
+			/* This is an entity bookmark, but that entity is not on the overhead yet. */
+			/* TODO - ToEntity.Distance doesnt work for anything but stations at the moment, merge with above when it does - CyberTech */
+
+			while !${DestinationBookmark.ToEntity(exists)}
+			{
+				UI:UpdateConsole["Warping to bookmark ${DestinationBookmark.Label}"]
+				DestinationBookmark:WarpTo
+				call This.WarpWait
+				;; TODO - verify we entered warp
+			}
+		}
+		else
+		{
+			/* This is an in-space bookmark, just warp to it. */
+			/* TODO - write distance(xyz,xyz) function to check distance to  */
+			/* the bookmark.  We'll have to figure out eve units to convert it to meters. */
+			/* we won't support multi-warp bookmarks of this type till we do so */
+
 			UI:UpdateConsole["Warping to bookmark ${DestinationBookmark.Label}"]
 			DestinationBookmark:WarpTo
-			
-			;; TODO - verify we entered warp
-			
-			wait 150
-			do
-			{
-				wait 20
-			}
-			while (${Me.ToEntity.Mode} == 3)	
-			wait 20
+			call This.WarpWait
 		}
 		
 		if ${DestinationBookmark.ToEntity(exists)}
@@ -923,7 +932,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				case 2
 					; stargate
 					break
-				case 3
+				case CATEGORYID_STATION
 					UI:UpdateConsole["Docking with destination station"]
 					call This.Approach ${DestinationBookmark.ToEntity.ID} DOCKING_RANGE
 				
@@ -941,11 +950,11 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 					      Counter:Set[0]
 					   }
 					}
-					while (!${Me.InStation})
+					while !${Me.InStation}
 					break
 			}
 
-			switch ${DestinationBookmark.ToEntity.CategoryID}
+			switch ${DestinationBookmark.ToEntity.TypeID}
 			{
 				case TYPEID_CORPORATE_HANGAR_ARRAY
 					call This.Approach ${DestinationBookmark.ToEntity.ID} CORP_HANGAR_LOOT_RANGE
@@ -974,14 +983,21 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 	
 	function WarpWait()
 	{
+		variable bool Warped = FALSE
 		; TODO - add check for InWarp== true at least once, to validate we did actually warp.
-		wait 120
+		wait 150
+		if ${Me.ToEntity.Mode} == 3
+		{
+			UI:UpdateConsole["Warping..."]
+		}
 		while ${Me.ToEntity.Mode} == 3
 		{
+			Warped:Set[TRUE]
 			wait 20
 		}
-	
-		UI:UpdateConsole["Finished warping (hopefully)"]
+		UI:UpdateConsole["Dropped out of warp"]
+		wait 20
+		return ${Warped}
 	}	
 
 	method Activate_AfterBurner()
