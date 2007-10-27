@@ -303,6 +303,8 @@ objectdef obj_Miner
 			{
 				call Cargo.TransferOreToJetCan
 				This:NotifyHaulers[]
+				/* needed a wait here because it would try to move the same item more than once */
+				wait 20		
 			}
 			
 			/* TODO - CyberTech: clean up this code when ArmorPct/ShieldPct wierdness is gone */

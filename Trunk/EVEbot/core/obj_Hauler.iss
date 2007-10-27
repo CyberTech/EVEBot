@@ -8,6 +8,33 @@
 	
 	-- GliderPro	
 */
+
+objectdef lootable
+{
+	variable bool m_empty		/* used for wrecks  */
+	variable bool m_skip			/* used for jetcans */
+	
+	method Initialize()
+	{			
+		m_empty:Set[FALSE]
+		m_skip:Set[FALSE]
+	}
+	
+	method Shutdown()
+	{
+	}
+
+	member:bool Empty()
+	{
+		return ${m_skip}
+	}
+
+	member:bool Skipped()
+	{
+		return ${m_skip}
+	}
+}
+
 objectdef obj_Hauler
 {
 	/* The name of the player we are hauling for (null if using m_corpName) */
@@ -112,12 +139,6 @@ objectdef obj_Hauler
 		
 		return 0	/* no can found */
 	}
-	
-	function ApproachEntity(int id)
-	{
-		call Ship.Approach ${id} LOOT_RANGE
-		EVE:Execute[CmdStopShip]
-	}	
 }
 
 objectdef obj_OreHauler inherits obj_Hauler
@@ -137,6 +158,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 	variable iterator SafeSpotIterator
 	
 	variable queue:gangmember GangMembers
+	variable queue:entity     Entities
 	
 	method Initialize(string player, string corp)
 	{
@@ -241,9 +263,6 @@ objectdef obj_OreHauler inherits obj_Hauler
 						EVEBot.ReturnToStation:Set[TRUE]
 						break
 				}
-				m_gangMemberID:Set[-1]
-				m_SystemID:Set[-1]		
-				m_BeltID:Set[-1]		
 				break
 		}	
 	}
@@ -277,13 +296,13 @@ objectdef obj_OreHauler inherits obj_Hauler
 		}
 	}
 
-	function LootEntity(int id)
+	function LootEntity(int id, int leave = 0)
 	{
 		variable index:item ContainerCargo
 		variable iterator Cargo
 		variable int QuantityToMove
 
-		UI:ConsoleUpdate["DEBUG: obj_OreHauler.LootEntity ${id}"]
+		UI:ConsoleUpdate["DEBUG: obj_OreHauler.LootEntity ${id} ${leave}"]
 		
 		Entity[${id}]:DoGetCargo[ContainerCargo]
 		ContainerCargo:GetIterator[Cargo]
@@ -291,7 +310,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		{
 			do
 			{
-				UI:ConsoleUpdate["Hauler: Found ${Cargo.Value.Quantity} x ${Cargo.Value.Name} - ${Math.Calc[${Cargo.Value.Quantity} * ${Cargo.Value.Volume}]}m3"]
+				UI:UpdateConsole["Hauler: Found ${Cargo.Value.Quantity} x ${Cargo.Value.Name} - ${Math.Calc[${Cargo.Value.Quantity} * ${Cargo.Value.Volume}]}m3"]
 				if (${Cargo.Value.Quantity} * ${Cargo.Value.Volume}) > ${Ship.CargoFreeSpace}
 				{
 					/* Move only what will fit, minus 1 to account for CCP rounding errors. */
@@ -299,10 +318,10 @@ objectdef obj_OreHauler inherits obj_Hauler
 				}
 				else
 				{
-					QuantityToMove:Set[${Cargo.Value.Quantity}]
+					QuantityToMove:Set[${Cargo.Value.Quantity} - ${leave}]
 				}
 
-				UI:ConsoleUpdate["Hauler: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
+				UI:UpdateConsole["Hauler: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
 				if ${QuantityToMove} > 0
 				{
 					Cargo.Value:MoveTo[MyShip,${QuantityToMove}]
@@ -377,7 +396,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		else
 		{
 			if ${GangMembers.Peek(exists)} && \
-				${Local[${GangMembers.Peek.ToPilot.Name}](exists)}
+			   ${Local[${GangMembers.Peek.ToPilot.Name}](exists)}
 			{
 				call This.WarpToGangMemberAndLoot ${GangMembers.Peek.CharID}
 				GangMembers:Dequeue
@@ -406,31 +425,41 @@ objectdef obj_OreHauler inherits obj_Hauler
 
 		call Ship.OpenCargo
 	
-		do
+		This:BuildJetCanList[${charID}]
+		while ${Entities.Peek(exists)}
 		{
-			id:Set[${This.NearestMatchingJetCan[${charID}]}]
-
-			echo "DEBUG: can ID = ${id}"
-			if ${Entity[${id}](exists)}
-
+			echo "DEBUG: \${Entities.Peek} = ${Entities.Peek}"
+			echo "DEBUG: \${Entities.Peek.ID} = ${Entities.Peek.ID}"
+			if ${Entity[fromID,${charID}](exists)} && \
+			   ${EVE.DistanceBetween[${Entity[fromID,${charID}]},${Entities.Peek.ID}]} > LOOT_RANGE
 			{
-				call This.ApproachEntity ${id}
-				Entity[${id}]:OpenCargo
-
+				echo "DEBUG: \${EVE.DistanceBetween[${Entity[fromID,${charID}]},${Entities.Peek.ID}]} = ${EVE.DistanceBetween[${Entity[fromID,${charID}]},${Entities.Peek.ID}]}"
+				/* TODO: approach within tractor range and tractor entity */
+				/* FOR NOW approach within loot range */
+				call Ship.Approach ${Entities.Peek.ID} LOOT_RANGE
+				Entities.Peek:OpenCargo
 				wait 30	
-				call This.LootEntity ${id}
-				if ${Entity[${id}](exists)}
-				{
-					Entity[${id}]:CloseCargo
-				}
-
-				if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
-				{
-					break
-				}
+				call This.LootEntity ${Entities.Peek.ID}
 			}
-		} 
-		while ${Entity[${id}](exists)}
+			else
+			{
+				call Ship.Approach ${Entities.Peek.ID} LOOT_RANGE
+				Entities.Peek:OpenCargo
+				wait 30	
+				call This.LootEntity ${Entities.Peek.ID} 1
+			}
+			
+			if ${Entities.Peek(exists)}
+			{
+				Entities.Peek:CloseCargo
+			}
+			Entities:Dequeue
+			
+			if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
+			{
+				break
+			}
+		}
 		
 		/* TODO: add code to loot and salvage any nearby wrecks */
 
@@ -515,6 +544,27 @@ objectdef obj_OreHauler inherits obj_Hauler
 		{
 			call Ship.WarpToBookMark ${SafeSpotIterator.Value.ID}
 		}
+	}
+	
+	method BuildJetCanList(int id)
+	{
+		variable index:entity cans
+		variable int idx
+			
+		EVE:DoGetEntities[cans,GroupID,12]
+		idx:Set[${cans.Used}]
+		Entities:Clear
+
+		while ${idx} > 0
+		{
+			if ${cans.Get[${idx}].Owner.CharID} == ${id}
+			{
+				Entities:Queue[${cans.Get[${idx}]}]	
+			}
+			idx:Dec
+		}
+		
+		UI:UpdateConsole["BuildJetCanList found ${Entities.Used} cans nearby."]
 	}
 }
 
