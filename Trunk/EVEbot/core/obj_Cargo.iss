@@ -282,14 +282,10 @@ objectdef obj_Cargo
 
 		UI:UpdateConsole["Transferring Cargo to Station Hangar"]
 
-		if ${This.IsCargoOpen}
-		{
-			; Need to cycle the the cargohold after docking to update the list.
-			call This.CloseCargo
-		}
-		
+		/* Need to cycle the the cargohold after docking to update the list. */
+		call This.CloseHolds
 		call This.OpenHolds
-		
+
 		/* FOR NOW move all cargo.  Add filtering later */
 		Me.Ship:DoGetCargo[This.CargoToTransfer]
 		

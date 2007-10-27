@@ -83,13 +83,16 @@ objectdef obj_Freighter
 				}
 				break
 			case BASE
-				call This.PickupOrDropoff
+				if ${m_DestinationID} > 0
+				{
+					call This.PickupOrDropoff
+				}					
 				call Ship.Undock
 				call Ship.OpenCargo
 				if ${EVE.Bookmark[${Config.Freighter.Destination}](exists)}
 				{
 					m_DestinationID:Set[${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity.ID}]
-					echo "\${m_DestinationID} = ${m_DestinationID}"
+					;echo "\${m_DestinationID} = ${m_DestinationID}"
 				}										
 				break
 			case TRANSPORT
@@ -153,9 +156,9 @@ objectdef obj_Freighter
 	{
 		if ${Me.InStation}
 		{	/* don't call this function if you are not in station */
-			echo "\${EVE.Bookmark[${Config.Freighter.Destination}](exists)} = ${EVE.Bookmark[${Config.Freighter.Destination}](exists)}"
-			echo "\${m_DestinationID} = ${m_DestinationID}"
-			echo "\${Me.StationID} = ${Me.StationID}"
+			;echo "\${EVE.Bookmark[${Config.Freighter.Destination}](exists)} = ${EVE.Bookmark[${Config.Freighter.Destination}](exists)}"
+			;echo "\${m_DestinationID} = ${m_DestinationID}"
+			;echo "\${Me.StationID} = ${Me.StationID}"
 			if ${EVE.Bookmark[${Config.Freighter.Destination}](exists)} && \
 			   ${m_DestinationID} == ${Me.StationID}
 			{	/* this is the destination station, drop off stuff */
