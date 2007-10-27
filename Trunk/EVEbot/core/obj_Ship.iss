@@ -900,7 +900,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				;; TODO - verify we entered warp
 			}
 		}
-		elseif ${DestinationBookmark.TypeID != 5}
+		elseif ${DestinationBookmark.TypeID} != 5
 		{
 			/* This is an entity bookmark, but that entity is not on the overhead yet. */
 			/* TODO - ToEntity.Distance doesnt work for anything but stations at the moment, merge with above when it does - CyberTech */
