@@ -90,8 +90,10 @@ objectdef obj_Miner
 				switch ${Config.Miner.DeliveryLocationTypeName}
 				{
 					case Station
-						if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && \
-						   ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
+						; try allowing bookmarks in other systems
+						;if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && \
+						;   ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
+						if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)}
 						{
 							call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
 						}
