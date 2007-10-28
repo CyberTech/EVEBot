@@ -244,25 +244,16 @@ objectdef obj_OreHauler inherits obj_Hauler
 			case BASE
 				call Cargo.TransferOreToHangar
 				call Ship.Undock
+				if ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}](exists)}
+				{
+					call Ship.WarpToBookMarkName "${Config.Hauler.MiningSystemBookmark}"
+				}
 				break
 			case HAUL
 				call This.Haul
 				break
 			case CARGOFULL
-				switch ${Config.Miner.DeliveryLocationTypeName}
-				{
-					case Station
-						call Dock
-						break
-					case Hangar Array
-						call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
-						call Cargo.TransferOreToCorpHangarArray
-						break		
-					case Jetcan
-						UI:UpdateConsole["Error: ORE Delivery location may not be jetcan when in hauler mode - docking"]
-						EVEBot.ReturnToStation:Set[TRUE]
-						break
-				}
+				call This.DropOff
 				break
 		}	
 	}
@@ -361,6 +352,42 @@ objectdef obj_OreHauler inherits obj_Hauler
 		}
 	}
 
+	function DropOff()
+	{
+		if ${EVE.Bookmark[${Config.Hauler.DropOffBookmark}](exists)}
+		{
+			variable bookmark bm
+			bm:Set[${EVE.Bookmark[${Config.Hauler.DropOffBookmark}]}]
+			call Ship.WarpToBookMarkName "${Config.Hauler.DropOffBookmark}"
+			if ${bm.ToEntity(exists)}
+			{
+				switch ${bm.ToEntity.TypeID}
+				{
+					case TYPEID_CORPORATE_HANGAR_ARRAY
+						call Cargo.TransferOreToCorpHangarArray
+						break
+				}
+			}
+		}
+		else
+		{
+			switch ${Config.Miner.DeliveryLocationTypeName}
+			{
+				case Station
+					call Dock
+					break
+				case Hangar Array
+					call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
+					call Cargo.TransferOreToCorpHangarArray
+					break		
+				case Jetcan
+					UI:UpdateConsole["Error: ORE Delivery location may not be jetcan when in hauler mode - docking"]
+					EVEBot.ReturnToStation:Set[TRUE]
+					break
+			}
+		}
+	}
+	
 	/* The HaulOnDemand function will be called repeatedly   */
 	/* until we leave the HAUL state due to downtime,        */
 	/* agression, or a full cargo hold.  The Haul function   */
@@ -543,6 +570,9 @@ objectdef obj_OreHauler inherits obj_Hauler
 		if ${SafeSpotIterator.Value(exists)}
 		{
 			call Ship.WarpToBookMark ${SafeSpotIterator.Value.ID}
+			
+			/* open cargo hold so the CARGOFULL detection has a chance to work */
+			call Ship.OpenCargo
 		}
 	}
 	

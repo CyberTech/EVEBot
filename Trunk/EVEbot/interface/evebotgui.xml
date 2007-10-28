@@ -698,6 +698,7 @@
 								This:SetSelection[${Script[EVEBot].VariableScope.Config.Hauler.HaulerMode}]
 							</OnLoad>
 						</combobox>
+						<!--
 						<checkbox Name='cbMultisystemSupport'>
 							<X>10</X>
 							<Y>30</Y>
@@ -717,6 +718,7 @@
 									Script[EVEBot].VariableScope.Config.Hauler:SetMultiSystemSupport[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
+						-->
 						<Text name='DropOffLabel'>
 							<X>10</X>
 							<Y>55</Y>
@@ -728,9 +730,8 @@
 						<Textentry name='DropOffBookmark'>
 							<X>200</X>							
 							<Y>55</Y>						
-							<Width>150</Width>						
+							<Width>250</Width>						
 							<Height>18</Height>
-							<MaxLength>10</MaxLength>
 							<OnLoad>
 								This:SetText[${Script[EVEBot].VariableScope.Config.Hauler.DropOffBookmark}]
 							</OnLoad>
@@ -752,9 +753,8 @@
 						<Textentry name='MiningSystemBookmark'>
 							<X>200</X>							
 							<Y>80</Y>						
-							<Width>150</Width>						
+							<Width>250</Width>						
 							<Height>18</Height>
-							<MaxLength>10</MaxLength>
 							<OnLoad>
 								This:SetText[${Script[EVEBot].VariableScope.Config.Hauler.MiningSystemBookmark}]
 							</OnLoad>

@@ -933,9 +933,9 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 					; stargate
 					break
 				case CATEGORYID_STATION
-					UI:UpdateConsole["Docking with destination station"]
+					UI:UpdateConsole["Approaching destination station"]
 					call This.Approach ${DestinationBookmark.ToEntity.ID} DOCKING_RANGE
-				
+					UI:UpdateConsole["Docking with destination station"]
 					DestinationBookmark.ToEntity:Dock
 					Counter:Set[0]
 					do
