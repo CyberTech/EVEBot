@@ -302,7 +302,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		variable iterator Cargo
 		variable int QuantityToMove
 
-		UI:ConsoleUpdate["DEBUG: obj_OreHauler.LootEntity ${id} ${leave}"]
+		UI:UpdateConsole["DEBUG: obj_OreHauler.LootEntity ${id} ${leave}"]
 		
 		Entity[${id}]:DoGetCargo[ContainerCargo]
 		ContainerCargo:GetIterator[Cargo]
@@ -424,16 +424,16 @@ objectdef obj_OreHauler inherits obj_Hauler
 		call Ship.WarpWait
 
 		call Ship.OpenCargo
-	
+		
 		This:BuildJetCanList[${charID}]
 		while ${Entities.Peek(exists)}
 		{
-			echo "DEBUG: \${Entities.Peek} = ${Entities.Peek}"
-			echo "DEBUG: \${Entities.Peek.ID} = ${Entities.Peek.ID}"
-			if ${Entity[fromID,${charID}](exists)} && \
-			   ${EVE.DistanceBetween[${Entity[fromID,${charID}]},${Entities.Peek.ID}]} > LOOT_RANGE
+			UI:UpdateConsole["DEBUG: ${Entity[OwnerID,${charID},CategoryID,6]}"]
+			UI:UpdateConsole["DEBUG: ${Entity[OwnerID,${charID},CategoryID,6].ID}"]
+			UI:UpdateConsole["DEBUG: ${Entity[OwnerID,${charID},CategoryID,6].DistanceTo[${Entities.Peek.ID}]}"]
+			if ${Entity[OwnerID,${charID},CategoryID,6](exists)} && \
+			   ${Entity[OwnerID,${charID},CategoryID,6].DistanceTo[${Entities.Peek.ID}]} > LOOT_RANGE
 			{
-				echo "DEBUG: \${EVE.DistanceBetween[${Entity[fromID,${charID}]},${Entities.Peek.ID}]} = ${EVE.DistanceBetween[${Entity[fromID,${charID}]},${Entities.Peek.ID}]}"
 				/* TODO: approach within tractor range and tractor entity */
 				/* FOR NOW approach within loot range */
 				call Ship.Approach ${Entities.Peek.ID} LOOT_RANGE

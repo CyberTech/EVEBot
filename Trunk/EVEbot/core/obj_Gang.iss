@@ -53,6 +53,32 @@ objectdef obj_Gang
 		GangMembers.Get[${idx}]:WarpTo[${distance}]
 	}
 	
+	member:gangmember CharIdToGangMember( int charID )
+	{
+		variable gangmember ReturnValue
+		ReturnValue:Set[NULL]
+		
+		This:UpdateGangList[]
+		
+		variable iterator GangMemberIterator
+		GangMembers:GetIterator[GangMemberIterator]
+		
+		if ${GangMemberIterator:First(exists)}
+		{
+			do
+			{
+				if ${GangMemberIterator.Value.CharID} == ${charID}
+				{
+					ReturnValue:Set[${GangMemberIterator.Value}]
+					break
+				}
+			}	
+			while ${GangMemberIterator:Next(exists)}
+		}
+
+		return ${ReturnValue}
+	}
+
 	method WarpToGangMember( int charID )
 	{
 		This:UpdateGangList[]
