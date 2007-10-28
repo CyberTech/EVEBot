@@ -9,14 +9,14 @@ objectdef obj_Skills
 	method Initialize()
 	{
 		UI:UpdateConsole["obj_Skills: Initialized"]
-		This:GetOtherSkills
-		;Dunno how to get isxeve to stay up to date with currently training.
-		;Event[OnFrame]:AttachAtom[This:Pulse]
+		Me:DoGetSkills[This.OwnedSkills]
+
+		Event[OnFrame]:AttachAtom[This:Pulse]
 	}
 	
 	method Shutdown()
 	{
-		;Event[OnFrame]:DetachAtom[This:Pulse]
+		Event[OnFrame]:DetachAtom[This:Pulse]
 	}
 	
 	method Pulse()
@@ -27,11 +27,12 @@ objectdef obj_Skills
 		}
 
 		FrameCounter:Inc
-		variable int IntervalInSeconds = 5
+		variable int IntervalInSeconds = 20
 		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 		{
 			if (${This.CurrentlyTraining.Equal[None]} && !${This.NextSkill.Equal[None]})
 			{
+				Me:DoGetSkills[This.OwnedSkills]
 				This:Train[${This.NextInLine}]
 			}
 			FrameCounter:Set[0]
@@ -60,52 +61,40 @@ objectdef obj_Skills
 		
 		This.OwnedSkills:GetIterator[Skills]
 		
-		for (i:Set[1] ; ${i} <= ${This.OwnedSkills.Used} ; i:Inc)	
+		if ${Skills:First(exists)}
+		do
 		{
-				Skills:Next
-				if ${Skills.Value.IsTraining}
+			if ${Skills.Value.IsTraining}
+			{
+				Switch ${Skills.Value.Level}
 				{
-					if ${Skills.Value.Level} == 1
-					{
-						return "${Skills.Value.Name} II\r\n"
-					}
-					
-					if ${Skills.Value.Level} == 2
-					{
-						return "${Skills.Value.Name} III\r\n"
-					}
-					
-					if ${Skills.Value.Level} == 3
-					{
-						return "${Skills.Value.Name} IV\r\n"
-					}
-					
-					if ${Skills.Value.Level} == 4
-					{
-						return "${Skills.Value.Name} V\r\n"
-					}
-					
-					if ${Skills.Value.Level} == 0
-					{
-						return "${Skills.Value.Name} I\r\n"
-					}
-		
-					if ${Skills.Value.Level} == 5
-					{
-						"${Skills.Value.Name} COMPLETE"
-					}
-					
-					return "${Skills.Value.Name} NULL"
+					case 0
+						return "${Skills.Value.Name} I"
+						break
+					case 1
+						return "${Skills.Value.Name} II"
+						break
+					case 2
+						return "${Skills.Value.Name} III"
+						break
+					case 3
+						return "${Skills.Value.Name} IV"
+						break
+					case 4
+						return "${Skills.Value.Name} V"
+						break
+					case 5
+						return "${Skills.Value.Name} Complete"
+						break
 				}
+				return "${Skills.Value.Name} NULL"
+			}
 		}
+		while ${Skills:Next(exists)}
+
 		return "None"
 	}
-	
-	method GetOtherSkills()
-	{
-		Me:DoGetSkills[OwnedSkills]
-	}
-	
+		
 	member(string) NextSkill()
 	{
 		variable int i
@@ -131,7 +120,11 @@ objectdef obj_Skills
 		{			
 			if ${SkillFile.Read(exists)}
 			{
-				This.ReadLine:Set[${SkillFile.Read}]
+				variable string temp
+				
+				temp:Set[${SkillFile.Read}]
+				/* Remove \r\n fron data.  Should really be checking it's not just \n terminated as well. */
+				This.ReadLine:Set[${temp.Left[${Math.Calc[${temp.Length} - 2]}]}]
 				
 				ReadSkillName:Set[${This.RemoveNumerals[${ReadLine}]}]
 				ReadSkillLevel:Set[${This.SkillLevel[${ReadLine}]}]
@@ -177,22 +170,26 @@ objectdef obj_Skills
 	}
 	
 	member(string) RemoveNumerals(string SkillName)
-	{
-		variable string ReturnVal
-		
-		SkillName:Set[${SkillName.Left[${Math.Calc[${SkillName.Length} - 3]}]}]
-		
-		if ${SkillName.Right[3].Equal[" II"]}
-		{
-			return ${SkillName.Left[${Math.Calc[${SkillName.Length} - 3]}]}
-		}
-		elseif ${SkillName.Right[2].Equal[" I"]}
+	{	
+		if ${SkillName.Right[2].Equal[" I"]}
 		{
 			return ${SkillName.Left[${Math.Calc[${SkillName.Length} - 2]}]}
 		}
-		elseif ${SkillName.Right[1].Equal[" "]}
+		elseif ${SkillName.Right[3].Equal[" II"]}
 		{
-			return ${SkillName.Left[${Math.Calc[${SkillName.Length} - 1]}]}
+			return ${SkillName.Left[${Math.Calc[${SkillName.Length} - 3]}]}
+		}
+		elseif ${SkillName.Right[4].Equal[" III"]}
+		{
+			return ${SkillName.Left[${Math.Calc[${SkillName.Length} - 4]}]}
+		}
+		elseif ${SkillName.Right[3].Equal[" IV"]}
+		{
+			return ${SkillName.Left[${Math.Calc[${SkillName.Length} - 3]}]}
+		}
+		elseif ${SkillName.Right[2].Equal[" V"]}
+		{
+			return ${SkillName.Left[${Math.Calc[${SkillName.Length} - 2]}]}
 		}
 		return "uh?"
 	}
@@ -202,12 +199,11 @@ objectdef obj_Skills
 		variable string NumeralList[5]
 		variable int i
 		
-		NumeralList[1]:Set["I"]
-		NumeralList[2]:Set["II"]
+		NumeralList[1]:Set["V"]
+		NumeralList[2]:Set["IV"]
 		NumeralList[3]:Set["III"]
-		NumeralList[4]:Set["IV"]
-		NumeralList[5]:Set["V"]
-		SkillName:Set[${SkillName.Left[${Math.Calc[${SkillName.Length} - 2]}]}]
+		NumeralList[4]:Set["II"]
+		NumeralList[5]:Set["I"]
 		
 		for (i:Set[1] ; ${i} <= 5 ; i:Inc)
 		{
