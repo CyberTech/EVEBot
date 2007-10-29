@@ -60,12 +60,12 @@ objectdef obj_EVEBot
 		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 		{
 			checkPulse:Inc[1]
-			; 30 pulses in this if loop is ~ 1 minute
-			if ${checkPulse} >= ${MAXCHECKPULSE}
+			; 20 pulses in this if loop is ~ 1 minute
+			if (${checkPulse} >= ${MAXCHECKPULSE} && ${Me.InStation(exists)} && !${Me.Instation})
 			{
 				variable int BuddyCounter = 1
 
-				;UI:UpdateConsole["DEBUG: Stacking cargo..."]
+				UI:UpdateConsole["DEBUG: Stacking cargo..."]
                                 Call Ship.StackAll
                                 ;UI:UpdateConsole["DEBUG: Checking buddies..."]
                                 if (${BuddiesCount} > 0)
