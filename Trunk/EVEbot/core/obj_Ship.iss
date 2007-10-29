@@ -853,6 +853,8 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 	
 	function WarpToBookMark(bookmark DestinationBookmark)
 	{
+		variable int Counter
+
 		if (${Me.InStation})
 		{
 			call Ship.UnDock
@@ -936,12 +938,14 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 					call This.Approach ${DestinationBookmark.ToEntity.ID} DOCKING_RANGE
 					UI:UpdateConsole["Docking with destination station"]
 					DestinationBookmark.ToEntity:Dock
+					UI:UpdateConsole["Waiting until ship enters the station"]
 					Counter:Set[0]
 					do
 					{
 					   wait 20
 					   Counter:Inc[20]
-					   if (${Counter} > 22)
+					   UI:UpdateConsole["Tick ${Counter}"]
+					   if ${Counter} > 220
 					   {
 					      UI:UpdateConsole["Retrying to dock with destination station"]
 					      ;DestinationBookmark.ToEntity:Dock	
