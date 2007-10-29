@@ -30,7 +30,7 @@ objectdef obj_EVEBot
 		echo "Starting ${Version}"
 
 		EVE:Execute[OpenPeopleAndPlaces]
-		EVE:Execute[CmdCloseAllWindows]
+		EVEWindow[addressbook]:Close
 
 		This.BuddiesCount:Set[${EVE.GetBuddies[This.Buddies]}]
 		UI:UpdateConsole["Populating Buddies List:: ${This.BuddiesCount} buddies total"]
