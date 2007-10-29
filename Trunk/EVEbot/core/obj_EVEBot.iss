@@ -61,7 +61,7 @@ objectdef obj_EVEBot
 		{
 			checkPulse:Inc[1]
 			; 20 pulses in this if loop is ~ 1 minute
-			if (${checkPulse} >= ${MAXCHECKPULSE} && ${Me.InStation(exists)} && !${Me.Instation})
+			if (${checkPulse} >= ${MAXCHECKPULSE} && ${Me.InStation(exists)} && !${Me.InStation})
 			{
 				variable int BuddyCounter = 1
 
