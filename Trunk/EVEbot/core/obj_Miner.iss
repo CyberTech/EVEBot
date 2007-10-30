@@ -71,13 +71,13 @@ objectdef obj_Miner
 			case IDLE
 				break
 			case ABORT
-				Call Dock
+				Call Station.Dock
 				Call This.Abort_Check
 				break
 			case BASE
 				call Cargo.TransferOreToHangar
 				;call Station.CheckList
-				call Ship.Undock
+				call Station.Undock
 				break
 			case MINE
 				call This.Mine
@@ -99,7 +99,7 @@ objectdef obj_Miner
 						}
 						else
 						{
-							call Dock
+							call Station.Dock
 						}
 						break
 					case Hangar Array
@@ -115,7 +115,7 @@ objectdef obj_Miner
 				break
 			case RUNNING
 				UI:UpdateConsole["Running Away"]
-				call Dock
+				call Station.Dock
 				EVEBot.ReturnToStation:Set[TRUE]
 				break
 		}	

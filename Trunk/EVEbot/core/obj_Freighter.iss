@@ -84,7 +84,7 @@ objectdef obj_Freighter
 				break
 			case BASE
 				call This.PickupOrDropoff
-				call Ship.Undock
+				call Station.Undock
 				call Ship.OpenCargo
 				break
 			case TRANSPORT

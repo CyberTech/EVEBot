@@ -239,11 +239,11 @@ objectdef obj_OreHauler inherits obj_Hauler
 				break
 			case ABORT
 				UI:UpdateConsole["Aborting operation: Returning to base"]
-				Call Dock
+				Call Station.Dock
 				break
 			case BASE
 				call Cargo.TransferOreToHangar
-				call Ship.Undock
+				call Station.Undock
 				if ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}](exists)}
 				{
 					call Ship.WarpToBookMarkName "${Config.Hauler.MiningSystemBookmark}"
@@ -374,7 +374,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 			switch ${Config.Miner.DeliveryLocationTypeName}
 			{
 				case Station
-					call Dock
+					call Station.Dock
 					break
 				case Hangar Array
 					call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"

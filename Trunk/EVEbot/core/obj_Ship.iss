@@ -789,33 +789,6 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		}
 	}
 
-	function Undock()
-	{
-	  variable int Counter
-		UI:UpdateConsole["Undock: Waiting while ship exits the station (13 sec)"]
-
-		EVE:Execute[CmdExitStation]	
-		wait WAIT_UNDOCK
-		Counter:Set[0]
-		do
-		{
-			wait 10
-			Counter:Inc[10]
-			if ${Counter} > 200
-			{
-			   Counter:Set[0]
-			   EVE:Execute[CmdExitStation]	
-			}
-		}
-		while (${Me.InStation} || !${EVEWindow[Local](exists)} || !${Me.InStation(exists)})
-		
-		Config.Common:SetHomeStation[${Entity[CategoryID,3].Name}]
-		
-		Me:SetVelocity[100]
-		wait 100
-
-		This:UpdateModuleList[]
-	}
 	
 	function WarpToID(int Id)
 	{ 
@@ -857,7 +830,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 
 		if (${Me.InStation})
 		{
-			call Ship.UnDock
+			call Station.UnDock
 		}
 		
 		if (${DestinationBookmark.SolarSystemID} != ${Me.SolarSystemID})

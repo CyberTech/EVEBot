@@ -30,11 +30,10 @@ objectdef obj_EVEBot
 		echo "Starting ${Version}"
 
 		EVE:Execute[OpenPeopleAndPlaces]
-		EVEWindow[addressbook]:Close
-
 		This.BuddiesCount:Set[${EVE.GetBuddies[This.Buddies]}]
 		UI:UpdateConsole["Populating Buddies List:: ${This.BuddiesCount} buddies total"]
-
+		EVEWindow[addressbook]:Close
+		
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_EVEBot: Initialized"]
 	}
@@ -66,18 +65,18 @@ objectdef obj_EVEBot
 				variable int BuddyCounter = 1
 
 				UI:UpdateConsole["DEBUG: Stacking cargo..."]
-                                Call Ship.StackAll
-                                ;UI:UpdateConsole["DEBUG: Checking buddies..."]
-                                if (${BuddiesCount} > 0)
-                                {
-                                        do
-                                        {       
-                                                buddyTest:Set[${This.Buddies.Get[${BuddyCounter}].Name}]
-                                                buddyOnline:Set[${This.Buddies.Get[${BuddyCounter}].IsOnline}]
-                                                ;UI:UpdateConsole["DEBUG: ${buddyTest} (Online: ${buddyOnline})"]
-                                        }
-                                        while ${BuddyCounter:Inc} <= ${This.MAX_BUDDIES}
-                                }       
+				Call Ship.StackAll
+				;UI:UpdateConsole["DEBUG: Checking buddies..."]
+				if (${BuddiesCount} > 0)
+				{
+					do
+					{       
+						buddyTest:Set[${This.Buddies.Get[${BuddyCounter}].Name}]
+						buddyOnline:Set[${This.Buddies.Get[${BuddyCounter}].IsOnline}]
+						;UI:UpdateConsole["DEBUG: ${buddyTest} (Online: ${buddyOnline})"]
+					}
+					while ${BuddyCounter:Inc} <= ${This.MAX_BUDDIES}
+				}       
 				checkPulse:Set[0]
 			}
 

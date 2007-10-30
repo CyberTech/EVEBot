@@ -84,17 +84,17 @@ objectdef obj_CombatFighter inherits obj_Fighter
 			case IDLE
 				break
 			case ABORT
-				Call Dock
+				Call Station.Dock
 				break
 			case BASE
-				call Ship.Undock
+				call Station.Undock
 				break
 			case COMBAT
 				UI:UpdateConsole["Fighting"]
 				break
 			case RUNNING
 				UI:UpdateConsole["Running Away"]
-				call Dock
+				call Station.Dock
 				EVEBot.ReturnToStation:Set[FALSE]
 				break
 		}	
