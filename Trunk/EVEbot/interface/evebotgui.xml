@@ -178,7 +178,7 @@
 								<Y>130</Y>
 								<Width>150</Width>
 								<Height>20</Height>
-								<text>${Script[EVEBot].VariableScope.Skills.NextSkill}</text>
+								<text>${Script[EVEBot].VariableScope.Skills.NextInLine}</text>
 							</text>						
 							<console Name="StatusConsole" template='EVESkin.Console'>
 								<X>5</X>

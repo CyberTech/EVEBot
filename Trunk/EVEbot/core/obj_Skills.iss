@@ -1,9 +1,8 @@
 objectdef obj_Skills
 {
-	variable file SkillFile = "${Me}SkillsTraining.txt"
+	variable file SkillFile = "${Script.CurrentDirectory}/config/${Me.Name} Training.txt"
 	variable index:skill OwnedSkills
 	variable int FrameCounter
-	variable string ReadLine = "None"
 	variable string NextInLine
 	
 	method Initialize()
@@ -27,10 +26,12 @@ objectdef obj_Skills
 		}
 
 		FrameCounter:Inc
-		variable int IntervalInSeconds = 20
+		variable int IntervalInSeconds = 10
 		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 		{
-			if (${This.CurrentlyTraining.Equal[None]} && !${This.NextSkill.Equal[None]})
+			echo ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
+			if !${This.NextSkill.Equal[None]} && \
+				!${Me.Skill[${This.NextSkill}].IsTraining}
 			{
 				Me:DoGetSkills[This.OwnedSkills]
 				This:Train[${This.NextInLine}]
@@ -97,54 +98,46 @@ objectdef obj_Skills
 		
 	member(string) NextSkill()
 	{
-		variable int i
-		variable index:skill SkillList
 		variable string ReadSkillName
 		variable string ReadSkillLevel
-		
-		if !${SkillFile.Open}
+		variable string ReadLine
+
+		if !${This.SkillFile:Open[readonly](exists)}
 		{
-			if !${SkillFile:Open(exists)}
-			{
-				UI:UpdateConsole["Error: Couldn't open skill file"]
-				return "None"
-			}
+			echo missing skill file ${SkillFile}
+			return "None"
 		}
 		
-		if !${This.ReadLine.Equal[None]} && !${This.ReadLine.Equal[${This.CurrentlyTraining}]}
+		variable string temp = ${SkillFile.Read}
+
+		while !${This.SkillFile.EOF} && ${temp(exists)}
 		{
-				return "${This.ReadLine}"
-		}
-		
-		if ${Me.GetSkills[SkillList]}
-		{			
-			if ${SkillFile.Read(exists)}
+			/* Remove \r\n fron data.  Should really be checking it's not just \n terminated as well. */
+			ReadLine:Set[${temp.Left[${Math.Calc[${temp.Length} - 2]}]}]
+			
+			ReadSkillName:Set[${This.RemoveNumerals[${ReadLine}]}]
+			ReadSkillLevel:Set[${This.SkillLevel[${ReadLine}]}]
+
+			echo Potential Skill: ${ReadSkillName} @ Level ${ReadSkillLevel}
+			if ${Me.Skill[${ReadSkillName}](exists)} && \
+				${Me.Skill[${ReadSkillName}].Level} < ${ReadSkillLevel}
 			{
-				variable string temp
-				
-				temp:Set[${SkillFile.Read}]
-				/* Remove \r\n fron data.  Should really be checking it's not just \n terminated as well. */
-				This.ReadLine:Set[${temp.Left[${Math.Calc[${temp.Length} - 2]}]}]
-				
-				ReadSkillName:Set[${This.RemoveNumerals[${ReadLine}]}]
-				ReadSkillLevel:Set[${This.SkillLevel[${ReadLine}]}]
-				for (i:Set[1] ; ${i} <= ${Me.GetSkills} ; i:Inc)
-				{
-					if ${SkillList[${i}].Name.Equal[${ReadSkillName}]}	
-					{
-						This.NextInLine:Set[${SkillList[${i}].Name}]
-					}
-				}
-			return "${This.ReadLine}"
+				This.NextInLine:Set[${ReadSkillName}]
+				SkillFile:Close
+				return "${ReadSkillName}"
+			}	
+			temp:Set[${SkillFile.Read}]
 		}
+
+		UI:UpdateConsole["Error: None of the skills specified were found; or all were already to requested level"]
 		SkillFile:Close
 		return "None"
 	}
-}
+
 	
-	member(bool) Training(string SkillName = NULL)
+	member(bool) Training(string SkillName)
 	{
-		if ${SkillName.NotEqual[NULL]}
+		if ${SkillName(exists)}
 		{
 			if ${Me.Skill[${SkillName}](exists)} && ${Me.Skill[${SkillName}].IsTraining}
 			{

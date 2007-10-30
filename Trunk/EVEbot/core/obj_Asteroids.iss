@@ -35,6 +35,7 @@ objectdef obj_Asteroids
 	variable int LastBookMarkIndex
 	variable int LastBeltIndex
 	variable bool UsingBookMarks = FALSE
+	variable time BeltArrivalTime
 	
 	method Initialize()
 	{	
@@ -109,6 +110,7 @@ objectdef obj_Asteroids
 				call Ship.WarpPrepare
 				BeltBookMarkList[${RandomBelt}]:WarpTo
 				call Ship.WarpWait
+				This.BeltArrivalTime:Set[${Time.Timestamp}]
 				This.LastBookMarkIndex:Set[${RandomBelt}]
 				This.UsingBookMarks:Set[TRUE]
 				return
@@ -130,6 +132,7 @@ objectdef obj_Asteroids
 			/* We have a stored location, we should return to it. */
 			UI:UpdateConsole["Returning to last location (${Bookmarks.StoredLocation})"]
 			call Ship.WarpToBookMarkName "${Bookmarks.StoredLocation}"
+			This.BeltArrivalTime:Set[${Time.Timestamp}]
 			Bookmarks:RemoveStoredLocation
 			return
 		}
@@ -172,6 +175,7 @@ objectdef obj_Asteroids
 				
 				UI:UpdateConsole["Warping to Asteroid Belt: ${Belts[${curBelt}].Name}"]
 				call Ship.WarpToID ${Belts[${curBelt}]}
+				This.BeltArrivalTime:Set[${Time.Timestamp}]
 				This.UsingMookMarks:Set[TRUE]
 				This.LastBeltIndex:Set[${curBelt}]
 			}
