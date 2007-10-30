@@ -11,6 +11,15 @@ objectdef obj_Skills
 		Me:DoGetSkills[This.OwnedSkills]
 
 		Event[OnFrame]:AttachAtom[This:Pulse]
+		if !${This.SkillFile:Open[readonly](exists)}
+		{
+			echo "obj_Skills: Missing skill file ${This.SkillFile}"
+		}
+		else
+		{
+			This.SkillFile:Close
+		}
+
 	}
 	
 	method Shutdown()
@@ -104,7 +113,6 @@ objectdef obj_Skills
 
 		if !${This.SkillFile:Open[readonly](exists)}
 		{
-			echo missing skill file ${SkillFile}
 			return "None"
 		}
 		
