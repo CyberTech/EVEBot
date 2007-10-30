@@ -26,7 +26,7 @@ objectdef obj_Skills
 		}
 
 		FrameCounter:Inc
-		variable int IntervalInSeconds = 10
+		variable int IntervalInSeconds = 30
 		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 		{
 			echo ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
@@ -108,24 +108,40 @@ objectdef obj_Skills
 			return "None"
 		}
 		
-		variable string temp = ${SkillFile.Read}
-
+		variable string temp
+		temp:Set[${SkillFile.Read}]
+		
 		while !${This.SkillFile.EOF} && ${temp(exists)}
 		{
-			/* Remove \r\n fron data.  Should really be checking it's not just \n terminated as well. */
-			ReadLine:Set[${temp.Left[${Math.Calc[${temp.Length} - 2]}]}]
-			
-			ReadSkillName:Set[${This.RemoveNumerals[${ReadLine}]}]
-			ReadSkillLevel:Set[${This.SkillLevel[${ReadLine}]}]
-
-			echo Potential Skill: ${ReadSkillName} @ Level ${ReadSkillLevel}
-			if ${Me.Skill[${ReadSkillName}](exists)} && \
-				${Me.Skill[${ReadSkillName}].Level} < ${ReadSkillLevel}
+			/* Sometimes we randomly et a NULL back at the begininng of the file. */
+			if !${temp.Equal[NULL]}
 			{
-				This.NextInLine:Set[${ReadSkillName}]
-				SkillFile:Close
-				return "${ReadSkillName}"
-			}	
+				/* Remove \r\n fron data.  Should really be checking it's not just \n terminated as well. */
+				ReadLine:Set[${temp.Left[${Math.Calc[${temp.Length} - 2]}]}]
+			
+
+				ReadSkillName:Set[${This.RemoveNumerals[${ReadLine}]}]
+				ReadSkillLevel:Set[${This.SkillLevel[${ReadLine}]}]
+
+				echo Potential Skill: ${ReadSkillName} @ Level ${ReadSkillLevel}
+				if ${Me.Skill[${ReadSkillName}](exists)}
+				{
+					if ${Me.Skill[${ReadSkillName}].Level} < ${ReadSkillLevel}
+					{
+						This.NextInLine:Set[${ReadSkillName}]
+						SkillFile:Close
+						return "${ReadSkillName}"
+					}
+					else
+					{
+						echo "  Skill is already at level ${Me.Skill[${ReadSkillName}].Level}"
+					}
+				}
+				else
+				{
+					echo "  Skill requested isn't known by you"
+				}
+			}
 			temp:Set[${SkillFile.Read}]
 		}
 
@@ -184,26 +200,30 @@ objectdef obj_Skills
 		{
 			return ${SkillName.Left[${Math.Calc[${SkillName.Length} - 2]}]}
 		}
-		return "uh?"
+		return "Unknown"
 	}
 	
 	member(int) SkillLevel(string SkillName)
 	{
-		variable string NumeralList[5]
-		variable int i
-		
-		NumeralList[1]:Set["V"]
-		NumeralList[2]:Set["IV"]
-		NumeralList[3]:Set["III"]
-		NumeralList[4]:Set["II"]
-		NumeralList[5]:Set["I"]
-		
-		for (i:Set[1] ; ${i} <= 5 ; i:Inc)
+		if ${SkillName.Right[2].Equal[" I"]}
 		{
-			if ${SkillName.Right[${NumeralList[${i}].Length}].Equal[${NumeralList[${i}]}]}
-			{
-				return ${i}
-			}
+			return 1
+		}
+		elseif ${SkillName.Right[3].Equal[" II"]}
+		{
+			return 2
+		}
+		elseif ${SkillName.Right[4].Equal[" III"]}
+		{
+			return 3
+		}
+		elseif ${SkillName.Right[3].Equal[" IV"]}
+		{
+			return 4
+		}
+		elseif ${SkillName.Right[2].Equal[" V"]}
+		{
+			return 5
 		}
 		return 0
 	}
