@@ -130,48 +130,55 @@ objectdef obj_Station
 
 		UI:UpdateConsole["Docking at ${StationID}:${Config.Common.HomeStation}"]
 
-		if (${StationID} <= 0)
+		if ${StationID} <= 0 || !${Entity[${StationID}](exists)}
 		{
-			UI:UpdateConsole["Warning: Home Station not set, going to nearest base"]
+			UI:UpdateConsole["Warning: Home station not found, going to nearest base"]
 			StationID:Set[${Entity[CategoryID,3].ID}]
 		}
 
-		if ${Entity[${StationID}].Distance} >= 10000
+		if ${Entity[${StationID}](exists)}
 		{
-			UI:UpdateConsole["Warping to Station"]
-			call Ship.WarpToID ${StationID}
-			do
-			{ 
-			   wait 20
+			if ${Entity[${StationID}].Distance} >= 10000
+			{
+				UI:UpdateConsole["Warping to Station"]
+				call Ship.WarpToID ${StationID}
+				do
+				{ 
+				   wait 20
+				}
+				while ${Entity[${StationID}].Distance} >= 10000
 			}
-			while ${Entity[${StationID}].Distance} >= 10000
-		}
 
-		Entity[${StationID}]:Approach
-		do
-		{
+			Entity[${StationID}]:Approach
+			do
+			{
+				wait 20
+			}
+			while (${Entity[${StationID}].Distance} > 100)
+		
+			Counter:Set[0]
+			UI:UpdateConsole["In Docking Range ... Docking"]
+			Entity[${StationID}]:Dock			
+			do
+			{
+		   		wait 20
+		   		Counter:Inc[20]
+		   		if (${Counter} > 200)
+		   		{
+					UI:UpdateConsole[" - Docking attempt failed, trying again"]
+					Entity[${StationID}]:Dock	
+		      		Counter:Set[0]
+		   		}
+			}
+			while (!${Me.InStation})
+
 			wait 20
+			UI:UpdateConsole["Finished Docking"]
 		}
-		while (${Entity[${StationID}].Distance} > 100)
-	
-		Counter:Set[0]
-		UI:UpdateConsole["In Docking Range ... Docking"]
-		Entity[${StationID}]:Dock			
-		do
+		else
 		{
-	   		wait 20
-	   		Counter:Inc[20]
-	   		if (${Counter} > 200)
-	   		{
-				UI:UpdateConsole[" - Docking attempt failed, trying again"]
-				Entity[${StationID}]:Dock	
-	      		Counter:Set[0]
-	   		}
+			UI:UpdateConsole["No stations in this system!"]
 		}
-		while (!${Me.InStation})
-
-		wait 20
-		UI:UpdateConsole["Finished Docking"]
 	}	
 
 	function Undock()
