@@ -141,7 +141,7 @@ objectdef obj_JetCan
 		if (${Me.Corporation(exists)} && \
 			${Me.Corporation.Length} > 0 )
 		{
-			NewName:Set["${Me.Corporation} ${EVE.Time[short]}"]
+			NewName:Set["${Me.CorporationTicker} ${EVE.Time[short]}"]
 		}
 		else
 		{
