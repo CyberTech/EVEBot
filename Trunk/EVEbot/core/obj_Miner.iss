@@ -90,9 +90,6 @@ objectdef obj_Miner
 				switch ${Config.Miner.DeliveryLocationTypeName}
 				{
 					case Station
-						; try allowing bookmarks in other systems
-						;if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && \
-						;   ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 						if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)}
 						{
 							call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
@@ -110,7 +107,11 @@ objectdef obj_Miner
 						UI:UpdateConsole["Warning: Cargo filled during jetcan mining, delays may occur"]
 						call Cargo.TransferOreToJetCan
 						This:NotifyHaulers[]
-						break		
+						break
+					Default
+						UI:UpdateConsole["ERROR: Delivery Location Type ${Config.Miner.DeliveryLocationTypeName} unknown"]
+						EVEBot.ReturnToStation:Set[TRUE]
+						break
 				}
 				break
 			case RUNNING
@@ -202,10 +203,6 @@ objectdef obj_Miner
 	; Enable defenses, launch drones	
 	function Prepare_Environment()
 	{
-		if ${Config.Combat.LaunchCombatDrones}
-		{
-			Ship.Drones:LaunchAll[]
-		}
 		call Ship.OpenCargo
 	}
 	
@@ -284,7 +281,7 @@ objectdef obj_Miner
 			{
 				TargetJammedCounter:Set[0]
 			}
-			
+
 			if ${Social.PlayerDetection}
 			{
 				UI:UpdateConsole["Avoiding player: Changing belts"]
@@ -441,7 +438,7 @@ objectdef obj_Miner
 					}					
 				}
 			}
-			wait 5
+			wait 10
 		}
 				
 		if ${Config.Miner.BookMarkLastPosition}
