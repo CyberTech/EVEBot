@@ -328,6 +328,23 @@
 									Script[EVEBot].VariableScope.Config.Miner:SetIncludeVeldspar[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
+						<checkbox Name='cbStripMine'>
+							<X>200</X>
+							<Y>10</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Strip Mine Area</Text>
+							<AutoTooltip>Strip Mine the immediate area to nothing before moving</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Miner.StripMine}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+									Script[EVEBot].VariableScope.Config.Miner:SetStripMine[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
 						<checkbox Name='cbBookMarkLastPosition'>
 							<X>10</X>
 							<Y>30</Y>

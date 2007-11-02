@@ -259,6 +259,7 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Delivery Location Type Name, Station]
 		This.MinerRef:AddSetting[Delivery Location,]
 		This.MinerRef:AddSetting[Use Field Bookmarks, FALSE]
+		This.MinerRef:AddSetting[Strip Mine, FALSE]
 
 		This.OreTypesRef:AddSetting[Vitreous Mercoxit, 1]
 		This.OreTypesRef:AddSetting[Magma Mercoxit, 1]
@@ -471,7 +472,28 @@ objectdef obj_Configuration_Miner
 	{	
 		This.MinerRef:AddSetting[Use Field Bookmarks, ${value}]
 	}
+
+	member:bool StripMine()
+	{
+		return ${This.MinerRef.FindSetting[Strip Mine, FALSE]}
+	}
+
+	method SetStripMine(bool value)
+	{	
+		This.MinerRef:AddSetting[Strip Mine, ${value}]
+	}
+
+	member:bool MaxSlowboatTime()
+	{
+		return ${This.MinerRef.FindSetting[Max Slowboat Time, 120]}
+	}
+
+	method SetMaxSlowboatTime(bool value)
+	{	
+		This.MinerRef:AddSetting[Max Slowboat Time, ${value}]
+	}
 }
+
 
 objectdef obj_Configuration_Combat
 {

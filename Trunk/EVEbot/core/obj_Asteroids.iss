@@ -241,7 +241,12 @@ objectdef obj_Asteroids
 			Config.Miner.OreTypesRef:GetSettingIterator[This.OreTypeIterator]
 		}
 		
-		if ${This.OreTypeIterator:First(exists)}
+		if ${Config.Miner.StripMine}
+		{
+			/* TODO - this list should end up sorted in the same order as This.OreTypeIterator, ideally */
+			EVE:DoGetEntities[This.AsteroidList,CategoryID,${This.AsteroidCategoryID}]
+		}
+		elseif ${This.OreTypeIterator:First(exists)}
 		{
 			do
 			{
@@ -258,15 +263,15 @@ objectdef obj_Asteroids
 				wait 0.5
 			}
 			while ${This.AsteroidList.Used} == 0 && ${This.OreTypeIterator:Next(exists)}
-			
-			if ${This.AsteroidList.Used}
-			{
-					;echo "DEBUG: obj_Asteroids:UpdateList - Found ${This.AsteroidList.Used} ${This.OreTypeIterator.Key} asteroids"
-			}
 		}
 		else
 		{
 			echo "WARNING: obj_Asteroids: Ore Type list is empty, please check config"
+		}
+
+		if ${This.AsteroidList.Used}
+		{
+				;echo "DEBUG: obj_Asteroids:UpdateList - Found ${This.AsteroidList.Used} ${This.OreTypeIterator.Key} asteroids"
 		}
 	}
 	
@@ -333,8 +338,7 @@ objectdef obj_Asteroids
 					wait 30
 					echo "DEBUG: Obj_Asteroids In Combat Pause Loop"
 				}
-				
-				
+								
 				AsteroidIterator.Value:LockTarget
 				do
 				{
@@ -356,14 +360,19 @@ objectdef obj_Asteroids
 					This.AsteroidList:GetIterator[AsteroidIterator]
 					if ${AsteroidIterator:First(exists)}
 					{
+						variable float maxdist
+
 						/* TODO: CyberTech - Make this configurable in the future */
-						if ${AsteroidIterator.Value.Distance} < ${Math.Calc[${Ship.OptimalMiningRange} * 3]}
+						maxdist:Set[${Math.Calc[${Ship.OptimalMiningRange} * 2.2]}]
+
+						if ${AsteroidIterator.Value.Distance} < ${maxdist}
 						{
 							UI:UpdateConsole["obj_Asteroids: TargetNext: No Asteroids in range & All lasers idle: Approaching nearest"]
 							call Ship.Approach ${AsteroidIterator.Value} ${Ship.OptimalMiningRange}
 						}
 						else
 						{
+							UI:UpdateConsole["obj_Asteroids: TargetNext: No Asteroids within ${maxdist}, changing fields."]
 							/* The nearest asteroid is farfar away.  Let's just warp out. */
 							call This.MoveToField TRUE
 							return TRUE
