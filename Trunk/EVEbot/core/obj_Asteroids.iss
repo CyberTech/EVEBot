@@ -232,6 +232,9 @@ objectdef obj_Asteroids
 
 	function UpdateList()
 	{
+		variable index:entity asteroid_index
+		variable iterator asteroid_iterator
+		
 		if ${Config.Miner.IceMining}
 		{
 			Config.Miner.IceTypesRef:GetSettingIterator[This.OreTypeIterator]
@@ -241,28 +244,67 @@ objectdef obj_Asteroids
 			Config.Miner.OreTypesRef:GetSettingIterator[This.OreTypeIterator]
 		}
 		
-		if ${Config.Miner.StripMine}
+		if ${This.OreTypeIterator:First(exists)}
 		{
-			/* TODO - this list should end up sorted in the same order as This.OreTypeIterator, ideally */
-			EVE:DoGetEntities[This.AsteroidList,CategoryID,${This.AsteroidCategoryID}]
-		}
-		elseif ${This.OreTypeIterator:First(exists)}
-		{
+			This.AsteroidList:Clear
 			do
 			{
-				;echo "DEBUG: obj_Asteroids: Checking for Ore Type ${This.OreTypeIterator.Key}"
-				This.AsteroidList:Clear
-				if ${This.OreTypeIterator.Key.Find[Veldspar]} != NULL && ${Config.Miner.IncludeVeldspar}
+				if ${This.OreTypeIterator.Key.Find[Veldspar]} != NULL && !${Config.Miner.IncludeVeldspar}
 				{
-					EVE:DoGetEntities[This.AsteroidList,CategoryID,${This.AsteroidCategoryID},${This.OreTypeIterator.Key}]
+					continue
 				}
-				elseif ${This.OreTypeIterator.Key.Find[Veldspar]} == NULL
+				
+				EVE:DoGetEntities[asteroid_index,CategoryID,${This.AsteroidCategoryID},${This.OreTypeIterator.Key}]
+				asteroid_index:GetIterator[asteroid_iterator]		
+				if ${asteroid_iterator:First(exists)}
 				{
-					EVE:DoGetEntities[This.AsteroidList,CategoryID,${This.AsteroidCategoryID},${This.OreTypeIterator.Key}]
+					do
+					{
+						if ${Config.Miner.StripMine}
+						{
+							if ${asteroid_iterator.Value.Distance} < ${Ship.OptimalMiningRange}
+							{
+								This.AsteroidList:Insert[${asteroid_iterator.Value.ID}]
+							}
+						}
+						else
+						{
+							This.AsteroidList:Insert[${asteroid_iterator.Value.ID}]
+						}
+					}
+					while ${asteroid_iterator:Next(exists)}
 				}
-				wait 0.5
 			}
-			while ${This.AsteroidList.Used} == 0 && ${This.OreTypeIterator:Next(exists)}
+			while ${This.AsteroidList.Used} < ${Ship.TotalMiningLasers} && ${This.OreTypeIterator:Next(exists)}
+
+			if ${Config.Miner.StripMine}
+			{	/* make a second pass and add all the asteroids that are out of range */
+				if ${This.OreTypeIterator:First(exists)}
+				{
+					do
+					{
+						if ${This.OreTypeIterator.Key.Find[Veldspar]} != NULL && !${Config.Miner.IncludeVeldspar}
+						{
+							continue
+						}
+						
+						EVE:DoGetEntities[asteroid_index,CategoryID,${This.AsteroidCategoryID},${This.OreTypeIterator.Key}]
+						asteroid_index:GetIterator[asteroid_iterator]		
+						if ${asteroid_iterator:First(exists)}
+						{
+							do
+							{
+								if ${asteroid_iterator.Value.Distance} >= ${Ship.OptimalMiningRange}
+								{
+									This.AsteroidList:Insert[${asteroid_iterator.Value.ID}]
+								}
+							}
+							while ${asteroid_iterator:Next(exists)}
+						}
+					}
+					while ${This.AsteroidList.Used} < ${Ship.TotalMiningLasers} && ${This.OreTypeIterator:Next(exists)}
+				}
+			}
 		}
 		else
 		{
@@ -294,25 +336,7 @@ objectdef obj_Asteroids
 		{
 			do
 			{
-				if ${Config.Miner.UseJetCan}
-				{	/* use different selection criteria when JC mining */
-					/* avoid moving away from the jetcan */
-					if ${Entity[${AsteroidIterator.Value}](exists)} && \
-					!${AsteroidIterator.Value.IsLockedTarget} && \
-					!${AsteroidIterator.Value.BeingTargeted} && \
-					${AsteroidIterator.Value.Distance} < ${Me.Ship.MaxTargetRange}
-					{
-						if !${Me.ActiveTarget(exists)}
-						{
-							break
-						}
-						elseif ${AsteroidIterator.Value.Distance} <= ${Ship.OptimalMiningRange}
-						{
-							break
-						}						
-					}
-				}
-				elseif ${Entity[${AsteroidIterator.Value}](exists)} && \
+				if ${Entity[${AsteroidIterator.Value}](exists)} && \
 					!${AsteroidIterator.Value.IsLockedTarget} && \
 					!${AsteroidIterator.Value.BeingTargeted} && \
 					${AsteroidIterator.Value.Distance} < ${Me.Ship.MaxTargetRange} && \
