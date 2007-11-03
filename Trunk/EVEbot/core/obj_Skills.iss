@@ -38,7 +38,6 @@ objectdef obj_Skills
 		variable int IntervalInSeconds = 30
 		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 		{
-			echo ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 			if !${This.NextSkill.Equal[None]} && \
 				!${Me.Skill[${This.NextSkill}].IsTraining}
 			{
@@ -58,7 +57,7 @@ objectdef obj_Skills
 		}
 		if !${This.Training} || ${SkillName.NotEqual[${This.CurrentlyTraining}]}
 		{
-			echo "Training ${SkillName}"
+			UI:ConsoleUpdate["Training ${SkillName}"]
 			Me.Skill[${SkillName}]:StartTraining
 		}		
 	}	
@@ -121,7 +120,7 @@ objectdef obj_Skills
 		
 		while !${This.SkillFile.EOF} && ${temp(exists)}
 		{
-			/* Sometimes we randomly et a NULL back at the begininng of the file. */
+			/* Sometimes we randomly get a NULL back at the begininng of the file. */
 			if !${temp.Equal[NULL]}
 			{
 				/* Remove \r\n fron data.  Should really be checking it's not just \n terminated as well. */
@@ -131,7 +130,7 @@ objectdef obj_Skills
 				ReadSkillName:Set[${This.RemoveNumerals[${ReadLine}]}]
 				ReadSkillLevel:Set[${This.SkillLevel[${ReadLine}]}]
 
-				echo Potential Skill: ${ReadSkillName} @ Level ${ReadSkillLevel}
+				
 				if ${Me.Skill[${ReadSkillName}](exists)}
 				{
 					if ${Me.Skill[${ReadSkillName}].Level} < ${ReadSkillLevel}
@@ -142,12 +141,12 @@ objectdef obj_Skills
 					}
 					else
 					{
-						echo "  Skill is already at level ${Me.Skill[${ReadSkillName}].Level}"
+						echo "Skill: ${ReadSkillName} to Level ${ReadSkillLevel}: Done"
 					}
 				}
 				else
 				{
-					echo "  Skill requested isn't known by you"
+					echo "Skill: ${ReadSkillName} to Level ${ReadSkillLevel}: Skill not known"
 				}
 			}
 			temp:Set[${SkillFile.Read}]
@@ -163,9 +162,14 @@ objectdef obj_Skills
 	{
 		if ${SkillName(exists)}
 		{
+			/* TODO - this randomly fails for a skill that's being trained.  Amadeus informed */
 			if ${Me.Skill[${SkillName}](exists)} && ${Me.Skill[${SkillName}].IsTraining}
 			{
 				return TRUE
+			}
+			else
+			{
+				echo "DEBUG: obj_Skill:Training(${SkillName}) == FALSE"
 			}
 		}
 		else

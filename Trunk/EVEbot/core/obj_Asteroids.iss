@@ -36,6 +36,7 @@ objectdef obj_Asteroids
 	variable int LastBeltIndex
 	variable bool UsingBookMarks = FALSE
 	variable time BeltArrivalTime
+	variable float MaxDistanceToAsteroid 
 	
 	method Initialize()
 	{	
@@ -233,8 +234,11 @@ objectdef obj_Asteroids
 	function UpdateList()
 	{
 		variable index:entity asteroid_index
+		variable index:entity AsteroidList_outofrange
 		variable iterator asteroid_iterator
 		
+		This.MaxDistanceToAsteroid:Set[${Math.Calc[${Ship.OptimalMiningRange} * ${Config.Miner.MiningRangeMultipler}]}]
+			
 		if ${Config.Miner.IceMining}
 		{
 			Config.Miner.IceTypesRef:GetSettingIterator[This.OreTypeIterator]
@@ -249,13 +253,13 @@ objectdef obj_Asteroids
 			This.AsteroidList:Clear
 			do
 			{
-				if ${This.OreTypeIterator.Key.Find[Veldspar]} != NULL && !${Config.Miner.IncludeVeldspar}
+				if ${This.OreTypeIterator.Key.Find[Veldspar]} > 0 && !${Config.Miner.IncludeVeldspar}
 				{
 					continue
 				}
 				
-				EVE:DoGetEntities[asteroid_index,CategoryID,${This.AsteroidCategoryID},${This.OreTypeIterator.Key}]
-				asteroid_index:GetIterator[asteroid_iterator]		
+				EVE:DoGetEntities[asteroid_index,CategoryID,${This.AsteroidCategoryID}, ${This.OreTypeIterator.Key}]
+				asteroid_index:GetIterator[asteroid_iterator]
 				if ${asteroid_iterator:First(exists)}
 				{
 					do
@@ -265,6 +269,10 @@ objectdef obj_Asteroids
 							if ${asteroid_iterator.Value.Distance} < ${Ship.OptimalMiningRange}
 							{
 								This.AsteroidList:Insert[${asteroid_iterator.Value.ID}]
+							}
+							else
+							{
+								AsteroidList_outofrange:Insert[${asteroid_iterator.Value.ID}]
 							}
 						}
 						else
@@ -278,32 +286,17 @@ objectdef obj_Asteroids
 			while ${This.AsteroidList.Used} < ${Ship.TotalMiningLasers} && ${This.OreTypeIterator:Next(exists)}
 
 			if ${Config.Miner.StripMine}
-			{	/* make a second pass and add all the asteroids that are out of range */
-				if ${This.OreTypeIterator:First(exists)}
+			{	
+				/* Append the OOR index to the good one */
+				AsteroidList_outofrange:GetIterator[asteroid_iterator]
+				if ${asteroid_iterator:First(exists)}
 				{
 					do
 					{
-						if ${This.OreTypeIterator.Key.Find[Veldspar]} != NULL && !${Config.Miner.IncludeVeldspar}
-						{
-							continue
-						}
-						
-						EVE:DoGetEntities[asteroid_index,CategoryID,${This.AsteroidCategoryID},${This.OreTypeIterator.Key}]
-						asteroid_index:GetIterator[asteroid_iterator]		
-						if ${asteroid_iterator:First(exists)}
-						{
-							do
-							{
-								if ${asteroid_iterator.Value.Distance} >= ${Ship.OptimalMiningRange}
-								{
-									This.AsteroidList:Insert[${asteroid_iterator.Value.ID}]
-								}
-							}
-							while ${asteroid_iterator:Next(exists)}
-						}
+						This.AsteroidList:Insert[${asteroid_iterator.Value.ID}]
 					}
-					while ${This.AsteroidList.Used} < ${Ship.TotalMiningLasers} && ${This.OreTypeIterator:Next(exists)}
-				}
+					while ${asteroid_iterator:Next(exists)}
+				}				
 			}
 		}
 		else
@@ -357,7 +350,7 @@ objectdef obj_Asteroids
 				}
 				UI:UpdateConsole["Locking Asteroid ${AsteroidIterator.Value.Name}: ${EVEBot.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"]
 				
-				while ${Combat.CombatPause}== TRUE
+				while ${Combat.CombatPause}
 				{
 					wait 30
 					echo "DEBUG: Obj_Asteroids In Combat Pause Loop"
@@ -384,19 +377,14 @@ objectdef obj_Asteroids
 					This.AsteroidList:GetIterator[AsteroidIterator]
 					if ${AsteroidIterator:First(exists)}
 					{
-						variable float maxdist
-
-						/* TODO: CyberTech - Make this configurable in the future */
-						maxdist:Set[${Math.Calc[${Ship.OptimalMiningRange} * 2.2]}]
-
-						if ${AsteroidIterator.Value.Distance} < ${maxdist}
+						if ${AsteroidIterator.Value.Distance} < ${This.MaxDistanceToAsteroid}
 						{
 							UI:UpdateConsole["obj_Asteroids: TargetNext: No Asteroids in range & All lasers idle: Approaching nearest"]
 							call Ship.Approach ${AsteroidIterator.Value} ${Ship.OptimalMiningRange}
 						}
 						else
 						{
-							UI:UpdateConsole["obj_Asteroids: TargetNext: No Asteroids within ${maxdist}, changing fields."]
+							UI:UpdateConsole["obj_Asteroids: TargetNext: No Asteroids within ${EVEBot.MetersToKM_Str[${This.MaxDistanceToAsteroid}], changing fields."]
 							/* The nearest asteroid is farfar away.  Let's just warp out. */
 							call This.MoveToField TRUE
 							return TRUE

@@ -362,6 +362,30 @@
 									Script[EVEBot].VariableScope.Config.Miner:SetBookMarkLastPosition[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
+						<Textentry name='MiningRangeMultipler'>
+							<X>200</X>
+							<Y>30</Y>
+							<Width>35</Width>
+							<Height>18</Height>
+							<MaxLength>4</MaxLength>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Miner.MiningRangeMultipler}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Miner:SetMiningRangeMultipler[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+						<Text name='MiningRangeMultiplerText'>
+							<X>250</X>
+							<Y>30</Y>
+							<Width>200</Width>
+							<Height>18</Height>
+							<Text>Mining Range Multipler</Text>
+							<AutoTooltip>Maximum slowboat distance is mining range * this</AutoTooltip>
+						</Text>					
 						<checkbox Name='cbDistributeLasers'>
 							<X>10</X>
 							<Y>50</Y>

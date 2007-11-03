@@ -257,7 +257,6 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Ice Mining, 0]
 		This.MinerRef:AddSetting[Delivery Location Type, 1]
 		This.MinerRef:AddSetting[Delivery Location Type Name, Station]
-		This.MinerRef:AddSetting[Delivery Location,]
 		This.MinerRef:AddSetting[Use Field Bookmarks, FALSE]
 		This.MinerRef:AddSetting[Strip Mine, FALSE]
 
@@ -455,7 +454,7 @@ objectdef obj_Configuration_Miner
 
 	member:string DeliveryLocation()
 	{
-		return ${This.MinerRef.FindSetting[Delivery Location, ${Config.Common.HomeStation}]}
+		return ${This.MinerRef.FindSetting[Delivery Location]}
 	}
 	
 	method SetDeliveryLocation(string value)
@@ -483,14 +482,14 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Strip Mine, ${value}]
 	}
 
-	member:bool MaxSlowboatTime()
+	member:float MiningRangeMultipler()
 	{
-		return ${This.MinerRef.FindSetting[Max Slowboat Time, 120]}
+		return ${This.MinerRef.FindSetting[Mining Range Multipler, 2.2]}
 	}
 
-	method SetMaxSlowboatTime(bool value)
+	method SetMiningRangeMultipler(float value)
 	{	
-		This.MinerRef:AddSetting[Max Slowboat Time, ${value}]
+		This.MinerRef:AddSetting[Mining Range Multipler, ${value}]
 	}
 }
 

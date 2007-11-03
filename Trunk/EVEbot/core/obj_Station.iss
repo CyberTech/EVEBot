@@ -99,7 +99,7 @@ objectdef obj_Station
 		;BotType Checks
 		
 		;General Checks
-		;To.Do Needs to be moved, into correct classes.
+		;ToDo Needs to be moved, into correct classes.
 		
 		;Awaiting ISXEVE Drone Bay Support
 		/*
