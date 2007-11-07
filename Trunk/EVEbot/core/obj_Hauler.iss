@@ -493,7 +493,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		m_gangMemberID:Set[-1]
 		m_SystemID:Set[-1]		
 		m_BeltID:Set[-1]		
-		call Ship.CloseCargo
+		; GP: Don't close cargo anymore call -- Ship.CloseCargo
 	}
 
 	method BuildGangMemberList()
