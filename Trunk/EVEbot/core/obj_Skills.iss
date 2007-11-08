@@ -61,7 +61,7 @@ objectdef obj_Skills
 			Me.Skill[${SkillName}]:StartTraining
 		}
 		
-		if ${SkillName.NotEqual[${This.RemoveNumerals[${This.CurrentlyTraining}]}]}
+		if ${SkillName.NotEqual[${Me.SkillCurrentlyTraining.Name}]}
 		{
 			UI:UpdateConsole["Changing skill to ${SkillName} from ${This.CurrentlyTraining}"]
 			Me.Skill[${SkillName}]:StartTraining
@@ -69,45 +69,32 @@ objectdef obj_Skills
 	}	
 	
 	member(string) CurrentlyTraining()
-	{
-		variable int i
-		
-		variable iterator Skills
-		
-		This.OwnedSkills:GetIterator[Skills]
-		
-		/* TODO - Change to ${Me.SkillCurrentlyTraining} when Amadeus puts it in. -- CyberTech */
-		
-		if ${Skills:First(exists)}
-		do
+	{			
+		if ${Me.SkillCurrentlyTraining(exists)}
 		{
-			if ${Skills.Value.IsTraining}
+			variable string SkillName = ${Me.SkillCurrentlyTraining.Name}
+			Switch ${Me.SkillCurrentlyTraining.Level}
 			{
-				Switch ${Skills.Value.Level}
-				{
-					case 0
-						return "${Skills.Value.Name} I"
-						break
-					case 1
-						return "${Skills.Value.Name} II"
-						break
-					case 2
-						return "${Skills.Value.Name} III"
-						break
-					case 3
-						return "${Skills.Value.Name} IV"
-						break
-					case 4
-						return "${Skills.Value.Name} V"
-						break
-					case 5
-						return "${Skills.Value.Name} Complete"
-						break
-				}
-				return "${Skills.Value.Name} NULL"
+				case 0
+					return "${SkillName} I"
+					break
+				case 1
+					return "${SkillName} II"
+					break
+				case 2
+					return "${SkillName} III"
+					break
+				case 3
+					return "${SkillName} IV"
+					break
+				case 4
+					return "${SkillName} V"
+					break
+				case 5
+					return "$SkillName} Complete"
+					break
 			}
-		}
-		while ${Skills:Next(exists)}
+		}	
 
 		return "None"
 	}
