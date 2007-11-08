@@ -35,7 +35,7 @@ objectdef obj_Skills
 		}
 
 		FrameCounter:Inc
-		variable int IntervalInSeconds = 30
+		variable int IntervalInSeconds = 60
 		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 		{
 			if !${This.NextSkill.Equal[None]} && \
@@ -55,11 +55,17 @@ objectdef obj_Skills
 			echo "Error: Don't have skill ${SkillName}"
 			return
 		}
-		if !${This.Training} || ${SkillName.NotEqual[${This.CurrentlyTraining}]}
+		if !${This.Training} 
 		{
-			UI:ConsoleUpdate["Training ${SkillName}"]
+			UI:UpdateConsole["Training ${SkillName}"]
 			Me.Skill[${SkillName}]:StartTraining
-		}		
+		}
+		
+		if ${SkillName.NotEqual[${This.RemoveNumerals[${This.CurrentlyTraining}]}]}
+		{
+			UI:UpdateConsole["Changing skill to ${SkillName} from ${This.CurrentlyTraining}"]
+			Me.Skill[${SkillName}]:StartTraining
+		}
 	}	
 	
 	member(string) CurrentlyTraining()
@@ -69,6 +75,8 @@ objectdef obj_Skills
 		variable iterator Skills
 		
 		This.OwnedSkills:GetIterator[Skills]
+		
+		/* TODO - Change to ${Me.SkillCurrentlyTraining} when Amadeus puts it in. -- CyberTech */
 		
 		if ${Skills:First(exists)}
 		do
@@ -141,12 +149,12 @@ objectdef obj_Skills
 					}
 					else
 					{
-						echo "Skill: ${ReadSkillName} to Level ${ReadSkillLevel}: Done"
+						;echo "Skill: ${ReadSkillName} to Level ${ReadSkillLevel}: Done"
 					}
 				}
 				else
 				{
-					echo "Skill: ${ReadSkillName} to Level ${ReadSkillLevel}: Skill not known"
+					;echo "Skill: ${ReadSkillName} to Level ${ReadSkillLevel}: Skill not known"
 				}
 			}
 			temp:Set[${SkillFile.Read}]
@@ -158,9 +166,9 @@ objectdef obj_Skills
 	}
 
 	
-	member(bool) Training(string SkillName)
+	member(bool) Training(string SkillName = "")
 	{
-		if ${SkillName(exists)}
+		if ${SkillName.Length} > 0
 		{
 			/* TODO - this randomly fails for a skill that's being trained.  Amadeus informed */
 			if ${Me.Skill[${SkillName}](exists)} && ${Me.Skill[${SkillName}].IsTraining}
@@ -169,7 +177,7 @@ objectdef obj_Skills
 			}
 			else
 			{
-				echo "DEBUG: obj_Skill:Training(${SkillName}) == FALSE"
+				;echo "DEBUG: obj_Skill:Training(${SkillName}) == (false) ${Me.Skill[${SkillName}].IsTraining} - ${Me.Skill[${SkillName}].Name}"
 			}
 		}
 		else
