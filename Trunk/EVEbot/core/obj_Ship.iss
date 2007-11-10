@@ -833,6 +833,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			call Station.UnDock
 		}
 		
+		call This.WarpPrepare
 		if (${DestinationBookmark.SolarSystemID} != ${Me.SolarSystemID})
 		{
 			UI:UpdateConsole["Setting autopilot destination: ${DestinationBookmark.Label}]}"]

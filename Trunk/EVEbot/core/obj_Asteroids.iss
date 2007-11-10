@@ -108,7 +108,6 @@ objectdef obj_Asteroids
 			if ${Label.Left[${prefix.Length}].Equal[${prefix}]}
 			{
 				UI:UpdateConsole["Warping to Bookmark ${Label}"]
-				call Ship.WarpPrepare
 				BeltBookMarkList[${RandomBelt}]:WarpTo
 				call Ship.WarpWait
 				This.BeltArrivalTime:Set[${Time.Timestamp}]
