@@ -190,7 +190,7 @@ objectdef obj_Freighter
 		while ${idx} > 0
 		{
 			variable string bm_name
-			bm_name:Set[${bm_index.Get[${idx}].Label}]			
+			bm_name:Set["${bm_index.Get[${idx}].Label}"]			
 			if ${bm_name.Left[${bm_prefix.Length}].Equal[${bm_prefix}]}
 			{
 				SourceLocations:Queue[${bm_index.Get[${idx}]}]	
