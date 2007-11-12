@@ -64,7 +64,7 @@ objectdef obj_EVEBot
 			{
 				variable int BuddyCounter = 1
 
-				UI:UpdateConsole["DEBUG: Stacking cargo..."]
+				;UI:UpdateConsole["DEBUG: Stacking cargo..."]
 				Call Ship.StackAll
 				;UI:UpdateConsole["DEBUG: Checking buddies..."]
 				if (${BuddiesCount} > 0)
