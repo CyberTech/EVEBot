@@ -317,11 +317,6 @@ objectdef obj_Ship
 
 	member:int TotalMiningLasers()
 	{	
-		if !${Me.Ship(exists)}
-		{
-			return 0
-		}
-
 		return ${This.ModuleList_MiningLaser.Used}
 	}
 	
