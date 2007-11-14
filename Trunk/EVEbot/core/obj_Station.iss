@@ -177,7 +177,8 @@ objectdef obj_Station
 		}
 		else
 		{
-			UI:UpdateConsole["No stations in this system!"]
+			UI:UpdateConsole["No stations in this system!  Quitting Game!!"]
+			EVE:Execute[CmdQuitGame]
 		}
 	}	
 
