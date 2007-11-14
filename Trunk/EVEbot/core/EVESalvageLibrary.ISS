@@ -35,7 +35,7 @@ function InitializeLibrary(bool LootCans)
 {
 	if (${LootCans})
 	{
-		EVELootingFilePath:Set["${LavishScript.HomeDirectory}/Scripts/"]
+		EVELootingFilePath:Set["${Script.CurrentDirectory}/../config/"]
 		EVELootingFileName:Set[${EVELootingFilePath}EVEIgnoreLootingItems.xml]
 	 
 		LavishSettings:AddSet[Loot Items Database]
@@ -105,6 +105,36 @@ function GetModulesInformation(bool LootCans)
   echo "- Your ship has ${TractorBeamCount} Tractor Beams, ${SalvagerCount} Salvage Modules, and ${AfterburnerCount} Afterburner."
 
 	return
+}
+
+function OpenCargo()
+{
+	if !${EVEWindow[MyShipCargo](exists)}
+	{
+		echo "Opening Ship Cargohold"
+		EVE:Execute[OpenCargoHoldOfActiveShip]
+		wait 15
+		while !${EVEWindow[MyShipCargo](exists)}
+		{
+			wait 0.5
+		}
+		wait 10
+	}
+}
+
+function CloseCargo()
+{
+	if ${EVEWindow[MyShipCargo](exists)}
+	{
+		echo "Closing Ship Cargohold"
+		EVEWindow[MyShipCargo]:Close
+		wait 15
+		while ${EVEWindow[MyShipCargo](exists)}
+		{
+			wait 0.5
+		}
+		wait 10
+	}
 }
 
 function CheckForLoot()
@@ -194,7 +224,7 @@ function CheckForLoot()
 				{
 				 	wait 15
 				}
-				while ${GetTargeting} > 0
+				while ${Me.GetTargeting} > 0
 				
 				wait 15
 				Cans.Get[${i}]:MakeActiveTarget
@@ -296,10 +326,10 @@ function CheckForLoot()
 				;; Loot! ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 				Cans.Get[${i}]:OpenCargo
 				wait 30
-				Me.Ship:OpenCargo
-				wait 15
+				call OpenCargo
 				call LootEntity ${Cans.Get[${i}].ID}
-				Me.ToEntity:CloseCargo
+				echo "--- Stacking cargo..."
+				Me.Ship:StackAllCargo
 				if ${Cans.Get[${i}](exists)}
 				{
 			  	Cans.Get[${i}]:CloseCargo
@@ -430,7 +460,7 @@ function DoSalvage(bool LootCans)
 			{
 			 	wait 15
 			}
-			while ${GetTargeting} > 0
+			while ${Me.GetTargeting} > 0
 			
 			wait 15
 			Wrecks.Get[${i}]:MakeActiveTarget
@@ -771,8 +801,11 @@ function CheckShipIsFull(bool LootCans, bool IgnoreCapacity)
 		
 		if !${IgnoreCapacity}
 		{
-	 		if (${Math.Calc[${Me.Ship.CargoCapacity}-${Me.Ship.UsedCargoCapacity}]} > ${Math.Calc[${Me.Ship.CargoCapacity}*0.01]})
-	   		return
+			/* salvage operation requires a minimum of 40 m^3 free */
+	 		if (${Math.Calc[${Me.Ship.CargoCapacity}-${Me.Ship.UsedCargoCapacity}]} > 40)
+			{
+				return
+			}
 	 	}
 	 	
 	 	; else, make a temp bookmark, return us to our salvage home, unload, and go back for more
