@@ -268,7 +268,7 @@
 							<AutoTooltip>The EVE Login name for ${Me.Name}</AutoTooltip>
 						</Text>					
 						<Textentry name='LoginName'>
-							<X>120</X>
+							<X>140</X>
 							<Y>70</Y>
 							<Width>100</Width>
 							<Height>18</Height>
@@ -292,7 +292,7 @@
 							<AutoTooltip>The EVE Login Password for ${Me.Name}</AutoTooltip>
 						</Text>					
 						<Textentry name='LoginPassword'>
-							<X>120</X>
+							<X>140</X>
 							<Y>90</Y>
 							<Width>100</Width>
 							<Height>18</Height>
@@ -305,6 +305,31 @@
 								if ${This.Text.Length} > 0
 								{
 									Script[EVEBot].VariableScope.Config.Common:SetLoginPassword[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+						
+						<Text name='lblMaxRuntime'>
+							<X>10</X>
+							<Y>130</Y>
+							<Width>130</Width>
+							<Height>18</Height>
+							<Text>Maximum Runtime</Text>
+							<AutoTooltip>The maximum time to run the script before it aborts.</AutoTooltip>
+						</Text>					
+						<Textentry name='tbMaxRuntime'>
+							<X>140</X>
+							<Y>130</Y>
+							<Width>32</Width>
+							<Height>18</Height>
+							<MaxLength>2</MaxLength>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Common.MaxRuntime}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Common:SetMaxRuntime[${Int[${This.Text}]}]
 								}
 							</OnChange>
 						</Textentry>

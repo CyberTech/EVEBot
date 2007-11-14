@@ -96,6 +96,7 @@ objectdef obj_Configuration_Common
 		This.CommonRef:AddSetting[Login Password, ""]
 		This.CommonRef:AddSetting[AutoLogin, TRUE]
 		This.CommonRef:AddSetting[AutoLoginCharID, 0]
+		This.CommonRef:AddSetting[Maximum Runtime, 0]
 	}
 
 	member:int BotMode()
@@ -199,6 +200,15 @@ objectdef obj_Configuration_Common
 		This.AbortCount:Inc
 	}
 
+	member:int MaxRuntime()
+	{
+		return ${This.CommonRef.FindSetting[Maximum Runtime, NOTSET]}
+	}
+
+	method SetMaxRuntime(int value)
+	{
+		This.CommonRef:AddSetting[Maximum Runtime,${value}]
+	}
 }
 
 objectdef obj_Configuration_Miner
