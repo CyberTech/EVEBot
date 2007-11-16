@@ -175,11 +175,11 @@ objectdef obj_Ship
 
 		Me.Ship:DoGetModules[This.ModuleList]
 		
-		if !${This.ModuleList.Used}
+		if !${This.ModuleList.Used} && ${Me.Ship.HighSlots} > 0
 		{
-			UI:UpdateConsole["DEBUG: obj_Ship:UpdateModuleList - No modules found."]
-			;;EVEBot:Pause
-			;;return
+			UI:UpdateConsole["DEBUG: obj_Ship:UpdateModuleList - No modules found. Paused."]
+			EVEBot:Pause
+			return
 		}
 	
 		variable iterator Module
