@@ -177,9 +177,9 @@ objectdef obj_Ship
 		
 		if !${This.ModuleList.Used}
 		{
-			UI:UpdateConsole["DEBUG: obj_Ship:UpdateModuleList - No modules found. Paused."]
-			EVEBot:Pause
-			return
+			UI:UpdateConsole["DEBUG: obj_Ship:UpdateModuleList - No modules found."]
+			;;EVEBot:Pause
+			;;return
 		}
 	
 		variable iterator Module
