@@ -939,6 +939,15 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 	function WarpPrepare()
 	{ 
 		UI:UpdateConsole["Preparing for warp"]
+		if ${This.Drones.WaitingForDrones}
+		{
+			UI:UpdateConsole["Drone deployment already in process, delaying warp"]
+			do
+			{
+				waitframe
+			}
+			while ${This.Drones.WaitingForDrones}
+		}
 		This:DeactivateAllMiningLasers[]
 		This:UnlockAllTargets[]
 		call This.Drones.ReturnAllToDroneBay
