@@ -302,11 +302,6 @@ objectdef obj_Asteroids
 		{
 			echo "WARNING: obj_Asteroids: Ore Type list is empty, please check config"
 		}
-
-		if ${This.AsteroidList.Used}
-		{
-				;echo "DEBUG: obj_Asteroids:UpdateList - Found ${This.AsteroidList.Used} ${This.OreTypeIterator.Key} asteroids"
-		}
 	}
 	
 	method NextAsteroid()

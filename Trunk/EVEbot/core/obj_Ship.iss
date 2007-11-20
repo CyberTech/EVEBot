@@ -24,6 +24,8 @@ objectdef obj_Ship
 	variable index:module ModuleList_Repair_Hull
 	variable index:module ModuleList_AB_MWD
 	variable index:module ModuleList_Passive
+	variable index:module ModuleList_Salvagers
+	variable index:module ModuleList_TractorBeams
 	variable bool Repairing_Armor = FALSE
 	variable bool Repairing_Hull = FALSE
 
@@ -171,7 +173,8 @@ objectdef obj_Ship
 		This.ModuleList_Passive:Clear
 		This.ModuleList_Repair_Armor:Clear
 		This.ModuleList_Repair_Hull:Clear
-		
+		This.ModuleList_Salvagers:Clear
+		This.ModuleList_TractorBeams:Clear
 
 		Me.Ship:DoGetModules[This.ModuleList]
 		
@@ -209,7 +212,7 @@ objectdef obj_Ship
 				This.ModuleList_MiningLaser:Insert[${Module.Value}]
 				continue
 			}
-			
+		   	
 			; TODO - Populate these arrays
 			;This.ModuleList_Weapon
 			;This.ModuleList_ActiveResists
@@ -226,6 +229,21 @@ objectdef obj_Ship
 					continue
 				case 62
 					This.ModuleList_Repair_Armor:Insert[${Module.Value}]
+					continue
+				case 538
+					/* data miners */
+					; DEBUG: Group: Data Miners  538
+					; DEBUG: Type: Salvager I  25861
+					if ${TypeID} == 25861
+				   	{	/* Salvager I */
+						This.ModuleList_Salvagers:Insert[${Module.Value}]
+				   	}
+					continue
+				case 650
+					/* tractor beams */
+					; DEBUG: Group: Tractor Beam  650
+					; DEBUG: Type: Small Tractor Beam I  24348
+					This.ModuleList_TractorBeams:Insert[${Module.Value}]
 					continue
 				case NONE
 					This.ModuleList_Repair_Hull:Insert[${Module.Value}]
@@ -286,6 +304,24 @@ objectdef obj_Ship
 		{
 			UI:UpdateConsole["Warning: More than 1 Afterburner or MWD was detected, I will only use the first one."]
 		}
+
+		UI:UpdateConsole["Salvaging Modules:"]
+		This.ModuleList_Salvagers:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"]
+		}
+		while ${Module:Next(exists)}
+
+		UI:UpdateConsole["Tractor Beam Modules:"]
+		This.ModuleList_TractorBeams:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"]
+		}
+		while ${Module:Next(exists)}
 	}
 	
 	method UpdateBaselineUsedCargo()
@@ -1129,5 +1165,43 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			Me.Ship:StackAllCargo
 		}
+	}
+
+	; Returns the salvager range minus 10%
+	member:int OptimalSalvageRange()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return 0
+		}
+
+		variable iterator Module
+
+		This.ModuleList_Salvagers:GetIterator[Module]
+		if ${Module:First(exists)}
+		{
+			return ${Math.Calc[${Module.Value.OptimalRange}*0.90]}
+		}
+
+		return 0
+	}
+
+	; Returns the tractor range minus 10%
+	member:int OptimalTractorRange()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return 0
+		}
+
+		variable iterator Module
+
+		This.ModuleList_TractorBeams:GetIterator[Module]
+		if ${Module:First(exists)}
+		{
+			return ${Math.Calc[${Module.Value.OptimalRange}*0.90]}
+		}
+
+		return 0
 	}
 }

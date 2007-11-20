@@ -242,7 +242,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 				Call Station.Dock
 				break
 			case BASE
-				call Cargo.TransferOreToHangar
+				call Cargo.TransferCargoToHangar
 				call Station.Undock
 				if ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}](exists)}
 				{
@@ -493,7 +493,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		m_gangMemberID:Set[-1]
 		m_SystemID:Set[-1]		
 		m_BeltID:Set[-1]		
-		; GP: Don't close cargo anymore call -- Ship.CloseCargo
+		;;; call Ship.CloseCargo
 	}
 
 	method BuildGangMemberList()
