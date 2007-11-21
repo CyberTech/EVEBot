@@ -9,6 +9,7 @@ variable(script) index:module Salvagers
 variable(script) index:module Afterburners
 variable(script) index:item MyCargo
 variable(script) index:item CargoToTransfer
+variable(script) index:int  NewCargoToTransfer
 variable(script) int MaxSalvageRange
 variable(script) int MaxTractorRange
 variable(script) int WrecksCount
@@ -684,6 +685,7 @@ function TransferSalvagedItemsToHangar()
 		
 		variable iterator ThisCargo
 		
+		NewCargoToTransfer:Clear[]
 		MyCargo:GetIterator[ThisCargo]
 		if ${ThisCargo:First(exists)}
 		do
@@ -698,7 +700,7 @@ function TransferSalvagedItemsToHangar()
 			switch ${GroupID}
 			{
 				case 754
-					CargoToTransfer:Insert[${ThisCargo.Value}]
+					NewCargoToTransfer:Insert[${ThisCargo.Value}]
 					break
 				default
 					break
@@ -706,22 +708,12 @@ function TransferSalvagedItemsToHangar()
 		}
 		while ${ThisCargo:Next(exists)}
 
-		if ${CargoToTransfer.Used} > 0
+		if ${NewCargoToTransfer.Used} > 0
 		{
-			variable iterator CargoIterator
-			CargoToTransfer:GetIterator[CargoIterator]
-			
-			if ${CargoIterator:First(exists)}
-			do
-			{
-				;echo "obj_Cargo:TransferToHangar: Unloading Cargo: ${CargoIterator.Value.Name}"
-				CargoIterator.Value:MoveTo[Hangar]
-				wait 30
-			}
-			while ${CargoIterator:Next(exists)}
+			EVE:MoveItemsTo[NewCargoToTransfer,Hangar]
 		}
 
-		CargoToTransfer:Clear[]
+		NewCargoToTransfer:Clear[]
  
     ; After everything is done ...let's clean up the stacks.
     Me.Station:StackAllHangarItems
@@ -758,32 +750,21 @@ function TransferLootToHangar()
 		
 		variable iterator ThisCargo
 		
+		NewCargoToTransfer:Clear
 		MyCargo:GetIterator[ThisCargo]
 		if ${ThisCargo:First(exists)}
 		do
 		{
-			;echo "DEBUG: TransferLootToHanger: CargoholdLoot.Element[ThisCargo.Value.ID]: ${CargoholdLoot.Element[${ThisCargo.Value.ID}]}"
-			if (${CargoholdLoot.Element[${ThisCargo.Value.ID}](exists)})
-				CargoToTransfer:Insert[${ThisCargo.Value}]
+			NewCargoToTransfer:Insert[${ThisCargo.Value}]
 		}
 		while ${ThisCargo:Next(exists)}
 
-		if ${CargoToTransfer.Used} > 0
+		if ${NewCargoToTransfer.Used} > 0
 		{
-			variable iterator CargoIterator
-			CargoToTransfer:GetIterator[CargoIterator]
-			
-			if ${CargoIterator:First(exists)}
-			do
-			{
-				;echo "TransferLootToHangar: Unloading Loot: ${CargoIterator.Value.Name}"
-				CargoIterator.Value:MoveTo[Hangar]
-				wait 30
-			}
-			while ${CargoIterator:Next(exists)}
+                EVE:MoveItemsTo[NewCargoToTransfer,Hangar]
 		}
 
-		CargoToTransfer:Clear
+		NewCargoToTransfer:Clear
  
     ; After everything is done ...let's clean up the stacks.
     Me.Station:StackAllHangarItems
