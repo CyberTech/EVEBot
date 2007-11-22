@@ -35,7 +35,7 @@ objectdef obj_Skills
 		;}
 
 		FrameCounter:Inc
-		variable int IntervalInSeconds = 5
+		variable int IntervalInSeconds = 60
 		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 		{
 			if !${This.NextSkill.Equal[None]} && \
