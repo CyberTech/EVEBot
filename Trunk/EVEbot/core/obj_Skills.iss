@@ -29,13 +29,13 @@ objectdef obj_Skills
 	
 	method Pulse()
 	{
-		if ${EVEBot.Paused}
-		{
-			return
-		}
+		;if ${EVEBot.Paused}
+		;{
+		;	return
+		;}
 
 		FrameCounter:Inc
-		variable int IntervalInSeconds = 60
+		variable int IntervalInSeconds = 5
 		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 		{
 			if !${This.NextSkill.Equal[None]} && \
@@ -124,7 +124,6 @@ objectdef obj_Skills
 
 				ReadSkillName:Set[${This.RemoveNumerals[${ReadLine}]}]
 				ReadSkillLevel:Set[${This.SkillLevel[${ReadLine}]}]
-
 				
 				if ${Me.Skill[${ReadSkillName}](exists)}
 				{
