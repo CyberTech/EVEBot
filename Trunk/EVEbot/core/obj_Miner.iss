@@ -142,7 +142,8 @@ objectdef obj_Miner
 	  		return
 		}
 				
-		if ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace}
+		; previous logic -- if ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace}
+		if ${Me.Ship.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold}
 		{
 		 	This.CurrentState:Set["MINE"]
 			return
@@ -244,7 +245,7 @@ objectdef obj_Miner
 		;; previous logic -- while ( !${EVEBot.ReturnToStation} && \
 		;; previous logic -- 		!${Ship.CargoFull} )
 		while ( !${EVEBot.ReturnToStation} && \
-				${Me.Ship.UsedCargoCapacity} < ${Config.Miner.CargoThreshold}	)
+				${Me.Ship.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold}	)
 		{	
 			if ${Ship.TotalMiningLasers} == 0
 			{
