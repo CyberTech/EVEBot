@@ -411,6 +411,30 @@
 							<Text>Mining Range Multipler</Text>
 							<AutoTooltip>Maximum slowboat distance is mining range * this</AutoTooltip>
 						</Text>					
+						<Textentry name='tbCargoThreshold'>
+							<X>200</X>
+							<Y>50</Y>
+							<Width>45</Width>
+							<Height>18</Height>
+							<MaxLength>5</MaxLength>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Miner.CargoThreshold}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Miner:SetCargoThreshold[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+						<Text name='lbCargoThreshold'>
+							<X>250</X>
+							<Y>50</Y>
+							<Width>200</Width>
+							<Height>18</Height>
+							<Text>Cargo Full Threshold</Text>
+							<AutoTooltip>Cargo hold >= this value means cargo hold full</AutoTooltip>
+						</Text>					
 						<checkbox Name='cbDistributeLasers'>
 							<X>10</X>
 							<Y>50</Y>

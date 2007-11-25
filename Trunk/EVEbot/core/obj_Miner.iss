@@ -148,7 +148,8 @@ objectdef obj_Miner
 			return
 		}
 		
-		if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${EVEBot.ReturnToStation}
+		; previous logic -- if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${EVEBot.ReturnToStation}
+		if ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold} || ${EVEBot.ReturnToStation}
 		{
 			This.CurrentState:Set["CARGOFULL"]
 			return
@@ -240,8 +241,10 @@ objectdef obj_Miner
 		
 		UI:UpdateConsole["Mining"]
 		
+		;; previous logic -- while ( !${EVEBot.ReturnToStation} && \
+		;; previous logic -- 		!${Ship.CargoFull} )
 		while ( !${EVEBot.ReturnToStation} && \
-				!${Ship.CargoFull} )
+				${Me.Ship.UsedCargoCapacity} < ${Config.Miner.CargoThreshold}	)
 		{	
 			if ${Ship.TotalMiningLasers} == 0
 			{
@@ -378,7 +381,8 @@ objectdef obj_Miner
 				if ${Target:First(exists)}
 				do
 				{
-					if ${Ship.CargoFull}
+					;; previous logic -- if ${Ship.CargoFull}
+					if ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 					{
 						break
 					}
@@ -403,7 +407,8 @@ objectdef obj_Miner
 							wait 5
 						}
 						
-						if ${Ship.CargoFull}
+						;; previous logic -- if ${Ship.CargoFull}
+						if ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 						{
 							break
 						}

@@ -269,6 +269,7 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Delivery Location Type Name, Station]
 		This.MinerRef:AddSetting[Use Field Bookmarks, FALSE]
 		This.MinerRef:AddSetting[Strip Mine, FALSE]
+		This.MinerRef:AddSetting[Cargo Threshold, 10000]
 
 		This.OreTypesRef:AddSetting[Vitreous Mercoxit, 1]
 		This.OreTypesRef:AddSetting[Magma Mercoxit, 1]
@@ -500,6 +501,16 @@ objectdef obj_Configuration_Miner
 	method SetMiningRangeMultipler(float value)
 	{	
 		This.MinerRef:AddSetting[Mining Range Multipler, ${value}]
+	}
+
+	member:int CargoThreshold()
+	{
+		return ${This.MinerRef.FindSetting[Cargo Threshold, 10000]}
+	}
+
+	method SetCargoThreshold(int value)
+	{	
+		This.MinerRef:AddSetting[Cargo Threshold, ${value}]
 	}
 }
 
