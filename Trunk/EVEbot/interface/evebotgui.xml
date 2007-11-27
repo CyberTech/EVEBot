@@ -416,7 +416,7 @@
 							<Y>50</Y>
 							<Width>45</Width>
 							<Height>18</Height>
-							<MaxLength>5</MaxLength>
+							<MaxLength>6</MaxLength>
 							<OnLoad>
 								This:SetText[${Script[EVEBot].VariableScope.Config.Miner.CargoThreshold}]
 							</OnLoad>
