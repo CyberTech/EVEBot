@@ -269,7 +269,7 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Delivery Location Type Name, Station]
 		This.MinerRef:AddSetting[Use Field Bookmarks, FALSE]
 		This.MinerRef:AddSetting[Strip Mine, FALSE]
-		This.MinerRef:AddSetting[Cargo Threshold, 10000]
+		This.MinerRef:AddSetting[Cargo Threshold, 0]
 
 		This.OreTypesRef:AddSetting[Vitreous Mercoxit, 1]
 		This.OreTypesRef:AddSetting[Magma Mercoxit, 1]
@@ -506,13 +506,13 @@ objectdef obj_Configuration_Miner
 	member:int CargoThreshold()
 	{
 		variable float threshold
-		threshold:Set[${This.MinerRef.FindSetting[Cargo Threshold, 10000]}]
+		threshold:Set[${This.MinerRef.FindSetting[Cargo Threshold, 0]}]
 		if (${threshold} == 0) || \
 			(${threshold} > ${Me.Ship.CargoCapacity})
 		{
 			threshold:Set[${Math.Calc[${Me.Ship.CargoCapacity} / ${Ship.MiningAmountPerLaser}].Int}]
 			threshold:Set[${Math.Calc[(${threshold} * ${Ship.MiningAmountPerLaser}) * 0.99]}]
-			if ${threshold} > ${Me.Ship.CargoCapacity}
+			if ${This.MinerRef.FindSetting[Cargo Threshold, 0]} > ${Me.Ship.CargoCapacity}
 			{
 				UI:UpdateConsole["ERROR: Mining Cargo Threshold is set higher than ship capacity: Using dynamic value of ${threshold}"]
 			}
