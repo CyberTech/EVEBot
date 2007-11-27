@@ -29,22 +29,21 @@ objectdef obj_Skills
 	
 	method Pulse()
 	{
-		;if ${EVEBot.Paused}
-		;{
-		;	return
-		;}
-
 		FrameCounter:Inc
 		variable int IntervalInSeconds = 60
-		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
+
+		if ${Me.InStation(exists)}
 		{
-			if !${This.NextSkill.Equal[None]} && \
-				!${Me.Skill[${This.NextSkill}].IsTraining}
+			if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 			{
-				Me:DoGetSkills[This.OwnedSkills]
-				This:Train[${This.NextInLine}]
+				if !${This.NextSkill.Equal[None]} && \
+					!${Me.Skill[${This.NextSkill}].IsTraining}
+				{
+					Me:DoGetSkills[This.OwnedSkills]
+					This:Train[${This.NextInLine}]
+				}
+				FrameCounter:Set[0]
 			}
-			FrameCounter:Set[0]
 		}
 	}
 
