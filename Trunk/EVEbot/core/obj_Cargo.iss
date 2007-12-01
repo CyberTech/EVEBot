@@ -134,6 +134,7 @@ objectdef obj_Cargo
 
 	function TransferListToJetCan()
 	{
+		variable int QuantityToMove
 		variable iterator CargoIterator
 		This.CargoToTransfer:GetIterator[CargoIterator]
 		
@@ -144,8 +145,19 @@ objectdef obj_Cargo
 				if ${JetCan.IsReady[TRUE]}
 				{
 					call JetCan.Open ${JetCan.ActiveCan}
-					UI:UpdateConsole["TransferListToJetCan: Transferring Cargo: ${CargoIterator.Value.Name}"]
-					CargoIterator.Value:MoveTo[${JetCan.ActiveCan}]
+					
+					if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${JetCan.CargoFreeSpace}
+					{
+						/* Move only what will fit, minus 1 to account for CCP rounding errors. */
+						QuantityToMove:Set[${JetCan.CargoFreeSpace} / ${CargoIterator.Value.Volume} - 1]
+					}
+					else
+					{
+						QuantityToMove:Set[${CargoIterator.Value.Quantity}]
+					}
+
+					UI:UpdateConsole["TransferListToJetCan: Transferring Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
+					CargoIterator.Value:MoveTo[${JetCan.ActiveCan}, ${QuantityToMove}]
 				}
 				else
 				{
