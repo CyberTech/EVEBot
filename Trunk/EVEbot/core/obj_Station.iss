@@ -198,9 +198,12 @@ objectdef obj_Station
 			{
 			   Counter:Set[0]
 			   EVE:Execute[CmdExitStation]	
+			   UI:UpdateConsole["Undock: Unexpected failure, retrying..."]
+			   UI:UpdateConsole["Undock: Debug: EVEWindow[Local]=${EVEWindow[Local](exists)}"]
+			   UI:UpdateConsole["Undock: Debug: Me.InStation=${Me.InStation}"]
 			}
 		}
-		while (${Me.InStation} || !${EVEWindow[Local](exists)} || !${Me.InStation(exists)})
+		while ( !${Me.InStation(exists)} || ${Me.InStation} || !${EVEWindow[Local](exists)} )
 		UI:UpdateConsole["Undock: Complete"]
 
 		Config.Common:SetHomeStation[${Entity[CategoryID,3].Name}]
