@@ -200,6 +200,7 @@ objectdef obj_Station
 			   EVE:Execute[CmdExitStation]	
 			   UI:UpdateConsole["Undock: Unexpected failure, retrying..."]
 			   UI:UpdateConsole["Undock: Debug: EVEWindow[Local]=${EVEWindow[Local](exists)}"]
+			   UI:UpdateConsole["Undock: Debug: Me.InStation Exists=${Me.InStation(exists)}"]
 			   UI:UpdateConsole["Undock: Debug: Me.InStation=${Me.InStation}"]
 			}
 		}
