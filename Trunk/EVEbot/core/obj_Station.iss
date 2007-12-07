@@ -144,7 +144,7 @@ objectdef obj_Station
 				call Ship.WarpToID ${StationID}
 				do
 				{ 
-				   wait 20
+				   wait 30
 				}
 				while ${Entity[${StationID}].Distance} >= 10000
 			}
@@ -152,7 +152,7 @@ objectdef obj_Station
 			Entity[${StationID}]:Approach
 			do
 			{
-				wait 20
+				wait 30
 			}
 			while (${Entity[${StationID}].Distance} > 100)
 		
@@ -161,7 +161,7 @@ objectdef obj_Station
 			Entity[${StationID}]:Dock			
 			do
 			{
-		   		wait 20
+		   		wait 30
 		   		Counter:Inc[20]
 		   		if (${Counter} > 200)
 		   		{
