@@ -861,7 +861,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 
 		if (${Me.InStation})
 		{
-			call Station.UnDock
+			call Station.Undock
 		}
 		
 		call This.WarpPrepare
