@@ -201,7 +201,8 @@ objectdef obj_Station
 			}
 		}
 		while (${Me.InStation} || !${EVEWindow[Local](exists)} || !${Me.InStation(exists)})
-		
+		UI:UpdateConsole["Undock: Complete"]
+
 		Config.Common:SetHomeStation[${Entity[CategoryID,3].Name}]
 		
 		Me:SetVelocity[100]
