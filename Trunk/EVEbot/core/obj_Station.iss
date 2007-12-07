@@ -193,8 +193,8 @@ objectdef obj_Station
 		do
 		{
 			wait 10
-			Counter:Inc[10]
-			if ${Counter} > 200
+			Counter:Inc[1]
+			if ${Counter} > 20
 			{
 			   Counter:Set[0]
 			   EVE:Execute[CmdExitStation]	
