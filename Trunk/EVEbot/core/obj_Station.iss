@@ -204,7 +204,8 @@ objectdef obj_Station
 			   UI:UpdateConsole["Undock: Debug: Me.InStation=${Me.InStation}"]
 			}
 		}
-		while ( !${Me.InStation(exists)} || ${Me.InStation} || !${EVEWindow[Local](exists)} )
+		while ( !${Me.InStation(exists)} || ${Me.InStation} )
+;		while ( !${Me.InStation(exists)} || ${Me.InStation} || !${EVEWindow[Local](exists)} )
 		UI:UpdateConsole["Undock: Complete"]
 
 		Config.Common:SetHomeStation[${Entity[CategoryID,3].Name}]
