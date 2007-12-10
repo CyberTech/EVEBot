@@ -144,9 +144,9 @@ objectdef obj_Hauler
 objectdef obj_OreHauler inherits obj_Hauler
 {
 	/* This variable is set by a remote event.  When it is non-zero, */
-	/* the bot will undock and seek out the gang memeber.  After the */
+	/* the bot will undock and seek out the fleet memeber.  After the */
 	/* member's cargo has been loaded the bot will zero this out.    */
-	variable int m_gangMemberID
+	variable int m_fleetMemberID
 	variable int m_SystemID
 	variable int m_BeltID
 
@@ -157,12 +157,12 @@ objectdef obj_OreHauler inherits obj_Hauler
 	variable index:bookmark SafeSpots
 	variable iterator SafeSpotIterator
 	
-	variable queue:gangmember GangMembers
+	variable queue:fleetmember FleetMembers
 	variable queue:entity     Entities
 	
 	method Initialize(string player, string corp)
 	{
-		m_gangMemberID:Set[-1]
+		m_fleetMemberID:Set[-1]
 		m_SystemID:Set[-1]
 		m_BeltID:Set[-1]
 		m_CheckedCargo:Set[FALSE]
@@ -225,7 +225,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		
 		echo "DEBUG: obj_OreHauler:MinerFull... ${charID} ${systemID} ${beltID}"
 
-		m_gangMemberID:Set[${charID}]
+		m_fleetMemberID:Set[${charID}]
 		m_SystemID:Set[${systemID}]		
 		m_BeltID:Set[${beltID}]				
 	}	
@@ -343,8 +343,8 @@ objectdef obj_OreHauler inherits obj_Hauler
 			case Service On-Demand
 				call This.HaulOnDemand
 				break
-			case Service Gang Members
-				call This.HaulForGang
+			case Service Fleet Members
+				call This.HaulForFleet
 				break
 			case Service All Belts
 				call This.HaulAllBelts
@@ -394,15 +394,15 @@ objectdef obj_OreHauler inherits obj_Hauler
 	/* should do one (and only one) of the following actions */
 	/* each it is called.									 */
 	/*                                                       */ 
-	/* 1) Warp to gang member and loot nearby cans           */ 
+	/* 1) Warp to fleet member and loot nearby cans           */ 
 	/* 2) Warp to next safespot                              */ 
 	/* 3) Travel to new system (if required)                 */ 
 	/*                                                       */ 
 	function HaulOnDemand()
 	{		
-		if ${m_gangMemberID} > 0 && ${m_SystemID} == ${Me.SolarSystemID}
+		if ${m_fleetMemberID} > 0 && ${m_SystemID} == ${Me.SolarSystemID}
 		{
-			call This.WarpToGangMemberAndLoot ${m_gangMemberID}
+			call This.WarpToFleetMemberAndLoot ${m_fleetMemberID}
 		}
 		else
 		{
@@ -410,23 +410,23 @@ objectdef obj_OreHauler inherits obj_Hauler
 		}
 	}
 
-	/* 1) Warp to gang member and loot nearby cans           */ 
+	/* 1) Warp to fleet member and loot nearby cans           */ 
 	/* 2) Repeat until cargo hold is full                    */ 
 	/*                                                       */ 
-	function HaulForGang()
+	function HaulForFleet()
 	{		
-		if ${GangMembers.Used} == 0 
+		if ${FleetMembers.Used} == 0 
 		{
-			This:BuildGangMemberList
+			This:BuildFleetMemberList
 			call This.WarpToNextSafeSpot
 		}		
 		else
 		{
-			if ${GangMembers.Peek(exists)} && \
-			   ${Local[${GangMembers.Peek.ToPilot.Name}](exists)}
+			if ${FleetMembers.Peek(exists)} && \
+			   ${Local[${FleetMembers.Peek.ToPilot.Name}](exists)}
 			{
-				call This.WarpToGangMemberAndLoot ${GangMembers.Peek.CharID}
-				GangMembers:Dequeue
+				call This.WarpToFleetMemberAndLoot ${FleetMembers.Peek.CharID}
+				FleetMembers:Dequeue
 			}
 		}
 	}
@@ -437,7 +437,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		EVEBot.ReturnToStation:Set[TRUE]
 	}
 
-	function WarpToGangMemberAndLoot(int charID)
+	function WarpToFleetMemberAndLoot(int charID)
 	{
 		variable int id = 0
 		
@@ -446,8 +446,8 @@ objectdef obj_OreHauler inherits obj_Hauler
 			return
 		}
 		
-		UI:UpdateConsole["Warping to gang member."]
-		Gang:WarpToGangMember[${charID}]
+		UI:UpdateConsole["Warping to fleet member."]
+		Fleet:WarpToFleetMember[${charID}]
 		call Ship.WarpWait
 
 		call Ship.OpenCargo
@@ -490,31 +490,31 @@ objectdef obj_OreHauler inherits obj_Hauler
 		
 		/* TODO: add code to loot and salvage any nearby wrecks */
 
-		m_gangMemberID:Set[-1]
+		m_fleetMemberID:Set[-1]
 		m_SystemID:Set[-1]		
 		m_BeltID:Set[-1]		
 		;;; call Ship.CloseCargo
 	}
 
-	method BuildGangMemberList()
+	method BuildFleetMemberList()
 	{
-		variable index:gangmember gang
-		GangMembers:Clear
-		Me:DoGetGang[gang]
+		variable index:fleetmember fleet
+		FleetMembers:Clear
+		Me:DoGetFleet[fleet]
 	
 		variable int idx
-		idx:Set[${gang.Used}]
+		idx:Set[${fleet.Used}]
 		
 		while ${idx} > 0
 		{
-			if ${gang.Get[${idx}].CharID} != ${Me.CharID}
+			if ${fleet.Get[${idx}].CharID} != ${Me.CharID}
 			{
-				GangMembers:Queue[${gang.Get[${idx}]}]	
+				FleetMembers:Queue[${fleet.Get[${idx}]}]	
 			}
 			idx:Dec
 		}		
 		
-		UI:UpdateConsole["BuildGangMemberList found ${GangMembers.Used} other gang members."]
+		UI:UpdateConsole["BuildFleetMemberList found ${FleetMembers.Used} other fleet members."]
 	}
 	
 

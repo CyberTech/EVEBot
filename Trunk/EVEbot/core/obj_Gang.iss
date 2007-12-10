@@ -1,8 +1,8 @@
 /*
-	Gang Class
+	Fleet Class
 	
 	This class will contain funtions for managing and manipulating
-	your gang.
+	your Fleet.
 	
 	-- GliderPro
 
@@ -11,120 +11,120 @@
 	10AUG2007 - Initial release of class template
 */
 
-objectdef obj_Gang
+objectdef obj_Fleet
 {
-	variable int GangMemberIndex = 1
-	variable index:gangmember GangMembers
-	variable int GangMemberCount
+	variable int FleetMemberIndex = 1
+	variable index:fleetmember FleetMembers
+	variable int FleetMemberCount
 
 	method Initialize()
 	{
-		GangMemberCount:Set[${Me.GetGang[GangMembers]}]
-		echo DEBUG: Populating gang member list:: ${GangMemberCount} members total
-		UI:UpdateConsole["obj_Gang: Initialized"]
+		FleetMemberCount:Set[${Me.GetFleet[FleetMembers]}]
+		echo DEBUG: Populating fleet member list:: ${FleetMemberCount} members total
+		UI:UpdateConsole["obj_Fleet: Initialized"]
 		
 		/* BEGIN TEST CODE */
 		variable int i = 1
 		do
 		{ 
-			echo DEBUG: Gang member ${i} - ${GangMembers.Get[${i}].ToPilot.Name}
+			echo DEBUG: Fleet member ${i} - ${FleetMembers.Get[${i}].ToPilot.Name}
 		}
-		while ${i:Inc} <= ${GangMemberCount}
+		while ${i:Inc} <= ${FleetMemberCount}
 		/* END TEST CODE */
 	}
 
 	/* 	
-		Issues a gang formation request to the player given
+		Issues a Fleet formation request to the player given
 		by the id parameter.
 	*/
-	method FormGangWithPlayer(int id)
+	method FormFleetWithPlayer(int id)
 	{
 	}
 	
-	method UpdateGangList()
+	method UpdateFleetList()
 	{
-		GangMemberIndex:Set[1]
-		GangMemberCount:Set[${Me.GetGang[GangMembers]}]
-		echo DEBUG: Populating gang member list:: ${GangMemberCount} members total
+		FleetMemberIndex:Set[1]
+		FleetMemberCount:Set[${Me.GetFleet[FleetMembers]}]
+		echo DEBUG: Populating Fleet member list:: ${FleetMemberCount} members total
 	}
 	
 	method WarpToMember( int idx, int distance )
 	{
-		GangMembers.Get[${idx}]:WarpTo[${distance}]
+		FleetMembers.Get[${idx}]:WarpTo[${distance}]
 	}
 	
-	member:gangmember CharIdToGangMember( int charID )
+	member:fleetmember CharIdToFleetMember( int charID )
 	{
-		variable gangmember ReturnValue
+		variable fleetmember ReturnValue
 		ReturnValue:Set[NULL]
 		
-		This:UpdateGangList[]
+		This:UpdateFleetList[]
 		
-		variable iterator GangMemberIterator
-		GangMembers:GetIterator[GangMemberIterator]
+		variable iterator FleetMemberIterator
+		FleetMembers:GetIterator[FleetMemberIterator]
 		
-		if ${GangMemberIterator:First(exists)}
+		if ${FleetMemberIterator:First(exists)}
 		{
 			do
 			{
-				if ${GangMemberIterator.Value.CharID} == ${charID}
+				if ${FleetMemberIterator.Value.CharID} == ${charID}
 				{
-					ReturnValue:Set[${GangMemberIterator.Value}]
+					ReturnValue:Set[${FleetMemberIterator.Value}]
 					break
 				}
 			}	
-			while ${GangMemberIterator:Next(exists)}
+			while ${FleetMemberIterator:Next(exists)}
 		}
 
 		return ${ReturnValue}
 	}
 
-	method WarpToGangMember( int charID )
+	method WarpToFleetMember( int charID )
 	{
-		This:UpdateGangList[]
+		This:UpdateFleetList[]
 		
 		variable int i = 1
 		do
 		{ 
-			if ${GangMembers.Get[${i}].CharID} == ${charID}
+			if ${FleetMembers.Get[${i}].CharID} == ${charID}
 			{
-				GangMembers.Get[${i}]:WarpTo
+				FleetMembers.Get[${i}]:WarpTo
 				break
 			}
 		}
-		while ${i:Inc} <= ${GangMemberCount}
+		while ${i:Inc} <= ${FleetMemberCount}
 	}
 
 	method WarpToNextMember(int distance = 0)
 	{		
-		GangMemberIndex:Inc
+		FleetMemberIndex:Inc
 		
-		if ${GangMembers.Get[${GangMemberIndex}].CharID} == ${Me.CharID}
+		if ${FleetMembers.Get[${FleetMemberIndex}].CharID} == ${Me.CharID}
 		{
-			GangMemberIndex:Inc
+			FleetMemberIndex:Inc
 		}
 		
-		if ${GangMemberIndex} > ${GangMemberCount}
+		if ${FleetMemberIndex} > ${FleetMemberCount}
 		{
-			GangMemberIndex:Set[1]
+			FleetMemberIndex:Set[1]
 		}
 		
-		This:WarpToMember[${GangMembers.Get[${GangMemberIndex}].CharID},${distance}]
+		This:WarpToMember[${FleetMembers.Get[${FleetMemberIndex}].CharID},${distance}]
 	}	
 
 	method WarpToPreviousMember(int distance = 0)
 	{
-		if ${GangMembers.Get[${GangMemberIndex}].CharID} == ${Me.CharID}
+		if ${FleetMembers.Get[${FleetMemberIndex}].CharID} == ${Me.CharID}
 		{
-			GangMemberIndex:Inc
+			FleetMemberIndex:Inc
 		}
 		
-		if ${GangMemberIndex} > ${GangMemberCount}
+		if ${FleetMemberIndex} > ${FleetMemberCount}
 		{
-			GangMemberIndex:Set[1]
+			FleetMemberIndex:Set[1]
 		}
 		
-		This:WarpToMember[${GangMembers.Get[${GangMemberIndex}].CharID},${distance}]
+		This:WarpToMember[${FleetMembers.Get[${FleetMemberIndex}].CharID},${distance}]
 	}	
 	
 }

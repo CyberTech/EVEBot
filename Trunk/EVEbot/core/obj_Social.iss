@@ -5,7 +5,7 @@ This contains all stuff dealing with other players around us. - Hessinger
 		- GetPlayers(): Updates our Pilot Index (Currently updated on pulse, do not use elsewhere)
 	
 	Members
-		- (bool) PlayerDetection(): Returns TRUE if a Player is near us. (Notes: Ignores Gang Members)
+		- (bool) PlayerDetection(): Returns TRUE if a Player is near us. (Notes: Ignores Fleet Members)
 		- (bool) NPCDetection(): Returns TRUE if an NPC is near us.
 		- (bool) PilotsWithinDectection(int Distance): Returns True if there are pilots within the distance passed to the member. (Notes: Only works for players)
 		- (bool) StandingDetection(int Standing): Returns True if there are pilots below the standing passed to the member. (Notes: Only works for players)
@@ -74,7 +74,7 @@ objectdef obj_Social
 				if ${PilotIterator.Value.IsPC} && \
 				 	${Me.ShipID} != ${PilotIterator.Value} && \
 				 	${PilotIterator.Value.Distance} < ${Config.Miner.AvoidPlayerRange} && \
-				 	!${PilotIterator.Value.Owner.ToGangMember}
+				 	!${PilotIterator.Value.Owner.ToFleetMember}
 				{
 					return TRUE
 				}
@@ -124,7 +124,7 @@ objectdef obj_Social
 			do
 			{
 				if (${Me.ShipID} == ${PilotIterator.Value}) && \
-					${PilotIterator.Value.Owner.ToGangMember(exists)}
+					${PilotIterator.Value.Owner.ToFleetMember(exists)}
 				{
 					return FALSE
 				}
@@ -175,7 +175,7 @@ objectdef obj_Social
 			do
 			{
 				if (${Me.ShipID} != ${PilotIterator.Value}) && \
-				!${PilotIterator.Value.Owner.ToGangMember} && \
+				!${PilotIterator.Value.Owner.ToFleetMember} && \
 				${PilotITerator.Value.Distance} < ${Dist}
 				{
 					return TRUE

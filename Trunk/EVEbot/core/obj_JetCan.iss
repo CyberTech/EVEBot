@@ -95,10 +95,7 @@ objectdef obj_JetCan
 		
 		variable int OwnerID = ${Entity[${ID}].OwnerID}
 
-		if (${Entity[${ID}].HaveLootRights} || \
-			${OwnerID} == ${Me.CharID} || \
-			${Entity[${ID}].CorporationID} == ${Me.CorporationID} || \
-			${Local[${OwnerID}].ToGangMember(exists)} ) 
+		if ${Entity[${ID}].HaveLootRights}
 		{
 			return TRUE
 		}

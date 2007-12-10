@@ -643,7 +643,7 @@ objectdef obj_Configuration_Hauler
 	{
 		BaseConfig.BaseRef:AddSet[${This.SetName}]
 		This.HaulerRef:AddSetting[Hauler Mode,1]
-		This.HaulerRef:AddSetting[Hauler Mode Name, "Service Gang Members"]
+		This.HaulerRef:AddSetting[Hauler Mode Name, "Service Fleet Members"]
 		This.HaulerRef:AddSetting[Multi System Support, FALSE]
 		This.HaulerRef:AddSetting[Drop Off Bookmark, ""]
 		This.HaulerRef:AddSetting[Mining System Bookmark, ""]
@@ -661,7 +661,7 @@ objectdef obj_Configuration_Hauler
 
 	member:string HaulerModeName()
 	{
-		return ${This.HaulerRef.FindSetting[Hauler Mode Name, "Service Gang Members"]}
+		return ${This.HaulerRef.FindSetting[Hauler Mode Name, "Service Fleet Members"]}
 	}
 	
 	method SetHaulerModeName(string Mode)

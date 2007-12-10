@@ -45,7 +45,7 @@ variable obj_Bookmarks Bookmarks
 variable obj_JetCan JetCan
 variable obj_CorpHangerArray CorpHangarArray
 variable obj_Social Social
-variable obj_Gang Gang
+variable obj_Fleet Fleet
 
 /* Script-Defined Behavior Objects */
 variable index:string BotModules

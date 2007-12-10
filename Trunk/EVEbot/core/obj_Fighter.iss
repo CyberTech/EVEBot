@@ -27,9 +27,9 @@ objectdef obj_Fighter
 objectdef obj_CombatFighter inherits obj_Fighter
 {
 	/* This variable is set by a remote event.  When it is non-zero, */
-	/* the bot will undock and seek out the gang member.  After the */
+	/* the bot will undock and seek out the fleet member.  After the */
 	/* member is safe the bot will zero this out.                    */
-	variable int m_gangMemberID
+	variable int m_FleetMemberID
 
 	/* the bot logic is currently based on a state machine */
 	variable string CurrentState
