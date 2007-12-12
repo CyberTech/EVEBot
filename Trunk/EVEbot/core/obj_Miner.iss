@@ -124,7 +124,7 @@ objectdef obj_Miner
 	
 	method SetState()
 	{
-		if ${EVEBot.ReturnToStation} && !${Me.InStation}
+		if ${EVEBot.ReturnToStation} && ${Me.InStation} == FALSE
 		{
 			This.CurrentState:Set["ABORT"]
 			return
@@ -136,7 +136,7 @@ objectdef obj_Miner
 			return
 		}
 		
-		if ${Me.InStation}
+		if ${Me.InStation} == TRUE
 		{
 	  		This.CurrentState:Set["BASE"]
 	  		return
@@ -230,6 +230,12 @@ objectdef obj_Miner
 		variable int BuddyCounter
 		variable string buddyTest
 		variable bool buddyOnline
+		
+		if ${Me.InStation} != FALSE
+		{
+			UI:UpdateConsole["DEBUG: obj_Miner.Mine called while zoning or while in station!"]
+			return
+		}
 		
 		This.TripStartTime:Set[${Time.Timestamp}]
 		; Find an asteroid field, or stay at current one if we're near one.
