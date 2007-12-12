@@ -131,22 +131,22 @@ objectdef obj_Social
 
 				/* Check Standing */
 				if	${EVE.Standing[${Me.CharID},${PilotITerator.Value.Owner.CharID}]} < ${Standing} || \
-					${EVE.Standing[${Me.CorporationID },${PilotITerator.Value.Owner.CharID}]} < ${Standing} || \
+					${EVE.Standing[${Me.CorporationID},${PilotITerator.Value.Owner.CharID}]} < ${Standing} || \
 					${EVE.Standing[${Me.AllianceID},${PilotITerator.Value.Owner.CharID}]} < ${Standing} || \
-					${EVE.Standing[${Me.CharID},${PilotITerator.Value.Owner.CorporationID }]} < ${Standing} || \
-					${EVE.Standing[${Me.CorporationID },${PilotITerator.Value.Owner.CorporationID }]} < ${Standing} || \
-					${EVE.Standing[${Me.AllianceID},${PilotITerator.Value.Owner.CorporationID }]} < ${Standing} || \
+					${EVE.Standing[${Me.CharID},${PilotITerator.Value.Owner.CorporationID}]} < ${Standing} || \
+					${EVE.Standing[${Me.CorporationID},${PilotITerator.Value.Owner.CorporationID}]} < ${Standing} || \
+					${EVE.Standing[${Me.AllianceID},${PilotITerator.Value.Owner.CorporationID}]} < ${Standing} || \
 					${EVE.Standing[${Me.CharID},${PilotITerator.Value.Owner.AllianceID}]} < ${Standing} || \
-					${EVE.Standing[${Me.CorporationID },${PilotITerator.Value.Owner.AllianceID}]} < ${Standing} || \
+					${EVE.Standing[${Me.CorporationID},${PilotITerator.Value.Owner.AllianceID}]} < ${Standing} || \
 					${EVE.Standing[${Me.AllianceID},${PilotITerator.Value.Owner.AllianceID}]} < ${Standing} || \
 					${EVE.Standing[${PilotITerator.Value.Owner.CharID},${Me.CharID}]} < ${Standing} || \
-					${EVE.Standing[${PilotITerator.Value.Owner.CorporationID },${Me.CharID}]} < ${Standing} || \
+					${EVE.Standing[${PilotITerator.Value.Owner.CorporationID},${Me.CharID}]} < ${Standing} || \
 					${EVE.Standing[${PilotITerator.Value.Owner.AllianceID},${Me.CharID}]} < ${Standing} || \
-					${EVE.Standing[${PilotITerator.Value.Owner.CharID},${Me.CorporationID }]} < ${Standing} || \
-					${EVE.Standing[${PilotITerator.Value.Owner.CorporationID },${Me.CorporationID }]} < ${Standing} || \
-					${EVE.Standing[${PilotITerator.Value.Owner.AllianceID},${Me.CorporationID }]} < ${Standing} || \
+					${EVE.Standing[${PilotITerator.Value.Owner.CharID},${Me.CorporationID}]} < ${Standing} || \
+					${EVE.Standing[${PilotITerator.Value.Owner.CorporationID},${Me.CorporationID}]} < ${Standing} || \
+					${EVE.Standing[${PilotITerator.Value.Owner.AllianceID},${Me.CorporationID}]} < ${Standing} || \
 					${EVE.Standing[${PilotITerator.Value.Owner.CharID},${Me.AllianceID}]} < ${Standing} || \
-					${EVE.Standing[${PilotITerator.Value.Owner.CorporationID },${Me.AllianceID}]} < ${Standing} || \
+					${EVE.Standing[${PilotITerator.Value.Owner.CorporationID},${Me.AllianceID}]} < ${Standing} || \
 					${EVE.Standing[${PilotITerator.Value.Owner.AllianceID},${Me.AllianceID}]} < ${Standing}
 				{
 					/* Yep, I'm laughing right now as well -- CyberTech */
