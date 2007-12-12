@@ -343,6 +343,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 			case Service On-Demand
 				call This.HaulOnDemand
 				break
+			case Service Gang Members
 			case Service Fleet Members
 				call This.HaulForFleet
 				break

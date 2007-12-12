@@ -776,7 +776,7 @@
 							<FullHeight>200</FullHeight>
 							<ButtonWidth>20</ButtonWidth>
 							<Items>
-								<Item Value='1'>Service Gang Members</Item>
+								<Item Value='1'>Service Fleet Members</Item>
 								<Item Value='2'>Service All Belts</Item>
 								<Item Value='3'>Service On-Demand</Item>
 							</Items>
