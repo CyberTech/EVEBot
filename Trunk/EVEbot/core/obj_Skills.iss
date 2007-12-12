@@ -13,7 +13,8 @@ objectdef obj_Skills
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		if !${This.SkillFile:Open[readonly](exists)}
 		{
-			echo "obj_Skills: Missing skill file ${This.SkillFile}"
+			UI:UpdateConsole["obj_Skills: ${This.SkillFile} does not exist"]
+			UI:UpdateConsole["To enable skill training, create this file and populate it with skills, one per line."]
 		}
 		else
 		{
@@ -104,7 +105,8 @@ objectdef obj_Skills
 		variable string ReadSkillLevel
 		variable string ReadLine
 
-		if !${This.SkillFile:Open[readonly](exists)}
+		if !${This.SkillFile:Open[readonly](exists)} || \
+			${This.SkillFile.Size} == 0
 		{
 			return "None"
 		}
