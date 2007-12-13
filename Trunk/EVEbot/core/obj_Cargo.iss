@@ -273,6 +273,15 @@ objectdef obj_Cargo
 		
 		call Ship.OpenCargo
 		
+		variable int captionCount
+		captionCount:Set[${EVEWindow[MyShipCargo].Caption.Token[2,"["].Token[1,"]"]}]
+		UI:UpdateConsole["DEBUG: obj_Cargo: captionCount = ${captionCount}"]
+		while ${captionCount} > ${Me.Ship.GetCargo}
+		{
+			UI:UpdateConsole["obj_Cargo: Waiting for cargo to load..."]
+			wait 10
+		}
+		
 		This:FindShipCargo[CATEGORYID_ORE]
 		
 		call This.TransferListToHangar
