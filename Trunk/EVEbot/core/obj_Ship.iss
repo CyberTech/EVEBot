@@ -783,12 +783,14 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 	{
 		if ${EVEWindow[MyShipCargo](exists)}
 		{
-			return TRUE
+			if ${EVEWindow[MyShipCargo].Caption(exists)}
+			{
+				return TRUE
+			}
 		}
-		else
-		{
-			return FALSE
-		}
+		
+		;; ELSE
+		return FALSE
 	}
 	
 	function OpenCargo()
