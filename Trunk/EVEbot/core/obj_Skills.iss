@@ -3,6 +3,7 @@ objectdef obj_Skills
 	variable file SkillFile = "${Script.CurrentDirectory}/config/${Me.Name} Training.txt"
 	variable index:skill OwnedSkills
 	variable int FrameCounter
+	variable string CurrentlyTrainingSkill
 	variable string NextInLine
 	
 	method Initialize()
@@ -33,18 +34,29 @@ objectdef obj_Skills
 		FrameCounter:Inc
 		variable int IntervalInSeconds = 60
 
-		if ${Me.InStation(exists)}
+        if (${CurrentlyTrainingSkill.Length} <= 0)
+        {
+            CurrentlyTrainingSkill:Set[${This.CurrentlyTraining}]
+        }
+
+		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 		{
-			if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
-			{
-				if !${This.NextSkill.Equal[None]} && \
-					!${Me.Skill[${This.NextSkill}].IsTraining}
-				{
-					Me:DoGetSkills[This.OwnedSkills]
-					This:Train[${This.NextInLine}]
-				}
-				FrameCounter:Set[0]
-			}
+		    if ${Me.InStation(exists)}
+		    {
+    			if !${This.NextSkill.Equal[None]} && \
+    				!${Me.Skill[${This.NextSkill}].IsTraining}
+    			{
+    				Me:DoGetSkills[This.OwnedSkills]
+    				This:Train[${This.NextInLine}]
+    			}
+    			
+    			CurrentlyTrainingSkill:Set[${This.CurrentlyTraining}]
+    			FrameCounter:Set[0]
+    		}
+    		else
+    		{
+    		    FrameCounter:Set[0]
+    		}
 		}
 	}
 
@@ -59,12 +71,14 @@ objectdef obj_Skills
 		{
 			UI:UpdateConsole["Training ${SkillName}"]
 			Me.Skill[${SkillName}]:StartTraining
+			CurrentlyTrainingSkill:Set[${SkillName}]
 		}
 		
 		if ${SkillName.NotEqual[${Me.SkillCurrentlyTraining.Name}]}
 		{
 			UI:UpdateConsole["Changing skill to ${SkillName} from ${This.CurrentlyTraining}"]
 			Me.Skill[${SkillName}]:StartTraining
+			CurrentlyTrainingSkill:Set[${SkillName}]
 		}
 	}	
 	

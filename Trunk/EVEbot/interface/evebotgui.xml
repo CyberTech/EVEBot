@@ -164,7 +164,7 @@
 								<Y>115</Y>
 								<Width>150</Width>
 								<Height>20</Height>
-								<text>${Script[EVEBot].VariableScope.Skills.CurrentlyTraining}</text>
+								<text>${Script[EVEBot].VariableScope.Skills.CurrentlyTrainingSkill}</text>
 							</text>
 							<text name='Next to be trained' template='EVESkin.Font.Description'>
 								<X>10</X>

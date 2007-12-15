@@ -58,14 +58,15 @@ objectdef obj_CombatFighter inherits obj_Fighter
 		{
 			return
 		}
+		
 		FrameCounter:Inc
-
 		variable int IntervalInSeconds = 2
+		
 		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 		{
-			call This.DevelopmentTest
-			This:SetState[]
-			FrameCounter:Set[0]
+		    call This.DevelopmentTest
+    		This:SetState[]
+    		FrameCounter:Set[0]
 		}
 	}
 	

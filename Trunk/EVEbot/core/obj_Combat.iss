@@ -35,19 +35,23 @@ objectdef obj_Combat
 		}
 
 		FrameCounter:Inc
-
-		if (${Me.InStation(exists)} && !${Me.InStation})
+		variable int IntervalInSeconds = 8
+		
+		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 		{
-			variable int IntervalInSeconds = 8
-			if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
-			{
-				if ((!${This.P_Combat}) && ${This.CombatState})
-				{
-					This:EnterCombatState
-					Call This.Fight
-				}					
-				FrameCounter:Set[0]
-			}
+    		if (${Me.InStation(exists)} && !${Me.InStation})
+    		{		    
+    			if ((!${This.P_Combat}) && ${This.CombatState})
+    			{
+    				This:EnterCombatState
+    				Call This.Fight
+    			}					
+    			FrameCounter:Set[0]
+    		}
+    		else
+    		{
+    		    FrameCounter:Set[0]
+    		}   
 		}
 	}
 	

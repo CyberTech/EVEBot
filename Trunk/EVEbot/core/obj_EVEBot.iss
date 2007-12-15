@@ -45,9 +45,7 @@ objectdef obj_EVEBot
 
 	method Pulse()
 	{
-		if !${ISXEVE(exists)} || \
-			${Login(exists)} || \
-			${CharSelect(exists)}
+		if !${ISXEVE(exists)}
 		{
 			echo "EVEBot: Out of game"
 			;run EVEBot/Launcher.iss charid or charname
@@ -58,6 +56,14 @@ objectdef obj_EVEBot
 		variable int IntervalInSeconds = 4
 		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 		{
+    		if ${Login(exists)} || \
+    			${CharSelect(exists)}
+    		{
+    			echo "EVEBot: Out of game"
+    			;run EVEBot/Launcher.iss charid or charname
+    			;Script:End
+    		}
+		    
 			checkPulse:Inc[1]
 			; 20 pulses in this if loop is ~ 1 minute
 			if (${checkPulse} >= ${MAXCHECKPULSE} && ${Me.InStation(exists)} && !${Me.InStation})

@@ -38,22 +38,26 @@ objectdef obj_Drones
 		if ${This.WaitingForDrones}
 		{
 			FrameCounterDrones:Inc
-
-			if (${Me.InStation(exists)} && !${Me.InStation})
+            variable int IntervalInSeconds = 4
+				
+			if ${FrameCounterDrones} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 			{
-				variable int IntervalInSeconds = 4
-				if ${FrameCounterDrones} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
-				{
-					This.LaunchedDrones:Set[${This.DronesInSpace}]
-					if  ${This.LaunchedDrones} > 0
-					{
-						This.WaitingForDrones:Set[FALSE]
-						This.DronesReady:Set[TRUE]
-						
-						UI:UpdateConsole["${This.LaunchedDrones} drones deployed"]
-					}					
-					FrameCounterDrones:Set[0]
-				}
+    			if (${Me.InStation(exists)} && !${Me.InStation})
+    			{			    
+    				This.LaunchedDrones:Set[${This.DronesInSpace}]
+    				if  ${This.LaunchedDrones} > 0
+    				{
+    					This.WaitingForDrones:Set[FALSE]
+    					This.DronesReady:Set[TRUE]
+    					
+    					UI:UpdateConsole["${This.LaunchedDrones} drones deployed"]
+    				}					
+    				FrameCounterDrones:Set[0]
+                }
+                else
+                {
+                    FrameCounterDrones:Set[0]
+                }
 			}
 		}
 	}

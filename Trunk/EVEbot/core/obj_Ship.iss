@@ -56,50 +56,54 @@ objectdef obj_Ship
 		}
 		
 		FrameCounter:Inc
-
-		if (${Me.InStation(exists)} && !${Me.InStation})
+	    variable int IntervalInSeconds = 8
+	    
+		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 		{
-			variable int IntervalInSeconds = 8
-			if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
-			{
-				This:ValidateModuleTargets
-					
-				;Ship Armor Repair
-				if ${This.Total_Armor_Reps} > 0
-				{
-					if ${Me.Ship.ArmorPct} < 100
-					{
-						This:ActivateRepairing_Armor
-					}
-						
-					if ${This.Repairing_Armor}
-					{
-						if ${Me.Ship.ArmorPct} == 100
-						{
-							This:DeactivateRepairing_Armor
-							This.Repairing_Armor:Set[FALSE]
-						}
-					}
-				}
-				
-				;Shield Boosters
-				;UI:UpdateConsole["Debug: Obj_Ship: Possible Hostiles: ${Social.PossibleHostiles}"]
-				;UI:UpdateConsole["Debug: Obj_Ship: Shield Booster Activation: ${Config.Combat.ShieldBAct}"]
-				/* TODO: CyberTech - This should be an option, not forced. */
-				if ${Social.PossibleHostiles} || \
-					${Me.Ship.ShieldPct} < 100 || \
-					${Config.Combat.AlwaysShieldBoost}
-				{
-					This:Activate_Shield_Booster[]
-				}
-				else
-				{
-					This:Deactivate_Shield_Booster[]
-				}
-				
-				FrameCounter:Set[0]
-			}
-		}
+    		if (${Me.InStation(exists)} && !${Me.InStation})
+    		{		    
+    			This:ValidateModuleTargets
+    				
+    			;Ship Armor Repair
+    			if ${This.Total_Armor_Reps} > 0
+    			{
+    				if ${Me.Ship.ArmorPct} < 100
+    				{
+    					This:ActivateRepairing_Armor
+    				}
+    					
+    				if ${This.Repairing_Armor}
+    				{
+    					if ${Me.Ship.ArmorPct} == 100
+    					{
+    						This:DeactivateRepairing_Armor
+    						This.Repairing_Armor:Set[FALSE]
+    					}
+    				}
+    			}
+    			
+    			;Shield Boosters
+    			;UI:UpdateConsole["Debug: Obj_Ship: Possible Hostiles: ${Social.PossibleHostiles}"]
+    			;UI:UpdateConsole["Debug: Obj_Ship: Shield Booster Activation: ${Config.Combat.ShieldBAct}"]
+    			/* TODO: CyberTech - This should be an option, not forced. */
+    			if ${Social.PossibleHostiles} || \
+    				${Me.Ship.ShieldPct} < 100 || \
+    				${Config.Combat.AlwaysShieldBoost}
+    			{
+    				This:Activate_Shield_Booster[]
+    			}
+    			else
+    			{
+    				This:Deactivate_Shield_Booster[]
+    			}
+    			
+    			FrameCounter:Set[0]
+    		}
+    		else
+    		{
+    		    FrameCounter:Set[0]
+    		}
+		}		
 	}
 	
 	member:float CargoMinimumFreeSpace()

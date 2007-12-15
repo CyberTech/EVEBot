@@ -38,17 +38,22 @@ objectdef obj_Social
 		}
 
 		FrameCounter:Inc
-
-		/* TODO : CyberTech - This is on-demand stuff. don't store it, get it as needed. */
-		if (${Me.InStation(exists)} && !${Me.InStation})
+		variable int IntervalInSeconds = 5
+		
+		
+		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 		{
-			variable int IntervalInSeconds = 5
-			if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
-			{
-				This:GetLists
-				FrameCounter:Set[0]
-			}
-		}
+    		if (${Me.InStation(exists)} && !${Me.InStation})
+    		{		    
+    		    /* TODO : CyberTech - This is on-demand stuff. don't store it, get it as needed. */
+    			This:GetLists
+    			FrameCounter:Set[0]
+    		}
+    		else
+    		{
+    		    FrameCounter:Set[0]
+    		}
+		}		
 	}
 	
 	method GetLists()
