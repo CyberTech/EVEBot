@@ -166,7 +166,6 @@ objectdef obj_Ship
 			UI:UpdateConsole["DEBUG: obj_Ship:UpdateModuleList called while in station"]
 			return
 		}
-		echo in updatemodulelist
 			
 		This.ModuleList:Clear
 		This.ModuleList_MiningLaser:Clear
