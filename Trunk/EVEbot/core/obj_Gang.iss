@@ -25,11 +25,14 @@ objectdef obj_Fleet
 		
 		/* BEGIN TEST CODE */
 		variable int i = 1
-		do
-		{ 
-			echo DEBUG: Fleet member ${i} - ${FleetMembers.Get[${i}].ToPilot.Name}
+		if (${FleetMemberCount} > 0)
+		{
+			do
+			{ 
+				echo DEBUG: Fleet member ${i} - ${FleetMembers.Get[${i}].ToPilot.Name}
+			}
+			while ${i:Inc} <= ${FleetMemberCount}
 		}
-		while ${i:Inc} <= ${FleetMemberCount}
 		/* END TEST CODE */
 	}
 
