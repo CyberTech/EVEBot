@@ -24,7 +24,11 @@ objectdef obj_Drones
 	}
 	method Shutdown()
 	{
-		EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
+	    if !${Me.InStation}
+	    {
+	        echo "Recalling Drones prior to EVEBOT shutdown..."
+		    EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
+		}
 		Event[OnFrame]:DetachAtom[This:Pulse]
 	}
 
