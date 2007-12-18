@@ -184,7 +184,7 @@ objectdef obj_Ship
 		
 		if !${This.ModuleList.Used} && ${Me.Ship.HighSlots} > 0
 		{
-			UI:UpdateConsole["DEBUG: obj_Ship:UpdateModuleList - No modules found. Paused."]
+			UI:UpdateConsole["ERROR: obj_Ship:UpdateModuleList - No modules found. Pausing - If this ship has slots, you must have at least one module equipped, of any type."]
 			EVEBot:Pause
 			return
 		}
