@@ -43,23 +43,24 @@ objectdef obj_Social
 		
 		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 		{
-    		if (${Me.InStation(exists)} && !${Me.InStation})
-    		{		    
-    		    /* TODO : CyberTech - This is on-demand stuff. don't store it, get it as needed. */
-    			This:GetLists
-    			FrameCounter:Set[0]
-    		}
-    		else
-    		{
-    		    FrameCounter:Set[0]
-    		}
+    		This:GetLists
+    		FrameCounter:Set[0]
 		}		
 	}
 	
 	method GetLists()
 	{
-		EVE:DoGetEntities[PilotIndex,CategoryID,6]
-		EVE:DoGetEntities[EntityIndex,CategoryID,11]
+        if (!${Me.InStation(exists)})
+	        return
+	        
+	    if (!${Me.InStation})
+	        return
+	    
+	    if (${Me.ToEntity.Mode} == 3)
+	        return    
+	       
+	    EVE:DoGetEntities[PilotIndex,CategoryID,6]
+        EVE:DoGetEntities[EntityIndex,CategoryID,11]
 	}
 	
 	member:bool PlayerDetection()
