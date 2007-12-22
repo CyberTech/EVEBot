@@ -153,9 +153,9 @@ objectdef obj_Freighter
 	{
 		if ${Me.InStation}
 		{	/* don't call this function if you are not in station */
-			;echo "\${EVE.Bookmark[${Config.Freighter.Destination}](exists)} = ${EVE.Bookmark[${Config.Freighter.Destination}](exists)}"
-			;echo "\${m_DestinationID} = ${m_DestinationID}"
-			;echo "\${Me.StationID} = ${Me.StationID}"
+			UI:UpdateConsole["DEBUG: \${EVE.Bookmark[${Config.Freighter.Destination}](exists)} = ${EVE.Bookmark[${Config.Freighter.Destination}](exists)}"]
+			UI:UpdateConsole["DEBUG: \${m_DestinationID} = ${m_DestinationID}"]
+			UI:UpdateConsole["DEBUG: \${Me.StationID} = ${Me.StationID}"]
 			if ${EVE.Bookmark[${Config.Freighter.Destination}](exists)} && \
 			   ${m_DestinationID} == ${Me.StationID}
 			{	/* this is the destination station, drop off stuff */
