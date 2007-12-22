@@ -50,17 +50,14 @@ objectdef obj_Social
 	
 	method GetLists()
 	{
-        if (!${Me.InStation(exists)})
-	        return
-	        
-	    if (!${Me.InStation})
-	        return
-	    
-	    if (${Me.ToEntity.Mode} == 3)
-	        return    
-	       
-	    EVE:DoGetEntities[PilotIndex,CategoryID,6]
-        EVE:DoGetEntities[EntityIndex,CategoryID,11]
+		if ( ${Me.InStation(exists)} && ${Me.InStation} )
+			return
+
+		if (${Me.ToEntity.Mode} == 3)
+			return    
+
+		EVE:DoGetEntities[PilotIndex,CategoryID,6]
+		EVE:DoGetEntities[EntityIndex,CategoryID,11]
 	}
 	
 	member:bool PlayerDetection()
