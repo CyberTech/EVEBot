@@ -67,7 +67,7 @@ objectdef obj_Station
 			wait 10
 		}
 		
-		Me.Station:DoGetHangarItems[This.StationCargo]
+		Me:DoGetHangarItems[This.StationCargo]
 		
 		variable iterator CargoIterator
 		This.StationCargo:GetIterator[CargoIterator]

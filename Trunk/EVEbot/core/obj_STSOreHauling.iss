@@ -95,7 +95,7 @@ function TransferOreToHangar()
 		CargoToTransfer:Clear[]
  
     ; After everything is done ...let's clean up the stacks.
-    Me.Station:StackAllHangarItems
+    Me:StackAllHangarItems
     wait 5
     
     EVEWindow[MyShipCargo]:Close
@@ -122,7 +122,7 @@ function TransferOreToShip()
 			wait 30		
 		}
 		
-		Me.Station:DoGetHangarItems[HangarCargo]
+		Me:DoGetHangarItems[HangarCargo]
 		
 		variable iterator ThisCargo
 		
@@ -193,7 +193,7 @@ function TransferOreToShip()
     ;;;;;;;;;;;;;;;;
     ; Now check to see if any ore is left...
     EverythingHauled:Set[TRUE]
- 		Me.Station:DoGetHangarItems[HangarCargo]		
+ 		Me:DoGetHangarItems[HangarCargo]		
 		HangarCargo:GetIterator[ThisCargo]
 		if ${ThisCargo:First(exists)}
 		do

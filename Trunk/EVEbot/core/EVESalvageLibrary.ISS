@@ -716,7 +716,7 @@ function TransferSalvagedItemsToHangar()
 		NewCargoToTransfer:Clear[]
  
     ; After everything is done ...let's clean up the stacks.
-    Me.Station:StackAllHangarItems
+    Me:StackAllHangarItems
     wait 5
 }
 
@@ -767,7 +767,7 @@ function TransferLootToHangar()
 		NewCargoToTransfer:Clear
  
     ; After everything is done ...let's clean up the stacks.
-    Me.Station:StackAllHangarItems
+    Me:StackAllHangarItems
     wait 5
 }
 

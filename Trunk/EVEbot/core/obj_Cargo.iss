@@ -287,7 +287,7 @@ objectdef obj_Cargo
 		call This.TransferListToHangar
 		
 		This.CargoToTransfer:Clear[]
-		Me.Station:StackAllHangarItems
+		Me:StackAllHangarItems
 		Ship:UpdateBaselineUsedCargo[]
 		wait 25
 		call This.CloseHolds
@@ -313,7 +313,7 @@ objectdef obj_Cargo
 		call This.TransferListToHangar
 		
 		This.CargoToTransfer:Clear[]
-		Me.Station:StackAllHangarItems
+		Me:StackAllHangarItems
 		Ship:UpdateBaselineUsedCargo[]
 		wait 25
 		call This.CloseHolds
@@ -335,7 +335,7 @@ objectdef obj_Cargo
 			call This.OpenHolds
 
 			/* FOR NOW move all cargo.  Add filtering later */
-			Me.Station:DoGetHangarItems[This.CargoToTransfer]
+			Me:DoGetHangarItems[This.CargoToTransfer]
 
 			if ${This.CargoToTransfer.Used} > 0
 			{
@@ -349,7 +349,7 @@ objectdef obj_Cargo
 				
 				/* Check for leftover items in the station */
 				/* FOR NOW check all cargo.  Add filtering later */
-				Me.Station:DoGetHangarItems[This.CargoToTransfer]
+				Me:DoGetHangarItems[This.CargoToTransfer]
 				if ${This.CargoToTransfer.Used} > 0
 				{
 					This.CargoToTransfer:Clear[]
