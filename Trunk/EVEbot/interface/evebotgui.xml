@@ -858,17 +858,44 @@
 					</tab>
 
 					<tab name='Freighter'>
+						<Text name='lblFreighterMode'>
+							<X>10</X>
+							<Y>12</Y>
+							<Width>70</Width>
+							<Height>10</Height>
+							<Text>Mode: </Text>
+						</Text>
+						<combobox name='cbFreighterMode'>
+							<X>80</X>
+							<Y>10</Y>
+							<Width>225</Width> 
+							<Height>15</Height> 
+							<FullHeight>80</FullHeight>
+							<ButtonWidth>20</ButtonWidth>
+							<Items>
+								<Item Value='1'>Source and Destination</Item>
+								<Item Value='2'>Asset Gather</Item>
+								<Item Value='3'>Move and Sell Ore</Item>
+							</Items>
+							<OnSelect>
+								Script[EVEBot].VariableScope.Config.Freighter:SetFreighterMode[${This.SelectedItem.Value}]
+								Script[EVEBot].VariableScope.Config.Freighter:SetFreighterModeName[${This.SelectedItem.Text}]
+							</OnSelect>
+							<OnLoad>
+								This:SetSelection[${Script[EVEBot].VariableScope.Config.Freighter.FreighterMode}]
+							</OnLoad>
+						</combobox>
 						<Text name='lblDestination'>
 							<X>10</X>
-							<Y>15</Y>
+							<Y>37</Y>
 							<Width>200</Width>
 							<Height>10</Height>
 							<Text>Destination</Text>
-							<AutoTooltip>The destination bookmark name.</AutoTooltip>
+							<AutoTooltip>The destination bookmark or station name.</AutoTooltip>
 						</Text>
 						<Textentry name='teDestination'>
 							<X>200</X>							
-							<Y>15</Y>						
+							<Y>35</Y>						
 							<Width>280</Width>						
 							<Height>18</Height>
 							<MaxLength>150</MaxLength>
@@ -884,7 +911,7 @@
 						</Textentry>
 						<Text name='lblSourcePrefix'>
 							<X>10</X>
-							<Y>40</Y>
+							<Y>62</Y>
 							<Width>200</Width>
 							<Height>10</Height>
 							<Text>Source Bookmark Prefix</Text>
@@ -892,7 +919,7 @@
 						</Text>
 						<Textentry name='teSourcePrefix'>
 							<X>200</X>							
-							<Y>40</Y>						
+							<Y>60</Y>						
 							<Width>100</Width>						
 							<Height>18</Height>
 							<MaxLength>10</MaxLength>
@@ -906,8 +933,48 @@
 								}
 							</OnChange>
 						</Textentry>
+						<Text name='lblSystemName'>
+							<X>10</X>
+							<Y>87</Y>
+							<Width>280</Width>
+							<Height>10</Height>
+							<Text>Limit To System</Text>
+							<AutoTooltip>Leave blank to service all systems.</AutoTooltip>
+						</Text>
+						<Textentry name='teSystemName'>
+							<X>200</X>							
+							<Y>85</Y>						
+							<Width>200</Width>						
+							<Height>18</Height>
+							<MaxLength>100</MaxLength>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Freighter.SystemName}]
+							</OnLoad>
+							<OnChange>							
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Freighter:SetSystemName[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+   					    <Frame name='frmNote'>
+							<X>2%</X>
+							<Y>50%</Y>
+							<Height>47%</Height>
+							<Width>96%</Width>
+							<Border>2</Border>
+							<Children>
+								<Text name='lblNote'>
+									<X>10</X>
+									<Y>10</Y>
+									<Width>95%</Width>
+									<Height>95%</Height>
+									<Wrap>1</Wrap>
+									<Text>NOTE: Only "Source and Destination" mode works at the moment.</Text>
+								</Text>
+							</Children>
+						</Frame>						
 					</tab>
-
 					<tab name='Labels'>
 						<Text name='Label1'>
 							<X>10</X>

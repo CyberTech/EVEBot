@@ -808,10 +808,43 @@ objectdef obj_Configuration_Freighter
 	method Set_Default_Values()
 	{
 		BaseConfig.BaseRef:AddSet[${This.SetName}]
+		This.FreighterRef:AddSetting[Freighter Mode, 1]
+		This.FreighterRef:AddSetting[Freighter Mode Name, "Source and Destination"]
+		This.FreighterRef:AddSetting[System Name, ""]
 		This.FreighterRef:AddSetting[Destination,""]
 		This.FreighterRef:AddSetting[Source Prefix,""]
 	}
 	
+	member:int FreighterMode()
+	{
+		return ${This.FreighterRef.FindSetting[Freighter Mode, 1]}
+	}
+
+	method SetFreighterMode(int Mode)
+	{
+		This.FreighterRef:AddSetting[Freighter Mode, ${Mode}]
+	}
+
+	member:string FreighterModeName()
+	{
+		return ${This.FreighterRef.FindSetting[Freighter Mode Name, "Source and Destination"]}
+	}
+	
+	method SetFreighterModeName(string Mode)
+	{
+		This.FreighterRef:AddSetting[Freighter Mode Name,${Mode}]
+	}
+
+	member:string SystemName()
+	{
+		return ${This.FreighterRef.FindSetting[System Name, ""]}
+	}
+	
+	method SetSystemName(string Name)
+	{
+		This.FreighterRef:AddSetting[System Name,${Name}]
+	}
+
 	member:string Destination()
 	{
 		return ${This.FreighterRef.FindSetting[Destination,""]}
