@@ -148,10 +148,11 @@ objectdef obj_Station
 				}
 				while ${Entity[${StationID}].Distance} >= 10000
 			}
-
-			Entity[${StationID}]:Approach
+			
 			do
 			{
+				Entity[${StationID}]:Approach
+				UI:UpdateConsole["Approaching docking range..."]
 				wait 30
 			}
 			while (${Entity[${StationID}].Distance} > 100)
