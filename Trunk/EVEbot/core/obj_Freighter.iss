@@ -133,8 +133,24 @@ objectdef obj_Freighter
 		}
 	}
 
-	/* Move the freighter to the next source station in the list */
 	function Transport()
+	{
+		switch ${Config.Freighter.FreighterModeName}
+		{
+			case Source and Destination
+				call This.MoveToSourceStation
+				break
+			case Asset Gather
+				call This.MoveToNextStationWithAssets
+				break
+			case Move Minerals to Buyer
+				/* not implemented yet */
+				break
+		}
+	}
+	
+	/* Move the freighter to the next source station in the list */
+	function MoveToSourceStation()
 	{
 		if ${SourceLocations.Used} == 0 
 		{	/* sources emptied, abort */
@@ -144,6 +160,37 @@ objectdef obj_Freighter
 		{
 			call Ship.WarpToBookMark ${SourceLocations.Peek}
 		}
+	}
+	
+	function MoveToNextStationWithAssets()
+	{
+		variable int nextStationID
+		
+		nextStationID:Set[${Assets.NextStation}]
+		if ${nextStationID}
+		{
+		    if ${Config.Freighter.SystemName(exists)}
+		    {   /* limit to the given system */
+    			UI:UpdateConsole["DEBUG: StationID = ${nextStationID}"]
+    			UI:UpdateConsole["DEBUG: Region = ${EVE.Station[${nextStationID}].Region}"]
+    			/* EVE.Station[] IS BROKEN!!!! */
+		        ;if ${Config.Freighter.SystemName.NotEqual[${EVE.Station[${nextStationID}].Region}]}
+		        ;{
+        		;	Assets:IgnoreStation[${nextStationID}]
+               	;	nextStationID:Set[0]
+		        ;}
+		    }
+		}
+		else
+		{	/* no more assets, abort */
+			UI:UpdateConsole["No more work to do.  Freighter aborting."]
+			EVEBot.ReturnToStation:Set[TRUE]
+		}
+		
+		if ${nextStationID}
+		{
+    		UI:UpdateConsole["Freighter moving to ${EVE.GetLocationNameByID[${nextStationID}]}."]
+    	}
 	}
 
 	/* If we are in a source station pick stuff up.

@@ -2,7 +2,7 @@
 	Autopilot Class
 	
 	This class will contain funtions for navigating space.  It is intended
-	to support the a bot class that has travelling functions.
+	to support a bot class that has traveling functions.
 	
 	-- GliderPro
 

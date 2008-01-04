@@ -875,7 +875,7 @@
 							<Items>
 								<Item Value='1'>Source and Destination</Item>
 								<Item Value='2'>Asset Gather</Item>
-								<Item Value='3'>Move and Sell Ore</Item>
+								<Item Value='3'>Move Minerals to Buyer</Item>
 							</Items>
 							<OnSelect>
 								Script[EVEBot].VariableScope.Config.Freighter:SetFreighterMode[${This.SelectedItem.Value}]
@@ -965,12 +965,12 @@
 							<Border>2</Border>
 							<Children>
 								<Text name='lblNote'>
-									<X>10</X>
-									<Y>10</Y>
-									<Width>95%</Width>
-									<Height>95%</Height>
+									<X>5</X>
+									<Y>5</Y>
+									<Width>98%</Width>
+									<Height>98%</Height>
 									<Wrap>1</Wrap>
-									<Text>NOTE: Only "Source and Destination" mode works at the moment.</Text>
+									<Text>NOTE: Only "Source and Destination" mode works at the moment.  "Source and Destination" mode moves everything from stations who's bookmark begins with the source prefix to the destination station.  "Asset Gather" mode moves all assets shown in the asset window to the destination station.  You can optionally limit the freighter to a single system in this mode.  "Move Minerals to Buyer" mode picks up minerals and moves them to the highest bidder's station.  It does not sell the goods for you.</Text>
 								</Text>
 							</Children>
 						</Frame>						
