@@ -12,7 +12,7 @@
 
 */
 variable string APP_NAME = "EVEBot"
-variable string APP_VERSION = "0.962"
+variable string APP_VERSION = "0.97"
 variable string APP_PATH = "EVEBot/EVEBot.iss"
 variable string SVN_REVISION = "$Rev$"
 variable string APP_MANIFEST = "https://www.isxgames.com/EVEBot/Trunk/EVEbot/manifest.xml"

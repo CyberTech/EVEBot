@@ -275,7 +275,7 @@ objectdef obj_Cargo
 		
 		variable int captionCount
 		captionCount:Set[${EVEWindow[MyShipCargo].Caption.Token[2,"["].Token[1,"]"]}]
-		UI:UpdateConsole["DEBUG: obj_Cargo: captionCount = ${captionCount}"]
+		;UI:UpdateConsole["DEBUG: obj_Cargo: captionCount = ${captionCount}"]
 		while ${captionCount} > ${Me.Ship.GetCargo}
 		{
 			UI:UpdateConsole["obj_Cargo: Waiting for cargo to load..."]

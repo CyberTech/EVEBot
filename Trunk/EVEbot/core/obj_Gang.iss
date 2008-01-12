@@ -20,10 +20,10 @@ objectdef obj_Fleet
 	method Initialize()
 	{
 		FleetMemberCount:Set[${Me.GetFleet[FleetMembers]}]
-		echo DEBUG: Populating fleet member list:: ${FleetMemberCount} members total
+		;echo DEBUG: Populating fleet member list:: ${FleetMemberCount} members total
 		UI:UpdateConsole["obj_Fleet: Initialized"]
 		
-		/* BEGIN TEST CODE */
+		/* BEGIN TEST CODE 
 		variable int i = 1
 		if (${FleetMemberCount} > 0)
 		{
@@ -33,7 +33,7 @@ objectdef obj_Fleet
 			}
 			while ${i:Inc} <= ${FleetMemberCount}
 		}
-		/* END TEST CODE */
+		 END TEST CODE */
 	}
 
 	/* 	
@@ -48,7 +48,7 @@ objectdef obj_Fleet
 	{
 		FleetMemberIndex:Set[1]
 		FleetMemberCount:Set[${Me.GetFleet[FleetMembers]}]
-		echo DEBUG: Populating Fleet member list:: ${FleetMemberCount} members total
+		;echo DEBUG: Populating Fleet member list:: ${FleetMemberCount} members total
 	}
 	
 	method WarpToMember( int idx, int distance )
