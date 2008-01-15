@@ -40,7 +40,7 @@ variable string Version = "${APP_NAME} ${APP_VERSION} Revision ${SVN_REVISION.To
 #define GROUPID_WRECK 186
 
 #define WARP_RANGE 250000
-#define DOCKING_RANGE 1000
+#define DOCKING_RANGE 200
 #define LOOT_RANGE 1450
 #define CORP_HANGAR_LOOT_RANGE 3000
 
