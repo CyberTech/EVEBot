@@ -179,7 +179,6 @@ function CheckForLoot()
 				 	while ${k:Inc} <= ${TargetCount}
 				}
 				
-				; Make sure we own this can
 				if (!${Cans.Get[${i}].HaveLootRights})
 				{
 					i:Inc
@@ -390,7 +389,7 @@ function DoSalvage(bool LootCans)
 		
 			if (${Me.GetTargets} == ${MaxTargets})
 			{
-			  echo "-- Max Targets reached (${MaxTargets}): holding..."
+			    echo "-- Max Targets reached (${MaxTargets}): holding..."
 				do
 				{
 					wait 30
@@ -420,12 +419,13 @@ function DoSalvage(bool LootCans)
 			{
 				if (!${Wrecks.Get[${i}].HaveLootRights})
 				{
+				    echo "DEBUG: ${Wrecks.Get[${i}].Name} : No Loot Rights..."
 					i:Inc
 					continue
 				}
 			}
 		  
-		  ProcessedEntities:Set[${Wrecks.Get[${i}].ID},1]
+		    ProcessedEntities:Set[${Wrecks.Get[${i}].ID},1]
 			echo "-- Processing: ${Wrecks.Get[${i}].Name}"
 			;;; Target
 			if (${Wrecks.Get[${i}].Distance} > ${MaxTargetRange})
@@ -613,7 +613,7 @@ function DoSalvage(bool LootCans)
 	  do
 	  {
 	  	if ${Wrecks.Get[${k}].HaveLootRights}
-	  	{
+			{
 	  		ContinueOn:Set[TRUE]
 	  		break
 	  	}
@@ -713,10 +713,27 @@ function TransferSalvagedItemsToHangar()
 			EVE:MoveItemsTo[NewCargoToTransfer,Hangar]
 		}
 
+		;; OLD METHOD
+		;
+		;if ${CargoToTransfer.Used} > 0
+		;{
+		;	variable iterator CargoIterator
+		;	CargoToTransfer:GetIterator[CargoIterator]
+		;	
+		;	if ${CargoIterator:First(exists)}
+		;	do
+		;	{
+		;		;echo "obj_Cargo:TransferToHangar: Unloading Cargo: ${CargoIterator.Value.Name}"
+		;		CargoIterator.Value:MoveTo[Hangar]
+		;		wait 30
+		;	}
+		;	while ${CargoIterator:Next(exists)}
+		;}
+
 		NewCargoToTransfer:Clear[]
  
     ; After everything is done ...let's clean up the stacks.
-    Me:StackAllHangarItems
+    Me.Station:StackAllHangarItems
     wait 5
 }
 
@@ -755,19 +772,36 @@ function TransferLootToHangar()
 		if ${ThisCargo:First(exists)}
 		do
 		{
+			;echo "DEBUG: TransferLootToHanger: CargoholdLoot.Element[ThisCargo.Value.ID]: ${CargoholdLoot.Element[${ThisCargo.Value.ID}]}"
 			NewCargoToTransfer:Insert[${ThisCargo.Value}]
 		}
 		while ${ThisCargo:Next(exists)}
 
 		if ${NewCargoToTransfer.Used} > 0
 		{
-                EVE:MoveItemsTo[NewCargoToTransfer,Hangar]
+      EVE:MoveItemsTo[NewCargoToTransfer,Hangar]
 		}
+
+		;; OLD METHOD
+		;if ${CargoToTransfer.Used} > 0
+		;{
+		;	variable iterator CargoIterator
+		;	CargoToTransfer:GetIterator[CargoIterator]
+		;	
+		;	if ${CargoIterator:First(exists)}
+		;	do
+		;	{
+		;		;echo "TransferLootToHangar: Unloading Loot: ${CargoIterator.Value.Name}"
+		;		CargoIterator.Value:MoveTo[Hangar]
+		;		wait 30
+		;	}
+		;	while ${CargoIterator:Next(exists)}
+		;}
 
 		NewCargoToTransfer:Clear
  
     ; After everything is done ...let's clean up the stacks.
-    Me:StackAllHangarItems
+    Me.Station:StackAllHangarItems
     wait 5
 }
 
@@ -782,11 +816,16 @@ function CheckShipIsFull(bool LootCans, bool IgnoreCapacity)
 		
 		if !${IgnoreCapacity}
 		{
-			/* salvage operation requires a minimum of 40 m^3 free */
+			/* 
+			; salvage operation requires a minimum of 40 m^3 free -- so, this is not useful 
+	 		if (${Math.Calc[${Me.Ship.CargoCapacity}-${Me.Ship.UsedCargoCapacity}]} > ${Math.Calc[${Me.Ship.CargoCapacity}*0.01]})
+	   		return
+	   	*/
+	   	
 	 		if (${Math.Calc[${Me.Ship.CargoCapacity}-${Me.Ship.UsedCargoCapacity}]} > 40)
 			{
 				return
-			}
+			}	   	
 	 	}
 	 	
 	 	; else, make a temp bookmark, return us to our salvage home, unload, and go back for more
