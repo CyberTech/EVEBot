@@ -23,6 +23,14 @@ variable string Version = "${APP_NAME} ${APP_VERSION} Revision ${SVN_REVISION.To
 #define WAIT_CARGO_WINDOW 15
 #define WAIT_UNDOCK 130
 
+/* If the miner's cargo hold doesn't increase during 
+ * this period, return to base.  Interval depends on the 
+ * IntervalInSeconds value used in obj_Miner.Pulse
+ * This value is currently set to 2 seconds so 240*2 = 8 minutes
+ * The check interval is set high to compensate for slowboating
+ */
+#define MINER_SANITY_CHECK_INTERVAL 240
+
 #define GROUPID_ASTEROID_BELT 9
 
 #define GROUPID_AFTERBURNER 46
