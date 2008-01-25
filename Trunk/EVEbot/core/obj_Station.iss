@@ -174,9 +174,8 @@ objectdef obj_Station
 		   		}
 				UI:UpdateConsole["DEBUG: StationExists = ${Entity[${StationID}](exists)}"]
 			}
-			while ( ${Entity[${StationID}](exists)} )
-			;while ( !${Me.InStation(exists)} || !${Me.InStation} )
-
+            while ( ${Entity[${StationID}](exists)} ) ||
+                  ( !${Me.InStation(exists)} || !${Me.InStation} )			
 			wait 75
 			UI:UpdateConsole["Finished Docking"]
 		}
