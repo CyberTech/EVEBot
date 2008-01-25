@@ -19,6 +19,8 @@ objectdef obj_Miner
 	variable string CurrentState	
 	variable int FrameCounter
 	variable bool CombatAbort = FALSE
+	variable int SanityCheckCounter = 0
+	variable float64 LastUsedCargoCapacity = 0
 
 	; Are we running out of asteroids to target?
 	variable bool ConcentrateFire = FALSE
@@ -50,11 +52,13 @@ objectdef obj_Miner
 		}
 		FrameCounter:Inc
 
+
 		variable int IntervalInSeconds = 2
 		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 		{
 			This:SetState[]
 			FrameCounter:Set[0]
+            SanityCheckCounter:Inc
 		}
 	}
 	
@@ -142,14 +146,12 @@ objectdef obj_Miner
 	  		return
 		}
 				
-		; previous logic -- if ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace}
 		if ${Me.Ship.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold}
 		{
 		 	This.CurrentState:Set["MINE"]
 			return
 		}
 		
-		; previous logic -- if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${EVEBot.ReturnToStation}
 		if ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold} || ${EVEBot.ReturnToStation}
 		{
 			This.CurrentState:Set["CARGOFULL"]
@@ -211,7 +213,7 @@ objectdef obj_Miner
 	function Cleanup_Environment()
 	{
 		call Ship.Drones.ReturnAllToDroneBay
-		call Ship.CloseCargo
+		;;;call Ship.CloseCargo
 	}
 	
 	function Statslog()
@@ -248,8 +250,6 @@ objectdef obj_Miner
 		
 		UI:UpdateConsole["Mining"]
 		
-		;; previous logic -- while ( !${EVEBot.ReturnToStation} && \
-		;; previous logic -- 		!${Ship.CargoFull} )
 		while ( !${EVEBot.ReturnToStation} && \
 				${Me.Ship.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold}	)
 		{	
@@ -265,6 +265,20 @@ objectdef obj_Miner
 			{
 				/* TODO - This should pick up drones from station instead of just docking */
 				UI:UpdateConsole["Warning: Drone shortage detected, docking"]
+				EVEBot.ReturnToStation:Set[TRUE]
+				return
+			}
+			
+			if ${Me.Ship.UsedCargoCapacity} > ${LastUsedCargoCapacity}
+			{
+				UI:UpdateConsole["DEBUG: ${Me.Ship.UsedCargoCapacity} > ${LastUsedCargoCapacity}"]
+			    SanityCheckCounter:Set[0]
+			    LastUsedCargoCapacity:Set[${Me.Ship.UsedCargoCapacity}]
+			}
+			
+			if ${SanityCheckCounter} > MINER_SANITY_CHECK_INTERVAL
+			{
+				UI:UpdateConsole["Warning: Cargo volume hasn't increased in a while, docking"]
 				EVEBot.ReturnToStation:Set[TRUE]
 				return
 			}
@@ -388,7 +402,6 @@ objectdef obj_Miner
 				if ${Target:First(exists)}
 				do
 				{
-					;; previous logic -- if ${Ship.CargoFull}
 					if ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 					{
 						break
@@ -414,7 +427,6 @@ objectdef obj_Miner
 							wait 5
 						}
 						
-						;; previous logic -- if ${Ship.CargoFull}
 						if ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 						{
 							break
