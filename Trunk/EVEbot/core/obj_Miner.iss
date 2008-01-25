@@ -20,6 +20,7 @@ objectdef obj_Miner
 	variable int FrameCounter
 	variable bool CombatAbort = FALSE
 	variable int SanityCheckCounter = 0
+	variable bool SanityCheckAbort = FALSE
 	variable float64 LastUsedCargoCapacity = 0
 
 	; Are we running out of asteroids to target?
@@ -82,6 +83,7 @@ objectdef obj_Miner
 				call Cargo.TransferOreToHangar
 				;call Station.CheckList
 			    SanityCheckCounter:Set[0]
+			    SanityCheckAbort:Set[FALSE]
 			    LastUsedCargoCapacity:Set[0]
 				call Station.Undock
 				break
@@ -92,7 +94,7 @@ objectdef obj_Miner
 				UI:UpdateConsole["Hauling"]
 				call Hauler.Haul
 				break
-			case CARGOFULL
+			case DROPOFF
 				switch ${Config.Miner.DeliveryLocationTypeName}
 				{
 					case Station
@@ -120,6 +122,7 @@ objectdef obj_Miner
 						break
 				}
 			    SanityCheckCounter:Set[0]
+			    SanityCheckAbort:Set[FALSE]
 			    LastUsedCargoCapacity:Set[0]
 				break
 			case RUNNING
@@ -150,15 +153,18 @@ objectdef obj_Miner
 	  		return
 		}
 				
-		if ${Me.Ship.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold}
+		if ${Me.Ship.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold} && \
+		    ${SanityCheckAbort} == FALSE
 		{
 		 	This.CurrentState:Set["MINE"]
 			return
 		}
 		
-		if ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold} || ${EVEBot.ReturnToStation}
+	    if ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold} || \
+    	    ${EVEBot.ReturnToStation}  || \
+    	    ${SanityCheckAbort} == TRUE
 		{
-			This.CurrentState:Set["CARGOFULL"]
+			This.CurrentState:Set["DROPOFF"]
 			return
 		}
 	
@@ -283,8 +289,8 @@ objectdef obj_Miner
 			if ${SanityCheckCounter} > MINER_SANITY_CHECK_INTERVAL
 			{
 				UI:UpdateConsole["Warning: Cargo volume hasn't increased in a while, docking"]
-				EVEBot.ReturnToStation:Set[TRUE]
-				return
+				SanityCheckAbort:Set[TRUE]
+				break
 			}
 			
 			if ${Config.Combat.LaunchCombatDrones} && \
