@@ -82,6 +82,7 @@ objectdef obj_Miner
 				call Cargo.TransferOreToHangar
 				;call Station.CheckList
 			    SanityCheckCounter:Set[0]
+			    LastUsedCargoCapacity:Set[0]
 				call Station.Undock
 				break
 			case MINE
@@ -118,6 +119,8 @@ objectdef obj_Miner
 						EVEBot.ReturnToStation:Set[TRUE]
 						break
 				}
+			    SanityCheckCounter:Set[0]
+			    LastUsedCargoCapacity:Set[0]
 				break
 			case RUNNING
 				UI:UpdateConsole["Running Away"]
