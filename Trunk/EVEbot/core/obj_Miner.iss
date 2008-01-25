@@ -81,6 +81,7 @@ objectdef obj_Miner
 			case BASE
 				call Cargo.TransferOreToHangar
 				;call Station.CheckList
+			    SanityCheckCounter:Set[0]
 				call Station.Undock
 				break
 			case MINE
