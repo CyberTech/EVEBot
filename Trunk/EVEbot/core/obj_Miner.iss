@@ -485,6 +485,7 @@ objectdef obj_Miner
 		This.TotalTripSeconds:Inc[${This.PreviousTripSeconds}]
 		This.AverageTripSeconds:Set[${Math.Calc[${This.TotalTripSeconds}/${This.TotalTrips}]}]
 		UI:UpdateConsole["Cargo Hold has reached threshold, returning"]
+		call ChatIRC.Say "Cargo Hold has reached threshold"
 		call This.Statslog
 
 	}
