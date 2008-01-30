@@ -333,6 +333,110 @@
 								}
 							</OnChange>
 						</Textentry>
+
+
+						<Text name='lblIRCServer'>
+							<X>10</X>
+							<Y>160</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<Text>IRC Server</Text>
+							<AutoTooltip>Enter an server address if you want to use IRC</AutoTooltip>
+						</Text>					
+						<Textentry name='tbIRCServer'>
+							<X>140</X>
+							<Y>160</Y>
+							<Width>200</Width>
+							<Height>18</Height>
+							<MaxLength>50</MaxLength>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Common.IRCServer}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Common:SetIRCServer[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+
+						<Text name='lblIRCChannel'>
+							<X>10</X>
+							<Y>180</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<Text>IRC Channel</Text>
+							<AutoTooltip>Enter an channel name if you want to use IRC</AutoTooltip>
+						</Text>					
+						<Textentry name='tbIRCChannel'>
+							<X>140</X>
+							<Y>180</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<MaxLength>25</MaxLength>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Common.IRCChannel}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Common:SetIRCChannel[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+
+						<Text name='lblIRCUser'>
+							<X>10</X>
+							<Y>200</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<Text>IRC Username</Text>
+							<AutoTooltip>Enter an username if you want to use IRC</AutoTooltip>
+						</Text>					
+						<Textentry name='tbIRCUser'>
+							<X>140</X>
+							<Y>200</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<MaxLength>25</MaxLength>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Common.IRCUser}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Common:SetIRCUser[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+
+						<Text name='lblIRCPassword'>
+							<X>10</X>
+							<Y>220</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<Text>IRC Password</Text>
+							<AutoTooltip>Enter a password if you need one to use IRC</AutoTooltip>
+						</Text>					
+						<Textentry name='tbIRCPassword'>
+							<X>140</X>
+							<Y>220</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<MaxLength>25</MaxLength>
+							<PasswordCharacter>*</PasswordCharacter>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Common.IRCPassword}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Common:SetIRCPassword[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+
+
 					</Tab>
     	
 					<Tab name='Miner'>

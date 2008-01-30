@@ -209,6 +209,46 @@ objectdef obj_Configuration_Common
 	{
 		This.CommonRef:AddSetting[Maximum Runtime,${value}]
 	}
+	
+	member:string IRCServer()
+	{
+		return ${This.CommonRef.FindSetting[IRC Server, "irc.lavishscript.com"]}
+	}
+
+	method SetIRCServer(string value)
+	{
+		This.CommonRef:AddSetting[IRC Server, ${value}]
+	}
+
+	member:string IRCChannel()
+	{
+		return ${This.CommonRef.FindSetting[IRC Channel, "#objirc"]}
+	}
+
+	method SetIRCChannel(string value)
+	{
+		This.CommonRef:AddSetting[IRC Channel, ${value}]
+	}
+
+	member:string IRCUser()
+	{
+		return ${This.CommonRef.FindSetting[IRC User, "Test${Math.Rand[5000]:Inc[1000]}"]}
+	}
+
+	method SetIRCUser(string value)
+	{
+		This.CommonRef:AddSetting[IRC User, ${value}]
+	}
+
+	member:string IRCPassword()
+	{
+		return ${This.CommonRef.FindSetting[IRC Password, "evebot"]}
+	}
+
+	method SetIRCPassword(string value)
+	{
+		This.CommonRef:AddSetting[IRC Password, ${value}]
+	}
 }
 
 objectdef obj_Configuration_Miner
