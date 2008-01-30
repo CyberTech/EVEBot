@@ -1,8 +1,9 @@
 objectdef obj_IRC
 {       
-    variable string SERVER = "irc.lavishsoft.com"
-    variable string USER = "Test${Math.Rand[5000]:Inc[1000]}"
-    variable string CHANNEL = "#objirc"
+    variable string SERVER    = ${Config.Common.IRCServer}
+    variable string CHANNEL   = ${Config.Common.IRCChannel}
+    variable string USER      = ${Config.Common.IRCUser}
+    variable string PASSWORD  = ${Config.Common.IRCPassword}
     variable bool IsConnected = FALSE
                   
 	method Initialize()
@@ -69,7 +70,7 @@ objectdef obj_IRC
     	  	  	  ; or xml.
     	  	  	  if (${To.Equal[${This.USER}]})
     	  	  	  {
-    	  	  	     IRCUser[${This.USER}]:PM[Nickserv,"identify ${This.USER}Password"]
+    	  	  	     IRCUser[${This.USER}]:PM[Nickserv,"identify ${This.PASSWORD}"]
     	  	  	  }
     	  	  	  return
     	  	  }
@@ -276,7 +277,7 @@ objectdef obj_IRC
      			  	echo [${User}] Identifying with Nickserv now.
         	  	  	if (${UserName.Equal[${This.USER}]})
         	  	  	{
-        	  	  			IRCUser[${This.USER}]:PM[Nickserv,"identify ${This.USER}Password"]
+        	  	  			IRCUser[${This.USER}]:PM[Nickserv,"identify ${This.PASSWORD}"]
         	  	  	}
     		  		IRCUser[${User}]:Join[${Channel}]
     		  		RegisteredChannelRetryAttempts:Inc
