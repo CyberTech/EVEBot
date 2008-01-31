@@ -534,7 +534,7 @@ objectdef obj_IRC
         } 
         else
         {
-            This:Connect()
+            call This.Connect
         }
     }      
 } 

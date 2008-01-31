@@ -178,6 +178,8 @@ objectdef obj_Station
                   ( !${Me.InStation(exists)} || !${Me.InStation} )			
 			wait 75
 			UI:UpdateConsole["Finished Docking"]
+    		call ChatIRC.Say "Finished Docking"
+			
 		}
 		else
 		{
@@ -211,6 +213,7 @@ objectdef obj_Station
 		while ( !${Me.InStation(exists)} || ${Me.InStation} )
 ;		while ( !${Me.InStation(exists)} || ${Me.InStation} || !${EVEWindow[Local](exists)} )
 		UI:UpdateConsole["Undock: Complete"]
+   		call ChatIRC.Say "Undock: Complete"
 
 		Config.Common:SetHomeStation[${Entity[CategoryID,3].Name}]
 		

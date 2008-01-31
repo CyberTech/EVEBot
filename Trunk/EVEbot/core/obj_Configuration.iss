@@ -212,7 +212,7 @@ objectdef obj_Configuration_Common
 	
 	member:string IRCServer()
 	{
-		return ${This.CommonRef.FindSetting[IRC Server, "irc.lavishscript.com"]}
+		return ${This.CommonRef.FindSetting[IRC Server, "irc.lavishsoft.com"]}
 	}
 
 	method SetIRCServer(string value)
