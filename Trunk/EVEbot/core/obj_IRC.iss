@@ -1,9 +1,5 @@
 objectdef obj_IRC
 {       
-    variable string SERVER    = ${Config.Common.IRCServer}
-    variable string CHANNEL   = ${Config.Common.IRCChannel}
-    variable string USER      = ${Config.Common.IRCUser}
-    variable string PASSWORD  = ${Config.Common.IRCPassword}
     variable bool IsConnected = FALSE
                   
 	method Initialize()
@@ -68,9 +64,9 @@ objectdef obj_IRC
     	  	  	  ; Send the password to Nickserv.  You might want to do this 
     	  	  	  ; more elegantly by saving passwords in the script via variables
     	  	  	  ; or xml.
-    	  	  	  if (${To.Equal[${This.USER}]})
+    	  	  	  if (${To.Equal[${Config.Common.IRCUser}]})
     	  	  	  {
-    	  	  	     IRCUser[${This.USER}]:PM[Nickserv,"identify ${This.PASSWORD}"]
+    	  	  	     IRCUser[${Config.Common.IRCUser}]:PM[Nickserv,"identify ${Config.Common.IRCPassword}"]
     	  	  	  }
     	  	  	  return
     	  	  }
@@ -275,9 +271,9 @@ objectdef obj_IRC
      			  if (${RegisteredChannelRetryAttempts} <= 5)
      			  {
      			  	echo [${User}] Identifying with Nickserv now.
-        	  	  	if (${UserName.Equal[${This.USER}]})
+        	  	  	if (${UserName.Equal[${Config.Common.IRCUser}]})
         	  	  	{
-        	  	  			IRCUser[${This.USER}]:PM[Nickserv,"identify ${This.PASSWORD}"]
+        	  	  			IRCUser[${Config.Common.IRCUser}]:PM[Nickserv,"identify ${Config.Common.IRCPassword}"]
         	  	  	}
     		  		IRCUser[${User}]:Join[${Channel}]
     		  		RegisteredChannelRetryAttempts:Inc
@@ -498,11 +494,11 @@ objectdef obj_IRC
     function Connect() 
     {       
         echo DEBUG Connecting to IRC...
-        IRC:Connect[${This.SERVER},${This.USER}]
+        IRC:Connect[${Config.Common.IRCServer},${Config.Common.IRCUser}]
                
         wait 10 
                                 
-        IRCUser[${This.USER}]:Join[${This.CHANNEL}]
+        IRCUser[${Config.Common.IRCUser}]:Join[${Config.Common.IRCChannel}]
                
         wait 10                 
         This.IsConnected:Set[TRUE]
@@ -519,7 +515,7 @@ objectdef obj_IRC
             Call This.Say "Disconnecting as Ordered, sir"
             wait 10 
                             
-            IRCUser[${This.USER}]:Disconnect
+            IRCUser[${Config.Common.IRCUser}]:Disconnect
             This.IsConnected:Set[FALSE]
         } 
     } 
@@ -530,7 +526,7 @@ objectdef obj_IRC
         if ${This.IsConnected} 
         {       
             echo Saying ${msg}...
-            IRCUser[${This.USER}].Channel[${This.CHANNEL}]:Say["${msg}"]
+            IRCUser[${Config.Common.IRCUser}].Channel[${Config.Common.IRCChannel}]:Say["${msg}"]
         } 
         else
         {
