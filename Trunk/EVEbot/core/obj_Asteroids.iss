@@ -167,6 +167,7 @@ objectdef obj_Asteroids
 					if ${TryCount} > ${Math.Calc[${Belts.Used} * 10]}
 					{
 						UI:UpdateConsole["All belts empty!"]
+						call ChatIRC.Say "All belts empty!"
 						EVEBot.ReturnToStation:Set[TRUE]
 						return
 					}
