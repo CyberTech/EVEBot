@@ -87,7 +87,7 @@ objectdef obj_Ship
     			;UI:UpdateConsole["Debug: Obj_Ship: Shield Booster Activation: ${Config.Combat.ShieldBAct}"]
     			/* TODO: CyberTech - This should be an option, not forced. */
     			if ${Social.PossibleHostiles} || \
-    				${Me.Ship.ShieldPct} < 100 || \
+    				${Me.Ship.ShieldPct} < 90 || \
     				${Config.Combat.AlwaysShieldBoost}
     			{
     				This:Activate_Shield_Booster[]
@@ -969,7 +969,8 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 					      Counter:Set[0]
 					   }
 					}
-					while !${Me.InStation}
+		            while ( ${Entity[CategoryID,3](exists)} ) || \
+		                  ( !${Me.InStation(exists)} || !${Me.InStation} )			
 					break
 			}
 
