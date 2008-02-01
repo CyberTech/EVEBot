@@ -951,7 +951,9 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 					; stargate
 					break
 				case CATEGORYID_STATION
-					call This.Approach ${DestinationBookmark.ToEntity.ID} DOCKING_RANGE
+				    variable int StationID
+				    StationID:Set[${DestinationBookmark.ToEntity.ID}]
+					call This.Approach ${StationID} DOCKING_RANGE
 					UI:UpdateConsole["Docking with destination station"]
 					DestinationBookmark.ToEntity:Dock
 					UI:UpdateConsole["Waiting until ship enters the station"]
@@ -969,8 +971,9 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 					      Counter:Set[0]
 					   }
 					}
-		            while ( ${Entity[CategoryID,3](exists)} ) || \
-		                  ( !${Me.InStation(exists)} || !${Me.InStation} )			
+					while !${Station.DockedAtStation[${StationID}]}
+		            ;while ( ${Entity[CategoryID,3](exists)} ) || \
+		            ;      ( !${Me.InStation(exists)} || !${Me.InStation} )			
 					break
 			}
 

@@ -123,7 +123,7 @@ objectdef obj_Freighter
 		{
 			This.CurrentState:Set["CARGOFULL"]
 		}
-		elseif ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace}
+		elseif !${Me.InStation} && ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace}
 		{
 		 	This.CurrentState:Set["TRANSPORT"]
 		}

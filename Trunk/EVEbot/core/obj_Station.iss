@@ -29,6 +29,15 @@ objectdef obj_Station
 		}		
 	}
 	
+	member:bool DockedAtStation(int stationID)
+	{
+	    if ${EVE.JumpsToStation[${stationID}]} == -1
+	        return TRUE
+	    
+	    /* else */
+	    return FALSE    	    
+	}
+	
 	function OpenHangar()
 	{
 		if !${This.IsHangarOpen}
@@ -174,8 +183,9 @@ objectdef obj_Station
 		   		}
 				UI:UpdateConsole["DEBUG: StationExists = ${Entity[${StationID}](exists)}"]
 			}
-            while ( ${Entity[${StationID}](exists)} ) || \
-                  ( !${Me.InStation(exists)} || !${Me.InStation} )			
+			while !${This.DockedAtStation[${StationID}]}
+            ;while ( ${Entity[${StationID}](exists)} ) || \
+            ;      ( !${Me.InStation(exists)} || !${Me.InStation} )			
 			wait 75
 			UI:UpdateConsole["Finished Docking"]
     		call ChatIRC.Say "Finished Docking"
