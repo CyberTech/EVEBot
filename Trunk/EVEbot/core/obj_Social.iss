@@ -45,7 +45,7 @@ objectdef obj_Social
 		{
     		This:GetLists
     		FrameCounter:Set[0]
-		}		
+		}
 	}
 	
 	method GetLists()

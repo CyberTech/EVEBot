@@ -279,16 +279,16 @@ objectdef obj_Miner
 				return
 			}
 			
-			if ${Me.Ship.UsedCargoCapacity} > ${LastUsedCargoCapacity}
+			if ${Me.Ship.UsedCargoCapacity} != ${LastUsedCargoCapacity}
 			{
-				UI:UpdateConsole["DEBUG: ${Me.Ship.UsedCargoCapacity} > ${LastUsedCargoCapacity}"]
+				;UI:UpdateConsole["DEBUG: ${Me.Ship.UsedCargoCapacity} != ${LastUsedCargoCapacity}"]
 			    SanityCheckCounter:Set[0]
 			    LastUsedCargoCapacity:Set[${Me.Ship.UsedCargoCapacity}]
 			}
 			
 			if ${SanityCheckCounter} > MINER_SANITY_CHECK_INTERVAL
 			{
-				UI:UpdateConsole["Warning: Cargo volume hasn't increased in a while, docking"]
+				UI:UpdateConsole["Warning: Cargo volume hasn't changed in a while, docking"]
 				SanityCheckAbort:Set[TRUE]
 				break
 			}

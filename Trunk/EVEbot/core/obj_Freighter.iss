@@ -173,7 +173,7 @@ objectdef obj_Freighter
 		    {   /* limit to the given system */
     			UI:UpdateConsole["DEBUG: StationID = ${nextStationID}"]
     			UI:UpdateConsole["DEBUG: Region = ${EVE.Station[${nextStationID}].Region}"]
-    			/* EVE.Station[] IS BROKEN!!!! */
+    			/* TODO: EVE.Station[] IS BROKEN!!!! */
 		        ;if ${Config.Freighter.SystemName.NotEqual[${EVE.Station[${nextStationID}].Region}]}
 		        ;{
         		;	Assets:IgnoreStation[${nextStationID}]
