@@ -32,7 +32,7 @@ objectdef obj_EVEBot
 		EVE:Execute[OpenPeopleAndPlaces]
 		This.BuddiesCount:Set[${EVE.GetBuddies[This.Buddies]}]
 		UI:UpdateConsole["Populating Buddies List:: ${This.BuddiesCount} buddies total"]
-		EVEWindow[addressbook]:Close
+		TimedCommand 50 EVEWindow[addressbook]:Close
 		
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_EVEBot: Initialized"]
