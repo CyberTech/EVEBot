@@ -120,29 +120,13 @@ objectdef obj_Asteroids
 	}
 		
 	function MoveToField(bool ForceMove)
-	{
-		if ${Config.Miner.UseFieldBookmarks}
-		{
-			call This.MoveToRandomBeltBookMark
-			return
-		}
-		
-		if (${Config.Miner.BookMarkLastPosition} && \
-			${Bookmarks.StoredLocationExists})
-		{
-			/* We have a stored location, we should return to it. */
-			UI:UpdateConsole["Returning to last location (${Bookmarks.StoredLocation})"]
-			call Ship.WarpToBookMarkName "${Bookmarks.StoredLocation}"
-			This.BeltArrivalTime:Set[${Time.Timestamp}]
-			Bookmarks:RemoveStoredLocation
-			return
-		}
-		
+	{			
 		variable int curBelt
 		variable index:entity Belts
 		variable iterator BeltIterator
 		variable int TryCount
 		variable string beltsubstring
+		variable bool AsteroidsInRange = FALSE
 		
 		if ${Config.Miner.IceMining}
 		{
@@ -156,9 +140,32 @@ objectdef obj_Asteroids
 		EVE:DoGetEntities[Belts,GroupID, GROUPID_ASTEROID_BELT]
 		Belts:GetIterator[BeltIterator]
 		if ${BeltIterator:First(exists)}
-		{
-			if ${ForceMove} || ${BeltIterator.Value.Distance} > 55000
+		{			
+			if !${ForceMove}
 			{
+				call TargetNext TRUE
+				AsteroidsInRange:Set[${Return}]
+			}
+			
+			if ${ForceMove} || !${AsteroidsInRange}
+			{
+				if (${Config.Miner.BookMarkLastPosition} && \
+					${Bookmarks.StoredLocationExists})
+				{
+					/* We have a stored location, we should return to it. */
+					UI:UpdateConsole["Returning to last location (${Bookmarks.StoredLocation})"]
+					call Ship.WarpToBookMarkName "${Bookmarks.StoredLocation}"
+					This.BeltArrivalTime:Set[${Time.Timestamp}]
+					Bookmarks:RemoveStoredLocation
+					return
+				}
+		
+				if ${Config.Miner.UseFieldBookmarks}
+				{
+					call This.MoveToRandomBeltBookMark
+					return
+				}
+
 				; We're not at a field already, so find one
 				do
 				{
@@ -188,6 +195,27 @@ objectdef obj_Asteroids
 		}
 		else
 		{
+			/* There is a corner case here, in the event the user is in a system with no overview-visible 
+				bookmarks, but has Belt bookmarks to hidden belts. We duplicate this code here from above
+				to avoid yet another level of */
+
+			if (${Config.Miner.BookMarkLastPosition} && \
+				${Bookmarks.StoredLocationExists})
+			{
+				/* We have a stored location, we should return to it. */
+				UI:UpdateConsole["Returning to last location (${Bookmarks.StoredLocation})"]
+				call Ship.WarpToBookMarkName "${Bookmarks.StoredLocation}"
+				This.BeltArrivalTime:Set[${Time.Timestamp}]
+				Bookmarks:RemoveStoredLocation
+				return
+			}
+			
+			if ${Config.Miner.UseFieldBookmarks}
+			{
+				call This.MoveToRandomBeltBookMark
+				return
+			}
+
 			UI:UpdateConsole["ERROR: oMining:Mine --> No asteroid belts in the area..."]
 			EVEBot.ReturnToStation:Set[TRUE]
 			return
@@ -311,7 +339,7 @@ objectdef obj_Asteroids
 		AsteroidList:GetSettingIterator
 	}
 	
-	function:bool TargetNext()
+	function:bool TargetNext(bool CalledFromMoveRoutine=FALSE)
 	{
 		variable iterator AsteroidIterator
 
@@ -382,6 +410,12 @@ objectdef obj_Asteroids
 						{
 							UI:UpdateConsole["obj_Asteroids: TargetNext: No Asteroids within ${EVEBot.MetersToKM_Str[${This.MaxDistanceToAsteroid}], changing fields."]
 							/* The nearest asteroid is farfar away.  Let's just warp out. */
+
+							if ${CalledFromMoveRoutine}
+							{
+								; Don't do any movement, we're being called from inside another movement function
+								return FALSE
+							}
 							call This.MoveToField TRUE
 							return TRUE
 						}
@@ -392,8 +426,11 @@ objectdef obj_Asteroids
 		}
 		else
 		{
-			echo "DEBUG: obj_Asteroids: No Asteroids within overview range"
-			This:BeltIsEmpty["${Entity[GroupID, GROUPID_ASTEROID_BELT]}"]
+			UI:UpdateConsole["obj_Asteroids: No Asteroids within overview range"]
+			if ${Entity[GroupID, GROUPID_ASTEROID_BELT].Distance} < 300000
+			{
+				This:BeltIsEmpty["${Entity[GroupID, GROUPID_ASTEROID_BELT]}"]
+			}
 			call This.MoveToField TRUE
 			return TRUE
 		}

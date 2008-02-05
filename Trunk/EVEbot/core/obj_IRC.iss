@@ -4,6 +4,7 @@ objectdef obj_IRC
                   
 	method Initialize()
 	{			
+#if USE_ISXIRC
 	    ext -require ISXIRC
 
 		Event[IRC_ReceivedNotice]:AttachAtom[This:IRC_ReceivedNotice]
@@ -24,12 +25,14 @@ objectdef obj_IRC
         Event[IRC_AddChannelBan]:AttachAtom[This:IRC_AddChannelBan]
         Event[IRC_RemoveChannelBan]:AttachAtom[This:IRC_RemoveChannelBan]
         Event[IRC_UnhandledEvent]:AttachAtom[This:IRC_UnhandledEvent]
-        
+
 		UI:UpdateConsole["obj_IRC: Initialized"]
+#endif
 	}
 	
 	method Shutdown()
 	{
+#if USE_ISXIRC
 		Event[IRC_ReceivedNotice]:DetachAtom[This:IRC_ReceivedNotice]
         Event[IRC_ReceivedChannelMsg]:DetachAtom[This:IRC_ReceivedChannelMsg]	
         Event[IRC_ReceivedPrivateMsg]:DetachAtom[This:IRC_ReceivedPrivateMsg]
@@ -48,6 +51,7 @@ objectdef obj_IRC
         Event[IRC_AddChannelBan]:DetachAtom[This:IRC_AddChannelBan]
         Event[IRC_RemoveChannelBan]:DetachAtom[This:IRC_RemoveChannelBan]
         Event[IRC_UnhandledEvent]:DetachAtom[This:IRC_UnhandledEvent]    
+#endif
 	}
 		
     method IRC_ReceivedNotice(string User, string From, string To, string Message)
