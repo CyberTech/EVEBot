@@ -82,6 +82,112 @@ objectdef obj_Cargo
 		
 		;UI:UpdateConsole["DEBUG: obj_Cargo:FindShipCargo: This.CargoToTransfer Populated: ${This.CargoToTransfer.Used}"]
 	}
+
+	function ReplenishCrystals()
+        {
+                variable iterator CargoIterator
+                variable iterator HangarIterator
+                variable collection:int Crystals
+                variable int MIN_CRYSTALS = 5
+                variable index:item HangarItems
+
+                call Ship.OpenCargo
+
+                variable int captionCount
+                captionCount:Set[${EVEWindow[MyShipCargo].Caption.Token[2,"["].Token[1,"]"]}]
+                UI:UpdateConsole["DEBUG: obj_Cargo: captionCount = ${captionCount}"]
+                while ${captionCount} > ${Me.Ship.GetCargo}
+                {
+                        UI:UpdateConsole["obj_Cargo: Waiting for cargo to load..."]
+                        wait 10
+                }
+
+                This:FindShipCargo[CATEGORYID_CHARGE]
+
+                ;echo Found Cargo: ${This.CargoToTransfer.Used}
+
+                This.CargoToTransfer:GetIterator[CargoIterator]
+
+
+                ; Add up the current crystal quantities in the cargo
+                if ${CargoIterator:First(exists)}
+                do
+                {
+                        variable string crystal
+                        variable int quantity
+
+                        crystal:Set[${CargoIterator.Value.Name}]
+                        quantity:Set[${CargoIterator.Value.Quantity}]
+
+                        Crystals:Set[${crystal}, ${Math.Calc[${Crystals.Element[${crystal}]} + ${quantity} ]}]
+                }
+                while ${CargoIterator:Next(exists)}
+
+                This.CargoToTransfer:Clear
+
+		; No crystals found, just return
+                if !${Crystals.FirstKey(exists)}
+                {
+                        return
+                }
+
+                call Station.OpenHangar
+                Me:DoGetHangarItems[HangarItems]
+                HangarItems:GetIterator[HangarIterator]
+
+		; Cycle thru the Hangar looking for the needed Crystals and move them to the ship
+                if ${HangarIterator:First(exists)}
+                do
+                {
+                        ;echo CategoryID: ${HangarIterator.Value.CategoryID}
+                        if ${HangarIterator.Value.CategoryID} == CATEGORYID_CHARGE
+                        {       
+                                variable string name
+                                variable int quant
+                                variable int needed
+                                
+                                name:Set[${HangarIterator.Value.Name}]
+                                quant:Set[${HangarIterator.Value.Quantity}]
+                                
+                                if ${Crystals.FirstKey(exists)}
+                                do
+                                {       
+                                        needed:Set[${Math.Calc[ ${MIN_CRYSTALS} - ${Crystals.CurrentValue}]}]
+                                        
+                                        ;echo "${MIN_CRYSTALS} - ${Crystals.CurrentValue} = ${needed}"
+                                        ;echo Hangar: ${name} : ${quant} == ${Crystals.CurrentKey} : Needed: ${needed}
+                                        
+                                        if (${name.Equal[${Crystals.CurrentKey}]} && ${needed} > 0)
+                                        {       
+                                                if ${quant} >= ${needed}
+                                                {       
+                                                        HangarIterator.Value:MoveTo[MyShip, ${needed}]
+                                                        Crystals:Set[${Crystals.CurrentKey}, ${Math.Calc[${Crystals.CurrentValue} + ${needed}]}]
+                                                }
+                                                else
+                                                {       
+                                                        HangarIterator.Value:MoveTo[MyShip]
+                                                        Crystals:Set[${Crystals.CurrentKey}, ${Math.Calc[${Crystals.CurrentValue} + ${quant}]}]
+                                                }
+                                        }
+                                } 
+                                while ${Crystals.NextKey(exists)}
+                        }
+                }
+                while ${HangarIterator:Next(exists)}
+                
+                if ${Crystals.FirstKey(exists)}
+                do
+                {       
+                        if ${Crystals.CurrentValue} < ${MIN_CRYSTALS}
+                        {        
+                                 UI:UpdateConsole["Out of ${Crystals.CurrentKey} !!"]
+                        }
+                } 
+                while ${Crystals.NextKey(exists)}
+         
+        }
+
 	
 	; Transfer ALL items in MyCargo index
 	function TransferListToHangar()
@@ -290,6 +396,10 @@ objectdef obj_Cargo
 		Me:StackAllHangarItems
 		Ship:UpdateBaselineUsedCargo[]
 		wait 25
+
+		call This.ReplenishCrystals
+		wait 10
+		
 		call This.CloseHolds
 	}
 	

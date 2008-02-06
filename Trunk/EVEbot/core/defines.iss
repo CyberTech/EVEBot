@@ -61,3 +61,5 @@ variable string Version = "${APP_NAME} ${APP_VERSION} Revision ${SVN_REVISION.To
 #define CATEGORYID_ORE 25
 #define CATEGORYID_GLACIAL_MASS 25
 #define CATEGORYID_STATION 3
+#define CATEGORYID_CHARGE 8
+
