@@ -189,8 +189,7 @@ objectdef obj_Station
 			wait 75
 			UI:UpdateConsole["Finished Docking"]
     		call ChatIRC.Say "Finished Docking"
-    		ISXEVE:Flush
-			
+    		;ISXEVE:Flush
 		}
 		else
 		{
