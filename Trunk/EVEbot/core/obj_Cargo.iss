@@ -15,6 +15,7 @@ objectdef obj_Cargo
 	variable index:item MyCargo
 	variable index:item CargoToTransfer
 	variable bool m_LastTransferComplete
+	variable index:string ActiveMiningCrystals
 
 	method Initialize()
 	{
@@ -85,11 +86,23 @@ objectdef obj_Cargo
 
 	function ReplenishCrystals()
         {
-                variable iterator CargoIterator
+		variable iterator CargoIterator
                 variable iterator HangarIterator
+                variable iterator CrystalIterator
                 variable collection:int Crystals
-                variable int MIN_CRYSTALS = 5
+                variable int MIN_CRYSTALS = ${Ship.ModuleList_MiningLaser.Used}
                 variable index:item HangarItems
+
+		This.ActiveMiningCrystals:GetIterator[CrystalIterator]
+
+                ; Add in any Crystals that were brought in from the laser modules
+                if ${CrystalIterator:First(exists)}
+                do
+                {
+                        ;echo Setting active crystal: ${CrystalIterator.Value}
+                        Crystals:Set[${CrystalIterator.Value}, ${Crystals.Element[${CrystalIterator.Value}]:Inc}]
+                }
+                while ${CrystalIterator:Next(exists)}
 
                 call Ship.OpenCargo
 
@@ -102,9 +115,8 @@ objectdef obj_Cargo
                         wait 10
                 }
 
-                This:FindShipCargo[CATEGORYID_CHARGE]
 
-                ;echo Found Cargo: ${This.CargoToTransfer.Used}
+                This:FindShipCargo[CATEGORYID_CHARGE]
 
                 This.CargoToTransfer:GetIterator[CargoIterator]
 

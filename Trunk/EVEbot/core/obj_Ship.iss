@@ -435,7 +435,7 @@ objectdef obj_Ship
 	}
 
 	; Returns the loaded crystal in a mining laser, given the slot name ("HiSlot0"...)
-	member:string LoadedMiningLaserCrystal(string SlotName)
+	member:string LoadedMiningLaserCrystal(string SlotName, bool fullName = FALSE)
 	{
 		if !${Me.Ship(exists)}
 		{
@@ -445,7 +445,15 @@ objectdef obj_Ship
 		
 		if ${Me.Ship.Module[${SlotName}].Charge(exists)}
 		{
-			return ${Me.Ship.Module[${SlotName}].Charge.Name.Token[1, " "]}
+			if ${fullName}
+                        {
+                                return ${Me.Ship.Module[${SlotName}].Charge.Name}
+                        }
+                        else
+                        {
+                                return ${Me.Ship.Module[${SlotName}].Charge.Name.Token[1, " "]}
+
+                        }
 		}
 		return "NOCHARGE"
 		
@@ -1219,4 +1227,31 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 
 		return 0
 	}
+	function SetActiveCrystals()
+        {
+                variable iterator ModuleIterator
+
+                This.ModuleList_MiningLaser:GetIterator[ModuleIterator]
+
+                Cargo.ActiveMiningCrystals:Clear
+
+                ;echo Found ${This.ModuleList_MiningLaser.Used} lasers
+
+                if ${ModuleIterator:First(exists)}
+                do
+                {
+                        variable string crystal
+                        if ${ModuleIterator.Value.SpecialtyCrystalMiningAmount(exists)}
+                        {
+                                crystal:Set[${This.LoadedMiningLaserCrystal[${ModuleIterator.Value.ToItem.Slot},TRUE]}]
+                                ;echo ${crystal} found
+                                if !${crystal.Equal["NOCHARGE"]}
+                                {
+                                        Cargo.ActiveMiningCrystals:Insert[${crystal}]
+                                }
+                        }
+                }
+                while ${ModuleIterator:Next(exists)}
+        }
+
 }

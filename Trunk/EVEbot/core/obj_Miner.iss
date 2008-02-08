@@ -98,6 +98,9 @@ objectdef obj_Miner
 				switch ${Config.Miner.DeliveryLocationTypeName}
 				{
 					case Station
+						; Gets info about the crystals currently loaded
+                                                call Ship.SetActiveCrystals
+
 						if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)}
 						{
 							call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
