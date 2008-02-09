@@ -100,7 +100,7 @@ objectdef obj_Cargo
                 do
                 {
                         ;echo Setting active crystal: ${CrystalIterator.Value}
-                        Crystals:Set[${CrystalIterator.Value}, ${Crystals.Element[${CrystalIterator.Value}]:Inc}]
+			Crystals:Set[${CrystalIterator.Value}, ${Math.Calc[${Crystals.Element[${CrystalIterator.Value}]} + 1]}]
                 }
                 while ${CrystalIterator:Next(exists)}
 
