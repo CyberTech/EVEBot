@@ -1,8 +1,9 @@
 #include defines.iss
 
 #define ChainSpawns TRUE
-#define SafespotBookmark "[safespotname]"
-
+#define SafespotBookmark "SS1"
+variable bool CapFlag = FALSE
+variable int CargoCount = 0
 function main()
 {
 	variable cls_Belts Belts
@@ -10,7 +11,7 @@ function main()
 	variable cls_Modules Modules
 	variable cls_Local LocalInformation
 	variable cls_Safespot Safespot
-	
+	Belts:NextBelt
 	while TRUE
 	{
 		while ${LocalInformation.IsSafe}
@@ -19,8 +20,10 @@ function main()
 			Modules:ActivateCloak[FALSE]
 
 			; Warp to the next belt
+			if ${Belts.IsAtBelt}
+			{
 			Belts:NextBelt
-
+			}
 			echo "Warping to belt ${Belts.Belt.Value.Name}"
 			Belts.Belt.Value:WarpTo[0]
 
@@ -64,7 +67,7 @@ function main()
 					Modules:ActivateShieldBooster[TRUE]
 				}
 				
-				if ${Me.Ship.ShieldPct} > 98
+				if ${Me.Ship.ShieldPct} > 95
 				{
 					; Turn off the shield booster
 					Modules:ActivateShieldBooster[FALSE]
@@ -80,7 +83,6 @@ function main()
 			; Are we at the safespot and not warping?
 			if !${Safespot.IsAtSafespot} && ${Me.ToEntity.Mode} != 3
 			{
-				echo "Enemy in local and not at safespot! Warping to safety!"
 				Safespot:WarpTo
 				
 				; Wait 3 seconds
@@ -89,13 +91,21 @@ function main()
 			
 			if ${Safespot.IsAtSafespot}
 			{
+				wait 60
 				Modules:ActivateCloak[TRUE]
 				
 				; Wait 1 minute, there was hostiles so who cares how long we wait
 				wait 600
 			}
 		}
-		
+			while ${Me.Ship.CapacitorPct} < 90 && ${Safespot.IsAtSafespot}
+			{
+			wait 20
+			}
+			if ${Me.Ship.CapacitorPct} > 90
+			{
+			CapFlag:Set[FALSE]
+			}
 		; Wait 2 seconds
 		wait 20
 	}
@@ -141,22 +151,63 @@ objectdef cls_Local
 	method Initialize()
 	{
 		; Aliance ID
-		SafeAllianceIDs:Insert[0]
-		; Corp ID
-		SafeCorporationIDs:Insert[0]
+		;BRUCE == 283331937
+		SafeAllianceIDs:Insert[283331937]
+		;SafeAllianceIDs:Insert[204298938]
+		; Insert corp id's here
+		;SafeCorporationIDs:Insert[320162553]
 	}
 	
 	member:bool IsSafe()
 	{
-		variable index:pilot Pilots
-		variable iterator Pilot
-	
-		EVE:DoGetPilots[Pilots]
-		Pilots:GetIterator[Pilot]
-
-		if ${Pilot:First(exists)}
-		do
+		if ${CapFlag} && ${Me.Ship.CapacitorPct} < 90
 		{
+		return FALSE
+		}
+		
+		if ${Me.Ship.CapacitorPct} < 10
+		{
+		echo "Cap low, warping the fuck away"
+		Safe:Set[FALSE]
+		CapFlag:Set[TRUE]
+		return FALSE
+		}
+		if ${Me.Ship.ArmorPct} < 25
+		
+		{
+		;; Pretty much self explanatory, right?
+		echo "ARMOR LOW!!!"
+		Safe:Set[FALSE]
+		return FALSE
+		}
+		if ${Me.Ship.UsedCargoCapacity} < 10
+		{
+			CargoCount:Set[${CargoCount}+1]
+			;; When reloading UsedCargoCapacity sometimes freaks out so have to make sure it's not one of those, otherwise
+			;; Otherwise you warp to your safespot alot.
+			if (${Me.Ship.UsedCargoCapacity} < 10 && ${CargoCount} > 10)
+			{
+				echo "CARGO LOW Warping to safespot and camping for the night!"
+				Safe:Set[FALSE]
+				return FALSE
+			}
+		}
+		elseif ${CargoCount} > 0
+		{
+		CargoCount:Set[0]
+		}
+		;;variable index:pilot Pilots
+		;;variable iterator Pilot
+	
+		;;EVE:DoGetPilots[Pilots]
+		;;Pilots:GetIterator[Pilot]
+		variable int LocalCheckLoop
+		for (LocalCheckLoop:Set[1] ; ${LocalCheckLoop}<=${EVE.LocalsCount} ; LocalCheckLoop:Inc)
+		{
+			if ${Local[${LocalCheckLoop}].CharID} == ${Me.CharID}
+			{
+			continue
+			}
 			variable bool Safe
 			Safe:Set[FALSE]
 			
@@ -166,7 +217,7 @@ objectdef cls_Local
 			if ${SafeAllianceID:First(exists)}
 			do
 			{
-				if ${SafeAllianceID.Value} == ${Pilot.Value.AllianceID}
+				if ${SafeAllianceID.Value} == ${Local[${LocalCheckLoop}].AllianceID}
 				{
 					Safe:Set[TRUE]
 				}
@@ -179,7 +230,7 @@ objectdef cls_Local
 			if ${SafeCorporationID:First(exists)}
 			do
 			{
-				if ${SafeCorporationID.Value} == ${Pilot.Value.CorporationID}
+				if ${SafeCorporationID.Value} == ${Local[${LocalCheckLoop}].CorporationID}
 				{
 					Safe:Set[TRUE]
 				}
@@ -188,11 +239,10 @@ objectdef cls_Local
 			
 			if !${Safe}
 			{
-				echo "Enemy in local: ${Pilot.Value.Name} [${Pilot.Value.Corporation}|${Pilot.Value.CorporationID}][${Pilot.Value.Alliance}|${Pilot.Value.AllianceID}]"
+				echo "Enemy in local: ${Local[${LocalCheckLoop}].Name} <${Local[${LocalCheckLoop}].Alliance}> (${Local[${LocalCheckLoop}].Corporation} [${Local[${LocalCheckLoop}].CorporationTicker}])"
 				return FALSE
 			}
 		}
-		while ${Pilot:Next(exists)}
 		
 		return TRUE
 	}
@@ -291,7 +341,7 @@ objectdef cls_Modules
 					else
 					{
 						; Is there still more then 30% ammo available?
-						if ${Math.Calc[${Weapon.Value.CurrentCharges}/${Weapon.Value.MaxCharges}]} < 0.3
+						if ${Math.Calc[${Weapon.Value.CurrentCharges}/${Weapon.Value.MaxCharges}]} < 0.5
 						{
 							; No, reload
 							NeedReload:Set[TRUE]
@@ -394,6 +444,53 @@ objectdef cls_Modules
 	}
 }
 
+
+/*
+Officer spawns appear in their home region, or in any region where their 
+faction normally appears, but *only* in systems with -0.8 or below true 
+sec rating.
+
+Faction: Guristas/Pithi/Dread Guristas
+Home Region: Venal
+Officers:
+Estamel
+Vepas
+Thon
+Kaikka
+
+
+Faction: Angels/Gisi/Domination
+Home Region: Curse
+Officers:
+Tobias
+Gotan
+Hakim
+Mizuro
+
+Faction: Serpentis/Coreli/Shadow:
+Home Region: Fountain
+Officers:
+Cormack
+Setele
+Tuvan
+Brynn
+
+Faction: Sanshas/Centi/True Sansha:
+Home Region: Stain
+Officers:
+Chelm
+Vizan
+Selynne
+Brokara
+
+Faction: Blood/Corpi/Dark Blood:
+Home Region: Not sure actually... Delve?
+Officers:
+Draclira
+Ahremen
+Raysere
+Tairei
+*/
 objectdef cls_Targets
 {
 	variable index:string PriorityTargets
@@ -431,7 +528,17 @@ objectdef cls_Targets
 		ChainTargets:Insert["Guristas Exterminator"]
 		ChainTargets:Insert["Guristas Massacrer"]
 		ChainTargets:Insert["Guristas Usurper"]
-		
+		ChainTargets:Insert["Angel Throne"]
+		ChainTargets:Insert["Angel Saint"]
+		ChainTargets:Insert["Angel Malakim"]
+		ChainTargets:Insert["Angel Nephilim"]
+		ChainTargets:Insert["Serpentis Admiral"]
+		ChainTargets:Insert["Serpentis Flotilla Admiral"]
+		ChainTargets:Insert["Serpentis Grand Admiral"]
+		ChainTargets:Insert["Serpentis High Admiral"]
+		ChainTargets:Insert["Serpentis Lord Admiral"]
+		ChainTargets:Insert["Serpentis Vice Admiral"]
+				
 		; Special targets will (eventually) trigger an alert
 		; This should include haulers / faction / officers
 		SpecialTargets:Insert["Dread Guristas"]
@@ -450,6 +557,11 @@ objectdef cls_Targets
 		SpecialTargets:Insert["Trailer"]
 		SpecialTargets:Insert["Transporter"]
 		SpecialTargets:Insert["Trucker"]
+		SpecialTargets:Insert["Cormack"]
+		SpecialTargets:Insert["Setele"]
+		SpecialTargets:Insert["Tuvan"]
+		SpecialTargets:Insert["Brynn"]
+		SpecialTargets:Insert["Shadow"]
 
 		; Get the iterators
 		PriorityTargets:GetIterator[PriorityTarget]
@@ -698,7 +810,17 @@ objectdef cls_Belts
 
 		echo "${Counter} belts found..."
 	}
-
+    member:bool IsAtBelt()
+	{
+		; Are we within 150km off the belt?
+		if ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${Belt.Value.X}, ${Belt.Value.Y}, ${Belt.Value.Z}]} < 150000
+		{
+			return TRUE
+		}
+		
+		return FALSE
+	}
+	
 	method NextBelt()
 	{
 		if !${Belt:Next(exists)}
