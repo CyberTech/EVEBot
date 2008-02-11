@@ -25,7 +25,7 @@ function main()
 			Belts:NextBelt
 			}
 			echo "Warping to belt ${Belts.Belt.Value.Name}"
-			Belts.Belt.Value:WarpTo[0]
+			Belts.Belt.Value:WarpTo[80]
 
 			; Wait till warp starts
 			wait 50
@@ -61,13 +61,13 @@ function main()
 				; Activate the weapons, the modules class checks if there's a target
 				Modules:ActivateWeapons
 				
-				if ${Me.Ship.ShieldPct} < 80
+				if ${Me.Ship.ShieldPct} < 70
 				{
 					; Turn on the shield booster
 					Modules:ActivateShieldBooster[TRUE]
 				}
 				
-				if ${Me.Ship.ShieldPct} > 95
+				if ${Me.Ship.ShieldPct} > 80
 				{
 					; Turn off the shield booster
 					Modules:ActivateShieldBooster[FALSE]
