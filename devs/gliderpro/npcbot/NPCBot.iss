@@ -25,7 +25,7 @@ function main()
 			Belts:NextBelt
 			}
 			echo "Warping to belt ${Belts.Belt.Value.Name}"
-			Belts.Belt.Value:WarpTo[80]
+			Belts.Belt.Value:WarpTo[80000]
 
 			; Wait till warp starts
 			wait 50
