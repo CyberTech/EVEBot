@@ -151,8 +151,7 @@ objectdef cls_Local
 	method Initialize()
 	{
 		; Aliance ID
-		;BRUCE == 283331937
-		SafeAllianceIDs:Insert[283331937]
+		SafeAllianceIDs:Insert[${Me.AllianceID}]
 		;SafeAllianceIDs:Insert[204298938]
 		; Insert corp id's here
 		;SafeCorporationIDs:Insert[320162553]
