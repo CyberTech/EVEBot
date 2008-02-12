@@ -25,7 +25,7 @@ function main()
 			Belts:NextBelt
 			}
 			variable int WarpToDistance
-			WarpToDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.85/1000].Round}]
+			WarpToDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.40/1000].Round}]
 			WarpToDistance:Set[${Math.Calc[${WarpToDistance}*1000]}]
 			echo "Warping to belt ${Belts.Belt.Value.Name} @ ${WarpToDistance}"
 			Belts.Belt.Value:WarpTo[${WarpToDistance}]
@@ -33,6 +33,9 @@ function main()
 			; Wait till warp starts
 			wait 50
 			
+			; Turn off the shield booster
+			Modules:ActivateShieldBooster[FALSE]
+		
 			; Wait till warp ends
 			while ${Me.ToEntity.Mode} == 3 && ${LocalInformation.IsSafe}
 			{
@@ -86,6 +89,9 @@ function main()
 			; Are we at the safespot and not warping?
 			if !${Safespot.IsAtSafespot} && ${Me.ToEntity.Mode} != 3
 			{
+				; Turn off the shield booster
+				Modules:ActivateShieldBooster[FALSE]
+			
 				Safespot:WarpTo
 				
 				; Wait 3 seconds
@@ -761,6 +767,14 @@ objectdef cls_Targets
 			}
 		}
 		while ${Target:Next(exists)}
+		
+		if ${HasTargets} && ${Me.ActiveTarget(exists)}
+		{
+			variable int OrbitDistance
+			OrbitDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.40/1000].Round}]
+			OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
+			Me.ActiveTarget:Orbit[${OrbitDistance}]
+		}
 		
 		return ${HasTargets}
 	}
