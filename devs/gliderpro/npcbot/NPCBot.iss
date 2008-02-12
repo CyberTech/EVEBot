@@ -24,8 +24,11 @@ function main()
 			{
 			Belts:NextBelt
 			}
-			echo "Warping to belt ${Belts.Belt.Value.Name}"
-			Belts.Belt.Value:WarpTo[80000]
+			variable int WarpToDistance
+			WarpToDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.85/1000].Round}]
+			WarpToDistance:Set[${Math.Calc[${WarpToDistance}*1000]}]
+			echo "Warping to belt ${Belts.Belt.Value.Name} @ ${WarpToDistance}"
+			Belts.Belt.Value:WarpTo[Math.Calc[${WarpToDistance}]
 
 			; Wait till warp starts
 			wait 50
