@@ -289,7 +289,7 @@ objectdef cls_Modules
 	variable index:module Hardeners
 	
 	variable index:module Cloaks
-
+	
 	method Initialize()
 	{
 		Me.Ship:DoGetModules[Modules]
@@ -533,9 +533,12 @@ objectdef cls_Targets
 	
 	variable bool CheckChain
 	variable bool Chaining
+	variable int TrueMaxTargetRange
 	
 	method Initialize()
 	{
+		TrueMaxTargetRange:Set[${Me.Ship.MaxTargetRange}]
+		
 		; TODO - load this all from XML files
 	
 		; Priority targets will be targeted (and killed) 
@@ -662,8 +665,27 @@ objectdef cls_Targets
 
 		if !${Target:First(exists)}
 		{
-			echo "No targets found..."
-			return FALSE
+			if ${Me.Ship.MaxTargetRange} < ${TrueMaxTargetRange}
+			{
+				EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY, radius, ${TrueMaxTargetRange}]
+				Targets:GetIterator[Target]
+
+				if !${Target:First(exists)}
+				{
+					echo "No targets found..."
+					return FALSE
+				}
+				else
+				{
+					echo "Damped, cant target..."
+					return TRUE
+				}
+			}
+			else
+			{
+				echo "No targets found..."
+				return FALSE
+			}
 		}
 
 		if ${Me.Ship.MaxLockedTargets} == 0
@@ -671,7 +693,7 @@ objectdef cls_Targets
 			echo "Jammed, cant target..."
 			return TRUE
 		}
-
+		
 		; Chaining means there might be targets here which we shouldnt kill
 		variable bool HasTargets = FALSE
 
