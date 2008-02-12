@@ -4,6 +4,19 @@
 #define SafespotBookmark "SS1"
 variable bool CapFlag = FALSE
 variable int CargoCount = 0
+variable bool SpecialTargetFlag = FALSE
+
+#define ALARMSOUND	"${Script.CurrentDirectory}/sounds/alarm.wav"
+#define DETECTSOUND	"${Script.CurrentDirectory}/sounds/detect.wav"
+#define TELLSOUND		"${Script.CurrentDirectory}/sounds/tell.wav"
+#define LEVELSOUND	"${Script.CurrentDirectory}/sounds/level.wav"
+#define WARNSOUND		"${Script.CurrentDirectory}/sounds/warning.wav"
+
+function PlaySound(string Filename)
+{
+	System:APICall[${System.GetProcAddress[WinMM.dll,PlaySound].Hex},Filename.String,0,"Math.Dec[22001]"]
+}
+
 function main()
 {
 	variable cls_Belts Belts
@@ -12,6 +25,7 @@ function main()
 	variable cls_Local LocalInformation
 	variable cls_Safespot Safespot
 	Belts:NextBelt
+	
 	while TRUE
 	{
 		while ${LocalInformation.IsSafe}
@@ -58,6 +72,13 @@ function main()
 			if !${Targets.PC}
 			while ${Targets.TargetNPCs} && ${LocalInformation.IsSafe}
 			{
+			
+				if ${SpecialTargetFlag}
+				{
+					echo "Special spawn detected!"
+					call PlaySound DETECTSOUND
+				}
+			
 				; Make sure our hardeners are running
 				Modules:ActivateHardeners
 				
@@ -662,6 +683,8 @@ objectdef cls_Targets
 		variable bool HasSpecialTarget = FALSE
 		variable bool HasMultipleTypes = FALSE
 
+		SpecialTargetFlag:Set[FALSE]
+		
 		variable int TypeID
 		TypeID:Set[${Target.Value.TypeID}]
 		do
@@ -682,6 +705,7 @@ objectdef cls_Targets
 			if ${This.IsSpecialTarget[${Target.Value.Name}]}
 			{
 				HasSpecialTarget:Set[TRUE]
+				SpecialTargetFlag:Set[TRUE]
 			}
 		
 			; Loop through the priority targets
