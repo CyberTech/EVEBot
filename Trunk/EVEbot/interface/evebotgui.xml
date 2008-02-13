@@ -441,7 +441,7 @@
 
 
 					</Tab>
-    	
+		
 					<Tab name='Miner'>
 						<checkbox Name='cbIncludeVeldspar'>
 							<X>10</X>
@@ -862,6 +862,91 @@
 									Script[EVEBot].VariableScope.Config.Combat:SetLaunchCombatDrones[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
+						<checkbox name='cbRunAway'>
+							<X>10</X>
+							<Y>110</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Hide from hostile players</text>
+							<AutoTooltip>If checked, run to safe spot when hostile enters system.</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Combat.RunAway}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+									Script[EVEBot].VariableScope.Config.Combat:SetRunAway[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+
+						<Frame name='frmRatter'>
+							<X>2%</X>
+							<Y>50%</Y>
+							<Height>47%</Height>
+							<Width>96%</Width>
+							<Border>2</Border>
+							<Children>
+								<checkbox name='cbChainSpawns'>
+									<X>10</X>
+									<Y>10</Y>
+									<Height>20</Height>
+									<Width>100</Width>
+									<Text>Chain Spawns</text>
+									<AutoTooltip>Will chain high value spawns if checked</AutoTooltip>
+									<OnLoad>
+										if ${Script[EVEBot].VariableScope.Config.Combat.ChainSpawns}
+										{
+											This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+											Script[EVEBot].VariableScope.Config.Combat:SetChainSpawns[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
+								<checkbox name='cbChainSolo'>
+									<X>10</X>
+									<Y>30</Y>
+									<Height>20</Height>
+									<Width>100</Width>
+									<Text>Chain Spawns (while alone)</text>
+									<AutoTooltip>If not checked chaining will be suspended if you are alone in a system.</AutoTooltip>
+									<OnLoad>
+										if ${Script[EVEBot].VariableScope.Config.Combat.ChainSolo}
+										{
+											This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+											Script[EVEBot].VariableScope.Config.Combat:SetChainSolo[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
+								<Text name='lblMinChainBounty'>
+									<X>50%</X>
+									<Y>10</Y>
+									<Width>200</Width>
+									<Height>18</Height>
+									<Text>Minimum Chain Bounty</Text>
+									<AutoTooltip>NPC ships with a bounty above this value will be chained (if enabled).</AutoTooltip>
+								</Text>
+								<Textentry name='tbMinChainBounty'>
+									<X>52%</X>							
+									<Y>30</Y>						
+									<Width>100</Width>						
+									<Height>18</Height>
+									<MaxLength>10</MaxLength>
+									<OnLoad>
+										This:SetText[${Script[EVEBot].VariableScope.Config.Combat.MinChainBounty}]
+									</OnLoad>
+									<OnChange>
+										if ${This.Text.Length} > 0
+										{
+											Script[EVEBot].VariableScope.Config.Combat:SetMinChainBounty[${Int[${This.Text}]}]
+										}
+									</OnChange>
+								</Textentry>
+							</Children>
+						</Frame>						
 					</tab>
 					
 					<Tab name='Salvager'>
@@ -1064,7 +1149,7 @@
 								}
 							</OnChange>
 						</Textentry>
-   					    <Frame name='frmNote'>
+						<Frame name='frmNote'>
 							<X>2%</X>
 							<Y>50%</Y>
 							<Height>47%</Height>

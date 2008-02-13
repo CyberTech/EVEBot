@@ -607,8 +607,52 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[MinimumShieldPct, 25]
 		This.CombatRef:AddSetting[AlwaysShieldBoost, FALSE]
 		This.CombatRef:AddSetting[Launch Combat Drones, TRUE]
+		This.CombatRef:AddSetting[Run Away, TRUE]
+		This.CombatRef:AddSetting[Chain Spawns, TRUE]
+		This.CombatRef:AddSetting[Chain Solo, TRUE]
+		This.CombatRef:AddSetting[Min Chain Bounty, 1500000]
+	}
+
+	member:bool RunAway()
+	{
+		return ${This.CombatRef.FindSetting[Run Away, TRUE]}
 	}
 	
+	method SetRunAway(bool value)
+	{
+		This.CombatRef:AddSetting[Run Away, ${value}]
+	} 
+
+	member:bool ChainSpawns()
+	{
+		return ${This.CombatRef.FindSetting[Chain Spawns, TRUE]}
+	}
+	
+	method SetChainSpawns(bool value)
+	{
+		This.CombatRef:AddSetting[Chain Spawns, ${value}]
+	} 
+
+	member:bool ChainSolo()
+	{
+		return ${This.CombatRef.FindSetting[Chain Solo, TRUE]}
+	}
+	
+	method SetChainSolo(bool value)
+	{
+		This.CombatRef:AddSetting[Chain Solo, ${value}]
+	} 
+
+	member:int MinChainBounty()
+	{
+		return ${This.CombatRef.FindSetting[Min Chain Bounty, 1500000]}
+	}
+	
+	method SetMinChainBounty(int value)
+	{
+		This.CombatRef:AddSetting[Min Chain Bounty,${value}]
+	}
+
 	member:bool LaunchCombatDrones()
 	{
 		return ${This.CombatRef.FindSetting[Launch Combat Drones, TRUE]}

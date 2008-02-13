@@ -18,7 +18,6 @@ objectdef obj_Ratter
 		This:SetupEvents[]
 		BotModules:Insert["Ratter"]
 		
-		
 		UI:UpdateConsole["obj_Ratter: Initialized"]
 	}
 
@@ -58,9 +57,22 @@ objectdef obj_Ratter
 		Event[OnFrame]:AttachAtom[This:Pulse]
 	}
 	
+	
+	/* NOTE: The order of these if statements is important!! */
+	method SetState()
+	{
+		This.CurrentState:Set["IDLE"]
+	}
+
 	/* this function is called repeatedly by the main loop in EveBot.iss */
 	function ProcessState()
 	{				
+	    /* don't do anything if we aren't in Ratter bot mode! */
+		if !${Config.Common.BotModeName.Equal[Ratter]}
+		{
+			return
+		}
+	    
 		switch ${This.CurrentState}
 		{
 			case IDLE
@@ -74,11 +86,5 @@ objectdef obj_Ratter
 			case CARGOFULL
 				break
 		}	
-	}
-	
-	/* NOTE: The order of these if statements is important!! */
-	method SetState()
-	{
-		This.CurrentState:Set["IDLE"]
 	}
 }
