@@ -198,7 +198,7 @@ objectdef obj_Freighter
 	 */
 	function PickupOrDropoff()
 	{
-		if ${Me.InStation}
+		if ${Me.InStation(exists)} && ${Me.InStation}
 		{	/* don't call this function if you are not in station */
 			UI:UpdateConsole["DEBUG: /${EVE.Bookmark[${Config.Freighter.Destination}](exists)} = ${EVE.Bookmark[${Config.Freighter.Destination}](exists)}"]
 			UI:UpdateConsole["DEBUG: /${m_DestinationID} = ${m_DestinationID}"]

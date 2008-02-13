@@ -207,8 +207,11 @@
 								<Item Value='1'>Miner</Item>
 								<Item Value='2'>Hauler</Item>
 								<Item Value='3'>Freighter</Item>
+								<Item Value='4'>Ratter</Item>
+								<!-- these aren't implemented
 								<Item Value='4'>Salvager</Item>
 								<Item Value='5'>Fighter</Item>
+								-->
 							</Items>
 							<OnSelect>
 								Script[EVEBot].VariableScope.Config.Common:SetBotMode[${This.SelectedItem.Value}]

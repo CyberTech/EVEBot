@@ -29,6 +29,7 @@
 #include core/obj_Miner.iss
 #include core/obj_Fighter.iss
 #include core/obj_Freighter.iss
+#include core/obj_Ratter.iss
 
 /* Script-Defined Support Objects */
 variable obj_EVEBot EVEBot
