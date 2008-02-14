@@ -61,7 +61,7 @@ objectdef obj_Belts
 		if ${Belt.Value(exists)}
 		{
 			;call Ship.WarpToBookMark ${SafeSpotIterator.Value.ID}
-			Belt.Value:WarpTo
+			call Ship.WarpToID ${Belt.Value.ID}
 		}
 	
 	}

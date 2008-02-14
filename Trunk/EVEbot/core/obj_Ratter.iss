@@ -115,17 +115,45 @@ objectdef obj_Ratter
 	
 	function Fight()
 	{	/* combat logic */
-	
-		; Are we at the belt and not warping?
-		if !${Belts.IsAtBelt} && ${Me.ToEntity.Mode} != 3
+		; Before opening fire, lets see if there are any friendlies here
+		if !${Targets.PC}
+		while ${Targets.TargetNPCs} && ${Social.IsSafe}
 		{
-			; Turn off the shield booster
-			;Modules:ActivateShieldBooster[FALSE]
 		
-			call Belts.WarpTo
+			;if ${SpecialTargetFlag}
+			;{
+			;	echo "Special spawn detected!"
+			;	call PlaySound DETECTSOUND
+			;}
+		
+			; Make sure our hardeners are running
+			;Modules:ActivateHardeners
 			
-			; Wait 3 seconds
-			wait 30
-		}		
+			; Reload the weapons -if- ammo is below 30% and they arent firing
+			;Modules:ReloadWeapons[FALSE]
+
+			; Activate the weapons, the modules class checks if there's a target
+			;Modules:ActivateWeapons
+			
+			;if ${Me.Ship.ShieldPct} < 70
+			;{
+				; Turn on the shield booster
+			;	Modules:ActivateShieldBooster[TRUE]
+			;}
+			
+			;if ${Me.Ship.ShieldPct} > 80
+			;{
+				; Turn off the shield booster
+			;	Modules:ActivateShieldBooster[FALSE]
+			;}
+
+			; Wait 2 seconds
+			wait 20
+		}
+	
+		call Belts.WarpTo
+		; This will reset target information about the belt 
+		; (its needed for chaining)
+		Targets:ResetTargets
 	}
 }
