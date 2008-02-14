@@ -106,6 +106,13 @@ objectdef obj_Ship
 		}		
 	}
 	
+	/* The IsSafe function should check the tank, ammo availability, etc.. */
+	/* and determine if it is safe to put the ship back into harms way.    */
+	member:bool IsSafe()
+	{	/* stub function, FOR NOW */
+		return TRUE
+	}
+	
 	member:float CargoMinimumFreeSpace()
 	{
 		if !${Me.Ship(exists)}

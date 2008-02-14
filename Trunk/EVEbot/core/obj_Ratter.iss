@@ -61,7 +61,12 @@ objectdef obj_Ratter
 	/* NOTE: The order of these if statements is important!! */
 	method SetState()
 	{
-		This.CurrentState:Set["IDLE"]
+		if !${Social.IsSafe}
+			This.CurrentState:Set["SAFESPOT"]
+		elseif !${Ship.IsSafe}
+			This.CurrentState:Set["SAFESPOT"]
+		else
+			This.CurrentState:Set["FIGHT"]
 	}
 
 	/* this function is called repeatedly by the main loop in EveBot.iss */
@@ -75,16 +80,52 @@ objectdef obj_Ratter
 	    
 		switch ${This.CurrentState}
 		{
-			case IDLE
+			case SAFESPOT
+				call This.RunAway
 				break
-			case ABORT
-				break
-			case BASE
-				break
-			case TRANSPORT
-				break
-			case CARGOFULL
+			case FIGHT
+				call This.Fight
 				break
 		}	
+	}
+	
+	function RunAway()
+	{
+		; Are we at the safespot and not warping?
+		if !${Safespot.IsAtSafespot} && ${Me.ToEntity.Mode} != 3
+		{
+			; Turn off the shield booster
+			;Modules:ActivateShieldBooster[FALSE]
+		
+			call Safespots.WarpTo
+			
+			; Wait 3 seconds
+			wait 30
+		}
+		
+		if ${Safespots.IsAtSafespot}
+		{
+			wait 60
+			;Modules:ActivateCloak[TRUE]
+			
+			; Wait 1 minute, there was hostiles so who cares how long we wait
+			wait 600
+		}
+	}
+	
+	function Fight()
+	{	/* combat logic */
+	
+		; Are we at the belt and not warping?
+		if !${Belts.IsAtBelt} && ${Me.ToEntity.Mode} != 3
+		{
+			; Turn off the shield booster
+			;Modules:ActivateShieldBooster[FALSE]
+		
+			call Belts.WarpTo
+			
+			; Wait 3 seconds
+			wait 30
+		}		
 	}
 }

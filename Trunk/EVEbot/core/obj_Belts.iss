@@ -5,21 +5,18 @@ objectdef obj_Belts
 
 	method Initialize()
 	{
-		EVE:DoGetEntities[Belts, GroupID, GROUPID_ASTEROID_BELT]
-		Belts:GetIterator[Belt]
-
-		variable int Counter
-
-		Counter:Set[0]
-		if ${Belt:First(exists)}
-		do
+		if ${Me.Station(exists)} && !${Me.Station}
 		{
-			Counter:Inc[1]
+			This:ResetBeltList
 		}
-		while ${Belt:Next(exists)}
-
-		UI:UpdateConsole["obj_Belts: Initialized"]
+		
+		UI:UpdateConsole["obj_Belts: Initialized."]
 	}
+	method ResetBeltList()
+	{
+		UI:UpdateConsole["ResetBeltList found ${Belts.Used} belts in this system."]
+	}
+	
     member:bool IsAtBelt()
 	{
 		; Are we within 150km off the belt?
@@ -37,5 +34,35 @@ objectdef obj_Belts
 			Belt:First(exists)
 
 		return
+	}
+	
+	function WarpTo()
+	{
+		call This.WarpToNextBelt
+	}
+	
+	function WarpToNextBelt()
+	{
+		if ${Belts.Used} == 0 
+		{
+			This:ResetBeltList
+		}		
+		
+		if ${Belts.Get[1](exists)} && ${Belts.Get[1].SolarSystemID} != ${Me.SolarSystemID}
+		{
+			This:ResetBeltList
+		}
+		
+		if !${Belt:Next(exists)}
+		{
+			Belt:First
+		}
+		
+		if ${Belt.Value(exists)}
+		{
+			;call Ship.WarpToBookMark ${SafeSpotIterator.Value.ID}
+			Belt.Value:WarpTo
+		}
+	
 	}
 }
