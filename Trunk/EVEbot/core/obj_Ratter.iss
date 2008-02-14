@@ -136,10 +136,10 @@ objectdef obj_Ratter
 			Ship:Activate_Hardeners[]
 			
 			; Reload the weapons -if- ammo is below 30% and they arent firing
-			;Modules:ReloadWeapons[FALSE]
+			Ship:Reload_Weapons[FALSE]
 
 			; Activate the weapons, the modules class checks if there's a target
-			;Modules:ActivateWeapons
+			Ship:Activate_Weapons
 			
 			; Wait 2 seconds
 			wait 20
@@ -149,5 +149,9 @@ objectdef obj_Ratter
 		; This will reset target information about the belt 
 		; (its needed for chaining)
 		Targets:ResetTargets
+		; Reload just before targeting everything, the ship
+		; has been through warp so we're sure that no weapons are still
+		; active
+		Ship:Reload_Weapons[TRUE]
 	}
 }

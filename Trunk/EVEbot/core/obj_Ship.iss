@@ -1338,30 +1338,107 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		return 0
 	}
 	function SetActiveCrystals()
+    {
+        variable iterator ModuleIterator
+
+        This.ModuleList_MiningLaser:GetIterator[ModuleIterator]
+
+        Cargo.ActiveMiningCrystals:Clear
+
+        ;echo Found ${This.ModuleList_MiningLaser.Used} lasers
+
+        if ${ModuleIterator:First(exists)}
+        do
         {
-                variable iterator ModuleIterator
-
-                This.ModuleList_MiningLaser:GetIterator[ModuleIterator]
-
-                Cargo.ActiveMiningCrystals:Clear
-
-                ;echo Found ${This.ModuleList_MiningLaser.Used} lasers
-
-                if ${ModuleIterator:First(exists)}
-                do
+            variable string crystal
+            if ${ModuleIterator.Value.SpecialtyCrystalMiningAmount(exists)}
+            {
+                crystal:Set[${This.LoadedMiningLaserCrystal[${ModuleIterator.Value.ToItem.Slot},TRUE]}]
+                ;echo ${crystal} found
+                if !${crystal.Equal["NOCHARGE"]}
                 {
-                        variable string crystal
-                        if ${ModuleIterator.Value.SpecialtyCrystalMiningAmount(exists)}
-                        {
-                                crystal:Set[${This.LoadedMiningLaserCrystal[${ModuleIterator.Value.ToItem.Slot},TRUE]}]
-                                ;echo ${crystal} found
-                                if !${crystal.Equal["NOCHARGE"]}
-                                {
-                                        Cargo.ActiveMiningCrystals:Insert[${crystal}]
-                                }
-                        }
+                    Cargo.ActiveMiningCrystals:Insert[${crystal}]
                 }
-                while ${ModuleIterator:Next(exists)}
+            }
         }
+        while ${ModuleIterator:Next(exists)}
+    }
 
+	method Activate_Weapons()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+		
+		variable iterator Module
+		
+		This.ModuleList_Weapon:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			if !${Module.Value.IsActive}
+			{
+				UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
+				Module.Value:Click
+			}
+		}	
+		while ${Module:Next(exists)}
+	}
+
+
+	method ReloadWeapons(bool force)
+	{
+		variable bool NeedReload = FALSE
+
+
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+		
+		variable iterator Module
+		
+		This.ModuleList_Weapon:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			if !${Module.Value.IsActive} && !${Module.Value.IsChangingAmmo} && !${Module.Value.IsReloadingAmmo}
+			{
+				; Sometimes this value can be NULL
+				if !${Module.Value.MaxCharges(exists)}
+				{
+					UI:UpdateConsole["Sanity check failed, weapon has no MaxCharges!"]
+					return
+				}
+			
+				; Has ammo been used?
+				if ${Module.Value.CurrentCharges} != ${Module.Value.MaxCharges}
+				{
+					; Force reload ?
+					if ${force}
+					{
+						; Yes, reload
+						NeedReload:Set[TRUE]
+					}
+					else
+					{
+						; Is there still more then 30% ammo available?
+						if ${Math.Calc[${Module.Value.CurrentCharges}/${Module.Value.MaxCharges}]} < 0.3
+						{
+							; No, reload
+							NeedReload:Set[TRUE]
+						}
+					}
+				}
+			}
+		}	
+		while ${Module:Next(exists)}
+
+		if ${NeedReload}
+		{
+			UI:UpdateConsole["Reloading weapons..."'
+			EVE:Execute[CmdReloadAmmo]
+		}
+	}
 }
