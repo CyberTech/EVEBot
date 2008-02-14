@@ -39,8 +39,9 @@ function main()
 			Belts:NextBelt
 			}
 			variable int WarpToDistance
-			WarpToDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.40/1000].Round}]
-			WarpToDistance:Set[${Math.Calc[${WarpToDistance}*1000]}]
+			;WarpToDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.80/1000].Round}]
+			;WarpToDistance:Set[${Math.Calc[${WarpToDistance}*1000]}]
+			WarpToDistance:Set[0]
 			echo "Warping to belt ${Belts.Belt.Value.Name} @ ${WarpToDistance}"
 			Belts.Belt.Value:WarpTo[${WarpToDistance}]
 
@@ -814,13 +815,13 @@ objectdef cls_Targets
 		}
 		while ${Target:Next(exists)}
 		
-		if ${HasTargets} && ${Me.ActiveTarget(exists)}
-		{
-			variable int OrbitDistance
-			OrbitDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.40/1000].Round}]
-			OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
-			Me.ActiveTarget:Orbit[${OrbitDistance}]
-		}
+		;if ${HasTargets} && ${Me.ActiveTarget(exists)}
+		;{
+		;	variable int OrbitDistance
+		;	OrbitDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.40/1000].Round}]
+		;	OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
+		;	Me.ActiveTarget:Orbit[${OrbitDistance}]
+		;}
 		
 		return ${HasTargets}
 	}
