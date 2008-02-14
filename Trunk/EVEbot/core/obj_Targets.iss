@@ -351,23 +351,23 @@ objectdef obj_Targets
 	
 	member:bool PC()
 	{
-		variable index:entity Targets
-		variable iterator Target
+		variable index:entity tgtIndex
+		variable iterator tgtIterator
 
-		EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_SHIP]
-		Targets:GetIterator[Target]
+		EVE:DoGetEntities[tgtIndex, CategoryID, CATEGORYID_SHIP]
+		tgtIndex:GetIterator[tgtIterator]
 		
-		if ${Target:First(exists)}
+		if ${tgtIterator:First(exists)}
 		do
 		{
-			if ${Target.Value.OwnerID} != ${Me.CharID}
+			if ${tgtIterator.Value.OwnerID} != ${Me.CharID}
 			{
 				; A player is already present here !
-				echo "Player found ${Target.Value.Owner}"
+				echo "Player found ${tgtIterator.Value.Owner}"
 				return TRUE
 			}
 		}
-		while ${Target:Next(exists)}
+		while ${tgtIterator:Next(exists)}
 		
 		; No other players around 
 		return FALSE
