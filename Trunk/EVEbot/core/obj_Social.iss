@@ -12,15 +12,130 @@ This contains all stuff dealing with other players around us. - Hessinger
 		- (bool) PossibleHostiles(): Returns True if there are ships targeting us.
 */
 
+objectdef cls_Local
+{
+	variable index:int SafeAllianceIDs
+	variable index:int SafeCorporationIDs
+
+	method Initialize()
+	{
+		; Aliance ID
+		SafeAllianceIDs:Insert[${Me.AllianceID}]
+		SafeAllianceIDs:Insert[1902943913]
+
+		; Insert corp id's here
+		;SafeCorporationIDs:Insert[320162553]
+	}
+	
+	member:bool IsSafe()
+	{
+		if ${CapFlag} && ${Me.Ship.CapacitorPct} < 90
+		{
+		return FALSE
+		}
+		
+		if ${Me.Ship.CapacitorPct} < 10
+		{
+		echo "Cap low, warping the fuck away"
+		Safe:Set[FALSE]
+		CapFlag:Set[TRUE]
+		return FALSE
+		}
+		if ${Me.Ship.ArmorPct} < 25
+		
+		{
+		;; Pretty much self explanatory, right?
+		echo "ARMOR LOW!!!"
+		Safe:Set[FALSE]
+		return FALSE
+		}
+		if ${Me.Ship.UsedCargoCapacity} < 10
+		{
+			CargoCount:Set[${CargoCount}+1]
+			;; When reloading UsedCargoCapacity sometimes freaks out so have to make sure it's not one of those, otherwise
+			;; Otherwise you warp to your safespot alot.
+			if (${Me.Ship.UsedCargoCapacity} < 10 && ${CargoCount} > 10)
+			{
+				echo "CARGO LOW Warping to safespot and camping for the night!"
+				Safe:Set[FALSE]
+				return FALSE
+			}
+		}
+		elseif ${CargoCount} > 0
+		{
+		CargoCount:Set[0]
+		}
+		;;variable index:pilot Pilots
+		;;variable iterator Pilot
+	
+		;;EVE:DoGetPilots[Pilots]
+		;;Pilots:GetIterator[Pilot]
+		variable int LocalCheckLoop
+		for (LocalCheckLoop:Set[1] ; ${LocalCheckLoop}<=${EVE.LocalsCount} ; LocalCheckLoop:Inc)
+		{
+			if ${Local[${LocalCheckLoop}].CharID} == ${Me.CharID}
+			{
+			continue
+			}
+			variable bool Safe
+			Safe:Set[FALSE]
+			
+			variable iterator SafeAllianceID
+			SafeAllianceIDs:GetIterator[SafeAllianceID]
+			
+			if ${SafeAllianceID:First(exists)}
+			do
+			{
+				if ${SafeAllianceID.Value} == ${Local[${LocalCheckLoop}].AllianceID}
+				{
+					Safe:Set[TRUE]
+				}
+			}
+			while ${SafeAllianceID:Next(exists)}
+			
+			variable iterator SafeCorporationID
+			SafeCorporationIDs:GetIterator[SafeCorporationID]
+			
+			if ${SafeCorporationID:First(exists)}
+			do
+			{
+				if ${SafeCorporationID.Value} == ${Local[${LocalCheckLoop}].CorporationID}
+				{
+					Safe:Set[TRUE]
+				}
+			}
+			while ${SafeCorporationID:Next(exists)}
+			
+			if !${Safe}
+			{
+				echo "Enemy in local: ${Local[${LocalCheckLoop}].Name} <${Local[${LocalCheckLoop}].Alliance}> (${Local[${LocalCheckLoop}].Corporation} [${Local[${LocalCheckLoop}].CorporationTicker}])"
+				return FALSE
+			}
+		}
+		
+		return TRUE
+	}
+}
+
+
 objectdef obj_Social
 {
 	;Variables 
 	variable index:entity PilotIndex
 	variable index:entity EntityIndex
 	variable int FrameCounter
+
+	variable iterator CorpIterator	
+	variable iterator AllianceIterator	
+	variable bool SystemSafe	
 	
 	method Initialize()
 	{
+		Whitelist.CorporationsRef:GetSettingIterator[This.CorpIterator]
+		Whitelist.AlliancesRef:GetSettingIterator[This.AllianceIterator]
+
+		SystemSafe:Set[TRUE]
+		
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_Social: Initialized"]
 	}
@@ -44,8 +159,65 @@ objectdef obj_Social
 		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 		{
     		This:GetLists
+    		This:CheckLocal
     		FrameCounter:Set[0]
 		}
+	}
+	
+	member:bool IsSafe()
+	{
+		return ${This.SystemSafe}
+	}
+	
+	method CheckLocal()
+	{
+		variable index:pilot anIndex
+		variable iterator    anIterator
+		variable bool localSafe
+		variable bool pilotSafe
+		
+		EVE:DoGetPilots[anIndex]
+		anIndex:GetIterator[anIterator]
+		
+		localSafe:Set[TRUE]
+		if ${anIterator:First(exists)}
+		do
+		{
+			pilotSafe:Set[FALSE]
+			
+			if ${This.AllianceIterator:First(exists)}
+			do
+			{
+				if ${This.AllianceIterator.Value.Int} == ${anIterator.Value.AllianceID}
+				{
+					pilotSafe:Set[TRUE]
+				}
+			}
+			while ${This.AllianceIterator:Next(exists)}
+			
+			if !${pilotSafe}
+			{	/* pilot failed alliance check, perform corporation check */
+				if ${This.CorpIterator:First(exists)}
+				do
+				{
+					if ${This.CorpIterator.Value.Int} == ${anIterator.Value.CorporationID}
+					{
+						pilotSafe:Set[TRUE]
+					}
+				}
+				while ${This.CorpIterator:Next(exists)}
+			}
+
+			if !${pilotSafe}
+			{	/* pilot failed alliance and corporation check, get out of town!! */
+				UI:UpdateConsole["DEBUG: Hostile in local!!"]
+				localSafe:Set[FALSE]
+				break
+			}
+		}
+		while ${anIterator:Next(exists)}
+				
+		SystemSafe:Set[${localSafe}]
 	}
 	
 	method GetLists()

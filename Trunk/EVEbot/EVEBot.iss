@@ -36,6 +36,7 @@ variable obj_EVEBot EVEBot
 variable obj_EVEBotUI UI
 variable obj_Configuration_BaseConfig BaseConfig
 variable obj_Configuration Config
+variable obj_Config_Whitelist Whitelist
 
 /* Core Objects */
 variable obj_Asteroids Asteroids

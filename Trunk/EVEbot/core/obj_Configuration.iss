@@ -950,4 +950,63 @@ objectdef obj_Configuration_Freighter
 	}
 }
 
+objectdef obj_Config_Whitelist
+{
+	variable string DATA_FILE = "${Script.CurrentDirectory}/config/whitelist.xml"
+	variable settingsetref BaseRef
 
+	method Initialize()
+	{	
+		if ${Me.Name(exists)}
+		{
+			This.DATA_FILE:Set["${Script.CurrentDirectory}/config/${Me.Name}_whitelist.xml"]
+		}
+	
+		LavishSettings[EVEBotWhitelist]:Clear
+		LavishSettings:AddSet[EVEBotWhitelist]
+		This.BaseRef:Set[${LavishSettings[EVEBotWhitelist]}]
+		This.BaseRef:Import[${This.DATA_FILE}]
+		
+		if !${This.BaseRef.FindSet[Corporations](exists)}
+		{
+			This.BaseRef:AddSet[Corporations]
+			if ${Me.CorporationID(exists)} && ${Me.CorporationID} > 0
+			{
+				This.CorporationsRef:AddSetting[${Me.Corporation}, ${Me.CorporationID}]
+			}
+		}
+
+		if !${This.BaseRef.FindSet[Alliances](exists)}
+		{
+			This.BaseRef:AddSet[Alliances]
+			if ${Me.AllianceID(exists)} && ${Me.AllianceID} > 0
+			{
+				This.AlliancesRef:AddSetting[${Me.Alliance}, ${Me.AllianceID}]
+			}
+		}
+
+		UI:UpdateConsole["obj_Config_Whitelist: Initialized"]
+	}
+	
+	method Shutdown()
+	{
+		This:Save[]
+		LavishSettings[EVEBotWhitelist]:Clear
+	}
+
+	method Save()
+	{
+		LavishSettings[EVEBotWhitelist]:Export[${This.DATA_FILE}]
+	}		
+
+	member:settingsetref CorporationsRef()
+	{
+		return ${This.BaseRef.FindSet[Corporations]}
+	}
+
+	member:settingsetref AlliancesRef()
+	{
+		return ${This.BaseRef.FindSet[Alliances]}
+	}
+
+}
