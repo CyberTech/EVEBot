@@ -133,7 +133,7 @@ objectdef obj_Ratter
 			;}
 		
 			; Make sure our hardeners are running
-			;Modules:ActivateHardeners
+			Ship:Activate_Hardeners[]
 			
 			; Reload the weapons -if- ammo is below 30% and they arent firing
 			;Modules:ReloadWeapons[FALSE]
@@ -141,18 +141,6 @@ objectdef obj_Ratter
 			; Activate the weapons, the modules class checks if there's a target
 			;Modules:ActivateWeapons
 			
-			;if ${Me.Ship.ShieldPct} < 70
-			;{
-				; Turn on the shield booster
-			;	Modules:ActivateShieldBooster[TRUE]
-			;}
-			
-			;if ${Me.Ship.ShieldPct} > 80
-			;{
-				; Turn off the shield booster
-			;	Modules:ActivateShieldBooster[FALSE]
-			;}
-
 			; Wait 2 seconds
 			wait 20
 		}

@@ -184,14 +184,15 @@ objectdef obj_Targets
 		variable index:entity Targets
 		variable iterator Target
 
+		/* Me.Ship.MaxTargetRange contains the (possibly) damped value */
 		EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY, radius, ${Me.Ship.MaxTargetRange}]
 		Targets:GetIterator[Target]
 
 		if !${Target:First(exists)}
 		{
-			if ${Me.Ship.MaxTargetRange} < ${TrueMaxTargetRange}
-			{
-				EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY, radius, ${TrueMaxTargetRange}]
+			if ${Ship.IsDamped}
+			{	/* Ship.MaxTargetRange contains the maximum undamped value */
+				EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY, radius, ${Ship.MaxTargetRange}]
 				Targets:GetIterator[Target]
 
 				if !${Target:First(exists)}

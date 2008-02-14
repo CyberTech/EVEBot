@@ -28,6 +28,7 @@ objectdef obj_Ship
 	variable index:module ModuleList_TractorBeams
 	variable bool Repairing_Armor = FALSE
 	variable bool Repairing_Hull = FALSE
+	variable float m_MaxTargetRange
 
 	variable iterator ModulesIterator
 
@@ -86,6 +87,7 @@ objectdef obj_Ship
     			;UI:UpdateConsole["Debug: Obj_Ship: Possible Hostiles: ${Social.PossibleHostiles}"]
     			;UI:UpdateConsole["Debug: Obj_Ship: Shield Booster Activation: ${Config.Combat.ShieldBAct}"]
     			/* TODO: CyberTech - This should be an option, not forced. */
+    			/*
     			if ${Social.PossibleHostiles} || \
     				${Me.Ship.ShieldPct} < 90 || \
     				${Config.Combat.AlwaysShieldBoost}
@@ -96,6 +98,20 @@ objectdef obj_Ship
     			{
     				This:Deactivate_Shield_Booster[]
     			}
+    			*/
+    			/* Why check ${Social.PossibleHostiles}?
+    			 * If your shield is going down something is hostile!
+    			 * The code below pulses your booster around the sweet spot
+    			 */
+				if ${Me.Ship.ShieldPct} < 70 || ${Config.Combat.AlwaysShieldBoost}
+				{	/* Turn on the shield booster */
+					This:Activate_Shield_Booster[]
+				}
+				
+				if ${Me.Ship.ShieldPct} > 80 && !${Config.Combat.AlwaysShieldBoost}
+				{	/* Turn off the shield booster */
+					This:Deactivate_Shield_Booster[]
+				}    			
     			
     			FrameCounter:Set[0]
     		}
@@ -165,6 +181,16 @@ objectdef obj_Ship
 		return FALSE
 	}
 
+	member:bool IsDamped()
+	{
+		return ${Me.Ship.MaxTargetRange} < ${This.m_MaxTargetRange}
+	}
+	
+	member:float MaxTargetRange()
+	{
+		return ${m_MaxTargetRange}
+	}
+	
 	method UpdateModuleList()
 	{
 		if ${Me.InStation}
@@ -174,6 +200,10 @@ objectdef obj_Ship
 			return
 		}
 			
+		/* save ship values that may change in combat */
+		This.m_MaxTargetRange:Set[${Me.Ship.MaxTargetRange}]
+			
+		/* build module lists */			
 		This.ModuleList:Clear
 		This.ModuleList_MiningLaser:Clear
 		This.ModuleList_Weapon:Clear
@@ -214,9 +244,9 @@ objectdef obj_Ship
 				continue
 			}
 
-			echo "DEBUG: Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"
-			echo " DEBUG: Group: ${Module.Value.ToItem.Group}  ${GroupID}"
-			echo " DEBUG: Type: ${Module.Value.ToItem.Type}  ${TypeID}"
+			;echo "DEBUG: Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"
+			;echo " DEBUG: Group: ${Module.Value.ToItem.Group}  ${GroupID}"
+			;echo " DEBUG: Type: ${Module.Value.ToItem.Type}  ${TypeID}"
 			
 			if ${Module.Value.MiningAmount(exists)}
 			{
@@ -230,6 +260,17 @@ objectdef obj_Ship
 			;This.ModuleList_AB_MWD
 			switch ${GroupID}
 			{
+				case GROUPID_SHIELD_HARDENER
+				case GROUPID_ARMOR_HARDENERS
+					This.ModuleList_ActiveResists:Insert[${Module.Value}]
+					break
+				case GROUPID_MISSILE_LAUNCHER_CRUISE
+				case GROUPID_MISSILE_LAUNCHER_ROCKET 
+				case GROUPID_MISSILE_LAUNCHER_SIEGE
+				case GROUPID_MISSILE_LAUNCHER_STANDARD
+				case GROUPID_MISSILE_LAUNCHER_HEAVY
+					This.ModuleList_Weapon:Insert[${Module.Value}]
+					break
 				case GROUPID_FREQUENCY_MINING_LASER
 					break
 				case GROUPID_SHIELD_BOOSTER
@@ -238,7 +279,7 @@ objectdef obj_Ship
 				case GROUPID_AFTERBURNER
 					This.ModuleList_AB_MWD:Insert[${Module.Value}]
 					continue
-				case 62
+				case GROUPID_ARMOR_REPAIRERS
 					This.ModuleList_Repair_Armor:Insert[${Module.Value}]
 					continue
 				case 538
@@ -264,6 +305,24 @@ objectdef obj_Ship
 			}
 
 		} 
+		while ${Module:Next(exists)}
+
+		UI:UpdateConsole["Weapons:"]
+		This.ModuleList_Weapon:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"]
+		}
+		while ${Module:Next(exists)}
+
+		UI:UpdateConsole["Active Resistance Modules:"]
+		This.ModuleList_ActiveResists:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"]
+		}
 		while ${Module:Next(exists)}
 
 		UI:UpdateConsole["Passive Modules:"]
@@ -1176,6 +1235,50 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				Module.Value:Click
 			}
 		}
+		while ${Module:Next(exists)}
+	}
+
+	method Activate_Hardeners()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+		
+		variable iterator Module
+		
+		This.ModuleList_ActiveResists:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			if !${Module.Value.IsActive}
+			{
+				UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
+				Module.Value:Click
+			}
+		}	
+		while ${Module:Next(exists)}
+	}
+
+	method Deactivate_Hardeners()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+		
+		variable iterator Module
+		
+		This.ModuleList_ActiveResists:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			if ${Module.Value.IsActive}
+			{
+				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}"]
+				Module.Value:Click
+			}
+		}	
 		while ${Module:Next(exists)}
 	}
 

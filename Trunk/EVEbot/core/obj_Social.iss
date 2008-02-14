@@ -122,8 +122,8 @@ objectdef obj_Social
 		if (${Me.ToEntity.Mode} == 3)
 			return    
 
-		EVE:DoGetEntities[PilotIndex,CategoryID,6]
-		EVE:DoGetEntities[EntityIndex,CategoryID,11]
+		EVE:DoGetEntities[PilotIndex,CategoryID,CATEGORYID_SHIP]
+		EVE:DoGetEntities[EntityIndex,CategoryID,CATEGORYID_ENTITY]
 	}
 	
 	member:bool PlayerDetection()
