@@ -921,7 +921,7 @@
 											Script[EVEBot].VariableScope.Config.Combat:SetChainSolo[${This.Checked}]
 									</OnLeftClick>
 								</checkbox>
-								<checkbox name='cbChainSpawns'>
+								<checkbox name='cbUseBeltBookmarks'>
 									<X>10</X>
 									<Y>50</Y>
 									<Height>20</Height>

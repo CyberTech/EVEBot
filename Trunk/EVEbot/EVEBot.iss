@@ -20,10 +20,11 @@
 #include core/obj_Jetcan.iss
 #include core/obj_Social.iss
 #include core/obj_Gang.iss
-#include core/obj_Target.iss
 #include core/obj_Assets.iss
 #include core/obj_IRC.iss
 #include core/obj_Safespots.iss
+#include core/obj_Belts.iss
+#include core/obj_Targets.iss
 
 /* Behavior/Mode Includes */
 #include core/obj_Hauler.iss
@@ -54,6 +55,8 @@ variable obj_Fleet Fleet
 variable obj_Assets Assets
 variable obj_IRC ChatIRC
 variable obj_Safespots Safespots
+variable obj_Belts Belts
+variable obj_Targets Targets
 
 /* Script-Defined Behavior Objects */
 variable index:string BotModules

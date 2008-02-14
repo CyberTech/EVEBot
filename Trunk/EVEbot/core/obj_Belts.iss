@@ -1,4 +1,4 @@
-objectdef cls_Belts
+objectdef obj_Belts
 {
 	variable index:entity Belts
 	variable iterator Belt
@@ -18,7 +18,7 @@ objectdef cls_Belts
 		}
 		while ${Belt:Next(exists)}
 
-		echo "${Counter} belts found..."
+		UI:UpdateConsole["obj_Belts: Initialized"]
 	}
     member:bool IsAtBelt()
 	{

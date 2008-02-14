@@ -44,7 +44,7 @@ Ahremen
 Raysere
 Tairei
 */
-objectdef cls_Targets
+objectdef obj_Targets
 {
 	variable index:string PriorityTargets
 	variable iterator PriorityTarget
@@ -281,7 +281,7 @@ objectdef cls_Targets
 		while ${Target:Next(exists)}
 		
 		; Do we need to determin if we need to chain ?
-		if ChainSpawns && ${CheckChain}
+		if ${Config.Combat.ChainSpawns} && ${CheckChain}
 		{
 			; Is there a chainable target? Is there a special or priority target?
 			if ${HasChainableTarget} && !${HasSpecialTarget} && !${HasPriorityTarget}

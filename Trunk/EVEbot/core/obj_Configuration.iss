@@ -646,7 +646,7 @@ objectdef obj_Configuration_Combat
 
 	member:bool UseBeltBookmarks()
 	{
-		return ${This.CombatRef.FindSetting[Use Belt Bookmarks, TRUE]}
+		return ${This.CombatRef.FindSetting[Use Belt Bookmarks, FALSE]}
 	}
 	
 	method SetUseBeltBookmarks(bool value)
