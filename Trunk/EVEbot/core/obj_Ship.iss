@@ -214,9 +214,9 @@ objectdef obj_Ship
 				continue
 			}
 
-			;echo "DEBUG: Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"
-			;echo " DEBUG: Group: ${Module.Value.ToItem.Group}  ${GroupID}"
-			;echo " DEBUG: Type: ${Module.Value.ToItem.Type}  ${TypeID}"
+			echo "DEBUG: Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"
+			echo " DEBUG: Group: ${Module.Value.ToItem.Group}  ${GroupID}"
+			echo " DEBUG: Type: ${Module.Value.ToItem.Type}  ${TypeID}"
 			
 			if ${Module.Value.MiningAmount(exists)}
 			{
@@ -1183,7 +1183,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 	{
 		if ${Entity[${TargetID}](exists)}
 		{
-			UI:UpdateConsole["Locking ${Entity[${TargetID}].Name}: " ${EVEBot.MetersToKM_Str[${Entity[${TargetID}].Distance}]}"]
+			UI:UpdateConsole["Locking ${Entity[${TargetID}].Name}: ${EVEBot.MetersToKM_Str[${Entity[${TargetID}].Distance}]}"]
 			Entity[${TargetID}]:LockTarget
 			wait 30
 		}

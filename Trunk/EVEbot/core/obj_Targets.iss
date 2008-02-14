@@ -196,25 +196,25 @@ objectdef obj_Targets
 
 				if !${Target:First(exists)}
 				{
-					echo "No targets found..."
+					UI:UpdateConsole["No targets found..."]
 					return FALSE
 				}
 				else
 				{
-					echo "Damped, cant target..."
+					UI:UpdateConsole["Damped, cant target..."]
 					return TRUE
 				}
 			}
 			else
 			{
-				echo "No targets found..."
+				UI:UpdateConsole["No targets found..."]
 				return FALSE
 			}
 		}
 
 		if ${Me.Ship.MaxLockedTargets} == 0
 		{
-			echo "Jammed, cant target..."
+			UI:UpdateConsole["Jammed, cant target..."]
 			return TRUE
 		}
 		
@@ -261,7 +261,7 @@ objectdef obj_Targets
 				if !${Target.Value.IsLockedTarget} && !${Target.Value.BeingTargeted}
 				{
 					; No, report it and lock it.
-					echo "Locking priority target ${Target.Value.Name}"
+					UI:UpdateConsole["Locking priority target ${Target.Value.Name}"]
 					Target.Value:LockTarget
 				}
 				
@@ -320,7 +320,7 @@ objectdef obj_Targets
 			{
 				if !${Target.Value.IsLockedTarget} && !${Target.Value.BeingTargeted}
 				{
-					echo "Locking ${Target.Value.Name}"
+					UI:UpdateConsole["Locking ${Target.Value.Name}"]
 					Target.Value:LockTarget
 				}
 				
@@ -361,9 +361,8 @@ objectdef obj_Targets
 		do
 		{
 			if ${tgtIterator.Value.OwnerID} != ${Me.CharID}
-			{
-				; A player is already present here !
-				echo "Player found ${tgtIterator.Value.Owner}"
+			{	/* A player is already present here ! */
+				UI:UpdateConsole["Player found ${tgtIterator.Value.Owner}"] 
 				return TRUE
 			}
 		}
