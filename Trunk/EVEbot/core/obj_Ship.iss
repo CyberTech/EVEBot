@@ -1439,7 +1439,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		if ${Module:First(exists)}
 		do
 		{
-			if ${Module.Value.IsActive}
+			if ${Module.Value.IsActive} || ${Module.Value.IsWaitingForActiveTarget}
 			{
 				;;UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}"]
 				Module.Value:Click
