@@ -29,6 +29,8 @@ objectdef obj_Ship
 	variable bool Repairing_Armor = FALSE
 	variable bool Repairing_Hull = FALSE
 	variable float m_MaxTargetRange
+	variable bool  m_WaitForCapRecharge = FALSE
+	variable int   m_CargoSanityCounter = 0
 
 	variable iterator ModulesIterator
 
@@ -125,7 +127,45 @@ objectdef obj_Ship
 	/* The IsSafe function should check the tank, ammo availability, etc.. */
 	/* and determine if it is safe to put the ship back into harms way.    */
 	member:bool IsSafe()
-	{	/* stub function, FOR NOW */
+	{
+		if ${m_WaitForCapRecharge} && ${Me.Ship.CapacitorPct} < 90
+		{
+			return FALSE
+		}
+		else
+		{
+			m_WaitForCapRecharge:Set[FALSE]	
+		}
+		
+		if ${Me.Ship.CapacitorPct} < 10
+		{
+			UI:UpdateConsole["Capacitor low!  Run for cover!"]
+			m_WaitForCapRecharge:Set[TRUE]
+			return FALSE
+		}
+		
+		if ${Me.Ship.ArmorPct} < 25
+		{
+			UI:UpdateConsole["Armor low!  Run for cover!"]
+			return FALSE
+		}
+		
+		if ${Me.Ship.UsedCargoCapacity} < 10
+		{
+			m_CargoSanityCounter:Set[${m_CargoSanityCounter}+1]
+			;; When reloading UsedCargoCapacity sometimes freaks out so have to make sure it's not one of those, otherwise
+			;; Otherwise you warp to your safespot alot.
+			if (${Me.Ship.UsedCargoCapacity} < 10 && ${m_CargoSanityCounter} > 10)
+			{
+				UI:UpdateConsole["Cargo low!  Warping to safespot and camping for the night!"]
+				return FALSE
+			}
+		}
+		elseif ${m_CargoSanityCounter} > 0
+		{
+			m_CargoSanityCounter:Set[0]
+		}
+		
 		return TRUE
 	}
 	
