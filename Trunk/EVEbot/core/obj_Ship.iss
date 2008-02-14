@@ -1379,7 +1379,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			if !${Module.Value.IsActive}
 			{
-				UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
+				;;UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
 				Module.Value:Click
 			}
 		}	
@@ -1387,7 +1387,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 	}
 
 
-	method ReloadWeapons(bool force)
+	method Reload_Weapons(bool force)
 	{
 		variable bool NeedReload = FALSE
 

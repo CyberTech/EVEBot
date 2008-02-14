@@ -339,13 +339,13 @@ objectdef obj_Targets
 		}
 		while ${Target:Next(exists)}
 		
-		if ${HasTargets} && ${Me.ActiveTarget(exists)}
-		{
-			variable int OrbitDistance
-			OrbitDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.40/1000].Round}]
-			OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
-			Me.ActiveTarget:Orbit[${OrbitDistance}]
-		}
+		;if ${HasTargets} && ${Me.ActiveTarget(exists)}
+		;{
+		;	variable int OrbitDistance
+		;	OrbitDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.40/1000].Round}]
+		;	OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
+		;	Me.ActiveTarget:Orbit[${OrbitDistance}]
+		;}
 		
 		return ${HasTargets}
 	}
