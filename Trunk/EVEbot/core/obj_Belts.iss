@@ -1,7 +1,7 @@
 objectdef obj_Belts
 {
-	variable index:entity Belts
-	variable iterator Belt
+	variable index:entity beltIndex
+	variable iterator beltIterator
 
 	method Initialize()
 	{
@@ -14,13 +14,15 @@ objectdef obj_Belts
 	}
 	method ResetBeltList()
 	{
-		UI:UpdateConsole["ResetBeltList found ${Belts.Used} belts in this system."]
+		EVE:DoGetEntities[beltIndex, GroupID, GROUPID_ASTEROID_BELT]
+		beltIndex:GetIterator[beltIterator]	
+		UI:UpdateConsole["ResetBeltList found ${beltIndex.Used} belts in this system."]
 	}
 	
     member:bool IsAtBelt()
 	{
 		; Are we within 150km off the belt?
-		if ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${Belt.Value.X}, ${Belt.Value.Y}, ${Belt.Value.Z}]} < 150000
+		if ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${beltIterator.Value.X}, ${beltIterator.Value.Y}, ${beltIterator.Value.Z}]} < 150000
 		{
 			return TRUE
 		}
@@ -30,8 +32,8 @@ objectdef obj_Belts
 	
 	method NextBelt()
 	{
-		if !${Belt:Next(exists)}
-			Belt:First(exists)
+		if !${beltIterator:Next(exists)}
+			beltIterator:First(exists)
 
 		return
 	}
@@ -43,26 +45,31 @@ objectdef obj_Belts
 	
 	function WarpToNextBelt()
 	{
-		if ${Belts.Used} == 0 
+		if ${beltIndex.Used} == 0 
 		{
 			This:ResetBeltList
 		}		
 		
-		if ${Belts.Get[1](exists)} && ${Belts.Get[1].SolarSystemID} != ${Me.SolarSystemID}
+		; This is for belt bookmarks only
+		;if ${beltIndex.Get[1](exists)} && ${beltIndex.Get[1].SolarSystemID} != ${Me.SolarSystemID}
+		;{
+		;	This:ResetBeltList
+		;}
+		
+		if !${beltIterator:Next(exists)}
 		{
-			This:ResetBeltList
+			beltIterator:First
 		}
 		
-		if !${Belt:Next(exists)}
-		{
-			Belt:First
-		}
-		
-		if ${Belt.Value(exists)}
+		if ${beltIterator.Value(exists)}
 		{
 			;call Ship.WarpToBookMark ${SafeSpotIterator.Value.ID}
-			call Ship.WarpToID ${Belt.Value.ID}
+			UI:UpdateConsole["obj_Belts: DEBUG: Warping to ${beltIterator.Value.Name}"]
+			call Ship.WarpToID ${beltIterator.Value.ID}
 		}
-	
+		else
+		{
+			UI:UpdateConsole["obj_Belts: DEBUG: ERROR: ${beltIterator.Value(exists)}"]
+		}
 	}
 }

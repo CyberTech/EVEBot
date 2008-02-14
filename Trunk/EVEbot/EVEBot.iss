@@ -64,6 +64,7 @@ variable obj_Miner Miner
 variable obj_OreHauler Hauler
 variable obj_CombatFighter Fighter
 variable obj_Freighter Freighter
+variable obj_Ratter Ratter
 ;variable obj_Salvager Salvager
 
 function atexit()

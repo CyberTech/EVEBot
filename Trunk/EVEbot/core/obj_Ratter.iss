@@ -91,6 +91,8 @@ objectdef obj_Ratter
 	
 	function RunAway()
 	{
+		UI:UpdateConsole["obj_Ratter: DEBUG: RunAway"]
+	
 		; Are we at the safespot and not warping?
 		if !${Safespot.IsAtSafespot} && ${Me.ToEntity.Mode} != 3
 		{
@@ -105,7 +107,9 @@ objectdef obj_Ratter
 		
 		if ${Safespots.IsAtSafespot}
 		{
+			
 			wait 60
+			UI:UpdateConsole["obj_Ratter: DEBUG: At safespot.  Cloaking..."]
 			;Modules:ActivateCloak[TRUE]
 			
 			; Wait 1 minute, there was hostiles so who cares how long we wait
@@ -115,6 +119,8 @@ objectdef obj_Ratter
 	
 	function Fight()
 	{	/* combat logic */
+	
+		UI:UpdateConsole["obj_Ratter: DEBUG: Fight"]
 		; Before opening fire, lets see if there are any friendlies here
 		if !${Targets.PC}
 		while ${Targets.TargetNPCs} && ${Social.IsSafe}
