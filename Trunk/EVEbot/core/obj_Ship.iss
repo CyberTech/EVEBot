@@ -1426,6 +1426,27 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		while ${Module:Next(exists)}
 	}
 
+	method Deactivate_Weapons()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+		
+		variable iterator Module
+		
+		This.ModuleList_Weapon:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			if ${Module.Value.IsActive}
+			{
+				;;UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}"]
+				Module.Value:Click
+			}
+		}	
+		while ${Module:Next(exists)}
+	}
 
 	method Reload_Weapons(bool force)
 	{

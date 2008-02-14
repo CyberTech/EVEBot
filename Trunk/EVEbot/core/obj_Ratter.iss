@@ -145,6 +145,8 @@ objectdef obj_Ratter
 			wait 20
 		}
 	
+		Ship:Deactivate_Weapons
+		
 		call Belts.WarpTo
 		; This will reset target information about the belt 
 		; (its needed for chaining)
