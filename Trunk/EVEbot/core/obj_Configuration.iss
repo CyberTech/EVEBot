@@ -610,6 +610,7 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[Run Away, TRUE]
 		This.CombatRef:AddSetting[Chain Spawns, TRUE]
 		This.CombatRef:AddSetting[Chain Solo, TRUE]
+		This.CombatRef:AddSetting[Use Belt Bookmarks, FALSE]
 		This.CombatRef:AddSetting[Min Chain Bounty, 1500000]
 	}
 
@@ -643,6 +644,16 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[Chain Solo, ${value}]
 	} 
 
+	member:bool UseBeltBookmarks()
+	{
+		return ${This.CombatRef.FindSetting[Use Belt Bookmarks, TRUE]}
+	}
+	
+	method SetUseBeltBookmarks(bool value)
+	{
+		This.CombatRef:AddSetting[Use Belt Bookmarks, ${value}]
+	} 
+	
 	member:int MinChainBounty()
 	{
 		return ${This.CombatRef.FindSetting[Min Chain Bounty, 1500000]}

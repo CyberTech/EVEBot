@@ -921,6 +921,23 @@
 											Script[EVEBot].VariableScope.Config.Combat:SetChainSolo[${This.Checked}]
 									</OnLeftClick>
 								</checkbox>
+								<checkbox name='cbChainSpawns'>
+									<X>10</X>
+									<Y>50</Y>
+									<Height>20</Height>
+									<Width>100</Width>
+									<Text>Use Belt Bookmarks</text>
+									<AutoTooltip>Will warp to bookmarks instead of belts.</AutoTooltip>
+									<OnLoad>
+										if ${Script[EVEBot].VariableScope.Config.Combat.UseBeltBookmarks}
+										{
+											This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+											Script[EVEBot].VariableScope.Config.Combat:SetUseBeltBookmarks[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
 								<Text name='lblMinChainBounty'>
 									<X>50%</X>
 									<Y>10</Y>
