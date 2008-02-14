@@ -1408,7 +1408,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				; Sometimes this value can be NULL
 				if !${Module.Value.MaxCharges(exists)}
 				{
-					UI:UpdateConsole["Sanity check failed, weapon has no MaxCharges!"]
+					UI:UpdateConsole["Sanity check failed... weapon has no MaxCharges!"]
 					return
 				}
 			

@@ -25,6 +25,7 @@
 #include core/obj_Safespots.iss
 #include core/obj_Belts.iss
 #include core/obj_Targets.iss
+#include core/obj_Sound.iss
 
 /* Behavior/Mode Includes */
 #include core/obj_Hauler.iss
@@ -57,6 +58,7 @@ variable obj_IRC ChatIRC
 variable obj_Safespots Safespots
 variable obj_Belts Belts
 variable obj_Targets Targets
+variable obj_Sound Sound
 
 /* Script-Defined Behavior Objects */
 variable index:string BotModules

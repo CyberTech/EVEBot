@@ -57,11 +57,12 @@ objectdef obj_Targets
 	
 	variable bool CheckChain
 	variable bool Chaining
-	variable int TrueMaxTargetRange
+
+	variable bool m_SpecialTargetPresent
 	
 	method Initialize()
 	{
-		TrueMaxTargetRange:Set[${Me.Ship.MaxTargetRange}]
+		m_SpecialTargetPresent:Set[FALSE]
 		
 		; TODO - load this all from XML files
 	
@@ -131,6 +132,11 @@ objectdef obj_Targets
 		Chaining:Set[FALSE]
 	}
 
+	member:bool SpecialTargetPresent()
+	{
+		return ${m_SpecialTargetPresent}
+	}
+	
 	member:bool IsPriorityTarget(string name)
 	{
 		; Loop through the priority targets
@@ -230,7 +236,7 @@ objectdef obj_Targets
 		variable bool HasSpecialTarget = FALSE
 		variable bool HasMultipleTypes = FALSE
 
-		SpecialTargetFlag:Set[FALSE]
+		m_SpecialTargetPresent:Set[FALSE]
 		
 		variable int TypeID
 		TypeID:Set[${Target.Value.TypeID}]
@@ -252,7 +258,7 @@ objectdef obj_Targets
 			if ${This.IsSpecialTarget[${Target.Value.Name}]}
 			{
 				HasSpecialTarget:Set[TRUE]
-				SpecialTargetFlag:Set[TRUE]
+				m_SpecialTargetPresent:Set[TRUE]
 			}
 		
 			; Loop through the priority targets

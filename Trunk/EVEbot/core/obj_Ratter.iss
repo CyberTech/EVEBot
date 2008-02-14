@@ -116,7 +116,7 @@ objectdef obj_Ratter
 			wait 600
 		}
 	}
-	
+
 	function Fight()
 	{	/* combat logic */
 	
@@ -126,11 +126,11 @@ objectdef obj_Ratter
 		while ${Targets.TargetNPCs} && ${Social.IsSafe}
 		{
 		
-			;if ${SpecialTargetFlag}
-			;{
-			;	echo "Special spawn detected!"
-			;	call PlaySound DETECTSOUND
-			;}
+			if ${Targets.SpecialTargetPresent}
+			{
+				UI:UpdateConsole["Special spawn detected!"]
+				call Sound.PlayDetectSound
+			}
 		
 			; Make sure our hardeners are running
 			Ship:Activate_Hardeners[]

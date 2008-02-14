@@ -113,3 +113,10 @@ variable string Version = "${APP_NAME} ${APP_VERSION} Revision ${SVN_REVISION.To
 #define CATEGORYID_ORE     		25
 #define CATEGORYID_GLACIAL_MASS 25
 
+/* for obj_Sound.iss */
+#define ALARMSOUND	"${Script.CurrentDirectory}/sounds/alarm.wav"
+#define DETECTSOUND	"${Script.CurrentDirectory}/sounds/detect.wav"
+#define TELLSOUND	"${Script.CurrentDirectory}/sounds/tell.wav"
+#define LEVELSOUND	"${Script.CurrentDirectory}/sounds/level.wav"
+#define WARNSOUND	"${Script.CurrentDirectory}/sounds/warning.wav"
+
