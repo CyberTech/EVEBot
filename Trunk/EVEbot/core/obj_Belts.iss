@@ -64,7 +64,7 @@ objectdef obj_Belts
 		if ${beltIterator.Value(exists)}
 		{
 			;call Ship.WarpToBookMark ${SafeSpotIterator.Value.ID}
-			UI:UpdateConsole["obj_Belts: DEBUG: Warping to ${beltIterator.Value.Name}"]
+			;;UI:UpdateConsole["obj_Belts: DEBUG: Warping to ${beltIterator.Value.Name}"]
 			call Ship.WarpToID ${beltIterator.Value.ID}
 		}
 		else
