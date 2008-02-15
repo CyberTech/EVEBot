@@ -84,6 +84,7 @@ objectdef obj_Social
 		variable index:pilot PilotIndex
 		variable iterator PilotIterator
 		variable bool pilotSafe
+		variable int UnSafeCount
 		variable set PilotWhiteList
 		variable set CorpWhiteList
 		variable set AllianceWhiteList
@@ -138,9 +139,10 @@ objectdef obj_Social
 				/* pilot failed alliance and corporation check, get out of town!! */
 				UI:UpdateConsole["obj_Social: Non-Whitelisted Pilot in local: ${PilotIterator.Value.Name}!"]
 				SystemSafe:Set[${pilotSafe}]
+				return
 			}			
 		}
-		while ${PilotIterator:Next(exists)}
+		while ${PilotIterator:Next(exists)}		
 	}
 	
 	/* This method is safe to call in station */
@@ -193,6 +195,7 @@ objectdef obj_Social
 				/* pilot failed alliance and corporation check, get out of town!! */
 				UI:UpdateConsole["obj_Social: Blacklisted Pilot in local: ${PilotIterator.Value.Name}!"]
 				SystemSafe:Set[${pilotSafe}]
+				return
 			}			
 		}
 		while ${PilotIterator:Next(exists)}
