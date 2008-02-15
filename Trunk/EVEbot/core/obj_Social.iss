@@ -52,7 +52,7 @@ objectdef obj_Social
 	{
 		if ${EVEBot.Paused}
 		{
-			;return
+			return
 		}
 
 		FrameCounter:Inc
