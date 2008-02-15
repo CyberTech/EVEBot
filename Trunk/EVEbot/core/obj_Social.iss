@@ -19,14 +19,23 @@ objectdef obj_Social
 	variable index:entity EntityIndex
 	variable int FrameCounter
 
-	variable iterator CorpIterator	
-	variable iterator AllianceIterator	
+	variable iterator WhiteListPilotIterator	
+	variable iterator WhiteListCorpIterator	
+	variable iterator WhiteListAllianceIterator	
+	variable iterator BlackListPilotIterator	
+	variable iterator BlackListCorpIterator	
+	variable iterator BlackListAllianceIterator	
 	variable bool SystemSafe	
 	
 	method Initialize()
 	{
+		Whitelist.PilotsRef:GetSettingIterator[This.PilotIterator]
 		Whitelist.CorporationsRef:GetSettingIterator[This.CorpIterator]
 		Whitelist.AlliancesRef:GetSettingIterator[This.AllianceIterator]
+
+		Blacklist.PilotsRef:GetSettingIterator[This.PilotIterator]
+		Blacklist.CorporationsRef:GetSettingIterator[This.CorpIterator]
+		Blacklist.AlliancesRef:GetSettingIterator[This.AllianceIterator]
 
 		SystemSafe:Set[TRUE]
 		
@@ -43,17 +52,23 @@ objectdef obj_Social
 	{
 		if ${EVEBot.Paused}
 		{
-			return
+			;return
 		}
 
 		FrameCounter:Inc
 		variable int IntervalInSeconds = 5
-		
-		
+				
 		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 		{
     		This:GetLists
-    		This:CheckLocal
+    		if ${Config.Combat.UseWhiteList}
+    		{
+    			This:CheckLocalWhiteList
+    		}
+    		if ${Config.Combat.UseBlackList}
+    		{
+    			This:CheckLocalBlackList
+    		}
     		FrameCounter:Set[0]
 		}
 	}
@@ -63,57 +78,126 @@ objectdef obj_Social
 		return ${This.SystemSafe}
 	}
 	
-	method CheckLocal()
+	/* This method is safe to call in station */
+	method CheckLocalWhiteList()
 	{
-		variable index:pilot anIndex
-		variable iterator    anIterator
-		variable bool localSafe
+		variable index:pilot PilotIndex
+		variable iterator PilotIterator
 		variable bool pilotSafe
+		variable set PilotWhiteList
+		variable set CorpWhiteList
+		variable set AllianceWhiteList
 		
-		EVE:DoGetPilots[anIndex]
-		anIndex:GetIterator[anIterator]
+		EVE:DoGetPilots[PilotIndex]
 		
-		localSafe:Set[TRUE]
-		if ${anIterator:First(exists)}
+		PilotWhiteList:Add[${Me.CharID}]
+		if ${Me.CorporationID} > 0
+		{
+			AllianceWhiteList:Add[${Me.CorporationID}]
+		}
+		if ${Me.AllianceID} > 0
+		{
+			AllianceWhiteList:Add[${Me.AllianceID}]
+		}
+
+		if ${This.WhiteListPilotIterator:First(exists)}
+		do
+		{
+			PilotWhiteList:Add[${This.WhiteListPilotIterator.Value}]
+		}
+		while ${This.WhiteListPilotIterator:Next(exists)}
+
+		if ${This.WhiteListCorpIterator:First(exists)}
+		do
+		{
+			CorpWhiteList:Add[${This.WhiteListCorpIterator.Value}]
+		}
+		while ${This.WhiteListCorpIterator:Next(exists)}
+
+		if ${This.WhiteListAllianceIterator:First(exists)}
+		do
+		{
+			AllianceWhiteList:Add[${This.WhiteListCorpIterator.Value}]
+		}
+		while ${This.WhiteListAllianceIterator:Next(exists)}
+
+		PilotIndex:GetIterator[PilotIterator]
+		if ${PilotIterator:First(exists)}
 		do
 		{
 			pilotSafe:Set[FALSE]
-			
-			if ${This.AllianceIterator:First(exists)}
-			do
+			if ${AllianceWhiteList.Contains[${PilotIterator.Value.AllianceID}]} || \
+				${CorpWhiteList.Contains[${PilotIterator.Value.CorporationID}]} || \
+				${PilotWhiteList.Contains[${PilotIterator.Value.CharID}]}
 			{
-				if ${This.AllianceIterator.Value.Int} == ${anIterator.Value.AllianceID}
-				{
 					pilotSafe:Set[TRUE]
-				}
 			}
-			while ${This.AllianceIterator:Next(exists)}
 			
 			if !${pilotSafe}
-			{	/* pilot failed alliance check, perform corporation check */
-				if ${This.CorpIterator:First(exists)}
-				do
-				{
-					if ${This.CorpIterator.Value.Int} == ${anIterator.Value.CorporationID}
-					{
-						pilotSafe:Set[TRUE]
-					}
-				}
-				while ${This.CorpIterator:Next(exists)}
-			}
-
-			if !${pilotSafe}
-			{	/* pilot failed alliance and corporation check, get out of town!! */
-				UI:UpdateConsole["DEBUG: Hostile in local!!"]
-				localSafe:Set[FALSE]
-				break
-			}
+			{	
+				/* pilot failed alliance and corporation check, get out of town!! */
+				UI:UpdateConsole["obj_Social: Non-Whitelisted Pilot in local: ${PilotIterator.Value.Name}!"]
+				SystemSafe:Set[${pilotSafe}]
+			}			
 		}
-		while ${anIterator:Next(exists)}
-				
-		SystemSafe:Set[${localSafe}]
+		while ${PilotIterator:Next(exists)}
 	}
 	
+	/* This method is safe to call in station */
+	method CheckLocalBlackList()
+	{
+		variable index:pilot PilotIndex
+		variable iterator PilotIterator
+		variable bool pilotSafe
+		variable set PilotBlackList
+		variable set CorpBlackList
+		variable set AllianceBlackList
+		
+		EVE:DoGetPilots[PilotIndex]
+
+		if ${This.WhiteListPilotIterator:First(exists)}
+		do
+		{
+			PilotWhiteList:Add[${This.WhiteListPilotIterator.Value}]
+		}
+		while ${This.WhiteListPilotIterator:Next(exists)}
+
+		if ${This.BlackListCorpIterator:First(exists)}
+		do
+		{
+			CorpBlackList:Add[${This.BlackListCorpIterator.Value}]
+		}
+		while ${This.BlackListCorpIterator:Next(exists)}
+
+		if ${This.BlackListAllianceIterator:First(exists)}
+		do
+		{
+			AllianceBlackList:Add[${This.BlackListAllianceIterator.Value}]
+		}
+		while ${This.BlackListAllianceIterator:Next(exists)}
+
+		PilotIndex:GetIterator[PilotIterator]
+		if ${PilotIterator:First(exists)}
+		do
+		{
+			pilotSafe:Set[TRUE]
+			if ${PilotBlackList.Contains[${PilotIterator.Value.CharID}]} || \
+				${AllianceBlackList.Contains[${PilotIterator.Value.AllianceID}]} || \
+				${CorpBlackList.Contains[${PilotIterator.Value.CorporationID}]}
+			{
+					pilotSafe:Set[FALSE]
+			}
+			
+			if !${pilotSafe}
+			{	
+				/* pilot failed alliance and corporation check, get out of town!! */
+				UI:UpdateConsole["obj_Social: Blacklisted Pilot in local: ${PilotIterator.Value.Name}!"]
+				SystemSafe:Set[${pilotSafe}]
+			}			
+		}
+		while ${PilotIterator:Next(exists)}
+	}
+
 	method GetLists()
 	{
 		if ( ${Me.InStation(exists)} && ${Me.InStation} )
@@ -244,8 +328,8 @@ objectdef obj_Social
 			do
 			{
 				if (${Me.ShipID} != ${PilotIterator.Value}) && \
-				!${PilotIterator.Value.Owner.ToFleetMember} && \
-				${PilotITerator.Value.Distance} < ${Dist}
+					!${PilotIterator.Value.Owner.ToFleetMember} && \
+					${PilotITerator.Value.Distance} < ${Dist}
 				{
 					return TRUE
 				}

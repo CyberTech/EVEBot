@@ -5,11 +5,6 @@ objectdef obj_Safespots
 
 	method Initialize()
 	{
-		if ${Me.Station(exists)} && !${Me.Station}
-		{
-			This:ResetSafeSpotList
-		}
-		
 		UI:UpdateConsole["obj_Safespots: Initialized"]
 	}
 
@@ -70,7 +65,13 @@ objectdef obj_Safespots
 
 	member:bool IsAtSafespot()
 	{
+		if ${SafeSpots.Used} == 0 
+		{
+			This:ResetSafeSpotList
+		}
+		
 		; Are we within 150km off th bookmark?
+		; TODO - Why are we calling math.distance w/6 object calls instead of ${SafeSpotIterator.Value.Distance} -- CyberTech
 		if ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${SafeSpotIterator.Value.X}, ${SafeSpotIterator.Value.Y}, ${SafeSpotIterator.Value.Z}]} < 150000
 		{
 			return TRUE

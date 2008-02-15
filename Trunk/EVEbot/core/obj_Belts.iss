@@ -4,24 +4,21 @@ objectdef obj_Belts
 	variable iterator beltIterator
 
 	method Initialize()
-	{
-		if ${Me.Station(exists)} && !${Me.Station}
-		{
-			This:ResetBeltList
-		}
-		
-		UI:UpdateConsole["obj_Belts: Initialized."]
+	{		
+		UI:UpdateConsole["obj_Belts: Initialized"]
 	}
+	
 	method ResetBeltList()
 	{
 		EVE:DoGetEntities[beltIndex, GroupID, GROUPID_ASTEROID_BELT]
 		beltIndex:GetIterator[beltIterator]	
-		UI:UpdateConsole["ResetBeltList found ${beltIndex.Used} belts in this system."]
+		UI:UpdateConsole["obj_Belts: ResetBeltList found ${beltIndex.Used} belts in this system."]
 	}
 	
     member:bool IsAtBelt()
 	{
 		; Are we within 150km off the belt?
+		; TODO - Why are we calling math.distance w/6 object calls instead of ${beltIterator.Value.Distance} -- CyberTech
 		if ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${beltIterator.Value.X}, ${beltIterator.Value.Y}, ${beltIterator.Value.Z}]} < 150000
 		{
 			return TRUE
@@ -30,8 +27,14 @@ objectdef obj_Belts
 		return FALSE
 	}
 	
+	; TODO - logic is duplicated inside WarpToNextBelt -- CyberTech
 	method NextBelt()
 	{
+		if ${beltIndex.Used} == 0 
+		{
+			This:ResetBeltList
+		}		
+
 		if !${beltIterator:Next(exists)}
 			beltIterator:First(exists)
 
@@ -69,7 +72,7 @@ objectdef obj_Belts
 		}
 		else
 		{
-			UI:UpdateConsole["obj_Belts: DEBUG: ERROR: ${beltIterator.Value(exists)}"]
+			UI:UpdateConsole["obj_Belts:WarpToNextBelt ERROR: beltIterator does not exist"]
 		}
 	}
 }

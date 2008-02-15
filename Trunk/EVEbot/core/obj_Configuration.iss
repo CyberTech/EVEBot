@@ -607,21 +607,33 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[MinimumShieldPct, 25]
 		This.CombatRef:AddSetting[AlwaysShieldBoost, FALSE]
 		This.CombatRef:AddSetting[Launch Combat Drones, TRUE]
-		This.CombatRef:AddSetting[Run Away, TRUE]
+		This.CombatRef:AddSetting[Use Whitelist, FALSE]
+		This.CombatRef:AddSetting[Use Blacklist, FALSE]
 		This.CombatRef:AddSetting[Chain Spawns, TRUE]
 		This.CombatRef:AddSetting[Chain Solo, TRUE]
 		This.CombatRef:AddSetting[Use Belt Bookmarks, FALSE]
 		This.CombatRef:AddSetting[Min Chain Bounty, 1500000]
 	}
 
-	member:bool RunAway()
+	member:bool UseWhiteList()
 	{
-		return ${This.CombatRef.FindSetting[Run Away, TRUE]}
+		return ${This.CombatRef.FindSetting[Use Whitelist, FALSE]}
 	}
 	
-	method SetRunAway(bool value)
+	method SetUseWhiteList(bool value)
 	{
-		This.CombatRef:AddSetting[Run Away, ${value}]
+		This.CombatRef:AddSetting[Use Whitelist, ${value}]
+	} 
+	
+	/* TODO - Add BlackList checkbox to UI near Whitelist checkbox - CyberTech */
+	member:bool UseBlackList()
+	{
+		return ${This.CombatRef.FindSetting[Use Blacklist, FALSE]}
+	}
+	
+	method SetUseBlackList(bool value)
+	{
+		This.CombatRef:AddSetting[Use Blacklist, ${value}]
 	} 
 
 	member:bool ChainSpawns()
@@ -978,22 +990,19 @@ objectdef obj_Config_Whitelist
 		This.BaseRef:Set[${LavishSettings[EVEBotWhitelist]}]
 		This.BaseRef:Import[${This.DATA_FILE}]
 		
+		if !${This.BaseRef.FindSet[Pilots](exists)}
+		{
+			This.BaseRef:AddSet[Pilots]
+		}
+
 		if !${This.BaseRef.FindSet[Corporations](exists)}
 		{
 			This.BaseRef:AddSet[Corporations]
-			if ${Me.CorporationID(exists)} && ${Me.CorporationID} > 0
-			{
-				This.CorporationsRef:AddSetting[${Me.Corporation}, ${Me.CorporationID}]
-			}
 		}
 
 		if !${This.BaseRef.FindSet[Alliances](exists)}
 		{
 			This.BaseRef:AddSet[Alliances]
-			if ${Me.AllianceID(exists)} && ${Me.AllianceID} > 0
-			{
-				This.AlliancesRef:AddSetting[${Me.Alliance}, ${Me.AllianceID}]
-			}
 		}
 
 		UI:UpdateConsole["obj_Config_Whitelist: Initialized"]
@@ -1010,6 +1019,11 @@ objectdef obj_Config_Whitelist
 		LavishSettings[EVEBotWhitelist]:Export[${This.DATA_FILE}]
 	}		
 
+	member:settingsetref PilotsRef()
+	{
+		return ${This.BaseRef.FindSet[Pilots]}
+	}
+
 	member:settingsetref CorporationsRef()
 	{
 		return ${This.BaseRef.FindSet[Corporations]}
@@ -1019,5 +1033,61 @@ objectdef obj_Config_Whitelist
 	{
 		return ${This.BaseRef.FindSet[Alliances]}
 	}
+}
 
+objectdef obj_Config_Blacklist
+{
+	variable string DATA_FILE = "${Script.CurrentDirectory}/config/blacklist.xml"
+	variable settingsetref BaseRef
+
+	method Initialize()
+	{	
+		if ${Me.Name(exists)}
+		{
+			This.DATA_FILE:Set["${Script.CurrentDirectory}/config/${Me.Name}_blacklist.xml"]
+		}
+	
+		LavishSettings[EVEBotWhitelist]:Clear
+		LavishSettings:AddSet[EVEBotBlacklist]
+		This.BaseRef:Set[${LavishSettings[EVEBotBlacklist]}]
+		This.BaseRef:Import[${This.DATA_FILE}]
+		
+		if !${This.BaseRef.FindSet[Pilots](exists)}
+		{
+			This.BaseRef:AddSet[Pilots]
+		}
+
+		if !${This.BaseRef.FindSet[Corporations](exists)}
+		{
+			This.BaseRef:AddSet[Corporations]
+		}
+
+		if !${This.BaseRef.FindSet[Alliances](exists)}
+		{
+			This.BaseRef:AddSet[Alliances]
+		}
+
+		UI:UpdateConsole["obj_Config_Blacklist: Initialized"]
+	}
+	
+	method Shutdown()
+	{
+		This:Save[]
+		LavishSettings[EVEBotBlacklist]:Clear
+	}
+
+	method Save()
+	{
+		LavishSettings[EVEBotBlacklist]:Export[${This.DATA_FILE}]
+	}		
+
+	member:settingsetref CorporationsRef()
+	{
+		return ${This.BaseRef.FindSet[Corporations]}
+	}
+
+	member:settingsetref AlliancesRef()
+	{
+		return ${This.BaseRef.FindSet[Alliances]}
+	}
 }

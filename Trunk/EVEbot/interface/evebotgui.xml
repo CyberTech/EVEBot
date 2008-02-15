@@ -862,21 +862,38 @@
 									Script[EVEBot].VariableScope.Config.Combat:SetLaunchCombatDrones[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
-						<checkbox name='cbRunAway'>
+						<checkbox name='cbUseWhiteList'>
 							<X>10</X>
 							<Y>110</Y>
 							<Height>20</Height>
 							<Width>100</Width>
-							<Text>Hide from hostile players</text>
-							<AutoTooltip>If checked, run to safe spot when hostile enters system.</AutoTooltip>
+							<Text>Use Pilot Whitelist - Assume Hostile Pilots</text>
+							<AutoTooltip>If checked, run to safe spot when any non-whitelisted pilot enters system.</AutoTooltip>
 							<OnLoad>
-								if ${Script[EVEBot].VariableScope.Config.Combat.RunAway}
+								if ${Script[EVEBot].VariableScope.Config.Combat.UseWhiteList}
 								{
 									This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
-									Script[EVEBot].VariableScope.Config.Combat:SetRunAway[${This.Checked}]
+									Script[EVEBot].VariableScope.Config.Combat:SetUseWhiteList[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox name='cbUseBlackList'>
+							<X>10</X>
+							<Y>130</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Use Blacklist</text>
+							<AutoTooltip>If checked, run to safe spot when any blacklisted pilot enters system.</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Combat.UseBlackList}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+									Script[EVEBot].VariableScope.Config.Combat:SetUseBlackList[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
 
