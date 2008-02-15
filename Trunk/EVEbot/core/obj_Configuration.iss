@@ -975,14 +975,14 @@ objectdef obj_Configuration_Freighter
 
 objectdef obj_Config_Whitelist
 {
-	variable string DATA_FILE = "${Script.CurrentDirectory}/config/whitelist.xml"
+	variable string DATA_FILE = "${Script.CurrentDirectory}/config/Whitelist.xml"
 	variable settingsetref BaseRef
 
 	method Initialize()
 	{	
 		if ${Me.Name(exists)}
 		{
-			This.DATA_FILE:Set["${Script.CurrentDirectory}/config/${Me.Name}_whitelist.xml"]
+			This.DATA_FILE:Set["${Script.CurrentDirectory}/config/${Me.Name}_Whitelist.xml"]
 		}
 	
 		LavishSettings[EVEBotWhitelist]:Clear
@@ -1037,14 +1037,14 @@ objectdef obj_Config_Whitelist
 
 objectdef obj_Config_Blacklist
 {
-	variable string DATA_FILE = "${Script.CurrentDirectory}/config/blacklist.xml"
+	variable string DATA_FILE = "${Script.CurrentDirectory}/config/Blacklist.xml"
 	variable settingsetref BaseRef
 
 	method Initialize()
 	{	
 		if ${Me.Name(exists)}
 		{
-			This.DATA_FILE:Set["${Script.CurrentDirectory}/config/${Me.Name}_blacklist.xml"]
+			This.DATA_FILE:Set["${Script.CurrentDirectory}/config/${Me.Name}_Blacklist.xml"]
 		}
 	
 		LavishSettings[EVEBotWhitelist]:Clear
