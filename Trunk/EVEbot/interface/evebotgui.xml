@@ -1102,6 +1102,7 @@
 								<Item Value='1'>Source and Destination</Item>
 								<Item Value='2'>Asset Gather</Item>
 								<Item Value='3'>Move Minerals to Buyer</Item>
+								<Item Value='4'>Container Test</Item>
 							</Items>
 							<OnSelect>
 								Script[EVEBot].VariableScope.Config.Freighter:SetFreighterMode[${This.SelectedItem.Value}]

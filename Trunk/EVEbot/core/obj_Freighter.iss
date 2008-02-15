@@ -83,9 +83,7 @@ objectdef obj_Freighter
 				}
 				break
 			case BASE
-				call This.PickupOrDropoff
-				call Station.Undock
-				call Ship.OpenCargo
+				call This.DoBaseAction
 				break
 			case TRANSPORT
 				call This.Transport
@@ -131,6 +129,36 @@ objectdef obj_Freighter
 		{
 			This.CurrentState:Set["Unknown"]
 		}
+	}
+
+	function DoBaseAction()
+	{
+		switch ${Config.Freighter.FreighterModeName}
+		{
+			case Move Minerals to Buyer
+				/* not implemented yet */
+				break
+			case Container Test
+				call This.ContainerTest
+				break
+			case default
+				call This.PickupOrDropoff
+				call Station.Undock
+				call Ship.OpenCargo
+				break
+		}
+	}
+	
+	function ContainerTest()
+	{
+		call Cargo.OpenHolds
+		
+		if ${Cargo.ShipHasContainers}
+			UI:UpdateConsole["obj_Freighter: Ship has containers."]
+		else
+			UI:UpdateConsole["obj_Freighter: Ship doesn't have containers."]
+			
+		wait 50
 	}
 
 	function Transport()

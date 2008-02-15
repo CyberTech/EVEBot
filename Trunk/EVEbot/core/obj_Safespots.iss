@@ -72,7 +72,9 @@ objectdef obj_Safespots
 		
 		; Are we within 150km off th bookmark?
 		; TODO - Why are we calling math.distance w/6 object calls instead of ${SafeSpotIterator.Value.Distance} -- CyberTech
-		if ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${SafeSpotIterator.Value.X}, ${SafeSpotIterator.Value.Y}, ${SafeSpotIterator.Value.Z}]} < 150000
+		; GP: Because I copied it from Da_Teach.
+		; OLD: if ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${SafeSpotIterator.Value.X}, ${SafeSpotIterator.Value.Y}, ${SafeSpotIterator.Value.Z}]} < 150000
+		if ${Entity[OwnerID,${Me.CharID},CategoryID,CATEGORYID_SHIP].DistanceTo[${SafeSpotIterator.Value.ID}]} < 150000
 		{
 			return TRUE
 		}
