@@ -302,6 +302,13 @@ objectdef obj_Targets
 			{
 				Chaining:Set[TRUE]
 			}
+			
+			/* skip chaining if chain solo == false and we are alone */
+			if !${Config.Combat.ChainSolo} && ${EVE.LocalsCount} == 1
+			{
+				;UI:UpdateConsole["DEBUG: We are alone.  Skip chaining!!"]
+				Chaining:Set[FALSE]
+			}			
 
 			CheckChain:Set[FALSE]
 		}
