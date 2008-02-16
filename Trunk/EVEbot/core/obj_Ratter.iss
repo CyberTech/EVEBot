@@ -110,6 +110,7 @@ objectdef obj_Ratter
 			
 			wait 60
 			UI:UpdateConsole["obj_Ratter: DEBUG: At safespot.  Cloaking..."]
+			Ship:Deactivate_Hardeners[]
 			;Modules:ActivateCloak[TRUE]
 			
 			; Wait 1 minute, there was hostiles so who cares how long we wait
