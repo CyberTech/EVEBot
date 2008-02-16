@@ -19,7 +19,9 @@ objectdef obj_Belts
 	{
 		; Are we within 150km off the belt?
 		; TODO - Why are we calling math.distance w/6 object calls instead of ${beltIterator.Value.Distance} -- CyberTech
-		if ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${beltIterator.Value.X}, ${beltIterator.Value.Y}, ${beltIterator.Value.Z}]} < 150000
+		; GP: Because I copied it from Da_Teach.
+		; OLD: if ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${beltIterator.Value.X}, ${beltIterator.Value.Y}, ${beltIterator.Value.Z}]} < 150000
+		if ${Entity[OwnerID,${Me.CharID},CategoryID,CATEGORYID_SHIP].DistanceTo[${beltIterator.Value.ID}]} < 150000
 		{
 			return TRUE
 		}

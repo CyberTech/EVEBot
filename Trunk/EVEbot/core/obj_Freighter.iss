@@ -154,9 +154,22 @@ objectdef obj_Freighter
 		call Cargo.OpenHolds
 		
 		if ${Cargo.ShipHasContainers}
+		{
 			UI:UpdateConsole["obj_Freighter: Ship has containers."]
+			UI:UpdateConsole["obj_Freighter: Station contains ${Me.GetHangarItems} items."]
+			if ${Me.GetHangarItems} > 0
+			{	/* move from hangar to ship */
+				call Cargo.TransferCargoToShip
+			}
+			else
+			{	/* move from ship to hangar */
+				call Cargo.TransferCargoToHangar
+			}			
+		}
 		else
+		{
 			UI:UpdateConsole["obj_Freighter: Ship doesn't have containers."]
+		}
 			
 		wait 50
 	}
