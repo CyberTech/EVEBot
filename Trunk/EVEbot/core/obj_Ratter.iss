@@ -147,13 +147,16 @@ objectdef obj_Ratter
 	
 		Ship:Deactivate_Weapons
 		
-		call Belts.WarpTo
-		; This will reset target information about the belt 
-		; (its needed for chaining)
-		Targets:ResetTargets
-		; Reload just before targeting everything, the ship
-		; has been through warp so we're sure that no weapons are still
-		; active
-		Ship:Reload_Weapons[TRUE]
+		if ${Social.IsSafe}
+		{
+			call Belts.WarpTo
+			; This will reset target information about the belt 
+			; (its needed for chaining)
+			Targets:ResetTargets
+			; Reload just before targeting everything, the ship
+			; has been through warp so we're sure that no weapons are still
+			; active
+			Ship:Reload_Weapons[TRUE]
+		}
 	}
 }
