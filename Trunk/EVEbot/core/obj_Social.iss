@@ -40,11 +40,16 @@ objectdef obj_Social
 		SystemSafe:Set[TRUE]
 		
 		Event[OnFrame]:AttachAtom[This:Pulse]
+		
+		Event[EVE_OnChannelMessage]:AttachAtom[This:OnChannelMessage]
+		EVE:ActivateChannelMessageEvents
+		
 		UI:UpdateConsole["obj_Social: Initialized"]
 	}
 	
 	method Shutdown()
 	{
+		Event[EVE_OnChannelMessage]:DetachAtom[This:OnChannelMessage]
 		Event[OnFrame]:DetachAtom[This:Pulse]
 	}
 
@@ -70,6 +75,14 @@ objectdef obj_Social
     			This:CheckLocalBlackList
     		}
     		FrameCounter:Set[0]
+		}
+	}
+	
+	method OnChannelMessage(int64 iTimeStamp, string sDate, string sTime, string sChannel, string sAuthor, int iAuthorID, string sMessageText)
+	{
+		if ${sChannel.Equal["Local"]} 
+		{
+			call Sound.PlayTellSound
 		}
 	}
 	
