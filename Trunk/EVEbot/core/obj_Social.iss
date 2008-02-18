@@ -49,6 +49,7 @@ objectdef obj_Social
 	
 	method Shutdown()
 	{
+		EVE:ActivateChannelMessageEvents
 		Event[EVE_OnChannelMessage]:DetachAtom[This:OnChannelMessage]
 		Event[OnFrame]:DetachAtom[This:Pulse]
 	}
@@ -66,6 +67,7 @@ objectdef obj_Social
 		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
 		{
     		This:GetLists
+			SystemSafe:Set[TRUE]
     		if ${Config.Combat.UseWhiteList}
     		{
     			This:CheckLocalWhiteList
@@ -155,7 +157,7 @@ objectdef obj_Social
 				return
 			}			
 		}
-		while ${PilotIterator:Next(exists)}		
+		while ${PilotIterator:Next(exists)}	
 	}
 	
 	/* This method is safe to call in station */

@@ -35,7 +35,10 @@ variable string Version = "${APP_NAME} ${APP_VERSION} Revision ${SVN_REVISION.To
  */
 #define MINER_SANITY_CHECK_INTERVAL 240
 
-#define GROUPID_ASTEROID_BELT 9
+#define GROUPID_PLANET			7
+#define GROUPID_MOON 			8
+#define GROUPID_ASTEROID_BELT 	9
+#define GROUPID_STARGATE		10
 
 /*
  * DEBUG: Slot: MedSlot3  Ballistic Deflection Field II
@@ -107,6 +110,7 @@ variable string Version = "${APP_NAME} ${APP_VERSION} Revision ${SVN_REVISION.To
 ;Implant (ID: 20)        Deployable (ID: 22)     Structure (ID: 23)          Reaction (ID: 24)
 ;Asteroid (ID: 25)
 	
+#define CATEGORYID_CELESTIAL	2
 #define CATEGORYID_STATION 		3
 #define CATEGORYID_MINERAL 		4
 #define CATEGORYID_SHIP    		6
@@ -114,6 +118,9 @@ variable string Version = "${APP_NAME} ${APP_VERSION} Revision ${SVN_REVISION.To
 #define CATEGORYID_ENTITY		11
 #define CATEGORYID_ORE     		25
 #define CATEGORYID_GLACIAL_MASS 25
+
+#define CATEGORYID_STRUCTURE	23
+#define GROUPID_CONTROL_TOWER   365
 
 /* for obj_Sound.iss */
 #define ALARMSOUND	"${Script.CurrentDirectory}/sounds/alarm.wav"
