@@ -152,23 +152,74 @@ objectdef obj_Ship
 			return FALSE
 		}
 		
-		if ${Me.Ship.UsedCargoCapacity} < 10
-		{
-			m_CargoSanityCounter:Set[${m_CargoSanityCounter}+1]
-			;; When reloading UsedCargoCapacity sometimes freaks out so have to make sure it's not one of those, otherwise
-			;; Otherwise you warp to your safespot alot.
-			if (${Me.Ship.UsedCargoCapacity} < 10 && ${m_CargoSanityCounter} > 10)
-			{
-				UI:UpdateConsole["Cargo low!  Warping to safespot and camping for the night!"]
-				return FALSE
-			}
-		}
-		elseif ${m_CargoSanityCounter} > 0
-		{
-			m_CargoSanityCounter:Set[0]
-		}
+		;if ${Me.Ship.UsedCargoCapacity} < 10
+		;{
+		;	m_CargoSanityCounter:Set[${m_CargoSanityCounter}+1]
+		;	;; When reloading UsedCargoCapacity sometimes freaks out so have to make sure it's not one of those, otherwise
+		;	;; Otherwise you warp to your safespot alot.
+		;	if (${Me.Ship.UsedCargoCapacity} < 10 && ${m_CargoSanityCounter} > 10)
+		;	{
+		;		UI:UpdateConsole["Cargo low!  Warping to safespot and camping for the night!"]
+		;		return FALSE
+		;	}
+		;}
+		;elseif ${m_CargoSanityCounter} > 0
+		;{
+		;	m_CargoSanityCounter:Set[0]
+		;}
 		
 		return TRUE
+	}
+	
+	member:bool IsAmmoAvailable()
+	{
+		variable iterator aWeaponIterator
+		variable index:item anItemIndex
+		variable iterator anItemIterator
+		variable bool bAmmoAvailable = TRUE
+		
+		This.ModuleList_Weapon:GetIterator[aWeaponIterator]
+		if ${aWeaponIterator:First(exists)}
+		do
+		{
+			if ${aWeaponIterator.Value.Charge(exists)}
+			{
+				;UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable:"]	
+				;UI:UpdateConsole["Slot: ${aWeaponIterator.Value.ToItem.Slot}  ${aWeaponIterator.Value.ToItem.Name}"]							
+				
+				aWeaponIterator.Value:DoGetAvailableAmmo[anItemIndex]
+				;UI:UpdateConsole["Ammo: Used = ${anItemIndex.Used}"]
+				
+				anItemIndex:GetIterator[anItemIterator]
+				if ${anItemIterator:First(exists)}
+				{
+					do
+					{
+						;UI:UpdateConsole["Ammo: Type = ${anItemIterator.Value.Type}"]
+						if ${anItemIterator.Value.TypeID} == ${aWeaponIterator.Value.Charge.TypeID}
+						{
+							;UI:UpdateConsole["Ammo: Match!"]
+							;UI:UpdateConsole["Ammo: Qty = ${anItemIterator.Value.Quantity}"]
+							;UI:UpdateConsole["Ammo: Max = ${aWeaponIterator.Value.MaxCharges}"]
+							if ${anItemIterator.Value.Quantity} < ${Math.Calc[${aWeaponIterator.Value.MaxCharges}*2]}
+							{
+								UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable: FALSE!"]
+								bAmmoAvailable:Set[FALSE]							
+							}
+						}
+					}
+					while ${anItemIterator:Next(exists)}			
+				}
+				else
+				{
+					UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable: FALSE!"]
+					bAmmoAvailable:Set[FALSE]							
+				}
+			}
+		}
+		while ${aWeaponIterator:Next(exists)}
+		
+		return ${bAmmoAvailable}
 	}
 	
 	member:float CargoMinimumFreeSpace()

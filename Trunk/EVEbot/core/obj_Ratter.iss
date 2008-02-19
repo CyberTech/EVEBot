@@ -65,6 +65,8 @@ objectdef obj_Ratter
 			This.CurrentState:Set["SAFESPOT"]
 		elseif !${Ship.IsSafe}
 			This.CurrentState:Set["SAFESPOT"]
+		elseif !${Ship.IsAmmoAvailable}
+			This.CurrentState:Set["SAFESPOT"]			
 		else
 			This.CurrentState:Set["FIGHT"]
 	}
