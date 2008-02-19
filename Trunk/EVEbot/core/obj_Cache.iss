@@ -47,8 +47,44 @@ objectdef obj_Cache
 		return NULL
 	}
 	
+	/* register an object for caching */
+	method SetObject(string objectName)
+	{
+	}
+
 	/* register a member for caching */
 	method RegisterMember(string memberName)
 	{
+	}
+
+
+}
+
+objectdef obj_ShipCache inherits obj_Cache
+{
+	method Initialize()
+	{
+		This[parent]:Initialize
+		
+		This:SetObject["Me.Ship"]
+		This:RegisterMember["ArmorPct"]
+		This:RegisterMember["ShieldPct"]
+		
+		UI:UpdateConsole["obj_ShipCache: Initialized"]
+	}
+	
+	method Shutdown()
+	{
+		This[parent]:Shutdown
+	}
+	
+	member:float ArmorPct()
+	{
+		return This.GetMember[ArmorPct]
+	}
+	
+	member:float ShieldPct()
+	{
+		return This.GetMember[ShieldPct]
 	}
 }
