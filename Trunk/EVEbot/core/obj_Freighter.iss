@@ -141,7 +141,7 @@ objectdef obj_Freighter
 			case Container Test
 				call This.ContainerTest
 				break
-			case default
+			default
 				call This.PickupOrDropoff
 				call Station.Undock
 				call Ship.OpenCargo

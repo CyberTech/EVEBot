@@ -29,13 +29,31 @@ objectdef obj_Station
 		}		
 	}
 	
-	member:bool DockedAtStation(int stationID)
+	member:bool Docked()
 	{
-	    if ${EVE.JumpsToStation[${stationID}]} == -1
-	        return TRUE
-	    
-	    /* else */
-	    return FALSE    	    
+		if ${Me.InStation(exists)} && ${Me.InStation} && \
+			${Me.StationID(exists)} && \
+			${Me.StationID} > 0
+		{
+			return TRUE
+		}
+	    return FALSE
+	}
+
+	member:bool DockedAtStation(int StationID)
+	{
+		echo ${Me.InStation(exists)} && ${Me.InStation} && \
+			${Me.StationID(exists)} && \
+			${Me.StationID} == ${StationID}
+
+		if ${Me.InStation(exists)} && ${Me.InStation} && \
+			${Me.StationID(exists)} && \
+			${Me.StationID} == ${StationID}
+		{
+			return TRUE
+		}
+
+	    return FALSE
 	}
 	
 	function OpenHangar()

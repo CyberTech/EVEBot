@@ -1121,9 +1121,8 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				    variable int StationID
 				    StationID:Set[${DestinationBookmark.ToEntity.ID}]
 					call This.Approach ${StationID} DOCKING_RANGE
-					UI:UpdateConsole["Docking with destination station"]
+					UI:UpdateConsole["Docking with destination station..."]
 					DestinationBookmark.ToEntity:Dock
-					UI:UpdateConsole["Waiting until ship enters the station"]
 					Counter:Set[0]
 					do
 					{
@@ -1139,8 +1138,6 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 					   }
 					}
 					while !${Station.DockedAtStation[${StationID}]}
-		            ;while ( ${Entity[CategoryID,3](exists)} ) || \
-		            ;      ( !${Me.InStation(exists)} || !${Me.InStation} )			
 					break
 			}
 
