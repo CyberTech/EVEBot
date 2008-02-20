@@ -16,6 +16,7 @@ objectdef obj_Cargo
 	variable index:item CargoToTransfer
 	variable bool m_LastTransferComplete
 	variable index:string ActiveMiningCrystals
+	variable float m_LastContainerFreeSpace
 
 	method Initialize()
 	{
@@ -264,7 +265,7 @@ objectdef obj_Cargo
 		if ${anItem.GroupID} == GROUPID_SECURE_CONTAINER
 		{
 			anItem:Open 
-			wait 15
+			call WaitUsedCargoCapacityValid ${anItem}
 			
 			variable index:item anItemIndex
 			variable index:int  anIntIndex
@@ -407,19 +408,35 @@ objectdef obj_Cargo
 		return ${Math.Calc[${anItem.Capacity}*0.02]}
 	}
 	
+	/* this must be called before you use the ContainerFreeSpace member!! */
+	function WaitUsedCargoCapacityValid(item anItem)
+	{
+		variable float tmpFloat
+		do
+		{
+			tmpFloat:Set[${anItem.UsedCargoCapacity}]
+			wait 2
+		}
+		while ${tmpFloat} < 0
+	}
+	
 	member:float ContainerFreeSpace(item anItem)
 	{
+		variable float tmpFloat
 		if !${anItem(exists)}
 		{
 			return 0
 		}
 
 		UI:UpdateConsole["DEBUG: ContainerFreeSpace: ${anItem} ${anItem.Capacity} ${anItem.UsedCargoCapacity}"]
-		if ${anItem.UsedCargoCapacity} < 0
+		tmpFloat:Set[${anItem.UsedCargoCapacity}]
+		if ${tmpFloat} < 0
 		{
-			return ${anItem.Capacity}
+			UI:UpdateConsole["DEBUG: ContainerFreeSpace: UsedCargoCapacity inavlid (${tmpFloat})!  Setting to ${anItem.Capacity}..."]
+			tmpFloat:Set[${anItem.Capacity}]
 		}
-		return ${Math.Calc[${anItem.Capacity}-${anItem.UsedCargoCapacity}]}
+		
+		return ${Math.Calc[${anItem.Capacity}-${tmpFloat}]}
 	}
 
 	member:bool ContainerFull(item anItem)
@@ -511,7 +528,7 @@ objectdef obj_Cargo
 		do
 		{
 			shipContainerIterator.Value:Open
-			wait 15
+			call WaitUsedCargoCapacityValid ${shipContainerIterator.Value}
 			cnt:Set[${This.CargoToTransfer.Used}]			
 			for (idx:Set[1] ; ${idx}<=${cnt} ; idx:Inc)
 			{								
