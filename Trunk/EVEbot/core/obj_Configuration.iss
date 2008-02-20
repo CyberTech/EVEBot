@@ -97,6 +97,7 @@ objectdef obj_Configuration_Common
 		This.CommonRef:AddSetting[AutoLogin, TRUE]
 		This.CommonRef:AddSetting[AutoLoginCharID, 0]
 		This.CommonRef:AddSetting[Maximum Runtime, 0]
+		This.CommonRef:AddSetting[Use Sound, FALSE]
 	}
 
 	member:int BotMode()
@@ -248,6 +249,16 @@ objectdef obj_Configuration_Common
 	method SetIRCPassword(string value)
 	{
 		This.CommonRef:AddSetting[IRC Password, ${value}]
+	}
+
+	member:bool UseSound()
+	{
+		return ${This.CommonRef.FindSetting[Use Sound, FALSE]}
+	}
+
+	method SetUseSound(bool value)
+	{
+		This.CommonRef:AddSetting[Use Sound,${value}]
 	}
 }
 
