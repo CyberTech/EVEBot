@@ -438,8 +438,23 @@
 								}
 							</OnChange>
 						</Textentry>
-
-
+						<checkbox Name='cbUseSound'>
+							<X>10</X>
+							<Y>240</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Enable sound</Text>
+							<AutoTooltip>Enable audio events</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Common.UseSound}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+									Script[EVEBot].VariableScope.Config.Common:SetUseSound[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
 					</Tab>
 		
 					<Tab name='Miner'>
