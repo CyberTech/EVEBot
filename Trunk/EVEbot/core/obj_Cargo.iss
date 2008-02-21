@@ -149,7 +149,7 @@ objectdef obj_Cargo
                 variable iterator HangarIterator
                 variable iterator CrystalIterator
                 variable collection:int Crystals
-                variable int MIN_CRYSTALS = ${Ship.ModuleList_MiningLaser.Used}
+                variable int MIN_CRYSTALS = ${Math.Calc[${Ship.ModuleList_MiningLaser.Used} + 1]}
                 variable index:item HangarItems
 
 		This.ActiveMiningCrystals:GetIterator[CrystalIterator]
