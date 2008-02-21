@@ -16,7 +16,7 @@ objectdef obj_Cargo
 	variable index:item CargoToTransfer
 	variable bool m_LastTransferComplete
 	variable index:string ActiveMiningCrystals
-	variable float m_LastContainerFreeSpace
+	variable float m_ContainerFreeSpace
 
 	method Initialize()
 	{
@@ -265,7 +265,7 @@ objectdef obj_Cargo
 		if ${anItem.GroupID} == GROUPID_SECURE_CONTAINER
 		{
 			anItem:Open 
-			call WaitUsedCargoCapacityValid ${anItem}
+			wait 15
 			
 			variable index:item anItemIndex
 			variable index:int  anIntIndex
@@ -397,62 +397,7 @@ objectdef obj_Cargo
 			UI:UpdateConsole["DEBUG: obj_Cargo:TransferListToJetCan: Nothing found to move"]
 		}
 	}
-	
-	member:float ContainerMinimumFreeSpace(item anItem)
-	{
-		if !${anItem(exists)}
-		{
-			return 0
-		}
 
-		return ${Math.Calc[${anItem.Capacity}*0.02]}
-	}
-	
-	/* this must be called before you use the ContainerFreeSpace member!! */
-	function WaitUsedCargoCapacityValid(item anItem)
-	{
-		variable float tmpFloat
-		do
-		{
-			tmpFloat:Set[${anItem.UsedCargoCapacity}]
-			wait 2
-		}
-		while ${tmpFloat} < 0
-	}
-	
-	member:float ContainerFreeSpace(item anItem)
-	{
-		variable float tmpFloat
-		if !${anItem(exists)}
-		{
-			return 0
-		}
-
-		UI:UpdateConsole["DEBUG: ContainerFreeSpace: ${anItem} ${anItem.Capacity} ${anItem.UsedCargoCapacity}"]
-		tmpFloat:Set[${anItem.UsedCargoCapacity}]
-		if ${tmpFloat} < 0
-		{
-			UI:UpdateConsole["DEBUG: ContainerFreeSpace: UsedCargoCapacity inavlid (${tmpFloat})!  Setting to ${anItem.Capacity}..."]
-			tmpFloat:Set[${anItem.Capacity}]
-		}
-		
-		return ${Math.Calc[${anItem.Capacity}-${tmpFloat}]}
-	}
-
-	member:bool ContainerFull(item anItem)
-	{
-		if !${anItem(exists)}
-		{
-			return FALSE
-		}
-
-		if ${This.ContainerFreeSpace[${anItem}]} <= ${This.ContainerMinimumFreeSpace[${anItem}]}
-		{
-			return TRUE
-		}
-		return FALSE
-	}
-	
 	member:int QuantityToMove(item src, item dest)
 	{
 		variable int qty = 0
@@ -528,11 +473,31 @@ objectdef obj_Cargo
 		do
 		{
 			shipContainerIterator.Value:Open
-			call WaitUsedCargoCapacityValid ${shipContainerIterator.Value}
+			wait 15
 			cnt:Set[${This.CargoToTransfer.Used}]			
 			for (idx:Set[1] ; ${idx}<=${cnt} ; idx:Inc)
-			{								
-				qty:Set[${This.QuantityToMove[${This.CargoToTransfer.Get[${idx}]},${shipContainerIterator.Value}]}]
+			{				
+				variable float usedSpace
+				variable float totalSpace
+				
+				do
+				{
+					usedSpace:Set[${shipContainerIterator.Value.UsedCargoCapacity}]
+					wait 2
+				}
+				while ${usedSpace} < 0
+				totalSpace:Set[${shipContainerIterator.Value.Capacity}]
+				;;UI:UpdateConsole["DEBUG: TransferListToShipWithContainers: used space = ${usedSpace}"]
+				;;UI:UpdateConsole["DEBUG: TransferListToShipWithContainers: total space = ${totalSpace}"]
+				if (${This.CargoToTransfer.Get[${idx}].Quantity} * ${This.CargoToTransfer.Get[${idx}].Volume}) > ${Math.Calc[${totalSpace}-${usedSpace}]}
+				{	/* Move only what will fit, minus 1 to account for CCP rounding errors. */
+					qty:Set[${Math.Calc[${totalSpace}-${usedSpace}]} / ${This.CargoToTransfer.Get[${idx}].Volume} - 1]
+				}
+				else
+				{
+					qty:Set[${This.CargoToTransfer.Get[${idx}].Quantity}]
+				}
+				;;UI:UpdateConsole["DEBUG: TransferListToShipWithContainers: quantity = ${qty}"]
 				if ${qty} > 0
 				{
 					UI:UpdateConsole["TransferListToShipWithContainers: Loading Cargo: ${qty} units (${Math.Calc[${qty} * ${This.CargoToTransfer.Get[${idx}].Volume}]}m3) of ${This.CargoToTransfer.Get[${idx}].Name}"]
@@ -543,10 +508,16 @@ objectdef obj_Cargo
 				{	
 					This.CargoToTransfer:Remove[${idx}]						
 				}
-				
-				if ${This.ContainerFull[${shipContainerIterator.Value}]}
+				do
 				{
-					UI:UpdateConsole["DEBUG: TransferListToShipWithContainers: Container Cargo: ${This.ContainerFreeSpace[${shipContainerIterator.Value}]} < ${This.ContainerMinimumFreeSpace[${shipContainerIterator.Value}]}"]
+					usedSpace:Set[${shipContainerIterator.Value.UsedCargoCapacity}]
+					wait 2
+				}
+				while ${usedSpace} < 0
+				;;UI:UpdateConsole["DEBUG: TransferListToShipWithContainers: used space = ${usedSpace}"]
+				if ${Math.Calc[${totalSpace}-${usedSpace}]} > ${Math.Calc[${totalSpace}*0.98]}
+				{
+					UI:UpdateConsole["DEBUG: TransferListToShipWithContainers: Container full."]
 					break
 				}
 			}
@@ -576,11 +547,11 @@ objectdef obj_Cargo
 			{	
 				This.CargoToTransfer:Remove[${idx}]						
 			}			
-			if ${Ship.CargoFull}
-			{
-				UI:UpdateConsole["DEBUG: TransferListToShipWithContainers: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
-				break
-			}
+			;if ${Ship.CargoFull}
+			;{
+			;	UI:UpdateConsole["DEBUG: TransferListToShipWithContainers: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
+			;	break
+			;}
 		}
 		This.CargoToTransfer:Collapse
 	}
