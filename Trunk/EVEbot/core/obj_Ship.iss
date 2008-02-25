@@ -86,21 +86,6 @@ objectdef obj_Ship
     			}
     			
     			;Shield Boosters
-    			;UI:UpdateConsole["Debug: Obj_Ship: Possible Hostiles: ${Social.PossibleHostiles}"]
-    			;UI:UpdateConsole["Debug: Obj_Ship: Shield Booster Activation: ${Config.Combat.ShieldBAct}"]
-    			/* TODO: CyberTech - This should be an option, not forced. */
-    			/*
-    			if ${Social.PossibleHostiles} || \
-    				${Me.Ship.ShieldPct} < 90 || \
-    				${Config.Combat.AlwaysShieldBoost}
-    			{
-    				This:Activate_Shield_Booster[]
-    			}
-    			else
-    			{
-    				This:Deactivate_Shield_Booster[]
-    			}
-    			*/
     			/* Why check ${Social.PossibleHostiles}?
     			 * If your shield is going down something is hostile!
     			 * The code below pulses your booster around the sweet spot
@@ -152,22 +137,6 @@ objectdef obj_Ship
 			return FALSE
 		}
 		
-		;if ${Me.Ship.UsedCargoCapacity} < 10
-		;{
-		;	m_CargoSanityCounter:Set[${m_CargoSanityCounter}+1]
-		;	;; When reloading UsedCargoCapacity sometimes freaks out so have to make sure it's not one of those, otherwise
-		;	;; Otherwise you warp to your safespot alot.
-		;	if (${Me.Ship.UsedCargoCapacity} < 10 && ${m_CargoSanityCounter} > 10)
-		;	{
-		;		UI:UpdateConsole["Cargo low!  Warping to safespot and camping for the night!"]
-		;		return FALSE
-		;	}
-		;}
-		;elseif ${m_CargoSanityCounter} > 0
-		;{
-		;	m_CargoSanityCounter:Set[0]
-		;}
-		
 		return TRUE
 	}
 	
@@ -201,9 +170,9 @@ objectdef obj_Ship
 							;UI:UpdateConsole["Ammo: Match!"]
 							;UI:UpdateConsole["Ammo: Qty = ${anItemIterator.Value.Quantity}"]
 							;UI:UpdateConsole["Ammo: Max = ${aWeaponIterator.Value.MaxCharges}"]
-							if ${anItemIterator.Value.Quantity} < ${Math.Calc[${aWeaponIterator.Value.MaxCharges}*2]}
+							if ${anItemIterator.Value.Quantity} < ${Math.Calc[${aWeaponIterator.Value.MaxCharges}*6]}
 							{
-								UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable: FALSE!"]
+								;UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable: FALSE!"]
 								bAmmoAvailable:Set[FALSE]							
 							}
 						}
@@ -212,7 +181,7 @@ objectdef obj_Ship
 				}
 				else
 				{
-					UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable: FALSE!"]
+					;UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable: FALSE!"]
 					bAmmoAvailable:Set[FALSE]							
 				}
 			}
