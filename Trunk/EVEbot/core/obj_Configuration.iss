@@ -618,6 +618,9 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[MinimumShieldPct, 25]
 		This.CombatRef:AddSetting[AlwaysShieldBoost, FALSE]
 		This.CombatRef:AddSetting[Launch Combat Drones, TRUE]
+		This.CombatRef:AddSetting[Run On Low Ammo, FALSE]
+		This.CombatRef:AddSetting[Run On Low Cap, FALSE]
+		This.CombatRef:AddSetting[Run On Low Tank, FALSE]
 		This.CombatRef:AddSetting[Use Whitelist, FALSE]
 		This.CombatRef:AddSetting[Use Blacklist, FALSE]
 		This.CombatRef:AddSetting[Chain Spawns, TRUE]
@@ -625,6 +628,36 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[Use Belt Bookmarks, FALSE]
 		This.CombatRef:AddSetting[Min Chain Bounty, 1500000]
 	}
+
+	member:bool RunOnLowAmmo()
+	{
+		return ${This.CombatRef.FindSetting[Run On Low Ammo, FALSE]}
+	}
+	
+	method SetRunOnLowAmmo(bool value)
+	{
+		This.CombatRef:AddSetting[Run On Low Ammo, ${value}]
+	} 
+
+	member:bool RunOnLowCap()
+	{
+		return ${This.CombatRef.FindSetting[Run On Low Cap, FALSE]}
+	}
+	
+	method SetRunOnLowCap(bool value)
+	{
+		This.CombatRef:AddSetting[Run On Low Cap, ${value}]
+	} 
+
+	member:bool RunOnLowTank()
+	{
+		return ${This.CombatRef.FindSetting[Run On Low Tank, FALSE]}
+	}
+	
+	method SetRunOnLowTank(bool value)
+	{
+		This.CombatRef:AddSetting[Run On Low Tank, ${value}]
+	} 
 
 	member:bool UseWhiteList()
 	{
@@ -636,7 +669,6 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[Use Whitelist, ${value}]
 	} 
 	
-	/* TODO - Add BlackList checkbox to UI near Whitelist checkbox - CyberTech */
 	member:bool UseBlackList()
 	{
 		return ${This.CombatRef.FindSetting[Use Blacklist, FALSE]}

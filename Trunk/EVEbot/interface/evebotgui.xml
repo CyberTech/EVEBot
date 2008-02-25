@@ -767,6 +767,66 @@
 						</Textentry>
 					</Tab>
 					<Tab name='Combat'>
+						<Frame name='frmRunOptions'>
+							<X>52%</X>
+							<Y>2%</Y>
+							<Height>46%</Height>
+							<Width>46%</Width>
+							<Border>2</Border>
+							<Children>
+								<checkbox name='cbRunOnLowAmmo'>
+									<X>10</X>
+									<Y>10</Y>
+									<Height>20</Height>
+									<Width>100</Width>
+									<Text>Run On Low Ammo</text>
+									<AutoTooltip>If checked will run to safe spot when low on ammo.</AutoTooltip>
+									<OnLoad>
+										if ${Script[EVEBot].VariableScope.Config.Combat.RunOnLowAmmo}
+										{
+											This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+											Script[EVEBot].VariableScope.Config.Combat:SetRunOnLowAmmo[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
+								<checkbox name='cbRunOnLowCap'>
+									<X>10</X>
+									<Y>30</Y>
+									<Height>20</Height>
+									<Width>100</Width>
+									<Text>Run On Low Cap</text>
+									<AutoTooltip>If checked will run to safe spot when capacitor is empty.</AutoTooltip>
+									<OnLoad>
+										if ${Script[EVEBot].VariableScope.Config.Combat.RunOnLowCap}
+										{
+											This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+											Script[EVEBot].VariableScope.Config.Combat:SetRunOnLowCap[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
+								<checkbox name='cbRunOnLowTank'>
+									<X>10</X>
+									<Y>50</Y>
+									<Height>20</Height>
+									<Width>100</Width>
+									<Text>Run On Low Tank</text>
+									<AutoTooltip>If checked will run to safe spot when tank (shield or armor) has failed.</AutoTooltip>
+									<OnLoad>
+										if ${Script[EVEBot].VariableScope.Config.Combat.RunOnLowTank}
+										{
+											This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+											Script[EVEBot].VariableScope.Config.Combat:SetRunOnLowTank[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
+							</Children>
+						</Frame>						
 						<slider name='MinArmorPct'>
 							<X>10</X>							
 							<Y>10</Y>						
