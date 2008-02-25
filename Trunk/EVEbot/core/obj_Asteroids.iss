@@ -374,11 +374,12 @@ objectdef obj_Asteroids
 				}
 				UI:UpdateConsole["Locking Asteroid ${AsteroidIterator.Value.Name}: ${EVEBot.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"]
 				
-				while ${Combat.CombatPause}
-				{
-					wait 30
-					echo "DEBUG: Obj_Asteroids In Combat Pause Loop"
-				}
+				;; This member does not exist in obj_Combat!!  -- GP
+				;;while ${Combat.CombatPause}
+				;;{
+				;;	wait 30
+				;;	echo "DEBUG: Obj_Asteroids In Combat Pause Loop"
+				;;}
 								
 				AsteroidIterator.Value:LockTarget
 				do

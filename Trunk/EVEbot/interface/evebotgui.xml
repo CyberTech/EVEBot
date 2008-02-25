@@ -769,8 +769,8 @@
 					<Tab name='Combat'>
 						<Frame name='frmRunOptions'>
 							<X>52%</X>
-							<Y>2%</Y>
-							<Height>46%</Height>
+							<Y>4%</Y>
+							<Height>44%</Height>
 							<Width>46%</Width>
 							<Border>2</Border>
 							<Children>
@@ -780,7 +780,7 @@
 									<Height>20</Height>
 									<Width>100</Width>
 									<Text>Run On Low Ammo</text>
-									<AutoTooltip>If checked will run to safe spot when low on ammo.</AutoTooltip>
+									<AutoTooltip>If checked, run to safe spot when low on ammo.</AutoTooltip>
 									<OnLoad>
 										if ${Script[EVEBot].VariableScope.Config.Combat.RunOnLowAmmo}
 										{
@@ -797,7 +797,7 @@
 									<Height>20</Height>
 									<Width>100</Width>
 									<Text>Run On Low Cap</text>
-									<AutoTooltip>If checked will run to safe spot when capacitor is empty.</AutoTooltip>
+									<AutoTooltip>If checked, run to safe spot when capacitor is empty.</AutoTooltip>
 									<OnLoad>
 										if ${Script[EVEBot].VariableScope.Config.Combat.RunOnLowCap}
 										{
@@ -814,7 +814,7 @@
 									<Height>20</Height>
 									<Width>100</Width>
 									<Text>Run On Low Tank</text>
-									<AutoTooltip>If checked will run to safe spot when tank (shield or armor) has failed.</AutoTooltip>
+									<AutoTooltip>If checked, run to safe spot when tank (shield or armor) has failed.</AutoTooltip>
 									<OnLoad>
 										if ${Script[EVEBot].VariableScope.Config.Combat.RunOnLowTank}
 										{
@@ -823,6 +823,40 @@
 									</OnLoad>
 									<OnLeftClick>
 											Script[EVEBot].VariableScope.Config.Combat:SetRunOnLowTank[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
+								<checkbox name='cbUseWhiteList'>
+									<X>10</X>
+									<Y>70</Y>
+									<Height>20</Height>
+									<Width>100</Width>
+									<Text>Run On Non-Whitelisted Pilot</text>
+									<AutoTooltip>If checked, run to safe spot when any non-whitelisted pilot enters system.</AutoTooltip>
+									<OnLoad>
+										if ${Script[EVEBot].VariableScope.Config.Combat.UseWhiteList}
+										{
+											This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+											Script[EVEBot].VariableScope.Config.Combat:SetUseWhiteList[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
+								<checkbox name='cbUseBlackList'>
+									<X>10</X>
+									<Y>90</Y>
+									<Height>20</Height>
+									<Width>100</Width>
+									<Text>Run On Blacklisted Pilot</text>
+									<AutoTooltip>If checked, run to safe spot when any blacklisted pilot enters system.</AutoTooltip>
+									<OnLoad>
+										if ${Script[EVEBot].VariableScope.Config.Combat.UseBlackList}
+										{
+											This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+											Script[EVEBot].VariableScope.Config.Combat:SetUseBlackList[${This.Checked}]
 									</OnLeftClick>
 								</checkbox>
 							</Children>
@@ -935,40 +969,6 @@
 							</OnLoad>
 							<OnLeftClick>
 									Script[EVEBot].VariableScope.Config.Combat:SetLaunchCombatDrones[${This.Checked}]
-							</OnLeftClick>
-						</checkbox>
-						<checkbox name='cbUseWhiteList'>
-							<X>10</X>
-							<Y>110</Y>
-							<Height>20</Height>
-							<Width>100</Width>
-							<Text>Use Pilot Whitelist - Assume Hostile Pilots</text>
-							<AutoTooltip>If checked, run to safe spot when any non-whitelisted pilot enters system.</AutoTooltip>
-							<OnLoad>
-								if ${Script[EVEBot].VariableScope.Config.Combat.UseWhiteList}
-								{
-									This:SetChecked
-								}
-							</OnLoad>
-							<OnLeftClick>
-									Script[EVEBot].VariableScope.Config.Combat:SetUseWhiteList[${This.Checked}]
-							</OnLeftClick>
-						</checkbox>
-						<checkbox name='cbUseBlackList'>
-							<X>10</X>
-							<Y>130</Y>
-							<Height>20</Height>
-							<Width>100</Width>
-							<Text>Use Blacklist</text>
-							<AutoTooltip>If checked, run to safe spot when any blacklisted pilot enters system.</AutoTooltip>
-							<OnLoad>
-								if ${Script[EVEBot].VariableScope.Config.Combat.UseBlackList}
-								{
-									This:SetChecked
-								}
-							</OnLoad>
-							<OnLeftClick>
-									Script[EVEBot].VariableScope.Config.Combat:SetUseBlackList[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
 

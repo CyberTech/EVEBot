@@ -15,7 +15,6 @@
 #include core/obj_Station.iss
 #include core/obj_Cargo.iss
 #include core/obj_EVEBotUI.iss
-#include core/obj_Combat.iss
 #include core/obj_Bookmarks.iss
 #include core/obj_Jetcan.iss
 #include core/obj_Social.iss
@@ -48,7 +47,6 @@ variable obj_Ship Ship
 variable obj_Station Station
 variable obj_Cargo Cargo
 variable obj_Skills Skills
-variable obj_Combat Combat
 variable obj_Bookmarks Bookmarks
 variable obj_JetCan JetCan
 variable obj_CorpHangerArray CorpHangarArray
@@ -65,7 +63,6 @@ variable obj_Sound Sound
 variable index:string BotModules
 variable obj_Miner Miner
 variable obj_OreHauler Hauler
-variable obj_CombatFighter Fighter
 variable obj_Freighter Freighter
 variable obj_Ratter Ratter
 ;variable obj_Salvager Salvager
