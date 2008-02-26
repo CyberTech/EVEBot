@@ -94,38 +94,45 @@ objectdef obj_Ratter
 	}
 	
 	function Fight()
-	{	/* combat logic */
-	
-		UI:UpdateConsole["obj_Ratter: DEBUG: Fight"]
+	{	/* combat logic */			
+		;;UI:UpdateConsole["obj_Ratter: DEBUG: Fight"]
+		
+		variable bool moveOn = FALSE
 		
 		; Before opening fire, lets see if there are any friendlies here
 		if !${Targets.PC}
-		while ${Targets.TargetNPCs} && ${Social.IsSafe}
 		{
-		
-			if ${Targets.SpecialTargetPresent}
+			if ${Targets.TargetNPCs} && ${Social.IsSafe}
 			{
-				UI:UpdateConsole["Special spawn detected!"]
-				call Sound.PlayDetectSound
-			}
-		
-			; Make sure our hardeners are running
-			Ship:Activate_Hardeners[]
+				if ${Targets.SpecialTargetPresent}
+				{
+					UI:UpdateConsole["Special spawn detected!"]
+					call Sound.PlayDetectSound
+				}
 			
-			; Reload the weapons -if- ammo is below 30% and they arent firing
-			Ship:Reload_Weapons[FALSE]
+				; Reload the weapons -if- ammo is below 30% and they arent firing
+				Ship:Reload_Weapons[FALSE]
 
-			; Activate the weapons, the modules class checks if there's a target
-			Ship:Activate_Weapons
-			
-			; Wait 2 seconds
-			wait 20
+				; Activate the weapons, the modules class checks if there's a target
+				Ship:Activate_Weapons
+				
+				; Wait 2 seconds
+				wait 20
+			}
+			else
+			{
+				moveOn:Set[TRUE]
+			}
+		}
+		else
+		{
+			moveOn:Set[TRUE]
 		}
 	
-		Ship:Deactivate_Weapons
-		
-		if ${Social.IsSafe}
+		if ${moveOn} && ${Social.IsSafe}
 		{
+			Ship:Deactivate_Weapons
+		
 			call Belts.WarpTo
 			; This will reset target information about the belt 
 			; (its needed for chaining)
