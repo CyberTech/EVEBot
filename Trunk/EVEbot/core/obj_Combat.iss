@@ -373,7 +373,7 @@ objectdef obj_Combat
         while (${cPct} == NULL || ${cPct} <= 0)
 
 
-        UI:UpdateConsole["DEBUG: Combat${aPct} ${sPct} ${cPct}"]
+        UI:UpdateConsole["DEBUG: Combat ${aPct} ${sPct} ${cPct}"]
 
         ; Armor Repair
         ; If you don't have armor repairers this code does nothing.

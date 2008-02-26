@@ -21,6 +21,7 @@ objectdef obj_Ratter
 	{
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		BotModules:Insert["Ratter"]
+		This.CurrentState:Set["IDLE"]
 
 		;; call the combat object's init routine
 		This.Combat:Initialize
@@ -61,10 +62,19 @@ objectdef obj_Ratter
 	}
 
 	/* NOTE: The order of these if statements is important!! */
+	
+	;; STATE MACHINE:  * -> IDLE -> MOVE -> PCCHECK -> FIGHT -> *  
 	method SetState()
 	{
 		/* Combat module handles all fleeing states now */
-		This.CurrentState:Set["FIGHT"]
+		switch ${This.CurrentState}
+		{
+			case IDLE
+				This.CurrentState:Set["MOVE"]
+				break
+			default
+				break
+		}
 	}
 
 	/* this function is called repeatedly by the main loop in EveBot.iss */
@@ -82,10 +92,14 @@ objectdef obj_Ratter
 		if ${This.Combat.Override}
 			return
 	    		    
+		UI:UpdateConsole["DEBUG: ${This.CurrentState}"]
 		switch ${This.CurrentState}
 		{
-			case SAFESPOT
-				call This.RunAway
+			case MOVE
+				call This.Move
+				break
+			case PCCHECK
+				call This.PlayerCheck
 				break
 			case FIGHT
 				call This.Fight
@@ -93,39 +107,11 @@ objectdef obj_Ratter
 		}	
 	}
 	
-	function Fight()
-	{	/* combat logic */			
-		;;UI:UpdateConsole["obj_Ratter: DEBUG: Fight"]
-		
-		variable bool moveOn = FALSE
-		
-		; Before opening fire, lets see if there are any friendlies here
-		if !${Targets.PC}
+	function Move()
+	{
+		if ${Social.IsSafe}
 		{
-			if ${Targets.TargetNPCs} && ${Social.IsSafe}
-			{
-				if ${Targets.SpecialTargetPresent}
-				{
-					UI:UpdateConsole["Special spawn detected!"]
-					call Sound.PlayDetectSound
-					; Wait 5 seconds
-					wait 50
-				}
-			}
-			else
-			{
-				moveOn:Set[TRUE]
-			}
-		}
-		else
-		{
-			moveOn:Set[TRUE]
-		}
-	
-		if ${moveOn} && ${Social.IsSafe}
-		{
-			Ship:Deactivate_Weapons
-		
+			Ship:Deactivate_Weapons		
 			call Belts.WarpTo
 			; This will reset target information about the belt 
 			; (its needed for chaining)
@@ -134,6 +120,39 @@ objectdef obj_Ratter
 			; has been through warp so we're sure that no weapons are still
 			; active
 			Ship:Reload_Weapons[TRUE]
+		}
+		
+		This.CurrentState:Set["PCCHECK"]
+	}
+	
+	function PlayerCheck()
+	{
+		if !${Targets.PC}
+		{
+			This.CurrentState:Set["FIGHT"]
+		}
+		else
+		{
+			This.CurrentState:Set["MOVE"]
+		}
+	}
+	
+	function Fight()
+	{	/* combat logic */	
+		;; just handle targetting, obj_Combat does the rest
+		if ${Targets.TargetNPCs} && ${Social.IsSafe}
+		{
+			if ${Targets.SpecialTargetPresent}
+			{
+				UI:UpdateConsole["Special spawn detected!"]
+				call Sound.PlayDetectSound
+				; Wait 5 seconds
+				wait 50
+			}
+		}
+		else
+		{
+			This.CurrentState:Set["IDLE"]		
 		}
 	}
 }
