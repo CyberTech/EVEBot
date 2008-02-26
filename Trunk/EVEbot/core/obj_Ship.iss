@@ -1181,7 +1181,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		This.ModuleList_AB_MWD:GetIterator[Module]
 		if ${Module:First(exists)}
 		{
-			if !${Module.Value.IsActive}
+			if !${Module.Value.IsActive} && ${Module.Value.IsOnline}
 			{
 				UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
 				Module.Value:Click
@@ -1207,7 +1207,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		if ${Module:First(exists)}
 		do
 		{
-			if !${Module.Value.IsActive}
+			if !${Module.Value.IsActive} && ${Module.Value.IsOnline}
 			{
 				UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
 				Module.Value:Click
@@ -1229,7 +1229,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		This.ModuleList_Repair_Armor:GetIterator[Module]
 		if ${Module:First(exists)}
 		{
-			if ${Module.Value.IsActive}
+			if ${Module.Value.IsActive} && ${Module.Value.IsOnline}
 			{
 				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}"]
 				Module.Value:Click
@@ -1249,7 +1249,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		This.ModuleList_AB_MWD:GetIterator[Module]
 		if ${Module:First(exists)}
 		{
-			if ${Module.Value.IsActive}
+			if ${Module.Value.IsActive} && ${Module.Value.IsOnline}
 			{
 				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}"]
 				Module.Value:Click
@@ -1270,7 +1270,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		if ${Module:First(exists)}
 		do
 		{
-			if !${Module.Value.IsActive}
+			if !${Module.Value.IsActive} && ${Module.Value.IsOnline}
 			{
 				UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
 				Module.Value:Click
@@ -1292,7 +1292,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		if ${Module:First(exists)}
 		do
 		{
-			if ${Module.Value.IsActive}
+			if ${Module.Value.IsActive} && ${Module.Value.IsOnline}
 			{
 				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}"]
 				Module.Value:Click
@@ -1314,7 +1314,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		if ${Module:First(exists)}
 		do
 		{
-			if !${Module.Value.IsActive}
+			if !${Module.Value.IsActive} && ${Module.Value.IsOnline}
 			{
 				UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
 				Module.Value:Click
@@ -1336,7 +1336,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		if ${Module:First(exists)}
 		do
 		{
-			if ${Module.Value.IsActive}
+			if ${Module.Value.IsActive} && ${Module.Value.IsOnline}
 			{
 				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}"]
 				Module.Value:Click
@@ -1440,7 +1440,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		if ${Module:First(exists)}
 		do
 		{
-			if !${Module.Value.IsActive} && !${Module.Value.IsChangingAmmo} && !${Module.Value.IsReloadingAmmo}
+			if !${Module.Value.IsActive} && !${Module.Value.IsChangingAmmo} && !${Module.Value.IsReloadingAmmo}  && ${Module.Value.IsOnline}
 			{
 				;;UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
 				Module.Value:Click
@@ -1462,7 +1462,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		if ${Module:First(exists)}
 		do
 		{
-			if ${Module.Value.IsActive} || ${Module.Value.IsWaitingForActiveTarget}
+			if ${Module.Value.IsActive} || ${Module.Value.IsWaitingForActiveTarget} && ${Module.Value.IsOnline}
 			{
 				;;UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}"]
 				Module.Value:Click
