@@ -108,16 +108,9 @@ objectdef obj_Ratter
 				{
 					UI:UpdateConsole["Special spawn detected!"]
 					call Sound.PlayDetectSound
+					; Wait 5 seconds
+					wait 50
 				}
-			
-				; Reload the weapons -if- ammo is below 30% and they arent firing
-				Ship:Reload_Weapons[FALSE]
-
-				; Activate the weapons, the modules class checks if there's a target
-				Ship:Activate_Weapons
-				
-				; Wait 2 seconds
-				wait 20
 			}
 			else
 			{

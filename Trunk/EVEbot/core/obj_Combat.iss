@@ -103,6 +103,14 @@ objectdef obj_Combat
     
     method SetState()
     {
+		if ${Me.GetTargets(exists)} && ${Me.GetTargets} > 0
+		{
+			This.CurrentState:Set["FIGHT"]
+		}
+		else
+		{
+			This.CurrentState:Set["IDLE"]
+		}
     }
     
     method SetMode(string newMode)
@@ -147,12 +155,21 @@ objectdef obj_Combat
                     call This.Flee
                     This.Override:Set[TRUE]
                     break
-                ;case FIGHT
-                ;   call This.Fight
-                ;   break
+                case FIGHT
+                   call This.Fight
+                   break
             }
         }
     }           
+	
+	function Fight()
+	{
+		; Reload the weapons -if- ammo is below 30% and they arent firing
+		Ship:Reload_Weapons[FALSE]
+
+		; Activate the weapons, the modules class checks if there's a target
+		Ship:Activate_Weapons	
+	}
     
     function Flee()
     {
@@ -356,7 +373,7 @@ objectdef obj_Combat
         while (${cPct} == NULL || ${cPct} <= 0)
 
 
-        UI:UpdateConsole["DEBUG: Combat ${aPct} ${sPct} ${cPct}"]
+        UI:UpdateConsole["DEBUG: Combat${aPct} ${sPct} ${cPct}"]
 
         ; Armor Repair
         ; If you don't have armor repairers this code does nothing.

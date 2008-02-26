@@ -335,8 +335,11 @@ objectdef obj_Targets
 			{
 				if !${Target.Value.IsLockedTarget} && !${Target.Value.BeingTargeted}
 				{
-					UI:UpdateConsole["Locking ${Target.Value.Name}"]
-					Target.Value:LockTarget
+					if ${Me.GetTargets(exists)} && ${Me.GetTargets} < ${Me.Ship.MaxLockedTargets}
+					{
+						UI:UpdateConsole["Locking ${Target.Value.Name}"]
+						Target.Value:LockTarget
+					}
 				}
 				
 				; Set the return value so we know we have targets
