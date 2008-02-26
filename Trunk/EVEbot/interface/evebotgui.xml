@@ -825,9 +825,26 @@
 											Script[EVEBot].VariableScope.Config.Combat:SetRunOnLowTank[${This.Checked}]
 									</OnLeftClick>
 								</checkbox>
-								<checkbox name='cbUseWhiteList'>
+								<checkbox name='cbRunToStation'>
 									<X>10</X>
 									<Y>70</Y>
+									<Height>20</Height>
+									<Width>100</Width>
+									<Text>Run To Station</text>
+									<AutoTooltip>If checked, run to a station instead of a safe-spot.</AutoTooltip>
+									<OnLoad>
+										if ${Script[EVEBot].VariableScope.Config.Combat.RunToStation}
+										{
+											This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+											Script[EVEBot].VariableScope.Config.Combat:SetRunToStation[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
+								<checkbox name='cbUseWhiteList'>
+									<X>10</X>
+									<Y>90</Y>
 									<Height>20</Height>
 									<Width>100</Width>
 									<Text>Run On Non-Whitelisted Pilot</text>
@@ -844,7 +861,7 @@
 								</checkbox>
 								<checkbox name='cbUseBlackList'>
 									<X>10</X>
-									<Y>90</Y>
+									<Y>110</Y>
 									<Height>20</Height>
 									<Width>100</Width>
 									<Text>Run On Blacklisted Pilot</text>
@@ -882,7 +899,7 @@
 							<Width>150</Width>
 							<Height>10</Height>
 							<Text>Minimum Armor: 0</Text>
-							<AutoTooltip>Lowest Shield Percent allowed before docking</AutoTooltip>
+							<AutoTooltip>Lowest armor percent allowed before fleeing</AutoTooltip>
 							<OnLoad>
 								This:SetText["Minimum Armor: ${UIElement[MinArmorPct@Combat@EvEBotOptionsTab@EVEBot].Value}"]
 							</OnLoad>
@@ -908,14 +925,40 @@
 							<Width>150</Width>
 							<Height>10</Height>
 							<Text>Minimum Shield: 0</Text>
-							<AutoTooltip>Lowest Armor Pct Allowed before Running</AutoTooltip>
+							<AutoTooltip>Lowest Shield Pct Allowed before Running</AutoTooltip>
 							<OnLoad>
 								This:SetText["Minimum Shield: ${UIElement[MinShieldPct@Combat@EvEBotOptionsTab@EVEBot].Value}"]
 							</OnLoad>
 						</Text>
+						<slider name='MinCapPct'>
+							<X>10</X>							
+							<Y>50</Y>						
+							<Width>40</Width>						
+							<Height>18</Height>
+							<Range>100</Range>
+							<OnLoad>
+								This:SetValue[${Script[EVEBot].VariableScope.Config.Combat.MinimumCapPct}]
+								UIElement[MinCapPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Cap: ${This.Value}"]
+							</OnLoad>
+							<OnChange>
+								Script[EVEBot].VariableScope.Config.Combat:SetMinimumCapPct[${Int[${This.Value}]}]
+								UIElement[MinCapPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Cap: ${This.Value}"]
+							</OnChange>				
+						</slider>
+						<Text name='MinCapPctLabel'>
+							<X>55</X>
+							<Y>50</Y>
+							<Width>150</Width>
+							<Height>10</Height>
+							<Text>Minimum Cap: 0</Text>
+							<AutoTooltip>Lowest capacitor percent allowed before fleeing</AutoTooltip>
+							<OnLoad>
+								This:SetText["Minimum Cap: ${UIElement[MinCapPct@Combat@EvEBotOptionsTab@EVEBot].Value}"]
+							</OnLoad>
+						</Text>
 						<checkbox name='cbAlwaysShieldBoost'>
 							<X>10</X>
-							<Y>50</Y>
+							<Y>70</Y>
 							<Height>20</Height>
 							<Width>100</Width>
 							<Text>Always Shield Boost</text>
@@ -930,9 +973,26 @@
 									Script[EVEBot].VariableScope.Config.Combat:SetAlwaysShieldBoost[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
+						<checkbox name='cbLaunchCombatDrones'>
+							<X>10</X>
+							<Y>90</Y>
+							<Height>20</Height>
+							<Width>130</Width>
+							<Text>Launch Combat Drones</text>
+							<AutoTooltip>Launch and Use Combat Drones</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Combat.LaunchCombatDrones}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+									Script[EVEBot].VariableScope.Config.Combat:SetLaunchCombatDrones[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
 						<Textentry name='MinimumDronesInSpace'>
 							<X>10</X>							
-							<Y>70</Y>						
+							<Y>110</Y>						
 							<Width>32</Width>						
 							<Height>18</Height>
 							<MaxLength>2</MaxLength>
@@ -948,29 +1008,12 @@
 						</Textentry>
 						<Text name='MinimumDronesInSpaceText'>
 							<X>44</X>
-							<Y>70</Y>
+							<Y>110</Y>
 							<Width>200</Width>
 							<Height>10</Height>
 							<Text>Minimum Drones in Space</Text>
 							<AutoTooltip>We will return to base when available drones falls below this number</AutoTooltip>
 						</Text>
-						<checkbox name='cbLaunchCombatDrones'>
-							<X>10</X>
-							<Y>90</Y>
-							<Height>20</Height>
-							<Width>100</Width>
-							<Text>Launch Combat Drones</text>
-							<AutoTooltip>Launch and Use Combat Drones</AutoTooltip>
-							<OnLoad>
-								if ${Script[EVEBot].VariableScope.Config.Combat.LaunchCombatDrones}
-								{
-									This:SetChecked
-								}
-							</OnLoad>
-							<OnLeftClick>
-									Script[EVEBot].VariableScope.Config.Combat:SetLaunchCombatDrones[${This.Checked}]
-							</OnLeftClick>
-						</checkbox>
 
 						<Frame name='frmRatter'>
 							<X>2%</X>

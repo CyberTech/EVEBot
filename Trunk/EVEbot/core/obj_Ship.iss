@@ -67,38 +67,42 @@ objectdef obj_Ship
     		{		    
     			This:ValidateModuleTargets
     				
-    			;Ship Armor Repair
-    			if ${This.Total_Armor_Reps} > 0
-    			{
-    				if ${Me.Ship.ArmorPct} < 100
-    				{
-    					This:ActivateRepairing_Armor
-    				}
-    					
-    				if ${This.Repairing_Armor}
-    				{
-    					if ${Me.Ship.ArmorPct} == 100
-    					{
-    						This:DeactivateRepairing_Armor
-    						This.Repairing_Armor:Set[FALSE]
-    					}
-    				}
-    			}
-    			
-    			;Shield Boosters
-    			/* Why check ${Social.PossibleHostiles}?
-    			 * If your shield is going down something is hostile!
-    			 * The code below pulses your booster around the sweet spot
-    			 */
-				if ${Me.Ship.ShieldPct} < 70 || ${Config.Combat.AlwaysShieldBoost}
-				{	/* Turn on the shield booster */
-					This:Activate_Shield_Booster[]
+				if !${Config.Common.BotModeName.Equal[Ratter]}
+				{	/* ratter was converted to use obj_Combat already */
+	    				
+	    			;Ship Armor Repair
+	    			if ${This.Total_Armor_Reps} > 0
+	    			{
+	    				if ${Me.Ship.ArmorPct} < 100
+	    				{
+	    					This:ActivateRepairing_Armor
+	    				}
+	    					
+	    				if ${This.Repairing_Armor}
+	    				{
+	    					if ${Me.Ship.ArmorPct} == 100
+	    					{
+	    						This:DeactivateRepairing_Armor
+	    						This.Repairing_Armor:Set[FALSE]
+	    					}
+	    				}
+	    			}
+	    			
+	    			;Shield Boosters
+	    			/* Why check ${Social.PossibleHostiles}?
+	    			 * If your shield is going down something is hostile!
+	    			 * The code below pulses your booster around the sweet spot
+	    			 */
+					if ${Me.Ship.ShieldPct} < 70 || ${Config.Combat.AlwaysShieldBoost}
+					{	/* Turn on the shield booster */
+						This:Activate_Shield_Booster[]
+					}
+					
+					if ${Me.Ship.ShieldPct} > 80 && !${Config.Combat.AlwaysShieldBoost}
+					{	/* Turn off the shield booster */
+						This:Deactivate_Shield_Booster[]
+					}    			
 				}
-				
-				if ${Me.Ship.ShieldPct} > 80 && !${Config.Combat.AlwaysShieldBoost}
-				{	/* Turn off the shield booster */
-					This:Deactivate_Shield_Booster[]
-				}    			
     			
     			FrameCounter:Set[0]
     		}

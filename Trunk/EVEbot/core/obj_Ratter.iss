@@ -7,17 +7,26 @@
 	
 	-- GliderPro	
 */
+
+#include obj_Combat.iss
+
 objectdef obj_Ratter
 {
 	/* the bot logic is currently based on a state machine */
 	variable string CurrentState
 	variable int FrameCounter
+	variable obj_Combat Combat
 	
 	method Initialize()
 	{
-		This:SetupEvents[]
+		Event[OnFrame]:AttachAtom[This:Pulse]
 		BotModules:Insert["Ratter"]
-		
+
+		;; call the combat object's init routine
+		This.Combat:Initialize
+		;; set the combat "mode"
+		This.Combat:SetMode["AGRESSIVE"]
+
 		UI:UpdateConsole["obj_Ratter: Initialized"]
 	}
 
@@ -41,6 +50,9 @@ objectdef obj_Ratter
 			This:SetState[]
 			FrameCounter:Set[0]
 		}
+		
+		;; call the combat frame action code
+		This.Combat:Pulse
 	}
 		
 	method Shutdown()
@@ -48,27 +60,11 @@ objectdef obj_Ratter
 		Event[OnFrame]:DetachAtom[This:Pulse]		
 	}
 
-	/* SetupEvents will attach atoms to all of the events used by the bot */
-	method SetupEvents()
-	{
-		This[parent]:SetupEvents[]
-
-		/* override any events setup by the base class */
-		Event[OnFrame]:AttachAtom[This:Pulse]
-	}
-	
-	
 	/* NOTE: The order of these if statements is important!! */
 	method SetState()
 	{
-		if !${Social.IsSafe}
-			This.CurrentState:Set["SAFESPOT"]
-		elseif !${Ship.IsSafe}
-			This.CurrentState:Set["SAFESPOT"]
-		elseif !${Ship.IsAmmoAvailable}
-			This.CurrentState:Set["SAFESPOT"]			
-		else
-			This.CurrentState:Set["FIGHT"]
+		/* Combat module handles all fleeing states now */
+		This.CurrentState:Set["FIGHT"]
 	}
 
 	/* this function is called repeatedly by the main loop in EveBot.iss */
@@ -76,10 +72,16 @@ objectdef obj_Ratter
 	{				
 	    /* don't do anything if we aren't in Ratter bot mode! */
 		if !${Config.Common.BotModeName.Equal[Ratter]}
-		{
 			return
-		}
 	    
+		; call the combat object state processing
+		call This.Combat.ProcessState
+		
+		; see if combat object wants to 
+		; override bot module state.
+		if ${This.Combat.Override}
+			return
+	    		    
 		switch ${This.CurrentState}
 		{
 			case SAFESPOT
@@ -91,39 +93,11 @@ objectdef obj_Ratter
 		}	
 	}
 	
-	function RunAway()
-	{
-		UI:UpdateConsole["obj_Ratter: DEBUG: RunAway"]
-	
-		; Are we at the safespot and not warping?
-		if !${Safespot.IsAtSafespot} && ${Me.ToEntity.Mode} != 3
-		{
-			; Turn off the shield booster
-			;Modules:ActivateShieldBooster[FALSE]
-		
-			call Safespots.WarpTo
-			
-			; Wait 3 seconds
-			wait 30
-		}
-		
-		if ${Safespots.IsAtSafespot}
-		{
-			
-			wait 60
-			UI:UpdateConsole["obj_Ratter: DEBUG: At safespot.  Cloaking..."]
-			Ship:Deactivate_Hardeners[]
-			;Modules:ActivateCloak[TRUE]
-			
-			; Wait 1 minute, there was hostiles so who cares how long we wait
-			wait 600
-		}
-	}
-
 	function Fight()
 	{	/* combat logic */
 	
 		UI:UpdateConsole["obj_Ratter: DEBUG: Fight"]
+		
 		; Before opening fire, lets see if there are any friendlies here
 		if !${Targets.PC}
 		while ${Targets.TargetNPCs} && ${Social.IsSafe}

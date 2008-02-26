@@ -616,11 +616,13 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[MinimumDronesInSpace,3]
 		This.CombatRef:AddSetting[MinimumArmorPct, 35]
 		This.CombatRef:AddSetting[MinimumShieldPct, 25]
+		This.CombatRef:AddSetting[MinimumCapPct, 5]
 		This.CombatRef:AddSetting[AlwaysShieldBoost, FALSE]
 		This.CombatRef:AddSetting[Launch Combat Drones, TRUE]
 		This.CombatRef:AddSetting[Run On Low Ammo, FALSE]
 		This.CombatRef:AddSetting[Run On Low Cap, FALSE]
-		This.CombatRef:AddSetting[Run On Low Tank, FALSE]
+		This.CombatRef:AddSetting[Run On Low Tank, TRUE]
+		This.CombatRef:AddSetting[Run To Station, TRUE]
 		This.CombatRef:AddSetting[Use Whitelist, FALSE]
 		This.CombatRef:AddSetting[Use Blacklist, FALSE]
 		This.CombatRef:AddSetting[Chain Spawns, TRUE]
@@ -651,12 +653,22 @@ objectdef obj_Configuration_Combat
 
 	member:bool RunOnLowTank()
 	{
-		return ${This.CombatRef.FindSetting[Run On Low Tank, FALSE]}
+		return ${This.CombatRef.FindSetting[Run On Low Tank, TRUE]}
 	}
 	
 	method SetRunOnLowTank(bool value)
 	{
 		This.CombatRef:AddSetting[Run On Low Tank, ${value}]
+	} 
+
+	member:bool RunToStation()
+	{
+		return ${This.CombatRef.FindSetting[Run To Station, TRUE]}
+	}
+	
+	method SetRunToStation(bool value)
+	{
+		This.CombatRef:AddSetting[Run To Station, ${value}]
 	} 
 
 	member:bool UseWhiteList()
@@ -757,6 +769,16 @@ objectdef obj_Configuration_Combat
 	method SetMinimumShieldPct(int value)
 	{
 		This.CombatRef:AddSetting[MinimumShieldPct, ${value}]
+	}
+
+	member:int MinimumCapPct()
+	{
+		return ${This.CombatRef.FindSetting[MinimumCapPct, 5]}
+	}
+	
+	method SetMinimumCapPct(int value)
+	{
+		This.CombatRef:AddSetting[MinimumCapPct, ${value}]
 	}
 
 	member:bool AlwaysShieldBoost()
