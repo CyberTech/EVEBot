@@ -40,7 +40,7 @@ objectdef obj_UI
 }
 variable obj_UI UI
 
-function main()
+function main(string unchar="")
 {
 	if !${ISXEVE(exists)}
 	{
@@ -48,6 +48,13 @@ function main()
 		call LoginHandler.LoadExtension
 		wait 200
 	}
+	if !${unchar.Equal[""]}
+	{
+	       	;echo DEBUG: Changing config to ${unchar}
+	       	BaseConfig:ChangeConfig[${unchar}]
+	       	wait 10
+	}
+
 
 	if (${Config.Common.LoginName.Equal[""]} || \ 
 		${Config.Common.LoginPassword.Equal[""]} || \ 

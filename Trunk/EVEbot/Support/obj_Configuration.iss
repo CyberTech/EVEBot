@@ -23,6 +23,7 @@
 objectdef obj_Configuration_BaseConfig
 {
 	variable string CONFIG_FILE = "${Script.CurrentDirectory}/launcher_config.xml"
+	variable string unchar = ""
 	variable settingsetref BaseRef
 	
 	method Initialize()
@@ -54,14 +55,36 @@ objectdef obj_Configuration_BaseConfig
 		if ${mySet:First(exists)}
 		do
 		{
-			if ${mySet.Value.FindSetting["Default Login"].String.Equal["TRUE"]}
+			if !${This.unchar.Equal[""]}
 			{
-				BaseRef:Set[${mySet.Value}]
-				return
+				if ${mySet.Value.Name.Equal[${This.unchar}]}
+				{
+					BaseRef:Set[${mySet.Value}]
+					return
+				}
+			}
+			else
+			{
+
+				if ${mySet.Value.FindSetting["Default Login"].String.Equal["TRUE"]}
+				{
+					BaseRef:Set[${mySet.Value}]
+					return
+				}
 			}
 		}
 		while ${mySet:Next(exists)}
 	}
+
+        method ChangeConfig(string unchar)
+        {
+                This:Shutdown
+		;echo unchar going to be ${unchar}
+                This.unchar:Set[${unchar}]
+		;echo unchar now ${This.unchar}
+                This:Initialize
+        }
+
 }
 
 objectdef obj_Configuration
