@@ -42,10 +42,6 @@ objectdef obj_Station
 
 	member:bool DockedAtStation(int StationID)
 	{
-		echo ${Me.InStation(exists)} && ${Me.InStation} && \
-			${Me.StationID(exists)} && \
-			${Me.StationID} == ${StationID}
-
 		if ${Me.InStation(exists)} && ${Me.InStation} && \
 			${Me.StationID(exists)} && \
 			${Me.StationID} == ${StationID}
@@ -219,7 +215,10 @@ objectdef obj_Station
 	function Undock()
 	{
 		variable int Counter
-		UI:UpdateConsole["Undock: Waiting while ship exits the station (13 sec)"]
+		variable int StationID
+		StationID:Set[${Me.StationID}]
+		
+		UI:UpdateConsole["Undocking"]
 
 		EVE:Execute[CmdExitStation]
 		wait WAIT_UNDOCK
@@ -238,8 +237,7 @@ objectdef obj_Station
 			   UI:UpdateConsole["Undock: Debug: Me.InStation=${Me.InStation}"]
 			}
 		}
-		while ( !${Me.InStation(exists)} || ${Me.InStation} )
-;		while ( !${Me.InStation(exists)} || ${Me.InStation} || !${EVEWindow[Local](exists)} )
+		while ${This.DockedAtStation[${StationID}]}
 		UI:UpdateConsole["Undock: Complete"]
    		call ChatIRC.Say "Undock: Complete"
 

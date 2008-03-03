@@ -62,7 +62,7 @@
     ---------------------
     
         * DEFENSIVE -- If under attack (by NPCs) AND damage taken exceeds threshold, fight back
-        * AGRESSIVE -- If hostile NPC is targeted, destroy it
+        * AGGRESSIVE -- If hostile NPC is targeted, destroy it
         * TANK      -- Maintain defenses but attack nothing
         
         NOTE: The combat object will activate and maintain your "tank" in all modes.  

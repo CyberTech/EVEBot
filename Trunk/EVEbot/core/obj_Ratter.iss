@@ -26,7 +26,7 @@ objectdef obj_Ratter
 		;; call the combat object's init routine
 		This.Combat:Initialize
 		;; set the combat "mode"
-		This.Combat:SetMode["AGRESSIVE"]
+		This.Combat:SetMode["AGGRESSIVE"]
 
 		UI:UpdateConsole["obj_Ratter: Initialized"]
 	}

@@ -890,33 +890,31 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		if ${Entity[${EntityID}](exists)}
 		{
 			variable float64 OriginalDistance = ${Entity[${EntityID}].Distance}
+			variable float64 CurrentDistance
+			
 			If ${OriginalDistance} < ${Distance}
 			{
 				return
 			}
+			OriginalDistance:Inc[10]
 			
-			UI:UpdateConsole["Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc[(${Entity[${EntityID}].Distance} - ${Distance}) / ${Me.Ship.MaxVelocity}].Ceil} Seconds away"]
+			CurrentDistance:Set[${Entity[${EntityID}].Distance}]
+			UI:UpdateConsole["Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc[(${CurrentDistance} - ${Distance}) / ${Me.Ship.MaxVelocity}].Ceil} Seconds away"]
+
 			This:Activate_AfterBurner[]
 			do
 			{
 				Entity[${EntityID}]:Approach
 				wait 50
-
+				CurrentDistance:Set[${Entity[${EntityID}].Distance}]
+				
 				if ${Entity[${EntityID}](exists)} && \
-					${OriginalDistance} < ${Entity[${EntityID}].Distance}
+					${OriginalDistance} < ${CurrentDistance}
 				{
 					UI:UpdateConsole["DEBUG: obj_Ship:Approach: ${Entity[${EntityID}].Name} is getting further away!  Is it moving? Are we stuck, or colliding?"]
 				}
-			
-				if ${Entity[${EntityID}](exists)} && \
-					${OriginalDistance} == ${Entity[${EntityID}].Distance}
-				{
-					UI:UpdateConsole["DEBUG: obj_Ship:Approach: We may be stuck or colliding"]
-					EVE:Execute[CmdStopShip]
-					return
-				}
 			}
-			while ${Entity[${EntityID}].Distance} > ${Math.Calc[${Distance} * 1.05]}
+			while ${CurrentDistance} > ${Math.Calc[${Distance} * 1.05]}
 			EVE:Execute[CmdStopShip]
 			This:Deactivate_AfterBurner[]
 		}
