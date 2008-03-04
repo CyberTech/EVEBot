@@ -9,6 +9,9 @@
 
 objectdef obj_Miner
 {
+	variable time NextPulse
+	variable int PulseIntervalInSeconds = 2
+
 	variable index:entity LockedTargets
 	variable iterator Target
 	variable int TotalTrips = 0						/* Total Times we've had to transfer to hanger */
@@ -17,7 +20,6 @@ objectdef obj_Miner
 	variable int TotalTripSeconds = 0
 	variable int AverageTripSeconds = 0
 	variable string CurrentState	
-	variable int FrameCounter
 	variable bool CombatAbort = FALSE
 	variable int SanityCheckCounter = 0
 	variable bool SanityCheckAbort = FALSE
@@ -51,15 +53,15 @@ objectdef obj_Miner
 			; There's no reason at all for the miner to check state if it's not a miner
 			return
 		}
-		FrameCounter:Inc
 
-
-		variable int IntervalInSeconds = 2
-		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
+	    if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
 		{
 			This:SetState[]
-			FrameCounter:Set[0]
             SanityCheckCounter:Inc
+
+    		This.NextPulse:Set[${Time.Timestamp}]
+    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+    		This.NextPulse:Update
 		}
 	}
 	

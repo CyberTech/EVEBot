@@ -16,7 +16,8 @@
 
 objectdef obj_LoginHandler
 {
-	variable int FrameCounter
+	variable time NextPulse
+
 	variable int LoginTimer = 0
 	variable string CurrentState
 	variable bool Finished = FALSE
@@ -45,20 +46,21 @@ objectdef obj_LoginHandler
 
 	method Pulse()
 	{
-		FrameCounter:Inc
-		
-		variable int IntervalInSeconds = 4
+		variable int PulseIntervalInSeconds = 5
+
 		if ${This.LoginTimer} > 0
 		{
-			IntervalInSeconds:Set[${This.LoginTimer}]
+			This.PulseIntervalInSeconds:Set[${This.LoginTimer}]
 		}
 		
-		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
+	    if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
 		{
 			;echo DEBUG: Pulse: ${This.LoginTimer} - ${This.CurrentState}
 			This:DoLogin
 			
-			FrameCounter:Set[0]
+    		This.NextPulse:Set[${Time.Timestamp}]
+    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+    		This.NextPulse:Update
 		}
 	}
 	

@@ -17,7 +17,9 @@ objectdef obj_Social
 	;Variables 
 	variable index:entity PilotIndex
 	variable index:entity EntityIndex
-	variable int FrameCounter
+
+	variable time NextPulse
+	variable int PulseIntervalInSeconds = 5
 
 	variable iterator WhiteListPilotIterator	
 	variable iterator WhiteListCorpIterator	
@@ -60,11 +62,8 @@ objectdef obj_Social
 		{
 			return
 		}
-
-		FrameCounter:Inc
-		variable int IntervalInSeconds = 5
-				
-		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
+		
+	    if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
 		{
     		This:GetLists
 			SystemSafe:Set[TRUE]
@@ -72,11 +71,15 @@ objectdef obj_Social
     		{
     			This:CheckLocalWhiteList
     		}
+
     		if ${Config.Combat.UseBlackList}
     		{
     			This:CheckLocalBlackList
     		}
-    		FrameCounter:Set[0]
+
+    		This.NextPulse:Set[${Time.Timestamp}]
+    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+    		This.NextPulse:Update
 		}
 	}
 	

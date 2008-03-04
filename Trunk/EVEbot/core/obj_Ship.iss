@@ -11,7 +11,9 @@ objectdef obj_Ship
 {
 	variable int MODE_WARPING = 3
 	
-	variable int FrameCounter
+	variable time NextPulse
+	variable int PulseIntervalInSeconds = 8
+	
 	variable int Calculated_MaxLockedTargets
 	variable float BaselineUsedCargo
 	variable bool CargoIsOpen
@@ -58,10 +60,7 @@ objectdef obj_Ship
 			return
 		}
 		
-		FrameCounter:Inc
-	    variable int IntervalInSeconds = 8
-	    
-		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
+	    if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
 		{
     		if (${Me.InStation(exists)} && !${Me.InStation})
     		{		    
@@ -103,13 +102,10 @@ objectdef obj_Ship
 						This:Deactivate_Shield_Booster[]
 					}    			
 				}
-    			
-    			FrameCounter:Set[0]
     		}
-    		else
-    		{
-    		    FrameCounter:Set[0]
-    		}
+    		This.NextPulse:Set[${Time.Timestamp}]
+    		This.NextPulse.Second:Inc[${This.IntervalInSeconds}]
+    		This.NextPulse:Update
 		}		
 	}
 	

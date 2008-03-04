@@ -11,7 +11,8 @@ objectdef obj_EVEBot
 {
 	variable bool ReturnToStation = FALSE
 	variable bool Paused = FALSE
-	variable int FrameCounter
+	variable time NextPulse
+	variable int PulseIntervalInSeconds = 4
 
 	variable index:being Buddies
 	variable int BuddiesCount = 0
@@ -52,9 +53,7 @@ objectdef obj_EVEBot
 			;Script:End
 		}
 		
-		FrameCounter:Inc
-		variable int IntervalInSeconds = 4
-		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
+	    if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
 		{
     		if ${Login(exists)} || \
     			${CharSelect(exists)}
@@ -107,7 +106,10 @@ objectdef obj_EVEBot
 					}
 				}
 			}
-			FrameCounter:Set[0]
+
+    		This.NextPulse:Set[${Time.Timestamp}]
+    		This.NextPulse.Second:Inc[${This.IntervalInSeconds}]
+    		This.NextPulse:Update
 		}
 	}
 		

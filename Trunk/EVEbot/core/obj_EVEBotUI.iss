@@ -7,8 +7,10 @@ objectdef obj_EVEBotUI
 	variable string MyRace
 	variable string MyCorp
 
-	variable int FrameCounter
-	variable int FrameCounterMsgBoxes
+	variable time NextPulse
+	variable time NextMsgBoxPulse
+	variable int PulseIntervalInSeconds = 4
+	variable int PulseMsgBoxIntervalInSeconds = 15
 
 	variable string LogFile
 	variable string StatsLogFile
@@ -51,22 +53,17 @@ objectdef obj_EVEBotUI
 	}
 
 	method Pulse()
-	{
-		FrameCounter:Inc
-		FrameCounterMsgBoxes:Inc
-		
-		variable int IntervalInSeconds = 2
-		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
+	{	
+	    if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
 		{
 		    if ${Me.Name(exists)}
 		    {
     			This:Update_Display_Values
-    			FrameCounter:Set[0]
 		    }
-		    else
-		    {
-		        FrameCounter:Set[0]
-		    }
+
+    		This.NextPulse:Set[${Time.Timestamp}]
+    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+    		This.NextPulse:Update
 		}
 		
 		if ${EVEBot.Paused}
@@ -74,16 +71,19 @@ objectdef obj_EVEBotUI
 			return
 		}
 
-		IntervalInSeconds:Set[15]
-		if ${FrameCounterMsgBoxes} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
+	    if ${Time.Timestamp} > ${This.NextMsgBoxPulse.Timestamp}
 		{
 			EVE:CloseAllMessageBoxes
 			EVE:CloseAllChatInvites
-			FrameCounterMsgBoxes:Set[0]
+
 			if ${Me.Name(exists)}
 			{
 				Config.Common:SetAutoLoginCharID[${Me.CharID}]
 			}
+
+    		This.NextMsgBoxPulse:Set[${Time.Timestamp}]
+    		This.NextMsgBoxPulse.Second:Inc[${This.PulseMsgBoxIntervalInSeconds}]
+    		This.NextMsgBoxPulse:Update
 		}
 
 	}

@@ -14,7 +14,8 @@ objectdef obj_Ratter
 {
 	/* the bot logic is currently based on a state machine */
 	variable string CurrentState
-	variable int FrameCounter
+	variable time NextPulse
+	variable int PulseIntervalInSeconds = 2
 	variable obj_Combat Combat
 	
 	method Initialize()
@@ -43,13 +44,14 @@ objectdef obj_Ratter
 		{
 			return
 		}
-		FrameCounter:Inc
 
-		variable int IntervalInSeconds = 2
-		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
+	    if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
 		{
 			This:SetState[]
-			FrameCounter:Set[0]
+
+    		This.NextPulse:Set[${Time.Timestamp}]
+    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+    		This.NextPulse:Update
 		}
 		
 		;; call the combat frame action code

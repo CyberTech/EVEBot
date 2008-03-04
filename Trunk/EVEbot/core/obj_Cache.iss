@@ -11,6 +11,8 @@ objectdef obj_Cache
 {
 	variable string m_ObjectName
 	variable string m_CachedMembers
+	variable time NextPulse
+	variable int PulseIntervalInSeconds = 10
 	
 	method Initialize()
 	{
@@ -30,13 +32,11 @@ objectdef obj_Cache
 			return
 		}
 
-		FrameCounter:Inc
-
-		variable int IntervalInSeconds = 2
-		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
+	    if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
 		{
-			FrameCounter:Set[0]
-			
+    		This.NextPulse:Set[${Time.Timestamp}]
+    		This.NextPulse.Second:Inc[${This.IntervalInSeconds}]
+    		This.NextPulse:Update			
 			/* iterate through the registered members and cache them */
 		}
 	}

@@ -33,7 +33,9 @@ objectdef obj_CombatFighter inherits obj_Fighter
 
 	/* the bot logic is currently based on a state machine */
 	variable string CurrentState
-	variable int FrameCounter
+
+	variable time NextPulse
+	variable int PulseIntervalInSeconds = 2
 	
 	method Initialize()
 	{
@@ -59,14 +61,14 @@ objectdef obj_CombatFighter inherits obj_Fighter
 			return
 		}
 		
-		FrameCounter:Inc
-		variable int IntervalInSeconds = 2
-		
-		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
+	    if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
 		{
 		    call This.DevelopmentTest
     		This:SetState[]
-    		FrameCounter:Set[0]
+
+    		This.NextPulse:Set[${Time.Timestamp}]
+    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+    		This.NextPulse:Update
 		}
 	}
 	

@@ -152,7 +152,9 @@ objectdef obj_OreHauler inherits obj_Hauler
 
 	/* the bot logic is currently based on a state machine */
 	variable string CurrentState
-	variable int FrameCounter
+
+	variable time NextPulse
+	variable int PulseIntervalInSeconds = 2
 	
 	variable index:bookmark SafeSpots
 	variable iterator SafeSpotIterator
@@ -184,13 +186,14 @@ objectdef obj_OreHauler inherits obj_Hauler
 		{
 			return
 		}
-		FrameCounter:Inc
 
-		variable int IntervalInSeconds = 2
-		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
+	    if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
 		{
 			This:SetState[]
-			FrameCounter:Set[0]
+
+    		This.NextPulse:Set[${Time.Timestamp}]
+    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+    		This.NextPulse:Update
 		}
 	}
 		

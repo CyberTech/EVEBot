@@ -12,7 +12,9 @@ objectdef obj_Freighter
 {
 	/* the bot logic is currently based on a state machine */
 	variable string CurrentState
-	variable int FrameCounter
+
+	variable time NextPulse
+	variable int PulseIntervalInSeconds = 2
 	
 	variable queue:bookmark SourceLocations
 	variable int m_DestinationID
@@ -44,13 +46,14 @@ objectdef obj_Freighter
 		{
 			return
 		}
-		FrameCounter:Inc
 
-		variable int IntervalInSeconds = 2
-		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
+	    if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
 		{
 			This:SetState[]
-			FrameCounter:Set[0]
+
+    		This.NextPulse:Set[${Time.Timestamp}]
+    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+    		This.NextPulse:Update
 		}
 	}
 		

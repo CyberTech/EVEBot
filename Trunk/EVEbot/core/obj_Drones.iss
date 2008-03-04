@@ -9,12 +9,14 @@
 
 objectdef obj_Drones
 {
+	variable time NextPulse
+	variable int PulseIntervalInSeconds = 5
+
 	variable index:int ActiveDroneIDList
 	variable int CategoryID_Drones = 18
 	variable int LaunchedDrones = 0
 	variable bool WaitingForDrones = FALSE
 	variable bool DronesReady = FALSE
-	variable int FrameCounterDrones
 	variable int ShortageCount
 	
 	method Initialize()
@@ -44,13 +46,10 @@ objectdef obj_Drones
 
 		if ${This.WaitingForDrones}
 		{
-			FrameCounterDrones:Inc
-            variable int IntervalInSeconds = 4
-				
-			if ${FrameCounterDrones} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
+		    if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
 			{
     			if (${Me.InStation(exists)} && !${Me.InStation})
-    			{			    
+    			{
     				This.LaunchedDrones:Set[${This.DronesInSpace}]
     				if  ${This.LaunchedDrones} > 0
     				{
@@ -59,12 +58,11 @@ objectdef obj_Drones
     					
     					UI:UpdateConsole["${This.LaunchedDrones} drones deployed"]
     				}					
-    				FrameCounterDrones:Set[0]
                 }
-                else
-                {
-                    FrameCounterDrones:Set[0]
-                }
+
+	    		This.NextPulse:Set[${Time.Timestamp}]
+	    		This.NextPulse.Second:Inc[${This.IntervalInSeconds}]
+	    		This.NextPulse:Update
 			}
 		}
 	}

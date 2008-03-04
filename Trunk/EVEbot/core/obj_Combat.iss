@@ -73,7 +73,9 @@
 
 objectdef obj_Combat
 {
-    variable int    FrameCounter
+	variable time NextPulse
+	variable int PulseIntervalInSeconds = 5
+
     variable bool   Override
     variable string CombatMode
     variable string CurrentState
@@ -92,12 +94,13 @@ objectdef obj_Combat
     
     method Pulse()
     {
-        This.FrameCounter:Inc
-        variable int IntervalInSeconds = 8
-        
-        if ${This.FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
-        {
+	    if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
+		{
             This:SetState
+
+    		This.NextPulse:Set[${Time.Timestamp}]
+    		This.NextPulse.Second:Inc[${This.IntervalInSeconds}]
+    		This.NextPulse:Update
         }
     }
     

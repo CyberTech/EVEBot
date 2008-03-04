@@ -2,7 +2,9 @@ objectdef obj_Skills
 {
 	variable file SkillFile = "${Script.CurrentDirectory}/config/${Me.Name} Training.txt"
 	variable index:skill OwnedSkills
-	variable int FrameCounter
+	variable time NextPulse
+	variable int PulseIntervalInSeconds = 5
+
 	variable string CurrentlyTrainingSkill
 	variable string NextInLine
 	
@@ -31,16 +33,13 @@ objectdef obj_Skills
 	
 	method Pulse()
 	{
-		FrameCounter:Inc
-		variable int IntervalInSeconds = 60
-
-        if (${CurrentlyTrainingSkill.Length} <= 0)
-        {
-            CurrentlyTrainingSkill:Set[${This.CurrentlyTraining}]
-        }
-
-		if ${FrameCounter} >= ${Math.Calc[${Display.FPS} * ${IntervalInSeconds}]}
+	    if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
 		{
+	        if (${CurrentlyTrainingSkill.Length} <= 0)
+	        {
+	            CurrentlyTrainingSkill:Set[${This.CurrentlyTraining}]
+	        }
+
 		    if ${Me.InStation(exists)}
 		    {
     			if !${This.NextSkill.Equal[None]} && \
@@ -51,12 +50,11 @@ objectdef obj_Skills
     			}
     			
     			CurrentlyTrainingSkill:Set[${This.CurrentlyTraining}]
-    			FrameCounter:Set[0]
-    		}
-    		else
-    		{
-    		    FrameCounter:Set[0]
-    		}
+
+	    		This.NextPulse:Set[${Time.Timestamp}]
+	    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+	    		This.NextPulse:Update
+			}
 		}
 	}
 
