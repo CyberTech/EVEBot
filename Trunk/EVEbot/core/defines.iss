@@ -10,6 +10,7 @@
 /*
 	I'm a comment to force SVN_REVISION update on checkin.. 
 	How are you today?
+	I'm fime. Touch of goiter, but doc says if I swallow these pills he'll be able to cut it out.
 
 */
 variable string APP_NAME = "EVEBot"
