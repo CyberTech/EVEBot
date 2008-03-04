@@ -16,6 +16,9 @@
  */
 objectdef obj_Courier
 {
+	/* the bot logic is currently based on a state machine */
+	variable string CurrentState
+
 	method Initialize()
 	{
 		UI:UpdateConsole["obj_Courier: Initialized"]
