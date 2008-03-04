@@ -8,6 +8,77 @@
 	
 	-- GliderPro	
 */
+
+/* obj_Courier is a "bot-mode" which is similar to a bot-module.
+ * obj_Courier runs within the obj_Freighter bot-module.  It would 
+ * be very straightforward to turn obj_Courier into a independent 
+ * bot-module in the future if it outgrows its place in obj_Freighter.
+ */
+objectdef obj_Courier
+{
+	method Initialize()
+	{
+		UI:UpdateConsole["obj_Courier: Initialized"]
+	}
+
+	method Shutdown()
+	{
+		Event[OnFrame]:DetachAtom[This:Pulse]		
+	}
+	
+	/* NOTE: The order of these if statements is important!! */
+	/* obj_Courier tasks:
+	 *	MOVING_TO_AGENT
+	 *	GETTING_MISSION
+	 *	MOVING_TO_PICKUP
+	 *	LOADING_CARGO
+	 *	MOVING_TO_DROPOFF
+	 *	UNLOADING_CARGO
+	 *	TURNING_IN_MISSION
+	 *  (repeat)
+	 */
+	method SetState()
+	{
+		if ${Agents.ActiveAgent.NotEqual[${Config.Freighter.AgentName}]}
+		{
+			Agents:SetActiveAgent[${Config.Freighter.AgentName}]
+		}
+		
+		if ${EVEBot.ReturnToStation} && !${Me.InStation}
+		{
+			This.CurrentState:Set["ABORT"]
+		}
+		elseif ${EVEBot.ReturnToStation}
+		{
+			This.CurrentState:Set["IDLE"]
+		}
+		elseif ${Agents.HaveMission}
+		{
+			This.CurrentState:Set["START_MISSION"]
+		}
+		elseif !${Agents.HaveMission}
+		{
+			This.CurrentState:Set["GET_MISSION"]
+		}
+		else
+		{
+			This.CurrentState:Set["Unknown"]
+		}
+	}
+
+	function ProcessState()
+	{
+		switch ${This.CurrentState}
+		{
+			case ABORT
+				call Station.Dock
+				break
+			case IDLE
+				break
+		}	
+	}
+}
+
 objectdef obj_Freighter
 {
 	/* the bot logic is currently based on a state machine */
@@ -18,8 +89,9 @@ objectdef obj_Freighter
 	
 	variable queue:bookmark SourceLocations
 	variable int m_DestinationID
+	variable obj_Courier Courier
 	
-	method Initialize(string player, string corp)
+	method Initialize()
 	{
 		This:SetupEvents[]
 		BotModules:Insert["Freighter"]
@@ -33,7 +105,6 @@ objectdef obj_Freighter
 		
 		UI:UpdateConsole["obj_Freighter: Initialized"]
 	}
-
 	
 	method Pulse()
 	{
@@ -46,10 +117,22 @@ objectdef obj_Freighter
 		{
 			return
 		}
-
+		
 	    if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
 		{
-			This:SetState[]
+			switch ${Config.Freighter.FreighterModeName}
+			{
+				case Move Minerals to Buyer
+					/* not implemented yet */
+					break
+				case Mission Runner
+					This.Courier:SetState
+					break
+				default
+					This:SetState[]
+					break
+			}
+
 
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
@@ -74,30 +157,41 @@ objectdef obj_Freighter
 	/* this function is called repeatedly by the main loop in EveBot.iss */
 	function ProcessState()
 	{				
-		switch ${This.CurrentState}
+		switch ${Config.Freighter.FreighterModeName}
 		{
-			case IDLE
+			case Move Minerals to Buyer
+				/* not implemented yet */
 				break
-			case ABORT
-				UI:UpdateConsole["Aborting operation: Returning to base"]
-				if ${EVE.Bookmark[${Config.Freighter.Destination}](exists)}
+			case Mission Runner
+				call This.Courier.ProcessState
+				break
+			default
+				switch ${This.CurrentState}
 				{
-					call Ship.WarpToBookMarkName "${Config.Freighter.Destination}"
-				}
+					case IDLE
+						break
+					case ABORT
+						UI:UpdateConsole["Aborting operation: Returning to base"]
+						if ${EVE.Bookmark[${Config.Freighter.Destination}](exists)}
+						{
+							call Ship.WarpToBookMarkName "${Config.Freighter.Destination}"
+						}
+						break
+					case BASE
+						call This.DoBaseAction
+						break
+					case TRANSPORT
+						call This.Transport
+						break
+					case CARGOFULL
+						if ${EVE.Bookmark[${Config.Freighter.Destination}](exists)}
+						{
+							call Ship.WarpToBookMarkName "${Config.Freighter.Destination}"
+						}
+						break
+				}	
 				break
-			case BASE
-				call This.DoBaseAction
-				break
-			case TRANSPORT
-				call This.Transport
-				break
-			case CARGOFULL
-				if ${EVE.Bookmark[${Config.Freighter.Destination}](exists)}
-				{
-					call Ship.WarpToBookMarkName "${Config.Freighter.Destination}"
-				}
-				break
-		}	
+		}
 	}
 	
 	/* NOTE: The order of these if statements is important!! */

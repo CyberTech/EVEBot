@@ -10,6 +10,7 @@
 objectdef obj_Agents
 {
 	variable int AgentID = 0
+	variable string AgentName
 	
     method Initialize()
     {
@@ -26,7 +27,17 @@ objectdef obj_Agents
 	    if (${This.AgentID} <= 0)
 	    {
 	        UI:UpdateConsole["obj_Agents: ERROR!  Cannot get Agent ID for ${name}."]
+			This.AgentName:Set[""]
 	    }
+		else
+		{
+			This.AgentName:Set[${name}]	
+		}
+	}
+	
+	member:string ActiveAgent()
+	{
+		return ${This.AgentName}
 	}
 	
 	member:bool InAgentStation()
@@ -45,5 +56,11 @@ objectdef obj_Agents
 			rVal:Set[FALSE]
 	    }
 		return ${rVal}
+	}
+	
+	member:bool HaveMission()
+	{
+		/* not implemented yet */
+		return FALSE
 	}
 }
