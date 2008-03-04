@@ -25,6 +25,7 @@ objectdef obj_Configuration_BaseConfig
 	
 	method Initialize()
 	{	
+
 		LavishSettings[EVEBotSettings]:Clear
 		LavishSettings:AddSet[EVEBotSettings]
 		LavishSettings[EVEBotSettings]:AddSet[${Me.Name}]
@@ -985,6 +986,7 @@ objectdef obj_Configuration_Freighter
 		This.FreighterRef:AddSetting[System Name, ""]
 		This.FreighterRef:AddSetting[Destination,""]
 		This.FreighterRef:AddSetting[Source Prefix,""]
+		This.FreighterRef:AddSetting[Agent Name, ""]
 	}
 	
 	member:int FreighterMode()
@@ -1015,6 +1017,16 @@ objectdef obj_Configuration_Freighter
 	method SetSystemName(string Name)
 	{
 		This.FreighterRef:AddSetting[System Name,${Name}]
+	}
+
+	member:string AgentName()
+	{
+		return ${This.FreighterRef.FindSetting[Agent Name, ""]}
+	}
+	
+	method SetAgentName(string Name)
+	{
+		This.FreighterRef:AddSetting[Agent Name,${Name}]
 	}
 
 	member:string Destination()

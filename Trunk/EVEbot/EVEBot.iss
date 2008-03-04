@@ -25,6 +25,7 @@
 #include core/obj_Belts.iss
 #include core/obj_Targets.iss
 #include core/obj_Sound.iss
+#include core/obj_Agents.iss
 
 /* Behavior/Mode Includes */
 #include core/obj_Hauler.iss
@@ -58,6 +59,7 @@ variable obj_Safespots Safespots
 variable obj_Belts Belts
 variable obj_Targets Targets
 variable obj_Sound Sound
+variable obj_Agents Agents
 
 /* Script-Defined Behavior Objects */
 variable index:string BotModules
