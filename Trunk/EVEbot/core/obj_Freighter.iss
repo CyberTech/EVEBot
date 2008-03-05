@@ -371,19 +371,42 @@ objectdef obj_Freighter
 		variable index:bookmark bm_index		
 		EVE:DoGetBookmarks[bm_index]
 	
-		variable int idx
-		idx:Set[${bm_index.Used}]
+		variable iterator bm_iterator
+		bm_index:GetIterator[bm_iterator]
+		
+		variable collection:bookmark bm_collection
+		if ${bm_iterator:First(exists)}
+		{
+			do
+			{
+				variable string bm_name
+				bm_name:Set["${bm_iterator.Value.Label}"]			
+				if ${bm_name.Left[${bm_prefix.Length}].Equal[${bm_prefix}]}
+				{
+					if ${bm_collection.Element[${bm_iterator.Value.Label}](exists)}
+					{
+						UI:UpdateConsole["Label ${bm_iterator.Value.Label} exists more than once."]
+						UI:UpdateConsole["Freighter will visit stations with the same bookmark label in a"]
+						UI:UpdateConsole["random order.  Try to use unique bookmark labels in the future."]
+						bm_collection:Set["${bm_iterator.Value.Label}_${Math.Rand[5000]:Inc[1000]}",${bm_iterator.Value}]
+					}
+					else
+					{
+						bm_collection:Set[${bm_iterator.Value.Label},${bm_iterator.Value}]	
+					}
+				}
+			}
+			while ${bm_iterator:Next(exists)}
+		}		
 		
 		SourceLocations:Clear
-		while ${idx} > 0
+		if ${bm_collection.FirstValue(exists)}
 		{
-			variable string bm_name
-			bm_name:Set["${bm_index.Get[${idx}].Label}"]			
-			if ${bm_name.Left[${bm_prefix.Length}].Equal[${bm_prefix}]}
+			do
 			{
-				SourceLocations:Queue[${bm_index.Get[${idx}]}]	
+				SourceLocations:Queue[${bm_collection.CurrentValue}]	
 			}
-			idx:Dec
+			while ${bm_collection.NextValue(exists)}
 		}		
 		
 		UI:UpdateConsole["BuildSourceList found ${SourceLocations.Used} source locations."]
