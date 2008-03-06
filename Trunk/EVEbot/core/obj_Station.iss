@@ -146,6 +146,65 @@ objectdef obj_Station
 		
 	}
 
+	function DockAtStation(int StationID)
+	{
+		variable int Counter = 0
+
+		UI:UpdateConsole["Docking at ${EVE.GetLocationNameByID[${stationID}]}"]
+
+		if ${Entity[${StationID}](exists)}
+		{
+			if ${Entity[${StationID}].Distance} >= 10000
+			{
+				UI:UpdateConsole["Warping to Station"]
+				call Ship.WarpToID ${StationID}
+				do
+				{ 
+				   wait 30
+				}
+				while ${Entity[${StationID}].Distance} >= 10000
+			}
+			
+			do
+			{
+				Entity[${StationID}]:Approach
+				UI:UpdateConsole["Approaching docking range..."]
+				wait 30
+			}
+			while (${Entity[${StationID}].Distance} > DOCKING_RANGE)
+		
+			Counter:Set[0]
+			UI:UpdateConsole["In Docking Range ... Docking"]
+			UI:UpdateConsole["DEBUG: StationExists = ${Entity[${StationID}](exists)}"]
+			Entity[${StationID}]:Dock			
+			;wait 100
+			do
+			{
+		   		wait 30
+		   		Counter:Inc[20]
+		   		if (${Counter} > 200)
+		   		{
+					UI:UpdateConsole[" - Docking attempt failed, trying again"]
+					Entity[${StationID}]:Dock	
+		      		Counter:Set[0]
+		   		}
+				UI:UpdateConsole["DEBUG: StationExists = ${Entity[${StationID}](exists)}"]
+			}
+			while !${This.DockedAtStation[${StationID}]}
+            ;while ( ${Entity[${StationID}](exists)} ) || \
+            ;      ( !${Me.InStation(exists)} || !${Me.InStation} )			
+			wait 75
+			UI:UpdateConsole["Finished Docking"]
+    		call ChatIRC.Say "Finished Docking"
+    		;ISXEVE:Flush
+		}
+		else
+		{
+			UI:UpdateConsole["No stations in this system!  Quitting Game!!"]
+			EVE:Execute[CmdQuitGame]
+		}
+	}	
+
 	function Dock()
 	{
 		variable int Counter = 0

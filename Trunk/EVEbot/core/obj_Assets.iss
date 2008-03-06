@@ -93,4 +93,28 @@ objectdef obj_Assets
         ;;;UI:UpdateConsole["DEBUG: Assets.NextStation returning ${nextStatonID}."]
         return ${nextStatonID}
     }
+    
+    member:string SolarSystem(int stationID)
+    {
+		variable string tmp_string
+		variable int    spaces
+		variable string last_token
+		variable int    last_token_pos
+
+		tmp_string:Set[${EVE.GetLocationNameByID[${stationID}]}]
+		if ${tmp_string.Find["("]} > 0
+		{
+			tmp_string:Set[${tmp_string.Token[1,"("]}]		
+		}
+		else
+		{
+			tmp_string:Set[${tmp_string.Token[1,"-"]}]
+		}
+		spaces:Set[${tmp_string.Count[" "]}]
+		last_token:Set[${tmp_string.Token[${Math.Calc[${spaces}+1]}," "]}]
+		last_token_pos:Set[${tmp_string.Find[" ${last_token}"]}]
+		tmp_string:Set[${tmp_string.Left[${last_token_pos}]}]
+
+		return ${tmp_string}
+    }
 }

@@ -99,6 +99,8 @@ objectdef obj_Freighter
 		This:SetupEvents[]
 		BotModules:Insert["Freighter"]
 		
+		m_DestinationID:Set[0]
+		
 		/* I didn't want this here but it was the only way to
 		 * get this to work properly.  When Bookmark:Remove 
 		 * works this can be moved into the state machine and
@@ -200,9 +202,10 @@ objectdef obj_Freighter
 	/* NOTE: The order of these if statements is important!! */
 	method SetState()
 	{
-		if ${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity(exists)}
+		if ${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity(exists)} && ${m_DestinationID} == 0
 		{
 			m_DestinationID:Set[${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity.ID}]
+			Assets:IgnoreStation[${m_DestinationID}]
 		}										
 
 		if ${EVEBot.ReturnToStation} && !${Me.InStation}
@@ -306,32 +309,105 @@ objectdef obj_Freighter
 	function MoveToNextStationWithAssets()
 	{
 		variable int nextStationID
+
+		if !${EVEWindow[ByCaption,"ASSETS"](exists)}
+		{
+			EVE:Execute[OpenAssets]
+		}
 		
 		nextStationID:Set[${Assets.NextStation}]
 		if ${nextStationID}
 		{
-		    if ${Config.Freighter.SystemName(exists)}
+   			variable string tmp_string
+			UI:UpdateConsole["DEBUG: StationID = ${nextStationID}"]
+   			UI:UpdateConsole["DEBUG: Location = ${EVE.GetLocationNameByID[${nextStationID}]}"]
+   			tmp_string:Set[${Assets.SolarSystem[${nextStationID}]}]
+			UI:UpdateConsole["DEBUG: Solar System = ${tmp_string}"]
+			UI:UpdateConsole["DEBUG: Region = ${Universe[${tmp_string}].Region}"]
+
+		    if ${Config.Freighter.SystemName.Length} > 0
 		    {   /* limit to the given system */
-    			UI:UpdateConsole["DEBUG: StationID = ${nextStationID}"]
-    			UI:UpdateConsole["DEBUG: Region = ${EVE.Station[${nextStationID}].Region}"]
-    			/* TODO: EVE.Station[] IS BROKEN!!!! */
-		        ;if ${Config.Freighter.SystemName.NotEqual[${EVE.Station[${nextStationID}].Region}]}
-		        ;{
-        		;	Assets:IgnoreStation[${nextStationID}]
-               	;	nextStationID:Set[0]
-		        ;}
+	   			UI:UpdateConsole["DEBUG: Config.Freighter.SystemName = ${Config.Freighter.SystemName}"]
+		        if ${Config.Freighter.SystemName.NotEqual[${Universe[${tmp_string}].Region}]}
+		        {
+        			Assets:IgnoreStation[${nextStationID}]
+               		nextStationID:Set[0]
+		        }
 		    }
+	        
+	        if ${nextStationID} && (${Me.SolarSystemID} != ${Universe[${tmp_string}].ID})
+	        {	/* check for low-sec jumps */
+	        	Universe[${tmp_string}]:SetDestination
+	        	wait 5
+	        	variable index:int ap_path
+	        	EVE:DoGetToDestinationPath[ap_path]
+	        	variable iterator ap_path_iterator
+	        	ap_path:GetIterator[ap_path_iterator]
+	        	
+				if ${ap_path_iterator:First(exists)}
+				{
+					do
+					{
+				        if ${Universe[${ap_path_iterator.Value}].Security} <= 0.45
+				        {	/* avoid low-sec */
+							UI:UpdateConsole["DEBUG: Avoiding low-sec routes."]					        	
+		        			Assets:IgnoreStation[${nextStationID}]
+		               		nextStationID:Set[0]
+		               		break
+				        }
+					}
+					while ${ap_path_iterator:Next(exists)}
+				}		
+	        }
+	        
+			if ${nextStationID} && (${Me.SolarSystemID} != ${Universe[${tmp_string}].ID})
+			{
+	    		UI:UpdateConsole["Freighter moving to ${EVE.GetLocationNameByID[${nextStationID}]}."]
+	    		
+				wait 5
+				UI:UpdateConsole["Activating autopilot and waiting until arrival..."]
+				EVE:Execute[CmdToggleAutopilot]
+				do
+				{
+					wait 50
+					if !${Me.AutoPilotOn(exists)}
+					{
+						do
+						{
+							wait 5
+						}
+						while !${Me.AutoPilotOn(exists)}
+					}
+				}
+				while ${Me.AutoPilotOn}
+				wait 20
+				do
+				{
+				   wait 10
+				}
+				while !${Me.ToEntity.IsCloaked}
+				wait 5
+	    	}
+	    	
+	        if ${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity(exists)}
+	        {	/* Unfortunately you cannot get the station ID cooresponding to the book- */
+	        	/* mark until you are in the same system as the bookmark destination.     */
+	        	if ${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity.ID} == ${nextStationID}
+	        	{
+               		nextStationID:Set[0]	        		
+	        	}
+			}										
+
+			if ${nextStationID}
+			{
+				call Station.DockAtStation ${nextStationID}    		
+			}	    	
 		}
 		else
 		{	/* no more assets, abort */
 			UI:UpdateConsole["No more work to do.  Freighter aborting."]
 			EVEBot.ReturnToStation:Set[TRUE]
 		}
-		
-		if ${nextStationID}
-		{
-    		UI:UpdateConsole["Freighter moving to ${EVE.GetLocationNameByID[${nextStationID}]}."]
-    	}
 	}
 
 	/* If we are in a source station pick stuff up.

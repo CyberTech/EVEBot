@@ -1253,6 +1253,10 @@
 								{
 									Script[EVEBot].VariableScope.Config.Freighter:SetDestination[${This.Text}]
 								}
+								else
+								{
+									Script[EVEBot].VariableScope.Config.Freighter:SetDestination[""]
+								}								
 							</OnChange>
 						</Textentry>
 						<Text name='lblSourcePrefix'>
@@ -1277,6 +1281,10 @@
 								{
 									Script[EVEBot].VariableScope.Config.Freighter:SetSourcePrefix[${This.Text}]
 								}
+								else
+								{
+									Script[EVEBot].VariableScope.Config.Freighter:SetSourcePrefix[""]
+								}
 							</OnChange>
 						</Textentry>
 						<Text name='lblSystemName'>
@@ -1292,7 +1300,6 @@
 							<Y>85</Y>						
 							<Width>200</Width>						
 							<Height>18</Height>
-							<MaxLength>100</MaxLength>
 							<OnLoad>
 								This:SetText[${Script[EVEBot].VariableScope.Config.Freighter.SystemName}]
 							</OnLoad>
@@ -1300,6 +1307,10 @@
 								if ${This.Text.Length} > 0
 								{
 									Script[EVEBot].VariableScope.Config.Freighter:SetSystemName[${This.Text}]
+								}
+								else
+								{
+									Script[EVEBot].VariableScope.Config.Freighter:SetSystemName[""]
 								}
 							</OnChange>
 						</Textentry>
@@ -1324,6 +1335,10 @@
 								if ${This.Text.Length} > 0
 								{
 									Script[EVEBot].VariableScope.Config.Freighter:SetAgentName[${This.Text}]
+								}
+								else
+								{
+									Script[EVEBot].VariableScope.Config.Freighter:SetAgentName[""]
 								}
 							</OnChange>
 						</Textentry>
@@ -1375,6 +1390,10 @@
 								{
 									Script[EVEBot].VariableScope.Config.Labels:SetSafeSpotPrefix[${This.Text}]
 								}
+								else
+								{
+									Script[EVEBot].VariableScope.Config.Labels:SetSafeSpotPrefix[""]
+								}
 							</OnChange>
 						</Textentry>
 						<Text name='BeltBookMarkLabel'>
@@ -1399,6 +1418,10 @@
 								{
 									Script[EVEBot].VariableScope.Config.Labels:SetOreBeltPrefix[${This.Text}]
 								}
+								else
+								{
+									Script[EVEBot].VariableScope.Config.Labels:SetOreBeltPrefix[""]
+								}
 							</OnChange>
 						</Textentry>
 						<Text name='IceBeltBookMarkLabel'>
@@ -1422,6 +1445,10 @@
 								if ${This.Text.Length} > 0
 								{
 									Script[EVEBot].VariableScope.Config.Labels:SetIceBeltPrefix[${This.Text}]
+								}
+								else
+								{
+									Script[EVEBot].VariableScope.Config.Labels:SetIceBeltPrefix[""]
 								}
 							</OnChange>
 						</Textentry>
