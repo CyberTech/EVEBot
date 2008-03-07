@@ -983,7 +983,7 @@ objectdef obj_Configuration_Freighter
 		BaseConfig.BaseRef:AddSet[${This.SetName}]
 		This.FreighterRef:AddSetting[Freighter Mode, 1]
 		This.FreighterRef:AddSetting[Freighter Mode Name, "Source and Destination"]
-		This.FreighterRef:AddSetting[System Name, ""]
+		This.FreighterRef:AddSetting[Region Name, ""]
 		This.FreighterRef:AddSetting[Destination,""]
 		This.FreighterRef:AddSetting[Source Prefix,""]
 		This.FreighterRef:AddSetting[Agent Name, ""]
@@ -1009,14 +1009,14 @@ objectdef obj_Configuration_Freighter
 		This.FreighterRef:AddSetting[Freighter Mode Name,${Mode}]
 	}
 
-	member:string SystemName()
+	member:string RegionName()
 	{
-		return ${This.FreighterRef.FindSetting[System Name, ""]}
+		return ${This.FreighterRef.FindSetting[Region Name, ""]}
 	}
 	
-	method SetSystemName(string Name)
+	method SetRegionName(string Name)
 	{
-		This.FreighterRef:AddSetting[System Name,${Name}]
+		This.FreighterRef:AddSetting[Region Name,${Name}]
 	}
 
 	member:string AgentName()

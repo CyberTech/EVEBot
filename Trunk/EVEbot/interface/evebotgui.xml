@@ -1287,30 +1287,26 @@
 								}
 							</OnChange>
 						</Textentry>
-						<Text name='lblSystemName'>
+						<Text name='lblRegionName'>
 							<X>10</X>
 							<Y>87</Y>
 							<Width>280</Width>
 							<Height>10</Height>
-							<Text>Limit To System</Text>
-							<AutoTooltip>Leave blank to service all systems.</AutoTooltip>
+							<Text>Limit To Region</Text>
+							<AutoTooltip>Leave blank to service all regions.</AutoTooltip>
 						</Text>
-						<Textentry name='teSystemName'>
+						<Textentry name='teRegionName'>
 							<X>200</X>							
 							<Y>85</Y>						
 							<Width>200</Width>						
 							<Height>18</Height>
 							<OnLoad>
-								This:SetText[${Script[EVEBot].VariableScope.Config.Freighter.SystemName}]
+								This:SetText[${Script[EVEBot].VariableScope.Config.Freighter.RegionName}]
 							</OnLoad>
 							<OnChange>							
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Freighter:SetSystemName[${This.Text}]
-								}
-								else
-								{
-									Script[EVEBot].VariableScope.Config.Freighter:SetSystemName[""]
+									Script[EVEBot].VariableScope.Config.Freighter:SetRegionName[${This.Text}]
 								}
 							</OnChange>
 						</Textentry>

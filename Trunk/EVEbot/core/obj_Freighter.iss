@@ -325,10 +325,10 @@ objectdef obj_Freighter
 			UI:UpdateConsole["DEBUG: Solar System = ${tmp_string}"]
 			UI:UpdateConsole["DEBUG: Region = ${Universe[${tmp_string}].Region}"]
 
-		    if ${Config.Freighter.SystemName.Length} > 0
-		    {   /* limit to the given system */
-	   			UI:UpdateConsole["DEBUG: Config.Freighter.SystemName = ${Config.Freighter.SystemName}"]
-		        if ${Config.Freighter.SystemName.NotEqual[${Universe[${tmp_string}].Region}]}
+		    if ${Config.Freighter.RegionName.Length} > 0
+		    {   /* limit to the given region */
+	   			UI:UpdateConsole["DEBUG: Config.Freighter.RegionName = ${Config.Freighter.RegionName}"]
+		        if ${Config.Freighter.RegionName.NotEqual[${Universe[${tmp_string}].Region}]}
 		        {
         			Assets:IgnoreStation[${nextStationID}]
                		nextStationID:Set[0]
