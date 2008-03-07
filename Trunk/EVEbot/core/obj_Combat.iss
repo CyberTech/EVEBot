@@ -203,12 +203,7 @@ objectdef obj_Combat
         ; Are we at the safespot and not warping?
         if !${Safespot.IsAtSafespot} && ${Me.ToEntity.Mode} != 3
         {
-            ; Turn off the shield booster
-            ;Modules:ActivateShieldBooster[FALSE]
-        
             call Safespots.WarpTo
-            
-            ; Wait 3 seconds
             wait 30
         }
         

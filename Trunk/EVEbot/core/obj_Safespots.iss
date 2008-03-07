@@ -70,7 +70,7 @@ objectdef obj_Safespots
 			This:ResetSafeSpotList
 		}
 		
-		; Are we within 150km off th bookmark?
+		; Are we within 150km of the bookmark?
 		; TODO - Why are we calling math.distance w/6 object calls instead of ${SafeSpotIterator.Value.Distance} -- CyberTech
 		; GP: Because I copied it from Da_Teach.
 		; OLD: if ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${SafeSpotIterator.Value.X}, ${SafeSpotIterator.Value.Y}, ${SafeSpotIterator.Value.Z}]} < 150000
