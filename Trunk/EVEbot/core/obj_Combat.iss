@@ -217,8 +217,7 @@ objectdef obj_Combat
             wait 60
             UI:UpdateConsole["obj_Combat: DEBUG: At safespot.  Cloaking..."]
             Ship:Deactivate_Hardeners[]
-            ;Ship:Activate_Cloak[]
-            
+            Ship:Activate_Cloak[]            
         }
     }
     

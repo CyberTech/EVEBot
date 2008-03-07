@@ -28,6 +28,7 @@ objectdef obj_Ship
 	variable index:module ModuleList_Passive
 	variable index:module ModuleList_Salvagers
 	variable index:module ModuleList_TractorBeams
+	variable index:module ModuleList_Cloaks
 	variable bool Repairing_Armor = FALSE
 	variable bool Repairing_Hull = FALSE
 	variable float m_MaxTargetRange
@@ -278,7 +279,8 @@ objectdef obj_Ship
 		This.ModuleList_Repair_Hull:Clear
 		This.ModuleList_Salvagers:Clear
 		This.ModuleList_TractorBeams:Clear
-
+		This.ModuleList_Cloaks:Clear
+		
 		Me.Ship:DoGetModules[This.ModuleList]
 		
 		if !${This.ModuleList.Used} && ${Me.Ship.HighSlots} > 0
@@ -362,6 +364,9 @@ objectdef obj_Ship
 				case NONE
 					This.ModuleList_Repair_Hull:Insert[${Module.Value}]
 				  continue
+				case GROUPID_CLOAKING_DEVICE
+					This.ModuleList_Cloaks:Insert[${Module.Value}]
+					continue
 				default
 					continue
 			}
@@ -448,6 +453,15 @@ objectdef obj_Ship
 
 		UI:UpdateConsole["Tractor Beam Modules:"]
 		This.ModuleList_TractorBeams:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"]
+		}
+		while ${Module:Next(exists)}
+
+		UI:UpdateConsole["Cloaking Device Modules:"]
+		This.ModuleList_Cloaks:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
@@ -1130,6 +1144,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			}
 			while ${This.Drones.WaitingForDrones}
 		}
+        This:Deactivate_Cloak[]		
 		This:DeactivateAllMiningLasers[]
 		This:UnlockAllTargets[]
 		call This.Drones.ReturnAllToDroneBay
@@ -1327,6 +1342,50 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		variable iterator Module
 		
 		This.ModuleList_ActiveResists:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			if ${Module.Value.IsActive} && ${Module.Value.IsOnline} && !${Module.Value.IsDeactivating}
+			{
+				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}"]
+				Module.Value:Click
+			}
+		}	
+		while ${Module:Next(exists)}
+	}
+
+	method Activate_Cloak()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+		
+		variable iterator Module
+		
+		This.ModuleList_Cloaks:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			if !${Module.Value.IsActive} && ${Module.Value.IsOnline}
+			{
+				UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
+				Module.Value:Click
+			}
+		}	
+		while ${Module:Next(exists)}
+	}
+
+	method Deactivate_Cloak()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+		
+		variable iterator Module
+		
+		This.ModuleList_Cloaks:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{

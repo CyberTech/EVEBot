@@ -48,30 +48,18 @@ variable string Version = "${APP_NAME} ${APP_VERSION} Revision ${SVN_REVISION.To
  * DEBUG: Slot: MedSlot1  Heat Dissipation Field II
  *  DEBUG: Group: Shield Hardener  77
  *  DEBUG: Type: Heat Dissipation Field II  2303
- * DEBUG: Slot: HiSlot4  'Arbalest' Cruise Launcher I
- *  DEBUG: Group: Missile Launcher Cruise  506
- *  DEBUG: Type: 'Arbalest' Cruise Launcher I  16519
- * DEBUG: Slot: HiSlot3  'Arbalest' Cruise Launcher I
- *  DEBUG: Group: Missile Launcher Cruise  506
- *  DEBUG: Type: 'Arbalest' Cruise Launcher I  16519
- * DEBUG: Slot: HiSlot2  'Arbalest' Cruise Launcher I
- *  DEBUG: Group: Missile Launcher Cruise  506
- *  DEBUG: Type: 'Arbalest' Cruise Launcher I  16519
- * DEBUG: Slot: HiSlot1  'Arbalest' Cruise Launcher I
- *  DEBUG: Group: Missile Launcher Cruise  506
- *  DEBUG: Type: 'Arbalest' Cruise Launcher I  16519
- * DEBUG: Slot: HiSlot0  'Arbalest' Cruise Launcher I
- *  DEBUG: Group: Missile Launcher Cruise  506
- *  DEBUG: Type: 'Arbalest' Cruise Launcher I  16519
  * DEBUG: Slot: MedSlot0  Large Shield Booster II
  *  DEBUG: Group: Shield Booster  40
  *  DEBUG: Type: Large Shield Booster II  10858
- * DEBUG: Slot: MedSlot2  Heat Dissipation Field II
- *  DEBUG: Group: Shield Hardener  77
- *  DEBUG: Type: Heat Dissipation Field II  2303
  * DEBUG: Slot: HiSlot5  'Arbalest' Cruise Launcher I
  *  DEBUG: Group: Missile Launcher Cruise  506
- *  DEBUG: Type: 'Arbalest' Cruise Launcher I  16519
+ *  DEBUG: Type: 'Arbalest' Cruise Launcher I  16519 
+ * DEBUG: Slot: HiSlot6  Prototype Cloaking Device I
+ *  DEBUG: Group: Cloaking Device  330
+ *  DEBUG: Type: Prototype Cloaking Device I  11370
+ * DEBUG: Slot: HiSlot1  Cruise Missile Launcher II
+ *  DEBUG: Group: Missile Launcher Cruise  506
+ *  DEBUG: Type: Cruise Missile Launcher II  19739
  */
 #define GROUPID_AFTERBURNER 				46
 #define GROUPID_SHIELD_BOOSTER 				40
@@ -85,6 +73,7 @@ variable string Version = "${APP_NAME} ${APP_VERSION} Revision ${SVN_REVISION.To
 #define GROUPID_MISSILE_LAUNCHER_HEAVY 		510
 #define GROUPID_MINING_CRYSTAL 				482
 #define GROUPID_FREQUENCY_MINING_LASER 		483
+#define GROUPID_CLOAKING_DEVICE		 		330
 
 /* Same group and type for secure cargo containers as well */
 #define GROUPID_CORPORATE_HANGAR_ARRAY 471
