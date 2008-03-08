@@ -21,6 +21,7 @@ objectdef obj_LoginHandler
 	variable int LoginTimer = 0
 	variable string CurrentState
 	variable bool Finished = FALSE
+	variable int PulseIntervalInSeconds = 5
 
 	; Added these in so no magic numbers are used
 	variable int startWaitTime = 0
@@ -46,7 +47,6 @@ objectdef obj_LoginHandler
 
 	method Pulse()
 	{
-		variable int PulseIntervalInSeconds = 5
 
 		if ${This.LoginTimer} > 0
 		{
