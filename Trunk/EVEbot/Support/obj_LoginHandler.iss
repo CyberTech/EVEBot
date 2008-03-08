@@ -28,6 +28,7 @@ objectdef obj_LoginHandler
 	variable int loginWaitTime = 2
 	variable int connectWaitTime = 30
 	variable int inspaceWaitTime = 60
+	variable int evebotWaitTime = 30
 	
 	method Initialize()
 	{
@@ -167,7 +168,12 @@ objectdef obj_LoginHandler
 				break
 			case INSPACE
 				run evebot/evebot
-				This.Finished:Set[TRUE]
+				This.CurrentState:Set["EVEBOT"]
+                                This.LoginTimer:Set[${This.evebotWaitTime}]
+                                break
+                        case EVEBOT
+                                Script[EVEBot]:Resume
+                                This.Finished:Set[TRUE]
 				return
 				break
 		}
