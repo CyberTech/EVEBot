@@ -1070,16 +1070,19 @@ objectdef obj_Config_Whitelist
 		if !${This.BaseRef.FindSet[Pilots](exists)}
 		{
 			This.BaseRef:AddSet[Pilots]
+			This.PilotsRef:AddSetting[Sample_Pilot, 0]
 		}
 
 		if !${This.BaseRef.FindSet[Corporations](exists)}
 		{
 			This.BaseRef:AddSet[Corporations]
+			This.CorporationsRef:AddSetting[Sample_Corporation, 0]
 		}
 
 		if !${This.BaseRef.FindSet[Alliances](exists)}
 		{
 			This.BaseRef:AddSet[Alliances]
+			This.AlliancesRef:AddSetting[Sample_Alliance, 0]
 		}
 
 		UI:UpdateConsole["obj_Config_Whitelist: Initialized"]
@@ -1124,7 +1127,7 @@ objectdef obj_Config_Blacklist
 			This.DATA_FILE:Set["${Script.CurrentDirectory}/config/${Me.Name}_Blacklist.xml"]
 		}
 	
-		LavishSettings[EVEBotWhitelist]:Clear
+		LavishSettings[EVEBotBlacklist]:Clear
 		LavishSettings:AddSet[EVEBotBlacklist]
 		This.BaseRef:Set[${LavishSettings[EVEBotBlacklist]}]
 		This.BaseRef:Import[${This.DATA_FILE}]
@@ -1132,16 +1135,19 @@ objectdef obj_Config_Blacklist
 		if !${This.BaseRef.FindSet[Pilots](exists)}
 		{
 			This.BaseRef:AddSet[Pilots]
+			This.PilotsRef:AddSetting[Sample_Pilot, 0]
 		}
 
 		if !${This.BaseRef.FindSet[Corporations](exists)}
 		{
 			This.BaseRef:AddSet[Corporations]
+			This.CorporationsRef:AddSetting[Sample_Corporation, 0]
 		}
 
 		if !${This.BaseRef.FindSet[Alliances](exists)}
 		{
 			This.BaseRef:AddSet[Alliances]
+			This.AlliancesRef:AddSetting[Sample_Alliance, 0]
 		}
 
 		UI:UpdateConsole["obj_Config_Blacklist: Initialized"]
@@ -1158,6 +1164,11 @@ objectdef obj_Config_Blacklist
 		LavishSettings[EVEBotBlacklist]:Export[${This.DATA_FILE}]
 	}		
 
+	member:settingsetref PilotsRef()
+	{
+		return ${This.BaseRef.FindSet[Pilots]}
+	}
+	
 	member:settingsetref CorporationsRef()
 	{
 		return ${This.BaseRef.FindSet[Corporations]}

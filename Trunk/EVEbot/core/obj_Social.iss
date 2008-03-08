@@ -175,12 +175,12 @@ objectdef obj_Social
 		
 		EVE:DoGetPilots[PilotIndex]
 
-		if ${This.WhiteListPilotIterator:First(exists)}
+		if ${This.BlackListPilotIterator:First(exists)}
 		do
 		{
-			PilotWhiteList:Add[${This.WhiteListPilotIterator.Value}]
+			PilotBlackList:Add[${This.BlackListPilotIterator.Value}]
 		}
-		while ${This.WhiteListPilotIterator:Next(exists)}
+		while ${This.BlackListPilotIterator:Next(exists)}
 
 		if ${This.BlackListCorpIterator:First(exists)}
 		do
