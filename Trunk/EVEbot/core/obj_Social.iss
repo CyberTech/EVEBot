@@ -136,7 +136,7 @@ objectdef obj_Social
 		if ${This.WhiteListAllianceIterator:First(exists)}
 		do
 		{
-			AllianceWhiteList:Add[${This.WhiteListCorpIterator.Value}]
+			AllianceWhiteList:Add[${This.WhiteListAllianceIterator.Value}]
 		}
 		while ${This.WhiteListAllianceIterator:Next(exists)}
 
