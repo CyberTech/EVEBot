@@ -31,13 +31,13 @@ objectdef obj_Social
 	
 	method Initialize()
 	{
-		Whitelist.PilotsRef:GetSettingIterator[This.PilotIterator]
-		Whitelist.CorporationsRef:GetSettingIterator[This.CorpIterator]
-		Whitelist.AlliancesRef:GetSettingIterator[This.AllianceIterator]
+		Whitelist.PilotsRef:GetSettingIterator[This.WhiteListPilotIterator]
+		Whitelist.CorporationsRef:GetSettingIterator[This.WhiteListCorpIterator]
+		Whitelist.AlliancesRef:GetSettingIterator[This.WhiteListAllianceIterator]
 
-		Blacklist.PilotsRef:GetSettingIterator[This.PilotIterator]
-		Blacklist.CorporationsRef:GetSettingIterator[This.CorpIterator]
-		Blacklist.AlliancesRef:GetSettingIterator[This.AllianceIterator]
+		Blacklist.PilotsRef:GetSettingIterator[This.BlackListPilotIterator]
+		Blacklist.CorporationsRef:GetSettingIterator[This.BlackListCorpIterator]
+		Blacklist.AlliancesRef:GetSettingIterator[This.BlackListAllianceIterator]
 
 		SystemSafe:Set[TRUE]
 		
