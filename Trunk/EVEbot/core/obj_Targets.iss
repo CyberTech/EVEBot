@@ -74,8 +74,17 @@ objectdef obj_Targets
 		; later when chaining gets added
 		PriorityTargets:Insert["Dire Guristas"]
 		PriorityTargets:Insert["Arch Angel"]
-		PriorityTargets:Insert["Sansha's Loyal"]
-		PriorityTargets:Insert["Guardian Agent"]
+		PriorityTargets:Insert["Sansha's Loyal"]		
+		PriorityTargets:Insert["Guardian Agent"]		; web/scram
+		PriorityTargets:Insert["Guardian Initiate"]		; web/scram
+		PriorityTargets:Insert["Guardian Scout"]		; web/scram
+		PriorityTargets:Insert["Guardian Spy"]			; web/scram
+		PriorityTargets:Insert["Crook Watchman"]		; damp
+		PriorityTargets:Insert["Guardian Watchman"]		; damp
+		PriorityTargets:Insert["Serpentis Watchman"]	; damp
+		PriorityTargets:Insert["Crook Patroller"]		; damp
+		PriorityTargets:Insert["Guardian Patroller"]	; damp
+		PriorityTargets:Insert["Serpentis Patroller"]	; damp
 
 		; Chain targets will be scanned for the first time
 		; and then the script will determin if its safe / alright
