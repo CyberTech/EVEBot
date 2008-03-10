@@ -75,6 +75,7 @@ objectdef obj_Targets
 		PriorityTargets:Insert["Dire Guristas"]
 		PriorityTargets:Insert["Arch Angel"]
 		PriorityTargets:Insert["Sansha's Loyal"]
+		PriorityTargets:Insert["Guardian Agent"]
 
 		; Chain targets will be scanned for the first time
 		; and then the script will determin if its safe / alright
@@ -89,9 +90,9 @@ objectdef obj_Targets
 		ChainTargets:Insert["Angel Saint"]
 		ChainTargets:Insert["Angel Malakim"]
 		ChainTargets:Insert["Angel Nephilim"]
-		ChainTargets:Insert["Serpentis Port Admiral"]
-		ChainTargets:Insert["Serpentis Flotilla Admiral"]
-		ChainTargets:Insert["Serpentis Vice Admiral"]
+		;ChainTargets:Insert["Serpentis Port Admiral"]
+		;ChainTargets:Insert["Serpentis Flotilla Admiral"]
+		;ChainTargets:Insert["Serpentis Vice Admiral"]
 		ChainTargets:Insert["Serpentis Admiral"]
 		ChainTargets:Insert["Serpentis Grand Admiral"]
 		ChainTargets:Insert["Serpentis High Admiral"]
