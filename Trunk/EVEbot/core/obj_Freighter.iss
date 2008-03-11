@@ -9,6 +9,18 @@
 	-- GliderPro	
 */
 
+objectdef obj_BotModule
+{
+	method Initialize()
+	{
+	}
+
+	method Shutdown()
+	{
+	}
+	
+}
+
 /* obj_Courier is a "bot-mode" which is similar to a bot-module.
  * obj_Courier runs within the obj_Freighter bot-module.  It would 
  * be very straightforward to turn obj_Courier into a independent 
