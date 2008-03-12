@@ -73,7 +73,11 @@ variable string Version = "${APP_NAME} ${APP_VERSION} Revision ${SVN_REVISION.To
 #define GROUPID_MISSILE_LAUNCHER_HEAVY 		510
 #define GROUPID_MINING_CRYSTAL 				482
 #define GROUPID_FREQUENCY_MINING_LASER 		483
+
 #define GROUPID_CLOAKING_DEVICE		 		330
+#define TYPEID_PROTOTYPE_CLOAKING_DEVICE	11370
+#define TYPEID_COVERT_OPS_CLOAKING_DEVICE	11578
+#define TYPEID_SMOKESCREEN_CLOAKING_DEVICE	99999	/* TBD */
 
 /* Same group and type for secure cargo containers as well */
 #define GROUPID_CORPORATE_HANGAR_ARRAY 471
@@ -91,7 +95,6 @@ variable string Version = "${APP_NAME} ${APP_VERSION} Revision ${SVN_REVISION.To
 #define CORP_HANGAR_LOOT_RANGE 3000
 
 #define TYPEID_GLACIAL_MASS 16263
-
 
 ;System (ID: 0)          Owner (ID: 1)           Celestial (ID: 2)           Station (ID: 3)
 ;Material (ID: 4)        Accessories (ID: 5)     Ship (ID: 6)                Module (ID: 7)

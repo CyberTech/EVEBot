@@ -123,6 +123,7 @@ objectdef obj_Targets
 		SpecialTargets:Insert["Bulker"]
 		SpecialTargets:Insert["Carrier"]
 		SpecialTargets:Insert["Convoy"]
+		SpecialTargets:Insert["Hauler"]
 		SpecialTargets:Insert["Trailer"]
 		SpecialTargets:Insert["Transporter"]
 		SpecialTargets:Insert["Trucker"]

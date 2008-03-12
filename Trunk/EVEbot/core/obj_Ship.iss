@@ -192,6 +192,28 @@ objectdef obj_Ship
 		return ${bAmmoAvailable}
 	}
 	
+	member:bool HasCovOpsCloak()
+	{
+		variable bool rVal = FALSE
+		
+		variable iterator aModuleIterator
+		This.ModuleList_Cloaks:GetIterator[aModuleIterator]
+		if ${aModuleIterator:First(exists)}
+		do
+		{
+			switch ${aModuleIterator.Value.ToItem.TypeID}
+			{
+				case TYPEID_COVERT_OPS_CLOAKING_DEVICE
+				case TYPEID_SMOKESCREEN_CLOAKING_DEVICE
+					rVal:Set[TRUE]
+					break
+			}
+		}
+		while !${rVal} && ${aModuleIterator:Next(exists)}
+		
+		return ${rVal}
+	}
+	
 	member:float CargoMinimumFreeSpace()
 	{
 		if !${Me.Ship(exists)}

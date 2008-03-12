@@ -1,3 +1,6 @@
+ #ifndef __OBJ_COMBAT__
+ #define __OBJ_COMBAT__
+
 /*
     The combat object
     
@@ -421,3 +424,5 @@ objectdef obj_Combat
         }
     }
 }
+
+#endif /* __OBJ_COMBAT__ */
