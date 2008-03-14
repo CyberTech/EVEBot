@@ -201,15 +201,13 @@ objectdef obj_Ship
 		if ${aModuleIterator:First(exists)}
 		do
 		{
-			switch ${aModuleIterator.Value.ToItem.TypeID}
+			if ${aModuleIterator.Value.MaxVelocityPenalty} == 0
 			{
-				case TYPEID_COVERT_OPS_CLOAKING_DEVICE
-				case TYPEID_SMOKESCREEN_CLOAKING_DEVICE
-					rVal:Set[TRUE]
-					break
+				rVal:Set[TRUE]
+				break
 			}
 		}
-		while !${rVal} && ${aModuleIterator:Next(exists)}
+		while ${aModuleIterator:Next(exists)}
 		
 		return ${rVal}
 	}
@@ -1017,7 +1015,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		}
 
 		call This.WarpPrepare
-		while ${Entity[${Id}].Distance} >= 10000
+		while ${Entity[${Id}].Distance} >= WARP_RANGE
 		{
 			UI:UpdateConsole["Warping to ${Entity[${Id}].Name}"]
 			Entity[${Id}]:WarpTo
@@ -1166,7 +1164,10 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			}
 			while ${This.Drones.WaitingForDrones}
 		}
-        This:Deactivate_Cloak[]		
+		if !${This.HasCovOpsCloak}
+		{
+        	This:Deactivate_Cloak[]
+        }
 		This:DeactivateAllMiningLasers[]
 		This:UnlockAllTargets[]
 		call This.Drones.ReturnAllToDroneBay

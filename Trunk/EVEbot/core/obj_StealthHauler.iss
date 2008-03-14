@@ -48,9 +48,90 @@ objectdef obj_StealthHauler
 				EVE:DoGetToDestinationPath[apRoute]	
 				EVE:DoGetWaypoints[apWaypoints]
 				apRoute:GetIterator[apIterator]
+				apIterator:First
+				
+				if ${apRoute.Used} == 0
+				{	/* must be at the destination */
+					Me:SetVelocity[${Math.Calc[90 + ${Math.Rand[9]} + ${Math.Calc[0.10 * ${Math.Rand[9]}]}]}]
+					wait 5
+					Ship:Activate_AfterBurner
+					wait 5
+					Ship:Activate_Cloak
+				}
 			}
 			else
 			{
+				if ${apIterator.Value(exists)}
+				{
+					variable index:entity sgIndex
+					variable iterator     sgIterator
+					EVE:DoGetEntities[sgIndex,GroupID, GROUPID_STARGATE]
+					sgIndex:GetIterator[sgIterator]
+					if ${sgIterator:First(exists)}
+					{
+						do
+						{
+							variable string tmpString
+							tmpString:Set[${sgIterator.Value.Name.Token[2,"("]}]
+							tmpString:Set[${tmpString.Token[1,")"]}]
+							if ${tmpString.Equal[${Universe[${apIterator.Value}].Name}]}
+							{
+								break
+							}
+						}
+						while ${sgIterator:Next(exists)}
+						
+						if ${sgIterator.Value(exists)}
+						{
+							UI:UpdateConsole["Setting speed to full throttle"]
+							Me:SetVelocity[${Math.Calc[90 + ${Math.Rand[9]} + ${Math.Calc[0.10 * ${Math.Rand[9]}]}]}]
+							do
+							{
+							   	wait 5
+							}
+							while ${Me.ToEntity.IsCloaked}
+							Ship:Activate_AfterBurner
+							wait 5
+							do
+							{
+								Ship:Activate_Cloak
+							   	wait 10
+							}
+							while !${Me.ToEntity.IsCloaked}
+							do
+							{
+							   wait 5
+							}
+							while ${Me.ToEntity.IsWarpScrambled}
+							wait 5
+							call Ship.WarpToID ${sgIterator.Value.ID}
+							call Ship.Approach ${sgIterator.Value.ID} JUMP_RANGE
+							Ship:Deactivate_Cloak
+							do
+							{
+							   	wait 5
+							}
+							while ${Me.ToEntity.IsCloaked}
+							wait 5
+							sgIterator.Value:Jump
+							wait 50
+							apIterator:Next
+						}
+						else
+						{
+							UI:UpdateConsole["obj_StealthHauler: Could not find stargate to ${Universe[${apIterator.Value}].Name}!!"]
+						}
+					}	
+				}
+				else
+				{	/* must be at the destination */
+					Me:SetVelocity[${Math.Calc[90 + ${Math.Rand[9]} + ${Math.Calc[0.10 * ${Math.Rand[9]}]}]}]
+					wait 5
+					Ship:Activate_AfterBurner
+					wait 5
+					Ship:Activate_Cloak
+				}
+				
 			}
 		}
 		else
