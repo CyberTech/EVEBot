@@ -888,9 +888,14 @@ objectdef cls_Targets
 		if !${HasPriorityTarget} && ${Target:First(exists)}
 		do
 		{
-			if ${Me.MaxLockedTargets} <= ${Math.Calc[${Me.GetTargeting}+${Me.GetTargeted}]}
+			if ${Me.MaxLockedTargets} <= ${Math.Calc[${Me.GetTargeting}+${Me.GetTargets}]}
 			{
 				break
+			}
+			
+			if ${Target.Value.Name.Lower.Find["concord"]} >= 1
+			{
+				continue
 			}
 			
 			variable bool DoTarget = FALSE
