@@ -91,8 +91,12 @@ function main()
 				{
 					if ${orbitingID} != ${Me.ActiveTarget.ID}
 					{
-						Me.ActiveTarget:Orbit[${Modules.BestRange}]
-						orbitingID:Set[${Me.ActiveTarget.ID}]
+						echo "Orbiting ${Me.ActiveTarget.Name} (${Me.ActiveTarget.ID}) @ ${Modules.BestRange}"
+						;Me.ActiveTarget:Orbit[${Modules.BestRange}]
+						;; Orbit[#] is BROKEN.  It always orbits @ 5000m
+						Me.ActiveTarget:KeepAtRange[${Modules.BestRange.Round}]
+						orbitingID:Set[${Me.ActiveTarget.ID}]						
+						Modules:ActivateAfterburner[TRUE]
 					}
 				}
 				else
@@ -100,8 +104,13 @@ function main()
 					; Activate the weapons, the modules class checks if there's a target
 					Modules:ActivateWeapons
 				}
+
+				if ${Me.ActiveTarget(exists)} && ${Me.ActiveTarget.Distance} <= ${Modules.WebRange}
+				{
+					Modules:ActivateWebifier
+				}
 				
-				if ${Me.Ship.ArmorPct} < 70
+				if ${Me.Ship.ArmorPct} < 80
 				{
 					Modules:ActivateArmorRepairer[TRUE]
 				}
@@ -310,14 +319,21 @@ objectdef cls_Modules
 	variable index:module Hardeners
 	variable index:module CapBoosters
 	variable index:module Webifiers
+	variable index:module Afterburners
 	
 	variable index:module Cloaks
 	
-	variable float FightingRange = 999
+	variable float FightingRange = 999999
+	variable float WebifierRange = 999999
 	
 	member:float BestRange()
 	{
 		return ${FightingRange}
+	}
+	
+	member:float WebRange()
+	{
+		return ${WebifierRange}
 	}
 	
 	method Initialize()
@@ -351,9 +367,26 @@ objectdef cls_Modules
 					CapBoosters:Insert[${Module.Value}]
 					continue
 					
+				case GROUPID_AFTERBURNER
+					echo "Afterburner ${Module.Value.ToItem.Name} found..."
+					Afterburners:Insert[${Module.Value}]
+					continue
+					
 				case GROUPID_STASIS_WEB
 					echo "Stasis webifier ${Module.Value.ToItem.Name} found..."
 					Webifiers:Insert[${Module.Value}]
+					if ${Module.Value.OptimalRange(exists)}
+					{
+						variable float webRange
+						
+						webRange:Set[${Math.Calc[${Module.Value.OptimalRange}*0.90]}]	
+						echo "Webbing Range ${webRange}"
+						
+						if ${WebifierRange} > ${webRange}
+						{
+							WebifierRange:Set[${webRange}]
+						}
+					}
 					continue
 					
 				case GROUPID_SHIELD_HARDENERS
@@ -485,6 +518,22 @@ objectdef cls_Modules
 		while ${Module:Next(exists)}
 	}
 	
+	method ActivateWebifier()
+	{
+		variable iterator Module
+		Webifiers:GetIterator[Module]
+
+		if ${Module:First(exists)}
+		do
+		{
+			if !${Module.Value.IsActive}
+			{
+				Module.Value:Click
+			}
+		}
+		while ${Module:Next(exists)}
+	}
+
 	method ActivateHardeners()
 	{
 		variable iterator Module
@@ -541,6 +590,27 @@ objectdef cls_Modules
 			if ${Module.Value.IsActive} && !${activate}
 			{
 				echo "Turning off shield booster..."
+				Module.Value:Click
+			}
+		}
+		while ${Module:Next(exists)}
+	}
+	
+	method ActivateAfterburner(bool activate)
+	{
+		variable iterator Module
+		Afterburners:GetIterator[Module]
+
+		if ${Module:First(exists)}
+		do
+		{
+			if !${Module.Value.IsActive} && ${activate}
+			{
+				Module.Value:Click
+			}
+
+			if ${Module.Value.IsActive} && !${Module.Value.IsDeactivating}  && !${activate}
+			{
 				Module.Value:Click
 			}
 		}
@@ -632,6 +702,7 @@ objectdef cls_Targets
 	variable bool CheckChain
 	variable bool Chaining
 	variable int TrueMaxTargetRange
+	variable int tgtID = -1
 	
 	method Initialize()
 	{
@@ -761,36 +832,26 @@ objectdef cls_Targets
 		EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY, radius, ${Me.Ship.MaxTargetRange}]
 		Targets:GetIterator[Target]
 
-		;; This code is for ships that don't want to move
-		;;if !${Target:First(exists)}
-		;;{
-		;;	if ${Me.Ship.MaxTargetRange} < ${TrueMaxTargetRange}
-		;;	{
-		;;		EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY, radius, ${TrueMaxTargetRange}]
-		;;		Targets:GetIterator[Target]
-        ;;
-		;;		if !${Target:First(exists)}
-		;;		{
-		;;			echo "No targets found..."
-		;;			return FALSE
-		;;		}
-		;;		else
-		;;		{
-		;;			echo "Damped, cant target..."
-		;;			return TRUE
-		;;		}
-		;;	}
-		;;	else
-		;;	{
-		;;		echo "No targets found..."
-		;;		return FALSE
-		;;	}
-		;;}
-		
 		if !${Target:First(exists)}
 		{
-			echo "No targets found..."
-			return FALSE
+			EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY]
+			Targets:GetIterator[Target]
+			if !${Target:First(exists)}
+			{
+				echo "No targets found..."
+				return FALSE
+			}
+			else
+			{
+				if !${Me.ToEntity.Approaching(exists)}
+				{
+					echo "Approaching ${Target.Value.Name} (${Target.Value.ID}) from ${Target.Value.Distance}"
+					Target.Value:Approach
+					wait 5
+					Modules:ActivateAfterburner[TRUE]
+				}
+				return TRUE			
+			}
 		}
 
 		if ${Me.Ship.MaxLockedTargets} == 0
