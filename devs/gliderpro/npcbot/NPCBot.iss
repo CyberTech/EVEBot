@@ -940,6 +940,11 @@ objectdef cls_Targets
 		;	OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
 		;	Me.ActiveTarget:Orbit[${OrbitDistance}]
 		;}
+
+		if ${Math.Calc[${Me.GetTargeting}+${Me.GetTargets}]} > 0
+		{
+			HasTargets:Set[TRUE]
+		}
 		
 		return ${HasTargets}
 	}
