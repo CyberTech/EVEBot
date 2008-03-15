@@ -847,7 +847,7 @@ objectdef cls_Targets
 				{
 					; No, report it and lock it.
 					echo "Locking priority target ${Target.Value.Name}"
-					;Target.Value:LockTarget
+					Target.Value:LockTarget
 				}
 				
 				; By only saying there's priority targets when they arent
@@ -916,7 +916,7 @@ objectdef cls_Targets
 				if !${Target.Value.IsLockedTarget} && !${Target.Value.BeingTargeted}
 				{
 					echo "Locking ${Target.Value.Name}"
-					;Target.Value:LockTarget
+					Target.Value:LockTarget
 				}
 				
 				; Set the return value so we know we have targets
