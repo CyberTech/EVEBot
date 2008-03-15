@@ -1,6 +1,6 @@
 #include defines.iss
 
-#define ChainSpawns TRUE
+#define ChainSpawns FALSE
 #define SafespotBookmark "SS1"
 variable bool CapFlag = FALSE
 variable int CargoCount = 0
@@ -24,6 +24,7 @@ function main()
 	variable cls_Modules Modules
 	variable cls_Local LocalInformation
 	variable cls_Safespot Safespot
+	variable int orbitingID = -1
 	Belts:NextBelt
 	
 	while TRUE
@@ -74,11 +75,11 @@ function main()
 			while ${Targets.TargetNPCs} && ${LocalInformation.IsSafe}
 			{
 			
-				if ${SpecialTargetFlag}
-				{
-					echo "Special spawn detected!"
-					call PlaySound DETECTSOUND
-				}
+				;if ${SpecialTargetFlag}
+				;{
+				;	echo "Special spawn detected!"
+				;	call PlaySound DETECTSOUND
+				;}
 			
 				; Make sure our hardeners are running
 				Modules:ActivateHardeners
@@ -86,21 +87,40 @@ function main()
 				; Reload the weapons -if- ammo is below 30% and they arent firing
 				Modules:ReloadWeapons[FALSE]
 
-				; Activate the weapons, the modules class checks if there's a target
-				Modules:ActivateWeapons
-				
-				if ${Me.Ship.ShieldPct} < 70
+				if ${Me.ActiveTarget(exists)} && ${Me.ActiveTarget.Distance} > ${Modules.BestRange}
 				{
-					; Turn on the shield booster
-					Modules:ActivateShieldBooster[TRUE]
+					if ${orbitingID} != ${Me.ActiveTarget.ID}
+					{
+						Me.ActiveTarget:Orbit[${Modules.BestRange}]
+						orbitingID:Set[${Me.ActiveTarget.ID}]
+					}
+				}
+				else
+				{				
+					; Activate the weapons, the modules class checks if there's a target
+					Modules:ActivateWeapons
 				}
 				
-				if ${Me.Ship.ShieldPct} > 80
+				if ${Me.Ship.ArmorPct} < 70
 				{
-					; Turn off the shield booster
-					Modules:ActivateShieldBooster[FALSE]
+					Modules:ActivateArmorRepairer[TRUE]
 				}
-
+				
+				if ${Me.Ship.ArmorPct} > 90
+				{
+					Modules:ActivateArmorRepairer[FALSE]
+				}
+				
+				if ${Me.Ship.CapacitorPct} < 30
+				{
+					Modules:ActivateCapBooster[TRUE]
+				}
+				
+				if ${Me.Ship.CapacitorPct} > 60
+				{
+					Modules:ActivateCapBooster[FALSE]
+				}
+				
 				; Wait 2 seconds
 				wait 20
 			}
@@ -231,48 +251,48 @@ objectdef cls_Local
 	
 		;;EVE:DoGetPilots[Pilots]
 		;;Pilots:GetIterator[Pilot]
-		variable int LocalCheckLoop
-		for (LocalCheckLoop:Set[1] ; ${LocalCheckLoop}<=${EVE.LocalsCount} ; LocalCheckLoop:Inc)
-		{
-			if ${Local[${LocalCheckLoop}].CharID} == ${Me.CharID}
-			{
-			continue
-			}
-			variable bool Safe
-			Safe:Set[FALSE]
-			
-			variable iterator SafeAllianceID
-			SafeAllianceIDs:GetIterator[SafeAllianceID]
-			
-			if ${SafeAllianceID:First(exists)}
-			do
-			{
-				if ${SafeAllianceID.Value} == ${Local[${LocalCheckLoop}].AllianceID}
-				{
-					Safe:Set[TRUE]
-				}
-			}
-			while ${SafeAllianceID:Next(exists)}
-			
-			variable iterator SafeCorporationID
-			SafeCorporationIDs:GetIterator[SafeCorporationID]
-			
-			if ${SafeCorporationID:First(exists)}
-			do
-			{
-				if ${SafeCorporationID.Value} == ${Local[${LocalCheckLoop}].CorporationID}
-				{
-					Safe:Set[TRUE]
-				}
-			}
-			while ${SafeCorporationID:Next(exists)}
-			
-			if !${Safe}
-			{
-				echo "Enemy in local: ${Local[${LocalCheckLoop}].Name} <${Local[${LocalCheckLoop}].Alliance}> (${Local[${LocalCheckLoop}].Corporation} [${Local[${LocalCheckLoop}].CorporationTicker}])"
-				return FALSE
-			}
-		}
+		;;variable int LocalCheckLoop
+		;;for (LocalCheckLoop:Set[1] ; ${LocalCheckLoop}<=${EVE.LocalsCount} ; LocalCheckLoop:Inc)
+		;;{
+		;;	if ${Local[${LocalCheckLoop}].CharID} == ${Me.CharID}
+		;;	{
+		;;	continue
+		;;	}
+		;;	variable bool Safe
+		;;	Safe:Set[FALSE]
+		;;	
+		;;	variable iterator SafeAllianceID
+		;;	SafeAllianceIDs:GetIterator[SafeAllianceID]
+		;;	
+		;;	if ${SafeAllianceID:First(exists)}
+		;;	do
+		;;	{
+		;;		if ${SafeAllianceID.Value} == ${Local[${LocalCheckLoop}].AllianceID}
+		;;		{
+		;;			Safe:Set[TRUE]
+		;;		}
+		;;	}
+		;;	while ${SafeAllianceID:Next(exists)}
+		;;	
+		;;	variable iterator SafeCorporationID
+		;;	SafeCorporationIDs:GetIterator[SafeCorporationID]
+		;;	
+		;;	if ${SafeCorporationID:First(exists)}
+		;;	do
+		;;	{
+		;;		if ${SafeCorporationID.Value} == ${Local[${LocalCheckLoop}].CorporationID}
+		;;		{
+		;;			Safe:Set[TRUE]
+		;;		}
+		;;	}
+		;;	while ${SafeCorporationID:Next(exists)}
+		;;	
+		;;	if !${Safe}
+		;;	{
+		;;		echo "Enemy in local: ${Local[${LocalCheckLoop}].Name} <${Local[${LocalCheckLoop}].Alliance}> (${Local[${LocalCheckLoop}].Corporation} [${Local[${LocalCheckLoop}].CorporationTicker}])"
+		;;		return FALSE
+		;;	}
+		;;}
 		
 		return TRUE
 	}
@@ -288,8 +308,17 @@ objectdef cls_Modules
 	variable index:module ArmorRepairers
 	
 	variable index:module Hardeners
+	variable index:module CapBoosters
+	variable index:module Webifiers
 	
 	variable index:module Cloaks
+	
+	variable float FightingRange = 999
+	
+	member:float BestRange()
+	{
+		return ${FightingRange}
+	}
 	
 	method Initialize()
 	{
@@ -304,6 +333,7 @@ objectdef cls_Modules
 			variable int GroupID
 			GroupID:Set[${Module.Value.ToItem.GroupID}]
 		
+			;;echo "${Module.Value.ToItem.Name} -> ${Module.Value.ToItem.Group} (${GroupID})..."
 			switch ${GroupID}
 			{
 				case GROUPID_SHIELD_BOOSTER
@@ -314,6 +344,16 @@ objectdef cls_Modules
 				case GROUPID_ARMOR_REPAIRERS
 					echo "Armor repairer ${Module.Value.ToItem.Name} found..."
 					ArmorRepairers:Insert[${Module.Value}]
+					continue
+					
+				case GROUPID_CAPACITOR_BOOSTER
+					echo "Cap booster ${Module.Value.ToItem.Name} found..."
+					CapBoosters:Insert[${Module.Value}]
+					continue
+					
+				case GROUPID_STASIS_WEB
+					echo "Stasis webifier ${Module.Value.ToItem.Name} found..."
+					Webifiers:Insert[${Module.Value}]
 					continue
 					
 				case GROUPID_SHIELD_HARDENERS
@@ -327,8 +367,21 @@ objectdef cls_Modules
 				case GROUPID_MISSILE_LAUNCHER_SIEGE
 				case GROUPID_MISSILE_LAUNCHER_STANDARD
 				case GROUPID_MISSILE_LAUNCHER_HEAVY
+				case GROUPID_PROJECTILE_WEAPON
 					echo "Weapon ${Module.Value.ToItem.Name} found..."
 					Weapons:Insert[${Module.Value}]
+					if ${Module.Value.OptimalRange(exists)} && ${Module.Value.AccuracyFalloff(exists)}
+					{
+						variable float optRange
+						
+						optRange:Set[${Math.Calc[${Module.Value.OptimalRange}+(${Module.Value.AccuracyFalloff}/2)]}]	
+						echo "Optimal Range ${optRange}"
+						
+						if ${FightingRange} > ${optRange}
+						{
+							FightingRange:Set[${optRange}]
+						}
+					}
 					continue
 					
 				case GROUPID_CLOAK
@@ -411,6 +464,27 @@ objectdef cls_Modules
 		while ${Weapon:Next(exists)}
 	}
 	
+	method ActivateCapBooster(bool activate)
+	{
+		variable iterator Module
+		CapBoosters:GetIterator[Module]
+
+		if ${Module:First(exists)}
+		do
+		{
+			if !${Module.Value.IsActive} && !${Weapon.Value.IsChangingAmmo} && !${Weapon.Value.IsReloadingAmmo} && ${activate}
+			{
+				Module.Value:Click
+			}
+
+			if ${Module.Value.IsActive} && !${Module.Value.IsDeactivating} && !${activate}
+			{
+				Module.Value:Click
+			}
+		}
+		while ${Module:Next(exists)}
+	}
+	
 	method ActivateHardeners()
 	{
 		variable iterator Module
@@ -467,6 +541,29 @@ objectdef cls_Modules
 			if ${Module.Value.IsActive} && !${activate}
 			{
 				echo "Turning off shield booster..."
+				Module.Value:Click
+			}
+		}
+		while ${Module:Next(exists)}
+	}
+	
+	method ActivateArmorRepairer(bool activate)
+	{
+		variable iterator Module
+		ArmorRepairers:GetIterator[Module]
+
+		if ${Module:First(exists)}
+		do
+		{
+			if !${Module.Value.IsActive} && ${activate}
+			{
+				echo "Turning on  ${Module.Value.ToItem.Name}..."
+				Module.Value:Click
+			}
+
+			if ${Module.Value.IsActive} && !${Module.Value.IsDeactivating} && !${activate}
+			{
+				echo "Turning off  ${Module.Value.ToItem.Name}..."
 				Module.Value:Click
 			}
 		}
@@ -664,29 +761,36 @@ objectdef cls_Targets
 		EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY, radius, ${Me.Ship.MaxTargetRange}]
 		Targets:GetIterator[Target]
 
+		;; This code is for ships that don't want to move
+		;;if !${Target:First(exists)}
+		;;{
+		;;	if ${Me.Ship.MaxTargetRange} < ${TrueMaxTargetRange}
+		;;	{
+		;;		EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY, radius, ${TrueMaxTargetRange}]
+		;;		Targets:GetIterator[Target]
+        ;;
+		;;		if !${Target:First(exists)}
+		;;		{
+		;;			echo "No targets found..."
+		;;			return FALSE
+		;;		}
+		;;		else
+		;;		{
+		;;			echo "Damped, cant target..."
+		;;			return TRUE
+		;;		}
+		;;	}
+		;;	else
+		;;	{
+		;;		echo "No targets found..."
+		;;		return FALSE
+		;;	}
+		;;}
+		
 		if !${Target:First(exists)}
 		{
-			if ${Me.Ship.MaxTargetRange} < ${TrueMaxTargetRange}
-			{
-				EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY, radius, ${TrueMaxTargetRange}]
-				Targets:GetIterator[Target]
-
-				if !${Target:First(exists)}
-				{
-					echo "No targets found..."
-					return FALSE
-				}
-				else
-				{
-					echo "Damped, cant target..."
-					return TRUE
-				}
-			}
-			else
-			{
-				echo "No targets found..."
-				return FALSE
-			}
+			echo "No targets found..."
+			return FALSE
 		}
 
 		if ${Me.Ship.MaxLockedTargets} == 0
@@ -712,6 +816,10 @@ objectdef cls_Targets
 		TypeID:Set[${Target.Value.TypeID}]
 		do
 		{
+			if ${Target.Value.Name.Lower.Find["concord"]} >= 1
+			{
+				continue
+			}
 			; If the Type ID is different then there's more then 1 type in the belt
 			if ${TypeID} != ${Target.Value.TypeID}
 			{
@@ -739,7 +847,7 @@ objectdef cls_Targets
 				{
 					; No, report it and lock it.
 					echo "Locking priority target ${Target.Value.Name}"
-					Target.Value:LockTarget
+					;Target.Value:LockTarget
 				}
 				
 				; By only saying there's priority targets when they arent
@@ -780,6 +888,11 @@ objectdef cls_Targets
 		if !${HasPriorityTarget} && ${Target:First(exists)}
 		do
 		{
+			if ${Me.MaxLockedTargets} <= ${Math.Calc[${Me.GetTargeting}+${Me.GetTargeted}]}
+			{
+				break
+			}
+			
 			variable bool DoTarget = FALSE
 			if ${Chaining}
 			{
@@ -798,7 +911,7 @@ objectdef cls_Targets
 				if !${Target.Value.IsLockedTarget} && !${Target.Value.BeingTargeted}
 				{
 					echo "Locking ${Target.Value.Name}"
-					Target.Value:LockTarget
+					;Target.Value:LockTarget
 				}
 				
 				; Set the return value so we know we have targets
