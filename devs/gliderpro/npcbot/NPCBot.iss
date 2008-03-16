@@ -847,7 +847,9 @@ objectdef cls_Targets
 				{
 					echo "Approaching ${Target.Value.Name} (${Target.Value.ID}) from ${Target.Value.Distance}"
 					Target.Value:Approach
-					wait 5
+				}
+				else
+				{
 					Modules:ActivateAfterburner[TRUE]
 				}
 				return TRUE			
