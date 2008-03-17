@@ -156,8 +156,8 @@ objectdef obj_Social
 			{	
 				/* pilot failed alliance and corporation check, get out of town!! */
 				UI:UpdateConsole["obj_Social: Non-Whitelisted Pilot in local: ${PilotIterator.Value.Name}!"]
-				UI:UpdateConsole["obj_Social: ALLIANCE:	<Setting Name="${PilotIterator.Value.Alliance}">${PilotIterator.Value.AllianceID}</Setting>"]
-				UI:UpdateConsole["obj_Social: CORP:	<Setting Name="${PilotIterator.Value.Corporation}">${PilotIterator.Value.CorporationID}</Setting>"]
+				UI:UpdateConsole["obj_Social: ALLIANCE:	<Setting Name="">${PilotIterator.Value.AllianceID}</Setting>"]
+				UI:UpdateConsole["obj_Social: CORP:	<Setting Name="">${PilotIterator.Value.CorporationID}</Setting>"]
 				SystemSafe:Set[${pilotSafe}]
 				return
 			}			
