@@ -103,7 +103,7 @@ objectdef obj_Skills
 					return "${SkillName} V"
 					break
 				case 5
-					return "$SkillName} Complete"
+					return "${SkillName} Complete"
 					break
 			}
 		}	
