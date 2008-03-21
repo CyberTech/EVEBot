@@ -107,6 +107,10 @@ objectdef obj_Targets
 		ChainTargets:Insert["Serpentis Grand Admiral"]
 		ChainTargets:Insert["Serpentis High Admiral"]
 		ChainTargets:Insert["Serpentis Lord Admiral"]
+		ChainTargets:Insert["Sansha's Lord"]
+		ChainTargets:Insert["Sansha's Slave Lord"]
+		ChainTargets:Insert["Sansha's Savage Lord"]
+		ChainTargets:Insert["Sansha's Mutant Lord"]
 				
 		; Special targets will (eventually) trigger an alert
 		; This should include haulers / faction / officers
@@ -132,6 +136,7 @@ objectdef obj_Targets
 		SpecialTargets:Insert["Tuvan"]
 		SpecialTargets:Insert["Brynn"]
 		SpecialTargets:Insert["Shadow"]
+		SpecialTargets:Insert["True Sansha"]
 
 		; Get the iterators
 		PriorityTargets:GetIterator[PriorityTarget]
