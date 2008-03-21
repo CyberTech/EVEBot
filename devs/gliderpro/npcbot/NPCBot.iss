@@ -35,19 +35,19 @@ function main()
 			Modules:ActivateCloak[FALSE]
 
 			; Warp to the next belt
-			if ${Belts.IsAtBelt}
-			{
-			Belts:NextBelt
-			}
-			variable int WarpToDistance
-			;WarpToDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.80/1000].Round}]
-			;WarpToDistance:Set[${Math.Calc[${WarpToDistance}*1000]}]
-			WarpToDistance:Set[0]
-			echo "Warping to belt ${Belts.Belt.Value.Name} @ ${WarpToDistance}"
-			Belts.Belt.Value:WarpTo[${WarpToDistance}]
-
-			; Wait till warp starts
-			wait 50
+			;;if ${Belts.IsAtBelt}
+			;;{
+			;;Belts:NextBelt
+			;;}
+			;;variable int WarpToDistance
+			;;;WarpToDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.80/1000].Round}]
+			;;;WarpToDistance:Set[${Math.Calc[${WarpToDistance}*1000]}]
+			;;WarpToDistance:Set[0]
+			;;echo "Warping to belt ${Belts.Belt.Value.Name} @ ${WarpToDistance}"
+			;;Belts.Belt.Value:WarpTo[${WarpToDistance}]
+            ;;
+			;;; Wait till warp starts
+			;;wait 50
 			
 			; Turn off the shield booster
 			Modules:ActivateShieldBooster[FALSE]
@@ -824,6 +824,28 @@ objectdef cls_Targets
 			return FALSE
 	}
 
+
+/*
+Name: Federation Hoplon Type: Federation Hoplon TypeID: 25107 Group: Mission Gallente Federation Frigate GroupID: 677
+Name: Federation Clavis Type: Federation Clavis TypeID: 25103 Group: Mission Gallente Federation Frigate GroupID: 677
+Name: Federation Hastile Type: Federation Hastile TypeID: 25105 Group: Mission Gallente Federation Frigate GroupID: 677
+Name: Cargo Rig Type: Cargo Rig TypeID: 16729 Group: Large Collidable Structure GroupID: 319
+Name: Habitation Module Type: Habitation Module - Roadhouse TypeID: 17401 Group: Large Collidable Structure GroupID: 319
+Name: Warehouse Type: Starbase Storage Facility TypeID: 17787 Group: Large Collidable Structure GroupID: 319
+Name: Power Generator Type: Power Generator TypeID: 13034 Group: Large Collidable Structure GroupID: 319
+Name: Pressure Silo Type: Pressure Silo TypeID: 16856 Group: Large Collidable Structure GroupID: 319
+Name: Federation Clavis Type: Federation Clavis TypeID: 25103 Group: Mission Gallente Federation Frigate GroupID: 677
+Name: Federation Hoplon Type: Federation Hoplon TypeID: 25107 Group: Mission Gallente Federation Frigate GroupID: 677
+Name: Federation Clavis Type: Federation Clavis TypeID: 25103 Group: Mission Gallente Federation Frigate GroupID: 677
+Name: Federation Hastile Type: Federation Hastile TypeID: 25105 Group: Mission Gallente Federation Frigate GroupID: 677
+Name: Federation Clavis Type: Federation Clavis TypeID: 25103 Group: Mission Gallente Federation Frigate GroupID: 677
+Name: Cargo Rig Type: Cargo Rig TypeID: 16729 Group: Large Collidable Structure GroupID: 319
+Name: Habitation Module Type: Habitation Module - Roadhouse TypeID: 17401 Group: Large Collidable Structure GroupID: 319
+Name: Warehouse Type: Starbase Storage Facility TypeID: 17787 Group: Large Collidable Structure GroupID: 319
+Name: Power Generator Type: Power Generator TypeID: 13034 Group: Large Collidable Structure GroupID: 319
+Name: Pressure Silo Type: Pressure Silo TypeID: 16856 Group: Large Collidable Structure GroupID: 319
+Name: Federation Clavis Type: Federation Clavis TypeID: 25103 Group: Mission Gallente Federation Frigate GroupID: 677
+*/
 	member:bool TargetNPCs()
 	{
 		variable index:entity Targets
@@ -883,6 +905,13 @@ objectdef cls_Targets
 			{
 				continue
 			}
+			
+			if ${Target.Value.GroupID} == GROUPID_LARGE_COLLIDABLE_STRUCTURE
+			{
+				continue
+			}
+				
+			echo "Name: ${Target.Value.Name} Type: ${Target.Value.Type} TypeID: ${Target.Value.TypeID} Group: ${Target.Value.Group} GroupID: ${Target.Value.GroupID}"
 			; If the Type ID is different then there's more then 1 type in the belt
 			if ${TypeID} != ${Target.Value.TypeID}
 			{
@@ -961,6 +990,11 @@ objectdef cls_Targets
 				continue
 			}
 			
+			if ${Target.Value.GroupID} == GROUPID_LARGE_COLLIDABLE_STRUCTURE
+			{
+				continue
+			}
+				
 			variable bool DoTarget = FALSE
 			if ${Chaining}
 			{
