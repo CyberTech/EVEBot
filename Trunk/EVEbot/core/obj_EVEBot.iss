@@ -94,6 +94,12 @@ objectdef obj_EVEBot
 					UI:UpdateConsole["EVE downtime approaching, pausing operations"]
 					This.ReturnToStation:Set[TRUE]
 				}
+				elseif (${This.GameHour} == 10 && \
+					${This.GameMinute} >= 57) 
+				{
+					UI:UpdateConsole["EVE downtime approaching, quiting game"]
+					EVE:Execute[CmdQuitGame]
+				}
 				else
 				{
 					variable int Hours = ${Math.Calc[(${Script.RunningTime}/1000/60/60)%60].Int}
