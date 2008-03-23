@@ -71,15 +71,18 @@ objectdef obj_Safespots
 		}
 		
 		; Are we within 150km of the bookmark?
-		; TODO - Why are we calling math.distance w/6 object calls instead of ${SafeSpotIterator.Value.Distance} -- CyberTech
-		; GP: Because I copied it from Da_Teach.
-		; ONLY WORKS FOR ENTITY BOOKMARKS if ${Entity[OwnerID,${Me.CharID},CategoryID,CATEGORYID_SHIP].DistanceTo[${SafeSpotIterator.Value.ID}]} < 150000
-		if ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${SafeSpotIterator.Value.X}, ${SafeSpotIterator.Value.Y}, ${SafeSpotIterator.Value.Z}]} < 150000
+		if ${SafeSpotIterator.Value.ItemID}> > -1
+		{
+			if ${Me.ToEntity.DistanceTo[${SafeSpotIterator.ItemID}]} < 150000
+			{
+				return TRUE
+			}
+		}
+		else if ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${SafeSpotIterator.Value.X}, ${SafeSpotIterator.Value.Y}, ${SafeSpotIterator.Value.Z}]} < 150000
 		{
 			return TRUE
 		}
-		
-		return FALSE
+		return FALSE		
 	}
 	
 	function WarpTo()

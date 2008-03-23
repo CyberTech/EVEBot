@@ -179,16 +179,16 @@ objectdef obj_Combat
     
     function Flee()
     {
-        UI:UpdateConsole["obj_Combat: DEBUG: Flee"]
-    
         This.Fled:Set[TRUE]
         
         if ${Config.Combat.RunToStation}
         {
+        	UI:UpdateConsole["obj_Combat: DEBUG: Fleeing to Station"]
             call This.FleeToStation
         }
         else
         {
+        	UI:UpdateConsole["obj_Combat: DEBUG: Fleeing to Safespots"]
             call This.FleeToSafespot
         }
     }
@@ -204,7 +204,7 @@ objectdef obj_Combat
     function FleeToSafespot()
     {   
         ; Are we at the safespot and not warping?
-        if !${Safespot.IsAtSafespot} && ${Me.ToEntity.Mode} != 3
+        if ${Me.ToEntity.Mode} != 3 && !${Safespot.IsAtSafespot}
         {
             call Safespots.WarpTo
             wait 30
