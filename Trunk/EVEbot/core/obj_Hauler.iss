@@ -513,7 +513,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		{
 			if ${fleet.Get[${idx}].CharID} != ${Me.CharID}
 			{
-				if ${${fleet.Get[${idx}].Name.NotEqual["Joe The Tank"]}}
+				if ${${fleet.Get[${idx}].ToPilot.Name.NotEqual["Joe The Tank"]}}
 				{
 					FleetMembers:Queue[${fleet.Get[${idx}]}]	
 				}
