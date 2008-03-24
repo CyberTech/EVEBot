@@ -430,8 +430,8 @@ objectdef obj_OreHauler inherits obj_Hauler
 			   ${Local[${FleetMembers.Peek.ToPilot.Name}](exists)}
 			{
 				call This.WarpToFleetMemberAndLoot ${FleetMembers.Peek.CharID}
-				FleetMembers:Dequeue
 			}
+			FleetMembers:Dequeue
 		}
 	}
 	
@@ -450,7 +450,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 			return
 		}
 		
-		UI:UpdateConsole["Warping to fleet member: ${Pilot[${charid}].Name}"]
+		UI:UpdateConsole["Warping to fleet member: ${charID}"]
 		Fleet:WarpToFleetMember[${charID}]
 		call Ship.WarpWait
 
@@ -513,7 +513,6 @@ objectdef obj_OreHauler inherits obj_Hauler
 		{
 			if ${fleet.Get[${idx}].CharID} != ${Me.CharID}
 			{
-				UI:UpdateConsole["BuildFleetMemberList: "]				
 				if ${fleet.Get[${idx}].ToPilot(exists)} && \
 				   ( ${fleet.Get[${idx}].ToPilot.Name.Equal["Joe The Tank"]} || \
 				     ${fleet.Get[${idx}].ToPilot.Name.Equal["Jane the Hauler"]} )				   
