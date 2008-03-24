@@ -132,7 +132,8 @@ objectdef obj_Cargo
 			variable int CategoryID
 
 			CategoryID:Set[${CargoIterator.Value.CategoryID}]
-			;UI:UpdateConsole["DEBUG: obj_Cargo:FindShipCargo: CategoryID: ${CategoryID} ${CargoIterator.Value.Name} - ${CargoIterator.Value.Quantity} (CargoToTransfer.Used: ${This.CargoToTransfer.Used})"]
+			;UI:UpdateConsole["DEBUG: obj_Cargo:FindShipCargo: CategoryID: ${CategoryID} ${CargoIterator.Value.Name} (${CargoIterator.Value.Quantity}) (CargoToTransfer.Used: ${This.CargoToTransfer.Used})"]
+
 			if (${CategoryID} == ${CategoryIDToMove})
 			{
 				This.CargoToTransfer:Insert[${CargoIterator.Value}]
@@ -638,15 +639,12 @@ objectdef obj_Cargo
 			wait 10
 		}
 
-		UI:UpdateConsole["Transferring Ore to Station Hangar"]
+		; Need to cycle the the cargohold after docking to update the list.
+		call Ship.CloseCargo
 
-		if ${Ship.IsCargoOpen}
-		{
-			; Need to cycle the the cargohold after docking to update the list.
-			call Ship.CloseCargo
-		}
+		UI:UpdateConsole["Transferring Ore to Station Hangar"]
+		call Ship.OpenCargo
 		
-		call Ship.OpenCargo	
 		This:FindShipCargo[CATEGORYID_ORE]
 		call This.TransferListToHangar
 		
@@ -669,10 +667,10 @@ objectdef obj_Cargo
 			wait 10
 		}
 
-		UI:UpdateConsole["Transferring Cargo to Station Hangar"]
-
 		/* Need to cycle the the cargohold after docking to update the list. */
 		call This.CloseHolds
+
+		UI:UpdateConsole["Transferring Cargo to Station Hangar"]
 		call This.OpenHolds
 
 		/* FOR NOW move all cargo.  Add filtering later */
@@ -696,10 +694,10 @@ objectdef obj_Cargo
 		}
 		else
 		{
-			UI:UpdateConsole["Transferring Cargo from Station Hangar"]
-	
 			/* Need to cycle the the cargohold after docking to update the list. */
 			call This.CloseHolds
+
+			UI:UpdateConsole["Transferring Cargo from Station Hangar"]	
 			call This.OpenHolds
 
 			/* FOR NOW move all cargo.  Add filtering later */

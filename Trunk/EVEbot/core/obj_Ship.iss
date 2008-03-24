@@ -1,19 +1,19 @@
 /*
 	Ship class
-	
+
 	Main object for interacting with the ship and its functions
-	
+
 	-- CyberTech
-	
+
 */
 
 objectdef obj_Ship
 {
 	variable int MODE_WARPING = 3
-	
+
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 8
-	
+
 	variable int Calculated_MaxLockedTargets
 	variable float BaselineUsedCargo
 	variable bool CargoIsOpen
@@ -48,7 +48,7 @@ objectdef obj_Ship
 		This:CalculateMaxLockedTargets
 		UI:UpdateConsole["obj_Ship: Initialized"]
 	}
-	
+
 	method Shutdown()
 	{
 		Event[OnFrame]:DetachAtom[This:Pulse]
@@ -60,16 +60,16 @@ objectdef obj_Ship
 		{
 			return
 		}
-		
+
 	    if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
 		{
     		if (${Me.InStation(exists)} && !${Me.InStation})
-    		{		    
+    		{
     			This:ValidateModuleTargets
-    				
+
 				if !${Config.Common.BotModeName.Equal[Ratter]}
 				{	/* ratter was converted to use obj_Combat already */
-	    				
+
 	    			;Ship Armor Repair
 	    			if ${This.Total_Armor_Reps} > 0
 	    			{
@@ -77,7 +77,7 @@ objectdef obj_Ship
 	    				{
 	    					This:ActivateRepairing_Armor
 	    				}
-	    					
+
 	    				if ${This.Repairing_Armor}
 	    				{
 	    					if ${Me.Ship.ArmorPct} == 100
@@ -87,7 +87,7 @@ objectdef obj_Ship
 	    					}
 	    				}
 	    			}
-	    			
+
 	    			;Shield Boosters
 	    			/* Why check ${Social.PossibleHostiles}?
 	    			 * If your shield is going down something is hostile!
@@ -97,19 +97,19 @@ objectdef obj_Ship
 					{	/* Turn on the shield booster */
 						This:Activate_Shield_Booster[]
 					}
-					
+
 					if ${Me.Ship.ShieldPct} > 80 && !${Config.Combat.AlwaysShieldBoost}
 					{	/* Turn off the shield booster */
 						This:Deactivate_Shield_Booster[]
-					}    			
+					}
 				}
     		}
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.IntervalInSeconds}]
     		This.NextPulse:Update
-		}		
+		}
 	}
-	
+
 	/* The IsSafe function should check the tank, ammo availability, etc.. */
 	/* and determine if it is safe to put the ship back into harms way.    */
 	/* TODO - Rename to SystemsReady (${Ship.SystemsReady}) or similar for clarity - CyberTech */
@@ -121,9 +121,9 @@ objectdef obj_Ship
 		}
 		else
 		{
-			m_WaitForCapRecharge:Set[FALSE]	
+			m_WaitForCapRecharge:Set[FALSE]
 		}
-		
+
 		/* TODO - These functions are not reliable. Redo per Looped armor/shield test in obj_Miner.Mine() (then consolidate code) -- CyberTech */
 		if ${Me.Ship.CapacitorPct} < 10
 		{
@@ -131,35 +131,35 @@ objectdef obj_Ship
 			m_WaitForCapRecharge:Set[TRUE]
 			return FALSE
 		}
-		
+
 		if ${Me.Ship.ArmorPct} < 25
 		{
 			UI:UpdateConsole["Armor low!  Run for cover!"]
 			return FALSE
 		}
-		
+
 		return TRUE
 	}
-	
+
 	member:bool IsAmmoAvailable()
 	{
 		variable iterator aWeaponIterator
 		variable index:item anItemIndex
 		variable iterator anItemIterator
 		variable bool bAmmoAvailable = TRUE
-		
+
 		This.ModuleList_Weapon:GetIterator[aWeaponIterator]
 		if ${aWeaponIterator:First(exists)}
 		do
 		{
 			if ${aWeaponIterator.Value.Charge(exists)}
 			{
-				;UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable:"]	
-				;UI:UpdateConsole["Slot: ${aWeaponIterator.Value.ToItem.Slot}  ${aWeaponIterator.Value.ToItem.Name}"]							
-				
+				;UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable:"]
+				;UI:UpdateConsole["Slot: ${aWeaponIterator.Value.ToItem.Slot}  ${aWeaponIterator.Value.ToItem.Name}"]
+
 				aWeaponIterator.Value:DoGetAvailableAmmo[anItemIndex]
 				;UI:UpdateConsole["Ammo: Used = ${anItemIndex.Used}"]
-				
+
 				anItemIndex:GetIterator[anItemIterator]
 				if ${anItemIterator:First(exists)}
 				{
@@ -174,28 +174,28 @@ objectdef obj_Ship
 							if ${anItemIterator.Value.Quantity} < ${Math.Calc[${aWeaponIterator.Value.MaxCharges}*6]}
 							{
 								;UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable: FALSE!"]
-								bAmmoAvailable:Set[FALSE]							
+								bAmmoAvailable:Set[FALSE]
 							}
 						}
 					}
-					while ${anItemIterator:Next(exists)}			
+					while ${anItemIterator:Next(exists)}
 				}
 				else
 				{
 					;UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable: FALSE!"]
-					bAmmoAvailable:Set[FALSE]							
+					bAmmoAvailable:Set[FALSE]
 				}
 			}
 		}
 		while ${aWeaponIterator:Next(exists)}
-		
+
 		return ${bAmmoAvailable}
 	}
-	
+
 	member:bool HasCovOpsCloak()
 	{
 		variable bool rVal = FALSE
-		
+
 		variable iterator aModuleIterator
 		This.ModuleList_Cloaks:GetIterator[aModuleIterator]
 		if ${aModuleIterator:First(exists)}
@@ -208,10 +208,10 @@ objectdef obj_Ship
 			}
 		}
 		while ${aModuleIterator:Next(exists)}
-		
+
 		return ${rVal}
 	}
-	
+
 	member:float CargoMinimumFreeSpace()
 	{
 		if !${Me.Ship(exists)}
@@ -221,7 +221,7 @@ objectdef obj_Ship
 
 		return ${Math.Calc[${Me.Ship.CargoCapacity}*0.02]}
 	}
-	
+
 	member:float CargoFreeSpace()
 	{
 		if !${Me.Ship(exists)}
@@ -249,7 +249,7 @@ objectdef obj_Ship
 		}
 		return FALSE
 	}
-	
+
 	member:bool CargoHalfFull()
 	{
 		if !${Me.Ship(exists)}
@@ -268,12 +268,12 @@ objectdef obj_Ship
 	{
 		return ${Me.Ship.MaxTargetRange} < ${This.m_MaxTargetRange}
 	}
-	
+
 	member:float MaxTargetRange()
 	{
 		return ${m_MaxTargetRange}
 	}
-	
+
 	method UpdateModuleList()
 	{
 		if ${Me.InStation}
@@ -282,11 +282,11 @@ objectdef obj_Ship
 			UI:UpdateConsole["DEBUG: obj_Ship:UpdateModuleList called while in station"]
 			return
 		}
-			
+
 		/* save ship values that may change in combat */
 		This.m_MaxTargetRange:Set[${Me.Ship.MaxTargetRange}]
-			
-		/* build module lists */			
+
+		/* build module lists */
 		This.ModuleList:Clear
 		This.ModuleList_MiningLaser:Clear
 		This.ModuleList_Weapon:Clear
@@ -300,16 +300,16 @@ objectdef obj_Ship
 		This.ModuleList_Salvagers:Clear
 		This.ModuleList_TractorBeams:Clear
 		This.ModuleList_Cloaks:Clear
-		
+
 		Me.Ship:DoGetModules[This.ModuleList]
-		
+
 		if !${This.ModuleList.Used} && ${Me.Ship.HighSlots} > 0
 		{
 			UI:UpdateConsole["ERROR: obj_Ship:UpdateModuleList - No modules found. Pausing - If this ship has slots, you must have at least one module equipped, of any type."]
 			EVEBot:Pause
 			return
 		}
-	
+
 		variable iterator Module
 
 		UI:UpdateConsole["Module Inventory:"]
@@ -331,13 +331,13 @@ objectdef obj_Ship
 			;echo "DEBUG: Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"
 			;echo " DEBUG: Group: ${Module.Value.ToItem.Group}  ${GroupID}"
 			;echo " DEBUG: Type: ${Module.Value.ToItem.Type}  ${TypeID}"
-			
+
 			if ${Module.Value.MiningAmount(exists)}
 			{
 				This.ModuleList_MiningLaser:Insert[${Module.Value}]
 				continue
 			}
-		   	
+
 			; TODO - Populate these arrays
 			;This.ModuleList_Weapon
 			;This.ModuleList_ActiveResists
@@ -349,7 +349,7 @@ objectdef obj_Ship
 					This.ModuleList_ActiveResists:Insert[${Module.Value}]
 					break
 				case GROUPID_MISSILE_LAUNCHER_CRUISE
-				case GROUPID_MISSILE_LAUNCHER_ROCKET 
+				case GROUPID_MISSILE_LAUNCHER_ROCKET
 				case GROUPID_MISSILE_LAUNCHER_SIEGE
 				case GROUPID_MISSILE_LAUNCHER_STANDARD
 				case GROUPID_MISSILE_LAUNCHER_HEAVY
@@ -391,7 +391,7 @@ objectdef obj_Ship
 					continue
 			}
 
-		} 
+		}
 		while ${Module:Next(exists)}
 
 		UI:UpdateConsole["Weapons:"]
@@ -429,7 +429,7 @@ objectdef obj_Ship
 			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"]
 		}
 		while ${Module:Next(exists)}
-		
+
 		UI:UpdateConsole["Armor Repair Modules:"]
 		This.ModuleList_Repair_Armor:GetIterator[Module]
 		if ${Module:First(exists)}
@@ -438,7 +438,7 @@ objectdef obj_Ship
 			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"]
 		}
 		while ${Module:Next(exists)}
-		
+
 		UI:UpdateConsole["Shield Regen Modules:"]
 		This.ModuleList_Regen_Shield:GetIterator[Module]
 		if ${Module:First(exists)}
@@ -489,23 +489,23 @@ objectdef obj_Ship
 		}
 		while ${Module:Next(exists)}
 	}
-	
+
 	method UpdateBaselineUsedCargo()
 	{
 		; Store the used cargo space as the cargo hold exists NOW, with whatever is leftover in it.
 		This.BaselineUsedCargo:Set[${Me.Ship.UsedCargoCapacity.Ceil}]
 	}
-		
+
 	member:int MaxLockedTargets()
 	{
 		This:CalculateMaxLockedTargets[]
 		return ${This.Calculated_MaxLockedTargets}
 	}
-	
+
 	; "Safe" max locked targets is defined as max locked targets - 1
 	; for a buffer of targets so that hostiles may be targeted.
 	; Always return at least 1
-	
+
 	member:int SafeMaxLockedTargets()
 	{
 		variable int result
@@ -518,10 +518,10 @@ objectdef obj_Ship
 	}
 
 	member:int TotalMiningLasers()
-	{	
+	{
 		return ${This.ModuleList_MiningLaser.Used}
 	}
-	
+
 	member:int TotalActivatedMiningLasers()
 	{
 		if !${Me.Ship(exists)}
@@ -531,7 +531,7 @@ objectdef obj_Ship
 
 		variable int count
 		variable iterator Module
-		
+
 		This.ModuleList_MiningLaser:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
@@ -547,7 +547,7 @@ objectdef obj_Ship
 		}
 		while ${Module:Next(exists)}
 
-		return ${count}		
+		return ${count}
 	}
 
 	; Note: This doesn't return ALL the mining amounts, just one.
@@ -604,7 +604,7 @@ objectdef obj_Ship
 			return "NOCHARGE"
 		}
 
-		
+
 		if ${Me.Ship.Module[${SlotName}].Charge(exists)}
 		{
 			if ${fullName}
@@ -618,7 +618,7 @@ objectdef obj_Ship
                         }
 		}
 		return "NOCHARGE"
-		
+
 		variable iterator Module
 
 		This.ModuleList_MiningLaser:GetIteratorModule]
@@ -640,7 +640,7 @@ objectdef obj_Ship
 
 		return "NOCHARGE"
 	}
-	
+
 	; Returns TRUE if we've got a laser mining this entity already
 	member:bool IsMiningAsteroidID(int EntityID)
 	{
@@ -655,7 +655,7 @@ objectdef obj_Ship
 		if ${Module:First(exists)}
 		do
 		{
-			if ${Module.Value.LastTarget(exists)} && \ 
+			if ${Module.Value.LastTarget(exists)} && \
 				${Module.Value.LastTarget.ID} == ${EntityID} && \
 				( ${Module.Value.IsActive} || ${Module.Value.IsGoingOnline} )
 			{
@@ -663,10 +663,10 @@ objectdef obj_Ship
 			}
 		}
 		while ${Module:Next(exists)}
-		
+
 		return FALSE
 	}
-	
+
 	method UnlockAllTargets()
 	{
 		variable index:entity LockedTargets
@@ -679,7 +679,7 @@ objectdef obj_Ship
 		{
 			UI:ConsoleUpdate["Unlocking all targets"]
 		}
-		
+
 		do
 		{
 			Target.Value:UnlockTarget
@@ -701,30 +701,30 @@ objectdef obj_Ship
 		else
 		{
 			Calculated_MaxLockedTargets:Set[${Me.Ship.MaxLockedTargets}]
-		}		
+		}
 	}
 
 	function ChangeMiningLaserCrystal(string OreType, string SlotName)
 	{
 		; We might need to change loaded crystal
 		variable string LoadedAmmo
-	
+
 		LoadedAmmo:Set[${This.LoadedMiningLaserCrystal[${SlotName}]}]
 		if !${OreType.Find[${LoadedAmmo}](exists)}
 		{
 			UI:UpdateConsole["Current crystal in ${SlotName} is ${LoadedAmmo}, looking for ${OreType}"]
 			variable index:item CrystalList
 			variable iterator CrystalIterator
-			
+
 			Me.Ship.Module[${SlotName}]:DoGetAvailableAmmo[CrystalList]
-			
+
 			CrystalList:GetIterator[CrystalIterator]
 			if ${CrystalIterator:First(exists)}
 			do
 			{
 				variable string CrystalType
 				CrystalType:Set[${CrystalIterator.Value.Name.Token[1, " "]}]
-				
+
 				;echo "DEBUG: ChangeMiningLaserCrystal Testing ${OreType} contains ${CrystalType}"
 				if ${OreType.Find[${CrystalType}](exists)}
 				{
@@ -739,7 +739,7 @@ objectdef obj_Ship
 			UI:UpdateConsole["Warning: No crystal found for ore type ${OreType}, efficiency reduced"]
 		}
 	}
-	
+
 	; Validates that all targets of activated modules still exist
 	; TODO - Add mid and low targetable modules, and high hostile modules, as well as just mining.
 	method ValidateModuleTargets()
@@ -748,7 +748,7 @@ objectdef obj_Ship
 		{
 			return
 		}
-		
+
 		variable iterator Module
 
 		This.ModuleList_MiningLaser:GetIterator[Module]
@@ -779,7 +779,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/core/obj_Miner.iss:190 Mine() call Sh
 C:/Program Files/InnerSpace/Scripts/evebot/core/obj_Miner.iss:59 ProcessState() call Miner.Mine
 C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.ProcessState
 	*/
-	
+
 	method CycleMiningLaser(string Activate, string Slot)
 	{
 		echo CycleMiningLaser: ${Slot} Activate: ${Activate}
@@ -794,7 +794,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			echo "obj_Ship:CycleMiningLaser: Tried to Activate the module, but it's already active or changing state."
 			return
 		}
-				
+
 		if ${Activate.Equal[OFF]} && \
 			(!${Me.Ship.Module[${Slot}].IsActive} || \
 			  ${Me.Ship.Module[${Slot}].IsGoingOnline} || \
@@ -839,7 +839,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			return
 		}
-		
+
 		variable iterator Module
 
 		This.ModuleList_MiningLaser:GetIterator[Module]
@@ -875,7 +875,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		}
 
 		variable iterator Module
-		
+
 		This.ModuleList_MiningLaser:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
@@ -913,7 +913,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 	{
 		EVE:Execute[CmdStopShip]
 	}
-	
+
 	; Approaches EntityID to within 5% of Distance, then stops ship.  Momentum will handle the rest.
 	function Approach(int EntityID, int64 Distance)
 	{
@@ -921,13 +921,13 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			variable float64 OriginalDistance = ${Entity[${EntityID}].Distance}
 			variable float64 CurrentDistance
-			
+
 			If ${OriginalDistance} < ${Distance}
 			{
 				return
 			}
 			OriginalDistance:Inc[10]
-			
+
 			CurrentDistance:Set[${Entity[${EntityID}].Distance}]
 			UI:UpdateConsole["Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc[(${CurrentDistance} - ${Distance}) / ${Me.Ship.MaxVelocity}].Ceil} Seconds away"]
 
@@ -937,7 +937,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				Entity[${EntityID}]:Approach
 				wait 50
 				CurrentDistance:Set[${Entity[${EntityID}].Distance}]
-				
+
 				if ${Entity[${EntityID}](exists)} && \
 					${OriginalDistance} < ${CurrentDistance}
 				{
@@ -948,7 +948,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			EVE:Execute[CmdStopShip]
 			This:Deactivate_AfterBurner[]
 		}
-	}			
+	}
 
 	member IsCargoOpen()
 	{
@@ -966,7 +966,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		}
 		return FALSE
 	}
-	
+
 	function OpenCargo()
 	{
 		if !${This.IsCargoOpen}
@@ -974,27 +974,27 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			UI:UpdateConsole["Opening Ship Cargohold"]
 			EVE:Execute[OpenCargoHoldOfActiveShip]
 			wait WAIT_CARGO_WINDOW
-			while !${This.IsCargoOpen}
-			{
-				wait 0.5
-			}
-			wait 10
 
-			/* Code from random other opencargo calls. return it if we need it, but do it here so it's centralized. -- CyberTech
 			; Note that this has a race condition. If the window populates fully before we check the CaptionCount
-			; OR if the cargo hold is empty, then we will sit forever.  Hence the LoopCheck test.
+			; OR if the cargo hold is empty, then we will sit forever.  Hence the LoopCheck test
+			; -- CyberTech
 			variable int CaptionCount
 			variable int LoopCheck
-			CaptionCount:Set[${EVEWindow[MyShipCargo].Caption.Token[2,"["].Token[1,"]"]}]		
+
 			LoopCheck:Set[0]
+			CaptionCount:Set[${EVEWindow[MyShipCargo].Caption.Token[2,"["].Token[1,"]"]}]
+
 			while (${CaptionCount} > ${Me.Ship.GetCargo} && \
 					${LoopCheck} < 10)
 			{
 				UI:UpdateConsole["obj_Cargo: Waiting for cargo to load...(${Loopcheck})"]
+				while !${This.IsCargoOpen}
+				{
+					wait 0.5
+				}
 				wait 10
 				LoopCheck:Inc
 			}
-			*/
 		}
 	}
 
@@ -1013,15 +1013,15 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		}
 	}
 
-	
+
 	function WarpToID(int Id)
-	{ 
+	{
 		if (${Id} <= 0)
 		{
 			UI:UpdateConsole["Error: obj_Ship:WarpToID: Id is <= 0 (${Id})"]
 			return
 		}
-		
+
 		if !${Entity[${Id}](exists)}
 		{
 			UI:UpdateConsole["Error: obj_Ship:WarpToID: No entity matched the ID given."]
@@ -1035,19 +1035,19 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			Entity[${Id}]:WarpTo
 			call This.WarpWait
 		}
-	}	
+	}
 
 	function WarpToBookMarkName(string DestinationBookmarkLabel)
 	{
 		if (!${EVE.Bookmark[${DestinationBookmarkLabel}](exists)})
-		{  
+		{
 			UI:UpdateConsole["ERROR: Bookmark: '${DestinationBookmarkLabel}' does not exist!"]
 			return
 		}
-		
+
 		call This.WarpToBookMark ${EVE.Bookmark[${DestinationBookmarkLabel}].ID}
 	}
-	
+
 	function WarpToBookMark(bookmark DestinationBookmark)
 	{
 		variable int Counter
@@ -1056,7 +1056,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			call Station.Undock
 		}
-		
+
 		call This.WarpPrepare
 		if (${DestinationBookmark.SolarSystemID} != ${Me.SolarSystemID})
 		{
@@ -1124,7 +1124,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			DestinationBookmark:WarpTo
 			call This.WarpWait
 		}
-		
+
 		if ${DestinationBookmark.ToEntity(exists)}
 		{
 			switch ${DestinationBookmark.ToEntity.CategoryID}
@@ -1147,7 +1147,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 					   if ${Counter} > 220
 					   {
 					      UI:UpdateConsole["Retrying to dock with destination station"]
-					      ;DestinationBookmark.ToEntity:Dock	
+					      ;DestinationBookmark.ToEntity:Dock
 					      Entity[CategoryID,3]:Dock
 					      Counter:Set[0]
 					   }
@@ -1163,11 +1163,11 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 					break
 			}
 		}
-		wait 20  
+		wait 20
 	}
 
 	function WarpPrepare()
-	{ 
+	{
 		UI:UpdateConsole["Preparing for warp"]
 		if ${This.Drones.WaitingForDrones}
 		{
@@ -1186,7 +1186,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		This:UnlockAllTargets[]
 		call This.Drones.ReturnAllToDroneBay
 	}
-	
+
 	member:bool InWarp()
 	{
 		if ${Me.ToEntity.Mode} == 3
@@ -1195,7 +1195,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		}
 		return FALSE
 	}
-	
+
 	function WarpWait()
 	{
 		variable bool Warped = FALSE
@@ -1213,7 +1213,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		UI:UpdateConsole["Dropped out of warp"]
 		wait 20
 		return ${Warped}
-	}	
+	}
 
 	method Activate_AfterBurner()
 	{
@@ -1221,9 +1221,9 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			return
 		}
-		
+
 		variable iterator Module
-		
+
 		This.ModuleList_AB_MWD:GetIterator[Module]
 		if ${Module:First(exists)}
 		{
@@ -1234,21 +1234,21 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			}
 		}
 	}
-	
+
 	member:int Total_Armor_Reps()
 	{
 		return ${This.ModuleList_Repair_Armor.Used}
 	}
-	
+
 	method Activate_Armor_Reps()
 	{
 		if !${Me.Ship(exists) || }
 		{
 			return
 		}
-		
+
 		variable iterator Module
-		
+
 		This.ModuleList_Repair_Armor:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
@@ -1262,16 +1262,16 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		}
 		while ${Module:Next(exists)}
 	}
-	
+
 	method Deactivate_Armor_Reps()
 	{
 		if !${Me.Ship(exists)}
 		{
 			return
 		}
-		
+
 		variable iterator Module
-		
+
 		This.ModuleList_Repair_Armor:GetIterator[Module]
 		if ${Module:First(exists)}
 		{
@@ -1289,9 +1289,9 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			return
 		}
-		
+
 		variable iterator Module
-		
+
 		This.ModuleList_AB_MWD:GetIterator[Module]
 		if ${Module:First(exists)}
 		{
@@ -1309,9 +1309,9 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			return
 		}
-		
+
 		variable iterator Module
-		
+
 		This.ModuleList_Regen_Shield:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
@@ -1321,19 +1321,19 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
 				Module.Value:Click
 			}
-		}	
+		}
 		while ${Module:Next(exists)}
 	}
-	
+
 	method Deactivate_Shield_Booster()
 	{
 		if !${Me.Ship(exists)}
 		{
 			return
 		}
-		
+
 		variable iterator Module
-		
+
 		This.ModuleList_Regen_Shield:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
@@ -1353,9 +1353,9 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			return
 		}
-		
+
 		variable iterator Module
-		
+
 		This.ModuleList_ActiveResists:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
@@ -1365,7 +1365,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
 				Module.Value:Click
 			}
-		}	
+		}
 		while ${Module:Next(exists)}
 	}
 
@@ -1375,9 +1375,9 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			return
 		}
-		
+
 		variable iterator Module
-		
+
 		This.ModuleList_ActiveResists:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
@@ -1387,7 +1387,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}"]
 				Module.Value:Click
 			}
-		}	
+		}
 		while ${Module:Next(exists)}
 	}
 
@@ -1397,9 +1397,9 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			return
 		}
-		
+
 		variable iterator Module
-		
+
 		This.ModuleList_Cloaks:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
@@ -1409,7 +1409,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
 				Module.Value:Click
 			}
-		}	
+		}
 		while ${Module:Next(exists)}
 	}
 
@@ -1419,9 +1419,9 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			return
 		}
-		
+
 		variable iterator Module
-		
+
 		This.ModuleList_Cloaks:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
@@ -1431,7 +1431,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}"]
 				Module.Value:Click
 			}
-		}	
+		}
 		while ${Module:Next(exists)}
 	}
 
@@ -1523,9 +1523,9 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			return
 		}
-		
+
 		variable iterator Module
-		
+
 		This.ModuleList_Weapon:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
@@ -1535,7 +1535,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				;;UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
 				Module.Value:Click
 			}
-		}	
+		}
 		while ${Module:Next(exists)}
 	}
 
@@ -1545,9 +1545,9 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			return
 		}
-		
+
 		variable iterator Module
-		
+
 		This.ModuleList_Weapon:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
@@ -1557,7 +1557,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				;;UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}"]
 				Module.Value:Click
 			}
-		}	
+		}
 		while ${Module:Next(exists)}
 	}
 
@@ -1570,9 +1570,9 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			return
 		}
-		
+
 		variable iterator Module
-		
+
 		This.ModuleList_Weapon:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
@@ -1585,7 +1585,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 					UI:UpdateConsole["Sanity check failed... weapon has no MaxCharges!"]
 					return
 				}
-			
+
 				; Has ammo been used?
 				if ${Module.Value.CurrentCharges} != ${Module.Value.MaxCharges}
 				{
@@ -1606,7 +1606,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 					}
 				}
 			}
-		}	
+		}
 		while ${Module:Next(exists)}
 
 		if ${NeedReload}
