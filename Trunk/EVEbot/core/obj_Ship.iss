@@ -964,8 +964,6 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				UI:UpdateConsole["\${EVEWindow[MyShipCargo].Caption(exists)} == ${EVEWindow[MyShipCargo].Caption(exists)}"]
 			}
 		}
-		
-		;; ELSE
 		return FALSE
 	}
 	
@@ -981,6 +979,22 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				wait 0.5
 			}
 			wait 10
+
+			/* Code from random other opencargo calls. return it if we need it, but do it here so it's centralized. -- CyberTech
+			; Note that this has a race condition. If the window populates fully before we check the CaptionCount
+			; OR if the cargo hold is empty, then we will sit forever.  Hence the LoopCheck test.
+			variable int CaptionCount
+			variable int LoopCheck
+			CaptionCount:Set[${EVEWindow[MyShipCargo].Caption.Token[2,"["].Token[1,"]"]}]		
+			LoopCheck:Set[0]
+			while (${CaptionCount} > ${Me.Ship.GetCargo} && \
+					${LoopCheck} < 10)
+			{
+				UI:UpdateConsole["obj_Cargo: Waiting for cargo to load...(${Loopcheck})"]
+				wait 10
+				LoopCheck:Inc
+			}
+			*/
 		}
 	}
 

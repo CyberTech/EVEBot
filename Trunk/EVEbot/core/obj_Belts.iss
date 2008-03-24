@@ -17,11 +17,15 @@ objectdef obj_Belts
 	
     member:bool IsAtBelt()
 	{
-		; Are we within 150km off the belt?
-		; TODO - Why are we calling math.distance w/6 object calls instead of ${beltIterator.Value.Distance} -- CyberTech
-		; GP: Because I copied it from Da_Teach.
-		; ONLY WORKS FOR ENTITY BOOKMARKS if ${Entity[OwnerID,${Me.CharID},CategoryID,CATEGORYID_SHIP].DistanceTo[${beltIterator.Value.ID}]} < 150000
-		if ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${beltIterator.Value.X}, ${beltIterator.Value.Y}, ${beltIterator.Value.Z}]} < 150000
+		; Are we within 150km of the bookmark?
+		if ${beltIterator.Value.ItemID} > -1
+		{
+			if ${Me.ToEntity.DistanceTo[${beltIterator.ItemID}]} < 150000
+			{
+				return TRUE
+			}
+		}
+		else if ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${beltIterator.Value.X}, ${beltIterator.Value.Y}, ${beltIterator.Value.Z}]} < 150000
 		{
 			return TRUE
 		}

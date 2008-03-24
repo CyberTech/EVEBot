@@ -450,7 +450,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 			return
 		}
 		
-		UI:UpdateConsole["Warping to fleet member."]
+		UI:UpdateConsole["Warping to fleet member: ${Pilot[${charid}].Name}}]
 		Fleet:WarpToFleetMember[${charID}]
 		call Ship.WarpWait
 

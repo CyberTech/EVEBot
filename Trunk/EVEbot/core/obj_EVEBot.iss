@@ -95,9 +95,9 @@ objectdef obj_EVEBot
 					This.ReturnToStation:Set[TRUE]
 				}
 				elseif (${This.GameHour} == 10 && \
-					${This.GameMinute} >= 57) 
+					${This.GameMinute} >= 58) 
 				{
-					UI:UpdateConsole["EVE downtime approaching, quiting game"]
+					UI:UpdateConsole["EVE downtime approaching - Quitting Eve"]
 					EVE:Execute[CmdQuitGame]
 				}
 				else

@@ -71,7 +71,7 @@ objectdef obj_Safespots
 		}
 		
 		; Are we within 150km of the bookmark?
-		if ${SafeSpotIterator.Value.ItemID}> > -1
+		if ${SafeSpotIterator.Value.ItemID} > -1
 		{
 			if ${Me.ToEntity.DistanceTo[${SafeSpotIterator.ItemID}]} < 150000
 			{
