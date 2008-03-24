@@ -497,7 +497,6 @@ objectdef obj_IRC
      
     function Connect() 
     {       
-        echo DEBUG Connecting to IRC...
         IRC:Connect[${Config.Common.IRCServer},${Config.Common.IRCUser}]
                
         wait 10 
@@ -529,7 +528,6 @@ objectdef obj_IRC
         ;echo Connected? ${This.IsConnected}
         if ${This.IsConnected} 
         {       
-            echo Saying ${msg}...
             IRCUser[${Config.Common.IRCUser}].Channel[${Config.Common.IRCChannel}]:Say["${msg}"]
         } 
         else

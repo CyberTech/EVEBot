@@ -80,22 +80,13 @@ objectdef obj_Asteroids
 		EVE:DoGetBookmarks[BeltBookMarkList]
 		
 		variable int RandomBelt
-
-		RandomBelt:Set[${Math.Rand[${BeltBookMarkList.Used}]:Inc[1]}]
+		variable string Label
+		variable string prefix
 
 		while ${BeltBookMarkList.Used} > 0
 		{
 			RandomBelt:Set[${Math.Rand[${BeltBookMarkList.Used}]:Inc[1]}]
 
-			if ${BeltBookMarkList[${RandomBelt}].SolarSystemID} != ${Me.SolarSystemID}
-			{
-				continue
-			}
-
-			variable string Label
-			Label:Set[${BeltBookMarkList[${RandomBelt}].Label}]
-
-			variable string prefix
 			if ${Config.Miner.IceMining}
 			{
 				prefix:Set[${Config.Labels.IceBeltPrefix}]
@@ -105,17 +96,24 @@ objectdef obj_Asteroids
 				prefix:Set[${Config.Labels.OreBeltPrefix}]
 			}
 
-			if ${Label.Left[${prefix.Length}].Equal[${prefix}]}
+			Label:Set[${BeltBookMarkList[${RandomBelt}].Label}]
+
+			if (${BeltBookMarkList[${RandomBelt}].SolarSystemID} != ${Me.SolarSystemID} || \
+				${Label.Left[${prefix.Length}].NotEqual[${prefix}]})
 			{
-				UI:UpdateConsole["Warping to Bookmark ${Label}"]
-				call Ship.WarpPrepare
-				BeltBookMarkList[${RandomBelt}]:WarpTo
-				call Ship.WarpWait
-				This.BeltArrivalTime:Set[${Time.Timestamp}]
-				This.LastBookMarkIndex:Set[${RandomBelt}]
-				This.UsingBookMarks:Set[TRUE]
-				return
+				BeltBookMarkList:Remove[${RandomBelt}]
+				BeltBookMarkList:Collapse
+				continue
 			}
+
+			UI:UpdateConsole["Warping to Bookmark ${Label}"]
+			call Ship.WarpPrepare
+			BeltBookMarkList[${RandomBelt}]:WarpTo
+			call Ship.WarpWait
+			This.BeltArrivalTime:Set[${Time.Timestamp}]
+			This.LastBookMarkIndex:Set[${RandomBelt}]
+			This.UsingBookMarks:Set[TRUE]
+			return
 		}
 	}
 		
@@ -387,6 +385,7 @@ objectdef obj_Asteroids
 				  wait 30
 				}
 				while ${Me.GetTargeting} > 0
+
 				call This.UpdateList
 				return TRUE
 			}

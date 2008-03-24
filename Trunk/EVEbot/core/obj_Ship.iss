@@ -1142,9 +1142,9 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 					do
 					{
 					   wait 20
-					   Counter:Inc[20]
+					   Counter:Inc[1]
 					   UI:UpdateConsole["Tick ${Counter}"]
-					   if ${Counter} > 220
+					   if ${Counter} > 5
 					   {
 					      UI:UpdateConsole["Retrying to dock with destination station"]
 					      ;DestinationBookmark.ToEntity:Dock

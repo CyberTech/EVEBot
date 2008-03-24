@@ -153,7 +153,7 @@ function main(... Args)
 		   			Counter:Inc[20]
 			   			if (${Counter} > 300)
 			   			{
-			   			  echo "- Undocking atttempt failed ... trying again." 
+			   			  echo "- Undocking attempt failed ... trying again." 
 			   				EVE:Execute[CmdExitStation]
 			   				Counter:Set[0]
 			   			}	   			   			
