@@ -513,9 +513,10 @@ objectdef obj_OreHauler inherits obj_Hauler
 		{
 			if ${fleet.Get[${idx}].CharID} != ${Me.CharID}
 			{
-				if ${${fleet.Get[${idx}].ToPilot(exists)} && \
-				   ( ${${fleet.Get[${idx}].ToPilot.Name.Equal["Joe The Tank"]}} || \
-				     ${${fleet.Get[${idx}].ToPilot.Name.Equal["Jane the Hauler"]}} )				   
+				UI:UpdateConsole["BuildFleetMemberList: "]				
+				if ${fleet.Get[${idx}].ToPilot(exists)} && \
+				   ( ${fleet.Get[${idx}].ToPilot.Name.Equal["Joe The Tank"]} || \
+				     ${fleet.Get[${idx}].ToPilot.Name.Equal["Jane the Hauler"]} )				   
 				{
 					continue
 				}
