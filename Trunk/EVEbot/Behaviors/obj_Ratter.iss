@@ -92,7 +92,7 @@ objectdef obj_Ratter
 		if ${This.Combat.Override}
 			return
 	    		    
-		UI:UpdateConsole["DEBUG: ${This.CurrentState}"]
+		;UI:UpdateConsole["DEBUG: ${This.CurrentState}"]
 		switch ${This.CurrentState}
 		{
 			case MOVE
