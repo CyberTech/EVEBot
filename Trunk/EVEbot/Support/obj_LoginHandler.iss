@@ -158,6 +158,13 @@ objectdef obj_LoginHandler
 					This.LoginTimer:Set[${This.connectWaitTime}]
 					break
 				}
+				if ${Login(exists)}
+				{
+					; Reconnect if we're still at the login screen
+					Login:Connect 
+					This.LoginTimer:Set[${This.connectWaitTime}]
+					break
+				}
 				if !${Me.Name(exists)}
 				{
 					This.LoginTimer:Set[${This.connectWaitTime}]
