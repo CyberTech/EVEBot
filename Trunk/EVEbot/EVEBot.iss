@@ -1,8 +1,5 @@
 #include core/defines.iss
 
-/* unconverted files */
-#include core/oSpace.iss
-
 /* Base Requirements */
 #include core/obj_EVEBot.iss
 #include core/obj_Configuration.iss
@@ -26,13 +23,16 @@
 #include core/obj_Targets.iss
 #include core/obj_Sound.iss
 #include core/obj_Agents.iss
+#include core/obj_Combat.iss
 
 /* Behavior/Mode Includes */
-#include core/obj_Hauler.iss
-#include core/obj_Miner.iss
-#include core/obj_Fighter.iss
-#include core/obj_Freighter.iss
-#include core/obj_Ratter.iss
+#include Behaviors/obj_Courier.iss
+#include Behaviors/obj_StealthHauler.iss
+#include Behaviors/obj_Hauler.iss
+#include Behaviors/obj_Miner.iss
+#include Behaviors/obj_Fighter.iss
+#include Behaviors/obj_Freighter.iss
+#include Behaviors/obj_Ratter.iss
 
 /* Script-Defined Support Objects */
 variable obj_EVEBot EVEBot

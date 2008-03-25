@@ -9,9 +9,6 @@
 	-- GliderPro	
 */
 
-#include obj_Courier.iss
-#include obj_StealthHauler.iss
-
 objectdef obj_Freighter
 {
 	/* the bot logic is currently based on a state machine */

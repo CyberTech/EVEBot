@@ -23,7 +23,6 @@ objectdef obj_Fighter
 	
 }
 
-
 objectdef obj_CombatFighter inherits obj_Fighter
 {
 	/* This variable is set by a remote event.  When it is non-zero, */

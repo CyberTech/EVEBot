@@ -8,8 +8,6 @@
 	-- GliderPro	
 */
 
-#include obj_Combat.iss
-
 objectdef obj_Ratter
 {
 	/* the bot logic is currently based on a state machine */
