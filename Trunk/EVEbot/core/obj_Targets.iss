@@ -406,4 +406,39 @@ objectdef obj_Targets
 		; No other players around 
 		return FALSE
 	}
+	
+	member:bool NPC()
+	{
+		variable index:entity tgtIndex
+		variable iterator tgtIterator
+
+		EVE:DoGetEntities[tgtIndex, CategoryID, CATEGORYID_ENTITY]
+		UI:UpdateConsole["DEBUG: Found ${tgtIndex.Used} entities."] 
+		
+		tgtIndex:GetIterator[tgtIterator]
+		if ${tgtIterator:First(exists)}
+		do
+		{
+			switch ${tgtIterator.Value.GroupID}
+			{
+				case GROUP_CONCORDDRONE
+				case GROUP_CONVOYDRONE
+				case GROUP_CONVOY
+				case GROUP_LARGECOLLIDABLEOBJECT
+				case GROUP_LARGECOLLIDABLESHIP
+				case GROUP_LARGECOLLIDABLESTRUCTURE
+					UI:UpdateConsole["DEBUG: Ignoring entity ${tgtIterator.Value.Group} (${tgtIterator.Value.GroupID})"] 
+					continue
+					break
+				default
+					UI:UpdateConsole["DEBUG: NPC found ${tgtIterator.Value.Group} (${tgtIterator.Value.GroupID})"] 
+					return TRUE
+					break
+			}
+		}
+		while ${tgtIterator:Next(exists)}
+		
+		; No NPCs around 
+		return FALSE
+	}
 }

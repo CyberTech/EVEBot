@@ -127,13 +127,12 @@ objectdef obj_Ratter
 	
 	function PlayerCheck()
 	{
-		if !${Targets.PC}
+		if !${Targets.PC} && ${Targets.NPC}
 		{
 			This.CurrentState:Set["FIGHT"]
 		}
 		else
 		{
-			call Sound.PlayLevelSound
 			This.CurrentState:Set["MOVE"]
 		}
 	}
