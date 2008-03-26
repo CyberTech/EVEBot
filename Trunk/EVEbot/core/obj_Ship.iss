@@ -1435,6 +1435,16 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		while ${Module:Next(exists)}
 	}
 
+	member:bool IsCloaked()
+	{
+		if ${Me.ToEntity(exists)} && ${Me.ToEntity.IsCloaked}
+		{
+			return TRUE
+		}
+		
+		return FALSE
+	}
+	
 	function LockTarget(int64 TargetID)
 	{
 		if ${Entity[${TargetID}](exists)}

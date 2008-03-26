@@ -98,9 +98,9 @@ objectdef obj_Ratter
 			case MOVE
 				call This.Move
 				break
-			case PCCHECK
-				call This.PlayerCheck
-				break
+;			case PCCHECK
+;				call This.PlayerCheck
+;				break
 			case FIGHT
 				call This.Fight
 				break
@@ -122,7 +122,7 @@ objectdef obj_Ratter
 			Ship:Reload_Weapons[TRUE]
 		}
 		
-		This.CurrentState:Set["PCCHECK"]
+		call This.PlayerCheck
 	}
 	
 	function PlayerCheck()
@@ -133,6 +133,7 @@ objectdef obj_Ratter
 		}
 		else
 		{
+			call Sound.PlayLevelSound
 			This.CurrentState:Set["MOVE"]
 		}
 	}

@@ -204,18 +204,20 @@ objectdef obj_Combat
     function FleeToSafespot()
     {   
         ; Are we at the safespot and not warping?
-        if ${Me.ToEntity.Mode} != 3 && !${Safespot.IsAtSafespot}
+        if ${Me.ToEntity.Mode} != 3 && !${Safespots.IsAtSafespot}
         {
             call Safespots.WarpTo
             wait 30
         }
         
-        if ${Safespots.IsAtSafespot}
+        if ${Safespots.IsAtSafespot} && !${Ship.IsCloaked}
         {           
             wait 60
             UI:UpdateConsole["obj_Combat: DEBUG: At safespot.  Cloaking..."]
             Ship:Deactivate_Hardeners[]
-            Ship:Activate_Cloak[]            
+			Ship:Deactivate_Shield_Booster[]
+			Ship:Deactivate_Armor_Reps[]
+            Ship:Activate_Cloak[]
         }
     }
     
