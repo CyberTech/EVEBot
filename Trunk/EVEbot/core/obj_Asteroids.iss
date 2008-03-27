@@ -135,7 +135,7 @@ objectdef obj_Asteroids
 			beltsubstring:Set["ASTEROID BELT"]
 		}
 		
-		EVE:DoGetEntities[Belts,GroupID, GROUPID_ASTEROID_BELT]
+		EVE:DoGetEntities[Belts,GroupID, GROUP_ASTEROIDBELT]
 		Belts:GetIterator[BeltIterator]
 		if ${BeltIterator:First(exists)}
 		{			
@@ -427,9 +427,9 @@ objectdef obj_Asteroids
 		else
 		{
 			UI:UpdateConsole["obj_Asteroids: No Asteroids within overview range"]
-			if ${Entity[GroupID, GROUPID_ASTEROID_BELT].Distance} < 300000
+			if ${Entity[GroupID, GROUP_ASTEROIDBELT].Distance} < 300000
 			{
-				This:BeltIsEmpty["${Entity[GroupID, GROUPID_ASTEROID_BELT]}"]
+				This:BeltIsEmpty["${Entity[GroupID, GROUP_ASTEROIDBELT]}"]
 			}
 			call This.MoveToField TRUE
 			return TRUE

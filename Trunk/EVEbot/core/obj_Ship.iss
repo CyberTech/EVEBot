@@ -983,11 +983,11 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 
 			LoopCheck:Set[0]
 			CaptionCount:Set[${EVEWindow[MyShipCargo].Caption.Token[2,"["].Token[1,"]"]}]
-
+			;UI:UpdateConsole["obj_Ship: Waiting for cargo to load: CaptionCount: ${CaptionCount}"]
 			while (${CaptionCount} > ${Me.Ship.GetCargo} && \
 					${LoopCheck} < 10)
 			{
-				UI:UpdateConsole["obj_Cargo: Waiting for cargo to load...(${Loopcheck})"]
+				UI:UpdateConsole["obj_Ship: Waiting for cargo to load...(${Loopcheck})"]
 				while !${This.IsCargoOpen}
 				{
 					wait 0.5
@@ -1087,55 +1087,125 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			wait 5
 		}
 
-		if ${DestinationBookmark.ToEntity(exists)} && \
-			${DestinationBookmark.ToEntity.CategoryID} == CATEGORYID_STATION
+		;echo \${DestinationBookmark.Type} = ${DestinationBookmark.Type}
+		;echo \${DestinationBookmark.TypeID} = ${DestinationBookmark.TypeID}
+		;echo \${DestinationBookmark.ToEntity(exists)} = ${DestinationBookmark.ToEntity(exists)}
+		;echo \${DestinationBookmark.ToEntity.Category} = ${DestinationBookmark.ToEntity.Category}
+		;echo \${DestinationBookmark.ToEntity.CategoryID} = ${DestinationBookmark.ToEntity.CategoryID}
+		;echo \${DestinationBookmark.ToEntity.Distance} = ${DestinationBookmark.ToEntity.Distance}
+		;echo \${DestinationBookmark.ItemID} = ${DestinationBookmark.ItemID}
+		;echo DestinationBookmark Location: ${DestinationBookmark.X}, ${DestinationBookmark.Y}, ${DestinationBookmark.Z}
+
+		declarevariable TypeID int ${DestinationBookmark.ToEntity.TypeID}
+		declarevariable GroupID int ${DestinationBookmark.ToEntity.GroupID}
+		declarevariable CategoryID int ${DestinationBookmark.ToEntity.CategoryID}
+		declarevariable EntityID int ${DestinationBookmark.ToEntity.ID}
+		declarevariable Label string ${DestinationBookmark.Label}
+		declarevariable WarpCounter int 0
+		variable int MinWarpRange
+		
+		if ${DestinationBookmark.ToEntity(exists)}
 		{
 			/* This is a station bookmark, we can use .Distance properly */
+			switch ${CategoryID}
+			{				
+				case CATEGORYID_STATION
+					MinWarpRange:Set[WARP_RANGE]
+					break
+				case CATEGORYID_CELESTIAL
+					switch ${GroupID}
+					{
+						case GROUP_SUN
+							UI:UpdateConsole["obj_Ship:WarpToBookMark - Sun/Star Entity Bookmarks are not supported"]
+							return
+							break
+						case GROUP_STARGATE
+							MinWarpRange:Set[WARP_RANGE]
+							break
+						case GROUP_MOON
+							MinWarpRange:Set[WARP_RANGE_MOON]
+							break
+						case GROUP_PLANET
+							MinWarpRange:Set[WARP_RANGE_PLANET]
+							break
+						default
+							MinWarpRange:Set[WARP_RANGE]
+							break
+					}
+					break
+				default
+					MinWarpRange:Set[WARP_RANGE]
+					break
+			}
 
-			while ${DestinationBookmark.ToEntity.Distance} > WARP_RANGE
+
+			WarpCounter:Set[1]
+			while ${DestinationBookmark.ToEntity.Distance} > ${MinWarpRange}
 			{
-				UI:UpdateConsole["Warping to bookmark ${DestinationBookmark.Label}"]
+				if ${WarpCounter} > 10
+				{
+					/* 	We return here, instead of breaking. We're either in a HUGE-ass system, which takes more
+						than 10 jumps to cross, or some putz with no Warp Drive Op skill is trying to cross a large system,
+						or, more likely, we're not actually warping anywhere.  So we'll return and let the bot do something
+						useful with itself -- CyberTech
+					*/
+					UI:UpdateConsole["obj_Ship:WarpToBookMark - Failed to arrive at bookmark after ${WarpCounter} warps"]
+					return
+				}
+				UI:UpdateConsole["Warping to bookmark ${Label} (Attempt #${WarpCounter})"]
 				DestinationBookmark:WarpTo
 				call This.WarpWait
-				;; TODO - verify we entered warp
+				WarpCounter:Inc
 			}
 		}
-		elseif ${DestinationBookmark.TypeID} != 5
+		elseif ${DestinationBookmark.ItemID} > -1
 		{
 			/* This is an entity bookmark, but that entity is not on the overhead yet. */
-			/* TODO - ToEntity.Distance doesnt work for anything but stations at the moment, merge with above when it does - CyberTech */
 
+			WarpCounter:Set[1]
 			while !${DestinationBookmark.ToEntity(exists)}
 			{
-				UI:UpdateConsole["Warping to bookmark ${DestinationBookmark.Label}"]
+				if ${WarpCounter} > 10
+				{
+					UI:UpdateConsole["obj_Ship:WarpToBookMark - Failed to arrive at bookmark after ${WarpCounter} warps"]
+					return
+				}
+				UI:UpdateConsole["Warping to bookmark ${Label} (Attempt #${WarpCounter})"]
 				DestinationBookmark:WarpTo
 				call This.WarpWait
-				;; TODO - verify we entered warp
+				WarpCounter:Inc
 			}
 		}
 		else
 		{
 			/* This is an in-space bookmark, just warp to it. */
-			/* TODO - write distance(xyz,xyz) function to check distance to  */
-			/* the bookmark.  We'll have to figure out eve units to convert it to meters. */
-			/* we won't support multi-warp bookmarks of this type till we do so */
 
-			UI:UpdateConsole["Warping to bookmark ${DestinationBookmark.Label}"]
-			DestinationBookmark:WarpTo
-			call This.WarpWait
+			WarpCounter:Set[1]
+			while ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${DestinationBookmark.X}, ${DestinationBookmark.Y}, ${DestinationBookmark.Z}]} > WARP_RANGE
+			{
+				echo ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${DestinationBookmark.X}, ${DestinationBookmark.Y}, ${DestinationBookmark.Z}]} > WARP_RANGE
+				if ${WarpCounter} > 10
+				{
+					UI:UpdateConsole["obj_Ship:WarpToBookMark - Failed to arrive at bookmark after ${WarpCounter} warps"]
+					return
+				}
+				UI:UpdateConsole["Warping to bookmark ${Label} (Attempt #${WarpCounter})"]
+				DestinationBookmark:WarpTo
+				call This.WarpWait
+				WarpCounter:Inc
+			}
 		}
 
+		/* Special-Case Code for docking or getting in proper range for known objects we'll warp to */
 		if ${DestinationBookmark.ToEntity(exists)}
 		{
-			switch ${DestinationBookmark.ToEntity.CategoryID}
+			switch ${CategoryID}
 			{
 				case 2
 					; stargate
 					break
 				case CATEGORYID_STATION
-				    variable int StationID
-				    StationID:Set[${DestinationBookmark.ToEntity.ID}]
-					call This.Approach ${StationID} DOCKING_RANGE
+					call This.Approach ${EntityID} DOCKING_RANGE
 					UI:UpdateConsole["Docking with destination station..."]
 					DestinationBookmark.ToEntity:Dock
 					Counter:Set[0]
@@ -1152,18 +1222,19 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 					      Counter:Set[0]
 					   }
 					}
-					while !${Station.DockedAtStation[${StationID}]}
+					while !${Station.DockedAtStation[${EntityID}]}
 					break
 			}
 
-			switch ${DestinationBookmark.ToEntity.TypeID}
+			switch ${TypeID}
 			{
 				case TYPEID_CORPORATE_HANGAR_ARRAY
-					call This.Approach ${DestinationBookmark.ToEntity.ID} CORP_HANGAR_LOOT_RANGE
+					call This.Approach ${EntityID} CORP_HANGAR_LOOT_RANGE
 					break
 			}
 		}
 		wait 20
+		;UI:UpdateConsole["obj_Ship:WarpToBookMark: Exiting"]
 	}
 
 	function WarpPrepare()

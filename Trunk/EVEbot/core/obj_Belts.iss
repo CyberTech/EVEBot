@@ -10,7 +10,7 @@ objectdef obj_Belts
 	
 	method ResetBeltList()
 	{
-		EVE:DoGetEntities[beltIndex, GroupID, GROUPID_ASTEROID_BELT]
+		EVE:DoGetEntities[beltIndex, GroupID, GROUP_ASTEROIDBELT]
 		beltIndex:GetIterator[beltIterator]	
 		UI:UpdateConsole["obj_Belts: ResetBeltList found ${beltIndex.Used} belts in this system."]
 	}

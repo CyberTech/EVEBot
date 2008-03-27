@@ -65,7 +65,7 @@ objectdef obj_StealthHauler
 				{
 					variable index:entity sgIndex
 					variable iterator     sgIterator
-					EVE:DoGetEntities[sgIndex,GroupID, GROUPID_STARGATE]
+					EVE:DoGetEntities[sgIndex,GroupID, GROUP_STARGATE]
 					sgIndex:GetIterator[sgIterator]
 					if ${sgIterator:First(exists)}
 					{

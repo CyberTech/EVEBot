@@ -510,7 +510,7 @@ objectdef obj_Miner
 	{
 		/* notify hauler there is ore in space */
 		variable string tempString
-		tempString:Set["${Me.CharID},${Me.SolarSystemID},${Entity[GroupID, GROUPID_ASTEROID_BELT].ID}"]
+		tempString:Set["${Me.CharID},${Me.SolarSystemID},${Entity[GroupID, GROUP_ASTEROIDBELT].ID}"]
 		relay all -event EVEBot_Miner_Full ${tempString}
 		
 		/* TO MANUALLY CALL A HAULER ENTER THIS IN THE CONSOLE

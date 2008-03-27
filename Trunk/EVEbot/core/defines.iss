@@ -38,11 +38,6 @@ variable string Version = "${APP_NAME} ${APP_VERSION} Revision ${SVN_REVISION.To
  */
 #define MINER_SANITY_CHECK_INTERVAL 240
 
-#define GROUPID_PLANET			7
-#define GROUPID_MOON 			8
-#define GROUPID_ASTEROID_BELT 	9
-#define GROUPID_STARGATE		10
-
 /*
  * DEBUG: Slot: MedSlot3  Ballistic Deflection Field II
  *  DEBUG: Group: Shield Hardener  77
@@ -80,6 +75,7 @@ variable string Version = "${APP_NAME} ${APP_VERSION} Revision ${SVN_REVISION.To
 #define TYPEID_PROTOTYPE_CLOAKING_DEVICE	11370
 #define TYPEID_COVERT_OPS_CLOAKING_DEVICE	11578
 #define TYPEID_SMOKESCREEN_CLOAKING_DEVICE	99999	/* TBD */
+#define TYPEID_MOON	14
 
 /* Same group and type for secure cargo containers as well */
 #define GROUPID_CORPORATE_HANGAR_ARRAY 471
@@ -91,7 +87,10 @@ variable string Version = "${APP_NAME} ${APP_VERSION} Revision ${SVN_REVISION.To
 
 #define GROUPID_WRECK 186
 
-#define WARP_RANGE 250000
+#define WARP_RANGE 151000
+#define WARP_RANGE_MOON  6000000
+#define WARP_RANGE_PLANET 55000000
+
 #define DOCKING_RANGE 200
 #define LOOT_RANGE 1450
 #define JUMP_RANGE 2350
