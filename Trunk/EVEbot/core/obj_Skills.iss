@@ -11,17 +11,17 @@ objectdef obj_Skills
 	method Initialize()
 	{
 		UI:UpdateConsole["obj_Skills: Initialized"]
-		Me:DoGetSkills[This.OwnedSkills]
-
-		Event[OnFrame]:AttachAtom[This:Pulse]
-		if !${This.SkillFile:Open[readonly](exists)}
+		
+		if ${This.SkillFile:Open[readonly](exists)}
 		{
-			UI:UpdateConsole["obj_Skills: ${This.SkillFile} does not exist"]
-			UI:UpdateConsole["To enable skill training, create this file and populate it with skills, one per line."]
+			Me:DoGetSkills[This.OwnedSkills]
+			Event[OnFrame]:AttachAtom[This:Pulse]
+			This.SkillFile:Close
 		}
 		else
 		{
-			This.SkillFile:Close
+			UI:UpdateConsole["obj_Skills: ${This.SkillFile} does not exist"]
+			UI:UpdateConsole["To enable skill training, create this file and populate it with skills, one per line."]
 		}
 
 	}

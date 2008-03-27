@@ -97,6 +97,11 @@ objectdef obj_Combat
     
     method Pulse()
     {
+		if ${EVEBot.Paused}
+		{
+			return
+		}
+		
 	    if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
 		{
             This:SetState
