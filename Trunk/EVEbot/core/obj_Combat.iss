@@ -178,9 +178,9 @@ objectdef obj_Combat
 		; Reload the weapons -if- ammo is below 30% and they arent firing
 		Ship:Reload_Weapons[FALSE]
 
-		; Activate the weapons, the modules class checks if there's a target
+		; Activate the weapons, the modules class checks if there's a target (no it doesn't - ct)
 		Ship:Activate_Weapons
-		Ship.Drones:SendDrones()
+		call Ship.Drones.SendDrones
 	}
     
     function Flee()
@@ -425,6 +425,14 @@ objectdef obj_Combat
         if ${Me.GetTargetedBy} > 0
         {
             Ship:Activate_Hardeners[]       
+
+            /* We have aggro now, yay! */
+			if ${Config.Combat.LaunchCombatDrones} && \
+				${Ship.Drones.DronesInSpace} == 0 && \
+				!${Ship.InWarp}
+			{
+				Ship.Drones:LaunchAll[]
+			}
         }
         else
         {
