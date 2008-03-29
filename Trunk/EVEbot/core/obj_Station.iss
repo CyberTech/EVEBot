@@ -200,8 +200,9 @@ objectdef obj_Station
 		}
 		else
 		{
-			UI:UpdateConsole["No stations in this system!  Quitting Game!!"]
-			EVE:Execute[CmdQuitGame]
+			UI:UpdateConsole["No stations in this system!  Trying Safespots"]
+			call Safespots.WarpTo
+			wait 30
 		}
 	}	
 

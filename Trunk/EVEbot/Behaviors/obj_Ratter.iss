@@ -130,6 +130,13 @@ objectdef obj_Ratter
 		if !${Targets.PC} && ${Targets.NPC}
 		{
 			This.CurrentState:Set["FIGHT"]
+			
+			if ${Config.Combat.LaunchCombatDrones} && \
+				${Ship.Drones.DronesInSpace} == 0 && \
+				!${Ship.InWarp}
+			{
+				Ship.Drones:LaunchAll[]
+			}			
 		}
 		else
 		{

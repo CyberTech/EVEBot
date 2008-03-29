@@ -179,7 +179,8 @@ objectdef obj_Combat
 		Ship:Reload_Weapons[FALSE]
 
 		; Activate the weapons, the modules class checks if there's a target
-		Ship:Activate_Weapons	
+		Ship:Activate_Weapons
+		Ship.Drones:SendDrones()
 	}
     
     function Flee()
@@ -309,9 +310,9 @@ objectdef obj_Combat
                 ${sPct} < ${Config.Combat.MinimumShieldPct} || \
                 ${cPct} < ${Config.Combat.MinimumCapPct})
         {
-            UI:UpdateConsole["Armor is at ${aPct}: ${Me.Ship.Armor}/${Me.Ship.MaxArmor}"]
-            UI:UpdateConsole["Shield is at ${sPct}: ${Me.Ship.Shield}/${Me.Ship.MaxShield}"]
-            UI:UpdateConsole["Cap is at ${cPct}: ${Me.Ship.Capacitor}/${Me.Ship.MaxCapacitor}"]
+            UI:UpdateConsole["Armor is at ${aPct}%: ${Me.Ship.Armor}/${Me.Ship.MaxArmor}"]
+            UI:UpdateConsole["Shield is at ${sPct}%: ${Me.Ship.Shield}/${Me.Ship.MaxShield}"]
+            UI:UpdateConsole["Cap is at ${cPct}%: ${Me.Ship.Capacitor}/${Me.Ship.MaxCapacitor}"]
             UI:UpdateConsole["Fleeing due to defensive status"]
             This.CurrentState:Set["FLEE"]
         }           
