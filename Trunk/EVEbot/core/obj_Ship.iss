@@ -338,12 +338,9 @@ objectdef obj_Ship
 				continue
 			}
 
-			; TODO - Populate these arrays
-			;This.ModuleList_Weapon
-			;This.ModuleList_ActiveResists
-			;This.ModuleList_AB_MWD
 			switch ${GroupID}
 			{
+				case GROUPID_DAMAGE_CONTROL
 				case GROUPID_SHIELD_HARDENER
 				case GROUPID_ARMOR_HARDENERS
 					This.ModuleList_ActiveResists:Insert[${Module.Value}]

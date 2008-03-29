@@ -431,7 +431,7 @@ objectdef obj_Targets
 					continue
 					break
 				default
-					UI:UpdateConsole["DEBUG: NPC found ${tgtIterator.Value.Group} (${tgtIterator.Value.GroupID})"] 
+					UI:UpdateConsole["DEBUG: NPC found: ${tgtIterator.Value.Group} (${tgtIterator.Value.GroupID})"] 
 					return TRUE
 					break
 			}

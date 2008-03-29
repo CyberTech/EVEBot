@@ -169,9 +169,11 @@ objectdef obj_Drones
 		{
 			return
 		}
-					
-		UI:UpdateConsole["Engaging Mining Drones"]
-		EVE:DronesMineRepeatedly[This.ActiveDroneIDList]
+
+		if (${This.DronesInSpace} > 0)
+		{
+			EVE:DronesMineRepeatedly[This.ActiveDroneIDList]
+		}
 	}
 	
 	function SendDrones()
@@ -183,7 +185,6 @@ objectdef obj_Drones
 
 		if (${This.DronesInSpace} > 0)
 		{
-			UI:UpdateConsole["Engaging Combat Drones"]
 			EVE:DronesEngageMyTarget[This.ActiveDroneIDList]
 		}
 	}
