@@ -219,7 +219,7 @@ objectdef obj_Combat
         if ${Safespots.IsAtSafespot} && !${Ship.IsCloaked}
         {           
             wait 60
-            UI:UpdateConsole["obj_Combat: DEBUG: At safespot.  Cloaking..."]
+            ;UI:UpdateConsole["obj_Combat: DEBUG: At Safespot."]
             Ship:Deactivate_Hardeners[]
 			Ship:Deactivate_Shield_Booster[]
 			Ship:Deactivate_Armor_Reps[]
