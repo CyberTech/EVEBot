@@ -29,6 +29,7 @@ objectdef obj_Ship
 	variable index:module ModuleList_Salvagers
 	variable index:module ModuleList_TractorBeams
 	variable index:module ModuleList_Cloaks
+	variable index:module ModuleList_StasisWeb
 	variable bool Repairing_Armor = FALSE
 	variable bool Repairing_Hull = FALSE
 	variable float m_MaxTargetRange
@@ -300,7 +301,8 @@ objectdef obj_Ship
 		This.ModuleList_Salvagers:Clear
 		This.ModuleList_TractorBeams:Clear
 		This.ModuleList_Cloaks:Clear
-
+		This.ModuleList_StasisWeb:Clear
+		
 		Me.Ship:DoGetModules[This.ModuleList]
 
 		if !${This.ModuleList.Used} && ${Me.Ship.HighSlots} > 0
@@ -392,6 +394,8 @@ objectdef obj_Ship
 				case GROUPID_CLOAKING_DEVICE
 					This.ModuleList_Cloaks:Insert[${Module.Value}]
 					continue
+				case GROUPID_STASIS_WEB
+					This.ModuleList_StasisWeb:Insert[${Module.Value}]
 				default
 					continue
 			}
@@ -487,6 +491,14 @@ objectdef obj_Ship
 
 		UI:UpdateConsole["Cloaking Device Modules:"]
 		This.ModuleList_Cloaks:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"]
+		}
+		while ${Module:Next(exists)}
+		UI:UpdateConsole["Stasis Web Modules:"]
+		This.ModuleList_StasisWeb:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
@@ -1455,6 +1467,54 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		variable iterator Module
 
 		This.ModuleList_ActiveResists:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			if ${Module.Value.IsActive} && ${Module.Value.IsOnline} && !${Module.Value.IsDeactivating}
+			{
+				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}"]
+				Module.Value:Click
+			}
+		}
+		while ${Module:Next(exists)}
+	}
+
+	method Activate_StasisWebs()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		
+		variable iterator Module
+
+		This.ModuleList_StasisWeb:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			if ${Me.ActiveTarget.Distance} < ${Module.Value.OptimalRange}
+			{
+				if !${Module.Value.IsActive} && ${Module.Value.IsOnline}
+				{
+					UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
+					Module.Value:Click
+				}
+			}
+		}
+		while ${Module:Next(exists)}
+	}
+
+	method Deactivate_StasisWebs()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		variable iterator Module
+
+		This.ModuleList_StasisWeb:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
