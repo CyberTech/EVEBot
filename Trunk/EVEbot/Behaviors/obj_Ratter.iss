@@ -136,7 +136,6 @@ objectdef obj_Ratter
 		}
 		else
 		{
-			echo !${Targets.PC} && ${Targets.NPC}
 			UI:UpdateConsole["PlayerCheck - Move"]
 			This.CurrentState:Set["MOVE"]
 		}
