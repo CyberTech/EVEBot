@@ -68,20 +68,22 @@ objectdef obj_Ship
     		{
     			This:ValidateModuleTargets
 
-				if !${Config.Common.BotModeName.Equal[Ratter]}
+				if (${Me.ToEntity.Mode} == 3 || !${Config.Common.BotModeName.Equal[Ratter]})
 				{	/* ratter was converted to use obj_Combat already */
 
-	    			;Ship Armor Repair
+	    			/* Ship Armor Repair
+	    				We rep to a fairly high level here because it's done while we're in warp.
+	    			*/
 	    			if ${This.Total_Armor_Reps} > 0
 	    			{
-	    				if ${Me.Ship.ArmorPct} < 100
+	    				if ${Me.Ship.ArmorPct} <95
 	    				{
 	    					This:ActivateRepairing_Armor
 	    				}
 
 	    				if ${This.Repairing_Armor}
 	    				{
-	    					if ${Me.Ship.ArmorPct} == 100
+	    					if ${Me.Ship.ArmorPct} >= 98
 	    					{
 	    						This:DeactivateRepairing_Armor
 	    						This.Repairing_Armor:Set[FALSE]
@@ -89,17 +91,15 @@ objectdef obj_Ship
 	    				}
 	    			}
 
-	    			;Shield Boosters
-	    			/* Why check ${Social.PossibleHostiles}?
-	    			 * If your shield is going down something is hostile!
-	    			 * The code below pulses your booster around the sweet spot
-	    			 */
-					if ${Me.Ship.ShieldPct} < 70 || ${Config.Combat.AlwaysShieldBoost}
+	    			/* Shield Boosters
+	    				We boost to a higher % in here, as it's done during warp, so cap has time to regen.
+	    			*/
+					if ${Me.Ship.ShieldPct} < 85 || ${Config.Combat.AlwaysShieldBoost}
 					{	/* Turn on the shield booster */
 						This:Activate_Shield_Booster[]
 					}
 
-					if ${Me.Ship.ShieldPct} > 80 && !${Config.Combat.AlwaysShieldBoost}
+					if ${Me.Ship.ShieldPct} > 95 && !${Config.Combat.AlwaysShieldBoost}
 					{	/* Turn off the shield booster */
 						This:Deactivate_Shield_Booster[]
 					}
@@ -507,6 +507,93 @@ objectdef obj_Ship
 		while ${Module:Next(exists)}
 	}
 
+	function ArmorPct()
+	{
+		/* TODO - clean up this code when ArmorPct/ShieldPct wierdness is gone */
+		if !${Me.Ship(exists)}
+		{
+			return 0
+		}
+
+		variable int counter
+		variable float Percent
+
+		Percent:Set[${Me.Ship.ArmorPct}]
+        Counter:Set[0]
+        while (${Percent} == NULL || ${Percent} <= 0)
+        {
+            if ${Counter} > 30
+            {
+               Percent:Set[-1]
+               UI:UpdateConsole["ob_Ship: ArmorPct was invalid for longer than 30 seconds"]
+               break
+            }
+            Counter:Inc[1]
+            wait 10
+            Percent:Set[${Me.Ship.ArmorPct}]
+        }
+        
+        return ${Percent}
+	}
+
+	function ShieldPct()
+	{
+		/* TODO - clean up this code when ArmorPct/ShieldPct wierdness is gone */
+		if !${Me.Ship(exists)}
+		{
+			return 0
+		}
+
+		variable int counter
+		variable float Percent
+
+		Percent:Set[${Me.Ship.ShieldPct}]
+        Counter:Set[0]
+        while (${Percent} == NULL || ${Percent} <= 0)
+        {
+                if ${Counter} > 30
+                {
+                	Percent:Set[-1]
+                    UI:UpdateConsole["ob_Ship: ShieldPct was invalid for longer than 30 seconds"]
+                    break
+                }
+                Counter:Inc[1]
+                wait 10
+	            Percent:Set[${Me.Ship.ShieldPct}]
+        }
+        
+        return ${Percent}
+	}
+
+	function CapacitorPct()
+	{
+		/* TODO - clean up this code when ArmorPct/ShieldPct wierdness is gone */
+		if !${Me.Ship(exists)}
+		{
+			return 0
+		}
+
+		variable int counter
+		variable float Percent
+
+		Percent:Set[${Me.Ship.CapacitorPct}]
+        Counter:Set[0]
+        while (${Percent} == NULL || ${Percent} <= 0)
+        {
+                if ${Counter} > 30
+                {
+                	Percent:Set[-1]
+                    UI:UpdateConsole["ob_Ship: CapacitorPct was invalid for longer than 30 seconds"]
+                    break
+                }
+                Counter:Inc[1]
+                wait 10
+	            Percent:Set[${Me.Ship.CapacitorPct}]
+        }
+
+        return ${Percent}
+	}
+	
 	method UpdateBaselineUsedCargo()
 	{
 		; Store the used cargo space as the cargo hold exists NOW, with whatever is leftover in it.
@@ -1293,6 +1380,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			UI:UpdateConsole["Warping..."]
 		}
+		This:Reload_Weapons[TRUE]
 		while ${Me.ToEntity.Mode} == 3
 		{
 			Warped:Set[TRUE]
@@ -1707,41 +1795,34 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		while ${Module:Next(exists)}
 	}
 
-	method Reload_Weapons(bool force)
+	method Reload_Weapons(bool ForceReload)
 	{
 		variable bool NeedReload = FALSE
-
 
 		if !${Me.Ship(exists)}
 		{
 			return
 		}
 
-		variable iterator Module
-
-		This.ModuleList_Weapon:GetIterator[Module]
-		if ${Module:First(exists)}
-		do
+		if !${ForceReload}
 		{
-			if !${Module.Value.IsActive} && !${Module.Value.IsChangingAmmo} && !${Module.Value.IsReloadingAmmo}
+			variable iterator Module
+			This.ModuleList_Weapon:GetIterator[Module]
+			if ${Module:First(exists)}
+			do
 			{
-				; Sometimes this value can be NULL
-				if !${Module.Value.MaxCharges(exists)}
+				if !${Module.Value.IsActive} && !${Module.Value.IsChangingAmmo} && !${Module.Value.IsReloadingAmmo}
 				{
-					UI:UpdateConsole["Sanity check failed... weapon has no MaxCharges!"]
-					return
-				}
-
-				; Has ammo been used?
-				if ${Module.Value.CurrentCharges} != ${Module.Value.MaxCharges}
-				{
-					; Force reload ?
-					if ${force}
+					; Sometimes this value can be NULL
+					if !${Module.Value.MaxCharges(exists)}
 					{
-						; Yes, reload
+						;UI:UpdateConsole["Sanity check failed... weapon has no MaxCharges!"]
 						NeedReload:Set[TRUE]
+						break
 					}
-					else
+
+					; Has ammo been used?
+					if ${Module.Value.CurrentCharges} != ${Module.Value.MaxCharges}
 					{
 						; Is there still more then 30% ammo available?
 						if ${Math.Calc[${Module.Value.CurrentCharges}/${Module.Value.MaxCharges}]} < 0.3
@@ -1752,12 +1833,12 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 					}
 				}
 			}
+			while ${Module:Next(exists)}
 		}
-		while ${Module:Next(exists)}
 
-		if ${NeedReload}
+		if ${ForceReload} || ${NeedReload}
 		{
-			UI:UpdateConsole["Reloading weapons..."'
+			UI:UpdateConsole["Reloading Weapons..."]
 			EVE:Execute[CmdReloadAmmo]
 		}
 	}

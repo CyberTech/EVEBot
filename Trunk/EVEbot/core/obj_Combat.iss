@@ -157,7 +157,6 @@ objectdef obj_Combat
         else
         {
             call This.ManageTank
-            call This.CheckTank
             switch ${This.CurrentState}
             {
                 case IDLE
@@ -175,6 +174,7 @@ objectdef obj_Combat
 	
 	function Fight()
 	{
+		Ship:Deactivate_Cloak[]
 		; Reload the weapons -if- ammo is below 30% and they arent firing
 		Ship:Reload_Weapons[FALSE]
 
@@ -190,12 +190,10 @@ objectdef obj_Combat
         
         if ${Config.Combat.RunToStation}
         {
-        	UI:UpdateConsole["obj_Combat: DEBUG: Fleeing to Station"]
             call This.FleeToStation
         }
         else
         {
-        	UI:UpdateConsole["obj_Combat: DEBUG: Fleeing to Safespots"]
             call This.FleeToSafespot
         }
     }
@@ -228,78 +226,20 @@ objectdef obj_Combat
         }
     }
     
-    function CheckTank()
-    {
-        variable int Counter
-        variable float aPct
-        variable float sPct
-        variable float cPct
+    method CheckTank(float ArmorPct, float ShieldPct, float CapacitorPct)
+    {      
+		/* see if tank checking is configured */
+		if !${Config.Combat.RunOnLowTank}
+		{
+			return
+		}
         
-        /* see if tank checking is configured */
-        if !${Config.Combat.RunOnLowTank}
-            return
-        
-        /* TODO - clean up this code when ArmorPct/ShieldPct wierdness is gone */
-        Counter:Set[0]
-        do
-        {
-            aPct:Set[${Me.Ship.ArmorPct}]
-            if (${aPct} == NULL || ${aPct} <= 0)
-            {
-                wait 20
-                Counter:Inc[20]
-                if ${Counter} > 600
-                {
-                    UI:UpdateConsole["Me.Ship.ArmorPct was invalid for longer than a minute!"]
-                    This.CurrentState:Set["FLEE"]
-                    return
-                }
-            }
-        }
-        while (${aPct} == NULL || ${aPct} <= 0)
-        
-        Counter:Set[0]
-        do
-        {
-            sPct:Set[${Me.Ship.ShieldPct}]
-            if (${sPct} == NULL || ${sPct} <= 0)
-            {
-                wait 20
-                Counter:Inc[20]
-                if ${Counter} > 600
-                {
-                    UI:UpdateConsole["Me.Ship.ShieldPct was invalid for longer than a minute!"]
-                    This.CurrentState:Set["FLEE"]
-                    return
-                }
-            }
-        }
-        while (${sPct} == NULL || ${sPct} <= 0)
-
-        Counter:Set[0]
-        do
-        {
-            cPct:Set[${Me.Ship.CapacitorPct}]
-            if (${cPct} == NULL || ${cPct} <= 0)
-            {
-                wait 20
-                Counter:Inc[20]
-                if ${Counter} > 600
-                {
-                    UI:UpdateConsole["Me.Ship.CapacitorPct was invalid for longer than a minute!"]
-                    This.CurrentState:Set["FLEE"]
-                    return
-                }
-            }
-        }
-        while (${cPct} == NULL || ${cPct} <= 0)
-
         if ${This.Fled}
         {
             /* don't leave the "fled" state until we regen */
-            if (${aPct} < 98 || ${sPct} < 80 || ${cPct} < 80)
+            if (${ArmorPct} < 95 || ${ShieldPct} < 80 || ${CapacitorPct} < 80)
             {
-                This.CurrentState:Set["FLEE"]           
+                This.CurrentState:Set["FLEE"]
             }
             else
             {
@@ -307,13 +247,13 @@ objectdef obj_Combat
                 This.CurrentState:Set["IDLE"]           
             }
         }
-        elseif (${aPct} < ${Config.Combat.MinimumArmorPct}  || \
-                ${sPct} < ${Config.Combat.MinimumShieldPct} || \
-                ${cPct} < ${Config.Combat.MinimumCapPct})
+        elseif (${ArmorPct} < ${Config.Combat.MinimumArmorPct}  || \
+                ${ShieldPct} < ${Config.Combat.MinimumShieldPct} || \
+                ${CapacitorPct} < ${Config.Combat.MinimumCapPct})
         {
-            UI:UpdateConsole["Armor is at ${aPct}%: ${Me.Ship.Armor}/${Me.Ship.MaxArmor}"]
-            UI:UpdateConsole["Shield is at ${sPct}%: ${Me.Ship.Shield}/${Me.Ship.MaxShield}"]
-            UI:UpdateConsole["Cap is at ${cPct}%: ${Me.Ship.Capacitor}/${Me.Ship.MaxCapacitor}"]
+            UI:UpdateConsole["Armor is at ${ArmorPct.Int}%: ${Me.Ship.Armor}/${Me.Ship.MaxArmor}"]
+            UI:UpdateConsole["Shield is at ${ShieldPct.Int}%: ${Me.Ship.Shield}/${Me.Ship.MaxShield}"]
+            UI:UpdateConsole["Cap is at ${CapacitorPct.Int}%: ${Me.Ship.Capacitor}/${Me.Ship.MaxCapacitor}"]
             UI:UpdateConsole["Fleeing due to defensive status"]
             This.CurrentState:Set["FLEE"]
         }           
@@ -322,102 +262,59 @@ objectdef obj_Combat
     function ManageTank()
     {
         variable int Counter
-        variable float aPct
-        variable float sPct
-        variable float cPct
+        variable float ArmorPct
+        variable float ShieldPct
+        variable float CapacitorPct
         
-        /* TODO - clean up this code when ArmorPct/ShieldPct wierdness is gone */
-        Counter:Set[0]
-        do
-        {
-            aPct:Set[${Me.Ship.ArmorPct}]
-            if (${aPct} == NULL || ${aPct} <= 0)
-            {
-                wait 20
-                Counter:Inc[20]
-                if ${Counter} > 600
-                {
-                    UI:UpdateConsole["Me.Ship.ArmorPct was invalid for longer than a minute!"]
-                    This.CurrentState:Set["FLEE"]
-                    return
-                }
-            }
-        }
-        while (${aPct} == NULL || ${aPct} <= 0)
-        
-        Counter:Set[0]
-        do
-        {
-            sPct:Set[${Me.Ship.ShieldPct}]
-            if (${sPct} == NULL || ${sPct} <= 0)
-            {
-                wait 20
-                Counter:Inc[20]
-                if ${Counter} > 600
-                {
-                    UI:UpdateConsole["Me.Ship.ShieldPct was invalid for longer than a minute!"]
-                    This.CurrentState:Set["FLEE"]
-                    return
-                }
-            }
-        }
-        while (${sPct} == NULL || ${sPct} <= 0)
+        call Ship.ShieldPct
+        ShieldPct:Set[${Return}]
 
-        Counter:Set[0]
-        do
+        call Ship.ArmorPct
+        ArmorPct:Set[${Return}]
+
+        call Ship.CapacitorPct
+        CapacitorPct:Set[${Return}]
+
+        ;UI:UpdateConsole["DEBUG: Combat ${ArmorPct} ${ShieldPct} ${CapacitorPct}"]
+
+		if (${ArmorPct} == -1 || ${ShieldPct} == -1 || ${CapacitorPct} == -1)
+		{
+			/* If any of these are -1, then the ship member timed out trying to retrieve 
+				a valid value. Don't exit here, let the modules activate even if needless, 
+				we'll be running anyway
+			*/
+			if !${This.Fled}
+			{
+				This.CurrentState:Set["FLEE"]
+			}
+		}
+
+        if ${ArmorPct} < 90
         {
-            cPct:Set[${Me.Ship.CapacitorPct}]
-            if (${cPct} == NULL || ${cPct} <= 0)
-            {
-                wait 20
-                Counter:Inc[20]
-                if ${Counter} > 600
-                {
-                    UI:UpdateConsole["Me.Ship.CapacitorPct was invalid for longer than a minute!"]
-                    This.CurrentState:Set["FLEE"]
-                    return
-                }
-            }
-        }
-        while (${cPct} == NULL || ${cPct} <= 0)
-
-
-        ;;UI:UpdateConsole["DEBUG: Combat ${aPct} ${sPct} ${cPct}"]
-
-        ; Armor Repair
-        ; If you don't have armor repairers this code does nothing.
-        if ${aPct} < 90
-        {
+        	/* Turn on armor reps, if you have them */
             Ship:Activate_Armor_Reps[]
-        }
-                
-        if ${aPct} > 98
+        }                
+        elseif ${ArmorPct} > 98
         {
             Ship:Deactivate_Armor_Reps[]
         }
         
-        ; Shield Boosters
-        ; If you don't have a shield booster this code does nothing.
         ; The code below pulses your booster around the sweet spot
-        if ${sPct} < 70 || ${Config.Combat.AlwaysShieldBoost}
-        {   /* Turn on the shield booster */
+        if ${ShieldPct} < 70 || ${Config.Combat.AlwaysShieldBoost}
+        {   /* Turn on the shield booster, if present */
             Ship:Activate_Shield_Booster[]
         }
-        
-        if ${sPct} > 80 && !${Config.Combat.AlwaysShieldBoost}
-        {   /* Turn off the shield booster */
+        elseif ${ShieldPct} > 82 && !${Config.Combat.AlwaysShieldBoost}
+        {
             Ship:Deactivate_Shield_Booster[]
         }               
         
-        ; Capacitor
-        ; If you don't have a cap booster this code does nothing.
-        if ${cPct} < 20
-        {   /* Turn on the cap booster */
+        if ${CapacitorPct} < 20
+        {   /* Turn on the cap booster, if present */
             Ship:Activate_Cap_Booster[]
         }
-        
-        if ${cPct} > 80
-        {   /* Turn off the cap booster */
+        elseif ${CapacitorPct} > 80
+        {
             Ship:Deactivate_Cap_Booster[]
         }               
                 
@@ -425,9 +322,9 @@ objectdef obj_Combat
         ; If you don't have hardeners this code does nothing.
         if ${Me.GetTargetedBy} > 0
         {
-            Ship:Activate_Hardeners[]       
+            Ship:Activate_Hardeners[]
 
-            /* We have aggro now, yay! */
+            /* We have aggro now, yay! Let's launch some drones */
 			if ${Config.Combat.LaunchCombatDrones} && \
 				${Ship.Drones.DronesInSpace} == 0 && \
 				!${Ship.InWarp}
@@ -437,8 +334,10 @@ objectdef obj_Combat
         }
         else
         {
-            Ship:Deactivate_Hardeners[]     
+            Ship:Deactivate_Hardeners[]
         }
+
+		This:CheckTank[${ArmorPct},${ShieldPct},${CapacitorPct}]
     }
 }
 

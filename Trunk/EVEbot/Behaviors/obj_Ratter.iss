@@ -20,7 +20,9 @@ objectdef obj_Ratter
 	{
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		BotModules:Insert["Ratter"]
-		This.CurrentState:Set["IDLE"]
+		
+		; Startup in fight mode, so that it checks current belt for rats, if we happen to be in one.
+		This.CurrentState:Set["FIGHT"]
 
 		;; call the combat object's init routine
 		This.Combat:Initialize
@@ -129,10 +131,13 @@ objectdef obj_Ratter
 	{
 		if !${Targets.PC} && ${Targets.NPC}
 		{
+			UI:UpdateConsole["PlayerCheck - Fight"]
 			This.CurrentState:Set["FIGHT"]
 		}
 		else
 		{
+			echo !${Targets.PC} && ${Targets.NPC}
+			UI:UpdateConsole["PlayerCheck - Move"]
 			This.CurrentState:Set["MOVE"]
 		}
 	}
