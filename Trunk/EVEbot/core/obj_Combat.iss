@@ -174,7 +174,14 @@ objectdef obj_Combat
 	
 	function Fight()
 	{
-		Ship:Deactivate_Cloak[]
+		Ship:Deactivate_Cloak
+		while ${Ship.IsCloaked}
+		{
+			waitframe
+		}
+		Ship:Offline_Cloak
+		Ship:Online_Salvager
+		
 		; Reload the weapons -if- ammo is below 30% and they arent firing
 		Ship:Reload_Weapons[FALSE]
 

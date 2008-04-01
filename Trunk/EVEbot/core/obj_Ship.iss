@@ -1623,7 +1623,9 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		}
 
 		variable iterator Module
+		variable iterator Salvagers
 
+		This.ModuleList_Salvagers:GetIterator[Salvagers]
 		This.ModuleList_Cloaks:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
@@ -1634,10 +1636,23 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				Module.Value:Click
 			}
 			elseif !${Module.Value.IsOnline} && !${Module.Value.IsGoingOnline} && \
-					${Me.Ship.CapacitorPct} > 97
+				${Me.Ship.CapacitorPct} > 97
 			{
-				UI:UpdateConsole["Putting ${Module.Value.ToItem.Name} online."]
-				Module.Value:PutOnline
+
+				if ${Math.Calc[${Me.Ship.CPUOutput}-${Me.Ship.CPULoad}]} <  ${Module.Value.CPUUsage} || \
+				   ${Math.Calc[${Me.Ship.PowerOutput}-${Me.Ship.PowerLoad}]} <  ${Module.Value.PowergridUsage}
+				{
+					if ${Salvagers:First(exists)} && ${Salvagers.Value.IsOnline} && !${Salvagers.Value.IsGoingOnline}
+					{
+						UI:UpdateConsole["Putting ${Salvagers.Value.ToItem.Name} offline."]
+						Salvagers.Value:PutOffline
+					}
+				}
+				else
+				{
+					UI:UpdateConsole["Putting ${Module.Value.ToItem.Name} online."]
+					Module.Value:PutOnline
+				}
 			}
 		}
 		while ${Module:Next(exists)}
@@ -1660,6 +1675,50 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			{
 				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}"]
 				Module.Value:Click
+			}
+		}
+		while ${Module:Next(exists)}
+	}
+
+	method Offline_Cloak()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		variable iterator Module
+
+		This.ModuleList_Cloaks:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			if ${Module.Value.IsOnline}
+			{
+				UI:UpdateConsole["Putting ${Module.Value.ToItem.Name} offline."]
+				Module.Value:PutOffline
+			}
+		}
+		while ${Module:Next(exists)}
+	}
+
+	method Online_Salvager()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		variable iterator Module
+
+		This.ModuleList_Salvagers:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			if !${Module.Value.IsOnline}
+			{
+				UI:UpdateConsole["Putting ${Module.Value.ToItem.Name} online."]
+				Module.Value:PutOnline
 			}
 		}
 		while ${Module:Next(exists)}
