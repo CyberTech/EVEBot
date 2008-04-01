@@ -1633,6 +1633,12 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
 				Module.Value:Click
 			}
+			elseif !${Module.Value.IsOnline} && !${Module.Value.IsGoingOnline} && \
+					${Me.Ship.CapacitorPct} > 97
+			{
+				UI:UpdateConsole["Putting ${Module.Value.ToItem.Name} online."]
+				Module.Value:PutOnline
+			}
 		}
 		while ${Module:Next(exists)}
 	}
