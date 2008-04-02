@@ -23,7 +23,7 @@ objectdef obj_Ratter
 		
 		; Startup in fight mode, so that it checks current belt for rats, if we happen to be in one.
 		This.CurrentState:Set["FIGHT"]
-
+		Targets:ResetTargets
 		;; call the combat object's init routine
 		This.Combat:Initialize
 		;; set the combat "mode"

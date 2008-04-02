@@ -1635,6 +1635,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
 				Module.Value:Click
 			}
+/*
 			elseif !${Module.Value.IsOnline} && !${Module.Value.IsGoingOnline} && \
 				${Me.Ship.CapacitorPct} > 97
 			{
@@ -1654,6 +1655,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 					Module.Value:PutOnline
 				}
 			}
+*/				
 		}
 		while ${Module:Next(exists)}
 	}
@@ -1682,6 +1684,8 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 
 	method Offline_Cloak()
 	{
+		;TODO
+		return
 		if !${Me.Ship(exists)}
 		{
 			return

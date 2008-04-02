@@ -179,8 +179,8 @@ objectdef obj_Combat
 		{
 			waitframe
 		}
-		Ship:Offline_Cloak
-		Ship:Online_Salvager
+		;Ship:Offline_Cloak
+		;Ship:Online_Salvager
 		
 		; Reload the weapons -if- ammo is below 30% and they arent firing
 		Ship:Reload_Weapons[FALSE]
