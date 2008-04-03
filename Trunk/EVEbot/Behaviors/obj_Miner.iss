@@ -452,7 +452,7 @@ objectdef obj_Miner
 						if (${Ship.Drones.DronesInSpace} > 0 && \
 							${Config.Miner.UseMiningDrones})
 						{
-							call Ship.Drones.ActivateMiningDrones
+							Ship.Drones:ActivateMiningDrones
 						}
 					}
 				}

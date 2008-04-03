@@ -163,7 +163,7 @@ objectdef obj_Drones
 		}
 	}
 	
-	function ActivateMiningDrones()
+	method ActivateMiningDrones()
 	{	
 		if !${This.DronesReady}
 		{
@@ -176,7 +176,7 @@ objectdef obj_Drones
 		}
 	}
 	
-	function SendDrones()
+	method SendDrones()
 	{
 		if !${This.DronesReady}
 		{

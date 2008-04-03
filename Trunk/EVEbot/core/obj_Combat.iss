@@ -188,7 +188,7 @@ objectdef obj_Combat
 		; Activate the weapons, the modules class checks if there's a target (no it doesn't - ct)
 		Ship:Activate_StasisWebs
 		Ship:Activate_Weapons
-		call Ship.Drones.SendDrones
+		Ship.Drones:SendDrones
 	}
     
     function Flee()

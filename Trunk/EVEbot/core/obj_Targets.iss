@@ -100,10 +100,12 @@ objectdef obj_Targets
 		ChainTargets:Insert["Angel Saint"]
 		ChainTargets:Insert["Angel Malakim"]
 		ChainTargets:Insert["Angel Nephilim"]
+		;ChainTargets:Insert["Serpentis Commodore"]	/* 650k */
 		;ChainTargets:Insert["Serpentis Port Admiral"]	/* 800k */
-		;ChainTargets:Insert["Serpentis Rear Admiral"]	/* 950k */
+		ChainTargets:Insert["Serpentis Rear Admiral"]	/* 950k */
 		ChainTargets:Insert["Serpentis Flotilla Admiral"]
 		ChainTargets:Insert["Serpentis Vice Admiral"]
+		ChainTargets:Insert["Serpentis Admiral"]
 		ChainTargets:Insert["Serpentis Admiral"]
 		ChainTargets:Insert["Serpentis Grand Admiral"]
 		ChainTargets:Insert["Serpentis High Admiral"]
