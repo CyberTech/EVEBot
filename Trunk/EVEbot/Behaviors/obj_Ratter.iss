@@ -148,7 +148,7 @@ objectdef obj_Ratter
 		{
 			if ${Targets.SpecialTargetPresent}
 			{
-				UI:UpdateConsole["Special spawn detected!"]
+				UI:UpdateConsole["Special spawn Detected!", TRUE]
 				call Sound.PlayDetectSound
 				; Wait 5 seconds
 				wait 50

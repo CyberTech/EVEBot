@@ -14,6 +14,7 @@ objectdef obj_EVEBotUI
 
 	variable string LogFile
 	variable string StatsLogFile
+	variable string CriticalLogFile
 	variable bool Reloaded = FALSE
 	variable queue:string ConsoleBuffer
 			
@@ -22,8 +23,9 @@ objectdef obj_EVEBotUI
 		This.CharacterName:Set[${Me.Name}]
 		This.MyRace:Set[${Me.ToPilot.Type}]
 		This.MyCorp:Set[${Me.Corporation}]
-		This.LogFile:Set["./config/logs/${Me.Name}-log.txt"]
-		This.StatsLogFile:Set["./config/logs/${Me.Name}-stats.txt"]
+		This.LogFile:Set["./config/logs/${Me.Name}.log"]
+		This.CriticalLogFile:Set["./config/logs/${Me.Name}_Critical.log"]
+		This.StatsLogFile:Set["./config/logs/${Me.Name}_Stats.log"]
 
 		ui -load interface/eveskin/eveskin.xml
 		ui -load interface/evebotgui.xml
@@ -112,7 +114,7 @@ objectdef obj_EVEBotUI
 		return "${Hours}:${Minutes}:${Seconds}"
 	}
 
-	method UpdateConsole(string StatusMessage)
+	method UpdateConsole(string StatusMessage, bool Critical=FALSE)
 	{
 		variable string msg
 		
@@ -124,6 +126,10 @@ objectdef obj_EVEBotUI
 
 				UIElement[StatusConsole@Status@EvEBotOptionsTab@EVEBot]:Echo[${msg}]
 				redirect -append "${This.LogFile}" Echo ${msg}
+				if ${Critical}
+				{
+					redirect -append "${This.CriticalLogFile}" Echo ${msg}
+				}
 			}
 			else
 			{
@@ -133,7 +139,6 @@ objectdef obj_EVEBotUI
 		}
 	}
 
-
 	method UpdateStatStatus(string StatusMessage)
 	{
 		redirect -append "${This.StatsLogFile}" Echo "[${Time.Time24}] ${StatusMessage}"
@@ -142,18 +147,18 @@ objectdef obj_EVEBotUI
 	method InitializeLogs()
 	{
 
-		redirect -append "${This.LogFile}" echo "-------------------------------------------------"
-		redirect -append "${This.LogFile}" echo "  Evebot Session time ${Time.Date} at ${Time.Time24}"
-		redirect -append "${This.LogFile}" echo "  Evebot Session for  ${Me.Name}"
-		redirect -append "${This.LogFile}" echo "  ${Version}"
-		redirect -append "${This.LogFile}" echo "-------------------------------------------------"
+		redirect -append "${This.LogFile}" echo "--------------------------------------------------------------------"
+		redirect -append "${This.LogFile}" echo "  Evebot ${Version} starting on ${Time.Date} at ${Time.Time24}"
+		redirect -append "${This.LogFile}" echo "--------------------------------------------------------------------"
+
+		redirect -append "${This.CriticalLogFile}" echo "--------------------------------------------------------------------"
+		redirect -append "${This.CriticalLogFile}" echo "  Evebot ${Version} starting on ${Time.Date} at ${Time.Time24}"
+		redirect -append "${This.CriticalLogFile}" echo "--------------------------------------------------------------------"
 
 		This:UpdateConsole["Starting EVEBot ${Version}"]
 
-		redirect -append "${This.StatsLogFile}" echo "-------------------------------------------------"
-		redirect -append "${This.StatsLogFile}" echo "  Evebot Session time ${Time.Date} at ${Time.Time24}"
-		redirect -append "${This.StatsLogFile}" echo "  Evebot Session for  ${Me.Name}"
-		redirect -append "${This.StatsLogFile}" echo "  ${Version}"
-		redirect -append "${This.StatsLogFile}" echo "-------------------------------------------------"
+		redirect -append "${This.StatsLogFile}" echo "--------------------------------------------------------------------"
+		redirect -append "${This.StatsLogFile}" echo "  Evebot ${Version} starting on ${Time.Date} at ${Time.Time24}"
+		redirect -append "${This.StatsLogFile}" echo "--------------------------------------------------------------------"
 	}	
 }

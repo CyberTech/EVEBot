@@ -575,7 +575,7 @@ objectdef obj_Configuration_Miner
 				}
 				else
 				{
-					UI:UpdateConsole["ERROR: Unable to retreieve Ship.MiningAmountPerLaser"]
+					UI:UpdateConsole["ERROR: Unable to retrieve Ship.MiningAmountPerLaser"]
 					UI:UpdateConsole["ERROR: Mining Cargo Threshold is set higher than ship capacity: Using cargo capacity"]
 					threshold:Set[${Me.Ship.CargoCapacity}]
 				}
