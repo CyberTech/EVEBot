@@ -1033,7 +1033,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			OriginalDistance:Inc[10]
 
 			CurrentDistance:Set[${Entity[${EntityID}].Distance}]
-			UI:UpdateConsole["Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc[(${CurrentDistance} - ${Distance}) / ${Me.Ship.MaxVelocity}].Ceil} Seconds away"]
+			UI:UpdateConsole["Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc64[(${CurrentDistance} - ${Distance}) / ${Me.Ship.MaxVelocity}].Ceil} Seconds away"]
 
 			This:Activate_AfterBurner[]
 			do
@@ -1048,7 +1048,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 					UI:UpdateConsole["DEBUG: obj_Ship:Approach: ${Entity[${EntityID}].Name} is getting further away!  Is it moving? Are we stuck, or colliding?"]
 				}
 			}
-			while ${CurrentDistance} > ${Math.Calc[${Distance} * 1.05]}
+			while ${CurrentDistance} > ${Math.Calc64[${Distance} * 1.05]}
 			EVE:Execute[CmdStopShip]
 			This:Deactivate_AfterBurner[]
 		}

@@ -497,7 +497,7 @@ objectdef obj_Miner
 
 	member:int TripDuration()
 	{
-		return ${Math.Calc[${Time.Timestamp} - ${This.TripStartTime.Timestamp}]}
+		return ${Math.Calc64[${Time.Timestamp} - ${This.TripStartTime.Timestamp}]}
 	}
 	
 	

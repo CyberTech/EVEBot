@@ -216,7 +216,6 @@ objectdef obj_JetCan
 			return FALSE
 		}
 
-		
 		return ${Math.Calc[${This.CargoCapacity}*0.05]}
 	}
 	

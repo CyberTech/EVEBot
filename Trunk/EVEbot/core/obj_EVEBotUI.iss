@@ -107,9 +107,11 @@ objectdef obj_EVEBotUI
    
 	member Runtime()
 	{
-		variable string Hours = ${Math.Calc[(${Script.RunningTime}/1000/60/60)%60].Int.LeadingZeroes[2]}
-		variable string Minutes = ${Math.Calc[(${Script.RunningTime}/1000/60)%60].Int.LeadingZeroes[2]}
-		variable string Seconds = ${Math.Calc[(${Script.RunningTime}/1000)%60].Int.LeadingZeroes[2]}
+		DeclareVariable RunTime float ${Math.Calc[${Script.RunningTime}/1000/60]}
+		
+		DeclareVariable Hours string ${Math.Calc[(${RunTime}/60)%60].Int.LeadingZeroes[2]}
+		DeclareVariable Minutes string ${Math.Calc[${RunTime}%60].Int.LeadingZeroes[2]}
+		DeclareVariable Seconds string ${Math.Calc[(${RunTime}*60)%60].Int.LeadingZeroes[2]}
 		
 		return "${Hours}:${Minutes}:${Seconds}"
 	}
@@ -147,18 +149,15 @@ objectdef obj_EVEBotUI
 	method InitializeLogs()
 	{
 
-		redirect -append "${This.LogFile}" echo "--------------------------------------------------------------------"
-		redirect -append "${This.LogFile}" echo "  Evebot ${Version} starting on ${Time.Date} at ${Time.Time24}"
-		redirect -append "${This.LogFile}" echo "--------------------------------------------------------------------"
+		redirect -append "${This.LogFile}" echo "--------------------------------------------------------------------------------------"
+		redirect -append "${This.LogFile}" echo "** Evebot ${Version} starting on ${Time.Date} at ${Time.Time24}"
 
-		redirect -append "${This.CriticalLogFile}" echo "--------------------------------------------------------------------"
-		redirect -append "${This.CriticalLogFile}" echo "  Evebot ${Version} starting on ${Time.Date} at ${Time.Time24}"
-		redirect -append "${This.CriticalLogFile}" echo "--------------------------------------------------------------------"
+		redirect -append "${This.CriticalLogFile}" echo "--------------------------------------------------------------------------------------"
+		redirect -append "${This.CriticalLogFile}" echo "** Evebot ${Version} starting on ${Time.Date} at ${Time.Time24}"
 
 		This:UpdateConsole["Starting EVEBot ${Version}"]
 
-		redirect -append "${This.StatsLogFile}" echo "--------------------------------------------------------------------"
-		redirect -append "${This.StatsLogFile}" echo "  Evebot ${Version} starting on ${Time.Date} at ${Time.Time24}"
-		redirect -append "${This.StatsLogFile}" echo "--------------------------------------------------------------------"
+		redirect -append "${This.StatsLogFile}" echo "--------------------------------------------------------------------------------------"
+		redirect -append "${This.StatsLogFile}" echo "** Evebot ${Version} starting on ${Time.Date} at ${Time.Time24}"
 	}	
 }
