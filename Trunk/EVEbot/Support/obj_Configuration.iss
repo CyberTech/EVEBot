@@ -109,7 +109,7 @@ objectdef obj_Configuration_Common
 			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
 		}
-		UI:UpdateConsole["obj_Configuration_Common: Initialized"]
+		UI:UpdateConsole["obj_Configuration_Common: Initialized", LOG_MINOR]
 	}
 	
 	member:settingsetref CommonRef()

@@ -88,7 +88,7 @@ objectdef obj_Combat
 	{
 		This.CurrentState:Set["IDLE"]
 		This.Fled:Set[FALSE]
-		UI:UpdateConsole["obj_Combat: Initialized"]
+		UI:UpdateConsole["obj_Combat: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -258,10 +258,10 @@ objectdef obj_Combat
 				${ShieldPct} < ${Config.Combat.MinimumShieldPct} || \
 				${CapacitorPct} < ${Config.Combat.MinimumCapPct})
 		{
-			UI:UpdateConsole["Armor is at ${ArmorPct.Int}%: ${Me.Ship.Armor}/${Me.Ship.MaxArmor}"]
-			UI:UpdateConsole["Shield is at ${ShieldPct.Int}%: ${Me.Ship.Shield}/${Me.Ship.MaxShield}"]
-			UI:UpdateConsole["Cap is at ${CapacitorPct.Int}%: ${Me.Ship.Capacitor}/${Me.Ship.MaxCapacitor}"]
-			UI:UpdateConsole["Fleeing due to defensive status"]
+			UI:UpdateConsole["Armor is at ${ArmorPct.Int}%: ${Me.Ship.Armor}/${Me.Ship.MaxArmor}", LOG_CRITICAL]
+			UI:UpdateConsole["Shield is at ${ShieldPct.Int}%: ${Me.Ship.Shield}/${Me.Ship.MaxShield}", LOG_CRITICAL]
+			UI:UpdateConsole["Cap is at ${CapacitorPct.Int}%: ${Me.Ship.Capacitor}/${Me.Ship.MaxCapacitor}", LOG_CRITICAL]
+			UI:UpdateConsole["Fleeing due to defensive status", LOG_CRITICAL]
 			This.CurrentState:Set["FLEE"]
 		}
 	}

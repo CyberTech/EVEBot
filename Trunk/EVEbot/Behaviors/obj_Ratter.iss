@@ -29,7 +29,7 @@ objectdef obj_Ratter
 		;; set the combat "mode"
 		This.Combat:SetMode["AGGRESSIVE"]
 
-		UI:UpdateConsole["obj_Ratter: Initialized"]
+		UI:UpdateConsole["obj_Ratter: Initialized", LOG_MINOR]
 	}
 
 	
@@ -148,7 +148,7 @@ objectdef obj_Ratter
 		{
 			if ${Targets.SpecialTargetPresent}
 			{
-				UI:UpdateConsole["Special spawn Detected!", TRUE]
+				UI:UpdateConsole["Special spawn Detected!", LOG_CRITICAL]
 				call Sound.PlayDetectSound
 				; Wait 5 seconds
 				wait 50

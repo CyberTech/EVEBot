@@ -10,7 +10,7 @@ objectdef obj_Skills
 	
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_Skills: Initialized"]
+		UI:UpdateConsole["obj_Skills: Initialized", LOG_MINOR]
 		
 		if ${This.SkillFile:Open[readonly](exists)}
 		{
@@ -159,7 +159,7 @@ objectdef obj_Skills
 			temp:Set[${SkillFile.Read}]
 		}
 
-		UI:UpdateConsole["Error: None of the skills specified were found (or all were already to requested level)"]
+		UI:UpdateConsole["Error: None of the skills specified were found (or all were already to requested level)", LOG_CRITICAL]
 		SkillFile:Close
 		return "None"
 	}

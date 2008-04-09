@@ -40,7 +40,7 @@ objectdef obj_Asteroids
 	
 	method Initialize()
 	{	
-		UI:UpdateConsole["obj_Asteroids: Initialized"]
+		UI:UpdateConsole["obj_Asteroids: Initialized", LOG_MINOR]
 	}
 		
 	; Checks the belt name against the empty belt list.
@@ -106,10 +106,8 @@ objectdef obj_Asteroids
 				continue
 			}
 
-			UI:UpdateConsole["Warping to Bookmark ${Label}"]
-			call Ship.WarpPrepare
-			BeltBookMarkList[${RandomBelt}]:WarpTo
-			call Ship.WarpWait
+			call Ship.WarpToBookMark ${BeltBookMarkList[${RandomBelt}].ID}
+
 			This.BeltArrivalTime:Set[${Time.Timestamp}]
 			This.LastBookMarkIndex:Set[${RandomBelt}]
 			This.UsingBookMarks:Set[TRUE]
@@ -214,7 +212,7 @@ objectdef obj_Asteroids
 				return
 			}
 
-			UI:UpdateConsole["ERROR: oMining:Mine --> No asteroid belts in the area..."]
+			UI:UpdateConsole["ERROR: OBJ_Asteroids:MoveToField: No asteroid belts in the area...", LOG_CRITICAL]
 			EVEBot.ReturnToStation:Set[TRUE]
 			return
 		}

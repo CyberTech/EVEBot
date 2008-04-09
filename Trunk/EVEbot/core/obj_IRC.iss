@@ -26,7 +26,7 @@ objectdef obj_IRC
         Event[IRC_RemoveChannelBan]:AttachAtom[This:IRC_RemoveChannelBan]
         Event[IRC_UnhandledEvent]:AttachAtom[This:IRC_UnhandledEvent]
 
-		UI:UpdateConsole["obj_IRC: Initialized"]
+		UI:UpdateConsole["obj_IRC: Initialized", LOG_MINOR]
 #endif
 	}
 	

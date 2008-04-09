@@ -20,7 +20,7 @@ objectdef obj_Courier
 
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_Courier: Initialized"]
+		UI:UpdateConsole["obj_Courier: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()

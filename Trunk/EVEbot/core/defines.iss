@@ -27,6 +27,11 @@ variable string Version = "${APP_NAME} ${APP_VERSION} Revision ${SVN_REVISION.To
 ;#define USE_ISXIRC 1
 #define USE_ISXIRC 0
 
+#define LOG_MINOR 1
+#define LOG_STANDARD 2
+#define LOG_CRITICAL 3
+#define LOG_DEBUG 4
+
 #define WAIT_CARGO_WINDOW 15
 #define WAIT_UNDOCK 130
 

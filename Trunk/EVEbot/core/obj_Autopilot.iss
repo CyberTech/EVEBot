@@ -15,7 +15,7 @@ objectdef obj_Autopilot
 {
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_Autopilot: Initialized"]
+		UI:UpdateConsole["obj_Autopilot: Initialized", LOG_MINOR]
 	}
 
 	/* 	

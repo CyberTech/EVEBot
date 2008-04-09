@@ -5,14 +5,14 @@ objectdef obj_Belts
 
 	method Initialize()
 	{		
-		UI:UpdateConsole["obj_Belts: Initialized"]
+		UI:UpdateConsole["obj_Belts: Initialized", LOG_MINOR]
 	}
 	
 	method ResetBeltList()
 	{
 		EVE:DoGetEntities[beltIndex, GroupID, GROUP_ASTEROIDBELT]
 		beltIndex:GetIterator[beltIterator]	
-		UI:UpdateConsole["obj_Belts: ResetBeltList found ${beltIndex.Used} belts in this system."]
+		UI:UpdateConsole["obj_Belts: ResetBeltList found ${beltIndex.Used} belts in this system.", LOG_DEBUG]
 	}
 	
     member:bool IsAtBelt()

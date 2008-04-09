@@ -14,7 +14,7 @@ objectdef obj_Agents
 	
     method Initialize()
     {
-        UI:UpdateConsole["obj_Agents: Initialized"]
+        UI:UpdateConsole["obj_Agents: Initialized", LOG_MINOR]
     }
 
 	method Shutdown()
@@ -26,7 +26,7 @@ objectdef obj_Agents
 	    This.AgentID:Set[${Agent[${name}].ID}]
 	    if (${This.AgentID} <= 0)
 	    {
-	        UI:UpdateConsole["obj_Agents: ERROR!  Cannot get Agent ID for ${name}."]
+	        UI:UpdateConsole["obj_Agents: ERROR!  Cannot get Agent ID for ${name}.", LOG_CRITICAL]
 			This.AgentName:Set[""]
 	    }
 		else

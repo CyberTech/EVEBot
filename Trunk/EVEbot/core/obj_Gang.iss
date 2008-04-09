@@ -21,7 +21,7 @@ objectdef obj_Fleet
 	{
 		FleetMemberCount:Set[${Me.GetFleet[FleetMembers]}]
 		;echo DEBUG: Populating fleet member list:: ${FleetMemberCount} members total
-		UI:UpdateConsole["obj_Fleet: Initialized"]
+		UI:UpdateConsole["obj_Fleet: Initialized", LOG_MINOR]
 		
 		/* BEGIN TEST CODE 
 		variable int i = 1
@@ -82,7 +82,7 @@ objectdef obj_Fleet
 		return ${ReturnValue}
 	}
 
-	method WarpToFleetMember( int charID )
+	function WarpToFleetMember( int charID )
 	{
 		This:UpdateFleetList[]
 		
@@ -91,7 +91,17 @@ objectdef obj_Fleet
 		{ 
 			if ${FleetMembers.Get[${i}].CharID} == ${charID}
 			{
-				FleetMembers.Get[${i}]:WarpTo
+				UI:UpdateConsole["Warping to Fleet Member: ${FleetMembers.Get[${i}].ToPilot.Name}"]
+				while !${Ship.WarpEntered}
+				{
+					FleetMembers.Get[${i}]:WarpTo
+					wait 10
+				}
+				call Ship.WarpWait
+				if ${Return} == 2
+				{
+					return
+				}
 				break
 			}
 		}

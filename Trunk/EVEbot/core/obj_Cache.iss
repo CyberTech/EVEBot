@@ -17,7 +17,7 @@ objectdef obj_Cache
 	method Initialize()
 	{
 		Event[OnFrame]:AttachAtom[This:Pulse]
-		UI:UpdateConsole["obj_Cache: Initialized"]
+		UI:UpdateConsole["obj_Cache: Initialized", LOG_MINOR]
 	}
 	
 	method Shutdown()
@@ -70,7 +70,7 @@ objectdef obj_ShipCache inherits obj_Cache
 		This:RegisterMember["ArmorPct"]
 		This:RegisterMember["ShieldPct"]
 		
-		UI:UpdateConsole["obj_ShipCache: Initialized"]
+		UI:UpdateConsole["obj_ShipCache: Initialized", LOG_MINOR]
 	}
 	
 	method Shutdown()

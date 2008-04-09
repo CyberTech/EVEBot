@@ -15,7 +15,7 @@ objectdef obj_Assets
     method Initialize()
     {
         IgnoreTheseStations:Clear[]
-        UI:UpdateConsole["obj_Assets: Initialized"]
+        UI:UpdateConsole["obj_Assets: Initialized", LOG_MINOR]
     }
     
     method UpdateList()

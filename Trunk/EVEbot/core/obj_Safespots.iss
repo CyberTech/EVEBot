@@ -5,7 +5,7 @@ objectdef obj_Safespots
 
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_Safespots: Initialized"]
+		UI:UpdateConsole["obj_Safespots: Initialized", LOG_MINOR]
 	}
 
 	method ResetSafeSpotList()

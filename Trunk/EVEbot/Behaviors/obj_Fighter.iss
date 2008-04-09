@@ -8,7 +8,7 @@ objectdef obj_Fighter
 {
 	method Initialize()
 	{			
-		UI:UpdateConsole["obj_Fighter: Initialized"]
+		UI:UpdateConsole["obj_Fighter: Initialized", LOG_MINOR]
 	}
 	
 	method Shutdown()
@@ -38,7 +38,7 @@ objectdef obj_CombatFighter inherits obj_Fighter
 	
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_CombatFighter: Initialized"]
+		UI:UpdateConsole["obj_CombatFighter: Initialized", LOG_MINOR]
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		BotModules:Insert["Fighter"]
 	}

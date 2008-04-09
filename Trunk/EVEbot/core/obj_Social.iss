@@ -46,7 +46,7 @@ objectdef obj_Social
 		Event[EVE_OnChannelMessage]:AttachAtom[This:OnChannelMessage]
 		EVE:ActivateChannelMessageEvents
 		
-		UI:UpdateConsole["obj_Social: Initialized"]
+		UI:UpdateConsole["obj_Social: Initialized", LOG_MINOR]
 	}
 	
 	method Shutdown()
@@ -155,7 +155,7 @@ objectdef obj_Social
 			if !${pilotSafe}
 			{	
 				/* pilot failed alliance and corporation check, get out of town!! */
-				UI:UpdateConsole["Alert: Non-Whitelisted Pilot Detected: ${PilotIterator.Value.Name} (AllianceID: ${PilotIterator.Value.AllianceID}) (CorpID: ${PilotIterator.Value.CorporationID})"]
+				UI:UpdateConsole["Alert: Non-Whitelisted Pilot Detected: ${PilotIterator.Value.Name} (AllianceID: ${PilotIterator.Value.AllianceID}) (CorpID: ${PilotIterator.Value.CorporationID})", LOG_CRITICAL]
 				SystemSafe:Set[${pilotSafe}]
 				return
 			}			
@@ -211,7 +211,7 @@ objectdef obj_Social
 			if !${pilotSafe}
 			{	
 				/* pilot failed alliance and corporation check, get out of town!! */
-				UI:UpdateConsole["obj_Social: Blacklisted Pilot in local: ${PilotIterator.Value.Name}!"]
+				UI:UpdateConsole["obj_Social: Blacklisted Pilot in local: ${PilotIterator.Value.Name}!", LOG_CRITICAL]
 				SystemSafe:Set[${pilotSafe}]
 				return
 			}			
@@ -357,7 +357,7 @@ objectdef obj_Social
 					${EVE.Standing[${PilotIterator.Value.AllianceID},${Me.AllianceID}]} < ${Standing}
 				{
 					/* Yep, I'm laughing right now as well -- CyberTech */
-					UI:UpdateConsole["obj_Social: StandingDetection in local: ${PilotIterator.Value.Name} - ${PilotIterator.Value.Standing}!"]
+					UI:UpdateConsole["obj_Social: StandingDetection in local: ${PilotIterator.Value.Name} - ${PilotIterator.Value.Standing}!", LOG_CRITICAL]
 					return TRUE
 				}
 			}

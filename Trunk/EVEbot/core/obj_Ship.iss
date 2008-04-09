@@ -35,7 +35,8 @@ objectdef obj_Ship
 	variable float m_MaxTargetRange
 	variable bool  m_WaitForCapRecharge = FALSE
 	variable int   m_CargoSanityCounter = 0
-
+	variable bool InteruptWarpWait = FALSE
+	
 	variable iterator ModulesIterator
 
 	variable obj_Drones Drones
@@ -47,7 +48,7 @@ objectdef obj_Ship
 
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		This:CalculateMaxLockedTargets
-		UI:UpdateConsole["obj_Ship: Initialized"]
+		UI:UpdateConsole["obj_Ship: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -128,14 +129,14 @@ objectdef obj_Ship
 		/* TODO - These functions are not reliable. Redo per Looped armor/shield test in obj_Miner.Mine() (then consolidate code) -- CyberTech */
 		if ${Me.Ship.CapacitorPct} < 10
 		{
-			UI:UpdateConsole["Capacitor low!  Run for cover!"]
+			UI:UpdateConsole["Capacitor low!  Run for cover!", LOG_CRITICAL]
 			m_WaitForCapRecharge:Set[TRUE]
 			return FALSE
 		}
 
 		if ${Me.Ship.ArmorPct} < 25
 		{
-			UI:UpdateConsole["Armor low!  Run for cover!"]
+			UI:UpdateConsole["Armor low!  Run for cover!", LOG_CRITICAL]
 			return FALSE
 		}
 
@@ -174,7 +175,7 @@ objectdef obj_Ship
 							;UI:UpdateConsole["Ammo: Max = ${aWeaponIterator.Value.MaxCharges}"]
 							if ${anItemIterator.Value.Quantity} < ${Math.Calc[${aWeaponIterator.Value.MaxCharges}*6]}
 							{
-								;UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable: FALSE!"]
+								UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable: FALSE!", LOG_CRITICAL]
 								bAmmoAvailable:Set[FALSE]
 							}
 						}
@@ -183,7 +184,7 @@ objectdef obj_Ship
 				}
 				else
 				{
-					;UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable: FALSE!"]
+					UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable: FALSE!", LOG_CRITICAL]
 					bAmmoAvailable:Set[FALSE]
 				}
 			}
@@ -280,7 +281,7 @@ objectdef obj_Ship
 		if ${Me.InStation}
 		{
 			; GetModules cannot be used in station as of 07/15/2007
-			UI:UpdateConsole["DEBUG: obj_Ship:UpdateModuleList called while in station"]
+			UI:UpdateConsole["DEBUG: obj_Ship:UpdateModuleList called while in station", LOG_DEBUG]
 			return
 		}
 
@@ -307,14 +308,14 @@ objectdef obj_Ship
 
 		if !${This.ModuleList.Used} && ${Me.Ship.HighSlots} > 0
 		{
-			UI:UpdateConsole["ERROR: obj_Ship:UpdateModuleList - No modules found. Pausing - If this ship has slots, you must have at least one module equipped, of any type."]
+			UI:UpdateConsole["ERROR: obj_Ship:UpdateModuleList - No modules found. Pausing - If this ship has slots, you must have at least one module equipped, of any type.", LOG_CRITICAL]
 			EVEBot:Pause
 			return
 		}
 
 		variable iterator Module
 
-		UI:UpdateConsole["Module Inventory:"]
+		UI:UpdateConsole["Module Inventory:", LOG_MINOR]
 		This.ModuleList:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
@@ -403,106 +404,106 @@ objectdef obj_Ship
 		}
 		while ${Module:Next(exists)}
 
-		UI:UpdateConsole["Weapons:"]
+		UI:UpdateConsole["Weapons:", LOG_MINOR]
 		This.ModuleList_Weapon:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
-			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"]
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR]
 		}
 		while ${Module:Next(exists)}
 
-		UI:UpdateConsole["Active Resistance Modules:"]
+		UI:UpdateConsole["Active Resistance Modules:", LOG_MINOR]
 		This.ModuleList_ActiveResists:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
-			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"]
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR]
 		}
 		while ${Module:Next(exists)}
 
-		UI:UpdateConsole["Passive Modules:"]
+		UI:UpdateConsole["Passive Modules:", LOG_MINOR]
 		This.ModuleList_Passive:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
-			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"]
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR]
 		}
 		while ${Module:Next(exists)}
 
-		UI:UpdateConsole["Mining Modules:"]
+		UI:UpdateConsole["Mining Modules:", LOG_MINOR]
 		This.ModuleList_MiningLaser:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
-			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"]
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR]
 		}
 		while ${Module:Next(exists)}
 
-		UI:UpdateConsole["Armor Repair Modules:"]
+		UI:UpdateConsole["Armor Repair Modules:", LOG_MINOR]
 		This.ModuleList_Repair_Armor:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
-			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"]
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR]
 		}
 		while ${Module:Next(exists)}
 
-		UI:UpdateConsole["Shield Regen Modules:"]
+		UI:UpdateConsole["Shield Regen Modules:", LOG_MINOR]
 		This.ModuleList_Regen_Shield:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
-			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"]
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR]
 		}
 		while ${Module:Next(exists)}
 
-		UI:UpdateConsole["AfterBurner Modules:"]
+		UI:UpdateConsole["AfterBurner Modules:", LOG_MINOR]
 		This.ModuleList_AB_MWD:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
-			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"]
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR]
 		}
 		while ${Module:Next(exists)}
 
 		if ${This.ModuleList_AB_MWD.Used} > 1
 		{
-			UI:UpdateConsole["Warning: More than 1 Afterburner or MWD was detected, I will only use the first one."]
+			UI:UpdateConsole["Warning: More than 1 Afterburner or MWD was detected, I will only use the first one.", LOG_MINOR]
 		}
 
-		UI:UpdateConsole["Salvaging Modules:"]
+		UI:UpdateConsole["Salvaging Modules:", LOG_MINOR]
 		This.ModuleList_Salvagers:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
-			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"]
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR]
 		}
 		while ${Module:Next(exists)}
 
-		UI:UpdateConsole["Tractor Beam Modules:"]
+		UI:UpdateConsole["Tractor Beam Modules:", LOG_MINOR]
 		This.ModuleList_TractorBeams:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
-			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"]
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR]
 		}
 		while ${Module:Next(exists)}
 
-		UI:UpdateConsole["Cloaking Device Modules:"]
+		UI:UpdateConsole["Cloaking Device Modules:", LOG_MINOR]
 		This.ModuleList_Cloaks:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
-			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"]
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR]
 		}
 		while ${Module:Next(exists)}
-		UI:UpdateConsole["Stasis Web Modules:"]
+		UI:UpdateConsole["Stasis Web Modules:", LOG_MINOR]
 		This.ModuleList_StasisWeb:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
-			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"]
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR]
 		}
 		while ${Module:Next(exists)}
 	}
@@ -525,7 +526,7 @@ objectdef obj_Ship
             if ${Counter} > 30
             {
                Percent:Set[-1]
-               UI:UpdateConsole["ob_Ship: ArmorPct was invalid for longer than 30 seconds"]
+               UI:UpdateConsole["ob_Ship: ArmorPct was invalid for longer than 30 seconds", LOG_CRITICAL]
                break
             }
             Counter:Inc[1]
@@ -554,7 +555,7 @@ objectdef obj_Ship
                 if ${Counter} > 30
                 {
                 	Percent:Set[-1]
-                    UI:UpdateConsole["ob_Ship: ShieldPct was invalid for longer than 30 seconds"]
+                    UI:UpdateConsole["ob_Ship: ShieldPct was invalid for longer than 30 seconds", LOG_CRITICAL]
                     break
                 }
                 Counter:Inc[1]
@@ -583,7 +584,7 @@ objectdef obj_Ship
                 if ${Counter} > 30
                 {
                 	Percent:Set[-1]
-                    UI:UpdateConsole["ob_Ship: CapacitorPct was invalid for longer than 30 seconds"]
+                    UI:UpdateConsole["ob_Ship: CapacitorPct was invalid for longer than 30 seconds", LOG_CRITICAL]
                     break
                 }
                 Counter:Inc[1]
@@ -781,14 +782,13 @@ objectdef obj_Ship
 
 		if ${Target:First(exists)}
 		{
-			UI:ConsoleUpdate["Unlocking all targets"]
+			UI:ConsoleUpdate["Unlocking all targets", LOG_MINOR]
+			do
+			{
+				Target.Value:UnlockTarget
+			}
+			while ${Target:Next(exists)}
 		}
-
-		do
-		{
-			Target.Value:UnlockTarget
-		}
-		while ${Target:Next(exists)}
 	}
 
 	method CalculateMaxLockedTargets()
@@ -1033,7 +1033,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			OriginalDistance:Inc[10]
 
 			CurrentDistance:Set[${Entity[${EntityID}].Distance}]
-			UI:UpdateConsole["Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc64[(${CurrentDistance} - ${Distance}) / ${Me.Ship.MaxVelocity}].Ceil} Seconds away"]
+			UI:UpdateConsole["Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc[(${CurrentDistance} - ${Distance}) / ${Me.Ship.MaxVelocity}].Ceil} Seconds away"]
 
 			This:Activate_AfterBurner[]
 			do
@@ -1045,7 +1045,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				if ${Entity[${EntityID}](exists)} && \
 					${OriginalDistance} < ${CurrentDistance}
 				{
-					UI:UpdateConsole["DEBUG: obj_Ship:Approach: ${Entity[${EntityID}].Name} is getting further away!  Is it moving? Are we stuck, or colliding?"]
+					UI:UpdateConsole["DEBUG: obj_Ship:Approach: ${Entity[${EntityID}].Name} is getting further away!  Is it moving? Are we stuck, or colliding?", LOG_MINOR]
 				}
 			}
 			while ${CurrentDistance} > ${Math.Calc64[${Distance} * 1.05]}
@@ -1064,8 +1064,8 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			}
 			else
 			{
-				UI:UpdateConsole["\${EVEWindow[MyShipCargo](exists)} == ${EVEWindow[MyShipCargo](exists)}"]
-				UI:UpdateConsole["\${EVEWindow[MyShipCargo].Caption(exists)} == ${EVEWindow[MyShipCargo].Caption(exists)}"]
+				UI:UpdateConsole["\${EVEWindow[MyShipCargo](exists)} == ${EVEWindow[MyShipCargo](exists)}", LOG_DEBUG]
+				UI:UpdateConsole["\${EVEWindow[MyShipCargo].Caption(exists)} == ${EVEWindow[MyShipCargo].Caption(exists)}", LOG_DEBUG]
 			}
 		}
 		return FALSE
@@ -1087,11 +1087,11 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 
 			LoopCheck:Set[0]
 			CaptionCount:Set[${EVEWindow[MyShipCargo].Caption.Token[2,"["].Token[1,"]"]}]
-			;UI:UpdateConsole["obj_Ship: Waiting for cargo to load: CaptionCount: ${CaptionCount}"]
+			;UI:UpdateConsole["obj_Ship: Waiting for cargo to load: CaptionCount: ${CaptionCount}", LOG_DEBUG]
 			while (${CaptionCount} > ${Me.Ship.GetCargo} && \
 					${LoopCheck} < 10)
 			{
-				UI:UpdateConsole["obj_Ship: Waiting for cargo to load...(${Loopcheck})"]
+				UI:UpdateConsole["obj_Ship: Waiting for cargo to load...(${Loopcheck})", LOG_MINOR]
 				while !${This.IsCargoOpen}
 				{
 					wait 0.5
@@ -1136,8 +1136,16 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		while ${Entity[${Id}].Distance} >= WARP_RANGE
 		{
 			UI:UpdateConsole["Warping to ${Entity[${Id}].Name}"]
-			Entity[${Id}]:WarpTo
+			while !${This.WarpEntered}
+			{
+				Entity[${Id}]:WarpTo
+				wait 10
+			}
 			call This.WarpWait
+			if ${Return} == 2
+			{
+				return
+			}
 		}
 	}
 
@@ -1145,7 +1153,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 	{
 		if (!${EVE.Bookmark[${DestinationBookmarkLabel}](exists)})
 		{
-			UI:UpdateConsole["ERROR: Bookmark: '${DestinationBookmarkLabel}' does not exist!"]
+			UI:UpdateConsole["ERROR: Bookmark: '${DestinationBookmarkLabel}' does not exist!", LOG_CRITICAL]
 			return
 		}
 
@@ -1220,7 +1228,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 					switch ${GroupID}
 					{
 						case GROUP_SUN
-							UI:UpdateConsole["obj_Ship:WarpToBookMark - Sun/Star Entity Bookmarks are not supported"]
+							UI:UpdateConsole["obj_Ship:WarpToBookMark - Sun/Star Entity Bookmarks are not supported", LOG_CRITICAL]
 							return
 							break
 						case GROUP_STARGATE
@@ -1253,12 +1261,20 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 						or, more likely, we're not actually warping anywhere.  So we'll return and let the bot do something
 						useful with itself -- CyberTech
 					*/
-					UI:UpdateConsole["obj_Ship:WarpToBookMark - Failed to arrive at bookmark after ${WarpCounter} warps"]
+					UI:UpdateConsole["obj_Ship:WarpToBookMark - Failed to arrive at bookmark after ${WarpCounter} warps", LOG_CRITICAL]
 					return
 				}
 				UI:UpdateConsole["Warping to bookmark ${Label} (Attempt #${WarpCounter})"]
-				DestinationBookmark:WarpTo
+				while !${This.WarpEntered}
+				{
+					DestinationBookmark:WarpTo
+					wait 10
+				}
 				call This.WarpWait
+				if ${Return} == 2
+				{
+					return
+				}
 				WarpCounter:Inc
 			}
 		}
@@ -1271,12 +1287,20 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			{
 				if ${WarpCounter} > 10
 				{
-					UI:UpdateConsole["obj_Ship:WarpToBookMark - Failed to arrive at bookmark after ${WarpCounter} warps"]
+					UI:UpdateConsole["obj_Ship:WarpToBookMark - Failed to arrive at bookmark after ${WarpCounter} warps", LOG_CRITICAL]
 					return
 				}
 				UI:UpdateConsole["Warping to bookmark ${Label} (Attempt #${WarpCounter})"]
-				DestinationBookmark:WarpTo
+				while !${This.WarpEntered}
+				{
+					DestinationBookmark:WarpTo
+					wait 10
+				}
 				call This.WarpWait
+				if ${Return} == 2
+				{
+					return
+				}
 				WarpCounter:Inc
 			}
 		}
@@ -1290,12 +1314,20 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				;echo Bookmark Distance: ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${DestinationBookmark.X}, ${DestinationBookmark.Y}, ${DestinationBookmark.Z}]} > WARP_RANGE
 				if ${WarpCounter} > 10
 				{
-					UI:UpdateConsole["obj_Ship:WarpToBookMark - Failed to arrive at bookmark after ${WarpCounter} warps"]
+					UI:UpdateConsole["obj_Ship:WarpToBookMark - Failed to arrive at bookmark after ${WarpCounter} warps", LOG_CRITICAL]
 					return
 				}
 				UI:UpdateConsole["Warping to bookmark ${Label} (Attempt #${WarpCounter})"]
-				DestinationBookmark:WarpTo
+				while !${This.WarpEntered}
+				{
+					DestinationBookmark:WarpTo
+					wait 10
+				}
 				call This.WarpWait
+				if ${Return} == 2
+				{
+					return
+				}
 				WarpCounter:Inc
 			}
 		}
@@ -1317,10 +1349,10 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 					{
 					   wait 20
 					   Counter:Inc[1]
-					   UI:UpdateConsole["Tick ${Counter}"]
+					   UI:UpdateConsole["Tick ${Counter}", LOG_MINOR]
 					   if ${Counter} > 5
 					   {
-					      UI:UpdateConsole["Retrying to dock with destination station"]
+					      UI:UpdateConsole["Retrying dock with destination station"]
 					      ;DestinationBookmark.ToEntity:Dock
 					      Entity[CategoryID,3]:Dock
 					      Counter:Set[0]
@@ -1338,7 +1370,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			}
 		}
 		wait 20
-		;UI:UpdateConsole["obj_Ship:WarpToBookMark: Exiting"]
+		;UI:UpdateConsole["obj_Ship:WarpToBookMark: Exiting", LOG_DEBUG]
 	}
 
 	function WarpPrepare()
@@ -1346,7 +1378,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		UI:UpdateConsole["Preparing for warp"]
 		if ${This.Drones.WaitingForDrones}
 		{
-			UI:UpdateConsole["Drone deployment already in process, delaying warp"]
+			UI:UpdateConsole["Drone deployment already in process, delaying warp", LOG_CRITICAL]
 			do
 			{
 				waitframe
@@ -1371,23 +1403,36 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		return FALSE
 	}
 
+	member:bool WarpEntered()
+	{
+		variable bool Warped = FALSE
+
+		if ${This.InWarp}
+		{
+			Warped:Set[TRUE]
+			UI:UpdateConsole["Warping..."]
+		}
+		return ${Warped}		
+	}
+	
 	function WarpWait()
 	{
 		variable bool Warped = FALSE
-		; TODO - add check for InWarp== true at least once, to validate we did actually warp.
-		wait 150
-		if ${Me.ToEntity.Mode} == 3
-		{
-			UI:UpdateConsole["Warping..."]
-		}
+		
+		; We reload weapons here, because we know we're in warp, so they're deactivated.
 		This:Reload_Weapons[TRUE]
-		while ${Me.ToEntity.Mode} == 3
+		while ${This.InWarp}
 		{
 			Warped:Set[TRUE]
-			wait 20
+			wait 10
+			if ${This.InteruptWarpWait}
+			{
+				UI:UpdateConsole["Leaving WarpWait due to emergency condition", LOG_CRITICAL]
+				This.InteruptWarpWait:Set[False]
+				return 2
+			}
 		}
 		UI:UpdateConsole["Dropped out of warp"]
-		wait 20
 		return ${Warped}
 	}
 
@@ -1453,7 +1498,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			if ${Module.Value.IsActive} && ${Module.Value.IsOnline} && !${Module.Value.IsDeactivating}
 			{
-				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}"]
+				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}", LOG_MINOR]
 				Module.Value:Click
 			}
 		}
@@ -1473,7 +1518,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			if ${Module.Value.IsActive} && ${Module.Value.IsOnline} && !${Module.Value.IsDeactivating}
 			{
-				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}"]
+				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}", LOG_MINOR]
 				Module.Value:Click
 			}
 		}
@@ -1516,7 +1561,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			if ${Module.Value.IsActive} && ${Module.Value.IsOnline} && !${Module.Value.IsDeactivating}
 			{
-				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}"]
+				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}", LOG_MINOR]
 				Module.Value:Click
 			}
 		}
@@ -1560,7 +1605,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			if ${Module.Value.IsActive} && ${Module.Value.IsOnline} && !${Module.Value.IsDeactivating}
 			{
-				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}"]
+				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}", LOG_MINOR]
 				Module.Value:Click
 			}
 		}
@@ -1608,7 +1653,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			if ${Module.Value.IsActive} && ${Module.Value.IsOnline} && !${Module.Value.IsDeactivating}
 			{
-				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}"]
+				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}", LOG_MINOR]
 				Module.Value:Click
 			}
 		}
@@ -1675,7 +1720,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			if ${Module.Value.IsActive} && ${Module.Value.IsOnline} && !${Module.Value.IsDeactivating}
 			{
-				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}"]
+				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}", LOG_MINOR]
 				Module.Value:Click
 			}
 		}
@@ -1744,7 +1789,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			UI:UpdateConsole["Locking ${Entity[${TargetID}].Name}: ${EVEBot.MetersToKM_Str[${Entity[${TargetID}].Distance}]}"]
 			Entity[${TargetID}]:LockTarget
-			wait 30
+			waitframe
 		}
 	}
 
@@ -1857,7 +1902,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			if (${Module.Value.IsActive} || ${Module.Value.IsWaitingForActiveTarget}) && ${Module.Value.IsOnline} && !${Module.Value.IsDeactivating}
 			{
-				;;UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}"]
+				;;UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}", LOG_MINOR]
 				Module.Value:Click
 			}
 		}

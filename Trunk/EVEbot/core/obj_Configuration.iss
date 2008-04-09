@@ -32,7 +32,7 @@ objectdef obj_Configuration_BaseConfig
 		LavishSettings[EVEBotSettings]:Import[${CONFIG_FILE}]
 	
 		BaseRef:Set[${LavishSettings[EVEBotSettings].FindSet[${Me.Name}]}]
-		UI:UpdateConsole["obj_Configuration_BaseConfig: Initialized"]
+		UI:UpdateConsole["obj_Configuration_BaseConfig: Initialized", LOG_MINOR]
 	}
 	
 	method Shutdown()
@@ -75,7 +75,7 @@ objectdef obj_Configuration_Common
 			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
 		}
-		UI:UpdateConsole["obj_Configuration_Common: Initialized"]
+		UI:UpdateConsole["obj_Configuration_Common: Initialized", LOG_MINOR]
 	}
 	
 	member:settingsetref CommonRef()
@@ -602,7 +602,7 @@ objectdef obj_Configuration_Combat
 			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
 		}
-		UI:UpdateConsole["obj_Configuration_Combat: Initialized"]
+		UI:UpdateConsole["obj_Configuration_Combat: Initialized", LOG_MINOR]
 	}
 
 	member:settingsetref CombatRef()
@@ -804,7 +804,7 @@ objectdef obj_Configuration_Hauler
 			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
 		}
-		UI:UpdateConsole["obj_Configuration_Hauler: Initialized"]
+		UI:UpdateConsole["obj_Configuration_Hauler: Initialized", LOG_MINOR]
 	}
 
 	member:settingsetref HaulerRef()
@@ -885,7 +885,7 @@ objectdef obj_Configuration_Salvager
 			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
 		}
-		UI:UpdateConsole["obj_Configuration_Salvager: Initialized"]
+		UI:UpdateConsole["obj_Configuration_Salvager: Initialized", LOG_MINOR]
 	}
 
 	member:settingsetref SalvagerRef()
@@ -912,7 +912,7 @@ objectdef obj_Configuration_Labels
 			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
 		}
-		UI:UpdateConsole["obj_Configuration_Labels: Initialized"]
+		UI:UpdateConsole["obj_Configuration_Labels: Initialized", LOG_MINOR]
 	}
 
 	member:settingsetref LabelsRef()
@@ -970,7 +970,7 @@ objectdef obj_Configuration_Freighter
 			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
 		}
-		UI:UpdateConsole["obj_Configuration_Freighter: Initialized"]
+		UI:UpdateConsole["obj_Configuration_Freighter: Initialized", LOG_MINOR]
 	}
 
 	member:settingsetref FreighterRef()
@@ -1085,7 +1085,7 @@ objectdef obj_Config_Whitelist
 			This.AlliancesRef:AddSetting[Sample_Alliance, 0]
 		}
 
-		UI:UpdateConsole["obj_Config_Whitelist: Initialized"]
+		UI:UpdateConsole["obj_Config_Whitelist: Initialized", LOG_MINOR]
 	}
 	
 	method Shutdown()
@@ -1150,7 +1150,7 @@ objectdef obj_Config_Blacklist
 			This.AlliancesRef:AddSetting[Sample_Alliance, 0]
 		}
 
-		UI:UpdateConsole["obj_Config_Blacklist: Initialized"]
+		UI:UpdateConsole["obj_Config_Blacklist: Initialized", LOG_MINOR]
 	}
 	
 	method Shutdown()

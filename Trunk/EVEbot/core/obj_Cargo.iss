@@ -20,7 +20,7 @@ objectdef obj_Cargo
 
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_Cargo: Initialized"]
+		UI:UpdateConsole["obj_Cargo: Initialized", LOG_MINOR]
 	}
 
 	member:bool LastTransferComplete()

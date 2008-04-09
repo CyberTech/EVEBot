@@ -33,7 +33,7 @@ objectdef obj_Miner
 		This.TripStartTime:Set[${Time.Timestamp}]
 		BotModules:Insert["Miner"]
 		Event[OnFrame]:AttachAtom[This:Pulse]
-		UI:UpdateConsole["obj_Miner: Initialized"]
+		UI:UpdateConsole["obj_Miner: Initialized", LOG_MINOR]
 	}
 	
 	method Shutdown()
@@ -389,9 +389,9 @@ objectdef obj_Miner
 					instead of being checked in each module
 				*/
 
-				UI:UpdateConsole["Armor is at ${Me.Ship.ArmorPct}: ${Me.Ship.Armor}/${Me.Ship.MaxArmor}"]
-				UI:UpdateConsole["Shield is at ${Me.Ship.ShieldPct}: ${Me.Ship.Shield}/${Me.Ship.MaxShield}"]
-				UI:UpdateConsole["Aborting due to defensive status"]
+				UI:UpdateConsole["Armor is at ${Me.Ship.ArmorPct}: ${Me.Ship.Armor}/${Me.Ship.MaxArmor}", LOG_CRITICAL]
+				UI:UpdateConsole["Shield is at ${Me.Ship.ShieldPct}: ${Me.Ship.Shield}/${Me.Ship.MaxShield}", LOG_CRITICAL]
+				UI:UpdateConsole["Miner aborting due to defensive status", LOG_CRITICAL]
 				
 				EVEBot.ReturnToStation:Set[TRUE]
 				This.CombatAbort:Set[TRUE]

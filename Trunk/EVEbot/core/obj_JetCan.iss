@@ -17,7 +17,7 @@ objectdef obj_JetCan
 	
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_JetCan: Initialized"]
+		UI:UpdateConsole["obj_JetCan: Initialized", LOG_MINOR]
 	}
 	
 	; Returns -1 for no can, or the entity ID
@@ -113,7 +113,7 @@ objectdef obj_JetCan
 			Counter:Inc[2]
 			if ${Counter} > 30
 			{
-				UI:UpdateConsole["JetCan:WaitForCan timed out waiting for a can to appear (30 seconds)"]
+				UI:UpdateConsole["JetCan:WaitForCan timed out waiting for a can to appear (30 seconds)", LOG_CRITICAL]
 				return
 			}
 		}
@@ -129,7 +129,7 @@ objectdef obj_JetCan
 
 		if !${This.AccessAllowed[${ID}]}
 		{
-			UI:UpdateConsole["JetCan:Rename: Access to ${ID} is not allowed"]
+			UI:UpdateConsole["JetCan:Rename: Access to ${ID} is not allowed", LOG_CRITICAL]
 			return
 		}
 		
@@ -163,7 +163,7 @@ objectdef obj_JetCan
 		
 		if !${This.AccessAllowed[${ID}]}
 		{
-			UI:UpdateConsole["JetCan:StackAllCargo: Access to ${ID} is not allowed"]
+			UI:UpdateConsole["JetCan:StackAllCargo: Access to ${ID} is not allowed", LOG_CRITICAL]
 			return
 		}
 		
@@ -290,7 +290,7 @@ objectdef obj_JetCan
 
 		if !${This.AccessAllowed[${ID}]}
 		{
-			UI:UpdateConsole["JetCan:Open: Access to ${ID} is not allowed"]
+			UI:UpdateConsole["JetCan:Open: Access to ${ID} is not allowed", LOG_CRITICAL]
 			return
 		}
 
@@ -307,7 +307,7 @@ objectdef obj_JetCan
 				TimeOut:Inc[0.5]
 				if ${TimeOut} > 20
 				{
-					UI:UpdateConsole["JetCan.Open timed out (40 seconds)"]
+					UI:UpdateConsole["JetCan.Open timed out (40 seconds)", LOG_CRITICAL]
 					break
 				}
 				wait 0.5
@@ -347,7 +347,7 @@ objectdef obj_CorpHangerArray inherits obj_JetCan
 		{
 			if ${CheckFreeSpace} && ${This.CargoFull[${This.ActiveCan}]}
 			{
-				;UI:UpdateConsole["oops... Corporate Hangar Array is full. I have no solution for this!"]
+				;UI:UpdateConsole["oops... Corporate Hangar Array is full. I have no solution for this!", LOG_CRITICAL]
 
 				/* TODO - when we can properly check the cargo full state of pos hangers, remove this */
 				return ${This.ActiveCan}

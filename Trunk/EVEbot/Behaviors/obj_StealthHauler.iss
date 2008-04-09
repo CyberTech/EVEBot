@@ -23,7 +23,7 @@ objectdef obj_StealthHauler
 	
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_StealthHauler: Initialized"]
+		UI:UpdateConsole["obj_StealthHauler: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -119,7 +119,7 @@ objectdef obj_StealthHauler
 						}
 						else
 						{
-							UI:UpdateConsole["obj_StealthHauler: Could not find stargate to ${Universe[${apIterator.Value}].Name}!!"]
+							UI:UpdateConsole["obj_StealthHauler: Could not find stargate to ${Universe[${apIterator.Value}].Name}!!", LOG_CRITICAL]
 						}
 					}	
 				}
@@ -136,7 +136,7 @@ objectdef obj_StealthHauler
 		}
 		else
 		{
-			UI:UpdateConsole["obj_StealthHauler: ERROR: You need a CovOps cloak to use this script!!"]
+			UI:UpdateConsole["obj_StealthHauler: ERROR: You need a CovOps cloak to use this script!!", LOG_CRITICAL]
 		}
 	}
 }

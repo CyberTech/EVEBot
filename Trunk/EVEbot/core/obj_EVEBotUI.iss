@@ -33,7 +33,7 @@ objectdef obj_EVEBotUI
 		This:InitializeLogs
 
 		Event[OnFrame]:AttachAtom[This:Pulse]
-		This:UpdateConsole["obj_EVEBotUI: Initialized"]
+		This:UpdateConsole["obj_EVEBotUI: Initialized", LOG_MINOR]
 	}
 
 	method Reload()
@@ -116,8 +116,13 @@ objectdef obj_EVEBotUI
 		return "${Hours}:${Minutes}:${Seconds}"
 	}
 
-	method UpdateConsole(string StatusMessage, bool Critical=FALSE)
+	method UpdateConsole(string StatusMessage, int Level=LOG_STANDARD)
 	{
+		/*
+			Level = LOG_MINOR - Minor - Log, do not print to screen.
+			Level = LOG_STANDARD - Standard, Log and Print to Screen
+			Level = LOG_CRITICAL - Critical, Log, Log to Critical Log, and print to screen
+		*/
 		variable string msg
 		
 		if ${StatusMessage(exists)}
@@ -125,10 +130,12 @@ objectdef obj_EVEBotUI
 			if ${This.Reloaded}
 			{
 				msg:Set["${Time.Time24}: ${StatusMessage}"]
-
-				UIElement[StatusConsole@Status@EvEBotOptionsTab@EVEBot]:Echo[${msg}]
+				if ${Level} > LOG_MINOR
+				{
+					UIElement[StatusConsole@Status@EvEBotOptionsTab@EVEBot]:Echo[${msg}]
+				}
 				redirect -append "${This.LogFile}" Echo ${msg}
-				if ${Critical}
+				if ${Level} == LOG_CRITICAL
 				{
 					redirect -append "${This.CriticalLogFile}" Echo ${msg}
 				}

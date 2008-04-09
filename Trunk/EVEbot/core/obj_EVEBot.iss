@@ -36,7 +36,7 @@ objectdef obj_EVEBot
 		TimedCommand 50 EVEWindow[addressbook]:Close
 		
 		Event[OnFrame]:AttachAtom[This:Pulse]
-		UI:UpdateConsole["obj_EVEBot: Initialized"]
+		UI:UpdateConsole["obj_EVEBot: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -91,13 +91,13 @@ objectdef obj_EVEBot
 				if (${This.GameHour} == 10 && \
 					${This.GameMinute} >= 50) 
 				{
-					UI:UpdateConsole["EVE downtime approaching, pausing operations"]
+					UI:UpdateConsole["EVE downtime approaching, pausing operations", LOG_CRITICAL]
 					This.ReturnToStation:Set[TRUE]
 				}
 				elseif (${This.GameHour} == 10 && \
 					${This.GameMinute} >= 58) 
 				{
-					UI:UpdateConsole["EVE downtime approaching - Quitting Eve"]
+					UI:UpdateConsole["EVE downtime approaching - Quitting Eve", LOG_CRITICAL]
 					EVE:Execute[CmdQuitGame]
 				}
 				else
@@ -107,7 +107,7 @@ objectdef obj_EVEBot
 					;;; UI:UpdateConsole["DEBUG: ${Config.Common.MaxRuntime} ${Hours}"]
 					if ${Config.Common.MaxRuntime} > 0 && ${Config.Common.MaxRuntime} <= ${Hours}
 					{
-						UI:UpdateConsole["Maximum runtime exceeded, pausing operations"]
+						UI:UpdateConsole["Maximum runtime exceeded, pausing operations", LOG_CRITICAL]
 						This.ReturnToStation:Set[TRUE]
 					}
 				}
@@ -121,13 +121,13 @@ objectdef obj_EVEBot
 		
 	method Pause()
 	{
-		UI:UpdateConsole["Paused"]
+		UI:UpdateConsole["Paused", LOG_CRITICAL]
 		This.Paused:Set[TRUE]
 	}
 	
 	method Resume()
 	{
-		UI:UpdateConsole["Resumed"]
+		UI:UpdateConsole["Resumed", LOG_CRITICAL]
 		This.Paused:Set[FALSE]
 	}
 	

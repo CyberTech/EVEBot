@@ -45,7 +45,7 @@ objectdef obj_Hauler
 		
 	method Initialize()
 	{			
-		UI:UpdateConsole["obj_Hauler: Initialized"]
+		UI:UpdateConsole["obj_Hauler: Initialized", LOG_MINOR]
 	}
 	
 	method Shutdown()
@@ -168,7 +168,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		m_SystemID:Set[-1]
 		m_BeltID:Set[-1]
 		m_CheckedCargo:Set[FALSE]
-		UI:UpdateConsole["obj_OreHauler: Initialized"]
+		UI:UpdateConsole["obj_OreHauler: Initialized", LOG_MINOR]
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		This:SetupEvents[]
 		BotModules:Insert["Hauler"]
@@ -450,9 +450,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 			return
 		}
 		
-		UI:UpdateConsole["Warping to fleet member: ${charID}"]
-		Fleet:WarpToFleetMember[${charID}]
-		call Ship.WarpWait
+		call Fleet.WarpToFleetMember ${charID}
 
 		call Ship.OpenCargo
 		

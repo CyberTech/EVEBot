@@ -37,7 +37,7 @@ objectdef obj_Freighter
 		 */
 		This:BuildSourceList
 		
-		UI:UpdateConsole["obj_Freighter: Initialized"]
+		UI:UpdateConsole["obj_Freighter: Initialized", LOG_MINOR]
 	}
 	
 	method Pulse()

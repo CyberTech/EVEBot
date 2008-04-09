@@ -14,7 +14,7 @@ objectdef obj_Station
 	
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_Station: Initialized"]
+		UI:UpdateConsole["obj_Station: Initialized", LOG_MINOR]
 	}
 	
 	member IsHangarOpen()
@@ -200,7 +200,7 @@ objectdef obj_Station
 		}
 		else
 		{
-			UI:UpdateConsole["No stations in this system!  Trying Safespots"]
+			UI:UpdateConsole["No stations in this system!  Trying Safespots", LOG_CRITICAL]
 			call Safespots.WarpTo
 			wait 30
 		}
@@ -215,7 +215,7 @@ objectdef obj_Station
 
 		if ${StationID} <= 0 || !${Entity[${StationID}](exists)}
 		{
-			UI:UpdateConsole["Warning: Home station not found, going to nearest base"]
+			UI:UpdateConsole["Warning: Home station not found, going to nearest base", LOG_CRITICAL]
 			StationID:Set[${Entity[CategoryID,3].ID}]
 		}
 
@@ -291,10 +291,10 @@ objectdef obj_Station
 			{
 			   Counter:Set[0]
 			   EVE:Execute[CmdExitStation]	
-			   UI:UpdateConsole["Undock: Unexpected failure, retrying..."]
-			   UI:UpdateConsole["Undock: Debug: EVEWindow[Local]=${EVEWindow[Local](exists)}"]
-			   UI:UpdateConsole["Undock: Debug: Me.InStation Exists=${Me.InStation(exists)}"]
-			   UI:UpdateConsole["Undock: Debug: Me.InStation=${Me.InStation}"]
+			   UI:UpdateConsole["Undock: Unexpected failure, retrying...", LOG_CRITICAL]
+			   UI:UpdateConsole["Undock: Debug: EVEWindow[Local]=${EVEWindow[Local](exists)}", LOG_CRITICAL]
+			   UI:UpdateConsole["Undock: Debug: Me.InStation Exists=${Me.InStation(exists)}", LOG_CRITICAL]
+			   UI:UpdateConsole["Undock: Debug: Me.InStation=${Me.InStation}", LOG_CRITICAL]
 			}
 		}
 		while ${This.DockedAtStation[${StationID}]}

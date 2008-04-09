@@ -22,7 +22,7 @@ objectdef obj_Drones
 	method Initialize()
 	{
 		Event[OnFrame]:AttachAtom[This:Pulse]
-		UI:UpdateConsole["obj_Drones: Initialized"]
+		UI:UpdateConsole["obj_Drones: Initialized", LOG_MINOR]
 	}
 	method Shutdown()
 	{
@@ -135,7 +135,7 @@ objectdef obj_Drones
 		if ${CargoIterator:First(exists)}
 		do
 		{
-			UI:UpdateConsole["obj_Drones:TransferToDroneBay: ${CargoIterator.Value.Name}"]
+			;UI:UpdateConsole["obj_Drones:TransferToDroneBay: ${CargoIterator.Value.Name}"]
 			CargoIterator.Value:MoveTo[DroneBay,1]
 			wait 30
 		}
