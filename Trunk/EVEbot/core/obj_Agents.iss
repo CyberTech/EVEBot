@@ -184,10 +184,12 @@ function main()
 	    if (!${EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"](exists)})
 	    {
 			UI:UpdateConsole["obj_Agents: Starting conversation with agent ${This.ActiveAgent}."]
-	        Agent[${This.AgentIndex}]:StartConversation
+	        ;Agent[id,${This.AgentID}]:StartConversation
+			Agent[${This.AgentIndex}]:StartConversation
 	        do
 	        {
-	            wait 5
+				UI:UpdateConsole["obj_Agents: Waiting for conversation window..."]
+	            wait 10
 	        }
 	        while !${EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"](exists)}        
 	    } 
