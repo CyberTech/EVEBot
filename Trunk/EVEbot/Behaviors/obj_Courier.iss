@@ -17,6 +17,7 @@ objectdef obj_Courier
 {
 	/* the bot logic is currently based on a state machine */
 	variable string CurrentState
+	variable bool bHaveCargo = FALSE
 
 	method Initialize()
 	{
@@ -53,9 +54,13 @@ objectdef obj_Courier
 		{
 			This.CurrentState:Set["IDLE"]
 		}
-		elseif ${Agents.HaveMission}
+		elseif ${Agents.HaveMission} && !${bHaveCargo}
 		{
-			This.CurrentState:Set["SELECT_SHIP"]
+			This.CurrentState:Set["PICKUP"]
+		}
+		elseif ${Agents.HaveMission} && ${bHaveCargo}
+		{
+			This.CurrentState:Set["DROPOFF"]
 		}
 		elseif !${Agents.HaveMission}
 		{
@@ -77,6 +82,12 @@ objectdef obj_Courier
 			case GET_MISSION
 				call Agents.MoveTo
 				call Agents.RequestCourierMission
+				break
+			case PICKUP
+				call Agents.MoveToPickup
+				break
+			case DROPOFF
+				call Agents.MoveToDropOff
 				break
 			case IDLE
 				break

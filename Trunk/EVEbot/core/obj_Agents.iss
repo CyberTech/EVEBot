@@ -48,6 +48,54 @@ objectdef obj_Agents
 		return ${Station.DockedAtStation[${Agent[${This.AgentIndex}].StationID}]}
 	}
 	
+	member:string CourierPickUp()
+	{
+		variable string rVal = ""
+		
+		variable int pos
+		
+		pos:Set[${This.MissionDetails.Find["Pickup Location"]}]
+		
+		if ${pos} > 0 
+		{
+			UI:UpdateConsole["obj_Agents: ${This.MissionDetails.Mid[${pos},50]}"]
+		}
+		
+		return ${rVal}
+	}
+	
+	member:string CourierDropOff()
+	{
+		variable string rVal = ""
+		
+		variable int pos
+		
+		pos:Set[${This.MissionDetails.Find["Drop-off Location"]}]
+		
+		if ${pos} > 0 
+		{
+			UI:UpdateConsole["obj_Agents: ${This.MissionDetails.Mid[${pos},50]}"]
+		}
+		
+		return ${rVal}
+	}
+	
+	member:string CourierItem()
+	{
+		variable string rVal = ""
+		
+		UI:UpdateConsole["obj_Agents: ${This.MissionDetails}"]
+		
+		return ${rVal}
+	}
+	
+	member:int CourierItemQty()
+	{
+		variable int rVal = 0
+				
+		return ${rVal}
+	}
+	
 	member:bool HaveMission()
 	{
 	    variable index:agentmission amIndex
@@ -56,10 +104,15 @@ objectdef obj_Agents
 		EVE:DoGetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
+		;;UI:UpdateConsole["obj_Agents: DEBUG: amIndex.Used = ${amIndex.Used}"]	
 		if ${amIterator:First(exists)}
 		{
 			do
 			{
+				UI:UpdateConsole["obj_Agents: DEBUG: This.AgentID = ${This.AgentID}"]	
+				UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.AgentID = ${amIterator.Value.AgentID}"]	
+				UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.State = ${amIterator.Value.State}"]	
+				UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}"]	
 				if ${amIterator.Value.AgentID} == ${This.AgentID} && ${amIterator.Value.State} > 1
 				{
 					return TRUE
@@ -69,6 +122,16 @@ objectdef obj_Agents
 		}
 		
 		return FALSE
+	}
+	
+	function MoveToPickup()
+	{
+		UI:UpdateConsole["obj_Agents: ${This.CourierPickUp}"]
+	}
+	
+	function MoveToDropOff()
+	{
+		UI:UpdateConsole["obj_Agents: ${This.CourierDropOff}"]	
 	}
 	
 	function MoveTo()
@@ -129,7 +192,14 @@ objectdef obj_Agents
 			EVEBot.ReturnToStation:Set[TRUE]
 			return
 		}
+
+	    wait 10
 		
+		EVE:Execute[OpenJournal]
+		wait 50
+		EVE:Execute[CmdCloseActiveWindow]
+		wait 50
+
 	    variable index:agentmission amIndex
 		variable iterator amIterator
 
@@ -155,86 +225,93 @@ objectdef obj_Agents
 			return
 		}
 
-		if ${amIterator.Value.Type.NotEqual["courier"]}
+		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.AgentID = ${amIterator.Value.AgentID}"]	
+		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.State = ${amIterator.Value.State}"]	
+		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}"]	
+		
+		UI:UpdateConsole["obj_Agents: Saving mission detials."]
+		dsIndex.Get[3]:Say[${This.AgentID}]
+        do
+        {
+		    UI:UpdateConsole["Waiting for mission details to update..."]
+            wait 10
+        }
+        while !${EVEWindow[ByCaption,"${amIterator.Value.Name}"](exists)}        
+	    wait 10
+	    This.MissionDetails:Set[${EVEWindow[ByCaption,"${amIterator.Value.Name}"].HTML}]
+		EVEWindow[ByCaption,"${amIterator.Value.Name}"]:Close
+	    wait 10			
+		EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"]:Close
+	    wait 10
+	    
+	    UI:UpdateConsole["mission details (${This.MissionDetails.Length} bytes)"]
+		
+		redirect -append "./config/logs/${Me.Name}-missions.log" echo "[${Time.Time24}] obj_Agents: ${This.MissionDetails} *****"		
+		
+		variable bool bAcceptMission = FALSE
+		if ${This.MissionDetails.Find["warning"]} > 0
+		{
+			UI:UpdateConsole["obj_Agents: Declining dangerous mission."]
+			bAcceptMission:Set[FALSE]
+		}
+		elseif ${This.MissionDetails.Find["killmission.png"]} > 0
 		{
 			UI:UpdateConsole["obj_Agents: WARNING: Declining combat mission!", LOG_CRITICAL]
-			dsIndex.Get[2]:Say[${This.AgentID}]
+			bAcceptMission:Set[FALSE]
 		}
 		else
+		{			
+			UI:UpdateConsole["obj_Agents: Accepting courier mission."]
+			bAcceptMission:Set[TRUE]
+		}
+		
+		Agent[${This.AgentIndex}]:StartConversation
+        do
+        {
+			UI:UpdateConsole["obj_Agents: Waiting for conversation window..."]
+            wait 10
+        }
+        while !${EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"](exists)}        
+		
+	    Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
+	    dsIndex:GetIterator[dsIterator]
+	    
+		if ${dsIterator:First(exists)}
 		{
-			UI:UpdateConsole["obj_Agents: Saving mission detials."]
-			dsIndex.Get[3]:Say[${This.AgentID}]
-	        do
-	        {
-			    UI:UpdateConsole["Waiting for mission details to update..."]
-	            wait 10
-	        }
-	        while !${EVEWindow[ByCaption,"${amIterator.Value.Name}"](exists)}        
-		    wait 10
-		    This.MissionDetails:Set[${EVEWindow[ByCaption,"${amIterator.Value.Name}"].HTML}]
-			EVEWindow[ByCaption,"${amIterator.Value.Name}"]:Close
-		    wait 10			
-			EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"]:Close
-		    wait 10
-			
-			variable bool bAcceptMission = FALSE
-			if ${This.MissionDetails.Find["warning"]} > 0
-			{
-				UI:UpdateConsole["obj_Agents: Declining dangerous mission."]
-				UI:UpdateConsole["obj_Agents: ${This.MissionDetails}"]
-				bAcceptMission:Set[FALSE]
-				dsIndex.Get[2]:Say[${This.AgentID}]
-			}
-			else
-			{			
-				UI:UpdateConsole["obj_Agents: Accepting courier mission."]
-				bAcceptMission:Set[TRUE]
-				dsIndex.Get[1]:Say[${This.AgentID}]
-			}
-			
-			Agent[${This.AgentIndex}]:StartConversation
-	        do
-	        {
-				UI:UpdateConsole["obj_Agents: Waiting for conversation window..."]
-	            wait 10
-	        }
-	        while !${EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"](exists)}        
-			
-		    Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
-		    dsIndex:GetIterator[dsIterator]
-		    
-			if ${dsIterator:First(exists)}
-			{
-		        dsIterator.Value:Say[${This.AgentID}]
-			}
-			
-		    UI:UpdateConsole["Waiting for agent dialog to update..."]
-		    wait 60
-			UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
-	
-		    Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
-		    dsIndex:GetIterator[dsIterator]
-		    
-			if ${dsIndex.Used} != 3
-			{
-				UI:UpdateConsole["obj_Agents: ERROR: Did not find expected dialog!  Aborting...", LOG_CRITICAL]
-				EVEBot.ReturnToStation:Set[TRUE]
-				return
-			}
-			
-			if ${bAcceptMission}
-			{
-				dsIndex.Get[1]:Say[${This.AgentID}]
-			}
-			else
-			{			
-				dsIndex.Get[2]:Say[${This.AgentID}]
-			}
+	        dsIterator.Value:Say[${This.AgentID}]
+		}
+		
+	    UI:UpdateConsole["Waiting for agent dialog to update..."]
+	    wait 60
+		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
+
+	    Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
+	    dsIndex:GetIterator[dsIterator]
+	    
+		if ${dsIndex.Used} != 3
+		{
+			UI:UpdateConsole["obj_Agents: ERROR: Did not find expected dialog!  Aborting...", LOG_CRITICAL]
+			EVEBot.ReturnToStation:Set[TRUE]
+			return
+		}
+		
+		if ${bAcceptMission}
+		{
+			dsIndex.Get[1]:Say[${This.AgentID}]
+		}
+		else
+		{			
+			dsIndex.Get[2]:Say[${This.AgentID}]
 		}
 
 	    UI:UpdateConsole["Waiting for mission dialog to update..."]
 	    wait 60
 		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
+
+		EVE:Execute[OpenJournal]
+		wait 50
+		EVE:Execute[CmdCloseActiveWindow]
+		wait 50
 
     	EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"]:Close
 	}
