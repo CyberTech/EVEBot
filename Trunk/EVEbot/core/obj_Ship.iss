@@ -1160,20 +1160,12 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		call This.WarpToBookMark ${EVE.Bookmark[${DestinationBookmarkLabel}].ID}
 	}
 
-	function WarpToBookMark(bookmark DestinationBookmark)
+	function TravelToSystem(int systemID)
 	{
-		variable int Counter
-
-		if (${Me.InStation})
+		if ${systemID} != ${Me.SolarSystemID}
 		{
-			call Station.Undock
-		}
-
-		call This.WarpPrepare
-		if (${DestinationBookmark.SolarSystemID} != ${Me.SolarSystemID})
-		{
-			UI:UpdateConsole["Setting autopilot destination: ${DestinationBookmark.Label}]}"]
-			DestinationBookmark:SetDestination
+			UI:UpdateConsole["Setting autopilot to ${Universe[${systemID}].Name}"]
+			Universe[${systemID}]:SetDestination
 			wait 5
 			UI:UpdateConsole["Activating autopilot and waiting until arrival..."]
 			EVE:Execute[CmdToggleAutopilot]
@@ -1198,6 +1190,19 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			while !${Me.ToEntity.IsCloaked}
 			wait 5
 		}
+	}
+	
+	function WarpToBookMark(bookmark DestinationBookmark)
+	{
+		variable int Counter
+
+		if (${Me.InStation})
+		{
+			call Station.Undock
+		}
+
+		call This.WarpPrepare
+		call This.TravelToSystem ${DestinationBookmark.SolarSystemID}
 
 		;echo \${DestinationBookmark.Type} = ${DestinationBookmark.Type}
 		;echo \${DestinationBookmark.TypeID} = ${DestinationBookmark.TypeID}

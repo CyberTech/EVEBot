@@ -150,7 +150,7 @@ objectdef obj_Station
 	{
 		variable int Counter = 0
 
-		UI:UpdateConsole["Docking at ${EVE.GetLocationNameByID[${stationID}]}"]
+		UI:UpdateConsole["Docking at ${EVE.GetLocationNameByID[${StationID}]}"]
 
 		if ${Entity[${StationID}](exists)}
 		{

@@ -55,7 +55,7 @@ objectdef obj_Courier
 		}
 		elseif ${Agents.HaveMission}
 		{
-			This.CurrentState:Set["START_MISSION"]
+			This.CurrentState:Set["SELECT_SHIP"]
 		}
 		elseif !${Agents.HaveMission}
 		{
@@ -73,6 +73,10 @@ objectdef obj_Courier
 		{
 			case ABORT
 				call Station.Dock
+				break
+			case GET_MISSION
+				call Agents.MoveTo
+				call Agents.RequestCourierMission
 				break
 			case IDLE
 				break

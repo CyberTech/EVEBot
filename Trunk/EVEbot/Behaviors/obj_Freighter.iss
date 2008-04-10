@@ -70,7 +70,6 @@ objectdef obj_Freighter
 					break
 			}
 
-
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
     		This.NextPulse:Update
