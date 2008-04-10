@@ -1188,7 +1188,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			   wait 10
 			}
 			while !${Me.ToEntity.IsCloaked}
-			wait 5
+			wait 20
 		}
 	}
 	
