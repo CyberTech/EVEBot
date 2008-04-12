@@ -128,10 +128,12 @@ objectdef obj_Agents
 				        	variable iterator ap_path_iterator
 				        	ap_path:GetIterator[ap_path_iterator]
 				        	
+							UI:UpdateConsole["obj_Agents: ${mbIterator.Value.Label} is ${ap_path.Used} jumps away."]
 							if ${ap_path_iterator:First(exists)}
 							{
 								do
 								{
+									UI:UpdateConsole["obj_Agents: ${ap_path_iterator.Value} ${Universe[${ap_path_iterator.Value}]} (${Universe[${ap_path_iterator.Value}].Security})"]
 							        if ${Universe[${ap_path_iterator.Value}].Security} <= 0.45
 							        {	/* avoid low-sec */
 										UI:UpdateConsole["obj_Agents: Low-Sec route found"]
@@ -147,8 +149,7 @@ objectdef obj_Agents
 				}
 			}  
 			while ${amIterator:Next(exists)}
-		}
-		
+		}		
 		
 		return FALSE
 	}
@@ -235,11 +236,26 @@ objectdef obj_Agents
 	function MoveToPickup()
 	{
 		UI:UpdateConsole["obj_Agents: DEBUG: Me.Station.Name = ${Me.Station.Name}"]	
-		; yes this sucks but Me.Station is returning NULL
-		;if ${Me.Station.Name.NotEqual[${This.PickupStation}]}
-		;{		
+		
+		; yes this sucks but Me.Station is returning NULL intermitently
+		variable string stationName
+		if ${Me.Station(exists)}
+		{
+			stationName:Set[${Me.Station.Name}]
+			UI:UpdateConsole["obj_Agents: DEBUG: stationName = ${stationName}"]	
+		}
+		
+		if ${stationName.Length} > 0
+		{
+			if ${stationName.NotEqual[${This.PickupStation}]}
+			{		
+				call This.WarpToPickupStation
+			}
+		}
+		else
+		{
 			call This.WarpToPickupStation
-		;}
+		}
 	}
 	
 	function MoveToDropOff()
@@ -514,7 +530,7 @@ objectdef obj_Agents
 	    Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
 	    dsIndex:GetIterator[dsIterator]
 	    
-		if if ${dsIndex.Used} == 2
+		if ${dsIndex.Used} == 2
 		{
 			; Assume the second item is the "quit mission" item.
 	        dsIndex.Get[2]:Say[${This.AgentID}]

@@ -74,7 +74,7 @@ objectdef obj_Courier
 				call Agents.RequestCourierMission
 				if ${Agents.LowSecRoute}
 				{
-					call Agents.QuitMission
+					;call Agents.QuitMission
 				}
 				break
 			case PICKUP
