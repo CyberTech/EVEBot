@@ -29,16 +29,6 @@ objectdef obj_Courier
 	}
 	
 	/* NOTE: The order of these if statements is important!! */
-	/* obj_Courier tasks:
-	 *	MOVING_TO_AGENT
-	 *	GETTING_MISSION
-	 *	MOVING_TO_PICKUP
-	 *	LOADING_CARGO
-	 *	MOVING_TO_DROPOFF
-	 *	UNLOADING_CARGO
-	 *	TURNING_IN_MISSION
-	 *  (repeat)
-	 */
 	method SetState()
 	{
 		if ${Agents.ActiveAgent.NotEqual[${Config.Freighter.AgentName}]}
@@ -84,10 +74,20 @@ objectdef obj_Courier
 				call Agents.RequestCourierMission
 				break
 			case PICKUP
+				UI:UpdateConsole["obj_Courier: MoveToPickup"]
 				call Agents.MoveToPickup
+				UI:UpdateConsole["obj_Courier: TransferCargoToShip"]
+				wait 100
+				call Cargo.TransferCargoToShip
+				bHaveCargo:Set[TRUE]
 				break
 			case DROPOFF
+				UI:UpdateConsole["obj_Courier: MoveToDropOff"]
 				call Agents.MoveToDropOff
+				wait 100
+				UI:UpdateConsole["obj_Courier: TurnInMission"]
+				call Agents.TurnInMission
+				bHaveCargo:Set[FALSE]
 				break
 			case IDLE
 				break
