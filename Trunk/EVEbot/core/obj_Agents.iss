@@ -99,6 +99,60 @@ objectdef obj_Agents
 		return ${rVal}
 	}
 
+	member:bool LowSecRoute()
+	{
+	    variable index:agentmission amIndex
+	    variable index:bookmark mbIndex
+		variable iterator amIterator
+		variable iterator mbIterator
+
+	    EVE:DoGetAgentMissions[amIndex]
+		amIndex:GetIterator[amIterator]
+
+		if ${amIterator:First(exists)}
+		{
+			do
+			{
+				if ${amIterator.Value.AgentID} == ${This.AgentID}
+				{
+					amIterator.Value:DoGetBookmarks[mbIndex]
+					mbIndex:GetIterator[mbIterator]
+
+					if ${mbIterator:First(exists)}
+					{
+						do
+						{
+							mbIterator.Value:SetDestination
+				        	variable index:int ap_path
+				        	EVE:DoGetToDestinationPath[ap_path]
+				        	variable iterator ap_path_iterator
+				        	ap_path:GetIterator[ap_path_iterator]
+				        	
+							if ${ap_path_iterator:First(exists)}
+							{
+								do
+								{
+							        if ${Universe[${ap_path_iterator.Value}].Security} <= 0.45
+							        {	/* avoid low-sec */
+										UI:UpdateConsole["obj_Agents: Low-Sec route found"]
+										return TRUE
+							        }
+								}
+								while ${ap_path_iterator:Next(exists)}
+							}		
+							
+						} 
+						while ${mbIterator:Next(exists)}
+					}
+				}
+			}  
+			while ${amIterator:Next(exists)}
+		}
+		
+		
+		return FALSE
+	}
+
 	member:string DropOffStation()
 	{
 		variable string rVal = ""
@@ -372,77 +426,9 @@ objectdef obj_Agents
 		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.State = ${amIterator.Value.State}"]	
 		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}"]	
 		
-		UI:UpdateConsole["obj_Agents: Saving mission detials."]
-		dsIndex.Get[3]:Say[${This.AgentID}]
-        do
-        {
-		    UI:UpdateConsole["Waiting for mission details to update..."]
-            wait 10
-        }
-        while !${EVEWindow[ByCaption,"${amIterator.Value.Name}"](exists)}        
-	    wait 10
-	    UI:UpdateConsole["mission details (${EVEWindow[ByCaption,"${amIterator.Value.Name}"].HTML.Length} bytes)"]
-	    This.MissionDetails:Set[${EVEWindow[ByCaption,"${amIterator.Value.Name}"].HTML}]
-		EVEWindow[ByCaption,"${amIterator.Value.Name}"]:Close
-	    wait 10			
-		EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"]:Close
-	    wait 10
-	    
-	    UI:UpdateConsole["mission details (${This.MissionDetails.Length} bytes)"]
+		;; evewindow.HTML is highly unstable.  DO NOT USE!!
 		
-		variable file logFile = "./config/logs/${Me.Name}-missions.log"
-		logFile:Open
-		logFile:Write["[${Time.Time24}] obj_Agents: ${This.MissionDetails} *****"]
-		logFile:Close
-		
-		variable bool bAcceptMission = FALSE
-		if ${This.MissionDetails.Find["warning"]} > 0
-		{
-			UI:UpdateConsole["obj_Agents: Declining dangerous mission."]
-			bAcceptMission:Set[FALSE]
-		}
-		elseif ${This.MissionDetails.Find["killmission.png"]} > 0
-		{
-			UI:UpdateConsole["obj_Agents: WARNING: Declining combat mission!", LOG_CRITICAL]
-			bAcceptMission:Set[FALSE]
-		}
-		else
-		{			
-			UI:UpdateConsole["obj_Agents: Accepting courier mission."]
-			bAcceptMission:Set[TRUE]
-		}
-		
-		Agent[${This.AgentIndex}]:StartConversation
-        do
-        {
-			UI:UpdateConsole["obj_Agents: Waiting for conversation window..."]
-            wait 10
-        }
-        while !${EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"](exists)}        
-		
-	    Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
-	    dsIndex:GetIterator[dsIterator]
-	    
-		if ${dsIterator:First(exists)}
-		{
-	        dsIterator.Value:Say[${This.AgentID}]
-		}
-		
-	    UI:UpdateConsole["Waiting for agent dialog to update..."]
-	    wait 60
-		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
-
-	    Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
-	    dsIndex:GetIterator[dsIterator]
-	    
-		if ${dsIndex.Used} != 3
-		{
-			UI:UpdateConsole["obj_Agents: ERROR: Did not find expected dialog!  Aborting...", LOG_CRITICAL]
-			EVEBot.ReturnToStation:Set[TRUE]
-			return
-		}
-		
-		if ${bAcceptMission}
+		if ${amIterator.Value.Type.Equal[courier]}
 		{
 			dsIndex.Get[1]:Say[${This.AgentID}]
 		}
@@ -490,6 +476,48 @@ objectdef obj_Agents
 		{
 			; Assume the first item is the "turn in mission" item.
 	        dsIterator.Value:Say[${This.AgentID}]
+		}
+		
+	    ; Now wait a couple of seconds and then get the new dialog options...and so forth.  The "Wait" needed may differ from person to person.
+	    UI:UpdateConsole["Waiting for agent dialog to update..."]
+	    wait 60
+		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
+
+		EVE:Execute[OpenJournal]
+		wait 50
+		EVE:Execute[CmdCloseActiveWindow]
+		wait 50
+
+    	EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"]:Close
+	}
+	
+	function QuitMission()
+	{
+		EVE:Execute[CmdCloseAllWindows]
+		wait 50
+
+		UI:UpdateConsole["obj_Agents: Starting conversation with agent ${This.ActiveAgent}."]
+		Agent[${This.AgentIndex}]:StartConversation
+        do
+        {
+			UI:UpdateConsole["obj_Agents: Waiting for conversation window..."]
+            wait 10
+        }
+        while !${EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"](exists)}        
+    
+		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
+		
+	    ; display your dialog options    
+	    variable index:dialogstring dsIndex
+	    variable iterator dsIterator
+	    
+	    Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
+	    dsIndex:GetIterator[dsIterator]
+	    
+		if if ${dsIndex.Used} == 2
+		{
+			; Assume the second item is the "quit mission" item.
+	        dsIndex.Get[2]:Say[${This.AgentID}]
 		}
 		
 	    ; Now wait a couple of seconds and then get the new dialog options...and so forth.  The "Wait" needed may differ from person to person.

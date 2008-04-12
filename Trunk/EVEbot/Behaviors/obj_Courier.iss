@@ -72,6 +72,10 @@ objectdef obj_Courier
 			case GET_MISSION
 				call Agents.MoveTo
 				call Agents.RequestCourierMission
+				if ${Agents.LowSecRoute}
+				{
+					call Agents.QuitMission
+				}
 				break
 			case PICKUP
 				UI:UpdateConsole["obj_Courier: MoveToPickup"]
