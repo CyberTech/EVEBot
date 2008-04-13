@@ -78,7 +78,7 @@ objectdef obj_Agents
 								variable int pos
 								rVal:Set[${mbIterator.Value.Label}]
 								pos:Set[${rVal.Find[" - "]}]
-								rVal:Set[${rVal.Right[${Math.Calc[${rVal.Length}-${pos}+3]}]}]
+								rVal:Set[${rVal.Right[${Math.Calc[${rVal.Length}-${pos}-2]}]}]
 								UI:UpdateConsole["obj_Agents: rVal = ${rVal}"]
 								break
 							}
@@ -184,7 +184,7 @@ objectdef obj_Agents
 								variable int pos
 								rVal:Set[${mbIterator.Value.Label}]
 								pos:Set[${rVal.Find[" - "]}]
-								rVal:Set[${rVal.Right[${Math.Calc[${rVal.Length}-${pos}+3]}]}]
+								rVal:Set[${rVal.Right[${Math.Calc[${rVal.Length}-${pos}-2]}]}]
 								UI:UpdateConsole["obj_Agents: rVal = ${rVal}"]
 								break
 							}
