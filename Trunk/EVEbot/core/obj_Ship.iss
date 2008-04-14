@@ -1163,9 +1163,9 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 
 	function TravelToSystem(int systemID)
 	{
-		if ${systemID} != ${Me.SolarSystemID}
+		while ${systemID} != ${Me.SolarSystemID}
 		{
-			UI:UpdateConsole["Setting autopilot to ${Universe[${systemID}].Name}"]
+			UI:UpdateConsole["Setting autopilot to ${Universe[${systemID}].Name} (${systemID})"]
 			Universe[${systemID}]:SetDestination
 			wait 5
 			UI:UpdateConsole["Activating autopilot and waiting until arrival..."]
@@ -1192,7 +1192,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			wait 20
 		}
 	}
-	
+
 	function WarpToBookMark(bookmark DestinationBookmark)
 	{
 		variable int Counter

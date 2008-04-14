@@ -134,7 +134,7 @@ objectdef obj_Agents
 								do
 								{
 									UI:UpdateConsole["obj_Agents: ${ap_path_iterator.Value} ${Universe[${ap_path_iterator.Value}]} (${Universe[${ap_path_iterator.Value}].Security})"]
-							        if ${Universe[${ap_path_iterator.Value}].Security} <= 0.45
+							        if ${ap_path_iterator.Value} > 0 && ${Universe[${ap_path_iterator.Value}].Security} <= 0.45
 							        {	/* avoid low-sec */
 										UI:UpdateConsole["obj_Agents: Low-Sec route found"]
 										return TRUE
