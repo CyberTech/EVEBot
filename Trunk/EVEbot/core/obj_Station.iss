@@ -7,6 +7,29 @@
 	
 */
 
+objectdef obj_EVEDB_Stations
+{
+	variable string CONFIG_FILE = "${Script.CurrentDirectory}/config/EVEDB_Stations.xml"
+	variable string SET_NAME = "EVEDB_Stations"
+	
+	method Initialize()
+	{
+		LavishSettings:Import[${CONFIG_FILE}]
+		
+		UI:UpdateConsole["obj_EVEDB_Stations: Initialized", LOG_MINOR]
+	}
+	
+	member:string StationName(int stationID)
+	{
+		return ${LavishSettings[${This.SET_NAME}].FindSet[${stationID}].FindSetting[stationName, NOTSET]}
+	}
+	
+	member:int SolarSystemID(int stationID)
+	{
+		return ${LavishSettings[${This.SET_NAME}].FindSet[${stationID}].FindSetting[solarSystemID, NOTSET]}
+	}
+}
+
 objectdef obj_Station
 {
 	variable index:item StationCargo

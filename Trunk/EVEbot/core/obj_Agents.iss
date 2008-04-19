@@ -235,16 +235,10 @@ objectdef obj_Agents
 	
 	function MoveToPickup()
 	{
-		UI:UpdateConsole["obj_Agents: DEBUG: Me.Station.Name = ${Me.Station.Name}"]	
-		
-		; yes this sucks but Me.Station is returning NULL intermitently
 		variable string stationName
-		if ${Me.Station(exists)}
-		{
-			stationName:Set[${Me.Station.Name}]
-			UI:UpdateConsole["obj_Agents: DEBUG: stationName = ${stationName}"]	
-		}
-		
+		stationName:Set[${EVEDB_Stations.StationName[${Me.StationID}]}]
+		UI:UpdateConsole["obj_Agents: DEBUG: stationName = ${stationName}"]	
+
 		if ${stationName.Length} > 0
 		{
 			if ${stationName.NotEqual[${This.PickupStation}]}
