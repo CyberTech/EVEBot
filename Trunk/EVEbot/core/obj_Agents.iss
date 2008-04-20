@@ -396,7 +396,7 @@ objectdef obj_Agents
 		if ${dsIndex.Used} != 3
 		{
 			UI:UpdateConsole["obj_Agents: ERROR: Did not find expected dialog!  Aborting...", LOG_CRITICAL]
-			EVEBot.ReturnToStation:Set[TRUE]
+			;EVEBot.ReturnToStation:Set[TRUE]
 			return
 		}
 
@@ -428,7 +428,7 @@ objectdef obj_Agents
 		if !${amIterator.Value(exists)}
 		{
 			UI:UpdateConsole["obj_Agents: ERROR: Did not find mission!  Aborting...", LOG_CRITICAL]
-			EVEBot.ReturnToStation:Set[TRUE]
+			;EVEBot.ReturnToStation:Set[TRUE]
 			return
 		}
 
