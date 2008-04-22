@@ -987,6 +987,7 @@ objectdef obj_Configuration_Freighter
 		This.FreighterRef:AddSetting[Destination,""]
 		This.FreighterRef:AddSetting[Source Prefix,""]
 		This.FreighterRef:AddSetting[Agent Name, ""]
+		This.FreighterRef:AddSetting[Last Decline, ${Time.Timestamp}]
 	}
 	
 	member:int FreighterMode()
@@ -1048,6 +1049,17 @@ objectdef obj_Configuration_Freighter
 	{
 		This.FreighterRef:AddSetting[Source Prefix,${value}]
 	}
+
+	member:int LastDecline()
+	{
+		return ${This.FreighterRef.FindSetting[Last Decline,${Time.Timestamp}]}
+	}
+	
+	method SetLastDecline(int value)
+	{
+		This.FreighterRef:AddSetting[Last Decline,${value}]
+	}
+	
 }
 
 objectdef obj_Config_Whitelist

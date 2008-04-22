@@ -13,6 +13,7 @@ objectdef obj_Agents
 	variable int AgentIndex = 0
 	variable string AgentName
 	variable string MissionDetails
+	variable int RetryCount = 0
 	
     method Initialize()
     {
@@ -395,8 +396,13 @@ objectdef obj_Agents
 	    
 		if ${dsIndex.Used} != 3
 		{
-			UI:UpdateConsole["obj_Agents: ERROR: Did not find expected dialog!  Aborting...", LOG_CRITICAL]
-			;EVEBot.ReturnToStation:Set[TRUE]
+			UI:UpdateConsole["obj_Agents: ERROR: Did not find expected dialog!  Will retry...", LOG_CRITICAL]
+			RetryCount:Inc
+			if ${RetryCount} > 4
+			{
+				UI:UpdateConsole["obj_Agents: ERROR: Retry count exceeded!  Aborting...", LOG_CRITICAL]
+				EVEBot.ReturnToStation:Set[TRUE]
+			}
 			return
 		}
 
@@ -427,11 +433,18 @@ objectdef obj_Agents
 		
 		if !${amIterator.Value(exists)}
 		{
-			UI:UpdateConsole["obj_Agents: ERROR: Did not find mission!  Aborting...", LOG_CRITICAL]
-			;EVEBot.ReturnToStation:Set[TRUE]
+			UI:UpdateConsole["obj_Agents: ERROR: Did not find mission!  Will retry...", LOG_CRITICAL]
+			RetryCount:Inc
+			if ${RetryCount} > 4
+			{
+				UI:UpdateConsole["obj_Agents: ERROR: Retry count exceeded!  Aborting...", LOG_CRITICAL]
+				EVEBot.ReturnToStation:Set[TRUE]
+			}
 			return
 		}
 
+		RetryCount:Set[0]
+		
 		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.AgentID = ${amIterator.Value.AgentID}"]	
 		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.State = ${amIterator.Value.State}"]	
 		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}"]	
@@ -443,8 +456,23 @@ objectdef obj_Agents
 			dsIndex.Get[1]:Say[${This.AgentID}]
 		}
 		else
-		{			
-			dsIndex.Get[2]:Say[${This.AgentID}]
+		{
+			variable time lastDecline
+			lastDecline:Set[${Config.Freighter.LastDecline}]
+			lastDecline.Hour:Inc[4]
+			lastDecline:Update
+			if ${lastDecline.Timestamp} >= ${Time.Timestamp}
+			{
+				UI:UpdateConsole["obj_Agents: ERROR: You declined a mission less than four hours ago!  Aborting...", LOG_CRITICAL]
+				EVEBot.ReturnToStation:Set[TRUE]
+				return
+			}
+			else
+			{
+				dsIndex.Get[2]:Say[${This.AgentID}]
+				Config.Freighter:SetLastDecline[${Time.Timestamp}]
+				UI:UpdateConsole["obj_Agents: Declined mission."]
+			}
 		}
 
 	    UI:UpdateConsole["Waiting for mission dialog to update..."]
