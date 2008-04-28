@@ -31,10 +31,10 @@ objectdef obj_Courier
 	/* NOTE: The order of these if statements is important!! */
 	method SetState()
 	{
-		if ${Agents.ActiveAgent.NotEqual[${Config.Freighter.AgentName}]}
-		{
-			Agents:SetActiveAgent[${Config.Freighter.AgentName}]
-		}
+		;if ${Agents.ActiveAgent.NotEqual[${Config.Freighter.AgentName}]}
+		;{
+		;	Agents:SetActiveAgent[${Config.Freighter.AgentName}]
+		;}
 		
 		if ${EVEBot.ReturnToStation} && !${Me.InStation}
 		{

@@ -56,6 +56,7 @@ objectdef obj_Configuration
 	variable obj_Configuration_Salvager Salvager
 	variable obj_Configuration_Labels Labels
 	variable obj_Configuration_Freighter Freighter
+	variable obj_Configuration_Agents Agents
 	
 	method Save()
 	{
@@ -1191,3 +1192,89 @@ objectdef obj_Config_Blacklist
 		return ${This.BaseRef.FindSet[Alliances]}
 	}
 }
+
+objectdef obj_Configuration_Agents
+{
+	variable string SetName = "Agents"
+
+	method Initialize()
+	{	
+		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
+		{
+			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
+			This:Set_Default_Values[]
+		}
+		UI:UpdateConsole["obj_Configuration_Agents: Initialized", LOG_MINOR]
+	}
+
+	member:settingsetref AgentsRef()
+	{
+		return ${BaseConfig.BaseRef.FindSet[${This.SetName}]}
+	}
+
+	member:settingsetref AgentRef(string name)
+	{
+		return ${This.AgentsRef.FindSet[${name}]}
+	}
+
+	method Set_Default_Values()
+	{
+		BaseConfig.BaseRef:AddSet[${This.SetName}]
+		This.AgentsRef:AddSet["Fykalia Adaferid"]
+		This.AgentRef["Fykalia Adaferid"]:AddSetting[AgentIndex,9591]
+		This.AgentRef["Fykalia Adaferid"]:AddSetting[AgentID,3018920]
+		This.AgentRef["Fykalia Adaferid"]:AddSetting[LastDecline,${Time.Timestamp}]
+	}
+	
+	member:int AgentIndex(string name)
+	{
+		;UI:UpdateConsole["obj_Configuration_Agents: AgentIndex ${name}"]
+		return ${This.AgentRef[${name}].FindSetting[AgentIndex,9591]}
+	}
+	
+	method SetAgentIndex(string name, int value)
+	{
+		;UI:UpdateConsole["obj_Configuration_Agents: SetAgentIndex ${name} ${value}"]
+		if !${This.AgentsRef.FindSet[${name}](exists)}
+		{
+			This.AgentsRef:AddSet[${name}]
+		}
+		
+		This.AgentRef[${name}]:AddSetting[AgentIndex,${value}]
+	}	
+	
+	member:int AgentID(string name)
+	{
+		;UI:UpdateConsole["obj_Configuration_Agents: AgentID ${name}"]
+		return ${This.AgentRef[${name}].FindSetting[AgentID,3018920]}
+	}
+	
+	method SetAgentID(string name, int value)
+	{
+		;UI:UpdateConsole["obj_Configuration_Agents: SetAgentID ${name} ${value}"]
+		if !${This.AgentsRef.FindSet[${name}](exists)}
+		{
+			This.AgentsRef:AddSet[${name}]
+		}
+		
+		This.AgentRef[${name}]:AddSetting[AgentID,${value}]
+	}	
+
+	member:int LastDecline(string name)
+	{
+		;UI:UpdateConsole["obj_Configuration_Agents: LastDecline ${name}"]
+		return ${This.AgentRef[${name}].FindSetting[LastDecline,${Time.Timestamp}]}
+	}
+	
+	method SetLastDecline(string name, int value)
+	{
+		;UI:UpdateConsole["obj_Configuration_Agents: SetLastDecline ${name} ${value}"]
+		if !${This.AgentsRef.FindSet[${name}](exists)}
+		{
+			This.AgentsRef:AddSet[${name}]
+		}
+		
+		This.AgentRef[${name}]:AddSetting[LastDecline,${value}]
+	}	
+}
+

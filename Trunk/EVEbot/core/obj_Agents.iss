@@ -7,16 +7,66 @@
     
 */
 
+objectdef obj_AgentList
+{
+	variable string CONFIG_FILE = "${Script.CurrentDirectory}/config/${Me.Name} Agents.xml"
+	variable string SET_NAME = "${Me.Name} Agents"
+	variable iterator agentIterator
+	
+	method Initialize()
+	{
+		if ${Me.Name(exists)}
+		{
+			LavishSettings:Import[${CONFIG_FILE}]
+			LavishSettings[${This.SET_NAME}]:GetSettingIterator[This.agentIterator]
+		}
+		else
+		{
+			UI:UpdateConsole["obj_AgentList: Me.Name is NULL", LOG_CRITICAL]
+		}
+		UI:UpdateConsole["obj_AgentList: Initialized", LOG_MINOR]
+	}
+	
+	member:string FirstAgent()
+	{
+		if ${This.agentIterator:First(exists)}
+		{
+			return ${This.agentIterator.Key}			
+		}
+		
+		return NULL
+	}
+	
+	member:string NextAgent()
+	{
+		if ${This.agentIterator:Next(exists)}
+		{
+			return ${This.agentIterator.Key}			
+		}
+		elseif ${This.agentIterator:First(exists)}
+		{
+			return ${This.agentIterator.Key}			
+		}
+		
+		return NULL
+	}
+	
+	member:string ActiveAgent()
+	{
+		return ${This.agentIterator.Key}
+	}
+}
+
 objectdef obj_Agents
 {
-	variable int AgentID = 0
-	variable int AgentIndex = 0
 	variable string AgentName
 	variable string MissionDetails
 	variable int RetryCount = 0
+	variable obj_AgentList AgentList
 	
     method Initialize()
     {
+    	This:SetActiveAgent[${This.AgentList.FirstAgent}]
         UI:UpdateConsole["obj_Agents: Initialized", LOG_MINOR]
     }
 
@@ -24,18 +74,41 @@ objectdef obj_Agents
 	{
 	}
 	
+	member:int AgentIndex()
+	{
+		return ${Config.Agents.AgentIndex[${This.AgentName}]}
+	}
+	
+	member:int AgentID()
+	{
+		return ${Config.Agents.AgentID[${This.AgentName}]}
+	}
+	
 	method SetActiveAgent(string name)
 	{
-	    This.AgentIndex:Set[${Agent[${name}].Index}]
-	    if (${This.AgentIndex} <= 0)
-	    {
-	        UI:UpdateConsole["obj_Agents: ERROR!  Cannot get Index for Agent ${name}.", LOG_CRITICAL]
-			This.AgentName:Set[""]
-	    }
+		UI:UpdateConsole["obj_Agents: SetActiveAgent ${name}"]
+		
+		if ${Config.Agents.AgentIndex[${name}]} > 0
+		{
+			UI:UpdateConsole["obj_Agents: SetActiveAgent: Found agent data. (${Config.Agents.AgentIndex[${name}]})"]
+			This.AgentName:Set[${name}]	
+		}
 		else
 		{
-			This.AgentName:Set[${name}]	
-			This.AgentID:Set[${Agent[${This.AgentIndex}].ID}]
+			variable int agentIndex = 0
+			agentIndex:Set[${Agent[${name}].Index}]
+		    if (${agentIndex} <= 0)
+		    {
+		        UI:UpdateConsole["obj_Agents: ERROR!  Cannot get Index for Agent ${name}.", LOG_CRITICAL]
+				This.AgentName:Set[""]
+		    }
+			else
+			{
+				This.AgentName:Set[${name}]	
+				Config.Agents:SetAgentIndex[${name},${agentIndex}]
+				Config.Agents:SetAgentID[${name},${Agent[${agentIndex}].ID}]
+				Config.Agents:SetLastDecline[${name},0]
+			}
 		}
 	}
 	
@@ -458,19 +531,19 @@ objectdef obj_Agents
 		else
 		{
 			variable time lastDecline
-			lastDecline:Set[${Config.Freighter.LastDecline}]
+			lastDecline:Set[${Config.Agents.LastDecline[${This.AgentName}]}]
 			lastDecline.Hour:Inc[4]
 			lastDecline:Update
 			if ${lastDecline.Timestamp} >= ${Time.Timestamp}
 			{
-				UI:UpdateConsole["obj_Agents: ERROR: You declined a mission less than four hours ago!  Aborting...", LOG_CRITICAL]
-				EVEBot.ReturnToStation:Set[TRUE]
+				UI:UpdateConsole["obj_Agents: ERROR: You declined a mission less than four hours ago!  Switching agents...", LOG_CRITICAL]
+		    	This:SetActiveAgent[${This.AgentList.NextAgent}]
 				return
 			}
 			else
 			{
 				dsIndex.Get[2]:Say[${This.AgentID}]
-				Config.Freighter:SetLastDecline[${Time.Timestamp}]
+				Config.Agents:SetLastDecline[${This.AgentName},${Time.Timestamp}]
 				UI:UpdateConsole["obj_Agents: Declined mission."]
 			}
 		}
