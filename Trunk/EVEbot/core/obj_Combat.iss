@@ -244,7 +244,7 @@ objectdef obj_Combat
 		if ${This.Fled}
 		{
 			/* don't leave the "fled" state until we regen */
-			if (${ArmorPct} < 50 || ${ShieldPct} < 80 || ${CapacitorPct} < 80)
+			if (${ArmorPct} < 50 || (${ShieldPct} < 80 && ${Config.Combat.MinimumShieldPct} > 0) || ${CapacitorPct} < 80)
 			{
 					This.CurrentState:Set["FLEE"]
 			}
