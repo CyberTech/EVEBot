@@ -51,6 +51,10 @@ objectdef obj_IRC
         Event[IRC_AddChannelBan]:DetachAtom[This:IRC_AddChannelBan]
         Event[IRC_RemoveChannelBan]:DetachAtom[This:IRC_RemoveChannelBan]
         Event[IRC_UnhandledEvent]:DetachAtom[This:IRC_UnhandledEvent]    
+        if ${This.IsConnected} 
+        {       
+			IRCUser[${Config.Common.IRCUser}]:Disconnect
+		}
 #endif
 	}
 		

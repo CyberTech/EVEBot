@@ -1382,6 +1382,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 	function WarpPrepare()
 	{
 		UI:UpdateConsole["Preparing for warp"]
+		This:Deactivate_Cloak
 		if ${This.Drones.WaitingForDrones}
 		{
 			UI:UpdateConsole["Drone deployment already in process, delaying warp", LOG_CRITICAL]
