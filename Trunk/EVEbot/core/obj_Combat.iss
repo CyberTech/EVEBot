@@ -291,33 +291,36 @@ objectdef obj_Combat
 			}
 		}
 
-		if ${ArmorPct} < 90
+		if ${ArmorPct} < 100
 		{
-			/* Turn on armor reps, if you have them */
-				Ship:Activate_Armor_Reps[]
+			/* Turn on armor reps, if you have them 
+				Armor reps do not rep right away -- they rep at the END of the cycle.
+				To counter this we start the rep as soon as any damage occurs.
+			*/
+			Ship:Activate_Armor_Reps[]
 		}
 		elseif ${ArmorPct} > 98
 		{
-				Ship:Deactivate_Armor_Reps[]
+			Ship:Deactivate_Armor_Reps[]
 		}
 
 		; The code below pulses your booster around the sweet spot
 		if ${ShieldPct} < 70 || ${Config.Combat.AlwaysShieldBoost}
 		{   /* Turn on the shield booster, if present */
-				Ship:Activate_Shield_Booster[]
+			Ship:Activate_Shield_Booster[]
 		}
 		elseif ${ShieldPct} > 82 && !${Config.Combat.AlwaysShieldBoost}
 		{
-				Ship:Deactivate_Shield_Booster[]
+			Ship:Deactivate_Shield_Booster[]
 		}
 
 		if ${CapacitorPct} < 20
 		{   /* Turn on the cap booster, if present */
-				Ship:Activate_Cap_Booster[]
+			Ship:Activate_Cap_Booster[]
 		}
 		elseif ${CapacitorPct} > 80
 		{
-				Ship:Deactivate_Cap_Booster[]
+			Ship:Deactivate_Cap_Booster[]
 		}
 
 		; Active shield (or armor) hardeners

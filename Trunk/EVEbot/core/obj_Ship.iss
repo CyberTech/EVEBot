@@ -77,7 +77,7 @@ objectdef obj_Ship
 	    			*/
 	    			if ${This.Total_Armor_Reps} > 0
 	    			{
-	    				if ${Me.Ship.ArmorPct} <95
+	    				if ${Me.Ship.ArmorPct} < 100
 	    				{
 	    					This:ActivateRepairing_Armor
 	    				}
