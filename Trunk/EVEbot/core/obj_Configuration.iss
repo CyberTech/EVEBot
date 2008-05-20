@@ -448,7 +448,7 @@ objectdef obj_Configuration_Miner
 	
 	member:bool UseMiningDrones()
 	{
-		return ${This.MinerRef.FindSetting[Mining Drones, FALSE]}
+		return ${This.MinerRef.FindSetting[Use Mining Drones, FALSE]}
 	}
 	
 	method SetUseMiningDrones(bool value)
