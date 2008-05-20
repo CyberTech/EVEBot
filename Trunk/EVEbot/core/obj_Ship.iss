@@ -348,6 +348,7 @@ objectdef obj_Ship
 				case GROUPID_ARMOR_HARDENERS
 					This.ModuleList_ActiveResists:Insert[${Module.Value}]
 					break
+				case GROUP_ENERGYWEAPON
 				case GROUP_PROJECTILEWEAPON
 				case GROUP_HYBRIDWEAPON
 				case GROUP_MISSILELAUNCHER

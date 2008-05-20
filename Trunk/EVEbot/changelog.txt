@@ -8,6 +8,12 @@
  |                                                      |
  .------------------------------------------------------.
 
+TODO:
+randomize delay between jettison and can rename
+randomize time between laser activations.
+randomized idle in belt (afk bio break)
+randomized full idle (safe/station - 30-60 minutes)
+
 *********************************************************
                      CHANGELOG:                          
 *********************************************************

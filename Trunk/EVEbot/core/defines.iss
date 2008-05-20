@@ -14,6 +14,7 @@
 	So how's that goiter been? Any news from the doc on removal?
 	Sure, he says we can go in thru my right ear to remove it.  I'm going to check the internet first, that doesn't sound right. I think it's the left.
 	You sure it's the left?
+	No, it's the right.
 */
 variable string APP_NAME = "EVEBot"
 variable string APP_VERSION = "0.98"
