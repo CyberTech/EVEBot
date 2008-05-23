@@ -44,6 +44,25 @@ Ahremen
 Raysere
 Tairei
 */
+
+objectdef obj_EVEDB_Spawns
+{
+	variable string CONFIG_FILE = "${Script.CurrentDirectory}/config/EVEDB_Spawns.xml"
+	variable string SET_NAME = "EVEDB_Spawns"
+	
+	method Initialize()
+	{
+		LavishSettings:Import[${CONFIG_FILE}]
+		
+		UI:UpdateConsole["obj_EVEDB_Spawns: Initialized", LOG_MINOR]
+	}
+	
+	member:int SpawnBounty(string spawnName)
+	{
+		return ${LavishSettings[${This.SET_NAME}].FindSet[${spawnName}].FindSetting[bounty, NOTSET]}
+	}	
+}
+
 objectdef obj_Targets
 {
 	variable index:string PriorityTargets
@@ -57,6 +76,7 @@ objectdef obj_Targets
 	
 	variable bool CheckChain
 	variable bool Chaining
+   variable int  TotalSpawnValue
 
 	variable bool m_SpecialTargetPresent
 	
@@ -149,8 +169,9 @@ objectdef obj_Targets
 	
 	method ResetTargets()
 	{
-		CheckChain:Set[TRUE]
-		Chaining:Set[FALSE]
+		This.CheckChain:Set[TRUE]
+		This.Chaining:Set[FALSE]
+      This.TotalSpawnValue:Set[0]
 	}
 
 	member:bool SpecialTargetPresent()
@@ -172,22 +193,6 @@ objectdef obj_Targets
 		while ${PriorityTarget:Next(exists)}
 		
 		return FALSE
-	}
-
-	member:bool IsChainTarget(string name)
-	{
-			; Loop through the chainable targets
-			if ${ChainTarget:First(exists)}
-			do
-			{
-				if ${name.Find[${ChainTarget.Value}]} > 0
-				{
-					return TRUE
-				}
-			}
-			while ${ChainTarget:Next(exists)}
-			
-			return FALSE
 	}
 
 	member:bool IsSpecialTarget(string name)
@@ -258,56 +263,74 @@ objectdef obj_Targets
 		variable bool HasMultipleTypes = FALSE
 
 		m_SpecialTargetPresent:Set[FALSE]
-		
-		variable int TypeID
-		TypeID:Set[${Target.Value.TypeID}]
-		do
+
+      ; Determine the total spawn value
+      if ${Target:First(exists)} && ${This.TotalSpawnValue} == 0
+      {
+         do
+         {
+            ;UI:UpdateConsole["DEBUG: ${Target.Value.Name} is worth ${EVEDB_Spawns.SpawnBounty[${Target.Value.Name}]} ISK."]
+            ;UI:UpdateConsole["DEBUG: Group: ${Target.Value.Group}(${Target.Value.GroupID})"]
+            ;UI:UpdateConsole["DEBUG: Type: ${Target.Value.Type}(${Target.Value.TypeID})"]
+            ;UI:UpdateConsole["DEBUG: Category: ${Target.Value.Category}(${Target.Value.CategoryID})"]
+            This.TotalSpawnValue:Inc[${EVEDB_Spawns.SpawnBounty[${Target.Value.Name}]}]
+         }
+         while ${Target:Next(exists)}
+         UI:UpdateConsole["DEBUG: This.TotalSpawnValue = ${This.TotalSpawnValue}"]
+      }
+
+      if ${This.TotalSpawnValue} >= ${Config.Combat.MinChainBounty}
+      {
+         ;UI:UpdateConsole["DEBUG: Spawn value exceeds minimum.  Should chain this spawn."]
+         HasChainableTarget:Set[TRUE]
+      }
+
+		if ${Target:First(exists)}
 		{
-			; If the Type ID is different then there's more then 1 type in the belt
-			if ${TypeID} != ${Target.Value.TypeID}
+			variable int TypeID
+			TypeID:Set[${Target.Value.TypeID}]
+			do
 			{
-				HasMultipleTypes:Set[TRUE]
-			}
-			
-			; Check for a chainable target
-			if ${This.IsChainTarget[${Target.Value.Name}]}
-			{
-				HasChainableTarget:Set[TRUE]
-			}
-			
-			; Check for a special target
-			if ${This.IsSpecialTarget[${Target.Value.Name}]}
-			{
-				HasSpecialTarget:Set[TRUE]
-				m_SpecialTargetPresent:Set[TRUE]
-			}
-		
-			; Loop through the priority targets
-			if ${This.IsPriorityTarget[${Target.Value.Name}]}
-			{
-				; Yes, is it locked?
-				if !${Target.Value.IsLockedTarget} && !${Target.Value.BeingTargeted}
+				; If the Type ID is different then there's more then 1 type in the belt
+				if ${TypeID} != ${Target.Value.TypeID}
 				{
-					; No, report it and lock it.
-					UI:UpdateConsole["Locking priority target ${Target.Value.Name}"]
-					Target.Value:LockTarget
+					HasMultipleTypes:Set[TRUE]
 				}
 				
-				; By only saying there's priority targets when they arent
-				; locked yet, the npc bot will target non-priority targets
-				; after it has locked all the priority targets 
-				; (saves time once the priority targets are dead)
-				if !${Target.Value.IsLockedTarget}
+				; Check for a special target
+				if ${This.IsSpecialTarget[${Target.Value.Name}]}
 				{
-					HasPriorityTarget:Set[TRUE]
+					HasSpecialTarget:Set[TRUE]
+					m_SpecialTargetPresent:Set[TRUE]
 				}
-				
-				; We have targets
-				HasTargets:Set[TRUE]
+			
+				; Loop through the priority targets
+				if ${This.IsPriorityTarget[${Target.Value.Name}]}
+				{
+					; Yes, is it locked?
+					if !${Target.Value.IsLockedTarget} && !${Target.Value.BeingTargeted}
+					{
+						; No, report it and lock it.
+						UI:UpdateConsole["Locking priority target ${Target.Value.Name}"]
+						Target.Value:LockTarget
+					}
+					
+					; By only saying there's priority targets when they arent
+					; locked yet, the npc bot will target non-priority targets
+					; after it has locked all the priority targets 
+					; (saves time once the priority targets are dead)
+					if !${Target.Value.IsLockedTarget}
+					{
+						HasPriorityTarget:Set[TRUE]
+					}
+					
+					; We have targets
+					HasTargets:Set[TRUE]
+				}
 			}
+			while ${Target:Next(exists)}
 		}
-		while ${Target:Next(exists)}
-		
+
 		; Do we need to determin if we need to chain ?
 		if ${Config.Combat.ChainSpawns} && ${CheckChain}
 		{
@@ -331,6 +354,7 @@ objectdef obj_Targets
 				Chaining:Set[FALSE]
 			}			
 
+	        UI:UpdateConsole["DEBUG: Chaining = ${Chaining}"]
 			CheckChain:Set[FALSE]
 		}
 
@@ -341,8 +365,11 @@ objectdef obj_Targets
 			variable bool DoTarget = FALSE
 			if ${Chaining}
 			{
-				; We're chaining, only kill chainable spawns
-				DoTarget:Set[${This.IsChainTarget[${Target.Value.Name}]}]
+				; We're chaining, only kill chainable spawns'
+            if ${Target.Value.Group.Find["Battleship"](exists)}
+            {
+               DoTarget:Set[TRUE]
+            }
 			}
 			else
 			{

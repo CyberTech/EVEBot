@@ -42,6 +42,7 @@ variable obj_Configuration Config
 variable obj_Config_Whitelist Whitelist
 variable obj_Config_Blacklist Blacklist
 variable obj_EVEDB_Stations EVEDB_Stations
+variable obj_EVEDB_Spawns EVEDB_Spawns
 
 /* Core Objects */
 variable obj_Asteroids Asteroids
