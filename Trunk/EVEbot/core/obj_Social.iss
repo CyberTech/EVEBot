@@ -88,6 +88,8 @@ objectdef obj_Social
 		if ${sChannel.Equal["Local"]} 
 		{
 			call Sound.PlayTellSound
+			UI:UpdateConsole["Local Chat Detected!", LOG_CRITICAL]		
+			UI:UpdateConsole["${sAuthor}: ${sMessageText}", LOG_CRITICAL]		
 		}
 	}
 	
