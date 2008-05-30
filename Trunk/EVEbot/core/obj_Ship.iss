@@ -95,7 +95,7 @@ objectdef obj_Ship
 	    			/* Shield Boosters
 	    				We boost to a higher % in here, as it's done during warp, so cap has time to regen.
 	    			*/
-					if ${Me.Ship.ShieldPct} < 85 || ${Config.Combat.AlwaysShieldBoost}
+					if ${Me.Ship.ShieldPct} < 90 || ${Config.Combat.AlwaysShieldBoost}
 					{	/* Turn on the shield booster */
 						This:Activate_Shield_Booster[]
 					}

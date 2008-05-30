@@ -450,7 +450,17 @@ objectdef obj_OreHauler inherits obj_Hauler
 			return
 		}
 		
-		call Fleet.WarpToFleetMember ${charID}
+		if ${Entity[${charID}].Distance} > 15000
+		{
+			if ${Entity[${charID}].Distance} < WARP_RANGE			
+			{
+				call This.WarpToNextSafeSpot
+			}
+			else
+			{
+				call Fleet.WarpToFleetMember ${charID}
+			}
+		}
 
 		call Ship.OpenCargo
 		
@@ -460,6 +470,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 			UI:UpdateConsole["DEBUG: ${Entity[OwnerID,${charID},CategoryID,6]}"]
 			UI:UpdateConsole["DEBUG: ${Entity[OwnerID,${charID},CategoryID,6].ID}"]
 			UI:UpdateConsole["DEBUG: ${Entity[OwnerID,${charID},CategoryID,6].DistanceTo[${Entities.Peek.ID}]}"]
+
 			if ${Entity[OwnerID,${charID},CategoryID,6](exists)} && \
 			   ${Entity[OwnerID,${charID},CategoryID,6].DistanceTo[${Entities.Peek.ID}]} > LOOT_RANGE
 			{

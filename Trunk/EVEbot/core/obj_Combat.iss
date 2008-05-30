@@ -304,12 +304,11 @@ objectdef obj_Combat
 			Ship:Deactivate_Armor_Reps[]
 		}
 
-		; The code below pulses your booster around the sweet spot
-		if ${ShieldPct} < 70 || ${Config.Combat.AlwaysShieldBoost}
+		if ${ShieldPct} < 85 || ${Config.Combat.AlwaysShieldBoost}
 		{   /* Turn on the shield booster, if present */
 			Ship:Activate_Shield_Booster[]
 		}
-		elseif ${ShieldPct} > 82 && !${Config.Combat.AlwaysShieldBoost}
+		elseif ${ShieldPct} > 95 && !${Config.Combat.AlwaysShieldBoost}
 		{
 			Ship:Deactivate_Shield_Booster[]
 		}
