@@ -1223,6 +1223,7 @@
 								<Item Value='4'>Container Test</Item>
 								<Item Value='5'>Mission Runner</Item>
 								<Item Value='6'>Stealth Hauler</Item>
+								<Item Value='7'>Scavenger</Item>								
 							</Items>
 							<OnSelect>
 								Script[EVEBot].VariableScope.Config.Freighter:SetFreighterMode[${This.SelectedItem.Value}]
@@ -1308,34 +1309,6 @@
 								if ${This.Text.Length} > 0
 								{
 									Script[EVEBot].VariableScope.Config.Freighter:SetRegionName[${This.Text}]
-								}
-							</OnChange>
-						</Textentry>
-						<Text name='lblAgentName'>
-							<X>10</X>
-							<Y>114</Y>
-							<Width>280</Width>
-							<Height>10</Height>
-							<Text>Agent Name</Text>
-							<AutoTooltip>Name of the agent we are working for.</AutoTooltip>
-						</Text>
-						<Textentry name='teAgentName'>
-							<X>200</X>							
-							<Y>110</Y>						
-							<Width>200</Width>						
-							<Height>18</Height>
-							<MaxLength>100</MaxLength>
-							<OnLoad>
-								This:SetText[${Script[EVEBot].VariableScope.Config.Freighter.AgentName}]
-							</OnLoad>
-							<OnChange>							
-								if ${This.Text.Length} > 0
-								{
-									Script[EVEBot].VariableScope.Config.Freighter:SetAgentName[${This.Text}]
-								}
-								else
-								{
-									Script[EVEBot].VariableScope.Config.Freighter:SetAgentName[""]
 								}
 							</OnChange>
 						</Textentry>

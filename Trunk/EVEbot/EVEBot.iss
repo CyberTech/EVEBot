@@ -33,6 +33,7 @@
 #include Behaviors/obj_Fighter.iss
 #include Behaviors/obj_Freighter.iss
 #include Behaviors/obj_Ratter.iss
+#include Behaviors/obj_Scavenger.iss
 
 /* Script-Defined Support Objects */
 variable obj_EVEBot EVEBot

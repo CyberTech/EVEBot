@@ -22,6 +22,7 @@ objectdef obj_Freighter
 	
 	variable obj_Courier 		Courier
 	variable obj_StealthHauler 	StealthHauler
+	variable obj_Scavenger 		Scavenger
 	
 	method Initialize()
 	{
@@ -65,6 +66,9 @@ objectdef obj_Freighter
 				case Stealth Hauler
 					This.StealthHauler:SetState
 					break
+				case Scavenger
+					This.Scavenger:SetState
+					break					
 				default
 					This:SetState[]
 					break
@@ -104,6 +108,10 @@ objectdef obj_Freighter
 			case Stealth Hauler
 				call This.StealthHauler.ProcessState
 				break
+			case Scavenger
+				call This.Scavenger.ProcessState
+				break					
+				
 			default
 				switch ${This.CurrentState}
 				{
