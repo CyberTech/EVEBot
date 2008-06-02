@@ -47,7 +47,7 @@ Tairei
 
 objectdef obj_EVEDB_Spawns
 {
-	variable string CONFIG_FILE = "${Script.CurrentDirectory}/config/EVEDB_Spawns.xml"
+	variable string CONFIG_FILE = "${BaseConfig.CONFIG_PATH}/EVEDB_Spawns.xml"
 	variable string SET_NAME = "EVEDB_Spawns"
 	
 	method Initialize()

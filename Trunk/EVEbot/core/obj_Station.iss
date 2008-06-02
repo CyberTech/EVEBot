@@ -9,7 +9,7 @@
 
 objectdef obj_EVEDB_Stations
 {
-	variable string CONFIG_FILE = "${Script.CurrentDirectory}/config/EVEDB_Stations.xml"
+	variable string CONFIG_FILE = "${BaseConfig.CONFIG_PATH}/EVEDB_Stations.xml"
 	variable string SET_NAME = "EVEDB_Stations"
 	
 	method Initialize()

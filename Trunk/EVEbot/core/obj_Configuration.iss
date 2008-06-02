@@ -18,6 +18,7 @@
 		of the existing classes below.
 */
 
+/* ************************************************************************* */
 objectdef obj_Configuration_BaseConfig
 {
 	variable filepath CONFIG_PATH = "${Script.CurrentDirectory}/Config"
@@ -65,6 +66,7 @@ objectdef obj_Configuration_BaseConfig
 	}		
 }
 
+/* ************************************************************************* */
 objectdef obj_Configuration
 {
 	variable obj_Configuration_Common Common
@@ -82,6 +84,7 @@ objectdef obj_Configuration
 	}		
 }
 
+/* ************************************************************************* */
 objectdef obj_Configuration_Common
 {
 	variable string SetName = "Common"
@@ -282,6 +285,7 @@ objectdef obj_Configuration_Common
 	}
 }
 
+/* ************************************************************************* */
 objectdef obj_Configuration_Miner
 {
 	variable string SetName = "Miner"
@@ -589,13 +593,13 @@ objectdef obj_Configuration_Miner
 					threshold:Set[${Math.Calc[(${threshold} * ${Ship.MiningAmountPerLaser}) * 0.99]}]
 					if ${This.MinerRef.FindSetting[Cargo Threshold, 0]} > ${Me.Ship.CargoCapacity}
 					{
-						UI:UpdateConsole["ERROR: Mining Cargo Threshold is set higher than ship capacity: Using dynamic value of ${threshold}"]
+						;UI:UpdateConsole["ERROR: Mining Cargo Threshold is set higher than ship capacity: Using dynamic value of ${threshold}"]
 					}
 				}
 				else
 				{
-					UI:UpdateConsole["ERROR: Unable to retrieve Ship.MiningAmountPerLaser"]
-					UI:UpdateConsole["ERROR: Mining Cargo Threshold is set higher than ship capacity: Using cargo capacity"]
+					;UI:UpdateConsole["ERROR: Unable to retrieve Ship.MiningAmountPerLaser"]
+					;UI:UpdateConsole["ERROR: Mining Cargo Threshold is set higher than ship capacity: Using cargo capacity"]
 					threshold:Set[${Me.Ship.CargoCapacity}]
 				}
 			}
@@ -610,6 +614,7 @@ objectdef obj_Configuration_Miner
 }
 
 
+/* ************************************************************************* */
 objectdef obj_Configuration_Combat
 {
 	variable string SetName = "Combat"
@@ -812,6 +817,7 @@ objectdef obj_Configuration_Combat
 	}
 }
 
+/* ************************************************************************* */
 objectdef obj_Configuration_Hauler
 {
 	variable string SetName = "Hauler"
@@ -892,6 +898,7 @@ objectdef obj_Configuration_Hauler
 	}
 }
 
+/* ************************************************************************* */
 objectdef obj_Configuration_Salvager
 {
 	variable string SetName = "Salvager"
@@ -920,6 +927,7 @@ objectdef obj_Configuration_Salvager
 	
 }
 
+/* ************************************************************************* */
 objectdef obj_Configuration_Labels
 {
 	variable string SetName = "Labels"
@@ -978,6 +986,7 @@ objectdef obj_Configuration_Labels
 	}
 }
 
+/* ************************************************************************* */
 objectdef obj_Configuration_Freighter
 {
 	variable string SetName = "Freighter"
@@ -1081,9 +1090,10 @@ objectdef obj_Configuration_Freighter
 	
 }
 
+/* ************************************************************************* */
 objectdef obj_Config_Whitelist
 {
-	variable string DATA_FILE = "${CONFIG_PATH}/${Me.Name} Whitelist.xml"
+	variable string DATA_FILE = "${BaseConfig.CONFIG_PATH}/${Me.Name} Whitelist.xml"
 	variable settingsetref BaseRef
 
 	method Initialize()
@@ -1091,6 +1101,7 @@ objectdef obj_Config_Whitelist
 		LavishSettings[EVEBotWhitelist]:Clear
 		LavishSettings:AddSet[EVEBotWhitelist]
 		This.BaseRef:Set[${LavishSettings[EVEBotWhitelist]}]
+		UI:UpdateConsole["obj_Config_Whitelist: Loading ${DATA_FILE}"]
 		This.BaseRef:Import[${This.DATA_FILE}]
 		
 		if !${This.BaseRef.FindSet[Pilots](exists)}
@@ -1141,9 +1152,10 @@ objectdef obj_Config_Whitelist
 	}
 }
 
+/* ************************************************************************* */
 objectdef obj_Config_Blacklist
 {
-	variable string DATA_FILE = "${CONFIG_PATH}/${Me.Name} Blacklist.xml"
+	variable string DATA_FILE = "${BaseConfig.CONFIG_PATH}/${Me.Name} Blacklist.xml"
 	variable settingsetref BaseRef
 
 	method Initialize()
@@ -1151,6 +1163,7 @@ objectdef obj_Config_Blacklist
 		LavishSettings[EVEBotBlacklist]:Clear
 		LavishSettings:AddSet[EVEBotBlacklist]
 		This.BaseRef:Set[${LavishSettings[EVEBotBlacklist]}]
+		UI:UpdateConsole["obj_Config_Blacklist: Loading ${DATA_FILE}"]
 		This.BaseRef:Import[${This.DATA_FILE}]
 		
 		if !${This.BaseRef.FindSet[Pilots](exists)}
@@ -1201,6 +1214,7 @@ objectdef obj_Config_Blacklist
 	}
 }
 
+/* ************************************************************************* */
 objectdef obj_Configuration_Agents
 {
 	variable string SetName = "Agents"

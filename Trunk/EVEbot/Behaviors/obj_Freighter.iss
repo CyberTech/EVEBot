@@ -36,8 +36,11 @@ objectdef obj_Freighter
 		 * works this can be moved into the state machine and
 		 * PickupOrDropoff can delete the station bookmarks.
 		 */
-		This:BuildSourceList
-		
+		if ${Config.Common.BotModeName.Equal[Freighter]}
+		{
+			This:BuildSourceList
+		}
+
 		UI:UpdateConsole["obj_Freighter: Initialized", LOG_MINOR]
 	}
 	

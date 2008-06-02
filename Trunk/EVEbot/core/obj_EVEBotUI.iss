@@ -39,12 +39,8 @@ objectdef obj_EVEBotUI
 	method Reload()
 	{
 		ui -reload interface/evebotgui.xml
+		This:WriteQueueToLog
 		This.Reloaded:Set[TRUE]
-		while ${This.ConsoleBuffer.Peek(exists)}
-		{
-			This:UpdateConsole[${This.ConsoleBuffer.Peek}]
-			This.ConsoleBuffer:Dequeue
-		}
 	}
 	
 	method Shutdown()
@@ -116,7 +112,7 @@ objectdef obj_EVEBotUI
 		return "${Hours}:${Minutes}:${Seconds}"
 	}
 
-	method UpdateConsole(string StatusMessage, int Level=LOG_STANDARD)
+	method UpdateConsole(string StatusMessage, int Level=LOG_STANDARD, int Indent=0)
 	{
 		/*
 			Level = LOG_MINOR - Minor - Log, do not print to screen.
@@ -124,12 +120,20 @@ objectdef obj_EVEBotUI
 			Level = LOG_CRITICAL - Critical, Log, Log to Critical Log, and print to screen
 		*/
 		variable string msg
+		variable int Count
 		
 		if ${StatusMessage(exists)}
 		{
+			msg:Set["${Time.Time24}: "]
+				
+			for (Count:Set[1]; ${Count}<=${Indent}; Count:Inc)
+			{
+  				msg:Concat[" "]
+  			}
+  			msg:Concat[${StatusMessage}]
+  				
 			if ${This.Reloaded}
 			{
-				msg:Set["${Time.Time24}: ${StatusMessage}"]
 				if ${Level} > LOG_MINOR
 				{
 					UIElement[StatusConsole@Status@EvEBotOptionsTab@EVEBot]:Echo[${msg}]
@@ -143,11 +147,21 @@ objectdef obj_EVEBotUI
 			else
 			{
 				; Just queue the lines till we reload the UI after config data is loaded
-				This.ConsoleBuffer:Queue[${StatusMessage}]
+				This.ConsoleBuffer:Queue[${msg}]
 			}
 		}
 	}
 
+	method WriteQueueToLog()
+	{
+		while ${This.ConsoleBuffer.Peek(exists)}
+		{
+			UIElement[StatusConsole@Status@EvEBotOptionsTab@EVEBot]:Echo[${This.ConsoleBuffer.Peek}]
+			redirect -append "${This.LogFile}" Echo "${This.ConsoleBuffer.Peek}"
+			This.ConsoleBuffer:Dequeue
+		}
+	}
+	
 	method UpdateStatStatus(string StatusMessage)
 	{
 		redirect -append "${This.StatsLogFile}" Echo "[${Time.Time24}] ${StatusMessage}"

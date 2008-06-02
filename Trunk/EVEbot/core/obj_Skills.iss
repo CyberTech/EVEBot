@@ -1,6 +1,6 @@
 objectdef obj_Skills
 {
-	variable file SkillFile = "${Script.CurrentDirectory}/config/${Me.Name} Training.txt"
+	variable file SkillFile = "${BaseConfig.CONFIG_PATH}/${Me.Name} Training.txt"
 	variable index:skill OwnedSkills
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 5
@@ -20,10 +20,10 @@ objectdef obj_Skills
 		}
 		else
 		{
-			UI:UpdateConsole["obj_Skills: ${This.SkillFile} does not exist"]
-			UI:UpdateConsole["To enable skill training, create this file and populate it with skills, one per line."]
+			This.SkillFile:Open
+			This.SkillFile:Truncate
+			This.SkillFile:Close
 		}
-
 	}
 	
 	method Shutdown()

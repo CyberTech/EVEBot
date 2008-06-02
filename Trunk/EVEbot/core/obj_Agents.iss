@@ -9,21 +9,14 @@
 
 objectdef obj_AgentList
 {
-	variable string CONFIG_FILE = "${Script.CurrentDirectory}/config/${Me.Name} Agents.xml"
+	variable string CONFIG_FILE = "${BaseConfig.CONFIG_PATH}/${Me.Name} Agents.xml"
 	variable string SET_NAME = "${Me.Name} Agents"
 	variable iterator agentIterator
 	
 	method Initialize()
 	{
-		if ${Me.Name(exists)}
-		{
-			LavishSettings:Import[${CONFIG_FILE}]
-			LavishSettings[${This.SET_NAME}]:GetSettingIterator[This.agentIterator]
-		}
-		else
-		{
-			UI:UpdateConsole["obj_AgentList: Me.Name is NULL", LOG_CRITICAL]
-		}
+		LavishSettings:Import[${CONFIG_FILE}]
+		LavishSettings[${This.SET_NAME}]:GetSettingIterator[This.agentIterator]
 		UI:UpdateConsole["obj_AgentList: Initialized", LOG_MINOR]
 	}
 	
@@ -66,8 +59,15 @@ objectdef obj_Agents
 	
     method Initialize()
     {
-    	This:SetActiveAgent[${This.AgentList.FirstAgent}]
-        UI:UpdateConsole["obj_Agents: Initialized", LOG_MINOR]
+    	if ${This.agentIterator:First(exists)}
+    	{
+    		This:SetActiveAgent[${This.AgentList.FirstAgent}]
+    		UI:UpdateConsole["obj_Agents: Initialized", LOG_MINOR]
+    	}
+    	else
+    	{
+			UI:UpdateConsole["obj_Agents: Initialized (No Agents Found)", LOG_MINOR]
+		}
     }
 
 	method Shutdown()

@@ -315,7 +315,7 @@ objectdef obj_Ship
 
 		variable iterator Module
 
-		UI:UpdateConsole["Module Inventory:", LOG_MINOR]
+		UI:UpdateConsole["Module Inventory:", LOG_MINOR, 1]
 		This.ModuleList:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
@@ -400,106 +400,106 @@ objectdef obj_Ship
 		}
 		while ${Module:Next(exists)}
 
-		UI:UpdateConsole["Weapons:", LOG_MINOR]
+		UI:UpdateConsole["Weapons:", LOG_MINOR, 2]
 		This.ModuleList_Weapon:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
-			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR]
+			UI:UpdateConsole["Slot: ${Module.Value.ToItem.Slot} ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
 		while ${Module:Next(exists)}
 
-		UI:UpdateConsole["Active Resistance Modules:", LOG_MINOR]
+		UI:UpdateConsole["Active Resistance Modules:", LOG_MINOR, 2]
 		This.ModuleList_ActiveResists:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
-			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR]
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
 		while ${Module:Next(exists)}
 
-		UI:UpdateConsole["Passive Modules:", LOG_MINOR]
+		UI:UpdateConsole["Passive Modules:", LOG_MINOR, 2]
 		This.ModuleList_Passive:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
-			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR]
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
 		while ${Module:Next(exists)}
 
-		UI:UpdateConsole["Mining Modules:", LOG_MINOR]
+		UI:UpdateConsole["Mining Modules:", LOG_MINOR, 2]
 		This.ModuleList_MiningLaser:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
-			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR]
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
 		while ${Module:Next(exists)}
 
-		UI:UpdateConsole["Armor Repair Modules:", LOG_MINOR]
+		UI:UpdateConsole["Armor Repair Modules:", LOG_MINOR, 2]
 		This.ModuleList_Repair_Armor:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
-			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR]
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
 		while ${Module:Next(exists)}
 
-		UI:UpdateConsole["Shield Regen Modules:", LOG_MINOR]
+		UI:UpdateConsole["Shield Regen Modules:", LOG_MINOR, 2]
 		This.ModuleList_Regen_Shield:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
-			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR]
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
 		while ${Module:Next(exists)}
 
-		UI:UpdateConsole["AfterBurner Modules:", LOG_MINOR]
+		UI:UpdateConsole["AfterBurner Modules:", LOG_MINOR, 2]
 		This.ModuleList_AB_MWD:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
-			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR]
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
 		while ${Module:Next(exists)}
 
 		if ${This.ModuleList_AB_MWD.Used} > 1
 		{
-			UI:UpdateConsole["Warning: More than 1 Afterburner or MWD was detected, I will only use the first one.", LOG_MINOR]
+			UI:UpdateConsole["Warning: More than 1 Afterburner or MWD was detected, I will only use the first one.", LOG_MINOR, 4]
 		}
 
-		UI:UpdateConsole["Salvaging Modules:", LOG_MINOR]
+		UI:UpdateConsole["Salvaging Modules:", LOG_MINOR, 2]
 		This.ModuleList_Salvagers:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
-			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR]
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
 		while ${Module:Next(exists)}
 
-		UI:UpdateConsole["Tractor Beam Modules:", LOG_MINOR]
+		UI:UpdateConsole["Tractor Beam Modules:", LOG_MINOR, 2]
 		This.ModuleList_TractorBeams:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
-			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR]
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
 		while ${Module:Next(exists)}
 
-		UI:UpdateConsole["Cloaking Device Modules:", LOG_MINOR]
+		UI:UpdateConsole["Cloaking Device Modules:", LOG_MINOR, 2]
 		This.ModuleList_Cloaks:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
-			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR]
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
 		while ${Module:Next(exists)}
-		UI:UpdateConsole["Stasis Web Modules:", LOG_MINOR]
+		UI:UpdateConsole["Stasis Web Modules:", LOG_MINOR, 2]
 		This.ModuleList_StasisWeb:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
-			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR]
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
 		while ${Module:Next(exists)}
 	}
