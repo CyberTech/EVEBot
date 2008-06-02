@@ -20,17 +20,35 @@
 
 objectdef obj_Configuration_BaseConfig
 {
-	variable string CONFIG_FILE = "${Script.CurrentDirectory}/config/evebot.xml"
+	variable filepath CONFIG_PATH = "${Script.CurrentDirectory}/Config"
+	variable string ORG_CONFIG_FILE = "evebot.xml"
+	variable string NEW_CONFIG_FILE = "${Me.Name} Config.xml"
+	variable string CONFIG_FILE = "${Me.Name} Config.xml"
 	variable settingsetref BaseRef
 	
 	method Initialize()
 	{	
-
 		LavishSettings[EVEBotSettings]:Clear
 		LavishSettings:AddSet[EVEBotSettings]
 		LavishSettings[EVEBotSettings]:AddSet[${Me.Name}]
-		LavishSettings[EVEBotSettings]:Import[${CONFIG_FILE}]
-	
+
+		; Check new config file first, then fallball to original name for import
+
+		CONFIG_FILE:Set["${CONFIG_PATH}/${NEW_CONFIG_FILE}"]
+
+		if !${CONFIG_PATH.FileExists[${NEW_CONFIG_FILE}]}
+		{
+			UI:UpdateConsole["${CONFIG_FILE} not found - looking for ${ORG_CONFIG_FILE}"]
+			UI:UpdateConsole["Configuration will be copied from ${ORG_CONFIG_FILE} to ${NEW_CONFIG_FILE}"]
+			
+			LavishSettings[EVEBotSettings]:Import[${CONFIG_PATH}/${ORG_CONFIG_FILE}]
+		}
+		else
+		{
+			UI:UpdateConsole["Configuration file is ${CONFIG_FILE}"]
+			LavishSettings[EVEBotSettings]:Import[${CONFIG_FILE}]
+		}		
+
 		BaseRef:Set[${LavishSettings[EVEBotSettings].FindSet[${Me.Name}]}]
 		UI:UpdateConsole["obj_Configuration_BaseConfig: Initialized", LOG_MINOR]
 	}
@@ -42,7 +60,7 @@ objectdef obj_Configuration_BaseConfig
 	}
 
 	method Save()
-	{
+	{		
 		LavishSettings[EVEBotSettings]:Export[${CONFIG_FILE}]
 	}		
 }
@@ -1065,16 +1083,11 @@ objectdef obj_Configuration_Freighter
 
 objectdef obj_Config_Whitelist
 {
-	variable string DATA_FILE = "${Script.CurrentDirectory}/config/Whitelist.xml"
+	variable string DATA_FILE = "${CONFIG_PATH}/${Me.Name} Whitelist.xml"
 	variable settingsetref BaseRef
 
 	method Initialize()
 	{	
-		if ${Me.Name(exists)}
-		{
-			This.DATA_FILE:Set["${Script.CurrentDirectory}/config/${Me.Name}_Whitelist.xml"]
-		}
-	
 		LavishSettings[EVEBotWhitelist]:Clear
 		LavishSettings:AddSet[EVEBotWhitelist]
 		This.BaseRef:Set[${LavishSettings[EVEBotWhitelist]}]
@@ -1130,16 +1143,11 @@ objectdef obj_Config_Whitelist
 
 objectdef obj_Config_Blacklist
 {
-	variable string DATA_FILE = "${Script.CurrentDirectory}/config/Blacklist.xml"
+	variable string DATA_FILE = "${CONFIG_PATH}/${Me.Name} Blacklist.xml"
 	variable settingsetref BaseRef
 
 	method Initialize()
 	{	
-		if ${Me.Name(exists)}
-		{
-			This.DATA_FILE:Set["${Script.CurrentDirectory}/config/${Me.Name}_Blacklist.xml"]
-		}
-	
 		LavishSettings[EVEBotBlacklist]:Clear
 		LavishSettings:AddSet[EVEBotBlacklist]
 		This.BaseRef:Set[${LavishSettings[EVEBotBlacklist]}]

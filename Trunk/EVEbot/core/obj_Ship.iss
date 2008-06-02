@@ -376,19 +376,13 @@ objectdef obj_Ship
 				case GROUPID_ARMOR_REPAIRERS
 					This.ModuleList_Repair_Armor:Insert[${Module.Value}]
 					continue
-				case 538
-					/* data miners */
-					; DEBUG: Group: Data Miners  538
-					; DEBUG: Type: Salvager I  25861
-					if ${TypeID} == 25861
-				   	{	/* Salvager I */
+				case GROUPID_DATA_MINER
+					if ${TypeID} == TYPEID_SALVAGER
+					{
 						This.ModuleList_Salvagers:Insert[${Module.Value}]
-				   	}
+					}
 					continue
-				case 650
-					/* tractor beams */
-					; DEBUG: Group: Tractor Beam  650
-					; DEBUG: Type: Small Tractor Beam I  24348
+				case GROUPID_TRACTOR_BEAM
 					This.ModuleList_TractorBeams:Insert[${Module.Value}]
 					continue
 				case NONE
@@ -1846,6 +1840,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 
 		return 0
 	}
+	
 	function SetActiveCrystals()
     {
         variable iterator ModuleIterator
@@ -1872,6 +1867,28 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
         }
         while ${ModuleIterator:Next(exists)}
     }
+
+	method Activate_Tractor()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+ 
+		variable iterator Module
+
+		This.ModuleList_TractorBeams:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			if !${Module.Value.IsActive} && ${Module.Value.IsOnline}
+			{
+				UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
+				Module.Value:Click
+			}
+		}
+		while ${Module:Next(exists)}
+	}
 
 	method Activate_Weapons()
 	{
