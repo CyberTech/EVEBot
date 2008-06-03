@@ -114,7 +114,7 @@ function main()
 		}
 	}
 	while ${VariableIterator:Next(exists)}
-	Version:Set["${APP_NAME} ${APP_VERSION} Revision ${VersionNum}"]
+	Version:Set["${APP_NAME} Version ${VersionNum}"]
 	
 	UI:Reload
 	UI:UpdateConsole["-=Paused: Press Run-="]
