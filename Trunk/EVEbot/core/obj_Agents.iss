@@ -65,15 +65,15 @@ objectdef obj_Agents
 	
     method Initialize()
     {
-    	if ${This.agentIterator:First(exists)}
+    	if ${This.AgentList.agentIterator:First(exists)}
     	{
     		This:SetActiveAgent[${This.AgentList.FirstAgent}]
     		UI:UpdateConsole["obj_Agents: Initialized", LOG_MINOR]
     	}
     	else
     	{
-			UI:UpdateConsole["obj_Agents: Initialized (No Agents Found)", LOG_MINOR]
-		}
+				UI:UpdateConsole["obj_Agents: Initialized (No Agents Found)", LOG_MINOR]
+			}
     }
 
 	method Shutdown()
