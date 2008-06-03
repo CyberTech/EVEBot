@@ -9,6 +9,9 @@
 
 objectdef obj_Cache
 {
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+
 	variable string m_ObjectName
 	variable string m_CachedMembers
 	variable time NextPulse
@@ -62,6 +65,9 @@ objectdef obj_Cache
 
 objectdef obj_ShipCache inherits obj_Cache
 {
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+
 	method Initialize()
 	{
 		This[parent]:Initialize

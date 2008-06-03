@@ -18,6 +18,9 @@ objectdef obj_AsteroidGroup
 
 objectdef obj_Asteroids
 {
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+
 	variable int AsteroidCategoryID = 25
 	
 	variable index:entity BestAsteroidList

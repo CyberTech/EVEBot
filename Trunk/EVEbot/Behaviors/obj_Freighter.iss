@@ -11,6 +11,9 @@
 
 objectdef obj_Freighter
 {
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+	
 	/* the bot logic is currently based on a state machine */
 	variable string CurrentState
 
@@ -36,10 +39,7 @@ objectdef obj_Freighter
 		 * works this can be moved into the state machine and
 		 * PickupOrDropoff can delete the station bookmarks.
 		 */
-		if ${Config.Common.BotModeName.Equal[Freighter]}
-		{
-			This:BuildSourceList
-		}
+		This:BuildSourceList
 
 		UI:UpdateConsole["obj_Freighter: Initialized", LOG_MINOR]
 	}

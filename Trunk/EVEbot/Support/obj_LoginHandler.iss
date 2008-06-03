@@ -16,6 +16,9 @@
 
 objectdef obj_LoginHandler
 {
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+
 	variable time NextPulse
 
 	variable int LoginTimer = 0

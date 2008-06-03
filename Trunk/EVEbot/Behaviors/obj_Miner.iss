@@ -9,6 +9,9 @@
 
 objectdef obj_Miner
 {
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+	
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 2
 
@@ -30,8 +33,9 @@ objectdef obj_Miner
 	
 	method Initialize()
 	{
-		This.TripStartTime:Set[${Time.Timestamp}]
 		BotModules:Insert["Miner"]
+
+		This.TripStartTime:Set[${Time.Timestamp}]
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_Miner: Initialized", LOG_MINOR]
 	}

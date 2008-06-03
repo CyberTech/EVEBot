@@ -21,6 +21,9 @@
 /* ************************************************************************* */
 objectdef obj_Configuration_BaseConfig
 {
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+
 	variable filepath CONFIG_PATH = "${Script.CurrentDirectory}/Config"
 	variable string ORG_CONFIG_FILE = "evebot.xml"
 	variable string NEW_CONFIG_FILE = "${Me.Name} Config.xml"

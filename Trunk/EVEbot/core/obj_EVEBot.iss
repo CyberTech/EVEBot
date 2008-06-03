@@ -9,6 +9,9 @@
 
 objectdef obj_EVEBot
 {
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+
 	variable bool ReturnToStation = FALSE
 	variable bool Paused = FALSE
 	variable time NextPulse

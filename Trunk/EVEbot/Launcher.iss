@@ -27,6 +27,9 @@ variable obj_Configuration Config
 /* Defined here for obj_Login to use temporarily */
 objectdef obj_UI
 {
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+
 	method UpdateConsole(string StatusMessage)
 	{
 		variable string msg

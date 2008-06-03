@@ -12,6 +12,9 @@ BUGS:
 
 objectdef obj_Cargo
 {
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+
 	variable index:item MyCargo
 	variable index:item CargoToTransfer
 	variable bool m_LastTransferComplete

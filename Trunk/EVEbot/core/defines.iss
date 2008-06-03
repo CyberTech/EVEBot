@@ -7,16 +7,6 @@
 	
 */
 
-/*
-	I'm a comment to force SVN_REVISION update on checkin.. 
-	How are you today?
-	I'm fime. Touch of goiter, but doc says if I swallow these pills he'll be able to cut it out.
-	So how's that goiter been? Any news from the doc on removal?
-	Sure, he says we can go in thru my right ear to remove it.  I'm going to check the internet first, that doesn't sound right. I think it's the left.
-	You sure it's the left?
-	No, it's the right.
-	REMOVE THE CENTER! DOWN WITH MODERATION!
-*/
 variable string APP_NAME = "EVEBot"
 variable string APP_VERSION = "0.98"
 variable string APP_PATH = "EVEBot/EVEBot.iss"
@@ -25,6 +15,7 @@ variable string APP_MANIFEST = "https://www.isxgames.com/EVEBot/Trunk/EVEbot/man
 variable string APP_MANIFEST_TRUNK = "https://www.isxgames.com/EVEBot/Trunk/EVEbot/manifest-trunk.xml"
 
 variable string Version = "${APP_NAME} ${APP_VERSION} Revision ${SVN_REVISION.Token[2, " "]}"
+variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 
 ;#define USE_ISXIRC 1
 #define USE_ISXIRC 0

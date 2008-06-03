@@ -1,5 +1,8 @@
 objectdef obj_Skills
 {
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+
 	variable file SkillFile = "${BaseConfig.CONFIG_PATH}/${Me.Name} Training.txt"
 	variable index:skill OwnedSkills
 	variable time NextPulse

@@ -1,6 +1,9 @@
 
 objectdef obj_EVEBotUI
 {
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+	
 	;; global variables (used in UI display)
 	variable string CharacterName
 	variable string MyTarget

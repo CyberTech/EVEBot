@@ -9,6 +9,9 @@
 
 objectdef obj_Sound
 {
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+
     variable int m_LastSoundTime
     variable int m_SoundDelay
 	

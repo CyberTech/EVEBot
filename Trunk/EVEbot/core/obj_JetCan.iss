@@ -13,6 +13,9 @@ BUGS:
 
 objectdef obj_JetCan
 {
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+
 	variable int64 ActiveCan = -1
 	
 	method Initialize()

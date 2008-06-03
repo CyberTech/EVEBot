@@ -35,6 +35,9 @@
 					<Width>120</Width>
 					<Height>20</Height>
 					<Text>${Script[EVEBot].VariableScope.Version}</Text>
+					<OnLoad>
+							This:SetText[${Script[EVEBot].VariableScope.Version}]
+					</OnLoad>		
 				</text>				
 				<button	Name='Minimize'	template='EVESkin.Window.TitleBar.Minimize'>
 					<OnLeftClick>

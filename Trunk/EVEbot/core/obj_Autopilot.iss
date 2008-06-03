@@ -13,6 +13,9 @@
 
 objectdef obj_Autopilot
 {
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+
 	method Initialize()
 	{
 		UI:UpdateConsole["obj_Autopilot: Initialized", LOG_MINOR]

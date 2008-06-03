@@ -30,7 +30,6 @@
 #include Behaviors/obj_StealthHauler.iss
 #include Behaviors/obj_Hauler.iss
 #include Behaviors/obj_Miner.iss
-#include Behaviors/obj_Fighter.iss
 #include Behaviors/obj_Freighter.iss
 #include Behaviors/obj_Ratter.iss
 #include Behaviors/obj_Scavenger.iss
@@ -70,7 +69,6 @@ variable obj_Miner Miner
 variable obj_OreHauler Hauler
 variable obj_Freighter Freighter
 variable obj_Ratter Ratter
-;variable obj_Salvager Salvager
 
 function atexit()
 {
@@ -86,6 +84,38 @@ function main()
 	/* Set Turbo to lowest value to try and avoid overloading the EVE Python engine */
 	Turbo 20
 			
+	variable iterator BotModule
+	BotModules:GetIterator[BotModule]
+
+	variable iterator VariableIterator
+	Script[EVEBot].VariableScope:GetIterator[VariableIterator]
+
+	/* 	This code iterates thru the variables list, looking for classes that have been 
+		defined with an SVN_REVISION variable.  It then converts that to a numeric
+		Version(int), which is then used to calculate the highest version (VersionNum),
+		for display on the UI.
+	*/
+	;echo "Listing EVEBot Class Versions:"
+	if ${VariableIterator:First(exists)}
+	do
+	{
+
+		if ${VariableIterator.Value(exists)} && \
+			${VariableIterator.Value(type).Name.Left[4].Equal["obj_"]} && \
+			${VariableIterator.Value.SVN_REVISION(exists)} && \
+			${VariableIterator.Value.Version(exists)}
+		{
+			VariableIterator.Value.Version:Set[${VariableIterator.Value.SVN_REVISION.Token[2, " "]}]
+			;echo " ${VariableIterator.Value.ObjectName} Revision ${VariableIterator.Value.Version}"	
+			if ${VersionNum} < ${VariableIterator.Value.Version}
+			{
+				VersionNum:Set[${VariableIterator.Value.Version}]
+			}
+		}
+	}
+	while ${VariableIterator:Next(exists)}
+	Version:Set["${APP_NAME} ${APP_VERSION} Revision ${VersionNum}"]
+	
 	UI:Reload
 	UI:UpdateConsole["-=Paused: Press Run-="]
 	Script:Pause
@@ -94,10 +124,7 @@ function main()
 	{
 		wait 10
 	}
-	
-	variable iterator BotModule
-	BotModules:GetIterator[BotModule]
-	
+
 	while TRUE
 	{
 		if ${BotModule:First(exists)}

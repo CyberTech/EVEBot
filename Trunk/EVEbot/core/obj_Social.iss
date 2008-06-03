@@ -14,6 +14,9 @@ This contains all stuff dealing with other players around us. - Hessinger
 
 objectdef obj_Social
 {
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+
 	;Variables 
 	variable index:pilot PilotIndex
 	variable index:entity EntityIndex

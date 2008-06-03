@@ -9,6 +9,9 @@
 
 objectdef obj_AgentList
 {
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+
 	variable string CONFIG_FILE = "${BaseConfig.CONFIG_PATH}/${Me.Name} Agents.xml"
 	variable string SET_NAME = "${Me.Name} Agents"
 	variable iterator agentIterator
@@ -52,6 +55,9 @@ objectdef obj_AgentList
 
 objectdef obj_Agents
 {
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+
 	variable string AgentName
 	variable string MissionDetails
 	variable int RetryCount = 0

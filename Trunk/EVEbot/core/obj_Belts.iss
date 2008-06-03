@@ -1,5 +1,8 @@
 objectdef obj_Belts
 {
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+
 	variable index:entity beltIndex
 	variable iterator beltIterator
 

@@ -13,6 +13,9 @@
 
 		objectdef obj_Miner
 		{
+				variable string SVN_REVISION = "$Rev$"
+				variable int Version
+
 				variable obj_Combat Combat
 
 				method Initialize()
@@ -76,6 +79,9 @@
 
 objectdef obj_Combat
 {
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 5
 

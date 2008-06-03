@@ -47,6 +47,9 @@ Tairei
 
 objectdef obj_EVEDB_Spawns
 {
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+
 	variable string CONFIG_FILE = "${BaseConfig.CONFIG_PATH}/EVEDB_Spawns.xml"
 	variable string SET_NAME = "EVEDB_Spawns"
 	
@@ -65,6 +68,9 @@ objectdef obj_EVEDB_Spawns
 
 objectdef obj_Targets
 {
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+	
 	variable index:string PriorityTargets
 	variable iterator PriorityTarget
 	

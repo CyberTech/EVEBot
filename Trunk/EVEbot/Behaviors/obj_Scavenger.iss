@@ -15,6 +15,9 @@
  */
 objectdef obj_Scavenger
 {
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+
 	/* the bot logic is currently based on a state machine */
 	variable string CurrentState
 	variable bool bHaveCargo = FALSE

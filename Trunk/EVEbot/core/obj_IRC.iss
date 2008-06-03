@@ -1,5 +1,8 @@
 objectdef obj_IRC
 {       
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+
     variable bool IsConnected = FALSE
                   
 	method Initialize()

@@ -9,6 +9,9 @@
 
 objectdef obj_Ship
 {
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+
 	variable int MODE_WARPING = 3
 
 	variable time NextPulse

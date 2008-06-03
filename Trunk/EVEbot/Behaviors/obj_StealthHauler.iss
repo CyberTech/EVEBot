@@ -17,6 +17,9 @@
  
 objectdef obj_StealthHauler
 {
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+
 	variable index:int apRoute
 	variable index:int apWaypoints
 	variable iterator  apIterator

@@ -9,6 +9,9 @@
 
 objectdef obj_Bookmarks
 {
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+
 	variable index:string TemporaryBookMarks
 	variable string StoredLocation = ""
 		
