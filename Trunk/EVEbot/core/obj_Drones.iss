@@ -30,7 +30,7 @@ objectdef obj_Drones
 	    {
 	        if (${Me.ToEntity.Mode} != 3)
 	        {
-    	        echo "Recalling Drones prior to EVEBOT shutdown..."
+	        	UI:UpdateConsole["Recalling Drones prior to shutdown..."]
     		    EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
     		}
 		}
