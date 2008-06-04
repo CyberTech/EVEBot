@@ -136,16 +136,26 @@ objectdef obj_EVEBot
 	
 	member:int GameHour()
 	{
-		variable string Hour = ${EVE.Time[short].Token[1, :]}
-		variable int HourInt = ${Hour}	
-		return ${HourInt}	
+		variable string HourStr = ${EVETime.Time}
+		variable string Hour = 00
+		
+		if ${HourStr(exists)}
+		{
+			 Hour:Set[${HourStr.Token[1, :](int)}]
+		}
+		return ${Hour}
 	}
 	
 	member:int GameMinute()
 	{
-		variable string Minute = ${EVE.Time[short].Token[2, :]}
-		variable int MinuteInt = ${Minute}	
-		return ${MinuteInt}	
+		variable string MinuteStr = ${EVETime.Time}
+		variable string Minute = 18
+		
+		if ${MinuteStr(exists)}
+		{
+			 Minute:Set[${MinuteStr.Token[2, :](int)}]
+		}
+		return ${Minute}
 	}
 
 	member:string MetersToKM_Str(float64 Meters)

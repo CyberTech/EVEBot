@@ -221,16 +221,21 @@ objectdef obj_Combat
 
 	function FleeToSafespot()
 	{
-		; Are we at the safespot and not warping?
-		if ${Me.ToEntity.Mode} != 3 && !${Safespots.IsAtSafespot}
+		if ${Safespots.IsAtSafespot}
 		{
-			call Safespots.WarpTo
-			wait 30
+			if !${Ship.IsCloaked}
+			{
+				Ship:Activate_Cloak[]
+			}
 		}
-
-		if ${Safespots.IsAtSafespot} && !${Ship.IsCloaked}
+		else
 		{
-			Ship:Activate_Cloak[]
+			; Are we at the safespot and not warping?
+			if ${Me.ToEntity.Mode} != 3
+			{
+				call Safespots.WarpTo
+				wait 30
+			}			
 		}
 	}
 
