@@ -88,7 +88,7 @@ objectdef obj_Social
 	
 	method OnChannelMessage(int64 iTimeStamp, string sDate, string sTime, string sChannel, string sAuthor, int iAuthorID, string sMessageText)
 	{
-		if ${sChannel.Equal["Local"]} 
+		if ${sChannel.Equal["Local"]} && !${sMessageText.Find["Channel changed to"](exists)}
 		{
 			call Sound.PlayTellSound
 			UI:UpdateConsole["Local Chat Detected!", LOG_CRITICAL]		
