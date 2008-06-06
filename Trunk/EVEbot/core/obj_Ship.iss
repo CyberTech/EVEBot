@@ -1148,6 +1148,44 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		}
 	}
 
+	function WarpToFleetMember( int charID )
+	{
+		variable index:fleetmember FleetMembers
+		variable iterator          FleetMember
+		
+		Me:DoGetFleet[FleetMembers]
+		FleetMembers:GetIterator[FleetMember]
+		
+		if ${FleetMember:First(exists)}
+		{
+			do
+			{
+				if ${FleetMember.Value.CharID} == ${charID} && ${Local[${FleetMember.Value.ToPilot.Name}](exists)}
+				{
+					call This.WarpPrepare
+					while !${Entity[${charID}](exists)} || ${Entity[${charID}].Distance} >= WARP_RANGE
+					{
+						UI:UpdateConsole["Warping to Fleet Member: ${FleetMember.Value.ToPilot.Name}"]
+						while !${This.WarpEntered}
+						{
+							FleetMember.Value:WarpTo
+							wait 10
+						}
+						call This.WarpWait
+						if ${Return} == 2
+						{
+							return
+						}
+					}
+					UI:UpdateConsole["ERROR: Ship.WarpToFleetMember never reached fleet member!"]
+					return
+				}
+			}
+			while ${FleetMember:Next(exists)}
+		}		
+		UI:UpdateConsole["ERROR: Ship.WarpToFleetMember could not find fleet member!"]
+	}
+
 	function WarpToBookMarkName(string DestinationBookmarkLabel)
 	{
 		if (!${EVE.Bookmark[${DestinationBookmarkLabel}](exists)})

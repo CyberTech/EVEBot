@@ -458,7 +458,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		
 		if !${Entity[${charID}](exists)}
 		{
-			call Fleet.WarpToFleetMember ${charID}
+			call Ship.WarpToFleetMember ${charID}
 		}
 		
 		if ${Entity[${charID}].Distance} > 15000
@@ -468,7 +468,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 				UI:UpdateConsole["Fleet member is to far for approach; warping to bounce point"]
 				call This.WarpToNextSafeSpot
 			}
-			call Fleet.WarpToFleetMember ${charID}
+			call Ship.WarpToFleetMember ${charID}
 		}
 
 		call Ship.OpenCargo
