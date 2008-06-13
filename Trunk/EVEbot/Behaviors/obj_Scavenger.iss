@@ -134,6 +134,7 @@ objectdef obj_Scavenger
 				{
 					call Ship.Approach ${Wreck.Value.ID} LOOT_RANGE
 					Wreck.Value:OpenCargo
+					wait 10				
 					call Ship.OpenCargo
 					wait 10				
 					Wreck.Value:DoGetCargo[Items]
