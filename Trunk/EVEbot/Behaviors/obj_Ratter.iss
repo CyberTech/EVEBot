@@ -118,7 +118,7 @@ objectdef obj_Ratter
 		if ${Social.IsSafe}
 		{
 			Ship:Deactivate_Weapons		
-			call Belts.WarpTo
+			call Belts.WarpToNextBelt
 			; This will reset target information about the belt 
 			; (its needed for chaining)
 			Targets:ResetTargets

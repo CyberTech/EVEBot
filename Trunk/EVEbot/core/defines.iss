@@ -82,6 +82,7 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 #define LOOT_RANGE 1450
 #define JUMP_RANGE 2350
 #define CORP_HANGAR_LOOT_RANGE 3000
+#define SCANNER_RANGE 2147483647000
 
 #define TYPEID_GLACIAL_MASS 16263
 

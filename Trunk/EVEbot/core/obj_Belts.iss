@@ -75,6 +75,24 @@ objectdef obj_Belts
 		
 		if ${beltIterator.Value(exists)}
 		{
+			/*
+			variable int NearestGate
+			variable float DistanceToGate
+			NearestGate:Set[${Entity[fromID,${beltIterator.Value.ID},Radius,SCANNER_RANGE,GroupID,GROUP_STARGATE].ID}]
+			if ${NearestGate(exists)} && ${NearestGate} > 0
+			{
+				DistanceToGate:Set[${Entity[${beltIterator.Value.ID}].DistanceTo[${NearestGate}]}]
+				if ${DistanceToGate} < ${Math.Calc[SCANNER_RANGE/2]}
+				{
+					; TODO - This needs to do a count of belts within range of the gate and make a decision if it's safe enough.
+					; I really, really hate this solution, it relies on the % chance the hostile will pick the wrong belt
+					; when they see you on scanner. -- CyberTech
+					UI:UpdateConsole["obj_Belts: Skipping belt ${beltIterator.Value.Name} - too close to gate (${Entity[${NearestGate}].Name} - ${DistanceToGate}"]
+					call This.WarpToNextBelt
+					return
+				}
+			}
+			*/
 			;call Ship.WarpToBookMark ${SafeSpotIterator.Value.ID}
 			;;UI:UpdateConsole["obj_Belts: DEBUG: Warping to ${beltIterator.Value.Name}"]
 			call Ship.WarpToID ${beltIterator.Value.ID}
