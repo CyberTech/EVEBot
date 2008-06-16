@@ -1,9 +1,9 @@
 /*
 This contains all stuff dealing with other players around us. - Hessinger
-	
+
 	Methods
 		- GetPlayers(): Updates our Pilot Index (Currently updated on pulse, do not use elsewhere)
-	
+
 	Members
 		- (bool) PlayerDetection(): Returns TRUE if a Player is near us. (Notes: Ignores Fleet Members)
 		- (bool) NPCDetection(): Returns TRUE if an NPC is near us.
@@ -17,21 +17,23 @@ objectdef obj_Social
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
-	;Variables 
+	;Variables
 	variable index:pilot PilotIndex
 	variable index:entity EntityIndex
+	variable collection:time WhiteListPilotLog
+	variable collection:time BlackListPilotLog
 
 	variable time NextPulse
-	variable int PulseIntervalInSeconds = 5
+	variable int PulseIntervalInSeconds = 2
 
-	variable iterator WhiteListPilotIterator	
-	variable iterator WhiteListCorpIterator	
-	variable iterator WhiteListAllianceIterator	
-	variable iterator BlackListPilotIterator	
-	variable iterator BlackListCorpIterator	
-	variable iterator BlackListAllianceIterator	
-	variable bool SystemSafe	
-	
+	variable iterator WhiteListPilotIterator
+	variable iterator WhiteListCorpIterator
+	variable iterator WhiteListAllianceIterator
+	variable iterator BlackListPilotIterator
+	variable iterator BlackListCorpIterator
+	variable iterator BlackListAllianceIterator
+	variable bool SystemSafe
+
 	method Initialize()
 	{
 		Whitelist.PilotsRef:GetSettingIterator[This.WhiteListPilotIterator]
@@ -43,15 +45,15 @@ objectdef obj_Social
 		Blacklist.AlliancesRef:GetSettingIterator[This.BlackListAllianceIterator]
 
 		SystemSafe:Set[TRUE]
-		
+
 		Event[OnFrame]:AttachAtom[This:Pulse]
-		
+
 		Event[EVE_OnChannelMessage]:AttachAtom[This:OnChannelMessage]
 		EVE:ActivateChannelMessageEvents
-		
+
 		UI:UpdateConsole["obj_Social: Initialized", LOG_MINOR]
 	}
-	
+
 	method Shutdown()
 	{
 		EVE:ActivateChannelMessageEvents
@@ -61,15 +63,17 @@ objectdef obj_Social
 
 	method Pulse()
 	{
-		if ${EVEBot.Paused}
+		if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
 		{
-			return
-		}
-		
-	    if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
-		{
-    		This:GetLists
+			EVE:DoGetPilots[This.PilotIndex]
+
+			if ( ${Me.InStation(exists)} && ${Me.InStation} )
+			{
+					EVE:DoGetEntities[EntityIndex,CategoryID,CATEGORYID_ENTITY]
+			}
+
 			SystemSafe:Set[TRUE]
+
     		if ${Config.Combat.UseWhiteList}
     		{
     			This:CheckLocalWhiteList
@@ -85,35 +89,32 @@ objectdef obj_Social
     		This.NextPulse:Update
 		}
 	}
-	
+
 	method OnChannelMessage(int64 iTimeStamp, string sDate, string sTime, string sChannel, string sAuthor, int iAuthorID, string sMessageText)
 	{
 		if ${sChannel.Equal["Local"]} && !${sMessageText.Find["Channel changed to"](exists)}
 		{
 			call Sound.PlayTellSound
-			UI:UpdateConsole["Local Chat Detected!", LOG_CRITICAL]		
-			UI:UpdateConsole["${sAuthor}: ${sMessageText}", LOG_CRITICAL]		
+			UI:UpdateConsole["Local Chat Detected!", LOG_CRITICAL]
+			UI:UpdateConsole["${sAuthor}: ${sMessageText}", LOG_CRITICAL]
 		}
 	}
-	
+
 	member:bool IsSafe()
 	{
 		return ${This.SystemSafe}
 	}
-	
+
 	/* This method is safe to call in station */
 	method CheckLocalWhiteList()
 	{
-		variable index:pilot PilotIndex
 		variable iterator PilotIterator
 		variable bool pilotSafe
 		variable int UnSafeCount
 		variable set PilotWhiteList
 		variable set CorpWhiteList
 		variable set AllianceWhiteList
-		
-		EVE:DoGetPilots[PilotIndex]
-		
+
 		PilotWhiteList:Add[${Me.CharID}]
 		if ${Me.CorporationID} > 0
 		{
@@ -145,7 +146,7 @@ objectdef obj_Social
 		}
 		while ${This.WhiteListAllianceIterator:Next(exists)}
 
-		PilotIndex:GetIterator[PilotIterator]
+		This.PilotIndex:GetIterator[PilotIterator]
 		if ${PilotIterator:First(exists)}
 		do
 		{
@@ -156,29 +157,26 @@ objectdef obj_Social
 			{
 					pilotSafe:Set[TRUE]
 			}
-			
+
 			if !${pilotSafe}
-			{	
+			{
 				/* pilot failed alliance and corporation check, get out of town!! */
 				UI:UpdateConsole["Alert: Non-Whitelisted Pilot Detected: ${PilotIterator.Value.Name} (AllianceID: ${PilotIterator.Value.AllianceID}) (CorpID: ${PilotIterator.Value.CorporationID})", LOG_CRITICAL]
 				SystemSafe:Set[${pilotSafe}]
 				return
-			}			
+			}
 		}
-		while ${PilotIterator:Next(exists)}	
+		while ${PilotIterator:Next(exists)}
 	}
-	
+
 	/* This method is safe to call in station */
 	method CheckLocalBlackList()
 	{
-		variable index:pilot PilotIndex
 		variable iterator PilotIterator
 		variable bool pilotSafe
 		variable set PilotBlackList
 		variable set CorpBlackList
 		variable set AllianceBlackList
-		
-		EVE:DoGetPilots[PilotIndex]
 
 		if ${This.BlackListPilotIterator:First(exists)}
 		do
@@ -201,7 +199,7 @@ objectdef obj_Social
 		}
 		while ${This.BlackListAllianceIterator:Next(exists)}
 
-		PilotIndex:GetIterator[PilotIterator]
+		This.PilotIndex:GetIterator[PilotIterator]
 		if ${PilotIterator:First(exists)}
 		do
 		{
@@ -212,49 +210,44 @@ objectdef obj_Social
 			{
 					pilotSafe:Set[FALSE]
 			}
-			
+
 			if !${pilotSafe}
-			{	
+			{
 				/* pilot failed alliance and corporation check, get out of town!! */
 				UI:UpdateConsole["obj_Social: Blacklisted Pilot in local: ${PilotIterator.Value.Name}!", LOG_CRITICAL]
 				SystemSafe:Set[${pilotSafe}]
 				return
-			}			
+			}
 		}
 		while ${PilotIterator:Next(exists)}
 	}
 
-	method GetLists()
-	{
-		if ( ${Me.InStation(exists)} && ${Me.InStation} )
-			return
-
-		if (${Me.ToEntity.Mode} == 3)
-			return    
-
-		EVE:DoGetEntities[PilotIndex,CategoryID,CATEGORYID_SHIP]
-		EVE:DoGetEntities[EntityIndex,CategoryID,CATEGORYID_ENTITY]
-	}
-	
-	member:bool PlayerDetection()
+	member:bool PlayerInRange(float Range=0)
 	{
 		if !${This.PilotIndex.Used}
 		{
 			return FALSE
 		}
-		
+
+		if ${Range} == 0
+		{
+			return FALSE
+		}
+
 		variable iterator PilotIterator
 		This.PilotIndex:GetIterator[PilotIterator]
-		
+
 		if ${PilotIterator:First(exists)}
 		{
 			do
 			{
-				if ${PilotIterator.Value.IsPC} && \
-				 	${Me.ShipID} != ${PilotIterator.Value} && \
-				 	${PilotIterator.Value.Distance} < ${Config.Miner.AvoidPlayerRange} && \
+				if 	${Me.CharID} != ${PilotIterator.Value.CharID} && \
+					${PilotIterator.Value.ToEntity(exists)} && \
+					${PilotIterator.Value.ToEntity.IsPC} && \
+				 	${PilotIterator.Value.ToEntity.Distance} < ${Config.Miner.AvoidPlayerRange} && \
 				 	!${PilotIterator.Value.ToFleetMember}
 				{
+					UI:UpdateConsole["PlayerInRange: ${PilotIterator.Value.Name} - ${EVEBot.MetersToKM_Str[${PilotIterator.Value.ToEntity.Distance}]"]
 					return TRUE
 				}
 			}
@@ -262,17 +255,17 @@ objectdef obj_Social
 		}
 		return FALSE
 	}
-	
+
 	member:bool NPCDetection()
 	{
 		if !${This.EntityIndex.Used}
 		{
 			return FALSE
 		}
-		
+
 		variable iterator EntityIterator
 		This.EntityIndex:GetIterator[EntityIterator]
-		
+
 		if ${EntityIterator:First(exists)}
 		{
 			do
@@ -284,22 +277,21 @@ objectdef obj_Social
 			}
 			while ${EntityIterator:Next(exists)}
 		}
-		
+
 		return FALSE
 	}
-	
+
 	member:bool StandingDetection(int Standing)
-	{	
+	{
 		return FALSE
 		; TODO - this is broken, isxeve standing check doesn't work atm.
-		
-		EVE:DoGetPilots[PilotIndex]
-		echo ${PilotIndex.Used}
+
+		echo ${This.PilotIndex.Used}
 
 		variable iterator PilotIterator
 		This.PilotIndex:GetIterator[PilotIterator]
 
-		
+
 		if ${PilotIterator:First(exists)}
 		{
 			do
@@ -309,12 +301,12 @@ objectdef obj_Social
 				echo ${Me.Standing[${PilotIterator.Value.CorporationID}]}
 				echo ${Me.Standing[${PilotIterator.Value.AllianceID}]}
 
-				if (${Me.CharID} == ${PilotIterator.Value.CharID}) 
+				if (${Me.CharID} == ${PilotIterator.Value.CharID})
 				{
 					echo "StandingDetection: Ignoring Self"
 					continue
 				}
-				
+
 				if ${PilotIterator.Value.ToFleetMember(exists)}
 				{
 					echo "StandingDetection Ignoring Fleet Member: ${PilotIterator.Value.Name}"
@@ -367,22 +359,22 @@ objectdef obj_Social
 				}
 			}
 			while ${PilotIterator:Next(exists)}
-			
+
 		}
-		
+
 		return FALSE
 	}
-	
+
 	member:bool PilotsWithinDetection(int Dist)
 	{
 		if !${This.PilotIndex.Used}
 		{
 			return FALSE
 		}
-		
+
 		variable iterator PilotIterator
 		This.PilotIndex:GetIterator[PilotIterator]
-		
+
 		if ${PilotIterator:First(exists)}
 		{
 			do
@@ -396,20 +388,20 @@ objectdef obj_Social
 			}
 			while ${PilotIterator:Next(exists)}
 		}
-		
+
 		return FALSE
 	}
-	
+
 	member:bool PossibleHostiles()
 	{
 		if !${This.EntityIndex.Used} && !${This.PilotIndex.Used}
 		{
 			return FALSE
 		}
-		
+
 		variable iterator EntityIterator
 		This.EntityIndex:GetIterator[EntityIterator]
-		
+
 		if ${EntityIterator:First(exists)}
 		{
 			do
@@ -421,10 +413,10 @@ objectdef obj_Social
 			}
 			while ${EntityIterator:Next(exists)}
 		}
-		
+
 		variable iterator PilotIterator
 		This.PilotIndex:GetIterator[PilotIterator]
-		
+
 		if ${PilotIterator:First(exists)}
 		{
 			do
@@ -436,10 +428,9 @@ objectdef obj_Social
 			}
 			while ${PilotIterator:Next(exists)}
 		}
-		
+
 		return FALSE
 	}
-	
+
 }
-	
-	
+

@@ -82,14 +82,14 @@ objectdef obj_Ship
 	    			{
 	    				if ${Me.Ship.ArmorPct} < 100
 	    				{
-	    					This:ActivateRepairing_Armor
+	    					This:Activate_Armor_Reps
 	    				}
 
 	    				if ${This.Repairing_Armor}
 	    				{
 	    					if ${Me.Ship.ArmorPct} >= 98
 	    					{
-	    						This:DeactivateRepairing_Armor
+	    						This:Deactivate_Armor_Reps
 	    						This.Repairing_Armor:Set[FALSE]
 	    					}
 	    				}
@@ -1153,6 +1153,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		variable index:fleetmember FleetMembers
 		variable iterator          FleetMember
 		
+		FleetMembers:Clear
 		Me:DoGetFleet[FleetMembers]
 		FleetMembers:GetIterator[FleetMember]
 		
@@ -1163,9 +1164,14 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				if ${FleetMember.Value.CharID} == ${charID} && ${Local[${FleetMember.Value.ToPilot.Name}](exists)}
 				{
 					call This.WarpPrepare
-					while !${Entity[${charID}](exists)} || ${Entity[${charID}].Distance} >= WARP_RANGE
+					while !${Entity[${charID}](exists)}								
 					{
+						if ${Entity[${charID}].Distance} < WARP_RANGE
+						{
+							return
+						}
 						UI:UpdateConsole["Warping to Fleet Member: ${FleetMember.Value.ToPilot.Name}"]
+						UI:UpdateConsole["Distance: ${Entity[${charID}].Distance}"]
 						while !${This.WarpEntered}
 						{
 							FleetMember.Value:WarpTo

@@ -325,9 +325,9 @@ objectdef obj_Miner
 				TargetJammedCounter:Set[0]
 			}
 
-			if ${Social.PlayerDetection}
+			if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]}
 			{
-				UI:UpdateConsole["Avoiding player: Changing belts"]
+				UI:UpdateConsole["Avoiding player: Changing Belts"]
 				call This.Cleanup_Environment
 				call Asteroids.MoveToField TRUE
 				call This.Prepare_Environment
