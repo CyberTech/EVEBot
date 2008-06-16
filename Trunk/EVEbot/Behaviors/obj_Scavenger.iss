@@ -161,7 +161,6 @@ objectdef obj_Scavenger
 						wait 10
 					}
 
-					call Ship.CloseCargo
 					return
 				}
 			}
