@@ -1124,13 +1124,13 @@
                   <Text>Courier Missions</text>
                     <AutoTooltip>If checked, accept and complete courier missions.</AutoTooltip>
                     <OnLoad>
-                      <!--if ${Script[EVEBot].VariableScope.Config.Combat.RunOnLowTank}
+                      if ${Script[EVEBot].VariableScope.Config.Missioneer.RunCourierMissions}
                       {
                       This:SetChecked
-                      }-->
+                      }
                     </OnLoad>
                     <OnLeftClick>
-                      <!--Script[EVEBot].VariableScope.Config.Combat:SetRunOnLowTank[${This.Checked}]-->
+                      Script[EVEBot].VariableScope.Config.Missioneer:SetRunCourierMissions[${This.Checked}]
                     </OnLeftClick>
                   </checkbox>
                 <checkbox name='cbRunTradeMissions'>
@@ -1141,13 +1141,13 @@
                   <Text>Trade Missions</text>
                     <AutoTooltip>If checked, accept and complete trade missions.</AutoTooltip>
                     <OnLoad>
-                      <!--if ${Script[EVEBot].VariableScope.Config.Combat.UseWhiteList}
+                      if ${Script[EVEBot].VariableScope.Config.Missioneer.RunTradeMissions}
                       {
                       This:SetChecked
-                      }-->
+                      }
                     </OnLoad>
                     <OnLeftClick>
-                      <!--Script[EVEBot].VariableScope.Config.Combat:SetUseWhiteList[${This.Checked}]-->
+                      Script[EVEBot].VariableScope.Config.Missioneer:SetRunTradeMissions[${This.Checked}]
                     </OnLeftClick>
                   </checkbox>
                 <checkbox name='cbRunMiningMissions'>
@@ -1158,13 +1158,13 @@
                   <Text>Mining Missions</text>
                     <AutoTooltip>If checked, accept and complete mining missions.</AutoTooltip>
                     <OnLoad>
-                      <!--if ${Script[EVEBot].VariableScope.Config.Combat.RunToStation}
+                      if ${Script[EVEBot].VariableScope.Config.Missioneer.RunMiningMissions}
                       {
                       This:SetChecked
-                      }-->
+                      }
                     </OnLoad>
                     <OnLeftClick>
-                      <!--Script[EVEBot].VariableScope.Config.Combat:SetRunToStation[${This.Checked}]-->
+                      Script[EVEBot].VariableScope.Config.Missioneer:SetRunMiningMissions[${This.Checked}]
                     </OnLeftClick>
                   </checkbox>
                 <checkbox name='cbRunKillMissions'>
@@ -1175,13 +1175,13 @@
                   <Text>Kill Missions</text>
                     <AutoTooltip>If checked, accept and complete kill missions.</AutoTooltip>
                     <OnLoad>
-                      <!--if ${Script[EVEBot].VariableScope.Config.Combat.UseBlackList}
+                      if ${Script[EVEBot].VariableScope.Config.Missioneer.RunKillMissions}
                       {
                       This:SetChecked
-                      }-->
+                      }
                     </OnLoad>
                     <OnLeftClick>
-                      <!--Script[EVEBot].VariableScope.Config.Combat:SetUseBlackList[${This.Checked}]-->
+                      Script[EVEBot].VariableScope.Config.Missioneer:SetRunKillMissions[${This.Checked}]
                     </OnLeftClick>
                   </checkbox>
               </Children>
@@ -1213,15 +1213,15 @@
                   <Y>10</Y>
                   <Width>210</Width>
                   <Height>18</Height>
-                  <MaxLength>10</MaxLength>
+                  <MaxLength>64</MaxLength>
                   <OnLoad>
-                    <!--This:SetText[${Script[EVEBot].VariableScope.Config.Combat.MinChainBounty}]-->
+                    This:SetText[${Script[EVEBot].VariableScope.Config.Missioneer.SmallHauler}]
                   </OnLoad>
                   <OnChange>
-                    <!--if ${This.Text.Length} > 0
+                    if ${This.Text.Length} > 0
                     {
-                    Script[EVEBot].VariableScope.Config.Combat:SetMinChainBounty[${Int[${This.Text}]}]
-                    }-->
+                    Script[EVEBot].VariableScope.Config.Missioneer:SetSmallHauler[${This.Text}]
+                    }
                   </OnChange>
                 </Textentry>
                 <Text name='lblLargeHauler'>
@@ -1237,15 +1237,15 @@
                   <Y>30</Y>
                   <Width>210</Width>
                   <Height>18</Height>
-                  <MaxLength>10</MaxLength>
+                  <MaxLength>64</MaxLength>
                   <OnLoad>
-                    <!--This:SetText[${Script[EVEBot].VariableScope.Config.Combat.MinChainBounty}]-->
+                    This:SetText[${Script[EVEBot].VariableScope.Config.Missioneer.LargeHauler}]
                   </OnLoad>
                   <OnChange>
-                    <!--if ${This.Text.Length} > 0
+                    if ${This.Text.Length} > 0
                     {
-                    Script[EVEBot].VariableScope.Config.Combat:SetMinChainBounty[${Int[${This.Text}]}]
-                    }-->
+                    Script[EVEBot].VariableScope.Config.Missioneer:SetLargeHauler[${This.Text}]
+                    }
                   </OnChange>
                 </Textentry>
                 <Text name='lblMiningShip'>
@@ -1261,15 +1261,15 @@
                   <Y>50</Y>
                   <Width>210</Width>
                   <Height>18</Height>
-                  <MaxLength>10</MaxLength>
+                  <MaxLength>64</MaxLength>
                   <OnLoad>
-                    <!--This:SetText[${Script[EVEBot].VariableScope.Config.Combat.MinChainBounty}]-->
+                    This:SetText[${Script[EVEBot].VariableScope.Config.Missioneer.MiningShip}]
                   </OnLoad>
                   <OnChange>
-                    <!--if ${This.Text.Length} > 0
+                    if ${This.Text.Length} > 0
                     {
-                    Script[EVEBot].VariableScope.Config.Combat:SetMinChainBounty[${Int[${This.Text}]}]
-                    }-->
+                    Script[EVEBot].VariableScope.Config.Missioneer:SetMiningShip[${This.Text}]
+                    }
                   </OnChange>
                 </Textentry>
                 <Text name='lblCombatShip'>
@@ -1285,15 +1285,15 @@
                   <Y>70</Y>
                   <Width>210</Width>
                   <Height>18</Height>
-                  <MaxLength>10</MaxLength>
+                  <MaxLength>64</MaxLength>
                   <OnLoad>
-                    <!--This:SetText[${Script[EVEBot].VariableScope.Config.Combat.MinChainBounty}]-->
+                    This:SetText[${Script[EVEBot].VariableScope.Config.Missioneer.CombatShip}]
                   </OnLoad>
                   <OnChange>
-                    <!--if ${This.Text.Length} > 0
+                    if ${This.Text.Length} > 0
                     {
-                    Script[EVEBot].VariableScope.Config.Combat:SetMinChainBounty[${Int[${This.Text}]}]
-                    }-->
+                    Script[EVEBot].VariableScope.Config.Missioneer:SetCombatShip[${This.Text}]
+                    }
                   </OnChange>
                 </Textentry>
               </Children>
@@ -1326,11 +1326,11 @@
                     <Item Value='3'>Relay</Item>
                   </Items>
                   <OnSelect>
-                    <!--Script[EVEBot].VariableScope.Config.Common:SetBotMode[${This.SelectedItem.Value}]
-                    Script[EVEBot].VariableScope.Config.Common:SetBotModeName[${This.SelectedItem.Text}]-->
+                    Script[EVEBot].VariableScope.Config.Missioneer:SetSalvageMode[${This.SelectedItem.Value}]
+                    Script[EVEBot].VariableScope.Config.Missioneer:SetSalvageModeName[${This.SelectedItem.Text}]
                   </OnSelect>
                   <OnLoad>
-                    <!--This:SetSelection[${Script[EVEBot].VariableScope.Config.Common.BotMode}]-->
+                    This:SetSelection[${Script[EVEBot].VariableScope.Config.Missioneer.SalvageMode}]
                   </OnLoad>
                 </combobox>
                 <Text name='lblSalvageShip'>
@@ -1346,15 +1346,15 @@
                   <Y>10</Y>
                   <Width>170</Width>
                   <Height>18</Height>
-                  <MaxLength>10</MaxLength>
+                  <MaxLength>64</MaxLength>
                   <OnLoad>
-                    <!--This:SetText[${Script[EVEBot].VariableScope.Config.Combat.MinChainBounty}]-->
+                    This:SetText[${Script[EVEBot].VariableScope.Config.Missioneer.SalvageShip}]
                   </OnLoad>
                   <OnChange>
-                    <!--if ${This.Text.Length} > 0
+                    if ${This.Text.Length} > 0
                     {
-                    Script[EVEBot].VariableScope.Config.Combat:SetMinChainBounty[${Int[${This.Text}]}]
-                    }-->
+                    Script[EVEBot].VariableScope.Config.Missioneer:SetSalvageShip[${This.Text}]
+                    }
                   </OnChange>
                 </Textentry>
               </Children>

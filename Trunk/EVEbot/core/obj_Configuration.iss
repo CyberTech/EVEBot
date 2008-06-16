@@ -80,6 +80,7 @@ objectdef obj_Configuration
 	variable obj_Configuration_Labels Labels
 	variable obj_Configuration_Freighter Freighter
 	variable obj_Configuration_Agents Agents
+	variable obj_Configuration_Missioneer Missioneer
 	
 	method Save()
 	{
@@ -1301,5 +1302,153 @@ objectdef obj_Configuration_Agents
 		
 		This.AgentRef[${name}]:AddSetting[LastDecline,${value}]
 	}	
+}
+
+/* ************************************************************************* */
+objectdef obj_Configuration_Missioneer
+{
+	variable string SetName = "Missioneer"
+
+	method Initialize()
+	{	
+		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
+		{
+			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
+			This:Set_Default_Values[]
+		}
+		UI:UpdateConsole["obj_Configuration_Missioneer: Initialized", LOG_MINOR]
+	}
+
+	member:settingsetref MissioneerRef()
+	{
+		return ${BaseConfig.BaseRef.FindSet[${This.SetName}]}
+	}
+
+	method Set_Default_Values()
+	{
+		BaseConfig.BaseRef:AddSet[${This.SetName}]
+
+		This.MissioneerRef:AddSetting[Run Courier Missions, TRUE]
+		This.MissioneerRef:AddSetting[Run Trade Missions, FALSE]
+		This.MissioneerRef:AddSetting[Run Mining Missions, FALSE]
+		This.MissioneerRef:AddSetting[Run Kill Missions, FALSE]
+		This.MissioneerRef:AddSetting[Small Hauler, ""]
+		This.MissioneerRef:AddSetting[Large Hauler, ""]
+		This.MissioneerRef:AddSetting[Mining Ship, ""]
+		This.MissioneerRef:AddSetting[Combat Ship, ""]
+		This.MissioneerRef:AddSetting[Salvage Mode, 1]
+		This.MissioneerRef:AddSetting[Salvage Mode Name, "None"]		
+		This.MissioneerRef:AddSetting[Salvage Ship, ""]
+	}
+
+	member:bool RunCourierMissions()
+	{
+		return ${This.MissioneerRef.FindSetting[Run Courier Missions, TRUE]}
+	}
+	
+	method SetRunCourierMissions(bool value)
+	{
+		This.MissioneerRef:AddSetting[Run Courier Missions, ${value}]
+	} 
+
+	member:bool RunTradeMissions()
+	{
+		return ${This.MissioneerRef.FindSetting[Run Trade Missions, FALSE]}
+	}
+	
+	method SetRunTradeMissions(bool value)
+	{
+		This.MissioneerRef:AddSetting[Run Trade Missions, ${value}]
+	} 
+
+	member:bool RunMiningMissions()
+	{
+		return ${This.MissioneerRef.FindSetting[Run Mining Missions, FALSE]}
+	}
+	
+	method SetRunMiningMissions(bool value)
+	{
+		This.MissioneerRef:AddSetting[Run Mining Missions, ${value}]
+	} 
+
+	member:bool RunKillMissions()
+	{
+		return ${This.MissioneerRef.FindSetting[Run Kill Missions, FALSE]}
+	}
+	
+	method SetRunKillMissions(bool value)
+	{
+		This.MissioneerRef:AddSetting[Run Kill Missions, ${value}]
+	} 
+
+	member:string SmallHauler()
+	{
+		return ${This.MissioneerRef.FindSetting[Small Hauler, ""]}
+	}
+	
+	method SetSmallHauler(string value)
+	{
+		This.MissioneerRef:AddSetting[Small Hauler,${value}]
+	}
+
+	member:string LargeHauler()
+	{
+		return ${This.MissioneerRef.FindSetting[Large Hauler, ""]}
+	}
+	
+	method SetLargeHauler(string value)
+	{
+		This.MissioneerRef:AddSetting[Large Hauler,${value}]
+	}
+
+	member:string MiningShip()
+	{
+		return ${This.MissioneerRef.FindSetting[Mining Ship, ""]}
+	}
+	
+	method SetMiningShip(string value)
+	{
+		This.MissioneerRef:AddSetting[Mining Ship,${value}]
+	}
+
+	member:string CombatShip()
+	{
+		return ${This.MissioneerRef.FindSetting[Combat Ship, ""]}
+	}
+	
+	method SetCombatShip(string value)
+	{
+		This.MissioneerRef:AddSetting[Combat Ship,${value}]
+	}
+
+	member:int SalvageMode()
+	{
+		return ${This.MissioneerRef.FindSetting[Salvage Mode, 1]}
+	}
+	
+	method SetSalvageMode(int value)
+	{
+		This.MissioneerRef:AddSetting[Salvage Mode,${value}]
+	}
+	
+	member:string SalvageModeName()
+	{
+		return ${This.MissioneerRef.FindSetting[Salvage Mode Name, "None"]}
+	}
+	
+	method SetSalvageModeName(string value)
+	{
+		This.MissioneerRef:AddSetting[Salvage Mode Name,${value}]
+	}
+
+	member:string SalvageShip()
+	{
+		return ${This.MissioneerRef.FindSetting[Salvage Ship, ""]}
+	}
+	
+	method SetSalvageShip(string value)
+	{
+		This.MissioneerRef:AddSetting[Salvage Ship,${value}]
+	}
 }
 
