@@ -1408,12 +1408,16 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 					}
 					while !${Station.DockedAtStation[${EntityID}]}
 					break
-			}
-
-			switch ${TypeID}
-			{
-				case TYPEID_CORPORATE_HANGAR_ARRAY
+				case GROUP_CORPORATEHANGARARRAY
 					call This.Approach ${EntityID} CORP_HANGAR_LOOT_RANGE
+					break
+				Default
+					switch ${TypeID}
+					{
+						case TYPEID_CORPORATE_HANGAR_ARRAY
+							call This.Approach ${EntityID} CORP_HANGAR_LOOT_RANGE
+							break
+					}
 					break
 			}
 		}
