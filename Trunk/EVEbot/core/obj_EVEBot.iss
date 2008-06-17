@@ -141,7 +141,7 @@ objectdef obj_EVEBot
 		
 		if ${HourStr(exists)}
 		{
-			 Hour:Set[${HourStr.Token[1, :](int)}]
+			 Hour:Set[${HourStr.Token[1, :]}]
 		}
 		return ${Hour}
 	}
@@ -153,7 +153,7 @@ objectdef obj_EVEBot
 		
 		if ${MinuteStr(exists)}
 		{
-			 Minute:Set[${MinuteStr.Token[2, :](int)}]
+			 Minute:Set[${MinuteStr.Token[2, :]}]
 		}
 		return ${Minute}
 	}

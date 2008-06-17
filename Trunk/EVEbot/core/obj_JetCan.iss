@@ -371,7 +371,7 @@ objectdef obj_CorpHangerArray inherits obj_JetCan
 		
 		variable index:entity Cans
 		variable iterator Can
-		EVE:DoGetEntities[Cans, GroupID, GROUPID_CORPORATE_HANGAR_ARRAY]
+		EVE:DoGetEntities[Cans, GroupID, GROUP_CORPORATEHANGARARRAY]
 		
 		Cans:GetIterator[Can]
 		
