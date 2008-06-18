@@ -33,6 +33,7 @@
 #include Behaviors/obj_Freighter.iss
 #include Behaviors/obj_Ratter.iss
 #include Behaviors/obj_Scavenger.iss
+#include Behaviors/obj_Missioneer.iss
 
 /* Script-Defined Support Objects */
 variable obj_EVEBot EVEBot
@@ -69,6 +70,7 @@ variable obj_Miner Miner
 variable obj_OreHauler Hauler
 variable obj_Freighter Freighter
 variable obj_Ratter Ratter
+variable obj_Missioneer Missioneer
 
 function atexit()
 {
