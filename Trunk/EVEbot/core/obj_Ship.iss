@@ -15,7 +15,7 @@ objectdef obj_Ship
 	variable int MODE_WARPING = 3
 
 	variable time NextPulse
-	variable int PulseIntervalInSeconds = 8
+	variable int PulseIntervalInSeconds = 5
 
 	variable int Calculated_MaxLockedTargets
 	variable float BaselineUsedCargo
