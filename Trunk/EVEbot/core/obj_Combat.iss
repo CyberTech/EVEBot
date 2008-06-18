@@ -83,7 +83,7 @@ objectdef obj_Combat
 	variable int Version
 
 	variable time NextPulse
-	variable int PulseIntervalInSeconds = 5
+	variable int PulseIntervalInSeconds = 1
 
 	variable bool   Override
 	variable string CombatMode
