@@ -108,7 +108,7 @@ objectdef obj_Combat
 			return
 		}
 
-		if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
+		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			This:SetState
 

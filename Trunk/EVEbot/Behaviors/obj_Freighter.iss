@@ -56,7 +56,7 @@ objectdef obj_Freighter
 			return
 		}
 		
-	    if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
+	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			switch ${Config.Freighter.FreighterModeName}
 			{

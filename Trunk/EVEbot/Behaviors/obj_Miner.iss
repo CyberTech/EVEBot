@@ -58,7 +58,7 @@ objectdef obj_Miner
 			return
 		}
 
-	    if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
+	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			This:SetState[]
             SanityCheckCounter:Inc

@@ -49,7 +49,7 @@ objectdef obj_Drones
 
 		if ${This.WaitingForDrones}
 		{
-		    if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
+		    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 			{
     			if (${Me.InStation(exists)} && !${Me.InStation})
     			{

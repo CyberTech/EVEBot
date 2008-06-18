@@ -13,7 +13,7 @@ variable string SVN_REVISION = "$Rev$"
 variable string APP_MANIFEST = "https://www.isxgames.com/EVEBot/Trunk/EVEbot/manifest.xml"
 variable string APP_MANIFEST_TRUNK = "https://www.isxgames.com/EVEBot/Trunk/EVEbot/manifest-trunk.xml"
 
-variable string Version = "${APP_NAME} Version ${SVN_REVISION.Token[2, " "]}"
+variable string AppVersion = "${APP_NAME} Version ${SVN_REVISION.Token[2, " "]}"
 variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 
 ;#define USE_ISXIRC 1

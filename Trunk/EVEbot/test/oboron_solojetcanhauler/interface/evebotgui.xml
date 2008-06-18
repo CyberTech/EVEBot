@@ -34,7 +34,7 @@
 					<Y>3</Y>
 					<Width>120</Width>
 					<Height>20</Height>
-					<Text>${Script[EVEBot].VariableScope.Version}</Text>
+					<Text>${Script[EVEBot].VariableScope.AppVersion}</Text>
 				</text>				
 				<button	Name='Minimize'	template='EVESkin.Window.TitleBar.Minimize'>
 					<OnLeftClick>

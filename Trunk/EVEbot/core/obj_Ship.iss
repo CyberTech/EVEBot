@@ -66,7 +66,7 @@ objectdef obj_Ship
 			return
 		}
 
-	    if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
+	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
     		if (${Me.InStation(exists)} && !${Me.InStation})
     		{

@@ -55,7 +55,7 @@ objectdef obj_EVEBotUI
 
 	method Pulse()
 	{	
-	    if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
+	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 		    if ${Me.Name(exists)}
 		    {
@@ -174,14 +174,14 @@ objectdef obj_EVEBotUI
 	{
 
 		redirect -append "${This.LogFile}" echo "--------------------------------------------------------------------------------------"
-		redirect -append "${This.LogFile}" echo "** Evebot ${Version} starting on ${Time.Date} at ${Time.Time24}"
+		redirect -append "${This.LogFile}" echo "** ${AppVersion} starting on ${Time.Date} at ${Time.Time24}"
 
 		redirect -append "${This.CriticalLogFile}" echo "--------------------------------------------------------------------------------------"
-		redirect -append "${This.CriticalLogFile}" echo "** Evebot ${Version} starting on ${Time.Date} at ${Time.Time24}"
+		redirect -append "${This.CriticalLogFile}" echo "** ${AppVersion} starting on ${Time.Date} at ${Time.Time24}"
 
 		This:UpdateConsole["Starting EVEBot ${Version}"]
 
 		redirect -append "${This.StatsLogFile}" echo "--------------------------------------------------------------------------------------"
-		redirect -append "${This.StatsLogFile}" echo "** Evebot ${Version} starting on ${Time.Date} at ${Time.Time24}"
+		redirect -append "${This.StatsLogFile}" echo "** ${AppVersion} starting on ${Time.Date} at ${Time.Time24}"
 	}	
 }

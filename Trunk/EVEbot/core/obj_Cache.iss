@@ -35,7 +35,7 @@ objectdef obj_Cache
 			return
 		}
 
-	    if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
+	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.IntervalInSeconds}]

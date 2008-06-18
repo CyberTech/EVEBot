@@ -36,7 +36,7 @@ objectdef obj_Skills
 	
 	method Pulse()
 	{
-	    if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
+	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 	        if (${CurrentlyTrainingSkill.Length} <= 0)
 	        {

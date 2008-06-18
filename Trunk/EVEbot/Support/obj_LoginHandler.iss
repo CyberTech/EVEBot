@@ -57,7 +57,7 @@ objectdef obj_LoginHandler
 			This.PulseIntervalInSeconds:Set[${This.LoginTimer}]
 		}
 		
-	    if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
+	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			;echo DEBUG: Pulse: ${This.LoginTimer} - ${This.CurrentState}
 			This:DoLogin

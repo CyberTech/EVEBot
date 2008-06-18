@@ -193,7 +193,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 			return
 		}
 
-	    if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
+	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			This:SetState[]
 

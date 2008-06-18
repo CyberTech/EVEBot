@@ -31,7 +31,6 @@ objectdef obj_EVEBot
 			echo "ISXEVE must be loaded to use ${APP_NAME}."
 			Script:End
 		}
-		echo "Starting ${Version}"
 
 		EVE:Execute[OpenPeopleAndPlaces]
 		This.BuddiesCount:Set[${EVE.GetBuddies[This.Buddies]}]
@@ -56,7 +55,7 @@ objectdef obj_EVEBot
 			;Script:End
 		}
 		
-	    if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
+	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
     		if ${Login(exists)} || \
     			${CharSelect(exists)}

@@ -49,7 +49,7 @@ objectdef obj_Ratter
 			return
 		}
 
-	    if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
+	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			This:SetState[]
 

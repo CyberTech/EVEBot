@@ -17,14 +17,13 @@ objectdef obj_Social
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
-	;Variables
 	variable index:pilot PilotIndex
 	variable index:entity EntityIndex
 	variable collection:time WhiteListPilotLog
 	variable collection:time BlackListPilotLog
 
 	variable time NextPulse
-	variable int PulseIntervalInSeconds = 2
+	variable int PulseIntervalInSeconds = 1
 
 	variable iterator WhiteListPilotIterator
 	variable iterator WhiteListCorpIterator
@@ -33,6 +32,13 @@ objectdef obj_Social
 	variable iterator BlackListCorpIterator
 	variable iterator BlackListAllianceIterator
 	variable bool SystemSafe
+
+	variable set PilotBlackList
+	variable set CorpBlackList
+	variable set AllianceBlackList
+	variable set PilotWhiteList
+	variable set CorpWhiteList
+	variable set AllianceWhiteList
 
 	method Initialize()
 	{
@@ -44,10 +50,63 @@ objectdef obj_Social
 		Blacklist.CorporationsRef:GetSettingIterator[This.BlackListCorpIterator]
 		Blacklist.AlliancesRef:GetSettingIterator[This.BlackListAllianceIterator]
 
+		UI:UpdateConsole["obj_Social: Initializing whitelist...", LOG_MINOR]
+		PilotWhiteList:Add[${Me.CharID}]
+		if ${Me.CorporationID} > 0
+		{
+			This.AllianceWhiteList:Add[${Me.CorporationID}]
+		}
+		if ${Me.AllianceID} > 0
+		{
+			This.AllianceWhiteList:Add[${Me.AllianceID}]
+		}
+
+		if ${This.WhiteListPilotIterator:First(exists)}
+		do
+		{
+			This.PilotWhiteList:Add[${This.WhiteListPilotIterator.Value}]
+		}
+		while ${This.WhiteListPilotIterator:Next(exists)}
+
+		if ${This.WhiteListCorpIterator:First(exists)}
+		do
+		{
+			This.CorpWhiteList:Add[${This.WhiteListCorpIterator.Value}]
+		}
+		while ${This.WhiteListCorpIterator:Next(exists)}
+
+		if ${This.WhiteListAllianceIterator:First(exists)}
+		do
+		{
+			This.AllianceWhiteList:Add[${This.WhiteListAllianceIterator.Value}]
+		}
+		while ${This.WhiteListAllianceIterator:Next(exists)}
+
+		UI:UpdateConsole["obj_Social: Initializing blacklist...", LOG_MINOR]
+		if ${This.BlackListPilotIterator:First(exists)}
+		do
+		{
+			This.PilotBlackList:Add[${This.BlackListPilotIterator.Value}]
+		}
+		while ${This.BlackListPilotIterator:Next(exists)}
+
+		if ${This.BlackListCorpIterator:First(exists)}
+		do
+		{
+			This.CorpBlackList:Add[${This.BlackListCorpIterator.Value}]
+		}
+		while ${This.BlackListCorpIterator:Next(exists)}
+
+		if ${This.BlackListAllianceIterator:First(exists)}
+		do
+		{
+			This.AllianceBlackList:Add[${This.BlackListAllianceIterator.Value}]
+		}
+		while ${This.BlackListAllianceIterator:Next(exists)}
+
 		SystemSafe:Set[TRUE]
 
 		Event[OnFrame]:AttachAtom[This:Pulse]
-
 		Event[EVE_OnChannelMessage]:AttachAtom[This:OnChannelMessage]
 		EVE:ActivateChannelMessageEvents
 
@@ -69,20 +128,10 @@ objectdef obj_Social
 
 			if ( ${Me.InStation(exists)} && ${Me.InStation} )
 			{
-					EVE:DoGetEntities[EntityIndex,CategoryID,CATEGORYID_ENTITY]
+				EVE:DoGetEntities[EntityIndex,CategoryID,CATEGORYID_ENTITY]
 			}
 
-			SystemSafe:Set[TRUE]
-
-    		if ${Config.Combat.UseWhiteList}
-    		{
-    			This:CheckLocalWhiteList
-    		}
-
-    		if ${Config.Combat.UseBlackList}
-    		{
-    			This:CheckLocalBlackList
-    		}
+    		SystemSafe:Set[${Math.Calc[${This.CheckLocalWhiteList} & ${This.CheckLocalBlackList}](bool)}]
 
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
@@ -95,8 +144,7 @@ objectdef obj_Social
 		if ${sChannel.Equal["Local"]} && !${sMessageText.Find["Channel changed to"](exists)}
 		{
 			call Sound.PlayTellSound
-			UI:UpdateConsole["Local Chat Detected!", LOG_CRITICAL]
-			UI:UpdateConsole["${sAuthor}: ${sMessageText}", LOG_CRITICAL]
+			UI:UpdateConsole["Channel Local: ${sAuthor}: ${sMessageText}", LOG_CRITICAL]
 		}
 	}
 
@@ -105,121 +153,54 @@ objectdef obj_Social
 		return ${This.SystemSafe}
 	}
 
-	/* This method is safe to call in station */
-	method CheckLocalWhiteList()
+	member:bool CheckLocalWhiteList()
 	{
 		variable iterator PilotIterator
-		variable bool pilotSafe
-		variable int UnSafeCount
-		variable set PilotWhiteList
-		variable set CorpWhiteList
-		variable set AllianceWhiteList
 
-		PilotWhiteList:Add[${Me.CharID}]
-		if ${Me.CorporationID} > 0
-		{
-			AllianceWhiteList:Add[${Me.CorporationID}]
-		}
-		if ${Me.AllianceID} > 0
-		{
-			AllianceWhiteList:Add[${Me.AllianceID}]
-		}
-
-		if ${This.WhiteListPilotIterator:First(exists)}
-		do
-		{
-			PilotWhiteList:Add[${This.WhiteListPilotIterator.Value}]
-		}
-		while ${This.WhiteListPilotIterator:Next(exists)}
-
-		if ${This.WhiteListCorpIterator:First(exists)}
-		do
-		{
-			CorpWhiteList:Add[${This.WhiteListCorpIterator.Value}]
-		}
-		while ${This.WhiteListCorpIterator:Next(exists)}
-
-		if ${This.WhiteListAllianceIterator:First(exists)}
-		do
-		{
-			AllianceWhiteList:Add[${This.WhiteListAllianceIterator.Value}]
-		}
-		while ${This.WhiteListAllianceIterator:Next(exists)}
+   		if !${Config.Combat.UseWhiteList}
+   		{
+   			return TRUE
+   		}
 
 		This.PilotIndex:GetIterator[PilotIterator]
 		if ${PilotIterator:First(exists)}
 		do
 		{
-			pilotSafe:Set[FALSE]
-			if ${AllianceWhiteList.Contains[${PilotIterator.Value.AllianceID}]} || \
-				${CorpWhiteList.Contains[${PilotIterator.Value.CorporationID}]} || \
-				${PilotWhiteList.Contains[${PilotIterator.Value.CharID}]}
+			if !${This.AllianceWhiteList.Contains[${PilotIterator.Value.AllianceID}]} && \
+				!${This.CorpWhiteList.Contains[${PilotIterator.Value.CorporationID}]} && \
+				!${This.PilotWhiteList.Contains[${PilotIterator.Value.CharID}]}
 			{
-					pilotSafe:Set[TRUE]
-			}
-
-			if !${pilotSafe}
-			{
-				/* pilot failed alliance and corporation check, get out of town!! */
-				UI:UpdateConsole["Alert: Non-Whitelisted Pilot Detected: ${PilotIterator.Value.Name} (AllianceID: ${PilotIterator.Value.AllianceID}) (CorpID: ${PilotIterator.Value.CorporationID})", LOG_CRITICAL]
-				SystemSafe:Set[${pilotSafe}]
-				return
+				UI:UpdateConsole["Alert: Non-Whitelisted Pilot: ${PilotIterator.Value.Name}: CharID: ${PilotIterator.Value.CharID} CorpID: ${PilotIterator.Value.CorporationID} AllianceID: ${PilotIterator.Value.AllianceID}", LOG_CRITICAL]
+				return FALSE
 			}
 		}
 		while ${PilotIterator:Next(exists)}
+		return TRUE
 	}
 
-	/* This method is safe to call in station */
-	method CheckLocalBlackList()
+	member:bool CheckLocalBlackList()
 	{
 		variable iterator PilotIterator
-		variable bool pilotSafe
-		variable set PilotBlackList
-		variable set CorpBlackList
-		variable set AllianceBlackList
 
-		if ${This.BlackListPilotIterator:First(exists)}
-		do
-		{
-			PilotBlackList:Add[${This.BlackListPilotIterator.Value}]
-		}
-		while ${This.BlackListPilotIterator:Next(exists)}
-
-		if ${This.BlackListCorpIterator:First(exists)}
-		do
-		{
-			CorpBlackList:Add[${This.BlackListCorpIterator.Value}]
-		}
-		while ${This.BlackListCorpIterator:Next(exists)}
-
-		if ${This.BlackListAllianceIterator:First(exists)}
-		do
-		{
-			AllianceBlackList:Add[${This.BlackListAllianceIterator.Value}]
-		}
-		while ${This.BlackListAllianceIterator:Next(exists)}
-
+   		if !${Config.Combat.UseBlackList}
+   		{
+   			return TRUE
+   		}
 		This.PilotIndex:GetIterator[PilotIterator]
 		if ${PilotIterator:First(exists)}
 		do
 		{
 			pilotSafe:Set[TRUE]
-			if ${PilotBlackList.Contains[${PilotIterator.Value.CharID}]} || \
-				${AllianceBlackList.Contains[${PilotIterator.Value.AllianceID}]} || \
-				${CorpBlackList.Contains[${PilotIterator.Value.CorporationID}]}
+			if ${This.PilotBlackList.Contains[${PilotIterator.Value.CharID}]} || \
+				${This.AllianceBlackList.Contains[${PilotIterator.Value.AllianceID}]} || \
+				${This.CorpBlackList.Contains[${PilotIterator.Value.CorporationID}]}
 			{
-					pilotSafe:Set[FALSE]
-			}
-
-			if !${pilotSafe}
-			{
-				/* pilot failed alliance and corporation check, get out of town!! */
-				UI:UpdateConsole["obj_Social: Blacklisted Pilot in local: ${PilotIterator.Value.Name}!", LOG_CRITICAL]
-				SystemSafe:Set[${pilotSafe}]
-				return
+				UI:UpdateConsole["Alert: Blacklisted Pilot: ${PilotIterator.Value.Name}!", LOG_CRITICAL]
+				return FALSE
 			}
 		}
 		while ${PilotIterator:Next(exists)}
+		return TRUE
 	}
 
 	member:bool PlayerInRange(float Range=0)
@@ -244,8 +225,8 @@ objectdef obj_Social
 				if 	${Me.CharID} != ${PilotIterator.Value.CharID} && \
 					${PilotIterator.Value.ToEntity(exists)} && \
 					${PilotIterator.Value.ToEntity.IsPC} && \
-				 	${PilotIterator.Value.ToEntity.Distance} < ${Config.Miner.AvoidPlayerRange} && \
-				 	!${PilotIterator.Value.ToFleetMember}
+					${PilotIterator.Value.ToEntity.Distance} < ${Config.Miner.AvoidPlayerRange} && \
+					!${PilotIterator.Value.ToFleetMember}
 				{
 					UI:UpdateConsole["PlayerInRange: ${PilotIterator.Value.Name} - ${EVEBot.MetersToKM_Str[${PilotIterator.Value.ToEntity.Distance}]"]
 					return TRUE
