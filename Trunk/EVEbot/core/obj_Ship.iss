@@ -15,7 +15,7 @@ objectdef obj_Ship
 	variable int MODE_WARPING = 3
 
 	variable time NextPulse
-	variable int PulseIntervalInSeconds = 5
+	variable int PulseIntervalInSeconds = 2
 
 	variable int Calculated_MaxLockedTargets
 	variable float BaselineUsedCargo
@@ -1164,14 +1164,14 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				if ${FleetMember.Value.CharID} == ${charID} && ${Local[${FleetMember.Value.ToPilot.Name}](exists)}
 				{
 					call This.WarpPrepare
-					while !${Entity[${charID}](exists)}								
+					while !${Entity[OwnerID,${charID},CategoryID,6]](exists)}								
 					{
-						if ${Entity[${charID}].Distance} < WARP_RANGE
+						if ${Entity[OwnerID,${charID},CategoryID,6]].Distance} < WARP_RANGE
 						{
 							return
 						}
 						UI:UpdateConsole["Warping to Fleet Member: ${FleetMember.Value.ToPilot.Name}"]
-						UI:UpdateConsole["Distance: ${Entity[${charID}].Distance}"]
+						UI:UpdateConsole["Distance: ${Entity[OwnerID,${charID},CategoryID,6]].Distance}"]
 						while !${This.WarpEntered}
 						{
 							FleetMember.Value:WarpTo
