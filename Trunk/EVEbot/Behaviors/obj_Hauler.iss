@@ -456,7 +456,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 			return
 		}
 		
-		if !${Entity[${charID}](exists)}
+		if !${Entity[OwnerID,${charID},CategoryID,6](exists)}
 		{
 			call Ship.WarpToFleetMember ${charID}
 		}
