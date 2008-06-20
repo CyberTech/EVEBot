@@ -1339,6 +1339,7 @@ objectdef obj_Configuration_Missioneer
 		This.MissioneerRef:AddSetting[Salvage Mode, 1]
 		This.MissioneerRef:AddSetting[Salvage Mode Name, "None"]		
 		This.MissioneerRef:AddSetting[Salvage Ship, ""]
+		This.MissioneerRef:AddSetting[Avoid Low Sec, TRUE]
 	}
 
 	member:bool RunCourierMissions()
@@ -1450,5 +1451,15 @@ objectdef obj_Configuration_Missioneer
 	{
 		This.MissioneerRef:AddSetting[Salvage Ship,${value}]
 	}
+	
+	member:bool AvoidLowSec()
+	{
+		return ${This.MissioneerRef.FindSetting[Avoid Low Sec, TRUE]}
+	}
+	
+	method SetAvoidLowSec(bool value)
+	{
+		This.MissioneerRef:AddSetting[Avoid Low Sec, ${value}]
+	} 	
 }
 

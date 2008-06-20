@@ -141,10 +141,13 @@ objectdef obj_Social
 
 	method OnChannelMessage(int64 iTimeStamp, string sDate, string sTime, string sChannel, string sAuthor, int iAuthorID, string sMessageText)
 	{
-		if ${sChannel.Equal["Local"]} && !${sMessageText.Find["Channel changed to"](exists)}
+		if ${sChannel.Equal["Local"]}
 		{
-			call Sound.PlayTellSound
-			UI:UpdateConsole["Channel Local: ${sAuthor}: ${sMessageText}", LOG_CRITICAL]
+			if !${sAuthor.Equal["EVE System"](exists)}
+			{
+				call Sound.PlayTellSound
+				UI:UpdateConsole["Channel Local: ${sAuthor}: ${sMessageText}", LOG_CRITICAL]
+			}
 		}
 	}
 

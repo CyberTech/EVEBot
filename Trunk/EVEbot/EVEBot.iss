@@ -24,6 +24,7 @@
 #include core/obj_Sound.iss
 #include core/obj_Agents.iss
 #include core/obj_Combat.iss
+#include core/obj_Missions.iss
 
 /* Behavior/Mode Includes */
 #include Behaviors/obj_Courier.iss
@@ -63,6 +64,7 @@ variable obj_Belts Belts
 variable obj_Targets Targets
 variable obj_Sound Sound
 variable obj_Agents Agents
+variable obj_Missions Missions
 
 /* Script-Defined Behavior Objects */
 variable index:string BotModules

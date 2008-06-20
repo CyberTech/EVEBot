@@ -1359,6 +1359,32 @@
                 </Textentry>
               </Children>
             </Frame>
+            <Frame name='frmGeneralOptions'>
+              <X>10</X>
+              <Y>190</Y>
+              <Height>40</Height>
+              <Width>480</Width>
+              <Border>2</Border>
+              <Children>
+                <checkbox name='cbAvoidLowSec'>
+                  <X>10</X>
+                  <Y>10</Y>
+                  <Height>20</Height>
+                  <Width>50</Width>
+                  <Text>Avoid Lowsec</text>
+                    <AutoTooltip>If checked, avoid missions that go into low-sec.</AutoTooltip>
+                    <OnLoad>
+                      if ${Script[EVEBot].VariableScope.Config.Missioneer.AvoidLowSec}
+                      {
+                      This:SetChecked
+                      }
+                    </OnLoad>
+                    <OnLeftClick>
+                      Script[EVEBot].VariableScope.Config.Missioneer:SetAvoidLowSec[${This.Checked}]
+                    </OnLeftClick>
+                  </checkbox>
+              </Children>
+            </Frame>
             </tab>
 					
 					<tab name='Hauler'>

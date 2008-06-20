@@ -18,6 +18,10 @@ objectdef obj_AgentList
 	
 	method Initialize()
 	{
+		if ${LavishSettings[${This.SET_NAME}](exists)}
+		{
+			LavishSettings[${This.SET_NAME}]:Clear
+		}
 		LavishSettings:Import[${CONFIG_FILE}]
 		LavishSettings[${This.SET_NAME}]:GetSettingIterator[This.agentIterator]
 		UI:UpdateConsole["obj_AgentList: Initialized", LOG_MINOR]
@@ -179,6 +183,94 @@ objectdef obj_Agents
 		return ${rVal}
 	}
 
+	/*  1) Check for offered (but unaccepted) missions
+	 *  2) Check the agent list for the first valid agent
+	 */
+	method PickAgent()
+	{
+	    variable index:agentmission amIndex
+		variable iterator amIterator
+		variable set skipList
+
+		EVE:DoGetAgentMissions[amIndex]
+		amIndex:GetIterator[amIterator]
+		skipList:Clear
+		
+		UI:UpdateConsole["obj_Agents: DEBUG: amIndex.Used = ${amIndex.Used}"]	
+		if ${amIterator:First(exists)}
+		{
+			do
+			{
+				UI:UpdateConsole["obj_Agents: DEBUG: This.AgentID = ${This.AgentID}"]	
+				UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.AgentID = ${amIterator.Value.AgentID}"]	
+				UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.State = ${amIterator.Value.State}"]	
+				UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}"]	
+				if ${amIterator.Value.State} == 1
+				{
+					variable time lastDecline
+					lastDecline:Set[${Config.Agents.LastDecline[${Agent[id,${amIterator.Value.AgentID}]}]}]
+					UI:UpdateConsole["obj_Agents: DEBUG: lastDecline = ${lastDecline}"]	
+					lastDecline.Hour:Inc[4]
+					lastDecline:Update
+					if ${lastDecline.Timestamp} >= ${Time.Timestamp}
+					{
+						UI:UpdateConsole["obj_Agents: DEBUG: Skipping mission to avoid standing loss: ${amIterator.Value.Name}"]	
+						skipList:Add[${amIterator.Value.AgentID}]
+						continue
+					}
+
+					if ${amIterator.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions} == FALSE
+					{
+						UI:UpdateConsole["obj_Agents: DEBUG: Skipping courier mission: ${amIterator.Value.Name}"]	
+						continue
+					}
+					
+					if ${amIterator.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} == FALSE
+					{
+						UI:UpdateConsole["obj_Agents: DEBUG: Skipping trade mission: ${amIterator.Value.Name}"]	
+						continue
+					}
+					
+					if ${amIterator.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} == FALSE
+					{
+						UI:UpdateConsole["obj_Agents: DEBUG: Skipping mining mission: ${amIterator.Value.Name}"]	
+						continue
+					}
+					
+					if ${amIterator.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions} == FALSE
+					{
+						UI:UpdateConsole["obj_Agents: DEBUG: Skipping combat mission: ${amIterator.Value.Name}"]	
+						continue
+					}
+										
+					/* if we get here the mission is valid */
+					This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}]}]
+					return
+				}
+			}  
+			while ${amIterator:Next(exists)}
+		}
+		
+		/* if we get here none of the missions in the journal are valid */
+		if ${This.AgentList.agentIterator:First(exists)}
+		{
+			do
+			{
+				if ${skipList.Contains[${Config.Agents.AgentID[${This.AgentList.agentIterator.Key}]}]} == FALSE
+				{
+					UI:UpdateConsole["obj_Agents: DEBUG: Setting agent to ${This.AgentList.agentIterator.Key}"]	
+					This:SetActiveAgent[${This.AgentList.agentIterator.Key}]
+					return
+				}
+			}  
+			while ${This.AgentList.agentIterator:Next(exists)}
+		}
+		
+		/* we should never get here */
+		UI:UpdateConsole["obj_Agents.PickAgent: DEBUG: Script paused."]
+		Script:Pause		
+	}
+	
 	member:bool LowSecRoute()
 	{
 	    variable index:agentmission amIndex
@@ -434,6 +526,149 @@ objectdef obj_Agents
 		}
 	}
 	
+	function RequestMission()
+	{
+		EVE:Execute[CmdCloseAllWindows]
+		wait 50
+
+		UI:UpdateConsole["obj_Agents: Starting conversation with agent ${This.ActiveAgent}."]
+		Agent[${This.AgentIndex}]:StartConversation
+        do
+        {
+			UI:UpdateConsole["obj_Agents: Waiting for conversation window..."]
+            wait 10
+        }
+        while !${EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"](exists)}        
+    
+		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
+		
+	    ; display your dialog options    
+	    variable index:dialogstring dsIndex
+	    variable iterator dsIterator
+	    
+	    Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
+	    dsIndex:GetIterator[dsIterator]
+	    
+		if ${dsIterator:First(exists)}
+		{
+			; Assume the first item is the "ask for work" item.
+			; This may break if you have agents with locator services.
+	        dsIterator.Value:Say[${This.AgentID}]
+		}
+		
+	    ; Now wait a couple of seconds and then get the new dialog options...and so forth.  The "Wait" needed may differ from person to person.
+	    UI:UpdateConsole["Waiting for agent dialog to update..."]
+	    wait 60
+		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
+
+	    Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
+	    dsIndex:GetIterator[dsIterator]
+	    
+		if ${dsIndex.Used} != 3
+		{
+			UI:UpdateConsole["obj_Agents: ERROR: Did not find expected dialog!  Will retry...", LOG_CRITICAL]
+			RetryCount:Inc
+			if ${RetryCount} > 4
+			{
+				UI:UpdateConsole["obj_Agents: ERROR: Retry count exceeded!  Aborting...", LOG_CRITICAL]
+				EVEBot.ReturnToStation:Set[TRUE]
+			}
+			return
+		}
+
+	    wait 10
+		
+		EVE:Execute[OpenJournal]
+		wait 50
+		EVE:Execute[CmdCloseActiveWindow]
+		wait 50
+
+	    variable index:agentmission amIndex
+		variable iterator amIterator
+
+		EVE:DoGetAgentMissions[amIndex]
+		amIndex:GetIterator[amIterator]
+
+		if ${amIterator:First(exists)}
+		{
+			do
+			{
+				if ${amIterator.Value.AgentID} == ${This.AgentID}
+				{
+					break
+				}
+			}  
+			while ${amIterator:Next(exists)}
+		}
+		
+		if !${amIterator.Value(exists)}
+		{
+			UI:UpdateConsole["obj_Agents: ERROR: Did not find mission!  Will retry...", LOG_CRITICAL]
+			RetryCount:Inc
+			if ${RetryCount} > 4
+			{
+				UI:UpdateConsole["obj_Agents: ERROR: Retry count exceeded!  Aborting...", LOG_CRITICAL]
+				EVEBot.ReturnToStation:Set[TRUE]
+			}
+			return
+		}
+
+		RetryCount:Set[0]
+		
+		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.AgentID = ${amIterator.Value.AgentID}"]	
+		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.State = ${amIterator.Value.State}"]	
+		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}"]	
+		
+		;; evewindow.HTML is highly unstable.  DO NOT USE!!
+		
+		if ${amIterator.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions} == TRUE
+		{
+			dsIndex.Get[1]:Say[${This.AgentID}]
+		}		
+		elseif ${amIterator.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} == TRUE
+		{
+			dsIndex.Get[1]:Say[${This.AgentID}]
+		}		
+		elseif ${amIterator.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} == TRUE
+		{
+			dsIndex.Get[1]:Say[${This.AgentID}]
+		}		
+		elseif ${amIterator.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions} == TRUE
+		{
+			dsIndex.Get[1]:Say[${This.AgentID}]
+		}						
+		else
+		{
+			variable time lastDecline
+			lastDecline:Set[${Config.Agents.LastDecline[${This.AgentName}]}]
+			lastDecline.Hour:Inc[4]
+			lastDecline:Update
+			if ${lastDecline.Timestamp} >= ${Time.Timestamp}
+			{
+				UI:UpdateConsole["obj_Agents: ERROR: You declined a mission less than four hours ago!  Switching agents...", LOG_CRITICAL]
+		    	This:SetActiveAgent[${This.AgentList.NextAgent}]
+				return
+			}
+			else
+			{
+				dsIndex.Get[2]:Say[${This.AgentID}]
+				Config.Agents:SetLastDecline[${This.AgentName},${Time.Timestamp}]
+				UI:UpdateConsole["obj_Agents: Declined mission."]
+			}
+		}
+
+	    UI:UpdateConsole["Waiting for mission dialog to update..."]
+	    wait 60
+		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
+
+		EVE:Execute[OpenJournal]
+		wait 50
+		EVE:Execute[CmdCloseActiveWindow]
+		wait 50
+
+    	EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"]:Close
+	}
+
 	; Request missions until we get a courier mission
 	function RequestCourierMission()
 	{
