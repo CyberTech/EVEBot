@@ -1161,8 +1161,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			do
 			{
-				;if ${FleetMember.Value.CharID} == ${charID} && ${Local[${FleetMember.Value.ToPilot.Name}](exists)}
-				if ${FleetMember.Value.CharID} == ${charID}
+				if ${FleetMember.Value.CharID} == ${charID} && ${Local[${FleetMember.Value.ToPilot.Name}](exists)}
 				{
 					call This.WarpPrepare
 					while !${Entity[OwnerID,${charID},CategoryID,6](exists)}
