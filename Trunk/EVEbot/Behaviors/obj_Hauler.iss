@@ -319,6 +319,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 				else
 				{
 					QuantityToMove:Set[${Cargo.Value.Quantity} - ${leave}]
+					leave:Set[0]
 				}
 
 				UI:UpdateConsole["Hauler: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
@@ -463,7 +464,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		
 		if ${Entity[OwnerID,${charID},CategoryID,6].Distance} > 15000
 		{
-			if ${Entity[OwnerID,${charID},CategoryID,6]].Distance} < WARP_RANGE
+			if ${Entity[OwnerID,${charID},CategoryID,6].Distance} < WARP_RANGE
 			{
 				UI:UpdateConsole["Fleet member is to far for approach; warping to bounce point"]
 				call This.WarpToNextSafeSpot

@@ -1161,17 +1161,13 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			do
 			{
-				if ${FleetMember.Value.CharID} == ${charID} && ${Local[${FleetMember.Value.ToPilot.Name}](exists)}
+				;if ${FleetMember.Value.CharID} == ${charID} && ${Local[${FleetMember.Value.ToPilot.Name}](exists)}
+				if ${FleetMember.Value.CharID} == ${charID}
 				{
 					call This.WarpPrepare
-					while !${Entity[OwnerID,${charID},CategoryID,6]](exists)}								
+					while !${Entity[OwnerID,${charID},CategoryID,6](exists)}
 					{
-						if ${Entity[OwnerID,${charID},CategoryID,6]].Distance} < WARP_RANGE
-						{
-							return
-						}
 						UI:UpdateConsole["Warping to Fleet Member: ${FleetMember.Value.ToPilot.Name}"]
-						UI:UpdateConsole["Distance: ${Entity[OwnerID,${charID},CategoryID,6]].Distance}"]
 						while !${This.WarpEntered}
 						{
 							FleetMember.Value:WarpTo
