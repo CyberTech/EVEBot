@@ -54,11 +54,6 @@ objectdef obj_Fleet
 		;echo DEBUG: Populating Fleet member list:: ${FleetMemberCount} members total
 	}
 	
-	method WarpToMember( int idx, int distance )
-	{
-		FleetMembers.Get[${idx}]:WarpTo[${distance}]
-	}
-	
 	member:fleetmember CharIdToFleetMember( int charID )
 	{
 		variable fleetmember ReturnValue
@@ -85,32 +80,6 @@ objectdef obj_Fleet
 		return ${ReturnValue}
 	}
 
-	function WarpToFleetMember( int charID )
-	{
-		This:UpdateFleetList[]
-		
-		variable int i = 1
-		do
-		{ 
-			if ${FleetMembers.Get[${i}].CharID} == ${charID}
-			{
-				UI:UpdateConsole["Warping to Fleet Member: ${FleetMembers.Get[${i}].ToPilot.Name}"]
-				while !${Ship.WarpEntered}
-				{
-					FleetMembers.Get[${i}]:WarpTo
-					wait 10
-				}
-				call Ship.WarpWait
-				if ${Return} == 2
-				{
-					return
-				}
-				break
-			}
-		}
-		while ${i:Inc} <= ${FleetMemberCount}
-	}
-
 	method WarpToNextMember(int distance = 0)
 	{		
 		FleetMemberIndex:Inc
@@ -125,7 +94,7 @@ objectdef obj_Fleet
 			FleetMemberIndex:Set[1]
 		}
 		
-		This:WarpToMember[${FleetMembers.Get[${FleetMemberIndex}].CharID},${distance}]
+		Ship:WarpToMember[${FleetMembers.Get[${FleetMemberIndex}].CharID},${distance}]
 	}	
 
 	method WarpToPreviousMember(int distance = 0)
@@ -140,7 +109,7 @@ objectdef obj_Fleet
 			FleetMemberIndex:Set[1]
 		}
 		
-		This:WarpToMember[${FleetMembers.Get[${FleetMemberIndex}].CharID},${distance}]
+		Ship:WarpToMember[${FleetMembers.Get[${FleetMemberIndex}].CharID},${distance}]
 	}	
 	
 }

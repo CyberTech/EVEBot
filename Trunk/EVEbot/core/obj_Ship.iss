@@ -1148,7 +1148,8 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		}
 	}
 
-	function WarpToFleetMember( int charID )
+	; This takes CHARID, not Entity id
+	function WarpToFleetMember( int charID, int distance=0 )
 	{
 		variable index:fleetmember FleetMembers
 		variable iterator          FleetMember
@@ -1169,7 +1170,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 						UI:UpdateConsole["Warping to Fleet Member: ${FleetMember.Value.ToPilot.Name}"]
 						while !${This.WarpEntered}
 						{
-							FleetMember.Value:WarpTo
+							FleetMember.Value:WarpTo[${distance}]
 							wait 10
 						}
 						call This.WarpWait
