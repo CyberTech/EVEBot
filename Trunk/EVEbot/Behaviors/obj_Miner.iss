@@ -295,7 +295,8 @@ objectdef obj_Miner
 			    LastUsedCargoCapacity:Set[${Me.Ship.UsedCargoCapacity}]
 			}
 			
-			if ${SanityCheckCounter} > MINER_SANITY_CHECK_INTERVAL
+			if (!${Config.Miner.IceMining} && \
+				${SanityCheckCounter} > MINER_SANITY_CHECK_INTERVAL)
 			{
 				UI:UpdateConsole["Warning: Cargo volume hasn't changed in a while, docking"]
 				SanityCheckAbort:Set[TRUE]
