@@ -110,7 +110,7 @@ objectdef obj_Ship
 				}
     		}
     		This.NextPulse:Set[${Time.Timestamp}]
-    		This.NextPulse.Second:Inc[${This.IntervalInSeconds}]
+    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
     		This.NextPulse:Update
 		}
 	}

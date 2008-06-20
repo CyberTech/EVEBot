@@ -29,7 +29,7 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 
 /* If the miner's cargo hold doesn't increase during 
  * this period, return to base.  Interval depends on the 
- * IntervalInSeconds value used in obj_Miner.Pulse
+ * PulseIntervalInSeconds value used in obj_Miner.Pulse
  * This value is currently set to 2 seconds so 240*2 = 8 minutes
  * The check interval is set high to compensate for slowboating
  */
