@@ -157,13 +157,23 @@ objectdef obj_Combat
 
 		if ${This.CurrentState.NotEqual["INSTATION"]}
 		{
-			if !${Social.IsSafe}
+			if ${Me.ToEntity.IsWarpScrambled}
 			{
-				call This.Flee
-				This.Override:Set[TRUE]
+				; TODO - we need to quit if a red warps in while we're scrambled -- cybertech
+				UI:UpdateConsole["Warp Scrambled: Ignoring System Status"]
 			}
-			elseif (!${Ship.IsAmmoAvailable} &&  ${Config.Combat.RunOnLowAmmo})
+			else
 			{
+				if !${Social.IsSafe} && ${Me.ToEntity.IsWarpScrambled}
+				{
+					call This.Flee
+					This.Override:Set[TRUE]
+				}
+			}
+			
+			if (!${Ship.IsAmmoAvailable} &&  ${Config.Combat.RunOnLowAmmo})
+			{
+				; TODO - what to do about being warp scrambled in this case?
 				call This.Flee
 				This.Override:Set[TRUE]
 			}
@@ -253,16 +263,12 @@ objectdef obj_Combat
 
 	method CheckTank(float ArmorPct, float ShieldPct, float CapacitorPct)
 	{
-		/* see if tank checking is configured */
-		if !${Config.Combat.RunOnLowTank}
-		{
-			return
-		}
-
 		if ${This.Fled}
 		{
 			/* don't leave the "fled" state until we regen */
-			if (${ArmorPct} < 50 || (${ShieldPct} < 80 && ${Config.Combat.MinimumShieldPct} > 0) || ${CapacitorPct} < 80)
+			if (${ArmorPct} < 50 || \
+				(${ShieldPct} < 80 && ${Config.Combat.MinimumShieldPct} > 0) || \
+				${CapacitorPct} < 80 )
 			{
 					This.CurrentState:Set["FLEE"]
 			}
@@ -276,11 +282,23 @@ objectdef obj_Combat
 				${ShieldPct} < ${Config.Combat.MinimumShieldPct} || \
 				${CapacitorPct} < ${Config.Combat.MinimumCapPct})
 		{
-			UI:UpdateConsole["Armor is at ${ArmorPct.Int}%: ${Me.Ship.Armor}/${Me.Ship.MaxArmor}", LOG_CRITICAL]
-			UI:UpdateConsole["Shield is at ${ShieldPct.Int}%: ${Me.Ship.Shield}/${Me.Ship.MaxShield}", LOG_CRITICAL]
-			UI:UpdateConsole["Cap is at ${CapacitorPct.Int}%: ${Me.Ship.Capacitor}/${Me.Ship.MaxCapacitor}", LOG_CRITICAL]
-			UI:UpdateConsole["Fleeing due to defensive status", LOG_CRITICAL]
-			This.CurrentState:Set["FLEE"]
+			UI:UpdateConsole["Armor is at ${ArmorPct.Int}%: ${Me.Ship.Armor.Int}/${Me.Ship.MaxArmor.Int}", LOG_CRITICAL]
+			UI:UpdateConsole["Shield is at ${ShieldPct.Int}%: ${Me.Ship.Shield.Int}/${Me.Ship.MaxShield.Int}", LOG_CRITICAL]
+			UI:UpdateConsole["Cap is at ${CapacitorPct.Int}%: ${Me.Ship.Capacitor.Int}/${Me.Ship.MaxCapacitor.Int}", LOG_CRITICAL]
+			
+			if !${Config.Combat.RunOnLowTank}
+			{
+				UI:UpdateConsole["Run On Low Tank Disabled: Fighting", LOG_CRITICAL]
+			}
+			elseif ${Me.ToEntity.IsWarpScrambled}
+			{
+				UI:UpdateConsole["Warp Scrambled: Fighting", LOG_CRITICAL]
+			}
+			else
+			{
+				UI:UpdateConsole["Fleeing due to defensive status", LOG_CRITICAL]
+				This.CurrentState:Set["FLEE"]
+			}
 		}
 	}
 
@@ -308,7 +326,7 @@ objectdef obj_Combat
 				a valid value. Don't exit here, let the modules activate even if needless,
 				we'll be running anyway
 			*/
-			if !${This.Fled}
+			if !${This.Fled} && !${Me.ToEntity.IsWarpScrambled}
 			{
 				This.CurrentState:Set["FLEE"]
 			}

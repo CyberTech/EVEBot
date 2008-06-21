@@ -155,6 +155,7 @@ objectdef obj_Drones
 		{
 			UI:UpdateConsole["Recalling ${This.ActiveDroneIDList.Used} Drones"]
 			EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
+			EVE:Execute[CmdDronesReturnToBay]
 			if (${Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
 				${Me.Ship.ShieldPct} < ${Config.Combat.MinimumShieldPct})
 			{
@@ -188,7 +189,8 @@ objectdef obj_Drones
 
 		if (${This.DronesInSpace} > 0)
 		{
-			EVE:DronesEngageMyTarget[This.ActiveDroneIDList]
+			;EVE:DronesEngageMyTarget[This.ActiveDroneIDList]
+			EVE:Execute[CmdDronesEngage]
 		}
 	}
 }
