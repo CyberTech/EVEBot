@@ -38,11 +38,6 @@ objectdef obj_Skills
 	{
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-	        if (${CurrentlyTrainingSkill.Length} <= 0)
-	        {
-	            CurrentlyTrainingSkill:Set[${This.CurrentlyTraining}]
-	        }
-
 		    if ${Me.InStation(exists)}
 		    {
     			if !${This.NextSkill.Equal[None]} && \

@@ -120,6 +120,12 @@ objectdef obj_Combat
 
 	method SetState()
 	{
+		if ${Me.InStation} == TRUE
+		{
+	  		This.CurrentState:Set["INSTATION"]
+	  		return
+		}
+		
 		if ${Me.GetTargets(exists)} && ${Me.GetTargets} > 0
 		{
 			This.CurrentState:Set["FIGHT"]
@@ -149,22 +155,29 @@ objectdef obj_Combat
 	{
 		This.Override:Set[FALSE]
 
-		/* flee on (Social.IsSafe == FALSE) regardless of state */
-		if !${Social.IsSafe}
+		if ${This.CurrentState.NotEqual["INSTATION"]}
 		{
-			call This.Flee
-			This.Override:Set[TRUE]
-		}
-		elseif (!${Ship.IsAmmoAvailable} &&  ${Config.Combat.RunOnLowAmmo})
-		{
-			call This.Flee
-			This.Override:Set[TRUE]
+			if !${Social.IsSafe}
+			{
+				call This.Flee
+				This.Override:Set[TRUE]
+			}
+			elseif (!${Ship.IsAmmoAvailable} &&  ${Config.Combat.RunOnLowAmmo})
+			{
+				call This.Flee
+				This.Override:Set[TRUE]
+			}
+			call This.ManageTank
 		}
 		else
 		{
-			call This.ManageTank
 			switch ${This.CurrentState}
 			{
+				case INSTATION
+					if ${Social.IsSafe}
+					{
+						call Station.Undock
+					}
 				case IDLE
 					break
 				case FLEE

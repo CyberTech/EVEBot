@@ -104,9 +104,6 @@ objectdef obj_Ratter
 			case MOVE
 				call This.Move
 				break
-;			case PCCHECK
-;				call This.PlayerCheck
-;				break
 			case FIGHT
 				call This.Fight
 				break
