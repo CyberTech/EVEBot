@@ -169,25 +169,24 @@ objectdef obj_Combat
 			}
 			call This.ManageTank
 		}
-		else
+		
+		switch ${This.CurrentState}
 		{
-			switch ${This.CurrentState}
-			{
-				case INSTATION
-					if ${Social.IsSafe}
-					{
-						call Station.Undock
-					}
-				case IDLE
-					break
-				case FLEE
-					call This.Flee
-					This.Override:Set[TRUE]
-					break
-				case FIGHT
-					call This.Fight
-					break
-			}
+			case INSTATION
+				if ${Social.IsSafe}
+				{
+					call Station.Undock
+				}
+				break
+			case IDLE
+				break
+			case FLEE
+				call This.Flee
+				This.Override:Set[TRUE]
+				break
+			case FIGHT
+				call This.Fight
+				break
 		}
 	}
 
