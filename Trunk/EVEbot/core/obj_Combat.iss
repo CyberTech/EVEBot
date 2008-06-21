@@ -162,13 +162,10 @@ objectdef obj_Combat
 				; TODO - we need to quit if a red warps in while we're scrambled -- cybertech
 				UI:UpdateConsole["Warp Scrambled: Ignoring System Status"]
 			}
-			else
+			elseif !${Social.IsSafe}
 			{
-				if !${Social.IsSafe} && ${Me.ToEntity.IsWarpScrambled}
-				{
-					call This.Flee
-					This.Override:Set[TRUE]
-				}
+				call This.Flee
+				This.Override:Set[TRUE]
 			}
 			
 			if (!${Ship.IsAmmoAvailable} &&  ${Config.Combat.RunOnLowAmmo})
