@@ -20,7 +20,8 @@ objectdef obj_EVEBotUI
 	variable string CriticalLogFile
 	variable bool Reloaded = FALSE
 	variable queue:string ConsoleBuffer
-			
+	variable string PreviousMsg
+				
 	method Initialize()
 	{
 		This.CharacterName:Set[${Me.Name}]
@@ -124,9 +125,19 @@ objectdef obj_EVEBotUI
 		*/
 		variable string msg
 		variable int Count
+		variable bool Filter = FALSE
 		
 		if ${StatusMessage(exists)}
 		{
+			if ${StatusMessage.Equal[${This.PreviousMsg}]}
+			{
+				Filter:Set[TRUE]
+			}
+			else
+			{
+				This.PreviousMsg:Set[${StatusMessage}]
+			}
+			
 			msg:Set["${Time.Time24}: "]
 				
 			for (Count:Set[1]; ${Count}<=${Indent}; Count:Inc)
@@ -137,7 +148,7 @@ objectdef obj_EVEBotUI
   				
 			if ${This.Reloaded}
 			{
-				if ${Level} > LOG_MINOR
+				if ${Level} > LOG_MINOR && !${Filter}
 				{
 					UIElement[StatusConsole@Status@EvEBotOptionsTab@EVEBot]:Echo[${msg}]
 				}
