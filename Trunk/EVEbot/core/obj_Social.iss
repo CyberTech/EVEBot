@@ -143,7 +143,7 @@ objectdef obj_Social
 	{
 		if ${sChannel.Equal["Local"]}
 		{
-			if !${sAuthor.Equal["EVE System"](exists)}
+			if ${sAuthor.NotEqual["EVE System"]}
 			{
 				call Sound.PlayTellSound
 				UI:UpdateConsole["Channel Local: ${sAuthor}: ${sMessageText}", LOG_CRITICAL]
