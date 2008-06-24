@@ -129,7 +129,7 @@ objectdef obj_Skills
 			/* Sometimes we randomly get a NULL back at the begininng of the file. */
 			if !${temp.Equal[NULL]}
 			{
-				/* Remove \r\n fron data.  Should really be checking it's not just \n terminated as well. */
+				/* Remove \r\n from data.  Should really be checking it's not just \n terminated as well. */
 				ReadLine:Set[${temp.Left[${Math.Calc[${temp.Length} - 2]}]}]
 			
 
