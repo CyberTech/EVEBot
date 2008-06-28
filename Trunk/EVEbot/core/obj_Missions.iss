@@ -7,10 +7,99 @@
     
 */
 
+objectdef obj_MissionCache
+{
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+
+	variable string CONFIG_FILE = "${Script.CurrentDirectory}/Config/${Me.Name} Mission Cache.xml"
+	variable string SET_NAME = "Missions"
+	
+	method Initialize()
+	{
+		LavishSettings[MissionCache]:Clear
+		LavishSettings:AddSet[MissionCache]
+		LavishSettings[MissionCache]:AddSet[${This.SET_NAME}]
+		LavishSettings[MissionCache]:Import[${This.CONFIG_FILE}]
+		UI:UpdateConsole["obj_MissionCache: Initialized", LOG_MINOR]
+	}
+
+	method Shutdown()
+	{
+		LavishSettings[MissionCache]:Export[${This.CONFIG_FILE}]
+		LavishSettings[MissionCache]:Clear
+	}
+
+	member:settingsetref MissionsRef()
+	{
+		return ${LavishSettings[MissionCache].FindSet[${This.SET_NAME}]}
+	}
+
+	member:settingsetref MissionRef(string timestamp)
+	{
+		return ${This.MissionsRef.FindSet[${timestamp}]}
+	}
+	
+	method AddMission(string timestamp, int agentID, string name)
+	{
+		This.MissionsRef:AddSet[${timestamp}]
+		This.MissionRef[${timestamp}]:AddSetting[AgentID,${agentID}]
+		This.MissionRef[${timestamp}]:AddSetting[Name,"${name}"]
+	}
+	
+	member:int FactionID(string timestamp)
+	{
+		return ${This.MissionRef[${timestamp}].FindSetting[FactionID,0]}
+	}
+	
+	method SetFactionID(string timestamp, int factionID)
+	{
+		if !${This.MissionsRef.FindSet[${timestamp}](exists)}
+		{
+			This.MissionsRef:AddSet[${timestamp}]
+		}
+		
+		This.MissionRef[${timestamp}]:AddSetting[FactionID,${factionID}]
+	}	
+
+	member:int TypeID(string timestamp)
+	{
+		return ${This.MissionRef[${timestamp}].FindSetting[TypeID,0]}
+	}
+	
+	method SetTypeID(string timestamp, int typeID)
+	{
+		if !${This.MissionsRef.FindSet[${timestamp}](exists)}
+		{
+			This.MissionsRef:AddSet[${timestamp}]
+		}
+		
+		This.MissionRef[${timestamp}]:AddSetting[TypeID,${typeID}]
+	}	
+
+	member:int Volume(string timestamp)
+	{
+		return ${This.MissionRef[${timestamp}].FindSetting[Volume,0]}
+	}
+	
+	method SetVolume(string timestamp, float volume)
+	{
+		if !${This.MissionsRef.FindSet[${timestamp}](exists)}
+		{
+			This.MissionsRef:AddSet[${timestamp}]
+		}
+		
+		This.MissionRef[${timestamp}]:AddSetting[Volume,${volume}]
+	}	
+
+}
+
 objectdef obj_Missions
 {
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
+	
+	variable obj_MissionCache MissionCache
 
     method Initialize()
     {
@@ -79,7 +168,7 @@ objectdef obj_Missions
 		wait 100
 		UI:UpdateConsole["obj_Missions: TurnInMission"]
 		call Agents.TurnInMission
-	}	
+	}
 	
 	function RunTradeMission()
 	{
@@ -97,5 +186,5 @@ objectdef obj_Missions
 	{
 		UI:UpdateConsole["obj_Missions: ERROR!  Combat missions are not supported!"]
 		Script:Pause
-	}
+	}	
 }

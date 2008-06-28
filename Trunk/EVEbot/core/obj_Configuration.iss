@@ -1340,6 +1340,7 @@ objectdef obj_Configuration_Missioneer
 		This.MissioneerRef:AddSetting[Salvage Mode Name, "None"]		
 		This.MissioneerRef:AddSetting[Salvage Ship, ""]
 		This.MissioneerRef:AddSetting[Avoid Low Sec, TRUE]
+		This.MissioneerRef:AddSetting[Small Hauler Limit, 600]
 	}
 
 	member:bool RunCourierMissions()
@@ -1461,5 +1462,17 @@ objectdef obj_Configuration_Missioneer
 	{
 		This.MissioneerRef:AddSetting[Avoid Low Sec, ${value}]
 	} 	
+	
+	member:int SmallHaulerLimit()
+	{
+		return ${This.MissioneerRef.FindSetting[Small Hauler Limit, 600]}
+	}
+	
+	method SetSmallHaulerLimit(int value)
+	{
+		This.MissioneerRef:AddSetting[Small Hauler Limit,${value}]
+	}
+	
+	
 }
 

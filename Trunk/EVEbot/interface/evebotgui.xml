@@ -1383,6 +1383,30 @@
                       Script[EVEBot].VariableScope.Config.Missioneer:SetAvoidLowSec[${This.Checked}]
                     </OnLeftClick>
                   </checkbox>
+                <Text name='lblSmallHaulerLimit'>
+                  <X>140</X>
+                  <Y>13</Y>
+                  <Width>160</Width>
+                  <Height>18</Height>
+                  <Text>Small Hauler Limit</Text>
+                  <AutoTooltip>Will use the large hauler for missions above this limit.</AutoTooltip>
+                </Text>
+                <Textentry name='tbSmallHaulerLimit'>
+                  <X>300</X>
+                  <Y>10</Y>
+                  <Width>50</Width>
+                  <Height>18</Height>
+                  <MaxLength>5</MaxLength>
+                  <OnLoad>
+                    This:SetText[${Script[EVEBot].VariableScope.Config.Missioneer.SmallHaulerLimit}]
+                  </OnLoad>
+                  <OnChange>
+                    if ${This.Text.Length} > 0
+                    {
+                    Script[EVEBot].VariableScope.Config.Missioneer:SetSmallHaulerLimit[${Int[${This.Text}]}]
+                    }
+                  </OnChange>
+                </Textentry>
               </Children>
             </Frame>
             </tab>
