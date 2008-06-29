@@ -184,6 +184,38 @@ objectdef obj_Missions
 
 	function RunCombatMission()
 	{
+		variable index:item hsIndex
+		variable iterator   hsIterator
+		variable string     shipName
+		
+		if ${Station.Docked}
+		{
+			shipName:Set[${Me.Ship}]
+			if ${shipName.NotEqual[${Config.Missioneer.CombatShip}]}
+			{			
+				Me.Station:DoGetHangarShips[hsIndex]
+				hsIndex:GetIterator[hsIterator]
+				
+				if ${hsIterator:First(exists)}
+				{
+					do
+					{
+						if ${hsIterator.Value.GivenName.Equal[${Config.Missioneer.CombatShip}]}
+						{
+							UI:UpdateConsole["obj_Missions: Switching to ship named ${hsIterator.Value.GivenName}."]
+							hsIterator.Value:MakeActive
+							break
+						}
+					}
+					while ${hsIterator:Next(exists)}
+				}
+			}
+		}		
+		else
+		{
+			UI:UpdateConsole["obj_Missions.RunCombatMission: ERROR Did not start docked!"]
+			Script:Pause
+		}
 		UI:UpdateConsole["obj_Missions: ERROR!  Combat missions are not supported!"]
 		Script:Pause
 	}	
