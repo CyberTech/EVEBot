@@ -126,7 +126,7 @@ objectdef obj_Social
 		{
 			EVE:DoGetPilots[This.PilotIndex]
 
-			if ( ${Me.InStation(exists)} && ${Me.InStation} )
+			if ( ${Me.InStation(exists)} && !${Me.InStation} )
 			{
 				EVE:DoGetEntities[EntityIndex,CategoryID,CATEGORYID_ENTITY]
 			}
