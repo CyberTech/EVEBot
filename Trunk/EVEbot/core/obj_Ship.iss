@@ -511,6 +511,14 @@ objectdef obj_Ship
 			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
 		while ${Module:Next(exists)}
+		UI:UpdateConsole["Sensor Boost Modules:", LOG_MINOR, 2]
+		This.ModuleList_SensorBoost:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			UI:UpdateConsole["    Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
+		}
+		while ${Module:Next(exists)}
 	}
 
 	function ArmorPct()
