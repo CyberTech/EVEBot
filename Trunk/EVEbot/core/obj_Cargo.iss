@@ -739,6 +739,86 @@ objectdef obj_Cargo
 		}
 	}
 	
+	function TransferHangarItemToShip(int typeID)
+	{	
+		if ${Me.InStation(exists)} && !${Me.InStation}
+		{
+			/* TODO - Support picking up from entities in space */
+			m_LastTransferComplete:Set[TRUE]
+		}
+		else
+		{
+			/* Need to cycle the the cargohold after docking to update the list. */
+			call This.CloseHolds
+
+			UI:UpdateConsole["Transferring Item (${typeID}) from Station Hangar"]	
+			call This.OpenHolds
+
+			variable index:item cargoIndex
+			variable iterator cargoIterator
+			Me:DoGetHangarItems[cargoIndex]
+			cargoIndex:GetIterator[cargoIterator]						
+			This.CargoToTransfer:Clear
+			
+			if ${cargoIterator:First(exists)}
+			{
+				do
+				{
+					UI:UpdateConsole["DEBUG: ${cargoIterator.Value.Type}(${cargoIterator.Value.TypeID})"]	
+					if ${typeID} == ${cargoIterator.Value.TypeID}
+					{
+						This.CargoToTransfer:Insert[${cargoIterator.Value}]	
+					}
+				}
+				while ${cargoIterator:Next(exists)}
+			}
+			
+			if ${This.CargoToTransfer.Used} > 0
+			{
+				call This.TransferListToShip
+				
+				This.CargoToTransfer:Clear[]
+				Me.Ship:StackAllCargo
+				Ship:UpdateBaselineUsedCargo[]
+				wait 25
+				call This.CloseHolds
+				
+				/* Check for leftover items in the station */
+				Me:DoGetHangarItems[cargoIndex]
+				cargoIndex:GetIterator[cargoIterator]						
+				This.CargoToTransfer:Clear
+				
+				if ${cargoIterator:First(exists)}
+				{
+					do
+					{
+						if ${typeID} == ${cargoIterator.Value.TypeID}
+						{
+							This.CargoToTransfer:Insert[${cargoIterator.Value}]	
+						}
+					}
+					while ${cargoIterator:Next(exists)}
+				}
+				if ${This.CargoToTransfer.Used} > 0
+				{
+					This.CargoToTransfer:Clear[]
+					UI:UpdateConsole["Could not carry all the cargo from the station hangar"]				
+					m_LastTransferComplete:Set[FALSE]
+				}
+				else
+				{
+					UI:UpdateConsole["Transfered all cargo from the station hangar"]				
+					m_LastTransferComplete:Set[TRUE]
+				}
+			}
+			else
+			{	/* Only set m_LastTransferComplete if we actually transfered something */
+				UI:UpdateConsole["Couldn't find any cargo in the station hangar"]				
+				m_LastTransferComplete:Set[FALSE]
+			}
+		}
+	}
+	
 	function TransferSpawnContainerCargoToShip()
 	{
 	}

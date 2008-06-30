@@ -35,61 +35,61 @@ objectdef obj_MissionCache
 		return ${LavishSettings[MissionCache].FindSet[${This.SET_NAME}]}
 	}
 
-	member:settingsetref MissionRef(string timestamp)
+	member:settingsetref MissionRef(int agentID)
 	{
-		return ${This.MissionsRef.FindSet[${timestamp}]}
+		return ${This.MissionsRef.FindSet[${agentID}]}
 	}
 	
-	method AddMission(string timestamp, int agentID, string name)
+	method AddMission(int agentID, string name)
 	{
-		This.MissionsRef:AddSet[${timestamp}]
-		This.MissionRef[${timestamp}]:AddSetting[AgentID,${agentID}]
-		This.MissionRef[${timestamp}]:AddSetting[Name,"${name}"]
+		This.MissionsRef:AddSet[${agentID}]
+		This.MissionRef[${agentID}]:AddSetting[Name,"${name}"]
 	}
 	
-	member:int FactionID(string timestamp)
+	member:int FactionID(int agentID)
 	{
-		return ${This.MissionRef[${timestamp}].FindSetting[FactionID,0]}
+		return ${This.MissionRef[${agentID}].FindSetting[FactionID,0]}
 	}
 	
-	method SetFactionID(string timestamp, int factionID)
+	method SetFactionID(int agentID, int factionID)
 	{
-		if !${This.MissionsRef.FindSet[${timestamp}](exists)}
+		if !${This.MissionsRef.FindSet[${agentID}](exists)}
 		{
-			This.MissionsRef:AddSet[${timestamp}]
+			This.MissionsRef:AddSet[${agentID}]
 		}
 		
-		This.MissionRef[${timestamp}]:AddSetting[FactionID,${factionID}]
+		This.MissionRef[${agentID}]:AddSetting[FactionID,${factionID}]
 	}	
 
-	member:int TypeID(string timestamp)
+	member:int TypeID(int agentID)
 	{
-		return ${This.MissionRef[${timestamp}].FindSetting[TypeID,0]}
+		UI:UpdateConsole["obj_MissionCache.TypeID: DEBUG ${agentID} ${This.MissionRef[${agentID}].Name}"]
+		return ${This.MissionRef[${agentID}].FindSetting[TypeID,0]}
 	}
 	
-	method SetTypeID(string timestamp, int typeID)
+	method SetTypeID(int agentID, int typeID)
 	{
-		if !${This.MissionsRef.FindSet[${timestamp}](exists)}
+		if !${This.MissionsRef.FindSet[${agentID}](exists)}
 		{
-			This.MissionsRef:AddSet[${timestamp}]
+			This.MissionsRef:AddSet[${agentID}]
 		}
 		
-		This.MissionRef[${timestamp}]:AddSetting[TypeID,${typeID}]
+		This.MissionRef[${agentID}]:AddSetting[TypeID,${typeID}]
 	}	
 
-	member:int Volume(string timestamp)
+	member:int Volume(int agentID)
 	{
-		return ${This.MissionRef[${timestamp}].FindSetting[Volume,0]}
+		return ${This.MissionRef[${agentID}].FindSetting[Volume,0]}
 	}
 	
-	method SetVolume(string timestamp, float volume)
+	method SetVolume(int agentID, float volume)
 	{
-		if !${This.MissionsRef.FindSet[${timestamp}](exists)}
+		if !${This.MissionsRef.FindSet[${agentID}](exists)}
 		{
-			This.MissionsRef:AddSet[${timestamp}]
+			This.MissionsRef:AddSet[${agentID}]
 		}
 		
-		This.MissionRef[${timestamp}]:AddSetting[Volume,${volume}]
+		This.MissionRef[${agentID}]:AddSetting[Volume,${volume}]
 	}	
 
 }
@@ -131,19 +131,19 @@ objectdef obj_Missions
 				{
 					if ${amIterator.Value.Type.Find[Courier](exists)}
 					{
-						call This.RunCourierMission
+						call This.RunCourierMission ${amIterator.Value.AgentID}
 					}					
 					elseif ${amIterator.Value.Type.Find[Trade](exists)}
 					{
-						call This.RunTradeMission
+						call This.RunTradeMission ${amIterator.Value.AgentID}
 					}
 					elseif ${amIterator.Value.Type.Find[Mining](exists)}
 					{
-						call This.RunMiningMission
+						call This.RunMiningMission ${amIterator.Value.AgentID}
 					}					
 					elseif ${amIterator.Value.Type.Find[Encounter](exists)}
 					{
-						call This.RunCombatMission
+						call This.RunCombatMission ${amIterator.Value.AgentID}
 					}
 					else
 					{
@@ -156,33 +156,42 @@ objectdef obj_Missions
 		}
 	}
 	
-	function RunCourierMission()
+	function RunCourierMission(int agentID)
 	{
-		UI:UpdateConsole["obj_Missions: MoveToPickup"]
-		call Agents.MoveToPickup
-		UI:UpdateConsole["obj_Missions: TransferCargoToShip"]
-		wait 100
-		call Cargo.TransferCargoToShip
-		UI:UpdateConsole["obj_Missions: MoveToDropOff"]
-		call Agents.MoveToDropOff
-		wait 100
+		variable bool allDone = FALSE
+		do
+		{
+			UI:UpdateConsole["obj_Missions: MoveToPickup"]
+			call Agents.MoveToPickup
+			UI:UpdateConsole["obj_Missions: TransferCargoToShip"]
+			wait 50
+			call Cargo.TransferHangarItemToShip ${Missions.MissionCache.TypeID[${agentID}]}
+			allDone:Set[${Cargo.LastTransferComplete}]
+			UI:UpdateConsole["obj_Missions: MoveToDropOff"]
+			call Agents.MoveToDropOff
+			wait 50
+			call Cargo.TransferCargoToHangar			
+			wait 50
+		}
+		while !${allDone}
+		
 		UI:UpdateConsole["obj_Missions: TurnInMission"]
 		call Agents.TurnInMission
 	}
 	
-	function RunTradeMission()
+	function RunTradeMission(int agentID)
 	{
 		UI:UpdateConsole["obj_Missions: ERROR!  Trade missions are not supported!"]
 		Script:Pause
 	}
 
-	function RunMiningMission()
+	function RunMiningMission(int agentID)
 	{
 		UI:UpdateConsole["obj_Missions: ERROR!  Mining missions are not supported!"]
 		Script:Pause
 	}
 
-	function RunCombatMission()
+	function RunCombatMission(int agentID)
 	{
 		variable index:item hsIndex
 		variable iterator   hsIterator

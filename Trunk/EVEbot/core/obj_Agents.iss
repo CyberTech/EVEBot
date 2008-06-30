@@ -621,123 +621,115 @@ objectdef obj_Agents
 		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Name = ${amIterator.Value.Name}"]	
 		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Expires = ${amIterator.Value.Expires.DateAndTime}"]	
 		
-		UI:UpdateConsole["obj_Agents: DEBUG: settingset = ${Missions.MissionCache.MissionRef[${amIterator.Value.Expires.AsInt64.Hex}].Name}"]
-		if !${Missions.MissionCache.MissionRef[${amIterator.Value.Expires.AsInt64.Hex}].Name(exists)}
+		amIterator.Value:GetDetails
+		wait 50
+		variable string details
+		details:Set["${EVEWindow[ByCaption,${amIterator.Value.Name}].HTML.Escape}"]
+		UI:UpdateConsole["obj_Agents: DEBUG: HTML.Length = ${EVEWindow[ByCaption,${amIterator.Value.Name}].HTML.Length}"]
+		EVE:Execute[CmdCloseActiveWindow]
+		UI:UpdateConsole["obj_Agents: DEBUG: details.Length = ${details.Length}"]	
+		
+		variable file detailsFile
+		detailsFile:SetFilename["./config/logs/${amIterator.Value.Expires.AsInt64.Hex} ${amIterator.Value.Name}.html"]
+		if ${detailsFile:Open(exists)}
 		{
-			amIterator.Value:GetDetails
-			wait 50
-			variable string details
-			details:Set["${EVEWindow[ByCaption,${amIterator.Value.Name}].HTML.Escape}"]
-			UI:UpdateConsole["obj_Agents: DEBUG: HTML.Length = ${EVEWindow[ByCaption,${amIterator.Value.Name}].HTML.Length}"]
-			EVE:Execute[CmdCloseActiveWindow]
-			UI:UpdateConsole["obj_Agents: DEBUG: details.Length = ${details.Length}"]	
-			
-			variable file detailsFile
-			detailsFile:SetFilename["./config/logs/${amIterator.Value.Expires.AsInt64.Hex} ${amIterator.Value.Name}.html"]
-			if ${detailsFile:Open(exists)}
-			{
-				detailsFile:Write["${details.Escape}"]
-			}
-			detailsFile:Close
-			
-			Missions.MissionCache:AddMission[${amIterator.Value.Expires.AsInt64.Hex},${amIterator.Value.AgentID},"${amIterator.Value.Name}"]
+			detailsFile:Write["${details.Escape}"]
+		}
+		detailsFile:Close
+		
+		Missions.MissionCache:AddMission[${amIterator.Value.AgentID},"${amIterator.Value.Name}"]
 
-			variable int factionID = 0
-			variable int left = 0
-			variable int right = 0
-			left:Set[${details.Escape.Find["<img src=\\\"factionlogo:"]}]
-			if ${left} > 0
-			{
-				UI:UpdateConsole["obj_Agents: DEBUG: Found \"factionlogo\" at ${left}."]
-				left:Inc[23]
-				UI:UpdateConsole["obj_Agents: DEBUG: Found \"factionlogo\" at ${left}."]
-				UI:UpdateConsole["obj_Agents: DEBUG: factionlogo substring = ${details.Escape.Mid[${left},16]}"]
-				right:Set[${details.Escape.Mid[${left},16].Find["\" "]}]
-				if ${right} > 0
-				{
-					right:Dec[2]
-					UI:UpdateConsole["obj_Agents: DEBUG: left = ${left}"]	
-					UI:UpdateConsole["obj_Agents: DEBUG: right = ${right}"]	
-					UI:UpdateConsole["obj_Agents: DEBUG: string = ${details.Escape.Mid[${left},${right}]}"]	
-					factionID:Set[${details.Escape.Mid[${left},${right}]}]	
-					UI:UpdateConsole["obj_Agents: DEBUG: factionID = ${factionID}"]	
-				}
-				else
-				{
-					UI:UpdateConsole["obj_Agents: ERROR: Did not find end of \"factionlogo\"!"]	
-				}
-			}
-			else
-			{
-				UI:UpdateConsole["obj_Agents: DEBUG: Did not find \"factionlogo\".  Rouge Drones???"]	
-			}		
-			
-			Missions.MissionCache:SetFactionID[${amIterator.Value.Expires.AsInt64.Hex},${factionID}]
-			
-			variable int typeID = 0
-			left:Set[${details.Escape.Find["<img src=\\\"typeicon:"]}]
-			if ${left} > 0
-			{
-				UI:UpdateConsole["obj_Agents: DEBUG: Found \"typeicon\" at ${left}."]
-				left:Inc[21]
-				UI:UpdateConsole["obj_Agents: DEBUG: typeicon substring = ${details.Escape.Mid[${left},16]}"]
-				right:Set[${details.Escape.Mid[${left},16].Find["\" "]}]
-				if ${right} > 0
-				{
-					right:Dec[2]
-					UI:UpdateConsole["obj_Agents: DEBUG: left = ${left}"]	
-					UI:UpdateConsole["obj_Agents: DEBUG: right = ${right}"]	
-					UI:UpdateConsole["obj_Agents: DEBUG: string = ${details.Escape.Mid[${left},${right}]}"]	
-					typeID:Set[${details.Escape.Mid[${left},${right}]}]	
-					UI:UpdateConsole["obj_Agents: DEBUG: typeID = ${typeID}"]	
-				}
-				else
-				{
-					UI:UpdateConsole["obj_Agents: ERROR: Did not find end of \"typeicon\"!"]	
-				}
-			}
-			else
-			{
-				UI:UpdateConsole["obj_Agents: DEBUG: Did not find \"typeicon\".  No cargo???"]	
-			}		
-			
-			Missions.MissionCache:SetTypeID[${amIterator.Value.Expires.AsInt64.Hex},${typeID}]
-			
-			variable float volume = 0
-					
-			right:Set[${details.Escape.Find["msup3"]}]
+		variable int factionID = 0
+		variable int left = 0
+		variable int right = 0
+		left:Set[${details.Escape.Find["<img src=\\\"factionlogo:"]}]
+		if ${left} > 0
+		{
+			UI:UpdateConsole["obj_Agents: DEBUG: Found \"factionlogo\" at ${left}."]
+			left:Inc[23]
+			UI:UpdateConsole["obj_Agents: DEBUG: Found \"factionlogo\" at ${left}."]
+			UI:UpdateConsole["obj_Agents: DEBUG: factionlogo substring = ${details.Escape.Mid[${left},16]}"]
+			right:Set[${details.Escape.Mid[${left},16].Find["\" "]}]
 			if ${right} > 0
 			{
-				UI:UpdateConsole["obj_Agents: DEBUG: Found \"msup3\" at ${right}."]
-				right:Dec
-				left:Set[${details.Escape.Mid[${Math.Calc[${right}-16]},16].Find[" ("]}]
-				if ${left} > 0
-				{
-					left:Set[${Math.Calc[${right}-16+${left}+1]}]
-					right:Set[${Math.Calc[${right}-${left}]}]
-					UI:UpdateConsole["obj_Agents: DEBUG: left = ${left}"]	
-					UI:UpdateConsole["obj_Agents: DEBUG: right = ${right}"]	
-					UI:UpdateConsole["obj_Agents: DEBUG: string = ${details.Escape.Mid[${left},${right}]}"]	
-					volume:Set[${details.Escape.Mid[${left},${right}]}]	
-					UI:UpdateConsole["obj_Agents: DEBUG: volume = ${volume}"]	
-				}
-				else
-				{
-					UI:UpdateConsole["obj_Agents: ERROR: Did not find number before \"msup3\"!"]	
-				}
+				right:Dec[2]
+				UI:UpdateConsole["obj_Agents: DEBUG: left = ${left}"]	
+				UI:UpdateConsole["obj_Agents: DEBUG: right = ${right}"]	
+				UI:UpdateConsole["obj_Agents: DEBUG: string = ${details.Escape.Mid[${left},${right}]}"]	
+				factionID:Set[${details.Escape.Mid[${left},${right}]}]	
+				UI:UpdateConsole["obj_Agents: DEBUG: factionID = ${factionID}"]	
 			}
 			else
 			{
-				UI:UpdateConsole["obj_Agents: DEBUG: Did not find \"msup3\".  No cargo???"]	
-			}		
-			
-			Missions.MissionCache:SetVolume[${amIterator.Value.Expires.AsInt64.Hex},${volume}]
+				UI:UpdateConsole["obj_Agents: ERROR: Did not find end of \"factionlogo\"!"]	
+			}
 		}
 		else
 		{
-			UI:UpdateConsole["obj_Agents: DEBUG: Mission ${amIterator.Value.Expires.AsInt64.Hex} already cached."]
-		}
+			UI:UpdateConsole["obj_Agents: DEBUG: Did not find \"factionlogo\".  Rouge Drones???"]	
+		}		
 		
+		Missions.MissionCache:SetFactionID[${amIterator.Value.AgentID},${factionID}]
+		
+		variable int typeID = 0
+		left:Set[${details.Escape.Find["<img src=\\\"typeicon:"]}]
+		if ${left} > 0
+		{
+			UI:UpdateConsole["obj_Agents: DEBUG: Found \"typeicon\" at ${left}."]
+			left:Inc[20]
+			UI:UpdateConsole["obj_Agents: DEBUG: typeicon substring = ${details.Escape.Mid[${left},16]}"]
+			right:Set[${details.Escape.Mid[${left},16].Find["\" "]}]
+			if ${right} > 0
+			{
+				right:Dec[2]
+				UI:UpdateConsole["obj_Agents: DEBUG: left = ${left}"]	
+				UI:UpdateConsole["obj_Agents: DEBUG: right = ${right}"]	
+				UI:UpdateConsole["obj_Agents: DEBUG: string = ${details.Escape.Mid[${left},${right}]}"]	
+				typeID:Set[${details.Escape.Mid[${left},${right}]}]	
+				UI:UpdateConsole["obj_Agents: DEBUG: typeID = ${typeID}"]	
+			}
+			else
+			{
+				UI:UpdateConsole["obj_Agents: ERROR: Did not find end of \"typeicon\"!"]	
+			}
+		}
+		else
+		{
+			UI:UpdateConsole["obj_Agents: DEBUG: Did not find \"typeicon\".  No cargo???"]	
+		}		
+		
+		Missions.MissionCache:SetTypeID[${amIterator.Value.AgentID},${typeID}]
+		
+		variable float volume = 0
+				
+		right:Set[${details.Escape.Find["msup3"]}]
+		if ${right} > 0
+		{
+			UI:UpdateConsole["obj_Agents: DEBUG: Found \"msup3\" at ${right}."]
+			right:Dec
+			left:Set[${details.Escape.Mid[${Math.Calc[${right}-16]},16].Find[" ("]}]
+			if ${left} > 0
+			{
+				left:Set[${Math.Calc[${right}-16+${left}+1]}]
+				right:Set[${Math.Calc[${right}-${left}]}]
+				UI:UpdateConsole["obj_Agents: DEBUG: left = ${left}"]	
+				UI:UpdateConsole["obj_Agents: DEBUG: right = ${right}"]	
+				UI:UpdateConsole["obj_Agents: DEBUG: string = ${details.Escape.Mid[${left},${right}]}"]	
+				volume:Set[${details.Escape.Mid[${left},${right}]}]	
+				UI:UpdateConsole["obj_Agents: DEBUG: volume = ${volume}"]	
+			}
+			else
+			{
+				UI:UpdateConsole["obj_Agents: ERROR: Did not find number before \"msup3\"!"]	
+			}
+		}
+		else
+		{
+			UI:UpdateConsole["obj_Agents: DEBUG: Did not find \"msup3\".  No cargo???"]	
+		}		
+		
+		Missions.MissionCache:SetVolume[${amIterator.Value.AgentID},${volume}]
+
 		if ${amIterator.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions} == TRUE
 		{
 			dsIndex.Get[1]:Say[${This.AgentID}]
