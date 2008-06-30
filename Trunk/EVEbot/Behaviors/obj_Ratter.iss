@@ -145,6 +145,8 @@ objectdef obj_Ratter
 	function Fight()
 	{	/* combat logic */	
 		;; just handle targetting, obj_Combat does the rest
+		Ship:Activate_SensorBoost
+		
 		if ${Targets.TargetNPCs} && ${Social.IsSafe}
 		{
 			if ${Targets.SpecialTargetPresent}

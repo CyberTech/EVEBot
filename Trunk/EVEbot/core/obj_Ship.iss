@@ -33,6 +33,7 @@ objectdef obj_Ship
 	variable index:module ModuleList_TractorBeams
 	variable index:module ModuleList_Cloaks
 	variable index:module ModuleList_StasisWeb
+	variable index:module ModuleList_SensorBoost
 	variable bool Repairing_Armor = FALSE
 	variable bool Repairing_Hull = FALSE
 	variable float m_MaxTargetRange
@@ -308,6 +309,7 @@ objectdef obj_Ship
 		This.ModuleList_TractorBeams:Clear
 		This.ModuleList_Cloaks:Clear
 		This.ModuleList_StasisWeb:Clear
+		This.ModuleList_SensorBoost:Clear
 		
 		Me.Ship:DoGetModules[This.ModuleList]
 
@@ -398,6 +400,8 @@ objectdef obj_Ship
 					continue
 				case GROUPID_STASIS_WEB
 					This.ModuleList_StasisWeb:Insert[${Module.Value}]
+				case GROUP_SENSORBOOSTER
+					This.ModuleList_SensorBoost:Insert[${Module.Value}]
 				default
 					continue
 			}
@@ -1427,6 +1431,8 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 	{
 		UI:UpdateConsole["Preparing for warp"]
 		This:Deactivate_Cloak
+		This:Deactivate_SensorBoost
+		
 		if ${This.Drones.WaitingForDrones}
 		{
 			UI:UpdateConsole["Drone deployment already in process, delaying warp", LOG_CRITICAL]
@@ -1651,6 +1657,51 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		variable iterator Module
 
 		This.ModuleList_ActiveResists:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			if ${Module.Value.IsActive} && ${Module.Value.IsOnline} && !${Module.Value.IsDeactivating}
+			{
+				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}", LOG_MINOR]
+				Module.Value:Click
+			}
+		}
+		while ${Module:Next(exists)}
+	}
+
+	method Activate_SensorBoost()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		
+		variable iterator Module
+
+		This.ModuleList_SensorBoost:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			if !${Module.Value.IsActive} && ${Module.Value.IsOnline}
+			{
+				UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
+				Module.Value:Click
+			}
+		}
+		while ${Module:Next(exists)}
+	}
+
+	method Deactivate_SensorBoost()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		variable iterator Module
+
+		This.ModuleList_SensorBoost:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
