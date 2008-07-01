@@ -181,6 +181,9 @@ objectdef obj_Station
 
 		UI:UpdateConsole["Docking at ${EVE.GetLocationNameByID[${StationID}]}"]
 
+		Ship:SetType[${Entity[CategoryID,CATEGORYID_SHIP].Type}]
+		Ship:SetTypeID[${Entity[CategoryID,CATEGORYID_SHIP].TypeID}]
+
 		if ${Entity[${StationID}](exists)}
 		{
 			if ${Entity[${StationID}].Distance} >= 10000
@@ -241,6 +244,9 @@ objectdef obj_Station
 		variable int StationID = ${Entity[CategoryID,3,${Config.Common.HomeStation}].ID}	
 
 		UI:UpdateConsole["Docking at ${StationID}:${Config.Common.HomeStation}"]
+
+		Ship:SetType[${Entity[CategoryID,CATEGORYID_SHIP].Type}]
+		Ship:SetTypeID[${Entity[CategoryID,CATEGORYID_SHIP].TypeID}]
 
 		if ${StationID} <= 0 || !${Entity[${StationID}](exists)}
 		{
@@ -336,6 +342,8 @@ objectdef obj_Station
 		wait 100
 
 		Ship:UpdateModuleList[]
+		Ship:SetType[${Entity[CategoryID,CATEGORYID_SHIP].Type}]
+		Ship:SetTypeID[${Entity[CategoryID,CATEGORYID_SHIP].TypeID}]
 	}
 
 }

@@ -63,7 +63,6 @@ objectdef obj_MissionCache
 
 	member:int TypeID(int agentID)
 	{
-		UI:UpdateConsole["obj_MissionCache.TypeID: DEBUG ${agentID} ${This.MissionRef[${agentID}].Name}"]
 		return ${This.MissionRef[${agentID}].FindSetting[TypeID,0]}
 	}
 	
@@ -123,7 +122,6 @@ objectdef obj_Missions
 		{
 			do
 			{
-				UI:UpdateConsole["obj_Missions: DEBUG: This.AgentID = ${This.AgentID}"]	
 				UI:UpdateConsole["obj_Missions: DEBUG: amIterator.Value.AgentID = ${amIterator.Value.AgentID}"]	
 				UI:UpdateConsole["obj_Missions: DEBUG: amIterator.Value.State = ${amIterator.Value.State}"]	
 				UI:UpdateConsole["obj_Missions: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}"]	
@@ -193,39 +191,64 @@ objectdef obj_Missions
 
 	function RunCombatMission(int agentID)
 	{
-		variable index:item hsIndex
-		variable iterator   hsIterator
-		variable string     shipName
+		call Ship.ActivateShip "${Config.Missioneer.CombatShip}"
 		
-		if ${Station.Docked}
+		UI:UpdateConsole["obj_Missions: DEBUG: ${Ship.Type} (${Ship.TypeID})"]		
+		switch ${Ship.TypeID}
 		{
-			shipName:Set[${Me.Ship}]
-			if ${shipName.NotEqual[${Config.Missioneer.CombatShip}]}
-			{			
-				Me.Station:DoGetHangarShips[hsIndex]
-				hsIndex:GetIterator[hsIterator]
-				
-				if ${hsIterator:First(exists)}
-				{
-					do
-					{
-						if ${hsIterator.Value.GivenName.Equal[${Config.Missioneer.CombatShip}]}
-						{
-							UI:UpdateConsole["obj_Missions: Switching to ship named ${hsIterator.Value.GivenName}."]
-							hsIterator.Value:MakeActive
-							break
-						}
-					}
-					while ${hsIterator:Next(exists)}
-				}
-			}
-		}		
-		else
-		{
-			UI:UpdateConsole["obj_Missions.RunCombatMission: ERROR Did not start docked!"]
-			Script:Pause
+			case TYPE_PUNISHER
+				call This.PunisherCombat ${agentID}
+				break
+			default
+				UI:UpdateConsole["obj_Missions: ERROR!  A ${Ship.Type} is not supported for combat missions yet!"]
+				Script:Pause
 		}
-		UI:UpdateConsole["obj_Missions: ERROR!  Combat missions are not supported!"]
-		Script:Pause
 	}	
+	
+	function PunisherCombat(int agentID)
+	{
+		call This.WarpToEncounter ${agentID}
+	}
+	
+;obj_Agents: DEBUG: mbIterator.Value.LocationType = dungeon
+;obj_Agents: DEBUG: mbIterator.Value.LocationType = agenthomebase
+
+	function WarpToEncounter(int agentID)
+	{
+	    variable index:agentmission amIndex
+	    variable index:bookmark mbIndex
+		variable iterator amIterator
+		variable iterator mbIterator
+
+	    EVE:DoGetAgentMissions[amIndex]
+		amIndex:GetIterator[amIterator]
+
+		if ${amIterator:First(exists)}
+		{
+			do
+			{
+				if ${amIterator.Value.AgentID} == ${agentID}
+				{
+					amIterator.Value:DoGetBookmarks[mbIndex]
+					mbIndex:GetIterator[mbIterator]
+
+					if ${mbIterator:First(exists)}
+					{
+						do
+						{
+							;UI:UpdateConsole["obj_Agents: DEBUG: mbIterator.Value.LocationType = ${mbIterator.Value.LocationType}"]	
+							if ${mbIterator.Value.LocationType.Equal["dungeon"]}
+							{
+								call Ship.WarpToBookMark ${mbIterator.Value}
+								return
+							}
+						} 
+						while ${mbIterator:Next(exists)}
+					}
+				}
+			}  
+			while ${amIterator:Next(exists)}
+		}
+	}
+	
 }

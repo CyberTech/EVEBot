@@ -519,4 +519,5 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 #define GROUP_HEAVYINTERDICTORS 894
 #define GROUP_MARAUDERS 900
 
+#define TYPE_PUNISHER 597
 

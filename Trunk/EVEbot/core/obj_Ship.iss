@@ -40,6 +40,8 @@ objectdef obj_Ship
 	variable bool  m_WaitForCapRecharge = FALSE
 	variable int   m_CargoSanityCounter = 0
 	variable bool InteruptWarpWait = FALSE
+	variable string m_Type
+	variable int    m_TypeID
 	
 	variable iterator ModulesIterator
 
@@ -2087,6 +2089,76 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			UI:UpdateConsole["Reloading Weapons..."]
 			EVE:Execute[CmdReloadAmmo]
+		}
+	}
+	
+	member:string Type()
+	{
+		if ${Station.Docked}
+		{
+			return ${This.m_Type}
+		}
+		else
+		{
+			return ${Entity[CategoryID,CATEGORYID_SHIP].Type}		
+		}
+	}
+	
+	method SetType(string typeString)
+	{
+		UI:UpdateConsole["obj_Ship: DEBUG: Setting ship type to ${typeString}"]
+		This.m_Type:Set[${typeString}]
+	}
+	
+	member:int TypeID()
+	{
+		if ${Station.Docked}
+		{
+			return ${This.m_TypeID}
+		}
+		else
+		{
+			return ${Entity[CategoryID,CATEGORYID_SHIP].TypeID}		
+		}
+	}
+	
+	method SetTypeID(int typeID)
+	{
+		UI:UpdateConsole["obj_Ship: DEBUG: Setting ship type ID to ${typeID}"]
+		This.m_TypeID:Set[${typeID}]
+	}
+	
+	function ActivateShip(string name)
+	{
+		variable index:item hsIndex
+		variable iterator   hsIterator
+		variable string     shipName
+		
+		if ${Station.Docked}
+		{
+			Me.Station:DoGetHangarShips[hsIndex]
+			hsIndex:GetIterator[hsIterator]
+			
+			shipName:Set[${Me.Ship}]
+			if ${shipName.NotEqual[${name}]}
+			{			
+				if ${hsIterator:First(exists)}
+				{
+					do
+					{
+						if ${hsIterator.Value.GivenName.Equal[${name}]}
+						{
+							UI:UpdateConsole["obj_Ship: Switching to ship named ${hsIterator.Value.GivenName}."]
+							hsIterator.Value:MakeActive
+							wait 10
+							This:SetType[${hsIterator.Value.Type}]
+							This:SetTypeID[${hsIterator.Value.TypeID}]
+							break
+						}
+					}
+					while ${hsIterator:Next(exists)}
+				}
+			}
 		}
 	}
 }
