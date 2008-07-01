@@ -1338,13 +1338,15 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				WarpCounter:Inc
 			}
 		}
-		elseif ${DestinationBookmark.ItemID} > -1
+		elseif ${DestinationBookmark.ItemID} < 0 || \
+				(${DestinationBookmark.AgentID(exists)} && ${DestinationBookmark.LocationID(exists)})
 		{
-			/* This is an entity bookmark, but that entity is not on the overhead yet. */
+			/* This is an in-space bookmark, or a dungeon bookmark, just warp to it. */
 
 			WarpCounter:Set[1]
-			while !${DestinationBookmark.ToEntity(exists)}
+			while ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${DestinationBookmark.X}, ${DestinationBookmark.Y}, ${DestinationBookmark.Z}]} > WARP_RANGE
 			{
+				;echo Bookmark Distance: ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${DestinationBookmark.X}, ${DestinationBookmark.Y}, ${DestinationBookmark.Z}]} > WARP_RANGE
 				if ${WarpCounter} > 10
 				{
 					UI:UpdateConsole["obj_Ship:WarpToBookMark - Failed to arrive at bookmark after ${WarpCounter} warps", LOG_CRITICAL]
@@ -1366,12 +1368,11 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		}
 		else
 		{
-			/* This is an in-space bookmark, just warp to it. */
+			/* This is an entity bookmark, but that entity is not on the overhead yet. */
 
 			WarpCounter:Set[1]
-			while ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${DestinationBookmark.X}, ${DestinationBookmark.Y}, ${DestinationBookmark.Z}]} > WARP_RANGE
+			while !${DestinationBookmark.ToEntity(exists)}
 			{
-				;echo Bookmark Distance: ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${DestinationBookmark.X}, ${DestinationBookmark.Y}, ${DestinationBookmark.Z}]} > WARP_RANGE
 				if ${WarpCounter} > 10
 				{
 					UI:UpdateConsole["obj_Ship:WarpToBookMark - Failed to arrive at bookmark after ${WarpCounter} warps", LOG_CRITICAL]
