@@ -200,19 +200,34 @@ objectdef obj_Missions
 				call This.PunisherCombat ${agentID}
 				break
 			default
-				UI:UpdateConsole["obj_Missions: ERROR!  A ${Ship.Type} is not supported for combat missions yet!"]
-				Script:Pause
+				UI:UpdateConsole["obj_Missions: WARNING!  Unknown Ship Type."]
+				call This.DefaultCombat ${agentID}
+				break
 		}
 	}	
+	
+	function DefaultCombat(int agentID)
+	{
+		call This.WarpToEncounter ${agentID}
+		UI:UpdateConsole["obj_Missions: Paused Script.  Complete mission manually and then run the script."]
+		Script:Pause
+		call This.WarpToHomeBase ${agentID}
+		wait 50
+		UI:UpdateConsole["obj_Missions: TurnInMission"]
+		call Agents.TurnInMission
+	}
 	
 	function PunisherCombat(int agentID)
 	{
 		call This.WarpToEncounter ${agentID}
+		UI:UpdateConsole["obj_Missions: Paused Script.  Complete mission manually and then run the script."]
+		Script:Pause
+		call This.WarpToHomeBase ${agentID}
+		wait 50
+		UI:UpdateConsole["obj_Missions: TurnInMission"]
+		call Agents.TurnInMission
 	}
 	
-;obj_Agents: DEBUG: mbIterator.Value.LocationType = dungeon
-;obj_Agents: DEBUG: mbIterator.Value.LocationType = agenthomebase
-
 	function WarpToEncounter(int agentID)
 	{
 	    variable index:agentmission amIndex
@@ -236,7 +251,6 @@ objectdef obj_Missions
 					{
 						do
 						{
-							;UI:UpdateConsole["obj_Agents: DEBUG: mbIterator.Value.LocationType = ${mbIterator.Value.LocationType}"]	
 							if ${mbIterator.Value.LocationType.Equal["dungeon"]}
 							{
 								call Ship.WarpToBookMark ${mbIterator.Value}
@@ -251,4 +265,41 @@ objectdef obj_Missions
 		}
 	}
 	
+	function WarpToHomeBase(int agentID)
+	{
+	    variable index:agentmission amIndex
+	    variable index:bookmark mbIndex
+		variable iterator amIterator
+		variable iterator mbIterator
+
+	    EVE:DoGetAgentMissions[amIndex]
+		amIndex:GetIterator[amIterator]
+
+		if ${amIterator:First(exists)}
+		{
+			do
+			{
+				if ${amIterator.Value.AgentID} == ${agentID}
+				{
+					amIterator.Value:DoGetBookmarks[mbIndex]
+					mbIndex:GetIterator[mbIterator]
+
+					if ${mbIterator:First(exists)}
+					{
+						do
+						{
+							;UI:UpdateConsole["obj_Agents: DEBUG: mbIterator.Value.LocationType = ${mbIterator.Value.LocationType}"]	
+							if ${mbIterator.Value.LocationType.Equal["agenthomebase"]}
+							{
+								call Ship.WarpToBookMark ${mbIterator.Value}
+								return
+							}
+						} 
+						while ${mbIterator:Next(exists)}
+					}
+				}
+			}  
+			while ${amIterator:Next(exists)}
+		}
+	}
 }
