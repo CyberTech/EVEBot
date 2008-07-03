@@ -1,6 +1,6 @@
  #ifndef __OBJ_COMBAT__
  #define __OBJ_COMBAT__
-
+ 
 /*
 		The combat object
 
@@ -213,7 +213,6 @@ objectdef obj_Combat
 		; Activate the weapons, the modules class checks if there's a target (no it doesn't - ct)
 		Ship:Activate_StasisWebs
 		Ship:Activate_Weapons
-		Ship:Activate_SensorBoost		
 		Ship.Drones:SendDrones
 	}
 
