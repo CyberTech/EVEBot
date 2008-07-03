@@ -275,10 +275,22 @@ objectdef obj_Targets
       {
          do
          {
-            ;UI:UpdateConsole["DEBUG: ${Target.Value.Name} is worth ${EVEDB_Spawns.SpawnBounty[${Target.Value.Name}]} ISK."]
-            ;UI:UpdateConsole["DEBUG: Group: ${Target.Value.Group}(${Target.Value.GroupID})"]
-            ;UI:UpdateConsole["DEBUG: Type: ${Target.Value.Type}(${Target.Value.TypeID})"]
-            ;UI:UpdateConsole["DEBUG: Category: ${Target.Value.Category}(${Target.Value.CategoryID})"]
+            UI:UpdateConsole["DEBUG: ${Target.Value.Name} is worth ${EVEDB_Spawns.SpawnBounty[${Target.Value.Name}]} ISK."]
+            UI:UpdateConsole["DEBUG: Group: ${Target.Value.Group}(${Target.Value.GroupID})"]
+            UI:UpdateConsole["DEBUG: Type: ${Target.Value.Type}(${Target.Value.TypeID})"]
+            UI:UpdateConsole["DEBUG: Category: ${Target.Value.Category}(${Target.Value.CategoryID})"]
+
+            switch ${Target.Value.GroupID} 
+            {
+               case GROUP_LARGECOLLIDABLEOBJECT
+               case GROUP_LARGECOLLIDABLESHIP
+               case GROUP_LARGECOLLIDABLESTRUCTURE
+                  continue
+
+               default               
+                  break
+            }
+
             This.TotalSpawnValue:Inc[${EVEDB_Spawns.SpawnBounty[${Target.Value.Name}]}]
          }
          while ${Target:Next(exists)}
@@ -297,6 +309,17 @@ objectdef obj_Targets
 			TypeID:Set[${Target.Value.TypeID}]
 			do
 			{
+            switch ${Target.Value.GroupID} 
+            {
+               case GROUP_LARGECOLLIDABLEOBJECT
+               case GROUP_LARGECOLLIDABLESHIP
+               case GROUP_LARGECOLLIDABLESTRUCTURE
+                  continue
+
+               default               
+                  break
+            }
+            
 				; If the Type ID is different then there's more then 1 type in the belt
 				if ${TypeID} != ${Target.Value.TypeID}
 				{
@@ -368,6 +391,17 @@ objectdef obj_Targets
 		if !${HasPriorityTarget} && ${Target:First(exists)}
 		do
 		{
+         switch ${Target.Value.GroupID} 
+         {
+            case GROUP_LARGECOLLIDABLEOBJECT
+            case GROUP_LARGECOLLIDABLESHIP
+            case GROUP_LARGECOLLIDABLESTRUCTURE
+               continue
+
+            default               
+               break
+         }
+         
 			variable bool DoTarget = FALSE
 			if ${Chaining}
 			{

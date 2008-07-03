@@ -99,6 +99,7 @@ objectdef obj_Missions
 	variable int Version
 	
 	variable obj_MissionCache MissionCache
+	variable obj_Combat Combat
 
     method Initialize()
     {
@@ -156,6 +157,15 @@ objectdef obj_Missions
 	
 	function RunCourierMission(int agentID)
 	{
+	   if ${This.MissionCache[${agentID}].Volume} > ${Config.Missioneer.SmallHaulerLimit}
+	   {
+		   call Ship.ActivateShip "${Config.Missioneer.LargeHauler}"
+      }		   
+      else
+	   {
+		   call Ship.ActivateShip "${Config.Missioneer.SmallHauler}"
+      }		   
+
 		variable bool allDone = FALSE
 		do
 		{
@@ -163,7 +173,7 @@ objectdef obj_Missions
 			call Agents.MoveToPickup
 			UI:UpdateConsole["obj_Missions: TransferCargoToShip"]
 			wait 50
-			call Cargo.TransferHangarItemToShip ${Missions.MissionCache.TypeID[${agentID}]}
+			call Cargo.TransferHangarItemToShip ${This.MissionCache.TypeID[${agentID}]}
 			allDone:Set[${Cargo.LastTransferComplete}]
 			UI:UpdateConsole["obj_Missions: MoveToDropOff"]
 			call Agents.MoveToDropOff
@@ -192,6 +202,9 @@ objectdef obj_Missions
 	function RunCombatMission(int agentID)
 	{
 		call Ship.ActivateShip "${Config.Missioneer.CombatShip}"
+		wait 10
+		call This.WarpToEncounter ${agentID}
+		wait 50
 		
 		UI:UpdateConsole["obj_Missions: DEBUG: ${Ship.Type} (${Ship.TypeID})"]		
 		switch ${Ship.TypeID}
@@ -199,33 +212,56 @@ objectdef obj_Missions
 			case TYPE_PUNISHER
 				call This.PunisherCombat ${agentID}
 				break
+			case TYPE_HAWK
+				call This.HawkCombat ${agentID}
+				break
+			case TYPE_KESTREL
+				call This.KestrelCombat ${agentID}
+				break
 			default
 				UI:UpdateConsole["obj_Missions: WARNING!  Unknown Ship Type."]
 				call This.DefaultCombat ${agentID}
 				break
 		}
+
+		call This.WarpToHomeBase ${agentID}
+		wait 50
+		UI:UpdateConsole["obj_Missions: TurnInMission"]
+		call Agents.TurnInMission
 	}	
 	
 	function DefaultCombat(int agentID)
 	{
-		call This.WarpToEncounter ${agentID}
 		UI:UpdateConsole["obj_Missions: Paused Script.  Complete mission manually and then run the script."]
 		Script:Pause
-		call This.WarpToHomeBase ${agentID}
-		wait 50
-		UI:UpdateConsole["obj_Missions: TurnInMission"]
-		call Agents.TurnInMission
 	}
 	
 	function PunisherCombat(int agentID)
 	{
-		call This.WarpToEncounter ${agentID}
 		UI:UpdateConsole["obj_Missions: Paused Script.  Complete mission manually and then run the script."]
 		Script:Pause
-		call This.WarpToHomeBase ${agentID}
-		wait 50
-		UI:UpdateConsole["obj_Missions: TurnInMission"]
-		call Agents.TurnInMission
+	}
+	
+	function HawkCombat(int agentID)
+	{
+		wait 100
+		while ${This.TargetNPCs} && ${Social.IsSafe}
+		{
+			This.Combat:SetState
+			call This.Combat.ProcessState
+			wait 10
+		}
+	}
+	
+	function KestrelCombat(int agentID)
+	{
+		wait 100
+		while (${This.TargetNPCs} || ${This.TargetStructures[${agentID}]}) && ${Social.IsSafe}
+		{
+			This.Combat:SetState
+			call This.Combat.ProcessState
+			wait 10
+		}		
 	}
 	
 	function WarpToEncounter(int agentID)
@@ -288,8 +324,9 @@ objectdef obj_Missions
 					{
 						do
 						{
-							;UI:UpdateConsole["obj_Agents: DEBUG: mbIterator.Value.LocationType = ${mbIterator.Value.LocationType}"]	
-							if ${mbIterator.Value.LocationType.Equal["agenthomebase"]}
+							UI:UpdateConsole["obj_Agents: DEBUG: mbIterator.Value.LocationType = ${mbIterator.Value.LocationType}"]	
+							if ${mbIterator.Value.LocationType.Equal["agenthomebase"]} || \
+							   ${mbIterator.Value.LocationType.Equal["objective"]}
 							{
 								call Ship.WarpToBookMark ${mbIterator.Value}
 								return
@@ -302,4 +339,125 @@ objectdef obj_Missions
 			while ${amIterator:Next(exists)}
 		}
 	}
+	
+	member:bool TargetStructures(int agentID)
+	{
+		variable index:entity Targets
+		variable iterator Target
+		variable bool HasTargets = FALSE
+
+      UI:UpdateConsole["DEBUG: TargetStructures"]
+      
+		if ${Me.Ship.MaxLockedTargets} == 0
+		{
+			UI:UpdateConsole["Jammed, cant target..."]
+			return TRUE
+		}
+		
+		EVE:DoGetEntities[Targets, GroupID, GROUP_LARGECOLLIDABLESTRUCTURE]
+		Targets:GetIterator[Target]
+
+		if ${Target:First(exists)}
+		{
+		   do
+		   {
+            if ${Me.GetTargetedBy} > 0 && ${Target.Value.IsLockedTarget}
+            {
+				   Target.Value:UnlockTarget
+            }
+			   elseif ${This.SpecialStructure[${agentID},${Target.Value.Name}]} && \
+			     !${Target.Value.IsLockedTarget} && !${Target.Value.BeingTargeted}
+			   {
+			      variable int OrbitDistance
+			      OrbitDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.40/1000].Round}]
+			      OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
+			      Target.Value:Orbit[${OrbitDistance}]
+
+				   if ${Me.GetTargets(exists)} && ${Me.GetTargets} < ${Ship.MaxLockedTargets}
+				   {
+					   UI:UpdateConsole["Locking ${Target.Value.Name}"]
+					   Target.Value:LockTarget
+				   }
+			   }
+				
+			   ; Set the return value so we know we have targets
+			   HasTargets:Set[TRUE]
+		   }
+		   while ${Target:Next(exists)}
+      }
+      		
+		return ${HasTargets}
+	}
+
+	member:bool TargetNPCs()
+	{
+		variable index:entity Targets
+		variable iterator Target
+		variable bool HasTargets = FALSE
+
+		if ${Me.Ship.MaxLockedTargets} == 0
+		{
+			UI:UpdateConsole["Jammed, cant target..."]
+			return TRUE
+		}
+		
+		EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY]
+		Targets:GetIterator[Target]
+
+		if ${Target:First(exists)}
+		{
+		   do
+		   {
+            switch ${Target.Value.GroupID} 
+            {
+               case GROUP_LARGECOLLIDABLEOBJECT
+               case GROUP_LARGECOLLIDABLESHIP
+               case GROUP_LARGECOLLIDABLESTRUCTURE
+                  continue
+
+               default               
+                  break
+            }
+            
+			   if !${Target.Value.IsLockedTarget} && !${Target.Value.BeingTargeted}
+			   {
+				   if ${Me.GetTargets(exists)} && ${Me.GetTargets} < ${Ship.MaxLockedTargets}
+				   {
+					   UI:UpdateConsole["Locking ${Target.Value.Name}"]
+					   Target.Value:LockTarget
+				   }
+			   }
+				
+			   ; Set the return value so we know we have targets
+			   HasTargets:Set[TRUE]
+		   }
+		   while ${Target:Next(exists)}
+      }
+      		
+		if ${HasTargets} && ${Me.ActiveTarget(exists)}
+		{
+			variable int OrbitDistance
+			OrbitDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.40/1000].Round}]
+			OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
+			Me.ActiveTarget:Orbit[${OrbitDistance}]
+		}
+		
+		return ${HasTargets}
+	}
+
+   member:bool SpecialStructure(int agentID, string name)
+   {
+      if ${This.MissionCache.Name[${agentID}](exists)}   
+      {
+         if ${This.MissionCache.Name.Equal["avenge a fallen comrade"]} && \
+            ${name.Equal["habitat"]}
+         {
+            return TRUE
+         }
+         ; elseif {...}
+         ; etc...         
+      }
+      
+      return FALSE
+   }
 }
