@@ -93,32 +93,32 @@ objectdef obj_MissionCache
 
 }
 
-objectdef obj_MissionDatabase
-{
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
-	variable string CONFIG_FILE = "${BaseConfig.CONFIG_PATH}/Mission Database.xml"
-	variable string SET_NAME = "Mission Database"
-	
-	method Initialize()
-	{
-		if ${LavishSettings[${This.SET_NAME}](exists)}
-		{
-			LavishSettings[${This.SET_NAME}]:Clear
-		}
-		LavishSettings:Import[${CONFIG_FILE}]
-		LavishSettings[${This.SET_NAME}]:GetSettingIterator[This.agentIterator]
-      This:DumpDatabase
-		UI:UpdateConsole["obj_MissionDatabase: Initialized", LOG_MINOR]
-	}
-
-   method DumpDatabase()
-   {
-
-   }
-	
-}
+;objectdef obj_MissionDatabase
+;{
+;	variable string SVN_REVISION = "$Rev$"
+;	variable int Version
+;
+;	variable string CONFIG_FILE = "${BaseConfig.CONFIG_PATH}/Mission Database.xml"
+;	variable string SET_NAME = "Mission Database"
+;	
+;	method Initialize()
+;	{
+;		if ${LavishSettings[${This.SET_NAME}](exists)}
+;		{
+;			LavishSettings[${This.SET_NAME}]:Clear
+;		}
+;		LavishSettings:Import[${CONFIG_FILE}]
+;		LavishSettings[${This.SET_NAME}]:GetSettingIterator[This.agentIterator]
+;     This:DumpDatabase
+;	UI:UpdateConsole["obj_MissionDatabase: Initialized", LOG_MINOR]
+;	}
+;
+;   method DumpDatabase()
+;   {
+;
+;   }
+;	
+;}
 
 objectdef obj_Missions
 {
@@ -126,7 +126,7 @@ objectdef obj_Missions
 	variable int Version
 	
 	variable obj_MissionCache MissionCache
-   variable obj_MissionDatabase MissionDatabase
+;   variable obj_MissionDatabase MissionDatabase
 	variable obj_Combat Combat
 
     method Initialize()
