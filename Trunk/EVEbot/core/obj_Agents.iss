@@ -645,17 +645,17 @@ objectdef obj_Agents
 		left:Set[${details.Escape.Find["<img src=\\\"factionlogo:"]}]
 		if ${left} > 0
 		{
-			UI:UpdateConsole["obj_Agents: DEBUG: Found \"factionlogo\" at ${left}."]
+			;UI:UpdateConsole["obj_Agents: DEBUG: Found \"factionlogo\" at ${left}."]
 			left:Inc[23]
-			UI:UpdateConsole["obj_Agents: DEBUG: Found \"factionlogo\" at ${left}."]
-			UI:UpdateConsole["obj_Agents: DEBUG: factionlogo substring = ${details.Escape.Mid[${left},16]}"]
+			;UI:UpdateConsole["obj_Agents: DEBUG: Found \"factionlogo\" at ${left}."]
+			;UI:UpdateConsole["obj_Agents: DEBUG: factionlogo substring = ${details.Escape.Mid[${left},16]}"]
 			right:Set[${details.Escape.Mid[${left},16].Find["\" "]}]
 			if ${right} > 0
 			{
 				right:Dec[2]
-				UI:UpdateConsole["obj_Agents: DEBUG: left = ${left}"]	
-				UI:UpdateConsole["obj_Agents: DEBUG: right = ${right}"]	
-				UI:UpdateConsole["obj_Agents: DEBUG: string = ${details.Escape.Mid[${left},${right}]}"]	
+				;UI:UpdateConsole["obj_Agents: DEBUG: left = ${left}"]	
+				;UI:UpdateConsole["obj_Agents: DEBUG: right = ${right}"]	
+				;UI:UpdateConsole["obj_Agents: DEBUG: string = ${details.Escape.Mid[${left},${right}]}"]	
 				factionID:Set[${details.Escape.Mid[${left},${right}]}]	
 				UI:UpdateConsole["obj_Agents: DEBUG: factionID = ${factionID}"]	
 			}
@@ -675,16 +675,16 @@ objectdef obj_Agents
 		left:Set[${details.Escape.Find["<img src=\\\"typeicon:"]}]
 		if ${left} > 0
 		{
-			UI:UpdateConsole["obj_Agents: DEBUG: Found \"typeicon\" at ${left}."]
+			;UI:UpdateConsole["obj_Agents: DEBUG: Found \"typeicon\" at ${left}."]
 			left:Inc[20]
-			UI:UpdateConsole["obj_Agents: DEBUG: typeicon substring = ${details.Escape.Mid[${left},16]}"]
+			;UI:UpdateConsole["obj_Agents: DEBUG: typeicon substring = ${details.Escape.Mid[${left},16]}"]
 			right:Set[${details.Escape.Mid[${left},16].Find["\" "]}]
 			if ${right} > 0
 			{
 				right:Dec[2]
-				UI:UpdateConsole["obj_Agents: DEBUG: left = ${left}"]	
-				UI:UpdateConsole["obj_Agents: DEBUG: right = ${right}"]	
-				UI:UpdateConsole["obj_Agents: DEBUG: string = ${details.Escape.Mid[${left},${right}]}"]	
+				;UI:UpdateConsole["obj_Agents: DEBUG: left = ${left}"]	
+				;UI:UpdateConsole["obj_Agents: DEBUG: right = ${right}"]	
+				;UI:UpdateConsole["obj_Agents: DEBUG: string = ${details.Escape.Mid[${left},${right}]}"]	
 				typeID:Set[${details.Escape.Mid[${left},${right}]}]	
 				UI:UpdateConsole["obj_Agents: DEBUG: typeID = ${typeID}"]	
 			}
@@ -705,16 +705,16 @@ objectdef obj_Agents
 		right:Set[${details.Escape.Find["msup3"]}]
 		if ${right} > 0
 		{
-			UI:UpdateConsole["obj_Agents: DEBUG: Found \"msup3\" at ${right}."]
+			;UI:UpdateConsole["obj_Agents: DEBUG: Found \"msup3\" at ${right}."]
 			right:Dec
 			left:Set[${details.Escape.Mid[${Math.Calc[${right}-16]},16].Find[" ("]}]
 			if ${left} > 0
 			{
 				left:Set[${Math.Calc[${right}-16+${left}+1]}]
 				right:Set[${Math.Calc[${right}-${left}]}]
-				UI:UpdateConsole["obj_Agents: DEBUG: left = ${left}"]	
-				UI:UpdateConsole["obj_Agents: DEBUG: right = ${right}"]	
-				UI:UpdateConsole["obj_Agents: DEBUG: string = ${details.Escape.Mid[${left},${right}]}"]	
+				;UI:UpdateConsole["obj_Agents: DEBUG: left = ${left}"]	
+				;UI:UpdateConsole["obj_Agents: DEBUG: right = ${right}"]	
+				;UI:UpdateConsole["obj_Agents: DEBUG: string = ${details.Escape.Mid[${left},${right}]}"]	
 				volume:Set[${details.Escape.Mid[${left},${right}]}]	
 				UI:UpdateConsole["obj_Agents: DEBUG: volume = ${volume}"]	
 			}
