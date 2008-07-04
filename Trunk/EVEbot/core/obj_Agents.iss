@@ -27,6 +27,11 @@ objectdef obj_AgentList
 		UI:UpdateConsole["obj_AgentList: Initialized", LOG_MINOR]
 	}
 	
+	method Shutdown()	
+	{
+		LavishSettings[${This.SET_NAME}]:Clear
+	}
+	
 	member:string FirstAgent()
 	{
 		if ${This.agentIterator:First(exists)}
