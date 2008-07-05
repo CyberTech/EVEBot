@@ -217,11 +217,7 @@ objectdef obj_Agents
 					UI:UpdateConsole["obj_Agents: DEBUG: lastDecline = ${lastDecline}"]	
 					lastDecline.Hour:Inc[4]
 					lastDecline:Update
-					if ${lastDecline.Timestamp} >= ${Time.Timestamp}  && \
-						((${amIterator.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions} == FALSE) || \\
-						 (${amIterator.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions}) || \
-						 (${amIterator.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions}) || \
-						 (${amIterator.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions}))
+					if ${lastDecline.Timestamp} >= ${Time.Timestamp}
 					{
 						UI:UpdateConsole["obj_Agents: DEBUG: Skipping mission to avoid standing loss: ${amIterator.Value.Name}"]	
 						skipList:Add[${amIterator.Value.AgentID}]
