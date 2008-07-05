@@ -64,6 +64,10 @@ objectdef obj_Safespots
 		{
 			call Ship.WarpToBookMark ${SafeSpotIterator.Value.ID}
 		}
+		else
+		{
+			UI:UpdateConsole["ERROR: obj_Safespots.WarpToNextSafeSpot found an invalid bookmark!"]			
+		}
 	}
 
 	member:bool IsAtSafespot()
