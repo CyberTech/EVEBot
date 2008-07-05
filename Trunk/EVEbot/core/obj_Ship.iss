@@ -1278,13 +1278,14 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
       ;echo \${Me.ToEntity.Z} = ${Me.ToEntity.Z}
       
 
+      variable int MinWarpRange
+      declarevariable WarpCounter int 0
+      declarevariable Label string ${DestinationBookmark.Label}
+
       declarevariable TypeID int ${DestinationBookmark.ToEntity.TypeID}
       declarevariable GroupID int ${DestinationBookmark.ToEntity.GroupID}
       declarevariable CategoryID int ${DestinationBookmark.ToEntity.CategoryID}
       declarevariable EntityID int ${DestinationBookmark.ToEntity.ID}
-      declarevariable Label string ${DestinationBookmark.Label}
-      declarevariable WarpCounter int 0
-      variable int MinWarpRange
       
       if ${DestinationBookmark.ToEntity(exists)}
       {
@@ -1348,7 +1349,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
             WarpCounter:Inc
          }
       }
-      elseif ${DestinationBookmark.ItemID} < 0 || \
+      elseif !${DestinationBookmark.ItemID(exists)} || \
             (${DestinationBookmark.AgentID(exists)} && ${DestinationBookmark.LocationID(exists)})
       {
          /* This is an in-space bookmark, or a dungeon bookmark, just warp to it. */

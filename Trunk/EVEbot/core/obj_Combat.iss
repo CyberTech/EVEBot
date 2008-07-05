@@ -254,7 +254,7 @@ objectdef obj_Combat
 			{
 				call Safespots.WarpTo
 				wait 30
-			}			
+			}
 		}
 	}
 
