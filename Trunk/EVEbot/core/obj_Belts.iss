@@ -21,9 +21,9 @@ objectdef obj_Belts
     member:bool IsAtBelt()
 	{
 		; Are we within 150km of the bookmark?
-		if ${beltIterator.Value.ItemID} > -1
+		if ${beltIterator.Value.ItemID(exists)}
 		{
-			if ${Me.ToEntity.DistanceTo[${beltIterator.ItemID}]} < 150000
+			if ${Me.ToEntity.DistanceTo[${beltIterator.Value.ItemID}]} < 150000
 			{
 				return TRUE
 			}
