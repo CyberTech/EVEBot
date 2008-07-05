@@ -212,6 +212,31 @@ objectdef obj_Agents
 				UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}"]	
 				if ${amIterator.Value.State} == 1
 				{
+					if ${amIterator.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions} == TRUE
+					{
+						This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}]}]
+						return
+					}
+					
+					if ${amIterator.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} == TRUE
+					{
+						This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}]}]
+						return
+					}
+					
+					if ${amIterator.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} == TRUE
+					{
+						This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}]}]
+						return
+					}
+					
+					if ${amIterator.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions} == TRUE
+					{
+						This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}]}]
+						return
+					}
+										
+					/* if we get here the mission is not acceptable */
 					variable time lastDecline
 					lastDecline:Set[${Config.Agents.LastDecline[${Agent[id,${amIterator.Value.AgentID}]}]}]
 					UI:UpdateConsole["obj_Agents: DEBUG: lastDecline = ${lastDecline}"]	
@@ -223,34 +248,6 @@ objectdef obj_Agents
 						skipList:Add[${amIterator.Value.AgentID}]
 						continue
 					}
-
-					if ${amIterator.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions} == FALSE
-					{
-						UI:UpdateConsole["obj_Agents: DEBUG: Skipping courier mission: ${amIterator.Value.Name}"]	
-						continue
-					}
-					
-					if ${amIterator.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} == FALSE
-					{
-						UI:UpdateConsole["obj_Agents: DEBUG: Skipping trade mission: ${amIterator.Value.Name}"]	
-						continue
-					}
-					
-					if ${amIterator.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} == FALSE
-					{
-						UI:UpdateConsole["obj_Agents: DEBUG: Skipping mining mission: ${amIterator.Value.Name}"]	
-						continue
-					}
-					
-					if ${amIterator.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions} == FALSE
-					{
-						UI:UpdateConsole["obj_Agents: DEBUG: Skipping combat mission: ${amIterator.Value.Name}"]	
-						continue
-					}
-										
-					/* if we get here the mission is valid */
-					This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}]}]
-					return
 				}
 			}  
 			while ${amIterator:Next(exists)}
