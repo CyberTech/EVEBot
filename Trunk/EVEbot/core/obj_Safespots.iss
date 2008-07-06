@@ -88,8 +88,9 @@ objectdef obj_Safespots
 		;UI:UpdateConsole["DEBUG: obj_Safespots.IsAtSafespot: DIST = ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${SafeSpotIterator.Value.X}, ${SafeSpotIterator.Value.Y}, ${SafeSpotIterator.Value.Z}]}"]
 
 		; Are we within 150km of the bookmark?
-		if ${SafeSpotIterator.Value.ItemID(exists)}
+		if ${SafeSpotIterator.Value.ItemID(exists)} && ${SafeSpotIterator.Value.ItemID} > 0
 		{
+            UI:UpdateConsole["DEBUG: obj_Safespots.IsAtSafespot: ItemID = ${SafeSpotIterator.Value.ItemID}"]
 			if ${Me.ToEntity.DistanceTo[${SafeSpotIterator.Value.ItemID}]} < WARP_RANGE
 			{
 				return TRUE
