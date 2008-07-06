@@ -85,6 +85,7 @@ objectdef obj_Targets
    variable int  TotalSpawnValue
 
 	variable bool m_SpecialTargetPresent
+    variable set DoNotKillList
 	
 	method Initialize()
 	{
@@ -171,6 +172,8 @@ objectdef obj_Targets
 		PriorityTargets:GetIterator[PriorityTarget]
 		ChainTargets:GetIterator[ChainTarget]
 		SpecialTargets:GetIterator[SpecialTarget]
+        
+        DoNotKillList:Clear
 	}
 	
 	method ResetTargets()
@@ -406,16 +409,22 @@ objectdef obj_Targets
 			if ${Chaining}
 			{
 				; We're chaining, only kill chainable spawns'
-            if ${Target.Value.Group.Find["Battleship"](exists)}
-            {
-               DoTarget:Set[TRUE]
-            }
+                if ${Target.Value.Group.Find["Battleship"](exists)}
+                {
+                   DoTarget:Set[TRUE]
+                }
 			}
 			else
 			{
 				; Target everything
 				DoTarget:Set[TRUE]
 			}
+            
+            ; override DoTarget to protect partially spawned chains
+            if ${DoNotKillList.Contains[${Target.Value.ID}]}
+            {
+				DoTarget:Set[FALSE]
+            }
 			
 			; Do we have to target this target?
 			if ${DoTarget}
@@ -434,6 +443,11 @@ objectdef obj_Targets
 			}
 			else
 			{
+                if !${DoNotKillList.Contains[${Target.Value.ID}]}
+                {
+                    UI:UpdateConsole["DEBUG: Adding ${Target.Value.Name} (${Target.Value.ID}) to the \"do not kill list\"!"]
+                    DoNotKillList:Add[${Target.Value.ID}]
+                }
 				; Make sure (due to auto-targeting) that its not targeted
 				if ${Target.Value.IsLockedTarget}
 				{
