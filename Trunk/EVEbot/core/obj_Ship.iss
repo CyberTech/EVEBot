@@ -1349,8 +1349,8 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
             WarpCounter:Inc
          }
       }
-      elseif (!${DestinationBookmark.ItemID(exists)} && \
-              ${DestinationBookmark.ItemID} > 0) || \
+      elseif !${DestinationBookmark.ItemID(exists)} || \
+              ${DestinationBookmark.ItemID} < 0 || \
             (${DestinationBookmark.AgentID(exists)} && ${DestinationBookmark.LocationID(exists)})
       {
          /* This is an in-space bookmark, or a dungeon bookmark, just warp to it. */
