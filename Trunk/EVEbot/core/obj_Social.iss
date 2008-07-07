@@ -146,7 +146,7 @@ objectdef obj_Social
 			if ${sAuthor.NotEqual["EVE System"]}
 			{
 				call Sound.PlayTellSound
-				UI:UpdateConsole["Channel Local: ${sAuthor.Escape}: ${sMessageText.Escape}", LOG_CRITICAL]
+				;UI:UpdateConsole["Channel Local: ${sAuthor.Escape}: ${sMessageText.Escape}", LOG_CRITICAL]
 			}
 		}
 	}
