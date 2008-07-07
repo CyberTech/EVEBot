@@ -60,9 +60,8 @@ objectdef obj_Station
 	
 	member:bool Docked()
 	{
-		if ${Me.InStation(exists)} && ${Me.InStation} && \
-			${Me.StationID(exists)} && \
-			${Me.StationID} > 0
+		if ${_Me.InStation} && \
+			${_Me.StationID} > 0
 		{
 			return TRUE
 		}
@@ -71,9 +70,8 @@ objectdef obj_Station
 
 	member:bool DockedAtStation(int StationID)
 	{
-		if ${Me.InStation(exists)} && ${Me.InStation} && \
-			${Me.StationID(exists)} && \
-			${Me.StationID} == ${StationID}
+		if ${_Me.InStation} && \
+			${_Me.StationID} == ${StationID}
 		{
 			return TRUE
 		}
@@ -113,7 +111,7 @@ objectdef obj_Station
 	
 	function GetStationItems()
 	{
-		while !${Me.InStation}
+		while !${_Me.InStation}
 		{
 			UI:UpdateConsole["obj_Cargo: Waiting for InStation..."]
 			wait 10
@@ -186,7 +184,7 @@ objectdef obj_Station
 
 		if ${Entity[${StationID}](exists)}
 		{
-			if ${Entity[${StationID}].Distance} >= 10000
+			if ${Entity[${StationID}].Distance} > WARP_RANGE
 			{
 				UI:UpdateConsole["Warping to Station"]
 				call Ship.WarpToID ${StationID}
@@ -194,7 +192,7 @@ objectdef obj_Station
 				{ 
 				   wait 30
 				}
-				while ${Entity[${StationID}].Distance} >= 10000
+				while ${Entity[${StationID}].Distance} > WARP_RANGE
 			}
 			
 			do
@@ -223,8 +221,6 @@ objectdef obj_Station
 				UI:UpdateConsole["DEBUG: StationExists = ${Entity[${StationID}](exists)}"]
 			}
 			while !${This.DockedAtStation[${StationID}]}
-            ;while ( ${Entity[${StationID}](exists)} ) || \
-            ;      ( !${Me.InStation(exists)} || !${Me.InStation} )			
 			wait 75
 			UI:UpdateConsole["Finished Docking"]
     		call ChatIRC.Say "Finished Docking"
@@ -256,7 +252,7 @@ objectdef obj_Station
 
 		if ${Entity[${StationID}](exists)}
 		{
-			if ${Entity[${StationID}].Distance} >= 10000
+			if ${Entity[${StationID}].Distance} > WARP_RANGE
 			{
 				UI:UpdateConsole["Warping to Station"]
 				call Ship.WarpToID ${StationID}
@@ -264,7 +260,7 @@ objectdef obj_Station
 				{ 
 				   wait 30
 				}
-				while ${Entity[${StationID}].Distance} >= 10000
+				while ${Entity[${StationID}].Distance} > WARP_RANGE
 			}
 			
 			do
@@ -293,8 +289,6 @@ objectdef obj_Station
 				UI:UpdateConsole["DEBUG: StationExists = ${Entity[${StationID}](exists)}"]
 			}
 			while !${This.DockedAtStation[${StationID}]}
-            ;while ( ${Entity[${StationID}](exists)} ) || \
-            ;      ( !${Me.InStation(exists)} || !${Me.InStation} )			
 			wait 75
 			UI:UpdateConsole["Finished Docking"]
     		call ChatIRC.Say "Finished Docking"
@@ -311,7 +305,7 @@ objectdef obj_Station
 	{
 		variable int Counter
 		variable int StationID
-		StationID:Set[${Me.StationID}]
+		StationID:Set[${_Me.StationID}]
 		
 		UI:UpdateConsole["Undocking"]
 
@@ -328,8 +322,7 @@ objectdef obj_Station
 			   EVE:Execute[CmdExitStation]	
 			   UI:UpdateConsole["Undock: Unexpected failure, retrying...", LOG_CRITICAL]
 			   UI:UpdateConsole["Undock: Debug: EVEWindow[Local]=${EVEWindow[Local](exists)}", LOG_CRITICAL]
-			   UI:UpdateConsole["Undock: Debug: Me.InStation Exists=${Me.InStation(exists)}", LOG_CRITICAL]
-			   UI:UpdateConsole["Undock: Debug: Me.InStation=${Me.InStation}", LOG_CRITICAL]
+			   UI:UpdateConsole["Undock: Debug: Me.InStation=${_Me.InStation}", LOG_CRITICAL]
 			}
 		}
 		while ${This.DockedAtStation[${StationID}]}

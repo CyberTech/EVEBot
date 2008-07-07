@@ -84,7 +84,7 @@ objectdef obj_Fleet
 	{		
 		FleetMemberIndex:Inc
 		
-		if ${FleetMembers.Get[${FleetMemberIndex}].CharID} == ${Me.CharID}
+		if ${FleetMembers.Get[${FleetMemberIndex}].CharID} == ${_Me.CharID}
 		{
 			FleetMemberIndex:Inc
 		}
@@ -99,7 +99,7 @@ objectdef obj_Fleet
 
 	method WarpToPreviousMember(int distance = 0)
 	{
-		if ${FleetMembers.Get[${FleetMemberIndex}].CharID} == ${Me.CharID}
+		if ${FleetMembers.Get[${FleetMemberIndex}].CharID} == ${_Me.CharID}
 		{
 			FleetMemberIndex:Inc
 		}

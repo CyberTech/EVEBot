@@ -101,7 +101,7 @@ objectdef obj_Asteroids
 
 			Label:Set[${BeltBookMarkList[${RandomBelt}].Label}]
 
-			if (${BeltBookMarkList[${RandomBelt}].SolarSystemID} != ${Me.SolarSystemID} || \
+			if (${BeltBookMarkList[${RandomBelt}].SolarSystemID} != ${_Me.SolarSystemID} || \
 				${Label.Left[${prefix.Length}].NotEqual[${prefix}]})
 			{
 				BeltBookMarkList:Remove[${RandomBelt}]
@@ -355,7 +355,7 @@ objectdef obj_Asteroids
 				if ${Entity[${AsteroidIterator.Value}](exists)} && \
 					!${AsteroidIterator.Value.IsLockedTarget} && \
 					!${AsteroidIterator.Value.BeingTargeted} && \
-					${AsteroidIterator.Value.Distance} < ${Me.Ship.MaxTargetRange} && \
+					${AsteroidIterator.Value.Distance} < ${_Me.Ship.MaxTargetRange} && \
 					( !${Me.ActiveTarget(exists)} || ${AsteroidIterator.Value.DistanceTo[${Me.ActiveTarget.ID}]} <= ${Math.Calc[${Ship.OptimalMiningRange}* 1.1]} )
 				{
 					break
@@ -385,7 +385,7 @@ objectdef obj_Asteroids
 				{
 				  wait 30
 				}
-				while ${Me.GetTargeting} > 0
+				while ${_Me.GetTargeting} > 0
 
 				call This.UpdateList
 				return TRUE
@@ -428,7 +428,7 @@ objectdef obj_Asteroids
 		else
 		{
 			UI:UpdateConsole["obj_Asteroids: No Asteroids within overview range"]
-			if ${Entity[GroupID, GROUP_ASTEROIDBELT].Distance} < 300000
+			if ${Entity[GroupID, GROUP_ASTEROIDBELT].Distance} < CONFIG_OVERVIEW_RANGE
 			{
 				This:BeltIsEmpty["${Entity[GroupID, GROUP_ASTEROIDBELT]}"]
 			}

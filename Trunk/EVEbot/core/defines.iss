@@ -86,6 +86,9 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 
 #define TYPEID_GLACIAL_MASS 16263
 
+#define CONFIG_MAX_SLOWBOAT_RANGE 15000
+#define CONFIG_OVERVIEW_RANGE 300000
+
 ;System (ID: 0)          Owner (ID: 1)           Celestial (ID: 2)           Station (ID: 3)
 ;Material (ID: 4)        Accessories (ID: 5)     Ship (ID: 6)                Module (ID: 7)
 ;Charge (ID: 8)          Blueprint (ID: 9)       Trading (ID: 10)            Entity (ID: 11)

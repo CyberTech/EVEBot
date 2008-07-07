@@ -18,7 +18,7 @@ function main()
 		{
 			bmlist:Remove[${idx}]
 		}				
-		elseif ${bmlist.Get[${idx}].SolarSystemID} != ${Me.SolarSystemID}
+		elseif ${bmlist.Get[${idx}].SolarSystemID} != ${_Me.SolarSystemID}
 		{
 			bmlist:Remove[${idx}]
 		}

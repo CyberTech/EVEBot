@@ -4,6 +4,9 @@
 #include core/obj_EVEBot.iss
 #include core/obj_Configuration.iss
 
+/* Cache Objects */
+#include core/obj_Cache.iss
+
 /* Support File Includes */
 #include core/obj_Skills.iss
 #include core/obj_Asteroids.iss
@@ -35,6 +38,10 @@
 #include Behaviors/obj_Ratter.iss
 #include Behaviors/obj_Scavenger.iss
 #include Behaviors/obj_Missioneer.iss
+
+/* Cache Objects */
+variable obj_Cache_Me _Me
+variable obj_Cache_EVETime _EVETime
 
 /* Script-Defined Support Objects */
 variable obj_EVEBot EVEBot
@@ -128,7 +135,7 @@ function main()
 	{
 		wait 10
 	}
-
+	
 	while TRUE
 	{
 		if ${BotModule:First(exists)}

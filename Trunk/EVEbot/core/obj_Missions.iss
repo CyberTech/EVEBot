@@ -12,7 +12,7 @@ objectdef obj_MissionCache
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
-	variable string CONFIG_FILE = "${Script.CurrentDirectory}/Config/${Me.Name} Mission Cache.xml"
+	variable string CONFIG_FILE = "${Script.CurrentDirectory}/Config/${_Me.Name} Mission Cache.xml"
 	variable string SET_NAME = "Missions"
 	
 	method Initialize()
@@ -390,7 +390,7 @@ objectdef obj_Missions
 
       UI:UpdateConsole["DEBUG: TargetStructures"]
       
-		if ${Me.Ship.MaxLockedTargets} == 0
+		if ${_Me.Ship.MaxLockedTargets} == 0
 		{
 			UI:UpdateConsole["Jammed, cant target..."]
 			return TRUE
@@ -403,7 +403,7 @@ objectdef obj_Missions
 		{
 		   do
 		   {
-            if ${Me.GetTargetedBy} > 0 && ${Target.Value.IsLockedTarget}
+            if ${_Me.GetTargetedBy} > 0 && ${Target.Value.IsLockedTarget}
             {
 				   Target.Value:UnlockTarget
             }
@@ -411,11 +411,11 @@ objectdef obj_Missions
 			     !${Target.Value.IsLockedTarget} && !${Target.Value.BeingTargeted}
 			   {
 			      variable int OrbitDistance
-			      OrbitDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.40/1000].Round}]
+			      OrbitDistance:Set[${Math.Calc[${_Me.Ship.MaxTargetRange}*0.40/1000].Round}]
 			      OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
 			      Target.Value:Orbit[${OrbitDistance}]
 
-				   if ${Me.GetTargets(exists)} && ${Me.GetTargets} < ${Ship.MaxLockedTargets}
+				   if ${_Me.GetTargets} < ${Ship.MaxLockedTargets}
 				   {
 					   UI:UpdateConsole["Locking ${Target.Value.Name}"]
 					   Target.Value:LockTarget
@@ -437,7 +437,7 @@ objectdef obj_Missions
 		variable iterator Target
 		variable bool HasTargets = FALSE
 
-		if ${Me.Ship.MaxLockedTargets} == 0
+		if ${_Me.Ship.MaxLockedTargets} == 0
 		{
 			UI:UpdateConsole["Jammed, cant target..."]
 			return TRUE
@@ -463,7 +463,7 @@ objectdef obj_Missions
             
 			   if !${Target.Value.IsLockedTarget} && !${Target.Value.BeingTargeted}
 			   {
-				   if ${Me.GetTargets(exists)} && ${Me.GetTargets} < ${Ship.MaxLockedTargets}
+				   if ${_Me.GetTargets} < ${Ship.MaxLockedTargets}
 				   {
 					   UI:UpdateConsole["Locking ${Target.Value.Name}"]
 					   Target.Value:LockTarget
@@ -479,7 +479,7 @@ objectdef obj_Missions
 		if ${HasTargets} && ${Me.ActiveTarget(exists)}
 		{
 			variable int OrbitDistance
-			OrbitDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.40/1000].Round}]
+			OrbitDistance:Set[${Math.Calc[${_Me.Ship.MaxTargetRange}*0.40/1000].Round}]
 			OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
 			Me.ActiveTarget:Orbit[${OrbitDistance}]
 		}

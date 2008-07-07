@@ -67,7 +67,7 @@ objectdef obj_EVEBot
 		    
 			checkPulse:Inc[1]
 			; 20 pulses in this if loop is ~ 1 minute
-			if (${checkPulse} >= ${MAXCHECKPULSE} && ${Me.InStation(exists)} && !${Me.InStation})
+			if (${checkPulse} >= ${MAXCHECKPULSE} && !${_Me.InStation})
 			{
 				variable int BuddyCounter = 1
 
@@ -88,7 +88,7 @@ objectdef obj_EVEBot
 			}
 
 			;UI:UpdateConsole["Interval ${checkPulse}"]
-			if !${This.ReturnToStation} && ${Me.Name(exists)}
+			if !${This.ReturnToStation} && ${Me(exists)}
 			{
 				if (${This.GameHour} == 10 && \
 					${This.GameMinute} >= 50) 
@@ -135,7 +135,7 @@ objectdef obj_EVEBot
 	
 	member:int GameHour()
 	{
-		variable string HourStr = ${EVETime.Time}
+		variable string HourStr = ${_EVETime.Time}
 		variable string Hour = 00
 		
 		if ${HourStr(exists)}
@@ -147,7 +147,7 @@ objectdef obj_EVEBot
 	
 	member:int GameMinute()
 	{
-		variable string MinuteStr = ${EVETime.Time}
+		variable string MinuteStr = ${_EVETime.Time}
 		variable string Minute = 18
 		
 		if ${MinuteStr(exists)}

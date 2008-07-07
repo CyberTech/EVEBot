@@ -4,12 +4,6 @@ objectdef obj_EVEBotUI
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 	
-	;; global variables (used in UI display)
-	variable string CharacterName
-	variable string MyTarget
-	variable string MyRace
-	variable string MyCorp
-
 	variable time NextPulse
 	variable time NextMsgBoxPulse
 	variable int PulseIntervalInSeconds = 4
@@ -24,12 +18,9 @@ objectdef obj_EVEBotUI
 				
 	method Initialize()
 	{
-		This.CharacterName:Set[${Me.Name}]
-		This.MyRace:Set[${Me.ToPilot.Type}]
-		This.MyCorp:Set[${Me.Corporation}]
-		This.LogFile:Set["./config/logs/${Me.Name}.log"]
-		This.CriticalLogFile:Set["./config/logs/${Me.Name}_Critical.log"]
-		This.StatsLogFile:Set["./config/logs/${Me.Name}_Stats.log"]
+		This.LogFile:Set["./config/logs/${_Me.Name}.log"]
+		This.CriticalLogFile:Set["./config/logs/${_Me.Name}_Critical.log"]
+		This.StatsLogFile:Set["./config/logs/${_Me.Name}_Stats.log"]
 
 		ui -load interface/eveskin/eveskin.xml
 		ui -load interface/evebotgui.xml
@@ -56,18 +47,15 @@ objectdef obj_EVEBotUI
 
 	method Pulse()
 	{	
+		/*
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-		    if ${Me.Name(exists)}
-		    {
-    			This:Update_Display_Values
-		    }
 
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
     		This.NextPulse:Update
 		}
-		
+		*/
 		if ${EVEBot.Paused}
 		{
 			return
@@ -78,9 +66,9 @@ objectdef obj_EVEBotUI
 			EVE:CloseAllMessageBoxes
 			EVE:CloseAllChatInvites
 
-			if ${Me.Name(exists)}
+			if ${Me(exists)}
 			{
-				Config.Common:SetAutoLoginCharID[${Me.CharID}]
+				Config.Common:SetAutoLoginCharID[${_Me.CharID}]
 			}
 
     		This.NextMsgBoxPulse:Set[${Time.Timestamp}]
@@ -89,22 +77,7 @@ objectdef obj_EVEBotUI
 		}
 
 	}
-
-	method Update_Display_Values()
-	{
- 
-		; Some variables just aren't going to change...they should be set initially and left alone
-   
-		if (${Me.ActiveTarget(exists)})
-		{
-			This.MyTarget:Set[${Me.ActiveTarget}]
-		}
-		else
-		{
-			This.MyTarget:Set[None]
-		}
-   }
-   
+  
 	member Runtime()
 	{
 		DeclareVariable RunTime float ${Math.Calc[${Script.RunningTime}/1000/60]}
@@ -129,13 +102,13 @@ objectdef obj_EVEBotUI
 		
 		if ${StatusMessage(exists)}
 		{
-			if ${StatusMessage.Equal[${This.PreviousMsg}]}
+			if ${StatusMessage.Equal["${This.PreviousMsg}"]}
 			{
 				Filter:Set[TRUE]
 			}
 			else
 			{
-				This.PreviousMsg:Set[${StatusMessage}]
+				This.PreviousMsg:Set["${StatusMessage}"]
 			}
 			
 			msg:Set["${Time.Time24}: "]
@@ -144,24 +117,24 @@ objectdef obj_EVEBotUI
 			{
   				msg:Concat[" "]
   			}
-  			msg:Concat[${StatusMessage}]
+  			msg:Concat["${StatusMessage}"]
   				
 			if ${This.Reloaded}
 			{
 				if ${Level} > LOG_MINOR && !${Filter}
 				{
-					UIElement[StatusConsole@Status@EvEBotOptionsTab@EVEBot]:Echo[${msg}]
+					UIElement[StatusConsole@Status@EvEBotOptionsTab@EVEBot]:Echo["${msg}"]
 				}
-				redirect -append "${This.LogFile}" Echo ${msg}
+				redirect -append "${This.LogFile}" Echo "${msg}"
 				if ${Level} == LOG_CRITICAL
 				{
-					redirect -append "${This.CriticalLogFile}" Echo ${msg}
+					redirect -append "${This.CriticalLogFile}" Echo "${msg}"
 				}
 			}
 			else
 			{
 				; Just queue the lines till we reload the UI after config data is loaded
-				This.ConsoleBuffer:Queue[${msg}]
+				This.ConsoleBuffer:Queue["${msg}"]
 			}
 		}
 	}

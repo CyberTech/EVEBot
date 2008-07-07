@@ -136,16 +136,18 @@ objectdef obj_JetCan
 			return
 		}
 		
-		variable string NewName = "${Me.Name}"
+		variable string NewName = "${_Me.Name}"
 		
+		/* TODO - remove EVE.Time usage in favour of EVETime - CT */
+		/* Also, this check is silly. we're always in a corp.  check npc vs not, or randomize it */
 		if (${Me.Corporation(exists)} && \
 			${Me.Corporation.Length} > 0 )
 		{
-			NewName:Set["${Me.CorporationTicker} ${EVE.Time[short]}"]
+			NewName:Set["${_Me.CorporationTicker} ${EVE.Time[short]}"]
 		}
 		else
 		{
-			NewName:Set["${Me.Name} ${EVE.Time[short]}"]
+			NewName:Set["${EVE.Time[short]}"]
 		}
 		
 		UI:UpdateConsole["JetCan:Rename: Renaming can to ${NewName}"]

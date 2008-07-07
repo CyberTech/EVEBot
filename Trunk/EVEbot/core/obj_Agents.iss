@@ -12,8 +12,8 @@ objectdef obj_AgentList
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
-	variable string CONFIG_FILE = "${BaseConfig.CONFIG_PATH}/${Me.Name} Agents.xml"
-	variable string SET_NAME = "${Me.Name} Agents"
+	variable string CONFIG_FILE = "${BaseConfig.CONFIG_PATH}/${_Me.Name} Agents.xml"
+	variable string SET_NAME = "${_Me.Name} Agents"
 	variable iterator agentIterator
 	
 	method Initialize()
@@ -410,7 +410,7 @@ objectdef obj_Agents
 	function MoveToPickup()
 	{
 		variable string stationName
-		stationName:Set[${EVEDB_Stations.StationName[${Me.StationID}]}]
+		stationName:Set[${EVEDB_Stations.StationName[${_Me.StationID}]}]
 		UI:UpdateConsole["obj_Agents: DEBUG: stationName = ${stationName}"]	
 
 		if ${stationName.Length} > 0

@@ -34,7 +34,7 @@ objectdef obj_Scavenger
 	/* NOTE: The order of these if statements is important!! */
 	method SetState()
 	{
-		if ${EVEBot.ReturnToStation} && !${Me.InStation}
+		if ${EVEBot.ReturnToStation} && !${_Me.InStation}
 		{
 			This.CurrentState:Set["ABORT"]
 		}
@@ -42,12 +42,12 @@ objectdef obj_Scavenger
 		{
 			This.CurrentState:Set["IDLE"]
 		}
-		elseif ${Me.Ship.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold}
+		elseif ${_Me.Ship.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold}
 		{
 		 	This.CurrentState:Set["SCAVENGE"]
 			return
 		}		
-	    elseif ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
+	    elseif ${_Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 		{
 			This.CurrentState:Set["DROPOFF"]
 			return
@@ -95,14 +95,14 @@ objectdef obj_Scavenger
 		variable iterator     Wreck
 
 		EVE:DoGetEntities[Wrecks,GroupID,GROUPID_WRECK]
-		UI:UpdateConsole["obj_Scavenger: DEBUG:  Found ${Wrecks.Used} wrecks."]
+		UI:UpdateConsole["obj_Scavenger: DEBUG: Found ${Wrecks.Used} wrecks."]
 
 		Wrecks:GetIterator[Wreck]
 		if ${Wreck:First(exists)}
 		{
 			do
 			{
-				UI:UpdateConsole["obj_Scavenger: DEBUG:  ${Wreck.Value.ID} ${Wreck.Value.Distance} ${Wreck.Value.IsWreckEmpty}"]
+				UI:UpdateConsole["obj_Scavenger: DEBUG: ${Wreck.Value.ID} ${Wreck.Value.Distance} ${Wreck.Value.IsWreckEmpty}"]
 				if ${Wreck.Value(exists)} && ${Wreck.Value.Distance} > WARP_RANGE && ${Wreck.Value.IsWreckEmpty} == FALSE
 				{
 					call Ship.WarpToID ${Wreck.Value.ID}

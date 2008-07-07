@@ -270,7 +270,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 	/* NOTE: The order of these if statements is important!! */
 	method SetState()
 	{
-		if ${EVEBot.ReturnToStation} && !${Me.InStation}
+		if ${EVEBot.ReturnToStation} && !${_Me.InStation}
 		{
 			This.CurrentState:Set["ABORT"]
 		}
@@ -278,7 +278,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		{
 			This.CurrentState:Set["IDLE"]
 		}
-		elseif ${Me.InStation}
+		elseif ${_Me.InStation}
 		{
 	  		This.CurrentState:Set["BASE"]
 		}
@@ -411,7 +411,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 	/*                                                       */ 
 	function HaulOnDemand()
 	{		
-		if ${m_fleetMemberID} > 0 && ${m_SystemID} == ${Me.SolarSystemID}
+		if ${m_fleetMemberID} > 0 && ${m_SystemID} == ${_Me.SolarSystemID}
 		{
 			call This.WarpToFleetMemberAndLoot ${m_fleetMemberID}
 		}
@@ -462,7 +462,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 			call Ship.WarpToFleetMember ${charID}
 		}
 		
-		if ${Entity[OwnerID,${charID},CategoryID,6].Distance} > 15000
+		if ${Entity[OwnerID,${charID},CategoryID,6].Distance} > CONFIG_MAX_SLOWBOAT_RANGE
 		{
 			if ${Entity[OwnerID,${charID},CategoryID,6].Distance} < WARP_RANGE
 			{
@@ -530,7 +530,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		
 		while ${idx} > 0
 		{
-			if ${fleet.Get[${idx}].CharID} != ${Me.CharID}
+			if ${fleet.Get[${idx}].CharID} != ${_Me.CharID}
 			{
 				if ${fleet.Get[${idx}].ToPilot(exists)} && \
 				   ( ${fleet.Get[${idx}].ToPilot.Name.Equal["Joe The Tank"]} || \
@@ -566,7 +566,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 			{
 				SafeSpots:Remove[${idx}]
 			}
-			elseif ${SafeSpots.Get[${idx}].SolarSystemID} != ${Me.SolarSystemID}
+			elseif ${SafeSpots.Get[${idx}].SolarSystemID} != ${_Me.SolarSystemID}
 			{
 				SafeSpots:Remove[${idx}]
 			}
@@ -581,15 +581,11 @@ objectdef obj_OreHauler inherits obj_Hauler
 	
 	function WarpToNextSafeSpot()
 	{
-		if ${SafeSpots.Used} == 0 
+		if ${SafeSpots.Used} == 0 || \
+			${SafeSpots.Get[1].SolarSystemID} != ${_Me.SolarSystemID}
 		{
 			This:BuildSafeSpotList
 		}		
-		
-		if ${SafeSpots.Get[1](exists)} && ${SafeSpots.Get[1].SolarSystemID} != ${Me.SolarSystemID}
-		{
-			This:BuildSafeSpotList
-		}
 		
 		if !${SafeSpotIterator:Next(exists)}
 		{

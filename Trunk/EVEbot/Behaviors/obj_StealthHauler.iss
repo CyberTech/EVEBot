@@ -92,7 +92,7 @@ objectdef obj_StealthHauler
 							{
 							   	wait 5
 							}
-							while ${Me.ToEntity.IsCloaked}
+							while ${_Me.ToEntity.IsCloaked}
 							Ship:Activate_AfterBurner
 							wait 5
 							do
@@ -100,12 +100,12 @@ objectdef obj_StealthHauler
 								Ship:Activate_Cloak
 							   	wait 10
 							}
-							while !${Me.ToEntity.IsCloaked}
+							while !${_Me.ToEntity.IsCloaked}
 							do
 							{
 							   wait 5
 							}
-							while ${Me.ToEntity.IsWarpScrambled}
+							while ${_Me.ToEntity.IsWarpScrambled}
 							wait 5
 							call Ship.WarpToID ${sgIterator.Value.ID}
 							call Ship.Approach ${sgIterator.Value.ID} JUMP_RANGE
@@ -114,7 +114,7 @@ objectdef obj_StealthHauler
 							{
 							   	wait 5
 							}
-							while ${Me.ToEntity.IsCloaked}
+							while ${_Me.ToEntity.IsCloaked}
 							wait 5
 							sgIterator.Value:Jump
 							wait 50

@@ -71,11 +71,11 @@ objectdef obj_Ship
 
        if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
       {
-         if (${Me.InStation(exists)} && !${Me.InStation})
+         if !${_Me.InStation}
          {
             This:ValidateModuleTargets
 
-            if (${Me.ToEntity.Mode} == 3 || !${Config.Common.BotModeName.Equal[Ratter]})
+            if (${_Me.ToEntity.Mode} == 3 || !${Config.Common.BotModeName.Equal[Ratter]})
             {	/* ratter was converted to use obj_Combat already */
 
                /* Ship Armor Repair
@@ -83,14 +83,14 @@ objectdef obj_Ship
                */
                if ${This.Total_Armor_Reps} > 0
                {
-                  if ${Me.Ship.ArmorPct} < 100
+                  if ${_Me.Ship.ArmorPct} < 100
                   {
                      This:Activate_Armor_Reps
                   }
 
                   if ${This.Repairing_Armor}
                   {
-                     if ${Me.Ship.ArmorPct} >= 98
+                     if ${_Me.Ship.ArmorPct} >= 98
                      {
                         This:Deactivate_Armor_Reps
                         This.Repairing_Armor:Set[FALSE]
@@ -101,13 +101,13 @@ objectdef obj_Ship
                /* Shield Boosters
                   We boost to a higher % in here, as it's done during warp, so cap has time to regen.
                */
-               if ${Me.Ship.ShieldPct} < 95 || ${Config.Combat.AlwaysShieldBoost}
+               if ${_Me.Ship.ShieldPct} < 95 || ${Config.Combat.AlwaysShieldBoost}
                {	/* Turn on the shield booster */
                   Ship:Activate_Hardeners[]
                   This:Activate_Shield_Booster[]
                }
 
-               if ${Me.Ship.ShieldPct} > 99 && !${Config.Combat.AlwaysShieldBoost}
+               if ${_Me.Ship.ShieldPct} > 99 && !${Config.Combat.AlwaysShieldBoost}
                {	/* Turn off the shield booster */
                   Ship:Deactivate_Hardeners[]
                   This:Deactivate_Shield_Booster[]
@@ -125,7 +125,7 @@ objectdef obj_Ship
    /* TODO - Rename to SystemsReady (${Ship.SystemsReady}) or similar for clarity - CyberTech */
    member:bool IsSafe()
    {
-      if ${m_WaitForCapRecharge} && ${Me.Ship.CapacitorPct} < 90
+      if ${m_WaitForCapRecharge} && ${_Me.Ship.CapacitorPct} < 90
       {
          return FALSE
       }
@@ -135,14 +135,14 @@ objectdef obj_Ship
       }
 
       /* TODO - These functions are not reliable. Redo per Looped armor/shield test in obj_Miner.Mine() (then consolidate code) -- CyberTech */
-      if ${Me.Ship.CapacitorPct} < 10
+      if ${_Me.Ship.CapacitorPct} < 10
       {
          UI:UpdateConsole["Capacitor low!  Run for cover!", LOG_CRITICAL]
          m_WaitForCapRecharge:Set[TRUE]
          return FALSE
       }
 
-      if ${Me.Ship.ArmorPct} < 25
+      if ${_Me.Ship.ArmorPct} < 25
       {
          UI:UpdateConsole["Armor low!  Run for cover!", LOG_CRITICAL]
          return FALSE
@@ -229,7 +229,7 @@ objectdef obj_Ship
          return
       }
 
-      return ${Math.Calc[${Me.Ship.CargoCapacity}*0.02]}
+      return ${Math.Calc[${_Me.Ship.CargoCapacity}*0.02]}
    }
 
    member:float CargoFreeSpace()
@@ -239,11 +239,11 @@ objectdef obj_Ship
          return 0
       }
 
-      if ${Me.Ship.UsedCargoCapacity} < 0
+      if ${_Me.Ship.UsedCargoCapacity} < 0
       {
-         return ${Me.Ship.CargoCapacity}
+         return ${_Me.Ship.CargoCapacity}
       }
-      return ${Math.Calc[${Me.Ship.CargoCapacity}-${Me.Ship.UsedCargoCapacity}]}
+      return ${Math.Calc[${_Me.Ship.CargoCapacity}-${_Me.Ship.UsedCargoCapacity}]}
    }
 
    member:bool CargoFull()
@@ -267,7 +267,7 @@ objectdef obj_Ship
          return FALSE
       }
 
-      if ${This.CargoFreeSpace} <= ${Math.Calc[${Me.Ship.CargoCapacity}*0.50]}
+      if ${This.CargoFreeSpace} <= ${Math.Calc[${_Me.Ship.CargoCapacity}*0.50]}
       {
          return TRUE
       }
@@ -276,7 +276,7 @@ objectdef obj_Ship
 
    member:bool IsDamped()
    {
-      return ${Me.Ship.MaxTargetRange} < ${This.m_MaxTargetRange}
+      return ${_Me.Ship.MaxTargetRange} < ${This.m_MaxTargetRange}
    }
 
    member:float MaxTargetRange()
@@ -286,7 +286,7 @@ objectdef obj_Ship
 
    method UpdateModuleList()
    {
-      if ${Me.InStation}
+      if ${_Me.InStation}
       {
          ; GetModules cannot be used in station as of 07/15/2007
          UI:UpdateConsole["DEBUG: obj_Ship:UpdateModuleList called while in station", LOG_DEBUG]
@@ -294,7 +294,7 @@ objectdef obj_Ship
       }
 
       /* save ship values that may change in combat */
-      This.m_MaxTargetRange:Set[${Me.Ship.MaxTargetRange}]
+      This.m_MaxTargetRange:Set[${_Me.Ship.MaxTargetRange}]
 
       /* build module lists */
       This.ModuleList:Clear
@@ -522,93 +522,6 @@ objectdef obj_Ship
       }
       while ${Module:Next(exists)}
    }
-
-   function ArmorPct()
-   {
-      /* TODO - clean up this code when ArmorPct/ShieldPct wierdness is gone */
-      if !${Me.Ship(exists)}
-      {
-         return 0
-      }
-
-      variable int counter
-      variable float Percent
-
-      Percent:Set[${Me.Ship.ArmorPct}]
-        Counter:Set[0]
-        while (${Percent} == NULL || ${Percent} <= 0)
-        {
-            if ${Counter} > 30
-            {
-               Percent:Set[-1]
-               UI:UpdateConsole["ob_Ship: ArmorPct was invalid for longer than 30 seconds", LOG_CRITICAL]
-               break
-            }
-            Counter:Inc[1]
-            wait 10
-            Percent:Set[${Me.Ship.ArmorPct}]
-        }
-        
-        return ${Percent}
-   }
-
-   function ShieldPct()
-   {
-      /* TODO - clean up this code when ArmorPct/ShieldPct wierdness is gone */
-      if !${Me.Ship(exists)}
-      {
-         return 0
-      }
-
-      variable int counter
-      variable float Percent
-
-      Percent:Set[${Me.Ship.ShieldPct}]
-        Counter:Set[0]
-        while (${Percent} == NULL || ${Percent} <= 0)
-        {
-                if ${Counter} > 30
-                {
-                  Percent:Set[-1]
-                    UI:UpdateConsole["ob_Ship: ShieldPct was invalid for longer than 30 seconds", LOG_CRITICAL]
-                    break
-                }
-                Counter:Inc[1]
-                wait 10
-               Percent:Set[${Me.Ship.ShieldPct}]
-        }
-        
-        return ${Percent}
-   }
-
-   function CapacitorPct()
-   {
-      /* TODO - clean up this code when ArmorPct/ShieldPct wierdness is gone */
-      if !${Me.Ship(exists)}
-      {
-         return 0
-      }
-
-      variable int counter
-      variable float Percent
-
-      Percent:Set[${Me.Ship.CapacitorPct}]
-        Counter:Set[0]
-        while (${Percent} == NULL || ${Percent} <= 0)
-        {
-                if ${Counter} > 30
-                {
-                  Percent:Set[-1]
-                    UI:UpdateConsole["ob_Ship: CapacitorPct was invalid for longer than 30 seconds", LOG_CRITICAL]
-                    break
-                }
-                Counter:Inc[1]
-                wait 10
-               Percent:Set[${Me.Ship.CapacitorPct}]
-        }
-
-        return ${Percent}
-   }
    
    method UpdateBaselineUsedCargo()
    {
@@ -724,7 +637,6 @@ objectdef obj_Ship
          return "NOCHARGE"
       }
 
-
       if ${Me.Ship.Module[${SlotName}].Charge(exists)}
       {
          if ${fullName}
@@ -813,13 +725,13 @@ objectdef obj_Ship
          return
       }
 
-      if ${Me.MaxLockedTargets(exists)} && ${Me.MaxLockedTargets} < ${Me.Ship.MaxLockedTargets}
+      if ${_Me.MaxLockedTargets} < ${_Me.Ship.MaxLockedTargets}
       {
-         Calculated_MaxLockedTargets:Set[${Me.MaxLockedTargets}]
+         Calculated_MaxLockedTargets:Set[${_Me.MaxLockedTargets}]
       }
       else
       {
-         Calculated_MaxLockedTargets:Set[${Me.Ship.MaxLockedTargets}]
+         Calculated_MaxLockedTargets:Set[${_Me.Ship.MaxLockedTargets}]
       }
    }
 
@@ -1215,35 +1127,39 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
       call This.WarpToBookMark ${EVE.Bookmark[${DestinationBookmarkLabel}].ID}
    }
 
+	; TODO - Move this to obj_AutoPilot when it is ready - CyberTech
+	function ActivateAutoPilot()
+	{
+		UI:UpdateConsole["Activating autopilot and waiting until arrival..."]
+		wait 5
+		EVE:Execute[CmdToggleAutopilot]
+		do
+		{
+			do
+			{
+				wait 5
+			}
+			while !${_Me.AutoPilotOn}
+			wait 30
+		}
+		while ${Me.AutoPilotOn}
+		wait 20
+		do
+		{
+		wait 10
+		}
+		while !${_Me.ToEntity.IsCloaked}
+		wait 20
+	}
+	
    function TravelToSystem(int systemID)
    {
-      while ${systemID} != ${Me.SolarSystemID}
+      while ${systemID} != ${_Me.SolarSystemID}
       {
          UI:UpdateConsole["Setting autopilot to ${Universe[${systemID}].Name} (${systemID})"]
          Universe[${systemID}]:SetDestination
-         wait 5
-         UI:UpdateConsole["Activating autopilot and waiting until arrival..."]
-         EVE:Execute[CmdToggleAutopilot]
-         do
-         {
-            wait 50
-            if !${Me.AutoPilotOn(exists)}
-            {
-               do
-               {
-                  wait 5
-               }
-               while !${Me.AutoPilotOn(exists)}
-            }
-         }
-         while ${Me.AutoPilotOn}
-         wait 20
-         do
-         {
-            wait 10
-         }
-         while !${Me.ToEntity.IsCloaked}
-         wait 20
+
+         call This.ActivateAutoPilot
       }
    }
 
@@ -1251,7 +1167,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
    {
       variable int Counter
 
-      if (${Me.InStation})
+      if ${_Me.InStation}
       {
          call Station.Undock
       }
@@ -1349,8 +1265,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
             WarpCounter:Inc
          }
       }
-      elseif !${DestinationBookmark.ItemID(exists)} || \
-              ${DestinationBookmark.ItemID} < 0 || \
+      elseif ${DestinationBookmark.ItemID} == -1 || \
             (${DestinationBookmark.AgentID(exists)} && ${DestinationBookmark.LocationID(exists)})
       {
          /* This is an in-space bookmark, or a dungeon bookmark, just warp to it. */
@@ -1498,7 +1413,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 
    member:bool InWarp()
    {
-      if ${Me.ToEntity.Mode} == 3
+      if ${_Me.ToEntity.Mode} == 3
       {
          return TRUE
       }
@@ -1829,7 +1744,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
          }
 /*
          elseif !${Module.Value.IsOnline} && !${Module.Value.IsGoingOnline} && \
-            ${Me.Ship.CapacitorPct} > 97
+            ${_Me.Ship.CapacitorPct} > 97
          {
 
             if ${Math.Calc[${Me.Ship.CPUOutput}-${Me.Ship.CPULoad}]} <  ${Module.Value.CPUUsage} || \
@@ -1922,7 +1837,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 
    member:bool IsCloaked()
    {
-      if ${Me.ToEntity(exists)} && ${Me.ToEntity.IsCloaked}
+      if ${Me.ToEntity(exists)} && ${_Me.ToEntity.IsCloaked}
       {
          return TRUE
       }

@@ -21,14 +21,14 @@ objectdef obj_Belts
     member:bool IsAtBelt()
 	{
 		; Are we within 150km of the bookmark?
-		if ${beltIterator.Value.ItemID(exists)} && ${beltIterator.Value.ItemID} > 0
+		if ${beltIterator.Value.ItemID} > -1
 		{
-			if ${Me.ToEntity.DistanceTo[${beltIterator.Value.ItemID}]} < 150000
+			if ${Me.ToEntity.DistanceTo[${beltIterator.Value.ItemID}]} < WARP_RANGE
 			{
 				return TRUE
 			}
 		}
-		elseif ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${beltIterator.Value.X}, ${beltIterator.Value.Y}, ${beltIterator.Value.Z}]} < 150000
+		elseif ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${beltIterator.Value.X}, ${beltIterator.Value.Y}, ${beltIterator.Value.Z}]} < WARP_RANGE
 		{
 			return TRUE
 		}
@@ -63,7 +63,7 @@ objectdef obj_Belts
 		}		
 		
 		; This is for belt bookmarks only
-		;if ${beltIndex.Get[1](exists)} && ${beltIndex.Get[1].SolarSystemID} != ${Me.SolarSystemID}
+		;if ${beltIndex.Get[1](exists)} && ${beltIndex.Get[1].SolarSystemID} != ${_Me.SolarSystemID}
 		;{
 		;	This:ResetBeltList
 		;}
@@ -75,7 +75,7 @@ objectdef obj_Belts
 		
 		if ${beltIterator.Value(exists)}
 		{
-/*
+
 			variable int NearestGate
 			variable float DistanceToGate
 			NearestGate:Set[${Entity[fromID,${beltIterator.Value.ID},Radius,SCANNER_RANGE,GroupID,GROUP_STARGATE].ID}]
@@ -92,7 +92,7 @@ objectdef obj_Belts
 					return
 				}
 			}
-*/
+
 			;call Ship.WarpToBookMark ${SafeSpotIterator.Value.ID}
 			;;UI:UpdateConsole["obj_Belts: DEBUG: Warping to ${beltIterator.Value.Name}"]
 			call Ship.WarpToID ${beltIterator.Value.ID}

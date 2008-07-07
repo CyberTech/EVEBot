@@ -226,7 +226,7 @@ objectdef obj_Targets
 		variable iterator Target
 
 		/* Me.Ship.MaxTargetRange contains the (possibly) damped value */
-		EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY, radius, ${Me.Ship.MaxTargetRange}]
+		EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY, radius, ${_Me.Ship.MaxTargetRange}]
 		Targets:GetIterator[Target]
 
 		if !${Target:First(exists)}
@@ -254,7 +254,7 @@ objectdef obj_Targets
 			}
 		}
 
-		if ${Me.Ship.MaxLockedTargets} == 0
+		if ${_Me.Ship.MaxLockedTargets} == 0
 		{
 			UI:UpdateConsole["Jammed, cant target..."]
 			return TRUE
@@ -431,7 +431,7 @@ objectdef obj_Targets
 			{
 				if !${Target.Value.IsLockedTarget} && !${Target.Value.BeingTargeted}
 				{
-					if ${Me.GetTargets(exists)} && ${Me.GetTargets} < ${Ship.MaxLockedTargets}
+					if ${_Me.GetTargets} < ${Ship.MaxLockedTargets}
 					{
 						UI:UpdateConsole["Locking ${Target.Value.Name}"]
 						Target.Value:LockTarget
@@ -460,7 +460,7 @@ objectdef obj_Targets
 		;if ${HasTargets} && ${Me.ActiveTarget(exists)}
 		;{
 		;	variable int OrbitDistance
-		;	OrbitDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.40/1000].Round}]
+		;	OrbitDistance:Set[${Math.Calc[${_Me.Ship.MaxTargetRange}*0.40/1000].Round}]
 		;	OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
 		;	Me.ActiveTarget:Orbit[${OrbitDistance}]
 		;}

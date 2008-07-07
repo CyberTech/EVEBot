@@ -29,9 +29,9 @@ objectdef obj_Drones
 	}
 	method Shutdown()
 	{
-	    if !${Me.InStation}
+	    if !${_Me.InStation}
 	    {
-	        if (${Me.ToEntity.Mode} != 3)
+	        if (${_Me.ToEntity.Mode} != 3)
 	        {
 	        	UI:UpdateConsole["Recalling Drones prior to shutdown..."]
     		    EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
@@ -51,7 +51,7 @@ objectdef obj_Drones
 		{
 		    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 			{
-    			if (${Me.InStation(exists)} && !${Me.InStation})
+    			if !${_Me.InStation}
     			{
     				This.LaunchedDrones:Set[${This.DronesInSpace}]
     				if  ${This.LaunchedDrones} > 0
@@ -156,8 +156,8 @@ objectdef obj_Drones
 			UI:UpdateConsole["Recalling ${This.ActiveDroneIDList.Used} Drones"]
 			EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
 			EVE:Execute[CmdDronesReturnToBay]
-			if (${Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
-				${Me.Ship.ShieldPct} < ${Config.Combat.MinimumShieldPct})
+			if (${_Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
+				${_Me.Ship.ShieldPct} < ${Config.Combat.MinimumShieldPct})
 			{
 				; We don't wait for drones if we're on emergency warp out
 				wait 10

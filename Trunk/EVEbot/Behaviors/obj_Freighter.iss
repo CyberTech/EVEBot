@@ -153,7 +153,7 @@ objectdef obj_Freighter
 			Assets:IgnoreStation[${m_DestinationID}]
 		}										
 
-		if ${EVEBot.ReturnToStation} && !${Me.InStation}
+		if ${EVEBot.ReturnToStation} && !${_Me.InStation}
 		{
 			This.CurrentState:Set["ABORT"]
 		}
@@ -161,7 +161,7 @@ objectdef obj_Freighter
 		{
 			This.CurrentState:Set["IDLE"]
 		}
-		elseif ${Me.InStation}
+		elseif ${_Me.InStation}
 		{
 	  		This.CurrentState:Set["BASE"]
 		}
@@ -169,7 +169,7 @@ objectdef obj_Freighter
 		{
 			This.CurrentState:Set["CARGOFULL"]
 		}
-		elseif !${Me.InStation} && ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace}
+		elseif !${_Me.InStation} && ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace}
 		{
 		 	This.CurrentState:Set["TRANSPORT"]
 		}
@@ -280,7 +280,7 @@ objectdef obj_Freighter
 		        }
 		    }
 	        
-	        if ${nextStationID} && (${Me.SolarSystemID} != ${Universe[${tmp_string}].ID})
+	        if ${nextStationID} && (${_Me.SolarSystemID} != ${Universe[${tmp_string}].ID})
 	        {	/* check for low-sec jumps */
 	        	Universe[${tmp_string}]:SetDestination
 	        	wait 5
@@ -305,33 +305,11 @@ objectdef obj_Freighter
 				}		
 	        }
 	        
-			if ${nextStationID} && (${Me.SolarSystemID} != ${Universe[${tmp_string}].ID})
+			if ${nextStationID} && (${_Me.SolarSystemID} != ${Universe[${tmp_string}].ID})
 			{
 	    		UI:UpdateConsole["Freighter moving to ${EVE.GetLocationNameByID[${nextStationID}]}."]
 	    		
-				wait 5
-				UI:UpdateConsole["Activating autopilot and waiting until arrival..."]
-				EVE:Execute[CmdToggleAutopilot]
-				do
-				{
-					wait 50
-					if !${Me.AutoPilotOn(exists)}
-					{
-						do
-						{
-							wait 5
-						}
-						while !${Me.AutoPilotOn(exists)}
-					}
-				}
-				while ${Me.AutoPilotOn}
-				wait 20
-				do
-				{
-				   wait 10
-				}
-				while !${Me.ToEntity.IsCloaked}
-				wait 5
+				call Ship.ActivateAutoPilot
 	    	}
 	    	
 	        if ${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity(exists)}
@@ -360,13 +338,13 @@ objectdef obj_Freighter
 	 */
 	function PickupOrDropoff()
 	{
-		if ${Me.InStation(exists)} && ${Me.InStation}
+		if ${_Me.InStation}
 		{	/* don't call this function if you are not in station */
 			UI:UpdateConsole["DEBUG: /${EVE.Bookmark[${Config.Freighter.Destination}](exists)} = ${EVE.Bookmark[${Config.Freighter.Destination}](exists)}"]
 			UI:UpdateConsole["DEBUG: /${m_DestinationID} = ${m_DestinationID}"]
-			UI:UpdateConsole["DEBUG: /${Me.StationID} = ${Me.StationID}"]
+			UI:UpdateConsole["DEBUG: /${Me.StationID} = ${_Me.StationID}"]
 			if ${EVE.Bookmark[${Config.Freighter.Destination}](exists)} && \
-			   ${m_DestinationID} == ${Me.StationID}
+			   ${m_DestinationID} == ${_Me.StationID}
 			{	/* this is the destination station, drop off stuff */
 				call Cargo.TransferCargoToHangar
 			}

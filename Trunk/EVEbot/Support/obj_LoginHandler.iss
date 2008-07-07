@@ -168,7 +168,7 @@ objectdef obj_LoginHandler
 					This.LoginTimer:Set[${This.connectWaitTime}]
 					break
 				}
-				if !${Me.Name(exists)}
+				if !${Me(exists)}
 				{
 					This.LoginTimer:Set[${This.connectWaitTime}]
 					break

@@ -3,7 +3,7 @@ objectdef obj_Skills
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
-	variable file SkillFile = "${BaseConfig.CONFIG_PATH}/${Me.Name} Training.txt"
+	variable file SkillFile = "${BaseConfig.CONFIG_PATH}/${_Me.Name} Training.txt"
 	variable index:skill OwnedSkills
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 5
@@ -38,7 +38,7 @@ objectdef obj_Skills
 	{
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-		    if ${Me.InStation(exists)}
+		    if ${Me(exists)}
 		    {
     			if !${This.NextSkill.Equal[None]} && \
     				!${Me.Skill[${This.NextSkill}].IsTraining}

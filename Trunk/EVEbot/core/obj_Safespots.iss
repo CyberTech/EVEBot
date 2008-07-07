@@ -30,7 +30,7 @@ objectdef obj_Safespots
 			{
 				SafeSpots:Remove[${idx}]
 			}
-			elseif ${SafeSpots.Get[${idx}].SolarSystemID} != ${Me.SolarSystemID}
+			elseif ${SafeSpots.Get[${idx}].SolarSystemID} != ${_Me.SolarSystemID}
 			{
 				SafeSpots:Remove[${idx}]
 			}
@@ -50,7 +50,7 @@ objectdef obj_Safespots
 			This:ResetSafeSpotList
 		}		
 		
-		if ${SafeSpots.Get[1](exists)} && ${SafeSpots.Get[1].SolarSystemID} != ${Me.SolarSystemID}
+		if ${SafeSpots.Get[1](exists)} && ${SafeSpots.Get[1].SolarSystemID} != ${_Me.SolarSystemID}
 		{
 			This:ResetSafeSpotList
 		}
@@ -87,8 +87,8 @@ objectdef obj_Safespots
 		;UI:UpdateConsole["DEBUG: obj_Safespots.IsAtSafespot: ME_Z = ${Me.ToEntity.Z}"]
 		;UI:UpdateConsole["DEBUG: obj_Safespots.IsAtSafespot: DIST = ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${SafeSpotIterator.Value.X}, ${SafeSpotIterator.Value.Y}, ${SafeSpotIterator.Value.Z}]}"]
 
-		; Are we within 150km of the bookmark?
-		if ${SafeSpotIterator.Value.ItemID(exists)} && ${SafeSpotIterator.Value.ItemID} > 0
+		; Are we within warp range of the bookmark?
+		if ${SafeSpotIterator.Value.ItemID} > -1
 		{
             UI:UpdateConsole["DEBUG: obj_Safespots.IsAtSafespot: ItemID = ${SafeSpotIterator.Value.ItemID}"]
 			if ${Me.ToEntity.DistanceTo[${SafeSpotIterator.Value.ItemID}]} < WARP_RANGE
