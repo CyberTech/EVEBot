@@ -76,7 +76,7 @@ objectdef obj_MissionCache
 		This.MissionRef[${agentID}]:AddSetting[TypeID,${typeID}]
 	}	
 
-	member:int Volume(int agentID)
+	member:float Volume(int agentID)
 	{
 		return ${This.MissionRef[${agentID}].FindSetting[Volume,0]}
 	}
@@ -91,6 +91,20 @@ objectdef obj_MissionCache
 		This.MissionRef[${agentID}]:AddSetting[Volume,${volume}]
 	}	
 
+	member:bool LowSec(int agentID)
+	{
+		return ${This.MissionRef[${agentID}].FindSetting[LowSec,FALSE]}
+	}
+	
+	method SetLowSec(int agentID, bool isLowSec)
+	{
+		if !${This.MissionsRef.FindSet[${agentID}](exists)}
+		{
+			This.MissionsRef:AddSet[${agentID}]
+		}
+		
+		This.MissionRef[${agentID}]:AddSetting[LowSec,${isLowSec}]
+	}	
 }
 
 ;objectdef obj_MissionDatabase
