@@ -75,7 +75,7 @@ objectdef obj_Belts
 		
 		if ${beltIterator.Value(exists)}
 		{
-
+/*
 			variable int NearestGate
 			variable float DistanceToGate
 			NearestGate:Set[${Entity[fromID,${beltIterator.Value.ID},Radius,SCANNER_RANGE,GroupID,GROUP_STARGATE].ID}]
@@ -92,7 +92,7 @@ objectdef obj_Belts
 					return
 				}
 			}
-
+*/
 			;call Ship.WarpToBookMark ${SafeSpotIterator.Value.ID}
 			;;UI:UpdateConsole["obj_Belts: DEBUG: Warping to ${beltIterator.Value.Name}"]
 			call Ship.WarpToID ${beltIterator.Value.ID}
