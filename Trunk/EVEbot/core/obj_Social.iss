@@ -60,7 +60,7 @@ objectdef obj_Social
 		{
 			This.AllianceWhiteList:Add[${_Me.AllianceID}]
 		}
-
+		
 		if ${This.WhiteListPilotIterator:First(exists)}
 		do
 		{
@@ -128,7 +128,7 @@ objectdef obj_Social
 
 			if !${_Me.InStation}
 			{
-				EVE:DoGetEntities[EntityIndex,CategoryID,CATEGORYID_ENTITY]
+				EVE:DoGetEntities[This.EntityIndex,CategoryID,CATEGORYID_ENTITY]
 			}
 
     		SystemSafe:Set[${Math.Calc[${This.CheckLocalWhiteList} & ${This.CheckLocalBlackList}](bool)}]

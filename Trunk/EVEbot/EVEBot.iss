@@ -39,6 +39,10 @@
 #include Behaviors/obj_Scavenger.iss
 #include Behaviors/obj_Missioneer.iss
 
+/* Cache Objects */
+variable(global) obj_Cache_Me _Me
+variable(global) obj_Cache_EVETime _EVETime
+
 /* Script-Defined Support Objects */
 variable obj_EVEBot EVEBot
 variable obj_EVEBotUI UI

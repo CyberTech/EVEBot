@@ -3,7 +3,8 @@
 
 	Caches isxeve result data:
 		StaticList: collection of var/member pairs which are initialized once.
-		ObjectList: collection of var/member pairs which are retrieved once per second
+		ObjectList: collection of var/member pairs which are retrieved every 2 seconds
+		FastObjectList: collection of var/member pairs which are retrieved every 1/2 second
 
 */
 
@@ -12,14 +13,14 @@ objectdef obj_Cache
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
-	variable bool PulsePerSecond = FALSE
-	variable time NextPulse
-	variable int PulseIntervalInSeconds = 1
 	variable int FrameCount = 0
-	variable int FrameInterval = 15
-
+	variable float FrameInterval = 0
+	variable int FrameCountHalfSec = 0
+	variable float FrameIntervalHalfSec = 0
+	
 	variable collection:string StaticList
 	variable collection:string ObjectList
+	variable collection:string FastObjectList
 
 
 	method Initialize()
@@ -30,76 +31,70 @@ objectdef obj_Cache
 			This:UpdateStaticList
 		}
 
-		if ${ObjectList.FirstKey(exists)}
-		{
-			This:Pulse
-		}
-
-		if ${This.PulsePerSecond}
-		{
-			Event[OnFrame]:AttachAtom[This:PulsePerSecond]
-		}
-		else
-		{
-			Event[OnFrame]:AttachAtom[This:Pulse]
-		}
+		This:Pulse
+		Event[OnFrame]:AttachAtom[This:Pulse]
 	}
 
 	method Shutdown()
 	{
 		Event[OnFrame]:DetachAtom[This:Pulse]
-		Event[OnFrame]:DetachAtom[This:PulsePerSecond]
 	}
 
 	/* Runs every other frame, and updates one member per run */
 	method Pulse()
 	{
-		FrameInterval:Set[${Math.Calc[${Display.FPS} / ${ObjectList.Used} + 1]}]
+		variable string temp
+		
+		/* Process FastObjectList every half second */
+		if ${FrameCountHalfSec} < ${FrameIntervalHalfSec}
+		{
+			FrameCountHalfSec:Inc
+		}
+		else
+		{
+			FrameCountHalfSec:Set[0]
+			FrameIntervalHalfSec:Set[${Math.Calc[${Display.FPS} * 0.5]}]
+		
+			if ${FastObjectList.FirstKey(exists)}
+			{
+				do
+				{
+					;redirect -append "crash.txt" echo "[${FastObjectList.CurrentKey}]: ${FastObjectList.CurrentValue}"
+					temp:Set[${${FastObjectList.CurrentValue}}]
+					if ${temp.NotEqual["NULL"]}
+					{
+						${FastObjectList.CurrentKey}:Set[${temp}]
+					}
+					;redirect -append "crash.txt" echo "    ${${FastObjectList.CurrentKey}}"
+				}
+				while ${FastObjectList.NextKey(exists)}
+			}
+		}
 
+		/* Process ObjectList every 2 seconds */
 		if ${FrameCount} < ${FrameInterval}
 		{
 			FrameCount:Inc
-			return
 		}
-
-		FrameCount:Set[0]
-		if !${ObjectList.NextKey(exists)}
+		else
 		{
-			if !${ObjectList.FirstKey(exists)}
-			{
-				return
-			}
-		}
-		;redirect -append "crash.txt" echo "[${ObjectList.CurrentKey}]: ${ObjectList.CurrentValue}"
-		if ${${ObjectList.CurrentValue}(exists)}
-		{
-			${ObjectList.CurrentKey}:Set[${${ObjectList.CurrentValue}}]
-		}
-
-		;redirect -append "crash.txt" echo "${${ObjectList.CurrentKey}}  - Mem: ${System.MemoryUsage}"
-	}
-
-	/* This self-limits to once per second, and refreshes all data at that time */
-	method PulsePerSecond()
-	{
-		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
-		{
+			FrameCount:Set[0]
+			FrameInterval:Set[${Math.Calc[${Display.FPS} * 2.5]}]
+		
 			if ${ObjectList.FirstKey(exists)}
 			{
 				do
 				{
-					;echo "[${ObjectList.CurrentKey}]: ${ObjectList.CurrentValue}"
-					if ${${ObjectList.CurrentValue}(exists)}
+					;redirect -append "crash.txt" echo "[${ObjectList.CurrentKey}]: ${ObjectList.CurrentValue}"
+					temp:Set[${${ObjectList.CurrentValue}}]
+					if ${temp.NotEqual["NULL"]}
 					{
-						${ObjectList.CurrentKey}:Set[${${ObjectList.CurrentValue}}]
+						${ObjectList.CurrentKey}:Set[${temp}]
 					}
-					;echo ${${ObjectList.CurrentKey}}
+					;redirect -append "crash.txt" echo "${${ObjectList.CurrentKey}}"
 				}
 				while ${ObjectList.NextKey(exists)}
 			}
-			This.NextPulse:Set[${Time.Timestamp}]
-			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-			This.NextPulse:Update
 		}
 	}
 
@@ -153,10 +148,6 @@ objectdef obj_Cache_Me inherits obj_Cache
 		StaticList:Set["CharID", "Me.CharID"]
 
 		ObjectList:Set["ShipID", "Me.ShipID"]
-		ObjectList:Set["InStation", "Me.InStation"]
-		ObjectList:Set["GetTargets", "Me.GetTargets"]
-		ObjectList:Set["GetTargeting", "Me.GetTargeting"]
-		ObjectList:Set["GetTargetedBy", "Me.GetTargetedBy"]
 		ObjectList:Set["MaxLockedTargets", "Me.MaxLockedTargets"]
 		ObjectList:Set["MaxActiveDrones", "Me.MaxActiveDrones"]
 		ObjectList:Set["DroneControlDistance", "Me.DroneControlDistance"]
@@ -164,7 +155,12 @@ objectdef obj_Cache_Me inherits obj_Cache
 		ObjectList:Set["AllianceID", "Me.AllianceID"]
 		ObjectList:Set["CorporationID", "Me.CorporationID"]
 		ObjectList:Set["CorporationTicker", "Me.CorporationTicker"]
-		ObjectList:Set["AutoPilotOn", "Me.AutoPilotOn"]
+
+		FastObjectList:Set["InStation", "Me.InStation"]
+		FastObjectList:Set["AutoPilotOn", "Me.AutoPilotOn"]
+		FastObjectList:Set["GetTargets", "Me.GetTargets"]
+		FastObjectList:Set["GetTargeting", "Me.GetTargeting"]
+		FastObjectList:Set["GetTargetedBy", "Me.GetTargetedBy"]
 
 		This[parent]:Initialize
 	}
@@ -188,9 +184,9 @@ objectdef obj_Cache_Me_ToEntity inherits obj_Cache
 	{
 		UI:UpdateConsole["obj_Cache_Me_ToEntity: Initialized", LOG_MINOR]
 
-		ObjectList:Set["IsCloaked", "Me.ToEntity.IsCloaked"]
-		ObjectList:Set["IsWarpScrambled", "Me.ToEntity.IsWarpScrambled"]
-		ObjectList:Set["Mode", "Me.ToEntity.Mode"]
+		FastObjectList:Set["IsCloaked", "Me.ToEntity.IsCloaked"]
+		FastObjectList:Set["IsWarpScrambled", "Me.ToEntity.IsWarpScrambled"]
+		FastObjectList:Set["Mode", "Me.ToEntity.Mode"]
 
 		This[parent]:Initialize
 	}
@@ -219,10 +215,10 @@ objectdef obj_Cache_Me_Ship inherits obj_Cache
 	{
 		UI:UpdateConsole["obj_Cache_Me_Ship: Initialized", LOG_MINOR]
 
-		ObjectList:Set["ArmorPct", "Me.Ship.ArmorPct"]
-		ObjectList:Set["StructurePct", "Me.Ship.StructurePct"]
-		ObjectList:Set["ShieldPct", "Me.Ship.ShieldPct"]
-		ObjectList:Set["CapacitorPct", "Me.Ship.CapacitorPct"]
+		FastObjectList:Set["ArmorPct", "Me.Ship.ArmorPct"]
+		FastObjectList:Set["StructurePct", "Me.Ship.StructurePct"]
+		FastObjectList:Set["ShieldPct", "Me.Ship.ShieldPct"]
+		FastObjectList:Set["CapacitorPct", "Me.Ship.CapacitorPct"]
 		ObjectList:Set["UsedCargoCapacity", "Me.Ship.UsedCargoCapacity"]
 		ObjectList:Set["CargoCapacity", "Me.Ship.CargoCapacity"]
 		ObjectList:Set["MaxLockedTargets", "Me.Ship.MaxLockedTargets"]
@@ -249,8 +245,6 @@ objectdef obj_Cache_EVETime inherits obj_Cache
 		UI:UpdateConsole["obj_Cache_EVETime: Initialized", LOG_MINOR]
 
 		ObjectList:Set["Time", "EVETime.Time"]
-		This.PulsePerSecond:Set[TRUE]
-		This.PulseIntervalInSeconds:Set[1]
 		This[parent]:Initialize
 	}
 

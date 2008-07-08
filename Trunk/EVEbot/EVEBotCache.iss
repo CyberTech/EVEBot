@@ -16,10 +16,9 @@ function main()
 	;Script:EnableDebugLogging[debug.txt]
 	;Script[EVEBot]:EnableProfiling
 
-	/* Set Turbo to lowest value to try and avoid overloading the EVE Python engine */
-
 	run EVEBot/EVEBot.iss
 	wait 10
+	
 	while ${Script[EVEBot](exists)}
 	{
 		waitframe
