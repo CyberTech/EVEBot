@@ -1142,11 +1142,11 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			while !${_Me.AutoPilotOn}
 			wait 30
 		}
-		while ${Me.AutoPilotOn}
+		while ${_Me.AutoPilotOn}
 		wait 20
 		do
 		{
-		wait 10
+			wait 10
 		}
 		while !${_Me.ToEntity.IsCloaked}
 		wait 20
