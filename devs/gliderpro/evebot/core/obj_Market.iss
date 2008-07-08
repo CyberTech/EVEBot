@@ -9,7 +9,7 @@
 
 objectdef obj_Market
 {
-   variable string SVN_REVISION = "$Rev $"
+   variable string SVN_REVISION = "$Rev$"
    variable int Version
 
    variable index:marketorder orderIndex
