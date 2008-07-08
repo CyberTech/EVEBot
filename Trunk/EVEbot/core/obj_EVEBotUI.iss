@@ -18,9 +18,9 @@ objectdef obj_EVEBotUI
 				
 	method Initialize()
 	{
-		This.LogFile:Set["./config/logs/${_Me.Name}.log"]
-		This.CriticalLogFile:Set["./config/logs/${_Me.Name}_Critical.log"]
-		This.StatsLogFile:Set["./config/logs/${_Me.Name}_Stats.log"]
+		This.LogFile:Set["./config/logs/${Me.Name}.log"]
+		This.CriticalLogFile:Set["./config/logs/${Me.Name}_Critical.log"]
+		This.StatsLogFile:Set["./config/logs/${Me.Name}_Stats.log"]
 
 		ui -load interface/eveskin/eveskin.xml
 		ui -load interface/evebotgui.xml
