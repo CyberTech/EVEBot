@@ -127,6 +127,8 @@ objectdef obj_Cache_Me inherits obj_Cache
 	variable string Name
 	variable int CharID
 	variable int ShipID
+	variable int StationID
+	
 	variable bool InStation = FALSE
 	variable int GetTargets
 	variable int GetTargeting
@@ -148,6 +150,7 @@ objectdef obj_Cache_Me inherits obj_Cache
 		StaticList:Set["CharID", "Me.CharID"]
 
 		ObjectList:Set["ShipID", "Me.ShipID"]
+		ObjectList:Set["StationID", "Me.StationID"]
 		ObjectList:Set["MaxLockedTargets", "Me.MaxLockedTargets"]
 		ObjectList:Set["MaxActiveDrones", "Me.MaxActiveDrones"]
 		ObjectList:Set["DroneControlDistance", "Me.DroneControlDistance"]
