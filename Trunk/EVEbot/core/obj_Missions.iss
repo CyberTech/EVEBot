@@ -220,7 +220,7 @@ objectdef obj_Missions
 			UI:UpdateConsole["obj_Missions: MoveToDropOff"]
 			call Agents.MoveToDropOff
 			wait 50
-			call Cargo.TransferCargoToHangar			
+			call Cargo.TransferItemTypeToHangar ${This.MissionCache.TypeID[${agentID}]}
 			wait 50
 		}
 		while !${allDone}
@@ -231,6 +231,24 @@ objectdef obj_Missions
 	
 	function RunTradeMission(int agentID)
 	{
+      if ${This.MissionCache[${agentID}].Volume} > ${Config.Missioneer.SmallHaulerLimit}
+      {
+         call Ship.ActivateShip "${Config.Missioneer.LargeHauler}"
+      }		   
+      else
+      {
+         call Ship.ActivateShip "${Config.Missioneer.SmallHauler}"
+      }		   
+
+      if ${Station.Docked} 
+      {
+         call Station.Undock
+      }
+
+      call Market.GetMarketOrders ${This.MissionCache.TypeID[${agentID}]}
+      ;call Market.TravelToBestSellOrder ${Config.Missioneer.AvoidLowSec}
+      ;call Market.PurchaseGoods 
+
 		UI:UpdateConsole["obj_Missions: ERROR!  Trade missions are not supported!"]
 		Script:Pause
 	}
