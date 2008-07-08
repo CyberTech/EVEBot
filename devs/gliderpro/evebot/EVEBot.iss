@@ -25,6 +25,7 @@
 #include core/obj_Agents.iss
 #include core/obj_Combat.iss
 #include core/obj_Missions.iss
+#include core/obj_Market.iss
 
 /* Behavior/Mode Includes */
 #include Behaviors/obj_Courier.iss
@@ -65,6 +66,7 @@ variable obj_Targets Targets
 variable obj_Sound Sound
 variable obj_Agents Agents
 variable obj_Missions Missions
+variable obj_Market Market
 
 /* Script-Defined Behavior Objects */
 variable index:string BotModules

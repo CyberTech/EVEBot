@@ -114,12 +114,12 @@ objectdef obj_Cargo
 			variable int CategoryID
 
 			CategoryID:Set[${CargoIterator.Value.CategoryID}]
-			UI:UpdateConsole["DEBUG: obj_Cargo:FindAllShipCargo: CategoryID: ${CategoryID} ${CargoIterator.Value.Name} - ${CargoIterator.Value.Quantity} (CargoToTransfer.Used: ${This.CargoToTransfer.Used})"]
+			;UI:UpdateConsole["DEBUG: obj_Cargo:FindAllShipCargo: CategoryID: ${CategoryID} ${CargoIterator.Value.Name} - ${CargoIterator.Value.Quantity} (CargoToTransfer.Used: ${This.CargoToTransfer.Used})"]
 			This.CargoToTransfer:Insert[${CargoIterator.Value}]
 		}
 		while ${CargoIterator:Next(exists)}
 		
-		UI:UpdateConsole["DEBUG: obj_Cargo:FindAllShipCargo: This.CargoToTransfer Populated: ${This.CargoToTransfer.Used}"]
+		;UI:UpdateConsole["DEBUG: obj_Cargo:FindAllShipCargo: This.CargoToTransfer Populated: ${This.CargoToTransfer.Used}"]
 	}
 		
 	method FindShipCargo(int CategoryIDToMove)

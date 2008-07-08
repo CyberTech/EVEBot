@@ -240,6 +240,15 @@ objectdef obj_Missions
          call Ship.ActivateShip "${Config.Missioneer.SmallHauler}"
       }		   
 
+      if ${Station.Docked} 
+      {
+         call Station.Undock
+      }
+
+      call Market.GetMarketOrders ${This.MissionCache.TypeID[${agentID}]}
+      ;call Market.TravelToBestSellOrder ${Config.Missioneer.AvoidLowSec}
+      ;call Market.PurchaseGoods 
+
 		UI:UpdateConsole["obj_Missions: ERROR!  Trade missions are not supported!"]
 		Script:Pause
 	}
