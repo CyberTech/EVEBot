@@ -147,6 +147,31 @@ objectdef obj_Cargo
 		;UI:UpdateConsole["DEBUG: obj_Cargo:FindShipCargo: This.CargoToTransfer Populated: ${This.CargoToTransfer.Used}"]
 	}
 
+   method FindShipCargoByType(int TypeIDToMove)
+   {
+      Me.Ship:DoGetCargo[This.MyCargo]
+
+      variable iterator CargoIterator
+
+      This.MyCargo:GetIterator[CargoIterator]
+      if ${CargoIterator:First(exists)}
+      do
+      {
+         variable int TypeID
+
+         TypeID:Set[${CargoIterator.Value.TypeID}]
+         UI:UpdateConsole["DEBUG: obj_Cargo:FindShipCargo: TypeID: ${TypeID} ${CargoIterator.Value.Name} (${CargoIterator.Value.Quantity}) (CargoToTransfer.Used: ${This.CargoToTransfer.Used})"]
+
+         if (${TypeID} == ${TypeIDToMove})
+         {
+            This.CargoToTransfer:Insert[${CargoIterator.Value}]
+         }
+      }
+      while ${CargoIterator:Next(exists)}
+
+      UI:UpdateConsole["DEBUG: obj_Cargo:FindShipCargo: This.CargoToTransfer Populated: ${This.CargoToTransfer.Used}"]
+   }
+
 	function ReplenishCrystals()
 	{
 		variable iterator CargoIterator
@@ -819,6 +844,31 @@ objectdef obj_Cargo
 		}
 	}
 	
+   function TransferItemTypeToHangar(int typeID)
+   {	
+      if !${Station.Docked}
+      {
+         UI:UpdateConsole["ERROR: obj_Cargo.TransferItemToHangar: Must be docked!"]
+         return
+      }
+
+      /* Need to cycle the the cargohold after docking to update the list. */
+      call This.CloseHolds
+
+      UI:UpdateConsole["Transferring Cargo to Station Hangar"]
+      call This.OpenHolds
+
+      This:FindShipCargoByType[${typeID}]
+
+      call This.TransferListToHangar
+
+      This.CargoToTransfer:Clear[]
+      Me:StackAllHangarItems
+      Ship:UpdateBaselineUsedCargo[]
+      wait 25
+      call This.CloseHolds
+   }
+
 	function TransferSpawnContainerCargoToShip()
 	{
 	}
