@@ -150,7 +150,7 @@ objectdef obj_Cache_Me inherits obj_Cache
 		StaticList:Set["CharID", "Me.CharID"]
 
 		ObjectList:Set["ShipID", "Me.ShipID"]
-		ObjectList:Set["StationID", "Me.StationID"]
+		
 		ObjectList:Set["MaxLockedTargets", "Me.MaxLockedTargets"]
 		ObjectList:Set["MaxActiveDrones", "Me.MaxActiveDrones"]
 		ObjectList:Set["DroneControlDistance", "Me.DroneControlDistance"]
@@ -159,6 +159,7 @@ objectdef obj_Cache_Me inherits obj_Cache
 		ObjectList:Set["CorporationID", "Me.CorporationID"]
 		ObjectList:Set["CorporationTicker", "Me.CorporationTicker"]
 
+		FastObjectList:Set["StationID", "Me.StationID"]
 		FastObjectList:Set["InStation", "Me.InStation"]
 		FastObjectList:Set["AutoPilotOn", "Me.AutoPilotOn"]
 		FastObjectList:Set["GetTargets", "Me.GetTargets"]
