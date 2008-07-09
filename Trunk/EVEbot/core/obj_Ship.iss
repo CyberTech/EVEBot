@@ -1039,7 +1039,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		}
 	}
 
-
+	
 	function WarpToID(int Id)
 	{
 		if (${Id} <= 0)
@@ -1053,7 +1053,8 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			UI:UpdateConsole["Error: obj_Ship:WarpToID: No entity matched the ID given."]
 			return
 		}
-
+		
+		Entity[${Id}]:AlignTo
 		call This.WarpPrepare
 		while ${Entity[${Id}].Distance} >= WARP_RANGE
 		{
