@@ -14,6 +14,9 @@ objectdef obj_MissionCache
 
 	variable string CONFIG_FILE = "${Script.CurrentDirectory}/Config/${_Me.Name} Mission Cache.xml"
 	variable string SET_NAME = "Missions"
+
+    variable index:entity entityIndex
+    variable iterator     entityIterator
 	
 	method Initialize()
 	{
@@ -265,7 +268,15 @@ objectdef obj_Missions
 		wait 10
 		call This.WarpToEncounter ${agentID}
 		wait 50
-		
+
+;       do
+;       {
+;            EVE:DoGetEntities[entityIndex,TypeID,TYPE_ACCELERATION_GATE]
+;            call Ship.Approach ${entityIndex.Get[1].ID} JUMP_RANGE
+;            entityIndex.Get[1]:Activate
+;        }
+;        while ${entityIndex.Used} == 1
+
 		UI:UpdateConsole["obj_Missions: DEBUG: ${Ship.Type} (${Ship.TypeID})"]		
 		switch ${Ship.TypeID}
 		{
@@ -315,15 +326,219 @@ objectdef obj_Missions
 	
 	function KestrelCombat(int agentID)
 	{
-		wait 100
-		while (${This.TargetNPCs} || ${This.TargetStructures[${agentID}]}) && ${Social.IsSafe}
-		{
-			This.Combat:SetState
-			call This.Combat.ProcessState
-			wait 10
-		}		
+      variable bool missionComplete = FALSE
+      variable time breakTime
+
+      while !${missionComplete}
+      {
+         ; wait up to 15 seconds for spawns to appear
+         breakTime:Set[${Time.Timestamp}]
+         breakTime.Second:Inc[15]
+         breakTime:Update
+
+         while TRUE
+         {
+            if ${This.HostileCount} > 0
+            {
+               break
+            }
+
+            if ${Time.Timestamp} >= ${breakTime.Timestamp}
+            {
+               break
+            }
+
+            waitframe
+         }
+
+         if ${This.HostileCount} > 0
+         {
+            ; wait up to 15 seconds for agro
+            breakTime:Set[${Time.Timestamp}]
+            breakTime.Second:Inc[15]
+            breakTime:Update
+   
+            while TRUE
+            {
+               if ${_Me.GetTargetedBy} > 0
+               {
+                  break
+               }
+   
+               if ${Time.Timestamp} >= ${breakTime.Timestamp}
+               {
+                  break
+               }
+   
+               waitframe
+            }
+
+            while ${This.HostileCount} > 0
+            {
+               if ${_Me.GetTargetedBy} > 0 || ${Math.Calc[${_Me.GetTargeting}+${_Me.GetTargets}]} > 0
+               {
+                  call This.TargetAgressors
+               }
+               else
+               {
+                  call This.PullTarget
+               }
+
+               This.Combat:SetState
+               call This.Combat.ProcessState
+
+               waitframe
+            }
+         }
+         elseif ${This.MissionCache.TypeID[${agentID}]} && ${This.ContainerCount} > 0
+         {
+            /* loot containers */
+         }
+         elseif ${This.GatePresent}
+         {
+            /* activate gate and go to next room */
+            call This.Approach ${Entity[TypeID,TYPE_ACCELERATION_GATE].ID} DOCKING_RANGE
+            wait 10
+            UI:UpdateConsole["Activating Acceleration Gate..."]
+            while !${This.WarpEntered}
+            {
+               Entity[TypeID,TYPE_ACCELERATION_GATE]:Activate
+               wait 10
+            }
+            call This.WarpWait
+            if ${Return} == 2
+            {
+               return
+            }
+         }
+         else
+         {
+            missionComplete:Set[TRUE]
+         }
+
+         waitframe
+      }
 	}
-	
+
+   function TargetAgressors()
+   {
+      variable index:entity targetIndex
+      variable iterator     targetIterator
+
+      EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
+      targetIndex:GetIterator[targetIterator]
+
+      UI:UpdateConsole["GetTargeting = ${_Me.GetTargeting}, GetTargets = ${_Me.GetTargets}"]
+      if ${targetIterator:First(exists)}
+      {
+         do
+         {
+            if ${targetIterator.Value.IsTargetingMe} && \
+               !${targetIterator.Value.BeingTargeted} && \
+               !${targetIterator.Value.IsLockedTarget} && \
+               ${Ship.SafeMaxLockedTargets} > ${Math.Calc[${_Me.GetTargeting}+${_Me.GetTargets}]}
+            {
+               if ${targetIterator.Value.Distance} > ${Ship.OptimalTargetingRange}
+               {
+                  Ship:Activate_AfterBurner
+                  targetIterator.Value:Approach
+                  wait 10
+               }
+               else
+               {
+                  EVE:Execute[CmdStopShip]
+                  Ship:Deactivate_AfterBurner
+                  targetIterator.Value:LockTarget
+                  wait 10
+               }
+            }
+         }
+         while ${targetIterator:Next(exists)}
+      }
+   }
+
+   function PullTarget()
+   {
+      variable index:entity targetIndex
+      variable iterator     targetIterator
+
+      EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
+      targetIndex:GetIterator[targetIterator]
+
+      /* FOR NOW just pull the closest target */
+      if ${targetIterator:First(exists)}
+      {
+         do
+         {
+            switch ${targetIterator.Value.GroupID} 
+            {
+               case GROUP_LARGECOLLIDABLEOBJECT
+               case GROUP_LARGECOLLIDABLESHIP
+               case GROUP_LARGECOLLIDABLESTRUCTURE
+                  continue
+
+               default               
+                  if ${targetIterator.Value.Distance} > ${Ship.OptimalTargetingRange}
+                  {
+                     Ship:Activate_AfterBurner
+                     targetIterator.Value:Approach
+                  }
+                  else
+                  {
+                     EVE:Execute[CmdStopShip]
+                     Ship:Deactivate_AfterBurner
+                     targetIterator.Value:LockTarget
+                     wait 10
+                     return
+                  }
+                  break
+            }
+         }
+         while ${targetIterator:Next(exists)}
+      }
+   }
+
+   member:int HostileCount()
+   {
+      variable index:entity targetIndex
+      variable iterator     targetIterator
+      variable int          targetCount = 0
+
+      EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
+      targetIndex:GetIterator[targetIterator]
+
+      if ${targetIterator:First(exists)}
+      {
+         do
+         {
+            switch ${targetIterator.Value.GroupID} 
+            {
+               case GROUP_LARGECOLLIDABLEOBJECT
+               case GROUP_LARGECOLLIDABLESHIP
+               case GROUP_LARGECOLLIDABLESTRUCTURE
+                  continue
+
+               default               
+                  targetCount:Inc
+                  break
+            }
+         }
+         while ${targetIterator:Next(exists)}
+      }
+
+      return ${targetCount}
+   }
+
+   member:int ContainerCount()
+   {
+      return 0
+   }
+
+   member:bool GatePresent()
+   {
+      return ${Entity[TypeID,TYPE_ACCELERATION_GATE](exists)}
+   }
+
 	function WarpToEncounter(int agentID)
 	{
 	    variable index:agentmission amIndex

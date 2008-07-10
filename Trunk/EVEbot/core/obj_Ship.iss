@@ -1150,9 +1150,10 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 	
 	function TravelToSystem(int systemID)
 	{
+      UI:UpdateConsole["DEBUG: ${systemID} ${_Me.SolarSystemID}"]
 		while ${systemID} != ${_Me.SolarSystemID}
 		{
-			UI:UpdateConsole["Setting autopilot to ${Universe[${systemID}].Name} (${systemID})"]
+			UI:UpdateConsole["Setting autopilot from ${Universe[${_Me.SolarSystemID}].Name} to ${Universe[${systemID}].Name}"]
 			Universe[${systemID}]:SetDestination
 
 			call This.ActivateAutoPilot
@@ -1897,6 +1898,12 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		return 0
 	}
 	
+   ; Returns the targeting range minus 10%
+   member:int OptimalTargetingRange()
+   {
+      return ${Math.Calc[${_Me.Ship.MaxTargetRange}*0.90]}
+   }
+
 	function SetActiveCrystals()
 	{
 		 variable iterator ModuleIterator

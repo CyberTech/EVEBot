@@ -273,7 +273,6 @@ objectdef obj_Station
 		
 			Counter:Set[0]
 			UI:UpdateConsole["In Docking Range ... Docking"]
-			UI:UpdateConsole["DEBUG: StationExists = ${Entity[${StationID}](exists)}"]
 			Entity[${StationID}]:Dock			
 			;wait 100
 			do
@@ -286,7 +285,6 @@ objectdef obj_Station
 					Entity[${StationID}]:Dock	
 		      		Counter:Set[0]
 		   		}
-				UI:UpdateConsole["DEBUG: StationExists = ${Entity[${StationID}](exists)}"]
 			}
 			while !${This.DockedAtStation[${StationID}]}
 			wait 75
