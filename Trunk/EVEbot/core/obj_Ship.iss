@@ -1126,26 +1126,24 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 	; TODO - Move this to obj_AutoPilot when it is ready - CyberTech
 	function ActivateAutoPilot()
 	{
+		variable int Counter
 		UI:UpdateConsole["Activating autopilot and waiting until arrival..."]
-		wait 5
-		EVE:Execute[CmdToggleAutopilot]
+		if !${_Me.AutoPilotOn}
+		{
+			EVE:Execute[CmdToggleAutopilot]
+		}
 		do
 		{
 			do
 			{
-				wait 5
+				Counter:Inc
+				wait 10
 			}
-			while !${_Me.AutoPilotOn}
-			wait 30
-		}
-		while ${_Me.AutoPilotOn}
-		wait 20
-		do
-		{
+			while !${_Me.AutoPilotOn} && (${Counter} < 10)
 			wait 10
 		}
-		while !${_Me.ToEntity.IsCloaked}
-		wait 20
+		while ${_Me.AutoPilotOn}
+		wait 30
 	}
 	
 	function TravelToSystem(int DestinationSystemID)
