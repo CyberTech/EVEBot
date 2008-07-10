@@ -1148,13 +1148,13 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		wait 20
 	}
 	
-	function TravelToSystem(int systemID)
+	function TravelToSystem(int DestinationSystemID)
 	{
-      UI:UpdateConsole["DEBUG: ${systemID} ${_Me.SolarSystemID}"]
-		while ${systemID} != ${_Me.SolarSystemID}
+		while ${DestinationSystemID} != ${_Me.SolarSystemID}
 		{
-			UI:UpdateConsole["Setting autopilot from ${Universe[${_Me.SolarSystemID}].Name} to ${Universe[${systemID}].Name}"]
-			Universe[${systemID}]:SetDestination
+			UI:UpdateConsole["DEBUG: To: ${DestinationSystemID} At: ${_Me.SolarSystemID}"]
+			UI:UpdateConsole["Setting autopilot from ${Universe[${_Me.SolarSystemID}].Name} to ${Universe[${DestinationSystemID}].Name}"]
+			Universe[${DestinationSystemID}]:SetDestination
 
 			call This.ActivateAutoPilot
 		}
