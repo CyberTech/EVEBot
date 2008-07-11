@@ -206,8 +206,8 @@ objectdef obj_Station
 			while (${Entity[${StationID}].Distance} > DOCKING_RANGE)
 		
 			Counter:Set[0]
-			UI:UpdateConsole["In Docking Range ... Docking"]
-			UI:UpdateConsole["DEBUG: StationExists = ${Entity[${StationID}](exists)}"]
+			UI:UpdateConsole["In Docking Range (${Entity[${StationID}].Distance})... Docking"]
+			;UI:UpdateConsole["DEBUG: StationExists = ${Entity[${StationID}](exists)}"]
 			Entity[${StationID}]:Dock			
 			;wait 100
 			do
@@ -220,7 +220,7 @@ objectdef obj_Station
 					Entity[${StationID}]:Dock	
 		      		Counter:Set[0]
 		   		}
-				UI:UpdateConsole["DEBUG: StationExists = ${Entity[${StationID}](exists)}"]
+				;UI:UpdateConsole["DEBUG: StationExists = ${Entity[${StationID}](exists)}"]
 			}
 			while !${This.DockedAtStation[${StationID}]}
             ;while ( ${Entity[${StationID}](exists)} ) || \
