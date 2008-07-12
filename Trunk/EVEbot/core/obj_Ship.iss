@@ -1040,7 +1040,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 	}
 
 	
-	function WarpToID(int Id)
+	function WarpToID(int Id, int WarpInDistance=0)
 	{
 		if (${Id} <= 0)
 		{
@@ -1058,10 +1058,10 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		call This.WarpPrepare
 		while ${Entity[${Id}].Distance} >= WARP_RANGE
 		{
-			UI:UpdateConsole["Warping to ${Entity[${Id}].Name}"]
+			UI:UpdateConsole["Warping to ${Entity[${Id}].Name} @ ${EVEBot.MetersToKM_Str[${WarpInDistance}]}"]
 			while !${This.WarpEntered}
 			{
-				Entity[${Id}]:WarpTo
+				Entity[${Id}]:WarpTo[${WarpInDistance}]
 				wait 10
 			}
 			call This.WarpWait

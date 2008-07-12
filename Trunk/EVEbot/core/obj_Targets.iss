@@ -86,6 +86,7 @@ objectdef obj_Targets
 
 	variable bool m_SpecialTargetPresent
     variable set DoNotKillList
+	variable bool CheckedSpawnValues = FALSE
 	
 	method Initialize()
 	{
@@ -180,7 +181,8 @@ objectdef obj_Targets
 	{
 		This.CheckChain:Set[TRUE]
 		This.Chaining:Set[FALSE]
-      This.TotalSpawnValue:Set[0]
+		This.CheckedSpawnValues:Set[FALSE]
+		This.TotalSpawnValue:Set[0]
 	}
 
 	member:bool SpecialTargetPresent()
@@ -274,14 +276,29 @@ objectdef obj_Targets
 		m_SpecialTargetPresent:Set[FALSE]
 
       ; Determine the total spawn value
-      if ${Target:First(exists)} && ${This.TotalSpawnValue} == 0
+      if ${Target:First(exists)} && !${This.CheckedSpawnValues}
       {
+		This.CheckedSpawnValues:Set[TRUE]
          do
          {
-            UI:UpdateConsole["DEBUG: ${Target.Value.Name} is worth ${EVEDB_Spawns.SpawnBounty[${Target.Value.Name}]} ISK."]
-            UI:UpdateConsole["DEBUG: Group: ${Target.Value.Group}(${Target.Value.GroupID})"]
-            UI:UpdateConsole["DEBUG: Type: ${Target.Value.Type}(${Target.Value.TypeID})"]
-            UI:UpdateConsole["DEBUG: Category: ${Target.Value.Category}(${Target.Value.CategoryID})"]
+         	variable int pos
+         	variable string NPCName
+         	variable string NPCGroup
+         	variable string NPCShipType
+         	
+         	NPCName:Set[${Target.Value.Name}]
+			NPCGroup:Set[${Target.Value.Group}]         	
+			pos:Set[1]
+        	while ${NPCGroup.Token[${pos}, " "](exists)}
+        	{
+				echo ${NPCGroup.Token[${pos}, " "]}
+        		NPCShipType:Set[${NPCGroup.Token[${pos}, " "]}]
+        		pos:Inc
+        	}
+            UI:UpdateConsole["NPC: ${NPCName}(${NPCShipType}) ${EVEBot.ISK_To_Str[${EVEDB_Spawns.SpawnBounty[${NPCName}]}]}"]
+
+            ;UI:UpdateConsole["DEBUG: Type: ${Target.Value.Type}(${Target.Value.TypeID})"]
+            ;UI:UpdateConsole["DEBUG: Category: ${Target.Value.Category}(${Target.Value.CategoryID})"]
 
             switch ${Target.Value.GroupID} 
             {
@@ -293,16 +310,18 @@ objectdef obj_Targets
                default               
                   break
             }
-
-            This.TotalSpawnValue:Inc[${EVEDB_Spawns.SpawnBounty[${Target.Value.Name}]}]
+			if ${NPCGroup.Find["Battleship"](exists)}
+			{
+            	This.TotalSpawnValue:Inc[${EVEDB_Spawns.SpawnBounty[${NPCName}]}]
+            }
          }
          while ${Target:Next(exists)}
-         UI:UpdateConsole["DEBUG: This.TotalSpawnValue = ${This.TotalSpawnValue}"]
+         UI:UpdateConsole["NPC: Battleship Value is ${EVEBot.ISK_To_Str[${This.TotalSpawnValue}]}"]
       }
 
       if ${This.TotalSpawnValue} >= ${Config.Combat.MinChainBounty}
       {
-         ;UI:UpdateConsole["DEBUG: Spawn value exceeds minimum.  Should chain this spawn."]
+         ;UI:UpdateConsole["NPC: Spawn value exceeds minimum.  Should chain this spawn."]
          HasChainableTarget:Set[TRUE]
       }
 
@@ -382,11 +401,18 @@ objectdef obj_Targets
 			/* skip chaining if chain solo == false and we are alone */
 			if !${Config.Combat.ChainSolo} && ${EVE.LocalsCount} == 1
 			{
-				;UI:UpdateConsole["DEBUG: We are alone.  Skip chaining!!"]
+				;UI:UpdateConsole["NPC: We are alone.  Skip chaining!!"]
 				Chaining:Set[FALSE]
 			}			
 
-	        UI:UpdateConsole["DEBUG: Chaining = ${Chaining}"]
+	        if ${Chaining}
+	        {
+	        	UI:UpdateConsole["NPC: Chaining Spawn"]
+	        }
+	        else
+	        {
+	        	UI:UpdateConsole["NPC: Not Chaining Spawn"]
+	        }
 			CheckChain:Set[FALSE]
 		}
 
@@ -445,7 +471,7 @@ objectdef obj_Targets
 			{
                 if !${DoNotKillList.Contains[${Target.Value.ID}]}
                 {
-                    UI:UpdateConsole["DEBUG: Adding ${Target.Value.Name} (${Target.Value.ID}) to the \"do not kill list\"!"]
+                    UI:UpdateConsole["NPC: Adding ${Target.Value.Name} (${Target.Value.ID}) to the \"do not kill list\"!"]
                     DoNotKillList:Add[${Target.Value.ID}]
                 }
 				; Make sure (due to auto-targeting) that its not targeted

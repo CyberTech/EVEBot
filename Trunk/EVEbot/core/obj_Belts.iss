@@ -50,12 +50,12 @@ objectdef obj_Belts
 		return
 	}
 	
-	function WarpTo()
+	function WarpTo(int WarpInDistance=0)
 	{
-		call This.WarpToNextBelt
+		call This.WarpToNextBelt ${WarpInDistance}
 	}
 	
-	function WarpToNextBelt()
+	function WarpToNextBelt(int WarpInDistance=0)
 	{
 		if ${beltIndex.Used} == 0 
 		{
@@ -88,14 +88,14 @@ objectdef obj_Belts
 					; I really, really hate this solution, it relies on the % chance the hostile will pick the wrong belt
 					; when they see you on scanner. -- CyberTech
 					UI:UpdateConsole["obj_Belts: Skipping belt ${beltIterator.Value.Name} - too close to gate (${Entity[${NearestGate}].Name} - ${DistanceToGate}"]
-					call This.WarpToNextBelt
+					call This.WarpToNextBelt ${WarpInDistance}
 					return
 				}
 			}
 */
 			;call Ship.WarpToBookMark ${SafeSpotIterator.Value.ID}
 			;;UI:UpdateConsole["obj_Belts: DEBUG: Warping to ${beltIterator.Value.Name}"]
-			call Ship.WarpToID ${beltIterator.Value.ID}
+			call Ship.WarpToID ${beltIterator.Value.ID} ${WarpInDistance}
 		}
 		else
 		{

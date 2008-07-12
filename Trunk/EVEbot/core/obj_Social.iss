@@ -124,11 +124,23 @@ objectdef obj_Social
 	{
 		if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
 		{
-			EVE:DoGetPilots[This.PilotIndex]
+			if ${EVE.GetPilots} > 1
+			{
+				; DoGetPilots is relatively expensive vs just the pilotcount.  Check if we're alone before calling.
+				EVE:DoGetPilots[This.PilotIndex]
+			}
+			else
+			{
+				This.PilotIndex:Clear
+			}
 
 			if !${_Me.InStation}
 			{
 				EVE:DoGetEntities[This.EntityIndex,CategoryID,CATEGORYID_ENTITY]
+			}
+			else
+			{
+				This.EntityIndex:Clear
 			}
 
     		SystemSafe:Set[${Math.Calc[${This.CheckLocalWhiteList} & ${This.CheckLocalBlackList}](bool)}]
@@ -159,13 +171,17 @@ objectdef obj_Social
 	member:bool CheckLocalWhiteList()
 	{
 		variable iterator PilotIterator
-
+		variable int CorpID
+		variable int AllianceID
+		variable int PilotID
+		variable string PilotName
+		
 		if !${Config.Combat.UseWhiteList}
 		{
 			return TRUE
 		}
 
-		if ${This.PilotIndex.Used} == 1
+		if ${This.PilotIndex.Used} < 2
 		{
 			return TRUE
 		}
@@ -174,11 +190,16 @@ objectdef obj_Social
 		if ${PilotIterator:First(exists)}
 		do
 		{
-			if !${This.AllianceWhiteList.Contains[${PilotIterator.Value.AllianceID}]} && \
-				!${This.CorpWhiteList.Contains[${PilotIterator.Value.CorporationID}]} && \
-				!${This.PilotWhiteList.Contains[${PilotIterator.Value.CharID}]}
+			CorpID:Set[${PilotIterator.Value.CorporationID}]
+			AllianceID:Set[${PilotIterator.Value.AllianceID}]
+			PilotID:Set[${PilotIterator.Value.CharID}]
+			PilotName:Set[${PilotIterator.Value.Name}]
+			
+			if !${This.AllianceWhiteList.Contains[${AllianceID}]} && \
+				!${This.CorpWhiteList.Contains[${CorpID}]} && \
+				!${This.PilotWhiteList.Contains[${PilotID}]}
 			{
-				UI:UpdateConsole["Alert: Non-Whitelisted Pilot: ${PilotIterator.Value.Name}: CharID: ${PilotIterator.Value.CharID} CorpID: ${PilotIterator.Value.CorporationID} AllianceID: ${PilotIterator.Value.AllianceID}", LOG_CRITICAL]
+				UI:UpdateConsole["Alert: Non-Whitelisted Pilot: ${PilotName}: CharID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_CRITICAL]
 				return FALSE
 			}
 		}
@@ -195,7 +216,7 @@ objectdef obj_Social
    			return TRUE
    		}
 
-   		if ${This.PilotIndex.Used} == 1
+   		if ${This.PilotIndex.Used} < 2
    		{
    			return TRUE
    		}
@@ -218,17 +239,12 @@ objectdef obj_Social
 
 	member:bool PlayerInRange(float Range=0)
 	{
-		if !${This.PilotIndex.Used}
-		{
-			return FALSE
-		}
-
 		if ${Range} == 0
 		{
 			return FALSE
 		}
 
-   		if ${This.PilotIndex.Used} == 1
+   		if ${This.PilotIndex.Used} < 2
    		{
    			return TRUE
    		}
@@ -287,7 +303,7 @@ objectdef obj_Social
 
 		echo ${This.PilotIndex.Used}
 
-   		if ${This.PilotIndex.Used} == 1
+   		if ${This.PilotIndex.Used} < 2
    		{
    			return FALSE
    		}
@@ -371,7 +387,7 @@ objectdef obj_Social
 
 	member:bool PilotsWithinDetection(int Dist)
 	{
-   		if ${This.PilotIndex.Used} == 1
+   		if ${This.PilotIndex.Used} < 2
    		{
    			return FALSE
    		}
@@ -413,7 +429,7 @@ objectdef obj_Social
 			while ${EntityIterator:Next(exists)}
 		}
 
-		if ${This.PilotIndex.Used} == 1
+		if ${This.PilotIndex.Used} < 2
 		{
 			return FALSE
 		}
