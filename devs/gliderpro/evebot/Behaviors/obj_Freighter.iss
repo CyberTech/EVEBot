@@ -360,13 +360,13 @@ objectdef obj_Freighter
 	 */
 	function PickupOrDropoff()
 	{
-		if ${Me.InStation(exists)} && ${Me.InStation}
+		if ${Station.Docked}
 		{	/* don't call this function if you are not in station */
 			UI:UpdateConsole["DEBUG: /${EVE.Bookmark[${Config.Freighter.Destination}](exists)} = ${EVE.Bookmark[${Config.Freighter.Destination}](exists)}"]
 			UI:UpdateConsole["DEBUG: /${m_DestinationID} = ${m_DestinationID}"]
 			UI:UpdateConsole["DEBUG: /${Me.StationID} = ${Me.StationID}"]
 			if ${EVE.Bookmark[${Config.Freighter.Destination}](exists)} && \
-			   ${m_DestinationID} == ${Me.StationID}
+			   ${m_DestinationID} == ${_Me.StationID}
 			{	/* this is the destination station, drop off stuff */
 				call Cargo.TransferCargoToHangar
 			}
