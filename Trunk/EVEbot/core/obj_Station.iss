@@ -272,7 +272,7 @@ objectdef obj_Station
 			while (${Entity[${StationID}].Distance} > DOCKING_RANGE)
 		
 			Counter:Set[0]
-			UI:UpdateConsole["In Docking Range ... Docking"]
+			UI:UpdateConsole["In Docking Range (${Entity[${StationID}].Distance})... Docking"]
 			Entity[${StationID}]:Dock			
 			;wait 100
 			do
