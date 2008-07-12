@@ -209,8 +209,8 @@ objectdef obj_Cache_Me_Ship inherits obj_Cache
 	variable float StructurePct
 	variable float ShieldPct
 	variable float CapacitorPct
-	variable float UsedCargoCapacity
-	variable float CargoCapacity
+	variable float _UsedCargoCapacity
+	variable float _CargoCapacity
 	variable int MaxLockedTargets
 	variable float MaxTargetRange
 	
@@ -223,12 +223,32 @@ objectdef obj_Cache_Me_Ship inherits obj_Cache
 		FastObjectList:Set["ShieldPct", "Me.Ship.ShieldPct"]
 		FastObjectList:Set["CapacitorPct", "Me.Ship.CapacitorPct"]
 		
-		ObjectList:Set["UsedCargoCapacity", "Me.Ship.UsedCargoCapacity"]
-		ObjectList:Set["CargoCapacity", "Me.Ship.CargoCapacity"]
+		ObjectList:Set["_UsedCargoCapacity", "Me.Ship.UsedCargoCapacity"]
+		ObjectList:Set["_CargoCapacity", "Me.Ship.CargoCapacity"]
 		ObjectList:Set["MaxLockedTargets", "Me.Ship.MaxLockedTargets"]
 		ObjectList:Set["MaxTargetRange", "Me.Ship.MaxTargetRange"]
 
 		This[parent]:Initialize
+	}
+
+	member:float UsedCargoCapacity
+	{
+		if ${Me.Ship.UsedCargoCapacity(exists)}
+		{
+			return ${Me.Ship.UsedCargoCapacity}
+		}
+
+		return 0
+	}
+	
+	member:float CargoCapacity
+	{
+		if ${Me.Ship.CargoCapacity(exists)}
+		{
+			return ${Me.Ship.CargoCapacity}
+		}
+
+		return 0
 	}
 
 	method Shutdown()

@@ -1,8 +1,8 @@
 /*
 	Miner Class
-	
+
 	Primary Miner hebavior module for EVEBot
-	
+
 	-- CyberTech
 
 */
@@ -11,7 +11,7 @@ objectdef obj_Miner
 {
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
-	
+
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 2
 
@@ -22,7 +22,7 @@ objectdef obj_Miner
 	variable int PreviousTripSeconds = 0
 	variable int TotalTripSeconds = 0
 	variable int AverageTripSeconds = 0
-	variable string CurrentState	
+	variable string CurrentState
 	variable bool CombatAbort = FALSE
 	variable int SanityCheckCounter = 0
 	variable bool SanityCheckAbort = FALSE
@@ -30,7 +30,7 @@ objectdef obj_Miner
 
 	; Are we running out of asteroids to target?
 	variable bool ConcentrateFire = FALSE
-	
+
 	method Initialize()
 	{
 		BotModules:Insert["Miner"]
@@ -39,12 +39,12 @@ objectdef obj_Miner
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_Miner: Initialized", LOG_MINOR]
 	}
-	
+
 	method Shutdown()
 	{
 		Event[OnFrame]:DetachAtom[This:Pulse]
 	}
-	
+
 	method Pulse()
 	{
 		if ${EVEBot.Paused}
@@ -68,9 +68,9 @@ objectdef obj_Miner
     		This.NextPulse:Update
 		}
 	}
-	
+
 	function ProcessState()
-	{			
+	{
 		if !${Config.Common.BotModeName.Equal[Miner]}
 		{
 			; There's no reason at all for the miner to check state if it's not a miner
@@ -105,7 +105,7 @@ objectdef obj_Miner
 				{
 					case Station
 						; Gets info about the crystals currently loaded
-                                                call Ship.SetActiveCrystals
+						call Ship.SetActiveCrystals
 
 						if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)}
 						{
@@ -119,7 +119,7 @@ objectdef obj_Miner
 					case Hangar Array
 						call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
 						call Cargo.TransferOreToCorpHangarArray
-						break		
+						break
 					case Jetcan
 						UI:UpdateConsole["Warning: Cargo filled during jetcan mining, delays may occur"]
 						call Cargo.TransferOreToJetCan
@@ -139,9 +139,9 @@ objectdef obj_Miner
 				call Station.Dock
 				EVEBot.ReturnToStation:Set[TRUE]
 				break
-		}	
+		}
 	}
-	
+
 	method SetState()
 	{
 		if ${EVEBot.ReturnToStation} && ${_Me.InStation} == FALSE
@@ -149,26 +149,26 @@ objectdef obj_Miner
 			This.CurrentState:Set["ABORT"]
 			return
 		}
-	
+
 		if ${EVEBot.ReturnToStation}
 		{
 			This.CurrentState:Set["IDLE"]
 			return
 		}
-		
+
 		if ${_Me.InStation} == TRUE
 		{
 	  		This.CurrentState:Set["BASE"]
 	  		return
 		}
-				
+
 		if ${_Me.Ship.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold} && \
 		    ${SanityCheckAbort} == FALSE
 		{
 		 	This.CurrentState:Set["MINE"]
 			return
 		}
-		
+
 	    if ${_Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold} || \
     	    ${EVEBot.ReturnToStation}  || \
     	    ${SanityCheckAbort} == TRUE
@@ -176,20 +176,20 @@ objectdef obj_Miner
 			This.CurrentState:Set["DROPOFF"]
 			return
 		}
-	
+
 		This.CurrentState:Set["Unknown"]
 	}
 
 	function Abort_Check()
-	{ 
+	{
 		call Config.Common.IncAbortCount
 		; abort check, this will allow the bot to continue botting if it is a temp abort or something that can
-		; if there is no abort type it will pause the script like before and wait... 
-		
+		; if there is no abort type it will pause the script like before and wait...
+
 		if ${This.CombatAbort}
 			{
 				UI:UpdateConsole["Warning: Paused. Combat type abort."]
-				
+
 				if ((${_Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct}) && ${Ship.ArmorRepairUnits} == 0)
 				{
 					UI:UpdateConsole["Warning: Script paused due to Armor Precentage."]
@@ -200,10 +200,10 @@ objectdef obj_Miner
 				if ((${_Me.Ship.StructurePct} < 100))
 				{
 					UI:UpdateConsole["Warning: Aborted. Script paused due to Structure Percentage."]
-					
+
 					Script:Pause
 				}
-				
+
 				if ${_Me.Ship.ShieldPct} < 100
 				{
 					UI:UpdateConsole["Warning: Waiting for Shields to Regen."]
@@ -212,52 +212,52 @@ objectdef obj_Miner
 						wait 20
 					}
 				}
-				
+
 				UI:UpdateConsole["Continuing"]
 				EVEBot.ReturnToStation:Set[FALSE]
 				This.CombatAbort:Set[FALSE]
 				Return
 			}
-			
+
 		UI:UpdateConsole["Warning: Aborted - Script Paused - Check Logs "]
 		Script:Pause
 	}
-	
-	; Enable defenses, launch drones	
+
+	; Enable defenses, launch drones
 	function Prepare_Environment()
 	{
 		call Ship.OpenCargo
 	}
-	
+
 	function Cleanup_Environment()
 	{
 		call Ship.Drones.ReturnAllToDroneBay
 		;;;call Ship.CloseCargo
 	}
-	
+
 	function Statslog()
 	{
 		variable string Hours = ${Math.Calc[(${Script.RunningTime}/1000/60/60)%60].Int.LeadingZeroes[2]}
 		variable string Minutes = ${Math.Calc[(${Script.RunningTime}/1000/60)%60].Int.LeadingZeroes[2]}
 		variable string Seconds = ${Math.Calc[(${Script.RunningTime}/1000)%60].Int.LeadingZeroes[2]}
-		
+
 		UI:UpdateStatStatus["Run ${This.TotalTrips} Done - Took ${ISXEVE.SecsToString[${This.PreviousTripSeconds}]}"]
 		UI:UpdateStatStatus["Total Run Time: ${Hours}:${Minutes}:${Seconds} - Average Run Time: ${ISXEVE.SecsToString[${Math.Calc[${This.TotalTripSeconds}/${This.TotalTrips}]}]}"]
-	} 
-		
+	}
+
 	function Mine()
 	{
 		variable int TargetJammedCounter=0
 		variable int BuddyCounter
 		variable string buddyTest
 		variable bool buddyOnline
-				
+
 		if ${_Me.InStation} != FALSE
 		{
 			UI:UpdateConsole["DEBUG: obj_Miner.Mine called while zoning or while in station!"]
 			return
 		}
-		
+
 		This.TripStartTime:Set[${Time.Timestamp}]
 		; Find an asteroid field, or stay at current one if we're near one.
 		call Asteroids.MoveToField FALSE
@@ -266,19 +266,19 @@ objectdef obj_Miner
 
 		variable int DroneCargoMin = ${Math.Calc[(${Ship.CargoMinimumFreeSpace}*1.4)]}
 		variable int Counter = 0
-		
+
 		UI:UpdateConsole["Mining"]
-		
+
 		while ( !${EVEBot.ReturnToStation} && \
 				${_Me.Ship.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold}	)
-		{	
+		{
 			if ${Ship.TotalMiningLasers} == 0
 			{
 				UI:UpdateConsole["Warning: No mining lasers detected, docking"]
 				EVEBot.ReturnToStation:Set[TRUE]
 				return
 			}
-	
+
 			if ${Config.Combat.LaunchCombatDrones} && \
 				${Ship.Drones.CombatDroneShortage}
 			{
@@ -287,14 +287,14 @@ objectdef obj_Miner
 				EVEBot.ReturnToStation:Set[TRUE]
 				return
 			}
-			
+
 			if ${_Me.Ship.UsedCargoCapacity} != ${LastUsedCargoCapacity}
 			{
 				;UI:UpdateConsole["DEBUG: ${_Me.Ship.UsedCargoCapacity} != ${LastUsedCargoCapacity}"]
 			    SanityCheckCounter:Set[0]
 			    LastUsedCargoCapacity:Set[${_Me.Ship.UsedCargoCapacity}]
 			}
-			
+
 			if (!${Config.Miner.IceMining} && \
 				${SanityCheckCounter} > MINER_SANITY_CHECK_INTERVAL)
 			{
@@ -302,14 +302,14 @@ objectdef obj_Miner
 				SanityCheckAbort:Set[TRUE]
 				break
 			}
-			
+
 			if ${Config.Combat.LaunchCombatDrones} && \
 				${Ship.Drones.DronesInSpace} == 0 && \
 				!${Ship.InWarp}
 			{
 				Ship.Drones:LaunchAll[]
 			}
-			
+
 			if ${_Me.Ship.MaxLockedTargets} == 0 && \
 				 ${Ship.Drones.DronesInSpace} == 0
 			{
@@ -341,15 +341,15 @@ objectdef obj_Miner
 				EVEBot.ReturnToStation:Set[TRUE]
 				UI:UpdateConsole["Warning: Low Standing player in system, docking"]
 			}
-			
+
 			if ${Config.Miner.DeliveryLocationTypeName.Equal[Jetcan]} && ${Ship.CargoHalfFull}
 			{
 				call Cargo.TransferOreToJetCan
 				This:NotifyHaulers[]
 				/* needed a wait here because it would try to move the same item more than once */
-				wait 20		
+				wait 20
 			}
-					
+
 			if (${_Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
 				${_Me.Ship.ShieldPct} < ${Config.Combat.MinimumShieldPct})
 			{
@@ -361,18 +361,18 @@ objectdef obj_Miner
 				UI:UpdateConsole["Armor is at ${_Me.Ship.ArmorPct}: ${Me.Ship.Armor}/${Me.Ship.MaxArmor}", LOG_CRITICAL]
 				UI:UpdateConsole["Shield is at ${_Me.Ship.ShieldPct}: ${Me.Ship.Shield}/${Me.Ship.MaxShield}", LOG_CRITICAL]
 				UI:UpdateConsole["Miner aborting due to defensive status", LOG_CRITICAL]
-				
+
 				EVEBot.ReturnToStation:Set[TRUE]
 				This.CombatAbort:Set[TRUE]
 				return
 			}
-			
+
 			if ${Ship.InWarp}
 			{
 				wait 10
 				continue
 			}
-			
+
 			if ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers}
 			{
 				; We've got idle lasers, and available targets. Do something with them.
@@ -397,27 +397,27 @@ objectdef obj_Miner
 					}
 					variable int TargetID
 					TargetID:Set[${Target.Value.ID}]
-					
+
 					/* TODO: CyberTech - this concentrates fire fine if there's only 1 target, but if there's multiple targets it still prefers to distribute. Ice mining shouldn't distribute */
 					if (${This.ConcentrateFire} || \
 						${Config.Miner.IceMining} || \
 						!${Config.Miner.DistributeLasers} || \
 						!${Ship.IsMiningAsteroidID[${TargetID}]})
-					{	
-						
+					{
+
 						Target.Value:MakeActiveTarget
 						while ${Target.Value.ID} != ${Me.ActiveTarget.ID}
 						{
 							wait 5
 						}
-						
+
 						if ${_Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 						{
 							break
 						}
 						call Ship.Approach ${TargetID} ${Ship.OptimalMiningRange}
 						call Ship.ActivateFreeMiningLaser
-						
+
 						if (${Ship.Drones.DronesInSpace} > 0 && \
 							${Config.Miner.UseMiningDrones})
 						{
@@ -427,7 +427,7 @@ objectdef obj_Miner
 				}
 				while ${Target:Next(exists)}
 			}
-	
+
 			if (!${Config.Miner.IceMining} || \
 				(${Ship.TotalActivatedMiningLasers} == 0))
 			{
@@ -443,12 +443,12 @@ objectdef obj_Miner
 						 ${Ship.TotalMiningLasers} > ${Ship.SafeMaxLockedTargets} )
 					{
 						This.ConcentrateFire:Set[TRUE]
-					}					
+					}
 				}
 			}
 			wait 10
 		}
-				
+
 		if ${Config.Miner.BookMarkLastPosition}
 		{
 			Bookmarks:StoreLocation
@@ -468,23 +468,23 @@ objectdef obj_Miner
 	{
 		return ${Math.Calc64[${Time.Timestamp} - ${This.TripStartTime.Timestamp}]}
 	}
-	
-	
+
+
 	member:float VolumePerCycle(string AsteroidType)
 	{
-		
+
 	}
-	
+
 	method NotifyHaulers()
 	{
 		/* notify hauler there is ore in space */
 		variable string tempString
 		tempString:Set["${_Me.CharID},${_Me.SolarSystemID},${Entity[GroupID, GROUP_ASTEROIDBELT].ID}"]
 		relay all -event EVEBot_Miner_Full ${tempString}
-		
+
 		/* TO MANUALLY CALL A HAULER ENTER THIS IN THE CONSOLE
 		 * relay all -event EVEBot_Miner_Full "${Me.CharID},${Me.SolarSystemID},0"
 		 */
 	}
-	
+
 }
