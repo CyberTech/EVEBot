@@ -246,7 +246,7 @@ objectdef obj_Social
 
    		if ${This.PilotIndex.Used} < 2
    		{
-   			return TRUE
+   			return FALSE
    		}
 
 		variable iterator PilotIterator
