@@ -2051,7 +2051,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		}
 		else
 		{
-			return ${Entity[CategoryID,CATEGORYID_SHIP].Type}		
+			return ${Me.ToEntity.Type}		
 		}
 	}
 	
@@ -2069,7 +2069,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		}
 		else
 		{
-			return ${Entity[CategoryID,CATEGORYID_SHIP].TypeID}		
+			return ${Me.ToEntity.TypeID}		
 		}
 	}
 	
@@ -2087,7 +2087,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		
 		if ${Station.Docked}
 		{
-			Me.Station:DoGetHangarShips[hsIndex]
+			Me:DoGetHangarShips[hsIndex]
 			hsIndex:GetIterator[hsIterator]
 			
 			shipName:Set[${Me.Ship}]
