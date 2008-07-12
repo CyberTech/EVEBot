@@ -231,7 +231,7 @@ objectdef obj_Cache_Me_Ship inherits obj_Cache
 		This[parent]:Initialize
 	}
 
-	member:float UsedCargoCapacity
+	member:float UsedCargoCapacity()
 	{
 		if ${Me.Ship.UsedCargoCapacity(exists)}
 		{
@@ -241,7 +241,7 @@ objectdef obj_Cache_Me_Ship inherits obj_Cache
 		return 0
 	}
 	
-	member:float CargoCapacity
+	member:float CargoCapacity()
 	{
 		if ${Me.Ship.CargoCapacity(exists)}
 		{
