@@ -626,10 +626,33 @@ objectdef obj_Agents
 		amIterator.Value:GetDetails
 		wait 50
 		variable string details
-		details:Set["${EVEWindow[ByCaption,${amIterator.Value.Name}].HTML.Escape}"]
-		UI:UpdateConsole["obj_Agents: DEBUG: HTML.Length = ${EVEWindow[ByCaption,${amIterator.Value.Name}].HTML.Length}"]
-		EVE:Execute[CmdCloseActiveWindow]
+		variable string caption
+		variable int left = 0
+		variable int right = 0
+		caption:Set["${amIterator.Value.Name.Escape}"]
+		left:Set[${caption.Escape.Find["u2013"]}]
+		
+		if ${left} > 0
+		{
+			UI:UpdateConsole["obj_Agents: WARNING: Mission name contains u2013"]
+			UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Name.Escape = ${amIterator.Value.Name.Escape}"]
+			
+			caption:Set["${caption.Escape.Right[${Math.Calc[${caption.Escape.Length} - ${left} - 5]}]}"]
+
+			UI:UpdateConsole["obj_Agents: DEBUG: caption.Escape = ${caption.Escape}"]
+		}
+		
+		if !${EVEWindow[ByCaption,${caption}](exists)}
+		{
+			UI:UpdateConsole["obj_Agents: ERROR: Mission details window was not found!"]
+			UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Name.Escape = ${amIterator.Value.Name.Escape}"]
+		}
+		details:Set["${EVEWindow[ByCaption,${caption}].HTML.Escape}"]
+
+		UI:UpdateConsole["obj_Agents: DEBUG: HTML.Length = ${EVEWindow[ByCaption,${caption}].HTML.Length}"]
 		UI:UpdateConsole["obj_Agents: DEBUG: details.Length = ${details.Length}"]	
+		
+		EVE:Execute[CmdCloseActiveWindow]
 		
 		variable file detailsFile
 		detailsFile:SetFilename["./config/logs/${amIterator.Value.Expires.AsInt64.Hex} ${amIterator.Value.Name}.html"]
@@ -642,8 +665,6 @@ objectdef obj_Agents
 		Missions.MissionCache:AddMission[${amIterator.Value.AgentID},"${amIterator.Value.Name}"]
 
 		variable int factionID = 0
-		variable int left = 0
-		variable int right = 0
 		left:Set[${details.Escape.Find["<img src=\\\"factionlogo:"]}]
 		if ${left} > 0
 		{
