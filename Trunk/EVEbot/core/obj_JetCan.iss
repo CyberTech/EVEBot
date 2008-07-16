@@ -7,6 +7,61 @@
 	
 	-- CyberTech
 
+		Jane (speaking): It is a game isn’t it Mary Poppins?
+		
+		Mary Poppins (speaking) : Well, it depends on your point of view. You see…
+		
+		(kinda, sing-speaking)In every job that must be done
+		There is an element of fun
+		You find the fun and snap!
+		The job’s a game
+		
+		(now singing)
+		And every task you undertake
+		Becomes a piece of cake
+		A lark! A spree! It’s very clear to see that…
+		
+		A Spoonful of sugar helps the medicine go down
+		The medicine go down
+		The medicine go down
+		Just a spoonful of sugar helps the medicine go down
+		In a most delightful way
+		
+		(Robin starts Whistling)
+		
+		A robin feathering his nest
+		Has very little time to rest
+		While gathering his bits of twine and twig
+		Though quite intent in his pursuit
+		He has a merry tune to toot
+		He knows a song will move the job along
+		
+		(Robin whistles a bit with Mary)
+		
+		For a Spoonful of sugar helps the medicine go down
+		The medicine go down
+		Medicine go down
+		Just a spoonful of sugar helps the medicine go down
+		In a most delightful way
+		
+		[Interlude where all the toys go about putting themselves away as the children snap and the Robin whistles away. This is perhaps the longest part of the song and always makes me think the song is longer than it really is]
+		
+		The honey bees that fetch the nectar
+		From the flowers to the comb
+		Never tire of ever buzzing to and fro
+		Because they take a little nip
+		From every flower that they sip
+		And hence (Mary’s reflection echoes: And hence),
+		They find (Mary’s reflection echoes: They find)
+		(together) Their task is not a grind.
+		
+		(the reflection alone) Aaaaaaaaaaaaaaaaaaaaaaaaaaah!
+		(Mary spoken to the mirror) Cheeky! (now to the children) Don’t be all day about it please
+		
+		Michael (yelling from inside the closet): Let me out! Let me out!
+		
+		Mary (spoken to the toys): Well, that was very… Thank you now… Will you quite finish! Thank you.
+
 BUGS:
 			
 */
