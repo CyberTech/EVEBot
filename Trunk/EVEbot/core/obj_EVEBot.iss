@@ -67,13 +67,10 @@ objectdef obj_EVEBot
 		    
 			checkPulse:Inc[1]
 			; 20 pulses in this if loop is ~ 1 minute
-			if (${checkPulse} >= ${MAXCHECKPULSE} && !${_Me.InStation})
+			if ${checkPulse} >= ${MAXCHECKPULSE}
 			{
 				variable int BuddyCounter = 1
 
-				;UI:UpdateConsole["DEBUG: Stacking cargo..."]
-				;Call Ship.StackAll
-				;UI:UpdateConsole["DEBUG: Checking buddies..."]
 				if (${BuddiesCount} > 0)
 				{
 					do

@@ -6,7 +6,7 @@ objectdef obj_EVEBotUI
 	
 	variable time NextPulse
 	variable time NextMsgBoxPulse
-	variable int PulseIntervalInSeconds = 4
+	variable int PulseIntervalInSeconds = 60
 	variable int PulseMsgBoxIntervalInSeconds = 15
 
 	variable string LogFile
@@ -26,7 +26,8 @@ objectdef obj_EVEBotUI
 		ui -load interface/evebotgui.xml
 
 		This:InitializeLogs
-
+		This:LogSystemStats
+		
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		This:UpdateConsole["obj_EVEBotUI: Initialized", LOG_MINOR]
 	}
@@ -47,15 +48,15 @@ objectdef obj_EVEBotUI
 
 	method Pulse()
 	{	
-		/*
+
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-
+    		This:LogSystemStats
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
     		This.NextPulse:Update
 		}
-		*/
+
 		if ${EVEBot.Paused}
 		{
 			return
@@ -78,6 +79,11 @@ objectdef obj_EVEBotUI
 
 	}
   
+	method LogSystemStats()
+	{
+		This:UpdateConsole["Memory: ${System.OS} Process: ${Math.Calc[${System.MemoryUsage}/1024].Int}kb Free: ${System.MemFree}mb Texture Mem Free: ${Display.TextureMem}mb FPS: ${Display.FPS.Int} Windowed: ${Display.Windowed}(${Display.AppWindowed}) Foreground: ${Display.Foreground}", LOG_MINOR]
+	}
+	
 	member Runtime()
 	{
 		DeclareVariable RunTime float ${Math.Calc[${Script.RunningTime}/1000/60]}
