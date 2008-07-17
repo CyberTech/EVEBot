@@ -321,9 +321,10 @@ objectdef obj_Station
 			   UI:UpdateConsole["Undock: Unexpected failure, retrying...", LOG_CRITICAL]
 			   UI:UpdateConsole["Undock: Debug: EVEWindow[Local]=${EVEWindow[Local](exists)}", LOG_CRITICAL]
 			   UI:UpdateConsole["Undock: Debug: Me.InStation=${_Me.InStation}", LOG_CRITICAL]
+			   UI:UpdateConsole["Undock: Debug: Me.StationID=${_Me.StationID}", LOG_CRITICAL]
 			}
 		}
-		while ${This.DockedAtStation[${StationID}]}
+		while ${This.Docked}
 		UI:UpdateConsole["Undock: Complete"]
    		call ChatIRC.Say "Undock: Complete"
 
