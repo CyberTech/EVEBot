@@ -13,10 +13,9 @@ objectdef obj_Cache
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
-	variable int FrameCount = 0
-	variable float FrameInterval = 0
-	variable int FrameCountHalfSec = 0
-	variable float FrameIntervalHalfSec = 0
+	variable float RunTime
+	variable float NextPulse2Sec = 0
+	variable float NextPulseHalfSec = 0
 	
 	variable collection:string StaticList
 	variable collection:string ObjectList
@@ -43,18 +42,13 @@ objectdef obj_Cache
 	/* Runs every other frame, and updates one member per run */
 	method Pulse()
 	{
+		This.RunTime:Set[${Math.Calc[${Script.RunningTime}/1000]}]
+
 		variable string temp
 		
 		/* Process FastObjectList every half second */
-		if ${FrameCountHalfSec} < ${FrameIntervalHalfSec}
-		{
-			FrameCountHalfSec:Inc
-		}
-		else
-		{
-			FrameCountHalfSec:Set[0]
-			FrameIntervalHalfSec:Set[${Math.Calc[${Display.FPS} * 0.5]}]
-		
+		if ${This.RunTime} > ${This.NextPulseHalfSec}
+		{	
 			if ${FastObjectList.FirstKey(exists)}
 			{
 				do
@@ -69,18 +63,14 @@ objectdef obj_Cache
 				}
 				while ${FastObjectList.NextKey(exists)}
 			}
+
+			This.NextPulseHalfSec:Set[${This.RunTime}]
+    		This.NextPulseHalfSec:Inc[0.5]
 		}
 
 		/* Process ObjectList every 2 seconds */
-		if ${FrameCount} < ${FrameInterval}
-		{
-			FrameCount:Inc
-		}
-		else
-		{
-			FrameCount:Set[0]
-			FrameInterval:Set[${Math.Calc[${Display.FPS} * 2.5]}]
-		
+		if ${This.RunTime} > ${This.NextPulse2Sec}
+		{		
 			if ${ObjectList.FirstKey(exists)}
 			{
 				do
@@ -95,6 +85,8 @@ objectdef obj_Cache
 				}
 				while ${ObjectList.NextKey(exists)}
 			}
+			This.NextPulse2Sec:Set[${This.RunTime}]
+    		This.NextPulse2Sec:Inc[2.0]
 		}
 	}
 
