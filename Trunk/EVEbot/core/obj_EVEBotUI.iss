@@ -169,7 +169,7 @@ objectdef obj_EVEBotUI
 		redirect -append "${This.CriticalLogFile}" echo "--------------------------------------------------------------------------------------"
 		redirect -append "${This.CriticalLogFile}" echo "** ${AppVersion} starting on ${Time.Date} at ${Time.Time24}"
 
-		This:UpdateConsole["Starting EVEBot ${Version}"]
+		This:UpdateConsole["Starting ${AppVersion}"]
 
 		redirect -append "${This.StatsLogFile}" echo "--------------------------------------------------------------------------------------"
 		redirect -append "${This.StatsLogFile}" echo "** ${AppVersion} starting on ${Time.Date} at ${Time.Time24}"
