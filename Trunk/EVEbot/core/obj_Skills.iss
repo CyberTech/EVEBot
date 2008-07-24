@@ -136,6 +136,8 @@ objectdef obj_Skills
 				ReadSkillName:Set[${This.RemoveNumerals[${ReadLine}]}]
 				ReadSkillLevel:Set[${This.SkillLevel[${ReadLine}]}]
 				
+				;echo "DEBUG: ReadSkillName: ${ReadSkillName} - ReadSkillLevel: ${ReadSkillLevel}"
+				
 				if ${Me.Skill[${ReadSkillName}](exists)}
 				{
 					if ${Me.Skill[${ReadSkillName}].Level} < ${ReadSkillLevel}
