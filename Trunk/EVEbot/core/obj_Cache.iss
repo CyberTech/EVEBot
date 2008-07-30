@@ -271,6 +271,6 @@ objectdef obj_Cache_EVETime inherits obj_Cache
 
 	member Time()
 	{
-		return This._Time
+		return ${This._Time}
 	}
 }
