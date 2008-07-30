@@ -260,7 +260,7 @@ objectdef obj_Cache_EVETime inherits obj_Cache
 	{
 		UI:UpdateConsole["obj_Cache_EVETime: Initialized", LOG_MINOR]
 
-		ObjectList:Set["Time", "EVETime.Time"]
+		ObjectList:Set["_Time", "EVETime.Time"]
 		This[parent]:Initialize
 	}
 
