@@ -1,10 +1,10 @@
 /*
-    Missions class
-    
-    Object to contain members related to missions.
-    
-    -- GliderPro
-    
+	Missions class
+	
+	Object to contain members related to missions.
+	
+	-- GliderPro
+	
 */
 
 objectdef obj_MissionCache
@@ -15,8 +15,8 @@ objectdef obj_MissionCache
 	variable string CONFIG_FILE = "${Script.CurrentDirectory}/Config/${_Me.Name} Mission Cache.xml"
 	variable string SET_NAME = "Missions"
 
-    variable index:entity entityIndex
-    variable iterator     entityIterator
+	variable index:entity entityIndex
+	variable iterator     entityIterator
 	
 	method Initialize()
 	{
@@ -146,10 +146,10 @@ objectdef obj_Missions
 ;   variable obj_MissionDatabase MissionDatabase
 	variable obj_Combat Combat
 
-    method Initialize()
-    {
-   		UI:UpdateConsole["obj_Missions: Initialized", LOG_MINOR]
-    }
+	method Initialize()
+	{
+		UI:UpdateConsole["obj_Missions: Initialized", LOG_MINOR]
+	}
 
 	method Shutdown()
 	{
@@ -157,7 +157,7 @@ objectdef obj_Missions
 	
 	function RunMission()
 	{
-	    variable index:agentmission amIndex
+		variable index:agentmission amIndex
 		variable iterator amIterator
 
 		EVE:DoGetAgentMissions[amIndex]
@@ -202,24 +202,29 @@ objectdef obj_Missions
 	
 	function RunCourierMission(int agentID)
 	{
-	   if ${This.MissionCache[${agentID}].Volume} > ${Config.Missioneer.SmallHaulerLimit}
-	   {
-		   call Ship.ActivateShip "${Config.Missioneer.LargeHauler}"
-      }		   
-      else
-	   {
-		   call Ship.ActivateShip "${Config.Missioneer.SmallHauler}"
-      }		   
+		if ${This.MissionCache[${agentID}].Volume} > ${Config.Missioneer.SmallHaulerLimit}
+		{
+			call Ship.ActivateShip "${Config.Missioneer.LargeHauler}"
+		}		   
+		else
+		{
+			call Ship.ActivateShip "${Config.Missioneer.SmallHauler}"
+		}		   
 
 		variable bool allDone = FALSE
 		do
 		{
-			UI:UpdateConsole["obj_Missions: MoveToPickup"]
-			call Agents.MoveToPickup
-			UI:UpdateConsole["obj_Missions: TransferCargoToShip"]
-			wait 50
-			call Cargo.TransferHangarItemToShip ${This.MissionCache.TypeID[${agentID}]}
-			allDone:Set[${Cargo.LastTransferComplete}]
+			Cargo:FindShipCargoByType[${This.MissionCache.TypeID[${agentID}]}]
+			if ${Cargo.CargoToTransferCount} == 0
+			{
+				UI:UpdateConsole["obj_Missions: MoveToPickup"]
+				call Agents.MoveToPickup
+				UI:UpdateConsole["obj_Missions: TransferCargoToShip"]
+				wait 50
+				call Cargo.TransferHangarItemToShip ${This.MissionCache.TypeID[${agentID}]}
+				allDone:Set[${Cargo.LastTransferComplete}]
+			}
+
 			UI:UpdateConsole["obj_Missions: MoveToDropOff"]
 			call Agents.MoveToDropOff
 			wait 50
@@ -234,23 +239,23 @@ objectdef obj_Missions
 	
 	function RunTradeMission(int agentID)
 	{
-      if ${This.MissionCache[${agentID}].Volume} > ${Config.Missioneer.SmallHaulerLimit}
-      {
-         call Ship.ActivateShip "${Config.Missioneer.LargeHauler}"
-      }		   
-      else
-      {
-         call Ship.ActivateShip "${Config.Missioneer.SmallHauler}"
-      }		   
+		if ${This.MissionCache[${agentID}].Volume} > ${Config.Missioneer.SmallHaulerLimit}
+		{
+			call Ship.ActivateShip "${Config.Missioneer.LargeHauler}"
+		}		   
+		else
+		{
+			call Ship.ActivateShip "${Config.Missioneer.SmallHauler}"
+		}		   
 
-      if ${Station.Docked} 
-      {
-         call Station.Undock
-      }
+	  	if ${Station.Docked} 
+	  	{
+		 	call Station.Undock
+	  	}
 
-      call Market.GetMarketOrders ${This.MissionCache.TypeID[${agentID}]}
-      ;call Market.TravelToBestSellOrder ${Config.Missioneer.AvoidLowSec}
-      ;call Market.PurchaseGoods 
+		call Market.GetMarketOrders ${This.MissionCache.TypeID[${agentID}]}
+		;call Market.TravelToBestSellOrder ${Config.Missioneer.AvoidLowSec}
+		;call Market.PurchaseGoods 
 
 		UI:UpdateConsole["obj_Missions: ERROR!  Trade missions are not supported!"]
 		Script:Pause
@@ -326,227 +331,227 @@ objectdef obj_Missions
 	
 	function KestrelCombat(int agentID)
 	{
-      variable bool missionComplete = FALSE
-      variable time breakTime
+	  variable bool missionComplete = FALSE
+	  variable time breakTime
 
-      while !${missionComplete}
-      {
-         ; wait up to 15 seconds for spawns to appear
-         breakTime:Set[${Time.Timestamp}]
-         breakTime.Second:Inc[15]
-         breakTime:Update
+	  while !${missionComplete}
+	  {
+		 ; wait up to 15 seconds for spawns to appear
+		 breakTime:Set[${Time.Timestamp}]
+		 breakTime.Second:Inc[15]
+		 breakTime:Update
 
-         while TRUE
-         {
-            if ${This.HostileCount} > 0
-            {
-               break
-            }
+		 while TRUE
+		 {
+			if ${This.HostileCount} > 0
+			{
+			   break
+			}
 
-            if ${Time.Timestamp} >= ${breakTime.Timestamp}
-            {
-               break
-            }
+			if ${Time.Timestamp} >= ${breakTime.Timestamp}
+			{
+			   break
+			}
 
-            waitframe
-         }
+			waitframe
+		 }
 
-         if ${This.HostileCount} > 0
-         {
-            ; wait up to 15 seconds for agro
-            breakTime:Set[${Time.Timestamp}]
-            breakTime.Second:Inc[15]
-            breakTime:Update
+		 if ${This.HostileCount} > 0
+		 {
+			; wait up to 15 seconds for agro
+			breakTime:Set[${Time.Timestamp}]
+			breakTime.Second:Inc[15]
+			breakTime:Update
    
-            while TRUE
-            {
-               if ${_Me.GetTargetedBy} > 0
-               {
-                  break
-               }
+			while TRUE
+			{
+			   if ${_Me.GetTargetedBy} > 0
+			   {
+				  break
+			   }
    
-               if ${Time.Timestamp} >= ${breakTime.Timestamp}
-               {
-                  break
-               }
+			   if ${Time.Timestamp} >= ${breakTime.Timestamp}
+			   {
+				  break
+			   }
    
-               waitframe
-            }
+			   waitframe
+			}
 
-            while ${This.HostileCount} > 0
-            {
-               if ${_Me.GetTargetedBy} > 0 || ${Math.Calc[${_Me.GetTargeting}+${_Me.GetTargets}]} > 0
-               {
-                  call This.TargetAgressors
-               }
-               else
-               {
-                  call This.PullTarget
-               }
+			while ${This.HostileCount} > 0
+			{
+			   if ${_Me.GetTargetedBy} > 0 || ${Math.Calc[${_Me.GetTargeting}+${_Me.GetTargets}]} > 0
+			   {
+				  call This.TargetAgressors
+			   }
+			   else
+			   {
+				  call This.PullTarget
+			   }
 
-               This.Combat:SetState
-               call This.Combat.ProcessState
+			   This.Combat:SetState
+			   call This.Combat.ProcessState
 
-               waitframe
-            }
-         }
-         elseif ${This.MissionCache.TypeID[${agentID}]} && ${This.ContainerCount} > 0
-         {
-            /* loot containers */
-         }
-         elseif ${This.GatePresent}
-         {
-            /* activate gate and go to next room */
-            call This.Approach ${Entity[TypeID,TYPE_ACCELERATION_GATE].ID} DOCKING_RANGE
-            wait 10
-            UI:UpdateConsole["Activating Acceleration Gate..."]
-            while !${This.WarpEntered}
-            {
-               Entity[TypeID,TYPE_ACCELERATION_GATE]:Activate
-               wait 10
-            }
-            call This.WarpWait
-            if ${Return} == 2
-            {
-               return
-            }
-         }
-         else
-         {
-            missionComplete:Set[TRUE]
-         }
+			   waitframe
+			}
+		}
+		elseif ${This.MissionCache.TypeID[${agentID}]} && ${This.ContainerCount} > 0
+		{
+			/* loot containers */
+		}
+		elseif ${This.GatePresent}
+		{
+			/* activate gate and go to next room */
+			call This.Approach ${Entity[TypeID,TYPE_ACCELERATION_GATE].ID} DOCKING_RANGE
+			wait 10
+			UI:UpdateConsole["Activating Acceleration Gate..."]
+			while !${This.WarpEntered}
+			{
+			   Entity[TypeID,TYPE_ACCELERATION_GATE]:Activate
+			   wait 10
+			}
+			call This.WarpWait
+			if ${Return} == 2
+			{
+			   return
+			}
+		}
+		else
+		{
+			missionComplete:Set[TRUE]
+		}
 
-         waitframe
-      }
+		waitframe
+		}
 	}
 
    function TargetAgressors()
    {
-      variable index:entity targetIndex
-      variable iterator     targetIterator
+	  variable index:entity targetIndex
+	  variable iterator     targetIterator
 
-      EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
-      targetIndex:GetIterator[targetIterator]
+	  EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
+	  targetIndex:GetIterator[targetIterator]
 
-      UI:UpdateConsole["GetTargeting = ${_Me.GetTargeting}, GetTargets = ${_Me.GetTargets}"]
-      if ${targetIterator:First(exists)}
-      {
-         do
-         {
-            if ${targetIterator.Value.IsTargetingMe} && \
-               !${targetIterator.Value.BeingTargeted} && \
-               !${targetIterator.Value.IsLockedTarget} && \
-               ${Ship.SafeMaxLockedTargets} > ${Math.Calc[${_Me.GetTargeting}+${_Me.GetTargets}]}
-            {
-               if ${targetIterator.Value.Distance} > ${Ship.OptimalTargetingRange}
-               {
-                  Ship:Activate_AfterBurner
-                  targetIterator.Value:Approach
-                  wait 10
-               }
-               else
-               {
-                  EVE:Execute[CmdStopShip]
-                  Ship:Deactivate_AfterBurner
-                  targetIterator.Value:LockTarget
-                  wait 10
-               }
-            }
-         }
-         while ${targetIterator:Next(exists)}
-      }
+	  UI:UpdateConsole["GetTargeting = ${_Me.GetTargeting}, GetTargets = ${_Me.GetTargets}"]
+	  if ${targetIterator:First(exists)}
+	  {
+		 do
+		 {
+			if ${targetIterator.Value.IsTargetingMe} && \
+			   !${targetIterator.Value.BeingTargeted} && \
+			   !${targetIterator.Value.IsLockedTarget} && \
+			   ${Ship.SafeMaxLockedTargets} > ${Math.Calc[${_Me.GetTargeting}+${_Me.GetTargets}]}
+			{
+			   if ${targetIterator.Value.Distance} > ${Ship.OptimalTargetingRange}
+			   {
+				  Ship:Activate_AfterBurner
+				  targetIterator.Value:Approach
+				  wait 10
+			   }
+			   else
+			   {
+				  EVE:Execute[CmdStopShip]
+				  Ship:Deactivate_AfterBurner
+				  targetIterator.Value:LockTarget
+				  wait 10
+			   }
+			}
+		 }
+		 while ${targetIterator:Next(exists)}
+	  }
    }
 
    function PullTarget()
    {
-      variable index:entity targetIndex
-      variable iterator     targetIterator
+	  variable index:entity targetIndex
+	  variable iterator     targetIterator
 
-      EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
-      targetIndex:GetIterator[targetIterator]
+	  EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
+	  targetIndex:GetIterator[targetIterator]
 
-      /* FOR NOW just pull the closest target */
-      if ${targetIterator:First(exists)}
-      {
-         do
-         {
-            switch ${targetIterator.Value.GroupID} 
-            {
-               case GROUP_LARGECOLLIDABLEOBJECT
-               case GROUP_LARGECOLLIDABLESHIP
-               case GROUP_LARGECOLLIDABLESTRUCTURE
-                  continue
+	  /* FOR NOW just pull the closest target */
+	  if ${targetIterator:First(exists)}
+	  {
+		 do
+		 {
+			switch ${targetIterator.Value.GroupID} 
+			{
+			   case GROUP_LARGECOLLIDABLEOBJECT
+			   case GROUP_LARGECOLLIDABLESHIP
+			   case GROUP_LARGECOLLIDABLESTRUCTURE
+				  continue
 
-               default               
-                  if ${targetIterator.Value.Distance} > ${Ship.OptimalTargetingRange}
-                  {
-                     Ship:Activate_AfterBurner
-                     targetIterator.Value:Approach
-                  }
-                  else
-                  {
-                     EVE:Execute[CmdStopShip]
-                     Ship:Deactivate_AfterBurner
-                     targetIterator.Value:LockTarget
-                     wait 10
-                     return
-                  }
-                  break
-            }
-         }
-         while ${targetIterator:Next(exists)}
-      }
+			   default               
+				  if ${targetIterator.Value.Distance} > ${Ship.OptimalTargetingRange}
+				  {
+					 Ship:Activate_AfterBurner
+					 targetIterator.Value:Approach
+				  }
+				  else
+				  {
+					 EVE:Execute[CmdStopShip]
+					 Ship:Deactivate_AfterBurner
+					 targetIterator.Value:LockTarget
+					 wait 10
+					 return
+				  }
+				  break
+			}
+		 }
+		 while ${targetIterator:Next(exists)}
+	  }
    }
 
    member:int HostileCount()
    {
-      variable index:entity targetIndex
-      variable iterator     targetIterator
-      variable int          targetCount = 0
+	  variable index:entity targetIndex
+	  variable iterator     targetIterator
+	  variable int          targetCount = 0
 
-      EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
-      targetIndex:GetIterator[targetIterator]
+	  EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
+	  targetIndex:GetIterator[targetIterator]
 
-      if ${targetIterator:First(exists)}
-      {
-         do
-         {
-            switch ${targetIterator.Value.GroupID} 
-            {
-               case GROUP_LARGECOLLIDABLEOBJECT
-               case GROUP_LARGECOLLIDABLESHIP
-               case GROUP_LARGECOLLIDABLESTRUCTURE
-                  continue
+	  if ${targetIterator:First(exists)}
+	  {
+		 do
+		 {
+			switch ${targetIterator.Value.GroupID} 
+			{
+			   case GROUP_LARGECOLLIDABLEOBJECT
+			   case GROUP_LARGECOLLIDABLESHIP
+			   case GROUP_LARGECOLLIDABLESTRUCTURE
+				  continue
 
-               default               
-                  targetCount:Inc
-                  break
-            }
-         }
-         while ${targetIterator:Next(exists)}
-      }
+			   default               
+				  targetCount:Inc
+				  break
+			}
+		 }
+		 while ${targetIterator:Next(exists)}
+	  }
 
-      return ${targetCount}
+	  return ${targetCount}
    }
 
    member:int ContainerCount()
    {
-      return 0
+	  return 0
    }
 
    member:bool GatePresent()
    {
-      return ${Entity[TypeID,TYPE_ACCELERATION_GATE](exists)}
+	  return ${Entity[TypeID,TYPE_ACCELERATION_GATE](exists)}
    }
 
 	function WarpToEncounter(int agentID)
 	{
-	    variable index:agentmission amIndex
-	    variable index:bookmark mbIndex
+		variable index:agentmission amIndex
+		variable index:bookmark mbIndex
 		variable iterator amIterator
 		variable iterator mbIterator
 
-	    EVE:DoGetAgentMissions[amIndex]
+		EVE:DoGetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		if ${amIterator:First(exists)}
@@ -578,12 +583,12 @@ objectdef obj_Missions
 	
 	function WarpToHomeBase(int agentID)
 	{
-	    variable index:agentmission amIndex
-	    variable index:bookmark mbIndex
+		variable index:agentmission amIndex
+		variable index:bookmark mbIndex
 		variable iterator amIterator
 		variable iterator mbIterator
 
-	    EVE:DoGetAgentMissions[amIndex]
+		EVE:DoGetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		if ${amIterator:First(exists)}
@@ -621,8 +626,8 @@ objectdef obj_Missions
 		variable iterator Target
 		variable bool HasTargets = FALSE
 
-      UI:UpdateConsole["DEBUG: TargetStructures"]
-      
+	  UI:UpdateConsole["DEBUG: TargetStructures"]
+	  
 		if ${_Me.Ship.MaxLockedTargets} == 0
 		{
 			UI:UpdateConsole["Jammed, cant target..."]
@@ -636,17 +641,17 @@ objectdef obj_Missions
 		{
 		   do
 		   {
-            if ${_Me.GetTargetedBy} > 0 && ${Target.Value.IsLockedTarget}
-            {
+			if ${_Me.GetTargetedBy} > 0 && ${Target.Value.IsLockedTarget}
+			{
 				   Target.Value:UnlockTarget
-            }
+			}
 			   elseif ${This.SpecialStructure[${agentID},${Target.Value.Name}]} && \
-			     !${Target.Value.IsLockedTarget} && !${Target.Value.BeingTargeted}
+				 !${Target.Value.IsLockedTarget} && !${Target.Value.BeingTargeted}
 			   {
-			      variable int OrbitDistance
-			      OrbitDistance:Set[${Math.Calc[${_Me.Ship.MaxTargetRange}*0.40/1000].Round}]
-			      OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
-			      Target.Value:Orbit[${OrbitDistance}]
+				  variable int OrbitDistance
+				  OrbitDistance:Set[${Math.Calc[${_Me.Ship.MaxTargetRange}*0.40/1000].Round}]
+				  OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
+				  Target.Value:Orbit[${OrbitDistance}]
 
 				   if ${_Me.GetTargets} < ${Ship.MaxLockedTargets}
 				   {
@@ -659,8 +664,8 @@ objectdef obj_Missions
 			   HasTargets:Set[TRUE]
 		   }
 		   while ${Target:Next(exists)}
-      }
-      		
+	  }
+			
 		return ${HasTargets}
 	}
 
@@ -683,17 +688,17 @@ objectdef obj_Missions
 		{
 		   do
 		   {
-            switch ${Target.Value.GroupID} 
-            {
-               case GROUP_LARGECOLLIDABLEOBJECT
-               case GROUP_LARGECOLLIDABLESHIP
-               case GROUP_LARGECOLLIDABLESTRUCTURE
-                  continue
+			switch ${Target.Value.GroupID} 
+			{
+			   case GROUP_LARGECOLLIDABLEOBJECT
+			   case GROUP_LARGECOLLIDABLESHIP
+			   case GROUP_LARGECOLLIDABLESTRUCTURE
+				  continue
 
-               default               
-                  break
-            }
-            
+			   default               
+				  break
+			}
+			
 			   if !${Target.Value.IsLockedTarget} && !${Target.Value.BeingTargeted}
 			   {
 				   if ${_Me.GetTargets} < ${Ship.MaxLockedTargets}
@@ -707,8 +712,8 @@ objectdef obj_Missions
 			   HasTargets:Set[TRUE]
 		   }
 		   while ${Target:Next(exists)}
-      }
-      		
+	  }
+			
 		if ${HasTargets} && ${Me.ActiveTarget(exists)}
 		{
 			variable int OrbitDistance
@@ -722,17 +727,17 @@ objectdef obj_Missions
 
    member:bool SpecialStructure(int agentID, string name)
    {
-      if ${This.MissionCache.Name[${agentID}](exists)}   
-      {
-         if ${This.MissionCache.Name.Equal["avenge a fallen comrade"]} && \
-            ${name.Equal["habitat"]}
-         {
-            return TRUE
-         }
-         ; elseif {...}
-         ; etc...         
-      }
-      
-      return FALSE
+	  if ${This.MissionCache.Name[${agentID}](exists)}   
+	  {
+		 if ${This.MissionCache.Name.Equal["avenge a fallen comrade"]} && \
+			${name.Equal["habitat"]}
+		 {
+			return TRUE
+		 }
+		 ; elseif {...}
+		 ; etc...         
+	  }
+	  
+	  return FALSE
    }
 }

@@ -149,28 +149,33 @@ objectdef obj_Cargo
 
    method FindShipCargoByType(int TypeIDToMove)
    {
-      Me.Ship:DoGetCargo[This.MyCargo]
+	  Me.Ship:DoGetCargo[This.MyCargo]
 
-      variable iterator CargoIterator
+	  variable iterator CargoIterator
 
-      This.MyCargo:GetIterator[CargoIterator]
-      if ${CargoIterator:First(exists)}
-      do
-      {
-         variable int TypeID
+	  This.MyCargo:GetIterator[CargoIterator]
+	  if ${CargoIterator:First(exists)}
+	  do
+	  {
+		 variable int TypeID
 
-         TypeID:Set[${CargoIterator.Value.TypeID}]
-         UI:UpdateConsole["DEBUG: obj_Cargo:FindShipCargo: TypeID: ${TypeID} ${CargoIterator.Value.Name} (${CargoIterator.Value.Quantity}) (CargoToTransfer.Used: ${This.CargoToTransfer.Used})"]
+		 TypeID:Set[${CargoIterator.Value.TypeID}]
+		 UI:UpdateConsole["DEBUG: obj_Cargo:FindShipCargo: TypeID: ${TypeID} ${CargoIterator.Value.Name} (${CargoIterator.Value.Quantity}) (CargoToTransfer.Used: ${This.CargoToTransfer.Used})"]
 
-         if (${TypeID} == ${TypeIDToMove})
-         {
-            This.CargoToTransfer:Insert[${CargoIterator.Value}]
-         }
-      }
-      while ${CargoIterator:Next(exists)}
+		 if (${TypeID} == ${TypeIDToMove})
+		 {
+			This.CargoToTransfer:Insert[${CargoIterator.Value}]
+		 }
+	  }
+	  while ${CargoIterator:Next(exists)}
 
-      UI:UpdateConsole["DEBUG: obj_Cargo:FindShipCargo: This.CargoToTransfer Populated: ${This.CargoToTransfer.Used}"]
+	  UI:UpdateConsole["DEBUG: obj_Cargo:FindShipCargo: This.CargoToTransfer Populated: ${This.CargoToTransfer.Used}"]
    }
+
+	member:int CargoToTransferCount()
+	{
+		return ${This.CargoToTransfer.Used}
+	}
 
 	function ReplenishCrystals()
 	{
@@ -270,7 +275,7 @@ objectdef obj_Cargo
 			{       
 				if ${Crystals.CurrentValue} < ${MIN_CRYSTALS}
 				{        
-				         UI:UpdateConsole["Out of ${Crystals.CurrentKey} !!"]
+						 UI:UpdateConsole["Out of ${Crystals.CurrentKey} !!"]
 				}
 			} 
 			while ${Crystals.NextKey(exists)}
@@ -846,27 +851,27 @@ objectdef obj_Cargo
 	
    function TransferItemTypeToHangar(int typeID)
    {	
-      if !${Station.Docked}
-      {
-         UI:UpdateConsole["ERROR: obj_Cargo.TransferItemToHangar: Must be docked!"]
-         return
-      }
+	  if !${Station.Docked}
+	  {
+		 UI:UpdateConsole["ERROR: obj_Cargo.TransferItemToHangar: Must be docked!"]
+		 return
+	  }
 
-      /* Need to cycle the the cargohold after docking to update the list. */
-      call This.CloseHolds
+	  /* Need to cycle the the cargohold after docking to update the list. */
+	  call This.CloseHolds
 
-      UI:UpdateConsole["Transferring Cargo to Station Hangar"]
-      call This.OpenHolds
+	  UI:UpdateConsole["Transferring Cargo to Station Hangar"]
+	  call This.OpenHolds
 
-      This:FindShipCargoByType[${typeID}]
+	  This:FindShipCargoByType[${typeID}]
 
-      call This.TransferListToHangar
+	  call This.TransferListToHangar
 
-      This.CargoToTransfer:Clear[]
-      Me:StackAllHangarItems
-      Ship:UpdateBaselineUsedCargo[]
-      wait 25
-      call This.CloseHolds
+	  This.CargoToTransfer:Clear[]
+	  Me:StackAllHangarItems
+	  Ship:UpdateBaselineUsedCargo[]
+	  wait 25
+	  call This.CloseHolds
    }
 
 	function TransferSpawnContainerCargoToShip()

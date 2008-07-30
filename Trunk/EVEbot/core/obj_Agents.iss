@@ -424,16 +424,39 @@ objectdef obj_Agents
 		{
 			call This.WarpToPickupStation
 		}
+		
+		; sometimes Ship.WarpToBookmark fails so make sure we are docked
+		if !${Station.Docked}
+		{
+			UI:UpdateConsole["obj_Agents.MoveToPickup: ERROR!  Not Docked."]	
+			call This.WarpToPickupStation
+		}
 	}
 	
 	function MoveToDropOff()
 	{
-		UI:UpdateConsole["obj_Agents: DEBUG: Me.Station.Name = ${Me.Station.Name}"]	
-		; yes this sucks but Me.Station is returning NULL
-		;if ${Me.Station.Name.NotEqual[${This.DropOffStation}]}
-		;{		
+		variable string stationName
+		stationName:Set[${EVEDB_Stations.StationName[${_Me.StationID}]}]
+		UI:UpdateConsole["obj_Agents: DEBUG: stationName = ${stationName}"]	
+
+		if ${stationName.Length} > 0
+		{
+			if ${stationName.NotEqual[${This.DropOffStation}]}
+			{		
+				call This.WarpToDropOffStation
+			}
+		}
+		else
+		{
 			call This.WarpToDropOffStation
-		;}
+		}
+		
+		; sometimes Ship.WarpToBookmark fails so make sure we are docked
+		if !${Station.Docked}
+		{
+			UI:UpdateConsole["obj_Agents.MoveToDropOff: ERROR!  Not Docked."]	
+			call This.WarpToDropOffStation
+		}
 	}
 
 	function WarpToPickupStation()
