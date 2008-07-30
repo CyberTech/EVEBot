@@ -1,51 +1,51 @@
 /*
 	JetCan Class
-	
+
 	Interacting with jetcans in space
 	All of this is also applicable to secure cargo containers in space
 	Most of this will be applicable to wrecks as well, however some things, like window name, will need to change.
-	
+
 	-- CyberTech
 
 		Jane (speaking): It is a game isn’t it Mary Poppins?
-		
+
 		Mary Poppins (speaking) : Well, it depends on your point of view. You see…
-		
+
 		(kinda, sing-speaking)In every job that must be done
 		There is an element of fun
 		You find the fun and snap!
 		The job’s a game
-		
+
 		(now singing)
 		And every task you undertake
 		Becomes a piece of cake
 		A lark! A spree! It’s very clear to see that…
-		
+
 		A Spoonful of sugar helps the medicine go down
 		The medicine go down
 		The medicine go down
 		Just a spoonful of sugar helps the medicine go down
 		In a most delightful way
-		
+
 		(Robin starts Whistling)
-		
+
 		A robin feathering his nest
 		Has very little time to rest
 		While gathering his bits of twine and twig
 		Though quite intent in his pursuit
 		He has a merry tune to toot
 		He knows a song will move the job along
-		
+
 		(Robin whistles a bit with Mary)
-		
+
 		For a Spoonful of sugar helps the medicine go down
 		The medicine go down
 		Medicine go down
 		Just a spoonful of sugar helps the medicine go down
 		In a most delightful way
-		
+
 		[Interlude where all the toys go about putting themselves away as the children snap and the Robin whistles away. This is perhaps the longest part of the song and always makes me think the song is longer than it really is]
-		
+
 		The honey bees that fetch the nectar
 		From the flowers to the comb
 		Never tire of ever buzzing to and fro
@@ -54,16 +54,16 @@
 		And hence (Mary’s reflection echoes: And hence),
 		They find (Mary’s reflection echoes: They find)
 		(together) Their task is not a grind.
-		
+
 		(the reflection alone) Aaaaaaaaaaaaaaaaaaaaaaaaaaah!
 		(Mary spoken to the mirror) Cheeky! (now to the children) Don’t be all day about it please
-		
+
 		Michael (yelling from inside the closet): Let me out! Let me out!
-		
+
 		Mary (spoken to the toys): Well, that was very… Thank you now… Will you quite finish! Thank you.
 
 BUGS:
-			
+
 */
 
 objectdef obj_JetCan
@@ -72,12 +72,12 @@ objectdef obj_JetCan
 	variable int Version
 
 	variable int64 ActiveCan = -1
-	
+
 	method Initialize()
 	{
 		UI:UpdateConsole["obj_JetCan: Initialized", LOG_MINOR]
 	}
-	
+
 	; Returns -1 for no can, or the entity ID
 	member:int CurrentCan(bool CheckFreeSpace = FALSE)
 	{
@@ -101,13 +101,13 @@ objectdef obj_JetCan
 			/* The can no longer exists, since we passed above checks, so try to compensate for an Eve bug and close the loot window for it. */
 			EVEWindow[loot_${This.ActiveCan}]:Close
 		}
-		
+
 		variable index:entity Cans
 		variable iterator Can
 		EVE:DoGetEntities[Cans, GroupID, GROUPID_CARGO_CONTAINER, Radius, LOOT_RANGE]
-		
+
 		Cans:GetIterator[Can]
-		
+
 		if ${Can:First(exists)}
 		{
 			do
@@ -124,11 +124,11 @@ objectdef obj_JetCan
 			}
 			while ${Can:Next(exists)}
 		}
-		
+
 		This.ActiveCan:Set[-1]
 		return ${This.ActiveCan}
 	}
-	
+
 	member:bool IsReady(bool CheckFreeSpace = FALSE)
 	{
 		if ${This.CurrentCan[${CheckFreeSpace}]} > 0
@@ -138,7 +138,7 @@ objectdef obj_JetCan
 
 		return FALSE
 	}
-	
+
 	member:bool AccessAllowed(int64 ID)
 	{
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
@@ -150,7 +150,7 @@ objectdef obj_JetCan
 		{
 			return FALSE
 		}
-		
+
 		variable int OwnerID = ${Entity[${ID}].OwnerID}
 
 		if ${Entity[${ID}].HaveLootRights}
@@ -160,7 +160,7 @@ objectdef obj_JetCan
 
 		return FALSE
 	}
-	
+
 	function WaitForCan()
 	{
 		variable int Counter
@@ -175,9 +175,9 @@ objectdef obj_JetCan
 				return
 			}
 		}
-			
+
 	}
-	
+
 	method Rename(int64 ID=0)
 	{
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
@@ -190,43 +190,65 @@ objectdef obj_JetCan
 			UI:UpdateConsole["JetCan:Rename: Access to ${ID} is not allowed", LOG_CRITICAL]
 			return
 		}
-		
-		variable string NewName = "${_Me.Name}"
-		
-		/* TODO - remove EVE.Time usage in favour of EVETime - CT */
-		/* Also, this check is silly. we're always in a corp.  check npc vs not, or randomize it */
-		if (${Me.Corporation(exists)} && \
-			${Me.Corporation.Length} > 0 )
+
+		variable string NewName
+
+		switch ${Config.Miner.JetCanNaming}
 		{
-			NewName:Set["${_Me.CorporationTicker} ${EVE.Time[short]}"]
+			case 1
+				NewName:Set[${_Me.CorporationTicker} ${EVE.Time[short]}]
+				break
+			case 2
+				NewName:Set[${_Me.CorporationTicker}:${EVE.Time[short]}]
+				break
+			case 3
+				NewName:Set[${_Me.CorporationTicker}_${EVE.Time[short]}]
+				break
+			case 4
+				NewName:Set[${_Me.CorporationTicker}.${EVE.Time[short]}]
+				break
+			case 5
+				NewName:Set[${_Me.CorporationTicker}]
+				break
+			case 6
+				NewName:Set[${EVE.Time[short]}]
+				break
+			case 7
+				NewName:Set[${_Me.Name.Token[1, " "]} ${EVE.Time[short]}]
+				break
+			case 8
+				NewName:Set[${_Me.Name.Token[1, " "]}]
+				break
+			case 9
+				NewName:Set[${_Me.Name}]
+				break
+			default
+				NewName:Set[${_Me.Name}]
+				break
 		}
-		else
-		{
-			NewName:Set["${EVE.Time[short]}"]
-		}
-		
+
 		UI:UpdateConsole["JetCan:Rename: Renaming can to ${NewName}"]
 		Entity[${ID}]:SetName[${NewName}]
 	}
-	
+
 	method StackAllCargo(int64 ID=0)
 	{
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
 			ID:Set[${This.ActiveCan}]
 		}
-		
+
 		if !${This.IsCargoOpen[${ID}]}
 		{
 			return
 		}
-		
+
 		if !${This.AccessAllowed[${ID}]}
 		{
 			UI:UpdateConsole["JetCan:StackAllCargo: Access to ${ID} is not allowed", LOG_CRITICAL]
 			return
 		}
-		
+
 		Entity[${ID}]:StackAllCargo
 	}
 
@@ -236,7 +258,7 @@ objectdef obj_JetCan
 		{
 			ID:Set[${This.ActiveCan}]
 		}
-		
+
 		if ${Entity[${ID}].LootWindow(exists)}
 		{
 			return TRUE
@@ -244,16 +266,16 @@ objectdef obj_JetCan
 		else
 		{
 			return FALSE
-		}		
+		}
 	}
-	
+
 	member:float CargoCapacity(int64 ID=0)
 	{
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
 			ID:Set[${This.ActiveCan}]
 		}
-		
+
 		if !${This.IsCargoOpen[${ID}]}
 		{
 			return FALSE
@@ -263,14 +285,14 @@ objectdef obj_JetCan
 		;return ${Entity[${ID}].CargoCapacity}
 		return 27500
 	}
-	
+
 	member:float CargoMinimumFreeSpace(int64 ID=0)
 	{
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
 			ID:Set[${This.ActiveCan}]
 		}
-		
+
 		if !${This.IsCargoOpen[${ID}]}
 		{
 			return FALSE
@@ -278,14 +300,14 @@ objectdef obj_JetCan
 
 		return ${Math.Calc[${This.CargoCapacity}*0.05]}
 	}
-	
+
 	member:float CargoFreeSpace(int64 ID=0)
 	{
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
 			ID:Set[${This.ActiveCan}]
 		}
-		
+
 		if !${This.IsCargoOpen[${ID}]}
 		{
 			return FALSE
@@ -304,7 +326,7 @@ objectdef obj_JetCan
 		{
 			ID:Set[${This.ActiveCan}]
 		}
-		
+
 		if !${This.IsCargoOpen[${ID}]}
 		{
 			return FALSE
@@ -316,14 +338,14 @@ objectdef obj_JetCan
 		}
 		return FALSE
 	}
-	
+
 	member:bool CargoHalfFull(int64 ID=0)
 	{
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
 			ID:Set[${This.ActiveCan}]
 		}
-		
+
 		if !${This.IsCargoOpen[${ID}]}
 		{
 			return FALSE
@@ -335,14 +357,14 @@ objectdef obj_JetCan
 		}
 		return FALSE
 	}
-	
+
 	function Open(int64 ID=0)
 	{
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
 			ID:Set[${This.ActiveCan}]
 		}
-		
+
 		if ${This.IsCargoOpen[${ID}]}
 		{
 			return
@@ -360,7 +382,7 @@ objectdef obj_JetCan
 			UI:UpdateConsole["Opening JetCan"]
 			Entity[${ID}]:OpenCargo
 			wait WAIT_CARGO_WINDOW
-			
+
 			variable float TimeOut = 0
 			while !${This.IsCargoOpen[${ID}]}
 			{
@@ -374,10 +396,10 @@ objectdef obj_JetCan
 			}
 			wait 10
 		}
-	}	
+	}
 
 	function Close(int64 ID=0)
-	{		
+	{
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
 			ID:Set[${This.ActiveCan}]
@@ -394,7 +416,7 @@ objectdef obj_JetCan
 			}
 			wait 10
 		}
-	}	
+	}
 }
 
 objectdef obj_CorpHangerArray inherits obj_JetCan
@@ -425,13 +447,13 @@ objectdef obj_CorpHangerArray inherits obj_JetCan
 			/* TODO - get name in case we do want to ever close it */
 			;EVEWindow[loot_${This.ActiveCan}]:Close
 		}
-		
+
 		variable index:entity Cans
 		variable iterator Can
 		EVE:DoGetEntities[Cans, GroupID, GROUP_CORPORATEHANGARARRAY]
-		
+
 		Cans:GetIterator[Can]
-		
+
 		if ${Can:First(exists)}
 		{
 			do
@@ -447,11 +469,11 @@ objectdef obj_CorpHangerArray inherits obj_JetCan
 			}
 			while ${Can:Next(exists)}
 		}
-		
-		
+
+
 		This.ActiveCan:Set[-1]
 		return ${This.ActiveCan}
-	}	
+	}
 
 	member:float CargoCapacity(int64 ID=0)
 	{
@@ -459,7 +481,7 @@ objectdef obj_CorpHangerArray inherits obj_JetCan
 		{
 			ID:Set[${This.ActiveCan}]
 		}
-		
+
 		if !${This.IsCargoOpen[${ID}]}
 		{
 			return FALSE
@@ -488,13 +510,13 @@ objectdef obj_SpawnContainer inherits obj_JetCan
 			/* The can no longer exists, since we passed above checks, so try to compensate for an Eve bug and close the loot window for it. */
 			EVEWindow[loot_${This.ActiveCan}]:Close
 		}
-		
+
 		variable index:entity Cans
 		variable iterator Can
 		EVE:DoGetEntities[Cans, GroupID, GROUPID_SPAWN_CONTAINER]
-		
+
 		Cans:GetIterator[Can]
-		
+
 		if ${Can:First(exists)}
 		{
 			do
@@ -509,11 +531,11 @@ objectdef obj_SpawnContainer inherits obj_JetCan
 			}
 			while ${Can:Next(exists)}
 		}
-		
-		
+
+
 		This.ActiveCan:Set[-1]
 		return ${This.ActiveCan}
-	}	
+	}
 
 	member:float CargoCapacity(int64 ID=0)
 	{
@@ -521,7 +543,7 @@ objectdef obj_SpawnContainer inherits obj_JetCan
 		{
 			ID:Set[${This.ActiveCan}]
 		}
-		
+
 		if !${This.IsCargoOpen[${ID}]}
 		{
 			return FALSE

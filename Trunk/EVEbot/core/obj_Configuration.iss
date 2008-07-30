@@ -336,7 +336,7 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSet[ORE_Volumes]
 		This.MinerRef:AddSetting[Restrict To Belt, NO]
 		This.MinerRef:AddSetting[Restrict To Ore Type, NONE]
-		This.MinerRef:AddSetting[Include Veldspar, TRUE]
+		This.MinerRef:AddSetting[JetCan Naming, 1]
 		This.MinerRef:AddSetting[Bookmark Last Position, TRUE]
 		This.MinerRef:AddSetting[Distribute Lasers, TRUE]
 		This.MinerRef:AddSetting[Use Mining Drones, FALSE]
@@ -350,6 +350,7 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Strip Mine, FALSE]
 		This.MinerRef:AddSetting[Cargo Threshold, 0]
 
+		
 		This.OreTypesRef:AddSetting[Vitreous Mercoxit, 1]
 		This.OreTypesRef:AddSetting[Magma Mercoxit, 1]
 		This.OreTypesRef:AddSetting[Mercoxit, 1]
@@ -442,14 +443,14 @@ objectdef obj_Configuration_Miner
 	;		This.MinerRef:AddSetting[Restrict To Belt, NO]
 	;		This.MinerRef:AddSetting[Restrict To Ore Type, NONE]
 
-	member:bool IncludeVeldspar()
+	member:int JetCanNaming()
 	{
-		return ${This.MinerRef.FindSetting[Include Veldspar, TRUE]}
+		return ${This.MinerRef.FindSetting[JetCan Naming, 1]}
 	}
 
-	method SetIncludeVeldspar(bool value)
+	method SetJetCanNaming(int value)
 	{	
-		This.MinerRef:AddSetting[Include Veldspar, ${value}]
+		This.MinerRef:AddSetting[JetCan Naming, ${value}]
 	}
 
 	member:bool BookMarkLastPosition()
