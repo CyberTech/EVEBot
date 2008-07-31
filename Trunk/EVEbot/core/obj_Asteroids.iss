@@ -280,12 +280,7 @@ objectdef obj_Asteroids
 		{
 			This.AsteroidList:Clear
 			do
-			{
-				if ${This.OreTypeIterator.Key.Find[Veldspar]} > 0 && !${Config.Miner.IncludeVeldspar}
-				{
-					continue
-				}
-				
+			{			
 				EVE:DoGetEntities[asteroid_index,CategoryID,${This.AsteroidCategoryID}, ${This.OreTypeIterator.Key}]
 				asteroid_index:GetIterator[asteroid_iterator]
 				if ${asteroid_iterator:First(exists)}
