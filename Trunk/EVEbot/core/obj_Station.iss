@@ -206,15 +206,14 @@ objectdef obj_Station
 			Counter:Set[0]
 			UI:UpdateConsole["In Docking Range ... Docking"]
 			UI:UpdateConsole["DEBUG: StationExists = ${Entity[${StationID}](exists)}"]
-			Entity[${StationID}]:Dock			
-			;wait 100
 			do
 			{
+				Entity[${StationID}]:Dock
 		   		wait 30
-		   		Counter:Inc[20]
-		   		if (${Counter} > 200)
+		   		Counter:Inc[1]
+		   		if (${Counter} > 20)
 		   		{
-					UI:UpdateConsole[" - Docking attempt failed, trying again"]
+					UI:UpdateConsole["Warning: Docking incomplete after 60 seconds", LOG_CRITICAL]
 					Entity[${StationID}]:Dock	
 		      		Counter:Set[0]
 		   		}
@@ -222,15 +221,12 @@ objectdef obj_Station
 			}
 			while !${This.DockedAtStation[${StationID}]}
 			wait 75
-			UI:UpdateConsole["Finished Docking"]
-    		call ChatIRC.Say "Finished Docking"
-    		;ISXEVE:Flush
+			UI:UpdateConsoleIRC["Finished Docking"]
 		}
 		else
 		{
-			UI:UpdateConsole["No stations in this system!  Trying Safespots", LOG_CRITICAL]
+			UI:UpdateConsole["Station Requested does not exist!  Trying Safespots...", LOG_CRITICAL]
 			call Safespots.WarpTo
-			wait 30
 		}
 	}	
 
@@ -252,50 +248,12 @@ objectdef obj_Station
 
 		if ${Entity[${StationID}](exists)}
 		{
-			if ${Entity[${StationID}].Distance} > WARP_RANGE
-			{
-				UI:UpdateConsole["Warping to Station"]
-				call Ship.WarpToID ${StationID}
-				do
-				{ 
-				   wait 30
-				}
-				while ${Entity[${StationID}].Distance} > WARP_RANGE
-			}
-			
-			do
-			{
-				Entity[${StationID}]:Approach
-				UI:UpdateConsole["Approaching docking range..."]
-				wait 30
-			}
-			while (${Entity[${StationID}].Distance} > DOCKING_RANGE)
-		
-			Counter:Set[0]
-			UI:UpdateConsole["In Docking Range (${Entity[${StationID}].Distance})... Docking"]
-			Entity[${StationID}]:Dock			
-			;wait 100
-			do
-			{
-		   		wait 30
-		   		Counter:Inc[20]
-		   		if (${Counter} > 200)
-		   		{
-					UI:UpdateConsole[" - Docking attempt failed, trying again"]
-					Entity[${StationID}]:Dock	
-		      		Counter:Set[0]
-		   		}
-			}
-			while !${This.DockedAtStation[${StationID}]}
-			wait 75
-			UI:UpdateConsole["Finished Docking"]
-    		call ChatIRC.Say "Finished Docking"
-    		;ISXEVE:Flush
+			call This.DockAtStation ${StationID}
 		}
 		else
 		{
-			UI:UpdateConsole["No stations in this system!  Quitting Game!!"]
-			EVE:Execute[CmdQuitGame]
+			UI:UpdateConsole["No stations in this system!  Trying Safespots...", LOG_CRITICAL]
+			call Safespots.WarpTo
 		}
 	}	
 

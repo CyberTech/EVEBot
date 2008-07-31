@@ -130,6 +130,12 @@ function main()
 	AppVersion:Set["${APP_NAME} Version ${VersionNum}"]
 	
 	UI:Reload
+
+
+#if USE_ISXIRC
+	call ChatIRC.Connect
+#endif
+
 	UI:UpdateConsole["-=Paused: Press Run-="]
 	Script:Pause
 	

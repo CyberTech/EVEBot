@@ -95,6 +95,12 @@ objectdef obj_EVEBotUI
 		return "${Hours}:${Minutes}:${Seconds}"
 	}
 
+	method UpdateConsoleIRC(string StatusMessage, int Level=LOG_STANDARD, int Indent=0)
+	{
+		This:UpdateConsole["${StatusMessage}", ${Level}, ${Indent}]
+		ChatIRC:QueueMessage["${msg}"]
+	}
+	
 	method UpdateConsole(string StatusMessage, int Level=LOG_STANDARD, int Indent=0)
 	{
 		/*
@@ -134,6 +140,7 @@ objectdef obj_EVEBotUI
 				redirect -append "${This.LogFile}" Echo "${msg}"
 				if ${Level} == LOG_CRITICAL
 				{
+					ChatIRC:QueueMessage["${msg}"]
 					redirect -append "${This.CriticalLogFile}" Echo "${msg}"
 				}
 			}

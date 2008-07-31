@@ -1170,23 +1170,25 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		call This.WarpPrepare
 		call This.TravelToSystem ${DestinationBookmark.SolarSystemID}
 
-		;echo \${DestinationBookmark.Type} = ${DestinationBookmark.Type}
-		;echo \${DestinationBookmark.TypeID} = ${DestinationBookmark.TypeID}
-		;echo \${DestinationBookmark.ToEntity(exists)} = ${DestinationBookmark.ToEntity(exists)}
-		;echo \${DestinationBookmark.ToEntity.Category} = ${DestinationBookmark.ToEntity.Category}
-		;echo \${DestinationBookmark.ToEntity.CategoryID} = ${DestinationBookmark.ToEntity.CategoryID}
-		;echo \${DestinationBookmark.ToEntity.Distance} = ${DestinationBookmark.ToEntity.Distance}
-		;echo \${DestinationBookmark.AgentID} = ${DestinationBookmark.AgentID}
-		;echo \${DestinationBookmark.ItemID} = ${DestinationBookmark.ItemID}
-		;echo \${DestinationBookmark.LocationType} = ${DestinationBookmark.LocationType}
-		;echo \${DestinationBookmark.LocationID} = ${DestinationBookmark.LocationID}
-		;echo DestinationBookmark Location: ${DestinationBookmark.X}, ${DestinationBookmark.Y}, ${DestinationBookmark.Z}
-		;echo \${Entity[CategoryID,6].X} = ${Entity[CategoryID,6].X}
-		;echo \${Entity[CategoryID,6].Y} = ${Entity[CategoryID,6].Y}
-		;echo \${Entity[CategoryID,6].Z} = ${Entity[CategoryID,6].Z}
-		;echo \${Me.ToEntity.X} = ${Me.ToEntity.X}
-		;echo \${Me.ToEntity.Y} = ${Me.ToEntity.Y}
-		;echo \${Me.ToEntity.Z} = ${Me.ToEntity.Z}
+#if DEBUG
+		echo \${DestinationBookmark.Type} = ${DestinationBookmark.Type}
+		echo \${DestinationBookmark.TypeID} = ${DestinationBookmark.TypeID}
+		echo \${DestinationBookmark.ToEntity(exists)} = ${DestinationBookmark.ToEntity(exists)}
+		echo \${DestinationBookmark.ToEntity.Category} = ${DestinationBookmark.ToEntity.Category}
+		echo \${DestinationBookmark.ToEntity.CategoryID} = ${DestinationBookmark.ToEntity.CategoryID}
+		echo \${DestinationBookmark.ToEntity.Distance} = ${DestinationBookmark.ToEntity.Distance}
+		echo \${DestinationBookmark.AgentID} = ${DestinationBookmark.AgentID}
+		echo \${DestinationBookmark.ItemID} = ${DestinationBookmark.ItemID}
+		echo \${DestinationBookmark.LocationType} = ${DestinationBookmark.LocationType}
+		echo \${DestinationBookmark.LocationID} = ${DestinationBookmark.LocationID}
+		echo DestinationBookmark Location: ${DestinationBookmark.X}, ${DestinationBookmark.Y}, ${DestinationBookmark.Z}
+		echo \${Entity[CategoryID,6].X} = ${Entity[CategoryID,6].X}
+		echo \${Entity[CategoryID,6].Y} = ${Entity[CategoryID,6].Y}
+		echo \${Entity[CategoryID,6].Z} = ${Entity[CategoryID,6].Z}
+		echo \${Me.ToEntity.X} = ${Me.ToEntity.X}
+		echo \${Me.ToEntity.Y} = ${Me.ToEntity.Y}
+		echo \${Me.ToEntity.Z} = ${Me.ToEntity.Z}
+#endif
 		
 
 		variable int MinWarpRange
@@ -1342,39 +1344,10 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 		{
 			switch ${CategoryID}
 			{
-				case 2
-					; stargate
-					break
 				case CATEGORYID_STATION
-					call This.Approach ${EntityID} DOCKING_RANGE
-					UI:UpdateConsole["Docking with destination station..."]
-					DestinationBookmark.ToEntity:Dock
-					Counter:Set[0]
-					do
-					{
-						wait 20
-						Counter:Inc[1]
-						UI:UpdateConsole["Tick ${Counter}", LOG_MINOR]
-						if ${Counter} > 5
-						{
-							UI:UpdateConsole["Retrying dock with destination station"]
-							;DestinationBookmark.ToEntity:Dock
-							Entity[CategoryID,3]:Dock
-							Counter:Set[0]
-						}
-					}
-					while !${Station.DockedAtStation[${EntityID}]}
-					break
-				case GROUP_CORPORATEHANGARARRAY
-					call This.Approach ${EntityID} CORP_HANGAR_LOOT_RANGE
+					call Station.DockAtStation ${EntityID}
 					break
 				Default
-					switch ${TypeID}
-					{
-						case TYPEID_CORPORATE_HANGAR_ARRAY
-							call This.Approach ${EntityID} CORP_HANGAR_LOOT_RANGE
-							break
-					}
 					break
 			}
 		}

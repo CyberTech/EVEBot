@@ -3,8 +3,14 @@ objectdef obj_IRC
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
+	variable time NextPulse
+	variable int PulseIntervalInSeconds = 1
+
     variable bool IsConnected = FALSE
-                  
+
+	variable queue:string Buffer
+
+	                  
 	method Initialize()
 	{			
 #if USE_ISXIRC
@@ -13,54 +19,55 @@ objectdef obj_IRC
 		Event[IRC_ReceivedNotice]:AttachAtom[This:IRC_ReceivedNotice]
         Event[IRC_ReceivedChannelMsg]:AttachAtom[This:IRC_ReceivedChannelMsg]	
         Event[IRC_ReceivedPrivateMsg]:AttachAtom[This:IRC_ReceivedPrivateMsg]
-        Event[IRC_TopicSet]:AttachAtom[This:IRC_TopicSet]
-        Event[IRC_NickChanged]:AttachAtom[This:IRC_NickChanged]
         Event[IRC_KickedFromChannel]:AttachAtom[This:IRC_KickedFromChannel]	
-        Event[IRC_ReceivedCTCP]:AttachAtom[This:IRC_ReceivedCTCP]	
         Event[IRC_PRIVMSGErrorResponse]:AttachAtom[This:IRC_PRIVMSGErrorResponse]	
         Event[IRC_JOINErrorResponse]:AttachAtom[This:IRC_JOINErrorResponse]	
-        Event[IRC_NickTypeChange]:AttachAtom[This:IRC_NickTypeChange]
-        Event[IRC_NickJoinedChannel]:AttachAtom[This:IRC_NickJoinedChannel]
-        Event[IRC_NickLeftChannel]:AttachAtom[This:IRC_NickLeftChannel]
-        Event[IRC_NickQuit]:AttachAtom[This:IRC_NickQuit]
-        Event[IRC_ReceivedEmote]:AttachAtom[This:IRC_ReceivedEmote]
-        Event[IRC_ChannelModeChange]:AttachAtom[This:IRC_ChannelModeChange]
-        Event[IRC_AddChannelBan]:AttachAtom[This:IRC_AddChannelBan]
-        Event[IRC_RemoveChannelBan]:AttachAtom[This:IRC_RemoveChannelBan]
         Event[IRC_UnhandledEvent]:AttachAtom[This:IRC_UnhandledEvent]
 
 		UI:UpdateConsole["obj_IRC: Initialized", LOG_MINOR]
+		Event[OnFrame]:AttachAtom[This:Pulse]
 #endif
 	}
 	
 	method Shutdown()
 	{
 #if USE_ISXIRC
+		Event[OnFrame]:DetachAtom[This:Pulse]
+
 		Event[IRC_ReceivedNotice]:DetachAtom[This:IRC_ReceivedNotice]
         Event[IRC_ReceivedChannelMsg]:DetachAtom[This:IRC_ReceivedChannelMsg]	
         Event[IRC_ReceivedPrivateMsg]:DetachAtom[This:IRC_ReceivedPrivateMsg]
-        Event[IRC_TopicSet]:DetachAtom[This:IRC_TopicSet]
-        Event[IRC_NickChanged]:DetachAtom[This:IRC_NickChanged]
         Event[IRC_KickedFromChannel]:DetachAtom[This:IRC_KickedFromChannel]	
-        Event[IRC_ReceivedCTCP]:DetachAtom[This:IRC_ReceivedCTCP]	
         Event[IRC_PRIVMSGErrorResponse]:DetachAtom[This:IRC_PRIVMSGErrorResponse]	
         Event[IRC_JOINErrorResponse]:DetachAtom[This:IRC_JOINErrorResponse]	    
-        Event[IRC_NickTypeChange]:DetachAtom[This:IRC_NickTypeChange]
-        Event[IRC_NickJoinedChannel]:DetachAtom[This:IRC_NickJoinedChannel]
-        Event[IRC_NickLeftChannel]:DetachAtom[This:IRC_NickLeftChannel]    
-        Event[IRC_NickQuit]:DetachAtom[This:IRC_NickQuit]
-        Event[IRC_ReceivedEmote]:DetachAtom[This:IRC_ReceivedEmote]
-        Event[IRC_ChannelModeChange]:DetachAtom[This:IRC_ChannelModeChange]
-        Event[IRC_AddChannelBan]:DetachAtom[This:IRC_AddChannelBan]
-        Event[IRC_RemoveChannelBan]:DetachAtom[This:IRC_RemoveChannelBan]
         Event[IRC_UnhandledEvent]:DetachAtom[This:IRC_UnhandledEvent]    
+
         if ${This.IsConnected} 
         {       
 			IRCUser[${Config.Common.IRCUser}]:Disconnect
 		}
 #endif
 	}
-		
+
+	method Pulse()
+	{	
+	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+		{
+			if ${This.IsConnected} 
+			{
+				if ${This.Buffer.Peek(exists)}
+				{
+					This:SendMessage["${This.Buffer.Peek}"]
+					This.Buffer:Dequeue
+				}
+			}
+    		
+    		This.NextPulse:Set[${Time.Timestamp}]
+    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+    		This.NextPulse:Update
+		}
+	}		
+
     method IRC_ReceivedNotice(string User, string From, string To, string Message)
     {
     	  ; This event is fired every time that an IRCUser that you have connected
@@ -150,46 +157,7 @@ objectdef obj_IRC
     	  
     	  echo [Private Message -> ${To}] (${From}) "${Message}"
     }
-    
-    method IRC_ReceivedEmote(string User, string From, string To, string Message)
-    {
-    	  ; This event is fired every time that an IRCUser recognizes an "emote"
-    	  ; from another user.  Please note that ${To} is typically a 'channel' 
-    	  ; in this event.
-    	  
-    	  echo [${User} - ${To}] ${From} "${Message}"
-    }
-    
-    method IRC_ReceivedCTCP(string User, string From, string To, string Message)
-    {
-    	  ; This event is fired every time that an IRCUser that you have connected
-    	  ; receives a CTCP request.
-    	  ; IMPORTANT:  isxIRC handles all of these requests for you, so this
-    	  ;             event is only here to let you know that it occured.
-    	  
-    	  echo [${User} - CTCP from ${From} to ${To}] "${Message}"
-    }
-    
-    method IRC_TopicSet(string User, string Channel, string NewTopic, string TopicSetBy)
-    {
-    	  ; This event is fired every time that someone changes the topic of a channel
-    	  ; of which one of your IRCUser connections is a part.  You can do anything 
-    	  ; fancy you want with this, but, for now, we're just going to echo it to the 
-    	  ; console window.
-    	  
-    	  echo [${User} - ${Channel}] New Topic: "'${NewTopic}'" (by ${TopicSetBy})
-    }
-    
-    method IRC_NickChanged(string User, string OldNick, string NewNick)
-    {
-    	  ; This event is fired every time that someone changes their NICK in a channel
-    	  ; of which one of your IRCUser connections is a part.  You can do anything 
-    	  ; fancy you want with this, but, for now, we're just going to echo it to the 
-    	  ; console window.
-    	  
-    	  echo [${User}] '${OldNick}' has changed their Nick to '${NewNick}'
-    }
-    
+        
     method IRC_KickedFromChannel(string User, string Channel, string WhoKicked, string KickedBy, string Reason)
     {
     		; This event is fired every time that one of your IRCUsers are kicked from a 
@@ -202,36 +170,7 @@ objectdef obj_IRC
     		; Auto rejoin! :)
     		IRCUser[${WhoKicked}]:Join[${Channel}]
     }
-    
-    method IRC_NickJoinedChannel(string User, string Channel, string WhoJoined)
-    {
-    	  ; This event is fired every time that someone joins a channel other than 
-    	  ; the IRCUser.
-    	  
-    	  echo [${User} - ${Channel}] ${WhoJoined} has joined channel ${Channel}.
-    }
-    
-    method IRC_NickLeftChannel(string User, string Channel, string WhoLeft)
-    {
-    		; This event is fired every time that someone leaves a channel other than
-    		; the IRCUser.  This event is NOT fired when someone (or yourself) is KICKED
-    		
-    		echo [${User} - ${Channel}] ${WhoLeft} has left channel ${Channel}
-    }
-    
-    method IRC_NickQuit(string User, string Channel, string Nick, string Reason)
-    {
-    	  ; This event is fired every time that someone QUITS the server
-    	  if (${Channel.Length} == 0 )
-    		{
-    				echo [${User}] ${Nick} has QUIT. (${Reason})
-    		}
-    		else
-    		{
-    				echo [${User} - ${Channel}] ${Nick} has QUIT. (${Reason})
-    		}
-    }
-    
+        
     method IRC_PRIVMSGErrorResponse(string User, string ErrorType, string To, string Response)
     {
     	  ; This event is fired whenever an IRCUser that you have connected receives an
@@ -292,27 +231,7 @@ objectdef obj_IRC
      			  }
      		}
     }
-    
-    method IRC_AddChannelBan(string User, string Channel, string WhoSet, string Ban)
-    {
-    	  ; This event is fired whenever an IRCUser that you have connected receives a
-    	  ; message that a ban has been added to the channel.   isxIRC handles updating
-    	  ; the banlist for each channel, so this event is just here for notifying the 
-    	  ; user
-    	  
-    		echo [${User} - ${Channel}] ${WhoSet} has banned "${Ban}"!
-    }
-    
-    method IRC_RemoveChannelBan(string User, string Channel, string WhoSet, string Ban)
-    {
-    	  ; This event is fired whenever an IRCUser that you have connected receives a
-    	  ; message that a ban has been removed from a channel.   isxIRC handles updating
-    	  ; the banlist for each channel, so this event is just here for notifying the 
-    	  ; user
-    	  
-    		echo [${User} - ${Channel}] ${WhoSet} has removed the ban "${Ban}"!
-    }	
-    
+       
     method IRC_UnhandledEvent(string User, string Command, string Param, string Rest)
     {
     	  ; This event is here to handle any events that are not handled otherwise by the
@@ -328,171 +247,7 @@ objectdef obj_IRC
     	  }
     }
     	
-    method IRC_NickTypeChange(string User, string Channel, string NickName, string NickType, string Toggle, string WhoSet)
-    {
-     		; This event is fired whenever an IRCUser that you have connected receives an
-    	  ; message that a nick has had their 'type' changed on a channel (ie, being set
-    	  ; as an OP)
-    	  
-    	  ; Possible ${NickType} include: "OWNER", "SOP", "OP", "HOP", "Voice", "Normal"
-    	  ; Possible ${Toggle} include: "TRUE, "FALSE"
-    	  
-    	  ; Ok, first of all, if it's Chanserv that's doing the MODE changing, we just don't
-    	  ; care enough to echo it.  If you want to utilize it in your scripts otherwise, feel
-    	  ; free!
-    	  if (${WhoSet.Find[Chanserv]})
-    	     return
-    	  
-    	  ; NOTE:  isxIRC takes care of updating the Nicks lists for all channels with their 
-    	  ;        'type'.  So, the script is only responsible for notifying the user or any
-    	  ;        other custom functions desired. 
-    	 
-    	  if (${NickType.Equal[OWNER]})
-    	  {
-    	  	  if (${Toggle.Equal[TRUE]})
-    	  	      echo [${User}] ${NickName} has been made an OWNER on ${Channel} by ${WhoSet}!
-    	  	  else
-    	  	      echo [${User}] ${NickName} has had their OWNER flag removed on ${Channel} by ${WhoSet}!
-     	  }
-    	  elseif (${NickType.Equal[SOP]})
-    	  {
-    	  	  if (${Toggle.Equal[TRUE]})
-    	  	      echo [${User}] ${NickName} has been made a SUPER OPERATOR on ${Channel} by ${WhoSet}!
-    	  	  else
-    	  	      echo [${User}] ${NickName} has had their SUPER OPERATOR flag removed on ${Channel} by ${WhoSet}!
-     	  }
-    	  elseif (${NickType.Equal[OP]})
-    	  {
-    	  	  if (${Toggle.Equal[TRUE]})
-    	  	      echo [${User}] ${NickName} has been made an OPERATOR on ${Channel} by ${WhoSet}!
-    	  	  else
-    	  	      echo [${User}] ${NickName} has had their OPERATOR flag removed on ${Channel} by ${WhoSet}!
-     	  }
-     	  elseif (${NickType.Equal[HOP]})
-    	  {
-    	  	  if (${Toggle.Equal[TRUE]})
-    	  	      echo [${User}] ${NickName} has been made a HALF OPERATOR on ${Channel} by ${WhoSet}!
-    	  	  else
-    	  	      echo [${User}] ${NickName} has had their HALF OPERATOR flag removed on ${Channel} by ${WhoSet}!
-     	  }	  
-    	  elseif (${NickType.Equal[VOICE]})
-    	  {
-    	  	  if (${Toggle.Equal[TRUE]})
-    	  	      echo [${User}] ${NickName} has been made a VOICE on ${Channel} by ${WhoSet}!
-    	  	  else
-    	  	      echo [${User}] ${NickName} has had their VOICE flag removed on ${Channel} by ${WhoSet}!
-     	  } 	    	   	  
-    }
-     
-    method IRC_ChannelModeChange(string User, string Channel, string ModeType, string Toggle, string WhoSet, string Extra)
-    {
-     		; This event is fired whenever an IRCUser that you have connected receives an
-    	  ; message that a channel has had its 'mode' changed.
-    	  ; NOTE:  This event will fire for every user that's in a channel!  So, if you
-    	  ;        have more than one user in a channel, you'll get duplicate messages :)
-    	  
-    	  ; Possible ${ModeType} include: "PASSWORD", "LIMIT", "SECRET", "PRIVATE", "INVITEONLY",
-        ;                               "MODERATED", "NOEXTERNALMSGS", "ONLYOPSCHANGETOPIC", "REGISTERED",
-        ;                               "REGISTRATIONREQ", "NOCOLORSALLOWED"
     
-    	  ; Possible ${Toggle} include: "TRUE, "FALSE"
-    
-    		; Possible ${Extra} include:  The "password" for the PASSWORD ${ModeType} and the "limit"
-    		;                             for the LIMIT ${ModeType}
-    	  
-    	  
-    	  ; Ok, first of all, if it's the server that's doing the MODE changing, we just don't
-    	  ; care enough to echo it.  If you want to utilize it in your scripts otherwise, feel
-    	  ; free!   
-    	  variable int i = 1
-    	  do
-    	  {
-    	  	 if (${IRCUser[${i}].Server.Equal[${WhoSet}]})
-    	  	     return
-    	  }
-    		while (${i:Inc} <= ${IRC.NumUsers})
-    	
-    	  ; NOTE:  isxIRC takes care of updating the Channel lists within the extension.  So, the 
-    	  ;        script is only responsible for notifying the user or any other custom functions desired. 
-    	 
-    	  if (${ModeType.Equal[PASSWORD]})
-    	  {
-    	  	  if (${Toggle.Equal[TRUE]})
-    	  	      echo [${User}] A PASSWORD has been set on ${Channel}: ${Extra}  (${WhoSet})
-    	  	  else
-    	  	      echo [${User}] ${WhoSet} has removed the PASSWORD on ${Channel}
-     	  }
-    	  elseif (${ModeType.Equal[LIMIT]})
-    	  {
-    				if (${Toggle.Equal[TRUE]})
-    						echo [${User}] A LIMIT has been placed on ${Channel} of ${Extra} Users!  (${WhoSet})
-    			  else
-    			   		echo [${User}] ${WhoSet} has removed the user LIMIT on ${Channel}
-        }
-        elseif (${ModeType.Equal[SECRET]})
-        {
-        	  if (${Toggle.Equal[TRUE]})
-        	   		echo [${User}] ${Channel} has been designated as SECRET by ${WhoSet}
-        	  else
-        	      echo [${User}] ${WhoSet} has removed the SECRET flag from ${Channel}
-        }
-        elseif (${ModeType.Equal[PRIVATE]})
-        {
-        	  if (${Toggle.Equal[TRUE]})
-        	   		echo [${User}] ${Channel} has been designated as PRIVATE by ${WhoSet}
-        	  else
-        	      echo [${User}] ${WhoSet} has removed the PRIVATE flag from ${Channel}
-        }    
-        elseif (${ModeType.Equal[INVITEONLY]})
-        {
-        	  if (${Toggle.Equal[TRUE]})
-        	   		echo [${User}] ${Channel} has been designated as INVITE ONLY by ${WhoSet}
-        	  else
-        	      echo [${User}] ${WhoSet} has removed the INVITE ONLY flag from ${Channel}
-        }    
-        elseif (${ModeType.Equal[MODERATED]})
-        {
-        	  if (${Toggle.Equal[TRUE]})
-        	   		echo [${User}] ${Channel} has been designated as MODERATED by ${WhoSet}
-        	  else
-        	      echo [${User}] ${WhoSet} has removed the MODERATED flag from ${Channel}
-        }    
-        elseif (${ModeType.Equal[NOEXTERNALMSGS]})
-        {
-        	  if (${Toggle.Equal[TRUE]})
-        	   		echo [${User}] ${Channel} has been designated as NO EXTERNAL MESSAGES by ${WhoSet}
-        	  else
-        	      echo [${User}] ${WhoSet} has removed the NO EXTERNAL MESSAGES flag from ${Channel}
-        }  
-        elseif (${ModeType.Equal[ONLYOPSCHANGETOPIC]})
-        {
-        	  if (${Toggle.Equal[TRUE]})
-        	   		echo [${User}] ${Channel} has been designated as ONLY OPS CHANGE TOPIC by ${WhoSet}
-        	  else
-        	      echo [${User}] ${WhoSet} has removed the ONLY OPS CHANGE TOPIC flag from ${Channel}
-        }      
-        elseif (${ModeType.Equal[REGISTERED]})
-        {
-        	  if (${Toggle.Equal[TRUE]})
-        	   		echo [${User}] ${Channel} has been designated as REGISTERED by ${WhoSet}
-        	  else
-        	      echo [${User}] ${WhoSet} has removed the REGISTERED flag from ${Channel}
-        }
-        elseif (${ModeType.Equal[REGISTRATIONREQ]})
-        {
-        	  if (${Toggle.Equal[TRUE]})
-        	   		echo [${User}] ${Channel} has been designated as REGISTRATION REQUIRED by ${WhoSet}
-        	  else
-        	      echo [${User}] ${WhoSet} has removed the REGISTRATION REQUIRED flag from ${Channel}
-        }
-        elseif (${ModeType.Equal[NOCOLORSALLOWED]})
-        {
-        	  if (${Toggle.Equal[TRUE]})
-        	   		echo [${User}] ${Channel} has been designated as NO COLORS ALLOWED by ${WhoSet}
-        	  else
-        	      echo [${User}] ${WhoSet} has removed the NO COLORS ALLOWED flag from ${Channel}
-        }
-    }
     
     member:bool Connected()
     {
@@ -514,7 +269,7 @@ objectdef obj_IRC
         This.IsConnected:Set[TRUE]
         wait 10 
                                 
-        Call This.Say "Reporting for duty, sir"
+        Call This.Say "${AppVersion} Connected"
     } 
                        
     function Disconnect() 
@@ -522,7 +277,7 @@ objectdef obj_IRC
         if ${This.IsConnected} 
         {       
             echo DEBUG: Disconnecting...
-            Call This.Say "Disconnecting as Ordered, sir"
+            Call This.Say "Disconnecting"
             wait 10 
                             
             IRCUser[${Config.Common.IRCUser}]:Disconnect
@@ -530,9 +285,23 @@ objectdef obj_IRC
         } 
     } 
     
+	method QueueMessage(string msg)
+	{
+#if USE_ISXIRC
+		This.Buffer:Queue[${msg}]
+#endif
+	}
+	
+  	method SendMessage(string msg)
+  	{
+		if ${This.IsConnected} 
+		{       
+			 IRCUser[${Config.Common.IRCUser}].Channel[${Config.Common.IRCChannel}]:Say["${msg}"]
+		}
+  	}
+  	
     function Say(string msg)
     {       
-        ;echo Connected? ${This.IsConnected}
         if ${This.IsConnected} 
         {       
             IRCUser[${Config.Common.IRCUser}].Channel[${Config.Common.IRCChannel}]:Say["${msg}"]
