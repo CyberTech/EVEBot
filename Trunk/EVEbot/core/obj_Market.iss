@@ -14,6 +14,9 @@ objectdef obj_Market
 	
 	variable index:marketorder sellOrders
 	variable index:marketorder buyOrders
+	variable index:myorder     mySellOrders
+	variable index:myorder     myBuyOrders
+	
 	
 	method Initialize()
 	{
@@ -26,7 +29,7 @@ objectdef obj_Market
 
    	function GetMarketOrders(int typeID)
    	{
-		UI:UpdateConsole["obj_Market: Obtaining market data for type ${typeID}"]
+		UI:UpdateConsole["obj_Market: Obtaining market data for ${EVEDB_Items.ItemName[${typeID}]}"]
 		
 		This.sellOrders:Clear
 		This.buyOrders:Clear
@@ -139,13 +142,21 @@ objectdef obj_Market
 
 	member:float64 HighestBuyOrder()
 	{
-		variable iterator anIterator
-		
-		This.buyOrders:GetIterator[anIterator]
-		anIterator:Last
-		return ${anIterator.Value.Price}
-		
-		;return ${This.buyOrders.Get[This.buyOrders.Used].Price}
+		return ${This.buyOrders.Get[${This.buyOrders.Used}].Price}
+	}
+	
+	function GetMyOrders(int typeID)
+	{
+		UI:UpdateConsole["obj_Market: Obtaining my orders for ${EVEDB_Items.ItemName[${typeID}]}"]
+		Me:UpdateMyOrders
+		wait 40
+		Me:DoGetMyOrders[This.myBuyOrders,"Buy",${typeID}] 
+		wait 10
+		Me:DoGetMyOrders[This.mySellOrders,"Sell",${typeID}]
+		wait 10
+
+		UI:UpdateConsole["obj_Market: Found ${This.mySellOrders.Used} active sell orders for ${EVEDB_Items.ItemName[${typeID}]}."]
+		UI:UpdateConsole["obj_Market: Found ${This.myBuyOrders.Used} active buy orders for ${EVEDB_Items.ItemName[${typeID}]}."]
 	}
 	
 	method DumpSellOrders()
