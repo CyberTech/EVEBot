@@ -101,7 +101,10 @@ objectdef obj_Targets
 		; leave rats that dont scramble which would help
 		; later when chaining gets added
 		PriorityTargets:Insert["Dire Guristas"]
-		PriorityTargets:Insert["Arch Angel"]
+		PriorityTargets:Insert["Arch Angel Hijacker"]
+		PriorityTargets:Insert["Arch Angel Outlaw"]
+		PriorityTargets:Insert["Arch Angel Rogue"]
+		PriorityTargets:Insert["Arch Angel Thug"]
 		PriorityTargets:Insert["Sansha's Loyal"]
 				
 		PriorityTargets:Insert["Guardian Agent"]		/* web/scram */

@@ -33,6 +33,27 @@ objectdef obj_EVEDB_Stations
 	}
 }
 
+objectdef obj_EVEDB_StationID
+{
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+
+	variable string CONFIG_FILE = "${BaseConfig.CONFIG_PATH}/EVEDB_StationID.xml"
+	variable string SET_NAME = "EVEDB_StationID"
+	
+	method Initialize()
+	{
+		LavishSettings:Import[${CONFIG_FILE}]
+		
+		UI:UpdateConsole["obj_EVEDB_StationID: Initialized", LOG_MINOR]
+	}
+	
+	member:int StationID(string stationName)
+	{
+		return ${LavishSettings[${This.SET_NAME}].FindSet[${stationName}].FindSetting[stationName, NOTSET]}
+	}	
+}
+
 objectdef obj_Station
 {
 	variable string SVN_REVISION = "$Rev$"
