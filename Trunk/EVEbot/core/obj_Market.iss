@@ -90,8 +90,8 @@ objectdef obj_Market
 		{
 			pivotIndex:Set[${left}]
 			pivotNewIndex:Set[${This.PartitionSellOrders[${left}, ${right}, ${pivotIndex}]}]
-			This:QuicksortSellOrders[${left}, ${pivotNewIndex} - 1]
-			This:QuicksortSellOrders[${pivotNewIndex} + 1, ${right}]
+			call This.QuicksortSellOrders ${left} ${Math.Calc[${pivotNewIndex} - 1]}
+			call This.QuicksortSellOrders ${Math.Calc[${pivotNewIndex} + 1]} ${right}
 		}
 	}
 
@@ -103,6 +103,9 @@ objectdef obj_Market
 				
 		pivotValue:Set[${This.buyOrders.Get[${pivotIndex}].Price}]
 		
+		;UI:UpdateConsole["DEBUG: ${left} ${right} ${pivotIndex} ${pivotValue}"]
+
+		;UI:UpdateConsole["DEBUG: SWAP ${pivotIndex} ${right}"]
 		This.buyOrders:Swap[${pivotIndex},${right}]
 
 		storeIndex:Set[${left}]
@@ -111,13 +114,17 @@ objectdef obj_Market
 		{
 			if ${This.buyOrders.Get[${idx}].Price} <= ${pivotValue}
 			{
+				;UI:UpdateConsole["DEBUG: SWAP ${storeIndex} ${idx} ${This.buyOrders.Get[${idx}].Price} <= ${pivotValue}"]
 				This.buyOrders:Swap[${storeIndex},${idx}]			
 				storeIndex:Inc
 			}
 		}
 
+		;UI:UpdateConsole["DEBUG: SWAP ${storeIndex} ${right}"]
 		This.buyOrders:Swap[${storeIndex},${right}]
 
+		;UI:UpdateConsole["DEBUG: RTN ${storeIndex}"]
+		
 		return ${storeIndex}
 	}
 
@@ -126,13 +133,47 @@ objectdef obj_Market
  		variable int pivotIndex
  		variable int pivotNewIndex
  		
+ 		;This:DumpBuyOrders
+ 		
 		if ${right} > ${left}
 		{
 			pivotIndex:Set[${left}]
 			pivotNewIndex:Set[${This.PartitionBuyOrders[${left}, ${right}, ${pivotIndex}]}]
-			This:QuicksortBuyOrders[${left}, ${pivotNewIndex} - 1]
-			This:QuicksortBuyOrders[${pivotNewIndex} + 1, ${right}]
+			call This.QuicksortBuyOrders ${left} ${Math.Calc[${pivotNewIndex} - 1]}
+			call This.QuicksortBuyOrders ${Math.Calc[${pivotNewIndex} + 1]} ${right}
 		}
+   	}
+   	
+   	function FilterOrdersByRange(int jumps)
+   	{
+		variable int idx
+		variable int count
+				
+		UI:UpdateConsole["obj_Market: Filtering all orders more than ${jumps} jumps away from your present location."]
+
+		count:Set[${This.sellOrders.Used}]
+		for ( idx:Set[1]; ${idx} <= ${count}; idx:Inc )
+		{
+			if ${This.sellOrders.Get[${idx}].Jumps} > ${jumps}
+			{
+				;UI:UpdateConsole["obj_Market: Removing order ${This.sellOrders.Get[${idx}].ID}."]
+				This.sellOrders:Remove[${idx}]
+			}
+		}
+		This.sellOrders:Collapse		
+		;This:DumpSellOrders		
+		
+		count:Set[${This.buyOrders.Used}]
+		for ( idx:Set[1]; ${idx} <= ${count}; idx:Inc )
+		{
+			if ${This.buyOrders.Get[${idx}].Jumps} > ${jumps}
+			{
+				;UI:UpdateConsole["obj_Market: Removing order ${This.sellOrders.Get[${idx}].ID}."]
+				This.buyOrders:Remove[${idx}]
+			}
+		}
+		This.buyOrders:Collapse
+		;This:DumpBuyOrders		
    	}
 
 	member:float64 LowestSellOrder()
@@ -159,9 +200,92 @@ objectdef obj_Market
 		UI:UpdateConsole["obj_Market: Found ${This.myBuyOrders.Used} active buy orders for ${EVEDB_Items.ItemName[${typeID}]}."]
 	}
 	
+	member:int MySellOrderCount()
+	{
+		return ${This.mySellOrders.Used}
+	}
+	
+	member:int MyBuyOrderCount()
+	{
+		return ${This.myBuyOrders.Used}
+	}
+	
+	
+	function UpdateMySellOrders(float64 delta)
+	{
+		variable iterator orderIterator
+		
+		This.mySellOrders:GetIterator[orderIterator]
+		
+		if ${orderIterator:First(exists)}
+		{
+			do
+			{
+				if ${orderIterator.Value.Price} > ${This.LowestSellOrder}
+				{
+					variable float64 sellPrice
+					sellPrice:Set[${Math.Calc[${This.LowestSellOrder}-${delta}]}]							
+					sellPrice:Set[${sellPrice.Precision[2]}]
+					
+					if ${sellPrice} < 5000000
+					{
+						UI:UpdateConsole["obj_Market: Adjusting order ${orderIterator.Value.ID} to ${sellPrice}."]
+						orderIterator.Value:Modify[${sellPrice}]
+					}
+					else
+					{
+						UI:UpdateConsole["obj_Market: ERROR: Sell price (${sellPrice}) exceeds limit!!"]
+					}
+				}
+				else
+				{
+					UI:UpdateConsole["obj_Market: Order ${orderIterator.Value.ID} is currently the lowest sell order."]
+				}
+			}
+			while ${orderIterator:Next(exists)}
+		}
+	}
+	
+	function UpdateMyBuyOrders(float64 delta)
+	{
+		variable iterator orderIterator
+		
+		This.myBuyOrders:GetIterator[orderIterator]
+		
+		if ${orderIterator:First(exists)}
+		{
+			do
+			{
+				if ${orderIterator.Value.Price} < ${This.HighestBuyOrder}
+				{
+					variable float64 buyPrice
+					buyPrice:Set[${Math.Calc[${This.HighestBuyOrder}+${delta}]}]							
+					buyPrice:Set[${buyPrice.Precision[2]}]
+					
+					if ${buyPrice} < 5000000
+					{
+						UI:UpdateConsole["obj_Market: Adjusting order ${orderIterator.Value.ID} to ${buyPrice}."]
+						orderIterator.Value:Modify[${buyPrice}]
+					}
+					else
+					{
+						UI:UpdateConsole["obj_Market: ERROR: Buy price (${buyPrice}) exceeds limit!!"]
+					}
+				}
+				else
+				{
+					UI:UpdateConsole["obj_Market: Order ${orderIterator.Value.ID} is currently the highest buy order."]
+				}
+			}
+			while ${orderIterator:Next(exists)}
+		}
+	}
+
 	method DumpSellOrders()
 	{
 		variable iterator orderIterator
+		
+		UI:UpdateConsole["obj_Market.DumpSellOrders: dumping..."]
 		
 		This.sellOrders:GetIterator[orderIterator]
 		
@@ -169,7 +293,7 @@ objectdef obj_Market
 		{
 			do
 			{
-				UI:UpdateConsole["obj_Market.DumpSellOrders: ${orderIterator.Value.ID} ${orderIterator.Value.Price} ${orderIterator.Value.QuantityRemaining.Int}/${orderIterator.Value.InitialQuantity}."]
+				UI:UpdateConsole["obj_Market.DumpSellOrders: ${orderIterator.Value.ID} ${orderIterator.Value.Jumps} ${orderIterator.Value.Price} ${orderIterator.Value.QuantityRemaining.Int}/${orderIterator.Value.InitialQuantity}."]
 			}
 			while ${orderIterator:Next(exists)}
 		}
@@ -179,13 +303,15 @@ objectdef obj_Market
 	{
 		variable iterator orderIterator
 		
+		UI:UpdateConsole["obj_Market.DumpBuyOrders: dumping..."]
+		
 		This.buyOrders:GetIterator[orderIterator]
 		
 		if ${orderIterator:First(exists)}
 		{
 			do
 			{
-				UI:UpdateConsole["obj_Market.DumpBuyOrders: ${orderIterator.Value.ID} ${orderIterator.Value.Price} ${orderIterator.Value.QuantityRemaining.Int}/${orderIterator.Value.InitialQuantity}."]
+				UI:UpdateConsole["obj_Market.DumpBuyOrders: ${orderIterator.Value.ID} ${orderIterator.Value.Jumps} ${orderIterator.Value.Price} ${orderIterator.Value.QuantityRemaining.Int}/${orderIterator.Value.InitialQuantity}."]
 			}
 			while ${orderIterator:Next(exists)}
 		}
