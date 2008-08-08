@@ -65,6 +65,20 @@ objectdef obj_EVEBot
     			;Script:End
     		}
 		    
+			if ${Config.Common.Disable3D}
+			{
+				if ${EVE.Is3DDisplayOn}
+				{
+					EVE:Toggle3DDisplay
+					UI:UpdateConsole["Disabling 3D Rendering"]
+				}
+			}
+			elseif !${EVE.Is3DDisplayOn}
+			{
+				EVE:Toggle3DDisplay
+				UI:UpdateConsole["Enabling 3D Rendering"]
+			}
+			
 			checkPulse:Inc[1]
 			; 20 pulses in this if loop is ~ 1 minute
 			if ${checkPulse} >= ${MAXCHECKPULSE}

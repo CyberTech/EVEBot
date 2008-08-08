@@ -125,6 +125,7 @@ objectdef obj_Configuration_Common
 		This.CommonRef:AddSetting[AutoLoginCharID, 0]
 		This.CommonRef:AddSetting[Maximum Runtime, 0]
 		This.CommonRef:AddSetting[Use Sound, FALSE]
+		This.CommonRef:AddSetting[Disable 3D, FALSE]
 	}
 
 	member:int BotMode()
@@ -286,6 +287,16 @@ objectdef obj_Configuration_Common
 	method SetUseSound(bool value)
 	{
 		This.CommonRef:AddSetting[Use Sound,${value}]
+	}
+
+	member:bool Disable3D()
+	{
+		return ${This.CommonRef.FindSetting[Disable 3D, FALSE]}
+	}
+
+	method SetDisable3D(bool value)
+	{
+		This.CommonRef:AddSetting[Disable 3D,${value}]
 	}
 }
 

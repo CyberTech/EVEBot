@@ -452,6 +452,23 @@
 									Script[EVEBot].VariableScope.Config.Common:SetUseSound[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
+						<checkbox Name='cbDisable3D'>
+							<X>110</X>
+							<Y>240</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Disable 3D Rendering</Text>
+							<AutoTooltip>Disable EVE 3D Rendering</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Common.Disable3D}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+									Script[EVEBot].VariableScope.Config.Common:SetDisable3D[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
 					</Tab>
 
 					<Tab name='Miner'>
