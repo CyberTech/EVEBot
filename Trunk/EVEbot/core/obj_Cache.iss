@@ -15,13 +15,14 @@ objectdef obj_Cache
 
 	variable float RunTime
 	variable float NextPulse2Sec = 0
+	variable float NextPulse1Sec = 0
 	variable float NextPulseHalfSec = 0
 	
 	variable collection:string StaticList
 	variable collection:string ObjectList
 	variable collection:string FastObjectList
-
-
+	variable collection:string OneSecondObjectList
+	
 	method Initialize()
 	{
 		UI:UpdateConsole["obj_Cache: Initialized", LOG_MINOR]
@@ -42,6 +43,7 @@ objectdef obj_Cache
 	/* Runs every other frame, and updates one member per run */
 	method Pulse()
 	{
+		; Changing the /1000 is not going to make your script faster or your dog smarter. it will just break things.
 		This.RunTime:Set[${Math.Calc[${Script.RunningTime}/1000]}]
 
 		variable string temp
@@ -66,6 +68,27 @@ objectdef obj_Cache
 
 			This.NextPulseHalfSec:Set[${This.RunTime}]
     		This.NextPulseHalfSec:Inc[0.5]
+		}
+
+		/* Process ObjectList every 1 second */
+		if ${This.RunTime} > ${This.NextPulse1Sec}
+		{		
+			if ${OneSecondObjectList.FirstKey(exists)}
+			{
+				do
+				{
+					;redirect -append "crash.txt" echo "[${OneSecondObjectList.CurrentKey}]: ${OneSecondObjectList.CurrentValue}"
+					temp:Set[${${OneSecondObjectList.CurrentValue}}]
+					if ${temp.NotEqual["NULL"]}
+					{
+						${OneSecondObjectList.CurrentKey}:Set[${temp}]
+					}
+					;redirect -append "crash.txt" echo "${${OneSecondObjectList.CurrentKey}}"
+				}
+				while ${OneSecondObjectList.NextKey(exists)}
+			}
+			This.NextPulse1Sec:Set[${This.RunTime}]
+    		This.NextPulse1Sec:Inc[2.0]
 		}
 
 		/* Process ObjectList every 2 seconds */
@@ -260,7 +283,7 @@ objectdef obj_Cache_EVETime inherits obj_Cache
 	{
 		UI:UpdateConsole["obj_Cache_EVETime: Initialized", LOG_MINOR]
 
-		ObjectList:Set["_Time", "EVETime.Time"]
+		OneSecondObjectList:Set["_Time", "EVETime.Time"]
 		This[parent]:Initialize
 	}
 

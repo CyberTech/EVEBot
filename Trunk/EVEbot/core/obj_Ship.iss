@@ -792,20 +792,6 @@ objectdef obj_Ship
 		while ${Module:Next(exists)}
 	}
 
-
-/*
-CycleMiningLaser: HiSlot1 Activate: FALSE
-Error: Math sequence not available
-Dumping script stack
---------------------
--->C:/Program Files/InnerSpace/Scripts/evebot/core/obj_Ship.iss:516 Atom000000B1() if !${Activate} &&(!${Me.Ship.Module[${Slot}].IsActive} ||${Me.Ship.Module[${Slot}].IsGoingOnline}
-||${Me.Ship.Module[${Slot}].IsDeactivating} ||${Me.Ship.Module[${Slot}].IsChangingAmmo} ||${Me.Ship.Module[${Slot}].IsReloadingAmmo}
-C:/Program Files/InnerSpace/Scripts/evebot/core/obj_Ship.iss:584 ActivateFreeMiningLaser() wait 10
-C:/Program Files/InnerSpace/Scripts/evebot/core/obj_Miner.iss:190 Mine() call Ship.ActivateFreeMiningLaser
-C:/Program Files/InnerSpace/Scripts/evebot/core/obj_Miner.iss:59 ProcessState() call Miner.Mine
-C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.ProcessState
-	*/
-
 	method CycleMiningLaser(string Activate, string Slot)
 	{
 		echo CycleMiningLaser: ${Slot} Activate: ${Activate}
@@ -1010,8 +996,8 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 			LoopCheck:Set[0]
 			CaptionCount:Set[${EVEWindow[MyShipCargo].Caption.Token[2,"["].Token[1,"]"]}]
 			;UI:UpdateConsole["obj_Ship: Waiting for cargo to load: CaptionCount: ${CaptionCount}", LOG_DEBUG]
-			while (${CaptionCount} > ${Me.Ship.GetCargo} && \
-					${LoopCheck} < 10)
+			while ( ${CaptionCount} > ${Me.Ship.GetCargo} && \
+					${LoopCheck} < 10 )
 			{
 				UI:UpdateConsole["obj_Ship: Waiting for cargo to load...(${Loopcheck})", LOG_MINOR]
 				while !${This.IsCargoOpen}
@@ -1248,7 +1234,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 					UI:UpdateConsole["obj_Ship:WarpToBookMark - Failed to arrive at bookmark after ${WarpCounter} warps", LOG_CRITICAL]
 					return
 				}
-				UI:UpdateConsole["1) Warping to bookmark ${Label} (Attempt #${WarpCounter})"]
+				UI:UpdateConsole["1: Warping to bookmark ${Label} (Attempt #${WarpCounter})"]
 				while !${This.WarpEntered}
 				{
 					DestinationBookmark:WarpTo
@@ -1297,7 +1283,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 				else
 				{
 					
-					UI:UpdateConsole["2) Warping to bookmark ${Label} (Attempt #${WarpCounter})"]
+					UI:UpdateConsole["2: Warping to bookmark ${Label} (Attempt #${WarpCounter})"]
 					while !${This.WarpEntered}
 					{
 						DestinationBookmark:WarpTo
@@ -1324,7 +1310,7 @@ C:/Program Files/InnerSpace/Scripts/evebot/evebot.iss:90 main() call ${BotType}.
 					UI:UpdateConsole["obj_Ship:WarpToBookMark - Failed to arrive at bookmark after ${WarpCounter} warps", LOG_CRITICAL]
 					return
 				}
-				UI:UpdateConsole["3) Warping to bookmark ${Label} (Attempt #${WarpCounter})"]
+				UI:UpdateConsole["3: Warping to bookmark ${Label} (Attempt #${WarpCounter})"]
 				while !${This.WarpEntered}
 				{
 					DestinationBookmark:WarpTo
