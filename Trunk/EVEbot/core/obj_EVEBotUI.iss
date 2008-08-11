@@ -98,7 +98,7 @@ objectdef obj_EVEBotUI
 	method UpdateConsoleIRC(string StatusMessage, int Level=LOG_STANDARD, int Indent=0)
 	{
 		This:UpdateConsole["${StatusMessage}", ${Level}, ${Indent}]
-		ChatIRC:QueueMessage["${msg}"]
+		ChatIRC:QueueMessage["${StatusMessage}"]
 	}
 	
 	method UpdateConsole(string StatusMessage, int Level=LOG_STANDARD, int Indent=0)
