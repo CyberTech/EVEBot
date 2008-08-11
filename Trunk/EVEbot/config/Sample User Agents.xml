@@ -15,4 +15,9 @@
 		<Setting Name="Uba Virserin">1</Setting>
 		<Setting Name="Dalofer Mattore">1</Setting>
 	</Set>
+	<Set Name="Sample User Research Agents">
+		<Setting Name="Agent One">1</Setting>
+		<Setting Name="Agent Two">1</Setting>
+		<Setting Name="Agent Three">1</Setting>
+	</Set>	
 </InnerSpaceSettings>

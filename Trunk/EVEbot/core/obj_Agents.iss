@@ -13,8 +13,11 @@ objectdef obj_AgentList
 	variable int Version
 
 	variable string CONFIG_FILE = "${BaseConfig.CONFIG_PATH}/${_Me.Name} Agents.xml"
-	variable string SET_NAME = "${_Me.Name} Agents"
+	variable string SET_NAME1 = "${_Me.Name} Agents"
+	variable string SET_NAME2 = "${_Me.Name} Research Agents"
 	variable iterator agentIterator
+	variable iterator researchAgentIterator
+	variable queue:string researchAgentQueue
 	
 	method Initialize()
 	{
@@ -23,13 +26,27 @@ objectdef obj_AgentList
 			LavishSettings[${This.SET_NAME}]:Clear
 		}
 		LavishSettings:Import[${CONFIG_FILE}]
-		LavishSettings[${This.SET_NAME}]:GetSettingIterator[This.agentIterator]
+		LavishSettings[${This.SET_NAME1}]:GetSettingIterator[This.agentIterator]
+		LavishSettings[${This.SET_NAME2}]:GetSettingIterator[This.researchAgentIterator]
+		
+		researchAgentQueue:Clear
+		if ${This.researchAgentIterator:First(exists)}
+		{
+			do
+			{
+			    UI:UpdateConsole["DEBUG: Queuing research agent (${This.researchAgentIterator.Key})"]
+				This.researchAgentQueue:Queue[${This.researchAgentIterator.Key}]
+			}  
+			while ${This.researchAgentIterator:Next(exists)}
+		}
+			
 		UI:UpdateConsole["obj_AgentList: Initialized", LOG_MINOR]
 	}
 	
 	method Shutdown()	
 	{
-		LavishSettings[${This.SET_NAME}]:Clear
+		LavishSettings[${This.SET_NAME1}]:Clear
+		LavishSettings[${This.SET_NAME2}]:Clear
 	}
 	
 	member:string FirstAgent()
@@ -59,6 +76,31 @@ objectdef obj_AgentList
 	member:string ActiveAgent()
 	{
 		return ${This.agentIterator.Key}
+	}
+
+	member:string FirstResearchAgent()
+	{
+		if ${This.researchAgentIterator:First(exists)}
+		{
+			return ${This.researchAgentIterator.Key}			
+		}
+		
+		return NULL
+	}
+	
+	member:string NextResearchAgent()
+	{
+		if ${This.researchAgentIterator:Next(exists)}
+		{
+			return ${This.researchAgentIterator.Key}			
+		}
+		
+		return NULL
+	}
+	
+	member:string ActiveResearchAgent()
+	{
+		return ${This.researchAgentIterator.Key}
 	}
 }
 
@@ -254,6 +296,26 @@ objectdef obj_Agents
 		}
 		
 		/* if we get here none of the missions in the journal are valid */
+		
+		/* iterate through research agent list once per session */
+		/* TODO: Change this to remember the last time we talked to a      */
+		/*       research agent and only talk to them once every 24 hours. */
+		if ${This.AgentList.researchAgentQueue.Peek(exists)}
+		{
+			do
+			{
+				if ${skipList.Contains[${Config.Agents.AgentID[${This.AgentList.researchAgentQueue.Peek}]}]} == FALSE
+				{
+					UI:UpdateConsole["obj_Agents: DEBUG: Setting agent to ${This.AgentList.researchAgentQueue.Peek}"]	
+					This:SetActiveAgent[${This.AgentList.researchAgentQueue.Peek}]
+					This.AgentList.researchAgentQueue:Dequeue
+					return
+				}
+				This.AgentList.researchAgentQueue:Dequeue
+			}  
+			while ${This.AgentList.researchAgentQueue.Peek(exists)}
+		}
+		
 		if ${This.AgentList.agentIterator:First(exists)}
 		{
 			do
@@ -578,7 +640,16 @@ objectdef obj_Agents
 		{
 			; Assume the first item is the "ask for work" item.
 			; This may break if you have agents with locator services.
-	        dsIterator.Value:Say[${This.AgentID}]
+			if ${Agent[${This.AgentIndex}].Division.Equal["R&D"]}
+			{
+				if ${dsIterator.Value.Text.Find["datacore"]}
+				{
+				    UI:UpdateConsole["WARNING: Research agent doesn't have a mission available"]
+				    return
+				}
+			}
+
+        	dsIterator.Value:Say[${This.AgentID}]
 		}
 		
 	    ; Now wait a couple of seconds and then get the new dialog options...and so forth.  The "Wait" needed may differ from person to person.
