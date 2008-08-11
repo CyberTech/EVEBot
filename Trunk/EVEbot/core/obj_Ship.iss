@@ -1156,7 +1156,7 @@ objectdef obj_Ship
 		call This.WarpPrepare
 		call This.TravelToSystem ${DestinationBookmark.SolarSystemID}
 
-#if DEBUG
+#if EVEBOT_DEBUG
 		echo \${DestinationBookmark.Type} = ${DestinationBookmark.Type}
 		echo \${DestinationBookmark.TypeID} = ${DestinationBookmark.TypeID}
 		echo \${DestinationBookmark.ToEntity(exists)} = ${DestinationBookmark.ToEntity(exists)}
