@@ -335,61 +335,6 @@ objectdef obj_Agents
 		Script:Pause		
 	}
 	
-	member:bool LowSecRoute()
-	{
-	    variable index:agentmission amIndex
-	    variable index:bookmark mbIndex
-		variable iterator amIterator
-		variable iterator mbIterator
-
-	    EVE:DoGetAgentMissions[amIndex]
-		amIndex:GetIterator[amIterator]
-
-		if ${amIterator:First(exists)}
-		{
-			do
-			{
-				if ${amIterator.Value.AgentID} == ${This.AgentID}
-				{
-					amIterator.Value:DoGetBookmarks[mbIndex]
-					mbIndex:GetIterator[mbIterator]
-
-					if ${mbIterator:First(exists)}
-					{
-						do
-						{
-							mbIterator.Value:SetDestination
-				        	variable index:int ap_path
-				        	EVE:DoGetToDestinationPath[ap_path]
-				        	variable iterator ap_path_iterator
-				        	ap_path:GetIterator[ap_path_iterator]
-				        	
-							UI:UpdateConsole["obj_Agents: ${mbIterator.Value.Label} is ${ap_path.Used} jumps away."]
-							if ${ap_path_iterator:First(exists)}
-							{
-								do
-								{
-									UI:UpdateConsole["obj_Agents: ${ap_path_iterator.Value} ${Universe[${ap_path_iterator.Value}]} (${Universe[${ap_path_iterator.Value}].Security})"]
-							        if ${ap_path_iterator.Value} > 0 && ${Universe[${ap_path_iterator.Value}].Security} <= 0.45
-							        {	/* avoid low-sec */
-										UI:UpdateConsole["obj_Agents: Low-Sec route found"]
-										return TRUE
-							        }
-								}
-								while ${ap_path_iterator:Next(exists)}
-							}		
-							
-						} 
-						while ${mbIterator:Next(exists)}
-					}
-				}
-			}  
-			while ${amIterator:Next(exists)}
-		}		
-		
-		return FALSE
-	}
-
 	member:string DropOffStation()
 	{
 		variable string rVal = ""
@@ -449,18 +394,31 @@ objectdef obj_Agents
 		EVE:DoGetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
-		;;UI:UpdateConsole["obj_Agents: DEBUG: amIndex.Used = ${amIndex.Used}"]	
 		if ${amIterator:First(exists)}
 		{
 			do
 			{
-				;UI:UpdateConsole["obj_Agents: DEBUG: This.AgentID = ${This.AgentID}"]	
-				;UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.AgentID = ${amIterator.Value.AgentID}"]	
-				;UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.State = ${amIterator.Value.State}"]	
-				;UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}"]	
-				if ${amIterator.Value.AgentID} == ${This.AgentID} && ${amIterator.Value.State} > 1
+				if ${amIterator.Value.State} > 1
 				{
-					return TRUE
+					if ${amIterator.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions} == TRUE
+					{
+						return TRUE
+					}
+					
+					if ${amIterator.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} == TRUE
+					{
+						return TRUE
+					}
+					
+					if ${amIterator.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} == TRUE
+					{
+						return TRUE
+					}
+					
+					if ${amIterator.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions} == TRUE
+					{
+						return TRUE
+					}
 				}
 			}  
 			while ${amIterator:Next(exists)}

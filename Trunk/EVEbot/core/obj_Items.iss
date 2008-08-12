@@ -22,6 +22,11 @@ objectdef obj_EVEDB_Items
 		UI:UpdateConsole["obj_EVEDB_Items: Initialized", LOG_MINOR]
 	}
 	
+	method Shutdown()	
+	{
+		LavishSettings[${This.SET_NAME}]:Clear
+	}	
+	
 	member:int ItemID(string itemName)
 	{
 		return ${LavishSettings[${This.SET_NAME}].FindSet[${itemName}].FindSetting[itemID, NOTSET]}
@@ -30,6 +35,11 @@ objectdef obj_EVEDB_Items
 	member:string ItemName(int itemID)
 	{
 		return ${LavishSettings[${This.SET_NAME}].FindSet[${itemID}].FindSetting[itemName, NOTSET]}
+	}
+
+	member:float Volume(int itemID)
+	{
+		return ${LavishSettings[${This.SET_NAME}].FindSet[${itemID}].FindSetting[Volume, NOTSET]}
 	}
 }
 

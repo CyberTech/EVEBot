@@ -29,6 +29,8 @@
 #include core/obj_Combat.iss
 #include core/obj_Missions.iss
 #include core/obj_Market.iss
+#include core/obj_Items.iss
+#include core/obj_Autopilot.iss
 
 /* Behavior/Mode Includes */
 #include Behaviors/obj_Courier.iss
@@ -52,7 +54,9 @@ variable obj_Configuration Config
 variable obj_Config_Whitelist Whitelist
 variable obj_Config_Blacklist Blacklist
 variable obj_EVEDB_Stations EVEDB_Stations
+variable obj_EVEDB_StationID EVEDB_StationID
 variable obj_EVEDB_Spawns EVEDB_Spawns
+variable obj_EVEDB_Items EVEDB_Items	
 
 /* Core Objects */
 variable obj_Asteroids Asteroids
@@ -74,6 +78,7 @@ variable obj_Sound Sound
 variable obj_Agents Agents
 variable obj_Missions Missions
 variable obj_Market Market
+variable obj_Autopilot Autopilot
 
 /* Script-Defined Behavior Objects */
 variable index:string BotModules

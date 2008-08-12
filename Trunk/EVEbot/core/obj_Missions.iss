@@ -202,7 +202,7 @@ objectdef obj_Missions
 	
 	function RunCourierMission(int agentID)
 	{
-		if ${This.MissionCache[${agentID}].Volume} > ${Config.Missioneer.SmallHaulerLimit}
+		if ${This.MissionCache.Volume[${agentID}]} > ${Config.Missioneer.SmallHaulerLimit}
 		{
 			call Ship.ActivateShip "${Config.Missioneer.LargeHauler}"
 		}		   
@@ -239,7 +239,11 @@ objectdef obj_Missions
 	
 	function RunTradeMission(int agentID)
 	{
-		if ${This.MissionCache[${agentID}].Volume} > ${Config.Missioneer.SmallHaulerLimit}
+		variable int quantity
+		
+		Agents:SetActiveAgent[${Agent[id,${agentID}]}]
+		
+		if ${This.MissionCache.Volume[${agentID}]} > ${Config.Missioneer.SmallHaulerLimit}
 		{
 			call Ship.ActivateShip "${Config.Missioneer.LargeHauler}"
 		}		   
@@ -253,12 +257,29 @@ objectdef obj_Missions
 		 	call Station.Undock
 	  	}
 
-		call Market.GetMarketOrders ${This.MissionCache.TypeID[${agentID}]}
-		;call Market.TravelToBestSellOrder ${Config.Missioneer.AvoidLowSec}
-		;call Market.PurchaseGoods 
+		call Market.GetMarketOrders ${This.MissionCache.TypeID[${agentID}]}		
+		quantity:Set[${Math.Calc[${This.MissionCache.Volume[${agentID}]}/${EVEDB_Items.Volume[${This.MissionCache.TypeID[${agentID}]}]}]}]
+		call Market.FindBestSellOrder ${Config.Missioneer.AvoidLowSec} ${quantity}
+		call Ship.TravelToSystem ${Market.BestSellOrderSystem}
+		call Station.DockAtStation ${Market.BestSellOrderStation}
+		call Market.PurchaseItem ${This.MissionCache.TypeID[${agentID}]} ${quantity}
 
-		UI:UpdateConsole["obj_Missions: ERROR!  Trade missions are not supported!"]
-		Script:Pause
+		call Cargo.TransferHangarItemToShip ${This.MissionCache.TypeID[${agentID}]}
+		
+		if ${Cargo.LastTransferComplete} == FALSE
+		{
+			UI:UpdateConsole["obj_Missions: ERROR: Couldn't carry all the trade goods!  Pasuing script!!"]
+			Script:Pause
+		}
+		
+		UI:UpdateConsole["obj_Missions: MoveTo Agent"]
+		call Agents.MoveTo
+		wait 50
+		call Cargo.TransferItemTypeToHangar ${This.MissionCache.TypeID[${agentID}]}
+		wait 50
+		
+		UI:UpdateConsole["obj_Missions: TurnInMission"]
+		call Agents.TurnInMission
 	}
 
 	function RunMiningMission(int agentID)

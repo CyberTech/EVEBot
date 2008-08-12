@@ -27920,5 +27920,12 @@
         <Set Name="17772">
             <Setting Name="itemName">"Small AutoCannon Battery"</Setting>
         </Set>
+        <Set Name="Tritanium">
+            <Setting Name="itemID">"34"</Setting>
+        </Set>
+        <Set Name="34">
+            <Setting Name="itemName">"Tritanium"</Setting>
+            <Setting Name="Volume">"0.01"</Setting>
+        </Set>
     </Set>
 </InnerSpaceSettings>
