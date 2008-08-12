@@ -259,7 +259,7 @@ objectdef obj_Missions
 
 		call Market.GetMarketOrders ${This.MissionCache.TypeID[${agentID}]}		
 		quantity:Set[${Math.Calc[${This.MissionCache.Volume[${agentID}]}/${EVEDB_Items.Volume[${This.MissionCache.TypeID[${agentID}]}]}]}]
-		call Market.FindBestSellOrder ${Config.Missioneer.AvoidLowSec} ${quantity}
+		call Market.FindBestWeightedSellOrder ${Config.Missioneer.AvoidLowSec} ${quantity}
 		call Ship.TravelToSystem ${Market.BestSellOrderSystem}
 		call Station.DockAtStation ${Market.BestSellOrderStation}
 		call Market.PurchaseItem ${This.MissionCache.TypeID[${agentID}]} ${quantity}

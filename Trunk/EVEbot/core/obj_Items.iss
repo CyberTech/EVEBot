@@ -7,6 +7,23 @@
 	
 */
 
+/*	keep for reference
+	==================
+		
+		SELECT 
+		`typeID`, 
+		`groupID`, 
+		`typeName`, 
+		`volume`, 
+		`capacity`, 
+		`portionSize`, 
+		`basePrice`, 
+		invTypes.marketGroupID
+		FROM `invTypes`
+		WHERE invTypes.marketGroupID IS NOT NULL
+		order by typeID	
+*/
+
 objectdef obj_EVEDB_Items
 {
 	variable string SVN_REVISION = "$Rev$"

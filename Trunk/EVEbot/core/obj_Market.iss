@@ -202,6 +202,85 @@ objectdef obj_Market
 		Script:Pause
 	}
 
+	; Rank orders based on price versus distance
+	; Items closed to your location will be given priority even if more expensive
+	; This function is intended for use with the trade mission bot.
+	; DO NOT use this function with expensive items!!!
+	; NOTE: THIS FUNCTION MODIFIES THE SELL ORDER INDEX
+	function FindBestWeightedSellOrder(bool avoidLowSec, int quantity)
+	{
+		variable int     idx
+		variable int     count
+		variable int     bestIdx
+		variable float64 bestWeight
+				
+		UI:UpdateConsole["obj_Market.BestSellOrderSystem(${avoidLowSec},${quantity})"]
+
+		if ${Station.Docked}
+		{
+			UI:UpdateConsole["obj_Market.BestSellOrderSystem: WARNING:  Called while docked."]
+		}
+
+		; if avoiding low-sec, remove all orders that go through low-sec
+		if ${avoidLowSec} == TRUE
+		{				
+			count:Set[${This.sellOrders.Used}]	
+			for ( idx:Set[1]; ${idx} <= ${count}; idx:Inc )
+			{
+				Autopilot:SetDestination[${This.sellOrders.Get[${idx}].SolarSystemID}]
+				wait 10	
+				if ${Autopilot.LowSecRoute} == FALSE
+				{
+					This.sellOrders:Remove[${idx}]
+				}
+			}
+			This.sellOrders:Collapse
+			UI:UpdateConsole["DEBUG: obj_Market.FindBestWeightedSellOrder: ${This.sellOrders.Used} remain after purging low-sec routes."]
+		}
+
+		count:Set[${This.sellOrders.Used}]	
+		bestIdx:Set[-1]
+		bestWeight:Set[999999999.99]
+
+		for ( idx:Set[1]; ${idx} <= ${count}; idx:Inc )
+		{
+			variable float64 weight
+			
+			weight:Set[${Math.Calc[${This.sellOrders.Get[${idx}].Price}*${This.Weight[${This.sellOrders.Get[${idx}].Jumps}]}]}]
+
+			UI:UpdateConsole["DEBUG: obj_Market.FindBestWeightedSellOrder ${This.sellOrders.Get[${idx}].Price} ${This.sellOrders.Get[${idx}].Jumps} ${weight}"]
+
+			if ${weight} < ${bestWeight}
+			{
+				bestWeight:Set[${weight}]
+				bestIdx:Set[${idx}]
+			}
+		}
+		
+		if ${bestIdx} >= 1
+		{
+			This.m_BestSellOrderSystem:Set[${This.sellOrders.Get[${bestIdx}].SolarSystemID}]
+			This.m_BestSellOrderStation:Set[${This.sellOrders.Get[${bestIdx}].StationID}]
+			return
+		}
+
+		; If this happens just pause the script to avoid errors
+		UI:UpdateConsole["obj_Market.FindBestWeightedSellOrder: ERROR:  Could not find a system to purchase the item.  Pausing script!"]
+		Script:Pause
+	}
+
+	member:float Weight(int jumps)
+	{
+		UI:UpdateConsole["obj_Market.Weight(${jumps})"]
+		
+		if ${jumps} <= 0
+		{
+			return 0.20
+		}
+		
+		return ${Math.Calc[${jumps}*0.50]}
+	}
+	
 	function PurchaseItem(int typeID, int quantity)
 	{
 		variable iterator orderIterator

@@ -5,10 +5,6 @@
 	to support a bot class that has traveling functions.
 	
 	-- GliderPro
-
-	HISTORY
-	------------------------------------------
-	10AUG2007 - Initial release of class template
 */
 
 objectdef obj_Autopilot
@@ -17,12 +13,14 @@ objectdef obj_Autopilot
 	variable int Version
 	
 	variable int       Destination
+	variable int       IsLowSecRoute
 	variable index:int Path
 	variable iterator  PathIterator
 
 
 	method Initialize()
 	{
+		This.IsLowSecRoute:Set[-999]
 		UI:UpdateConsole["obj_Autopilot: Initialized", LOG_MINOR]
 	}
 
@@ -40,9 +38,15 @@ objectdef obj_Autopilot
 	*/
 	method SetDestination(int id)
 	{
+		if ${This.Destination} == ${id}
+		{
+			return
+		}
+		
 		UI:UpdateConsole["obj_Autopilot: Setting destination to ${Universe[${id}]}"]
 		This.Destination:Set[${id}]
 		Universe[${id}]:SetDestination
+		This.IsLowSecRoute:Set[-999]
 	}
 	
 	/*
@@ -50,25 +54,30 @@ objectdef obj_Autopilot
 	*/
 	member:bool LowSecRoute()
 	{
-    	EVE:DoGetToDestinationPath[This.Path]
-    	This.Path:GetIterator[This.PathIterator]
-    	
-		;;UI:UpdateConsole["obj_Autopilot: DEBUG: ${Universe[${This.Destination}]} is ${This.Path.Used} jumps away."]
-		if ${This.PathIterator:First(exists)}
+		if ${This.IsLowSecRoute} == -999
 		{
-			do
+	
+	    	EVE:DoGetToDestinationPath[This.Path]
+	    	This.Path:GetIterator[This.PathIterator]
+	    	
+			;;UI:UpdateConsole["obj_Autopilot: DEBUG: ${Universe[${This.Destination}]} is ${This.Path.Used} jumps away."]
+			if ${This.PathIterator:First(exists)}
 			{
-				;;UI:UpdateConsole["obj_Autopilot: DEBUG: ${This.PathIterator.Value} ${Universe[${This.PathIterator.Value}]} (${Universe[${This.PathIterator.Value}].Security})"]
-		        if ${This.PathIterator.Value} > 0 && ${Universe[${This.PathIterator.Value}].Security} <= 0.45
-		        {
-					UI:UpdateConsole["obj_Autopilot: Low-Sec system found"]
-					return TRUE
-		        }
-			}
-			while ${This.PathIterator:Next(exists)}
-		}		
-		
-		return FALSE
+				do
+				{
+					;;UI:UpdateConsole["obj_Autopilot: DEBUG: ${This.PathIterator.Value} ${Universe[${This.PathIterator.Value}]} (${Universe[${This.PathIterator.Value}].Security})"]
+			        if ${This.PathIterator.Value} > 0 && ${Universe[${This.PathIterator.Value}].Security} <= 0.45
+			        {
+						UI:UpdateConsole["obj_Autopilot: Low-Sec system found"]
+						This.IsLowSecRoute:Set[TRUE]
+						break
+			        }
+				}
+				while ${This.PathIterator:Next(exists)}
+			}		
+		}
+			
+		return ${This.IsLowSecRoute}
 	}
 
 	/*
