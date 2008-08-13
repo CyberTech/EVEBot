@@ -118,7 +118,7 @@ objectdef obj_Market
 
    	function GetMarketOrders(int typeID)
    	{
-		UI:UpdateConsole["obj_Market: Obtaining market data for ${EVEDB_Items.ItemName[${typeID}]} (${typeID})"]
+		UI:UpdateConsole["obj_Market: Obtaining market data for ${EVEDB_Items.Name[${typeID}]} (${typeID})"]
 		
 		This.sellOrders:Clear
 		This.buyOrders:Clear
@@ -450,7 +450,7 @@ objectdef obj_Market
 	
 	function GetMyOrders(int typeID)
 	{
-		UI:UpdateConsole["obj_Market: Obtaining my orders for ${EVEDB_Items.ItemName[${typeID}]}"]
+		UI:UpdateConsole["obj_Market: Obtaining my orders for ${EVEDB_Items.Name[${typeID}]}"]
 		Me:UpdateMyOrders
 		wait 40
 		Me:DoGetMyOrders[This.myBuyOrders,"Buy",${typeID}] 
@@ -458,8 +458,8 @@ objectdef obj_Market
 		Me:DoGetMyOrders[This.mySellOrders,"Sell",${typeID}]
 		wait 10
 
-		UI:UpdateConsole["obj_Market: Found ${This.mySellOrders.Used} active sell orders for ${EVEDB_Items.ItemName[${typeID}]}."]
-		UI:UpdateConsole["obj_Market: Found ${This.myBuyOrders.Used} active buy orders for ${EVEDB_Items.ItemName[${typeID}]}."]
+		UI:UpdateConsole["obj_Market: Found ${This.mySellOrders.Used} active sell orders for ${EVEDB_Items.Name[${typeID}]}."]
+		UI:UpdateConsole["obj_Market: Found ${This.myBuyOrders.Used} active buy orders for ${EVEDB_Items.Name[${typeID}]}."]
 	}
 	
 	member:int MySellOrderCount()

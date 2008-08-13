@@ -239,7 +239,8 @@ objectdef obj_Missions
 	
 	function RunTradeMission(int agentID)
 	{
-		variable int quantity
+		variable int    quantity
+		variable string itemName
 		
 		Agents:SetActiveAgent[${Agent[id,${agentID}]}]
 		
@@ -258,7 +259,8 @@ objectdef obj_Missions
 	  	}
 
 		call Market.GetMarketOrders ${This.MissionCache.TypeID[${agentID}]}		
-		quantity:Set[${Math.Calc[${This.MissionCache.Volume[${agentID}]}/${EVEDB_Items.Volume[${This.MissionCache.TypeID[${agentID}]}]}]}]
+		itemName:Set[${EVEDB_Items.Name[${This.MissionCache.TypeID[${agentID}]}]}]
+		quantity:Set[${Math.Calc[${This.MissionCache.Volume[${agentID}]}/${EVEDB_Items.Volume[${itemName}]}]}]
 		call Market.FindBestWeightedSellOrder ${Config.Missioneer.AvoidLowSec} ${quantity}
 		call Ship.TravelToSystem ${Market.BestSellOrderSystem}
 		call Station.DockAtStation ${Market.BestSellOrderStation}
