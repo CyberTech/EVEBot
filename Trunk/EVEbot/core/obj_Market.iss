@@ -248,7 +248,7 @@ objectdef obj_Market
 			
 			weight:Set[${Math.Calc[${This.sellOrders.Get[${idx}].Price}*${This.Weight[${This.sellOrders.Get[${idx}].Jumps}]}]}]
 
-			UI:UpdateConsole["DEBUG: obj_Market.FindBestWeightedSellOrder ${This.sellOrders.Get[${idx}].Price} ${This.sellOrders.Get[${idx}].Jumps} ${weight}"]
+			;;UI:UpdateConsole["DEBUG: obj_Market.FindBestWeightedSellOrder ${This.sellOrders.Get[${idx}].Price} ${This.sellOrders.Get[${idx}].Jumps} ${weight}"]
 
 			if ${weight} < ${bestWeight}
 			{
@@ -271,8 +271,6 @@ objectdef obj_Market
 
 	member:float Weight(int jumps)
 	{
-		UI:UpdateConsole["obj_Market.Weight(${jumps})"]
-		
 		if ${jumps} <= 0
 		{
 			return 0.20

@@ -303,13 +303,25 @@ objectdef obj_Agents
 		if ${This.AgentList.researchAgentQueue.Peek(exists)}
 		{
 			do
-			{
+			{				
 				if ${skipList.Contains[${Config.Agents.AgentID[${This.AgentList.researchAgentQueue.Peek}]}]} == FALSE
 				{
-					UI:UpdateConsole["obj_Agents: DEBUG: Setting agent to ${This.AgentList.researchAgentQueue.Peek}"]	
-					This:SetActiveAgent[${This.AgentList.researchAgentQueue.Peek}]
-					This.AgentList.researchAgentQueue:Dequeue
-					return
+					variable time lastCompletionTime
+					lastCompletionTime:Set[${Config.Agents.LastCompletionTime[${This.AgentList.researchAgentQueue.Peek}]}]
+					UI:UpdateConsole["obj_Agents: DEBUG: lastCompletionTime = ${lastCompletionTime}"]
+					lastCompletionTime.Hour:Inc[24]
+					lastCompletionTime:Update
+					if ${lastCompletionTime.Timestamp} < ${Time.Timestamp}
+					{
+						UI:UpdateConsole["obj_Agents: DEBUG: Setting agent to ${This.AgentList.researchAgentQueue.Peek}"]	
+						This:SetActiveAgent[${This.AgentList.researchAgentQueue.Peek}]
+						This.AgentList.researchAgentQueue:Dequeue
+						return
+					}
+					else
+					{
+						UI:UpdateConsole["obj_Agents: Spoke with research agent ${This.AgentList.researchAgentQueue.Peek} less than 24 hours ago."]	
+					}
 				}
 				This.AgentList.researchAgentQueue:Dequeue
 			}  
@@ -603,7 +615,13 @@ objectdef obj_Agents
 				if ${dsIterator.Value.Text.Find["datacore"]}
 				{
 				    UI:UpdateConsole["WARNING: Research agent doesn't have a mission available"]
-				    return
+					if ${Config.Agents.LastCompletionTime[${This.AgentName}]} == 0
+					{
+				    	;; this agent didn't have a valid LastCompletionTime
+				    	;; set LastCompletionTime to lock out this agent for 24 hours
+	    				Config.Agents:SetLastCompletionTime[${This.AgentName},${Time.Timestamp}]
+	    			}
+					return
 				}
 			}
 
@@ -1040,6 +1058,7 @@ objectdef obj_Agents
 		{
 			; Assume the first item is the "turn in mission" item.
 	        dsIterator.Value:Say[${This.AgentID}]
+			Config.Agents:SetLastCompletionTime[${This.AgentName},${Time.Timestamp}]
 		}
 		
 	    ; Now wait a couple of seconds and then get the new dialog options...and so forth.  The "Wait" needed may differ from person to person.
