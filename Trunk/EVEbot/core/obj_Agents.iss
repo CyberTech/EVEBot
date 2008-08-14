@@ -17,7 +17,6 @@ objectdef obj_AgentList
 	variable string SET_NAME2 = "${_Me.Name} Research Agents"
 	variable iterator agentIterator
 	variable iterator researchAgentIterator
-	variable queue:string researchAgentQueue
 	
 	method Initialize()
 	{
@@ -27,20 +26,8 @@ objectdef obj_AgentList
 		}
 		LavishSettings:Import[${CONFIG_FILE}]
 		LavishSettings[${This.SET_NAME1}]:GetSettingIterator[This.agentIterator]
-		LavishSettings[${This.SET_NAME2}]:GetSettingIterator[This.researchAgentIterator]
-		
-		researchAgentQueue:Clear
-		if ${This.researchAgentIterator:First(exists)}
-		{
-			do
-			{
-			    UI:UpdateConsole["DEBUG: Queuing research agent (${This.researchAgentIterator.Key})"]
-				This.researchAgentQueue:Queue[${This.researchAgentIterator.Key}]
-			}  
-			while ${This.researchAgentIterator:Next(exists)}
-		}
-			
-		UI:UpdateConsole["obj_AgentList: Initialized", LOG_MINOR]
+		LavishSettings[${This.SET_NAME2}]:GetSettingIterator[This.researchAgentIterator]		
+		UI:UpdateConsole["obj_AgentList: Initialized.", LOG_MINOR]
 	}
 	
 	method Shutdown()	
@@ -78,29 +65,27 @@ objectdef obj_AgentList
 		return ${This.agentIterator.Key}
 	}
 
-	member:string FirstResearchAgent()
+	member:string NextAvailableResearchAgent()
 	{
-		if ${This.researchAgentIterator:First(exists)}
+		if ${This.researchAgentIterator.Key.Length} > 0
 		{
-			return ${This.researchAgentIterator.Key}			
+			do
+			{
+				variable time lastCompletionTime
+				lastCompletionTime:Set[${Config.Agents.LastCompletionTime[${This.researchAgentIterator.Key}]}]
+				UI:UpdateConsole["DEBUG: Last mission for ${This.researchAgentIterator.Key} was completed at ${lastCompletionTime} on ${lastCompletionTime.Date}."]
+				lastCompletionTime.Hour:Inc[24]
+				lastCompletionTime:Update
+				if ${lastCompletionTime.Timestamp} < ${Time.Timestamp}
+				{
+					return ${This.researchAgentIterator.Key}
+				}
+			}  
+			while ${This.researchAgentIterator:Next(exists)}
+			This.researchAgentIterator:First
 		}
-		
+				
 		return NULL
-	}
-	
-	member:string NextResearchAgent()
-	{
-		if ${This.researchAgentIterator:Next(exists)}
-		{
-			return ${This.researchAgentIterator.Key}			
-		}
-		
-		return NULL
-	}
-	
-	member:string ActiveResearchAgent()
-	{
-		return ${This.researchAgentIterator.Key}
 	}
 }
 
@@ -296,36 +281,17 @@ objectdef obj_Agents
 		}
 		
 		/* if we get here none of the missions in the journal are valid */
-		
-		/* iterate through research agent list once per session */
-		/* TODO: Change this to remember the last time we talked to a      */
-		/*       research agent and only talk to them once every 24 hours. */
-		if ${This.AgentList.researchAgentQueue.Peek(exists)}
+		variable string agentName
+		agentName:Set[${This.AgentList.NextAvailableResearchAgent}]
+		while ${agentName} != NULL
 		{
-			do
-			{				
-				if ${skipList.Contains[${Config.Agents.AgentID[${This.AgentList.researchAgentQueue.Peek}]}]} == FALSE
-				{
-					variable time lastCompletionTime
-					lastCompletionTime:Set[${Config.Agents.LastCompletionTime[${This.AgentList.researchAgentQueue.Peek}]}]
-					UI:UpdateConsole["obj_Agents: DEBUG: lastCompletionTime = ${lastCompletionTime}"]
-					lastCompletionTime.Hour:Inc[24]
-					lastCompletionTime:Update
-					if ${lastCompletionTime.Timestamp} < ${Time.Timestamp}
-					{
-						UI:UpdateConsole["obj_Agents: DEBUG: Setting agent to ${This.AgentList.researchAgentQueue.Peek}"]	
-						This:SetActiveAgent[${This.AgentList.researchAgentQueue.Peek}]
-						This.AgentList.researchAgentQueue:Dequeue
-						return
-					}
-					else
-					{
-						UI:UpdateConsole["obj_Agents: Spoke with research agent ${This.AgentList.researchAgentQueue.Peek} less than 24 hours ago."]	
-					}
-				}
-				This.AgentList.researchAgentQueue:Dequeue
-			}  
-			while ${This.AgentList.researchAgentQueue.Peek(exists)}
+			if ${skipList.Contains[${Config.Agents.AgentID[${agentName}]}]} == FALSE
+			{
+				UI:UpdateConsole["obj_Agents: DEBUG: Setting agent to ${agentName}"]	
+				This:SetActiveAgent[${agentName}]
+				return
+			}
+			agentName:Set[${This.AgentList.NextAvailableResearchAgent}]
 		}
 		
 		if ${This.AgentList.agentIterator:First(exists)}

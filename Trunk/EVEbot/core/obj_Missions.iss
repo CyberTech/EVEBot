@@ -425,7 +425,7 @@ objectdef obj_Missions
 		elseif ${This.GatePresent}
 		{
 			/* activate gate and go to next room */
-			call This.Approach ${Entity[TypeID,TYPE_ACCELERATION_GATE].ID} DOCKING_RANGE
+			call Ship.Approach ${Entity[TypeID,TYPE_ACCELERATION_GATE].ID} DOCKING_RANGE
 			wait 10
 			UI:UpdateConsole["Activating Acceleration Gate..."]
 			while !${This.WarpEntered}
