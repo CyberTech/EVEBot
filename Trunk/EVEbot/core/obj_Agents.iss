@@ -283,7 +283,7 @@ objectdef obj_Agents
 		/* if we get here none of the missions in the journal are valid */
 		variable string agentName
 		agentName:Set[${This.AgentList.NextAvailableResearchAgent}]
-		while ${agentName} != NULL
+		while ${agentName.Length} > 0
 		{
 			if ${skipList.Contains[${Config.Agents.AgentID[${agentName}]}]} == FALSE
 			{
