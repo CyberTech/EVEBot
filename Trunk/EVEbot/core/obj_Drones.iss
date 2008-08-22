@@ -186,11 +186,36 @@ objectdef obj_Drones
 		{
 			return
 		}
-
+ 
 		if (${This.DronesInSpace} > 0)
 		{
-			;EVE:DronesEngageMyTarget[This.ActiveDroneIDList]
-			EVE:Execute[CmdDronesEngage]
+			variable iterator DroneIterator
+			variable index:activedrone ActiveDroneList
+			Me:DoGetActiveDrones[ActiveDroneList]
+			ActiveDroneList:GetIterator[DroneIterator]
+			variable index:int returnIndex
+			variable index:int engageIndex
+ 
+			do 
+			{				
+				if ${DroneIterator.Value.ToEntity.ShieldPct} < 50 || \
+					${DroneIterator.Value.ToEntity.ArmorPct} < 80 || \
+					${DroneIterator.Value.ToEntity.StructurePct} < 100
+				{
+					UI:UpdateConsole["Recalling Damaged Drone ${DroneIterator.Value.ID}"]
+					;UI:UpdateConsole["Debug: Shield: ${DroneIterator.Value.ToEntity.ShieldPct}, Armor: ${DroneIterator.Value.ToEntity.ArmorPct}, Structure: ${DroneIterator.Value.ToEntity.StructurePct}"]
+					returnIndex:Insert[${DroneIterator.Value.ID}]
+ 
+				}
+				else
+				{
+					;UI:UpdateConsole["Debug: Engage Target ${DroneIterator.Value.ID}"]
+					engageIndex:Insert[${DroneIterator.Value.ID}]
+				}
+			}
+			while ${DroneIterator:Next(exists)}
+			EVE:DronesReturnToDroneBay[returnIndex]
+			EVE:DronesEngageMyTarget[engageIndex]
 		}
-	}
+	}	
 }
