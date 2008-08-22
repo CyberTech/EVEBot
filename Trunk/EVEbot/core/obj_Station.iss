@@ -102,6 +102,11 @@ objectdef obj_Station
 	
 	function OpenHangar()
 	{
+		if ${This.Docked} == FALSE
+		{
+			return
+		}
+
 		if !${This.IsHangarOpen}
 		{
 			UI:UpdateConsole["Opening Cargo Hangar"]
@@ -117,6 +122,11 @@ objectdef obj_Station
 
 	function CloseHangar()
 	{
+		if ${This.Docked} == FALSE
+		{
+			return
+		}
+		
 		if ${This.IsHangarOpen}
 		{
 			UI:UpdateConsole["Closing Cargo Hangar"]

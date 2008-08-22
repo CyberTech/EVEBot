@@ -239,30 +239,37 @@ objectdef obj_Agents
 				UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}"]	
 				if ${amIterator.Value.State} == 1
 				{
-					if ${amIterator.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions} == TRUE
+					variable bool isLowSec
+					variable bool avoidLowSec
+					isLowSec:Set[${Missions.MissionCache.LowSec[${amIterator.Value.AgentID}]}]
+					avoidLowSec:Set[${Config.Missioneer.AvoidLowSec}]
+					if ${avoidLowSec} == FALSE || (${avoidLowSec} == TRUE && ${isLowSec} == FALSE)
 					{
-						This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}]}]
-						return
+						if ${amIterator.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions} == TRUE
+						{
+							This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}]}]
+							return
+						}
+						
+						if ${amIterator.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} == TRUE
+						{
+							This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}]}]
+							return
+						}
+						
+						if ${amIterator.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} == TRUE
+						{
+							This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}]}]
+							return
+						}
+						
+						if ${amIterator.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions} == TRUE
+						{
+							This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}]}]
+							return
+						}
 					}
-					
-					if ${amIterator.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} == TRUE
-					{
-						This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}]}]
-						return
-					}
-					
-					if ${amIterator.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} == TRUE
-					{
-						This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}]}]
-						return
-					}
-					
-					if ${amIterator.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions} == TRUE
-					{
-						This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}]}]
-						return
-					}
-										
+											
 					/* if we get here the mission is not acceptable */
 					variable time lastDecline
 					lastDecline:Set[${Config.Agents.LastDecline[${Agent[id,${amIterator.Value.AgentID}]}]}]
@@ -378,24 +385,31 @@ objectdef obj_Agents
 			{
 				if ${amIterator.Value.State} > 1
 				{
-					if ${amIterator.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions} == TRUE
+					variable bool isLowSec
+					variable bool avoidLowSec
+					isLowSec:Set[${Missions.MissionCache.LowSec[${amIterator.Value.AgentID}]}]
+					avoidLowSec:Set[${Config.Missioneer.AvoidLowSec}]
+					if ${avoidLowSec} == FALSE || (${avoidLowSec} == TRUE && ${isLowSec} == FALSE)
 					{
-						return TRUE
-					}
-					
-					if ${amIterator.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} == TRUE
-					{
-						return TRUE
-					}
-					
-					if ${amIterator.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} == TRUE
-					{
-						return TRUE
-					}
-					
-					if ${amIterator.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions} == TRUE
-					{
-						return TRUE
+						if ${amIterator.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions} == TRUE
+						{
+							return TRUE
+						}
+						
+						if ${amIterator.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} == TRUE
+						{
+							return TRUE
+						}
+						
+						if ${amIterator.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} == TRUE
+						{
+							return TRUE
+						}
+						
+						if ${amIterator.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions} == TRUE
+						{
+							return TRUE
+						}
 					}
 				}
 			}  
@@ -581,12 +595,28 @@ objectdef obj_Agents
 				if ${dsIterator.Value.Text.Find["datacore"]}
 				{
 				    UI:UpdateConsole["WARNING: Research agent doesn't have a mission available"]
-					if ${Config.Agents.LastCompletionTime[${This.AgentName}]} == 0
+					variable time lastCompletionTime
+					variable int  lastCompletionTimestamp
+					lastCompletionTimestamp:Set[${Config.Agents.LastCompletionTime[${This.AgentName}]}]
+					lastCompletionTime:Set[${lastCompletionTimestamp}]
+					UI:UpdateConsole["DEBUG: RequestMission: ${lastCompletionTime} ${lastCompletionTime.Date}"]
+					if ${lastCompletionTimestamp} == 0
 					{
 				    	;; this agent didn't have a valid LastCompletionTime
 				    	;; set LastCompletionTime to lock out this agent for 24 hours
 	    				Config.Agents:SetLastCompletionTime[${This.AgentName},${Time.Timestamp}]
 	    			}
+	    			else
+	    			{
+						lastCompletionTime.Hour:Inc[24]
+						lastCompletionTime:Update
+						if ${lastCompletionTime.Timestamp} < ${Time.Timestamp}
+						{
+					    	;; been more than 24 hours according to config data.  must be invalid.
+					    	;; set LastCompletionTime to lock out this agent for 24 hours
+		    				Config.Agents:SetLastCompletionTime[${This.AgentName},${Time.Timestamp}]
+						}
+					}
 					return
 				}
 			}

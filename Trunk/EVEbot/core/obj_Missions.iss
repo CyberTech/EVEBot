@@ -239,11 +239,43 @@ objectdef obj_Missions
 	
 	function RunTradeMission(int agentID)
 	{
-		variable int    quantity
-		variable string itemName
+		variable int        QuantityRequired
+		variable string     itemName
+		variable bool       haveCargo = FALSE
+		variable index:item CargoIndex
+		variable iterator   CargoIterator
+		variable int        TypeID
+		variable int        ItemQuantity	
 		
 		Agents:SetActiveAgent[${Agent[id,${agentID}]}]
+
+		itemName:Set[${EVEDB_Items.Name[${This.MissionCache.TypeID[${agentID}]}]}]
+		QuantityRequired:Set[${Math.Calc[${This.MissionCache.Volume[${agentID}]}/${EVEDB_Items.Volume[${itemName}]}]}]
+
+		call Cargo.CloseHolds
+		call Cargo.OpenHolds
 		
+		;;; Check the cargohold of your ship
+		Me.Ship:DoGetCargo[CargoIndex]
+		CargoIndex:GetIterator[CargoIterator]
+		if ${CargoIterator:First(exists)}
+		{
+			do
+			{
+				TypeID:Set[${CargoIterator.Value.TypeID}]
+				ItemQuantity:Set[${CargoIterator.Value.Quantity}]
+				UI:UpdateConsole["DEBUG: RunTradeMission: Ship's Cargo: ${ItemQuantity} units of ${CargoIterator.Value.Name}(${TypeID})."]
+				
+				if (${TypeID} == ${This.MissionCache.TypeID[${agentID}]}) && \
+				   (${ItemQuantity} >= ${QuantityRequired})
+				{
+					UI:UpdateConsole["DEBUG: RunTradeMission: Found required items in ship's cargohold."]
+					haveCargo:Set[TRUE]
+				}
+			}
+			while ${CargoIterator:Next(exists)}
+		}		
+
 		if ${This.MissionCache.Volume[${agentID}]} > ${Config.Missioneer.SmallHaulerLimit}
 		{
 			call Ship.ActivateShip "${Config.Missioneer.LargeHauler}"
@@ -253,32 +285,63 @@ objectdef obj_Missions
 			call Ship.ActivateShip "${Config.Missioneer.SmallHauler}"
 		}		   
 
-	  	if ${Station.Docked} 
-	  	{
-		 	call Station.Undock
-	  	}
-
-		call Market.GetMarketOrders ${This.MissionCache.TypeID[${agentID}]}		
-		itemName:Set[${EVEDB_Items.Name[${This.MissionCache.TypeID[${agentID}]}]}]
-		quantity:Set[${Math.Calc[${This.MissionCache.Volume[${agentID}]}/${EVEDB_Items.Volume[${itemName}]}]}]
-		call Market.FindBestWeightedSellOrder ${Config.Missioneer.AvoidLowSec} ${quantity}
-		call Ship.TravelToSystem ${Market.BestSellOrderSystem}
-		call Station.DockAtStation ${Market.BestSellOrderStation}
-		call Market.PurchaseItem ${This.MissionCache.TypeID[${agentID}]} ${quantity}
-
-		call Cargo.TransferHangarItemToShip ${This.MissionCache.TypeID[${agentID}]}
-		
-		if ${Cargo.LastTransferComplete} == FALSE
+		;;; Check the hangar of the current station
+		if ${haveCargo} == FALSE && ${Station.Docked}
 		{
-			UI:UpdateConsole["obj_Missions: ERROR: Couldn't carry all the trade goods!  Pasuing script!!"]
-			Script:Pause
+			Me:DoGetHangarItems[CargoIndex]
+			CargoIndex:GetIterator[CargoIterator]						
+			
+			if ${CargoIterator:First(exists)}
+			{
+				do
+				{
+					TypeID:Set[${CargoIterator.Value.TypeID}]
+					ItemQuantity:Set[${CargoIterator.Value.Quantity}]
+					UI:UpdateConsole["DEBUG: RunTradeMission: Station Hangar: ${ItemQuantity} units of ${CargoIterator.Value.Name}(${TypeID})."]
+					
+					if (${TypeID} == ${This.MissionCache.TypeID[${agentID}]}) && \
+					   (${ItemQuantity} >= ${QuantityRequired})
+					{
+						UI:UpdateConsole["DEBUG: RunTradeMission: Found required items in station hangar."]
+						if ${Agents.InAgentStation} == FALSE
+						{
+							call Cargo.TransferHangarItemToShip ${This.MissionCache.TypeID[${agentID}]}
+						}
+						haveCargo:Set[TRUE]
+					}
+				}
+				while ${CargoIterator:Next(exists)}
+			}			
 		}
 		
-		UI:UpdateConsole["obj_Missions: MoveTo Agent"]
+		;;;  Try to buy the item
+		if ${haveCargo} == FALSE
+		{
+		  	if ${Station.Docked} 
+		  	{
+			 	call Station.Undock
+		  	}
+	
+			call Market.GetMarketOrders ${This.MissionCache.TypeID[${agentID}]}		
+			call Market.FindBestWeightedSellOrder ${Config.Missioneer.AvoidLowSec} ${quantity}
+			call Ship.TravelToSystem ${Market.BestSellOrderSystem}
+			call Station.DockAtStation ${Market.BestSellOrderStation}
+			call Market.PurchaseItem ${This.MissionCache.TypeID[${agentID}]} ${quantity}
+	
+			call Cargo.TransferHangarItemToShip ${This.MissionCache.TypeID[${agentID}]}
+			
+			if ${Cargo.LastTransferComplete} == FALSE
+			{
+				UI:UpdateConsole["obj_Missions: ERROR: Couldn't carry all the trade goods!  Pasuing script!!"]
+				Script:Pause
+			}
+		}
+				
+		;;;UI:UpdateConsole["obj_Missions: MoveTo Agent"]
 		call Agents.MoveTo
 		wait 50
-		call Cargo.TransferItemTypeToHangar ${This.MissionCache.TypeID[${agentID}]}
-		wait 50
+		;;;call Cargo.TransferItemTypeToHangar ${This.MissionCache.TypeID[${agentID}]}
+		;;;wait 50
 		
 		UI:UpdateConsole["obj_Missions: TurnInMission"]
 		call Agents.TurnInMission

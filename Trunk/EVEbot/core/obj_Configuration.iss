@@ -1317,13 +1317,13 @@ objectdef obj_Configuration_Agents
 
 	member:int LastCompletionTime(string name)
 	{
-		;UI:UpdateConsole["obj_Configuration_Agents: LastCompletionTime ${name}"]
+		;;;UI:UpdateConsole["obj_Configuration_Agents: LastCompletionTime ${name}"]
 		return ${This.AgentRef[${name}].FindSetting[LastCompletionTime,0]}
 	}
 	
 	method SetLastCompletionTime(string name, int value)
 	{
-		;UI:UpdateConsole["obj_Configuration_Agents: SetLastCompletionTime ${name} ${value}"]
+		;;;UI:UpdateConsole["obj_Configuration_Agents: SetLastCompletionTime ${name} ${value}"]
 		if !${This.AgentsRef.FindSet[${name}](exists)}
 		{
 			This.AgentsRef:AddSet[${name}]
