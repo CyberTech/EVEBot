@@ -588,12 +588,12 @@ objectdef obj_Cargo
 		if ${CargoIterator:First(exists)}
 		{
 			call Ship.OpenCargo
-			if ${This.ShipHasContainers}
-			{
-				call This.TransferListToShipWithContainers
-			}
-			else
-			{
+			;;;if ${This.ShipHasContainers}
+			;;;{
+			;;;	call This.TransferListToShipWithContainers
+			;;;}
+			;;;else
+			;;;{
 				do
 				{
 					if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${Ship.CargoFreeSpace}
@@ -620,7 +620,7 @@ objectdef obj_Cargo
 					}
 				}
 				while ${CargoIterator:Next(exists)}
-			}
+			;;;}
 			wait 10
 		}
 		else
