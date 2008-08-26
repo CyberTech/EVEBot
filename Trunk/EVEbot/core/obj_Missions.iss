@@ -221,6 +221,7 @@ objectdef obj_Missions
 
 		itemName:Set[${EVEDB_Items.Name[${This.MissionCache.TypeID[${agentID}]}]}]
 		QuantityRequired:Set[${Math.Calc[${This.MissionCache.Volume[${agentID}]}/${EVEDB_Items.Volume[${itemName}]}]}]
+		
 		do
 		{
 			Cargo:FindShipCargoByType[${This.MissionCache.TypeID[${agentID}]}]
@@ -238,6 +239,7 @@ objectdef obj_Missions
 			call Agents.MoveToDropOff
 			wait 50
 			
+			UI:UpdateConsole["DEBUG: RunCourierMission: Checking ship's cargohold for ${QuantityRequired} units of ${itemName}."]
 			Me.Ship:DoGetCargo[CargoIndex]
 			CargoIndex:GetIterator[CargoIterator]
 			if ${CargoIterator:First(exists)}
