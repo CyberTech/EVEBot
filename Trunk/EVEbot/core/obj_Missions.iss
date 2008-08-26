@@ -210,6 +210,9 @@ objectdef obj_Missions
 		variable int        TypeID
 		variable int        ItemQuantity	
 
+		call Cargo.CloseHolds
+		call Cargo.OpenHolds
+
 		if ${This.MissionCache.Volume[${agentID}]} > ${Config.Missioneer.SmallHaulerLimit}
 		{
 			call Ship.ActivateShip "${Config.Missioneer.LargeHauler}"
@@ -239,6 +242,9 @@ objectdef obj_Missions
 			call Agents.MoveToDropOff
 			wait 50
 			
+			call Cargo.CloseHolds
+			call Cargo.OpenHolds
+
 			UI:UpdateConsole["DEBUG: RunCourierMission: Checking ship's cargohold for ${QuantityRequired} units of ${itemName}."]
 			Me.Ship:DoGetCargo[CargoIndex]
 			CargoIndex:GetIterator[CargoIterator]
