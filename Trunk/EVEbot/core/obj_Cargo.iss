@@ -332,6 +332,7 @@ objectdef obj_Cargo
 			do
 			{
 				UI:UpdateConsole["TransferListToHangar: Unloading Cargo: ${CargoIterator.Value.Name}"]
+				UI:UpdateConsole["TransferListToShip: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
 				if ${CargoIterator.Value.GroupID} == GROUPID_SECURE_CONTAINER
 				{
 					call This.TransferContainerToHangar ${CargoIterator.Value}
@@ -588,12 +589,12 @@ objectdef obj_Cargo
 		if ${CargoIterator:First(exists)}
 		{
 			call Ship.OpenCargo
-			;;;if ${This.ShipHasContainers}
-			;;;{
-			;;;	call This.TransferListToShipWithContainers
-			;;;}
-			;;;else
-			;;;{
+			if ${This.ShipHasContainers}
+			{
+				call This.TransferListToShipWithContainers
+			}
+			else
+			{
 				do
 				{
 					if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${Ship.CargoFreeSpace}
@@ -607,6 +608,7 @@ objectdef obj_Cargo
 					}
 	
 					UI:UpdateConsole["TransferListToShip: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
+					UI:UpdateConsole["TransferListToShip: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
 					if ${QuantityToMove} > 0
 					{
 						CargoIterator.Value:MoveTo[MyShip,${QuantityToMove}]
@@ -620,7 +622,7 @@ objectdef obj_Cargo
 					}
 				}
 				while ${CargoIterator:Next(exists)}
-			;;;}
+			}
 			wait 10
 		}
 		else
