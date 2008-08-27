@@ -668,9 +668,9 @@ objectdef obj_Cargo
 	
 	function TransferOreToHangar()
 	{	
-		while !${_Me.InStation}
+		while !${Station.Docked}
 		{
-			UI:UpdateConsole["obj_Cargo: Waiting for InStation..."]
+			UI:UpdateConsole["obj_Cargo: Waiting for dock..."]
 			wait 10
 		}
 
@@ -696,9 +696,9 @@ objectdef obj_Cargo
 	
 	function TransferCargoToHangar()
 	{	
-		while !${_Me.InStation}
+		while !${Station.Docked}
 		{
-			UI:UpdateConsole["obj_Cargo: Waiting for InStation..."]
+			UI:UpdateConsole["obj_Cargo: Waiting for dock..."]
 			wait 10
 		}
 
@@ -722,7 +722,7 @@ objectdef obj_Cargo
 
 	function TransferCargoToShip()
 	{	
-		if !${_Me.InStation}
+		if !${Station.Docked}
 		{
 			/* TODO - Support picking up from entities in space */
 			m_LastTransferComplete:Set[TRUE]
@@ -773,7 +773,7 @@ objectdef obj_Cargo
 	
 	function TransferHangarItemToShip(int typeID)
 	{	
-		if !${_Me.InStation}
+		if !${Station.Docked}
 		{
 			/* TODO - Support picking up from entities in space */
 			m_LastTransferComplete:Set[TRUE]

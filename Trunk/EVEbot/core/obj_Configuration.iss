@@ -1123,19 +1123,19 @@ objectdef obj_Config_Whitelist
 		if !${This.BaseRef.FindSet[Pilots](exists)}
 		{
 			This.BaseRef:AddSet[Pilots]
-			This.PilotsRef:AddSetting[Sample_Pilot, 0]
+			This.PilotsRef:AddSetting[Sample_Pilot_Comment, 0]
 		}
 
 		if !${This.BaseRef.FindSet[Corporations](exists)}
 		{
 			This.BaseRef:AddSet[Corporations]
-			This.CorporationsRef:AddSetting[Sample_Corporation, 0]
+			This.CorporationsRef:AddSetting[Sample_Corporation_Comment, 0]
 		}
 
 		if !${This.BaseRef.FindSet[Alliances](exists)}
 		{
 			This.BaseRef:AddSet[Alliances]
-			This.AlliancesRef:AddSetting[Sample_Alliance, 0]
+			This.AlliancesRef:AddSetting[Sample_Alliance_Comment, 0]
 		}
 
 		UI:UpdateConsole["obj_Config_Whitelist: Initialized", LOG_MINOR]
@@ -1185,19 +1185,19 @@ objectdef obj_Config_Blacklist
 		if !${This.BaseRef.FindSet[Pilots](exists)}
 		{
 			This.BaseRef:AddSet[Pilots]
-			This.PilotsRef:AddSetting[Sample_Pilot, 0]
+			This.PilotsRef:AddSetting[Sample_Pilot_Comment, 0]
 		}
 
 		if !${This.BaseRef.FindSet[Corporations](exists)}
 		{
 			This.BaseRef:AddSet[Corporations]
-			This.CorporationsRef:AddSetting[Sample_Corporation, 0]
+			This.CorporationsRef:AddSetting[Sample_Corporation_Comment, 0]
 		}
 
 		if !${This.BaseRef.FindSet[Alliances](exists)}
 		{
 			This.BaseRef:AddSet[Alliances]
-			This.AlliancesRef:AddSetting[Sample_Alliance, 0]
+			This.AlliancesRef:AddSetting[Sample_Alliance_Comment, 0]
 		}
 
 		UI:UpdateConsole["obj_Config_Blacklist: Initialized", LOG_MINOR]
