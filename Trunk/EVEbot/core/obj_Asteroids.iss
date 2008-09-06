@@ -287,6 +287,8 @@ objectdef obj_Asteroids
 				{
 					do
 					{
+						/* This is intended to get the best ore in the system before others do.  Its not
+							intended to empty a given radius of asteroids */
 						if ${Config.Miner.StripMine}
 						{
 							if ${asteroid_iterator.Value.Distance} < ${Ship.OptimalMiningRange}
