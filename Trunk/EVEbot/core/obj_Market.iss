@@ -245,6 +245,11 @@ objectdef obj_Market
 		for ( idx:Set[1]; ${idx} <= ${count}; idx:Inc )
 		{
 			variable float64 weight
+		
+			if 	${This.sellOrders.Get[${idx}].QuantityRemaining} < ${quantity}
+			{
+				continue
+			}
 			
 			weight:Set[${Math.Calc[${This.sellOrders.Get[${idx}].Price}*${This.Weight[${This.sellOrders.Get[${idx}].Jumps}]}]}]
 

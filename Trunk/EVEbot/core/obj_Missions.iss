@@ -216,10 +216,10 @@ objectdef obj_Missions
 
 	    Agents:SetActiveAgent[${Agent[id, ${agentID}].Name}]
 	
-	    if ${This.MissionCache.Volume[${agentID}]} == 0
-	    {
-	      call Agents.MissionDetails
-	    }
+		if ${This.MissionCache.Volume[${agentID}]} == 0
+		{
+			call Agents.MissionDetails
+		}
 
 		if ${This.MissionCache.Volume[${agentID}]} > ${Config.Missioneer.SmallHaulerLimit}
 		{
@@ -230,10 +230,18 @@ objectdef obj_Missions
 			call Ship.ActivateShip "${Config.Missioneer.SmallHauler}"
 		}		   
 
-	    itemName:Set[${EVEDB_Items.Name[${This.MissionCache.TypeID[${agentID}]}]}]
-	    itemVolume:Set[${EVEDB_Items.Volume[${itemName}]}]
-		UI:UpdateConsole["DEBUG: RunCourierMission: ${This.MissionCache.TypeID[${agentID}]}:${itemName} has volume ${itemVolume}."]
-		QuantityRequired:Set[${Math.Calc[${This.MissionCache.Volume[${agentID}]}/${itemVolume}]}]		
+		itemName:Set[${EVEDB_Items.Name[${This.MissionCache.TypeID[${agentID}]}]}]
+		itemVolume:Set[${EVEDB_Items.Volume[${itemName}]}]
+		if ${itemVolume} > 0
+		{
+			UI:UpdateConsole["DEBUG: RunCourierMission: ${This.MissionCache.TypeID[${agentID}]}:${itemName} has volume ${itemVolume}."]
+			QuantityRequired:Set[${Math.Calc[${This.MissionCache.Volume[${agentID}]}/${itemVolume}]}]
+		}
+		else
+		{
+			UI:UpdateConsole["DEBUG: RunCourierMission: ${This.MissionCache.TypeID[${agentID}]}: Item not found!  Assuming one unit to move."]
+			QuantityRequired:Set[1]
+		}
 		
 		do
 		{
