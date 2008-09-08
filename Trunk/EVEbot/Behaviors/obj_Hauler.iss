@@ -168,6 +168,8 @@ objectdef obj_OreHauler inherits obj_Hauler
 	variable queue:fleetmember FleetMembers
 	variable queue:entity     Entities
 	
+	variable bool PickupFailed = FALSE
+	
 	method Initialize(string player, string corp)
 	{
 		m_fleetMemberID:Set[-1]
@@ -250,7 +252,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 				UI:UpdateConsole["Aborting operation: Returning to base"]
 				Call Station.Dock
 				break
-			case BASE
+			case INSTATION
 				call Cargo.TransferCargoToHangar
 				call Station.Undock
 				if ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}](exists)}
@@ -263,6 +265,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 				break
 			case CARGOFULL
 				call This.DropOff
+				This.PickupFailed:Set[FALSE]
 				break
 		}	
 	}
@@ -280,15 +283,15 @@ objectdef obj_OreHauler inherits obj_Hauler
 		}
 		elseif ${_Me.InStation}
 		{
-	  		This.CurrentState:Set["BASE"]
+	  		This.CurrentState:Set["INSTATION"]
+		}
+		elseif ${This.PickupFailed} || ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
+		{
+			This.CurrentState:Set["CARGOFULL"]
 		}
 		elseif ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace}
 		{
 		 	This.CurrentState:Set["HAUL"]
-		}
-		elseif ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
-		{
-			This.CurrentState:Set["CARGOFULL"]
 		}
 		else
 		{
@@ -327,6 +330,10 @@ objectdef obj_OreHauler inherits obj_Hauler
 				{
 					Cargo.Value:MoveTo[MyShip,${QuantityToMove}]
 					wait 30
+				}
+				else
+				{
+					This.PickupFailed:Set[TRUE]
 				}
 								
 				if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
@@ -390,7 +397,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 				case Hangar Array
 					call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
 					call Cargo.TransferOreToCorpHangarArray
-					break		
+					break
 				case Jetcan
 					UI:UpdateConsole["Error: ORE Delivery location may not be jetcan when in hauler mode - docking"]
 					EVEBot.ReturnToStation:Set[TRUE]
