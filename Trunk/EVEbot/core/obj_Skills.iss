@@ -6,7 +6,7 @@ objectdef obj_Skills
 	variable file SkillFile = "${BaseConfig.CONFIG_PATH}/${_Me.Name} Training.txt"
 	variable index:skill OwnedSkills
 	variable time NextPulse
-	variable int PulseIntervalInSeconds = 5
+	variable int PulseIntervalInSeconds = 15
 
 	variable string CurrentlyTrainingSkill
 	variable string NextInLine
@@ -15,11 +15,16 @@ objectdef obj_Skills
 	{
 		UI:UpdateConsole["obj_Skills: Initialized", LOG_MINOR]
 		
-		if ${This.SkillFile:Open[readonly](exists)}
+		if ${This.SkillFile:Open[readonly](exists)} || ${Config.Common.TrainFastest}
 		{
 			Me:DoGetSkills[This.OwnedSkills]
 			Event[OnFrame]:AttachAtom[This:Pulse]
 			This.SkillFile:Close
+
+			if ${Config.Common.TrainFastest}
+			{
+				UI:UpdateConsole["obj_Skills: Training skills in duration order, fastest first"]
+			}
 		}
 		else
 		{
@@ -40,14 +45,18 @@ objectdef obj_Skills
 		{
 		    if ${Me(exists)}
 		    {
-    			if !${This.NextSkill.Equal[None]} && \
-    				!${Me.Skill[${This.NextSkill}].IsTraining}
-    			{
-    				Me:DoGetSkills[This.OwnedSkills]
-    				This:Train[${This.NextInLine}]
-    			}
-    			
-    			CurrentlyTrainingSkill:Set[${This.CurrentlyTraining}]
+		    	; Only call the expensive stuf if we're not training a skill, or if we're not in trainfastest 
+		    	; mode, since that iterates the entire skill list and is slow.
+		    	if !${Config.Common.TrainFastest} || !${Me.SkillCurrentlyTraining(exists)}
+		    	{
+					if !${This.NextSkill.Equal[None]} && \
+						!${Me.Skill[${This.NextSkill}].IsTraining}
+					{
+						Me:DoGetSkills[This.OwnedSkills]
+						This:Train[${This.NextInLine}]
+					}
+				}
+				CurrentlyTrainingSkill:Set[${This.CurrentlyTraining}]
 
 	    		This.NextPulse:Set[${Time.Timestamp}]
 	    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
@@ -115,53 +124,80 @@ objectdef obj_Skills
 		variable string ReadSkillLevel
 		variable string ReadLine
 
-		if !${This.SkillFile:Open[readonly](exists)} || \
-			${This.SkillFile.Size} == 0
+		if ${Config.Common.TrainFastest}
 		{
-			return "None"
-		}
-		
-		variable string temp
-		temp:Set[${SkillFile.Read}]
-		
-		while !${This.SkillFile.EOF} && ${temp(exists)}
-		{
-			/* Sometimes we randomly get a NULL back at the begininng of the file. */
-			if !${temp.Equal[NULL]}
-			{
-				/* Remove \r\n from data.  Should really be checking it's not just \n terminated as well. */
-				ReadLine:Set[${temp.Left[${Math.Calc[${temp.Length} - 2]}]}]
+			variable iterator CurrentSkill
+			variable float64 Shortest
+			variable float64 TimeToTrain
 			
-
-				ReadSkillName:Set[${This.RemoveNumerals[${ReadLine}]}]
-				ReadSkillLevel:Set[${This.SkillLevel[${ReadLine}]}]
-				
-				;echo "DEBUG: ReadSkillName: ${ReadSkillName} - ReadSkillLevel: ${ReadSkillLevel}"
-				
-				if ${Me.Skill[${ReadSkillName}](exists)}
+			This.OwnedSkills:GetIterator[CurrentSkill]
+			if ${CurrentSkill:First(exists)}
+			{
+				do
 				{
-					if ${Me.Skill[${ReadSkillName}].Level} < ${ReadSkillLevel}
+					;echo ${CurrentSkill.Value.Name} at level ${CurrentSkill.Value.Level} ${CurrentSkill.Value.TimeToTrain}
+					TimeToTrain:Set[${CurrentSkill.Value.TimeToTrain}]
+					if ${TimeToTrain} > 0 && \
+						(${Shortest} == 0 || ${TimeToTrain} < ${Shortest})
+						{
+							echo Shortest So Far (${Shortest}): ${CurrentSkill.Value.Name} at level ${CurrentSkill.Value.Level} ${TimeToTrain.Round} Minutes
+							Shortest:Set[${TimeToTrain}]
+							This.NextInLine:Set[${CurrentSkill.Value.Name}]
+						}
+				}
+				while ${CurrentSkill:Next(exists)}
+			}
+		}
+		else
+		{
+			if !${This.SkillFile:Open[readonly](exists)} || \
+				${This.SkillFile.Size} == 0
+			{
+				return "None"
+			}
+			
+			variable string temp
+			temp:Set[${SkillFile.Read}]
+			
+			while !${This.SkillFile.EOF} && ${temp(exists)}
+			{
+				/* Sometimes we randomly get a NULL back at the begininng of the file. */
+				if !${temp.Equal[NULL]}
+				{
+					/* Remove \r\n from data.  Should really be checking it's not just \n terminated as well. */
+					ReadLine:Set[${temp.Left[${Math.Calc[${temp.Length} - 2]}]}]
+				
+        	
+					ReadSkillName:Set[${This.RemoveNumerals[${ReadLine}]}]
+					ReadSkillLevel:Set[${This.SkillLevel[${ReadLine}]}]
+					
+					;echo "DEBUG: ReadSkillName: ${ReadSkillName} - ReadSkillLevel: ${ReadSkillLevel}"
+					
+					if ${Me.Skill[${ReadSkillName}](exists)}
 					{
-						This.NextInLine:Set[${ReadSkillName}]
-						SkillFile:Close
-						return "${ReadSkillName}"
+						if ${Me.Skill[${ReadSkillName}].Level} < ${ReadSkillLevel}
+						{
+							This.NextInLine:Set[${ReadSkillName}]
+							SkillFile:Close
+							return "${ReadSkillName}"
+						}
+						else
+						{
+							;echo "Skill: ${ReadSkillName} to Level ${ReadSkillLevel}: Done"
+						}
 					}
 					else
 					{
-						;echo "Skill: ${ReadSkillName} to Level ${ReadSkillLevel}: Done"
+						;echo "Skill: ${ReadSkillName} to Level ${ReadSkillLevel}: Skill not known"
 					}
 				}
-				else
-				{
-					;echo "Skill: ${ReadSkillName} to Level ${ReadSkillLevel}: Skill not known"
-				}
+				temp:Set[${SkillFile.Read}]
 			}
-			temp:Set[${SkillFile.Read}]
+        	
+			UI:UpdateConsole["Error: None of the skills specified were found (or all were already to requested level)", LOG_CRITICAL]
+			SkillFile:Close
+			return "None"
 		}
-
-		UI:UpdateConsole["Error: None of the skills specified were found (or all were already to requested level)", LOG_CRITICAL]
-		SkillFile:Close
-		return "None"
 	}
 
 	

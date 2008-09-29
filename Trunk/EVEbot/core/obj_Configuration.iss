@@ -126,6 +126,7 @@ objectdef obj_Configuration_Common
 		This.CommonRef:AddSetting[Maximum Runtime, 0]
 		This.CommonRef:AddSetting[Use Sound, FALSE]
 		This.CommonRef:AddSetting[Disable 3D, FALSE]
+		This.CommonRef:AddSetting[TrainFastest, TRUE]
 	}
 
 	member:int BotMode()
@@ -297,6 +298,16 @@ objectdef obj_Configuration_Common
 	method SetDisable3D(bool value)
 	{
 		This.CommonRef:AddSetting[Disable 3D,${value}]
+	}
+
+	member:bool TrainFastest()
+	{
+		return ${This.CommonRef.FindSetting[TrainFastest, TRUE]}
+	}
+
+	method SetTrainFastest(bool value)
+	{
+		This.CommonRef:AddSetting[TrainFastest,${value}]
 	}
 }
 
