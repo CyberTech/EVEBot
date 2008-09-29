@@ -206,6 +206,7 @@ objectdef obj_Missions
 		variable string     itemName
 		variable float      itemVolume	
 		variable bool       haveCargo = FALSE
+		variable bool       allDone = FALSE
 		variable index:item CargoIndex
 		variable iterator   CargoIterator
 		variable int        TypeID
