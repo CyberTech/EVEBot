@@ -469,6 +469,9 @@ objectdef obj_Missions
 			case TYPE_KESTREL
 				call This.KestrelCombat ${agentID}
 				break
+			case TYPE_RAVEN
+				call This.RavenCombat ${agentID}
+				break
 			default
 				UI:UpdateConsole["obj_Missions: WARNING!  Unknown Ship Type."]
 				call This.DefaultCombat ${agentID}
@@ -493,6 +496,11 @@ objectdef obj_Missions
 		Script:Pause
 	}
 	
+	function RavenCombat(int agentID)
+	{
+		UI:UpdateConsole["obj_Missions: Paused Script.  Complete mission manually and then run the script."]
+		Script:Pause
+	}
 	function HawkCombat(int agentID)
 	{
 		wait 100
