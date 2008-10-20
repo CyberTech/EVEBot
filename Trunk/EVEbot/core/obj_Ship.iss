@@ -397,6 +397,7 @@ objectdef obj_Ship
 					continue
 				case GROUPID_STASIS_WEB
 					This.ModuleList_StasisWeb:Insert[${Module.Value}]
+					continue
 				case GROUP_SENSORBOOSTER
 					This.ModuleList_SensorBoost:Insert[${Module.Value}]
 				default
