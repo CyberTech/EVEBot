@@ -231,7 +231,14 @@ objectdef obj_Targets
 		variable iterator Target
 
 		/* Me.Ship.MaxTargetRange contains the (possibly) damped value */
-		EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY, radius, ${_Me.Ship.MaxTargetRange}]
+		if ${Ship.TypeID} == TYPE_RIFTER
+		{
+			EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY, radius, 100000]
+		}
+		else
+		{
+			EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY, radius, ${_Me.Ship.MaxTargetRange}]
+		}
 		Targets:GetIterator[Target]
 
 		if !${Target:First(exists)}
@@ -308,6 +315,13 @@ objectdef obj_Targets
                case GROUP_LARGECOLLIDABLEOBJECT
                case GROUP_LARGECOLLIDABLESHIP
                case GROUP_LARGECOLLIDABLESTRUCTURE
+               case GROUP_SENTRYGUN
+               case GROUP_CONCORDDRONE
+               case GROUP_CUSTOMSOFFICIAL
+               case GROUP_POLICEDRONE
+               case GROUP_CONVOYDRONE
+			   case GROUP_FACTIONDRONE
+			   case GROUP_BILLBOARD
                   continue
 
                default               
@@ -334,16 +348,23 @@ objectdef obj_Targets
 			TypeID:Set[${Target.Value.TypeID}]
 			do
 			{
-            switch ${Target.Value.GroupID} 
-            {
-               case GROUP_LARGECOLLIDABLEOBJECT
-               case GROUP_LARGECOLLIDABLESHIP
-               case GROUP_LARGECOLLIDABLESTRUCTURE
-                  continue
-
-               default               
-                  break
-            }
+	            switch ${Target.Value.GroupID} 
+	            {
+	               case GROUP_LARGECOLLIDABLEOBJECT
+	               case GROUP_LARGECOLLIDABLESHIP
+	               case GROUP_LARGECOLLIDABLESTRUCTURE
+	               case GROUP_SENTRYGUN
+		           case GROUP_CONCORDDRONE
+	               case GROUP_CUSTOMSOFFICIAL
+	               case GROUP_POLICEDRONE
+                   case GROUP_CONVOYDRONE
+				   case GROUP_FACTIONDRONE
+    			   case GROUP_BILLBOARD
+	                  continue
+	
+	               default               
+	                  break
+	            }
             
 				; If the Type ID is different then there's more then 1 type in the belt
 				if ${TypeID} != ${Target.Value.TypeID}
@@ -423,16 +444,23 @@ objectdef obj_Targets
 		if !${HasPriorityTarget} && ${Target:First(exists)}
 		do
 		{
-         switch ${Target.Value.GroupID} 
-         {
-            case GROUP_LARGECOLLIDABLEOBJECT
-            case GROUP_LARGECOLLIDABLESHIP
-            case GROUP_LARGECOLLIDABLESTRUCTURE
-               continue
-
-            default               
-               break
-         }
+			switch ${Target.Value.GroupID} 
+			{
+				case GROUP_LARGECOLLIDABLEOBJECT
+				case GROUP_LARGECOLLIDABLESHIP
+				case GROUP_LARGECOLLIDABLESTRUCTURE
+				case GROUP_SENTRYGUN
+				case GROUP_CONCORDDRONE
+				case GROUP_CUSTOMSOFFICIAL
+				case GROUP_POLICEDRONE
+				case GROUP_CONVOYDRONE
+				case GROUP_FACTIONDRONE
+			    case GROUP_BILLBOARD
+					continue
+				
+				default               
+					break
+			}
          
 			variable bool DoTarget = FALSE
 			if ${Chaining}
@@ -462,8 +490,21 @@ objectdef obj_Targets
 				{
 					if ${_Me.GetTargets} < ${Ship.MaxLockedTargets}
 					{
-						UI:UpdateConsole["Locking ${Target.Value.Name}"]
-						Target.Value:LockTarget
+						if ${Ship.TypeID} == TYPE_RIFTER
+						{
+							if ${Target.Value.Distance} > ${_Me.Ship.MaxTargetRange}
+							{
+								if ${Me.ToEntity.Approaching.NotEqual[NULL]}
+								{
+									Target.Value:Approach
+								}
+							}
+						}
+						else
+						{
+							UI:UpdateConsole["Locking ${Target.Value.Name}"]
+							Target.Value:LockTarget
+						}
 					}
 				}
 				
