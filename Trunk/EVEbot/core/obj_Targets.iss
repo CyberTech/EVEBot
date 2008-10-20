@@ -171,6 +171,7 @@ objectdef obj_Targets
 		SpecialTargets:Insert["Brynn"]
 		SpecialTargets:Insert["Shadow"]
 		SpecialTargets:Insert["True Sansha"]
+		SpecialTargets:Insert["Dark Blood"]
 
 		; Get the iterators
 		PriorityTargets:GetIterator[PriorityTarget]
