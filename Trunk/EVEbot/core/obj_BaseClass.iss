@@ -7,7 +7,19 @@
 	
 	By making it inherited, the Sort methods have implicit access to the object that needs sorting.
 	
+	Sorting notes:
 	
+		Because we want to sort objects, and LS has no copy constructor, the only sorts we can use
+		are those that use x.Swap() to handle moves.  We've settled on two sorts:
+			
+			1) in-place unstable quicksort
+			2) in-place stable gnomesort
+				(note that "stable" is used as a type of sort, not an indicator of code quality)
+				
+		The quicksort should be much faster, however it will not retain the ordering of equivilent items
+		in the input list.  The gnomesort will retain said ordering, however is non-optimal for large
+		input sets (over a few thousand items).
+		
 	-- CyberTech
 
 Example Usage:
@@ -68,7 +80,8 @@ objectdef obj_BaseClass
 		switch "${vartype}"
 		{
 			case index
-				This:QuickSort[${IndexName}, ${MemberName}, 1, ${${IndexName}.Used}}]
+				This:Gnomesort[${IndexName}, ${MemberName}]
+				;This:QuickSort[${IndexName}, ${MemberName}, 1, ${${IndexName}.Used}}]
 				break
 			Default
 				echo "Unexpected object type (${vartype}), cannot sort:"
@@ -76,11 +89,31 @@ objectdef obj_BaseClass
 		}		
 	}
 	
+	/* 	This is a stable sort, slow, but should be fine for most of our sets sizes.
+		Ordering of equivilent objects IS guaranteed to be the same as the input.
+		-- CyberTech
+	*/
+	method Gnomesort(string IndexName, string MemberName)
+	{
+		variable int i = 1
+		
+		while ${i} <= ${${IndexName}.Used}
+		{
+			if ( ${i} == 1 ) || ${${IndexName}[${Math.Calc[${i}-1]}].${MemberName}} <= ${${IndexName}[${i}].${MemberName}}
+			{
+				i:Inc
+			}
+			else
+			{
+				${IndexName}:Swap[${i}, ${Math.Calc[${i}-1]}]
+				i:Dec
+			}
+		}
+	}
+	
 	member:int QS_Partition(string IndexName, string MemberName, int First, int Last, int PivotIndex)
 	{
-		echo "QS_Partition[${IndexName}, ${MemberName}, ${First}, ${Last}, ${PivotIndex}]"
-
-		variable int PivotValue
+		variable float64 PivotValue
 		variable int StoredIndex = ${First}
 
 		PivotValue:Set[${${IndexName}[${PivotIndex}].${MemberName}}]
@@ -100,12 +133,14 @@ objectdef obj_BaseClass
 		return ${StoredIndex}
 	}
 	
+	/* 	This is not a stable sort, but should be much faster for larger sets.  
+		Ordering of equivilent objects is not guaranteed to tbe the same as the input.
+		-- CyberTech
+	*/
 	method QuickSort(string IndexName, string MemberName, int First, int Last)
 	{
 		variable int PivotIndex
 
-		echo "QuickSort(${IndexName}, ${MemberName}, ${First}, ${Last})"
-		
 		if ${First} < ${Last}
 		{
 			PivotIndex:Set[]
