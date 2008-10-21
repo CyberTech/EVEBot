@@ -126,6 +126,12 @@ objectdef obj_Combat
 	  		return
 		}
 		
+		if ${EVEBot.ReturnToStation}
+		{
+			This.CurrentState:Set["FLEE"]
+			return
+		}
+
 		if ${_Me.GetTargets} > 0
 		{
 			This.CurrentState:Set["FIGHT"]

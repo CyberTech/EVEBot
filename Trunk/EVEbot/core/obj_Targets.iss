@@ -107,16 +107,23 @@ objectdef obj_Targets
 		PriorityTargets:Insert["Arch Angel Thug"]
 		PriorityTargets:Insert["Sansha's Loyal"]
 				
-		PriorityTargets:Insert["Guardian Agent"]		/* web/scram */
-		PriorityTargets:Insert["Guardian Initiate"]		/* web/scram */
-		PriorityTargets:Insert["Guardian Scout"]		/* web/scram */
-		PriorityTargets:Insert["Guardian Spy"]			/* web/scram */
-		PriorityTargets:Insert["Crook Watchman"]		/* damp */
-		PriorityTargets:Insert["Guardian Watchman"]		/* damp */
-		PriorityTargets:Insert["Serpentis Watchman"]	/* damp */
-		PriorityTargets:Insert["Crook Patroller"]		/* damp */
-		PriorityTargets:Insert["Guardian Patroller"]	/* damp */
-		PriorityTargets:Insert["Serpentis Patroller"]	/* damp */
+		PriorityTargets:Insert["Guardian Agent"]		    /* web/scram */
+		PriorityTargets:Insert["Guardian Initiate"]		    /* web/scram */
+		PriorityTargets:Insert["Guardian Scout"]		    /* web/scram */
+		PriorityTargets:Insert["Guardian Spy"]			    /* web/scram */
+		PriorityTargets:Insert["Crook Watchman"]		    /* damp */
+		PriorityTargets:Insert["Guardian Watchman"]		    /* damp */
+		PriorityTargets:Insert["Serpentis Watchman"]	    /* damp */
+		PriorityTargets:Insert["Crook Patroller"]		    /* damp */
+		PriorityTargets:Insert["Guardian Patroller"]	    /* damp */
+		PriorityTargets:Insert["Serpentis Patroller"]	    /* damp */
+
+        PriorityTargets:Insert["Elder Blood Upholder"]	    /* web/scram */
+        PriorityTargets:Insert["Elder Blood Worshipper"]    /* web/scram */
+        PriorityTargets:Insert["Elder Blood Follower"]	    /* web/scram */
+        PriorityTargets:Insert["Elder Blood Herald"]	    /* web/scram */
+        PriorityTargets:Insert["Blood Wraith"]	            /* web/scram */
+        PriorityTargets:Insert["Blood Disciple"]	        /* web/scram */
 
 		; Chain targets will be scanned for the first time
 		; and then the script will determin if its safe / alright
