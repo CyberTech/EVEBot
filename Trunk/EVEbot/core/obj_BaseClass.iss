@@ -20,7 +20,7 @@
 		in the input list.  The gnomesort will retain said ordering, however is non-optimal for large
 		input sets (over a few thousand items).
 		
-	-- CyberTech
+	-- CyberTech/GliderPro
 
 Example Usage:
 ****		objectdef obj_session
