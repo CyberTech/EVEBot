@@ -72,6 +72,12 @@ objectdef obj_Ratter
 	;; STATE MACHINE:  * -> IDLE -> MOVE -> PCCHECK -> FIGHT -> *  
 	method SetState()
 	{
+		if ${EVEBot.ReturnToStation}
+		{
+			This.CurrentState:Set["FLEE"]
+			return
+		}
+		
 		/* Combat module handles all fleeing states now */
 		switch ${This.CurrentState}
 		{
@@ -151,7 +157,7 @@ objectdef obj_Ratter
 		{
 			if ${Targets.SpecialTargetPresent}
 			{
-				UI:UpdateConsole["Special spawn Detected!", LOG_CRITICAL]
+				UI:UpdateConsole["Special spawn Detected at ${Entity[GroupID, GROUP_ASTEROIDBELT]}!", LOG_CRITICAL]
 				call Sound.PlayDetectSound
 				; Wait 5 seconds
 				wait 50

@@ -347,7 +347,7 @@ objectdef obj_Combat
 			/* We have aggro now, yay! Let's launch some drones */
 			if ${Config.Combat.LaunchCombatDrones} && \
 				${Ship.Drones.DronesInSpace} == 0 && \
-				!${Ship.InWarp}
+				!${Ship.InWarp} && !${This.Fled}
 			{
 				Ship.Drones:LaunchAll[]
 			}
