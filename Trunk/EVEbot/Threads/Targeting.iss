@@ -131,6 +131,8 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 			return
 		}
 
+		Script[EVEBot].VariableScope.UI:UpdateConsole["Debug: Targets: ${Script[EVEBot].VariableScope._Me.GetTargets}"]
+		Script[EVEBot].VariableScope.UI:UpdateConsole["Debug: Targeting: ${Script[EVEBot].VariableScope._Me.GetTargeting}"]
 		Script[EVEBot].VariableScope.UI:UpdateConsole["Debug: Current Targets: ${Math.Calc[${Script[EVEBot].VariableScope._Me.GetTargets} + ${Script[EVEBot].VariableScope._Me.GetTargeting}]}"]
 		Script[EVEBot].VariableScope.UI:UpdateConsole["Debug: Max Targets: ${Script[EVEBot].VariableScope.Ship.MaxLockedTargets}"]
 				
