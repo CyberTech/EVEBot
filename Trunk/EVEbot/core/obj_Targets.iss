@@ -45,27 +45,6 @@ Raysere
 Tairei
 */
 
-objectdef obj_EVEDB_Spawns
-{
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
-	variable string CONFIG_FILE = "${BaseConfig.CONFIG_PATH}/EVEDB_Spawns.xml"
-	variable string SET_NAME = "EVEDB_Spawns"
-	
-	method Initialize()
-	{
-		LavishSettings:Import[${CONFIG_FILE}]
-		
-		UI:UpdateConsole["obj_EVEDB_Spawns: Initialized", LOG_MINOR]
-	}
-	
-	member:int SpawnBounty(string spawnName)
-	{
-		return ${LavishSettings[${This.SET_NAME}].FindSet[${spawnName}].FindSetting[bounty, NOTSET]}
-	}	
-}
-
 objectdef obj_Targets
 {
 	variable string SVN_REVISION = "$Rev$"
