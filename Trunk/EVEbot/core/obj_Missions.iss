@@ -624,7 +624,7 @@ objectdef obj_Missions
 			if ${targetIterator.Value.IsTargetingMe} && \
 			   !${targetIterator.Value.BeingTargeted} && \
 			   !${targetIterator.Value.IsLockedTarget} && \
-			   ${Ship.SafeMaxLockedTargets} > ${Math.Calc[${_Me.GetTargeting}+${_Me.GetTargets}]}
+			   ${Ship.MaxLockedTargets} > ${Math.Calc[${_Me.GetTargeting}+${_Me.GetTargets}]}
 			{
 			   if ${targetIterator.Value.Distance} > ${Ship.OptimalTargetingRange}
 			   {

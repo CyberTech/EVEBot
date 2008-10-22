@@ -531,21 +531,6 @@ objectdef obj_Ship
 		return ${This.Calculated_MaxLockedTargets}
 	}
 
-	; "Safe" max locked targets is defined as max locked targets - 1
-	; for a buffer of targets so that hostiles may be targeted.
-	; Always return at least 1
-
-	member:int SafeMaxLockedTargets()
-	{
-		variable int result
-		result:Set[${This.Calculated_MaxLockedTargets}]
-		if ${result} > 3
-		{
-			result:Dec
-		}
-		return ${result}
-	}
-
 	member:int TotalMiningLasers()
 	{
 		return ${This.ModuleList_MiningLaser.Used}
@@ -1130,7 +1115,8 @@ objectdef obj_Ship
 			wait 10
 		}
 		while ${_Me.AutoPilotOn}
-		wait 30
+		UI:UpdateConsole["Arrived - Waiting for system load"]
+		wait 150
 	}
 	
 	function TravelToSystem(int DestinationSystemID)
@@ -1362,6 +1348,7 @@ objectdef obj_Ship
 			This:Deactivate_Cloak[]
 		}
 		This:DeactivateAllMiningLasers[]
+		Targeting:Disable[]
 		This:UnlockAllTargets[]
 		call This.Drones.ReturnAllToDroneBay
 	}
@@ -1800,14 +1787,10 @@ objectdef obj_Ship
 		return FALSE
 	}
 	
+	/* TODO - remove this function */
 	function LockTarget(int64 TargetID)
 	{
-		if ${Entity[${TargetID}](exists)}
-		{
-			UI:UpdateConsole["Locking ${Entity[${TargetID}].Name}: ${EVEBot.MetersToKM_Str[${Entity[${TargetID}].Distance}]}"]
-			Entity[${TargetID}]:LockTarget
-			waitframe
-		}
+		Targeting:Queue[${TargetID}]
 	}
 
 	function StackAll()

@@ -142,7 +142,7 @@ objectdef obj_Asteroids
 		{			
 			if !${ForceMove}
 			{
-				call TargetNext TRUE
+				call ChooseTargets TRUE
 				AsteroidsInRange:Set[${Return}]
 			}
 			
@@ -335,7 +335,7 @@ objectdef obj_Asteroids
 		AsteroidList:GetSettingIterator
 	}
 	
-	function:bool TargetNext(bool CalledFromMoveRoutine=FALSE)
+	function:bool ChooseTargets(bool CalledFromMoveRoutine=FALSE)
 	{
 		variable iterator AsteroidIterator
 
@@ -350,46 +350,19 @@ objectdef obj_Asteroids
 			do
 			{
 				if ${Entity[${AsteroidIterator.Value}](exists)} && \
-					!${AsteroidIterator.Value.IsLockedTarget} && \
-					!${AsteroidIterator.Value.BeingTargeted} && \
+					!${Targeting.IsQueued[${AsteroidIterator.Value}]} && \
 					${AsteroidIterator.Value.Distance} < ${_Me.Ship.MaxTargetRange} && \
 					( !${Me.ActiveTarget(exists)} || ${AsteroidIterator.Value.DistanceTo[${Me.ActiveTarget.ID}]} <= ${Math.Calc[${Ship.OptimalMiningRange}* 1.1]} )
 				{
-					break
+					Targeting:Queue[${AsteroidIterator.Value}]
 				}
 			}
 			while ${AsteroidIterator:Next(exists)}
 
-			if ${AsteroidIterator.Value(exists)} && \
-				${Entity[${AsteroidIterator.Value}](exists)}
-			{
-				if ${AsteroidIterator.Value.IsLockedTarget} || \
-					${AsteroidIterator.Value.BeingTargeted}
-				{
-					return TRUE
-				}
-				UI:UpdateConsole["Locking Asteroid ${AsteroidIterator.Value.Name}: ${EVEBot.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"]
-				
-				;; This member does not exist in obj_Combat!!  -- GP
-				;;while ${Combat.CombatPause}
-				;;{
-				;;	wait 30
-				;;	echo "DEBUG: Obj_Asteroids In Combat Pause Loop"
-				;;}
-								
-				AsteroidIterator.Value:LockTarget
-				do
-				{
-				  wait 30
-				}
-				while ${_Me.GetTargeting} > 0
+			call This.UpdateList
 
-				call This.UpdateList
-				return TRUE
-			}
-			else
+			if ${Targeting.QueueSize} == 0
 			{
-				call This.UpdateList
 				if ${Ship.TotalActivatedMiningLasers} == 0				
 				{
 					if ${Ship.CargoFull}
@@ -401,12 +374,12 @@ objectdef obj_Asteroids
 					{
 						if ${AsteroidIterator.Value.Distance} < ${This.MaxDistanceToAsteroid}
 						{
-							UI:UpdateConsole["obj_Asteroids: TargetNext: No Asteroids in range & All lasers idle: Approaching nearest"]
+							UI:UpdateConsole["obj_Asteroids: ChooseTargets: No Asteroids in range & All lasers idle: Approaching nearest"]
 							call Ship.Approach ${AsteroidIterator.Value} ${Ship.OptimalMiningRange}
 						}
 						else
 						{
-							UI:UpdateConsole["obj_Asteroids: TargetNext: No Asteroids within ${EVEBot.MetersToKM_Str[${This.MaxDistanceToAsteroid}], changing fields."]
+							UI:UpdateConsole["obj_Asteroids: ChooseTargets: No Asteroids within ${EVEBot.MetersToKM_Str[${This.MaxDistanceToAsteroid}], changing fields."]
 							/* The nearest asteroid is farfar away.  Let's just warp out. */
 
 							if ${CalledFromMoveRoutine}

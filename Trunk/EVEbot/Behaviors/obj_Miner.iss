@@ -431,16 +431,15 @@ objectdef obj_Miner
 			if (!${Config.Miner.IceMining} || \
 				(${Ship.TotalActivatedMiningLasers} == 0))
 			{
-				if ${Math.Calc[${_Me.GetTargets} + ${_Me.GetTargeting}]} < ${Ship.SafeMaxLockedTargets}
+				if ${Math.Calc[${_Me.GetTargets} + ${_Me.GetTargeting}]} < ${Ship.MaxLockedTargets}
 				{
-					call Asteroids.TargetNext
+					call Asteroids.ChooseTargets
 					This.ConcentrateFire:Set[!${Return}]
-					;echo DEBUG: Target Locking: ${Math.Calc[${_Me.GetTargets} + ${_Me.GetTargeting}].Int} out of ${Ship.SafeMaxLockedTargets} (Limited Asteroids: ${This.ConcentrateFire})
 				}
 				else
 				{
-					if ( ${_Me.GetTargets} >= ${Ship.SafeMaxLockedTargets} && \
-						 ${Ship.TotalMiningLasers} > ${Ship.SafeMaxLockedTargets} )
+					if ( ${_Me.GetTargets} >= ${Ship.MaxLockedTargets} && \
+						 ${Ship.TotalMiningLasers} > ${Ship.MaxLockedTargets} )
 					{
 						This.ConcentrateFire:Set[TRUE]
 					}
@@ -449,10 +448,13 @@ objectdef obj_Miner
 			wait 10
 		}
 
+		/*
+		TODO - CyberTech - redo with static bookmark name so we're not creating bookmarks.  Possible detection risk.
 		if ${Config.Miner.BookMarkLastPosition}
 		{
 			Bookmarks:StoreLocation
 		}
+		*/
 		call This.Cleanup_Environment
 		This.TotalTrips:Inc
 		This.PreviousTripSeconds:Set[${This.TripDuration}]

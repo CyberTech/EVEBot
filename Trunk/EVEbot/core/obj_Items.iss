@@ -5,6 +5,8 @@
 	
 	-- GliderPro
 	
+ TODO - CyberTech - Unless this class is going to do something specific to items, let's move it into obj_EVEDB.iss
+
 */
 
 /*	keep for reference

@@ -8,6 +8,8 @@
 #include core/obj_Cache.iss
 
 /* Support File Includes */
+#include core/obj_BaseClass.iss
+#include core/obj_EVEDB.iss
 #include core/obj_Skills.iss
 #include core/obj_Asteroids.iss
 #include core/obj_Drones.iss
@@ -53,6 +55,8 @@ variable obj_Configuration_BaseConfig BaseConfig
 variable obj_Configuration Config
 variable obj_Config_Whitelist Whitelist
 variable obj_Config_Blacklist Blacklist
+
+/* EVE Database Exports */
 variable obj_EVEDB_Stations EVEDB_Stations
 variable obj_EVEDB_StationID EVEDB_StationID
 variable obj_EVEDB_Spawns EVEDB_Spawns
@@ -73,7 +77,7 @@ variable obj_Assets Assets
 variable obj_IRC ChatIRC
 variable obj_Safespots Safespots
 variable obj_Belts Belts
-variable obj_Targets Targets
+variable(global) obj_Targets Targets
 variable obj_Sound Sound
 variable obj_Agents Agents
 variable obj_Missions Missions
@@ -102,6 +106,8 @@ function main()
 	/* Set Turbo to lowest value to try and avoid overloading the EVE Python engine */
 	Turbo 20
 			
+	runscript Threads/Targeting.iss
+	
 	variable iterator BotModule
 	BotModules:GetIterator[BotModule]
 
@@ -111,7 +117,7 @@ function main()
 	/* 	This code iterates thru the variables list, looking for classes that have been 
 		defined with an SVN_REVISION variable.  It then converts that to a numeric
 		Version(int), which is then used to calculate the highest version (VersionNum),
-		for display on the UI.
+		for display on the UI. -- CyberTech
 	*/
 	;echo "Listing EVEBot Class Versions:"
 	if ${VariableIterator:First(exists)}
