@@ -126,14 +126,14 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 
 	method TargetEntity(int EntityID)
 	{
-		if ${Math.Calc[${Script[EVEBot].VariableScope._Me.GetTargets} + ${Script[EVEBot].VariableScope._Me.GetTargeting}]} >= ${Script[EVEBot].VariableScope.Ship.MaxLockedTargets}
+		if ${Math.Calc[${_Me.GetTargets} + ${_Me.GetTargeting}]} >= ${Script[EVEBot].VariableScope.Ship.MaxLockedTargets}
 		{
 			return
 		}
 
-		Script[EVEBot].VariableScope.UI:UpdateConsole["Debug: Targets: ${Script[EVEBot].VariableScope._Me.GetTargets}"]
-		Script[EVEBot].VariableScope.UI:UpdateConsole["Debug: Targeting: ${Script[EVEBot].VariableScope._Me.GetTargeting}"]
-		Script[EVEBot].VariableScope.UI:UpdateConsole["Debug: Current Targets: ${Math.Calc[${Script[EVEBot].VariableScope._Me.GetTargets} + ${Script[EVEBot].VariableScope._Me.GetTargeting}]}"]
+		Script[EVEBot].VariableScope.UI:UpdateConsole["Debug: Targets: ${_Me.GetTargets}"]
+		Script[EVEBot].VariableScope.UI:UpdateConsole["Debug: Targeting: ${_Me.GetTargeting}"]
+		Script[EVEBot].VariableScope.UI:UpdateConsole["Debug: Current Targets: ${Math.Calc[${_Me.GetTargets} + ${_Me.GetTargeting}]}"]
 		Script[EVEBot].VariableScope.UI:UpdateConsole["Debug: Max Targets: ${Script[EVEBot].VariableScope.Ship.MaxLockedTargets}"]
 				
 		if !${Entity[${EntityID}].IsLockedTarget} && !${Entity[${EntityID}].BeingTargeted}
@@ -156,7 +156,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 				if !${Entity[${Target.Value.EntityID}].IsLockedTarget} && !${Entity[${Target.Value.EntityID}].BeingTargeted}
 				{
 					/* TODO - check to see if target list is full. if it is, unlock a target. */
-					if ${Math.Calc[${Script[EVEBot].VariableScope._Me.GetTargets} + ${Script[EVEBot].VariableScope._Me.GetTargeting}]} >= ${Script[EVEBot].VariableScope.Ship.MaxLockedTargets}
+					if ${Math.Calc[${_Me.GetTargets} + ${_Me.GetTargeting}]} >= ${Script[EVEBot].VariableScope.Ship.MaxLockedTargets}
 					{
 						This:UnlockRandomTarget[]
 						/*	Go ahead and return here -- we'll catch the mandatory target on the next pulse, this gives the client
@@ -176,7 +176,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 			return
 		}
 
-		if ${Math.Calc[${Script[EVEBot].VariableScope._Me.GetTargets} + ${Script[EVEBot].VariableScope._Me.GetTargeting}]} >= ${Script[EVEBot].VariableScope.Ship.MaxLockedTargets}
+		if ${Math.Calc[${_Me.GetTargets} + ${_Me.GetTargeting}]} >= ${Script[EVEBot].VariableScope.Ship.MaxLockedTargets}
 		{
 			return
 		}
