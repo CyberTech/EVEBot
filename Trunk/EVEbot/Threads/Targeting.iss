@@ -131,12 +131,12 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 			return
 		}
 
-		UI:UpdateConsole["Debug: Current Targets: ${Math.Calc[${Script[EVEBot].VariableScope._Me.GetTargets} + ${Script[EVEBot].VariableScope._Me.GetTargeting}]}"]
-		UI:UpdateConsole["Debug: Max Targets: ${Script[EVEBot].VariableScope.Ship.MaxLockedTargets}"]
+		Script[EVEBot].VariableScope.UI:UpdateConsole["Debug: Current Targets: ${Math.Calc[${Script[EVEBot].VariableScope._Me.GetTargets} + ${Script[EVEBot].VariableScope._Me.GetTargeting}]}"]
+		Script[EVEBot].VariableScope.UI:UpdateConsole["Debug: Max Targets: ${Script[EVEBot].VariableScope.Ship.MaxLockedTargets}"]
 				
 		if !${Entity[${EntityID}].IsLockedTarget} && !${Entity[${EntityID}].BeingTargeted}
 		{
-			UI:UpdateConsole["Locking ${Entity[${EntityID}].Name} (${EntityID}): ${Script[EVEBot].VariableScope.EVEBot.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"]
+			Script[EVEBot].VariableScope.UI:UpdateConsole["Locking ${Entity[${EntityID}].Name} (${EntityID}): ${Script[EVEBot].VariableScope.EVEBot.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"]
 			Entity[${EntityID}]:LockTarget
 		}
 	}
