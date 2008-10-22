@@ -323,10 +323,11 @@ objectdef obj_Configuration_Miner
 			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
 		}
-		if !${BaseConfig.BaseRef.FindSet[${This.SetName}].FindSet[Ice_Types](exists)}
+		if !${BaseConfig.BaseRef.FindSet[${This.SetName}].FindSet[Mercoxit_Types](exists)}
 		{
-			UI:UpdateConsole["obj_Configuration_Miner: Initialized ICE Types"]
-			This:Set_Default_Values_Ice[]
+			UI:UpdateConsole["obj_Configuration_Miner: Re-Initializing Asteroid Types"]
+			BaseConfig.BaseRef.FindSet[${This.SetName}]:Clear
+			This:Set_Default_Values[]
 		}
 	}
 
@@ -338,6 +339,11 @@ objectdef obj_Configuration_Miner
 	member:settingsetref OreTypesRef()
 	{
 		return ${BaseConfig.BaseRef.FindSet[${This.SetName}].FindSet[Ore_Types]}
+	}
+
+	member:settingsetref MercoxitTypesRef()
+	{
+		return ${BaseConfig.BaseRef.FindSet[${This.SetName}].FindSet[Mercoxit_Types]}
 	}
 	
 	member:settingsetref IceTypesRef()
@@ -354,28 +360,27 @@ objectdef obj_Configuration_Miner
 	{
 		BaseConfig.BaseRef:AddSet[${This.SetName}]
 
-		This.MinerRef:AddSet[ORE_Types]
-		This.MinerRef:AddSet[ORE_Volumes]
-		This.MinerRef:AddSetting[Restrict To Belt, NO]
-		This.MinerRef:AddSetting[Restrict To Ore Type, NONE]
 		This.MinerRef:AddSetting[JetCan Naming, 1]
 		This.MinerRef:AddSetting[Bookmark Last Position, TRUE]
-		This.MinerRef:AddSetting[Distribute Lasers, TRUE]
 		This.MinerRef:AddSetting[Use Mining Drones, FALSE]
 		This.MinerRef:AddSetting[Avoid Player Range, 10000]
 		This.MinerRef:AddSetting[Standing Detection, FALSE]
 		This.MinerRef:AddSetting[Lowest Standing, 0]
-		This.MinerRef:AddSetting[Ice Mining, 0]
-		This.MinerRef:AddSetting[Delivery Location Type, 1]
+		This.MinerRef:AddSetting[Miner Type, Ore]
 		This.MinerRef:AddSetting[Delivery Location Type Name, Station]
 		This.MinerRef:AddSetting[Use Field Bookmarks, FALSE]
 		This.MinerRef:AddSetting[Strip Mine, FALSE]
 		This.MinerRef:AddSetting[Cargo Threshold, 0]
 
-		
-		This.OreTypesRef:AddSetting[Vitreous Mercoxit, 1]
-		This.OreTypesRef:AddSetting[Magma Mercoxit, 1]
-		This.OreTypesRef:AddSetting[Mercoxit, 1]
+		This:Set_Default_Values_Ore[]
+		This:Set_Default_Values_Mercoxit[]
+		This:Set_Default_Values_Ice[]
+	}
+
+	method Set_Default_Values_Ore()
+	{
+		This.MinerRef:AddSet[ORE_Types]
+
 		This.OreTypesRef:AddSetting[Prime Arkonor, 1]
 		This.OreTypesRef:AddSetting[Crimson Arkonor, 1]
 		This.OreTypesRef:AddSetting[Arkonor, 1]
@@ -422,8 +427,8 @@ objectdef obj_Configuration_Miner
 		This.OreTypesRef:AddSetting[Concentrated Veldspar, 1]
 		This.OreTypesRef:AddSetting[Veldspar, 1]
 
-		This:Set_Default_Values_Ice[]
-		
+		This.MinerRef:AddSet[ORE_Volumes]
+
 		This.OreVolumesRef:AddSetting[Mercoxit,40]
 		This.OreVolumesRef:AddSetting[Arkonor,16]
 		This.OreVolumesRef:AddSetting[Bistot,16]
@@ -440,6 +445,15 @@ objectdef obj_Configuration_Miner
 		This.OreVolumesRef:AddSetting[Pyroxeres,0.3]
 		This.OreVolumesRef:AddSetting[Scordite,0.15]
 		This.OreVolumesRef:AddSetting[Veldspar,0.1]
+	}
+
+	method Set_Default_Values_Mercoxit()
+	{
+		This.MinerRef:AddSet[Mercoxit_Types]
+
+		This.MercoxitTypesRef:AddSetting[Vitreous Mercoxit, 1]
+		This.MercoxitTypesRef:AddSetting[Magma Mercoxit, 1]
+		This.MercoxitTypesRef:AddSetting[Mercoxit, 1]
 	}
 
 	method Set_Default_Values_Ice()
@@ -460,11 +474,6 @@ objectdef obj_Configuration_Miner
 		This.IceTypesRef:AddSetting[Blue Ice, 1]
 	}
 	
-	; TODO - members/methods for these - CyberTech
-	
-	;		This.MinerRef:AddSetting[Restrict To Belt, NO]
-	;		This.MinerRef:AddSetting[Restrict To Ore Type, NONE]
-
 	member:int JetCanNaming()
 	{
 		return ${This.MinerRef.FindSetting[JetCan Naming, 1]}
@@ -485,16 +494,6 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Bookmark Last Position, ${value}]
 	}
 
-	member:bool DistributeLasers()
-	{
-		return ${This.MinerRef.FindSetting[Distribute Lasers, TRUE]}
-	}
-
-	method SetDistributeLasers(bool value)
-	{	
-		This.MinerRef:AddSetting[Distribute Lasers, ${value}]
-	}
-	
 	member:bool UseMiningDrones()
 	{
 		return ${This.MinerRef.FindSetting[Use Mining Drones, FALSE]}
@@ -535,26 +534,16 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Lowest Standing, ${value}]
 	}
 	
-	member:bool IceMining()
+	member:string MinerType()
 	{
-		return ${This.MinerRef.FindSetting[Ice Mining, 0]}
+		return ${This.MinerRef.FindSetting[Miner Type, Ore]}
 	}
 	
-	method SetIceMining(bool value)
+	method SetMinerType(string value)
 	{
-		This.MinerRef:AddSetting[Ice Mining, ${value}]
+		This.MinerRef:AddSetting[Miner Type, ${value}]
 	}
 	
-	member:int DeliveryLocationType()
-	{
-		return ${This.MinerRef.FindSetting[Delivery Location Type, 1]}
-	}
-	
-	method SetDeliveryLocationType(int value)
-	{
-		This.MinerRef:AddSetting[Delivery Location Type, ${value}]
-	}
-
 	member:string DeliveryLocationTypeName()
 	{
 		return ${This.MinerRef.FindSetting[Delivery Location Type Name, STATION]}

@@ -1,3 +1,4 @@
+#include ..\core\defines.iss
 /*
 	Target Thread
 
@@ -37,10 +38,12 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 	variable index:obj_QueueTarget MandatoryQueue
 	variable index:obj_QueueTarget TargetQueue
 
+	variable int TargetingThisFrame = 0
+
 	method Initialize()
 	{
 		Event[OnFrame]:AttachAtom[This:Pulse]
-		Script[EVEBot].VariableScope.UI:UpdateConsole["obj_EVEBOT_Targeting: Initialized", LOG_MINOR]
+		Script[EVEBot].VariableScope.UI:UpdateConsole["Thread: obj_EVEBOT_Targeting: Initialized", LOG_MINOR]
 	}
 
 	method Pulse()
@@ -126,7 +129,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 
 	method TargetEntity(int EntityID)
 	{
-		if ${Math.Calc[${_Me.GetTargets} + ${_Me.GetTargeting}]} >= ${Script[EVEBot].VariableScope.Ship.MaxLockedTargets}
+		if ${Math.Calc[${This.TargetingThisFrame} + ${_Me.GetTargets} + ${_Me.GetTargeting}]} >= ${Script[EVEBot].VariableScope.Ship.MaxLockedTargets}
 		{
 			return
 		}
@@ -140,6 +143,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 		{
 			Script[EVEBot].VariableScope.UI:UpdateConsole["Locking ${Entity[${EntityID}].Name} (${EntityID}): ${Script[EVEBot].VariableScope.EVEBot.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"]
 			Entity[${EntityID}]:LockTarget
+			This.TargetingThisFrame:Inc
 		}
 	}
 
@@ -148,15 +152,25 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 		variable iterator Target
 		variable bool TargetingMandatory = FALSE
 	
+		This.TargetingThisFrame:Set[0]
+		
+		if ${_Me.Ship.MaxLockedTargets} == 0
+		{
+			UI:UpdateConsole["Targeting is Jammed"]
+			return
+		}
+		
 		MandatoryQueue:GetIterator[Target]
 		if ${Target:First(exists)}
 		{
 			do
 			{
-				if !${Entity[${Target.Value.EntityID}].IsLockedTarget} && !${Entity[${Target.Value.EntityID}].BeingTargeted}
+				if ${Entity[${Target.Value.EntityID}](exists)} && \
+					!${Entity[${Target.Value.EntityID}].IsLockedTarget} && \
+					!${Entity[${Target.Value.EntityID}].BeingTargeted}
 				{
 					/* TODO - check to see if target list is full. if it is, unlock a target. */
-					if ${Math.Calc[${_Me.GetTargets} + ${_Me.GetTargeting}]} >= ${Script[EVEBot].VariableScope.Ship.MaxLockedTargets}
+					if ${Math.Calc[${This.TargetingThisFrame} + ${_Me.GetTargets} + ${_Me.GetTargeting}]} >= ${Script[EVEBot].VariableScope.Ship.MaxLockedTargets}
 					{
 						This:UnlockRandomTarget[]
 						/*	Go ahead and return here -- we'll catch the mandatory target on the next pulse, this gives the client
@@ -176,7 +190,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 			return
 		}
 
-		if ${Math.Calc[${_Me.GetTargets} + ${_Me.GetTargeting}]} >= ${Script[EVEBot].VariableScope.Ship.MaxLockedTargets}
+		if ${Math.Calc[${This.TargetingThisFrame} + ${_Me.GetTargets} + ${_Me.GetTargeting}]} >= ${Script[EVEBot].VariableScope.Ship.MaxLockedTargets}
 		{
 			return
 		}
@@ -186,19 +200,12 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 		{
 			do
 			{
-				echo Name = ${Entity[${Target.Value.EntityID}].Name}
-				echo IsLockedTarget = ${Entity[${Target.Value.EntityID}].IsLockedTarget}
-				echo BeingTargeted = ${Entity[${Target.Value.EntityID}].BeingTargeted}
-				
-				if !${Entity[${Target.Value.EntityID}].IsLockedTarget} && \
+				if ${Entity[${Target.Value.EntityID}](exists)} && \
+					!${Entity[${Target.Value.EntityID}].IsLockedTarget} && \
 					!${Entity[${Target.Value.EntityID}].BeingTargeted}
 				{
 					This:TargetEntity[${Target.Value.EntityID}]
 					Target.Value.Targeting:Set[TRUE]
-				}
-				else
-				{
-					echo Already targeted
 				}
 			}
 			while ${Target:Next(exists)}
@@ -353,11 +360,17 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 
 	method Enable()
 	{
+#if EVEBOT_DEBUG
+		Script[EVEBot].VariableScope.UI:UpdateConsole["Targeting: Enabled"]
+#endif
 		This.Running:Set[TRUE]
 	}
 
 	method Disable()
 	{
+#if EVEBOT_DEBUG
+		Script[EVEBot].VariableScope.UI:UpdateConsole["Targeting: Disabled"]
+#endif
 		This.Running:Set[FALSE]
 	}
 }

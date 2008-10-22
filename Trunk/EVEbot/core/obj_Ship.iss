@@ -1012,28 +1012,30 @@ objectdef obj_Ship
 	}
 
 	
-	function WarpToID(int Id, int WarpInDistance=0)
+	function WarpToID(int ID, int WarpInDistance=0)
 	{
-		if (${Id} <= 0)
+		if (${ID} <= 0)
 		{
-			UI:UpdateConsole["Error: obj_Ship:WarpToID: Id is <= 0 (${Id})"]
+			UI:UpdateConsole["Error: obj_Ship:WarpToID: Id is <= 0 (${ID})"]
 			return
 		}
 
-		if !${Entity[${Id}](exists)}
+		if !${Entity[${ID}](exists)}
 		{
 			UI:UpdateConsole["Error: obj_Ship:WarpToID: No entity matched the ID given."]
 			return
 		}
-		
-		Entity[${Id}]:AlignTo
+#if EVEBOT_DEBUG
+		UI:UpdateConsole["Debug: WarpToID ${ID} ${WarpInDistance}"]
+#endif
+		Entity[${ID}]:AlignTo
 		call This.WarpPrepare
-		while ${Entity[${Id}].Distance} >= WARP_RANGE
+		while ${Entity[${ID}].Distance} >= WARP_RANGE
 		{
-			UI:UpdateConsole["Warping to ${Entity[${Id}].Name} @ ${EVEBot.MetersToKM_Str[${WarpInDistance}]}"]
+			UI:UpdateConsole["Warping to ${Entity[${ID}].Name} @ ${EVEBot.MetersToKM_Str[${WarpInDistance}]}"]
 			while !${This.WarpEntered}
 			{
-				Entity[${Id}]:WarpTo[${WarpInDistance}]
+				Entity[${ID}]:WarpTo[${WarpInDistance}]
 				wait 10
 			}
 			call This.WarpWait
@@ -1060,6 +1062,9 @@ objectdef obj_Ship
 			{
 				if ${FleetMember.Value.CharID} == ${charID} && ${Local[${FleetMember.Value.ToPilot.Name}](exists)}
 				{
+#if EVEBOT_DEBUG
+					UI:UpdateConsole["Debug: WarpToFleetMember ${charID} ${distance}"]
+#endif
 					call This.WarpPrepare
 					while !${Entity[OwnerID,${charID},CategoryID,6](exists)}
 					{
@@ -1140,6 +1145,12 @@ objectdef obj_Ship
 			call Station.Undock
 		}
 
+		if ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${DestinationBookmark.X}, ${DestinationBookmark.Y}, ${DestinationBookmark.Z}]} < WARP_RANGE
+		{
+			UI:UpdateConsole["obj_Ship:WarpToBookMark - We are already at the bookmark"]
+			return
+		}
+		
 		call This.WarpPrepare
 		call This.TravelToSystem ${DestinationBookmark.SolarSystemID}
 

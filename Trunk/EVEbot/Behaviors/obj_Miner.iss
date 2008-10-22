@@ -376,10 +376,6 @@ objectdef obj_Miner
 			if ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers}
 			{
 				; We've got idle lasers, and available targets. Do something with them.
-				while ${_Me.GetTargeting} > 0
-				{
-				 	wait 10
-				}
 
 				Me:DoGetTargets[LockedTargets]
 				LockedTargets:GetIterator[Target]
@@ -395,14 +391,13 @@ objectdef obj_Miner
 					{
 						continue
 					}
-					variable int TargetID
-					TargetID:Set[${Target.Value.ID}]
 
-					/* TODO: CyberTech - this concentrates fire fine if there's only 1 target, but if there's multiple targets it still prefers to distribute. Ice mining shouldn't distribute */
+					/* TODO: CyberTech - this concentrates fire fine if there's only 1 target, but if there's multiple targets 
+						it still prefers to distribute. Ice mining shouldn't distribute
+					*/
 					if (${This.ConcentrateFire} || \
-						${Config.Miner.IceMining} || \
-						!${Config.Miner.DistributeLasers} || \
-						!${Ship.IsMiningAsteroidID[${TargetID}]})
+						${Config.Miner.MinerType.Equal["Ice"]} || \
+						!${Ship.IsMiningAsteroidID[${Target.Value.ID}]})
 					{
 
 						Target.Value:MakeActiveTarget
@@ -415,7 +410,7 @@ objectdef obj_Miner
 						{
 							break
 						}
-						call Ship.Approach ${TargetID} ${Ship.OptimalMiningRange}
+						call Ship.Approach ${Target.Value.ID} ${Ship.OptimalMiningRange}
 						call Ship.ActivateFreeMiningLaser
 
 						if (${Ship.Drones.DronesInSpace} > 0 && \
@@ -428,21 +423,18 @@ objectdef obj_Miner
 				while ${Target:Next(exists)}
 			}
 
-			if (!${Config.Miner.IceMining} || \
+			call Asteroids.ChooseTargets
+
+			if (${Config.Miner.MinerType.NotEqual["Ore"]} || \
 				(${Ship.TotalActivatedMiningLasers} == 0))
 			{
-				if ${Math.Calc[${_Me.GetTargets} + ${_Me.GetTargeting}]} < ${Ship.MaxLockedTargets}
+				if ${Ship.TotalMiningLasers} > ${Ship.MaxLockedTargets}
 				{
-					call Asteroids.ChooseTargets
-					This.ConcentrateFire:Set[!${Return}]
+					This.ConcentrateFire:Set[TRUE]
 				}
 				else
 				{
-					if ( ${_Me.GetTargets} >= ${Ship.MaxLockedTargets} && \
-						 ${Ship.TotalMiningLasers} > ${Ship.MaxLockedTargets} )
-					{
-						This.ConcentrateFire:Set[TRUE]
-					}
+					This.ConcentrateFire:Set[FALSE]
 				}
 			}
 			wait 10
