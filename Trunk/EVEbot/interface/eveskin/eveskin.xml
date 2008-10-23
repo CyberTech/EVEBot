@@ -226,7 +226,8 @@
 		<Texture Template='EVESkin.Window.Texture' />
 	</template>
 	
-	<template name='EVESkin.TabControl'>
+	<!-- <template name='EVESkin.TabControl'> -->
+	<template name='EVESkin.TabControl' template='tabcontrol'>
 		<Font template='Button.Font' />
 		<SelectedTextColor>FFFFFF00</SelectedTextColor>
 		<TabHeight>16</TabHeight>
@@ -249,7 +250,8 @@
 		<Border>0</Border>
 		<Font template='Console.Font' />
 		<SelectionColor>FFD4D0C8</SelectionColor>
-    	<ScrollBar>console.ScrollBar</ScrollBar>
+    	<!-- <ScrollBar>console.ScrollBar</ScrollBar> -->
+    	<ScrollBar Template='console.ScrollBar' />
     	<BackBufferSize>2000</BackBufferSize>		
 	</template>
 </ISUI>
