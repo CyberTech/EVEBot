@@ -144,7 +144,7 @@ objectdef obj_MissionBlacklist
 				break
 		}
 
-		UI:UpdateConsole["DEBUG: obj_MissionBlacklist: Searching for ${levelString} mission blacklist..."]
+		;;;UI:UpdateConsole["DEBUG: obj_MissionBlacklist: Searching for ${levelString} mission blacklist..."]
 		
 		if ${This.levelIterator:First(exists)}
 		{
@@ -152,7 +152,7 @@ objectdef obj_MissionBlacklist
 			{
 				if ${levelString.Equal[${This.levelIterator.Key}]}
 				{
-					UI:UpdateConsole["DEBUG: obj_MissionBlacklist: Searching ${levelString} mission blacklist for ${mission}..."]
+					;;;UI:UpdateConsole["DEBUG: obj_MissionBlacklist: Searching ${levelString} mission blacklist for ${mission}..."]
 		
 					variable iterator missionIterator
 					
@@ -163,7 +163,7 @@ objectdef obj_MissionBlacklist
 						{
 							if ${mission.Equal[${missionIterator.Key}]}
 							{
-								UI:UpdateConsole["DEBUG: obj_MissionBlacklist: ${mission} is blacklisted!"]
+								;;;UI:UpdateConsole["DEBUG: obj_MissionBlacklist: ${mission} is blacklisted!"]
 								return TRUE
 							}
 						}
@@ -1119,13 +1119,14 @@ objectdef obj_Agents
 			isLowSec:Set[TRUE]	
 			UI:UpdateConsole["obj_Agents: DEBUG: isLowSec = ${isLowSec}"]	
 		}		
+
 		Missions.MissionCache:SetLowSec[${amIterator.Value.AgentID},${isLowSec}]
 
-        variable time lastDecline
-        lastDecline:Set[${Config.Agents.LastDecline[${This.AgentName}]}]
-        lastDecline.Hour:Inc[4]
-        lastDecline:Update
-
+		variable time lastDecline
+		lastDecline:Set[${Config.Agents.LastDecline[${This.AgentName}]}]
+		lastDecline.Hour:Inc[4]
+		lastDecline:Update
+		
 		if ${isLowSec} && ${Config.Missioneer.AvoidLowSec} == TRUE
 		{
 			if ${lastDecline.Timestamp} >= ${Time.Timestamp}
@@ -1200,10 +1201,6 @@ objectdef obj_Agents
     	EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"]:Close
 	}
 	
-	method DeclineMission()
-	{
-	}
-
 	function TurnInMission()
 	{
 		EVE:Execute[CmdCloseAllWindows]
