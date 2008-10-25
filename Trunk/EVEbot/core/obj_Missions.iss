@@ -523,32 +523,38 @@ objectdef obj_Missions
 		variable int  gateCounter = 0
 		variable int  doneCounter = 0
 
-	  while !${missionComplete}
-	  {
-			 ; wait up to 15 seconds for spawns to appear
-			 breakTime:Set[${Time.Timestamp}]
-			 breakTime.Second:Inc[15]
-			 breakTime:Update
+			; wait up to 15 seconds for spawns to appear
+			breakTime:Set[${Time.Timestamp}]
+			breakTime.Second:Inc[15]
+			breakTime:Update
 	
-			 while TRUE
-			 {
-				if ${This.HostileCount} > 0
-				{
-				   break
-				}
-	
-				if ${Time.Timestamp} >= ${breakTime.Timestamp}
-				{
-				   break
-				}
-	
-				This.Combat:SetState
-				call This.Combat.ProcessState
-				waitframe
-			 }
-	
-			 if ${This.HostileCount} > 0
-			 {
+		while TRUE
+		{
+			if ${This.HostileCount} > 0
+			{
+			   break
+			}
+
+			if ${Time.Timestamp} >= ${breakTime.Timestamp}
+			{
+			   break
+			}
+
+			This.Combat:SetState
+			call This.Combat.ProcessState
+			waitframe
+		}
+
+		while !${missionComplete}
+		{
+			UI:UpdateConsole["obj_Missions: DEBUG: TypeID = ${This.MissionCache.TypeID[${agentID}]}."]
+
+
+			if ${This.HostileCount} > 0
+			{
+				gateCounter:Set[0]
+				doneCounter:Set[0]
+				
 				; wait up to 15 seconds for agro
 				breakTime:Set[${Time.Timestamp}]
 				breakTime.Second:Inc[15]
@@ -607,13 +613,13 @@ objectdef obj_Missions
 				}
 				call This.CombatApproach ${structureID} LOOT_RANGE
 			}
-			elseif ${This.MissionCache.TypeID[${agentID}]} > 0
+			elseif ${This.MissionCache.TypeID[${agentID}]} > 0 && !${This.HaveLoot[${agentID}]}
 			{
 				/* loot containers */
 				variable index:entity containerIndex
 				variable iterator     containerIterator
 				
-				EVE:DoGetEntities[containerIndex, CategoryID, GROUP_SPAWNCONTAINER]
+				EVE:DoGetEntities[containerIndex, GroupID, GROUP_SPAWNCONTAINER]
 				containerIndex:GetIterator[containerIterator]
 				
 				if ${containerIterator:First(exists)}
@@ -627,7 +633,7 @@ objectdef obj_Missions
 					while ${containerIterator:Next(exists)}
 				}
 	
-				EVE:DoGetEntities[containerIndex, CategoryID, GROUP_CARGOCONTAINER]
+				EVE:DoGetEntities[containerIndex, GroupID, GROUP_CARGOCONTAINER]
 				containerIndex:GetIterator[containerIterator]
 				
 				if ${containerIterator:First(exists)}
@@ -640,14 +646,27 @@ objectdef obj_Missions
 					}
 					while ${containerIterator:Next(exists)}
 				}
+				
+				/* loot wrecks */
+				if ${This.SpecialWreckPresent[${agentID}]} == TRUE
+				{
+					variable int wreckID
+					
+					wreckID:Set[${This.SpecialWreckID[${agentID}]}]
+					UI:UpdateConsole["obj_Missions: Special wreck present."]
+					call This.CombatApproach ${wreckID} LOOT_RANGE
+					call This.LootEntity ${wreckID}
+				}
 			}
-			elseif ${This.GatePresent} == TRUE
+			
+			;;;  This will not work for missions that have bonus rooms which require a key
+			if ${This.HostileCount} == 0 && ${This.GatePresent}
 			{
 				gateCounter:Inc
 				
 				UI:UpdateConsole["DEBUG: obj_Missions: gateCounter = ${gateCounter}.",LOG_MINOR]
 				
-				if ${gateCounter} > 100
+				if ${gateCounter} > 45
 				{
 					/* activate gate and go to next room */
 					call Ship.Approach ${Entity[TypeID,TYPE_ACCELERATION_GATE].ID} DOCKING_RANGE
@@ -666,13 +685,13 @@ objectdef obj_Missions
 					}
 				}
 			}
-			else
+			elseif ${This.HostileCount} == 0
 			{
 				doneCounter:Inc
 				
 				UI:UpdateConsole["DEBUG: obj_Missions: doneCounter = ${doneCounter}.",LOG_MINOR]
 				
-				if ${doneCounter} > 100
+				if ${doneCounter} > 45
 				{
 					missionComplete:Set[TRUE]
 				}
@@ -737,13 +756,13 @@ objectdef obj_Missions
 					continue
 
 				default               
+					if !${Targeting.IsQueued[${targetIterator.Value.ID}]}
+					{
+						Targeting:Queue[${targetIterator.Value.ID},1,1,FALSE]
+					}
+					
 					if ${targetIterator.Value.Distance} > ${Ship.OptimalTargetingRange}
 					{
-						if !${Targeting.IsQueued[${targetIterator.Value.ID}]}
-						{
-							Targeting:Queue[${targetIterator.Value.ID},1,1,FALSE]
-						}
-						
 						call This.CombatApproach ${targetIterator.Value.ID} ${Ship.OptimalTargetingRange}
 						return
 					}
@@ -838,7 +857,13 @@ objectdef obj_Missions
 
    member:bool GatePresent()
    {
-	  return ${Entity[TypeID,TYPE_ACCELERATION_GATE](exists)}
+		variable index:entity gateIndex
+		
+		EVE:DoGetEntities[gateIndex, TypeID, TYPE_ACCELERATION_GATE]
+		
+		UI:UpdateConsole["obj_Missions: DEBUG There are ${gateIndex.Used} gates nearby."]
+		
+		return ${gateIndex.Used} > 0
    }
 
 	function WarpToEncounter(int agentID)
@@ -937,6 +962,11 @@ objectdef obj_Missions
 			{
 				return TRUE
 			}
+			elseif ${missionName.Equal["the hidden stash"]} && \
+				${structureName.Equal["warehouse"]}
+			{
+				return TRUE
+			}
 			; elseif {...}
 			; etc...         
 		}
@@ -992,6 +1022,76 @@ objectdef obj_Missions
 		return -1
 	}
 	
+	member:bool IsSpecialWreck(int agentID,string wreckName)
+	{
+		variable string missionName
+		
+		;;;UI:UpdateConsole["obj_Agents: DEBUG: IsSpecialWreck(${agentID},${wreckName}) >>> ${This.MissionCache.Name[${agentID}]}"]	
+
+		missionName:Set[${This.MissionCache.Name[${agentID}]}]
+		if ${missionName.NotEqual[NULL]}
+		{
+			UI:UpdateConsole["obj_Agents: DEBUG: missionName = ${missionName}"]	
+			if ${missionName.Equal["smuggler interception"]} && \
+				${wreckName.Find["transport"]} > 0
+			{
+				return TRUE
+			}
+			; elseif {...}
+			; etc...         
+		}
+
+		return FALSE
+	}
+	
+	member:bool SpecialWreckPresent(int agentID)
+	{
+		variable index:entity targetIndex
+		variable iterator     targetIterator
+
+		EVE:DoGetEntities[targetIndex, GroupID, GROUP_LARGECOLLIDABLESTRUCTURE]
+		targetIndex:GetIterator[targetIterator]
+
+		UI:UpdateConsole["obj_Agents: DEBUG: SpecialWreckPresent found ${targetIndex.Used} wrecks",LOG_MINOR]	
+
+		if ${targetIterator:First(exists)}
+		{
+			do
+			{
+				if ${This.IsSpecialWreck[${agentID},${targetIterator.Value.Name}]} == TRUE
+				{
+					return TRUE
+				}
+			}
+			while ${targetIterator:Next(exists)}
+		}
+		
+		return FALSE
+	}
+
+	member:int SpecialWreckID(int agentID)
+	{
+		variable index:entity targetIndex
+		variable iterator     targetIterator
+   	
+		EVE:DoGetEntities[targetIndex, GroupID, GROUP_LARGECOLLIDABLESTRUCTURE]
+		targetIndex:GetIterator[targetIterator]
+   	
+		if ${targetIterator:First(exists)}
+		{
+			do
+			{
+				if ${This.IsSpecialWreck[${agentID},${targetIterator.Value.Name}]} == TRUE
+				{
+					return ${targetIterator.Value.ID}
+				}
+			}
+			while ${targetIterator:Next(exists)}
+		}
+		
+		return -1
+	}
+
 	function LootEntity(int id, int leave = 0)
 	{
 		variable index:item ContainerCargo
@@ -1000,6 +1100,8 @@ objectdef obj_Missions
 
 		UI:UpdateConsole["DEBUG: obj_OreHauler.LootEntity ${id} ${leave}"]
 		
+		Entity[${id}]:Open
+		wait 50
 		Entity[${id}]:DoGetCargo[ContainerCargo]
 		ContainerCargo:GetIterator[Cargo]
 		if ${Cargo:First(exists)}
@@ -1042,5 +1144,44 @@ objectdef obj_Missions
 		wait 10
 	}
 
-   
+	member:bool HaveLoot(int agentID)
+	{
+		variable int        QuantityRequired
+		variable string     itemName
+		variable bool       haveCargo = FALSE
+		variable index:item CargoIndex
+		variable iterator   CargoIterator
+		variable int        TypeID
+		variable int        ItemQuantity	
+		
+		Agents:SetActiveAgent[${Agent[id,${agentID}]}]
+
+		itemName:Set[${EVEDB_Items.Name[${This.MissionCache.TypeID[${agentID}]}]}]
+		QuantityRequired:Set[${Math.Calc[${This.MissionCache.Volume[${agentID}]}/${EVEDB_Items.Volume[${itemName}]}]}]
+
+		call Cargo.OpenHolds
+		
+		;;; Check the cargohold of your ship
+		Me.Ship:DoGetCargo[CargoIndex]
+		CargoIndex:GetIterator[CargoIterator]
+		if ${CargoIterator:First(exists)}
+		{
+			do
+			{
+				TypeID:Set[${CargoIterator.Value.TypeID}]
+				ItemQuantity:Set[${CargoIterator.Value.Quantity}]
+				UI:UpdateConsole["DEBUG: HaveLoot: Ship's Cargo: ${ItemQuantity} units of ${CargoIterator.Value.Name}(${TypeID})."]
+				
+				if (${TypeID} == ${This.MissionCache.TypeID[${agentID}]}) && \
+				   (${ItemQuantity} >= ${QuantityRequired})
+				{
+					UI:UpdateConsole["DEBUG: HaveLoot: Found required items in ship's cargohold."]
+					haveCargo:Set[TRUE]
+				}
+			}
+			while ${CargoIterator:Next(exists)}
+		}		
+
+		return ${haveCargo}
+	}   
 }
