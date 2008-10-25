@@ -540,4 +540,3 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 #define TYPE_KESTREL  602
 #define TYPE_RIFTER   587
 #define TYPE_RAVEN    638
-

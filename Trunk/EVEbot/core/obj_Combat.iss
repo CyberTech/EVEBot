@@ -218,7 +218,17 @@ objectdef obj_Combat
 
 		; Activate the weapons, the modules class checks if there's a target (no it doesn't - ct)
 		Ship:Activate_StasisWebs
-		Ship:Activate_Weapons
+		
+		if ${Me.ActiveTarget.Distance} > ${Ship.OptimalWeaponRange}
+		{
+			UI:UpdateConsole["Active target out of range!!"]
+		}
+		else
+		{
+			Ship:Activate_Weapons
+		}
+		
+		
 		Ship.Drones:SendDrones
 	}
 

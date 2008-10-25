@@ -772,6 +772,16 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[Min Chain Bounty,${value}]
 	}
 
+	member:int MaxMissileRange()
+	{
+		return ${This.CombatRef.FindSetting[MaxMissileRange, 10000]}
+	}
+	
+	method SetMaxMissileRange(int value)
+	{
+		This.CombatRef:AddSetting[MaxMissileRange,${value}]
+	}
+
 	member:bool LaunchCombatDrones()
 	{
 		return ${This.CombatRef.FindSetting[Launch Combat Drones, TRUE]}

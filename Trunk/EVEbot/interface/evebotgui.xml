@@ -1122,6 +1122,30 @@
 										}
 									</OnChange>
 								</Textentry>
+								<Text name='lblMissileRange'>
+									<X>50%</X>
+									<Y>52</Y>
+									<Width>200</Width>
+									<Height>18</Height>
+									<Text>Maximum Missile Range</Text>
+									<AutoTooltip>Maximum missile range for your ship.</AutoTooltip>
+								</Text>
+								<Textentry name='tbMissileRange'>
+									<X>52%</X>
+									<Y>72</Y>
+									<Width>100</Width>
+									<Height>18</Height>
+									<MaxLength>10</MaxLength>
+									<OnLoad>
+										This:SetText[${Script[EVEBot].VariableScope.Config.Combat.MaxMissileRange}]
+									</OnLoad>
+									<OnChange>
+										if ${This.Text.Length} > 0
+										{
+											Script[EVEBot].VariableScope.Config.Combat:SetMaxMissileRange[${Int[${This.Text}]}]
+										}
+									</OnChange>
+								</Textentry>
 							</Children>
 						</Frame>
 					</tab>

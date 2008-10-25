@@ -876,7 +876,7 @@ objectdef obj_Cargo
 	  call This.CloseHolds
    }
 
-	function TransferSpawnContainerCargoToShip()
+	function TransferSpawnContainerCargoToShip(int entityID)
 	{
 	}
 }

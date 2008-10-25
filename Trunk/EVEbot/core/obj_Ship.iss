@@ -1856,6 +1856,13 @@ objectdef obj_Ship
       return ${Math.Calc[${_Me.Ship.MaxTargetRange}*0.90]}
    }
 
+   ; Returns the lowest weapon optimal range minus 10%
+   member:int OptimalWeaponRange()
+   {
+   	; just handle missiles for now
+      return ${Config.Combat.MaxMissileRange}
+   }
+
 	function SetActiveCrystals()
 	{
 		 variable iterator ModuleIterator
