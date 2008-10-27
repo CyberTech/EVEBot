@@ -17,11 +17,6 @@ objectdef obj_Offense
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 1
 
-	variable index:obj_QueueTarget MandatoryQueue
-	variable index:obj_QueueTarget TargetQueue
-
-	variable int TargetingThisFrame = 0
-
 	method Initialize()
 	{
 		Event[OnFrame]:AttachAtom[This:Pulse]
