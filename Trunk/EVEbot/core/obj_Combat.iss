@@ -180,7 +180,7 @@ objectdef obj_Combat
 				call This.Flee
 				This.Override:Set[TRUE]
 			}
-			call This.ManageTank
+			call This.CheckTank
 		}
 		
 		switch ${This.CurrentState}
@@ -276,6 +276,18 @@ objectdef obj_Combat
 
 	method CheckTank()
 	{
+		/* this shouldn't be here. just temporary moved here after removal of ManageTank into Defense thread. */
+		if ${_Me.GetTargetedBy} > 0
+		{
+			/* We have aggro now, yay! Let's launch some drones */
+			if ${Config.Combat.LaunchCombatDrones} && \
+				${Ship.Drones.DronesInSpace} == 0 && \
+				!${Ship.InWarp} && !${This.Fled}
+			{
+				Ship.Drones:LaunchAll[]
+			}
+		}
+		
 		if ${This.Fled}
 		{
 			/* don't leave the "fled" state until we regen */
@@ -313,61 +325,6 @@ objectdef obj_Combat
 				This.CurrentState:Set["FLEE"]
 			}
 		}
-	}
-
-	function ManageTank()
-	{
-		if ${_Me.Ship.ArmorPct} < 100
-		{
-			/* Turn on armor reps, if you have them 
-				Armor reps do not rep right away -- they rep at the END of the cycle.
-				To counter this we start the rep as soon as any damage occurs.
-			*/
-			Ship:Activate_Armor_Reps[]
-		}
-		elseif ${_Me.Ship.ArmorPct} > 98
-		{
-			Ship:Deactivate_Armor_Reps[]
-		}
-
-		if ${_Me.Ship.ShieldPct} < 85 || ${Config.Combat.AlwaysShieldBoost}
-		{   /* Turn on the shield booster, if present */
-			Ship:Activate_Shield_Booster[]
-		}
-		elseif ${_Me.Ship.ShieldPct} > 95 && !${Config.Combat.AlwaysShieldBoost}
-		{
-			Ship:Deactivate_Shield_Booster[]
-		}
-
-		if ${_Me.Ship.CapacitorPct} < 20
-		{   /* Turn on the cap booster, if present */
-			Ship:Activate_Cap_Booster[]
-		}
-		elseif ${_Me.Ship.CapacitorPct} > 80
-		{
-			Ship:Deactivate_Cap_Booster[]
-		}
-
-		; Active shield (or armor) hardeners
-		; If you don't have hardeners this code does nothing.
-		if ${_Me.GetTargetedBy} > 0
-		{
-			Ship:Activate_Hardeners[]
-
-			/* We have aggro now, yay! Let's launch some drones */
-			if ${Config.Combat.LaunchCombatDrones} && \
-				${Ship.Drones.DronesInSpace} == 0 && \
-				!${Ship.InWarp} && !${This.Fled}
-			{
-				Ship.Drones:LaunchAll[]
-			}
-		}
-		else
-		{
-			Ship:Deactivate_Hardeners[]
-		}
-
-		This:CheckTank
 	}
 }
 

@@ -107,6 +107,7 @@ function main()
 	Turbo 20
 			
 	runscript Threads/Targeting.iss
+	runscript Threads/Defense.iss
 	
 	variable iterator BotModule
 	BotModules:GetIterator[BotModule]

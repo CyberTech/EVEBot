@@ -69,46 +69,6 @@ objectdef obj_Ship
 			if !${_Me.InStation}
 			{
 				This:ValidateModuleTargets
-
-				if ( ${_Me.ToEntity.Mode} == 3 || !${Config.Common.BotModeName.Equal[Ratter]} || \
-					!${Config.Common.BotModeName.Equal[Missioneer]} )
-				{	/* ratter/missioneer was converted to use obj_Combat already */
-
-					/* Ship Armor Repair
-						We rep to a fairly high level here because it's done while we're in warp.
-					*/
-					if ${This.Total_Armor_Reps} > 0
-					{
-						if ${_Me.Ship.ArmorPct} < 100
-						{
-							This:Activate_Armor_Reps
-						}
-
-						if ${This.Repairing_Armor}
-						{
-							if ${_Me.Ship.ArmorPct} >= 98
-							{
-								This:Deactivate_Armor_Reps
-								This.Repairing_Armor:Set[FALSE]
-							}
-						}
-					}
-
-					/* Shield Boosters
-						We boost to a higher % in here, as it's done during warp, so cap has time to regen.
-					*/
-					if ${_Me.Ship.ShieldPct} < 95 || ${Config.Combat.AlwaysShieldBoost}
-					{	/* Turn on the shield booster */
-						Ship:Activate_Hardeners[]
-						This:Activate_Shield_Booster[]
-					}
-
-					if ${_Me.Ship.ShieldPct} > 99 && !${Config.Combat.AlwaysShieldBoost}
-					{	/* Turn off the shield booster */
-						Ship:Deactivate_Hardeners[]
-						This:Deactivate_Shield_Booster[]
-					}
-				}
 			}
 			This.NextPulse:Set[${Time.Timestamp}]
 			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
@@ -1427,14 +1387,9 @@ objectdef obj_Ship
 		}
 	}
 
-	member:int Total_Armor_Reps()
-	{
-		return ${This.ModuleList_Repair_Armor.Used}
-	}
-
 	method Activate_Armor_Reps()
 	{
-		if !${Me.Ship(exists) || }
+		if !${Me.Ship(exists)}
 		{
 			return
 		}
