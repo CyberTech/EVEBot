@@ -51,7 +51,7 @@ objectdef obj_EVEBotUI
 
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-    		This:LogSystemStats
+    		; This:LogSystemStats
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
     		This.NextPulse:Update
