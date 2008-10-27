@@ -108,6 +108,7 @@ function main()
 			
 	runscript Threads/Targeting.iss
 	runscript Threads/Defense.iss
+	runscript Threads/Offense.iss
 	
 	variable iterator BotModule
 	BotModules:GetIterator[BotModule]

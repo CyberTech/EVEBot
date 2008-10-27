@@ -62,11 +62,11 @@ objectdef obj_Defense
 		else
 		{
 			; We're not in warp, so use normal percentages to enable/disable 
-			if ${_Me.Ship.ShieldPct} < 95 || ${Config.Combat.AlwaysShieldBoost}
+			if ${_Me.Ship.ShieldPct} < 95 || ${Script[EVEBot].VariableScope.Config.Combat.AlwaysShieldBoost}
 			{
 				Script[EVEBot].VariableScope.Ship:Activate_Shield_Booster[]
 			}
-			elseif ${_Me.Ship.ShieldPct} > 95 && !${Config.Combat.AlwaysShieldBoost}
+			elseif ${_Me.Ship.ShieldPct} > 95 && !${Script[EVEBot].VariableScope.Config.Combat.AlwaysShieldBoost}
 			{
 				Script[EVEBot].VariableScope.Ship:Deactivate_Shield_Booster[]
 			}
