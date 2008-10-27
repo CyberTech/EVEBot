@@ -293,7 +293,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 	method Remove(int EntityID)
 	{
 		variable int Pos
-		for ( Pos:Set[1]; ${Pos} < ${MandatoryQueue.Used}; Pos:Inc )
+		for ( Pos:Set[1]; ${Pos} <= ${MandatoryQueue.Used}; Pos:Inc )
 		{
 			if ${MandatoryQueue[${Pos}].EntityID} == ${EntityID}
 			{
@@ -302,7 +302,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 		}
 		MandatoryQueue:Collapse
 
-		for ( Pos:Set[1]; ${Pos} < ${TargetQueue.Used}; Pos:Inc )
+		for ( Pos:Set[1]; ${Pos} <= ${TargetQueue.Used}; Pos:Inc )
 		{
 			if ${TargetQueue[${Pos}].EntityID} == ${EntityID}
 			{
@@ -314,7 +314,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 		variable index:entity LockedTargets
 		Me:DoGetTargets[LockedTargets]
 
-		for ( Pos:Set[1]; ${Pos} < ${LockedTargets.Used}; Pos:Inc )
+		for ( Pos:Set[1]; ${Pos} <= ${LockedTargets.Used}; Pos:Inc )
 		{
 			if ${LockedTargets[${Pos}]} == ${EntityID}
 			{
@@ -328,7 +328,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 	method Remove(int EntityID)
 	{
 		variable int Pos
-		for ( Pos:Set[1]; ${Pos} < ${MandatoryQueue.Used}; Pos:Inc )
+		for ( Pos:Set[1]; ${Pos} <= ${MandatoryQueue.Used}; Pos:Inc )
 		{
 			if ${MandatoryQueue[${Pos}].EntityID} == ${EntityID}
 			{
@@ -336,7 +336,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 			}
 		}
 
-		for ( Pos:Set[1]; ${Pos} < ${TargetQueue.Used}; Pos:Inc )
+		for ( Pos:Set[1]; ${Pos} <= ${TargetQueue.Used}; Pos:Inc )
 		{
 			if ${TargetQueue[${Pos}].EntityID} == ${EntityID}
 			{
@@ -347,7 +347,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 		variable index:entity LockedTargets
 		Me:DoGetTargets[LockedTargets]
 
-		for ( Pos:Set[1]; ${Pos} < ${LockedTargets.Used}; Pos:Inc )
+		for ( Pos:Set[1]; ${Pos} <= ${LockedTargets.Used}; Pos:Inc )
 		{
 			if ${LockedTargets[${Pos}]} == ${EntityID}
 			{
