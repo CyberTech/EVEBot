@@ -270,7 +270,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 	method PruneQueue()
 	{
 		variable int Pos
-		for ( Pos:Set[1]; ${Pos} < ${MandatoryQueue.Used}; Pos:Inc )
+		for ( Pos:Set[1]; ${Pos} <= ${MandatoryQueue.Used}; Pos:Inc )
 		{
 			if !${Entity[${MandatoryQueue[${Pos}].EntityID}](exists)}
 			{
@@ -279,7 +279,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 		}
 		MandatoryQueue:Collapse
 
-		for ( Pos:Set[1]; ${Pos} < ${TargetQueue.Used}; Pos:Inc )
+		for ( Pos:Set[1]; ${Pos} <= ${TargetQueue.Used}; Pos:Inc )
 		{
 			if !${Entity[${TargetQueue[${Pos}].EntityID}](exists)}
 			{

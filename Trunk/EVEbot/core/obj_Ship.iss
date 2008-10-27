@@ -70,8 +70,9 @@ objectdef obj_Ship
 			{
 				This:ValidateModuleTargets
 
-				if (${_Me.ToEntity.Mode} == 3 || !${Config.Common.BotModeName.Equal[Ratter]})
-				{	/* ratter was converted to use obj_Combat already */
+				if ( ${_Me.ToEntity.Mode} == 3 || !${Config.Common.BotModeName.Equal[Ratter]} || \
+					!${Config.Common.BotModeName.Equal[Missioneer]} )
+				{	/* ratter/missioneer was converted to use obj_Combat already */
 
 					/* Ship Armor Repair
 						We rep to a fairly high level here because it's done while we're in warp.

@@ -549,7 +549,8 @@ objectdef obj_Missions
 		{
 			UI:UpdateConsole["obj_Missions: DEBUG: TypeID = ${This.MissionCache.TypeID[${agentID}]}."]
 
-
+			UI:UpdateConsole["obj_Missions: DEBUG: Targeting.QueueSize = ${Targeting.QueueSize}."]
+			
 			if ${This.HostileCount} > 0
 			{
 				gateCounter:Set[0]
@@ -714,7 +715,7 @@ objectdef obj_Missions
 	  EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
 	  targetIndex:GetIterator[targetIterator]
 
-	  UI:UpdateConsole["GetTargeting = ${_Me.GetTargeting}, GetTargets = ${_Me.GetTargets}"]
+	  ;;UI:UpdateConsole["GetTargeting = ${_Me.GetTargeting}, GetTargets = ${_Me.GetTargets}"]
 	  if ${targetIterator:First(exists)}
 	  {
 		 do
@@ -756,6 +757,8 @@ objectdef obj_Missions
 					continue
 
 				default               
+					UI:UpdateConsole["obj_Missions: DEBUG: Pulling ${targetIterator.Value} (${targetIterator.Value.ID})..."]
+					
 					if !${Targeting.IsQueued[${targetIterator.Value.ID}]}
 					{
 						Targeting:Queue[${targetIterator.Value.ID},1,1,FALSE]
