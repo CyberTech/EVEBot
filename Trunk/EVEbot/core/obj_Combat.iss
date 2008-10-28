@@ -205,31 +205,34 @@ objectdef obj_Combat
 
 	function Fight()
 	{
-		Ship:Deactivate_Cloak
-		while ${Ship.IsCloaked}
+		if ${Config.Common.BotModeName.Equal[Ratter]}
 		{
-			waitframe
+			Ship:Deactivate_Cloak
+			while ${Ship.IsCloaked}
+			{
+				waitframe
+			}
+			;Ship:Offline_Cloak
+			;Ship:Online_Salvager
+	
+			; Reload the weapons -if- ammo is below 30% and they arent firing
+			Ship:Reload_Weapons[FALSE]
+	
+			; Activate the weapons, the modules class checks if there's a target (no it doesn't - ct)
+			Ship:Activate_StasisWebs
+			
+			if ${Me.ActiveTarget.Distance} > ${Ship.OptimalWeaponRange}
+			{
+				UI:UpdateConsole["Active target out of range!!"]
+			}
+			else
+			{
+				Ship:Activate_Weapons
+			}
+			
+			
+			Ship.Drones:SendDrones
 		}
-		;Ship:Offline_Cloak
-		;Ship:Online_Salvager
-
-		; Reload the weapons -if- ammo is below 30% and they arent firing
-		Ship:Reload_Weapons[FALSE]
-
-		; Activate the weapons, the modules class checks if there's a target (no it doesn't - ct)
-		Ship:Activate_StasisWebs
-		
-		if ${Me.ActiveTarget.Distance} > ${Ship.OptimalWeaponRange}
-		{
-			UI:UpdateConsole["Active target out of range!!"]
-		}
-		else
-		{
-			Ship:Activate_Weapons
-		}
-		
-		
-		Ship.Drones:SendDrones
 	}
 
 	function Flee()
