@@ -28,6 +28,30 @@ objectdef obj_Defense
 
 	method Pulse()
 	{
+		if !${Script[EVEBot](exists)}
+		{
+			return
+		}
+
+		if ${Script[EVEBot].VariableScope.EVEBot.Paused}
+		{
+			return
+		}
+
+		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+		{
+			if ${This.Running}
+			{
+				This:TakeDefensiveAction
+			}
+			This.NextPulse:Set[${Time.Timestamp}]
+			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+			This.NextPulse:Update
+		}
+	}
+	
+	method TakeDefensiveAction()
+	{
 		if	${Script[EVEBot].VariableScope.Ship.IsCloaked} || \
 			${_Me.InStation}
 		{

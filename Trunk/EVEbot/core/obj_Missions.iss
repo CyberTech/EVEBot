@@ -742,34 +742,20 @@ objectdef obj_Missions
 	  {
 		 do
 		 {
-			switch ${targetIterator.Value.GroupID} 
+		 	if ${This.IsNPCTarget[${targetIterator.Value.GroupID}]} == FALSE
 			{
-				case GROUP_LARGECOLLIDABLEOBJECT
-				case GROUP_LARGECOLLIDABLESHIP
-				case GROUP_LARGECOLLIDABLESTRUCTURE
-				case GROUP_SENTRYGUN
-				case GROUP_CONCORDDRONE
-				case GROUP_CUSTOMSOFFICIAL
-				case GROUP_POLICEDRONE
-				case GROUP_CONVOYDRONE
-				case GROUP_FACTIONDRONE
-				case GROUP_BILLBOARD
-					continue
-
-				default               
-					UI:UpdateConsole["obj_Missions: DEBUG: Pulling ${targetIterator.Value} (${targetIterator.Value.ID})..."]
-					
-					if !${Targeting.IsQueued[${targetIterator.Value.ID}]}
-					{
-						Targeting:Queue[${targetIterator.Value.ID},1,1,FALSE]
-					}
-					
-					if ${targetIterator.Value.Distance} > ${Ship.OptimalTargetingRange}
-					{
-						call This.CombatApproach ${targetIterator.Value.ID} ${Ship.OptimalTargetingRange}
-					}
-					return
-					break
+				UI:UpdateConsole["obj_Missions: DEBUG: Pulling ${targetIterator.Value} (${targetIterator.Value.ID})..."]
+				
+				if !${Targeting.IsQueued[${targetIterator.Value.ID}]}
+				{
+					Targeting:Queue[${targetIterator.Value.ID},1,1,FALSE]
+				}
+				
+				if ${targetIterator.Value.Distance} > ${Ship.OptimalTargetingRange}
+				{
+					call This.CombatApproach ${targetIterator.Value.ID} ${Ship.OptimalTargetingRange}
+				}
+				return
 			}
 		 }
 		 while ${targetIterator:Next(exists)}
@@ -815,6 +801,26 @@ objectdef obj_Missions
 		}
 	}
 
+	member:bool IsNPCTarget(int groupID)
+	{
+		switch ${groupID} 
+		{
+			case GROUP_LARGECOLLIDABLEOBJECT
+			case GROUP_LARGECOLLIDABLESHIP
+			case GROUP_LARGECOLLIDABLESTRUCTURE
+			case GROUP_SENTRYGUN
+			case GROUP_CONCORDDRONE
+			case GROUP_CUSTOMSOFFICIAL
+			case GROUP_POLICEDRONE
+			case GROUP_CONVOYDRONE
+			case GROUP_FACTIONDRONE
+			case GROUP_BILLBOARD
+				return FALSE
+		}
+
+		return TRUE
+	}
+	
    member:int HostileCount()
    {
 	  variable index:entity targetIndex
@@ -828,23 +834,9 @@ objectdef obj_Missions
 	  {
 		 do
 		 {
-			switch ${targetIterator.Value.GroupID} 
+		 	if ${This.IsNPCTarget[${targetIterator.Value.GroupID}]} == FALSE
 			{
-				case GROUP_LARGECOLLIDABLEOBJECT
-				case GROUP_LARGECOLLIDABLESHIP
-				case GROUP_LARGECOLLIDABLESTRUCTURE
-				case GROUP_SENTRYGUN
-				case GROUP_CONCORDDRONE
-				case GROUP_CUSTOMSOFFICIAL
-				case GROUP_POLICEDRONE
-				case GROUP_CONVOYDRONE
-				case GROUP_FACTIONDRONE
-				case GROUP_BILLBOARD
-					continue
-
-			   default               
 				  targetCount:Inc
-				  break
 			}
 		 }
 		 while ${targetIterator:Next(exists)}

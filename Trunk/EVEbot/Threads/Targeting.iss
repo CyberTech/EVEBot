@@ -134,7 +134,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 			return
 		}
 
-		if ${_Me.Ship.MaxTargetRange} > ${Entity[${EntityID}].Distance} 
+		if ${_Me.Ship.MaxTargetRange} <= ${Entity[${EntityID}].Distance}
 		{
 			return
 		}

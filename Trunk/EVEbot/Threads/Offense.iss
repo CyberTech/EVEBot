@@ -37,7 +37,6 @@ objectdef obj_Offense
 
 		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-			This:PruneQueue[]
 			if ${This.Running}
 			{
 				This:TakeOffensiveAction
