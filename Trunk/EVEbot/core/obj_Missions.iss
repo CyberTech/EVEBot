@@ -582,7 +582,7 @@ objectdef obj_Missions
 	
 				while ${This.HostileCount} > 0
 				{
-				   if ${_Me.GetTargetedBy} > 0 || ${Math.Calc[${_Me.GetTargeting}+${_Me.GetTargets}]} > 0
+				   if ${_Me.GetTargetedBy} > 0 || ${Targeting.QueueSize} > 0
 				   {
 					  call This.TargetAgressors
 				   }
@@ -767,8 +767,8 @@ objectdef obj_Missions
 					if ${targetIterator.Value.Distance} > ${Ship.OptimalTargetingRange}
 					{
 						call This.CombatApproach ${targetIterator.Value.ID} ${Ship.OptimalTargetingRange}
-						return
 					}
+					return
 					break
 			}
 		 }
@@ -967,6 +967,11 @@ objectdef obj_Missions
 			}
 			elseif ${missionName.Equal["the hidden stash"]} && \
 				${structureName.Equal["warehouse"]}
+			{
+				return TRUE
+			}
+			elseif ${missionName.Equal["secret pickup"]} && \
+				${structureName.Equal["recon outpost"]}
 			{
 				return TRUE
 			}
@@ -1173,7 +1178,7 @@ objectdef obj_Missions
 			{
 				TypeID:Set[${CargoIterator.Value.TypeID}]
 				ItemQuantity:Set[${CargoIterator.Value.Quantity}]
-				UI:UpdateConsole["DEBUG: HaveLoot: Ship's Cargo: ${ItemQuantity} units of ${CargoIterator.Value.Name}(${TypeID})."]
+				;;UI:UpdateConsole["DEBUG: HaveLoot: Ship's Cargo: ${ItemQuantity} units of ${CargoIterator.Value.Name}(${TypeID})."]
 				
 				if (${TypeID} == ${This.MissionCache.TypeID[${agentID}]}) && \
 				   (${ItemQuantity} >= ${QuantityRequired})

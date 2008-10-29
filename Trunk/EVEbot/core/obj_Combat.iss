@@ -180,7 +180,8 @@ objectdef obj_Combat
 				call This.Flee
 				This.Override:Set[TRUE]
 			}
-			call This.CheckTank
+			
+			This:CheckTank
 		}
 		
 		switch ${This.CurrentState}
