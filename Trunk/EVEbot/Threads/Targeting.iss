@@ -134,6 +134,10 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 			return
 		}
 
+		if ${_Me.Ship.MaxTargetRange} > ${Entity[${EntityID}].Distance} {
+			return
+		}
+
 		Script[EVEBot].VariableScope.UI:UpdateConsole["Debug: Targets: ${_Me.GetTargets}"]
 		Script[EVEBot].VariableScope.UI:UpdateConsole["Debug: Targeting: ${_Me.GetTargeting}"]
 		Script[EVEBot].VariableScope.UI:UpdateConsole["Debug: Current Targets: ${Math.Calc[${_Me.GetTargets} + ${_Me.GetTargeting}]}"]
@@ -167,9 +171,9 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 			{
 				if ${Entity[${Target.Value.EntityID}](exists)} && \
 					!${Entity[${Target.Value.EntityID}].IsLockedTarget} && \
-					!${Entity[${Target.Value.EntityID}].BeingTargeted}
+					!${Entity[${Target.Value.EntityID}].BeingTargeted} && \
+					${_Me.Ship.MaxTargetRange} > ${Entity[${Target.Value.EntityID}].Distance}
 				{
-					/* TODO - check to see if target list is full. if it is, unlock a target. */
 					if ${Math.Calc[${This.TargetingThisFrame} + ${_Me.GetTargets} + ${_Me.GetTargeting}]} >= ${Script[EVEBot].VariableScope.Ship.MaxLockedTargets}
 					{
 						This:UnlockRandomTarget[]
@@ -202,7 +206,8 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 			{
 				if ${Entity[${Target.Value.EntityID}](exists)} && \
 					!${Entity[${Target.Value.EntityID}].IsLockedTarget} && \
-					!${Entity[${Target.Value.EntityID}].BeingTargeted}
+					!${Entity[${Target.Value.EntityID}].BeingTargeted} && \
+					${_Me.Ship.MaxTargetRange} > ${Entity[${Target.Value.EntityID}].Distance}
 				{
 					This:TargetEntity[${Target.Value.EntityID}]
 					Target.Value.Targeting:Set[TRUE]
