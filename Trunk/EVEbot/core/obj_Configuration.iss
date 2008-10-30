@@ -1,19 +1,19 @@
 /*
 	Configuration Classes
-	
+
 	Main object for interacting with the config file, and for wrapping access to the config items.
-	
+
 	-- CyberTech
-	
+
 	Description:
-	obj_Configuration defines the config file and the root.  It contains an instantiation of obj_Configuration_MODE, 
+	obj_Configuration defines the config file and the root.  It contains an instantiation of obj_Configuration_MODE,
 	where MODE is Hauler,Miner, Combat, etc.
-	
+
 	Each obj_Configuration_MODE is responsible for setting it's own default	values and for providing access members
 	and update methods for the config items. ALL configuration items should receive both a member and a method.
-	
+
 	Instructions:
-		To add a new module, add a variable to obj_Configuration, name it with the thought that it will be accessed 
+		To add a new module, add a variable to obj_Configuration, name it with the thought that it will be accessed
 		as Config.Module (ie, Config.Miner).  Create the class, and it's members and methods, following the example
 		of the existing classes below.
 */
@@ -25,13 +25,15 @@ objectdef obj_Configuration_BaseConfig
 	variable int Version
 
 	variable filepath CONFIG_PATH = "${Script.CurrentDirectory}/Config"
+	variable filepath DATA_PATH = "${Script.CurrentDirectory}/Data"
+
 	variable string ORG_CONFIG_FILE = "evebot.xml"
 	variable string NEW_CONFIG_FILE = "${_Me.Name} Config.xml"
 	variable string CONFIG_FILE = "${_Me.Name} Config.xml"
 	variable settingsetref BaseRef
-	
+
 	method Initialize()
-	{	
+	{
 		LavishSettings[EVEBotSettings]:Clear
 		LavishSettings:AddSet[EVEBotSettings]
 		LavishSettings[EVEBotSettings]:AddSet[${_Me.Name}]
@@ -44,19 +46,19 @@ objectdef obj_Configuration_BaseConfig
 		{
 			UI:UpdateConsole["${CONFIG_FILE} not found - looking for ${ORG_CONFIG_FILE}"]
 			UI:UpdateConsole["Configuration will be copied from ${ORG_CONFIG_FILE} to ${NEW_CONFIG_FILE}"]
-			
+
 			LavishSettings[EVEBotSettings]:Import[${CONFIG_PATH}/${ORG_CONFIG_FILE}]
 		}
 		else
 		{
 			UI:UpdateConsole["Configuration file is ${CONFIG_FILE}"]
 			LavishSettings[EVEBotSettings]:Import[${CONFIG_FILE}]
-		}		
+		}
 
 		BaseRef:Set[${LavishSettings[EVEBotSettings].FindSet[${_Me.Name}]}]
 		UI:UpdateConsole["obj_Configuration_BaseConfig: Initialized", LOG_MINOR]
 	}
-	
+
 	method Shutdown()
 	{
 		This:Save[]
@@ -64,9 +66,9 @@ objectdef obj_Configuration_BaseConfig
 	}
 
 	method Save()
-	{		
+	{
 		LavishSettings[EVEBotSettings]:Export[${CONFIG_FILE}]
-	}		
+	}
 }
 
 /* ************************************************************************* */
@@ -81,11 +83,11 @@ objectdef obj_Configuration
 	variable obj_Configuration_Freighter Freighter
 	variable obj_Configuration_Agents Agents
 	variable obj_Configuration_Missioneer Missioneer
-	
+
 	method Save()
 	{
 		BaseConfig:Save[]
-	}		
+	}
 }
 
 /* ************************************************************************* */
@@ -93,9 +95,9 @@ objectdef obj_Configuration_Common
 {
 	variable string SetName = "Common"
 	variable int AboutCount = 0
-	
+
 	method Initialize()
-	{	
+	{
 		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
 		{
 			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
@@ -103,16 +105,16 @@ objectdef obj_Configuration_Common
 		}
 		UI:UpdateConsole["obj_Configuration_Common: Initialized", LOG_MINOR]
 	}
-	
+
 	member:settingsetref CommonRef()
 	{
 		return ${BaseConfig.BaseRef.FindSet[${This.SetName}]}
 	}
-	
+
 	method Set_Default_Values()
 	{
 		BaseConfig.BaseRef:AddSet[${This.SetName}]
-		
+
 		; We use both so we have an ID to use to set the default selection in the UI.
 		This.CommonRef:AddSetting[Bot Mode,1]
 		This.CommonRef:AddSetting[Bot Mode Name,MINER]
@@ -143,7 +145,7 @@ objectdef obj_Configuration_Common
 	{
 		return ${This.CommonRef.FindSetting[Bot Mode Name, MINER]}
 	}
-	
+
 	method SetBotModeName(string value)
 	{
 		This.CommonRef:AddSetting[Bot Mode Name,${value}]
@@ -178,7 +180,7 @@ objectdef obj_Configuration_Common
 	{
 		This.CommonRef:AddSetting[Home Station,${value}]
 	}
-	
+
 	/* TODO - Encrypt this as much as lavishcript will allow */
 	member:string LoginName()
 	{
@@ -224,7 +226,7 @@ objectdef obj_Configuration_Common
 	{
 		return ${AbortCount}
 	}
-	
+
 	function IncAbortCount()
 	{
 		This.AbortCount:Inc
@@ -239,7 +241,7 @@ objectdef obj_Configuration_Common
 	{
 		This.CommonRef:AddSetting[Maximum Runtime,${value}]
 	}
-	
+
 	member:string IRCServer()
 	{
 		return ${This.CommonRef.FindSetting[IRC Server, "irc.lavishsoft.com"]}
@@ -317,7 +319,7 @@ objectdef obj_Configuration_Miner
 	variable string SetName = "Miner"
 
 	method Initialize()
-	{	
+	{
 		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
 		{
 			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
@@ -345,7 +347,7 @@ objectdef obj_Configuration_Miner
 	{
 		return ${BaseConfig.BaseRef.FindSet[${This.SetName}].FindSet[Mercoxit_Types]}
 	}
-	
+
 	member:settingsetref IceTypesRef()
 	{
 		return ${BaseConfig.BaseRef.FindSet[${This.SetName}].FindSet[Ice_Types]}
@@ -473,14 +475,14 @@ objectdef obj_Configuration_Miner
 		This.IceTypesRef:AddSetting[Enriched Clear Icicle, 1]
 		This.IceTypesRef:AddSetting[Blue Ice, 1]
 	}
-	
+
 	member:int JetCanNaming()
 	{
 		return ${This.MinerRef.FindSetting[JetCan Naming, 1]}
 	}
 
 	method SetJetCanNaming(int value)
-	{	
+	{
 		This.MinerRef:AddSetting[JetCan Naming, ${value}]
 	}
 
@@ -490,7 +492,7 @@ objectdef obj_Configuration_Miner
 	}
 
 	method SetBookMarkLastPosition(bool value)
-	{	
+	{
 		This.MinerRef:AddSetting[Bookmark Last Position, ${value}]
 	}
 
@@ -498,57 +500,57 @@ objectdef obj_Configuration_Miner
 	{
 		return ${This.MinerRef.FindSetting[Use Mining Drones, FALSE]}
 	}
-	
+
 	method SetUseMiningDrones(bool value)
 	{
 		This.MinerRef:AddSetting[Use Mining Drones, ${value}]
-	} 
-	
+	}
+
 	member:int AvoidPlayerRange()
 	{
 		return ${This.MinerRef.FindSetting[Avoid Player Range, 10000]}
 	}
-	
+
 	method SetAvoidPlayerRange(int value)
-	{	
+	{
 		This.MinerRef:AddSetting[Avoid Player Range, ${value}]
 	}
-	
+
 	member:bool StandingDetection()
 	{
 		return ${This.MinerRef.FindSetting[Standing Detection, FALSE]}
 	}
-	
+
 	method SetStandingDetection(bool value)
-	{	
+	{
 		This.MinerRef:AddSetting[Standing Detection, ${value}]
 	}
-	
+
 	member:int LowestStanding()
 	{
 		return ${This.MinerRef.FindSetting[Lowest Standing, 0]}
 	}
-	
+
 	method SetLowestStanding(int value)
 	{
 		This.MinerRef:AddSetting[Lowest Standing, ${value}]
 	}
-	
+
 	member:string MinerType()
 	{
 		return ${This.MinerRef.FindSetting[Miner Type, Ore]}
 	}
-	
+
 	method SetMinerType(string value)
 	{
 		This.MinerRef:AddSetting[Miner Type, ${value}]
 	}
-	
+
 	member:string DeliveryLocationTypeName()
 	{
 		return ${This.MinerRef.FindSetting[Delivery Location Type Name, STATION]}
 	}
-	
+
 	method SetDeliveryLocationTypeName(string value)
 	{
 		This.MinerRef:AddSetting[Delivery Location Type Name, ${value}]
@@ -558,19 +560,19 @@ objectdef obj_Configuration_Miner
 	{
 		return ${This.MinerRef.FindSetting[Delivery Location]}
 	}
-	
+
 	method SetDeliveryLocation(string value)
 	{
 		This.MinerRef:AddSetting[Delivery Location, ${value}]
 	}
-	
+
 	member:bool UseFieldBookmarks()
 	{
 		return ${This.MinerRef.FindSetting[Use Field Bookmarks, FALSE]}
 	}
 
 	method SetUseFieldBookmarks(bool value)
-	{	
+	{
 		This.MinerRef:AddSetting[Use Field Bookmarks, ${value}]
 	}
 
@@ -580,7 +582,7 @@ objectdef obj_Configuration_Miner
 	}
 
 	method SetStripMine(bool value)
-	{	
+	{
 		This.MinerRef:AddSetting[Strip Mine, ${value}]
 	}
 
@@ -590,7 +592,7 @@ objectdef obj_Configuration_Miner
 	}
 
 	method SetMiningRangeMultipler(float value)
-	{	
+	{
 		This.MinerRef:AddSetting[Mining Range Multipler, ${value}]
 	}
 
@@ -624,7 +626,7 @@ objectdef obj_Configuration_Miner
 	}
 
 	method SetCargoThreshold(int value)
-	{	
+	{
 		This.MinerRef:AddSetting[Cargo Threshold, ${value}]
 	}
 }
@@ -636,7 +638,7 @@ objectdef obj_Configuration_Combat
 	variable string SetName = "Combat"
 
 	method Initialize()
-	{	
+	{
 		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
 		{
 			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
@@ -676,97 +678,97 @@ objectdef obj_Configuration_Combat
 	{
 		return ${This.CombatRef.FindSetting[Run On Low Ammo, FALSE]}
 	}
-	
+
 	method SetRunOnLowAmmo(bool value)
 	{
 		This.CombatRef:AddSetting[Run On Low Ammo, ${value}]
-	} 
+	}
 
 	member:bool RunOnLowCap()
 	{
 		return ${This.CombatRef.FindSetting[Run On Low Cap, FALSE]}
 	}
-	
+
 	method SetRunOnLowCap(bool value)
 	{
 		This.CombatRef:AddSetting[Run On Low Cap, ${value}]
-	} 
+	}
 
 	member:bool RunOnLowTank()
 	{
 		return ${This.CombatRef.FindSetting[Run On Low Tank, TRUE]}
 	}
-	
+
 	method SetRunOnLowTank(bool value)
 	{
 		This.CombatRef:AddSetting[Run On Low Tank, ${value}]
-	} 
+	}
 
 	member:bool RunToStation()
 	{
 		return ${This.CombatRef.FindSetting[Run To Station, TRUE]}
 	}
-	
+
 	method SetRunToStation(bool value)
 	{
 		This.CombatRef:AddSetting[Run To Station, ${value}]
-	} 
+	}
 
 	member:bool UseWhiteList()
 	{
 		return ${This.CombatRef.FindSetting[Use Whitelist, FALSE]}
 	}
-	
+
 	method SetUseWhiteList(bool value)
 	{
 		This.CombatRef:AddSetting[Use Whitelist, ${value}]
-	} 
-	
+	}
+
 	member:bool UseBlackList()
 	{
 		return ${This.CombatRef.FindSetting[Use Blacklist, FALSE]}
 	}
-	
+
 	method SetUseBlackList(bool value)
 	{
 		This.CombatRef:AddSetting[Use Blacklist, ${value}]
-	} 
+	}
 
 	member:bool ChainSpawns()
 	{
 		return ${This.CombatRef.FindSetting[Chain Spawns, TRUE]}
 	}
-	
+
 	method SetChainSpawns(bool value)
 	{
 		This.CombatRef:AddSetting[Chain Spawns, ${value}]
-	} 
+	}
 
 	member:bool ChainSolo()
 	{
 		return ${This.CombatRef.FindSetting[Chain Solo, TRUE]}
 	}
-	
+
 	method SetChainSolo(bool value)
 	{
 		This.CombatRef:AddSetting[Chain Solo, ${value}]
-	} 
+	}
 
 	member:bool UseBeltBookmarks()
 	{
 		return ${This.CombatRef.FindSetting[Use Belt Bookmarks, FALSE]}
 	}
-	
+
 	method SetUseBeltBookmarks(bool value)
 	{
 		This.CombatRef:AddSetting[Use Belt Bookmarks, ${value}]
-	} 
-	
+	}
+
 	member:int MinChainBounty()
 	{
 		return ${This.CombatRef.FindSetting[Min Chain Bounty, 1500000]}
 	}
-	
+
 	method SetMinChainBounty(int value)
 	{
 		This.CombatRef:AddSetting[Min Chain Bounty,${value}]
@@ -776,7 +778,7 @@ objectdef obj_Configuration_Combat
 	{
 		return ${This.CombatRef.FindSetting[MaxMissileRange, 10000]}
 	}
-	
+
 	method SetMaxMissileRange(int value)
 	{
 		This.CombatRef:AddSetting[MaxMissileRange,${value}]
@@ -786,37 +788,37 @@ objectdef obj_Configuration_Combat
 	{
 		return ${This.CombatRef.FindSetting[Launch Combat Drones, TRUE]}
 	}
-	
+
 	method SetLaunchCombatDrones(bool value)
 	{
 		This.CombatRef:AddSetting[Launch Combat Drones, ${value}]
-	} 
+	}
 
 	member:int MinimumDronesInSpace()
 	{
 		return ${This.CombatRef.FindSetting[MinimumDronesInSpace, 3]}
 	}
-	
+
 	method SetMinimumDronesInSpace(int value)
 	{
 		This.CombatRef:AddSetting[MinimumDronesInSpace,${value}]
 	}
-	
+
 	member:int MinimumArmorPct()
 	{
 		return ${This.CombatRef.FindSetting[MinimumArmorPct, 35]}
 	}
-	
+
 	method SetMinimumArmorPct(int value)
 	{
 		This.CombatRef:AddSetting[MinimumArmorPct, ${value}]
 	}
-	
+
 	member:int MinimumShieldPct()
 	{
 		return ${This.CombatRef.FindSetting[MinimumShieldPct, 25]}
 	}
-	
+
 	method SetMinimumShieldPct(int value)
 	{
 		This.CombatRef:AddSetting[MinimumShieldPct, ${value}]
@@ -826,7 +828,7 @@ objectdef obj_Configuration_Combat
 	{
 		return ${This.CombatRef.FindSetting[MinimumCapPct, 5]}
 	}
-	
+
 	method SetMinimumCapPct(int value)
 	{
 		This.CombatRef:AddSetting[MinimumCapPct, ${value}]
@@ -836,7 +838,7 @@ objectdef obj_Configuration_Combat
 	{
 		return ${This.CombatRef.FindSetting[AlwaysShieldBoost, FALSE]}
 	}
-	
+
 	method SetAlwaysShieldBoost(bool value)
 	{
 		This.CombatRef:AddSetting[AlwaysShieldBoost, ${value}]
@@ -849,7 +851,7 @@ objectdef obj_Configuration_Hauler
 	variable string SetName = "Hauler"
 
 	method Initialize()
-	{	
+	{
 		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
 		{
 			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
@@ -887,7 +889,7 @@ objectdef obj_Configuration_Hauler
 	{
 		return ${This.HaulerRef.FindSetting[Hauler Mode Name, "Service Fleet Members"]}
 	}
-	
+
 	method SetHaulerModeName(string Mode)
 	{
 		This.HaulerRef:AddSetting[Hauler Mode Name,${Mode}]
@@ -897,7 +899,7 @@ objectdef obj_Configuration_Hauler
 	{
 		return ${This.HaulerRef.FindSetting[Multi System Support, FALSE]}
 	}
-	
+
 	method SetMultiSystemSupport(bool value)
 	{
 		This.HaulerRef:AddSetting[Multi System Support, ${value}]
@@ -907,7 +909,7 @@ objectdef obj_Configuration_Hauler
 	{
 		return ${This.HaulerRef.FindSetting[Drop Off Bookmark, ""]}
 	}
-	
+
 	method SetDropOffBookmark(string Bookmark)
 	{
 		This.HaulerRef:AddSetting[Drop Off Bookmark,${Bookmark}]
@@ -917,7 +919,7 @@ objectdef obj_Configuration_Hauler
 	{
 		return ${This.HaulerRef.FindSetting[Mining System Bookmark, ""]}
 	}
-	
+
 	method SetMiningSystemBookmark(string Bookmark)
 	{
 		This.HaulerRef:AddSetting[Mining System Bookmark,${Bookmark}]
@@ -930,7 +932,7 @@ objectdef obj_Configuration_Salvager
 	variable string SetName = "Salvager"
 
 	method Initialize()
-	{	
+	{
 		return
 		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
 		{
@@ -950,7 +952,7 @@ objectdef obj_Configuration_Salvager
 		BaseConfig.BaseRef:AddSet[${This.SetName}]
 
 	}
-	
+
 }
 
 /* ************************************************************************* */
@@ -959,7 +961,7 @@ objectdef obj_Configuration_Labels
 	variable string SetName = "Labels"
 
 	method Initialize()
-	{	
+	{
 		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
 		{
 			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
@@ -980,22 +982,22 @@ objectdef obj_Configuration_Labels
 		This.LabelsRef:AddSetting[Ore Belt Prefix,"Belt:"]
 		This.LabelsRef:AddSetting[Ice Belt Prefix,"Ice Belt:"]
 	}
-	
+
 	member:string SafeSpotPrefix()
 	{
 		return ${This.LabelsRef.FindSetting[Safe Spot Prefix,"Safe:"]}
 	}
-	
+
 	method SetSafeSpotPrefix(string value)
 	{
 		This.LabelsRef:AddSetting[Safe Spot Prefix,${value}]
 	}
-	
+
 	member:string OreBeltPrefix()
 	{
 		return ${This.LabelsRef.FindSetting[Ore Belt Prefix,"Belt:"]}
 	}
-	
+
 	method SetOreBeltPrefix(string value)
 	{
 		This.LabelsRef:AddSetting[Ore Belt Prefix,${value}]
@@ -1005,7 +1007,7 @@ objectdef obj_Configuration_Labels
 	{
 		return ${This.LabelsRef.FindSetting[Ice Belt Prefix,"Ice Belt:"]}
 	}
-	
+
 	method SetIceBeltPrefix(string value)
 	{
 		This.LabelsRef:AddSetting[Ice Belt Prefix,${value}]
@@ -1018,7 +1020,7 @@ objectdef obj_Configuration_Freighter
 	variable string SetName = "Freighter"
 
 	method Initialize()
-	{	
+	{
 		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
 		{
 			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
@@ -1043,7 +1045,7 @@ objectdef obj_Configuration_Freighter
 		This.FreighterRef:AddSetting[Agent Name, ""]
 		This.FreighterRef:AddSetting[Last Decline, ${Time.Timestamp}]
 	}
-	
+
 	member:int FreighterMode()
 	{
 		return ${This.FreighterRef.FindSetting[Freighter Mode, 1]}
@@ -1058,7 +1060,7 @@ objectdef obj_Configuration_Freighter
 	{
 		return ${This.FreighterRef.FindSetting[Freighter Mode Name, "Source and Destination"]}
 	}
-	
+
 	method SetFreighterModeName(string Mode)
 	{
 		This.FreighterRef:AddSetting[Freighter Mode Name,${Mode}]
@@ -1068,7 +1070,7 @@ objectdef obj_Configuration_Freighter
 	{
 		return ${This.FreighterRef.FindSetting[Region Name, ""]}
 	}
-	
+
 	method SetRegionName(string Name)
 	{
 		This.FreighterRef:AddSetting[Region Name,${Name}]
@@ -1078,7 +1080,7 @@ objectdef obj_Configuration_Freighter
 	{
 		return ${This.FreighterRef.FindSetting[Agent Name, ""]}
 	}
-	
+
 	method SetAgentName(string Name)
 	{
 		This.FreighterRef:AddSetting[Agent Name,${Name}]
@@ -1088,17 +1090,17 @@ objectdef obj_Configuration_Freighter
 	{
 		return ${This.FreighterRef.FindSetting[Destination,""]}
 	}
-	
+
 	method SetDestination(string value)
 	{
 		This.FreighterRef:AddSetting[Destination,${value}]
 	}
-	
+
 	member:string SourcePrefix()
 	{
 		return ${This.FreighterRef.FindSetting[Source Prefix,""]}
 	}
-	
+
 	method SetSourcePrefix(string value)
 	{
 		This.FreighterRef:AddSetting[Source Prefix,${value}]
@@ -1108,12 +1110,12 @@ objectdef obj_Configuration_Freighter
 	{
 		return ${This.FreighterRef.FindSetting[Last Decline,${Time.Timestamp}]}
 	}
-	
+
 	method SetLastDecline(int value)
 	{
 		This.FreighterRef:AddSetting[Last Decline,${value}]
 	}
-	
+
 }
 
 /* ************************************************************************* */
@@ -1123,13 +1125,13 @@ objectdef obj_Config_Whitelist
 	variable settingsetref BaseRef
 
 	method Initialize()
-	{	
+	{
 		LavishSettings[EVEBotWhitelist]:Clear
 		LavishSettings:AddSet[EVEBotWhitelist]
 		This.BaseRef:Set[${LavishSettings[EVEBotWhitelist]}]
 		UI:UpdateConsole["obj_Config_Whitelist: Loading ${DATA_FILE}"]
 		This.BaseRef:Import[${This.DATA_FILE}]
-		
+
 		if !${This.BaseRef.FindSet[Pilots](exists)}
 		{
 			This.BaseRef:AddSet[Pilots]
@@ -1150,7 +1152,7 @@ objectdef obj_Config_Whitelist
 
 		UI:UpdateConsole["obj_Config_Whitelist: Initialized", LOG_MINOR]
 	}
-	
+
 	method Shutdown()
 	{
 		This:Save[]
@@ -1160,7 +1162,7 @@ objectdef obj_Config_Whitelist
 	method Save()
 	{
 		LavishSettings[EVEBotWhitelist]:Export[${This.DATA_FILE}]
-	}		
+	}
 
 	member:settingsetref PilotsRef()
 	{
@@ -1185,13 +1187,13 @@ objectdef obj_Config_Blacklist
 	variable settingsetref BaseRef
 
 	method Initialize()
-	{	
+	{
 		LavishSettings[EVEBotBlacklist]:Clear
 		LavishSettings:AddSet[EVEBotBlacklist]
 		This.BaseRef:Set[${LavishSettings[EVEBotBlacklist]}]
 		UI:UpdateConsole["obj_Config_Blacklist: Loading ${DATA_FILE}"]
 		This.BaseRef:Import[${This.DATA_FILE}]
-		
+
 		if !${This.BaseRef.FindSet[Pilots](exists)}
 		{
 			This.BaseRef:AddSet[Pilots]
@@ -1212,7 +1214,7 @@ objectdef obj_Config_Blacklist
 
 		UI:UpdateConsole["obj_Config_Blacklist: Initialized", LOG_MINOR]
 	}
-	
+
 	method Shutdown()
 	{
 		This:Save[]
@@ -1222,13 +1224,13 @@ objectdef obj_Config_Blacklist
 	method Save()
 	{
 		LavishSettings[EVEBotBlacklist]:Export[${This.DATA_FILE}]
-	}		
+	}
 
 	member:settingsetref PilotsRef()
 	{
 		return ${This.BaseRef.FindSet[Pilots]}
 	}
-	
+
 	member:settingsetref CorporationsRef()
 	{
 		return ${This.BaseRef.FindSet[Corporations]}
@@ -1246,7 +1248,7 @@ objectdef obj_Configuration_Agents
 	variable string SetName = "Agents"
 
 	method Initialize()
-	{	
+	{
 		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
 		{
 			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
@@ -1273,13 +1275,13 @@ objectdef obj_Configuration_Agents
 		This.AgentRef["Fykalia Adaferid"]:AddSetting[AgentID,3018920]
 		This.AgentRef["Fykalia Adaferid"]:AddSetting[LastDecline,${Time.Timestamp}]
 	}
-	
+
 	member:int AgentIndex(string name)
 	{
 		;UI:UpdateConsole["obj_Configuration_Agents: AgentIndex ${name}"]
 		return ${This.AgentRef[${name}].FindSetting[AgentIndex,9591]}
 	}
-	
+
 	method SetAgentIndex(string name, int value)
 	{
 		;UI:UpdateConsole["obj_Configuration_Agents: SetAgentIndex ${name} ${value}"]
@@ -1287,16 +1289,16 @@ objectdef obj_Configuration_Agents
 		{
 			This.AgentsRef:AddSet[${name}]
 		}
-		
+
 		This.AgentRef[${name}]:AddSetting[AgentIndex,${value}]
-	}	
-	
+	}
+
 	member:int AgentID(string name)
 	{
 		;UI:UpdateConsole["obj_Configuration_Agents: AgentID ${name}"]
 		return ${This.AgentRef[${name}].FindSetting[AgentID,3018920]}
 	}
-	
+
 	method SetAgentID(string name, int value)
 	{
 		;UI:UpdateConsole["obj_Configuration_Agents: SetAgentID ${name} ${value}"]
@@ -1304,16 +1306,16 @@ objectdef obj_Configuration_Agents
 		{
 			This.AgentsRef:AddSet[${name}]
 		}
-		
+
 		This.AgentRef[${name}]:AddSetting[AgentID,${value}]
-	}	
+	}
 
 	member:int LastDecline(string name)
 	{
 		;UI:UpdateConsole["obj_Configuration_Agents: LastDecline ${name}"]
 		return ${This.AgentRef[${name}].FindSetting[LastDecline,${Time.Timestamp}]}
 	}
-	
+
 	method SetLastDecline(string name, int value)
 	{
 		;UI:UpdateConsole["obj_Configuration_Agents: SetLastDecline ${name} ${value}"]
@@ -1321,16 +1323,16 @@ objectdef obj_Configuration_Agents
 		{
 			This.AgentsRef:AddSet[${name}]
 		}
-		
+
 		This.AgentRef[${name}]:AddSetting[LastDecline,${value}]
-	}	
+	}
 
 	member:int LastCompletionTime(string name)
 	{
 		;;;UI:UpdateConsole["obj_Configuration_Agents: LastCompletionTime ${name}"]
 		return ${This.AgentRef[${name}].FindSetting[LastCompletionTime,0]}
 	}
-	
+
 	method SetLastCompletionTime(string name, int value)
 	{
 		;;;UI:UpdateConsole["obj_Configuration_Agents: SetLastCompletionTime ${name} ${value}"]
@@ -1338,9 +1340,9 @@ objectdef obj_Configuration_Agents
 		{
 			This.AgentsRef:AddSet[${name}]
 		}
-		
+
 		This.AgentRef[${name}]:AddSetting[LastCompletionTime,${value}]
-	}	
+	}
 }
 
 /* ************************************************************************* */
@@ -1349,7 +1351,7 @@ objectdef obj_Configuration_Missioneer
 	variable string SetName = "Missioneer"
 
 	method Initialize()
-	{	
+	{
 		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
 		{
 			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
@@ -1376,7 +1378,7 @@ objectdef obj_Configuration_Missioneer
 		This.MissioneerRef:AddSetting[Mining Ship, ""]
 		This.MissioneerRef:AddSetting[Combat Ship, ""]
 		This.MissioneerRef:AddSetting[Salvage Mode, 1]
-		This.MissioneerRef:AddSetting[Salvage Mode Name, "None"]		
+		This.MissioneerRef:AddSetting[Salvage Mode Name, "None"]
 		This.MissioneerRef:AddSetting[Salvage Ship, ""]
 		This.MissioneerRef:AddSetting[Avoid Low Sec, TRUE]
 		This.MissioneerRef:AddSetting[Small Hauler Limit, 600]
@@ -1386,47 +1388,47 @@ objectdef obj_Configuration_Missioneer
 	{
 		return ${This.MissioneerRef.FindSetting[Run Courier Missions, TRUE]}
 	}
-	
+
 	method SetRunCourierMissions(bool value)
 	{
 		This.MissioneerRef:AddSetting[Run Courier Missions, ${value}]
-	} 
+	}
 
 	member:bool RunTradeMissions()
 	{
 		return ${This.MissioneerRef.FindSetting[Run Trade Missions, FALSE]}
 	}
-	
+
 	method SetRunTradeMissions(bool value)
 	{
 		This.MissioneerRef:AddSetting[Run Trade Missions, ${value}]
-	} 
+	}
 
 	member:bool RunMiningMissions()
 	{
 		return ${This.MissioneerRef.FindSetting[Run Mining Missions, FALSE]}
 	}
-	
+
 	method SetRunMiningMissions(bool value)
 	{
 		This.MissioneerRef:AddSetting[Run Mining Missions, ${value}]
-	} 
+	}
 
 	member:bool RunKillMissions()
 	{
 		return ${This.MissioneerRef.FindSetting[Run Kill Missions, FALSE]}
 	}
-	
+
 	method SetRunKillMissions(bool value)
 	{
 		This.MissioneerRef:AddSetting[Run Kill Missions, ${value}]
-	} 
+	}
 
 	member:string SmallHauler()
 	{
 		return ${This.MissioneerRef.FindSetting[Small Hauler, ""]}
 	}
-	
+
 	method SetSmallHauler(string value)
 	{
 		This.MissioneerRef:AddSetting[Small Hauler,${value}]
@@ -1436,7 +1438,7 @@ objectdef obj_Configuration_Missioneer
 	{
 		return ${This.MissioneerRef.FindSetting[Large Hauler, ""]}
 	}
-	
+
 	method SetLargeHauler(string value)
 	{
 		This.MissioneerRef:AddSetting[Large Hauler,${value}]
@@ -1446,7 +1448,7 @@ objectdef obj_Configuration_Missioneer
 	{
 		return ${This.MissioneerRef.FindSetting[Mining Ship, ""]}
 	}
-	
+
 	method SetMiningShip(string value)
 	{
 		This.MissioneerRef:AddSetting[Mining Ship,${value}]
@@ -1456,7 +1458,7 @@ objectdef obj_Configuration_Missioneer
 	{
 		return ${This.MissioneerRef.FindSetting[Combat Ship, ""]}
 	}
-	
+
 	method SetCombatShip(string value)
 	{
 		This.MissioneerRef:AddSetting[Combat Ship,${value}]
@@ -1466,17 +1468,17 @@ objectdef obj_Configuration_Missioneer
 	{
 		return ${This.MissioneerRef.FindSetting[Salvage Mode, 1]}
 	}
-	
+
 	method SetSalvageMode(int value)
 	{
 		This.MissioneerRef:AddSetting[Salvage Mode,${value}]
 	}
-	
+
 	member:string SalvageModeName()
 	{
 		return ${This.MissioneerRef.FindSetting[Salvage Mode Name, "None"]}
 	}
-	
+
 	method SetSalvageModeName(string value)
 	{
 		This.MissioneerRef:AddSetting[Salvage Mode Name,${value}]
@@ -1486,32 +1488,32 @@ objectdef obj_Configuration_Missioneer
 	{
 		return ${This.MissioneerRef.FindSetting[Salvage Ship, ""]}
 	}
-	
+
 	method SetSalvageShip(string value)
 	{
 		This.MissioneerRef:AddSetting[Salvage Ship,${value}]
 	}
-	
+
 	member:bool AvoidLowSec()
 	{
 		return ${This.MissioneerRef.FindSetting[Avoid Low Sec, TRUE]}
 	}
-	
+
 	method SetAvoidLowSec(bool value)
 	{
 		This.MissioneerRef:AddSetting[Avoid Low Sec, ${value}]
-	} 	
-	
+	}
+
 	member:int SmallHaulerLimit()
 	{
 		return ${This.MissioneerRef.FindSetting[Small Hauler Limit, 600]}
 	}
-	
+
 	method SetSmallHaulerLimit(int value)
 	{
 		This.MissioneerRef:AddSetting[Small Hauler Limit,${value}]
 	}
-	
-	
+
+
 }
 

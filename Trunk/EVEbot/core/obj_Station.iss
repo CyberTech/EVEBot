@@ -1,10 +1,10 @@
 /*
 	Station class
-	
+
 	Object to contain members related to in-station activities.
-	
+
 	-- CyberTech
-	
+
 */
 
 
@@ -14,20 +14,20 @@ objectdef obj_EVEDB_StationID
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
-	variable string CONFIG_FILE = "${BaseConfig.CONFIG_PATH}/EVEDB_StationID.xml"
+	variable string CONFIG_FILE = "${BaseConfig.DATA_PATH}/EVEDB_StationID.xml"
 	variable string SET_NAME = "EVEDB_StationID"
-	
+
 	method Initialize()
 	{
 		LavishSettings:Import[${CONFIG_FILE}]
-		
+
 		UI:UpdateConsole["obj_EVEDB_StationID: Initialized", LOG_MINOR]
 	}
-	
+
 	member:int StationID(string stationName)
 	{
 		return ${LavishSettings[${This.SET_NAME}].FindSet[${stationName}].FindSetting[stationName, NOTSET]}
-	}	
+	}
 }
 
 objectdef obj_Station
@@ -37,12 +37,12 @@ objectdef obj_Station
 
 	variable index:item StationCargo
 	variable index:item DronesInStation
-	
+
 	method Initialize()
 	{
 		UI:UpdateConsole["obj_Station: Initialized", LOG_MINOR]
 	}
-	
+
 	member IsHangarOpen()
 	{
 		if ${EVEWindow[hangarFloor](exists)}
@@ -52,9 +52,9 @@ objectdef obj_Station
 		else
 		{
 			return FALSE
-		}		
+		}
 	}
-	
+
 	member:bool Docked()
 	{
 		if ${_Me.InStation} && \
@@ -75,7 +75,7 @@ objectdef obj_Station
 
 	    return FALSE
 	}
-	
+
 	function OpenHangar()
 	{
 		if ${This.Docked} == FALSE
@@ -94,7 +94,7 @@ objectdef obj_Station
 			}
 			wait 10
 		}
-	}	
+	}
 
 	function CloseHangar()
 	{
@@ -102,7 +102,7 @@ objectdef obj_Station
 		{
 			return
 		}
-		
+
 		if ${This.IsHangarOpen}
 		{
 			UI:UpdateConsole["Closing Cargo Hangar"]
@@ -115,7 +115,7 @@ objectdef obj_Station
 			wait 10
 		}
 	}
-	
+
 	function GetStationItems()
 	{
 		while !${_Me.InStation}
@@ -123,12 +123,12 @@ objectdef obj_Station
 			UI:UpdateConsole["obj_Cargo: Waiting for InStation..."]
 			wait 10
 		}
-		
+
 		Me:DoGetHangarItems[This.StationCargo]
-		
+
 		variable iterator CargoIterator
 		This.StationCargo:GetIterator[CargoIterator]
-		
+
 			if ${CargoIterator:First(exists)}
 			do
 			{
@@ -139,7 +139,7 @@ objectdef obj_Station
 				;echo "${CargoIterator.Value.Name}: ${CargoIterator.Value.CategoryID}"
 				Name:Set[${CargoIterator.Value.Name}]
 
-				;echo "DEBUG: obj_Cargo:TransferToHangar: CategoryID: ${CategoryID} ${Name} - ${ThisCargo.Value.Quantity}"			
+				;echo "DEBUG: obj_Cargo:TransferToHangar: CategoryID: ${CategoryID} ${Name} - ${ThisCargo.Value.Quantity}"
 				switch ${CategoryID}
 				{
 					default
@@ -150,14 +150,14 @@ objectdef obj_Station
 			}
 			while ${CargoIterator:Next(exists)}
 	}
-	
+
 	function CheckList()
 	{
 		;BotType Checks
-		
+
 		;General Checks
 		;ToDo Needs to be moved, into correct classes.
-		
+
 		;Awaiting ISXEVE Drone Bay Support
 		/*
 		echo "${Config.Common.DronesInBay} > ${Ship.Drones.DronesInBay}"
@@ -166,18 +166,18 @@ objectdef obj_Station
 		call Station.OpenHangar
 		call This.GetStationItems
 		wait 10
-			
+
 			echo "${Ship.Drones.DronesInStation}"
 			if ${Ship.Drones.DronesInStation} > 0
 			{
 			echo "${Ship.Drones.DronesInStation}"
 			call Ship.Drones.StationToBay
 			}
-			
+
 		call Cargo.CloseHolds
 		}
 		*/
-		
+
 	}
 
 	function DockAtStation(int StationID)
@@ -196,12 +196,12 @@ objectdef obj_Station
 				UI:UpdateConsole["Warping to Station"]
 				call Ship.WarpToID ${StationID}
 				do
-				{ 
+				{
 				   wait 30
 				}
 				while ${Entity[${StationID}].Distance} > WARP_RANGE
 			}
-			
+
 			do
 			{
 				Entity[${StationID}]:Approach
@@ -209,7 +209,7 @@ objectdef obj_Station
 				wait 30
 			}
 			while (${Entity[${StationID}].Distance} > DOCKING_RANGE)
-		
+
 			Counter:Set[0]
 			UI:UpdateConsole["In Docking Range ... Docking"]
 			UI:UpdateConsole["DEBUG: StationExists = ${Entity[${StationID}](exists)}"]
@@ -221,7 +221,7 @@ objectdef obj_Station
 		   		if (${Counter} > 20)
 		   		{
 					UI:UpdateConsole["Warning: Docking incomplete after 60 seconds", LOG_CRITICAL]
-					Entity[${StationID}]:Dock	
+					Entity[${StationID}]:Dock
 		      		Counter:Set[0]
 		   		}
 				UI:UpdateConsole["DEBUG: StationExists = ${Entity[${StationID}](exists)}"]
@@ -235,12 +235,12 @@ objectdef obj_Station
 			UI:UpdateConsole["Station Requested does not exist!  Trying Safespots...", LOG_CRITICAL]
 			call Safespots.WarpTo
 		}
-	}	
+	}
 
 	function Dock()
 	{
 		variable int Counter = 0
-		variable int StationID = ${Entity[CategoryID,3,${Config.Common.HomeStation}].ID}	
+		variable int StationID = ${Entity[CategoryID,3,${Config.Common.HomeStation}].ID}
 
 		UI:UpdateConsole["Docking at ${StationID}:${Config.Common.HomeStation}"]
 
@@ -262,14 +262,14 @@ objectdef obj_Station
 			UI:UpdateConsole["No stations in this system!  Trying Safespots...", LOG_CRITICAL]
 			call Safespots.WarpTo
 		}
-	}	
+	}
 
 	function Undock()
 	{
 		variable int Counter
 		variable int StationID
 		StationID:Set[${_Me.StationID}]
-		
+
 		UI:UpdateConsole["Undocking"]
 
 		EVE:Execute[CmdExitStation]
@@ -282,7 +282,7 @@ objectdef obj_Station
 			if ${Counter} > 20
 			{
 			   Counter:Set[0]
-			   EVE:Execute[CmdExitStation]	
+			   EVE:Execute[CmdExitStation]
 			   UI:UpdateConsole["Undock: Unexpected failure, retrying...", LOG_CRITICAL]
 			   UI:UpdateConsole["Undock: Debug: EVEWindow[Local]=${EVEWindow[Local](exists)}", LOG_CRITICAL]
 			   UI:UpdateConsole["Undock: Debug: Me.InStation=${_Me.InStation}", LOG_CRITICAL]
@@ -294,7 +294,7 @@ objectdef obj_Station
    		call ChatIRC.Say "Undock: Complete"
 
 		Config.Common:SetHomeStation[${Entity[CategoryID,3].Name}]
-		
+
 		Me:SetVelocity[100]
 		wait 100
 
