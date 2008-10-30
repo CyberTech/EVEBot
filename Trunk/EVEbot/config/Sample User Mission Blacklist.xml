@@ -3,16 +3,19 @@
 <InnerSpaceSettings>
 	<Set Name="Sample User Mission Blacklist">
 		<Set Name="Level One">
-			<Setting Name="The Blockade">1</Setting>
+			<Setting Name="An Ancient Roster">1</Setting>
+			<Setting Name="Soft Drink Wars">1</Setting>
+			<Setting Name="Worlds Collide">1</Setting>
+			<Setting Name="Air Show!  - Sign-up Begins (1 of 5)">1</Setting>
 		</Set>	
 		<Set Name="Level Two">
-			<Setting Name="The Blockade">1</Setting>
+			<Setting Name="Worlds Collide">1</Setting>
 		</Set>	
 		<Set Name="Level Three">
-			<Setting Name="The Blockade">1</Setting>
+			<Setting Name="Worlds Collide">1</Setting>
 		</Set>	
 		<Set Name="Level Four">
-			<Setting Name="The Blockade">1</Setting>
+			<Setting Name="Worlds Collide">1</Setting>
 		</Set>	
 	</Set>
 </InnerSpaceSettings>

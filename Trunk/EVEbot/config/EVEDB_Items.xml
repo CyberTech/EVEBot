@@ -55726,5 +55726,17 @@ SetString Ascending
             <Setting Name="BasePrice">2048</Setting>
             <Setting Name="MarketGroupID">18</Setting>
         </Set>
+
+       <!-- Manual Edits Follow -->
+       <Set Name="Brutor Tribe Roster">
+            <Setting Name="TypeID">28830</Setting>
+            <Setting Name="GroupID">0</Setting>
+            <Setting Name="Volume">0.2</Setting>
+            <Setting Name="Capacity">0</Setting>
+            <Setting Name="PortionSize">1</Setting>
+            <Setting Name="BasePrice">150</Setting>
+            <Setting Name="MarketGroupID">0</Setting>
+        </Set>
+
     </Set>
 </InnerSpaceSettings>
