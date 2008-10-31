@@ -1,41 +1,41 @@
 /*
 	The freighter object
-	
-	The obj_Freighter object is a bot module designed to be used with 
+
+	The obj_Freighter object is a bot module designed to be used with
 	EVEBOT.  The freighter bot will move cargo from one (or more) source
 	locations to a destination.  The type of cargo moved is selectable.
 	The source and destination locations are specified via bookmarks.
-	
-	-- GliderPro	
+
+	-- GliderPro
 */
 
 objectdef obj_Freighter
 {
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
-	
+
 	/* the bot logic is currently based on a state machine */
 	variable string CurrentState
 
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 2
-	
+
 	variable queue:bookmark SourceLocations
 	variable int m_DestinationID
-	
+
 	variable obj_Courier 		Courier
 	variable obj_StealthHauler 	StealthHauler
 	variable obj_Scavenger 		Scavenger
-	
+
 	method Initialize()
 	{
 		This:SetupEvents[]
 		BotModules:Insert["Freighter"]
-		
+
 		m_DestinationID:Set[0]
-		
+
 		/* I didn't want this here but it was the only way to
-		 * get this to work properly.  When Bookmark:Remove 
+		 * get this to work properly.  When Bookmark:Remove
 		 * works this can be moved into the state machine and
 		 * PickupOrDropoff can delete the station bookmarks.
 		 */
@@ -43,7 +43,7 @@ objectdef obj_Freighter
 
 		UI:UpdateConsole["obj_Freighter: Initialized", LOG_MINOR]
 	}
-	
+
 	method Pulse()
 	{
 		if ${EVEBot.Paused}
@@ -51,11 +51,11 @@ objectdef obj_Freighter
 			return
 		}
 
-		if !${Config.Common.BotModeName.Equal[Freighter]}
+		if !${Config.Common.BotMode.Equal[Freighter]}
 		{
 			return
 		}
-		
+
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			switch ${Config.Freighter.FreighterModeName}
@@ -65,13 +65,13 @@ objectdef obj_Freighter
 					break
 				case Mission Runner
 					This.Courier:SetState
-					break					
+					break
 				case Stealth Hauler
 					This.StealthHauler:SetState
 					break
 				case Scavenger
 					This.Scavenger:SetState
-					break					
+					break
 				default
 					This:SetState[]
 					break
@@ -82,10 +82,10 @@ objectdef obj_Freighter
     		This.NextPulse:Update
 		}
 	}
-		
+
 	method Shutdown()
 	{
-		Event[OnFrame]:DetachAtom[This:Pulse]		
+		Event[OnFrame]:DetachAtom[This:Pulse]
 	}
 
 	/* SetupEvents will attach atoms to all of the events used by the bot */
@@ -96,10 +96,10 @@ objectdef obj_Freighter
 		/* override any events setup by the base class */
 		Event[OnFrame]:AttachAtom[This:Pulse]
 	}
-	
+
 	/* this function is called repeatedly by the main loop in EveBot.iss */
 	function ProcessState()
-	{				
+	{
 		switch ${Config.Freighter.FreighterModeName}
 		{
 			case Move Minerals to Buyer
@@ -113,8 +113,8 @@ objectdef obj_Freighter
 				break
 			case Scavenger
 				call This.Scavenger.ProcessState
-				break					
-				
+				break
+
 			default
 				switch ${This.CurrentState}
 				{
@@ -139,11 +139,11 @@ objectdef obj_Freighter
 							call Ship.WarpToBookMarkName "${Config.Freighter.Destination}"
 						}
 						break
-				}	
+				}
 				break
 		}
 	}
-	
+
 	/* NOTE: The order of these if statements is important!! */
 	method SetState()
 	{
@@ -151,7 +151,7 @@ objectdef obj_Freighter
 		{
 			m_DestinationID:Set[${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity.ID}]
 			Assets:IgnoreStation[${m_DestinationID}]
-		}										
+		}
 
 		if ${EVEBot.ReturnToStation} && !${_Me.InStation}
 		{
@@ -196,11 +196,11 @@ objectdef obj_Freighter
 				break
 		}
 	}
-	
+
 	function ContainerTest()
 	{
 		call Cargo.OpenHolds
-		
+
 		if ${Cargo.ShipHasContainers}
 		{
 			UI:UpdateConsole["obj_Freighter: Ship has containers."]
@@ -212,13 +212,13 @@ objectdef obj_Freighter
 			else
 			{	/* move from ship to hangar */
 				call Cargo.TransferCargoToHangar
-			}			
+			}
 		}
 		else
 		{
 			UI:UpdateConsole["obj_Freighter: Ship doesn't have containers."]
 		}
-			
+
 		wait 50
 	}
 
@@ -237,11 +237,11 @@ objectdef obj_Freighter
 				break
 		}
 	}
-	
+
 	/* Move the freighter to the next source station in the list */
 	function MoveToSourceStation()
 	{
-		if ${SourceLocations.Used} == 0 
+		if ${SourceLocations.Used} == 0
 		{	/* sources emptied, abort */
 			EVEBot.ReturnToStation:Set[TRUE]
 		}
@@ -250,7 +250,7 @@ objectdef obj_Freighter
 			call Ship.WarpToBookMark ${SourceLocations.Peek}
 		}
 	}
-	
+
 	function MoveToNextStationWithAssets()
 	{
 		variable int nextStationID
@@ -259,7 +259,7 @@ objectdef obj_Freighter
 		{
 			EVE:Execute[OpenAssets]
 		}
-		
+
 		nextStationID:Set[${Assets.NextStation}]
 		if ${nextStationID}
 		{
@@ -279,7 +279,7 @@ objectdef obj_Freighter
                		nextStationID:Set[0]
 		        }
 		    }
-	        
+
 	        if ${nextStationID} && (${_Me.SolarSystemID} != ${Universe[${tmp_string}].ID})
 	        {	/* check for low-sec jumps */
 	        	Universe[${tmp_string}]:SetDestination
@@ -288,43 +288,43 @@ objectdef obj_Freighter
 	        	EVE:DoGetToDestinationPath[ap_path]
 	        	variable iterator ap_path_iterator
 	        	ap_path:GetIterator[ap_path_iterator]
-	        	
+
 				if ${ap_path_iterator:First(exists)}
 				{
 					do
 					{
 				        if ${Universe[${ap_path_iterator.Value}].Security} <= 0.45
 				        {	/* avoid low-sec */
-							UI:UpdateConsole["DEBUG: Avoiding low-sec routes."]					        	
+							UI:UpdateConsole["DEBUG: Avoiding low-sec routes."]
 		        			Assets:IgnoreStation[${nextStationID}]
 		               		nextStationID:Set[0]
 		               		break
 				        }
 					}
 					while ${ap_path_iterator:Next(exists)}
-				}		
+				}
 	        }
-	        
+
 			if ${nextStationID} && (${_Me.SolarSystemID} != ${Universe[${tmp_string}].ID})
 			{
 	    		UI:UpdateConsole["Freighter moving to ${EVE.GetLocationNameByID[${nextStationID}]}."]
-	    		
+
 				call Ship.ActivateAutoPilot
 	    	}
-	    	
+
 	        if ${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity(exists)}
 	        {	/* Unfortunately you cannot get the station ID cooresponding to the book- */
 	        	/* mark until you are in the same system as the bookmark destination.     */
 	        	if ${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity.ID} == ${nextStationID}
 	        	{
-               		nextStationID:Set[0]	        		
+               		nextStationID:Set[0]
 	        	}
-			}										
+			}
 
 			if ${nextStationID}
 			{
-				call Station.DockAtStation ${nextStationID}    		
-			}	    	
+				call Station.DockAtStation ${nextStationID}
+			}
 		}
 		else
 		{	/* no more assets, abort */
@@ -355,7 +355,7 @@ objectdef obj_Freighter
 				{
 					if ${SourceLocations.Peek(exists)}
 					{
-						SourceLocations:Dequeue					
+						SourceLocations:Dequeue
 					}
 				}
 			}
@@ -365,21 +365,21 @@ objectdef obj_Freighter
 	method BuildSourceList()
 	{
 		variable string bm_prefix
-		bm_prefix:Set[${Config.Freighter.SourcePrefix}]
+		bm_prefix:Set[${Config.Freighter.SourceBookmarkPrefix}]
 
-		variable index:bookmark bm_index		
+		variable index:bookmark bm_index
 		EVE:DoGetBookmarks[bm_index]
-	
+
 		variable iterator bm_iterator
 		bm_index:GetIterator[bm_iterator]
-		
+
 		variable collection:bookmark bm_collection
 		if ${bm_iterator:First(exists)}
 		{
 			do
 			{
 				variable string bm_name
-				bm_name:Set["${bm_iterator.Value.Label}"]			
+				bm_name:Set["${bm_iterator.Value.Label}"]
 				if ${bm_name.Left[${bm_prefix.Length}].Equal[${bm_prefix}]}
 				{
 					if ${bm_collection.Element[${bm_iterator.Value.Label}](exists)}
@@ -391,23 +391,23 @@ objectdef obj_Freighter
 					}
 					else
 					{
-						bm_collection:Set[${bm_iterator.Value.Label},${bm_iterator.Value}]	
+						bm_collection:Set[${bm_iterator.Value.Label},${bm_iterator.Value}]
 					}
 				}
 			}
 			while ${bm_iterator:Next(exists)}
-		}		
-		
+		}
+
 		SourceLocations:Clear
 		if ${bm_collection.FirstValue(exists)}
 		{
 			do
 			{
-				SourceLocations:Queue[${bm_collection.CurrentValue}]	
+				SourceLocations:Queue[${bm_collection.CurrentValue}]
 			}
 			while ${bm_collection.NextValue(exists)}
-		}		
-		
+		}
+
 		UI:UpdateConsole["BuildSourceList found ${SourceLocations.Used} source locations."]
 	}
 }

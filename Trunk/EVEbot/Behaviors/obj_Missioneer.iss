@@ -1,10 +1,10 @@
 /*
 	The missioneer object
-	
+
 	The obj_Missioneer object is the main bot module for the
 	mission running bot.
-	
-	-- GliderPro	
+
+	-- GliderPro
 */
 
 objectdef obj_Missioneer
@@ -14,7 +14,7 @@ objectdef obj_Missioneer
 	variable string CurrentState
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 2
-	
+
 	method Initialize()
 	{
 		Event[OnFrame]:AttachAtom[This:Pulse]
@@ -29,11 +29,11 @@ objectdef obj_Missioneer
 			return
 		}
 
-		if !${Config.Common.BotModeName.Equal[Missioneer]}
+		if !${Config.Common.BotMode.Equal[Missioneer]}
 		{
 			return
 		}
-		
+
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			This:SetState
@@ -42,10 +42,10 @@ objectdef obj_Missioneer
     		This.NextPulse:Update
 		}
 	}
-		
+
 	method Shutdown()
 	{
-		Event[OnFrame]:DetachAtom[This:Pulse]		
+		Event[OnFrame]:DetachAtom[This:Pulse]
 	}
 
 	/* NOTE: The order of these if statements is important!! */
@@ -81,7 +81,7 @@ objectdef obj_Missioneer
 				call Station.Dock
 				break
 			case GET_MISSION
-				Agents:PickAgent			
+				Agents:PickAgent
 				call Agents.MoveTo
 				call Agents.RequestMission
 				break
@@ -90,7 +90,7 @@ objectdef obj_Missioneer
 				break
 			case IDLE
 				break
-		}	
+		}
 	}
 }
 

@@ -1,10 +1,10 @@
 /*
 	Drone class
-	
+
 	Main object for interacting with the drones.  Instantiated by obj_Ship, only.
-	
+
 	-- CyberTech
-	
+
 */
 
 objectdef obj_Drones
@@ -21,7 +21,7 @@ objectdef obj_Drones
 	variable bool WaitingForDrones = FALSE
 	variable bool DronesReady = FALSE
 	variable int ShortageCount
-	
+
 	method Initialize()
 	{
 		Event[OnFrame]:AttachAtom[This:Pulse]
@@ -58,9 +58,9 @@ objectdef obj_Drones
     				{
     					This.WaitingForDrones:Set[FALSE]
     					This.DronesReady:Set[TRUE]
-    					
+
     					UI:UpdateConsole["${This.LaunchedDrones} drones deployed"]
-    				}					
+    				}
                 }
 
 	    		This.NextPulse:Set[${Time.Timestamp}]
@@ -79,7 +79,7 @@ objectdef obj_Drones
 			This.WaitingForDrones:Set[TRUE]
 		}
 	}
-		
+
 	member:int DronesInBay()
 	{
 		return ${Me.GetActiveDroneIDs[This.ActiveDroneIDList]}
@@ -89,14 +89,14 @@ objectdef obj_Drones
 	{
 		return ${Me.GetActiveDroneIDs[This.ActiveDroneIDList]}
 	}
-   
+
 	member:bool CombatDroneShortage()
 	{
 		if !${This.DronesReady}
 		{
 			return
 		}
-		
+
 		if (${Me.Ship.DronebayCapacity} > 0 && \
    			${Me.Ship.GetDrones} == 0 && \
    			${This.DronesInSpace} < ${Config.Combat.MinimumDronesInSpace})
@@ -113,28 +113,28 @@ objectdef obj_Drones
    		}
    		return FALSE
 	}
-	
+
 	; Returns the number of Drones in our station hanger.
 	member:int DronesInStation()
 	{
 		return ${Station.DronesInStation.Used}
 	}
-	
+
 	function StationToBay()
 	{
-		variable int DroneQuantitiyToMove = ${Math.Calc[${Config.Common.DronesInBay} - ${This.DronesInBay}]}
+		variable int DroneQuantitiyToMove = ${Math.Calc[${Config.Common.MinimumDronesInBay} - ${This.DronesInBay}]}
 		if ${This.DronesInStation} == 0 || \
 			!${Me.Ship(exists)}
 		{
 			return
 		}
-		
+
 		EVE:Execute[OpenDroneBayOfActiveShip]
 		wait 15
-		
+
 		variable iterator CargoIterator
 		Station.DronesInStation:GetIterator[CargoIterator]
-		
+
 		if ${CargoIterator:First(exists)}
 		do
 		{
@@ -147,8 +147,8 @@ objectdef obj_Drones
 		EVEWindow[MyDroneBay]:Close
 		wait 10
 	}
-		
-   	
+
+
 	function ReturnAllToDroneBay()
 	{
 		while ${This.DronesInSpace} > 0
@@ -166,9 +166,9 @@ objectdef obj_Drones
 			wait 50
 		}
 	}
-	
+
 	method ActivateMiningDrones()
-	{	
+	{
 		if !${This.DronesReady}
 		{
 			return
@@ -179,14 +179,14 @@ objectdef obj_Drones
 			EVE:DronesMineRepeatedly[This.ActiveDroneIDList]
 		}
 	}
-	
+
 	method SendDrones()
 	{
 		if !${This.DronesReady}
 		{
 			return
 		}
- 
+
 		if (${This.DronesInSpace} > 0)
 		{
 			variable iterator DroneIterator
@@ -195,9 +195,9 @@ objectdef obj_Drones
 			ActiveDroneList:GetIterator[DroneIterator]
 			variable index:int returnIndex
 			variable index:int engageIndex
- 
-			do 
-			{				
+
+			do
+			{
 				if ${DroneIterator.Value.ToEntity.ShieldPct} < 50 || \
 					${DroneIterator.Value.ToEntity.ArmorPct} < 80 || \
 					${DroneIterator.Value.ToEntity.StructurePct} < 100
@@ -205,7 +205,7 @@ objectdef obj_Drones
 					UI:UpdateConsole["Recalling Damaged Drone ${DroneIterator.Value.ID}"]
 					;UI:UpdateConsole["Debug: Shield: ${DroneIterator.Value.ToEntity.ShieldPct}, Armor: ${DroneIterator.Value.ToEntity.ArmorPct}, Structure: ${DroneIterator.Value.ToEntity.StructurePct}"]
 					returnIndex:Insert[${DroneIterator.Value.ID}]
- 
+
 				}
 				else
 				{
@@ -217,5 +217,5 @@ objectdef obj_Drones
 			EVE:DronesReturnToDroneBay[returnIndex]
 			EVE:DronesEngageMyTarget[engageIndex]
 		}
-	}	
+	}
 }

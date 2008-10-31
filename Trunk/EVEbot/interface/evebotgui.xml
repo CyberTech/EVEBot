@@ -36,7 +36,7 @@
 					<Height>20</Height>
 					<Text>${Script[EVEBot].VariableScope.AppVersion}</Text>
 					<OnLoad>
-							This:SetText[${Script[EVEBot].VariableScope.AppVersion}]
+						This:SetText[${Script[EVEBot].VariableScope.AppVersion}]
 					</OnLoad>
 				</text>
 				<button	Name='Minimize'	template='EVESkin.Window.TitleBar.Minimize'>
@@ -70,125 +70,125 @@
 				<Height>100%</Height>
 				<Tabs>
 					<Tab Name='Status'>
-							<text name='script_runtime'>
-								<X>10</X>
-								<Y>10</Y>
-								<Width>115</Width>
-								<Height>20</Height>
-								<Text>Script Runtime:</Text>
-							</text>
-							<Text name='script_runtime_data' template='EVESkin.Font.Value'>
-								<X>150</X>
-								<Y>10</Y>
-								<Width>100</Width>
-								<Height>20</Height>
-								<Text>${Script[EVEBot].VariableScope.UI.Runtime}</Text>
-							</Text>
+						<text name='script_runtime'>
+							<X>10</X>
+							<Y>10</Y>
+							<Width>115</Width>
+							<Height>20</Height>
+							<Text>Script Runtime:</Text>
+						</text>
+						<Text name='script_runtime_data' template='EVESkin.Font.Value'>
+							<X>150</X>
+							<Y>10</Y>
+							<Width>100</Width>
+							<Height>20</Height>
+							<Text>${Script[EVEBot].VariableScope.UI.Runtime}</Text>
+						</Text>
 
-							<text name='state' template='EVESkin.Font.Description'>
-								<X>10</X>
-								<Y>25</Y>
-								<Width>100</Width>
-								<Height>20</Height>
-								<Text>Action:</Text>
-							</text>
-							<text name='state_data' template='EVESkin.Font.Value'>
-								<X>150</X>
-								<Y>25</Y>
-								<Width>100</Width>
-								<Height>20</Height>
-								<text>${Script[EVEBot].VariableScope.Config.Common.BotModeName}</text>
-							</text>
-							<text name='Trips' template='EVESkin.Font.Description'>
-								<X>10</X>
-								<Y>40</Y>
-								<Width>100</Width>
-								<Height>20</Height>
-								<Text>Runs this Session:</Text>
-							</text>
-							<text name='Trips_Data' template='EVESkin.Font.Value'>
-								<X>150</X>
-								<Y>40</Y>
-								<Width>100</Width>
-								<Height>20</Height>
-								<text>${Script[EVEBot].VariableScope.Miner.TotalTrips}</text>
-							</text>
-							<text name='Aborts' template='EVESkin.Font.Description'>
-								<X>10</X>
-								<Y>55</Y>
-								<Width>100</Width>
-								<Height>20</Height>
-								<Text>Aborts this Session:</Text>
-							</text>
-							<text name='Aborts_Data' template='EVESkin.Font.Value'>
-								<X>150</X>
-								<Y>55</Y>
-								<Width>100</Width>
-								<Height>20</Height>
-								<text>${Script[EVEBot].VariableScope.Config.Common.OurAbortCount}</text>
-							</text>
-							<text name='avg_time' template='EVESkin.Font.Description'>
-								<X>10</X>
-								<Y>70</Y>
-								<Width>175</Width>
-								<Height>20</Height>
-								<Text>Time For Current Trip:</Text>
-							</text>
-							<text name='avg_time_data' template='EVESkin.Font.Value'>
-								<X>150</X>
-								<Y>70</Y>
-								<Width>150</Width>
-								<Height>20</Height>
-								<text>${ISXEVE.SecsToString[${Script[EVEBot].VariableScope.Miner.TripDuration}]}</text>
-							</text>
-							<text name='Average Time/Trip' template='EVESkin.Font.Description'>
-								<X>10</X>
-								<Y>85</Y>
-								<Width>175</Width>
-								<Height>20</Height>
-								<Text>Average Time per Trip:</Text>
-							</text>
-							<text name='Average Time/Trip Data' template='EVESkin.Font.Value'>
-								<X>150</X>
-								<Y>85</Y>
-								<Width>150</Width>
-								<Height>20</Height>
-								<text>${ISXEVE.SecsToString[${Script[EVEBot].VariableScope.Miner.AverageTripSeconds}]}</text>
-							</text>
-							<text name='Currently Training' template='EVESkin.Font.Description'>
-								<X>10</X>
-								<Y>115</Y>
-								<Width>175</Width>
-								<Height>20</Height>
-								<Text>Currently Training:</Text>
-							</text>
-							<text name='CurrentlyTrainingDATA' template='EVESkin.Font.Value'>
-								<X>150</X>
-								<Y>115</Y>
-								<Width>150</Width>
-								<Height>20</Height>
-								<text>${Script[EVEBot].VariableScope.Skills.CurrentlyTrainingSkill}</text>
-							</text>
-							<text name='Next to be trained' template='EVESkin.Font.Description'>
-								<X>10</X>
-								<Y>130</Y>
-								<Width>175</Width>
-								<Height>20</Height>
-								<Text>Next Queued:</Text>
-							</text>
-							<text name='nexttobetrainedDATA' template='EVESkin.Font.Value'>
-								<X>150</X>
-								<Y>130</Y>
-								<Width>150</Width>
-								<Height>20</Height>
-								<text>${Script[EVEBot].VariableScope.Skills.NextInLine}</text>
-							</text>
-							<console Name="StatusConsole" template='EVESkin.Console'>
-								<X>5</X>
-								<Y>r120</Y>
-								<Width>97.5%</Width>
-								<Height>115</Height>
-							</console>
+						<text name='state' template='EVESkin.Font.Description'>
+							<X>10</X>
+							<Y>25</Y>
+							<Width>100</Width>
+							<Height>20</Height>
+							<Text>Action:</Text>
+						</text>
+						<text name='state_data' template='EVESkin.Font.Value'>
+							<X>150</X>
+							<Y>25</Y>
+							<Width>100</Width>
+							<Height>20</Height>
+							<text>${Script[EVEBot].VariableScope.Config.Common.BotMode}</text>
+						</text>
+						<text name='Trips' template='EVESkin.Font.Description'>
+							<X>10</X>
+							<Y>40</Y>
+							<Width>100</Width>
+							<Height>20</Height>
+							<Text>Runs this Session:</Text>
+						</text>
+						<text name='Trips_Data' template='EVESkin.Font.Value'>
+							<X>150</X>
+							<Y>40</Y>
+							<Width>100</Width>
+							<Height>20</Height>
+							<text>${Script[EVEBot].VariableScope.Miner.TotalTrips}</text>
+						</text>
+						<text name='Aborts' template='EVESkin.Font.Description'>
+							<X>10</X>
+							<Y>55</Y>
+							<Width>100</Width>
+							<Height>20</Height>
+							<Text>Aborts this Session:</Text>
+						</text>
+						<text name='Aborts_Data' template='EVESkin.Font.Value'>
+							<X>150</X>
+							<Y>55</Y>
+							<Width>100</Width>
+							<Height>20</Height>
+							<text>${Script[EVEBot].VariableScope.Config.Common.OurAbortCount}</text>
+						</text>
+						<text name='avg_time' template='EVESkin.Font.Description'>
+							<X>10</X>
+							<Y>70</Y>
+							<Width>175</Width>
+							<Height>20</Height>
+							<Text>Time For Current Trip:</Text>
+						</text>
+						<text name='avg_time_data' template='EVESkin.Font.Value'>
+							<X>150</X>
+							<Y>70</Y>
+							<Width>150</Width>
+							<Height>20</Height>
+							<text>${ISXEVE.SecsToString[${Script[EVEBot].VariableScope.Miner.TripDuration}]}</text>
+						</text>
+						<text name='Average Time/Trip' template='EVESkin.Font.Description'>
+							<X>10</X>
+							<Y>85</Y>
+							<Width>175</Width>
+							<Height>20</Height>
+							<Text>Average Time per Trip:</Text>
+						</text>
+						<text name='Average Time/Trip Data' template='EVESkin.Font.Value'>
+							<X>150</X>
+							<Y>85</Y>
+							<Width>150</Width>
+							<Height>20</Height>
+							<text>${ISXEVE.SecsToString[${Script[EVEBot].VariableScope.Miner.AverageTripSeconds}]}</text>
+						</text>
+						<text name='Currently Training' template='EVESkin.Font.Description'>
+							<X>10</X>
+							<Y>115</Y>
+							<Width>175</Width>
+							<Height>20</Height>
+							<Text>Currently Training:</Text>
+						</text>
+						<text name='CurrentlyTrainingDATA' template='EVESkin.Font.Value'>
+							<X>150</X>
+							<Y>115</Y>
+							<Width>150</Width>
+							<Height>20</Height>
+							<text>${Script[EVEBot].VariableScope.Skills.CurrentlyTrainingSkill}</text>
+						</text>
+						<text name='Next to be trained' template='EVESkin.Font.Description'>
+							<X>10</X>
+							<Y>130</Y>
+							<Width>175</Width>
+							<Height>20</Height>
+							<Text>Next Queued:</Text>
+						</text>
+						<text name='nexttobetrainedDATA' template='EVESkin.Font.Value'>
+							<X>150</X>
+							<Y>130</Y>
+							<Width>150</Width>
+							<Height>20</Height>
+							<text>${Script[EVEBot].VariableScope.Skills.NextInLine}</text>
+						</text>
+						<console Name="StatusConsole" template='EVESkin.Console'>
+							<X>5</X>
+							<Y>r120</Y>
+							<Width>97.5%</Width>
+							<Height>115</Height>
+						</console>
 					</Tab>
 
 					<Tab Name='Main'>
@@ -211,14 +211,29 @@
 								<Item Value='2'>Hauler</Item>
 								<Item Value='3'>Freighter</Item>
 								<Item Value='4'>Ratter</Item>
-                <Item Value='5'>Missioneer</Item>
+								<Item Value='5'>Missioneer</Item>
 							</Items>
 							<OnSelect>
-								Script[EVEBot].VariableScope.Config.Common:SetBotMode[${This.SelectedItem.Value}]
-								Script[EVEBot].VariableScope.Config.Common:SetBotModeName[${This.SelectedItem.Text}]
+								Script[EVEBot].VariableScope.Config.Common:BotMode[${This.SelectedItem.Text}]
+								switch ${This.SelectedItem.Text}
+								{
+									case Miner
+										echo Miner Selected
+										UIElement[EVEBot].FindUsableChild[Miner,frame]:Show
+										;UIElement[EVEBot].FindUsableChild[Hauler,frame]:Hide
+										UIElement[Hauler@EVEBotOptionsTab@EVEBot_Children@EVEBot]:Hide
+										break
+									case Hauler
+										echo Hauler Selected
+										UIElement[EVEBot].FindUsableChild[Miner,frame]:Hide
+										UIElement[EVEBot].FindUsableChild[Hauler,frame]:Show
+										break
+									Default
+										break
+								}
 							</OnSelect>
 							<OnLoad>
-								This:SetSelection[${Script[EVEBot].VariableScope.Config.Common.BotMode}]
+								This.ItemByText[${Script[EVEBot].VariableScope.Config.Common.BotMode}]:Select
 							</OnLoad>
 						</combobox>
 						<Textentry name='MinimumDronesInBay'>
@@ -228,12 +243,12 @@
 							<Height>18</Height>
 							<MaxLength>2</MaxLength>
 							<OnLoad>
-								This:SetText[${Script[EVEBot].VariableScope.Config.Common.DronesInBay}]
+								This:SetText[${Script[EVEBot].VariableScope.Config.Common.MinimumDronesInBay}]
 							</OnLoad>
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Common:SetDronesInBay[${Int[${This.Text}]}]
+								Script[EVEBot].VariableScope.Config.Common:MinimumDronesInBay[${Int[${This.Text}]}]
 								}
 							</OnChange>
 						</Textentry>
@@ -255,11 +270,11 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Common.AutoLogin}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
-									Script[EVEBot].VariableScope.Config.Common:SetAutoLogin[${This.Checked}]
+								Script[EVEBot].VariableScope.Config.Common:AutoLogin[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
 						<Text name='LoginNameText'>
@@ -282,7 +297,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Common:SetLoginName[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Common:LoginName[${This.Text}]
 								}
 							</OnChange>
 						</Textentry>
@@ -307,7 +322,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Common:SetLoginPassword[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Common:LoginPassword[${This.Text}]
 								}
 							</OnChange>
 						</Textentry>
@@ -332,7 +347,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Common:SetMaxRuntime[${Int[${This.Text}]}]
+								Script[EVEBot].VariableScope.Config.Common:MaxRuntime[${Int[${This.Text}]}]
 								}
 							</OnChange>
 						</Textentry>
@@ -356,7 +371,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Common:SetIRCServer[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Common:IRCServer[${This.Text}]
 								}
 							</OnChange>
 						</Textentry>
@@ -381,7 +396,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Common:SetIRCChannel[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Common:IRCChannel[${This.Text}]
 								}
 							</OnChange>
 						</Textentry>
@@ -405,7 +420,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Common:SetIRCUser[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Common:IRCUser[${This.Text}]
 								}
 							</OnChange>
 						</Textentry>
@@ -431,7 +446,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Common:SetIRCPassword[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Common:IRCPassword[${This.Text}]
 								}
 							</OnChange>
 						</Textentry>
@@ -445,11 +460,11 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Common.UseSound}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
-									Script[EVEBot].VariableScope.Config.Common:SetUseSound[${This.Checked}]
+								Script[EVEBot].VariableScope.Config.Common:UseSound[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
 						<checkbox Name='cbDisable3D'>
@@ -462,11 +477,11 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Common.Disable3D}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
-									Script[EVEBot].VariableScope.Config.Common:SetDisable3D[${This.Checked}]
+								Script[EVEBot].VariableScope.Config.Common:Disable3D[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
 					</Tab>
@@ -482,11 +497,11 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Miner.StripMine}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
-									Script[EVEBot].VariableScope.Config.Miner:SetStripMine[${This.Checked}]
+								Script[EVEBot].VariableScope.Config.Miner:StripMine[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
 						<checkbox Name='cbBookMarkLastPosition'>
@@ -499,11 +514,11 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Miner.BookMarkLastPosition}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
-									Script[EVEBot].VariableScope.Config.Miner:SetBookMarkLastPosition[${This.Checked}]
+								Script[EVEBot].VariableScope.Config.Miner:BookMarkLastPosition[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
 						<Textentry name='MiningRangeMultipler'>
@@ -518,7 +533,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Miner:SetMiningRangeMultipler[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Miner:MiningRangeMultipler[${This.Text}]
 								}
 							</OnChange>
 						</Textentry>
@@ -542,7 +557,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Miner:SetCargoThreshold[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Miner:CargoThreshold[${This.Text}]
 								}
 							</OnChange>
 						</Textentry>
@@ -580,7 +595,7 @@
 								<Item Value='9'>CharName</Item>
 							</Items>
 							<OnSelect>
-								Script[EVEBot].VariableScope.Config.Miner:SetJetCanNaming[${This.SelectedItem.Value}]
+								Script[EVEBot].VariableScope.Config.Miner:JetCanNaming[${This.SelectedItem.Value}]
 							</OnSelect>
 							<OnLoad>
 								This:SetSelection[${Script[EVEBot].VariableScope.Config.Miner.JetCanNaming}]
@@ -606,7 +621,7 @@
 								<Item Value='Ice'>Ice</Item>
 							</Items>
 							<OnSelect>
-								Script[EVEBot].VariableScope.Config.Miner:SetMinerType[${This.SelectedItem.Text}]
+								Script[EVEBot].VariableScope.Config.Miner:MinerType[${This.SelectedItem.Text}]
 							</OnSelect>
 							<OnLoad>
 								This.ItemByText[${Script[EVEBot].VariableScope.Config.Miner.MinerType}]:Select
@@ -618,15 +633,15 @@
 							<Height>20</Height>
 							<Width>100</Width>
 							<Text>Use Belt Bookmarks</Text>
-							<AutoTooltip>When checked the miner will warp to asteroid belt bookmarks instead of the belts themselves.  See the labels tab for bookmark prefix requirements.</AutoTooltip>
+							<AutoTooltip>When checked the miner will warp to asteroid belt bookmarks instead of the belts themselves.	See the labels tab for bookmark prefix requirements.</AutoTooltip>
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Miner.UseFieldBookmarks}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
-									Script[EVEBot].VariableScope.Config.Miner:SetUseFieldBookmarks[${This.Checked}]
+								Script[EVEBot].VariableScope.Config.Miner:UseFieldBookmarks[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
 						<checkbox name='cbMiningDrones'>
@@ -639,11 +654,11 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Miner.UseMiningDrones}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
-									Script[EVEBot].VariableScope.Config.Miner:SetUseMiningDrones[${This.Checked}]
+								Script[EVEBot].VariableScope.Config.Miner:UseMiningDrones[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
 						<Text name='AvoidPlayerRangeLabel'>
@@ -664,7 +679,7 @@
 								This:SetValue[${Script[EVEBot].VariableScope.Config.Miner.AvoidPlayerRange}]
 							</OnLoad>
 							<OnChange>
-								Script[EVEBot].VariableScope.Config.Miner:SetAvoidPlayerRange[${Int[${This.Value}]}]
+								Script[EVEBot].VariableScope.Config.Miner:AvoidPlayerRange[${Int[${This.Value}]}]
 								UIElement[AvoidPlayerRangeValue@Miner@EvEBotOptionsTab@EVEBot]:SetText["${Script[EVEBot].VariableScope.EVEBot.MetersToKM_Str[${This.Value}]}"]
 							</OnChange>
 						</slider>
@@ -679,60 +694,6 @@
 								This:SetText["${Script[EVEBot].VariableScope.EVEBot.MetersToKM_Str[${UIElement[AvoidPlayerRange@Miner@EvEBotOptionsTab@EVEBot].Value}]}"]
 							</OnLoad>
 						</Text>
-						<checkbox name='cbStandingDetection'>
-							<X>10</X>
-							<Y>130</Y>
-							<Height>20</Height>
-							<Width>100</Width>
-							<Text>Mine Alone: Standing Detection</text>
-							<AutoTooltip>When checked you will move to another field when and if a player enters yours and is below the standing you set. (Doesn't Include Gang Members)</AutoTooltip>
-							<OnLoad>
-								if ${Script[EVEBot].VariableScope.Config.Miner.StandingDetection}
-								{
-									This:SetChecked
-								}
-							</OnLoad>
-							<OnLeftClick>
-									Script[EVEBot].VariableScope.Config.Miner:SetStandingDetection[${This.Checked}]
-							</OnLeftClick>
-						</checkbox>
-						<combobox name='cbLowestStanding'>
-							<X>210</X>
-							<Y>130</Y>
-							<Width>50</Width>
-							<Height>20</Height>
-							<FullHeight>200</FullHeight>
-							<ButtonWidth>20</ButtonWidth>
-							<Items>
-								<Item Value='-10'>-10</Item>
-								<Item Value='-9'>-9</Item>
-								<Item Value='-8'>-8</Item>
-								<Item Value='-7'>-7</Item>
-								<Item Value='-6'>-6</Item>
-								<Item Value='-5'>-5</Item>
-								<Item Value='-4'>-4</Item>
-								<Item Value='-3'>-3</Item>
-								<Item Value='-2'>-2</Item>
-								<Item Value='-1'>-1</Item>
-								<Item Value='0'>0</Item>
-								<Item Value='1'>1</Item>
-								<Item Value='2'>2</Item>
-								<Item Value='3'>3</Item>
-								<Item Value='4'>4</Item>
-								<Item Value='5'>5</Item>
-								<Item Value='6'>6</Item>
-								<Item Value='7'>7</Item>
-								<Item Value='8'>8</Item>
-								<Item Value='9'>9</Item>
-								<Item Value='10'>10</Item>
-							</Items>
-							<OnSelect>
-								Script[EVEBot].VariableScope.Config.Miner:SetStandingDetection[${This.SelectedItem.Value}]
-							</OnSelect>
-							<OnLoad>
-								This:SetSelection[${Script[EVEBot].VariableScope.Config.Miner.StandingDetection}]
-							</OnLoad>
-						</combobox>
 						<Text name='DeliveryLocationTypeLabel'>
 							<X>10</X>
 							<Y>170</Y>
@@ -761,10 +722,10 @@
 								<Item>Jetcan</Item>
 							</Items>
 							<OnSelect>
-								Script[EVEBot].VariableScope.Config.Miner:SetDeliveryLocationTypeName[${This.SelectedItem.Text}]
+								Script[EVEBot].VariableScope.Config.Miner:DeliveryLocationType[${This.SelectedItem.Text}]
 							</OnSelect>
 							<OnLoad>
-								This.ItemByText[${Script[EVEBot].VariableScope.Config.Miner.DeliveryLocationTypeName}]:Select
+								This.ItemByText[${Script[EVEBot].VariableScope.Config.Miner.DeliveryLocationType}]:Select
 							</OnLoad>
 						</combobox>
 						<Text name='DeliveryLocationText'>
@@ -786,11 +747,12 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Miner:SetDeliveryLocation[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Miner:DeliveryLocation[${This.Text}]
 								}
 							</OnChange>
 						</Textentry>
 					</Tab>
+
 					<Tab name='Combat'>
 						<Frame name='frmRunOptions'>
 							<X>52%</X>
@@ -809,11 +771,11 @@
 									<OnLoad>
 										if ${Script[EVEBot].VariableScope.Config.Combat.RunOnLowAmmo}
 										{
-											This:SetChecked
+										This:SetChecked
 										}
 									</OnLoad>
 									<OnLeftClick>
-											Script[EVEBot].VariableScope.Config.Combat:SetRunOnLowAmmo[${This.Checked}]
+										Script[EVEBot].VariableScope.Config.Combat:RunOnLowAmmo[${This.Checked}]
 									</OnLeftClick>
 								</checkbox>
 								<checkbox name='cbRunOnLowCap'>
@@ -826,11 +788,11 @@
 									<OnLoad>
 										if ${Script[EVEBot].VariableScope.Config.Combat.RunOnLowCap}
 										{
-											This:SetChecked
+										This:SetChecked
 										}
 									</OnLoad>
 									<OnLeftClick>
-											Script[EVEBot].VariableScope.Config.Combat:SetRunOnLowCap[${This.Checked}]
+										Script[EVEBot].VariableScope.Config.Combat:RunOnLowCap[${This.Checked}]
 									</OnLeftClick>
 								</checkbox>
 								<checkbox name='cbRunOnLowTank'>
@@ -843,11 +805,11 @@
 									<OnLoad>
 										if ${Script[EVEBot].VariableScope.Config.Combat.RunOnLowTank}
 										{
-											This:SetChecked
+										This:SetChecked
 										}
 									</OnLoad>
 									<OnLeftClick>
-											Script[EVEBot].VariableScope.Config.Combat:SetRunOnLowTank[${This.Checked}]
+										Script[EVEBot].VariableScope.Config.Combat:RunOnLowTank[${This.Checked}]
 									</OnLeftClick>
 								</checkbox>
 								<checkbox name='cbRunToStation'>
@@ -860,11 +822,11 @@
 									<OnLoad>
 										if ${Script[EVEBot].VariableScope.Config.Combat.RunToStation}
 										{
-											This:SetChecked
+										This:SetChecked
 										}
 									</OnLoad>
 									<OnLeftClick>
-											Script[EVEBot].VariableScope.Config.Combat:SetRunToStation[${This.Checked}]
+										Script[EVEBot].VariableScope.Config.Combat:RunToStation[${This.Checked}]
 									</OnLeftClick>
 								</checkbox>
 								<checkbox name='cbUseWhiteList'>
@@ -877,11 +839,11 @@
 									<OnLoad>
 										if ${Script[EVEBot].VariableScope.Config.Combat.UseWhiteList}
 										{
-											This:SetChecked
+										This:SetChecked
 										}
 									</OnLoad>
 									<OnLeftClick>
-											Script[EVEBot].VariableScope.Config.Combat:SetUseWhiteList[${This.Checked}]
+										Script[EVEBot].VariableScope.Config.Combat:UseWhiteList[${This.Checked}]
 									</OnLeftClick>
 								</checkbox>
 								<checkbox name='cbUseBlackList'>
@@ -894,11 +856,11 @@
 									<OnLoad>
 										if ${Script[EVEBot].VariableScope.Config.Combat.UseBlackList}
 										{
-											This:SetChecked
+										This:SetChecked
 										}
 									</OnLoad>
 									<OnLeftClick>
-											Script[EVEBot].VariableScope.Config.Combat:SetUseBlackList[${This.Checked}]
+										Script[EVEBot].VariableScope.Config.Combat:UseBlackList[${This.Checked}]
 									</OnLeftClick>
 								</checkbox>
 							</Children>
@@ -914,7 +876,7 @@
 								UIElement[MinArmorPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Armor: ${This.Value}"]
 							</OnLoad>
 							<OnChange>
-								Script[EVEBot].VariableScope.Config.Combat:SetMinimumArmorPct[${Int[${This.Value}]}]
+								Script[EVEBot].VariableScope.Config.Combat:MinimumArmorPct[${Int[${This.Value}]}]
 								UIElement[MinArmorPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Armor: ${This.Value}"]
 							</OnChange>
 						</slider>
@@ -940,7 +902,7 @@
 								UIElement[MinShieldPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Shield: ${This.Value}"]
 							</OnLoad>
 							<OnChange>
-								Script[EVEBot].VariableScope.Config.Combat:SetMinimumShieldPct[${Int[${This.Value}]}]
+								Script[EVEBot].VariableScope.Config.Combat:MinimumShieldPct[${Int[${This.Value}]}]
 								UIElement[MinShieldPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Shield: ${This.Value}"]
 							</OnChange>
 						</slider>
@@ -966,7 +928,7 @@
 								UIElement[MinCapPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Cap: ${This.Value}"]
 							</OnLoad>
 							<OnChange>
-								Script[EVEBot].VariableScope.Config.Combat:SetMinimumCapPct[${Int[${This.Value}]}]
+								Script[EVEBot].VariableScope.Config.Combat:MinimumCapPct[${Int[${This.Value}]}]
 								UIElement[MinCapPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Cap: ${This.Value}"]
 							</OnChange>
 						</slider>
@@ -991,11 +953,11 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Combat.AlwaysShieldBoost}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
-									Script[EVEBot].VariableScope.Config.Combat:SetAlwaysShieldBoost[${This.Checked}]
+								Script[EVEBot].VariableScope.Config.Combat:AlwaysShieldBoost[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
 						<checkbox name='cbLaunchCombatDrones'>
@@ -1008,11 +970,11 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Combat.LaunchCombatDrones}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
-									Script[EVEBot].VariableScope.Config.Combat:SetLaunchCombatDrones[${This.Checked}]
+								Script[EVEBot].VariableScope.Config.Combat:LaunchCombatDrones[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
 						<Textentry name='MinimumDronesInSpace'>
@@ -1027,7 +989,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Combat:SetMinimumDronesInSpace[${Int[${This.Text}]}]
+								Script[EVEBot].VariableScope.Config.Combat:MinimumDronesInSpace[${Int[${This.Text}]}]
 								}
 							</OnChange>
 						</Textentry>
@@ -1057,11 +1019,11 @@
 									<OnLoad>
 										if ${Script[EVEBot].VariableScope.Config.Combat.ChainSpawns}
 										{
-											This:SetChecked
+										This:SetChecked
 										}
 									</OnLoad>
 									<OnLeftClick>
-											Script[EVEBot].VariableScope.Config.Combat:SetChainSpawns[${This.Checked}]
+										Script[EVEBot].VariableScope.Config.Combat:ChainSpawns[${This.Checked}]
 									</OnLeftClick>
 								</checkbox>
 								<checkbox name='cbChainSolo'>
@@ -1074,11 +1036,11 @@
 									<OnLoad>
 										if ${Script[EVEBot].VariableScope.Config.Combat.ChainSolo}
 										{
-											This:SetChecked
+										This:SetChecked
 										}
 									</OnLoad>
 									<OnLeftClick>
-											Script[EVEBot].VariableScope.Config.Combat:SetChainSolo[${This.Checked}]
+										Script[EVEBot].VariableScope.Config.Combat:ChainSolo[${This.Checked}]
 									</OnLeftClick>
 								</checkbox>
 								<checkbox name='cbUseBeltBookmarks'>
@@ -1091,11 +1053,11 @@
 									<OnLoad>
 										if ${Script[EVEBot].VariableScope.Config.Combat.UseBeltBookmarks}
 										{
-											This:SetChecked
+										This:SetChecked
 										}
 									</OnLoad>
 									<OnLeftClick>
-											Script[EVEBot].VariableScope.Config.Combat:SetUseBeltBookmarks[${This.Checked}]
+										Script[EVEBot].VariableScope.Config.Combat:UseBeltBookmarks[${This.Checked}]
 									</OnLeftClick>
 								</checkbox>
 								<Text name='lblMinChainBounty'>
@@ -1118,7 +1080,7 @@
 									<OnChange>
 										if ${This.Text.Length} > 0
 										{
-											Script[EVEBot].VariableScope.Config.Combat:SetMinChainBounty[${Int[${This.Text}]}]
+										Script[EVEBot].VariableScope.Config.Combat:MinChainBounty[${Int[${This.Text}]}]
 										}
 									</OnChange>
 								</Textentry>
@@ -1142,7 +1104,7 @@
 									<OnChange>
 										if ${This.Text.Length} > 0
 										{
-											Script[EVEBot].VariableScope.Config.Combat:SetMaxMissileRange[${Int[${This.Text}]}]
+										Script[EVEBot].VariableScope.Config.Combat:MaxMissileRange[${Int[${This.Text}]}]
 										}
 									</OnChange>
 								</Textentry>
@@ -1151,314 +1113,313 @@
 					</tab>
 
 					<Tab name='Missions'>
-            <Text name='lblRunTheseTypes'>
-              <X>10</X>
-              <Y>10</Y>
-              <Width>130</Width>
-              <Height>18</Height>
-              <Text>Run These Types</Text>
-            </Text>
-            <Frame name='frmMissionTypes'>
-              <X>10</X>
-              <Y>30</Y>
-              <Height>100</Height>
-              <Width>130</Width>
-              <Border>2</Border>
-              <Children>
-                <checkbox name='cbRunCourierMissions'>
-                  <X>10</X>
-                  <Y>10</Y>
-                  <Height>20</Height>
-                  <Width>50</Width>
-                  <Text>Courier Missions</text>
-                    <AutoTooltip>If checked, accept and complete courier missions.</AutoTooltip>
-                    <OnLoad>
-                      if ${Script[EVEBot].VariableScope.Config.Missioneer.RunCourierMissions}
-                      {
-                      This:SetChecked
-                      }
-                    </OnLoad>
-                    <OnLeftClick>
-                      Script[EVEBot].VariableScope.Config.Missioneer:SetRunCourierMissions[${This.Checked}]
-                    </OnLeftClick>
-                  </checkbox>
-                <checkbox name='cbRunTradeMissions'>
-                  <X>10</X>
-                  <Y>30</Y>
-                  <Height>20</Height>
-                  <Width>50</Width>
-                  <Text>Trade Missions</text>
-                    <AutoTooltip>If checked, accept and complete trade missions.</AutoTooltip>
-                    <OnLoad>
-                      if ${Script[EVEBot].VariableScope.Config.Missioneer.RunTradeMissions}
-                      {
-                      This:SetChecked
-                      }
-                    </OnLoad>
-                    <OnLeftClick>
-                      Script[EVEBot].VariableScope.Config.Missioneer:SetRunTradeMissions[${This.Checked}]
-                    </OnLeftClick>
-                  </checkbox>
-                <checkbox name='cbRunMiningMissions'>
-                  <X>10</X>
-                  <Y>50</Y>
-                  <Height>20</Height>
-                  <Width>50</Width>
-                  <Text>Mining Missions</text>
-                    <AutoTooltip>If checked, accept and complete mining missions.</AutoTooltip>
-                    <OnLoad>
-                      if ${Script[EVEBot].VariableScope.Config.Missioneer.RunMiningMissions}
-                      {
-                      This:SetChecked
-                      }
-                    </OnLoad>
-                    <OnLeftClick>
-                      Script[EVEBot].VariableScope.Config.Missioneer:SetRunMiningMissions[${This.Checked}]
-                    </OnLeftClick>
-                  </checkbox>
-                <checkbox name='cbRunKillMissions'>
-                  <X>10</X>
-                  <Y>70</Y>
-                  <Height>20</Height>
-                  <Width>50</Width>
-                  <Text>Kill Missions</text>
-                    <AutoTooltip>If checked, accept and complete kill missions.</AutoTooltip>
-                    <OnLoad>
-                      if ${Script[EVEBot].VariableScope.Config.Missioneer.RunKillMissions}
-                      {
-                      This:SetChecked
-                      }
-                    </OnLoad>
-                    <OnLeftClick>
-                      Script[EVEBot].VariableScope.Config.Missioneer:SetRunKillMissions[${This.Checked}]
-                    </OnLeftClick>
-                  </checkbox>
-              </Children>
-            </Frame>
-            <Text name='lblShipNames'>
-              <X>150</X>
-              <Y>10</Y>
-              <Width>130</Width>
-              <Height>18</Height>
-              <Text>Ship Names</Text>
-            </Text>
-            <Frame name='frmShipNames'>
-              <X>150</X>
-              <Y>30</Y>
-              <Height>100</Height>
-              <Width>340</Width>
-              <Border>2</Border>
-              <Children>
-                <Text name='lblSmallHauler'>
-                  <X>10</X>
-                  <Y>10</Y>
-                  <Width>100</Width>
-                  <Height>18</Height>
-                  <Text>Small Hauler</Text>
-                  <AutoTooltip>Small Hauler (6000 m^3 or less).</AutoTooltip>
-                </Text>
-                <Textentry name='tbSmallHauler'>
-                  <X>120</X>
-                  <Y>10</Y>
-                  <Width>210</Width>
-                  <Height>18</Height>
-                  <MaxLength>64</MaxLength>
-                  <OnLoad>
-                    This:SetText[${Script[EVEBot].VariableScope.Config.Missioneer.SmallHauler}]
-                  </OnLoad>
-                  <OnChange>
-                    if ${This.Text.Length} > 0
-                    {
-                    Script[EVEBot].VariableScope.Config.Missioneer:SetSmallHauler[${This.Text}]
-                    }
-                  </OnChange>
-                </Textentry>
-                <Text name='lblLargeHauler'>
-                  <X>10</X>
-                  <Y>30</Y>
-                  <Width>100</Width>
-                  <Height>18</Height>
-                  <Text>Large Hauler</Text>
-                  <AutoTooltip>Large Hauler (more than 6000 m^3).</AutoTooltip>
-                </Text>
-                <Textentry name='tbLargeHauler'>
-                  <X>120</X>
-                  <Y>30</Y>
-                  <Width>210</Width>
-                  <Height>18</Height>
-                  <MaxLength>64</MaxLength>
-                  <OnLoad>
-                    This:SetText[${Script[EVEBot].VariableScope.Config.Missioneer.LargeHauler}]
-                  </OnLoad>
-                  <OnChange>
-                    if ${This.Text.Length} > 0
-                    {
-                    Script[EVEBot].VariableScope.Config.Missioneer:SetLargeHauler[${This.Text}]
-                    }
-                  </OnChange>
-                </Textentry>
-                <Text name='lblMiningShip'>
-                  <X>10</X>
-                  <Y>50</Y>
-                  <Width>100</Width>
-                  <Height>18</Height>
-                  <Text>Mining Ship</Text>
-                  <AutoTooltip>Mining Ship.</AutoTooltip>
-                </Text>
-                <Textentry name='tbMiningShip'>
-                  <X>120</X>
-                  <Y>50</Y>
-                  <Width>210</Width>
-                  <Height>18</Height>
-                  <MaxLength>64</MaxLength>
-                  <OnLoad>
-                    This:SetText[${Script[EVEBot].VariableScope.Config.Missioneer.MiningShip}]
-                  </OnLoad>
-                  <OnChange>
-                    if ${This.Text.Length} > 0
-                    {
-                    Script[EVEBot].VariableScope.Config.Missioneer:SetMiningShip[${This.Text}]
-                    }
-                  </OnChange>
-                </Textentry>
-                <Text name='lblCombatShip'>
-                  <X>10</X>
-                  <Y>70</Y>
-                  <Width>100</Width>
-                  <Height>18</Height>
-                  <Text>Combat Ship</Text>
-                  <AutoTooltip>Combat Ship.</AutoTooltip>
-                </Text>
-                <Textentry name='tbCombatShip'>
-                  <X>120</X>
-                  <Y>70</Y>
-                  <Width>210</Width>
-                  <Height>18</Height>
-                  <MaxLength>64</MaxLength>
-                  <OnLoad>
-                    This:SetText[${Script[EVEBot].VariableScope.Config.Missioneer.CombatShip}]
-                  </OnLoad>
-                  <OnChange>
-                    if ${This.Text.Length} > 0
-                    {
-                    Script[EVEBot].VariableScope.Config.Missioneer:SetCombatShip[${This.Text}]
-                    }
-                  </OnChange>
-                </Textentry>
-              </Children>
-            </Frame>
-            <Frame name='frmSalvageOptions'>
-              <X>10</X>
-              <Y>140</Y>
-              <Height>40</Height>
-              <Width>480</Width>
-              <Border>2</Border>
-              <Children>
-                <Text name='lblSalvageMode'>
-                  <X>10</X>
-                  <Y>12</Y>
-                  <Width>110</Width>
-                  <Height>18</Height>
-                  <Text>Salvage Mode</Text>
-                  <AutoTooltip>Solo = switch to salvage ship.  Relay = relay to salvage bot.</AutoTooltip>
-                </Text>
-                <combobox name='comboSalvageMode'>
-                  <X>115</X>
-                  <Y>10</Y>
-                  <Width>75</Width>
-                  <Height>18</Height>
-                  <FullHeight>80</FullHeight>
-                  <ButtonWidth>20</ButtonWidth>
-                  <Items>
-                    <Item Value='1'>None</Item>
-                    <Item Value='2'>Solo</Item>
-                    <Item Value='3'>Relay</Item>
-                  </Items>
-                  <OnSelect>
-                    Script[EVEBot].VariableScope.Config.Missioneer:SetSalvageMode[${This.SelectedItem.Value}]
-                    Script[EVEBot].VariableScope.Config.Missioneer:SetSalvageModeName[${This.SelectedItem.Text}]
-                  </OnSelect>
-                  <OnLoad>
-                    This:SetSelection[${Script[EVEBot].VariableScope.Config.Missioneer.SalvageMode}]
-                  </OnLoad>
-                </combobox>
-                <Text name='lblSalvageShip'>
-                  <X>200</X>
-                  <Y>12</Y>
-                  <Width>100</Width>
-                  <Height>18</Height>
-                  <Text>Salvage Ship</Text>
-                  <AutoTooltip>Ship to use for solo salvaging.</AutoTooltip>
-                </Text>
-                <Textentry name='tbSalvageShip'>
-                  <X>300</X>
-                  <Y>10</Y>
-                  <Width>170</Width>
-                  <Height>18</Height>
-                  <MaxLength>64</MaxLength>
-                  <OnLoad>
-                    This:SetText[${Script[EVEBot].VariableScope.Config.Missioneer.SalvageShip}]
-                  </OnLoad>
-                  <OnChange>
-                    if ${This.Text.Length} > 0
-                    {
-                    Script[EVEBot].VariableScope.Config.Missioneer:SetSalvageShip[${This.Text}]
-                    }
-                  </OnChange>
-                </Textentry>
-              </Children>
-            </Frame>
-            <Frame name='frmGeneralOptions'>
-              <X>10</X>
-              <Y>190</Y>
-              <Height>40</Height>
-              <Width>480</Width>
-              <Border>2</Border>
-              <Children>
-                <checkbox name='cbAvoidLowSec'>
-                  <X>10</X>
-                  <Y>10</Y>
-                  <Height>20</Height>
-                  <Width>50</Width>
-                  <Text>Avoid Lowsec</text>
-                    <AutoTooltip>If checked, avoid missions that go into low-sec.</AutoTooltip>
-                    <OnLoad>
-                      if ${Script[EVEBot].VariableScope.Config.Missioneer.AvoidLowSec}
-                      {
-                      This:SetChecked
-                      }
-                    </OnLoad>
-                    <OnLeftClick>
-                      Script[EVEBot].VariableScope.Config.Missioneer:SetAvoidLowSec[${This.Checked}]
-                    </OnLeftClick>
-                  </checkbox>
-                <Text name='lblSmallHaulerLimit'>
-                  <X>140</X>
-                  <Y>13</Y>
-                  <Width>160</Width>
-                  <Height>18</Height>
-                  <Text>Small Hauler Limit</Text>
-                  <AutoTooltip>Will use the large hauler for missions above this limit.</AutoTooltip>
-                </Text>
-                <Textentry name='tbSmallHaulerLimit'>
-                  <X>300</X>
-                  <Y>10</Y>
-                  <Width>50</Width>
-                  <Height>18</Height>
-                  <MaxLength>5</MaxLength>
-                  <OnLoad>
-                    This:SetText[${Script[EVEBot].VariableScope.Config.Missioneer.SmallHaulerLimit}]
-                  </OnLoad>
-                  <OnChange>
-                    if ${This.Text.Length} > 0
-                    {
-                    Script[EVEBot].VariableScope.Config.Missioneer:SetSmallHaulerLimit[${Int[${This.Text}]}]
-                    }
-                  </OnChange>
-                </Textentry>
-              </Children>
-            </Frame>
-            </tab>
+						<Text name='lblRunTheseTypes'>
+							<X>10</X>
+							<Y>10</Y>
+							<Width>130</Width>
+							<Height>18</Height>
+							<Text>Run These Types</Text>
+						</Text>
+						<Frame name='frmMissionTypes'>
+							<X>10</X>
+							<Y>30</Y>
+							<Height>100</Height>
+							<Width>130</Width>
+							<Border>2</Border>
+							<Children>
+								<checkbox name='cbRunCourierMissions'>
+									<X>10</X>
+									<Y>10</Y>
+									<Height>20</Height>
+									<Width>50</Width>
+									<Text>Courier Missions</text>
+									<AutoTooltip>If checked, accept and complete courier missions.</AutoTooltip>
+									<OnLoad>
+										if ${Script[EVEBot].VariableScope.Config.Missioneer.RunCourierMissions}
+										{
+										This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+										Script[EVEBot].VariableScope.Config.Missioneer:RunCourierMissions[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
+								<checkbox name='cbRunTradeMissions'>
+									<X>10</X>
+									<Y>30</Y>
+									<Height>20</Height>
+									<Width>50</Width>
+									<Text>Trade Missions</text>
+									<AutoTooltip>If checked, accept and complete trade missions.</AutoTooltip>
+									<OnLoad>
+										if ${Script[EVEBot].VariableScope.Config.Missioneer.RunTradeMissions}
+										{
+										This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+										Script[EVEBot].VariableScope.Config.Missioneer:RunTradeMissions[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
+								<checkbox name='cbRunMiningMissions'>
+									<X>10</X>
+									<Y>50</Y>
+									<Height>20</Height>
+									<Width>50</Width>
+									<Text>Mining Missions</text>
+									<AutoTooltip>If checked, accept and complete mining missions.</AutoTooltip>
+									<OnLoad>
+										if ${Script[EVEBot].VariableScope.Config.Missioneer.RunMiningMissions}
+										{
+										This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+										Script[EVEBot].VariableScope.Config.Missioneer:RunMiningMissions[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
+								<checkbox name='cbRunKillMissions'>
+									<X>10</X>
+									<Y>70</Y>
+									<Height>20</Height>
+									<Width>50</Width>
+									<Text>Kill Missions</text>
+									<AutoTooltip>If checked, accept and complete kill missions.</AutoTooltip>
+									<OnLoad>
+										if ${Script[EVEBot].VariableScope.Config.Missioneer.RunKillMissions}
+										{
+										This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+										Script[EVEBot].VariableScope.Config.Missioneer:RunKillMissions[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
+							</Children>
+						</Frame>
+						<Text name='lblShipNames'>
+							<X>150</X>
+							<Y>10</Y>
+							<Width>130</Width>
+							<Height>18</Height>
+							<Text>Ship Names</Text>
+						</Text>
+						<Frame name='frmShipNames'>
+							<X>150</X>
+							<Y>30</Y>
+							<Height>100</Height>
+							<Width>340</Width>
+							<Border>2</Border>
+							<Children>
+								<Text name='lblSmallHauler'>
+									<X>10</X>
+									<Y>10</Y>
+									<Width>100</Width>
+									<Height>18</Height>
+									<Text>Small Hauler</Text>
+									<AutoTooltip>Small Hauler (6000 m^3 or less).</AutoTooltip>
+								</Text>
+								<Textentry name='tbSmallHauler'>
+									<X>120</X>
+									<Y>10</Y>
+									<Width>210</Width>
+									<Height>18</Height>
+									<MaxLength>64</MaxLength>
+									<OnLoad>
+										This:SetText[${Script[EVEBot].VariableScope.Config.Missioneer.SmallHauler}]
+									</OnLoad>
+									<OnChange>
+										if ${This.Text.Length} > 0
+										{
+										Script[EVEBot].VariableScope.Config.Missioneer:SmallHauler[${This.Text}]
+										}
+									</OnChange>
+								</Textentry>
+								<Text name='lblLargeHauler'>
+									<X>10</X>
+									<Y>30</Y>
+									<Width>100</Width>
+									<Height>18</Height>
+									<Text>Large Hauler</Text>
+									<AutoTooltip>Large Hauler (more than 6000 m^3).</AutoTooltip>
+								</Text>
+								<Textentry name='tbLargeHauler'>
+									<X>120</X>
+									<Y>30</Y>
+									<Width>210</Width>
+									<Height>18</Height>
+									<MaxLength>64</MaxLength>
+									<OnLoad>
+										This:SetText[${Script[EVEBot].VariableScope.Config.Missioneer.LargeHauler}]
+									</OnLoad>
+									<OnChange>
+										if ${This.Text.Length} > 0
+										{
+										Script[EVEBot].VariableScope.Config.Missioneer:LargeHauler[${This.Text}]
+										}
+									</OnChange>
+								</Textentry>
+								<Text name='lblMiningShip'>
+									<X>10</X>
+									<Y>50</Y>
+									<Width>100</Width>
+									<Height>18</Height>
+									<Text>Mining Ship</Text>
+									<AutoTooltip>Mining Ship.</AutoTooltip>
+								</Text>
+								<Textentry name='tbMiningShip'>
+									<X>120</X>
+									<Y>50</Y>
+									<Width>210</Width>
+									<Height>18</Height>
+									<MaxLength>64</MaxLength>
+									<OnLoad>
+										This:SetText[${Script[EVEBot].VariableScope.Config.Missioneer.MiningShip}]
+									</OnLoad>
+									<OnChange>
+										if ${This.Text.Length} > 0
+										{
+										Script[EVEBot].VariableScope.Config.Missioneer:MiningShip[${This.Text}]
+										}
+									</OnChange>
+								</Textentry>
+								<Text name='lblCombatShip'>
+									<X>10</X>
+									<Y>70</Y>
+									<Width>100</Width>
+									<Height>18</Height>
+									<Text>Combat Ship</Text>
+									<AutoTooltip>Combat Ship.</AutoTooltip>
+								</Text>
+								<Textentry name='tbCombatShip'>
+									<X>120</X>
+									<Y>70</Y>
+									<Width>210</Width>
+									<Height>18</Height>
+									<MaxLength>64</MaxLength>
+									<OnLoad>
+										This:SetText[${Script[EVEBot].VariableScope.Config.Missioneer.CombatShip}]
+									</OnLoad>
+									<OnChange>
+										if ${This.Text.Length} > 0
+										{
+										Script[EVEBot].VariableScope.Config.Missioneer:CombatShip[${This.Text}]
+										}
+									</OnChange>
+								</Textentry>
+							</Children>
+						</Frame>
+						<Frame name='frmSalvageOptions'>
+							<X>10</X>
+							<Y>140</Y>
+							<Height>40</Height>
+							<Width>480</Width>
+							<Border>2</Border>
+							<Children>
+								<Text name='lblSalvageMode'>
+									<X>10</X>
+									<Y>12</Y>
+									<Width>110</Width>
+									<Height>18</Height>
+									<Text>Salvage Mode</Text>
+									<AutoTooltip>Solo = switch to salvage ship.	Relay = relay to salvage bot.</AutoTooltip>
+								</Text>
+								<combobox name='comboSalvageMode'>
+									<X>115</X>
+									<Y>10</Y>
+									<Width>75</Width>
+									<Height>18</Height>
+									<FullHeight>80</FullHeight>
+									<ButtonWidth>20</ButtonWidth>
+									<Items>
+										<Item Value='1'>None</Item>
+										<Item Value='2'>Solo</Item>
+										<Item Value='3'>Relay</Item>
+									</Items>
+									<OnSelect>
+										Script[EVEBot].VariableScope.Config.Missioneer:SalvageMode[${This.SelectedItem.Text}]
+									</OnSelect>
+									<OnLoad>
+										This.ItemByText[${Script[EVEBot].VariableScope.Config.Missioneer.SalvageMode}]:Select
+									</OnLoad>
+								</combobox>
+								<Text name='lblSalvageShip'>
+									<X>200</X>
+									<Y>12</Y>
+									<Width>100</Width>
+									<Height>18</Height>
+									<Text>Salvage Ship</Text>
+									<AutoTooltip>Ship to use for solo salvaging.</AutoTooltip>
+								</Text>
+								<Textentry name='tbSalvageShip'>
+									<X>300</X>
+									<Y>10</Y>
+									<Width>170</Width>
+									<Height>18</Height>
+									<MaxLength>64</MaxLength>
+									<OnLoad>
+										This:SetText[${Script[EVEBot].VariableScope.Config.Missioneer.SalvageShip}]
+									</OnLoad>
+									<OnChange>
+										if ${This.Text.Length} > 0
+										{
+										Script[EVEBot].VariableScope.Config.Missioneer:SalvageShip[${This.Text}]
+										}
+									</OnChange>
+								</Textentry>
+							</Children>
+						</Frame>
+						<Frame name='frmGeneralOptions'>
+							<X>10</X>
+							<Y>190</Y>
+							<Height>40</Height>
+							<Width>480</Width>
+							<Border>2</Border>
+							<Children>
+								<checkbox name='cbAvoidLowSec'>
+									<X>10</X>
+									<Y>10</Y>
+									<Height>20</Height>
+									<Width>50</Width>
+									<Text>Avoid Lowsec</text>
+									<AutoTooltip>If checked, avoid missions that go into low-sec.</AutoTooltip>
+									<OnLoad>
+										if ${Script[EVEBot].VariableScope.Config.Missioneer.AvoidLowSec}
+										{
+										This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+										Script[EVEBot].VariableScope.Config.Missioneer:AvoidLowSec[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
+								<Text name='lblSmallHaulerLimit'>
+									<X>140</X>
+									<Y>13</Y>
+									<Width>160</Width>
+									<Height>18</Height>
+									<Text>Small Hauler Limit</Text>
+									<AutoTooltip>Will use the large hauler for missions above this limit.</AutoTooltip>
+								</Text>
+								<Textentry name='tbSmallHaulerLimit'>
+									<X>300</X>
+									<Y>10</Y>
+									<Width>50</Width>
+									<Height>18</Height>
+									<MaxLength>5</MaxLength>
+									<OnLoad>
+										This:SetText[${Script[EVEBot].VariableScope.Config.Missioneer.SmallHaulerLimit}]
+									</OnLoad>
+									<OnChange>
+										if ${This.Text.Length} > 0
+										{
+										Script[EVEBot].VariableScope.Config.Missioneer:SmallHaulerLimit[${Int[${This.Text}]}]
+										}
+									</OnChange>
+								</Textentry>
+							</Children>
+						</Frame>
+					</tab>
 
 					<tab name='Hauler'>
 						<Text name='HaulerModeLabel'>
@@ -1481,32 +1442,31 @@
 								<Item Value='3'>Service On-Demand</Item>
 							</Items>
 							<OnSelect>
-								Script[EVEBot].VariableScope.Config.Hauler:SetHaulerMode[${This.SelectedItem.Value}]
-								Script[EVEBot].VariableScope.Config.Hauler:SetHaulerModeName[${This.SelectedItem.Text}]
+								Script[EVEBot].VariableScope.Config.Hauler:HaulerMode[${This.SelectedItem.Text}]
 							</OnSelect>
 							<OnLoad>
-								This:SetSelection[${Script[EVEBot].VariableScope.Config.Hauler.HaulerMode}]
+								This.ItemByText[${Script[EVEBot].VariableScope.Config.Hauler.HaulerMode}]:Select
 							</OnLoad>
 						</combobox>
 						<!--
 						<checkbox Name='cbMultisystemSupport'>
-							<X>10</X>
-							<Y>30</Y>
-							<Height>20</Height>
-							<Width>100</Width>
-							<Text>Support Multi-System Hauling</Text>
-							<AutoTooltip>
-								When checked the hauler will drop-off ore at bookmarked station (or POS) which may be in another system.
-							</AutoTooltip>
-							<OnLoad>
-								if ${Script[EVEBot].VariableScope.Config.Hauler.MultiSystemSupport}
-								{
-									This:SetChecked
-								}
-							</OnLoad>
-							<OnLeftClick>
-									Script[EVEBot].VariableScope.Config.Hauler:SetMultiSystemSupport[${This.Checked}]
-							</OnLeftClick>
+						<X>10</X>
+						<Y>30</Y>
+						<Height>20</Height>
+						<Width>100</Width>
+						<Text>Support Multi-System Hauling</Text>
+						<AutoTooltip>
+						When checked the hauler will drop-off ore at bookmarked station (or POS) which may be in another system.
+						</AutoTooltip>
+						<OnLoad>
+						if ${Script[EVEBot].VariableScope.Config.Hauler.MultiSystemSupport}
+						{
+						This:SetChecked
+						}
+						</OnLoad>
+						<OnLeftClick>
+						Script[EVEBot].VariableScope.Config.Hauler:MultiSystemSupport[${This.Checked}]
+						</OnLeftClick>
 						</checkbox>
 						-->
 						<Text name='DropOffLabel'>
@@ -1528,7 +1488,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Hauler:SetDropOffBookmark[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Hauler:DropOffBookmark[${This.Text}]
 								}
 							</OnChange>
 						</Textentry>
@@ -1551,7 +1511,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Hauler:SetMiningSystemBookmark[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Hauler:MiningSystemBookmark[${This.Text}]
 								}
 							</OnChange>
 						</Textentry>
@@ -1582,11 +1542,10 @@
 								<Item Value='7'>Scavenger</Item>
 							</Items>
 							<OnSelect>
-								Script[EVEBot].VariableScope.Config.Freighter:SetFreighterMode[${This.SelectedItem.Value}]
-								Script[EVEBot].VariableScope.Config.Freighter:SetFreighterModeName[${This.SelectedItem.Text}]
+								Script[EVEBot].VariableScope.Config.Freighter:FreighterMode[${This.SelectedItem.Text}]
 							</OnSelect>
 							<OnLoad>
-								This:SetSelection[${Script[EVEBot].VariableScope.Config.Freighter.FreighterMode}]
+								This.ItemByText[${Script[EVEBot].VariableScope.Config.Freighter.FreighterMode}]:Select
 							</OnLoad>
 						</combobox>
 						<Text name='lblDestination'>
@@ -1609,15 +1568,15 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Freighter:SetDestination[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Freighter:Destination[${This.Text}]
 								}
 								else
 								{
-									Script[EVEBot].VariableScope.Config.Freighter:SetDestination[""]
+								Script[EVEBot].VariableScope.Config.Freighter:Destination[""]
 								}
 							</OnChange>
 						</Textentry>
-						<Text name='lblSourcePrefix'>
+						<Text name='lblSourceBookmarkPrefix'>
 							<X>10</X>
 							<Y>62</Y>
 							<Width>200</Width>
@@ -1632,16 +1591,16 @@
 							<Height>18</Height>
 							<MaxLength>10</MaxLength>
 							<OnLoad>
-								This:SetText[${Script[EVEBot].VariableScope.Config.Freighter.SourcePrefix}]
+								This:SetText[${Script[EVEBot].VariableScope.Config.Freighter.SourceBookmarkPrefix}]
 							</OnLoad>
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Freighter:SetSourcePrefix[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Freighter:SourceBookmarkPrefix[${This.Text}]
 								}
 								else
 								{
-									Script[EVEBot].VariableScope.Config.Freighter:SetSourcePrefix[""]
+								Script[EVEBot].VariableScope.Config.Freighter:SourceBookmarkPrefix[""]
 								}
 							</OnChange>
 						</Textentry>
@@ -1664,7 +1623,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Freighter:SetRegionName[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Freighter:RegionName[${This.Text}]
 								}
 							</OnChange>
 						</Textentry>
@@ -1681,11 +1640,12 @@
 									<Width>98%</Width>
 									<Height>98%</Height>
 									<Wrap>1</Wrap>
-									<Text>NOTE: Only "Source and Destination" mode works at the moment.  "Source and Destination" mode moves everything from stations who's bookmark begins with the source prefix to the destination station.  "Asset Gather" mode moves all assets shown in the asset window to the destination station.  You can optionally limit the freighter to a single system in this mode.  "Move Minerals to Buyer" mode picks up minerals and moves them to the highest bidder's station.  It does not sell the goods for you.</Text>
+									<Text>NOTE: Only "Source and Destination" mode works at the moment.	"Source and Destination" mode moves everything from stations who's bookmark begins with the source prefix to the destination station.	"Asset Gather" mode moves all assets shown in the asset window to the destination station.	You can optionally limit the freighter to a single system in this mode.	"Move Minerals to Buyer" mode picks up minerals and moves them to the highest bidder's station.	It does not sell the goods for you.</Text>
 								</Text>
 							</Children>
 						</Frame>
 					</tab>
+
 					<tab name='Labels'>
 						<Text name='Label1'>
 							<X>10</X>
@@ -1714,11 +1674,11 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Labels:SetSafeSpotPrefix[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Labels:SafeSpotPrefix[${This.Text}]
 								}
 								else
 								{
-									Script[EVEBot].VariableScope.Config.Labels:SetSafeSpotPrefix[""]
+								Script[EVEBot].VariableScope.Config.Labels:SafeSpotPrefix[""]
 								}
 							</OnChange>
 						</Textentry>
@@ -1742,11 +1702,11 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Labels:SetOreBeltPrefix[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Labels:OreBeltPrefix[${This.Text}]
 								}
 								else
 								{
-									Script[EVEBot].VariableScope.Config.Labels:SetOreBeltPrefix[""]
+								Script[EVEBot].VariableScope.Config.Labels:OreBeltPrefix[""]
 								}
 							</OnChange>
 						</Textentry>
@@ -1770,11 +1730,11 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Labels:SetIceBeltPrefix[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Labels:IceBeltPrefix[${This.Text}]
 								}
 								else
 								{
-									Script[EVEBot].VariableScope.Config.Labels:SetIceBeltPrefix[""]
+								Script[EVEBot].VariableScope.Config.Labels:IceBeltPrefix[""]
 								}
 							</OnChange>
 						</Textentry>

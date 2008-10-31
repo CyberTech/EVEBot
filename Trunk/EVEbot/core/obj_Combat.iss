@@ -1,6 +1,6 @@
  #ifndef __OBJ_COMBAT__
  #define __OBJ_COMBAT__
- 
+
 /*
 		The combat object
 
@@ -33,7 +33,7 @@
 				{
 						if ${EVEBot.Paused}
 								return
-						if !${Config.Common.BotModeName.Equal[Miner]}
+						if !${Config.Common.BotMode.Equal[Miner]}
 								return
 						;; bot module frame action code
 						;; ...
@@ -44,7 +44,7 @@
 
 				function ProcessState()
 				{
-						if !${Config.Common.BotModeName.Equal[Miner]}
+						if !${Config.Common.BotMode.Equal[Miner]}
 								return
 
 						; call the combat object state processing
@@ -125,7 +125,7 @@ objectdef obj_Combat
 	  		This.CurrentState:Set["INSTATION"]
 	  		return
 		}
-		
+
 		if ${EVEBot.ReturnToStation}
 		{
 			This.CurrentState:Set["FLEE"]
@@ -173,17 +173,17 @@ objectdef obj_Combat
 				call This.Flee
 				This.Override:Set[TRUE]
 			}
-			
+
 			if (!${Ship.IsAmmoAvailable} &&  ${Config.Combat.RunOnLowAmmo})
 			{
 				; TODO - what to do about being warp scrambled in this case?
 				call This.Flee
 				This.Override:Set[TRUE]
 			}
-			
+
 			This:CheckTank
 		}
-		
+
 		switch ${This.CurrentState}
 		{
 			case INSTATION
@@ -206,7 +206,7 @@ objectdef obj_Combat
 
 	function Fight()
 	{
-		if ${Config.Common.BotModeName.Equal[Ratter]}
+		if ${Config.Common.BotMode.Equal[Ratter]}
 		{
 			Ship:Deactivate_Cloak
 			while ${Ship.IsCloaked}
@@ -215,13 +215,13 @@ objectdef obj_Combat
 			}
 			;Ship:Offline_Cloak
 			;Ship:Online_Salvager
-	
+
 			; Reload the weapons -if- ammo is below 30% and they arent firing
 			Ship:Reload_Weapons[FALSE]
-	
+
 			; Activate the weapons, the modules class checks if there's a target (no it doesn't - ct)
 			Ship:Activate_StasisWebs
-			
+
 			if ${Me.ActiveTarget.Distance} > ${Ship.OptimalWeaponRange}
 			{
 				UI:UpdateConsole["Active target out of range!!"]
@@ -230,8 +230,8 @@ objectdef obj_Combat
 			{
 				Ship:Activate_Weapons
 			}
-			
-			
+
+
 			Ship.Drones:SendDrones
 		}
 	}
@@ -291,7 +291,7 @@ objectdef obj_Combat
 				Ship.Drones:LaunchAll[]
 			}
 		}
-		
+
 		if ${This.Fled}
 		{
 			/* don't leave the "fled" state until we regen */
@@ -314,7 +314,7 @@ objectdef obj_Combat
 			UI:UpdateConsole["Armor is at ${_Me.Ship.ArmorPct.Int}%: ${Me.Ship.Armor.Int}/${Me.Ship.MaxArmor.Int}", LOG_CRITICAL]
 			UI:UpdateConsole["Shield is at ${_Me.Ship.ShieldPct.Int}%: ${Me.Ship.Shield.Int}/${Me.Ship.MaxShield.Int}", LOG_CRITICAL]
 			UI:UpdateConsole["Cap is at ${_Me.Ship.CapacitorPct.Int}%: ${Me.Ship.Capacitor.Int}/${Me.Ship.MaxCapacitor.Int}", LOG_CRITICAL]
-			
+
 			if !${Config.Combat.RunOnLowTank}
 			{
 				UI:UpdateConsole["Run On Low Tank Disabled: Fighting", LOG_CRITICAL]

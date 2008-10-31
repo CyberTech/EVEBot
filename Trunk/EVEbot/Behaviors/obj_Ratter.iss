@@ -1,30 +1,30 @@
 /*
 	The ratter object
-	
-	The obj_Ratter object is a bot module designed to be used with 
+
+	The obj_Ratter object is a bot module designed to be used with
 	EVEBOT.  The ratter bot will warp from belt to belt and wtfbbqpwn
 	any NPC ships it finds.
-	
-	-- GliderPro	
+
+	-- GliderPro
 */
 
 objectdef obj_Ratter
 {
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
-	
+
 	/* the bot logic is currently based on a state machine */
 	variable string CurrentState
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 2
 	variable obj_Combat Combat
-	
+
 	method Initialize()
 	{
 		Event[OnFrame]:AttachAtom[This:Pulse]
 
 		BotModules:Insert["Ratter"]
-		
+
 		; Startup in fight mode, so that it checks current belt for rats, if we happen to be in one.
 		This.CurrentState:Set["FIGHT"]
 		Targets:ResetTargets
@@ -36,7 +36,7 @@ objectdef obj_Ratter
 		UI:UpdateConsole["obj_Ratter: Initialized", LOG_MINOR]
 	}
 
-	
+
 	method Pulse()
 	{
 		if ${EVEBot.Paused}
@@ -44,7 +44,7 @@ objectdef obj_Ratter
 			return
 		}
 
-		if !${Config.Common.BotModeName.Equal[Ratter]}
+		if !${Config.Common.BotMode.Equal[Ratter]}
 		{
 			return
 		}
@@ -57,19 +57,19 @@ objectdef obj_Ratter
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
     		This.NextPulse:Update
 		}
-		
+
 		;; call the combat frame action code
 		This.Combat:Pulse
 	}
-		
+
 	method Shutdown()
 	{
-		Event[OnFrame]:DetachAtom[This:Pulse]		
+		Event[OnFrame]:DetachAtom[This:Pulse]
 	}
 
 	/* NOTE: The order of these if statements is important!! */
-	
-	;; STATE MACHINE:  * -> IDLE -> MOVE -> PCCHECK -> FIGHT -> *  
+
+	;; STATE MACHINE:  * -> IDLE -> MOVE -> PCCHECK -> FIGHT -> *
 	method SetState()
 	{
 		if ${EVEBot.ReturnToStation}
@@ -77,7 +77,7 @@ objectdef obj_Ratter
 			This.CurrentState:Set["FLEE"]
 			return
 		}
-		
+
 		/* Combat module handles all fleeing states now */
 		switch ${This.CurrentState}
 		{
@@ -91,19 +91,19 @@ objectdef obj_Ratter
 
 	/* this function is called repeatedly by the main loop in EveBot.iss */
 	function ProcessState()
-	{				
+	{
 	    /* don't do anything if we aren't in Ratter bot mode! */
-		if !${Config.Common.BotModeName.Equal[Ratter]}
+		if !${Config.Common.BotMode.Equal[Ratter]}
 			return
-	    
+
 		; call the combat object state processing
 		call This.Combat.ProcessState
-		
-		; see if combat object wants to 
+
+		; see if combat object wants to
 		; override bot module state.
 		if ${This.Combat.Override}
 			return
-	    		    
+
 		;UI:UpdateConsole["DEBUG: ${This.CurrentState}"]
 		switch ${This.CurrentState}
 		{
@@ -113,16 +113,16 @@ objectdef obj_Ratter
 			case FIGHT
 				call This.Fight
 				break
-		}	
+		}
 	}
-	
+
 	function Move()
 	{
 		if ${Social.IsSafe}
 		{
-			Ship:Deactivate_Weapons		
+			Ship:Deactivate_Weapons
 			call Belts.WarpToNextBelt
-			; This will reset target information about the belt 
+			; This will reset target information about the belt
 			; (its needed for chaining)
 			Targets:ResetTargets
 			; Reload just before targeting everything, the ship
@@ -130,10 +130,10 @@ objectdef obj_Ratter
 			; active
 			Ship:Reload_Weapons[TRUE]
 		}
-		
+
 		call This.PlayerCheck
 	}
-	
+
 	function PlayerCheck()
 	{
 		if !${Targets.PC} && ${Targets.NPC}
@@ -147,12 +147,12 @@ objectdef obj_Ratter
 			This.CurrentState:Set["MOVE"]
 		}
 	}
-	
+
 	function Fight()
-	{	/* combat logic */	
+	{	/* combat logic */
 		;; just handle targetting, obj_Combat does the rest
 		Ship:Activate_SensorBoost
-		
+
 		if ${Targets.TargetNPCs} && ${Social.IsSafe}
 		{
 			if ${Targets.SpecialTargetPresent}
@@ -165,7 +165,7 @@ objectdef obj_Ratter
 		}
 		else
 		{
-			This.CurrentState:Set["IDLE"]		
+			This.CurrentState:Set["IDLE"]
 		}
 	}
 }

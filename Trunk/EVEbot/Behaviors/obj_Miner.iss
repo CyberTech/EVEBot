@@ -52,7 +52,7 @@ objectdef obj_Miner
 			return
 		}
 
-		if !${Config.Common.BotModeName.Equal[Miner]}
+		if !${Config.Common.BotMode.Equal[Miner]}
 		{
 			; There's no reason at all for the miner to check state if it's not a miner
 			return
@@ -71,7 +71,7 @@ objectdef obj_Miner
 
 	function ProcessState()
 	{
-		if !${Config.Common.BotModeName.Equal[Miner]}
+		if !${Config.Common.BotMode.Equal[Miner]}
 		{
 			; There's no reason at all for the miner to check state if it's not a miner
 			return
@@ -101,7 +101,7 @@ objectdef obj_Miner
 				call Hauler.Haul
 				break
 			case DROPOFF
-				switch ${Config.Miner.DeliveryLocationTypeName}
+				switch ${Config.Miner.DeliveryLocationType}
 				{
 					case Station
 						; Gets info about the crystals currently loaded
@@ -126,7 +126,7 @@ objectdef obj_Miner
 						This:NotifyHaulers[]
 						break
 					Default
-						UI:UpdateConsole["ERROR: Delivery Location Type ${Config.Miner.DeliveryLocationTypeName} unknown"]
+						UI:UpdateConsole["ERROR: Delivery Location Type ${Config.Miner.DeliveryLocationType} unknown"]
 						EVEBot.ReturnToStation:Set[TRUE]
 						break
 				}
@@ -182,7 +182,6 @@ objectdef obj_Miner
 
 	function Abort_Check()
 	{
-		call Config.Common.IncAbortCount
 		; abort check, this will allow the bot to continue botting if it is a temp abort or something that can
 		; if there is no abort type it will pause the script like before and wait...
 
@@ -342,7 +341,7 @@ objectdef obj_Miner
 				UI:UpdateConsole["Warning: Low Standing player in system, docking"]
 			}
 
-			if ${Config.Miner.DeliveryLocationTypeName.Equal[Jetcan]} && ${Ship.CargoHalfFull}
+			if ${Config.Miner.DeliveryLocationType.Equal[Jetcan]} && ${Ship.CargoHalfFull}
 			{
 				call Cargo.TransferOreToJetCan
 				This:NotifyHaulers[]
@@ -392,7 +391,7 @@ objectdef obj_Miner
 						continue
 					}
 
-					/* TODO: CyberTech - this concentrates fire fine if there's only 1 target, but if there's multiple targets 
+					/* TODO: CyberTech - this concentrates fire fine if there's only 1 target, but if there's multiple targets
 						it still prefers to distribute. Ice mining shouldn't distribute
 					*/
 					if (${This.ConcentrateFire} || \

@@ -160,8 +160,8 @@ objectdef obj_Station
 
 		;Awaiting ISXEVE Drone Bay Support
 		/*
-		echo "${Config.Common.DronesInBay} > ${Ship.Drones.DronesInBay}"
-		if ${Config.Common.DronesInBay} > ${Ship.Drones.DronesInBay}
+		echo "${Config.Common.MinimumDronesInBay} > ${Ship.Drones.DronesInBay}"
+		if ${Config.Common.MinimumDronesInBay} > ${Ship.Drones.DronesInBay}
 		{
 		call Station.OpenHangar
 		call This.GetStationItems

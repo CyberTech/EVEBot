@@ -1,25 +1,25 @@
 /*
 	The hauler object and subclasses
-	
+
 	The obj_Hauler object contains functions that a usefull in creating
 	a hauler bot.  The obj_OreHauler object extends obj_Hauler and adds
 	functions that are useful for bots the haul ore in conjunction with
 	one or more miner bots.
-	
-	-- GliderPro	
+
+	-- GliderPro
 */
 
 objectdef lootable
 {
 	variable bool m_empty		/* used for wrecks  */
 	variable bool m_skip			/* used for jetcans */
-	
+
 	method Initialize()
-	{			
+	{
 		m_empty:Set[FALSE]
 		m_skip:Set[FALSE]
 	}
-	
+
 	method Shutdown()
 	{
 	}
@@ -42,20 +42,20 @@ objectdef obj_Hauler
 
 	/* The name of the player we are hauling for (null if using m_corpName) */
 	variable string m_playerName
-	
+
 	/* The name of the corp we are hauling for (null if using m_playerName) */
 	variable string m_corpName
-		
+
 	method Initialize()
-	{			
+	{
 		UI:UpdateConsole["obj_Hauler: Initialized", LOG_MINOR]
 	}
-	
+
 	method Shutdown()
 	{
 		/* nothing needs cleanup AFAIK */
 	}
-		
+
 	/* SetupEvents will attach atoms to all of the events used by the bot */
 	method SetupEvents()
 	{
@@ -68,7 +68,7 @@ objectdef obj_Hauler
 		variable int JetCanCount
 		variable int JetCanCounter
 		variable string tempString
-			
+
 		JetCanCounter:Set[1]
 		JetCanCount:Set[${EVE.GetEntityIDs[JetCan,GroupID,12]}]
 		do
@@ -89,24 +89,24 @@ objectdef obj_Hauler
 			}
 		}
 		while ${JetCanCounter:Inc} <= ${JetCanCount}
-		
+
 		return 0	/* no can found */
 	}
-	
+
 	member:int OldNearestMatchingJetCan()
 	{
 		variable index:int JetCan
 		variable int JetCanCount
 		variable int JetCanCounter
 		variable string tempString
-			
+
 		JetCanCounter:Set[1]
 		JetCanCount:Set[${EVE.GetEntityIDs[JetCan,GroupID,12]}]
 		do
 		{
 			if ${Entity[${JetCan.Get[${JetCanCounter}]}](exists)}
 			{
- 				if ${m_playerName.Length} 
+ 				if ${m_playerName.Length}
  				{
  					tempString:Set[${Entity[${JetCan.Get[${JetCanCounter}]}].Owner.Name}]
  					echo "DEBUG: owner ${tempString}"
@@ -118,7 +118,7 @@ objectdef obj_Hauler
 						return ${Entity[${JetCan.Get[${JetCanCounter}]}].ID}
  					}
  				}
- 				elseif ${m_corpName.Length} 
+ 				elseif ${m_corpName.Length}
  				{
  					tempString:Set[${Entity[${JetCan.Get[${JetCanCounter}]}].Owner.Corporation}]
  					echo "DEBUG: corp ${tempString}"
@@ -131,7 +131,7 @@ objectdef obj_Hauler
  				else
  				{
 					echo "No matching jetcans found"
- 				} 				
+ 				}
 			}
 			else
 			{
@@ -139,7 +139,7 @@ objectdef obj_Hauler
 			}
 		}
 		while ${JetCanCounter:Inc} <= ${JetCanCount}
-		
+
 		return 0	/* no can found */
 	}
 }
@@ -148,7 +148,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 {
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
-	
+
 	/* This variable is set by a remote event.  When it is non-zero, */
 	/* the bot will undock and seek out the fleet memeber.  After the */
 	/* member's cargo has been loaded the bot will zero this out.    */
@@ -161,15 +161,15 @@ objectdef obj_OreHauler inherits obj_Hauler
 
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 2
-	
+
 	variable index:bookmark SafeSpots
 	variable iterator SafeSpotIterator
-	
+
 	variable queue:fleetmember FleetMembers
 	variable queue:entity     Entities
-	
+
 	variable bool PickupFailed = FALSE
-	
+
 	method Initialize(string player, string corp)
 	{
 		m_fleetMemberID:Set[-1]
@@ -182,7 +182,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		BotModules:Insert["Hauler"]
 	}
 
-	
+
 	method Pulse()
 	{
 		if ${EVEBot.Paused}
@@ -190,7 +190,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 			return
 		}
 
-		if !${Config.Common.BotModeName.Equal[Hauler]}
+		if !${Config.Common.BotMode.Equal[Hauler]}
 		{
 			return
 		}
@@ -204,10 +204,10 @@ objectdef obj_OreHauler inherits obj_Hauler
     		This.NextPulse:Update
 		}
 	}
-		
+
 	method Shutdown()
 	{
-		Event[OnFrame]:DetachAtom[This:Pulse]		
+		Event[OnFrame]:DetachAtom[This:Pulse]
 		Event[EVEBot_Miner_Full]:DetachAtom[This:MinerFull]
 	}
 
@@ -220,30 +220,30 @@ objectdef obj_OreHauler inherits obj_Hauler
 		LavishScript:RegisterEvent[EVEBot_Miner_Full]
 		Event[EVEBot_Miner_Full]:AttachAtom[This:MinerFull]
 	}
-	
+
 	/* A miner's jetcan is full.  Let's go get the ore.  */
 	method MinerFull(string haulParams)
 	{
 		echo "DEBUG: obj_OreHauler:MinerFull... ${haulParams}"
-		
+
 		variable int charID = -1
 		variable int systemID = -1
 		variable int beltID = -1
-		
+
 		charID:Set[${haulParams.Token[1,","]}]
 		systemID:Set[${haulParams.Token[2,","]}]
 		beltID:Set[${haulParams.Token[3,","]}]
-		
+
 		echo "DEBUG: obj_OreHauler:MinerFull... ${charID} ${systemID} ${beltID}"
 
 		m_fleetMemberID:Set[${charID}]
-		m_SystemID:Set[${systemID}]		
-		m_BeltID:Set[${beltID}]				
-	}	
-	
+		m_SystemID:Set[${systemID}]
+		m_BeltID:Set[${beltID}]
+	}
+
 	/* this function is called repeatedly by the main loop in EveBot.iss */
 	function ProcessState()
-	{				
+	{
 		switch ${This.CurrentState}
 		{
 			case IDLE
@@ -267,9 +267,9 @@ objectdef obj_OreHauler inherits obj_Hauler
 				call This.DropOff
 				This.PickupFailed:Set[FALSE]
 				break
-		}	
+		}
 	}
-	
+
 	/* NOTE: The order of these if statements is important!! */
 	method SetState()
 	{
@@ -306,7 +306,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		variable int QuantityToMove
 
 		UI:UpdateConsole["DEBUG: obj_OreHauler.LootEntity ${id} ${leave}"]
-		
+
 		Entity[${id}]:DoGetCargo[ContainerCargo]
 		ContainerCargo:GetIterator[Cargo]
 		if ${Cargo:First(exists)}
@@ -335,16 +335,16 @@ objectdef obj_OreHauler inherits obj_Hauler
 				{
 					This.PickupFailed:Set[TRUE]
 				}
-								
+
 				if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
 				{
 					/* TODO - this needs to keep a queue of bookmarks, named for the can ie, "Can CORP hh:mm", of partially looted cans */
 					/* Be sure its names, and not ID.  We shouldn't store anything in a bookmark name that we shouldnt know */
-					
+
 					UI:UpdateConsole["DEBUG: obj_Hauler.LootEntity: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
 					break
 				}
-			} 
+			}
 			while ${Cargo:Next(exists)}
 		}
 
@@ -389,7 +389,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		}
 		else
 		{
-			switch ${Config.Miner.DeliveryLocationTypeName}
+			switch ${Config.Miner.DeliveryLocationType}
 			{
 				case Station
 					call Station.Dock
@@ -405,19 +405,19 @@ objectdef obj_OreHauler inherits obj_Hauler
 			}
 		}
 	}
-	
+
 	/* The HaulOnDemand function will be called repeatedly   */
 	/* until we leave the HAUL state due to downtime,        */
 	/* agression, or a full cargo hold.  The Haul function   */
 	/* should do one (and only one) of the following actions */
 	/* each it is called.									 */
-	/*                                                       */ 
-	/* 1) Warp to fleet member and loot nearby cans           */ 
-	/* 2) Warp to next safespot                              */ 
-	/* 3) Travel to new system (if required)                 */ 
-	/*                                                       */ 
+	/*                                                       */
+	/* 1) Warp to fleet member and loot nearby cans           */
+	/* 2) Warp to next safespot                              */
+	/* 3) Travel to new system (if required)                 */
+	/*                                                       */
 	function HaulOnDemand()
-	{		
+	{
 		if ${m_fleetMemberID} > 0 && ${m_SystemID} == ${_Me.SolarSystemID}
 		{
 			call This.WarpToFleetMemberAndLoot ${m_fleetMemberID}
@@ -428,16 +428,16 @@ objectdef obj_OreHauler inherits obj_Hauler
 		}
 	}
 
-	/* 1) Warp to fleet member and loot nearby cans           */ 
-	/* 2) Repeat until cargo hold is full                    */ 
-	/*                                                       */ 
+	/* 1) Warp to fleet member and loot nearby cans           */
+	/* 2) Repeat until cargo hold is full                    */
+	/*                                                       */
 	function HaulForFleet()
-	{		
-		if ${FleetMembers.Used} == 0 
+	{
+		if ${FleetMembers.Used} == 0
 		{
 			This:BuildFleetMemberList
 			call This.WarpToNextSafeSpot
-		}		
+		}
 		else
 		{
 			if ${FleetMembers.Peek(exists)} && \
@@ -448,9 +448,9 @@ objectdef obj_OreHauler inherits obj_Hauler
 			FleetMembers:Dequeue
 		}
 	}
-	
+
 	function HaulAllBelts()
-	{		
+	{
     	UI:UpdateConsole["Service All Belts mode not implemented!"]
 		EVEBot.ReturnToStation:Set[TRUE]
 	}
@@ -458,17 +458,17 @@ objectdef obj_OreHauler inherits obj_Hauler
 	function WarpToFleetMemberAndLoot(int charID)
 	{
 		variable int id = 0
-		
+
 		if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
 		{	/* if we are already full ignore this request */
 			return
 		}
-		
+
 		if !${Entity[OwnerID,${charID},CategoryID,6](exists)}
 		{
 			call Ship.WarpToFleetMember ${charID}
 		}
-		
+
 		if ${Entity[OwnerID,${charID},CategoryID,6].Distance} > CONFIG_MAX_SLOWBOAT_RANGE
 		{
 			if ${Entity[OwnerID,${charID},CategoryID,6].Distance} < WARP_RANGE
@@ -480,7 +480,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		}
 
 		call Ship.OpenCargo
-		
+
 		This:BuildJetCanList[${charID}]
 		while ${Entities.Peek(exists)}
 		{
@@ -495,34 +495,34 @@ objectdef obj_OreHauler inherits obj_Hauler
 				/* FOR NOW approach within loot range */
 				call Ship.Approach ${Entities.Peek.ID} LOOT_RANGE
 				Entities.Peek:OpenCargo
-				wait 30	
+				wait 30
 				call This.LootEntity ${Entities.Peek.ID}
 			}
 			else
 			{
 				call Ship.Approach ${Entities.Peek.ID} LOOT_RANGE
 				Entities.Peek:OpenCargo
-				wait 30	
+				wait 30
 				call This.LootEntity ${Entities.Peek.ID} 1
 			}
-			
+
 			if ${Entities.Peek(exists)}
 			{
 				Entities.Peek:CloseCargo
 			}
 			Entities:Dequeue
-			
+
 			if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
 			{
 				break
 			}
 		}
-		
+
 		/* TODO: add code to loot and salvage any nearby wrecks */
 
 		m_fleetMemberID:Set[-1]
-		m_SystemID:Set[-1]		
-		m_BeltID:Set[-1]		
+		m_SystemID:Set[-1]
+		m_BeltID:Set[-1]
 		;;; call Ship.CloseCargo
 	}
 
@@ -531,44 +531,44 @@ objectdef obj_OreHauler inherits obj_Hauler
 		variable index:fleetmember fleet
 		FleetMembers:Clear
 		Me:DoGetFleet[fleet]
-	
+
 		variable int idx
 		idx:Set[${fleet.Used}]
-		
+
 		while ${idx} > 0
 		{
 			if ${fleet.Get[${idx}].CharID} != ${_Me.CharID}
 			{
 				if ${fleet.Get[${idx}].ToPilot(exists)} && \
 				   ( ${fleet.Get[${idx}].ToPilot.Name.Equal["Joe The Tank"]} || \
-				     ${fleet.Get[${idx}].ToPilot.Name.Equal["Jane the Hauler"]} )				   
+				     ${fleet.Get[${idx}].ToPilot.Name.Equal["Jane the Hauler"]} )
 				{
 					continue
 				}
-				FleetMembers:Queue[${fleet.Get[${idx}]}]	
+				FleetMembers:Queue[${fleet.Get[${idx}]}]
 			}
 			idx:Dec
-		}		
-		
+		}
+
 		UI:UpdateConsole["BuildFleetMemberList found ${FleetMembers.Used} other fleet members."]
 	}
-	
+
 
 	method BuildSafeSpotList()
 	{
 		SafeSpots:Clear
 		EVE:DoGetBookmarks[SafeSpots]
-	
+
 		variable int idx
 		idx:Set[${SafeSpots.Used}]
-		
+
 		while ${idx} > 0
 		{
 			variable string Prefix
 			Prefix:Set[${Config.Labels.SafeSpotPrefix}]
-			
+
 			variable string Label
-			Label:Set[${SafeSpots.Get[${idx}].Label}]			
+			Label:Set[${SafeSpots.Get[${idx}].Label}]
 			if ${Label.Left[${Prefix.Length}].NotEqual[${Prefix}]}
 			{
 				SafeSpots:Remove[${idx}]
@@ -577,42 +577,42 @@ objectdef obj_OreHauler inherits obj_Hauler
 			{
 				SafeSpots:Remove[${idx}]
 			}
-			
+
 			idx:Dec
-		}		
+		}
 		SafeSpots:Collapse
 		SafeSpots:GetIterator[SafeSpotIterator]
-		
+
 		UI:UpdateConsole["BuildSafeSpotList found ${SafeSpots.Used} safespots in this system."]
 	}
-	
+
 	function WarpToNextSafeSpot()
 	{
 		if ${SafeSpots.Used} == 0 || \
 			${SafeSpots.Get[1].SolarSystemID} != ${_Me.SolarSystemID}
 		{
 			This:BuildSafeSpotList
-		}		
-		
+		}
+
 		if !${SafeSpotIterator:Next(exists)}
 		{
 			SafeSpotIterator:First
 		}
-		
+
 		if ${SafeSpotIterator.Value(exists)}
 		{
 			call Ship.WarpToBookMark ${SafeSpotIterator.Value.ID}
-			
+
 			/* open cargo hold so the CARGOFULL detection has a chance to work */
 			call Ship.OpenCargo
 		}
 	}
-	
+
 	method BuildJetCanList(int id)
 	{
 		variable index:entity cans
 		variable int idx
-			
+
 		EVE:DoGetEntities[cans,GroupID,12]
 		idx:Set[${cans.Used}]
 		Entities:Clear
@@ -621,11 +621,11 @@ objectdef obj_OreHauler inherits obj_Hauler
 		{
 			if ${cans.Get[${idx}].Owner.CharID} == ${id}
 			{
-				Entities:Queue[${cans.Get[${idx}]}]	
+				Entities:Queue[${cans.Get[${idx}]}]
 			}
 			idx:Dec
 		}
-		
+
 		UI:UpdateConsole["BuildJetCanList found ${Entities.Used} cans nearby."]
 	}
 }

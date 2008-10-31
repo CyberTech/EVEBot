@@ -10,18 +10,18 @@ objectdef obj_Skills
 
 	variable string CurrentlyTrainingSkill
 	variable string NextInLine
-	
+
 	method Initialize()
 	{
 		UI:UpdateConsole["obj_Skills: Initialized", LOG_MINOR]
-		
-		if ${This.SkillFile:Open[readonly](exists)} || ${Config.Common.TrainFastest}
+
+		if ${This.SkillFile:Open[readonly](exists)} || ${Config.Common.TrainSkillsByTime}
 		{
 			Me:DoGetSkills[This.OwnedSkills]
 			Event[OnFrame]:AttachAtom[This:Pulse]
 			This.SkillFile:Close
 
-			if ${Config.Common.TrainFastest}
+			if ${Config.Common.TrainSkillsByTime}
 			{
 				UI:UpdateConsole["obj_Skills: Training skills in duration order, fastest first"]
 			}
@@ -33,21 +33,21 @@ objectdef obj_Skills
 			This.SkillFile:Close
 		}
 	}
-	
+
 	method Shutdown()
 	{
 		Event[OnFrame]:DetachAtom[This:Pulse]
 	}
-	
+
 	method Pulse()
 	{
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 		    if ${Me(exists)}
 		    {
-		    	; Only call the expensive stuf if we're not training a skill, or if we're not in trainfastest 
+		    	; Only call the expensive stuf if we're not training a skill, or if we're not in trainfastest
 		    	; mode, since that iterates the entire skill list and is slow.
-		    	if !${Config.Common.TrainFastest} || !${Me.SkillCurrentlyTraining(exists)}
+		    	if !${Config.Common.TrainSkillsByTime} || !${Me.SkillCurrentlyTraining(exists)}
 		    	{
 					if !${This.NextSkill.Equal[None]} && \
 						!${Me.Skill[${This.NextSkill}].IsTraining}
@@ -72,23 +72,23 @@ objectdef obj_Skills
 			echo "Error: Don't have skill ${SkillName}"
 			return
 		}
-		if !${This.Training} 
+		if !${This.Training}
 		{
 			UI:UpdateConsole["Training ${SkillName}"]
 			Me.Skill[${SkillName}]:StartTraining
 			CurrentlyTrainingSkill:Set[${SkillName}]
 		}
-		
+
 		if ${SkillName.NotEqual[${Me.SkillCurrentlyTraining.Name}]}
 		{
 			UI:UpdateConsole["Changing skill to ${SkillName} from ${This.CurrentlyTraining}"]
 			Me.Skill[${SkillName}]:StartTraining
 			CurrentlyTrainingSkill:Set[${SkillName}]
 		}
-	}	
-	
+	}
+
 	member(string) CurrentlyTraining()
-	{			
+	{
 		if ${Me.SkillCurrentlyTraining(exists)}
 		{
 			variable string SkillName = ${Me.SkillCurrentlyTraining.Name}
@@ -113,23 +113,23 @@ objectdef obj_Skills
 					return "${SkillName} Complete"
 					break
 			}
-		}	
+		}
 
 		return "None"
 	}
-		
+
 	member(string) NextSkill()
 	{
 		variable string ReadSkillName
 		variable string ReadSkillLevel
 		variable string ReadLine
 
-		if ${Config.Common.TrainFastest}
+		if ${Config.Common.TrainSkillsByTime}
 		{
 			variable iterator CurrentSkill
 			variable float64 Shortest
 			variable float64 TimeToTrain
-			
+
 			This.OwnedSkills:GetIterator[CurrentSkill]
 			if ${CurrentSkill:First(exists)}
 			{
@@ -155,10 +155,10 @@ objectdef obj_Skills
 			{
 				return "None"
 			}
-			
+
 			variable string temp
 			temp:Set[${SkillFile.Read}]
-			
+
 			while !${This.SkillFile.EOF} && ${temp(exists)}
 			{
 				/* Sometimes we randomly get a NULL back at the begininng of the file. */
@@ -166,13 +166,13 @@ objectdef obj_Skills
 				{
 					/* Remove \r\n from data.  Should really be checking it's not just \n terminated as well. */
 					ReadLine:Set[${temp.Left[${Math.Calc[${temp.Length} - 2]}]}]
-				
-        	
+
+
 					ReadSkillName:Set[${This.RemoveNumerals[${ReadLine}]}]
 					ReadSkillLevel:Set[${This.SkillLevel[${ReadLine}]}]
-					
+
 					;echo "DEBUG: ReadSkillName: ${ReadSkillName} - ReadSkillLevel: ${ReadSkillLevel}"
-					
+
 					if ${Me.Skill[${ReadSkillName}](exists)}
 					{
 						if ${Me.Skill[${ReadSkillName}].Level} < ${ReadSkillLevel}
@@ -193,14 +193,14 @@ objectdef obj_Skills
 				}
 				temp:Set[${SkillFile.Read}]
 			}
-        	
+
 			UI:UpdateConsole["Error: None of the skills specified were found (or all were already to requested level)", LOG_CRITICAL]
 			SkillFile:Close
 			return "None"
 		}
 	}
 
-	
+
 	member(bool) Training(string SkillName = "")
 	{
 		if ${SkillName.Length} > 0
@@ -232,9 +232,9 @@ objectdef obj_Skills
 		}
 		return FALSE
 	}
-	
+
 	member(string) RemoveNumerals(string SkillName)
-	{	
+	{
 		if ${SkillName.Right[2].Equal[" I"]}
 		{
 			return ${SkillName.Left[${Math.Calc[${SkillName.Length} - 2]}]}
@@ -257,7 +257,7 @@ objectdef obj_Skills
 		}
 		return "Unknown"
 	}
-	
+
 	member(int) SkillLevel(string SkillName)
 	{
 		if ${SkillName.Right[2].Equal[" I"]}
