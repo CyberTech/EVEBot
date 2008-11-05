@@ -115,32 +115,66 @@ objectdef obj_MissionCache
 	}	
 }
 
-;objectdef obj_MissionDatabase
-;{
-;	variable string SVN_REVISION = "$Rev$"
-;	variable int Version
-;
-;	variable string CONFIG_FILE = "${BaseConfig.CONFIG_PATH}/Mission Database.xml"
-;	variable string SET_NAME = "Mission Database"
-;	
-;	method Initialize()
-;	{
-;		if ${LavishSettings[${This.SET_NAME}](exists)}
-;		{
-;			LavishSettings[${This.SET_NAME}]:Clear
-;		}
-;		LavishSettings:Import[${CONFIG_FILE}]
-;		LavishSettings[${This.SET_NAME}]:GetSettingIterator[This.agentIterator]
-;     This:DumpDatabase
-;	UI:UpdateConsole["obj_MissionDatabase: Initialized", LOG_MINOR]
-;	}
-;
-;   method DumpDatabase()
-;   {
-;
-;   }
-;	
-;}
+objectdef obj_MissionDatabase
+{
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+
+	variable string CONFIG_FILE = "${BaseConfig.DATA_PATH}/Mission Database.xml"
+	variable string SET_NAME = "Mission Database"
+	
+	method Initialize()
+	{
+		if ${LavishSettings[${This.SET_NAME}](exists)}
+		{
+			LavishSettings[${This.SET_NAME}]:Clear
+		}
+		LavishSettings:Import[${CONFIG_FILE}]
+		
+		UI:UpdateConsole["obj_MissionDatabase: Initialized", LOG_MINOR]
+
+		UI:UpdateConsole["obj_MissionDatabase: Dumping database...",LOG_MINOR]
+		This:DumpSet[${LavishSettings[${This.SET_NAME}]},1]
+	}
+
+	method DumpSet(settingsetref Set, uint Indent=1)
+	{
+		UI:UpdateConsole["${Set.Name} - ${Set.GUID}",LOG_MINOR,Indent]
+
+		variable iterator Iterator
+		Set:GetSetIterator[Iterator]
+		
+		Indent:Inc
+		if ${Iterator:First(exists)}
+		{
+			do
+			{
+				This:DumpSet[${Iterator.Value.GUID},${Indent}]
+			}
+			while ${Iterator:Next(exists)}
+		}
+		else
+		{
+			This:DumpSettings[${Set.GUID},${Indent}]
+			return
+		}
+	}	
+
+	method DumpSettings(settingsetref Set, uint Indent=1)
+	{
+		variable iterator Iterator
+		Set:GetSettingIterator[Iterator]
+		
+		if ${Iterator:First(exists)}
+		{
+			do
+			{
+				UI:UpdateConsole["${sIndent}${Iterator.Key} - ${Iterator.Value}",LOG_MINOR,Indent]
+			}
+			while ${Iterator:Next(exists)}
+		}
+	}	
+}
 
 objectdef obj_Missions
 {
@@ -148,7 +182,7 @@ objectdef obj_Missions
 	variable int Version
 	
 	variable obj_MissionCache MissionCache
-;   variable obj_MissionDatabase MissionDatabase
+   variable obj_MissionDatabase MissionDatabase
 	variable obj_Combat Combat
 
 	method Initialize()

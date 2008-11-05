@@ -19,6 +19,8 @@ objectdef obj_Defense
 
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 1
+	
+	variable bool Fled = FALSE
 
 	method Initialize()
 	{
@@ -43,6 +45,23 @@ objectdef obj_Defense
 			if ${This.Running}
 			{
 				This:TakeDefensiveAction
+				if ${This.Fled} == FALSE && (${This.IsTankHolding} == FALSE || \
+					${This.IsLocalHot} == TRUE || ${This.OutOfAmmo} == TRUE)
+				{
+					;; run away fool
+					This.Fled:Set[TRUE]
+					Script[EVEBot].VariableScope.UI:UpdateConsole["Thread: obj_Defense: fleeing...  ${This.IsTankHolding} ${This.IsLocalHot} ${This.OutOfAmmo}"]	
+				}
+				else
+				{
+					if ${This.Fled} && ${This.DidTankRegen} == TRUE && \
+						${This.IsLocalHot} == FALSE && ${This.OutOfAmmo} == FALSE
+					{
+						;; return to action
+						This.Fled:Set[FALSE]
+						Script[EVEBot].VariableScope.UI:UpdateConsole["Thread: obj_Defense: returning to action..."]
+					}	
+				}
 			}
 			This.NextPulse:Set[${Time.Timestamp}]
 			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
@@ -50,6 +69,137 @@ objectdef obj_Defense
 		}
 	}
 	
+	member:bool IsTankHolding()
+	{
+		if	${Script[EVEBot].VariableScope.Ship.IsCloaked} || \
+			${_Me.InStation}
+		{
+			return TRUE
+		}
+		
+		if (${_Me.Ship.ArmorPct} < ${Script[EVEBot].VariableScope.Config.Combat.MinimumArmorPct}  || \
+			${_Me.Ship.ShieldPct} < ${Script[EVEBot].VariableScope.Config.Combat.MinimumShieldPct} || \
+			${_Me.Ship.CapacitorPct} < ${Script[EVEBot].VariableScope.Config.Combat.MinimumCapPct})
+		{
+			Script[EVEBot].VariableScope.UI:UpdateConsole["Armor is at ${_Me.Ship.ArmorPct.Int}%: ${Me.Ship.Armor.Int}/${Me.Ship.MaxArmor.Int}", LOG_CRITICAL]
+			Script[EVEBot].VariableScope.UI:UpdateConsole["Shield is at ${_Me.Ship.ShieldPct.Int}%: ${Me.Ship.Shield.Int}/${Me.Ship.MaxShield.Int}", LOG_CRITICAL]
+			Script[EVEBot].VariableScope.UI:UpdateConsole["Cap is at ${_Me.Ship.CapacitorPct.Int}%: ${Me.Ship.Capacitor.Int}/${Me.Ship.MaxCapacitor.Int}", LOG_CRITICAL]
+
+			if !${Script[EVEBot].VariableScope.Config.Combat.RunOnLowTank}
+			{
+				Script[EVEBot].VariableScope.UI:UpdateConsole["Run On Low Tank Disabled: Fighting", LOG_CRITICAL]
+			}
+			elseif ${_Me.ToEntity.IsWarpScrambled}
+			{
+				Script[EVEBot].VariableScope.UI:UpdateConsole["Warp Scrambled: Fighting", LOG_CRITICAL]
+			}
+			else
+			{
+				Script[EVEBot].VariableScope.UI:UpdateConsole["Fleeing due to defensive status", LOG_CRITICAL]
+				return FALSE
+			}
+		}
+		
+		return TRUE
+	}
+	
+	member:bool DidTankRegen()
+	{
+		/* don't leave the "fled" state until we regen */
+		if ${This.Fled} == TRUE && (${_Me.Ship.ArmorPct} < 50 || \
+			(${_Me.Ship.ShieldPct} < 80 && ${Config.Combat.MinimumShieldPct} > 0) || \
+			${_Me.Ship.CapacitorPct} < 80 )
+		{
+				return FALSE
+		}
+
+		return TRUE
+	}
+	
+	member:bool IsLocalHot()
+	{
+		if	${Script[EVEBot].VariableScope.Ship.IsCloaked} || \
+			${_Me.InStation}
+		{
+			return FALSE
+		}
+		
+		if ${Script[EVEBot].VariableScope.Social.IsSafe} == FALSE
+		{
+			if ${_Me.ToEntity.IsWarpScrambled}
+			{
+				; TODO - we need to quit if a red warps in while we're scrambled -- cybertech
+				Script[EVEBot].VariableScope.UI:UpdateConsole["Warp Scrambled: Ignoring System Status"]
+			}
+			else
+			{
+				return TRUE	
+			}
+		}
+		
+		return FALSE
+	}
+	
+	member:bool OutOfAmmo()
+	{
+		if	${Script[EVEBot].VariableScope.Ship.IsCloaked} || \
+			${_Me.InStation}
+		{
+			return FALSE
+		}
+
+		if ${Script[EVEBot].VariableScope.Ship.IsAmmoAvailable} == FALSE
+		{
+			if ${Script[EVEBot].VariableScope.Config.Combat.RunOnLowAmmo} == TRUE
+			{			
+				; TODO - what to do about being warp scrambled in this case?
+				return TRUE
+			}
+		}
+		
+		return FALSE
+	}
+	
+	function Flee()
+	{
+		if ${Script[EVEBot].VariableScope.Config.Combat.RunToStation}
+		{
+			call This.FleeToStation
+		}
+		else
+		{
+			call This.FleeToSafespot
+		}
+	}
+
+	function FleeToStation()
+	{
+		if !${Script[EVEBot].VariableScope.Station.Docked}
+		{
+			call Script[EVEBot].VariableScope.Station.Dock
+		}
+	}
+
+	function FleeToSafespot()
+	{
+		if ${Script[EVEBot].VariableScope.Safespots.IsAtSafespot}
+		{
+			if !${Script[EVEBot].VariableScope.Ship.IsCloaked}
+			{
+				${Script[EVEBot].VariableScope.Ship:Activate_Cloak[]
+			}
+		}
+		else
+		{
+			; Are we at the safespot and not warping?
+			if ${_Me.ToEntity.Mode} != 3
+			{
+				call Script[EVEBot].VariableScope.Safespots.WarpTo
+				wait 30
+			}
+		}
+	}
+
 	method TakeDefensiveAction()
 	{
 		if	${Script[EVEBot].VariableScope.Ship.IsCloaked} || \
@@ -126,6 +276,11 @@ function main()
 {
 	while ${Script[EVEBot](exists)}
 	{
+		if ${Defense.Fled} == TRUE
+		{
+			call Defense.Flee
+			wait 60
+		}
 		waitframe
 	}
 	echo "EVEBot exited, unloading ${Script.Filename}"
