@@ -53,17 +53,13 @@ objectdef obj_Defense
 				This:CheckLocal[]
 				This:CheckAmmo[]
 
-				if ${This.Hide}
-				{
-					; Note - this is untested, and may not work. if it fails, then check Defense.Hide in the while loop inside main() -- CyberTech
-					TimedCommand 1 call Defense.Flee[]
-				}
-				elseif !${This.Hide} && ${This.Hiding}  && ${This.TankReady}
+				if !${This.Hide} && ${This.Hiding} && ${This.TankReady}
 				{
 					UI:UpdateConsole["Thread: obj_Defense: No longer hiding"]
 					This.Hiding:Set[FALSE]
 				}
 			}
+
 			This.NextPulse:Set[${Time.Timestamp}]
 			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
 			This.NextPulse:Update
@@ -72,10 +68,20 @@ objectdef obj_Defense
 
 	method CheckTankMinimums()
 	{
+		if !${Script[EVEBot](exists)}
+		{
+			return
+		}
+
 		if	${Ship.IsCloaked} || \
 			${_Me.InStation}
 		{
 			return
+		}
+
+		if ${Ship.IsPod}
+		{
+			This:RunAway["We're in a pod! Run Away! Run Away!"]
 		}
 
 		if (${_Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct}  || \
@@ -105,6 +111,11 @@ objectdef obj_Defense
 	; 3rd Parties should call this if they want Defense thread to initiate safespotting
 	method RunAway(string Reason="Not Specified")
 	{
+		if !${Script[EVEBot](exists)}
+		{
+			return
+		}
+
 		This.Hide:Set[TRUE]
 		This.HideReason:Set[${Reason}]
 		if !${This.Hiding}
@@ -115,6 +126,11 @@ objectdef obj_Defense
 
 	member:bool TankReady()
 	{
+		if !${Script[EVEBot](exists)}
+		{
+			return
+		}
+
 		if ${_Me.InStation}
 		{
 			return TRUE
@@ -137,6 +153,11 @@ objectdef obj_Defense
 
 	method CheckLocal()
 	{
+		if !${Script[EVEBot](exists)}
+		{
+			return
+		}
+
 		if	${Ship.IsCloaked} || \
 			${_Me.InStation}
 		{
@@ -159,6 +180,11 @@ objectdef obj_Defense
 
 	method CheckAmmo()
 	{
+		if !${Script[EVEBot](exists)}
+		{
+			return
+		}
+
 		; TODO - move this to offensive thread, and call back to Defense.RunAway() if necessary - CyberTech
 
 		if	${Ship.IsCloaked} || \
@@ -179,7 +205,13 @@ objectdef obj_Defense
 
 	function Flee()
 	{
+		if !${Script[EVEBot](exists)}
+		{
+			return
+		}
+
 		This.Hiding:Set[TRUE]
+		echo ${SafeSpots.Count}
 		if ${Config.Combat.RunToStation} || ${SafeSpots.Count} == 0
 		{
 			call This.FleeToStation
@@ -192,6 +224,11 @@ objectdef obj_Defense
 
 	function FleeToStation()
 	{
+		if !${Script[EVEBot](exists)}
+		{
+			return
+		}
+
 		if !${Station.Docked}
 		{
 			call Station.Dock
@@ -200,6 +237,11 @@ objectdef obj_Defense
 
 	function FleeToSafespot()
 	{
+		if !${Script[EVEBot](exists)}
+		{
+			return
+		}
+
 		if ${Safespots.IsAtSafespot}
 		{
 			if !${Ship.IsCloaked}
@@ -220,6 +262,11 @@ objectdef obj_Defense
 
 	method TakeDefensiveAction()
 	{
+		if !${Script[EVEBot](exists)}
+		{
+			return
+		}
+
 		;TODO: These should be moved to config variables w/ UI controls
 		variable int ArmorPctEnable = 100
 		variable int ArmorPctDisable = 98
@@ -302,6 +349,11 @@ function main()
 {
 	while ${Script[EVEBot](exists)}
 	{
+		if ${Defense.Hide}
+		{
+			call Defense.Flee
+			wait 10 !${Script[EVEBot](exists)}
+		}
 		waitframe
 	}
 	echo "EVEBot exited, unloading ${Script.Filename}"

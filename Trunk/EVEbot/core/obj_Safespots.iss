@@ -54,11 +54,6 @@ objectdef obj_Safespots
 		{
 			This:ResetList
 		}
-
-		if !${SafeSpotIterator:Next(exists)}
-		{
-			SafeSpotIterator:First
-		}
 	}
 
 	member:int Count()
@@ -71,6 +66,11 @@ objectdef obj_Safespots
 	function WarpToNext()
 	{
 		This:ValidateList[]
+
+		if !${SafeSpotIterator:Next(exists)}
+		{
+			SafeSpotIterator:First
+		}
 
 		if ${SafeSpotIterator.Value(exists)}
 		{
