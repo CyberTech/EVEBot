@@ -20,7 +20,7 @@ objectdef obj_Offense
 	method Initialize()
 	{
 		Event[OnFrame]:AttachAtom[This:Pulse]
-		Script[EVEBot].VariableScope.UI:UpdateConsole["Thread: obj_Offense: Initialized", LOG_MINOR]
+		UI:UpdateConsole["Thread: obj_Offense: Initialized", LOG_MINOR]
 	}
 
 	method Pulse()
@@ -30,7 +30,7 @@ objectdef obj_Offense
 			return
 		}
 
-		if ${Script[EVEBot].VariableScope.EVEBot.Paused}
+		if ${EVEBot.Paused}
 		{
 			return
 		}
@@ -46,7 +46,7 @@ objectdef obj_Offense
 			This.NextPulse:Update
 		}
 	}
-	
+
 	method TakeOffensiveAction()
 	{
 		if ${Me.ActiveTarget(exists)} && !${Me.ActiveTarget.IsPC}
@@ -55,30 +55,30 @@ objectdef obj_Offense
 			{
 				if ${Me.ActiveTarget.Distance} < 9999
 				{
-					Script[EVEBot].VariableScope.Ship:Activate_StasisWebs
+					Ship:Activate_StasisWebs
 				}
-				
-				if ${Me.ActiveTarget.Distance} < ${Script[EVEBot].VariableScope.Ship.OptimalWeaponRange}
+
+				if ${Me.ActiveTarget.Distance} < ${Ship.OptimalWeaponRange}
 				{
-					Script[EVEBot].VariableScope.Ship:Activate_Weapons
+					Ship:Activate_Weapons
 				}
-				
+
 				if ${Me.ActiveTarget.Distance} < 19999
 				{
-					Script[EVEBot].VariableScope.Ship.Drones:SendDrones
-				}				
+					Ship.Drones:SendDrones
+				}
 			}
 		}
 		else
 		{
-			Script[EVEBot].VariableScope.Ship:Deactivate_Weapons
-			Script[EVEBot].VariableScope.Ship:Deactivate_StasisWebs
+			Ship:Deactivate_Weapons
+			Ship:Deactivate_StasisWebs
 		}
 	}
 
 	member:bool IsConcordTarget(int groupID)
 	{
-		switch ${groupID} 
+		switch ${groupID}
 		{
 			case GROUP_LARGECOLLIDABLEOBJECT
 			case GROUP_LARGECOLLIDABLESHIP
@@ -95,11 +95,11 @@ objectdef obj_Offense
 
 		return FALSE
 	}
-	
+
 	method Enable()
 	{
 #if EVEBOT_DEBUG
-		Script[EVEBot].VariableScope.UI:UpdateConsole["Offense: Enabled"]
+		UI:UpdateConsole["Offense: Enabled"]
 #endif
 		This.Running:Set[TRUE]
 	}
@@ -107,7 +107,7 @@ objectdef obj_Offense
 	method Disable()
 	{
 #if EVEBOT_DEBUG
-		Script[EVEBot].VariableScope.UI:UpdateConsole["Offense: Disabled"]
+		UI:UpdateConsole["Offense: Disabled"]
 #endif
 		This.Running:Set[FALSE]
 	}

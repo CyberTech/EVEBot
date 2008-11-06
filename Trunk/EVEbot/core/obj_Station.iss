@@ -233,7 +233,7 @@ objectdef obj_Station
 		else
 		{
 			UI:UpdateConsole["Station Requested does not exist!  Trying Safespots...", LOG_CRITICAL]
-			call Safespots.WarpTo
+			call Safespots.WarpToNext
 		}
 	}
 
@@ -260,7 +260,7 @@ objectdef obj_Station
 		else
 		{
 			UI:UpdateConsole["No stations in this system!  Trying Safespots...", LOG_CRITICAL]
-			call Safespots.WarpTo
+			call Safespots.WarpToNext
 		}
 	}
 

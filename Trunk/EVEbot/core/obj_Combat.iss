@@ -272,7 +272,7 @@ objectdef obj_Combat
 			; Are we at the safespot and not warping?
 			if ${_Me.ToEntity.Mode} != 3
 			{
-				call Safespots.WarpTo
+				call Safespots.WarpToNext
 				wait 30
 			}
 		}

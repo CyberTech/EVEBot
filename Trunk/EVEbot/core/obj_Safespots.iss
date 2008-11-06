@@ -11,21 +11,21 @@ objectdef obj_Safespots
 		UI:UpdateConsole["obj_Safespots: Initialized", LOG_MINOR]
 	}
 
-	method ResetSafeSpotList()
+	method ResetList()
 	{
 		SafeSpots:Clear
 		EVE:DoGetBookmarks[SafeSpots]
-	
+
 		variable int idx
 		idx:Set[${SafeSpots.Used}]
-		
+
 		while ${idx} > 0
 		{
 			variable string Prefix
 			Prefix:Set[${Config.Labels.SafeSpotPrefix}]
-			
+
 			variable string Label
-			Label:Set[${SafeSpots.Get[${idx}].Label}]			
+			Label:Set[${SafeSpots.Get[${idx}].Label}]
 			if ${Label.Left[${Prefix.Length}].NotEqual[${Prefix}]}
 			{
 				SafeSpots:Remove[${idx}]
@@ -34,49 +34,58 @@ objectdef obj_Safespots
 			{
 				SafeSpots:Remove[${idx}]
 			}
-			
+
 			idx:Dec
-		}		
+		}
 		SafeSpots:Collapse
 		SafeSpots:GetIterator[SafeSpotIterator]
-		
-		UI:UpdateConsole["ResetSafeSpotList found ${SafeSpots.Used} safespots in this system."]
+
+		UI:UpdateConsole["ResetList found ${SafeSpots.Used} safespots in this system."]
 	}
-	
-	function WarpToNextSafeSpot()
+
+	method ValidateList()
 	{
-		if ${SafeSpots.Used} == 0 
+		if ${SafeSpots.Used} == 0
 		{
-			This:ResetSafeSpotList
-		}		
-		
+			This:ResetList
+		}
+
 		if ${SafeSpots.Get[1](exists)} && ${SafeSpots.Get[1].SolarSystemID} != ${_Me.SolarSystemID}
 		{
-			This:ResetSafeSpotList
+			This:ResetList
 		}
-		
+
 		if !${SafeSpotIterator:Next(exists)}
 		{
 			SafeSpotIterator:First
 		}
-		
+	}
+
+	member:int Count()
+	{
+		This:ValidateList[]
+
+		return ${SafeSpots.Used}
+	}
+
+	function WarpToNext()
+	{
+		This:ValidateList[]
+
 		if ${SafeSpotIterator.Value(exists)}
 		{
 			call Ship.WarpToBookMark ${SafeSpotIterator.Value.ID}
 		}
 		else
 		{
-			UI:UpdateConsole["ERROR: obj_Safespots.WarpToNextSafeSpot found an invalid bookmark!"]			
+			UI:UpdateConsole["ERROR: obj_Safespots.WarpToNext found an invalid bookmark!"]
 		}
 	}
 
 	member:bool IsAtSafespot()
 	{
-		if ${SafeSpots.Used} == 0 
-		{
-			This:ResetSafeSpotList
-		}
-		
+		This:ValidateList[]
+
 		; big debug block to get to the bottom of the "safe spot problem"
 		;UI:UpdateConsole["DEBUG: obj_Safespots.IsAtSafespot: ItemID = ${SafeSpotIterator.Value.ItemID}"]
 		;UI:UpdateConsole["DEBUG: obj_Safespots.IsAtSafespot: SS_X = ${SafeSpotIterator.Value.X}"]
@@ -86,6 +95,8 @@ objectdef obj_Safespots
 		;UI:UpdateConsole["DEBUG: obj_Safespots.IsAtSafespot: ME_Y = ${Me.ToEntity.Y}"]
 		;UI:UpdateConsole["DEBUG: obj_Safespots.IsAtSafespot: ME_Z = ${Me.ToEntity.Z}"]
 		;UI:UpdateConsole["DEBUG: obj_Safespots.IsAtSafespot: DIST = ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${SafeSpotIterator.Value.X}, ${SafeSpotIterator.Value.Y}, ${SafeSpotIterator.Value.Z}]}"]
+
+		; TODO - this should iterate thru the safespot list and see if we're at ANY of the safespots - CyberTech
 
 		; Are we within warp range of the bookmark?
 		if ${SafeSpotIterator.Value.ItemID} > -1
@@ -100,13 +111,8 @@ objectdef obj_Safespots
 		{
 			return TRUE
 		}
-		
-		return FALSE		
-	}
-	
-	function WarpTo()
-	{
-		call This.WarpToNextSafeSpot
+
+		return FALSE
 	}
 }
 

@@ -43,7 +43,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 	method Initialize()
 	{
 		Event[OnFrame]:AttachAtom[This:Pulse]
-		Script[EVEBot].VariableScope.UI:UpdateConsole["Thread: obj_EVEBOT_Targeting: Initialized", LOG_MINOR]
+		UI:UpdateConsole["Thread: obj_EVEBOT_Targeting: Initialized", LOG_MINOR]
 	}
 
 	method Pulse()
@@ -53,7 +53,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 			return
 		}
 
-		if ${Script[EVEBot].VariableScope.EVEBot.Paused}
+		if ${EVEBot.Paused}
 		{
 			return
 		}
@@ -129,7 +129,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 
 	method TargetEntity(int EntityID)
 	{
-		if ${Math.Calc[${This.TargetingThisFrame} + ${_Me.GetTargets} + ${_Me.GetTargeting}]} >= ${Script[EVEBot].VariableScope.Ship.MaxLockedTargets}
+		if ${Math.Calc[${This.TargetingThisFrame} + ${_Me.GetTargets} + ${_Me.GetTargeting}]} >= ${Ship.MaxLockedTargets}
 		{
 			return
 		}
@@ -139,14 +139,14 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 			return
 		}
 
-		Script[EVEBot].VariableScope.UI:UpdateConsole["Debug: Targets: ${_Me.GetTargets}"]
-		Script[EVEBot].VariableScope.UI:UpdateConsole["Debug: Targeting: ${_Me.GetTargeting}"]
-		Script[EVEBot].VariableScope.UI:UpdateConsole["Debug: Current Targets: ${Math.Calc[${_Me.GetTargets} + ${_Me.GetTargeting}]}"]
-		Script[EVEBot].VariableScope.UI:UpdateConsole["Debug: Max Targets: ${Script[EVEBot].VariableScope.Ship.MaxLockedTargets}"]
-				
+		UI:UpdateConsole["Debug: Targets: ${_Me.GetTargets}"]
+		UI:UpdateConsole["Debug: Targeting: ${_Me.GetTargeting}"]
+		UI:UpdateConsole["Debug: Current Targets: ${Math.Calc[${_Me.GetTargets} + ${_Me.GetTargeting}]}"]
+		UI:UpdateConsole["Debug: Max Targets: ${Ship.MaxLockedTargets}"]
+
 		if !${Entity[${EntityID}].IsLockedTarget} && !${Entity[${EntityID}].BeingTargeted} && ${Entity[${EntityID}].Name.NotEqual[NULL]}
 		{
-			Script[EVEBot].VariableScope.UI:UpdateConsole["Locking ${Entity[${EntityID}].Name} (${EntityID}): ${Script[EVEBot].VariableScope.EVEBot.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"]
+			UI:UpdateConsole["Locking ${Entity[${EntityID}].Name} (${EntityID}): ${EVEBot.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"]
 			Entity[${EntityID}]:LockTarget
 			This.TargetingThisFrame:Inc
 		}
@@ -156,15 +156,15 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 	{
 		variable iterator Target
 		variable bool TargetingMandatory = FALSE
-	
+
 		This.TargetingThisFrame:Set[0]
-		
+
 		if ${_Me.Ship.MaxLockedTargets} == 0
 		{
 			UI:UpdateConsole["Targeting is Jammed"]
 			return
 		}
-		
+
 		MandatoryQueue:GetIterator[Target]
 		if ${Target:First(exists)}
 		{
@@ -175,7 +175,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 					!${Entity[${Target.Value.EntityID}].BeingTargeted} && \
 					${_Me.Ship.MaxTargetRange} > ${Entity[${Target.Value.EntityID}].Distance}
 				{
-					if ${Math.Calc[${This.TargetingThisFrame} + ${_Me.GetTargets} + ${_Me.GetTargeting}]} >= ${Script[EVEBot].VariableScope.Ship.MaxLockedTargets}
+					if ${Math.Calc[${This.TargetingThisFrame} + ${_Me.GetTargets} + ${_Me.GetTargeting}]} >= ${Ship.MaxLockedTargets}
 					{
 						This:UnlockRandomTarget[]
 						/*	Go ahead and return here -- we'll catch the mandatory target on the next pulse, this gives the client
@@ -195,7 +195,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 			return
 		}
 
-		if ${Math.Calc[${This.TargetingThisFrame} + ${_Me.GetTargets} + ${_Me.GetTargeting}]} >= ${Script[EVEBot].VariableScope.Ship.MaxLockedTargets}
+		if ${Math.Calc[${This.TargetingThisFrame} + ${_Me.GetTargets} + ${_Me.GetTargeting}]} >= ${Ship.MaxLockedTargets}
 		{
 			return
 		}
@@ -225,7 +225,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 
 		if ${This.IsQueued[${EntityID}]}
 		{
-			Script[EVEBot].VariableScope.UI:UpdateConsole["Targeting: Already queued ${Entity[${EntityID}].Name} (${EntityID}) Type: ${TargetType}"]
+			UI:UpdateConsole["Targeting: Already queued ${Entity[${EntityID}].Name} (${EntityID}) Type: ${TargetType}"]
 			return
 		}
 
@@ -234,20 +234,20 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 			This.Running:Set[TRUE]
 			if ${Mandatory}
 			{
-				Script[EVEBot].VariableScope.UI:UpdateConsole["Targeting: Queueing mandatory target ${Entity[${EntityID}].Name} (${EntityID}) Type: ${TargetType}"]
+				UI:UpdateConsole["Targeting: Queueing mandatory target ${Entity[${EntityID}].Name} (${EntityID}) Type: ${TargetType}"]
 				MandatoryQueue:Insert[${EntityID}, ${TargetType}, ${Priority}]
 				This:Sort[MandatoryQueue, Priority]
 			}
 			else
 			{
-				Script[EVEBot].VariableScope.UI:UpdateConsole["Targeting: Queueing target ${Entity[${EntityID}].Name} (${EntityID}) Type: ${TargetType}"]
+				UI:UpdateConsole["Targeting: Queueing target ${Entity[${EntityID}].Name} (${EntityID}) Type: ${TargetType}"]
 				TargetQueue:Insert[${EntityID}, ${TargetType}, ${Priority}]
 				This:Sort[TargetQueue, Priority]
 			}
 		}
 		else
 		{
-			Script[EVEBot].VariableScope.UI:UpdateConsole["Targeting: Attempted queue of non-existent entity ${EntityID}"]
+			UI:UpdateConsole["Targeting: Attempted queue of non-existent entity ${EntityID}"]
 		}
 	}
 
@@ -271,7 +271,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 			while ${Target:Next(exists)}
 		}
 	}
-	
+
 	/* Remove Queued targets which no longer exist on overview */
 	method PruneQueue()
 	{
@@ -367,7 +367,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 	method Enable()
 	{
 #if EVEBOT_DEBUG
-		Script[EVEBot].VariableScope.UI:UpdateConsole["Targeting: Enabled"]
+		UI:UpdateConsole["Targeting: Enabled"]
 #endif
 		This.Running:Set[TRUE]
 	}
@@ -375,7 +375,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 	method Disable()
 	{
 #if EVEBOT_DEBUG
-		Script[EVEBot].VariableScope.UI:UpdateConsole["Targeting: Disabled"]
+		UI:UpdateConsole["Targeting: Disabled"]
 #endif
 		This.Running:Set[FALSE]
 	}

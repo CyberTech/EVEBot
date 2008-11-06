@@ -44,53 +44,55 @@
 #include Behaviors/obj_Scavenger.iss
 #include Behaviors/obj_Missioneer.iss
 
+/* All variables that would normally be defined script scope should be defined global scope to simplify threads */
+
 /* Cache Objects */
 variable(global) obj_Cache_Me _Me
 variable(global) obj_Cache_EVETime _EVETime
 
 /* Script-Defined Support Objects */
-variable obj_EVEBot EVEBot
-variable obj_EVEBotUI UI
-variable obj_Configuration_BaseConfig BaseConfig
-variable obj_Configuration Config
-variable obj_Config_Whitelist Whitelist
-variable obj_Config_Blacklist Blacklist
+variable(global) obj_EVEBot EVEBot
+variable(global) obj_EVEBotUI UI
+variable(global) obj_Configuration_BaseConfig BaseConfig
+variable(global) obj_Configuration Config
+variable(global) obj_Config_Whitelist Whitelist
+variable(global) obj_Config_Blacklist Blacklist
 
 /* EVE Database Exports */
-variable obj_EVEDB_Stations EVEDB_Stations
-variable obj_EVEDB_StationID EVEDB_StationID
-variable obj_EVEDB_Spawns EVEDB_Spawns
-variable obj_EVEDB_Items EVEDB_Items	
+variable(global) obj_EVEDB_Stations EVEDB_Stations
+variable(global) obj_EVEDB_StationID EVEDB_StationID
+variable(global) obj_EVEDB_Spawns EVEDB_Spawns
+variable(global) obj_EVEDB_Items EVEDB_Items
 
 /* Core Objects */
-variable obj_Asteroids Asteroids
-variable obj_Ship Ship
-variable obj_Station Station
-variable obj_Cargo Cargo
-variable obj_Skills Skills
-variable obj_Bookmarks Bookmarks
-variable obj_JetCan JetCan
-variable obj_CorpHangerArray CorpHangarArray
-variable obj_Social Social
-variable obj_Fleet Fleet
-variable obj_Assets Assets
-variable obj_IRC ChatIRC
-variable obj_Safespots Safespots
-variable obj_Belts Belts
+variable(global) obj_Asteroids Asteroids
+variable(global) obj_Ship Ship
+variable(global) obj_Station Station
+variable(global) obj_Cargo Cargo
+variable(global) obj_Skills Skills
+variable(global) obj_Bookmarks Bookmarks
+variable(global) obj_JetCan JetCan
+variable(global) obj_CorpHangerArray CorpHangarArray
+variable(global) obj_Social Social
+variable(global) obj_Fleet Fleet
+variable(global) obj_Assets Assets
+variable(global) obj_IRC ChatIRC
+variable(global) obj_Safespots Safespots
+variable(global) obj_Belts Belts
 variable(global) obj_Targets Targets
-variable obj_Sound Sound
-variable obj_Agents Agents
-variable obj_Missions Missions
-variable obj_Market Market
-variable obj_Autopilot Autopilot
+variable(global) obj_Sound Sound
+variable(global) obj_Agents Agents
+variable(global) obj_Missions Missions
+variable(global) obj_Market Market
+variable(global) obj_Autopilot Autopilot
 
 /* Script-Defined Behavior Objects */
-variable index:string BotModules
-variable obj_Miner Miner
-variable obj_OreHauler Hauler
-variable obj_Freighter Freighter
-variable obj_Ratter Ratter
-variable obj_Missioneer Missioneer
+variable(global) index:string BotModules
+variable(global) obj_Miner Miner
+variable(global) obj_OreHauler Hauler
+variable(global) obj_Freighter Freighter
+variable(global) obj_Ratter Ratter
+variable(global) obj_Missioneer Missioneer
 
 function atexit()
 {
@@ -105,18 +107,18 @@ function main()
 
 	/* Set Turbo to lowest value to try and avoid overloading the EVE Python engine */
 	Turbo 20
-			
+
 	runscript Threads/Targeting.iss
 	runscript Threads/Defense.iss
 	runscript Threads/Offense.iss
-	
+
 	variable iterator BotModule
 	BotModules:GetIterator[BotModule]
 
 	variable iterator VariableIterator
-	Script[EVEBot].VariableScope:GetIterator[VariableIterator]
+	VariableScope:GetIterator[VariableIterator]
 
-	/* 	This code iterates thru the variables list, looking for classes that have been 
+	/* 	This code iterates thru the variables list, looking for classes that have been
 		defined with an SVN_REVISION variable.  It then converts that to a numeric
 		Version(int), which is then used to calculate the highest version (VersionNum),
 		for display on the UI. -- CyberTech
@@ -132,7 +134,7 @@ function main()
 			${VariableIterator.Value.Version(exists)}
 		{
 			VariableIterator.Value.Version:Set[${VariableIterator.Value.SVN_REVISION.Token[2, " "]}]
-			;echo " ${VariableIterator.Value.ObjectName} Revision ${VariableIterator.Value.Version}"	
+			;echo " ${VariableIterator.Value.ObjectName} Revision ${VariableIterator.Value.Version}"
 			if ${VersionNum} < ${VariableIterator.Value.Version}
 			{
 				VersionNum:Set[${VariableIterator.Value.Version}]
@@ -141,7 +143,7 @@ function main()
 	}
 	while ${VariableIterator:Next(exists)}
 	AppVersion:Set["${APP_NAME} Version ${VersionNum}"]
-	
+
 	UI:Reload
 
 
@@ -151,12 +153,12 @@ function main()
 
 	UI:UpdateConsole["-=Paused: Press Run-="]
 	Script:Pause
-	
+
 	while ${EVEBot.Paused}
 	{
 		wait 10
 	}
-	
+
 	while TRUE
 	{
 		if ${BotModule:First(exists)}
