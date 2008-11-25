@@ -1,10 +1,24 @@
-objectdef obj_Skills
+objectdef obj_SkillData
+{
+	variable string Name
+	variable float64 TimeToTrain 
+
+	method Initialize(string _Name, float64 _TimeToTrain)
+	{
+		This.Name:Set[${_Name}]
+		This.TimeToTrain:Set[${_TimeToTrain}]
+	}
+}
+
+objectdef obj_Skills inherits obj_BaseClass
 {
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
 	variable file SkillFile = "${BaseConfig.CONFIG_PATH}/${_Me.Name} Training.txt"
 	variable index:skill OwnedSkills
+	variable index:obj_SkillData SkillQueue
+
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 15
 
@@ -17,7 +31,7 @@ objectdef obj_Skills
 
 		if ${This.SkillFile:Open[readonly](exists)} || ${Config.Common.TrainSkillsByTime}
 		{
-			Me:DoGetSkills[This.OwnedSkills]
+			This:UpdateSkills
 			Event[OnFrame]:AttachAtom[This:Pulse]
 			This.SkillFile:Close
 
@@ -52,7 +66,7 @@ objectdef obj_Skills
 					if !${This.NextSkill.Equal[None]} && \
 						!${Me.Skill[${This.NextSkill}].IsTraining}
 					{
-						Me:DoGetSkills[This.OwnedSkills]
+						This:UpdateSkills
 						This:Train[${This.NextInLine}]
 					}
 				}
@@ -126,26 +140,36 @@ objectdef obj_Skills
 
 		if ${Config.Common.TrainSkillsByTime}
 		{
-			variable iterator CurrentSkill
-			variable float64 Shortest
-			variable float64 TimeToTrain
-
-			This.OwnedSkills:GetIterator[CurrentSkill]
-			if ${CurrentSkill:First(exists)}
+			variable iterator skillIterator
+	
+			This.SkillQueue:GetIterator[skillIterator]
+			if ${skillIterator:First(exists)}
 			{
 				do
 				{
-					;echo ${CurrentSkill.Value.Name} at level ${CurrentSkill.Value.Level} ${CurrentSkill.Value.TimeToTrain}
-					TimeToTrain:Set[${CurrentSkill.Value.TimeToTrain}]
-					if ${TimeToTrain} > 0 && \
-						(${Shortest} == 0 || ${TimeToTrain} < ${Shortest})
-						{
-							echo Shortest So Far (${Shortest}): ${CurrentSkill.Value.Name} at level ${CurrentSkill.Value.Level} ${TimeToTrain.Round} Minutes
-							Shortest:Set[${TimeToTrain}]
-							This.NextInLine:Set[${CurrentSkill.Value.Name}]
-						}
+					;; EVETime ticks are 0.1 microseconds
+					;; skill time is in minutes
+					variable int64 endTime = ${EVETime.AsInt64}
+					UI:UpdateConsole["DEBUG: endTime  = ${endTime}", LOG_MINOR]
+					UI:UpdateConsole["DEBUG: ${skillIterator.Value.Name} >> ${skillIterator.Value.TimeToTrain}", LOG_MINOR]
+					endTime:Inc[${Math.Calc[${skillIterator.Value.TimeToTrain}*10000000*60].Round}]
+					UI:UpdateConsole["DEBUG: endTime+ = ${endTime}", LOG_MINOR]
+					UI:UpdateConsole["DEBUG: endTime >> ${EVETime[${endTime}].Time}", LOG_MINOR]
+					;; Skip skills that end during downtime           
+					
+					variable int hour
+					hour:Set[${EVETime[${endTime}].Time.Token[1, :]}]
+					UI:UpdateConsole["DEBUG: hour >> ${hour}", LOG_MINOR]
+					
+					;;; do not switch to a skill that ends between DT and 8AM PST
+					;;; I need my beauty rest -- GP
+					if ${hour} < 11 && ${hour} > 15
+					{
+						This.NextInLine:Set[${skillIterator.Value.Name}]
+						break
+					}
 				}
-				while ${CurrentSkill:Next(exists)}
+				while ${skillIterator:Next(exists)}
 			}
 		}
 		else
@@ -281,5 +305,41 @@ objectdef obj_Skills
 			return 5
 		}
 		return 0
+	}
+	
+	method UpdateSkills()
+	{
+		variable iterator skillIterator
+		variable string currentlyTraining
+
+		Me:DoGetSkills[This.OwnedSkills]
+		SkillQueue:Clear
+		
+		This.OwnedSkills:GetIterator[skillIterator]
+		if ${skillIterator:First(exists)}
+		{
+			currentlyTraining:Set[${Me.SkillCurrentlyTraining.Name}]
+			
+			do
+			{
+				if ${skillIterator.Value.TimeToTrain} > 0 && ${currentlyTraining.NotEqual[${skillIterator.Value.Name}]}
+				{
+					SkillQueue:Insert[${skillIterator.Value.Name}, ${skillIterator.Value.TimeToTrain}]
+				}
+			}
+			while ${skillIterator:Next(exists)}
+		}
+
+		This:Sort[SkillQueue, TimeToTrain]
+
+		;;;This.SkillQueue:GetIterator[skillIterator]
+		;;;if ${skillIterator:First(exists)}
+		;;;{
+		;;;	do
+		;;;	{
+		;;;		UI:UpdateConsole["DEBUG: ${skillIterator.Value.Name} >> ${skillIterator.Value.TimeToTrain}", LOG_MINOR]
+		;;;	}
+		;;;	while ${skillIterator:Next(exists)}
+		;;;}
 	}
 }
