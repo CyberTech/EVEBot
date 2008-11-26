@@ -163,8 +163,9 @@ objectdef obj_Skills inherits obj_BaseClass
 					
 					;;; do not switch to a skill that ends between DT and 8AM PST
 					;;; I need my beauty rest -- GP
-					if ${hour} < 11 && ${hour} > 15
+					if ${hour} < 11 || ${hour} > 15
 					{
+						UI:UpdateConsole["DEBUG: NextInLine >> ${skillIterator.Value.Name}", LOG_MINOR]
 						This.NextInLine:Set[${skillIterator.Value.Name}]
 						break
 					}
