@@ -55,26 +55,25 @@ objectdef obj_Skills inherits obj_BaseClass
 
 	method Pulse()
 	{
-	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-		    if ${Me(exists)}
-		    {
-		    	; Only call the expensive stuf if we're not training a skill, or if we're not in trainfastest
-		    	; mode, since that iterates the entire skill list and is slow.
-		    	if !${Config.Common.TrainSkillsByTime} || !${Me.SkillCurrentlyTraining(exists)}
-		    	{
+			if ${Me(exists)}
+			{
+				; Only call the expensive stuf if we're not training a skill, or if we're not in trainfastest
+				; mode, since that iterates the entire skill list and is slow.
+				if !${Config.Common.TrainSkillsByTime} || !${Me.SkillCurrentlyTraining(exists)}
+				{
 					if !${This.NextSkill.Equal[None]} && \
-						!${Me.Skill[${This.NextSkill}].IsTraining}
+						!${Me.Skill[${This.NextInLine}].IsTraining}
 					{
-						This:UpdateSkills
 						This:Train[${This.NextInLine}]
 					}
 				}
 				CurrentlyTrainingSkill:Set[${This.CurrentlyTraining}]
 
-	    		This.NextPulse:Set[${Time.Timestamp}]
-	    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-	    		This.NextPulse:Update
+				This.NextPulse:Set[${Time.Timestamp}]
+				This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+				This.NextPulse:Update
 			}
 		}
 	}
@@ -141,7 +140,8 @@ objectdef obj_Skills inherits obj_BaseClass
 		if ${Config.Common.TrainSkillsByTime}
 		{
 			variable iterator skillIterator
-	
+			
+			This:UpdateSkills
 			This.SkillQueue:GetIterator[skillIterator]
 			if ${skillIterator:First(exists)}
 			{
@@ -320,6 +320,7 @@ objectdef obj_Skills inherits obj_BaseClass
 		if ${skillIterator:First(exists)}
 		{
 			currentlyTraining:Set[${Me.SkillCurrentlyTraining.Name}]
+			UI:UpdateConsole["DEBUG: currentlyTraining = ${currentlyTraining}", LOG_MINOR]
 			
 			do
 			{
