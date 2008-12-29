@@ -19,5 +19,6 @@
 		<Setting Name="Agent One">1</Setting>
 		<Setting Name="Agent Two">1</Setting>
 		<Setting Name="Agent Three">1</Setting>
+		<Setting Name="Agent Four">1</Setting>
 	</Set>	
 </InnerSpaceSettings>
