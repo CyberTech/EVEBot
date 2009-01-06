@@ -22,10 +22,10 @@ objectdef obj_Safespots
 		while ${idx} > 0
 		{
 			variable string Prefix
-			Prefix:Set[${Config.Labels.SafeSpotPrefix}]
+			Prefix:Set["${Config.Labels.SafeSpotPrefix}"]
 
 			variable string Label
-			Label:Set[${SafeSpots.Get[${idx}].Label}]
+			Label:Set["${SafeSpots.Get[${idx}].Label}"]
 			if ${Label.Left[${Prefix.Length}].NotEqual[${Prefix}]}
 			{
 				SafeSpots:Remove[${idx}]
