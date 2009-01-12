@@ -79,25 +79,12 @@ objectdef obj_EVEBot
 				UI:UpdateConsole["Enabling 3D Rendering"]
 			}
 			
-			checkPulse:Inc[1]
-			; 20 pulses in this if loop is ~ 1 minute
-			if ${checkPulse} >= ${MAXCHECKPULSE}
-			{
-				variable int BuddyCounter = 1
-
-				if (${BuddiesCount} > 0)
-				{
-					do
-					{       
-						buddyTest:Set[${This.Buddies.Get[${BuddyCounter}].Name}]
-						buddyOnline:Set[${This.Buddies.Get[${BuddyCounter}].IsOnline}]
-						;UI:UpdateConsole["DEBUG: ${buddyTest} (Online: ${buddyOnline})"]
-					}
-					while ${BuddyCounter:Inc} <= ${This.MAX_BUDDIES}
-				}       
-				checkPulse:Set[0]
-			}
-
+			/*
+				TODO
+					[15:52] <CyberTechWork> the downtime check could be massively optimized
+					[15:52] <CyberTechWork> by calcing how long till downtime and setting a timed event to call back
+					[15:52] <CyberTechWork> don't know why we didn't think of that in the first place
+			*/
 			;UI:UpdateConsole["Interval ${checkPulse}"]
 			if !${This.ReturnToStation} && ${Me(exists)}
 			{

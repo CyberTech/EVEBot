@@ -168,10 +168,10 @@ function main()
 			{
 				wait 10
 			}
+			echo "call ${BotModule.Value}.ProcessState"
 			call ${BotModule.Value}.ProcessState
-			wait 10
+			waitframe
 		}
 		while ${BotModule:Next(exists)}
-		waitframe
 	}
 }
