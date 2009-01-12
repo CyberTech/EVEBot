@@ -17,13 +17,6 @@ objectdef obj_EVEBot
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 4
 
-	variable index:being Buddies
-	variable int BuddiesCount = 0
-	variable int MAX_BUDDIES = 1
-	variable int checkPulse = 0
-	variable int MAXCHECKPULSE = 20
-
-	
 	method Initialize()
 	{
 		if !${ISXEVE(exists)}
@@ -31,12 +24,7 @@ objectdef obj_EVEBot
 			echo "ISXEVE must be loaded to use ${APP_NAME}."
 			Script:End
 		}
-
-		EVE:Execute[OpenPeopleAndPlaces]
-		This.BuddiesCount:Set[${EVE.GetBuddies[This.Buddies]}]
-		UI:UpdateConsole["Populating Buddies List:: ${This.BuddiesCount} buddies total"]
-		TimedCommand 50 EVEWindow[addressbook]:Close
-		
+	
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_EVEBot: Initialized", LOG_MINOR]
 	}
@@ -85,7 +73,6 @@ objectdef obj_EVEBot
 					[15:52] <CyberTechWork> by calcing how long till downtime and setting a timed event to call back
 					[15:52] <CyberTechWork> don't know why we didn't think of that in the first place
 			*/
-			;UI:UpdateConsole["Interval ${checkPulse}"]
 			if !${This.ReturnToStation} && ${Me(exists)}
 			{
 				if ( ${This.GameHour} == 10 && \
