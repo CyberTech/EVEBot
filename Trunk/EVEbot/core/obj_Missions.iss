@@ -133,8 +133,8 @@ objectdef obj_MissionDatabase
 		
 		UI:UpdateConsole["obj_MissionDatabase: Initialized", LOG_MINOR]
 
-		UI:UpdateConsole["obj_MissionDatabase: Dumping database...",LOG_MINOR]
-		This:DumpSet[${LavishSettings[${This.SET_NAME}]},1]
+		;UI:UpdateConsole["obj_MissionDatabase: Dumping database...",LOG_MINOR]
+		;This:DumpSet[${LavishSettings[${This.SET_NAME}]},1]
 	}
 
 	method DumpSet(settingsetref Set, uint Indent=1)

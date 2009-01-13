@@ -142,22 +142,22 @@ objectdef obj_Skills inherits obj_BaseClass
 				;; EVETime ticks are 0.1 microseconds
 				;; skill time is in minutes
 				variable int64 endTime = ${EVETime.AsInt64}
-				UI:UpdateConsole["DEBUG: endTime  = ${endTime}", LOG_MINOR]
-				UI:UpdateConsole["DEBUG: ${skillIterator.Value.Name} >> ${skillIterator.Value.TimeToTrain}", LOG_MINOR]
+				;UI:UpdateConsole["DEBUG: endTime  = ${endTime}", LOG_MINOR]
+				;UI:UpdateConsole["DEBUG: ${skillIterator.Value.Name} >> ${skillIterator.Value.TimeToTrain}", LOG_MINOR]
 				endTime:Inc[${Math.Calc[${skillIterator.Value.TimeToTrain}*10000000*60].Round}]
-				UI:UpdateConsole["DEBUG: endTime+ = ${endTime}", LOG_MINOR]
-				UI:UpdateConsole["DEBUG: endTime >> ${EVETime[${endTime}].Time}", LOG_MINOR]
+				;UI:UpdateConsole["DEBUG: endTime+ = ${endTime}", LOG_MINOR]
+				;UI:UpdateConsole["DEBUG: endTime >> ${EVETime[${endTime}].Time}", LOG_MINOR]
 				;; Skip skills that end during downtime           
 				
 				variable int hour
 				hour:Set[${EVETime[${endTime}].Time.Token[1, :]}]
-				UI:UpdateConsole["DEBUG: hour >> ${hour}", LOG_MINOR]
+				;UI:UpdateConsole["DEBUG: hour >> ${hour}", LOG_MINOR]
 				
 				;;; do not switch to a skill that ends between DT and 8AM PST
 				;;; I need my beauty rest -- GP
 				if ${hour} < 11 || ${hour} > 15
 				{
-					UI:UpdateConsole["DEBUG: NextInLine >> ${skillIterator.Value.Name}", LOG_MINOR]
+					;UI:UpdateConsole["DEBUG: NextInLine >> ${skillIterator.Value.Name}", LOG_MINOR]
 					This.NextInLine:Set[${skillIterator.Value.Name}]
 					return ${This.NextInLine}
 				}
@@ -305,7 +305,7 @@ objectdef obj_Skills inherits obj_BaseClass
 		;;;	UI:UpdateConsole["DEBUG: ${idx1}: ${This.SkillFilter.Get[${idx1}].Name} ${This.SkillFilter.Get[${idx1}].Level}", LOG_MINOR]
 		;;;}
 
-		UI:UpdateConsole["DEBUG: num skills in filter = ${This.SkillFilter.Used}", LOG_MINOR]
+		;UI:UpdateConsole["DEBUG: num skills in filter = ${This.SkillFilter.Used}", LOG_MINOR]
 		for (idx1:Set[1] ; ${idx1} <= ${This.SkillFilter.Used} ; idx1:Inc)
 		{
 			ReadSkillName:Set[${This.SkillFilter.Get[${idx1}].Name}]
@@ -342,7 +342,7 @@ objectdef obj_Skills inherits obj_BaseClass
 		if ${skillIterator:First(exists)}
 		{
 			currentlyTraining:Set[${Me.SkillCurrentlyTraining.Name}]
-			UI:UpdateConsole["DEBUG: currentlyTraining = ${currentlyTraining}", LOG_MINOR]
+			;UI:UpdateConsole["DEBUG: currentlyTraining = ${currentlyTraining}", LOG_MINOR]
 			
 			do
 			{

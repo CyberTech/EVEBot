@@ -25,8 +25,6 @@ objectdef obj_MarketItemList
 		LavishSettings:Import[${CONFIG_FILE}]
 		LavishSettings[${This.SET_NAME}]:GetSetIterator[This.itemIterator]
 		UI:UpdateConsole["obj_MarketItemList: Initialized", LOG_MINOR]
-		
-		This:DumpList
 	}
 	
 	method Shutdown()	
