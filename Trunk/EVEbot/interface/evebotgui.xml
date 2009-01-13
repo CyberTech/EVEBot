@@ -113,20 +113,6 @@
 							<Height>20</Height>
 							<text>${Miner.TotalTrips}</text>
 						</text>
-						<text name='Aborts' template='EVESkin.Font.Description'>
-							<X>10</X>
-							<Y>55</Y>
-							<Width>100</Width>
-							<Height>20</Height>
-							<Text>Aborts this Session:</Text>
-						</text>
-						<text name='Aborts_Data' template='EVESkin.Font.Value'>
-							<X>150</X>
-							<Y>55</Y>
-							<Width>100</Width>
-							<Height>20</Height>
-							<text>${Config.Common.OurAbortCount}</text>
-						</text>
 						<text name='avg_time' template='EVESkin.Font.Description'>
 							<X>10</X>
 							<Y>70</Y>
@@ -140,20 +126,6 @@
 							<Width>150</Width>
 							<Height>20</Height>
 							<text>${ISXEVE.SecsToString[${Miner.TripDuration}]}</text>
-						</text>
-						<text name='Average Time/Trip' template='EVESkin.Font.Description'>
-							<X>10</X>
-							<Y>85</Y>
-							<Width>175</Width>
-							<Height>20</Height>
-							<Text>Average Time per Trip:</Text>
-						</text>
-						<text name='Average Time/Trip Data' template='EVESkin.Font.Value'>
-							<X>150</X>
-							<Y>85</Y>
-							<Width>150</Width>
-							<Height>20</Height>
-							<text>${ISXEVE.SecsToString[${Miner.AverageTripSeconds}]}</text>
 						</text>
 						<text name='Currently Training' template='EVESkin.Font.Description'>
 							<X>10</X>

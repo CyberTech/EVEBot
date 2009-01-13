@@ -93,6 +93,7 @@ variable(global) obj_OreHauler Hauler
 variable(global) obj_Freighter Freighter
 variable(global) obj_Ratter Ratter
 variable(global) obj_Missioneer Missioneer
+variable(global) iterator GlobalVariableIterator
 
 function atexit()
 {
@@ -101,47 +102,47 @@ function atexit()
 
 function main()
 {
+	/* Set Turbo to lowest value to try and avoid overloading the EVE Python engine */
+	Turbo 20
+
 	;Script:Unsquelch
 	;Script:EnableDebugLogging[debug.txt]
 	;Script[EVEBot]:EnableProfiling
 
-	/* Set Turbo to lowest value to try and avoid overloading the EVE Python engine */
-	Turbo 20
+	variable iterator BotModule
+	BotModules:GetIterator[BotModule]
 
 	runscript Threads/Targeting.iss
 	runscript Threads/Defense.iss
 	runscript Threads/Offense.iss
 
-	variable iterator BotModule
-	BotModules:GetIterator[BotModule]
-
-	variable iterator VariableIterator
-	VariableScope:GetIterator[VariableIterator]
-
+	; This is a TimedCommand so that it executes in global scope, so we can get the list of global vars.
+	TimedCommand 1 VariableScope:GetIterator[GlobalVariableIterator]
+	wait 10
+	
 	/* 	This code iterates thru the variables list, looking for classes that have been
 		defined with an SVN_REVISION variable.  It then converts that to a numeric
 		Version(int), which is then used to calculate the highest version (VersionNum),
 		for display on the UI. -- CyberTech
 	*/
 	;echo "Listing EVEBot Class Versions:"
-	if ${VariableIterator:First(exists)}
+	if ${GlobalVariableIterator:First(exists)}
 	do
 	{
-
-		if ${VariableIterator.Value(exists)} && \
-			${VariableIterator.Value(type).Name.Left[4].Equal["obj_"]} && \
-			${VariableIterator.Value.SVN_REVISION(exists)} && \
-			${VariableIterator.Value.Version(exists)}
+		if ${GlobalVariableIterator.Value(exists)} && \
+			${GlobalVariableIterator.Value(type).Name.Left[4].Equal["obj_"]} && \
+			${GlobalVariableIterator.Value.SVN_REVISION(exists)} && \
+			${GlobalVariableIterator.Value.Version(exists)}
 		{
-			VariableIterator.Value.Version:Set[${VariableIterator.Value.SVN_REVISION.Token[2, " "]}]
-			;echo " ${VariableIterator.Value.ObjectName} Revision ${VariableIterator.Value.Version}"
-			if ${VersionNum} < ${VariableIterator.Value.Version}
+			GlobalVariableIterator.Value.Version:Set[${GlobalVariableIterator.Value.SVN_REVISION.Token[2, " "]}]
+			;echo " ${GlobalVariableIterator.Value.ObjectName} Revision ${GlobalVariableIterator.Value.Version}"
+			if ${VersionNum} < ${GlobalVariableIterator.Value.Version}
 			{
-				VersionNum:Set[${VariableIterator.Value.Version}]
+				VersionNum:Set[${GlobalVariableIterator.Value.Version}]
 			}
 		}
 	}
-	while ${VariableIterator:Next(exists)}
+	while ${GlobalVariableIterator:Next(exists)}
 	AppVersion:Set["${APP_NAME} Version ${VersionNum}"]
 
 	UI:Reload
@@ -168,7 +169,6 @@ function main()
 			{
 				wait 10
 			}
-			echo "call ${BotModule.Value}.ProcessState"
 			call ${BotModule.Value}.ProcessState
 			waitframe
 		}
