@@ -9,7 +9,7 @@
 */
 objectdef obj_Offense
 {
-	variable string SVN_REVISION = "$Rev: $"
+	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
 	variable bool Running = TRUE

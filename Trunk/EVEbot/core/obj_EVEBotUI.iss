@@ -86,6 +86,7 @@ objectdef obj_EVEBotUI
 	
 	member Runtime()
 	{
+		/* TODO - this is expensive (4-5fps for me), replace with something better -- CyberTech */
 		DeclareVariable RunTime float ${Math.Calc[${Script.RunningTime}/1000/60]}
 		
 		DeclareVariable Hours string ${Math.Calc[(${RunTime}/60)%60].Int.LeadingZeroes[2]}

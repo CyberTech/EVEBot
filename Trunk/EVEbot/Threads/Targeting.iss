@@ -27,7 +27,7 @@ objectdef obj_QueueTarget
 
 objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 {
-	variable string SVN_REVISION = "$Rev: 728 $"
+	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
 	variable bool Running = TRUE

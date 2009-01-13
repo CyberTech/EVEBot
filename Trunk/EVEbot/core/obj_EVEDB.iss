@@ -9,7 +9,7 @@
 
 objectdef obj_EVEDB_Spawns
 {
-	variable string SVN_REVISION = "$Rev: 707 $"
+	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
 	variable string CONFIG_FILE = "${BaseConfig.DATA_PATH}/EVEDB_Spawns.xml"
@@ -30,7 +30,7 @@ objectdef obj_EVEDB_Spawns
 
 objectdef obj_EVEDB_Stations
 {
-	variable string SVN_REVISION = "$Rev: 722 $"
+	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
 	variable string CONFIG_FILE = "${BaseConfig.DATA_PATH}/EVEDB_Stations.xml"

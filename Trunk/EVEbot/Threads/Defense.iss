@@ -12,7 +12,7 @@
 
 objectdef obj_Defense
 {
-	variable string SVN_REVISION = "$Rev: 728 $"
+	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
 	variable bool Running = TRUE
@@ -43,7 +43,7 @@ objectdef obj_Defense
 		;{
 		;	return
 		;}
-
+	
 		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			if ${This.Running}
