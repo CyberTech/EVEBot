@@ -132,8 +132,9 @@ function main()
 		}
 	}
 	while ${VariableIterator:Next(exists)}
-	AppVersion:Set["${APP_NAME} Version ${VersionNum}"]
 	
+	EVEBot:SetVersion[${VersionNum}]
+
 	UI:Reload
 
 
