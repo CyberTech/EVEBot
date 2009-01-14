@@ -25,6 +25,7 @@ objectdef obj_EVEBot
 			Script:End
 		}
 	
+		This:SetVersion
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_EVEBot: Initialized", LOG_MINOR]
 	}
@@ -116,6 +117,18 @@ objectdef obj_EVEBot
 	{
 		UI:UpdateConsole["Resumed", LOG_CRITICAL]
 		This.Paused:Set[FALSE]
+	}
+	
+	method SetVersion(int Version=${VersionNum})
+	{
+		if ${APP_HEADURL.Find["EVEBot/branches/stable"]}
+		{
+			AppVersion:Set["${APP_NAME} Stable Revision ${VersionNum}"]
+		}
+		else
+		{
+			AppVersion:Set["${APP_NAME} Dev Revision ${VersionNum}"]
+		}
 	}
 	
 	member:int GameHour()
