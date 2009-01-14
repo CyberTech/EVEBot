@@ -17,13 +17,6 @@ objectdef obj_EVEBot
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 4
 
-	variable index:being Buddies
-	variable int BuddiesCount = 0
-	variable int MAX_BUDDIES = 1
-	variable int checkPulse = 0
-	variable int MAXCHECKPULSE = 20
-
-	
 	method Initialize()
 	{
 		if !${ISXEVE(exists)}
@@ -31,12 +24,7 @@ objectdef obj_EVEBot
 			echo "ISXEVE must be loaded to use ${APP_NAME}."
 			Script:End
 		}
-
-		EVE:Execute[OpenPeopleAndPlaces]
-		This.BuddiesCount:Set[${EVE.GetBuddies[This.Buddies]}]
-		UI:UpdateConsole["Populating Buddies List:: ${This.BuddiesCount} buddies total"]
-		TimedCommand 50 EVEWindow[addressbook]:Close
-		
+	
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_EVEBot: Initialized", LOG_MINOR]
 	}
@@ -79,30 +67,16 @@ objectdef obj_EVEBot
 				UI:UpdateConsole["Enabling 3D Rendering"]
 			}
 			
-			checkPulse:Inc[1]
-			; 20 pulses in this if loop is ~ 1 minute
-			if ${checkPulse} >= ${MAXCHECKPULSE}
-			{
-				variable int BuddyCounter = 1
-
-				if (${BuddiesCount} > 0)
-				{
-					do
-					{       
-						buddyTest:Set[${This.Buddies.Get[${BuddyCounter}].Name}]
-						buddyOnline:Set[${This.Buddies.Get[${BuddyCounter}].IsOnline}]
-						;UI:UpdateConsole["DEBUG: ${buddyTest} (Online: ${buddyOnline})"]
-					}
-					while ${BuddyCounter:Inc} <= ${This.MAX_BUDDIES}
-				}       
-				checkPulse:Set[0]
-			}
-
-			;UI:UpdateConsole["Interval ${checkPulse}"]
+			/*
+				TODO
+					[15:52] <CyberTechWork> the downtime check could be massively optimized
+					[15:52] <CyberTechWork> by calcing how long till downtime and setting a timed event to call back
+					[15:52] <CyberTechWork> don't know why we didn't think of that in the first place
+			*/
 			if !${This.ReturnToStation} && ${Me(exists)}
 			{
-				if (${This.GameHour} == 10 && \
-					${This.GameMinute} >= 50) 
+				if ( ${This.GameHour} == 10 && \
+					( ${This.GameMinute} >= 50 || ${This.GameMinute} <= 57) )
 				{
 					UI:UpdateConsole["EVE downtime approaching, pausing operations", LOG_CRITICAL]
 					This.ReturnToStation:Set[TRUE]
