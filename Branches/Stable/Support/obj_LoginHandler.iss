@@ -127,7 +127,7 @@ objectdef obj_LoginHandler
 				}
 			case SERVERDOWN
 				; echo DEBUG: Server Status: ${Login.ServerStatus}
-				if ${Login.ServerStatus.NotEqual[LIVE]}
+				if ${Login.ServerStatus.NotEqual[LIVE]} && ${Login.ServerStatus.NotEqual[EVE-EVE-RELEASE]}
 				{
 					This.CurrentState:Set["SERVERDOWN"]
 					This.LoginTimer:Set[${This.connectWaitTime}]
