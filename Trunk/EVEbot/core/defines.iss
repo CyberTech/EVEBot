@@ -10,6 +10,7 @@
 variable string APP_NAME = "EVEBot"
 variable string APP_PATH = "EVEBot/EVEBot.iss"
 variable string SVN_REVISION = "$Rev$"
+variable string HEADURL = "$HeadURL$"
 variable string APP_MANIFEST = "https://www.isxgames.com/EVEBot/Trunk/EVEbot/manifest.xml"
 variable string APP_MANIFEST_TRUNK = "https://www.isxgames.com/EVEBot/Trunk/EVEbot/manifest-trunk.xml"
 
