@@ -213,14 +213,12 @@ objectdef obj_Combat
 			{
 				waitframe
 			}
-			;Ship:Offline_Cloak
-			;Ship:Online_Salvager
 
 			; Reload the weapons -if- ammo is below 30% and they arent firing
 			Ship:Reload_Weapons[FALSE]
 
-			; Activate the weapons, the modules class checks if there's a target (no it doesn't - ct)
 			Ship:Activate_StasisWebs
+			Ship:Activate_TargetPainters
 
 			if ${Me.ActiveTarget.Distance} > ${Ship.OptimalWeaponRange}
 			{
