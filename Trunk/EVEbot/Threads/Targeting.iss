@@ -71,6 +71,11 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 		}
 	}
 
+	member:int TargetCount()
+	{
+		return ${Math.Calc[${This.TargetingThisFrame} + ${_Me.GetTargets} + ${_Me.GetTargeting}]}
+	}
+	
 	member:int QueueSize()
 	{
 		return ${Math.Calc[${TargetQueue.Used} + ${MandatoryQueue.Used}]}
@@ -129,7 +134,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 
 	method TargetEntity(int EntityID)
 	{
-		if ${Math.Calc[${This.TargetingThisFrame} + ${_Me.GetTargets} + ${_Me.GetTargeting}]} >= ${Ship.MaxLockedTargets}
+		if ${This.TargetCount} >= ${Ship.MaxLockedTargets}
 		{
 			return
 		}
@@ -139,11 +144,12 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 			return
 		}
 
+#if EVEBOT_DEBUG
 		UI:UpdateConsole["Debug: Targets: ${_Me.GetTargets}"]
 		UI:UpdateConsole["Debug: Targeting: ${_Me.GetTargeting}"]
 		UI:UpdateConsole["Debug: Current Targets: ${Math.Calc[${_Me.GetTargets} + ${_Me.GetTargeting}]}"]
 		UI:UpdateConsole["Debug: Max Targets: ${Ship.MaxLockedTargets}"]
-
+#endif
 		if !${Entity[${EntityID}].IsLockedTarget} && !${Entity[${EntityID}].BeingTargeted} && ${Entity[${EntityID}].Name.NotEqual[NULL]}
 		{
 			UI:UpdateConsole["Locking ${Entity[${EntityID}].Name} (${EntityID}): ${EVEBot.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"]
@@ -175,7 +181,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 					!${Entity[${Target.Value.EntityID}].BeingTargeted} && \
 					${_Me.Ship.MaxTargetRange} > ${Entity[${Target.Value.EntityID}].Distance}
 				{
-					if ${Math.Calc[${This.TargetingThisFrame} + ${_Me.GetTargets} + ${_Me.GetTargeting}]} >= ${Ship.MaxLockedTargets}
+					if ${This.TargetCount} >= ${Ship.MaxLockedTargets}
 					{
 						This:UnlockRandomTarget[]
 						/*	Go ahead and return here -- we'll catch the mandatory target on the next pulse, this gives the client
@@ -195,7 +201,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 			return
 		}
 
-		if ${Math.Calc[${This.TargetingThisFrame} + ${_Me.GetTargets} + ${_Me.GetTargeting}]} >= ${Ship.MaxLockedTargets}
+		if ${This.TargetCount} >= ${Ship.MaxLockedTargets}
 		{
 			return
 		}

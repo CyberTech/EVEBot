@@ -152,7 +152,8 @@ objectdef obj_Asteroids
 #endif
 			if ${ForceMove} || !${AsteroidsInRange}
 			{
-
+				This.AsteroidList:Clear
+				
 				if (${Config.Miner.BookMarkLastPosition} && \
 					${Bookmarks.StoredLocationExists})
 				{
@@ -228,7 +229,8 @@ objectdef obj_Asteroids
 	method Populate_AsteroidList()
 	{
 		variable index:entity CurrentAsteroidList
-
+		variable iterator AsteroidIterator
+		
 		switch ${Config.Miner.MinerType}
 		{
 			case Ice
@@ -250,11 +252,17 @@ objectdef obj_Asteroids
 		{
 			do
 			{
-				;echo "DEBUG: obj_Asteroids: Checking for Ore Type ${This.OreTypeIterator.Key}"
-				This.CurrentAsteroidList:Clear
-				EVE:DoGetEntities[This.CurrentAsteroidList,CategoryID,${This.AsteroidCategoryID},${This.OreTypeIterator.Key}]
+#if EVEBOT_DEBUG
+				UI:UpdateConsole["DEBUG: obj_Asteroids:Populate_AsteroidList: Checking for Ore Type ${This.OreTypeIterator.Key}"]
+#endif
+				CurrentAsteroidList:Clear
+				EVE:DoGetEntities[CurrentAsteroidList,CategoryID,${This.AsteroidCategoryID},ExactName,${This.OreTypeIterator.Key}]
 
-				This.CurrentAsteroidList:GetIterator[AsteroidIterator]
+#if EVEBOT_DEBUG
+				UI:UpdateConsole["DEBUG: obj_Asteroids:Populate_AsteroidList: Found ${CurrentAsteroidList.Used}"]
+#endif
+
+				CurrentAsteroidList:GetIterator[AsteroidIterator]
 				if ${AsteroidIterator:First(exists)}
 				do
 				{
@@ -358,7 +366,7 @@ objectdef obj_Asteroids
 		variable iterator AsteroidIterator
 		variable int IndexPos = 1
 		
-		if ${AsteroidList.Used} == 0
+		if ${This.AsteroidList.Used} == 0
 		{
 			;call This.UpdateList
 			This:Populate_AsteroidList[]
@@ -366,11 +374,16 @@ objectdef obj_Asteroids
 
 		This.MaxDistanceToAsteroid:Set[${Math.Calc[${Ship.OptimalMiningRange} * ${Config.Miner.MiningRangeMultipler}]}]
 
-		if ${This.AsteroidList[${IndexPos}](exists)}
+#if EVEBOT_DEBUG
+				UI:UpdateConsole["DEBUG: obj_Asteroids:ChooseTargets: Checking ${This.AsteroidList.Used} asteroids"]
+#endif
+		if ${This.AsteroidList.Used}
 		{
 			for ( IndexPos:Set[1]; ${IndexPos} <= ${This.AsteroidList.Size}; IndexPos:Inc )
 			{
 				if ${Entity[${This.AsteroidList[${IndexPos}].ID}](exists)} && \
+					${Targeting.TargetCount} < ${Ship.MaxLockedTargets} && \
+					${Targeting.QueueSize} < ${Ship.MaxLockedTargets} && \
 					!${Targeting.IsQueued[${This.AsteroidList[${IndexPos}].ID}]} && \
 					${This.AsteroidList[${IndexPos}].Distance} < ${_Me.Ship.MaxTargetRange} && \
 					( !${Me.ActiveTarget(exists)} || ${This.AsteroidList[${IndexPos}].DistanceTo[${Me.ActiveTarget.ID}]} <= ${Math.Calc[${Ship.OptimalMiningRange}* 1.1]} )
