@@ -167,6 +167,10 @@ objectdef obj_Freighter
 		}
 		elseif ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
 		{
+			/* TODO - CyberTech - This needs configurable. Assume Ship 
+				942k, items of 100k each, ship is full @ 900k, however 
+				min freespace is looking for 20k (2%)
+			*/
 			This.CurrentState:Set["CARGOFULL"]
 		}
 		elseif !${_Me.InStation} && ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace}

@@ -600,6 +600,7 @@ objectdef obj_Cargo
 					if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${Ship.CargoFreeSpace}
 					{
 						/* Move only what will fit, minus 1 to account for CCP rounding errors. */
+						/* TODO - CyberTech - this should only apply to small items with m3 sizes with decimal places, not large items */
 						QuantityToMove:Set[${Ship.CargoFreeSpace} / ${CargoIterator.Value.Volume} - 1]
 					}
 					else
