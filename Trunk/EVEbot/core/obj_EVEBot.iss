@@ -82,12 +82,6 @@ objectdef obj_EVEBot
 					UI:UpdateConsole["EVE downtime approaching, pausing operations", LOG_CRITICAL]
 					This.ReturnToStation:Set[TRUE]
 				}
-				elseif (${This.GameHour} == 10 && \
-					${This.GameMinute} >= 58) 
-				{
-					UI:UpdateConsole["EVE downtime approaching - Quitting Eve", LOG_CRITICAL]
-					EVE:Execute[CmdQuitGame]
-				}
 				else
 				{
 					variable int Hours = ${Math.Calc[(${Script.RunningTime}/1000/60/60)%60].Int}
@@ -101,6 +95,15 @@ objectdef obj_EVEBot
 				}
 			}
 
+			if ${This.ReturnToStation} && ${Me(exists)}
+			{
+				if (${This.GameHour} == 10 && ${This.GameMinute} >= 58) 
+				{
+					UI:UpdateConsole["EVE downtime approaching - Quitting Eve", LOG_CRITICAL]
+					EVE:Execute[CmdQuitGame]
+				}
+			}
+			
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
     		This.NextPulse:Update
