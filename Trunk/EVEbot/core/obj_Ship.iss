@@ -241,6 +241,18 @@ objectdef obj_Ship
 		return ${rVal}
 	}
 
+	member:bool HasCloak()
+	{
+		variable bool rVal = FALSE
+
+		if ${This.ModuleList_Cloaks.Used} > 0
+		{
+			rVal:Set[TRUE]
+		}
+
+		return ${rVal}
+	}
+
 	member:float CargoMinimumFreeSpace()
 	{
 		if !${Me.Ship(exists)}

@@ -217,7 +217,6 @@ objectdef obj_Defense
 		}
 
 		This.Hiding:Set[TRUE]
-		echo ${Safespots.Count}
 		if ${Config.Combat.RunToStation} || ${Safespots.Count} == 0
 		{
 			call This.FleeToStation
@@ -250,15 +249,27 @@ objectdef obj_Defense
 
 		if ${Safespots.IsAtSafespot}
 		{
-			if !${Ship.IsCloaked}
+			if ${Ship.HasCloak} && !${Ship.IsCloaked}
 			{
 				${Ship:Activate_Cloak[]
 			}
+			
+			;;; Doing this for hours would make you look like a bot.
+			;;; TODO Shutdown Eve or dock if we are fleeing without a cloak for more than 5-10 minutes
+			;;;if !${Ship.HasCloak} && ${Safespots.Count} > 1
+			;;;{
+			;;;	; This ship doesn't have a cloak so let's bounce between safe spots
+			;;;	if ${Me.ToEntity.Mode} != 3
+			;;;	{
+			;;;		call Safespots.WarpToNext
+			;;;		wait 30
+			;;;	}
+			;;;}
 		}
 		else
 		{
 			; Are we at the safespot and not warping?
-			if ${_Me.ToEntity.Mode} != 3
+			if ${Me.ToEntity.Mode} != 3
 			{
 				call Safespots.WarpToNext
 				wait 30
