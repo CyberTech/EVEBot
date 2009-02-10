@@ -217,8 +217,8 @@ objectdef obj_Defense
 		}
 
 		This.Hiding:Set[TRUE]
-		echo ${SafeSpots.Count}
-		if ${Config.Combat.RunToStation} || ${SafeSpots.Count} == 0
+		echo ${Safespots.Count}
+		if ${Config.Combat.RunToStation} || ${Safespots.Count} == 0
 		{
 			call This.FleeToStation
 		}
