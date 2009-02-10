@@ -732,7 +732,8 @@ objectdef obj_Agents
 			UI:UpdateConsole["obj_Agents: ERROR: Mission details window was not found!"]
 			UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Name.Escape = ${amIterator.Value.Name.Escape}"]
 		}
-		details:Set[${EVEWindow[ByCaption,"${caption}"].HTML.Escape}]
+		; The embedded quotes look odd here, but this is required to escape the comma that exists in the caption and in the resulting html.
+		details:Set["${EVEWindow[ByCaption,"${caption}"].HTML.Escape}"]
 
 		UI:UpdateConsole["obj_Agents: DEBUG: HTML.Length = ${EVEWindow[ByCaption,${caption}].HTML.Length}"]
 		UI:UpdateConsole["obj_Agents: DEBUG: details.Length = ${details.Length}"]
@@ -1003,7 +1004,8 @@ objectdef obj_Agents
 			UI:UpdateConsole["obj_Agents: ERROR: Mission details window was not found!"]
 			UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Name.Escape = ${amIterator.Value.Name.Escape}"]
 		}
-		details:Set[${EVEWindow[ByCaption,"${caption}"].HTML.Escape}]
+		; The embedded quotes look odd here, but this is required to escape the comma that exists in the caption and in the resulting html.
+		details:Set["${EVEWindow[ByCaption,"${caption}"].HTML.Escape}"]
 
 		UI:UpdateConsole["obj_Agents: DEBUG: HTML.Length = ${EVEWindow[ByCaption,${caption}].HTML.Length}"]
 		UI:UpdateConsole["obj_Agents: DEBUG: details.Length = ${details.Length}"]
