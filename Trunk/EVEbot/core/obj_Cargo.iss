@@ -1,13 +1,13 @@
 /*
 	Cargo Class
-	
+
 	Interacting with Cargo of ship, hangar, and containers, and moving it.
-	
+
 	-- CyberTech
 
 BUGS:
-	
-			
+
+
 */
 
 objectdef obj_Cargo
@@ -34,15 +34,15 @@ objectdef obj_Cargo
 	function OpenHolds()
 	{
 		call Ship.OpenCargo
-		call Station.OpenHangar		
+		call Station.OpenHangar
 	}
-	
+
 	function CloseHolds()
 	{
 		call Ship.CloseCargo
 		call Station.CloseHangar
 	}
-	
+
 	member:bool ShipHasContainers()
 	{
 		variable index:item anItemIndex
@@ -53,17 +53,17 @@ objectdef obj_Cargo
 		if ${anIterator:First(exists)}
 		do
 		{
-			;This:DumpItem[${anIterator.Value}]			
+			;This:DumpItem[${anIterator.Value}]
 			if ${anIterator.Value.GroupID} == GROUPID_SECURE_CONTAINER
 			{
 				return TRUE
-			}			
+			}
 		}
 		while ${anIterator:Next(exists)}
-		
+
 		return FALSE
 	}
-			
+
 
 	method DumpItem(item anItem)
 	{
@@ -100,13 +100,13 @@ objectdef obj_Cargo
 		UI:UpdateConsole["========================================================"]
 
 	}
-	
+
 	method FindAllShipCargo()
 	{
 		Me.Ship:DoGetCargo[This.MyCargo]
-		
+
 		variable iterator CargoIterator
-		
+
 		This.MyCargo:GetIterator[CargoIterator]
 		if ${CargoIterator:First(exists)}
 		do
@@ -118,16 +118,16 @@ objectdef obj_Cargo
 			This.CargoToTransfer:Insert[${CargoIterator.Value}]
 		}
 		while ${CargoIterator:Next(exists)}
-		
+
 		;UI:UpdateConsole["DEBUG: obj_Cargo:FindAllShipCargo: This.CargoToTransfer Populated: ${This.CargoToTransfer.Used}"]
 	}
-		
+
 	method FindShipCargo(int CategoryIDToMove)
 	{
 		Me.Ship:DoGetCargo[This.MyCargo]
-		
+
 		variable iterator CargoIterator
-		
+
 		This.MyCargo:GetIterator[CargoIterator]
 		if ${CargoIterator:First(exists)}
 		do
@@ -143,7 +143,7 @@ objectdef obj_Cargo
 			}
 		}
 		while ${CargoIterator:Next(exists)}
-		
+
 		;UI:UpdateConsole["DEBUG: obj_Cargo:FindShipCargo: This.CargoToTransfer Populated: ${This.CargoToTransfer.Used}"]
 	}
 
@@ -199,24 +199,24 @@ objectdef obj_Cargo
 
 		call Ship.OpenCargo
 		This:FindShipCargo[CATEGORYID_CHARGE]
-		
+
 		This.CargoToTransfer:GetIterator[CargoIterator]
-		
-		
+
+
 		; Add up the current crystal quantities in the cargo
 		if ${CargoIterator:First(exists)}
 		do
 		{
 			variable string crystal
 			variable int quantity
-			
+
 			crystal:Set[${CargoIterator.Value.Name}]
 			quantity:Set[${CargoIterator.Value.Quantity}]
-			
+
 			Crystals:Set[${crystal}, ${Math.Calc[${Crystals.Element[${crystal}]} + ${quantity} ]}]
 		}
 		while ${CargoIterator:Next(exists)}
-		
+
 		This.CargoToTransfer:Clear
 
 		; No crystals found, just return
@@ -224,7 +224,7 @@ objectdef obj_Cargo
 		{
 			return
 		}
-		
+
 		call Station.OpenHangar
 		Me:DoGetHangarItems[HangarItems]
 		HangarItems:GetIterator[HangarIterator]
@@ -235,76 +235,76 @@ objectdef obj_Cargo
 			{
 				;echo CategoryID: ${HangarIterator.Value.CategoryID}
 				if ${HangarIterator.Value.CategoryID} == CATEGORYID_CHARGE
-				{       
+				{
 					variable string name
 					variable int quant
 					variable int needed
-					
+
 					name:Set[${HangarIterator.Value.Name}]
 					quant:Set[${HangarIterator.Value.Quantity}]
-					
+
 					if ${Crystals.FirstKey(exists)}
 					do
-					{       
+					{
 						needed:Set[${Math.Calc[ ${MIN_CRYSTALS} - ${Crystals.CurrentValue}]}]
-						
+
 						;echo "${MIN_CRYSTALS} - ${Crystals.CurrentValue} = ${needed}"
 						;echo Hangar: ${name} : ${quant} == ${Crystals.CurrentKey} : Needed: ${needed}
-						
+
 						if (${name.Equal[${Crystals.CurrentKey}]} && ${needed} > 0)
-						{       
+						{
 							if ${quant} >= ${needed}
-							{       
+							{
 								HangarIterator.Value:MoveTo[MyShip, ${needed}]
 								Crystals:Set[${Crystals.CurrentKey}, ${Math.Calc[${Crystals.CurrentValue} + ${needed}]}]
 							}
 							else
-							{       
+							{
 								HangarIterator.Value:MoveTo[MyShip]
 								Crystals:Set[${Crystals.CurrentKey}, ${Math.Calc[${Crystals.CurrentValue} + ${quant}]}]
 							}
 						}
-					} 
+					}
 					while ${Crystals.NextKey(exists)}
 				}
 			}
 			while ${HangarIterator:Next(exists)}
-			
+
 			if ${Crystals.FirstKey(exists)}
 			do
-			{       
+			{
 				if ${Crystals.CurrentValue} < ${MIN_CRYSTALS}
-				{        
+				{
 						 UI:UpdateConsole["Out of ${Crystals.CurrentKey} !!"]
 				}
-			} 
+			}
 			while ${Crystals.NextKey(exists)}
-			
+
 		}
 
-	
+
 	function TransferContainerToHangar(item anItem)
 	{
 		if ${anItem.GroupID} == GROUPID_SECURE_CONTAINER
 		{
-			anItem:Open 
+			anItem:Open
 			wait 15
-			
+
 			variable index:item anItemIndex
 			variable index:int  anIntIndex
 			variable iterator   anIterator
-			
+
 			anItem:DoGetCargo[anItemIndex]
 			anItemIndex:GetIterator[anIterator]
 			anIntIndex:Clear
-			
+
 			if ${anIterator:First(exists)}
 			do
 			{
 				anIntIndex:Insert[${anIterator.Value.ID}]
 			}
 			while ${anIterator:Next(exists)}
-			
+
 			if ${anIntIndex.Used} > 0
 			{
 				EVE:MoveItemsTo[anIntIndex, Hangar]
@@ -319,13 +319,13 @@ objectdef obj_Cargo
 			UI:UpdateConsole["TransferContainerToHangar: Not Supported!! ${CargoIterator.Value.Name}"]
 		}
 	}
-	
+
 	; Transfer ALL items in MyCargo index
 	function TransferListToHangar()
 	{
 		variable iterator CargoIterator
 		This.CargoToTransfer:GetIterator[CargoIterator]
-		
+
 		if ${CargoIterator:First(exists)}
 		{
 			call Station.OpenHangar
@@ -340,7 +340,7 @@ objectdef obj_Cargo
 				else
 				{
 					CargoIterator.Value:MoveTo[Hangar]
-				}	
+				}
 				wait 30
 			}
 			while ${CargoIterator:Next(exists)}
@@ -356,7 +356,7 @@ objectdef obj_Cargo
 	{
 		variable iterator CargoIterator
 		This.CargoToTransfer:GetIterator[CargoIterator]
-		
+
 		if ${CargoIterator:First(exists)}
 		{
 			do
@@ -382,7 +382,7 @@ objectdef obj_Cargo
 		variable int QuantityToMove
 		variable iterator CargoIterator
 		This.CargoToTransfer:GetIterator[CargoIterator]
-		
+
 		if ${CargoIterator:First(exists)}
 		{
 			do
@@ -390,7 +390,7 @@ objectdef obj_Cargo
 				if ${JetCan.IsReady[TRUE]}
 				{
 					call JetCan.Open ${JetCan.ActiveCan}
-					
+
 					if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${JetCan.CargoFreeSpace}
 					{
 						/* Move only what will fit, minus 1 to account for CCP rounding errors. */
@@ -452,10 +452,10 @@ objectdef obj_Cargo
 					qty:Set[${src.Quantity}]
 				}
 			}
-		}			
-	
+		}
+
 		UI:UpdateConsole["DEBUG: QuantityToMove: returning ${qty}"]
-	
+
 		return ${qty}
 	}
 
@@ -476,7 +476,7 @@ objectdef obj_Cargo
 		}
 
 		call Ship.OpenCargo
-		
+
 		/* build the container list */
 		Me.Ship:DoGetCargo[shipItemIndex]
 		shipItemIndex:GetIterator[shipItemIterator]
@@ -486,11 +486,11 @@ objectdef obj_Cargo
 		{
 			if ${shipItemIterator.Value.GroupID} == GROUPID_SECURE_CONTAINER
 			{
-				shipContainerIndex:Insert[${shipItemIterator.Value}]					
+				shipContainerIndex:Insert[${shipItemIterator.Value}]
 			}
 		}
 		while ${shipItemIterator:Next(exists)}
-				
+
 		/* move the list to containers */
 		shipContainerIndex:GetIterator[shipContainerIterator]
 		if ${shipContainerIterator:First(exists)}
@@ -498,12 +498,12 @@ objectdef obj_Cargo
 		{
 			shipContainerIterator.Value:Open
 			wait 15
-			cnt:Set[${This.CargoToTransfer.Used}]			
+			cnt:Set[${This.CargoToTransfer.Used}]
 			for (idx:Set[1] ; ${idx}<=${cnt} ; idx:Inc)
-			{				
+			{
 				variable float usedSpace
 				variable float totalSpace
-				
+
 				do
 				{
 					usedSpace:Set[${shipContainerIterator.Value.UsedCargoCapacity}]
@@ -529,8 +529,8 @@ objectdef obj_Cargo
 					wait 15
 				}
 				if ${qty} == ${This.CargoToTransfer.Get[${idx}].Quantity}
-				{	
-					This.CargoToTransfer:Remove[${idx}]						
+				{
+					This.CargoToTransfer:Remove[${idx}]
 				}
 				do
 				{
@@ -548,19 +548,19 @@ objectdef obj_Cargo
 			This.CargoToTransfer:Collapse
 			shipContainerIterator.Value:Close
 			wait 15
-			
+
 			if ${This.CargoToTransfer.Used} == 0
 			{	/* everything moved */
 				break
 			}
 		}
-		while ${shipContainerIterator:Next(exists)}		
-		
+		while ${shipContainerIterator:Next(exists)}
+
 		/* move the list to the ship */
-		cnt:Set[${This.CargoToTransfer.Used}]			
+		cnt:Set[${This.CargoToTransfer.Used}]
 		for (idx:Set[1] ; ${idx}<=${cnt} ; idx:Inc)
 		{
-			qty:Set[${This.QuantityToMove[${This.CargoToTransfer.Get[${idx}]},0]}]			
+			qty:Set[${This.QuantityToMove[${This.CargoToTransfer.Get[${idx}]},0]}]
 			if ${qty} > 0
 			{
 				UI:UpdateConsole["TransferListToShipWithContainers: Loading Cargo: ${qty} units (${Math.Calc[${qty} * ${This.CargoToTransfer.Get[${idx}].Volume}]}m3) of ${This.CargoToTransfer.Get[${idx}].Name}"]
@@ -568,9 +568,9 @@ objectdef obj_Cargo
 				wait 15
 			}
 			if ${qty} == ${This.CargoToTransfer.Get[${idx}].Quantity}
-			{	
-				This.CargoToTransfer:Remove[${idx}]						
-			}			
+			{
+				This.CargoToTransfer:Remove[${idx}]
+			}
 			;if ${Ship.CargoFull}
 			;{
 			;	UI:UpdateConsole["DEBUG: TransferListToShipWithContainers: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
@@ -579,13 +579,13 @@ objectdef obj_Cargo
 		}
 		This.CargoToTransfer:Collapse
 	}
-	
+
 	function TransferListToShip()
 	{
 		variable int QuantityToMove
 		variable iterator CargoIterator
 		This.CargoToTransfer:GetIterator[CargoIterator]
-		
+
 		if ${CargoIterator:First(exists)}
 		{
 			call Ship.OpenCargo
@@ -607,7 +607,7 @@ objectdef obj_Cargo
 					{
 						QuantityToMove:Set[${CargoIterator.Value.Quantity}]
 					}
-	
+
 					UI:UpdateConsole["TransferListToShip: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
 					UI:UpdateConsole["TransferListToShip: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
 					if ${QuantityToMove} > 0
@@ -615,7 +615,7 @@ objectdef obj_Cargo
 						CargoIterator.Value:MoveTo[MyShip,${QuantityToMove}]
 						wait 30
 					}
-									
+
 					if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
 					{
 						UI:UpdateConsole["DEBUG: TransferListToShip: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
@@ -631,9 +631,9 @@ objectdef obj_Cargo
 			UI:UpdateConsole["DEBUG: obj_Cargo:TransferListToShip: Nothing found to move"]
 		}
 	}
-	
+
 	function TransferOreToCorpHangarArray()
-	{		
+	{
 		if ${CorpHangarArray.IsReady}
 		{
 			if ${Entity[${CorpHangarArray.ActiveCan}].Distance} > CORP_HANGAR_LOOT_RANGE
@@ -651,7 +651,7 @@ objectdef obj_Cargo
 
 		This:FindShipCargo[CATEGORYID_ORE]
 		call This.TransferListToCorpHangarArray
-		
+
 		This.CargoToTransfer:Clear[]
 	}
 
@@ -663,12 +663,12 @@ objectdef obj_Cargo
 
 		This:FindShipCargo[CATEGORYID_ORE]
 		call This.TransferListToJetCan
-		
+
 		This.CargoToTransfer:Clear[]
 	}
-	
+
 	function TransferOreToHangar()
-	{	
+	{
 		while !${Station.Docked}
 		{
 			UI:UpdateConsole["obj_Cargo: Waiting for dock..."]
@@ -680,10 +680,10 @@ objectdef obj_Cargo
 
 		UI:UpdateConsole["Transferring Ore to Station Hangar"]
 		call Ship.OpenCargo
-		
+
 		This:FindShipCargo[CATEGORYID_ORE]
 		call This.TransferListToHangar
-		
+
 		This.CargoToTransfer:Clear[]
 		Me:StackAllHangarItems
 		Ship:UpdateBaselineUsedCargo[]
@@ -691,12 +691,12 @@ objectdef obj_Cargo
 
 		call This.ReplenishCrystals
 		wait 10
-		
+
 		call This.CloseHolds
 	}
-	
+
 	function TransferCargoToHangar()
-	{	
+	{
 		while !${Station.Docked}
 		{
 			UI:UpdateConsole["obj_Cargo: Waiting for dock..."]
@@ -711,9 +711,9 @@ objectdef obj_Cargo
 
 		/* FOR NOW move all cargo.  Add filtering later */
 		This:FindAllShipCargo
-		
+
 		call This.TransferListToHangar
-		
+
 		This.CargoToTransfer:Clear[]
 		Me:StackAllHangarItems
 		Ship:UpdateBaselineUsedCargo[]
@@ -722,7 +722,7 @@ objectdef obj_Cargo
 	}
 
 	function TransferCargoToShip()
-	{	
+	{
 		if !${Station.Docked}
 		{
 			/* TODO - Support picking up from entities in space */
@@ -733,7 +733,7 @@ objectdef obj_Cargo
 			/* Need to cycle the the cargohold after docking to update the list. */
 			call This.CloseHolds
 
-			UI:UpdateConsole["Transferring Cargo from Station Hangar"]	
+			UI:UpdateConsole["Transferring Cargo from Station Hangar"]
 			call This.OpenHolds
 
 			/* FOR NOW move all cargo.  Add filtering later */
@@ -742,38 +742,38 @@ objectdef obj_Cargo
 			if ${This.CargoToTransfer.Used} > 0
 			{
 				call This.TransferListToShip
-				
+
 				This.CargoToTransfer:Clear[]
 				Me.Ship:StackAllCargo
 				Ship:UpdateBaselineUsedCargo[]
 				wait 25
 				call This.CloseHolds
-				
+
 				/* Check for leftover items in the station */
 				/* FOR NOW check all cargo.  Add filtering later */
 				Me:DoGetHangarItems[This.CargoToTransfer]
 				if ${This.CargoToTransfer.Used} > 0
 				{
 					This.CargoToTransfer:Clear[]
-					UI:UpdateConsole["Could not carry all the cargo from the station hangar"]				
+					UI:UpdateConsole["Could not carry all the cargo from the station hangar"]
 					m_LastTransferComplete:Set[FALSE]
 				}
 				else
 				{
-					UI:UpdateConsole["Transfered all cargo from the station hangar"]				
+					UI:UpdateConsole["Transfered all cargo from the station hangar"]
 					m_LastTransferComplete:Set[TRUE]
 				}
 			}
 			else
 			{	/* Only set m_LastTransferComplete if we actually transfered something */
-				UI:UpdateConsole["Couldn't find any cargo in the station hangar"]				
+				UI:UpdateConsole["Couldn't find any cargo in the station hangar"]
 				m_LastTransferComplete:Set[FALSE]
 			}
 		}
 	}
-	
+
 	function TransferHangarItemToShip(int typeID)
-	{	
+	{
 		if !${Station.Docked}
 		{
 			/* TODO - Support picking up from entities in space */
@@ -784,50 +784,50 @@ objectdef obj_Cargo
 			/* Need to cycle the the cargohold after docking to update the list. */
 			call This.CloseHolds
 
-			UI:UpdateConsole["Transferring Item (${typeID}) from Station Hangar"]	
+			UI:UpdateConsole["Transferring Item (${typeID}) from Station Hangar"]
 			call This.OpenHolds
 
 			variable index:item cargoIndex
 			variable iterator cargoIterator
 			Me:DoGetHangarItems[cargoIndex]
-			cargoIndex:GetIterator[cargoIterator]						
+			cargoIndex:GetIterator[cargoIterator]
 			This.CargoToTransfer:Clear
-			
+
 			if ${cargoIterator:First(exists)}
 			{
 				do
 				{
-					UI:UpdateConsole["DEBUG: ${cargoIterator.Value.Type}(${cargoIterator.Value.TypeID})"]	
+					UI:UpdateConsole["DEBUG: ${cargoIterator.Value.Type}(${cargoIterator.Value.TypeID})"]
 					if ${typeID} == ${cargoIterator.Value.TypeID}
 					{
-						This.CargoToTransfer:Insert[${cargoIterator.Value}]	
+						This.CargoToTransfer:Insert[${cargoIterator.Value}]
 					}
 				}
 				while ${cargoIterator:Next(exists)}
 			}
-			
+
 			if ${This.CargoToTransfer.Used} > 0
 			{
 				call This.TransferListToShip
-				
+
 				This.CargoToTransfer:Clear[]
 				Me.Ship:StackAllCargo
 				Ship:UpdateBaselineUsedCargo[]
 				wait 25
 				call This.CloseHolds
-				
+
 				/* Check for leftover items in the station */
 				Me:DoGetHangarItems[cargoIndex]
-				cargoIndex:GetIterator[cargoIterator]						
+				cargoIndex:GetIterator[cargoIterator]
 				This.CargoToTransfer:Clear
-				
+
 				if ${cargoIterator:First(exists)}
 				{
 					do
 					{
 						if ${typeID} == ${cargoIterator.Value.TypeID}
 						{
-							This.CargoToTransfer:Insert[${cargoIterator.Value}]	
+							This.CargoToTransfer:Insert[${cargoIterator.Value}]
 						}
 					}
 					while ${cargoIterator:Next(exists)}
@@ -835,25 +835,25 @@ objectdef obj_Cargo
 				if ${This.CargoToTransfer.Used} > 0
 				{
 					This.CargoToTransfer:Clear[]
-					UI:UpdateConsole["Could not carry all the cargo from the station hangar"]				
+					UI:UpdateConsole["Could not carry all the cargo from the station hangar"]
 					m_LastTransferComplete:Set[FALSE]
 				}
 				else
 				{
-					UI:UpdateConsole["Transfered all cargo from the station hangar"]				
+					UI:UpdateConsole["Transfered all cargo from the station hangar"]
 					m_LastTransferComplete:Set[TRUE]
 				}
 			}
 			else
 			{	/* Only set m_LastTransferComplete if we actually transfered something */
-				UI:UpdateConsole["Couldn't find any cargo in the station hangar"]				
+				UI:UpdateConsole["Couldn't find any cargo in the station hangar"]
 				m_LastTransferComplete:Set[FALSE]
 			}
 		}
 	}
-	
+
    function TransferItemTypeToHangar(int typeID)
-   {	
+   {
 	  if !${Station.Docked}
 	  {
 		 UI:UpdateConsole["ERROR: obj_Cargo.TransferItemToHangar: Must be docked!"]

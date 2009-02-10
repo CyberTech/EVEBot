@@ -26,9 +26,6 @@ objectdef obj_Asteroids
 	variable index:entity AsteroidList
 	variable iterator OreTypeIterator
 
-	; Should only be referenced inside NextAsteroid()
-	variable iterator NextAsteroidIterator
-
 	variable index:string EmptyBeltList
 	variable iterator EmptyBelt
 
@@ -285,6 +282,21 @@ objectdef obj_Asteroids
 		}
 
 	}
+
+	member:int SelectBestGroup()
+	{
+		variable iterator AsteroidIterator
+		
+		variable int BestAsteroidID
+		variable int BestAsteroidValue
+		;variable int BestAsteroidNeighborCount
+		
+		This.AsteroidList:GetIterator[AsteroidIterator]
+		if ${AsteroidIterator:First(exists)}
+		{
+		}
+		
+	}
 	
 	function UpdateList()
 	{
@@ -354,11 +366,6 @@ objectdef obj_Asteroids
 		{
 			UI:UpdateConsole["WARNING: obj_Asteroids: Ore Type list is empty, please check config"]
 		}
-	}
-
-	method NextAsteroid()
-	{
-		AsteroidList:GetSettingIterator
 	}
 
 	function:bool ChooseTargets(bool CalledFromMoveRoutine=FALSE)

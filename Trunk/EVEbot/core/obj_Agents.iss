@@ -330,7 +330,7 @@ objectdef obj_Agents
 				UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}"]
 				if ${amIterator.Value.State} == 1
 				{
-					if ${MissionBlacklist.IsBlacklisted[${Agent[id,${amIterator.Value.AgentID}].Level},${amIterator.Value.Name}]} == FALSE
+					if ${MissionBlacklist.IsBlacklisted[${Agent[id,${amIterator.Value.AgentID}].Level},"${amIterator.Value.Name}"]} == FALSE
 					{
 						variable bool isLowSec
 						variable bool avoidLowSec
@@ -479,7 +479,7 @@ objectdef obj_Agents
 			{
 				if ${amIterator.Value.State} > 1
 				{
-					if ${MissionBlacklist.IsBlacklisted[${Agent[id,${amIterator.Value.AgentID}].Level},${amIterator.Value.Name}]} == FALSE
+					if ${MissionBlacklist.IsBlacklisted[${Agent[id,${amIterator.Value.AgentID}].Level},"${amIterator.Value.Name}"]} == FALSE
 					{
 						variable bool isLowSec
 						variable bool avoidLowSec
@@ -727,12 +727,12 @@ objectdef obj_Agents
 			UI:UpdateConsole["obj_Agents: DEBUG: caption.Escape = ${caption.Escape}"]
 		}
 
-		if !${EVEWindow[ByCaption,${caption}](exists)}
+		if !${EVEWindow[ByCaption,"${caption}"](exists)}
 		{
 			UI:UpdateConsole["obj_Agents: ERROR: Mission details window was not found!"]
 			UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Name.Escape = ${amIterator.Value.Name.Escape}"]
 		}
-		details:Set["${EVEWindow[ByCaption,${caption}].HTML.Escape}"]
+		details:Set[${EVEWindow[ByCaption,"${caption}"].HTML.Escape}]
 
 		UI:UpdateConsole["obj_Agents: DEBUG: HTML.Length = ${EVEWindow[ByCaption,${caption}].HTML.Length}"]
 		UI:UpdateConsole["obj_Agents: DEBUG: details.Length = ${details.Length}"]
@@ -740,7 +740,7 @@ objectdef obj_Agents
 		EVE:Execute[CmdCloseActiveWindow]
 
 		variable file detailsFile
-		detailsFile:SetFilename["./config/logs/${amIterator.Value.Expires.AsInt64.Hex} ${amIterator.Value.Name}.html"]
+		detailsFile:SetFilename["./config/logs/${amIterator.Value.Expires.AsInt64.Hex} ${amIterator.Value.Name.Replace[",",""]}.html"]
 		if ${detailsFile:Open(exists)}
 		{
 			detailsFile:Write["${details.Escape}"]
@@ -998,12 +998,12 @@ objectdef obj_Agents
 			UI:UpdateConsole["obj_Agents: DEBUG: caption.Escape = ${caption.Escape}"]
 		}
 
-		if !${EVEWindow[ByCaption,${caption}](exists)}
+		if !${EVEWindow[ByCaption,"${caption}"](exists)}
 		{
 			UI:UpdateConsole["obj_Agents: ERROR: Mission details window was not found!"]
 			UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Name.Escape = ${amIterator.Value.Name.Escape}"]
 		}
-		details:Set["${EVEWindow[ByCaption,${caption}].HTML.Escape}"]
+		details:Set[${EVEWindow[ByCaption,"${caption}"].HTML.Escape}]
 
 		UI:UpdateConsole["obj_Agents: DEBUG: HTML.Length = ${EVEWindow[ByCaption,${caption}].HTML.Length}"]
 		UI:UpdateConsole["obj_Agents: DEBUG: details.Length = ${details.Length}"]
@@ -1011,7 +1011,7 @@ objectdef obj_Agents
 		EVE:Execute[CmdCloseActiveWindow]
 
 		variable file detailsFile
-		detailsFile:SetFilename["./config/logs/${amIterator.Value.Expires.AsInt64.Hex} ${amIterator.Value.Name}.html"]
+		detailsFile:SetFilename["./config/logs/${amIterator.Value.Expires.AsInt64.Hex} ${amIterator.Value.Name.Replace[",",""]}.html"]
 		if ${detailsFile:Open(exists)}
 		{
 			detailsFile:Write["${details.Escape}"]
@@ -1143,7 +1143,7 @@ objectdef obj_Agents
 				Config:Save[]
 			}
 		}
-		elseif ${MissionBlacklist.IsBlacklisted[${Agent[id,${amIterator.Value.AgentID}].Level},${amIterator.Value.Name}]} == TRUE
+		elseif ${MissionBlacklist.IsBlacklisted[${Agent[id,${amIterator.Value.AgentID}].Level},"${amIterator.Value.Name}"]} == TRUE
 		{
 			if ${lastDecline.Timestamp} >= ${Time.Timestamp}
 			{

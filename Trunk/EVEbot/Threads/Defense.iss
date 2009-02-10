@@ -43,7 +43,7 @@ objectdef obj_Defense
 		;{
 		;	return
 		;}
-	
+
 		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			if ${This.Running}
@@ -122,6 +122,12 @@ objectdef obj_Defense
 		{
 			UI:UpdateConsole["Fleeing: ${Reason}", LOG_CRITICAL]
 		}
+	}
+
+	method ReturnToDuty()
+	{
+		UI:UpdateConsole["Returning to duty", LOG_CRITICAL]
+		This.Hide:Set[FALSE]
 	}
 
 	member:bool TankReady()
