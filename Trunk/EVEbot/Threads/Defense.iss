@@ -51,7 +51,11 @@ objectdef obj_Defense
 				This:TakeDefensiveAction[]
 				This:CheckTankMinimums[]
 				This:CheckLocal[]
-				This:CheckAmmo[]
+
+				if !${EVEBot.Paused}
+				{
+					This:CheckAmmo[]
+				}
 
 				if !${This.Hide} && ${This.Hiding} && ${This.TankReady}
 				{
