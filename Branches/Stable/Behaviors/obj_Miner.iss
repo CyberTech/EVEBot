@@ -335,11 +335,12 @@ objectdef obj_Miner
 			}
 
 			/* TODO: CyberTech: Move this to the state machine, have it check for when the system is clear */
-			if ${Config.Miner.StandingDetection} && \
-				${Social.StandingDetection[${Config.Miner.LowestStanding}]}
+			if (${Config.Miner.StandingDetection} && \
+				${Social.StandingDetection[${Config.Miner.LowestStanding}]}) || \
+				!${Social.IsSafe}
 			{
 				EVEBot.ReturnToStation:Set[TRUE]
-				UI:UpdateConsole["Warning: Low Standing player in system, docking"]
+				UI:UpdateConsole["Warning: Low Standing player or system unsafe, docking"]
 			}
 
 			if ${Config.Miner.DeliveryLocationTypeName.Equal[Jetcan]} && ${Ship.CargoHalfFull}
