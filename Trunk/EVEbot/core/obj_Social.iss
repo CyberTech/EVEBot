@@ -134,6 +134,8 @@ objectdef obj_Social
 				This.PilotIndex:Clear
 			}
 
+			This:CheckChatInvitation[]
+			
 			if !${_Me.InStation}
 			{
 				EVE:DoGetEntities[This.EntityIndex,CategoryID,CATEGORYID_ENTITY]
@@ -163,6 +165,15 @@ objectdef obj_Social
 		}
 	}
 
+	method CheckChatInvitation()
+	{
+		if ${EVEWindow[ByCaption, "Chat Invite"](exists)}
+		{
+			call Sound.PlayTellSound
+			UI:UpdateConsole["Notice: ${EVEWindow[ByCaption, Chat Invite].Name}", LOG_CRITICAL]
+		}
+	}
+	
 	member:bool IsSafe()
 	{
 		return ${This.SystemSafe}
