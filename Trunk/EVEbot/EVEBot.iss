@@ -1,3 +1,8 @@
+#if ${ISXEVE(exists)}
+#else
+	#error This script requires ISXEVE to be loaded before running
+#endif
+
 #include core/defines.iss
 
 /* Base Requirements */
@@ -119,7 +124,7 @@ function main()
 	; This is a TimedCommand so that it executes in global scope, so we can get the list of global vars.
 	TimedCommand 1 VariableScope:GetIterator[GlobalVariableIterator]
 	wait 10
-	
+
 	/* 	This code iterates thru the variables list, looking for classes that have been
 		defined with an SVN_REVISION variable.  It then converts that to a numeric
 		Version(int), which is then used to calculate the highest version (VersionNum),
