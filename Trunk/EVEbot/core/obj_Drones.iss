@@ -518,7 +518,7 @@ objectdef obj_Drones
 
 		Me:DoGetActiveDrones[This.ActiveDrones]
 			
-		if ${targetdistance} > 40000 && (${This.HaveSniperDroneInBay} || ${This.HaveActiveSniperDrone})
+		if ${targetdistance} > 30000 && (${This.HaveSniperDroneInBay} || ${This.HaveActiveSniperDrone})
 		{
 			return "Sniper"	
 		}
@@ -542,7 +542,8 @@ objectdef obj_Drones
 		{
 			return "Heavy"
 		}
-
+; smalls?
+; ecm drones?
 		else
 		{
 			echo "Cant find best drone type"
