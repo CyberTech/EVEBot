@@ -22,7 +22,7 @@ objectdef obj_Skills inherits obj_BaseClass
 
 	variable index:skill OwnedSkills
 	variable index:obj_SkillData SkillQueue
-	variable index:obj_SkillData SkillFilter
+	variable index:obj_SkillData SkillFileQueue
 
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 15
@@ -77,8 +77,11 @@ objectdef obj_Skills inherits obj_BaseClass
 						This:Train[${This.NextInLine}]
 					}
 				}
-				CurrentlyTrainingSkill:Set[${This.CurrentlyTraining}]
+			}
 
+			if ${Me(exists)}
+			{
+				CurrentlyTrainingSkill:Set[${This.CurrentlyTraining}]
 			}
 			This.NextPulse:Set[${Time.Timestamp}]
 			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
@@ -142,7 +145,6 @@ objectdef obj_Skills inherits obj_BaseClass
 	{
 		variable iterator skillIterator
 
-		This:UpdateSkills
 		This.SkillQueue:GetIterator[skillIterator]
 		if ${skillIterator:First(exists)}
 		{
@@ -268,7 +270,7 @@ objectdef obj_Skills inherits obj_BaseClass
 		variable string ReadLine
 		variable string temp
 
-		This.SkillFilter:Clear
+		This.SkillFileQueue:Clear
 		if !${This.SkillFile:Open[readonly](exists)}
 		{
 			UI:UpdateConsole["obj_Skills: Unable to open skillfile!", LOG_CRITICAL]
@@ -294,7 +296,7 @@ objectdef obj_Skills inherits obj_BaseClass
 				{
 					if ${Me.Skill[${ReadSkillName}].Level} < ${ReadSkillLevel}
 					{
-						This.SkillFilter:Insert[${ReadSkillName}, 0, ${ReadSkillLevel}]
+						This.SkillFileQueue:Insert[${ReadSkillName}, 0, ${ReadSkillLevel}]
 					}
 					else
 					{
@@ -333,11 +335,11 @@ objectdef obj_Skills inherits obj_BaseClass
 					;;UI:UpdateConsole["DEBUG: ${skillIterator.Value.Name} ${skillIterator.Value.Level}", LOG_DEBUG]
 					variable int maxLevelToTrain
 					maxLevelToTrain:Set[${This.SkillFilteredLevel["${skillIterator.Value.Name}"]}]
-					;;;UI:UpdateConsole["DEBUG: maxLevelToTrain = ${maxLevelToTrain}", LOG_MINOR]
+					;;;UI:UpdateConsole["DEBUG: maxLevelToTrain = ${maxLevelToTrain}", LOG_DEBUG]
 					;;;UI:UpdateConsole["DEBUG: currentLevel = ${skillIterator.Value.Level}", LOG_DEBUG]
 					if ${maxLevelToTrain} > ${skillIterator.Value.Level}
 					{
-						;;;UI:UpdateConsole["DEBUG: Queueing ${skillIterator.Value.Name} up to level ${maxLevelToTrain}", LOG_DEBUG]
+						UI:UpdateConsole["DEBUG: Queueing ${skillIterator.Value.Name} up to level ${maxLevelToTrain}", LOG_DEBUG]
 						SkillQueue:Insert[${skillIterator.Value.Name}, ${skillIterator.Value.TimeToTrain}]
 					}
 				}
@@ -360,7 +362,7 @@ objectdef obj_Skills inherits obj_BaseClass
 
 	member(int) SkillFilteredLevel(string SkillName)
 	{
-		if ${This.SkillFilter.Used} == 0
+		if ${This.SkillFileQueue.Used} == 0
 		{
 			return 5
 		}
@@ -369,12 +371,12 @@ objectdef obj_Skills inherits obj_BaseClass
 		variable string name
 		variable int level
 
-		for (idx:Set[1] ; ${idx} <= ${This.SkillFilter.Used} ; idx:Inc)
+		for (idx:Set[1] ; ${idx} <= ${This.SkillFileQueue.Used} ; idx:Inc)
 		{
-			name:Set[${This.SkillFilter.Get[${idx}].Name}]
+			name:Set[${This.SkillFileQueue.Get[${idx}].Name}]
 			if ${name.Equal[${SkillName}]}
 			{
-				level:Set[${This.SkillFilter.Get[${idx}].Level}]
+				level:Set[${This.SkillFileQueue.Get[${idx}].Level}]
 				if ${level} > ${Me.Skill[${SkillName}].Level}
 				{
 					UI:UpdateConsole["DEBUG: SkillFilteredLevel found skill at ${idx} (${name} ${level})", LOG_MINOR]
@@ -383,8 +385,8 @@ objectdef obj_Skills inherits obj_BaseClass
 				else
 				{
 					UI:UpdateConsole["obj_Skills.SkillFilteredLevel removing invalid filter at ${idx} (${name} ${level})"]
-					This.SkillFilter:Remove[${idx}]
-					This.SkillFilter:Collapse
+					This.SkillFileQueue:Remove[${idx}]
+					This.SkillFileQueue:Collapse
 					break
 				}
 			}
