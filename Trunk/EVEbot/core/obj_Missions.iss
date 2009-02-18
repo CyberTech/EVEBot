@@ -786,7 +786,7 @@ objectdef obj_Missions
 	  {
 		 do
 		 {
-		 	if ${This.IsNPCTarget[${targetIterator.Value.GroupID}]} == FALSE
+		 	if ${This.IsNPCTarget[${targetIterator.Value.GroupID}]}
 			{
 				UI:UpdateConsole["obj_Missions: DEBUG: Pulling ${targetIterator.Value} (${targetIterator.Value.ID})..."]
 
@@ -860,6 +860,10 @@ objectdef obj_Missions
 			case GROUP_FACTIONDRONE
 			case GROUP_BILLBOARD
 				return FALSE
+				break
+			default
+				return TRUE
+				break
 		}
 
 		return TRUE
@@ -878,7 +882,7 @@ objectdef obj_Missions
 	  {
 		 do
 		 {
-		 	if ${This.IsNPCTarget[${targetIterator.Value.GroupID}]} == FALSE
+		 	if ${This.IsNPCTarget[${targetIterator.Value.GroupID}]}
 			{
 				  targetCount:Inc
 			}
