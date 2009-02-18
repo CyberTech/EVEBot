@@ -115,6 +115,11 @@ objectdef obj_EVEBotUI
 		
 		if ${StatusMessage(exists)}
 		{
+			if ${Level} == LOG_DEBUG && EVEBOT_DEBUG == 0
+			{
+				return
+			}
+
 			if ${StatusMessage.Equal["${This.PreviousMsg}"]}
 			{
 				Filter:Set[TRUE]
@@ -138,7 +143,9 @@ objectdef obj_EVEBotUI
 				{
 					UIElement[StatusConsole@Status@EvEBotOptionsTab@EVEBot]:Echo["${msg}"]
 				}
+
 				redirect -append "${This.LogFile}" Echo "${msg}"
+
 				if ${Level} == LOG_CRITICAL
 				{
 					ChatIRC:QueueMessage["${msg}"]

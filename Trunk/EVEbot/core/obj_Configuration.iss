@@ -125,7 +125,7 @@ objectdef obj_Configuration_Common
 	Define_ConfigItem(string, IRCPassword, "evebot")
 	Define_ConfigItem(bool, UseSound, FALSE)
 	Define_ConfigItem(bool, Disable3D, FALSE)
-	Define_ConfigItem(bool, TrainSkillsByTime, TRUE)
+	Define_ConfigItem(bool, TrainSkills, TRUE)
 }
 
 /* ************************************************************************* */
