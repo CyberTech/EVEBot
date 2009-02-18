@@ -22,8 +22,78 @@ objectdef obj_Drones
 	variable bool DronesReady = FALSE
 	variable int ShortageCount
 
+	variable string ActiveDroneType
+	
+	; All Drones
+	;variable collection:int DroneCollection
+
+	variable index:int ActiveDroneIDs
+	variable iterator ActiveDroneID
+	variable index:entity ActiveDrones
+	variable iterator ActiveDrone
+	variable index:item DronesInBay
+	variable iterator DroneInBay
+
+	; Initialize Specific Drone Lists
+	variable index:int SniperDrones
+	variable iterator SniperDrone
+	variable index:int SentryDrones
+	variable iterator SentryDrone
+	variable index:int HeavyDrones
+	variable iterator HeavyDrone
+	variable index:int MediumDrones
+	variable iterator MediumDrones
+
+	; Specific Drone TypeID Lists
+	variable index:int SniperDroneTypeIDs
+	variable iterator SniperDroneTypeID
+	variable index:int SentryDroneTypeIDs
+	variable iterator SentryDroneTypeID
+	variable index:int HeavyDroneTypeIDs
+	variable iterator HeavyDroneTypeID
+	variable index:int MediumDroneTypeIDs
+	variable iterator MediumDroneTypeID
+	
 	method Initialize()
 	{
+		SniperDroneTypeIDs:Insert[23559]
+		SniperDroneTypeIDs:Insert[23525]
+		SniperDroneTypeIDs:Insert[23563]
+		SniperDroneTypeIDs:Insert[28209]
+		SniperDroneTypeIDs:Insert[28213]
+		SniperDroneTypeIDs:Insert[28215]
+		SentryDroneTypeIDs:Insert[23561]
+		SentryDroneTypeIDs:Insert[28211]
+		HeavyDroneTypeIDs:Insert[2476]
+		HeavyDroneTypeIDs:Insert[2193]
+		HeavyDroneTypeIDs:Insert[1201]
+		HeavyDroneTypeIDs:Insert[2444]
+		HeavyDroneTypeIDs:Insert[2478]
+		HeavyDroneTypeIDs:Insert[2195]
+		HeavyDroneTypeIDs:Insert[2436]
+		HeavyDroneTypeIDs:Insert[2446]
+		MediumDroneTypeIDs:Insert[2183]
+		MediumDroneTypeIDs:Insert[15510]
+		MediumDroneTypeIDs:Insert[2173]
+		MediumDroneTypeIDs:Insert[15508]
+		MediumDroneTypeIDs:Insert[2185]
+		MediumDroneTypeIDs:Insert[21640]
+		MediumDroneTypeIDs:Insert[2175]
+		MediumDroneTypeIDs:Insert[21638]
+						
+		;get the drone type iterators
+		SniperDroneTypeIDs:GetIterator[SniperDroneTypeID]
+		SentryDroneTypeIDs:GetIterator[SentryDroneTypeID]
+		HeavyDroneTypeIDs:GetIterator[HeavyDroneTypeID]
+		MediumDroneTypeIDs:GetIterator[MediumDroneTypeID]
+
+		ActiveDroneType:Set["None"]
+
+		echo "Sniper Drones in Bay: " ${This.HaveSniperDroneInBay}	
+		echo "Sentry Drones in Bay: " ${This.HaveSentryDroneInBay}	
+		echo "Heavy Drones in Bay : " ${This.HaveHeavyDroneInBay}	
+		echo "Medium Drones in Bay: " ${This.HaveMediumDroneInBay}	
+				
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_Drones: Initialized", LOG_MINOR]
 	}
@@ -216,6 +286,498 @@ objectdef obj_Drones
 			while ${DroneIterator:Next(exists)}
 			EVE:DronesReturnToDroneBay[returnIndex]
 			EVE:DronesEngageMyTarget[engageIndex]
+		}
+	}
+	
+/*	
+	Below here are the members/methods from Cade -- they are entirely untested in evebot,
+	and I want to rearchitect some of it (generic calls instead of drone-type specific, 
+	etc)
+*/
+	method GetActiveDrones()
+	{
+		Me:DoGetActiveDrones[This.ActiveDrones]
+	}
+	
+	method GetActiveDroneIDs()
+	{
+		Me:DoGetActiveDroneIDs[This.ActiveDroneIDs]
+	}
+	
+	method GetDronesInBay()
+	{
+		variable int i = 1
+
+		; Specific Drone Lists
+		variable index:int SniperDrones
+		variable iterator SniperDrone
+		variable index:int SentryDrones
+		variable iterator SentryDrone
+		variable index:int HeavyDrones
+		variable iterator HeavyDrone
+		variable index:int MediumDrones
+		variable iterator MediumDrones
+		
+		do
+		{
+			if ${This.IsSniperDrone[${Me.Ship.Drone[${i}].TypeID}]}
+			{
+				SniperDrones:Insert[${Me.Ship.Drone[${i}].ID}]
+			}
+			elseif ${This.IsSentryDrone[${Me.Ship.Drone[${i}].TypeID}]}
+			{
+				SentryDrones:Insert[${Me.Ship.Drone[${i}].ID}]
+			}	
+			elseif ${This.IsHeavyDrone[${Me.Ship.Drone[${i}].TypeID}]}
+			{
+				HeavyDrones:Insert[${Me.Ship.Drone[${i}].ID}]
+			}	
+			elseif ${This.IsMediumDrone[${Me.Ship.Drone[${i}].TypeID}]}
+			{
+				MediumDrones:Insert[${Me.Ship.Drone[${i}].ID}]
+			}	
+		}
+		while ${i:Inc} <= ${This.NumDronesInBay}
+	}
+	
+	method LaunchDrones()
+	{
+		variable int i = 1
+
+		; Build Specific Drone Lists
+		do
+		{
+			if ${This.IsSniperDrone[${Me.Ship.Drone[${i}].TypeID}]}
+			{
+				SniperDrones:Insert[${Me.Ship.Drone[${i}].ID}]
+			}
+			elseif ${This.IsSentryDrone[${Me.Ship.Drone[${i}].TypeID}]}
+			{
+				SentryDrones:Insert[${Me.Ship.Drone[${i}].ID}]
+			}	
+			elseif ${This.IsHeavyDrone[${Me.Ship.Drone[${i}].TypeID}]}
+			{
+				HeavyDrones:Insert[${Me.Ship.Drone[${i}].ID}]
+			}	
+			elseif ${This.IsMediumDrone[${Me.Ship.Drone[${i}].TypeID}]}
+			{
+				MediumDrones:Insert[${Me.Ship.Drone[${i}].ID}]
+			}	
+		}
+		while ${i:Inc} <= ${This.NumDronesInBay}
+		
+
+		; Call Correct Drone Type Launch Function
+		switch ${This.BestDroneType}
+		{
+			case Sniper
+			{
+				This:LaunchSniperDrones
+				return
+			}
+			case Sentry
+			{
+				This:LaunchSentryDrones
+				return
+			}
+			case Heavy
+			{
+				This:LaunchHeavyDrones
+				return
+			}
+			case Medium
+			{
+				This:LaunchMediumDrones
+				return
+			}
+		}
+	}
+	
+	method LaunchSniperDrones()
+	{
+		if ${This.HaveSniperDroneInBay}
+		{
+			;echo "Launching Sniper Drones..."
+			EVE:LaunchDrones[This.SniperDrones]
+			This.ActiveDroneType:Set["Sniper"]
+		}
+	}
+	
+	method LaunchSentryDrones()
+	{
+		if ${This.HaveSentryDroneInBay}
+		{
+			;echo "Launching Sentry Drones..."
+			EVE:LaunchDrones[This.SentryDrones]
+			This.ActiveDroneType:Set["Sentry"]
+		}
+	}
+	
+	method LaunchHeavyDrones()
+	{
+		if ${This.HaveHeavyDroneInBay}
+		{
+			;echo "Launching Heavy Drones..."
+			EVE:LaunchDrones[This.HeavyDrones]
+			This.ActiveDroneType:Set["Heavy"]
+		}
+	}
+	
+	method LaunchMediumDrones()
+	{
+		if ${This.HaveMediumDroneInBay}
+		{
+			;echo "Launching Medium Drones..."
+			EVE:LaunchDrones[This.MediumDrones]
+			This.ActiveDroneType:Set["Medium"]
+		}
+	}
+	
+	method EngageDrones()
+	{
+		;echo "Engaging Drones..."
+		EVE:DronesEngageMyTarget[This.ActiveDroneIDs]
+	}
+	
+	method ReturnDrones()
+	{
+		;echo "Returning Drones"
+		if ${This.NumActiveDrones} > 0
+		{
+			EVE:DronesReturnToDroneBay[This.ActiveDroneIDs]
+		}
+	}
+	
+	method ScoopDrones()
+	{
+	
+	}
+	
+	method ActivateBestDroneTarget()
+	{
+		
+	}
+	
+	method DroneSafetyScoop()
+	{
+		variable index:int ScoopedDrones
+		
+		ActiveDroneIDs:GetIterator[ActiveDroneID]
+		if ${ActiveDroneID:First(exists)}
+		{
+			do
+			{
+				if ${Entity[${ActiveDroneID.Value}].ShieldPct} < 50 && ${Entity[${ActiveDroneID.Value}].ShieldPct} != NULL
+				{
+					if ${Entity[${ActiveDroneID.Value}].Distance} < 1500
+					{
+						ScoopedDrones:Insert[${ActiveDroneID.Value}]
+						echo "Scooping Drone: " ${ActiveDroneID.Value} ${Entity[${ActiveDroneID.Value}].ShieldPct}
+						;EVE:DronesScoopToDroneBay[${ScoopedDrones}]
+					}
+				}
+			}
+			while ${ActiveDroneID:Next(exists)}
+		}
+		EVE:DronesScoopToDroneBay[ScoopedDrones]
+	}
+
+
+; ####################    MEMBERS
+
+
+	member:int NumDronesInBay()
+	{
+		return ${Me.Ship.GetDrones}
+	}
+
+	member:int NumActiveDrones()
+	{
+		;echo "NumActiveDrones"
+		return ${Me.GetActiveDroneIDs[This.ActiveDroneIDs]}
+	}
+	
+	member:bool AreMaxDronesActive()
+	{
+		if ${Me.GetActiveDroneIDs} < ${Me.MaxActiveDrones}
+			return TRUE
+			
+		return FALSE	
+	}
+	
+	member:string BestDroneType()
+	{
+		if ${Me.GetTargets} == 0
+		{
+			;echo "No Targets - Best Drone Type = NULL"
+			return NULL
+		}
+
+		variable string activetargetgroup = ${Me.ActiveTarget.Group}
+		variable int targetdistance = ${Me.ActiveTarget.Distance}
+
+		Me:DoGetActiveDrones[This.ActiveDrones]
+			
+		if ${targetdistance} > 40000 && (${This.HaveSniperDroneInBay} || ${This.HaveActiveSniperDrone})
+		{
+			return "Sniper"	
+		}
+		
+		if ${targetdistance} > 15000 && (${This.HaveSentryDroneInBay} || ${This.HaveActiveSentryDrone})
+		{
+			return "Sentry"
+		}
+		
+		if (${activetargetgroup.Find["Battleship"]} != NULL || ${activetargetgroup.Find["Battlecruiser"]} != NULL) && (${This.HaveHeavyDroneInBay} || ${This.HaveActiveHeavyDrone})
+		{
+			return "Heavy"
+		}
+		
+		if ${This.HaveMediumDroneInBay} || ${This.HaveActiveMediumDrone}
+		{
+			return "Medium"
+		}
+
+		if ${This.HaveHeavyDroneInBay} || ${This.HaveActiveHeavyDrone}
+		{
+			return "Heavy"
+		}
+
+		else
+		{
+			echo "Cant find best drone type"
+			return NULL	
+		}
+	}
+	
+	member:bool HaveSniperDroneInBay()
+	{
+		variable int i = 1
+		do
+		{
+			switch ${Me.Ship.Drone[${i}]}
+			{
+				case Bouncer I
+				case Bouncer II
+				case Warden I
+				case Warden II
+				case Curator I
+				case Curator II
+				{
+					;echo "Have Sniper Drone in Bay"
+					return TRUE
+				}
+			}
+		}
+		while ${i:Inc} <= ${This.NumDronesInBay}
+		return FALSE
+	}
+	
+	member:bool HaveSentryDroneInBay()
+	{
+		variable int i = 1
+		do
+		{
+			switch ${Me.Ship.Drone[${i}]}
+			{
+				case Garde I
+				case Garde II
+				{
+					;echo "Have Sentry Drone in Bay"
+					return TRUE
+				}
+			}
+		}
+		while ${i:Inc} <= ${This.NumDronesInBay}
+		return FALSE
+	}
+
+	member:bool HaveHeavyDroneInBay()
+	{
+		variable int i = 1
+		do
+		{
+			switch ${Me.Ship.Drone[${i}]}
+			{
+				case Praetor I
+				case Praetor II
+				case Wasp I
+				case Wasp II
+				case Ogre I
+				case Ogre II
+				case Berserker I
+				case Berserker II
+				{
+					;echo "Have Heavy Drone in Bay"
+					return TRUE
+				}
+			}
+		}
+		while ${i:Inc} <= ${This.NumDronesInBay}
+		return FALSE
+	}
+
+	member:bool HaveMediumDroneInBay()
+	{
+		variable int i = 1
+		do
+		{
+			switch ${Me.Ship.Drone[${i}]}
+			{
+				case Infiltrator I
+				case Infiltrator II
+				case Vespa I
+				case Vespa II
+				case Hammerhead I
+				case Hammerhead II
+				case Valkyrie I
+				case Valkyrie II
+				{
+					;echo "Have Medium Drone in Bay"
+					return TRUE
+				}
+			}
+		}
+		while ${i:Inc} <= ${This.NumDronesInBay}
+		return FALSE
+	}
+	
+	member:bool HaveActiveSniperDrone()
+	{
+		ActiveDroneIDs:GetIterator[ActiveDroneID]
+		if ${ActiveDroneID:First(exists)}
+			do
+			{
+				if ${This.IsSniperDrone[${Entity[${ActiveDroneID.Value}].TypeID}]}
+					return TRUE
+			}
+			while ${ActiveDroneID:Next(exists)}
+		return FALSE
+	}		
+
+	member:bool HaveActiveSentryDrone()
+	{
+		ActiveDroneIDs:GetIterator[ActiveDroneID]
+		if ${ActiveDroneID:First(exists)}
+			do
+			{
+				if ${This.IsSentryDrone[${Entity[${ActiveDroneID.Value}].TypeID}]}
+					return TRUE
+			}
+			while ${ActiveDroneID:Next(exists)}
+
+		return FALSE
+	}	
+
+	member:bool HaveActiveHeavyDrone()
+	{
+		ActiveDroneIDs:GetIterator[ActiveDroneID]
+		if ${ActiveDroneID:First(exists)}
+			do
+			{
+				if ${This.IsHeavyDrone[${Entity[${ActiveDroneID.Value}].TypeID}]}
+					return TRUE
+			}
+			while ${ActiveDroneID:Next(exists)}
+
+		return FALSE
+	}
+
+	member:bool HaveActiveMediumDrone()
+	{
+		ActiveDroneIDs:GetIterator[ActiveDroneID]
+		if ${ActiveDroneID:First(exists)}
+			do
+			{
+				if ${This.IsMediumDrone[${Entity[${ActiveDroneID.Value}].TypeID}]}
+					return TRUE
+			}
+			while ${ActiveDroneID:Next(exists)}
+
+		return FALSE
+	}	
+
+	member:bool IsSniperDrone(int typeid)
+	{
+		if ${SniperDroneTypeID:First(exists)}
+			do
+			{
+				if ${SniperDroneTypeID.Value} == ${typeid}
+					return TRUE
+			}
+			while ${SniperDroneTypeID:Next(exists)}
+		
+		return FALSE
+	}
+	
+	member:bool IsSentryDrone(int typeid)
+	{
+		if ${SentryDroneTypeID:First(exists)}
+			do
+			{
+				if ${SentryDroneTypeID.Value} == ${typeid}
+					return TRUE
+			}
+			while ${SentryDroneTypeID:Next(exists)}
+		
+		return FALSE
+	}
+
+	member:bool IsHeavyDrone(int typeid)
+	{
+		if ${HeavyDroneTypeID:First(exists)}
+			do
+			{
+				if ${HeavyDroneTypeID.Value} == ${typeid}
+					return TRUE
+			}
+			while ${HeavyDroneTypeID:Next(exists)}
+		
+		return FALSE
+	}
+
+	member:bool IsMediumDrone(int typeid)
+	{
+		if ${MediumDroneTypeID:First(exists)}
+			do
+			{
+				if ${MediumDroneTypeID.Value} == ${typeid}
+					return TRUE
+			}
+			while ${MediumDroneTypeID:Next(exists)}
+		
+		return FALSE
+	}
+	
+	member:bool DroneNeedsRepair()
+	{
+		ActiveDroneIDs:GetIterator[ActiveDroneID]
+		if ${ActiveDroneID:First(exists)}
+			do
+			{
+				if ${Entity[${ActiveDroneID.Value}].ArmorPct} < 75
+					return TRUE
+			}
+			while ${ActiveDroneID:Next(exists)}
+		return FALSE
+	}
+	
+	member:bool DronesNeedSafetyScoop()
+	{
+		ActiveDroneIDs:GetIterator[ActiveDroneID]
+		if ${ActiveDroneID:First(exists)}
+		{
+			do
+			{
+				if ${Entity[${ActiveDroneID.Value}].ShieldPct} < 50 && ${Entity[${ActiveDroneID.Value}].ShieldPct} != NULL
+				{
+					if ${Entity[${ActiveDroneID.Value}].Distance} < 1500
+					{
+						return TRUE
+					}
+				}
+			}
+			while ${ActiveDroneID:Next(exists)}
 		}
 	}
 }
