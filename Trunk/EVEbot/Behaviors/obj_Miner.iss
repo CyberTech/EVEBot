@@ -113,9 +113,11 @@ objectdef obj_Miner
 				This:NotifyHaulers[]
 				break
 			case DROPOFF
+				
 				switch ${Config.Miner.DeliveryLocationType}
 				{
 					case Station
+						UI:UpdateConsole["Delivering ore to station"]
 						; Gets info about the crystals currently loaded
 						call Ship.SetActiveCrystals
 
@@ -129,10 +131,12 @@ objectdef obj_Miner
 						}
 						break
 					case Hangar Array
+						UI:UpdateConsole["Delivering ore to hangary array"]
 						call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
 						call Cargo.TransferOreToCorpHangarArray
 						break
 					case Jetcan
+						UI:UpdateConsole["Delivering ore to jetcan"]
 						call Cargo.TransferOreToJetCan
 						This:NotifyHaulers[]
 						break
@@ -290,8 +294,6 @@ objectdef obj_Miner
 		variable int DroneCargoMin = ${Math.Calc[(${Ship.CargoMinimumFreeSpace}*1.4)]}
 		variable int Counter = 0
 
-		UI:UpdateConsole["Mining"]
-
 		if ${_Me.Ship.UsedCargoCapacity} != ${LastUsedCargoCapacity}
 		{
 			;UI:UpdateConsole["DEBUG: ${_Me.Ship.UsedCargoCapacity} != ${LastUsedCargoCapacity}"]
@@ -386,6 +388,7 @@ objectdef obj_Miner
 			Bookmarks:StoreLocation
 		}
 		*/
+/*		
 		This.TotalTrips:Inc
 		This.PreviousTripSeconds:Set[${This.TripDuration}]
 		This.TotalTripSeconds:Inc[${This.PreviousTripSeconds}]
@@ -393,7 +396,7 @@ objectdef obj_Miner
 		UI:UpdateConsole["Cargo Hold has reached threshold, returning"]
 		call ChatIRC.Say "Cargo Hold has reached threshold"
 		call This.Statslog
-
+*/
 	}
 
 	member:int TripDuration()
