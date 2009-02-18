@@ -41,7 +41,7 @@
 		}
 		while ${Module:Next(exists)}
 	}
-	
+
 	method _Deactivate_FunctionName(bool LOG=_LOG)
 	{
 		if !${Me.Ship(exists)}
@@ -100,8 +100,8 @@ objectdef obj_Ship
 	variable bool Repairing_Armor = FALSE
 	variable bool Repairing_Hull = FALSE
 	variable float m_MaxTargetRange
-	variable bool  m_WaitForCapRecharge = FALSE
-	variable int	m_CargoSanityCounter = 0
+	variable bool m_WaitForCapRecharge = FALSE
+	variable int m_CargoSanityCounter = 0
 	variable bool InteruptWarpWait = FALSE
 	variable string m_Type
 	variable int m_TypeID
@@ -223,8 +223,6 @@ objectdef obj_Ship
 
 	member:bool HasCovOpsCloak()
 	{
-		variable bool rVal = FALSE
-
 		variable iterator aModuleIterator
 		This.ModuleList_Cloaks:GetIterator[aModuleIterator]
 		if ${aModuleIterator:First(exists)}
@@ -232,32 +230,24 @@ objectdef obj_Ship
 		{
 			if ${aModuleIterator.Value.MaxVelocityPenalty} == 0
 			{
-				rVal:Set[TRUE]
-				break
+				return TRUE
 			}
 		}
 		while ${aModuleIterator:Next(exists)}
 
-		return ${rVal}
+		return FALSE
 	}
 
 	member:bool HasCloak()
 	{
-		variable bool rVal = FALSE
-
-		if ${This.ModuleList_Cloaks.Used} > 0
-		{
-			rVal:Set[TRUE]
-		}
-
-		return ${rVal}
+		return ${This.ModuleList_Cloaks.Used(bool)}
 	}
 
 	member:float CargoMinimumFreeSpace()
 	{
 		if !${Me.Ship(exists)}
 		{
-			return
+			return 0
 		}
 
 		return ${Math.Calc[${_Me.Ship.CargoCapacity}*0.02]}
@@ -346,7 +336,7 @@ objectdef obj_Ship
 		This.ModuleList_StasisWeb:Clear
 		This.ModuleList_SensorBoost:Clear
 		This.ModuleList_TargetPainter:Clear
-		
+
 		Me.Ship:DoGetModules[This.ModuleList]
 
 		if !${This.ModuleList.Used} && ${Me.Ship.HighSlots} > 0
@@ -1593,7 +1583,7 @@ objectdef obj_Ship
 		{
 			return
 		}
-		
+
 		if !${ForceReload}
 		{
 			variable iterator Module

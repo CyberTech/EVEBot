@@ -28,6 +28,8 @@ objectdef obj_Miner
 	variable bool SanityCheckAbort = FALSE
 	variable float64 LastUsedCargoCapacity = 0
 
+	variable int TargetJammedCounter = 0
+
 	; Are we running out of asteroids to target?
 	variable bool ConcentrateFire = FALSE
 
@@ -85,7 +87,7 @@ objectdef obj_Miner
 				Call Station.Dock
 				Call This.Abort_Check
 				break
-			case BASE
+			case INSTATION
 				call Cargo.TransferOreToHangar
 				;call Station.CheckList
 			    SanityCheckCounter:Set[0]
@@ -93,12 +95,22 @@ objectdef obj_Miner
 			    LastUsedCargoCapacity:Set[0]
 				call Station.Undock
 				break
+			case CHANGEBELT
+				call Asteroids.MoveToField TRUE
+				break
 			case MINE
 				call This.Mine
+				break
+			case WARP_WAIT
+				wait 10
 				break
 			case HAUL
 				UI:UpdateConsole["Hauling"]
 				call Hauler.Haul
+				break
+			case TRANSFER_TO_JETCAN
+				call Cargo.TransferOreToJetCan
+				This:NotifyHaulers[]
 				break
 			case DROPOFF
 				switch ${Config.Miner.DeliveryLocationType}
@@ -121,7 +133,6 @@ objectdef obj_Miner
 						call Cargo.TransferOreToCorpHangarArray
 						break
 					case Jetcan
-						UI:UpdateConsole["Warning: Cargo filled during jetcan mining, delays may occur"]
 						call Cargo.TransferOreToJetCan
 						This:NotifyHaulers[]
 						break
@@ -150,6 +161,12 @@ objectdef obj_Miner
 			return
 		}
 
+		if ${Ship.InWarp}
+		{
+			This.CurrentState:Set["WARP_WAIT"]
+			return
+		}
+
 		if ${EVEBot.ReturnToStation}
 		{
 			This.CurrentState:Set["IDLE"]
@@ -158,7 +175,7 @@ objectdef obj_Miner
 
 		if ${_Me.InStation} == TRUE
 		{
-	  		This.CurrentState:Set["BASE"]
+	  		This.CurrentState:Set["INSTATION"]
 	  		return
 		}
 
@@ -166,6 +183,12 @@ objectdef obj_Miner
 		    ${SanityCheckAbort} == FALSE
 		{
 		 	This.CurrentState:Set["MINE"]
+			return
+		}
+
+		if ${Config.Miner.DeliveryLocationType.Equal[Jetcan]} && ${Ship.CargoHalfFull}
+		{
+			This.CurrentState:Set["TRANSFER_TO_JETCAN"]
 			return
 		}
 
@@ -180,58 +203,10 @@ objectdef obj_Miner
 		This.CurrentState:Set["Unknown"]
 	}
 
-	function Abort_Check()
-	{
-		; abort check, this will allow the bot to continue botting if it is a temp abort or something that can
-		; if there is no abort type it will pause the script like before and wait...
-
-		if ${This.CombatAbort}
-			{
-				UI:UpdateConsole["Warning: Paused. Combat type abort."]
-
-				if ((${_Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct}) && ${Ship.ArmorRepairUnits} == 0)
-				{
-					UI:UpdateConsole["Warning: Script paused due to Armor Precentage."]
-					Script:Pause
-				}
-
-				; To.Do NEED TO ADD CHECK FOR HULL REPAIRER in SHIP OBJECT.
-				if ((${_Me.Ship.StructurePct} < 100))
-				{
-					UI:UpdateConsole["Warning: Aborted. Script paused due to Structure Percentage."]
-
-					Script:Pause
-				}
-
-				if ${_Me.Ship.ShieldPct} < 100
-				{
-					UI:UpdateConsole["Warning: Waiting for Shields to Regen."]
-					while ${_Me.Ship.ShieldPct} < 95
-					{
-						wait 20
-					}
-				}
-
-				UI:UpdateConsole["Continuing"]
-				EVEBot.ReturnToStation:Set[FALSE]
-				This.CombatAbort:Set[FALSE]
-				Return
-			}
-
-		UI:UpdateConsole["Warning: Aborted - Script Paused - Check Logs "]
-		Script:Pause
-	}
-
 	; Enable defenses, launch drones
 	function Prepare_Environment()
 	{
 		call Ship.OpenCargo
-	}
-
-	function Cleanup_Environment()
-	{
-		call Ship.Drones.ReturnAllToDroneBay
-		;;;call Ship.CloseCargo
 	}
 
 	function Statslog()
@@ -244,14 +219,63 @@ objectdef obj_Miner
 		UI:UpdateStatStatus["Total Run Time: ${Hours}:${Minutes}:${Seconds} - Average Run Time: ${ISXEVE.SecsToString[${Math.Calc[${This.TotalTripSeconds}/${This.TotalTrips}]}]}"]
 	}
 
+	member:bool ReadyToMine()
+	{
+		if ${Defense.Hide}
+		{
+			return FALSE
+		}
+
+		if ${Ship.TotalMiningLasers} == 0
+		{
+			Defense.RunAway["No mining lasers detected"]
+			return FALSE
+		}
+
+		if ${Config.Miner.StandingDetection} && \
+			${Social.StandingDetection[${Config.Miner.LowestStanding}]}
+		{
+			Defense.RunAway["Low-standing player in system"]
+		}
+
+		if ${Config.Combat.LaunchCombatDrones} && \
+			${Ship.Drones.CombatDroneShortage}
+		{
+			/* TODO - This should pick up drones from station instead of just docking */
+			Defense.RunAway["Drone shortage detected"]
+			return FALSE
+		}
+
+		if (!${Config.Miner.IceMining} && \
+			${SanityCheckCounter} > MINER_SANITY_CHECK_INTERVAL)
+		{
+			Defense.RunAway["Cargo volume unchanged for too long; assuming desync"]
+			return FALSE
+		}
+
+		if ${_Me.Ship.MaxLockedTargets} == 0 && \
+			 ${Ship.Drones.DronesInSpace} == 0
+		{
+			This.TargetJammedCounter:Inc
+			if ${This.TargetJammedCounter} > 200
+			{
+				This.TargetJammedCounter:Set[0]
+				UI:UpdateConsole["Warning: Ship target jammed, no drones available. Changing Belts"]
+				This.CurrentState:Set["CHANGEBELT"]
+				return FALSE
+			}
+		}
+		else
+		{
+			This.TargetJammedCounter:Set[0]
+		}
+
+		return TRUE
+	}
+
 	function Mine()
 	{
-		variable int TargetJammedCounter=0
-		variable int BuddyCounter
-		variable string buddyTest
-		variable bool buddyOnline
-
-		if ${_Me.InStation} != FALSE
+		if ${_Me.InStation}
 		{
 			UI:UpdateConsole["DEBUG: obj_Miner.Mine called while zoning or while in station!"]
 			return
@@ -268,176 +292,92 @@ objectdef obj_Miner
 
 		UI:UpdateConsole["Mining"]
 
-		while ( !${EVEBot.ReturnToStation} && \
-				${_Me.Ship.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold}	)
+		if ${_Me.Ship.UsedCargoCapacity} != ${LastUsedCargoCapacity}
 		{
-			if ${Ship.TotalMiningLasers} == 0
-			{
-				UI:UpdateConsole["Warning: No mining lasers detected, docking"]
-				EVEBot.ReturnToStation:Set[TRUE]
-				return
-			}
+			;UI:UpdateConsole["DEBUG: ${_Me.Ship.UsedCargoCapacity} != ${LastUsedCargoCapacity}"]
+		    SanityCheckCounter:Set[0]
+		    LastUsedCargoCapacity:Set[${_Me.Ship.UsedCargoCapacity}]
+		}
 
-			if ${Config.Combat.LaunchCombatDrones} && \
-				${Ship.Drones.CombatDroneShortage}
-			{
-				/* TODO - This should pick up drones from station instead of just docking */
-				UI:UpdateConsole["Warning: Drone shortage detected, docking"]
-				EVEBot.ReturnToStation:Set[TRUE]
-				return
-			}
+		/* TODO: CyberTech: Move this to obj_Defense */
+		if ${Config.Combat.LaunchCombatDrones} && \
+			${Ship.Drones.DronesInSpace} == 0 && \
+			!${Ship.InWarp}
+		{
+			Ship.Drones:LaunchAll[]
+		}
 
-			if ${_Me.Ship.UsedCargoCapacity} != ${LastUsedCargoCapacity}
-			{
-				;UI:UpdateConsole["DEBUG: ${_Me.Ship.UsedCargoCapacity} != ${LastUsedCargoCapacity}"]
-			    SanityCheckCounter:Set[0]
-			    LastUsedCargoCapacity:Set[${_Me.Ship.UsedCargoCapacity}]
-			}
+		if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]}
+		{
+			UI:UpdateConsole["Avoiding player: Changing Belts"]
+			This.CurrentState:Set["CHANGEBELT"]
+			call This.Prepare_Environment
+			return
+		}
 
-			if (!${Config.Miner.IceMining} && \
-				${SanityCheckCounter} > MINER_SANITY_CHECK_INTERVAL)
+		if ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers}
+		{
+			; We've got idle lasers, and available targets. Do something with them.
+			Me:DoGetTargets[LockedTargets]
+			LockedTargets:GetIterator[Target]
+			if ${Target:First(exists)}
+			do
 			{
-				UI:UpdateConsole["Warning: Cargo volume hasn't changed in a while, docking"]
-				SanityCheckAbort:Set[TRUE]
-				break
-			}
-
-			if ${Config.Combat.LaunchCombatDrones} && \
-				${Ship.Drones.DronesInSpace} == 0 && \
-				!${Ship.InWarp}
-			{
-				Ship.Drones:LaunchAll[]
-			}
-
-			if ${_Me.Ship.MaxLockedTargets} == 0 && \
-				 ${Ship.Drones.DronesInSpace} == 0
-			{
-				TargetJammedCounter:Inc
-				if ${TargetJammedCounter} > 200
+				if ${_Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 				{
-					TargetJammedCounter:Set[0]
-					UI:UpdateConsole["Warning: Ship target jammed, no drones available. Changing Belts"]
-					call Asteroids.MoveToField TRUE
+					break
 				}
-			}
-			else
-			{
-				TargetJammedCounter:Set[0]
-			}
 
-			if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]}
-			{
-				UI:UpdateConsole["Avoiding player: Changing Belts"]
-				call This.Cleanup_Environment
-				call Asteroids.MoveToField TRUE
-				call This.Prepare_Environment
-			}
-
-			/* TODO: CyberTech: Move this to the state machine, have it check for when the system is clear */
-			if ${Config.Miner.StandingDetection} && \
-				${Social.StandingDetection[${Config.Miner.LowestStanding}]}
-			{
-				EVEBot.ReturnToStation:Set[TRUE]
-				UI:UpdateConsole["Warning: Low Standing player in system, docking"]
-			}
-
-			if ${Config.Miner.DeliveryLocationType.Equal[Jetcan]} && ${Ship.CargoHalfFull}
-			{
-				call Cargo.TransferOreToJetCan
-				This:NotifyHaulers[]
-				/* needed a wait here because it would try to move the same item more than once */
-				wait 20
-			}
-
-			if (${_Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
-				${_Me.Ship.ShieldPct} < ${Config.Combat.MinimumShieldPct})
-			{
-				/*
-					TODO - CyberTech: This should be checked in a defensive class that runs regardless of which bot module is active
-					instead of being checked in each module
-				*/
-
-				UI:UpdateConsole["Armor is at ${_Me.Ship.ArmorPct}: ${Me.Ship.Armor}/${Me.Ship.MaxArmor}", LOG_CRITICAL]
-				UI:UpdateConsole["Shield is at ${_Me.Ship.ShieldPct}: ${Me.Ship.Shield}/${Me.Ship.MaxShield}", LOG_CRITICAL]
-				UI:UpdateConsole["Miner aborting due to defensive status", LOG_CRITICAL]
-
-				EVEBot.ReturnToStation:Set[TRUE]
-				This.CombatAbort:Set[TRUE]
-				return
-			}
-
-			if ${Ship.InWarp}
-			{
-				wait 10
-				continue
-			}
-
-			if ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers}
-			{
-				; We've got idle lasers, and available targets. Do something with them.
-
-				Me:DoGetTargets[LockedTargets]
-				LockedTargets:GetIterator[Target]
-				if ${Target:First(exists)}
-				do
+				if ${Target.Value.CategoryID} != ${Asteroids.AsteroidCategoryID}
 				{
+					continue
+				}
+
+				/* TODO: CyberTech - this concentrates fire fine if there's only 1 target, but if there's multiple targets
+					it still prefers to distribute. Ice mining shouldn't distribute
+				*/
+				if (${This.ConcentrateFire} || \
+					${Config.Miner.MinerType.Equal["Ice"]} || \
+					!${Ship.IsMiningAsteroidID[${Target.Value.ID}]})
+				{
+					Target.Value:MakeActiveTarget
+					while ${Target.Value.ID} != ${Me.ActiveTarget.ID}
+					{
+						wait 5
+					}
+
 					if ${_Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 					{
 						break
 					}
+					call Ship.Approach ${Target.Value.ID} ${Ship.OptimalMiningRange}
+					call Ship.ActivateFreeMiningLaser
 
-					if ${Target.Value.CategoryID} != ${Asteroids.AsteroidCategoryID}
+					if (${Ship.Drones.DronesInSpace} > 0 && \
+						${Config.Miner.UseMiningDrones})
 					{
-						continue
-					}
-
-					/* TODO: CyberTech - this concentrates fire fine if there's only 1 target, but if there's multiple targets
-						it still prefers to distribute. Ice mining shouldn't distribute
-					*/
-					if (${This.ConcentrateFire} || \
-						${Config.Miner.MinerType.Equal["Ice"]} || \
-						!${Ship.IsMiningAsteroidID[${Target.Value.ID}]})
-					{
-
-						Target.Value:MakeActiveTarget
-						while ${Target.Value.ID} != ${Me.ActiveTarget.ID}
-						{
-							wait 5
-						}
-
-						if ${_Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
-						{
-							break
-						}
-						call Ship.Approach ${Target.Value.ID} ${Ship.OptimalMiningRange}
-						call Ship.ActivateFreeMiningLaser
-
-						if (${Ship.Drones.DronesInSpace} > 0 && \
-							${Config.Miner.UseMiningDrones})
-						{
-							Ship.Drones:ActivateMiningDrones
-						}
+						Ship.Drones:ActivateMiningDrones
 					}
 				}
-				while ${Target:Next(exists)}
 			}
-
-			call Asteroids.ChooseTargets
-
-			if (${Config.Miner.MinerType.NotEqual["Ore"]} || \
-				(${Ship.TotalActivatedMiningLasers} == 0))
-			{
-				if ${Ship.TotalMiningLasers} > ${Ship.MaxLockedTargets}
-				{
-					This.ConcentrateFire:Set[TRUE]
-				}
-				else
-				{
-					This.ConcentrateFire:Set[FALSE]
-				}
-			}
-			wait 10
+			while ${Target:Next(exists)}
 		}
+
+		call Asteroids.ChooseTargets
+
+		if (${Config.Miner.MinerType.NotEqual["Ore"]} || \
+			(${Ship.TotalActivatedMiningLasers} == 0))
+		{
+			if ${Ship.TotalMiningLasers} > ${Ship.MaxLockedTargets}
+			{
+				This.ConcentrateFire:Set[TRUE]
+			}
+			else
+			{
+				This.ConcentrateFire:Set[FALSE]
+			}
+		}
+		wait 10
 
 		/*
 		TODO - CyberTech - redo with static bookmark name so we're not creating bookmarks.  Possible detection risk.
@@ -446,7 +386,6 @@ objectdef obj_Miner
 			Bookmarks:StoreLocation
 		}
 		*/
-		call This.Cleanup_Environment
 		This.TotalTrips:Inc
 		This.PreviousTripSeconds:Set[${This.TripDuration}]
 		This.TotalTripSeconds:Inc[${This.PreviousTripSeconds}]
