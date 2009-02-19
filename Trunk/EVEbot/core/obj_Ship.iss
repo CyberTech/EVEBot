@@ -7,6 +7,13 @@
 
 */
 
+#macro Validate_Ship()
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+#endmac
+
 #macro Define_ModuleMethod(_Activate_FunctionName, _Deactivate_FunctionName, _ModuleIndex, _LOG)
 	method _Activate_FunctionName(bool LOG=_LOG)
 	{
@@ -44,10 +51,7 @@
 
 	method _Deactivate_FunctionName(bool LOG=_LOG)
 	{
-		if !${Me.Ship(exists)}
-		{
-			return
-		}
+		Validate_Ship()
 
 		variable iterator Module
 
@@ -129,7 +133,7 @@ objectdef obj_Ship
 	{
 		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-			if !${_Me.InStation}
+			if !${_Me.InStation} && ${Me.Ship(exists)}
 			{
 				This:ValidateModuleTargets
 			}
@@ -144,6 +148,8 @@ objectdef obj_Ship
 	/* TODO - Rename to SystemsReady (${Ship.SystemsReady}) or similar for clarity - CyberTech */
 	member:bool IsSafe()
 	{
+		Validate_Ship()
+
 		if ${m_WaitForCapRecharge} && ${_Me.Ship.CapacitorPct} < 90
 		{
 			return FALSE
@@ -172,6 +178,8 @@ objectdef obj_Ship
 
 	member:bool IsAmmoAvailable()
 	{
+		Validate_Ship()
+		
 		variable iterator aWeaponIterator
 		variable index:item anItemIndex
 		variable iterator anItemIterator
@@ -223,6 +231,8 @@ objectdef obj_Ship
 
 	member:bool HasCovOpsCloak()
 	{
+		Validate_Ship()
+		
 		variable iterator aModuleIterator
 		This.ModuleList_Cloaks:GetIterator[aModuleIterator]
 		if ${aModuleIterator:First(exists)}
@@ -245,21 +255,11 @@ objectdef obj_Ship
 
 	member:float CargoMinimumFreeSpace()
 	{
-		if !${Me.Ship(exists)}
-		{
-			return 0
-		}
-
 		return ${Math.Calc[${_Me.Ship.CargoCapacity}*0.02]}
 	}
 
 	member:float CargoFreeSpace()
 	{
-		if !${Me.Ship(exists)}
-		{
-			return 0
-		}
-
 		if ${_Me.Ship.UsedCargoCapacity} < 0
 		{
 			return ${_Me.Ship.CargoCapacity}
@@ -269,11 +269,6 @@ objectdef obj_Ship
 
 	member:bool CargoFull()
 	{
-		if !${Me.Ship(exists)}
-		{
-			return FALSE
-		}
-
 		if ${This.CargoFreeSpace} <= ${This.CargoMinimumFreeSpace}
 		{
 			return TRUE
@@ -283,11 +278,6 @@ objectdef obj_Ship
 
 	member:bool CargoHalfFull()
 	{
-		if !${Me.Ship(exists)}
-		{
-			return FALSE
-		}
-
 		if ${This.CargoFreeSpace} <= ${Math.Calc[${_Me.Ship.CargoCapacity}*0.50]}
 		{
 			return TRUE
@@ -307,6 +297,8 @@ objectdef obj_Ship
 
 	method UpdateModuleList()
 	{
+		Validate_Ship()
+
 		if ${_Me.InStation}
 		{
 			; GetModules cannot be used in station as of 07/15/2007
@@ -562,6 +554,8 @@ objectdef obj_Ship
 
 	method UpdateBaselineUsedCargo()
 	{
+		Validate_Ship()
+
 		; Store the used cargo space as the cargo hold exists NOW, with whatever is leftover in it.
 		This.BaselineUsedCargo:Set[${Me.Ship.UsedCargoCapacity.Ceil}]
 	}
@@ -579,11 +573,8 @@ objectdef obj_Ship
 
 	member:int TotalActivatedMiningLasers()
 	{
-		if !${Me.Ship(exists)}
-		{
-			return 0
-		}
-
+		Validate_Ship()
+		
 		variable int count
 		variable iterator Module
 
@@ -609,11 +600,8 @@ objectdef obj_Ship
 	; It should perhaps be changed to return the largest, or the smallest, or an average.
 	member:float MiningAmountPerLaser()
 	{
-		if !${Me.Ship(exists)}
-		{
-			return 0
-		}
-
+		Validate_Ship()
+		
 		variable iterator Module
 
 		This.ModuleList_MiningLaser:GetIterator[Module]
@@ -635,11 +623,8 @@ objectdef obj_Ship
 	; Returns the laser mining range minus 10%
 	member:int OptimalMiningRange()
 	{
-		if !${Me.Ship(exists)}
-		{
-			return 0
-		}
-
+		Validate_Ship()
+		
 		variable iterator Module
 
 		This.ModuleList_MiningLaser:GetIterator[Module]
@@ -697,10 +682,7 @@ objectdef obj_Ship
 	; Returns TRUE if we've got a laser mining this entity already
 	member:bool IsMiningAsteroidID(int EntityID)
 	{
-		if !${Me.Ship(exists)}
-		{
-			return
-		}
+		Validate_Ship()
 
 		variable iterator Module
 
@@ -722,6 +704,8 @@ objectdef obj_Ship
 
 	method UnlockAllTargets()
 	{
+		Validate_Ship()
+
 		variable index:entity LockedTargets
 		variable iterator Target
 
@@ -741,10 +725,7 @@ objectdef obj_Ship
 
 	method CalculateMaxLockedTargets()
 	{
-		if !${Me.Ship(exists)}
-		{
-			return
-		}
+		Validate_Ship()
 
 		if ${_Me.MaxLockedTargets} < ${_Me.Ship.MaxLockedTargets}
 		{
@@ -758,6 +739,8 @@ objectdef obj_Ship
 
 	function ChangeMiningLaserCrystal(string OreType, string SlotName)
 	{
+		Validate_Ship()
+
 		; We might need to change loaded crystal
 		variable string LoadedAmmo
 
@@ -796,10 +779,7 @@ objectdef obj_Ship
 	; TODO - Add mid and low targetable modules, and high hostile modules, as well as just mining.
 	method ValidateModuleTargets()
 	{
-		if !${Me.Ship(exists)}
-		{
-			return
-		}
+		Validate_Ship()
 
 		variable iterator Module
 
@@ -820,6 +800,8 @@ objectdef obj_Ship
 
 	method CycleMiningLaser(string Activate, string Slot)
 	{
+		Validate_Ship()
+
 		echo CycleMiningLaser: ${Slot} Activate: ${Activate}
 		if ${Activate.Equal[ON]} && \
 			( ${Me.Ship.Module[${Slot}].IsActive} || \
@@ -873,10 +855,7 @@ objectdef obj_Ship
 
 	method DeactivateAllMiningLasers()
 	{
-		if !${Me.Ship(exists)}
-		{
-			return
-		}
+		Validate_Ship()
 
 		variable iterator Module
 
@@ -901,10 +880,7 @@ objectdef obj_Ship
 	}
 	function ActivateFreeMiningLaser()
 	{
-		if !${Me.Ship(exists)}
-		{
-			return
-		}
+		Validate_Ship()
 
 		if ${Me.ActiveTarget.CategoryID} != ${Asteroids.AsteroidCategoryID}
 		{
@@ -949,12 +925,16 @@ objectdef obj_Ship
 
 	method StopShip()
 	{
+		Validate_Ship()
+
 		EVE:Execute[CmdStopShip]
 	}
 
 	; Approaches EntityID to within 5% of Distance, then stops ship.  Momentum will handle the rest.
 	function Approach(int EntityID, int64 Distance)
 	{
+		Validate_Ship()
+
 		if ${Entity[${EntityID}](exists)}
 		{
 			variable float64 OriginalDistance = ${Entity[${EntityID}].Distance}
@@ -1008,6 +988,8 @@ objectdef obj_Ship
 
 	function OpenCargo()
 	{
+		Validate_Ship()
+
 		if !${This.IsCargoOpen}
 		{
 			UI:UpdateConsole["Opening Ship Cargohold"]
@@ -1039,6 +1021,8 @@ objectdef obj_Ship
 
 	function CloseCargo()
 	{
+		Validate_Ship()
+
 		if ${This.IsCargoOpen}
 		{
 			UI:UpdateConsole["Closing Ship Cargohold"]
@@ -1055,6 +1039,8 @@ objectdef obj_Ship
 
 	function WarpToID(int ID, int WarpInDistance=0)
 	{
+		Validate_Ship()
+
 		if (${ID} <= 0)
 		{
 			UI:UpdateConsole["Error: obj_Ship:WarpToID: Id is <= 0 (${ID})"]
@@ -1090,6 +1076,8 @@ objectdef obj_Ship
 	; This takes CHARID, not Entity id
 	function WarpToFleetMember( int charID, int distance=0 )
 	{
+		Validate_Ship()
+
 		variable index:fleetmember FleetMembers
 		variable iterator FleetMember
 
@@ -1132,6 +1120,8 @@ objectdef obj_Ship
 
 	function WarpToBookMarkName(string DestinationBookmarkLabel)
 	{
+		Validate_Ship()
+
 		if (!${EVE.Bookmark[${DestinationBookmarkLabel}](exists)})
 		{
 			UI:UpdateConsole["ERROR: Bookmark: '${DestinationBookmarkLabel}' does not exist!", LOG_CRITICAL]
@@ -1144,6 +1134,8 @@ objectdef obj_Ship
 	; TODO - Move this to obj_AutoPilot when it is ready - CyberTech
 	function ActivateAutoPilot()
 	{
+		Validate_Ship()
+
 		variable int Counter
 		UI:UpdateConsole["Activating autopilot and waiting until arrival..."]
 		if !${_Me.AutoPilotOn}
@@ -1179,6 +1171,8 @@ objectdef obj_Ship
 
 	function WarpToBookMark(bookmark DestinationBookmark)
 	{
+		Validate_Ship()
+
 		variable int Counter
 
 		if ${_Me.InStation}
@@ -1382,6 +1376,8 @@ objectdef obj_Ship
 
 	function WarpPrepare()
 	{
+		Validate_Ship()
+
 		UI:UpdateConsole["Preparing for warp"]
 		This:Deactivate_Cloak
 		This:Deactivate_SensorBoost
@@ -1407,6 +1403,8 @@ objectdef obj_Ship
 
 	member:bool InWarp()
 	{
+		Validate_Ship()
+
 		if ${_Me.ToEntity.Mode} == 3
 		{
 			return TRUE
@@ -1416,6 +1414,8 @@ objectdef obj_Ship
 
 	member:bool WarpEntered()
 	{
+		Validate_Ship()
+
 		variable bool Warped = FALSE
 
 		if ${This.InWarp}
@@ -1428,6 +1428,8 @@ objectdef obj_Ship
 
 	function WarpWait()
 	{
+		Validate_Ship()
+
 		variable bool Warped = FALSE
 
 		; We reload weapons here, because we know we're in warp, so they're deactivated.
@@ -1460,6 +1462,8 @@ objectdef obj_Ship
 
 	member:bool IsCloaked()
 	{
+		Validate_Ship()
+
 		if ${Me.ToEntity(exists)} && ${_Me.ToEntity.IsCloaked}
 		{
 			return TRUE
@@ -1470,6 +1474,8 @@ objectdef obj_Ship
 
 	function StackAll()
 	{
+		Validate_Ship()
+
 		if ${This.IsCargoOpen}
 		{
 			Me.Ship:StackAllCargo
@@ -1479,11 +1485,7 @@ objectdef obj_Ship
 	; Returns the salvager range minus 10%
 	member:int OptimalSalvageRange()
 	{
-		if !${Me.Ship(exists)}
-		{
-			return 0
-		}
-
+		Validate_Ship()
 		variable iterator Module
 
 		This.ModuleList_Salvagers:GetIterator[Module]
@@ -1498,11 +1500,8 @@ objectdef obj_Ship
 	; Returns the tractor range minus 10%
 	member:int OptimalTractorRange()
 	{
-		if !${Me.Ship(exists)}
-		{
-			return 0
-		}
-
+		Validate_Ship()
+		
 		variable iterator Module
 
 		This.ModuleList_TractorBeams:GetIterator[Module]
@@ -1514,21 +1513,23 @@ objectdef obj_Ship
 		return 0
 	}
 
-   ; Returns the targeting range minus 10%
-   member:int OptimalTargetingRange()
-   {
-      return ${Math.Calc[${_Me.Ship.MaxTargetRange}*0.90]}
-   }
+	; Returns the targeting range minus 10%
+	member:int OptimalTargetingRange()
+	{
+		return ${Math.Calc[${_Me.Ship.MaxTargetRange}*0.90]}
+	}
 
-   ; Returns the lowest weapon optimal range minus 10%
-   member:int OptimalWeaponRange()
-   {
-   	; just handle missiles for now
-      return ${Config.Combat.MaxMissileRange}
-   }
+	; Returns the lowest weapon optimal range minus 10%
+	member:int OptimalWeaponRange()
+	{
+		; just handle missiles for now
+		return ${Config.Combat.MaxMissileRange}
+	}
 
 	member:bool IsPod()
 	{
+		Validate_Ship()
+
 		variable string ShipName = ${Me.Ship}
 
 		if ${ShipName.Right[10].Equal["'s Capsule"]} || \
@@ -1545,7 +1546,9 @@ objectdef obj_Ship
 
 	function SetActiveCrystals()
 	{
-		 variable iterator ModuleIterator
+		Validate_Ship()
+
+		variable iterator ModuleIterator
 
 		This.ModuleList_MiningLaser:GetIterator[ModuleIterator]
 
@@ -1574,10 +1577,7 @@ objectdef obj_Ship
 	{
 		variable bool NeedReload = FALSE
 
-		if !${Me.Ship(exists)}
-		{
-			return
-		}
+		Validate_Ship()
 
 		if !${This.ModuleList_Weapon.Used}
 		{
@@ -1661,6 +1661,8 @@ objectdef obj_Ship
 
 	function ActivateShip(string name)
 	{
+		Validate_Ship()
+
 		variable index:item hsIndex
 		variable iterator hsIterator
 		variable string shipName
