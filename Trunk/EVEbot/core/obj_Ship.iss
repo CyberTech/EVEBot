@@ -17,17 +17,17 @@
 #macro Define_ModuleMethod(_Activate_FunctionName, _Deactivate_FunctionName, _ModuleIndex, _LOG)
 	method _Activate_FunctionName(bool LOG=_LOG)
 	{
-		if !${Me.Ship(exists)}
-		{
-			return
-		}
-
 		variable iterator Module
 
 		_ModuleIndex:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
+			if !${Me.Ship(exists)}
+			{
+				return
+			}
+
 			/* Validation:
 					Module is:
 						Online
