@@ -50,6 +50,11 @@ objectdef obj_Skills inherits obj_BaseClass
 
 	method Pulse()
 	{
+		if !${EVEBot.SessionValid}
+		{
+			return
+		}
+
 		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			if ${Config.Common.TrainSkills} && ${Me(exists)}

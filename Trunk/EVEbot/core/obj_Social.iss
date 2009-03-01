@@ -60,7 +60,7 @@ objectdef obj_Social
 		{
 			This.AllianceWhiteList:Add[${_Me.AllianceID}]
 		}
-		
+
 		if ${This.WhiteListPilotIterator:First(exists)}
 		do
 		{
@@ -122,6 +122,11 @@ objectdef obj_Social
 
 	method Pulse()
 	{
+		if !${EVEBot.SessionValid}
+		{
+			return
+		}
+
 		if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
 		{
 			if ${EVE.GetPilots} > 1
@@ -135,7 +140,7 @@ objectdef obj_Social
 			}
 
 			This:CheckChatInvitation[]
-			
+
 			if !${_Me.InStation}
 			{
 				EVE:DoGetEntities[This.EntityIndex,CategoryID,CATEGORYID_ENTITY]
@@ -173,7 +178,7 @@ objectdef obj_Social
 			UI:UpdateConsole["Notice: ${EVEWindow[ByCaption, Chat Invite].Name}", LOG_CRITICAL]
 		}
 	}
-	
+
 	member:bool IsSafe()
 	{
 		return ${This.SystemSafe}
@@ -186,7 +191,7 @@ objectdef obj_Social
 		variable int AllianceID
 		variable int PilotID
 		variable string PilotName
-		
+
 		if !${Config.Combat.UseWhiteList}
 		{
 			return TRUE
@@ -205,7 +210,7 @@ objectdef obj_Social
 			AllianceID:Set[${PilotIterator.Value.AllianceID}]
 			PilotID:Set[${PilotIterator.Value.CharID}]
 			PilotName:Set[${PilotIterator.Value.Name}]
-			
+
 			if !${This.AllianceWhiteList.Contains[${AllianceID}]} && \
 				!${This.CorpWhiteList.Contains[${CorpID}]} && \
 				!${This.PilotWhiteList.Contains[${PilotID}]}

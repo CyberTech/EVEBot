@@ -1,10 +1,10 @@
 /*
 	defines.iss
-	
+
 	Hardcoded defines for EVEBot
-	
+
 	- CyberTech
-	
+
 */
 
 variable string APP_NAME = "EVEBot"
@@ -31,8 +31,8 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 #define WAIT_CARGO_WINDOW 15
 #define WAIT_UNDOCK 130
 
-/* If the miner's cargo hold doesn't increase during 
- * this period, return to base.  Interval depends on the 
+/* If the miner's cargo hold doesn't increase during
+ * this period, return to base.  Interval depends on the
  * PulseIntervalInSeconds value used in obj_Miner.Pulse
  * This value is currently set to 2 seconds so 240*2 = 8 minutes
  * The check interval is set high to compensate for slowboating
@@ -100,21 +100,21 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 ;Implant (ID: 20)        Deployable (ID: 22)     Structure (ID: 23)          Reaction (ID: 24)
 ;Asteroid (ID: 25)
 
-; Mission Warp Gate IDs	
+; Mission Warp Gate IDs
 ;${Entity[Acceleration Gate].Category} = Celestial
 ;${Entity[Acceleration Gate].CategoryID} = 2
 ;${Entity[Acceleration Gate].Type} = Acceleration Gate
 ;${Entity[Acceleration Gate].TypeID} = 17831
 ;${Entity[Acceleration Gate].Group} = Warp Gate
-;${Entity[Acceleration Gate].GroupID} = 366	
-	
+;${Entity[Acceleration Gate].GroupID} = 366
+
 #define CATEGORYID_CELESTIAL	2
 #define CATEGORYID_STATION 		3
-#define CATEGORYID_MINERAL ``		4
+#define CATEGORYID_MINERAL 		4
 #define CATEGORYID_SHIP    		6
 #define CATEGORYID_CHARGE  		8
 #define CATEGORYID_ENTITY		11
-#define CATEGORYID_ORE     		25
+#define CATEGORYID_ORE			25
 #define CATEGORYID_GLACIAL_MASS 25
 
 #define CATEGORYID_STRUCTURE	23

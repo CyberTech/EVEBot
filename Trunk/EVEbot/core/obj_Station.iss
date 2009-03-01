@@ -78,7 +78,7 @@ objectdef obj_Station
 
 	function OpenHangar()
 	{
-		if ${This.Docked} == FALSE
+		if !${This.Docked}
 		{
 			return
 		}
@@ -98,7 +98,7 @@ objectdef obj_Station
 
 	function CloseHangar()
 	{
-		if ${This.Docked} == FALSE
+		if !${This.Docked}
 		{
 			return
 		}
@@ -184,6 +184,12 @@ objectdef obj_Station
 	{
 		variable int Counter = 0
 
+		if ${_Me.InStation}
+		{
+			UI:UpdateConsole["DockAtStation called, but we're already in station!"]
+			return
+		}
+
 		UI:UpdateConsole["Docking at ${EVE.GetLocationNameByID[${StationID}]}"]
 
 		Ship:SetType[${Entity[CategoryID,CATEGORYID_SHIP].Type}]
@@ -242,6 +248,12 @@ objectdef obj_Station
 		variable int Counter = 0
 		variable int StationID = ${Entity[CategoryID,3,${Config.Common.HomeStation}].ID}
 
+		if ${_Me.InStation}
+		{
+			UI:UpdateConsole["Dock called, but we're already instation!"]
+			return
+		}
+
 		UI:UpdateConsole["Docking at ${StationID}:${Config.Common.HomeStation}"]
 
 		Ship:SetType[${Entity[CategoryID,CATEGORYID_SHIP].Type}]
@@ -269,6 +281,12 @@ objectdef obj_Station
 		variable int Counter
 		variable int StationID
 		StationID:Set[${_Me.StationID}]
+
+		if !${_Me.InStation}
+		{
+			UI:UpdateConsole["Undock called, but we're already instation!"]
+			return
+		}
 
 		UI:UpdateConsole["Undocking"]
 

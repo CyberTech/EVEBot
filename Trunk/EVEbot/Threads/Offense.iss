@@ -27,7 +27,7 @@ objectdef obj_Offense
 	{
 		if !${Script[EVEBot](exists)}
 		{
-			return
+			Script:End
 		}
 
 		if ${EVEBot.Paused}

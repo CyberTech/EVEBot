@@ -50,7 +50,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 	{
 		if !${Script[EVEBot](exists)}
 		{
-			return
+			Script:End
 		}
 
 		if ${EVEBot.Paused}
@@ -75,7 +75,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 	{
 		return ${Math.Calc[${This.TargetingThisFrame} + ${_Me.GetTargets} + ${_Me.GetTargeting}]}
 	}
-	
+
 	member:int QueueSize()
 	{
 		return ${Math.Calc[${TargetQueue.Used} + ${MandatoryQueue.Used}]}

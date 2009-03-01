@@ -1,10 +1,10 @@
 /*
 	EVEBot class
-	
+
 	Object to contain miscellaneous helper methods and members that don't properly belong elsewhere.
-	
+
 	-- CyberTech
-	
+
 */
 
 objectdef obj_EVEBot
@@ -13,7 +13,7 @@ objectdef obj_EVEBot
 	variable int Version
 
 	variable bool ReturnToStation = FALSE
-	variable bool Paused = FALSE
+	variable bool _Paused = FALSE
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 4
 
@@ -24,7 +24,7 @@ objectdef obj_EVEBot
 			echo "ISXEVE must be loaded to use ${APP_NAME}."
 			Script:End
 		}
-	
+
 		This:SetVersion
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_EVEBot: Initialized", LOG_MINOR]
@@ -43,7 +43,12 @@ objectdef obj_EVEBot
 			;run EVEBot/Launcher.iss charid or charname
 			;Script:End
 		}
-		
+
+		if ${This.Paused}
+		{
+			return
+		}
+
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
     		if ${Login(exists)} || \
@@ -53,7 +58,7 @@ objectdef obj_EVEBot
     			;run EVEBot/Launcher.iss charid or charname
     			;Script:End
     		}
-		    
+
 			if ${Config.Common.Disable3D}
 			{
 				if ${EVE.Is3DDisplayOn}
@@ -67,7 +72,7 @@ objectdef obj_EVEBot
 				EVE:Toggle3DDisplay
 				UI:UpdateConsole["Enabling 3D Rendering"]
 			}
-			
+
 			/*
 				TODO
 					[15:52] <CyberTechWork> the downtime check could be massively optimized
@@ -97,31 +102,56 @@ objectdef obj_EVEBot
 
 			if ${This.ReturnToStation} && ${Me(exists)}
 			{
-				if (${This.GameHour} == 10 && ${This.GameMinute} >= 58) 
+				if (${This.GameHour} == 10 && ${This.GameMinute} >= 58)
 				{
 					UI:UpdateConsole["EVE downtime approaching - Quitting Eve", LOG_CRITICAL]
 					EVE:Execute[CmdQuitGame]
 				}
 			}
-			
+
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
     		This.NextPulse:Update
 		}
 	}
-		
+
+	member:bool SessionValid()
+	{
+		if !${EVE(exists)} || \
+			!${Me(exists)} || \
+			!${Me.Ship(exists)} || \
+			!${Me.InStation(exists)} || \
+			!${EVEWindow[Local](exists)}
+		{
+			return FALSE
+		}
+
+		;return MAYBE
+		return TRUE
+	}
+
+	member:bool Paused()
+	{
+		if ${This._Paused} || ${Script.Paused}
+		{
+			return TRUE
+		}
+
+		return ${This.SessionValid}
+	}
+
 	method Pause()
 	{
 		UI:UpdateConsole["Paused", LOG_CRITICAL]
-		This.Paused:Set[TRUE]
+		This._Paused:Set[TRUE]
 	}
-	
+
 	method Resume()
 	{
 		UI:UpdateConsole["Resumed", LOG_CRITICAL]
-		This.Paused:Set[FALSE]
+		This._Paused:Set[FALSE]
 	}
-	
+
 	method SetVersion(int Version=${VersionNum})
 	{
 		if ${APP_HEADURL.Find["EVEBot/branches/stable"]}
@@ -133,24 +163,24 @@ objectdef obj_EVEBot
 			AppVersion:Set["${APP_NAME} Dev Revision ${VersionNum}"]
 		}
 	}
-	
+
 	member:int GameHour()
 	{
 		variable string HourStr = ${_EVETime.Time}
 		variable string Hour = 00
-		
+
 		if ${HourStr(exists)}
 		{
 			 Hour:Set[${HourStr.Token[1, :]}]
 		}
 		return ${Hour}
 	}
-	
+
 	member:int GameMinute()
 	{
 		variable string MinuteStr = ${_EVETime.Time}
 		variable string Minute = 18
-		
+
 		if ${MinuteStr(exists)}
 		{
 			 Minute:Set[${MinuteStr.Token[2, :]}]
@@ -191,7 +221,7 @@ objectdef obj_EVEBot
 				return "${Total.Round} isk"
 			}
 		}
-		
+
 		return "0 isk"
 	}
 }

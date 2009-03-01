@@ -131,6 +131,11 @@ objectdef obj_Ship
 
 	method Pulse()
 	{
+		if !${EVEBot.SessionValid}
+		{
+			return
+		}
+
 		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			if !${_Me.InStation} && ${Me.Ship(exists)}
@@ -179,7 +184,7 @@ objectdef obj_Ship
 	member:bool IsAmmoAvailable()
 	{
 		Validate_Ship()
-		
+
 		variable iterator aWeaponIterator
 		variable index:item anItemIndex
 		variable iterator anItemIterator
@@ -232,7 +237,7 @@ objectdef obj_Ship
 	member:bool HasCovOpsCloak()
 	{
 		Validate_Ship()
-		
+
 		variable iterator aModuleIterator
 		This.ModuleList_Cloaks:GetIterator[aModuleIterator]
 		if ${aModuleIterator:First(exists)}
@@ -574,7 +579,7 @@ objectdef obj_Ship
 	member:int TotalActivatedMiningLasers()
 	{
 		Validate_Ship()
-		
+
 		variable int count
 		variable iterator Module
 
@@ -601,7 +606,7 @@ objectdef obj_Ship
 	member:float MiningAmountPerLaser()
 	{
 		Validate_Ship()
-		
+
 		variable iterator Module
 
 		This.ModuleList_MiningLaser:GetIterator[Module]
@@ -624,7 +629,7 @@ objectdef obj_Ship
 	member:int OptimalMiningRange()
 	{
 		Validate_Ship()
-		
+
 		variable iterator Module
 
 		This.ModuleList_MiningLaser:GetIterator[Module]
@@ -1501,7 +1506,7 @@ objectdef obj_Ship
 	member:int OptimalTractorRange()
 	{
 		Validate_Ship()
-		
+
 		variable iterator Module
 
 		This.ModuleList_TractorBeams:GetIterator[Module]

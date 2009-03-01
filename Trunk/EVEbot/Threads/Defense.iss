@@ -34,15 +34,13 @@ objectdef obj_Defense
 	{
 		if !${Script[EVEBot](exists)}
 		{
-			return
+			Script:End
 		}
 
-		; Commented out for now - I want the bot to handle automatic defense when it's
-		; loaded, as a background task. - CyberTech
-		;if ${EVEBot.Paused}
-		;{
-		;	return
-		;}
+		if !${EVEBot.SessionValid}
+		{
+			return
+		}
 
 		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
@@ -257,7 +255,7 @@ objectdef obj_Defense
 			{
 				${Ship:Activate_Cloak[]
 			}
-			
+
 			;;; Doing this for hours would make you look like a bot.
 			;;; TODO Shutdown Eve or dock if we are fleeing without a cloak for more than 5-10 minutes
 			;;;if !${Ship.HasCloak} && ${Safespots.Count} > 1
