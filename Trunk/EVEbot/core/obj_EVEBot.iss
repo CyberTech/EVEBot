@@ -129,12 +129,14 @@ objectdef obj_EVEBot
 
 	member:bool Paused()
 	{
-		if ${This._Paused} || ${Script.Paused}
+		if ${This._Paused} || \
+			${Script.Paused} || \
+			!${This.SessionValid}
 		{
 			return TRUE
 		}
 
-		return ${This.SessionValid}
+		return FALSE
 	}
 
 	method Pause()
