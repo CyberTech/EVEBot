@@ -185,11 +185,6 @@ objectdef obj_OreHauler inherits obj_Hauler
 
 	method Pulse()
 	{
-		if ${EVEBot.Paused}
-		{
-			return
-		}
-
 		if !${Config.Common.BotMode.Equal[Hauler]}
 		{
 			return
@@ -197,7 +192,10 @@ objectdef obj_OreHauler inherits obj_Hauler
 
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-			This:SetState[]
+			if !${EVEBot.Paused}
+			{
+				This:SetState[]
+			}
 
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]

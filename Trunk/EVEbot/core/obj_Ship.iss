@@ -131,17 +131,16 @@ objectdef obj_Ship
 
 	method Pulse()
 	{
-		if !${EVEBot.SessionValid}
-		{
-			return
-		}
-
 		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-			if !${_Me.InStation} && ${Me.Ship(exists)}
+			if ${EVEBot.SessionValid}
 			{
-				This:ValidateModuleTargets
+				if !${_Me.InStation} && ${Me.Ship(exists)}
+				{
+					This:ValidateModuleTargets
+				}
 			}
+
 			This.NextPulse:Set[${Time.Timestamp}]
 			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
 			This.NextPulse:Update

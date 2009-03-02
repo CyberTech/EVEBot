@@ -37,20 +37,13 @@ objectdef obj_EVEBot
 
 	method Pulse()
 	{
-		if !${ISXEVE(exists)}
-		{
-			echo "EVEBot: Out of game"
-			;run EVEBot/Launcher.iss charid or charname
-			;Script:End
-		}
-
-		if ${This.Paused}
-		{
-			return
-		}
-
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
+			if !${This.SessionValid}
+			{
+				return
+			}
+
     		if ${Login(exists)} || \
     			${CharSelect(exists)}
     		{
@@ -73,39 +66,43 @@ objectdef obj_EVEBot
 				UI:UpdateConsole["Enabling 3D Rendering"]
 			}
 
-			/*
-				TODO
-					[15:52] <CyberTechWork> the downtime check could be massively optimized
-					[15:52] <CyberTechWork> by calcing how long till downtime and setting a timed event to call back
-					[15:52] <CyberTechWork> don't know why we didn't think of that in the first place
-			*/
-			if !${This.ReturnToStation} && ${Me(exists)}
+			if !${This._Paused}
 			{
-				if ( ${This.GameHour} == 10 && \
-					( ${This.GameMinute} >= 50 || ${This.GameMinute} <= 57) )
-				{
-					UI:UpdateConsole["EVE downtime approaching, pausing operations", LOG_CRITICAL]
-					This.ReturnToStation:Set[TRUE]
-				}
-				else
-				{
-					variable int Hours = ${Math.Calc[(${Script.RunningTime}/1000/60/60)%60].Int}
 
-					;;; UI:UpdateConsole["DEBUG: ${Config.Common.MaxRuntime} ${Hours}"]
-					if ${Config.Common.MaxRuntime} > 0 && ${Config.Common.MaxRuntime} <= ${Hours}
+				/*
+					TODO
+						[15:52] <CyberTechWork> the downtime check could be massively optimized
+						[15:52] <CyberTechWork> by calcing how long till downtime and setting a timed event to call back
+						[15:52] <CyberTechWork> don't know why we didn't think of that in the first place
+				*/
+				if !${This.ReturnToStation} && ${Me(exists)}
+				{
+					if ( ${This.GameHour} == 10 && \
+						( ${This.GameMinute} >= 50 || ${This.GameMinute} <= 57) )
 					{
-						UI:UpdateConsole["Maximum runtime exceeded, pausing operations", LOG_CRITICAL]
+						UI:UpdateConsole["EVE downtime approaching, pausing operations", LOG_CRITICAL]
 						This.ReturnToStation:Set[TRUE]
 					}
-				}
-			}
+					else
+					{
+						variable int Hours = ${Math.Calc[(${Script.RunningTime}/1000/60/60)%60].Int}
 
-			if ${This.ReturnToStation} && ${Me(exists)}
-			{
-				if (${This.GameHour} == 10 && ${This.GameMinute} >= 58)
+						;;; UI:UpdateConsole["DEBUG: ${Config.Common.MaxRuntime} ${Hours}"]
+						if ${Config.Common.MaxRuntime} > 0 && ${Config.Common.MaxRuntime} <= ${Hours}
+						{
+							UI:UpdateConsole["Maximum runtime exceeded, pausing operations", LOG_CRITICAL]
+							This.ReturnToStation:Set[TRUE]
+						}
+					}
+				}
+
+				if ${This.ReturnToStation} && ${Me(exists)}
 				{
-					UI:UpdateConsole["EVE downtime approaching - Quitting Eve", LOG_CRITICAL]
-					EVE:Execute[CmdQuitGame]
+					if (${This.GameHour} == 10 && ${This.GameMinute} >= 58)
+					{
+						UI:UpdateConsole["EVE downtime approaching - Quitting Eve", LOG_CRITICAL]
+						EVE:Execute[CmdQuitGame]
+					}
 				}
 			}
 

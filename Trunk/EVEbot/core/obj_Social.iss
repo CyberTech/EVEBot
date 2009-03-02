@@ -122,35 +122,33 @@ objectdef obj_Social
 
 	method Pulse()
 	{
-		if !${EVEBot.SessionValid}
-		{
-			return
-		}
-
 		if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
 		{
-			if ${EVE.GetPilots} > 1
+			if ${EVEBot.SessionValid}
 			{
-				; DoGetPilots is relatively expensive vs just the pilotcount.  Check if we're alone before calling.
-				EVE:DoGetPilots[This.PilotIndex]
-			}
-			else
-			{
-				This.PilotIndex:Clear
-			}
+				if ${EVE.GetPilots} > 1
+				{
+					; DoGetPilots is relatively expensive vs just the pilotcount.  Check if we're alone before calling.
+					EVE:DoGetPilots[This.PilotIndex]
+				}
+				else
+				{
+					This.PilotIndex:Clear
+				}
 
-			This:CheckChatInvitation[]
+				This:CheckChatInvitation[]
 
-			if !${_Me.InStation}
-			{
-				EVE:DoGetEntities[This.EntityIndex,CategoryID,CATEGORYID_ENTITY]
-			}
-			else
-			{
-				This.EntityIndex:Clear
-			}
+				if !${_Me.InStation}
+				{
+					EVE:DoGetEntities[This.EntityIndex,CategoryID,CATEGORYID_ENTITY]
+				}
+				else
+				{
+					This.EntityIndex:Clear
+				}
 
-    		SystemSafe:Set[${Math.Calc[${This.CheckLocalWhiteList} & ${This.CheckLocalBlackList}](bool)}]
+    			SystemSafe:Set[${Math.Calc[${This.CheckLocalWhiteList} & ${This.CheckLocalBlackList}](bool)}]
+			}
 
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]

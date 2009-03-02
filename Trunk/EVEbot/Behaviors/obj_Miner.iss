@@ -49,21 +49,18 @@ objectdef obj_Miner
 
 	method Pulse()
 	{
-		if ${EVEBot.Paused}
-		{
-			return
-		}
-
 		if !${Config.Common.BotMode.Equal[Miner]}
 		{
-			; There's no reason at all for the miner to check state if it's not a miner
 			return
 		}
 
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-			This:SetState[]
-            SanityCheckCounter:Inc
+			if !${EVEBot.Paused}
+			{
+				This:SetState[]
+            	SanityCheckCounter:Inc
+            }
 
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
@@ -113,7 +110,7 @@ objectdef obj_Miner
 				This:NotifyHaulers[]
 				break
 			case DROPOFF
-				
+
 				switch ${Config.Miner.DeliveryLocationType}
 				{
 					case Station
@@ -388,7 +385,7 @@ objectdef obj_Miner
 			Bookmarks:StoreLocation
 		}
 		*/
-/*		
+/*
 		This.TotalTrips:Inc
 		This.PreviousTripSeconds:Set[${This.TripDuration}]
 		This.TotalTripSeconds:Inc[${This.PreviousTripSeconds}]

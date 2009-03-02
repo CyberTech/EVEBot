@@ -30,17 +30,13 @@ objectdef obj_Offense
 			Script:End
 		}
 
-		if ${EVEBot.Paused}
-		{
-			return
-		}
-
 		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-			if ${This.Running}
+			if ${This.Running} && !${EVEBot.Paused}
 			{
 				This:TakeOffensiveAction
 			}
+
 			This.NextPulse:Set[${Time.Timestamp}]
 			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
 			This.NextPulse:Update

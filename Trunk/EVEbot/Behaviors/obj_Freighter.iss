@@ -14,11 +14,10 @@ objectdef obj_Freighter
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
-	/* the bot logic is currently based on a state machine */
-	variable string CurrentState
-
 	variable time NextPulse
-	variable int PulseIntervalInSeconds = 2
+	variable float PulseIntervalInSeconds = 2.0
+
+	variable string CurrentState
 
 	variable queue:bookmark SourceLocations
 	variable int m_DestinationID
@@ -46,11 +45,6 @@ objectdef obj_Freighter
 
 	method Pulse()
 	{
-		if ${EVEBot.Paused}
-		{
-			return
-		}
-
 		if !${Config.Common.BotMode.Equal[Freighter]}
 		{
 			return
@@ -58,28 +52,30 @@ objectdef obj_Freighter
 
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-			switch ${Config.Freighter.FreighterModeName}
+			if !${EVEBot.Paused}
 			{
-				case Move Minerals to Buyer
-					/* not implemented yet */
-					break
-				case Mission Runner
-					This.Courier:SetState
-					break
-				case Stealth Hauler
-					This.StealthHauler:SetState
-					break
-				case Scavenger
-					This.Scavenger:SetState
-					break
-				default
-					This:SetState[]
-					break
+				switch ${Config.Freighter.FreighterModeName}
+				{
+					case Move Minerals to Buyer
+						/* not implemented yet */
+						break
+					case Mission Runner
+						This.Courier:SetState
+						break
+					case Stealth Hauler
+						This.StealthHauler:SetState
+						break
+					case Scavenger
+						This.Scavenger:SetState
+						break
+					default
+						This:SetState[]
+						break
+				}
 			}
-
-    		This.NextPulse:Set[${Time.Timestamp}]
-    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-    		This.NextPulse:Update
+   			This.NextPulse:Set[${Time.Timestamp}]
+   			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+			This.NextPulse:Update
 		}
 	}
 
@@ -167,8 +163,8 @@ objectdef obj_Freighter
 		}
 		elseif ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
 		{
-			/* TODO - CyberTech - This needs configurable. Assume Ship 
-				942k, items of 100k each, ship is full @ 900k, however 
+			/* TODO - CyberTech - This needs configurable. Assume Ship
+				942k, items of 100k each, ship is full @ 900k, however
 				min freespace is looking for 20k (2%)
 			*/
 			This.CurrentState:Set["CARGOFULL"]

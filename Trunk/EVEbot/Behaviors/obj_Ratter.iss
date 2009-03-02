@@ -39,11 +39,6 @@ objectdef obj_Ratter
 
 	method Pulse()
 	{
-		if ${EVEBot.Paused}
-		{
-			return
-		}
-
 		if !${Config.Common.BotMode.Equal[Ratter]}
 		{
 			return
@@ -51,15 +46,15 @@ objectdef obj_Ratter
 
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-			This:SetState[]
+			if !${EVEBot.Paused}
+			{
+				This:SetState[]
+			}
 
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
     		This.NextPulse:Update
 		}
-
-		;; call the combat frame action code
-		This.Combat:Pulse
 	}
 
 	method Shutdown()

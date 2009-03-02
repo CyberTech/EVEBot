@@ -94,23 +94,24 @@ objectdef obj_Combat
 	{
 		This.CurrentState:Set["IDLE"]
 		This.Fled:Set[FALSE]
+		Event[OnFrame]:AttachAtom[This:Pulse]
+
 		UI:UpdateConsole["obj_Combat: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
 	{
+		Event[OnFrame]:DetachAtom[This:Pulse]
 	}
 
 	method Pulse()
 	{
-		if ${EVEBot.Paused}
-		{
-			return
-		}
-
 		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-			This:SetState
+			if !${EVEBot.Paused}
+			{
+				This:SetState
+			}
 
 			This.NextPulse:Set[${Time.Timestamp}]
 			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]

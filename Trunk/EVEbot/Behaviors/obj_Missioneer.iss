@@ -24,11 +24,6 @@ objectdef obj_Missioneer
 
 	method Pulse()
 	{
-		if ${EVEBot.Paused}
-		{
-			return
-		}
-
 		if !${Config.Common.BotMode.Equal[Missioneer]}
 		{
 			return
@@ -36,7 +31,11 @@ objectdef obj_Missioneer
 
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-			This:SetState
+			if !${EVEBot.Paused}
+			{
+				This:SetState
+			}
+
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
     		This.NextPulse:Update

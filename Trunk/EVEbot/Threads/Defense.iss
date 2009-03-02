@@ -37,14 +37,9 @@ objectdef obj_Defense
 			Script:End
 		}
 
-		if !${EVEBot.SessionValid}
-		{
-			return
-		}
-
 		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-			if ${This.Running}
+			if ${EVEBot.SessionValid} && ${This.Running}
 			{
 				This:TakeDefensiveAction[]
 				This:CheckTankMinimums[]

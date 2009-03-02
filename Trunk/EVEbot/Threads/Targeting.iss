@@ -53,18 +53,17 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 			Script:End
 		}
 
-		if ${EVEBot.Paused}
-		{
-			return
-		}
-
 		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-			This:PruneQueue[]
-			if ${This.Running}
+			if !${EVEBot.Paused}
 			{
-				This:TargetNext[]
+				This:PruneQueue[]
+				if ${This.Running}
+				{
+					This:TargetNext[]
+				}
 			}
+
 			This.NextPulse:Set[${Time.Timestamp}]
 			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
 			This.NextPulse:Update

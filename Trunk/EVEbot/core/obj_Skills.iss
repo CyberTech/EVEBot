@@ -50,44 +50,43 @@ objectdef obj_Skills inherits obj_BaseClass
 
 	method Pulse()
 	{
-		if !${EVEBot.SessionValid}
-		{
-			return
-		}
-
 		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-			if ${Config.Common.TrainSkills} && ${Me(exists)}
+			if ${EVEBot.SessionValid}
 			{
-				if (${This.PrevSkillFileSize} == -1) || \
-					 (${This.SkillFile.Size} != ${This.PrevSkillFileSize})
+				if ${Config.Common.TrainSkills} && ${Me(exists)}
 				{
-					; Skillfile has not yet been checked or has changed
-					if ${This.SkillFile.Size} > 0
+					if (${This.PrevSkillFileSize} == -1) || \
+						 (${This.SkillFile.Size} != ${This.PrevSkillFileSize})
 					{
-						UI:UpdateConsole["obj_Skill: Reloading skillfile"]
-						This:UpdateSkillFileQueue[]
+						; Skillfile has not yet been checked or has changed
+						if ${This.SkillFile.Size} > 0
+						{
+							UI:UpdateConsole["obj_Skill: Reloading skillfile"]
+							This:UpdateSkillFileQueue[]
+						}
+						This.PrevSkillFileSize:Set[${This.SkillFile.Size}]
 					}
-					This.PrevSkillFileSize:Set[${This.SkillFile.Size}]
+
+					; TODO - CyberTech - need to detect other char on account training a skill
+					if !${Me.SkillCurrentlyTraining(exists)}
+					{
+						; We're not training a skill, so update the character skill list
+						This:UpdateSkills
+						if !${This.NextSkill.Equal[None]} && \
+							!${Me.Skill[${This.NextInLine}].IsTraining}
+						{
+							This:Train[${This.NextInLine}]
+						}
+					}
 				}
 
-				; TODO - CyberTech - need to detect other char on account training a skill
-				if !${Me.SkillCurrentlyTraining(exists)}
+				if ${Me(exists)}
 				{
-					; We're not training a skill, so update the character skill list
-					This:UpdateSkills
-					if !${This.NextSkill.Equal[None]} && \
-						!${Me.Skill[${This.NextInLine}].IsTraining}
-					{
-						This:Train[${This.NextInLine}]
-					}
+					CurrentlyTrainingSkill:Set[${This.CurrentlyTraining}]
 				}
 			}
 
-			if ${Me(exists)}
-			{
-				CurrentlyTrainingSkill:Set[${This.CurrentlyTraining}]
-			}
 			This.NextPulse:Set[${Time.Timestamp}]
 			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
 			This.NextPulse:Update

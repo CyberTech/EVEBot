@@ -1,10 +1,10 @@
 /*
 	LoginHandler class
-	
+
 	Object to contain autologin code
-	
+
 	-- CyberTech
-	
+
 	Referenced code from Altered during object creation.
 
 	TODO: Solve invalid config loaded at fresh startup b/c me.name is null during obj_config.
@@ -32,7 +32,7 @@ objectdef obj_LoginHandler
 	variable int connectWaitTime = 30
 	variable int inspaceWaitTime = 60
 	variable int evebotWaitTime = 30
-	
+
 	method Initialize()
 	{
 		echo obj_Login: Initialized
@@ -41,7 +41,7 @@ objectdef obj_LoginHandler
 
 	method Start()
 	{
-		Event[OnFrame]:AttachAtom[This:Pulse]		
+		Event[OnFrame]:AttachAtom[This:Pulse]
 	}
 
 	method Shutdown()
@@ -51,51 +51,50 @@ objectdef obj_LoginHandler
 
 	method Pulse()
 	{
-
 		if ${This.LoginTimer} > 0
 		{
 			This.PulseIntervalInSeconds:Set[${This.LoginTimer}]
 		}
-		
+
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			;echo DEBUG: Pulse: ${This.LoginTimer} - ${This.CurrentState}
 			This:DoLogin
-			
+
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
     		This.NextPulse:Update
 		}
 	}
-	
+
 	function LoadExtension()
 	{
 		variable int Timer = 0
 		variable string EXTNAME = "ISXEVE"
-		
+
 		if ${${EXTNAME}(exists)}
 		{
 			return
 		}
 	    	;echo "DEBUG: obj_Login: Loading Extension ${EXTNAME}"
 		do
-		{   
+		{
 			wait 50
 			if !${${EXTNAME}.IsLoading} && !${${EXTNAME}.IsReady}
 			{
 				extension -unload ${EXTNAME}
 				extension ${EXTNAME}
-			} 	
+			}
 
 			Timer:Set[0]
-	    
+
 			do
 			{
 				if (${${EXTNAME}.IsReady})
 				{
 					return
 				}
-	           
+
 				Timer:Inc
 				waitframe
 			}
@@ -104,7 +103,7 @@ objectdef obj_LoginHandler
 		}
 		while (!${${EXTNAME}(exists)})
 	 }
-	
+
 	method DoLogin()
 	{
 		EVE:CloseAllMessageBoxes
@@ -164,7 +163,7 @@ objectdef obj_LoginHandler
 				if ${Login(exists)}
 				{
 					; Reconnect if we're still at the login screen
-					Login:Connect 
+					Login:Connect
 					This.LoginTimer:Set[${This.connectWaitTime}]
 					break
 				}
