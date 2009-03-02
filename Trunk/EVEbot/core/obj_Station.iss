@@ -58,7 +58,8 @@ objectdef obj_Station
 	member:bool Docked()
 	{
 		if ${_Me.InStation} && \
-			${_Me.StationID} > 0
+			${_Me.StationID} > 0 && \
+			${EVEBot.SessionValid}
 		{
 			return TRUE
 		}
@@ -68,7 +69,8 @@ objectdef obj_Station
 	member:bool DockedAtStation(int StationID)
 	{
 		if ${_Me.InStation} && \
-			${_Me.StationID} == ${StationID}
+			${_Me.StationID} == ${StationID} && \
+			${EVEBot.SessionValid}
 		{
 			return TRUE
 		}
@@ -218,7 +220,7 @@ objectdef obj_Station
 
 			Counter:Set[0]
 			UI:UpdateConsole["In Docking Range ... Docking"]
-			UI:UpdateConsole["DEBUG: StationExists = ${Entity[${StationID}](exists)}"]
+			;UI:UpdateConsole["DEBUG: StationExists = ${Entity[${StationID}](exists)}"]
 			do
 			{
 				Entity[${StationID}]:Dock
