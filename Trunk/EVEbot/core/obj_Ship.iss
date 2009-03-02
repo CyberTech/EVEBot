@@ -23,7 +23,7 @@
 		if ${Module:First(exists)}
 		do
 		{
-			if !${Me.Ship(exists)}
+			if !${EVEBot.SessionValid}
 			{
 				return
 			}
@@ -135,7 +135,7 @@ objectdef obj_Ship
 		{
 			if ${EVEBot.SessionValid}
 			{
-				if !${_Me.InStation} && ${Me.Ship(exists)}
+				if !${_Me.InStation}
 				{
 					This:ValidateModuleTargets
 				}
@@ -643,7 +643,7 @@ objectdef obj_Ship
 	; Returns the loaded crystal in a mining laser, given the slot name ("HiSlot0"...)
 	member:string LoadedMiningLaserCrystal(string SlotName, bool fullName = FALSE)
 	{
-		if !${Me.Ship(exists)}
+		if !${EVEBot.SessionValid}
 		{
 			return "NOCHARGE"
 		}
