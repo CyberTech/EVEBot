@@ -8,7 +8,7 @@
 */
 
 #macro Validate_Ship()
-		if !${Me.Ship(exists)}
+		if !${EVEBot.SessionValid}
 		{
 			return
 		}
