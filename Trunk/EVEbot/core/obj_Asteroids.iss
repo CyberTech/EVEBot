@@ -88,17 +88,17 @@ objectdef obj_Asteroids
 
 			if ${Config.Miner.IceMining}
 			{
-				prefix:Set[${Config.Labels.IceBeltPrefix}]
+				prefix:Set["${Config.Labels.IceBeltPrefix}"]
 			}
 			else
 			{
-				prefix:Set[${Config.Labels.OreBeltPrefix}]
+				prefix:Set["${Config.Labels.OreBeltPrefix}"]
 			}
 
-			Label:Set[${BeltBookMarkList[${RandomBelt}].Label}]
+			Label:Set["${BeltBookMarkList[${RandomBelt}].Label}"]
 
 			if (${BeltBookMarkList[${RandomBelt}].SolarSystemID} != ${_Me.SolarSystemID} || \
-				${Label.Left[${prefix.Length}].NotEqual[${prefix}]})
+				${Label.Left[${prefix.Length}].NotEqual["${prefix}"]})
 			{
 				BeltBookMarkList:Remove[${RandomBelt}]
 				BeltBookMarkList:Collapse
@@ -150,7 +150,7 @@ objectdef obj_Asteroids
 			if ${ForceMove} || !${AsteroidsInRange}
 			{
 				This.AsteroidList:Clear
-				
+
 				if (${Config.Miner.BookMarkLastPosition} && \
 					${Bookmarks.StoredLocationExists})
 				{
@@ -227,7 +227,7 @@ objectdef obj_Asteroids
 	{
 		variable index:entity CurrentAsteroidList
 		variable iterator AsteroidIterator
-		
+
 		switch ${Config.Miner.MinerType}
 		{
 			case Ice
@@ -286,18 +286,18 @@ objectdef obj_Asteroids
 	member:int SelectBestGroup()
 	{
 		variable iterator AsteroidIterator
-		
+
 		variable int BestAsteroidID
 		variable int BestAsteroidValue
 		;variable int BestAsteroidNeighborCount
-		
+
 		This.AsteroidList:GetIterator[AsteroidIterator]
 		if ${AsteroidIterator:First(exists)}
 		{
 		}
-		
+
 	}
-	
+
 	function UpdateList()
 	{
 		variable index:entity asteroid_index
@@ -372,7 +372,7 @@ objectdef obj_Asteroids
 	{
 		variable iterator AsteroidIterator
 		variable int IndexPos = 1
-		
+
 		if ${This.AsteroidList.Used} == 0
 		{
 			;call This.UpdateList
