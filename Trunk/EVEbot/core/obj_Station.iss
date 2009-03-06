@@ -232,7 +232,7 @@ objectdef obj_Station
 					Entity[${StationID}]:Dock
 		      		Counter:Set[0]
 		   		}
-				UI:UpdateConsole["DEBUG: StationExists = ${Entity[${StationID}](exists)}"]
+				;UI:UpdateConsole["DEBUG: StationExists = ${Entity[${StationID}](exists)}"]
 			}
 			while !${This.DockedAtStation[${StationID}]}
 			wait 75

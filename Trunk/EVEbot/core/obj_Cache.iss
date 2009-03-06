@@ -171,15 +171,16 @@ objectdef obj_Cache_Me inherits obj_Cache
 
 		StaticList:Set["Name", "Me.Name"]
 		StaticList:Set["CharID", "Me.CharID"]
+		/* Yes, this causes a problem where if we join an alliance while evebot is running we dont notice. oh well. */
+		StaticList:Set["AllianceID", "Me.AllianceID"]
+		StaticList:Set["CorporationID", "Me.CorporationID"]
+		StaticList:Set["CorporationTicker", "Me.CorporationTicker"]
 
 		ObjectList:Set["ShipID", "Me.ShipID"]
 		ObjectList:Set["MaxLockedTargets", "Me.MaxLockedTargets"]
 		ObjectList:Set["MaxActiveDrones", "Me.MaxActiveDrones"]
 		ObjectList:Set["DroneControlDistance", "Me.DroneControlDistance"]
 		ObjectList:Set["SolarSystemID", "Me.SolarSystemID"]
-		ObjectList:Set["AllianceID", "Me.AllianceID"]
-		ObjectList:Set["CorporationID", "Me.CorporationID"]
-		ObjectList:Set["CorporationTicker", "Me.CorporationTicker"]
 
 		FastObjectList:Set["StationID", "Me.StationID"]
 		FastObjectList:Set["InStation", "Me.InStation"]
