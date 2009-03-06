@@ -95,6 +95,8 @@ function atexit()
 
 function main()
 {
+	echo "LOADING ISXEVE(Stable) -- Please wait..."
+	
 	;Script:Unsquelch
 	;Script:EnableDebugLogging[debug.txt]
 	;Script[EVEBot]:EnableProfiling
