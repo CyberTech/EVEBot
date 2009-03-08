@@ -372,6 +372,7 @@ objectdef obj_Asteroids
 	{
 		variable iterator AsteroidIterator
 		variable int IndexPos = 1
+		variable int MaxDistBetweenAsteroids = ${Math.Calc[${Ship.OptimalMiningRange}* 1.1]}
 
 		if ${This.AsteroidList.Used} == 0
 		{
@@ -393,7 +394,7 @@ objectdef obj_Asteroids
 					${Targeting.QueueSize} < ${Ship.MaxLockedTargets} && \
 					!${Targeting.IsQueued[${This.AsteroidList[${IndexPos}].ID}]} && \
 					${This.AsteroidList[${IndexPos}].Distance} < ${_MyShip.MaxTargetRange} && \
-					( !${Me.ActiveTarget(exists)} || ${This.AsteroidList[${IndexPos}].DistanceTo[${Me.ActiveTarget.ID}]} <= ${Math.Calc[${Ship.OptimalMiningRange}* 1.1]} )
+					${Targeting.DistanceFromQueue[${This.AsteroidList[${IndexPos}].ID},${MaxDistBetweenAsteroids}]} < ${MaxDistBetweenAsteroids}
 				{
 					Targeting:Queue[${This.AsteroidList[${IndexPos}].ID}]
 					This.AsteroidList:Remove[${IndexPos}]

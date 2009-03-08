@@ -384,6 +384,77 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 #endif
 		This.Running:Set[FALSE]
 	}
+
+	member:int DistanceFromQueue(int EntityID, int MaxDistanceWanted=2147483647)
+	{
+		variable iterator Target
+		variable int MaxDistance
+		variable int CurDistance
+
+		if !${Entity[${EntityID}](exists)}
+		{
+			return
+		}
+
+		variable index:entity LockedTargets
+		Me:DoGetTargets[LockedTargets]
+
+		LockedTargets:GetIterator[Target]
+		if ${Target:First(exists)}
+		{
+			do
+			{
+				CurDistance:Set[${Entity[${EntityID}].DistanceTo[${Target.Value.EntityID}]}]
+				if ${CurDistance} > ${MaxDistance}
+				{
+					MaxDistance:Set[${CurDistance}]
+				}
+				if ${MaxDistance} > ${MaxDistanceWanted}
+				{
+					return ${MaxDistance}
+				}
+			}
+			while ${Target:Next(exists)}
+		}
+
+		MandatoryQueue:GetIterator[Target]
+		if ${Target:First(exists)}
+		{
+			do
+			{
+				CurDistance:Set[${Entity[${EntityID}].DistanceTo[${Target.Value.EntityID}]}]
+				if ${CurDistance} > ${MaxDistance}
+				{
+					MaxDistance:Set[${CurDistance}]
+				}
+				if ${MaxDistance} > ${MaxDistanceWanted}
+				{
+					return ${MaxDistance}
+				}
+			}
+			while ${Target:Next(exists)}
+		}
+
+		TargetQueue:GetIterator[Target]
+		if ${Target:First(exists)}
+		{
+			do
+			{
+				CurDistance:Set[${Entity[${EntityID}].DistanceTo[${Target.Value.EntityID}]}]
+				if ${CurDistance} > ${MaxDistance}
+				{
+					MaxDistance:Set[${CurDistance}]
+				}
+				if ${MaxDistance} > ${MaxDistanceWanted}
+				{
+					return ${MaxDistance}
+				}
+			}
+			while ${Target:Next(exists)}
+		}
+
+		return ${MaxDistance}
+	}
 }
 
 variable(global) obj_EVEBOT_Targeting Targeting
