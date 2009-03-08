@@ -1,6 +1,6 @@
 /*
-Officer spawns appear in their home region, or in any region where their 
-faction normally appears, but *only* in systems with -0.8 or below true 
+Officer spawns appear in their home region, or in any region where their
+faction normally appears, but *only* in systems with -0.8 or below true
 sec rating.
 
 Faction: Guristas/Pithi/Dread Guristas
@@ -52,34 +52,34 @@ objectdef obj_EVEDB_Spawns
 
 	variable string CONFIG_FILE = "${BaseConfig.CONFIG_PATH}/EVEDB_Spawns.xml"
 	variable string SET_NAME = "EVEDB_Spawns"
-	
+
 	method Initialize()
 	{
 		LavishSettings:Import[${CONFIG_FILE}]
-		
+
 		UI:UpdateConsole["obj_EVEDB_Spawns: Initialized", LOG_MINOR]
 	}
-	
+
 	member:int SpawnBounty(string spawnName)
 	{
 		return ${LavishSettings[${This.SET_NAME}].FindSet[${spawnName}].FindSetting[bounty, NOTSET]}
-	}	
+	}
 }
 
 objectdef obj_Targets
 {
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
-	
+
 	variable index:string PriorityTargets
 	variable iterator PriorityTarget
-	
+
 	variable index:string ChainTargets
 	variable iterator ChainTarget
-	
+
 	variable index:string SpecialTargets
 	variable iterator SpecialTarget
-	
+
 	variable bool CheckChain
 	variable bool Chaining
    variable int  TotalSpawnValue
@@ -87,17 +87,17 @@ objectdef obj_Targets
 	variable bool m_SpecialTargetPresent
     variable set DoNotKillList
 	variable bool CheckedSpawnValues = FALSE
-	
+
 	method Initialize()
 	{
 		m_SpecialTargetPresent:Set[FALSE]
-		
+
 		; TODO - load this all from XML files
-	
-		; Priority targets will be targeted (and killed) 
+
+		; Priority targets will be targeted (and killed)
 		; before other targets, they often do special things
 		; which we cant use (scramble / web / damp / etc)
-		; You can specify the entire rat name, for example 
+		; You can specify the entire rat name, for example
 		; leave rats that dont scramble which would help
 		; later when chaining gets added
 		PriorityTargets:Insert["Dire Guristas"]
@@ -106,7 +106,7 @@ objectdef obj_Targets
 		PriorityTargets:Insert["Arch Angel Rogue"]
 		PriorityTargets:Insert["Arch Angel Thug"]
 		PriorityTargets:Insert["Sansha's Loyal"]
-				
+
 		PriorityTargets:Insert["Guardian Agent"]		    /* web/scram */
 		PriorityTargets:Insert["Guardian Initiate"]		    /* web/scram */
 		PriorityTargets:Insert["Guardian Scout"]		    /* web/scram */
@@ -152,7 +152,7 @@ objectdef obj_Targets
 		ChainTargets:Insert["Sansha's Slave Lord"]
 		ChainTargets:Insert["Sansha's Savage Lord"]
 		ChainTargets:Insert["Sansha's Mutant Lord"]
-				
+
 		; Special targets will (eventually) trigger an alert
 		; This should include haulers / faction / officers
 		SpecialTargets:Insert["Dread Guristas"]
@@ -184,10 +184,10 @@ objectdef obj_Targets
 		PriorityTargets:GetIterator[PriorityTarget]
 		ChainTargets:GetIterator[ChainTarget]
 		SpecialTargets:GetIterator[SpecialTarget]
-        
+
         DoNotKillList:Clear
 	}
-	
+
 	method ResetTargets()
 	{
 		This.CheckChain:Set[TRUE]
@@ -200,7 +200,7 @@ objectdef obj_Targets
 	{
 		return ${m_SpecialTargetPresent}
 	}
-	
+
 	member:bool IsPriorityTarget(string name)
 	{
 		; Loop through the priority targets
@@ -213,7 +213,7 @@ objectdef obj_Targets
 			}
 		}
 		while ${PriorityTarget:Next(exists)}
-		
+
 		return FALSE
 	}
 
@@ -229,7 +229,7 @@ objectdef obj_Targets
 				}
 			}
 			while ${SpecialTarget:Next(exists)}
-			
+
 			return FALSE
 	}
 
@@ -279,12 +279,12 @@ objectdef obj_Targets
 			UI:UpdateConsole["Jammed, cant target..."]
 			return TRUE
 		}
-		
+
 		; Chaining means there might be targets here which we shouldnt kill
 		variable bool HasTargets = FALSE
 
 		; Start looking for (and locking) priority targets
-		; special targets and chainable targets, only priority 
+		; special targets and chainable targets, only priority
 		; targets will be locked in this loop
 		variable bool HasPriorityTarget = FALSE
 		variable bool HasChainableTarget = FALSE
@@ -303,9 +303,9 @@ objectdef obj_Targets
          	variable string NPCName
          	variable string NPCGroup
          	variable string NPCShipType
-         	
+
          	NPCName:Set[${Target.Value.Name}]
-			NPCGroup:Set[${Target.Value.Group}]         	
+			NPCGroup:Set[${Target.Value.Group}]
 			pos:Set[1]
         	while ${NPCGroup.Token[${pos}, " "](exists)}
         	{
@@ -318,7 +318,7 @@ objectdef obj_Targets
             ;UI:UpdateConsole["DEBUG: Type: ${Target.Value.Type}(${Target.Value.TypeID})"]
             ;UI:UpdateConsole["DEBUG: Category: ${Target.Value.Category}(${Target.Value.CategoryID})"]
 
-            switch ${Target.Value.GroupID} 
+            switch ${Target.Value.GroupID}
             {
                case GROUP_LARGECOLLIDABLEOBJECT
                case GROUP_LARGECOLLIDABLESHIP
@@ -332,7 +332,7 @@ objectdef obj_Targets
 			   case GROUP_BILLBOARD
                   continue
 
-               default               
+               default
                   break
             }
 			if ${NPCGroup.Find["Battleship"](exists)}
@@ -356,7 +356,7 @@ objectdef obj_Targets
 			TypeID:Set[${Target.Value.TypeID}]
 			do
 			{
-	            switch ${Target.Value.GroupID} 
+	            switch ${Target.Value.GroupID}
 	            {
 	               case GROUP_LARGECOLLIDABLEOBJECT
 	               case GROUP_LARGECOLLIDABLESHIP
@@ -369,24 +369,24 @@ objectdef obj_Targets
 				   case GROUP_FACTIONDRONE
     			   case GROUP_BILLBOARD
 	                  continue
-	
-	               default               
+
+	               default
 	                  break
 	            }
-            
+
 				; If the Type ID is different then there's more then 1 type in the belt
 				if ${TypeID} != ${Target.Value.TypeID}
 				{
 					HasMultipleTypes:Set[TRUE]
 				}
-				
+
 				; Check for a special target
 				if ${This.IsSpecialTarget[${Target.Value.Name}]}
 				{
 					HasSpecialTarget:Set[TRUE]
 					m_SpecialTargetPresent:Set[TRUE]
 				}
-			
+
 				; Loop through the priority targets
 				if ${This.IsPriorityTarget[${Target.Value.Name}]}
 				{
@@ -397,16 +397,16 @@ objectdef obj_Targets
 						UI:UpdateConsole["Locking priority target ${Target.Value.Name}"]
 						Target.Value:LockTarget
 					}
-					
+
 					; By only saying there's priority targets when they arent
 					; locked yet, the npc bot will target non-priority targets
-					; after it has locked all the priority targets 
+					; after it has locked all the priority targets
 					; (saves time once the priority targets are dead)
 					if !${Target.Value.IsLockedTarget}
 					{
 						HasPriorityTarget:Set[TRUE]
 					}
-					
+
 					; We have targets
 					HasTargets:Set[TRUE]
 				}
@@ -429,13 +429,13 @@ objectdef obj_Targets
 			{
 				Chaining:Set[TRUE]
 			}
-			
+
 			/* skip chaining if chain solo == false and we are alone */
 			if !${Config.Combat.ChainSolo} && ${EVE.LocalsCount} == 1
 			{
 				;UI:UpdateConsole["NPC: We are alone.  Skip chaining!!"]
 				Chaining:Set[FALSE]
-			}			
+			}
 
 	        if ${Chaining}
 	        {
@@ -452,7 +452,7 @@ objectdef obj_Targets
 		if !${HasPriorityTarget} && ${Target:First(exists)}
 		do
 		{
-			switch ${Target.Value.GroupID} 
+			switch ${Target.Value.GroupID}
 			{
 				case GROUP_LARGECOLLIDABLEOBJECT
 				case GROUP_LARGECOLLIDABLESHIP
@@ -465,11 +465,11 @@ objectdef obj_Targets
 				case GROUP_FACTIONDRONE
 			    case GROUP_BILLBOARD
 					continue
-				
-				default               
+
+				default
 					break
 			}
-         
+
 			variable bool DoTarget = FALSE
 			if ${Chaining}
 			{
@@ -484,13 +484,13 @@ objectdef obj_Targets
 				; Target everything
 				DoTarget:Set[TRUE]
 			}
-            
+
             ; override DoTarget to protect partially spawned chains
             if ${DoNotKillList.Contains[${Target.Value.ID}]}
             {
 				DoTarget:Set[FALSE]
             }
-			
+
 			; Do we have to target this target?
 			if ${DoTarget}
 			{
@@ -515,7 +515,7 @@ objectdef obj_Targets
 						}
 					}
 				}
-				
+
 				; Set the return value so we know we have targets
 				HasTargets:Set[TRUE]
 			}
@@ -534,7 +534,7 @@ objectdef obj_Targets
 			}
 		}
 		while ${Target:Next(exists)}
-		
+
 		;if ${HasTargets} && ${Me.ActiveTarget(exists)}
 		;{
 		;	variable int OrbitDistance
@@ -542,10 +542,10 @@ objectdef obj_Targets
 		;	OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
 		;	Me.ActiveTarget:Orbit[${OrbitDistance}]
 		;}
-		
+
 		return ${HasTargets}
 	}
-	
+
 	member:bool PC()
 	{
 		variable index:entity tgtIndex
@@ -553,30 +553,30 @@ objectdef obj_Targets
 
 		EVE:DoGetEntities[tgtIndex, CategoryID, CATEGORYID_SHIP]
 		tgtIndex:GetIterator[tgtIterator]
-		
+
 		if ${tgtIterator:First(exists)}
 		do
 		{
-			if ${tgtIterator.Value.OwnerID} != ${Me.CharID}
+			if ${tgtIterator.Value.Owner.CharID} != ${Me.CharID}
 			{	/* A player is already present here ! */
-				UI:UpdateConsole["Player found ${tgtIterator.Value.Owner}"] 
+				UI:UpdateConsole["Player found ${tgtIterator.Value.Owner}"]
 				return TRUE
 			}
 		}
 		while ${tgtIterator:Next(exists)}
-		
-		; No other players around 
+
+		; No other players around
 		return FALSE
 	}
-	
+
 	member:bool NPC()
 	{
 		variable index:entity tgtIndex
 		variable iterator tgtIterator
 
 		EVE:DoGetEntities[tgtIndex, CategoryID, CATEGORYID_ENTITY]
-		UI:UpdateConsole["DEBUG: Found ${tgtIndex.Used} entities."] 
-		
+		UI:UpdateConsole["DEBUG: Found ${tgtIndex.Used} entities."]
+
 		tgtIndex:GetIterator[tgtIterator]
 		if ${tgtIterator:First(exists)}
 		do
@@ -589,18 +589,18 @@ objectdef obj_Targets
 				case GROUP_LARGECOLLIDABLEOBJECT
 				case GROUP_LARGECOLLIDABLESHIP
 				case GROUP_LARGECOLLIDABLESTRUCTURE
-					UI:UpdateConsole["DEBUG: Ignoring entity ${tgtIterator.Value.Group} (${tgtIterator.Value.GroupID})"] 
+					UI:UpdateConsole["DEBUG: Ignoring entity ${tgtIterator.Value.Group} (${tgtIterator.Value.GroupID})"]
 					continue
 					break
 				default
-					UI:UpdateConsole["DEBUG: NPC found: ${tgtIterator.Value.Group} (${tgtIterator.Value.GroupID})"] 
+					UI:UpdateConsole["DEBUG: NPC found: ${tgtIterator.Value.Group} (${tgtIterator.Value.GroupID})"]
 					return TRUE
 					break
 			}
 		}
 		while ${tgtIterator:Next(exists)}
-		
-		; No NPCs around 
+
+		; No NPCs around
 		return FALSE
 	}
 }
