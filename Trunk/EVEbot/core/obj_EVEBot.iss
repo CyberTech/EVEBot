@@ -115,7 +115,7 @@ objectdef obj_EVEBot
 	member:bool SessionValid()
 	{
 		if !${EVE(exists)} || \
-			!${Me.Ship(exists)} || \
+			!${MyShip(exists)} || \
 			!${Me.InStation(exists)}
 		{
 			return FALSE

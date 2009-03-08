@@ -392,7 +392,7 @@ objectdef obj_Asteroids
 					${Targeting.TargetCount} < ${Ship.MaxLockedTargets} && \
 					${Targeting.QueueSize} < ${Ship.MaxLockedTargets} && \
 					!${Targeting.IsQueued[${This.AsteroidList[${IndexPos}].ID}]} && \
-					${This.AsteroidList[${IndexPos}].Distance} < ${_Me.Ship.MaxTargetRange} && \
+					${This.AsteroidList[${IndexPos}].Distance} < ${_MyShip.MaxTargetRange} && \
 					( !${Me.ActiveTarget(exists)} || ${This.AsteroidList[${IndexPos}].DistanceTo[${Me.ActiveTarget.ID}]} <= ${Math.Calc[${Ship.OptimalMiningRange}* 1.1]} )
 				{
 					Targeting:Queue[${This.AsteroidList[${IndexPos}].ID}]

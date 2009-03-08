@@ -138,7 +138,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 			return
 		}
 
-		if ${_Me.Ship.MaxTargetRange} <= ${Entity[${EntityID}].Distance}
+		if ${_MyShip.MaxTargetRange} <= ${Entity[${EntityID}].Distance}
 		{
 			return
 		}
@@ -164,7 +164,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 
 		This.TargetingThisFrame:Set[0]
 
-		if ${_Me.Ship.MaxLockedTargets} == 0
+		if ${_MyShip.MaxLockedTargets} == 0
 		{
 			UI:UpdateConsole["Targeting is Jammed"]
 			return
@@ -178,7 +178,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 				if ${Entity[${Target.Value.EntityID}](exists)} && \
 					!${Entity[${Target.Value.EntityID}].IsLockedTarget} && \
 					!${Entity[${Target.Value.EntityID}].BeingTargeted} && \
-					${_Me.Ship.MaxTargetRange} > ${Entity[${Target.Value.EntityID}].Distance}
+					${_MyShip.MaxTargetRange} > ${Entity[${Target.Value.EntityID}].Distance}
 				{
 					if ${This.TargetCount} >= ${Ship.MaxLockedTargets}
 					{
@@ -213,7 +213,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 				if ${Entity[${Target.Value.EntityID}](exists)} && \
 					!${Entity[${Target.Value.EntityID}].IsLockedTarget} && \
 					!${Entity[${Target.Value.EntityID}].BeingTargeted} && \
-					${_Me.Ship.MaxTargetRange} > ${Entity[${Target.Value.EntityID}].Distance}
+					${_MyShip.MaxTargetRange} > ${Entity[${Target.Value.EntityID}].Distance}
 				{
 					This:TargetEntity[${Target.Value.EntityID}]
 					Target.Value.Targeting:Set[TRUE]

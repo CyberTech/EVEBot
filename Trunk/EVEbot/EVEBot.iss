@@ -53,6 +53,7 @@
 
 /* Cache Objects */
 variable(global) obj_Cache_Me _Me
+variable(global) obj_Cache_MyShip _MyShip
 variable(global) obj_Cache_EVETime _EVETime
 
 /* Script-Defined Support Objects */

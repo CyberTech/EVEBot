@@ -290,7 +290,7 @@ objectdef obj_Configuration_Miner
 	Define_ConfigItem(bool, StripMine, FALSE)
 	Define_ConfigItem(float, MiningRangeMultipler, 2.2)
 	Define_ConfigItem(bool, StripMine, FALSE)
-	Define_ConfigItem(int, CargoThreshold, ${_Me.Ship.CargoCapacity})
+	Define_ConfigItem(int, CargoThreshold, ${_MyShip.CargoCapacity})
 }
 
 

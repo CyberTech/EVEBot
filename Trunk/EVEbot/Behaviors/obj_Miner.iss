@@ -180,7 +180,7 @@ objectdef obj_Miner
 	  		return
 		}
 
-		if ${_Me.Ship.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold} && \
+		if ${_MyShip.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold} && \
 		    ${SanityCheckAbort} == FALSE
 		{
 		 	This.CurrentState:Set["MINE"]
@@ -193,7 +193,7 @@ objectdef obj_Miner
 			return
 		}
 
-	    if ${_Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold} || \
+	    if ${_MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold} || \
     	    ${EVEBot.ReturnToStation}  || \
     	    ${SanityCheckAbort} == TRUE
 		{
@@ -254,7 +254,7 @@ objectdef obj_Miner
 			return FALSE
 		}
 
-		if ${_Me.Ship.MaxLockedTargets} == 0 && \
+		if ${_MyShip.MaxLockedTargets} == 0 && \
 			 ${Ship.Drones.DronesInSpace} == 0
 		{
 			This.TargetJammedCounter:Inc
@@ -291,11 +291,11 @@ objectdef obj_Miner
 		variable int DroneCargoMin = ${Math.Calc[(${Ship.CargoMinimumFreeSpace}*1.4)]}
 		variable int Counter = 0
 
-		if ${_Me.Ship.UsedCargoCapacity} != ${LastUsedCargoCapacity}
+		if ${_MyShip.UsedCargoCapacity} != ${LastUsedCargoCapacity}
 		{
-			;UI:UpdateConsole["DEBUG: ${_Me.Ship.UsedCargoCapacity} != ${LastUsedCargoCapacity}"]
+			;UI:UpdateConsole["DEBUG: ${_MyShip.UsedCargoCapacity} != ${LastUsedCargoCapacity}"]
 		    SanityCheckCounter:Set[0]
-		    LastUsedCargoCapacity:Set[${_Me.Ship.UsedCargoCapacity}]
+		    LastUsedCargoCapacity:Set[${_MyShip.UsedCargoCapacity}]
 		}
 
 		/* TODO: CyberTech: Move this to obj_Defense */
@@ -322,7 +322,7 @@ objectdef obj_Miner
 			if ${Target:First(exists)}
 			do
 			{
-				if ${_Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
+				if ${_MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 				{
 					break
 				}
@@ -345,7 +345,7 @@ objectdef obj_Miner
 						wait 5
 					}
 
-					if ${_Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
+					if ${_MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 					{
 						break
 					}

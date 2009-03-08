@@ -56,9 +56,9 @@ objectdef obj_Targets
 
 	variable index:int DefensiveQueue
 	variable index:int DefensiveQueueOverride
-	
+
 	variable int ReservedDefensiveSlots = 2
-	
+
 	variable index:string PriorityTargets
 	variable iterator PriorityTarget
 
@@ -84,7 +84,7 @@ objectdef obj_Targets
 		{
 			ReservedDefensiveSlots:Dec
 		}
-		
+
 		; TODO - load this all from XML files
 
 		; Priority targets will be targeted (and killed)
@@ -240,7 +240,7 @@ objectdef obj_Targets
 		if ${tgtIterator:First(exists)}
 		do
 		{
-			if ${tgtIterator.Value.OwnerID} != ${Me.CharID}
+			if ${tgtIterator.Value.Owner.CharID} != ${Me.CharID}
 			{	/* A player is already present here ! */
 				UI:UpdateConsole["Player found ${tgtIterator.Value.Owner}"]
 				return TRUE
@@ -345,20 +345,20 @@ objectdef obj_Targets_Rats
 
 	method UpdateTargetList()
 	{
-		if ${_Me.Ship.MaxLockedTargets} == 0
+		if ${_MyShip.MaxLockedTargets} == 0
 		{
 			UI:UpdateConsole["Jammed: Unable to Target"]
 			return
 		}
 
-		/* Me.Ship.MaxTargetRange contains the (possibly) damped value */
+		/* MyShip.MaxTargetRange contains the (possibly) damped value */
 		if ${Ship.TypeID} == TYPE_RIFTER
 		{
 			EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY, radius, 100000]
 		}
 		else
 		{
-			EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY, radius, ${_Me.Ship.MaxTargetRange}]
+			EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY, radius, ${_MyShip.MaxTargetRange}]
 		}
 		This.Targets:GetIterator[This.Target]
 
@@ -581,7 +581,7 @@ objectdef obj_Targets_Rats
 		;if ${HasTargets} && ${Me.ActiveTarget(exists)}
 		;{
 		;	variable int OrbitDistance
-		;	OrbitDistance:Set[${Math.Calc[${_Me.Ship.MaxTargetRange}*0.40/1000].Round}]
+		;	OrbitDistance:Set[${Math.Calc[${_MyShip.MaxTargetRange}*0.40/1000].Round}]
 		;	OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
 		;	Me.ActiveTarget:Orbit[${OrbitDistance}]
 		;}

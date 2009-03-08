@@ -304,7 +304,7 @@ objectdef obj_Missions
 			call Cargo.OpenHolds
 
 			UI:UpdateConsole["DEBUG: RunCourierMission: Checking ship's cargohold for ${QuantityRequired} units of ${itemName}."]
-			Me.Ship:DoGetCargo[CargoIndex]
+			MyShip:DoGetCargo[CargoIndex]
 			CargoIndex:GetIterator[CargoIterator]
 			if ${CargoIterator:First(exists)}
 			{
@@ -384,7 +384,7 @@ objectdef obj_Missions
 		call Cargo.OpenHolds
 
 		;;; Check the cargohold of your ship
-		Me.Ship:DoGetCargo[CargoIndex]
+		MyShip:DoGetCargo[CargoIndex]
 		CargoIndex:GetIterator[CargoIterator]
 		if ${CargoIterator:First(exists)}
 		{
@@ -821,7 +821,7 @@ objectdef obj_Missions
 			OriginalDistance:Inc[10]
 
 			CurrentDistance:Set[${Entity[${EntityID}].Distance}]
-			UI:UpdateConsole["Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc[(${CurrentDistance} - ${Distance}) / ${Me.Ship.MaxVelocity}].Ceil} Seconds away"]
+			UI:UpdateConsole["Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc[(${CurrentDistance} - ${Distance}) / ${MyShip.MaxVelocity}].Ceil} Seconds away"]
 
 			Ship:Activate_AfterBurner[]
 			do
@@ -1190,7 +1190,7 @@ objectdef obj_Missions
 			while ${Cargo:Next(exists)}
 		}
 
-		Me.Ship:StackAllCargo
+		MyShip:StackAllCargo
 		wait 10
 	}
 
@@ -1210,7 +1210,7 @@ objectdef obj_Missions
 		QuantityRequired:Set[${Math.Calc[${This.MissionCache.Volume[${agentID}]}/${EVEDB_Items.Volume[${itemName}]}]}]
 
 		;;; Check the cargohold of your ship
-		Me.Ship:DoGetCargo[CargoIndex]
+		MyShip:DoGetCargo[CargoIndex]
 		CargoIndex:GetIterator[CargoIterator]
 		if ${CargoIterator:First(exists)}
 		{

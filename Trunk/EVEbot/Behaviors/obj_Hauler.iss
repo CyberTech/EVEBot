@@ -346,7 +346,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 			while ${Cargo:Next(exists)}
 		}
 
-		Me.Ship:StackAllCargo
+		MyShip:StackAllCargo
 		wait 10
 	}
 

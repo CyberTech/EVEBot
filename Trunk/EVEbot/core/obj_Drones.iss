@@ -140,10 +140,10 @@ objectdef obj_Drones
 
 	method LaunchAll()
 	{
-		if ${Me.Ship.GetDrones} > 0
+		if ${MyShip.GetDrones} > 0
 		{
 			UI:UpdateConsole["Launching drones..."]
-			Me.Ship:LaunchAllDrones
+			MyShip:LaunchAllDrones
 			This.WaitingForDrones:Set[TRUE]
 		}
 	}
@@ -165,8 +165,8 @@ objectdef obj_Drones
 			return
 		}
 
-		if (${Me.Ship.DronebayCapacity} > 0 && \
-   			${Me.Ship.GetDrones} == 0 && \
+		if (${MyShip.DronebayCapacity} > 0 && \
+   			${MyShip.GetDrones} == 0 && \
    			${This.DronesInSpace} < ${Config.Combat.MinimumDronesInSpace})
    		{
 			ShortageCount:Inc
@@ -192,7 +192,7 @@ objectdef obj_Drones
 	{
 		variable int DroneQuantitiyToMove = ${Math.Calc[${Config.Common.MinimumDronesInBay} - ${This.DronesInBay}]}
 		if ${This.DronesInStation} == 0 || \
-			!${Me.Ship(exists)}
+			!${MyShip(exists)}
 		{
 			return
 		}
@@ -224,8 +224,8 @@ objectdef obj_Drones
 			UI:UpdateConsole["Recalling ${This.ActiveDroneIDList.Used} Drones"]
 			EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
 			EVE:Execute[CmdDronesReturnToBay]
-			if (${_Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
-				${_Me.Ship.ShieldPct} < ${Config.Combat.MinimumShieldPct})
+			if (${_MyShip.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
+				${_MyShip.ShieldPct} < ${Config.Combat.MinimumShieldPct})
 			{
 				; We don't wait for drones if we're on emergency warp out
 				wait 10
@@ -318,21 +318,21 @@ objectdef obj_Drones
 
 		do
 		{
-			if ${This.IsSniperDrone[${Me.Ship.Drone[${i}].TypeID}]}
+			if ${This.IsSniperDrone[${MyShip.Drone[${i}].TypeID}]}
 			{
-				SniperDrones:Insert[${Me.Ship.Drone[${i}].ID}]
+				SniperDrones:Insert[${MyShip.Drone[${i}].ID}]
 			}
-			elseif ${This.IsSentryDrone[${Me.Ship.Drone[${i}].TypeID}]}
+			elseif ${This.IsSentryDrone[${MyShip.Drone[${i}].TypeID}]}
 			{
-				SentryDrones:Insert[${Me.Ship.Drone[${i}].ID}]
+				SentryDrones:Insert[${MyShip.Drone[${i}].ID}]
 			}
-			elseif ${This.IsHeavyDrone[${Me.Ship.Drone[${i}].TypeID}]}
+			elseif ${This.IsHeavyDrone[${MyShip.Drone[${i}].TypeID}]}
 			{
-				HeavyDrones:Insert[${Me.Ship.Drone[${i}].ID}]
+				HeavyDrones:Insert[${MyShip.Drone[${i}].ID}]
 			}
-			elseif ${This.IsMediumDrone[${Me.Ship.Drone[${i}].TypeID}]}
+			elseif ${This.IsMediumDrone[${MyShip.Drone[${i}].TypeID}]}
 			{
-				MediumDrones:Insert[${Me.Ship.Drone[${i}].ID}]
+				MediumDrones:Insert[${MyShip.Drone[${i}].ID}]
 			}
 		}
 		while ${i:Inc} <= ${This.NumDronesInBay}
@@ -345,21 +345,21 @@ objectdef obj_Drones
 		; Build Specific Drone Lists
 		do
 		{
-			if ${This.IsSniperDrone[${Me.Ship.Drone[${i}].TypeID}]}
+			if ${This.IsSniperDrone[${MyShip.Drone[${i}].TypeID}]}
 			{
-				SniperDrones:Insert[${Me.Ship.Drone[${i}].ID}]
+				SniperDrones:Insert[${MyShip.Drone[${i}].ID}]
 			}
-			elseif ${This.IsSentryDrone[${Me.Ship.Drone[${i}].TypeID}]}
+			elseif ${This.IsSentryDrone[${MyShip.Drone[${i}].TypeID}]}
 			{
-				SentryDrones:Insert[${Me.Ship.Drone[${i}].ID}]
+				SentryDrones:Insert[${MyShip.Drone[${i}].ID}]
 			}
-			elseif ${This.IsHeavyDrone[${Me.Ship.Drone[${i}].TypeID}]}
+			elseif ${This.IsHeavyDrone[${MyShip.Drone[${i}].TypeID}]}
 			{
-				HeavyDrones:Insert[${Me.Ship.Drone[${i}].ID}]
+				HeavyDrones:Insert[${MyShip.Drone[${i}].ID}]
 			}
-			elseif ${This.IsMediumDrone[${Me.Ship.Drone[${i}].TypeID}]}
+			elseif ${This.IsMediumDrone[${MyShip.Drone[${i}].TypeID}]}
 			{
-				MediumDrones:Insert[${Me.Ship.Drone[${i}].ID}]
+				MediumDrones:Insert[${MyShip.Drone[${i}].ID}]
 			}
 		}
 		while ${i:Inc} <= ${This.NumDronesInBay}
@@ -486,7 +486,7 @@ objectdef obj_Drones
 
 	member:int NumDronesInBay()
 	{
-		return ${Me.Ship.GetDrones}
+		return ${MyShip.GetDrones}
 	}
 
 	member:int NumActiveDrones()
@@ -554,7 +554,7 @@ objectdef obj_Drones
 		variable int i = 1
 		do
 		{
-			switch ${Me.Ship.Drone[${i}]}
+			switch ${MyShip.Drone[${i}]}
 			{
 				case Bouncer I
 				case Bouncer II
@@ -577,7 +577,7 @@ objectdef obj_Drones
 		variable int i = 1
 		do
 		{
-			switch ${Me.Ship.Drone[${i}]}
+			switch ${MyShip.Drone[${i}]}
 			{
 				case Garde I
 				case Garde II
@@ -596,7 +596,7 @@ objectdef obj_Drones
 		variable int i = 1
 		do
 		{
-			switch ${Me.Ship.Drone[${i}]}
+			switch ${MyShip.Drone[${i}]}
 			{
 				case Praetor I
 				case Praetor II
@@ -621,7 +621,7 @@ objectdef obj_Drones
 		variable int i = 1
 		do
 		{
-			switch ${Me.Ship.Drone[${i}]}
+			switch ${MyShip.Drone[${i}]}
 			{
 				case Infiltrator I
 				case Infiltrator II

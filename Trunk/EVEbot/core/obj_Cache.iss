@@ -144,7 +144,6 @@ objectdef obj_Cache_Me inherits obj_Cache
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
-	variable obj_Cache_Me_Ship Ship
 	variable obj_Cache_Me_ToEntity ToEntity
 
 	variable string Name
@@ -224,7 +223,7 @@ objectdef obj_Cache_Me_ToEntity inherits obj_Cache
 	}
 }
 
-objectdef obj_Cache_Me_Ship inherits obj_Cache
+objectdef obj_Cache_MyShip inherits obj_Cache
 {
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
@@ -242,24 +241,24 @@ objectdef obj_Cache_Me_Ship inherits obj_Cache
 	{
 		UI:UpdateConsole["obj_Cache_Me_Ship: Initialized", LOG_MINOR]
 
-		FastObjectList:Set["ArmorPct", "Me.Ship.ArmorPct"]
-		FastObjectList:Set["StructurePct", "Me.Ship.StructurePct"]
-		FastObjectList:Set["ShieldPct", "Me.Ship.ShieldPct"]
-		FastObjectList:Set["CapacitorPct", "Me.Ship.CapacitorPct"]
+		FastObjectList:Set["ArmorPct", "MyShip.ArmorPct"]
+		FastObjectList:Set["StructurePct", "MyShip.StructurePct"]
+		FastObjectList:Set["ShieldPct", "MyShip.ShieldPct"]
+		FastObjectList:Set["CapacitorPct", "MyShip.CapacitorPct"]
 
-		ObjectList:Set["_UsedCargoCapacity", "Me.Ship.UsedCargoCapacity"]
-		ObjectList:Set["_CargoCapacity", "Me.Ship.CargoCapacity"]
-		ObjectList:Set["MaxLockedTargets", "Me.Ship.MaxLockedTargets"]
-		ObjectList:Set["MaxTargetRange", "Me.Ship.MaxTargetRange"]
+		ObjectList:Set["_UsedCargoCapacity", "MyShip.UsedCargoCapacity"]
+		ObjectList:Set["_CargoCapacity", "MyShip.CargoCapacity"]
+		ObjectList:Set["MaxLockedTargets", "MyShip.MaxLockedTargets"]
+		ObjectList:Set["MaxTargetRange", "MyShip.MaxTargetRange"]
 
 		This[parent]:Initialize
 	}
 
 	member:float UsedCargoCapacity()
 	{
-		if ${Me.Ship.UsedCargoCapacity(exists)}
+		if ${MyShip.UsedCargoCapacity(exists)}
 		{
-			return ${Me.Ship.UsedCargoCapacity}
+			return ${MyShip.UsedCargoCapacity}
 		}
 
 		return 0
@@ -267,9 +266,9 @@ objectdef obj_Cache_Me_Ship inherits obj_Cache
 
 	member:float CargoCapacity()
 	{
-		if ${Me.Ship.CargoCapacity(exists)}
+		if ${MyShip.CargoCapacity(exists)}
 		{
-			return ${Me.Ship.CargoCapacity}
+			return ${MyShip.CargoCapacity}
 		}
 
 		return 0

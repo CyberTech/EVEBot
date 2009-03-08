@@ -42,12 +42,12 @@ objectdef obj_Scavenger
 		{
 			This.CurrentState:Set["IDLE"]
 		}
-		elseif ${_Me.Ship.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold}
+		elseif ${_MyShip.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold}
 		{
 		 	This.CurrentState:Set["SCAVENGE"]
 			return
 		}		
-	    elseif ${_Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
+	    elseif ${_MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 		{
 			This.CurrentState:Set["DROPOFF"]
 			return

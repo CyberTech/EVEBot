@@ -48,7 +48,7 @@ objectdef obj_Cargo
 		variable index:item anItemIndex
 		variable iterator   anIterator
 
-		Me.Ship:DoGetCargo[anItemIndex]
+		MyShip:DoGetCargo[anItemIndex]
 		anItemIndex:GetIterator[anIterator]
 		if ${anIterator:First(exists)}
 		do
@@ -103,7 +103,7 @@ objectdef obj_Cargo
 
 	method FindAllShipCargo()
 	{
-		Me.Ship:DoGetCargo[This.MyCargo]
+		MyShip:DoGetCargo[This.MyCargo]
 
 		variable iterator CargoIterator
 
@@ -124,7 +124,7 @@ objectdef obj_Cargo
 
 	method FindShipCargo(int CategoryIDToMove)
 	{
-		Me.Ship:DoGetCargo[This.MyCargo]
+		MyShip:DoGetCargo[This.MyCargo]
 
 		variable iterator CargoIterator
 
@@ -149,7 +149,7 @@ objectdef obj_Cargo
 
    method FindShipCargoByType(int TypeIDToMove)
    {
-	  Me.Ship:DoGetCargo[This.MyCargo]
+	  MyShip:DoGetCargo[This.MyCargo]
 
 	  variable iterator CargoIterator
 
@@ -478,7 +478,7 @@ objectdef obj_Cargo
 		call Ship.OpenCargo
 
 		/* build the container list */
-		Me.Ship:DoGetCargo[shipItemIndex]
+		MyShip:DoGetCargo[shipItemIndex]
 		shipItemIndex:GetIterator[shipItemIterator]
 		shipContainerIndex:Clear
 		if ${shipItemIterator:First(exists)}
@@ -744,7 +744,7 @@ objectdef obj_Cargo
 				call This.TransferListToShip
 
 				This.CargoToTransfer:Clear[]
-				Me.Ship:StackAllCargo
+				MyShip:StackAllCargo
 				Ship:UpdateBaselineUsedCargo[]
 				wait 25
 				call This.CloseHolds
@@ -811,7 +811,7 @@ objectdef obj_Cargo
 				call This.TransferListToShip
 
 				This.CargoToTransfer:Clear[]
-				Me.Ship:StackAllCargo
+				MyShip:StackAllCargo
 				Ship:UpdateBaselineUsedCargo[]
 				wait 25
 				call This.CloseHolds

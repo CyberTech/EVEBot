@@ -160,7 +160,7 @@ objectdef obj_Ship
 	{
 		Validate_Ship()
 
-		if ${m_WaitForCapRecharge} && ${_Me.Ship.CapacitorPct} < 90
+		if ${m_WaitForCapRecharge} && ${_MyShip.CapacitorPct} < 90
 		{
 			return FALSE
 		}
@@ -170,14 +170,14 @@ objectdef obj_Ship
 		}
 
 		/* TODO - These functions are not reliable. Redo per Looped armor/shield test in obj_Miner.Mine() (then consolidate code) -- CyberTech */
-		if ${_Me.Ship.CapacitorPct} < 10
+		if ${_MyShip.CapacitorPct} < 10
 		{
 			UI:UpdateConsole["Capacitor low!  Run for cover!", LOG_CRITICAL]
 			m_WaitForCapRecharge:Set[TRUE]
 			return FALSE
 		}
 
-		if ${_Me.Ship.ArmorPct} < 25
+		if ${_MyShip.ArmorPct} < 25
 		{
 			UI:UpdateConsole["Armor low!  Run for cover!", LOG_CRITICAL]
 			return FALSE
@@ -265,16 +265,16 @@ objectdef obj_Ship
 
 	member:float CargoMinimumFreeSpace()
 	{
-		return ${Math.Calc[${_Me.Ship.CargoCapacity}*0.02]}
+		return ${Math.Calc[${_MyShip.CargoCapacity}*0.02]}
 	}
 
 	member:float CargoFreeSpace()
 	{
-		if ${_Me.Ship.UsedCargoCapacity} < 0
+		if ${_MyShip.UsedCargoCapacity} < 0
 		{
-			return ${_Me.Ship.CargoCapacity}
+			return ${_MyShip.CargoCapacity}
 		}
-		return ${Math.Calc[${_Me.Ship.CargoCapacity}-${_Me.Ship.UsedCargoCapacity}]}
+		return ${Math.Calc[${_MyShip.CargoCapacity}-${_MyShip.UsedCargoCapacity}]}
 	}
 
 	member:bool CargoFull()
@@ -288,7 +288,7 @@ objectdef obj_Ship
 
 	member:bool CargoHalfFull()
 	{
-		if ${This.CargoFreeSpace} <= ${Math.Calc[${_Me.Ship.CargoCapacity}*0.50]}
+		if ${This.CargoFreeSpace} <= ${Math.Calc[${_MyShip.CargoCapacity}*0.50]}
 		{
 			return TRUE
 		}
@@ -297,7 +297,7 @@ objectdef obj_Ship
 
 	member:bool IsDamped()
 	{
-		return ${_Me.Ship.MaxTargetRange} < ${This.m_MaxTargetRange}
+		return ${_MyShip.MaxTargetRange} < ${This.m_MaxTargetRange}
 	}
 
 	member:float MaxTargetRange()
@@ -317,7 +317,7 @@ objectdef obj_Ship
 		}
 
 		/* save ship values that may change in combat */
-		This.m_MaxTargetRange:Set[${_Me.Ship.MaxTargetRange}]
+		This.m_MaxTargetRange:Set[${_MyShip.MaxTargetRange}]
 		This:SetType[${Me.ToEntity.Type}]
 		this:SetTypeID[${Me.ToEntity.TypeID}]
 
@@ -339,9 +339,9 @@ objectdef obj_Ship
 		This.ModuleList_SensorBoost:Clear
 		This.ModuleList_TargetPainter:Clear
 
-		Me.Ship:DoGetModules[This.ModuleList]
+		MyShip:DoGetModules[This.ModuleList]
 
-		if !${This.ModuleList.Used} && ${Me.Ship.HighSlots} > 0
+		if !${This.ModuleList.Used} && ${MyShip.HighSlots} > 0
 		{
 			Defense:RunAway["ERROR: obj_Ship:UpdateModuleList - No modules found"]
 			return
@@ -567,7 +567,7 @@ objectdef obj_Ship
 		Validate_Ship()
 
 		; Store the used cargo space as the cargo hold exists NOW, with whatever is leftover in it.
-		This.BaselineUsedCargo:Set[${Me.Ship.UsedCargoCapacity.Ceil}]
+		This.BaselineUsedCargo:Set[${MyShip.UsedCargoCapacity.Ceil}]
 	}
 
 	member:int MaxLockedTargets()
@@ -654,15 +654,15 @@ objectdef obj_Ship
 			return "NOCHARGE"
 		}
 
-		if ${Me.Ship.Module[${SlotName}].Charge(exists)}
+		if ${MyShip.Module[${SlotName}].Charge(exists)}
 		{
 			if ${fullName}
 			{
-				return ${Me.Ship.Module[${SlotName}].Charge.Name}
+				return ${MyShip.Module[${SlotName}].Charge.Name}
 			}
 			else
 			{
-				return ${Me.Ship.Module[${SlotName}].Charge.Name.Token[1, " "]}
+				return ${MyShip.Module[${SlotName}].Charge.Name.Token[1, " "]}
 			}
 		}
 		return "NOCHARGE"
@@ -737,13 +737,13 @@ objectdef obj_Ship
 	{
 		Validate_Ship()
 
-		if ${_Me.MaxLockedTargets} < ${_Me.Ship.MaxLockedTargets}
+		if ${_Me.MaxLockedTargets} < ${_MyShip.MaxLockedTargets}
 		{
 			Calculated_MaxLockedTargets:Set[${_Me.MaxLockedTargets}]
 		}
 		else
 		{
-			Calculated_MaxLockedTargets:Set[${_Me.Ship.MaxLockedTargets}]
+			Calculated_MaxLockedTargets:Set[${_MyShip.MaxLockedTargets}]
 		}
 	}
 
@@ -761,7 +761,7 @@ objectdef obj_Ship
 			variable index:item CrystalList
 			variable iterator CrystalIterator
 
-			Me.Ship.Module[${SlotName}]:DoGetAvailableAmmo[CrystalList]
+			MyShip.Module[${SlotName}]:DoGetAvailableAmmo[CrystalList]
 
 			CrystalList:GetIterator[CrystalIterator]
 			if ${CrystalIterator:First(exists)}
@@ -774,7 +774,7 @@ objectdef obj_Ship
 				if ${OreType.Find[${CrystalType}](exists)}
 				{
 					UI:UpdateConsole["Switching Crystal in ${SlotName} from ${LoadedAmmo} to ${CrystalIterator.Value.Name}"]
-					Me.Ship.Module[${SlotName}]:ChangeAmmo[${CrystalIterator.Value.ID},1]
+					MyShip.Module[${SlotName}]:ChangeAmmo[${CrystalIterator.Value.ID},1]
 					; This takes 2 seconds ingame, let's give it 50% more
 					wait 30
 					return
@@ -814,11 +814,11 @@ objectdef obj_Ship
 
 		echo CycleMiningLaser: ${Slot} Activate: ${Activate}
 		if ${Activate.Equal[ON]} && \
-			( ${Me.Ship.Module[${Slot}].IsActive} || \
-			  ${Me.Ship.Module[${Slot}].IsGoingOnline} || \
-			  ${Me.Ship.Module[${Slot}].IsDeactivating} || \
-			  ${Me.Ship.Module[${Slot}].IsChangingAmmo} || \
-			  ${Me.Ship.Module[${Slot}].IsReloadingAmmo} \
+			( ${MyShip.Module[${Slot}].IsActive} || \
+			  ${MyShip.Module[${Slot}].IsGoingOnline} || \
+			  ${MyShip.Module[${Slot}].IsDeactivating} || \
+			  ${MyShip.Module[${Slot}].IsChangingAmmo} || \
+			  ${MyShip.Module[${Slot}].IsReloadingAmmo} \
 			)
 		{
 			echo "obj_Ship:CycleMiningLaser: Tried to Activate the module, but it's already active or changing state."
@@ -826,11 +826,11 @@ objectdef obj_Ship
 		}
 
 		if ${Activate.Equal[OFF]} && \
-			(!${Me.Ship.Module[${Slot}].IsActive} || \
-			  ${Me.Ship.Module[${Slot}].IsGoingOnline} || \
-			  ${Me.Ship.Module[${Slot}].IsDeactivating} || \
-			  ${Me.Ship.Module[${Slot}].IsChangingAmmo} || \
-			  ${Me.Ship.Module[${Slot}].IsReloadingAmmo} \
+			(!${MyShip.Module[${Slot}].IsActive} || \
+			  ${MyShip.Module[${Slot}].IsGoingOnline} || \
+			  ${MyShip.Module[${Slot}].IsDeactivating} || \
+			  ${MyShip.Module[${Slot}].IsChangingAmmo} || \
+			  ${MyShip.Module[${Slot}].IsReloadingAmmo} \
 			)
 		{
 			echo "obj_Ship:CycleMiningLaser: Tried to Deactivate the module, but it's already active or changing state."
@@ -838,15 +838,15 @@ objectdef obj_Ship
 		}
 
 		if ${Activate.Equal[ON]} && \
-			(	!${Me.Ship.Module[${Slot}].LastTarget(exists)} || \
-				!${Entity[id,${Me.Ship.Module[${Slot}].LastTarget.ID}](exists)} \
+			(	!${MyShip.Module[${Slot}].LastTarget(exists)} || \
+				!${Entity[id,${MyShip.Module[${Slot}].LastTarget.ID}](exists)} \
 			)
 		{
 			echo "obj_Ship:CycleMiningLaser: Target doesn't exist"
 			return
 		}
 
-		Me.Ship.Module[${Slot}]:Click
+		MyShip.Module[${Slot}]:Click
 		if ${Activate.Equal[ON]}
 		{
 			; Delay from 18 to 45 seconds before deactivating
@@ -958,7 +958,7 @@ objectdef obj_Ship
 			OriginalDistance:Inc[10]
 
 			CurrentDistance:Set[${Entity[${EntityID}].Distance}]
-			UI:UpdateConsole["Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc[(${CurrentDistance} - ${Distance}) / ${Me.Ship.MaxVelocity}].Ceil} Seconds away"]
+			UI:UpdateConsole["Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc[(${CurrentDistance} - ${Distance}) / ${MyShip.MaxVelocity}].Ceil} Seconds away"]
 
 			This:Activate_AfterBurner[]
 			do
@@ -1015,7 +1015,7 @@ objectdef obj_Ship
 			LoopCheck:Set[0]
 			CaptionCount:Set[${EVEWindow[MyShipCargo].Caption.Token[2,"["].Token[1,"]"]}]
 			;UI:UpdateConsole["obj_Ship: Waiting for cargo to load: CaptionCount: ${CaptionCount}", LOG_DEBUG]
-			while ( ${CaptionCount} > ${Me.Ship.GetCargo} && \
+			while ( ${CaptionCount} > ${MyShip.GetCargo} && \
 					${LoopCheck} < 10 )
 			{
 				UI:UpdateConsole["obj_Ship: Waiting for cargo to load...(${Loopcheck})", LOG_MINOR]
@@ -1488,7 +1488,7 @@ objectdef obj_Ship
 
 		if ${This.IsCargoOpen}
 		{
-			Me.Ship:StackAllCargo
+			MyShip:StackAllCargo
 		}
 	}
 
@@ -1526,7 +1526,7 @@ objectdef obj_Ship
 	; Returns the targeting range minus 10%
 	member:int OptimalTargetingRange()
 	{
-		return ${Math.Calc[${_Me.Ship.MaxTargetRange}*0.90]}
+		return ${Math.Calc[${_MyShip.MaxTargetRange}*0.90]}
 	}
 
 	; Returns the lowest weapon optimal range minus 10%
@@ -1540,7 +1540,7 @@ objectdef obj_Ship
 	{
 		Validate_Ship()
 
-		variable string ShipName = ${Me.Ship}
+		variable string ShipName = ${MyShip}
 
 		if ${ShipName.Right[10].Equal["'s Capsule"]} || \
 			${Me.ToEntity.GroupID} == GROUP_CAPSULE
@@ -1682,7 +1682,7 @@ objectdef obj_Ship
 			Me:DoGetHangarShips[hsIndex]
 			hsIndex:GetIterator[hsIterator]
 
-			shipName:Set[${Me.Ship}]
+			shipName:Set[${MyShip}]
 			if ${shipName.NotEqual[${name}]}
 			{
 				if ${hsIterator:First(exists)}

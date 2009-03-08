@@ -294,9 +294,9 @@ objectdef obj_Combat
 		if ${This.Fled}
 		{
 			/* don't leave the "fled" state until we regen */
-			if (${_Me.Ship.ArmorPct} < 50 || \
-				(${_Me.Ship.ShieldPct} < 80 && ${Config.Combat.MinimumShieldPct} > 0) || \
-				${_Me.Ship.CapacitorPct} < 80 )
+			if (${_MyShip.ArmorPct} < 50 || \
+				(${_MyShip.ShieldPct} < 80 && ${Config.Combat.MinimumShieldPct} > 0) || \
+				${_MyShip.CapacitorPct} < 80 )
 			{
 					This.CurrentState:Set["FLEE"]
 			}
@@ -306,13 +306,13 @@ objectdef obj_Combat
 					This.CurrentState:Set["IDLE"]
 			}
 		}
-		elseif (${_Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct}  || \
-				${_Me.Ship.ShieldPct} < ${Config.Combat.MinimumShieldPct} || \
-				${_Me.Ship.CapacitorPct} < ${Config.Combat.MinimumCapPct})
+		elseif (${_MyShip.ArmorPct} < ${Config.Combat.MinimumArmorPct}  || \
+				${_MyShip.ShieldPct} < ${Config.Combat.MinimumShieldPct} || \
+				${_MyShip.CapacitorPct} < ${Config.Combat.MinimumCapPct})
 		{
-			UI:UpdateConsole["Armor is at ${_Me.Ship.ArmorPct.Int}%: ${Me.Ship.Armor.Int}/${Me.Ship.MaxArmor.Int}", LOG_CRITICAL]
-			UI:UpdateConsole["Shield is at ${_Me.Ship.ShieldPct.Int}%: ${Me.Ship.Shield.Int}/${Me.Ship.MaxShield.Int}", LOG_CRITICAL]
-			UI:UpdateConsole["Cap is at ${_Me.Ship.CapacitorPct.Int}%: ${Me.Ship.Capacitor.Int}/${Me.Ship.MaxCapacitor.Int}", LOG_CRITICAL]
+			UI:UpdateConsole["Armor is at ${_MyShip.ArmorPct.Int}%: ${MyShip.Armor.Int}/${MyShip.MaxArmor.Int}", LOG_CRITICAL]
+			UI:UpdateConsole["Shield is at ${_MyShip.ShieldPct.Int}%: ${MyShip.Shield.Int}/${MyShip.MaxShield.Int}", LOG_CRITICAL]
+			UI:UpdateConsole["Cap is at ${_MyShip.CapacitorPct.Int}%: ${MyShip.Capacitor.Int}/${MyShip.MaxCapacitor.Int}", LOG_CRITICAL]
 
 			if !${Config.Combat.RunOnLowTank}
 			{

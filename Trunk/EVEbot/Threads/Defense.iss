@@ -81,13 +81,13 @@ objectdef obj_Defense
 			This:RunAway["We're in a pod! Run Away! Run Away!"]
 		}
 
-		if (${_Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct}  || \
-			${_Me.Ship.ShieldPct} < ${Config.Combat.MinimumShieldPct} || \
-			${_Me.Ship.CapacitorPct} < ${Config.Combat.MinimumCapPct})
+		if (${_MyShip.ArmorPct} < ${Config.Combat.MinimumArmorPct}  || \
+			${_MyShip.ShieldPct} < ${Config.Combat.MinimumShieldPct} || \
+			${_MyShip.CapacitorPct} < ${Config.Combat.MinimumCapPct})
 		{
-			UI:UpdateConsole["Armor is at ${_Me.Ship.ArmorPct.Int}%: ${Me.Ship.Armor.Int}/${Me.Ship.MaxArmor.Int}", LOG_CRITICAL]
-			UI:UpdateConsole["Shield is at ${_Me.Ship.ShieldPct.Int}%: ${Me.Ship.Shield.Int}/${Me.Ship.MaxShield.Int}", LOG_CRITICAL]
-			UI:UpdateConsole["Cap is at ${_Me.Ship.CapacitorPct.Int}%: ${Me.Ship.Capacitor.Int}/${Me.Ship.MaxCapacitor.Int}", LOG_CRITICAL]
+			UI:UpdateConsole["Armor is at ${_MyShip.ArmorPct.Int}%: ${MyShip.Armor.Int}/${MyShip.MaxArmor.Int}", LOG_CRITICAL]
+			UI:UpdateConsole["Shield is at ${_MyShip.ShieldPct.Int}%: ${MyShip.Shield.Int}/${MyShip.MaxShield.Int}", LOG_CRITICAL]
+			UI:UpdateConsole["Cap is at ${_MyShip.CapacitorPct.Int}%: ${MyShip.Capacitor.Int}/${MyShip.MaxCapacitor.Int}", LOG_CRITICAL]
 
 			if !${Config.Combat.RunOnLowTank}
 			{
@@ -144,9 +144,9 @@ objectdef obj_Defense
 		variable int ShieldPctReady = 80
 		variable int CapacitorPctReady = 80
 
-		if  ${_Me.Ship.ArmorPct} < ${ArmorPctReady} || \
-			(${_Me.Ship.ShieldPct} < ${ShieldPctReady} && ${Config.Combat.MinimumShieldPct} > 0) || \
-			${_Me.Ship.CapacitorPct} < ${CapacitorPctReady}
+		if  ${_MyShip.ArmorPct} < ${ArmorPctReady} || \
+			(${_MyShip.ShieldPct} < ${ShieldPctReady} && ${Config.Combat.MinimumShieldPct} > 0) || \
+			${_MyShip.CapacitorPct} < ${CapacitorPctReady}
 		{
 			return FALSE
 		}
@@ -295,7 +295,7 @@ objectdef obj_Defense
 			return
 		}
 
-		if ${_Me.Ship.ArmorPct} < ${ArmorPctEnable}
+		if ${_MyShip.ArmorPct} < ${ArmorPctEnable}
 		{
 			/* Turn on armor reps, if you have them
 				Armor reps do not rep right away -- they rep at the END of the cycle.
@@ -303,7 +303,7 @@ objectdef obj_Defense
 			*/
 			Ship:Activate_Armor_Reps[]
 		}
-		elseif ${_Me.Ship.ArmorPct} > ${ArmorPctDisable}
+		elseif ${_MyShip.ArmorPct} > ${ArmorPctDisable}
 		{
 			Ship:Deactivate_Armor_Reps[]
 		}
@@ -311,7 +311,7 @@ objectdef obj_Defense
 		if (${_Me.ToEntity.Mode} == 3)
 		{
 			; We are in warp, we turn on shield regen so we can use up cap while it has time to regen
-			if ${_Me.Ship.ShieldPct} < 99
+			if ${_MyShip.ShieldPct} < 99
 			{
 				Ship:Activate_Shield_Booster[]
 			}
@@ -323,21 +323,21 @@ objectdef obj_Defense
 		else
 		{
 			; We're not in warp, so use normal percentages to enable/disable
-			if ${_Me.Ship.ShieldPct} < ${ShieldPctEnable} || ${Config.Combat.AlwaysShieldBoost}
+			if ${_MyShip.ShieldPct} < ${ShieldPctEnable} || ${Config.Combat.AlwaysShieldBoost}
 			{
 				Ship:Activate_Shield_Booster[]
 			}
-			elseif ${_Me.Ship.ShieldPct} > ${ShieldPctDisable} && !${Config.Combat.AlwaysShieldBoost}
+			elseif ${_MyShip.ShieldPct} > ${ShieldPctDisable} && !${Config.Combat.AlwaysShieldBoost}
 			{
 				Ship:Deactivate_Shield_Booster[]
 			}
 		}
 
-		if ${_Me.Ship.CapacitorPct} < ${CapacitorPctEnable}
+		if ${_MyShip.CapacitorPct} < ${CapacitorPctEnable}
 		{
 			Ship:Activate_Cap_Booster[]
 		}
-		elseif ${_Me.Ship.CapacitorPct} > ${CapacitorPctDisable}
+		elseif ${_MyShip.CapacitorPct} > ${CapacitorPctDisable}
 		{
 			Ship:Deactivate_Cap_Booster[]
 		}
@@ -346,7 +346,7 @@ objectdef obj_Defense
 		; If you don't have hardeners this code does nothing.
 		; This uses shield and uncached GetTargetedBy (to reduce chance of a
 		; volley making it thru before hardeners are up)
-		if ${Me.GetTargetedBy} > 0 || ${_Me.Ship.ShieldPct} < 99
+		if ${Me.GetTargetedBy} > 0 || ${_MyShip.ShieldPct} < 99
 		{
 			Ship:Activate_Hardeners[]
 		}
