@@ -856,70 +856,90 @@ objectdef obj_Agents
 
 	function RequestMission()
 	{
+		variable index:dialogstring dsIndex
+		variable iterator dsIterator
+
+		if ${Agent[${This.AgentIndex}].Division.Equal["R&D"]}
+		{
+			UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: R&D agents not supported after patch."]
+			return
+		}
+		
 		EVE:Execute[CmdCloseAllWindows]
 		wait 50
 
 		UI:UpdateConsole["obj_Agents: Starting conversation with agent ${This.ActiveAgent}."]
 		Agent[${This.AgentIndex}]:StartConversation
-        do
-        {
-			UI:UpdateConsole["obj_Agents: Waiting for conversation window..."]
-            wait 10
-        }
-        while !${EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"](exists)}
-
-		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
-
-	    ; display your dialog options
-	    variable index:dialogstring dsIndex
-	    variable iterator dsIterator
-
-	    Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
-	    dsIndex:GetIterator[dsIterator]
-
-		if ${dsIterator:First(exists)}
+		do
 		{
-			; Assume the first item is the "ask for work" item.
-			; This may break if you have agents with locator services.
-			if ${Agent[${This.AgentIndex}].Division.Equal["R&D"]}
-			{
-				if ${dsIterator.Value.Text.Find["datacore"]}
-				{
-				    UI:UpdateConsole["WARNING: Research agent doesn't have a mission available"]
-					variable time lastCompletionTime
-					variable int  lastCompletionTimestamp
-					lastCompletionTimestamp:Set[${Config.Agents.LastCompletionTime[${This.AgentName}]}]
-					lastCompletionTime:Set[${lastCompletionTimestamp}]
-					UI:UpdateConsole["DEBUG: RequestMission: ${lastCompletionTime} ${lastCompletionTime.Date}"]
-					if ${lastCompletionTimestamp} == 0
-					{
-				    	;; this agent didn't have a valid LastCompletionTime
-				    	;; set LastCompletionTime to lock out this agent for 24 hours
-	    				Config.Agents:SetLastCompletionTime[${This.AgentName},${Time.Timestamp}]
-	    			}
-	    			else
-	    			{
-						lastCompletionTime.Hour:Inc[24]
-						lastCompletionTime:Update
-						if ${lastCompletionTime.Timestamp} < ${Time.Timestamp}
-						{
-					    	;; been more than 24 hours according to config data.  must be invalid.
-					    	;; set LastCompletionTime to lock out this agent for 24 hours
-		    				Config.Agents:SetLastCompletionTime[${This.AgentName},${Time.Timestamp}]
-						}
-					}
-					return
-				}
-			}
-
-        	dsIterator.Value:Say[${This.AgentID}]
+			UI:UpdateConsole["obj_Agents: Waiting for conversation window..."]
+			wait 10
 		}
+		while !${EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"](exists)}
 
-	    ; Now wait a couple of seconds and then get the new dialog options...and so forth.  The "Wait" needed may differ from person to person.
-	    UI:UpdateConsole["Waiting for agent dialog to update..."]
-	    wait 60
+		;; The dialog caption fills in long before the details do.  
+		;; Wait for dialog strings to become valid before proceeding.
+		variable int WaitCount
+		for( WaitCount:Set[0]; ${WaitCount} < 6; WaitCount:Inc )
+		{
+			Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
+			if ${dsIndex.Used} > 0
+			{
+				break
+			}
+			wait 10
+		}
+		
 		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
 
+;;;;  You now longer have to ask for work.  An agent will automatically offer work.  This may break
+;;;;  with research or locator agents!
+;;;;	    Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
+;;;;	    dsIndex:GetIterator[dsIterator]
+;;;;
+;;;;		if ${dsIterator:First(exists)}
+;;;;		{
+;;;;			; Assume the first item is the "ask for work" item.
+;;;;			; This may break if you have agents with locator services.
+;;;;			if ${Agent[${This.AgentIndex}].Division.Equal["R&D"]}
+;;;;			{
+;;;;				if ${dsIterator.Value.Text.Find["datacore"]}
+;;;;				{
+;;;;				    UI:UpdateConsole["WARNING: Research agent doesn't have a mission available"]
+;;;;					variable time lastCompletionTime
+;;;;					variable int  lastCompletionTimestamp
+;;;;					lastCompletionTimestamp:Set[${Config.Agents.LastCompletionTime[${This.AgentName}]}]
+;;;;					lastCompletionTime:Set[${lastCompletionTimestamp}]
+;;;;					UI:UpdateConsole["DEBUG: RequestMission: ${lastCompletionTime} ${lastCompletionTime.Date}"]
+;;;;					if ${lastCompletionTimestamp} == 0
+;;;;					{
+;;;;				    	;; this agent didn't have a valid LastCompletionTime
+;;;;				    	;; set LastCompletionTime to lock out this agent for 24 hours
+;;;;	    				Config.Agents:SetLastCompletionTime[${This.AgentName},${Time.Timestamp}]
+;;;;	    			}
+;;;;	    			else
+;;;;	    			{
+;;;;						lastCompletionTime.Hour:Inc[24]
+;;;;						lastCompletionTime:Update
+;;;;						if ${lastCompletionTime.Timestamp} < ${Time.Timestamp}
+;;;;						{
+;;;;					    	;; been more than 24 hours according to config data.  must be invalid.
+;;;;					    	;; set LastCompletionTime to lock out this agent for 24 hours
+;;;;		    				Config.Agents:SetLastCompletionTime[${This.AgentName},${Time.Timestamp}]
+;;;;						}
+;;;;					}
+;;;;					return
+;;;;				}
+;;;;			}
+;;;;
+;;;;        	dsIterator.Value:Say[${This.AgentID}]
+;;;;		}
+;;;;
+;;;;	    ; Now wait a couple of seconds and then get the new dialog options...and so forth.  The "Wait" needed may differ from person to person.
+;;;;	    UI:UpdateConsole["Waiting for agent dialog to update..."]
+;;;;	    wait 60
+;;;;		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
+;;;;
 	    Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
 	    dsIndex:GetIterator[dsIterator]
 
