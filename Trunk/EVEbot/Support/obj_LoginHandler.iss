@@ -153,7 +153,8 @@ objectdef obj_LoginHandler
 				This.LoginTimer:Set[${This.connectWaitTime}]
 				break
 			case CONNECTING
-				if ${EVEWindow[ByCaption,System Congested](exists)}
+				if ${EVEWindow[ByName,MessageBox](exists)} || \
+					${EVEWindow[ByCaption,System Congested](exists)}
 				{
 					Press Esc
 					This.LoginTimer:Set[1]
@@ -184,11 +185,11 @@ objectdef obj_LoginHandler
 			case INSPACE
 				run evebot/evebot
 				This.CurrentState:Set["EVEBOT"]
-                                This.LoginTimer:Set[${This.evebotWaitTime}]
-                                break
-                        case EVEBOT
-                                Script[EVEBot]:Resume
-                                This.Finished:Set[TRUE]
+				This.LoginTimer:Set[${This.evebotWaitTime}]
+				break
+			case EVEBOT
+				Script[EVEBot]:Resume
+				This.Finished:Set[TRUE]
 				return
 				break
 		}
