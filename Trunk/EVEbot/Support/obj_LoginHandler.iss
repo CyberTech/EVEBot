@@ -153,6 +153,12 @@ objectdef obj_LoginHandler
 				This.LoginTimer:Set[${This.connectWaitTime}]
 				break
 			case CONNECTING
+				if ${EVEWindow[ByCaption,System Congested](exists)}
+				{
+					Press Esc
+					This.LoginTimer:Set[1]
+					break
+				}
 				if ${CharSelect(exists)}
 				{
 					;echo DEBUG: AutoLoginCharID: ${Config.Common.AutoLoginCharID}
