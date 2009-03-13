@@ -54,13 +54,13 @@ objectdef obj_Social
 		PilotWhiteList:Add[${_Me.CharID}]
 		if ${_Me.CorporationID} > 0
 		{
-			This.AllianceWhiteList:Add[${_Me.CorporationID}]
+			This.CorpWhiteList:Add[${_Me.CorporationID}]
 		}
 		if ${_Me.AllianceID} > 0
 		{
 			This.AllianceWhiteList:Add[${_Me.AllianceID}]
 		}
-		
+
 		if ${This.WhiteListPilotIterator:First(exists)}
 		do
 		{
@@ -175,7 +175,7 @@ objectdef obj_Social
 		variable int AllianceID
 		variable int PilotID
 		variable string PilotName
-		
+
 		if !${Config.Combat.UseWhiteList}
 		{
 			return TRUE
@@ -194,7 +194,7 @@ objectdef obj_Social
 			AllianceID:Set[${PilotIterator.Value.AllianceID}]
 			PilotID:Set[${PilotIterator.Value.CharID}]
 			PilotName:Set[${PilotIterator.Value.Name}]
-			
+
 			if !${This.AllianceWhiteList.Contains[${AllianceID}]} && \
 				!${This.CorpWhiteList.Contains[${CorpID}]} && \
 				!${This.PilotWhiteList.Contains[${PilotID}]}
