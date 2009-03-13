@@ -54,7 +54,7 @@ objectdef obj_Social
 		PilotWhiteList:Add[${_Me.CharID}]
 		if ${_Me.CorporationID} > 0
 		{
-			This.AllianceWhiteList:Add[${_Me.CorporationID}]
+			This.CorpWhiteList:Add[${_Me.CorporationID}]
 		}
 		if ${_Me.AllianceID} > 0
 		{
