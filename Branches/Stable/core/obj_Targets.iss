@@ -523,7 +523,7 @@ objectdef obj_Targets
 			{
                 if !${DoNotKillList.Contains[${Target.Value.ID}]}
                 {
-                    UI:UpdateConsole["NPC: Adding ${Target.Value.Name} (${Target.Value.ID}) to the \"do not kill list\"!"]
+                    UI:UpdateConsole["NPC: Adding ${Target.Value.Name} (${Target.Value.Group})(${Target.Value.ID}) to the \"do not kill list\"!"]
                     DoNotKillList:Add[${Target.Value.ID}]
                 }
 				; Make sure (due to auto-targeting) that its not targeted
