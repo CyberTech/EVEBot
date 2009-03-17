@@ -127,7 +127,7 @@ objectdef obj_Ratter
 
 		; Wait for the rats to warp into the belt. Reports are between 10 and 20 seconds.
 		variable int Count
-		for (Count:Set[0] ; ${Count}<=20 ; Count:Inc)
+		for (Count:Set[0] ; ${Count}<=30 ; Count:Inc)
 		{
 			if ${Targets.PC} || ${Targets.NPC}
 			{
