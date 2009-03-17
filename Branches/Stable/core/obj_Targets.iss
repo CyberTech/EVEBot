@@ -176,7 +176,7 @@ objectdef obj_Targets
 		SpecialTargets:Insert["Setele"]
 		SpecialTargets:Insert["Tuvan"]
 		SpecialTargets:Insert["Brynn"]
-		SpecialTargets:Insert["Shadow"]
+		SpecialTargets:Insert["Shadow Serpentis"]
 		SpecialTargets:Insert["True Sansha"]
 		SpecialTargets:Insert["Dark Blood"]
 
