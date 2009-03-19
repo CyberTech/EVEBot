@@ -609,7 +609,7 @@ objectdef obj_Missions
 
 				while TRUE
 				{
-				   if ${_Me.GetTargetedBy} > 0
+				   if ${Me.GetTargetedBy} > 0
 				   {
 					  break
 				   }
@@ -626,7 +626,7 @@ objectdef obj_Missions
 
 				while ${This.HostileCount} > 0
 				{
-				   if ${_Me.GetTargetedBy} > 0 || ${Targeting.QueueSize} > 0
+				   if ${Me.GetTargetedBy} > 0 || ${Targeting.QueueSize} > 0
 				   {
 					  call This.TargetAgressors
 				   }
@@ -759,7 +759,7 @@ objectdef obj_Missions
 	  EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
 	  targetIndex:GetIterator[targetIterator]
 
-	  ;;UI:UpdateConsole["GetTargeting = ${_Me.GetTargeting}, GetTargets = ${_Me.GetTargets}"]
+	  ;;UI:UpdateConsole["GetTargeting = ${Me.GetTargeting}, GetTargets = ${Me.GetTargets}"]
 	  if ${targetIterator:First(exists)}
 	  {
 		 do
