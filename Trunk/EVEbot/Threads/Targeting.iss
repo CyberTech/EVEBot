@@ -72,7 +72,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 
 	member:int TargetCount()
 	{
-		return ${Math.Calc[${This.TargetingThisFrame} + ${_Me.GetTargets} + ${_Me.GetTargeting}]}
+		return ${Math.Calc[${This.TargetingThisFrame} + ${Me.GetTargets} + ${Me.GetTargeting}]}
 	}
 
 	member:int QueueSize()
@@ -144,9 +144,9 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 		}
 
 #if EVEBOT_DEBUG
-		UI:UpdateConsole["Debug: Targets: ${_Me.GetTargets}"]
-		UI:UpdateConsole["Debug: Targeting: ${_Me.GetTargeting}"]
-		UI:UpdateConsole["Debug: Current Targets: ${Math.Calc[${_Me.GetTargets} + ${_Me.GetTargeting}]}"]
+		UI:UpdateConsole["Debug: Targets: ${Me.GetTargets}"]
+		UI:UpdateConsole["Debug: Targeting: ${Me.GetTargeting}"]
+		UI:UpdateConsole["Debug: Current Targets: ${Math.Calc[${Me.GetTargets} + ${Me.GetTargeting}]}"]
 		UI:UpdateConsole["Debug: Max Targets: ${Ship.MaxLockedTargets}"]
 #endif
 		if !${Entity[${EntityID}].IsLockedTarget} && !${Entity[${EntityID}].BeingTargeted} && ${Entity[${EntityID}].Name.NotEqual[NULL]}
