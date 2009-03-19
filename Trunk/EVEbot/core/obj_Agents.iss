@@ -180,6 +180,10 @@ objectdef obj_MissionBlacklist
 
 objectdef obj_Agents
 {
+	variable string BUTTON_REQUEST_MISSION = "Request Mission"
+	variable string BUTTON_VIEW_MISSION = "View Mission"
+	variable string BUTTON_COMPLETE_MISSION = "Complete Mission"
+
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
@@ -519,7 +523,7 @@ objectdef obj_Agents
 	function MoveToPickup()
 	{
 		variable string stationName
-		stationName:Set[${EVEDB_Stations.StationName[${_Me.StationID}]}]
+		stationName:Set[${EVEDB_Stations.StationName[${Me.StationID}]}]
 		UI:UpdateConsole["obj_Agents: DEBUG: stationName = ${stationName}"]
 
 		if ${stationName.Length} > 0
@@ -545,7 +549,7 @@ objectdef obj_Agents
 	function MoveToDropOff()
 	{
 		variable string stationName
-		stationName:Set[${EVEDB_Stations.StationName[${_Me.StationID}]}]
+		stationName:Set[${EVEDB_Stations.StationName[${Me.StationID}]}]
 		UI:UpdateConsole["obj_Agents: DEBUG: stationName = ${stationName}"]
 
 		if ${stationName.Length} > 0
@@ -859,12 +863,6 @@ objectdef obj_Agents
 		variable index:dialogstring dsIndex
 		variable iterator dsIterator
 
-		if ${Agent[${This.AgentIndex}].Division.Equal["R&D"]}
-		{
-			UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: R&D agents not supported after patch."]
-			return
-		}
-
 		EVE:Execute[CmdCloseAllWindows]
 		wait 50
 
@@ -949,10 +947,12 @@ objectdef obj_Agents
 			do
 			{
 				UI:UpdateConsole["obj_Agents: dsIterator.Value.Text: ${dsIterator.Value.Text}"]
-				if (${dsIterator.Value.Text.Find["View Mission"]} || ${dsIterator.Value.Text.Find["Request Mission"]})
+
+				if (${dsIterator.Value.Text.Find["${This.BUTTON_VIEW_MISSION}"]} || ${dsIterator.Value.Text.Find["${This.BUTTON_REQUEST_MISSION}"]})
 				{
 					UI:UpdateConsole["obj_Agents: May be a locator agent, attempting to view mission..."]
 					dsIterator.Value:Say[${This.AgentID}]
+					break
 				}
 			}
 			while (${dsIterator:Next(exists)})
@@ -1269,16 +1269,32 @@ objectdef obj_Agents
 	    Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
 	    dsIndex:GetIterator[dsIterator]
 
-		if ${dsIterator:First(exists)}
+		if (${dsIterator:First(exists)})
 		{
-			; Assume the first item is the "turn in mission" item.
-	        dsIterator.Value:Say[${This.AgentID}]
-			Config.Agents:SetLastCompletionTime[${This.AgentName},${Time.Timestamp}]
+			do
+			{
+				UI:UpdateConsole["obj_Agents:TurnInMission dsIterator.Value.Text: ${dsIterator.Value.Text}"]
+				if (${dsIterator.Value.Text.Find["${This.BUTTON_VIEW_MISSION}"]})
+				{
+					dsIterator.Value:Say[${This.AgentID}]
+					Config.Agents:SetLastCompletionTime[${This.AgentName},${Time.Timestamp}]
+					break
+				}
+			}
+			while (${dsIterator:Next(exists)})
 		}
 
 	    ; Now wait a couple of seconds and then get the new dialog options...and so forth.  The "Wait" needed may differ from person to person.
 	    UI:UpdateConsole["Waiting for agent dialog to update..."]
 	    wait 60
+
+	    Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
+	    dsIndex:GetIterator[dsIterator]
+	    UI:UpdateConsole["Completing Mission..."]
+	    dsIndex.Get[1]:Say[${This.AgentID}]
+
+		UI:UpdateConsole["Waiting for mission dialog to update..."]
+		wait 60
 		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
 
 		EVE:Execute[OpenJournal]
