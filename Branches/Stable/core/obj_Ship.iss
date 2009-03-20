@@ -42,7 +42,7 @@ objectdef obj_Ship
 	variable bool InteruptWarpWait = FALSE
 	variable string m_Type
 	variable int m_TypeID
-	
+
 	variable iterator ModulesIterator
 
 	variable obj_Drones Drones
@@ -307,7 +307,7 @@ objectdef obj_Ship
 		This.ModuleList_Cloaks:Clear
 		This.ModuleList_StasisWeb:Clear
 		This.ModuleList_SensorBoost:Clear
-		
+
 		Me.Ship:DoGetModules[This.ModuleList]
 
 		if !${This.ModuleList.Used} && ${Me.Ship.HighSlots} > 0
@@ -366,7 +366,7 @@ objectdef obj_Ship
 				case GROUP_MISSILELAUNCHERROCKET
 				case GROUP_MISSILELAUNCHERSIEGE
 				case GROUP_MISSILELAUNCHERSNOWBALL
-				case GROUP_MISSILELAUNCHERSTANDARD				
+				case GROUP_MISSILELAUNCHERSTANDARD
 					This.ModuleList_Weapon:Insert[${Module.Value}]
 					break
 				case GROUPID_FREQUENCY_MINING_LASER
@@ -518,7 +518,7 @@ objectdef obj_Ship
 		}
 		while ${Module:Next(exists)}
 	}
-	
+
 	method UpdateBaselineUsedCargo()
 	{
 		; Store the used cargo space as the cargo hold exists NOW, with whatever is leftover in it.
@@ -1026,7 +1026,7 @@ objectdef obj_Ship
 		}
 	}
 
-	
+
 	function WarpToID(int Id, int WarpInDistance=0)
 	{
 		if (${Id} <= 0)
@@ -1040,7 +1040,7 @@ objectdef obj_Ship
 			UI:UpdateConsole["Error: obj_Ship:WarpToID: No entity matched the ID given."]
 			return
 		}
-		
+
 		Entity[${Id}]:AlignTo
 		call This.WarpPrepare
 		while ${Entity[${Id}].Distance} >= WARP_RANGE
@@ -1064,11 +1064,11 @@ objectdef obj_Ship
 	{
 		variable index:fleetmember FleetMembers
 		variable iterator FleetMember
-		
+
 		FleetMembers:Clear
 		Me:DoGetFleet[FleetMembers]
 		FleetMembers:GetIterator[FleetMember]
-		
+
 		if ${FleetMember:First(exists)}
 		{
 			do
@@ -1095,7 +1095,7 @@ objectdef obj_Ship
 				}
 			}
 			while ${FleetMember:Next(exists)}
-		}		
+		}
 		UI:UpdateConsole["ERROR: Ship.WarpToFleetMember could not find fleet member!"]
 	}
 
@@ -1132,7 +1132,7 @@ objectdef obj_Ship
 		while ${_Me.AutoPilotOn}
 		wait 30
 	}
-	
+
 	function TravelToSystem(int DestinationSystemID)
 	{
 		while ${DestinationSystemID} != ${_Me.SolarSystemID}
@@ -1176,7 +1176,7 @@ objectdef obj_Ship
 		echo \${Me.ToEntity.Y} = ${Me.ToEntity.Y}
 		echo \${Me.ToEntity.Z} = ${Me.ToEntity.Z}
 #endif
-		
+
 
 		variable int MinWarpRange
 		declarevariable WarpCounter int 0
@@ -1186,12 +1186,12 @@ objectdef obj_Ship
 		declarevariable GroupID int ${DestinationBookmark.ToEntity.GroupID}
 		declarevariable CategoryID int ${DestinationBookmark.ToEntity.CategoryID}
 		declarevariable EntityID int ${DestinationBookmark.ToEntity.ID}
-		
+
 		if ${DestinationBookmark.ToEntity(exists)}
 		{
 			/* This is a station bookmark, we can use .Distance properly */
 			switch ${CategoryID}
-			{				
+			{
 				case CATEGORYID_STATION
 					MinWarpRange:Set[WARP_RANGE]
 					break
@@ -1263,7 +1263,7 @@ objectdef obj_Ship
 					UI:UpdateConsole["obj_Ship:WarpToBookMark - Failed to arrive at bookmark after ${WarpCounter} warps", LOG_CRITICAL]
 					return
 				}
-				
+
 				if ${DestinationBookmark.AgentID(exists)} && ${DestinationBookmark.LocationID(exists)} && \
 					${Entity[TypeID,TYPE_ACCELERATION_GATE](exists)}
 				{
@@ -1283,7 +1283,7 @@ objectdef obj_Ship
 				}
 				else
 				{
-					
+
 					UI:UpdateConsole["2: Warping to bookmark ${Label} (Attempt #${WarpCounter})"]
 					while !${This.WarpEntered}
 					{
@@ -1345,9 +1345,12 @@ objectdef obj_Ship
 	function WarpPrepare()
 	{
 		UI:UpdateConsole["Preparing for warp"]
-		This:Deactivate_Cloak
+		if !${This.HasCovOpsCloak}
+		{
+			This:Deactivate_Cloak[]
+		}
 		This:Deactivate_SensorBoost
-		
+
 		if ${This.Drones.WaitingForDrones}
 		{
 			UI:UpdateConsole["Drone deployment already in process, delaying warp", LOG_CRITICAL]
@@ -1356,10 +1359,6 @@ objectdef obj_Ship
 				waitframe
 			}
 			while ${This.Drones.WaitingForDrones}
-		}
-		if !${This.HasCovOpsCloak}
-		{
-			This:Deactivate_Cloak[]
 		}
 		This:DeactivateAllMiningLasers[]
 		This:UnlockAllTargets[]
@@ -1384,13 +1383,13 @@ objectdef obj_Ship
 			Warped:Set[TRUE]
 			UI:UpdateConsole["Warping..."]
 		}
-		return ${Warped}		
+		return ${Warped}
 	}
-	
+
 	function WarpWait()
 	{
 		variable bool Warped = FALSE
-		
+
 		; We reload weapons here, because we know we're in warp, so they're deactivated.
 		This:Reload_Weapons[TRUE]
 		while ${This.InWarp}
@@ -1591,7 +1590,7 @@ objectdef obj_Ship
 			return
 		}
 
-		
+
 		variable iterator Module
 
 		This.ModuleList_SensorBoost:GetIterator[Module]
@@ -1636,7 +1635,7 @@ objectdef obj_Ship
 			return
 		}
 
-		
+
 		variable iterator Module
 
 		This.ModuleList_StasisWeb:GetIterator[Module]
@@ -1717,7 +1716,7 @@ objectdef obj_Ship
 					Module.Value:PutOnline
 				}
 			}
-*/				
+*/
 		}
 		while ${Module:Next(exists)}
 	}
@@ -1796,10 +1795,10 @@ objectdef obj_Ship
 		{
 			return TRUE
 		}
-		
+
 		return FALSE
 	}
-	
+
 	function LockTarget(int64 TargetID)
 	{
 		if ${Entity[${TargetID}](exists)}
@@ -1855,7 +1854,7 @@ objectdef obj_Ship
 
 		return 0
 	}
-	
+
    ; Returns the targeting range minus 10%
    member:int OptimalTargetingRange()
    {
@@ -1895,7 +1894,7 @@ objectdef obj_Ship
 		{
 			return
 		}
- 
+
 		variable iterator Module
 
 		This.ModuleList_TractorBeams:GetIterator[Module]
@@ -2002,7 +2001,7 @@ objectdef obj_Ship
 			EVE:Execute[CmdReloadAmmo]
 		}
 	}
-	
+
 	member:string Type()
 	{
 		if ${Station.Docked}
@@ -2011,16 +2010,16 @@ objectdef obj_Ship
 		}
 		else
 		{
-			return ${Me.ToEntity.Type}		
+			return ${Me.ToEntity.Type}
 		}
 	}
-	
+
 	method SetType(string typeString)
 	{
 		UI:UpdateConsole["obj_Ship: DEBUG: Setting ship type to ${typeString}"]
 		This.m_Type:Set[${typeString}]
 	}
-	
+
 	member:int TypeID()
 	{
 		if ${Station.Docked}
@@ -2029,30 +2028,30 @@ objectdef obj_Ship
 		}
 		else
 		{
-			return ${Me.ToEntity.TypeID}		
+			return ${Me.ToEntity.TypeID}
 		}
 	}
-	
+
 	method SetTypeID(int typeID)
 	{
 		UI:UpdateConsole["obj_Ship: DEBUG: Setting ship type ID to ${typeID}"]
 		This.m_TypeID:Set[${typeID}]
 	}
-	
+
 	function ActivateShip(string name)
 	{
 		variable index:item hsIndex
 		variable iterator hsIterator
 		variable string shipName
-		
+
 		if ${Station.Docked}
 		{
 			Me:DoGetHangarShips[hsIndex]
 			hsIndex:GetIterator[hsIterator]
-			
+
 			shipName:Set[${Me.Ship}]
 			if ${shipName.NotEqual[${name}]}
-			{			
+			{
 				if ${hsIterator:First(exists)}
 				{
 					do
