@@ -7,7 +7,6 @@
 #include core/obj_EVEBot.iss
 #include core/obj_Configuration.iss
 
-
 /* Support File Includes */
 #include core/obj_Skills.iss
 #include core/obj_Asteroids.iss
@@ -47,48 +46,6 @@
 variable(global) obj_Cache_Me _Me
 variable(global) obj_Cache_EVETime _EVETime
 
-/* Script-Defined Support Objects */
-variable obj_EVEBot EVEBot
-variable obj_EVEBotUI UI
-variable obj_Configuration_BaseConfig BaseConfig
-variable obj_Configuration Config
-variable obj_Config_Whitelist Whitelist
-variable obj_Config_Blacklist Blacklist
-variable obj_EVEDB_Stations EVEDB_Stations
-variable obj_EVEDB_StationID EVEDB_StationID
-variable obj_EVEDB_Spawns EVEDB_Spawns
-variable obj_EVEDB_Items EVEDB_Items
-
-/* Core Objects */
-variable obj_Asteroids Asteroids
-variable obj_Ship Ship
-variable obj_Station Station
-variable obj_Cargo Cargo
-variable obj_Skills Skills
-variable obj_Bookmarks Bookmarks
-variable obj_JetCan JetCan
-variable obj_CorpHangerArray CorpHangarArray
-variable obj_Social Social
-variable obj_Fleet Fleet
-variable obj_Assets Assets
-variable obj_IRC ChatIRC
-variable obj_Safespots Safespots
-variable obj_Belts Belts
-variable obj_Targets Targets
-variable obj_Sound Sound
-variable obj_Agents Agents
-variable obj_Missions Missions
-variable obj_Market Market
-variable obj_Autopilot Autopilot
-
-/* Script-Defined Behavior Objects */
-variable index:string BotModules
-variable obj_Miner Miner
-variable obj_OreHauler Hauler
-variable obj_Freighter Freighter
-variable obj_Ratter Ratter
-variable obj_Missioneer Missioneer
-
 function atexit()
 {
 	;redirect profile.txt Script:DumpProfiling
@@ -100,8 +57,52 @@ function main()
 	;Script:EnableDebugLogging[debug.txt]
 	;Script[EVEBot]:EnableProfiling
 
+	;Turbo 20
+
+	/* Script-Defined Support Objects */
+	declarevariable EVEBot obj_EVEBot script
+	declarevariable UI obj_EVEBotUI script
+	declarevariable BaseConfig obj_Configuration_BaseConfig script
+
+	declarevariable Config obj_Configuration script
+	declarevariable Whitelist obj_Config_Whitelist script
+	declarevariable Blacklist obj_Config_Blacklist script
+	declarevariable EVEDB_Stations obj_EVEDB_Stations script
+	declarevariable EVEDB_StationID obj_EVEDB_StationID script
+	declarevariable EVEDB_Spawns obj_EVEDB_Spawns script
+	declarevariable EVEDB_Items obj_EVEDB_Items script
+
+	/* Core Objects */
+	declarevariable Asteroids obj_Asteroids script
+	declarevariable Ship obj_Ship script
+	declarevariable Station obj_Station script
+	declarevariable Cargo obj_Cargo script
+	declarevariable Skills obj_Skills script
+	declarevariable Bookmarks obj_Bookmarks script
+	declarevariable JetCan obj_JetCan script
+	declarevariable CorpHangarArray obj_CorpHangerArray script
+	declarevariable Social obj_Social script
+	declarevariable Fleet obj_Fleet script
+	declarevariable Assets obj_Assets script
+	declarevariable ChatIRC obj_IRC script
+	declarevariable Safespots obj_Safespots script
+	declarevariable Belts obj_Belts script
+	declarevariable Targets obj_Targets script
+	declarevariable Sound obj_Sound script
+	declarevariable Agents obj_Agents script
+	declarevariable Missions obj_Missions script
+	declarevariable Market obj_Market script
+	declarevariable Autopilot obj_Autopilot script
+
+	/* Script-Defined Behavior Objects */
+	declarevariable BotModules index:string script
+	declarevariable Miner obj_Miner script
+	declarevariable Hauler obj_OreHauler script
+	declarevariable Freighter obj_Freighter script
+	declarevariable Ratter obj_Ratter script
+	declarevariable Missioneer obj_Missioneer script
+
 	/* Set Turbo to lowest value to try and avoid overloading the EVE Python engine */
-	Turbo 20
 
 	variable iterator BotModule
 	BotModules:GetIterator[BotModule]
