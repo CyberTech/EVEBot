@@ -1,11 +1,12 @@
 #include core/defines.iss
 
+/* Cache Objects */
+#include core/obj_Cache.iss
+
 /* Base Requirements */
 #include core/obj_EVEBot.iss
 #include core/obj_Configuration.iss
 
-/* Cache Objects */
-#include core/obj_Cache.iss
 
 /* Support File Includes */
 #include core/obj_Skills.iss
@@ -56,7 +57,7 @@ variable obj_Config_Blacklist Blacklist
 variable obj_EVEDB_Stations EVEDB_Stations
 variable obj_EVEDB_StationID EVEDB_StationID
 variable obj_EVEDB_Spawns EVEDB_Spawns
-variable obj_EVEDB_Items EVEDB_Items	
+variable obj_EVEDB_Items EVEDB_Items
 
 /* Core Objects */
 variable obj_Asteroids Asteroids
@@ -95,22 +96,20 @@ function atexit()
 
 function main()
 {
-	echo "LOADING ISXEVE(Stable) -- Please wait..."
-	
 	;Script:Unsquelch
 	;Script:EnableDebugLogging[debug.txt]
 	;Script[EVEBot]:EnableProfiling
 
 	/* Set Turbo to lowest value to try and avoid overloading the EVE Python engine */
 	Turbo 20
-			
+
 	variable iterator BotModule
 	BotModules:GetIterator[BotModule]
 
 	variable iterator VariableIterator
 	Script[EVEBot].VariableScope:GetIterator[VariableIterator]
 
-	/* 	This code iterates thru the variables list, looking for classes that have been 
+	/* 	This code iterates thru the variables list, looking for classes that have been
 		defined with an SVN_REVISION variable.  It then converts that to a numeric
 		Version(int), which is then used to calculate the highest version (VersionNum),
 		for display on the UI.
@@ -126,7 +125,7 @@ function main()
 			${VariableIterator.Value.Version(exists)}
 		{
 			VariableIterator.Value.Version:Set[${VariableIterator.Value.SVN_REVISION.Token[2, " "]}]
-			;echo " ${VariableIterator.Value.ObjectName} Revision ${VariableIterator.Value.Version}"	
+			;echo " ${VariableIterator.Value.ObjectName} Revision ${VariableIterator.Value.Version}"
 			if ${VersionNum} < ${VariableIterator.Value.Version}
 			{
 				VersionNum:Set[${VariableIterator.Value.Version}]
@@ -134,7 +133,7 @@ function main()
 		}
 	}
 	while ${VariableIterator:Next(exists)}
-	
+
 	EVEBot:SetVersion[${VersionNum}]
 
 	UI:Reload
@@ -146,12 +145,12 @@ function main()
 
 	UI:UpdateConsole["-=Paused: Press Run-="]
 	Script:Pause
-	
+
 	while ${EVEBot.Paused}
 	{
 		wait 10
 	}
-	
+
 	while TRUE
 	{
 		if ${BotModule:First(exists)}
