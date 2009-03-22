@@ -58,12 +58,10 @@ function main()
 	;Script:EnableDebugLogging[debug.txt]
 	;Script[EVEBot]:EnableProfiling
 
-	;Turbo 20
-
-	while !${_Me.Name(exists)} || ${_Me.Name.Equal[NULL]}
+	while !${_Me.Name(exists)} || ${_Me.Name.Equal[NULL]} || ${_Me.Name.Length} == 0
 	{
 		echo " ${Time} EVEBot: Waiting for cache to initialize..."
-		waitframe
+		wait 10
 	}
 
 	echo "${Time} EVEBot: Loading Objects..."
