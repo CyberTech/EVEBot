@@ -53,11 +53,20 @@ function atexit()
 
 function main()
 {
+	echo "${Time} EVEBot: Starting"
 	;Script:Unsquelch
 	;Script:EnableDebugLogging[debug.txt]
 	;Script[EVEBot]:EnableProfiling
 
 	;Turbo 20
+
+	while !${_Me.Name(exists)} || ${_Me.Name.Equal[NULL]}
+	{
+		echo " ${Time} EVEBot: Waiting for cache to initialize..."
+		waitframe
+	}
+
+	echo "${Time} EVEBot: Loading Objects..."
 
 	/* Script-Defined Support Objects */
 	declarevariable EVEBot obj_EVEBot script
@@ -101,6 +110,8 @@ function main()
 	declarevariable Freighter obj_Freighter script
 	declarevariable Ratter obj_Ratter script
 	declarevariable Missioneer obj_Missioneer script
+
+	echo "${Time} EVEBot: Loaded"
 
 	/* Set Turbo to lowest value to try and avoid overloading the EVE Python engine */
 
