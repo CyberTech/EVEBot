@@ -552,7 +552,7 @@ objectdef obj_Targets_Rats
 			{
 				if !${This.Target.Value.IsLockedTarget} && !${This.Target.Value.BeingTargeted}
 				{
-					if ${_Me.GetTargets} < ${Ship.MaxLockedTargets}
+					if ${Me.GetTargets} < ${Ship.MaxLockedTargets}
 					{
 						UI:UpdateConsole["Locking ${This.Target.Value.Name}"]
 						This.Target.Value:LockTarget

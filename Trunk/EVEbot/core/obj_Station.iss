@@ -57,9 +57,9 @@ objectdef obj_Station
 
 	member:bool Docked()
 	{
-		if ${_Me.InStation} && \
-			${_Me.StationID} > 0 && \
-			${EVEBot.SessionValid}
+		if ${EVEBot.SessionValid} && \
+			${Me.InStation} && \
+			${Me.StationID} > 0
 		{
 			return TRUE
 		}
@@ -68,9 +68,10 @@ objectdef obj_Station
 
 	member:bool DockedAtStation(int StationID)
 	{
-		if ${_Me.InStation} && \
-			${_Me.StationID} == ${StationID} && \
-			${EVEBot.SessionValid}
+		if ${EVEBot.SessionValid} && \
+			${Me.InStation} && \
+			${Me.StationID} == ${StationID}
+
 		{
 			return TRUE
 		}
@@ -120,7 +121,7 @@ objectdef obj_Station
 
 	function GetStationItems()
 	{
-		while !${_Me.InStation}
+		while !${Me.InStation}
 		{
 			UI:UpdateConsole["obj_Cargo: Waiting for InStation..."]
 			wait 10
@@ -186,7 +187,7 @@ objectdef obj_Station
 	{
 		variable int Counter = 0
 
-		if ${_Me.InStation}
+		if ${Me.InStation}
 		{
 			UI:UpdateConsole["DockAtStation called, but we're already in station!"]
 			return
@@ -250,7 +251,7 @@ objectdef obj_Station
 		variable int Counter = 0
 		variable int StationID = ${Entity[CategoryID,3,${Config.Common.HomeStation}].ID}
 
-		if ${_Me.InStation}
+		if ${Me.InStation}
 		{
 			UI:UpdateConsole["Dock called, but we're already instation!"]
 			return
@@ -282,9 +283,9 @@ objectdef obj_Station
 	{
 		variable int Counter
 		variable int StationID
-		StationID:Set[${_Me.StationID}]
+		StationID:Set[${Me.StationID}]
 
-		if !${_Me.InStation}
+		if !${Me.InStation}
 		{
 			UI:UpdateConsole["Undock called, but we're already instation!"]
 			return
@@ -305,8 +306,8 @@ objectdef obj_Station
 			   EVE:Execute[CmdExitStation]
 			   UI:UpdateConsole["Undock: Unexpected failure, retrying...", LOG_CRITICAL]
 			   UI:UpdateConsole["Undock: Debug: EVEWindow[Local]=${EVEWindow[Local](exists)}", LOG_CRITICAL]
-			   UI:UpdateConsole["Undock: Debug: Me.InStation=${_Me.InStation}", LOG_CRITICAL]
-			   UI:UpdateConsole["Undock: Debug: Me.StationID=${_Me.StationID}", LOG_CRITICAL]
+			   UI:UpdateConsole["Undock: Debug: Me.InStation=${Me.InStation}", LOG_CRITICAL]
+			   UI:UpdateConsole["Undock: Debug: Me.StationID=${Me.StationID}", LOG_CRITICAL]
 			}
 		}
 		while ${This.Docked}

@@ -156,7 +156,7 @@ objectdef obj_Miner
 
 	method SetState()
 	{
-		if ${EVEBot.ReturnToStation} && ${_Me.InStation} == FALSE
+		if ${EVEBot.ReturnToStation} && ${Me.InStation} == FALSE
 		{
 			This.CurrentState:Set["ABORT"]
 			return
@@ -174,13 +174,13 @@ objectdef obj_Miner
 			return
 		}
 
-		if ${_Me.InStation} == TRUE
+		if ${Me.InStation} == TRUE
 		{
 	  		This.CurrentState:Set["INSTATION"]
 	  		return
 		}
 
-		if ${_MyShip.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold} && \
+		if ${MyShip.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold} && \
 		    ${SanityCheckAbort} == FALSE
 		{
 		 	This.CurrentState:Set["MINE"]
@@ -193,7 +193,9 @@ objectdef obj_Miner
 			return
 		}
 
-	    if ${_MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold} || \
+	    echo "${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold} || ${EVEBot.ReturnToStation}  || ${SanityCheckAbort} == TRUE"
+
+	    if ${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold} || \
     	    ${EVEBot.ReturnToStation}  || \
     	    ${SanityCheckAbort} == TRUE
 		{
@@ -276,7 +278,7 @@ objectdef obj_Miner
 
 	function Mine()
 	{
-		if ${_Me.InStation}
+		if ${Me.InStation}
 		{
 			UI:UpdateConsole["DEBUG: obj_Miner.Mine called while zoning or while in station!"]
 			return
@@ -291,11 +293,11 @@ objectdef obj_Miner
 		variable int DroneCargoMin = ${Math.Calc[(${Ship.CargoMinimumFreeSpace}*1.4)]}
 		variable int Counter = 0
 
-		if ${_MyShip.UsedCargoCapacity} != ${LastUsedCargoCapacity}
+		if ${MyShip.UsedCargoCapacity} != ${LastUsedCargoCapacity}
 		{
-			;UI:UpdateConsole["DEBUG: ${_MyShip.UsedCargoCapacity} != ${LastUsedCargoCapacity}"]
+			;UI:UpdateConsole["DEBUG: ${MyShip.UsedCargoCapacity} != ${LastUsedCargoCapacity}"]
 		    SanityCheckCounter:Set[0]
-		    LastUsedCargoCapacity:Set[${_MyShip.UsedCargoCapacity}]
+		    LastUsedCargoCapacity:Set[${MyShip.UsedCargoCapacity}]
 		}
 
 		/* TODO: CyberTech: Move this to obj_Defense */
@@ -316,41 +318,54 @@ objectdef obj_Miner
 
 		if ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers}
 		{
+			echo 1
 			; We've got idle lasers, and available targets. Do something with them.
 			Me:DoGetTargets[LockedTargets]
 			LockedTargets:GetIterator[Target]
 			if ${Target:First(exists)}
 			do
 			{
-				if ${_MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
+			echo Used: ${LockedTargets.Used}
+				if ${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 				{
 					break
 				}
+			echo 2
 
 				if ${Target.Value.CategoryID} != ${Asteroids.AsteroidCategoryID}
 				{
 					continue
 				}
+			echo 3
 
 				/* TODO: CyberTech - this concentrates fire fine if there's only 1 target, but if there's multiple targets
 					it still prefers to distribute. Ice mining shouldn't distribute
 				*/
+				echo "(${This.ConcentrateFire} || ${Config.Miner.MinerType.Equal[Ice]} || !${Ship.IsMiningAsteroidID[${Target.Value.ID}]})"
+
 				if (${This.ConcentrateFire} || \
 					${Config.Miner.MinerType.Equal["Ice"]} || \
 					!${Ship.IsMiningAsteroidID[${Target.Value.ID}]})
 				{
+			echo Calling Target.Value:MakeActiveTarget
+
 					Target.Value:MakeActiveTarget
+			echo Done.. waiting
 					while ${Target.Value.ID} != ${Me.ActiveTarget.ID}
 					{
+						echo "while ${Target.Value.ID} != ${Me.ActiveTarget.ID}"
 						wait 5
+						echo .
 					}
+			echo 4
 
-					if ${_MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
+					if ${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 					{
 						break
 					}
 					call Ship.Approach ${Target.Value.ID} ${Ship.OptimalMiningRange}
 					call Ship.ActivateFreeMiningLaser
+			echo 5
 
 					if (${Ship.Drones.DronesInSpace} > 0 && \
 						${Config.Miner.UseMiningDrones})

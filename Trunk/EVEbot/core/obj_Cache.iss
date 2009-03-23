@@ -13,6 +13,7 @@ objectdef obj_Cache
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
+	variable bool Initialized = false
 	variable float RunTime
 	variable float NextPulse2Sec = 0
 	variable float NextPulse1Sec = 0
@@ -25,10 +26,9 @@ objectdef obj_Cache
 
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_Cache: Initialized", LOG_MINOR]
 		if ${StaticList.FirstKey(exists)}
 		{
-			This:UpdateStaticList
+			This:UpdateList[StaticList]
 		}
 
 		This:Pulse
@@ -43,37 +43,22 @@ objectdef obj_Cache
 	/* Runs every other frame, and updates one member per run */
 	method Pulse()
 	{
-		if ${EVEBot(exists)} && !${EVEBot.SessionValid}
-		{
-			/*	EVEBot object isn't fully up before we call this the first time -- we'll just assume
-				the user isn't going to be starting evebot while jumping or undocking. */
-
-			return
-		}
-
 		; Changing the /1000 is not going to make your script faster or your dog smarter. it will just break things.
 		This.RunTime:Set[${Math.Calc[${Script.RunningTime}/1000]}]
-
-		variable string temp
 
 		/* Process FastObjectList every half second */
 		if ${This.RunTime} > ${This.NextPulseHalfSec}
 		{
-			if ${FastObjectList.FirstKey(exists)}
+			/*
+			if ${EVEBot(exists)} && !${EVEBot.SessionValid}
 			{
-				do
-				{
-					;redirect -append "crash.txt" echo "[${FastObjectList.CurrentKey}]: ${FastObjectList.CurrentValue}"
-					temp:Set[${${FastObjectList.CurrentValue}}]
-					if ${temp.NotEqual["NULL"]}
-					{
-						${FastObjectList.CurrentKey}:Set[${temp}]
-					}
-					;redirect -append "crash.txt" echo "    ${${FastObjectList.CurrentKey}}"
-				}
-				while ${FastObjectList.NextKey(exists)}
-			}
+				;	EVEBot object isn't fully up before we call this the first time -- we'll just assume
+				;	the user isn't going to be starting evebot while jumping or undocking.
 
+				return
+			}
+			*/
+			This:UpdateList[FastObjectList]
 			This.NextPulseHalfSec:Set[${This.RunTime}]
     		This.NextPulseHalfSec:Inc[0.5]
 		}
@@ -81,20 +66,7 @@ objectdef obj_Cache
 		/* Process ObjectList every 1 second */
 		if ${This.RunTime} > ${This.NextPulse1Sec}
 		{
-			if ${OneSecondObjectList.FirstKey(exists)}
-			{
-				do
-				{
-					;redirect -append "crash.txt" echo "[${OneSecondObjectList.CurrentKey}]: ${OneSecondObjectList.CurrentValue}"
-					temp:Set[${${OneSecondObjectList.CurrentValue}}]
-					if ${temp.NotEqual["NULL"]}
-					{
-						${OneSecondObjectList.CurrentKey}:Set[${temp}]
-					}
-					;redirect -append "crash.txt" echo "${${OneSecondObjectList.CurrentKey}}"
-				}
-				while ${OneSecondObjectList.NextKey(exists)}
-			}
+			This:UpdateList[OneSecondObjectList]
 			This.NextPulse1Sec:Set[${This.RunTime}]
     		This.NextPulse1Sec:Inc[2.0]
 		}
@@ -102,22 +74,29 @@ objectdef obj_Cache
 		/* Process ObjectList every 2 seconds */
 		if ${This.RunTime} > ${This.NextPulse2Sec}
 		{
-			if ${ObjectList.FirstKey(exists)}
-			{
-				do
-				{
-					;redirect -append "crash.txt" echo "[${ObjectList.CurrentKey}]: ${ObjectList.CurrentValue}"
-					temp:Set[${${ObjectList.CurrentValue}}]
-					if ${temp.NotEqual["NULL"]}
-					{
-						${ObjectList.CurrentKey}:Set[${temp}]
-					}
-					;redirect -append "crash.txt" echo "${${ObjectList.CurrentKey}}"
-				}
-				while ${ObjectList.NextKey(exists)}
-			}
+			This:UpdateList[ObjectList]
 			This.NextPulse2Sec:Set[${This.RunTime}]
     		This.NextPulse2Sec:Inc[2.0]
+		}
+	}
+
+	method UpdateList(string ListVar)
+	{
+		variable string temp
+
+		if ${${ListVar}.FirstKey(exists)}
+		{
+			do
+			{
+				temp:Set[${${${ListVar}.CurrentValue}}]
+				;redirect -append "crash.txt" echo "[${${ListVar}.CurrentKey}]: ${${ListVar}.CurrentValue} New: ${temp}"
+				;echo "[${${ListVar}.CurrentKey}]: ${${ListVar}.CurrentValue} New: ${temp}"
+				if ${temp.NotEqual["NULL"]}
+				{
+					${${ListVar}.CurrentKey}:Set[${temp}]
+				}
+			}
+			while ${${ListVar}.NextKey(exists)}
 		}
 	}
 
@@ -151,10 +130,6 @@ objectdef obj_Cache_Me inherits obj_Cache
 	variable int ShipID
 	variable int StationID
 
-	variable bool InStation = FALSE
-	variable int GetTargets
-	variable int GetTargeting
-	variable int GetTargetedBy
 	variable int MaxLockedTargets
 	variable int MaxActiveDrones
 	variable float64 DroneControlDistance
@@ -162,15 +137,12 @@ objectdef obj_Cache_Me inherits obj_Cache
 	variable int AllianceID
 	variable int CorporationID
 	variable string CorporationTicker
-	variable bool AutoPilotOn = FALSE
 
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_Cache_Me: Initialized", LOG_MINOR]
-
 		StaticList:Set["Name", "Me.Name"]
 		StaticList:Set["CharID", "Me.CharID"]
-		/* Yes, this causes a problem where if we join an alliance while evebot is running we dont notice. oh well. */
+			;TODO Yes, this causes a problem where if we join an alliance while evebot is running we dont notice. oh well.
 		StaticList:Set["AllianceID", "Me.AllianceID"]
 		StaticList:Set["CorporationID", "Me.CorporationID"]
 		StaticList:Set["CorporationTicker", "Me.CorporationTicker"]
@@ -181,12 +153,7 @@ objectdef obj_Cache_Me inherits obj_Cache
 		ObjectList:Set["DroneControlDistance", "Me.DroneControlDistance"]
 		ObjectList:Set["SolarSystemID", "Me.SolarSystemID"]
 
-		FastObjectList:Set["StationID", "Me.StationID"]
-		FastObjectList:Set["InStation", "Me.InStation"]
-		FastObjectList:Set["AutoPilotOn", "Me.AutoPilotOn"]
-		FastObjectList:Set["GetTargets", "Me.GetTargets"]
-		FastObjectList:Set["GetTargeting", "Me.GetTargeting"]
-		FastObjectList:Set["GetTargetedBy", "Me.GetTargetedBy"]
+		;FastObjectList:Set["GetTargets", "Me.GetTargets"]
 
 		This[parent]:Initialize
 	}
@@ -208,8 +175,6 @@ objectdef obj_Cache_Me_ToEntity inherits obj_Cache
 
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_Cache_Me_ToEntity: Initialized", LOG_MINOR]
-
 		FastObjectList:Set["IsCloaked", "Me.ToEntity.IsCloaked"]
 		FastObjectList:Set["IsWarpScrambled", "Me.ToEntity.IsWarpScrambled"]
 		FastObjectList:Set["Mode", "Me.ToEntity.Mode"]
@@ -232,46 +197,22 @@ objectdef obj_Cache_MyShip inherits obj_Cache
 	variable float StructurePct
 	variable float ShieldPct
 	variable float CapacitorPct
-	variable float _UsedCargoCapacity
-	variable float _CargoCapacity
+	variable float CargoCapacity
 	variable int MaxLockedTargets
 	variable float MaxTargetRange
 
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_Cache_Me_Ship: Initialized", LOG_MINOR]
-
 		FastObjectList:Set["ArmorPct", "MyShip.ArmorPct"]
 		FastObjectList:Set["StructurePct", "MyShip.StructurePct"]
 		FastObjectList:Set["ShieldPct", "MyShip.ShieldPct"]
 		FastObjectList:Set["CapacitorPct", "MyShip.CapacitorPct"]
 
-		ObjectList:Set["_UsedCargoCapacity", "MyShip.UsedCargoCapacity"]
-		ObjectList:Set["_CargoCapacity", "MyShip.CargoCapacity"]
+		ObjectList:Set["CargoCapacity", "MyShip.CargoCapacity"]
 		ObjectList:Set["MaxLockedTargets", "MyShip.MaxLockedTargets"]
 		ObjectList:Set["MaxTargetRange", "MyShip.MaxTargetRange"]
 
 		This[parent]:Initialize
-	}
-
-	member:float UsedCargoCapacity()
-	{
-		if ${MyShip.UsedCargoCapacity(exists)}
-		{
-			return ${MyShip.UsedCargoCapacity}
-		}
-
-		return 0
-	}
-
-	member:float CargoCapacity()
-	{
-		if ${MyShip.CargoCapacity(exists)}
-		{
-			return ${MyShip.CargoCapacity}
-		}
-
-		return 0
 	}
 
 	method Shutdown()
@@ -289,8 +230,6 @@ objectdef obj_Cache_EVETime inherits obj_Cache
 
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_Cache_EVETime: Initialized", LOG_MINOR]
-
 		OneSecondObjectList:Set["_Time", "EVETime.Time"]
 		This[parent]:Initialize
 	}

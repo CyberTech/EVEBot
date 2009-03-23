@@ -271,7 +271,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 	/* NOTE: The order of these if statements is important!! */
 	method SetState()
 	{
-		if ${EVEBot.ReturnToStation} && !${_Me.InStation}
+		if ${EVEBot.ReturnToStation} && !${Me.InStation}
 		{
 			This.CurrentState:Set["ABORT"]
 		}
@@ -279,7 +279,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		{
 			This.CurrentState:Set["IDLE"]
 		}
-		elseif ${_Me.InStation}
+		elseif ${Me.InStation}
 		{
 	  		This.CurrentState:Set["INSTATION"]
 		}

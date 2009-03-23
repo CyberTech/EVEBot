@@ -149,7 +149,7 @@ objectdef obj_Freighter
 			Assets:IgnoreStation[${m_DestinationID}]
 		}
 
-		if ${EVEBot.ReturnToStation} && !${_Me.InStation}
+		if ${EVEBot.ReturnToStation} && !${Me.InStation}
 		{
 			This.CurrentState:Set["ABORT"]
 		}
@@ -157,7 +157,7 @@ objectdef obj_Freighter
 		{
 			This.CurrentState:Set["IDLE"]
 		}
-		elseif ${_Me.InStation}
+		elseif ${Me.InStation}
 		{
 	  		This.CurrentState:Set["BASE"]
 		}
@@ -169,7 +169,7 @@ objectdef obj_Freighter
 			*/
 			This.CurrentState:Set["CARGOFULL"]
 		}
-		elseif !${_Me.InStation} && ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace}
+		elseif !${Me.InStation} && ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace}
 		{
 		 	This.CurrentState:Set["TRANSPORT"]
 		}
@@ -338,13 +338,13 @@ objectdef obj_Freighter
 	 */
 	function PickupOrDropoff()
 	{
-		if ${_Me.InStation}
+		if ${Me.InStation}
 		{	/* don't call this function if you are not in station */
 			UI:UpdateConsole["DEBUG: /${EVE.Bookmark[${Config.Freighter.Destination}](exists)} = ${EVE.Bookmark[${Config.Freighter.Destination}](exists)}"]
 			UI:UpdateConsole["DEBUG: /${m_DestinationID} = ${m_DestinationID}"]
-			UI:UpdateConsole["DEBUG: /${Me.StationID} = ${_Me.StationID}"]
+			UI:UpdateConsole["DEBUG: /${Me.StationID} = ${Me.StationID}"]
 			if ${EVE.Bookmark[${Config.Freighter.Destination}](exists)} && \
-			   ${m_DestinationID} == ${_Me.StationID}
+			   ${m_DestinationID} == ${Me.StationID}
 			{	/* this is the destination station, drop off stuff */
 				call Cargo.TransferCargoToHangar
 			}

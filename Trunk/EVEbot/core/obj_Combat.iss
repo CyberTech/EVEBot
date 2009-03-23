@@ -121,7 +121,7 @@ objectdef obj_Combat
 
 	method SetState()
 	{
-		if ${_Me.InStation} == TRUE
+		if ${Me.InStation} == TRUE
 		{
 	  		This.CurrentState:Set["INSTATION"]
 	  		return
@@ -133,7 +133,7 @@ objectdef obj_Combat
 			return
 		}
 
-		if ${_Me.GetTargets} > 0
+		if ${Me.GetTargets} > 0
 		{
 			This.CurrentState:Set["FIGHT"]
 		}
@@ -280,7 +280,7 @@ objectdef obj_Combat
 	method CheckTank()
 	{
 		/* this shouldn't be here. just temporary moved here after removal of ManageTank into Defense thread. */
-		if ${_Me.GetTargetedBy} > 0
+		if ${Me.GetTargetedBy} > 0
 		{
 			/* We have aggro now, yay! Let's launch some drones */
 			if ${Config.Combat.LaunchCombatDrones} && \

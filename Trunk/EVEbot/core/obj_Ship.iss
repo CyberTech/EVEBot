@@ -141,7 +141,7 @@ objectdef obj_Ship
 		{
 			if ${EVEBot.SessionValid}
 			{
-				if !${_Me.InStation}
+				if !${Me.InStation}
 				{
 					This:ValidateModuleTargets
 				}
@@ -270,11 +270,11 @@ objectdef obj_Ship
 
 	member:float CargoFreeSpace()
 	{
-		if ${_MyShip.UsedCargoCapacity} < 0
+		if ${MyShip.UsedCargoCapacity} < 0
 		{
 			return ${_MyShip.CargoCapacity}
 		}
-		return ${Math.Calc[${_MyShip.CargoCapacity}-${_MyShip.UsedCargoCapacity}]}
+		return ${Math.Calc[${_MyShip.CargoCapacity}-${MyShip.UsedCargoCapacity}]}
 	}
 
 	member:bool CargoFull()
@@ -309,7 +309,7 @@ objectdef obj_Ship
 	{
 		Validate_Ship()
 
-		if ${_Me.InStation}
+		if ${Me.InStation}
 		{
 			; GetModules cannot be used in station as of 07/15/2007
 			UI:UpdateConsole["DEBUG: obj_Ship:UpdateModuleList called while in station", LOG_DEBUG]
@@ -1018,7 +1018,7 @@ objectdef obj_Ship
 			while ( ${CaptionCount} > ${MyShip.GetCargo} && \
 					${LoopCheck} < 10 )
 			{
-				UI:UpdateConsole["obj_Ship: Waiting for cargo to load...(${Loopcheck})", LOG_MINOR]
+				UI:UpdateConsole["obj_Ship: Waiting for cargo to load...(${LoopCheck})", LOG_MINOR]
 				while !${This.IsCargoOpen}
 				{
 					wait 0.5
@@ -1148,7 +1148,7 @@ objectdef obj_Ship
 
 		variable int Counter
 		UI:UpdateConsole["Activating autopilot and waiting until arrival..."]
-		if !${_Me.AutoPilotOn}
+		if !${Me.AutoPilotOn}
 		{
 			EVE:Execute[CmdToggleAutopilot]
 		}
@@ -1159,10 +1159,10 @@ objectdef obj_Ship
 				Counter:Inc
 				wait 10
 			}
-			while !${_Me.AutoPilotOn} && (${Counter} < 10)
+			while ${Me.AutoPilotOn(exists)} && !${Me.AutoPilotOn} && (${Counter} < 10)
 			wait 10
 		}
-		while ${_Me.AutoPilotOn}
+		while ${Me.AutoPilotOn(exists)} && ${Me.AutoPilotOn}
 		UI:UpdateConsole["Arrived - Waiting for system load"]
 		wait 150
 	}
@@ -1185,7 +1185,7 @@ objectdef obj_Ship
 
 		variable int Counter
 
-		if ${_Me.InStation}
+		if ${Me.InStation}
 		{
 			call Station.Undock
 		}
@@ -1389,7 +1389,10 @@ objectdef obj_Ship
 		Validate_Ship()
 
 		UI:UpdateConsole["Preparing for warp"]
-		This:Deactivate_Cloak
+		if !${This.HasCovOpsCloak}
+		{
+			This:Deactivate_Cloak[]
+		}
 		This:Deactivate_SensorBoost
 
 		if ${This.Drones.WaitingForDrones}
@@ -1401,10 +1404,7 @@ objectdef obj_Ship
 			}
 			while ${This.Drones.WaitingForDrones}
 		}
-		if !${This.HasCovOpsCloak}
-		{
-			This:Deactivate_Cloak[]
-		}
+
 		This:DeactivateAllMiningLasers[]
 		Targeting:Disable[]
 		This:UnlockAllTargets[]

@@ -99,7 +99,7 @@ objectdef obj_Drones
 	}
 	method Shutdown()
 	{
-	    if !${_Me.InStation}
+	    if !${Me.InStation}
 	    {
 	        if (${_Me.ToEntity.Mode} != 3)
 	        {
@@ -118,7 +118,7 @@ objectdef obj_Drones
 			{
 				if !${EVEBot.Paused}
 				{
-    				if !${_Me.InStation}
+    				if !${Me.InStation}
     				{
     					This.LaunchedDrones:Set[${This.DronesInSpace}]
     					if  ${This.LaunchedDrones} > 0

@@ -138,7 +138,7 @@ objectdef obj_Social
 
 				This:CheckChatInvitation[]
 
-				if !${_Me.InStation}
+				if !${Me.InStation}
 				{
 					EVE:DoGetEntities[This.EntityIndex,CategoryID,CATEGORYID_ENTITY]
 				}
@@ -413,7 +413,7 @@ objectdef obj_Social
 		{
 			do
 			{
-				if (${_MyShipID} != ${PilotIterator.Value}) && \
+				if (${_Me.ShipID} != ${PilotIterator.Value}) && \
 					!${PilotIterator.Value.ToFleetMember} && \
 					${PilotIterator.Value.Distance} < ${Dist}
 				{
