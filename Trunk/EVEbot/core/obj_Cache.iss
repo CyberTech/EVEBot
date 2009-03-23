@@ -21,6 +21,7 @@ objectdef obj_Cache
 
 	variable collection:string StaticList
 	variable collection:string ObjectList
+	variable collection:string FrameObjectList
 	variable collection:string FastObjectList
 	variable collection:string OneSecondObjectList
 
@@ -46,6 +47,8 @@ objectdef obj_Cache
 		; Changing the /1000 is not going to make your script faster or your dog smarter. it will just break things.
 		This.RunTime:Set[${Math.Calc[${Script.RunningTime}/1000]}]
 
+		This:UpdateList[FrameObjectList]
+		
 		/* Process FastObjectList every half second */
 		if ${This.RunTime} > ${This.NextPulseHalfSec}
 		{

@@ -141,7 +141,7 @@ objectdef obj_Ship
 		{
 			if ${EVEBot.SessionValid}
 			{
-				if !${Me.InStation}
+				if ${Me.InSpace}
 				{
 					This:ValidateModuleTargets
 				}
@@ -309,10 +309,10 @@ objectdef obj_Ship
 	{
 		Validate_Ship()
 
-		if ${Me.InStation}
+		if !${Me.InSpace}
 		{
 			; GetModules cannot be used in station as of 07/15/2007
-			UI:UpdateConsole["DEBUG: obj_Ship:UpdateModuleList called while in station", LOG_DEBUG]
+			UI:UpdateConsole["DEBUG: obj_Ship:UpdateModuleList called while not in space", LOG_DEBUG]
 			return
 		}
 

@@ -126,6 +126,23 @@ objectdef obj_Ratter
 			Ship:Reload_Weapons[TRUE]
 		}
 
+		; TODO - CyberTech - Make this a proper solution instead of this half-ass piss
+		; Wait for the rats to warp into the belt. Reports are between 10 and 20 seconds.
+		variable int Count
+		for (Count:Set[0] ; ${Count}<=30 ; Count:Inc)
+		{
+			if ${Targets.PC} || ${Targets.NPC}
+			{
+				break
+			}
+			wait 10
+		}
+
+		if (${Count} > 1)
+		{
+			; If we had to wait for rats, Wait another second to try to let them get into range/out of warp
+			wait 10
+		}
 		call This.PlayerCheck
 	}
 

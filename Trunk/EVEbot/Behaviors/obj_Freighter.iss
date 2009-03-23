@@ -149,7 +149,7 @@ objectdef obj_Freighter
 			Assets:IgnoreStation[${m_DestinationID}]
 		}
 
-		if ${EVEBot.ReturnToStation} && !${Me.InStation}
+		if ${EVEBot.ReturnToStation} && ${Me.InSpace}
 		{
 			This.CurrentState:Set["ABORT"]
 		}
@@ -169,7 +169,7 @@ objectdef obj_Freighter
 			*/
 			This.CurrentState:Set["CARGOFULL"]
 		}
-		elseif !${Me.InStation} && ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace}
+		elseif ${Me.InSpace} && ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace}
 		{
 		 	This.CurrentState:Set["TRANSPORT"]
 		}

@@ -58,17 +58,19 @@ objectdef obj_Station
 	member:bool Docked()
 	{
 		if ${EVEBot.SessionValid} && \
+			!${Me.InSpace} && \
 			${Me.InStation} && \
 			${Me.StationID} > 0
 		{
 			return TRUE
 		}
-	    return FALSE
+		return FALSE
 	}
 
 	member:bool DockedAtStation(int StationID)
 	{
 		if ${EVEBot.SessionValid} && \
+			!${Me.InSpace} && \
 			${Me.InStation} && \
 			${Me.StationID} == ${StationID}
 
@@ -76,7 +78,7 @@ objectdef obj_Station
 			return TRUE
 		}
 
-	    return FALSE
+		return FALSE
 	}
 
 	function OpenHangar()
@@ -121,7 +123,7 @@ objectdef obj_Station
 
 	function GetStationItems()
 	{
-		while !${Me.InStation}
+		while (${Me.InSpace} || !${Me.InStation})
 		{
 			UI:UpdateConsole["obj_Cargo: Waiting for InStation..."]
 			wait 10
@@ -287,7 +289,7 @@ objectdef obj_Station
 
 		if !${Me.InStation}
 		{
-			UI:UpdateConsole["Undock called, but we're already instation!"]
+			UI:UpdateConsole["Undock called, but we're already undocking!"]
 			return
 		}
 
@@ -311,8 +313,7 @@ objectdef obj_Station
 			}
 		}
 		while ${This.Docked}
-		UI:UpdateConsole["Undock: Complete"]
-   		call ChatIRC.Say "Undock: Complete"
+		UI:UpdateConsoleIRC["Undock: Complete"]
 
 		Config.Common:SetHomeStation[${Entity[CategoryID,3].Name}]
 

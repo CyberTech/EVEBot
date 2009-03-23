@@ -108,9 +108,6 @@ function atexit()
 
 function main()
 {
-	/* Set Turbo to lowest value to try and avoid overloading the EVE Python engine */
-	Turbo 20
-
 	;Script:Unsquelch
 	;Script:EnableDebugLogging[debug.txt]
 	;Script[EVEBot]:EnableProfiling

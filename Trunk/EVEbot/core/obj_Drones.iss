@@ -99,13 +99,13 @@ objectdef obj_Drones
 	}
 	method Shutdown()
 	{
-	    if !${Me.InStation}
-	    {
-	        if (${_Me.ToEntity.Mode} != 3)
-	        {
-	        	UI:UpdateConsole["Recalling Drones prior to shutdown..."]
-    		    EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
-    		}
+		if ${Me.InSpace}
+		{
+			if (${_Me.ToEntity.Mode} != 3)
+			{
+				UI:UpdateConsole["Recalling Drones prior to shutdown..."]
+				EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
+			}
 		}
 		Event[OnFrame]:DetachAtom[This:Pulse]
 	}
@@ -114,26 +114,26 @@ objectdef obj_Drones
 	{
 		if ${This.WaitingForDrones}
 		{
-		    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+			if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 			{
 				if !${EVEBot.Paused}
 				{
-    				if !${Me.InStation}
-    				{
-    					This.LaunchedDrones:Set[${This.DronesInSpace}]
-    					if  ${This.LaunchedDrones} > 0
-    					{
-    						This.WaitingForDrones:Set[FALSE]
-    						This.DronesReady:Set[TRUE]
+					if ${Me.InSpace}
+					{
+						This.LaunchedDrones:Set[${This.DronesInSpace}]
+						if  ${This.LaunchedDrones} > 0
+						{
+							This.WaitingForDrones:Set[FALSE]
+							This.DronesReady:Set[TRUE]
 
-	    					UI:UpdateConsole["${This.LaunchedDrones} drones deployed"]
-   		 				}
-       		         }
-       		     }
+							UI:UpdateConsole["${This.LaunchedDrones} drones deployed"]
+							}
+					}
+				}
 
-	    		This.NextPulse:Set[${Time.Timestamp}]
-	    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-	    		This.NextPulse:Update
+				This.NextPulse:Set[${Time.Timestamp}]
+				This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+				This.NextPulse:Update
 			}
 		}
 	}

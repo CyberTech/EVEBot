@@ -16,6 +16,8 @@ objectdef obj_EVEBot
 	variable bool _Paused = FALSE
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 4
+	variable int LastSessionFrame
+	variable bool LastSessionResult
 
 	method Initialize()
 	{
@@ -114,15 +116,21 @@ objectdef obj_EVEBot
 
 	member:bool SessionValid()
 	{
-		if !${EVE(exists)} || \
-			!${MyShip(exists)} || \
-			!${Me.InStation(exists)}
+		if ${This.LastSessionFrame} == ${Script.RunningTime}
 		{
-			return FALSE
+			return ${This.LastSessionResult}
+		}
+		if ${EVE(exists)} && ${MyShip(exists)}
+		{
+			echo ${Script.RunningTime}
+			This.LastSessionFrame:Set[${Script.RunningTime}]
+			This.LastSessionResult:Set[TRUE]
+			return TRUE
 		}
 
-		;return MAYBE
-		return TRUE
+		This.LastSessionFrame:Set[${Script.RunningTime}]
+		This.LastSessionResult:Set[FALSE]
+		return FALSE
 	}
 
 	member:bool Paused()

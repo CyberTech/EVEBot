@@ -23,7 +23,7 @@ objectdef obj_Social
 	variable collection:time BlackListPilotLog
 
 	variable time NextPulse
-	variable int PulseIntervalInSeconds = 1
+	variable int PulseIntervalInSeconds = 2
 
 	variable iterator WhiteListPilotIterator
 	variable iterator WhiteListCorpIterator
@@ -126,28 +126,32 @@ objectdef obj_Social
 		{
 			if ${EVEBot.SessionValid}
 			{
-				if ${EVE.GetPilots} > 1
-				{
-					; DoGetPilots is relatively expensive vs just the pilotcount.  Check if we're alone before calling.
-					EVE:DoGetPilots[This.PilotIndex]
-				}
-				else
-				{
-					This.PilotIndex:Clear
-				}
-
 				This:CheckChatInvitation[]
 
-				if !${Me.InStation}
+				if (${Config.Combat.UseBlackList} && ( ${PilotBlackList.Used} > 1 || ${CorpBlackList.Used} > 1 || ${AllianceBlackList.Used} > 1)) || \
+					(${Config.Combat.UseWhiteList} && ( ${PilotWhiteList.Used} > 2 || ${CorpWhiteList.Used} > 2 || ${AllianceWhiteList.Used} > 2))
 				{
-					EVE:DoGetEntities[This.EntityIndex,CategoryID,CATEGORYID_ENTITY]
-				}
-				else
-				{
-					This.EntityIndex:Clear
-				}
-
-    			SystemSafe:Set[${Math.Calc[${This.CheckLocalWhiteList} & ${This.CheckLocalBlackList}](bool)}]
+					if ${EVE.GetPilots} > 1
+					{
+						; DoGetPilots is relatively expensive vs just the pilotcount.  Check if we're alone before calling.
+						EVE:DoGetPilots[This.PilotIndex]
+					}
+					else
+					{
+						This.PilotIndex:Clear
+					}
+                	
+					if ${Me.InSpace}
+					{
+						EVE:DoGetEntities[This.EntityIndex,CategoryID,CATEGORYID_ENTITY]
+					}
+					else
+					{
+						This.EntityIndex:Clear
+					}
+                	
+    				SystemSafe:Set[${Math.Calc[${This.CheckLocalWhiteList} & ${This.CheckLocalBlackList}](bool)}]
+    			}
 			}
 
     		This.NextPulse:Set[${Time.Timestamp}]

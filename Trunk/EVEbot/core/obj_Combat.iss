@@ -123,8 +123,8 @@ objectdef obj_Combat
 	{
 		if ${Me.InStation} == TRUE
 		{
-	  		This.CurrentState:Set["INSTATION"]
-	  		return
+			This.CurrentState:Set["INSTATION"]
+			return
 		}
 
 		if ${EVEBot.ReturnToStation}

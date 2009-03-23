@@ -34,7 +34,7 @@ objectdef obj_Scavenger
 	/* NOTE: The order of these if statements is important!! */
 	method SetState()
 	{
-		if ${EVEBot.ReturnToStation} && !${Me.InStation}
+		if ${EVEBot.ReturnToStation} && ${Me.InSpace}
 		{
 			This.CurrentState:Set["ABORT"]
 		}

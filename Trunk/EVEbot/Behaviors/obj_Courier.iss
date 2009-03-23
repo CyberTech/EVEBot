@@ -39,7 +39,7 @@ objectdef obj_Courier
 		;	Agents:SetActiveAgent[${Config.Freighter.AgentName}]
 		;}
 		
-		if ${EVEBot.ReturnToStation} && !${Me.InStation}
+		if ${EVEBot.ReturnToStation} && ${Me.InSpace}
 		{
 			This.CurrentState:Set["ABORT"]
 		}

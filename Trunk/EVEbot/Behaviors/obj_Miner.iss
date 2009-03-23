@@ -156,7 +156,7 @@ objectdef obj_Miner
 
 	method SetState()
 	{
-		if ${EVEBot.ReturnToStation} && ${Me.InStation} == FALSE
+		if ${EVEBot.ReturnToStation} && ${Me.InSpace}
 		{
 			This.CurrentState:Set["ABORT"]
 			return
@@ -174,7 +174,7 @@ objectdef obj_Miner
 			return
 		}
 
-		if ${Me.InStation} == TRUE
+		if ${Me.InStation}
 		{
 	  		This.CurrentState:Set["INSTATION"]
 	  		return
@@ -278,9 +278,9 @@ objectdef obj_Miner
 
 	function Mine()
 	{
-		if ${Me.InStation}
+		if !${Me.InSpace}
 		{
-			UI:UpdateConsole["DEBUG: obj_Miner.Mine called while zoning or while in station!"]
+			UI:UpdateConsole["DEBUG: obj_Miner.Mine called while not in space!"]
 			return
 		}
 

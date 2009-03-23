@@ -70,8 +70,7 @@ objectdef obj_Defense
 			return
 		}
 
-		if	${Ship.IsCloaked} || \
-			${Me.InStation}
+		if ${Ship.IsCloaked} || !${Me.InSpace}
 		{
 			return
 		}
@@ -134,7 +133,7 @@ objectdef obj_Defense
 			return
 		}
 
-		if ${Me.InStation}
+		if !${Me.InSpace}
 		{
 			return TRUE
 		}
@@ -161,8 +160,7 @@ objectdef obj_Defense
 			return
 		}
 
-		if	${Ship.IsCloaked} || \
-			${Me.InStation}
+		if ${Ship.IsCloaked} || !${Me.InSpace}
 		{
 			return
 		}
@@ -190,8 +188,7 @@ objectdef obj_Defense
 
 		; TODO - move this to offensive thread, and call back to Defense.RunAway() if necessary - CyberTech
 
-		if	${Ship.IsCloaked} || \
-			${Me.InStation}
+		if ${Ship.IsCloaked} || !${Me.InSpace}
 		{
 			return
 		}
@@ -289,8 +286,7 @@ objectdef obj_Defense
 		variable int CapacitorPctEnable = 20
 		variable int CapacitorPctDisable = 80
 
-		if	${Ship.IsCloaked} || \
-			${Me.InStation}
+		if ${Ship.IsCloaked} || !${Me.InSpace}
 		{
 			return
 		}
