@@ -190,13 +190,11 @@
 								switch ${This.SelectedItem.Text}
 								{
 									case Miner
-										echo Miner Selected
 										UIElement[EVEBot].FindUsableChild[Miner,frame]:Show
 										;UIElement[EVEBot].FindUsableChild[Hauler,frame]:Hide
 										UIElement[Hauler@EVEBotOptionsTab@EVEBot_Children@EVEBot]:Hide
 										break
 									case Hauler
-										echo Hauler Selected
 										UIElement[EVEBot].FindUsableChild[Miner,frame]:Hide
 										UIElement[EVEBot].FindUsableChild[Hauler,frame]:Show
 										break

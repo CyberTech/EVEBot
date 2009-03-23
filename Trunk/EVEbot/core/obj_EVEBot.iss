@@ -122,7 +122,6 @@ objectdef obj_EVEBot
 		}
 		if ${EVE(exists)} && ${MyShip(exists)}
 		{
-			echo ${Script.RunningTime}
 			This.LastSessionFrame:Set[${Script.RunningTime}]
 			This.LastSessionResult:Set[TRUE]
 			return TRUE
