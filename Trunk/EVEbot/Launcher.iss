@@ -17,30 +17,14 @@
 */
 
 #include core/defines.iss
+#include Support/TestAPI.iss
 #include Support/obj_LoginHandler.iss
 #include Support/obj_AutoPatcher.iss
 #include Support/obj_Configuration.iss
+
 variable obj_LoginHandler LoginHandler
 variable obj_Configuration_BaseConfig BaseConfig
 variable obj_Configuration Config
-
-/* Defined here for obj_Login to use temporarily */
-objectdef obj_UI
-{
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
-	method UpdateConsole(string StatusMessage)
-	{
-		variable string msg
-		
-		if ${StatusMessage(exists)}
-		{
-			msg:Set["${Time.Time24}: ${StatusMessage}"]
-			echo ${msg}
-		}
-	}
-}
 variable obj_UI UI
 
 function main(string unchar="")
