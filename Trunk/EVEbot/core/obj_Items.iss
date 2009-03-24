@@ -9,38 +9,6 @@
 
 */
 
-/*	keep for reference
-	==================
-
-		SELECT
-		`typeID`,
-		`groupID`,
-		`typeName`,
-		`volume`,
-		`capacity`,
-		`portionSize`,
-		`basePrice`,
-		invTypes.marketGroupID
-		FROM `invTypes`
-		WHERE invTypes.marketGroupID IS NOT NULL
-		order by typeID
-*/
-
-/* settings file format
-   ====================
-
-	<Set Name="Seeker F.O.F. Light Missile I Blueprint">
-		<Setting Name="TypeID">1216</Setting>
-		<Setting Name="GroupID">166</Setting>
-		<Setting Name="Volume">0.01</Setting>
-		<Setting Name="Capacity">0</Setting>
-		<Setting Name="PortionSize">1</Setting>
-		<Setting Name="BasePrice">180000</Setting>
-		<Setting Name="MarketGroupID">315</Setting>
-	</Set>
-
-*/
-
 objectdef obj_EVEDB_Items
 {
 	variable string SVN_REVISION = "$Rev$"
@@ -51,10 +19,9 @@ objectdef obj_EVEDB_Items
 
 	method Initialize()
 	{
+		UI:UpdateConsole["obj_EVEDB_Items: Loading database", LOG_MINOR]
 		LavishSettings:Import[${CONFIG_FILE}]
-
 		UI:UpdateConsole["obj_EVEDB_Items: Initialized", LOG_MINOR]
-		echo "obj_EVEDB_Items IS BROKEN UNTIL ITS UPDATED FOR THE NEW XML FILE"
 	}
 
 	method Shutdown()
@@ -64,12 +31,17 @@ objectdef obj_EVEDB_Items
 
 	member:int TypeID(string itemName)
 	{
-		return ${LavishSettings[${This.SET_NAME}].FindSet[${itemName}].FindSetting[TypeID, NOTSET]}
+		; need to iterate - probably not needed
 	}
 
-	member:int GroupID(string itemName)
+	member:string Name(int TypeID)
 	{
-		return ${LavishSettings[${This.SET_NAME}].FindSet[${itemName}].FindSetting[GroupID, NOTSET]}
+		return ${LavishSettings[${This.SET_NAME}].FindSetting[${TypeID}].FindAttribute[ItemName, NOTSET]}
+	}
+
+	member:int GroupID(int TypeID)
+	{
+		temp:Set[${LavishSettings[${This.SET_NAME}].FindSetting[${TypeID}].FindAttribute[GroupID, NOTSET]}]
 	}
 
 	member:float Volume(int TypeID)
@@ -80,29 +52,19 @@ objectdef obj_EVEDB_Items
 		return ${temp}
 	}
 
-	member:int Capacity(string itemName)
+	member:int Capacity(int TypeID)
 	{
-		return ${LavishSettings[${This.SET_NAME}].FindSet[${itemName}].FindSetting[Capacity, NOTSET]}
+		return ${LavishSettings[${This.SET_NAME}].FindSetting[${TypeID}].FindAttribute[Capacity, NOTSET]}
 	}
 
-	member:int PortionSize(string itemName)
+	member:int PortionSize(int TypeID)
 	{
-		return ${LavishSettings[${This.SET_NAME}].FindSet[${itemName}].FindSetting[PortionSize, NOTSET]}
+		return ${LavishSettings[${This.SET_NAME}].FindSetting[${TypeID}].FindAttribute[PortionSize, NOTSET]}
 	}
 
-	member:float BasePrice(string itemName)
+	member:float BasePrice(int TypeID)
 	{
-		return ${LavishSettings[${This.SET_NAME}].FindSet[${itemName}].FindSetting[BasePrice, NOTSET]}
-	}
-
-	member:int MarketGroupID(string itemName)
-	{
-		return ${LavishSettings[${This.SET_NAME}].FindSet[${itemName}].FindSetting[MarketGroupID, NOTSET]}
-	}
-
-	member:string Name(int TypeID)
-	{
-		return ${LavishSettings[${This.SET_NAME}].FindSetting[${TypeID}].FindAttribute[ItemName, NOTSET]}
+		return ${LavishSettings[${This.SET_NAME}].FindSetting[${TypeID}].FindAttribute[BasePrice, NOTSET]}
 	}
 }
 
