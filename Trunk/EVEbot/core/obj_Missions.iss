@@ -271,7 +271,7 @@ objectdef obj_Missions
 		}
 
 		itemName:Set[${EVEDB_Items.Name[${This.MissionCache.TypeID[${agentID}]}]}]
-		itemVolume:Set[${EVEDB_Items.Volume["${itemName}"]}]
+		itemVolume:Set[${EVEDB_Items.Volume[${This.MissionCache.TypeID[${agentID}]}]}]
 		if ${itemVolume} > 0
 		{
 			UI:UpdateConsole["DEBUG: RunCourierMission: ${This.MissionCache.TypeID[${agentID}]}:${itemName} has volume ${itemVolume}."]
@@ -368,6 +368,7 @@ objectdef obj_Missions
 	function RunTradeMission(int agentID)
 	{
 		variable int        QuantityRequired
+		variable float      itemVolume
 		variable string     itemName
 		variable bool       haveCargo = FALSE
 		variable index:item CargoIndex
@@ -378,7 +379,8 @@ objectdef obj_Missions
 		Agents:SetActiveAgent[${Agent[id,${agentID}]}]
 
 		itemName:Set[${EVEDB_Items.Name[${This.MissionCache.TypeID[${agentID}]}]}]
-		QuantityRequired:Set[${Math.Calc[${This.MissionCache.Volume[${agentID}]}/${EVEDB_Items.Volume["${itemName}"]}]}]
+		itemVolume:Set[${EVEDB_Items.Volume[${This.MissionCache.TypeID[${agentID}]}]}]
+		QuantityRequired:Set[${Math.Calc[${This.MissionCache.Volume[${agentID}]}/${itemVolume}]}]
 
 		call Cargo.CloseHolds
 		call Cargo.OpenHolds
@@ -1197,6 +1199,7 @@ objectdef obj_Missions
 	member:bool HaveLoot(int agentID)
 	{
 		variable int        QuantityRequired
+		variable float		itemVolume
 		variable string     itemName
 		variable bool       haveCargo = FALSE
 		variable index:item CargoIndex
@@ -1207,7 +1210,8 @@ objectdef obj_Missions
 		;;Agents:SetActiveAgent[${Agent[id,${agentID}]}]
 
 		itemName:Set[${EVEDB_Items.Name[${This.MissionCache.TypeID[${agentID}]}]}]
-		QuantityRequired:Set[${Math.Calc[${This.MissionCache.Volume[${agentID}]}/${EVEDB_Items.Volume[${itemName}]}]}]
+		itemVolume:Set[${EVEDB_Items.Volume[${This.MissionCache.TypeID[${agentID}]}]}]
+		QuantityRequired:Set[${Math.Calc[${This.MissionCache.Volume[${agentID}]}/${itemVolume}]}]
 
 		;;; Check the cargohold of your ship
 		MyShip:DoGetCargo[CargoIndex]

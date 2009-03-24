@@ -755,13 +755,13 @@ objectdef obj_Agents
 		Missions.MissionCache:AddMission[${amIterator.Value.AgentID},"${amIterator.Value.Name}"]
 
 		variable int factionID = 0
-		left:Set[${details.Escape.Find["<img src=\\\"factionlogo:"]}]
+		left:Set[${details.Escape.Find["<img src=\\\"corplogo:"]}]
 		if ${left} > 0
 		{
-			;UI:UpdateConsole["obj_Agents: DEBUG: Found \"factionlogo\" at ${left}."]
+			;UI:UpdateConsole["obj_Agents: DEBUG: Found \"corplogo\" at ${left}."]
 			left:Inc[23]
-			;UI:UpdateConsole["obj_Agents: DEBUG: Found \"factionlogo\" at ${left}."]
-			;UI:UpdateConsole["obj_Agents: DEBUG: factionlogo substring = ${details.Escape.Mid[${left},16]}"]
+			;UI:UpdateConsole["obj_Agents: DEBUG: Found \"corplogo\" at ${left}."]
+			;UI:UpdateConsole["obj_Agents: DEBUG: corplogo substring = ${details.Escape.Mid[${left},16]}"]
 			right:Set[${details.Escape.Mid[${left},16].Find["\" "]}]
 			if ${right} > 0
 			{
@@ -774,12 +774,12 @@ objectdef obj_Agents
 			}
 			else
 			{
-				UI:UpdateConsole["obj_Agents: ERROR: Did not find end of \"factionlogo\"!"]
+				UI:UpdateConsole["obj_Agents: ERROR: Did not find end of \"corplogo\"!"]
 			}
 		}
 		else
 		{
-			UI:UpdateConsole["obj_Agents: DEBUG: Did not find \"factionlogo\".  Rouge Drones???"]
+			UI:UpdateConsole["obj_Agents: DEBUG: Did not find \"corplogo\".  Rogue Drones???"]
 		}
 
 		Missions.MissionCache:SetFactionID[${amIterator.Value.AgentID},${factionID}]
@@ -1063,13 +1063,13 @@ objectdef obj_Agents
 		Missions.MissionCache:AddMission[${amIterator.Value.AgentID},"${amIterator.Value.Name}"]
 
 		variable int factionID = 0
-		left:Set[${details.Escape.Find["<img src=\\\"factionlogo:"]}]
+		left:Set[${details.Escape.Find["<img src=\\\"corplogo:"]}]
 		if ${left} > 0
 		{
-			;UI:UpdateConsole["obj_Agents: DEBUG: Found \"factionlogo\" at ${left}."]
+			;UI:UpdateConsole["obj_Agents: DEBUG: Found \"corplogo\" at ${left}."]
 			left:Inc[23]
-			;UI:UpdateConsole["obj_Agents: DEBUG: Found \"factionlogo\" at ${left}."]
-			;UI:UpdateConsole["obj_Agents: DEBUG: factionlogo substring = ${details.Escape.Mid[${left},16]}"]
+			;UI:UpdateConsole["obj_Agents: DEBUG: Found \"corplogo\" at ${left}."]
+			;UI:UpdateConsole["obj_Agents: DEBUG: corplogo substring = ${details.Escape.Mid[${left},16]}"]
 			right:Set[${details.Escape.Mid[${left},16].Find["\" "]}]
 			if ${right} > 0
 			{
@@ -1082,12 +1082,12 @@ objectdef obj_Agents
 			}
 			else
 			{
-				UI:UpdateConsole["obj_Agents: ERROR: Did not find end of \"factionlogo\"!"]
+				UI:UpdateConsole["obj_Agents: ERROR: Did not find end of \"corplogo\"!"]
 			}
 		}
 		else
 		{
-			UI:UpdateConsole["obj_Agents: DEBUG: Did not find \"factionlogo\".  Rouge Drones???"]
+			UI:UpdateConsole["obj_Agents: DEBUG: Did not find \"corplogo\".  Rouge Drones???"]
 		}
 
 		Missions.MissionCache:SetFactionID[${amIterator.Value.AgentID},${factionID}]

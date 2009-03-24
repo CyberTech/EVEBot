@@ -72,9 +72,12 @@ objectdef obj_EVEDB_Items
 		return ${LavishSettings[${This.SET_NAME}].FindSet[${itemName}].FindSetting[GroupID, NOTSET]}
 	}
 
-	member:float Volume(string itemName)
+	member:float Volume(int TypeID)
 	{
-		return ${LavishSettings[${This.SET_NAME}].FindSet[${itemName}].FindSetting[Volume, NOTSET]}
+		variable float temp
+		temp:Set[${LavishSettings[${This.SET_NAME}].FindSetting[${TypeID}].FindAttribute[Volume, NOTSET]}]
+		echo "item:volume(${TypeID}) == ${temp}"
+		return ${temp}
 	}
 
 	member:int Capacity(string itemName)
@@ -99,23 +102,7 @@ objectdef obj_EVEDB_Items
 
 	member:string Name(int TypeID)
 	{
-		variable iterator anInterator
-
-		LavishSettings[${This.SET_NAME}]:GetSetIterator[anInterator]
-
-		if ${anInterator:First(exists)}
-		{
-			do
-			{
-				if ${anInterator.Value.FindSetting[TypeID, NOTSET]} == ${TypeID}
-				{
-					return ${anInterator.Key}
-				}
-			}
-			while ${anInterator:Next(exists)}
-		}
-
-		return NULL
+		return ${LavishSettings[${This.SET_NAME}].FindSetting[${TypeID}].FindAttribute[ItemName, NOTSET]}
 	}
 }
 
