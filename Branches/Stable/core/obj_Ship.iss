@@ -1000,7 +1000,7 @@ objectdef obj_Ship
 			while ( ${CaptionCount} > ${Me.Ship.GetCargo} && \
 					${LoopCheck} < 10 )
 			{
-				UI:UpdateConsole["obj_Ship: Waiting for cargo to load...(${Loopcheck})", LOG_MINOR]
+				UI:UpdateConsole["obj_Ship: Waiting for cargo to load...(${LoopCheck})", LOG_MINOR]
 				while !${This.IsCargoOpen}
 				{
 					wait 0.5
