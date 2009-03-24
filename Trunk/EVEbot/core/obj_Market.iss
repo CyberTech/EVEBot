@@ -18,10 +18,7 @@ objectdef obj_MarketItemList
 	
 	method Initialize()
 	{
-		if ${LavishSettings[${This.SET_NAME}](exists)}
-		{
-			LavishSettings[${This.SET_NAME}]:Clear
-		}
+		LavishSettings[${This.SET_NAME}]:Remove
 		LavishSettings:Import[${CONFIG_FILE}]
 		LavishSettings[${This.SET_NAME}]:GetSetIterator[This.itemIterator]
 		UI:UpdateConsole["obj_MarketItemList: Initialized", LOG_MINOR]
@@ -29,7 +26,7 @@ objectdef obj_MarketItemList
 	
 	method Shutdown()	
 	{
-		LavishSettings[${This.SET_NAME}]:Clear
+		LavishSettings[${This.SET_NAME}]:Remove
 	}
 	
 	member:string FirstItem()

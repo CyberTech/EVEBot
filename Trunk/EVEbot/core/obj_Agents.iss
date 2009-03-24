@@ -20,14 +20,9 @@ objectdef obj_AgentList
 
 	method Initialize()
 	{
-		if ${LavishSettings[${This.SET_NAME1}](exists)}
-		{
-			LavishSettings[${This.SET_NAME1}]:Clear
-		}
-		if ${LavishSettings[${This.SET_NAME2}](exists)}
-		{
-			LavishSettings[${This.SET_NAME2}]:Clear
-		}
+		LavishSettings[${This.SET_NAME1}]:Remove
+		LavishSettings[${This.SET_NAME2}]:Remove
+
 		LavishSettings:Import[${CONFIG_FILE}]
 		LavishSettings[${This.SET_NAME1}]:GetSettingIterator[This.agentIterator]
 		LavishSettings[${This.SET_NAME2}]:GetSettingIterator[This.researchAgentIterator]
@@ -36,8 +31,8 @@ objectdef obj_AgentList
 
 	method Shutdown()
 	{
-		LavishSettings[${This.SET_NAME1}]:Clear
-		LavishSettings[${This.SET_NAME2}]:Clear
+		LavishSettings[${This.SET_NAME1}]:Remove
+		LavishSettings[${This.SET_NAME2}]:Remove
 	}
 
 	member:string FirstAgent()
@@ -104,10 +99,7 @@ objectdef obj_MissionBlacklist
 
 	method Initialize()
 	{
-		if ${LavishSettings[${This.SET_NAME}](exists)}
-		{
-			LavishSettings[${This.SET_NAME}]:Clear
-		}
+		LavishSettings[${This.SET_NAME}]:Remove
 		LavishSettings:Import[${CONFIG_FILE}]
 		LavishSettings[${This.SET_NAME}]:GetSetIterator[This.levelIterator]
 		UI:UpdateConsole["obj_MissionBlacklist: Initialized.", LOG_MINOR]
@@ -115,7 +107,7 @@ objectdef obj_MissionBlacklist
 
 	method Shutdown()
 	{
-		LavishSettings[${This.SET_NAME}]:Clear
+		LavishSettings[${This.SET_NAME}]:Remove
 	}
 
 	member:bool IsBlacklisted(int level, string mission)
@@ -316,73 +308,73 @@ objectdef obj_Agents
 	method PickAgent()
 	{
 	    variable index:agentmission amIndex
-		variable iterator amIterator
+		variable iterator MissionInfo
 		variable set skipList
 
 		EVE:DoGetAgentMissions[amIndex]
-		amIndex:GetIterator[amIterator]
+		amIndex:GetIterator[MissionInfo]
 		skipList:Clear
 
 		UI:UpdateConsole["obj_Agents: DEBUG: amIndex.Used = ${amIndex.Used}"]
-		if ${amIterator:First(exists)}
+		if ${MissionInfo:First(exists)}
 		{
 			do
 			{
 				UI:UpdateConsole["obj_Agents: DEBUG: This.AgentID = ${This.AgentID}"]
-				UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.AgentID = ${amIterator.Value.AgentID}"]
-				UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.State = ${amIterator.Value.State}"]
-				UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}"]
-				if ${amIterator.Value.State} == 1
+				UI:UpdateConsole["obj_Agents: DEBUG: MissionInfo.AgentID = ${MissionInfo.Value.AgentID}"]
+				UI:UpdateConsole["obj_Agents: DEBUG: MissionInfo.State = ${MissionInfo.Value.State}"]
+				UI:UpdateConsole["obj_Agents: DEBUG: MissionInfo.Type = ${MissionInfo.Value.Type}"]
+				if ${MissionInfo.Value.State} == 1
 				{
-					if ${MissionBlacklist.IsBlacklisted[${Agent[id,${amIterator.Value.AgentID}].Level},"${amIterator.Value.Name}"]} == FALSE
+					if ${MissionBlacklist.IsBlacklisted[${Agent[id,${MissionInfo.Value.AgentID}].Level},"${MissionInfo.Value.Name}"]} == FALSE
 					{
 						variable bool isLowSec
 						variable bool avoidLowSec
-						isLowSec:Set[${Missions.MissionCache.LowSec[${amIterator.Value.AgentID}]}]
+						isLowSec:Set[${Missions.MissionCache.LowSec[${MissionInfo.Value.AgentID}]}]
 						avoidLowSec:Set[${Config.Missioneer.AvoidLowSec}]
 						if ${avoidLowSec} == FALSE || (${avoidLowSec} == TRUE && ${isLowSec} == FALSE)
 						{
-							if ${amIterator.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions} == TRUE
+							if ${MissionInfo.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions} == TRUE
 							{
-								This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}]}]
+								This:SetActiveAgent[${Agent[id,${MissionInfo.Value.AgentID}]}]
 								return
 							}
 
-							if ${amIterator.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} == TRUE
+							if ${MissionInfo.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} == TRUE
 							{
-								This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}]}]
+								This:SetActiveAgent[${Agent[id,${MissionInfo.Value.AgentID}]}]
 								return
 							}
 
-							if ${amIterator.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} == TRUE
+							if ${MissionInfo.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} == TRUE
 							{
-								This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}]}]
+								This:SetActiveAgent[${Agent[id,${MissionInfo.Value.AgentID}]}]
 								return
 							}
 
-							if ${amIterator.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions} == TRUE
+							if ${MissionInfo.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions} == TRUE
 							{
-								This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}]}]
+								This:SetActiveAgent[${Agent[id,${MissionInfo.Value.AgentID}]}]
 								return
 							}
 						}
 
 						/* if we get here the mission is not acceptable */
 						variable time lastDecline
-						lastDecline:Set[${Config.Agents.LastDecline[${Agent[id,${amIterator.Value.AgentID}]}]}]
+						lastDecline:Set[${Config.Agents.LastDecline[${Agent[id,${MissionInfo.Value.AgentID}]}]}]
 						UI:UpdateConsole["obj_Agents: DEBUG: lastDecline = ${lastDecline}"]
 						lastDecline.Hour:Inc[4]
 						lastDecline:Update
 						if ${lastDecline.Timestamp} >= ${Time.Timestamp}
 						{
-							UI:UpdateConsole["obj_Agents: DEBUG: Skipping mission to avoid standing loss: ${amIterator.Value.Name}"]
-							skipList:Add[${amIterator.Value.AgentID}]
+							UI:UpdateConsole["obj_Agents: DEBUG: Skipping mission to avoid standing loss: ${MissionInfo.Value.Name}"]
+							skipList:Add[${MissionInfo.Value.AgentID}]
 							continue
 						}
 					}
 				}
 			}
-			while ${amIterator:Next(exists)}
+			while ${MissionInfo:Next(exists)}
 		}
 
 		/* if we get here none of the missions in the journal are valid */
@@ -666,8 +658,8 @@ objectdef obj_Agents
 
 	function MissionDetails()
 	{
-		EVE:Execute[CmdCloseAllWindows]
-		wait 50
+		;EVE:Execute[CmdCloseAllWindows]
+		;wait 50
 
 		EVE:Execute[OpenJournal]
 		wait 50
@@ -863,8 +855,8 @@ objectdef obj_Agents
 		variable index:dialogstring dsIndex
 		variable iterator dsIterator
 
-		EVE:Execute[CmdCloseAllWindows]
-		wait 50
+		;EVE:Execute[CmdCloseAllWindows]
+		;wait 50
 
 		UI:UpdateConsole["obj_Agents: Starting conversation with agent ${This.ActiveAgent}."]
 		Agent[${This.AgentIndex}]:StartConversation
@@ -938,6 +930,7 @@ objectdef obj_Agents
 ;;;;	    wait 60
 ;;;;		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
 ;;;;
+		UI:UpdateConsole["obj_Agents: Refreshing Dialog Responses"]
 		Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
 		dsIndex:GetIterator[dsIterator]
 
@@ -957,26 +950,36 @@ objectdef obj_Agents
 			}
 			while (${dsIterator:Next(exists)})
 			;UI:UpdateConsole["obj_Agents: Waiting for dialog to update..."]
-			wait 60
-			UI:UpdateConsole["obj_Agents: Refreshing dsIndex and dsIterator"]
-			Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
-			dsIndex:GetIterator[dsIterator]
+			wait 100
 		}
+
+		UI:UpdateConsole["obj_Agents: Refreshing Dialog Responses"]
+		Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
+		dsIndex:GetIterator[dsIterator]
 
 		if ${dsIndex.Used} != 3
 		{
-			UI:UpdateConsole["obj_Agents: ERROR: Did not find expected dialog!  Will retry...", LOG_CRITICAL]
+			UI:UpdateConsole["obj_Agents: ERROR: Did not find expected dialog! (dsIndex.Used=${dsIndex.Used} Will retry...", LOG_CRITICAL]
+			if ${dsIterator:First(exists)}
+			{
+				do
+				{
+					UI:UpdateConsole["obj_Agents: ${dsIterator.Value.Text}"]
+				}
+				while ${dsIterator:Next(exists)}
+			}			
 			RetryCount:Inc
 			if ${RetryCount} > 4
 			{
 				UI:UpdateConsole["obj_Agents: ERROR: Retry count exceeded!  Aborting...", LOG_CRITICAL]
 				EVEBot.ReturnToStation:Set[TRUE]
 			}
+			EVE:Execute[CmdCloseActiveWindow]
+			wait 10
 			return
 		}
 
 		wait 10
-
 		EVE:Execute[OpenJournal]
 		wait 50
 		EVE:Execute[CmdCloseActiveWindow]
@@ -1248,8 +1251,8 @@ objectdef obj_Agents
 
 	function TurnInMission()
 	{
-		EVE:Execute[CmdCloseAllWindows]
-		wait 50
+		;EVE:Execute[CmdCloseAllWindows]
+		;wait 50
 
 		UI:UpdateConsole["obj_Agents: Starting conversation with agent ${This.ActiveAgent}."]
 		Agent[${This.AgentIndex}]:StartConversation
@@ -1307,8 +1310,8 @@ objectdef obj_Agents
 
 	function QuitMission()
 	{
-		EVE:Execute[CmdCloseAllWindows]
-		wait 50
+		;EVE:Execute[CmdCloseAllWindows]
+		;wait 50
 
 		UI:UpdateConsole["obj_Agents: Starting conversation with agent ${This.ActiveAgent}."]
 		Agent[${This.AgentIndex}]:StartConversation

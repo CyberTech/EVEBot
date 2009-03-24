@@ -47,7 +47,7 @@ objectdef obj_Configuration_BaseConfig
 
 	method Initialize()
 	{
-		LavishSettings[EVEBotSettings]:Clear
+		LavishSettings[EVEBotSettings]:Remove
 		LavishSettings:AddSet[EVEBotSettings]
 
 		; Check new config file first, then fallball to original name for import
@@ -62,7 +62,7 @@ objectdef obj_Configuration_BaseConfig
 	method Shutdown()
 	{
 		This:Save[]
-		LavishSettings[EVEBotSettings]:Clear
+		LavishSettings[EVEBotSettings]:Remove
 	}
 
 	method Save()
@@ -143,7 +143,7 @@ objectdef obj_Configuration_Miner
 		if !${BaseConfig.BaseRef.FindSet[${This.SetName}].FindSet[Mercoxit_Types](exists)}
 		{
 			UI:UpdateConsole["obj_Configuration_Miner: Re-Initializing Asteroid Types"]
-			BaseConfig.BaseRef.FindSet[${This.SetName}]:Clear
+			BaseConfig.BaseRef.FindSet[${This.SetName}]:Remove
 			This:Set_Default_Values[]
 		}
 	}

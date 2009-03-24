@@ -31,7 +31,7 @@ objectdef obj_Configuration_BaseConfig
 	
 	method Initialize()
 	{	
-		LavishSettings[LauncherSettings]:Clear
+		LavishSettings[LauncherSettings]:Remove
 		LavishSettings:AddSet[LauncherSettings]
 		LavishSettings[LauncherSettings]:Import[${CONFIG_FILE}]
 
@@ -42,7 +42,7 @@ objectdef obj_Configuration_BaseConfig
 	method Shutdown()
 	{
 		This:Save[]
-		LavishSettings[LauncherSettings]:Clear
+		LavishSettings[LauncherSettings]:Remove
 	}
 
 	method Save()

@@ -19,9 +19,15 @@ objectdef obj_EVEDB_StationID
 
 	method Initialize()
 	{
+		LavishSettings[${This.SET_NAME}]:Remove
 		LavishSettings:Import[${CONFIG_FILE}]
 
 		UI:UpdateConsole["obj_EVEDB_StationID: Initialized", LOG_MINOR]
+	}
+
+	method Shutdown()
+	{
+		LavishSettings[${This.SET_NAME}]:Remove
 	}
 
 	member:int StationID(string stationName)

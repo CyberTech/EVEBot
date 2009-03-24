@@ -71,9 +71,13 @@ function main()
 
 	while !${_Me.Name(exists)} || ${_Me.Name.Equal[NULL]} || ${_Me.Name.Length} == 0
 	{
-		echo " ${Time} EVEBot: Waiting for cache to initialize..."
+		echo " ${Time} EVEBot: Waiting for cache to initialize - ${_Me.Name} != ${Me.Name}"
 		wait 10
+		obj_Cache_Me:Initialize
+		obj_Cache_MyShip:Initialize
+		obj_Cache_EVETime:Initialize
 	}
+
 
 	echo "${Time} EVEBot: Loading Base & Config..."
 

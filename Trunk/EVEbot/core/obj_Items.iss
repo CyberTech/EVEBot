@@ -14,24 +14,69 @@ objectdef obj_EVEDB_Items
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
+#ifdef TESTCASE
+	variable string CONFIG_FILE = "${LavishScript.HomeDirectory}/Scripts/EVEBot/Data/EVEDB_Items.xml"
+#else
 	variable string CONFIG_FILE = "${BaseConfig.DATA_PATH}/EVEDB_Items.xml"
+#endif
 	variable string SET_NAME = "EVEDB_Items"
 
 	method Initialize()
 	{
 		UI:UpdateConsole["obj_EVEDB_Items: Loading database", LOG_MINOR]
-		LavishSettings:Import[${CONFIG_FILE}]
+		LavishSettings[${This.SET_NAME}]:Remove
+		LavishSettings:Import["${CONFIG_FILE}"]
 		UI:UpdateConsole["obj_EVEDB_Items: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
 	{
-		LavishSettings[${This.SET_NAME}]:Clear
+		LavishSettings[${This.SET_NAME}]:Remove
+	}
+
+	method DumpDB(string itemName)
+	{
+		variable iterator SetIterator
+		variable iterator SettingIterator		
+
+		LavishSettings[${This.SET_NAME}]:GetSettingIterator[SetIterator]
+
+		if ${SetIterator:First(exists)}
+		{
+			do
+			{
+				echo ${SetIterator.Value.Name}
+
+			}
+			while ${SetIterator:Next(exists)}
+		}
+		else
+		{
+			echo "No Sets to iterate!"
+		}
+			
 	}
 
 	member:int TypeID(string itemName)
 	{
-		; need to iterate - probably not needed
+		variable iterator anIterator
+
+		LavishSettings[${This.SET_NAME}]:GetSettingIterator[anIterator]
+
+		if ${anIterator:First(exists)}
+		{
+			do
+			{
+				echo ${anIterator.Value}
+				;if ${anIterator.Value.FindSetting[TypeID, NOTSET]} == ${TypeID}
+				;{
+				;	return ${anIterator.Key}
+				;}
+			}
+			while ${anIterator:Next(exists)}
+		}
+
+		return NULL
 	}
 
 	member:string Name(int TypeID)
@@ -41,15 +86,12 @@ objectdef obj_EVEDB_Items
 
 	member:int GroupID(int TypeID)
 	{
-		temp:Set[${LavishSettings[${This.SET_NAME}].FindSetting[${TypeID}].FindAttribute[GroupID, NOTSET]}]
+		return ${LavishSettings[${This.SET_NAME}].FindSetting[${TypeID}].FindAttribute[GroupID, NOTSET]}
 	}
 
 	member:float Volume(int TypeID)
 	{
-		variable float temp
-		temp:Set[${LavishSettings[${This.SET_NAME}].FindSetting[${TypeID}].FindAttribute[Volume, NOTSET]}]
-		echo "item:volume(${TypeID}) == ${temp}"
-		return ${temp}
+		return ${LavishSettings[${This.SET_NAME}].FindSetting[${TypeID}].FindAttribute[Volume, NOTSET]}
 	}
 
 	member:int Capacity(int TypeID)

@@ -20,7 +20,7 @@ objectdef obj_MissionCache
 
 	method Initialize()
 	{
-		LavishSettings[MissionCache]:Clear
+		LavishSettings[MissionCache]:Remove
 		LavishSettings:AddSet[MissionCache]
 		LavishSettings[MissionCache]:AddSet[${This.SET_NAME}]
 		LavishSettings[MissionCache]:Import[${This.CONFIG_FILE}]
@@ -30,7 +30,7 @@ objectdef obj_MissionCache
 	method Shutdown()
 	{
 		LavishSettings[MissionCache]:Export[${This.CONFIG_FILE}]
-		LavishSettings[MissionCache]:Clear
+		LavishSettings[MissionCache]:Remove
 	}
 
 	member:settingsetref MissionsRef()
@@ -125,16 +125,18 @@ objectdef obj_MissionDatabase
 
 	method Initialize()
 	{
-		if ${LavishSettings[${This.SET_NAME}](exists)}
-		{
-			LavishSettings[${This.SET_NAME}]:Clear
-		}
+		LavishSettings[${This.SET_NAME}]:Remove
 		LavishSettings:Import[${CONFIG_FILE}]
 
 		UI:UpdateConsole["obj_MissionDatabase: Initialized", LOG_MINOR]
 
 		;UI:UpdateConsole["obj_MissionDatabase: Dumping database...",LOG_MINOR]
 		;This:DumpSet[${LavishSettings[${This.SET_NAME}]},1]
+	}
+
+	method Shutdown()
+	{
+		LavishSettings[${This.SET_NAME}]:Remove
 	}
 
 	method DumpSet(settingsetref Set, uint Indent=1)

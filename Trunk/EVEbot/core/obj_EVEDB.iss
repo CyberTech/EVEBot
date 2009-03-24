@@ -17,9 +17,15 @@ objectdef obj_EVEDB_Spawns
 
 	method Initialize()
 	{
+		LavishSettings[${This.SET_NAME}]:Remove		
 		LavishSettings:Import[${CONFIG_FILE}]
 
 		UI:UpdateConsole["obj_EVEDB_Spawns: Initialized", LOG_MINOR]
+	}
+
+	method Shutdown()
+	{
+		LavishSettings[${This.SET_NAME}]:Remove
 	}
 
 	member:int SpawnBounty(string spawnName)
@@ -38,9 +44,15 @@ objectdef obj_EVEDB_Stations
 
 	method Initialize()
 	{
+		LavishSettings[${This.SET_NAME}]:Remove
 		LavishSettings:Import[${CONFIG_FILE}]
 
 		UI:UpdateConsole["obj_EVEDB_Stations: Initialized", LOG_MINOR]
+	}
+
+	method Shutdown()
+	{
+		LavishSettings[${This.SET_NAME}]:Remove
 	}
 
 	member:string StationName(int stationID)

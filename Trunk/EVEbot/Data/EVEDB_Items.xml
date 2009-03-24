@@ -2251,7 +2251,7 @@
 		<Setting Name="9878" ItemName="Amarr Mining Station Ruins" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="9879" ItemName="Amarr Research Station Ruins" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="9880" ItemName="Amarr Trade Station Ruins" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
-		<Setting Name="9881" ItemName="Caldari Station Ruins - Huge & Sprawling" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
+		<Setting Name="9881" ItemName="Caldari Station Ruins - Huge &amp; Sprawling" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="9882" ItemName="Caldari Station Ruins - Hook Shaped" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="9883" ItemName="Caldari Station Ruins - Flat Hulk" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="9884" ItemName="Caldari Station Ruins - Industry Drill" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
@@ -2403,7 +2403,7 @@
 		<Setting Name="10116" ItemName="Trafficker" GroupID="297" Volume="960000" Capacity="3500" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="10117" ItemName="Caravan" GroupID="297" Volume="1090000" Capacity="3000" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="10118" ItemName="Flotilla" GroupID="297" Volume="1105000" Capacity="4000" PortionSize="1" BasePrice="0">0</Setting>
-		<Setting Name="10119" ItemName="Outpost/Disc - Spiky & Pulsating" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
+		<Setting Name="10119" ItemName="Outpost/Disc - Spiky &amp; Pulsating" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="10120" ItemName="Rock - Infested by Rogue Drones" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="10121" ItemName="Small Asteroid w/Drone-tech" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="10122" ItemName="Multi-purpose Pad" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
@@ -2421,7 +2421,7 @@
 		<Setting Name="10134" ItemName="Mordu's Captain" GroupID="288" Volume="92000" Capacity="450" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="10135" ItemName="Depleted Station Battery" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="10136" ItemName="Black Monolith" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
-		<Setting Name="10137" ItemName="Rock Formation - Branched & Twisted" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
+		<Setting Name="10137" ItemName="Rock Formation - Branched &amp; Twisted" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="10138" ItemName="Spaceshuttle Wreck w/debris" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="10139" ItemName="Circular Construction" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="10140" ItemName="Debris - Broken Engine Part 1" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
@@ -2593,11 +2593,11 @@
 		<Setting Name="10771" ItemName="Asteroid Colony - Factory" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="10772" ItemName="Asteroid Colony - Refinery" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="10773" ItemName="Asteroid Colony - Wedge Shape" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
-		<Setting Name="10774" ItemName="Asteroid Colony - High & Massive" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
+		<Setting Name="10774" ItemName="Asteroid Colony - High &amp; Massive" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="10775" ItemName="Asteroid Colony - Medium Size" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
-		<Setting Name="10778" ItemName="Asteroid Colony - High & Medium Size" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
+		<Setting Name="10778" ItemName="Asteroid Colony - High &amp; Medium Size" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="10779" ItemName="Asteroid Colony - Small Tower" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
-		<Setting Name="10780" ItemName="Asteroid Colony - Small & FLat" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
+		<Setting Name="10780" ItemName="Asteroid Colony - Small &amp; FLat" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="10781" ItemName="Asteroid Colony - Flat Hulk" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="10782" ItemName="Giant Snake-Shaped Asteroid" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="10783" ItemName="Rock - Small w/hole" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
@@ -2796,7 +2796,7 @@
 		<Setting Name="11207" ItemName="Advanced Weapon Upgrades" GroupID="255" Volume="0.01" Capacity="0" PortionSize="1" BasePrice="500000">0</Setting>
 		<Setting Name="11208" ItemName="Advanced Sensor Upgrades" GroupID="272" Volume="0.01" Capacity="0" PortionSize="1" BasePrice="100000">0</Setting>
 		<Setting Name="11209" ItemName="Barren Asteroid - Not Mineable" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
-		<Setting Name="11210" ItemName="Huge & Hellish Stalagmite" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
+		<Setting Name="11210" ItemName="Huge &amp; Hellish Stalagmite" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="11215" ItemName="Energized Basic Reflective Plating" GroupID="326" Volume="25" Capacity="0" PortionSize="1" BasePrice="30000">0</Setting>
 		<Setting Name="11216" ItemName="Energized Basic Reflective Plating Blueprint" GroupID="163" Volume="0.01" Capacity="0" PortionSize="1" BasePrice="300000">0</Setting>
 		<Setting Name="11217" ItemName="Energized Reflective Membrane I" GroupID="326" Volume="25" Capacity="0" PortionSize="1" BasePrice="75000">0</Setting>
@@ -6937,7 +6937,7 @@
 		<Setting Name="17744" ItemName="Purple Particle Research Patrol" GroupID="821" Volume="19000000" Capacity="120" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="17745" ItemName="General Hixous Puxley" GroupID="821" Volume="19000000" Capacity="120" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="17746" ItemName="Supply Headman" GroupID="821" Volume="19000000" Capacity="120" PortionSize="1" BasePrice="0">0</Setting>
-		<Setting Name="17747" ItemName="Docked & Loaded Mammoth" GroupID="494" Volume="100000000" Capacity="10000" PortionSize="1" BasePrice="0">0</Setting>
+		<Setting Name="17747" ItemName="Docked &amp; Loaded Mammoth" GroupID="494" Volume="100000000" Capacity="10000" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="17748" ItemName="Megathron under frantic repair" GroupID="494" Volume="100000000" Capacity="10000" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="17749" ItemName="The Antimatter Channeler" GroupID="821" Volume="19000000" Capacity="120" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="17754" ItemName="Activists" GroupID="283" Volume="1" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
@@ -9275,7 +9275,7 @@
 		<Setting Name="21511" ItemName="Process-Interruptive Warp Disruptor Blueprint" GroupID="132" Volume="0.01" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="21512" ItemName="'Delineative' Warp Scrambler" GroupID="52" Volume="5" Capacity="0" PortionSize="1" BasePrice="39424">0</Setting>
 		<Setting Name="21513" ItemName="'Delineative' Warp Scrambler Blueprint" GroupID="132" Volume="0.01" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
-		<Setting Name="21514" ItemName="Doctored Arrivals & Departures Logs" GroupID="526" Volume="0.1" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
+		<Setting Name="21514" ItemName="Doctored Arrivals &amp; Departures Logs" GroupID="526" Volume="0.1" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="21515" ItemName="The Duke" GroupID="527" Volume="107000" Capacity="850" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="21516" ItemName="Cheri Mirei's DNA" GroupID="526" Volume="0.1" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="21517" ItemName="Parts of Printing Machine" GroupID="526" Volume="1" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
@@ -13182,7 +13182,7 @@
 		<Setting Name="26233" ItemName="Amarr Mining Station Ruins- no description" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="26234" ItemName="Amarr Research Station Ruins- no description" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="26235" ItemName="Caldari Station Ruins - Flat Hulk- no description" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
-		<Setting Name="26236" ItemName="Caldari Station Ruins - Huge & Sprawling - no description" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
+		<Setting Name="26236" ItemName="Caldari Station Ruins - Huge &amp; Sprawling - no description" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="26237" ItemName="Gallente Station Ruins - Fathom -no description" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="26238" ItemName="Gallente Station Ruins - Military-no description" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
 		<Setting Name="26239" ItemName="Gallente Station Ruins - Ugly Industrial- no description" GroupID="226" Volume="0" Capacity="0" PortionSize="1" BasePrice="0">0</Setting>
