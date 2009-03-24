@@ -54,6 +54,7 @@ objectdef obj_EVEDB_Items
 		LavishSettings:Import[${CONFIG_FILE}]
 
 		UI:UpdateConsole["obj_EVEDB_Items: Initialized", LOG_MINOR]
+		echo "obj_EVEDB_Items IS BROKEN UNTIL ITS UPDATED FOR THE NEW XML FILE"
 	}
 
 	method Shutdown()

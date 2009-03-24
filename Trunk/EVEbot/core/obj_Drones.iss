@@ -89,10 +89,10 @@ objectdef obj_Drones
 
 		ActiveDroneType:Set["None"]
 
-		echo "Sniper Drones in Bay: " ${This.HaveSniperDroneInBay}
-		echo "Sentry Drones in Bay: " ${This.HaveSentryDroneInBay}
-		echo "Heavy Drones in Bay : " ${This.HaveHeavyDroneInBay}
-		echo "Medium Drones in Bay: " ${This.HaveMediumDroneInBay}
+		;echo "Sniper Drones in Bay: " ${This.HaveSniperDroneInBay}
+		;echo "Sentry Drones in Bay: " ${This.HaveSentryDroneInBay}
+		;echo "Heavy Drones in Bay : " ${This.HaveHeavyDroneInBay}
+		;echo "Medium Drones in Bay: " ${This.HaveMediumDroneInBay}
 
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_Drones: Initialized", LOG_MINOR]
