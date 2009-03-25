@@ -353,7 +353,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 
 	function Haul()
 	{
-		switch ${Config.Hauler.HaulerModeName}
+		switch ${Config.Hauler.HaulerMode}
 		{
 			case Service On-Demand
 				call This.HaulOnDemand

@@ -54,7 +54,7 @@ objectdef obj_Freighter
 		{
 			if !${EVEBot.Paused}
 			{
-				switch ${Config.Freighter.FreighterModeName}
+				switch ${Config.Freighter.FreighterMode}
 				{
 					case Move Minerals to Buyer
 						/* not implemented yet */
@@ -96,7 +96,7 @@ objectdef obj_Freighter
 	/* this function is called repeatedly by the main loop in EveBot.iss */
 	function ProcessState()
 	{
-		switch ${Config.Freighter.FreighterModeName}
+		switch ${Config.Freighter.FreighterMode}
 		{
 			case Move Minerals to Buyer
 				/* not implemented yet */
@@ -181,7 +181,7 @@ objectdef obj_Freighter
 
 	function DoBaseAction()
 	{
-		switch ${Config.Freighter.FreighterModeName}
+		switch ${Config.Freighter.FreighterMode}
 		{
 			case Move Minerals to Buyer
 				/* not implemented yet */
@@ -224,7 +224,7 @@ objectdef obj_Freighter
 
 	function Transport()
 	{
-		switch ${Config.Freighter.FreighterModeName}
+		switch ${Config.Freighter.FreighterMode}
 		{
 			case Source and Destination
 				call This.MoveToSourceStation
