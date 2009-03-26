@@ -174,6 +174,7 @@ objectdef obj_Agents
 {
 	variable string BUTTON_REQUEST_MISSION = "Request Mission"
 	variable string BUTTON_VIEW_MISSION = "View Mission"
+	variable string BUTTON_BUY_DATACORES = "Buy Datacores"
 	variable string BUTTON_COMPLETE_MISSION = "Complete Mission"
 
 	variable string SVN_REVISION = "$Rev$"
@@ -648,6 +649,8 @@ objectdef obj_Agents
 			{
 				call Station.Undock
 			}
+
+			;UI:UpdateConsole["obj_Agents: DEBUG: agentSystem (byname) = ${Universe[${Agent[${This.AgentName}].Solarsystem}].ID}"]
 			;UI:UpdateConsole["obj_Agents: DEBUG: agentSystem = ${Universe[${Agent[${This.AgentIndex}].Solarsystem}].ID}"]
 			;UI:UpdateConsole["obj_Agents: DEBUG: agentStation = ${Agent[${This.AgentIndex}].StationID}"]
 			call Ship.TravelToSystem ${Universe[${Agent[${This.AgentIndex}].Solarsystem}].ID}
@@ -964,10 +967,16 @@ objectdef obj_Agents
 			{
 				do
 				{
-					UI:UpdateConsole["obj_Agents: ${dsIterator.Value.Text}"]
+					if ${dsIterator.Value.Text.Find["${This.BUTTON_BUY_DATACORES}"]}
+					{
+						UI:UpdateConsole["obj_Agents: Agent has no mission available"]
+						This:SetActiveAgent[${This.AgentList.NextAgent}]
+						return
+					}
+					;UI:UpdateConsole["obj_Agents: ${dsIterator.Value.Text}"]
 				}
 				while ${dsIterator:Next(exists)}
-			}			
+			}
 			RetryCount:Inc
 			if ${RetryCount} > 4
 			{
