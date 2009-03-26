@@ -652,8 +652,10 @@ objectdef obj_Agents
 			{
 				call Station.Undock
 			}
-			;UI:UpdateConsole["obj_Agents: DEBUG: agentSystem (byname) = ${Universe[${Agent[${This.AgentName}].Solarsystem}].ID}"]
-			;UI:UpdateConsole["obj_Agents: DEBUG: agentSystem = ${Universe[${Agent[${This.AgentIndex}].Solarsystem}].ID}"]
+			;UI:UpdateConsole["obj_Agents: DEBUG: Agent Name -> Index = ${This.AgentIndex} = ${Agent[${This.AgentName}].Index}"]
+			;UI:UpdateConsole["obj_Agents: DEBUG: Agent Index->Name = ${Agent[${This.AgentIndex}].Name}"]
+			;UI:UpdateConsole["obj_Agents: DEBUG: Agent Name->System  = ${Universe[${Agent[${This.AgentName}].Solarsystem}].ID}"]
+			;UI:UpdateConsole["obj_Agents: DEBUG: agent Index->System = ${Universe[${Agent[${This.AgentIndex}].Solarsystem}].ID}"]
 			;UI:UpdateConsole["obj_Agents: DEBUG: agentStation = ${Agent[${This.AgentIndex}].StationID}"]
 			call Ship.TravelToSystem ${Universe[${Agent[${This.AgentIndex}].Solarsystem}].ID}
 			wait 50
