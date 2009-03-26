@@ -652,6 +652,7 @@ objectdef obj_Agents
 			{
 				call Station.Undock
 			}
+			;UI:UpdateConsole["obj_Agents: DEBUG: agentSystem (byname) = ${Universe[${Agent[${This.AgentName}].Solarsystem}].ID}"]
 			;UI:UpdateConsole["obj_Agents: DEBUG: agentSystem = ${Universe[${Agent[${This.AgentIndex}].Solarsystem}].ID}"]
 			;UI:UpdateConsole["obj_Agents: DEBUG: agentStation = ${Agent[${This.AgentIndex}].StationID}"]
 			call Ship.TravelToSystem ${Universe[${Agent[${This.AgentIndex}].Solarsystem}].ID}
@@ -864,7 +865,7 @@ objectdef obj_Agents
 			UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: R&D agents not supported after patch."]
 			return
 		}
-		
+
 		EVE:Execute[CmdCloseAllWindows]
 		wait 50
 
@@ -877,7 +878,7 @@ objectdef obj_Agents
 		}
 		while !${EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"](exists)}
 
-		;; The dialog caption fills in long before the details do.  
+		;; The dialog caption fills in long before the details do.
 		;; Wait for dialog strings to become valid before proceeding.
 		variable int WaitCount
 		for( WaitCount:Set[0]; ${WaitCount} < 6; WaitCount:Inc )
@@ -889,7 +890,7 @@ objectdef obj_Agents
 			}
 			wait 10
 		}
-		
+
 		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
 
 ;;;;  You now longer have to ask for work.  An agent will automatically offer work.  This may break
