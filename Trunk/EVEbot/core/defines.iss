@@ -3,7 +3,7 @@
 
 	Hardcoded defines for EVEBot
 
-	- CyberTech
+	-  CyberTech
 
 */
 
