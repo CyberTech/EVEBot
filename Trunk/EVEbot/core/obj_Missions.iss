@@ -137,7 +137,7 @@ objectdef obj_MissionDatabase
 		LavishSettings[${This.SET_NAME}]:Remove
 	}
 	member:settingsetref MissionCommands(string missionName,int missionLevel)
-	{	
+	{
 		return ${LavishSettings["${This.SET_NAME}"].FindSet["${missionName}"].FindSet["${missionLevel}"].FindSet["Commands"]}
 	}
 	method DumpSet(settingsetref Set, uint Indent=1)
@@ -201,7 +201,7 @@ objectdef obj_Missions
 	{
 		variable index:agentmission amIndex
 		variable iterator amIterator
-		
+
 		EVE:DoGetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
@@ -491,15 +491,16 @@ objectdef obj_Missions
 	{
 		UI:UpdateConsole["obj_Missions: DEBUG: Shiptype ${Ship.Type} (${Ship.TypeID}) Mission agent (${MissionCache.Name[${agentID}]}) (${Agents.AgentName})"]
 
-		variable string missLevel = ${Config.Agents.AgentLevel[${Agents.AgentName}]}
+		variable string missLevel = ${Agent[id,${agentID}].Level}
 		variable string missionName = ${MissionCache.Name[${agentID}]}
+
 		echo ${MissionDatabase.MissionCommands[${missionName},${missLevel}]}
 		if ${MissionDatabase.MissionCommands[${missionName},${missLevel}].Children(exists)}
 		{
 			UI:UpdateConsole["obj_Missions: DEBUG: Mission Name : __${missionName}__ , level ${missLevel}"]
-	
+
 			call This.WarpToEncounter ${agentID}
-	
+
 			call missionCombat.RunMission ${MissionDatabase.MissionCommands[${missionName},${missLevel}]}
 			wait 10
 			; missionCombat.RunMission will return true if it exhausts all commands without being interrupted

@@ -611,21 +611,7 @@ objectdef obj_Configuration_Agents
 		;UI:UpdateConsole["obj_Configuration_Agents: AgentIndex ${name}"]
 		return ${This.AgentRef[${name}].FindSetting[AgentIndex,9591]}
 	}
-	member:int AgentLevel(string name)
-	{
-		;UI:UpdateConsole["obj_Configuration_Agents: AgentLevel ${name}"]
-		return ${This.AgentRef[${name}].FindSetting[AgentLevel,1]}
-	}
-	method SetAgentLevel(string name,int value)
-	{
-			;UI:UpdateConsole["obj_Configuration_Agents: SetAgentLevel ${name} ${value}"]
-		if !${This.Ref.FindSet[${name}](exists)}
-		{
-			This.Ref:AddSet[${name}]
-		}
 
-		This.AgentRef[${name}]:AddSetting[AgentLevel,${value}]
-	}
 	method SetAgentIndex(string name, int value)
 	{
 		;UI:UpdateConsole["obj_Configuration_Agents: SetAgentIndex ${name} ${value}"]

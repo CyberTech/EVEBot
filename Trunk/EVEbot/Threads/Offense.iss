@@ -67,8 +67,8 @@ objectdef obj_Offense
 		}
 		else
 		{
-			;Ship:Deactivate_Weapons
-			;Ship:Deactivate_StasisWebs
+			Ship:Deactivate_Weapons
+			Ship:Deactivate_StasisWebs
 		}
 	}
 
@@ -78,6 +78,7 @@ objectdef obj_Offense
 		{
 			case GROUP_LARGECOLLIDABLEOBJECT
 			case GROUP_LARGECOLLIDABLESHIP
+			case GROUP_LARGECOLLIDABLESTRUCTURE
 			case GROUP_SENTRYGUN
 			case GROUP_CONCORDDRONE
 			case GROUP_CUSTOMSOFFICIAL
