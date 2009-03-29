@@ -17,7 +17,7 @@
 variable obj_UI UI
 function main()
 {
-		variable index:queuedskill SkillSkillQueueIndex
+		variable index:queuedskill SkillQueueIndex
 		Me:DoGetSkillQueue[SkillQueueIndex]
 
 		variable iterator Skill
@@ -32,10 +32,7 @@ function main()
 			do
 			{
 				echo Skill.Value.TrainingTo ${Skill.Value.TrainingTo}
-				echo Skill.Value.ToSkill ${Skill.Value.toSkill}
-				echo Skill.Value.IsNPC ${Skill.Value.IsNPC}
-				echo Skill.Value.IsPC ${Skill.Value.IsPC}
-				echo Skill.Value.IsOnline ${Skill.Value.IsOnline}
+				echo Skill.Value.ToSkill ${Skill.Value.ToSkill}
 				;Skill.Value:Remove
 			}
 			while ${Skill:Next(exists)}
