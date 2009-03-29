@@ -278,6 +278,11 @@ objectdef obj_Defense
 			return
 		}
 
+		if ${Ship.IsCloaked} || !${Me.InSpace}
+		{
+			return
+		}
+
 		;TODO: These should be moved to config variables w/ UI controls
 		variable int ArmorPctEnable = 100
 		variable int ArmorPctDisable = 98
@@ -285,11 +290,6 @@ objectdef obj_Defense
 		variable int ShieldPctDisable = 95
 		variable int CapacitorPctEnable = 20
 		variable int CapacitorPctDisable = 80
-
-		if ${Ship.IsCloaked} || !${Me.InSpace}
-		{
-			return
-		}
 
 		if ${_MyShip.ArmorPct} < ${ArmorPctEnable}
 		{

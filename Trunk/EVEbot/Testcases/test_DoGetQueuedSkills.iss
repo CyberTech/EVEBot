@@ -11,6 +11,7 @@
 
 	Requirements:
 		Populated Skill Queue
+		Skill Queue Window Must be open
 */
 
 variable obj_UI UI

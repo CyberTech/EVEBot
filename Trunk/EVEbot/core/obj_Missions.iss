@@ -384,6 +384,7 @@ objectdef obj_Missions
 		itemVolume:Set[${EVEDB_Items.Volume[${This.MissionCache.TypeID[${agentID}]}]}]
 		QuantityRequired:Set[${Math.Calc[${This.MissionCache.Volume[${agentID}]}/${itemVolume}]}]
 
+		UI:UpdateConsole["RunTradeMission: Looking for ${QuantityRequired} units of ${itemName}"]
 		call Cargo.CloseHolds
 		call Cargo.OpenHolds
 

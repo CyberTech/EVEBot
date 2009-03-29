@@ -140,7 +140,7 @@ objectdef obj_Social
 					{
 						This.PilotIndex:Clear
 					}
-                	
+
 					if ${Me.InSpace}
 					{
 						EVE:DoGetEntities[This.EntityIndex,CategoryID,CATEGORYID_ENTITY]
@@ -149,7 +149,7 @@ objectdef obj_Social
 					{
 						This.EntityIndex:Clear
 					}
-                	
+
     				SystemSafe:Set[${Math.Calc[${This.CheckLocalWhiteList} & ${This.CheckLocalBlackList}](bool)}]
     			}
 			}
@@ -280,7 +280,7 @@ objectdef obj_Social
 					${PilotIterator.Value.ToEntity.Distance} < ${Config.Miner.AvoidPlayerRange} && \
 					!${PilotIterator.Value.ToFleetMember}
 				{
-					UI:UpdateConsole["PlayerInRange: ${PilotIterator.Value.Name} - ${EVEBot.MetersToKM_Str[${PilotIterator.Value.ToEntity.Distance}]"]
+					UI:UpdateConsole["PlayerInRange: ${PilotIterator.Value.Name} (${EVEBot.MetersToKM_Str[${PilotIterator.Value.ToEntity.Distance}])"]
 					return TRUE
 				}
 			}

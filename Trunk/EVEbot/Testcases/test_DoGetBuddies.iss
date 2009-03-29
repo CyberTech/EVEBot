@@ -10,6 +10,7 @@
 	Requirements:
 		You:
 		Buddy List: Populated
+		People & Places window must have been opened at least once
 */
 
 variable obj_UI UI
