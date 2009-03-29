@@ -5,6 +5,8 @@
 /*
 	Test Fleet Member Iteration, FleetMember.ToPilot
 
+	Revision $Id$
+
 	Requirements:
 		You: In Space
 		Other: In Fleet, In Space, on Grid

@@ -3,6 +3,8 @@
 /*
 	Test EVEBot ItemDB Loading & Members
 
+	Revision $Id$
+
 	Requirements:
 		None
 
