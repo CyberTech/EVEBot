@@ -50,7 +50,11 @@ objectdef obj_Missioneer
 	/* NOTE: The order of these if statements is important!! */
 	method SetState()
 	{
-		if ${EVEBot.ReturnToStation} && ${Me.InSpace}
+		if ${Defense.Hiding}
+		{
+			This.CurrentState:Set["IDLE"]
+		}
+		elseif ${EVEBot.ReturnToStation} && ${Me.InSpace}
 		{
 			This.CurrentState:Set["ABORT"]
 		}

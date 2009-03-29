@@ -75,6 +75,7 @@ Create Tagfile=0
 29=core\obj_Sound.iss
 30=core\obj_Station.iss
 31=core\obj_Targets.iss
+32=core\obj_MissionCombat.iss
 [Files - Docs]
 0=Docs\svn2html.css
 1=Docs\changelog.html
