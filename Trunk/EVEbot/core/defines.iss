@@ -4,7 +4,7 @@
 	Hardcoded defines for EVEBot
 
 	- CyberTech
-
+-
 */
 
 variable string APP_NAME = "EVEBot"
