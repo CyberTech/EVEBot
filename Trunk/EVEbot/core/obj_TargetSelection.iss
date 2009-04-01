@@ -2,8 +2,6 @@
 targets, i.e. rats for the Ratter, asteroids for Miner, etc. This object
 will make heavy use of the Targeting queue. --Stealthy */
 
-#include defines.iss
-
 objectdef obj_TargetSelection
 {
 	method Initialize()
@@ -46,19 +44,25 @@ objectdef obj_TargetSelection
 						UI:UpdateConsole["obj_Targets: Queueing target ${itrEntity.Value.Name} ${itrEntity.Value.ID}"]
 						/* If it's a priority target (web/scram/jam) make it mandatory and kill it first. */
 						if ${Targets.IsPriorityTaraget[${itrEntity.Value.Name}]}
+						{
 							Targeting:Queue[${itrEntity.Value.ID},5,${itrEntity.Value.TypeID},TRUE]
+						}
 						elseif ${Targets.IsSpecialTarget[${itrEntity.Value.Name}]}
 						{
 							/* If it's not a priority target but is a special target, kill it second. I can escape from special targets. */	
 							Targeting:Queue[${itrEntity.Value.ID},3,${itrEntity.Value.TypeID},FALSE]
-							/* The below is borrowed from some legacy ratter code and moved to a more appropriate spot. */
+							/* This code will hang EVE. Fix it later.
+							The below is borrowed from some legacy ratter code and moved to a more appropriate spot.
 							UI:UpdateConsole["Special spawn Detected at ${Entity[GroupID, GROUP_ASTEROIDBELT]}!", LOG_CRITICAL]
 							call Sound.PlayDetectSound
 							wait 50
+							*/
 						}
 						/* If it's neither a special nor priority target, add it with a priority of 1 (low). */
 						else
+						{
 							Targeting:Queue[${itrEntity.Value.ID},1,${itrEntity.Value.TypeID},FALSE]
+						}
 					}
 				}
 		}
