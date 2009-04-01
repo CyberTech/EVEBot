@@ -17,7 +17,6 @@ objectdef obj_Ratter
 	variable string CurrentState
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 2
-	variable obj_Combat Combat
 
 	method Initialize()
 	{
@@ -28,10 +27,6 @@ objectdef obj_Ratter
 		; Startup in fight mode, so that it checks current belt for rats, if we happen to be in one.
 		This.CurrentState:Set["FIGHT"]
 		Targets:ResetTargets
-		;; call the combat object's init routine
-		This.Combat:Initialize
-		;; set the combat "mode"
-		This.Combat:SetMode["AGGRESSIVE"]
 
 		UI:UpdateConsole["obj_Ratter: Initialized", LOG_MINOR]
 	}
@@ -44,16 +39,16 @@ objectdef obj_Ratter
 			return
 		}
 
-	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+	  if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			if !${EVEBot.Paused}
 			{
 				This:SetState[]
 			}
 
-    		This.NextPulse:Set[${Time.Timestamp}]
-    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-    		This.NextPulse:Update
+    	This.NextPulse:Set[${Time.Timestamp}]
+    	This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+    	This.NextPulse:Update
 		}
 	}
 
@@ -91,14 +86,6 @@ objectdef obj_Ratter
 		if !${Config.Common.BotMode.Equal[Ratter]}
 			return
 
-		; call the combat object state processing
-		call This.Combat.ProcessState
-
-		; see if combat object wants to
-		; override bot module state.
-		if ${This.Combat.Override}
-			return
-
 		;UI:UpdateConsole["DEBUG: ${This.CurrentState}"]
 		switch ${This.CurrentState}
 		{
@@ -128,6 +115,9 @@ objectdef obj_Ratter
 
 		; TODO - CyberTech - Make this a proper solution instead of this half-ass piss
 		; Wait for the rats to warp into the belt. Reports are between 10 and 20 seconds.
+		/* I plan to at the very least align to the next belt before waiting so that we'll
+		be aligned and ready to go in case nothing shows up after our 30-second waitfest or
+		social suddenly becomes unsafe. */		
 		variable int Count
 		for (Count:Set[0] ; ${Count}<=30 ; Count:Inc)
 		{
@@ -160,24 +150,34 @@ objectdef obj_Ratter
 		}
 	}
 
+	/* WIP: Convert this to rely on the Targeting thread and Targets members/methods. Ratter should
+	not contain any "targeting" code - just calls to existing code. -- Stealthy */
 	function Fight()
-	{	/* combat logic */
-		;; just handle targetting, obj_Combat does the rest
+	{
 		Ship:Activate_SensorBoost
 
-		if ${Targets.TargetNPCs} && ${Social.IsSafe}
+		/* Loop this while Defense says we're safe and we have rats. */
+		while !${Defense.Hide} && ${Targets.NPC}
 		{
-			if ${Targets.SpecialTargetPresent}
+			/* Queue any rats. */
+			TargetSelection:QueueRats[]
+			/* Check Targeting queue size before engaging targeting */
+			if ${Targeting.QueueSize} > 0
 			{
-				UI:UpdateConsole["Special spawn Detected at ${Entity[GroupID, GROUP_ASTEROIDBELT]}!", LOG_CRITICAL]
-				call Sound.PlayDetectSound
-				; Wait 5 seconds
-				wait 50
+				if ${Targeting.Running} != TRUE
+					Targeting:Enable
+				if ${Offense.Running} != TRUE
+					Offense:Enable
 			}
+			/* Wait a second to avoid spamming the fuck out of EVE. Seriously, FPS drop. */
+			wait 10
 		}
-		else
-		{
-			This.CurrentState:Set["IDLE"]
-		}
+		
+		/* Cleanup: Disable targeting and offense. */
+		Offense:Disable
+		Targeting:Disable
+		Ship:Deactivate_SensorBoost
+		/* Set state to idle. */
+		This.CurrentState:Set["IDLE"]
 	}
 }

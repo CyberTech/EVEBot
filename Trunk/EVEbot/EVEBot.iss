@@ -39,6 +39,7 @@
 #include core/obj_Items.iss
 #include core/obj_Autopilot.iss
 #include core/obj_MissionCombat.iss
+#include core/obj_TargetSelection.iss
 
 /* Behavior/Mode Includes */
 #include Behaviors/obj_Courier.iss
@@ -123,6 +124,7 @@ function main()
 	declarevariable Missions obj_Missions global
 	declarevariable Market obj_Market global
 	declarevariable Autopilot obj_Autopilot global
+	declarevariable TargetSelection obj_TargetSelection global
 	
 	declarevariable BotModules index:string global
 	declarevariable GlobalVariableIterator iterator global
