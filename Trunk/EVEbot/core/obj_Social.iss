@@ -166,7 +166,7 @@ objectdef obj_Social
 		{
 			if ${sAuthor.NotEqual["EVE System"]}
 			{
-				call Sound.PlayTellSound
+				Sound:PlayTellSound
 				UI:UpdateConsole["Channel Local: ${sAuthor.Escape}: ${sMessageText.Escape}", LOG_CRITICAL]
 			}
 		}
@@ -176,7 +176,7 @@ objectdef obj_Social
 	{
 		if ${EVEWindow[ByCaption, "Chat Invite"](exists)}
 		{
-			call Sound.PlayTellSound
+			Sound:PlayTellSound
 			UI:UpdateConsole["Notice: ${EVEWindow[ByCaption, Chat Invite].Name}", LOG_CRITICAL]
 		}
 	}

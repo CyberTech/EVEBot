@@ -1,10 +1,10 @@
 /*
 	Sound class
-	
+
 	Object to handle playing sounds.
-	
+
 	-- GliderPro
-	
+
 */
 
 objectdef obj_Sound
@@ -14,49 +14,49 @@ objectdef obj_Sound
 
     variable int m_LastSoundTime
     variable int m_SoundDelay
-	
+
 	method Initialize()
 	{
 		m_LastSoundTime:Set[${LavishScript.RunningTime}]
 		m_SoundDelay:Set[15000]	/* milliseconds */
-		
+
 		UI:UpdateConsole["obj_Sound: Initialized", LOG_MINOR]
 	}
-	
-	function PlaySound(string Filename)
+
+	method TryPlaySound(string Filename)
 	{
 		if !${Config.Common.UseSound}
 			return
-			
+
 		if ${Math.Calc64[${m_LastSoundTime} + ${m_SoundDelay}]} < ${LavishScript.RunningTime}
 		{
-			System:APICall[${System.GetProcAddress[WinMM.dll,PlaySound].Hex},Filename.String,0,"Math.Dec[22001]"]
+			PlaySound ${Filename}
 			m_LastSoundTime:Set[${LavishScript.RunningTime}]
 		}
 	}
-	
-	function PlayAlarmSound()
+
+	method PlayAlarmSound()
 	{
-		call This.PlaySound ALARMSOUND
-	}
-	
-	function PlayDetectSound()
-	{
-		call This.PlaySound DETECTSOUND
+		This:PlaySound[ALARMSOUND]
 	}
 
-	function PlayTellSound()
+	method PlayDetectSound()
 	{
-		call This.PlaySound TELLSOUND
+		This:PlaySound[DETECTSOUND]
 	}
 
-	function PlayLevelSound()
+	method PlayTellSound()
 	{
-		call This.PlaySound LEVELSOUND
+		This:PlaySound[TELLSOUND]
 	}
 
-	function PlayWarningSound()
+	method PlayLevelSound()
 	{
-		call This.PlaySound WARNSOUND
+		This:PlaySound[LEVELSOUND]
+	}
+
+	method PlayWarningSound()
+	{
+		This:PlaySound[WARNSOUND]
 	}
 }
