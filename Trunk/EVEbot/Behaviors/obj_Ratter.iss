@@ -26,7 +26,6 @@ objectdef obj_Ratter
 
 		; Startup in fight mode, so that it checks current belt for rats, if we happen to be in one.
 		This.CurrentState:Set["FIGHT"]
-		Targets:ResetTargets
 
 		UI:UpdateConsole["obj_Ratter: Initialized", LOG_MINOR]
 	}
@@ -106,7 +105,6 @@ objectdef obj_Ratter
 			call Belts.WarpToNextBelt
 			; This will reset target information about the belt
 			; (its needed for chaining)
-			Targets:ResetTargets
 			; Reload just before targeting everything, the ship
 			; has been through warp so we're sure that no weapons are still
 			; active
@@ -155,19 +153,22 @@ objectdef obj_Ratter
 	function Fight()
 	{
 		Ship:Activate_SensorBoost
-
 		/* Loop this while Defense says we're safe and we have rats. */
 		while !${Defense.Hide} && ${Targets.NPC}
 		{
 			/* Queue any rats. */
-			TargetSelection:QueueRats[]
+			TargetSelection:Ratter_QueueTargets[]
 			/* Check Targeting queue size before engaging targeting */
 			if ${Targeting.QueueSize} > 0
 			{
 				if ${Targeting.Running} != TRUE
+				{
 					Targeting:Enable
+				}
 				if ${Offense.Running} != TRUE
+				{
 					Offense:Enable
+				}
 			}
 			/* Wait a second to avoid spamming the fuck out of EVE. Seriously, FPS drop. */
 			wait 10
@@ -181,3 +182,4 @@ objectdef obj_Ratter
 		This.CurrentState:Set["IDLE"]
 	}
 }
+
