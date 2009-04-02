@@ -129,7 +129,7 @@ objectdef obj_Ratter
 		variable int Count
 		for (Count:Set[0] ; ${Count}<=30 ; Count:Inc)
 		{
-			if ${Targets.PC} || ${Targets.NPC}
+			if ${Targets.PC} || ${Targets.NPC} || !${Social.IsSafe}
 			{
 				break
 			}
