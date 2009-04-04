@@ -1,5 +1,5 @@
 /* SuperLauncher.iss - serve as a multi-script launcher for my bots.
-Launch my callback script, test crash logging script, and the evebot launcher. */
+Launch my callback script, and the evebot launcher. */
 
 #define DEBUG TRUE
 
@@ -27,7 +27,6 @@ function main(... Params)
 		echo "SuperLauncher.iss: Starting the EveCallback script"
 	run EveCallback
 	
-	/* TODO: Make the test crash logging script. */
 	if DEBUG
 		echo "SuperLauncher.iss: Starting the EVEBot Launcher using profile ${LauncherCharacter}"
 	run evebot/launcher ${LauncherCharacter}

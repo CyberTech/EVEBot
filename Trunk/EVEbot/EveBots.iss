@@ -104,7 +104,6 @@ function main()
 			/* If we're after uptime, make sure we have our sessions up. */
 			/* Just use isboxer to launch the char set. Each char will have a different profile and therefore a different evebot,
 				allowing for autologin to work. */
-			/* Should have at least 6 other sessions running - if I don't; the ice bots aren't up. */
 			if (${CrashedSessions} > 0 || ${EVEWatcher.Characters_CalledBack.Used} < ${CharactersInSet}) && (${Time.Hour} >= ${UptimeHour} || ${Time.Hour} < ${DowntimeHour}) 
 			{
 				/* We need to account for fuckups, i.e. bad login, account expired, account *shudder* closed. Lower CharactersInSet if we repeatedly
