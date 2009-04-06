@@ -1,3 +1,5 @@
+objectdef obj_Vector
+{
  	method CalcHeadingToPoint()
  	{
  		variable float temp1
@@ -46,4 +48,5 @@
  	member:float Unsigned_Angle_2D()
  	{
      	return ${Math.Abs[${This.Signed_Angle_2D}]}
-     }
+  }
+}
