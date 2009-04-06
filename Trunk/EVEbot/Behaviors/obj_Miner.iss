@@ -1,7 +1,7 @@
 /*
 	Miner Class
 
-	Primary Miner hebavior module for EVEBot
+	Primary Miner behavior module for EVEBot
 
 	-- CyberTech
 

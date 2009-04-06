@@ -84,17 +84,9 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 	{
 		variable iterator Target
 
-		MandatoryQueue:GetIterator[Target]
-		if ${Target:First(exists)}
+		if ${This.IsMandatoryQueued[${EntityID}]}
 		{
-			do
-			{
-				if ${Target.Value.EntityID} == ${EntityID}
-				{
-					return TRUE
-				}
-			}
-			while ${Target:Next(exists)}
+			return TRUE
 		}
 
 		TargetQueue:GetIterator[Target]

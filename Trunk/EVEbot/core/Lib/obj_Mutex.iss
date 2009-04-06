@@ -13,6 +13,17 @@ objectdef obj_Mutex
 
 	member:bool TryLock(int TimeoutSeconds)
 	{
+		if ${_Locked}
+		{
+			return FALSE
+		}
+
+		_Locked:Set[TRUE]
+		return TRUE
+	}
+
+	function TryLockWait(int TimeoutSeconds)
+	{
 		while ${_Locked}
 		{
 			waitframe
@@ -27,5 +38,4 @@ objectdef obj_Mutex
 	{
 		_Locked:Set[FALSE]
 	}
-
 }

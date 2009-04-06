@@ -12,8 +12,13 @@
 /* Cache Objects */
 #include core/obj_Cache.iss
 
-/* Support File Includes */
-#include core/obj_BaseClass.iss
+/* Core Library (Non-EVE Related code) */
+#include core/Lib/obj_BaseClass.iss
+#include core/Lib/obj_Vector.iss
+;#include core/Lib/obj_Mutex.iss
+#include core/Lib/obj_Sound.iss
+
+/* Core EVEBot API Includes */
 #include core/obj_EVEDB.iss
 #include core/obj_Skills.iss
 #include core/obj_Asteroids.iss
@@ -31,7 +36,6 @@
 #include core/obj_Safespots.iss
 #include core/obj_Belts.iss
 #include core/obj_Targets.iss
-#include core/obj_Sound.iss
 #include core/obj_Agents.iss
 #include core/obj_Combat.iss
 #include core/obj_Missions.iss
@@ -92,7 +96,7 @@ function main()
 	declarevariable Config obj_Configuration global
 	declarevariable Whitelist obj_Config_Whitelist global
 	declarevariable Blacklist obj_Config_Blacklist global
-	
+
 	echo "${Time} EVEBot: Loading Databases..."
 
 	/* EVE Database Exports */
@@ -100,7 +104,7 @@ function main()
 	declarevariable EVEDB_StationID obj_EVEDB_StationID global
 	declarevariable EVEDB_Spawns obj_EVEDB_Spawns global
 	declarevariable EVEDB_Items obj_EVEDB_Items global
-	
+
 	echo "${Time} EVEBot: Loading Core Objects..."
 
 	/* Core Objects */
@@ -125,7 +129,7 @@ function main()
 	declarevariable Market obj_Market global
 	declarevariable Autopilot obj_Autopilot global
 	declarevariable TargetSelection obj_TargetSelection global
-	
+
 	declarevariable BotModules index:string global
 	declarevariable GlobalVariableIterator iterator global
 
