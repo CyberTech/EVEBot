@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EveBots", "EveBots\EveBots.csproj", "{B77FAB76-6E4F-4E25-89B2-F9B5490DECA2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B77FAB76-6E4F-4E25-89B2-F9B5490DECA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B77FAB76-6E4F-4E25-89B2-F9B5490DECA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B77FAB76-6E4F-4E25-89B2-F9B5490DECA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B77FAB76-6E4F-4E25-89B2-F9B5490DECA2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
