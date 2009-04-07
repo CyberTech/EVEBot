@@ -8,10 +8,12 @@ variable(global) obj_EveCallback EVECallback
 function main(... Params)
 {
 	if DEBUG
-		echo "EveCallback.iss: Loaded. Beginning infinite loop."
+		{
+			echo "EveCallback.iss: Loaded. Beginning infinite loop."
+		}
 	while 1==1
 	{
-		
+		waitframe
 	}
 }
 
@@ -30,7 +32,7 @@ objectdef obj_EveCallback
 		if ${ISXEVE.Version} > 0
 		{
 
-				echo "EveCallback.iss: Relaying \"uplink EVEWatcher:Update[${Session},${Me.Name}]\""
+			echo "EveCallback.iss: Relaying \"uplink EVEWatcher:Update[${Session},${Me.Name}]\""
 			uplink UpdateClient ${Me.Name} ${MyShip.ShieldPct} ${MyShip.ArmorPct} ${MyShip.CapacitorPct}
 
 		}
