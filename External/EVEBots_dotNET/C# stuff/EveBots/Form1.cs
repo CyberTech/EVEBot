@@ -14,12 +14,13 @@ namespace EveBots
     public partial class Form1 : Form
     {
         protected ClientsWindow _clientsWindow = new ClientsWindow();
-
+        protected LauncherProfiles _launcherProfiles = new LauncherProfiles();
         public Form1()
         {
             InitializeComponent();
             LavishScript.Commands.AddCommand("UpdateClient",ClientCallback);
             this.panel1.Controls.Add(_clientsWindow);
+
         }
         public int ClientCallback(string[] args)
         {
