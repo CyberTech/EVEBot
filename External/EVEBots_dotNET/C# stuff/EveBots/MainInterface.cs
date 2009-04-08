@@ -11,11 +11,11 @@ using LavishVMAPI;
 
 namespace EveBots
 {
-    public partial class Form1 : Form
+    public partial class MainInterface : Form
     {
         protected ClientsWindow _clientsWindow = new ClientsWindow();
         protected LauncherProfiles _launcherProfiles = new LauncherProfiles();
-        public Form1()
+        public MainInterface()
         {
             InitializeComponent();
             LavishScript.Commands.AddCommand("UpdateClient",ClientCallback);

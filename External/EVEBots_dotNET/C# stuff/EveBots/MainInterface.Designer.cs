@@ -1,6 +1,6 @@
 ﻿namespace EveBots
 {
-    partial class Form1
+    partial class MainInterface
     {
         /// <summary>
         /// Required designer variable.
