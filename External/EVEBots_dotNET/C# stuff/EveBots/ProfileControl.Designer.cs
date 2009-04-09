@@ -29,7 +29,10 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.treeView1 = new System.Windows.Forms.TreeView();
+            this._addProfile = new System.Windows.Forms.Button();
+            this._removeProfile = new System.Windows.Forms.Button();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
@@ -40,13 +43,16 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this._removeCommand = new System.Windows.Forms.Button();
+            this._addCommand = new System.Windows.Forms.Button();
             this._pSequence = new System.Windows.Forms.ListView();
-            this._addProfile = new System.Windows.Forms.Button();
-            this._removeProfile = new System.Windows.Forms.Button();
             this._Finished = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.splitContainer4.Panel1.SuspendLayout();
+            this.splitContainer4.Panel2.SuspendLayout();
+            this.splitContainer4.SuspendLayout();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -65,7 +71,7 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.treeView1);
+            this.splitContainer1.Panel1.Controls.Add(this.splitContainer4);
             // 
             // splitContainer1.Panel2
             // 
@@ -74,14 +80,53 @@
             this.splitContainer1.SplitterDistance = 200;
             this.splitContainer1.TabIndex = 0;
             // 
+            // splitContainer4
+            // 
+            this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer4.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer4.Name = "splitContainer4";
+            this.splitContainer4.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer4.Panel1
+            // 
+            this.splitContainer4.Panel1.Controls.Add(this.treeView1);
+            // 
+            // splitContainer4.Panel2
+            // 
+            this.splitContainer4.Panel2.Controls.Add(this._addProfile);
+            this.splitContainer4.Panel2.Controls.Add(this._removeProfile);
+            this.splitContainer4.Size = new System.Drawing.Size(200, 454);
+            this.splitContainer4.SplitterDistance = 383;
+            this.splitContainer4.TabIndex = 0;
+            // 
             // treeView1
             // 
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(200, 454);
+            this.treeView1.Size = new System.Drawing.Size(200, 383);
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+            // 
+            // _addProfile
+            // 
+            this._addProfile.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this._addProfile.Location = new System.Drawing.Point(0, 21);
+            this._addProfile.Name = "_addProfile";
+            this._addProfile.Size = new System.Drawing.Size(200, 23);
+            this._addProfile.TabIndex = 3;
+            this._addProfile.Text = "Add Profile";
+            this._addProfile.UseVisualStyleBackColor = true;
+            // 
+            // _removeProfile
+            // 
+            this._removeProfile.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this._removeProfile.Location = new System.Drawing.Point(0, 44);
+            this._removeProfile.Name = "_removeProfile";
+            this._removeProfile.Size = new System.Drawing.Size(200, 23);
+            this._removeProfile.TabIndex = 4;
+            this._removeProfile.Text = "Remove Profile";
+            this._removeProfile.UseVisualStyleBackColor = true;
             // 
             // splitContainer2
             // 
@@ -191,9 +236,9 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this._removeCommand);
+            this.groupBox2.Controls.Add(this._addCommand);
             this.groupBox2.Controls.Add(this._pSequence);
-            this.groupBox2.Controls.Add(this._addProfile);
-            this.groupBox2.Controls.Add(this._removeProfile);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox2.Location = new System.Drawing.Point(0, 0);
             this.groupBox2.Name = "groupBox2";
@@ -202,39 +247,42 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Startup Sequence";
             // 
+            // _removeCommand
+            // 
+            this._removeCommand.Dock = System.Windows.Forms.DockStyle.Top;
+            this._removeCommand.Location = new System.Drawing.Point(3, 215);
+            this._removeCommand.Name = "_removeCommand";
+            this._removeCommand.Size = new System.Drawing.Size(386, 23);
+            this._removeCommand.TabIndex = 4;
+            this._removeCommand.Text = "Remove Command";
+            this._removeCommand.UseVisualStyleBackColor = true;
+            this._removeCommand.Click += new System.EventHandler(this._removeCommand_Click);
+            // 
+            // _addCommand
+            // 
+            this._addCommand.Dock = System.Windows.Forms.DockStyle.Top;
+            this._addCommand.Location = new System.Drawing.Point(3, 192);
+            this._addCommand.Name = "_addCommand";
+            this._addCommand.Size = new System.Drawing.Size(386, 23);
+            this._addCommand.TabIndex = 3;
+            this._addCommand.Text = "Add Command";
+            this._addCommand.UseVisualStyleBackColor = true;
+            this._addCommand.Click += new System.EventHandler(this._addCommand_Click);
+            // 
             // _pSequence
             // 
             this._pSequence.Dock = System.Windows.Forms.DockStyle.Top;
+            this._pSequence.FullRowSelect = true;
             this._pSequence.LabelEdit = true;
             this._pSequence.Location = new System.Drawing.Point(3, 16);
+            this._pSequence.MultiSelect = false;
             this._pSequence.Name = "_pSequence";
             this._pSequence.Size = new System.Drawing.Size(386, 176);
             this._pSequence.TabIndex = 1;
             this._pSequence.UseCompatibleStateImageBehavior = false;
             this._pSequence.View = System.Windows.Forms.View.Details;
-            this._pSequence.BeforeLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this._pSequence_BeforeLabelEdit);
-            // 
-            // _addProfile
-            // 
-            this._addProfile.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this._addProfile.Location = new System.Drawing.Point(3, 223);
-            this._addProfile.Name = "_addProfile";
-            this._addProfile.Size = new System.Drawing.Size(386, 23);
-            this._addProfile.TabIndex = 1;
-            this._addProfile.Text = "Add";
-            this._addProfile.UseVisualStyleBackColor = true;
-            this._addProfile.Click += new System.EventHandler(this._addProfile_Click);
-            // 
-            // _removeProfile
-            // 
-            this._removeProfile.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this._removeProfile.Location = new System.Drawing.Point(3, 246);
-            this._removeProfile.Name = "_removeProfile";
-            this._removeProfile.Size = new System.Drawing.Size(386, 23);
-            this._removeProfile.TabIndex = 2;
-            this._removeProfile.Text = "Remove";
-            this._removeProfile.UseVisualStyleBackColor = true;
-            this._removeProfile.Click += new System.EventHandler(this._removeProfile_Click);
+            this._pSequence.AfterLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this._pSequence_AfterLabelEdit);
+            this._pSequence.SelectedIndexChanged += new System.EventHandler(this._pSequence_SelectedIndexChanged);
             // 
             // _Finished
             // 
@@ -257,6 +305,9 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
+            this.splitContainer4.Panel1.ResumeLayout(false);
+            this.splitContainer4.Panel2.ResumeLayout(false);
+            this.splitContainer4.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
@@ -285,8 +336,11 @@
         private System.Windows.Forms.MaskedTextBox _pName;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.ListView _pSequence;
+        private System.Windows.Forms.MaskedTextBox _pExecutable;
+        private System.Windows.Forms.SplitContainer splitContainer4;
         private System.Windows.Forms.Button _addProfile;
         private System.Windows.Forms.Button _removeProfile;
-        private System.Windows.Forms.MaskedTextBox _pExecutable;
+        private System.Windows.Forms.Button _removeCommand;
+        private System.Windows.Forms.Button _addCommand;
     }
 }

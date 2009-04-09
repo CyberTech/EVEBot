@@ -54,20 +54,29 @@ namespace EveBots
             this.Hide();
         }
 
-       
+
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            _pName.Text = _pList[treeView1.SelectedNode.Name].ProfileName;
-            _pPath.Text = _pList[treeView1.SelectedNode.Name].Path;
-            _pExecutable.Text = _pList[treeView1.SelectedNode.Name].Executable;
-            NewSequenceList(_pList[treeView1.SelectedNode.Name].StartUpSequence);
+            if (treeView1.SelectedNode != null)
+            {
+                _pName.Text = _pList[treeView1.SelectedNode.Name].ProfileName;
+                _pPath.Text = _pList[treeView1.SelectedNode.Name].Path;
+                _pExecutable.Text = _pList[treeView1.SelectedNode.Name].Executable;
+                NewSequenceList(_pList[treeView1.SelectedNode.Name].StartUpSequence);
+                _removeProfile.Enabled = true;
+            }
+            else
+            {
+                _removeProfile.Enabled = false;
+            }
+
         }
         private void NewSequenceList(Dictionary<string, string> SequenceList)
         {
+            _pSequence.Items.Clear();
             foreach (string name in SequenceList.Keys)
-            {
-                _pSequence.Items.Clear();
+            {                
                 ListViewItem lvi = new ListViewItem(SequenceList[name]);
                 lvi.Name = name;
                 _pSequence.Items.Add(lvi);
@@ -78,12 +87,13 @@ namespace EveBots
             }
         }
 
-        private void _pSequence_BeforeLabelEdit(object sender, LabelEditEventArgs e)
+        private void _pSequence_AfterLabelEdit(object sender, LabelEditEventArgs e)
         {
            Dictionary<string,string> sequenceList = _pList[treeView1.SelectedNode.Name].StartUpSequence;
+           InnerSpaceAPI.InnerSpace.Echo(e.Label);
+
            sequenceList[_pSequence.Items[e.Item].Name] = e.Label;
         }
-
         private void _pPath_TextChanged(object sender, EventArgs e)
         {
             _pList[treeView1.SelectedNode.Name].Path = _pPath.Text;
@@ -99,6 +109,40 @@ namespace EveBots
             treeView1.SelectedNode.Text = _pName.Text;
             treeView1.SelectedNode.Name = _pName.Text;
         }
+
+        private void _addCommand_Click(object sender, EventArgs e)
+        {
+            Dictionary<string, string> sequenceList = _pList[treeView1.SelectedNode.Name].StartUpSequence;
+            string guid = Guid.NewGuid().ToString();
+            sequenceList.Add(guid, "run piggy run");
+            ListViewItem lvi = new ListViewItem(sequenceList[guid]);
+            lvi.Name = guid;
+            _pSequence.Items.Add(lvi);
+            foreach (ColumnHeader cH in _pSequence.Columns)
+            {
+                cH.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+            }
+        }
+        private void _removeCommand_Click(object sender, EventArgs e)
+        {
+            Dictionary<string, string> sequenceList = _pList[treeView1.SelectedNode.Name].StartUpSequence;
+            sequenceList.Remove(_pSequence.SelectedItems[0].Name);
+            _pSequence.Items.RemoveByKey(_pSequence.SelectedItems[0].Name);
+        }
+
+        private void _pSequence_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_pSequence.SelectedItems.Count < 0)
+            {
+                _removeCommand.Enabled = false;
+            }
+            else
+            {
+                _removeCommand.Enabled = true;
+            }
+        }
+
+       
       
     }
 }
