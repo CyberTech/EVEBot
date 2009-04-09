@@ -14,12 +14,14 @@ namespace EveBots
     public partial class MainInterface : Form
     {
         protected ClientsWindow _clientsWindow = new ClientsWindow();
-        protected LauncherProfiles _launcherProfiles = new LauncherProfiles();
+        protected ProfileControl _profileControl = new ProfileControl();
+
         public MainInterface()
         {
             InitializeComponent();
             LavishScript.Commands.AddCommand("UpdateClient",ClientCallback);
-            this.panel1.Controls.Add(_clientsWindow);
+            this.panel1.Controls.Add(_profileControl);
+            _profileControl.Dock = DockStyle.Fill;
 
         }
         public int ClientCallback(string[] args)

@@ -31,14 +31,23 @@ namespace EveBots
                 while (profilesIterator.IsValid);
             }
         }
-        public void AddProfile(string ProfileName, string Path, string Executable, Dictionary<string, string> StartupSequence)
+        public Profile AddProfile(string ProfileName, string Path, string Executable, Dictionary<string, string> StartupSequence)
         {
-            InnerSpaceAPI.InnerSpace.Echo(ProfileName + Path + Executable + _profilesSet.ToString());
-            _profileList.Add(new Profile(ProfileName, Path, Executable, StartupSequence,_profilesSet));
+            Profile p = new Profile(ProfileName, Path, Executable, StartupSequence, _profilesSet);
+            _profileList.Add(p);
+            return p;
         }
         public void DeleteProfile(string ProfileName)
         {
-
+            foreach (Profile p in _profileList)
+            {
+                if (p.ProfileName.Equals(ProfileName))
+                {
+                    p.DeleteProfile();
+                    _profileList.Remove(p);
+                    break;
+                }
+            }
         }
         public void Save()
         {
@@ -47,6 +56,13 @@ namespace EveBots
                 p.SaveProfile();
             }
             _gameConfigurationXMLSet.Export(_homeDirectory + "/GameConfiguration.XML");
+        }
+        public List<Profile> Profiles
+        {
+            get
+            {
+                return _profileList;
+            }
         }
        
 
@@ -122,6 +138,50 @@ namespace EveBots
             {
                 _setReference.Remove();
                 _setReference = null;
+            }
+        }
+        public string ProfileName
+        {
+            get
+            {
+                return _profileName;
+            }
+            set
+            {
+                _profileName = value;
+            }
+        }
+        public string Path
+        {
+            get
+            {
+                return _path;
+            }
+            set
+            {
+                _path = value;
+            }
+        }
+        public string Executable
+        {
+            get
+            {
+                return _executable;
+            }
+            set
+            {
+                _executable = value;
+            }
+        }
+        public Dictionary<string, string> StartUpSequence
+        {
+            get
+            {
+                return _startupSequence;
+            }
+            set
+            {
+                _startupSequence = value;
             }
         }
     }
