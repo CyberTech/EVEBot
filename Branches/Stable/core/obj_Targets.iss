@@ -425,7 +425,7 @@ objectdef obj_Targets
 
 			; Special exception, if there is only 1 type its most likely
 			; a chain in progress
-			if !${HasMultipleTypes}
+			if !${HasMultipleTypes} && !${HasPriorityTarget}
 			{
 				Chaining:Set[TRUE]
 			}
