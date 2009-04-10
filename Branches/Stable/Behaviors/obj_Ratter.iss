@@ -142,6 +142,12 @@ objectdef obj_Ratter
 			wait 10
 		}
 		call This.PlayerCheck
+
+		Count:Set[0]
+		while (${Count:Inc} < 10) && ${Social.IsSafe} && !${Targets.PC} && ${Targets.NPC}
+		{
+			wait 10
+		}
 	}
 
 	function PlayerCheck()
