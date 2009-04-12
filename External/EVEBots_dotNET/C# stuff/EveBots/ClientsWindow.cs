@@ -50,28 +50,27 @@ namespace EveBots
             listView1.EndUpdate();
             _clientTable.Add(newClient, client);
         }
-        public void UpdateClient(Session Client)
-        {
-            if (listView1.Items.ContainsKey(Client.Name))
-            {
-                _clientTable[listView1.Items[Client.Name]] = Client;
-            }
-            else
-            {
-                AddClient(Client);
-            }
-            this.Invalidate();
-        }
         public void UpdateClients()
         {
+            listView1.BeginUpdate();
             foreach (ListViewItem lvi in listView1.Items)
             {
                 lvi.Text = _clientTable[lvi].Name;
                 lvi.SubItems["ArmorPct"].Text = _clientTable[lvi].ArmorPct.ToString();
                 lvi.SubItems["ShieldPct"].Text = _clientTable[lvi].ShieldPct.ToString();
                 lvi.SubItems["CapacitorPct"].Text = _clientTable[lvi].CapacitorPct.ToString();
+                lvi.SubItems["Launched"].Text = _clientTable[lvi].Launched.ToString();
+                lvi.SubItems["Hiding"].Text = _clientTable[lvi].Hiding.ToString();
+                lvi.SubItems["BotMode"].Text = _clientTable[lvi].BotMode;
+                lvi.SubItems["Ship"].Text = _clientTable[lvi].Ship;
+                lvi.SubItems["Crashes"].Text = _clientTable[lvi].Crashes.ToString();
+                lvi.SubItems["LastUpdate"].Text = _clientTable[lvi].LastUpdate.ToLongTimeString();
+                lvi.Text = _clientTable[lvi].Name;
+                lvi.Name = _clientTable[lvi].Name;
+                lvi.SubItems["Status"].Text = _clientTable[lvi].Status.ToString();
             }
             listView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+            listView1.EndUpdate();
         }
 
         private void ClientsWindow_Paint(object sender, PaintEventArgs e)
