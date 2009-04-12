@@ -112,6 +112,7 @@ objectdef obj_Configuration_Common
 	}
 
 	Define_ConfigItem(string, BotMode, MINER)
+	Define_ConfigItem(bool, Callback, FALSE)
 	Define_ConfigItem(int, MinimumDronesInBay, 0)
 	Define_ConfigItem(string, HomeStation, NOTSET)
 	Define_ConfigItem(string, LoginName, NOTSET)
