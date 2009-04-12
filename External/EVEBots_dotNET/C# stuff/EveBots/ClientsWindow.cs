@@ -13,20 +13,20 @@ namespace EveBots
     {
         private int _clientCount;
 
-        private Dictionary<ListViewItem, Client> _clientTable = new Dictionary<ListViewItem,Client>();
+        private Dictionary<ListViewItem, Session> _clientTable = new Dictionary<ListViewItem,Session>();
         private List<string> _clientProperties;
         public ClientsWindow()
         {
             InitializeComponent();
             _clientProperties = new List<string>();
-             Type type = typeof(Client);
+             Type type = typeof(Session);
             foreach (PropertyInfo propertyInfo in type.GetProperties())
             {
                 _clientProperties.Add(propertyInfo.Name);
                 listView1.Columns.Add(propertyInfo.Name);
             }
         }
-        public void AddClient(Client client)
+        public void AddClient(Session client)
         {
             _clientCount++;
             ListViewItem newClient = new ListViewItem();
@@ -50,7 +50,7 @@ namespace EveBots
             listView1.EndUpdate();
             _clientTable.Add(newClient, client);
         }
-        public void UpdateClient(Client Client)
+        public void UpdateClient(Session Client)
         {
             if (listView1.Items.ContainsKey(Client.Name))
             {
@@ -66,6 +66,7 @@ namespace EveBots
         {
             foreach (ListViewItem lvi in listView1.Items)
             {
+                lvi.Text = _clientTable[lvi].Name;
                 lvi.SubItems["ArmorPct"].Text = _clientTable[lvi].ArmorPct.ToString();
                 lvi.SubItems["ShieldPct"].Text = _clientTable[lvi].ShieldPct.ToString();
                 lvi.SubItems["CapacitorPct"].Text = _clientTable[lvi].CapacitorPct.ToString();

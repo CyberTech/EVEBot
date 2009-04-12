@@ -4,19 +4,15 @@ using System.Text;
 
 namespace EveBots
 {
-    public class Client
+    public class Session
     {
         private int _armorPct = 0;
         private int _shieldPct = 0;
         private int _capacitorPct = 0;
         private string _name = "default";
         private ClientStatus _status = ClientStatus.Inactive;
-        public Client(string Name, ClientStatus Status)
-        {
-            _name = Name;
-            _status = Status;
-        }
-        public Client()
+
+        public Session()
         {
 
         }

@@ -30,15 +30,26 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainInterface));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.botControl1 = new EveBots.BotControl();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.botControl1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(758, 418);
             this.panel1.TabIndex = 0;
+            // 
+            // botControl1
+            // 
+            this.botControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.botControl1.Location = new System.Drawing.Point(0, 0);
+            this.botControl1.Name = "botControl1";
+            this.botControl1.Size = new System.Drawing.Size(758, 418);
+            this.botControl1.TabIndex = 0;
             // 
             // MainInterface
             // 
@@ -49,6 +60,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainInterface";
             this.Text = "EVEBots";
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -56,6 +68,7 @@
         #endregion
 
         private System.Windows.Forms.Panel panel1;
+        private BotControl botControl1;
 
     }
 }

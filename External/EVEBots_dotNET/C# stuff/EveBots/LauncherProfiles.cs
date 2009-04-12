@@ -10,7 +10,7 @@ namespace EveBots
         private Set _gameConfigurationXMLSet;
         private Set _profilesSet;
         private List<Profile> _profileList = new List<Profile>();
-        private string _homeDirectory = InnerSpaceAPI.InnerSpace.Path.Replace('\\','/');
+        private string _homeDirectory = InnerSpaceAPI.InnerSpace.Path.Replace('\\', '/');
         public LauncherProfiles()
         {
             // <Lax>   ${LavishSettings[${LavishScript.HomeDirectory}/GameConfiguration.XML]}
