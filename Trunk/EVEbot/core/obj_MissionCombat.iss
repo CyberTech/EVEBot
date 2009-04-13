@@ -2,14 +2,98 @@
 
 objectdef obj_MissionCombat
 {
+	variable string SVN_REVISION = "$Rev: 988 $"
+	variable int Version
+
+	variable time NextPulse
+	variable int PulseIntervalInSeconds = 2
+
+	variable string CurrentState
+
 	variable int roomNumber = 0
 	variable index:string targetBlacklist
 	variable index:string priorityTargets
 	variable string lootItem
+	variable bool CommandComplete = FALSE
+	variable bool MissionComplete = FALSE
+	variable bool MissionUnderway = FALSE
+	variable iterator CommandIterator
 	method Initialize()
 	{
-
+;		Event[OnFrame]:AttachAtom[This:Pulse]
 	}
+;	method Pulse()
+;	{
+;		if !${Config.Common.BotMode.Equal[Missioneer]}
+;		{
+;			return
+;		}
+;	  if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+;		{
+;			if !${EVEBot.Paused}
+;			{
+;				This:SetState[]            	
+;      }
+;      This.NextPulse:Set[${Time.Timestamp}]
+;    	This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+;    	This.NextPulse:Update
+;		}
+;	}
+;	method Shutdown()
+;	{
+;		Event[OnFrame]:DetachAtom[This:Pulse]
+;	}
+;	method SetState()
+;	{
+;		if ${CommandIterator.IsValid}
+;		{
+;			switch ${This.${CommandIterator.Value.FindAttribute["Action"].String}}
+;				{
+;					case "Approach":
+;					{
+;						CurrentState:Set["Approach"]
+;					}
+;					case "Kill":
+;					{
+;						CurrentState:Set["Kill"]
+;					}
+;				}		
+;		}
+;		else
+;		{
+;			CurrentState:Set["Idle"]
+;		}
+;	}
+;		
+;	method ProccessState()
+;	{		
+;		if !${Config.Common.BotMode.Equal[Missioneer]}
+;		{
+;			; There's no reason at all for the bot to check state if it's not a missioneer
+;			return
+;		}
+;		switch ${This.CurrentState}
+;		{
+;			case "Approach":
+;			{
+;				call This.Approach ${CommandIterator.Value.FindAttribute["Target"].String}
+;				if ${Return}
+;				{
+;					CommandIterator:Next
+;				}
+;			}
+;			case "Kill":
+;			{
+;				call This.Kill ${CommandIterator.Value.FindAttribute["Target"].String}
+;				if ${Return}
+;				{
+;					CommandIterator:Next
+;				}
+;			}
+;			case Idle:
+;			return
+;		}
+;	}
 
 	function:bool RunMission(settingsetref commandPile)
 	{
@@ -18,7 +102,10 @@ objectdef obj_MissionCombat
 		variable int  doneCounter = 0
 		variable iterator CommandIterator
 		variable iterator ParameterIterator
-
+		switch ${CommandIterator.Value.FindAttribute["Action"].String}
+		{
+			
+			case "App
 		while TRUE
 		{
 			commandPile:GetSetIterator[CommandIterator]
