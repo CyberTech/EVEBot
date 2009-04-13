@@ -108,5 +108,11 @@ objectdef obj_EVEDB_Items
 	{
 		return ${LavishSettings[${This.SET_NAME}].FindSetting[${TypeID}].FindAttribute[BasePrice, NOTSET]}
 	}
+
+	member:float WeaponRangeMultiplier(int TypeID)
+	{
+		return ${LavishSettings[${This.SET_NAME}].FindSetting[${TypeID}].FindAttribute[weaponRangeMultiplier, 0]}
+	}
+
 }
 
