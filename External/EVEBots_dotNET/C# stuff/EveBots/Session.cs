@@ -44,7 +44,11 @@ namespace EveBots
             _ship = Ship;
             _sessionName = SessionName;
         }
-      
+        public void Launch()
+        {
+            _calledBack = false;
+            _launched = true;
+        }
         public string Name
         {
             get
@@ -72,6 +76,13 @@ namespace EveBots
             {
                 return _capacitorPct;
             }            
+        }
+        public string Currentarget
+        {
+            get
+            {
+                return _currentTarget;
+            }
         }
         public SessionStatus Status
         {
@@ -120,6 +131,10 @@ namespace EveBots
             {
                 return _launched;
             }
+            set
+            {
+                _launched = value;
+            }
         }
         public bool Hiding
         {
@@ -147,6 +162,10 @@ namespace EveBots
             get
             {
                 return _crashes;
+            }
+            set
+            {
+                _crashes = value;
             }
         }
         public DateTime LastUpdate

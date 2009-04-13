@@ -25,6 +25,7 @@ namespace EveBots
                 _clientProperties.Add(propertyInfo.Name);
                 listView1.Columns.Add(propertyInfo.Name);
             }
+            this.DoubleBuffered = true;
         }
         public void AddClient(Session client)
         {
@@ -55,7 +56,6 @@ namespace EveBots
             listView1.BeginUpdate();
             foreach (ListViewItem lvi in listView1.Items)
             {
-                lvi.Text = _clientTable[lvi].Name;
                 lvi.SubItems["ArmorPct"].Text = _clientTable[lvi].ArmorPct.ToString();
                 lvi.SubItems["ShieldPct"].Text = _clientTable[lvi].ShieldPct.ToString();
                 lvi.SubItems["CapacitorPct"].Text = _clientTable[lvi].CapacitorPct.ToString();
@@ -65,18 +65,14 @@ namespace EveBots
                 lvi.SubItems["Ship"].Text = _clientTable[lvi].Ship;
                 lvi.SubItems["Crashes"].Text = _clientTable[lvi].Crashes.ToString();
                 lvi.SubItems["LastUpdate"].Text = _clientTable[lvi].LastUpdate.ToLongTimeString();
+                lvi.SubItems["SessionName"].Text = _clientTable[lvi].SessionName;
+                lvi.SubItems["Status"].Text = _clientTable[lvi].Status.ToString();
+                lvi.SubItems["Currentarget"].Text = _clientTable[lvi].Currentarget;
                 lvi.Text = _clientTable[lvi].Name;
                 lvi.Name = _clientTable[lvi].Name;
-                lvi.SubItems["Status"].Text = _clientTable[lvi].Status.ToString();
             }
             listView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
             listView1.EndUpdate();
-        }
-
-        private void ClientsWindow_Paint(object sender, PaintEventArgs e)
-        {
-            UpdateClients();
-        }
-                
+        }                
     }
 }

@@ -63,6 +63,7 @@ namespace EveBots
     {
         Dictionary<string, Character> _characters = new Dictionary<string, Character>();
         string _setName = "-";
+        bool _launched = false;
         public CharacterSet(string name)
         {
             _setName = name;
@@ -76,6 +77,17 @@ namespace EveBots
             get
             {
                 return _setName;
+            }
+        }
+        public bool Launched
+        {
+            get
+            {
+                return _launched;
+            }
+            set
+            {
+                _launched = value;
             }
         }
         public Dictionary<string, Character> Characters
