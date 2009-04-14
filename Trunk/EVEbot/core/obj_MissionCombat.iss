@@ -17,59 +17,95 @@ objectdef obj_MissionCombat
 	variable bool CommandComplete = FALSE
 	variable bool MissionComplete = FALSE
 	variable bool MissionUnderway = FALSE
+	variable Time timeout
 	variable iterator CommandIterator
 	method Initialize()
 	{
+		;attach our pulse atom to the onframe even so we fire the pulse every frame
 ;		Event[OnFrame]:AttachAtom[This:Pulse]
 	}
-;	method Pulse()
-;	{
-;		if !${Config.Common.BotMode.Equal[Missioneer]}
-;		{
-;			return
-;		}
-;	  if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
-;		{
-;			if !${EVEBot.Paused}
-;			{
-;				This:SetState[]            	
-;      }
-;      This.NextPulse:Set[${Time.Timestamp}]
-;    	This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-;    	This.NextPulse:Update
-;		}
-;	}
+	method Pulse()
+	{
+		if !${Config.Common.BotMode.Equal[Missioneer]}
+		{
+			; finish if we are not running missions, should be we finish if we are not running a combat mission
+			return
+		}
+		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+		{
+			if !${EVEBot.Paused}
+			{
+				; if evebot is not paused we should figure out what state we want to be in
+				This:SetState
+			}
+			This.NextPulse:Set[${Time.Timestamp}]
+			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+			This.NextPulse:Update
+		}
+	}
 ;	method Shutdown()
 ;	{
+;		; detach the atom when we get garbaged
 ;		Event[OnFrame]:DetachAtom[This:Pulse]
 ;	}
 ;	method SetState()
 ;	{
+;		; we have an iterator that should be set to the first command in a series of commands in a mission
 ;		if ${CommandIterator.IsValid}
 ;		{
+;			;we find whatever action is to be taken , it should be an attribute called "Action"
 ;			switch ${This.${CommandIterator.Value.FindAttribute["Action"].String}}
+;			{
+;				case "Approach":
 ;				{
-;					case "Approach":
-;					{
-;						CurrentState:Set["Approach"]
-;					}
-;					case "Kill":
-;					{
-;						CurrentState:Set["Kill"]
-;					}
-;				}		
+;					CurrentState:Set["Approach"]
+;				}
+;				case "ApproachNoBlock":
+;				{
+;					CurrentState:Set["ApproachNoBlock"]
+;				}
+;				case "Kill":
+;				{
+;					CurrentState:Set["Kill"]
+;				}
+;				case "CheckForLoot":
+;				{
+;					CurrentState:Set["CheckForLoot"]
+;				}
+;				case "ClearRoom":
+;				{
+;					CurrentState:Set["ClearRoom"]
+;				}
+;				case "KillAgressors":
+;				{
+;					CurrentState:Set["KillAgressors"]
+;				}
+;				case "NextRoom":
+;				{
+;					CurrentState:Set["NextRoom"]
+;				}
+;				case "TargetPrioritys":
+;				{
+;					CurrentState:Set["TargetPriorities"]
+;				}
+;				case "WaitForAggro":
+;				{
+;					CurrentState:Set["WaitForAggro"]
+;				}
+;			}
 ;		}
 ;		else
 ;		{
+;			;if our command iterator is not valid ,we either ran out of commands or we have not been given any
 ;			CurrentState:Set["Idle"]
 ;		}
 ;	}
-;		
+;
 ;	method ProccessState()
-;	{		
+;	{
 ;		if !${Config.Common.BotMode.Equal[Missioneer]}
 ;		{
-;			; There's no reason at all for the bot to check state if it's not a missioneer
+;			; There's no reason at all for the bot to be doing this if it's not a missioneer
 ;			return
 ;		}
 ;		switch ${This.CurrentState}
@@ -82,10 +118,64 @@ objectdef obj_MissionCombat
 ;					CommandIterator:Next
 ;				}
 ;			}
+;			case "ApproachNoBlock":
+;			{
+;				This:ApproachNoBlock[${CommandIterator.Value.FindAttribute["Target"].String}]
+;				if ${Return}
+;				{
+;					CommandIterator:Next
+;				}
+;			}
 ;			case "Kill":
 ;			{
 ;				call This.Kill ${CommandIterator.Value.FindAttribute["Target"].String}
 ;				if ${Return}
+;				{
+;					CommandIterator:Next
+;				}
+;			}
+;			case "CheckForLoot":
+;			{
+;				call This.LootItem ${CommandIterator.Value.FindAttribute["Item"]} ${CommandIterator.Value.FindAttribute["ContainerType"]}
+;				if ${Return}
+;				{
+;					CommandIterator:Next
+;				}
+;			}
+;			case "ClearRoom":
+;			{				
+;				call This.ClearRoom
+;				if ${Return}
+;				{
+;					CommandIterator:Next
+;				}
+;			}
+;			case "KillAgressors":
+;			{
+;				call This.KillAggressors
+;				if ${Return}
+;				{
+;					CommandIterator:Next
+;				}
+;			}
+;			case "NextRoom":
+;			{
+;				call This.NextRoom
+;				if ${Return}
+;				{
+;					CommandIterator:Next
+;				}
+;			}
+;			case "TargetPriorities":
+;			{
+;				variable iterator settingIterator
+;				CommandIterator:GetSettingIterator[settingIterator]
+;				This:TargetPriorities settingIterator					
+;			}
+;			case "WaitForAggro":
+;			{
+;				
+;				if ${This.AggroCount > 0}
 ;				{
 ;					CommandIterator:Next
 ;				}
@@ -820,7 +910,7 @@ objectdef obj_MissionCombat
 		{
 			UI:UpdateConsole["obj_Missions: DEBUG: missionName = ${missionName}"]
 			if ${missionName.Equal["smuggler interception"]} && \
-				${wreckName.Find["transport"]} > 0
+			${wreckName.Find["transport"]} > 0
 			{
 				return TRUE
 			}
@@ -947,7 +1037,7 @@ objectdef obj_MissionCombat
 				;;UI:UpdateConsole["DEBUG: HaveLoot: Ship's Cargo: ${ItemQuantity} units of ${CargoIterator.Value.Name}(${TypeID})."]
 
 				if (${TypeID} == ${This.MissionCache.TypeID[${agentID}]}) && \
-					(${ItemQuantity} >= ${QuantityRequired})
+				(${ItemQuantity} >= ${QuantityRequired})
 				{
 					UI:UpdateConsole["DEBUG: HaveLoot: Found required items in ship's cargohold."]
 					haveCargo:Set[TRUE]
