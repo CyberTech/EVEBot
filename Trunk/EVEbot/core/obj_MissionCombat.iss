@@ -102,10 +102,6 @@ objectdef obj_MissionCombat
 		variable int  doneCounter = 0
 		variable iterator CommandIterator
 		variable iterator ParameterIterator
-		switch ${CommandIterator.Value.FindAttribute["Action"].String}
-		{
-			
-			case "App
 		while TRUE
 		{
 			commandPile:GetSetIterator[CommandIterator]
