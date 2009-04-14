@@ -19,6 +19,7 @@ objectdef obj_MissionCombat
 	variable bool MissionUnderway = FALSE
 	variable Time timeout
 	variable iterator CommandIterator
+	
 	method Initialize()
 	{
 		;attach our pulse atom to the onframe even so we fire the pulse every frame
@@ -48,6 +49,45 @@ objectdef obj_MissionCombat
 ;		; detach the atom when we get garbaged
 ;		Event[OnFrame]:DetachAtom[This:Pulse]
 ;	}
+
+/* All of this should be getting called from Behaviors/obj_Missioneer.iss so
+it will be handling the getting and turning in of missions. However, we do
+need to handle going to locations for objectives. */
+method SetState()
+{
+	/* Let defense handle any hiding */
+	if ${Defense.Hiding}
+	{
+		This.CurrentState:Set["IDLE"]
+	}
+	/* Check if we're at our current objective's location - if not, we need
+	to go to it. */
+	
+	/* If we're at the current objective's location, do an action for it. */
+	
+	/* If objective is complete, check for more objectives. If more exist, switch to next.
+	Otherwise, mission is complete. */
+	
+	/* If we're looting/salvaging we'll probably need to switch to our loot/salvage
+	ship. Go to the ship's location, get in it, come back. */
+	
+	/* If we're salvaging and here in our salvager, start salvaging/looting. */
+	
+	/* Go home, unload cargo, switch back to normal ship if we're in our salvager,
+	let missioneer turnin. */
+}
+
+method ProcessState()
+{
+	switch ${This.CurrentState}
+	{
+		case "IDLE"
+			break
+	}
+}
+
+
+
 ;	method SetState()
 ;	{
 ;		; we have an iterator that should be set to the first command in a series of commands in a mission
