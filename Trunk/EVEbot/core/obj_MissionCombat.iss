@@ -83,6 +83,8 @@ method ProcessState()
 	{
 		case "IDLE"
 			break
+		/* Somewhere in here will be a call to a method in this class that will
+		process the objective command. It will not be done from the FSM. */
 	}
 }
 
