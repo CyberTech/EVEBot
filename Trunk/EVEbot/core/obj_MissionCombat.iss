@@ -4,6 +4,7 @@ objectdef obj_MissionCombat
 {
 	variable string SVN_REVISION = "$Rev: 988 $"
 	variable int Version
+	variable obj_MissionCombatConfig MissionCombatConfig
 
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 2
