@@ -18,13 +18,13 @@ objectdef obj_MissionCombat
 	variable bool CommandComplete = FALSE
 	variable bool MissionComplete = FALSE
 	variable bool MissionUnderway = FALSE
-	variable Time timeout
+	;variable Time timeout
 	variable iterator CommandIterator
 	
 	method Initialize()
 	{
 		;attach our pulse atom to the onframe even so we fire the pulse every frame
-;		Event[OnFrame]:AttachAtom[This:Pulse]
+		;Event[OnFrame]:AttachAtom[This:Pulse]
 	}
 	method Pulse()
 	{
@@ -45,11 +45,11 @@ objectdef obj_MissionCombat
 			This.NextPulse:Update
 		}
 	}
-;	method Shutdown()
-;	{
-;		; detach the atom when we get garbaged
-;		Event[OnFrame]:DetachAtom[This:Pulse]
-;	}
+	method Shutdown()
+	{
+		; detach the atom when we get garbaged
+		Event[OnFrame]:DetachAtom[This:Pulse]
+	}
 
 /* All of this should be getting called from Behaviors/obj_Missioneer.iss so
 it will be handling the getting and turning in of missions. However, we do
@@ -91,142 +91,142 @@ method ProcessState()
 
 
 
-;	method SetState()
-;	{
-;		; we have an iterator that should be set to the first command in a series of commands in a mission
-;		if ${CommandIterator.IsValid}
-;		{
-;			;we find whatever action is to be taken , it should be an attribute called "Action"
-;			switch ${This.${CommandIterator.Value.FindAttribute["Action"].String}}
-;			{
-;				case "Approach":
-;				{
-;					CurrentState:Set["Approach"]
-;				}
-;				case "ApproachNoBlock":
-;				{
-;					CurrentState:Set["ApproachNoBlock"]
-;				}
-;				case "Kill":
-;				{
-;					CurrentState:Set["Kill"]
-;				}
-;				case "CheckForLoot":
-;				{
-;					CurrentState:Set["CheckForLoot"]
-;				}
-;				case "ClearRoom":
-;				{
-;					CurrentState:Set["ClearRoom"]
-;				}
-;				case "KillAgressors":
-;				{
-;					CurrentState:Set["KillAgressors"]
-;				}
-;				case "NextRoom":
-;				{
-;					CurrentState:Set["NextRoom"]
-;				}
-;				case "TargetPrioritys":
-;				{
-;					CurrentState:Set["TargetPriorities"]
-;				}
-;				case "WaitForAggro":
-;				{
-;					CurrentState:Set["WaitForAggro"]
-;				}
-;			}
-;		}
-;		else
-;		{
-;			;if our command iterator is not valid ,we either ran out of commands or we have not been given any
-;			CurrentState:Set["Idle"]
-;		}
-;	}
-;
-;	method ProccessState()
-;	{
-;		if !${Config.Common.BotMode.Equal[Missioneer]}
-;		{
-;			; There's no reason at all for the bot to be doing this if it's not a missioneer
-;			return
-;		}
-;		switch ${This.CurrentState}
-;		{
-;			case "Approach":
-;			{
-;				call This.Approach ${CommandIterator.Value.FindAttribute["Target"].String}
-;				if ${Return}
-;				{
-;					CommandIterator:Next
-;				}
-;			}
-;			case "ApproachNoBlock":
-;			{
-;				This:ApproachNoBlock[${CommandIterator.Value.FindAttribute["Target"].String}]
-;				if ${Return}
-;				{
-;					CommandIterator:Next
-;				}
-;			}
-;			case "Kill":
-;			{
-;				call This.Kill ${CommandIterator.Value.FindAttribute["Target"].String}
-;				if ${Return}
-;				{
-;					CommandIterator:Next
-;				}
-;			}
-;			case "CheckForLoot":
-;			{
-;				call This.LootItem ${CommandIterator.Value.FindAttribute["Item"]} ${CommandIterator.Value.FindAttribute["ContainerType"]}
-;				if ${Return}
-;				{
-;					CommandIterator:Next
-;				}
-;			}
-;			case "ClearRoom":
-;			{				
-;				call This.ClearRoom
-;				if ${Return}
-;				{
-;					CommandIterator:Next
-;				}
-;			}
-;			case "KillAgressors":
-;			{
-;				call This.KillAggressors
-;				if ${Return}
-;				{
-;					CommandIterator:Next
-;				}
-;			}
-;			case "NextRoom":
-;			{
-;				call This.NextRoom
-;				if ${Return}
-;				{
-;					CommandIterator:Next
-;				}
-;			}
-;			case "TargetPriorities":
-;			{
-;				variable iterator settingIterator
-;				CommandIterator:GetSettingIterator[settingIterator]
-;				This:TargetPriorities settingIterator					
-;			}
-;			case "WaitForAggro":
-;			{
-;				
-;				if ${This.AggroCount > 0}
-;				{
-;					CommandIterator:Next
-;				}
-;			}
-;			case Idle:
-;			return
-;		}
-;	}
+	method SetState()
+	{
+		; we have an iterator that should be set to the first command in a series of commands in a mission
+		if ${CommandIterator.IsValid}
+		{
+			;we find whatever action is to be taken , it should be an attribute called "Action"
+			switch ${This.${CommandIterator.Value.FindAttribute["Action"].String}}
+			{
+				case "Approach":
+				{
+					CurrentState:Set["Approach"]
+				}
+				case "ApproachNoBlock":
+				{
+					CurrentState:Set["ApproachNoBlock"]
+				}
+				case "Kill":
+				{
+					CurrentState:Set["Kill"]
+				}
+				case "CheckForLoot":
+				{
+					CurrentState:Set["CheckForLoot"]
+				}
+				case "ClearRoom":
+				{
+					CurrentState:Set["ClearRoom"]
+				}
+				case "KillAgressors":
+				{
+					CurrentState:Set["KillAgressors"]
+				}
+				case "NextRoom":
+				{
+					CurrentState:Set["NextRoom"]
+				}
+				case "TargetPrioritys":
+				{
+					CurrentState:Set["TargetPriorities"]
+				}
+				case "WaitForAggro":
+				{
+					CurrentState:Set["WaitForAggro"]
+				}
+			}
+		}
+		else
+		{
+			;if our command iterator is not valid ,we either ran out of commands or we have not been given any
+			CurrentState:Set["Idle"]
+		}
+	}
+
+	method ProccessState()
+	{
+		if !${Config.Common.BotMode.Equal[Missioneer]}
+		{
+			; There's no reason at all for the bot to be doing this if it's not a missioneer
+			return
+		}
+		switch ${This.CurrentState}
+		{
+			case "Approach":
+			{
+				call This.Approach ${CommandIterator.Value.FindAttribute["Target"].String}
+				if ${Return}
+				{
+					CommandIterator:Next
+				}
+			}
+			case "ApproachNoBlock":
+			{
+				This:ApproachNoBlock[${CommandIterator.Value.FindAttribute["Target"].String}]
+				if ${Return}
+				{
+					CommandIterator:Next
+				}
+			}
+			case "Kill":
+			{
+				call This.Kill ${CommandIterator.Value.FindAttribute["Target"].String}
+				if ${Return}
+				{
+					CommandIterator:Next
+				}
+			}
+			case "CheckForLoot":
+			{
+				call This.LootItem ${CommandIterator.Value.FindAttribute["Item"]} ${CommandIterator.Value.FindAttribute["ContainerType"]}
+				if ${Return}
+				{
+					CommandIterator:Next
+				}
+			}
+			case "ClearRoom":
+			{				
+				call This.ClearRoom
+				if ${Return}
+				{
+					CommandIterator:Next
+				}
+			}
+			case "KillAgressors":
+			{
+				call This.KillAggressors
+				if ${Return}
+				{
+					CommandIterator:Next
+				}
+			}
+			case "NextRoom":
+			{
+				call This.NextRoom
+				if ${Return}
+				{
+					CommandIterator:Next
+				}
+			}
+			case "TargetPriorities":
+			{
+				variable iterator settingIterator
+				CommandIterator:GetSettingIterator[settingIterator]
+				This:TargetPriorities settingIterator					
+			}
+			case "WaitForAggro":
+			{
+				
+				if ${This.AggroCount > 0}
+				{
+					CommandIterator:Next
+				}
+			}
+			case Idle:
+			return
+		}
+	}
 
 	function:bool RunMission(settingsetref commandPile)
 	{

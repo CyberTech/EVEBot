@@ -47,7 +47,7 @@ objectdef obj_Defense
 
 				if !${EVEBot.Paused}
 				{
-					This:CheckAmmo[]
+					;This:CheckAmmo[]
 				}
 
 				if !${This.Hide} && ${This.Hiding} && ${This.TankReady}
@@ -82,7 +82,7 @@ objectdef obj_Defense
 
 		if (${_MyShip.ArmorPct} < ${Config.Combat.MinimumArmorPct}  || \
 			${_MyShip.ShieldPct} < ${Config.Combat.MinimumShieldPct} || \
-			${_MyShip.CapacitorPct} < ${Config.Combat.MinimumCapPct})
+			${_MyShip.CapacitorPct} < ${Config.Combat.MinimumCapPct} && ${Config.Combat.RunOnLowCap})
 		{
 			UI:UpdateConsole["Armor is at ${_MyShip.ArmorPct.Int}%: ${MyShip.Armor.Int}/${MyShip.MaxArmor.Int}", LOG_CRITICAL]
 			UI:UpdateConsole["Shield is at ${_MyShip.ShieldPct.Int}%: ${MyShip.Shield.Int}/${MyShip.MaxShield.Int}", LOG_CRITICAL]

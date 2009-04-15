@@ -594,5 +594,13 @@
         </Set>
       </Set>
     </Set>
+    <Set Name = "Seek and Destroy">
+      <Set Name = "2">
+        <Set Name = "Commands">
+          <Set Name = "2" Action = "ClearRoom">
+          </Set>
+        </Set>
+      </Set>
+    </Set>
   </Set>
 </InnerSpaceSettings>
