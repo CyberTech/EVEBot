@@ -47,7 +47,7 @@ objectdef obj_Defense
 
 				if !${EVEBot.Paused}
 				{
-					;This:CheckAmmo[]
+					This:CheckAmmo[]
 				}
 
 				if !${This.Hide} && ${This.Hiding} && ${This.TankReady}

@@ -67,8 +67,8 @@ objectdef obj_Offense
 		}
 		else
 		{
-			;Ship:Deactivate_Weapons
-			;Ship:Deactivate_StasisWebs
+			Ship:Deactivate_Weapons
+			Ship:Deactivate_StasisWebs
 		}
 	}
 
