@@ -54,18 +54,48 @@ objectdef obj_EVEBot
     			;Script:End
     		}
 
-			if ${Config.Common.Disable3D}
+			if ${Display.Foreground}
 			{
+				if ${Config.Common.DisableUI}
+				{
+					if ${EVE.IsUIDisplayOn}
+					{
+						EVE:ToggleUIDisplay
+						UI:UpdateConsole["Disabling UI Rendering"]
+					}
+				}
+				elseif !${EVE.IsUIDisplayOn}
+				{
+					EVE:ToggleUIDisplay
+					UI:UpdateConsole["Enabling UI Rendering"]
+				}
+
+				if ${Config.Common.Disable3D}
+				{
+					if ${EVE.Is3DDisplayOn}
+					{
+						EVE:Toggle3DDisplay
+						UI:UpdateConsole["Disabling 3D Rendering"]
+					}
+				}
+				elseif !${EVE.Is3DDisplayOn}
+				{
+					EVE:Toggle3DDisplay
+					UI:UpdateConsole["Enabling 3D Rendering"]
+				}
+			}
+			elseif ${Config.Common.DisableScreenWhenBackgrounded}
+			{
+				if ${EVE.IsUIDisplayOn}
+				{
+					EVE:ToggleUIDisplay
+					UI:UpdateConsole["Background EVE: Disabling UI Rendering"]
+				}
 				if ${EVE.Is3DDisplayOn}
 				{
 					EVE:Toggle3DDisplay
-					UI:UpdateConsole["Disabling 3D Rendering"]
+					UI:UpdateConsole["Background EVE: Disabling 3D Rendering"]
 				}
-			}
-			elseif !${EVE.Is3DDisplayOn}
-			{
-				EVE:Toggle3DDisplay
-				UI:UpdateConsole["Enabling 3D Rendering"]
 			}
 
 			if !${This._Paused}

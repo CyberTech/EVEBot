@@ -437,21 +437,21 @@
 								Config.Common:UseSound[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
-						<checkbox Name='cbDisable3D'>
+						<checkbox Name='cbDisableUI'>
 							<X>110</X>
 							<Y>240</Y>
 							<Height>20</Height>
 							<Width>100</Width>
-							<Text>Disable 3D Rendering</Text>
-							<AutoTooltip>Disable EVE 3D Rendering</AutoTooltip>
+							<Text>Disable UI Rendering</Text>
+							<AutoTooltip>Disable EVE UI Rendering</AutoTooltip>
 							<OnLoad>
-								if ${Config.Common.Disable3D}
+								if ${Config.Common.DisableUI}
 								{
 								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
-								Config.Common:Disable3D[${This.Checked}]
+								Config.Common:DisableUI[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
 						<checkbox Name='cbTrainSkills'>
@@ -469,6 +469,40 @@
 							</OnLoad>
 							<OnLeftClick>
 								Config.Common:TrainSkills[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox Name='cbDisable3D'>
+							<X>110</X>
+							<Y>260</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Disable 3D Rendering</Text>
+							<AutoTooltip>Disable EVE 3D Rendering</AutoTooltip>
+							<OnLoad>
+								if ${Config.Common.Disable3D}
+								{
+								This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Config.Common:Disable3D[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox Name='cbDisable3DBackground'>
+							<X>250</X>
+							<Y>240</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Disable Rendering in Background</Text>
+							<AutoTooltip>Disable Rendering when EVE is in the background</AutoTooltip>
+							<OnLoad>
+								if ${Config.Common.DisableScreenWhenBackgrounded}
+								{
+								This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Config.Common:DisableScreenWhenBackgrounded[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
 					</Tab>
