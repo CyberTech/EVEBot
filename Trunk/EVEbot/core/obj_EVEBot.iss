@@ -48,6 +48,7 @@ objectdef obj_EVEBot
     			;run EVEBot/Launcher.iss charid or charname
     		}
 
+			; TODO this doesn't disable rendering if it's not forground and disablescreenwhenbackgrounded = false
 			if ${Display.Foreground}
 			{
 				if ${Config.Common.DisableUI}
