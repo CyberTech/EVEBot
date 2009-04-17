@@ -21,12 +21,6 @@ objectdef obj_EVEBot
 
 	method Initialize()
 	{
-		if !${ISXEVE(exists)}
-		{
-			echo "ISXEVE must be loaded to use ${APP_NAME}."
-			Script:End
-		}
-
 		This:SetVersion
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_EVEBot: Initialized", LOG_MINOR]
@@ -49,9 +43,9 @@ objectdef obj_EVEBot
     		if ${Login(exists)} || \
     			${CharSelect(exists)}
     		{
-    			echo "EVEBot: Out of game"
+    			This:Pause["Error: At login or character select screens - EVEBot must be restarted after login"]
+    			Script:Pause
     			;run EVEBot/Launcher.iss charid or charname
-    			;Script:End
     		}
 
 			if ${Display.Foreground}
@@ -174,9 +168,9 @@ objectdef obj_EVEBot
 		return FALSE
 	}
 
-	method Pause()
+	method Pause(string ErrMsg)
 	{
-		UI:UpdateConsole["Paused", LOG_CRITICAL]
+		UI:UpdateConsole["${ErrMsg}", LOG_CRITICAL]
 		This._Paused:Set[TRUE]
 	}
 
@@ -184,6 +178,7 @@ objectdef obj_EVEBot
 	{
 		UI:UpdateConsole["Resumed", LOG_CRITICAL]
 		This._Paused:Set[FALSE]
+		Script:Resume
 	}
 
 	method SetVersion(int Version=${VersionNum})
