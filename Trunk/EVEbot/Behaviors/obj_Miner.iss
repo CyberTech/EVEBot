@@ -37,7 +37,7 @@ objectdef obj_Miner
 	{
 		BotModules:Insert["Miner"]
 		Defense.Option_RunIfTargetJammed:Set[TRUE]
-		
+
 		This.TripStartTime:Set[${Time.Timestamp}]
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_Miner: Initialized", LOG_MINOR]
@@ -157,6 +157,12 @@ objectdef obj_Miner
 
 	method SetState()
 	{
+		if ${Defense.Hiding}
+		{
+			This.CurrentState:Set["IDLE"]
+			return
+		}
+
 		if ${EVEBot.ReturnToStation} && ${Me.InSpace}
 		{
 			This.CurrentState:Set["ABORT"]
