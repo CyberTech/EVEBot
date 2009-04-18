@@ -5,6 +5,10 @@
 	Intended to be instantiated one or more times for each module that requires
 	frequent entity lookups.
 
+	Keeps entity data in 2 lists -- the original index:int from isxeve, and an expanded
+	index:obj_Entity which contains commonly accessed data fields.
+	
+	-- CyberTech
 */
 
 objectdef obj_Entity
@@ -34,11 +38,11 @@ objectdef obj_EntityCache inherits BaseClass
 {
 	variable string SVN_REVISION = "$Rev: 949 $"
 	variable int Version
+	variable string LogPrefix
 
 	variable bool Initialized = false
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 4
-	variable string LogPrefix
 
 	variable string SearchParams = "byDist"
 	variable index:entity Entities

@@ -36,7 +36,8 @@ objectdef obj_Miner
 	method Initialize()
 	{
 		BotModules:Insert["Miner"]
-
+		Defense.Option_RunIfTargetJammed:Set[TRUE]
+		
 		This.TripStartTime:Set[${Time.Timestamp}]
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_Miner: Initialized", LOG_MINOR]

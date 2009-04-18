@@ -12,10 +12,6 @@ BUGS:
 
 */
 
-objectdef obj_AsteroidGroup
-{
-}
-
 objectdef obj_Asteroids
 {
 	variable string SVN_REVISION = "$Rev$"
@@ -23,7 +19,8 @@ objectdef obj_Asteroids
 
 	variable int AsteroidCategoryID = 25
 
-	variable index:entity AsteroidList
+	; Asteroids = AsteroidList
+	variable obj_EntityCache AsteroidCache
 	variable iterator OreTypeIterator
 
 	variable index:string EmptyBeltList
@@ -40,6 +37,8 @@ objectdef obj_Asteroids
 	method Initialize()
 	{
 		UI:UpdateConsole["obj_Asteroids: Initialized", LOG_MINOR]
+		AsteroidCache:UpdateSearchParams["AsteroidCache", "CategoryID,CATEGORYID_ORE"]
+		AsteroidCache:SetUpdateFrequency[15]
 	}
 
 	; Checks the belt name against the empty belt list.
@@ -65,54 +64,12 @@ objectdef obj_Asteroids
 	}
 
 	; Adds the named belt to the empty belt list
-	method BeltIsEmpty(string BeltName)
+	method MarkBeltEmpty(string BeltName)
 	{
 		if ${BeltName(exists)}
 		{
 			EmptyBeltList:Insert[${BeltName}]
 			UI:UpdateConsole["Excluding empty belt ${BeltName}"]
-		}
-	}
-
-	function MoveToRandomBeltBookMark()
-	{
-		EVE:DoGetBookmarks[BeltBookMarkList]
-
-		variable int RandomBelt
-		variable string Label
-		variable string prefix
-
-		while ${BeltBookMarkList.Used} > 0
-		{
-			RandomBelt:Set[${Math.Rand[${BeltBookMarkList.Used}]:Inc[1]}]
-
-			if ${Config.Miner.IceMining}
-			{
-				prefix:Set["${Config.Labels.IceBeltPrefix}"]
-			}
-			else
-			{
-				prefix:Set["${Config.Labels.OreBeltPrefix}"]
-			}
-
-			Label:Set["${BeltBookMarkList[${RandomBelt}].Label}"]
-
-			if (${BeltBookMarkList[${RandomBelt}].SolarSystemID} != ${_Me.SolarSystemID} || \
-				${Label.Left[${prefix.Length}].NotEqual["${prefix}"]})
-			{
-				BeltBookMarkList:Remove[${RandomBelt}]
-				BeltBookMarkList:Collapse
-				continue
-			}
-#if EVEBOT_DEBUG
-			UI:UpdateConsole["MoveToRandomBeltBookMark: call Ship.WarpToBookMark ${BeltBookMarkList[${RandomBelt}].ID}"]
-#endif
-			call Ship.WarpToBookMark ${BeltBookMarkList[${RandomBelt}].ID}
-
-			This.BeltArrivalTime:Set[${Time.Timestamp}]
-			This.LastBookMarkIndex:Set[${RandomBelt}]
-			This.UsingBookMarks:Set[TRUE]
-			return
 		}
 	}
 
@@ -164,7 +121,7 @@ objectdef obj_Asteroids
 
 				if ${Config.Miner.UseFieldBookmarks}
 				{
-					call This.MoveToRandomBeltBookMark
+					call BeltBookmarks.WarpToRandom
 					return
 				}
 
@@ -213,7 +170,7 @@ objectdef obj_Asteroids
 
 			if ${Config.Miner.UseFieldBookmarks}
 			{
-				call This.MoveToRandomBeltBookMark
+				call Beltbookmarks.WarpToRandom
 				return
 			}
 
@@ -442,7 +399,7 @@ objectdef obj_Asteroids
 			UI:UpdateConsole["obj_Asteroids: No Asteroids within overview range"]
 			if ${Entity[GroupID, GROUP_ASTEROIDBELT].Distance} < CONFIG_OVERVIEW_RANGE
 			{
-				This:BeltIsEmpty["${Entity[GroupID, GROUP_ASTEROIDBELT]}"]
+				This:MarkBeltEmpty["${Entity[GroupID, GROUP_ASTEROIDBELT]}"]
 			}
 			call This.MoveToField TRUE
 			return TRUE

@@ -259,7 +259,7 @@ objectdef obj_Combat
 
 	function FleeToSafespot()
 	{
-		if ${Safespots.IsAtSafespot}
+		if ${Safespots.AtSafespot}
 		{
 			if !${Ship.IsCloaked}
 			{

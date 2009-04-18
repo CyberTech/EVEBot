@@ -19,6 +19,9 @@
 #include core/Lib/obj_Sound.iss
 
 /* Core EVEBot API Includes */
+#include core/obj_EntityCache.iss
+#include core/obj_Bookmark.iss
+#include core/obj_BeltBookmarks.iss
 #include core/obj_EVEDB.iss
 #include core/obj_Skills.iss
 #include core/obj_Asteroids.iss
@@ -124,6 +127,7 @@ function main()
 	declarevariable ChatIRC obj_IRC global
 	declarevariable Safespots obj_Safespots global
 	declarevariable Belts obj_Belts global
+	declarevariable BeltBookmarks obj_BeltBookmarks global
 	declarevariable Targets obj_Targets global
 	declarevariable Sound obj_Sound global
 	declarevariable Agents obj_Agents global

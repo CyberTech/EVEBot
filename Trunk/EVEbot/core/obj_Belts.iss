@@ -2,23 +2,26 @@ objectdef obj_Belts
 {
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
+	variable string LogPrefix
 
 	variable index:entity beltIndex
 	variable iterator beltIterator
 
 	method Initialize()
 	{		
-		UI:UpdateConsole["obj_Belts: Initialized", LOG_MINOR]
+		This[parent]:Initialize
+		LogPrefix:Set["obj_Belts(${This.ObjectName})"]
+		UI:UpdateConsole["${LogPrefix}: Initialized"]
 	}
 	
 	method ResetBeltList()
 	{
 		EVE:DoGetEntities[beltIndex, GroupID, GROUP_ASTEROIDBELT]
 		beltIndex:GetIterator[beltIterator]	
-		UI:UpdateConsole["obj_Belts: ResetBeltList found ${beltIndex.Used} belts in this system.", LOG_DEBUG]
+		UI:UpdateConsole["${LogPrefix}: ResetBeltList found ${beltIndex.Used} belts in this system.", LOG_DEBUG]
 	}
 	
-    member:bool IsAtBelt()
+	member:bool AtBelt()
 	{
 		; Are we within 150km of the bookmark?
 		if ${beltIterator.Value.ItemID} > -1
@@ -36,42 +39,42 @@ objectdef obj_Belts
 		return FALSE
 	}
 	
-	; TODO - logic is duplicated inside WarpToNextBelt -- CyberTech
-	method NextBelt()
+	method Next()
 	{
 		if ${beltIndex.Used} == 0 
 		{
 			This:ResetBeltList
 		}		
 
-		if !${beltIterator:Next(exists)}
-			beltIterator:First(exists)
-
-		return
-	}
-	
-	function WarpTo(int WarpInDistance=0)
-	{
-		call This.WarpToNextBelt ${WarpInDistance}
-	}
-	
-	function WarpToNextBelt(int WarpInDistance=0)
-	{
-		if ${beltIndex.Used} == 0 
-		{
-			This:ResetBeltList
-		}		
-		
-		; This is for belt bookmarks only
-		;if ${beltIndex.Get[1](exists)} && ${beltIndex.Get[1].SolarSystemID} != ${_Me.SolarSystemID}
-		;{
-		;	This:ResetBeltList
-		;}
-		
 		if !${beltIterator:Next(exists)}
 		{
 			beltIterator:First
 		}
+	}
+	
+	function WarpTo(int WarpInDistance=0)
+	{
+		call This.WarpToNext ${WarpInDistance}
+	}
+	
+	function WarpToRandom(int WarpInDistance=0)
+	{
+		variable int RandomBelt
+
+		if ${beltIndex.Used} > 0
+		{
+			RandomBelt:Set[${Math.Rand[${Math.Calc[${beltIndex.Used}-1]}]:Inc[1]}]
+			while ${RandomBelt} > 0
+			{
+				This:Next
+			}
+		}
+		This:WarpToNext ${WarpInDistance}
+	}
+	
+	function WarpToNext(int WarpInDistance=0)
+	{
+		This:Next
 		
 		if ${beltIterator.Value(exists)}
 		{
@@ -88,18 +91,18 @@ objectdef obj_Belts
 					; I really, really hate this solution, it relies on the % chance the hostile will pick the wrong belt
 					; when they see you on scanner. -- CyberTech
 					UI:UpdateConsole["obj_Belts: Skipping belt ${beltIterator.Value.Name} - too close to gate (${Entity[${NearestGate}].Name} - ${DistanceToGate}"]
-					call This.WarpToNextBelt ${WarpInDistance}
+					call This.WarpToNext ${WarpInDistance}
 					return
 				}
 			}
 
 			;call Ship.WarpToBookMark ${SafeSpotIterator.Value.ID}
-			;;UI:UpdateConsole["obj_Belts: DEBUG: Warping to ${beltIterator.Value.Name}"]
+			;;UI:UpdateConsole["${LogPrefix}: DEBUG: Warping to ${beltIterator.Value.Name}"]
 			call Ship.WarpToID ${beltIterator.Value.ID} ${WarpInDistance}
 		}
 		else
 		{
-			UI:UpdateConsole["obj_Belts:WarpToNextBelt ERROR: beltIterator does not exist"]
+			UI:UpdateConsole["${LogPrefix}: WarpToNext ERROR: beltIterator does not exist"]
 		}
 	}
 }

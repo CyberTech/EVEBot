@@ -72,7 +72,7 @@ objectdef obj_Scavenger
 					call Station.Undock
 				}
 				wait 10
-				call Asteroids.MoveToRandomBeltBookMark
+				call Belt.WarpToRandom
 				wait 10
 				call This.WarpToFirstNonEmptyWreck
 				wait 10

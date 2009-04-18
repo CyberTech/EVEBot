@@ -24,6 +24,9 @@ objectdef obj_Defense
 	variable string HideReason
 	variable bool Hiding = FALSE
 
+	; TODO - implement these
+	variable bool Option_RunIfTargetJammed = FALSE
+	variable bool Option_QuitIfWarpScrambled = FALSE
 	method Initialize()
 	{
 		Event[OnFrame]:AttachAtom[This:Pulse]
@@ -241,7 +244,7 @@ objectdef obj_Defense
 			return
 		}
 
-		if ${Safespots.IsAtSafespot}
+		if ${Safespots.AtSafespot}
 		{
 			if ${Ship.HasCloak} && !${Ship.IsCloaked}
 			{

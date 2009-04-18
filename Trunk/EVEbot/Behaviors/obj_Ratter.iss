@@ -102,7 +102,8 @@ objectdef obj_Ratter
 		if ${Social.IsSafe}
 		{
 			Ship:Deactivate_Weapons
-			call Belts.WarpToNextBelt
+	; TODO - check for use of belt bookmark object instead
+			call Belts.WarpToNext
 			; This will reset target information about the belt
 			; (its needed for chaining)
 			; Reload just before targeting everything, the ship

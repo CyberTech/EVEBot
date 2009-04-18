@@ -1,5 +1,5 @@
 /*
-	Bookmark class
+	Bookmarks class
 	
 	Manages dynamic bookmarks for EVEBot
 	
