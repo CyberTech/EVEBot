@@ -94,7 +94,14 @@ objectdef obj_Miner
 				call Station.Undock
 				break
 			case CHANGEBELT
-				call Asteroids.MoveToField TRUE
+				if ${Config.Miner.UseFieldBookmarks}
+				{
+					BeltBookmarks:WarpToNext
+				}
+				else
+				{
+					Belts:WarpToNext
+				}
 				break
 			case MINE
 				call This.Mine
@@ -187,9 +194,49 @@ objectdef obj_Miner
 	  		return
 		}
 
+		if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]}
+		{
+			UI:UpdateConsole["Avoiding player: Changing Belts"]
+			This.CurrentState:Set["CHANGEBELT"]
+			return
+		}
+
 		if ${MyShip.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold} && \
 		    ${SanityCheckAbort} == FALSE
 		{
+			if ${Config.Miner.UseFieldBookmarks}
+			{
+				if ${BeltBookmarks.Count} == ${BeltBookmarks.EmptyBelts.Used}
+				{
+					; TODO - CyberTech: Add option to switch to non-bookmark use in this case
+					This.CurrentState:Set["ABORT"]
+					return
+				}
+				if !${BeltBookmarks.AtBelt}
+				{
+				 	This.CurrentState:Set["CHANGEBELT"]
+					return
+				}
+			}
+			else
+			{
+				if ${Belts.Count} == ${Belts.EmptyBelts.Used}
+				{
+					This.CurrentState:Set["ABORT"]
+					return
+				}
+				if !${Belts.AtBelt}
+				{
+				 	This.CurrentState:Set["CHANGEBELT"]
+					return
+				}
+			}
+			; TODO - CyberTech: implement this
+			;if ${Asteroids.Count} == 0
+			;{
+			; 	This.CurrentState:Set["CHANGEBELT"]
+			;	return
+			;}
 		 	This.CurrentState:Set["MINE"]
 			return
 		}
@@ -199,8 +246,6 @@ objectdef obj_Miner
 			This.CurrentState:Set["TRANSFER_TO_JETCAN"]
 			return
 		}
-
-	    echo "${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold} || ${EVEBot.ReturnToStation}  || ${SanityCheckAbort} == TRUE"
 
 	    if ${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold} || \
     	    ${EVEBot.ReturnToStation}  || \
@@ -315,56 +360,37 @@ objectdef obj_Miner
 			Ship.Drones:LaunchAll[]
 		}
 
-		if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]}
-		{
-			UI:UpdateConsole["Avoiding player: Changing Belts"]
-			This.CurrentState:Set["CHANGEBELT"]
-			call This.Prepare_Environment
-			return
-		}
-
 		if ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers}
 		{
-			echo 1
 			; We've got idle lasers, and available targets. Do something with them.
 			Me:DoGetTargets[LockedTargets]
 			LockedTargets:GetIterator[Target]
 			if ${Target:First(exists)}
 			do
 			{
-			echo Used: ${LockedTargets.Used}
 				if ${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 				{
 					break
 				}
-			echo 2
 
 				if ${Target.Value.CategoryID} != ${Asteroids.AsteroidCategoryID}
 				{
 					continue
 				}
-			echo 3
 
 				/* TODO: CyberTech - this concentrates fire fine if there's only 1 target, but if there's multiple targets
 					it still prefers to distribute. Ice mining shouldn't distribute
 				*/
-				echo "(${This.ConcentrateFire} || ${Config.Miner.MinerType.Equal[Ice]} || !${Ship.IsMiningAsteroidID[${Target.Value.ID}]})"
-
 				if (${This.ConcentrateFire} || \
 					${Config.Miner.MinerType.Equal["Ice"]} || \
 					!${Ship.IsMiningAsteroidID[${Target.Value.ID}]})
 				{
-			echo Calling Target.Value:MakeActiveTarget
-
+					; TODO - CyberTech: None of this should be here. it should be in a TARGETING state
 					Target.Value:MakeActiveTarget
-			echo Done.. waiting
 					while ${Target.Value.ID} != ${Me.ActiveTarget.ID}
 					{
-						echo "while ${Target.Value.ID} != ${Me.ActiveTarget.ID}"
-						wait 5
-						echo .
+						wait 0.5
 					}
-			echo 4
 
 					if ${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 					{
@@ -372,7 +398,6 @@ objectdef obj_Miner
 					}
 					call Ship.Approach ${Target.Value.ID} ${Ship.OptimalMiningRange}
 					call Ship.ActivateFreeMiningLaser
-			echo 5
 
 					if (${Ship.Drones.DronesInSpace} > 0 && \
 						${Config.Miner.UseMiningDrones})

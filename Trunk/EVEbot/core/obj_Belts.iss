@@ -7,6 +7,8 @@ objectdef obj_Belts
 	variable index:entity beltIndex
 	variable iterator beltIterator
 
+	variable set EmptyBelts
+
 	method Initialize()
 	{
 		This[parent]:Initialize
@@ -20,6 +22,24 @@ objectdef obj_Belts
 		beltIndex:GetIterator[beltIterator]
 		beltIterator:First
 		UI:UpdateConsole["${LogPrefix}: ResetBeltList found ${beltIndex.Used} belts in this system.", LOG_DEBUG]
+	}
+
+	; Checks the belt name against the empty belt list.
+	member IsBeltEmpty(string BeltName)
+	{
+		if ${This.EmptyBelts.Contains["${BeltName}"]}
+		{
+			UI:UpdateConsole["DEBUG: ${LogPrefix}:IsBeltEmpty - ${BeltName} - TRUE", LOG_DEBUG]
+			return TRUE
+		}
+		return FALSE
+	}
+
+	; Adds the named belt to the empty belt list
+	method MarkBeltEmpty(string BeltName)
+	{
+		EmptyBelts:Add["${BeltName}"]
+		UI:UpdateConsole["Excluding empty belt ${BeltName}"]
 	}
 
 	member:int Count()
