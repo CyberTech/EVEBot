@@ -163,15 +163,15 @@ objectdef obj_Miner
 			return
 		}
 
-		if ${EVEBot.ReturnToStation} && ${Me.InSpace}
-		{
-			This.CurrentState:Set["ABORT"]
-			return
-		}
-
 		if ${Ship.InWarp}
 		{
 			This.CurrentState:Set["WARP_WAIT"]
+			return
+		}
+
+		if ${EVEBot.ReturnToStation} && ${Me.InSpace}
+		{
+			This.CurrentState:Set["ABORT"]
 			return
 		}
 

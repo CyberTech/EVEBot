@@ -8,22 +8,42 @@ objectdef obj_Belts
 	variable iterator beltIterator
 
 	method Initialize()
-	{		
+	{
 		This[parent]:Initialize
 		LogPrefix:Set["obj_Belts(${This.ObjectName})"]
 		UI:UpdateConsole["${LogPrefix}: Initialized"]
 	}
-	
+
 	method ResetBeltList()
 	{
 		EVE:DoGetEntities[beltIndex, GroupID, GROUP_ASTEROIDBELT]
-		beltIndex:GetIterator[beltIterator]	
+		beltIndex:GetIterator[beltIterator]
+		beltIterator:First
 		UI:UpdateConsole["${LogPrefix}: ResetBeltList found ${beltIndex.Used} belts in this system.", LOG_DEBUG]
 	}
-	
+
+	member:int Count()
+	{
+		return ${beltIndex.Used}
+	}
+
 	member:bool AtBelt()
 	{
-		; Are we within 150km of the bookmark?
+		; Check if there is a belt closer than warp range.
+		if (${beltIndex.Used} == 0)
+		{
+			This:ResetBeltList
+			if (${This.Count} == 0)
+			{
+				return FALSE
+			}
+		}
+
+		if !${beltIterator.Value.IsValid}
+		{
+			return FALSE
+		}
+
 		if ${beltIterator.Value.ItemID} > -1
 		{
 			if ${Me.ToEntity.DistanceTo[${beltIterator.Value.ItemID}]} < WARP_RANGE
@@ -35,28 +55,28 @@ objectdef obj_Belts
 		{
 			return TRUE
 		}
-		
+
 		return FALSE
 	}
-	
+
 	method Next()
 	{
-		if ${beltIndex.Used} == 0 
+		if ${beltIndex.Used} == 0
 		{
 			This:ResetBeltList
-		}		
+		}
 
 		if !${beltIterator:Next(exists)}
 		{
 			beltIterator:First
 		}
 	}
-	
+
 	function WarpTo(int WarpInDistance=0)
 	{
 		call This.WarpToNext ${WarpInDistance}
 	}
-	
+
 	function WarpToRandom(int WarpInDistance=0)
 	{
 		variable int RandomBelt
@@ -71,11 +91,11 @@ objectdef obj_Belts
 		}
 		This:WarpToNext ${WarpInDistance}
 	}
-	
+
 	function WarpToNext(int WarpInDistance=0)
 	{
 		This:Next
-		
+
 		if ${beltIterator.Value(exists)}
 		{
 
@@ -96,8 +116,6 @@ objectdef obj_Belts
 				}
 			}
 
-			;call Ship.WarpToBookMark ${SafeSpotIterator.Value.ID}
-			;;UI:UpdateConsole["${LogPrefix}: DEBUG: Warping to ${beltIterator.Value.Name}"]
 			call Ship.WarpToID ${beltIterator.Value.ID} ${WarpInDistance}
 		}
 		else
