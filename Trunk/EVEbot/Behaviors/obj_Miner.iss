@@ -83,7 +83,6 @@ objectdef obj_Miner
 				break
 			case ABORT
 				Call Station.Dock
-				Call This.Abort_Check
 				break
 			case INSTATION
 				call Cargo.TransferOreToHangar
