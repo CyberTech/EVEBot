@@ -3,17 +3,41 @@
 This data doesn't apply here really, but it's good enough here for now -- CyberTech
 
 Missile range:
+	http://www.eveonline.com/ingameboard.asp?a=topic&threadID=771647&page=1#9
+
+	Current consensus of an acceleration formula for ships is
+
 	V(t) = (1-e^(-t/(ma)))Vmax
 
+	All missiles fly such a short time, that their velocity never really reach the maximum velocity.
+	That alone proves that max flight time*maximum velocity is too optimistic formula.
+
+	The guaranteed range of missiles is with the formula:
+
+	s(t) = (a(-1+e^(-t/(ma)))m+t)Vmax
+
 	where
-	t = time
-	m = mass / 1 000 000
-	a = inertia modifier
-	Vmax = maximum velocity
+		s(t) = function for distance traveled over time t
+		t = time
+		m = mass / 1,000,000
+		a = inertia modifier
+		Vmax = maximum velocity
 
-	Now if we do a definite integral of this with respect to the flight time of OPs missile (T between 0 and 9). We get a formula:
+	This falls short of the range that missiles really reach. Also missiles range seem to differ randomly by a few
+	kilometers. So my theory was that missiles check their state only every second or so, which would mean that the
+	maximum range of missiles would vary roughly by their maximum velocity. You might think this as an falloff, even
+	though falloff is a curve and this missile range variation seems to be linear.
 
-	V(T) = (a(-1+e^(-T/(ma)))m+T)Vmax
+	The way I use currently to show missile range is first of all assume both shooter and target are stationary. Then
+	take the guaranteed range formulas result as a base number and add the maximum velocity of the missile as variation.
+	Which for a Golem firing normal torps would look like:
+
+		Vmax=3881
+		t=10.35
+		a=1000
+		m=1.5E-3
+
+		Range = 34353 (+3881)
 
 Time to warp: (From aligned)
 	V(t) = Vmax*(1-e^-(t / (A*M)))
@@ -43,6 +67,10 @@ Distance Traveled Before Warp:
 
 Time to warp (including align time):
 	http://www.eveonline.com/ingameboard.asp?a=topic&threadID=723019, post #5
+
+Orbital Speed/Radius:
+	http://www.eveonline.com/ingameboard.asp?a=topic&threadID=498317&page=1#27
+	post 27 describes the max orbital speed at radius, or the min radius at orbital speed
 */
 
 objectdef obj_Vector
