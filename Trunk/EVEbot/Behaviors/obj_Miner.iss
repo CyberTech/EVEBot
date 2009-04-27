@@ -95,11 +95,12 @@ objectdef obj_Miner
 			case CHANGEBELT
 				if ${Config.Miner.UseFieldBookmarks}
 				{
+					/* There's currently no obj_BeltBookmarks method for warping so this will silently fail. --Stealthy */
 					BeltBookmarks:WarpToNext
 				}
 				else
 				{
-					Belts:WarpToNext
+					call Belts.WarpToNext
 				}
 				break
 			case MINE
@@ -219,6 +220,7 @@ objectdef obj_Miner
 			}
 			else
 			{
+				UI:UpdateConsole["Normal Belts: Count: ${Belts.Count}, EmptyBelts.Used: ${Belts.EmptyBelts.Used}"]
 				if ${Belts.Count} == ${Belts.EmptyBelts.Used}
 				{
 					This.CurrentState:Set["ABORT"]
@@ -329,6 +331,7 @@ objectdef obj_Miner
 
 	function Mine()
 	{
+		UI:UpdateConsole["Mining"]
 		if !${Me.InSpace}
 		{
 			UI:UpdateConsole["DEBUG: obj_Miner.Mine called while not in space!"]
@@ -337,7 +340,8 @@ objectdef obj_Miner
 
 		This.TripStartTime:Set[${Time.Timestamp}]
 		; Find an asteroid field, or stay at current one if we're near one.
-		call Asteroids.MoveToField FALSE
+		if !${Belts.AtBelt}
+			call Belts.WarpToNext
 		call This.Prepare_Environment
 		call Asteroids.UpdateList
 

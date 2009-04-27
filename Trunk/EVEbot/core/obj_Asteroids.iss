@@ -98,6 +98,7 @@ objectdef obj_Asteroids
 			if !${ForceMove}
 			{
 				call ChooseTargets TRUE
+				UI:UpdateConsole["DEBUG: MoveToField: T.QS: ${Targeting.QueueSize}"]
 				AsteroidsInRange:Set[${Targeting.QueueSize}]
 			}
 
@@ -203,19 +204,18 @@ objectdef obj_Asteroids
 		}
 
 		if ${This.OreTypeIterator:First(exists)}
-		{
+		{		
 			do
 			{
 #if EVEBOT_DEBUG
 				UI:UpdateConsole["DEBUG: obj_Asteroids:Populate_AsteroidList: Checking for Ore Type ${This.OreTypeIterator.Key}"]
 #endif
 				CurrentAsteroidList:Clear
-				EVE:DoGetEntities[CurrentAsteroidList,CategoryID,${This.AsteroidCategoryID},ExactName,${This.OreTypeIterator.Key}]
+				EVE:DoGetEntities[CurrentAsteroidList,CategoryID,${This.AsteroidCategoryID},ExactName,Asteroid (${This.OreTypeIterator.Key})]
 
 #if EVEBOT_DEBUG
 				UI:UpdateConsole["DEBUG: obj_Asteroids:Populate_AsteroidList: Found ${CurrentAsteroidList.Used}"]
 #endif
-
 				CurrentAsteroidList:GetIterator[AsteroidIterator]
 				if ${AsteroidIterator:First(exists)}
 				do
