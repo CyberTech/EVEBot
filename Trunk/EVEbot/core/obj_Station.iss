@@ -319,12 +319,12 @@ objectdef obj_Station
 			}
 		}
 		while ${This.Docked}
-		UI:UpdateConsoleIRC["Undock: Complete"]
-
-		Config.Common:SetHomeStation[${Entity[CategoryID,3].Name}]
 
 		Me:SetVelocity[100]
 		wait 100
+		Config.Common:SetHomeStation[${Entity[CategoryID,3].Name}]
+		UI:UpdateConsole["Undock: Complete - Home Station set to ${Config.Common.HomeStation}"]
+
 
 		Ship:UpdateModuleList[]
 		Ship:SetType[${Entity[CategoryID,CATEGORYID_SHIP].Type}]
