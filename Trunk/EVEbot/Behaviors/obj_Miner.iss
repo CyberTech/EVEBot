@@ -95,8 +95,7 @@ objectdef obj_Miner
 			case CHANGEBELT
 				if ${Config.Miner.UseFieldBookmarks}
 				{
-					/* There's currently no obj_BeltBookmarks method for warping so this will silently fail. --Stealthy */
-					BeltBookmarks:WarpToNext
+					call BeltBookmarks.WarpToNext
 				}
 				else
 				{
