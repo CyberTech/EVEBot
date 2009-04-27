@@ -322,7 +322,7 @@ objectdef obj_Station
 
 		Me:SetVelocity[100]
 		wait 100
-		Config.Common:SetHomeStation[${Entity[CategoryID,3].Name}]
+		Config.Common:HomeStation[${Entity[CategoryID,3].Name}]
 		UI:UpdateConsole["Undock: Complete - Home Station set to ${Config.Common.HomeStation}"]
 
 
