@@ -65,7 +65,7 @@ objectdef obj_EVEBotUI
 
 				if ${Me(exists)}
 				{
-					Config.Common:SetAutoLoginCharID[${_Me.CharID}]
+					Config.Common:AutoLoginCharID[${_Me.CharID}]
 				}
 			}
 
