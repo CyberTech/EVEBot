@@ -270,7 +270,7 @@ objectdef obj_Defense
 		variable int CapacitorPctEnable = 20
 		variable int CapacitorPctDisable = 80
 
-		if ${_MyShip.ArmorPct} < ${ArmorPctEnable}
+		if ${_MyShip.ArmorPct} < ${Config.Combat.ArmorPctEnable}
 		{
 			/* Turn on armor reps, if you have them
 				Armor reps do not rep right away -- they rep at the END of the cycle.
@@ -278,7 +278,7 @@ objectdef obj_Defense
 			*/
 			Ship:Activate_Armor_Reps[]
 		}
-		elseif ${_MyShip.ArmorPct} > ${ArmorPctDisable}
+		elseif ${_MyShip.ArmorPct} > ${Config.Combat.ArmorPctDisable}
 		{
 			Ship:Deactivate_Armor_Reps[]
 		}
@@ -298,21 +298,21 @@ objectdef obj_Defense
 		else
 		{
 			; We're not in warp, so use normal percentages to enable/disable
-			if ${_MyShip.ShieldPct} < ${ShieldPctEnable} || ${Config.Combat.AlwaysShieldBoost}
+			if ${_MyShip.ShieldPct} < ${Config.Combat.ShieldPctEnable} || ${Config.Combat.AlwaysShieldBoost}
 			{
 				Ship:Activate_Shield_Booster[]
 			}
-			elseif ${_MyShip.ShieldPct} > ${ShieldPctDisable} && !${Config.Combat.AlwaysShieldBoost}
+			elseif ${_MyShip.ShieldPct} > ${Config.Combat.ShieldPctDisable} && !${Config.Combat.AlwaysShieldBoost}
 			{
 				Ship:Deactivate_Shield_Booster[]
 			}
 		}
 
-		if ${_MyShip.CapacitorPct} < ${CapacitorPctEnable}
+		if ${_MyShip.CapacitorPct} < ${Config.Combat.CapacitorPctEnable}
 		{
 			Ship:Activate_Cap_Booster[]
 		}
-		elseif ${_MyShip.CapacitorPct} > ${CapacitorPctDisable}
+		elseif ${_MyShip.CapacitorPct} > ${Config.Combat.CapacitorPctDisable}
 		{
 			Ship:Deactivate_Cap_Booster[]
 		}
