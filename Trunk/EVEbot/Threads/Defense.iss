@@ -143,14 +143,9 @@ objectdef obj_Defense
 			return TRUE
 		}
 
-		;TODO:  These should be moved to config variables w/ UI controls
-		variable int ArmorPctReady = 50
-		variable int ShieldPctReady = 80
-		variable int CapacitorPctReady = 80
-
-		if  ${_MyShip.ArmorPct} < ${ArmorPctReady} || \
-			(${_MyShip.ShieldPct} < ${ShieldPctReady} && ${Config.Combat.MinimumShieldPct} > 0) || \
-			${_MyShip.CapacitorPct} < ${CapacitorPctReady}
+		if  ${_MyShip.ArmorPct} < ${Config.Combat.ArmorPctReady} || \
+			(${_MyShip.ShieldPct} < ${Config.Combat.ShieldPctReady} && ${Config.Combat.MinimumShieldPct} > 0) || \
+			${_MyShip.CapacitorPct} < ${Config.Combat.CapacitorPctReady}
 		{
 			return FALSE
 		}
