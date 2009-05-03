@@ -35,7 +35,8 @@ objectdef obj_Offense
 			if ${This.Running} && !${EVEBot.Paused}
 			{
 				This:TakeOffensiveAction
-			}
+				This:CheckAmmo[]				
+			}	
 
 			This.NextPulse:Set[${Time.Timestamp}]
 			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
@@ -69,6 +70,27 @@ objectdef obj_Offense
 		{
 			Ship:Deactivate_Weapons
 			Ship:Deactivate_StasisWebs
+		}
+	}
+
+	method CheckAmmo()
+	{
+		if !${Script[EVEBot](exists)}
+		{
+			return
+		}
+
+		if ${Ship.IsCloaked} || !${Me.InSpace}
+		{
+			return
+		}
+
+		if ${Ship.IsAmmoAvailable} == FALSE
+		{
+			if ${Config.Combat.RunOnLowAmmo} == TRUE
+			{
+				Defense:RunAway["No Ammo!"]
+			}
 		}
 	}
 

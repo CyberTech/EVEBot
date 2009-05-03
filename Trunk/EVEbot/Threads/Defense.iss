@@ -50,11 +50,6 @@ objectdef obj_Defense
 					This:RunAway["RunIfTargetJammed == TRUE && IsTargetJammed == TRUE"]
 				}
 
-				if !${EVEBot.Paused}
-				{
-					This:CheckAmmo[]
-				}
-
 				if !${This.Hide} && ${This.Hiding} && ${This.TankReady}
 				{
 					UI:UpdateConsole["Thread: obj_Defense: No longer hiding"]
@@ -167,47 +162,7 @@ objectdef obj_Defense
 
 		if ${Social.IsSafe} == FALSE
 		{
-			if ${_Me.ToEntity.IsWarpScrambled}
-			{
-				if ${Config.Combat.QuitIfWarpScrambled}
-				{
-					UI:UpdateConsole["Warp Scrambled: Quitting game."]
-					exit
-					/* Todo: Optionally start the launcher to restart EVE in a while. */
-				}
-				else
-				{
-					UI:UpdateConsole["Warp Scrambled: Not quitting game. Don't blame us if you pop."]
-				}
-			}
-			else
-			{
-				This:RunAway["Hostiles in Local"]
-			}
-		}
-	}
-
-	method CheckAmmo()
-	{
-		if !${Script[EVEBot](exists)}
-		{
-			return
-		}
-
-		; TODO - move this to offensive thread, and call back to Defense.RunAway() if necessary - CyberTech
-
-		if ${Ship.IsCloaked} || !${Me.InSpace}
-		{
-			return
-		}
-
-		if ${Ship.IsAmmoAvailable} == FALSE
-		{
-			if ${Config.Combat.RunOnLowAmmo} == TRUE
-			{
-				; TODO - what to do about being warp scrambled in this case?
-				This:RunAway["No Ammo!"]
-			}
+			This:RunAway["Hostiles in Local"]
 		}
 	}
 
@@ -216,6 +171,22 @@ objectdef obj_Defense
 		if !${Script[EVEBot](exists)}
 		{
 			return
+		}
+
+		if ${_Me.ToEntity.IsWarpScrambled}
+		{
+			if ${Config.Combat.QuitIfWarpScrambled}
+			{
+				UI:UpdateConsole["Warp Scrambled: Quitting game."]
+				exit
+				/* Todo: Optionally start the launcher to restart EVE in a while. */
+			}
+			else
+			{
+				UI:UpdateConsole["Warp Scrambled: Not quitting game. Don't blame us if you pop."]
+				/* Return because we can't do anything else. */
+				return
+			}
 		}
 
 		This.Hiding:Set[TRUE]
