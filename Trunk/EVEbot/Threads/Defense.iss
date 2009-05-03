@@ -262,14 +262,6 @@ objectdef obj_Defense
 			return
 		}
 
-		;TODO: These should be moved to config variables w/ UI controls
-		variable int ArmorPctEnable = 100
-		variable int ArmorPctDisable = 98
-		variable int ShieldPctEnable = 99
-		variable int ShieldPctDisable = 95
-		variable int CapacitorPctEnable = 20
-		variable int CapacitorPctDisable = 80
-
 		if ${_MyShip.ArmorPct} < ${Config.Combat.ArmorPctEnable}
 		{
 			/* Turn on armor reps, if you have them
