@@ -12,6 +12,7 @@ objectdef obj_QueueTarget
 	variable int EntityID
 	variable int TargetType
 	variable int Priority
+	variable bool IsTargetJammed = FALSE
 
 	; Are we currently targeting this?
 	variable bool Targeting = FALSE
@@ -158,8 +159,13 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 
 		if ${_MyShip.MaxLockedTargets} == 0
 		{
-			UI:UpdateConsole["Targeting is Jammed"]
+			UI:UpdateConsole["Targeting: Targeting is Jammed"]
+			This.IsTargetJammed:Set[TRUE]
 			return
+		}
+		elseif ${This.IsTargetJammed}
+		{
+			This.IsTargetJammed:Set[FALSE]
 		}
 
 		MandatoryQueue:GetIterator[Target]

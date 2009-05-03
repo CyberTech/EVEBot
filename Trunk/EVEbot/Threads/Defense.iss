@@ -24,9 +24,6 @@ objectdef obj_Defense
 	variable string HideReason
 	variable bool Hiding = FALSE
 
-	; TODO - implement these
-	variable bool Option_RunIfTargetJammed = FALSE
-	variable bool Option_QuitIfWarpScrambled = FALSE
 	method Initialize()
 	{
 		Event[OnFrame]:AttachAtom[This:Pulse]
@@ -47,6 +44,11 @@ objectdef obj_Defense
 				This:TakeDefensiveAction[]
 				This:CheckTankMinimums[]
 				This:CheckLocal[]
+
+				if ${Config.Combat.RunIfTargetJammed} && ${Targeting.IsTargetJammed}
+				{
+					This:RunAway["RunIfTargetJammed == TRUE && IsTargetJammed == TRUE"]
+				}
 
 				if !${EVEBot.Paused}
 				{
@@ -172,8 +174,16 @@ objectdef obj_Defense
 		{
 			if ${_Me.ToEntity.IsWarpScrambled}
 			{
-				; TODO - we need to quit if a red warps in while we're scrambled -- CyberTech
-				UI:UpdateConsole["Warp Scrambled: Ignoring System Status"]
+				if ${Config.Combat.QuitIfWarpScrambled}
+				{
+					UI:UpdateConsole["Warp Scrambled: Quitting game."]
+					exit
+					/* Todo: Optionally start the launcher to restart EVE in a while. */
+				}
+				else
+				{
+					UI:UpdateConsole["Warp Scrambled: Not quitting game. Don't blame us if you pop."]
+				}
 			}
 			else
 			{

@@ -778,7 +778,7 @@
 						<Frame name='frmRunOptions'>
 							<X>52%</X>
 							<Y>4%</Y>
-							<Height>44%</Height>
+							<Height>42%</Height>
 							<Width>46%</Width>
 							<Border>2</Border>
 							<Children>
@@ -883,7 +883,7 @@
 									<OnLeftClick>
 										Config.Combat:UseBlackList[${This.Checked}]
 									</OnLeftClick>
-								</checkbox>
+								</checkbox>							
 							</Children>
 						</Frame>
 						<slider name='MinArmorPct'>
@@ -1081,6 +1081,40 @@
 										Config.Combat:UseBeltBookmarks[${This.Checked}]
 									</OnLeftClick>
 								</checkbox>
+								<checkbox name='cbRunIfTargetJammed'>
+									<X>10</X>
+									<Y>70</Y>
+									<Height>20</Height>
+									<Width>100</Width>
+									<Text>Run if Target Jammed</Text>
+									<AutoTooltip>If checked, run to safe spot when we are target jammed.</AutoTooltip>
+									<OnLoad>
+										if ${Config.Combat.RunIfTargetJammed}
+										{
+											This:SetChecked
+										}
+									</OnLoad> 
+									<OnLeftClick>
+										Config.Combat:RunIfTargetJammed[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
+								<checkbox name='cbQuitIfWarpScrambled'>
+									<X>10</X>
+									<Y>90</Y>
+									<Height>20</Height>
+									<Width>100</Width>
+									<Text>Quit if Warp Scrambled</Text>
+									<AutoTooltip>If checked, quit the game when warp scrambled and a hostile enters system.</AutoTooltip>
+									<OnLoad>
+										if ${Config.Combat.QuitIfWarpScrambled}
+										{
+											This:SetChecked
+										}
+									</OnLoad> 
+									<OnLeftClick>
+										Config.Combat:QuitIfWarpScrambled[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>	
 								<Text name='lblMinChainBounty'>
 									<X>50%</X>
 									<Y>10</Y>

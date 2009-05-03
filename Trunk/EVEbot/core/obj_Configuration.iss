@@ -334,6 +334,8 @@ objectdef obj_Configuration_Combat
 	Define_ConfigItem(int, MinimumShieldPct, 25)
 	Define_ConfigItem(int, MinimumCapPct, 5)
 	Define_ConfigItem(bool, AlwaysShieldBoost, FALSE)
+	Define_ConfigItem(bool, RunIfTargetJammed, FALSE)
+	Define_ConfigItem(bool, QuitIfWarpScrambled, TRUE)
 }
 
 /* ************************************************************************* */
