@@ -28,8 +28,6 @@ objectdef obj_Miner
 	variable bool SanityCheckAbort = FALSE
 	variable float64 LastUsedCargoCapacity = 0
 
-	variable int TargetJammedCounter = 0
-
 	; Are we running out of asteroids to target?
 	variable bool ConcentrateFire = FALSE
 
@@ -308,21 +306,13 @@ objectdef obj_Miner
 			return FALSE
 		}
 
-		if ${_MyShip.MaxLockedTargets} == 0 && \
-			 ${Ship.Drones.DronesInSpace} == 0
+		; TODO - CyberTech - this logic conflicts with defense.runiftargetjammed, add logic to defense to check if drones are deployed and engaged.
+		if ${Targeting.IsTargetingJammed} &&  \
+			${Ship.Drones.DronesInSpace} == 0
 		{
-			This.TargetJammedCounter:Inc
-			if ${This.TargetJammedCounter} > 200
-			{
-				This.TargetJammedCounter:Set[0]
-				UI:UpdateConsole["Warning: Ship target jammed, no drones available. Changing Belts"]
-				This.CurrentState:Set["CHANGEBELT"]
-				return FALSE
-			}
-		}
-		else
-		{
-			This.TargetJammedCounter:Set[0]
+			UI:UpdateConsole["Warning: Ship target jammed, no drones available. Changing Belts"]
+			This.CurrentState:Set["CHANGEBELT"]
+			return FALSE
 		}
 
 		return TRUE

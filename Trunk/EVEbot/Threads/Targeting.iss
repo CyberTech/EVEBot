@@ -12,7 +12,6 @@ objectdef obj_QueueTarget
 	variable int EntityID
 	variable int TargetType
 	variable int Priority
-	variable bool IsTargetJammed = FALSE
 
 	; Are we currently targeting this?
 	variable bool Targeting = FALSE
@@ -40,6 +39,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 	variable index:obj_QueueTarget TargetQueue
 
 	variable int TargetingThisFrame = 0
+	variable int Counter_TargetingJammed = 0
 
 	method Initialize()
 	{
@@ -124,6 +124,12 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 		return FALSE
 	}
 
+	member:bool IsTargetingJammed()
+	{
+		; TODO - Tune this threshold
+		return ${This.Counter_TargetingJammed} > 40
+	}
+
 	method TargetEntity(int EntityID)
 	{
 		if ${This.TargetCount} >= ${Ship.MaxLockedTargets}
@@ -159,13 +165,17 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 
 		if ${_MyShip.MaxLockedTargets} == 0
 		{
-			UI:UpdateConsole["Targeting: Targeting is Jammed"]
-			This.IsTargetJammed:Set[TRUE]
+			UI:UpdateConsole["Targeting: Jammed - Unable to target"]
+			This.Counter_TargetingJammed:Inc
 			return
 		}
-		elseif ${This.IsTargetJammed}
+		else
 		{
-			This.IsTargetJammed:Set[FALSE]
+			if ${This.Counter_TargetingJammed}
+			{
+				UI:UpdateConsole["Targeting: Jamming ended"]
+				This.Counter_TargetingJammed:Set[0]
+			}
 		}
 
 		MandatoryQueue:GetIterator[Target]

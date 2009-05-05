@@ -45,9 +45,9 @@ objectdef obj_Defense
 				This:CheckTankMinimums[]
 				This:CheckLocal[]
 
-				if ${Config.Combat.RunIfTargetJammed} && ${Targeting.IsTargetJammed}
+				if ${Config.Combat.RunIfTargetJammed} && ${Targeting.IsTargetingJammed}
 				{
-					This:RunAway["RunIfTargetJammed == TRUE && IsTargetJammed == TRUE"]
+					This:RunAway["Unable to evade sensor jamming"]
 				}
 
 				if !${This.Hide} && ${This.Hiding} && ${This.TankReady}
