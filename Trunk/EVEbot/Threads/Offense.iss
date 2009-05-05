@@ -16,6 +16,7 @@ objectdef obj_Offense
 
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 1
+	variable bool Warned_LowAmmo = FALSE
 
 	method Initialize()
 	{
@@ -35,8 +36,8 @@ objectdef obj_Offense
 			if ${This.Running} && !${EVEBot.Paused}
 			{
 				This:TakeOffensiveAction
-				This:CheckAmmo[]				
-			}	
+				This:CheckAmmo[]
+			}
 
 			This.NextPulse:Set[${Time.Timestamp}]
 			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
@@ -48,7 +49,7 @@ objectdef obj_Offense
 	{
 		if ${Me.ActiveTarget(exists)} && !${Me.ActiveTarget.IsPC}
 		{
-			if ${This.IsConcordTarget[${Me.ActiveTarget.GroupID}]} == FALSE
+			if !${This.IsConcordTarget[${Me.ActiveTarget.GroupID}]}
 			{
 				if ${Me.ActiveTarget.Distance} < 9999
 				{
@@ -85,12 +86,21 @@ objectdef obj_Offense
 			return
 		}
 
-		if ${Ship.IsAmmoAvailable} == FALSE
+		if !${Ship.IsAmmoAvailable}
 		{
-			if ${Config.Combat.RunOnLowAmmo} == TRUE
+			if ${Config.Combat.RunOnLowAmmo}
 			{
-				Defense:RunAway["No Ammo!"]
+				Defense:RunAway["Offense - Out of ammo!"]
 			}
+			elseif !${This.Warned_LowAmmo}
+			{
+				This.Warned_LowAmmo:Set[TRUE]
+				UI:UpdateConsole["Offense: Warning - Out of ammo!"]
+			}
+		}
+		else
+		{
+			This.Warned_LowAmmo:Set[FALSE]
 		}
 	}
 
