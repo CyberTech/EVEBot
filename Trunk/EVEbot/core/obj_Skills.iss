@@ -68,7 +68,6 @@ objectdef obj_Skills inherits obj_BaseClass
 						This.PrevSkillFileSize:Set[${This.SkillFile.Size}]
 					}
 
-					; TODO - CyberTech - need to detect other char on account training a skill
 					if !${Me.SkillCurrentlyTraining(exists)}
 					{
 						; We're not training a skill, so update the character skill list
@@ -77,6 +76,16 @@ objectdef obj_Skills inherits obj_BaseClass
 							!${Me.Skill[${This.NextInLine}].IsTraining}
 						{
 							This:Train[${This.NextInLine}]
+						}
+						
+						/* If we've already got a skill training on this account, turn off training */
+						if ${EVEWindow[ByName,MessageBox](exists)} && \
+							${EVEWindow[ByCaption,Information](exists)}
+						{
+							UI:UpdateConsole["obj_Skill: Already training on another character on this account, detaching pulse and turning off TrainSkills"]
+							Press Esc
+							This:Shutdown[]
+							Config.Common:TrainSkills[FALSE]
 						}
 					}
 				}
