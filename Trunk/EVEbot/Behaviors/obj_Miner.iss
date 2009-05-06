@@ -22,14 +22,21 @@ objectdef obj_Miner
 	variable int PreviousTripSeconds = 0
 	variable int TotalTripSeconds = 0
 	variable int AverageTripSeconds = 0
-	variable string CurrentState
-	variable bool CombatAbort = FALSE
-	variable int SanityCheckCounter = 0
-	variable bool SanityCheckAbort = FALSE
-	variable float64 LastUsedCargoCapacity = 0
+	variable int CurrentState
 
 	; Are we running out of asteroids to target?
 	variable bool ConcentrateFire = FALSE
+
+	variable int STATE_ERROR = 0
+	variable int STATE_WAIT_WARP = 1
+	variable int STATE_IDLE = 2
+	variable int STATE_DOCKED = 3
+	variable int STATE_MINE = 4
+	variable int STATE_CHANGE_BELT = 5
+	variable int STATE_BELTSFULL = 6
+	variable int STATE_TRANSFER_TO_JETCAN = 7
+	variable int STATE_DELIVER_ORE = 8
+	variable int STATE_RETURN_TO_STATION = 11
 
 	method Initialize()
 	{
@@ -58,7 +65,6 @@ objectdef obj_Miner
 			if !${EVEBot.Paused}
 			{
 				This:SetState[]
-            	SanityCheckCounter:Inc
             }
 
     		This.NextPulse:Set[${Time.Timestamp}]
@@ -71,26 +77,25 @@ objectdef obj_Miner
 	{
 		if !${Config.Common.BotMode.Equal[Miner]}
 		{
-			; There's no reason at all for the miner to check state if it's not a miner
 			return
 		}
-
+echo ${This.CurrentState}
 		switch ${This.CurrentState}
 		{
-			case IDLE
+			case ${STATE_WAIT_WARP}
 				break
-			case ABORT
+			case ${STATE_IDLE}
+				break
+			case ${STATE_ABORT}
 				Call Station.Dock
 				break
-			case INSTATION
+			case ${STATE_DOCKED}
+			echo "docked state"
 				call Cargo.TransferOreToHangar
 				;call Station.CheckList
-			    SanityCheckCounter:Set[0]
-			    SanityCheckAbort:Set[FALSE]
-			    LastUsedCargoCapacity:Set[0]
 				call Station.Undock
 				break
-			case CHANGEBELT
+			case ${STATE_CHANGE_BELT}
 				if ${Config.Miner.UseFieldBookmarks}
 				{
 					call BeltBookmarks.WarpToNext
@@ -100,21 +105,15 @@ objectdef obj_Miner
 					call Belts.WarpToNext
 				}
 				break
-			case MINE
+			case ${STATE_MINE}
 				call This.Mine
 				break
-			case WARP_WAIT
-				wait 10
-				break
-			case HAUL
-				UI:UpdateConsole["Hauling"]
-				call Hauler.Haul
-				break
-			case TRANSFER_TO_JETCAN
+			case ${STATE_TRANSFER_TO_JETCAN}
 				call Cargo.TransferOreToJetCan
+				; TODO - This shouldn't notify until the jetcan is x% full - CyberTech
 				This:NotifyHaulers[]
 				break
-			case DROPOFF
+			case ${STATE_DELIVER_ORE}
 
 				switch ${Config.Miner.DeliveryLocationType}
 				{
@@ -147,14 +146,12 @@ objectdef obj_Miner
 						EVEBot.ReturnToStation:Set[TRUE]
 						break
 				}
-			    SanityCheckCounter:Set[0]
-			    SanityCheckAbort:Set[FALSE]
-			    LastUsedCargoCapacity:Set[0]
 				break
-			case RUNNING
-				UI:UpdateConsole["Running Away"]
-				call Station.Dock
-				EVEBot.ReturnToStation:Set[TRUE]
+			case ${STATE_ERROR}
+				UI:UpdateConsole["CurrentState is ERROR"]
+				break
+			Default
+				UI:UpdateConsole["Error: CurrentState is unknown value ${This.CurrentState}"]
 				break
 		}
 	}
@@ -163,97 +160,92 @@ objectdef obj_Miner
 	{
 		if ${Defense.Hiding}
 		{
-			This.CurrentState:Set["IDLE"]
+			This.CurrentState:Set[${STATE_IDLE}]
 			return
 		}
 
 		if ${Ship.InWarp}
 		{
-			This.CurrentState:Set["WARP_WAIT"]
+			This.CurrentState:Set[${STATE_WAIT_WARP}]
 			return
 		}
 
 		if ${EVEBot.ReturnToStation} && ${Me.InSpace}
 		{
-			This.CurrentState:Set["ABORT"]
+			This.CurrentState:Set[${STATE_RETURN_TO_STATION}]
 			return
 		}
 
 		if ${EVEBot.ReturnToStation}
 		{
-			This.CurrentState:Set["IDLE"]
+			This.CurrentState:Set[${STATE_IDLE}]
 			return
 		}
 
 		if ${Me.InStation}
 		{
-	  		This.CurrentState:Set["INSTATION"]
+	  		This.CurrentState:Set[${STATE_DOCKED}]
 	  		return
 		}
 
 		if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]}
 		{
 			UI:UpdateConsole["Avoiding player: Changing Belts"]
-			This.CurrentState:Set["CHANGEBELT"]
-			return
-		}
-
-		if ${MyShip.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold} && \
-		    ${SanityCheckAbort} == FALSE
-		{
-			if ${Config.Miner.UseFieldBookmarks}
-			{
-				if ${BeltBookmarks.Count} == ${BeltBookmarks.EmptyBelts.Used}
-				{
-					; TODO - CyberTech: Add option to switch to non-bookmark use in this case
-					This.CurrentState:Set["ABORT"]
-					return
-				}
-				if !${BeltBookmarks.AtBelt}
-				{
-				 	This.CurrentState:Set["CHANGEBELT"]
-					return
-				}
-			}
-			else
-			{
-				UI:UpdateConsole["Normal Belts: Count: ${Belts.Count}, EmptyBelts.Used: ${Belts.EmptyBelts.Used}"]
-				if ${Belts.Count} == ${Belts.EmptyBelts.Used}
-				{
-					This.CurrentState:Set["ABORT"]
-					return
-				}
-				if !${Belts.AtBelt}
-				{
-				 	This.CurrentState:Set["CHANGEBELT"]
-					return
-				}
-			}
-			; TODO - CyberTech: implement this
-			;if ${Asteroids.Count} == 0
-			;{
-			; 	This.CurrentState:Set["CHANGEBELT"]
-			;	return
-			;}
-		 	This.CurrentState:Set["MINE"]
+			This.CurrentState:Set[${STATE_CHANGE_BELT}]
 			return
 		}
 
 		if ${Config.Miner.DeliveryLocationType.Equal[Jetcan]} && ${Ship.CargoHalfFull}
 		{
-			This.CurrentState:Set["TRANSFER_TO_JETCAN"]
+			This.CurrentState:Set[${STATE_TRANSFER_TO_JETCAN}]
 			return
 		}
 
-	    if ${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold} || \
-    	    ${EVEBot.ReturnToStation}  || \
-    	    ${SanityCheckAbort} == TRUE
+	    if ${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 		{
-			This.CurrentState:Set["DROPOFF"]
+			This.CurrentState:Set[${STATE_DELIVER_ORE}]
 			return
 		}
 
-		This.CurrentState:Set["Unknown"]
+		if ${Config.Miner.UseFieldBookmarks}
+		{
+			if !${BeltBookmarks.AtBelt}
+			{
+				UI:UpdateConsole["Bookmarked Belts: Count: ${BeltBookmarks.Count} Empty: ${BeltBookmarks.EmptyBelts.Used}"]
+				if ${BeltBookmarks.Count} == ${BeltBookmarks.EmptyBelts.Used}
+				{
+					; TODO - CyberTech: Add option to switch to non-bookmark use in this case
+					This.CurrentState:Set[${STATE_RETURN_TO_STATION}]
+					return
+				}
+
+		 		This.CurrentState:Set[${STATE_CHANGE_BELT}]
+				return
+			}
+		}
+		else
+		{
+			if !${Belts.AtBelt}
+			{
+				UI:UpdateConsole["Normal Belts: Count: ${Belts.Count} Empty: ${Belts.EmptyBelts.Used}"]
+				if ${Belts.Count} == ${Belts.EmptyBelts.Used}
+				{
+					This.CurrentState:Set[${STATE_RETURN_TO_STATION}]
+					return
+				}
+
+			 	This.CurrentState:Set[${STATE_CHANGE_BELT}]
+				return
+			}
+		}
+		; TODO - CyberTech: implement this
+		;if ${Asteroids.Count} == 0
+		;{
+		; 	This.CurrentState:Set[${STATE_CHANGE_BELT}]
+		;	return
+		;}
+
+	 	This.CurrentState:Set[${STATE_MINING}]
 	}
 
 	; Enable defenses, launch drones
@@ -299,19 +291,21 @@ objectdef obj_Miner
 			return FALSE
 		}
 
+		/* - Removing this -- it shouldn't be needed when we cycle lasers.
 		if (!${Config.Miner.IceMining} && \
 			${SanityCheckCounter} > MINER_SANITY_CHECK_INTERVAL)
 		{
 			Defense.RunAway["Cargo volume unchanged for too long; assuming desync"]
 			return FALSE
 		}
+		*/
 
 		; TODO - CyberTech - this logic conflicts with defense.runiftargetjammed, add logic to defense to check if drones are deployed and engaged.
 		if ${Targeting.IsTargetingJammed} &&  \
 			${Ship.Drones.DronesInSpace} == 0
 		{
 			UI:UpdateConsole["Warning: Ship target jammed, no drones available. Changing Belts"]
-			This.CurrentState:Set["CHANGEBELT"]
+			This.CurrentState:Set[${STATE_CHANGE_BELT}]
 			return FALSE
 		}
 
@@ -336,13 +330,6 @@ objectdef obj_Miner
 
 		variable int DroneCargoMin = ${Math.Calc[(${Ship.CargoMinimumFreeSpace}*1.4)]}
 		variable int Counter = 0
-
-		if ${MyShip.UsedCargoCapacity} != ${LastUsedCargoCapacity}
-		{
-			;UI:UpdateConsole["DEBUG: ${MyShip.UsedCargoCapacity} != ${LastUsedCargoCapacity}"]
-		    SanityCheckCounter:Set[0]
-		    LastUsedCargoCapacity:Set[${MyShip.UsedCargoCapacity}]
-		}
 
 		/* TODO: CyberTech: Move this to obj_Defense */
 		if ${Config.Combat.LaunchCombatDrones} && \

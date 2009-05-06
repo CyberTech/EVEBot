@@ -282,20 +282,20 @@ objectdef obj_Cargo
 
 		}
 
-
-	function TransferContainerToHangar(item anItem)
+	; Transfer the entire contents of a GSC to the hangar.
+	function TransferContainerToHangar(item Container)
 	{
-		if ${anItem.GroupID} == GROUPID_SECURE_CONTAINER
+		if ${Container.GroupID} == GROUPID_SECURE_CONTAINER
 		{
-			anItem:Open
+			Container:Open
 			wait 15
 
-			variable index:item anItemIndex
+			variable index:item ContainerContents
 			variable index:int  anIntIndex
 			variable iterator   anIterator
 
-			anItem:DoGetCargo[anItemIndex]
-			anItemIndex:GetIterator[anIterator]
+			Container:DoGetCargo[ContainerContents]
+			ContainerContents:GetIterator[anIterator]
 			anIntIndex:Clear
 
 			if ${anIterator:First(exists)}
@@ -311,12 +311,12 @@ objectdef obj_Cargo
 				wait 15
 			}
 
-			anItem:Close
+			Container:Close
 			wait 15
 		}
 		else
 		{
-			UI:UpdateConsole["TransferContainerToHangar: Not Supported!! ${CargoIterator.Value.Name}"]
+			UI:UpdateConsole["TransferContainerToHangar: Not Supported - ${Container.Name}"]
 		}
 	}
 
