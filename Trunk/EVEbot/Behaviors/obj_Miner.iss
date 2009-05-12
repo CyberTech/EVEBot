@@ -150,7 +150,7 @@ echo ${This.CurrentState}
 			case ${STATE_ERROR}
 				UI:UpdateConsole["CurrentState is ERROR"]
 				break
-			Default
+			default
 				UI:UpdateConsole["Error: CurrentState is unknown value ${This.CurrentState}"]
 				break
 		}
@@ -287,7 +287,7 @@ echo ${This.CurrentState}
 			${Ship.Drones.CombatDroneShortage}
 		{
 			/* TODO - This should pick up drones from station instead of just docking */
-			Defense.RunAway["Drone shortage detected"]
+			Defense.RunAway["Miner: Drone shortage detected"]
 			return FALSE
 		}
 

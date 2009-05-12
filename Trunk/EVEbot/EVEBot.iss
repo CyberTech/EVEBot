@@ -40,14 +40,12 @@
 #include core/obj_Belts.iss
 #include core/obj_Targets.iss
 #include core/obj_Agents.iss
-#include core/obj_Combat.iss
 #include core/obj_Missions.iss
 #include core/obj_Market.iss
 #include core/obj_Items.iss
 #include core/obj_Autopilot.iss
 #include core/obj_MissionCombat.iss
 #include core/obj_MissionCombatConfig.iss
-#include core/obj_TargetSelection.iss
 #include core/obj_Callback.iss
 
 /* Behavior/Mode Includes */
@@ -134,7 +132,6 @@ function main()
 	declarevariable Missions obj_Missions global
 	declarevariable Market obj_Market global
 	declarevariable Autopilot obj_Autopilot global
-	declarevariable TargetSelection obj_TargetSelection global
 	declarevariable Callback obj_Callback global
 
 	declarevariable BotModules index:string global

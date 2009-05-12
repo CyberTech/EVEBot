@@ -1450,6 +1450,7 @@ objectdef obj_Ship
 			wait 10
 			if ${This.InteruptWarpWait}
 			{
+				; TODO - implement this. not sure what i was thinking of for it. i can see it's use -- CyberTech
 				UI:UpdateConsole["Leaving WarpWait due to emergency condition", LOG_CRITICAL]
 				This.InteruptWarpWait:Set[False]
 				return 2

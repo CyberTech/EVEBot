@@ -127,7 +127,10 @@ objectdef obj_Drones
 							This.DronesReady:Set[TRUE]
 
 							UI:UpdateConsole["${This.LaunchedDrones} drones deployed"]
-							}
+						}
+
+						; TODO - Iterate thru the drones, storing their current shield/armor. If shield/armor this round
+						; is below last round, drone is under attack. recall it so attacker loses lock. -- CyberTech
 					}
 				}
 
@@ -148,6 +151,31 @@ objectdef obj_Drones
 		}
 	}
 
+	member:bool ShouldLaunchCombatDrones()
+	{
+		/* this shouldn't be here. just temporary moved here after removal of ManageTank into Defense thread. */
+
+		if ${Ship.InWarp} || ${Defense.Hiding}
+		{
+			return FALSE
+		}
+
+		if ${This.DronesInSpace} == 0
+		{
+			variable index:entity NearbyNPCList
+
+			; TODO - This is WRONG - it includes players and non-aggressive entities (concord) - CyberTech
+			; TODO - This should be referencing whatever object gets created to track entities using the entitycache - CyberTech
+			EVE:DoGetEntities[NearbyNPCList, CategoryID, CATEGORYID_ENTITY]
+
+			if ${Me.GetTargetedBy} == ${NearbyNPCList.Used}
+			{
+				return TRUE
+			}
+		}
+		return FALSE
+	}
+
 	member:int DronesInBay()
 	{
 		return ${Me.GetActiveDroneIDs[This.ActiveDroneIDList]}
@@ -156,6 +184,11 @@ objectdef obj_Drones
 	member:int DronesInSpace()
 	{
 		return ${Me.GetActiveDroneIDs[This.ActiveDroneIDList]}
+	}
+
+	member:int DeployedDroneCount()
+	{
+		return ${This.ActiveDroneIDList.Used}
 	}
 
 	member:bool CombatDroneShortage()

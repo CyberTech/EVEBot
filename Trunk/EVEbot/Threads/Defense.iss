@@ -50,11 +50,17 @@ objectdef obj_Defense
 					This:RunAway["Unable to evade sensor jamming"]
 				}
 
+				if ${EVEBot.ReturnToStation}
+				{
+					This:RunAway["ReturnToStation is true - legacy code somewhere!"]
+				}
+
 				if !${This.Hide} && ${This.Hiding} && ${This.TankReady}
 				{
 					UI:UpdateConsole["Thread: obj_Defense: No longer hiding"]
 					This.Hiding:Set[FALSE]
 				}
+
 			}
 
 			This.NextPulse:Set[${Time.Timestamp}]
@@ -90,11 +96,11 @@ objectdef obj_Defense
 
 			if !${Config.Combat.RunOnLowTank}
 			{
-				UI:UpdateConsole["Run On Low Tank Disabled: Fighting", LOG_CRITICAL]
+				UI:UpdateConsole["Running on low tank is disabled", LOG_CRITICAL]
 			}
 			elseif ${_Me.ToEntity.IsWarpScrambled}
 			{
-				UI:UpdateConsole["Warp Scrambled: Fighting", LOG_CRITICAL]
+				UI:UpdateConsole["Warp scrambled, can't run", LOG_CRITICAL]
 			}
 			else
 			{
@@ -104,7 +110,7 @@ objectdef obj_Defense
 		}
 	}
 
-	; 3rd Parties should call this if they want Defense thread to initiate safespotting
+	; 3rd Parties should call this if they want Defense thread to initiate fleeing
 	method RunAway(string Reason="Not Specified")
 	{
 		if !${Script[EVEBot](exists)}
@@ -135,7 +141,7 @@ objectdef obj_Defense
 
 		if !${Me.InSpace}
 		{
-			return TRUE
+			return FALSE
 		}
 
 		if  ${_MyShip.ArmorPct} < ${Config.Combat.ArmorPctReady} || \
@@ -179,12 +185,12 @@ objectdef obj_Defense
 			{
 				UI:UpdateConsole["Warp Scrambled: Quitting game."]
 				exit
-				/* Todo: Optionally start the launcher to restart EVE in a while. */
+				; Todo: Optionally start the launcher to restart EVE in a while.
 			}
 			else
 			{
 				UI:UpdateConsole["Warp Scrambled: Not quitting game. Don't blame us if you pop."]
-				/* Return because we can't do anything else. */
+				; Return because we can't do anything else.
 				return
 			}
 		}
@@ -227,17 +233,16 @@ objectdef obj_Defense
 				${Ship:Activate_Cloak[]
 			}
 
-			;;; Doing this for hours would make you look like a bot.
-			;;; TODO Shutdown Eve or dock if we are fleeing without a cloak for more than 5-10 minutes
-			;;;if !${Ship.HasCloak} && ${Safespots.Count} > 1
-			;;;{
-			;;;	; This ship doesn't have a cloak so let's bounce between safe spots
-			;;;	if ${Me.ToEntity.Mode} != 3
-			;;;	{
-			;;;		call Safespots.WarpToNext
-			;;;		wait 30
-			;;;	}
-			;;;}
+			; TODO - Shutdown Eve or dock if we are fleeing without a cloak for more than (configurable) minutes - CyberTech
+			if !${Ship.HasCloak} && ${Safespots.Count} > 1
+			{
+				; This ship doesn't have a cloak so let's bounce between safe spots
+				if ${Me.ToEntity.Mode} != 3
+				{
+					call Safespots.WarpToNext
+					wait 30
+				}
+			}
 		}
 		else
 		{

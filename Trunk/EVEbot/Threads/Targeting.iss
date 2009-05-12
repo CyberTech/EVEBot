@@ -71,6 +71,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 		}
 	}
 
+	; Don't like this name -- LockedCount? PotentialLockedCount?
 	member:int TargetCount()
 	{
 		return ${Math.Calc[${This.TargetingThisFrame} + ${Me.GetTargets} + ${Me.GetTargeting}]}
@@ -239,6 +240,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 		if ${This.IsQueued[${EntityID}]}
 		{
 			UI:UpdateConsole["Targeting: Already queued ${Entity[${EntityID}].Name} (${EntityID}) Type: ${TargetType}"]
+			; TODO: This needs to update the appropriate queue with the possibly new priority, targetype, mandatory settings instead of just returning - CyberTech
 			return
 		}
 
@@ -247,13 +249,13 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 			This.Running:Set[TRUE]
 			if ${Mandatory}
 			{
-				UI:UpdateConsole["Targeting: Queueing mandatory target ${Entity[${EntityID}].Name} (${EntityID}) Type: ${TargetType}"]
+				UI:UpdateConsole["Targeting: Queueing mandatory target ${Entity[${EntityID}].Name} (${EntityID}) Type: ${TargetType} Priority: ${Priority}"]
 				MandatoryQueue:Insert[${EntityID}, ${TargetType}, ${Priority}]
 				This:Sort[MandatoryQueue, Priority]
 			}
 			else
 			{
-				UI:UpdateConsole["Targeting: Queueing target ${Entity[${EntityID}].Name} (${EntityID}) Type: ${TargetType}"]
+				UI:UpdateConsole["Targeting: Queueing target ${Entity[${EntityID}].Name} (${EntityID}) Type: ${TargetType} Priority: ${Priority}"]
 				TargetQueue:Insert[${EntityID}, ${TargetType}, ${Priority}]
 				This:Sort[TargetQueue, Priority]
 			}
@@ -329,39 +331,6 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 			}
 		}
 		TargetQueue:Collapse
-
-		variable index:entity LockedTargets
-		Me:DoGetTargets[LockedTargets]
-
-		for ( Pos:Set[1]; ${Pos} <= ${LockedTargets.Used}; Pos:Inc )
-		{
-			if ${LockedTargets[${Pos}]} == ${EntityID}
-			{
-				Entity[${EntityID}]:UnlockTarget
-			}
-		}
-
-		return
-	}
-
-	method Remove(int EntityID)
-	{
-		variable int Pos
-		for ( Pos:Set[1]; ${Pos} <= ${MandatoryQueue.Used}; Pos:Inc )
-		{
-			if ${MandatoryQueue[${Pos}].EntityID} == ${EntityID}
-			{
-				MandatoryQueue:Remove[${Pos}]
-			}
-		}
-
-		for ( Pos:Set[1]; ${Pos} <= ${TargetQueue.Used}; Pos:Inc )
-		{
-			if ${TargetQueue[${Pos}].EntityID} == ${EntityID}
-			{
-				TargetQueue:Remove[${Pos}]
-			}
-		}
 
 		variable index:entity LockedTargets
 		Me:DoGetTargets[LockedTargets]

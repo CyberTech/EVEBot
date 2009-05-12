@@ -51,19 +51,45 @@ objectdef obj_Offense
 		{
 			if !${This.IsConcordTarget[${Me.ActiveTarget.GroupID}]}
 			{
-				if ${Me.ActiveTarget.Distance} < 9999
+				if ${Ship.IsCloaked}
 				{
-					Ship:Activate_StasisWebs
+					Ship:Deactivate_Cloak
+					; Need to give it time to uncloak
+					return
 				}
+
+				Ship:Activate_StasisWebs
+				Ship:Activate_TargetPainters
 
 				if ${Me.ActiveTarget.Distance} < ${Ship.OptimalWeaponRange}
 				{
 					Ship:Activate_Weapons
 				}
 
-				if ${Me.ActiveTarget.Distance} < 19999
+				if ${Ship.Drones.CombatDroneShortage}
 				{
-					Ship.Drones:SendDrones
+					/* TODO - This should pick up drones from station instead of just docking */
+					Defense.RunAway["Combat: Drone shortage detected"]
+					return
+				}
+
+				if ${Config.Combat.LaunchCombatDrones}
+				{
+					if ${Ship.Drones.CombatDroneShortage}
+					{
+						; TODO - This should pick up drones from station instead of just docking
+						Defense.RunAway["Offense: Drone shortage detected"]
+						return
+					}
+
+					if ${Ship.Drones.ShouldLaunchCombatDrones} && ${Ship.Drones.DeployedDroneCount} == 0
+					{
+						Ship.Drones:LaunchAll[]
+					}
+					else
+					{
+						Ship.Drones:SendDrones
+					}
 				}
 			}
 		}
@@ -104,9 +130,9 @@ objectdef obj_Offense
 		}
 	}
 
-	member:bool IsConcordTarget(int groupID)
+	member:bool IsConcordTarget(int GroupID)
 	{
-		switch ${groupID}
+		switch ${GroupID}
 		{
 			case GROUP_LARGECOLLIDABLEOBJECT
 			case GROUP_LARGECOLLIDABLESHIP
