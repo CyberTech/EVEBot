@@ -215,6 +215,7 @@ echo ${This.CurrentState}
 				if ${BeltBookmarks.Count} == ${BeltBookmarks.EmptyBelts.Used}
 				{
 					; TODO - CyberTech: Add option to switch to non-bookmark use in this case
+					UI:UpdateConsole["All Belt Bookmarks marked empty, aborting"]
 					This.CurrentState:Set[${STATE_RETURN_TO_STATION}]
 					return
 				}
@@ -230,6 +231,7 @@ echo ${This.CurrentState}
 				UI:UpdateConsole["Normal Belts: Count: ${Belts.Count} Empty: ${Belts.EmptyBelts.Used}"]
 				if ${Belts.Count} == ${Belts.EmptyBelts.Used}
 				{
+					UI:UpdateConsole["All Belts marked empty, aborting"]
 					This.CurrentState:Set[${STATE_RETURN_TO_STATION}]
 					return
 				}
@@ -238,12 +240,13 @@ echo ${This.CurrentState}
 				return
 			}
 		}
-		; TODO - CyberTech: implement this
-		;if ${Asteroids.Count} == 0
-		;{
-		; 	This.CurrentState:Set[${STATE_CHANGE_BELT}]
-		;	return
-		;}
+
+		if ${Asteroids.Count} == 0
+		{
+			UI:UpdateConsole["Belt is empty (or nothing we want), moving"]
+		 	This.CurrentState:Set[${STATE_CHANGE_BELT}]
+			return
+		}
 
 	 	This.CurrentState:Set[${STATE_MINING}]
 	}

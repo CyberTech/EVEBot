@@ -214,7 +214,7 @@ objectdef obj_Ratter
 			{
 				if ${itrEntity.Value.IsNPC} && \
 					!${itrEntity.Value.IsLockedTarget} && \
-					!${Offense.IsConcordTarget[${itrEntity.Value.GroupID}
+					!${Offense.IsConcordTarget[${itrEntity.Value.GroupID}]}
 				{
 					/*	Since ISXEVE doesn't tell us -what- is warp scrambling us just check our target against
 						known priority targets. Also be sure to not queue targets currently in warp. */

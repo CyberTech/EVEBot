@@ -153,8 +153,6 @@ objectdef obj_Drones
 
 	member:bool ShouldLaunchCombatDrones()
 	{
-		/* this shouldn't be here. just temporary moved here after removal of ManageTank into Defense thread. */
-
 		if ${Ship.InWarp} || ${Defense.Hiding}
 		{
 			return FALSE
@@ -178,6 +176,7 @@ objectdef obj_Drones
 
 	member:int DronesInBay()
 	{
+		; TODO. This would be a buggarooni.
 		return ${Me.GetActiveDroneIDs[This.ActiveDroneIDList]}
 	}
 

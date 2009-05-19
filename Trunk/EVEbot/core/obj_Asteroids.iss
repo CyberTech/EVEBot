@@ -44,6 +44,7 @@ objectdef obj_Asteroids
 	; Checks the belt name against the empty belt list.
 	member IsBeltEmpty(string BeltName)
 	{
+		echo "obj_Asteroids.IsBeltEmpty is deprecated"
 		if !${BeltName(exists)}
 		{
 			return FALSE
@@ -71,6 +72,11 @@ objectdef obj_Asteroids
 			EmptyBeltList:Insert[${BeltName}]
 			UI:UpdateConsole["Excluding empty belt ${BeltName}"]
 		}
+	}
+
+	member:int Count()
+	{
+		return 0
 	}
 
 	function MoveToField(bool ForceMove)
@@ -204,7 +210,7 @@ objectdef obj_Asteroids
 		}
 
 		if ${This.OreTypeIterator:First(exists)}
-		{		
+		{
 			do
 			{
 #if EVEBOT_DEBUG
