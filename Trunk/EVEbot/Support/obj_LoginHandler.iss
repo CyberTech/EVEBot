@@ -154,7 +154,8 @@ objectdef obj_LoginHandler
 				break
 			case CONNECTING
 				if ${EVEWindow[ByCaption,Connection in Progress](exists)} || \
-					${EVEWindow[ByCaption,Connection Not Allowed](exists)}
+					${EVEWindow[ByCaption,Connection Not Allowed](exists)} || \
+					${EVEWindow[ByCaption,CONNECTION FAILED](exists)}
 				{
 					; Server is still coming up, or you are queued. Wait 10 seconds.
 					Press Esc
