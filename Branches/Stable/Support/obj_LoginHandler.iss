@@ -163,7 +163,7 @@ objectdef obj_LoginHandler
 					break
 				}
 				if ${EVEWindow[ByName,MessageBox](exists)} || \
-					${EVEWindow[ByCaption,System Congested](exists)} || \
+					${EVEWindow[ByCaption,System Congested](exists)}
 				{
 					; This happens at character select, when the system is full
 					Press Esc
