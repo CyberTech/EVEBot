@@ -93,8 +93,13 @@ objectdef obj_EVEBot
 				}
 			}
 
+			; This is processed here rather than in the obj_Fleet pulse to avoid timing issues closing the invite.
+			Fleet:ProcessInvitations
+
 			if !${This._Paused}
 			{
+				EVE:CloseAllMessageBoxes
+				EVE:CloseAllChatInvites
 
 				/*
 					TODO

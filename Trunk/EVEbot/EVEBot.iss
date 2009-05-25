@@ -33,7 +33,7 @@
 #include core/obj_Bookmarks.iss
 #include core/obj_Jetcan.iss
 #include core/obj_Social.iss
-#include core/obj_Gang.iss
+#include core/obj_Fleet.iss
 #include core/obj_Assets.iss
 #include core/obj_IRC.iss
 #include core/obj_Safespots.iss

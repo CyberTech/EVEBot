@@ -58,11 +58,9 @@ objectdef obj_EVEBotUI
 
 	    if ${Time.Timestamp} > ${This.NextMsgBoxPulse.Timestamp}
 		{
+
 			if !${EVEBot.Paused}
 			{
-				EVE:CloseAllMessageBoxes
-				EVE:CloseAllChatInvites
-
 				if ${Me(exists)}
 				{
 					Config.Common:AutoLoginCharID[${_Me.CharID}]

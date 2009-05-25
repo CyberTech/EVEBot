@@ -83,6 +83,7 @@ objectdef obj_Configuration
 	variable obj_Configuration_Freighter Freighter
 	variable obj_Configuration_Agents Agents
 	variable obj_Configuration_Missioneer Missioneer
+	variable obj_Config_FleetMembers FleetMembers
 
 	method Save()
 	{
@@ -445,6 +446,33 @@ objectdef obj_Configuration_Freighter
 	Define_ConfigItem(string, RegionName, "")
 	Define_ConfigItem(string, Destination, "")
 	Define_ConfigItem(string, SourceBookmarkPrefix, "")
+}
+
+/* ************************************************************************* */
+objectdef obj_Config_FleetMembers
+{
+	variable string SetName = "FleetMembers"
+
+	method Initialize()
+	{
+		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
+		{
+			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
+			This:Set_Default_Values[]
+		}
+		UI:UpdateConsole["obj_Config_FleetMembers: Initialized", LOG_MINOR]
+	}
+
+	method Set_Default_Values()
+	{
+		BaseConfig.BaseRef:AddSet[${This.SetName}]
+		This.Ref:AddSetting["${Me.Name}", "${Me.Name}"]
+	}
+
+	member:settingsetref Ref()
+	{
+		return ${BaseConfig.BaseRef.FindSet[${This.SetName}]}
+	}
 }
 
 /* ************************************************************************* */
