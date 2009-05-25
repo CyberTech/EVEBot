@@ -153,10 +153,21 @@ objectdef obj_LoginHandler
 				This.LoginTimer:Set[${This.connectWaitTime}]
 				break
 			case CONNECTING
-				if ${EVEWindow[ByCaption,System Congested](exists)}
+				if ${EVEWindow[ByCaption,Connection in Progress](exists)} || \
+					${EVEWindow[ByCaption,Connection Not Allowed](exists)}
 				{
+					; Server is still coming up, or you are queued. Wait 10 seconds.
 					Press Esc
-					This.LoginTimer:Set[1]
+					This.CurrentState:Set["PASS_ENTERED"]
+					This.LoginTimer:Set[10]
+					break
+				}
+				if ${EVEWindow[ByName,MessageBox](exists)} || \
+					${EVEWindow[ByCaption,System Congested](exists)} || \
+				{
+					; This happens at character select, when the system is full
+					Press Esc
+					This.LoginTimer:Set[2]
 					break
 				}
 				if ${CharSelect(exists)}
@@ -184,11 +195,11 @@ objectdef obj_LoginHandler
 			case INSPACE
 				run evebot/evebot
 				This.CurrentState:Set["EVEBOT"]
-                                This.LoginTimer:Set[${This.evebotWaitTime}]
-                                break
-                        case EVEBOT
-                                Script[EVEBot]:Resume
-                                This.Finished:Set[TRUE]
+				This.LoginTimer:Set[${This.evebotWaitTime}]
+				break
+			case EVEBOT
+				Script[EVEBot]:Resume
+				This.Finished:Set[TRUE]
 				return
 				break
 		}
