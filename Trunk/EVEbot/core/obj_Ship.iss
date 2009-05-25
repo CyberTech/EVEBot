@@ -759,11 +759,48 @@ objectdef obj_Ship
 		{
 			UI:UpdateConsole["Current crystal in ${SlotName} is ${LoadedAmmo}, looking for ${OreType}"]
 			variable index:item CrystalList
+			variable index:item CrystalListT1
+			variable index:item CrystalListT2
 			variable iterator CrystalIterator
 
 			MyShip.Module[${SlotName}]:DoGetAvailableAmmo[CrystalList]
 
 			CrystalList:GetIterator[CrystalIterator]
+			if ${CrystalIterator:First(exists)}
+			do
+			{
+				if ${CrystalIterator.Value.Name.Right[3].Equal[" II"]}
+				{
+					CrystalListT2:Insert[${CrystalIterator.Value}]
+				}
+				else
+				{
+					CrystalListT1:Insert[${CrystalIterator.Value}]
+				}
+			}
+			while ${CrystalIterator:Next(exists)}
+
+			CrystalListT2:GetIterator[CrystalIterator]
+			if ${CrystalIterator:First(exists)}
+			do
+			{
+				variable string CrystalType
+				CrystalType:Set[${CrystalIterator.Value.Name.Token[1, " "]}]
+
+				;echo "DEBUG: ChangeMiningLaserCrystal Testing ${OreType} contains ${CrystalType}"
+				if ${OreType.Find[${CrystalType}](exists)}
+				{
+					UI:UpdateConsole["Switching Crystal in ${SlotName} from ${LoadedAmmo} to ${CrystalIterator.Value.Name}"]
+					MyShip.Module[${SlotName}]:ChangeAmmo[${CrystalIterator.Value.ID},1]
+					; This takes 2 seconds ingame, let's give it 50% more
+					wait 30
+					return
+				}
+			}
+			while ${CrystalIterator:Next(exists)}
+			UI:UpdateConsole["Warning: No T2 crystal found for ore type ${OreType}, checking for T1"]
+
+			CrystalListT1:GetIterator[CrystalIterator]
 			if ${CrystalIterator:First(exists)}
 			do
 			{
