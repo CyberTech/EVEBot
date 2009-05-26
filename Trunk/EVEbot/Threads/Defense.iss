@@ -55,7 +55,7 @@ objectdef obj_Defense
 					This:RunAway["ReturnToStation is true - legacy code somewhere!"]
 				}
 
-				if !${This.Hide} && ${This.Hiding} && ${This.TankReady}
+				if !${This.Hide} && ${This.Hiding} && ${This.TankReady} && ${Social.IsSafe}
 				{
 					UI:UpdateConsole["Thread: obj_Defense: No longer hiding"]
 					This.Hiding:Set[FALSE]
@@ -166,7 +166,7 @@ objectdef obj_Defense
 			return
 		}
 
-		if ${Social.IsSafe} == FALSE
+		if !${Social.IsSafe}
 		{
 			This:RunAway["Hostiles in Local"]
 		}

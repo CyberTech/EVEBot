@@ -280,12 +280,6 @@ echo ${This.CurrentState}
 			return FALSE
 		}
 
-		if ${Config.Miner.StandingDetection} && \
-			${Social.StandingDetection[${Config.Miner.LowestStanding}]}
-		{
-			Defense.RunAway["Low-standing player in system"]
-		}
-
 		if ${Config.Combat.LaunchCombatDrones} && \
 			${Ship.Drones.CombatDroneShortage}
 		{

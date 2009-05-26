@@ -76,6 +76,7 @@ objectdef obj_Configuration
 {
 	variable obj_Configuration_Common Common
 	variable obj_Configuration_Combat Combat
+	variable obj_Configuration_Defense Defense
 	variable obj_Configuration_Miner Miner
 	variable obj_Configuration_Hauler Hauler
 	variable obj_Configuration_Salvager Salvager
@@ -297,6 +298,32 @@ objectdef obj_Configuration_Miner
 	Define_ConfigItem(int, CargoThreshold, ${_MyShip.CargoCapacity})
 }
 
+/* ************************************************************************* */
+objectdef obj_Configuration_Defense
+{
+	variable string SetName = "Defense"
+
+	method Initialize()
+	{
+		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
+		{
+			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
+			BaseConfig.BaseRef:AddSet[${This.SetName}]
+		}
+		UI:UpdateConsole["obj_Configuration_Defense: Initialized", LOG_MINOR]
+	}
+
+	member:settingsetref Ref()
+	{
+		return ${BaseConfig.BaseRef.FindSet[${This.SetName}]}
+	}
+
+
+	Define_ConfigItem(bool, DetectLowStanding, TRUE)
+	Define_ConfigItem(float, MinimumAllianceStanding, 0.0)
+	Define_ConfigItem(float, MinimumCorpStanding, 0.0)
+	Define_ConfigItem(float, MinimumPilotStanding, 0.0)
+}
 
 /* ************************************************************************* */
 objectdef obj_Configuration_Combat

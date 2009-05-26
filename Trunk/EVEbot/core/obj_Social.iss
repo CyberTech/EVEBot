@@ -8,7 +8,7 @@ This contains all stuff dealing with other players around us. - Hessinger
 		- (bool) PlayerDetection(): Returns TRUE if a Player is near us. (Notes: Ignores Fleet Members)
 		- (bool) NPCDetection(): Returns TRUE if an NPC is near us.
 		- (bool) PilotsWithinDectection(int Distance): Returns True if there are pilots within the distance passed to the member. (Notes: Only works for players)
-		- (bool) StandingDetection(int Standing): Returns True if there are pilots below the standing passed to the member. (Notes: Only works for players)
+		- (bool) StandingDetection(): Returns True if there are pilots below the standing passed to the member. (Notes: Only works for players)
 		- (bool) PossibleHostiles(): Returns True if there are ships targeting us.
 */
 
@@ -25,13 +25,16 @@ objectdef obj_Social
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 2
 
+	variable bool Passed_LowStandingCheck = TRUE
+	variable bool Passed_WhiteListCheck = TRUE
+	variable bool Passed_BlackListCheck = TRUE
+
 	variable iterator WhiteListPilotIterator
 	variable iterator WhiteListCorpIterator
 	variable iterator WhiteListAllianceIterator
 	variable iterator BlackListPilotIterator
 	variable iterator BlackListCorpIterator
 	variable iterator BlackListAllianceIterator
-	variable bool SystemSafe
 
 	variable set PilotBlackList
 	variable set CorpBlackList
@@ -104,8 +107,6 @@ objectdef obj_Social
 		}
 		while ${This.BlackListAllianceIterator:Next(exists)}
 
-		SystemSafe:Set[TRUE]
-
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		Event[EVE_OnChannelMessage]:AttachAtom[This:OnChannelMessage]
 		EVE:ActivateChannelMessageEvents
@@ -128,19 +129,23 @@ objectdef obj_Social
 			{
 				This:CheckChatInvitation[]
 
+				if ${EVE.GetPilots} > 1
+				{
+					; DoGetPilots is relatively expensive vs just the pilotcount.  Check if we're alone before calling.
+					EVE:DoGetPilots[This.PilotIndex]
+					if ${Config.Defense.DetectLowStanding}
+					{
+						Passed_LowStandingCheck:Set[${This.LowStandingDetected}]
+					}
+				}
+				else
+				{
+					This.PilotIndex:Clear
+				}
+
 				if (${Config.Combat.UseBlackList} && ( ${PilotBlackList.Used} > 1 || ${CorpBlackList.Used} > 1 || ${AllianceBlackList.Used} > 1)) || \
 					(${Config.Combat.UseWhiteList} && ( ${PilotWhiteList.Used} > 2 || ${CorpWhiteList.Used} > 2 || ${AllianceWhiteList.Used} > 2))
 				{
-					if ${EVE.GetPilots} > 1
-					{
-						; DoGetPilots is relatively expensive vs just the pilotcount.  Check if we're alone before calling.
-						EVE:DoGetPilots[This.PilotIndex]
-					}
-					else
-					{
-						This.PilotIndex:Clear
-					}
-
 					if ${Me.InSpace}
 					{
 						EVE:DoGetEntities[This.EntityIndex,CategoryID,CATEGORYID_ENTITY]
@@ -150,7 +155,13 @@ objectdef obj_Social
 						This.EntityIndex:Clear
 					}
 
-    				SystemSafe:Set[${Math.Calc[${This.CheckLocalWhiteList} & ${This.CheckLocalBlackList}](bool)}]
+    				Passed_WhiteListCheck:Set[${This.CheckLocalWhiteList}]
+    				Passed_BlackListCheck:Set[${This.CheckLocalBlackList}]
+    			}
+    			else
+    			{
+    				Passed_WhiteListCheck:Set[TRUE]
+    				Passed_BlackListCheck:Set[TRUE]
     			}
 			}
 
@@ -183,9 +194,10 @@ objectdef obj_Social
 
 	member:bool IsSafe()
 	{
-		return ${This.SystemSafe}
+		return (${Passed_LowStandingCheck} & ${Passed_WhiteListCheck} & ${Passed_BlackListCheck})
 	}
 
+	; Returns TRUE if the Check passes and there are no non-whitelisted pilots in local
 	member:bool CheckLocalWhiteList()
 	{
 		variable iterator PilotIterator
@@ -193,6 +205,9 @@ objectdef obj_Social
 		variable int AllianceID
 		variable int PilotID
 		variable string PilotName
+		variable bool Result
+
+		Result:Set[TRUE]
 
 		if !${Config.Combat.UseWhiteList}
 		{
@@ -217,17 +232,28 @@ objectdef obj_Social
 				!${This.CorpWhiteList.Contains[${CorpID}]} && \
 				!${This.PilotWhiteList.Contains[${PilotID}]}
 			{
-				UI:UpdateConsole["Alert: Non-Whitelisted Pilot: ${PilotName}: CharID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_CRITICAL]
-				return FALSE
+				if ${PilotIterator.Value.Alliance(exists)}
+				{
+					UI:UpdateConsole["Alert: Non-Whitelisted Pilot: ${PilotName} (${PilotID}) ${PilotIterator.Value.Corporation} (${CorpID}) ${PilotIterator.Value.Alliance} (${AllianceID})", LOG_CRITICAL]
+				}
+				else
+				{
+					UI:UpdateConsole["Alert: Non-Whitelisted Pilot: ${PilotName} (${PilotID}) ${PilotIterator.Value.Corporation} (${CorpID})", LOG_CRITICAL]
+				}
+				Result:Set[FALSE]
 			}
 		}
 		while ${PilotIterator:Next(exists)}
-		return TRUE
+		return ${Result}
 	}
 
+	; Returns TRUE if the Check passes and there are no blacklisted pilots in local
 	member:bool CheckLocalBlackList()
 	{
 		variable iterator PilotIterator
+		variable bool Result
+
+		Result:Set[TRUE]
 
    		if !${Config.Combat.UseBlackList}
    		{
@@ -243,16 +269,24 @@ objectdef obj_Social
 		if ${PilotIterator:First(exists)}
 		do
 		{
-			if ${This.PilotBlackList.Contains[${PilotIterator.Value.CharID}]} || \
-				${This.AllianceBlackList.Contains[${PilotIterator.Value.AllianceID}]} || \
-				${This.CorpBlackList.Contains[${PilotIterator.Value.CorporationID}]}
+			if ${This.AllianceBlackList.Contains[${PilotIterator.Value.AllianceID}]}
+			{
+				UI:UpdateConsole["Alert: Blacklisted Alliance: Pilot: ${PilotIterator.Value.Name} Alliance: ${PilotIterator.Value.Alliance}", LOG_CRITICAL]
+				Result:Set[FALSE]
+			}
+			if ${This.CorpBlackList.Contains[${PilotIterator.Value.CorporationID}]}
+			{
+				UI:UpdateConsole["Alert: Blacklisted Corporation: Pilot: ${PilotIterator.Value.Name} Corp: ${PilotIterator.Value.Corporation}", LOG_CRITICAL]
+				Result:Set[FALSE]
+			}
+			if ${This.PilotBlackList.Contains[${PilotIterator.Value.CharID}]}
 			{
 				UI:UpdateConsole["Alert: Blacklisted Pilot: ${PilotIterator.Value.Name}!", LOG_CRITICAL]
-				return FALSE
+				Result:Set[FALSE]
 			}
 		}
 		while ${PilotIterator:Next(exists)}
-		return TRUE
+		return ${Result}
 	}
 
 	member:bool PlayerInRange(float Range=0)
@@ -314,12 +348,9 @@ objectdef obj_Social
 		return FALSE
 	}
 
-	member:bool StandingDetection(int Standing)
+	member:bool LowStandingDetected()
 	{
-		return FALSE
-		; TODO - this is broken, isxeve standing check doesn't work atm.
-
-		echo ${This.PilotIndex.Used}
+		variable bool HostilesPresent
 
    		if ${This.PilotIndex.Used} < 2
    		{
@@ -329,15 +360,12 @@ objectdef obj_Social
 		variable iterator PilotIterator
 		This.PilotIndex:GetIterator[PilotIterator]
 
-
+		HostilesPresent:Set[FALSE]
 		if ${PilotIterator:First(exists)}
 		{
 			do
 			{
-				echo ${PilotIterator.Value.Name} ${PilotIterator.Value.CharID} ${PilotIterator.Value.CorporationID} ${PilotIterator.Value.AllianceID}
-				echo ${Me.Standing[${PilotIterator.Value.CharID}]}
-				echo ${Me.Standing[${PilotIterator.Value.CorporationID}]}
-				echo ${Me.Standing[${PilotIterator.Value.AllianceID}]}
+				;echo "DEBUG: ${PilotIterator.Value.Name} ${PilotIterator.Value.CharID} ${PilotIterator.Value.CorporationID} ${PilotIterator.Value.Corporation} ${PilotIterator.Value.AllianceID} ${PilotIterator.Value.Alliance}"
 
 				if ${_Me.CharID} == ${PilotIterator.Value.CharID}
 				{
@@ -351,56 +379,31 @@ objectdef obj_Social
 					continue
 				}
 
-				/* Check Standing */
-				echo Me -> Them ${EVE.Standing[${_Me.CharID},${PilotIterator.Value.CharID}]}
-				echo Corp -> Them ${EVE.Standing[${_Me.CorporationID},${PilotIterator.Value.CharID}]}
-				echo Alliance -> Them ${EVE.Standing[${_Me.AllianceID},${PilotIterator.Value.CharID}]}
-				echo Me -> TheyCorp	${EVE.Standing[${_Me.CharID},${PilotIterator.Value.CorporationID}]}
-				echo MeCorp -> TheyCorp	${EVE.Standing[${_Me.CorporationID},${PilotIterator.Value.CorporationID}]}
-				echo MeAlliance -> TheyCorp ${EVE.Standing[${_Me.AllianceID},${PilotIterator.Value.CorporationID}]}
-				echo Me -> TheyAlliance ${EVE.Standing[${_Me.CharID},${PilotIterator.Value.AllianceID}]}
-				echo MeCorp -> TheyAlliance ${EVE.Standing[${_Me.CorporationID},${PilotIterator.Value.AllianceID}]}
-				echo MeAlliance -> TheyAlliance ${EVE.Standing[${_Me.AllianceID},${PilotIterator.Value.AllianceID}]}
-
-				echo They -> Me	${EVE.Standing[${PilotIterator.Value.CharID},${_Me.CharID}]}
-				echo TheyCorp -> Me ${EVE.Standing[${PilotIterator.Value.CorporationID},${_Me.CharID}]}
-				echo TheyAlliance -> Me ${EVE.Standing[${PilotIterator.Value.AllianceID},${_Me.CharID}]}
-				echo They -> MeCorp ${EVE.Standing[${PilotIterator.Value.CharID},${_Me.CorporationID}]}
-				echo TheyCorp -> MeCorp ${EVE.Standing[${PilotIterator.Value.CorporationID},${_Me.CorporationID}]}
-				echo TheyAlliance -> MeCorp ${EVE.Standing[${PilotIterator.Value.AllianceID},${_Me.CorporationID}]}
-				echo They -> MeAlliance ${EVE.Standing[${PilotIterator.Value.CharID},${_Me.AllianceID}]}
-				echo TheyCorp -> MeAlliance ${EVE.Standing[${PilotIterator.Value.CorporationID},${_Me.AllianceID}]}
-				echo TheyAlliance -> MeAlliance ${EVE.Standing[${PilotIterator.Value.AllianceID},${_Me.AllianceID}]}
-
-				if	${EVE.Standing[${_Me.CharID},${PilotIterator.Value.CharID}]} < ${Standing} || \
-					${EVE.Standing[${_Me.CorporationID},${PilotIterator.Value.CharID}]} < ${Standing} || \
-					${EVE.Standing[${_Me.AllianceID},${PilotIterator.Value.CharID}]} < ${Standing} || \
-					${EVE.Standing[${_Me.CharID},${PilotIterator.Value.CorporationID}]} < ${Standing} || \
-					${EVE.Standing[${_Me.CorporationID},${PilotIterator.Value.CorporationID}]} < ${Standing} || \
-					${EVE.Standing[${_Me.AllianceID},${PilotIterator.Value.CorporationID}]} < ${Standing} || \
-					${EVE.Standing[${_Me.CharID},${PilotIterator.Value.AllianceID}]} < ${Standing} || \
-					${EVE.Standing[${_Me.CorporationID},${PilotIterator.Value.AllianceID}]} < ${Standing} || \
-					${EVE.Standing[${_Me.AllianceID},${PilotIterator.Value.AllianceID}]} < ${Standing} || \
-					${EVE.Standing[${PilotIterator.Value.CharID},${_Me.CharID}]} < ${Standing} || \
-					${EVE.Standing[${PilotIterator.Value.CorporationID},${_Me.CharID}]} < ${Standing} || \
-					${EVE.Standing[${PilotIterator.Value.AllianceID},${_Me.CharID}]} < ${Standing} || \
-					${EVE.Standing[${PilotIterator.Value.CharID},${_Me.CorporationID}]} < ${Standing} || \
-					${EVE.Standing[${PilotIterator.Value.CorporationID},${_Me.CorporationID}]} < ${Standing} || \
-					${EVE.Standing[${PilotIterator.Value.AllianceID},${_Me.CorporationID}]} < ${Standing} || \
-					${EVE.Standing[${PilotIterator.Value.CharID},${_Me.AllianceID}]} < ${Standing} || \
-					${EVE.Standing[${PilotIterator.Value.CorporationID},${_Me.AllianceID}]} < ${Standing} || \
-					${EVE.Standing[${PilotIterator.Value.AllianceID},${_Me.AllianceID}]} < ${Standing}
+				;echo "  DEBUG: ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].CorpToAlliance} ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].CorpToCorp} ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].CorpToPilot} ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].MeToCorp} ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].MeToPilot} ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].AllianceToAlliance}"
+				;echo "  DEBUG: ${PilotIterator.Value.Standing.CorpToAlliance} ${PilotIterator.Value.Standing.CorpToCorp} ${PilotIterator.Value.Standing.CorpToPilot} ${PilotIterator.Value.Standing.MeToCorp} ${PilotIterator.Value.Standing.MeToPilot} ${PilotIterator.Value.Standing.AllianceToAlliance}"
+				if (${PilotIterator.Value.Standing.AllianceToAlliance} < ${Config.Defense.MinimumAllianceStanding} || \
+					${PilotIterator.Value.Standing.CorpToAlliance} < ${Config.Defense.MinimumAllianceStanding})
 				{
-					/* Yep, I'm laughing right now as well -- CyberTech */
-					UI:UpdateConsole["obj_Social: StandingDetection in local: ${PilotIterator.Value.Name} - ${PilotIterator.Value.Standing}!", LOG_CRITICAL]
-					return TRUE
+					UI:UpdateConsole["Social: Pilot Alliance Below Standing Threshold: ${PilotIterator.Value.Name} ${PilotIterator.Value.Corporation} Alliance: ${PilotIterator.Value.Alliance}", LOG_CRITICAL]
+					HostilesPresent:Set[TRUE]
+				}
+				if (${PilotIterator.Value.Standing.CorpToCorp} < ${Config.Defense.MinimumCorpStanding} || \
+					${PilotIterator.Value.Standing.MeToCorp} < ${Config.Defense.MinimumCorpStanding})
+				{
+					UI:UpdateConsole["Social: Pilot Corp Below Standing Threshold: ${PilotIterator.Value.Name} ${PilotIterator.Value.Corporation} Alliance: ${PilotIterator.Value.Alliance}", LOG_CRITICAL]
+					HostilesPresent:Set[TRUE]
+				}
+				if (${PilotIterator.Value.Standing.CorpToPilot} < ${Config.Defense.MinimumPilotStanding} || \
+					${PilotIterator.Value.Standing.MeToPilot} < ${Config.Defense.MinimumPilotStanding})
+				{
+					UI:UpdateConsole["Social: Pilot Below Standing Threshold: ${PilotIterator.Value.Name} ${PilotIterator.Value.Corporation} Alliance: ${PilotIterator.Value.Alliance}", LOG_CRITICAL]
+					HostilesPresent:Set[TRUE]
 				}
 			}
 			while ${PilotIterator:Next(exists)}
-
 		}
 
-		return FALSE
+		return ${HostilesPresent}
 	}
 
 	member:bool PilotsWithinDetection(int Dist)
