@@ -82,20 +82,20 @@ objectdef obj_Miner
 echo ${This.CurrentState}
 		switch ${This.CurrentState}
 		{
-			case ${STATE_WAIT_WARP}
+			variablecase ${STATE_WAIT_WARP}
 				break
-			case ${STATE_IDLE}
+			variablecase ${STATE_IDLE}
 				break
-			case ${STATE_ABORT}
+			variablecase ${STATE_ABORT}
 				Call Station.Dock
 				break
-			case ${STATE_DOCKED}
+			variablecase ${STATE_DOCKED}
 			echo "docked state"
 				call Cargo.TransferOreToHangar
 				;call Station.CheckList
 				call Station.Undock
 				break
-			case ${STATE_CHANGE_BELT}
+			variablecase ${STATE_CHANGE_BELT}
 				if ${Config.Miner.UseFieldBookmarks}
 				{
 					call BeltBookmarks.WarpToNext
@@ -105,15 +105,15 @@ echo ${This.CurrentState}
 					call Belts.WarpToNext
 				}
 				break
-			case ${STATE_MINE}
+			variablecase ${STATE_MINE}
 				call This.Mine
 				break
-			case ${STATE_TRANSFER_TO_JETCAN}
+			variablecase ${STATE_TRANSFER_TO_JETCAN}
 				call Cargo.TransferOreToJetCan
 				; TODO - This shouldn't notify until the jetcan is x% full - CyberTech
 				This:NotifyHaulers[]
 				break
-			case ${STATE_DELIVER_ORE}
+			variablecase ${STATE_DELIVER_ORE}
 
 				switch ${Config.Miner.DeliveryLocationType}
 				{
@@ -147,7 +147,7 @@ echo ${This.CurrentState}
 						break
 				}
 				break
-			case ${STATE_ERROR}
+			variablecase ${STATE_ERROR}
 				UI:UpdateConsole["CurrentState is ERROR"]
 				break
 			default
