@@ -1,10 +1,10 @@
 /*
 	Bookmark class
-	
+
 	Base class for bookmark lists
-	
+
 	-- CyberTech
-	
+
 */
 
 objectdef obj_Bookmark
@@ -17,7 +17,7 @@ objectdef obj_Bookmark
 	variable iterator BookmarkIterator
 	variable string BookmarkPrefix
 	variable bool CheckSystemID
-	
+
 	method Reset(string _BookmarkPrefix = "", bool _CheckSystemID = TRUE)
 	{
 		variable int Pos
@@ -30,13 +30,13 @@ objectdef obj_Bookmark
 
 		Bookmarks:Clear
 		EVE:DoGetBookmarks[Bookmarks]
-		Bookmarks:GetIterator[BookmarkIterator]	
+		Bookmarks:GetIterator[BookmarkIterator]
 #if EVEBOT_DEBUG
 		UI:UpdateConsole["${LogPrefix}: Found ${Bookmarks.Used} total bookmarks, filtering by prefix '${This.BookmarkPrefix}'", LOG_DEBUG]
 #endif
 		Used:Set[${Bookmarks.Used}]
 		for(Pos:Set[1]; ${Pos} <= ${Used}; Pos:Inc)
-		{		
+		{
 			if (${This.CheckSystemID} && ${Bookmarks[${Pos}].SolarSystemID} != ${_Me.SolarSystemID})
 			{
 #if EVEBOT_DEBUG
@@ -53,10 +53,10 @@ objectdef obj_Bookmark
 #endif
 				Bookmarks:Remove[${Pos}]
 				continue
-			}			
+			}
 		}
 		Bookmarks:Collapse
-		BookmarkIterator:First		
+		BookmarkIterator:First
 	}
 
 	method ValidateList()
@@ -65,7 +65,7 @@ objectdef obj_Bookmark
 		{
 			This:Reset
 		}
-		
+
 		if ${Bookmarks.Get[1](exists)} && ${Bookmarks.Get[1].SolarSystemID} != ${_Me.SolarSystemID}
 		{
 #if EVEBOT_DEBUG
@@ -82,10 +82,10 @@ objectdef obj_Bookmark
 
 	method Next()
 	{
-		if ${beltIndex.Used} == 0 
+		if ${beltIndex.Used} == 0
 		{
 			This:ResetBeltList
-		}		
+		}
 
 		if !${beltIterator:Next(exists)}
 		{
@@ -102,7 +102,7 @@ objectdef obj_Bookmark
 		UI:UpdateConsole["${LogPrefix} DEBUG: obj_Safespots.IsAtSafespot: ME_Z = ${Me.ToEntity.Z}", LOG_DEBUG]
 #endif
 
-		Bookmarks:GetIterator[TempIterator]	
+		Bookmarks:GetIterator[TempIterator]
 		if ${TempIterator:First(exists)}
 		{
 			do
@@ -132,9 +132,9 @@ objectdef obj_Bookmark
 			while ${TempIterator:Next(exists)}
 		}
 
-		return FALSE	
+		return FALSE
 	}
-	
+
 	function WarpToNext()
 	{
 		This:ValidateList[]
@@ -154,7 +154,7 @@ objectdef obj_Bookmark
 		}
 	}
 
-	; TODO: MoveToRandomBeltBookMark -> 
+	; TODO: MoveToRandomBeltBookMark ->
 	function WarpToRandom()
 	{
 		variable int RandomBelt

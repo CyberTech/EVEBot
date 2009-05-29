@@ -369,13 +369,13 @@ objectdef obj_Social
 
 				if ${_Me.CharID} == ${PilotIterator.Value.CharID}
 				{
-					echo "StandingDetection: Ignoring Self"
+					UI:UpdateConsole["Social: StandingDetection: Ignoring Self", LOG_DEBUG]
 					continue
 				}
 
 				if ${PilotIterator.Value.ToFleetMember(exists)}
 				{
-					echo "StandingDetection Ignoring Fleet Member: ${PilotIterator.Value.Name}"
+					UI:UpdateConsole["Social: StandingDetection Ignoring Fleet Member: ${PilotIterator.Value.Name}", LOG_DEBUG]
 					continue
 				}
 

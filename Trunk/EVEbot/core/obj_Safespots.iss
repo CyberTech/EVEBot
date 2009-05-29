@@ -1,10 +1,10 @@
 /*
 	Safespots class
-	
+
 	Safespot access.  Inherits obj_Bookmark
-	
+
 	-- CyberTech
-	
+
 */
 
 objectdef obj_Safespots inherits obj_Bookmark
@@ -14,7 +14,7 @@ objectdef obj_Safespots inherits obj_Bookmark
 	variable string LogPrefix
 
 	method Initialize()
-	{		
+	{
 		LogPrefix:Set["obj_Safespots(${This.ObjectName})"]
 		This:Reset
 		UI:UpdateConsole["${LogPrefix}: Initialized"]
