@@ -438,6 +438,7 @@ variable(global) obj_EVEBOT_Targeting Targeting
 
 function main()
 {
+	EVEBot.Threads:Insert[${Script.Filename}]
 	while ${Script[EVEBot](exists)}
 	{
 		waitframe

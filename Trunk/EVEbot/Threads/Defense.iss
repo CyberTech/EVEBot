@@ -333,6 +333,7 @@ variable(global) obj_Defense Defense
 
 function main()
 {
+	EVEBot.Threads:Insert[${Script.Filename}]
 	while ${Script[EVEBot](exists)}
 	{
 		if ${Defense.Hide}

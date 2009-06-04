@@ -57,7 +57,7 @@
 				</button>
 				<button	Name='Close' template='EVESkin.Window.TitleBar.Close'>
 					<OnLeftClick>
-						endscript EVEBot
+						EVEBot:EndBot[]
 					</OnLeftClick>
 				</button>
 			</Children>
@@ -883,7 +883,7 @@
 									<OnLeftClick>
 										Config.Combat:UseBlackList[${This.Checked}]
 									</OnLeftClick>
-								</checkbox>							
+								</checkbox>
 							</Children>
 						</Frame>
 						<slider name='MinArmorPct'>
@@ -1093,7 +1093,7 @@
 										{
 											This:SetChecked
 										}
-									</OnLoad> 
+									</OnLoad>
 									<OnLeftClick>
 										Config.Combat:RunIfTargetJammed[${This.Checked}]
 									</OnLeftClick>
@@ -1110,11 +1110,11 @@
 										{
 											This:SetChecked
 										}
-									</OnLoad> 
+									</OnLoad>
 									<OnLeftClick>
 										Config.Combat:QuitIfWarpScrambled[${This.Checked}]
 									</OnLeftClick>
-								</checkbox>	
+								</checkbox>
 								<Text name='lblMinChainBounty'>
 									<X>50%</X>
 									<Y>10</Y>

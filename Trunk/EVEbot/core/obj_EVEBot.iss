@@ -18,6 +18,7 @@ objectdef obj_EVEBot
 	variable int PulseIntervalInSeconds = 4
 	variable int LastSessionFrame
 	variable bool LastSessionResult
+	variable index:string Threads
 
 	method Initialize()
 	{
@@ -29,6 +30,19 @@ objectdef obj_EVEBot
 	method Shutdown()
 	{
 		Event[OnFrame]:DetachAtom[This:Pulse]
+	}
+
+	method EndBot()
+	{
+		variable int i
+		UI:UpdateConsole["EVEBot shutting down..."]
+		for (i:Set[1]; ${i} <= ${Threads.Used}; i:Inc)
+		{
+			UI:UpdateConsole[" Stopping ${Threads.Get[${i}]} thread..."]
+			endscript ${Threads.Get[${i}]}
+		}
+		UI:UpdateConsole["Finished"]
+		endscript ${Script.Filename}
 	}
 
 	method Pulse()
