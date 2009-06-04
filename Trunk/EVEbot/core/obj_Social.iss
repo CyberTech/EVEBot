@@ -135,7 +135,7 @@ objectdef obj_Social
 					EVE:DoGetPilots[This.PilotIndex]
 					if ${Config.Defense.DetectLowStanding}
 					{
-						Passed_LowStandingCheck:Set[${This.LowStandingDetected}]
+						Passed_LowStandingCheck:Set[!${This.LowStandingDetected}]
 					}
 				}
 				else
@@ -194,7 +194,19 @@ objectdef obj_Social
 
 	member:bool IsSafe()
 	{
-		return (${Passed_LowStandingCheck} & ${Passed_WhiteListCheck} & ${Passed_BlackListCheck})
+		if !${Passed_LowStandingCheck}
+		{
+			return FALSE
+		}
+		if !${Passed_WhiteListCheck}
+		{
+			return FALSE
+		}
+		if !${Passed_BlackListCheck}
+		{
+			return FALSE
+		}
+		return TRUE
 	}
 
 	; Returns TRUE if the Check passes and there are no non-whitelisted pilots in local
@@ -369,13 +381,13 @@ objectdef obj_Social
 
 				if ${_Me.CharID} == ${PilotIterator.Value.CharID}
 				{
-					UI:UpdateConsole["Social: StandingDetection: Ignoring Self", LOG_DEBUG]
+					;UI:UpdateConsole["Social: StandingDetection: Ignoring Self", LOG_DEBUG]
 					continue
 				}
 
 				if ${PilotIterator.Value.ToFleetMember(exists)}
 				{
-					UI:UpdateConsole["Social: StandingDetection Ignoring Fleet Member: ${PilotIterator.Value.Name}", LOG_DEBUG]
+					;UI:UpdateConsole["Social: StandingDetection Ignoring Fleet Member: ${PilotIterator.Value.Name}", LOG_DEBUG]
 					continue
 				}
 

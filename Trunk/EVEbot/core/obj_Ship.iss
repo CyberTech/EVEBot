@@ -153,39 +153,6 @@ objectdef obj_Ship
 		}
 	}
 
-	/* The IsSafe function should check the tank, ammo availability, etc.. */
-	/* and determine if it is safe to put the ship back into harms way. */
-	/* TODO - Rename to SystemsReady (${Ship.SystemsReady}) or similar for clarity - CyberTech */
-	member:bool IsSafe()
-	{
-		Validate_Ship()
-
-		if ${m_WaitForCapRecharge} && ${_MyShip.CapacitorPct} < 90
-		{
-			return FALSE
-		}
-		else
-		{
-			m_WaitForCapRecharge:Set[FALSE]
-		}
-
-		/* TODO - These functions are not reliable. Redo per Looped armor/shield test in obj_Miner.Mine() (then consolidate code) -- CyberTech */
-		if ${_MyShip.CapacitorPct} < 10
-		{
-			UI:UpdateConsole["Capacitor low!  Run for cover!", LOG_CRITICAL]
-			m_WaitForCapRecharge:Set[TRUE]
-			return FALSE
-		}
-
-		if ${_MyShip.ArmorPct} < 25
-		{
-			UI:UpdateConsole["Armor low!  Run for cover!", LOG_CRITICAL]
-			return FALSE
-		}
-
-		return TRUE
-	}
-
 	member:bool IsAmmoAvailable()
 	{
 		Validate_Ship()
