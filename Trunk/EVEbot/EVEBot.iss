@@ -5,7 +5,7 @@
 
 #include core/defines.iss
 
-/* Base Requirements */
+/* Base Requirements  */
 #include core/obj_EVEBot.iss
 #include core/obj_Configuration.iss
 
