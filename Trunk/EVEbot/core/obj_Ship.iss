@@ -185,6 +185,7 @@ objectdef obj_Ship
 							;UI:UpdateConsole["Ammo: Match!"]
 							;UI:UpdateConsole["Ammo: Qty = ${anItemIterator.Value.Quantity}"]
 							;UI:UpdateConsole["Ammo: Max = ${aWeaponIterator.Value.MaxCharges}"]
+							; TODO - CyberTech - this check needs to be dynamic, not hardcoded at 6 highslots.
 							if ${anItemIterator.Value.Quantity} < ${Math.Calc[${aWeaponIterator.Value.MaxCharges}*6]}
 							{
 								UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable: FALSE!", LOG_CRITICAL]
