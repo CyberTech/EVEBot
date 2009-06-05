@@ -1174,12 +1174,24 @@ objectdef obj_Ship
 
 	function TravelToSystem(int DestinationSystemID)
 	{
+		variable index:int apRoute
+		variable iterator  apIterator
+
+		; Clear the destination first.  Need an isxeve method for this.
+		Universe[${_Me.SolarSystemID}]:SetDestination 
+		wait 10
+		
 		while ${DestinationSystemID} != ${_Me.SolarSystemID}
 		{
-			UI:UpdateConsole["DEBUG: To: ${DestinationSystemID} At: ${_Me.SolarSystemID}"]
-			UI:UpdateConsole["Setting autopilot from ${Universe[${_Me.SolarSystemID}].Name} to ${Universe[${DestinationSystemID}].Name}"]
-			Universe[${DestinationSystemID}]:SetDestination
-
+			EVE:DoGetToDestinationPath[apRoute]	
+			UI:UpdateConsole["DEBUG: apRoute.Used = ${apRoute.Used}",LOG_DEBUG]
+			if ${apRoute.Used} == 0
+			{
+				UI:UpdateConsole["DEBUG: To: ${DestinationSystemID} At: ${_Me.SolarSystemID}"]
+				UI:UpdateConsole["Setting autopilot from ${Universe[${_Me.SolarSystemID}].Name} to ${Universe[${DestinationSystemID}].Name}"]
+				Universe[${DestinationSystemID}]:SetDestination
+			}
+			
 			call This.ActivateAutoPilot
 		}
 	}

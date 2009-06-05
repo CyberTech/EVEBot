@@ -166,7 +166,7 @@ objectdef obj_Defense
 			return
 		}
 
-		if !${Social.IsSafe}
+		if ${Social.IsSafe} == FALSE
 		{
 			This:RunAway["Hostiles in Local"]
 		}

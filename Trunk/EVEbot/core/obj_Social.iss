@@ -194,19 +194,24 @@ objectdef obj_Social
 
 	member:bool IsSafe()
 	{
+		variable bool is_safe = TRUE
+		
 		if !${Passed_LowStandingCheck}
 		{
-			return FALSE
+			is_safe:Set[FALSE]
 		}
+		
 		if !${Passed_WhiteListCheck}
 		{
-			return FALSE
+			is_safe:Set[FALSE]
 		}
+		
 		if !${Passed_BlackListCheck}
 		{
-			return FALSE
+			is_safe:Set[FALSE]
 		}
-		return TRUE
+		
+		return ${is_safe}
 	}
 
 	; Returns TRUE if the Check passes and there are no non-whitelisted pilots in local
