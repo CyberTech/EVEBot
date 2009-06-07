@@ -134,8 +134,7 @@ objectdef obj_Drones
 							UI:UpdateConsole["${This.LaunchedDrones} drones deployed"]
 						}
 
-						; TODO - Iterate thru the drones, storing their current shield/armor. If shield/armor this round
-						; is below last round, drone is under attack. recall it so attacker loses lock. -- CyberTech
+						This:CheckDroneHP
 					}
 				}
 
