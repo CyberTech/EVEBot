@@ -23,6 +23,11 @@ objectdef obj_Drones
 	variable int ShortageCount
 
 	variable string ActiveDroneType
+	
+	variable collection:float StoredDroneArmor
+	variable collection:float StoredDroneShield
+	variable index:entity	RecalledDrones
+	variable iterator RecalledDroneIterator
 
 	; All Drones
 	;variable collection:int DroneCollection
@@ -139,6 +144,78 @@ objectdef obj_Drones
 				This.NextPulse:Update
 			}
 		}
+	}
+	
+	/* CheckDroneHP - This method is here to iterate through all the drones, check their shield/armor % against
+	any known previous value, if they haven't already been recalled, recall them, and store the current shield/armor hp. */
+	method CheckDroneHP()
+	{
+		/* Update drone entity index */
+		This:GetActiveDrones[]
+		
+		/* Get an iterator from the index */
+		This.ActiveDrones:GetIterator[This.ActiveDrone]
+		
+		/* iterate over the index */
+		if ${ActiveDrone:First(exists)}
+		{
+			do
+			{
+				/* Only compare hp if the stored hp isn't null */
+				if ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}]} != NULL
+				{
+					if ${ActiveDrone.Value.ArmorPct} < ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}]}
+					{
+						/* Check if we've previously recalled the drone */
+						if !${DroneIsRecalled[${ActiveDrone.Value}]}
+						{
+							This:RecallDrone[${ActiveDrone.Value}]
+						}
+					}
+				}
+				/* Store current HP */
+				StoredDroneArmor:Set[${ActiveDrone.Value.ID},${ActiveDrone.Value.ArmorPct}]
+				if ${StoredDroneShield.Element[${ActiveDrone.Value.ID}]} != NULL
+				{
+					if ${ActiveDrone.Value.ShieldPct} < ${StoredDroneShield.Element[${ActiveDrone.Value.ID}]}
+					{
+						if !${This.DroneIsRecalled[${ActiveDrone.Value}]}
+						{
+							This:RecallDrone[${ActiveDrone.Value}]
+						}	
+					}
+				}
+				StoredDroneShield:Set[${ActiveDrone.Value.ID},${ActiveDrone.Value.ShieldPct}]
+			}
+			while ${ActiveDrone:Next(exists)}
+		}
+	}
+	
+	member DroneIsRecalled(entity drone)
+	{
+		/* Get an iterator to the recalled drones */
+		RecalledDrones:GetIterator[RecalledDroneIterator]
+		
+		/* Iterate the index */
+		if ${RecalledDroneIterator:First(exists)}
+		{
+			do
+			{
+				if ${RecalledDroneIterator.Value} == ${drone}
+				{
+					return TRUE
+				}
+			}
+			while ${RecalledDroneIterator:Next(exists)}
+		}
+		return FALSE
+	}
+	
+	method RecallDrone(entity drone)
+	{
+		UI:UpdateConsole["obj_Drones: Recalling drone ${drone.ID}"]
+		RecalledDrones:Insert[${drone}]
+		drone:ReturnToDroneBay
 	}
 
 	method LaunchAll()
