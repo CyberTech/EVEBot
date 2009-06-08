@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using LavishSettingsAPI;
+using Microsoft.Win32;
 
 namespace EveBots
 {
@@ -21,6 +22,13 @@ namespace EveBots
         }
         public ISBoxerSettings()
         {
+          if (_homeDirectory == "")
+          {
+            // HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\InnerSpace.exe
+            RegistryKey iskey = Registry.LocalMachine.OpenSubKey(
+              "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\InnerSpace.exe");
+            _homeDirectory = iskey.GetValue("Path", "").ToString().Replace('\\', '/');
+          }
             _lavishSettings.Tree.Import(_homeDirectory + "/ISBoxerToolkit.GeneralSettings.XML");
             _characters_Set = _lavishSettings.Tree.FindSet("Characters");
             _characterSets_Set = _lavishSettings.Tree.FindSet("Character Sets");
@@ -31,7 +39,7 @@ namespace EveBots
         {
             LavishScriptAPI.LavishScriptIterator charsetIterator = _characterSets_Set.GetSetIterator();
 
-            if (charsetIterator.IsValid)
+            if (charsetIterator != null && charsetIterator.IsValid)
             {
                 charsetIterator.First();
                 do

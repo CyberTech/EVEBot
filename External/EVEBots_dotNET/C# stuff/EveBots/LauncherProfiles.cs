@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using LavishSettingsAPI;
+using Microsoft.Win32;
+using System.Diagnostics;
+
 namespace EveBots
 {
     public class LauncherProfiles
@@ -16,11 +19,24 @@ namespace EveBots
             // <Lax>   ${LavishSettings[${LavishScript.HomeDirectory}/GameConfiguration.XML]}
             //<Lax> but needs \ converted to /
 
+          if( _homeDirectory == "" )
+          {
+            // HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\InnerSpace.exe
+            RegistryKey iskey = Registry.LocalMachine.OpenSubKey(
+              "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\InnerSpace.exe");
+            _homeDirectory = iskey.GetValue("Path", "").ToString().Replace('\\', '/');
+          }
+
             _gameConfigurationXMLSet = _lavishSettings.Tree.FindSet((_homeDirectory + "/GameConfiguration.XML"));
             _profilesSet = _gameConfigurationXMLSet.FindSet("EVE Online").FindSet("Profiles");
             LavishScriptAPI.LavishScriptIterator profilesIterator = _profilesSet.GetSetIterator();
+            if (profilesIterator == null)
+            {
+              _profilesSet = _gameConfigurationXMLSet.FindSet("EVE").FindSet("Profiles");
+              profilesIterator = _profilesSet.GetSetIterator();
+            } 
 
-            if (profilesIterator.IsValid)
+            if (profilesIterator != null && profilesIterator.IsValid)
             {
                 profilesIterator.First();
                 do
