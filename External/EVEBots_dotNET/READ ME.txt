@@ -10,7 +10,7 @@ You must set up a launcher profile for each character you wish to use
 in the startup sequence you have to add "run evebot/launcher YOURCHARACTERNAME"
 3. An isboxer profile set up with a charset filled with the characters you want to use, make sure you set up each character to use the correct profile
 4. For each character find evebot/config/yourcharacter.xml , replace the line "<Setting Name="Callback">FALSE</Setting>" with "<Setting Name="Callback">TRUE</Setting>"
-5. Place the evebots executable in innerspace/.NET Programs directory
+5. Compile the project in the C# stuff directory using visual studio 2008 and place the evebots executable in innerspace/.NET Programs directory
 
 
 Once this is done simply type "dotnet evebots" into your innerspace console *the innerspace console NOT the one in eve , its the one you get when you double click on the innerspace icon in your system tray
