@@ -7,6 +7,5 @@ objectdef obj_MissionCombatConfig
 	method Initialize()
 	{
 		UI:UpdateConsole["obj_MissionCombatConfig: Initialize not implemented."]
-	}
-	
+	}	
 }

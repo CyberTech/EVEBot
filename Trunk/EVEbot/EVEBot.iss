@@ -46,6 +46,7 @@
 #include core/obj_Autopilot.iss
 #include core/obj_MissionCombat.iss
 #include core/obj_MissionCombatConfig.iss
+#include core/obj_MissionCommands.iss
 #include core/obj_Callback.iss
 
 /* Behavior/Mode Includes */

@@ -1,15 +1,21 @@
+/* Explanation of room numbers -
 
+they are intended to be used when the salvaging part of the bot is completed so we can inform our salvager which areas are clear
+
+room 0 is always the area that is where the mission bookmark is
+rooms are divided by a warp , so using an acceleration gate or warping to another boookmark would mean whereever you land is room 1
+*/
 
 objectdef obj_MissionCombat
 {
 	variable string SVN_REVISION = "$Rev: 988 $"
 	variable int Version
-	variable obj_MissionCombatConfig MissionCombatConfig
-
+	variable obj_MissionCommands MissionCommands
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 2
 
 	variable string CurrentState
+	variable string CurrentCommand
 
 	variable int roomNumber = 0
 	variable index:string targetBlacklist
@@ -20,7 +26,9 @@ objectdef obj_MissionCombat
 	variable bool MissionUnderway = FALSE
 	;variable Time timeout
 	variable iterator CommandIterator
-	
+	variable int FailureCount = 0
+	variable int MissionID = 0
+	variable obj_MissionDatabase MissionDatabase
 	method Initialize()
 	{
 		;attach our pulse atom to the onframe even so we fire the pulse every frame
@@ -48,50 +56,255 @@ objectdef obj_MissionCombat
 	method Shutdown()
 	{
 		; detach the atom when we get garbaged
-		Event[OnFrame]:DetachAtom[This:Pulse]
+		;Event[OnFrame]:DetachAtom[This:Pulse]
 	}
 
-/* All of this should be getting called from Behaviors/obj_Missioneer.iss so
-it will be handling the getting and turning in of missions. However, we do
-need to handle going to locations for objectives. */
-method SetState()
-{
-	/* Let defense handle any hiding */
-	if ${Defense.Hiding}
+	/* All of this should be getting called from Behaviors/obj_Missioneer.iss so
+	it will be handling the getting and turning in of missions. However, we do
+	need to handle going to locations for objectives. */
+	method SetState()
 	{
-		This.CurrentState:Set["IDLE"]
-	}
-	/* Check if we're at our current objective's location - if not, we need
-	to go to it. */
-	
-	/* If we're at the current objective's location, do an action for it. */
-	
-	/* If objective is complete, check for more objectives. If more exist, switch to next.
-	Otherwise, mission is complete. */
-	
-	/* If we're looting/salvaging we'll probably need to switch to our loot/salvage
-	ship. Go to the ship's location, get in it, come back. */
-	
-	/* If we're salvaging and here in our salvager, start salvaging/looting. */
-	
-	/* Go home, unload cargo, switch back to normal ship if we're in our salvager,
-	let missioneer turnin. */
-}
+		/* we reset to idle of the defense thread runs away, thus resetting the state machine to its entry point, processstate does not get called untill the defense thread stops hiding */
+		if ${Defense.Hide}
+		{
+			#if EVEBOT_DEBUG
+			UI:UpdateConsole["DEBUG: obj_MissionCombat - Defense hiding , resetting state to idle"]
+			#endif
+			This.CurrentState:Set["Idle"]
+		}
+		; We dont use setstate for anything else because there is no way to tell if we are in the mission,
+		; which means we could get stuck in infinite loops trying to warp to the mission as you cant warp from inside a mission to its start
+		; the best way to solve this would be to have amadeus implement a member in isxeve indicating if we are in a deadspace or not
+		; a hack would be to have failure states for warptobookmark and have warptobookmark watch for the "cannot warp in deadspace" message - warpprepare means this is even more terrible
 
-method ProcessState()
-{
-	switch ${This.CurrentState}
+		; For now we just have the states themselves decide what the correct state transition is
+		; STATES -
+
+		; ARMING - Go to equipment station and equip the right things for the mission - transitions to gotomission when ship is properly equipped
+		; GOTOMISSION - get to the mission - transition to commands when at the location (for now it calls warptobookmark then assumes we reached the mission)
+		; RUNCOMMANDS - find commands , execute them in order - transition to mission complete when we have no commands left
+		; MISSIONCOMPLETE - hand the mission in - transitions to abort if we have tried to hand the mission in too many times (ie something went wrong) , otherwise goes back to idle
+		; ABORT - Mission failed to complete too many times, something went wrong so we abandon the mission - transitions to idle when finished
+
+	}
+
+	function ProcessState()
 	{
-		case "IDLE"
+		switch ${This.CurrentState}
+		{
+			case "Idle":
+			; missionID is set to 0 when complete Agents.TurnInMission successfully
+			if ${This.MissionID != 0}
+			{
+				#if EVEBOT_DEBUG
+				UI:UpdateConsole["DEBUG: obj_MissionCombat - MissionID found, setting state to arming"]
+				#endif
+				This.CurrentState:Set["Arming"]
+			}
 			break
+			case "Arming":
+			; TODO (this is a really big one)
+			; MAKE EVEBOT EQUIP ITSELF!
+			;if ${This.Armed}
+			;{
+			#if EVEBOT_DEBUG
+			UI:UpdateConsole["DEBUG: obj_MissionCombat - setting state from arming to goto mission"]
+			#endif
+			This.CurrentState:Set["GotoMission"]
+			;}
+			;else
+			;{
+			;call This.Rearm
+			;}
+			break
+			case "GotoMission":
+			if ${This.MissionID != 0}
+			{
+				#if EVEBOT_DEBUG
+				UI:UpdateConsole["DEBUG: obj_MissionCombat - Calling WarpToEncounter, MissionID ${This.MissionID}"]
+				#endif
+				call WarpToEncounter ${This.MissionID}
+				;we assume that warptoencounter succeded and we are now sitting at the first acceleration gate
+				;todo - check it actually succeded
+
+				;lets find the name of the mission we are running and see if we can match it to a set of commands in the database
+				variable string missLevel = ${Agent[id,${agentID}].Level}
+				variable string missionName = ${MissionCache.Name[${agentID}]}
+				#if EVEBOT_DEBUG
+				UI:UpdateConsole["DEBUG: obj_MissionCombat - Checking for mission in database - Mission Name : ${missonName} , Mission Level : ${missLevel}"]
+				#endif
+				if ${MissionDatabase.MissionCommands[${missionName},${missLevel}].Children(exists)}
+				{
+					#if EVEBOT_DEBUG
+					UI:UpdateConsole["DEBUG: obj_MissionCombat - Mission found in database , checking commands exist for it"]
+					#endif
+					;if we get here we can assume there are some command associate with the mission so we set the command iterator to the first one
+					CommandIterator = MissionDatabase.MissionCommands[${missionName},${missLevel}]:GetSetIterator[CommandIterator]
+					;one final check to make sure we really do have commands
+					if ${CommandIterator:First(exists)}
+					{
+						#if EVEBOT_DEBUG
+						UI:UpdateConsole["DEBUG: obj_MissionCombat - Commands found, changing state to RunCommands"]
+						#endif
+						;light is green! the first location in a mission is always room number 0
+						roomNumber:Set[0]
+						This.CurrentState:Set["RunCommands"]
+					}
+					else
+					{
+						;well we found the mission but no commands exist for it, abort
+						#if EVEBOT_DEBUG
+						UI:UpdateConsole["DEBUG: obj_MissionCombat - Commands not found , changing state to Abort "]
+						#endif
+						This.CurrentState::Set["Abort"]
+					}
+				}
+				else
+				{
+					;we could not find the mission in the database! Abort!
+					#if EVEBOT_DEBUG
+					UI:UpdateConsole["DEBUG: obj_MissionCombat - Mission not found, changing state to Abort "]
+					#endif
+					This.CurrentState:Set["Abort"]
+				}
+			}
+			else
+			{
+				;we get here if for some reason we lost the missionID, revert to idle state
+				#if EVEBOT_DEBUG
+				UI:UpdateConsole["DEBUG: obj_MissionCombat - Have no mission ID in state GotoMisison, reverting to Idle state "]
+				#endif
+				This.CurrentState:Set["Idle"]
+			}
+			break
+			case "RunCommands":
+			;we should be at the mission at the very first gate or simply in the encounter area
+			;we should also have some commands to iterator over
+			;first we call the method that decides what command we should be executing
+			#if EVEBOT_DEBUG
+			UI:UpdateConsole["DEBUG: obj_MissionCombat - Executing Runcommands state"]
+			#endif
+			This:SetCommandState
+			;next we call the method that executes said command
+			;commands return true or false based on whether they complete or not, commands that do not complete in one go
+			;simply get called again untill they complete
+			#if EVEBOT_DEBUG
+			UI:UpdateConsole["DEBUG: obj_MissionCombat - Attempting to process command ${CurrentCommand}"]
+			#endif
+			if ${This:ProcessCommand}
+			{
+				#if EVEBOT_DEBUG
+				UI:UpdateConsole["DEBUG: obj_MissionCombat - ${CurrentCommand} successfully completed, moving onto next command"]
+				#endif
+				;then we move the iterator onto the next command
+				if !${CommandIterator:Next(exists)}
+				{
+					;the next command in the list does not exist!
+					;if everything went smoothly  the mission should be in the complete state
+					#if EVEBOT_DEBUG
+					UI:UpdateConsole["DEBUG: obj_MissionCombat - Ran out of commands ,setting state to MissionComplete "]
+					#endif
+					This.CurrentState:Set["MissionComplete"]
+				}
+				else
+				{
+					#if EVEBOT_DEBUG
+					UI:UpdateConsole["DEBUG: obj_MissionCombat - Next command is ${CommandIterator.Value.FindAttribute["Action"].String} "]
+					#endif
+				}
+			}
+			else
+			{
+				;getting here means we need to process the command again as it did not complete
+				;todo -
+				;add a limit to the number of times we get here before we decide something has gone wrong
+				#if EVEBOT_DEBUG
+				UI:UpdateConsole["DEBUG: obj_MissionCombat - command did not complete , will attempt again next pulse "]
+				#endif
+			}
+			break
+			case "MissionComplete":
+			#if EVEBOT_DEBUG
+			UI:UpdateConsole["DEBUG: obj_MissionCombat - Warping to Agent Home Base  "]
+			#endif
+			call This.WarpToHomeBase ${This.MissionID}
+			#if EVEBOT_DEBUG
+			UI:UpdateConsole["DEBUG: obj_MissionCombat - Arrived at agent home base (we hope), attempting to turn in mission"]
+			#endif
+			call Agents.TurnInMission
+			#if EVEBOT_DEBUG
+			UI:UpdateConsole["DEBUG: obj_MissionCombat - Mission turned in (probably) setting state to idle"]
+			#endif
+			This.MissionID:Set[0]
+			This.CurrentState:Set["Idle"]
+			;			if ${StillHaveTheMission}
+			;			{
+			;				if ${FailureCount > FailureThreshhold}
+			;				{
+			;					This.CurrentState:Set["Abort"]
+			;					return
+			;				}
+			;				FailureCount:Inc
+			;			}
+			break
+			case "Abort":
+			#if EVEBOT_DEBUG
+			UI:UpdateConsole["DEBUG: obj_MissionCombat - Aborting mission, warpign to home base"]
+			#endif
+			call This.WarpToHomeBase ${This.MissionID}
+			#if EVEBOT_DEBUG
+			UI:UpdateConsole["DEBUG: obj_MissionCombat - Attempting to quit mission"]
+			#endif
+			call Agent.QuitMission
+			#if EVEBOT_DEBUG
+			UI:UpdateConsole["DEBUG: obj_MissionCombat - Quit mission (hopefully) , setting state to idle"]
+			#endif
+			This.MissionID:Set[0]
+			This.CurrentState:Set["Idle"]
+			break
+		}
 		/* Somewhere in here will be a call to a method in this class that will
 		process the objective command. It will not be done from the FSM. */
 	}
-}
 
+	function WarpToEncounter(int agentID)
+	{
+		variable index:agentmission amIndex
+		variable index:bookmark mbIndex
+		variable iterator amIterator
+		variable iterator mbIterator
 
+		EVE:DoGetAgentMissions[amIndex]
+		amIndex:GetIterator[amIterator]
 
-	method SetState()
+		if ${amIterator:First(exists)}
+		{
+			do
+			{
+				if ${amIterator.Value.AgentID} == ${agentID}
+				{
+					amIterator.Value:DoGetBookmarks[mbIndex]
+					mbIndex:GetIterator[mbIterator]
+
+					if ${mbIterator:First(exists)}
+					{
+						do
+						{
+							if ${mbIterator.Value.LocationType.Equal["dungeon"]}
+							{
+								call Ship.WarpToBookMark ${mbIterator.Value}
+								return
+							}
+						}
+						while ${mbIterator:Next(exists)}
+					}
+				}
+			}
+			while ${amIterator:Next(exists)}
+		}
+	}
+
+	method SetCommandState()
 	{
 		; we have an iterator that should be set to the first command in a series of commands in a mission
 		if ${CommandIterator.IsValid}
@@ -101,130 +314,140 @@ method ProcessState()
 			{
 				case "Approach":
 				{
-					CurrentState:Set["Approach"]
+					CurrentCommand:Set["Approach"]
 				}
-				case "ApproachNoBlock":
+				case "UseGateStructure":
 				{
-					CurrentState:Set["ApproachNoBlock"]
-				}
-				case "Kill":
-				{
-					CurrentState:Set["Kill"]
-				}
-				case "CheckForLoot":
-				{
-					CurrentState:Set["CheckForLoot"]
-				}
-				case "ClearRoom":
-				{
-					CurrentState:Set["ClearRoom"]
-				}
-				case "KillAgressors":
-				{
-					CurrentState:Set["KillAgressors"]
+					CurrentCommand:Set["UseGateStructure"]
 				}
 				case "NextRoom":
 				{
-					CurrentState:Set["NextRoom"]
+					CurrentCommand:Set["NextRoom"]
 				}
-				case "TargetPrioritys":
+				case "TargetAggros":
 				{
-					CurrentState:Set["TargetPriorities"]
+					CurrentCommand:Set["TargetAggros"]
 				}
-				case "WaitForAggro":
+				case "WaitAggro":
 				{
-					CurrentState:Set["WaitForAggro"]
+					CurrentCommand:Set["WaitAggro"]
+				}
+				case "KillAgressors":
+				{
+					CurrentCommand:Set["KillAgressors"]
+				}
+				case "ClearRoom":
+				{
+					CurrentCommand:Set["ClearRoom"]
+				}
+				case "Kill":
+				{
+					CurrentCommand:Set["Kill"]
+				}
+				case "Waves":
+				{
+					CurrentCommand:Set["Waves"]
+				}
+				case "WaitTargetQueueZero":
+				{
+					CurrrentCommand:Set["WaitTargetQueueZero"]
+				}
+				case "PullNearest"
+				{
+					CurrentCommand:Set["PullNearest"]
+				}
+				case "CheckContainers":
+				{
+					CurrentCommand:Set["CheckContainers"]
+				}
+				case "CheckWrecks":
+				{
+					CurrentCommand:Set["CheckWrecks"]
 				}
 			}
 		}
 		else
 		{
 			;if our command iterator is not valid ,we either ran out of commands or we have not been given any
-			CurrentState:Set["Idle"]
+			CurrentCommand:Set["Idle"]
 		}
 	}
 
-	method ProccessState()
+	function:bool ProccessState()
 	{
-		if !${Config.Common.BotMode.Equal[Missioneer]}
-		{
-			; There's no reason at all for the bot to be doing this if it's not a missioneer
-			return
-		}
 		switch ${This.CurrentState}
 		{
 			case "Approach":
 			{
-				call This.Approach ${CommandIterator.Value.FindAttribute["Target"].String}
-				if ${Return}
-				{
-					CommandIterator:Next
-				}
+				return ${MissionCommands.Approach[${CommandIterator.Value.FindAttribute["Target"].String}]}
+				break
 			}
-			case "ApproachNoBlock":
+			case "ApproachBreakOnCombat":
 			{
-				This:ApproachNoBlock[${CommandIterator.Value.FindAttribute["Target"].String}]
-				if ${Return}
-				{
-					CommandIterator:Next
-				}
-			}
-			case "Kill":
+				return ${MissionCommands.ApproachBreakOnCombat[${CommandIterator.Value.FindAttribute["Target"].String}]}
+				break
+			case "UseGateStructure":
 			{
-				call This.Kill ${CommandIterator.Value.FindAttribute["Target"].String}
-				if ${Return}
-				{
-					CommandIterator:Next
-				}
-			}
-			case "CheckForLoot":
-			{
-				call This.LootItem ${CommandIterator.Value.FindAttribute["Item"]} ${CommandIterator.Value.FindAttribute["ContainerType"]}
-				if ${Return}
-				{
-					CommandIterator:Next
-				}
-			}
-			case "ClearRoom":
-			{				
-				call This.ClearRoom
-				if ${Return}
-				{
-					CommandIterator:Next
-				}
-			}
-			case "KillAgressors":
-			{
-				call This.KillAggressors
-				if ${Return}
-				{
-					CommandIterator:Next
-				}
+				return ${MissionCommands.UseGateStructure[${CommandIterator.Value.FindAttribute["Target"].String}]}
+				break
 			}
 			case "NextRoom":
 			{
-				call This.NextRoom
-				if ${Return}
-				{
-					CommandIterator:Next
-				}
+				return ${MissionCommands.NextRoom[]}
+				break
 			}
-			case "TargetPriorities":
+			case "TargetAggros":
 			{
-				variable iterator settingIterator
-				CommandIterator:GetSettingIterator[settingIterator]
-				This:TargetPriorities settingIterator					
+				return ${MissionCommands.TargetAggros[]}
+				break
 			}
-			case "WaitForAggro":
+			case "WaitAggro":
 			{
-				
-				if ${This.AggroCount > 0}
-				{
-					CommandIterator:Next
-				}
+				return ${MissionCommands.Approach[${CommandIterator.Value.FindAttribute["TimeOut"].Int}]}
+				break
 			}
+			case "KillAggressors":
+			{
+				return ${MissionCommands.KillAgressors[]}
+				break
+			}
+			case "ClearRoom":
+			{
+				return ${MissionCommands.ClearRoom[]}
+				break
+			}
+			case "Kill":
+			{
+				return ${MissionCommands.Kill[${CommandIterator.Value.FindAttribute["Target"].String}]}
+				break
+			}
+			case "Waves":
+			{
+				return ${MissionCommands.Waves[${CommandIterator.Value.FindAttribute["TimeOut"].Int}]}
+				break
+			}
+			case "WaitTargetQueueZero":
+			{
+				return ${MissionCommands.WaitTargetQueueZero[]}
+				break
+			}
+			case "PullNearest":
+			{
+				return ${MissionCommands.PullNearest[]}
+				break
+			}
+			case "CheckContainers":
+			{
+				return ${MissionCommands.CheckContainers[${CommandIterator.Value.FindAttribute["GroupID"]}, ${CommandIterator.Value.FindAttribute["Target"].String}]}
+				break
+			}
+			case "CheckWrecks":
+			{
+				return  ${MissionCommands.CheckContainers[${CommandIterator.Value.FindAttribute["GroupID"]}, ${CommandIterator.Value.FindAttribute["Target"].String} , ${CommandIterator.Value.FindAttribute["WreckName"]}
 			case Idle:
-			return
+			{
+				return TRUE
+			}
 		}
 	}
 
@@ -287,808 +510,5 @@ method ProcessState()
 			UI:UpdateConsole["obj_MissionCombat: DEBUG: no commands for mission!"]
 			return FALSE
 		}
-	}
-
-
-	; ------ USER AVALIABLE FUNCTIONS - users will be able to call these ones!
-	; TODO - this should not be a function, it should be a method
-	function TargetAggros()
-	{
-		variable index:entity targetIndex
-		variable iterator     targetIterator
-		variable iterator blackListIterator
-		variable bool blacklisted = FALSE
-		EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
-		targetIndex:GetIterator[targetIterator]
-
-		;;UI:UpdateConsole["GetTargeting = ${_Me.GetTargeting}, GetTargets = ${_Me.GetTargets}"]
-		if ${targetIterator:First(exists)}
-		{
-			do
-			{
-				if ${targetIterator.Value.IsTargetingMe} && !${Targeting.IsQueued[${targetIterator.Value.ID}]}
-				{
-					targetBlacklist:GetIterator[blackListIterator]
-					; Check the target blacklist and ignore anything on it
-					if ${blackListIterator:First(exists)}
-					{
-						do
-						{
-							if ${blackListIterator.Value.Equal[${targetIterator.Value.Name}]}
-							{
-								blacklisted:Set[TRUE]
-								break
-							}
-							echo ${targetIterator.Value.Name}
-
-						}
-						while ${blackListIterator:Next(exists)}
-					}
-					if !${blacklisted}
-					{
-						; target is not blacklisted so lock it up
-						Targeting:Queue[${targetIterator.Value.ID},1,1,FALSE]
-					}
-					else
-					{
-						blacklisted:Set[FALSE]
-					}
-				}
-			}
-			while ${targetIterator:Next(exists)}
-		}
-	}
-
-	; TODO - move guts into movement thread
-	function UseGateStructure(string gateName)
-	{
-		variable index:entity targetIndex
-		variable iterator     targetIterator
-		EVE:DoGetEntities[targetIndex, GroupID, GROUP_LARGECOLLIDABLEOBJECT]
-		targetIndex:GetIterator[targetIterator]
-		if ${targetIterator:First(exists)}
-		{
-			do
-			{
-
-				if ${targetIterator.Value.Name.Equal[${gateName}]}
-				{
-					call Ship.Approach ${targetIterator.Value.ID} DOCKING_RANGE
-					wait 10
-					call Ship.WarpPrepare
-					ui:UpdateConsole["Activating Acceleration Gate..."]
-					while !${Ship.WarpEntered}
-					{
-						targetIterator.Value:Activate
-						wait 50
-					}
-					call Ship.WarpWait
-					break
-				}
-			}
-			while ${targetIterator:Next(exists)}
-		}
-	}
-
-	; TODO - move into movement thread
-	function ApproachGate()
-	{
-		Entity[TypeID,TYPE_ACCELERATION_GATE]:Approach
-		wait 10
-	}
-
-	; TODO - move guts into Ship.Approach except for roonumer:inc
-	function NextRoom()
-	{
-		call Ship.Approach ${Entity[TypeID,TYPE_ACCELERATION_GATE].ID} DOCKING_RANGE
-		wait 10
-		call Ship.WarpPrepare
-		ui:UpdateConsole["Activating Acceleration Gate..."]
-		while !${Ship.WarpEntered}
-		{
-			Entity[TypeID,TYPE_ACCELERATION_GATE]:Activate
-			wait 50
-			/* ADD CODE TO UNSTICK SHIP HERE */
-		}
-		call Ship.WarpWait
-		roomNumber:Inc
-	}
-
-	; TODO - should be method
-	function IgnoreEntity(string entityName)
-	{
-		targetBlacklist:Insert[${entityName}]
-	}
-
-	; TODO - should be method
-	function PrioritzeEntity(string entityName)
-	{
-		priorityTargets:Insert[${entityName}]
-	}
-
-	; TODO - should be calling ship.approach (eventually movement thread)
-	function Approach(string entityName)
-	{
-		variable index:entity targetIndex
-		variable iterator     targetIterator
-		variable entity closestMatch
-		EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
-		targetIndex:GetIterator[targetIterator]
-		if ${targetIterator:First(exists)}
-		{
-			do
-			{
-				if ${targetIterator.Value.Name.Equal[${entityName}]}
-				{
-					if ${targetIterator.Value.Distance < closestMatch.Distance}
-					{
-						closestMatch = targetIterator.Value
-					}
-				}
-			}
-			while ${targetIterator:Next(exists)}
-			Entity[${closestMatch.EntityID}]:Approach
-		}
-	}
-
-	; TODO - infinite loop. should be part of FSM
-	function WaitAggro(int aggroCount = 1)
-	{
-		while TRUE
-		{
-			if ${This.AggroCount} >= ${aggroCount}
-			{
-				break
-			}
-		}
-	}
-
-	; TODO - should be part of FSM
-	function KillAggressors()
-	{
-		while TRUE
-		{
-			call This.TargetAggros
-			wait 50
-			if ${This.AggroCount < 1}
-			{
-				break
-			}
-			waitframe
-		}
-	}
-
-	; TODO - should be part of FSM
-	function ClearRoom()
-	{
-		while TRUE
-		{
-			call This.TargetAggros
-			wait 20
-			if ${This.HostileCount} < 1
-			{
-				UI:UpdateConsole["obj_MissionCombat.ClearRoom: DEBUG: Hostile count is zero! Room cleared"]
-				break
-			}
-			if ${This.AggroCount} < 1
-			{
-				UI:UpdateConsole["obj_MissionCombat.ClearRoom: DEBUG: No aggression, Pulling nearest"]
-				call This.PullNearest
-				wait 20
-			}
-			waitframe
-		}
-	}
-
-	; TODO - spams targeting queue. spams ship.approach. move logic to FSM
-	function Kill(string entityName)
-	{
-		; For the moment this will find the closest entity with a matching name
-		variable index:entity targetIndex
-		variable iterator     targetIterator
-		EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
-		targetIndex:GetIterator[targetIterator]
-		if ${targetIterator:First(exists)}
-		{
-			do
-			{
-				if ${targetIterator.Value.Name.Equal[${entityName}]}
-				{
-					do
-					{
-						Targeting:Queue[${targetIterator.Value.ID},1,1,TRUE]
-						if ${targetIterator.Value.Distance} > ${Ship.OptimalTargetingRange}
-						{
-							call Ship.Approach ${targetIterator.Value.ID} ${Ship.OptimalTargetingRange}
-						}
-					}
-					while ${targetIterator.Value.Name(exists)}
-					break
-				}
-			}
-			while ${targetIterator:Next(exists)}
-
-		}
-	}
-
-	; TODO: Waiting for next wave should be part of FSM
-	function Waves(int timeoutMinutes)
-	{
-		UI:UpdateConsole["obj_Missions.Waves: DEBUG: Waiting for waves , timeout ${timeoutMinutes} minutes"]
-		variable time WaitTimeOut
-		while TRUE
-		{
-			call This.ClearRoom
-			WaitTimeOut:Set[${Time.Timestamp}]
-			WaitTimeOut.Minute:Inc[${timeoutMinutes}]
-			WaitTimeOut:Update
-
-			while ${This.HostileCount} < 1
-			{
-				if ${Time.Timestamp} >= ${WaitTimeOut.Timestamp}
-				{
-					UI:UpdateConsole["obj_Missions.Waves: DEBUG: No hostiles present after timer expired, Waves finished"]
-					return
-				}
-			}
-		}
-	}
-
-	; TODO: FSM
-	function WaitTargetQueueZero()
-	{
-		while ${Math.Calc[${Targeting.QueueSize} + ${Targeting.TargetCount}]} > 0
-		{
-			waitframe
-		}
-	}
-
-	; TODO: Move to Targeting.SelectTarget module
-	function PullNearest()
-	{
-		variable index:entity targetIndex
-		variable iterator     targetIterator
-
-		EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
-		targetIndex:GetIterator[targetIterator]
-
-		/* FOR NOW just pull the closest target */
-		if ${targetIterator:First(exists)}
-		{
-			do
-			{
-				if ${This.IsNPCTarget[${targetIterator.Value.GroupID}]}
-				{
-					;UI:UpdateConsole["obj_Missions: DEBUG: Pulling ${targetIterator.Value} (${targetIterator.Value.ID})..."]
-					UI:UpdateConsole["obj_Missions: DEBUG: Group = ${targetIterator.Value.Group} GroupID = ${targetIterator.Value.GroupID} IsNPCTarget : ${This.IsNPCTarget[${targetIterator.Value.GroupID}]}"]
-
-					if !${Targeting.IsQueued[${targetIterator.Value.ID}]}
-					{
-						Targeting:Queue[${targetIterator.Value.ID},1,1,FALSE]
-					}
-
-					if ${targetIterator.Value.Distance} > ${Ship.OptimalWeaponRange}
-					{
-
-						call Ship.Approach ${targetIterator.Value.ID} ${Ship.OptimalWeaponRange}
-					}
-					while !${targetIterator.Value(exists)}
-					{
-						;pew pew untill something targets us or it dies
-						if ${targetIterator.Value.Distance} > ${Ship.${Ship.OptimalWeaponRange}}
-						{
-							call Ship.Approach ${targetIterator.Value.ID} ${Ship.OptimalWeaponRange}
-						}
-						waitframe
-						if ${This.AggroCount} > 0
-						{
-							break
-						}
-					}
-					return
-				}
-			}
-			while ${targetIterator:Next(exists)}
-		}
-	}
-
-	; TODO: FSM
-	function KillStructure(string structureName)
-	{
-		variable index:entity targetIndex
-		variable iterator     targetIterator
-
-		EVE:DoGetEntities[targetIndex, GroupID, GROUP_LARGECOLLIDABLESTRUCTURE]
-		targetIndex:GetIterator[targetIterator]
-
-		if ${targetIterator:First(exists)}
-		{
-			do
-			{
-				if ${structureName.Equal[${targetIterator.Value.Name}]}
-				{
-					UI:UpdateConsole["obj_Missions.KillStructure: DEBUG: Found ${structureName} shooting it"]
-					do
-					{
-						Targeting:Queue[${targetIterator.Value.ID},1,1,TRUE]
-						if ${targetIterator.Value.Distance} > ${Ship.OptimalTargetingRange}
-						{
-							call Ship.Approach ${targetIterator.Value.ID} ${Ship.OptimalTargetingRange}
-						}
-					}
-					while ${targetIterator.Value.Name(exists)}
-					break
-				}
-			}
-			while ${targetIterator:Next(exists)}
-		}
-	}
-
-	; TODO: LS doesn't support get/set calls, so don't try to fake them. things should just set lootItem directly
-	function LootItem(string Item)
-	{
-		lootItem:Set["${Item}"]
-	}
-
-	; TODO - FSM - this function could last 30 minutes in it's current form!
-	function CheckSpawnContainers()
-	{
-		variable iterator containerIterator
-		variable index:entity containerIndex
-		EVE:DoGetEntities[containerIndex, GroupID, GROUPID_SPAWN_CONTAINER]
-		containerIndex:GetIterator[containerIterator]
-		if ${containerIterator:First(exists)}
-		{
-			UI:UpdateConsole["obj_Missions: There are ${containerIndex.Used} cargo containers nearby."]
-			do
-			{
-				call Ship.Approach ${containerIterator.Value.ID} LOOT_RANGE
-				call This.LootEntity ${containerIterator.Value.ID}
-				if ${Return} > 0
-				{
-					; for now assume there is only one bit of loot to loot!
-					break
-				}
-			}
-			while ${containerIterator:Next(exists)}
-		}
-	}
-
-	; TODO - FSM - this function could last 30 minutes in it's current form!
-	; TODO - Functionally identical to CheckSpawnContainers
-	function CheckCans()
-	{
-		variable iterator containerIterator
-		variable index:entity containerIndex
-		EVE:DoGetEntities[containerIndex, TypeID, 23]
-		containerIndex:GetIterator[containerIterator]
-		if ${containerIterator:First(exists)}
-		{
-			UI:UpdateConsole["obj_Missions: There are ${containerIndex.Used} cargo containers nearby."]
-			do
-			{
-				call Ship.Approach ${containerIterator.Value.ID} LOOT_RANGE
-				call This.LootEntity ${containerIterator.Value.ID}
-				if ${Return} > 0
-				{
-					; for now assume there is only one bit of loot to loot!
-					break
-				}
-			}
-			while ${containerIterator:Next(exists)}
-		}
-	}
-
-	; TODO - FSM - this function could last 30 minutes in it's current form!
-	; TODO - Functionally identical to CheckSpawnContainers and CheckWrecks
-	function CheckWrecks(string shipName)
-	{
-		variable index:entity targetIndex
-		variable iterator     targetIterator
-
-		EVE:DoGetEntities[targetIndex, GroupID, GROUPID_WRECK]
-		targetIndex:GetIterator[targetIterator]
-
-		if ${targetIterator:First(exists)}
-		{
-			do
-			{
-				if ${targetIterator.Value.Name.Find[${shipName}]} > 0
-				{
-					call Ship.Approach ${targetIterator.Value.ID} LOOT_RANGE
-					call This.LootEntity ${targetIterator.Value.ID}
-					if ${Return} > 0
-					{
-						; for now assume there is only one bit of loot to loot!
-						break
-					}
-				}
-			}
-			while ${targetIterator:Next(exists)}
-		}
-	}
-
-	; TODO - I see no reason to have an approach for a specific object type when name is adequate
-	function ApproachCollidableObject(string objectName)
-	{
-		variable index:entity targetIndex
-		variable iterator     targetIterator
-
-		EVE:DoGetEntities[targetIndex, GroupID, GROUP_LARGECOLLIDABLEOBJECT]
-		targetIndex:GetIterator[targetIterator]
-
-		if ${targetIterator:First(exists)}
-		{
-			do
-			{
-				if ${targetIterator.Value.Name.Equal[${objectName}]}
-				{
-					targetIterator.Value:Approach
-					break
-				}
-			}
-			while ${targetIterator:Next(exists)}
-		}
-	}
-
-	; ------------------ END OF USER FUNCTIONS
-
-	; TODO - use of targetBlacklist appears to be more of a target ignore list; rename as appropriate
-	member:int AggroCount()
-	{
-		variable index:entity targetIndex
-		variable iterator     targetIterator
-		variable iterator blackListIterator
-		variable int hostileCount = 0
-
-		EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
-		targetIndex:GetIterator[targetIterator]
-
-		if ${targetIterator:First(exists)}
-		{
-			do
-			{
-				if ${targetIterator.Value.IsTargetingMe}
-				{
-					targetBlacklist:GetIterator[blackListIterator]
-					if ${blackListIterator:First(exists)}
-					{
-						do
-						{
-							if ${blackListIterator.Value.Equal[${targetIterator.Value.Name}]}
-							{
-								continue
-							}
-							hostileCount:Inc
-						}
-						while ${blackListIterator:Next(exists)}
-					}
-					else
-					{
-						hostileCount:Inc
-						echo ${hostileCount}
-					}
-				}
-			}
-			while ${targetIterator:Next(exists)}
-		}
-		return ${hostileCount}
-	}
-
-	; TODO - move to obj_Target
-	member:bool IsNPCTarget(int groupID)
-	{
-		switch ${groupID}
-		{
-			case GROUP_LARGECOLLIDABLEOBJECT
-			case GROUP_LARGECOLLIDABLESHIP
-			case GROUP_LARGECOLLIDABLESTRUCTURE
-			case GROUP_SENTRYGUN
-			case GROUP_CONCORDDRONE
-			case GROUP_CUSTOMSOFFICIAL
-			case GROUP_POLICEDRONE
-			case GROUP_CONVOYDRONE
-			case GROUP_FACTIONDRONE
-			case GROUP_BILLBOARD
-			return FALSE
-			break
-			default
-			return TRUE
-			break
-		}
-
-		return TRUE
-	}
-
-	; TODO - move to Target.TargetSelect module
-	; TODO move blacklist/ignorelist to same
-	member:int HostileCount()
-	{
-		variable index:entity targetIndex
-		variable iterator     targetIterator
-		variable iterator blackListIterator
-		variable int hostileCount = 0
-		variable bool blackListed = FALSE
-
-		EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
-		targetIndex:GetIterator[targetIterator]
-
-		if ${targetIterator:First(exists)}
-		{
-			do
-			{
-				if ${This.IsNPCTarget[${targetIterator.Value.GroupID}]}
-				{
-					targetBlacklist:GetIterator[blackListIterator]
-					if ${blackListIterator(exists)}
-					{
-						do
-						{
-							if ${blackListIterator.Value.Equal[${targetIterator.Value.Name}]}
-							{
-								blackListed:Set[TRUE]
-								break
-							}
-						}
-						while ${blackListIterator:Next(exists)}
-						if !${blackListed}
-						{
-							hostileCount:Inc
-						}
-						else
-						{
-							blackListed:Set[FALSE]
-						}
-					}
-				}
-			}
-			while ${targetIterator:Next(exists)}
-		}
-		return ${hostileCount}
-	}
-
-	member:int ContainerCount()
-	{
-		return 0
-	}
-
-	member:bool GatePresent()
-	{
-		variable index:entity gateIndex
-
-		EVE:DoGetEntities[gateIndex, TypeID, TYPE_ACCELERATION_GATE]
-
-		UI:UpdateConsole["obj_Missions: DEBUG There are ${gateIndex.Used} gates nearby."]
-
-		return ${gateIndex.Used} > 0
-	}
-
-	member:bool IsSpecialStructure(int agentID,string structureName)
-	{
-		variable string missionName
-
-		;;;UI:UpdateConsole["obj_Agents: DEBUG: IsSpecialStructure(${agentID},${structureName}) >>> ${This.MissionCache.Name[${agentID}]}"]
-
-		missionName:Set[${This.MissionCache.Name[${agentID}]}]
-		if ${missionName.NotEqual[NULL]}
-		{
-			UI:UpdateConsole["obj_Missions: DEBUG: missionName = ${missionName}"]
-			if ${missionName.Equal["avenge a fallen comrade"]} && ${structureName.Equal["habitat"]}
-			{
-				return TRUE
-			}
-			elseif ${missionName.Equal["break their will"]} && ${structureName.Equal["repair outpost"]}
-			{
-				return TRUE
-			}
-			elseif ${missionName.Equal["the hidden stash"]} && ${structureName.Equal["warehouse"]}
-			{
-				return TRUE
-			}
-			elseif ${missionName.Equal["secret pickup"]} && ${structureName.Equal["recon outpost"]}
-			{
-				return TRUE
-			}
-		}
-
-		return FALSE
-	}
-
-	member:bool SpecialStructurePresent(int agentID)
-	{
-		variable index:entity targetIndex
-		variable iterator     targetIterator
-
-		EVE:DoGetEntities[targetIndex, GroupID, GROUP_LARGECOLLIDABLESTRUCTURE]
-		targetIndex:GetIterator[targetIterator]
-
-		UI:UpdateConsole["obj_Missions: DEBUG: SpecialStructurePresent found ${targetIndex.Used} structures"]
-
-		if ${targetIterator:First(exists)}
-		{
-			do
-			{
-				if ${This.IsSpecialStructure[${agentID},${targetIterator.Value.Name}]} == TRUE
-				{
-					return TRUE
-				}
-			}
-			while ${targetIterator:Next(exists)}
-		}
-
-		return FALSE
-	}
-
-	member:int SpecialStructureID(int agentID)
-	{
-		variable index:entity targetIndex
-		variable iterator     targetIterator
-
-		EVE:DoGetEntities[targetIndex, GroupID, GROUP_LARGECOLLIDABLESTRUCTURE]
-		targetIndex:GetIterator[targetIterator]
-
-		if ${targetIterator:First(exists)}
-		{
-			do
-			{
-				if ${This.IsSpecialStructure[${agentID},${targetIterator.Value.Name}]} == TRUE
-				{
-					return ${targetIterator.Value.ID}
-				}
-			}
-			while ${targetIterator:Next(exists)}
-		}
-
-		return -1
-	}
-
-	member:bool IsSpecialWreck(int agentID,string wreckName)
-	{
-		variable string missionName
-
-		;;;UI:UpdateConsole["obj_Missions: DEBUG: IsSpecialWreck(${agentID},${wreckName}) >>> ${This.MissionCache.Name[${agentID}]}"]
-
-		missionName:Set[${This.MissionCache.Name[${agentID}]}]
-		if ${missionName.NotEqual[NULL]}
-		{
-			UI:UpdateConsole["obj_Missions: DEBUG: missionName = ${missionName}"]
-			if ${missionName.Equal["smuggler interception"]} && \
-			${wreckName.Find["transport"]} > 0
-			{
-				return TRUE
-			}
-			; elseif {...}
-			; etc...
-		}
-
-		return FALSE
-	}
-
-	member:bool SpecialWreckPresent(int agentID)
-	{
-		variable index:entity targetIndex
-		variable iterator     targetIterator
-
-		EVE:DoGetEntities[targetIndex, GroupID, GROUP_LARGECOLLIDABLESTRUCTURE]
-		targetIndex:GetIterator[targetIterator]
-
-		UI:UpdateConsole["obj_Missions: DEBUG: SpecialWreckPresent found ${targetIndex.Used} wrecks",LOG_MINOR]
-
-		if ${targetIterator:First(exists)}
-		{
-			do
-			{
-				if ${This.IsSpecialWreck[${agentID},${targetIterator.Value.Name}]} == TRUE
-				{
-					return TRUE
-				}
-			}
-			while ${targetIterator:Next(exists)}
-		}
-
-		return FALSE
-	}
-
-	member:int SpecialWreckID(int agentID)
-	{
-		variable index:entity targetIndex
-		variable iterator     targetIterator
-
-		EVE:DoGetEntities[targetIndex, GroupID, GROUP_LARGECOLLIDABLESTRUCTURE]
-		targetIndex:GetIterator[targetIterator]
-
-		if ${targetIterator:First(exists)}
-		{
-			do
-			{
-				if ${This.IsSpecialWreck[${agentID},${targetIterator.Value.Name}]} == TRUE
-				{
-					return ${targetIterator.Value.ID}
-				}
-			}
-			while ${targetIterator:Next(exists)}
-		}
-
-		return -1
-	}
-
-	; TODO - move to obj_Cargo
-	function:int LootEntity(int entityID)
-	{
-		variable index:item ContainerCargo
-		variable iterator Cargo
-		variable int QuantityToMove
-		variable int lootedamount = 0
-		UI:UpdateConsole["DEBUG: obj_Missions.LootEntity  ${typeID}"]
-
-		Entity[${entityID}]:OpenCargo
-		wait 80
-		Entity[${entityID}]:DoGetCargo[ContainerCargo]
-		ContainerCargo:GetIterator[Cargo]
-		if ${Cargo:First(exists)}
-		{
-			do
-			{
-				UI:UpdateConsole["DEBUG: obj_Missions.LootEntity: Found ${Cargo.Value.Quantity} x ${Cargo.Value.Name} - ${Math.Calc[${Cargo.Value.Quantity} * ${Cargo.Value.Volume}]}m3"]
-
-				if ${Cargo.Value.Name.Equal[${lootItem}]}
-				{
-					QuantityToMove:Set[${Cargo.Value.Quantity}]
-
-					UI:UpdateConsole["DEBUG: obj_Missions.LootEntity: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
-					if ${QuantityToMove} > 0
-					{
-						Cargo.Value:MoveTo[MyShip,${QuantityToMove}]
-						lootedamount:Inc[${QuantityToMove}]
-						wait 30
-					}
-				}
-			}
-			while ${Cargo:Next(exists)}
-		}
-		Me.Ship:StackAllCargo
-		wait 10
-		return ${lootedamount}
-	}
-
-	;TODO - move to obj_Cargo
-	;TODO - member will fail if called without cargo open
-	member:bool HaveLoot(int agentID)
-	{
-		variable int        QuantityRequired
-		variable string     itemName
-		variable bool       haveCargo = FALSE
-		variable index:item CargoIndex
-		variable iterator   CargoIterator
-		variable int        TypeID
-		variable int        ItemQuantity
-
-		;;Agents:SetActiveAgent[${Agent[id,${agentID}]}]
-
-		itemName:Set[${EVEDB_Items.Name[${This.MissionCache.TypeID[${agentID}]}]}]
-		QuantityRequired:Set[${Math.Calc[${This.MissionCache.Volume[${agentID}]}/${EVEDB_Items.Volume[${itemName}]}]}]
-
-		;;; Check the cargohold of your ship
-		MyShip:DoGetCargo[CargoIndex]
-		CargoIndex:GetIterator[CargoIterator]
-		if ${CargoIterator:First(exists)}
-		{
-			do
-			{
-				TypeID:Set[${CargoIterator.Value.TypeID}]
-				ItemQuantity:Set[${CargoIterator.Value.Quantity}]
-				;;UI:UpdateConsole["DEBUG: HaveLoot: Ship's Cargo: ${ItemQuantity} units of ${CargoIterator.Value.Name}(${TypeID})."]
-
-				if (${TypeID} == ${This.MissionCache.TypeID[${agentID}]}) && \
-				(${ItemQuantity} >= ${QuantityRequired})
-				{
-					UI:UpdateConsole["DEBUG: HaveLoot: Found required items in ship's cargohold."]
-					haveCargo:Set[TRUE]
-				}
-			}
-			while ${CargoIterator:Next(exists)}
-		}
-
-		return ${haveCargo}
 	}
 }

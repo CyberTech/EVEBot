@@ -186,7 +186,7 @@ objectdef obj_Missions
 
 	variable obj_MissionCache MissionCache
    variable obj_MissionDatabase MissionDatabase
-	variable obj_MissionCombat missionCombat
+	;variable obj_MissionCombat missionCombat
 
 	method Initialize()
 	{
@@ -489,36 +489,49 @@ objectdef obj_Missions
 
 	function RunCombatMission(int agentID)
 	{
-		UI:UpdateConsole["obj_Missions: DEBUG: Shiptype ${Ship.Type} (${Ship.TypeID}) Mission agent (${MissionCache.Name[${agentID}]}) (${Agents.AgentName})"]
-
-		variable string missLevel = ${Agent[id,${agentID}].Level}
-		variable string missionName = ${MissionCache.Name[${agentID}]}
-
-		echo ${MissionDatabase.MissionCommands[${missionName},${missLevel}]}
-		if ${MissionDatabase.MissionCommands[${missionName},${missLevel}].Children(exists)}
-		{
-			UI:UpdateConsole["obj_Missions: DEBUG: Mission Name : __${missionName}__ , level ${missLevel}"]
-
-			call This.WarpToEncounter ${agentID}
-
-			call missionCombat.RunMission ${MissionDatabase.MissionCommands[${missionName},${missLevel}]}
-			wait 10
-			; missionCombat.RunMission will return true if it exhausts all commands without being interrupted
-			if ${Return}
-			{
-				;we go home and hand the mission in
-				call This.WarpToHomeBase ${agentID}
-				wait 50
-				UI:UpdateConsole["obj_Missions: TurnInMission"]
-				call Agents.TurnInMission
-			}
-		}
-		else
-		{
-			UI:UpdateConsole["obj_Missions: Paused Script. No commands available for mission, complete mission manually then run the script."]
-			Script:Pause
-		}
+		missionCombat.MissionID:Set[${agentID}]
+		call missionCombat.ProcessState
+		;if ${missionCombat.CurrentState.Equals["Idle"]}
+		;{
+		;	missionCombat.MissionID:Set[${agentID}]
+		;}
+	;	call missionCombat.ProcessState
 	}
+			
+		
+		
+;				
+;		UI:UpdateConsole["obj_Missions: DEBUG: Shiptype ${Ship.Type} (${Ship.TypeID}) Mission agent (${MissionCache.Name[${agentID}]}) (${Agents.AgentName})"]
+;
+;		variable string missLevel = ${Agent[id,${agentID}].Level}
+;		variable string missionName = ${MissionCache.Name[${agentID}]}
+;
+;		
+;		;echo ${MissionDatabase.MissionCommands[${missionName},${missLevel}]}
+;		if ${MissionDatabase.MissionCommands[${missionName},${missLevel}].Children(exists)}
+;		{
+;			UI:UpdateConsole["obj_Missions: DEBUG: Mission Name : __${missionName}__ , level ${missLevel}"]
+;
+;			call This.WarpToEncounter ${agentID}
+;
+;			call missionCombat.RunMission ${MissionDatabase.MissionCommands[${missionName},${missLevel}]}
+;			wait 10
+;			; missionCombat.RunMission will return true if it exhausts all commands without being interrupted
+;			if ${Return}
+;			{
+;				;we go home and hand the mission in
+;				call This.WarpToHomeBase ${agentID}
+;				wait 50
+;				UI:UpdateConsole["obj_Missions: TurnInMission"]
+;				call Agents.TurnInMission
+;			}
+;		}
+;		else
+;		{
+;			UI:UpdateConsole["obj_Missions: Paused Script. No commands available for mission, complete mission manually then run the script."]
+;			Script:Pause
+;		}
+;	}
 
 	function DefaultCombat(int agentID)
 	{

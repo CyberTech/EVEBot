@@ -78,6 +78,7 @@ Create Tagfile=0
 32=core\obj_MissionCombat.iss
 33=obj_Callback.iss
 34=core\obj_MissionCombatConfig.iss
+35=core\obj_MissionCommands.iss
 [Files - Docs]
 0=Docs\svn2html.css
 1=Docs\changelog.html

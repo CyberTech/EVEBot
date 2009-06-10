@@ -36,8 +36,7 @@
         <Set Name = "Commands">
           <Set Name = "1" Action = "NextRoom">
           </Set>
-          <Set Name = "2" Action = "KillStructure">
-            <Setting Name = "parameter1">Drone Silo</Setting>
+          <Set Name = "2" Action = "Kill" Target ="Drone Silo">
           </Set>
           <Set Name = "3" Action = "WaitTargetQueueZero">
           </Set>
@@ -61,10 +60,7 @@
           </Set>
           <Set Name = "3" Action = "ClearRoom">
           </Set>
-          <Set Name = "4" Action = "LootItem">
-            <Setting Name = "Parameter1">Confiscated Viral Agent</Setting>
-          </Set>
-          <Set Name = "5" Action = "CheckCans">
+          <Set Name = "4" Action = "CheckContainers"  Target = "Confiscated Viral Agent" GroupID = "12">
           </Set>
         </Set>
       </Set>
@@ -80,13 +76,9 @@
     <Set Name = "Technological Secrets (1 of 3)">
       <Set Name = "2">
         <Set Name = "Commands">
-          <Set Name = "1" Action = "Waves">
-            <Setting Name = "wavesTimeout">3</Setting>
+          <Set Name = "1" Action = "Waves" TimeOut ="3">
           </Set>
-          <Set Name = "2" Action = "LootItem">
-            <Setting Name = "parameter1">Mercenary Pilot</Setting>
-          </Set>
-          <Set Name = "3" Action = "CheckCans">
+          <Set Name = "2" Action = "CheckContainers" Target ="Mercenary Pilot" GroupID ="12">
           </Set>
         </Set>
       </Set>
@@ -94,10 +86,9 @@
     <Set Name = "Deadly Arrival">
       <Set Name = "2">
         <Set Name = "Commands">
-          <Set Name = "1" Action = "ApproachCollidableObject">
-            <Setting Name = "parameter1">Spaceshuttle Wreck</Setting>
+          <Set Name = "1" Action = "Approach" Target ="Spaceshuttle Wreck">
           </Set>
-          <Set Name = "2" Action = "WaitAggro">
+          <Set Name = "2" Action = "WaitAggro" TimeOut ="10">
           </Set>
         </Set>
       </Set>
@@ -115,20 +106,15 @@
         <Set Name = "Commands">
           <Set Name = "1" Action = "ClearRoom">
           </Set>
-          <Set Name = "2" Action = "LootItem">
-            <Setting Name = "parameter1">Brutor Workers</Setting>
+          <Set Name = "2" Action = "CheckContainers" Target ="Brutor Workers" GroupID ="12">
           </Set>
-          <Set Name = "3" Action = "CheckCans">
-          </Set>
-
         </Set>
       </Set>
     </Set>
     <Set Name = "Labors of War (3 of 3)">
       <Set Name = "2">
         <Set Name = "Commands">
-          <Set Name = "2" Action = "KillStructure">
-            <Setting Name = "parameter1">Manufacturing Outpost</Setting>
+          <Set Name = "2" Action = "Kill" Target ="Manufacturing Outpost">
           </Set>
         </Set>
       </Set>
@@ -138,12 +124,8 @@
         <Set Name = "Commands">
           <Set Name = "1" Action = "ClearRoom">
           </Set>
-          <Set Name = "2" Action = "LootItem">
-            <Setting Name = "parameter1">Gallentean Viral Agent</Setting>
+          <Set Name = "2" Action = "CheckContainers" Target="Gallentean Viral Agent" GroupID="12">
           </Set>
-          <Set Name = "3" Action = "CheckCans">
-          </Set>
-
         </Set>
       </Set>
     </Set>
@@ -152,10 +134,7 @@
         <Set Name = "Commands">
           <Set Name = "1" Action = "ClearRoom">
           </Set>
-          <Set Name = "2" Action = "LootItem">
-            <Setting Name = "parameter1">Reports</Setting>
-          </Set>
-          <Set Name = "3" Action = "CheckCans">
+          <Set Name = "2" Action = "CheckContainers" Target ="Reports" GroupID ="12">
           </Set>
         </Set>
       </Set>
@@ -195,10 +174,7 @@
         <Set Name = "Commands">
           <Set Name = "1" Action = "NextRoom">
           </Set>
-          <Set Name = "2" Action = "ApproachCollidableObject">
-            <Setting Name = "parameter1">Acceleration Gate (Locked Down)</Setting>
-          </Set>
-          <Set Name = "3" Action = "WaitAggro">
+          <Set Name = "2" Action = "ApproachBreakOnCombat" Target ="Acceleration Gate (Locked Down)">
           </Set>
         </Set>
       </Set>
@@ -218,12 +194,8 @@
           </Set>
           <Set Name = "2" Action = "ClearRoom">
           </Set>
-          <Set Name = "3" Action = "LootItem">
-            <Setting Name = "parameter1">Militants</Setting>
-          </Set>
-          <Set Name = "4" Action = "CheckWrecks">
-            <Setting Name = "param1">Transport</Setting>
-          </Set>
+          <Set Name = "3" Action = "CheckWrecks" Target="Militants" GroupID="186" WreckName="Transport">            
+          </Set>         
         </Set>
       </Set>
     </Set>
@@ -266,15 +238,12 @@
         <Set Name = "Commands">
           <Set Name = "1" Action = "NextRoom">
           </Set>
-          <Set Name = "2" Action = "KillStructure">
-            <Setting Name = "parma1">Warehouse</Setting>
+          <Set Name = "2" Action = "Kill" Target="Warehouse">
           </Set>
           <Set Name = "3" Action = "ClearRoom">
           </Set>
-          <Set Name = "4" Action = "LootItem">
+          <Set Name = "4" Action = "CheckContainers" Target="Small Sealed Cargo Containers" GroupID ="12">
             <Setting Name = "parm2">Small Sealed Cargo Containers</Setting>
-          </Set>
-          <Set Name = "5" Action = "CheckCans">
           </Set>
         </Set>
       </Set>
@@ -284,10 +253,7 @@
         <Set Name = "Commands">
           <Set Name = "1" Action = "ClearRoom">
           </Set>
-          <Set Name = "2" Action = "LootItem">
-            <Setting Name = "parm2">Caldari Traitor's DNA</Setting>
-          </Set>
-          <Set Name = "3" Action = "CheckCans">
+          <Set Name = "2" Action = "CheckContainers" Target="Caldari Traitor's DNA" GroupID="12">
           </Set>
         </Set>
       </Set>
@@ -313,10 +279,7 @@
     <Set Name = "Cargo Delivery">
       <Set Name = "2">
         <Set Name = "Commands">
-          <Set Name = "1" Action = "LootItem">
-            <Setting Name = "parm1">Silicate Glass</Setting>
-          </Set>
-          <Set Name = "2" Action = "CheckSpawnContainers">
+          <Set Name = "1" Action = "CheckContainers" Target="Silicate Glass" GroupID="306">
           </Set>
         </Set>
       </Set>
@@ -328,11 +291,7 @@
           </Set>
           <Set Name = "2" Action = "ClearRoom">
           </Set>
-          <Set Name = "3" Action = "LootItem">
-            <Setting Name = "parm1">Militants</Setting>
-          </Set>
-          <Set Name = "4" Action = "CheckWrecks">
-            <Setting Name = "dong">Transport</Setting>
+          <Set Name = "3" Action = "CheckWrecks" Target="Militants" GroupID="186" WreckName="Transport">
           </Set>
         </Set>
       </Set>
@@ -346,8 +305,7 @@
           </Set>
           <Set Name = "3" Action = "ClearRoom">
           </Set>
-          <Set Name = "4" Action = "KillStructure">
-            <Setting Name = "parma1">Gallente Company HQ</Setting>
+          <Set Name = "4" Action = "Kill" Target="Gallente Company HQ">
           </Set>
         </Set>
       </Set>
@@ -357,13 +315,9 @@
         <Set Name = "Commands">
           <Set Name = "1" Action = "ClearRoom">
           </Set>
-          <Set Name = "2" Action = "KillStructure">
-            <Setting Name = "parma1">Kruul's Pleasure Hub</Setting>
+          <Set Name = "2" Action = "Kill" Target="Kruul's Pleasure Hub">
           </Set>
-          <Set Name = "3" Action = "LootItem">
-            <Setting Name = "parm1">The Damsel</Setting>
-          </Set>
-          <Set Name = "4" Action = "CheckCans">
+          <Set Name = "3" Action = "CheckContainers" Target="The Damsel" GroupID="12">
           </Set>
         </Set>
       </Set>
@@ -385,8 +339,7 @@
           </Set>
           <Set Name = "2" Action = "ClearRoom">
           </Set>
-          <Set Name = "3" Action = "LootItem">
-            <Setting Name = "parma1">Construction Blocks</Setting>
+          <Set Name = "3" Action = "CheckContainers" Target="Construction Blocks" GroupID="12">
           </Set>
           <Set Name = "4" Action = "CheckCans">
           </Set>
@@ -408,10 +361,7 @@
           </Set>
           <Set Name = "2" Action = "ClearRoom">
           </Set>
-          <Set Name = "3" Action = "LootItem">
-            <Setting Name = "parameter1">Gallente Light Marines</Setting>
-          </Set>
-          <Set Name = "4" Action = "CheckCans">
+          <Set Name = "3" Action = "CheckContainers" GroupID="12" Target="Gallente Light Marines">
           </Set>
         </Set>
       </Set>
