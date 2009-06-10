@@ -296,7 +296,7 @@ objectdef obj_MissionCommands
 	member:bool KillAggressors()
 	{
 		This.TargetAggros
-		if ${This.AggroCount < 1}
+		if ${This.AggroCount} < 1
 		{
 			return TRUE
 		}
@@ -326,20 +326,20 @@ objectdef obj_MissionCommands
 	}
 
 	;we have to cache things here to make sure we dont end up killing every entity with the same name, we only want to kill the first one we find
-	variable entity killCache
+	variable int killCache
 	variable string entityNameCache
 	member:bool Kill(string entityName)
 	{
-		if ${killCache(exists)}
+		if ${killCache} != 0
 		{
-			if ${This.Approach[${killCache.ID}, ${Ship.OptimalTargetingRange}]}
+			if ${This.Approach[${killCache}, ${Ship.OptimalTargetingRange}]}
 			{
-				if ${!Targeting.IsMandatoryQueued[${killCache.ID}]}
+				if ${!Targeting.IsMandatoryQueued[${killCache}]}
 				{
 					#if EVEBOT_DEBUG
 					UI:UpdateConsole["DEBUG: obj_MissionCommands - Killing ${entityName}"]
 					#endif
-					Targeting:Queue[${killCache.ID},1,1,TRUE]
+					Targeting:Queue[${killCache},1,1,TRUE]
 				}
 			}
 			return FALSE
@@ -350,6 +350,7 @@ objectdef obj_MissionCommands
 			{
 				;we only get here if the entity dissapeared and we are being asked to kill an entity with the same name, this should indicate we killed the entity!
 				entityNameCache:Set[""]
+				killCache:Set[0]
 				return TRUE
 			}
 			else
@@ -365,7 +366,7 @@ objectdef obj_MissionCommands
 					{
 						if ${targetIterator.Value.Name.Equal[${entityName}]}
 						{
-							killCache = ${targetIterator.Value}
+							killCache:Set[${targetIterator.ID}]
 							return FALSE
 						}
 					}
@@ -383,7 +384,7 @@ objectdef obj_MissionCommands
 		#endif
 
 
-		if ${This:ClearRoom} && ${This.WaitTimeOut.Timestamp == 0}
+		if ${This:ClearRoom} && ${${This.WaitTimeOut.Timestamp} == 0}
 		{
 			WaitTimeOut:Set[${Time.Timestamp}]
 			WaitTimeOut.Minute:Inc[${timeoutMinutes}]
@@ -415,25 +416,25 @@ objectdef obj_MissionCommands
 		}
 	}
 
-	variable entity pullCache
+	variable int pullCache
 	; TODO: Move to Targeting.SelectTarget module
 	member:bool PullNearest()
 	{
-		if ${pullCache(exists)}
+		if ${pullCache != 0}
 		{
 			if ${This.AggroCount} > 0
 			{
 				;we got sum aggro!
-				pullCache = null
+				pullCache:Set[0]
 				return TRUE
 			}
 			else
 			{
-				if ${This.Approach[${pullCache.ID}, ${Ship.OptimalTargetingRange}]}
+				if ${This.Approach[${pullCache}, ${Ship.OptimalTargetingRange}]}
 				{
-					if ${!Targeting.IsMandatoryQueued[${pullCache.ID}]}
+					if ${!Targeting.IsMandatoryQueued[${pullCache}]}
 					{
-						Targeting:Queue[${pullCache.ID},1,1,TRUE]
+						Targeting:Queue[${pullCache},1,1,TRUE]
 					}
 				}
 				return FALSE
@@ -456,7 +457,7 @@ objectdef obj_MissionCommands
 					{
 						UI:UpdateConsole["obj_Missions: DEBUG: Pulling ${targetIterator.Value} (${targetIterator.Value.ID})..."]
 						UI:UpdateConsole["obj_Missions: DEBUG: Group = ${targetIterator.Value.Group} GroupID = ${targetIterator.Value.GroupID} IsNPCTarget : ${This.IsNPCTarget[${targetIterator.Value.GroupID}]}"]
-						pullCache = ${targetIterator.Value}
+						pullCache:Set[${targetIterator.Value.ID}]
 						return FALSE
 					}
 				}
@@ -490,8 +491,7 @@ objectdef obj_MissionCommands
 						#endif
 						if ${This.LootEntity[${containerIterator.Value.ID},lootItem]}
 						{
-							containerIterator = null
-							containerCache = null
+							containerCache:Clear[]
 							return TRUE
 						}
 					}
@@ -506,8 +506,7 @@ objectdef obj_MissionCommands
 					#endif
 					if ${This.LootEntity[${containerIterator.Value.ID},lootItem]}
 					{
-						containerIterator = null
-						containerCache = null
+						containerCache:Clear[]
 						return TRUE
 					}
 					else

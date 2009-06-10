@@ -185,8 +185,8 @@ objectdef obj_Missions
 	variable int Version
 
 	variable obj_MissionCache MissionCache
-   variable obj_MissionDatabase MissionDatabase
-	;variable obj_MissionCombat missionCombat
+  variable obj_MissionDatabase MissionDatabase
+	variable obj_MissionCombat missionCombat
 
 	method Initialize()
 	{
@@ -210,9 +210,9 @@ objectdef obj_Missions
 		{
 			do
 			{
-				UI:UpdateConsole["obj_Missions: DEBUG: amIterator.Value.AgentID = ${amIterator.Value.AgentID}"]
-				UI:UpdateConsole["obj_Missions: DEBUG: amIterator.Value.State = ${amIterator.Value.State}"]
-				UI:UpdateConsole["obj_Missions: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}"]
+				;UI:UpdateConsole["obj_Missions: DEBUG: amIterator.Value.AgentID = ${amIterator.Value.AgentID}"]
+				;UI:UpdateConsole["obj_Missions: DEBUG: amIterator.Value.State = ${amIterator.Value.State}"]
+				;UI:UpdateConsole["obj_Missions: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}"]
 				if ${amIterator.Value.State} == 2
 				{
 					if ${amIterator.Value.Type.Find[Courier](exists)}
@@ -229,6 +229,7 @@ objectdef obj_Missions
 					}
 					elseif ${amIterator.Value.Type.Find[Encounter](exists)}
 					{
+						UI:UpdateConsole["obj_Missions: DEBUG: Run Combat Mission being called"]
 						call This.RunCombatMission ${amIterator.Value.AgentID}
 					}
 					else
