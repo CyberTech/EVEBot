@@ -379,19 +379,15 @@
         <Set Name = "Commands">
           <Set Name = "1" Action = "ClearRoom">
           </Set>
-          <Set Name = "2" Action = "LootItem">
-            <Setting Name = "parameter1">R.S. Officer's Passcard</Setting>
-          </Set>
-          <Set Name = "3" Action = "CheckCans">
+          <Set Name = "2" Action = "CheckContainers" Target="R.S. Officer's Passcard" GroupID="12">
           </Set>
           <Set Name = "10" Action = "NextRoom">
           </Set>
           <Set Name = "11" Action = "ClearRoom">
-            <Set Name = "4" Action = "UseGateStructure">
-              <Setting Name = "parm1">Gallente Stargate</Setting>
-            </Set>
-            <Set Name = "5" Action = "ClearRoom">
-            </Set>
+          </Set>
+          <Set Name = "4" Action = "UseGateStructure" Target="Gallente Stargate">
+          </Set>
+          <Set Name = "5" Action = "ClearRoom">
           </Set>
         </Set>
       </Set>
@@ -401,10 +397,7 @@
         <Set Name = "Commands">
           <Set Name = "1" Action = "ClearRoom">
           </Set>
-          <Set Name = "2" Action = "LootItem">
-            <Setting Name = "parameter1">Reports</Setting>
-          </Set>
-          <Set Name = "3" Action = "CheckCans">
+          <Set Name = "2" Action = "CheckContainers" Target ="Reports" GroupID="12">
           </Set>
         </Set>
       </Set>
@@ -412,8 +405,7 @@
     <Set Name = "Alluring Emanations">
       <Set Name = "2">
         <Set Name = "Commands">
-          <Set Name = "3" Action = "Kill">
-            <Setting Name = "parameter1">Rogue Drone</Setting>
+          <Set Name = "3" Action = "Kill" Target="Rogue Drone">
           </Set>
         </Set>
       </Set>
@@ -423,10 +415,7 @@
         <Set Name = "Commands">
           <Set Name = "2" Action = "ClearRoom">
           </Set>
-          <Set Name = "3" Action = "LootItem">
-            <Setting Name = "parameter1">Runaway Daughter</Setting>
-          </Set>
-          <Set Name = "4" Action = "CheckCans">
+          <Set Name = "3" Action = "CheckContainers" Target="Runaway Daughter" GroupID="12">
           </Set>
         </Set>
       </Set>
@@ -436,10 +425,7 @@
         <Set Name = "Commands">
           <Set Name = "2" Action = "ClearRoom">
           </Set>
-          <Set Name = "3" Action = "LootItem">
-            <Setting Name = "parameter1">Religious Artifact</Setting>
-          </Set>
-          <Set Name = "4" Action = "CheckCans">
+          <Set Name = "3" Action = "CheckContainers" Target="Religious Artifact" GroupID="12">
           </Set>
         </Set>
       </Set>
@@ -457,10 +443,7 @@
         <Set Name = "Commands">
           <Set Name = "2" Action = "ClearRoom">
           </Set>
-          <Set Name = "3" Action = "LootItem">
-            <Setting Name = "parameter1">Political Envoy</Setting>
-          </Set>
-          <Set Name = "4" Action = "CheckCans">
+          <Set Name = "3" Action = "CheckContainers" Target="Political Envoy" GroupID="12">
           </Set>
         </Set>
       </Set>
@@ -470,10 +453,7 @@
         <Set Name = "Commands">
           <Set Name = "2" Action = "ClearRoom">
           </Set>
-          <Set Name = "3" Action = "LootItem">
-            <Setting Name = "parameter1">Geeral Tash-Murkon</Setting>
-          </Set>
-          <Set Name = "4" Action = "CheckCans">
+          <Set Name = "3" Action = "CheckContainers" Target="Geeral Tash-Murkon" GroupID="12">
           </Set>
         </Set>
       </Set>
@@ -489,10 +469,7 @@
           </Set>
           <Set Name = "4" Action = "ClearRoom">
           </Set>
-          <Set Name = "5" Action = "LootItem">
-            <Setting Name = "parameter1">Slaves</Setting>
-          </Set>
-          <Set Name = "6" Action = "CheckCans">
+          <Set Name = "5" Action = "CheckContainers" Target="Slaves" GroupID="12">
           </Set>
         </Set>
       </Set>
@@ -500,13 +477,9 @@
     <Set Name = "Minmatar Plot (2 of 3)">
       <Set Name = "2">
         <Set Name = "Commands">
-          <Set Name = "1" Action = "Waves">
-            <Setting Name = "wavesTimeout">1</Setting>
+          <Set Name = "1" Action = "Waves" TimeOut="1">
           </Set>
-          <Set Name = "5" Action = "LootItem">
-            <Setting Name = "parameter1">Data Chip</Setting>
-          </Set>
-          <Set Name = "6" Action = "CheckCans">
+          <Set Name = "5" Action = "CheckContainers" Target="Data Chip" GroupID="12">
           </Set>
         </Set>
       </Set>
@@ -530,8 +503,7 @@
     <Set Name = "Ambushed Ally">
       <Set Name = "2">
         <Set Name = "Commands">
-          <Set Name = "2" Action = "Kill">
-            <Setting Name ="1">Federation Praktor Arx</Setting>
+          <Set Name = "2" Action = "Kill" Target="Federation Praktor Arx">
           </Set>
         </Set>
       </Set>
