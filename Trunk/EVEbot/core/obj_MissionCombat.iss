@@ -386,6 +386,7 @@ objectdef obj_MissionCombat
 			{
 				return ${MissionCommands.ApproachBreakOnCombat[${CommandIterator.Value.FindAttribute["Target"].String}]}
 				break
+			}
 			case "UseGateStructure":
 			{
 				return ${MissionCommands.UseGateStructure[${CommandIterator.Value.FindAttribute["Target"].String}]}
@@ -443,72 +444,74 @@ objectdef obj_MissionCombat
 			}
 			case "CheckWrecks":
 			{
-				return  ${MissionCommands.CheckContainers[${CommandIterator.Value.FindAttribute["GroupID"]}, ${CommandIterator.Value.FindAttribute["Target"].String} , ${CommandIterator.Value.FindAttribute["WreckName"]}
+				return  ${MissionCommands.CheckContainers[${CommandIterator.Value.FindAttribute["GroupID"]}, ${CommandIterator.Value.FindAttribute["Target"].String} , ${CommandIterator.Value.FindAttribute["WreckName"]}]}
+				break
+			}
 			case Idle:
 			{
 				return TRUE
 			}
 		}
 	}
-
-	function:bool RunMission(settingsetref commandPile)
-	{
-		variable time breakTime
-		variable int  gateCounter = 0
-		variable int  doneCounter = 0
-		variable iterator CommandIterator
-		variable iterator ParameterIterator
-		while TRUE
-		{
-			commandPile:GetSetIterator[CommandIterator]
-			if ${CommandIterator:First(exists)}
-			{
-				do
-				{
-					if !${Combat.Fled}
-					{
-						CommandIterator.Value:GetSettingIterator[ParameterIterator]
-						if ${ParameterIterator:First(exists)}
-						{
-							do
-							{
-								if !${Defense.Hiding}
-								{
-									UI:UpdateConsole["obj_MissionCombat: DEBUG: Calling ${CommandIterator.Value.FindAttribute[Action].String} parameter : ${ParameterIterator.Value.String}"]
-									call This.${CommandIterator.Value.FindAttribute["Action"].String} "${ParameterIterator.Value.String}"
-								}
-								else
-								{
-									return FALSE
-								}
-							}
-							while ${ParameterIterator:Next(exists)}
-						}
-						else
-						{
-							if !${Defense.Hiding}
-							{
-								UI:UpdateConsole["obj_MissionCombat: DEBUG: Calling ${CommandIterator.Value.FindAttribute[Action].String}"]
-								call This.${CommandIterator.Value.FindAttribute["Action"].String}
-							}
-							else
-							{
-								return FALSE
-							}
-						}
-					}
-					else
-					{
-						break
-					}
-					wait 20 ; pause here as running stuff like checkcans after hostilecount reaches zero can be too fast sometimes
-				}
-				while ${CommandIterator:Next(exists)}
-				UI:UpdateConsole["obj_MissionCombat: DEBUG: Mission commands exhausted , mission complete? "]
-				return TRUE
-			}
-			UI:UpdateConsole["obj_MissionCombat: DEBUG: no commands for mission!"]
-			return FALSE
-		}
-	}
 }
+
+;	function:bool RunMission(settingsetref commandPile)
+;	{
+;		variable time breakTime
+;		variable int  gateCounter = 0
+;		variable int  doneCounter = 0
+;		variable iterator CommandIterator
+;		variable iterator ParameterIterator
+;		while TRUE
+;		{
+;			commandPile:GetSetIterator[CommandIterator]
+;			if ${CommandIterator:First(exists)}
+;			{
+;				do
+;				{
+;					if !${Combat.Fled}
+;					{
+;						CommandIterator.Value:GetSettingIterator[ParameterIterator]
+;						if ${ParameterIterator:First(exists)}
+;						{
+;							do
+;							{
+;								if !${Defense.Hiding}
+;								{
+;									UI:UpdateConsole["obj_MissionCombat: DEBUG: Calling ${CommandIterator.Value.FindAttribute[Action].String} parameter : ${ParameterIterator.Value.String}"]
+;									call This.${CommandIterator.Value.FindAttribute["Action"].String} "${ParameterIterator.Value.String}"
+;								}
+;								else
+;								{
+;									return FALSE
+;								}
+;							}
+;							while ${ParameterIterator:Next(exists)}
+;						}
+;						else
+;						{
+;							if !${Defense.Hiding}
+;							{
+;								UI:UpdateConsole["obj_MissionCombat: DEBUG: Calling ${CommandIterator.Value.FindAttribute[Action].String}"]
+;								call This.${CommandIterator.Value.FindAttribute["Action"].String}
+;							}
+;							else
+;							{
+;								return FALSE
+;							}
+;						}
+;					}
+;					else
+;					{
+;						break
+;					}
+;					wait 20 ; pause here as running stuff like checkcans after hostilecount reaches zero can be too fast sometimes
+;				}
+;				while ${CommandIterator:Next(exists)}
+;				UI:UpdateConsole["obj_MissionCombat: DEBUG: Mission commands exhausted , mission complete? "]
+;				return TRUE
+;			}
+;			UI:UpdateConsole["obj_MissionCombat: DEBUG: no commands for mission!"]
+;			return FALSE
+;		}
+;	}
