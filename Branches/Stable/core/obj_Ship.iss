@@ -745,6 +745,10 @@ objectdef obj_Ship
 
 			Me.Ship.Module[${SlotName}]:DoGetAvailableAmmo[CrystalList]
 
+			if ${CrystalList.Used} == 0
+			{
+				UI:UpdateConsole["Unable to find ammo for ${SlotName} - lag?"]
+			}
 			CrystalList:GetIterator[CrystalIterator]
 			if ${CrystalIterator:First(exists)}
 			do
