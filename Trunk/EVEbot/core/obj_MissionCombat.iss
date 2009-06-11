@@ -67,16 +67,11 @@ objectdef obj_MissionCombat
 		/* we reset to idle of the defense thread runs away, thus resetting the state machine to its entry point, processstate does not get called untill the defense thread stops hiding */
 		if ${Defense.Hide}
 		{
-			#if EVEBOT_DEBUG
-			UI:UpdateConsole["DEBUG: obj_MissionCombat - Defense hiding , resetting state to idle"]
-			#endif
+			UI:UpdateConsole["DEBUG: obj_MissionCombat - Defense hiding , resetting state to idle",LOG_DEBUG]
 			This.CurrentState:Set["Idle"]
 		}
 		else
 		{
-			#if EVEBOT_DEBUG
-			UI:UpdateConsole["DEBUG: obj_MissionCombat - Current State is ${This.CurrentState}"]
-			#endif
 		}
 		; We dont use setstate for anything else because there is no way to tell if we are in the mission,
 		; which means we could get stuck in infinite loops trying to warp to the mission as you cant warp from inside a mission to its start
@@ -98,32 +93,29 @@ objectdef obj_MissionCombat
 	{
 		switch ${This.CurrentState}
 		{
-			case IDLE		
-				UI:UpdateConsole["DEBUG: obj_MissionCombat - ${This.MissionID}"]
-				;missionID is set to 0 when complete Agents.TurnInMission successfully
-				if ${This.MissionID} != 0
-				{
-					UI:UpdateConsole["DEBUG: obj_MissionCombat - eeeeeeeeeee"]
-					#if EVEBOT_DEBUG
-					UI:UpdateConsole["DEBUG: obj_MissionCombat - MissionID found, setting state to arming"]
-					#endif
-					This.CurrentState:Set["ARMING"]
-				}
-				else
-				{
-					UI:UpdateConsole["DEBUG: obj_MissionCombat - fffffffff"]
-				}
-				break
-			
+			case IDLE
+			UI:UpdateConsole["DEBUG: obj_MissionCombat - ${This.MissionID}"]
+			;missionID is set to 0 when complete Agents.TurnInMission successfully
+			if ${This.MissionID} != 0
+			{
+				UI:UpdateConsole["DEBUG: obj_MissionCombat - MissionID found, setting state to arming",LOG_DEBUG]
+				This.CurrentState:Set["ARMING"]
+			}
+			else
+			{
+				UI:UpdateConsole["DEBUG: obj_MissionCombat - fffffffff"]
+			}
+			break
+
 			case ARMING
 			{
 				; TODO (this is a really big one)
 				; MAKE EVEBOT EQUIP ITSELF!
 				;if ${This.Armed}
 				;{
-				#if EVEBOT_DEBUG
-				UI:UpdateConsole["DEBUG: obj_MissionCombat - setting state from arming to goto mission"]
-				#endif
+
+				UI:UpdateConsole["DEBUG: obj_MissionCombat - setting state from arming to goto mission",LOG_DEBUG]
+
 				This.CurrentState:Set["GOTOMISSION"]
 				;}
 				;else
@@ -137,9 +129,8 @@ objectdef obj_MissionCombat
 			{
 				if ${This.MissionID} != 0
 				{
-					#if EVEBOT_DEBUG
-					UI:UpdateConsole["DEBUG: obj_MissionCombat - Calling WarpToEncounter, MissionID ${This.MissionID}"]
-					#endif
+					UI:UpdateConsole["DEBUG: obj_MissionCombat - Calling WarpToEncounter, MissionID ${This.MissionID}",LOG_DEBUG]
+
 					call WarpToEncounter ${This.MissionID}
 					;we assume that warptoencounter succeded and we are now sitting at the first acceleration gate
 					;todo - check it actually succeded
@@ -147,22 +138,22 @@ objectdef obj_MissionCombat
 					;lets find the name of the mission we are running and see if we can match it to a set of commands in the database
 					variable string missLevel = ${Agent[id,${This.MissionID}].Level}
 					variable string missionName = ${Missions.MissionCache.Name[${This.MissionID}]}
-					#if EVEBOT_DEBUG
-					UI:UpdateConsole["DEBUG: obj_MissionCombat - Checking for mission in database - Mission Name : ${missionName} , Mission Level : ${missLevel}"]
-					#endif
+
+					UI:UpdateConsole["DEBUG: obj_MissionCombat - Checking for mission in database - Mission Name : ${missionName} , Mission Level : ${missLevel}",LOG_DEBUG]
+
 					if ${MissionDatabase.MissionCommands[${missionName},${missLevel}].Children(exists)}
 					{
-						#if EVEBOT_DEBUG
-						UI:UpdateConsole["DEBUG: obj_MissionCombat - Mission found in database , checking commands exist for it"]
-						#endif
+
+						UI:UpdateConsole["DEBUG: obj_MissionCombat - Mission found in database , checking commands exist for it",LOG_DEBUG]
+
 						;if we get here we can assume there are some command associate with the mission so we set the command iterator to the first one
 						MissionDatabase.MissionCommands[${missionName},${missLevel}]:GetSetIterator[CommandIterator]
 						;one final check to make sure we really do have commands
 						if ${CommandIterator:First(exists)}
 						{
-							#if EVEBOT_DEBUG
-							UI:UpdateConsole["DEBUG: obj_MissionCombat - Commands found, changing state to RunCommands"]
-							#endif
+
+							UI:UpdateConsole["DEBUG: obj_MissionCombat - Commands found, changing state to RunCommands",LOG_DEBUG]
+
 							;light is green! the first location in a mission is always room number 0
 							roomNumber:Set[0]
 							This.CurrentState:Set["RUNCOMMANDS"]
@@ -170,27 +161,27 @@ objectdef obj_MissionCombat
 						else
 						{
 							;well we found the mission but no commands exist for it, abort
-							#if EVEBOT_DEBUG
-							UI:UpdateConsole["DEBUG: obj_MissionCombat - Commands not found , changing state to Abort "]
-							#endif
+
+							UI:UpdateConsole["DEBUG: obj_MissionCombat - Commands not found , changing state to Abort ",LOG_DEBUG]
+
 							This.CurrentState::Set["ABORT"]
 						}
 					}
 					else
 					{
 						;we could not find the mission in the database! Abort!
-						#if EVEBOT_DEBUG
-						UI:UpdateConsole["DEBUG: obj_MissionCombat - Mission not found, changing state to Abort "]
-						#endif
+
+						UI:UpdateConsole["DEBUG: obj_MissionCombat - Mission not found, changing state to Abort ",LOG_DEBUG]
+
 						This.CurrentState:Set["ABORT"]
 					}
 				}
 				else
 				{
 					;we get here if for some reason we lost the missionID, revert to idle state
-					#if EVEBOT_DEBUG
-					UI:UpdateConsole["DEBUG: obj_MissionCombat - Have no mission ID in state GotoMisison, reverting to Idle state "]
-					#endif
+
+					UI:UpdateConsole["DEBUG: obj_MissionCombat - Have no mission ID in state GotoMisison, reverting to Idle state ",LOG_DEBUG]
+
 					This.CurrentState:Set["IDLE"]
 				}
 
@@ -201,36 +192,34 @@ objectdef obj_MissionCombat
 				;we should be at the mission at the very first gate or simply in the encounter area
 				;we should also have some commands to iterator over
 				;first we call the method that decides what command we should be executing
-				#if EVEBOT_DEBUG
-				UI:UpdateConsole["DEBUG: obj_MissionCombat - Executing Runcommands state"]
-				#endif
+
+				UI:UpdateConsole["DEBUG: obj_MissionCombat - Executing Runcommands state",LOG_DEBUG]
+
 				This:SetCommandState
 				;next we call the method that executes said command
 				;commands return true or false based on whether they complete or not, commands that do not complete in one go
 				;simply get called again untill they complete
-				#if EVEBOT_DEBUG
-				UI:UpdateConsole["DEBUG: obj_MissionCombat - Attempting to process command ${CurrentCommand}"]
-				#endif
+
+				UI:UpdateConsole["DEBUG: obj_MissionCombat - Attempting to process command 	${CommandIterator.Value.FindAttribute["Action"].String}",LOG_DEBUG]
+
 				if ${This.ProccessCommand}
 				{
-					#if EVEBOT_DEBUG
-					UI:UpdateConsole["DEBUG: obj_MissionCombat - ${CurrentCommand} successfully completed, moving onto next command"]
-					#endif
-					;then we move the iterator onto the next command
+
+					UI:UpdateConsole["DEBUG: obj_MissionCombat - ${CurrentCommand} successfully completed, moving onto next command",LOG_DEBUG]
+
+
 					if !${CommandIterator:Next(exists)}
 					{
 						;the next command in the list does not exist!
 						;if everything went smoothly  the mission should be in the complete state
-						#if EVEBOT_DEBUG
-						UI:UpdateConsole["DEBUG: obj_MissionCombat - Ran out of commands ,setting state to MissionComplete "]
-						#endif
+
+						UI:UpdateConsole["DEBUG: obj_MissionCombat - Ran out of commands ,setting state to MissionComplete ",LOG_DEBUG]
+
 						This.CurrentState:Set["MISSIONCOMPLETE"]
 					}
 					else
 					{
-						#if EVEBOT_DEBUG
-						UI:UpdateConsole["DEBUG: obj_MissionCombat - Next command is ${CommandIterator.Value.FindAttribute["Action"].String} "]
-						#endif
+						UI:UpdateConsole["DEBUG: obj_MissionCombat - Next command is ${CommandIterator.Value.FindAttribute["Action"].String} ",LOG_DEBUG]
 					}
 				}
 				else
@@ -238,26 +227,26 @@ objectdef obj_MissionCombat
 					;getting here means we need to process the command again as it did not complete
 					;todo -
 					;add a limit to the number of times we get here before we decide something has gone wrong
-					#if EVEBOT_DEBUG
-					UI:UpdateConsole["DEBUG: obj_MissionCombat - command did not complete , will attempt again next pulse "]
-					#endif
+
+					UI:UpdateConsole["DEBUG: obj_MissionCombat - command did not complete , will attempt again next pulse ",LOG_DEBUG]
+
 				}
 
 				break
 			}
 			case MISSIONCOMPLETE
 			{
-				#if EVEBOT_DEBUG
-				UI:UpdateConsole["DEBUG: obj_MissionCombat - Warping to Agent Home Base  "]
-				#endif
+
+				UI:UpdateConsole["DEBUG: obj_MissionCombat - Warping to Agent Home Base  ",LOG_DEBUG]
+
 				call This.WarpToHomeBase ${This.MissionID}
-				#if EVEBOT_DEBUG
-				UI:UpdateConsole["DEBUG: obj_MissionCombat - Arrived at agent home base (we hope), attempting to turn in mission"]
-				#endif
+
+				UI:UpdateConsole["DEBUG: obj_MissionCombat - Arrived at agent home base (we hope), attempting to turn in mission",LOG_DEBUG]
+
 				call Agents.TurnInMission
-				#if EVEBOT_DEBUG
-				UI:UpdateConsole["DEBUG: obj_MissionCombat - Mission turned in (probably) setting state to idle"]
-				#endif
+
+				UI:UpdateConsole["DEBUG: obj_MissionCombat - Mission turned in (probably) setting state to idle",LOG_DEBUG]
+
 				This.MissionID:Set[0]
 				This.CurrentState:Set["IDLE"]
 				;			if ${StillHaveTheMission}
@@ -273,17 +262,17 @@ objectdef obj_MissionCombat
 			}
 			case ABORT
 			{
-				#if EVEBOT_DEBUG
-				UI:UpdateConsole["DEBUG: obj_MissionCombat - Aborting mission, warpign to home base"]
-				#endif
+
+				UI:UpdateConsole["DEBUG: obj_MissionCombat - Aborting mission, warpign to home base",LOG_DEBUG]
+
 				call This.WarpToHomeBase ${This.MissionID}
-				#if EVEBOT_DEBUG
-				UI:UpdateConsole["DEBUG: obj_MissionCombat - Attempting to quit mission"]
-				#endif
+
+				UI:UpdateConsole["DEBUG: obj_MissionCombat - Attempting to quit mission",LOG_DEBUG]
+
 				call Agent.QuitMission
-				#if EVEBOT_DEBUG
-				UI:UpdateConsole["DEBUG: obj_MissionCombat - Quit mission (hopefully) , setting state to idle"]
-				#endif
+
+				UI:UpdateConsole["DEBUG: obj_MissionCombat - Quit mission (hopefully) , setting state to idle",LOG_DEBUG]
+
 				This.MissionID:Set[0]
 				This.CurrentState:Set["IDLE"]
 				break
@@ -334,59 +323,72 @@ objectdef obj_MissionCombat
 		if ${CommandIterator.IsValid}
 		{
 			;we find whatever action is to be taken , it should be an attribute called "Action"
-			switch ${This.${CommandIterator.Value.FindAttribute["Action"].String}}
+			switch ${CommandIterator.Value.FindAttribute["Action"].String}
 			{
 				case Approach
 				{
 					CurrentCommand:Set["Approach"]
+					break
+				}
+				case ApproachBreakOnCombat
+				{
+					CurrentCommand:Set["ApproachBreakOnCombat"]
+					break
 				}
 				case UseGateStructure
 				{
 					CurrentCommand:Set["UseGateStructure"]
+					break
 				}
 				case NextRoom
 				{
 					CurrentCommand:Set["NextRoom"]
+					break
 				}
 				case TargetAggros
 				{
 					CurrentCommand:Set["TargetAggros"]
+					break
 				}
 				case WaitAggro
 				{
 					CurrentCommand:Set["WaitAggro"]
+					break
 				}
 				case KillAgressors
 				{
 					CurrentCommand:Set["KillAgressors"]
+					break
 				}
 				case ClearRoom
 				{
 					CurrentCommand:Set["ClearRoom"]
+					break
 				}
 				case Kill
 				{
 					CurrentCommand:Set["Kill"]
+					break
 				}
 				case Waves
 				{
 					CurrentCommand:Set["Waves"]
+					break
 				}
 				case "WaitTargetQueueZero"
 				{
 					CurrrentCommand:Set["WaitTargetQueueZero"]
+					break
 				}
 				case PullNearest
 				{
 					CurrentCommand:Set["PullNearest"]
+					break
 				}
 				case CheckContainers
 				{
 					CurrentCommand:Set["CheckContainers"]
-				}
-				case CheckWrecks
-				{
-					CurrentCommand:Set["CheckWrecks"]
+					break
 				}
 			}
 		}
@@ -399,36 +401,48 @@ objectdef obj_MissionCombat
 
 	member:bool ProccessCommand()
 	{
+		variable settingsetref currentCommandref
+		currentCommandref:Set[${CommandIterator.Value.GUID}]
+
+		variable int IDCache
+		UI:UpdateConsole["DEBUG: obj_MissionCombat - current command : ${This.CurrentCommand} !",LOG_DEBUG]
+
 		switch ${This.CurrentCommand}
 		{
 			case Approach
 			{
-				return ${MissionCommands.Approach[${CommandIterator.Value.FindAttribute["Target"].String}]}
+				IDCache:Set[${This.FindID[${currentCommandref.FindAttribute["Target"].String}]}]
+
+				return ${MissionCommands.Approach[${IDCache}]}
 				break
 			}
 			case ApproachBreakOnCombat
 			{
-				return ${MissionCommands.ApproachBreakOnCombat[${CommandIterator.Value.FindAttribute["Target"].String}]}
+				IDCache:Set[${This.FindID[${currentCommandref.FindAttribute["Target"].String}, ${currentCommandref.FindAttribute["CategoryID"].String}]}]
+
+				return ${MissionCommands.ApproachBreakOnCombat[${IDCache},${currentCommandref.FindAttribute["Distance"].String}]}
 				break
 			}
-			case UseGateStructure
+			case ActivateGate
 			{
-				return ${MissionCommands.UseGateStructure[${CommandIterator.Value.FindAttribute["Target"].String}]}
+				IDCache:Set[${This.FindID[${currentCommandref.FindAttribute["Target"].String}]}]
+
+				return ${MissionCommands.ActivateGate[${IDCache}]}
 				break
 			}
 			case NextRoom
 			{
-				return ${MissionCommands.NextRoom[]}
+				return ${MissionCommands.NextRoom}
 				break
 			}
 			case TargetAggros
 			{
-				return ${MissionCommands.TargetAggros[]}
+				MissionCommands:TargetAggros[]
 				break
 			}
 			case WaitAggro
 			{
-				return ${MissionCommands.Approach[${CommandIterator.Value.FindAttribute["TimeOut"].Int}]}
+				return ${MissionCommands.Approach[${currentCommandref.FindAttribute["TimeOut"].Int}]}
 				break
 			}
 			case KillAggressors
@@ -443,32 +457,22 @@ objectdef obj_MissionCombat
 			}
 			case Kill
 			{
-				return ${MissionCommands.Kill[${CommandIterator.Value.FindAttribute["Target"].String}]}
+				return ${MissionCommands.Kill[${This.FindID[${currentCommandref.FindAttribute["Target"].String}]}, ${currentCommandref.FindAttribute["CategoryID",CATEGORYID_ENTITY]}]}
 				break
 			}
 			case Waves
 			{
-				return ${MissionCommands.Waves[${CommandIterator.Value.FindAttribute["TimeOut"].Int}]}
+				return ${MissionCommands.Waves[${currentCommandref.FindAttribute["TimeOut"].Int}]}
 				break
 			}
-			case WaitTargetQueueZero
+			case Pull
 			{
-				return ${MissionCommands.WaitTargetQueueZero[]}
-				break
-			}
-			case PullNearest
-			{
-				return ${MissionCommands.PullNearest[]}
+				return ${MissionCommands.Pull[${currentCommandref.FindAttribute["Target","NONE"]}]}
 				break
 			}
 			case CheckContainers
 			{
-				return ${MissionCommands.CheckContainers[${CommandIterator.Value.FindAttribute["GroupID"]}, ${CommandIterator.Value.FindAttribute["Target"].String}]}
-				break
-			}
-			case CheckWrecks
-			{
-				return  ${MissionCommands.CheckContainers[${CommandIterator.Value.FindAttribute["GroupID"]}, ${CommandIterator.Value.FindAttribute["Target"].String} , ${CommandIterator.Value.FindAttribute["WreckName"]}]}
+				return ${MissionCommands.CheckContainers[${currentCommandref.FindAttribute["GroupID",GROUPID_CARGO_CONTAINER]}, ${currentCommandref.FindAttribute["Target"].String}, ${currentCommandref.FindAttribute["WreckName","NONE"]}]}
 				break
 			}
 			case Idle
@@ -478,6 +482,7 @@ objectdef obj_MissionCombat
 			}
 		}
 	}
+	
 	function WarpToHomeBase(int agentID)
 	{
 		variable index:agentmission amIndex
@@ -503,7 +508,7 @@ objectdef obj_MissionCombat
 						{
 							UI:UpdateConsole["obj_Missions: DEBUG: mbIterator.Value.LocationType = ${mbIterator.Value.LocationType}"]
 							if ${mbIterator.Value.LocationType.Equal["agenthomebase"]} || \
-							   ${mbIterator.Value.LocationType.Equal["objective"]}
+							${mbIterator.Value.LocationType.Equal["objective"]}
 							{
 								call Ship.WarpToBookMark ${mbIterator.Value}
 								return
@@ -516,65 +521,24 @@ objectdef obj_MissionCombat
 			while ${amIterator:Next(exists)}
 		}
 	}
+	member:int FindID(string entityName,int CatID = CATEGORYID_ENTITY)
+	{
+		variable index:entity targetIndex
+		variable iterator     targetIterator
+		EVE:DoGetEntities[targetIndex, CategoryID, ${CatID}]
+		targetIndex:GetIterator[targetIterator]
+		if ${targetIterator:First(exists)}
+		{
+			do
+			{
+				if ${targetIterator.Value.Name.Equal[${entityName}]}
+				{
+					return ${targetIterator.Value.ID}
+				}
+			}
+			while ${targetIterator:Next(exists)}
+		}
+		UI:UpdateConsole["DEBUG: obj_MissionCommands - Could not find ${entityName}",LOG_DEBUG]
+		return 0
+	}
 }
-
-;	function:bool RunMission(settingsetref commandPile)
-;	{
-;		variable time breakTime
-;		variable int  gateCounter = 0
-;		variable int  doneCounter = 0
-;		variable iterator CommandIterator
-;		variable iterator ParameterIterator
-;		while TRUE
-;		{
-;			commandPile:GetSetIterator[CommandIterator]
-;			if ${CommandIterator:First(exists)}
-;			{
-;				do
-;				{
-;					if !${Combat.Fled}
-;					{
-;						CommandIterator.Value:GetSettingIterator[ParameterIterator]
-;						if ${ParameterIterator:First(exists)}
-;						{
-;							do
-;							{
-;								if !${Defense.Hiding}
-;								{
-;									UI:UpdateConsole["obj_MissionCombat: DEBUG: Calling ${CommandIterator.Value.FindAttribute[Action].String} parameter : ${ParameterIterator.Value.String}"]
-;									call This.${CommandIterator.Value.FindAttribute["Action"].String} "${ParameterIterator.Value.String}"
-;								}
-;								else
-;								{
-;									return FALSE
-;								}
-;							}
-;							while ${ParameterIterator:Next(exists)}
-;						}
-;						else
-;						{
-;							if !${Defense.Hiding}
-;							{
-;								UI:UpdateConsole["obj_MissionCombat: DEBUG: Calling ${CommandIterator.Value.FindAttribute[Action].String}"]
-;								call This.${CommandIterator.Value.FindAttribute["Action"].String}
-;							}
-;							else
-;							{
-;								return FALSE
-;							}
-;						}
-;					}
-;					else
-;					{
-;						break
-;					}
-;					wait 20 ; pause here as running stuff like checkcans after hostilecount reaches zero can be too fast sometimes
-;				}
-;				while ${CommandIterator:Next(exists)}
-;				UI:UpdateConsole["obj_MissionCombat: DEBUG: Mission commands exhausted , mission complete? "]
-;				return TRUE
-;			}
-;			UI:UpdateConsole["obj_MissionCombat: DEBUG: no commands for mission!"]
-;			return FALSE
-;		}
-;	}

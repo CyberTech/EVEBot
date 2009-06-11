@@ -38,8 +38,6 @@
           </Set>
           <Set Name = "2" Action = "Kill" Target ="Drone Silo">
           </Set>
-          <Set Name = "3" Action = "WaitTargetQueueZero">
-          </Set>
         </Set>
       </Set>
     </Set>
@@ -164,8 +162,6 @@
           </Set>
           <Set Name = "2" Action = "NextRoom">
           </Set>
-          <Set Name = "3" Action = "NextRoom">
-          </Set>
         </Set>
       </Set>
     </Set>
@@ -174,7 +170,7 @@
         <Set Name = "Commands">
           <Set Name = "1" Action = "NextRoom">
           </Set>
-          <Set Name = "2" Action = "ApproachBreakOnCombat" Target ="Acceleration Gate (Locked Down)">
+          <Set Name = "2" Action = "ApproachBreakOnCombat" Target ="Acceleration Gate (Locked Down)" Distance="1000" CategoryID="2">
           </Set>
         </Set>
       </Set>
@@ -194,7 +190,7 @@
           </Set>
           <Set Name = "2" Action = "ClearRoom">
           </Set>
-          <Set Name = "3" Action = "CheckWrecks" Target="Militants" GroupID="186" WreckName="Transport">            
+          <Set Name = "3" Action = "CheckContainers" Target="Militants" GroupID="186" WreckName="Transport">            
           </Set>         
         </Set>
       </Set>
@@ -243,7 +239,6 @@
           <Set Name = "3" Action = "ClearRoom">
           </Set>
           <Set Name = "4" Action = "CheckContainers" Target="Small Sealed Cargo Containers" GroupID ="12">
-            <Setting Name = "parm2">Small Sealed Cargo Containers</Setting>
           </Set>
         </Set>
       </Set>
@@ -291,7 +286,7 @@
           </Set>
           <Set Name = "2" Action = "ClearRoom">
           </Set>
-          <Set Name = "3" Action = "CheckWrecks" Target="Militants" GroupID="186" WreckName="Transport">
+          <Set Name = "3" Action = "CheckContainers" Target="Militants" GroupID="186" WreckName="Transport">
           </Set>
         </Set>
       </Set>
@@ -385,7 +380,7 @@
           </Set>
           <Set Name = "11" Action = "ClearRoom">
           </Set>
-          <Set Name = "4" Action = "UseGateStructure" Target="Gallente Stargate">
+          <Set Name = "4" Action = "ActivateGate" Target="Gallente Stargate">
           </Set>
           <Set Name = "5" Action = "ClearRoom">
           </Set>
