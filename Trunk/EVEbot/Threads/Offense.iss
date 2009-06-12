@@ -65,8 +65,18 @@ objectdef obj_Offense
 
 				if ${Me.ActiveTarget.Distance} < ${Ship.OptimalWeaponRange}
 				{
+					/* returns true if done */
+					UI:UpdateConsole["Offense: Loading ammo"]
 					Ship:LoadOptimalAmmo[${Me.ActiveTarget.Distance}]
 					Ship:Activate_Weapons
+				}
+				else
+				{
+					if ${Me.ToEntity.Velocity} <= 20
+					{
+						Me.ActiveTarget:Orbit[${Ship.OptimalWeaponRange}]
+					}
+					Ship:LoadOptimalAmmo[${Ship.OptimalWeaponRange}]
 				}
 
 				if ${Ship.Drones.CombatDroneShortage}

@@ -197,6 +197,7 @@ objectdef obj_Ship
 		variable string sBestAmmo = ${This.GetBestAmmoTypeByRange[${range}]}
 		UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(${range}): Best Ammo: ${sBestAmmo}"]
 		
+		UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(): First? ${itrWeapon:First(exists)}"]
 		if ${itrWeapon:First(exists)}
 		{
 			do
@@ -209,18 +210,18 @@ objectdef obj_Ship
 					do
 					{
 						UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(${range}): Found best ammo: ${itrAmmo.Value.Name.Find[${sBestAmmo}]}"]
-						if ${itrAmmo.Value.Name.Find[${sBestAmmo}]}
+						if ${itrAmmo.Value.Name.Find[${sBestAmmo}]} && !${itrWeapon.Value.Charge.Name.Find[${sBestAmmo}]}
 						{
 							UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(${range}): Changing ammo to ${itrAmmo.Value.Name}, ${itrWeapon.Value.MaxCharges}"]
 							itrWeapon.Value:ChangeAmmo[${itrAmmo.Value.ID},${itrWeapon.Value.MaxCharges}]
-							break
+							return FALSE
 						}
 					}
 					while ${itrAmmo:Next(exists)}
 				}
 			}
 			while ${itrWeapon:Next(exists)}
-		}		
+		}	
 	}
 
 	member:float GetMaximumTurretRange()
@@ -263,7 +264,7 @@ objectdef obj_Ship
 			{
 				switch ${iGroupId}
 				{
-					case GROUP_AMMO:
+					case GROUP_AMMO
 						if ${itrAmmoPairs:First(exists)}
 						{
 							do
@@ -278,7 +279,7 @@ objectdef obj_Ship
 							while ${itrAmmoPairs:Next(exists)}
 						}
 						break
-					case GROUP_FREQUENCYCRYSTAL:
+					case GROUP_FREQUENCYCRYSTAL
 						if ${itrFrequencyPairs:First(exists)}
 						{
 							do
@@ -293,7 +294,7 @@ objectdef obj_Ship
 							while ${itrFrequencyPairs:Next(exists)}
 						}
 						break
-					case GROUP_HYBRIDAMMO:
+					case GROUP_HYBRIDAMMO
 						if ${itrHybridPairs:First(exists)}
 						{
 							do
@@ -308,7 +309,7 @@ objectdef obj_Ship
 							while ${itrHybridPairs:Next(exists)}
 						}
 						break
-					default:
+					default
 						UI:UpdateConsole["obj_Ship.GetMaxTurretRange: Shit broke because we didn't meet a case for ammo group id."]
 						break
 				}
@@ -337,13 +338,16 @@ objectdef obj_Ship
 		HybridNameModPairs:GetIterator[itrHybridPairs]
 		AmmoNameModPairs:GetIterator[itrAmmoPairs]
 			
+		UI:UpdateConsole["obj_Ship.GetTurretBaseOptimal(): {itrWeapon:First(exists)}: ${itrWeapon:First(exists)}"]
 		if ${itrWeapon:First(exists)}
 		{
 			do
 			{
+				UI:UpdateConsole["obj_Ship.GetTurretBaseOptimal(): .GropuID ${itrWeapon.Value.Charge.GroupID}"]
 				switch ${itrWeapon.Value.Charge.GroupID}
 				{
-					case GROUP_AMMO:
+					UI:UpdateConsole["entered switch"]
+					case GROUP_AMMO
 						if ${itrAmmoPairs:First(exists)}
 						{
 							do
@@ -358,7 +362,8 @@ objectdef obj_Ship
 							while ${itrAmmoPairs:Next(exists)}
 						}
 						break
-					case GROUP_HYBRIDAMMO:
+					case GROUP_HYBRIDAMMO
+						UI:UpdateConsole["obj_Ship.GTBO(): hybrid pairs first exists? ${itrHybridPairs:First(exists)}"]
 						if ${itrHybridPairs:First(exists)}
 						{
 							do
@@ -373,7 +378,7 @@ objectdef obj_Ship
 							while ${itrHybridPairs:Next(exists)}
 						}
 						break
-					case GROUP_FREQUENCYCRYSTAL:
+					case GROUP_FREQUENCYCRYSTAL
 						if ${itrFrequencyPairs:First(exists)}
 						{
 							do
@@ -387,6 +392,9 @@ objectdef obj_Ship
 							}
 							while ${itrFrequencyPairs:Next(exists)}
 						}
+						break
+					default
+						UI:UpdateConsole["obj_Ship.GetTurretBaseOptimal(): Inavlid gropuid, shit broke"]
 						break
 				}
 				fBaseOptimal:Set[${Math.Calc[${itrWeapon.Value.OptimalRange} / ${fRangeMod}]}]
@@ -437,7 +445,7 @@ objectdef obj_Ship
 				/* Next, figure out the best ammo for a given range. */
 				switch ${iGroupId}
 				{
-					case GROUP_AMMO:
+					case GROUP_AMMO
 						if ${itrAmmo:First(exists)}
 						{
 							do
@@ -474,7 +482,7 @@ objectdef obj_Ship
 						}
 						UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range}): sBestSoFar: ${sBestSoFar}, sHighestSoFar: ${sHighestSoFar}"]
 						break
-					case GROUP_HYBRIDAMMO:
+					case GROUP_HYBRIDAMMO
 						if ${itrAmmo:First(exists)}
 						{
 							do
@@ -511,7 +519,7 @@ objectdef obj_Ship
 						}			
 						UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range}): sBestSoFar: ${sBestSoFar}, sHighestSoFar: ${sHighestSoFar}"]
 						break
-					case GROUP_FREQUENCYCRYSTAL:
+					case GROUP_FREQUENCYCRYSTAL
 						if ${itrAmmo:First(exists)}
 						{
 							do
