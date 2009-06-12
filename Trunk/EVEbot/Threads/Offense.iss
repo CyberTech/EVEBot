@@ -17,7 +17,8 @@ objectdef obj_Offense
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 1
 	variable bool Warned_LowAmmo = FALSE
-	variable float fOptimalWeaponRange = 0
+	variable time NextAmmoChange
+	variable int NumTurrets = 0
 
 	method Initialize()
 	{
@@ -64,17 +65,34 @@ objectdef obj_Offense
 				Ship:Activate_StasisWebs
 				Ship:Activate_TargetPainters
 
-				fOptimalWeaponRange:Set[${Ship.OptimalWeaponRange}]
-				if ${Me.ActiveTarget.Distance} < ${fOptimalWeaponRange}
+				if ${Time.Timestamp} >= ${This.NextAmmoChange.Timestamp}
 				{
-					/* returns true if done */
-					UI:UpdateConsole["Offense: Loading ammo"]
-					Ship:LoadOptimalAmmo[${Me.ActiveTarget.Distance}]
-					Ship:Activate_Weapons
+					if ${Ship.GetNumberTurrets} > 0 && ${NumTurrets} == 0
+					{
+						Ship:Deactivate_Weapons
+						NumTurrets:Set[${Ship.GetNumberTurrets}]
+					}
+					if ${NumTurrets} > 0
+					{
+						Ship:LoadOptimalAmmo[${Me.ActiveTarget.Distance}]
+						NumTurrets:Dec
+					}
+					if ${NumTurrets} == 0
+					{
+						This.NextAmmoChange:Set[${Time.Timestamp}]
+						This.NextAmmoChange.Second:Inc[20]
+						This.NextAmmoChange:Update
+					}
+					return
 				}
-				else
+				
+				if ${Me.ActiveTarget.Distance} < ${Ship.OptimalWeaponRange}
 				{
-					Ship:LoadOptimalAmmo[${fOptimalWeaponRange}]
+					if ${Me.ToEntity.Velocity} <= 30
+					{
+						Me.ActiveTarget:KeepAtRange[${Ship.GetMinimumTurretRange}]
+					}
+					Ship:Activate_Weapons
 				}
 
 				if ${Ship.Drones.CombatDroneShortage}

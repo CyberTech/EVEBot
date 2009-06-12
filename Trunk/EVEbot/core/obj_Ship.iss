@@ -210,7 +210,9 @@ objectdef obj_Ship
 			do
 			{
 				iTempTurret:Inc
+#if EVEBOT_DEBUG				
 				UI:UpdateConsole["obj_Ship:LoadOptimalAmmo: iTempTurret: ${iTempTurret}, iCurrentTurret: ${iCurrentTurret}"]
+#endif
 				if ${iTempTurret} == ${iCurrentTurret}
 				{
 					itrWeapon.Value:DoGetAvailableAmmo[idxAmmo]
@@ -228,7 +230,9 @@ objectdef obj_Ship
 								UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(${range}): Changing ammo to ${itrAmmo.Value.Name}, ${itrWeapon.Value.MaxCharges}"]
 #endif
 								itrWeapon.Value:ChangeAmmo[${itrAmmo.Value.ID},${itrWeapon.Value.MaxCharges}]
+#if EVEBOT_DEBUG
 								UI:UpdateConsole["post-change checks: iCurrentTurret: ${iCurrentTurret}, iTurrets: ${iTurrets}"]
+#endif
 								if ${iCurrentTurret} < ${iTurrets}
 								{
 									iCurrentTurret:Inc
@@ -630,7 +634,9 @@ objectdef obj_Ship
 					{
 						do
 						{
+#if EVEBOT_DEBUG
 							UI:UpdateConsole["obj_Ship.GetMinimumTurretRange: checking ${itrAmmoPairs.Key} against currently loaded ammo ${itrWeapon.Value.Charge.Name}"]
+#endif
   						if ${itrWeapon.Value.Charge.Name.Find[${itrAmmoPairs.Key}]}
   						{
   							fTempMinRange:Set[${Math.Calc[${fBaseOptimal} * ${itrAmmoPairs.Value}]}]
