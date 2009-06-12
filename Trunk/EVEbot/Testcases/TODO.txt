@@ -1,8 +1,13 @@
 .0
 .1 Items with a . in front are already completed
 .2
+.DoGetAgents[<index:being>]
+.DoGetAssets[<index:asset>,#]                                     [Retrieves all items that match the StationID# given]
+.DoGetAssets[<index:asset>]                                       [Retrieves all items that are in your assets window]
+.DoGetAvailableAmmo[<index:item>]
 .DoGetBookmarks[<index:bookmark>]
 .DoGetBuddies[<index:being>]
+.DoGetDrones[<index:item>]
 .DoGetEntities[<index:entity>]
 .DoGetFleet
 .DoGetFleet[<index:gangmember>]
@@ -11,10 +16,6 @@
 DoGetActiveDroneIDs[<index:int>}
 DoGetActiveDrones[<index:activedrone>]
 DoGetAgentMissions[<index:agentmission>]
-DoGetAgents[<index:being>]
-DoGetAssets[<index:asset>,#]                                     [Retrieves all items that match the StationID# given]
-DoGetAssets[<index:asset>]                                       [Retrieves all items that are in your assets window]
-DoGetAvailableAmmo[<index:item>]
 DoGetCargo[<index:item>]
 DoGetChannelMessages[<index:string>,#]                        [Retrieve all channel messages since timestamp #]
 DoGetChannelMessages[<index:string>,CHANNELNAME,#]            [Retrieves all messages from the given channel since timestamp #]
@@ -23,7 +24,6 @@ DoGetChannelMessages[<index:string>]                          [Retrieve all chan
 DoGetCorpHangarItems
 DoGetCorpHangarItems[<index:item>]
 DoGetDialogResponses[<index:dialogstring>]
-DoGetDrones[<index:item>]
 DoGetEntityIDs[<index:int>]
 DoGetHangarItems
 DoGetHangarItems[<index:item>]
