@@ -115,7 +115,7 @@ objectdef obj_Ship
 	variable bool InteruptWarpWait = FALSE
 	variable string m_Type
 	variable int m_TypeID
-	variable int iCurrentTurret = 0
+	variable int iCurrentTurret = 1
 	
 	variable collection:float HybridNameModPairs
 	variable collection:float AmmoNameModPairs
@@ -190,33 +190,62 @@ objectdef obj_Ship
     
 	method LoadOptimalAmmo(float range)
 	{ 
+#if EVEBOT_DEBUG
+		UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(${range}): called"]	
+#endif
+		variable string sBestAmmo = ${This.GetBestAmmoTypeByRange[${range}]}
+#if EVEBOT_DEBUG		
+		UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(${range}): Best Ammo: ${sBestAmmo}"]	
+#endif
 		variable iterator itrWeapon
 		This.ModuleList_Weapon:GetIterator[itrWeapon]
 		
 		variable index:item idxAmmo
 		variable iterator itrAmmo
-		variable string sBestAmmo = ${This.GetBestAmmoTypeByRange[${range}]}
-		UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(${range}): Best Ammo: ${sBestAmmo}"]
+		variable int iTempTurret = 0
+		variable int iTurrets = ${This.GetNumberTurrets}
 		
-		if ${GetNumberTurrets} > ${iCurrentTurret}
+		if ${itrWeapon:First(exists)}
 		{
-			iCurrentTurret:Inc		
-			MyShip.Module[HiSlot${iCurrentTurret}]:DoGetAvailableAmmo[idxAmmo]
-			idxAmmo:GetIterator[itrAmmo]			
-			if ${itrAmmo:First(exists)}
+			do
 			{
-				do
+				iTempTurret:Inc
+				UI:UpdateConsole["obj_Ship:LoadOptimalAmmo: iTempTurret: ${iTempTurret}, iCurrentTurret: ${iCurrentTurret}"]
+				if ${iTempTurret} == ${iCurrentTurret}
 				{
-					UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(${range}): Found best ammo: ${itrAmmo.Value.Name.Find[${sBestAmmo}]}"]
-					if ${itrAmmo.Value.Name.Find[${sBestAmmo}]} && !${MyShip.Module[HiSlot${iCurrentTurret}].Charge.Name.Find[${sBestAmmo}]}
+					itrWeapon.Value:DoGetAvailableAmmo[idxAmmo]
+					idxAmmo:GetIterator[itrAmmo]			
+					if ${itrAmmo:First(exists)}
 					{
-						UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(${range}): Changing ammo to ${itrAmmo.Value.Name}, ${MyShip.Module[HiSlot${iCurrentTurret}].MaxCharges}"]
-						MyShip.Module[HiSlot${iCurrentTurret}]:ChangeAmmo[${itrAmmo.Value.ID},${MyShip.Module[HiSlot${iCurrentTurret}].MaxCharges}]
-						return
-					}					
+						do
+						{
+#if EVEBOT_DEBUG					
+							UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(${range}): Found best ammo: ${itrAmmo.Value.Name.Find[${sBestAmmo}]}"]
+#endif
+							if ${itrAmmo.Value.Name.Find[${sBestAmmo}]} && !${itrWeapon.Value.Charge.Name.Find[${sBestAmmo}]}
+							{
+#if EVEBOT_DEBUG						
+								UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(${range}): Changing ammo to ${itrAmmo.Value.Name}, ${itrWeapon.Value.MaxCharges}"]
+#endif
+								itrWeapon.Value:ChangeAmmo[${itrAmmo.Value.ID},${itrWeapon.Value.MaxCharges}]
+								UI:UpdateConsole["post-change checks: iCurrentTurret: ${iCurrentTurret}, iTurrets: ${iTurrets}"]
+								if ${iCurrentTurret} < ${iTurrets}
+								{
+									iCurrentTurret:Inc
+								}
+								else
+								{
+									iCurrentTurret:Set[1]
+								}								
+								return
+								break
+							}					
+						}
+						while ${itrAmmo:Next(exists)}
+					}
 				}
-				while ${itrAmmo:Next(exists)}
 			}
+			while ${itrWeapon:Next(exists)}
 		}
 	}
 	
@@ -234,11 +263,21 @@ objectdef obj_Ship
 			}
 			while ${itrWeapon:Next(exists)}
 		}
+#if EVEBOT_DEBUG		
 		UI:UpdateConsole["obj_Ship.GetNumberTurrets(): Returning ${iNumTurrets}"]
+#endif		
+		return ${iNumTurrets}
 	}
 
 	member:float GetMaximumTurretRange()
 	{
+#if EVEBOT_DEBUG	
+		UI:UpdateConsole["obj_Ship.GetMaximumTurretRange() called"]
+#endif
+		variable float fBaseOptimal = ${This.GetTurretBaseOptimal}
+#if EVEBOT_DEBUG
+		UI:UpdateConsole["obj_Ship.GetMaximumTurretRange(): base optimal: ${fBaseOptimal}"]		
+#endif
 		variable int iGroupId = 0
 		variable iterator itrWeapon
 		This.ModuleList_Weapon:GetIterator[itrWeapon]
@@ -246,8 +285,9 @@ objectdef obj_Ship
 		variable index:item idxAmmo
 		variable iterator itrAmmo
 
-		variable float fBaseOptimal = ${This.GetTurretBaseOptimal}
-		UI:UpdateConsole["obj_Ship.GetMaximumTurretRange(): base optimal: ${fBaseOptimal}"]
+		variable float fTempMaxRange = 0
+		variable float sTempMaxRangeAmmo
+
 		variable float fMaxTurretRange = 0
 
 		variable iterator itrFrequencyPairs
@@ -264,15 +304,15 @@ objectdef obj_Ship
 			idxAmmo:GetIterator[itrAmmo]
 			if ${itrAmmo:First(exists)}
 			{
-				UI:UpdateConsole["obj_Ship.GetMaximumTurretRange(): Group ID: ${iGroupId}"]
 				iGroupId:Set[${itrAmmo.Value.GroupID}]
+#if EVEBOT_DEBUG
+				UI:UpdateConsole["obj_Ship.GetMaximumTurretRange(): Group ID: ${iGroupId}"]				
+#endif
 			}
 		}
 		
 		if ${itrAmmo:First(exists)}
 		{
-			/* THIS WILL GO FROM LONGEST TO SHORTEST RANGE BECAUSE OF THE ORDER IN WHICH THE COLLECTIONS ARE BUILT */
-			/* OR SO I HOPE */
 			do
 			{
 				switch ${iGroupId}
@@ -284,7 +324,9 @@ objectdef obj_Ship
 							{
 								if ${itrAmmo.Value.Name.Find[${itrAmmoPairs.Key}]}
 								{
+#if EVEBOT_DEBUG
 									UI:UpdateConsole["obj_Ship.GetMaximumTurretRange(): Found ammo type ${itrAmmoPairs.Key} ${itrAmmoPairs.Value}"]
+#endif
 									fMaxTurretRange:Set[${Math.Calc[${fBaseOptimal} * ${itrAmmoPairs.Value}]}]
 									break
 								}
@@ -299,7 +341,9 @@ objectdef obj_Ship
 							{
 								if ${itrAmmo.Value.Name.Find[${itrFrequencyPairs.Key}]}
 								{
+#if EVEBOT_DEBUG
 									UI:UpdateConsole["obj_Ship.GetMaximumTurretRange(): Found crystal type ${itrFrequencyPairs.Key} ${itrFrequencyPairs.Value}"]
+#endif
 									fMaxTurretRange:Set[${Math.Calc[${fBaseOptimal} * ${itrFrequencyPairs.Value}]}]
 									break
 								}
@@ -314,8 +358,17 @@ objectdef obj_Ship
 							{
 								if ${itrAmmo.Value.Name.Find[${itrHybridPairs.Key}]}
 								{
+#if EVEBOT_DEBUG
 									UI:UpdateConsole["obj_Ship.GetMaximumTurretRange(): Found hybrid ammo type ${itrHybridPairs.Key} ${itrHybridPairs.Value}"]
-									fMaxTurretRange:Set[${Math.Calc[${fBaseOptimal} * ${itrHybridPairs.Value}]}]
+#endif
+									fTempMaxRange:Set[${Math.Calc[${fBaseOptimal} * ${itrHybridPairs.Value}]}]
+									if ${fTempMaxRange} > ${fMaxTurretRange}
+									{
+#if EVEBOT_DEBUG
+										UI:UpdateConsole["obj_Ship.GetMaximumTurretRange(): New max range: ${fTempMaxRange}"]
+#endif
+										fMaxTurretRange:Set[${fTempMaxRange}]
+									}
 									break
 								}
 							}
@@ -329,12 +382,298 @@ objectdef obj_Ship
 			}
 			while ${itrAmmo:Next(exists)}
 		}
+		/* We have to account for the ammo we currently have loaded. */
+		if ${itrWeapon:First(exists)}
+		{
+			switch ${iGroupId}
+			{
+				case GROUP_HYBRIDAMMO
+					if ${itrHybridPairs:First(exists)}
+					{
+						do
+						{
+#if EVEBOT_DEBUG
+							UI:UpdateConsole["obj_Ship.GetMaxTurretRange: checking ${itrHybridPairs.Key} against currently loaded ammo ${itrWeapon.Value.Charge.Name}"]
+#endif
+  						if ${itrWeapon.Value.Charge.Name.Find[${itrHybridPairs.Key}]}
+  						{
+  							fTempMaxRange:Set[${Math.Calc[${fBaseOptimal} * ${itrHybridPairs.Value}]}]
+  							if ${fTempMaxRange} > ${fMaxTurretRange}
+  							{
+#if EVEBOT_DEBUG
+  								UI:UpdateConsole["obj_Ship.GetMaximumTurretRange(): New max range: ${fTempMaxRange}"]
+#endif
+  								fMaxTurretRange:Set[${fTempMaxRange}]
+  							}
+  							break
+  						}
+						}
+						while ${itrHybridPairs:Next(exists)}
+					}
+					break
+				case GROUP_AMMO
+					if ${itrAmmoPairs:First(exists)}
+					{
+						do
+						{
+#if EVEBOT_DEBUG
+							UI:UpdateConsole["obj_Ship.GetMaxTurretRange: checking ${itrAmmoPairs.Key} against currently loaded ammo ${itrWeapon.Value.Charge.Name}"]
+#endif
+  						if ${itrWeapon.Value.Charge.Name.Find[${itrAmmoPairs.Key}]}
+  						{
+  							fTempMaxRange:Set[${Math.Calc[${fBaseOptimal} * ${itrAmmoPairs.Value}]}]
+  							if ${fTempMaxRange} > ${fMaxTurretRange}
+  							{
+#if EVEBOT_DEBUG
+  								UI:UpdateConsole["obj_Ship.GetMaximumTurretRange(): New max range: ${fTempMaxRange}"]
+#endif
+  								fMaxTurretRange:Set[${fTempMaxRange}]
+  							}
+  							break
+  						}
+						}
+						while ${itrHybridPairs:Next(exists)}
+					}
+					break
+				case GROUP_FREQUENCYCRYSTAL
+					if ${itrFrequencyPairs:First(exists)}
+					{
+						do
+						{
+#if EVEBOT_DEBUG
+							UI:UpdateConsole["obj_Ship.GetMaxTurretRange: checking ${itrFrequencyPairs.Key} against currently loaded ammo ${itrWeapon.Value.Charge.Name}"]
+#endif
+  						if ${itrWeapon.Value.Charge.Name.Find[${itrFrequencyPairs.Key}]}
+  						{
+  							fTempMaxRange:Set[${Math.Calc[${fBaseOptimal} * ${itrFrequencyPairs.Value}]}]
+  							if ${fTempMaxRange} > ${fMaxTurretRange}
+  							{
+#if EVEBOT_DEBUG
+  								UI:UpdateConsole["obj_Ship.GetMaximumTurretRange(): New max range: ${fTempMaxRange}"]
+#endif
+  								fMaxTurretRange:Set[${fTempMaxRange}]
+  							}
+  							break
+  						}
+						}
+						while ${itrFrequencyPairs:Next(exists)}
+					}
+					break
+			}
+		}
+#if EVEBOT_DEBUG
 		UI:UpdateConsole["obj_Ship.GetMaximumTurretRange(): calculated maximum turret range: ${fMaxTurretRange}"]
+#endif
 		return ${fMaxTurretRange}
 	}
 	
+	member:float GetMinimumTurretRange()
+	{
+#if EVEBOT_DEBUG
+		UI:UpdateConsole["obj_Ship.GetMinimumTurretRange() called"]
+#endif
+		variable float fBaseOptimal = ${This.GetTurretBaseOptimal}
+#if EVEBOT_DEBUG
+		UI:UpdateConsole["obj_Ship.GetMinimumTurretRange(): base optimal: ${fBaseOptimal}"]		
+#endif
+		variable int iGroupId = 0
+		variable iterator itrWeapon
+		This.ModuleList_Weapon:GetIterator[itrWeapon]
+		
+		variable index:item idxAmmo
+		variable iterator itrAmmo
+
+		variable float fTempMinRange = 0
+		variable float sTempMinRangeAmmo
+
+		variable float fMinTurretRange = 0
+
+		variable iterator itrFrequencyPairs
+		variable iterator itrHybridPairs
+		variable iterator itrAmmoPairs
+		FrequencyNameModPairs:GetIterator[itrFrequencyPairs]
+		HybridNameModPairs:GetIterator[itrHybridPairs]
+		AmmoNameModPairs:GetIterator[itrAmmoPairs]		
+		
+		/* Assume we have identical turrets all around and aren't retarded */
+		if ${itrWeapon:First(exists)}
+		{
+			itrWeapon.Value:DoGetAvailableAmmo[idxAmmo]
+			idxAmmo:GetIterator[itrAmmo]
+			if ${itrAmmo:First(exists)}
+			{
+				iGroupId:Set[${itrAmmo.Value.GroupID}]
+#if EVEBOT_DEBUG
+				UI:UpdateConsole["obj_Ship.GetMinimumTurretRange(): Group ID: ${iGroupId}"]				
+#endif
+			}
+		}
+		
+		if ${itrAmmo:First(exists)}
+		{
+			do
+			{
+				switch ${iGroupId}
+				{
+					case GROUP_AMMO
+						if ${itrAmmoPairs:First(exists)}
+						{
+							do
+							{
+								if ${itrAmmo.Value.Name.Find[${itrAmmoPairs.Key}]}
+								{
+#if EVEBOT_DEBUG
+									UI:UpdateConsole["obj_Ship.GetMinimumTurretRange(): Found ammo type ${itrAmmoPairs.Key} ${itrAmmoPairs.Value}"]
+#endif
+									fMinTurretRange:Set[${Math.Calc[${fBaseOptimal} * ${itrAmmoPairs.Value}]}]
+									if ${fTempMinRange} < ${fMinTurretRange} || ${fMinTurretRange} == 0
+									{
+#if EVEBOT_DEBUG
+										UI:UpdateConsole["obj_Ship.GetMinimumTurretRange(): New min range: ${fTempMinRange}"]
+#endif
+										fMinTurretRange:Set[${fTempMinRange}]
+									}
+									break
+								}
+							}
+							while ${itrAmmoPairs:Next(exists)}
+						}
+						break
+					case GROUP_FREQUENCYCRYSTAL
+						if ${itrFrequencyPairs:First(exists)}
+						{
+							do
+							{
+								if ${itrAmmo.Value.Name.Find[${itrFrequencyPairs.Key}]}
+								{
+#if EVEBOT_DEBUG
+									UI:UpdateConsole["obj_Ship.GetMinimumTurretRange(): Found crystal type ${itrFrequencyPairs.Key} ${itrFrequencyPairs.Value}"]
+#endif
+									fMinTurretRange:Set[${Math.Calc[${fBaseOptimal} * ${itrFrequencyPairs.Value}]}]
+									if ${fTempMinRange} < ${fMinTurretRange} || ${fMinTurretRange} == 0
+									{
+#if EVEBOT_DEBUG
+										UI:UpdateConsole["obj_Ship.GetMinimumTurretRange(): New min range: ${fTempMinRange}"]
+#endif
+										fMinTurretRange:Set[${fTempMinRange}]
+									}
+									break
+								}
+							}
+							while ${itrFrequencyPairs:Next(exists)}
+						}
+						break
+					case GROUP_HYBRIDAMMO
+						if ${itrHybridPairs:First(exists)}
+						{
+							do
+							{
+								if ${itrAmmo.Value.Name.Find[${itrHybridPairs.Key}]}
+								{
+#if EVEBOT_DEBUG
+									UI:UpdateConsole["obj_Ship.GetMinimumTurretRange(): Found hybrid ammo type ${itrHybridPairs.Key} ${itrHybridPairs.Value}"]
+#endif
+									fTempMinRange:Set[${Math.Calc[${fBaseOptimal} * ${itrHybridPairs.Value}]}]
+									if ${fTempMinRange} < ${fMinTurretRange} || ${fMinTurretRange} == 0
+									{
+#if EVEBOT_DEBUG
+										UI:UpdateConsole["obj_Ship.GetMinimumTurretRange(): New min range: ${fTempMinRange}"]
+#endif
+										fMinTurretRange:Set[${fTempMinRange}]
+									}
+									break
+								}
+							}
+							while ${itrHybridPairs:Next(exists)}
+						}
+						break
+					default
+#if EVEBOT_DEBUG
+						UI:UpdateConsole["obj_Ship.GetMinimumTurretRange: GroupID is bad; ammo needs cycled. TODO: Auto cycle ammo"]
+#endif
+						break
+				}
+			}
+			while ${itrAmmo:Next(exists)}
+		}
+		/* We have to account for the ammo we currently have loaded. */
+		if ${itrWeapon:First(exists)}
+		{
+			switch ${iGroupId}
+			{
+				case GROUP_HYBRIDAMMO
+					if ${itrHybridPairs:First(exists)}
+					{
+						do
+						{
+#if EVEBOT_DEBUG
+							UI:UpdateConsole["obj_Ship.GetMinimumTurretRange: checking ${itrHybridPairs.Key} against currently loaded ammo ${itrWeapon.Value.Charge.Name}"]
+#endif
+  						if ${itrWeapon.Value.Charge.Name.Find[${itrHybridPairs.Key}]}
+  						{
+  							fTempMinRange:Set[${Math.Calc[${fBaseOptimal} * ${itrHybridPairs.Value}]}]
+  							if ${fTempMinRange} < ${fMinTurretRange} || ${fMinTurretRange} == 0
+  							{
+#if EVEBOT_DEBUG
+  								UI:UpdateConsole["obj_Ship.GetMinimumTurretRange(): New min range: ${fTempMinRange}"]
+#endif
+  								fMinTurretRange:Set[${fTempMinRange}]
+  							}
+  							break
+  						}
+						}
+						while ${itrHybridPairs:Next(exists)}
+					}
+					break
+				case GROUP_AMMO
+					if ${itrAmmoPairs:First(exists)}
+					{
+						do
+						{
+							UI:UpdateConsole["obj_Ship.GetMinimumTurretRange: checking ${itrAmmoPairs.Key} against currently loaded ammo ${itrWeapon.Value.Charge.Name}"]
+  						if ${itrWeapon.Value.Charge.Name.Find[${itrAmmoPairs.Key}]}
+  						{
+  							fTempMinRange:Set[${Math.Calc[${fBaseOptimal} * ${itrAmmoPairs.Value}]}]
+  							if ${fTempMinRange} < ${fMinTurretRange} || ${fMinTurretRange} == 0
+  							{
+  								UI:UpdateConsole["obj_Ship.GetMinimumTurretRange(): New Min range: ${fTempMinRange}"]
+  								fMinTurretRange:Set[${fTempMinRange}]
+  							}
+  							break
+  						}
+						}
+						while ${itrHybridPairs:Next(exists)}
+					}
+					break
+				case GROUP_FREQUENCYCRYSTAL
+					if ${itrFrequencyPairs:First(exists)}
+					{
+						do
+						{
+							UI:UpdateConsole["obj_Ship.GetMinimumTurretRange: checking ${itrFrequencyPairs.Key} against currently loaded ammo ${itrWeapon.Value.Charge.Name}"]
+  						if ${itrWeapon.Value.Charge.Name.Find[${itrFrequencyPairs.Key}]}
+  						{
+  							fTempMinRange:Set[${Math.Calc[${fBaseOptimal} * ${itrFrequencyPairs.Value}]}]
+  							if ${fTempMinRange} < ${fMinTurretRange} || ${fMinTurretRange} == 0
+  							{
+  								UI:UpdateConsole["obj_Ship.GetMinimumTurretRange(): New Min range: ${fTempMinRange}"]
+  								fMinTurretRange:Set[${fTempMinRange}]
+  							}
+  							break
+  						}
+						}
+						while ${itrFrequencyPairs:Next(exists)}
+					}
+					break
+			}
+		}
+		UI:UpdateConsole["obj_Ship.GetMinimumTurretRange(): calculated minimum turret range: ${fMinTurretRange}"]
+		return ${fMinTurretRange}
+	}	
+	
 	member:float GetTurretBaseOptimal()
 	{
+		UI:UpdateConsole["obj_Ship.GetTurretBaseOptimal called"]
 		variable iterator itrWeapon
 		This.ModuleList_Weapon:GetIterator[itrWeapon]
 		
@@ -407,14 +746,21 @@ objectdef obj_Ship
 						}
 						break
 					default
-						UI:UpdateConsole["obj_Ship.GetTurretBaseOptimal(): Inavlid gropuid, shit broke"]
+						UI:UpdateConsole["obj_Ship.GetTurretBaseOptimal(): Inavlid groupID, ammo needs to be cycled!"]
 						break
-					if ${fRangeMod} == 0
-					{
-						fRangeMod:Inc
-					}
 				}
-				fBaseOptimal:Set[${Math.Calc[${itrWeapon.Value.OptimalRange} / ${fRangeMod}]}]
+				if ${fRangeMod} == 0
+				{
+					UI:UpdateConsole["obj_Ship.GetTurretBaseOptimal(): Range mod is 0; ammo needs cycled; returning current optimal"]
+					fBaseOptimal:Set[${itrWeapon.Value.OptimalRange}]
+					return ${fBaseOptimal}
+				}
+				else
+				{
+					fBaseOptimal:Set[${Math.Calc[${itrWeapon.Value.OptimalRange} / ${fRangeMod}]}]
+					UI:UpdateConsole["obj_Ship.GetTurretBaseOptimal(): First turret's base optimal: ${fBaseOptimal}. All turrets should be the same, breaking..."]
+					break
+				}
 			}
 			while ${itrWeapon:Next(exists)}
 		}
@@ -424,6 +770,7 @@ objectdef obj_Ship
 
 	member:string GetBestAmmoTypeByRange(float range)
 	{
+		UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range}): called"]
 		variable iterator itrWeapon
 		This.ModuleList_Weapon:GetIterator[itrWeapon]
 		
@@ -432,7 +779,6 @@ objectdef obj_Ship
 		variable index:item idxAmmo
 		variable iterator itrAmmo
 		
-		variable float fBaseOptimal
 		variable float fRangeMod
 		variable string sCurrentAmmo
 		
@@ -448,7 +794,10 @@ objectdef obj_Ship
 		variable string sBestSoFar
 		variable string sHighestSoFar
 		variable float fHighestSoFar = 0
+		UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range}): getting base optimal..."]
 		variable float fBaseOptimal = ${This.GetTurretBaseOptimal}
+		UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range}): fBaseOptimal: ${fBaseOptimal}"]
+		variable bool bBestFound = FALSE
 		
 		itrWeapon.Value:DoGetAvailableAmmo[idxAmmo]
 		idxAmmo:GetIterator[itrAmmo]
@@ -459,6 +808,7 @@ objectdef obj_Ship
 			{
 				/* First, figure out this module's base optimal */
 				iGroupId:Set[${itrWeapon.Value.Charge.GroupID}]
+				UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range}): iGroupId: ${iGroupId}"]
 				/* Next, figure out the best ammo for a given range. */
 				switch ${iGroupId}
 				{
@@ -477,8 +827,9 @@ objectdef obj_Ship
 											if ${fNewDelta} > 0 && (${fNewDelta} < ${fOldDelta} || ${fOldDelta} == 0)
 											{
 												sBestSoFar:Set[${itrAmmoPairs.Key}]
+												bBestFound:Set[TRUE]
+												fOldDelta:Set[${fNewDelta}]
 											}
-											fOldDelta:Set[${fNewDelta}]
 											
 											if ${fHighestSoFar} == 0 || ${fNewDelta} > ${fHighestSoFar}
 											{
@@ -493,13 +844,14 @@ objectdef obj_Ship
 							}
 							while ${itrAmmo:Next(exists)}				
 						}
-						if ${sBestSoFar.Equal[]} || ${sBestSoFar.Equal[NULL]}
+						if !${bBestFound}
 						{
 							sBestSoFar:Set[${sHighestSoFar}]
 						}
 						UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range}): sBestSoFar: ${sBestSoFar}, sHighestSoFar: ${sHighestSoFar}"]
 						break
 					case GROUP_HYBRIDAMMO
+						UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange, in group_hybridammo case"]
 						if ${itrAmmo:First(exists)}
 						{
 							do
@@ -508,15 +860,24 @@ objectdef obj_Ship
 								{
 									do
 									{
+										UI:UpdateConsole["Checking ${itrAmmo.Value.Name} against ${itrHybridPairs.Key}..."]
 										if ${itrAmmo.Value.Name.Find[${itrHybridPairs.Key}]}
 										{
 											fNewDelta:Set[${Math.Calc[${fBaseOptimal} * ${itrHybridPairs.Value} - ${range}]}]
+											UI:UpdateConsole["fNewDelta: ${fNewDelta}, ${Math.Calc[${fBaseOptimal} * ${itrHybridPairs.Value} - ${range}]}, fOldDelta: ${fOldDelta}"]
+											/* We want our delta to be positive or 0 = meaning it'll hit at or above target range */
+											/* If our new delta is smaller than the old delta - meaning it'll hit closer to the rat even if it overshoots - we want it */
+											/* we'll also take it if oldDelta is 0 and we have nothing to compare against */
 											if ${fNewDelta} > 0 && (${fNewDelta} < ${fOldDelta} || ${fOldDelta} == 0)
 											{
+												UI:UpdateConsole["right before the freakin' string set"]
 												sBestSoFar:Set[${itrHybridPairs.Key}]
+												UI:UpdateConsole["obj_Ship.GetBestAmmo: sBestsoFar: ${sBestSoFar}, fNewDeelta ${fNewDelta}, fOldDelta ${fOldDelta} "]
+												bBestFound:Set[TRUE]
+												fOldDelta:Set[${fNewDelta}]
 											}
-											fOldDelta:Set[${fNewDelta}]
 											
+											UI:UpdateConsole["fHighestSoFar: ${fHighestSoFar}"]
 											if ${fHighestSoFar} == 0 || ${fNewDelta} > ${fHighestSoFar}
 											{
 												fHighestSoFar:Set[${fNewDelta}]
@@ -530,7 +891,7 @@ objectdef obj_Ship
 							}
 							while ${itrAmmo:Next(exists)}				
 						}
-						if ${sBestSoFar.Equal[]} || ${sBestSoFar.Equal[NULL]}
+						if !${bBestFound}
 						{
 							sBestSoFar:Set[${sHighestSoFar}]
 						}			
@@ -551,8 +912,9 @@ objectdef obj_Ship
 											if ${fNewDelta} > 0 && (${fNewDelta} < ${fOldDelta} || ${fOldDelta} == 0)
 											{
 												sBestSoFar:Set[${itrFrequencyPairs.Key}]
+												bBestFound:Set[TRUE]
+												fOldDelta:Set[${fNewDelta}]
 											}
-											fOldDelta:Set[${fNewDelta}]
 											
 											if ${fHighestSoFar} == 0 || ${fNewDelta} > ${fHighestSoFar}
 											{
@@ -567,7 +929,7 @@ objectdef obj_Ship
 							}
 							while ${itrAmmo:Next(exists)}				
 						}
-						if ${sBestSoFar.Equal[]} || ${sBestSoFar.Equal[NULL]}
+						if !${bBestFound}
 						{
 							sBestSoFar:Set[${sHighestSoFar}]
 						}

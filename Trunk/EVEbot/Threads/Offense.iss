@@ -74,10 +74,6 @@ objectdef obj_Offense
 				}
 				else
 				{
-					if ${Me.ToEntity.Velocity} <= 20
-					{
-						Me.ActiveTarget:Orbit[${fOptimalWeaponRange}]
-					}
 					Ship:LoadOptimalAmmo[${fOptimalWeaponRange}]
 				}
 
