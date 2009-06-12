@@ -207,7 +207,7 @@ objectdef obj_Ship
 				{
 					do
 					{
-						UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(${range}): Found best ammo: ${itrAmmo.Value.Name.Find[${sBestAmmo}]"]
+						UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(${range}): Found best ammo: ${itrAmmo.Value.Name.Find[${sBestAmmo}]}"]
 						if ${itrAmmo.Value.Name.Find[${sBestAmmo}]}
 						{
 							UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(${range}): Changing ammo to ${itrAmmo.Value.Name}, ${itrWeapon.Value.MaxCharges}"]
@@ -433,7 +433,7 @@ objectdef obj_Ship
 			{
 				/* First, figure out this module's base optimal */
 				iGroupId:Set[${itrWeapon.Value.Charge.GroupID}]
-				/* Next, figure out the best ammo for a given range.
+				/* Next, figure out the best ammo for a given range. */
 				switch ${iGroupId}
 				{
 					case GROUP_AMMO:
@@ -547,9 +547,9 @@ objectdef obj_Ship
 						}
 						break
 						UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range}): sBestSoFar: ${sBestSoFar}, sHighestSoFar: ${sHighestSoFar}"]
-					}
-				while ${itrWeapon:Next(exists)}
-			}						
+					}			
+			}			
+			while ${itrWeapon:Next(exists)}				
 		}		
 		UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range}): returning ${sBestSoFar}"]
 		return ${sBestSoFar}
