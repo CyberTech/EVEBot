@@ -62,6 +62,9 @@ objectdef obj_Ratter
 	;; STATE MACHINE:  * -> IDLE -> MOVE -> PCCHECK -> FIGHT -> *
 	method SetState()
 	{
+#ifdef EVEBOT_DEBUG
+		UI:UpdateConsole["obj_Ratter: Hiding: ${Defense.Hiding}"]
+#endif	
 		if ${Defense.Hiding}
 		{
 			This.CurrentState:Set["IDLE"]
@@ -81,7 +84,7 @@ objectdef obj_Ratter
 		}
 		else
 		{
-			This.CurrentState:Set["IDLE"]
+			This.CurrentState:Set["STATE_CHANGE_BELT"]
 		}
 	}
 
@@ -91,7 +94,9 @@ objectdef obj_Ratter
 		{
 			return
 		}
-
+#ifdef EVEBOT_DEBUG
+		UI:UpdateConsole["obj_Ratter: Processing State: ${This.CurrentState}"]
+#endif
 		;UI:UpdateConsole["DEBUG: ${This.CurrentState}"]
 		switch ${This.CurrentState}
 		{
