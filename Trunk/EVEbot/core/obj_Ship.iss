@@ -212,7 +212,7 @@ objectdef obj_Ship
 						if ${itrAmmo.Value.Name.Find[${sBestAmmo}]}
 						{
 							UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(${range}): Changing ammo to ${itrAmmo.Value.Name}, ${itrWeapon.Value.MaxCharges}"]
-							itrWeapon.Value:ChangeAmmo[${itrAmmo.Value.Id},${itrWeapon.Value.MaxCharges}]
+							itrWeapon.Value:ChangeAmmo[${itrAmmo.Value.ID},${itrWeapon.Value.MaxCharges}]
 							break
 						}
 					}
@@ -251,7 +251,7 @@ objectdef obj_Ship
 			if ${itrAmmo:First(exists)}
 			{
 				UI:UpdateConsole["obj_Ship.GetMaximumTurretRange(): Group ID: ${iGroupId}"]
-				iGroupId:Set[${itrAmmo.Value.GroupId}]
+				iGroupId:Set[${itrAmmo.Value.GroupID}]
 			}
 		}
 		
@@ -1961,6 +1961,7 @@ objectdef obj_Ship
 		}
 		else
 		{
+			UI:UpdateConsole["obj_Ship.OptimalWeaponRange(): getting checked"]
 			return ${This.GetMaximumTurretRange}
 		}
 		

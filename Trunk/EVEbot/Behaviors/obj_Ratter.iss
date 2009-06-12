@@ -78,7 +78,7 @@ objectdef obj_Ratter
 		}
 
 
-		if ${Me.GetTargets} > 0
+		if ${Me.GetTargets} > 0 || ${Me.GetTargetedBy} > 0
 		{
 			This.CurrentState:Set["FIGHT"]
 		}
