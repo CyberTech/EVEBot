@@ -118,6 +118,7 @@ objectdef obj_Ratter
 			case IDLE
 				break
 			case STATE_CHANGE_BELT
+				Offense:Disable
 				; TODO - check for use of belt bookmark object instead - CyberTech
 				;if ${Config.Miner.UseFieldBookmarks}
 				;{
@@ -160,6 +161,7 @@ objectdef obj_Ratter
 				This.CurrentState:Set["FIGHT"]
 				break
 			case FIGHT
+				Offense:Enable
 				This:QueueTargets
 				break
 			case STATE_ERROR
