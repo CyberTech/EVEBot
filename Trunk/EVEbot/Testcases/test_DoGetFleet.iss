@@ -16,7 +16,7 @@ variable obj_UI UI
 function main()
 {
 		variable index:fleetmember FleetIndex
-		Me:DoGetFleet[FleetIndex]
+		Me.Fleet:GetMembers[FleetIndex]
 		variable iterator FleetMember
 		FleetIndex:GetIterator[FleetMember]
 
