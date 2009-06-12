@@ -17,6 +17,7 @@ objectdef obj_Offense
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 1
 	variable bool Warned_LowAmmo = FALSE
+	variable float fOptimalWeaponRange = 0
 
 	method Initialize()
 	{
@@ -63,7 +64,8 @@ objectdef obj_Offense
 				Ship:Activate_StasisWebs
 				Ship:Activate_TargetPainters
 
-				if ${Me.ActiveTarget.Distance} < ${Ship.OptimalWeaponRange}
+				fOptimalWeaponRange:Set[${Ship.OptimalWeaponRange}]
+				if ${Me.ActiveTarget.Distance} < ${fOptimalWeaponRange}
 				{
 					/* returns true if done */
 					UI:UpdateConsole["Offense: Loading ammo"]
@@ -74,9 +76,9 @@ objectdef obj_Offense
 				{
 					if ${Me.ToEntity.Velocity} <= 20
 					{
-						Me.ActiveTarget:Orbit[${Ship.OptimalWeaponRange}]
+						Me.ActiveTarget:Orbit[${fOptimalWeaponRange}]
 					}
-					Ship:LoadOptimalAmmo[${Ship.OptimalWeaponRange}]
+					Ship:LoadOptimalAmmo[${fOptimalWeaponRange}]
 				}
 
 				if ${Ship.Drones.CombatDroneShortage}

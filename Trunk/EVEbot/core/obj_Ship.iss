@@ -115,6 +115,7 @@ objectdef obj_Ship
 	variable bool InteruptWarpWait = FALSE
 	variable string m_Type
 	variable int m_TypeID
+	variable int iCurrentTurret = 0
 	
 	variable collection:float HybridNameModPairs
 	variable collection:float AmmoNameModPairs
@@ -197,31 +198,43 @@ objectdef obj_Ship
 		variable string sBestAmmo = ${This.GetBestAmmoTypeByRange[${range}]}
 		UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(${range}): Best Ammo: ${sBestAmmo}"]
 		
-		UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(): First? ${itrWeapon:First(exists)}"]
+		if ${GetNumberTurrets} > ${iCurrentTurret}
+		{
+			iCurrentTurret:Inc		
+			MyShip.Module[HiSlot${iCurrentTurret}]:DoGetAvailableAmmo[idxAmmo]
+			idxAmmo:GetIterator[itrAmmo]			
+			if ${itrAmmo:First(exists)}
+			{
+				do
+				{
+					UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(${range}): Found best ammo: ${itrAmmo.Value.Name.Find[${sBestAmmo}]}"]
+					if ${itrAmmo.Value.Name.Find[${sBestAmmo}]} && !${MyShip.Module[HiSlot${iCurrentTurret}].Charge.Name.Find[${sBestAmmo}]}
+					{
+						UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(${range}): Changing ammo to ${itrAmmo.Value.Name}, ${MyShip.Module[HiSlot${iCurrentTurret}].MaxCharges}"]
+						MyShip.Module[HiSlot${iCurrentTurret}]:ChangeAmmo[${itrAmmo.Value.ID},${MyShip.Module[HiSlot${iCurrentTurret}].MaxCharges}]
+						return
+					}					
+				}
+				while ${itrAmmo:Next(exists)}
+			}
+		}
+	}
+	
+	member:int GetNumberTurrets()
+	{
+		variable iterator itrWeapon
+		This.ModuleList_Weapon:GetIterator[itrWeapon]
+		variable int iNumTurrets = 0
+		
 		if ${itrWeapon:First(exists)}
 		{
 			do
 			{
-				itrWeapon.Value:DoGetAvailableAmmo[idxAmmo]
-				idxAmmo:GetIterator[itrAmmo]
-				
-				if ${itrAmmo:First(exists)}
-				{
-					do
-					{
-						UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(${range}): Found best ammo: ${itrAmmo.Value.Name.Find[${sBestAmmo}]}"]
-						if ${itrAmmo.Value.Name.Find[${sBestAmmo}]} && !${itrWeapon.Value.Charge.Name.Find[${sBestAmmo}]}
-						{
-							UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(${range}): Changing ammo to ${itrAmmo.Value.Name}, ${itrWeapon.Value.MaxCharges}"]
-							itrWeapon.Value:ChangeAmmo[${itrAmmo.Value.ID},${itrWeapon.Value.MaxCharges}]
-							return FALSE
-						}
-					}
-					while ${itrAmmo:Next(exists)}
-				}
+				iNumTurrets:Inc
 			}
 			while ${itrWeapon:Next(exists)}
-		}	
+		}
+		UI:UpdateConsole["obj_Ship.GetNumberTurrets(): Returning ${iNumTurrets}"]
 	}
 
 	member:float GetMaximumTurretRange()
@@ -396,6 +409,10 @@ objectdef obj_Ship
 					default
 						UI:UpdateConsole["obj_Ship.GetTurretBaseOptimal(): Inavlid gropuid, shit broke"]
 						break
+					if ${fRangeMod} == 0
+					{
+						fRangeMod:Inc
+					}
 				}
 				fBaseOptimal:Set[${Math.Calc[${itrWeapon.Value.OptimalRange} / ${fRangeMod}]}]
 			}

@@ -25,6 +25,10 @@ function main()
 			{
 				echo "Changing ammo to currently iterated type at current number of charges and breaking."
 				MyShip.Module[HiSlot0]:ChangeAmmo[${itrAmmo.Value.ID}]
+				MyShip.Module[HiSlot1]:ChangeAmmo[${itrAmmo.Value.ID}]
+				MyShip.Module[HiSlot2]:ChangeAmmo[${itrAmmo.Value.ID}]
+				MyShip.Module[HiSlot3]:ChangeAmmo[${itrAmmo.Value.ID}]
+				echo "IsReloadingAmmo? ${MyShip.Module[HiSlot0].IsReloadingAmmo} IsChangingAmmo? ${MyShip.Module[HiSlot0].IsChangingAmmo}"
 				break
 			}
 		}
