@@ -63,7 +63,7 @@ objectdef obj_Ratter
 	method SetState()
 	{
 #ifdef EVEBOT_DEBUG
-		UI:UpdateConsole["obj_Ratter: Hiding: ${Defense.Hiding}"]
+		UI:UpdateConsole["obj_Ratter: Hiding: ${Defense.Hiding}, Hide Reason: ${Defense.HideReason}"]
 #endif	
 		if ${Defense.Hiding}
 		{
