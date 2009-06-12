@@ -63,6 +63,7 @@ objectdef obj_Offense
 
 				if ${Me.ActiveTarget.Distance} < ${Ship.OptimalWeaponRange}
 				{
+					Ship:LoadOptimalAmmo[${Me.ActiveTarget.Distance}]
 					Ship:Activate_Weapons
 				}
 

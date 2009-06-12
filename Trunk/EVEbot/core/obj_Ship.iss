@@ -115,8 +115,10 @@ objectdef obj_Ship
 	variable bool InteruptWarpWait = FALSE
 	variable string m_Type
 	variable int m_TypeID
-
-	variable iterator ModulesIterator
+	
+	variable collection:float HybridNameModPairs
+	variable collection:float AmmoNameModPairs
+	variable collection:float FrequencyNameModPairs
 
 	variable obj_Drones Drones
 
@@ -127,6 +129,7 @@ objectdef obj_Ship
 
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		This:CalculateMaxLockedTargets
+		This:PopulateNameModPairs[]
 		UI:UpdateConsole["obj_Ship: Initialized", LOG_MINOR]
 	}
 
@@ -151,6 +154,405 @@ objectdef obj_Ship
 			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
 			This.NextPulse:Update
 		}
+	}
+	
+	method PopulateNameModPairs()
+	{
+		HybridNameModPairs:Set["Iron",1.6]
+		HybridNameModPairs:Set["Tungsten",1.4]
+		HybridNameModPairs:Set["Iridium",1.2]
+		HybridNameModPairs:Set["Lead",1]
+		HybridNameModPairs:Set["Thorium",0.875]
+		HybridNameModPairs:Set["Uranium",0.75]
+		HybridNameModPairs:Set["Plutonium",0.625]
+		HybridNameModPairs:Set["Antimatter",0.5]
+		
+		AmmoNameModPairs:Set["Carbonized Lead",1.6]
+		AmmoNameModPairs:Set["Nuclear",1.4]
+		AmmoNameModPairs:Set["Proton",1.2]
+		AmmoNameModPairs:Set["Depleted Uranium",1]
+		AmmoNameModPairs:Set["Titanium Sabot",0.875]
+		AmmoNameModPairs:Set["Fusion",0.75]
+		AmmoNameModPairs:Set["Phased Plasma",0.625]
+		AmmoNameModPairs:Set["EMP",0.5]
+		
+		FrequencyNameModPairs:Set["Radio",1.6]
+		FrequencyNameModPairs:Set["Microwave",1.4]
+		FrequencyNameModPairs:Set["Infrared",1.2]
+		FrequencyNameModPairs:Set["Standard",1]
+		FrequencyNameModPairs:Set["Ultraviolet",0.875]
+		FrequencyNameModPairs:Set["Xray",0.75]
+		FrequencyNameModPairs:Set["Gamma",0.625]
+		FrequencyNameModPairs:Set["Multifrequency",0.5]
+	}
+    
+	method LoadOptimalAmmo(float range)
+	{ 
+		variable iterator itrWeapon
+		This.ModuleList_Weapon:GetIterator[itrWeapon]
+		
+		variable index:item idxAmmo
+		variable iterator itrAmmo
+		variable string sBestAmmo = ${This.GetBestAmmoTypeByRange[${range}]}
+		UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(${range}): Best Ammo: ${sBestAmmo}"]
+		
+		if ${itrWeapon:First(exists)}
+		{
+			do
+			{
+				itrWeapon.Value:DoGetAvailableAmmo[idxAmmo]
+				idxAmmo:GetIterator[itrAmmo]
+				
+				if ${itrAmmo:First(exists)}
+				{
+					do
+					{
+						UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(${range}): Found best ammo: ${itrAmmo.Value.Name.Find[${sBestAmmo}]"]
+						if ${itrAmmo.Value.Name.Find[${sBestAmmo}]}
+						{
+							UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(${range}): Changing ammo to ${itrAmmo.Value.Name}, ${itrWeapon.Value.MaxCharges}"]
+							itrWeapon.Value:ChangeAmmo[${itrAmmo.Value.Id},${itrWeapon.Value.MaxCharges}]
+							break
+						}
+					}
+					while ${itrAmmo:Next(exists)}
+				}
+			}
+			while ${itrWeapon:Next(exists)}
+		}		
+	}
+
+	member:float GetMaximumTurretRange()
+	{
+		variable int iGroupId = 0
+		variable iterator itrWeapon
+		This.ModuleList_Weapon:GetIterator[itrWeapon]
+		
+		variable index:item idxAmmo
+		variable iterator itrAmmo
+
+		variable float fBaseOptimal = ${This.GetTurretBaseOptimal}
+		UI:UpdateConsole["obj_Ship.GetMaximumTurretRange(): base optimal: ${fBaseOptimal}"]
+		variable float fMaxTurretRange = 0
+
+		variable iterator itrFrequencyPairs
+		variable iterator itrHybridPairs
+		variable iterator itrAmmoPairs
+		FrequencyNameModPairs:GetIterator[itrFrequencyPairs]
+		HybridNameModPairs:GetIterator[itrHybridPairs]
+		AmmoNameModPairs:GetIterator[itrAmmoPairs]		
+		
+		/* Assume we have identical turrets all around and aren't retarded */
+		if ${itrWeapon:First(exists)}
+		{
+			itrWeapon.Value:DoGetAvailableAmmo[idxAmmo]
+			idxAmmo:GetIterator[itrAmmo]
+			if ${itrAmmo:First(exists)}
+			{
+				UI:UpdateConsole["obj_Ship.GetMaximumTurretRange(): Group ID: ${iGroupId}"]
+				iGroupId:Set[${itrAmmo.Value.GroupId}]
+			}
+		}
+		
+		if ${itrAmmo:First(exists)}
+		{
+			/* THIS WILL GO FROM LONGEST TO SHORTEST RANGE BECAUSE OF THE ORDER IN WHICH THE COLLECTIONS ARE BUILT */
+			/* OR SO I HOPE */
+			do
+			{
+				switch ${iGroupId}
+				{
+					case GROUP_AMMO:
+						if ${itrAmmoPairs:First(exists)}
+						{
+							do
+							{
+								if ${itrAmmo.Value.Name.Find[${itrAmmoPairs.Key}]}
+								{
+									UI:UpdateConsole["obj_Ship.GetMaximumTurretRange(): Found ammo type ${itrAmmoPairs.Key} ${itrAmmoPairs.Value}"]
+									fMaxTurretRange:Set[${Math.Calc[${fBaseOptimal} * ${itrAmmoPairs.Value}]}]
+									break
+								}
+							}
+							while ${itrAmmoPairs:Next(exists)}
+						}
+						break
+					case GROUP_FREQUENCYCRYSTAL:
+						if ${itrFrequencyPairs:First(exists)}
+						{
+							do
+							{
+								if ${itrAmmo.Value.Name.Find[${itrFrequencyPairs.Key}]}
+								{
+									UI:UpdateConsole["obj_Ship.GetMaximumTurretRange(): Found crystal type ${itrFrequencyPairs.Key} ${itrFrequencyPairs.Value}"]
+									fMaxTurretRange:Set[${Math.Calc[${fBaseOptimal} * ${itrFrequencyPairs.Value}]}]
+									break
+								}
+							}
+							while ${itrFrequencyPairs:Next(exists)}
+						}
+						break
+					case GROUP_HYBRIDAMMO:
+						if ${itrHybridPairs:First(exists)}
+						{
+							do
+							{
+								if ${itrAmmo.Value.Name.Find[${itrHybridPairs.Key}]}
+								{
+									UI:UpdateConsole["obj_Ship.GetMaximumTurretRange(): Found hybrid ammo type ${itrHybridPairs.Key} ${itrHybridPairs.Value}"]
+									fMaxTurretRange:Set[${Math.Calc[${fBaseOptimal} * ${itrHybridPairs.Value}]}]
+									break
+								}
+							}
+							while ${itrHybridPairs:Next(exists)}
+						}
+						break
+					default:
+						UI:UpdateConsole["obj_Ship.GetMaxTurretRange: Shit broke because we didn't meet a case for ammo group id."]
+						break
+				}
+			}
+			while ${itrAmmo:Next(exists)}
+		}
+		UI:UpdateConsole["obj_Ship.GetMaximumTurretRange(): calculated maximum turret range: ${fMaxTurretRange}"]
+		return ${fMaxTurretRange}
+	}
+	
+	member:float GetTurretBaseOptimal()
+	{
+		variable iterator itrWeapon
+		This.ModuleList_Weapon:GetIterator[itrWeapon]
+		
+		variable index:item idxAmmo
+		variable iterator itrAmmo
+		
+		variable float fBaseOptimal
+		variable float fRangeMod
+		
+		variable iterator itrFrequencyPairs
+		variable iterator itrHybridPairs
+		variable iterator itrAmmoPairs
+		FrequencyNameModPairs:GetIterator[itrFrequencyPairs]
+		HybridNameModPairs:GetIterator[itrHybridPairs]
+		AmmoNameModPairs:GetIterator[itrAmmoPairs]
+			
+		if ${itrWeapon:First(exists)}
+		{
+			do
+			{
+				switch ${itrWeapon.Value.Charge.GroupID}
+				{
+					case GROUP_AMMO:
+						if ${itrAmmoPairs:First(exists)}
+						{
+							do
+							{
+								if ${itrWeapon.Value.Charge.Name.Find[${itrAmmoPairs.Key}]}
+								{
+									UI:UpdateConsole["obj_Ship.GetTurretBaseOptimal(): Found ammo ${itrAmmoPairs.Key}, mod ${itrAmmoPairs.Value}"]
+									fRangeMod:Set[${itrAmmoPairs.Value}]
+									break
+								}
+							}
+							while ${itrAmmoPairs:Next(exists)}
+						}
+						break
+					case GROUP_HYBRIDAMMO:
+						if ${itrHybridPairs:First(exists)}
+						{
+							do
+							{
+								if ${itrWeapon.Value.Charge.Name.Find[${itrHybridPairs.Key}]}
+								{
+									UI:UpdateConsole["obj_Ship.GetTurretBaseOptimal(): Found hybrid ammo ${itrHybridPairs.Key}, mod ${itrHybridPairs.Value}"]
+									fRangeMod:Set[${itrHybridPairs.Value}]
+									break
+								}
+							}
+							while ${itrHybridPairs:Next(exists)}
+						}
+						break
+					case GROUP_FREQUENCYCRYSTAL:
+						if ${itrFrequencyPairs:First(exists)}
+						{
+							do
+							{
+								if ${itrWeapon.Value.Charge.Name.Find[${itrFrequencyPairs.Key}]}
+								{
+									UI:UpdateConsole["obj_Ship.GetTurretBaseOptimal(): Found crystal ${itrFrequencyPairs.Key}, mod ${itrFrequencyPairs.Value}"]
+									fRangeMod:Set[${itrFrequencyPairs.Value}]
+									break
+								}
+							}
+							while ${itrFrequencyPairs:Next(exists)}
+						}
+						break
+				}
+				fBaseOptimal:Set[${Math.Calc[${itrWeapon.Value.OptimalRange} / ${fRangeMod}]}]
+			}
+			while ${itrWeapon:Next(exists)}
+		}
+		UI:UpdateConsole["obj_Ship.GetTurretBaseOptimal(): Returning calculated base optimal: ${fBaseOptimal}"]
+		return ${fBaseOptimal}
+	}
+
+	member:string GetBestAmmoTypeByRange(float range)
+	{
+		variable iterator itrWeapon
+		This.ModuleList_Weapon:GetIterator[itrWeapon]
+		
+		variable int iGroupId = 0
+		
+		variable index:item idxAmmo
+		variable iterator itrAmmo
+		
+		variable float fBaseOptimal
+		variable float fRangeMod
+		variable string sCurrentAmmo
+		
+		variable iterator itrFrequencyPairs
+		variable iterator itrHybridPairs
+		variable iterator itrAmmoPairs
+		FrequencyNameModPairs:GetIterator[itrFrequencyPairs]
+		HybridNameModPairs:GetIterator[itrHybridPairs]
+		AmmoNameModPairs:GetIterator[itrAmmoPairs]
+		
+		variable float fOldDelta = 0
+		variable float fNewDelta = 0
+		variable string sBestSoFar
+		variable string sHighestSoFar
+		variable float fHighestSoFar = 0
+		variable float fBaseOptimal = ${This.GetTurretBaseOptimal}
+		
+		itrWeapon.Value:DoGetAvailableAmmo[idxAmmo]
+		idxAmmo:GetIterator[itrAmmo]
+		
+		if ${itrWeapon:First(exists)}
+		{
+			do
+			{
+				/* First, figure out this module's base optimal */
+				iGroupId:Set[${itrWeapon.Value.Charge.GroupID}]
+				/* Next, figure out the best ammo for a given range.
+				switch ${iGroupId}
+				{
+					case GROUP_AMMO:
+						if ${itrAmmo:First(exists)}
+						{
+							do
+							{
+								if ${itrAmmoPairs:First(exists)}
+								{
+									do
+									{
+										if ${itrAmmo.Value.Name.Find[${itrAmmoPairs.Key}]}
+										{
+											fNewDelta:Set[${Math.Calc[${fBaseOptimal} * ${itrAmmoPairs.Value} - ${range}]}]
+											if ${fNewDelta} > 0 && (${fNewDelta} < ${fOldDelta} || ${fOldDelta} == 0)
+											{
+												sBestSoFar:Set[${itrAmmoPairs.Key}]
+											}
+											fOldDelta:Set[${fNewDelta}]
+											
+											if ${fHighestSoFar} == 0 || ${fNewDelta} > ${fHighestSoFar}
+											{
+												fHighestSoFar:Set[${fNewDelta}]
+												sHighestSoFar:Set[${itrAmmoPairs.Key}]
+											}
+											break
+										}
+									}
+									while ${itrAmmoPairs:Next(exists)}
+								}
+							}
+							while ${itrAmmo:Next(exists)}				
+						}
+						if ${sBestSoFar.Equal[]} || ${sBestSoFar.Equal[NULL]}
+						{
+							sBestSoFar:Set[${sHighestSoFar}]
+						}
+						UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range}): sBestSoFar: ${sBestSoFar}, sHighestSoFar: ${sHighestSoFar}"]
+						break
+					case GROUP_HYBRIDAMMO:
+						if ${itrAmmo:First(exists)}
+						{
+							do
+							{
+								if ${itrHybridPairs:First(exists)}
+								{
+									do
+									{
+										if ${itrAmmo.Value.Name.Find[${itrHybridPairs.Key}]}
+										{
+											fNewDelta:Set[${Math.Calc[${fBaseOptimal} * ${itrHybridPairs.Value} - ${range}]}]
+											if ${fNewDelta} > 0 && (${fNewDelta} < ${fOldDelta} || ${fOldDelta} == 0)
+											{
+												sBestSoFar:Set[${itrHybridPairs.Key}]
+											}
+											fOldDelta:Set[${fNewDelta}]
+											
+											if ${fHighestSoFar} == 0 || ${fNewDelta} > ${fHighestSoFar}
+											{
+												fHighestSoFar:Set[${fNewDelta}]
+												sHighestSoFar:Set[${itrHybridPairs.Key}]
+											}
+											break
+										}
+									}
+									while ${itrHybridPairs:Next(exists)}
+								}
+							}
+							while ${itrAmmo:Next(exists)}				
+						}
+						if ${sBestSoFar.Equal[]} || ${sBestSoFar.Equal[NULL]}
+						{
+							sBestSoFar:Set[${sHighestSoFar}]
+						}			
+						UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range}): sBestSoFar: ${sBestSoFar}, sHighestSoFar: ${sHighestSoFar}"]
+						break
+					case GROUP_FREQUENCYCRYSTAL:
+						if ${itrAmmo:First(exists)}
+						{
+							do
+							{
+								if ${itrFrequencyPairs:First(exists)}
+								{
+									do
+									{
+										if ${itrAmmo.Value.Name.Find[${itrFrequencyPairs.Key}]}
+										{
+											fNewDelta:Set[${Math.Calc[${fBaseOptimal} * ${itrFrequencyPairs.Value} - ${range}]}]
+											if ${fNewDelta} > 0 && (${fNewDelta} < ${fOldDelta} || ${fOldDelta} == 0)
+											{
+												sBestSoFar:Set[${itrFrequencyPairs.Key}]
+											}
+											fOldDelta:Set[${fNewDelta}]
+											
+											if ${fHighestSoFar} == 0 || ${fNewDelta} > ${fHighestSoFar}
+											{
+												fHighestSoFar:Set[${fNewDelta}]
+												sHighestSoFar:Set[${itrFrequencyPairs.Key}]
+											}
+											break
+										}
+									}
+									while ${itrFrequencyPairs:Next(exists)}
+								}
+							}
+							while ${itrAmmo:Next(exists)}				
+						}
+						if ${sBestSoFar.Equal[]} || ${sBestSoFar.Equal[NULL]}
+						{
+							sBestSoFar:Set[${sHighestSoFar}]
+						}
+						break
+						UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range}): sBestSoFar: ${sBestSoFar}, sHighestSoFar: ${sHighestSoFar}"]
+					}
+				while ${itrWeapon:Next(exists)}
+			}						
+		}		
+		UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range}): returning ${sBestSoFar}"]
+		return ${sBestSoFar}
 	}
 
 	member:bool IsAmmoAvailable()
@@ -1547,11 +1949,20 @@ objectdef obj_Ship
 		return ${Math.Calc[${_MyShip.MaxTargetRange}*0.90]}
 	}
 
-	; Returns the lowest weapon optimal range minus 10%
+	; Returns the highest weapon optimal range minus 10%
 	member:int OptimalWeaponRange()
 	{
 		; just handle missiles for now
-		return ${Config.Combat.MaxMissileRange}
+		/* fuck you, we're handling turrets */
+		if ${Config.Combat.UsingMissiles}
+		{
+			return ${Config.Combat.MaxMissileRange}
+		}
+		else
+		{
+			return ${This.GetMaximumTurretRange}
+		}
+		
 	}
 
 	member:bool IsPod()
