@@ -147,6 +147,7 @@ objectdef obj_Ship
 				if ${Me.InSpace}
 				{
 					This:ValidateModuleTargets
+					This:UpdateModuleList
 				}
 			}
 
@@ -1954,7 +1955,7 @@ objectdef obj_Ship
 	{
 		; just handle missiles for now
 		/* fuck you, we're handling turrets */
-		if ${Config.Combat.UsingMissiles}
+		if ${Config.Combat.ShouldUseMissiles}
 		{
 			return ${Config.Combat.MaxMissileRange}
 		}
