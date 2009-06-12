@@ -5,6 +5,9 @@ function main()
 	variable index:item idxAmmo
 	variable iterator itrAmmo
 	
+	variable string sLoadedAmmo
+	variable string sIteratedAmmo
+	
 	MyShip.Module[HiSlot0]:DoGetAvailableAmmo[idxAmmo]
 	idxAmmo:GetIterator[itrAmmo]
 	
@@ -13,8 +16,12 @@ function main()
 	{
 		do
 		{
-			echo "Comparing currently loaded ammo (${MyShip.Module[HiSlot0].Charge.Name}) with current available ammo (${itrAmmo.Value.Name}). Strings equal? ${MyShip.Module[HiSlot0].Charge.Name.Equal[${itrAmmo.Value.Name}]}"
-			if !${MyShip.Module[HiSlot0].Charge.Name.Equal[${itrAmmo.Value.Name}]}
+			echo "Comparing currently loaded ammo (${MyShip.Module[HiSlot0].Charge.Name}) with current available ammo (${itrAmmo.Value.Name}). Strings equal? ${MyShip.Module[HiSlot0].Charge.Name.Find[${itrAmmo.Value.Name}]}"
+			sLoadedAmmo:Set[${MyShip.Module[HiSlot0].Charge.Name}]
+			sIteratedAmmo:Set[${itrAmmo.Value.Name}]
+			echo "sLoadedAmmo: ${sLoadedAmmo}, sIteratedAmmo: ${sIteratedAmmo}, equal? ${sLoadedAmmo.Equal[${sIteratedAmmo}]}"
+			echo "Module max charges: ${MyShip.Module[HiSlot0].MaxCharges}"
+			if !${sLoadedAmmo.Equal[${sIteratedAmmo},${MyShip.Module[HiSlot0].MaxCharges}]}
 			{
 				echo "Changing ammo to currently iterated type at current number of charges and breaking."
 				MyShip.Module[HiSlot0]:ChangeAmmo[${itrAmmo.Value.ID}]
