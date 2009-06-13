@@ -310,7 +310,7 @@
         <Set Name = "Commands">
           <Set Name = "1" Action = "ClearRoom">
           </Set>
-          <Set Name = "2" Action = "Kill" Target="Kruul's Pleasure Hub">
+          <Set Name = "2" Action = "Kill" Target="Kruul's Pleasure Hub" CategoryID="11">
           </Set>
           <Set Name = "3" Action = "CheckContainers" Target="The Damsel" GroupID="12">
           </Set>

@@ -457,7 +457,7 @@ objectdef obj_MissionCombat
 			}
 			case Kill
 			{
-				return ${MissionCommands.Kill[${This.FindID[${currentCommandref.FindAttribute["Target"].String}]}, ${currentCommandref.FindAttribute["CategoryID",CATEGORYID_ENTITY]}]}
+				return ${MissionCommands.Kill[${currentCommandref.FindAttribute["Target"].String}, ${currentCommandref.FindAttribute["CategoryID",CATEGORYID_ENTITY]}]}
 				break
 			}
 			case Waves

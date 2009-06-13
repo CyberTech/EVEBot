@@ -103,6 +103,7 @@ objectdef obj_MissionCommands
 					else
 					{
 						UI:UpdateConsole["DEBUG: obj_MissionCommands - not ready for warping will wait untill ready",LOG_DEBUG]
+						return FALSE
 					}
 				}
 				else
@@ -226,7 +227,7 @@ objectdef obj_MissionCommands
 	}
 	;these solutions for pulling and killing specific NPCs based on their names are not ideal, if you can come up with some better logic please tell
 	variable int KillCache
-	variable string KillState
+	variable string KillState = "START"
 	member:bool Kill(string targetName,int CatID)
 	{
 		switch ${KillState}
@@ -567,13 +568,13 @@ objectdef obj_MissionCommands
 				if ${containerIterator.Value(exists)}
 				{
 					UI:UpdateConsole["DEBUG: obj_MissionCommands - Attempting to loot from ${containerIterator.Value.Name} ID ${containerIterator.Value.ID}",LOG_DEBUG]
-					 result:Set[${This.LootEntity[${containerIterator.Value.ID},${lootItem}]}]
+					result:Set[${This.LootEntity[${containerIterator.Value.ID},${lootItem}]}]
 					if ${result} == 3
 					{
 						UI:UpdateConsole["DEBUG: obj_MissionCommands - Found the item",LOG_DEBUG]
 						return TRUE
 					}
-					if${result} == 2
+					if ${result} == 2
 					{
 						UI:UpdateConsole["DEBUG: obj_MissionCommands - Item was not in this container",LOG_DEBUG]
 						if ${containerIterator:Next(exists)}
@@ -900,7 +901,7 @@ objectdef obj_MissionCommands
 			case APPROACHING
 			{
 				UI:UpdateConsole["DEBUG: obj_MissionCommands - LootEntity moving closer to loot ${entID}",LOG_DEBUG]
-				if ${This.Approach[${entID}],DOCKING_RANGE}
+				if ${This.Approach[${entID},DOCKING_RANGE]}
 				{
 					UI:UpdateConsole["DEBUG: obj_MissionCommands - In range attempting to open cargo",LOG_DEBUG]
 					lootEntityID:Set[${entID}]
@@ -917,8 +918,7 @@ objectdef obj_MissionCommands
 					if ${Entity[${entID}].LootWindow(exists)}
 					{
 						UI:UpdateConsole["DEBUG: obj_MissionCommands - Found the loot window checking for itamz",LOG_DEBUG]
-						Entity[${entID}]:DoGetCargo[ContainerCargo]
-						ContainerCargo:GetIterator[Cargo]
+
 						LootEntityState:Set["LOOTING"]
 						return 1
 					}
@@ -929,16 +929,16 @@ objectdef obj_MissionCommands
 			case LOOTING
 			{
 				variable int QuantityToMove
+				Entity[${entID}]:DoGetCargo[ContainerCargo]
+				ContainerCargo:GetIterator[Cargo]
 				if ${Cargo:First(exists)}
 				{
 					do
 					{
-						UI:UpdateConsole["DEBUG: obj_Missions.LootEntity: Found ${Cargo.Value.Quantity} x ${Cargo.Value.Name} - ${Math.Calc[${Cargo.Value.Quantity} * ${Cargo.Value.Volume}]}m3"]
-
+						UI:UpdateConsole["DEBUG: obj_MissionCommands - Found item : ${Cargo.Value.Name}",LOG_DEBUG]
 						if ${Cargo.Value.Name.Equal[${lootItem}]}
 						{
 							QuantityToMove:Set[${Cargo.Value.Quantity}]
-
 							UI:UpdateConsole["DEBUG: obj_Missions.LootEntity: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
 							if ${QuantityToMove} > 0
 							{
@@ -950,6 +950,7 @@ objectdef obj_MissionCommands
 					}
 					while ${Cargo:Next(exists)}
 				}
+				UI:UpdateConsole["DEBUG: obj_MissionCommands - Did not find any items to loot!",LOG_DEBUG]
 				LootEntityState:Set["APPROACHING"]
 				return 2
 			}
@@ -998,13 +999,9 @@ objectdef obj_MissionCommands
 	}
 	member:bool ReturnAllToDroneBay()
 	{
-		EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
-		if ${This.DronesInSpace} > 0
+		if ${Ship.Drones.DronesInSpace} > 0
 		{
-
 			UI:UpdateConsole["Recalling ${This.ActiveDroneIDList.Used} Drones",LOG_DEBUG]
-
-
 			EVE:Execute[CmdDronesReturnToBay]
 			if (${_MyShip.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
 			${_MyShip.ShieldPct} < ${Config.Combat.MinimumShieldPct})
