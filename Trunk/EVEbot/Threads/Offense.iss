@@ -15,7 +15,7 @@ objectdef obj_Offense
 	variable bool Running = TRUE
 
 	variable time NextPulse
-	variable int PulseIntervalInSeconds = 2
+	variable int PulseIntervalInSeconds = 1
 	variable bool Warned_LowAmmo = FALSE
 	variable time NextAmmoChange
 	variable int NumTurrets = 0
@@ -68,13 +68,16 @@ objectdef obj_Offense
 				
 				if !${Config.Combat.ShouldUseMissiles} && ${Time.Timestamp} >= ${This.NextAmmoChange.Timestamp}
 				{
+					UI:UpdateConsole["Ship.GetNumTurrets: ${Ship.GetNumberTurrets}, NumTurrets: ${NumTurrets}"]
 					if ${Ship.GetNumberTurrets} > 0 && ${NumTurrets} == 0
 					{
+						UI:UpdateConsole["Setting num turrets"]
 						NumTurrets:Set[${Ship.GetNumberTurrets}]
 						return
 					}
 					if ${NumTurrets} > 0
 					{
+						UI:UpdateConsole["Ship.WeaponsActive: ${Ship.WeaponsActive}"]
 						if !${Ship.WeaponsActive}
 						{
 							Ship:LoadOptimalAmmo[${Me.ActiveTarget.Distance}]
@@ -94,7 +97,7 @@ objectdef obj_Offense
 					return
 				}
 				
-				UI:UpdateConsole["Max Distance: ${Ship.GetMaximumTurretDistance}, Min: ${Ship.GetMinimumTurretDistance}, Math: ${Math.Calc[${Ship.GetMinimumTurretDistance} * 0.5]}"]
+				UI:UpdateConsole["Max Distance: ${Ship.GetMaximumTurretRange}, Min: ${Ship.GetMinimumTurretRange}, Math: ${Math.Calc[${Ship.GetMaximumTurretRange} * 1.2]}, ${Math.Calc[${Ship.GetMinimumTurretRange} * 0.833]}"]
 				if ${Config.Combat.ShouldUseMissiles}
 				{
 					if ${Me.ActiveTarget.Distance} < ${Ship.OptimalWeaponRange}
@@ -103,7 +106,7 @@ objectdef obj_Offense
 					}					
 				}
 				/* We can shoot a LITTLE past maximum because of falloff, and we can shoot a little under minimum, just won't do as much damage */
-				elseif ${Me.ActiveTarget.Distance} <= (${Ship.GetMaximumTurretRange} * 1.2) && ${Me.ActiveTarget.Distance} >= (${Ship.GetMinimumTurretRange} * 0.833)
+				elseif ${Me.ActiveTarget.Distance} <= (${Ship.GetMaximumTurretRange} * 1.2)/* && ${Me.ActiveTarget.Distance} >= (${Ship.GetMinimumTurretRange} * 0.833)*/
 				{
 					Ship:Activate_Weapons
 				}
