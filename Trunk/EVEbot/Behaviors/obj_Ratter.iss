@@ -167,7 +167,10 @@ objectdef obj_Ratter
 				}
 				if ${Me.ToEntity.Velocity} <= ${Me.ToEntity.MaxVelocity} * 0.5 && ${Me.ActiveTarget(exists)}
 				{
-					Me.ActiveTarget:KeepAtRange[${Ship.GetMinimumTurretRange}]
+					variable int tMinRange = ${Ship.GetMinimumTurretRange}
+					/* KeepAtRange seems to be broken */
+					UI:UpdateConsole["obj_Ratter: Orbiting at ${tMinRange}"]
+					Me.ActiveTarget:Orbit[${tMinRange}]
 				}
 				This:QueueTargets
 				break
