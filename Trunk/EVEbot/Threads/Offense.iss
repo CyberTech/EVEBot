@@ -70,14 +70,20 @@ objectdef obj_Offense
 				{
 					if ${Ship.GetNumberTurrets} > 0 && ${NumTurrets} == 0
 					{
-						Ship:Deactivate_Weapons
 						NumTurrets:Set[${Ship.GetNumberTurrets}]
 						return
 					}
 					if ${NumTurrets} > 0
 					{
-						Ship:LoadOptimalAmmo[${Me.ActiveTarget.Distance}]
-						NumTurrets:Dec
+						if !${Ship.WeaponsActive}
+						{
+							Ship:LoadOptimalAmmo[${Me.ActiveTarget.Distance}]
+							NumTurrets:Dec
+						}
+						else
+						{
+							Ship:Deactivate_Weapons
+						}
 					}
 					if ${NumTurrets} == 0
 					{
@@ -97,7 +103,7 @@ objectdef obj_Offense
 					}					
 				}
 				/* We can shoot a LITTLE past maximum because of falloff, and we can shoot a little under minimum, just won't do as much damage */
-				elseif ${Me.ActiveTarget.Distance} <= (${Ship.GetMaximumTurretRange} * 1.2) && ${Me.ActiveTarget.Distance} >= (${Ship.GetMinimumTurretRange} * 0.5)
+				elseif ${Me.ActiveTarget.Distance} <= (${Ship.GetMaximumTurretRange} * 1.2) && ${Me.ActiveTarget.Distance} >= (${Ship.GetMinimumTurretRange} * 0.833)
 				{
 					Ship:Activate_Weapons
 				}

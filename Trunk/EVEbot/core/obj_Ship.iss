@@ -2407,6 +2407,25 @@ objectdef obj_Ship
 		while ${ModuleIterator:Next(exists)}
 	}
 
+	member:bool WeaponsActive()
+	{
+		variable iterator itrWeapon
+		This.ModuleList_Weapon:GetIterator[itrWeapon]
+		
+		if ${itrWeapon:First(exists)}
+		{
+			do
+			{
+				if ${itrWeapon.Value.IsActive}
+				{
+					return TRUE
+				}
+			}
+			while ${itrWeapon:Next(exists)}
+		}
+		return FALSE
+	}
+
 	method Reload_Weapons(bool ForceReload)
 	{
 		variable bool NeedReload = FALSE
