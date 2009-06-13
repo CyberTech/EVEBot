@@ -2355,7 +2355,7 @@ objectdef obj_Ship
 		else
 		{
 			UI:UpdateConsole["obj_Ship.OptimalWeaponRange(): getting checked"]
-			return ${This.GetMaximumTurretRange}
+			return ${This.GetMinimumTurretRange}
 		}
 		
 	}

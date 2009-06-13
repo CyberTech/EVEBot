@@ -161,7 +161,14 @@ objectdef obj_Ratter
 				This.CurrentState:Set["FIGHT"]
 				break
 			case FIGHT
-				Offense:Enable
+				if !${Offense.Running}
+				{
+					Offense:Enable
+				}
+				if ${Me.ToEntity.Velocity} <= ${Me.ToEntity.MaxVelocity} * 0.5 && ${Me.ActiveTarget(exists)}
+				{
+					Me.ActiveTarget:KeepAtRange[${Ship.GetMinimumTurretRange}]
+				}
 				This:QueueTargets
 				break
 			case STATE_ERROR
