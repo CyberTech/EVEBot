@@ -462,26 +462,34 @@ objectdef obj_MissionCommands
 
 
 
-	variable time WaitTimeOut
+	variable time WaitTimeOut = 0
 	member:bool Waves(int timeoutMinutes)
 	{
-		UI:UpdateConsole["DEBUG: obj_MissionCommands -  Waiting for waves , timeout ${timeoutMinutes} minutes",LOG_DEBUG]
-		if ${This.ClearRoom} && ${${This.WaitTimeOut.Timestamp} == 0}
+		
+		if ${This.WaitTimeOut.Timestamp} == 0
 		{
+			UI:UpdateConsole["DEBUG: obj_MissionCommands -  Waiting for waves , timeout ${timeoutMinutes} minutes",LOG_DEBUG]
 			WaitTimeOut:Set[${Time.Timestamp}]
 			WaitTimeOut.Minute:Inc[${timeoutMinutes}]
 			WaitTimeOut:Update
+			return FALSE
 		}
 		if ${This.HostileCount} < 1
 		{
-			if ${time.Timestamp} >= ${WaitTimeOut.Timestamp} && ${This.WaitTimeOut.Timestamp == 0}
+			if ${Time.Timestamp} >= ${This.WaitTimeOut.Timestamp}
 			{
 				UI:UpdateConsole["DEBUG: obj_MissionCommands - No hostiles present after timer expired, Waves finished",LOG_DEBUG]
 
-				WaitTimeOut:[0]
+				WaitTimeOut:Set[0]
 				return TRUE
 			}
 		}
+		if ${This.ClearRoom}
+		{
+			UI:UpdateConsole["DEBUG: obj_MissionCommands -  Waiting untill ${This.WaitTimeOut.Time24}",LOG_DEBUG]
+			return FALSE
+		}
+		UI:UpdateConsole["DEBUG: obj_MissionCommands -  Waiting untill ${This.WaitTimeOut.Time24}",LOG_DEBUG]
 		return FALSE
 	}
 
@@ -1025,7 +1033,7 @@ objectdef obj_MissionCommands
 		variable iterator     targetIterator
 		variable iterator blackListIterator
 		variable bool blacklisted = FALSE
-		EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
+		Me:DoGetTargetedBy[targetIndex]
 		targetIndex:GetIterator[targetIterator]
 
 		;UI:UpdateConsole["GetTargeting = ${_Me.GetTargeting}, GetTargets = ${_Me.GetTargets}"]
@@ -1033,7 +1041,7 @@ objectdef obj_MissionCommands
 		{
 			do
 			{
-				if ${targetIterator.Value.IsTargetingMe} && !${Targeting.IsQueued[${targetIterator.Value.ID}]}
+				if !${Targeting.IsQueued[${targetIterator.Value.ID}]}
 				{
 					targetBlacklist:GetIterator[blackListIterator]
 					; Check the target blacklist and ignore anything on it
