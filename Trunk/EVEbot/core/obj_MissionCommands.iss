@@ -91,7 +91,7 @@ objectdef obj_MissionCommands
 		{
 			case IDLE
 			{
-				if ${This.Approach[${EntityID}, DOCKING_RANGE]}
+				if ${This.Approach[${EntityID}, JUMP_RANGE]}
 				{
 					if ${This.WarpPrepare}
 					{

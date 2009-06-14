@@ -519,5 +519,16 @@
         </Set>
       </Set>
     </Set>
+    <Set Name ="Pirate Intrusion">
+      <Set Name ="2">
+        <Set Name ="Commands">
+          <Set Name ="1" Action ="NextRoom">
+          </Set>
+          <Set Name ="2" Action ="ClearRoom"></Set>
+          <Set Name ="3" Action ="NextRoom"></Set>
+          <Set Name ="4" Action ="ClearRoom"></Set>
+        </Set>
+      </Set>
+    </Set>
   </Set>
 </InnerSpaceSettings>
