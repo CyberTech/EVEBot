@@ -626,6 +626,7 @@ objectdef obj_MissionCommands
 					if ${result} == 3
 					{
 						UI:UpdateConsole["DEBUG: obj_MissionCommands - Found the item",LOG_DEBUG]
+						ContainerState:Set["START"]
 						return TRUE
 					}
 					if ${result} == 2
@@ -638,6 +639,7 @@ objectdef obj_MissionCommands
 						else
 						{
 							;error loot not found
+							ContainerState:Set["START"]
 							return TRUE
 						}
 					}
