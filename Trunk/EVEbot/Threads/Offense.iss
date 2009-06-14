@@ -26,8 +26,7 @@ objectdef obj_Offense
 	{
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["Thread: obj_Offense: Initialized", LOG_MINOR]
-		/* If you want to use missiles, pass true to this */
-		Config.Combat:ShouldUseMissiles[FALSE]
+
 	}
 
 	method Pulse()

@@ -154,10 +154,13 @@ objectdef obj_Ship
 				{
 					This:ValidateModuleTargets
 					This:UpdateModuleList
-					NumberTurrets:Set[${This.GetNumberTurrets}]
-					MaximumTurretRange:Set[${This.GetMaximumTurretRange}]
-					MinimumTurretRange:Set[${This.GetMinimumTurretRange}]
-					TurretBaseOptimal:Set[${This.GetTurretBaseOptimal}]
+					if !${Config.Combat.ShouldUseMissiles}
+					{
+						NumberTurrets:Set[${This.GetNumberTurrets}]
+						MaximumTurretRange:Set[${This.GetMaximumTurretRange}]
+						MinimumTurretRange:Set[${This.GetMinimumTurretRange}]
+						TurretBaseOptimal:Set[${This.GetTurretBaseOptimal}]
+					}
 				}
 			}
 
