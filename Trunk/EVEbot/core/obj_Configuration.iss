@@ -365,7 +365,7 @@ objectdef obj_Configuration_Combat
 	Define_ConfigItem(bool, RunIfTargetJammed, FALSE)
 	Define_ConfigItem(bool, QuitIfWarpScrambled, TRUE)
 	/* Todo: These need UI controls. */
-	Define_ConfigItem(bool, ShouldUseMissiles, FALSE)
+	Define_ConfigItem(bool, ShouldUseMissiles, TRUE)
 	Define_ConfigItem(int, ArmorPctReady, 50)
 	Define_ConfigItem(int, ShieldPctReady, 80)
 	Define_ConfigItem(int, CapacitorPctReady, 80)
