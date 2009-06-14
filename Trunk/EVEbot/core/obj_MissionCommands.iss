@@ -41,7 +41,7 @@ objectdef obj_MissionCommands
 			{
 				if ${EntityID} == ${ApproachIDCache}
 				{
-					if ${Entity[${ApproachIDCache}].Distance} < ${Distance}
+					if ${Entity[${ApproachIDCache}].Distance} < ${Math.Calc[${Distance} * 1.05]}
 					{
 						UI:UpdateConsole["DEBUG: obj_MissionCommands - Reached ${EntityID} ",LOG_DEBUG]
 						EVE:Execute[CmdStopShip]
@@ -321,17 +321,20 @@ objectdef obj_MissionCommands
 			{
 				if ${KillIDCache} == ${entityID}
 				{
-					if !${Targeting.IsMandatoryQueued[${KillIDCache}]}
+					if ${This.Approach[${entityID}, ${Math.Calc[${Ship.OptimalTargetingRange}*.9]}]}
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Targeting ${KillIDCache}",LOG_DEBUG]
-						Targeting:Queue[${KillIDCache},1,1,TRUE]
-						KillIDState:Set["KILLING"]
-						return FALSE
-					}
-					else
-					{
-						KillIDState:Set["KILLING"]
-						return FALSE
+						if !${Targeting.IsMandatoryQueued[${KillIDCache}]}
+						{
+							UI:UpdateConsole["DEBUG: obj_MissionCommands - Targeting ${KillIDCache}",LOG_DEBUG]
+							Targeting:Queue[${KillIDCache},1,1,TRUE]
+							KillIDState:Set["KILLING"]
+							return FALSE
+						}
+						else
+						{
+							KillIDState:Set["KILLING"]
+							return FALSE
+						}
 					}
 				}
 				else
@@ -348,7 +351,10 @@ objectdef obj_MissionCommands
 				{
 					if ${Entity[${KillIDCache}](exists)}
 					{
-						return FALSE
+						if ${This.Approach[${entityID}, ${Math.Calc[${Ship.OptimalTargetingRange}*.9]}]}
+						{
+							return FALSE
+						}
 					}
 					else
 					{
@@ -465,7 +471,7 @@ objectdef obj_MissionCommands
 	variable time WaitTimeOut = 0
 	member:bool Waves(int timeoutMinutes)
 	{
-		
+
 		if ${This.WaitTimeOut.Timestamp} == 0
 		{
 			UI:UpdateConsole["DEBUG: obj_MissionCommands -  Waiting for waves , timeout ${timeoutMinutes} minutes",LOG_DEBUG]
