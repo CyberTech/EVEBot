@@ -117,6 +117,11 @@ objectdef obj_Ship
 	variable int m_TypeID
 	variable int iCurrentTurret = 1
 	
+	variable int NumberTurrets
+	variable float MaximumTurretRange
+	variable float MinimumTurretRange
+	variable float TurretBaseOptimal
+	
 	variable collection:float HybridNameModPairs
 	variable collection:float AmmoNameModPairs
 	variable collection:float FrequencyNameModPairs
@@ -149,6 +154,10 @@ objectdef obj_Ship
 				{
 					This:ValidateModuleTargets
 					This:UpdateModuleList
+					NumberTurrets:Set[${This.GetNumberTurrets}]
+					MaximumTurretRange:Set[${This.GetMaximumTurretRange}]
+					MinimumTurretRange:Set[${This.GetMinimumTurretRange}]
+					TurretBaseOptimal:Set[${This.GetTurretBaseOptimal}]
 				}
 			}
 
@@ -203,7 +212,7 @@ objectdef obj_Ship
 		variable index:item idxAmmo
 		variable iterator itrAmmo
 		variable int iTempTurret = 0
-		variable int iTurrets = ${This.GetNumberTurrets}
+		variable int iTurrets = ${This.NumberTurrets}
 		
 		if ${itrWeapon:First(exists)}
 		{
@@ -222,9 +231,9 @@ objectdef obj_Ship
 						do
 						{
 #if EVEBOT_DEBUG					
-							UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(${range}): Found best ammo: ${itrAmmo.Value.Name.Find[${sBestAmmo}]}"]
+							UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(${range}): Found best ammo: ${itrAmmo.Value.Name.Find[${sBestAmmo}](exists)}"]
 #endif
-							if ${itrAmmo.Value.Name.Find[${sBestAmmo}]} && !${itrWeapon.Value.Charge.Name.Find[${sBestAmmo}]}
+							if ${itrAmmo.Value.Name.Find[${sBestAmmo}](exists)} && !${itrWeapon.Value.Charge.Name.Find[${sBestAmmo}](exists)}
 							{
 #if EVEBOT_DEBUG						
 								UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(${range}): Changing ammo to ${itrAmmo.Value.Name}, ${itrWeapon.Value.MaxCharges}"]
@@ -814,7 +823,7 @@ objectdef obj_Ship
 		variable string sHighestSoFar
 		variable float fHighestSoFar = 0
 		UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range}): getting base optimal..."]
-		variable float fBaseOptimal = ${This.GetTurretBaseOptimal}
+		variable float fBaseOptimal = ${This.TurretBaseOptimal}
 		UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range}): fBaseOptimal: ${fBaseOptimal}"]
 		variable bool bBestFound = FALSE
 		
@@ -823,8 +832,6 @@ objectdef obj_Ship
 		
 		if ${itrWeapon:First(exists)}
 		{
-			do
-			{
 				/* First, figure out this module's base optimal */
 				iGroupId:Set[${itrWeapon.Value.Charge.GroupID}]
 				UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range}): iGroupId: ${iGroupId}"]
@@ -1045,9 +1052,7 @@ objectdef obj_Ship
 						}
 						break
 						UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range}): sBestSoFar: ${sBestSoFar}, sHighestSoFar: ${sHighestSoFar}"]
-					}			
-			}			
-			while ${itrWeapon:Next(exists)}				
+					}							
 		}		
 		UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range}): returning ${sBestSoFar}"]
 		return ${sBestSoFar}
