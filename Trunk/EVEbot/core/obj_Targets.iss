@@ -266,12 +266,15 @@ objectdef obj_Targets
 		{
 			switch ${tgtIterator.Value.GroupID}
 			{
-				case GROUP_CONCORDDRONE
-				case GROUP_CONVOYDRONE
-				case GROUP_CONVOY
 				case GROUP_LARGECOLLIDABLEOBJECT
 				case GROUP_LARGECOLLIDABLESHIP
-				case GROUP_LARGECOLLIDABLESTRUCTURE
+				case GROUP_SENTRYGUN
+				case GROUP_CONCORDDRONE
+				case GROUP_CUSTOMSOFFICIAL
+				case GROUP_POLICEDRONE
+				case GROUP_CONVOYDRONE
+				case GROUP_FACTIONDRONE
+				case GROUP_BILLBOARD
 					UI:UpdateConsole["DEBUG: Ignoring entity ${tgtIterator.Value.Group} (${tgtIterator.Value.GroupID})"]
 					continue
 					break
@@ -297,6 +300,7 @@ objectdef obj_Targets_Rats
 	variable iterator Target
 
 	variable int TotalBattleShipValue
+	variable bool UpdateSucceeded
 
 	method CalcTotalBattleShipValue()
 	{
@@ -373,18 +377,21 @@ objectdef obj_Targets_Rats
 				if !${This.Target:First(exists)}
 				{
 					UI:UpdateConsole["No targets found"]
-					return FALSE
+					UpdateSucceeded:Set[FALSE]
+					return
 				}
 				else
 				{
 					UI:UpdateConsole["Damped: Unable to Target"]
-					return TRUE
+					UpdateSucceeded:Set[TRUE]
+					return
 				}
 			}
 			else
 			{
 				UI:UpdateConsole["No targets found..."]
-				return FALSE
+				UpdateSucceeded:Set[FALSE]
+				return
 			}
 		}
 
@@ -447,11 +454,12 @@ objectdef obj_Targets_Rats
 				if ${This.IsPriorityTarget[${This.Target.Value.Name}]}
 				{
 					; Yes, is it locked?
-					if !${This.Target.Value.IsLockedTarget} && !${This.Target.Value.BeingTargeted}
+					!${Targeting.IsQueued[${This.Target.Value.ID}]}
 					{
+						/* Queue[ID, Priority, TypeID, Mandatory] */
 						; No, report it and lock it.
-						UI:UpdateConsole["Locking priority target ${This.Target.Value.Name}"]
-						This.Target.Value:LockTarget
+						UI:UpdateConsole["Queueing priority target ${This.Target.Value.Name}"]
+						Targeting:Queue[${This.Target.Value.ID},5,${RatCache.EntityIterator.Value.TypeID},TRUE]
 					}
 
 					; By only saying there's priority targets when they arent
@@ -468,6 +476,13 @@ objectdef obj_Targets_Rats
 				}
 			}
 			while ${This.Target:Next(exists)}
+		}
+
+		/* if we have priority targets just return until they're dead */
+		if ${HasPriorityTarget}
+		{
+			UI:UpdateConsole["Have priority target, returning 'til it's DEAD"]
+			return
 		}
 
 		; Do we need to determine if we need to chain ?
@@ -550,13 +565,10 @@ objectdef obj_Targets_Rats
 			; Do we have to target this target?
 			if ${DoTarget}
 			{
-				if !${This.Target.Value.IsLockedTarget} && !${This.Target.Value.BeingTargeted}
+				if !${Targeting.IsQueued[${This.Target.Value.ID}]}
 				{
-					if ${Me.GetTargets} < ${Ship.MaxLockedTargets}
-					{
-						UI:UpdateConsole["Locking ${This.Target.Value.Name}"]
-						This.Target.Value:LockTarget
-					}
+					UI:UpdateConsole["Queueing ${This.Target.Value.Name}"]
+					Targeting:Queue[${This.Target.Value.ID},1,${This.Target.Value.TypeID},FALSE]
 				}
 
 				; Set the return value so we know we have targets
@@ -570,9 +582,9 @@ objectdef obj_Targets_Rats
 					DoNotKillList:Add[${This.Target.Value.ID}]
 				}
 				; Make sure (due to auto-targeting) that its not targeted
-				if ${This.Target.Value.IsLockedTarget}
+				if ${Targeting.IsQueued[${This.Target.Value.ID}]}
 				{
-					This.Target.Value:UnlockTarget
+					Targeting:Remove[${This.Target.Value.ID}]
 				}
 			}
 		}
@@ -586,6 +598,7 @@ objectdef obj_Targets_Rats
 		;	Me.ActiveTarget:Orbit[${OrbitDistance}]
 		;}
 
-		return ${HasTargets}
+		UpdateSucceeded:Set[${HasTargets}]
+		return
 	}
 }

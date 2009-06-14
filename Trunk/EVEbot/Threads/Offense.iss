@@ -122,7 +122,7 @@ objectdef obj_Offense
 						}
 					}
 				}
-				elseif ${Me.ActiveTarget.Distance} <= (${Ship.MaximumTurretRange} * 1.2) && ${Me.ActiveTarget.Distance} >= (${Ship.MinimumTurretRange} * 0.5)
+				elseif ${Me.ActiveTarget.Distance} <= (${Ship.MaximumTurretRange} * 1.2) && ${Me.ActiveTarget.Distance} >= (${Ship.MinimumTurretRange} * 0.25)
 				{
 				/* We can shoot a LITTLE past maximum because of falloff, and we can shoot a little under minimum, just won't do as much damage */
 					UI:UpdateConsole["Offense: Activating weapons"]
