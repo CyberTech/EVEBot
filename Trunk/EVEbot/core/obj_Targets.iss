@@ -134,7 +134,7 @@ objectdef obj_Targets
 		ChainTargets:Insert["Angel Malakim"]
 		ChainTargets:Insert["Angel Nephilim"]
 		;ChainTargets:Insert["Serpentis Commodore"]	/* 650k */
-		;ChainTargets:Insert["Serpentis Port Admiral"]	/* 800k */
+		ChainTargets:Insert["Serpentis Port Admiral"]	/* 800k */
 		ChainTargets:Insert["Serpentis Rear Admiral"]	/* 950k */
 		ChainTargets:Insert["Serpentis Flotilla Admiral"]
 		ChainTargets:Insert["Serpentis Vice Admiral"]
@@ -305,6 +305,7 @@ objectdef obj_Targets_Rats
 	method CalcTotalBattleShipValue()
 	{
 		; Determine the total spawn value
+		TotalBattleShipValue:Set[0]
 		if ${This.Target:First(exists)}
 		{
 			do
@@ -407,11 +408,12 @@ objectdef obj_Targets_Rats
 		variable bool HasMultipleTypes = FALSE
 
 		m_SpecialTargetPresent:Set[FALSE]
-
-		if ${This.TotalSpawnValue} >= ${Config.Combat.MinChainBounty}
+		This:CalcTotalBattleShipValue[]
+		if ${This.TotalBattleShipValue} >= ${Config.Combat.MinChainBounty}
 		{
 			 HasChainableTarget:Set[TRUE]
 		}
+		UI:UpdateConsole["obj_Targets: Total BS Value: ${This.TotalBattleShipValue}, Minimum: ${Config.Combat.MinChainBounty}, Chainable: ${HasChainableTarget}"]
 
 		if ${This.Target:First(exists)}
 		{
@@ -451,14 +453,17 @@ objectdef obj_Targets_Rats
 				}
 
 				; Loop through the priority targets
-				if ${This.IsPriorityTarget[${This.Target.Value.Name}]}
+				UI:UpdateConsole["obj_Targets: IsPriorityTarget(${This.Target.Value.Name}): ${Targets.IsPriorityTarget[${This.Target.Value.Name}]}"]
+				if ${Targets.IsPriorityTarget[${This.Target.Value.Name}]}
 				{
+					/* We have a priority target, set the flag true. */
+					HasPriorityTarget:Set[TRUE]
 					; Yes, is it locked?
 					!${Targeting.IsQueued[${This.Target.Value.ID}]}
 					{
 						/* Queue[ID, Priority, TypeID, Mandatory] */
 						; No, report it and lock it.
-						UI:UpdateConsole["Queueing priority target ${This.Target.Value.Name}"]
+						UI:UpdateConsole["obj_Targets: Queueing priority target ${This.Target.Value.Name}"]
 						Targeting:Queue[${This.Target.Value.ID},5,${RatCache.EntityIterator.Value.TypeID},TRUE]
 					}
 
@@ -481,7 +486,7 @@ objectdef obj_Targets_Rats
 		/* if we have priority targets just return until they're dead */
 		if ${HasPriorityTarget}
 		{
-			UI:UpdateConsole["Have priority target, returning 'til it's DEAD"]
+			UI:UpdateConsole["obj_Targets: Have priority target, returning 'til it's DEAD"]
 			return
 		}
 

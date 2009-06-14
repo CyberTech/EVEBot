@@ -93,7 +93,7 @@ objectdef obj_Ratter
 		}
 
 		UI:UpdateConsole["obj_Ratter: Rat Check: ${Targets.NPC}"]
-		if ${Me.GetTargets} > 0 || ${Targets.NPC}
+		if ${Me.GetTargets} > 0 || (${Targets.NPC} && !${Targets.PC})
 		{
 			This.CurrentState:Set["FIGHT"]
 		}
