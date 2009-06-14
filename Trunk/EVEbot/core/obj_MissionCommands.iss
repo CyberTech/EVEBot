@@ -41,7 +41,7 @@ objectdef obj_MissionCommands
 			{
 				if ${EntityID} == ${ApproachIDCache}
 				{
-					if ${Entity[${ApproachIDCache}].Distance} < ${Math.Calc[${Distance} * 1.05]}
+					if ${Entity[${ApproachIDCache}].Distance} < ${Math.Calc[${Distance} * 1.025]}
 					{
 						UI:UpdateConsole["DEBUG: obj_MissionCommands - Reached ${EntityID} ",LOG_DEBUG]
 						EVE:Execute[CmdStopShip]
@@ -300,7 +300,7 @@ objectdef obj_MissionCommands
 			{
 				if ${KillIDCache} == ${entityID}
 				{
-					if ${This.Approach[${entityID}, ${Math.Calc[${Ship.OptimalTargetingRange}*.9]}]}
+					if ${This.Approach[${entityID}, ${Math.Calc[${Ship.OptimalTargetingRange}*.8]}]}
 					{
 						UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - In weapons range, will target and fire",LOG_DEBUG]
 						KillIDState:Set["TARGETING"]
@@ -321,7 +321,7 @@ objectdef obj_MissionCommands
 			{
 				if ${KillIDCache} == ${entityID}
 				{
-					if ${This.Approach[${entityID}, ${Math.Calc[${Ship.OptimalTargetingRange}*.9]}]}
+					if ${This.Approach[${entityID}, ${Math.Calc[${Ship.OptimalTargetingRange}*.8]}]}
 					{
 						if !${Targeting.IsMandatoryQueued[${KillIDCache}]}
 						{
@@ -351,7 +351,7 @@ objectdef obj_MissionCommands
 				{
 					if ${Entity[${KillIDCache}](exists)}
 					{
-						if ${This.Approach[${entityID}, ${Math.Calc[${Ship.OptimalTargetingRange}*.9]}]}
+						if ${This.Approach[${entityID}, ${Math.Calc[${Ship.OptimalTargetingRange}*.8]}]}
 						{
 							return FALSE
 						}
@@ -586,6 +586,7 @@ objectdef obj_MissionCommands
 					if ${result} == 3
 					{
 						UI:UpdateConsole["DEBUG: obj_MissionCommands - Found the item",LOG_DEBUG]
+						ContainerState:Set["START"]
 						return TRUE
 					}
 					if ${result} == 2
@@ -598,6 +599,7 @@ objectdef obj_MissionCommands
 						else
 						{
 							;error loot not found
+							ContainerState:Set["START"]
 							return TRUE
 						}
 					}
