@@ -269,7 +269,7 @@ objectdef obj_MissionCombat
 
 				UI:UpdateConsole["DEBUG: obj_MissionCombat - Attempting to quit mission",LOG_DEBUG]
 
-				call Agent.QuitMission
+				call Agents.QuitMission
 
 				UI:UpdateConsole["DEBUG: obj_MissionCombat - Quit mission (hopefully) , setting state to idle",LOG_DEBUG]
 

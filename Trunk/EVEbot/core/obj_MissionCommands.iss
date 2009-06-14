@@ -908,6 +908,7 @@ objectdef obj_MissionCommands
 	variable string LootEntityState = "APPROACHING"
 	variable index:item ContainerCargo
 	variable iterator Cargo
+	variable int Recheck = 0
 	member:int LootEntity(int entID,string lootItem)
 	{
 		switch ${LootEntityState}
@@ -956,6 +957,7 @@ objectdef obj_MissionCommands
 							UI:UpdateConsole["DEBUG: obj_Missions.LootEntity: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
 							if ${QuantityToMove} > 0
 							{
+								LootEntityState:Set["APPROACHING"]
 								Cargo.Value:MoveTo[MyShip,${QuantityToMove}]
 								Me.Ship:StackAllCargo
 								return 3
@@ -964,9 +966,18 @@ objectdef obj_MissionCommands
 					}
 					while ${Cargo:Next(exists)}
 				}
-				UI:UpdateConsole["DEBUG: obj_MissionCommands - Did not find any items to loot!",LOG_DEBUG]
-				LootEntityState:Set["APPROACHING"]
-				return 2
+				UI:UpdateConsole["DEBUG: obj_MissionCommands - Did not find any items to loot!, could be because we are going too fast",LOG_DEBUG]
+				if ${Recheck} > 20
+				{	
+					Recheck:Set[0]
+					LootEntityState:Set["APPROACHING"]
+					return 2
+				}
+				else
+				{
+					Recheck:Inc[1]
+					return 1
+				}
 			}
 		}
 	}
