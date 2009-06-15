@@ -50,14 +50,16 @@
 #include core/obj_Callback.iss
 
 /* Behavior/Mode Includes */
-#include Behaviors/obj_Courier.iss
-#include Behaviors/obj_StealthHauler.iss
-#include Behaviors/obj_Hauler.iss
-#include Behaviors/obj_Miner.iss
-#include Behaviors/obj_Freighter.iss
-#include Behaviors/obj_Ratter.iss
-#include Behaviors/obj_Scavenger.iss
-#include Behaviors/obj_Missioneer.iss
+#includeoptional Behaviors/obj_Hauler.iss
+#includeoptional Behaviors/obj_Miner.iss
+#includeoptional Behaviors/obj_Freighter.iss
+#includeoptional Behaviors/obj_Ratter.iss
+#includeoptional Behaviors/obj_Missioneer.iss
+#includeoptional Behaviors/obj_Tycoon.iss
+
+#includeoptional Modes/obj_Courier.iss
+#includeoptional Modes/obj_StealthHauler.iss
+#includeoptional Modes/obj_Scavenger.iss
 
 /* Cache Objects */
 variable(global) obj_Cache_Me _Me
@@ -141,11 +143,27 @@ function main()
 	echo "${Time} EVEBot: Loading Behavior Modules..."
 
 	/* Script-Defined Behavior Objects */
-	declarevariable Miner obj_Miner global
-	declarevariable Hauler obj_OreHauler global
-	declarevariable Freighter obj_Freighter global
-	declarevariable Ratter obj_Ratter global
-	declarevariable Missioneer obj_Missioneer global
+	variable int count = 0
+	variable filelist file_list
+	variable string obj_name
+	variable string var_name
+	variable filepath script_dir = ${Script.CurrentDirectory}
+	file_list:GetFiles[${script_dir}/\Behaviors/\*.iss]
+	while (${count:Inc}<=${file_list.Files})
+	{
+		obj_name:Set[${file_list.File[${count}].Filename.Left[-4]}]
+		var_name:Set[${obj_name.Right[-4]}]
+		echo "${Time} EVEBot: Loading ${obj_name}..."
+		if ${obj_name.Equal["obj_Hauler"]}
+		{
+			; TODO: Fix obj_Hauler.iss so this special case isn't needed
+			declarevariable Hauler obj_OreHauler global
+		}
+		else
+		{
+			declarevariable ${var_name} ${obj_name} global
+		}
+	}	
 
 	variable iterator BotModule
 	BotModules:GetIterator[BotModule]
