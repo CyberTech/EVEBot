@@ -505,19 +505,16 @@ objectdef obj_Market
 					}
 					else
 					{
-						UI:UpdateConsole["LowestSellOrder: Ignored Order: ${This.sellOrders.Get[${idx}].Name}: ${This.sellOrders.Get[${idx}].QuantityRemaining.Int} @ ${This.sellOrders.Get[${idx}].Price.Centi} (Price Delta)", LOG_CRITICAL]
-						call ChatIRC.Say "LowestSellOrder: Ignored Order: ${This.sellOrders.Get[${idx}].Name}: ${This.sellOrders.Get[${idx}].QuantityRemaining.Int} @ ${This.sellOrders.Get[${idx}].Price.Centi} (Price Delta)"
+						UI:UpdateConsoleIRC["LowestSellOrder: Ignored Order: ${This.sellOrders.Get[${idx}].Name}: ${This.sellOrders.Get[${idx}].QuantityRemaining.Int} @ ${This.sellOrders.Get[${idx}].Price.Centi} (Price Delta)", LOG_CRITICAL]
 					}
 				}
 				else
 				{
-					UI:UpdateConsole["LowestSellOrder: Ignored Order: ${This.sellOrders.Get[${idx}].Name}: ${This.sellOrders.Get[${idx}].QuantityRemaining.Int} @ ${This.sellOrders.Get[${idx}].Price.Centi} (Small order)", LOG_CRITICAL]
-					call ChatIRC.Say "LowestSellOrder: Ignored Order: ${This.sellOrders.Get[${idx}].Name}: ${This.sellOrders.Get[${idx}].QuantityRemaining.Int} @ ${This.sellOrders.Get[${idx}].Price.Centi} (Small order)"
+					UI:UpdateConsoleIRC["LowestSellOrder: Ignored Order: ${This.sellOrders.Get[${idx}].Name}: ${This.sellOrders.Get[${idx}].QuantityRemaining.Int} @ ${This.sellOrders.Get[${idx}].Price.Centi} (Small order)", LOG_CRITICAL]
 				}
 			}
 			; Fell thru -- no order have the min quantity, so return the lowest
-			UI:UpdateConsole["LowestSellOrder: Warning: No orders had requested min quantity of ${MinQuantity} and min price of ${MinPrice.Centi}, returning lowest price of all orders", LOG_CRITICAL]
-			call ChatIRC.Say "LowestSellOrder: Warning: No orders had requested min quantity of ${MinQuantity} and min price of ${MinPrice.Centi}, returning lowest price of all orders"
+			UI:UpdateConsoleIRC["LowestSellOrder: Warning: No orders had requested min quantity of ${MinQuantity} and min price of ${MinPrice.Centi}, returning lowest price of all orders", LOG_CRITICAL]
 		}
 
 		; Return the lowest order that is NOT ours AND meets our min price
@@ -535,11 +532,9 @@ objectdef obj_Market
 				{
 					return ${This.sellOrders.Get[${idx}].Price}
 				}
-				UI:UpdateConsole["LowestSellOrder: Ignored Order: ${This.sellOrders.Get[${idx}].Name}: ${This.sellOrders.Get[${idx}].QuantityRemaining.Int} @ ${This.sellOrders.Get[${idx}].Price.Centi} (Price Delta)", LOG_CRITICAL]
-				call ChatIRC.Say "LowestSellOrder: Ignored Order: ${This.sellOrders.Get[${idx}].Name}: ${This.sellOrders.Get[${idx}].QuantityRemaining.Int} @ ${This.sellOrders.Get[${idx}].Price.Centi} (Price Delta)"
+				UI:UpdateConsoleIRC["LowestSellOrder: Ignored Order: ${This.sellOrders.Get[${idx}].Name}: ${This.sellOrders.Get[${idx}].QuantityRemaining.Int} @ ${This.sellOrders.Get[${idx}].Price.Centi} (Price Delta)", LOG_CRITICAL]
 			}
-			UI:UpdateConsole["LowestSellOrder: Warning: No orders had requested min price of ${MinPrice.Centi}, returning lowest price of all orders", LOG_CRITICAL]
-			call ChatIRC.Say "LowestSellOrder: Warning: No orders had requested min price of ${MinPrice.Centi}, returning lowest price of all orders"
+			UI:UpdateConsoleIRC["LowestSellOrder: Warning: No orders had requested min price of ${MinPrice.Centi}, returning lowest price of all orders", LOG_CRITICAL]
 		}
 
 		; Return the lowest order that is NOT ours
@@ -719,8 +714,7 @@ objectdef obj_Market
 					continue
 				}
 
-				UI:UpdateConsole["Processing Sell Order: ${Orders.Value.Name} ${Orders.Value.QuantityRemaining.Int}/${Orders.Value.InitialQuantity} @ ${Orders.Value.Price.Centi}"]
-				call ChatIRC.Say "Processing Sell Order: ${Orders.Value.Name} ${Orders.Value.QuantityRemaining.Int}/${Orders.Value.InitialQuantity} @ ${Orders.Value.Price.Centi}"
+				UI:UpdateConsoleIRC["Processing Sell Order: ${Orders.Value.Name} ${Orders.Value.QuantityRemaining.Int}/${Orders.Value.InitialQuantity} @ ${Orders.Value.Price.Centi}"]
 
 				; Find the lowest price that has both the minquantity AND ourprice-maxchange in price
 				; This is so that if we are at 10, our maxchange is 2, and there are orders for 5, 8, and 10, we will still pricematch the 8, but ignore the 5
@@ -737,8 +731,7 @@ objectdef obj_Market
 
 					if ${PriceDiff} > 0
 					{
-						UI:UpdateConsole["UpdateMySellOrders: Increasing Sell Price: ${Orders.Value.Name} Old: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Increase: ${PriceDiff.Centi}", LOG_CRITICAL]
-						call ChatIRC.Say "Increasing Price: ${Orders.Value.Name} Old: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Increase: ${PriceDiff.Centi}"
+						UI:UpdateConsoleIRC["UpdateMySellOrders: Increasing Sell Price: ${Orders.Value.Name} Old: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Increase: ${PriceDiff.Centi}", LOG_CRITICAL]
 						Orders.Value:Modify[${sellPrice}]
 					}
 					else
@@ -747,18 +740,15 @@ objectdef obj_Market
 						PriceDiff:Set[${Math.Calc[${Orders.Value.Price} - ${sellPrice}]}]
 						if ${sellPrice} > ${MaxPrice}
 						{
-							UI:UpdateConsole["UpdateMySellOrders: Ignoring Order: ${Orders.Value.Name} Old: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Decrease: ${PriceDiff.Centi}, maximum price (${MaxPrice.Centi}) exceeded", LOG_CRITICAL]
-							call ChatIRC.Say "Ignoring Order: ${Orders.Value.Name} Old: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Decrease: ${PriceDiff.Centi}, maximum price (${MaxPrice.Centi}) exceeded"
+							UI:UpdateConsoleIRC["UpdateMySellOrders: Ignoring Order: ${Orders.Value.Name} Old: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Decrease: ${PriceDiff.Centi}, maximum price (${MaxPrice.Centi}) exceeded", LOG_CRITICAL]
 						}
 						elseif ${PriceDiff} > ${MaxChange}
 						{
-							UI:UpdateConsole["UpdateMySellOrders: Warning: ${Orders.Value.Name} Current: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Decrease: ${PriceDiff.Centi}, price change limit (${MaxChange.Centi}) exceeded", LOG_CRITICAL]
-							call ChatIRC.Say "Warning:${Orders.Value.Name} Current: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Decrease: ${PriceDiff.Centi}, price change limit (${MaxChange.Centi}) exceeded"
+							UI:UpdateConsoleIRC["UpdateMySellOrders: Warning: ${Orders.Value.Name} Current: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Decrease: ${PriceDiff.Centi}, price change limit (${MaxChange.Centi}) exceeded", LOG_CRITICAL]
 						}
 						else
 						{
-							UI:UpdateConsole["UpdateMySellOrders: Decreasing Price: ${Orders.Value.Name} Old: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Decrease: ${PriceDiff.Centi}", LOG_CRITICAL]
-							call ChatIRC.Say "Decreasing Price: ${Orders.Value.Name} Old: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Decrease: ${PriceDiff.Centi}"
+							UI:UpdateConsoleIRC["UpdateMySellOrders: Decreasing Price: ${Orders.Value.Name} Old: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Decrease: ${PriceDiff.Centi}", LOG_CRITICAL]
 							Orders.Value:Modify[${sellPrice}]
 						}
 					}
