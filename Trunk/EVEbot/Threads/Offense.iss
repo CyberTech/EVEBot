@@ -155,7 +155,7 @@ objectdef obj_Offense
 						return
 					}
 
-					if ${Targets.HaveFullAggro} && ${Me.ActiveTarget.Distance} < (${Config.Combat.MaximumDroneRange} * .975)
+					if ${Targets.HaveFullAggro} && ${Me.ActiveTarget.Distance} < (${Me.DroneControlDistance} * 0.975)
 					{
 						if ${Ship.Drones.ShouldLaunchCombatDrones} && ${Ship.Drones.DeployedDroneCount} == 0
 						{
