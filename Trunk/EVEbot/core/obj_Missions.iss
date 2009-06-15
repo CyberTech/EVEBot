@@ -498,16 +498,16 @@ objectdef obj_Missions
 		;}
 	;	call missionCombat.ProcessState
 	}
-			
-		
-		
-;				
+
+
+
+;
 ;		UI:UpdateConsole["obj_Missions: DEBUG: Shiptype ${Ship.Type} (${Ship.TypeID}) Mission agent (${MissionCache.Name[${agentID}]}) (${Agents.AgentName})"]
 ;
 ;		variable string missLevel = ${Agent[id,${agentID}].Level}
 ;		variable string missionName = ${MissionCache.Name[${agentID}]}
 ;
-;		
+;
 ;		;echo ${MissionDatabase.MissionCommands[${missionName},${missLevel}]}
 ;		if ${MissionDatabase.MissionCommands[${missionName},${missLevel}].Children(exists)}
 ;		{
@@ -1169,7 +1169,7 @@ objectdef obj_Missions
 					continue
 				}
 
-				if (${Cargo.Value.Quantity} * ${Cargo.Value.Volume}) > ${Ship.CargoFreeSpace}
+				if ${Math.Calc[${Cargo.Value.Quantity} * ${Cargo.Value.Volume}]} > ${Ship.CargoFreeSpace}
 				{
 					/* Move only what will fit, minus 1 to account for CCP rounding errors. */
 					QuantityToMove:Set[${Ship.CargoFreeSpace} / ${Cargo.Value.Volume} - 1]

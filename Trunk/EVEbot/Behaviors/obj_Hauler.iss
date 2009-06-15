@@ -312,14 +312,14 @@ objectdef obj_OreHauler inherits obj_Hauler
 			do
 			{
 				UI:UpdateConsole["Hauler: Found ${Cargo.Value.Quantity} x ${Cargo.Value.Name} - ${Math.Calc[${Cargo.Value.Quantity} * ${Cargo.Value.Volume}]}m3"]
-				if (${Cargo.Value.Quantity} * ${Cargo.Value.Volume}) > ${Ship.CargoFreeSpace}
+				if ${Math.Calc[${Cargo.Value.Quantity} * ${Cargo.Value.Volume}]} > ${Ship.CargoFreeSpace}
 				{
 					/* Move only what will fit, minus 1 to account for CCP rounding errors. */
-					QuantityToMove:Set[${Ship.CargoFreeSpace} / ${Cargo.Value.Volume} - 1]
+					QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${Cargo.Value.Volume} - 1]}]
 				}
 				else
 				{
-					QuantityToMove:Set[${Cargo.Value.Quantity} - ${leave}]
+					QuantityToMove:Set[${Math.Calc[${Cargo.Value.Quantity} - ${leave}]}]
 					leave:Set[0]
 				}
 

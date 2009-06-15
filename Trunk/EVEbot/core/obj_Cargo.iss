@@ -391,10 +391,10 @@ objectdef obj_Cargo
 				{
 					call JetCan.Open ${JetCan.ActiveCan}
 
-					if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${JetCan.CargoFreeSpace}
+					if ${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}]} > ${JetCan.CargoFreeSpace}
 					{
 						/* Move only what will fit, minus 1 to account for CCP rounding errors. */
-						QuantityToMove:Set[${JetCan.CargoFreeSpace} / ${CargoIterator.Value.Volume} - 1]
+						QuantityToMove:Set[${Math.Calc[${JetCan.CargoFreeSpace} / ${CargoIterator.Value.Volume} - 1]}]
 					}
 					else
 					{
@@ -409,7 +409,6 @@ objectdef obj_Cargo
 					UI:UpdateConsole["TransferListToJetCan: Ejecting Cargo: ${CargoIterator.Value.Name}"]
 					CargoIterator.Value:Jettison
 					call JetCan.WaitForCan
-					/* This isn't a botter giveaway; I don't know a single miner who doesn't rename cans - failure to do so affects can life. */
 					JetCan:Rename
 				}
 			}
@@ -432,7 +431,7 @@ objectdef obj_Cargo
 		{
 			if ${dest(exists)} && ${dest} > 0
 			{	/* assume destination is a container */
-				if (${src.Quantity} * ${src.Volume}) > ${This.ContainerFreeSpace[${dest}]}
+				if ${Math.Calc[${src.Quantity} * ${src.Volume}]} > ${This.ContainerFreeSpace[${dest}]}
 				{	/* Move only what will fit, minus 1 to account for CCP rounding errors. */
 					qty:Set[${This.ContainerFreeSpace[${dest}]} / ${src.Volume} - 1]
 				}
@@ -443,7 +442,7 @@ objectdef obj_Cargo
 			}
 			else
 			{	/* assume destination is ship's cargo hold */
-				if (${src.Quantity} * ${src.Volume}) > ${Ship.CargoFreeSpace}
+				if ${Math.Calc[${src.Quantity} * ${src.Volume}]} > ${Ship.CargoFreeSpace}
 				{	/* Move only what will fit, minus 1 to account for CCP rounding errors. */
 					qty:Set[${Ship.CargoFreeSpace} / ${src.Volume} - 1]
 				}
@@ -513,7 +512,7 @@ objectdef obj_Cargo
 				totalSpace:Set[${shipContainerIterator.Value.Capacity}]
 				;;UI:UpdateConsole["DEBUG: TransferListToShipWithContainers: used space = ${usedSpace}"]
 				;;UI:UpdateConsole["DEBUG: TransferListToShipWithContainers: total space = ${totalSpace}"]
-				if (${This.CargoToTransfer.Get[${idx}].Quantity} * ${This.CargoToTransfer.Get[${idx}].Volume}) > ${Math.Calc[${totalSpace}-${usedSpace}]}
+				if ${Math.Calc[${This.CargoToTransfer.Get[${idx}].Quantity} * ${This.CargoToTransfer.Get[${idx}].Volume}]} > ${Math.Calc[${totalSpace}-${usedSpace}]}
 				{	/* Move only what will fit, minus 1 to account for CCP rounding errors. */
 					qty:Set[${Math.Calc[${totalSpace}-${usedSpace}]} / ${This.CargoToTransfer.Get[${idx}].Volume} - 1]
 				}

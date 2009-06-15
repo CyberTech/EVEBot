@@ -66,14 +66,14 @@ objectdef obj_Offense
 				Ship:Activate_StasisWebs
 				Ship:Activate_TargetPainters
 
-				
+
 				UI:UpdateConsole["Max Distance: ${Ship.MaximumTurretRange}, Min: ${Ship.MinimumTurretRange}, Math: ${Math.Calc[${Ship.MaximumTurretRange} * 1.2]}, ${Math.Calc[${Ship.MinimumTurretRange} * 0.833]}"]
 				if ${Config.Combat.ShouldUseMissiles}
 				{
 					if ${Me.ActiveTarget.Distance} < ${Ship.OptimalWeaponRange}
 					{
 						Ship:Activate_Weapons
-					}					
+					}
 				}
 				elseif ${Time.Timestamp} >= ${This.NextAmmoChange.Timestamp}
 				{
@@ -109,7 +109,7 @@ objectdef obj_Offense
 								/* we're still waiting for weapons to shut off */
 								return
 							}
-							
+
 							/* If we've just decremented NumTurrets to 0... */
 							if ${NumTurrets} == 0
 							{
@@ -123,7 +123,7 @@ objectdef obj_Offense
 								This.NextAmmoChange:Update
 								return
 							}
-						} 
+						}
 					}
 					else
 					{
@@ -132,18 +132,12 @@ objectdef obj_Offense
 						This.NextAmmoChange:Update
 					}
 				}
-				elseif ${Me.ActiveTarget.Distance} <= (${Ship.MaximumTurretRange} * 1.2) && ${Me.ActiveTarget.Distance} >= (${Ship.MinimumTurretRange} * 0.33)
+				elseif ${Me.ActiveTarget.Distance} <= ${Math.Calc[${Ship.MaximumTurretRange} * 1.2]} && \
+						${Me.ActiveTarget.Distance} >= ${Math.Calc[${Ship.MinimumTurretRange} * 0.33]}
 				{
 				/* We can shoot a LITTLE past maximum because of falloff, and we can shoot a little under minimum, just won't do as much damage */
 					UI:UpdateConsole["Offense: Activating weapons"]
 					Ship:Activate_Weapons
-				}
-
-				if ${Ship.Drones.CombatDroneShortage}
-				{
-					/* TODO - This should pick up drones from station instead of just docking */
-					Defense.RunAway["Combat: Drone shortage detected"]
-					return
 				}
 
 				if ${Config.Combat.LaunchCombatDrones}
@@ -155,9 +149,11 @@ objectdef obj_Offense
 						return
 					}
 
-					if ${Targets.HaveFullAggro} && ${Me.ActiveTarget.Distance} < (${Me.DroneControlDistance} * 0.975)
+					if ${Targets.HaveFullAggro} && \
+						${Me.ActiveTarget.Distance} < ${Math.Calc[${Me.DroneControlDistance} * 0.975]}
 					{
-						if ${Ship.Drones.ShouldLaunchCombatDrones} && ${Ship.Drones.DeployedDroneCount} == 0
+						if ${Ship.Drones.ShouldLaunchCombatDrones} && \
+							 ${Ship.Drones.DeployedDroneCount} == 0
 						{
 							Ship.Drones:LaunchAll[]
 						}
