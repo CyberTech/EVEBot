@@ -289,6 +289,27 @@ objectdef obj_Targets
 		; No NPCs around
 		return FALSE
 	}
+	
+	/* bool HaveFullAggro(index:entity entities):
+	Iterate through entities and determine if any are not targeting me. If so, return FALSE. Otherwise, return TRUE. */
+	member:bool HaveFullAggro(index:entity entities)
+	{
+		variable iterator itrEntities
+		entities:GetIterator[itrEntities]
+		
+		if ${itrEntities:First(exists)}
+		{
+			do
+			{
+				if !${itrEntities.Value.IsTargetingMe}
+				{
+					return FALSE
+				}
+			}
+			while ${itrEntities:Next(exists)}
+		}
+		return TRUE
+	}
 }
 
 /* Handles Targeting Rats:

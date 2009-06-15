@@ -84,7 +84,7 @@
     <Set Name = "Deadly Arrival">
       <Set Name = "2">
         <Set Name = "Commands">
-          <Set Name = "1" Action = "Approach" Target ="Spaceshuttle Wreck">
+          <Set Name = "1" Action = "ApproachBreakOnCombat" Target ="Spaceshuttle Wreck">
           </Set>
           <Set Name = "2" Action = "WaitAggro" TimeOut ="10">
           </Set>
@@ -534,6 +534,15 @@
     	<Set Name="2">
     		<Set Name="Commands">
     			<Set Name="1" Action="ClearRoom" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="The Mordus Headhunters">
+    	<Set Name="2">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    			<Set Name="2" Action="NextRoom" />
+    			<Set Name="3" Action="ClearRoom" />
     		</Set>
     	</Set>
     </Set>

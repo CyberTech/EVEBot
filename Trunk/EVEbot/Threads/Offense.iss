@@ -86,7 +86,7 @@ objectdef obj_Offense
 							UI:UpdateConsole["Setting num turrets"]
 							NumTurrets:Set[${Ship.NumberTurrets}]
 						}
-						if ${NumTurrets} > 0
+						elseif ${NumTurrets} > 0
 						{
 							UI:UpdateConsole["Ship.WeaponsActive: ${Ship.WeaponsActive}"]
 							if !${Ship.WeaponsActive}
@@ -155,13 +155,16 @@ objectdef obj_Offense
 						return
 					}
 
-					if ${Ship.Drones.ShouldLaunchCombatDrones} && ${Ship.Drones.DeployedDroneCount} == 0
+					if ${Targets.HaveFullAggro} && ${Me.ActiveTarget.Distance} < (${Config.Combat.MaximumDroneRange} * .975)
 					{
-						Ship.Drones:LaunchAll[]
-					}
-					else
-					{
-						Ship.Drones:SendDrones
+						if ${Ship.Drones.ShouldLaunchCombatDrones} && ${Ship.Drones.DeployedDroneCount} == 0
+						{
+							Ship.Drones:LaunchAll[]
+						}
+						else
+						{
+							Ship.Drones:SendDrones
+						}
 					}
 				}
 			}

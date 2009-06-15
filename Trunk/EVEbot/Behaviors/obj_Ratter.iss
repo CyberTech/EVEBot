@@ -300,6 +300,8 @@ objectdef obj_Ratter
 		
 		variable bool bHavePriorityTarget = FALSE
 		variable bool bHaveSpecialTarget = FALSE
+		variable bool bHaveMultipleTypes = FALSE
+		variable bool iTempTypeID
 		
 		RatCache.Entities:GetIterator[RatCache.EntityIterator]
 		
@@ -350,13 +352,23 @@ objectdef obj_Ratter
 			{
 				do
 				{
+					/* Check for multiple types (if we only have one type of rat it's likely an in-progress chain) */
+					if ${iTempTypeID} == 0
+					{
+						iTempTypeID:Set[${RatCache.EntityIterator.Value.TypeID}]
+					}
+					if ${iTempTypeID} != ${RatCache.EntityIterator.Value.TypeID}
+					{
+						bHaveMultipleTypes:Set[TRUE]
+					}
 					/* Ok, since we're chaining, we only want special rats and battleships at this point, since any priority targets
 					have already been taken care of. */
 					if !${Targeting.IsQueued[${RatCache.EntityIterator.Value.ID}]}
 					{
-						UI:UpdateConsole["obj_Ratter: Find Battleship? Name: ${RatCache.EntityIterator.Value.Name}, Group: ${RatCache.EntityIterator.Value.Group}, Exists? ${RatCache.EntityIterator.Value.Group.Find["Battleship"](exists)}"]
-						if ${Targets.IsSpecialTarget[${RatCache.EntityIterator.Value.Name}]} || \
-							${RatCache.EntityIterator.Value.Group.Find["Battleship"](exists)}
+						UI:UpdateConsole["obj_Ratter: Find Battleship? Name: ${RatCache.EntityIterator.Value.Name}, Group: ${RatCache.EntityIterator.Value.Group}, Exists? ${RatCache.EntityIterator.Value.Group.Find["Battleship"](exists)}, Mutli? ${bHaveMultipleTypes}"]
+						if (${Targets.IsSpecialTarget[${RatCache.EntityIterator.Value.Name}]} || \
+							${RatCache.EntityIterator.Value.Group.Find["Battleship"](exists)}) && \
+							!${bHaveMultipleTypes}
 						{
 							/* if it's a special target, we additionally want to play a sound */
 							if ${Config.Common.UseSound} && ${Targets.IsSpecialTarget[${RatCache.EntityIterator.Value.Name}]}
@@ -409,17 +421,27 @@ objectdef obj_Ratter
 	}
 	
 	/* bool NPCCheck():
-	return true if we have non-donotkill and non-concord npcs nearby. */
+	return true if we have non-donotkill and non-concord npcs nearby and non-singletype */
 	member:bool NPCCheck()
 	{
 		RatCache.Entities:GetIterator[RatCache.EntityIterator]
-		
+		variable bool HaveMultipleTypes = FALSE
+		variable int TempTypeID
 		if ${RatCache.EntityIterator:First(exists)}
 		{
 			do
 			{
+				if ${TempTypeID} == 0
+				{
+					TempTypeID:Set[${RatCache.EntityIterator.Value.TypeID}]
+				}
+				if ${TempTypeID} != ${RatCache.EntityIterator.Value.TypeID}
+				{
+					HaveMultipleTypes:Set[TRUE]
+				}
 				if !${This.IsDoNotKill[${RatCache.EntityIterator.Value.ID}]} && \
-				!${Offense.IsConcordTarget[${RatCache.EntityIterator.Value.GroupID}]}
+				!${Offense.IsConcordTarget[${RatCache.EntityIterator.Value.GroupID}]} && \
+				${HaveMultipleTypes}
 				{
 					return TRUE
 				}

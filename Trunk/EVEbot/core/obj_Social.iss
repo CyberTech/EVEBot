@@ -155,19 +155,19 @@ objectdef obj_Social
 						This.EntityIndex:Clear
 					}
 
-    				Passed_WhiteListCheck:Set[${This.CheckLocalWhiteList}]
-    				Passed_BlackListCheck:Set[${This.CheckLocalBlackList}]
-    			}
-    			else
-    			{
-    				Passed_WhiteListCheck:Set[TRUE]
-    				Passed_BlackListCheck:Set[TRUE]
-    			}
+    			Passed_WhiteListCheck:Set[${This.CheckLocalWhiteList}]
+    			Passed_BlackListCheck:Set[${This.CheckLocalBlackList}]
+    		}
+    		else
+    		{
+    			Passed_WhiteListCheck:Set[TRUE]
+    			Passed_BlackListCheck:Set[TRUE]
+    		}
 			}
 
-    		This.NextPulse:Set[${Time.Timestamp}]
-    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-    		This.NextPulse:Update
+    	This.NextPulse:Set[${Time.Timestamp}]
+    	This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+    	This.NextPulse:Update
 		}
 	}
 
