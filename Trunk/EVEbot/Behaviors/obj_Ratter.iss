@@ -359,9 +359,9 @@ objectdef obj_Ratter
 							${RatCache.EntityIterator.Value.Group.Find["Battleship"](exists)}
 						{
 							/* if it's a special target, we additionally want to play a sound */
-							if ${Config.Common.UseSound}
+							if ${Config.Common.UseSound} && ${Targets.IsSpecialTarget[${RatCache.EntityIterator.Value.Name}]}
 							{
-								PlayDetectSound
+								Sound:PlayDetectSound
 							}
 							UI:UpdateConsole["obj_Ratter: Queueing special or chainable target: ${RatCache.EntityIterator.Value.Name}"]
 							Targeting:Queue[${RatCache.EntityIterator.Value.ID},3,${RatCache.EntityIterator.Value.TypeID},FALSE]
