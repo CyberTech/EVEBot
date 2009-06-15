@@ -546,5 +546,13 @@
     		</Set>
     	</Set>
     </Set>
+    <Set Name="Human Cattle (1 of 5)">
+    	<Set Name="2">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    			<Set Name="2" Action="CheckContainers" Target="Data Chip" GroupID="306" />
+    		</Set>
+    	</Set>
+    </Set>
   </Set>
 </InnerSpaceSettings>

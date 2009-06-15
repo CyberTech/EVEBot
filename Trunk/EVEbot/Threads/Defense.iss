@@ -170,6 +170,10 @@ objectdef obj_Defense
 		{
 			This:RunAway["Hostiles in Local"]
 		}
+		elseif ${This.Hide} && ${This.HideReason.Equal["Hostiles in Local"]}
+		{
+			This:ReturnToDuty
+		}
 	}
 
 	function Flee()
