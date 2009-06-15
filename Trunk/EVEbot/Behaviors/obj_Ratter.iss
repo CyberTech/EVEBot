@@ -354,8 +354,9 @@ objectdef obj_Ratter
 					have already been taken care of. */
 					if !${Targeting.IsQueued[${RatCache.EntityIterator.Value.ID}]}
 					{
-						if ${Targets.IsSpecialTarget[${RatCache.EntityIterator.Value.Name}]} && \
-						${RatCache.EntityIterator.Value.Group.Find["Battleship"](exists)}
+						UI:UpdateConsole["obj_Ratter: Find Battleship? Name: ${RatCache.EntityIterator.Value.Name}, Group: ${RatCache.EntityIterator.Value.Group}, Exists? ${RatCache.EntityIterator.Value.Group.Find["Battleship"](exists)}"]
+						if ${Targets.IsSpecialTarget[${RatCache.EntityIterator.Value.Name}]} || \
+							${RatCache.EntityIterator.Value.Group.Find["Battleship"](exists)}
 						{
 							/* if it's a special target, we additionally want to play a sound */
 							if ${Config.Common.UseSound}

@@ -77,49 +77,59 @@ objectdef obj_Offense
 				}
 				elseif ${Time.Timestamp} >= ${This.NextAmmoChange.Timestamp}
 				{
-					UI:UpdateConsole["Ship.NumTurrets: ${Ship.NumberTurrets}, NumTurrets: ${NumTurrets}"]
-					if ${Ship.NumberTurrets} > 0 && ${NumTurrets} == 0
+					UI:UpdateConsole["Offense: NeedAmmoChange: ${Ship.NeedAmmoChange[${Me.ActiveTarget.Distance}]}"]
+					if ${Ship.NeedAmmoChange[${Me.ActiveTarget.Distance}]}
 					{
-						UI:UpdateConsole["Setting num turrets"]
-						NumTurrets:Set[${Ship.NumberTurrets}]
+						UI:UpdateConsole["Ship.NumTurrets: ${Ship.NumberTurrets}, NumTurrets: ${NumTurrets}"]
+						if ${Ship.NumberTurrets} > 0 && ${NumTurrets} == 0
+						{
+							UI:UpdateConsole["Setting num turrets"]
+							NumTurrets:Set[${Ship.NumberTurrets}]
+						}
+						if ${NumTurrets} > 0
+						{
+							UI:UpdateConsole["Ship.WeaponsActive: ${Ship.WeaponsActive}"]
+							if !${Ship.WeaponsActive}
+							{
+								if ${Range} == 0
+								{
+									Range:Set[${Me.ActiveTarget.Distance}]
+								}
+								Ship:LoadOptimalAmmo[${Range}]
+								NumTurrets:Dec
+							}
+							elseif !${bDeactivatedWeapons}
+							{
+								Ship:Deactivate_Weapons
+								bDeactivatedWeapons:Set[TRUE]
+								return
+							}
+							else
+							{
+								/* we're still waiting for weapons to shut off */
+								return
+							}
+							
+							/* If we've just decremented NumTurrets to 0... */
+							if ${NumTurrets} == 0
+							{
+								if ${Range} > 0
+								{
+									Range:Set[0]
+								}
+								bDeactivatedWeapons:Set[FALSE]
+								This.NextAmmoChange:Set[${Time.Timestamp}]
+								This.NextAmmoChange.Second:Inc[20]
+								This.NextAmmoChange:Update
+								return
+							}
+						} 
 					}
-					if ${NumTurrets} > 0
+					else
 					{
-						UI:UpdateConsole["Ship.WeaponsActive: ${Ship.WeaponsActive}"]
-						if !${Ship.WeaponsActive}
-						{
-							if ${Range} == 0
-							{
-								Range:Set[${Me.ActiveTarget.Distance}]
-							}
-							Ship:LoadOptimalAmmo[${Range}]
-							NumTurrets:Dec
-						}
-						elseif !${bDeactivatedWeapons}
-						{
-							Ship:Deactivate_Weapons
-							bDeactivatedWeapons:Set[TRUE]
-							return
-						}
-						else
-						{
-							/* we're still waiting for weapons to shut off */
-							return
-						}
-						
-						/* If we've just decremented NumTurrets to 0... */
-						if ${NumTurrets} == 0
-						{
-							if ${Range} > 0
-							{
-								Range:Set[0]
-							}
-							bDeactivatedWeapons:Set[FALSE]
-							This.NextAmmoChange:Set[${Time.Timestamp}]
-							This.NextAmmoChange.Second:Inc[20]
-							This.NextAmmoChange:Update
-							return
-						}
+						This.NextAmmoChange:Set[${Time.Timestamp}]
+						This.NextAmmoChange.Second:Inc[20]
+						This.NextAmmoChange:Update
 					}
 				}
 				elseif ${Me.ActiveTarget.Distance} <= (${Ship.MaximumTurretRange} * 1.2) && ${Me.ActiveTarget.Distance} >= (${Ship.MinimumTurretRange} * 0.33)

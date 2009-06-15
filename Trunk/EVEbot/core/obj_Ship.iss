@@ -198,7 +198,40 @@ objectdef obj_Ship
 		FrequencyNameModPairs:Set["Gamma",0.625]
 		FrequencyNameModPairs:Set["Multifrequency",0.5]
 	}
-    
+
+	/* bool NeedAmmoChange(float range):
+	Return true if we are currently using a different ammo than is optimal. Otherwise return false. */
+	member:bool NeedAmmoChange(float range)
+	{
+		variable string sBestAmmo = ${This.GetBestAmmoTypeByRange[${range}]}
+		variable bool bFoundAmmo = FALSE
+		
+		variable iterator itrWeapon
+		This.ModuleList_Weapon:GetIterator[itrWeapon]
+		
+		if ${itrWeapon:First(exists)}
+		{
+			do
+			{
+				if ${itrWeapon.Value.Charge.Name.Find[${sBestAmmo}]}
+				{
+					bFoundAmmo:Set[TRUE]
+				}
+				else
+				{
+					bFoundAmmo:Set[FALSE]
+				}
+			}
+			while ${itrWeapon:Next(exists)}
+		}
+		/* If we DON'T find our optimal ammo, we DO need an ammo change */
+		if !${bFoundAmmo}
+		{
+			return TRUE
+		}
+		return FALSE
+	}
+
 	method LoadOptimalAmmo(float range)
 	{ 
 #if EVEBOT_DEBUG
