@@ -185,6 +185,7 @@ objectdef obj_Ratter
 				if !${Targeting.Running}
 				{
 					Targeting:Enable
+					This:QueueTargets
 				}
 				             
 				/* Don't worry about orbiting or keeping at range if we're a missile boat */
@@ -193,7 +194,6 @@ objectdef obj_Ratter
 				{               
 					This:KeepAtRange[${Me.ActiveTarget.ID},${Ship.MinimumTurretRange}]
 				}               
-				This:QueueTargets
 				break
 			case STATE_ERROR
 				UI:UpdateConsole["CurrentState is ERROR"]
