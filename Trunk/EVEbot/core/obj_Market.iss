@@ -18,7 +18,10 @@ objectdef obj_MarketItemList
 	
 	method Initialize()
 	{
-		LavishSettings[${This.SET_NAME}]:Remove
+		if ${LavishSettings[${This.SET_NAME}](exists)}
+		{
+			LavishSettings[${This.SET_NAME}]:Clear
+		}
 		LavishSettings:Import[${CONFIG_FILE}]
 		LavishSettings[${This.SET_NAME}]:GetSetIterator[This.itemIterator]
 		UI:UpdateConsole["obj_MarketItemList: Initialized", LOG_MINOR]
@@ -26,7 +29,7 @@ objectdef obj_MarketItemList
 	
 	method Shutdown()	
 	{
-		LavishSettings[${This.SET_NAME}]:Remove
+		LavishSettings[${This.SET_NAME}]:Clear
 	}
 	
 	member:string FirstItem()
@@ -110,9 +113,8 @@ objectdef obj_Market
 	method Shutdown()
 	{
 	}
-
-   	function GetMarketOrders(int typeID)
-   	{
+ 	function GetMarketOrders(int typeID)
+ 	{
 		UI:UpdateConsole["obj_Market: Obtaining market data for ${EVEDB_Items.Name[${typeID}]} (${typeID})"]
 		
 		This.sellOrders:Clear
@@ -137,9 +139,48 @@ objectdef obj_Market
 		;This:DumpBuyOrders
 		call This.QuicksortBuyOrders 1 ${This.buyOrders.Used}
 		;This:DumpBuyOrders
+ 	}
+   	   	
+	function GetMarketSellOrders(int typeID)
+	{
+		;UI:UpdateConsole["obj_Market: Obtaining market sell orders for item ${typeID}:${EVEDB_Items.ItemName[${typeID}]}"]
+
+		This.sellOrders:Clear
+
+		EVE:UpdateMarketOrders_A[${typeID}]
+		wait 50
+		EVE:UpdateMarketOrders_B[${typeID}]
+		wait 20
+		EVE:DoGetMarketOrders[This.sellOrders,"Sell",${typeID}]
+		wait 20
+
+		UI:UpdateConsole["obj_Market:GetMarketSellOrders Item ${typeID}:${EVEDB_Items.ItemName[${typeID}]} Orders - Sell: ${This.sellOrders.Used}"]
+
+		;This:DumpSellOrders
+		call This.QuicksortSellOrders 1 ${This.sellOrders.Used}
+		;This:DumpSellOrders
    	}
-   	
-   	
+
+	function GetMarketBuyOrders(int typeID)
+	{
+		;UI:UpdateConsole["obj_Market: Obtaining market buy orders  for item ${typeID}:${EVEDB_Items.ItemName[${typeID}]}"]
+
+		This.buyOrders:Clear
+
+		EVE:UpdateMarketOrders_A[${typeID}]
+		wait 50
+		EVE:UpdateMarketOrders_B[${typeID}]
+		wait 20
+		EVE:DoGetMarketOrders[This.buyOrders,"Buy",${typeID}]
+		wait 20
+
+		UI:UpdateConsole["obj_Market:GetMarketOrders Item ${typeID}:${EVEDB_Items.ItemName[${typeID}]} Orders - Buy: ${This.buyOrders.Used}"]
+
+		;This:DumpBuyOrders
+		call This.QuicksortBuyOrders 1 ${This.buyOrders.Used}
+		;This:DumpBuyOrders
+  }
+
 	member:int BestSellOrderSystem()
 	{
 		return ${This.m_BestSellOrderSystem}
@@ -436,8 +477,83 @@ objectdef obj_Market
 		;This:DumpBuyOrders		
    	}
 
-	member:float64 LowestSellOrder()
+;	member:float64 LowestSellOrder()
+;	{
+;		return ${This.sellOrders.Get[1].Price}
+;	}
+	member:float64 LowestSellOrder(int MinQuantity=1, float MinPrice=0.0)
 	{
+		variable int idx
+		variable int count
+
+		; Return the lowest order that is NOT ours AND meets our min price AND meets our minquantity remaining
+		if ${MinQuantity} > 1
+		{
+			count:Set[${This.sellOrders.Used}]
+			for ( idx:Set[1]; ${idx} <= ${count}; idx:Inc )
+			{
+				if ${This.IsMySellOrder[${This.sellOrders.Get[${idx}].ID}]}
+				{
+					continue
+				}
+
+				if ${This.sellOrders.Get[${idx}].QuantityRemaining} >= ${MinQuantity}
+				{
+					if ${This.sellOrders.Get[${idx}].Price} >= ${MinPrice}
+					{
+						return ${This.sellOrders.Get[${idx}].Price}
+					}
+					else
+					{
+						UI:UpdateConsole["LowestSellOrder: Ignored Order: ${This.sellOrders.Get[${idx}].Name}: ${This.sellOrders.Get[${idx}].QuantityRemaining.Int} @ ${This.sellOrders.Get[${idx}].Price.Centi} (Price Delta)", LOG_CRITICAL]
+						call ChatIRC.Say "LowestSellOrder: Ignored Order: ${This.sellOrders.Get[${idx}].Name}: ${This.sellOrders.Get[${idx}].QuantityRemaining.Int} @ ${This.sellOrders.Get[${idx}].Price.Centi} (Price Delta)"
+					}
+				}
+				else
+				{
+					UI:UpdateConsole["LowestSellOrder: Ignored Order: ${This.sellOrders.Get[${idx}].Name}: ${This.sellOrders.Get[${idx}].QuantityRemaining.Int} @ ${This.sellOrders.Get[${idx}].Price.Centi} (Small order)", LOG_CRITICAL]
+					call ChatIRC.Say "LowestSellOrder: Ignored Order: ${This.sellOrders.Get[${idx}].Name}: ${This.sellOrders.Get[${idx}].QuantityRemaining.Int} @ ${This.sellOrders.Get[${idx}].Price.Centi} (Small order)"
+				}
+			}
+			; Fell thru -- no order have the min quantity, so return the lowest
+			UI:UpdateConsole["LowestSellOrder: Warning: No orders had requested min quantity of ${MinQuantity} and min price of ${MinPrice.Centi}, returning lowest price of all orders", LOG_CRITICAL]
+			call ChatIRC.Say "LowestSellOrder: Warning: No orders had requested min quantity of ${MinQuantity} and min price of ${MinPrice.Centi}, returning lowest price of all orders"
+		}
+
+		; Return the lowest order that is NOT ours AND meets our min price
+		if ${MinPrice} > 0.0
+		{
+			count:Set[${This.sellOrders.Used}]
+			for ( idx:Set[1]; ${idx} <= ${count}; idx:Inc )
+			{
+				if ${This.IsMySellOrder[${This.sellOrders.Get[${idx}].ID}]}
+				{
+					continue
+				}
+
+				if ${This.sellOrders.Get[${idx}].Price} >= ${MinPrice}
+				{
+					return ${This.sellOrders.Get[${idx}].Price}
+				}
+				UI:UpdateConsole["LowestSellOrder: Ignored Order: ${This.sellOrders.Get[${idx}].Name}: ${This.sellOrders.Get[${idx}].QuantityRemaining.Int} @ ${This.sellOrders.Get[${idx}].Price.Centi} (Price Delta)", LOG_CRITICAL]
+				call ChatIRC.Say "LowestSellOrder: Ignored Order: ${This.sellOrders.Get[${idx}].Name}: ${This.sellOrders.Get[${idx}].QuantityRemaining.Int} @ ${This.sellOrders.Get[${idx}].Price.Centi} (Price Delta)"
+			}
+			UI:UpdateConsole["LowestSellOrder: Warning: No orders had requested min price of ${MinPrice.Centi}, returning lowest price of all orders", LOG_CRITICAL]
+			call ChatIRC.Say "LowestSellOrder: Warning: No orders had requested min price of ${MinPrice.Centi}, returning lowest price of all orders"
+		}
+
+		; Return the lowest order that is NOT ours
+		count:Set[${This.sellOrders.Used}]
+		for ( idx:Set[1]; ${idx} <= ${count}; idx:Inc )
+		{
+			if ${This.IsMySellOrder[${This.sellOrders.Get[${idx}].ID}]}
+			{
+				continue
+			}
+			return ${This.sellOrders.Get[${idx}].Price}
+		}
+
+		; Fell thru -- no order have the min quantity, so return the lowest
 		return ${This.sellOrders.Get[1].Price}
 	}
 
@@ -446,6 +562,43 @@ objectdef obj_Market
 		return ${This.buyOrders.Get[${This.buyOrders.Used}].Price}
 	}
 	
+	function GetMyBuyOrders(int typeID=0)
+	{
+		;Me:UpdateMyOrders
+		;wait 300
+		if ${typeID} != 0
+		{
+			UI:UpdateConsole["obj_Market: Obtaining my buy orders for ${EVEDB_Items.ItemName[${typeID}]}"]
+			TotalOrders:Set[${Me.GetMyOrders[This.mySellOrders,"Buy",${typeID}]}]
+		}
+		else
+		{
+			UI:UpdateConsole["obj_Market: Obtaining my buy orders for all items"]
+			TotalOrders:Set[${Me.GetMyOrders[This.mySellOrders,"Buy"]}]
+		}
+		UI:UpdateConsole["obj_Market: Waiting up to 1 minute to retrieve ${TotalOrders} orders"]
+		wait 600 ${This.mySellOrders.Get[${TotalOrders}].Name(exists)}
+	}
+
+	function GetMySellOrders(int typeID=0)
+	{
+		variable int TotalOrders
+		;Me:UpdateMyOrders
+		;wait 300
+		if ${typeID} != 0
+		{
+			UI:UpdateConsole["obj_Market: Obtaining my sell orders for ${EVEDB_Items.ItemName[${typeID}]}"]
+			TotalOrders:Set[${Me.GetMyOrders[This.mySellOrders,"Sell",${typeID}]}]
+		}
+		else
+		{
+			UI:UpdateConsole["obj_Market: Obtaining my sell orders for all items"]
+			TotalOrders:Set[${Me.GetMyOrders[This.mySellOrders,"Sell"]}]
+		}
+		UI:UpdateConsole["obj_Market: Waiting up to 1 minute to retrieve ${TotalOrders} orders"]
+		wait 600 ${This.mySellOrders.Get[${TotalOrders}].Name(exists)}
+	}
+
 	function GetMyOrders(int typeID)
 	{
 		UI:UpdateConsole["obj_Market: Obtaining my orders for ${EVEDB_Items.Name[${typeID}]}"]
@@ -460,6 +613,40 @@ objectdef obj_Market
 		UI:UpdateConsole["obj_Market: Found ${This.myBuyOrders.Used} active buy orders for ${EVEDB_Items.Name[${typeID}]}."]
 	}
 	
+	member:bool IsMySellOrder(int OrderID)
+	{
+		variable int idx
+		variable int count
+
+		count:Set[${This.mySellOrders.Used}]
+		for ( idx:Set[1]; ${idx} <= ${count}; idx:Inc )
+		{
+			if ${This.mySellOrders.Get[${idx}].ID} == ${OrderID}
+			{
+				return TRUE
+			}
+		}
+
+		return FALSE
+	}
+
+	member:bool IsMyBuyOrder(int OrderID)
+	{
+		variable int idx
+		variable int count
+
+		count:Set[${This.myBuyOrders.Used}]
+		for ( idx:Set[1]; ${idx} <= ${count}; idx:Inc )
+		{
+			if ${This.myBuyOrders.Get[${idx}].ID} == ${OrderID}
+			{
+				return TRUE
+			}
+		}
+
+		return FALSE
+	}
+
 	member:int MySellOrderCount()
 	{
 		return ${This.mySellOrders.Used}
@@ -469,7 +656,6 @@ objectdef obj_Market
 	{
 		return ${This.myBuyOrders.Used}
 	}
-	
 	
 	function UpdateMySellOrders(float64 delta)
 	{
@@ -505,7 +691,88 @@ objectdef obj_Market
 			while ${orderIterator:Next(exists)}
 		}
 	}
-	
+
+	function UpdateMySellOrdersEx(int TypeID, float64 delta=0.01, float64 MaxChange=481, float64 MaxPrice=5000000, MinQuantity=2)
+	{
+		variable iterator Orders
+		variable float LowestPrice
+
+		This.mySellOrders:GetIterator[Orders]
+		if ${Orders:First(exists)}
+		{
+			do
+			{
+				if !${Orders.Value(exists)}
+				{
+					UI:UpdateConsole["UpdateMySellOrders: ERROR - Found null order", LOG_CRITICAL]
+					continue
+				}
+
+				if ${Orders.Value.TypeID} != ${TypeID}
+				{
+					;UI:UpdateConsole["UpdateMySellOrders: TypeID: ${Orders.Value.TypeID} != ${TypeID}"]
+					continue
+				}
+				if ${Orders.Value.RegionID} != ${Me.RegionID}
+				{
+					UI:UpdateConsole["UpdateMySellOrders: RegionID: ${Orders.Value.RegionID} != ${Me.RegionID}"]
+					continue
+				}
+
+				UI:UpdateConsole["Processing Sell Order: ${Orders.Value.Name} ${Orders.Value.QuantityRemaining.Int}/${Orders.Value.InitialQuantity} @ ${Orders.Value.Price.Centi}"]
+				call ChatIRC.Say "Processing Sell Order: ${Orders.Value.Name} ${Orders.Value.QuantityRemaining.Int}/${Orders.Value.InitialQuantity} @ ${Orders.Value.Price.Centi}"
+
+				; Find the lowest price that has both the minquantity AND ourprice-maxchange in price
+				; This is so that if we are at 10, our maxchange is 2, and there are orders for 5, 8, and 10, we will still pricematch the 8, but ignore the 5
+				sellPrice:Set[${Math.Calc[${Orders.Value.Price}-${MaxChange}]}]
+				LowestPrice:Set[${This.LowestSellOrder[${MinQuantity}, ${sellPrice}]}]
+
+				if ${Orders.Value.Price} > ${LowestPrice}
+				{
+					variable float64 sellPrice
+					variable float64 PriceDiff
+					sellPrice:Set[${Math.Calc[${LowestPrice}-${delta}]}]
+					sellPrice:Set[${sellPrice.Precision[2]}]
+					PriceDiff:Set[${Math.Calc[${sellPrice} - ${Orders.Value.Price}]}]
+
+					if ${PriceDiff} > 0
+					{
+						UI:UpdateConsole["UpdateMySellOrders: Increasing Sell Price: ${Orders.Value.Name} Old: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Increase: ${PriceDiff.Centi}", LOG_CRITICAL]
+						call ChatIRC.Say "Increasing Price: ${Orders.Value.Name} Old: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Increase: ${PriceDiff.Centi}"
+						Orders.Value:Modify[${sellPrice}]
+					}
+					else
+					{
+						; Get a positive difference
+						PriceDiff:Set[${Math.Calc[${Orders.Value.Price} - ${sellPrice}]}]
+						if ${sellPrice} > ${MaxPrice}
+						{
+							UI:UpdateConsole["UpdateMySellOrders: Ignoring Order: ${Orders.Value.Name} Old: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Decrease: ${PriceDiff.Centi}, maximum price (${MaxPrice.Centi}) exceeded", LOG_CRITICAL]
+							call ChatIRC.Say "Ignoring Order: ${Orders.Value.Name} Old: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Decrease: ${PriceDiff.Centi}, maximum price (${MaxPrice.Centi}) exceeded"
+						}
+						elseif ${PriceDiff} > ${MaxChange}
+						{
+							UI:UpdateConsole["UpdateMySellOrders: Warning: ${Orders.Value.Name} Current: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Decrease: ${PriceDiff.Centi}, price change limit (${MaxChange.Centi}) exceeded", LOG_CRITICAL]
+							call ChatIRC.Say "Warning:${Orders.Value.Name} Current: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Decrease: ${PriceDiff.Centi}, price change limit (${MaxChange.Centi}) exceeded"
+						}
+						else
+						{
+							UI:UpdateConsole["UpdateMySellOrders: Decreasing Price: ${Orders.Value.Name} Old: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Decrease: ${PriceDiff.Centi}", LOG_CRITICAL]
+							call ChatIRC.Say "Decreasing Price: ${Orders.Value.Name} Old: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Decrease: ${PriceDiff.Centi}"
+							Orders.Value:Modify[${sellPrice}]
+						}
+					}
+				}
+				else
+				{
+					UI:UpdateConsole["Skipping Order: ${Orders.Value.Name} Price: ${Orders.Value.Price.Centi}, already lowest"]
+				}
+				waitframe
+			}
+			while ${Orders:Next(exists)}
+		}
+	}
+
 	function UpdateMyBuyOrders(float64 delta)
 	{
 		variable iterator orderIterator
