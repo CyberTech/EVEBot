@@ -302,11 +302,14 @@ objectdef obj_Targets_Rats
 	variable int TotalBattleShipValue
 	variable bool UpdateSucceeded
 
-	method CalcTotalBattleShipValue()
+	/* This will be called from obj_Ratter. Make use of the RatCache. */
+	member:int CalcTotalBattleShipValue()
 	{
+		variable int iTotalBSValue = 0
+		Ratter.RatCache.Entities:GetIterator[Ratter.RatCache.EntityIterator]
+		
 		; Determine the total spawn value
-		TotalBattleShipValue:Set[0]
-		if ${This.Target:First(exists)}
+		if ${Ratter.RatCache.EntityIterator:First(exists)}
 		{
 			do
 			{
@@ -315,8 +318,8 @@ objectdef obj_Targets_Rats
 				variable string NPCGroup
 				variable string NPCShipType
 
-				NPCName:Set[${This.Target.Value.Name}]
-				NPCGroup:Set[${This.Target.Value.Group}]
+				NPCName:Set[${Ratter.RatCache.EntityIterator.Value.Name}]
+				NPCGroup:Set[${Ratter.RatCache.EntityIterator.Value.Group}]
 				pos:Set[1]
 				while ${NPCGroup.Token[${pos}, " "](exists)}
 				{
@@ -325,10 +328,10 @@ objectdef obj_Targets_Rats
 				}
 				UI:UpdateConsole["NPC: ${NPCName}(${NPCShipType}) ${EVEBot.ISK_To_Str[${EVEDB_Spawns.SpawnBounty[${NPCName}]}]}"]
 
-				;UI:UpdateConsole["DEBUG: Type: ${This.Target.Value.Type}(${This.Target.Value.TypeID})"]
-				;UI:UpdateConsole["DEBUG: Category: ${This.Target.Value.Category}(${This.Target.Value.CategoryID})"]
+				;UI:UpdateConsole["DEBUG: Type: ${Ratter.RatCache.EntityIterator.Value.Type}(${Ratter.RatCache.EntityIterator.Value.TypeID})"]
+				;UI:UpdateConsole["DEBUG: Category: ${Ratter.RatCache.EntityIterator.Value.Category}(${Ratter.RatCache.EntityIterator.Value.CategoryID})"]
 
-				switch ${This.Target.Value.GroupID}
+				switch ${Ratter.RatCache.EntityIterator.Value.GroupID}
 				{
 					case GROUP_LARGECOLLIDABLEOBJECT
 					case GROUP_LARGECOLLIDABLESHIP
@@ -340,12 +343,13 @@ objectdef obj_Targets_Rats
 				}
 				if ${NPCGroup.Find["Battleship"](exists)}
 				{
-					This.TotalBattleShipValue:Inc[${EVEDB_Spawns.SpawnBounty[${NPCName}]}]
+					iTotalBSValue:Inc[${EVEDB_Spawns.SpawnBounty[${NPCName}]}]
 				}
 			 }
-			 while ${This.Target:Next(exists)}
-			 UI:UpdateConsole["NPC: Total Battleship Value is ${EVEBot.ISK_To_Str[${This.TotalSpawnValue}]}"]
+			 while ${Ratter.RatCache.EntityIterator:Next(exists)}
+			 UI:UpdateConsole["NPC: Total Battleship Value is ${EVEBot.ISK_To_Str[${iTotalBSValue}]}"]
 		}
+		return ${iTotalBSValue}
 	}
 
 	method UpdateTargetList()

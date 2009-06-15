@@ -230,7 +230,7 @@ objectdef obj_Defense
 		{
 			if ${Ship.HasCloak} && !${Ship.IsCloaked}
 			{
-				${Ship:Activate_Cloak[]
+				Ship:Activate_Cloak[]
 			}
 
 			; TODO - Shutdown Eve or dock if we are fleeing without a cloak for more than (configurable) minutes - CyberTech

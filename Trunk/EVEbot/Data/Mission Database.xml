@@ -530,5 +530,12 @@
         </Set>
       </Set>
     </Set>
+    <Set Name="The Serpentis Spies">
+    	<Set Name="2">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    		</Set>
+    	</Set>
+    </Set>
   </Set>
 </InnerSpaceSettings>

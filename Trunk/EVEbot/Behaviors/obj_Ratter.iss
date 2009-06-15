@@ -20,6 +20,7 @@ objectdef obj_Ratter
 	
 	/* Cache for NPCs */
 	variable obj_EntityCache RatCache
+	variable index:int DoNotKillList
 	
 	/* Used for calculating battleship chain values */
 	variable obj_Targets_Rats RatCalculator
@@ -28,6 +29,7 @@ objectdef obj_Ratter
 	
 	/* Todo: This, IsOrbiting, and Orbit should all probably be moved to a movement object. -- stealthy */
 	variable int iEntityOrbiting
+	variable int iEntityKeepingAtRange
 
 	method Initialize()
 	{
@@ -92,8 +94,8 @@ objectdef obj_Ratter
 			return
 		}
 
-		UI:UpdateConsole["obj_Ratter: Rat Check: ${Targets.NPC}"]
-		if ${Me.GetTargets} > 0 || (${Targets.NPC} && !${Targets.PC})
+		UI:UpdateConsole["obj_Ratter: NPC Check: ${This.NPCCheck}"]
+		if ${Me.GetTargets} > 0 || (${This.NPCCheck} && !${Targets.PC})
 		{
 			This.CurrentState:Set["FIGHT"]
 		}
@@ -101,38 +103,6 @@ objectdef obj_Ratter
 		{
 			This.CurrentState:Set["STATE_CHANGE_BELT"]
 		}
-	}
-	
-	/* bool RatCheck():
-		Return true if we have rats (NOT CONCORD) near us
-		Also take chaining into account*/
-	member:bool RatCheck()
-	{
-		RatCalculator:CalcTotalBattleShipValue
-		UI:UpdateConsole["obj_Ratter: RatCheck: Entities: ${RatCache.Entities.Size}"]
-		if ${RatCache.Entities.Size} > 0
-		{
-			RatCache.Entities:GetIterator[RatCache.EntityIterator]
-			if ${RatCache.EntityIterator:First(exists)}
-			{
-				do
-				{
-					UI:UpdateConsole["obj_Ratter: Rat Check: IsConcordTarget: ${Offense.IsConcordTarget[${RatCache.EntityIterator.Value.GroupID}]}"]
-					if !${Offense.IsConcordTarget[${RatCache.EntityIterator.Value.GroupID}]}
-					{
-						UI:UpdateConsole["obj_Ratter: Should Chain: ${Config.Combat.ChainSpawns} ${Config.Combat.ChainSolo} ${EVE.LocalsCount} ${RatCalculator.TotalBattleShipValue} ${RatCache.EntityIterator.Value.Group.Find["Battleship"](exists)}"]
-						if (${Config.Combat.ChainSpawns} && (${Config.Combat.ChainSolo} || !${Config.Combat.ChainSolo} && ${EVE.LocalsCount} > 1) && \
-							${RatCalculator.TotalBattleShipValue} >= ${Config.Combat.MinChainBounty} && ${RatCache.EntityIterator.Value.Group.Find["Battleship"](exists)}) || \
-							!${Config.Combat.ChainSpawns}
-						{
-							return TRUE
-						}
-					}
-				}
-				while ${RatCache.EntityIterator:Next(exists)}
-			}
-		}
-		return FALSE
 	}
 
 	function ProcessState()
@@ -184,7 +154,7 @@ objectdef obj_Ratter
 				{
 					This.CurrentState:Set["STATE_CHANGE_BELT"]
 				}
-				elseif ${Targets.NPC}
+				elseif ${This.NPCCheck}
 				{
 					This.CurrentState:Set["WAITING_FOR_RATS_2"]
 				}
@@ -216,20 +186,14 @@ objectdef obj_Ratter
 				{
 					Targeting:Enable
 				}
-				RatCalculator:UpdateTargetList
-				UI:UpdateConsole[Updating target list: ${RatCalculator.UpdateSucceeded}]
-				if !${RatCalculator.UpdateSucceeded}
-				{
-					Targeting:Disable
-					This.State:Set["STATE_CHANGE_BELT"]
-				}               
+				             
 				/* Don't worry about orbiting or keeping at range if we're a missile boat */
 				/* Todo: remove this, "It's dangerous in belts" */
-				if !${Config.Combat.ShouldUseMissiles} && !${This.IsOrbiting}
+				if !${Config.Combat.ShouldUseMissiles} && !${This.IsKeepingAtRange}
 				{               
-					This:Orbit[${Me.ActiveTarget.ID},${Ship.MinimumTurretRange}]
+					This:KeepAtRange[${Me.ActiveTarget.ID},${Ship.MinimumTurretRange}]
 				}               
-				/* This:QueueTargets */
+				This:QueueTargets
 				break
 			case STATE_ERROR
 				UI:UpdateConsole["CurrentState is ERROR"]
@@ -253,7 +217,7 @@ objectdef obj_Ratter
 		variable int Count
 		for (Count:Set[0] ; ${Count}<=30 ; Count:Inc)
 		{
-			if ${Targets.PC} || ${Targets.NPC}
+			if ${Targets.PC} || ${This.NPCCheck}
 			{
 				break
 			}
@@ -278,6 +242,14 @@ objectdef obj_Ratter
 		iEntityOrbiting:Set[${entityId}]
 	}
 	
+	/* KeepAtRange(int entityID, float range):
+	KeepAtRange passed entity at passed range and record that we are keeping this entity at range. */
+	method KeepAtRange(int entityId, float range)
+	{
+		Entity[${entityId}]:KeepAtRange[${range}]
+		iEntityKeepingAtRange:Set[${entityId}]
+	}
+	
 	/* IsOrbiting():
 		Return true if I'm currently orbiting a living entity. Otherwise, returns false. */
 	member:bool IsOrbiting()
@@ -296,84 +268,185 @@ objectdef obj_Ratter
 		}
 		return FALSE
 	}
+	
+	/* bool IsKeepingAtRange():
+		Return true if I'm currently keeping a living entity at range. */
+	member:bool IsKeepingAtRange()
+	{
+		variable bool bEntityExists = FALSE
+		if ${Entity[${iEntityKeepingAtRange}](exists)} && !${Entity[${iEntityKeepingAtRange}].Type.Find[Wreck](exists)}
+		{
+			bEntityExists:Set[TRUE]
+		}
+#if EVEBOT_DEBUG
+		UI:UpdateConsole["obj_Ratter.IsKeepingAtRange: iEntityKeepingAtRange: ${iEntityKeepingAtRange}, exists: ${bEntityExists}"]
+#endif
+		if ${iEntityKeepingAtRange} != 0 && ${bEntityExists}
+		{
+			return TRUE
+		}
+		return FALSE
+	}
 
+	/* QueueTargets(): Handle any queueing, prioritizing, chaining, etc. of rats.
+		This will do pretty much nothing but queue targets. */
 	method QueueTargets()
 	{
+		/* Activate any sensor boosters */
 		Ship:Activate_SensorBoost
-
-;		/* Iterate through the entities in entitycache. */
-;		RatCache.Entities:GetIterator[RatCache.EntityIterator]
-;		
-;		/* Interface with the legacy code */
-;		RatCalculator.Targets:Set[${RatCache.Entities}]
-;		RatCalculator.Targets:GetIterator[RatCalculator.Target]
-;		RatCalculator:CalcTotalBattleShipValue[]
-;		
-;		/* Basically, we want to kill everything if:
-;			1) We're chaining and it doesn't meet our required value
-;			2) We're not chanining
-;			If we are chaining and it DOES meet required value, kill everything but low-value non-scram/jams.
-;			If the only low-values are scram/jam, tough titties itty bitty.
-;			obj_Targets code *does* ignore non-battleship ships when chaining. */
-;
-;		/* Assume there are entities near us - this should only be called after the NPC check. */
-;		/* Queue non-players and non-concord, etc. We really only want to queue rats. */
-;		if ${RatCache.EntityIterator:First(exists)}
-;		{
-;			do
-;			{
-;				if ${RatCache.EntityIterator.Value.IsNPC} && \
-;					!${RatCache.EntityIterator.Value.IsLockedTarget} && \
-;					!${Offense.IsConcordTarget[${RatCache.EntityIterator.Value.GroupID}]}
-;				{
-;					/*	Since ISXEVE doesn't tell us -what- is warp scrambling us just check our target against
-;						known priority targets. Also be sure to not queue targets currently in warp. */
-;
-;					/* Queue[ID, Priority, TypeID, Mandatory] */
-;#if EVEBOT_DEBUG
-;					UI:UpdateConsole["obj_Ratter: ##LOGGING## RatCache.EntityIterator.Value.Mode: ${RatCache.EntityIterator.Value.Mode}"]
-;#endif
-;					if !${Targeting.IsQueued[${RatCache.EntityIterator.Value.ID}]} && ${RatCache.EntityIterator.Value.Mode} != 3
-;					{
-;						if ${Targets.IsPriorityTaraget[${RatCache.EntityIterator.Value.Name}]}
-;						{
-;							; If it's a priority target (web/scram/jam) make it mandatory and kill it first.
-;							Targeting:Queue[${RatCache.EntityIterator.Value.ID},5,${RatCache.EntityIterator.Value.TypeID},TRUE]
-;						}
-;						elseif ${Targets.IsSpecialTarget[${RatCache.EntityIterator.Value.Name}]}
-;						{
-;							; If it's not a priority target but is a special target, kill it second. I can escape from special targets.
-;							Targeting:Queue[${RatCache.EntityIterator.Value.ID},3,${RatCache.EntityIterator.Value.TypeID},FALSE]
-;							UI:UpdateConsole["Special spawn Detected at ${Entity[GroupID, GROUP_ASTEROIDBELT]}: ${RatCache.EntityIterator.Value.Name}", LOG_CRITICAL]
-;							Sound:PlayDetectSound
-;						}
-;						else
-;						{
-;							; If it's neither a special nor priority target, add it with a priority of 1 (low).
-;							/* This should be where I decide whether or not to queue based on chaining. */
-;							/* If I'm chaining spawns and either I'm chaining solo or I'm not chaining solo but there are people in local */
-;							/* I also only want to chain if the calculated value is above our threshold */
-;							UI:UpdateConsole["obj_Ratter: Should Chain: ${Config.Combat.ChainSpawns} ${Config.Combat.ChainSolo} ${EVE.LocalsCount} ${RatCalculator.TotalBattleShipValue}"]
-;							if ${Config.Combat.ChainSpawns} && (${Config.Combat.ChainSolo} || !${Config.Combat.ChainSolo} && ${EVE.LocalsCount} > 1) && \
-;								${RatCalculator.TotalBattleShipValue} >= ${Config.Combat.MinChainBounty}
-;							{
-;								/* Since I'm chaining, only queue the battleships */
-;								if ${RatCache.EntityIterator.Value.Group.Find["Battleship"](exists)}
-;								{
-;									Targeting:Queue[${RatCache.EntityIterator.Value.ID},1,${RatCache.EntityIterator.Value.TypeID},FALSE]
-;								}
-;							}
-;							else
-;							{
-;								/* If I'm not chaining, just kill it all. */
-;								Targeting:Queue[${RatCache.EntityIterator.Value.ID},1,${RatCache.EntityIterator.Value.TypeID},FALSE]
-;							}
-;						}
-;					}
-;				}
-;			}
-;			while ${RatCache.EntityIterator:Next(exists)}
-;		}
+		
+		/* Get total battleship value for chaining purposes */
+		variable int iTotalBSValue = ${RatCalculator.CalcTotalBattleShipValue}
+		
+		variable bool bHavePriorityTarget = FALSE
+		variable bool bHaveSpecialTarget = FALSE
+		
+		RatCache.Entities:GetIterator[RatCache.EntityIterator]
+		
+		/* Start iterating through */
+		if ${RatCache.EntityIterator:First(exists)}
+		{
+			do
+			{
+				/* Ignore any "concord" targets */
+				if ${Offense.IsConcordTarget[${RatCache.EntityIterator.Value.GroupID}]}
+				{
+					UI:UpdateConsole["obj_Ratter: Ignoring \"concord\" target ${RatCache.EntityIterator.Value.Name}"]
+					continue
+				}
+				
+				/* Is our target a "priority" target? If so, we won't continue with the rest of the targeting/chaining until
+				all priority targets are dead. Gotta kill those scrambling bastards... */
+				if ${Targets.IsPriorityTarget[${RatCache.EntityIterator.Value.Name}]}
+				{
+					UI:UpdateConsole["obj_Ratter: We have a priority target: ${RatCache.EntityIterator.Value.Name}."]
+					bHavePriorityTarget:Set[TRUE]
+					/* Queue[ID, Priority, TypeID, Mandatory] */
+					/* Queue it mandatory so we make sure it dies. */
+					if !${Targeting.IsQueued[${RatCache.EntityIterator.Value.ID}]} && !${Targeting.IsMandatoryQueued[${RatCache.EntityIterator.Value.ID}]}
+					{
+						UI:UpdateConsole["obj_Ratter: Queueing priority target: ${RatCache.EntityIterator.Value.Name}"]
+						Targeting:Queue[${RatCache.EntityIterator.Value.ID},5,${RatCache.EntityIterator.Value.TypeID},TRUE]
+					}
+				}
+			}
+			while ${RatCache.EntityIterator:Next(exists)}
+		}
+		
+		/* If we ended up with any priority targets, just return for now. We don't want to touch others until they're dead. */
+		if ${bHavePriorityTarget}
+		{
+			return
+		}
+		
+		/* Now for the fun task of figuring out chaining. */
+		/* If I'm chaining spawns and either I'm chaining solo or I'm not chaining solo but there are others here... */
+		/* I also only want to actually chain it if the calculated BS value is above our threshold */
+		if ${Config.Combat.ChainSpawns} && (${Config.Combat.ChainSolo} || ${EVE.LocalsCount} > 1) && \
+			${iTotalBSValue} >= ${Config.Combat.MinChainBounty}
+		{
+			/* Start iterating... */
+			if ${RatCache.EntityIterator:First(exists)}
+			{
+				do
+				{
+					/* Ok, since we're chaining, we only want special rats and battleships at this point, since any priority targets
+					have already been taken care of. */
+					if !${Targeting.IsQueued[${RatCache.EntityIterator.Value.ID}]}
+					{
+						if ${Targets.IsSpecialTarget[${RatCache.EntityIterator.Value.Name}]} && \
+						${RatCache.EntityIterator.Value.Group.Find["Battleship"](exists)}
+						{
+							/* if it's a special target, we additionally want to play a sound */
+							if ${Config.Common.UseSound}
+							{
+								PlayDetectSound
+							}
+							UI:UpdateConsole["obj_Ratter: Queueing special or chainable target: ${RatCache.EntityIterator.Value.Name}"]
+							Targeting:Queue[${RatCache.EntityIterator.Value.ID},3,${RatCache.EntityIterator.Value.TypeID},FALSE]
+						}
+						else
+						{
+							/* If it's not a special or battleship spawn, add it to the 'do not kill' list. */
+							if !${IsDoNotKill[${RatCache.EntityIterator.Value.ID}]}
+							{
+								UI:UpdateConsole["obj_Ratter: Adding ${RatCache.EntityIterator.Value.ID} to the \"do not kill\" list."]
+								DoNotKillList:Insert[${RatCache.EntityIterator.Value.ID}]
+							}
+						}
+					}
+				}
+				while ${RatCache.EntityIterator:Next(exists)}
+			}
+		}
+		else
+		{
+			if ${RatCache.EntityIterator:First(exists)}
+			{
+				do
+				{
+					/* If we're not chaining, we're not chaining when solo and we're alone, or the spawn doesn't meet chain requirements...
+					blow it all up. */
+					UI:UpdateConsole["obj_Ratter: For some reason not chaining; light 'em up."]
+					if !${Targeting.IsQueued[${RatCache.EntityIterator.Value.ID}]}
+					{
+						if ${Targets.IsSpecialTarget[${RatCache.EntityIterator.Value.Name}]}
+						{
+							if ${Config.Common.UseSound}
+							{
+								Sound:PlayDetectSound
+							}
+						}
+						
+						UI:UpdateConsole["obj_Ratter: Entity ID in light up check: ${RatCache.EntityIterator.Value.ID}"]
+						Targeting:Queue[${RatCache.EntityIterator.Value.ID},3,${RatCache.EntityIterator.Value.TypeID},FALSE]
+					}
+				}
+				while ${RatCache.EntityIterator:Next(exists)}
+			}
+		}
+	}
+	
+	/* bool NPCCheck():
+	return true if we have non-donotkill and non-concord npcs nearby. */
+	member:bool NPCCheck()
+	{
+		RatCache.Entities:GetIterator[RatCache.EntityIterator]
+		
+		if ${RatCache.EntityIterator:First(exists)}
+		{
+			do
+			{
+				if !${This.IsDoNotKill[${RatCache.EntityIterator.Value.ID}]} && \
+				!${Offense.IsConcordTarget[${RatCache.EntityIterator.Value.GroupID}]}
+				{
+					return TRUE
+				}
+			}
+			while ${RatCache.EntityIterator:Next(exists)}
+		}
+		return FALSE
+	}
+	
+	/* bool IsDoNotKill(int entityID): 
+	return true if given entity ID is on our do not kill list, otherwise return false */
+	member:bool IsDoNotKill(int entityID)
+	{
+		variable iterator DoNotKillIterator
+		DoNotKillList:GetIterator[DoNotKillIterator]
+		
+		if ${DoNotKillIterator:First(exists)}
+		{
+			do
+			{
+				if ${DoNotKillIterator.Value} == ${entityID}
+				{
+					return TRUE
+				}
+			}
+			while ${DoNotKillIterator:Next(exists)}
+		}
+		return FALSE
 	}
 }
 

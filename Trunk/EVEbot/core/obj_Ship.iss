@@ -153,7 +153,6 @@ objectdef obj_Ship
 				if ${Me.InSpace}
 				{
 					This:ValidateModuleTargets
-					This:UpdateModuleList
 					if !${Config.Combat.ShouldUseMissiles}
 					{
 						NumberTurrets:Set[${This.GetNumberTurrets}]
