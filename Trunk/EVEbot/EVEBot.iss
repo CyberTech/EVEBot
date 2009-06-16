@@ -50,16 +50,10 @@
 #include core/obj_Callback.iss
 
 /* Behavior/Mode Includes */
-#includeoptional Behaviors/obj_Hauler.iss
-#includeoptional Behaviors/obj_Miner.iss
-#includeoptional Behaviors/obj_Freighter.iss
-#includeoptional Behaviors/obj_Ratter.iss
-#includeoptional Behaviors/obj_Missioneer.iss
-#includeoptional Behaviors/obj_Tycoon.iss
+#includeoptional behaviors/includes.iss
 
-#includeoptional Modes/obj_Courier.iss
-#includeoptional Modes/obj_StealthHauler.iss
-#includeoptional Modes/obj_Scavenger.iss
+/* Private Includes */
+#includeoptional private/includes.iss
 
 /* Cache Objects */
 variable(global) obj_Cache_Me _Me
@@ -148,19 +142,35 @@ function main()
 	variable string obj_name
 	variable string var_name
 	variable filepath script_dir = ${Script.CurrentDirectory}
-	file_list:GetFiles[${script_dir}/\Behaviors/\*.iss]
+	file_list:GetFiles[${script_dir}/\behaviors/\*.iss]
 	while (${count:Inc}<=${file_list.Files})
 	{
-		obj_name:Set[${file_list.File[${count}].Filename.Left[-4]}]
-		var_name:Set[${obj_name.Right[-4]}]
-		echo "${Time} EVEBot: Loading ${obj_name}..."
-		if ${obj_name.Equal["obj_Hauler"]}
-		{
-			; TODO: Fix obj_Hauler.iss so this special case isn't needed
-			declarevariable Hauler obj_OreHauler global
+		if ${file_list.File[${count}].Filename.NotEqual["includes.iss"]}
+		{	/* skip the includes.iss file */
+			obj_name:Set[${file_list.File[${count}].Filename.Left[-4]}]
+			var_name:Set[${obj_name.Right[-4]}]
+			echo "${Time} EVEBot: Loading behavior ${obj_name}..."
+			if ${obj_name.Equal["obj_Hauler"]}
+			{
+				; TODO: Fix obj_Hauler.iss so this special case isn't needed
+				declarevariable Hauler obj_OreHauler global
+			}
+			else
+			{
+				declarevariable ${var_name} ${obj_name} global
+			}
 		}
-		else
-		{
+	}	
+
+	/* Private Behavior Objects */
+	file_list:GetFiles[${script_dir}/\private/\*.iss]
+	while (${count:Inc}<=${file_list.Files})
+	{
+		if ${file_list.File[${count}].Filename.NotEqual["includes.iss"]}
+		{	/* skip the includes.iss file */
+			obj_name:Set[${file_list.File[${count}].Filename.Left[-4]}]
+			var_name:Set[${obj_name.Right[-4]}]
+			echo "${Time} EVEBot: Loading private behavior ${obj_name}..."
 			declarevariable ${var_name} ${obj_name} global
 		}
 	}	

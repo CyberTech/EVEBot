@@ -7,97 +7,11 @@
 	
 */
 
-objectdef obj_MarketItemList
-{
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
-	variable string CONFIG_FILE = "${BaseConfig.CONFIG_PATH}/${_Me.Name} Market.xml"
-	variable string SET_NAME = "${_Me.Name} Market"
-	variable iterator itemIterator
-	
-	method Initialize()
-	{
-		if ${LavishSettings[${This.SET_NAME}](exists)}
-		{
-			LavishSettings[${This.SET_NAME}]:Clear
-		}
-		LavishSettings:Import[${CONFIG_FILE}]
-		LavishSettings[${This.SET_NAME}]:GetSetIterator[This.itemIterator]
-		UI:UpdateConsole["obj_MarketItemList: Initialized", LOG_MINOR]
-	}
-	
-	method Shutdown()	
-	{
-		LavishSettings[${This.SET_NAME}]:Clear
-	}
-	
-	member:string FirstItem()
-	{
-		if ${This.itemIterator:First(exists)}
-		{
-			return ${This.itemIterator.Key}			
-		}
-		
-		return NULL
-	}
-	
-	member:string NextItem()
-	{
-		if ${This.itemIterator:Next(exists)}
-		{
-			return ${This.itemIterator.Key}			
-		}
-		
-		return NULL
-	}
-	
-	member:string CurrentItem()
-	{
-		return ${This.itemIterator.Key}			
-	}
-
-	method DumpList()
-	{
-		UI:UpdateConsole["obj_MarketItemList: Dumping list..."]
-		
-		UI:UpdateConsole["obj_MarketItemList: This.FirstItem   = ${This.FirstItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.CurrentItem = ${This.CurrentItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.NextItem    = ${This.NextItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.CurrentItem = ${This.CurrentItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.NextItem    = ${This.NextItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.CurrentItem = ${This.CurrentItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.NextItem    = ${This.NextItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.CurrentItem = ${This.CurrentItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.NextItem    = ${This.NextItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.CurrentItem = ${This.CurrentItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.NextItem    = ${This.NextItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.CurrentItem = ${This.CurrentItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.NextItem    = ${This.NextItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.CurrentItem = ${This.CurrentItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.NextItem    = ${This.NextItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.CurrentItem = ${This.CurrentItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.NextItem    = ${This.NextItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.CurrentItem = ${This.CurrentItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.NextItem    = ${This.NextItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.CurrentItem = ${This.CurrentItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.NextItem    = ${This.NextItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.CurrentItem = ${This.CurrentItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.NextItem    = ${This.NextItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.CurrentItem = ${This.CurrentItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.NextItem    = ${This.NextItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.CurrentItem = ${This.CurrentItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.NextItem(exists)    = ${This.NextItem(exists)}"]
-		UI:UpdateConsole["obj_MarketItemList: This.CurrentItem(exists) = ${This.CurrentItem(exists)}"]
-	}
-}
-
 objectdef obj_Market
 {
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 	
-	variable obj_MarketItemList ItemList
 	variable index:marketorder  sellOrders
 	variable index:marketorder  buyOrders
 	variable index:myorder      mySellOrders
