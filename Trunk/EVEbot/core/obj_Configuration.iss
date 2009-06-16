@@ -131,6 +131,7 @@ objectdef obj_Configuration_Common
 	Define_ConfigItem(bool, DisableUI, FALSE)
 	Define_ConfigItem(bool, DisableScreenWhenBackgrounded, FALSE)
 	Define_ConfigItem(bool, TrainSkills, TRUE)
+	Define_ConfigItem(bool, EnableChatLogging, FALSE)
 }
 
 /* ************************************************************************* */

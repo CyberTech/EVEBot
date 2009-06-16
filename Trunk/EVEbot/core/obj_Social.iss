@@ -178,7 +178,14 @@ objectdef obj_Social
 			if ${sAuthor.NotEqual["EVE System"]}
 			{
 				Sound:PlayTellSound
-				UI:UpdateConsole["Channel Local: ${sAuthor.Escape}: ${sMessageText.Escape}", LOG_CRITICAL]
+				if ${Config.Common.EnableChatLogging}
+				{
+					UI:UpdateConsoleIRC["Channel Local: ${sAuthor.Escape}: ${sMessageText.Escape}"]
+				}
+				else
+				{
+					UI:UpdateConsole["Channel Local: ${sAuthor.Escape}: ${sMessageText.Escape}", LOG_MINOR]
+				}	
 			}
 		}
 	}

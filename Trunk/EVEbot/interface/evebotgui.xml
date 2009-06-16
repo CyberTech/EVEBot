@@ -505,6 +505,23 @@
 								Config.Common:DisableScreenWhenBackgrounded[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
+						<checkbox Name='cbEnableChatLogging'>
+							<X>250</X>
+							<Y>260</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Enable Local Chat Logging</Text>
+							<AutoTooltip>Enable the display of local chat in EveBot.</AutoTooltip>
+							<OnLoad>
+								if ${Config.Common.EnableChatLogging}
+								{
+								This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Config.Common:EnableChatLogging[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
 					</Tab>
 
 					<Tab name='Miner'>
