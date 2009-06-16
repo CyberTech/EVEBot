@@ -12,7 +12,7 @@ objectdef obj_MissionCommands
 		KillCache:Set[0]
 		KillState:Set["START"]
 		KillIDCache:Set[0]
-		KillIDState:Set[START]
+		KillIDState:Set["START"]
 		PullCache:Set[0]
 		PullState:Set["START"]
 		WaitTimeOut:Set[0]
@@ -58,15 +58,23 @@ objectdef obj_MissionCommands
 			{
 				if ${Entity[${EntityID}](exists)}
 				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - found entity with ID ${EntityID} , will approach",LOG_DEBUG]
-					ApproachIDCache:Set[${EntityID}]
-					ApproachState:Set["APPROACH"]
-					return FALSE
+					if !${Entity[${ApproachIDCache}].Distance} < ${Math.Calc[${Distance} * 1.025]}
+					{
+						UI:UpdateConsole["DEBUG: obj_MissionCommands - found entity with ID ${EntityID} , will approach",LOG_DEBUG]
+						ApproachIDCache:Set[${EntityID}]
+						ApproachState:Set["APPROACH"]
+						return FALSE
+						break
+					}
+					else
+					{
+						UI:UpdateConsole["DEBUG: obj_MissionCommands - Entity already in range",LOG_DEBUG]
+						return TRUE
+					}
+					UI:UpdateConsole["DEBUG: obj_MissionCommands - Error , could not find entity with ID ${EntityID} to approach",LOG_DEBUG]
+					return TRUE
 					break
 				}
-				UI:UpdateConsole["DEBUG: obj_MissionCommands - Error , could not find entity with ID ${EntityID} to approach",LOG_DEBUG]
-				return TRUE
-				break
 			}
 			case APPROACH
 			{
@@ -413,9 +421,9 @@ objectdef obj_MissionCommands
 			{
 				if ${KillIDCache} == ${entityID}
 				{
-					if ${Entity[${entityID}](exists)}
+					if ${Entity[${KillIDCache}](exists)} 
 					{
-						if ${This.Approach[${entityID}, ${Math.Calc[${Ship.OptimalTargetingRange}*.8]}]}
+						if ${This.Approach[${KillIDCache}, ${Math.Calc[${Ship.OptimalTargetingRange}*.8]}]}
 						{
 							if !${Targeting.IsMandatoryQueued[${KillIDCache}]}
 							{
@@ -426,6 +434,7 @@ objectdef obj_MissionCommands
 							}
 							else
 							{
+								UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - Target is in range and in the targeting queue,should be killing it now",LOG_DEBUG]
 								KillIDState:Set["KILLING"]
 								return FALSE
 							}
@@ -448,13 +457,13 @@ objectdef obj_MissionCommands
 			}
 			case KILLING
 			{
-				if ${KillIDCache} == ${entityID}
+				if ${KillIDCache} == ${entityID} 
 				{
-
-					if ${Entity[${KillIDCache}](exists)}
+					if ${Entity[${KillIDCache}](exists)}  && !${Entity[${KillIDCache}].Type.Find["Wreck"](exists)}
 					{
 						if ${This.Approach[${entityID}, ${Math.Calc[${Ship.OptimalTargetingRange}*.8]}]}
 						{
+							UI:UpdateConsole["DEBUG: obj_MissionCommands - Entity with ID ${KillIDCache} still exists, we have no killed it yet :<",LOG_DEBUG]
 							return FALSE
 						}
 					}
@@ -781,6 +790,7 @@ objectdef obj_MissionCommands
 			case GROUP_CONVOYDRONE
 			case GROUP_FACTIONDRONE
 			case GROUP_BILLBOARD
+			case GROUPID_SPAWN_CONTAINER
 			return FALSE
 			break
 			default
