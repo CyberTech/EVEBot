@@ -208,6 +208,18 @@ function main()
 
 	UI:Reload
 
+	if ${BotModule:First(exists)}
+	{
+		UIElement[EveBot].FindUsableChild["EVEBotMode","combobox"]:ClearItems 
+		do
+		{
+			UIElement[EveBot].FindUsableChild["EVEBotMode","combobox"]:AddItem["${BotModule.Value}"]
+		}
+		while ${BotModule:Next(exists)}
+		UIElement[EveBot].FindUsableChild["EVEBotMode","combobox"].ItemByText[${Config.Common.BotMode}]:Select
+
+	}
+
 #if USE_ISXIRC
 	call ChatIRC.Connect
 #endif
