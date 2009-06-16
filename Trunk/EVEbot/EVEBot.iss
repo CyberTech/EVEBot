@@ -153,15 +153,7 @@ function main()
 			obj_name:Set[${file_list.File[${count}].Filename.Left[-4]}]
 			var_name:Set[${obj_name.Right[-4]}]
 			echo "${Time} EVEBot: Loading behavior ${obj_name}..."
-			if ${obj_name.Equal["obj_Hauler"]}
-			{
-				; TODO: Fix obj_Hauler.iss so this special case isn't needed
-				declarevariable Hauler obj_OreHauler global
-			}
-			else
-			{
-				declarevariable ${var_name} ${obj_name} global
-			}
+			declarevariable ${var_name} ${obj_name} global
 		}
 	}
 

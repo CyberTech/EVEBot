@@ -180,7 +180,7 @@
 							<ButtonWidth>20</ButtonWidth>
 							<Items>
 								<Item Value='1'>Miner</Item>
-								<Item Value='2'>Hauler</Item>
+								<Item Value='2'>MinerHauler</Item>
 								<Item Value='3'>Freighter</Item>
 								<Item Value='4'>Ratter</Item>
 								<Item Value='5'>Missioneer</Item>
@@ -194,7 +194,7 @@
 										;UIElement[EVEBot].FindUsableChild[Hauler,frame]:Hide
 										UIElement[Hauler@EVEBotOptionsTab@EVEBot_Children@EVEBot]:Hide
 										break
-									case Hauler
+									case MinerHauler
 										UIElement[EVEBot].FindUsableChild[Miner,frame]:Hide
 										UIElement[EVEBot].FindUsableChild[Hauler,frame]:Show
 										break

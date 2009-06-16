@@ -1,8 +1,8 @@
 /*
 	The hauler object and subclasses
 
-	The obj_Hauler object contains functions that a usefull in creating
-	a hauler bot.  The obj_OreHauler object extends obj_Hauler and adds
+	The obj_Hauler object contains functions that a useful in creating
+	a hauler bot.  The obj_MinerHauler object extends obj_Hauler and adds
 	functions that are useful for bots the haul ore in conjunction with
 	one or more miner bots.
 
@@ -144,7 +144,7 @@ objectdef obj_Hauler
 	}
 }
 
-objectdef obj_OreHauler inherits obj_Hauler
+objectdef obj_MinerHauler inherits obj_Hauler
 {
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
@@ -176,16 +176,16 @@ objectdef obj_OreHauler inherits obj_Hauler
 		m_SystemID:Set[-1]
 		m_BeltID:Set[-1]
 		m_CheckedCargo:Set[FALSE]
-		UI:UpdateConsole["obj_OreHauler: Initialized", LOG_MINOR]
+		UI:UpdateConsole["obj_MinerHauler: Initialized", LOG_MINOR]
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		This:SetupEvents[]
-		BotModules:Insert["Hauler"]
+		BotModules:Insert["MinerHauler"]
 	}
 
 
 	method Pulse()
 	{
-		if !${Config.Common.BotMode.Equal[Hauler]}
+		if !${Config.Common.BotMode.Equal[MinerHauler]}
 		{
 			return
 		}
@@ -222,7 +222,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 	/* A miner's jetcan is full.  Let's go get the ore.  */
 	method MinerFull(string haulParams)
 	{
-		echo "DEBUG: obj_OreHauler:MinerFull... ${haulParams}"
+		echo "DEBUG: obj_MinerHauler:MinerFull... ${haulParams}"
 
 		variable int charID = -1
 		variable int systemID = -1
@@ -232,7 +232,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		systemID:Set[${haulParams.Token[2,","]}]
 		beltID:Set[${haulParams.Token[3,","]}]
 
-		echo "DEBUG: obj_OreHauler:MinerFull... ${charID} ${systemID} ${beltID}"
+		echo "DEBUG: obj_MinerHauler:MinerFull... ${charID} ${systemID} ${beltID}"
 
 		m_fleetMemberID:Set[${charID}]
 		m_SystemID:Set[${systemID}]
@@ -303,7 +303,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		variable iterator Cargo
 		variable int QuantityToMove
 
-		UI:UpdateConsole["DEBUG: obj_OreHauler.LootEntity ${id} ${leave}"]
+		UI:UpdateConsole["DEBUG: obj_MinerHauler.LootEntity ${id} ${leave}"]
 
 		Entity[${id}]:DoGetCargo[ContainerCargo]
 		ContainerCargo:GetIterator[Cargo]
@@ -339,7 +339,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 					/* TODO - this needs to keep a queue of bookmarks, named for the can ie, "Can CORP hh:mm", of partially looted cans */
 					/* Be sure its names, and not ID.  We shouldn't store anything in a bookmark name that we shouldnt know */
 
-					UI:UpdateConsole["DEBUG: obj_Hauler.LootEntity: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
+					UI:UpdateConsole["DEBUG: obj_MinerHauler.LootEntity: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
 					break
 				}
 			}
