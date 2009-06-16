@@ -50,10 +50,13 @@
 #include core/obj_Callback.iss
 
 /* Behavior/Mode Includes */
-#includeoptional behaviors/includes.iss
+#includeoptional Behaviors/includes.iss
 
 /* Custom Includes */
-#includeoptional behaviors/custom/includes.iss
+#includeoptional Behaviors/UserDefined/includes.iss
+
+/* Custom Includes  - Custom directory is assumed to be an external SVN repository */
+#includeoptional Behaviors/Custom/includes.iss
 
 /* Cache Objects */
 variable(global) obj_Cache_Me _Me
@@ -160,7 +163,7 @@ function main()
 				declarevariable ${var_name} ${obj_name} global
 			}
 		}
-	}	
+	}
 
 	/* Custom Behavior Objects */
 	file_list:GetFiles[${script_dir}/\behaviors/\custom/\*.iss]
@@ -173,7 +176,7 @@ function main()
 			echo "${Time} EVEBot: Loading custom behavior ${obj_name}..."
 			declarevariable ${var_name} ${obj_name} global
 		}
-	}	
+	}
 
 	variable iterator BotModule
 	BotModules:GetIterator[BotModule]
@@ -220,7 +223,7 @@ function main()
 
 	if ${BotModule:First(exists)}
 	{
-		UIElement[EveBot].FindUsableChild["EVEBotMode","combobox"]:ClearItems 
+		UIElement[EveBot].FindUsableChild["EVEBotMode","combobox"]:ClearItems
 		do
 		{
 			UIElement[EveBot].FindUsableChild["EVEBotMode","combobox"]:AddItem["${BotModule.Value}"]
