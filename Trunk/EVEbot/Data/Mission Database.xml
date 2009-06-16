@@ -583,7 +583,7 @@
     			<Set Name="6" Action="WaitAggro" TimeOut="10" />
     		</Set>
     	</Set>
-    </Set>
+    </Set>  
     <Set Name="Delving Into the Past (1 of 3)">
     	<Set Name="2">
     		<Set Name="Commands">
@@ -607,6 +607,21 @@
     			<Set Name="2" Action="Kill" Target="Caldari Bunker" GroupID="319" />
     		</Set>
     	</Set>
+    </Set>
+  </Set>
+  <!-- This mission will only allow t-1 cruisers and t-1/t-2 frigates -->
+  <Set Name ="Communications Cold War FFFFFFFFFFFFFFFFF">
+    <Set Name ="2">
+      <Set Name="Commands">
+        <Set Name ="1" Action ="NextRoom">
+        </Set>
+        <Set Name ="2" Action ="ClearRoom">
+        </Set>
+        <Set Name ="3" Action ="NextRoom">
+        </Set>
+        <Set Name ="4" Action ="ClearRoom">
+        </Set>
+      </Set>
     </Set>
   </Set>
 </InnerSpaceSettings>
