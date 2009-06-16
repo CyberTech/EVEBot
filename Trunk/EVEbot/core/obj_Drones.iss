@@ -237,7 +237,6 @@ objectdef obj_Drones
 
 		if ${This.DronesInSpace} == 0
 		{
-			return TRUE
 			variable index:entity NearbyNPCList
 
 			; TODO - This is WRONG - it includes players and non-aggressive entities (concord) - CyberTech
