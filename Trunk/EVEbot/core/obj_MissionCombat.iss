@@ -305,7 +305,7 @@ objectdef obj_MissionCombat
 						{
 							if ${mbIterator.Value.LocationType.Equal["dungeon"]}
 							{
-								call Ship.WarpToBookMark ${mbIterator.Value}
+								call Ship.WarpToBookMark ${mbIterator.Value} , FALSE
 								return
 							}
 						}
@@ -510,7 +510,7 @@ objectdef obj_MissionCombat
 							if ${mbIterator.Value.LocationType.Equal["agenthomebase"]} || \
 							${mbIterator.Value.LocationType.Equal["objective"]}
 							{
-								call Ship.WarpToBookMark ${mbIterator.Value}
+								call Ship.WarpToBookMark ${mbIterator.Value} , FALSE
 								return
 							}
 						}

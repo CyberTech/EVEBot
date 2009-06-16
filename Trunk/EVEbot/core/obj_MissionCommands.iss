@@ -21,7 +21,7 @@ objectdef obj_MissionCommands
 		containerID:Set[0]
 		ContainerState:Set["START"]
 		lootEntityID:Set[0]
-		LootEntityState:Set["START"]
+		LootEntityState:Set["APPROACHING"]
 		ContainerCargo:Clear
 		Recheck:Set[0]
 
@@ -1074,6 +1074,11 @@ objectdef obj_MissionCommands
 					Recheck:Inc[1]
 					return 1
 				}
+			}
+			default
+			{
+				LootEntityState:Set["APPROACHING"]
+				return 2
 			}
 		}
 	}

@@ -2114,7 +2114,7 @@ objectdef obj_Ship
 		}
 	}
 
-	function WarpToBookMark(bookmark DestinationBookmark)
+	function WarpToBookMark(bookmark DestinationBookmark,bool EnterGate = TRUE)
 	{
 		Validate_Ship()
 
@@ -2244,21 +2244,27 @@ objectdef obj_Ship
 				if ${DestinationBookmark.AgentID(exists)} && ${DestinationBookmark.LocationID(exists)} && \
 					${Entity[TypeID,TYPE_ACCELERATION_GATE](exists)}
 				{
-				/*	call This.Approach ${Entity[TypeID,TYPE_ACCELERATION_GATE].ID} DOCKING_RANGE
-					wait 10
-					UI:UpdateConsole["Activating Acceleration Gate..."]
-					while !${This.WarpEntered}
+					if ${EnterGate}
 					{
-						Entity[TypeID,TYPE_ACCELERATION_GATE]:Activate
+						call This.Approach ${Entity[TypeID,TYPE_ACCELERATION_GATE].ID} DOCKING_RANGE
 						wait 10
+						UI:UpdateConsole["Activating Acceleration Gate..."]
+						while !${This.WarpEntered}
+						{
+							Entity[TypeID,TYPE_ACCELERATION_GATE]:Activate
+							wait 10
+						}
+						call This.WarpWait
+						if ${Return} == 2
+						{
+							return
+						}
 					}
-					call This.WarpWait
-					if ${Return} == 2
+					else
 					{
+						;we should not be going through acceleration gates , this is handled by the missioneer!
 						return
-					}*/
-					;we should not be going through acceleration gates , this is handled by the missioneer!
-					return
+					}
 				}
 				else
 				{
