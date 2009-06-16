@@ -108,8 +108,7 @@ objectdef obj_MissionCommands
 				{
 					if ${EntityID} == ${ApproachIDCache}
 					{
-
-						if ${Entity[${ApproachIDCache}].Distance} > ${Math.Calc[${Distance} * 1.025]}
+						if ${Entity[${ApproachIDCache}].Distance} < ${Math.Calc[${Distance} * 1.025]}
 						{
 							UI:UpdateConsole["DEBUG: obj_MissionCommands - Reached ${EntityID} ",LOG_DEBUG]
 							EVE:Execute[CmdStopShip]
