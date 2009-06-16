@@ -52,8 +52,8 @@
 /* Behavior/Mode Includes */
 #includeoptional behaviors/includes.iss
 
-/* Private Includes */
-#includeoptional private/includes.iss
+/* Custom Includes */
+#includeoptional behaviors/custom/includes.iss
 
 /* Cache Objects */
 variable(global) obj_Cache_Me _Me
@@ -162,15 +162,15 @@ function main()
 		}
 	}	
 
-	/* Private Behavior Objects */
-	file_list:GetFiles[${script_dir}/\private/\*.iss]
+	/* Custom Behavior Objects */
+	file_list:GetFiles[${script_dir}/\behaviors/\custom/\*.iss]
 	while (${count:Inc}<=${file_list.Files})
 	{
 		if ${file_list.File[${count}].Filename.NotEqual["includes.iss"]}
 		{	/* skip the includes.iss file */
 			obj_name:Set[${file_list.File[${count}].Filename.Left[-4]}]
 			var_name:Set[${obj_name.Right[-4]}]
-			echo "${Time} EVEBot: Loading private behavior ${obj_name}..."
+			echo "${Time} EVEBot: Loading custom behavior ${obj_name}..."
 			declarevariable ${var_name} ${obj_name} global
 		}
 	}	
