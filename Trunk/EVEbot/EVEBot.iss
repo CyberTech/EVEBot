@@ -152,7 +152,7 @@ function main()
 		{	/* skip the includes.iss file */
 			obj_name:Set[${file_list.File[${count}].Filename.Left[-4]}]
 			var_name:Set[${obj_name.Right[-4]}]
-			echo "${Time} EVEBot: Loading behavior ${obj_name}..."
+			UI:UpdateConsole["Loading behavior ${obj_name}", LOG_DEBUG]
 			declarevariable ${var_name} ${obj_name} global
 		}
 	}
@@ -165,7 +165,7 @@ function main()
 		{	/* skip the includes.iss file */
 			obj_name:Set[${file_list.File[${count}].Filename.Left[-4]}]
 			var_name:Set[${obj_name.Right[-4]}]
-			echo "${Time} EVEBot: Loading custom behavior ${obj_name}..."
+			UI:UpdateConsole["Loading custom behavior ${obj_name}", LOG_DEBUG]
 			declarevariable ${var_name} ${obj_name} global
 		}
 	}
