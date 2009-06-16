@@ -1,7 +1,54 @@
 objectdef obj_MissionCommands
 {
+	method MissionComplete()
+	{
+		;we reset all our states to their defaults and clear out all caches
+		TargetPriorities:Clear
+		ApproachState:Set["IDLE"]
+		ApproachIDCache:Set[0]
+		GateState:Set["IDLE"]
+		ClearRoomState:Set["KILLING"]
+		KillCache:Set[0]
+		KillState:Set["START"]
+		KillIDCache:Set[0]
+		KillIDState:Set[START]
+		PullCache:Set[0]
+		PullState:Set["START"]
+		WaitTimeOut:Set[0]
+		containerCache:Clear
+		wreckList:Clear
+		containerID:Set[0]
+		ContainerState:Set["START"]
+		lootEntityID:Set[0]
+		LootEntityState:Set["START"]
+		ContainerCargo:Clear
+		Recheck:Set[0]
+
+	}
+
+	variable collection:int TargetPriorities
 	variable string ApproachState = "IDLE"
 	variable int ApproachIDCache
+	variable string GateState = "IDLE"
+	variable string ClearRoomState = "KILLING"
+	variable int KillCache
+	variable string KillState = "START"
+	variable int KillIDCache
+	variable string KillIDState = "START"
+	variable int PullCache
+	variable string PullState = "START"
+	variable time WaitTimeOut = 0
+	variable index:entity containerCache
+	variable index:entity wreckList
+	variable iterator wreckIterator
+	variable iterator containerIterator
+	variable int containerID
+	variable string ContainerState = "START"
+	variable int lootEntityID
+	variable string LootEntityState = "APPROACHING"
+	variable index:item ContainerCargo
+	variable iterator Cargo
+	variable int Recheck = 0
 	member:bool Approach(int EntityID, int64 Distance = DOCKING_RANGE)
 	{
 		switch ${ApproachState}
@@ -101,7 +148,7 @@ objectdef obj_MissionCommands
 		return ${This.ActivateGate[${Entity[TypeID,TYPE_ACCELERATION_GATE].ID}]}
 	}
 
-	variable string GateState = "IDLE"
+
 	member:bool ActivateGate(int EntityID)
 	{
 		UI:UpdateConsole["DEBUG: obj_MissionCommands - attempting to activate ${Entity[${EntityID}].Name!",LOG_DEBUG]
@@ -188,7 +235,7 @@ objectdef obj_MissionCommands
 
 	member:bool KillAggressors()
 	{
-		This:TargetAggros[]
+		This:NextTarget[]
 		if ${This.AggroCount} < 1
 		{
 			return TRUE
@@ -196,7 +243,7 @@ objectdef obj_MissionCommands
 		return FALSE
 	}
 
-	variable string ClearRoomState = "KILLING"
+
 	member:bool ClearRoom()
 	{
 		switch ${ClearRoomState}
@@ -206,7 +253,7 @@ objectdef obj_MissionCommands
 				if ${This.AggroCount} > 0
 				{
 					UI:UpdateConsole["DEBUG: obj_MissionCommands - Killing stuff",LOG_DEBUG]
-					This:TargetAggros[]
+					This:NextTarget[]
 				}
 				else
 				{
@@ -244,8 +291,7 @@ objectdef obj_MissionCommands
 		}
 	}
 	;these solutions for pulling and killing specific NPCs based on their names are not ideal, if you can come up with some better logic please tell
-	variable int KillCache
-	variable string KillState = "START"
+
 	member:bool Kill(string targetName,int CatID)
 	{
 		switch ${KillState}
@@ -300,8 +346,7 @@ objectdef obj_MissionCommands
 		}
 	}
 
-	variable int KillIDCache
-	variable string KillIDState = "START"
+
 	member:bool KillID(int entityID)
 	{
 
@@ -420,8 +465,7 @@ objectdef obj_MissionCommands
 		}
 	}
 
-	variable int PullCache
-	variable string PullState = "START"
+
 	member:bool Pull(string targetName = "NONE")
 	{
 		variable index:entity targetIndex
@@ -514,11 +558,11 @@ objectdef obj_MissionCommands
 
 
 
-	variable time WaitTimeOut = 0
+
 	member:bool Waves(int timeoutMinutes)
 	{
 
-		if ${This.WaitTimeOut.Timestamp} == 0
+		if ${This.WaitTimeOut.Timestamp} == 0 && ${This.HostileCount} < 1
 		{
 			UI:UpdateConsole["DEBUG: obj_MissionCommands -  Waiting for waves , timeout ${timeoutMinutes} minutes",LOG_DEBUG]
 			WaitTimeOut:Set[${Time.Timestamp}]
@@ -559,12 +603,7 @@ objectdef obj_MissionCommands
 
 
 
-	variable index:entity containerCache
-	variable index:entity wreckList
-	variable iterator wreckIterator
-	variable iterator containerIterator
-	variable int containerID
-	variable string ContainerState = "START"
+
 	member:bool CheckContainers(int groupID = GROUPID_CARGO_CONTAINER,string lootItem,string containerName)
 	{
 		variable int result
@@ -954,11 +993,7 @@ objectdef obj_MissionCommands
 	}
 
 	; TODO - move to obj_Cargo
-	variable int lootEntityID
-	variable string LootEntityState = "APPROACHING"
-	variable index:item ContainerCargo
-	variable iterator Cargo
-	variable int Recheck = 0
+
 	member:int LootEntity(int entID,string lootItem)
 	{
 		switch ${LootEntityState}
@@ -966,7 +1001,7 @@ objectdef obj_MissionCommands
 			case APPROACHING
 			{
 				UI:UpdateConsole["DEBUG: obj_MissionCommands - LootEntity moving closer to loot ${entID}",LOG_DEBUG]
-				if ${This.Approach[${entID},DOCKING_RANGE]}
+				if ${This.Approach[${entID},LOOT_RANGE]}
 				{
 					UI:UpdateConsole["DEBUG: obj_MissionCommands - In range attempting to open cargo",LOG_DEBUG]
 					lootEntityID:Set[${entID}]
@@ -1094,56 +1129,7 @@ objectdef obj_MissionCommands
 			return TRUE
 		}
 	}
-	method TargetAggros()
-	{
-		variable index:entity targetIndex
-		variable iterator     targetIterator
-		variable iterator blackListIterator
-		variable bool blacklisted = FALSE
-		Me:DoGetTargetedBy[targetIndex]
-		targetIndex:GetIterator[targetIterator]
 
-		;UI:UpdateConsole["GetTargeting = ${_Me.GetTargeting}, GetTargets = ${_Me.GetTargets}"]
-		if ${targetIterator:First(exists)}
-		{
-			do
-			{
-				if !${Targeting.IsQueued[${targetIterator.Value.ID}]}
-				{
-					targetBlacklist:GetIterator[blackListIterator]
-					; Check the target blacklist and ignore anything on it
-					if ${blackListIterator:First(exists)}
-					{
-						do
-						{
-							if ${blackListIterator.Value.Equal[${targetIterator.Value.Name}]}
-							{
-								blacklisted:Set[TRUE]
-								break
-							}
-						}
-						while ${blackListIterator:Next(exists)}
-					}
-					if !${blacklisted}
-					{
-						if !${Targeting.IsQueued[${targetIterator.Value.ID}]}
-						{
-							; target is not blacklisted so lock it up
-
-							UI:UpdateConsole["DEBUG: obj_MissionCommands - targeting ${targetIterator.Value.Name}",LOG_DEBUG]
-
-							Targeting:Queue[${targetIterator.Value.ID},1,1,FALSE]
-						}
-					}
-					else
-					{
-						blacklisted:Set[FALSE]
-					}
-				}
-			}
-			while ${targetIterator:Next(exists)}
-		}
-	}
 	member:bool WarpPrepare()
 	{
 
@@ -1198,6 +1184,79 @@ objectdef obj_MissionCommands
 			return
 		}
 	}
+	method AddPriority(string EntityName , int Priority)
+	{
+		TargetPriorities:Set[${EntityName},${Priority}]
+	}
 
+	method NextTarget()
+	{
+		if !${Me.ActiveTarget(exists)}
+		{
+			variable int highestPriority = 0
+			variable int highestID
+			variable index:entity targetIndex
+			variable iterator targetIterator
+			Me:DoGetTargetedBy[targetIndex]
+			targetIndex:GetIterator[targetIterator]
+			;UI:UpdateConsole["GetTargeting = ${_Me.GetTargeting}, GetTargets = ${_Me.GetTargets}"]
+			if ${targetIterator:First(exists)}
+			{
+				if ${TargetPriorities.Used} > 0
+				{
+					do
+					{
+						if ${TargetPriorities.Element[${targetIterator.Value.Name}](exists)}
+						{
+							if ${TargetPriorities.Element[${targetIterator.Value.Name}]} > ${highestPriority}
+							{
+								UI:UpdateConsole["DEBUG: obj_MissionCommands - NextTarget - Found new highest priority ${targetIterator.Value.Name}",LOG_DEBUG]
+								highestPriority:Set[${TargetPriorities.Element[${targetIterator.Value.Name}]}]
+								highestID:Set[${targetIterator.Value.ID}]
+							}
+						}
+						elseif 5 > ${highestPriority}
+						{
+							highestPriority:Set[5]
+							highestID:Set[${targetIterator.Value.ID}]
+						}
+					}
+					while ${targetIterator:Next(exists)}
+				}
+				else
+				{					
+					highestPriority:Set[5]
+				}
+				if ${highestPriority} == 5
+				{
+					UI:UpdateConsole["DEBUG: obj_MissionCommands - NextTarget - All priority targets dead, will go hog wild killing non priority targets!",LOG_DEBUG]
+					if ${targetIterator:First(exists)}
+					do
+					{
+						if !${TargetPriorities.Element[${targetIterator.Value.Name}](exists)}
+						{
+							if !${Targeting.IsQueued[${targetIterator.Value.ID}]}
+							{
+								Targeting:Queue[${targetIterator.Value.ID},1,1,TRUE]
+							}
+						}
+					}
+					while ${targetIterator:Next(exists)}
+				}
+				else
+				{
+					if !${Targeting.IsQueued[${highestID}]}
+					{
+						UI:UpdateConsole["DEBUG: obj_MissionCommands - NextTarget - Targeting highest priority ${targetIterator.Value.Name}",LOG_DEBUG]
+						Targeting:Queue[${highestID},1,1,TRUE]
+					}
+				}
+			}
+			else
+			{
+				UI:UpdateConsole["DEBUG: obj_MissionCommands - NextTarget - No hostiles!",LOG_DEBUG]
+			}
+		}
+	}
 }
 

@@ -2244,7 +2244,7 @@ objectdef obj_Ship
 				if ${DestinationBookmark.AgentID(exists)} && ${DestinationBookmark.LocationID(exists)} && \
 					${Entity[TypeID,TYPE_ACCELERATION_GATE](exists)}
 				{
-					call This.Approach ${Entity[TypeID,TYPE_ACCELERATION_GATE].ID} DOCKING_RANGE
+				/*	call This.Approach ${Entity[TypeID,TYPE_ACCELERATION_GATE].ID} DOCKING_RANGE
 					wait 10
 					UI:UpdateConsole["Activating Acceleration Gate..."]
 					while !${This.WarpEntered}
@@ -2256,7 +2256,9 @@ objectdef obj_Ship
 					if ${Return} == 2
 					{
 						return
-					}
+					}*/
+					;we should not be going through acceleration gates , this is handled by the missioneer!
+					return
 				}
 				else
 				{

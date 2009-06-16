@@ -236,7 +236,7 @@ objectdef obj_MissionCombat
 			}
 			case MISSIONCOMPLETE
 			{
-
+				This.MissionCommands:MissionComplete[]
 				UI:UpdateConsole["DEBUG: obj_MissionCombat - Warping to Agent Home Base  ",LOG_DEBUG]
 
 				call This.WarpToHomeBase ${This.MissionID}
