@@ -23,7 +23,7 @@ objectdef obj_Drones
 	variable int ShortageCount
 
 	variable string ActiveDroneType
-	
+
 	variable collection:float StoredDroneArmor
 	variable collection:float StoredDroneShield
 	variable index:entity	RecalledDrones
@@ -144,17 +144,18 @@ objectdef obj_Drones
 			}
 		}
 	}
-	
+
 	/* CheckDroneHP - This method is here to iterate through all the drones, check their shield/armor % against
 	any known previous value, if they haven't already been recalled, recall them, and store the current shield/armor hp. */
 	method CheckDroneHP()
 	{
+		; TODO: Create obj_DroneStatus and store index:obj_DroneStatus to store hp/shield/armor in one construct and reduce code here.
 		/* Update drone entity index */
 		This:GetActiveDrones[]
-		
+
 		/* Get an iterator from the index */
 		This.ActiveDrones:GetIterator[This.ActiveDrone]
-		
+
 		/* iterate over the index */
 		if ${ActiveDrone:First(exists)}
 		{
@@ -181,7 +182,7 @@ objectdef obj_Drones
 						if !${This.DroneIsRecalled[${ActiveDrone.Value}]}
 						{
 							This:RecallDrone[${ActiveDrone.Value}]
-						}	
+						}
 					}
 				}
 				StoredDroneShield:Set[${ActiveDrone.Value.ID},${ActiveDrone.Value.ShieldPct}]
@@ -189,12 +190,12 @@ objectdef obj_Drones
 			while ${ActiveDrone:Next(exists)}
 		}
 	}
-	
+
 	member DroneIsRecalled(entity drone)
 	{
 		/* Get an iterator to the recalled drones */
 		RecalledDrones:GetIterator[RecalledDroneIterator]
-		
+
 		/* Iterate the index */
 		if ${RecalledDroneIterator:First(exists)}
 		{
@@ -209,7 +210,7 @@ objectdef obj_Drones
 		}
 		return FALSE
 	}
-	
+
 	method RecallDrone(entity drone)
 	{
 		UI:UpdateConsole["obj_Drones: Recalling drone ${drone.ID}"]

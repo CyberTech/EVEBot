@@ -335,25 +335,10 @@ objectdef obj_Agents
 						avoidLowSec:Set[${Config.Missioneer.AvoidLowSec}]
 						if ${avoidLowSec} == FALSE || (${avoidLowSec} == TRUE && ${isLowSec} == FALSE)
 						{
-							if ${MissionInfo.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions} == TRUE
-							{
-								This:SetActiveAgent[${Agent[id,${MissionInfo.Value.AgentID}]}]
-								return
-							}
-
-							if ${MissionInfo.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} == TRUE
-							{
-								This:SetActiveAgent[${Agent[id,${MissionInfo.Value.AgentID}]}]
-								return
-							}
-
-							if ${MissionInfo.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} == TRUE
-							{
-								This:SetActiveAgent[${Agent[id,${MissionInfo.Value.AgentID}]}]
-								return
-							}
-
-							if ${MissionInfo.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions} == TRUE
+							if (${MissionInfo.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions}) || \
+								(${MissionInfo.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} || \
+								(${MissionInfo.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} || \
+								(${MissionInfo.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions})
 							{
 								This:SetActiveAgent[${Agent[id,${MissionInfo.Value.AgentID}]}]
 								return
@@ -484,10 +469,13 @@ objectdef obj_Agents
 						avoidLowSec:Set[${Config.Missioneer.AvoidLowSec}]
 						if ${avoidLowSec} == FALSE || (${avoidLowSec} == TRUE && ${isLowSec} == FALSE)
 						{
-							if ${amIterator.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions} == TRUE
+							if (${amIterator.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions}) || \
+								(${amIterator.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} || \
+								(${amIterator.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} || \
+								(${amIterator.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions})
 							{
 								if ${Missions.MissionCache.Name[${amIterator.Value.AgentID}].Equal[${amIterator.Value.Name}]}
-								{	
+								{
 									return TRUE
 								}
 								else
@@ -495,46 +483,7 @@ objectdef obj_Agents
 									Missions.MissionCache:AddMission[${amIterator.Value.AgentID},${amIterator.Value.Name}]
 									return TRUE
 								}
-							
-							}
 
-							if ${amIterator.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} == TRUE
-							{
-								if ${Missions.MissionCache.Name[${amIterator.Value.AgentID}].Equal[${amIterator.Value.Name}]}
-								{	
-									return TRUE
-								}
-								else
-								{
-									Missions.MissionCache:AddMission[${amIterator.Value.AgentID},${amIterator.Value.Name}]
-									return TRUE
-								}
-							}
-
-							if ${amIterator.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} == TRUE
-							{
-								if ${Missions.MissionCache.Name[${amIterator.Value.AgentID}].Equal[${amIterator.Value.Name}]}
-								{	
-									return TRUE
-								}
-								else
-								{
-									Missions.MissionCache:AddMission[${amIterator.Value.AgentID},${amIterator.Value.Name}]
-									return TRUE
-								}
-							}
-
-							if ${amIterator.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions} == TRUE
-							{
-							if ${Missions.MissionCache.Name[${amIterator.Value.AgentID}].Equal[${amIterator.Value.Name}]}
-								{	
-									return TRUE
-								}
-								else
-								{
-									Missions.MissionCache:AddMission[${amIterator.Value.AgentID},${amIterator.Value.Name}]
-									return TRUE
-								}
 							}
 						}
 					}

@@ -7,7 +7,7 @@
 
 	Keeps entity data in 2 lists -- the original index:int from isxeve, and an expanded
 	index:obj_Entity which contains commonly accessed data fields.
-	
+
 	-- CyberTech
 */
 
@@ -49,7 +49,7 @@ objectdef obj_EntityCache inherits BaseClass
 	variable index:obj_Entity CachedEntities
 	variable iterator EntityIterator
 	variable bool Initialized = FALSE
-	
+
 	method Initialize()
 	{
 		;TODO: propagate this syntax to all other objects. it's spiffy handy.
@@ -79,7 +79,7 @@ objectdef obj_EntityCache inherits BaseClass
 		UI:UpdateConsole["${LogPrefix}: Updated with Update Frequency of ${Seconds.Deci} seconds"]
 		This.PulseIntervalInSeconds:Set[${Seconds}]
 	}
-	
+
 	method UpdateSearchParams(string VarName, string SearchTerms)
 	{
 		UI:UpdateConsole["${LogPrefix}: Search Params: ${SearchTerms}"]
@@ -92,7 +92,7 @@ objectdef obj_EntityCache inherits BaseClass
 	{
 		This.NextPulse:Set[${Time.Timestamp}]
 	}
-	
+
 	method UpdateEntityCache()
 	{
 		variable string Name
@@ -116,9 +116,6 @@ objectdef obj_EntityCache inherits BaseClass
 						case CATEGORYID_ORE
 							switch ${Name}
 							{
-								case Dark Ochre
-									ORE_Density:Set[1]
-									break
 								case Crimson Arkonor
 								case Triclinic Bistot
 								case Sharp Crokite
@@ -134,7 +131,7 @@ objectdef obj_EntityCache inherits BaseClass
 								case Solid Pyroxeres
 								case Condensed Scordite
 								case Concentrated Veldspar
-									ORE_Density:Set[2]
+									ORE_Density:Set[3]
 									break
 								case Prime Arkonor
 								case Monoclinic Bistot
