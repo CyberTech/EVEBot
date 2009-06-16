@@ -413,7 +413,7 @@ objectdef obj_MissionCommands
 			{
 				if ${KillIDCache} == ${entityID}
 				{
-					if ${Entity[${KillIDCache}](exists)}  && !${${Entity[${KillIDCache}].GroupID} == GROUPID_WRECK} && !${${Entity[${KillIDCache}].GroupID} == GROUPID_CARGO_CONTAINER}
+					if ${Entity[${KillIDCache}](exists)}  && ${Entity[${KillIDCache}].GroupID} != GROUPID_WRECK && ${Entity[${KillIDCache}].GroupID} != GROUPID_CARGO_CONTAINER
 						{
 							if ${This.Approach[${KillIDCache}, ${Math.Calc[${Ship.OptimalTargetingRange}*.8]}]}
 							{
@@ -450,7 +450,7 @@ objectdef obj_MissionCommands
 				{
 					if ${KillIDCache} == ${entityID}
 					{
-						if ${Entity[${KillIDCache}](exists)}  && !${${Entity[${KillIDCache}].GroupID} == GROUPID_WRECK} && !${${Entity[${KillIDCache}].GroupID} == GROUPID_CARGO_CONTAINER} 
+						if ${Entity[${KillIDCache}](exists)}  && ${Entity[${KillIDCache}].GroupID} != GROUPID_WRECK && ${Entity[${KillIDCache}].GroupID} != GROUPID_CARGO_CONTAINER 
 						{
 							if ${This.Approach[${entityID}, ${Math.Calc[${Ship.OptimalTargetingRange}*.8]}]}
 							{
