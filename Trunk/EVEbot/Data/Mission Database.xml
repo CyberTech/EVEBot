@@ -600,5 +600,13 @@
     		</Set>
     	</Set>
     </Set>
+    <Set Name="Terrorism!">
+    	<Set Name="2">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    			<Set Name="2" Action="Kill" Target="Caldari Bunker" GroupID="319" />
+    		</Set>
+    	</Set>
+    </Set>
   </Set>
 </InnerSpaceSettings>

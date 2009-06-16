@@ -10,6 +10,8 @@
 		</Set>	
 		<Set Name="Level Two">
 			<Setting Name="Worlds Collide">1</Setting>
+			<Setting Name="Delving Into the Past (1 of 3)">1</Setting>
+			<Setting Name="Data Mining">1</Setting>
 		</Set>	
 		<Set Name="Level Three">
 			<Setting Name="Worlds Collide">1</Setting>
