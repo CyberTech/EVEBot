@@ -58,7 +58,7 @@ objectdef obj_MissionCommands
 			{
 				if ${Entity[${EntityID}](exists)}
 				{
-					if !${Entity[${ApproachIDCache}].Distance} < ${Math.Calc[${Distance} * 1.025]}
+					if ${Entity[${ApproachIDCache}].Distance} > ${Math.Calc[${Distance} * 1.025]}
 					{
 						UI:UpdateConsole["DEBUG: obj_MissionCommands - found entity with ID ${EntityID} , will approach",LOG_DEBUG]
 						ApproachIDCache:Set[${EntityID}]
@@ -109,7 +109,7 @@ objectdef obj_MissionCommands
 					if ${EntityID} == ${ApproachIDCache}
 					{
 
-						if ${Entity[${ApproachIDCache}].Distance} < ${Math.Calc[${Distance} * 1.025]}
+						if ${Entity[${ApproachIDCache}].Distance} > ${Math.Calc[${Distance} * 1.025]}
 						{
 							UI:UpdateConsole["DEBUG: obj_MissionCommands - Reached ${EntityID} ",LOG_DEBUG]
 							EVE:Execute[CmdStopShip]
@@ -421,7 +421,7 @@ objectdef obj_MissionCommands
 			{
 				if ${KillIDCache} == ${entityID}
 				{
-					if ${Entity[${KillIDCache}](exists)} 
+					if ${Entity[${KillIDCache}](exists)} && !${Entity[${KillIDCache}].Type.Find["Wreck"](exists)
 					{
 						if ${This.Approach[${KillIDCache}, ${Math.Calc[${Ship.OptimalTargetingRange}*.8]}]}
 						{
@@ -459,7 +459,7 @@ objectdef obj_MissionCommands
 			{
 				if ${KillIDCache} == ${entityID} 
 				{
-					if ${Entity[${KillIDCache}](exists)}  && !${Entity[${KillIDCache}].Type.Find["Wreck"](exists)}
+					if ${Entity[${KillIDCache}](exists)}  && ${This.IsNPCTarget[${Entity[${KillIDCache}].GroupID}]}
 					{
 						if ${This.Approach[${entityID}, ${Math.Calc[${Ship.OptimalTargetingRange}*.8]}]}
 						{
