@@ -68,6 +68,26 @@ function atexit()
 	;redirect profile.txt Script:DumpProfiling
 }
 
+function LoadBehaviors(string Label, string Path)
+{
+	variable int count = 0
+	variable filelist file_list
+	variable string obj_name
+	variable string var_name
+
+	file_list:GetFiles["${Path}"]
+	while (${count:Inc}<=${file_list.Files})
+	{
+		if ${file_list.File[${count}].Filename.NotEqual["includes.iss"]}
+		{
+			obj_name:Set[${file_list.File[${count}].Filename.Left[-4]}]
+			var_name:Set[${obj_name.Right[-4]}]
+			UI:UpdateConsole["Loading ${Label} behavior ${var_name}", LOG_DEBUG]
+			declarevariable ${var_name} ${obj_name} global
+		}
+	}
+}
+
 function main()
 {
 	echo "${Time} EVEBot: Starting"
@@ -80,13 +100,12 @@ function main()
 
 	while !${_Me.Name(exists)} || ${_Me.Name.Equal[NULL]} || ${_Me.Name.Length} == 0
 	{
-		echo " ${Time} EVEBot: Waiting for cache to initialize - ${_Me.Name} != ${Me.Name}"
+		echo " ${Time} EVEBot: Waiting for cache to initialize - ${_Me.Name} != ${Me.Name} (if this continues, restart isxeve)"
 		wait 10
 		obj_Cache_Me:Initialize
 		obj_Cache_MyShip:Initialize
 		obj_Cache_EVETime:Initialize
 	}
-
 
 	echo "${Time} EVEBot: Loading Base & Config..."
 
@@ -139,36 +158,14 @@ function main()
 
 	echo "${Time} EVEBot: Loading Behavior Modules..."
 
-	/* Script-Defined Behavior Objects */
-	variable int count = 0
-	variable filelist file_list
-	variable string obj_name
-	variable string var_name
-	variable filepath script_dir = ${Script.CurrentDirectory}
-	file_list:GetFiles[${script_dir}/\behaviors/\*.iss]
-	while (${count:Inc}<=${file_list.Files})
-	{
-		if ${file_list.File[${count}].Filename.NotEqual["includes.iss"]}
-		{	/* skip the includes.iss file */
-			obj_name:Set[${file_list.File[${count}].Filename.Left[-4]}]
-			var_name:Set[${obj_name.Right[-4]}]
-			UI:UpdateConsole["Loading behavior ${obj_name}", LOG_DEBUG]
-			declarevariable ${var_name} ${obj_name} global
-		}
-	}
+	; Script-Defined Behavior Objects
+	call LoadBehaviors "Stock" "${Script.CurrentDirectory}/\Behaviors/\*.iss"
 
-	/* Custom Behavior Objects */
-	file_list:GetFiles[${script_dir}/\behaviors/\custom/\*.iss]
-	while (${count:Inc}<=${file_list.Files})
-	{
-		if ${file_list.File[${count}].Filename.NotEqual["includes.iss"]}
-		{	/* skip the includes.iss file */
-			obj_name:Set[${file_list.File[${count}].Filename.Left[-4]}]
-			var_name:Set[${obj_name.Right[-4]}]
-			UI:UpdateConsole["Loading custom behavior ${obj_name}", LOG_DEBUG]
-			declarevariable ${var_name} ${obj_name} global
-		}
-	}
+	; User Defined Behavior Objects
+	call LoadBehaviors "User Defined" "${Script.CurrentDirectory}/\Behaviors/\UserDefined/\*.iss"
+
+	; Custom Behavior Objects (Custom directory is assumed to be from an external repository, it's not part of EVEBot)
+	call LoadBehaviors "Custom" "${Script.CurrentDirectory}/\Behaviors/\Custom/\*.iss"
 
 	variable iterator BotModule
 	BotModules:GetIterator[BotModule]
