@@ -554,5 +554,35 @@
     		</Set>
     	</Set>
     </Set>
+    <Set Name="Human Cattle (3 of 5)">
+    	<Set Name="2">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    			<Set Name="2" Action="WaitAggro" />
+    			<Set Name="3" Action="ClearRoom" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Human Cattle (4 of 5)">
+    	<Set Name="2">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="WaitAggro" TimeOut="15" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="CheckContainers" Target="Prisoners" GroupID="12" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Human Cattle (5 of 5)">
+    	<Set Name="2">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="NextRoom" />
+    			<Set Name="4" Action="ClearRoom" />
+    			<Set Name="5" Action="NextRoom" />
+    			<Set Name="6" Action="WaitAggro" TimeOut="10" />
+    		</Set>
+    	</Set>
+    </Set>
   </Set>
 </InnerSpaceSettings>
