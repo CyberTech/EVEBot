@@ -1,6 +1,6 @@
 objectdef obj_Callback
 {
-	variable string SVN_REVISION = "$Rev: 1005 $"
+	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 2

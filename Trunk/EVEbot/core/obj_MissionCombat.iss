@@ -8,7 +8,7 @@ rooms are divided by a warp , so using an acceleration gate or warping to anothe
 
 objectdef obj_MissionCombat
 {
-	variable string SVN_REVISION = "$Rev: 988 $"
+	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 	variable obj_MissionCommands MissionCommands
 	variable time NextPulse

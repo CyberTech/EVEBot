@@ -8,7 +8,7 @@
 
 objectdef obj_UI
 {
-	variable string SVN_REVISION = "$Rev: 594 $"
+	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
 	method UpdateConsole(string StatusMessage)

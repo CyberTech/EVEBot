@@ -9,7 +9,7 @@
 
 objectdef obj_BeltBookmarks inherits obj_Bookmark
 {
-	variable string SVN_REVISION = "$Rev: 803 $"
+	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 	variable string LogPrefix
 	variable set EmptyBelts

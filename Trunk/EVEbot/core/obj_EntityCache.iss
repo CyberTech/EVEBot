@@ -36,7 +36,7 @@ objectdef obj_Entity
 
 objectdef obj_EntityCache inherits BaseClass
 {
-	variable string SVN_REVISION = "$Rev: 949 $"
+	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 	variable string LogPrefix
 
