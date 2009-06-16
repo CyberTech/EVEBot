@@ -57,6 +57,10 @@ objectdef obj_MissionCommands
 			case IDLE
 			{
 				if ${Entity[${EntityID}](exists)}
+				{	
+					UI:UpdateConsole["DEBUG: obj_MissionCommands - ENTITY EXISTS , GROUPID READS AS ${Entity[${EntityID}].GroupID} NAME IS ${Entity[${EntityID}].Name} NAME EXISTS IS  ${Entity[${EntityID}].GroupID(exists)}",LOG_DEBUG]
+				}
+				if ${Entity[${EntityID}].GroupID(exists)}
 				{					
 					if ${Entity[${EntityID}].Distance} > ${Math.Calc[${Distance} * 1.025]}
 					{
@@ -79,7 +83,7 @@ objectdef obj_MissionCommands
 			}
 			case APPROACH
 			{
-				if ${Entity[${EntityID}](exists)}
+				if ${Entity[${EntityID}].GroupID(exists)}
 				{
 					if ${EntityID} == ${ApproachIDCache}
 					{
@@ -104,7 +108,7 @@ objectdef obj_MissionCommands
 			}
 			case APPROACHING
 			{
-				if ${Entity[${EntityID}](exists)}
+				if ${Entity[${EntityID}].GroupID(exists)}
 				{
 					if ${EntityID} == ${ApproachIDCache}
 					{
@@ -165,7 +169,7 @@ objectdef obj_MissionCommands
 		{
 			case IDLE
 			{
-				if ${Entity[${EntityID}](exists)}
+				if ${Entity[${EntityID}].GroupID(exists)}
 				{
 					if ${This.Approach[${EntityID}, JUMP_RANGE]}
 					{
@@ -334,7 +338,7 @@ objectdef obj_MissionCommands
 			}
 			case KILLING
 			{
-				if ${Entity[${KillCache}](exists)}
+				if ${Entity[${KillCache}].GroupID(exists)}
 				{
 					if ${Entity[${KillCache}].Name.Equal[${targetName}]}
 					{
@@ -366,7 +370,7 @@ objectdef obj_MissionCommands
 		{
 			case START
 			{
-				if ${Entity[${entityID}](exists)}
+				if ${Entity[${entityID}].GroupID(exists)}
 				{
 					KillIDCache:Set[${entityID}]
 					KillIDState:Set["APPROACHING"]
@@ -384,7 +388,7 @@ objectdef obj_MissionCommands
 			{
 				if ${KillIDCache} == ${entityID}
 				{
-					if ${Entity[${entityID}](exists)}
+					if ${Entity[${entityID}].GroupID(exists)}
 					{
 						if ${This.Approach[${entityID}, ${Math.Calc[${Ship.OptimalTargetingRange}*.8]}]}
 						{
@@ -413,7 +417,7 @@ objectdef obj_MissionCommands
 			{
 				if ${KillIDCache} == ${entityID}
 				{
-					if ${Entity[${KillIDCache}](exists)}  && ${Entity[${KillIDCache}].GroupID} != GROUPID_WRECK && ${Entity[${KillIDCache}].GroupID} != GROUPID_CARGO_CONTAINER
+					if ${Entity[${KillIDCache}].GroupID(exists)}  && ${Entity[${KillIDCache}].GroupID} != GROUPID_WRECK && ${Entity[${KillIDCache}].GroupID} != GROUPID_CARGO_CONTAINER
 						{
 							if ${This.Approach[${KillIDCache}, ${Math.Calc[${Ship.OptimalTargetingRange}*.8]}]}
 							{
@@ -450,7 +454,7 @@ objectdef obj_MissionCommands
 				{
 					if ${KillIDCache} == ${entityID}
 					{
-						if ${Entity[${KillIDCache}](exists)}  && ${Entity[${KillIDCache}].GroupID} != GROUPID_WRECK && ${Entity[${KillIDCache}].GroupID} != GROUPID_CARGO_CONTAINER 
+						if ${Entity[${KillIDCache}].GroupID(exists)}  && ${Entity[${KillIDCache}].GroupID} != GROUPID_WRECK && ${Entity[${KillIDCache}].GroupID} != GROUPID_CARGO_CONTAINER 
 						{
 							if ${This.Approach[${entityID}, ${Math.Calc[${Ship.OptimalTargetingRange}*.8]}]}
 							{
@@ -534,7 +538,7 @@ objectdef obj_MissionCommands
 				}
 				case PULL
 				{
-					if ${Entity[${PullCache}](exists)}
+					if ${Entity[${PullCache}].GroupID(exists)}
 					{
 						if ${Entity[${PullCache}].Name.Equal[${targetName}]} || ${targetName.Equal["NONE"]}
 						{
