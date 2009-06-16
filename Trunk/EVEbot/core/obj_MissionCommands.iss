@@ -1,5 +1,6 @@
 objectdef obj_MissionCommands
 {
+	;TODO - Add checks to all members that involve movement to make sure we are actually moving!
 	method MissionComplete()
 	{
 		;we reset all our states to their defaults and clear out all caches
@@ -69,9 +70,9 @@ objectdef obj_MissionCommands
 			}
 			case APPROACH
 			{
-				if ${EntityID} == ${ApproachIDCache}
+				if ${Entity[${EntityID}](exists)}
 				{
-					if ${Entity[${EntityID}](exists)}
+					if ${EntityID} == ${ApproachIDCache}
 					{
 						Entity[${ApproachIDCache}]:Approach
 						Ship:Activate_AfterBurner[]
@@ -80,25 +81,26 @@ objectdef obj_MissionCommands
 					}
 					else
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Entity no longer exists cannot approach",LOG_DEBUG]
+						UI:UpdateConsole["DEBUG: obj_MissionCommands - AprroachIDCache and EntityID do not match ,resetting to idle",LOG_DEBUG]
 						ApproachState:Set["IDLE"]
-						return TRUE
+						return FALSE
 					}
 				}
 				else
 				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - AprroachIDCache and EntityID do not match ,resetting to idle",LOG_DEBUG]
+					UI:UpdateConsole["DEBUG: obj_MissionCommands - Entity no longer exists cannot approach",LOG_DEBUG]
 					ApproachState:Set["IDLE"]
-					return FALSE
+					return TRUE
 				}
 				break
 			}
 			case APPROACHING
 			{
-				if ${EntityID} == ${ApproachIDCache}
+				if ${Entity[${EntityID}](exists)}
 				{
-					if ${Entity[${EntityID}](exists)}
+					if ${EntityID} == ${ApproachIDCache}
 					{
+
 						if ${Entity[${ApproachIDCache}].Distance} < ${Math.Calc[${Distance} * 1.025]}
 						{
 							UI:UpdateConsole["DEBUG: obj_MissionCommands - Reached ${EntityID} ",LOG_DEBUG]
@@ -107,19 +109,20 @@ objectdef obj_MissionCommands
 							return TRUE
 						}
 					}
+
 					else
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Entity no longer exists cannot approach",LOG_DEBUG]
+						UI:UpdateConsole["DEBUG: obj_MissionCommands - AprroachIDCache and EntityID do not match ,resetting to idle",LOG_DEBUG]
+						EVE:Execute[CmdStopShip]
 						ApproachState:Set["IDLE"]
-						return TRUE
+						return FALSE
 					}
 				}
 				else
 				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - AprroachIDCache and EntityID do not match ,resetting to idle",LOG_DEBUG]
-					EVE:Execute[CmdStopShip]
+					UI:UpdateConsole["DEBUG: obj_MissionCommands - Entity no longer exists cannot approach",LOG_DEBUG]
 					ApproachState:Set["IDLE"]
-					return FALSE
+					return TRUE
 				}
 				break
 			}
@@ -145,7 +148,15 @@ objectdef obj_MissionCommands
 	; TODO - move guts into Ship.Approach except for roonumer:inc
 	member:bool NextRoom()
 	{
-		return ${This.ActivateGate[${Entity[TypeID,TYPE_ACCELERATION_GATE].ID}]}
+		if ${Entity[TypeID,TYPE_ACCELERATION_GATE](exists)}
+		{
+			return ${This.ActivateGate[${Entity[TypeID,TYPE_ACCELERATION_GATE].ID}]}
+		}
+		else
+		{
+			UI:UpdateConsole["DEBUG: obj_MissionCommands - could not find an acceleration gate!",LOG_DEBUG]
+			return TRUE
+		}
 	}
 
 
@@ -1224,7 +1235,7 @@ objectdef obj_MissionCommands
 					while ${targetIterator:Next(exists)}
 				}
 				else
-				{					
+				{
 					highestPriority:Set[5]
 				}
 				if ${highestPriority} == 5
