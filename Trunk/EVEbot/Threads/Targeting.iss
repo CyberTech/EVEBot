@@ -13,15 +13,19 @@ objectdef obj_QueueTarget
 	variable int TargetType
 	variable int Priority
 
+	; Does this entity have to be gone before we'll target anything else after it in the queue?
+	variable bool Blocker
+
 	; Are we currently targeting this?
 	variable bool Targeting = FALSE
 
-	method Initialize(int _EntityID, int _TargetType=0, int _Priority=0, bool _Targeting=FALSE)
+	method Initialize(int _EntityID, int _TargetType=0, int _Priority=0, bool _Targeting=FALSE, bool _Blocker=FALSE)
 	{
 		EntityID:Set[${_EntityID}]
 		TargetType:Set[${_TargetType}]
 		Priority:Set[${_Priority}]
 		Targeting:Set[${_Targeting}]
+		Blocker:Set[${_Blocker}]
 	}
 }
 
@@ -200,6 +204,12 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 					Target.Value.Targeting:Set[TRUE]
 					TargetingMandatory:Set[TRUE]
 				}
+
+				if ${Target.Value.Blocker} && ${Entity[${Target.Value.EntityID}](exists)}
+				{
+					; Don't target anything else until this is gone. Note that this will block if you queue a blocking entity outside targeting range. Don't be stupid.
+					return
+				}
 			}
 			while ${Target:Next(exists)}
 		}
@@ -234,7 +244,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 	}
 
 
-	method Queue(int EntityID, int Priority, int TargetType, bool Mandatory)
+	method Queue(int EntityID, int Priority, int TargetType, bool Mandatory=FALSE, bool Blocker=FALSE)
 	{
 
 		if ${This.IsQueued[${EntityID}]}
@@ -244,19 +254,35 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 			return
 		}
 
+		if ${Blocker}
+		{
+			if !${Mandatory}
+			{
+				UI:UpdateConsole["Targeting: BUG: Attempted to queue ${Entity[${EntityID}].Name} as non-mandatory Blocker - forcing mandatory"]
+				Mandatory:Set[TRUE]
+			}
+
+			if ${Priority}
+			{
+				UI:UpdateConsole["Targeting: BUG: Attempted to queue ${Entity[${EntityID}].Name} as low-priority Blocker - forcing highest"]
+				Priority:Set[0]
+			}
+		}
+
 		if ${Entity[${EntityID}](exists)}
 		{
 			This.Running:Set[TRUE]
 			if ${Mandatory}
 			{
 				UI:UpdateConsole["Targeting: Queueing mandatory target ${Entity[${EntityID}].Name} (${EntityID}) Type: ${TargetType} Priority: ${Priority}"]
-				MandatoryQueue:Insert[${EntityID}, ${TargetType}, ${Priority}]
+
+				MandatoryQueue:Insert[${EntityID}, ${TargetType}, ${Priority}, ${Blocker}]
 				This:Sort[MandatoryQueue, Priority]
 			}
 			else
 			{
 				UI:UpdateConsole["Targeting: Queueing target ${Entity[${EntityID}].Name} (${EntityID}) Type: ${TargetType} Priority: ${Priority}"]
-				TargetQueue:Insert[${EntityID}, ${TargetType}, ${Priority}]
+				TargetQueue:Insert[${EntityID}, ${TargetType}, ${Priority}, FALSE]
 				This:Sort[TargetQueue, Priority]
 			}
 		}
