@@ -185,15 +185,16 @@ objectdef obj_Ratter
 				if !${Targeting.Running}
 				{
 					Targeting:Enable
-					This:QueueTargets
 				}
-				             
+				
+				This:QueueTargets      
 				/* Don't worry about orbiting or keeping at range if we're a missile boat */
 				/* Todo: remove this, "It's dangerous in belts" */
-				if !${Config.Combat.ShouldUseMissiles} && !${This.IsKeepingAtRange}
+				if !${Config.Combat.ShouldUseMissiles} && ${Me.ActiveTarget(exists)} && \
+					${Me.ToEntity.FollowingRange} == 0
 				{               
-					This:KeepAtRange[${Me.ActiveTarget.ID},${Ship.MinimumTurretRange}]
-				}               
+					Me.ActiveTarget:KeepAtRange[${Ship.MinimumTurretRange}]
+				}            
 				break
 			case STATE_ERROR
 				UI:UpdateConsole["CurrentState is ERROR"]
@@ -310,10 +311,21 @@ objectdef obj_Ratter
 		{
 			do
 			{
-				/* Ignore any "concord" targets */
-				if ${Offense.IsConcordTarget[${RatCache.EntityIterator.Value.GroupID}]}
+				/* Check for multiple types (if we only have one type of rat it's likely an in-progress chain) */
+				if ${iTempTypeID} == 0
 				{
-					UI:UpdateConsole["obj_Ratter: Ignoring \"concord\" target ${RatCache.EntityIterator.Value.Name}"]
+					iTempTypeID:Set[${RatCache.EntityIterator.Value.TypeID}]
+				}
+				if ${iTempTypeID} != ${RatCache.EntityIterator.Value.TypeID}
+				{
+					bHaveMultipleTypes:Set[TRUE]
+				}
+					
+				/* If this target is already queue in any way, continue on. */
+				if ${Targeting.IsQueued[${RatCache.EntityIterator.Value.ID}]} || ${Targeting.IsMandatoryQueued[${RatCache.EntityIterator.Value.ID}]} || \
+					${Offense.IsConcordTarget[${RatCache.EntityIterator.Value.GroupID}]} || ${This.IsDoNotKill[${RatCache.EntityIterator.Value.ID}]}
+				{
+					UI:UpdateConsole["obj_Ratter: ${RatCache.EntityIterator.Value.ID} is queued, concord, or DNK, skipping in priority target iteration.", LOG_DEBUG]
 					continue
 				}
 				
@@ -325,17 +337,14 @@ objectdef obj_Ratter
 					bHavePriorityTarget:Set[TRUE]
 					/* Queue[ID, Priority, TypeID, Mandatory] */
 					/* Queue it mandatory so we make sure it dies. */
-					if !${Targeting.IsQueued[${RatCache.EntityIterator.Value.ID}]} && !${Targeting.IsMandatoryQueued[${RatCache.EntityIterator.Value.ID}]}
-					{
-						UI:UpdateConsole["obj_Ratter: Queueing priority target: ${RatCache.EntityIterator.Value.Name}"]
-						Targeting:Queue[${RatCache.EntityIterator.Value.ID},5,${RatCache.EntityIterator.Value.TypeID},TRUE]
-					}
+					UI:UpdateConsole["obj_Ratter: Queueing priority target: ${RatCache.EntityIterator.Value.Name}"]
+					Targeting:Queue[${RatCache.EntityIterator.Value.ID},0,${RatCache.EntityIterator.Value.TypeID},TRUE]
 				}
 			}
 			while ${RatCache.EntityIterator:Next(exists)}
 		}
 		
-		/* If we ended up with any priority targets, just return for now. We don't want to touch others until they're dead. */
+		; If I have a priority target, just return. Targeting will lock both mandatory and non-mandatory at the same time, which is bad(tm)
 		if ${bHavePriorityTarget}
 		{
 			return
@@ -344,7 +353,7 @@ objectdef obj_Ratter
 		/* Now for the fun task of figuring out chaining. */
 		/* If I'm chaining spawns and either I'm chaining solo or I'm not chaining solo but there are others here... */
 		/* I also only want to actually chain it if the calculated BS value is above our threshold */
-		if ${Config.Combat.ChainSpawns} && (${Config.Combat.ChainSolo} || ${EVE.LocalsCount} > 1) && \
+		if (${Config.Combat.ChainSpawns} || (${Config.Combat.ChainSolo} && ${EVE.LocalsCount} == 1)) && \
 			${iTotalBSValue} >= ${Config.Combat.MinChainBounty}
 		{
 			/* Start iterating... */
@@ -352,42 +361,41 @@ objectdef obj_Ratter
 			{
 				do
 				{
-					/* Check for multiple types (if we only have one type of rat it's likely an in-progress chain) */
-					if ${iTempTypeID} == 0
+					; If the target is already queued, just continue.
+					if ${Targeting.IsQueued[${RatCache.EntityIterator.Value.ID}]} || ${Offense.IsConcordTarget[${RatCache.EntityIterator.Value.GroupID}]} || \
+						${This.IsDoNotKill[${RatCache.EntityIterator.Value.ID}]}
 					{
-						iTempTypeID:Set[${RatCache.EntityIterator.Value.TypeID}]
+						UI:UpdateConsole["obj_Ratter: ${RatCache.EntityIterator.Value.ID} already queued, concord, or DNK, skipping", LOG_DEBUG]
+						continue
 					}
-					if ${iTempTypeID} != ${RatCache.EntityIterator.Value.TypeID}
+
+					; Since we're chaining, if it isn't a special spawn or a battleship, and we've already queued any priority targets, we don't want it.
+					; Add it to do not kill.
+					UI:UpdateConsole["obj_Ratter: Find Battleship? Name: ${RatCache.EntityIterator.Value.Name}, Group: ${RatCache.EntityIterator.Value.Group}, Exists? ${RatCache.EntityIterator.Value.Group.Find["Battleship"](exists)}, Mutli? ${bHaveMultipleTypes}", LOG_DEBUG]
+					if !${RatCache.EntityIterator.Value.Group.Find["Battleship"](exists)} && !${Targets.IsSpecialTarget[${RatCache.EntityIterator.Value.Name}]}
 					{
-						bHaveMultipleTypes:Set[TRUE]
+						UI:UpdateConsole["obj_Ratter: ${RatCache.EntityIterator.Value.Name} isn't a battleship or special target -- adding to DNK list.", LOG_DEBUG]
+						DoNotKillList:Insert[${RatCache.EntityIterator.Value.ID}]
+						continue
 					}
-					/* Ok, since we're chaining, we only want special rats and battleships at this point, since any priority targets
-					have already been taken care of. */
-					if !${Targeting.IsQueued[${RatCache.EntityIterator.Value.ID}]}
+					
+					; If we have a special target, queue it higher priority.
+					; Currently it does nothing because combat doesn't detect "higher priority" targets
+					if ${Targets.IsSpecialTarget[${RatCache.EntityIterator.Value.Name}]}
 					{
-						UI:UpdateConsole["obj_Ratter: Find Battleship? Name: ${RatCache.EntityIterator.Value.Name}, Group: ${RatCache.EntityIterator.Value.Group}, Exists? ${RatCache.EntityIterator.Value.Group.Find["Battleship"](exists)}, Mutli? ${bHaveMultipleTypes}"]
-						if (${Targets.IsSpecialTarget[${RatCache.EntityIterator.Value.Name}]} || \
-							${RatCache.EntityIterator.Value.Group.Find["Battleship"](exists)}) && \
-							!${bHaveMultipleTypes}
+						UI:UpdateConsole["obj_Ratter: Queueing special target ${RatCache.EntityIterator.Value.Name}, ${RatCache.EntityIterator.Value.ID}.",LOG_CRITICAL]
+						if ${Config.Common.UseSound}
 						{
-							/* if it's a special target, we additionally want to play a sound */
-							if ${Config.Common.UseSound} && ${Targets.IsSpecialTarget[${RatCache.EntityIterator.Value.Name}]}
-							{
-								Sound:PlayDetectSound
-							}
-							UI:UpdateConsole["obj_Ratter: Queueing special or chainable target: ${RatCache.EntityIterator.Value.Name}"]
-							Targeting:Queue[${RatCache.EntityIterator.Value.ID},3,${RatCache.EntityIterator.Value.TypeID},FALSE]
+							Sound:PlayDetectSound
 						}
-						else
-						{
-							/* If it's not a special or battleship spawn, add it to the 'do not kill' list. */
-							if !${IsDoNotKill[${RatCache.EntityIterator.Value.ID}]}
-							{
-								UI:UpdateConsole["obj_Ratter: Adding ${RatCache.EntityIterator.Value.ID} to the \"do not kill\" list."]
-								DoNotKillList:Insert[${RatCache.EntityIterator.Value.ID}]
-							}
-						}
+						Targeting:Queue[${RatCache.EntityIterator.Value.ID},1,${RatCache.EntityIterator.Value.TypeID},FALSE]
+						continue
 					}
+
+					; Basically, the only way we get this far is our entity is a battleship we haven't queued.
+					; So queue it!
+					UI:UpdateConsole["obj_Ratter: Queueing chainable battleship ${RatCache.EntityIterator.Value.Name}",LOG_DEBUG]
+					Targeting:Queue[${RatCache.EntityIterator.Value.ID},2,${RatCache.EntityIterator.Value.TypeID},FALSE]
 				}
 				while ${RatCache.EntityIterator:Next(exists)}
 			}
@@ -398,22 +406,29 @@ objectdef obj_Ratter
 			{
 				do
 				{
-					/* If we're not chaining, we're not chaining when solo and we're alone, or the spawn doesn't meet chain requirements...
-					blow it all up. */
-					UI:UpdateConsole["obj_Ratter: For some reason not chaining; light 'em up."]
-					if !${Targeting.IsQueued[${RatCache.EntityIterator.Value.ID}]}
+					; If the target is already queued, just continue.
+					if ${Targeting.IsQueued[${RatCache.EntityIterator.Value.ID}]} || ${Offense.IsConcordTarget[${RatCache.EntityIterator.Value.GroupID}]} || \
+						${This.IsDoNotKill[${RatCache.EntityIterator.Value.ID}]}
 					{
-						if ${Targets.IsSpecialTarget[${RatCache.EntityIterator.Value.Name}]}
-						{
-							if ${Config.Common.UseSound}
-							{
-								Sound:PlayDetectSound
-							}
-						}
-						
-						UI:UpdateConsole["obj_Ratter: Entity ID in light up check: ${RatCache.EntityIterator.Value.ID}"]
-						Targeting:Queue[${RatCache.EntityIterator.Value.ID},3,${RatCache.EntityIterator.Value.TypeID},FALSE]
+						UI:UpdateConsole["obj_Ratter: ${RatCache.EntityIterator.Value.ID} already queued, concord, or DNK, skipping", LOG_DEBUG]
+						continue
 					}
+					
+					; If we have a special target, queue it higher priority.
+					; Currently it does nothing because combat doesn't detect "higher priority" targets
+					if ${Targets.IsSpecialTarget[${RatCache.EntityIterator.Value.Name}]}
+					{
+						UI:UpdateConsole["obj_Ratter: Not chaining, queueing special target ${RatCache.EntityIterator.Value.Name}, ${RatCache.EntityIterator.Value.ID}.",LOG_CRITICAL]
+						if ${Config.Common.UseSound}
+						{
+							Sound:PlayDetectSound
+						}
+						Targeting:Queue[${RatCache.EntityIterator.Value.ID},1,${RatCache.EntityIterator.Value.TypeID},FALSE]
+						continue
+					}
+					
+					UI:UpdateConsole["obj_Ratter: Not chaining, queueing target ${RatCache.EntityIterator.Value.Name}.",LOG_DEBUG]
+					Targeting:Queue[${RatCache.EntityIterator.Value.ID},2,${RatCache.EntityIterator.Value.TypeID},FALSE]
 				}
 				while ${RatCache.EntityIterator:Next(exists)}
 			}
@@ -439,9 +454,8 @@ objectdef obj_Ratter
 				{
 					HaveMultipleTypes:Set[TRUE]
 				}
-				if !${This.IsDoNotKill[${RatCache.EntityIterator.Value.ID}]} && \
-				!${Offense.IsConcordTarget[${RatCache.EntityIterator.Value.GroupID}]} && \
-				${HaveMultipleTypes}
+				if !${Offense.IsConcordTarget[${RatCache.EntityIterator.Value.GroupID}]} && \
+				(!${This.IsDoNotKill[${RatCache.EntityIterator.Value.ID}]} || ${HaveMultipleTypes})
 				{
 					return TRUE
 				}

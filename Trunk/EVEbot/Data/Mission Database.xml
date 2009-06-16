@@ -584,5 +584,21 @@
     		</Set>
     	</Set>
     </Set>
+    <Set Name="Delving Into the Past (1 of 3)">
+    	<Set Name="2">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    			<Set Name="2" Action="CheckContainers" Target="Old Map" GroupID="306" />
+    		</Set>
+    	</Set>
+    </Set>
+    <!-- This mission will only allow t-1 cruisers and t-1/t-2 frigates -->
+    <Set Name="Delving Into the Past (2 of 3)">
+    	<Set Name="2">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="CheckContainers" Target="Old Map" GroupID="306" />
+    		</Set>
+    	</Set>
+    </Set>
   </Set>
 </InnerSpaceSettings>

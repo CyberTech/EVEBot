@@ -117,7 +117,6 @@ objectdef obj_Ship
 	variable int m_TypeID
 	variable int iCurrentTurret = 1
 	
-	variable int NumberTurrets
 	variable float MaximumTurretRange
 	variable float MinimumTurretRange
 	variable float TurretBaseOptimal
@@ -155,7 +154,6 @@ objectdef obj_Ship
 					This:ValidateModuleTargets
 					if !${Config.Combat.ShouldUseMissiles}
 					{
-						NumberTurrets:Set[${This.GetNumberTurrets}]
 						MaximumTurretRange:Set[${This.GetMaximumTurretRange}]
 						MinimumTurretRange:Set[${This.GetMinimumTurretRange}]
 						TurretBaseOptimal:Set[${This.GetTurretBaseOptimal}]
@@ -247,7 +245,7 @@ objectdef obj_Ship
 		variable index:item idxAmmo
 		variable iterator itrAmmo
 		variable int iTempTurret = 0
-		variable int iTurrets = ${This.NumberTurrets}
+		variable int iTurrets = ${This.ModuleList_Weapon.Used}
 		
 		if ${itrWeapon:First(exists)}
 		{
@@ -295,26 +293,6 @@ objectdef obj_Ship
 			}
 			while ${itrWeapon:Next(exists)}
 		}
-	}
-	
-	member:int GetNumberTurrets()
-	{
-		variable iterator itrWeapon
-		This.ModuleList_Weapon:GetIterator[itrWeapon]
-		variable int iNumTurrets = 0
-		
-		if ${itrWeapon:First(exists)}
-		{
-			do
-			{
-				iNumTurrets:Inc
-			}
-			while ${itrWeapon:Next(exists)}
-		}
-#if EVEBOT_DEBUG		
-		UI:UpdateConsole["obj_Ship.GetNumberTurrets(): Returning ${iNumTurrets}"]
-#endif		
-		return ${iNumTurrets}
 	}
 
 	member:float GetMaximumTurretRange()

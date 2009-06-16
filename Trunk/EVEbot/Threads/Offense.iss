@@ -80,11 +80,11 @@ objectdef obj_Offense
 					UI:UpdateConsole["Offense: NeedAmmoChange: ${Ship.NeedAmmoChange[${Me.ActiveTarget.Distance}]}"]
 					if ${Ship.NeedAmmoChange[${Me.ActiveTarget.Distance}]}
 					{
-						UI:UpdateConsole["Ship.NumTurrets: ${Ship.NumberTurrets}, NumTurrets: ${NumTurrets}"]
-						if ${Ship.NumberTurrets} > 0 && ${NumTurrets} == 0
+						UI:UpdateConsole["Ship.NumTurrets: ${Ship.ModuleList_Weapon.Used}, NumTurrets: ${NumTurrets}"]
+						if ${Ship.ModuleList_Weapon.Used} > 0 && ${NumTurrets} == 0
 						{
 							UI:UpdateConsole["Setting num turrets"]
-							NumTurrets:Set[${Ship.NumberTurrets}]
+							NumTurrets:Set[${Ship.ModuleList_Weapon.Used}]
 						}
 						elseif ${NumTurrets} > 0
 						{
