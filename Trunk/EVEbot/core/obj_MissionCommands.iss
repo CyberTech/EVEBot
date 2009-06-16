@@ -159,7 +159,7 @@ objectdef obj_MissionCommands
 		{
 			case IDLE
 			{
-				if ${Enitity[${EntityID}](exists)}
+				if ${Entity[${EntityID}](exists)}
 				{
 					if ${This.Approach[${EntityID}, JUMP_RANGE]}
 					{
