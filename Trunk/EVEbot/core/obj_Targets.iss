@@ -301,7 +301,12 @@ objectdef obj_Targets
 		{
 			do
 			{
-				if !${itrEntities.Value.IsTargetingMe}
+				;If our target is a hauler, it won't be targeting us.
+				if ${itrEntities.Value.Group.Find["Hauler"](exists)}
+				{
+					return TRUE
+				}
+				if !${itrEntities.Value.IsTargetingMe} && 
 				{
 					return FALSE
 				}
