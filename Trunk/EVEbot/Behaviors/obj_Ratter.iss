@@ -133,6 +133,12 @@ objectdef obj_Ratter
 				}
 				break
 			case IDLE
+				; if we're idle (defense was hiding) but defense is no longer hiding; set state to change belt so that we don't freeze up.
+				if !${Defense.Hiding}
+				{
+					UI:UpdateConsole["obj_Ratter: We were hiding but no longer are; setting state to change belt.",LOG_CRITICAL]
+					This.CurrentState:Set[STATE_CHANGE_BELT]
+				}
 				break
 			case STATE_CHANGE_BELT
 				Offense:Disable
@@ -178,6 +184,11 @@ objectdef obj_Ratter
 				This.CurrentState:Set["FIGHT"]
 				break
 			case FIGHT
+				variable bool bEntityFollowingExists = FALSE
+				if ${Me.ToEntity.Following(exists)}
+				{
+					bEntityFollowingExists:Set[TRUE]
+				}
 				if !${Offense.Running}
 				{
 					Offense:Enable
@@ -190,10 +201,11 @@ objectdef obj_Ratter
 				This:QueueTargets      
 				/* Don't worry about orbiting or keeping at range if we're a missile boat */
 				/* Todo: remove this, "It's dangerous in belts" */
+				UI:UpdateConsole["obj_Ratter: Me.ActiveTarget(exists): ${Me.ActiveTarget(exists)}, Me.ToEntity.FollowRange: ${Me.ToEntity.FollowRange}, bEntityFollowingExists: ${bEntityFollowingExists}",LOG_DEBUG]
 				if !${Config.Combat.ShouldUseMissiles} && ${Me.ActiveTarget(exists)} && \
-					${Me.ToEntity.FollowingRange} == 0
+					((${Me.ToEntity.FollowRange} == 0) || !${bEntityFollowingExists})
 				{               
-					Me.ActiveTarget:KeepAtRange[${Ship.MinimumTurretRange}]
+					Me.ActiveTarget:KeepAtRange[${Ship.GetMinimumTurretRange[1]}]
 				}            
 				break
 			case STATE_ERROR
@@ -325,6 +337,10 @@ objectdef obj_Ratter
 				if ${Targeting.IsQueued[${RatCache.EntityIterator.Value.ID}]} || ${Targeting.IsMandatoryQueued[${RatCache.EntityIterator.Value.ID}]} || \
 					${Offense.IsConcordTarget[${RatCache.EntityIterator.Value.GroupID}]} || ${This.IsDoNotKill[${RatCache.EntityIterator.Value.ID}]}
 				{
+					if ${Targeting.IsMandatoryQueued[${RatCache.EntityIterator.Value.ID}]}
+					{
+						bHavePriorityTarget:Set[TRUE]
+					}
 					UI:UpdateConsole["obj_Ratter: ${RatCache.EntityIterator.Value.ID} is queued, concord, or DNK, skipping in priority target iteration.", LOG_DEBUG]
 					continue
 				}
@@ -338,7 +354,7 @@ objectdef obj_Ratter
 					/* Queue[ID, Priority, TypeID, Mandatory] */
 					/* Queue it mandatory so we make sure it dies. */
 					UI:UpdateConsole["obj_Ratter: Queueing priority target: ${RatCache.EntityIterator.Value.Name}"]
-					Targeting:Queue[${RatCache.EntityIterator.Value.ID},0,${RatCache.EntityIterator.Value.TypeID},TRUE]
+					Targeting:Queue[${RatCache.EntityIterator.Value.ID},0,${RatCache.EntityIterator.Value.TypeID},TRUE,TRUE]
 				}
 			}
 			while ${RatCache.EntityIterator:Next(exists)}

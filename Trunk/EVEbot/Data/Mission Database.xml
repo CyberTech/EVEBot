@@ -587,8 +587,7 @@
     <Set Name="Delving Into the Past (1 of 3)">
     	<Set Name="2">
     		<Set Name="Commands">
-    			<Set Name="1" Action="ClearRoom" />
-    			<Set Name="2" Action="CheckContainers" Target="Old Map" GroupID="306" />
+    			<Set Name="1" Action="CheckContainers" Target="Old Map" GroupID="306" />
     		</Set>
     	</Set>
     </Set>
@@ -596,7 +595,26 @@
     <Set Name="Delving Into the Past (2 of 3)">
     	<Set Name="2">
     		<Set Name="Commands">
-    			<Set Name="1" Action="CheckContainers" Target="Old Map" GroupID="306" />
+    			<Set Name="1" Action="ClearRoom" />
+    			<Set Name="2" Action="CheckContainers" Target="Old Map" GroupID="306" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Delving Into the Past (3 of 3)">
+    	<Set Name="2">
+    		<Set Name="AllowedShips">
+    			<Setting Name="GROUP_CRUISER">26</Setting>
+    			<Setting Name="GROUP_DESTROYER">420</Setting>
+    			<Setting Name="GROUP_ASSAULTSHIP">324</Setting>
+    			<Setting Name="GROUP_INTERCEPTOR">831</Setting>
+    			<Setting Name="GROUP_INTERDICTOR">541</Setting>
+    			<Setting Name="GROUP_ELECTRONICATTACKSHIPS">893</Setting>
+    			<Setting Name="GROUP_FRIGATE">25</Setting>
+    			<Setting Name="GROUP_INDUSTRIAL">28</Setting>
+    			<Setting Name="GROUP_TRANSPORTSHIP">380</Setting>
+    		</Set>
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
     		</Set>
     	</Set>
     </Set>
