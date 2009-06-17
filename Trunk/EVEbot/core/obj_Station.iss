@@ -7,21 +7,23 @@
 
 */
 
-
-
 objectdef obj_EVEDB_StationID
 {
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
+#ifdef TESTCASE
+	variable string CONFIG_FILE = "${Script.CurrentDirectory}/../Data/EVEDB_StationID.xml"
+#else
 	variable string CONFIG_FILE = "${BaseConfig.DATA_PATH}/EVEDB_StationID.xml"
+#endif
 	variable string SET_NAME = "EVEDB_StationID"
 
 	method Initialize()
 	{
 		LavishSettings[${This.SET_NAME}]:Remove
-		LavishSettings:Import[${CONFIG_FILE}]
-
+		UI:UpdateConsole["${This.ObjectName}: Loading database from ${This.CONFIG_FILE}", LOG_MINOR]
+		LavishSettings:Import[${This.CONFIG_FILE}]
 		UI:UpdateConsole["obj_EVEDB_StationID: Initialized", LOG_MINOR]
 	}
 
@@ -32,7 +34,7 @@ objectdef obj_EVEDB_StationID
 
 	member:int StationID(string stationName)
 	{
-		return ${LavishSettings[${This.SET_NAME}].FindSet[${stationName}].FindSetting[stationName, NOTSET]}
+		return ${LavishSettings[${This.SET_NAME}].FindSet[${stationName}].FindSetting[stationID, NOTSET]}
 	}
 }
 
