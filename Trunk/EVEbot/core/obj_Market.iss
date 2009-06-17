@@ -46,18 +46,13 @@ objectdef obj_Market
 		UI:UpdateConsole["obj_Market: Found ${This.sellOrders.Used} sell orders."]
 		UI:UpdateConsole["obj_Market: Found ${This.buyOrders.Used} buy orders."]
 		
-		;This:DumpSellOrders
 		call This.QuicksortSellOrders 1 ${This.sellOrders.Used}
-		;This:DumpSellOrders
-		
-		;This:DumpBuyOrders
 		call This.QuicksortBuyOrders 1 ${This.buyOrders.Used}
-		;This:DumpBuyOrders
  	}
    	   	
 	function GetMarketSellOrders(int typeID)
 	{
-		;UI:UpdateConsole["obj_Market: Obtaining market sell orders for item ${typeID}:${EVEDB_Items.ItemName[${typeID}]}"]
+		;UI:UpdateConsole["${This.ObjectName}: Obtaining market sell orders for item ${typeID}:${EVEDB_Items.Name[${typeID}]}"]
 
 		This.sellOrders:Clear
 
@@ -68,16 +63,13 @@ objectdef obj_Market
 		EVE:DoGetMarketOrders[This.sellOrders,"Sell",${typeID}]
 		wait 20
 
-		UI:UpdateConsole["obj_Market:GetMarketSellOrders Item ${typeID}:${EVEDB_Items.ItemName[${typeID}]} Orders - Sell: ${This.sellOrders.Used}"]
+		UI:UpdateConsole["${This.ObjectName}: GetMarketSellOrders Item ${typeID}:${EVEDB_Items.Name[${typeID}]} Orders - Sell: ${This.sellOrders.Used}"]
 
-		;This:DumpSellOrders
 		call This.QuicksortSellOrders 1 ${This.sellOrders.Used}
-		;This:DumpSellOrders
-   	}
+ 	}
 
 	function GetMarketBuyOrders(int typeID)
 	{
-		;UI:UpdateConsole["obj_Market: Obtaining market buy orders  for item ${typeID}:${EVEDB_Items.ItemName[${typeID}]}"]
 
 		This.buyOrders:Clear
 
@@ -88,11 +80,9 @@ objectdef obj_Market
 		EVE:DoGetMarketOrders[This.buyOrders,"Buy",${typeID}]
 		wait 20
 
-		UI:UpdateConsole["obj_Market:GetMarketOrders Item ${typeID}:${EVEDB_Items.ItemName[${typeID}]} Orders - Buy: ${This.buyOrders.Used}"]
+		UI:UpdateConsole["${This.ObjectName}: GetMarketBuyOrders: Item ${typeID}:${EVEDB_Items.Name[${typeID}]} Orders - Buy: ${This.buyOrders.Used}"]
 
-		;This:DumpBuyOrders
 		call This.QuicksortBuyOrders 1 ${This.buyOrders.Used}
-		;This:DumpBuyOrders
   }
 
 	member:int BestSellOrderSystem()
@@ -359,8 +349,8 @@ objectdef obj_Market
 		}
    	}
    	
-   	function FilterOrdersByRange(int jumps)
-   	{
+ 	function FilterOrdersByRange(int jumps)
+ 	{
 		variable int idx
 		variable int count
 				
@@ -371,25 +361,44 @@ objectdef obj_Market
 		{
 			if ${This.sellOrders.Get[${idx}].Jumps} > ${jumps}
 			{
-				;UI:UpdateConsole["obj_Market: Removing order ${This.sellOrders.Get[${idx}].ID}."]
 				This.sellOrders:Remove[${idx}]
 			}
 		}
 		This.sellOrders:Collapse		
-		;This:DumpSellOrders		
+		UI:UpdateConsole["obj_Market: Filtered ${Math.Calc[${count}-${This.sellOrders.Used}].Int} sell orders."]
 		
+		count:Set[${This.buyOrders.Used}]
+		removed:Set[0]
+		for ( idx:Set[1]; ${idx} <= ${count}; idx:Inc )
+		{
+			if ${This.buyOrders.Get[${idx}].Jumps} > ${jumps}
+			{
+				This.buyOrders:Remove[${idx}]
+			}
+		}
+		This.buyOrders:Collapse
+		UI:UpdateConsole["obj_Market: Filtered ${Math.Calc[${count}-${This.buyOrders.Used}].Int} buy orders."]
+ 	}
+
+ 	function FilterBuyOrdersByRange(int jumps)
+ 	{
+		variable int idx
+		variable int count
+				
+		UI:UpdateConsole["${This.ObjectName}: Filtering all orders more than ${jumps} jumps away from your present location."]
+
 		count:Set[${This.buyOrders.Used}]
 		for ( idx:Set[1]; ${idx} <= ${count}; idx:Inc )
 		{
 			if ${This.buyOrders.Get[${idx}].Jumps} > ${jumps}
 			{
-				;UI:UpdateConsole["obj_Market: Removing order ${This.sellOrders.Get[${idx}].ID}."]
+				UI:UpdateConsole["${This.ObjectName}: Removing order ${This.buyOrders.Get[${idx}].ID}."]
 				This.buyOrders:Remove[${idx}]
 			}
 		}
 		This.buyOrders:Collapse
-		;This:DumpBuyOrders		
-   	}
+		;This:DumpBuyOrders
+ 	}
 
 ;	member:float64 LowestSellOrder()
 ;	{
@@ -468,57 +477,67 @@ objectdef obj_Market
 
 	member:float64 HighestBuyOrder()
 	{
+		variable int idx
+
+		for ( idx:Set[${This.buyOrders.Used}]; ${idx} > 0; idx:Dec )
+		{
+			if ${This.IsMyBuyOrder[${This.buyOrders.Get[${idx}].ID}]}
+			{
+				continue
+			}
+			return ${This.buyOrders.Get[${idx}].Price}
+		}
+
+		; Shouldn't get here.  If we do, return the highest entry.
 		return ${This.buyOrders.Get[${This.buyOrders.Used}].Price}
 	}
 	
 	function GetMyBuyOrders(int typeID=0)
 	{
+		variable int TotalOrders
+
+		This.myBuyOrders:Clear
+		
 		if ${typeID} != 0
 		{
-			UI:UpdateConsole["obj_Market: Obtaining my buy orders for ${EVEDB_Items.ItemName[${typeID}]}"]
+			UI:UpdateConsole["${This.ObjectName}: Obtaining my buy orders for ${EVEDB_Items.Name[${typeID}]}"]
 			TotalOrders:Set[${Me.GetMyOrders[This.myBuyOrders,"Buy",${typeID}]}]
 		}
 		else
 		{
-			UI:UpdateConsole["obj_Market: Obtaining my buy orders for all items"]
+			UI:UpdateConsole["${This.ObjectName}: Obtaining my buy orders for all items"]
 			TotalOrders:Set[${Me.GetMyOrders[This.myBuyOrders,"Buy"]}]
 		}
 
 		if ${TotalOrders} > 0
 		{
-			UI:UpdateConsole["obj_Market: Waiting up to 1 minute to retrieve ${TotalOrders} orders"]
+			UI:UpdateConsole["${This.ObjectName}: Waiting up to 1 minute to retrieve ${TotalOrders} orders"]
 			wait 600 ${This.myBuyOrders.Get[${TotalOrders}].Name(exists)}
-		}
-		else
-		{
-			This.myBuyOrders:Clear
 		}
 	}
 
 	function GetMySellOrders(int typeID=0)
 	{
 		variable int TotalOrders
-		;Me:UpdateMyOrders
-		;wait 300
+
+		This.mySellOrders:Clear
 		if ${typeID} != 0
 		{
-			UI:UpdateConsole["obj_Market: Obtaining my sell orders for ${EVEDB_Items.ItemName[${typeID}]}"]
+			UI:UpdateConsole["${This.ObjectName}: Obtaining my sell orders for ${EVEDB_Items.Name[${typeID}]}"]
 			TotalOrders:Set[${Me.GetMyOrders[This.mySellOrders,"Sell",${typeID}]}]
+			wait 30
 		}
 		else
 		{
-			UI:UpdateConsole["obj_Market: Obtaining my sell orders for all items"]
+			UI:UpdateConsole["${This.ObjectName}: Obtaining my sell orders for all items"]
 			TotalOrders:Set[${Me.GetMyOrders[This.mySellOrders,"Sell"]}]
+			wait 30
 		}
 		
 		if ${TotalOrders} > 0
 		{
-			UI:UpdateConsole["obj_Market: Waiting up to 1 minute to retrieve ${TotalOrders} orders"]
+			UI:UpdateConsole["${This.ObjectName}: Waiting up to 1 minute to retrieve ${TotalOrders} orders"]
 			wait 600 ${This.mySellOrders.Get[${TotalOrders}].Name(exists)}
-		}
-		else
-		{
-			This.mySellOrders:Clear
 		}
 	}
 
