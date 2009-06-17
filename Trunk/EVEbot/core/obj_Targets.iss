@@ -352,7 +352,7 @@ objectdef obj_Targets_Rats
 					NPCShipType:Set[${NPCGroup.Token[${pos}, " "]}]
 					pos:Inc
 				}
-				UI:UpdateConsole["NPC: ${NPCName}(${NPCShipType}) ${EVEBot.ISK_To_Str[${EVEDB_Spawns.SpawnBounty[${NPCName}]}]}"]
+				UI:UpdateConsole["NPC: ${NPCName}(${NPCShipType}) ${EVEBot.ISK_To_Str[${EVEDB_Spawns.SpawnBounty[${NPCName}]}]}",LOG_DEBUG]
 
 				;UI:UpdateConsole["DEBUG: Type: ${Ratter.RatCache.EntityIterator.Value.Type}(${Ratter.RatCache.EntityIterator.Value.TypeID})"]
 				;UI:UpdateConsole["DEBUG: Category: ${Ratter.RatCache.EntityIterator.Value.Category}(${Ratter.RatCache.EntityIterator.Value.CategoryID})"]
@@ -373,7 +373,7 @@ objectdef obj_Targets_Rats
 				}
 			 }
 			 while ${Ratter.RatCache.EntityIterator:Next(exists)}
-			 UI:UpdateConsole["NPC: Total Battleship Value is ${EVEBot.ISK_To_Str[${iTotalBSValue}]}"]
+			 UI:UpdateConsole["NPC: Total Battleship Value is ${EVEBot.ISK_To_Str[${iTotalBSValue}]}",LOG_DEBUG]
 		}
 		return ${iTotalBSValue}
 	}

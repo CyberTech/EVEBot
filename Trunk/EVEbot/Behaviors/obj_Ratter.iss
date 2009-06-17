@@ -79,9 +79,7 @@ objectdef obj_Ratter
 	;; STATE MACHINE:  * -> IDLE -> MOVE -> PCCHECK -> FIGHT -> *
 	method SetState()
 	{
-#ifdef EVEBOT_DEBUG
-		UI:UpdateConsole["obj_Ratter: Hiding: ${Defense.Hiding}, Hide Reason: ${Defense.HideReason}"]
-#endif	
+		UI:UpdateConsole["obj_Ratter: Hiding: ${Defense.Hiding}, Hide Reason: ${Defense.HideReason}",LOG_DEBUG]
 		if ${Defense.Hiding}
 		{
 			This.CurrentState:Set["IDLE"]
@@ -111,9 +109,7 @@ objectdef obj_Ratter
 		{
 			return
 		}
-#ifdef EVEBOT_DEBUG
-		UI:UpdateConsole["obj_Ratter: Processing State: ${This.CurrentState}"]
-#endif
+		UI:UpdateConsole["obj_Ratter: Processing State: ${This.CurrentState}",LOG_DEBUG]
 		;UI:UpdateConsole["DEBUG: ${This.CurrentState}"]
 		switch ${This.CurrentState}
 		{
@@ -242,63 +238,6 @@ objectdef obj_Ratter
 			; If we had to wait for rats, Wait another second to try to let them get into range/out of warp
 			wait 10
 		}
-	}
-	
-	/* Orbit(int entityId, float range):
-		Orbit passed entity at passed range and record that we are orbiting this entity. */
-	method Orbit(int entityId, float range)
-	{
-#if EVEBOT_DEBUG
-		UI:UpdateConsole["obj_Ratter: Orbiting ${Entity[${entityId}].Name}, ${entityId} at range ${range}"]
-#endif
-		Entity[${entityId}]:Orbit[${range}]
-		iEntityOrbiting:Set[${entityId}]
-	}
-	
-	/* KeepAtRange(int entityID, float range):
-	KeepAtRange passed entity at passed range and record that we are keeping this entity at range. */
-	method KeepAtRange(int entityId, float range)
-	{
-		Entity[${entityId}]:KeepAtRange[${range}]
-		iEntityKeepingAtRange:Set[${entityId}]
-	}
-	
-	/* IsOrbiting():
-		Return true if I'm currently orbiting a living entity. Otherwise, returns false. */
-	member:bool IsOrbiting()
-	{
-		variable bool bEntityExists = FALSE
-		if ${Entity[${iEntityOrbiting}](exists)} && !${Entity[${iEntityOrbiting}].Type.Find[Wreck](exists)}
-		{
-			bEntityExists:Set[TRUE]
-		}
-#if EVEBOT_DEBUG
-		UI:UpdateConsole["obj_Ratter.IsOrbiting: iEntityOrbiting: ${iEntityOrbiting}, exists: ${bEntityExists}"]
-#endif
-		if ${iEntityOrbiting} != 0 && ${bEntityExists}
-		{
-			return TRUE
-		}
-		return FALSE
-	}
-	
-	/* bool IsKeepingAtRange():
-		Return true if I'm currently keeping a living entity at range. */
-	member:bool IsKeepingAtRange()
-	{
-		variable bool bEntityExists = FALSE
-		if ${Entity[${iEntityKeepingAtRange}](exists)} && !${Entity[${iEntityKeepingAtRange}].Type.Find[Wreck](exists)}
-		{
-			bEntityExists:Set[TRUE]
-		}
-#if EVEBOT_DEBUG
-		UI:UpdateConsole["obj_Ratter.IsKeepingAtRange: iEntityKeepingAtRange: ${iEntityKeepingAtRange}, exists: ${bEntityExists}"]
-#endif
-		if ${iEntityKeepingAtRange} != 0 && ${bEntityExists}
-		{
-			return TRUE
-		}
-		return FALSE
 	}
 
 	/* QueueTargets(): Handle any queueing, prioritizing, chaining, etc. of rats.
