@@ -10,8 +10,8 @@
 
 */
 
-#include Scripts/EVEBot/Support/TestAPI.iss
-#include Scripts/EVEBot/core/obj_Items.iss
+#include ../Support/TestAPI.iss
+#include ../core/obj_Items.iss
 
 variable obj_UI UI
 
@@ -21,6 +21,7 @@ function main()
 
 	declarevariable itemdb obj_EVEDB_Items
 
+	echo TypeID: ${itemdb.TypeID[Tritanium]}
 	echo Name: ${itemdb.Name[34]}
 	echo Volume: ${itemdb.Volume[34]}
 	echo Capacity: ${itemdb.Capacity[34]}

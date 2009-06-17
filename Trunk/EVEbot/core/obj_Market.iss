@@ -473,20 +473,26 @@ objectdef obj_Market
 	
 	function GetMyBuyOrders(int typeID=0)
 	{
-		;Me:UpdateMyOrders
-		;wait 300
 		if ${typeID} != 0
 		{
 			UI:UpdateConsole["obj_Market: Obtaining my buy orders for ${EVEDB_Items.ItemName[${typeID}]}"]
-			TotalOrders:Set[${Me.GetMyOrders[This.mySellOrders,"Buy",${typeID}]}]
+			TotalOrders:Set[${Me.GetMyOrders[This.myBuyOrders,"Buy",${typeID}]}]
 		}
 		else
 		{
 			UI:UpdateConsole["obj_Market: Obtaining my buy orders for all items"]
-			TotalOrders:Set[${Me.GetMyOrders[This.mySellOrders,"Buy"]}]
+			TotalOrders:Set[${Me.GetMyOrders[This.myBuyOrders,"Buy"]}]
 		}
-		UI:UpdateConsole["obj_Market: Waiting up to 1 minute to retrieve ${TotalOrders} orders"]
-		wait 600 ${This.mySellOrders.Get[${TotalOrders}].Name(exists)}
+
+		if ${TotalOrders} > 0
+		{
+			UI:UpdateConsole["obj_Market: Waiting up to 1 minute to retrieve ${TotalOrders} orders"]
+			wait 600 ${This.myBuyOrders.Get[${TotalOrders}].Name(exists)}
+		}
+		else
+		{
+			This.myBuyOrders:Clear
+		}
 	}
 
 	function GetMySellOrders(int typeID=0)
@@ -504,8 +510,16 @@ objectdef obj_Market
 			UI:UpdateConsole["obj_Market: Obtaining my sell orders for all items"]
 			TotalOrders:Set[${Me.GetMyOrders[This.mySellOrders,"Sell"]}]
 		}
-		UI:UpdateConsole["obj_Market: Waiting up to 1 minute to retrieve ${TotalOrders} orders"]
-		wait 600 ${This.mySellOrders.Get[${TotalOrders}].Name(exists)}
+		
+		if ${TotalOrders} > 0
+		{
+			UI:UpdateConsole["obj_Market: Waiting up to 1 minute to retrieve ${TotalOrders} orders"]
+			wait 600 ${This.mySellOrders.Get[${TotalOrders}].Name(exists)}
+		}
+		else
+		{
+			This.mySellOrders:Clear
+		}
 	}
 
 	function GetMyOrders(int typeID)

@@ -15,7 +15,7 @@ objectdef obj_EVEDB_Items
 	variable int Version
 
 #ifdef TESTCASE
-	variable string CONFIG_FILE = "${LavishScript.HomeDirectory}/Scripts/EVEBot/Data/EVEDB_Items.xml"
+	variable string CONFIG_FILE = "${Script.CurrentDirectory}/../Data/EVEDB_Items.xml"
 #else
 	variable string CONFIG_FILE = "${BaseConfig.DATA_PATH}/EVEDB_Items.xml"
 #endif
@@ -23,38 +23,15 @@ objectdef obj_EVEDB_Items
 
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_EVEDB_Items: Loading database", LOG_MINOR]
+		UI:UpdateConsole["${This.ObjectName}: Loading database from ${This.CONFIG_FILE}", LOG_MINOR]
 		LavishSettings[${This.SET_NAME}]:Remove
-		LavishSettings:Import["${CONFIG_FILE}"]
-		UI:UpdateConsole["obj_EVEDB_Items: Initialized", LOG_MINOR]
+		LavishSettings:Import[${This.CONFIG_FILE}]
+		UI:UpdateConsole["${This.ObjectName}: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
 	{
 		LavishSettings[${This.SET_NAME}]:Remove
-	}
-
-	method DumpDB(string itemName)
-	{
-		variable iterator SetIterator
-		variable iterator SettingIterator		
-
-		LavishSettings[${This.SET_NAME}]:GetSettingIterator[SetIterator]
-
-		if ${SetIterator:First(exists)}
-		{
-			do
-			{
-				echo ${SetIterator.Value.Name}
-
-			}
-			while ${SetIterator:Next(exists)}
-		}
-		else
-		{
-			echo "No Sets to iterate!"
-		}
-			
 	}
 
 	member:int TypeID(string itemName)
@@ -67,11 +44,10 @@ objectdef obj_EVEDB_Items
 		{
 			do
 			{
-				echo ${anIterator.Value}
-				;if ${anIterator.Value.FindSetting[TypeID, NOTSET]} == ${TypeID}
-				;{
-				;	return ${anIterator.Key}
-				;}
+				if ${anIterator.Value.FindAttribute[ItemName, NOTSET].String.Equal[${itemName}]}
+				{
+					return ${anIterator.Key}
+				}
 			}
 			while ${anIterator:Next(exists)}
 		}
