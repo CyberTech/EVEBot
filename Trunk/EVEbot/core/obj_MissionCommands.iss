@@ -501,7 +501,7 @@ objectdef obj_MissionCommands
 						{
 							do
 							{
-								if ${This.IsNPCTarget[${targetIterator.Value.GroupID}]}
+								if ${Targeting.IsNPCTarget[${targetIterator.Value.GroupID}]}
 								{
 									PullState:Set["PULL"]
 									PullCache:Set[${targetIterator.Value.ID}]
@@ -772,32 +772,6 @@ objectdef obj_MissionCommands
 			return ${Me.GetTargetedBy}
 		}
 
-		; TODO - move to obj_Target
-		member:bool IsNPCTarget(int groupID)
-		{
-			switch ${groupID}
-			{
-				case GROUP_LARGECOLLIDABLEOBJECT
-				case GROUP_LARGECOLLIDABLESHIP
-				case GROUP_LARGECOLLIDABLESTRUCTURE
-				case GROUP_SENTRYGUN
-				case GROUP_CONCORDDRONE
-				case GROUP_CUSTOMSOFFICIAL
-				case GROUP_POLICEDRONE
-				case GROUP_CONVOYDRONE
-				case GROUP_FACTIONDRONE
-				case GROUP_BILLBOARD
-				case GROUPID_SPAWN_CONTAINER
-				return FALSE
-				break
-				default
-				return TRUE
-				break
-			}
-
-			return TRUE
-		}
-
 		; TODO - move to Target.TargetSelect module
 		; TODO move blacklist/ignorelist to same
 		member:int HostileCount()
@@ -813,7 +787,7 @@ objectdef obj_MissionCommands
 			{
 				do
 				{
-					if ${This.IsNPCTarget[${targetIterator.Value.GroupID}]}
+					if ${Targeting.IsNPCTarget[${targetIterator.Value.GroupID}]}
 					{
 						hostileCount:Inc						
 					}

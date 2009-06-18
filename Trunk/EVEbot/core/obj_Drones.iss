@@ -238,17 +238,32 @@ objectdef obj_Drones
 		if ${This.DronesInSpace} == 0
 		{
 			variable index:entity NearbyNPCList
-
+			variable iterator NPCIterator
 			; TODO - This is WRONG - it includes players and non-aggressive entities (concord) - CyberTech
 			; TODO - This should be referencing whatever object gets created to track entities using the entitycache - CyberTech
 			EVE:DoGetEntities[NearbyNPCList, CategoryID, CATEGORYID_ENTITY]
-
-			if ${Me.GetTargetedBy} == ${NearbyNPCList.Used}
+			NearbyNPCList:DoGetIterator[NPCIterator]
+			if ${NPCIterator:First(exists)}
 			{
+				do
+				{
+					if ${Targeting.IsNPCTarget[${NPCIterator.Value.GroupID}]} && !${NPCIterator.Value.IsTargetingMe}
+					{
+						return FALSE
+					}
+				}
+				while ${NPCIterator:Next(exists)}
 				return TRUE
 			}
+			else
+			{
+				return FALSE
+			}
 		}
-		return FALSE
+		else
+		{
+			return TRUE
+		}
 	}
 
 	member:int DronesInBay()
