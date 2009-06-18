@@ -1,5 +1,10 @@
 objectdef obj_MissionCommands
 {
+	method Initialize()
+	{
+		EntityCache:UpdateSearchParams["I like big butts can i cannot lie","CategoryID, CATEGORYID_ENTITY"]
+		EntityCache:SetUpdateFrequency[2]
+	}
 	;TODO - Add checks to all members that involve movement to make sure we are actually moving!
 	method MissionComplete()
 	{
@@ -26,7 +31,7 @@ objectdef obj_MissionCommands
 		Recheck:Set[0]
 
 	}
-
+	variable obj_EntityCache EntityCache
 	variable collection:int TargetPriorities
 	variable string ApproachState = "IDLE"
 	variable int ApproachIDCache
@@ -761,7 +766,7 @@ objectdef obj_MissionCommands
 		; ------------------ END OF USER FUNCTIONS
 
 
-		; TODO - use of targetBlacklist appears to be more of a target ignore list; rename as appropriate
+		
 		member:int AggroCount()
 		{
 			return ${Me.GetTargetedBy}
@@ -797,14 +802,12 @@ objectdef obj_MissionCommands
 		; TODO move blacklist/ignorelist to same
 		member:int HostileCount()
 		{
-			variable index:entity targetIndex
 			variable iterator     targetIterator
 			variable iterator blackListIterator
 			variable int hostileCount = 0
 			variable bool blackListed = FALSE
 
-			EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
-			targetIndex:GetIterator[targetIterator]
+			This.EntityCache.CachedEntities:GetIterator[targetIterator]
 
 			if ${targetIterator:First(exists)}
 			{
@@ -812,27 +815,7 @@ objectdef obj_MissionCommands
 				{
 					if ${This.IsNPCTarget[${targetIterator.Value.GroupID}]}
 					{
-						targetBlacklist:GetIterator[blackListIterator]
-						if ${blackListIterator(exists)}
-						{
-							do
-							{
-								if ${blackListIterator.Value.Equal[${targetIterator.Value.Name}]}
-								{
-									blackListed:Set[TRUE]
-									break
-								}
-							}
-							while ${blackListIterator:Next(exists)}
-							if !${blackListed}
-							{
-								hostileCount:Inc
-							}
-							else
-							{
-								blackListed:Set[FALSE]
-							}
-						}
+						hostileCount:Inc						
 					}
 				}
 				while ${targetIterator:Next(exists)}
@@ -840,10 +823,7 @@ objectdef obj_MissionCommands
 			return ${hostileCount}
 		}
 
-		member:int ContainerCount()
-		{
-			return 0
-		}
+
 
 		member:bool GatePresent()
 		{
@@ -856,154 +836,7 @@ objectdef obj_MissionCommands
 			return ${gateIndex.Used} > 0
 		}
 
-		member:bool IsSpecialStructure(int agentID,string structureName)
-		{
-			variable string missionName
-
-			;;;UI:UpdateConsole["obj_Agents: DEBUG: IsSpecialStructure(${agentID},${structureName}) >>> ${This.MissionCache.Name[${agentID}]}"]
-
-			missionName:Set[${This.MissionCache.Name[${agentID}]}]
-			if ${missionName.NotEqual[NULL]}
-			{
-				UI:UpdateConsole["obj_Missions: DEBUG: missionName = ${missionName}"]
-				if ${missionName.Equal["avenge a fallen comrade"]} && ${structureName.Equal["habitat"]}
-				{
-					return TRUE
-				}
-				elseif ${missionName.Equal["break their will"]} && ${structureName.Equal["repair outpost"]}
-				{
-					return TRUE
-				}
-				elseif ${missionName.Equal["the hidden stash"]} && ${structureName.Equal["warehouse"]}
-				{
-					return TRUE
-				}
-				elseif ${missionName.Equal["secret pickup"]} && ${structureName.Equal["recon outpost"]}
-				{
-					return TRUE
-				}
-			}
-
-			return FALSE
-		}
-
-		member:bool SpecialStructurePresent(int agentID)
-		{
-			variable index:entity targetIndex
-			variable iterator     targetIterator
-
-			EVE:DoGetEntities[targetIndex, GroupID, GROUP_LARGECOLLIDABLESTRUCTURE]
-			targetIndex:GetIterator[targetIterator]
-
-			UI:UpdateConsole["obj_Missions: DEBUG: SpecialStructurePresent found ${targetIndex.Used} structures"]
-
-			if ${targetIterator:First(exists)}
-			{
-				do
-				{
-					if ${This.IsSpecialStructure[${agentID},${targetIterator.Value.Name}]} == TRUE
-					{
-						return TRUE
-					}
-				}
-				while ${targetIterator:Next(exists)}
-			}
-
-			return FALSE
-		}
-
-		member:int SpecialStructureID(int agentID)
-		{
-			variable index:entity targetIndex
-			variable iterator     targetIterator
-
-			EVE:DoGetEntities[targetIndex, GroupID, GROUP_LARGECOLLIDABLESTRUCTURE]
-			targetIndex:GetIterator[targetIterator]
-
-			if ${targetIterator:First(exists)}
-			{
-				do
-				{
-					if ${This.IsSpecialStructure[${agentID},${targetIterator.Value.Name}]} == TRUE
-					{
-						return ${targetIterator.Value.ID}
-					}
-				}
-				while ${targetIterator:Next(exists)}
-			}
-
-			return -1
-		}
-
-		member:bool IsSpecialWreck(int agentID,string wreckName)
-		{
-			variable string missionName
-
-			;;;UI:UpdateConsole["obj_Missions: DEBUG: IsSpecialWreck(${agentID},${wreckName}) >>> ${This.MissionCache.Name[${agentID}]}"]
-
-			missionName:Set[${This.MissionCache.Name[${agentID}]}]
-			if ${missionName.NotEqual[NULL]}
-			{
-				UI:UpdateConsole["obj_Missions: DEBUG: missionName = ${missionName}"]
-				if ${missionName.Equal["smuggler interception"]} && \
-				${wreckName.Find["transport"]} > 0
-				{
-					return TRUE
-				}
-				; elseif {...}
-				; etc...
-			}
-
-			return FALSE
-		}
-
-		member:bool SpecialWreckPresent(int agentID)
-		{
-			variable index:entity targetIndex
-			variable iterator     targetIterator
-
-			EVE:DoGetEntities[targetIndex, GroupID, GROUP_LARGECOLLIDABLESTRUCTURE]
-			targetIndex:GetIterator[targetIterator]
-
-			UI:UpdateConsole["obj_Missions: DEBUG: SpecialWreckPresent found ${targetIndex.Used} wrecks",LOG_MINOR]
-
-			if ${targetIterator:First(exists)}
-			{
-				do
-				{
-					if ${This.IsSpecialWreck[${agentID},${targetIterator.Value.Name}]} == TRUE
-					{
-						return TRUE
-					}
-				}
-				while ${targetIterator:Next(exists)}
-			}
-
-			return FALSE
-		}
-
-		member:int SpecialWreckID(int agentID)
-		{
-			variable index:entity targetIndex
-			variable iterator     targetIterator
-
-			EVE:DoGetEntities[targetIndex, GroupID, GROUP_LARGECOLLIDABLESTRUCTURE]
-			targetIndex:GetIterator[targetIterator]
-
-			if ${targetIterator:First(exists)}
-			{
-				do
-				{
-					if ${This.IsSpecialWreck[${agentID},${targetIterator.Value.Name}]} == TRUE
-					{
-						return ${targetIterator.Value.ID}
-					}
-				}
-				while ${targetIterator:Next(exists)}
-			}
-
-			return -1
-		}
+	
 
 		; TODO - move to obj_Cargo
 
@@ -1202,11 +1035,6 @@ objectdef obj_MissionCommands
 				return
 			}
 		}
-		method AddPriority(string EntityName , int Priority)
-		{
-			TargetPriorities:Set[${EntityName},${Priority}]
-		}
-
 		method NextTarget()
 		{
 			if !${Me.ActiveTarget(exists)}
@@ -1255,6 +1083,7 @@ objectdef obj_MissionCommands
 							{
 								if !${Targeting.IsQueued[${targetIterator.Value.ID}]}
 								{
+									UI:UpdateConsole["DEBUG: obj_MissionCommands - NextTarget - Targeting ${targetIterator.Value.Name} ID ${targetIterator.Value.ID}",LOG_DEBUG]
 									Targeting:Queue[${targetIterator.Value.ID},1,1,TRUE]
 								}
 							}
