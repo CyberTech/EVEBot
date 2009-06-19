@@ -67,7 +67,6 @@ objectdef obj_MissionCombat
 		/* we reset to idle of the defense thread runs away, thus resetting the state machine to its entry point, processstate does not get called untill the defense thread stops hiding */
 		if ${Defense.Hide}
 		{
-			UI:UpdateConsole["DEBUG: obj_MissionCombat - Defense hiding , resetting state to idle",LOG_DEBUG]
 			This.CurrentState:Set["Idle"]
 		}
 		else
@@ -482,7 +481,7 @@ objectdef obj_MissionCombat
 			}
 		}
 	}
-	
+
 	function WarpToHomeBase(int agentID)
 	{
 		variable index:agentmission amIndex
