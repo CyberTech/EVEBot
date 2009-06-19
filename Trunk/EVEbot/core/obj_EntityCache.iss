@@ -1,14 +1,14 @@
 /*
-Entity Cache Base Class
+	Entity Cache Base Class
 
-Caches isxeve result data for Entity Searches, and keeps them up to date
-Intended to be instantiated one or more times for each module that requires
-frequent entity lookups.
+	Caches isxeve result data for Entity Searches, and keeps them up to date
+	Intended to be instantiated one or more times for each module that requires
+	frequent entity lookups.
 
-Keeps entity data in 2 lists -- the original index:int from isxeve, and an expanded
-index:obj_Entity which contains commonly accessed data fields.
+	Keeps entity data in 2 lists -- the original index:int from isxeve, and an expanded
+	index:obj_Entity which contains commonly accessed data fields.
 
--- CyberTech
+	-- CyberTech
 */
 
 objectdef obj_Entity
@@ -113,51 +113,49 @@ objectdef obj_EntityCache inherits BaseClass
 					switch ${EntityIterator.Value.CategoryID}
 					{
 						case CATEGORYID_ENTITY
-						break
+							break
 						case CATEGORYID_ORE
-						switch ${Name}
-						{
-							case Crimson Arkonor
-							case Triclinic Bistot
-							case Sharp Crokite
-							case Bright Spodumain
-							case Onyx Ochre
-							case Iridescent Gneiss
-							case Vitric Hedbergite
-							case Vivid Hemorphite
-							case Pure Jaspet
-							case Luminous Kernite
-							case Silvery Omber
-							case Azure Plagioclase
-							case Solid Pyroxeres
-							case Condensed Scordite
-							case Concentrated Veldspar
-							ORE_Density:Set[3]
+							switch ${Name}
+							{
+								case Crimson Arkonor
+								case Triclinic Bistot
+								case Sharp Crokite
+								case Bright Spodumain
+								case Onyx Ochre
+								case Iridescent Gneiss
+								case Vitric Hedbergite
+								case Vivid Hemorphite
+								case Pure Jaspet
+								case Luminous Kernite
+								case Silvery Omber
+								case Azure Plagioclase
+								case Solid Pyroxeres
+								case Condensed Scordite
+								case Concentrated Veldspar
+									ORE_Density:Set[3]
+									break
+								case Prime Arkonor
+								case Monoclinic Bistot
+								case Crystalline Crokite
+								case Gleaming Spodumain
+								case Obsidian Ochre
+								case Prismatic Gneiss
+								case Glazed Hedbergite
+								case Radiant Hemorphite
+								case Pristine Jaspet
+								case Fiery Kernite
+								case Golden Omber
+								case Rich Plagioclase
+								case Viscous Pyroxeres
+								case Massive Scordite
+								case Dense Veldspar
+									ORE_Density:Set[2]
+									break
+								default
+									ORE_Density:Set[1]
+									break
+							}
 							break
-							case Prime Arkonor
-							case Monoclinic Bistot
-							case Crystalline Crokite
-							case Gleaming Spodumain
-							case Obsidian Ochre
-							case Prismatic Gneiss
-							case Glazed Hedbergite
-							case Radiant Hemorphite
-							case Pristine Jaspet
-							case Fiery Kernite
-							case Golden Omber
-							case Rich Plagioclase
-							case Viscous Pyroxeres
-							case Massive Scordite
-							case Dense Veldspar
-							ORE_Density:Set[2]
-							break
-							default
-							ORE_Density:Set[1]
-							break
-						}
-						break
-						default
-						break
 					}
 					switch ${This.FilterMember}
 					{

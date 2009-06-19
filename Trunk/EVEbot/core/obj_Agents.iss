@@ -1081,7 +1081,7 @@ objectdef obj_Agents
 		}
 		else
 		{
-			UI:UpdateConsole["obj_Agents: DEBUG: Did not find \"corplogo\".  Rouge Drones???"]
+			UI:UpdateConsole["obj_Agents: DEBUG: Did not find \"corplogo\".  Rogue Drones???"]
 		}
 
 		Missions.MissionCache:SetFactionID[${amIterator.Value.AgentID},${factionID}]

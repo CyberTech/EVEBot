@@ -150,10 +150,7 @@ objectdef obj_Drones
 	method CheckDroneHP()
 	{
 		; TODO: Create obj_DroneStatus and store index:obj_DroneStatus to store hp/shield/armor in one construct and reduce code here.
-		/* Update drone entity index */
 		This:GetActiveDrones[]
-
-		/* Get an iterator from the index */
 		This.ActiveDrones:GetIterator[This.ActiveDrone]
 
 		/* iterate over the index */
@@ -188,7 +185,7 @@ objectdef obj_Drones
 		}
 	}
 
-	member DroneIsRecalled(entity drone)
+	member DroneIsRecalled(entity Drone)
 	{
 		/* Get an iterator to the recalled drones */
 		RecalledDrones:GetIterator[RecalledDroneIterator]
@@ -198,7 +195,7 @@ objectdef obj_Drones
 		{
 			do
 			{
-				if ${RecalledDroneIterator.Value.ID} == ${drone.ID}
+				if ${RecalledDroneIterator.Value.ID} == ${Drone.ID}
 				{
 					return TRUE
 				}
@@ -208,21 +205,21 @@ objectdef obj_Drones
 		return FALSE
 	}
 
-	method RecallDrone(entity drone, bool relaunch=TRUE)
+	method RecallDrone(entity Drone, bool Relaunchable=TRUE)
 	{
-		UI:UpdateConsole["obj_Drones: Recalling drone ${drone.ID}, ${relaunch}"]
-		if !${relaunch}
+		UI:UpdateConsole["obj_Drones: Recalling drone ${Drone.ID}, Relaunchable: ${Relaunchable}", LOG_DEBUG]
+		if !${Relaunchable}
 		{
-			RecalledDrones:Insert[${drone.ID}]
+			RecalledDrones:Insert[${Drone.ID}]
 		}
-		drone:ReturnToDroneBay
+		Drone:ReturnToDroneBay
 	}
 
 	method LaunchAll()
 	{
 		if ${MyShip.GetDrones} > 0
 		{
-			UI:UpdateConsole["Launching drones..."]
+			UI:UpdateConsole["Launching all drones..."]
 			MyShip:LaunchAllDrones
 			This.WaitingForDrones:Set[TRUE]
 		}
@@ -235,19 +232,16 @@ objectdef obj_Drones
 			return FALSE
 		}
 
-		if ${This.DronesInSpace} == 0
+		if ${Offense.HaveFullAggro}
 		{
-			if ${Offense.HaveFullAggro}
-			{
-				return TRUE
-			}
+			return TRUE
 		}
 		return FALSE
 	}
 
 	member:int DronesInBay()
 	{
-		; TODO. This would be a buggarooni.
+		; TODO. This would be a buggarooni. check drones in bay, not active.
 		return ${Me.GetActiveDroneIDs[This.ActiveDroneIDList]}
 	}
 
