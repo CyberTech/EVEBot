@@ -171,7 +171,6 @@ objectdef obj_MissionCombat
 						;we could not find the mission in the database! Abort!
 
 						UI:UpdateConsole["DEBUG: obj_MissionCombat - Mission not found, changing state to Abort ",LOG_DEBUG]
-
 						This.CurrentState:Set["ABORT"]
 					}
 				}
@@ -180,7 +179,6 @@ objectdef obj_MissionCombat
 					;we get here if for some reason we lost the missionID, revert to idle state
 
 					UI:UpdateConsole["DEBUG: obj_MissionCombat - Have no mission ID in state GotoMisison, reverting to Idle state ",LOG_DEBUG]
-
 					This.CurrentState:Set["IDLE"]
 				}
 
@@ -193,11 +191,11 @@ objectdef obj_MissionCombat
 				;first we call the method that decides what command we should be executing
 
 				UI:UpdateConsole["DEBUG: obj_MissionCombat - Executing Runcommands state",LOG_DEBUG]
-
 				This:SetCommandState
+
 				;next we call the method that executes said command
 				;commands return true or false based on whether they complete or not, commands that do not complete in one go
-				;simply get called again untill they complete
+				;simply get called again until they complete
 
 				UI:UpdateConsole["DEBUG: obj_MissionCombat - Attempting to process command 	${CommandIterator.Value.FindAttribute["Action"].String}",LOG_DEBUG]
 
