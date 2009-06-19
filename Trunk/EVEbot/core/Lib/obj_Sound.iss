@@ -37,26 +37,26 @@ objectdef obj_Sound
 
 	method PlayAlarmSound()
 	{
-		This:PlaySound[ALARMSOUND]
+		This:TryPlaySound[ALARMSOUND]
 	}
 
 	method PlayDetectSound()
 	{
-		This:PlaySound[DETECTSOUND]
+		This:TryPlaySound[DETECTSOUND]
 	}
 
 	method PlayTellSound()
 	{
-		This:PlaySound[TELLSOUND]
+		This:TryPlaySound[TELLSOUND]
 	}
 
 	method PlayLevelSound()
 	{
-		This:PlaySound[LEVELSOUND]
+		This:TryPlaySound[LEVELSOUND]
 	}
 
 	method PlayWarningSound()
 	{
-		This:PlaySound[WARNSOUND]
+		This:TryPlaySound[WARNSOUND]
 	}
 }
