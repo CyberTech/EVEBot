@@ -1,4 +1,20 @@
 ﻿<?xml version='1.0' encoding='UTF-8'?>
+<!--
+	TODO:
+	<Set Name="Mission Template">
+    <Set Name = "Kill Everything"> <- Template attribute
+      <Set Name = "2">
+        <Set Name = "Commands" Repeat="TotalRooms">   <- TotalRooms is an attribute from the set name
+          <Set Name = "1" Action = "NextRoom">
+          <Set Name = "2" Action = "ClearRoom">
+        </Set>
+------------------------
+Example use:
+  <Set Name="Mission Database">
+    <Set Name = "Rogue Drone Harassment" Template="Kill Everything" TotalRooms="2">
+    </Set>
+
+-->
 <InnerSpaceSettings>
   <Set Name="Mission Database">
     <Set Name = "Rogue Drone Harassment">
@@ -190,8 +206,8 @@
           </Set>
           <Set Name = "2" Action = "ClearRoom">
           </Set>
-          <Set Name = "3" Action = "CheckContainers" Target="Militants" GroupID="186" WreckName="Transport">            
-          </Set>         
+          <Set Name = "3" Action = "CheckContainers" Target="Militants" GroupID="186" WreckName="Transport">
+          </Set>
         </Set>
       </Set>
     </Set>
