@@ -2,7 +2,7 @@ objectdef obj_MissionCommands
 {
 	method Initialize()
 	{
-		EntityCache:UpdateSearchParams["I like big butts can i cannot lie","CategoryID, CATEGORYID_ENTITY"]
+		EntityCache:UpdateSearchParams["I like big butts can i cannot lie","CategoryID, CATEGORYID_ENTITY","IsNPC"]
 		EntityCache:SetUpdateFrequency[2]
 	}
 	;TODO - Add checks to all members that involve movement to make sure we are actually moving!
@@ -501,7 +501,7 @@ objectdef obj_MissionCommands
 						{
 							do
 							{
-								if ${Targeting.IsNPCTarget[${targetIterator.Value.GroupID}]}
+								if ${Targets.IsNPCTarget[${targetIterator.Value.GroupID}]}
 								{
 									PullState:Set["PULL"]
 									PullCache:Set[${targetIterator.Value.ID}]
@@ -787,10 +787,7 @@ objectdef obj_MissionCommands
 			{
 				do
 				{
-					if ${Targeting.IsNPCTarget[${targetIterator.Value.GroupID}]}
-					{
-						hostileCount:Inc						
-					}
+						hostileCount:Inc			
 				}
 				while ${targetIterator:Next(exists)}
 			}

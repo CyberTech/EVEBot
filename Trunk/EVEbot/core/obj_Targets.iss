@@ -315,6 +315,27 @@ objectdef obj_Targets
 		}
 		return TRUE
 	}
+	member:bool IsNPCTarget(int groupID)
+	{
+		switch ${groupID}
+		{
+			case GROUP_LARGECOLLIDABLEOBJECT
+			case GROUP_LARGECOLLIDABLESHIP
+			case GROUP_LARGECOLLIDABLESTRUCTURE
+			case GROUP_SENTRYGUN
+			case GROUP_CONCORDDRONE
+			case GROUP_CUSTOMSOFFICIAL
+			case GROUP_POLICEDRONE
+			case GROUP_CONVOYDRONE
+			case GROUP_FACTIONDRONE
+			case GROUP_BILLBOARD
+			case GROUPID_SPAWN_CONTAINER
+				return FALSE
+				break
+		}
+
+		return TRUE
+	}
 }
 
 /* Handles Targeting Rats:

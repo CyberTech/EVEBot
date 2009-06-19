@@ -1,14 +1,14 @@
 /*
-	Entity Cache Base Class
+Entity Cache Base Class
 
-	Caches isxeve result data for Entity Searches, and keeps them up to date
-	Intended to be instantiated one or more times for each module that requires
-	frequent entity lookups.
+Caches isxeve result data for Entity Searches, and keeps them up to date
+Intended to be instantiated one or more times for each module that requires
+frequent entity lookups.
 
-	Keeps entity data in 2 lists -- the original index:int from isxeve, and an expanded
-	index:obj_Entity which contains commonly accessed data fields.
+Keeps entity data in 2 lists -- the original index:int from isxeve, and an expanded
+index:obj_Entity which contains commonly accessed data fields.
 
-	-- CyberTech
+-- CyberTech
 */
 
 objectdef obj_Entity
@@ -44,6 +44,7 @@ objectdef obj_EntityCache inherits BaseClass
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 4
 
+	variable string FilterMember = "NONE"
 	variable string SearchParams = "byDist"
 	variable index:entity Entities
 	variable index:obj_Entity CachedEntities
@@ -65,12 +66,12 @@ objectdef obj_EntityCache inherits BaseClass
 
 	method Pulse()
 	{
-	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			This:UpdateEntityCache
-	   		This.NextPulse:Set[${Time.Timestamp}]
-   			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-  			This.NextPulse:Update
+			This.NextPulse:Set[${Time.Timestamp}]
+			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+			This.NextPulse:Update
 		}
 	}
 
@@ -80,11 +81,12 @@ objectdef obj_EntityCache inherits BaseClass
 		This.PulseIntervalInSeconds:Set[${Seconds}]
 	}
 
-	method UpdateSearchParams(string VarName, string SearchTerms)
+	method UpdateSearchParams(string VarName, string SearchTerms,string Filter = "NONE")
 	{
 		UI:UpdateConsole["${LogPrefix}: Search Params: ${SearchTerms}"]
 		This.Initialized:Set[FALSE]
 		This.SearchParams:Set["${SearchTerms}"]
+		This.FilterMember:Set["${Filter}"]
 		This:UpdateEntityCache
 	}
 
@@ -107,58 +109,72 @@ objectdef obj_EntityCache inherits BaseClass
 			{
 				do
 				{
-					;method Initialize(int _EntityID, string _Name, int _TypeID, int _GroupID, float _Distance, int _ORE_Density = 0)
 					Name:Set[${EntityIterator.Value.Name}]
 					switch ${EntityIterator.Value.CategoryID}
 					{
 						case CATEGORYID_ENTITY
-							break
+						break
 						case CATEGORYID_ORE
-							switch ${Name}
-							{
-								case Crimson Arkonor
-								case Triclinic Bistot
-								case Sharp Crokite
-								case Bright Spodumain
-								case Onyx Ochre
-								case Iridescent Gneiss
-								case Vitric Hedbergite
-								case Vivid Hemorphite
-								case Pure Jaspet
-								case Luminous Kernite
-								case Silvery Omber
-								case Azure Plagioclase
-								case Solid Pyroxeres
-								case Condensed Scordite
-								case Concentrated Veldspar
-									ORE_Density:Set[3]
-									break
-								case Prime Arkonor
-								case Monoclinic Bistot
-								case Crystalline Crokite
-								case Gleaming Spodumain
-								case Obsidian Ochre
-								case Prismatic Gneiss
-								case Glazed Hedbergite
-								case Radiant Hemorphite
-								case Pristine Jaspet
-								case Fiery Kernite
-								case Golden Omber
-								case Rich Plagioclase
-								case Viscous Pyroxeres
-								case Massive Scordite
-								case Dense Veldspar
-									ORE_Density:Set[2]
-									break
-								default
-									ORE_Density:Set[1]
-									break
-							}
+						switch ${Name}
+						{
+							case Crimson Arkonor
+							case Triclinic Bistot
+							case Sharp Crokite
+							case Bright Spodumain
+							case Onyx Ochre
+							case Iridescent Gneiss
+							case Vitric Hedbergite
+							case Vivid Hemorphite
+							case Pure Jaspet
+							case Luminous Kernite
+							case Silvery Omber
+							case Azure Plagioclase
+							case Solid Pyroxeres
+							case Condensed Scordite
+							case Concentrated Veldspar
+							ORE_Density:Set[3]
 							break
+							case Prime Arkonor
+							case Monoclinic Bistot
+							case Crystalline Crokite
+							case Gleaming Spodumain
+							case Obsidian Ochre
+							case Prismatic Gneiss
+							case Glazed Hedbergite
+							case Radiant Hemorphite
+							case Pristine Jaspet
+							case Fiery Kernite
+							case Golden Omber
+							case Rich Plagioclase
+							case Viscous Pyroxeres
+							case Massive Scordite
+							case Dense Veldspar
+							ORE_Density:Set[2]
+							break
+							default
+							ORE_Density:Set[1]
+							break
+						}
+						break
 						default
-							break
+						break
 					}
-					CachedEntities:Insert[${EntityIterator.Value.ID}, "${Name}", ${EntityIterator.Value.TypeID}, ${EntityIterator.Value.GroupID}, ${EntityIterator.Value.Distance}, ${ORE_Density}]
+					switch ${This.FilterMember}
+					{
+						case NONE
+						{
+							;method Initialize(int _EntityID, string _Name, int _TypeID, int _GroupID, float _Distance, int _ORE_Density = 0)
+
+							CachedEntities:Insert[${EntityIterator.Value.ID}, "${Name}", ${EntityIterator.Value.TypeID}, ${EntityIterator.Value.GroupID}, ${EntityIterator.Value.Distance}, ${ORE_Density}]
+						}
+						case IsNPC
+						{
+							if ${Targets.IsNPCTarget[${EntityIterator.Value.GroupID}]}
+							{
+								CachedEntities:Insert[${EntityIterator.Value.ID}, "${Name}", ${EntityIterator.Value.TypeID}, ${EntityIterator.Value.GroupID}, ${EntityIterator.Value.Distance}, ${ORE_Density}]
+							}
+						}
+					}
 				}
 				while ${EntityIterator:Next(exists)}
 			}

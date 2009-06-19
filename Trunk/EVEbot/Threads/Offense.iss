@@ -273,8 +273,7 @@ objectdef obj_Offense
 				HaveAggro:Set[${Targets.HaveFullAggro["Ratter.RatCache.Entities"]}]
 				break
 			case Missioneer
-				;todo: Pass Targets.HaveFullAggro[] the FQN of MissionCombat's entity cache. - Stealthy
-				HaveAggro:Set[TRUE]
+				HaveAggro:Set[${Targets.HaveFullAggro["Missions.MissionCommands.EntityCache"]}]
 				break
 		}
 		return ${HaveAggro}
