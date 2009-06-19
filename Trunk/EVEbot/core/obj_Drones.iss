@@ -210,10 +210,10 @@ objectdef obj_Drones
 
 	method RecallDrone(entity drone, bool relaunch=TRUE)
 	{
-		UI:UpdateConsole["obj_Drones: Recalling drone ${drone.ID}",LOG_DEBUG]
+		UI:UpdateConsole["obj_Drones: Recalling drone ${drone.ID}, ${relaunch}"]
 		if !${relaunch}
 		{
-			RecalledDrones:Insert[${drone}]
+			RecalledDrones:Insert[${drone.ID}]
 		}
 		drone:ReturnToDroneBay
 	}

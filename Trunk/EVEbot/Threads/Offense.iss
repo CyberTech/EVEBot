@@ -186,7 +186,7 @@ objectdef obj_Offense
 						;If we had no turrets needing ammo changes, go ahead and reset the pulse timer. We're done for now.
 						UI:UpdateConsole["Offense: Done swapping out ammo, resetting timer.",LOG_DEBUG]
 						This.NextAmmoChange:Set[${Time.Timestamp}]
-						This.NextAmmoChange.Second:Inc[20]
+						This.NextAmmoChange.Second:Inc[5]
 						This.NextAmmoChange:Update
 					}
 				}

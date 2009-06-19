@@ -416,6 +416,7 @@ objectdef obj_Ratter
 				if !${Offense.IsConcordTarget[${RatCache.EntityIterator.Value.GroupID}]} && \
 				(${Targets.IsPriorityTarget[${RatCache.EntityIterator.Value.Name}]} || \
 				${Targets.IsSpecialTarget[${RatCache.EntityIterator.Value.Name}]} || \
+				${RatCache.EntityIterator.Value.Group.Find["Battleship"](exists)} || \
 				(!${This.IsDoNotKill[${RatCache.EntityIterator.Value.ID}]} && ${HaveMultipleTypes}))
 				{
 					return TRUE

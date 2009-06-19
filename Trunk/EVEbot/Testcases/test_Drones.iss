@@ -1,6 +1,6 @@
 #define TESTCASE 1
 
-#include Scripts/EVEBot/Support/TestAPI.iss
+#include Scripts/EVEBot-test/Support/TestAPI.iss
 
 /*
 	Test Drone Launch, Recall, ID collection, activedrone member, engage

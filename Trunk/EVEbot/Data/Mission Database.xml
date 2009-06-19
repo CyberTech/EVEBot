@@ -583,7 +583,7 @@
     			<Set Name="6" Action="WaitAggro" TimeOut="10" />
     		</Set>
     	</Set>
-    </Set>  
+    </Set>
     <Set Name="Delving Into the Past (1 of 3)">
     	<Set Name="2">
     		<Set Name="Commands">
@@ -626,20 +626,25 @@
     		</Set>
     	</Set>
     </Set>
-  </Set>
-  <!-- This mission will only allow t-1 cruisers and t-1/t-2 frigates -->
-  <Set Name ="Communications Cold War FFFFFFFFFFFFFFFFF">
-    <Set Name ="2">
-      <Set Name="Commands">
-        <Set Name ="1" Action ="NextRoom">
-        </Set>
-        <Set Name ="2" Action ="ClearRoom">
-        </Set>
-        <Set Name ="3" Action ="NextRoom">
-        </Set>
-        <Set Name ="4" Action ="ClearRoom">
-        </Set>
-      </Set>
-    </Set>
+		<Set Name="Scout It Out">
+			<Set Name="3">
+				<Set Name="Commands">
+					<Set Name="1" Action="ClearRoom" />
+					<Set Name="2" Action="Kill" Target="Warehouse" GroupID="319" />
+					<!-- This is not a duplicate entry. There are four warehouses that need to die. -->
+					<!-- Todo: Add some sort of Count="num" paramater for the LCO's that need to die. -->
+					<Set Name="3" Action="Kill" Target="Warehouse" GroupID="319" />
+					<Set Name="4" Action="Kill" Target="Warehouse" GroupID="319" />
+					<Set Name="5" Action="Kill" Target="Warehouse" GroupID="319" />
+				</Set>
+			</Set>
+		</Set>
+		<Set Name="What Comes Around Goes Around">
+			<Set Name="3">
+				<Set Name="Commands">
+					<Set Name="1" Action="ClearRoom" />
+				</Set>
+			</Set>
+		</Set>
   </Set>
 </InnerSpaceSettings>
