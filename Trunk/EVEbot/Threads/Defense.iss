@@ -23,6 +23,7 @@ objectdef obj_Defense
 	variable bool Hide = FALSE
 	variable string HideReason
 	variable bool Hiding = FALSE
+	variable index:entity TargetingMe
 
 	method Initialize()
 	{
@@ -326,7 +327,8 @@ objectdef obj_Defense
 		; If you don't have hardeners this code does nothing.
 		; This uses shield and uncached GetTargetedBy (to reduce chance of a
 		; volley making it thru before hardeners are up)
-		if ${Me.GetTargetedBy} > 0 || ${_MyShip.ShieldPct} < 99
+		Me:DoGetTargetedBy[This.TargetingMe]
+		if ${This.TargetingMe.Used} > 0 || ${_MyShip.ShieldPct} < 99
 		{
 			Ship:Activate_Hardeners[]
 		}
