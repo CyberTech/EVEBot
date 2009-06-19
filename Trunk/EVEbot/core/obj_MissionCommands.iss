@@ -769,7 +769,7 @@ objectdef obj_MissionCommands
 		
 		member:int AggroCount()
 		{
-			return ${Me.GetTargetedBy}
+			return ${Defense.TargetingMe.Used}
 		}
 
 		; TODO - move to Target.TargetSelect module
@@ -1012,10 +1012,8 @@ objectdef obj_MissionCommands
 			{
 				variable int highestPriority = 0
 				variable int highestID
-				variable index:entity targetIndex
 				variable iterator targetIterator
-				Me:DoGetTargetedBy[targetIndex]
-				targetIndex:GetIterator[targetIterator]
+				Defense.TargetingMe:GetIterator[targetIterator]
 				;UI:UpdateConsole["GetTargeting = ${_Me.GetTargeting}, GetTargets = ${_Me.GetTargets}"]
 				if ${targetIterator:First(exists)}
 				{
