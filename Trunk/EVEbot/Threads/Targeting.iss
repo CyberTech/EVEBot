@@ -458,31 +458,28 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 
 		return ${MaxDistance}
 	}
-	
+
 	member:bool IsNPCTarget(int groupID)
+	{
+		switch ${groupID}
 		{
-			switch ${groupID}
-			{
-				case GROUP_LARGECOLLIDABLEOBJECT
-				case GROUP_LARGECOLLIDABLESHIP
-				case GROUP_LARGECOLLIDABLESTRUCTURE
-				case GROUP_SENTRYGUN
-				case GROUP_CONCORDDRONE
-				case GROUP_CUSTOMSOFFICIAL
-				case GROUP_POLICEDRONE
-				case GROUP_CONVOYDRONE
-				case GROUP_FACTIONDRONE
-				case GROUP_BILLBOARD
-				case GROUPID_SPAWN_CONTAINER
+			case GROUP_LARGECOLLIDABLEOBJECT
+			case GROUP_LARGECOLLIDABLESHIP
+			case GROUP_LARGECOLLIDABLESTRUCTURE
+			case GROUP_SENTRYGUN
+			case GROUP_CONCORDDRONE
+			case GROUP_CUSTOMSOFFICIAL
+			case GROUP_POLICEDRONE
+			case GROUP_CONVOYDRONE
+			case GROUP_FACTIONDRONE
+			case GROUP_BILLBOARD
+			case GROUPID_SPAWN_CONTAINER
 				return FALSE
 				break
-				default
-				return TRUE
-				break
-			}
-
-			return TRUE
 		}
+
+		return TRUE
+	}
 }
 
 variable(global) obj_EVEBOT_Targeting Targeting
