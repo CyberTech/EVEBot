@@ -290,12 +290,12 @@ objectdef obj_Targets
 		return FALSE
 	}
 	
-	/* bool HaveFullAggro(index:entity entities):
+	/* bool HaveFullAggro(string entities):
 	Iterate through entities and determine if any are not targeting me. If so, return FALSE. Otherwise, return TRUE. */
-	member:bool HaveFullAggro(index:entity entities)
+	member:bool HaveFullAggro(string entities)
 	{
 		variable iterator itrEntities
-		entities:GetIterator[itrEntities]
+		${entities}:GetIterator[itrEntities]
 		
 		if ${itrEntities:First(exists)}
 		{
@@ -306,7 +306,7 @@ objectdef obj_Targets
 				{
 					return TRUE
 				}
-				if !${itrEntities.Value.IsTargetingMe} && 
+				if !${itrEntities.Value.IsTargetingMe}
 				{
 					return FALSE
 				}

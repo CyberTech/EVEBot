@@ -49,6 +49,10 @@ objectdef obj_Defense
 				{
 					This:RunAway["Unable to evade sensor jamming"]
 				}
+				elseif ${This.Hide} && ${This.HideReason.Equal["Unable to evade sensor jamming"]} && !${Targeting.IsTargetJammed}
+				{
+					This:ReturnToDuty
+				}
 
 				if ${EVEBot.ReturnToStation}
 				{

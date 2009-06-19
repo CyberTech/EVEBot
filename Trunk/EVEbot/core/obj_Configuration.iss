@@ -376,6 +376,7 @@ objectdef obj_Configuration_Combat
 	Define_ConfigItem(int, ShieldPctDisable, 95)
 	Define_ConfigItem(int, CapacitorPctEnable, 20)
 	Define_ConfigItem(int, CapacitorPctDisable, 80)
+	Define_ConfigItem(bool, ConserveDrones, TRUE)
 }
 
 /* ************************************************************************* */

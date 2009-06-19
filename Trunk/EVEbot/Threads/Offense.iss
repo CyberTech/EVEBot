@@ -228,10 +228,9 @@ objectdef obj_Offense
 					if ${Ship.Drones.CombatDroneShortage}
 					{
 						; TODO - This should pick up drones from station instead of just docking
-						Defense.RunAway["Offense: Drone shortage detected"]
+						Defense:RunAway["Offense: Drone shortage detected"]
 						return
 					}
-
 					if ${Me.ActiveTarget.Distance} < ${Math.Calc[${Me.DroneControlDistance} * 0.975]}
 					{
 						if ${Ship.Drones.ShouldLaunchCombatDrones} && \
@@ -244,6 +243,13 @@ objectdef obj_Offense
 							Ship.Drones:SendDrones
 						}
 					}
+					elseif ${Ship.Drones.DeployedDroneCount} > 0
+					{
+						;If we have drones out and our active target isn't in range, recall them to prevent them from going
+						;fucking berserk on everything and breaking the fucking chain. -- stealthy
+						;Use the executecommand because the ship function isn't atomic
+						EVE:Execute[CmdDronesReturnToBay]
+					}
 				}
 			}
 		}
@@ -252,6 +258,26 @@ objectdef obj_Offense
 			Ship:Deactivate_Weapons
 			Ship:Deactivate_StasisWebs
 		}
+	}
+	
+	/* bool HaveFullAggro:
+	Using the correct entity cache for a given bot mode, determine if we have aggro from all aggroing entities.
+	This will account for non-aggressing spawns such as hauler spawns. */
+	member:bool HaveFullAggro()
+	{
+		variable bool HaveAggro = FALSE
+		
+		switch ${Config.Common.BotMode}
+		{
+			case Ratter
+				HaveAggro:Set[${Targets.HaveFullAggro["Ratter.RatCache.Entities"]}]
+				break
+			case Missioneer
+				;todo: Pass Targets.HaveFullAggro[] the FQN of MissionCombat's entity cache. - Stealthy
+				HaveAggro:Set[TRUE]
+				break
+		}
+		return ${HaveAggro}
 	}
 
 	method CheckAmmo()

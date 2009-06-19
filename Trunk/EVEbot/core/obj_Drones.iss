@@ -162,27 +162,24 @@ objectdef obj_Drones
 			do
 			{
 				/* Only compare hp if the stored hp isn't null */
-				if ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}]} != NULL
+				if ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}](exists)}
 				{
 					if ${ActiveDrone.Value.ArmorPct} < ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}]}
 					{
-						/* Check if we've previously recalled the drone */
-						if !${DroneIsRecalled[${ActiveDrone.Value}]}
+						if ${ActiveDrone.Value.ArmorPct} < 50
 						{
-							This:RecallDrone[${ActiveDrone.Value}]
+							;Recall it and do not relaunch it
+							This:RecallDrone[${ActiveDrone.Value},FALSE]
 						}
 					}
 				}
 				/* Store current HP */
 				StoredDroneArmor:Set[${ActiveDrone.Value.ID},${ActiveDrone.Value.ArmorPct}]
-				if ${StoredDroneShield.Element[${ActiveDrone.Value.ID}]} != NULL
+				if ${StoredDroneShield.Element[${ActiveDrone.Value.ID}](exists)}
 				{
 					if ${ActiveDrone.Value.ShieldPct} < ${StoredDroneShield.Element[${ActiveDrone.Value.ID}]}
 					{
-						if !${This.DroneIsRecalled[${ActiveDrone.Value}]}
-						{
-							This:RecallDrone[${ActiveDrone.Value}]
-						}
+						This:RecallDrone[${ActiveDrone.Value}]
 					}
 				}
 				StoredDroneShield:Set[${ActiveDrone.Value.ID},${ActiveDrone.Value.ShieldPct}]
@@ -201,7 +198,7 @@ objectdef obj_Drones
 		{
 			do
 			{
-				if ${RecalledDroneIterator.Value} == ${drone}
+				if ${RecalledDroneIterator.Value.ID} == ${drone.ID}
 				{
 					return TRUE
 				}
@@ -211,10 +208,13 @@ objectdef obj_Drones
 		return FALSE
 	}
 
-	method RecallDrone(entity drone)
+	method RecallDrone(entity drone, bool relaunch=TRUE)
 	{
-		UI:UpdateConsole["obj_Drones: Recalling drone ${drone.ID}"]
-		RecalledDrones:Insert[${drone}]
+		UI:UpdateConsole["obj_Drones: Recalling drone ${drone.ID}",LOG_DEBUG]
+		if !${relaunch}
+		{
+			RecalledDrones:Insert[${drone}]
+		}
 		drone:ReturnToDroneBay
 	}
 
@@ -237,13 +237,7 @@ objectdef obj_Drones
 
 		if ${This.DronesInSpace} == 0
 		{
-			variable index:entity NearbyNPCList
-
-			; TODO - This is WRONG - it includes players and non-aggressive entities (concord) - CyberTech
-			; TODO - This should be referencing whatever object gets created to track entities using the entitycache - CyberTech
-			EVE:DoGetEntities[NearbyNPCList, CategoryID, CATEGORYID_ENTITY]
-
-			if ${Me.GetTargetedBy} == ${NearbyNPCList.Used}
+			if ${Offense.HaveFullAggro}
 			{
 				return TRUE
 			}
@@ -331,7 +325,7 @@ objectdef obj_Drones
 		while ${This.DronesInSpace} > 0
 		{
 			UI:UpdateConsole["Recalling ${This.ActiveDroneIDList.Used} Drones"]
-			EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
+			;EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
 			EVE:Execute[CmdDronesReturnToBay]
 			if (${_MyShip.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
 				${_MyShip.ShieldPct} < ${Config.Combat.MinimumShieldPct})
@@ -370,28 +364,29 @@ objectdef obj_Drones
 			variable index:activedrone ActiveDroneList
 			Me:DoGetActiveDrones[ActiveDroneList]
 			ActiveDroneList:GetIterator[DroneIterator]
-			variable index:int returnIndex
+;			variable index:int returnIndex
 			variable index:int engageIndex
 
 			do
 			{
-				if ${DroneIterator.Value.ToEntity.ShieldPct} < 50 || \
-					${DroneIterator.Value.ToEntity.ArmorPct} < 80 || \
-					${DroneIterator.Value.ToEntity.StructurePct} < 100
-				{
-					UI:UpdateConsole["Recalling Damaged Drone ${DroneIterator.Value.ID}"]
-					;UI:UpdateConsole["Debug: Shield: ${DroneIterator.Value.ToEntity.ShieldPct}, Armor: ${DroneIterator.Value.ToEntity.ArmorPct}, Structure: ${DroneIterator.Value.ToEntity.StructurePct}"]
-					returnIndex:Insert[${DroneIterator.Value.ID}]
-
-				}
-				else
-				{
+				;This is all obsoleted by CheckDroneHP.
+;				if ${DroneIterator.Value.ToEntity.ShieldPct} < 50 || \
+;					${DroneIterator.Value.ToEntity.ArmorPct} < 80 || \
+;					${DroneIterator.Value.ToEntity.StructurePct} < 100
+;				{
+;					UI:UpdateConsole["Recalling Damaged Drone ${DroneIterator.Value.ID}"]
+;					;UI:UpdateConsole["Debug: Shield: ${DroneIterator.Value.ToEntity.ShieldPct}, Armor: ${DroneIterator.Value.ToEntity.ArmorPct}, Structure: ${DroneIterator.Value.ToEntity.StructurePct}"]
+;					returnIndex:Insert[${DroneIterator.Value.ID}]
+;
+;				}
+;				else
+;				{
 					;UI:UpdateConsole["Debug: Engage Target ${DroneIterator.Value.ID}"]
 					engageIndex:Insert[${DroneIterator.Value.ID}]
-				}
+;				}
 			}
 			while ${DroneIterator:Next(exists)}
-			EVE:DronesReturnToDroneBay[returnIndex]
+;			EVE:DronesReturnToDroneBay[returnIndex]
 			EVE:DronesEngageMyTarget[engageIndex]
 		}
 	}
