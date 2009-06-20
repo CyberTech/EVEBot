@@ -164,7 +164,7 @@ objectdef obj_MissionCommands
 	; TODO - move guts into Ship.Approach except for roonumer:inc
 	member:bool NextRoom()
 	{
-			return ${This.ActivateGate[${Entity[TypeID,TYPE_ACCELERATION_GATE].ID}]}
+			return ${This.ActivateGate[${Entity[GroupID,GROUP_WARPGATE].ID}]}
 	}
 
 
@@ -421,9 +421,9 @@ objectdef obj_MissionCommands
 				{
 					if ${Entity[${entityID}].GroupID(exists)}
 					{
-							UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - Approaching entity with Name ${Entity[${entityID}].Name} ID ${entityID} , we are ${Entity[${EntityID}].Distance} away, we want to be ${Math.Calc[${Ship.OptimalTargetingRange}*.8]} away will approach",LOG_DEBUG]
+							UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - Approaching entity with Name ${Entity[${entityID}].Name} ID ${entityID} , we are ${Entity[${entityID}].Distance} away, we want to be ${Math.Calc[${Ship.OptimalWeaponRange}*.8]} away will approach",LOG_DEBUG]
 					
-						if ${This.Approach[${entityID}, ${Math.Calc[${Ship.OptimalTargetingRange}*.8]}]}
+						if ${This.Approach[${entityID}, ${Math.Calc[${Ship.OptimalWeaponRange}*.8]}]}
 						{
 							UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - In weapons range, will target and fire",LOG_DEBUG]
 							KillIDState:Set["TARGETING"]
@@ -452,7 +452,7 @@ objectdef obj_MissionCommands
 				{
 					if ${Entity[${KillIDCache}].GroupID(exists)}  && ${Entity[${KillIDCache}].GroupID} != GROUPID_WRECK && ${Entity[${KillIDCache}].GroupID} != GROUPID_CARGO_CONTAINER
 						{
-							if ${This.Approach[${KillIDCache}, ${Math.Calc[${Ship.OptimalTargetingRange}*.8]}]}
+							if ${This.Approach[${KillIDCache}, ${Math.Calc[${Ship.OptimalWeaponRange}*.8]}]}
 							{
 								if !${Targeting.IsMandatoryQueued[${KillIDCache}]}
 								{
@@ -489,7 +489,7 @@ objectdef obj_MissionCommands
 					{
 						if ${Entity[${KillIDCache}].GroupID(exists)}  && ${Entity[${KillIDCache}].GroupID} != GROUPID_WRECK && ${Entity[${KillIDCache}].GroupID} != GROUPID_CARGO_CONTAINER 
 						{
-							if ${This.Approach[${entityID}, ${Math.Calc[${Ship.OptimalTargetingRange}*.8]}]}
+							if ${This.Approach[${entityID}, ${Math.Calc[${Ship.OptimalWeaponRange}*.8]}]}
 							{
 								UI:UpdateConsole["DEBUG: obj_MissionCommands - Entity with ID ${KillIDCache} still exists, we have no killed it yet :<",LOG_DEBUG]
 								return FALSE
