@@ -23,7 +23,6 @@ objectdef obj_LoginHandler
 
 	variable int LoginTimer = 0
 	variable string CurrentState
-	variable bool Finished = FALSE
 	variable int PulseIntervalInSeconds = 1
 
 	; Added these in so no magic numbers are used
@@ -35,13 +34,14 @@ objectdef obj_LoginHandler
 
 	method Initialize()
 	{
-		echo obj_Login: Initialized
-		This.CurrentState:Set[START]
+		UI:UpdateConsole["${This.ObjectName}: Initialized", LOG_MINOR]
+		This.CurrentState:Set["START"]
 	}
 
 	method Start()
 	{
 		Event[OnFrame]:AttachAtom[This:Pulse]
+		This.NextPulse:Set[${Time.Timestamp}]
 	}
 
 	method Shutdown()
@@ -54,12 +54,12 @@ objectdef obj_LoginHandler
 		if ${This.LoginTimer} > 0
 		{
 			This.PulseIntervalInSeconds:Set[${This.LoginTimer}]
+			UI:UpdateConsole["DEBUG: Pulse: ${This.LoginTimer} - ${This.CurrentState}", LOG_DEBUG]
 			This.LoginTimer:Set[0]
 		}
 
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-			;echo DEBUG: Pulse: ${This.LoginTimer} - ${This.CurrentState}
 			This:DoLogin
 
     		This.NextPulse:Set[${Time.Timestamp}]
@@ -78,7 +78,7 @@ objectdef obj_LoginHandler
 			return
 		}
 
-	    echo obj_Login: Loading Extension ${EXTNAME}
+	    UI:UpdateConsole["obj_Login: Loading Extension ${EXTNAME}", LOG_MINOR]
 		do
 		{
 			wait 50
@@ -101,7 +101,7 @@ objectdef obj_LoginHandler
 				waitframe
 			}
 			while (${Timer} < 200)
-			echo "obj_Login:LoadExtension: Loading extension ${EXTNAME} timed out, retrying"
+			UI:UpdateConsole["obj_Login:LoadExtension: Loading extension ${EXTNAME} timed out, retrying"]
 		}
 		while (!${${EXTNAME}(exists)})
 	 }
@@ -110,20 +110,18 @@ objectdef obj_LoginHandler
 	{
 		EVE:CloseAllMessageBoxes
 
-		;echo DEBUG: Current state: ${This.CurrentState}
+		;UI:UpdateConsole["DEBUG: Current state: ${This.CurrentState}"]
 		switch ${This.CurrentState}
 		{
-			case INSPACE
+			case LOGGED_IN
 				run evebot/evebot
 				This.CurrentState:Set["EVEBOT"]
-				This.LoginTimer:Set[${This.evebotWaitTime}]
 				break
 			case EVEBOT
 				Script[EVEBot]:Resume
-				This.Finished:Set[TRUE]
 				break
 			default
-				echo "obj_Login: StartBot called in unknown state!"
+				UI:UpdateConsole["obj_Login: StartBot called in unknown state!"]
 				break
 		}
 	}
@@ -132,10 +130,15 @@ objectdef obj_LoginHandler
 	{
 		EVE:CloseAllMessageBoxes
 
-		;echo DEBUG: Current state: ${This.CurrentState}
+		UI:UpdateConsole["DEBUG: Current state: ${This.CurrentState}", LOG_DEBUG]
 		switch ${This.CurrentState}
 		{
 			case START
+				if ${Login(exists)}
+				{
+					This.CurrentState:Set["SERVERDOWN"]
+					break
+				}
 				if ${CharSelect(exists)}
 				{
 					This.CurrentState:Set["CONNECTING"]
@@ -144,37 +147,29 @@ objectdef obj_LoginHandler
 				}
 				if !${Login(exists)} && !${CharSelect(exists)}
 				{
-					This.CurrentState:Set["INSPACE"]
+					This.CurrentState:Set["LOGGED_IN"]
 					This.LoginTimer:Set[${This.inspaceWaitTime}]
 					break
 				}
-				This.CurrentState:Set["SERVERDOWN"]
 			case SERVERDOWN
-				; echo DEBUG: Server Status: ${Login.ServerStatus}
-				if ${Login.ServerStatus.NotEqual[LIVE]} && ${Login.ServerStatus.NotEqual[EVE-EVE-RELEASE]}
+				UI:UpdateConsole["DEBUG: Server Status: ${Login.ServerStatus}", LOG_DEBUG]
+				if ${Login.ServerStatus.Equal[LIVE]} || ${Login.ServerStatus.Equal[EVE-EVE-RELEASE]}
 				{
-					This.CurrentState:Set["SERVERDOWN"]
-					This.LoginTimer:Set[${This.connectWaitTime}]
-					break
+					This.CurrentState:Set["SERVERUP"]
 				}
 				else
 				{
-					This.CurrentState:Set["SERVERUP"]
+					This.CurrentState:Set["SERVERDOWN"]
+					This.LoginTimer:Set[${This.connectWaitTime}]
 				}
 				break
 			case SERVERUP
 				Login:SetUsername[${Config.Common.LoginName}]
 				Login:SetPassword[${Config.Common.LoginPassword}]
-				;This.CurrentState:Set["LOGIN_ENTERED"]
-				This.CurrentState:Set["PASS_ENTERED"]
-				This.LoginTimer:Set[${This.loginWaitTime}]
+				This.CurrentState:Set["LOGIN_ENTERED"]
+				This.LoginTimer:Set[1]
 				break
 			case LOGIN_ENTERED
-				Login:SetPassword[${Config.Common.LoginPassword}]
-				This.CurrentState:Set["PASS_ENTERED"]
-				This.LoginTimer:Set[${This.loginWaitTime}]
-				break
-			case PASS_ENTERED
 				Login:Connect
 				This.CurrentState:Set["CONNECTING"]
 				This.LoginTimer:Set[${This.connectWaitTime}]
@@ -198,6 +193,12 @@ objectdef obj_LoginHandler
 					This.LoginTimer:Set[2]
 					break
 				}
+				if ${Me(exists)}
+				{
+					This.CurrentState:Set["LOGGED_IN"]
+					This.LoginTimer:Set[${This.inspaceWaitTime}]
+					break
+				}
 				if !${CharSelect(exists)}
 				{
 					This.LoginTimer:Set[1]
@@ -205,7 +206,7 @@ objectdef obj_LoginHandler
 				}
 				if ${CharSelect(exists)}
 				{
-					;echo DEBUG: AutoLoginCharID: ${Config.Common.AutoLoginCharID}
+					;UI:UpdateConsole["DEBUG: AutoLoginCharID: ${Config.Common.AutoLoginCharID}", LOG_DEBUG]
 					CharSelect:ClickCharacter[${Config.Common.AutoLoginCharID}]
 					This.LoginTimer:Set[${This.connectWaitTime}]
 					break
@@ -222,8 +223,6 @@ objectdef obj_LoginHandler
 					This.LoginTimer:Set[${This.connectWaitTime}]
 					break
 				}
-				This.CurrentState:Set["INSPACE"]
-				This.LoginTimer:Set[${This.inspaceWaitTime}]
 				break
 		}
 	}

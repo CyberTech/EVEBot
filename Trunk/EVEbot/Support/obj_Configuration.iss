@@ -1,19 +1,19 @@
 /*
 	Configuration Classes
-	
+
 	Main object for interacting with the config file, and for wrapping access to the config items.
-	
+
 	-- CyberTech
-	
+
 	Description:
-	obj_Configuration defines the config file and the root.  It contains an instantiation of obj_Configuration_MODE, 
+	obj_Configuration defines the config file and the root.  It contains an instantiation of obj_Configuration_MODE,
 	where MODE is Hauler,Miner, Combat, etc.
-	
+
 	Each obj_Configuration_MODE is responsible for setting it's own default	values and for providing access members
 	and update methods for the config items. ALL configuration items should receive both a member and a method.
-	
+
 	Instructions:
-		To add a new module, add a variable to obj_Configuration, name it with the thought that it will be accessed 
+		To add a new module, add a variable to obj_Configuration, name it with the thought that it will be accessed
 		as Config.Module (ie, Config.Miner).  Create the class, and it's members and methods, following the example
 		of the existing classes below.
 
@@ -25,20 +25,20 @@ objectdef obj_Configuration_BaseConfig
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
-	variable string CONFIG_FILE = "${Script.CurrentDirectory}/launcher_config.xml"
+	variable string CONFIG_FILE = "./config/Launcher.xml"
 	variable string unchar = ""
 	variable settingsetref BaseRef
-	
+
 	method Initialize()
-	{	
+	{
 		LavishSettings[LauncherSettings]:Remove
 		LavishSettings:AddSet[LauncherSettings]
 		LavishSettings[LauncherSettings]:Import[${CONFIG_FILE}]
 
 		This:GetDefaultSet
-		echo obj_Configuration_BaseConfig: Initialized
+		UI:UpdateConsole["obj_Configuration_BaseConfig: Initialized", LOG_MINOR]
 	}
-	
+
 	method Shutdown()
 	{
 		This:Save[]
@@ -48,8 +48,8 @@ objectdef obj_Configuration_BaseConfig
 	method Save()
 	{
 		LavishSettings[LauncherSettings]:Export[${CONFIG_FILE}]
-	}	
-	
+	}
+
 	method GetDefaultSet()
 	{
 		variable iterator mySet
@@ -93,37 +93,37 @@ objectdef obj_Configuration_BaseConfig
 objectdef obj_Configuration
 {
 	variable obj_Configuration_Common Common
-	
+
 	method Save()
 	{
 		BaseConfig:Save[]
-	}		
+	}
 }
 
 objectdef obj_Configuration_Common
 {
 	variable string SetName = "Common"
 	variable int AboutCount = 0
-	
+
 	method Initialize()
-	{	
+	{
 		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
 		{
 			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
 		}
-		UI:UpdateConsole["obj_Configuration_Common: Initialized", LOG_MINOR]
+		s"obj_Configuration_Common: Initialized", LOG_MINOR]
 	}
-	
+
 	member:settingsetref CommonRef()
 	{
 		return ${BaseConfig.BaseRef.FindSet[${This.SetName}]}
 	}
-	
+
 	method Set_Default_Values()
 	{
 		BaseConfig.BaseRef:AddSet[${This.SetName}]
-		
+
 		; We use both so we have an ID to use to set the default selection in the UI.
 		This.CommonRef:AddSetting[Login Name, ""]
 		This.CommonRef:AddSetting[Login Password, ""]
@@ -132,7 +132,7 @@ objectdef obj_Configuration_Common
 	}
 
 
-	
+
 	/* TODO - Encrypt this as much as lavishcript will allow */
 	member:string LoginName()
 	{

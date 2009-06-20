@@ -22,27 +22,25 @@
 #include Support/obj_AutoPatcher.iss
 #include Support/obj_Configuration.iss
 
+variable obj_UI UI
 variable obj_LoginHandler LoginHandler
 variable obj_Configuration_BaseConfig BaseConfig
 variable obj_Configuration Config
-variable obj_UI UI
 
 function main(string unchar="", bool StartBot=FALSE)
 {
 	if !${ISXEVE(exists)}
 	{
-		;echo DEBUG: ISXEVE not loaded, loading it now
 		call LoginHandler.LoadExtension
 
 		wait 200 ${Login(exists)}
 	}
+
 	if !${unchar.Equal[""]}
 	{
-	       	;echo DEBUG: Changing config to ${unchar}
 	       	BaseConfig:ChangeConfig[${unchar}]
 	       	wait 10
 	}
-
 
 	if (${Config.Common.LoginName.Equal[""]} || \
 		${Config.Common.LoginPassword.Equal[""]} || \
@@ -50,24 +48,28 @@ function main(string unchar="", bool StartBot=FALSE)
 		${Config.Common.LoginPassword.Equal[NULL]} || \
 		${Config.Common.AutoLoginCharID} == 0 || )
 	{
-		echo No login, pw, or CharID found in config
+		UI:UpdateConsole["No login, pw, or CharID found in Launcher config"]
 		; do config gui here, the next line will save a blank template for a config if none exists
 		Config:Save
 		return
 	}
-	;echo DEBUG: ${Config.Common.LoginName} / ${Config.Common.LoginPassword} / ${Config.Common.AutoLoginCharID}
 
 	if ${ISXEVE(exists)}
 	{
 		LoginHandler:Start
 		LoginHandler:DoLogin
-		if ${StartBot}
-		{
-			LoginHandler:StartBot
-		}
 	}
-	while !${LoginHandler.Finished}
+
+	while ${LoginHandler.CurrentState.NotEqual["LOGGED_IN"]}
 	{
 		waitframe
 	}
+
+	while ${StartBot} && ${EVEBot.Paused}
+	{
+		LoginHandler:StartBot
+		wait 10
+	}
+
+	UI:UpdateConsole["Launcher Finished", LOG_MINOR]
 }
