@@ -302,12 +302,13 @@ objectdef obj_Targets
 			do
 			{
 				;If our target is a hauler, it won't be targeting us.
-				if ${itrEntities.Value.Group.Find["Hauler"](exists)}
+				if ${Entity[${itrEntities.Value.EntityID}].Group.Find["Hauler"](exists)}
 				{
 					return TRUE
 				}
-				if !${itrEntities.Value.IsTargetingMe}
+				if !${Entity[${itrEntities.Value.EntityID}].IsTargetingMe}
 				{
+					UI:UpdateConsole["DEBUG: obj_Targets - Entity[${itrEntities.Value.EntityID}].Name is not targeting me, we dont have full aggro",LOG_DEBUG]
 					return FALSE
 				}
 			}
