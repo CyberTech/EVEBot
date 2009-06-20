@@ -129,6 +129,11 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 #define LEVELSOUND	"${Script.CurrentDirectory}/sounds/level.wav"
 #define WARNSOUND	"${Script.CurrentDirectory}/sounds/warning.wav"
 
+#define GANGBOOSTERNONE 0
+#define GANGBOOSTERFLEET 1
+#define GANGBOOSTERWING 2
+#define GANGBOOSTERSQUAD 3
+
 #define GROUP_ACCELERATIONGATEKEYS 474
 #define GROUP_AGENTSINSPACE 517
 #define GROUP_ALLIANCE 32
