@@ -273,7 +273,7 @@ objectdef obj_Offense
 				HaveAggro:Set[${Targets.HaveFullAggro["Ratter.RatCache.Entities"]}]
 				break
 			case Missioneer
-				HaveAggro:Set[${Targets.HaveFullAggro["Missions.MissionCommands.EntityCache"]}]
+				HaveAggro:Set[${Targets.HaveFullAggro["Missions.missionCombat.MissionCommands.EntityCache"]}]
 				break
 		}
 		return ${HaveAggro}
