@@ -698,5 +698,12 @@ Example use:
 				</Set>
 			</Set>
 		</Set>
+  </Set>  
+  <Set Name = "Technological Secrets (3 of 3)">
+    <Set Name = "2">      
+      <Set Name = "Commands">        
+        <Set Name = "1" Action = "Waves" TimeOut ="3" />        
+      </Set>      
+    </Set>    
   </Set>
 </InnerSpaceSettings>
