@@ -688,5 +688,16 @@ Example use:
 				</Set>
 			</Set>
 		</Set>
+		<Set Name="Portal To War (1 of 5)">
+			<Set Name="3">
+				<Set Name="Commands">
+					<Set Name="1" Action="ClearRoom" />
+					<Set Name="2" Action="NextRoom" />
+					<Set Name="3" Action="ClearRoom" />
+					<Set Name="4" Action="NextRoom" />
+					<Set Name="5" Action="ClearRoom" />
+				</Set>
+			</Set>
+		</Set>
   </Set>
 </InnerSpaceSettings>

@@ -18,7 +18,7 @@ variable string APP_MANIFEST_TRUNK = "https://www.isxgames.com/EVEBot/Trunk/EVEb
 variable string AppVersion = "${APP_NAME} Version ${SVN_REVISION.Token[2, " "]}"
 variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 
-#define EVEBOT_DEBUG 0
+#define EVEBOT_DEBUG 1
 #define EVEBOT_PROFILING 0
 
 ;#define USE_ISXIRC 1
@@ -543,6 +543,7 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 #define GROUP_TARGETPAINTER 379
 
 #define TYPE_ACCELERATION_GATE 17831
+#define TYPE_ANCIENT_ACCELERATION_GATE 12273
 
 #define TYPE_PUNISHER 597
 #define TYPE_DRAKE    24698

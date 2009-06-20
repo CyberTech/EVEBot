@@ -163,7 +163,14 @@ objectdef obj_MissionCommands
 	; TODO - move guts into Ship.Approach except for roonumer:inc
 	member:bool NextRoom()
 	{
-		return ${This.ActivateGate[${Entity[TypeID,TYPE_ACCELERATION_GATE].ID}]}
+		if ${Entity[TypeID,TYPE_ACCELERATION_GATE](exists)}
+		{
+			return ${This.ActivateGate[${Entity[TypeID,TYPE_ACCELERATION_GATE].ID}]}
+		}
+		elseif ${Entity[TypeID,TYPE_ANCIENT_ACCELERATION_GATE](exists)}
+		{
+			return ${This.ActivateGate[${Entity[TypeID,TYPE_ANCIENT_ACCELERATION_GATE].ID}]}
+		}
 	}
 
 
