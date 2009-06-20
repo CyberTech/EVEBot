@@ -281,14 +281,15 @@ objectdef obj_MissionCommands
 					{
 						if ${Config.Combat.ShouldUseMissiles}
 						{
-							if ${EntityCache.EntityIterator.Distance} < ${Config.Combat.MaxMissileRange}
+							if ${EntityCache.EntityIterator.Value.Distance} < ${Config.Combat.MaxMissileRange}
 							{
 								EntityInRange:Set[TRUE]
 							}
 						}
 						else
 						{
-							if ${EntityCache.EntityIterator.Distance} < ${Ship.GetMinimumTurretRange[1]}
+							;Todo: Dirty hack for gun users.
+							if ${EntityCache.EntityIterator.Value.Distance} < ${Ship.GetMinimumTurretRange[1]}
 							{
 								EntityInRange:Set[TRUE]
 							} 
@@ -793,7 +794,7 @@ objectdef obj_MissionCommands
 		
 		member:int AggroCount()
 		{
-			return ${Defense.TargetingMe.Used}
+			return ${Me.GetTargetedBy}
 		}
 
 		; TODO - move to Target.TargetSelect module
@@ -1036,8 +1037,10 @@ objectdef obj_MissionCommands
 			{
 				variable int highestPriority = 0
 				variable int highestID
+				variable index:entity targetIndex
 				variable iterator targetIterator
-				Defense.TargetingMe:GetIterator[targetIterator]
+				Me:DoGetTargetedBy[targetIndex]
+				targetIndex:GetIterator[targetIterator]
 				;UI:UpdateConsole["GetTargeting = ${_Me.GetTargeting}, GetTargets = ${_Me.GetTargets}"]
 				if ${targetIterator:First(exists)}
 				{
