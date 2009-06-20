@@ -281,6 +281,7 @@ objectdef obj_MissionCommands
 			{
 				variable bool EntityInRange = FALSE
 				;Use "entity" more, please --stealthy
+				;Seems like it doesn't check range until something is a 
 				EntityCache.Entities:GetIterator[EntityCache.EntityIterator]
 				if ${EntityCache.EntityIterator:First(exists)}
 				{
