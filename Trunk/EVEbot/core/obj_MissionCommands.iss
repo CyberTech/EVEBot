@@ -272,7 +272,31 @@ objectdef obj_MissionCommands
 		{
 			case KILLING
 			{
-				if ${This.AggroCount} > 0
+				variable bool EntityInRange = FALSE
+				;Use "entity" more, please --stealthy
+				EntityCache.Entities:GetIterator[EntityCache.EntityIterator]
+				if ${EntityCache.EntityIterator:First(exists)}
+				{
+					do
+					{
+						if ${Config.Combat.ShouldUseMissiles}
+						{
+							if ${EntityCache.EntityIterator.Distance} < ${Config.Combat.MaxMissileRange}
+							{
+								EntityInRange:Set[TRUE]
+							}
+						}
+						else
+						{
+							if ${EntityCache.EntityIterator.Distance} < ${Ship.GetMinimumTurretRange[1]}
+							{
+								EntityInRange:Set[TRUE]
+							} 
+						}
+					}
+					while ${EntityCache.EntityIterator:Next(exists)}
+				}
+				if ${This.AggroCount} > 0 && ${EntityInRange}
 				{
 					UI:UpdateConsole["DEBUG: obj_MissionCommands - Killing stuff",LOG_DEBUG]
 					This:NextTarget[]

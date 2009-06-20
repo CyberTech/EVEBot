@@ -824,8 +824,7 @@ objectdef obj_Ship
 		variable float fHighestSoFar = 0
 		variable bool bBestFound = FALSE
 		
-		itrWeapon.Value:DoGetAvailableAmmo[idxAmmo]
-		idxAmmo:GetIterator[itrAmmo]
+
 		
 		if ${itrWeapon:First(exists)}
 		{
@@ -839,10 +838,21 @@ objectdef obj_Ship
 					UI:UpdateConsole["obj_Ship: Skipping turret ${iTurret} because we want best ammo for turret ${turret}.",LOG_DEBUG]
 					continue
 				}
+				
+				;Moved these down here = doesn't help at all to get available ammo for a freakin' nonexistent itrWeapon value!
+				; This must have worked previously out of pure luck
+				itrWeapon.Value:DoGetAvailableAmmo[idxAmmo]
+				idxAmmo:GetIterator[itrAmmo]
 			
 				UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range}): getting base optimal...",LOG_DEBUG]
 				variable float fBaseOptimal = ${This.GetTurretBaseOptimal[${turret}]}
 				UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range}): fBaseOptimal: ${fBaseOptimal}",LOG_DEBUG]
+
+				; Do some math on our range to 'reduce' it a little, i.e. if our target is at 25km, math it down to 22.5 or 25
+				; This will help reduce the number of ammo changes as we can certainly hit well at that little deviation, and
+				; it will help account for rats moving towards us (common).
+				range:Set[${Math.Calc[${range} * 0.85]}]
+				; 0.85 is pretty random. I should see if there is a "better"
 			
 				/*figure out the best ammo for a given range. */
 				switch ${itrWeapon.Value.Charge.GroupID}
@@ -881,33 +891,45 @@ objectdef obj_Ship
 						}
 						if ${itrWeapon2:First(exists)}
 						{
-							if ${itrAmmoPairs:First(exists)}
+							iTurret:Set[0]
+							do
 							{
-								do
+								iTurret:Inc
+								if ${iTurret} != ${turret}
 								{
-									if ${itrWeapon2.Value.Charge.Name.Find[${itrAmmoPairs.Key}]}
-									{
-										UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range},${turret}): including already loaded ammo in our check!",LOG_DEBUG]
-										fNewDelta:Set[${Math.Calc[${fBaseOptimal} * ${itrAmmoPairs.Value} - ${range}]}]
-										UI:UpdateConsole["fNewDelta: ${fNewDelta}, ${Math.Calc[${fBaseOptimal} * ${itrAmmoPairs.Value} - ${range}]}, fOldDelta: ${fOldDelta}",LOG_DEBUG]
-										if ${fNewDelta} > 0 && (${fNewDelta} < ${fOldDelta} || ${fOldDelta} == 0)
-										{
-											sBestSoFar:Set[${itrAmmoPairs.Key}]
-											UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range},${turret}): sBestsoFar: ${sBestSoFar}, fNewDeelta ${fNewDelta}, fOldDelta ${fOldDelta}",LOG_DEBUG]
-											bBestFound:Set[TRUE]
-											fOldDelta:Set[${fNewDelta}]
-										}
-										
-										if ${fHighestSoFar} == 0 || ${fNewDelta} > ${fHighestSoFar}
-										{
-											fHighestSoFar:Set[${fNewDelta}]
-											sHighestSoFar:Set[${itrAmmoPairs.Key}]
-										}
-										break
-									}
+									; Looks like it isn't, which means we can continue in order to skip all the logic.
+									UI:UpdateConsole["obj_Ship: Skipping turret ${iTurret} because we want best ammo for turret ${turret}.",LOG_DEBUG]
+									continue
 								}
-								while ${itrAmmoPairs:Next(exists)}
+								if ${itrAmmoPairs:First(exists)}
+								{
+									do
+									{
+										if ${itrWeapon2.Value.Charge.Name.Find[${itrAmmoPairs.Key}]}
+										{
+											UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range},${turret}): including already loaded ammo in our check!",LOG_DEBUG]
+											fNewDelta:Set[${Math.Calc[${fBaseOptimal} * ${itrAmmoPairs.Value} - ${range}]}]
+											UI:UpdateConsole["fNewDelta: ${fNewDelta}, ${Math.Calc[${fBaseOptimal} * ${itrAmmoPairs.Value} - ${range}]}, fOldDelta: ${fOldDelta}",LOG_DEBUG]
+											if ${fNewDelta} > 0 && (${fNewDelta} < ${fOldDelta} || ${fOldDelta} == 0)
+											{
+												sBestSoFar:Set[${itrAmmoPairs.Key}]
+												UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range},${turret}): sBestsoFar: ${sBestSoFar}, fNewDeelta ${fNewDelta}, fOldDelta ${fOldDelta}",LOG_DEBUG]
+												bBestFound:Set[TRUE]
+												fOldDelta:Set[${fNewDelta}]
+											}
+											
+											if ${fHighestSoFar} == 0 || ${fNewDelta} > ${fHighestSoFar}
+											{
+												fHighestSoFar:Set[${fNewDelta}]
+												sHighestSoFar:Set[${itrAmmoPairs.Key}]
+											}
+											break
+										}
+									}
+									while ${itrAmmoPairs:Next(exists)}
+								}
 							}
+							while ${itrWeapon2:Next(exists)}
 						}
 						if !${bBestFound}
 						{
@@ -956,33 +978,45 @@ objectdef obj_Ship
 						}
 						if ${itrWeapon2:First(exists)}
 						{
-							if ${itrHybridPairs:First(exists)}
+							iTurret:Set[0]
+							do
 							{
-								do
+								iTurret:Inc
+								if ${iTurret} != ${turret}
 								{
-									if ${itrWeapon2.Value.Charge.Name.Find[${itrHybridPairs.Key}]}
-									{
-										UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range},${turret}): including already loaded ammo in our check!",LOG_DEBUG]
-										fNewDelta:Set[${Math.Calc[${fBaseOptimal} * ${itrHybridPairs.Value} - ${range}]}]
-										UI:UpdateConsole["fNewDelta: ${fNewDelta}, ${Math.Calc[${fBaseOptimal} * ${itrHybridPairs.Value} - ${range}]}, fOldDelta: ${fOldDelta}",LOG_DEBUG]
-										if ${fNewDelta} > 0 && (${fNewDelta} < ${fOldDelta} || ${fOldDelta} == 0)
-										{
-											sBestSoFar:Set[${itrHybridPairs.Key}]
-											UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range},${turret}): sBestsoFar: ${sBestSoFar}, fNewDeelta ${fNewDelta}, fOldDelta ${fOldDelta} ",LOG_DEBUG]
-											bBestFound:Set[TRUE]
-											fOldDelta:Set[${fNewDelta}]
-										}
-										
-										if ${fHighestSoFar} == 0 || ${fNewDelta} > ${fHighestSoFar}
-										{
-											fHighestSoFar:Set[${fNewDelta}]
-											sHighestSoFar:Set[${itrHybridPairs.Key}]
-										}
-										break
-									}
+									; Looks like it isn't, which means we can continue in order to skip all the logic.
+									UI:UpdateConsole["obj_Ship: Skipping turret ${iTurret} because we want best ammo for turret ${turret}.",LOG_DEBUG]
+									continue
 								}
-								while ${itrHybridPairs:Next(exists)}
+								if ${itrHybridPairs:First(exists)}
+								{
+									do
+									{
+										if ${itrWeapon2.Value.Charge.Name.Find[${itrHybridPairs.Key}]}
+										{
+											UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range},${turret}): including already loaded ammo in our check!",LOG_DEBUG]
+											fNewDelta:Set[${Math.Calc[${fBaseOptimal} * ${itrHybridPairs.Value} - ${range}]}]
+											UI:UpdateConsole["fNewDelta: ${fNewDelta}, ${Math.Calc[${fBaseOptimal} * ${itrHybridPairs.Value} - ${range}]}, fOldDelta: ${fOldDelta}",LOG_DEBUG]
+											if ${fNewDelta} > 0 && (${fNewDelta} < ${fOldDelta} || ${fOldDelta} == 0)
+											{
+												sBestSoFar:Set[${itrHybridPairs.Key}]
+												UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range},${turret}): sBestsoFar: ${sBestSoFar}, fNewDeelta ${fNewDelta}, fOldDelta ${fOldDelta} ",LOG_DEBUG]
+												bBestFound:Set[TRUE]
+												fOldDelta:Set[${fNewDelta}]
+											}
+											
+											if ${fHighestSoFar} == 0 || ${fNewDelta} > ${fHighestSoFar}
+											{
+												fHighestSoFar:Set[${fNewDelta}]
+												sHighestSoFar:Set[${itrHybridPairs.Key}]
+											}
+											break
+										}
+									}
+									while ${itrHybridPairs:Next(exists)}
+								}
 							}
+							while ${itrWeapon2:Next(exists)}
 						}
 						if !${bBestFound}
 						{
@@ -1026,33 +1060,45 @@ objectdef obj_Ship
 						}
 						if ${itrWeapon2:First(exists)}
 						{
-							if ${itrFrequencyPairs:First(exists)}
+							iTurret:Set[0]
+							do
 							{
-								do
+								iTurret:Inc
+								if ${iTurret} != ${turret}
 								{
-									if ${itrWeapon2.Value.Charge.Name.Find[${itrFrequencyPairs.Key}]}
-									{
-										UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange[${range}]: including already loaded ammo in our check!",LOG_DEBUG]
-										fNewDelta:Set[${Math.Calc[${fBaseOptimal} * ${itrFrequencyPairs.Value} - ${range}]}]
-										UI:UpdateConsole["fNewDelta: ${fNewDelta}, ${Math.Calc[${fBaseOptimal} * ${itrFrequencyPairs.Value} - ${range}]}, fOldDelta: ${fOldDelta}",LOG_DEBUG]
-										if ${fNewDelta} > 0 && (${fNewDelta} < ${fOldDelta} || ${fOldDelta} == 0)
-										{
-											sBestSoFar:Set[${itrFrequencyPairs.Key}]
-											UI:UpdateConsole["obj_Ship.GetBestAmmo: sBestsoFar: ${sBestSoFar}, fNewDeelta ${fNewDelta}, fOldDelta ${fOldDelta} ",LOG_DEBUG]
-											bBestFound:Set[TRUE]
-											fOldDelta:Set[${fNewDelta}]
-										}
-										
-										if ${fHighestSoFar} == 0 || ${fNewDelta} > ${fHighestSoFar}
-										{
-											fHighestSoFar:Set[${fNewDelta}]
-											sHighestSoFar:Set[${itrFrequencyPairs.Key}]
-										}
-										break
-									}
+									; Looks like it isn't, which means we can continue in order to skip all the logic.
+									UI:UpdateConsole["obj_Ship: Skipping turret ${iTurret} because we want best ammo for turret ${turret}.",LOG_DEBUG]
+									continue
 								}
-								while ${itrFrequencyPairs:Next(exists)}
+								if ${itrFrequencyPairs:First(exists)}
+								{
+									do
+									{
+										if ${itrWeapon2.Value.Charge.Name.Find[${itrFrequencyPairs.Key}]}
+										{
+											UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange[${range}]: including already loaded ammo in our check!",LOG_DEBUG]
+											fNewDelta:Set[${Math.Calc[${fBaseOptimal} * ${itrFrequencyPairs.Value} - ${range}]}]
+											UI:UpdateConsole["fNewDelta: ${fNewDelta}, ${Math.Calc[${fBaseOptimal} * ${itrFrequencyPairs.Value} - ${range}]}, fOldDelta: ${fOldDelta}",LOG_DEBUG]
+											if ${fNewDelta} > 0 && (${fNewDelta} < ${fOldDelta} || ${fOldDelta} == 0)
+											{
+												sBestSoFar:Set[${itrFrequencyPairs.Key}]
+												UI:UpdateConsole["obj_Ship.GetBestAmmo: sBestsoFar: ${sBestSoFar}, fNewDeelta ${fNewDelta}, fOldDelta ${fOldDelta} ",LOG_DEBUG]
+												bBestFound:Set[TRUE]
+												fOldDelta:Set[${fNewDelta}]
+											}
+											
+											if ${fHighestSoFar} == 0 || ${fNewDelta} > ${fHighestSoFar}
+											{
+												fHighestSoFar:Set[${fNewDelta}]
+												sHighestSoFar:Set[${itrFrequencyPairs.Key}]
+											}
+											break
+										}
+									}
+									while ${itrFrequencyPairs:Next(exists)}
+								}
 							}
+							while ${itrWeapon2:Next(exists)}
 						}
 						if !${bBestFound}
 						{

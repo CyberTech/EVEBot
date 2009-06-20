@@ -30,6 +30,14 @@ Example use:
           </Set>
         </Set>
       </Set>
+      <Set Name="3">
+      	<Set Name="Commands">
+      		<Set Name="1" Action="NextRoom" />
+      		<Set Name="2" Action="ClearRoom" />
+      		<Set Name="3" Action="NextRoom" />
+      		<Set Name="4" Action="ClearRoom" />
+      	</Set>
+      </Set>
     </Set>
     <Set Name = "Customs Interdiction (1 of 2)">
       <Set Name ="2">
@@ -659,6 +667,24 @@ Example use:
 			<Set Name="3">
 				<Set Name="Commands">
 					<Set Name="1" Action="ClearRoom" />
+				</Set>
+			</Set>
+		</Set>
+		<Set Name="Break Their Will">
+			<Set Name="3">
+				<Set Name="Commands">
+					<Set Name="1" Action="Pull" Target="Repair Station" />
+					<Set Name="2" Action="ClearRoom" />
+					<Set Name="3" Action="Kill" Target="Repair Station" />
+					<Set Name="4" Action="ClearRoom" />
+				</Set>
+			</Set>
+		</Set>
+		<Set Name="Mannar Mining Colony">
+			<Set Name="3">
+				<Set Name="Commands">
+					<Set Name="1" Action="ClearRoom" />
+					<Set Name="2" Action="CheckContainers" Target="Broken Mining Equipment" GroupID="306" />
 				</Set>
 			</Set>
 		</Set>
