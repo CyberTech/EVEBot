@@ -132,6 +132,7 @@ objectdef obj_Freighter
 						call This.DoBaseAction
 						break
 					case TRANSPORT
+						This.ExcessCargoAtSource:Set[FALSE]
 						call This.Transport
 						break
 					case CARGOFULL
