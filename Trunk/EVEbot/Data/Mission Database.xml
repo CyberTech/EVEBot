@@ -246,10 +246,9 @@ Example use:
     <Set Name = "Avenge a Fallen Comrade">
       <Set Name = "2">
         <Set Name = "Commands">
-          <Set Name = "1" Action = "NextRoom">
-          </Set>
-          <Set Name = "2" Action = "ClearRoom">
-          </Set>
+          <Set Name = "1" Action = "NextRoom" />
+          <Set Name = "2" Action = "ClearRoom" />
+          <Set Name="3" Action="Kill" Target="Habitat" />
         </Set>
       </Set>
     </Set>
