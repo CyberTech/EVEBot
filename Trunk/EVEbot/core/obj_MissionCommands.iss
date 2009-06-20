@@ -627,10 +627,14 @@ objectdef obj_MissionCommands
 					return TRUE
 				}
 			}
-			if ${This.ClearRoom}
+			else
 			{
-				UI:UpdateConsole["DEBUG: obj_MissionCommands -  Waiting untill ${This.WaitTimeOut.Time24}",LOG_DEBUG]
-				return FALSE
+				WaitTimeOut:Set[0]
+				if ${This.ClearRoom}
+				{
+					UI:UpdateConsole["DEBUG: obj_MissionCommands -  Waiting untill ${This.WaitTimeOut.Time24}",LOG_DEBUG]
+					return FALSE
+				}
 			}
 			UI:UpdateConsole["DEBUG: obj_MissionCommands -  Waiting untill ${This.WaitTimeOut.Time24}",LOG_DEBUG]
 			return FALSE
