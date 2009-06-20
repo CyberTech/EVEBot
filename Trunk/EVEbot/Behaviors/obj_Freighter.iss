@@ -25,6 +25,7 @@ objectdef obj_Freighter
 	variable obj_Courier 		Courier
 	variable obj_StealthHauler 	StealthHauler
 	variable obj_Scavenger 		Scavenger
+	variable bool ExcessCargoAtSource = FALSE
 
 	method Initialize()
 	{
@@ -127,6 +128,7 @@ objectdef obj_Freighter
 						call This.DoBaseAction
 						break
 					case TRANSPORT
+						This.ExcessCargoAtSource:Set[FALSE]
 						call This.Transport
 						break
 					case CARGOFULL
@@ -161,15 +163,11 @@ objectdef obj_Freighter
 		{
 	  		This.CurrentState:Set["BASE"]
 		}
-		elseif ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
+		elseif ${This.ExcessCargoAtSource} || ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
 		{
-			/* TODO - CyberTech - This needs configurable. Assume Ship
-				942k, items of 100k each, ship is full @ 900k, however
-				min freespace is looking for 20k (2%)
-			*/
 			This.CurrentState:Set["CARGOFULL"]
 		}
-		elseif ${Me.InSpace} && ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace}
+		elseif ${Me.InSpace} && (${This.ExcessCargoAtSource} || ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace})
 		{
 		 	This.CurrentState:Set["TRANSPORT"]
 		}
@@ -357,6 +355,11 @@ objectdef obj_Freighter
 					{
 						SourceLocations:Dequeue
 					}
+				}
+				else
+				{
+					; We can't fit the rest of the cargo
+					This.ExcessCargoAtSource:Set[TRUE]
 				}
 			}
 		}
