@@ -63,13 +63,13 @@ objectdef obj_MissionCommands
 			{
 				if ${Entity[${EntityID}](exists)}
 				{	
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - ENTITY EXISTS , GROUPID READS AS ${Entity[${EntityID}].GroupID} NAME IS ${Entity[${EntityID}].Name} NAME EXISTS IS  ${Entity[${EntityID}].GroupID(exists)}",LOG_DEBUG]
+					UI:UpdateConsole["DEBUG: obj_MissionCommands - ENTITY EXISTS , GROUPID READS AS ${Entity[${EntityID}].GroupID} NAME IS ${Entity[${EntityID}].Name} ",LOG_DEBUG]
 				}
 				if ${Entity[${EntityID}].GroupID(exists)}
 				{					
 					if ${Entity[${EntityID}].Distance} > ${Math.Calc[${Distance} * 1.025]}
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - found entity with Name ${Entity[${EntityID}].Name} ID ${EntityID} , will approach",LOG_DEBUG]
+						UI:UpdateConsole["DEBUG: obj_MissionCommands - found entity with Name ${Entity[${EntityID}].Name} ID ${EntityID} , we are ${Entity[${EntityID}].Distance} away, we want to be ${Distance} away will approach",LOG_DEBUG]
 						ApproachIDCache:Set[${EntityID}]
 						ApproachState:Set["APPROACH"]
 						return FALSE
@@ -119,6 +119,7 @@ objectdef obj_MissionCommands
 					{
 						if ${Entity[${ApproachIDCache}].Distance} < ${Math.Calc[${Distance} * 1.025]}
 						{
+							UI:UpdateConsole["DEBUG: obj_MissionCommands - Name ${Entity[${EntityID}].Name} ID ${EntityID} , we are ${Entity[${EntityID}].Distance} away, we want to be ${Distance} we have succeeded!",LOG_DEBUG]
 							UI:UpdateConsole["DEBUG: obj_MissionCommands - Reached ${EntityID} ",LOG_DEBUG]
 							EVE:Execute[CmdStopShip]
 							ApproachState:Set["IDLE"]
@@ -163,14 +164,7 @@ objectdef obj_MissionCommands
 	; TODO - move guts into Ship.Approach except for roonumer:inc
 	member:bool NextRoom()
 	{
-		if ${Entity[TypeID,TYPE_ACCELERATION_GATE](exists)}
-		{
 			return ${This.ActivateGate[${Entity[TypeID,TYPE_ACCELERATION_GATE].ID}]}
-		}
-		elseif ${Entity[TypeID,TYPE_ANCIENT_ACCELERATION_GATE](exists)}
-		{
-			return ${This.ActivateGate[${Entity[TypeID,TYPE_ANCIENT_ACCELERATION_GATE].ID}]}
-		}
 	}
 
 
@@ -214,24 +208,22 @@ objectdef obj_MissionCommands
 			{
 				if ${Ship.WarpEntered}
 				{
-					GateState:Set["RELOAD"]
+					UI:UpdateConsole["DEBUG: obj_MissionCommands - Warp was entered",LOG_DEBUG]
+					GateState:Set["WARPWAIT"]
 				}
+				UI:UpdateConsole["DEBUG: obj_MissionCommands - Waiting for ship to enter warp",LOG_DEBUG]
 				;TODO - put a timer here so we retry activating the gate
-				return FALSE
-			}
-			case RELOAD
-			{
-				Ship:Reload_Weapons[TRUE]
-				GateState:Set["WARPWAIT"]
 				return FALSE
 			}
 			case WARPWAIT
 			{
 				if ${This.WarpWait}
 				{
+					UI:UpdateConsole["DEBUG: obj_MissionCommands - We dropped out of warp!",LOG_DEBUG]
 					GateState:Set["IDLE"]
 					return TRUE
 				}
+				UI:UpdateConsole["DEBUG: obj_MissionCommands -  We are still in warp, This.WarpWait is ${This.WarpWait}",LOG_DEBUG]
 				return FALSE
 			}
 		}
@@ -412,6 +404,7 @@ objectdef obj_MissionCommands
 				{
 					KillIDCache:Set[${entityID}]
 					KillIDState:Set["APPROACHING"]
+					UI:UpdateConsole["DEBUG: obj_MissionCommands - found entity with Name ${Entity[${entityID}].Name} ID ${entityID} , we are ${Entity[${entityID}].Distance} away, lets kill it",LOG_DEBUG]					
 					return FALSE
 				}
 				else
@@ -428,6 +421,8 @@ objectdef obj_MissionCommands
 				{
 					if ${Entity[${entityID}].GroupID(exists)}
 					{
+							UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - Approaching entity with Name ${Entity[${entityID}].Name} ID ${entityID} , we are ${Entity[${EntityID}].Distance} away, we want to be ${Math.Calc[${Ship.OptimalTargetingRange}*.8]} away will approach",LOG_DEBUG]
+					
 						if ${This.Approach[${entityID}, ${Math.Calc[${Ship.OptimalTargetingRange}*.8]}]}
 						{
 							UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - In weapons range, will target and fire",LOG_DEBUG]
@@ -1023,6 +1018,7 @@ objectdef obj_MissionCommands
 
 			if ${Ship.InWarp}
 			{
+				UI:UpdateConsole["DEBUG: obj_MissionCommands - Warpwait : Ship.InWarp is ${Ship.InWarp}!",LOG_DEBUG]
 				return FALSE
 			}
 			else
