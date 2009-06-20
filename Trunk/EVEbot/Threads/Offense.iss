@@ -270,10 +270,10 @@ objectdef obj_Offense
 		switch ${Config.Common.BotMode}
 		{
 			case Ratter
-				HaveAggro:Set[${Targets.HaveFullAggro["Ratter.RatCache.Entities"]}]
+				HaveAggro:Set[${Targets.HaveFullAggro["Ratter.RatCache.CachedEntities"]}]
 				break
 			case Missioneer
-				HaveAggro:Set[${Targets.HaveFullAggro["Missions.missionCombat.MissionCommands.EntityCache.Entities"]}]
+				HaveAggro:Set[${Targets.HaveFullAggro["Missions.missionCombat.MissionCommands.EntityCache.CachedEntities"]}]
 				break
 		}
 		return ${HaveAggro}
