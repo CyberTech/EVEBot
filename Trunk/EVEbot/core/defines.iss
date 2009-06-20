@@ -102,14 +102,6 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 ;Implant (ID: 20)        Deployable (ID: 22)     Structure (ID: 23)          Reaction (ID: 24)
 ;Asteroid (ID: 25)
 
-; Mission Warp Gate IDs
-;${Entity[Acceleration Gate].Category} = Celestial
-;${Entity[Acceleration Gate].CategoryID} = 2
-;${Entity[Acceleration Gate].Type} = Acceleration Gate
-;${Entity[Acceleration Gate].TypeID} = 17831
-;${Entity[Acceleration Gate].Group} = Warp Gate
-;${Entity[Acceleration Gate].GroupID} = 366
-
 #define CATEGORYID_CELESTIAL	2
 #define CATEGORYID_STATION 		3
 #define CATEGORYID_MINERAL 		4
@@ -542,6 +534,7 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 #define GROUP_MARAUDERS 900
 #define GROUP_TARGETPAINTER 379
 
+#define GROUP_WARPGATE 366
 #define TYPE_ACCELERATION_GATE 17831
 #define TYPE_ANCIENT_ACCELERATION_GATE 12273
 
