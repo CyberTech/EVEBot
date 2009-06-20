@@ -377,9 +377,9 @@ objectdef obj_MissionCombat
 					CurrrentCommand:Set["WaitTargetQueueZero"]
 					break
 				}
-				case PullNearest
+				case Pull
 				{
-					CurrentCommand:Set["PullNearest"]
+					CurrentCommand:Set["Pull"]
 					break
 				}
 				case CheckContainers
@@ -439,7 +439,7 @@ objectdef obj_MissionCombat
 			}
 			case WaitAggro
 			{
-				return ${MissionCommands.Approach[${currentCommandref.FindAttribute["TimeOut"].Int}]}
+				return ${MissionCommands.WaitAggro[${currentCommandref.FindAttribute["TimeOut"].Int}]}
 				break
 			}
 			case KillAggressors
