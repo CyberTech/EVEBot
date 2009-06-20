@@ -128,7 +128,6 @@ objectdef obj_Freighter
 						call This.DoBaseAction
 						break
 					case TRANSPORT
-						This.ExcessCargoAtSource:Set[FALSE]
 						call This.Transport
 						break
 					case CARGOFULL
@@ -149,6 +148,7 @@ objectdef obj_Freighter
 		{
 			m_DestinationID:Set[${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity.ID}]
 			Assets:IgnoreStation[${m_DestinationID}]
+			This.ExcessCargoAtSource:Set[FALSE]
 		}
 
 		if ${EVEBot.ReturnToStation} && ${Me.InSpace}
@@ -167,7 +167,7 @@ objectdef obj_Freighter
 		{
 			This.CurrentState:Set["CARGOFULL"]
 		}
-		elseif ${Me.InSpace} && (${This.ExcessCargoAtSource} || ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace})
+		elseif ${Me.InSpace} && ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace}
 		{
 		 	This.CurrentState:Set["TRANSPORT"]
 		}
