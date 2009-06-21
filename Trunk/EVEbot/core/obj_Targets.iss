@@ -291,36 +291,49 @@ objectdef obj_Targets
 		; No NPCs around
 		return FALSE
 	}
-	
+
 	/* bool HaveFullAggro(string entities):
 	Iterate through entities and determine if any are not targeting me. If so, return FALSE. Otherwise, return TRUE. */
-	member:bool HaveFullAggro(string entities)
+	member:bool HaveFullAggro(string EntityIndex)
 	{
-		variable iterator itrEntities
-		${entities}:GetIterator[itrEntities]
-		
-		if ${itrEntities:First(exists)}
+		variable iterator CurEntity
+		${EntityIndex}:GetIterator[CurEntity]
+
+		if ${CurEntity:First(exists)}
 		{
 			do
 			{
-				;If our target is a hauler, it won't be targeting us.
-				;Same goes for assorted deadspace entities
-				if ${Entity[${itrEntities.Value.EntityID}].Group.Find["Hauler"](exists)} || \
-				${Entity[${itrEntities.Value.EntityID}].GroupID} == GROUP_DEADSPACEOVERSEERSSTRUCTURE || \
-				${Entity[${itrEntities.Value.EntityID}].GroupID} == GROUP_LARGECOLLIDABLESTRUCTURE
+				/* ; Ignore anything that isn't a player or npc.
+				TODO: Before we can do this, need to validate that structures that target you (missile silos, etc) are NPCs
+					Would remove the need for the struct checks below. -- CyberTech
+				if !${Entity[${CurEntity.Value.EntityID}].IsNPC} && \
+					!${Entity[${CurEntity.Value.EntityID}].IsPC}
 				{
 					continue
 				}
-				if !${Entity[${itrEntities.Value.EntityID}].IsTargetingMe}
+				*/
+
+				;If our target is a hauler, it won't be targeting us.
+				;Same goes for assorted deadspace entities
+				if ${Entity[${CurEntity.Value.EntityID}].Group.Find["Hauler"](exists)} || \
+					${Entity[${CurEntity.Value.EntityID}].GroupID} == GROUP_DEADSPACEOVERSEERSSTRUCTURE || \
+					${Entity[${CurEntity.Value.EntityID}].GroupID} == GROUP_LARGECOLLIDABLESTRUCTURE
+					; TODO - why aren't these 2 group checks above in IsNPCTarget so they don't end up in the index to begin with? -- CyberTech
 				{
-					UI:UpdateConsole["DEBUG: obj_Targets - Entity[${itrEntities.Value.EntityID}].Name (${Entity[${itrEntities.Value.EntityID}].Name}) is not targeting me, we don't have full aggro",LOG_DEBUG]
+					continue
+				}
+
+				if !${Entity[${CurEntity.Value.EntityID}].IsTargetingMe}
+				{
+					UI:UpdateConsole["DEBUG: obj_Targets - Entity[${CurEntity.Value.EntityID}].Name (${Entity[${CurEntity.Value.EntityID}].Name}) is not targeting me, we don't have full aggro",LOG_DEBUG]
 					return FALSE
 				}
 			}
-			while ${itrEntities:Next(exists)}
+			while ${CurEntity:Next(exists)}
 		}
 		return TRUE
 	}
+
 	member:bool IsNPCTarget(int groupID)
 	{
 		switch ${groupID}
@@ -361,7 +374,7 @@ objectdef obj_Targets_Rats
 	{
 		variable int iTotalBSValue = 0
 		Ratter.RatCache.Entities:GetIterator[Ratter.RatCache.EntityIterator]
-		
+
 		; Determine the total spawn value
 		if ${Ratter.RatCache.EntityIterator:First(exists)}
 		{

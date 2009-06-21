@@ -1,6 +1,6 @@
 #define TESTCASE 1
 
-#include Scripts/EVEBot-test/Support/TestAPI.iss
+#include ../Support/TestAPI.iss
 
 /*
 	Test Drone Launch, Recall, ID collection, activedrone member, engage
@@ -18,23 +18,25 @@ function main()
 	variable index:int ActiveDroneIDList
 	variable index:activedrone ActiveDroneList
 
-	while TRUE
-	{
+	;while TRUE
+	;{
 		echo Drone Bay Capacity: ${Me.Ship.DronebayCapacity}
 		echo Drones in Bay: ${Me.Ship.GetDrones}
 
 		UI:UpdateConsole["Launching drones..."]
-		Me.Ship:LaunchAllDrones
+		;Me.Ship:LaunchAllDrones
 		wait 30
 
 		echo "Drones in Space: ${Me.GetActiveDrones[ActiveDroneList]}"
 
 		echo " Drone ID: ${ActiveDroneList.Get[1].ID}"
 		echo " Drone Name: ${ActiveDroneList.Get[1].ToEntity}"
+		echo " Drone Owner: ${ActiveDroneList.Get[1].Owner}"
+		echo " Drone Controller: ${ActiveDroneList.Get[1].Owner}"
 
 		echo " Engaging Drones..."
-		EVE:DronesEngageMyTarget[ActiveDroneIDList]
-
+		;EVE:DronesEngageMyTarget[ActiveDroneIDList]
+/*
 		while ${Me.GetActiveDroneIDs[ActiveDroneIDList]}
 		{
 			wait 20
@@ -43,5 +45,6 @@ function main()
 			EVE:DronesReturnToDroneBay[ActiveDroneIDList]
 			wait 30
 		}
-	}
+*/
+	;}
 }

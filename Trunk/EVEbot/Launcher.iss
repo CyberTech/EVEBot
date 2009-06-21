@@ -16,7 +16,6 @@
 
 */
 
-#include core/defines.iss
 #include Support/TestAPI.iss
 #include Support/obj_LoginHandler.iss
 #include Support/obj_AutoPatcher.iss

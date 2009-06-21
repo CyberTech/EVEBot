@@ -5,7 +5,9 @@
 
 	-- CyberTech
 */
+
 #define TESTAPI_DEBUG 0
+#include ../core/defines.iss
 
 objectdef obj_UI
 {
