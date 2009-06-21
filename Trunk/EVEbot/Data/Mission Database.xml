@@ -537,9 +537,15 @@ Example use:
     <Set Name = "Seek and Destroy">
       <Set Name = "2">
         <Set Name = "Commands">
-          <Set Name = "2" Action = "ClearRoom">
-          </Set>
+        	<Set Name="1" Action="NextRoom" />
+          <Set Name = "2" Action = "ClearRoom" />
         </Set>
+      </Set>
+      <Set Name="3">
+      	<Set Name="Commands">
+      		<Set Name="1" Action="NextRoom" />
+      		<Set Name="2" Action="ClearRoom" />
+      	</Set>
       </Set>
     </Set>
     <Set Name ="Pirate Intrusion">
@@ -709,6 +715,13 @@ Example use:
 					<Set Name="6" Action="ClearRoom" />
 					<Set Name="7" Action="Kill" Target="Control Tower" />
 					<Set Name="8" Action="CheckContainers" Target="Data Chip" />
+				</Set>
+			</Set>
+		</Set>
+		<Set Name="The Seven's Prison Facility">
+			<Set Name="3">
+				<Set Name="Commands">
+					<Set Name="1" Action="ClearRoom" />
 				</Set>
 			</Set>
 		</Set>

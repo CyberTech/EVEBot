@@ -67,7 +67,7 @@ objectdef obj_MissionCommands
 				}
 				if ${Entity[${EntityID}].GroupID(exists)}
 				{
-					if ${Entity[${EntityID}].Distance} > ${Math.Calc[${Distance} * 1.025]}
+					if ${Entity[${EntityID}].Distance} > ${Math.Calc[${Distance} * 1.1]}
 					{
 						UI:UpdateConsole["DEBUG: obj_MissionCommands - found entity with Name ${Entity[${EntityID}].Name} ID ${EntityID} , we are ${Entity[${EntityID}].Distance} away, we want to be ${Distance} away will approach",LOG_DEBUG]
 						ApproachIDCache:Set[${EntityID}]

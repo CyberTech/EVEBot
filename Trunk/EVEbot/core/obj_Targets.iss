@@ -302,13 +302,16 @@ objectdef obj_Targets
 			do
 			{
 				;If our target is a hauler, it won't be targeting us.
-				if ${Entity[${itrEntities.Value.EntityID}].Group.Find["Hauler"](exists)}
+				;Same goes for assorted deadspace entities
+				if ${Entity[${itrEntities.Value.EntityID}].Group.Find["Hauler"](exists)} || \
+				${Entity[${itrEntities.Value.EntityID}].GroupID} == GROUP_DEADSPACEOVERSEERSSTRUCTURE || \
+				${Entity[${itrEntities.Value.EntityID}].GroupID} == GROUP_LARGECOLLIDABLESTRUCTURE
 				{
-					return TRUE
+					continue
 				}
 				if !${Entity[${itrEntities.Value.EntityID}].IsTargetingMe}
 				{
-					UI:UpdateConsole["DEBUG: obj_Targets - Entity[${itrEntities.Value.EntityID}].Name is not targeting me, we dont have full aggro",LOG_DEBUG]
+					UI:UpdateConsole["DEBUG: obj_Targets - Entity[${itrEntities.Value.EntityID}].Name (${Entity[${itrEntities.Value.EntityID}].Name}) is not targeting me, we don't have full aggro",LOG_DEBUG]
 					return FALSE
 				}
 			}

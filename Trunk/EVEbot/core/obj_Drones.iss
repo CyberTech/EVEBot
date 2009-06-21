@@ -207,7 +207,7 @@ objectdef obj_Drones
 
 	method RecallDrone(entity Drone, bool Relaunchable=TRUE)
 	{
-		UI:UpdateConsole["obj_Drones: Recalling drone ${Drone.ID}, Relaunchable: ${Relaunchable}", LOG_DEBUG]
+		UI:UpdateConsole["obj_Drones: Recalling drone ${Drone.ID}, Relaunchable: ${Relaunchable}"]
 		if !${Relaunchable}
 		{
 			RecalledDrones:Insert[${Drone.ID}]
@@ -375,8 +375,12 @@ objectdef obj_Drones
 ;				}
 ;				else
 ;				{
-					;UI:UpdateConsole["Debug: Engage Target ${DroneIterator.Value.ID}"]
-					engageIndex:Insert[${DroneIterator.Value.ID}]
+					; 0 is the "idle" state
+					if ${DroneIterator.Value.State} == 0
+					{
+						UI:UpdateConsole["Debug: Engage Target ${DroneIterator.Value.ID}"]
+						engageIndex:Insert[${DroneIterator.Value.ID}]
+					}
 ;				}
 			}
 			while ${DroneIterator:Next(exists)}
