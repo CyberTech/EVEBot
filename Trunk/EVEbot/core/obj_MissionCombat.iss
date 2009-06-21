@@ -439,7 +439,7 @@ objectdef obj_MissionCombat
 			}
 			case WaitAggro
 			{
-				return ${MissionCommands.WaitAggro[${currentCommandref.FindAttribute["TimeOut"].Int}]}
+				return ${MissionCommands.WaitAggro[${currentCommandref.FindAttribute["AggroCount"].Int}]}
 				break
 			}
 			case KillAggressors

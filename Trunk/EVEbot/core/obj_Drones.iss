@@ -34,7 +34,7 @@ objectdef obj_Drones
 
 	variable index:int ActiveDroneIDs
 	variable iterator ActiveDroneID
-	variable index:entity ActiveDrones
+	variable index:activedrone ActiveDrones
 	variable iterator ActiveDrone
 	variable index:item DronesInBay
 	variable iterator DroneInBay
@@ -116,35 +116,35 @@ objectdef obj_Drones
 	}
 
 	method Pulse()
-	{
-		if ${This.WaitingForDrones}
+	{		
+		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-			if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+			if !${EVEBot.Paused}
 			{
-				if !${EVEBot.Paused}
+				if ${Me.InSpace}
 				{
-					if ${Me.InSpace}
+					if ${This.WaitingForDrones}
 					{
 						This.LaunchedDrones:Set[${This.DronesInSpace}]
 						if  ${This.LaunchedDrones} > 0
 						{
 							This.WaitingForDrones:Set[FALSE]
 							This.DronesReady:Set[TRUE]
-
 							UI:UpdateConsole["${This.LaunchedDrones} drones deployed"]
 						}
-
+					}
+					else
+					{
+						UI:UpdateConsole["Checking drone hp"]
 						This:CheckDroneHP
 					}
 				}
-
-				This.NextPulse:Set[${Time.Timestamp}]
-				This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-				This.NextPulse:Update
 			}
+			This.NextPulse:Set[${Time.Timestamp}]
+			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+			This.NextPulse:Update
 		}
 	}
-
 	/* CheckDroneHP - This method is here to iterate through all the drones, check their shield/armor % against
 	any known previous value, if they haven't already been recalled, recall them, and store the current shield/armor hp. */
 	method CheckDroneHP()
@@ -156,14 +156,15 @@ objectdef obj_Drones
 		/* iterate over the index */
 		if ${ActiveDrone:First(exists)}
 		{
+			UI:UpdateConsole["Found drones"]
 			do
 			{
 				/* Only compare hp if the stored hp isn't null */
 				if ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}](exists)}
 				{
-					if ${ActiveDrone.Value.ArmorPct} < ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}]}
+					if ${ActiveDrone.Value.ToEntity.ArmorPct} < ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}]}
 					{
-						if ${ActiveDrone.Value.ArmorPct} < 50
+						if ${ActiveDrone.Value.ToEntity.ArmorPct} < 50
 						{
 							;Recall it and do not relaunch it
 							This:RecallDrone[${ActiveDrone.Value},FALSE]
@@ -171,15 +172,15 @@ objectdef obj_Drones
 					}
 				}
 				/* Store current HP */
-				StoredDroneArmor:Set[${ActiveDrone.Value.ID},${ActiveDrone.Value.ArmorPct}]
+				StoredDroneArmor:Set[${ActiveDrone.Value.ID},${ActiveDrone.Value.ToEntity.ArmorPct}]
 				if ${StoredDroneShield.Element[${ActiveDrone.Value.ID}](exists)}
 				{
-					if ${ActiveDrone.Value.ShieldPct} < ${StoredDroneShield.Element[${ActiveDrone.Value.ID}]}
+					if ${ActiveDrone.Value.ToEntity.ShieldPct} < ${StoredDroneShield.Element[${ActiveDrone.Value.ID}]}
 					{
 						This:RecallDrone[${ActiveDrone.Value}]
 					}
 				}
-				StoredDroneShield:Set[${ActiveDrone.Value.ID},${ActiveDrone.Value.ShieldPct}]
+				StoredDroneShield:Set[${ActiveDrone.Value.ID},${ActiveDrone.Value.ToEntity.ShieldPct}]
 			}
 			while ${ActiveDrone:Next(exists)}
 		}

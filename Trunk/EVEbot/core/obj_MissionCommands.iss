@@ -966,14 +966,16 @@ objectdef obj_MissionCommands
 	{
 		if ${Ship.Drones.DronesInSpace} > 0
 		{
-			variable iterator droneIDIterator
+			variable iterator droneIterator
 			Ship.Drones.ActiveDrones:GetIterator[droneIterator]
 			if ${droneIterator:First(exists)}
 			{
 				do
 				{
-					if ${droneIterator.Value.ToActiveDrone.State} != 2
+					if ${droneIterator.Value.State} != DRONESTATE_RETURNINGTOBAY
 					{
+						UI:UpdateConsole["DEBUG: obj_MissionCommands - Attempting to recall drones!",LOG_DEBUG]
+
 						EVE:Execute[CmdDronesReturnToBay]
 						return FALSE
 					}
@@ -993,7 +995,8 @@ objectdef obj_MissionCommands
 			}
 			else
 			{
-				return FALSE
+				UI:UpdateConsole["DEBUG: obj_MissionCommands - We dont have any drones!",LOG_DEBUG]
+				return TRUE
 			}
 		}
 		else
