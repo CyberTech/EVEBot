@@ -275,6 +275,8 @@ objectdef obj_Targets
 				case GROUP_CONVOYDRONE
 				case GROUP_FACTIONDRONE
 				case GROUP_BILLBOARD
+				case GROUP_DEADSPACEOVERSEERSSTRUCTURE
+				case GROUP_LARGECOLLIDABLESTRUCTURE
 					UI:UpdateConsole["DEBUG: Ignoring entity ${tgtIterator.Value.Group} (${tgtIterator.Value.GroupID})"]
 					continue
 					break
