@@ -117,7 +117,7 @@ objectdef obj_MissionCommands
 				{
 					if ${EntityID} == ${ApproachIDCache}
 					{
-						if ${Entity[${ApproachIDCache}].Distance} < ${Math.Calc[${Distance} * 1.025]}
+						if ${Entity[${ApproachIDCache}].Distance} < ${Math.Calc[${Distance} * 1.1]}
 						{
 							UI:UpdateConsole["DEBUG: obj_MissionCommands - Name ${Entity[${EntityID}].Name} ID ${EntityID} , we are ${Entity[${EntityID}].Distance} away, we want to be ${Distance} we have succeeded!",LOG_DEBUG]
 							UI:UpdateConsole["DEBUG: obj_MissionCommands - Reached ${EntityID} ",LOG_DEBUG]
@@ -457,7 +457,7 @@ objectdef obj_MissionCommands
 							if !${Targeting.IsMandatoryQueued[${KillIDCache}]}
 							{
 								UI:UpdateConsole["DEBUG: obj_MissionCommands - Targeting ${KillIDCache}",LOG_DEBUG]
-								Targeting:Queue[${KillIDCache},1,1,TRUE]
+								Targeting:Queue[${KillIDCache},1,1,FALSE]
 								KillIDState:Set["KILLING"]
 								return FALSE
 							}
@@ -498,7 +498,7 @@ objectdef obj_MissionCommands
 					else
 					{
 						UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill-  ${KillIDCache} is destroyed",LOG_DEBUG]
-						KillIDState:Set["IDLE"]
+						KillIDState:Set["START"]
 						return TRUE
 					}
 				}
@@ -579,6 +579,7 @@ objectdef obj_MissionCommands
 						This:PullTarget[${PullCache}]
 						if ${This.AggroCount} > 0
 						{
+							Targeting:UnlockRandomTarget[]
 							UI:UpdateConsole["DEBUG: obj_MissionCommands - we pulled something, success!",LOG_DEBUG]
 							PullState:Set["START"]
 							return TRUE
@@ -1105,7 +1106,7 @@ objectdef obj_MissionCommands
 							if !${Targeting.IsQueued[${targetIterator.Value.ID}]}
 							{
 								UI:UpdateConsole["DEBUG: obj_MissionCommands - NextTarget - Targeting ${targetIterator.Value.Name} ID ${targetIterator.Value.ID}",LOG_DEBUG]
-								Targeting:Queue[${targetIterator.Value.ID},1,1,TRUE]
+								Targeting:Queue[${targetIterator.Value.ID},1,1,FALSE]
 							}
 						}
 					}
@@ -1116,7 +1117,7 @@ objectdef obj_MissionCommands
 					if !${Targeting.IsQueued[${highestID}]}
 					{
 						UI:UpdateConsole["DEBUG: obj_MissionCommands - NextTarget - Targeting highest priority ${targetIterator.Value.Name}",LOG_DEBUG]
-						Targeting:Queue[${highestID},1,1,TRUE]
+						Targeting:Queue[${highestID},1,1,FALSE]
 					}
 				}
 			}
