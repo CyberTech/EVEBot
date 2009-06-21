@@ -42,16 +42,16 @@ Example use:
     <Set Name = "Customs Interdiction (1 of 2)">
       <Set Name ="2">
         <Set Name = "Commands">
-          <Set Name = "1" Action = "ClearRoom">
-          </Set>
+          <Set Name = "1" Action = "ClearRoom" />
+          <Set Name="2" Action="CheckContainers" Target="Smuggler DNA" GroupID="12" />
         </Set>
       </Set>
     </Set>
     <Set Name = "Customs Interdiction (2 of 2)">
       <Set Name ="2">
         <Set Name = "Commands">
-          <Set Name = "1" Action = "ClearRoom">
-          </Set>
+          <Set Name = "1" Action = "ClearRoom" />
+          <Set Name="2" Action="CheckContainers" Target="Freed Slaves" GroupID="12" />
         </Set>
       </Set>
     </Set>
@@ -698,12 +698,19 @@ Example use:
 				</Set>
 			</Set>
 		</Set>
-  </Set>  
-  <Set Name = "Technological Secrets (3 of 3)">
-    <Set Name = "2">      
-      <Set Name = "Commands">        
-        <Set Name = "1" Action = "Waves" TimeOut ="3" />        
-      </Set>      
-    </Set>    
+		<Set Name="Portal to War (2 of 5)">
+			<Set Name="3">
+				<Set Name="Commands">
+					<Set Name="1" Action="NextRoom" />
+					<Set Name="2" Action="NextRoom" />
+					<Set Name="3" Action="NextRoom" />
+					<Set Name="4" Action="ClearRoom" />
+					<Set Name="5" Action="NextRoom" />
+					<Set Name="6" Action="ClearRoom" />
+					<Set Name="7" Action="Kill" Target="Control Tower" />
+					<Set Name="8" Action="CheckContainers" Target="Data Chip" />
+				</Set>
+			</Set>
+		</Set>
   </Set>
 </InnerSpaceSettings>

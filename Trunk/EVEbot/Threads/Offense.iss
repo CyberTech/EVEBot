@@ -241,6 +241,7 @@ objectdef obj_Offense
 						else
 						{
 							Ship.Drones:SendDrones
+							Ship.Drones:CheckDroneHP
 						}
 					}
 					elseif ${Ship.Drones.DeployedDroneCount} > 0
