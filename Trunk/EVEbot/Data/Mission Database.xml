@@ -108,11 +108,15 @@ Example use:
     <Set Name = "Deadly Arrival">
       <Set Name = "2">
         <Set Name = "Commands">
-          <Set Name = "1" Action = "ApproachBreakOnCombat" Target ="Spaceshuttle Wreck">
-          </Set>
-          <Set Name = "2" Action = "WaitAggro" TimeOut ="10">
-          </Set>
+          <Set Name = "1" Action = "ApproachBreakOnCombat" Target ="Spaceshuttle Wreck" />
+          <Set Name = "2" Action = "WaitAggro" TimeOut ="10" />
         </Set>
+      </Set>
+      <Set Name="3">
+      	<Set Name="Commands">
+      		<Set Name="1" Action="ApproachBreakOnCombat" Target="Spaceshuttle Wreck" />
+      		<Set Name="2" Action="WaitAggro" TimeOut="10" />
+      	</Set>
       </Set>
     </Set>
     <Set Name = "Labors of War (1 of 3)">
@@ -279,11 +283,15 @@ Example use:
     <Set Name = "Gone Berserk">
       <Set Name = "2">
         <Set Name = "Commands">
-          <Set Name = "1" Action = "NextRoom">
-          </Set>
-          <Set Name = "2" Action = "ClearRoom">
-          </Set>
+          <Set Name = "1" Action = "NextRoom" />
+          <Set Name = "2" Action = "ClearRoom" />
         </Set>
+      </Set>
+      <Set Name="3">
+      	<Set Name="Commands">
+      		<Set Name="1" Action="NextRoom" />
+      		<Set Name="2" Action="ClearRoom" />
+      	</Set>
       </Set>
     </Set>
     <Set Name = "The Blockade">
@@ -719,6 +727,34 @@ Example use:
 			</Set>
 		</Set>
 		<Set Name="The Seven's Prison Facility">
+			<Set Name="3">
+				<Set Name="Commands">
+					<Set Name="1" Action="ClearRoom" />
+				</Set>
+			</Set>
+		</Set>
+		<Set Name="Transport Duty">
+			<Set Name="3">
+				<Set Name="Commands">
+					<Set Name="1" Action="NextRoom" />
+					<Set Name="2" Action="ClearRoom" />
+				</Set>
+			</Set>
+		</Set>
+		<Set Name="Silence The Informant">
+			<Set Name="3">
+				<Set Name="Commands">
+					<Set Name="1" Action="NextRoom" />
+					<Set Name="2" Action="ClearRoom" />
+					<Set Name="3" Action="NextRoom" />
+					<Set Name="4" Action="ClearRoom" />
+					<Set Name="5" Action="NextRoom" />
+					<Set Name="6" Action="ClearRoom" />
+				</Set>
+			</Set>
+		</Set>
+		<!-- This is a VERY neut heavy mission, beware. I'd blacklist it. -->
+		<Set Name="Probing Question">
 			<Set Name="3">
 				<Set Name="Commands">
 					<Set Name="1" Action="ClearRoom" />

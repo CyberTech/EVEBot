@@ -294,20 +294,19 @@ objectdef obj_Targets
 
 	/* bool HaveFullAggro(string entities):
 	Iterate through entities and determine if any are not targeting me. If so, return FALSE. Otherwise, return TRUE. */
-	member:bool HaveFullAggro(string EntityIndex)
+	member:bool HaveFullAggro(string EntityCache)
 	{
-		variable iterator CurEntity
-		${EntityIndex}:GetIterator[CurEntity]
+		${EntityCache}.Entities:GetIterator[${EntityCache}.EntityIterator]
 
-		if ${CurEntity:First(exists)}
+		if ${${EntityCache}.EntityIterator:First(exists)}
 		{
 			do
 			{
 				/* ; Ignore anything that isn't a player or npc.
 				TODO: Before we can do this, need to validate that structures that target you (missile silos, etc) are NPCs
 					Would remove the need for the struct checks below. -- CyberTech
-				if !${Entity[${CurEntity.Value.EntityID}].IsNPC} && \
-					!${Entity[${CurEntity.Value.EntityID}].IsPC}
+				if !${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].IsNPC} && \
+					!${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].IsPC}
 				{
 					continue
 				}
@@ -315,21 +314,21 @@ objectdef obj_Targets
 
 				;If our target is a hauler, it won't be targeting us.
 				;Same goes for assorted deadspace entities
-				if ${Entity[${CurEntity.Value.EntityID}].Group.Find["Hauler"](exists)} || \
-					${Entity[${CurEntity.Value.EntityID}].GroupID} == GROUP_DEADSPACEOVERSEERSSTRUCTURE || \
-					${Entity[${CurEntity.Value.EntityID}].GroupID} == GROUP_LARGECOLLIDABLESTRUCTURE
+				if ${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].Group.Find["Hauler"](exists)} || \
+					${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].GroupID} == GROUP_DEADSPACEOVERSEERSSTRUCTURE || \
+					${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].GroupID} == GROUP_LARGECOLLIDABLESTRUCTURE
 					; TODO - why aren't these 2 group checks above in IsNPCTarget so they don't end up in the index to begin with? -- CyberTech
 				{
 					continue
 				}
 
-				if !${Entity[${CurEntity.Value.EntityID}].IsTargetingMe}
+				if !${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].IsTargetingMe}
 				{
-					UI:UpdateConsole["DEBUG: obj_Targets - Entity[${CurEntity.Value.EntityID}].Name (${Entity[${CurEntity.Value.EntityID}].Name}) is not targeting me, we don't have full aggro",LOG_DEBUG]
+					UI:UpdateConsole["DEBUG: obj_Targets - Entity[${${EntityCache}.EntityIterator.Value.EntityID}].Name (${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].Name}) is not targeting me, we don't have full aggro",LOG_DEBUG]
 					return FALSE
 				}
 			}
-			while ${CurEntity:Next(exists)}
+			while ${${EntityCache}.EntityIterator:Next(exists)}
 		}
 		return TRUE
 	}
