@@ -296,7 +296,7 @@ objectdef obj_Targets
 	Iterate through entities and determine if any are not targeting me. If so, return FALSE. Otherwise, return TRUE. */
 	member:bool HaveFullAggro(string EntityCache)
 	{
-		${EntityCache}.Entities:GetIterator[${EntityCache}.EntityIterator]
+		${EntityCache}.CachedEntities:GetIterator[${EntityCache}.EntityIterator]
 
 		if ${${EntityCache}.EntityIterator:First(exists)}
 		{
