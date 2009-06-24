@@ -26,7 +26,7 @@ objectdef obj_Drones
 
 	variable collection:float StoredDroneArmor
 	variable collection:float StoredDroneShield
-	variable index:entity	RecalledDrones
+	variable index:int	RecalledDrones
 	variable iterator RecalledDroneIterator
 
 	; All Drones
@@ -135,7 +135,6 @@ objectdef obj_Drones
 					}
 					else
 					{
-						UI:UpdateConsole["Checking drone hp"]
 						This:CheckDroneHP
 					}
 				}
@@ -156,18 +155,23 @@ objectdef obj_Drones
 		/* iterate over the index */
 		if ${ActiveDrone:First(exists)}
 		{
-			UI:UpdateConsole["Found drones"]
 			do
 			{
+				UI:UpdateConsole["obj_Drones: Drone ${ActiveDrone.Value.ID}: Armor %: ${ActiveDrone.Value.ToEntity.ArmorPct}, Stored: ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}]}, Shield %: ${ActiveDrone.Value.ToEntity.ShieldPct}, Stored: ${StoredDroneShield.Element[${ActiveDrone.Value.ID}]}",LOG_DEBUG]
 				/* Only compare hp if the stored hp isn't null */
 				if ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}](exists)}
 				{
 					if ${ActiveDrone.Value.ToEntity.ArmorPct} < ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}]}
 					{
+						UI:UpdateConsole["obj_Drones: Drone ${ActiveDrone.Value.ID} is low on armor. Recalling."]
 						if ${ActiveDrone.Value.ToEntity.ArmorPct} < 50
 						{
 							;Recall it and do not relaunch it
 							This:RecallDrone[${ActiveDrone.Value},FALSE]
+						}
+						else
+						{
+							This:RecallDrone[${ActiveDrone.Value}]
 						}
 					}
 				}
@@ -177,7 +181,7 @@ objectdef obj_Drones
 				{
 					if ${ActiveDrone.Value.ToEntity.ShieldPct} < ${StoredDroneShield.Element[${ActiveDrone.Value.ID}]}
 					{
-						This:RecallDrone[${ActiveDrone.Value}]
+						This:RecallDrone[${ActiveDrone.Value.ToEntity}]
 					}
 				}
 				StoredDroneShield:Set[${ActiveDrone.Value.ID},${ActiveDrone.Value.ToEntity.ShieldPct}]
@@ -186,7 +190,7 @@ objectdef obj_Drones
 		}
 	}
 
-	member DroneIsRecalled(entity Drone)
+	member DroneIsRecalled(int DroneID)
 	{
 		/* Get an iterator to the recalled drones */
 		RecalledDrones:GetIterator[RecalledDroneIterator]
@@ -196,7 +200,7 @@ objectdef obj_Drones
 		{
 			do
 			{
-				if ${RecalledDroneIterator.Value.ID} == ${Drone.ID}
+				if ${RecalledDroneIterator.Value} == ${DroneID}
 				{
 					return TRUE
 				}
@@ -206,14 +210,14 @@ objectdef obj_Drones
 		return FALSE
 	}
 
-	method RecallDrone(entity Drone, bool Relaunchable=TRUE)
+	method RecallDrone(activedrone Drone, bool Relaunchable=TRUE)
 	{
 		UI:UpdateConsole["obj_Drones: Recalling drone ${Drone.ID}, Relaunchable: ${Relaunchable}"]
 		if !${Relaunchable}
 		{
 			RecalledDrones:Insert[${Drone.ID}]
 		}
-		Drone:ReturnToDroneBay
+		Drone.ToEntity:ReturnToDroneBay
 	}
 
 	method LaunchAll()
@@ -362,31 +366,35 @@ objectdef obj_Drones
 ;			variable index:int returnIndex
 			variable index:int engageIndex
 
-			do
+			if ${DroneIterator:First(exists)}
 			{
-				;This is all obsoleted by CheckDroneHP.
-;				if ${DroneIterator.Value.ToEntity.ShieldPct} < 50 || \
-;					${DroneIterator.Value.ToEntity.ArmorPct} < 80 || \
-;					${DroneIterator.Value.ToEntity.StructurePct} < 100
-;				{
-;					UI:UpdateConsole["Recalling Damaged Drone ${DroneIterator.Value.ID}"]
-;					;UI:UpdateConsole["Debug: Shield: ${DroneIterator.Value.ToEntity.ShieldPct}, Armor: ${DroneIterator.Value.ToEntity.ArmorPct}, Structure: ${DroneIterator.Value.ToEntity.StructurePct}"]
-;					returnIndex:Insert[${DroneIterator.Value.ID}]
-;
-;				}
-;				else
-;				{
-					; 0 is the "idle" state
-					if ${DroneIterator.Value.State} == 0
-					{
-						UI:UpdateConsole["Debug: Engage Target ${DroneIterator.Value.ID}"]
-						engageIndex:Insert[${DroneIterator.Value.ID}]
-					}
-;				}
+				do
+				{
+					;This is all obsoleted by CheckDroneHP.
+;					if ${DroneIterator.Value.ToEntity.ShieldPct} < 50 || \
+;						${DroneIterator.Value.ToEntity.ArmorPct} < 80 || \
+;						${DroneIterator.Value.ToEntity.StructurePct} < 100
+;					{
+;						UI:UpdateConsole["Recalling Damaged Drone ${DroneIterator.Value.ID}"]
+;						;UI:UpdateConsole["Debug: Shield: ${DroneIterator.Value.ToEntity.ShieldPct}, Armor: ${DroneIterator.Value.ToEntity.ArmorPct}, Structure: ${DroneIterator.Value.ToEntity.StructurePct}"]
+;						returnIndex:Insert[${DroneIterator.Value.ID}]
+;     	
+;					}
+;					else
+;					{
+						; if Drone's target isn't our active target
+						UI:UpdateConsole["obj_Drones: DroneIterator.Value.Target.ID: ${DroneIterator.Value.Target.ID}, Me.ActiveTarget.ID: ${Me.ActiveTarget.ID}",LOG_DEBUG]
+						if ${DroneIterator.Value.Target.ID} != ${Me.ActiveTarget.ID}
+						{
+      	
+							engageIndex:Insert[${DroneIterator.Value.ID}]
+						}
+;					}
+				}
+				while ${DroneIterator:Next(exists)}
+;				EVE:DronesReturnToDroneBay[returnIndex]
+				EVE:DronesEngageMyTarget[engageIndex]
 			}
-			while ${DroneIterator:Next(exists)}
-;			EVE:DronesReturnToDroneBay[returnIndex]
-			EVE:DronesEngageMyTarget[engageIndex]
 		}
 	}
 
