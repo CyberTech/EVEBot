@@ -235,32 +235,42 @@ objectdef obj_Defense
 			return
 		}
 
+		variable bool KeepMoving = TRUE
+
 		if ${Safespots.AtSafespot}
 		{
-			if ${Ship.HasCloak} && !${Ship.IsCloaked}
+			if !${This.TankReady} && ${Social.IsSafe}
 			{
-				Ship:Activate_Cloak[]
+				; We deactivate cloak here, regardless of flee reason, because social is "safe",
+				; and we need to rep. We will cycle safespots while doing so.
+				Ship:Deactivate_Cloak[]
+				KeepMoving:Set[TRUE]
 			}
-
-			; TODO - Shutdown Eve or dock if we are fleeing without a cloak for more than (configurable) minutes - CyberTech
-			if !${Ship.HasCloak} && ${Safespots.Count} > 1
+			elseif ${Ship.HasCloak}
+			{
+				if !${Ship.IsCloaked}
+				{
+					Ship:Activate_Cloak[]
+					KeepMoving:Set[FALSE]
+				}
+			}
+			elseif ${Safespots.Count} > 1
 			{
 				; This ship doesn't have a cloak so let's bounce between safe spots
-				if ${Me.ToEntity.Mode} != 3
-				{
-					call Safespots.WarpToNext
-					wait 30
-				}
+				KeepMoving:Set[TRUE]
 			}
 		}
 		else
 		{
+			KeepMoving:Set[TRUE]
+		}
+
+		if ${KeepMoving} && ${Me.ToEntity.Mode} != 3
+		{
 			; Are we at the safespot and not warping?
-			if ${Me.ToEntity.Mode} != 3
-			{
-				call Safespots.WarpToNext
-				wait 30
-			}
+			; TODO - Shutdown Eve or dock if we are fleeing without a cloak for more than (configurable) minutes - CyberTech
+			call Safespots.WarpToNext
+			wait 30
 		}
 	}
 
