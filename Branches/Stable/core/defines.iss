@@ -20,6 +20,8 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 
 #define EVEBOT_DEBUG 0
 
+; Do not set this to 1 unless you have downloaded and installed the ISXIRC 
+; extension from http://www.isxgames.com/forums/forumdisplay.php?f=19
 ;#define USE_ISXIRC 1
 #define USE_ISXIRC 0
 
