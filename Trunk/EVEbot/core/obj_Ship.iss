@@ -2140,8 +2140,7 @@ objectdef obj_Ship
 		variable index:int apRoute
 		variable iterator  apIterator
 
-		; Clear the destination first.  Need an isxeve method for this.
-		Universe[${_Me.SolarSystemID}]:SetDestination 
+		EVE:ClearAllWaypoints
 		wait 10
 		
 		while ${DestinationSystemID} != ${_Me.SolarSystemID}
