@@ -754,7 +754,48 @@ Example use:
 			</Set>
 		</Set>
 		<!-- This is a VERY neut heavy mission, beware. I'd blacklist it. -->
+		<!-- Do damage type: EM, Kite at range >10k to avoid nos. You -must- be able to do some -->
+		<!-- very hefty dps to knock down the tech2 cruisers. They rep very rapidly. -->
 		<Set Name="Probing Question">
+			<Set Name="3">
+				<Set Name="Commands">
+					<Set Name="1" Action="ClearRoom" />
+				</Set>
+			</Set>
+		</Set>
+		<Set Name="Crooked Cop">
+			<Set Name="3">
+				<Set Name="Commands">
+					<Set Name="1" Action="ClearRoom" />
+				</Set>
+			</Set>
+		</Set>
+		<Set Name="The Missing Reporters - Caldari Smugglers (1 of 3)">
+			<Set Name="3">
+				<Set Name="Commands">
+					<Set Name="1" Action="ClearRoom" />
+					<Set Name="2" Action="CheckContainers" Target="Gallente Corpse" GroupID="306" />
+				</Set>
+			</Set>
+		</Set>
+		<Set Name="The Missing Reporters - Bad Timing (2 of 3)">
+			<Set Name="3">
+				<Set Name="Commands">
+					<Set Name="1" Action="ClearRoom" />
+					<Set Name="2" Action="Kill" Target="Local Prison" GroupID="319" />
+					<Set Name="3" Action="CheckContainers" Target="Gallente Reporter" GroupID="12" />
+				</Set>
+			</Set>
+		</Set>
+		<Set Name="The Missing Reporters - Slavers Beware (3 of 3)">
+			<Set Name="3">
+				<Set Name="Commands">
+					<Set Name="1" Action="ClearRoom" />
+					<Set Name="2" Action="CheckContainers" Target="Gallente Reporter" GroupID="12" />
+				</Set>
+			</Set>
+		</Set>
+		<Set Name="Down with the Legion">
 			<Set Name="3">
 				<Set Name="Commands">
 					<Set Name="1" Action="ClearRoom" />

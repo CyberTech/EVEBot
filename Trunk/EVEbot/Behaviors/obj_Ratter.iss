@@ -26,10 +26,9 @@ objectdef obj_Ratter
 	variable obj_Targets_Rats RatCalculator
 
 	variable bool bPlayerCheck
-
-	/* Todo: This, IsOrbiting, and Orbit should all probably be moved to a movement object. -- stealthy */
-	variable int iEntityOrbiting
-	variable int iEntityKeepingAtRange
+	
+	;temp bool for determining whether or not we have priority targets
+	variable bool HavePriorityTarget = FALSE
 
 	method Initialize()
 	{
@@ -238,13 +237,14 @@ objectdef obj_Ratter
 		This will do pretty much nothing but queue targets. */
 	method QueueTargets()
 	{
+		;reset HavePriorityTarget
+		HavePriorityTarget:Set[FALSE]
 		/* Activate any sensor boosters */
 		Ship:Activate_SensorBoost
 
 		/* Get total battleship value for chaining purposes */
 		variable int iTotalBSValue = ${RatCalculator.CalcTotalBattleShipValue}
 
-		variable bool bHavePriorityTarget = FALSE
 		variable bool bHaveSpecialTarget = FALSE
 		variable bool bHaveMultipleTypes = FALSE
 		variable bool iTempTypeID
@@ -272,7 +272,7 @@ objectdef obj_Ratter
 				{
 					if ${Targeting.IsMandatoryQueued[${RatCache.EntityIterator.Value.ID}]}
 					{
-						bHavePriorityTarget:Set[TRUE]
+						HavePriorityTarget:Set[TRUE]
 					}
 					UI:UpdateConsole["obj_Ratter: ${RatCache.EntityIterator.Value.ID} is queued, concord, or DNK, skipping in priority target iteration.", LOG_DEBUG]
 					continue
@@ -283,7 +283,7 @@ objectdef obj_Ratter
 				if ${Targets.IsPriorityTarget[${RatCache.EntityIterator.Value.Name}]}
 				{
 					UI:UpdateConsole["obj_Ratter: We have a priority target: ${RatCache.EntityIterator.Value.Name}."]
-					bHavePriorityTarget:Set[TRUE]
+					HavePriorityTarget:Set[TRUE]
 					/* Queue[ID, Priority, TypeID, Mandatory] */
 					/* Queue it mandatory so we make sure it dies. */
 					UI:UpdateConsole["obj_Ratter: Queueing priority target: ${RatCache.EntityIterator.Value.Name}"]
@@ -294,7 +294,9 @@ objectdef obj_Ratter
 		}
 
 		; If I have a priority target, just return. Targeting will lock both mandatory and non-mandatory at the same time, which is bad(tm)
-		if ${bHavePriorityTarget}
+		; Commented after making 
+		;Uncommented because blocking targets still aren't working
+		if ${HavePriorityTarget}
 		{
 			return
 		}
@@ -388,6 +390,14 @@ objectdef obj_Ratter
 	return true if we have non-donotkill and non-concord npcs nearby and non-singletype */
 	member:bool NPCCheck()
 	{
+		;QueueTargets will set HavePriorityTarget true until we no longer have priority targets:
+		;Since this will be checked before that bool is reset, we can check it here, because we'll have queued
+		;non-priority targets and will stay to fight at the same tiem the bool is reset.
+		if ${HavePriorityTarget}
+		{
+			return TRUE
+		}
+		
 		RatCache.Entities:GetIterator[RatCache.EntityIterator]
 		variable bool HaveMultipleTypes = FALSE
 		variable int TempTypeID

@@ -30,7 +30,7 @@ objectdef obj_Sound
 
 		if ${Math.Calc64[${m_LastSoundTime} + ${m_SoundDelay}]} < ${LavishScript.RunningTime}
 		{
-			PlaySound ${Filename}
+			PlaySound "${Filename}"
 			m_LastSoundTime:Set[${LavishScript.RunningTime}]
 		}
 	}

@@ -151,14 +151,17 @@ objectdef obj_Drones
 		; TODO: Create obj_DroneStatus and store index:obj_DroneStatus to store hp/shield/armor in one construct and reduce code here.
 		This:GetActiveDrones[]
 		This.ActiveDrones:GetIterator[This.ActiveDrone]
+		variable bool recalledDrone = FALSE
 
 		/* iterate over the index */
 		if ${ActiveDrone:First(exists)}
 		{
 			do
 			{
+				;Reset our recall switch at the start of a new drone's checking
+				recalledDrone:Set[FALSE]
 				UI:UpdateConsole["obj_Drones: Drone ${ActiveDrone.Value.ID}: Armor %: ${ActiveDrone.Value.ToEntity.ArmorPct}, Stored: ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}]}, Shield %: ${ActiveDrone.Value.ToEntity.ShieldPct}, Stored: ${StoredDroneShield.Element[${ActiveDrone.Value.ID}]}",LOG_DEBUG]
-				/* Only compare hp if the stored hp isn't null */
+				/* Only compare hp if the stored hp isn't null and activedrone is a valid entity*/
 				if ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}](exists)}
 				{
 					if ${ActiveDrone.Value.ToEntity.ArmorPct} < ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}]}
@@ -173,11 +176,14 @@ objectdef obj_Drones
 						{
 							This:RecallDrone[${ActiveDrone.Value}]
 						}
+						;Flip our 'recalled' flag
+						recalledDrone:Set[TRUE]
 					}
 				}
 				/* Store current HP */
 				StoredDroneArmor:Set[${ActiveDrone.Value.ID},${ActiveDrone.Value.ToEntity.ArmorPct}]
-				if ${StoredDroneShield.Element[${ActiveDrone.Value.ID}](exists)}
+				;only do the shield check if we haven't already recalled
+				if !${recalledDrone} && ${StoredDroneShield.Element[${ActiveDrone.Value.ID}](exists)}
 				{
 					if ${ActiveDrone.Value.ToEntity.ShieldPct} < ${StoredDroneShield.Element[${ActiveDrone.Value.ID}]}
 					{

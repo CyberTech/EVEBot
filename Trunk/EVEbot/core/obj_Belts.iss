@@ -122,6 +122,7 @@ objectdef obj_Belts
 			variable int NearestGate
 			variable float DistanceToGate
 			NearestGate:Set[${Entity[fromID,${beltIterator.Value.ID},Radius,SCANNER_RANGE,GroupID,GROUP_STARGATE].ID}]
+			/* Commented as per wishes of CT. -- Stealthy
 			if ${NearestGate(exists)} && ${NearestGate} > 0
 			{
 				DistanceToGate:Set[${Entity[${beltIterator.Value.ID}].DistanceTo[${NearestGate}]}]
@@ -135,6 +136,7 @@ objectdef obj_Belts
 					return
 				}
 			}
+			*/
 
 			call Ship.WarpToID ${beltIterator.Value.ID} ${WarpInDistance}
 		}
