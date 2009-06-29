@@ -1250,7 +1250,7 @@ objectdef obj_Ship
 		/* save ship values that may change in combat */
 		This.m_MaxTargetRange:Set[${_MyShip.MaxTargetRange}]
 		This:SetType[${Me.ToEntity.Type}]
-		this:SetTypeID[${Me.ToEntity.TypeID}]
+		This:SetTypeID[${Me.ToEntity.TypeID}]
 
 		/* build module lists */
 		This.ModuleList:Clear
