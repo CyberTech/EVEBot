@@ -158,39 +158,48 @@ objectdef obj_Drones
 		{
 			do
 			{
-				;Reset our recall switch at the start of a new drone's checking
-				recalledDrone:Set[FALSE]
-				UI:UpdateConsole["obj_Drones: Drone ${ActiveDrone.Value.ID}: Armor %: ${ActiveDrone.Value.ToEntity.ArmorPct}, Stored: ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}]}, Shield %: ${ActiveDrone.Value.ToEntity.ShieldPct}, Stored: ${StoredDroneShield.Element[${ActiveDrone.Value.ID}]}",LOG_DEBUG]
-				/* Only compare hp if the stored hp isn't null and activedrone is a valid entity*/
-				if ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}](exists)}
+				;only do the checks if the drone has a valid ToEntity
+				if ${ActiveDrone.Value.ToEntity(exists)}
 				{
-					if ${ActiveDrone.Value.ToEntity.ArmorPct} < ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}]}
+					;Reset our recall switch at the start of a new drone's checking
+					recalledDrone:Set[FALSE]
+					UI:UpdateConsole["obj_Drones: Drone ${ActiveDrone.Value.ID}: Armor %: ${ActiveDrone.Value.ToEntity.ArmorPct}, Stored: ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}]}, Shield %: ${ActiveDrone.Value.ToEntity.ShieldPct}, Stored: ${StoredDroneShield.Element[${ActiveDrone.Value.ID}]}",LOG_DEBUG]
+					/* Only compare hp if the stored hp isn't null and activedrone is a valid entity*/
+					UI:UpdateConsole["obj_Drones: Drone ${ActiveDrone.Value.ID}, state: ${ActiveDrone.Value.State}",LOG_DEBUG]
+					if ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}](exists)} && ${ActiveDrone.Value.State} != DRONESTATE_RETURNING && \
+						${Math.Calc[${StoredDroneArmor.Element[${ActiveDrone.Value.ID}]} - ${ActiveDrone.Value.ToEntity.ArmorPct}]} > 2
 					{
-						UI:UpdateConsole["obj_Drones: Drone ${ActiveDrone.Value.ID} is low on armor. Recalling."]
-						if ${ActiveDrone.Value.ToEntity.ArmorPct} < 50
+						if ${ActiveDrone.Value.ToEntity.ArmorPct} < ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}]}
 						{
-							;Recall it and do not relaunch it
-							This:RecallDrone[${ActiveDrone.Value},FALSE]
+							UI:UpdateConsole["obj_Drones: Drone ${ActiveDrone.Value.ID} is losing armor (${ActiveDrone.Value.ToEntity.ArmorPct} < ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}]}). Recalling."]
+							if ${ActiveDrone.Value.ToEntity.ArmorPct} < 50
+							{
+								;Recall it and do not relaunch it
+								This:RecallDrone[${ActiveDrone.Value},FALSE]
+							}
+							else
+							{
+								This:RecallDrone[${ActiveDrone.Value}]
+							}
+							;Flip our 'recalled' flag
+							recalledDrone:Set[TRUE]
 						}
-						else
+					}
+					/* Store current HP */
+					StoredDroneArmor:Set[${ActiveDrone.Value.ID},${ActiveDrone.Value.ToEntity.ArmorPct}]
+					;only do the shield check if we haven't already recalled
+					if !${recalledDrone} && ${StoredDroneShield.Element[${ActiveDrone.Value.ID}](exists)} && \
+						${Math.Calc[${StoredDroneShield.Element[${ActiveDrone.Value.ID}]} - ${ActiveDrone.Value.ToEntity.ShieldPct}]} > 2 && \
+						${ActiveDrone.Value.State} != DRONESTATE_RETURNING
+					{
+						if ${ActiveDrone.Value.ToEntity.ShieldPct} < ${StoredDroneShield.Element[${ActiveDrone.Value.ID}]}
 						{
+							UI:UpdateConsole["obj_Drones: Drone ${ActiveDrone.Value.ID} is losing shield (${ActiveDrone.Value.ToEntity.ShieldPct} < ${StoredDroneShield.Element[${ActiveDrone.Value.ID}]}). Recalling."]
 							This:RecallDrone[${ActiveDrone.Value}]
 						}
-						;Flip our 'recalled' flag
-						recalledDrone:Set[TRUE]
 					}
+					StoredDroneShield:Set[${ActiveDrone.Value.ID},${ActiveDrone.Value.ToEntity.ShieldPct}]
 				}
-				/* Store current HP */
-				StoredDroneArmor:Set[${ActiveDrone.Value.ID},${ActiveDrone.Value.ToEntity.ArmorPct}]
-				;only do the shield check if we haven't already recalled
-				if !${recalledDrone} && ${StoredDroneShield.Element[${ActiveDrone.Value.ID}](exists)}
-				{
-					if ${ActiveDrone.Value.ToEntity.ShieldPct} < ${StoredDroneShield.Element[${ActiveDrone.Value.ID}]}
-					{
-						This:RecallDrone[${ActiveDrone.Value.ToEntity}]
-					}
-				}
-				StoredDroneShield:Set[${ActiveDrone.Value.ID},${ActiveDrone.Value.ToEntity.ShieldPct}]
 			}
 			while ${ActiveDrone:Next(exists)}
 		}
@@ -218,12 +227,15 @@ objectdef obj_Drones
 
 	method RecallDrone(activedrone Drone, bool Relaunchable=TRUE)
 	{
-		UI:UpdateConsole["obj_Drones: Recalling drone ${Drone.ID}, Relaunchable: ${Relaunchable}"]
-		if !${Relaunchable}
+		if ${Drone.ToEntity(exists)} && ${Drone.State} != DRONESTATE_RETURNING
 		{
-			RecalledDrones:Insert[${Drone.ID}]
+			UI:UpdateConsole["obj_Drones: Recalling drone ${Drone.ID}, Relaunchable: ${Relaunchable}"]
+			if !${Relaunchable}
+			{
+				RecalledDrones:Insert[${Drone.ID}]
+			}
+			Drone.ToEntity:ReturnToDroneBay
 		}
-		Drone.ToEntity:ReturnToDroneBay
 	}
 
 	method LaunchAll()
@@ -390,9 +402,10 @@ objectdef obj_Drones
 ;					{
 						; if Drone's target isn't our active target
 						UI:UpdateConsole["obj_Drones: DroneIterator.Value.Target.ID: ${DroneIterator.Value.Target.ID}, Me.ActiveTarget.ID: ${Me.ActiveTarget.ID}",LOG_DEBUG]
-						if ${DroneIterator.Value.Target.ID} != ${Me.ActiveTarget.ID}
+						if ${DroneIterator.Value.Target.ID} != ${Me.ActiveTarget.ID} && \
+							${DroneIterator.Value.State} != DRONESTATE_RETURNING && \
+							(!${Config.Combat.ConserveDrones} || !${DroneIsRecalled[${DroneIterator.Value.ID}]})
 						{
-      	
 							engageIndex:Insert[${DroneIterator.Value.ID}]
 						}
 ;					}
