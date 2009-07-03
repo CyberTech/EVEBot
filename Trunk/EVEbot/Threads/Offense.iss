@@ -17,13 +17,7 @@ objectdef obj_Offense
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 1
 	variable bool Warned_LowAmmo = FALSE
-	variable time NextAmmoChange
-	variable int NumTurrets = 0
-	variable float Range
-	variable bool bDeactivatedWeapons = FALSE
-	variable collection:bool cbTurrets
 	variable iterator itrWeapon
-	variable int iCurrentTurret = 0
 
 	method Initialize()
 	{
@@ -76,151 +70,73 @@ objectdef obj_Offense
 						Ship:Activate_Weapons
 					}
 				}
-				elseif ${Time.Timestamp} >= ${This.NextAmmoChange.Timestamp}
+				else
 				{
 					; iterate through every turret and determine if it needs an ammo change.
-					; If so, deactivate it. Use a collection:bool cbTurrets to determine which need ammo change (TRUE) and cannot be activated,
-					; and those that don't (FALSE) and may be activated
 					
 					Ship.ModuleList_Weapon:GetIterator[itrWeapon]
 					
-					; Only build the collection if it hasn't previously been built
-					if ${cbTurrets.Used} == 0
+					if ${itrWeapon:First(exists)}
 					{
-						UI:UpdateConsole["Offense: Building cbTurrets.",LOG_DEBUG]
-						if ${itrWeapon:First(exists)}
+						do
 						{
-							do
+							;If a module's ammo group ID is 8 (moon, needs cycled), it's reloading, or changing ammo, continue on.
+							if ${itrWeapon.Value.Charge.GroupID} == 8 || ${itrWeapon.Value.IsChangingAmmo} || ${itrWeapon.Value.IsReloadingAmmo}
 							{
-								iCurrentTurret:Inc
-								;Only check if a gun needs ammo change if it isn't reloading or changing ammo already
-								if ${itrWeapon.Value.IsChangingAmmo} || ${itrWeapon.Value.IsReloadingAmmo}
+								UI:UpdateConsole["Offense: Skipping turret, reasons: ${If[${itrWeapon.Value.Charge.GroupID} == 8,TRUE,FALSE]}, ${itrWeapon.Value.IsChangingAmmo}, ${itrWeapon.Value.IsReloadingAmmo}",LOG_DEBUG]
+								continue
+							}
+							
+							;Awesome, our guns are ready for ammo checks. Does our gun need an ammo change?
+							if ${Ship.NeedAmmoChange[${Me.ActiveTarget.Distance},${itrWeapon.Key}]}
+							{
+								UI:UpdateConsole["Offense: Turret ${itrWeapon.Key}: need ammo change.",LOG_DEBUG]
+								;ok, if our Turret needs ammo change, make sure IT IS OFF.
+								;We can't change ammo 'til it's inactive so just continue after deactivating.
+								if ${itrWeapon.Value.IsActive}
 								{
-									UI:UpdateConsole["Offense: Turret ${iCurrentTurret} is already changing ammo or reloading; skipping.",LOG_DEBUG]
+									UI:UpdateConsole["Offense: Turret ${itrWeapon.Key}: active during ammo change, deactivating and continuing.",LOG_DEBUG]
+									itrWeapon.Value:Click
 									continue
 								}
-								
-								UI:UpdateConsole["Offense: NeedAmmoChange[${Me.ActiveTarget.Distance},${iCurrentTurret}]: ${Ship.NeedAmmoChange[${Me.ActiveTarget.Distance},${iCurrentTurret}]}",LOG_DEBUG]
-								if ${Ship.NeedAmmoChange[${Me.ActiveTarget.Distance},${iCurrentTurret}]}
+								else
 								{
-									; Add the turret to the collection
-									cbTurrets:Set[${iCurrentTurret},TRUE]
-									; Turn it off
-									if ${itrWeapon.Value.IsActive}
+									;If the weapon's off, go ahead and change ammo.
+									UI:UpdateConsole["Offense: Turret ${itrWeapon.Key}: Loading optimal ammo and breaking.",LOG_DEBUG]
+									Ship:LoadOptimalAmmo[${Me.ActiveTarget.Distance},${itrWeapon.Key}]
+									;Break after loading a turret's ammo, because chaging too much ammo too fast will REALLY fuck things up and make ammo disappear
+									break
+								}
+							}
+							else
+							{
+								UI:UpdateConsole["Offense: Turret ${itrWeapon.Key}: Didn't need ammo change.",LOG_DEBUG]
+								;If we didn't need an ammo change, check if we need to activate or deactivate the weapon.
+								;Account for some falloff in our ammo checks. EFT shows we can maintain about 75% of our dps
+								;at about 1.5* our range, so assume skills suck and we're going for 1.3. The only real problem
+								;with overshooting is tracking speed, and we need some sort of entity.rad/s member to check that.
+								if ${itrWeapon.Value.IsActive}
+								{
+									if ${Me.ActiveTarget.Distance} > ${Math.Calc[${Ship.GetMaximumTurretRange[${itrWeapon.Key}]} * 1.3]} || \
+										${Me.ActiveTarget.Distance} < ${Math.Calc[${Ship.GetMinimumTurretRange[${itrWeapon.Key}]} * 0.5]}
 									{
+										UI:UpdateConsole["Offense: Turret ${itrWeapon.Key}: Turret on but we're either below or above range, deactivating",LOG_DEBUG]
 										itrWeapon.Value:Click
 									}
 								}
 								else
 								{
-									;it doesn't need ammo change, set it false
-									cbTurrets:Set[${iCurrentTurret},FALSE]
-								}
-							}
-							while ${itrWeapon:Next(exists)}
-							; We're done using iCurrentTurret for now, reset it
-							iCurrentTurret:Set[0]
-						}
-					}
-					
-					; Now, I have a collection of turrets I can't turn on because they need an ammo change. Iterate through them and
-					; see if they're inactive and not changing ammo and not reloading. If these are all true, do the ChangeAmmo and 
-					; remove it from the collection then return so that we change the next ammo next pulse and don't de-sync.
-					if ${cbTurrets.Used} > 0
-					{
-						if ${itrWeapon:First(exists)}
-						{
-							do
-							{
-								iCurrentTurret:Inc
-								;Check that this is a turret we're changing ammo on
-								;We can just 'if' this without a compare since it would return a true or false
-								UI:UpdateConsole["Offense: cbTurrets.Element[${iCurrentTurret}]: ${cbTurrets.Element[${iCurrentTurret}]}",LOG_DEBUG]
-								if ${cbTurrets.Element[${iCurrentTurret}]}
-								{
-									; IF this turret is active, changing ammo, or reloading, skip.
-									if ${itrWeapon.Value.IsActive} || ${itrWeapon.Value.IsReloadingAmmo} || ${itrWeapon.Value.IsChangingAmmo}
+									if ${Me.ActiveTarget.Distance} <= ${Math.Calc[${Ship.GetMaximumTurretRange[${itrWeapon.Key}]} * 1.3]} && \
+										${Me.ActiveTarget.Distance} >= ${Math.Calc[${Ship.GetMinimumTurretRange[${itrWeapon.Key}]} * 0.5]}
 									{
-										if ${itrWeapon.Value.IsActive}
-										{
-											UI:UpdateConsole["Offense: Turret ${iCurrentTurret} is active, clicking it off.",LOG_DEBUG]
-											itrWeapon.Value:Click
-										}
-										UI:UpdateConsole["Offense: Turret ${iCurrentTurret} is active, reloading, or changing ammo; skipping",LOG_DEBUG]
-										continue
-									}
-									; If it's off and not doing something, change its ammo and remove it.
-									elseif !${itrWeapon.Value.IsActive} && !${itrWeapon.Value.IsReloadingAmmo} && !${itrWeapon.Value.IsChangingAmmo}
-									{
-										UI:UpdateConsole["Offense: Changing turret ${iCurrentTurret}'s ammo and removing it from the collection, then returning.",LOG_DEBUG]
-										Ship:LoadOptimalAmmo[${Me.ActiveTarget.Distance},${iCurrentTurret}]
-										cbTurrets:Erase[${iCurrentTurret}]
-										;Return, the ammo check will continue changing one more every pulse until all needed ammo swaps have been done. This will
-										;help prevent the nasty de-sync.
-										iCurrentTurret:Set[0]
-										return
+										UI:UpdateConsole["Offense: Turret ${itrWeapon.Key}: Turret off but we're within range, activating",LOG_DEBUG]
+										itrWeapon.Value:Click
 									}
 								}
-								else
-								{
-									;if it didn't need a weapon reload, erase it.
-									UI:UpdateConsole["Offense: Turret ${iCurrentTurret} doesn't need an ammo change, erasing it.",LOG_DEBUG]
-									cbTurrets:Erase[${iCurrentTurret}]
-								}
-							}
-							while ${itrWeapon:Next(exists)}
-						}
-						; Since the above logic will naturally skip a few now and then, reset it to 0 if we've iterated through everything (and possibly skipped a few in state changes)
-						; and still have entries in cbTurrets.
-						if ${cbTurrets.Used} > 0
-						{
-							UI:UpdateConsole["Offense: Done iterating through but still have guns needing ammo; some were likely skipped for active/reload/changing. Resetting iCurrentTurret and returning.",LOG_DEBUG]
-							iCurrentTurret:Set[0]
-							return
-						}
-					}
-					
-					;If we have no more in cbTurrets, meaning it's cleared of both those that did and did not need ammo changes, we're done.
-					if ${cbTurrets.Used} == 0
-					{
-						;If we had no turrets needing ammo changes, go ahead and reset the pulse timer. We're done for now.
-						UI:UpdateConsole["Offense: Done swapping out ammo, resetting timer.",LOG_DEBUG]
-						This.NextAmmoChange:Set[${Time.Timestamp}]
-						This.NextAmmoChange.Second:Inc[5]
-						This.NextAmmoChange:Update
-					}
-				}
-				;Iterate through each weapon and activate it if we're within its ranges, accounting for *some* falloff.
-				;Time to make use of iCurrentTurret again
-				iCurrentTurret:Set[0]
-				if ${itrWeapon:First(exists)}
-				{
-					do
-					{
-						iCurrentTurret:Inc
-						; if the weapon is already active, don't effin' click it unless they're out of ze range
-						if ${itrWeapon.Value.IsActive}
-						{
-							if ${Me.ActiveTarget.Distance} > ${Math.Calc[${Ship.GetMaximumTurretRange[${iCurrentTurret}]} * 1.2]} || \
-								${Me.ActiveTarget.Distance} < ${Math.Calc[${Ship.GetMinimumTurretRange[${iCurrentTurret}]} * 0.5]}
-							{
-								itrWeapon.Value:Click
 							}
 						}
-						else
-						{
-							; if the weapon isn't active and it's not reloading/changing ammo, click it on
-							if ${Me.ActiveTarget.Distance} <= ${Math.Calc[${Ship.GetMaximumTurretRange[${iCurrentTurret}]} * 1.2]} && \
-								${Me.ActiveTarget.Distance} >= ${Math.Calc[${Ship.GetMinimumTurretRange[${iCurrentTurret}]} * 0.5]} && \
-								!${itrWeapon.Value.IsReloadingAmmo} && !${itrWeapon.Value.IsChangingAmmo}
-							{
-								itrWeapon.Value:Click
-							}
-						}
+						while ${itrWeapon:Next(exists)}
 					}
-					while ${itrWeapon:Next(exists)}
-					;Remember to reset iCurrentTurret after we're done with it!
-					iCurrentTurret:Set[0]
 				}
 
 				if ${Config.Combat.LaunchCombatDrones}
@@ -234,7 +150,7 @@ objectdef obj_Offense
 					if ${Me.ActiveTarget.Distance} < ${Math.Calc[${Me.DroneControlDistance} * 0.975]}
 					{
 						if ${Ship.Drones.ShouldLaunchCombatDrones} && \
-							 ${Ship.Drones.DeployedDroneCount} == 0
+							 ${Ship.Drones.DeployedDroneCount} < ${MyShip.GetDrones} && ${Ship.Drones.DeployedDroneCount} < 5
 						{
 							Ship.Drones:LaunchAll[]
 						}

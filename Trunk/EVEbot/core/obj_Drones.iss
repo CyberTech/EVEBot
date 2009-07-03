@@ -264,8 +264,8 @@ objectdef obj_Drones
 
 	member:int DronesInBay()
 	{
-		; TODO. This would be a buggarooni. check drones in bay, not active.
-		return ${Me.GetActiveDroneIDs[This.ActiveDroneIDList]}
+		;Note: KEEP DRONES UNSTACKED. THIS COUNTS ENTRIES IN THE DRONE BAY. AN ENTIRE STACK COUNTS AS AN ENTRY. KEEP YOUR SHIT UNSTACKED.
+		return ${MyShip.GetDrones}
 	}
 
 	member:int DronesInSpace()

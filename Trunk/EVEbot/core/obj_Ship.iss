@@ -200,6 +200,12 @@ objectdef obj_Ship
 		{
 			do
 			{
+				if ${itrWeapon.Key} != ${turret}
+				{
+					UI:UpdateConsole["obj_Ship.NeedAmmoChange[${range},${turret}]: Skipping turret ${itrWeapon.Key}",LOG_DEBUG]
+					continue
+				}
+				
 				if ${itrWeapon.Value.Charge.Name.Find[${sBestAmmo}](exists)}
 				{
 					bFoundAmmo:Set[TRUE]
@@ -280,8 +286,6 @@ objectdef obj_Ship
 		variable float sTempMaxRangeAmmo
 
 		variable float fMaxTurretRange = 0
-		
-		variable int iTurret = 0
 
 		variable iterator itrFrequencyPairs
 		variable iterator itrHybridPairs
@@ -295,10 +299,9 @@ objectdef obj_Ship
 			do
 			{
 				; Check if we're on the turret we want
-				iTurret:Inc
-				if ${iTurret} != ${turret}
+				if ${itrWeapon.Key} != ${turret}
 				{
-					UI:UpdateConsole["obj_Ship.GetMaximumTurretRange(${turret}): Skipping turret ${iTurret}.",LOG_DEBUG]
+					UI:UpdateConsole["obj_Ship.GetMaximumTurretRange(${turret}): Skipping turret ${itrWeapon.Key}.",LOG_DEBUG]
 					continue
 				}
 				itrWeapon.Value:DoGetAvailableAmmo[idxAmmo]
@@ -386,17 +389,15 @@ objectdef obj_Ship
 			}
 			while ${itrWeapon:Next(exists)}
 		}
-		iTurret:Set[0]
 		/* We have to account for the ammo we currently have loaded. */
 		if ${itrWeapon:First(exists)}
 		{
 			do
 			{
 				; Check that this is the turret we want
-				iTurret:Inc
-				if ${iTurret} != ${turret}
+				if ${itrWeapon.Key} != ${turret}
 				{
-					UI:UpdateConsole["obj_Ship.GetMinimumTurretRange(${turret}): Skipping turret ${iTurret}.",LOG_DEBUG]
+					UI:UpdateConsole["obj_Ship.GetMinimumTurretRange(${turret}): Skipping turret ${itrWeapon.Key}.",LOG_DEBUG]
 					continue
 				}
 				switch ${itrAmmo.Value.GroupID}
@@ -487,8 +488,6 @@ objectdef obj_Ship
 		variable float sTempMinRangeAmmo
 
 		variable float fMinTurretRange = 0
-		
-		variable int iTurret = 0
 
 		variable iterator itrFrequencyPairs
 		variable iterator itrHybridPairs
@@ -502,10 +501,9 @@ objectdef obj_Ship
 			do
 			{
 				; Check that this is the turret we want
-				iTurret:Inc
-				if ${iTurret} != ${turret}
+				if ${itrWeapon.Key} != ${turret}
 				{
-					UI:UpdateConsole["obj_Ship.GetMinimumTurretRange(${turret}): Skipping turret ${iTurret}.",LOG_DEBUG]
+					UI:UpdateConsole["obj_Ship.GetMinimumTurretRange(${turret}): Skipping turret ${itrWeapon.Key}.",LOG_DEBUG]
 					continue
 				}
 				itrWeapon.Value:DoGetAvailableAmmo[idxAmmo]
@@ -593,17 +591,15 @@ objectdef obj_Ship
 			}
 			while ${itrWeapon:Next(exists)}
 		}
-		iTurret:Set[0]
 		/* We have to account for the ammo we currently have loaded. */
 		if ${itrWeapon:First(exists)}
 		{
 			do
 			{
 				; Check that this is the turret we want
-				iTurret:Inc
-				if ${iTurret} != ${turret}
+				if ${itrWeapon.Key} != ${turret}
 				{
-					UI:UpdateConsole["obj_Ship.GetMinimumTurretRange(${turret}): Skipping turret ${iTurret}.",LOG_DEBUG]
+					UI:UpdateConsole["obj_Ship.GetMinimumTurretRange(${turret}): Skipping turret ${itrWeapon.Key}.",LOG_DEBUG]
 					continue
 				}
 				switch ${itrAmmo.Value.GroupID}
@@ -689,8 +685,6 @@ objectdef obj_Ship
 		variable float fBaseOptimal
 		variable float fRangeMod
 		
-		variable int iTurret = 0
-		
 		variable iterator itrFrequencyPairs
 		variable iterator itrHybridPairs
 		variable iterator itrAmmoPairs
@@ -704,10 +698,9 @@ objectdef obj_Ship
 			do
 			{
 				; Check if we have the turret we wanted
-				iTurret:Inc
-				if ${iTurret} != ${turret}
+				if ${itrWeapon.Key} != ${turret}
 				{
-					UI:UpdateConsole["obj_Ship.GetTurretBaseOptimal(${turret}): Skipping turret ${iTurret}.",LOG_DEBUG]
+					UI:UpdateConsole["obj_Ship.GetTurretBaseOptimal(${turret}): Skipping turret ${itrWeapon.Key}.",LOG_DEBUG]
 					continue
 				}
 				
@@ -808,7 +801,6 @@ objectdef obj_Ship
 		variable float fRangeMod
 		variable string sCurrentAmmo
 		variable float fTurretOptimal
-		variable int iTurret = 0
 		
 		variable iterator itrFrequencyPairs
 		variable iterator itrHybridPairs
@@ -831,11 +823,10 @@ objectdef obj_Ship
 			do
 			{
 				; Check if the turret we're iterating is the turret we want.
-				iTurret:Inc
-				if ${iTurret} != ${turret}
+				if ${itrWeapon.Key} != ${turret}
 				{
 					; Looks like it isn't, which means we can continue in order to skip all the logic.
-					UI:UpdateConsole["obj_Ship: Skipping turret ${iTurret} because we want best ammo for turret ${turret}.",LOG_DEBUG]
+					UI:UpdateConsole["obj_Ship: Skipping turret ${itrWeapon.Key} because we want best ammo for turret ${turret}.",LOG_DEBUG]
 					continue
 				}
 				
@@ -891,14 +882,12 @@ objectdef obj_Ship
 						}
 						if ${itrWeapon2:First(exists)}
 						{
-							iTurret:Set[0]
 							do
 							{
-								iTurret:Inc
-								if ${iTurret} != ${turret}
+								if ${itrWeapon2.Key} != ${turret}
 								{
 									; Looks like it isn't, which means we can continue in order to skip all the logic.
-									UI:UpdateConsole["obj_Ship: Skipping turret ${iTurret} because we want best ammo for turret ${turret}.",LOG_DEBUG]
+									UI:UpdateConsole["obj_Ship: Skipping turret ${itrWeapon.Key} because we want best ammo for turret ${turret}.",LOG_DEBUG]
 									continue
 								}
 								if ${itrAmmoPairs:First(exists)}
@@ -978,14 +967,12 @@ objectdef obj_Ship
 						}
 						if ${itrWeapon2:First(exists)}
 						{
-							iTurret:Set[0]
 							do
 							{
-								iTurret:Inc
-								if ${iTurret} != ${turret}
+								if ${itrWeapon2.Key} != ${turret}
 								{
 									; Looks like it isn't, which means we can continue in order to skip all the logic.
-									UI:UpdateConsole["obj_Ship: Skipping turret ${iTurret} because we want best ammo for turret ${turret}.",LOG_DEBUG]
+									UI:UpdateConsole["obj_Ship: Skipping turret ${itrWeapon.Key} because we want best ammo for turret ${turret}.",LOG_DEBUG]
 									continue
 								}
 								if ${itrHybridPairs:First(exists)}
@@ -1060,14 +1047,12 @@ objectdef obj_Ship
 						}
 						if ${itrWeapon2:First(exists)}
 						{
-							iTurret:Set[0]
 							do
 							{
-								iTurret:Inc
-								if ${iTurret} != ${turret}
+								if ${itrWeapon2.Key} != ${turret}
 								{
 									; Looks like it isn't, which means we can continue in order to skip all the logic.
-									UI:UpdateConsole["obj_Ship: Skipping turret ${iTurret} because we want best ammo for turret ${turret}.",LOG_DEBUG]
+									UI:UpdateConsole["obj_Ship: Skipping turret ${itrWeapon.Key} because we want best ammo for turret ${turret}.",LOG_DEBUG]
 									continue
 								}
 								if ${itrFrequencyPairs:First(exists)}
@@ -1111,8 +1096,6 @@ objectdef obj_Ship
 			while ${itrWeapon:Next(exists)}
 		}		
 		UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range},${turret}): returning ${sBestSoFar}",LOG_DEBUG]
-		; for shits and giggles, reset iTurret
-		iTurret:Set[0]
 		return ${sBestSoFar}
 	}
 
