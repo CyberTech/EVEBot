@@ -327,6 +327,17 @@ objectdef obj_Targets
 					UI:UpdateConsole["DEBUG: obj_Targets - Entity[${${EntityCache}.EntityIterator.Value.EntityID}].Name (${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].Name}) is not targeting me, we don't have full aggro",LOG_DEBUG]
 					return FALSE
 				}
+				/* Just waiting on Ama to release the new ISXEVE before I enable this awesome targeting check.
+				echo "obj_Targets.HaveFullAggro[]: ${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].Name} is attacking me: ${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].ToAttacker.IsCurrentlyAttacking}"
+				if ${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].ToAttacker.IsCurrentlyAttacking}
+				{
+					continue
+				}
+				else
+				{
+					return FALSE
+				}
+				*/
 			}
 			while ${${EntityCache}.EntityIterator:Next(exists)}
 		}

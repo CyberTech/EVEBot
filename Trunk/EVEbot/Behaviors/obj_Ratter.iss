@@ -247,6 +247,7 @@ objectdef obj_Ratter
 
 		variable bool bHaveSpecialTarget = FALSE
 		variable bool bHaveMultipleTypes = FALSE
+		variable bool bHavePriorityTarget = FALSE
 		variable bool iTempTypeID
 
 		RatCache.Entities:GetIterator[RatCache.EntityIterator]
@@ -273,6 +274,7 @@ objectdef obj_Ratter
 					if ${Targeting.IsMandatoryQueued[${RatCache.EntityIterator.Value.ID}]}
 					{
 						HavePriorityTarget:Set[TRUE]
+						bHavePriorityTarget:Set[TRUE]
 					}
 					UI:UpdateConsole["obj_Ratter: ${RatCache.EntityIterator.Value.ID} is queued, concord, or DNK, skipping in priority target iteration.", LOG_DEBUG]
 					continue
@@ -284,6 +286,7 @@ objectdef obj_Ratter
 				{
 					UI:UpdateConsole["obj_Ratter: We have a priority target: ${RatCache.EntityIterator.Value.Name}."]
 					HavePriorityTarget:Set[TRUE]
+					bHavePriorityTarget:Set[TRUE]
 					/* Queue[ID, Priority, TypeID, Mandatory] */
 					/* Queue it mandatory so we make sure it dies. */
 					UI:UpdateConsole["obj_Ratter: Queueing priority target: ${RatCache.EntityIterator.Value.Name}"]
@@ -296,7 +299,7 @@ objectdef obj_Ratter
 		; If I have a priority target, just return. Targeting will lock both mandatory and non-mandatory at the same time, which is bad(tm)
 		; Commented after making 
 		;Uncommented because blocking targets still aren't working
-		if ${HavePriorityTarget}
+		if ${HavePriorityTarget} && ${bHavePriorityTarget}
 		{
 			return
 		}
@@ -305,8 +308,10 @@ objectdef obj_Ratter
 		/* If I'm chaining spawns and either I'm chaining solo or I'm not chaining solo but there are others here... */
 		/* I also only want to actually chain it if the calculated BS value is above our threshold */
 		if (${Config.Combat.ChainSpawns} || (${Config.Combat.ChainSolo} && ${EVE.LocalsCount} == 1)) && \
-			${iTotalBSValue} >= ${Config.Combat.MinChainBounty}
+			${iTotalBSValue} >= ${Config.Combat.MinChainBounty} || \
+			${HavePriorityTarget}
 		{
+			HavePriorityTarget:Set[FALSE]
 			/* Start iterating... */
 			if ${RatCache.EntityIterator:First(exists)}
 			{
