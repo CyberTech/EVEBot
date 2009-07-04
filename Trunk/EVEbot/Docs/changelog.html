@@ -9,6 +9,11 @@
   <body>
     <h1>EVEBot Changelog</h1>
     <ul class="changelog_entries">
+      <li class="changelog_entry"><span class="changelog_date">2009-07-03</span> <span class="changelog_author">stealthy</span></li>
+      <li class="changelog_change"><span class="changelog_revision"><a id="r1286" href="#r1286">[r1286]</a></span> <span class="changelog_files">Threads/Offense.iss, core/obj_Drones.iss, core/obj_Ship.iss</span> <span class="changelog_message">Offense: Completely reworked the turret code, it is now much more efficient. Available drones will be relaunched as soon as they're pulled in. The ammo code now works much faster, and will no longer wait until all ammo has been swapped to turn on "good" turrets, thereby increasing the rate at which we kill rats. Yay for more isk.<br/>obj_Ship: Use iterator.Key instead of a counter. Fix a bug in NeedAmmoChange, where only the first turret would be checked regardless of the # passed to it.<br/>obj_Drones: (try) to fix DronesInBay.</span></li>
+      <li class="changelog_change"><span class="changelog_revision"><a id="r1285" href="#r1285">[r1285]</a></span> <span class="changelog_files">Behaviors/obj_Ratter.iss, core/obj_Targets.iss</span> <span class="changelog_message">obj_Ratter: Attempted fix for a rare priority-target bug<br/>obj_Targets: Prepare for checking .ToAttacker.IsCurrentlyAttacking</span></li>
+      <li class="changelog_entry"><span class="changelog_date">2009-07-02</span> <span class="changelog_author">cybertech</span></li>
+      <li class="changelog_change"><span class="changelog_revision"><a id="r1284" href="#r1284">[r1284]</a></span> <span class="changelog_files">Docs/changelog.html</span> <span class="changelog_message">Automation: Updating changelog</span></li>
       <li class="changelog_entry"><span class="changelog_date">2009-07-01</span> <span class="changelog_author">Cplusplus</span></li>
       <li class="changelog_change"><span class="changelog_revision"><a id="r1283" href="#r1283">[r1283]</a></span> <span class="changelog_files">core/obj_MissionCombat.iss</span> <span class="changelog_message">Quick todo on what needs finishing for combat missions</span></li>
       <li class="changelog_entry"><span class="changelog_date">2009-07-01</span> <span class="changelog_author">cybertech</span></li>
