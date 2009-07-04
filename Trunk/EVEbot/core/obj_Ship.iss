@@ -158,6 +158,7 @@ objectdef obj_Ship
 	
 	method PopulateNameModPairs()
 	{
+		HybridNameModPairs:Set["Spike",1.8]
 		HybridNameModPairs:Set["Iron",1.6]
 		HybridNameModPairs:Set["Tungsten",1.4]
 		HybridNameModPairs:Set["Iridium",1.2]
@@ -166,7 +167,9 @@ objectdef obj_Ship
 		HybridNameModPairs:Set["Uranium",0.75]
 		HybridNameModPairs:Set["Plutonium",0.625]
 		HybridNameModPairs:Set["Antimatter",0.5]
+		HybridNameModPairs:Set["Javelin",0.25]
 		
+		AmmoNameModPairs:Set["Tremor", 1.8]
 		AmmoNameModPairs:Set["Carbonized Lead",1.6]
 		AmmoNameModPairs:Set["Nuclear",1.4]
 		AmmoNameModPairs:Set["Proton",1.2]
@@ -175,6 +178,7 @@ objectdef obj_Ship
 		AmmoNameModPairs:Set["Fusion",0.75]
 		AmmoNameModPairs:Set["Phased Plasma",0.625]
 		AmmoNameModPairs:Set["EMP",0.5]
+		AmmoNameModPairs:Set["Quake",0.25]
 		
 		FrequencyNameModPairs:Set["Radio",1.6]
 		FrequencyNameModPairs:Set["Scorch",1.5]
@@ -335,6 +339,7 @@ objectdef obj_Ship
 								}
 								break
 							case GROUP_FREQUENCYCRYSTAL
+							case GROUP_ADVANCEDPULSELASERCRYSTAL
 								if ${itrFrequencyPairs:First(exists)}
 								{
 									do
@@ -445,6 +450,7 @@ objectdef obj_Ship
 						}
 						break
 					case GROUP_FREQUENCYCRYSTAL
+					case GROUP_ADVANCEDPULSELASERCRYSTAL
 						if ${itrFrequencyPairs:First(exists)}
 						{
 							do
@@ -537,6 +543,7 @@ objectdef obj_Ship
 								}
 								break
 							case GROUP_FREQUENCYCRYSTAL
+							case GROUP_ADVANCEDPULSELASERCRYSTAL
 								if ${itrFrequencyPairs:First(exists)}
 								{
 									do
@@ -647,6 +654,7 @@ objectdef obj_Ship
 						}
 						break
 					case GROUP_FREQUENCYCRYSTAL
+					case GROUP_ADVANCEDPULSELASERCRYSTAL
 						if ${itrFrequencyPairs:First(exists)}
 						{
 							do
@@ -741,6 +749,7 @@ objectdef obj_Ship
 						}
 						break
 					case GROUP_FREQUENCYCRYSTAL
+					case GROUP_ADVANCEDPULSELASERCRYSTAL
 						if ${itrFrequencyPairs:First(exists)}
 						{
 							do
@@ -1014,6 +1023,7 @@ objectdef obj_Ship
 						UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range}): sBestSoFar: ${sBestSoFar}, sHighestSoFar: ${sHighestSoFar}",LOG_DEBUG]
 						break
 					case GROUP_FREQUENCYCRYSTAL
+					case GROUP_ADVANCEDPULSELASERCRYSTAL
 						if ${itrAmmo:First(exists)}
 						{
 							do
