@@ -15,7 +15,7 @@ objectdef obj_Offense
 	variable bool Running = TRUE
 
 	variable time NextPulse
-	variable int PulseIntervalInSeconds = 1
+	variable int PulseIntervalInSeconds = 1.5
 	variable bool Warned_LowAmmo = FALSE
 	variable iterator itrWeapon
 
@@ -80,10 +80,15 @@ objectdef obj_Offense
 					{
 						do
 						{
-							;If a module's ammo group ID is 8 (moon, needs cycled), it's reloading, or changing ammo, continue on.
-							if ${itrWeapon.Value.Charge.GroupID} == 8 || ${itrWeapon.Value.IsChangingAmmo} || ${itrWeapon.Value.IsReloadingAmmo}
+							variable bool ChargeExists = FALSE
+							if ${itrWeapon.Value.Charge(exists)}
 							{
-								UI:UpdateConsole["Offense: Skipping turret, reasons: ${If[${itrWeapon.Value.Charge.GroupID} == 8,TRUE,FALSE]}, ${itrWeapon.Value.IsChangingAmmo}, ${itrWeapon.Value.IsReloadingAmmo}",LOG_DEBUG]
+								ChargeExists:Set[TRUE]
+							}
+							;If a module's ammo group ID is 8 (moon, needs cycled), it's reloading, or changing ammo, continue on.
+							UI:UpdateConsole["Offense: Skipping turret ${itrWeapon.Key}, reasons: ${If[${itrWeapon.Value.Charge.GroupID} == 8,TRUE,FALSE]}, ${itrWeapon.Value.IsChangingAmmo}, ${itrWeapon.Value.IsReloadingAmmo}, ${ChargeExists}",LOG_DEBUG]
+							if ${itrWeapon.Value.Charge.GroupID} == 8 || ${itrWeapon.Value.IsChangingAmmo} || ${itrWeapon.Value.IsReloadingAmmo} || !${ChargeExists}
+							{
 								continue
 							}
 							
@@ -110,11 +115,12 @@ objectdef obj_Offense
 							}
 							else
 							{
-								UI:UpdateConsole["Offense: Turret ${itrWeapon.Key}: Didn't need ammo change.",LOG_DEBUG]
+								;UI:UpdateConsole["Offense: Turret ${itrWeapon.Key}: Didn't need ammo change.",LOG_DEBUG]
 								;If we didn't need an ammo change, check if we need to activate or deactivate the weapon.
 								;Account for some falloff in our ammo checks. EFT shows we can maintain about 75% of our dps
 								;at about 1.5* our range, so assume skills suck and we're going for 1.3. The only real problem
 								;with overshooting is tracking speed, and we need some sort of entity.rad/s member to check that.
+								UI:UpdateConsole["Offense: Turret ${itrWeapon.Key}: IsActive? ${itrWeapon.Value.IsActive}, Distance? ${Me.ActiveTarget.Distance}, Min? ${Math.Calc[${Ship.GetMinimumTurretRange[${itrWeapon.Key}]} * 0.5]}, Max? ${Math.Calc[${Ship.GetMaximumTurretRange[${itrWeapon.Key}]} * 1.3]}",LOG_DEBUG]
 								if ${itrWeapon.Value.IsActive}
 								{
 									if ${Me.ActiveTarget.Distance} > ${Math.Calc[${Ship.GetMaximumTurretRange[${itrWeapon.Key}]} * 1.3]} || \
@@ -141,6 +147,7 @@ objectdef obj_Offense
 
 				if ${Config.Combat.LaunchCombatDrones}
 				{
+					variable bool ShouldLaunchCombatDrones = ${Ship.Drones.ShouldLaunchCombatDrones}
 					if ${Ship.Drones.CombatDroneShortage}
 					{
 						; TODO - This should pick up drones from station instead of just docking
@@ -149,23 +156,26 @@ objectdef obj_Offense
 					}
 					if ${Me.ActiveTarget.Distance} < ${Math.Calc[${Me.DroneControlDistance} * 0.975]}
 					{
-						if ${Ship.Drones.ShouldLaunchCombatDrones} && \
-							 ${Ship.Drones.DeployedDroneCount} < ${MyShip.GetDrones} && ${Ship.Drones.DeployedDroneCount} < 5
+						if ${ShouldLaunchCombatDrones}
 						{
-							Ship.Drones:LaunchAll[]
+							if ${Ship.Drones.DeployedDroneCount} < 5 && ${Ship.Drones.DeployedDroneCount} < ${MyShip.GetDrones}
+							{
+								Ship.Drones:LaunchAll
+							}
+							else
+							{
+								Ship.Drones:SendDrones
+								Ship.Drones:CheckDroneHP
+							}
 						}
 						else
 						{
-							Ship.Drones:SendDrones
-							Ship.Drones:CheckDroneHP
+							if ${Ship.Drones.DeployedDroneCount} > 0
+							{
+								UI:UpdateConsole["Offense: Shouldn't have combat drones out but we do, recalling!"]
+								Ship.Drones:QuickReturnAllToDroneBay
+							}
 						}
-					}
-					elseif ${Ship.Drones.DeployedDroneCount} > 0
-					{
-						;If we have drones out and our active target isn't in range, recall them to prevent them from going
-						;fucking berserk on everything and breaking the fucking chain. -- stealthy
-						;Use the executecommand because the ship function isn't atomic
-						EVE:Execute[CmdDronesReturnToBay]
 					}
 				}
 			}
