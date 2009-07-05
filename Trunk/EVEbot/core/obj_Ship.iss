@@ -178,6 +178,7 @@ objectdef obj_Ship
 		AmmoNameModPairs:Set["EMP",0.5]
 		
 		FrequencyNameModPairs:Set["Radio",1.6]
+		FrequencyNameModPairs:Set["Scorch",1.5]
 		FrequencyNameModPairs:Set["Microwave",1.4]
 		FrequencyNameModPairs:Set["Infrared",1.2]
 		FrequencyNameModPairs:Set["Standard",1]
@@ -185,6 +186,7 @@ objectdef obj_Ship
 		FrequencyNameModPairs:Set["Xray",0.75]
 		FrequencyNameModPairs:Set["Gamma",0.625]
 		FrequencyNameModPairs:Set["Multifrequency",0.5]
+		FrequencyNameModPairs:Set["Conflagration",0.5]
 	}
 
 	/* bool NeedAmmoChange(float range, int turret):
