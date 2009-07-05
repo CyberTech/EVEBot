@@ -250,6 +250,7 @@ objectdef obj_Drones
 
 	member:bool ShouldLaunchCombatDrones()
 	{
+		UI:UpdateConsole["obj_Drones:ShouldLaunchCombatDrones(): ${Ship.InWarp} ${Defense.Hiding} ${Offense.HaveFullAggro}",LOG_DEBUG]
 		if ${Ship.InWarp} || ${Defense.Hiding}
 		{
 			return FALSE
@@ -336,6 +337,24 @@ objectdef obj_Drones
 		wait 10
 	}
 
+	method QuickReturnAllToDroneBay()
+	{
+		This:GetActiveDrones[]
+		This.ActiveDrones:GetIterator[This.ActiveDrone]
+		
+		if ${ActiveDrone:First(exists)}
+		{
+			do
+			{
+				if ${ActiveDrone.Value.State} != DRONESTATE_RETURNING
+				{
+					UI:UpdateConsole["obj_Drones: Recalling ${ActiveDrone.Value.ID} to drone bay."]
+					ActiveDrone.Value.ToEntity:ReturnToDroneBay
+				}
+			}
+			while ${ActiveDrone:Next(exists)}
+		}
+	}
 
 	function ReturnAllToDroneBay()
 	{

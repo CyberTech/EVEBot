@@ -314,21 +314,20 @@ objectdef obj_Targets
 
 				;If our target is a hauler, it won't be targeting us.
 				;Same goes for assorted deadspace entities
+				;Also make sure we're not accounting for a wreck or moribund object
+				;Something in here is giving us a false positive.
+				UI:UpdateConsole["obj_Targets: ${${EntityCache}.EntityIterator.Value.EntityID} IsMoribund: ${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].IsMoribund}",LOG_DEBUG]
 				if ${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].Group.Find["Hauler"](exists)} || \
 					${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].GroupID} == GROUP_DEADSPACEOVERSEERSSTRUCTURE || \
-					${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].GroupID} == GROUP_LARGECOLLIDABLESTRUCTURE
+					${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].GroupID} == GROUP_LARGECOLLIDABLESTRUCTURE || \
+					${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].IsMoribund}
 					; TODO - why aren't these 2 group checks above in IsNPCTarget so they don't end up in the index to begin with? -- CyberTech
 				{
 					continue
 				}
 
-				if !${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].IsTargetingMe}
-				{
-					UI:UpdateConsole["DEBUG: obj_Targets - Entity[${${EntityCache}.EntityIterator.Value.EntityID}].Name (${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].Name}) is not targeting me, we don't have full aggro",LOG_DEBUG]
-					return FALSE
-				}
-				/* Just waiting on Ama to release the new ISXEVE before I enable this awesome targeting check.
-				echo "obj_Targets.HaveFullAggro[]: ${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].Name} is attacking me: ${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].ToAttacker.IsCurrentlyAttacking}"
+				; Just waiting on Ama to release the new ISXEVE before I enable this awesome targeting check.
+				UI:UpdateConsole["obj_Targets.HaveFullAggro[]: ${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].Name} is attacking me: ${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].ToAttacker.IsCurrentlyAttacking}",LOG_DEBUG]
 				if ${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].ToAttacker.IsCurrentlyAttacking}
 				{
 					continue
@@ -337,7 +336,6 @@ objectdef obj_Targets
 				{
 					return FALSE
 				}
-				*/
 			}
 			while ${${EntityCache}.EntityIterator:Next(exists)}
 		}

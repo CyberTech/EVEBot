@@ -195,7 +195,7 @@ objectdef obj_Ratter
 					((${Me.ToEntity.FollowRange} == 0) || !${Me.ToEntity.Following(exists)})
 				{
 
-					Me.ActiveTarget:KeepAtRange[${Ship.GetMinimumTurretRange[1]}]
+					Me.ActiveTarget:KeepAtRange[${Ship.MinimumTurretRange[1]}]
 				}
 				break
 			case STATE_ERROR

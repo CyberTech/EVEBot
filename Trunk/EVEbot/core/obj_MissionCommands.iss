@@ -972,7 +972,7 @@ objectdef obj_MissionCommands
 			{
 				do
 				{
-					if ${droneIterator.Value.State} != DRONESTATE_RETURNINGTOBAY
+					if ${droneIterator.Value.State} != DRONESTATE_RETURNING
 					{
 						UI:UpdateConsole["DEBUG: obj_MissionCommands - Attempting to recall drones!",LOG_DEBUG]
 
