@@ -119,6 +119,7 @@ objectdef obj_Ship
 	variable collection:float HybridNameModPairs
 	variable collection:float AmmoNameModPairs
 	variable collection:float FrequencyNameModPairs
+	variable collection:float TurretBaseOptimals
 
 	variable obj_Drones Drones
 
@@ -328,7 +329,17 @@ objectdef obj_Ship
 	Calculate and return the Maximum range for passed turret, taking into account the ammo types available. */
 	member:float GetMaximumTurretRange(int turret, string ChargeType)
 	{
-		variable float fBaseOptimal = ${This.TurretBaseOptimal[${turret}]}
+		variable float fBaseOptimal
+		if ${TurretBaseOptimals.Element[${turret}](exists)}
+		{
+			fBaseOptimal:Set[${TurretBaseOptimals.Element[${turret}]}]
+		}
+		else
+		{
+			TurretBaseOptimals:Set[${turret},${This.TurretBaseOptimal[${turret}]}]
+			fBaseOptimal:Set[${TurretBaseOptimals.Element[${turret}]}]
+		}
+		
 		UI:UpdateConsole["obj_Ship.GetMaximumTurretRange(${turret}): base optimal: ${fBaseOptimal}",LOG_DEBUG]
 		variable iterator itrWeapon
 		This.ModuleList_Weapon:GetIterator[itrWeapon]
@@ -381,56 +392,6 @@ objectdef obj_Ship
 								}
 							}
 							while ${itr${ChargeType}Pairs:Next(exists)}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 						}
 					}
 					while ${itrAmmo:Next(exists)}
@@ -537,12 +498,20 @@ objectdef obj_Ship
 	Calculate and return the minimum range for passed turret, taking into account the ammo types available. */
 	member:float GetMinimumTurretRange(int turret, string ChargeType)
 	{
-		variable float fBaseOptimal = ${This.TurretBaseOptimal[${turret}]}
-		UI:UpdateConsole["obj_Ship.GETMinimumTurretRange(${turret}): base optimal: ${fBaseOptimal}",LOG_DEBUG]
+		variable float fBaseOptimal
+		
+		if ${TurretBaseOptimals.Element[${turret}](exists)}
+		{
+			fBaseOptimal:Set[${TurretBaseOptimals.Element[${turret}]}]
+		}
+		else
+		{
+			TurretBaseOptimals:Set[${turret},${This.TurretBaseOptimal[${turret}]}]
+			fBaseOptimal:Set[${TurretBaseOptimals.Element[${turret}]}]
+		}
+		
 		variable iterator itrWeapon
-		variable iterator itrWeapon2
 		This.ModuleList_Weapon:GetIterator[itrWeapon]
-		This.ModuleList_Weapon:GetIterator[itrWeapon2]
 		
 		variable index:item idxAmmo
 		variable iterator itrAmmo
@@ -592,56 +561,6 @@ objectdef obj_Ship
 								}
 							}
 							while ${itr${ChargeType}Pairs:Next(exists)}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 						}
 					}
 					while ${itrAmmo:Next(exists)}
@@ -868,8 +787,6 @@ objectdef obj_Ship
 		This.ModuleList_Weapon:GetIterator[itrWeapon]
 		This.ModuleList_Weapon:GetIterator[itrWeapon2]
 		
-		variable int iGroupId = 0
-		
 		variable index:item idxAmmo
 		variable iterator itrAmmo
 		
@@ -908,7 +825,17 @@ objectdef obj_Ship
 				itrWeapon.Value:DoGetAvailableAmmo[idxAmmo]
 				idxAmmo:GetIterator[itrAmmo]
 			
-				variable float fBaseOptimal = ${This.TurretBaseOptimal[${turret}]}
+				variable float fBaseOptimal
+				
+				if ${TurretBaseOptimals.Element[${turret}](exists)}
+				{
+					fBaseOptimal:Set[${TurretBaseOptimals.Element[${turret}]}]
+				}
+				else
+				{
+					TurretBaseOptimals:Set[${turret},${This.TurretBaseOptimal[${turret}]}]
+					fBaseOptimal:Set[${TurretBaseOptimals.Element[${turret}]}]
+				}
 				UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range},${turret}): fBaseOptimal: ${fBaseOptimal}",LOG_DEBUG]
 
 				; Do some math on our range to 'reduce' it a little, i.e. if our target is at 25km, math it down to 22.5 or 25
@@ -994,86 +921,6 @@ objectdef obj_Ship
 					sBestSoFar:Set[${sHighestSoFar}]
 				}
 				UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range}): sBestSoFar: ${sBestSoFar}, sHighestSoFar: ${sHighestSoFar}",LOG_DEBUG]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 			}
 			while ${itrWeapon:Next(exists)}
 		}		
