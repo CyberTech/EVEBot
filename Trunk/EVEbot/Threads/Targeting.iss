@@ -203,6 +203,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 					This:TargetEntity[${Target.Value.EntityID}]
 					Target.Value.Targeting:Set[TRUE]
 					TargetingMandatory:Set[TRUE]
+					return
 				}
 
 				if ${Target.Value.Blocker} && ${Entity[${Target.Value.EntityID}](exists)}
@@ -236,6 +237,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 				{
 					This:TargetEntity[${Target.Value.EntityID}]
 					Target.Value.Targeting:Set[TRUE]
+					return
 				}
 			}
 			while ${Target:Next(exists)}
