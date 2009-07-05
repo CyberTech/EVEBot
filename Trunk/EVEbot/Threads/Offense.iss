@@ -17,7 +17,7 @@ objectdef obj_Offense
 	variable time NextPulse
 	variable time NextAmmoCheck
 	variable int PulseIntervalInSeconds = 1
-	variable int AmmoCheckIntervalInSeconds = 10
+	variable int AmmoCheckIntervalInSeconds = 5
 	variable bool Warned_LowAmmo = FALSE
 	variable iterator itrWeapon
 	variable collection:bool TurretNeedsAmmo

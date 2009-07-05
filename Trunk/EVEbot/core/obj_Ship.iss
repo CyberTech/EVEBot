@@ -159,24 +159,33 @@ objectdef obj_Ship
 	
 	method PopulateNameModPairs()
 	{
+		HybridNameModPairs:Set["Spike",1.8]
 		HybridNameModPairs:Set["Iron",1.6]
 		HybridNameModPairs:Set["Tungsten",1.4]
+		HybridNameModPairs:Set["Null",1.25]
 		HybridNameModPairs:Set["Iridium",1.2]
 		HybridNameModPairs:Set["Lead",1]
 		HybridNameModPairs:Set["Thorium",0.875]
 		HybridNameModPairs:Set["Uranium",0.75]
+		HybridNameModPairs:Set["Void",0.75]
 		HybridNameModPairs:Set["Plutonium",0.625]
 		HybridNameModPairs:Set["Antimatter",0.5]
+		HybridNameModPairs:Set["Javelin",0.25]
 		
+		AmmoNameModPairs:Set["Tremor",1.8]
 		AmmoNameModPairs:Set["Carbonized Lead",1.6]
 		AmmoNameModPairs:Set["Nuclear",1.4]
 		AmmoNameModPairs:Set["Proton",1.2]
 		AmmoNameModPairs:Set["Depleted Uranium",1]
+		AmmoNameModPairs:Set["Barrage",1]
 		AmmoNameModPairs:Set["Titanium Sabot",0.875]
 		AmmoNameModPairs:Set["Fusion",0.75]
 		AmmoNameModPairs:Set["Phased Plasma",0.625]
 		AmmoNameModPairs:Set["EMP",0.5]
+		AmmoNameModPairs:Set["Hail",0.5]
+		AmmoNameModPairs:Set["Quake",0.25]
 		
+		FrequencyNameModPairs:Set["Aurora",1.8]
 		FrequencyNameModPairs:Set["Radio",1.6]
 		FrequencyNameModPairs:Set["Scorch",1.5]
 		FrequencyNameModPairs:Set["Microwave",1.4]
@@ -187,6 +196,7 @@ objectdef obj_Ship
 		FrequencyNameModPairs:Set["Gamma",0.625]
 		FrequencyNameModPairs:Set["Multifrequency",0.5]
 		FrequencyNameModPairs:Set["Conflagration",0.5]
+		FrequencyNameModPairs:Set["Gleam",0.25]
 	}
 
 	/* bool NeedAmmoChange(float range, int turret):
@@ -292,10 +302,15 @@ objectdef obj_Ship
 				switch ${itrWeapon.Value.Charge.GroupID}
 				{
 					case GROUP_AMMO
+					case GROUP_ADVANCEDAUTOCANNONAMMO
+					case GROUP_ADVANCEDARTILLERYAMMO
 						return ${This.GetMaximumTurretRange[${turret},Ammo]}
 					case GROUP_HYBRIDAMMO
+					case GROUP_ADVANCEDBLASTERAMMO
+					case GROUP_ADVANCEDRAILAMMO
 						return ${This.GetMaximumTurretRange[${turret},Hybrid]}
 					case GROUP_FREQUENCYCRYSTAL
+					case GROUP_ADVANCEDBEAMLASERCRYSTAL
 					case GROUP_ADVANCEDPULSELASERCRYSTAL
 						return ${This.GetMaximumTurretRange[${turret},Frequency]}
 					case GROUP_MOON
@@ -458,10 +473,15 @@ objectdef obj_Ship
 				switch ${itrWeapon.Value.Charge.GroupID}
 				{
 					case GROUP_AMMO
+					case GROUP_ADVANCEDAUTOCANNONAMMO
+					case GROUP_ADVANCEDARTILLERYAMMO
 						return ${This.GetMinimumTurretRange[${turret},Ammo]}
 					case GROUP_HYBRIDAMMO
+					case GROUP_ADVANCEDBLASTERAMMO
+					case GROUP_ADVANCEDRAILAMMO
 						return ${This.GetMinimumTurretRange[${turret},Hybrid]}
 					case GROUP_FREQUENCYCRYSTAL
+					case GROUP_ADVANCEDBEAMLASERCRYSTAL
 					case GROUP_ADVANCEDPULSELASERCRYSTAL
 						return ${This.GetMinimumTurretRange[${turret},Frequency]}
 					case GROUP_MOON
@@ -626,10 +646,15 @@ objectdef obj_Ship
 				switch ${itrWeapon.Value.Charge.GroupID}
 				{
 					case GROUP_AMMO
+					case GROUP_ADVANCEDAUTOCANNONAMMO
+					case GROUP_ADVANCEDARTILLERYAMMO
 						return ${This.GetTurretBaseOptimal[${turret},Ammo]}
 					case GROUP_HYBRIDAMMO
+					case GROUP_ADVANCEDBLASTERAMMO
+					case GROUP_ADVANCEDRAILAMMO
 						return ${This.GetTurretBaseOptimal[${turret},Hybrid]}
 					case GROUP_FREQUENCYCRYSTAL
+					case GROUP_ADVANCEDBEAMLASERCRYSTAL
 					case GROUP_ADVANCEDPULSELASERCRYSTAL
 						return ${This.GetTurretBaseOptimal[${turret},Frequency]}
 					case GROUP_MOON
@@ -742,10 +767,15 @@ objectdef obj_Ship
 				switch ${itrWeapon.Value.Charge.GroupID}
 				{
 					case GROUP_AMMO
+					case GROUP_ADVANCEDAUTOCANNONAMMO
+					case GROUP_ADVANCEDARTILLERYAMMO
 						return ${This.GetBestAmmoTypeByRange[${range},${turret},Ammo]}
 					case GROUP_HYBRIDAMMO
+					case GROUP_ADVANCEDBLASTERAMMO
+					case GROUP_ADVANCEDRAILAMMO
 						return ${This.GetBestAmmoTypeByRange[${range},${turret},Hybrid]}
 					case GROUP_FREQUENCYCRYSTAL
+					case GROUP_ADVANCEDBEAMLASERCRYSTAL
 					case GROUP_ADVANCEDPULSELASERCRYSTAL
 						return ${This.GetBestAmmoTypeByRange[${range},${turret},Frequency]}
 					case GROUP_MOON
