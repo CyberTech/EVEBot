@@ -19,13 +19,13 @@ objectdef obj_QueueTarget
 	; Are we currently targeting this?
 	variable bool Targeting = FALSE
 
-	method Initialize(int _EntityID, int _TargetType=0, int _Priority=0, bool _Targeting=FALSE, bool _Blocker=FALSE)
+	method Initialize(int _EntityID, int _TargetType=0, int _Priority=0, bool _Blocker=FALSE, bool _Targeting=FALSE)
 	{
 		EntityID:Set[${_EntityID}]
 		TargetType:Set[${_TargetType}]
 		Priority:Set[${_Priority}]
-		Targeting:Set[${_Targeting}]
 		Blocker:Set[${_Blocker}]
+		Targeting:Set[${_Targeting}]
 	}
 }
 
@@ -202,13 +202,18 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 					}
 					This:TargetEntity[${Target.Value.EntityID}]
 					Target.Value.Targeting:Set[TRUE]
-					TargetingMandatory:Set[TRUE]
 					return
+				}
+				elseif ${Entity[${Target.Value.EntityID}](exists)} && \
+					${Entity[${Target.Value.EntityID}].IsLockedTarget} || ${Entity[${Target.Value.EntityID}].BeingTargeted}
+				{
+					TargetingMandatory:Set[TRUE]
 				}
 
 				if ${Target.Value.Blocker} && ${Entity[${Target.Value.EntityID}](exists)}
 				{
 					; Don't target anything else until this is gone. Note that this will block if you queue a blocking entity outside targeting range. Don't be stupid.
+					; Actually, no - go ahead and target any other mandatory blockers. 
 					return
 				}
 			}
@@ -248,7 +253,6 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 
 	method Queue(int EntityID, int Priority, int TargetType, bool Mandatory=FALSE, bool Blocker=FALSE)
 	{
-
 		if ${This.IsQueued[${EntityID}]}
 		{
 			UI:UpdateConsole["Targeting: Already queued ${Entity[${EntityID}].Name} (${EntityID}) Type: ${TargetType}"]

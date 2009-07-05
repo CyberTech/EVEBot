@@ -458,7 +458,6 @@ objectdef obj_Ship
 					case GROUP_AMMO
 						return ${This.GetMinimumTurretRange[${turret},Ammo]}
 					case GROUP_HYBRIDAMMO
-						UI:UpdateConsole["obj_Ship.MinimumTurretRange[${turret}]: Ship.GetMinimumTurretRange[${turret},Hybrid]: ${Ship.GetMinimumTurretRange[${turret},Hybrid]}",LOG_DEBUG]
 						return ${This.GetMinimumTurretRange[${turret},Hybrid]}
 					case GROUP_FREQUENCYCRYSTAL
 					case GROUP_ADVANCEDPULSELASERCRYSTAL
@@ -627,7 +626,6 @@ objectdef obj_Ship
 					case GROUP_AMMO
 						return ${This.GetTurretBaseOptimal[${turret},Ammo]}
 					case GROUP_HYBRIDAMMO
-						UI:UpdateConsole["obj_Ship.TurretBaseOptimal[${turret}]: Ship.GetTurretBaseOptimal[${turret},Hybrid]: ${Ship.GetTurretBaseOptimal[${turret},Hybrid]}",LOG_DEBUG]
 						return ${This.GetTurretBaseOptimal[${turret},Hybrid]}
 					case GROUP_FREQUENCYCRYSTAL
 					case GROUP_ADVANCEDPULSELASERCRYSTAL
@@ -965,6 +963,7 @@ objectdef obj_Ship
 							{
 								UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable: FALSE!", LOG_CRITICAL]
 								bAmmoAvailable:Set[FALSE]
+								break
 							}
 						}
 					}

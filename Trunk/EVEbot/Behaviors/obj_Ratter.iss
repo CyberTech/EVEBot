@@ -188,15 +188,6 @@ objectdef obj_Ratter
 				}
 
 				This:QueueTargets
-				/* Don't worry about orbiting or keeping at range if we're a missile boat */
-				/* Todo: remove this, "It's dangerous in belts" */
-				UI:UpdateConsole["obj_Ratter: Me.ActiveTarget(exists): ${Me.ActiveTarget(exists)}, Me.ToEntity.FollowRange: ${Me.ToEntity.FollowRange}",LOG_DEBUG]
-				if !${Config.Combat.ShouldUseMissiles} && ${Me.ActiveTarget(exists)} && \
-					((${Me.ToEntity.FollowRange} == 0) || !${Me.ToEntity.Following(exists)})
-				{
-
-					Me.ActiveTarget:KeepAtRange[${Ship.MinimumTurretRange[1]}]
-				}
 				break
 			case STATE_ERROR
 				UI:UpdateConsole["CurrentState is ERROR"]
@@ -287,21 +278,13 @@ objectdef obj_Ratter
 					UI:UpdateConsole["obj_Ratter: We have a priority target: ${RatCache.EntityIterator.Value.Name}."]
 					HavePriorityTarget:Set[TRUE]
 					bHavePriorityTarget:Set[TRUE]
-					/* Queue[ID, Priority, TypeID, Mandatory] */
+					/* 	method Queue(int EntityID, int Priority, int TargetType, bool Mandatory=FALSE, bool Blocker=FALSE) */
 					/* Queue it mandatory so we make sure it dies. */
 					UI:UpdateConsole["obj_Ratter: Queueing priority target: ${RatCache.EntityIterator.Value.Name}"]
-					Targeting:Queue[${RatCache.EntityIterator.Value.ID},0,${RatCache.EntityIterator.Value.TypeID},TRUE,TRUE]
+					Targeting:Queue[${RatCache.EntityIterator.Value.ID},0,${RatCache.EntityIterator.Value.TypeID},TRUE,FALSE]
 				}
 			}
 			while ${RatCache.EntityIterator:Next(exists)}
-		}
-
-		; If I have a priority target, just return. Targeting will lock both mandatory and non-mandatory at the same time, which is bad(tm)
-		; Commented after making 
-		;Uncommented because blocking targets still aren't working
-		if ${HavePriorityTarget} && ${bHavePriorityTarget}
-		{
-			return
 		}
 
 		/* Now for the fun task of figuring out chaining. */
@@ -328,9 +311,9 @@ objectdef obj_Ratter
 					; Since we're chaining, if it isn't a special spawn or a battleship, and we've already queued any priority targets, we don't want it.
 					; Add it to do not kill.
 					UI:UpdateConsole["obj_Ratter: Find Battleship? Name: ${RatCache.EntityIterator.Value.Name}, Group: ${RatCache.EntityIterator.Value.Group}, Exists? ${RatCache.EntityIterator.Value.Group.Find["Battleship"](exists)}, Mutli? ${bHaveMultipleTypes}", LOG_DEBUG]
-					if !${RatCache.EntityIterator.Value.Group.Find["Battleship"](exists)} && !${Targets.IsSpecialTarget[${RatCache.EntityIterator.Value.Name}]}
+					if !${RatCache.EntityIterator.Value.Group.Find["Battleship"](exists)} && !${Targets.IsSpecialTarget[${RatCache.EntityIterator.Value.Name}]} && !${bHavePriorityTarget}
 					{
-						UI:UpdateConsole["obj_Ratter: ${RatCache.EntityIterator.Value.Name} isn't a battleship or special target -- adding to DNK list.", LOG_DEBUG]
+						UI:UpdateConsole["obj_Ratter: ${RatCache.EntityIterator.Value.Name} isn't a battleship or special target and we have no priority targets -- adding to DNK list.", LOG_DEBUG]
 						DoNotKillList:Insert[${RatCache.EntityIterator.Value.ID}]
 						continue
 					}
@@ -344,14 +327,14 @@ objectdef obj_Ratter
 						{
 							Sound:PlayDetectSound
 						}
-						Targeting:Queue[${RatCache.EntityIterator.Value.ID},1,${RatCache.EntityIterator.Value.TypeID},FALSE]
+						Targeting:Queue[${RatCache.EntityIterator.Value.ID},1,${RatCache.EntityIterator.Value.TypeID},FALSE,FALSE]
 						continue
 					}
 
 					; Basically, the only way we get this far is our entity is a battleship we haven't queued.
 					; So queue it!
 					UI:UpdateConsole["obj_Ratter: Queueing chainable battleship ${RatCache.EntityIterator.Value.Name}",LOG_DEBUG]
-					Targeting:Queue[${RatCache.EntityIterator.Value.ID},2,${RatCache.EntityIterator.Value.TypeID},FALSE]
+					Targeting:Queue[${RatCache.EntityIterator.Value.ID},2,${RatCache.EntityIterator.Value.TypeID},FALSE,FALSE]
 				}
 				while ${RatCache.EntityIterator:Next(exists)}
 			}
@@ -379,12 +362,12 @@ objectdef obj_Ratter
 						{
 							Sound:PlayDetectSound
 						}
-						Targeting:Queue[${RatCache.EntityIterator.Value.ID},1,${RatCache.EntityIterator.Value.TypeID},FALSE]
+						Targeting:Queue[${RatCache.EntityIterator.Value.ID},1,${RatCache.EntityIterator.Value.TypeID},FALSE,FALSE]
 						continue
 					}
 
 					UI:UpdateConsole["obj_Ratter: Not chaining, queueing target ${RatCache.EntityIterator.Value.Name}.",LOG_DEBUG]
-					Targeting:Queue[${RatCache.EntityIterator.Value.ID},2,${RatCache.EntityIterator.Value.TypeID},FALSE]
+					Targeting:Queue[${RatCache.EntityIterator.Value.ID},2,${RatCache.EntityIterator.Value.TypeID},FALSE,FALSE]
 				}
 				while ${RatCache.EntityIterator:Next(exists)}
 			}

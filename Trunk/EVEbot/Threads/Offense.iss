@@ -16,11 +16,13 @@ objectdef obj_Offense
 
 	variable time NextPulse
 	variable time NextAmmoCheck
-	variable int PulseIntervalInSeconds = 1.5
+	variable int PulseIntervalInSeconds = 1
 	variable int AmmoCheckIntervalInSeconds = 10
 	variable bool Warned_LowAmmo = FALSE
 	variable iterator itrWeapon
 	variable collection:bool TurretNeedsAmmo
+	variable index:module LauncherIndex
+	variable index:module TurretIndex
 
 	method Initialize()
 	{
@@ -42,11 +44,53 @@ objectdef obj_Offense
 			{
 				This:TakeOffensiveAction
 				This:CheckAmmo[]
+				if ${This.TurretIndex.Used} == 0 && ${This.LauncherIndex.Used} == 0 && ${Ship.ModuleList_Weapon.Used} > 0
+				{
+					This:BuildIndices
+				}
 			}
 
 			This.NextPulse:Set[${Time.Timestamp}]
 			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
 			This.NextPulse:Update
+		}
+	}
+
+	/* void BuildIndices():
+	Split ModuleList_Weapon into turrets and launchers so that the two may BOTH work at the same time. */
+	method BuildIndices()
+	{
+		Ship.ModuleList_Weapon:GetIterator[itrWeapon]
+		
+		if ${itrWeapon:First(exists)}
+		{
+			do
+			{
+				switch ${itrWeapon.Value.ToItem.GroupID}
+				{
+					case GROUP_MISSILELAUNCHER
+					case GROUP_MISSILELAUNCHERASSAULT
+					case GROUP_MISSILELAUNCHERBOMB
+					case GROUP_MISSILELAUNCHERCITADEL
+					case GROUP_MISSILELAUNCHERCRUISE
+					case GROUP_MISSILELAUNCHERHEAVY
+					case GROUP_MISSILELAUNCHERHEAVYASSAULT
+					case GROUP_MISSILELAUNCHERROCKET
+					case GROUP_MISSILELAUNCHERSIEGE
+					case GROUP_MISSILELAUNCHERSTANDARD
+						LauncherIndex:Insert[${itrWeapon.Value}]
+						break
+					case GROUP_HYBRIDWEAPON
+					case GROUP_PROJECTILEWEAPON
+					case GROUP_ENERGYWEAPON
+						TurretIndex:Insert[${itrWeapon.Value}]
+						break
+					default
+						UI:UpdateConsole["Offense:BuildIndices[]: Cannot insert ${itrWeapon.Value.ToItem.Name} ${itrWeapon.Value.ToItem.Group} ${itrWeapon.Value.ToItem.GroupID} - no matching case!",LOG_CRITICAL]
+						break
+				}
+			}
+			while ${itrWeapon:Next(exists)}
 		}
 	}
 
@@ -66,17 +110,32 @@ objectdef obj_Offense
 				Ship:Activate_StasisWebs
 				Ship:Activate_TargetPainters
 
-				if ${Config.Combat.ShouldUseMissiles}
+				if ${LauncherIndex.Used} > 0
 				{
 					if ${Me.ActiveTarget.Distance} < ${Ship.OptimalWeaponRange}
 					{
-						Ship:Activate_Weapons
+						LauncherIndex:GetIterator[itrWeapon]
+						
+						if ${itrWeapon:First(exists)}
+						{
+							do
+							{
+								if !${itrWeapon.Value.IsActive} && !${itrWeapon.Value.IsReloadingAmmo} && !${itrWeapon.Value.IsChangingAmmo} && \
+									${itrWeapon.CurrentCharges} > 0
+								{
+									itrWeapon.Value:Click
+									break
+								}
+							}
+							while ${itrWeapon:Next(exists)}
+						}
 					}
 				}
-				else
+				
+				if ${TurretIndex.Used} > 0
 				{
 					; iterate through every turret and determine if it needs an ammo change.
-					Ship.ModuleList_Weapon:GetIterator[itrWeapon]
+					TurretIndex:GetIterator[itrWeapon]
 					if ${Time.Timestamp} >= ${This.NextAmmoCheck.Timestamp}
 					{
 						if ${itrWeapon:First(exists)}
@@ -157,6 +216,7 @@ objectdef obj_Offense
 									{
 										UI:UpdateConsole["Offense: Turret ${itrWeapon.Key}: Turret on but we're either below or above range, deactivating",LOG_DEBUG]
 										itrWeapon.Value:Click
+										break
 									}
 								}
 								else
@@ -166,6 +226,7 @@ objectdef obj_Offense
 									{
 										UI:UpdateConsole["Offense: Turret ${itrWeapon.Key}: Turret off but we're within range, activating",LOG_DEBUG]
 										itrWeapon.Value:Click
+										break
 									}
 								}
 							}
