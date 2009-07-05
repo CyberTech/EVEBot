@@ -2331,18 +2331,7 @@ objectdef obj_Ship
 	; Returns the highest weapon optimal range minus 10%
 	member:int OptimalWeaponRange()
 	{
-		; just handle missiles for now
-		/* fuck you, we're handling turrets */
-		if ${Config.Combat.ShouldUseMissiles}
-		{
-			return ${Config.Combat.MaxMissileRange}
-		}
-		else
-		{
-			UI:UpdateConsole["obj_Ship.OptimalWeaponRange(): getting checked"]
-			return ${This.GetMinimumTurretRange}
-		}
-		
+		return ${Math.Calc[${Config.Combat.MaxMissileRange} * 0.95]}
 	}
 
 	member:bool IsPod()
