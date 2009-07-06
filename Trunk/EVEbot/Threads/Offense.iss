@@ -17,7 +17,7 @@ objectdef obj_Offense
 	variable time NextPulse
 	variable time NextAmmoCheck
 	variable int PulseIntervalInSeconds = 1
-	variable int AmmoCheckIntervalInSeconds = 5
+	variable int AmmoCheckIntervalInSeconds = 1
 	variable bool Warned_LowAmmo = FALSE
 	variable iterator itrWeapon
 	variable collection:bool TurretNeedsAmmo
@@ -121,7 +121,7 @@ objectdef obj_Offense
 							do
 							{
 								if !${itrWeapon.Value.IsActive} && !${itrWeapon.Value.IsReloadingAmmo} && !${itrWeapon.Value.IsChangingAmmo} && \
-									${itrWeapon.CurrentCharges} > 0
+									${itrWeapon.Value.CurrentCharges} > 0
 								{
 									itrWeapon.Value:Click
 									break
@@ -142,13 +142,20 @@ objectdef obj_Offense
 						{
 							do
 							{
-								if ${Ship.NeedAmmoChange[${Me.ActiveTarget.Distance},${itrWeapon.Key}]}
+								if !${itrWeapon.Value.IsReloadingAmmo} && !${itrWeapon.Value.IsChangingAmmo}
 								{
-									TurretNeedsAmmo:Set[${itrWeapon.Key},TRUE]
+									if ${Ship.NeedAmmoChange[${Me.ActiveTarget.Distance},${itrWeapon.Key}]}
+									{
+										TurretNeedsAmmo:Set[${itrWeapon.Key},TRUE]
+									}
+									else
+									{
+										TurretNeedsAmmo:Set[${itrWeapon.Key},FALSE]
+									}
 								}
 								else
 								{
-									TurretNeedsAmmo:Erase[${itrWeapon.Key},FALSE]
+									TurretNeedsAmmo:Set[${itrWeapon.Key},FALSE]
 								}
 							}
 							while ${itrWeapon:Next(exists)}
