@@ -23,7 +23,7 @@ objectdef obj_Offense
 	variable collection:bool TurretNeedsAmmo
 	variable index:module LauncherIndex
 	variable index:module TurretIndex
-	variable int LastTurretTypeID
+	variable int LastTurretTypeID = 0
 
 	method Initialize()
 	{
