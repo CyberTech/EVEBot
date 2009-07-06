@@ -17,7 +17,7 @@ objectdef obj_Offense
 	variable time NextPulse
 	variable time NextAmmoCheck
 	variable int PulseIntervalInSeconds = 1
-	variable int AmmoCheckIntervalInSeconds = 1
+	variable int AmmoCheckIntervalInSeconds = 5
 	variable bool Warned_LowAmmo = FALSE
 	variable iterator itrWeapon
 	variable collection:bool TurretNeedsAmmo
@@ -120,17 +120,34 @@ objectdef obj_Offense
 				{
 					if ${Me.ActiveTarget.Distance} < ${Ship.OptimalWeaponRange}
 					{
+						;Turn on any launchers that are within range, not active, not reloading, and not changing ammo, and that have ammo
 						LauncherIndex:GetIterator[itrWeapon]
 						
 						if ${itrWeapon:First(exists)}
 						{
 							do
 							{
-								if !${itrWeapon.Value.IsActive} && !${itrWeapon.Value.IsReloadingAmmo} && !${itrWeapon.Value.IsChangingAmmo} && \
-									${itrWeapon.Value.CurrentCharges} > 0
+								if !${itrWeapon.Value.IsActive} && !${itrWeapon.Value.IsReloadingAmmo} && !${itrWeapon.Value.IsChangingAmmo}
 								{
 									itrWeapon.Value:Click
 									break
+								}
+							}
+							while ${itrWeapon:Next(exists)}
+						}
+					}
+					else
+					{
+						;Turn off any launchers that are on but not within range
+						LauncherIndex:GetIterator[itrWeapon]
+						
+						if ${itrWeapon:First(exists)}
+						{
+							do
+							{
+								if ${itrWeapon.Value.IsActive}
+								{
+									itrWeapon.Value:Click
 								}
 							}
 							while ${itrWeapon:Next(exists)}
@@ -140,6 +157,8 @@ objectdef obj_Offense
 				
 				if ${TurretIndex.Used} > 0
 				{
+					This.LastTurretTypeID:Set[0]
+					This.LastChargeTypeID:Set[0]
 					; iterate through every turret and determine if it needs an ammo change.
 					TurretIndex:GetIterator[itrWeapon]
 					if ${Time.Timestamp} >= ${This.NextAmmoCheck.Timestamp}
@@ -147,7 +166,7 @@ objectdef obj_Offense
 						if ${itrWeapon:First(exists)}
 						{
 							tempInt:Set[${itrWeapon.Key}]
-							tempInt:Dec
+							tempInt:Dec[2]
 							do
 							{
 								tempInt:Inc
@@ -208,15 +227,17 @@ objectdef obj_Offense
 								continue
 							}
 							
-							if ${LastTurretTypeID} == 0 || ${LastTurretTypeID} != ${itrWeapon.Value.ToItem.TypeID}
+							if ${This.LastTurretTypeID} == 0 || ${This.LastTurretTypeID} != ${itrWeapon.Value.ToItem.TypeID} || \
+								${This.LastChargeTypeID} == 0 || ${This.LastChargeTypeID} != ${itrWeapon.Value.ToItem.TypeID}
 							{
-								LastTurretTypeID:Set[${itrWeapon.Value.ToItem.TypeID}]
+								This.LastTurretTypeID:Set[${itrWeapon.Value.ToItem.TypeID}]
+								This.LastTurretTypeID:Set[${itrWeapon.Value.Charge.TypeID}]
 								This.MinRange:Set[${Ship.MinimumTurretRange[${itrWeapon.Key}]}]
 								This.MaxRange:Set[${Ship.MaximumTurretRange[${itrWeapon.Key}]}]
 							}
 							
-							
 							;Awesome, our guns are ready for ammo checks. Does our gun need an ammo change?
+							UI:UpdateConsole["Offense: Turret ${itrWeapon.Key} Needs Ammo: ${This.TurretNeedsAmmo.Element[${itrWeapon.Key}]}",LOG_DEBUG]
 							if ${This.TurretNeedsAmmo.Element[${itrWeapon.Key}]}
 							{
 								UI:UpdateConsole["Offense: Turret ${itrWeapon.Key}: need ammo change.",LOG_DEBUG]
@@ -226,7 +247,7 @@ objectdef obj_Offense
 								{
 									UI:UpdateConsole["Offense: Turret ${itrWeapon.Key}: active during ammo change, deactivating and continuing.",LOG_DEBUG]
 									itrWeapon.Value:Click
-									continue
+									;continue
 								}
 								else
 								{
