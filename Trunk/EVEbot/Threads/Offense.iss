@@ -24,6 +24,7 @@ objectdef obj_Offense
 	variable index:module LauncherIndex
 	variable index:module TurretIndex
 	variable int LastTurretTypeID = 0
+	variable int LastChargeTypeID = 0
 	
 	variable int MinRange = 0
 	variable int MaxRange = 0
@@ -100,6 +101,7 @@ objectdef obj_Offense
 
 	method TakeOffensiveAction()
 	{
+		variable int tempInt = 0
 		if ${Me.ActiveTarget(exists)} && !${Me.ActiveTarget.IsPC}
 		{
 			if !${This.IsConcordTarget[${Me.ActiveTarget.GroupID}]}
@@ -144,41 +146,47 @@ objectdef obj_Offense
 					{
 						if ${itrWeapon:First(exists)}
 						{
+							tempInt:Set[${itrWeapon.Key}]
+							tempInt:Dec
 							do
 							{
-								if !${itrWeapon.Value.IsReloadingAmmo} && !${itrWeapon.Value.IsChangingAmmo}
+								tempInt:Inc
+								UI:UpdateConsole["Offense: itrWeapon.Value.ToItem.TypeID: ${itrWeapon.Value.ToItem.TypeID}, LastTurretTypeID: ${LastTurretTypeID}",LOG_DEBUG]
+								if ${itrWeapon.Value.ToItem.TypeID} == ${This.LastTurretTypeID} && \
+									${itrWeapon.Value.Charge.TypeID} == ${This.LastChargeTypeID}
 								{
-									if ${LastTurretTypeID} == 0 || ${LastTurretTypeID} == ${itrWeapon.Value.ToItem.TypeID}
+									;if the previous turret needed ammo...
+									UI:UpdateConsole["Offense: turret: ${itrWeapon.Key}, This.TurretNeedsAmmo.Element[${tempInt}]: ${This.TurretNeedsAmmo.Element[${tempInt}]}",LOG_DEBUG]
+									if ${This.TurretNeedsAmmo.Element[${tempInt}]} == TRUE
 									{
-										if ${TurretNeedsAmmo.Element[${Math.Calc[${itrWeapon.Key} - 1]}]} == TRUE
-										{
-											TurretNeedsAmmo:Set[${itrWeapon.Key},TRUE]
-										}
-										else
-										{
-											TurretNeedsAmmo:Set[${itrWeapon.Key},FALSE]
-										}
+										
+										;this one probably does too
+										This.TurretNeedsAmmo:Set[${itrWeapon.Key},TRUE]
 									}
 									else
 									{
-										LastTurretTypeID:Set[${itrWeapon.Value.ToItem.TypeID}]
-										if ${Ship.NeedAmmoChange[${Me.ActiveTarget.Distance},${itrWeapon.Key}]}
-										{
-											TurretNeedsAmmo:Set[${itrWeapon.Key},TRUE]
-										}
-										else
-										{
-											TurretNeedsAmmo:Set[${itrWeapon.Key},FALSE]
-										}
+										;if it didn't, we probably don't either.
+										This.TurretNeedsAmmo:Set[${itrWeapon.Key},FALSE]
 									}
 								}
 								else
 								{
-									TurretNeedsAmmo:Set[${itrWeapon.Key},FALSE]
+									This.LastTurretTypeID:Set[${itrWeapon.Value.ToItem.TypeID}]
+									This.LastChargeTypeID:Set[${itrWeapon.Value.Charge.TypeID}]
+									if ${Ship.NeedAmmoChange[${Me.ActiveTarget.Distance},${itrWeapon.Key}]}
+									{
+										This.TurretNeedsAmmo:Set[${itrWeapon.Key},TRUE]
+									}
+									else
+									{
+										This.TurretNeedsAmmo:Set[${itrWeapon.Key},FALSE]
+									}
 								}
 							}
 							while ${itrWeapon:Next(exists)}
 						}
+						This.LastTurretTypeID:Set[0]
+						This.LastChargeTypeID:Set[0]
 						This.NextAmmoCheck:Set[${Time.Timestamp}]
 						This.NextAmmoCheck.Second:Inc[${This.AmmoCheckIntervalInSeconds}]
 						This.NextAmmoCheck:Update
