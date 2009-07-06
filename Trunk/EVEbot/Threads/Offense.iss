@@ -148,13 +148,28 @@ objectdef obj_Offense
 							{
 								if !${itrWeapon.Value.IsReloadingAmmo} && !${itrWeapon.Value.IsChangingAmmo}
 								{
-									if ${Ship.NeedAmmoChange[${Me.ActiveTarget.Distance},${itrWeapon.Key}]}
+									if ${LastTurretTypeID} == 0 || ${LastTurretTypeID} == ${itrWeapon.Value.ToItem.TypeID}
 									{
-										TurretNeedsAmmo:Set[${itrWeapon.Key},TRUE]
+										if ${TurretNeedsAmmo.Element[${Math.Calc[${itrWeapon.Key} - 1]}]} == TRUE
+										{
+											TurretNeedsAmmo:Set[${itrWeapon.Key},TRUE]
+										}
+										else
+										{
+											TurretNeedsAmmo:Set[${itrWeapon.Key},FALSE]
+										}
 									}
 									else
 									{
-										TurretNeedsAmmo:Set[${itrWeapon.Key},FALSE]
+										LastTurretTypeID:Set[${itrWeapon.Value.ToItem.TypeID}]
+										if ${Ship.NeedAmmoChange[${Me.ActiveTarget.Distance},${itrWeapon.Key}]}
+										{
+											TurretNeedsAmmo:Set[${itrWeapon.Key},TRUE]
+										}
+										else
+										{
+											TurretNeedsAmmo:Set[${itrWeapon.Key},FALSE]
+										}
 									}
 								}
 								else
