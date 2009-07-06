@@ -24,6 +24,9 @@ objectdef obj_Offense
 	variable index:module LauncherIndex
 	variable index:module TurretIndex
 	variable int LastTurretTypeID = 0
+	
+	variable int MinRange = 0
+	variable int MaxRange = 0
 
 	method Initialize()
 	{
@@ -171,8 +174,6 @@ objectdef obj_Offense
 					{
 						do
 						{
-							variable int MinRange = 0
-							variable int MaxRange = 0
 							variable bool ChargeExists = FALSE
 							if ${itrWeapon.Value.Charge(exists)}
 							{
@@ -187,8 +188,8 @@ objectdef obj_Offense
 							if ${LastTurretTypeID} == 0 || ${LastTurretTypeID} != ${itrWeapon.Value.ToItem.TypeID}
 							{
 								LastTurretTypeID:Set[${itrWeapon.Value.ToItem.TypeID}]
-								MinRange:Set[${Ship.MinimumTurretRange[${itrWeapon.Key}]}]
-								MaxRange:Set[${Ship.MaximumTurretRange[${itrWeapon.Key}]}]
+								This.MinRange:Set[${Ship.MinimumTurretRange[${itrWeapon.Key}]}]
+								This.MaxRange:Set[${Ship.MaximumTurretRange[${itrWeapon.Key}]}]
 							}
 							
 							
@@ -221,11 +222,11 @@ objectdef obj_Offense
 								;Account for some falloff in our ammo checks. EFT shows we can maintain about 75% of our dps
 								;at about 1.5* our range, so assume skills suck and we're going for 1.3. The only real problem
 								;with overshooting is tracking speed, and we need some sort of entity.rad/s member to check that.
-								UI:UpdateConsole["Offense: Turret ${itrWeapon.Key}: IsActive? ${itrWeapon.Value.IsActive}, Distance? ${Me.ActiveTarget.Distance}, Min? ${Math.Calc[${MinRange} * 0.5]}, Max? ${Math.Calc[${MaxRange} * 1.3]}",LOG_DEBUG]
+								UI:UpdateConsole["Offense: Turret ${itrWeapon.Key}: IsActive? ${itrWeapon.Value.IsActive}, Distance? ${Me.ActiveTarget.Distance}, Min? ${Math.Calc[${This.MinRange} * 0.5]}, Max? ${Math.Calc[${This.MaxRange} * 1.3]}",LOG_DEBUG]
 								if ${itrWeapon.Value.IsActive}
 								{
-									if ${Me.ActiveTarget.Distance} > ${Math.Calc[${MaxRange} * 1.3]} || \
-										${Me.ActiveTarget.Distance} < ${Math.Calc[${MinRange} * 0.5]}
+									if ${Me.ActiveTarget.Distance} > ${Math.Calc[${This.MaxRange} * 1.3]} || \
+										${Me.ActiveTarget.Distance} < ${Math.Calc[${This.MinRange} * 0.5]}
 									{
 										UI:UpdateConsole["Offense: Turret ${itrWeapon.Key}: Turret on but we're either below or above range, deactivating",LOG_DEBUG]
 										itrWeapon.Value:Click
@@ -234,8 +235,8 @@ objectdef obj_Offense
 								}
 								else
 								{
-									if ${Me.ActiveTarget.Distance} <= ${Math.Calc[${MaxRange} * 1.3]} && \
-										${Me.ActiveTarget.Distance} >= ${Math.Calc[${MinRange} * 0.5]}
+									if ${Me.ActiveTarget.Distance} <= ${Math.Calc[${This.MaxRange} * 1.3]} && \
+										${Me.ActiveTarget.Distance} >= ${Math.Calc[${This.MinRange} * 0.5]}
 									{
 										UI:UpdateConsole["Offense: Turret ${itrWeapon.Key}: Turret off but we're within range, activating",LOG_DEBUG]
 										itrWeapon.Value:Click
