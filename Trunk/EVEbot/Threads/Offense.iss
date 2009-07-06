@@ -23,6 +23,7 @@ objectdef obj_Offense
 	variable collection:bool TurretNeedsAmmo
 	variable index:module LauncherIndex
 	variable index:module TurretIndex
+	variable int LastTurretTypeID
 
 	method Initialize()
 	{
@@ -183,8 +184,13 @@ objectdef obj_Offense
 								continue
 							}
 							
-							MinRange:Set[${Ship.MinimumTurretRange[${itrWeapon.Key}]}]
-							MaxRange:Set[${Ship.MaximumTurretRange[${itrWeapon.Key}]}]
+							if ${LastTurretTypeID} == 0 || ${LastTurretTypeID} != ${itrWeapon.Value.ToItem.TypeID}
+							{
+								LastTurretTypeID:Set[${itrWeapon.Value.ToItem.TypeID}]
+								MinRange:Set[${Ship.MinimumTurretRange[${itrWeapon.Key}]}]
+								MaxRange:Set[${Ship.MaximumTurretRange[${itrWeapon.Key}]}]
+							}
+							
 							
 							;Awesome, our guns are ready for ammo checks. Does our gun need an ammo change?
 							if ${This.TurretNeedsAmmo.Element[${itrWeapon.Key}]}
