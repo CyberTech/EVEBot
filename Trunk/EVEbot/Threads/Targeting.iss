@@ -155,7 +155,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 #endif
 		if !${Entity[${EntityID}].IsLockedTarget} && !${Entity[${EntityID}].BeingTargeted} && ${Entity[${EntityID}].Name.NotEqual[NULL]}
 		{
-			UI:UpdateConsole["Locking ${Entity[${EntityID}].Name} (${EntityID}): ${EVEBot.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"]
+			UI:UpdateConsole["Locking ${Entity[${EntityID}].Name} (${EntityID}): ${EVEBot.MetersToKM_Str[${Entity[${EntityID}].Distance}]}"]
 			Entity[${EntityID}]:LockTarget
 			This.TargetingThisFrame:Inc
 		}
