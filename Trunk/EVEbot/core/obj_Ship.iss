@@ -107,6 +107,7 @@ objectdef obj_Ship
 	variable index:module ModuleList_StasisWeb
 	variable index:module ModuleList_SensorBoost
 	variable index:module ModuleList_TargetPainter
+	variable index:module ModuleList_ECCM
 	variable bool Repairing_Armor = FALSE
 	variable bool Repairing_Hull = FALSE
 	variable float m_MaxTargetRange
@@ -701,7 +702,8 @@ objectdef obj_Ship
 	{
 		variable string slot = ${This.TurretSlots.Element[${turret}]}
 		variable float BaseOptimal = 0
-				
+		
+		
 		switch ${MyShip.Module[${slot}].Charge.GroupID}
 		{
 			case GROUP_AMMO
@@ -744,6 +746,11 @@ objectdef obj_Ship
 	
 	member:float GetTurretBaseOptimal(int turret, string ChargeType)
 	{
+		if ${This.TurretBaseOptimals.Element[${turret}](exists)}
+		{
+			return ${This.TurretBaseOptimals.Element[${turret}](exists)}
+		}
+		
 		variable string slot = ${This.TurretSlots[${turret}]}
 		variable index:item idxAmmo
 		variable iterator itrAmmo
@@ -778,6 +785,7 @@ objectdef obj_Ship
 			UI:UpdateConsole["obj_Ship.GetTurretBaseOptimal(${turret}): Turret's base optimal: ${fBaseOptimal}.",LOG_DEBUG]
 		}
 		UI:UpdateConsole["obj_Ship.GetTurretBaseOptimal(${turret}): Returning calculated base optimal: ${fBaseOptimal}",LOG_DEBUG]
+		This.TurretBaseOptimals:Set[${turret},${fBaseOptimal}]
 		return ${fBaseOptimal}
 	}
 
@@ -1093,6 +1101,7 @@ objectdef obj_Ship
 		This.ModuleList_StasisWeb:Clear
 		This.ModuleList_SensorBoost:Clear
 		This.ModuleList_TargetPainter:Clear
+		This.ModuleList_ECCM:Clear
 
 		MyShip:DoGetModules[This.ModuleList]
 
@@ -1132,6 +1141,9 @@ objectdef obj_Ship
 
 			switch ${GroupID}
 			{
+				case GROUP_ECCM
+					This.ModuleList_ECCM:Insert[${Module.Value}]
+					continue
 				case GROUPID_DAMAGE_CONTROL
 				case GROUPID_SHIELD_HARDENER
 				case GROUPID_ARMOR_HARDENERS
@@ -1203,6 +1215,17 @@ objectdef obj_Ship
 		}
 		while ${Module:Next(exists)}
 
+		UI:UpdateConsole["ECCM:",LOG_MINOR,2]
+		This.ModuleList_ECCM:GetIterator[Module]
+		if ${Module:First(exists)}
+		{
+			do
+			{
+				UI:UpdateConsole["	Slot: ${Module.Value.ToItem.Slot} ${Module.Value.ToItem.Name}",LOG_MINOR,4]
+			}
+			while ${Module:Next(exists)}
+		}
+		
 		UI:UpdateConsole["Active Resistance Modules:", LOG_MINOR, 2]
 		This.ModuleList_ActiveResists:GetIterator[Module]
 		if ${Module:First(exists)}
@@ -2281,6 +2304,7 @@ objectdef obj_Ship
 	Define_ModuleMethod(Activate_Cloak, Deactivate_Cloak, This.ModuleList_Cloaks, TRUE)
 	Define_ModuleMethod(Activate_Tractor, Deactivate_Tractor, This.ModuleList_TractorBeams, TRUE)
 	Define_ModuleMethod(Activate_Weapons, Deactivate_Weapons, This.ModuleList_Weapon, FALSE)
+	Define_ModuleMethod(Activate_ECCM, Deactivate_ECCM, This.ModuleList_ECCM, FALSE)
 
 	member:bool IsCloaked()
 	{

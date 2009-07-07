@@ -341,10 +341,12 @@ objectdef obj_Defense
 		if ${This.TargetingMe.Used} > 0 || ${_MyShip.ShieldPct} < 99
 		{
 			Ship:Activate_Hardeners[]
+			Ship:Activate_ECCM[]
 		}
 		else
 		{
 			Ship:Deactivate_Hardeners[]
+			Ship:Deactivate_ECCM[]
 		}
 	}
 }
