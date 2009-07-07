@@ -333,7 +333,7 @@ objectdef obj_Ship
 									{
 										This.TurretMinimumRanges:Set[${Weapon.Key}]
 									}
-									This.TurretMinimumRanges.Element[${Weapon.Key}]:Set[${LookupIterator.Key},${Math.Calc[${BaseOptimal} * ${LookupIterator.Value} * 0.5]}]
+									This.TurretMinimumRanges.Element[${Weapon.Key}]:Set[${LookupIterator.Key},${Math.Calc[${BaseOptimal} * ${LookupIterator.Value} * 0.40]}]
 									if !${This.TurretMaximumRanges.Element[${Weapon.Key}](exists)}
 									{
 										This.TurretMaximumRanges:Set[${Weapon.Key}]
