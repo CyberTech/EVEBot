@@ -416,7 +416,8 @@ objectdef obj_Ratter
 				${Targets.IsSpecialTarget[${RatCache.EntityIterator.Value.Name}]} || \
 				${RatCache.EntityIterator.Value.Group.Find["Battleship"](exists)} || \
 				${Targeting.IsQueued[${RatCache.EntityIterator.Value.ID}]} || ${Targeting.IsMandatoryQueued[${RatCache.EntityIterator.Value.ID}]} || \
-				(!${This.IsDoNotKill[${RatCache.EntityIterator.Value.ID}]} && ${HaveMultipleTypes}))
+				(!${This.IsDoNotKill[${RatCache.EntityIterator.Value.ID}]} && ${HaveMultipleTypes})) || \
+				!${Config.Combat.ChainSpawns}
 				{
 					return TRUE
 				}
