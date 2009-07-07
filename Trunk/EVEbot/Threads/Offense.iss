@@ -17,7 +17,7 @@ objectdef obj_Offense
 	variable time NextPulse
 	variable time NextAmmoCheck
 	variable int PulseIntervalInSeconds = 1
-	variable int AmmoCheckIntervalInSeconds = 5
+	variable int AmmoCheckIntervalInSeconds = 10
 	variable bool Warned_LowAmmo = FALSE
 	variable iterator itrWeapon
 	variable collection:bool TurretNeedsAmmo
@@ -101,7 +101,6 @@ objectdef obj_Offense
 
 	method TakeOffensiveAction()
 	{
-		variable int tempInt = 0
 		if ${Me.ActiveTarget(exists)} && !${Me.ActiveTarget.IsPC}
 		{
 			if !${This.IsConcordTarget[${Me.ActiveTarget.GroupID}]}
@@ -157,52 +156,48 @@ objectdef obj_Offense
 				
 				if ${TurretIndex.Used} > 0
 				{
+					variable int idx
+					variable string slot
 					This.LastTurretTypeID:Set[0]
 					This.LastChargeTypeID:Set[0]
+					
 					; iterate through every turret and determine if it needs an ammo change.
-					TurretIndex:GetIterator[itrWeapon]
 					if ${Time.Timestamp} >= ${This.NextAmmoCheck.Timestamp}
 					{
-						if ${itrWeapon:First(exists)}
+						variable int tempInt = -1
+						for ( idx:Set[1]; ${idx} <= ${TurretIndex.Used}; idx:Inc )
 						{
-							tempInt:Set[${itrWeapon.Key}]
-							tempInt:Dec[2]
-							do
+							slot:Set[${Ship.TurretSlots.Element[${idx}]}]
+							tempInt:Inc
+							
+							if ${MyShip.Module[${slot}].ToItem.TypeID} == ${This.LastTurretTypeID} && \
+								${MyShip.Module[${slot}].Charge.TypeID} == ${This.LastChargeTypeID}
 							{
-								tempInt:Inc
-								UI:UpdateConsole["Offense: itrWeapon.Value.ToItem.TypeID: ${itrWeapon.Value.ToItem.TypeID}, LastTurretTypeID: ${LastTurretTypeID}",LOG_DEBUG]
-								if ${itrWeapon.Value.ToItem.TypeID} == ${This.LastTurretTypeID} && \
-									${itrWeapon.Value.Charge.TypeID} == ${This.LastChargeTypeID}
+								;if the previous turret needed ammo...
+								if ${This.TurretNeedsAmmo.Element[${tempInt}]} == TRUE
 								{
-									;if the previous turret needed ammo...
-									UI:UpdateConsole["Offense: turret: ${itrWeapon.Key}, This.TurretNeedsAmmo.Element[${tempInt}]: ${This.TurretNeedsAmmo.Element[${tempInt}]}",LOG_DEBUG]
-									if ${This.TurretNeedsAmmo.Element[${tempInt}]} == TRUE
-									{
-										
-										;this one probably does too
-										This.TurretNeedsAmmo:Set[${itrWeapon.Key},TRUE]
-									}
-									else
-									{
-										;if it didn't, we probably don't either.
-										This.TurretNeedsAmmo:Set[${itrWeapon.Key},FALSE]
-									}
+									;this one probably does too
+									This.TurretNeedsAmmo:Set[${idx},TRUE]
 								}
 								else
 								{
-									This.LastTurretTypeID:Set[${itrWeapon.Value.ToItem.TypeID}]
-									This.LastChargeTypeID:Set[${itrWeapon.Value.Charge.TypeID}]
-									if ${Ship.NeedAmmoChange[${Me.ActiveTarget.Distance},${itrWeapon.Key}]}
-									{
-										This.TurretNeedsAmmo:Set[${itrWeapon.Key},TRUE]
-									}
-									else
-									{
-										This.TurretNeedsAmmo:Set[${itrWeapon.Key},FALSE]
-									}
+									;if it didn't, we probably don't either.
+									This.TurretNeedsAmmo:Set[${idx},FALSE]
 								}
 							}
-							while ${itrWeapon:Next(exists)}
+							else
+							{
+								This.LastTurretTypeID:Set[${MyShip.Module[${slot}].ToItem.TypeID}]
+								This.LastChargeTypeID:Set[${MyShip.Module[${slot}].Charge.TypeID}]
+								if ${Ship.NeedAmmoChange[${Me.ActiveTarget.Distance},${idx}]}
+								{
+									This.TurretNeedsAmmo:Set[${idx},TRUE]
+								}
+								else
+								{
+									This.TurretNeedsAmmo:Set[${idx},FALSE]
+								}
+							}
 						}
 						This.LastTurretTypeID:Set[0]
 						This.LastChargeTypeID:Set[0]
@@ -211,85 +206,78 @@ objectdef obj_Offense
 						This.NextAmmoCheck:Update
 					}
 
-					
-					if ${itrWeapon:First(exists)}
+					for ( idx:Set[1]; ${idx} <= ${TurretIndex.Used}; idx:Inc )
 					{
-						do
+						slot:Set[${Ship.TurretSlots.Element[${idx}]}]
+						variable bool ChargeExists = FALSE
+						if ${MyShip.Module[${slot}].Charge(exists)}
 						{
-							variable bool ChargeExists = FALSE
-							if ${itrWeapon.Value.Charge(exists)}
+							ChargeExists:Set[TRUE]
+						}
+						;If a module's reloading, or changing ammo, continue on.
+						if ${MyShip.Module[${slot}].IsChangingAmmo} || ${MyShip.Module[${slot}].IsReloadingAmmo} || !${ChargeExists}
+						{
+							This.TurretNeedsAmmo:Set[${idx},FALSE]
+							continue
+						}
+						
+						;Awesome, our guns are ready for ammo checks. Does our gun need an ammo change?
+						if ${This.TurretNeedsAmmo.Element[${idx}]}
+						{
+							;ok, if our Turret needs ammo change, make sure IT IS OFF.
+							;We can't change ammo 'til it's inactive so just continue after deactivating.
+							if ${MyShip.Module[${slot}].IsActive}
 							{
-								ChargeExists:Set[TRUE]
+								UI:UpdateConsole["Offense: Turret ${idx}: active during ammo change, deactivating and continuing.",LOG_DEBUG]
+								MyShip.Module[${slot}]:Click
 							}
-							;If a module's reloading, or changing ammo, continue on.
-							if ${itrWeapon.Value.IsChangingAmmo} || ${itrWeapon.Value.IsReloadingAmmo} || !${ChargeExists}
+							else
 							{
-								continue
+								;If the weapon's off, go ahead and change ammo.
+								UI:UpdateConsole["Offense: Turret ${idx}: Loading optimal ammo and breaking. Active? ${MyShip.Module[${slot}].IsActive}",LOG_DEBUG]
+								Ship:LoadOptimalAmmo[${Me.ActiveTarget.Distance},${idx}]
+								This.TurretNeedsAmmo:Set[${itrWeapon.Key},FALSE]
+								;Break after loading a turret's ammo, because chaging too much ammo too fast will REALLY fuck things up and make ammo disappear
+								break
 							}
-							
+						}
+						else
+						{
 							if ${This.LastTurretTypeID} == 0 || ${This.LastTurretTypeID} != ${itrWeapon.Value.ToItem.TypeID} || \
 								${This.LastChargeTypeID} == 0 || ${This.LastChargeTypeID} != ${itrWeapon.Value.ToItem.TypeID}
 							{
-								This.LastTurretTypeID:Set[${itrWeapon.Value.ToItem.TypeID}]
-								This.LastTurretTypeID:Set[${itrWeapon.Value.Charge.TypeID}]
-								This.MinRange:Set[${Ship.MinimumTurretRange[${itrWeapon.Key}]}]
-								This.MaxRange:Set[${Ship.MaximumTurretRange[${itrWeapon.Key}]}]
+								This.LastTurretTypeID:Set[${MyShip.Module[${slot}].ToItem.TypeID}]
+								This.LastTurretTypeID:Set[${MyShip.Module[${slot}].Charge.TypeID}]
+								This.MinRange:Set[${Ship.MinimumTurretRange[${idx}]}]
+								This.MaxRange:Set[${Ship.MaximumTurretRange[${idx}]}]
 							}
 							
-							;Awesome, our guns are ready for ammo checks. Does our gun need an ammo change?
-							UI:UpdateConsole["Offense: Turret ${itrWeapon.Key} Needs Ammo: ${This.TurretNeedsAmmo.Element[${itrWeapon.Key}]}",LOG_DEBUG]
-							if ${This.TurretNeedsAmmo.Element[${itrWeapon.Key}]}
+							;If we didn't need an ammo change, check if we need to activate or deactivate the weapon.
+							;Account for some falloff in our ammo checks. EFT shows we can maintain about 75% of our dps
+							;at about 1.5* our range, so assume skills suck and we're going for 1.3. The only real problem
+							;with overshooting is tracking speed, and we need some sort of entity.rad/s member to check that.
+							UI:UpdateConsole["Offense: Turret ${idx}: IsActive? ${MyShip.Module[${slot}].IsActive}, Distance? ${Me.ActiveTarget.Distance}, Min? ${Math.Calc[${This.MinRange}]}, Max? ${Math.Calc[${This.MaxRange}]}",LOG_DEBUG]
+							if ${MyShip.Module[${slot}].IsActive}
 							{
-								UI:UpdateConsole["Offense: Turret ${itrWeapon.Key}: need ammo change.",LOG_DEBUG]
-								;ok, if our Turret needs ammo change, make sure IT IS OFF.
-								;We can't change ammo 'til it's inactive so just continue after deactivating.
-								if ${itrWeapon.Value.IsActive}
+								if ${Me.ActiveTarget.Distance} > ${This.MaxRange} || \
+									${Me.ActiveTarget.Distance} < ${This.MinRange}
 								{
-									UI:UpdateConsole["Offense: Turret ${itrWeapon.Key}: active during ammo change, deactivating and continuing.",LOG_DEBUG]
-									itrWeapon.Value:Click
-									;continue
-								}
-								else
-								{
-									;If the weapon's off, go ahead and change ammo.
-									UI:UpdateConsole["Offense: Turret ${itrWeapon.Key}: Loading optimal ammo and breaking.",LOG_DEBUG]
-									Ship:LoadOptimalAmmo[${Me.ActiveTarget.Distance},${itrWeapon.Key}]
-									This.TurretNeedsAmmo:Set[${itrWeapon.Key},FALSE]
-									;Break after loading a turret's ammo, because chaging too much ammo too fast will REALLY fuck things up and make ammo disappear
+									UI:UpdateConsole["Offense: Turret ${idx}: Turret on but we're either below or above range, deactivating",LOG_DEBUG]
+									MyShip.Module[${slot}]:Click
 									break
 								}
 							}
 							else
 							{
-								UI:UpdateConsole["Offense: Turret ${itrWeapon.Key}: Didn't need ammo change.",LOG_DEBUG]
-								;If we didn't need an ammo change, check if we need to activate or deactivate the weapon.
-								;Account for some falloff in our ammo checks. EFT shows we can maintain about 75% of our dps
-								;at about 1.5* our range, so assume skills suck and we're going for 1.3. The only real problem
-								;with overshooting is tracking speed, and we need some sort of entity.rad/s member to check that.
-								UI:UpdateConsole["Offense: Turret ${itrWeapon.Key}: IsActive? ${itrWeapon.Value.IsActive}, Distance? ${Me.ActiveTarget.Distance}, Min? ${Math.Calc[${This.MinRange} * 0.5]}, Max? ${Math.Calc[${This.MaxRange} * 1.3]}",LOG_DEBUG]
-								if ${itrWeapon.Value.IsActive}
+								if ${Me.ActiveTarget.Distance} <= ${This.MaxRange} && \
+									${Me.ActiveTarget.Distance} >= ${This.MinRange}
 								{
-									if ${Me.ActiveTarget.Distance} > ${Math.Calc[${This.MaxRange} * 1.3]} || \
-										${Me.ActiveTarget.Distance} < ${Math.Calc[${This.MinRange} * 0.5]}
-									{
-										UI:UpdateConsole["Offense: Turret ${itrWeapon.Key}: Turret on but we're either below or above range, deactivating",LOG_DEBUG]
-										itrWeapon.Value:Click
-										break
-									}
-								}
-								else
-								{
-									if ${Me.ActiveTarget.Distance} <= ${Math.Calc[${This.MaxRange} * 1.3]} && \
-										${Me.ActiveTarget.Distance} >= ${Math.Calc[${This.MinRange} * 0.5]}
-									{
-										UI:UpdateConsole["Offense: Turret ${itrWeapon.Key}: Turret off but we're within range, activating",LOG_DEBUG]
-										itrWeapon.Value:Click
-										break
-									}
+									UI:UpdateConsole["Offense: Turret ${idx}: Turret off but we're within range, activating",LOG_DEBUG]
+									MyShip.Module[${slot}]:Click
+									break
 								}
 							}
 						}
-						while ${itrWeapon:Next(exists)}
 					}
 				}
 
