@@ -107,6 +107,7 @@ objectdef obj_Ship
 	variable index:module ModuleList_StasisWeb
 	variable index:module ModuleList_SensorBoost
 	variable index:module ModuleList_TargetPainter
+	variable index:module ModuleList_WeaponEnhance
 	variable index:module ModuleList_ECCM
 	variable bool Repairing_Armor = FALSE
 	variable bool Repairing_Hull = FALSE
@@ -841,8 +842,8 @@ objectdef obj_Ship
 	Return a string designating the best ammo type at a given range for a given turret. */
 	member:string GetBestAmmoTypeByRange(float range, int turret, string ChargeType)
 	{
-		UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range},${turret},${ChargeType}): called",LOG_DEBUG]
 		variable string slot = ${This.TurretSlots[${turret}]}
+		UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range},${turret},${ChargeType}): called, slot ${slot}",LOG_DEBUG]
 		
 		variable index:item idxAmmo
 		variable iterator itrAmmo
@@ -854,9 +855,9 @@ objectdef obj_Ship
 		variable iterator itrFrequencyPairs
 		variable iterator itrHybridPairs
 		variable iterator itrAmmoPairs
-		FrequencyNameModPairs:GetIterator[itrFrequencyPairs]
+		FrequencyLookupTable:GetIterator[itrFrequencyPairs]
 		HybridLookupTable:GetIterator[itrHybridPairs]
-		AmmoNameModPairs:GetIterator[itrAmmoPairs]
+		AmmoLookupTable:GetIterator[itrAmmoPairs]
 		
 		variable float fOldDelta = 0
 		variable float fNewDelta = 0
@@ -1102,6 +1103,7 @@ objectdef obj_Ship
 		This.ModuleList_SensorBoost:Clear
 		This.ModuleList_TargetPainter:Clear
 		This.ModuleList_ECCM:Clear
+		This.ModuleList_WeaponEnhance:Clear
 
 		MyShip:DoGetModules[This.ModuleList]
 
@@ -1143,6 +1145,9 @@ objectdef obj_Ship
 			{
 				case GROUP_ECCM
 					This.ModuleList_ECCM:Insert[${Module.Value}]
+					continue
+				case GROUP_TRACKINGCOMPUTER
+					This.ModuleList_WeaponEnhance:Insert[${Module.Value}]
 					continue
 				case GROUPID_DAMAGE_CONTROL
 				case GROUPID_SHIELD_HARDENER
@@ -1214,6 +1219,17 @@ objectdef obj_Ship
 			UI:UpdateConsole["Slot: ${Module.Value.ToItem.Slot} ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
 		while ${Module:Next(exists)}
+
+		UI:UpdateConsole["Weapon Enhance:",LOG_MINOR,2]
+		This.ModuleList_WeaponEnhance:GetIterator[Module]
+		if ${Module:First(exists)}
+		{
+			do
+			{
+				UI:UpdateConsole["	Slot: ${Module.Value.ToItem.Slot} ${Module.Value.ToItem.Name}",LOG_MINOR,4]
+			}
+			while ${Module:Next(exists)}
+		}
 
 		UI:UpdateConsole["ECCM:",LOG_MINOR,2]
 		This.ModuleList_ECCM:GetIterator[Module]
@@ -2305,6 +2321,7 @@ objectdef obj_Ship
 	Define_ModuleMethod(Activate_Tractor, Deactivate_Tractor, This.ModuleList_TractorBeams, TRUE)
 	Define_ModuleMethod(Activate_Weapons, Deactivate_Weapons, This.ModuleList_Weapon, FALSE)
 	Define_ModuleMethod(Activate_ECCM, Deactivate_ECCM, This.ModuleList_ECCM, FALSE)
+	Define_ModuleMethod(Activate_WeaponEnhance, Deactivate_WeaponEnhance, This.ModuleList_WeaponEnhance, FALSE)
 
 	member:bool IsCloaked()
 	{
