@@ -130,6 +130,10 @@ objectdef obj_Ship
 	variable bool LookupTableBuilt = FALSE
 	variable collection:string TurretSlots
 
+	;Change these to change min/maxrange mod.
+	variable float TurretMinRangeMod = 0.4
+	variable float TurretMaxRangeMod = 1.3
+
 	variable obj_Drones Drones
 
 	method Initialize()
@@ -333,7 +337,7 @@ objectdef obj_Ship
 									{
 										This.TurretMinimumRanges:Set[${Weapon.Key}]
 									}
-									This.TurretMinimumRanges.Element[${Weapon.Key}]:Set[${LookupIterator.Key},${Math.Calc[${BaseOptimal} * ${LookupIterator.Value} * 0.40]}]
+									This.TurretMinimumRanges.Element[${Weapon.Key}]:Set[${LookupIterator.Key},${Math.Calc[${BaseOptimal} * ${LookupIterator.Value} * ${This.TurretMinRangeMod}]}]
 									if !${This.TurretMaximumRanges.Element[${Weapon.Key}](exists)}
 									{
 										This.TurretMaximumRanges:Set[${Weapon.Key}]
@@ -415,6 +419,11 @@ objectdef obj_Ship
 	{
 		variable string slot = ${This.TurretSlots.Element[${turret}]}
 		variable float MaximumRange = 0
+		
+		if !${MyShip.Module[${slot}].Charge(exists)}
+		{
+			return ${Math.Calc[${MyShip.Module[${slot}].OptimalRange} * ${This.TurretMaxRangeMod}]}
+		}
 		
 		switch ${MyShip.Module[${slot}].Charge.GroupID}
 		{
@@ -563,6 +572,11 @@ objectdef obj_Ship
 		variable string slot = ${This.TurretSlots.Element[${turret}]}
 		variable float MinimumRange = 0
 		
+		if !${MyShip.Module[${slot}].Charge(exists)}
+		{
+			return ${Math.Calc[${MyShip.Module[${slot}].OptimalRange} * ${This.TurretMinRangeMod}]}
+		}
+		
 		switch ${MyShip.Module[${slot}].Charge.GroupID}
 		{
 			case GROUP_AMMO
@@ -704,20 +718,13 @@ objectdef obj_Ship
 		variable string slot = ${This.TurretSlots.Element[${turret}]}
 		variable float BaseOptimal = 0
 		
-		
-		switch ${MyShip.Module[${slot}].Charge.GroupID}
+		switch ${MyShip.Module[${slot}].ToItem.GroupID}
 		{
-			case GROUP_AMMO
-			case GROUP_ADVANCEDAUTOCANNONAMMO
-			case GROUP_ADVANCEDARTILLERYAMMO
+			case GROUP_PROJECTILEWEAPON
 				return ${This.GetTurretBaseOptimal[${turret},Ammo]}
-			case GROUP_HYBRIDAMMO
-			case GROUP_ADVANCEDBLASTERAMMO
-			case GROUP_ADVANCEDRAILAMMO
+			case GROUP_HYBRIDWEAPON
 				return ${This.GetTurretBaseOptimal[${turret},Hybrid]}
-			case GROUP_FREQUENCYCRYSTAL
-			case GROUP_ADVANCEDBEAMLASERCRYSTAL
-			case GROUP_ADVANCEDPULSELASERCRYSTAL
+			case GROUP_ENERGYWEAPON
 				return ${This.GetTurretBaseOptimal[${turret},Frequency]}
 			case GROUP_MOON
 				;Figure out what the hell the correct one is since we've not yet cycled ammo
@@ -765,6 +772,11 @@ objectdef obj_Ship
 		FrequencyNameModPairs:GetIterator[itrFrequencyPairs]
 		HybridNameModPairs:GetIterator[itrHybridPairs]
 		AmmoNameModPairs:GetIterator[itrAmmoPairs]
+		
+		if !${MyShip.Module[${slot}].Charge(exists)}
+		{
+			fRangeMod:Set[${MyShip.Module[${slot}].OptimalRange}]
+		}
 			
 		if ${itr${ChargeType}Pairs:First(exists)}
 		{
@@ -798,19 +810,13 @@ objectdef obj_Ship
 		variable string slot = ${This.TurretSlots.Element[${turret}]}	
 		variable string BestAmmoType
 		
-		switch ${MyShip.Module[${slot}].Charge.GroupID}
+		switch ${MyShip.Module[${slot}].ToItem.GroupID}
 		{
-			case GROUP_AMMO
-			case GROUP_ADVANCEDAUTOCANNONAMMO
-			case GROUP_ADVANCEDARTILLERYAMMO
+			case GROUP_PROJECTILEWEAPON
 				return ${This.GetBestAmmoTypeByRange[${range},${turret},Ammo]}
-			case GROUP_HYBRIDAMMO
-			case GROUP_ADVANCEDBLASTERAMMO
-			case GROUP_ADVANCEDRAILAMMO
+			case GROUP_HYBRIDWEAPON
 				return ${This.GetBestAmmoTypeByRange[${range},${turret},Hybrid]}
-			case GROUP_FREQUENCYCRYSTAL
-			case GROUP_ADVANCEDBEAMLASERCRYSTAL
-			case GROUP_ADVANCEDPULSELASERCRYSTAL
+			case GROUP_ENERGYWEAPON
 				return ${This.GetBestAmmoTypeByRange[${range},${turret},Frequency]}
 			case GROUP_MOON
 				;Figure out what the hell the correct one is since we've not yet cycled ammo
