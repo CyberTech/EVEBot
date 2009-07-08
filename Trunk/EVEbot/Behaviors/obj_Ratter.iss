@@ -26,9 +26,6 @@ objectdef obj_Ratter
 	variable obj_Targets_Rats RatCalculator
 
 	variable bool bPlayerCheck
-	
-	;temp bool for determining whether or not we have priority targets
-	variable bool HavePriorityTarget = FALSE
 
 	method Initialize()
 	{
@@ -228,8 +225,6 @@ objectdef obj_Ratter
 		This will do pretty much nothing but queue targets. */
 	method QueueTargets()
 	{
-		;reset HavePriorityTarget
-		HavePriorityTarget:Set[FALSE]
 		/* Activate any sensor boosters */
 		Ship:Activate_SensorBoost
 
@@ -264,7 +259,6 @@ objectdef obj_Ratter
 				{
 					if ${Targeting.IsMandatoryQueued[${RatCache.EntityIterator.Value.ID}]}
 					{
-						HavePriorityTarget:Set[TRUE]
 						bHavePriorityTarget:Set[TRUE]
 					}
 					UI:UpdateConsole["obj_Ratter: ${RatCache.EntityIterator.Value.ID} is queued, concord, or DNK, skipping in priority target iteration.", LOG_DEBUG]
@@ -276,7 +270,6 @@ objectdef obj_Ratter
 				if ${Targets.IsPriorityTarget[${RatCache.EntityIterator.Value.Name}]}
 				{
 					UI:UpdateConsole["obj_Ratter: We have a priority target: ${RatCache.EntityIterator.Value.Name}."]
-					HavePriorityTarget:Set[TRUE]
 					bHavePriorityTarget:Set[TRUE]
 					/* 	method Queue(int EntityID, int Priority, int TargetType, bool Mandatory=FALSE, bool Blocker=FALSE) */
 					/* Queue it mandatory so we make sure it dies. */
@@ -291,10 +284,8 @@ objectdef obj_Ratter
 		/* If I'm chaining spawns and either I'm chaining solo or I'm not chaining solo but there are others here... */
 		/* I also only want to actually chain it if the calculated BS value is above our threshold */
 		if (${Config.Combat.ChainSpawns} || (${Config.Combat.ChainSolo} && ${EVE.LocalsCount} == 1)) && \
-			${iTotalBSValue} >= ${Config.Combat.MinChainBounty} || \
-			${HavePriorityTarget}
+			${iTotalBSValue} >= ${Config.Combat.MinChainBounty}
 		{
-			HavePriorityTarget:Set[FALSE]
 			/* Start iterating... */
 			if ${RatCache.EntityIterator:First(exists)}
 			{
@@ -378,14 +369,6 @@ objectdef obj_Ratter
 	return true if we have non-donotkill and non-concord npcs nearby and non-singletype */
 	member:bool NPCCheck()
 	{
-		;QueueTargets will set HavePriorityTarget true until we no longer have priority targets:
-		;Since this will be checked before that bool is reset, we can check it here, because we'll have queued
-		;non-priority targets and will stay to fight at the same tiem the bool is reset.
-		if ${HavePriorityTarget}
-		{
-			return TRUE
-		}
-		
 		RatCache.Entities:GetIterator[RatCache.EntityIterator]
 		variable bool HaveMultipleTypes = FALSE
 		variable int TempTypeID
