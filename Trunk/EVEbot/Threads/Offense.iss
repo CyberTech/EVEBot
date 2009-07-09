@@ -19,7 +19,6 @@ objectdef obj_Offense
 	variable int PulseIntervalInSeconds = 1
 	variable int AmmoCheckIntervalInSeconds = 10
 	variable bool Warned_LowAmmo = FALSE
-	variable iterator itrWeapon
 	variable collection:bool TurretNeedsAmmo
 	variable index:module LauncherIndex
 	variable index:module TurretIndex
@@ -114,58 +113,56 @@ objectdef obj_Offense
 				}
 
 				Ship:Activate_StasisWebs
-				Ship.ModuleList_TargetPainters:GetIterator[itrWeapon]
-				if ${This.itrWeapon:First(exists)}
+				Ship:Activate_WeaponEnhance
+				
+				variable iterator TargetPainter
+				Ship.ModuleList_TargetPainter:GetIterator[TargetPainter]
+				if ${TargetPainter:First(exists)}
 				{
 					do
 					{
-						echo "TARGET PAINTERS: ${This.itrWeapon.Value.ToItem.Name}"
-						if !${This.itrWeapon.Value.IsActive} && ${Me.ActiveTarget.Distance} < ${Math.Calc[${This.itrWeapon.Value.OptimalRange} * 2]}
+						if !${TargetPainter.Value.IsActive} && ${Me.ActiveTarget.Distance} < ${Math.Calc[${TargetPainter.Value.OptimalRange} * 2]}
 						{
-							This.itrWeapon.Value:Click
+							TargetPainter.Value:Click
+							break
 						}
 					}
-					while ${This.itrWeapon:Next(exists)}
+					while ${TargetPainter:Next(exists)}
 				}
-				Ship:Activate_TargetPainters
-				Ship:Activate_WeaponEnhance
 
 				if ${This.LauncherIndex.Used} > 0
 				{
+					variable iterator Launcher
+					This.LauncherIndex:GetIterator[Launcher]
 					if ${Me.ActiveTarget.Distance} < ${Ship.OptimalWeaponRange}
 					{
 						;Turn on any launchers that are within range, not active, not reloading, and not changing ammo, and that have ammo
-						This.LauncherIndex:GetIterator[This.itrWeapon]
-						
-						if ${This.itrWeapon:First(exists)}
+						if ${Launcher:First(exists)}
 						{
 							do
 							{
-								if !${This.itrWeapon.Value.IsActive} && !${This.itrWeapon.Value.IsReloadingAmmo} && !${This.itrWeapon.Value.IsChangingAmmo}
+								if !${Launcher.Value.IsActive} && !${Launcher.Value.IsReloadingAmmo} && !${Launcher.Value.IsChangingAmmo}
 								{
-									This.itrWeapon.Value:Click
+									Launcher.Value:Click
 									break
 								}
 							}
-							while ${This.itrWeapon:Next(exists)}
+							while ${Launcher:Next(exists)}
 						}
 					}
 					else
 					{
-						;Turn off any launchers that are on but not within range
-						This.LauncherIndex:GetIterator[This.itrWeapon]
-						
-						if ${This.itrWeapon:First(exists)}
+						if ${Launcher:First(exists)}
 						{
 							do
 							{
-								if ${This.itrWeapon.Value.IsActive}
+								if ${Launcher.Value.IsActive}
 								{
-									This.itrWeapon.Value:Click
-									return
+									Launcher.Value:Click
+									break
 								}
 							}
-							while ${This.itrWeapon:Next(exists)}
+							while ${Launcher:Next(exists)}
 						}
 					}
 				}
@@ -246,7 +243,7 @@ objectdef obj_Offense
 							{
 								UI:UpdateConsole["Offense: Turret ${idx}: active during ammo change, deactivating and continuing.",LOG_DEBUG]
 								MyShip.Module[${slot}]:Click
-								return
+								break
 							}
 							else
 							{
@@ -255,13 +252,13 @@ objectdef obj_Offense
 								Ship:LoadOptimalAmmo[${Me.ActiveTarget.Distance},${idx}]
 								This.TurretNeedsAmmo:Set[${idx},FALSE]
 								;Break after loading a turret's ammo, because chaging too much ammo too fast will REALLY fuck things up and make ammo disappear
-								return
+								break
 							}
 						}
 						else
 						{
-							if ${This.LastTurretTypeID} == 0 || ${This.LastTurretTypeID} != ${itrWeapon.Value.ToItem.TypeID} || \
-								${This.LastChargeTypeID} == 0 || ${This.LastChargeTypeID} != ${itrWeapon.Value.ToItem.TypeID}
+							if ${This.LastTurretTypeID} == 0 || ${This.LastTurretTypeID} != ${MyShip.Module[${slot}].ToItem.TypeID} || \
+								${This.LastChargeTypeID} == 0 || ${This.LastChargeTypeID} != ${MyShip.Module[${slot}].ToItem.TypeID}
 							{
 								This.LastTurretTypeID:Set[${MyShip.Module[${slot}].ToItem.TypeID}]
 								This.LastTurretTypeID:Set[${MyShip.Module[${slot}].Charge.TypeID}]
@@ -281,7 +278,7 @@ objectdef obj_Offense
 								{
 									UI:UpdateConsole["Offense: Turret ${idx}: Turret on but we're either below or above range, deactivating",LOG_DEBUG]
 									MyShip.Module[${slot}]:Click
-									return
+									break
 								}
 							}
 							else
@@ -291,7 +288,7 @@ objectdef obj_Offense
 								{
 									UI:UpdateConsole["Offense: Turret ${idx}: Turret off but we're within range, activating",LOG_DEBUG]
 									MyShip.Module[${slot}]:Click
-									return
+									break
 								}
 							}
 						}
