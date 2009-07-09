@@ -107,6 +107,11 @@ objectdef obj_Defense
 			{
 				UI:UpdateConsole["Warp scrambled, can't run", LOG_CRITICAL]
 			}
+			elseif ${_MyShip.CapacitorPct} < ${Config.Combat.MinimumCapPct} && ${Config.Combat.RunOnLowCap}
+			{
+				This:RunAway["Low Capacitor"]
+				return
+			}
 			else
 			{
 				This:RunAway["Defensive Status"]
@@ -144,8 +149,14 @@ objectdef obj_Defense
 			return
 		}
 
+		;Only return false if it wasn't because of low cap, cap recharges on dock
 		if !${Me.InSpace}
 		{
+			;Our cap recharges on docking.
+			if ${Config.Combat.RunOnLowCap} && ${This.HideReason.Equal["Low Capacitor"]}
+			{
+				return TRUE
+			}
 			return FALSE
 		}
 

@@ -129,6 +129,7 @@ objectdef obj_Ship
 	variable collection:collection:float TurretMaximumRanges
 	variable bool LookupTableBuilt = FALSE
 	variable collection:string TurretSlots
+	variable bool HaveTrackingEnhancer = FALSE
 
 	;Change these to change min/maxrange mod.
 	variable float TurretMinRangeMod = 0.4
@@ -163,6 +164,14 @@ objectdef obj_Ship
 					This:ValidateModuleTargets
 					if !${This.LookupTableBuilt}
 					{
+						;if we have Weapon Enhance modules, slightly lower min range and raise max range
+						if ${This.HaveTrackingEnhancer}
+						{
+							;Track 9.5% faster; 1/1.095=~0.91
+							This.TurretMinRangeMod:Set[${Math.Calc[${This.TurretMinRangeMod} * 0.91]}]
+							;+15% optimal range
+							This.TurretMaxRangeMod:Set[${Math.Calc[${This.TurretMaxRangeMod} * 1.15]}]
+						}
 						This:BuildLookupTables
 					}
 				}
@@ -1133,6 +1142,10 @@ objectdef obj_Ship
 
 			if !${Module.Value.IsActivatable}
 			{
+				if ${Module.Value.ToItem.GroupID} == GROUP_TRACKINGENHANCER
+				{
+					This.HaveTrackingEnhancer:Set[TRUE]
+				}
 				This.ModuleList_Passive:Insert[${Module.Value}]
 				continue
 			}

@@ -65,13 +65,13 @@ objectdef obj_Offense
 	Split ModuleList_Weapon into turrets and launchers so that the two may BOTH work at the same time. */
 	method BuildIndices()
 	{
-		Ship.ModuleList_Weapon:GetIterator[itrWeapon]
+		Ship.ModuleList_Weapon:GetIterator[This.itrWeapon]
 		
-		if ${itrWeapon:First(exists)}
+		if ${This.itrWeapon:First(exists)}
 		{
 			do
 			{
-				switch ${itrWeapon.Value.ToItem.GroupID}
+				switch ${This.itrWeapon.Value.ToItem.GroupID}
 				{
 					case GROUP_MISSILELAUNCHER
 					case GROUP_MISSILELAUNCHERASSAULT
@@ -83,19 +83,19 @@ objectdef obj_Offense
 					case GROUP_MISSILELAUNCHERROCKET
 					case GROUP_MISSILELAUNCHERSIEGE
 					case GROUP_MISSILELAUNCHERSTANDARD
-						LauncherIndex:Insert[${itrWeapon.Value}]
+						LauncherIndex:Insert[${This.itrWeapon.Value}]
 						break
 					case GROUP_HYBRIDWEAPON
 					case GROUP_PROJECTILEWEAPON
 					case GROUP_ENERGYWEAPON
-						TurretIndex:Insert[${itrWeapon.Value}]
+						TurretIndex:Insert[${This.itrWeapon.Value}]
 						break
 					default
-						UI:UpdateConsole["Offense:BuildIndices[]: Cannot insert ${itrWeapon.Value.ToItem.Name} ${itrWeapon.Value.ToItem.Group} ${itrWeapon.Value.ToItem.GroupID} - no matching case!",LOG_CRITICAL]
+						UI:UpdateConsole["Offense:BuildIndices[]: Cannot insert ${This.itrWeapon.Value.ToItem.Name} ${This.itrWeapon.Value.ToItem.Group} ${This.itrWeapon.Value.ToItem.GroupID} - no matching case!",LOG_CRITICAL]
 						break
 				}
 			}
-			while ${itrWeapon:Next(exists)}
+			while ${This.itrWeapon:Next(exists)}
 		}
 	}
 
@@ -113,48 +113,61 @@ objectdef obj_Offense
 				}
 
 				Ship:Activate_StasisWebs
+				Ship.ModuleList_TargetPainters:GetIterator[itrWeapon]
+				if ${This.itrWeapon:First(exists)}
+				{
+					do
+					{
+						if !${This.itrWeapon.Value.IsActive} && ${Me.ActiveTarget.Distance} < ${Math.Calc[${This.itrWeapon.Value.OptimalRange} * 2]}
+						{
+							This.itrWeapon.Value:Click
+						}
+					}
+					while ${This.itrWeapon:Next(exists)}
+				}
 				Ship:Activate_TargetPainters
+				Ship:Activate_WeaponEnhance
 
-				if ${LauncherIndex.Used} > 0
+				if ${This.LauncherIndex.Used} > 0
 				{
 					if ${Me.ActiveTarget.Distance} < ${Ship.OptimalWeaponRange}
 					{
 						;Turn on any launchers that are within range, not active, not reloading, and not changing ammo, and that have ammo
-						LauncherIndex:GetIterator[itrWeapon]
+						This.LauncherIndex:GetIterator[This.itrWeapon]
 						
-						if ${itrWeapon:First(exists)}
+						if ${This.itrWeapon:First(exists)}
 						{
 							do
 							{
-								if !${itrWeapon.Value.IsActive} && !${itrWeapon.Value.IsReloadingAmmo} && !${itrWeapon.Value.IsChangingAmmo}
+								if !${This.itrWeapon.Value.IsActive} && !${This.itrWeapon.Value.IsReloadingAmmo} && !${This.itrWeapon.Value.IsChangingAmmo}
 								{
-									itrWeapon.Value:Click
+									This.itrWeapon.Value:Click
 									break
 								}
 							}
-							while ${itrWeapon:Next(exists)}
+							while ${This.itrWeapon:Next(exists)}
 						}
 					}
 					else
 					{
 						;Turn off any launchers that are on but not within range
-						LauncherIndex:GetIterator[itrWeapon]
+						This.LauncherIndex:GetIterator[This.itrWeapon]
 						
-						if ${itrWeapon:First(exists)}
+						if ${This.itrWeapon:First(exists)}
 						{
 							do
 							{
-								if ${itrWeapon.Value.IsActive}
+								if ${This.itrWeapon.Value.IsActive}
 								{
-									itrWeapon.Value:Click
+									This.itrWeapon.Value:Click
 								}
 							}
-							while ${itrWeapon:Next(exists)}
+							while ${This.itrWeapon:Next(exists)}
 						}
 					}
 				}
 				
-				if ${TurretIndex.Used} > 0
+				if ${This.TurretIndex.Used} > 0
 				{
 					variable int idx
 					variable string slot
@@ -165,7 +178,7 @@ objectdef obj_Offense
 					if ${Time.Timestamp} >= ${This.NextAmmoCheck.Timestamp}
 					{
 						variable int tempInt = -1
-						for ( idx:Set[1]; ${idx} <= ${TurretIndex.Used}; idx:Inc )
+						for ( idx:Set[1]; ${idx} <= ${This.TurretIndex.Used}; idx:Inc )
 						{
 							slot:Set[${Ship.TurretSlots.Element[${idx}]}]
 							tempInt:Inc
@@ -320,6 +333,8 @@ objectdef obj_Offense
 		{
 			Ship:Deactivate_Weapons
 			Ship:Deactivate_StasisWebs
+			Ship:Deactivate_TargetPainters
+			Ship:Deactivate_WeaponEnhance
 		}
 	}
 	
