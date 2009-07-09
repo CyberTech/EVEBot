@@ -262,8 +262,8 @@ objectdef obj_Offense
 							{
 								This.LastTurretTypeID:Set[${MyShip.Module[${slot}].ToItem.TypeID}]
 								This.LastTurretTypeID:Set[${MyShip.Module[${slot}].Charge.TypeID}]
-								This.MinRange:Set[${Ship.MinimumTurretRange[${idx}]}]
-								This.MaxRange:Set[${Ship.MaximumTurretRange[${idx}]}]
+								This.MinRange:Set[${Ship.GetMinimumTurretRange[${idx}]}]
+								This.MaxRange:Set[${Ship.GetMaximumTurretRange[${idx}]}]
 							}
 							
 							;If we didn't need an ammo change, check if we need to activate or deactivate the weapon.
