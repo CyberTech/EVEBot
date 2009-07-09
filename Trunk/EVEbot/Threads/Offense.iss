@@ -65,13 +65,14 @@ objectdef obj_Offense
 	Split ModuleList_Weapon into turrets and launchers so that the two may BOTH work at the same time. */
 	method BuildIndices()
 	{
-		Ship.ModuleList_Weapon:GetIterator[This.itrWeapon]
+		variable iterator ModuleIterator
+		Ship.ModuleList_Weapon:GetIterator[ModuleIterator]
 		
-		if ${This.itrWeapon:First(exists)}
+		if ${ModuleIterator:First(exists)}
 		{
 			do
 			{
-				switch ${This.itrWeapon.Value.ToItem.GroupID}
+				switch ${ModuleIterator.Value.ToItem.GroupID}
 				{
 					case GROUP_MISSILELAUNCHER
 					case GROUP_MISSILELAUNCHERASSAULT
@@ -83,19 +84,19 @@ objectdef obj_Offense
 					case GROUP_MISSILELAUNCHERROCKET
 					case GROUP_MISSILELAUNCHERSIEGE
 					case GROUP_MISSILELAUNCHERSTANDARD
-						LauncherIndex:Insert[${This.itrWeapon.Value}]
+						LauncherIndex:Insert[${ModuleIterator.Value}]
 						break
 					case GROUP_HYBRIDWEAPON
 					case GROUP_PROJECTILEWEAPON
 					case GROUP_ENERGYWEAPON
-						TurretIndex:Insert[${This.itrWeapon.Value}]
+						TurretIndex:Insert[${ModuleIterator.Value}]
 						break
 					default
-						UI:UpdateConsole["Offense:BuildIndices[]: Cannot insert ${This.itrWeapon.Value.ToItem.Name} ${This.itrWeapon.Value.ToItem.Group} ${This.itrWeapon.Value.ToItem.GroupID} - no matching case!",LOG_CRITICAL]
+						UI:UpdateConsole["Offense:BuildIndices[]: Cannot insert ${ModuleIterator.Value.ToItem.Name} ${ModuleIterator.Value.ToItem.Group} ${ModuleIterator.Value.ToItem.GroupID} - no matching case!",LOG_CRITICAL]
 						break
 				}
 			}
-			while ${This.itrWeapon:Next(exists)}
+			while ${ModuleIterator:Next(exists)}
 		}
 	}
 
@@ -118,6 +119,7 @@ objectdef obj_Offense
 				{
 					do
 					{
+						echo "TARGET PAINTERS: ${This.itrWeapon.Value.ToItem.Name}"
 						if !${This.itrWeapon.Value.IsActive} && ${Me.ActiveTarget.Distance} < ${Math.Calc[${This.itrWeapon.Value.OptimalRange} * 2]}
 						{
 							This.itrWeapon.Value:Click
@@ -160,6 +162,7 @@ objectdef obj_Offense
 								if ${This.itrWeapon.Value.IsActive}
 								{
 									This.itrWeapon.Value:Click
+									return
 								}
 							}
 							while ${This.itrWeapon:Next(exists)}
@@ -243,15 +246,16 @@ objectdef obj_Offense
 							{
 								UI:UpdateConsole["Offense: Turret ${idx}: active during ammo change, deactivating and continuing.",LOG_DEBUG]
 								MyShip.Module[${slot}]:Click
+								return
 							}
 							else
 							{
 								;If the weapon's off, go ahead and change ammo.
 								UI:UpdateConsole["Offense: Turret ${idx}: Loading optimal ammo and breaking. Active? ${MyShip.Module[${slot}].IsActive}",LOG_DEBUG]
 								Ship:LoadOptimalAmmo[${Me.ActiveTarget.Distance},${idx}]
-								This.TurretNeedsAmmo:Set[${itrWeapon.Key},FALSE]
+								This.TurretNeedsAmmo:Set[${idx},FALSE]
 								;Break after loading a turret's ammo, because chaging too much ammo too fast will REALLY fuck things up and make ammo disappear
-								break
+								return
 							}
 						}
 						else
@@ -277,7 +281,7 @@ objectdef obj_Offense
 								{
 									UI:UpdateConsole["Offense: Turret ${idx}: Turret on but we're either below or above range, deactivating",LOG_DEBUG]
 									MyShip.Module[${slot}]:Click
-									break
+									return
 								}
 							}
 							else
@@ -287,7 +291,7 @@ objectdef obj_Offense
 								{
 									UI:UpdateConsole["Offense: Turret ${idx}: Turret off but we're within range, activating",LOG_DEBUG]
 									MyShip.Module[${slot}]:Click
-									break
+									return
 								}
 							}
 						}
