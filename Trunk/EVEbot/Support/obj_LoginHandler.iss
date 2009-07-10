@@ -98,9 +98,9 @@ objectdef obj_LoginHandler
 				}
 
 				Timer:Inc
-				waitframe
+				wait 10
 			}
-			while (${Timer} < 200)
+			while (${Timer} < 20)
 			UI:UpdateConsole["obj_Login:LoadExtension: Loading extension ${EXTNAME} timed out, retrying"]
 		}
 		while (!${${EXTNAME}(exists)})
