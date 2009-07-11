@@ -607,7 +607,7 @@ objectdef obj_MissionCommands
 					{
 						UI:UpdateConsole["DEBUG: obj_MissionCommands - attempting to kill ${targetName}",LOG_DEBUG]
 						This:PullTarget[${PullCache}]
-						if ${${This.AggroCount} > 0} && ${${EntityCache.EntityIterator.Value.Distance} < ${Config.Combat.MaxMissileRange}}
+						if ${This.AggroCount} > 0 && ${EntityCache.EntityIterator.Value.Distance} < ${Config.Combat.MaxMissileRange}
 						{
 							Targeting:UnlockRandomTarget[]
 							UI:UpdateConsole["DEBUG: obj_MissionCommands - we pulled something, success!",LOG_DEBUG]
