@@ -267,11 +267,12 @@ objectdef obj_MissionCommands
 
 	member:bool ClearRoom()
 	{
+		variable bool EntityInRange = FALSE
 		switch ${ClearRoomState}
 		{
 			case KILLING
 			{
-				variable bool EntityInRange = FALSE
+
 				;Use "entity" more, please --stealthy
 				;Seems like it doesn't check range until something is a
 				EntityCache.Entities:GetIterator[EntityCache.EntityIterator]
@@ -279,19 +280,22 @@ objectdef obj_MissionCommands
 				{
 					do
 					{
-						if ${Config.Combat.ShouldUseMissiles}
+						if ${EntityCache.EntityIterator.Value.IsTargetingMe}
 						{
-							if ${EntityCache.EntityIterator.Value.Distance} < ${Config.Combat.MaxMissileRange}
+							if ${Config.Combat.ShouldUseMissiles}
 							{
-								EntityInRange:Set[TRUE]
+								if ${EntityCache.EntityIterator.Value.Distance} < ${Config.Combat.MaxMissileRange}
+								{
+									EntityInRange:Set[TRUE]
+								}
 							}
-						}
-						else
-						{
-							;Todo: Dirty hack for gun users.
-							if ${EntityCache.EntityIterator.Value.Distance} < ${Ship.GetMinimumTurretRange[1]}
+							else
 							{
-								EntityInRange:Set[TRUE]
+								;Todo: Dirty hack for gun users.
+								if ${EntityCache.EntityIterator.Value.Distance} < ${Ship.GetMinimumTurretRange[1]}
+								{
+									EntityInRange:Set[TRUE]
+								}
 							}
 						}
 					}
@@ -313,7 +317,33 @@ objectdef obj_MissionCommands
 			{
 				if ${This.HostileCount} > 0
 				{
-					if ${This.AggroCount} > 0
+					EntityCache.Entities:GetIterator[EntityCache.EntityIterator]
+					if ${EntityCache.EntityIterator:First(exists)}
+					{
+						do
+						{
+							if ${EntityCache.EntityIterator.Value.IsTargetingMe}
+							{
+								if ${Config.Combat.ShouldUseMissiles}
+								{
+									if ${EntityCache.EntityIterator.Value.Distance} < ${Config.Combat.MaxMissileRange}
+									{
+										EntityInRange:Set[TRUE]
+									}
+								}
+								else
+								{
+									;Todo: Dirty hack for gun users.
+									if ${EntityCache.EntityIterator.Value.Distance} < ${Ship.GetMinimumTurretRange[1]}
+									{
+										EntityInRange:Set[TRUE]
+									}
+								}
+							}
+						}
+						while ${EntityCache.EntityIterator:Next(exists)}
+					}
+					if ${This.AggroCount} > 0 && EntityInRange
 					{
 						UI:UpdateConsole["DEBUG: obj_MissionCommands - ClearRoom got some aggro, switching to killing",LOG_DEBUG]
 						This.ClearRoomState:Set["KILLING"]
@@ -577,7 +607,7 @@ objectdef obj_MissionCommands
 					{
 						UI:UpdateConsole["DEBUG: obj_MissionCommands - attempting to kill ${targetName}",LOG_DEBUG]
 						This:PullTarget[${PullCache}]
-						if ${This.AggroCount} > 0
+						if ${${This.AggroCount} > 0} && ${${EntityCache.EntityIterator.Value.Distance} < ${Config.Combat.MaxMissileRange}}
 						{
 							Targeting:UnlockRandomTarget[]
 							UI:UpdateConsole["DEBUG: obj_MissionCommands - we pulled something, success!",LOG_DEBUG]
