@@ -343,7 +343,7 @@ objectdef obj_MissionCommands
 						}
 						while ${EntityCache.EntityIterator:Next(exists)}
 					}
-					if ${This.AggroCount} > 0 && EntityInRange
+					if ${This.AggroCount} > 0 && ${EntityInRange}
 					{
 						UI:UpdateConsole["DEBUG: obj_MissionCommands - ClearRoom got some aggro, switching to killing",LOG_DEBUG]
 						This.ClearRoomState:Set["KILLING"]
