@@ -32,10 +32,7 @@ objectdef obj_Ratter
 		Event[OnFrame]:AttachAtom[This:Pulse]
 
 		BotModules:Insert["Ratter"]
-
-		RatCache:SetUpdateFrequency[1]
 		RatCache:UpdateSearchParams["Unused","CategoryID,CATEGORYID_ENTITY,radius,100000"]
-
 		; Startup in fight mode, so that it checks current belt for rats, if we happen to be in one.
 		This.CurrentState:Set["FIGHT"]
 
@@ -47,8 +44,14 @@ objectdef obj_Ratter
 	{
 		if !${Config.Common.BotMode.Equal[Ratter]}
 		{
+			if ${RatCache.PulseIntervalInSeconds} == 1
+			{
+				RatCache:SetUpdateFrequency[600]
+			}
 			return
 		}
+		
+		RatCache:SetUpdateFrequency[1]
 
 	  if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{

@@ -25,10 +25,14 @@ objectdef obj_Defense
 	variable bool Hiding = FALSE
 	variable index:entity TargetingMe
 
+	variable obj_EntityCache DefenseCache
+
 	method Initialize()
 	{
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["Thread: obj_Defense: Initialized", LOG_MINOR]
+		DefenseCache:SetUpdateFrequency[9999]
+		DefenseCache:UpdateSearchParams["Unused","CategoryID,CATEGORYID_ENTITY,radius,60000"]
 	}
 
 	method Pulse()
@@ -42,6 +46,7 @@ objectdef obj_Defense
 		{
 			if ${EVEBot.SessionValid} && ${This.Running}
 			{
+				This:CheckWarpScramble
 				This:TakeDefensiveAction[]
 				This:CheckTankMinimums[]
 				This:CheckLocal[]
@@ -71,6 +76,39 @@ objectdef obj_Defense
 			This.NextPulse:Set[${Time.Timestamp}]
 			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
 			This.NextPulse:Update
+		}
+	}
+	
+	method CheckWarpScramble()
+	{
+		if ${_Me.IsWarpScrambled}
+		{
+			if ${DefenseCache.Entities.Used} == 0
+			{
+				DefenseCache:SetUpdateFrequency[1]
+			}
+			else
+			{
+				DefenseCache.Entities:GetIterator[DefenseCache.EntityIterator]
+				if ${DefenseCache.EntityIterator:First(exists)}
+				{
+					do
+					{
+						if !${Targeting.IsMandatoryQueued[${DefenseCache.EntityIterator.Value.ID}]} && \
+							${DefenseCache.EntityIterator.Value.IsWarpScramblingMe}
+						{
+							;method Queue(int EntityID, int Priority, int TargetType, bool Mandatory=FALSE, bool Blocker=FALSE)
+							UI:UpdateConsole["Defense: Targeting warp scrambling rat ${DefenseCache.EntityIterator.Value.Name} ${DefenseCache.EntityIterator.Value.TypeID}!",LOG_CRITICAL]
+							Targeting:Queue[${DefenseCache.EntityIterator.Value.ID},0,${DefenseCache.EntityIterator.Value.TypeID},TRUE]
+						}
+					}
+					while ${DefenseCache.EntityIterator:Next(exists)}
+				}
+			}
+		}
+		else
+		{
+			DefenseCache:SetUpdateFrequency[9999]
 		}
 	}
 

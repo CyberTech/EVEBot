@@ -2173,6 +2173,10 @@ objectdef obj_Ship
 	; Returns the highest weapon optimal range minus 10%
 	member:int OptimalWeaponRange()
 	{
+		if ${Ship.TurretMaximumRange[1]} > 0
+		{
+			return ${Ship.TurretMaximumRange[1]}
+		}
 		return ${Math.Calc[${Config.Combat.MaxMissileRange} * 0.95]}
 	}
 

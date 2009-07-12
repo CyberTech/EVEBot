@@ -355,6 +355,25 @@ objectdef obj_Drones
 			while ${ActiveDrone:Next(exists)}
 		}
 	}
+	
+	method QuickReturnAllToOrbit()
+	{
+		This:GetActiveDrones[]
+		This.ActiveDrones:GetIterator[This.ActiveDrone]
+		
+		if ${ActiveDrone:First(exists)}
+		{
+			do
+			{
+				if ${ActiveDrone.Value.State} == DRONESETATE_FIGHTING
+				{
+					UI:UpdateConsole["obj_Drones: Recalling ${ActiveDrone.Value.ID} to orbit."]
+					ActiveDrone.Value.ToEntity:ReturnAndOrbit
+				}
+			}
+			while ${ActiveDrone:Next(exists)}
+		}
+	}
 
 	function ReturnAllToDroneBay()
 	{

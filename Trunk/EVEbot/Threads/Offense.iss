@@ -327,6 +327,11 @@ objectdef obj_Offense
 							}
 						}
 					}
+					elseif ${Ship.Drones.DeployedDroneCount} > 0
+					{
+						UI:UpdateConsole["Offense: Active target is out of range but we have drones out; recalling to orbit."]
+						Ship.Drones:QuickReturnAllToOrbit
+					}
 				}
 			}
 		}
