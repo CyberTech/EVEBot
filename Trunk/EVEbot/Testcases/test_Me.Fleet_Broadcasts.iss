@@ -43,17 +43,19 @@ function main()
 		wait 10
 		Me.Fleet:Broadcast_JumpBeacon
 		wait 10
-		Me.Fleet:Broadcast_JumpTo[${Entity["Stargate"].ID}]
+		Me.Fleet:Broadcast_JumpTo[${Universe["Jita"].ID}]
 		wait 10
 		Me.Fleet:Broadcast_Location
 		wait 10
 		Me.Fleet:Broadcast_NeedBackup
 		wait 10
-		Me.Fleet:Broadcast_Target[${Entity["Stargate"].ID}]
+		Me.Fleet:Broadcast_Target[${Me.ToEntity.ID}]
 		wait 10
-		;Me.Fleet:Broadcast_TravelTo[${Entity["Stargate"].ID}]
-		;wait 10
+		Me.Fleet:Broadcast_TravelTo[${Universe["Jita"].ID}]
+		wait 10
 		Me.Fleet:Broadcast_WarpTo[${Entity["Stargate"].ID}]
+		wait 10
+		Me.Fleet:Broadcast_WarpTo[${Me.ToEntity.ID}]
 		wait 10
 
 		echo "${Script.Filename} Completed..."
