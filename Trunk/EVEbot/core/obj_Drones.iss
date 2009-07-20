@@ -365,7 +365,7 @@ objectdef obj_Drones
 		{
 			do
 			{
-				if ${ActiveDrone.Value.State} == DRONESETATE_FIGHTING
+				if ${ActiveDrone.Value.State} == DRONESTATE_FIGHTING
 				{
 					UI:UpdateConsole["obj_Drones: Recalling ${ActiveDrone.Value.ID} to orbit."]
 					ActiveDrone.Value.ToEntity:ReturnAndOrbit
