@@ -136,7 +136,7 @@ objectdef obj_MissionBlacklist
 				break
 		}
 
-		;;;UI:UpdateConsole["DEBUG: obj_MissionBlacklist: Searching for ${levelString} mission blacklist..."]
+		UI:UpdateConsole["DEBUG: obj_MissionBlacklist: Searching for ${levelString} mission blacklist...", LOG_DEBUG]
 
 		if ${This.levelIterator:First(exists)}
 		{
@@ -144,7 +144,7 @@ objectdef obj_MissionBlacklist
 			{
 				if ${levelString.Equal[${This.levelIterator.Key}]}
 				{
-					;;;UI:UpdateConsole["DEBUG: obj_MissionBlacklist: Searching ${levelString} mission blacklist for ${mission}..."]
+					UI:UpdateConsole["DEBUG: obj_MissionBlacklist: Searching ${levelString} mission blacklist for ${mission}...", LOG_DEBUG]
 
 					variable iterator missionIterator
 
@@ -155,7 +155,7 @@ objectdef obj_MissionBlacklist
 						{
 							if ${mission.Equal[${missionIterator.Key}]}
 							{
-								;;;UI:UpdateConsole["DEBUG: obj_MissionBlacklist: ${mission} is blacklisted!"]
+								UI:UpdateConsole["DEBUG: obj_MissionBlacklist: ${mission} is blacklisted!", LOG_DEBUG]
 								return TRUE
 							}
 						}
