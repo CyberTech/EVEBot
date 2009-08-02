@@ -18,6 +18,14 @@ Example use:
 <InnerSpaceSettings>
   <Set Name="Mission Database">
     <Set Name = "Rogue Drone Harassment">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="NextRoom" />
+    			<Set Name="4" Action="ClearRoom" />
+    		</Set>
+    	</Set>
       <Set Name = "2">
         <Set Name = "Commands">
           <Set Name = "1" Action = "NextRoom">
@@ -39,6 +47,14 @@ Example use:
       	</Set>
       </Set>
     </Set>
+    <Set Name="The Disgruntled Employee">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    		</Set>
+    	</Set>
+    </Set>
     <Set Name = "Customs Interdiction (1 of 2)">
       <Set Name ="2">
         <Set Name = "Commands">
@@ -56,6 +72,13 @@ Example use:
       </Set>
     </Set>
     <Set Name = "The Drone Infestation">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="Kill" Target="Drone Silo" />
+    		</Set>
+    	</Set>
       <Set Name ="2">
         <Set Name = "Commands">
           <Set Name = "1" Action = "NextRoom">
@@ -94,6 +117,21 @@ Example use:
           </Set>
         </Set>
       </Set>
+    </Set>
+    <Set Name="Freedom and Commerce">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    		</Set>
+    		<Set Name="AllowedShips">
+    			<Set Name="GROUP_FRIGATE" />
+    			<Set Name="GROUP_SHUTTLE" />
+    			<Set Name="GROUP_ROOKIESHIP" />
+    			<Set Name="GROUP_ASSAULTSHIP" />
+    			<Set Name="GROUP_DESTROYER" />
+    			<Set Name="GROUP_INTERCEPTOR" />
+    		</Set>
+    	</Set>
     </Set>
     <Set Name = "Technological Secrets (1 of 3)">
       <Set Name = "2">
@@ -173,7 +211,50 @@ Example use:
         </Set>
       </Set>
     </Set>
+    <Set Name="Patriotic Measures (1 of 5)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="Approach" Target="Caldari Research Outpost" Distance="10000" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Patriotic Measures (3 of 5)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    			<Set Name="2" Action="Kill" Target="Caldari Research Outpost" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Patriotic Measures (4 of 5)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    			<Set Name="2" Action="CheckContainers" Target="Scientist" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Patriotic Measures (5 of 5)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    			<Set Name="2" Action="NextRoom" />
+    			<Set Name="3" Action="ClearRoom" />
+    			<Set Name="4" Action="Kill" Target="Starbase Ion Field Projection Battery" />
+    			<Set Name="5" Action="Kill" Target="Starbase Ion Field Projection Battery" />
+    			<Set Name="6" Action="Kill" Target="Starbase Ion Field Projection Battery" />
+    			<Set Name="7" Action="NextRoom" />
+    			<Set Name="8" Action="Kill" Target="Prototype Macroshield Generator" />
+    		</Set>
+    	</Set>
+    </Set>
     <Set Name = "The Score">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    		</Set>
+    	</Set>
       <Set Name = "2">
         <Set Name = "Commands">
           <Set Name = "1" Action = "NextRoom">
@@ -248,6 +329,13 @@ Example use:
       </Set>
     </Set>
     <Set Name = "Avenge a Fallen Comrade">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="Kill" Target="Habitat" />
+    		</Set>
+    	</Set>
       <Set Name = "2">
         <Set Name = "Commands">
           <Set Name = "1" Action = "NextRoom" />
@@ -256,7 +344,78 @@ Example use:
         </Set>
       </Set>
     </Set>
+    <Set Name="Soft Drink Wars">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    			<Set Name="2" Action="NextRoom" />
+    			<Set Name="3" Action="ClearRoom" />
+    			<Set Name="4" Action="CheckContainers" Target="Quafe Unleashed Formula" GroupID="12" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Violent Expulsion">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="WaitAggro" Timeout="15" />
+    			<Set Name="2" Action="ClearRoom" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Furrier Fiasco">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="Approach" Target="Acceleration Gate" Distance="200" />
+    			<Set Name="2" Action="WaitAggro" Timeout="15" />
+    			<Set Name="3" Action="ClearRoom" />
+    			<Set Name="4" Action="NextRoom" />
+    			<Set Name="5" Action="Kill" Target="Infested Laboratory" />
+    			<Set Name="6" Action="ClearRoom" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="In the Shadow of War (1 of 5)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    			<Set Name="2" Action="NextRoom" />
+    			<Set Name="3" Action="ClearRoom" />
+    			<Set Name="4" Action="NextRoom" />
+    			<Set Name="5" Action="ClearRoom" />
+    			<Set Name="6" Action="CheckContainers" Target="Stranded Pilot" GroupID="12" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="In the Shadow of War (2 of 5)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    			<Set Name="2" Action="CheckContainers" Target="Data Chip" GroupID="12" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Closing the Gate">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    			<Set Name="2" Action="NextRoom" />
+    			<Set Name="3" Action="ClearRoom" />
+    			<Set Name="4" Action="NextRoom" />
+    			<Set Name="5" Action="ClearRoom" />
+    			<Set Name="6" Action="Kill" Target="Smuggler Stargate" />
+    			<Set Name="7" Action="ClearRoom" />
+    		</Set>
+    	</Set>
+    </Set>
     <Set Name = "The Hidden Stash">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="Kill" Target="Warehouse" />
+    			<Set Name="4" Action="CheckContainers" Target="Small Sealed Cargo Containers" GroupID="12" />
+    		</Set>
+    	</Set>
       <Set Name = "2">
         <Set Name = "Commands">
           <Set Name = "1" Action = "NextRoom">
@@ -281,6 +440,12 @@ Example use:
       </Set>
     </Set>
     <Set Name = "Gone Berserk">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    		</Set>
+    	</Set>
       <Set Name = "2">
         <Set Name = "Commands">
           <Set Name = "1" Action = "NextRoom" />
@@ -295,6 +460,11 @@ Example use:
       </Set>
     </Set>
     <Set Name = "The Blockade">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    		</Set>
+    	</Set>
       <Set Name = "2">
         <Set Name = "Commands">
           <Set Name = "2" Action = "ClearRoom">
@@ -302,15 +472,54 @@ Example use:
         </Set>
       </Set>
     </Set>
+    <Set Name="Escaped Terrorist">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    			<Set Name="2" Action="NextRoom" />
+    			<Set Name="3" Action="ClearRoom" />
+    			<Set Name="4" Action="CheckContainers" Target="Prisoner" GroupID="12" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Carrying AIMEDs">
+    	<Set Name="1">
+    		<Set Name="Commands">
+					<Set Name="1" Action="ClearRoom" />
+					<Set Name="2" Action="NextRoom" />
+					<Set Name="3" Action="ClearRoom" />
+					<Set Name="4" Action="CheckContainers" Target="AIMED" GroupID="12" />
+    		</Set>
+    	</Set>
+    </Set>
     <Set Name = "Cargo Delivery">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ApproachBreakOnCombat" Target="Warehouse" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="CheckContainers" Target="Synthetic Oil" GroupID="306" />
+    		</Set>
+    	</Set>
       <Set Name = "2">
         <Set Name = "Commands">
-          <Set Name = "1" Action = "CheckContainers" Target="Silicate Glass" GroupID="306">
-          </Set>
+    			<Set Name="1" Action="ApproachBreakOnCombat" Target="Warehouse" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="CheckContainers" Target="Silicate Glass" GroupID="306" />
         </Set>
       </Set>
     </Set>
     <Set Name = "Unauthorized Military Presence">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="NextRoom" />
+    			<Set Name="4" Action="ClearRoom" />
+    			<Set Name="5" Action="WaitAggro" Timeout="30" />
+    			<Set Name="6" Action="ClearRoom" />
+    			<Set Name="7" Action="CheckContainers" Target="Marines" GroupID="186" WreckName="Transport" />
+    		</Set>
+    	</Set>
       <Set Name = "2">
         <Set Name = "Commands">
           <Set Name = "1" Action = "NextRoom">
@@ -321,6 +530,16 @@ Example use:
           </Set>
         </Set>
       </Set>
+    </Set>
+    <Set Name="Lost Records">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    			<Set Name="2" Action="NextRoom" />
+    			<Set Name="3" Action="ClearRoom" />
+    			<Set Name="4" Action="CheckContainers" Target="Federation Court Logs" GroupID="306" />
+    		</Set>
+    	</Set>
     </Set>
     <Set Name = "Foreign Investment">
       <Set Name = "2">
@@ -429,6 +648,11 @@ Example use:
       </Set>
     </Set>
     <Set Name = "Alluring Emanations">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    		</Set>
+    	</Set>
       <Set Name = "2">
         <Set Name = "Commands">
           <Set Name = "3" Action = "Kill" Target="Rogue Drone">
@@ -543,10 +767,16 @@ Example use:
       </Set>
     </Set>
     <Set Name = "Seek and Destroy">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    		</Set>
+    	</Set>
       <Set Name = "2">
         <Set Name = "Commands">
         	<Set Name="1" Action="NextRoom" />
-          <Set Name = "2" Action = "ClearRoom" />
+          <Set Name="2" Action="ClearRoom" />
         </Set>
       </Set>
       <Set Name="3">
@@ -557,6 +787,14 @@ Example use:
       </Set>
     </Set>
     <Set Name ="Pirate Intrusion">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="NextRoom" />
+    			<Set Name="4" Action="ClearRoom" />
+    		</Set>
+    	</Set>
       <Set Name ="2">
         <Set Name ="Commands">
           <Set Name ="1" Action ="NextRoom">
@@ -568,18 +806,55 @@ Example use:
       </Set>
     </Set>
     <Set Name="The Serpentis Spies">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    		</Set>
+    	</Set>
     	<Set Name="2">
     		<Set Name="Commands">
     			<Set Name="1" Action="ClearRoom" />
     		</Set>
     	</Set>
     </Set>
+    <Set Name="Mysterious Sightings (3 of 4)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Mysterious Sightings (4 of 4)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    		</Set>
+    	</Set>
+    </Set>
     <Set Name="The Mordus Headhunters">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    			<Set Name="2" Action="NextRoom" />
+    			<Set Name="3" Action="ClearRoom" />
+    		</Set>
+    	</Set>
     	<Set Name="2">
     		<Set Name="Commands">
     			<Set Name="1" Action="ClearRoom" />
     			<Set Name="2" Action="NextRoom" />
     			<Set Name="3" Action="ClearRoom" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Desperate Measures">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="Kill" Target="Subspace Data Miner" />
     		</Set>
     	</Set>
     </Set>
@@ -684,6 +959,14 @@ Example use:
 			</Set>
 		</Set>
 		<Set Name="Break Their Will">
+			<Set Name="1">
+				<Set Name="Commands">
+					<Set Name="1" Action="Pull" Target="Repair Station" />
+					<Set Name="2" Action="ClearRoom" />
+					<Set Name="3" Action="Kill" Target="Repair Station" />
+					<Set Name="4" Action="ClearRoom" />
+				</Set>
+			</Set>
 			<Set Name="3">
 				<Set Name="Commands">
 					<Set Name="1" Action="Pull" Target="Repair Station" />

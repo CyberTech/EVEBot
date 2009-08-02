@@ -327,36 +327,34 @@ objectdef obj_Agents
 				UI:UpdateConsole["obj_Agents: DEBUG: MissionInfo.Type = ${MissionInfo.Value.Type}"]
 				if ${MissionInfo.Value.State} == 1
 				{
-					if ${MissionBlacklist.IsBlacklisted[${Agent[id,${MissionInfo.Value.AgentID}].Level},"${MissionInfo.Value.Name}"]} == FALSE
+					variable bool isLowSec
+					variable bool avoidLowSec
+					isLowSec:Set[${Missions.MissionCache.LowSec[${MissionInfo.Value.AgentID}]}]
+					avoidLowSec:Set[${Config.Missioneer.AvoidLowSec}]
+					if (${avoidLowSec} == FALSE || (${avoidLowSec} == TRUE && ${isLowSec} == FALSE)) && \
+						!${MissionBlacklist.IsBlacklisted[${Agent[id,${MissionInfo.Value.AgentID}].Level},"${MissionInfo.Value.Name}"]}
 					{
-						variable bool isLowSec
-						variable bool avoidLowSec
-						isLowSec:Set[${Missions.MissionCache.LowSec[${MissionInfo.Value.AgentID}]}]
-						avoidLowSec:Set[${Config.Missioneer.AvoidLowSec}]
-						if ${avoidLowSec} == FALSE || (${avoidLowSec} == TRUE && ${isLowSec} == FALSE)
+						if (${MissionInfo.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions}) || \
+							(${MissionInfo.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} || \
+							(${MissionInfo.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} || \
+							(${MissionInfo.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions})
 						{
-							if (${MissionInfo.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions}) || \
-								(${MissionInfo.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} || \
-								(${MissionInfo.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} || \
-								(${MissionInfo.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions})
-							{
-								This:SetActiveAgent[${Agent[id,${MissionInfo.Value.AgentID}]}]
-								return
-							}
+							This:SetActiveAgent[${Agent[id,${MissionInfo.Value.AgentID}]}]
+							return
 						}
+					}
 
-						/* if we get here the mission is not acceptable */
-						variable time lastDecline
-						lastDecline:Set[${Config.Agents.LastDecline[${Agent[id,${MissionInfo.Value.AgentID}]}]}]
-						UI:UpdateConsole["obj_Agents: DEBUG: lastDecline = ${lastDecline}"]
-						lastDecline.Hour:Inc[4]
-						lastDecline:Update
-						if ${lastDecline.Timestamp} >= ${Time.Timestamp}
-						{
-							UI:UpdateConsole["obj_Agents: DEBUG: Skipping mission to avoid standing loss: ${MissionInfo.Value.Name}"]
-							skipList:Add[${MissionInfo.Value.AgentID}]
-							continue
-						}
+					/* if we get here the mission is not acceptable */
+					variable time lastDecline
+					lastDecline:Set[${Config.Agents.LastDecline[${Agent[id,${MissionInfo.Value.AgentID}]}]}]
+					UI:UpdateConsole["obj_Agents: DEBUG: lastDecline = ${lastDecline}"]
+					lastDecline.Hour:Inc[4]
+					lastDecline:Update
+					if ${lastDecline.Timestamp} >= ${Time.Timestamp}
+					{
+						UI:UpdateConsole["obj_Agents: DEBUG: Skipping mission to avoid standing loss: ${MissionInfo.Value.Name}"]
+						skipList:Add[${MissionInfo.Value.AgentID}]
+						continue
 					}
 				}
 			}
@@ -461,30 +459,28 @@ objectdef obj_Agents
 			{
 				if ${amIterator.Value.State} > 1
 				{
-					if ${MissionBlacklist.IsBlacklisted[${Agent[id,${amIterator.Value.AgentID}].Level},"${amIterator.Value.Name}"]} == FALSE
+					variable bool isLowSec
+					variable bool avoidLowSec
+					isLowSec:Set[${Missions.MissionCache.LowSec[${amIterator.Value.AgentID}]}]
+					avoidLowSec:Set[${Config.Missioneer.AvoidLowSec}]
+					if (${avoidLowSec} == FALSE || (${avoidLowSec} == TRUE && ${isLowSec} == FALSE)) && \
+					!${MissionBlacklist.IsBlacklisted[${Agent[id,${MissionInfo.Value.AgentID}].Level},"${MissionInfo.Value.Name}"]}
 					{
-						variable bool isLowSec
-						variable bool avoidLowSec
-						isLowSec:Set[${Missions.MissionCache.LowSec[${amIterator.Value.AgentID}]}]
-						avoidLowSec:Set[${Config.Missioneer.AvoidLowSec}]
-						if ${avoidLowSec} == FALSE || (${avoidLowSec} == TRUE && ${isLowSec} == FALSE)
+						if (${amIterator.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions}) || \
+							(${amIterator.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} || \
+							(${amIterator.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} || \
+							(${amIterator.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions})
 						{
-							if (${amIterator.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions}) || \
-								(${amIterator.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} || \
-								(${amIterator.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} || \
-								(${amIterator.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions})
+							if ${Missions.MissionCache.Name[${amIterator.Value.AgentID}].Equal[${amIterator.Value.Name}]}
 							{
-								if ${Missions.MissionCache.Name[${amIterator.Value.AgentID}].Equal[${amIterator.Value.Name}]}
-								{
-									return TRUE
-								}
-								else
-								{
-									Missions.MissionCache:AddMission[${amIterator.Value.AgentID},${amIterator.Value.Name}]
-									return TRUE
-								}
-
+								return TRUE
 							}
+							else
+							{
+								Missions.MissionCache:AddMission[${amIterator.Value.AgentID},${amIterator.Value.Name}]
+								return TRUE
+							}
+
 						}
 					}
 				}

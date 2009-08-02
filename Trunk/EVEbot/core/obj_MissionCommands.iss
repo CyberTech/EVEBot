@@ -69,20 +69,20 @@ objectdef obj_MissionCommands
 				{
 					if ${Entity[${EntityID}].Distance} > ${Math.Calc[${Distance} * 1.1]}
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - found entity with Name ${Entity[${EntityID}].Name} ID ${EntityID} , we are ${Entity[${EntityID}].Distance} away, we want to be ${Distance} away will approach",LOG_DEBUG]
+						UI:UpdateConsole["DEBUG: obj_MissionCommands - found entity with Name ${Entity[${EntityID}].Name} ID ${EntityID} , we are ${Entity[${EntityID}].Distance} away, we want to be ${Distance} away will approach"]
 						ApproachIDCache:Set[${EntityID}]
 						ApproachState:Set["APPROACH"]
 						return FALSE
 					}
 					else
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Entity with name ${Entity[${EntityID}].Name} already in range",LOG_DEBUG]
+						UI:UpdateConsole["DEBUG: obj_MissionCommands - Entity with name ${Entity[${EntityID}].Name} already in range"]
 						return TRUE
 					}
 				}
 				else
 				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - Error , could not find entity with ID ${EntityID} to approach",LOG_DEBUG]
+					UI:UpdateConsole["DEBUG: obj_MissionCommands - Error , could not find entity with ID ${EntityID} to approach"]
 					return TRUE
 				}
 			}
@@ -92,6 +92,7 @@ objectdef obj_MissionCommands
 				{
 					if ${EntityID} == ${ApproachIDCache}
 					{
+						
 						Entity[${ApproachIDCache}]:Approach
 						Ship:Activate_AfterBurner[]
 						ApproachState:Set["APPROACHING"]
@@ -99,14 +100,14 @@ objectdef obj_MissionCommands
 					}
 					else
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - AprroachIDCache and EntityID do not match ,resetting to idle",LOG_DEBUG]
+						UI:UpdateConsole["DEBUG: obj_MissionCommands - AprroachIDCache and EntityID do not match ,resetting to idle"]
 						ApproachState:Set["IDLE"]
 						return FALSE
 					}
 				}
 				else
 				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - Entity no longer exists cannot approach",LOG_DEBUG]
+					UI:UpdateConsole["DEBUG: obj_MissionCommands - Entity no longer exists cannot approach"]
 					ApproachState:Set["IDLE"]
 					return TRUE
 				}
@@ -120,7 +121,7 @@ objectdef obj_MissionCommands
 						if ${Entity[${ApproachIDCache}].Distance} < ${Math.Calc[${Distance} * 1.1]}
 						{
 							UI:UpdateConsole["DEBUG: obj_MissionCommands - Name ${Entity[${EntityID}].Name} ID ${EntityID} , we are ${Entity[${EntityID}].Distance} away, we want to be ${Distance} we have succeeded!",LOG_DEBUG]
-							UI:UpdateConsole["DEBUG: obj_MissionCommands - Reached ${EntityID} ",LOG_DEBUG]
+							UI:UpdateConsole["DEBUG: obj_MissionCommands - Reached ${EntityID} "]
 							EVE:Execute[CmdStopShip]
 							ApproachState:Set["IDLE"]
 							return TRUE
@@ -425,7 +426,17 @@ objectdef obj_MissionCommands
 
 	member:bool KillID(int entityID)
 	{
-
+		variable float dist
+		variable bool didApproach
+		if ${Ship.OptimalWeaponRange} > ${Me.DroneControlDistance}
+		{
+			dist:Set[${Ship.OptimalWeaponRange}]
+		}
+		else
+		{
+			dist:Set[${Me.DroneControlDistance}]
+		}
+						
 		switch ${KillIDState}
 		{
 			case START
@@ -453,7 +464,8 @@ objectdef obj_MissionCommands
 					{
 						UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - Approaching entity with Name ${Entity[${entityID}].Name} ID ${entityID} , we are ${Entity[${entityID}].Distance} away, we want to be ${Math.Calc[${Ship.OptimalWeaponRange}*.8]} away will approach",LOG_DEBUG]
 
-						if ${This.Approach[${entityID}, ${Math.Calc[${Ship.OptimalWeaponRange}*.8]}]}
+						didApproach:Set[${This.Approach[${KillIDCache}, ${Math.Calc[${dist} * .80]}]}]
+						if ${didApproach}
 						{
 							UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - In weapons range, will target and fire",LOG_DEBUG]
 							KillIDState:Set["TARGETING"]
@@ -482,18 +494,20 @@ objectdef obj_MissionCommands
 				{
 					if ${Entity[${KillIDCache}].GroupID(exists)}  && ${Entity[${KillIDCache}].GroupID} != GROUPID_WRECK && ${Entity[${KillIDCache}].GroupID} != GROUPID_CARGO_CONTAINER
 					{
-						if ${This.Approach[${KillIDCache}, ${Math.Calc[${Ship.OptimalWeaponRange}*.8]}]}
+						didApproach:Set[${This.Approach[${KillIDCache}, ${Math.Calc[${dist} * .8]}]}]
+						echo "MissionCommands: DidApproach ${didApproach} ${Entity[${KillIDCache}]} ${Entity[${KillIDCache}].ID} ${Entity[${KillIDCache}].Distance} ${Math.Calc[${dist} * .8]}"
+						if ${didApproach}
 						{
 							if !${Targeting.IsMandatoryQueued[${KillIDCache}]}
 							{
-								UI:UpdateConsole["DEBUG: obj_MissionCommands - Targeting ${KillIDCache}",LOG_DEBUG]
+								UI:UpdateConsole["DEBUG: obj_MissionCommands - Targeting ${KillIDCache}"]
 								Targeting:Queue[${KillIDCache},1,1,FALSE]
 								KillIDState:Set["KILLING"]
 								return FALSE
 							}
 							else
 							{
-								UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - Target is in range and in the targeting queue,should be killing it now",LOG_DEBUG]
+								UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - Target is in range and in the targeting queue,should be killing it now"]
 								KillIDState:Set["KILLING"]
 								return FALSE
 							}
@@ -519,7 +533,8 @@ objectdef obj_MissionCommands
 				{
 					if ${Entity[${KillIDCache}].GroupID(exists)}  && ${Entity[${KillIDCache}].GroupID} != GROUPID_WRECK && ${Entity[${KillIDCache}].GroupID} != GROUPID_CARGO_CONTAINER
 					{
-						if ${This.Approach[${entityID}, ${Math.Calc[${Ship.OptimalWeaponRange}*.8]}]}
+						didApproach:Set[${This.Approach[${KillIDCache}, ${Math.Calc[${dist} * .80]}]}]
+						if ${didApproach}
 						{
 							UI:UpdateConsole["DEBUG: obj_MissionCommands - Entity with ID ${KillIDCache} still exists, we have no killed it yet :<",LOG_DEBUG]
 							return FALSE
