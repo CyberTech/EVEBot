@@ -190,7 +190,8 @@ objectdef obj_Agents
     {
     	if ${This.AgentList.agentIterator:First(exists)}
     	{
-    		This:SetActiveAgent[${This.AgentList.FirstAgent}]
+    		;This:SetActiveAgent[${This.AgentList.FirstAgent}]
+    		This:PickAgent
     		UI:UpdateConsole["obj_Agents: Initialized", LOG_MINOR]
     	}
     	else
@@ -839,11 +840,11 @@ objectdef obj_Agents
 		;EVE:Execute[CmdCloseAllWindows]
 		;wait 50
 
-		UI:UpdateConsole["obj_Agents: Starting conversation with agent ${This.ActiveAgent}."]
+		UI:UpdateConsole["obj_Agents:RequestMission: Starting conversation with agent ${This.ActiveAgent}."]
 		Agent[${This.AgentIndex}]:StartConversation
 		do
 		{
-			UI:UpdateConsole["obj_Agents: Waiting for conversation window..."]
+			UI:UpdateConsole["obj_Agents:RequestMission: Waiting for conversation window..."]
 			wait 10
 		}
 		while !${EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"](exists)}
@@ -1241,30 +1242,29 @@ objectdef obj_Agents
 		;EVE:Execute[CmdCloseAllWindows]
 		;wait 50
 
-		UI:UpdateConsole["obj_Agents: Starting conversation with agent ${This.ActiveAgent}."]
+		UI:UpdateConsole["obj_Agents:TurnInMission: Starting conversation with agent ${This.ActiveAgent}."]
 		Agent[${This.AgentIndex}]:StartConversation
-        do
-        {
-			UI:UpdateConsole["obj_Agents: Waiting for conversation window..."]
-            wait 10
-        }
-        while !${EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"](exists)}
+    do
+    {
+			UI:UpdateConsole["obj_Agents:TurnInMission: Waiting for conversation window..."]
+      wait 10
+    }
+    while !${EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"](exists)}
 
 		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
 
-	    ; display your dialog options
-	    variable index:dialogstring dsIndex
-	    variable iterator dsIterator
-
-	    Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
-	    dsIndex:GetIterator[dsIterator]
+	  ; display your dialog options
+	  variable index:dialogstring dsIndex
+	  variable iterator dsIterator
+   	Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
+	  dsIndex:GetIterator[dsIterator]
 
 		if (${dsIterator:First(exists)})
 		{
 			do
 			{
 				UI:UpdateConsole["obj_Agents:TurnInMission dsIterator.Value.Text: ${dsIterator.Value.Text}"]
-				if (${dsIterator.Value.Text.Find["${This.BUTTON_VIEW_MISSION}"]})
+				if (${dsIterator.Value.Text.Find["View Mission"]})
 				{
 					dsIterator.Value:Say[${This.AgentID}]
 					Config.Agents:SetLastCompletionTime[${This.AgentName},${Time.Timestamp}]
@@ -1274,14 +1274,13 @@ objectdef obj_Agents
 			while (${dsIterator:Next(exists)})
 		}
 
-	    ; Now wait a couple of seconds and then get the new dialog options...and so forth.  The "Wait" needed may differ from person to person.
-	    UI:UpdateConsole["Waiting for agent dialog to update..."]
-	    wait 60
-
-	    Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
-	    dsIndex:GetIterator[dsIterator]
-	    UI:UpdateConsole["Completing Mission..."]
-	    dsIndex.Get[1]:Say[${This.AgentID}]
+	  ; Now wait a couple of seconds and then get the new dialog options...and so forth.  The "Wait" needed may differ from person to person.
+	  UI:UpdateConsole["obj_Agents:TurnInMission: Waiting for agent dialog to update..."]
+	  wait 60
+    Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
+	  dsIndex:GetIterator[dsIterator]
+	  UI:UpdateConsole["Completing Mission..."]
+	  dsIndex.Get[1]:Say[${This.AgentID}]
 
 		UI:UpdateConsole["Waiting for mission dialog to update..."]
 		wait 60
@@ -1300,11 +1299,11 @@ objectdef obj_Agents
 		;EVE:Execute[CmdCloseAllWindows]
 		;wait 50
 
-		UI:UpdateConsole["obj_Agents: Starting conversation with agent ${This.ActiveAgent}."]
+		UI:UpdateConsole["obj_Agents:QuitMission: Starting conversation with agent ${This.ActiveAgent}."]
 		Agent[${This.AgentIndex}]:StartConversation
 		do
 		{
-			UI:UpdateConsole["obj_Agents: Waiting for conversation window..."]
+			UI:UpdateConsole["obj_Agents:QuitMission: Waiting for conversation window..."]
 			wait 10
 		}
 		while !${EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"](exists)}

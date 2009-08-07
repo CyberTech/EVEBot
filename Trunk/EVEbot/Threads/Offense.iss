@@ -320,7 +320,7 @@ objectdef obj_Offense
 						}
 						else
 						{
-							if ${Ship.Drones.DeployedDroneCount} > 0
+							if ${Ship.Drones.DronesInSpace} > 0
 							{
 								UI:UpdateConsole["Offense: Shouldn't have combat drones out but we do, recalling!"]
 								Ship.Drones:QuickReturnAllToDroneBay
@@ -329,7 +329,7 @@ objectdef obj_Offense
 					}
 					elseif ${Ship.Drones.DeployedDroneCount} > 0
 					{
-						UI:UpdateConsole["Offense: Active target is out of range but we have drones out; recalling to orbit."]
+						UI:UpdateConsole["Offense: Active target is out of range but we have drones out; recalling to orbit if they aren't already here.",LOG_DEBUG]
 						Ship.Drones:QuickReturnAllToOrbit
 					}
 				}

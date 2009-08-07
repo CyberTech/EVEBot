@@ -165,7 +165,7 @@ objectdef obj_MissionCombat
 						{
 							;well we found the mission but no commands exist for it, abort
 
-							UI:UpdateConsole["DEBUG: obj_MissionCombat - Commands not found , changing state to Abort ",LOG_DEBUG]
+							UI:UpdateConsole["DEBUG: obj_MissionCombat - Commands not found , changing state to Abort "]
 
 							This.CurrentState::Set["ABORT"]
 						}
@@ -174,7 +174,7 @@ objectdef obj_MissionCombat
 					{
 						;we could not find the mission in the database! Abort!
 
-						UI:UpdateConsole["DEBUG: obj_MissionCombat - Mission not found, changing state to Abort ",LOG_DEBUG]
+						UI:UpdateConsole["DEBUG: obj_MissionCombat - Mission not found, changing state to Abort "]
 						This.CurrentState:Set["ABORT"]
 					}
 				}
@@ -264,15 +264,15 @@ objectdef obj_MissionCombat
 			case ABORT
 			{
 
-				UI:UpdateConsole["DEBUG: obj_MissionCombat - Aborting mission, warpign to home base",LOG_DEBUG]
+				UI:UpdateConsole["DEBUG: obj_MissionCombat - Aborting mission, warpign to home base"]
 
 				call This.WarpToHomeBase ${This.MissionID}
 
-				UI:UpdateConsole["DEBUG: obj_MissionCombat - Attempting to quit mission",LOG_DEBUG]
+				UI:UpdateConsole["DEBUG: obj_MissionCombat - Attempting to quit mission"]
 
 				call Agents.QuitMission
 
-				UI:UpdateConsole["DEBUG: obj_MissionCombat - Quit mission (hopefully) , setting state to idle",LOG_DEBUG]
+				UI:UpdateConsole["DEBUG: obj_MissionCombat - Quit mission (hopefully) , setting state to idle"]
 
 				This.MissionID:Set[0]
 				This.CurrentState:Set["IDLE"]

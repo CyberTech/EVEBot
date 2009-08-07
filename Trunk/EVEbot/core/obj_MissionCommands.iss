@@ -283,20 +283,10 @@ objectdef obj_MissionCommands
 					{
 						if ${EntityCache.EntityIterator.Value.IsTargetingMe}
 						{
-							if ${Config.Combat.ShouldUseMissiles}
+							if ${EntityCache.EntityIterator.Value.Distance} < ${Ship.OptimalWeaponRange} || \
+								${EntityCache.EntityIterator.Value.Distance} < ${Me.DroneControlDistance}
 							{
-								if ${EntityCache.EntityIterator.Value.Distance} < ${Config.Combat.MaxMissileRange}
-								{
-									EntityInRange:Set[TRUE]
-								}
-							}
-							else
-							{
-								;Todo: Dirty hack for gun users.
-								if ${EntityCache.EntityIterator.Value.Distance} < ${Ship.GetMinimumTurretRange[1]}
-								{
-									EntityInRange:Set[TRUE]
-								}
+								EntityInRange:Set[TRUE]
 							}
 						}
 					}
@@ -325,20 +315,10 @@ objectdef obj_MissionCommands
 						{
 							if ${EntityCache.EntityIterator.Value.IsTargetingMe}
 							{
-								if ${Config.Combat.ShouldUseMissiles}
+								if ${EntityCache.EntityIterator.Value.Distance} < ${Ship.OptimalWeaponRange} || \
+									${EntityCache.EntityIterator.Value.Distance} < ${Me.DroneControlDistance}
 								{
-									if ${EntityCache.EntityIterator.Value.Distance} < ${Config.Combat.MaxMissileRange}
-									{
-										EntityInRange:Set[TRUE]
-									}
-								}
-								else
-								{
-									;Todo: Dirty hack for gun users.
-									if ${EntityCache.EntityIterator.Value.Distance} < ${Ship.GetMinimumTurretRange[1]}
-									{
-										EntityInRange:Set[TRUE]
-									}
+									EntityInRange:Set[TRUE]
 								}
 							}
 						}
@@ -387,15 +367,19 @@ objectdef obj_MissionCommands
 						{
 							KillState:Set["KILLING"]
 							KillCache:Set[${targetIterator.Value.ID}]
-							UI:UpdateConsole["DEBUG: obj_MissionCommands - found kill target will try and kill it",LOG_DEBUG]
+						  UI:UpdateConsole["DEBUG: obj_MissionCommands - found kill target will try and kill it",LOG_DEBUG]"
+						  echo "DEBUG: obj_MissionCommands - found kill target will try and kill it"
 							return FALSE
 						}
 					}
 					while ${targetIterator:Next(exists)}
 					UI:UpdateConsole["DEBUG: obj_MissionCommands - Could not find ${entityName}",LOG_DEBUG]
+					echo "DEBUG: obj_MissionCommands - Could not find ${entityName}"
 					return TRUE
 				}
 				UI:UpdateConsole["DEBUG: obj_MissionCommands - Could not find find any entities",LOG_DEBUG]
+				echo "DEBUG: obj_MissionCommands - Could not find find any entities"
+				return TRUE
 			}
 			case KILLING
 			{
@@ -436,7 +420,12 @@ objectdef obj_MissionCommands
 		{
 			dist:Set[${Me.DroneControlDistance}]
 		}
-						
+			
+		if !${Entity[${entityID}](exists)}
+		{
+			return true
+		}			
+		
 		switch ${KillIDState}
 		{
 			case START
@@ -464,8 +453,8 @@ objectdef obj_MissionCommands
 					{
 						UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - Approaching entity with Name ${Entity[${entityID}].Name} ID ${entityID} , we are ${Entity[${entityID}].Distance} away, we want to be ${Math.Calc[${Ship.OptimalWeaponRange}*.8]} away will approach",LOG_DEBUG]
 
-						didApproach:Set[${This.Approach[${KillIDCache}, ${Math.Calc[${dist} * .80]}]}]
-						if ${didApproach}
+						didApproach:Set[${This.Approach[${KillIDCache}, ${Math.Calc[${Ship.OptimalWeaponRange} * .80]}]}]
+						if ${Entity[${entityID}].Distance} <= ${dist}
 						{
 							UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - In weapons range, will target and fire",LOG_DEBUG]
 							KillIDState:Set["TARGETING"]
@@ -494,9 +483,9 @@ objectdef obj_MissionCommands
 				{
 					if ${Entity[${KillIDCache}].GroupID(exists)}  && ${Entity[${KillIDCache}].GroupID} != GROUPID_WRECK && ${Entity[${KillIDCache}].GroupID} != GROUPID_CARGO_CONTAINER
 					{
-						didApproach:Set[${This.Approach[${KillIDCache}, ${Math.Calc[${dist} * .8]}]}]
+						didApproach:Set[${This.Approach[${KillIDCache}, ${Math.Calc[${Ship.OptimalWeaponRange} * .8]}]}]
 						echo "MissionCommands: DidApproach ${didApproach} ${Entity[${KillIDCache}]} ${Entity[${KillIDCache}].ID} ${Entity[${KillIDCache}].Distance} ${Math.Calc[${dist} * .8]}"
-						if ${didApproach}
+						if ${Entity[${entityID}].Distance} <= ${dist}
 						{
 							if !${Targeting.IsMandatoryQueued[${KillIDCache}]}
 							{
@@ -533,12 +522,9 @@ objectdef obj_MissionCommands
 				{
 					if ${Entity[${KillIDCache}].GroupID(exists)}  && ${Entity[${KillIDCache}].GroupID} != GROUPID_WRECK && ${Entity[${KillIDCache}].GroupID} != GROUPID_CARGO_CONTAINER
 					{
-						didApproach:Set[${This.Approach[${KillIDCache}, ${Math.Calc[${dist} * .80]}]}]
-						if ${didApproach}
-						{
-							UI:UpdateConsole["DEBUG: obj_MissionCommands - Entity with ID ${KillIDCache} still exists, we have no killed it yet :<",LOG_DEBUG]
-							return FALSE
-						}
+						didApproach:Set[${This.Approach[${KillIDCache}, ${Math.Calc[${Ship.OptimalWeaponRange} * .80]}]}]
+						UI:UpdateConsole["DEBUG: obj_MissionCommands - Entity with ID ${KillIDCache} still exists, we have no killed it yet :<",LOG_DEBUG]
+						return FALSE
 					}
 					else
 					{
@@ -854,22 +840,7 @@ objectdef obj_MissionCommands
 	; TODO move blacklist/ignorelist to same
 	member:int HostileCount()
 	{
-		variable iterator     targetIterator
-		variable iterator blackListIterator
-		variable int hostileCount = 0
-		variable bool blackListed = FALSE
-
-		This.EntityCache.CachedEntities:GetIterator[targetIterator]
-
-		if ${targetIterator:First(exists)}
-		{
-			do
-			{
-				hostileCount:Inc
-			}
-			while ${targetIterator:Next(exists)}
-		}
-		return ${hostileCount}
+		return ${This.EntityCache.CachedEntities.Used}
 	}
 
 

@@ -323,6 +323,7 @@ objectdef obj_Cargo
 	; Transfer ALL items in MyCargo index
 	function TransferListToHangar()
 	{
+		/*
 		variable iterator CargoIterator
 		This.CargoToTransfer:GetIterator[CargoIterator]
 
@@ -350,10 +351,15 @@ objectdef obj_Cargo
 		{
 			UI:UpdateConsole["DEBUG: obj_Cargo:TransferListToHangar: Nothing found to move"]
 		}
+		*/
+		call Station.OpenHangar
+		UI:UpdateConsole["obj_Cargo:TransferListToHangar: Moving all items in index This.CargoToTransfer to hangar",LOG_DEBUG]
+		EVE:MoveItemsTo[This.CargoToTransfer,Hangar]
 	}
 
 	function TransferListToCorpHangarArray()
 	{
+		/*
 		variable iterator CargoIterator
 		This.CargoToTransfer:GetIterator[CargoIterator]
 
@@ -375,6 +381,9 @@ objectdef obj_Cargo
 		{
 			UI:UpdateConsole["DEBUG: obj_Cargo:TransferListToCorpHangarArray: Nothing found to move"]
 		}
+		*/
+		UI:UpdateConsole["obj_Cargo:TransferListToCorpHangarArray: Moving all items in index This.CargoToTransfer to corp hangar array ID ${CorpHangarArray.ActiveCan}",LOG_DEBUG]
+		EVE:MoveItemsTo[This.CargoToTransfer,CorpHangarArray.ActiveCan]
 	}
 
 	function TransferListToJetCan()

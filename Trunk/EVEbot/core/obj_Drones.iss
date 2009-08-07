@@ -256,7 +256,7 @@ objectdef obj_Drones
 			return FALSE
 		}
 
-		if ${Offense.HaveFullAggro}
+		if ${Offense.HaveFullAggro} || ${Config.Common.BotMode.Equal["Missioneer"]}
 		{
 			return TRUE
 		}

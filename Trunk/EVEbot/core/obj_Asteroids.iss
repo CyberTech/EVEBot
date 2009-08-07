@@ -177,7 +177,7 @@ objectdef obj_Asteroids
 
 			if ${Config.Miner.UseFieldBookmarks}
 			{
-				call Beltbookmarks.WarpToRandom
+				call BeltBookmarks.WarpToRandom
 				return
 			}
 

@@ -51,7 +51,10 @@ objectdef obj_Ratter
 			return
 		}
 		
-		RatCache:SetUpdateFrequency[1]
+		if ${RatCache.PulseIntervalInSeconds} != 1
+		{
+			RatCache:SetUpdateFrequency[1]
+		}
 
 	  if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{

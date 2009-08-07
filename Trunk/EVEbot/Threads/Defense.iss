@@ -31,7 +31,10 @@ objectdef obj_Defense
 	{
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["Thread: obj_Defense: Initialized", LOG_MINOR]
-		DefenseCache:SetUpdateFrequency[9999]
+		if ${DefenseCache.PulseIntervalInSeconds} != 9999
+		{
+			DefenseCache:SetUpdateFrequency[9999]
+		}
 		DefenseCache:UpdateSearchParams["Unused","CategoryID,CATEGORYID_ENTITY,radius,60000"]
 	}
 
@@ -85,7 +88,10 @@ objectdef obj_Defense
 		{
 			if ${DefenseCache.Entities.Used} == 0
 			{
-				DefenseCache:SetUpdateFrequency[1]
+				if ${DefenseCache.PulseIntervalInSeconds} != 1
+				{
+					DefenseCache:SetUpdateFrequency[1]
+				}
 			}
 			else
 			{
@@ -108,7 +114,10 @@ objectdef obj_Defense
 		}
 		else
 		{
-			DefenseCache:SetUpdateFrequency[9999]
+			if ${DefenseCache.PulseIntervalInSeconds} != 9999
+			{
+				DefenseCache:SetUpdateFrequency[9999]
+			}
 		}
 	}
 

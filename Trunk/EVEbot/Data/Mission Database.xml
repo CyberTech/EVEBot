@@ -1,23 +1,25 @@
 ﻿<?xml version='1.0' encoding='UTF-8'?>
-<!--
-	TODO:
-	<Set Name="Mission Template">
-    <Set Name = "Kill Everything"> <- Template attribute
-      <Set Name = "2">
-        <Set Name = "Commands" Repeat="TotalRooms">   <- TotalRooms is an attribute from the set name
-          <Set Name = "1" Action = "NextRoom">
-          <Set Name = "2" Action = "ClearRoom">
-        </Set>
-------------------------
-Example use:
-  <Set Name="Mission Database">
-    <Set Name = "Rogue Drone Harassment" Template="Kill Everything" TotalRooms="2">
-    </Set>
-
--->
 <InnerSpaceSettings>
   <Set Name="Mission Database">
-    <Set Name = "Rogue Drone Harassment">
+    <Set Name="Intercept The Saboteurs">
+      <Set Name="2">
+        <Set Name="Commands">
+          <Set Name="1" Action="ClearRoom" />
+          <Set Name="2" Action="NextRoom" />
+          <Set Name="3" Action="ClearRoom" />
+          <Set Name="4" Action="CheckContainers" Target="Confiscated Viral Agent" GroupID="12" />
+        </Set>
+      </Set>
+      <Set Name="3">
+      	<Set Name="Commands">
+      		<Set Name="1" Action="ClearRoom" />
+      		<Set Name="2" Action="NextRoom" />
+      		<Set Name="3" Action="ClearRoom" />
+      		<Set Name="4" Action="CheckContainers" Target="Confiscated Viral Agent" GroupID="12" />
+      	</Set>
+      </Set>
+    </Set>
+    <Set Name="Rogue Drone Harassment">
     	<Set Name="1">
     		<Set Name="Commands">
     			<Set Name="1" Action="NextRoom" />
@@ -26,16 +28,12 @@ Example use:
     			<Set Name="4" Action="ClearRoom" />
     		</Set>
     	</Set>
-      <Set Name = "2">
-        <Set Name = "Commands">
-          <Set Name = "1" Action = "NextRoom">
-          </Set>
-          <Set Name = "2" Action = "ClearRoom">
-          </Set>
-          <Set Name = "3" Action = "NextRoom">
-          </Set>
-          <Set Name = "4" Action = "ClearRoom">
-          </Set>
+      <Set Name="2">
+        <Set Name="Commands">
+      		<Set Name="1" Action="NextRoom" />
+      		<Set Name="2" Action="ClearRoom" />
+      		<Set Name="3" Action="NextRoom" />
+      		<Set Name="4" Action="ClearRoom" />
         </Set>
       </Set>
       <Set Name="3">
@@ -56,17 +54,17 @@ Example use:
     	</Set>
     </Set>
     <Set Name = "Customs Interdiction (1 of 2)">
-      <Set Name ="2">
-        <Set Name = "Commands">
-          <Set Name = "1" Action = "ClearRoom" />
+      <Set Name="2">
+        <Set Name="Commands">
+          <Set Name="1" Action="ClearRoom" />
           <Set Name="2" Action="CheckContainers" Target="Smuggler DNA" GroupID="12" />
         </Set>
       </Set>
     </Set>
     <Set Name = "Customs Interdiction (2 of 2)">
-      <Set Name ="2">
-        <Set Name = "Commands">
-          <Set Name = "1" Action = "ClearRoom" />
+      <Set Name="2">
+        <Set Name="Commands">
+          <Set Name="1" Action="ClearRoom" />
           <Set Name="2" Action="CheckContainers" Target="Freed Slaves" GroupID="12" />
         </Set>
       </Set>
@@ -75,42 +73,29 @@ Example use:
     	<Set Name="1">
     		<Set Name="Commands">
     			<Set Name="1" Action="NextRoom" />
-    			<Set Name="2" Action="ClearRoom" />
-    			<Set Name="3" Action="Kill" Target="Drone Silo" />
+    			<Set Name="2" Action="Kill" Target="Drone Silo" />
     		</Set>
     	</Set>
       <Set Name ="2">
         <Set Name = "Commands">
-          <Set Name = "1" Action = "NextRoom">
-          </Set>
-          <Set Name = "2" Action = "Kill" Target ="Drone Silo">
-          </Set>
+          <Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="Kill" Target="Drone Silo" />
         </Set>
       </Set>
     </Set>
     <Set Name = "Trimming the Fat">
       <Set Name ="2">
         <Set Name = "Commands">
-          <Set Name = "1" Action = "ClearRoom">
-          </Set>
-        </Set>
-      </Set>
-    </Set>
-    <Set Name = "Intercept The Saboteurs">
-      <Set Name = "2">
-        <Set Name = "Commands">
-          <Set Name = "1" Action = "ClearRoom">
-          </Set>
-          <Set Name = "2" Action = "NextRoom">
-          </Set>
-          <Set Name = "3" Action = "ClearRoom">
-          </Set>
-          <Set Name = "4" Action = "CheckContainers"  Target = "Confiscated Viral Agent" GroupID = "12">
-          </Set>
+          <Set Name = "1" Action = "ClearRoom" />
         </Set>
       </Set>
     </Set>
     <Set Name = "Eliminate the Pirate Campers">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    		</Set>
+    	</Set>
       <Set Name = "2">
         <Set Name = "Commands">
           <Set Name = "1" Action = "ClearRoom">
@@ -130,6 +115,13 @@ Example use:
     			<Set Name="GROUP_ASSAULTSHIP" />
     			<Set Name="GROUP_DESTROYER" />
     			<Set Name="GROUP_INTERCEPTOR" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Eliminate a Pirate Nuisance">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
     		</Set>
     	</Set>
     </Set>
@@ -203,6 +195,54 @@ Example use:
         </Set>
       </Set>
     </Set>
+    <Set Name="Angel Extravaganza">
+    	<Set Name="3">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="NextRoom" />
+    			<Set Name="4" Action="ClearRoom" />
+    			<Set Name="5" Action="NextRoom" />
+    			<Set Name="6" Action="ClearRoom" />
+    			<Set Name="7" Action="NextRoom" />
+    			<Set Name="8" Action="ClearRoom" />
+    			<Set Name="9" Action="NextRoom" />
+    			<Set Name="10" Action="ClearRoom" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Serpentis Extravaganza">
+    	<Set Name="3">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="NextRoom" />
+    			<Set Name="4" Action="ClearRoom" />
+    			<Set Name="5" Action="NextRoom" />
+    			<Set Name="6" Action="ClearRoom" />
+    			<Set Name="7" Action="NextRoom" />
+    			<Set Name="8" Action="ClearRoom" />
+    			<Set Name="9" Action="NextRoom" />
+    			<Set Name="10" Action="ClearRoom" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="For the Honor of Rouvenor">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    		</Set>
+    		<Set Name="AllowedShips">
+    			<Set Name="GROUP_FRIGATE"></Set>
+    			<Set Name="GROUP_INDUSTRIAL"></Set>
+    			<Set Name="GROUP_SHUTTLE"></Set>
+    			<Set Name="GROUP_ROOKIESHIP"></Set>
+    			<Set Name="GROUP_ASSAULTSHIP"></Set>
+    			<Set Name="GROUP_DESTROYER"></Set>
+    			<Set Name="GROUP_ELECTRONICASSAULTSHIP"></Set>
+    		</Set>
+    	</Set>
+    </Set>
     <Set Name = "The Guristas Spies">
       <Set Name = "2">
         <Set Name = "Commands">
@@ -217,6 +257,11 @@ Example use:
     			<Set Name="1" Action="Approach" Target="Caldari Research Outpost" Distance="10000" />
     		</Set>
     	</Set>
+			<Set Name="2">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="Approach" Target="Caldari Research Outpost" Distance="10000" />
+    		</Set>
+    	</Set>
     </Set>
     <Set Name="Patriotic Measures (3 of 5)">
     	<Set Name="1">
@@ -225,9 +270,21 @@ Example use:
     			<Set Name="2" Action="Kill" Target="Caldari Research Outpost" />
     		</Set>
     	</Set>
+			<Set Name="2">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    			<Set Name="2" Action="Kill" Target="Caldari Research Outpost" />
+    		</Set>
+    	</Set>
     </Set>
     <Set Name="Patriotic Measures (4 of 5)">
     	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    			<Set Name="2" Action="CheckContainers" Target="Scientist" />
+    		</Set>
+    	</Set>
+    	<Set Name="2">
     		<Set Name="Commands">
     			<Set Name="1" Action="ClearRoom" />
     			<Set Name="2" Action="CheckContainers" Target="Scientist" />
@@ -247,6 +304,26 @@ Example use:
     			<Set Name="8" Action="Kill" Target="Prototype Macroshield Generator" />
     		</Set>
     	</Set>
+    	<Set Name="2">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    			<Set Name="2" Action="NextRoom" />
+    			<Set Name="3" Action="ClearRoom" />
+    			<Set Name="4" Action="Kill" Target="Starbase Ion Field Projection Battery" />
+    			<Set Name="5" Action="Kill" Target="Starbase Ion Field Projection Battery" />
+    			<Set Name="6" Action="Kill" Target="Starbase Ion Field Projection Battery" />
+    			<Set Name="7" Action="NextRoom" />
+    			<Set Name="8" Action="Kill" Target="Prototype Macroshield Generator" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Preliminary Strike">
+    	<Set Name="2">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    		</Set>
+    	</Set>
     </Set>
     <Set Name = "The Score">
     	<Set Name="1">
@@ -255,14 +332,47 @@ Example use:
     			<Set Name="2" Action="ClearRoom" />
     		</Set>
     	</Set>
-      <Set Name = "2">
-        <Set Name = "Commands">
-          <Set Name = "1" Action = "NextRoom">
-          </Set>
-          <Set Name = "2" Action = "ClearRoom">
-          </Set>
+      <Set Name="2">
+        <Set Name="Commands">
+          <Set Name="1" Action="NextRoom" />
+          <Set Name="2" Action="ClearRoom" />
         </Set>
       </Set>
+      <Set Name="3">
+      	<Set Name="Commands">
+      		<Set Name="1" Action="NextRoom" />
+      		<Set Name="2" Action="ClearRoom" />
+      		<Set Name="3" Action="NextRoom" />
+      		<Set Name="4" Action="ClearRoom" />
+      	</Set>
+      </Set>
+    </Set>
+    <Set Name="The Voting Trail (1 of 3)">
+    	<Set Name="2">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    			<Set Name="2" Action="Kill" Target="Broadcast Tower" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="The Voting Trail (3 of 3)">
+    	<Set Name="2">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="Kill" Target="Caldari Navy" />
+    			<Set Name="3" Action="Kill" Target="Caldari Navy" />
+    			<Set Name="3" Action="Kill" Target="Vengeful Caldari Officer" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Retribution">
+    	<Set Name="3">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="Kill" Target="Angel Outpost" />
+    		</Set>
+    	</Set>
     </Set>
     <Set Name = "Recon (1 of 3)">
       <Set Name = "2">
@@ -293,6 +403,13 @@ Example use:
       </Set>
     </Set>
     <Set Name = "Smuggler Interception">
+    	<Set Name="1"> 
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="CheckContainers" Target="Militants" GroupID="186" WreckName="Transport" />
+    		</Set>
+    	</Set>
       <Set Name = "2">
         <Set Name = "Commands">
           <Set Name = "1" Action = "NextRoom">
@@ -357,7 +474,7 @@ Example use:
     <Set Name="Violent Expulsion">
     	<Set Name="1">
     		<Set Name="Commands">
-    			<Set Name="1" Action="WaitAggro" Timeout="15" />
+    			<Set Name="1" Action="WaitAggro" TimeOut="15" />
     			<Set Name="2" Action="ClearRoom" />
     		</Set>
     	</Set>
@@ -365,8 +482,8 @@ Example use:
     <Set Name="Furrier Fiasco">
     	<Set Name="1">
     		<Set Name="Commands">
-    			<Set Name="1" Action="Approach" Target="Acceleration Gate" Distance="200" />
-    			<Set Name="2" Action="WaitAggro" Timeout="15" />
+    			<Set Name="1" Action="Approach" Target="Acceleration Gate" Distance="1" />
+    			<Set Name="2" Action="WaitAggro" TimeOut="120" />
     			<Set Name="3" Action="ClearRoom" />
     			<Set Name="4" Action="NextRoom" />
     			<Set Name="5" Action="Kill" Target="Infested Laboratory" />
@@ -404,6 +521,17 @@ Example use:
     			<Set Name="5" Action="ClearRoom" />
     			<Set Name="6" Action="Kill" Target="Smuggler Stargate" />
     			<Set Name="7" Action="ClearRoom" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Pirate Invasion">
+    	<Set Name="3">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    			<Set Name="2" Action="NextRoom" />
+    			<Set Name="3" Action="ClearRoom" />
+    			<Set Name="4" Action="NextRoom" />
+    			<Set Name="5" Action="ClearRoom" />
     		</Set>
     	</Set>
     </Set>
@@ -488,25 +616,30 @@ Example use:
 					<Set Name="1" Action="ClearRoom" />
 					<Set Name="2" Action="NextRoom" />
 					<Set Name="3" Action="ClearRoom" />
-					<Set Name="4" Action="CheckContainers" Target="AIMED" GroupID="12" />
+					<Set Name="4" Action="CheckContainers" Target="AIMEDs" GroupID="12" />
     		</Set>
     	</Set>
     </Set>
     <Set Name = "Cargo Delivery">
     	<Set Name="1">
     		<Set Name="Commands">
-    			<Set Name="1" Action="ApproachBreakOnCombat" Target="Warehouse" />
-    			<Set Name="2" Action="ClearRoom" />
-    			<Set Name="3" Action="CheckContainers" Target="Synthetic Oil" GroupID="306" />
+    			<Set Name="1" Action="CheckContainers" Target="Synthetic Oil" GroupID="306" />
     		</Set>
     	</Set>
       <Set Name = "2">
         <Set Name = "Commands">
-    			<Set Name="1" Action="ApproachBreakOnCombat" Target="Warehouse" />
-    			<Set Name="2" Action="ClearRoom" />
-    			<Set Name="3" Action="CheckContainers" Target="Silicate Glass" GroupID="306" />
+    			<Set Name="1" Action="CheckContainers" Target="Silicate Glass" GroupID="306" />
         </Set>
       </Set>
+    </Set>
+    <Set Name="A Railgun Charge Is Worth a Thousand Words">
+    	<Set Name="2">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="Kill" Target="Corilian's Pleasure Yacht" />
+    		</Set>
+    	</Set>
     </Set>
     <Set Name = "Unauthorized Military Presence">
     	<Set Name="1">
@@ -530,6 +663,17 @@ Example use:
           </Set>
         </Set>
       </Set>
+      <Set Name="3">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="NextRoom" />
+    			<Set Name="4" Action="ClearRoom" />
+    			<Set Name="5" Action="WaitAggro" Timeout="30" />
+    			<Set Name="6" Action="ClearRoom" />
+    			<Set Name="7" Action="CheckContainers" Target="Militants" GroupID="186" WreckName="Transport" />
+    		</Set>
+    	</Set>
     </Set>
     <Set Name="Lost Records">
     	<Set Name="1">
@@ -538,6 +682,14 @@ Example use:
     			<Set Name="2" Action="NextRoom" />
     			<Set Name="3" Action="ClearRoom" />
     			<Set Name="4" Action="CheckContainers" Target="Federation Court Logs" GroupID="306" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="The Roving Rogue Drones">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
     		</Set>
     	</Set>
     </Set>
@@ -566,8 +718,21 @@ Example use:
           </Set>
         </Set>
       </Set>
+      <Set Name="3">
+        <Set Name="Commands">
+        	<Set Name="1" Action="ClearRoom" />
+          <Set Name="2" Action="Kill" Target="Kruul's Pleasure Hub" CategoryID="11" />
+        	<Set Name="3" Action="CheckContainers" Target="The Damsel" GroupID="12" />
+        </Set>
+      </Set>
     </Set>
     <Set Name = "Whispers in the Dark - First Contact (1 of 4)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    		</Set>
+    	</Set>
       <Set Name = "2">
         <Set Name = "Commands">
           <Set Name = "1" Action = "NextRoom">
@@ -578,6 +743,14 @@ Example use:
       </Set>
     </Set>
     <Set Name = "Whispers in the Dark - Lay and Pray (2 of 4)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="CheckContainers" Target="Construction Blocks" GroupID="12" />
+    			<Set Name="4" Action="CheckCans" />
+    		</Set>
+    	</Set>
       <Set Name = "2">
         <Set Name = "Commands">
           <Set Name = "1" Action = "NextRoom">
@@ -650,7 +823,7 @@ Example use:
     <Set Name = "Alluring Emanations">
     	<Set Name="1">
     		<Set Name="Commands">
-    			<Set Name="1" Action="ClearRoom" />
+    			<Set Name="1" Action="Kill" Target="Rogue Drone" />
     		</Set>
     	</Set>
       <Set Name = "2">
@@ -771,6 +944,8 @@ Example use:
     		<Set Name="Commands">
     			<Set Name="1" Action="NextRoom" />
     			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="WaitAggro" TimeOut="15" />
+    			<Set Name="4" Action="ClearRoom" />
     		</Set>
     	</Set>
       <Set Name = "2">
@@ -805,6 +980,13 @@ Example use:
         </Set>
       </Set>
     </Set>
+    <Set Name="Pirate Aggression">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    		</Set>
+    	</Set>
+    </Set>
     <Set Name="The Serpentis Spies">
     	<Set Name="1">
     		<Set Name="Commands">
@@ -813,6 +995,14 @@ Example use:
     		</Set>
     	</Set>
     	<Set Name="2">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Mysterious Sightings (1 of 4)">
+    	<Set Name="1">
     		<Set Name="Commands">
     			<Set Name="1" Action="ClearRoom" />
     		</Set>
@@ -842,6 +1032,13 @@ Example use:
     		</Set>
     	</Set>
     	<Set Name="2">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    			<Set Name="2" Action="NextRoom" />
+    			<Set Name="3" Action="ClearRoom" />
+    		</Set>
+    	</Set>
+    	<Set Name="3">
     		<Set Name="Commands">
     			<Set Name="1" Action="ClearRoom" />
     			<Set Name="2" Action="NextRoom" />
@@ -1004,8 +1201,24 @@ Example use:
 					<Set Name="4" Action="ClearRoom" />
 					<Set Name="5" Action="NextRoom" />
 					<Set Name="6" Action="ClearRoom" />
-					<Set Name="7" Action="Kill" Target="Control Tower" />
-					<Set Name="8" Action="CheckContainers" Target="Data Chip" />
+					<Set Name="7" Action="Kill" Target="Imperial Control Tower" />
+					<Set Name="8" Action="ClearRoom" />
+					<Set Name="9" Action="CheckContainers" Target="Data Chip" GroupID="12" />
+				</Set>
+			</Set>
+		</Set>
+		<Set Name="Portal to War (4 of 5)">
+			<Set Name="3">
+				<Set Name="Commands">
+					<Set Name="1" Action="ClearRoom" />
+				</Set>
+			</Set>
+		</Set>
+		<Set Name="Portal to War (5 of 5)">
+			<Set Name="3">
+				<Set Name="Commands">
+					<Set Name="1" Action="ClearRoom" />
+					<Set Name="2" Action="Kill" Target="Stargate" />
 				</Set>
 			</Set>
 		</Set>

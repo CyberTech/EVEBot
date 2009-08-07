@@ -142,26 +142,47 @@ objectdef obj_Social
 				{
 					This.PilotIndex:Clear
 				}
-
-				if (${Config.Combat.UseBlackList} && ( ${PilotBlackList.Used} > 1 || ${CorpBlackList.Used} > 1 || ${AllianceBlackList.Used} > 1)) || \
-					(${Config.Combat.UseWhiteList} && ( ${PilotWhiteList.Used} > 2 || ${CorpWhiteList.Used} > 2 || ${AllianceWhiteList.Used} > 2))
+    		
+    		;Update the entity index
+    		if ${Me.InSpace}
 				{
-					if ${Me.InSpace}
-					{
-						EVE:DoGetEntities[This.EntityIndex,CategoryID,CATEGORYID_ENTITY]
-					}
-					else
-					{
-						This.EntityIndex:Clear
-					}
-
-    			Passed_WhiteListCheck:Set[${This.CheckLocalWhiteList}]
+					EVE:DoGetEntities[This.EntityIndex,CategoryID,CATEGORYID_ENTITY]
+				}
+				else
+				{
+					This.EntityIndex:Clear
+				}
+					
+    		if ${Config.Combat.UseBlackList} && ( ${PilotBlackList.Used} > 0 || ${CorpBlackList.Used} > 0 || ${AllianceBlackList.Used} > 0)
+    		{
     			Passed_BlackListCheck:Set[${This.CheckLocalBlackList}]
     		}
     		else
     		{
-    			Passed_WhiteListCheck:Set[TRUE]
     			Passed_BlackListCheck:Set[TRUE]
+    		}
+    		
+    		if ${Config.Combat.UseWhiteList}
+    		{
+    			;Only check whitelists if we have more than one pilot in local
+    			if ${EVE.GetPilots} > 1
+    			{
+    				;If we have more than one pilot, check if we have people in the whitelists before checking the whitelists.
+    				if ${PilotWhiteList.Used} > 0 || ${CorpWhiteList.Used} > 0 || ${AllianceWhiteList.Used} > 0
+    				{
+    					Passed_WhiteListCheck:Set[${This.CheckLocalWhiteList}]
+    				}
+    				else
+    				{
+    					;If we have more than myself in local but no one whitelisted, we obviously aren't passing the whitelist check
+    					Passed_WhiteListCheck:Set[FALSE]
+    				}
+    			}
+    			else
+    			{
+    				;Myself only in local? I'm safe.
+    				Passed_WhiteListCheck:Set[TRUE]
+    			}
     		}
 			}
 
@@ -251,7 +272,6 @@ objectdef obj_Social
 			AllianceID:Set[${PilotIterator.Value.AllianceID}]
 			PilotID:Set[${PilotIterator.Value.CharID}]
 			PilotName:Set[${PilotIterator.Value.Name}]
-
 			if !${This.AllianceWhiteList.Contains[${AllianceID}]} && \
 				!${This.CorpWhiteList.Contains[${CorpID}]} && \
 				!${This.PilotWhiteList.Contains[${PilotID}]}
