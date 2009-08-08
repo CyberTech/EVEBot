@@ -310,9 +310,9 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 		{
 			do
 			{
-				if !${This.IsMandatoryQueued[${Target.Value.EntityID}]}
+				if !${This.IsMandatoryQueued[${Target.Value.ID}]}
 				{
-					Entity[${Target.Value.EntityID}]:UnlockTarget
+					Entity[${Target.Value.ID}]:UnlockTarget
 				}
 			}
 			while ${Target:Next(exists)}
