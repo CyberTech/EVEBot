@@ -420,6 +420,13 @@
           </Set>
         </Set>
       </Set>
+      <Set Name="3"> 
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="CheckContainers" Target="Militants" GroupID="186" WreckName="Transport" />
+    		</Set>
+    	</Set>
     </Set>
     <Set Name = "Murderer Brought To Justice">
       <Set Name = "2">
@@ -511,6 +518,107 @@
     		</Set>
     	</Set>
     </Set>
+    <Set Name="In the Shadow of War (4 of 5)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    			<Set Name="2" Action="NextRoom" />
+    			<Set Name="3" Action="ClearRoom" />
+    			<Set Name="4" Action="ApproachBreakOnCombat" Target="Ancient Starbase Ruins" />
+    			<Set Name="5" Action="ClearRoom" />
+    			<Set Name="6" Action="CheckContainers" Target="Communications Logs" GroupID="306" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="In the Shadow of War (5 of 5)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    			<Set Name="2" Action="NextRoom" />
+    			<Set Name="3" Action="ClearRoom" />
+    			<Set Name="4" Action="NextRoom" />
+    			<Set Name="5" Action="ClearRoom" />
+    			<Set Name="6" Action="NextRoom" />
+    			<Set Name="7" Action="ClearRoom" />
+    			<Set Name="8" Action="Kill" Target="Communications Tower" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Kidnappers Strike - Ambush in the Dark (1 of 10)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="CheckContainers" Target="Prisoners" GroupID="12" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Kidnappers Strike - The Kidnapping (3 of 10)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="Kill" Target="Drazin's Habitat" />
+    			<Set Name="4" Action="CheckContainers" Target="Drazin's Keycard" GroupID="12" />
+    			<Set Name="5" Action="NextRoom" />
+    			<Set Name="6" Action="ClearRoom" />
+    			<Set Name="7" Action="CheckContainers" Target="Prisoners" GroupID="12" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Kidnappers Strike - Incriminating Evidence (5 of 10)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Kidnappers Strike - The Flu Outbreak (6 of 10)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Kidnappers Strike - The Secret Meeting (7 of 10)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="NextRoom" />
+    			<Set Name="3" Action="ClearRoom" />
+    			<Set Name="4" Action="CheckContainers" Target="Prisoners" GroupID="12" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Kidnappers Strike - Defend the Civilian Convoy (8 of 10)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Kidnappers Strike - Retrieve the Prisoners (9 of 10)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="CheckContainers" Target="Prisoners" GroupID="12" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Kidnappers Strike - The Final Battle (10 of 10)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="NextRoom" />
+    			<Set Name="4" Action="ClearRoom" />
+    			<Set Name="5" Action="NextRoom" />
+    			<Set Name="6" Action="Kill" Target="Central Communication Tower" />
+    		</Set>
+    	</Set>
+    </Set>
     <Set Name="Closing the Gate">
     	<Set Name="1">
     		<Set Name="Commands">
@@ -595,9 +703,14 @@
     	</Set>
       <Set Name = "2">
         <Set Name = "Commands">
-          <Set Name = "2" Action = "ClearRoom">
+          <Set Name = "1" Action = "ClearRoom">
           </Set>
         </Set>
+      </Set>
+      <Set Name="3">
+      	<Set Name="Commands">
+      		<Set Name="1" Action="ClearRoom" />
+      	</Set>
       </Set>
     </Set>
     <Set Name="Escaped Terrorist">
@@ -630,6 +743,11 @@
         <Set Name = "Commands">
     			<Set Name="1" Action="CheckContainers" Target="Silicate Glass" GroupID="306" />
         </Set>
+      </Set>
+      <Set Name="3">
+      	<Set Name="Commands">
+      		<Set Name="1" Action="CheckContainers" Target="Spiced Wine" GroupID="306" />
+      	</Set>
       </Set>
     </Set>
     <Set Name="A Railgun Charge Is Worth a Thousand Words">
@@ -682,6 +800,69 @@
     			<Set Name="2" Action="NextRoom" />
     			<Set Name="3" Action="ClearRoom" />
     			<Set Name="4" Action="CheckContainers" Target="Federation Court Logs" GroupID="306" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Lost That Bet (2 of 5)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="WaitAggro" TimeOut="30" />
+    			<Set Name="2" Action="CheckContainers" Target="Dolls" GroupID="12" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Lost That Bet (3 of 5)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="CheckContainers" Target="Dolls" GroupID="306" />
+    			<Set Name="2" Action="NextRoom" />
+    			<Set Name="3" Action="CheckContainers" Target="Dolls" GroupID="306" />
+    			<Set Name="4" Action="NextRoom" />
+    			<Set Name="5" Action="CheckContainers" Target="Dolls" GroupID="306" />
+    			<Set Name="6" Action="NextRoom" />
+    			<Set Name="7" Action="CheckContainers" Target="Dolls" GroupID="306" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Crystal Dreams Shattered">
+    	<Set Name="3">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    			<Set Name="2" Action="NextRoom" />
+    		</Set>
+    		<Set Name="AllowedShips">
+    			<Set Name="GROUP_FRIGATE"></Set>
+    			<Set Name="GROUP_CRUISER"></Set>
+    			<Set Name="GROUP_INDUSTRIAL"></Set>
+    			<Set Name="GROUP_SHUTTLE"></Set>
+    			<Set Name="GROUP_ROOKIESHIP"></Set>
+    			<Set Name="GROUP_ASSAULTSHIP"></Set>
+    			<Set Name="GROUP_HEAVYASSAULTSHIP"></Set>
+    			<Set Name="GROUP_TRANSPORTSHIP"></Set>
+    			<Set Name="GROUP_BATTLECRUISER"></Set>
+    			<Set Name="GROUP_DESTROYER"></Set>
+    			<Set Name="GROUP_MININGBARGE"></Set>
+    			<Set Name="GROUP_COMMANDSHIP"></Set>
+    			<Set Name="GROUP_INTERDICTOR"></Set>
+    			<Set Name="GROUP_EXHUMER"></Set>
+    			<Set Name="GROUP_COVERTOPS"></Set>
+    			<Set Name="GROUP_INTERCEPTOR"></Set>
+    			<Set Name="GROUP_LOGISTICS"></Set>
+    			<Set Name="GROUP_FORCERECONSHIP"></Set>
+    			<Set Name="GROUP_STEALTHBOMBER"></Set>
+    			<Set Name="GROUP_ELECTRONICATTACKSHIP"></Set>
+    			<Set Name="GROUP_HEAVYINTERDICTOR"></Set>
+    			<Set Name="GROUP_COMBATRECONSHIP"></Set>
+    			<Set Name="GROUP_STRATEGICCRUISER"></Set>
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Duo of Death">
+    	<Set Name="3">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="CheckContainers" Target="Special Delivery" GroupID="12" />
     		</Set>
     	</Set>
     </Set>

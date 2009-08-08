@@ -16,7 +16,7 @@ objectdef obj_MissionCombat
 	variable int Version
 	variable obj_MissionCommands MissionCommands
 	variable time NextPulse
-	variable int PulseIntervalInSeconds = 1
+	variable int PulseIntervalInSeconds = 2
 
 	variable string CurrentState = "IDLE"
 	variable string CurrentCommand = "Idle"

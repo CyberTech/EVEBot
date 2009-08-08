@@ -205,7 +205,7 @@ objectdef obj_Missions
 		EVE:DoGetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
-		UI:UpdateConsole["obj_Missions: DEBUG: amIndex.Used = ${amIndex.Used}"]
+		UI:UpdateConsole["obj_Missions: DEBUG: amIndex.Used = ${amIndex.Used}",LOG_DEBUG]
 		if ${amIterator:First(exists)}
 		{
 			do
@@ -229,7 +229,7 @@ objectdef obj_Missions
 					}
 					elseif ${amIterator.Value.Type.Find[Encounter](exists)}
 					{
-						UI:UpdateConsole["obj_Missions: DEBUG: Run Combat Mission being called"]
+						UI:UpdateConsole["obj_Missions: DEBUG: Run Combat Mission being called",LOG_DEBUG]
 						call This.RunCombatMission ${amIterator.Value.AgentID}
 					}
 					else

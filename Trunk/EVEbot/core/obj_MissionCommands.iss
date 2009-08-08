@@ -3,7 +3,7 @@ objectdef obj_MissionCommands
 	method Initialize()
 	{
 		EntityCache:UpdateSearchParams["I like big butts can i cannot lie","CategoryID, CATEGORYID_ENTITY","IsNPC"]
-		EntityCache:SetUpdateFrequency[2]
+		EntityCache:SetUpdateFrequency[1]
 	}
 	;TODO - Add checks to all members that involve movement to make sure we are actually moving!
 	method MissionComplete()
@@ -368,17 +368,17 @@ objectdef obj_MissionCommands
 							KillState:Set["KILLING"]
 							KillCache:Set[${targetIterator.Value.ID}]
 						  UI:UpdateConsole["DEBUG: obj_MissionCommands - found kill target will try and kill it",LOG_DEBUG]"
-						  echo "DEBUG: obj_MissionCommands - found kill target will try and kill it"
+						  ;echo "DEBUG: obj_MissionCommands - found kill target will try and kill it"
 							return FALSE
 						}
 					}
 					while ${targetIterator:Next(exists)}
 					UI:UpdateConsole["DEBUG: obj_MissionCommands - Could not find ${entityName}",LOG_DEBUG]
-					echo "DEBUG: obj_MissionCommands - Could not find ${entityName}"
+					;echo "DEBUG: obj_MissionCommands - Could not find ${entityName}"
 					return TRUE
 				}
 				UI:UpdateConsole["DEBUG: obj_MissionCommands - Could not find find any entities",LOG_DEBUG]
-				echo "DEBUG: obj_MissionCommands - Could not find find any entities"
+				;echo "DEBUG: obj_MissionCommands - Could not find find any entities"
 				return TRUE
 			}
 			case KILLING
@@ -420,7 +420,7 @@ objectdef obj_MissionCommands
 		{
 			dist:Set[${Me.DroneControlDistance}]
 		}
-			
+		dist:Set[${Math.Calc[${dist} * 0.90]}]
 		if !${Entity[${entityID}](exists)}
 		{
 			return true
@@ -451,10 +451,10 @@ objectdef obj_MissionCommands
 				{
 					if ${Entity[${entityID}].GroupID(exists)}
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - Approaching entity with Name ${Entity[${entityID}].Name} ID ${entityID} , we are ${Entity[${entityID}].Distance} away, we want to be ${Math.Calc[${Ship.OptimalWeaponRange}*.8]} away will approach",LOG_DEBUG]
+						UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - Approaching entity with Name ${Entity[${entityID}].Name} ID ${entityID} , we are ${Entity[${entityID}].Distance} away, we want to be ${dist} away will approach",LOG_DEBUG]
 
-						didApproach:Set[${This.Approach[${KillIDCache}, ${Math.Calc[${Ship.OptimalWeaponRange} * .80]}]}]
-						if ${Entity[${entityID}].Distance} <= ${dist}
+						didApproach:Set[${This.Approach[${KillIDCache},${dist}]}]
+						if ${didApproach}
 						{
 							UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - In weapons range, will target and fire",LOG_DEBUG]
 							KillIDState:Set["TARGETING"]
@@ -483,10 +483,10 @@ objectdef obj_MissionCommands
 				{
 					if ${Entity[${KillIDCache}].GroupID(exists)}  && ${Entity[${KillIDCache}].GroupID} != GROUPID_WRECK && ${Entity[${KillIDCache}].GroupID} != GROUPID_CARGO_CONTAINER
 					{
-						didApproach:Set[${This.Approach[${KillIDCache}, ${Math.Calc[${Ship.OptimalWeaponRange} * .8]}]}]
-						echo "MissionCommands: DidApproach ${didApproach} ${Entity[${KillIDCache}]} ${Entity[${KillIDCache}].ID} ${Entity[${KillIDCache}].Distance} ${Math.Calc[${dist} * .8]}"
-						if ${Entity[${entityID}].Distance} <= ${dist}
-						{
+						;didApproach:Set[${This.Approach[${KillIDCache}, ${dist}]}]
+						;echo "MissionCommands: DidApproach ${didApproach} ${Entity[${KillIDCache}]} ${Entity[${KillIDCache}].ID} ${Entity[${KillIDCache}].Distance} ${dist}"
+						;if ${didApproach}
+						;{
 							if !${Targeting.IsMandatoryQueued[${KillIDCache}]}
 							{
 								UI:UpdateConsole["DEBUG: obj_MissionCommands - Targeting ${KillIDCache}"]
@@ -500,7 +500,7 @@ objectdef obj_MissionCommands
 								KillIDState:Set["KILLING"]
 								return FALSE
 							}
-						}
+						;}
 					}
 					else
 					{
@@ -522,7 +522,7 @@ objectdef obj_MissionCommands
 				{
 					if ${Entity[${KillIDCache}].GroupID(exists)}  && ${Entity[${KillIDCache}].GroupID} != GROUPID_WRECK && ${Entity[${KillIDCache}].GroupID} != GROUPID_CARGO_CONTAINER
 					{
-						didApproach:Set[${This.Approach[${KillIDCache}, ${Math.Calc[${Ship.OptimalWeaponRange} * .80]}]}]
+						;didApproach:Set[${This.Approach[${KillIDCache}, ${dist}]
 						UI:UpdateConsole["DEBUG: obj_MissionCommands - Entity with ID ${KillIDCache} still exists, we have no killed it yet :<",LOG_DEBUG]
 						return FALSE
 					}
@@ -546,6 +546,16 @@ objectdef obj_MissionCommands
 
 	member:bool Pull(string targetName = "NONE")
 	{
+		variable float dist
+		if ${Ship.OptimalWeaponRange} > ${Me.DroneControlDistance}
+		{
+			dist:Set[${Ship.OptimalWeaponRange}]
+		}
+		else
+		{
+			dist:Set[${Me.DroneControlDistance}]
+		}
+		dist:Set[${Math.Calc[${dist} * 0.90]}]
 		variable index:entity targetIndex
 		variable iterator     targetIterator
 		switch ${PullState}
@@ -564,7 +574,7 @@ objectdef obj_MissionCommands
 							{
 								PullState:Set["PULL"]
 								PullCache:Set[${targetIterator.Value.ID}]
-								UI:UpdateConsole["DEBUG: obj_MissionCommands - targeting closest npc",LOG_DEBUG]
+								UI:UpdateConsole["DEBUG: obj_MissionCommands - targeting closest npc"]
 								return FALSE
 							}
 						}
@@ -588,7 +598,7 @@ objectdef obj_MissionCommands
 							{
 								PullState:Set["PULL"]
 								PullCache:Set[${targetIterator.Value.ID}]
-								UI:UpdateConsole["DEBUG: obj_MissionCommands - found ${targetName} will pull it",LOG_DEBUG]
+								UI:UpdateConsole["DEBUG: obj_MissionCommands - found ${targetName} will pull it"]
 								return FALSE
 							}
 						}
@@ -606,26 +616,28 @@ objectdef obj_MissionCommands
 				{
 					if ${Entity[${PullCache}].Name.Equal[${targetName}]} || ${targetName.Equal["NONE"]}
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - attempting to kill ${targetName}",LOG_DEBUG]
+						UI:UpdateConsole["DEBUG: obj_MissionCommands.Pull.Pull - attempting to kill ${targetName}"]
 						This:PullTarget[${PullCache}]
-						if ${This.AggroCount} > 0 && ${EntityCache.EntityIterator.Value.Distance} < ${Config.Combat.MaxMissileRange}
+						if ${Entity[${PullCache}].Distance} <= ${dist} && ${This.AggroCount} > 0
 						{
 							Targeting:UnlockRandomTarget[]
-							UI:UpdateConsole["DEBUG: obj_MissionCommands - we pulled something, success!",LOG_DEBUG]
+							UI:UpdateConsole["DEBUG: obj_MissionCommands - we pulled something, success!"]
 							PullState:Set["START"]
 							return TRUE
 						}
+						;echo "Pull.Pull: Returning FALSE; entity not yet in range or no aggros."
+						return FALSE
 					}
 					else
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - name does not match cached name, resetting",LOG_DEBUG]
+						UI:UpdateConsole["DEBUG: obj_MissionCommands - name does not match cached name, resetting"]
 						PullState:Set["START"]
 						return FALSE
 					}
 				}
 				else
 				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - cached entity no longer exists, resetting",LOG_DEBUG]
+					UI:UpdateConsole["DEBUG: obj_MissionCommands - cached entity no longer exists, resetting"]
 					PullState:Set["START"]
 					return FALSE
 				}
@@ -1078,8 +1090,18 @@ objectdef obj_MissionCommands
 	}
 	method NextTarget()
 	{
-		if !${Me.ActiveTarget(exists)}
-		{
+			if !${Me.ActiveTarget(exists)}
+			{
+			variable float dist
+			if ${Ship.OptimalWeaponRange} > ${Me.DroneControlDistance}
+			{
+				dist:Set[${Ship.OptimalWeaponRange}]
+			}
+			else
+			{
+				dist:Set[${Me.DroneControlDistance}]
+			}
+			dist:Set[${Math.Calc[${dist} * 0.90]}]
 			variable int highestPriority = 0
 			variable int highestID
 			variable index:entity targetIndex
@@ -1124,8 +1146,8 @@ objectdef obj_MissionCommands
 						{
 							if !${Targeting.IsQueued[${targetIterator.Value.ID}]}
 							{
-								UI:UpdateConsole["DEBUG: obj_MissionCommands - NextTarget - Targeting ${targetIterator.Value.Name} ID ${targetIterator.Value.ID}",LOG_DEBUG]
-								Targeting:Queue[${targetIterator.Value.ID},1,1,FALSE]
+									UI:UpdateConsole["DEBUG: obj_MissionCommands - NextTarget - Targeting ${targetIterator.Value.Name} ID ${targetIterator.Value.ID}"]
+									Targeting:Queue[${targetIterator.Value.ID},1,1,FALSE]
 							}
 						}
 					}
@@ -1135,8 +1157,9 @@ objectdef obj_MissionCommands
 				{
 					if !${Targeting.IsQueued[${highestID}]}
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - NextTarget - Targeting highest priority ${targetIterator.Value.Name}",LOG_DEBUG]
-						Targeting:Queue[${highestID},1,1,FALSE]
+							UI:UpdateConsole["DEBUG: obj_MissionCommands - NextTarget - Targeting highest priority ${targetIterator.Value.Name}"]
+							
+							Targeting:Queue[${highestID},1,1,FALSE]
 					}
 				}
 			}
