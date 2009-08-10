@@ -133,6 +133,11 @@ objectdef obj_LoginHandler
 		UI:UpdateConsole["DEBUG: Current state: ${This.CurrentState}", LOG_DEBUG]
 		switch ${This.CurrentState}
 		{
+			case BANNED_HAHAHAHA
+				{
+					This.LoginTimer:Set[100]
+					break
+				}
 			case START
 				if ${Login(exists)}
 				{
@@ -175,6 +180,12 @@ objectdef obj_LoginHandler
 				This.LoginTimer:Set[${This.connectWaitTime}]
 				break
 			case CONNECTING
+				if ${EVEWindow[ByCaption,BANNED](exists)}
+				{
+					This.CurrentState:Set["BANNED_HAHAHAHA"]
+					This.LoginTimer:Set[100]
+					break
+				}
 				if ${EVEWindow[ByCaption,Connection in Progress](exists)} || \
 					${EVEWindow[ByCaption,Connection Not Allowed](exists)} || \
 					${EVEWindow[ByCaption,CONNECTION FAILED](exists)}
