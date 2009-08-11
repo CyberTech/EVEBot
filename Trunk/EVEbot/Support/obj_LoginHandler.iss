@@ -133,6 +133,7 @@ objectdef obj_LoginHandler
 		UI:UpdateConsole["DEBUG: Current state: ${This.CurrentState}", LOG_DEBUG]
 		switch ${This.CurrentState}
 		{
+			case POSSIBLE_ACCOUNT_EXPIRED
 			case BANNED_HAHAHAHA
 				{
 					This.LoginTimer:Set[100]
@@ -183,6 +184,12 @@ objectdef obj_LoginHandler
 				if ${EVEWindow[ByCaption,BANNED](exists)}
 				{
 					This.CurrentState:Set["BANNED_HAHAHAHA"]
+					This.LoginTimer:Set[100]
+					break
+				}
+				if ${EVEWindow[ByCaption,INFORMATION](exists)}
+				{
+					This.CurrentState:Set["POSSIBLE_ACCOUNT_EXPIRED"]
 					This.LoginTimer:Set[100]
 					break
 				}
