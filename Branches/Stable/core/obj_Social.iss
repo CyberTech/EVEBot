@@ -143,7 +143,7 @@ objectdef obj_Social
 				This.EntityIndex:Clear
 			}
 
-    		SystemSafe:Set[${Math.Calc[${This.CheckLocalWhiteList} & ${This.CheckLocalBlackList}](bool)}]
+    		SystemSafe:Set[${Math.Calc[${This.CheckLocalWhiteList} & ${This.CheckLocalBlackList}].Int(bool)}]
 
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
