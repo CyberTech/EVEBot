@@ -18,13 +18,13 @@ function main()
 	variable index:int ActiveDroneIDList
 	variable index:activedrone ActiveDroneList
 
-	;while TRUE
-	;{
+	while TRUE
+	{
 		echo Drone Bay Capacity: ${Me.Ship.DronebayCapacity}
 		echo Drones in Bay: ${Me.Ship.GetDrones}
 
 		UI:UpdateConsole["Launching drones..."]
-		;Me.Ship:LaunchAllDrones
+		Me.Ship:LaunchAllDrones
 		wait 30
 
 		echo "Drones in Space: ${Me.GetActiveDrones[ActiveDroneList]}"
@@ -36,15 +36,15 @@ function main()
 
 		echo " Engaging Drones..."
 		;EVE:DronesEngageMyTarget[ActiveDroneIDList]
-/*
-		while ${Me.GetActiveDroneIDs[ActiveDroneIDList]}
+
+		Me:DoGetActiveDroneIDs[ActiveDroneIDList]
+		while ${ActiveDroneIDList.Used}
 		{
-			wait 20
-			Me:DoGetActiveDroneIDs[ActiveDroneIDList]
 			echo " Recalling ${ActiveDroneIDList.Used} Drones..."
 			EVE:DronesReturnToDroneBay[ActiveDroneIDList]
-			wait 30
+			wait 50
+			Me:DoGetActiveDroneIDs[ActiveDroneIDList]
 		}
-*/
-	;}
+		wait 20
+	}
 }

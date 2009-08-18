@@ -79,7 +79,7 @@ function main(string Invitee)
 			}
 			while ${Wing:Next(exists)}
 		}
-return
+
 		echo "Fleet Member List:"
 
 		Me.Fleet:GetMembers[FleetIndex]
