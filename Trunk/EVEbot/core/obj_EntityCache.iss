@@ -77,8 +77,11 @@ objectdef obj_EntityCache inherits BaseClass
 
 	method SetUpdateFrequency(float Seconds)
 	{
-		UI:UpdateConsole["${LogPrefix}: Updated with Update Frequency of ${Seconds.Deci} seconds"]
-		This.PulseIntervalInSeconds:Set[${Seconds}]
+		if ${Seconds} != ${This.PulseIntervalInSeconds}
+		{
+			UI:UpdateConsole["${LogPrefix}: Update frequency is ${Seconds.Deci} seconds"]
+			This.PulseIntervalInSeconds:Set[${Seconds}]
+		}
 	}
 
 	method UpdateSearchParams(string VarName, string SearchTerms,string Filter = "NONE")
@@ -178,7 +181,6 @@ objectdef obj_EntityCache inherits BaseClass
 			}
 
 			This.Initialized:Set[TRUE]
-			echo "${LogPrefix}: ${CachedEntities.Used}"
 		}
 	}
 
