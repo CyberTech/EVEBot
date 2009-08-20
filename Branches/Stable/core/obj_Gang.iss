@@ -1,9 +1,9 @@
 /*
 	Fleet Class
-	
+
 	This class will contain funtions for managing and manipulating
 	your Fleet.
-	
+
 	-- GliderPro
 
 	HISTORY
@@ -22,16 +22,17 @@ objectdef obj_Fleet
 
 	method Initialize()
 	{
-		FleetMemberCount:Set[${Me.GetFleet[FleetMembers]}]
+		Me.Fleet:GetMembers[FleetMembers]
+		FleetMemberCount:Set[${FleetMembers.Used}]
 		;echo DEBUG: Populating fleet member list:: ${FleetMemberCount} members total
 		UI:UpdateConsole["obj_Fleet: Initialized", LOG_MINOR]
-		
-		/* BEGIN TEST CODE 
+
+		/* BEGIN TEST CODE
 		variable int i = 1
 		if (${FleetMemberCount} > 0)
 		{
 			do
-			{ 
+			{
 				echo DEBUG: Fleet member ${i} - ${FleetMembers.Get[${i}].ToPilot.Name}
 			}
 			while ${i:Inc} <= ${FleetMemberCount}
@@ -39,31 +40,32 @@ objectdef obj_Fleet
 		 END TEST CODE */
 	}
 
-	/* 	
+	/*
 		Issues a Fleet formation request to the player given
 		by the id parameter.
 	*/
 	method FormFleetWithPlayer(int id)
 	{
 	}
-	
+
 	method UpdateFleetList()
 	{
 		FleetMemberIndex:Set[1]
-		FleetMemberCount:Set[${Me.GetFleet[FleetMembers]}]
+		Me.Fleet:GetMembers[FleetMembers]
+		FleetMemberCount:Set[${FleetMembers.Used}]
 		;echo DEBUG: Populating Fleet member list:: ${FleetMemberCount} members total
 	}
-	
+
 	member:fleetmember CharIdToFleetMember( int charID )
 	{
 		variable fleetmember ReturnValue
 		ReturnValue:Set[NULL]
-		
+
 		This:UpdateFleetList[]
-		
+
 		variable iterator FleetMemberIterator
 		FleetMembers:GetIterator[FleetMemberIterator]
-		
+
 		if ${FleetMemberIterator:First(exists)}
 		{
 			do
@@ -73,7 +75,7 @@ objectdef obj_Fleet
 					ReturnValue:Set[${FleetMemberIterator.Value}]
 					break
 				}
-			}	
+			}
 			while ${FleetMemberIterator:Next(exists)}
 		}
 
@@ -81,21 +83,21 @@ objectdef obj_Fleet
 	}
 
 	method WarpToNextMember(int distance = 0)
-	{		
+	{
 		FleetMemberIndex:Inc
-		
+
 		if ${FleetMembers.Get[${FleetMemberIndex}].CharID} == ${_Me.CharID}
 		{
 			FleetMemberIndex:Inc
 		}
-		
+
 		if ${FleetMemberIndex} > ${FleetMemberCount}
 		{
 			FleetMemberIndex:Set[1]
 		}
-		
+
 		Ship:WarpToMember[${FleetMembers.Get[${FleetMemberIndex}].CharID},${distance}]
-	}	
+	}
 
 	method WarpToPreviousMember(int distance = 0)
 	{
@@ -103,13 +105,13 @@ objectdef obj_Fleet
 		{
 			FleetMemberIndex:Inc
 		}
-		
+
 		if ${FleetMemberIndex} > ${FleetMemberCount}
 		{
 			FleetMemberIndex:Set[1]
 		}
-		
+
 		Ship:WarpToMember[${FleetMembers.Get[${FleetMemberIndex}].CharID},${distance}]
-	}	
-	
+	}
+
 }
