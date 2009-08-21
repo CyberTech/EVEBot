@@ -120,6 +120,7 @@ objectdef obj_Hauler
  				}
  				elseif ${m_corpName.Length}
  				{
+ 					; CRITICAL TODO - corporation isn't populated by default anymore, requires a remote call to update, so we don't want to use it - fix this
  					tempString:Set[${Entity[${JetCan.Get[${JetCanCounter}]}].Owner.Corporation}]
  					echo "DEBUG: corp ${tempString}"
  					if ${tempString.Equal[${m_corpName}]}
@@ -526,24 +527,24 @@ objectdef obj_MinerHauler inherits obj_Hauler
 
 	method BuildFleetMemberList()
 	{
-		variable index:fleetmember fleet
+		variable index:fleetmember MyFleet
 		FleetMembers:Clear
-		Me:DoGetFleet[fleet]
+		Me.Fleet:GetMembers[MyFleet]
 
 		variable int idx
-		idx:Set[${fleet.Used}]
+		idx:Set[${MyFleet.Used}]
 
 		while ${idx} > 0
 		{
-			if ${fleet.Get[${idx}].CharID} != ${_Me.CharID}
+			if ${MyFleet.Get[${idx}].CharID} != ${_Me.CharID}
 			{
-				if ${fleet.Get[${idx}].ToPilot(exists)} && \
-				   ( ${fleet.Get[${idx}].ToPilot.Name.Equal["Joe The Tank"]} || \
-				     ${fleet.Get[${idx}].ToPilot.Name.Equal["Jane the Hauler"]} )
+				if ${MyFleet.Get[${idx}].ToPilot(exists)} && \
+				   ( ${MyFleet.Get[${idx}].ToPilot.Name.Equal["Joe The Tank"]} || \
+				     ${MyFleet.Get[${idx}].ToPilot.Name.Equal["Jane the Hauler"]} )
 				{
 					continue
 				}
-				FleetMembers:Queue[${fleet.Get[${idx}]}]
+				FleetMembers:Queue[${MyFleet.Get[${idx}]}]
 			}
 			idx:Dec
 		}

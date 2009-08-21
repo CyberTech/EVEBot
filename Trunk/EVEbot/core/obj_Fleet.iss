@@ -37,25 +37,25 @@ objectdef obj_Fleet
 	{
 		variable string Inviter
 
-		if ${Me.IsInFleet} || !${Me.IsInvitedToFleet}
+		if !${Me.Fleet.Invited} || ${Me.Fleet.Size}
 		{
 			return
 		}
 
 		;<html><body>charname wants you to join their fleet
-		Inviter:Set[${Me.FleetInvitationText}]
+		Inviter:Set[${Me.Fleet.InvitationText}]
 		Inviter:Set[${Inviter.Left[${Inviter.Find[" wants you to join their fleet"]}]}]
 		Inviter:Set[${Inviter.Mid[13, -1]}]
 
 		if ${This.AllowedFleetMembers.Contains["${Inviter}"]}
 		{
 			UI:UpdateConsole["obj_Fleet: Accepting fleet invitation from ${Inviter}"]
-			Me:AcceptFleetInvite
+			Me.Fleet:AcceptInvite
 		}
 		else
 		{
 			UI:UpdateConsole["obj_Fleet: Rejecting fleet invitation from ${Inviter}"]
-			Me:RejectFleetInvite
+			Me.Fleet:RejectInvite
 		}
 	}
 
@@ -70,7 +70,8 @@ objectdef obj_Fleet
 	method UpdateFleetList()
 	{
 		FleetMemberIndex:Set[1]
-		FleetMemberCount:Set[${Me.GetFleet[FleetMembers]}]
+		Me.Fleet:GetMembers[FleetMembers]}
+		FleetMemberCount:Set[${FleetMembers.Used}]
 		;echo DEBUG: Populating Fleet member list:: ${FleetMemberCount} members total
 	}
 

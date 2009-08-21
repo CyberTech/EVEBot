@@ -117,7 +117,7 @@ objectdef obj_Ship
 	variable bool InteruptWarpWait = FALSE
 	variable string m_Type
 	variable int m_TypeID
-	
+
 	variable collection:float HybridNameModPairs
 	variable collection:float AmmoNameModPairs
 	variable collection:float FrequencyNameModPairs
@@ -182,7 +182,7 @@ objectdef obj_Ship
 			This.NextPulse:Update
 		}
 	}
-	
+
 	method PopulateNameModPairs()
 	{
 		HybridNameModPairs:Set["Spike",1.8]
@@ -197,7 +197,7 @@ objectdef obj_Ship
 		HybridNameModPairs:Set["Plutonium",0.625]
 		HybridNameModPairs:Set["Antimatter",0.5]
 		HybridNameModPairs:Set["Javelin",0.25]
-		
+
 		AmmoNameModPairs:Set["Tremor",1.8]
 		AmmoNameModPairs:Set["Carbonized Lead",1.6]
 		AmmoNameModPairs:Set["Nuclear",1.4]
@@ -210,7 +210,7 @@ objectdef obj_Ship
 		AmmoNameModPairs:Set["EMP",0.5]
 		AmmoNameModPairs:Set["Hail",0.5]
 		AmmoNameModPairs:Set["Quake",0.25]
-		
+
 		FrequencyNameModPairs:Set["Aurora",1.8]
 		FrequencyNameModPairs:Set["Radio",1.6]
 		FrequencyNameModPairs:Set["Scorch",1.5]
@@ -233,7 +233,7 @@ objectdef obj_Ship
 		variable int AvgSigRadius
 		variable float TurretOptimal
 		variable float Max = 0
-		
+
 		if ${TurretBaseOptimals.Element[${turret}](exists)}
 		{
 			TurretOptimal:Set[${TurretBaseOptimals.Element[${turret}]}]
@@ -243,12 +243,12 @@ objectdef obj_Ship
 			TurretBaseOptimals:Set[${turret},${This.TurretBaseOptimal[${turret}]}]
 			TurretOptimal:Set[${TurretBaseOptimals.Element[${turret}]}]
 		}
-		
+
 		if ${Math.Calc[${Entity[${EntityID}].Distance} - ${TurretOptimal}]} > 0
 		{
 			Max:Set[${Math.Calc[${Entity[${EntityID}].Distance} - ${TurretOptimal}]}]
 		}
-		
+
 		if ${Entity[${EntityID}].Name.Find[Battleship](exists)} || ${Entity[${EntityID}].Name.Find[Hauler]}
 		{
 			AvgSigRadius:Set[450]
@@ -265,10 +265,10 @@ objectdef obj_Ship
 		{
 			AvgSigRadius:Set[35]
 		}
-		
+
 		Blob:Set[${Math.Calc[((1/${tracking}) * (${Entity[${EntityID}].TransverseVelocity}/${Entity[${EntityID}].Distance}) * (${MyShip.ScanResolution} / ${AvgSigRadius})) ^^ 2 + \
 			(${Max} / ${falloff}) ^^ 2]}]
-			
+
 			return 0.5 && ${Blob}
 	}
 
@@ -283,10 +283,10 @@ objectdef obj_Ship
 		variable iterator AvailableCharge
 		variable iterator LookupIterator
 		variable string ChargeType
-		
+
 		This.ModuleList_Weapon:GetIterator[Weapon]
 		variable float BaseOptimal
-		
+
 		variable int CurrentTurret = 0
 		variable int idx
 		for ( idx:Set[0]; ${idx} <= 7; idx:Inc )
@@ -301,17 +301,17 @@ objectdef obj_Ship
 					break
 			}
 		}
-		
+
 		if ${Weapon:First(exists)}
 		{
 			do
 			{
 				BaseOptimal:Set[${This.TurretBaseOptimal[${Weapon.Key}]}]
 				UI:UpdateConsole["obj_Ship:BuildLookupTables[]: TurretBaseOptimals.Element[${Weapon.Key}]: ${TurretBaseOptimals.Element[${Weapon.Key}]}",LOG_DEBUG]
-				
+
 				Weapon.Value:DoGetAvailableAmmo[AvailableCharges]
 				AvailableCharges:GetIterator[AvailableCharge]
-				
+
 				UI:UpdateConsole["obj_Ship:BuildLookupTables[]: GroupID: ${Weapon.Value.ToItem.GroupID}",LOG_DEBUG]
 				switch ${Weapon.Value.ToItem.GroupID}
 				{
@@ -327,7 +327,7 @@ objectdef obj_Ship
 				}
 				UI:UpdateConsole["obj_Ship:BuildLookupTables[]: ChargeType: ${ChargeType}",LOG_DEBUG]
 				${ChargeType}NameModPairs:GetIterator[LookupIterator]
-				
+
 				if ${AvailableCharge:First(exists)}
 				{
 					do
@@ -376,7 +376,7 @@ objectdef obj_Ship
 		variable string slot = ${This.TurretSlots.Element[${turret}]}
 		UI:UpdateConsole["obj_Ship.NeedAmmoChange[${range},${turret}]: BestAmmo: ${BestAmmo}",LOG_DEBUG]
 		variable bool FoundAmmo = FALSE
-		
+
 		if ${MyShip.Module[${slot}].Charge.Name.Find[${BestAmmo}](exists)}
 		{
 			FoundAmmo:Set[TRUE]
@@ -396,27 +396,27 @@ objectdef obj_Ship
 	/* LoadOptimalAmmo(float range, int turret):
 	Determine the best ammo type for passed turret at passed range and swap to it. */
 	method LoadOptimalAmmo(float range, int turret)
-	{ 
+	{
 		variable string BestAmmo = ${This.BestAmmoTypeByRange[${range},${turret}]}
 		variable string slot = ${This.TurretSlots.Element[${turret}]}
 		UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(${range}): Best Ammo: ${BestAmmo}",LOG_DEBUG]
-		
+
 		variable index:item AmmoIndex
 		variable iterator AmmoIterator
-		
+
 		MyShip.Module[${slot}]:DoGetAvailableAmmo[AmmoIndex]
-		AmmoIndex:GetIterator[AmmoIterator]			
+		AmmoIndex:GetIterator[AmmoIterator]
 		if ${AmmoIterator:First(exists)}
 		{
 			do
 			{
 				UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(${range},${turret}): Found best ammo: ${AmmoIterator.Value.Name.Find[${BestAmmo}](exists)}",LOG_DEBUG]
 				if ${AmmoIterator.Value.Name.Find[${BestAmmo}](exists)} && !${MyShip.Module[${slot}].Charge.Name.Find[${BestAmmo}](exists)}
-				{					
+				{
 					UI:UpdateConsole["obj_Ship:LoadOptimalAmmo(${range},${turret}): Changing ammo to ${AmmoIterator.Value.ID}/${AmmoIterator.Value.Name}, ${MyShip.Module[${slot}].MaxCharges}. Turret Active? ${MyShip.Module[${slot}].IsActive}",LOG_DEBUG]
-					MyShip.Module[${slot}]:ChangeAmmo[${AmmoIterator.Value.ID},${MyShip.Module[${slot}].MaxCharges}]							
+					MyShip.Module[${slot}]:ChangeAmmo[${AmmoIterator.Value.ID},${MyShip.Module[${slot}].MaxCharges}]
 					return
-				}					
+				}
 			}
 			while ${AmmoIterator:Next(exists)}
 		}
@@ -427,12 +427,12 @@ objectdef obj_Ship
 	member:float GetMaximumTurretRange(int turret)
 	{
 		variable string slot = ${This.TurretSlots.Element[${turret}]}
-		
+
 		if !${MyShip.Module[${slot}].Charge(exists)}
 		{
 			return ${Math.Calc[${This.TurretBaseOptimal[${turret}]} * ${This.TurretMaxRangeMod}]}
 		}
-		
+
 		variable string ChargeName = ${MyShip.Module[${slot}].Charge.Name}
 		variable iterator RangeIterator
 		UI:UpdateConsole["obj_Ship This.TurretMaximumRanges.Element[${turret}](exists) ${This.TurretMaximumRanges.Element[${turret}](exists)} ${This.TurretMaximumRanges.Element[${turret}].Used}",LOG_DEBUG]
@@ -456,19 +456,19 @@ objectdef obj_Ship
 		UI:UpdateConsole["obj_Ship.GetMaximumTurretRange(${turret},${ChargeType},${ChargeName}): Could not find a match for ${ChargeName} in the TurretMaximumRanges dictionary!",LOG_CRITICAL]
 		This.TurretMaximumRanges.Element[${turret}]:Set[${MyShip.Module[${slot}].Charge.Name},${Math.Calc[${This.TurretMaxRangeMod} * ${This.TurretBaseOptimal[${turret}]}]}]
 		return ${This.TurretMaximumRanges.Element[${turret}].Element[${MyShip.Module[${slot}].Charge.Name}]}
-	}	
+	}
 
 	/* float GetMinimumTurretRange(int turret):
 	Get the slot for the passed Turret, get its current ammo type, and check against the MinimumRanges dictionary for a match. */
 	member:float GetMinimumTurretRange(int turret)
 	{
 		variable string slot = ${This.TurretSlots.Element[${turret}]}
-		
+
 		if !${MyShip.Module[${slot}].Charge(exists)}
 		{
 			return ${Math.Calc[${This.TurretBaseOptimal[${turret}]} * ${This.TurretMinRangeMod}]}
 		}
-		
+
 		variable string ChargeName = ${MyShip.Module[${slot}].Charge.Name}
 		variable iterator RangeIterator
 		if ${This.TurretMinimumRanges.Element[${turret}](exists)}
@@ -490,15 +490,15 @@ objectdef obj_Ship
 		UI:UpdateConsole["obj_Ship.GetMinimumTurretRange(${turret},${ChargeType},${ChargeName}): Could not find charge ${ChargeName} in TurretMinimumRanges dictionary!",LOG_DEBUG]
 		This.TurretMinimumRanges.Element[${turret}]:Set[${MyShip.Module[${slot}].Charge.Name},${Math.Calc[${This.TurretMinRangeMod} * ${This.TurretBaseOptimal[${turret}]}]}]
 		return ${This.TurretMinimumRanges.Element[${turret}].Element[${MyShip.Module[${slot}].Charge.Name}]}
-	}	
-	
+	}
+
 	/* float TurretBaseOptimal(int turret):
 	Calculate and return the base optimal range for passed turret. */
 	member:float TurretBaseOptimal(int turret)
 	{
 		variable string slot = ${This.TurretSlots.Element[${turret}]}
 		variable float BaseOptimal = 0
-		
+
 		switch ${MyShip.Module[${slot}].ToItem.GroupID}
 		{
 			case GROUP_PROJECTILEWEAPON
@@ -532,33 +532,33 @@ objectdef obj_Ship
 				return ${MyShip.Module[${slot}].OptimalRange}
 		}
 	}
-	
+
 	member:float GetTurretBaseOptimal(int turret, string ChargeType)
 	{
 		if ${This.TurretBaseOptimals.Element[${turret}](exists)}
 		{
 			return ${This.TurretBaseOptimals.Element[${turret}](exists)}
 		}
-		
+
 		variable string slot = ${This.TurretSlots[${turret}]}
 		variable index:item AmmoIndex
 		variable iterator AmmoIterator
-		
+
 		variable float BaseOptimal
 		variable float RangeMod = 0
-		
+
 		variable iterator FrequencyPairIterator
 		variable iterator HybridPairIterator
 		variable iterator AmmoPairIterator
 		FrequencyNameModPairs:GetIterator[FrequencyPairIterator]
 		HybridNameModPairs:GetIterator[HybridPairIterator]
 		AmmoNameModPairs:GetIterator[AmmoPairIterator]
-		
+
 		if !${MyShip.Module[${slot}].Charge(exists)}
 		{
 			RangeMod:Set[${MyShip.Module[${slot}].OptimalRange}]
 		}
-			
+
 		if ${${ChargeType}PairIterator:First(exists)}
 		{
 			do
@@ -588,9 +588,9 @@ objectdef obj_Ship
 	turret requires and calling GetBestAmmoTypeByRange using that charge type */
 	member:string BestAmmoTypeByRange(float range, int turret)
 	{
-		variable string slot = ${This.TurretSlots.Element[${turret}]}	
+		variable string slot = ${This.TurretSlots.Element[${turret}]}
 		variable string BestAmmoType
-		
+
 		switch ${MyShip.Module[${slot}].ToItem.GroupID}
 		{
 			case GROUP_PROJECTILEWEAPON
@@ -631,32 +631,32 @@ objectdef obj_Ship
 	{
 		variable string slot = ${This.TurretSlots[${turret}]}
 		UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range},${turret},${ChargeType}): called, slot ${slot}",LOG_DEBUG]
-		
+
 		variable index:item AmmoIndex
 		variable iterator AmmoIterator
-		
+
 		variable float RangeMod
 		variable float TurretOptimal
-		
+
 		variable iterator FrequencyPairIterator
 		variable iterator HybridPairIterator
 		variable iterator AmmoPairIterator
 		FrequencyLookupTable:GetIterator[FrequencyPairIterator]
 		HybridLookupTable:GetIterator[HybridPairIterator]
 		AmmoLookupTable:GetIterator[AmmoPairIterator]
-		
+
 		variable float OldDelta = 0
 		variable float NewDelta = 0
 		variable string BestSoFar
 		variable string HighestSoFar
 		variable float HighestRangeSoFar = 0
 		variable bool BestFound = FALSE
-				
+
 		;Moved these down here = doesn't help at all to get available ammo for a freakin' nonexistent WeaponIterator value!
 		; This must have worked previously out of pure luck
 		MyShip.Module[${slot}]:DoGetAvailableAmmo[AmmoIndex]
 		AmmoIndex:GetIterator[AmmoIterator]
-		
+
 		variable float BaseOptimal = ${TurretBaseOptimals.Element[${turret}]}
 		UI:UpdateConsole["obj_Ship.GetBestAmmoTypeByRange(${range},${turret}): BaseOptimal: ${BaseOptimal}",LOG_DEBUG]
 
@@ -665,7 +665,7 @@ objectdef obj_Ship
 		; it will help account for rats moving towards us (common).
 		range:Set[${Math.Calc[${range} * 0.85]}]
 		; 0.85 is pretty random. I should see if there is a "better"
-		
+
 		/*figure out the best ammo for a given range. */
 		if ${AmmoIterator:First(exists)}
 		{
@@ -684,7 +684,7 @@ objectdef obj_Ship
 								BestFound:Set[TRUE]
 								OldDelta:Set[${NewDelta}]
 							}
-							
+
 							if ${HighestRangeSoFar} == 0 || ${NewDelta} > ${HighestRangeSoFar}
 							{
 								HighestRangeSoFar:Set[${NewDelta}]
@@ -696,7 +696,7 @@ objectdef obj_Ship
 					while ${${ChargeType}PairIterator:Next(exists)}
 				}
 			}
-			while ${AmmoIterator:Next(exists)}				
+			while ${AmmoIterator:Next(exists)}
 		}
 		if ${${ChargeType}PairIterator:First(exists)}
 		{
@@ -714,7 +714,7 @@ objectdef obj_Ship
 						BestFound:Set[TRUE]
 						OldDelta:Set[${NewDelta}]
 					}
-					
+
 					if ${HighestRangeSoFar} == 0 || ${NewDelta} > ${HighestRangeSoFar}
 					{
 						HighestRangeSoFar:Set[${NewDelta}]
@@ -1031,7 +1031,7 @@ objectdef obj_Ship
 			}
 			while ${Module:Next(exists)}
 		}
-		
+
 		UI:UpdateConsole["Active Resistance Modules:", LOG_MINOR, 2]
 		This.ModuleList_ActiveResists:GetIterator[Module]
 		if ${Module:First(exists)}
@@ -1713,7 +1713,7 @@ objectdef obj_Ship
 		variable iterator FleetMember
 
 		FleetMembers:Clear
-		Me:DoGetFleet[FleetMembers]
+		Me.Fleet:GetMembers[FleetMembers]}
 		FleetMembers:GetIterator[FleetMember]
 
 		if ${FleetMember:First(exists)}
@@ -1795,10 +1795,10 @@ objectdef obj_Ship
 
 		EVE:ClearAllWaypoints
 		wait 10
-		
+
 		while ${DestinationSystemID} != ${_Me.SolarSystemID}
 		{
-			EVE:DoGetToDestinationPath[apRoute]	
+			EVE:DoGetToDestinationPath[apRoute]
 			UI:UpdateConsole["DEBUG: apRoute.Used = ${apRoute.Used}",LOG_DEBUG]
 			if ${apRoute.Used} == 0
 			{
@@ -1806,7 +1806,7 @@ objectdef obj_Ship
 				UI:UpdateConsole["Setting autopilot from ${Universe[${_Me.SolarSystemID}].Name} to ${Universe[${DestinationSystemID}].Name}"]
 				Universe[${DestinationSystemID}]:SetDestination
 			}
-			
+
 			call This.ActivateAutoPilot
 		}
 	}
@@ -2233,7 +2233,7 @@ objectdef obj_Ship
 	{
 		variable iterator WeaponIterator
 		This.ModuleList_Weapon:GetIterator[WeaponIterator]
-		
+
 		if ${WeaponIterator:First(exists)}
 		{
 			do

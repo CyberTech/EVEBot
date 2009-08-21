@@ -32,7 +32,7 @@ function main(... Args)
   variable int k = 1
   variable int WaitCount = 0
   variable int Iterator = 1
-  
+
   SalvageYardFound:Set[FALSE]
   LeftStation:Set[FALSE]
   DoLoot:Set[FALSE]
@@ -49,9 +49,9 @@ function main(... Args)
      waitframe
   }
   while !${ISXEVE.IsReady}
-  
+
   echo " \n \n \n** EVE Salvager Script by Amadeus ** \n \n"
-  
+
   ; 'Args' is an array ... arrays are static.  Copying to an index just in case we have a desire at some point to add/remove elements.
 	if ${Args.Size} > 0
 	{
@@ -63,7 +63,9 @@ function main(... Args)
 			{
 				UsingAt:Set[TRUE]
 				Iterator:Inc
-				MyFleetCount:Set[${Me.GetFleet[MyFleet]}]
+				Me.Fleet:GetMembers[MyFleet]}
+				MyFleetCount:Set[${MyFleet.Used}]
+
 				if ${MyFleetCount} <= 0
 				{
 				    echo "- Sorry -- you cannot clear a field 'at' someone that is not in your fleet."
@@ -80,14 +82,14 @@ function main(... Args)
 			        }
 			    }
 			    while ${FleetIterator:Inc} <= ${MyFleetCount}
-			    
+
 			    if !${FoundThem}
 			    {
 			        echo "- There does not seem to be a fleet member with the name '${Args[${Iterator}]}'..."
 			        echo "- Aborting script"
 			        return
 			    }
-			    
+
 			}
 			elseif (${Args[${Iterator}].Equal[-STOP]} || ${Args[${Iterator}].Equal[-stop]})
     			StopAfterSalvaging:Set[TRUE]
@@ -107,13 +109,13 @@ function main(... Args)
   	echo "* Flags:   '-loot'  (the script will loot all cans that are found in space)"
   	echo "*          '-stop'  (the script will stop after the last wreck is handled and will not return to the base/location from which you started)"
   	return
-  }  
-  
+  }
+
   if ${DoLoot}
   	echo "- The Salvager will loot cans as it goes."
   else
   	echo "- The Salvager will *NOT* loot cans as it goes."
-  
+
   MyBookmarksCount:Set[${EVE.GetBookmarks[MyBookmarks]}]
 
   ;;; For use with the -at flag
@@ -133,16 +135,16 @@ function main(... Args)
 			  		}
 			   }
 			   while ${k:Inc} <= ${MyBookmarksCount}
-			
+
 			   if !${SalvagerHomeBaseFound}
 			   {
 			   		echo "- Creating 'Salvager Home Base' bookmark..."
 			  		EVE:CreateBookmark["Salvager Home Base"]
 			  		wait 10
-			 	 } 
-			 	   			
+			 	 }
+
 		   echo "- Undocking from station..."
-		   EVE:Execute[CmdExitStation]	
+		   EVE:Execute[CmdExitStation]
 		   wait 150
 		   Counter:Set[0]
 		   if (${Me.InStation})
@@ -153,10 +155,10 @@ function main(... Args)
 		   			Counter:Inc[20]
 			   			if (${Counter} > 300)
 			   			{
-			   			  echo "- Undocking attempt failed ... trying again." 
+			   			  echo "- Undocking attempt failed ... trying again."
 			   				EVE:Execute[CmdExitStation]
 			   				Counter:Set[0]
-			   			}	   			   			
+			   			}
 		   		}
 		   		while (${Me.InStation} || !${EVEWindow[Local](exists)} || !${Me.InStation(exists)})
 		   }
@@ -165,21 +167,21 @@ function main(... Args)
 		}
 		wait 1
 	}
-	
+
 	echo "- Warping to '${MyFleet.Get[${FleetIterator}].ToPilot.Name}' for salvage operation..."
 	MyFleet.Get[${FleetIterator}]:WarpTo
 	do
 	{
 		wait 20
 	}
-	while (${Me.ToEntity.Mode} == 3)	
+	while (${Me.ToEntity.Mode} == 3)
 
     wait 10
 	call DoSalvage ${DoLoot}
-	
+
 	; Remove bookmark now that we're done
 	wait 2
-	echo "- Salvage operation at '${MyFleet.Get[${FleetIterator}].ToPilot.Name}' complete..." 
+	echo "- Salvage operation at '${MyFleet.Get[${FleetIterator}].ToPilot.Name}' complete..."
   }
 
   ; Checks required for using bookmarks...
@@ -189,10 +191,10 @@ function main(... Args)
       {
         echo "- Sorry, you do not appear to have any bookmarks!"
         return
-      }  
+      }
   }
-    
-    
+
+
   ;;; Loop for use with bookmarks...we skip this if using -at ;;;;;;;
   if !${UsingAt}
   {
@@ -203,20 +205,20 @@ function main(... Args)
         do
         {
     		if (${MyBookmarks.Get[${j}].Label.Find[${SalvageLocationLabels[${i}]}]} > 0)
-    		{  
+    		{
     		  SalvageYardFound:Set[TRUE]
     	      if (!${SalvageYardFound})
     	      {
                  echo "- Sorry, no bookmarks were found that matched the arguments given."
-                 return   	        
+                 return
     	      }
     	      else
     	      {
     	         echo "- Salvage location found in bookmarks: (${SalvageLocationLabels[${i}]})..."
     		  }
-    		
-    	
-    		;;; Leave station 
+
+
+    		;;; Leave station
     		if !${LeftStation}
     		{
        			if ${Me.InStation}
@@ -231,16 +233,16 @@ function main(... Args)
     				  		}
     				   }
     				   while ${k:Inc} <= ${MyBookmarksCount}
-    				
+
     				   if !${SalvagerHomeBaseFound}
     				   {
     				   		echo "- Creating 'Salvager Home Base' bookmark..."
     				  		EVE:CreateBookmark["Salvager Home Base"]
     				  		wait 10
-    				   } 
-    				 	   			
+    				   }
+
        			   echo "- Undocking from station..."
-       			   EVE:Execute[CmdExitStation]	
+       			   EVE:Execute[CmdExitStation]
        			   wait 150
        			   Counter:Set[0]
        			   if (${Me.InStation})
@@ -251,10 +253,10 @@ function main(... Args)
        			   			Counter:Inc[20]
     				   			if (${Counter} > 300)
     				   			{
-    				   			  echo "- Undocking atttempt failed ... trying again." 
+    				   			  echo "- Undocking atttempt failed ... trying again."
     				   				EVE:Execute[CmdExitStation]
     				   				Counter:Set[0]
-    				   			}	   			   			
+    				   			}
        			   		}
        			   		while (${Me.InStation} || !${EVEWindow[Local](exists)} || !${Me.InStation(exists)})
        			   }
@@ -265,8 +267,8 @@ function main(... Args)
        			   echo "- WARNING: You must be in a station to properly utilize this script."
        			wait 1
     		}
-    		
-    		;;; Set destination and then activate autopilot (if we're not in that system to begin with)    			
+
+    		;;; Set destination and then activate autopilot (if we're not in that system to begin with)
     		if (${MyBookmarks[${j}].SolarSystemID} != ${Me.SolarSystemID})
     		{
     		  echo "- Setting Destination and activating auto pilot for salvage operation ${i} (${MyBookmarks.Get[${j}].Label})."
@@ -295,7 +297,7 @@ function main(... Args)
     			while !${Me.ToEntity.IsCloaked}
     			wait 5
     		}
-    		
+
     		;;; Warp to location
     		echo "- Warping to salvage location..."
     		MyBookmarks[${j}]:WarpTo
@@ -304,11 +306,11 @@ function main(... Args)
     		{
     			wait 20
     		}
-    		while (${Me.ToEntity.Mode} == 3)	
-        
+    		while (${Me.ToEntity.Mode} == 3)
+
             wait 10
     		call DoSalvage ${DoLoot}
-    		
+
     		; Remove bookmark now that we're done
     		wait 2
     		echo "- Salvage operation at '${SalvageLocationLabels[${i}]}' complete ... removing bookmark."
@@ -321,14 +323,14 @@ function main(... Args)
       while ${i:Inc} <= ${NumSalvageLocations}
   }
   ; Loop for use with bookmarks ENDS ;;;;;;;;;;;;;;;;;;;
-  
-  
-  
+
+
+
   if (${StopAfterSalvaging})
     return
-  
+
   ;;; Finished...returning home ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  echo "- Salvage operations completed .. returning to home base"	
+  echo "- Salvage operations completed .. returning to home base"
   if (${EVEWindow[MyShipCargo](exists)})
   	EVEWindow[MyShipCargo]:Close
   MyBookmarksCount:Set[${EVE.GetBookmarks[MyBookmarks]}]
@@ -363,7 +365,7 @@ function main(... Args)
  				}
  				while !${Me.ToEntity.IsCloaked}
 			}
-   			
+
 			;;; Warp to location
 			echo "- Warping to home base location"
 			MyBookmarks[${j}]:WarpTo
@@ -372,9 +374,9 @@ function main(... Args)
 			{
 				wait 20
 			}
-			while (${Me.ToEntity.Mode} == 3)	
+			while (${Me.ToEntity.Mode} == 3)
 			wait 20
-			
+
 			;;; Dock, if applicable
 			if ${MyBookmarks[${j}].ToEntity(exists)}
 			{
@@ -386,9 +388,9 @@ function main(... Args)
 						wait 20
 					}
 					while (${MyBookmarks[${j}].ToEntity.Distance} > 50)
-					
+
 					MyBookmarks[${j}].ToEntity:Dock
-					Counter:Set[0]			
+					Counter:Set[0]
 					do
 					{
 					   wait 20
@@ -396,20 +398,20 @@ function main(... Args)
 					   if (${Counter} > 200)
 					   {
 					      echo " - Docking atttempt failed ... trying again."
-					      ;EVE.Bookmark[${Destination}].ToEntity:Dock	
+					      ;EVE.Bookmark[${Destination}].ToEntity:Dock
 					      Entity[CategoryID,3]:Dock
 					      Counter:Set[0]
 					   }
 					}
-					while (!${Me.InStation})					
+					while (!${Me.InStation})
 				}
 			}
 		}
 	}
 	while ${j:Inc} <= ${MyBookmarksCount}
  	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
- 	
- 	
+
+
  	;;; unload all "salvaged" items to hangar ;;;;;;;;;;;;;;
   wait 10
   echo "- Unloading Salvaged Items..."
@@ -421,7 +423,7 @@ function main(... Args)
  		call TransferLootToHangar
  	}
  	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
- 	
+
  	; Remove the "Salvager Home Base" bookmark  (it's created each time the script is run)
  	EVE.Bookmark["Salvager Home Base"]:Remove
 

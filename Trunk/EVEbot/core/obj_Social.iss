@@ -142,7 +142,7 @@ objectdef obj_Social
 				{
 					This.PilotIndex:Clear
 				}
-    		
+
     		;Update the entity index
     		if ${Me.InSpace}
 				{
@@ -152,7 +152,7 @@ objectdef obj_Social
 				{
 					This.EntityIndex:Clear
 				}
-					
+
     		if ${Config.Combat.UseBlackList} && ( ${PilotBlackList.Used} > 0 || ${CorpBlackList.Used} > 0 || ${AllianceBlackList.Used} > 0)
     		{
     			Passed_BlackListCheck:Set[${This.CheckLocalBlackList}]
@@ -161,7 +161,7 @@ objectdef obj_Social
     		{
     			Passed_BlackListCheck:Set[TRUE]
     		}
-    		
+
     		if ${Config.Combat.UseWhiteList}
     		{
     			;Only check whitelists if we have more than one pilot in local
@@ -206,7 +206,7 @@ objectdef obj_Social
 				else
 				{
 					UI:UpdateConsole["Channel Local: ${sAuthor.Escape}: ${sMessageText.Escape}", LOG_MINOR]
-				}	
+				}
 			}
 		}
 	}
@@ -223,22 +223,22 @@ objectdef obj_Social
 	member:bool IsSafe()
 	{
 		variable bool is_safe = TRUE
-		
+
 		if !${Passed_LowStandingCheck}
 		{
 			is_safe:Set[FALSE]
 		}
-		
+
 		if !${Passed_WhiteListCheck}
 		{
 			is_safe:Set[FALSE]
 		}
-		
+
 		if !${Passed_BlackListCheck}
 		{
 			is_safe:Set[FALSE]
 		}
-		
+
 		return ${is_safe}
 	}
 
@@ -276,14 +276,7 @@ objectdef obj_Social
 				!${This.CorpWhiteList.Contains[${CorpID}]} && \
 				!${This.PilotWhiteList.Contains[${PilotID}]}
 			{
-				if ${PilotIterator.Value.Alliance(exists)}
-				{
-					UI:UpdateConsole["Alert: Non-Whitelisted Pilot: ${PilotName} (${PilotID}) ${PilotIterator.Value.Corporation} (${CorpID}) ${PilotIterator.Value.Alliance} (${AllianceID})", LOG_CRITICAL]
-				}
-				else
-				{
-					UI:UpdateConsole["Alert: Non-Whitelisted Pilot: ${PilotName} (${PilotID}) ${PilotIterator.Value.Corporation} (${CorpID})", LOG_CRITICAL]
-				}
+				UI:UpdateConsole["Alert: Non-Whitelisted Pilot: ${PilotName} ID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_CRITICAL]
 				Result:Set[FALSE]
 			}
 		}
@@ -315,12 +308,12 @@ objectdef obj_Social
 		{
 			if ${This.AllianceBlackList.Contains[${PilotIterator.Value.AllianceID}]}
 			{
-				UI:UpdateConsole["Alert: Blacklisted Alliance: Pilot: ${PilotIterator.Value.Name} Alliance: ${PilotIterator.Value.Alliance}", LOG_CRITICAL]
+				UI:UpdateConsole["Alert: Blacklisted Alliance: Pilot: ${PilotIterator.Value.Name} AllianceID: ${PilotIterator.Value.AllianceID}", LOG_CRITICAL]
 				Result:Set[FALSE]
 			}
 			if ${This.CorpBlackList.Contains[${PilotIterator.Value.CorporationID}]}
 			{
-				UI:UpdateConsole["Alert: Blacklisted Corporation: Pilot: ${PilotIterator.Value.Name} Corp: ${PilotIterator.Value.Corporation}", LOG_CRITICAL]
+				UI:UpdateConsole["Alert: Blacklisted Corporation: Pilot: ${PilotIterator.Value.Name} CorpID: ${PilotIterator.Value.CorporationID}", LOG_CRITICAL]
 				Result:Set[FALSE]
 			}
 			if ${This.PilotBlackList.Contains[${PilotIterator.Value.CharID}]}
@@ -428,19 +421,19 @@ objectdef obj_Social
 				if (${PilotIterator.Value.Standing.AllianceToAlliance} < ${Config.Defense.MinimumAllianceStanding} || \
 					${PilotIterator.Value.Standing.CorpToAlliance} < ${Config.Defense.MinimumAllianceStanding})
 				{
-					UI:UpdateConsole["Social: Pilot Alliance Below Standing Threshold: ${PilotIterator.Value.Name} ${PilotIterator.Value.Corporation} Alliance: ${PilotIterator.Value.Alliance}", LOG_CRITICAL]
+					UI:UpdateConsole["Social: Pilot Alliance Below Standing Threshold: ${PilotIterator.Value.Name} CorpID: ${PilotIterator.Value.CorporationID} AllianceID: ${PilotIterator.Value.AllianceID}", LOG_CRITICAL]
 					HostilesPresent:Set[TRUE]
 				}
 				if (${PilotIterator.Value.Standing.CorpToCorp} < ${Config.Defense.MinimumCorpStanding} || \
 					${PilotIterator.Value.Standing.MeToCorp} < ${Config.Defense.MinimumCorpStanding})
 				{
-					UI:UpdateConsole["Social: Pilot Corp Below Standing Threshold: ${PilotIterator.Value.Name} ${PilotIterator.Value.Corporation} Alliance: ${PilotIterator.Value.Alliance}", LOG_CRITICAL]
+					UI:UpdateConsole["Social: Pilot Corp Below Standing Threshold: ${PilotIterator.Value.Name} CorpID: ${PilotIterator.Value.CorporationID} AllianceID: ${PilotIterator.Value.AllianceID}", LOG_CRITICAL]
 					HostilesPresent:Set[TRUE]
 				}
 				if (${PilotIterator.Value.Standing.CorpToPilot} < ${Config.Defense.MinimumPilotStanding} || \
 					${PilotIterator.Value.Standing.MeToPilot} < ${Config.Defense.MinimumPilotStanding})
 				{
-					UI:UpdateConsole["Social: Pilot Below Standing Threshold: ${PilotIterator.Value.Name} ${PilotIterator.Value.Corporation} Alliance: ${PilotIterator.Value.Alliance}", LOG_CRITICAL]
+					UI:UpdateConsole["Social: Pilot Below Standing Threshold: ${PilotIterator.Value.Name} CorpID: ${PilotIterator.Value.CorporationID} Alliance: ${PilotIterator.Value.AllianceID}", LOG_CRITICAL]
 					HostilesPresent:Set[TRUE]
 				}
 			}
