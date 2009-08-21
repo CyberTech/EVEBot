@@ -1,6 +1,6 @@
 #define TESTCASE 1
 
-#include Scripts/EVEBotDev/Support/TestAPI.iss
+#include Scripts/EVEBot/Support/TestAPI.iss
 
 /*
  *	Test DoGetAssets (Listed as GetAssets) [Shiva]
@@ -20,7 +20,7 @@ function main()
 	if !${EVEWindow[ByCaption,"ASSETS"](exists)}
 	{
 		EVE:Execute[OpenAssets]
-		; May want a Pause here while it loads...
+		wait 50
 	}
 
 	variable index:asset AssetsIndex
@@ -31,11 +31,11 @@ function main()
 	{
 		; Shiva: Just a value from known list... You could just check entity list in system for a station and then check assets there?
 		;        Ala Asset Gatherer.
-		temp:Set[${Me.GetAssets[AssetsIndex,60012157]}] ; Alkez VII I think.. Don't recall.
+		Me:DoGetAssets[AssetsIndex,60012157]
 	}
 	else
 	{
-		temp:Set[${Me.GetAssets[AssetsIndex]}]
+		Me:DoGetAssets[AssetsIndex]
 	}
 
 	echo "- GetAssets took ${Math.Calc[${Script.RunningTime}-${RTime}]} ms. (Used: ${AssetsIndex.Used})"
