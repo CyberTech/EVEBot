@@ -528,21 +528,21 @@ objectdef obj_OreHauler inherits obj_Hauler
 
 	method BuildFleetMemberList()
 	{
-		variable index:fleetmember fleet
+		variable index:fleetmember myfleet
 		FleetMembers:Clear
-		Me.Fleet:GetMembers[fleet]
+		Me.Fleet:GetMembers[myfleet]
 
 		variable int idx
-		idx:Set[${fleet.Used}]
+		idx:Set[${myfleet.Used}]
 
 		while ${idx} > 0
 		{
-			if ${fleet.Get[${idx}].CharID} != ${_Me.CharID}
+			if ${myfleet.Get[${idx}].CharID} != ${_Me.CharID}
 			{
-				if ${fleet.Get[${idx}].ToPilot(exists)} && \
-					${fleet.Get[${idx}].ToPilot.Name.NotEqual["Joe The Tank"]}
+				if ${myfleet.Get[${idx}].ToPilot(exists)} && \
+					${myfleet.Get[${idx}].ToPilot.Name.NotEqual["Joe The Tank"]}
 				{
-					FleetMembers:Queue[${fleet.Get[${idx}]}]
+					FleetMembers:Queue[${myfleet.Get[${idx}]}]
 				}
 			}
 			idx:Dec
