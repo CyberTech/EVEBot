@@ -45,6 +45,8 @@ objectdef obj_Social
 
 	method Initialize()
 	{
+		EVE:RefreshStandings
+
 		Whitelist.PilotsRef:GetSettingIterator[This.WhiteListPilotIterator]
 		Whitelist.CorporationsRef:GetSettingIterator[This.WhiteListCorpIterator]
 		Whitelist.AlliancesRef:GetSettingIterator[This.WhiteListAllianceIterator]
@@ -129,23 +131,9 @@ objectdef obj_Social
 			{
 				This:CheckChatInvitation[]
 
-				if ${EVE.GetPilots} > 1
+   				if ${Me.InSpace}
 				{
-					; DoGetPilots is relatively expensive vs just the pilotcount.  Check if we're alone before calling.
-					EVE:DoGetPilots[This.PilotIndex]
-					if ${Config.Defense.DetectLowStanding}
-					{
-						Passed_LowStandingCheck:Set[!${This.LowStandingDetected}]
-					}
-				}
-				else
-				{
-					This.PilotIndex:Clear
-				}
-
-    		;Update the entity index
-    		if ${Me.InSpace}
-				{
+					; TODO - replace with with entityache after entitycache is merged to not be multi-instance - CyberTech
 					EVE:DoGetEntities[This.EntityIndex,CategoryID,CATEGORYID_ENTITY]
 				}
 				else
@@ -153,42 +141,27 @@ objectdef obj_Social
 					This.EntityIndex:Clear
 				}
 
-    		if ${Config.Combat.UseBlackList} && ( ${PilotBlackList.Used} > 0 || ${CorpBlackList.Used} > 0 || ${AllianceBlackList.Used} > 0)
-    		{
-    			Passed_BlackListCheck:Set[${This.CheckLocalBlackList}]
-    		}
-    		else
-    		{
-    			Passed_BlackListCheck:Set[TRUE]
-    		}
+				; DoGetPilots is relatively expensive vs just the pilotcount.  Check if we're alone before calling.
+				if ${EVE.GetPilots} > 1
+				{
+					EVE:DoGetPilots[This.PilotIndex]
 
-    		if ${Config.Combat.UseWhiteList}
-    		{
-    			;Only check whitelists if we have more than one pilot in local
-    			if ${EVE.GetPilots} > 1
-    			{
-    				;If we have more than one pilot, check if we have people in the whitelists before checking the whitelists.
-    				if ${PilotWhiteList.Used} > 0 || ${CorpWhiteList.Used} > 0 || ${AllianceWhiteList.Used} > 0
-    				{
-    					Passed_WhiteListCheck:Set[${This.CheckLocalWhiteList}]
-    				}
-    				else
-    				{
-    					;If we have more than myself in local but no one whitelisted, we obviously aren't passing the whitelist check
-    					Passed_WhiteListCheck:Set[FALSE]
-    				}
-    			}
-    			else
-    			{
-    				;Myself only in local? I'm safe.
-    				Passed_WhiteListCheck:Set[TRUE]
-    			}
-    		}
+					Passed_LowStandingCheck:Set[!${This.LowStandingDetected}]
+		   			Passed_BlackListCheck:Set[${This.CheckLocalBlackList}]
+					Passed_WhiteListCheck:Set[${This.CheckLocalWhiteList}]
+				}
+				else
+				{
+					Passed_LowStandingCheck:Set[TRUE]
+   					Passed_BlackListCheck:Set[TRUE]
+					Passed_WhiteListCheck:Set[TRUE]
+					This.PilotIndex:Clear
+				}
 			}
 
-    	This.NextPulse:Set[${Time.Timestamp}]
-    	This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-    	This.NextPulse:Update
+    		This.NextPulse:Set[${Time.Timestamp}]
+    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+    		This.NextPulse:Update
 		}
 	}
 
@@ -259,7 +232,10 @@ objectdef obj_Social
 			return TRUE
 		}
 
-		if ${This.PilotIndex.Used} < 2
+		if ${This.PilotIndex.Used} < 2 || \
+			(${PilotWhiteList.Used} == 0 && \
+			${CorpWhiteList.Used} == 0 && \
+			${AllianceWhiteList.Used} == 0)
 		{
 			return TRUE
 		}
@@ -297,7 +273,10 @@ objectdef obj_Social
    			return TRUE
    		}
 
-   		if ${This.PilotIndex.Used} < 2
+   		if ${This.PilotIndex.Used} < 2 || \
+   			(${PilotBlackList.Used} == 0 && \
+   			${CorpBlackList.Used} == 0 && \
+   			${AllianceBlackList.Used} == 0)
    		{
    			return TRUE
    		}
@@ -388,6 +367,11 @@ objectdef obj_Social
 	member:bool LowStandingDetected()
 	{
 		variable bool HostilesPresent
+
+		if !${Config.Defense.DetectLowStanding}
+		{
+			return FALSE
+		}
 
    		if ${This.PilotIndex.Used} < 2
    		{
