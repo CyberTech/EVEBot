@@ -23,7 +23,7 @@ function main()
 		wait 50
 	}
 
-	variable index:asset AssetsIndex
+	variable index:item AssetsIndex
 	variable int RTime = ${Script.RunningTime}
 
 	variable int temp
