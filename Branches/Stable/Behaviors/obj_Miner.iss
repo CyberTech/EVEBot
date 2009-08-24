@@ -144,15 +144,24 @@ objectdef obj_Miner
 
 	method SetState()
 	{
-		if ${EVEBot.ReturnToStation} && ${_Me.InStation} == FALSE
+		/* TODO: CyberTech: Move this to the state machine, have it check for when the system is clear */
+		if !${EVEBot.ReturnToStation} && \
+			((${Config.Miner.StandingDetection} && ${Social.StandingDetection[${Config.Miner.LowestStanding}]}) || \
+			!${Social.IsSafe})
 		{
-			This.CurrentState:Set["ABORT"]
+			EVEBot.ReturnToStation:Set[TRUE]
+			UI:UpdateConsole["Warning: Low Standing player or system unsafe, docking"]
+		}
+
+		if ${EVEBot.ReturnToStation} && ${_Me.InStation} == TRUE
+		{
+			This.CurrentState:Set["IDLE"]
 			return
 		}
 
 		if ${EVEBot.ReturnToStation}
 		{
-			This.CurrentState:Set["IDLE"]
+			This.CurrentState:Set["ABORT"]
 			return
 		}
 
@@ -272,6 +281,15 @@ objectdef obj_Miner
 		while ( !${EVEBot.ReturnToStation} && \
 				${_Me.Ship.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold}	)
 		{
+			/* TODO: CyberTech: Move this to the state machine, have it check for when the system is clear */
+			if (${Config.Miner.StandingDetection} && \
+				${Social.StandingDetection[${Config.Miner.LowestStanding}]}) || \
+				!${Social.IsSafe}
+			{
+				EVEBot.ReturnToStation:Set[TRUE]
+				UI:UpdateConsole["Warning: Low Standing player or system unsafe, docking"]
+			}
+
 			if ${Ship.TotalMiningLasers} == 0
 			{
 				UI:UpdateConsole["Warning: No mining lasers detected, docking"]
@@ -332,15 +350,6 @@ objectdef obj_Miner
 				call This.Cleanup_Environment
 				call Asteroids.MoveToField TRUE
 				call This.Prepare_Environment
-			}
-
-			/* TODO: CyberTech: Move this to the state machine, have it check for when the system is clear */
-			if (${Config.Miner.StandingDetection} && \
-				${Social.StandingDetection[${Config.Miner.LowestStanding}]}) || \
-				!${Social.IsSafe}
-			{
-				EVEBot.ReturnToStation:Set[TRUE]
-				UI:UpdateConsole["Warning: Low Standing player or system unsafe, docking"]
 			}
 
 			if ${Config.Miner.DeliveryLocationTypeName.Equal[Jetcan]} && ${Ship.CargoHalfFull}
