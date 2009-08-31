@@ -58,13 +58,13 @@ objectdef obj_LoginHandler
 			This.LoginTimer:Set[0]
 		}
 
-	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			This:DoLogin
 
-    		This.NextPulse:Set[${Time.Timestamp}]
-    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-    		This.NextPulse:Update
+			This.NextPulse:Set[${Time.Timestamp}]
+			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+			This.NextPulse:Update
 		}
 	}
 
@@ -80,7 +80,7 @@ objectdef obj_LoginHandler
 
 		wait 20
 
-	    UI:UpdateConsole["obj_Login: Loading Extension ${EXTNAME}", LOG_MINOR]
+		UI:UpdateConsole["obj_Login: Loading Extension ${EXTNAME}", LOG_MINOR]
 		do
 		{
 			wait 50

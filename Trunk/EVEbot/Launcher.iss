@@ -37,8 +37,8 @@ function main(string unchar="", bool StartBot=FALSE)
 
 	if !${unchar.Equal[""]}
 	{
-	       	BaseConfig:ChangeConfig[${unchar}]
-	       	wait 10
+		BaseConfig:ChangeConfig[${unchar}]
+		wait 10
 	}
 
 	if (${Config.Common.LoginName.Equal[""]} || \
@@ -64,11 +64,23 @@ function main(string unchar="", bool StartBot=FALSE)
 		waitframe
 	}
 
-	while ${StartBot} && ${EVEBot.Paused}
+	if ${StartBot}
 	{
 		LoginHandler:StartBot
-		wait 10
+
+		while !${Script[EVEBot](exists)}
+		{
+			wait 10
+		}
+
+		wait 600 ${Script[EVEBot].Paused}
+
+		while ${Script[EVEBot].Paused}
+		{
+			LoginHandler:StartBot
+			wait 15
+		}
 	}
 
-	UI:UpdateConsole["Launcher Finished", LOG_MINOR]
+	UI:UpdateConsole["Launcher Finished"]
 }
