@@ -78,6 +78,8 @@ objectdef obj_LoginHandler
 			return
 		}
 
+		wait 20
+
 	    UI:UpdateConsole["obj_Login: Loading Extension ${EXTNAME}", LOG_MINOR]
 		do
 		{
