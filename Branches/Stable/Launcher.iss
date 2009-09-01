@@ -31,9 +31,10 @@ function main(string unchar="", bool StartBot=FALSE)
 	if !${ISXEVE(exists)}
 	{
 		call LoginHandler.LoadExtension
-
-		wait 200 ${Login(exists)}
 	}
+
+	wait 200 ${ISXEVE.IsReady}
+	wait 200 ${Login(exists)}
 
 	if !${unchar.Equal[""]}
 	{
@@ -53,33 +54,37 @@ function main(string unchar="", bool StartBot=FALSE)
 		return
 	}
 
-	if ${ISXEVE(exists)}
+	if ${ISXEVE(exists)} && ${ISXEVE.IsReady}
 	{
 		LoginHandler:Start
 		LoginHandler:DoLogin
-	}
 
-	while ${LoginHandler.CurrentState.NotEqual["LOGGED_IN"]}
-	{
-		waitframe
-	}
-
-	if ${StartBot}
-	{
-		LoginHandler:StartBot
-
-		while !${Script[EVEBot](exists)}
+		while ${LoginHandler.CurrentState.NotEqual["FINISHED"]}
 		{
-			wait 10
+			waitframe
 		}
 
-		wait 600 ${Script[EVEBot].Paused}
-
-		while ${Script[EVEBot].Paused}
+		if ${StartBot}
 		{
 			LoginHandler:StartBot
-			wait 15
+
+			while !${Script[EVEBot](exists)}
+			{
+				wait 10
+			}
+
+			wait 600 ${Script[EVEBot].Paused}
+
+			while ${Script[EVEBot].Paused}
+			{
+				LoginHandler:StartBot
+				wait 15
+			}
 		}
+	}
+	else
+	{
+		UI:UpdateConsole["Launcher: Error: Extension loading failed or was not recognized"]
 	}
 
 	UI:UpdateConsole["Launcher Finished"]
