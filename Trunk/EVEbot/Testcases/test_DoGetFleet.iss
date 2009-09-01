@@ -127,16 +127,22 @@ function main(string Invitee)
 					FleetMember.Value:SetBooster[1]
 					wait 20
 					echo "  " FleetMember.Boosting ${FleetMember.Value.Boosting}
+					FleetMember.Value:SetBooster[0]
+					wait 10
 
 				echo "  Setting Booster Status WING"
 					FleetMember.Value:SetBooster[2]
 					wait 20
 					echo "  " FleetMember.Boosting ${FleetMember.Value.Boosting}
+					FleetMember.Value:SetBooster[0]
+					wait 10
 
 				echo "  Setting Booster Status SQUAD"
 					FleetMember.Value:SetBooster[3]
 					wait 20
 					echo "  " FleetMember.Boosting ${FleetMember.Value.Boosting}
+					FleetMember.Value:SetBooster[0]
+					wait 10
 
 				echo "  Setting Booster Status OFF"
 					FleetMember.Value:SetBooster[0]

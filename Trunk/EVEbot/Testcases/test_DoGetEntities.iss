@@ -1,6 +1,6 @@
 #define TESTCASE 1
 
-#include Scripts/EVEBot/Support/TestAPI.iss
+#include ../Support/TestAPI.iss
 
 /*
 	Test Entity Iteration
@@ -16,7 +16,7 @@ function main()
 		echo "- DoGetEntities took ${Math.Calc[${Script.RunningTime}-${RTime}]} ms. (Used: ${EntityIndex.Used})"
 		variable iterator EntityIterator
 		EntityIndex:GetIterator[EntityIterator]
-	
+
 		if ${EntityIterator:First(exists)}
 		{
 			do
