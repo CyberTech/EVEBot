@@ -56,6 +56,9 @@ function main(string unchar="", bool StartBot=FALSE)
 
 	if ${ISXEVE(exists)} && ${ISXEVE.IsReady}
 	{
+		UI:UpdateConsole["Launcher: Starting EveCallback"]
+		runscript "${Script.CurrentDirectory}/EveCallback.iss"
+
 		LoginHandler:Start
 		LoginHandler:DoLogin
 
@@ -66,6 +69,7 @@ function main(string unchar="", bool StartBot=FALSE)
 
 		if ${StartBot}
 		{
+			UI:UpdateConsole["Launcher: Starting Bot"]
 			LoginHandler:StartBot
 
 			while !${Script[EVEBot](exists)}
