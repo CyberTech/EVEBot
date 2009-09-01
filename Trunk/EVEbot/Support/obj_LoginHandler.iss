@@ -73,21 +73,22 @@ objectdef obj_LoginHandler
 		variable int Timer = 0
 		variable string EXTNAME = "ISXEVE"
 
-		if ${${EXTNAME}(exists)}
+		if ${${EXTNAME}(exists)} && ${${EXTNAME}.IsReady}
 		{
 			return
 		}
 
-		wait 20
+		wait 50 ${${EXTNAME}.IsReady}
 
-		UI:UpdateConsole["obj_Login: Loading Extension ${EXTNAME}", LOG_MINOR]
+		UI:UpdateConsole["Login: Loading Extension ${EXTNAME}", LOG_MINOR]
 		do
 		{
-			wait 50
 			if !${${EXTNAME}.IsLoading} && !${${EXTNAME}.IsReady}
 			{
 				extension -unload ${EXTNAME}
+				wait 20
 				extension ${EXTNAME}
+				wait 100 ${${EXTNAME}.IsReady}
 			}
 
 			Timer:Set[0]
@@ -103,7 +104,7 @@ objectdef obj_LoginHandler
 				wait 10
 			}
 			while (${Timer} < 20)
-			UI:UpdateConsole["obj_Login:LoadExtension: Loading extension ${EXTNAME} timed out, retrying"]
+			UI:UpdateConsole["Login:LoadExtension: Loading extension ${EXTNAME} timed out, retrying"]
 		}
 		while (!${${EXTNAME}(exists)})
 	 }
@@ -115,15 +116,15 @@ objectdef obj_LoginHandler
 		;UI:UpdateConsole["DEBUG: Current state: ${This.CurrentState}"]
 		switch ${This.CurrentState}
 		{
-			case LOGGED_IN
-				run evebot/evebot
-				This.CurrentState:Set["EVEBOT"]
+			case FINISHED
+				run evebot_stable/evebot
+				This.CurrentState:Set["EVEBOT_STARTED"]
 				break
-			case EVEBOT
+			case EVEBOT_STARTED
 				Script[EVEBot]:Resume
 				break
 			default
-				UI:UpdateConsole["obj_Login: StartBot called in unknown state!"]
+				UI:UpdateConsole["Login: StartBot called in unknown state!"]
 				break
 		}
 	}
@@ -189,12 +190,14 @@ objectdef obj_LoginHandler
 					This.LoginTimer:Set[100]
 					break
 				}
+				/* this one causes false positives in overloaded systems
 				if ${EVEWindow[ByCaption,INFORMATION](exists)}
 				{
 					This.CurrentState:Set["POSSIBLE_ACCOUNT_EXPIRED"]
 					This.LoginTimer:Set[100]
 					break
 				}
+				*/
 				if ${EVEWindow[ByCaption,Connection in Progress](exists)} || \
 					${EVEWindow[ByCaption,Connection Not Allowed](exists)} || \
 					${EVEWindow[ByCaption,CONNECTION FAILED](exists)}
@@ -213,15 +216,11 @@ objectdef obj_LoginHandler
 					This.LoginTimer:Set[2]
 					break
 				}
-				if ${Me(exists)}
+				if ${Login(exists)}
 				{
-					This.CurrentState:Set["LOGGED_IN"]
-					This.LoginTimer:Set[${This.inspaceWaitTime}]
-					break
-				}
-				if !${CharSelect(exists)}
-				{
-					This.LoginTimer:Set[1]
+					; Reconnect if we're still at the login screen
+					Login:Connect
+					This.LoginTimer:Set[${This.connectWaitTime}]
 					break
 				}
 				if ${CharSelect(exists)}
@@ -231,16 +230,29 @@ objectdef obj_LoginHandler
 					This.LoginTimer:Set[${This.connectWaitTime}]
 					break
 				}
-				if ${Login(exists)}
+				else
 				{
-					; Reconnect if we're still at the login screen
-					Login:Connect
-					This.LoginTimer:Set[${This.connectWaitTime}]
+					; Now we're just waiting to get fully into the game. This can take a while, especially in systems like Jita.
+					if ${EVEWindow[ByCaption,ENTERING STATION](exists)} || \
+						${EVEWindow[ByCaption,PREPARE TO UNDOCK](exists)} || \
+						${EVEWindow[ByCaption,ENTERING SPACE](exists)}
+						${EVEWindow[ByCaption,CHARACTER SELECTION](exists)}
+					{
+						This.LoginTimer:Set[1]
+						break
+					}
+					if ${Me(exists)} && ${MyShip(exists)} && (${Me.InSpace} || ${Me.InStation})
+					{
+						This.CurrentState:Set["LOGGED_IN"]
+						This.LoginTimer:Set[${This.inspaceWaitTime}]
+						break
+					}
+					This.LoginTimer:Set[1]
 					break
 				}
-				if !${Me(exists)}
+			case LOGGED_IN
 				{
-					This.LoginTimer:Set[${This.connectWaitTime}]
+					This.CurrentState:Set["FINISHED"]
 					break
 				}
 				break
