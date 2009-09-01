@@ -117,7 +117,7 @@ objectdef obj_LoginHandler
 		switch ${This.CurrentState}
 		{
 			case FINISHED
-				run evebot_stable/evebot
+				run evebot/evebot
 				This.CurrentState:Set["EVEBOT_STARTED"]
 				break
 			case EVEBOT_STARTED
