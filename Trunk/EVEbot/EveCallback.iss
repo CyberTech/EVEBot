@@ -8,10 +8,12 @@ variable(global) obj_EveCallback EVECallback
 function main(... Params)
 {
 	if DEBUG
-		echo "EveCallback.iss: Loaded. Beginning infinite loop."
-	while 1==1
 	{
-		
+		echo "EveCallback Loaded"
+	}
+	while TRUE
+	{
+		waitframe
 	}
 }
 
@@ -20,17 +22,19 @@ objectdef obj_EveCallback
 	/* Do nothing to initialize. */
 	method Initialize()
 	{
-	
+
 	}
 
-	/* Do the callback. Relay the function call to the uplink, which will have a global atom
-	for the check. */
+	/*	Do the callback. Relay the function call to the uplink,
+		which will have a global atom for the check. */
 	method DoCallback()
 	{
 		if ${ISXEVE.Version} > 0
 		{
 			if DEBUG
+			{
 				echo "EveCallback.iss: Relaying \"uplink EVEWatcher:Update[${Session},${Me.Name}]\""
+			}
 			uplink EVEWatcher:Update[${Session},${Me.Name}]
 		}
 		else
