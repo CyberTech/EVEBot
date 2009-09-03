@@ -36,10 +36,37 @@ objectdef obj_Miner
 		BotModules:Insert["Miner"]
 
 		This.TripStartTime:Set[${Time.Timestamp}]
+		This:SetLocation
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_Miner: Initialized", LOG_MINOR]
 	}
-
+	method SetLocation()
+	{
+		variable settingsetref locationsRef = Config.Miner.LocationsRef
+		variable Iterator location
+		variable int totalTime = 0
+		variable index:string wheel
+		locationsRef:GetSettingIterator[location]
+		if ${location:First(exists)}
+		{
+			do
+			{
+				totalTime:Inc[${location.Value.Int}]
+				variable int x = 0
+			  do
+			  {
+			  	wheel:Insert[${location.Value.Name}]
+			  	x:Inc[1]
+			  }
+			  while ${x < ${location.Value.Int}}
+			}
+			while ${location:Next(exists)}
+		}
+		;roll a number between 0 and the total time
+		variable int roll = ${Math.Rand[${totalTime}]}
+		Config.Miner:SetDeliveryLocation[${wheel:Get[${roll}]}]
+		Config:Save[]		
+	}
 	method Shutdown()
 	{
 		Event[OnFrame]:DetachAtom[This:Pulse]

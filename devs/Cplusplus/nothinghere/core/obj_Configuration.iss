@@ -334,7 +334,10 @@ objectdef obj_Configuration_Miner
 	{
 		return ${BaseConfig.BaseRef.FindSet[${This.SetName}]}
 	}
-
+	member:settingsetref LocationsRef()
+	{
+		return ${BaseConfig.BaseRef.FindSet[${This.SetName}].FindSet[Locations]
+	}
 	member:settingsetref OreTypesRef()
 	{
 		return ${BaseConfig.BaseRef.FindSet[${This.SetName}].FindSet[Ore_Types]}
@@ -356,6 +359,9 @@ objectdef obj_Configuration_Miner
 
 		This.MinerRef:AddSet[ORE_Types]
 		This.MinerRef:AddSet[ORE_Volumes]
+		;create the set to contain the list of systems, we do not populate it as having default systems for evebot to mine it would be dumb
+		This.MinerRef:AddSet[Locations]
+		
 		This.MinerRef:AddSetting[Restrict To Belt, NO]
 		This.MinerRef:AddSetting[Restrict To Ore Type, NONE]
 		This.MinerRef:AddSetting[JetCan Naming, 1]
@@ -465,6 +471,7 @@ objectdef obj_Configuration_Miner
 	;		This.MinerRef:AddSetting[Restrict To Belt, NO]
 	;		This.MinerRef:AddSetting[Restrict To Ore Type, NONE]
 
+	
 	member:int JetCanNaming()
 	{
 		return ${This.MinerRef.FindSetting[JetCan Naming, 1]}
@@ -637,6 +644,15 @@ objectdef obj_Configuration_Miner
 	method SetCargoThreshold(int value)
 	{	
 		This.MinerRef:AddSetting[Cargo Threshold, ${value}]
+	}
+	;New settings for location cycling
+	member:int LocationTime(string SystemName)
+	{
+		return ${This.LocationsRef.FindSetting[SystemName,0]}
+	}
+	method:string SetLocationTime(string SystemName , int value)
+	{
+		This.LocationsRef:AddSetting[${SystemName} , ${value}]
 	}
 }
 
