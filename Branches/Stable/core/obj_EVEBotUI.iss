@@ -3,7 +3,7 @@ objectdef obj_EVEBotUI
 {
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
-	
+
 	variable time NextPulse
 	variable time NextMsgBoxPulse
 	variable int PulseIntervalInSeconds = 60
@@ -15,7 +15,7 @@ objectdef obj_EVEBotUI
 	variable bool Reloaded = FALSE
 	variable queue:string ConsoleBuffer
 	variable string PreviousMsg
-				
+
 	method Initialize()
 	{
 		This.LogFile:Set["./config/logs/${Me.Name}.log"]
@@ -27,7 +27,7 @@ objectdef obj_EVEBotUI
 
 		This:InitializeLogs
 		This:LogSystemStats
-		
+
 		Event[OnFrame]:AttachAtom[This:Pulse]
 		This:UpdateConsole["obj_EVEBotUI: Initialized", LOG_MINOR]
 	}
@@ -37,8 +37,26 @@ objectdef obj_EVEBotUI
 		ui -reload interface/evebotgui.xml
 		This:WriteQueueToLog
 		This.Reloaded:Set[TRUE]
+
+		if ${UIElement[EVEBot].X} <= -${Math.Calc[${UIElement[EVEBot].Width} * 0.66].Int} || \
+			${UIElement[EVEBot].X} >= ${Math.Calc[${Display.Width} - ${UIElement[EVEBot].Width}]}
+		{
+			echo "----"
+			echo "    Warning: EVEBot window is outside window area: ${UIElement[EVEBot].X} > ${Display.Width}"
+			echo "    You may fix this with 'UIElement[EVEbot]:SetX[${Math.Calc[${Display.Width}/2].Int}]"
+			echo "----"
+		}
+
+		if ${UIElement[EVEBot].Y} <= 1 || \
+			${UIElement[EVEBot].Y} >= ${Math.Calc[${Display.Height} - ${UIElement[EVEBot].Height}]}
+		{
+			echo "----"
+			echo "    Warning: EVEBot window is outside window area: ${UIElement[EVEBot].Y} > ${Display.Height}"
+			echo "    You may fix this with 'UIElement[EVEbot]:SetY[${Math.Calc[${Display.Height}/2].Int}]"
+			echo "----"
+		}
 	}
-	
+
 	method Shutdown()
 	{
 		Event[OnFrame]:DetachAtom[This:Pulse]
@@ -47,7 +65,7 @@ objectdef obj_EVEBotUI
 	}
 
 	method Pulse()
-	{	
+	{
 
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
@@ -78,20 +96,20 @@ objectdef obj_EVEBotUI
 		}
 
 	}
-  
+
 	method LogSystemStats()
 	{
 		This:UpdateConsole["Memory: ${System.OS} Process: ${Math.Calc[${System.MemoryUsage}/1024].Int}kb Free: ${System.MemFree}mb Texture Mem Free: ${Display.TextureMem}mb FPS: ${Display.FPS.Int} Windowed: ${Display.Windowed}(${Display.AppWindowed}) Foreground: ${Display.Foreground}", LOG_MINOR]
 	}
-	
+
 	member Runtime()
 	{
 		DeclareVariable RunTime float ${Math.Calc[${Script.RunningTime}/1000/60]}
-		
+
 		DeclareVariable Hours string ${Math.Calc[(${RunTime}/60)%60].Int.LeadingZeroes[2]}
 		DeclareVariable Minutes string ${Math.Calc[${RunTime}%60].Int.LeadingZeroes[2]}
 		DeclareVariable Seconds string ${Math.Calc[(${RunTime}*60)%60].Int.LeadingZeroes[2]}
-		
+
 		return "${Hours}:${Minutes}:${Seconds}"
 	}
 
@@ -100,7 +118,7 @@ objectdef obj_EVEBotUI
 		This:UpdateConsole["${StatusMessage}", ${Level}, ${Indent}]
 		ChatIRC:QueueMessage["${StatusMessage}"]
 	}
-	
+
 	method UpdateConsole(string StatusMessage, int Level=LOG_STANDARD, int Indent=0)
 	{
 		/*
@@ -111,7 +129,7 @@ objectdef obj_EVEBotUI
 		variable string msg
 		variable int Count
 		variable bool Filter = FALSE
-		
+
 		if ${StatusMessage(exists)}
 		{
 			if ${StatusMessage.Equal["${This.PreviousMsg}"]}
@@ -122,15 +140,15 @@ objectdef obj_EVEBotUI
 			{
 				This.PreviousMsg:Set["${StatusMessage}"]
 			}
-			
+
 			msg:Set["${Time.Time24}: "]
-				
+
 			for (Count:Set[1]; ${Count}<=${Indent}; Count:Inc)
 			{
   				msg:Concat[" "]
   			}
   			msg:Concat["${StatusMessage}"]
-  				
+
 			if ${This.Reloaded}
 			{
 				if ${Level} > LOG_MINOR && !${Filter}
@@ -161,12 +179,12 @@ objectdef obj_EVEBotUI
 			This.ConsoleBuffer:Dequeue
 		}
 	}
-	
+
 	method UpdateStatStatus(string StatusMessage)
 	{
 		redirect -append "${This.StatsLogFile}" Echo "[${Time.Time24}] ${StatusMessage}"
-	}	
-	
+	}
+
 	method InitializeLogs()
 	{
 
@@ -180,5 +198,5 @@ objectdef obj_EVEBotUI
 
 		redirect -append "${This.StatsLogFile}" echo "--------------------------------------------------------------------------------------"
 		redirect -append "${This.StatsLogFile}" echo "** ${AppVersion} starting on ${Time.Date} at ${Time.Time24}"
-	}	
+	}
 }
