@@ -133,7 +133,7 @@ objectdef obj_LoginHandler
 	{
 		EVE:CloseAllMessageBoxes
 
-		UI:UpdateConsole["DEBUG: Current state: ${This.CurrentState}", LOG_DEBUG]
+		echo "DEBUG: Current state: ${This.CurrentState}"
 		switch ${This.CurrentState}
 		{
 			case POSSIBLE_ACCOUNT_EXPIRED
