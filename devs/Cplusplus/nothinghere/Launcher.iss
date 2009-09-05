@@ -30,14 +30,17 @@ function main(string unchar="", bool StartBot=FALSE)
 {
 	if !${ISXEVE(exists)}
 	{
+		echo "Launcher : ISXEVE not loaded, loading"
 		call LoginHandler.LoadExtension
 	}
-
+	echo "Launcher : Waiting for ISXEVE to be ready"
 	wait 200 ${ISXEVE.IsReady}
+	echo "Launcher : ISXEVE ready , waiting for login screen"
 	wait 200 ${Login(exists)}
 
 	if !${unchar.Equal[""]}
 	{
+		echo "Launcher : Checking for char configuration"
 		BaseConfig:ChangeConfig[${unchar}]
 		wait 10
 	}
@@ -53,9 +56,9 @@ function main(string unchar="", bool StartBot=FALSE)
 		Config:Save
 		return
 	}
-
 	if ${ISXEVE(exists)} && ${ISXEVE.IsReady}
 	{
+		echo "Launcher : ISXEVE still exists and is ready , starting to login"
 		LoginHandler:Start
 		LoginHandler:DoLogin
 
@@ -63,18 +66,19 @@ function main(string unchar="", bool StartBot=FALSE)
 		{
 			waitframe
 		}
-
+		
 		if ${StartBot}
 		{
+			echo "Launcher : Logged in, starting bot"
 			LoginHandler:StartBot
 
 			while !${Script[EVEBot](exists)}
 			{
 				wait 10
 			}
-
+			echo "Launcher : EVEBOT exists, waiting for it to load"
 			wait 600 ${Script[EVEBot].Paused}
-
+			
 			while ${Script[EVEBot].Paused}
 			{
 				LoginHandler:StartBot
