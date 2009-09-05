@@ -145,7 +145,7 @@ objectdef obj_LoginHandler
 			case START
 				if ${Login(exists)}
 				{
-					This.CurrentState:Set["SERVERDOWN"]
+					This.CurrentState:Set["SERVERUP"]
 					break
 				}
 				if ${CharSelect(exists)}
