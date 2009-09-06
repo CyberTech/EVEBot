@@ -46,6 +46,7 @@ objectdef obj_Miner
 		variable iterator location
 		variable int totalTime = 0
 		variable index:string wheel
+		variable int slots = 0
 		variable int x 
 		variable int y
 		variable int roll
@@ -75,6 +76,7 @@ objectdef obj_Miner
 					wheel:Insert[${location.Value.Name}]
 					UI:UpdateConsole["obj_Miner: Y is ${y}", LOG_MINOR]
 					y:Inc[1]
+					slots:Inc[1]
 				}
 				while (${y} < ${x})
 			}
@@ -82,7 +84,7 @@ objectdef obj_Miner
 			
 			;roll a number between 0 and the total time
 			totalTime:Dec[1]
-		 	UI:UpdateConsole["wheel0 is ${wheel.Get[1]}"]
+		 	UI:UpdateConsole["Total number of slots is ${slots}"]
 			roll:Set[${Math.Rand[${totalTime}]}]
 			roll:Inc[1]
 			Config.Miner:SetDeliveryLocation[${wheel.Get[${roll}]}]
