@@ -14,7 +14,8 @@ objectdef obj_Miner
 
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 2
-
+	variable time UpdateLocationTime
+	
 	variable index:entity LockedTargets
 	variable iterator Target
 	variable int TotalTrips = 0						/* Total Times we've had to transfer to hanger */
@@ -34,7 +35,6 @@ objectdef obj_Miner
 	method Initialize()
 	{
 		BotModules:Insert["Miner"]
-
 		This.TripStartTime:Set[${Time.Timestamp}]
 		This:SetLocation
 		Event[OnFrame]:AttachAtom[This:Pulse]
@@ -42,30 +42,57 @@ objectdef obj_Miner
 	}
 	method SetLocation()
 	{
-		variable settingsetref locationsRef = Config.Miner.LocationsRef
-		variable Iterator location
+		variable settingsetref locationsRef = ${Config.Miner.LocationsRef}
+		variable iterator location
 		variable int totalTime = 0
 		variable index:string wheel
+		UI:UpdateConsole["obj_Miner: Finding locations", LOG_MINOR]
 		locationsRef:GetSettingIterator[location]
+		UI:UpdateConsole["obj_Miner: LocationsRef is ${locationsRef.Name}", LOG_MINOR]
 		if ${location:First(exists)}
 		{
+			
 			do
 			{
-				totalTime:Inc[${location.Value.Int}]
-				variable int x = 0
-			  do
-			  {
-			  	wheel:Insert[${location.Value.Name}]
-			  	x:Inc[1]
-			  }
-			  while ${x < ${location.Value.Int}}
+				totalTime:Inc[${location.Value.Int}]			
+			}			
+			while ${location:Next(exists)}
+			
+			location:First
+			
+			do
+			{
+			totalTime:Inc[${location.Value.Int}]
+			variable int x = ${Math.Calc[${totalTime} - ${location.Value.Int}]}
+			UI:UpdateConsole["obj_Miner: Found ${location.Value.Name}", LOG_MINOR]
+			UI:UpdateConsole["obj_Miner: Time spent in location is ${location.Value.Int}", LOG_MINOR]
+				do
+				{
+					UI:UpdateConsole["obj_Miner: Populating wheel", LOG_MINOR]
+					wheel:Insert[${location.Value.Name}]
+					x:Inc[1]
+				}
+				while ${x < ${location.Value.Int}}
 			}
 			while ${location:Next(exists)}
+			
+			;roll a number between 0 and the total time
+			totalTime:Dec[1]
+		 	UI:UpdateConsole["wheel0 is ${wheel.Get[1]}"]
+			variable int roll = ${Math.Rand[${totalTime}]}
+			roll:Inc[1]
+			Config.Miner:SetDeliveryLocation[${wheel.Get[${roll}]}]
+			UI:UpdateConsole["obj_Miner: roll is ${roll}", LOG_MINOR]
+			UI:UpdateConsole["obj_Miner: Mining location for today is ${wheel.Get[${roll}]}", LOG_MINOR]
+			This.UpdateLocationTime:Set[${Time.Timestamp}]
+    	This.UpdateLocationTime.Hour:Inc[1]
+    	This.UpdateLocationTime:Update
+			Config:Save[]		
 		}
-		;roll a number between 0 and the total time
-		variable int roll = ${Math.Rand[${totalTime}]}
-		Config.Miner:SetDeliveryLocation[${wheel:Get[${roll}]}]
-		Config:Save[]		
+		else
+		{
+			UI:UpdateConsole["obj_Miner: Locations not found", LOG_MINOR]
+		}
 	}
 	method Shutdown()
 	{
@@ -87,12 +114,22 @@ objectdef obj_Miner
 
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-			This:SetState[]
-            SanityCheckCounter:Inc
+				This:SetState[]
+        SanityCheckCounter:Inc
 
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
     		This.NextPulse:Update
+		}
+		 if ${Time.Timestamp} >= ${This.UpdateLocationTime.Timestamp}
+		{
+				variable int locationtime = ${Config.Miner.LocationTime[${Config.Miner.DeliveryLocation}]}
+				locationtime:Inc[1]
+				Config.Miner.SetLocationTime:[${Config.Miner.DeliveryLocation},${locationtime}]
+
+    		This.UpdateLocationTime:Set[${Time.Timestamp}]
+    		This.UpdateLocationTime.Second:Inc[${This.PulseIntervalInSeconds}]
+    		This.UpdateLocationTime:Update
 		}
 	}
 
