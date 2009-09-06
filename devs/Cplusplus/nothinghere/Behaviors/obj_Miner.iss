@@ -46,6 +46,8 @@ objectdef obj_Miner
 		variable iterator location
 		variable int totalTime = 0
 		variable index:string wheel
+		variable int x 
+		variable int y
 		UI:UpdateConsole["obj_Miner: Finding locations", LOG_MINOR]
 		locationsRef:GetSettingIterator[location]
 		UI:UpdateConsole["obj_Miner: LocationsRef is ${locationsRef.Name}", LOG_MINOR]
@@ -62,10 +64,10 @@ objectdef obj_Miner
 			
 			do
 			{			
-			variable int x = ${Math.Calc[${totalTime} - ${location.Value.Int}]}
-			variable int y = 0
-			UI:UpdateConsole["obj_Miner: Found ${location.Value.Name}", LOG_MINOR]
-			UI:UpdateConsole["obj_Miner: Time spent in location is ${location.Value.Int}", LOG_MINOR]
+				x:Set[${Math.Calc[${totalTime} - ${location.Value.Int}]}]
+				y:Set[0]
+				UI:UpdateConsole["obj_Miner: Found ${location.Value.Name}", LOG_MINOR]
+				UI:UpdateConsole["obj_Miner: Time spent in location is ${location.Value.Int}", LOG_MINOR]
 				do
 				{
 					UI:UpdateConsole["obj_Miner: Populating wheel", LOG_MINOR]
@@ -73,7 +75,7 @@ objectdef obj_Miner
 					UI:UpdateConsole["obj_Miner: Y is ${y}", LOG_MINOR]
 					y:Inc[1]
 				}
-				while ${y} < ${x}
+				while ${${y} < ${x}}
 			}
 			while ${location:Next(exists)}
 			
