@@ -336,7 +336,7 @@ objectdef obj_Configuration_Miner
 	}
 	member:settingsetref LocationsRef()
 	{
-		return ${BaseConfig.BaseRef.FindSet[${This.SetName}].FindSet[Locations]
+		return ${BaseConfig.BaseRef.FindSet[${This.SetName}].FindSet[Locations]}
 	}
 	member:settingsetref OreTypesRef()
 	{
@@ -360,7 +360,11 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSet[ORE_Types]
 		This.MinerRef:AddSet[ORE_Volumes]
 		;create the set to contain the list of systems, we do not populate it as having default systems for evebot to mine it would be dumb
+		UI:UpdateConsole["obj_Miner: Adding location set", LOG_MINOR]
 		This.MinerRef:AddSet[Locations]
+		UI:UpdateConsole["obj_Miner: ${This.LocationsRef.Name}", LOG_MINOR]
+		UI:UpdateConsole["obj_Miner: ${This.MinerRef.Name}", LOG_MINOR]
+		This.LocationsRef:AddSetting[Jita,1]
 		
 		This.MinerRef:AddSetting[Restrict To Belt, NO]
 		This.MinerRef:AddSetting[Restrict To Ore Type, NONE]
@@ -648,9 +652,9 @@ objectdef obj_Configuration_Miner
 	;New settings for location cycling
 	member:int LocationTime(string SystemName)
 	{
-		return ${This.LocationsRef.FindSetting[SystemName,0]}
+		return ${This.LocationsRef.FindSetting[${SystemName},0]}
 	}
-	method:string SetLocationTime(string SystemName , int value)
+	method SetLocationTime(string SystemName , int value)
 	{
 		This.LocationsRef:AddSetting[${SystemName} , ${value}]
 	}
