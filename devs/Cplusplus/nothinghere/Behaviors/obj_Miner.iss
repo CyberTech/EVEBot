@@ -57,7 +57,7 @@ objectdef obj_Miner
 				totalTime:Inc[${location.Value.Int}]			
 			}			
 			while ${location:Next(exists)}
-			
+			UI:UpdateConsole["obj_Miner: Total time is ${totalTime}", LOG_MINOR]
 			location:First
 			
 			do
