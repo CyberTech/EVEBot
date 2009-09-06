@@ -61,18 +61,18 @@ objectdef obj_Miner
 			location:First
 			
 			do
-			{
-			totalTime:Inc[${location.Value.Int}]
+			{			
 			variable int x = ${Math.Calc[${totalTime} - ${location.Value.Int}]}
+			variable int y = 0
 			UI:UpdateConsole["obj_Miner: Found ${location.Value.Name}", LOG_MINOR]
 			UI:UpdateConsole["obj_Miner: Time spent in location is ${location.Value.Int}", LOG_MINOR]
 				do
 				{
 					UI:UpdateConsole["obj_Miner: Populating wheel", LOG_MINOR]
 					wheel:Insert[${location.Value.Name}]
-					x:Inc[1]
+					y:Inc[1]
 				}
-				while ${x < ${location.Value.Int}}
+				while ${${y} < ${x}}
 			}
 			while ${location:Next(exists)}
 			
