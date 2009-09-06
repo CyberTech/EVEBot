@@ -75,7 +75,7 @@ objectdef obj_Miner
 					UI:UpdateConsole["obj_Miner: Y is ${y}", LOG_MINOR]
 					y:Inc[1]
 				}
-				while ${${y} < ${x}}
+				while (${y} < ${x})
 			}
 			while ${location:Next(exists)}
 			
