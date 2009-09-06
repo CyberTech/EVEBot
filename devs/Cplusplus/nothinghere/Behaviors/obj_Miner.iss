@@ -48,6 +48,7 @@ objectdef obj_Miner
 		variable index:string wheel
 		variable int x 
 		variable int y
+		variable int roll
 		UI:UpdateConsole["obj_Miner: Finding locations", LOG_MINOR]
 		locationsRef:GetSettingIterator[location]
 		UI:UpdateConsole["obj_Miner: LocationsRef is ${locationsRef.Name}", LOG_MINOR]
@@ -82,7 +83,7 @@ objectdef obj_Miner
 			;roll a number between 0 and the total time
 			totalTime:Dec[1]
 		 	UI:UpdateConsole["wheel0 is ${wheel.Get[1]}"]
-			variable int roll = ${Math.Rand[${totalTime}]}
+			roll:Set:[${Math.Rand[${totalTime}]}]
 			roll:Inc[1]
 			Config.Miner:SetDeliveryLocation[${wheel.Get[${roll}]}]
 			UI:UpdateConsole["obj_Miner: roll is ${roll}", LOG_MINOR]
