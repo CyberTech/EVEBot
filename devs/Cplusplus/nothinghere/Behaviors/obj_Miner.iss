@@ -85,7 +85,7 @@ objectdef obj_Miner
 			;roll a number between 0 and the total time
 			totalTime:Dec[1]
 		 	UI:UpdateConsole["Total number of slots is ${slots}"]
-			roll:Set[${Math.Rand[${totalTime}]}]
+			roll:Set[${Math.Rand[${slots}]}]
 			roll:Inc[1]
 			Config.Miner:SetDeliveryLocation[${wheel.Get[${roll}]}]
 			UI:UpdateConsole["obj_Miner: roll is ${roll}", LOG_MINOR]
