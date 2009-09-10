@@ -67,7 +67,7 @@ objectdef obj_MissionCommands
 				}
 				if ${Entity[${EntityID}].GroupID(exists)}
 				{
-					if ${Entity[${EntityID}].Distance} > ${Math.Calc[${Distance} * 1.1]}
+					if ${Entity[${EntityID}].Distance} > ${Distance}
 					{
 						UI:UpdateConsole["DEBUG: obj_MissionCommands - found entity with Name ${Entity[${EntityID}].Name} ID ${EntityID} , we are ${Entity[${EntityID}].Distance} away, we want to be ${Distance} away will approach"]
 						ApproachIDCache:Set[${EntityID}]
@@ -118,7 +118,7 @@ objectdef obj_MissionCommands
 				{
 					if ${EntityID} == ${ApproachIDCache}
 					{
-						if ${Entity[${ApproachIDCache}].Distance} < ${Math.Calc[${Distance} * 1.1]}
+						if ${Entity[${ApproachIDCache}].Distance} < ${Distance}
 						{
 							UI:UpdateConsole["DEBUG: obj_MissionCommands - Name ${Entity[${EntityID}].Name} ID ${EntityID} , we are ${Entity[${EntityID}].Distance} away, we want to be ${Distance} we have succeeded!",LOG_DEBUG]
 							UI:UpdateConsole["DEBUG: obj_MissionCommands - Reached ${EntityID} "]
@@ -287,11 +287,13 @@ objectdef obj_MissionCommands
 								${EntityCache.EntityIterator.Value.Distance} < ${Me.DroneControlDistance}
 							{
 								EntityInRange:Set[TRUE]
+								break
 							}
 						}
 					}
 					while ${EntityCache.EntityIterator:Next(exists)}
 				}
+				;Why are we worried about aggro count in clearroom?
 				if ${This.AggroCount} > 0 && ${EntityInRange}
 				{
 					UI:UpdateConsole["DEBUG: obj_MissionCommands - Killing stuff",LOG_DEBUG]
@@ -319,6 +321,7 @@ objectdef obj_MissionCommands
 									${EntityCache.EntityIterator.Value.Distance} < ${Me.DroneControlDistance}
 								{
 									EntityInRange:Set[TRUE]
+									break
 								}
 							}
 						}
@@ -522,7 +525,7 @@ objectdef obj_MissionCommands
 				{
 					if ${Entity[${KillIDCache}].GroupID(exists)}  && ${Entity[${KillIDCache}].GroupID} != GROUPID_WRECK && ${Entity[${KillIDCache}].GroupID} != GROUPID_CARGO_CONTAINER
 					{
-						;didApproach:Set[${This.Approach[${KillIDCache}, ${dist}]
+						didApproach:Set[${This.Approach[${KillIDCache}, ${dist}]}]
 						UI:UpdateConsole["DEBUG: obj_MissionCommands - Entity with ID ${KillIDCache} still exists, we have no killed it yet :<",LOG_DEBUG]
 						return FALSE
 					}
@@ -983,6 +986,7 @@ objectdef obj_MissionCommands
 				{
 					UI:UpdateConsole["DEBUG: HaveLoot: Found required items in ship's cargohold."]
 					haveCargo:Set[TRUE]
+					break
 				}
 			}
 			while ${CargoIterator:Next(exists)}
@@ -1048,7 +1052,8 @@ objectdef obj_MissionCommands
 			return FALSE
 		}
 
-		Targeting:Disable[]
+		;There is 0 reason to disable targeting. Don't.
+		;Targeting:Disable[]
 		This:UnlockAllTargets[]
 		if ${This.ReturnAllToDroneBay[]}
 		{
