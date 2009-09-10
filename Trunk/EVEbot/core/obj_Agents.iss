@@ -1299,6 +1299,9 @@ objectdef obj_Agents
 		;EVE:Execute[CmdCloseAllWindows]
 		;wait 50
 
+		echo "DO NOT FUCKING QUIT MISSONS KKTHX"
+		return
+
 		UI:UpdateConsole["obj_Agents:QuitMission: Starting conversation with agent ${This.ActiveAgent}."]
 		Agent[${This.AgentIndex}]:StartConversation
 		do
