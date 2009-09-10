@@ -435,7 +435,7 @@ objectdef obj_Ship
 
 		variable string ChargeName = ${MyShip.Module[${slot}].Charge.Name}
 		variable iterator RangeIterator
-		UI:UpdateConsole["obj_Ship This.TurretMaximumRanges.Element[${turret}](exists) ${This.TurretMaximumRanges.Element[${turret}](exists)} ${This.TurretMaximumRanges.Element[${turret}].Used}",LOG_DEBUG]
+		UI:UpdateConsole["obj_Ship This.TurretMaximumRanges.Element[${turret}](exists) ${This.TurretMaximumRanges.Element[${turret}](exists)} ${This.TurretMaximumRanges.Element[${turret}].Used}"]
 		if ${This.TurretMaximumRanges.Element[${turret}](exists)}
 		{
 			This.TurretMaximumRanges.Element[${turret}]:GetIterator[RangeIterator]
@@ -443,7 +443,7 @@ objectdef obj_Ship
 			{
 				do
 				{
-					UI:UpdateConsole["obj_Ship range ${RangeIterator.Key} ${RangeIterator.Value}",LOG_DEBUG]
+					UI:UpdateConsole["obj_Ship range ${RangeIterator.Key} ${RangeIterator.Value}"]
 					if ${ChargeName.Find[${RangeIterator.Key}](exists)}
 					{
 						return ${RangeIterator.Value}
@@ -453,7 +453,7 @@ objectdef obj_Ship
 			}
 		}
 		;If something didn't return, something broke. Record it.
-		UI:UpdateConsole["obj_Ship.GetMaximumTurretRange(${turret},${ChargeType},${ChargeName}): Could not find a match for ${ChargeName} in the TurretMaximumRanges dictionary!",LOG_CRITICAL]
+		UI:UpdateConsole["obj_Ship.GetMaximumTurretRange(${turret}): Could not find a match for ${ChargeName} in the TurretMaximumRanges dictionary!",LOG_CRITICAL]
 		This.TurretMaximumRanges.Element[${turret}]:Set[${MyShip.Module[${slot}].Charge.Name},${Math.Calc[${This.TurretMaxRangeMod} * ${This.TurretBaseOptimal[${turret}]}]}]
 		return ${This.TurretMaximumRanges.Element[${turret}].Element[${MyShip.Module[${slot}].Charge.Name}]}
 	}
@@ -471,14 +471,16 @@ objectdef obj_Ship
 
 		variable string ChargeName = ${MyShip.Module[${slot}].Charge.Name}
 		variable iterator RangeIterator
+		;echo "This.TurretMinimumRanges.Element[${turret}](exists) ${This.TurretMinimumRanges.Element[${turret}](exists)}"
 		if ${This.TurretMinimumRanges.Element[${turret}](exists)}
 		{
 			This.TurretMinimumRanges.Element[${turret}]:GetIterator[RangeIterator]
+			;echo "This.TurretMinimumRanges.Element[${turret}].Used ${This.TurretMinimumRanges.Element[${turret}].Used}"
 			if ${RangeIterator:First(exists)}
 			{
 				do
 				{
-					;UI:UpdateConsole["obj_Ship range ${RangeIterator.Key} ${RangeIterator.Value}"]
+					UI:UpdateConsole["obj_Ship range ${RangeIterator.Key} ${RangeIterator.Value}"]
 					if ${ChargeName.Find[${RangeIterator.Key}]}
 					{
 						return ${RangeIterator.Value}
@@ -487,7 +489,7 @@ objectdef obj_Ship
 				while ${RangeIterator:Next(exists)}
 			}
 		}
-		UI:UpdateConsole["obj_Ship.GetMinimumTurretRange(${turret},${ChargeType},${ChargeName}): Could not find charge ${ChargeName} in TurretMinimumRanges dictionary!",LOG_DEBUG]
+		UI:UpdateConsole["obj_Ship.GetMinimumTurretRange(${turret},${ChargeType},${ChargeName}): Could not find charge ${ChargeName} in TurretMinimumRanges dictionary!"]
 		This.TurretMinimumRanges.Element[${turret}]:Set[${MyShip.Module[${slot}].Charge.Name},${Math.Calc[${This.TurretMinRangeMod} * ${This.TurretBaseOptimal[${turret}]}]}]
 		return ${This.TurretMinimumRanges.Element[${turret}].Element[${MyShip.Module[${slot}].Charge.Name}]}
 	}
