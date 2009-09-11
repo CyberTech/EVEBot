@@ -131,10 +131,10 @@ objectdef obj_Miner
 		{
 				variable int locationtime = ${Config.Miner.LocationTime[${Config.Miner.DeliveryLocation}]}
 				locationtime:Inc[1]
-				Config.Miner.SetLocationTime:[${Config.Miner.DeliveryLocation},${locationtime}]
+				Config.Miner:SetLocationTime[${Config.Miner.DeliveryLocation},${locationtime}]
 
     		This.UpdateLocationTime:Set[${Time.Timestamp}]
-    		This.UpdateLocationTime.Second:Inc[${This.PulseIntervalInSeconds}]
+    		This.UpdateLocationTime.Hour:Inc[1]
     		This.UpdateLocationTime:Update
 		}
 	}
