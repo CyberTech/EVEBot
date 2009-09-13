@@ -190,6 +190,13 @@ objectdef obj_LoginHandler
 					This.LoginTimer:Set[100]
 					break
 				}
+				if ${EVEWindow[ByCaption,LOGIN DATA INCORRECT](exists)}
+				{
+					; TODO - add a retry count here so we don't spam.
+					This.CurrentState:Set["SERVERUP"]
+					This.LoginTimer:Set[50]
+					break
+				}
 				/* this one causes false positives in overloaded systems
 				if ${EVEWindow[ByCaption,INFORMATION](exists)}
 				{
