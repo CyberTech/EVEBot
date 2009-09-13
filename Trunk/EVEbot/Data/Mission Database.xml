@@ -19,6 +19,20 @@
       	</Set>
       </Set>
     </Set>
+    <Set Name="No Excuse">
+    	<Set Name="3">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="Kill" Target="Monument" />
+    			<Set Name="2" Action="Kill" Target="Monument" />
+    			<Set Name="3" Action="Kill" Target="Monument" />
+    			<Set Name="4" Action="Kill" Target="Monument" />
+    			<Set Name="5" Action="Kill" Target="Monument" />
+    			<Set Name="6" Action="Kill" Target="Monument" />
+    			<Set Name="7" Action="Kill" Target="Monument" />
+    			<Set Name="8" Action="ClearRoom" />
+    		</Set>
+    	</Set>
+    </Set>
     <Set Name="Rogue Drone Harassment">
     	<Set Name="1">
     		<Set Name="Commands">
@@ -98,9 +112,13 @@
     	</Set>
       <Set Name = "2">
         <Set Name = "Commands">
-          <Set Name = "1" Action = "ClearRoom">
-          </Set>
+          <Set Name = "1" Action = "ClearRoom" />
         </Set>
+      </Set>
+      <Set Name="3">
+      	<Set Name="Commands">
+      		<Set Name="1" Action="ClearRoom" />
+      	</Set>
       </Set>
     </Set>
     <Set Name="Freedom and Commerce">
@@ -118,10 +136,20 @@
     		</Set>
     	</Set>
     </Set>
+    <Set Name="Break the Slave Trade">
+    	<Set Name="2">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="CheckContainers" Target="Vitoc" GroupID="12" />
+    		</Set>
+    	</Set>
+    </Set>
     <Set Name="Eliminate a Pirate Nuisance">
     	<Set Name="1">
     		<Set Name="Commands">
     			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
     		</Set>
     	</Set>
     </Set>
@@ -370,7 +398,9 @@
     		<Set Name="Commands">
     			<Set Name="1" Action="NextRoom" />
     			<Set Name="2" Action="ClearRoom" />
-    			<Set Name="3" Action="Kill" Target="Angel Outpost" />
+    			<Set Name="3" Action="Kill" Target="Serpentis Outpost" />
+    			<Set Name="4" Action="Kill" Target="Guristas Outpost" />
+    			<Set Name="5" Action="Kill" Target="Angel Outpost" />
     		</Set>
     	</Set>
     </Set>
@@ -410,21 +440,20 @@
     			<Set Name="3" Action="CheckContainers" Target="Militants" GroupID="186" WreckName="Transport" />
     		</Set>
     	</Set>
-      <Set Name = "2">
-        <Set Name = "Commands">
-          <Set Name = "1" Action = "NextRoom">
-          </Set>
-          <Set Name = "2" Action = "ClearRoom">
-          </Set>
-          <Set Name = "3" Action = "CheckContainers" Target="Militants" GroupID="186" WreckName="Transport">
-          </Set>
+      <Set Name="2">
+        <Set Name="Commands">
+          <Set Name="1" Action="NextRoom" />
+          <Set Name="2" Action="ClearRoom" />
+          <Set Name="3" Action="CheckContainers" Target="Militants" GroupID="186" WreckName="Transport" />
         </Set>
       </Set>
       <Set Name="3"> 
     		<Set Name="Commands">
     			<Set Name="1" Action="NextRoom" />
     			<Set Name="2" Action="ClearRoom" />
-    			<Set Name="3" Action="CheckContainers" Target="Militants" GroupID="186" WreckName="Transport" />
+    			<Set Name="3" Action="NextRoom" />
+    			<Set Name="4" Action="ClearRoom" />
+    			<Set Name="5" Action="CheckContainers" Target="Militants" GroupID="186" WreckName="Transport" />
     		</Set>
     	</Set>
     </Set>
@@ -553,7 +582,29 @@
     		</Set>
     	</Set>
     </Set>
+    <Set Name="Guristas Strike - Ambush in the Dark (1 of 10)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="CheckContainers" Target="Prisoners" GroupID="12" />
+    		</Set>
+    	</Set>
+    </Set>
     <Set Name="Kidnappers Strike - The Kidnapping (3 of 10)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="Kill" Target="Drazin's Habitat" />
+    			<Set Name="4" Action="CheckContainers" Target="Drazin's Keycard" GroupID="12" />
+    			<Set Name="5" Action="NextRoom" />
+    			<Set Name="6" Action="ClearRoom" />
+    			<Set Name="7" Action="CheckContainers" Target="Prisoners" GroupID="12" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Guristas Strike - The Kidnapping (3 of 10)">
     	<Set Name="1">
     		<Set Name="Commands">
     			<Set Name="1" Action="NextRoom" />
@@ -574,6 +625,14 @@
     		</Set>
     	</Set>
     </Set>
+    <Set Name="Guristas Strike - Incriminating Evidence (5 of 10)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    		</Set>
+    	</Set>
+    </Set>
     <Set Name="Kidnappers Strike - The Flu Outbreak (6 of 10)">
     	<Set Name="1">
     		<Set Name="Commands">
@@ -581,7 +640,24 @@
     		</Set>
     	</Set>
     </Set>
+    <Set Name="Guristas Strike - The Flu Outbreak (6 of 10)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    		</Set>
+    	</Set>
+    </Set>
     <Set Name="Kidnappers Strike - The Secret Meeting (7 of 10)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="NextRoom" />
+    			<Set Name="3" Action="ClearRoom" />
+    			<Set Name="4" Action="CheckContainers" Target="Prisoners" GroupID="12" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Guristas Strike - The Secret Meeting (7 of 10)">
     	<Set Name="1">
     		<Set Name="Commands">
     			<Set Name="1" Action="NextRoom" />
@@ -599,15 +675,45 @@
     		</Set>
     	</Set>
     </Set>
+    <Set Name="Guristas Strike - Defend the Civilian Convoy (8 of 10)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    		</Set>
+    	</Set>
+    </Set>
     <Set Name="Kidnappers Strike - Retrieve the Prisoners (9 of 10)">
     	<Set Name="1">
     		<Set Name="Commands">
     			<Set Name="1" Action="NextRoom" />
-    			<Set Name="2" Action="CheckContainers" Target="Prisoners" GroupID="12" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="CheckContainers" Target="Prisoners" GroupID="12" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Guristas Strike - Retrieve the Prisoners (9 of 10)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="CheckContainers" Target="Prisoners" GroupID="12" />
     		</Set>
     	</Set>
     </Set>
     <Set Name="Kidnappers Strike - The Final Battle (10 of 10)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="NextRoom" />
+    			<Set Name="4" Action="ClearRoom" />
+    			<Set Name="5" Action="NextRoom" />
+    			<Set Name="6" Action="Kill" Target="Central Communication Tower" />
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Guristas Strike - The Final Battle (10 of 10)">
     	<Set Name="1">
     		<Set Name="Commands">
     			<Set Name="1" Action="NextRoom" />
@@ -929,21 +1035,19 @@
     			<Set Name="1" Action="NextRoom" />
     			<Set Name="2" Action="ClearRoom" />
     			<Set Name="3" Action="CheckContainers" Target="Construction Blocks" GroupID="12" />
-    			<Set Name="4" Action="CheckCans" />
     		</Set>
     	</Set>
-      <Set Name = "2">
-        <Set Name = "Commands">
-          <Set Name = "1" Action = "NextRoom">
-          </Set>
-          <Set Name = "2" Action = "ClearRoom">
-          </Set>
-          <Set Name = "3" Action = "CheckContainers" Target="Construction Blocks" GroupID="12">
-          </Set>
-          <Set Name = "4" Action = "CheckCans">
-          </Set>
-        </Set>
-      </Set>
+    </Set>
+    <Set Name="Whispers in the Dark - The Outpost (4 of 4)">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="NextRoom" />
+    			<Set Name="4" Action="ClearRoom" />
+    			<Set Name="5" Action="Kill" Target="Workers' Quarters" />
+    		</Set>
+    	</Set>
     </Set>
     <Set Name = "The Seven's Brothel">
       <Set Name = "2">
@@ -952,6 +1056,17 @@
           </Set>
         </Set>
       </Set>
+    </Set>
+    <Set Name="The Spy Stash">
+    	<Set Name="3">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="NextRoom" />
+    			<Set Name="4" Action="ClearRoom" />
+    			<Set Name="5" Action="CheckContainers" Target="Classified Report - Station Defenses" GroupID="306" />
+    		</Set>
+    	</Set>
     </Set>
     <Set Name = "Illegal Activity (1 of 3)">
       <Set Name = "2">
@@ -1221,9 +1336,10 @@
     	</Set>
     	<Set Name="3">
     		<Set Name="Commands">
-    			<Set Name="1" Action="ClearRoom" />
-    			<Set Name="2" Action="NextRoom" />
-    			<Set Name="3" Action="ClearRoom" />
+					<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="NextRoom" />
+    			<Set Name="4" Action="ClearRoom" />
     		</Set>
     	</Set>
     </Set>
@@ -1305,6 +1421,7 @@
     		</Set>
     		<Set Name="Commands">
     			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
     		</Set>
     	</Set>
     </Set>
@@ -1359,6 +1476,23 @@
 				<Set Name="Commands">
 					<Set Name="1" Action="ClearRoom" />
 					<Set Name="2" Action="CheckContainers" Target="Broken Mining Equipment" GroupID="306" />
+				</Set>
+			</Set>
+		</Set>
+		<Set Name="The Rogue Slave Trader (1 of 2)">
+			<Set Name="3">
+				<Set Name="Commands">
+					<Set Name="1" Action="ClearRoom" />
+					<Set Name="2" Action="Kill" Target="Slave Pen" />
+					<Set Name="3" Action="CheckContainers" Target="Prisoners" GroupID="12" />
+				</Set>
+			</Set>
+		</Set>
+		<Set Name="Downing The Slavers (2 of 2)">
+			<Set Name="3">
+				<Set Name="Commands">
+					<Set Name="1" Action="ClearRoom" />
+					<Set Name="2" Action="NextRoom" />
 				</Set>
 			</Set>
 		</Set>
