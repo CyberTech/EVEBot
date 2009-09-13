@@ -277,7 +277,7 @@ objectdef obj_Ship
 	Warning: THIS IS A *VERY* EXPENSIVE CALL. */
 	method BuildLookupTables()
 	{
-		UI:UpdateConsole["obj_Ship:BuildLookupTables[]: called.",LOG_DEBUG]
+		UI:UpdateConsole["obj_Ship:BuildLookupTables[]: called."]
 		variable index:item AvailableCharges
 		variable iterator Weapon
 		variable iterator AvailableCharge
@@ -307,12 +307,12 @@ objectdef obj_Ship
 			do
 			{
 				BaseOptimal:Set[${This.TurretBaseOptimal[${Weapon.Key}]}]
-				UI:UpdateConsole["obj_Ship:BuildLookupTables[]: TurretBaseOptimals.Element[${Weapon.Key}]: ${TurretBaseOptimals.Element[${Weapon.Key}]}",LOG_DEBUG]
+				UI:UpdateConsole["obj_Ship:BuildLookupTables[]: TurretBaseOptimals.Element[${Weapon.Key}]: ${TurretBaseOptimals.Element[${Weapon.Key}]}"]
 
 				Weapon.Value:DoGetAvailableAmmo[AvailableCharges]
 				AvailableCharges:GetIterator[AvailableCharge]
 
-				UI:UpdateConsole["obj_Ship:BuildLookupTables[]: GroupID: ${Weapon.Value.ToItem.GroupID}",LOG_DEBUG]
+				UI:UpdateConsole["obj_Ship:BuildLookupTables[]: GroupID: ${Weapon.Value.ToItem.GroupID}"]
 				switch ${Weapon.Value.ToItem.GroupID}
 				{
 					case GROUP_PROJECTILEWEAPON
@@ -325,22 +325,22 @@ objectdef obj_Ship
 						ChargeType:Set[Frequency]
 						break
 				}
-				UI:UpdateConsole["obj_Ship:BuildLookupTables[]: ChargeType: ${ChargeType}",LOG_DEBUG]
+				UI:UpdateConsole["obj_Ship:BuildLookupTables[]: ChargeType: ${ChargeType}"]
 				${ChargeType}NameModPairs:GetIterator[LookupIterator]
 
 				if ${AvailableCharge:First(exists)}
 				{
 					do
 					{
-						UI:UpdateConsole["obj_Ship.BuildLookupTables[]: Weapon: ${Weapon.Key}, Available Charge: ${AvailableCharge.Value.Name}",LOG_DEBUG]
+						UI:UpdateConsole["obj_Ship.BuildLookupTables[]: Weapon: ${Weapon.Key}, Available Charge: ${AvailableCharge.Value.Name}"]
 						if ${LookupIterator:First(exists)}
 						{
 							do
 							{
-								UI:UpdateConsole["obj_Ship.BuildLookupTables[]: Weapon: ${Weapon.Key}, Lookup Charge: ${LookupIterator.Key}",LOG_DEBUG]
+								UI:UpdateConsole["obj_Ship.BuildLookupTables[]: Weapon: ${Weapon.Key}, Lookup Charge: ${LookupIterator.Key}"]
 								if ${AvailableCharge.Value.Name.Find[${LookupIterator.Key}](exists)}
 								{
-									UI:UpdateConsole["obj_Ship:BuildLookupTables[]: ${ChargeType}, ${LookupIterator.Key}, ${LookupIterator.Value}, ${Math.Calc[${BaseOptimal} * ${LookupIterator.Value}]}",LOG_DEBUG]
+									UI:UpdateConsole["obj_Ship:BuildLookupTables[]: ${ChargeType}, ${LookupIterator.Key}, ${LookupIterator.Value}, ${Math.Calc[${BaseOptimal} * ${LookupIterator.Value}]}"]
 									${ChargeType}LookupTable:Set[${Math.Calc[${BaseOptimal} * ${LookupIterator.Value}]}, ${LookupIterator.Key}]
 									if !${This.TurretMinimumRanges.Element[${Weapon.Key}](exists)}
 									{
@@ -352,8 +352,8 @@ objectdef obj_Ship
 										This.TurretMaximumRanges:Set[${Weapon.Key}]
 									}
 									This.TurretMaximumRanges.Element[${Weapon.Key}]:Set[${LookupIterator.Key},${Math.Calc[${BaseOptimal} * ${LookupIterator.Value} * ${This.TurretMaxRangeMod}]}]
-									UI:UpdateConsole["obj_Ship:BuildLookupTables[]: ${Weapon.Key}, ${This.TurretMinimumRanges.Element[${Weapon.Key}](exists)}, ${LookupIterator.Key}, ${This.TurretMinimumRanges.Element[${Weapon.Key}].Element[${LookupIterator.Key}]} ${This.TurretMinimumRanges.Element[${Weapon.Key}].Used} ${BaseOptimal} ${LookupIterator.Value}",LOG_DEBUG]
-									UI:UpdateConsole["obj_Ship:BuildLookupTables[]: ${Weapon.Key}, ${This.TurretMaximumRanges.Element[${Weapon.Key}](exists)}, ${LookupIterator.Key}, ${This.TurretMaximumRanges.Element[${Weapon.Key}].Element[${LookupIterator.Key}]} ${This.TurretMaximumRanges.Element[${Weapon.Key}].Used} ${BaseOptimal} ${LookupIterator.Value}",LOG_DEBUG]
+									UI:UpdateConsole["obj_Ship:BuildLookupTables[]: ${Weapon.Key}, ${This.TurretMinimumRanges.Element[${Weapon.Key}](exists)}, ${LookupIterator.Key}, ${This.TurretMinimumRanges.Element[${Weapon.Key}].Element[${LookupIterator.Key}]} ${This.TurretMinimumRanges.Element[${Weapon.Key}].Used} ${BaseOptimal} ${LookupIterator.Value}"]
+									UI:UpdateConsole["obj_Ship:BuildLookupTables[]: ${Weapon.Key}, ${This.TurretMaximumRanges.Element[${Weapon.Key}](exists)}, ${LookupIterator.Key}, ${This.TurretMaximumRanges.Element[${Weapon.Key}].Element[${LookupIterator.Key}]} ${This.TurretMaximumRanges.Element[${Weapon.Key}].Used} ${BaseOptimal} ${LookupIterator.Value}"]
 									break
 								}
 							}
@@ -435,7 +435,7 @@ objectdef obj_Ship
 
 		variable string ChargeName = ${MyShip.Module[${slot}].Charge.Name}
 		variable iterator RangeIterator
-		UI:UpdateConsole["obj_Ship This.TurretMaximumRanges.Element[${turret}](exists) ${This.TurretMaximumRanges.Element[${turret}](exists)} ${This.TurretMaximumRanges.Element[${turret}].Used}"]
+		UI:UpdateConsole["obj_Ship This.TurretMaximumRanges.Element[${turret}](exists) ${This.TurretMaximumRanges.Element[${turret}](exists)} ${This.TurretMaximumRanges.Element[${turret}].Used}",LOG_DEBUG]
 		if ${This.TurretMaximumRanges.Element[${turret}](exists)}
 		{
 			This.TurretMaximumRanges.Element[${turret}]:GetIterator[RangeIterator]
@@ -443,7 +443,7 @@ objectdef obj_Ship
 			{
 				do
 				{
-					UI:UpdateConsole["obj_Ship range ${RangeIterator.Key} ${RangeIterator.Value}"]
+					UI:UpdateConsole["obj_Ship range ${RangeIterator.Key} ${RangeIterator.Value}",LOG_DEBUG]
 					if ${ChargeName.Find[${RangeIterator.Key}](exists)}
 					{
 						return ${RangeIterator.Value}
@@ -454,7 +454,7 @@ objectdef obj_Ship
 		}
 		;If something didn't return, something broke. Record it.
 		UI:UpdateConsole["obj_Ship.GetMaximumTurretRange(${turret}): Could not find a match for ${ChargeName} in the TurretMaximumRanges dictionary!",LOG_CRITICAL]
-		This.TurretMaximumRanges.Element[${turret}]:Set[${MyShip.Module[${slot}].Charge.Name},${Math.Calc[${This.TurretMaxRangeMod} * ${This.TurretBaseOptimal[${turret}]}]}]
+		;This.BuildLookupTables[]
 		return ${This.TurretMaximumRanges.Element[${turret}].Element[${MyShip.Module[${slot}].Charge.Name}]}
 	}
 
@@ -480,7 +480,7 @@ objectdef obj_Ship
 			{
 				do
 				{
-					UI:UpdateConsole["obj_Ship range ${RangeIterator.Key} ${RangeIterator.Value}"]
+					UI:UpdateConsole["obj_Ship range ${RangeIterator.Key} ${RangeIterator.Value}",LOG_DEBUG]
 					if ${ChargeName.Find[${RangeIterator.Key}]}
 					{
 						return ${RangeIterator.Value}
@@ -489,7 +489,7 @@ objectdef obj_Ship
 				while ${RangeIterator:Next(exists)}
 			}
 		}
-		UI:UpdateConsole["obj_Ship.GetMinimumTurretRange(${turret},${ChargeType},${ChargeName}): Could not find charge ${ChargeName} in TurretMinimumRanges dictionary!"]
+		UI:UpdateConsole["obj_Ship.GetMinimumTurretRange(${turret},${ChargeType},${ChargeName}): Could not find charge ${ChargeName} in TurretMinimumRanges dictionary!",LOG_DEBUG]
 		This.TurretMinimumRanges.Element[${turret}]:Set[${MyShip.Module[${slot}].Charge.Name},${Math.Calc[${This.TurretMinRangeMod} * ${This.TurretBaseOptimal[${turret}]}]}]
 		return ${This.TurretMinimumRanges.Element[${turret}].Element[${MyShip.Module[${slot}].Charge.Name}]}
 	}
@@ -2138,7 +2138,7 @@ objectdef obj_Ship
 	}
 
 	; Returns the salvager range minus 10%
-	member:int OptimalSalvageRange()
+	member:float OptimalSalvageRange()
 	{
 		Validate_Ship()
 		variable iterator Module
@@ -2153,7 +2153,7 @@ objectdef obj_Ship
 	}
 
 	; Returns the tractor range minus 10%
-	member:int OptimalTractorRange()
+	member:float OptimalTractorRange()
 	{
 		Validate_Ship()
 
@@ -2169,18 +2169,21 @@ objectdef obj_Ship
 	}
 
 	; Returns the targeting range minus 10%
-	member:int OptimalTargetingRange()
+	member:float OptimalTargetingRange()
 	{
 		return ${Math.Calc[${_MyShip.MaxTargetRange}*0.90]}
 	}
 
 	; Returns the highest weapon optimal range minus
-	member:int OptimalWeaponRange()
+	member:float OptimalWeaponRange()
 	{
-		if ${Ship.TurretMaximumRange[1]} > 0
+		variable float maxRange = ${Ship.GetMaximumTurretRange[1]}
+		if ${maxRange} > 0
 		{
-			return ${Ship.TurretMaximumRange[1]}
+			echo "OptimalWeaponRange: Returning \${Ship.GetMaximumTurretRange[1]} ${Ship.GetMaximumTurretRange[1]}"
+			return ${maxRange}
 		}
+		echo "OptimalWeaponRange: Returning \${Math.Calc[${Config.Combat.MaxMissileRange} * 0.95]} ${Math.Calc[${Config.Combat.MaxMissileRange} * 0.95]}"
 		return ${Math.Calc[${Config.Combat.MaxMissileRange} * 0.95]}
 	}
 

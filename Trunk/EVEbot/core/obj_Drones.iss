@@ -13,7 +13,7 @@ objectdef obj_Drones
 	variable int Version
 
 	variable time NextPulse
-	variable int PulseIntervalInSeconds = 5
+	variable int PulseIntervalInSeconds = 2
 
 	variable index:int ActiveDroneIDList
 	variable int CategoryID_Drones = 18
@@ -196,12 +196,13 @@ objectdef obj_Drones
 						{
 							UI:UpdateConsole["obj_Drones: Drone ${ActiveDrone.Value.ID} is losing shield (${ActiveDrone.Value.ToEntity.ShieldPct} < ${StoredDroneShield.Element[${ActiveDrone.Value.ID}]}). Recalling."]
 							This:RecallDrone[${ActiveDrone.Value}]
+							recalledDrone:Set[TRUE]
 						}
 					}
 					StoredDroneShield:Set[${ActiveDrone.Value.ID},${ActiveDrone.Value.ToEntity.ShieldPct}]
 				}
 			}
-			while ${ActiveDrone:Next(exists)}
+			while ${ActiveDrone:Next(exists)} && !${recalledDrone}
 		}
 	}
 
