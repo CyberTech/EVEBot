@@ -819,6 +819,13 @@
       	</Set>
       </Set>
     </Set>
+    <Set Name="A Force To Be Reckoned With">
+    	<Set Name="1">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="ClearRoom" />
+    		</Set>
+    	</Set>
+    </Set>
     <Set Name="Escaped Terrorist">
     	<Set Name="1">
     		<Set Name="Commands">
@@ -960,6 +967,14 @@
     			<Set Name="GROUP_HEAVYINTERDICTOR"></Set>
     			<Set Name="GROUP_COMBATRECONSHIP"></Set>
     			<Set Name="GROUP_STRATEGICCRUISER"></Set>
+    		</Set>
+    	</Set>
+    </Set>
+    <Set Name="Intercept The Pirate Smugglers">
+    	<Set Name="3">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="WaitAggro" TimeOut="30" />
+    			<Set Name="2" Action="ClearRoom" />
     		</Set>
     	</Set>
     </Set>
@@ -1115,6 +1130,21 @@
           </Set>
         </Set>
       </Set>
+      <Set Name="3">
+      	<Set Name="Commands">
+      		<Set Name="1" Action="ClearRoom" />
+      		<Set Name="2" Action="CheckContainers" Target="Reports" GroupID="12" />
+      	</Set>
+      </Set>
+    </Set>
+    <Set Name="Operation Hamstring">
+    	<Set Name="3">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="Kill" Target="Armory" />
+    		</Set>
+    	</Set>
     </Set>
     <Set Name = "Alluring Emanations">
     	<Set Name="1">
@@ -1291,6 +1321,12 @@
     		</Set>
     	</Set>
     	<Set Name="2">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    		</Set>
+    	</Set>
+    	<Set Name="3">
     		<Set Name="Commands">
     			<Set Name="1" Action="NextRoom" />
     			<Set Name="2" Action="ClearRoom" />
@@ -1493,6 +1529,7 @@
 				<Set Name="Commands">
 					<Set Name="1" Action="ClearRoom" />
 					<Set Name="2" Action="NextRoom" />
+					<Set Name="3" Action="ClearRoom" />
 				</Set>
 			</Set>
 		</Set>
