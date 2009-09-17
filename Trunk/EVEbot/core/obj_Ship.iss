@@ -530,7 +530,7 @@ objectdef obj_Ship
 				}
 				;If we didn't have a match... fallthrough to default
 			default
-				UI:UpdateConsole["obj_Ship.TurretBaseOptimal: Unrecognized group for the weapon's charge, something is very broken. Group: ${WeaponIterator.Value.Charge.Group} ${WeaponIterator.Value.Charge.GroupID}",LOG_CRITICAL]
+				;UI:UpdateConsole["obj_Ship.TurretBaseOptimal: Unrecognized group for the weapon's charge, something is very broken. Group: ${WeaponIterator.Value.Charge.Group} ${WeaponIterator.Value.Charge.GroupID}",LOG_CRITICAL]
 				return ${MyShip.Module[${slot}].OptimalRange}
 		}
 	}
@@ -2180,10 +2180,10 @@ objectdef obj_Ship
 		variable float maxRange = ${Ship.GetMaximumTurretRange[1]}
 		if ${maxRange} > 0
 		{
-			echo "OptimalWeaponRange: Returning \${Ship.GetMaximumTurretRange[1]} ${Ship.GetMaximumTurretRange[1]}"
+			;echo "OptimalWeaponRange: Returning \${Ship.GetMaximumTurretRange[1]} ${Ship.GetMaximumTurretRange[1]}"
 			return ${maxRange}
 		}
-		echo "OptimalWeaponRange: Returning \${Math.Calc[${Config.Combat.MaxMissileRange} * 0.95]} ${Math.Calc[${Config.Combat.MaxMissileRange} * 0.95]}"
+		;echo "OptimalWeaponRange: Returning \${Math.Calc[${Config.Combat.MaxMissileRange} * 0.95]} ${Math.Calc[${Config.Combat.MaxMissileRange} * 0.95]}"
 		return ${Math.Calc[${Config.Combat.MaxMissileRange} * 0.95]}
 	}
 
