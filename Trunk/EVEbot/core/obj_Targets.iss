@@ -150,13 +150,39 @@ objectdef obj_Targets
 
 		; Special targets will (eventually) trigger an alert
 		; This should include haulers / faction / officers
-		SpecialTargets:Insert["Dread Guristas"]
+		; 
+		; Asteroid Angel Cartel Officers
+		SpecialTargets:Insert["Gotan Kreiss"]
 		SpecialTargets:Insert["Hakim Stormare"]
+		SpecialTargets:Insert["Mizuro Cybon"]
+		SpecialTargets:Insert["Tobias Kruzhoryy"]
+
+		; Asteroid Blood Raiders Officers
+		SpecialTargets:Insert["Ahremen Arkah"]
+		SpecialTargets:Insert["Draclira Merlonne"]
+		SpecialTargets:Insert["Raysere Giant"]
 		SpecialTargets:Insert["Tairei Namazoth"]
+		
+		; Asteroid Guristas Officers
 		SpecialTargets:Insert["Estamel Tharchon"]
 		SpecialTargets:Insert["Kaikka Peunato"]
 		SpecialTargets:Insert["Thon Eney"]
 		SpecialTargets:Insert["Vepas Minimala"]
+
+		; Asteroid Sansha's Nation Officers
+		SpecialTargets:Insert["Brokara Ryver"]
+		SpecialTargets:Insert["Chelm Soran"]
+		SpecialTargets:Insert["Selynne Mardakar"]
+		SpecialTargets:Insert["Vizan Ankonin"]
+
+		; Asteroid Serpentis Officers
+		SpecialTargets:Insert["Brynn Jerdola"]
+		SpecialTargets:Insert["Cormack Vaaja"]
+		SpecialTargets:Insert["Setele Schellan"]
+		SpecialTargets:Insert["Tuvan Orth"]
+
+
+		SpecialTargets:Insert["Dread Guristas"]
 		SpecialTargets:Insert["Courier"]
 		SpecialTargets:Insert["Ferrier"]
 		SpecialTargets:Insert["Gatherer"]
@@ -169,10 +195,6 @@ objectdef obj_Targets
 		SpecialTargets:Insert["Trailer"]
 		SpecialTargets:Insert["Transporter"]
 		SpecialTargets:Insert["Trucker"]
-		SpecialTargets:Insert["Cormack"]
-		SpecialTargets:Insert["Setele"]
-		SpecialTargets:Insert["Tuvan"]
-		SpecialTargets:Insert["Brynn"]
 		SpecialTargets:Insert["Shadow Serpentis"]
 		SpecialTargets:Insert["True Sansha"]
 		SpecialTargets:Insert["Dark Blood"]
