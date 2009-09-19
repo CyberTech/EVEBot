@@ -7,43 +7,43 @@ sec rating.
 Faction: Guristas/Pithi/Dread Guristas
 Home Region: Venal
 Officers:
-Estamel
-Vepas
-Thon
-Kaikka
+Estamel Tharchon
+Vepas Minimala
+Thon Eney
+Kaikka Peunato
 
 
 Faction: Angels/Gisi/Domination
 Home Region: Curse
 Officers:
-Tobias
-Gotan
-Hakim
-Mizuro
+Tobias Kruzhor
+Gotan Kreiss
+Hakim Stormare
+Mizuro Cybon
 
 Faction: Serpentis/Coreli/Shadow:
 Home Region: Fountain
 Officers:
-Cormack
-Setele
-Tuvan
-Brynn
+Cormack Vaaja
+Setele Schellan
+Tuvan Orth
+Brynn Jerdola
 
 Faction: Sanshas/Centi/True Sansha:
 Home Region: Stain
 Officers:
-Chelm
-Vizan
-Selynne
-Brokara
+Chelm Soran
+Vizan Ankonin
+Selynne Mardakar
+Brokara Ryver
 
 Faction: Blood/Corpi/Dark Blood:
-Home Region: Not sure actually... Delve?
+Home Region: Delve
 Officers:
-Draclira
-Ahremen
-Raysere
-Tairei
+Draclira Merlonne
+Ahremen Arkah
+Raysere Giant
+Tairei Namazoth
 */
 
 objectdef obj_Targets
@@ -152,6 +152,7 @@ objectdef obj_Targets
 		; This should include haulers / faction / officers
 		SpecialTargets:Insert["Dread Guristas"]
 		SpecialTargets:Insert["Hakim Stormare"]
+		SpecialTargets:Insert["Tairei Namazoth"]
 		SpecialTargets:Insert["Estamel Tharchon"]
 		SpecialTargets:Insert["Kaikka Peunato"]
 		SpecialTargets:Insert["Thon Eney"]
