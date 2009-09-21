@@ -15,17 +15,17 @@ objectdef obj_Safespots
 	{
 		SafeSpots:Clear
 		EVE:DoGetBookmarks[SafeSpots]
-	
+
 		variable int idx
 		idx:Set[${SafeSpots.Used}]
-		
+
 		while ${idx} > 0
 		{
 			variable string Prefix
 			Prefix:Set[${Config.Labels.SafeSpotPrefix}]
-			
+
 			variable string Label
-			Label:Set[${SafeSpots.Get[${idx}].Label}]			
+			Label:Set["${SafeSpots.Get[${idx}].Label}"]
 			if ${Label.Left[${Prefix.Length}].NotEqual[${Prefix}]}
 			{
 				SafeSpots:Remove[${idx}]
@@ -34,49 +34,49 @@ objectdef obj_Safespots
 			{
 				SafeSpots:Remove[${idx}]
 			}
-			
+
 			idx:Dec
-		}		
+		}
 		SafeSpots:Collapse
 		SafeSpots:GetIterator[SafeSpotIterator]
-		
+
 		UI:UpdateConsole["ResetSafeSpotList found ${SafeSpots.Used} safespots in this system."]
 	}
-	
+
 	function WarpToNextSafeSpot()
 	{
-		if ${SafeSpots.Used} == 0 
+		if ${SafeSpots.Used} == 0
 		{
 			This:ResetSafeSpotList
-		}		
-		
+		}
+
 		if ${SafeSpots.Get[1](exists)} && ${SafeSpots.Get[1].SolarSystemID} != ${_Me.SolarSystemID}
 		{
 			This:ResetSafeSpotList
 		}
-		
+
 		if !${SafeSpotIterator:Next(exists)}
 		{
 			SafeSpotIterator:First
 		}
-		
+
 		if ${SafeSpotIterator.Value(exists)}
 		{
 			call Ship.WarpToBookMark ${SafeSpotIterator.Value.ID}
 		}
 		else
 		{
-			UI:UpdateConsole["ERROR: obj_Safespots.WarpToNextSafeSpot found an invalid bookmark!"]			
+			UI:UpdateConsole["ERROR: obj_Safespots.WarpToNextSafeSpot found an invalid bookmark!"]
 		}
 	}
 
 	member:bool IsAtSafespot()
 	{
-		if ${SafeSpots.Used} == 0 
+		if ${SafeSpots.Used} == 0
 		{
 			This:ResetSafeSpotList
 		}
-		
+
 		; big debug block to get to the bottom of the "safe spot problem"
 		;UI:UpdateConsole["DEBUG: obj_Safespots.IsAtSafespot: ItemID = ${SafeSpotIterator.Value.ItemID}"]
 		;UI:UpdateConsole["DEBUG: obj_Safespots.IsAtSafespot: SS_X = ${SafeSpotIterator.Value.X}"]
@@ -100,10 +100,10 @@ objectdef obj_Safespots
 		{
 			return TRUE
 		}
-		
-		return FALSE		
+
+		return FALSE
 	}
-	
+
 	function WarpTo()
 	{
 		call This.WarpToNextSafeSpot
