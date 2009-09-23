@@ -50,7 +50,7 @@ function main(... Args)
   }
   while !${ISXEVE.IsReady}
 
-  echo " \n \n \n** EVE Salvager Script by Amadeus ** \n \n"
+  echo " \n \n \n** EVE Salvager 3.11 Script by Amadeus ** \n \n"
 
   ; 'Args' is an array ... arrays are static.  Copying to an index just in case we have a desire at some point to add/remove elements.
 	if ${Args.Size} > 0
@@ -63,7 +63,7 @@ function main(... Args)
 			{
 				UsingAt:Set[TRUE]
 				Iterator:Inc
-				Me.Fleet:GetMembers[MyFleet]}
+				Me.Fleet:GetMembers[MyFleet]
 				MyFleetCount:Set[${MyFleet.Used}]
 
 				if ${MyFleetCount} <= 0
