@@ -1,0 +1,1818 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ISUI>
+	<window name='EVEBot'>
+		<Visible>1</Visible>
+		<BackGroundColor></BackGroundColor>
+		<Border>0</Border>
+		<X>200</X>
+		<Y>300</Y>
+		<Width>500</Width>
+		<Height>326</Height>
+		<Title>EVEBot Options</Title>
+		<TitleBar template='EVESkin.Window.TitleBar'>
+			<Width>100%</Width>
+			<Height>20</Height>
+			<Border>0</Border>
+			<Children>
+				<commandbutton name='Run EVEBot' template='EVESkin.Window.TitleBar.RunButton'>
+					<OnLeftClick>
+						Script[EVEBot]:Resume
+						EVEBot:Resume
+						Echo EVEBot: Resumed
+					</OnLeftClick>
+				</commandbutton>
+				<commandbutton name='Pause EVEBot' template='EVESkin.Window.TitleBar.PauseButton'>
+					<OnLeftClick>
+						EVE:Execute[CmdStopShip]
+						Script[EVEBot]:Pause
+						EVEBot:Pause
+						Echo EVEBot: Paused
+					</OnLeftClick>
+				</commandbutton>
+				<text name='EVEBot_TitleBar_Title' template='EVESkin.Font.TitleBar'>
+					<X>200</X>
+					<Y>3</Y>
+					<Width>120</Width>
+					<Height>20</Height>
+					<Text>${Script[EVEBot].VariableScope.AppVersion}</Text>
+					<OnLoad>
+						This:SetText[${Script[EVEBot].VariableScope.AppVersion}]
+					</OnLoad>
+				</text>
+				<button	Name='Minimize'	template='EVESkin.Window.TitleBar.Minimize'>
+					<OnLeftClick>
+						UIElement[EVEBot].FindUsableChild[TitleBotStatus,text]:Show
+						UIElement[EVEBot].FindUsableChild[TitleBotStatusCap,text]:Show
+						UIElement[EVEBot].FindUsableChild[TitleBotXPStatus,text]:Show
+						UIElement[EVEBot].FindUsableChild[TitleBotXPCap,text]:Show
+					</OnLeftClick>
+				</button>
+				<button	Name='Maximize'	template='EVESkin.Window.TitleBar.Minimize'>
+					<OnLeftClick>
+						UIElement[EVEBot].FindUsableChild[TitleBotStatus,text]:Hide
+						UIElement[EVEBot].FindUsableChild[TitleBotXPStatus,text]:Hide
+						UIElement[EVEBot].FindUsableChild[TitleBotXPCap,text]:Hide
+						UIElement[EVEBot].FindUsableChild[TitleBotStatusCap,text]:Hide
+					</OnLeftClick>
+				</button>
+				<button	Name='Close' template='EVESkin.Window.TitleBar.Close'>
+					<OnLeftClick>
+						EVEBot:EndBot[]
+					</OnLeftClick>
+				</button>
+			</Children>
+		</TitleBar>
+		<Children name="EVEBot_Children">
+			<TabControl	Name='EVEBotOptionsTab' template='EVESkin.TabControl'>
+				<X>0</X>
+				<Y>4</Y>
+				<Width>100%</Width>
+				<Height>100%</Height>
+				<Tabs>
+					<Tab Name='Status'>
+						<text name='script_runtime'>
+							<X>10</X>
+							<Y>10</Y>
+							<Width>115</Width>
+							<Height>20</Height>
+							<Text>Script Runtime:</Text>
+						</text>
+						<Text name='script_runtime_data' template='EVESkin.Font.Value'>
+							<X>150</X>
+							<Y>10</Y>
+							<Width>100</Width>
+							<Height>20</Height>
+							<Text>${UI.Runtime}</Text>
+						</Text>
+
+						<text name='state' template='EVESkin.Font.Description'>
+							<X>10</X>
+							<Y>25</Y>
+							<Width>100</Width>
+							<Height>20</Height>
+							<Text>Action:</Text>
+						</text>
+						<text name='state_data' template='EVESkin.Font.Value'>
+							<X>150</X>
+							<Y>25</Y>
+							<Width>100</Width>
+							<Height>20</Height>
+							<text>${Config.Common.BotMode}</text>
+						</text>
+						<text name='Trips' template='EVESkin.Font.Description'>
+							<X>10</X>
+							<Y>40</Y>
+							<Width>100</Width>
+							<Height>20</Height>
+							<Text>Runs this Session:</Text>
+						</text>
+						<text name='Trips_Data' template='EVESkin.Font.Value'>
+							<X>150</X>
+							<Y>40</Y>
+							<Width>100</Width>
+							<Height>20</Height>
+							<text>${Miner.TotalTrips}</text>
+						</text>
+						<text name='avg_time' template='EVESkin.Font.Description'>
+							<X>10</X>
+							<Y>70</Y>
+							<Width>175</Width>
+							<Height>20</Height>
+							<Text>Time For Current Trip:</Text>
+						</text>
+						<text name='avg_time_data' template='EVESkin.Font.Value'>
+							<X>150</X>
+							<Y>70</Y>
+							<Width>150</Width>
+							<Height>20</Height>
+							<text>${ISXEVE.SecsToString[${Miner.TripDuration}]}</text>
+						</text>
+						<text name='Currently Training' template='EVESkin.Font.Description'>
+							<X>10</X>
+							<Y>115</Y>
+							<Width>175</Width>
+							<Height>20</Height>
+							<Text>Currently Training:</Text>
+						</text>
+						<text name='CurrentlyTrainingDATA' template='EVESkin.Font.Value'>
+							<X>150</X>
+							<Y>115</Y>
+							<Width>150</Width>
+							<Height>20</Height>
+							<text>${Skills.CurrentlyTrainingSkill}</text>
+						</text>
+						<text name='Next to be trained' template='EVESkin.Font.Description'>
+							<X>10</X>
+							<Y>130</Y>
+							<Width>175</Width>
+							<Height>20</Height>
+							<Text>Next Queued:</Text>
+						</text>
+						<text name='nexttobetrainedDATA' template='EVESkin.Font.Value'>
+							<X>150</X>
+							<Y>130</Y>
+							<Width>150</Width>
+							<Height>20</Height>
+							<text>${Skills.NextInLine}</text>
+						</text>
+						<console Name="StatusConsole" template='EVESkin.Console'>
+							<X>5</X>
+							<Y>r120</Y>
+							<Width>97.5%</Width>
+							<Height>115</Height>
+						</console>
+					</Tab>
+
+					<Tab Name='Main'>
+						<Text name='EVEBotModeLabel'>
+							<X>10</X>
+							<Y>10</Y>
+							<Width>70</Width>
+							<Height>10</Height>
+							<Text>Bot Mode</Text>
+						</Text>
+						<combobox name='EVEBotMode'>
+							<X>80</X>
+							<Y>10</Y>
+							<Width>250</Width>
+							<Height>15</Height>
+							<FullHeight>200</FullHeight>
+							<ButtonWidth>20</ButtonWidth>
+							<Items>
+								<Item Value='1'>Miner</Item>
+								<Item Value='2'>MinerHauler</Item>
+								<Item Value='3'>Freighter</Item>
+								<Item Value='4'>Ratter</Item>
+								<Item Value='5'>Missioneer</Item>
+							</Items>
+							<OnSelect>
+								Config.Common:BotMode[${This.SelectedItem.Text}]
+								switch ${This.SelectedItem.Text}
+								{
+									case Miner
+										UIElement[EVEBot].FindUsableChild[Miner,frame]:Show
+										;UIElement[EVEBot].FindUsableChild[Hauler,frame]:Hide
+										UIElement[Hauler@EVEBotOptionsTab@EVEBot_Children@EVEBot]:Hide
+										break
+									case MinerHauler
+										UIElement[EVEBot].FindUsableChild[Miner,frame]:Hide
+										UIElement[EVEBot].FindUsableChild[Hauler,frame]:Show
+										break
+									Default
+										break
+								}
+							</OnSelect>
+							<OnLoad>
+								This.ItemByText[${Config.Common.BotMode}]:Select
+							</OnLoad>
+						</combobox>
+						<Textentry name='MinimumDronesInBay'>
+							<X>10</X>
+							<Y>30</Y>
+							<Width>32</Width>
+							<Height>18</Height>
+							<MaxLength>2</MaxLength>
+							<OnLoad>
+								This:SetText[${Config.Common.MinimumDronesInBay}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+								Config.Common:MinimumDronesInBay[${Int[${This.Text}]}]
+								}
+							</OnChange>
+						</Textentry>
+						<Text name='MinimumDronesInBayText'>
+							<X>44</X>
+							<Y>30</Y>
+							<Width>200</Width>
+							<Height>10</Height>
+							<Text>Minimum Drones in Bay</Text>
+							<AutoTooltip>This will set the amount of drones you want in your drone bay.</AutoTooltip>
+						</Text>
+						<checkbox Name='cbAutoLogin'>
+							<X>10</X>
+							<Y>50</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Auto Login</Text>
+							<AutoTooltip>Auto Login when at Login window</AutoTooltip>
+							<OnLoad>
+								if ${Config.Common.AutoLogin}
+								{
+								This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Config.Common:AutoLogin[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<Text name='LoginNameText'>
+							<X>10</X>
+							<Y>70</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<Text>EVE Login</Text>
+							<AutoTooltip>The EVE Login name for ${_Me.Name}</AutoTooltip>
+						</Text>
+						<Textentry name='LoginName'>
+							<X>140</X>
+							<Y>70</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<MaxLength>25</MaxLength>
+							<OnLoad>
+								This:SetText[${Config.Common.LoginName}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+								Config.Common:LoginName[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+						<Text name='LoginPasswordText'>
+							<X>10</X>
+							<Y>90</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<Text>EVE Password</Text>
+							<AutoTooltip>The EVE Login Password for ${_Me.Name}</AutoTooltip>
+						</Text>
+						<Textentry name='LoginPassword'>
+							<X>140</X>
+							<Y>90</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<MaxLength>25</MaxLength>
+							<PasswordCharacter>*</PasswordCharacter>
+							<OnLoad>
+								This:SetText[${Config.Common.LoginPassword}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+								Config.Common:LoginPassword[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+
+						<Text name='lblMaxRuntime'>
+							<X>10</X>
+							<Y>130</Y>
+							<Width>130</Width>
+							<Height>18</Height>
+							<Text>Maximum Runtime</Text>
+							<AutoTooltip>The maximum time to run the script before it aborts.</AutoTooltip>
+						</Text>
+						<Textentry name='tbMaxRuntime'>
+							<X>140</X>
+							<Y>130</Y>
+							<Width>32</Width>
+							<Height>18</Height>
+							<MaxLength>2</MaxLength>
+							<OnLoad>
+								This:SetText[${Config.Common.MaxRuntime}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+								Config.Common:MaxRuntime[${Int[${This.Text}]}]
+								}
+							</OnChange>
+						</Textentry>
+						<Text name='lblIRCServer'>
+							<X>10</X>
+							<Y>160</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<Text>IRC Server</Text>
+							<AutoTooltip>Enter an server address if you want to use IRC</AutoTooltip>
+						</Text>
+						<Textentry name='tbIRCServer'>
+							<X>140</X>
+							<Y>160</Y>
+							<Width>200</Width>
+							<Height>18</Height>
+							<MaxLength>50</MaxLength>
+							<OnLoad>
+								This:SetText[${Config.Common.IRCServer}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+								Config.Common:IRCServer[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+
+						<Text name='lblIRCChannel'>
+							<X>10</X>
+							<Y>180</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<Text>IRC Channel</Text>
+							<AutoTooltip>Enter an channel name if you want to use IRC</AutoTooltip>
+						</Text>
+						<Textentry name='tbIRCChannel'>
+							<X>140</X>
+							<Y>180</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<MaxLength>25</MaxLength>
+							<OnLoad>
+								This:SetText[${Config.Common.IRCChannel}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+								Config.Common:IRCChannel[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+						<Text name='lblIRCUser'>
+							<X>10</X>
+							<Y>200</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<Text>IRC Username</Text>
+							<AutoTooltip>Enter an username if you want to use IRC</AutoTooltip>
+						</Text>
+						<Textentry name='tbIRCUser'>
+							<X>140</X>
+							<Y>200</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<MaxLength>25</MaxLength>
+							<OnLoad>
+								This:SetText[${Config.Common.IRCUser}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+								Config.Common:IRCUser[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+
+						<Text name='lblIRCPassword'>
+							<X>10</X>
+							<Y>220</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<Text>IRC Password</Text>
+							<AutoTooltip>Enter a password if you need one to use IRC</AutoTooltip>
+						</Text>
+						<Textentry name='tbIRCPassword'>
+							<X>140</X>
+							<Y>220</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<MaxLength>25</MaxLength>
+							<PasswordCharacter>*</PasswordCharacter>
+							<OnLoad>
+								This:SetText[${Config.Common.IRCPassword}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+								Config.Common:IRCPassword[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+						<checkbox Name='cbUseSound'>
+							<X>10</X>
+							<Y>240</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Enable sound</Text>
+							<AutoTooltip>Enable audio events</AutoTooltip>
+							<OnLoad>
+								if ${Config.Common.UseSound}
+								{
+								This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Config.Common:UseSound[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox Name='cbDisableUI'>
+							<X>110</X>
+							<Y>240</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Disable UI Rendering</Text>
+							<AutoTooltip>Disable EVE UI Rendering</AutoTooltip>
+							<OnLoad>
+								if ${Config.Common.DisableUI}
+								{
+								This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Config.Common:DisableUI[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox Name='cbTrainSkills'>
+							<X>10</X>
+							<Y>260</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Skill Trainer</Text>
+							<AutoTooltip>Enable skill training</AutoTooltip>
+							<OnLoad>
+								if ${Config.Common.TrainSkills}
+								{
+								This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Config.Common:TrainSkills[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox Name='cbDisable3D'>
+							<X>110</X>
+							<Y>260</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Disable 3D Rendering</Text>
+							<AutoTooltip>Disable EVE 3D Rendering</AutoTooltip>
+							<OnLoad>
+								if ${Config.Common.Disable3D}
+								{
+								This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Config.Common:Disable3D[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox Name='cbDisable3DBackground'>
+							<X>250</X>
+							<Y>240</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Disable Rendering in Background</Text>
+							<AutoTooltip>Disable Rendering when EVE is in the background</AutoTooltip>
+							<OnLoad>
+								if ${Config.Common.DisableScreenWhenBackgrounded}
+								{
+								This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Config.Common:DisableScreenWhenBackgrounded[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox Name='cbEnableChatLogging'>
+							<X>250</X>
+							<Y>260</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Enable Local Chat Logging</Text>
+							<AutoTooltip>Enable the display of local chat in EveBot.</AutoTooltip>
+							<OnLoad>
+								if ${Config.Common.EnableChatLogging}
+								{
+								This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Config.Common:EnableChatLogging[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+					</Tab>
+
+					<Tab name='Miner'>
+						<checkbox Name='cbStripMine'>
+							<X>10</X>
+							<Y>10</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Strip Mine Area</Text>
+							<AutoTooltip>Strip Mine the immediate area to nothing before moving</AutoTooltip>
+							<OnLoad>
+								if ${Config.Miner.StripMine}
+								{
+								This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Config.Miner:StripMine[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox Name='cbBookMarkLastPosition'>
+							<X>10</X>
+							<Y>30</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Bookmark Last Position</Text>
+							<AutoTooltip>Will bookmark the last mining location when the hold fills, and return to that spot after emptying the hold.</AutoTooltip>
+							<OnLoad>
+								if ${Config.Miner.BookMarkLastPosition}
+								{
+								This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Config.Miner:BookMarkLastPosition[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<Textentry name='MiningRangeMultipler'>
+							<X>200</X>
+							<Y>30</Y>
+							<Width>35</Width>
+							<Height>20</Height>
+							<MaxLength>4</MaxLength>
+							<OnLoad>
+								This:SetText[${Config.Miner.MiningRangeMultipler}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+								Config.Miner:MiningRangeMultipler[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+						<Text name='MiningRangeMultiplerText'>
+							<X>250</X>
+							<Y>30</Y>
+							<Width>200</Width>
+							<Height>20</Height>
+							<Text>Mining Range Multipler</Text>
+							<AutoTooltip>Maximum slowboat distance is mining range * this</AutoTooltip>
+						</Text>
+						<Textentry name='tbCargoThreshold'>
+							<X>200</X>
+							<Y>50</Y>
+							<Width>45</Width>
+							<Height>20</Height>
+							<MaxLength>6</MaxLength>
+							<OnLoad>
+								This:SetText[${Config.Miner.CargoThreshold}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+								Config.Miner:CargoThreshold[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+						<Text name='lbCargoThreshold'>
+							<X>250</X>
+							<Y>50</Y>
+							<Width>200</Width>
+							<Height>20</Height>
+							<Text>Cargo Full Threshold</Text>
+							<AutoTooltip>Cargo hold >= this value means cargo hold full</AutoTooltip>
+						</Text>
+						<Text name='cbJetCanNameText'>
+							<X>200</X>
+							<Y>70</Y>
+							<Width>100</Width>
+							<Height>20</Height>
+							<Text>JetCan Name: </Text>
+						</Text>
+						<combobox name='cbJetCanName'>
+							<X>300</X>
+							<Y>70</Y>
+							<Width>150</Width>
+							<Height>20</Height>
+							<FullHeight>200</FullHeight>
+							<ButtonWidth>20</ButtonWidth>
+							<Items>
+								<Item Value='1'>CorpTicker Time</Item>
+								<Item Value='2'>CorpTicker:Time</Item>
+								<Item Value='3'>CorpTicker_Time</Item>
+								<Item Value='4'>CorpTicker.Time</Item>
+								<Item Value='5'>CorpTicker</Item>
+								<Item Value='6'>Time</Item>
+								<Item Value='7'>FirstName Time</Item>
+								<Item Value='8'>FirstName</Item>
+								<Item Value='9'>CharName</Item>
+							</Items>
+							<OnSelect>
+								Config.Miner:JetCanNaming[${This.SelectedItem.Value}]
+							</OnSelect>
+							<OnLoad>
+								This:SetSelection[${Config.Miner.JetCanNaming}]
+							</OnLoad>
+						</combobox>
+						<Text name='cbMinerTypeText'>
+							<X>200</X>
+							<Y>90</Y>
+							<Width>100</Width>
+							<Height>20</Height>
+							<Text>Miner Type: </Text>
+						</Text>
+						<combobox name='cbMinerType'>
+							<X>300</X>
+							<Y>90</Y>
+							<Width>150</Width>
+							<Height>15</Height>
+							<FullHeight>200</FullHeight>
+							<ButtonWidth>20</ButtonWidth>
+							<Items>
+								<Item Value='Ore'>Ore</Item>
+								<Item Value='Ore - Mercoxit'>Ore - Mercoxit</Item>
+								<Item Value='Ice'>Ice</Item>
+							</Items>
+							<OnSelect>
+								Config.Miner:MinerType[${This.SelectedItem.Text}]
+							</OnSelect>
+							<OnLoad>
+								This.ItemByText[${Config.Miner.MinerType}]:Select
+							</OnLoad>
+						</combobox>
+						<checkbox Name='cbUseFieldBookmarks'>
+							<X>10</X>
+							<Y>70</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Use Belt Bookmarks</Text>
+							<AutoTooltip>When checked the miner will warp to asteroid belt bookmarks instead of the belts themselves.	See the labels tab for bookmark prefix requirements.</AutoTooltip>
+							<OnLoad>
+								if ${Config.Miner.UseFieldBookmarks}
+								{
+								This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Config.Miner:UseFieldBookmarks[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox name='cbMiningDrones'>
+							<X>10</X>
+							<Y>90</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Use Mining Drones </text>
+							<AutoTooltip>When checked mining drones will be used instead of combat drones</AutoTooltip>
+							<OnLoad>
+								if ${Config.Miner.UseMiningDrones}
+								{
+								This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Config.Miner:UseMiningDrones[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<Text name='AvoidPlayerRangeLabel'>
+							<X>10</X>
+							<Y>110</Y>
+							<Width>300</Width>
+							<Height>20</Height>
+							<Text>Minimum PC Range: </Text>
+							<AutoTooltip>Minimum distance we will keep other players at</AutoTooltip>
+						</Text>
+						<slider name='AvoidPlayerRange'>
+							<X>150</X>
+							<Y>110</Y>
+							<Width>40</Width>
+							<Height>20</Height>
+							<Range>100000</Range>
+							<OnLoad>
+								This:SetValue[${Config.Miner.AvoidPlayerRange}]
+							</OnLoad>
+							<OnChange>
+								Config.Miner:AvoidPlayerRange[${Int[${This.Value}]}]
+								UIElement[AvoidPlayerRangeValue@Miner@EvEBotOptionsTab@EVEBot]:SetText["${EVEBot.MetersToKM_Str[${This.Value}]}"]
+							</OnChange>
+						</slider>
+						<Text name='AvoidPlayerRangeValue'>
+							<X>200</X>
+							<Y>110</Y>
+							<Width>300</Width>
+							<Height>20</Height>
+							<Text>0km</Text>
+							<AutoTooltip>Minimum distance we will keep other players at</AutoTooltip>
+							<OnLoad>
+								This:SetText["${EVEBot.MetersToKM_Str[${UIElement[AvoidPlayerRange@Miner@EvEBotOptionsTab@EVEBot].Value}]}"]
+							</OnLoad>
+						</Text>
+						<Text name='DeliveryLocationTypeLabel'>
+							<X>10</X>
+							<Y>170</Y>
+							<Width>250</Width>
+							<Height>20</Height>
+							<Text>ORE Delivery Configuration</Text>
+						</Text>
+						<Text name='DeliveryLocationTypeText'>
+							<X>15</X>
+							<Y>190</Y>
+							<Width>110</Width>
+							<Height>20</Height>
+							<Text>Location Type</Text>
+							<AutoTooltip>Type of the destination to delivery to, such as POS, Station, Outpost, etc</AutoTooltip>
+						</Text>
+						<combobox name='DeliveryLocationType'>
+							<X>135</X>
+							<Y>190</Y>
+							<Width>150</Width>
+							<Height>20</Height>
+							<FullHeight>200</FullHeight>
+							<ButtonWidth>20</ButtonWidth>
+							<Items>
+								<Item>Station</Item>
+								<Item>Hangar Array</Item>
+								<Item>Jetcan</Item>
+							</Items>
+							<OnSelect>
+								Config.Miner:DeliveryLocationType[${This.SelectedItem.Text}]
+							</OnSelect>
+							<OnLoad>
+								This.ItemByText[${Config.Miner.DeliveryLocationType}]:Select
+							</OnLoad>
+						</combobox>
+						<Text name='DeliveryLocationText'>
+							<X>15</X>
+							<Y>210</Y>
+							<Width>110</Width>
+							<Height>20</Height>
+							<Text>Location Name</Text>
+							<AutoTooltip>Either enter the delivery location here, or it will default to the last station we undock at</AutoTooltip>
+						</Text>
+						<Textentry name='DeliveryLocation'>
+							<X>135</X>
+							<Y>210</Y>
+							<Width>350</Width>
+							<Height>20</Height>
+							<OnLoad>
+								This:SetText[${Config.Miner.DeliveryLocation}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+								Config.Miner:DeliveryLocation[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+					</Tab>
+
+					<Tab name='Combat'>
+						<Frame name='frmRunOptions'>
+							<X>52%</X>
+							<Y>4%</Y>
+							<Height>42%</Height>
+							<Width>46%</Width>
+							<Border>2</Border>
+							<Children>
+								<checkbox name='cbRunOnLowAmmo'>
+									<X>10</X>
+									<Y>10</Y>
+									<Height>20</Height>
+									<Width>100</Width>
+									<Text>Run On Low Ammo</text>
+									<AutoTooltip>If checked, run to safe spot when low on ammo.</AutoTooltip>
+									<OnLoad>
+										if ${Config.Combat.RunOnLowAmmo}
+										{
+										This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+										Config.Combat:RunOnLowAmmo[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
+								<checkbox name='cbRunOnLowCap'>
+									<X>10</X>
+									<Y>30</Y>
+									<Height>20</Height>
+									<Width>100</Width>
+									<Text>Run On Low Cap</text>
+									<AutoTooltip>If checked, run to safe spot when capacitor is empty.</AutoTooltip>
+									<OnLoad>
+										if ${Config.Combat.RunOnLowCap}
+										{
+										This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+										Config.Combat:RunOnLowCap[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
+								<checkbox name='cbRunOnLowTank'>
+									<X>10</X>
+									<Y>50</Y>
+									<Height>20</Height>
+									<Width>100</Width>
+									<Text>Run On Low Tank</text>
+									<AutoTooltip>If checked, run to safe spot when tank (shield or armor) has failed.</AutoTooltip>
+									<OnLoad>
+										if ${Config.Combat.RunOnLowTank}
+										{
+										This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+										Config.Combat:RunOnLowTank[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
+								<checkbox name='cbRunToStation'>
+									<X>10</X>
+									<Y>70</Y>
+									<Height>20</Height>
+									<Width>100</Width>
+									<Text>Run To Station</text>
+									<AutoTooltip>If checked, run to a station instead of a safe-spot.</AutoTooltip>
+									<OnLoad>
+										if ${Config.Combat.RunToStation}
+										{
+										This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+										Config.Combat:RunToStation[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
+								<checkbox name='cbUseWhiteList'>
+									<X>10</X>
+									<Y>90</Y>
+									<Height>20</Height>
+									<Width>100</Width>
+									<Text>Run On Non-Whitelisted Pilot</text>
+									<AutoTooltip>If checked, run to safe spot when any non-whitelisted pilot enters system.</AutoTooltip>
+									<OnLoad>
+										if ${Config.Combat.UseWhiteList}
+										{
+										This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+										Config.Combat:UseWhiteList[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
+								<checkbox name='cbUseBlackList'>
+									<X>10</X>
+									<Y>110</Y>
+									<Height>20</Height>
+									<Width>100</Width>
+									<Text>Run On Blacklisted Pilot</text>
+									<AutoTooltip>If checked, run to safe spot when any blacklisted pilot enters system.</AutoTooltip>
+									<OnLoad>
+										if ${Config.Combat.UseBlackList}
+										{
+										This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+										Config.Combat:UseBlackList[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
+							</Children>
+						</Frame>
+						<slider name='MinArmorPct'>
+							<X>10</X>
+							<Y>10</Y>
+							<Width>40</Width>
+							<Height>18</Height>
+							<Range>100</Range>
+							<OnLoad>
+								This:SetValue[${Config.Combat.MinimumArmorPct}]
+								UIElement[MinArmorPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Armor: ${This.Value}"]
+							</OnLoad>
+							<OnChange>
+								Config.Combat:MinimumArmorPct[${Int[${This.Value}]}]
+								UIElement[MinArmorPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Armor: ${This.Value}"]
+							</OnChange>
+						</slider>
+						<Text name='MinArmorPctLabel'>
+							<X>55</X>
+							<Y>10</Y>
+							<Width>150</Width>
+							<Height>10</Height>
+							<Text>Minimum Armor: 0</Text>
+							<AutoTooltip>Lowest armor percent allowed before fleeing</AutoTooltip>
+							<OnLoad>
+								This:SetText["Minimum Armor: ${UIElement[MinArmorPct@Combat@EvEBotOptionsTab@EVEBot].Value}"]
+							</OnLoad>
+						</Text>
+						<slider name='MinShieldPct'>
+							<X>10</X>
+							<Y>30</Y>
+							<Width>40</Width>
+							<Height>18</Height>
+							<Range>100</Range>
+							<OnLoad>
+								This:SetValue[${Config.Combat.MinimumShieldPct}]
+								UIElement[MinShieldPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Shield: ${This.Value}"]
+							</OnLoad>
+							<OnChange>
+								Config.Combat:MinimumShieldPct[${Int[${This.Value}]}]
+								UIElement[MinShieldPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Shield: ${This.Value}"]
+							</OnChange>
+						</slider>
+						<Text name='MinShieldPctLabel'>
+							<X>55</X>
+							<Y>30</Y>
+							<Width>150</Width>
+							<Height>10</Height>
+							<Text>Minimum Shield: 0</Text>
+							<AutoTooltip>Lowest Shield Pct Allowed before Running</AutoTooltip>
+							<OnLoad>
+								This:SetText["Minimum Shield: ${UIElement[MinShieldPct@Combat@EvEBotOptionsTab@EVEBot].Value}"]
+							</OnLoad>
+						</Text>
+						<slider name='MinCapPct'>
+							<X>10</X>
+							<Y>50</Y>
+							<Width>40</Width>
+							<Height>18</Height>
+							<Range>100</Range>
+							<OnLoad>
+								This:SetValue[${Config.Combat.MinimumCapPct}]
+								UIElement[MinCapPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Cap: ${This.Value}"]
+							</OnLoad>
+							<OnChange>
+								Config.Combat:MinimumCapPct[${Int[${This.Value}]}]
+								UIElement[MinCapPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Cap: ${This.Value}"]
+							</OnChange>
+						</slider>
+						<Text name='MinCapPctLabel'>
+							<X>55</X>
+							<Y>50</Y>
+							<Width>150</Width>
+							<Height>10</Height>
+							<Text>Minimum Cap: 0</Text>
+							<AutoTooltip>Lowest capacitor percent allowed before fleeing</AutoTooltip>
+							<OnLoad>
+								This:SetText["Minimum Cap: ${UIElement[MinCapPct@Combat@EvEBotOptionsTab@EVEBot].Value}"]
+							</OnLoad>
+						</Text>
+						<checkbox name='cbAlwaysShieldBoost'>
+							<X>10</X>
+							<Y>70</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Always Shield Boost</text>
+							<AutoTooltip>Turn Shield Booster on full-time, instead of on-demand.</AutoTooltip>
+							<OnLoad>
+								if ${Config.Combat.AlwaysShieldBoost}
+								{
+								This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Config.Combat:AlwaysShieldBoost[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox name='cbLaunchCombatDrones'>
+							<X>10</X>
+							<Y>90</Y>
+							<Height>20</Height>
+							<Width>130</Width>
+							<Text>Launch Combat Drones</text>
+							<AutoTooltip>Launch and Use Combat Drones</AutoTooltip>
+							<OnLoad>
+								if ${Config.Combat.LaunchCombatDrones}
+								{
+								This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Config.Combat:LaunchCombatDrones[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<Textentry name='MinimumDronesInSpace'>
+							<X>10</X>
+							<Y>110</Y>
+							<Width>32</Width>
+							<Height>18</Height>
+							<MaxLength>2</MaxLength>
+							<OnLoad>
+								This:SetText[${Config.Combat.MinimumDronesInSpace}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+								Config.Combat:MinimumDronesInSpace[${Int[${This.Text}]}]
+								}
+							</OnChange>
+						</Textentry>
+						<Text name='MinimumDronesInSpaceText'>
+							<X>44</X>
+							<Y>110</Y>
+							<Width>200</Width>
+							<Height>10</Height>
+							<Text>Minimum Drones in Space</Text>
+							<AutoTooltip>We will return to base when available drones falls below this number</AutoTooltip>
+						</Text>
+
+						<Frame name='frmRatter'>
+							<X>2%</X>
+							<Y>50%</Y>
+							<Height>47%</Height>
+							<Width>96%</Width>
+							<Border>2</Border>
+							<Children>
+								<checkbox name='cbChainSpawns'>
+									<X>10</X>
+									<Y>10</Y>
+									<Height>20</Height>
+									<Width>100</Width>
+									<Text>Chain Spawns</text>
+									<AutoTooltip>Will chain high value spawns if checked</AutoTooltip>
+									<OnLoad>
+										if ${Config.Combat.ChainSpawns}
+										{
+										This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+										Config.Combat:ChainSpawns[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
+								<checkbox name='cbChainSolo'>
+									<X>10</X>
+									<Y>30</Y>
+									<Height>20</Height>
+									<Width>100</Width>
+									<Text>Chain Spawns (while alone)</text>
+									<AutoTooltip>If not checked chaining will be suspended if you are alone in a system.</AutoTooltip>
+									<OnLoad>
+										if ${Config.Combat.ChainSolo}
+										{
+										This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+										Config.Combat:ChainSolo[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
+								<checkbox name='cbUseBeltBookmarks'>
+									<X>10</X>
+									<Y>50</Y>
+									<Height>20</Height>
+									<Width>100</Width>
+									<Text>Use Belt Bookmarks</text>
+									<AutoTooltip>Will warp to bookmarks instead of belts.</AutoTooltip>
+									<OnLoad>
+										if ${Config.Combat.UseBeltBookmarks}
+										{
+										This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+										Config.Combat:UseBeltBookmarks[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
+								<checkbox name='cbRunIfTargetJammed'>
+									<X>10</X>
+									<Y>70</Y>
+									<Height>20</Height>
+									<Width>100</Width>
+									<Text>Run if Target Jammed</Text>
+									<AutoTooltip>If checked, run to safe spot when we are target jammed.</AutoTooltip>
+									<OnLoad>
+										if ${Config.Combat.RunIfTargetJammed}
+										{
+											This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+										Config.Combat:RunIfTargetJammed[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
+								<checkbox name='cbQuitIfWarpScrambled'>
+									<X>10</X>
+									<Y>90</Y>
+									<Height>20</Height>
+									<Width>100</Width>
+									<Text>Quit if Warp Scrambled</Text>
+									<AutoTooltip>If checked, quit the game when warp scrambled and a hostile enters system.</AutoTooltip>
+									<OnLoad>
+										if ${Config.Combat.QuitIfWarpScrambled}
+										{
+											This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+										Config.Combat:QuitIfWarpScrambled[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
+								<Text name='lblMinChainBounty'>
+									<X>50%</X>
+									<Y>10</Y>
+									<Width>200</Width>
+									<Height>18</Height>
+									<Text>Minimum Chain Bounty</Text>
+									<AutoTooltip>NPC ships with a bounty above this value will be chained (if enabled).</AutoTooltip>
+								</Text>
+								<Textentry name='tbMinChainBounty'>
+									<X>52%</X>
+									<Y>30</Y>
+									<Width>100</Width>
+									<Height>18</Height>
+									<MaxLength>10</MaxLength>
+									<OnLoad>
+										This:SetText[${Config.Combat.MinChainBounty}]
+									</OnLoad>
+									<OnChange>
+										if ${This.Text.Length} > 0
+										{
+										Config.Combat:MinChainBounty[${Int[${This.Text}]}]
+										}
+									</OnChange>
+								</Textentry>
+								<Text name='lblMissileRange'>
+									<X>50%</X>
+									<Y>52</Y>
+									<Width>200</Width>
+									<Height>18</Height>
+									<Text>Maximum Missile Range</Text>
+									<AutoTooltip>Maximum missile range for your ship.</AutoTooltip>
+								</Text>
+								<Textentry name='tbMissileRange'>
+									<X>52%</X>
+									<Y>72</Y>
+									<Width>100</Width>
+									<Height>18</Height>
+									<MaxLength>10</MaxLength>
+									<OnLoad>
+										This:SetText[${Config.Combat.MaxMissileRange}]
+									</OnLoad>
+									<OnChange>
+										if ${This.Text.Length} > 0
+										{
+										Config.Combat:MaxMissileRange[${Int[${This.Text}]}]
+										}
+									</OnChange>
+								</Textentry>
+							</Children>
+						</Frame>
+					</tab>
+
+					<Tab name='Missions'>
+						<Text name='lblRunTheseTypes'>
+							<X>10</X>
+							<Y>10</Y>
+							<Width>130</Width>
+							<Height>18</Height>
+							<Text>Run These Types</Text>
+						</Text>
+						<Frame name='frmMissionTypes'>
+							<X>10</X>
+							<Y>30</Y>
+							<Height>100</Height>
+							<Width>130</Width>
+							<Border>2</Border>
+							<Children>
+								<checkbox name='cbRunCourierMissions'>
+									<X>10</X>
+									<Y>10</Y>
+									<Height>20</Height>
+									<Width>50</Width>
+									<Text>Courier Missions</text>
+									<AutoTooltip>If checked, accept and complete courier missions.</AutoTooltip>
+									<OnLoad>
+										if ${Config.Missioneer.RunCourierMissions}
+										{
+										This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+										Config.Missioneer:RunCourierMissions[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
+								<checkbox name='cbRunTradeMissions'>
+									<X>10</X>
+									<Y>30</Y>
+									<Height>20</Height>
+									<Width>50</Width>
+									<Text>Trade Missions</text>
+									<AutoTooltip>If checked, accept and complete trade missions.</AutoTooltip>
+									<OnLoad>
+										if ${Config.Missioneer.RunTradeMissions}
+										{
+										This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+										Config.Missioneer:RunTradeMissions[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
+								<checkbox name='cbRunMiningMissions'>
+									<X>10</X>
+									<Y>50</Y>
+									<Height>20</Height>
+									<Width>50</Width>
+									<Text>Mining Missions</text>
+									<AutoTooltip>If checked, accept and complete mining missions.</AutoTooltip>
+									<OnLoad>
+										if ${Config.Missioneer.RunMiningMissions}
+										{
+										This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+										Config.Missioneer:RunMiningMissions[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
+								<checkbox name='cbRunKillMissions'>
+									<X>10</X>
+									<Y>70</Y>
+									<Height>20</Height>
+									<Width>50</Width>
+									<Text>Kill Missions</text>
+									<AutoTooltip>If checked, accept and complete kill missions.</AutoTooltip>
+									<OnLoad>
+										if ${Config.Missioneer.RunKillMissions}
+										{
+										This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+										Config.Missioneer:RunKillMissions[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
+							</Children>
+						</Frame>
+						<Text name='lblShipNames'>
+							<X>150</X>
+							<Y>10</Y>
+							<Width>130</Width>
+							<Height>18</Height>
+							<Text>Ship Names</Text>
+						</Text>
+						<Frame name='frmShipNames'>
+							<X>150</X>
+							<Y>30</Y>
+							<Height>100</Height>
+							<Width>340</Width>
+							<Border>2</Border>
+							<Children>
+								<Text name='lblSmallHauler'>
+									<X>10</X>
+									<Y>10</Y>
+									<Width>100</Width>
+									<Height>18</Height>
+									<Text>Small Hauler</Text>
+									<AutoTooltip>Small Hauler (6000 m^3 or less).</AutoTooltip>
+								</Text>
+								<Textentry name='tbSmallHauler'>
+									<X>120</X>
+									<Y>10</Y>
+									<Width>210</Width>
+									<Height>18</Height>
+									<MaxLength>64</MaxLength>
+									<OnLoad>
+										This:SetText[${Config.Missioneer.SmallHauler}]
+									</OnLoad>
+									<OnChange>
+										if ${This.Text.Length} > 0
+										{
+										Config.Missioneer:SmallHauler[${This.Text}]
+										}
+									</OnChange>
+								</Textentry>
+								<Text name='lblLargeHauler'>
+									<X>10</X>
+									<Y>30</Y>
+									<Width>100</Width>
+									<Height>18</Height>
+									<Text>Large Hauler</Text>
+									<AutoTooltip>Large Hauler (more than 6000 m^3).</AutoTooltip>
+								</Text>
+								<Textentry name='tbLargeHauler'>
+									<X>120</X>
+									<Y>30</Y>
+									<Width>210</Width>
+									<Height>18</Height>
+									<MaxLength>64</MaxLength>
+									<OnLoad>
+										This:SetText[${Config.Missioneer.LargeHauler}]
+									</OnLoad>
+									<OnChange>
+										if ${This.Text.Length} > 0
+										{
+										Config.Missioneer:LargeHauler[${This.Text}]
+										}
+									</OnChange>
+								</Textentry>
+								<Text name='lblMiningShip'>
+									<X>10</X>
+									<Y>50</Y>
+									<Width>100</Width>
+									<Height>18</Height>
+									<Text>Mining Ship</Text>
+									<AutoTooltip>Mining Ship.</AutoTooltip>
+								</Text>
+								<Textentry name='tbMiningShip'>
+									<X>120</X>
+									<Y>50</Y>
+									<Width>210</Width>
+									<Height>18</Height>
+									<MaxLength>64</MaxLength>
+									<OnLoad>
+										This:SetText[${Config.Missioneer.MiningShip}]
+									</OnLoad>
+									<OnChange>
+										if ${This.Text.Length} > 0
+										{
+										Config.Missioneer:MiningShip[${This.Text}]
+										}
+									</OnChange>
+								</Textentry>
+								<Text name='lblCombatShip'>
+									<X>10</X>
+									<Y>70</Y>
+									<Width>100</Width>
+									<Height>18</Height>
+									<Text>Combat Ship</Text>
+									<AutoTooltip>Combat Ship.</AutoTooltip>
+								</Text>
+								<Textentry name='tbCombatShip'>
+									<X>120</X>
+									<Y>70</Y>
+									<Width>210</Width>
+									<Height>18</Height>
+									<MaxLength>64</MaxLength>
+									<OnLoad>
+										This:SetText[${Config.Missioneer.CombatShip}]
+									</OnLoad>
+									<OnChange>
+										if ${This.Text.Length} > 0
+										{
+										Config.Missioneer:CombatShip[${This.Text}]
+										}
+									</OnChange>
+								</Textentry>
+							</Children>
+						</Frame>
+						<Frame name='frmSalvageOptions'>
+							<X>10</X>
+							<Y>140</Y>
+							<Height>40</Height>
+							<Width>480</Width>
+							<Border>2</Border>
+							<Children>
+								<Text name='lblSalvageMode'>
+									<X>10</X>
+									<Y>12</Y>
+									<Width>110</Width>
+									<Height>18</Height>
+									<Text>Salvage Mode</Text>
+									<AutoTooltip>Solo = switch to salvage ship.	Relay = relay to salvage bot.</AutoTooltip>
+								</Text>
+								<combobox name='comboSalvageMode'>
+									<X>115</X>
+									<Y>10</Y>
+									<Width>75</Width>
+									<Height>18</Height>
+									<FullHeight>80</FullHeight>
+									<ButtonWidth>20</ButtonWidth>
+									<Items>
+										<Item Value='1'>None</Item>
+										<Item Value='2'>Solo</Item>
+										<Item Value='3'>Relay</Item>
+									</Items>
+									<OnSelect>
+										Config.Missioneer:SalvageMode[${This.SelectedItem.Text}]
+									</OnSelect>
+									<OnLoad>
+										This.ItemByText[${Config.Missioneer.SalvageMode}]:Select
+									</OnLoad>
+								</combobox>
+								<Text name='lblSalvageShip'>
+									<X>200</X>
+									<Y>12</Y>
+									<Width>100</Width>
+									<Height>18</Height>
+									<Text>Salvage Ship</Text>
+									<AutoTooltip>Ship to use for solo salvaging.</AutoTooltip>
+								</Text>
+								<Textentry name='tbSalvageShip'>
+									<X>300</X>
+									<Y>10</Y>
+									<Width>170</Width>
+									<Height>18</Height>
+									<MaxLength>64</MaxLength>
+									<OnLoad>
+										This:SetText[${Config.Missioneer.SalvageShip}]
+									</OnLoad>
+									<OnChange>
+										if ${This.Text.Length} > 0
+										{
+										Config.Missioneer:SalvageShip[${This.Text}]
+										}
+									</OnChange>
+								</Textentry>
+							</Children>
+						</Frame>
+						<Frame name='frmGeneralOptions'>
+							<X>10</X>
+							<Y>190</Y>
+							<Height>40</Height>
+							<Width>480</Width>
+							<Border>2</Border>
+							<Children>
+								<checkbox name='cbAvoidLowSec'>
+									<X>10</X>
+									<Y>10</Y>
+									<Height>20</Height>
+									<Width>50</Width>
+									<Text>Avoid Lowsec</text>
+									<AutoTooltip>If checked, avoid missions that go into low-sec.</AutoTooltip>
+									<OnLoad>
+										if ${Config.Missioneer.AvoidLowSec}
+										{
+										This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+										Config.Missioneer:AvoidLowSec[${This.Checked}]
+									</OnLeftClick>
+								</checkbox>
+								<Text name='lblSmallHaulerLimit'>
+									<X>140</X>
+									<Y>13</Y>
+									<Width>160</Width>
+									<Height>18</Height>
+									<Text>Small Hauler Limit</Text>
+									<AutoTooltip>Will use the large hauler for missions above this limit.</AutoTooltip>
+								</Text>
+								<Textentry name='tbSmallHaulerLimit'>
+									<X>300</X>
+									<Y>10</Y>
+									<Width>50</Width>
+									<Height>18</Height>
+									<MaxLength>5</MaxLength>
+									<OnLoad>
+										This:SetText[${Config.Missioneer.SmallHaulerLimit}]
+									</OnLoad>
+									<OnChange>
+										if ${This.Text.Length} > 0
+										{
+										Config.Missioneer:SmallHaulerLimit[${Int[${This.Text}]}]
+										}
+									</OnChange>
+								</Textentry>
+							</Children>
+						</Frame>
+					</tab>
+
+					<tab name='Hauler'>
+						<Text name='HaulerModeLabel'>
+							<X>10</X>
+							<Y>10</Y>
+							<Width>70</Width>
+							<Height>10</Height>
+							<Text>Mode: </Text>
+						</Text>
+						<combobox name='HaulerMode'>
+							<X>80</X>
+							<Y>10</Y>
+							<Width>250</Width>
+							<Height>15</Height>
+							<FullHeight>200</FullHeight>
+							<ButtonWidth>20</ButtonWidth>
+							<Items>
+								<Item Value='1'>Service Fleet Members</Item>
+								<Item Value='2'>Service All Belts</Item>
+								<Item Value='3'>Service On-Demand</Item>
+							</Items>
+							<OnSelect>
+								Config.Hauler:HaulerMode[${This.SelectedItem.Text}]
+							</OnSelect>
+							<OnLoad>
+								This.ItemByText[${Config.Hauler.HaulerMode}]:Select
+							</OnLoad>
+						</combobox>
+						<!--
+						<checkbox Name='cbMultisystemSupport'>
+						<X>10</X>
+						<Y>30</Y>
+						<Height>20</Height>
+						<Width>100</Width>
+						<Text>Support Multi-System Hauling</Text>
+						<AutoTooltip>
+						When checked the hauler will drop-off ore at bookmarked station (or POS) which may be in another system.
+						</AutoTooltip>
+						<OnLoad>
+						if ${Config.Hauler.MultiSystemSupport}
+						{
+						This:SetChecked
+						}
+						</OnLoad>
+						<OnLeftClick>
+						Config.Hauler:MultiSystemSupport[${This.Checked}]
+						</OnLeftClick>
+						</checkbox>
+						-->
+						<Text name='DropOffLabel'>
+							<X>10</X>
+							<Y>55</Y>
+							<Width>180</Width>
+							<Height>10</Height>
+							<Text>Drop Off Bookmark</Text>
+							<AutoTooltip>The bookmark name for the drop off location.</AutoTooltip>
+						</Text>
+						<Textentry name='DropOffBookmark'>
+							<X>200</X>
+							<Y>55</Y>
+							<Width>250</Width>
+							<Height>18</Height>
+							<OnLoad>
+								This:SetText[${Config.Hauler.DropOffBookmark}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+								Config.Hauler:DropOffBookmark[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+						<Text name='MiningSystemLabel'>
+							<X>10</X>
+							<Y>80</Y>
+							<Width>180</Width>
+							<Height>10</Height>
+							<Text>Mining System Bookmark</Text>
+							<AutoTooltip>The bookmark name for the mining system location.</AutoTooltip>
+						</Text>
+						<Textentry name='MiningSystemBookmark'>
+							<X>200</X>
+							<Y>80</Y>
+							<Width>250</Width>
+							<Height>18</Height>
+							<OnLoad>
+								This:SetText[${Config.Hauler.MiningSystemBookmark}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+								Config.Hauler:MiningSystemBookmark[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+					</tab>
+
+					<tab name='Freighter'>
+						<Text name='lblFreighterMode'>
+							<X>10</X>
+							<Y>12</Y>
+							<Width>70</Width>
+							<Height>10</Height>
+							<Text>Mode: </Text>
+						</Text>
+						<combobox name='cbFreighterMode'>
+							<X>80</X>
+							<Y>10</Y>
+							<Width>225</Width>
+							<Height>15</Height>
+							<FullHeight>80</FullHeight>
+							<ButtonWidth>20</ButtonWidth>
+							<Items>
+								<Item Value='1'>Source and Destination</Item>
+								<Item Value='2'>Asset Gather</Item>
+								<Item Value='3'>Move Minerals to Buyer</Item>
+								<Item Value='4'>Container Test</Item>
+								<Item Value='5'>Mission Runner</Item>
+								<Item Value='6'>Stealth Hauler</Item>
+								<Item Value='7'>Scavenger</Item>
+							</Items>
+							<OnSelect>
+								Config.Freighter:FreighterMode[${This.SelectedItem.Text}]
+							</OnSelect>
+							<OnLoad>
+								This.ItemByText[${Config.Freighter.FreighterMode}]:Select
+							</OnLoad>
+						</combobox>
+						<Text name='lblDestination'>
+							<X>10</X>
+							<Y>37</Y>
+							<Width>200</Width>
+							<Height>10</Height>
+							<Text>Destination</Text>
+							<AutoTooltip>The destination bookmark or station name.</AutoTooltip>
+						</Text>
+						<Textentry name='teDestination'>
+							<X>200</X>
+							<Y>35</Y>
+							<Width>280</Width>
+							<Height>18</Height>
+							<MaxLength>150</MaxLength>
+							<OnLoad>
+								This:SetText[${Config.Freighter.Destination}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+								Config.Freighter:Destination[${This.Text}]
+								}
+								else
+								{
+								Config.Freighter:Destination[""]
+								}
+							</OnChange>
+						</Textentry>
+						<Text name='lblSourceBookmarkPrefix'>
+							<X>10</X>
+							<Y>62</Y>
+							<Width>200</Width>
+							<Height>10</Height>
+							<Text>Source Bookmark Prefix</Text>
+							<AutoTooltip>The prefix for source bookmark names.</AutoTooltip>
+						</Text>
+						<Textentry name='teSourcePrefix'>
+							<X>200</X>
+							<Y>60</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<MaxLength>10</MaxLength>
+							<OnLoad>
+								This:SetText[${Config.Freighter.SourceBookmarkPrefix}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+								Config.Freighter:SourceBookmarkPrefix[${This.Text}]
+								}
+								else
+								{
+								Config.Freighter:SourceBookmarkPrefix[""]
+								}
+							</OnChange>
+						</Textentry>
+						<Text name='lblRegionName'>
+							<X>10</X>
+							<Y>87</Y>
+							<Width>280</Width>
+							<Height>10</Height>
+							<Text>Limit To Region</Text>
+							<AutoTooltip>Leave blank to service all regions.</AutoTooltip>
+						</Text>
+						<Textentry name='teRegionName'>
+							<X>200</X>
+							<Y>85</Y>
+							<Width>200</Width>
+							<Height>18</Height>
+							<OnLoad>
+								This:SetText[${Config.Freighter.RegionName}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+								Config.Freighter:RegionName[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+						<Frame name='frmNote'>
+							<X>2%</X>
+							<Y>50%</Y>
+							<Height>47%</Height>
+							<Width>96%</Width>
+							<Border>2</Border>
+							<Children>
+								<Text name='lblNote'>
+									<X>5</X>
+									<Y>5</Y>
+									<Width>98%</Width>
+									<Height>98%</Height>
+									<Wrap>1</Wrap>
+									<Text>NOTE: Only "Source and Destination" mode works at the moment.	"Source and Destination" mode moves everything from stations who's bookmark begins with the source prefix to the destination station.	"Asset Gather" mode moves all assets shown in the asset window to the destination station.	You can optionally limit the freighter to a single system in this mode.	"Move Minerals to Buyer" mode picks up minerals and moves them to the highest bidder's station.	It does not sell the goods for you.</Text>
+								</Text>
+							</Children>
+						</Frame>
+					</tab>
+
+					<tab name='Labels'>
+						<Text name='Label1'>
+							<X>10</X>
+							<Y>10</Y>
+							<Width>200</Width>
+							<Height>10</Height>
+							<Text>Bookmark Prefixes</Text>
+						</Text>
+						<Text name='SafeSpotsLabel'>
+							<X>25</X>
+							<Y>25</Y>
+							<Width>200</Width>
+							<Height>10</Height>
+							<Text>Safe Spots</Text>
+							<AutoTooltip>The prefix for safe spot bookmark names.</AutoTooltip>
+						</Text>
+						<Textentry name='SafeSpotPrefix'>
+							<X>230</X>
+							<Y>25</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<MaxLength>10</MaxLength>
+							<OnLoad>
+								This:SetText[${Config.Labels.SafeSpotPrefix}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+								Config.Labels:SafeSpotPrefix[${This.Text}]
+								}
+								else
+								{
+								Config.Labels:SafeSpotPrefix[""]
+								}
+							</OnChange>
+						</Textentry>
+						<Text name='BeltBookMarkLabel'>
+							<X>25</X>
+							<Y>40</Y>
+							<Width>200</Width>
+							<Height>10</Height>
+							<Text>Ore Belts</Text>
+							<AutoTooltip>The prefix for ore belt bookmark names.</AutoTooltip>
+						</Text>
+						<Textentry name='BeltBookMarkPrefix'>
+							<X>230</X>
+							<Y>40</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<MaxLength>10</MaxLength>
+							<OnLoad>
+								This:SetText[${Config.Labels.OreBeltPrefix}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+								Config.Labels:OreBeltPrefix[${This.Text}]
+								}
+								else
+								{
+								Config.Labels:OreBeltPrefix[""]
+								}
+							</OnChange>
+						</Textentry>
+						<Text name='IceBeltBookMarkLabel'>
+							<X>25</X>
+							<Y>55</Y>
+							<Width>200</Width>
+							<Height>10</Height>
+							<Text>Ice Belts</Text>
+							<AutoTooltip>The prefix for ice belt bookmark names.</AutoTooltip>
+						</Text>
+						<Textentry name='IceBeltBookMarkPrefix'>
+							<X>230</X>
+							<Y>55</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<MaxLength>10</MaxLength>
+							<OnLoad>
+								This:SetText[${Config.Labels.IceBeltPrefix}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+								Config.Labels:IceBeltPrefix[${This.Text}]
+								}
+								else
+								{
+								Config.Labels:IceBeltPrefix[""]
+								}
+							</OnChange>
+						</Textentry>
+					</tab>
+				</Tabs>
+			</tabcontrol>
+		</Children>
+	</window>
+</ISUI>

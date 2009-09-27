@@ -1,0 +1,385 @@
+ .______________________________________________________.
+ |                   ___.           __                  |
+ |   _______  __ ____\_ |__   _____/  |_                |
+ | _/ __ \  \/ // __ \| __ \ /  _ \   __\               |
+ | \  ___/\   /\  ___/| \_\ (  <_> )  |                 |
+ |  \___  >\_/  \___  >___  /\____/|__|                 |
+ |      \/          \/    \/                            |
+ |                                                      |
+ .------------------------------------------------------.
+
+TODO:
+randomize delay between jettison and can rename
+randomize time between laser activations.
+randomized idle in belt (afk bio break)
+randomized full idle (safe/station - 30-60 minutes)
+
+*********************************************************
+                     CHANGELOG:
+*********************************************************
+Boy this file is old..
+
+Changes Currently in Trunk
+New Features:
+- Close all message and chat boxes every 15 seconds
+- Added check for drone shortage. When finished, will return to base if insufficient drones are available
+- Added Minimum Drones In Space combat tab option to the UI
+- Added MinimumShieldPercent, linked to UI
+- Added use of Config.Miner.Distribute lasers setting (who would ever want to set it to false??)
+- Optional Mining drone support
+- Added Bot Mode selection to Main tab of UI
+- Moved configuration options to be character-specific. Multiple characters will be stored per config file.
+- Added UI option "Bookmark Last Position" for mining operations.
+- obj_Miner: Added support for bookmarking last position and returning to it after emptying cargo
+- obj_Miner: Jetcan support.  Check "Use JetCan" on the UI to jettison ore instead of hauling it when full.
+- Added downtime support.  Script will return to station at 10 minutes before downtime.
+- Added Player Avoidance Range - bot will warp to a new belt if a player is detected inside the given range.
+- Added Player Avoidance for Standing Detection (Needs Testing, but appears to be functional)
+- Add checkbox for "Always Shield Boost"
+- Shield boost will activate if always shield boost, hostiles nearby, or shield < 100%
+- Add slowboating check - if distance to roid is more than 3 * laser range, move belts.
+- Added ICE Mining support - check Ice Mining on the mining tab to seek ice belts.
+	Note that ice mining implicitly turns off multiple mining target selection, and turns off distribute lasers. This is by intentional and by design.
+	This was a fairly major change to a lot of systems, so if there are any problems with standard mining, speak up.
+
+
+Behavior Fixes/Changes:
+- Use new ActiveDrone index to recall only active drones, instead of all drones owned by you.
+- Added miner abort on drone shortage
+- Added miner abort on armor or shield low
+- If we're emergency warping, Drone recall will only wait 1 second for drones to enter ship before allowing warp to begin
+- More checks for cargo full so it responds faster
+- Pre-warp check now deactivates all mining lasers and unlocks targets
+- Belt bookmarks must start with Belt: now
+- Drones will be told to return to bay on script shutdown.. we won't wait for them, tho.
+
+Bug Fixes:
+- Amadeus fixed DoGetAvailableAmmo in the extension, so crystal switching works now.
+- Fixed problem where ming laser crystal wouldn't be loaded if the laser had no crystal already.
+- Removed extra "evebot" from the UI title.
+- Drones will only attempt to launch if you have some
+- Fixed Ship:Pulse to only execute if outside station
+- UI: fixed reversed checked/unchecked for checkboxes
+- Fix problem with bot not performing actions, introduced in rev 168
+- Removed missed UpdateHudStatus call
+- Fixed drone shortage check and tested.
+- (really) Fixed script end when miner hits ABORT state
+- Fixed race condtion in drone shortage check vs launching drones
+- Fixed problem with all lasers not getting acitvated on 2 roids
+- Updated many of the UI options to link to proper config values
+- Changed check for isxeve to ensure we don't try to load without it.
+- Added some missing safety checks to a few obj_Ship methods
+- Jetcan support: check distance on existing/known cans as well
+- Jetcan support: fix rename function
+- Fix missing declare in obj_Drones, probably the cause of peoples missed drone launches.
+- Fix spurious drone shortage aborts.
+- Typo in logmsg in obj_drones
+- Typo in ui line had script end on abort condition
+- Fix missing open parenthenis in obj_jetcan
+- Fix ) instead of } in obj_evebot
+- Fixed typos in obj_Skills.iss
+- Fixed typo in obj_configuration
+- Fix mining mainloop so it won't attempt lock while in warp.
+- Fixed problem with dynamic bookmark usage where if you had a bookmark with your characters first name (or whole name, for single-name chars) it might use that bookmark instead of the dynamic one.
+- Fix wrong variable name causing bot not to unpause after an abort condition is fixed.
+- Fixing unexpected case where bookmarks are deleted by the user while the bot is operating.
+- Fix slider text so it's initialized properly on load for combat and miner tabs
+- Fix: All Pulse methods now check EVEBot.Paused
+- Fix: Hopefully fixed case where ship would approach an asteroid to 0km
+- Fix: if there are no belts in the area, return to station, don't just sit there
+
+Architecture Work:
+- A first pass at removing the bot logic from EVEBot.iss and pushing it into the bot classes.
+- Created UI:UpdateConsole to replace function UpdateHUdStatus
+- Moved more ui-related functions into the ui object
+- fixed miner not working after initial hauler object update.
+- Added new defines to defines.iss, appname, version, svn rev # is split out and reassembled nicely.
+- Added AutoPatcher initial support (new file, obj_AutoPatcher.iss)
+- Refactored everything to use UI:UpdateConsole
+- Removed oCore.iss
+- UI: fixed up checkboxes to use checkbox instead of commandcheckbox, fixed overlay text
+- Added UI.CommandBuffer, to buffer log messages which occur before main() is called. Once main() is called,
+  we call ui -reload, which properly populates all the elements with data from the Config.* objects.  The
+  commandbuffer is then replayed back to the statuswindow so we can see the log msgs from before the reload.
+- SVN: Moved /Tags/* to /tags/Historical/*
+- SVN: Tagged previous beta release as /tags/0.93
+- SVN: SVN work is in preparation for autopatching of release and development versions of EVEBot
+ - Basic Combat Object Introduction
+	- Fail Safe Run [UI Combat Child]
+	- Drone Combat
+	- Combat Targeting
+	- Added Skeleton for Fighter Bot (Included XML Update)
+	- Added Skeleton for Branches of Combat: Defense and Offense
+- Removed combat elements from obj_Miner (for now, until obj_Combat is further along)
+- Changed Minimum Armor/Shield percent UI elements from textentry to slider, with dynamic label change to show value
+- More work on the autopatcher
+- Removed duplication of timestamp for startup msgs
+- Consolidated Cargo full checks with bool Ship.CargoFull
+- initial pass at miner laser short cycling code
+- Removed generate_lasers_set.iss
+- Moved all bot logic into the bot modules
+- Moved most of the remaining non-object globals into bot modules.
+		Bot modules register when loaded, and set their state independent of one another.
+		All bot modules are given a chance to process their state every 2 seconds
+- Added obj_Bookmarks.iss
+- Created obj_Bookmarks (instantiated as Bookmarks) to handle temporary bookmark management
+- added Config.Miner.BookmarkLastPosition
+- Renamed Ship.GotoBookMark, Ship.WarpToBookMark
+- Added obj_JetCan
+- added Cargo.TransferOreToJetcan
+- Added obj_Ship:CargoHalfFull
+- Updated UI element for Use JetCan
+- Separate obj_Ship and obj_Drones into separate files
+-Changed jetcan window check function to use the new Entity.LootWindow member
+-obj_Login.iss added for autoconnect functionality.
+ 	 Not integrated yet.
+- Added GameHour and GameMinute to obj_Misc
+- Renamed obj_Misc to obj_EVEBot.iss, same with the objects.
+	It now performs downtime shutdowns, and handles the return to base duties for all abort actions.
+- Removed all ForcedReturn and m_abort members and actions, and moved them to use EVEBot.ReturnToStation.
+- Added Obj_Social.iss to prepare for player/npc  detection options
+- Separate the logic for hessingers addition of player and standing detection.  Player detection just requires a belt change.  Standing detection requires docking.
+- Fix: Rename all Astroid -> Asteroid. No functional effect.
+- AutoLogin script turned into an fps-timed pulse-based state engine.  Not enabled yet.
+- UI: Added Login name, password fields, and use auto login checkbox
+- Arch: Converted all ${play} to EVEBot.Paused. Removed ${play}
+
+0.93 Revision 114
+- Fixed the obj_Ship.iss file in the function WarpToID that if it didn't make it to the destintion in the first warp it warps again.
+- Added to the oCore.iss to have the character's name as part of the log file name incase you have more then one bot going on the same computer for better logging.
+- Added a statslog file to log your runs and average time.
+- Fixed trip timer
+- Added More defines to defines.iss
+- Tuned drone return routine - still needs to have a catch for when you left your drones in space.
+- Tuned ValidateModuleTarget
+- Tuned undock to remove entity check every frame, and use EVEWindow[Local]
+- Added blacklisting for empty asteroid belts.  Bot will not return to a belt that has been detected as empty
+	 If every asteroid belt in the system becomes blacklisted, bot will enter ABORT state, dock, and sit in IDLE state.
+- New routines: Asteroid.IsBeltEmpty, Asteroid:BeltIsEmpty,
+- Fixed bug where cargo wouldn't be detected if you docked with the cargo window open.
+- Fixed Missing quotes
+- Changed TransferOreToHangar to be more vigilant about being in the hangar.
+- Added more bot states to properly separate BASE state from cargoempty state.
+- Added fallback to concentrate fire of multiple lasers on a single asteroid if there are insufficient asteroids in targeting range.
+- Fixed ValidateModuleTargets pulse call
+- Rewrote obj_Ship:Pulse to run every 5 seconds, regardless of FPS.
+- Changed "are we already at a field" check to be 45k from warp in, instead of 25k.
+- Changed max distance between potential asteroid targets to be 1.3 optimal range instead of 1.5.
+- Added comments
+- Added Ship:LockTarget
+- Tuned ValidateModuleTargets
+- Added obj_Misc
+- Added Misc.MetersToKM_Str, to convert meters to a "#.## km" string.
+- Extended Ship:Approach to approach only to the requested distance.
+- Made use of ship:locktarget
+- fixed MovetoRandomBeltbookMark
+- Fix bug with not clearing indexes between calls to updatemodulelist
+- Fixed problem with targeting too many at once.
+- Renamed oMining.iss to obj_Miner.iss
+- Split obj_Asteroids into it's own file.
+- Added obj_Asteroids.iss
+- Afterburner/MWD support.
+- Hauler inprogress (not working yet)
+	Now uses item.Volume for cargo space calculations.
+	Now flees if attacked in the belt.
+- Lowering the max distance between asteroids to help stop rare pingpong issues.
+
+0.92-Revision 58
+- UI Rewrite
+- Fixed crystal switching. Again. :) Works now!
+- Changed optimal range to be module.optimalrange -10% for a safety margin.
+- Fixed pingpong between asteroids due to range, as noted by override
+- Asteroids are now targeted only if they are within 1.5 * optimal range of our active target.
+- Added fix from override for a situation where we'd think their were no asteroids left. in the universe.
+- Totally redid the config object, there are now module-specific config options, they handle their own default setting initialization, and provide wrapped access to the config options in the lavishsettings array
+- Added ORE_Volume list of hardcoded volumes for the various ore types.
+- Added Ship.IsCargoOpen
+- Added Staton.IsHangarOpen
+- Redid Ship/Station.OpenCargo/Hangar with new EVEWindow tlo
+- Fixed avg time per run calc
+- Fixed time this run calc to reset on undock
+- Added defines.iss, to store numeric defines.
+- Added check to make sure we're warping to an ore belt.  For now, ice belts are ignored. will add toggle soon.
+
+0.91
+- Fixed drones not being recalled in some cases
+- Lots of changes.  Fixes to mining, to crystal selection, changes to UI display. Home station is now saved on undock, and saved to config file by name, not by ID.
+- Created obj_Mining, added Trip-related counters to it that now display on the UI page- Trip duration, trip count, trip avg duration.
+- Moved Mine() function into obj_mining and broke it up as appropriate.
+- Fixed crystal changing
+- Drone launching/recalling fixed/turned on by default
+- Fixed unlockalltargets method
+- Added obj_Configuration, an object to hold config variables and store them to disk in evebot.xml
+- Added shutdown events to the objects which have initialize events.
+- removed redundant code from oCombat.iss
+
+
+0.899.1-0.90: Complete rewrite of mining code, drone code, asteroid selection code, cargo handling, etc.  This should set the core of the future bot nicely.
+- Drone Support
+- GUI Stabilization
+- Targeting fixed
+- Multiple lasers on 1 roid fixed
+- Swapping crystals for t2 mining lasers implemented, working.
+- Station hangar isn't opened till we verify we have stuff to move.
+- Added obj_Configuration, an object to hold config variables and store them to disk in evebot.xml
+- Added shutdown events to the objects which have initialize events.
+- Fixed not targeting asteroids when it warped to belt.  Fixed emptying of config file, unexplained lavishsettings burp that will need followup.
+- Changed a few waits.
+- Added more debug output.
+- Worked more on T2 mining crystal auto change
+- Fixed math error typo in SetbotState.
+- Removed redundant code from oCombat.iss
+- Removed extra xml files
+- Created central config file, evebot.xml, currently only stores ORE info.
+- Created obj_Asteroid
+- Created obj_Ship
+- Created obj_Drones
+- Created obj_EVEBotUI
+- Created obj_Cargo
+- Created obj_Station
+- All function calls which could be converted to methods or members have been, for those functions.
+- Note that very little changes have occured in oCombat, except where necessary for it to call a function which was moved.
+- Rewrote cargo transfer routines, they should be 100% reliable now, and extensible for other cargo types in the future.
+- Created basic use of bookmarked asteroid locations, any bookmarks that start with Belt: or Belt will be iterated thru at random.  This is not up to par yet, I wouldn't use it.  Need to integrate bookmark iteration with blacklisting for empty (or empty of desired) ore types and fall back to overview list of belts if so (which should also be added to blacklist).
+- Rewrote EB_GlobalVariablesDaemon.iss, see obj_EVEMONUI.iss for an example of how to do this without making a 2nd script.
+
+
+0.88
+- Numerous Fixed for oCombat... still needs more testing =)
+- Changed Undock in oSpace.iss
+- Changed oMining.iss to support Combat better
+- Added a few more features to the GUI to prep for the gui Update
+- EVEBot.iss changed 1 last time for combat hopefully
+
+
+0.87
+- Add 200 Lines of Code in Combat.iss, not gonna list everything I did, assholes.
+- Fixed Where Cargo Sometimes wouldn't get put in the station.
+- Added and Fixed several things in oMining
+- Added Combat Support for EVEbot.iss
+- Continous Updates to the GUI, nothing major yet.. rev from me
+- Updated Skin.xml for future updates
+- Fixed Various Bugs in oStation.iss
+- fuck.. who knows what else... I know there are some problems probably in oCombat still, since its not fully tested
+- I love you... Good night!
+- Hessinger
+
+
+0.86
+- Deleted oPixel.iss
+- Added Basic Combat Support (Should prevent us from getting our ships from being destroyed)
+
+
+0.85
+- No more pixel defining!!!
+
+
+0.84
+- Add a exists if for oStation (thanks to Cyber)
+- Only activate 2 shields (more was killing my capacity, feel free to change it back to the GetModule value)
+- Added a check if your stationloc == NULL
+
+
+0.83
+- Added CheckOrbit
+- Added a member CheckEntity (commented just for the structure)
+- Fixed docking
+- Temporary changed orbit roid to approach
+
+
+0.801.6
+- Missing bracket in oSpace.iss
+- Something is still fucked in SetBotState() (EVEBot.iss)
+
+
+0.801.5
+- Lazor Execution put back in loop due to crashes
+
+
+0.801.4
+- Fixed Deactivating Lazors in Loop by taking out of Loop
+- Added Logging
+- Various Other Changes to HUD and Evebot.iss
+
+
+0.801.3:
+- Doesn't include Neutros Wait Changes
+- Added own wait changes
+- Has mining file update from .2
+- Runs over an hour in both trials.
+- First run was 1 hour 2 mins (fixed bug)
+- Second run was 1 hour 15 mins, then servers went down like they do every night.
+- Mael think's a newb...
+- Mael can suck my dick.
+- :P lol
+- http://tinyurl.com/2g9mqh Information on how I got around the D/C Problem =).. enjoy..
+- YOUR ALL NEWBS!!!
+
+
+0.801.2
+- Will now select another asteroid if the one you are currently mining is destroyed
+- Will now consider 139.999/140 as 'ship is full' (used .Round)
+- Changed timers a bit
+
+
+0.801
+- Added Minor GUI Changes, thanks to hazard.. newb...
+- Added HUD
+
+
+0.8
+-Complete re-write of some functions
+-Ama pitched in and changed waits
+
+
+0.712
+- Almost fixed Defend when attacked (commented atm)
+- Now uses 1 and 2 high power slot (for mining)
+- Now uses med and low power slot 1 (for protection)
+- Corrected a Typo for the roid id
+- Removed the COMBAT state
+- Add the logic for a queue script
+
+
+0.711
+-Basic UI implemented
+-Hazard's .png's included
+
+
+0.701
+-Fixed Looping Issue Moving Cargo To Station Items
+
+
+0.7
+- Includes a total rewrite of the past Evebot form (from scratch)
+- Add objects in the core folder, please read the object info
+- You will probably want to keep your oPixel and change oBase for the colors ;)
+- Enjoy and read the to do list
+
+
+0.68
+- Total rewrite of the bot
+- Defend when attack does not work right now, unless you start the bot while people are attacking you
+- Never crashed with me *i think*
+
+
+0.65
+- Fixed Some D/C Bugs Caused by Warp Issues
+- Added Mockup BoneKit GUI
+- Added Call and Functions to evebot.iss for GUI
+- Added Return on First Unloading Drag to keep from looping
+- Added Longer Delays to make time to get out of warp.
+- Added Dock and Undock Fix to stop d/cs
+
+
+0.61
+-Basic Revisions by Tehtsuo
+
+
+0.5
+-Original bot by Tehtsuo
+
+
+ _________________________
+| Last Updated: 7/23/07.  |
+|_________________________|
