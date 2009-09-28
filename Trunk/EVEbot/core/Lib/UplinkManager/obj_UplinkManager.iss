@@ -225,10 +225,9 @@ objectdef obj_UplinkManager
 					else
 					{
 						RegisteredSession.Value.VariableScope:CreateVariable[${VarType}, "${VarName}", "${Value}"]
-						UI:UpdateConsole["${LogPrefix}:UpdateInfo: DEBUG: Received new info from ${RemoteSessionName} (${VarName}=${Value})", LOG_DEBUG]
 					}
 					RegisteredSession.Value.LastPing:Set[${Time.Timestamp}]
-					UI:UpdateConsole["${LogPrefix}:UpdateInfo: Updated info from ${RemoteSessionName} (${VarName}=${Value})", LOG_DEBUG]
+					UI:UpdateConsole["${LogPrefix}:UpdateInfo: ${RegisteredSession.Value.CharName}: ${VarName}=${Value}", LOG_DEBUG]
 					return
 				}
 			}

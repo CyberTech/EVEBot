@@ -40,7 +40,7 @@ objectdef obj_BeltBookmarks inherits obj_Bookmark
 	{
 		if ${This.EmptyBelts.Contains["${BeltName}"]}
 		{
-			UI:UpdateConsole["DEBUG: ${LogPrefix}:IsBeltEmpty - ${BeltName} - TRUE", LOG_DEBUG]
+			UI:UpdateConsole["${LogPrefix}:IsBeltEmpty - ${BeltName} - TRUE", LOG_DEBUG]
 			return TRUE
 		}
 		return FALSE

@@ -77,7 +77,7 @@ objectdef obj_Skills inherits obj_BaseClass
 						{
 							This:Train[${This.NextInLine}]
 						}
-						
+
 						/* If we've already got a skill training on this account, turn off training */
 						if ${EVEWindow[ByName,MessageBox](exists)} && \
 							${EVEWindow[ByCaption,Information](exists)}

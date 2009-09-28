@@ -117,6 +117,7 @@ objectdef obj_Configuration_Common
 	Define_ConfigItem(bool, Callback, FALSE)
 	Define_ConfigItem(int, MinimumDronesInBay, 0)
 	Define_ConfigItem(string, HomeStation, NOTSET)
+	Define_ConfigItem(int64, LastStationID, NOTSET)
 	Define_ConfigItem(string, LoginName, NOTSET)
 	Define_ConfigItem(string, LoginPassword, NOTSET)
 	Define_ConfigItem(bool, AutoLogin, FALSE)
@@ -132,6 +133,7 @@ objectdef obj_Configuration_Common
 	Define_ConfigItem(bool, DisableScreenWhenBackgrounded, FALSE)
 	Define_ConfigItem(bool, TrainSkills, TRUE)
 	Define_ConfigItem(bool, EnableChatLogging, FALSE)
+	Define_ConfigItem(bool, Randomize, TRUE)
 }
 
 /* ************************************************************************* */
@@ -400,6 +402,7 @@ objectdef obj_Configuration_Hauler
 
 	Define_ConfigItem(string, HaulerMode, "Service Fleet Members")
 	Define_ConfigItem(bool, MultiSystemSupport, FALSE)
+	Define_ConfigItem(bool, PopJetCans, TRUE)
 	Define_ConfigItem(string, DropOffBookmark, "")
 	Define_ConfigItem(string, MiningSystemBookmark, "")
 }
