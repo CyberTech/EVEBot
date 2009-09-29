@@ -196,14 +196,14 @@ objectdef obj_MissionCombat
 
 				UI:UpdateConsole["DEBUG: obj_MissionCombat - Executing Runcommands state",LOG_DEBUG]
 				This:SetCommandState
-
+				
 				;next we call the method that executes said command
 				;commands return true or false based on whether they complete or not, commands that do not complete in one go
 				;simply get called again until they complete
 
 				UI:UpdateConsole["DEBUG: obj_MissionCombat - Attempting to process command 	${CommandIterator.Value.FindAttribute["Action"].String}",LOG_DEBUG]
 
-				if ${This.ProccessCommand}
+				call This.ProccessCommand
 				{
 
 					UI:UpdateConsole["DEBUG: obj_MissionCombat - ${CurrentCommand} successfully completed, moving onto next command",LOG_DEBUG]
@@ -414,7 +414,7 @@ objectdef obj_MissionCombat
 			{
 				IDCache:Set[${This.FindID[${currentCommandref.FindAttribute["Target"].String}]}]
 
-				return ${MissionCommands.Approach[${IDCache}]}
+				call MissionCommands.Approach[${IDCache}]
 				break
 			}
 			case ApproachBreakOnCombat

@@ -31,6 +31,7 @@ objectdef obj_MissionCommands
 		Recheck:Set[0]
 
 	}
+	variable int WaitTimeOut = 500
 	variable obj_EntityCache EntityCache
 	variable collection:int TargetPriorities
 	variable string ApproachState = "IDLE"
@@ -55,198 +56,77 @@ objectdef obj_MissionCommands
 	variable index:item ContainerCargo
 	variable iterator Cargo
 	variable int Recheck = 0
-	member:bool Approach(int EntityID, int64 Distance = DOCKING_RANGE)
+
+	function Approach(int EntityID, int64 Distance)
 	{
-		switch ${ApproachState}
+		if ${Entity[${EntityID}](exists)}
 		{
-			case IDLE
+			variable float64 OriginalDistance = ${Entity[${EntityID}].Distance}
+			variable float64 CurrentDistance
+
+			If ${OriginalDistance} < ${Distance}
 			{
-				if ${Entity[${EntityID}](exists)}
+				EVE:Execute[CmdStopShip]
+				return
+			}
+			OriginalDistance:Inc[10]
+
+			CurrentDistance:Set[${Entity[${EntityID}].Distance}]
+			UI:UpdateConsole["Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc[(${CurrentDistance} - ${Distance}) / ${MyShip.MaxVelocity}].Ceil} Seconds away"]
+
+			Ship:Activate_AfterBurner[]
+			do
+			{
+				Entity[${EntityID}]:Approach
+				wait 50
+				CurrentDistance:Set[${Entity[${EntityID}].Distance}]
+
+				if ${Entity[${EntityID}](exists)} && \
+				${OriginalDistance} < ${CurrentDistance}
+
 				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - ENTITY EXISTS , GROUPID READS AS ${Entity[${EntityID}].GroupID} NAME IS ${Entity[${EntityID}].Name} ",LOG_DEBUG]
-				}
-				if ${Entity[${EntityID}].GroupID(exists)}
-				{
-					if ${Entity[${EntityID}].Distance} > ${Distance}
-					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - found entity with Name ${Entity[${EntityID}].Name} ID ${EntityID} , we are ${Entity[${EntityID}].Distance} away, we want to be ${Distance} away will approach"]
-						ApproachIDCache:Set[${EntityID}]
-						ApproachState:Set["APPROACH"]
-						return FALSE
-					}
-					else
-					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Entity with name ${Entity[${EntityID}].Name} already in range"]
-						return TRUE
-					}
-				}
-				else
-				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - Error , could not find entity with ID ${EntityID} to approach"]
-					return TRUE
+					UI:UpdateConsole["DEBUG: obj_Ship:Approach: ${Entity[${EntityID}].Name} is getting further away!  Is it moving? Are we stuck, or colliding?", LOG_MINOR]
+					return
 				}
 			}
-			case APPROACH
-			{
-				if ${Entity[${EntityID}].GroupID(exists)}
-				{
-					if ${EntityID} == ${ApproachIDCache}
-					{
-						
-						Entity[${ApproachIDCache}]:Approach
-						Ship:Activate_AfterBurner[]
-						ApproachState:Set["APPROACHING"]
-						return FALSE
-					}
-					else
-					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - AprroachIDCache and EntityID do not match ,resetting to idle"]
-						ApproachState:Set["IDLE"]
-						return FALSE
-					}
-				}
-				else
-				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - Entity no longer exists cannot approach"]
-					ApproachState:Set["IDLE"]
-					return TRUE
-				}
-			}
-			case APPROACHING
-			{
-				if ${Entity[${EntityID}].GroupID(exists)}
-				{
-					if ${EntityID} == ${ApproachIDCache}
-					{
-						if ${Entity[${ApproachIDCache}].Distance} < ${Distance}
-						{
-							UI:UpdateConsole["DEBUG: obj_MissionCommands - Name ${Entity[${EntityID}].Name} ID ${EntityID} , we are ${Entity[${EntityID}].Distance} away, we want to be ${Distance} we have succeeded!",LOG_DEBUG]
-							UI:UpdateConsole["DEBUG: obj_MissionCommands - Reached ${EntityID} "]
-							EVE:Execute[CmdStopShip]
-							ApproachState:Set["IDLE"]
-							return TRUE
-						}
-					}
-					else
-					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - AprroachIDCache and EntityID do not match ,resetting to idle",LOG_DEBUG]
-						EVE:Execute[CmdStopShip]
-						ApproachState:Set["IDLE"]
-						return FALSE
-					}
-				}
-				else
-				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - Entity no longer exists cannot approach",LOG_DEBUG]
-					ApproachState:Set["IDLE"]
-					return TRUE
-				}
+			while ${CurrentDistance} > ${Math.Calc64[${Distance} * 1.05]} && \
+			${This.AggroCount} > 0
 
-			}
-		}
-	}
-
-
-	member:bool ApproachBreakOnCombat(int EntityID,int Distance = DOCKING_RANGE)
-	{
-		if ${This.AggroCount} > 0
-		{
-			This.ApproachState:Set["IDLE"]
-			return TRUE
-		}
-		if ${This.Approach[${EntityID},${Distance}]}
-		{
-			return TRUE
+			EVE:Execute[CmdStopShip]
+			Ship:Deactivate_AfterBurner[]
 		}
 	}
 
 
 
 	; TODO - move guts into Ship.Approach except for roonumer:inc
-	member:bool NextRoom()
-	{
-		return ${This.ActivateGate[${Entity[GroupID,GROUP_WARPGATE].ID}]}
-	}
 
 
-	member:bool ActivateGate(int EntityID)
+
+	function ActivateGate(int EntityID)
 	{
+		variable int waitCounter = 0
+		This.Approach[${EntityID}, JUMP_RANGE]
+		Ship:WarpPrepare
 		UI:UpdateConsole["DEBUG: obj_MissionCommands - attempting to activate ${Entity[${EntityID}].Name!",LOG_DEBUG]
-		switch ${GateState}
+		Entity[${EntityID}]:Activate
+		while !${Ship.WarpEntered}
 		{
-			case IDLE
+			waitCounter:Inc[1]
+			if ${waitCounter} > ${WaitTimeOut}
 			{
-				if ${Entity[${EntityID}].GroupID(exists)}
-				{
-					if ${This.Approach[${EntityID}, JUMP_RANGE]}
-					{
-						if ${This.WarpPrepare}
-						{
-							UI:UpdateConsole["DEBUG: obj_MissionCommands - attempting to activate ${Entity[${EntityID}].Name!",LOG_DEBUG]
-							Entity[${EntityID}]:Activate
-							GateState:Set["ACTIVATED_GATE"]
-							return FALSE
-						}
-						else
-						{
-							UI:UpdateConsole["DEBUG: obj_MissionCommands - not ready for warping will wait untill ready",LOG_DEBUG]
-							return FALSE
-						}
-					}
-					else
-					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands -  Not Close enough to acceleration gate, will get closer",LOG_DEBUG]
-					}
-					return FALSE
-				}
-				else
-				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - Could not find gate!",LOG_DEBUG]
-					return TRUE
-				}
+				UI:UpdateConsole["DEBUG: obj_MissionCommands - timed out trying to enter warp",LOG_DEBUG]
+				return
 			}
-			case ACTIVATED_GATE
-			{
-				if ${Ship.WarpEntered}
-				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - Warp was entered",LOG_DEBUG]
-					GateState:Set["WARPWAIT"]
-				}
-				UI:UpdateConsole["DEBUG: obj_MissionCommands - Waiting for ship to enter warp",LOG_DEBUG]
-				;TODO - put a timer here so we retry activating the gate
-				return FALSE
-			}
-			case WARPWAIT
-			{
-				if ${This.WarpWait}
-				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - We dropped out of warp!",LOG_DEBUG]
-					GateState:Set["IDLE"]
-					return TRUE
-				}
-				UI:UpdateConsole["DEBUG: obj_MissionCommands -  We are still in warp, This.WarpWait is ${This.WarpWait}",LOG_DEBUG]
-				return FALSE
-			}
+			wait 20
+			UI:UpdateConsole["DEBUG: obj_MissionCommands - waiting to enter warp",LOG_DEBUG]
 		}
-	}
-
-	; TODO - should be method
-	member:bool IgnoreEntity(string entityName)
-	{
-		targetBlacklist:Insert[${entityName}]
-		return TRUE
-	}
-
-	; TODO - should be method
-	member:bool PrioritzeEntity(string entityName)
-	{
-		priorityTargets:Insert[${entityName}]
-		return TRUE
-
+		call Ship.WarpWait
 	}
 
 
-	member:bool WaitAggro(int aggroCount = 1)
+
+	member:bool WaitAggro(int aggroCount = 1, int timeOut)
 	{
 		if ${This.AggroCount} >= ${aggroCount}
 		{
