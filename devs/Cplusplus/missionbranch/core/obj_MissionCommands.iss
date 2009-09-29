@@ -1,61 +1,14 @@
 objectdef obj_MissionCommands
 {
+	variable int WaitTimeOut = 500
+	variable obj_EntityCache EntityCache
+	variable bool CommandComplete = FALSE
+	variable bool Abort = FALSE
 	method Initialize()
 	{
 		EntityCache:UpdateSearchParams["I like big butts can i cannot lie","CategoryID, CATEGORYID_ENTITY","IsNPC"]
 		EntityCache:SetUpdateFrequency[1]
 	}
-	;TODO - Add checks to all members that involve movement to make sure we are actually moving!
-	method MissionComplete()
-	{
-		;we reset all our states to their defaults and clear out all caches
-		TargetPriorities:Clear
-		ApproachState:Set["IDLE"]
-		ApproachIDCache:Set[0]
-		GateState:Set["IDLE"]
-		ClearRoomState:Set["KILLING"]
-		KillCache:Set[0]
-		KillState:Set["START"]
-		KillIDCache:Set[0]
-		KillIDState:Set["START"]
-		PullCache:Set[0]
-		PullState:Set["START"]
-		WaitTimeOut:Set[0]
-		containerCache:Clear
-		wreckList:Clear
-		containerID:Set[0]
-		ContainerState:Set["START"]
-		lootEntityID:Set[0]
-		LootEntityState:Set["APPROACHING"]
-		ContainerCargo:Clear
-		Recheck:Set[0]
-
-	}
-	variable int WaitTimeOut = 500
-	variable obj_EntityCache EntityCache
-	variable collection:int TargetPriorities
-	variable string ApproachState = "IDLE"
-	variable int ApproachIDCache
-	variable string GateState = "IDLE"
-	variable string ClearRoomState = "KILLING"
-	variable int KillCache
-	variable string KillState = "START"
-	variable int KillIDCache
-	variable string KillIDState = "START"
-	variable int PullCache
-	variable string PullState = "START"
-	variable time WaitTimeOut = 0
-	variable index:entity containerCache
-	variable index:entity wreckList
-	variable iterator wreckIterator
-	variable iterator containerIterator
-	variable int containerID
-	variable string ContainerState = "START"
-	variable int lootEntityID
-	variable string LootEntityState = "APPROACHING"
-	variable index:item ContainerCargo
-	variable iterator Cargo
-	variable int Recheck = 0
 
 	function Approach(int EntityID, int64 Distance)
 	{
@@ -97,12 +50,6 @@ objectdef obj_MissionCommands
 		}
 	}
 
-
-
-	; TODO - move guts into Ship.Approach except for roonumer:inc
-
-
-
 	function ActivateGate(int EntityID)
 	{
 		variable int waitCounter = 0
@@ -116,6 +63,7 @@ objectdef obj_MissionCommands
 			if ${waitCounter} > ${WaitTimeOut}
 			{
 				UI:UpdateConsole["DEBUG: obj_MissionCommands - timed out trying to enter warp",LOG_DEBUG]
+				Abort:Set[TRUE]
 				return
 			}
 			wait 20
@@ -124,18 +72,16 @@ objectdef obj_MissionCommands
 		call Ship.WarpWait
 	}
 
-
-
-	member:bool WaitAggro(int aggroCount = 1, int timeOut)
+	function WaitAggro(int aggroCount = 1)
 	{
 		if ${This.AggroCount} >= ${aggroCount}
 		{
-			return TRUE
+			CommandComplete:Set[TRUE]
 		}
-		return FALSE
+		CommandComplete:Set[FALSE]
 	}
 
-	member:bool KillAggressors()
+	function KillAggressors()
 	{
 		This:NextTarget[]
 		if ${This.AggroCount} < 1
@@ -146,14 +92,11 @@ objectdef obj_MissionCommands
 	}
 
 
-	member:bool ClearRoom()
+	function ClearRoom()
 	{
-		variable bool EntityInRange = FALSE
-		switch ${ClearRoomState}
-		{
-			case KILLING
-			{
 
+				if ${This.AggroCount} > 0
+				{
 				;Use "entity" more, please --stealthy
 				;Seems like it doesn't check range until something is a
 				EntityCache.Entities:GetIterator[EntityCache.EntityIterator]
@@ -174,7 +117,7 @@ objectdef obj_MissionCommands
 					while ${EntityCache.EntityIterator:Next(exists)}
 				}
 				;Why are we worried about aggro count in clearroom?
-				if ${This.AggroCount} > 0 && ${EntityInRange}
+				 && ${EntityInRange}
 				{
 					UI:UpdateConsole["DEBUG: obj_MissionCommands - Killing stuff",LOG_DEBUG]
 					This:NextTarget[]
@@ -186,154 +129,25 @@ objectdef obj_MissionCommands
 				}
 				return FALSE
 			}
-			case PULLING
+			else if ${This.HostileCount} > 0
 			{
-				if ${This.HostileCount} > 0
-				{
-					EntityCache.Entities:GetIterator[EntityCache.EntityIterator]
-					if ${EntityCache.EntityIterator:First(exists)}
-					{
-						do
-						{
-							if ${EntityCache.EntityIterator.Value.IsTargetingMe}
-							{
-								if ${EntityCache.EntityIterator.Value.Distance} < ${Ship.OptimalWeaponRange} || \
-									${EntityCache.EntityIterator.Value.Distance} < ${Me.DroneControlDistance}
-								{
-									EntityInRange:Set[TRUE]
-									break
-								}
-							}
-						}
-						while ${EntityCache.EntityIterator:Next(exists)}
-					}
-					if ${This.AggroCount} > 0 && ${EntityInRange}
-					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - ClearRoom got some aggro, switching to killing",LOG_DEBUG]
-						This.ClearRoomState:Set["KILLING"]
-						return FALSE
-					}
-					else
-					{
 						UI:UpdateConsole["DEBUG: obj_MissionCommands - Clearroom trying to pull stuff",LOG_DEBUG]
 						if ${This.Pull[]}
 						{
 							This.ClearRoomState:Set["KILLING"]
-						}
-						return FALSE
-					}
-				}
-				else
-				{
-					return TRUE
-				}
+						}				
 			}
-		}
 	}
 	;these solutions for pulling and killing specific NPCs based on their names are not ideal, if you can come up with some better logic please tell
 
-	member:bool Kill(string targetName,int CatID)
-	{
-		switch ${KillState}
-		{
-			case START
-			{
-				variable index:entity targetIndex
-				variable iterator     targetIterator
-				EVE:DoGetEntities[targetIndex, CategoryID, ${CatID}]
-				targetIndex:GetIterator[targetIterator]
-				if ${targetIterator:First(exists)}
-				{
-					do
-					{
-						if ${targetIterator.Value.Name.Equal[${targetName}]}
-						{
-							KillState:Set["KILLING"]
-							KillCache:Set[${targetIterator.Value.ID}]
-						  UI:UpdateConsole["DEBUG: obj_MissionCommands - found kill target will try and kill it",LOG_DEBUG]"
-						  ;echo "DEBUG: obj_MissionCommands - found kill target will try and kill it"
-							return FALSE
-						}
-					}
-					while ${targetIterator:Next(exists)}
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - Could not find ${entityName}",LOG_DEBUG]
-					;echo "DEBUG: obj_MissionCommands - Could not find ${entityName}"
-					return TRUE
-				}
-				UI:UpdateConsole["DEBUG: obj_MissionCommands - Could not find find any entities",LOG_DEBUG]
-				;echo "DEBUG: obj_MissionCommands - Could not find find any entities"
-				return TRUE
-			}
-			case KILLING
-			{
-				if ${Entity[${KillCache}].GroupID(exists)}
-				{
-					if ${Entity[${KillCache}].Name.Equal[${targetName}]}
-					{
-						if ${This.KillID[${KillCache}]}
-						{
-							KillState:Set["START"]
-							return TRUE
-						}
-					}
-					else
-					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Cached name does not match ${targetName}, resetting",LOG_DEBUG]
-						KillState:Set["START"]
-						return FALSE
-					}
-				}
-				UI:UpdateConsole["DEBUG: obj_MissionCommands - entity in cache dissapeared, resetting ",LOG_DEBUG]
-				KillState:Set["START"]
-				return FALSE
-			}
-		}
-	}
+	
 
-
-	member:bool KillID(int entityID)
+	function KillID(int entityID)
 	{
-		variable float dist
-		variable bool didApproach
-		if ${Ship.OptimalWeaponRange} > ${Me.DroneControlDistance}
-		{
-			dist:Set[${Ship.OptimalWeaponRange}]
-		}
-		else
-		{
-			dist:Set[${Me.DroneControlDistance}]
-		}
-		dist:Set[${Math.Calc[${dist} * 0.90]}]
-		if !${Entity[${entityID}](exists)}
-		{
-			return true
-		}			
-		
-		switch ${KillIDState}
-		{
-			case START
-			{
+
 				if ${Entity[${entityID}].GroupID(exists)}
 				{
-					KillIDCache:Set[${entityID}]
-					KillIDState:Set["APPROACHING"]
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - found entity with Name ${Entity[${entityID}].Name} ID ${entityID} , we are ${Entity[${entityID}].Distance} away, lets kill it",LOG_DEBUG]
-					return FALSE
-				}
-				else
-				{
-					KillIDState:Set["START"]
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - Entity does not exist ,it must be dead already!",LOG_DEBUG]
-					return TRUE
-				}
-
-			}
-			case APPROACHING
-			{
-				if ${KillIDCache} == ${entityID}
-				{
-					if ${Entity[${entityID}].GroupID(exists)}
-					{
+		
 						UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - Approaching entity with Name ${Entity[${entityID}].Name} ID ${entityID} , we are ${Entity[${entityID}].Distance} away, we want to be ${dist} away will approach",LOG_DEBUG]
 
 						didApproach:Set[${This.Approach[${KillIDCache},${dist}]}]
@@ -343,110 +157,27 @@ objectdef obj_MissionCommands
 							KillIDState:Set["TARGETING"]
 							return FALSE
 						}
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - Out of range of  ${KillIDCache} moving closer",LOG_DEBUG]
-						return FALSE
-					}
-					else
-					{
-						KillIDState:Set["START"]
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - Entity does not exist ,it must be dead already!",LOG_DEBUG]
-						return TRUE
-					}
-				}
-				else
-				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - EntityID does not match cached one, returning to start state",LOG_DEBUG]
-					KillIDState:Set["START"]
-					return FALSE
-				}
-			}
-			case TARGETING
-			{
-				if ${KillIDCache} == ${entityID}
-				{
+		
 					if ${Entity[${KillIDCache}].GroupID(exists)}  && ${Entity[${KillIDCache}].GroupID} != GROUPID_WRECK && ${Entity[${KillIDCache}].GroupID} != GROUPID_CARGO_CONTAINER
 					{
-						;didApproach:Set[${This.Approach[${KillIDCache}, ${dist}]}]
-						;echo "MissionCommands: DidApproach ${didApproach} ${Entity[${KillIDCache}]} ${Entity[${KillIDCache}].ID} ${Entity[${KillIDCache}].Distance} ${dist}"
-						;if ${didApproach}
-						;{
+					
 							if !${Targeting.IsMandatoryQueued[${KillIDCache}]}
 							{
 								UI:UpdateConsole["DEBUG: obj_MissionCommands - Targeting ${KillIDCache}"]
 								Targeting:Queue[${KillIDCache},1,1,FALSE]
 								KillIDState:Set["KILLING"]
 								return FALSE
-							}
-							else
-							{
-								UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - Target is in range and in the targeting queue,should be killing it now"]
-								KillIDState:Set["KILLING"]
-								return FALSE
-							}
-						;}
-					}
-					else
-					{
-						KillIDState:Set["START"]
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - Entity does not exist ,it must be dead already!",LOG_DEBUG]
-						return TRUE
-					}
-				}
-				else
-				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - EntityID does not match cached one, returning to start state",LOG_DEBUG]
-					KillIDState:Set["START"]
-					return FALSE
-				}
-			}
-			case KILLING
-			{
-				if ${KillIDCache} == ${entityID}
-				{
-					if ${Entity[${KillIDCache}].GroupID(exists)}  && ${Entity[${KillIDCache}].GroupID} != GROUPID_WRECK && ${Entity[${KillIDCache}].GroupID} != GROUPID_CARGO_CONTAINER
-					{
-						didApproach:Set[${This.Approach[${KillIDCache}, ${dist}]}]
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Entity with ID ${KillIDCache} still exists, we have no killed it yet :<",LOG_DEBUG]
-						return FALSE
-					}
-					else
-					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill-  ${KillIDCache} is destroyed",LOG_DEBUG]
-						KillIDState:Set["START"]
-						return TRUE
-					}
-				}
-				else
-				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - EntityID does not match cached one, returning to start state",LOG_DEBUG]
-					KillIDState:Set["START"]
-					return FALSE
-				}
-			}
+					
+		}
+		}
 		}
 	}
 
 
-	member:bool Pull(string targetName = "NONE")
+	function Pull(string targetName = "NONE")
 	{
-		variable float dist
-		if ${Ship.OptimalWeaponRange} > ${Me.DroneControlDistance}
-		{
-			dist:Set[${Ship.OptimalWeaponRange}]
-		}
-		else
-		{
-			dist:Set[${Me.DroneControlDistance}]
-		}
-		dist:Set[${Math.Calc[${dist} * 0.90]}]
-		variable index:entity targetIndex
-		variable iterator     targetIterator
-		switch ${PullState}
-		{
-			case START
-			{
-				if ${targetName.Equal["NONE"]}
-				{
+	
+		
 					EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
 					targetIndex:GetIterator[targetIterator]
 					if ${targetIterator:First(exists)}
@@ -468,33 +199,7 @@ objectdef obj_MissionCommands
 					UI:UpdateConsole["DEBUG: obj_MissionCommands - Could not find find any entities",LOG_DEBUG]
 					return FALSE
 
-				}
-				else
-				{
-					EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
-					targetIndex:GetIterator[targetIterator]
-					if ${targetIterator:First(exists)}
-					{
-						do
-						{
-							if ${targetIterator.Value.Name.Equal[${targetName}]}
-							{
-								PullState:Set["PULL"]
-								PullCache:Set[${targetIterator.Value.ID}]
-								UI:UpdateConsole["DEBUG: obj_MissionCommands - found ${targetName} will pull it"]
-								return FALSE
-							}
-						}
-						while ${targetIterator:Next(exists)}
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Could not find ${targetName}",LOG_DEBUG]
-						return TRUE
-					}
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - Could not find find any entities",LOG_DEBUG]
-					return FALSE
-				}
-			}
-			case PULL
-			{
+		
 				if ${Entity[${PullCache}].GroupID(exists)}
 				{
 					if ${Entity[${PullCache}].Name.Equal[${targetName}]} || ${targetName.Equal["NONE"]}
@@ -510,30 +215,13 @@ objectdef obj_MissionCommands
 						}
 						;echo "Pull.Pull: Returning FALSE; entity not yet in range or no aggros."
 						return FALSE
-					}
-					else
-					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - name does not match cached name, resetting"]
-						PullState:Set["START"]
-						return FALSE
-					}
-				}
-				else
-				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - cached entity no longer exists, resetting"]
-					PullState:Set["START"]
-					return FALSE
-				}
-			}
-		}
+}
+				
 	}
+}
 
 
-
-
-
-
-	member:bool Waves(int timeoutMinutes)
+	function Waves(int timeoutMinutes)
 	{
 
 		if ${This.WaitTimeOut.Timestamp} == 0 && ${This.HostileCount} < 1
@@ -567,7 +255,7 @@ objectdef obj_MissionCommands
 		return FALSE
 	}
 
-	member:bool WaitTargetQueueZero()
+	function WaitTargetQueueZero()
 	{
 		if ${Math.Calc[${Targeting.QueueSize} + ${Targeting.TargetCount}]} > 0
 		{
@@ -582,14 +270,8 @@ objectdef obj_MissionCommands
 
 
 
-	member:bool CheckContainers(int groupID = GROUPID_CARGO_CONTAINER,string lootItem,string containerName)
+	function CheckContainers(int groupID = GROUPID_CARGO_CONTAINER,string lootItem,string containerName)
 	{
-		variable int result
-		switch ${ContainerState}
-		{
-
-			case START
-			{
 				EVE:DoGetEntities[containerCache, GroupID, ${groupID}]
 				containerCache:GetIterator[containerIterator]
 				UI:UpdateConsole["DEBUG: obj_MissionCommands - Looking for containers to loot",LOG_DEBUG]
