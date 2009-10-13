@@ -1715,7 +1715,7 @@ objectdef obj_Ship
 		variable iterator FleetMember
 
 		FleetMembers:Clear
-		Me.Fleet:GetMembers[FleetMembers]}
+		Me.Fleet:GetMembers[FleetMembers]
 		FleetMembers:GetIterator[FleetMember]
 
 		if ${FleetMember:First(exists)}
