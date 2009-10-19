@@ -1,6 +1,16 @@
 ﻿<?xml version='1.0' encoding='UTF-8'?>
 <InnerSpaceSettings>
   <Set Name="Mission Database">
+  	<Set Name="Id and Egonics, Inc.">
+  		<Set Name="1">
+  			<Set Name="Commands">
+  				<Set Name="1" Action="ClearRoom" />
+  				<Set Name="2" Action="NextRoom" />
+  				<Set Name="3" Action="ClearRoom" />
+  				<Set Name="4" Action="CheckContainers" GroupID="12" Target="Prisoners" />
+  			</Set>
+  		</Set>
+  	</Set>
     <Set Name="Intercept The Saboteurs">
       <Set Name="2">
         <Set Name="Commands">
@@ -738,6 +748,29 @@
     		</Set>
     	</Set>
     </Set>
+    <Set Name="The Black Market Hub">
+    	<Set Name="3">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="NextRoom" />
+    			<Set Name="4" Action="ClearRoom" />
+    			<Set Name="5" Action="Kill" Target="Docked Bestower" />
+    			<Set Name="6" Action="CheckContainers" Target="Small Sealed Cargo Containers" GroupID="12" />
+    		</Set>	
+    	</Set>
+    </Set>
+    <Set Name="The Missing Convoy">
+    	<Set Name="3">
+    		<Set Name="Commands">
+    			<Set Name="1" Action="NextRoom" />
+    			<Set Name="2" Action="ClearRoom" />
+    			<Set Name="3" Action="Kill" Target="Powerful EM Forcefield" />
+    			<Set Name="4" Action="Kill" Target="Lesser Drone Hive" />
+    			<Set Name="5" Action="CheckContainers" Target="Special Delivery" GroupID="12" />
+    		</Set>
+    	</Set>
+    </Set>
     <Set Name="Pirate Invasion">
     	<Set Name="3">
     		<Set Name="Commands">
@@ -1108,7 +1141,7 @@
         <Set Name = "Commands">
           <Set Name = "1" Action = "ClearRoom">
           </Set>
-          <Set Name = "2" Action = "CheckContainers" Target="R.S. Officer's Passcard" GroupID="12">
+          <Set Name = "2" Action = "CheckContainers" Target="R.S. Officer's Passcard" WreckName="Officer" GroupID="186">
           </Set>
           <Set Name = "10" Action = "NextRoom">
           </Set>

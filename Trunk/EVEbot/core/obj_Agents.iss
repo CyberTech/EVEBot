@@ -309,7 +309,8 @@ objectdef obj_Agents
 	 */
 	method PickAgent()
 	{
-	    variable index:agentmission amIndex
+		echo "Picking Agent"
+	  variable index:agentmission amIndex
 		variable iterator MissionInfo
 		variable set skipList
 
@@ -448,7 +449,7 @@ objectdef obj_Agents
 
 	member:bool HaveMission()
 	{
-	    variable index:agentmission amIndex
+	  variable index:agentmission amIndex
 		variable iterator amIterator
 
 		EVE:DoGetAgentMissions[amIndex]
@@ -1292,6 +1293,37 @@ objectdef obj_Agents
 		wait 50
 
 		EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"]:Close
+		
+		variable int forIdx = 0
+		variable int timesWaited
+		for (forIdx:Set[0]; ${forIdx} < 15; forIdx:Inc)
+		{
+			;75% chance to wait 2 minutes
+			;37.5% chance to wait 4 minutes
+			;18.75% chance to wait 6 minutes
+			;9.375% chance to wait 8 minutes
+			;4.6875% chance to wait 10 minutes
+			;2.34% chance to wait 12 minutes
+			;1.17% chance to wait 14 minutes
+			;0.59% chance to wait 16 minutes
+			;0.29% chance to wait 18 minutes
+			;0.15% chance to wait 20 minutes
+			;0.07% chance to wait 22 minutes
+			;0.04% chance to wait 24 minutes
+			;0.02% chance to wait 26 minutes
+			;0.01% chance to wait 28 minutes
+			;0.005% chance to wait 30 minutes
+			if ${Math.Rand[20]} == 0
+			{
+				timesWaited:Inc
+				echo "Waiting two minutes! Odds to have waited this long: ${Math.Calc[100 * (0.75 / ${timesWaited})].Precision[4]}"
+				wait 1200
+			}
+			else
+			{
+				echo "Not waiting during this check!"
+			}
+		}
 	}
 
 	function QuitMission()
@@ -1300,6 +1332,7 @@ objectdef obj_Agents
 		;wait 50
 
 		echo "DO NOT FUCKING QUIT MISSONS KKTHX"
+		EVEBot:Pause
 		return
 
 		UI:UpdateConsole["obj_Agents:QuitMission: Starting conversation with agent ${This.ActiveAgent}."]

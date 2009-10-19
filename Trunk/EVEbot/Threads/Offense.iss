@@ -315,7 +315,6 @@ objectdef obj_Offense
 							else
 							{
 								Ship.Drones:SendDrones
-								Ship.Drones:CheckDroneHP
 							}
 						}
 						else

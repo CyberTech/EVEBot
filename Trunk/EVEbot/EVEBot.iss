@@ -134,7 +134,7 @@ function main()
 	declarevariable Ship obj_Ship global
 	declarevariable Station obj_Station global
 	declarevariable Cargo obj_Cargo global
-	declarevariable Skills obj_Skills global
+	;declarevariable Skills obj_Skills global
 	declarevariable Bookmarks obj_Bookmarks global
 	declarevariable JetCan obj_JetCan global
 	declarevariable CorpHangarArray obj_CorpHangerArray global
