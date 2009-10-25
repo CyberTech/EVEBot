@@ -155,7 +155,7 @@ objectdef obj_IRC
     	  ; NOTE: ${User} should always be the same as ${To} in this instance.  However, it is
     	  ;       included for continuity's sake.
 
-    	  echo [Private Message -> ${To}] (${From}) "${Message}"
+    	  ;echo [Private Message -> ${To}] (${From}) "${Message}"
     }
 
     method IRC_KickedFromChannel(string User, string Channel, string WhoKicked, string KickedBy, string Reason)
