@@ -143,7 +143,7 @@ objectdef obj_IRC
     	  ; receives a Channel Message.  You can do anything fancy you want with this, 
     	  ; but, for now, we're just going to echo it to the console window.
     	  
-    	  echo [${User} - ${Channel}] -- (${From}) "${Message}"
+    	  echo [${User} - ${Channel}] -- (${From}) "${Message.Escape}"
     }
     
     method IRC_ReceivedPrivateMsg(string User, string From, string To, string Message)
@@ -155,7 +155,7 @@ objectdef obj_IRC
     	  ; NOTE: ${User} should always be the same as ${To} in this instance.  However, it is
     	  ;       included for continuity's sake.
     	  
-    	  echo [Private Message -> ${To}] (${From}) "${Message}"
+    	  echo [Private Message -> ${To}] (${From}) "${Message.Escape}"
     }
         
     method IRC_KickedFromChannel(string User, string Channel, string WhoKicked, string KickedBy, string Reason)
