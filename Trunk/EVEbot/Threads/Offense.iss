@@ -304,7 +304,8 @@ objectdef obj_Offense
 						Defense:RunAway["Offense: Drone shortage detected"]
 						return
 					}
-					if ${Me.ActiveTarget.Distance} < ${Math.Calc[${Me.DroneControlDistance} * 0.975]}
+					if ${Me.ActiveTarget.Distance} < ${Math.Calc[${Me.DroneControlDistance} * 0.975]} && \
+						${Me.ActiveTarget.Distance} < ${Config.Combat.MaxDroneRange}
 					{
 						if ${ShouldLaunchCombatDrones}
 						{

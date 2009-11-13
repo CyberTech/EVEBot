@@ -376,8 +376,20 @@ objectdef obj_Drones
 	
 	method QuickReturnAllToOrbit()
 	{
-		UI:UpdateConsole["obj_Drones: Returning all drones to orbit."]
-		EVE:Execute[CmdDronesReturnAndOrbit]
+		if ${This.ActiveDrone:First(exists)}
+		{
+			do
+			{
+				if ${This.ActiveDrone.Value.ToEntity.Distance} > 5000 &&
+					${This.ActiveDrone.Value.State} != DRONESTATE_RETURNING
+				{
+					UI:UpdateConsole["obj_Drones: Returning all drones to orbit."]
+					EVE:Execute[CmdDronesReturnAndOrbit]
+					return
+				}
+			}
+			while ${This.ActiveDrone:Next(exists)}
+		}
 	}
 
 	function ReturnAllToDroneBay()

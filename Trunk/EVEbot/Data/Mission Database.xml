@@ -11,6 +11,21 @@
   			</Set>
   		</Set>
   	</Set>
+  	<Set Name="Another Slave Rescue (1 of 3)">
+  		<Set Name="1">
+  			<Set Name="Commands">
+  				<Set Name="1" Action="ClearRoom" />
+  			</Set>
+  		</Set>
+  	</Set>
+  	<Set Name="Another Slave Rescue (3 of 3)">
+  		<Set Name="1">
+  			<Set Name="Commands">
+  				<Set Name="1" Action="ClearRoom" />
+  				<Set Name="2" Action="Approach" Target="Beacon" />
+  			</Set>
+  		</Set>
+  	</Set>
     <Set Name="Intercept The Saboteurs">
       <Set Name="2">
         <Set Name="Commands">
@@ -731,7 +746,7 @@
     			<Set Name="3" Action="NextRoom" />
     			<Set Name="4" Action="ClearRoom" />
     			<Set Name="5" Action="NextRoom" />
-    			<Set Name="6" Action="Kill" Target="Central Communication Tower" />
+    			<Set Name="6" Action="Kill" Target="Central Control Hub" />
     		</Set>
     	</Set>
     </Set>
