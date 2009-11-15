@@ -31,10 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ISXEVEWrapper, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Program Files (x86)\InnerSpace\.NET Programs\ISXEVEWrapper.dll</HintPath>
-    </Reference>
     <Reference Include="Lavish.InnerSpace, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9029a3ab4cbe108d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Program Files (x86)\InnerSpace\Lavish.InnerSpace.dll</HintPath>
@@ -56,8 +52,18 @@
   <ItemGroup>
     <Compile Include="EveCmd.cs" />
     <Compile Include="Globals.cs" />
+    <Compile Include="MissionPage.cs" />
+    <Compile Include="MissionStates.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="States.cs" />
+    <Compile Include="TravelStates.cs" />
+    <Compile Include="Util.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\evesvn\ISXEVEWrapper\EVE.ISXEVE.csproj">
+      <Project>{A9583204-C40D-4496-BB62-0F9546E5D613}</Project>
+      <Name>EVE.ISXEVE</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

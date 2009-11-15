@@ -24,9 +24,13 @@ namespace evecmd
         {
             if (g.eve == null)
             {
+                g.isxeve = new ISXEVE();
                 g.eve = new EVE.ISXEVE.EVE();
                 g.me = new Me();
+                
             }
+
+
         }
 
         public void Run()
@@ -70,6 +74,12 @@ namespace evecmd
                     }
                 }
 
+                if (queue != null && !g.isxeve.IsReady)
+                {
+                    g.Print("ISXEVE isn't ready!");
+                    return;
+                }
+
                 // first process any commands from the user
                 if (queue != null)
                     foreach (string command in queue)
@@ -93,10 +103,7 @@ namespace evecmd
                 {
                     State state = states[i];
                     if (state.IsDone())
-                    {
-                        g.Print("Exiting state: {0} ({1})", state, state.Result);
                         states.RemoveAt(i);
-                    }
                 }
             }
         }
@@ -141,7 +148,23 @@ namespace evecmd
                     int i = 0;
                     foreach (AgentMission mission in missions)
                     {
-                        g.Print("#{0}: [{2}] {1}", i, mission.Name, mission.AgentID);
+                        g.Print("#{0}: {1}", i, mission.Name);
+                        g.Print("    AgentID={0}", mission.AgentID);
+                        g.Print("    Expires={0}", mission.Expires);
+                        g.Print("    State={0}", mission.State);
+                        g.Print("    Type={0}", mission.Type);
+                        //mission.GetDetails(); //opens details window
+                        List<BookMark> bookmarks = mission.GetBookmarks();
+                        int j = 0;
+                        g.Print("    {0} Bookmarks:", bookmarks.Count);
+                        foreach (BookMark bookmark in bookmarks)
+                        {
+                            g.Print("    Bookmark #{0}: [{2}] {1}", j, bookmark.Label, bookmark.ID);
+                            g.Print("        Type: [{0}] {1}", bookmark.TypeID, bookmark.TypeID);
+                            g.Print("        LocationType: {0}", bookmark.LocationType);
+                            g.Print("        SolarSystemID: {0}", bookmark.SolarSystemID);
+                            j++;
+                        }
                         i++;
                     }
                 }
@@ -154,6 +177,76 @@ namespace evecmd
                     g.Print("No missions found");
                 }
             }
+            else if (command.StartsWith("printwindow "))
+            {
+                string window_name = command.Substring(12);
+                EVEWindow window = EVEWindow.GetWindowByName(window_name);
+                if (window == null || !window.IsValid)
+                    window = EVEWindow.GetWindowByCaption(window_name);
+
+                if (window != null && window.IsValid)
+                {
+                    g.Print(window.Caption);
+                    g.Print(window.HTML);
+
+                    try // to parse some basics
+                    {
+                        MissionPage page = new MissionPage(window.HTML);
+                        g.Print("Title: {0}", page.Title);
+                        g.Print("CargoID: {0}", page.CargoID);
+                        g.Print("Volume: {0}", page.CargoVolume);
+                    }
+                    catch { }
+                }
+                else
+                    g.Print("window \"{0}\" not found", window_name);
+            }
+            else if (command == "printitems")
+            {
+                // print the items in station
+                if (!g.me.InStation)
+                    g.Print("Not in station...");
+                else
+                {
+                    List<Item> items = g.me.GetHangarItems();
+                    if (items == null)
+                    {
+                        g.Print("Failed to GetHangerItems");
+                    }
+                    else
+                    {
+                        int i = 0;
+                        g.Print("Found {0} Items:", items.Count);
+                        foreach (Item item in items)
+                        {
+                            g.Print("#{0}: [{2}] {1} x{3}", i, item.Name, item.ID, item.Quantity);
+                            g.Print("    Description={0}", item.Description);
+                            g.Print("    Type=[{0}] {1}", item.TypeID, item.Type);
+                            g.Print("    Category=[{0}] {1}", item.CategoryID, item.Category);
+                            g.Print("    BasePrice={0}", item.BasePrice);
+                            g.Print("    UsedCargoCapacity={0}", item.UsedCargoCapacity);
+                            i++;
+                        }
+                    }
+                }
+            }
+            else if (command.StartsWith("printagent "))
+            {
+                int id = Int32.Parse(command.Substring(11));
+                Agent agent = new Agent("ByID", id);
+                if (agent != null && agent.IsValid)
+                {
+                    g.Print("Name: {0}", agent.Name);
+                    g.Print("Station: [{0}] {1}", agent.StationID, agent.Station);
+                    g.Print("Division: [{0}] {1}", agent.DivisionID, agent.Division);
+                    g.Print("StandingTo: {0}", agent.StandingTo);
+                    g.Print("SolarSystemID: {0}", agent.Solarsystem.ID);
+                }
+                else
+                {
+                    g.Print("Agent not found");
+                }
+            }
             else if (command.StartsWith("warp "))
             {
                 State state = new WarpState(command);
@@ -164,6 +257,16 @@ namespace evecmd
                 State state = new DockState(command);
                 TryToEnterState(state);
             }
+            else if (command.StartsWith("domission "))
+            {
+                State state = new MissionState(command);
+                TryToEnterState(state);
+            }
+            else if (command.StartsWith("travel "))
+            {
+                State state = new TravelToStationState(command);
+                TryToEnterState(state);
+            }
         }
 
         public void TryToEnterState(State state)
@@ -171,7 +274,6 @@ namespace evecmd
             state.OnFrame();
             if (!state.IsDone())
             {
-                g.Print("Entering state: {0}", state);
                 states.Insert(0, state);
             }
             else

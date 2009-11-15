@@ -13,9 +13,28 @@ namespace evecmd
     {
         // true means the frame has been 'handled', and we 
         // shouldn't continue down the state list.
-        public abstract bool OnFrame();
+        private bool on_frame_run = false;
+        public virtual bool OnFrame()
+        {
+            if (!on_frame_run)
+            {
+                on_frame_run = true;
+                g.Print("Entering State:{0}", this);
+            }
+            return false;
+        }
 
-        protected bool done = false;
+        private bool done_ = false;
+        protected bool done
+        {
+            get { return done_; }
+            set
+            {
+                if (value && !done_)
+                    g.Print("Finished State:{0}:{1}", this, Result);
+                done_ = value;
+            }
+        }
         // call this after OnFrame - if its true, abandon the state
         public virtual bool IsDone()
         {
@@ -31,6 +50,8 @@ namespace evecmd
     public class DockState : State
     {
         bool started = false;
+        bool waiting = false;
+        DateTime wait_start;
         int entity_id = -1;
         WarpState warp = null;
 
@@ -58,34 +79,39 @@ namespace evecmd
 
         public override bool OnFrame()
         {
+            base.OnFrame();
+
             if (warp != null)
             {
                 warp.OnFrame();
                 if (warp.IsDone())
                     warp = null;
+                else
+                    return true;
             }
-            else if (!started)
+
+            if (!started)
             {
                 // check if we're already in warp
                 if (g.me.ToEntity.Mode == 3)
                 {
-                    done = true;
                     Result = "can't dock in warp";
+                    done = true;
                     return false;
                 }
 
                 List<Entity> entities = g.eve.GetEntities("ID", entity_id.ToString());
                 if (entities.Count == 0)
                 {
-                    done = true;
                     Result = "entity not found";
+                    done = true;
                     return false;
                 }
 
                 if (entities.Count > 1)
                 {
-                    done = true;
                     Result = "entity ambiguous";
+                    done = true;
                     return false;
                 }
 
@@ -97,8 +123,8 @@ namespace evecmd
                     warp.OnFrame();
                     if (warp.IsDone())
                     {
-                        done = true;
                         Result = warp.Result;
+                        done = true;
                     }
                 }
                 else
@@ -108,11 +134,27 @@ namespace evecmd
                 }
                 return true;
             }
-            else if (g.me.InStation && g.me.StationID > 0)
+            else if (waiting)
             {
-                Result = "Success";
-                done = true;
-                return false;
+                if (DateTime.Now - wait_start > TimeSpan.FromSeconds(5.0))
+                {
+                    Result = "Success";
+                    done = true;
+                    return false;
+                }
+            }
+            else
+            {
+
+                if (!g.me.InSpace &&
+                g.me.InStation &&
+                g.me.StationID > 0 &&
+                g.me.Ship.GetCargo() != null)
+                {
+                    waiting = true;
+                    wait_start = DateTime.Now;
+                    return true;
+                }
             }
          
             return true;
@@ -132,6 +174,7 @@ namespace evecmd
 
         public override bool OnFrame()
         {
+            base.OnFrame();
             bool in_space = false;
             bool in_station = false;
             int station_id = g.me.StationID;
@@ -156,8 +199,8 @@ namespace evecmd
             {
                 if (!in_station)
                 {
-                    done = true;
                     Result = "not docked";
+                    done = true;
                     return false;
                 }
 
@@ -208,28 +251,29 @@ namespace evecmd
 
         public override bool OnFrame()
         {
+            base.OnFrame();
             if (!started)
             {
                 // check if we're already in warp
                 if (g.me.ToEntity.Mode == 3)
                 {
-                    done = true;
                     Result = "already in warp";
+                    done = true;
                     return false;
                 }
 
                 List<Entity> entities = g.eve.GetEntities("ID", entity_id.ToString());
                 if (entities.Count == 0)
                 {
-                    done = true;
                     Result = "entity not found";
+                    done = true;
                     return false;
                 }
 
                 if (entities.Count > 1)
                 {
-                    done = true;
                     Result = "entity ambiguous";
+                    done = true;
                     return false;
                 }
 
