@@ -124,7 +124,7 @@ objectdef obj_EVEBot
 				if !${This.ReturnToStation} && ${Me(exists)}
 				{
 					if ( ${This.GameHour} == 10 && \
-						( ${This.GameMinute} >= 50 || ${This.GameMinute} <= 57) )
+						( ${This.GameMinute} >= 50 && ${This.GameMinute} <= 57) )
 					{
 						UI:UpdateConsole["EVE downtime approaching, pausing operations", LOG_CRITICAL]
 						This.ReturnToStation:Set[TRUE]
