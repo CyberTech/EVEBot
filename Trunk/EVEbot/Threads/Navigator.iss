@@ -14,21 +14,18 @@ objectdef obj_Navigator
 
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 1
-	variable int ApproachingEntityID = 0
-	variable string MovementType = "IDLE"
+	
 	variable int TargetEntityID = 0
 	variable int TargetDistance = 50
 	variable int LastVelocity = 0
 	variable int CurrentAcceleration = 0
 	variable string MovementState = "STOPPED"
 	variable string ActionState = "IDLE"
-	;variable obj_EntityCache NavigatorCache
-
 	method Initialize()
 	{
 		/* attach the pulse method to the onframe event */
 		Event[OnFrame]:AttachAtom[This:Pulse]
-		;UI:UpdateConsole["Thread: obj_Defense: Initialized", LOG_MINOR]
+		UI:UpdateConsole["Thread: obj_Defense: Initialized", LOG_MINOR]
 		/* set the entity cache update frequency */
 		;if ${NavigatorCache.PulseIntervalInSeconds} != 9999
 		;{
@@ -39,15 +36,15 @@ objectdef obj_Navigator
 
 	method Pulse()
 	{
-		/*if !${Script[EVEBot](exists)}
+		if !${Script[EVEBot](exists)}
 		{
-		Script:End
+			Script:End
 		}
-		*/
+		
 
 		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-			if ${This.Running}
+			if ${This.Running} && ${EVEBot.SessionValid} && ${Me.InSpace}
 			{
 				/*this is where we set state , ie check if we should be approaching something and check if we are moving towards it*/
 				This:SetState
@@ -207,12 +204,15 @@ variable(global) obj_Navigator Navigator
 /* main thread */
 function main()
 {
-	;EVEBot.Threads:Insert[${Script.Filename}]
-	while TRUE
+	EVEBot.Threads:Insert[${Script.Filename}]
+	while ${Script[EVEBot](exists)}
 	{
 		/* this is where we take action based on our current state */
-		call Navigator.ProcessState
+		if ${Navigator.Running} && ${EVEBot.SessionValid} && ${Me.InSpace}
+			{
+				call Navigator.ProcessState
+			}
 		wait 30
 	}
-	;echo "EVEBot exited, unloading ${Script.Filename}"
+	echo "EVEBot exited, unloading ${Script.Filename}"
 }
