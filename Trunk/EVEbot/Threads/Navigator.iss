@@ -1,8 +1,8 @@
 #include ..\core\defines.iss
 /*
-	Navigator thread
-	
-	This handles movement 
+Navigator thread
+
+This handles movement
 */
 
 objectdef obj_Navigator
@@ -14,15 +14,14 @@ objectdef obj_Navigator
 
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 1
-  variable int ApproachingEntityID = 0
-  variable string MovementType = "IDLE" 
-  variable int TargetEntityID = 0
-  variable int Distance = 50
-  variable int LastVelocity = 0
-  variable int CurrentAcceleration = 0
-  variable bool SlowingDown = FALSE
-  variable bool Stopped = FALSE
-
+	variable int ApproachingEntityID = 0
+	variable string MovementType = "IDLE"
+	variable int TargetEntityID = 0
+	variable int TargetDistance = 50
+	variable int LastVelocity = 0
+	variable int CurrentAcceleration = 0
+	variable string MovementState = "STOPPED"
+	variable string ActionState = "IDLE"
 	;variable obj_EntityCache NavigatorCache
 
 	method Initialize()
@@ -42,16 +41,16 @@ objectdef obj_Navigator
 	{
 		/*if !${Script[EVEBot](exists)}
 		{
-			Script:End
+		Script:End
 		}
 		*/
-	
+
 		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			if ${This.Running}
 			{
 				/*this is where we set state , ie check if we should be approaching something and check if we are moving towards it*/
-				This:SetState								
+				This:SetState
 				CurrentAcceleration:Set[${Math.Calc[(${Me.ToEntity.Velocity} - ${LastVelocity}) / ${PulseIntervalInSeconds}]}]
 				LastVelocity:Set[${Me.ToEntity.Velocity}]
 			}
@@ -60,74 +59,71 @@ objectdef obj_Navigator
 			This.NextPulse:Update
 		}
 	}
-	
+
 	method SetState()
 	{
-		; TODO -
-		;				Need to use keep at range instead of approach, with moving targets we could end up spamming approach as they move in and out of range
-		echo ${This.TargetEntityID} != 0 && !${This.MovementType.Equal["STOP"]}
+		/*
+		SET MOVEMENT STATE
+		*/
 		if ${Me.ToEntity.Mode} == 3
 		{
-			;cant do anything while we are in warp
-			MovementType:Set["WARPING"]
+			MovementState:Set["WARPING"]
 		}
-		elseif ${This.TargetEntityID} != 0 && ${Entity[${TargetEntityID}].Distance} < ${Distance}
-		{ 
-			;we are at the required distance of the target so we can stop moving
-			MovementType:Set["STOP"]				
-		}
-		elseif ${This.TargetEntityID} != 0 && !${This.MovementType.Equal["STOP"]}
+		elseif ${Me.ToEntity.Velocity} <= 4 && ${This.CurrentAcceleration} < 3 && ${This.CurrentAcceleration} > -1
 		{
-			;we are approaching the correct target and we have not been told to stop
-			MovementType:Set["APPROACHING_TARGET"]
+			MovementState:Set["STOPPED"]
 		}
-		elseif ${Me.ToEntity.Approaching(exists)} && !${This.MovementType.Equal["STOP"]} 
+		elseif ${Me.ToEntity.Approaching(exists)}
 		{
-			;we have not been told to approach anything but we are anyway
-			;for the moment we just leave it, when all modules are using navigator we should stop the ship though
-			MovementType:Set["APPROACHING"]
+			MovementState:Set["APPROACHING"]
 		}
-		elseif !${Me.ToEntity.Approaching(exists)} && ${Me.ToEntity.Velocity} > 4 && !${This.MovementType.Equal["STOP"]}
+		elseif !${Me.ToEntity.Approaching(exists)} && ${This.CurrentAcceleration} < 0
 		{
-			;we are not approaching anything but we are still moving this is most likely when we are aligning to warp
-			MovementType:Set["MOVING"]
+			MovementState:Set["STOPPING"]
 		}
-		elseif ${This.MovementType.Equal["STOP"]} && ${Me.ToEntity.Velocity} <= 3 && ${This.CurrentAcceleration} < 3
+		elseif !${Me.ToEntity.Approaching(exists)} && ${Me.ToEntity.Velocity} > 4
 		{
-			;TODO - we should be checking acceleration over the last second or so here as we could pass through 0 velocity
-			;				while being bounced off in a random direction
-			
-			;we have been asked to stop and we have now stopped , therefore we can goto idle state
-			This.TargetEntityID:Set[0]
-			MovementType:Set["IDLE"]
-		}		
+			MovementState:Set["MOVING"]
+		}
+		/*
+		SET ACTION STATE
+		*/
+		switch ${This.ActionState}
+		{
+			case APPROACH
+				if ${TargetEntityID} != 0
+				{
+					if !${Entity[${TargetEntityID}](exists)} || ${Entity[${TargetEntityID}].Distance} < ${This.TargetDistance}
+					{
+						;if we are close enough or if the entity no longer exists, stop the ship
+						TargetEntityID:Set[0]
+						This.ActionState:Set["STOP"]
+					}
+				}
+				else
+				{
+					;how did we get here, help i am not good with state machines
+					This.ActionState:Set["STOP"]
+				}
+				break
+			case STOP
+				if ${This.MovementState.Equal["STOPPED"]}
+				{
+					This.ActionState:Set["IDLE"]
+				}
+				elseif ${TargetEntityID} != 0
+				{
+					This.ActionState:Set["APPROACH"]
+				}
+				break
+			case IDLE
+				break
+		}
 	}
-	
+
 	method Stop()
 	{
-
-		if (${MovementType.Equal["WARPING"]})
-		{
-			;Can't stop when warping or not moving
-			UI:UpdateConsole["Can't stop because currently ${MovementType}."]
-			return
-		}
-		else
-		{
-			;Stop
-
-			;use an OR because we could be stuck on something still trying to approach(0 velocity)
-			if (${Me.ToEntity.Velocity} >=3) || ${Me.ToEntity.Approaching(exists)}
-			{
-				MovementType:Set["STOP"]
-				UI:UpdateConsole["Stopping"]
-			}
-			else
-			{
-				MovementType:Set["IDLE"]
-				UI:UpdateConsole["Idle"]
-			}	
-		}
+		This.ActionState:Set["STOP"]
 	}
 	;removed default entityID , this function should not ever work unless you give it an entityid
 	method Approach(int EntityID, int Distance=DOCKING_RANGE)
@@ -137,8 +133,8 @@ objectdef obj_Navigator
 		{
 			;Set EntityID
 			TargetEntityID:Set[${EntityID}]
-			Distance:Set[${Distance}]
-		
+			TargetDistance:Set[${Distance}]
+			This.ActionState:Set["APPROACH"]
 		}
 		else
 		{
@@ -148,50 +144,64 @@ objectdef obj_Navigator
 
 	function ProcessState()
 	{
-		switch ${This.MovementType}
+		switch ${This.ActionState}
 		{
 			case IDLE
 				;Be as lazy as the ship and do nothing
 				break
-			case APPROACHING_TARGET
-				;Approach to target
+			case APPROACH
 				if ${This.TargetEntityID} != 0 && ${Entity[${TargetEntityID}](exists)}
 				{
-					if ${Me.ToEntity.Approaching.ID} != ${TargetEntityID}
-					{				
+					switch ${This.MovementState}
+					{
+						case APPROACHING
+						if ${Me.ToEntity.Approaching.ID} != ${This.TargetEntityID}
+						{
+							if ${Entity[${TargetEntityID}].Distance} < 150000
+							{
+								Entity[${TargetEntityID}]:Approach[${This.TargetDistance}]
+							}
+							else
+							{
+								Entity[${TargetEntityID}]:WarpTo
+							}
+						}
+						case WARPING
+						break
+						default
 						if ${Entity[${TargetEntityID}].Distance} < 150000
-						{	
-							;Approach
-							Entity[${TargetEntityID}]:Approach[${Distance}]
-						}					
+						{
+							Entity[${TargetEntityID}]:Approach[${This.TargetDistance}]
+						}
 						else
 						{
-							;this will get spammed currently, figure out a way of telling we have have asked to warp or not
-							Entity[${TargetEntityID}]:WarpTo					
+							Entity[${TargetEntityID}]:WarpTo
 						}
-					}					
+						break
+					}
 				}
-				else
-				{
-					TargetEntityID:Set[0]
-				}
-				break
-			case APPROACHING
-				;something else is making us approach, do nothing
-				break
-			case WARPING
-				;Currently warping, do nothing until stopped
 				break
 			case STOP
-				;Stop
-				if ${Me.ToEntity.Velocity} > 3 && ${This.CurrentAcceleration} >= 0 
+				switch ${This.MovementState}
 				{
+					case MOVING
 					Me:SetVelocity[0]
+					break
+					case APPROACHING
+					Me:SetVelocity[0]
+					break
+					case WARPING
+					break
+					case STOPPING
+					break
+					case STOPPED
+					break
 				}
 				break
 		}
 	}
 }
+
 
 variable(global) obj_Navigator Navigator
 /* main thread */
