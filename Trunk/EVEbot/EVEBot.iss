@@ -175,7 +175,7 @@ function main()
 	runscript Threads/Targeting.iss
 	runscript Threads/Defense.iss
 	runscript Threads/Offense.iss
-
+	runscript Threads/Navigator.iss
 	echo "${Time} EVEBot: Loaded"
 
 	; This is a TimedCommand so that it executes in global scope, so we can get the list of global vars.
