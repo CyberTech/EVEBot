@@ -9,6 +9,61 @@ using EVE.ISXEVE;
 
 namespace evecmd
 {
+    public class CompleteQuestState : State
+    {
+        int agent_id;
+        bool opened_conversation = false;
+        string convo_name;
+
+        public CompleteQuestState(int agent_id)
+        {
+            this.agent_id = agent_id;
+            Agent agent = new Agent("ByID", agent_id);
+            convo_name = String.Format("Agent Conversation - {0}", agent.Name);
+        }
+
+        public override bool OnFrame()
+        {
+            Agent agent;
+            if (!opened_conversation)
+            {
+                agent = new Agent("ByID", agent_id);
+                agent.StartConversation();
+                opened_conversation = true;
+                return true;
+            }
+
+            // now wait until we're sure the dialog is open
+            EVEWindow window = EVEWindow.GetWindowByCaption(convo_name);
+            if (window == null || !window.IsValid)
+                return true;
+
+            agent = new Agent("ByID", agent_id);
+            List<DialogString> responses = agent.GetDialogResponses();
+            if (responses == null)
+                return true;
+            
+            // find the one that reads "[Button]Complete Mission" - should be the first
+            DialogString ds = null;
+            foreach (DialogString dialogstring in responses)
+                if (dialogstring.Text == "[Button]Complete Mission")
+                {
+                    ds = dialogstring;
+                    break;
+                }
+
+            if (ds != null)
+            {
+                ds.Say(agent_id);
+                Result = "Quest Completed";
+                done = true;
+                return false;
+            }
+
+            return true;
+        }
+    }
+
     public class MissionState : State
     {
         int agent_id = -1;
@@ -77,7 +132,7 @@ namespace evecmd
             }
 
             // so, for now, we only know how to do courier missions
-            if (mission.Type == "Courier")
+            if (mission.Type.EndsWith("Courier"))
             {
                 substate = new CourierMission(agent_id);
                 substate.OnFrame();
@@ -128,6 +183,14 @@ namespace evecmd
                 if (substate.OnFrame())
                     return true;
             }
+
+            if (substate is CompleteQuestState)
+            {
+                Result = substate.Result;
+                done = true;
+                return false;
+            }
+
             // first, make sure we have the mission page
             if (page == null)
             {
@@ -183,17 +246,7 @@ namespace evecmd
                 // the dropoff bookmark ID is the same as the station ID (if its a station, all we support atm)
                 if (g.me.InStation && g.me.StationID == dropoff.ID)
                 {
-                    List<Item> items = g.me.Ship.GetCargo();
-                    foreach (Item item in items)
-                        if (item.TypeID == page.CargoID)
-                            item.MoveToHangar();
-                    items_delivered = true;
-
-                    // return to the agent
-                    Agent agent = new Agent("ByID", agent_id);
-
-                    substate = new TravelToStationState(agent.StationID, agent.Solarsystem.ID);
-                    substate.OnFrame();
+                    substate = new CompleteQuestState(agent_id);
                     return true;
                 }
                 else
@@ -214,7 +267,15 @@ namespace evecmd
                     foreach (Item hanger in hanger_items)
                         if (hanger.TypeID == page.CargoID)
                             hanger.MoveToMyShip();
-                    return true;
+
+                    if (ItemsInCargoBay())
+                        return OnFrame();
+                    else
+                    {
+                        Result = "Didn't find all the things we needed";
+                        done = true;
+                        return false;
+                    }
                 }
                 else
                 {

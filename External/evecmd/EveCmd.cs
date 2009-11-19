@@ -241,6 +241,14 @@ namespace evecmd
                     g.Print("Division: [{0}] {1}", agent.DivisionID, agent.Division);
                     g.Print("StandingTo: {0}", agent.StandingTo);
                     g.Print("SolarSystemID: {0}", agent.Solarsystem.ID);
+                    List<DialogString> responses = agent.GetDialogResponses();
+                    int i = 0;
+                    g.Print("{0} Dialog Responses:", responses.Count);
+                    foreach (DialogString response in responses)
+                    {
+                        g.Print("    Response #{0}: {1}", i, response.Text);
+                        i++;
+                    }
                 }
                 else
                 {
