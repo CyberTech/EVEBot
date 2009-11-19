@@ -206,6 +206,7 @@ objectdef obj_LoginHandler
 				}
 				*/
 				if ${EVEWindow[ByCaption,Connection in Progress](exists)} || \
+					${EVEWindow[ByCaption,CONNECTION IN PROGRESS](exists)} || \
 					${EVEWindow[ByCaption,Connection Not Allowed](exists)} || \
 					${EVEWindow[ByCaption,CONNECTION FAILED](exists)}
 				{
