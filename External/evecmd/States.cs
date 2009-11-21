@@ -16,7 +16,7 @@ namespace evecmd
         private bool on_frame_run = false;
         public virtual bool OnFrame()
         {
-            if (!on_frame_run)
+            if (!on_frame_run && !done)
             {
                 on_frame_run = true;
                 g.Print("Entering State:{0}", this);
@@ -30,7 +30,9 @@ namespace evecmd
             get { return done_; }
             set
             {
-                if (value && !done_)
+                // if the constructor set done = true we don't want to 
+                // spew
+                if (value && !done_ && on_frame_run)
                     g.Print("Finished State:{0}:{1}", this, Result);
                 done_ = value;
             }
@@ -57,13 +59,32 @@ namespace evecmd
 
         public DockState(string command)
         {
-            // atm we only support "dock <entityID>"
-            try
+            List<string> args = new List<string>(command.Split(' '));
+            // "dock bm <Bookmark name>"
+            if (args.Count == 3 && args[1] == "bm")
             {
-                entity_id = Int32.Parse(command.Substring(5));
+                BookMark bm = g.eve.Bookmark(args[2]);
+
+                if (bm != null && bm.ToEntity != null && bm.ToEntity.ID > 0)
+                    entity_id = bm.ToEntity.ID;
+                else
+                {
+                    Result = "Bookmark not found";
+                    done = true;
+                }
             }
-            catch
+            else
             {
+                // support for "dock <entityID>"
+                try
+                {
+                    entity_id = Int32.Parse(command.Substring(5));
+                }
+                catch
+                {
+                    Result = "Failed to parse command";
+                    done = true;
+                }
             }
         }
 
@@ -80,6 +101,9 @@ namespace evecmd
         public override bool OnFrame()
         {
             base.OnFrame();
+
+            if (done)
+                return false;
 
             if (warp != null)
             {
@@ -217,101 +241,6 @@ namespace evecmd
          
             // keep waiting
             return true;
-        }
-    }
-
-    public class WarpState : State
-    {
-        int entity_id = -1;
-        bool started = false;
-        bool warp_start_detected = false;
-
-        // state started from a command from the user
-        public WarpState(string command)
-        {
-            // atm we only support "warp <entityID>"
-            try
-            {
-                entity_id = Int32.Parse(command.Substring(5));
-            }
-            catch
-            {
-            }
-        }
-
-        public WarpState(int entity_id)
-        {
-            this.entity_id = entity_id;
-        }
-
-        public override string ToString()
-        {
-            return "WarpState to entity id " + entity_id.ToString();
-        }
-
-        public override bool OnFrame()
-        {
-            base.OnFrame();
-            if (!started)
-            {
-                // check if we're already in warp
-                if (g.me.ToEntity.Mode == 3)
-                {
-                    Result = "already in warp";
-                    done = true;
-                    return false;
-                }
-
-                List<Entity> entities = g.eve.GetEntities("ID", entity_id.ToString());
-                if (entities.Count == 0)
-                {
-                    Result = "entity not found";
-                    done = true;
-                    return false;
-                }
-
-                if (entities.Count > 1)
-                {
-                    Result = "entity ambiguous";
-                    done = true;
-                    return false;
-                }
-
-                Entity entity = entities[0];
-
-                if (entity.Distance < 150000.0)
-                {
-                    Result = "entity too close";
-                    done = true;
-                    return false;
-                }
-
-                entity.WarpTo();
-                started = true;
-                return true;
-            }
-            else if (!warp_start_detected)
-            {
-                // check if we've entered warp
-                if (g.me.ToEntity.Mode == 3)
-                {
-                    warp_start_detected = true;
-                }
-
-                // TODO: have some way to bail if we don't start warp in enough time
-                return true;
-            }
-            else
-            {
-                // we did enter warp - if we drop out of warp, then we're done
-                if (g.me.ToEntity.Mode != 3)
-                {
-                    Result = "Success";
-                    done = true;
-                    return false;
-                }
-                return true;
-            }
         }
     }
 }

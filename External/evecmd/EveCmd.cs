@@ -255,19 +255,44 @@ namespace evecmd
                     g.Print("Agent not found");
                 }
             }
+            else if (command == "printcargo")
+            {
+                List<Item> items = g.me.Ship.GetCargo();
+            
+                g.Print("Found {0} Items:", items.Count);
+                int i = 0;
+                foreach (Item item in items)
+                {
+                    g.Print("#{0} {1}", i, item.Name);
+                    g.Print("    Category: [{0}] {1} ({2})", item.CategoryID, item.Category, item.CategoryType.ToString());
+                    g.Print("    Description: {0}", item.Description);
+                    g.Print("    Group: [{0}] {1}", item.GroupID, item.Group);
+                    i++;
+                }
+            }
             else if (command.StartsWith("warp "))
             {
                 State state = new WarpState(command);
                 TryToEnterState(state);
             }
-            else if (command.StartsWith("dock "))
+            else if (command.Split(' ')[0] == "dock")
             {
                 State state = new DockState(command);
                 TryToEnterState(state);
             }
-            else if (command.StartsWith("domission "))
+            else if (command.Split(' ')[0] == "goto")
+            {
+                State state = new GotoState(command);
+                TryToEnterState(state);
+            }
+            else if (command.Split(' ')[0] == "domission")
             {
                 State state = new MissionState(command);
+                TryToEnterState(state);
+            }
+            else if (command == "unloadore")
+            {
+                State state = new UnloadOreState();
                 TryToEnterState(state);
             }
             else if (command.StartsWith("travel "))

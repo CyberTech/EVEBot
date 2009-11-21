@@ -9,6 +9,111 @@ using EVE.ISXEVE;
 
 namespace evecmd
 {
+    class GotoState : State
+    {
+        State substate = null;
+        string bm_label;
+
+        public GotoState(string command)
+        {
+            List<string> args = new List<string>(command.Split(' '));
+
+            // "goto bm <Bookmark name>"
+            if (args.Count == 3 && args[1] == "bm")
+            {
+                BookMark bm = g.eve.Bookmark(args[2]);
+
+                if (bm != null && bm.IsValid)
+                    bm_label = bm.Label;
+                else
+                {
+                    Result = "Bookmark not found";
+                    done = true;
+                }
+            }
+            else
+            {
+                Result = "Invalid arguments";
+                done = true;
+            }
+        }
+
+        public override bool OnFrame()
+        {
+            if (base.OnFrame())
+                return true;
+
+            if (substate != null)
+            {
+                if (substate.OnFrame())
+                    return true;
+            }
+
+            BookMark bm = g.eve.Bookmark(bm_label);
+
+            if (bm == null || !bm.IsValid)
+            {
+                Result = "Bookmark no longer available";
+                done = true;
+            }
+
+            // check if we're in a station
+            if (g.me.InStation)
+            {
+                // maybe we're at our destination already
+                if (bm.ToEntity != null && g.me.StationID == bm.ToEntity.ID)
+                {
+                    Result = "We're already docked at the place we're trying to go";
+                    done = true;
+                    return false;
+                }
+                else
+                {
+                    substate = new UndockState();
+                    substate.OnFrame();
+                    return true;
+                }
+            }
+            else
+            {
+                // if we're in the right solar system, then warp to or approach the bookmark
+                if (g.me.SolarSystemID == bm.SolarSystemID)
+                {
+                    double distance;
+                    if (bm.ToEntity != null && bm.ToEntity.IsValid)
+                        distance = bm.ToEntity.Distance;
+                    else
+                        distance = Util.Distance(bm.X, bm.Y, bm.Z, g.me.ToEntity.X, g.me.ToEntity.Y, g.me.ToEntity.Z);
+
+                    // if we're too far away, warp
+                    if (distance > 150000.0)
+                    {
+                        substate = new WarpState(bm);
+                        substate.OnFrame();
+                        return true;
+                    }
+                    else if (distance > 10000.0)
+                    {
+                        substate = new ApproachState(bm);
+                        substate.OnFrame();
+                        return true;
+                    }
+                    else
+                    {
+                        // we've made it!
+                        Result = "Success";
+                        done = true;
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+    }
+
+    // TODO: make this use the GotoState
     class TravelToStationState : State
     {
         State substate = null;
@@ -30,7 +135,9 @@ namespace evecmd
 
         public override bool OnFrame()
         {
-            base.OnFrame();
+            if (base.OnFrame())
+                return true;
+
             if (substate != null)
             {
                 if (substate.OnFrame())
@@ -166,6 +273,215 @@ namespace evecmd
             }
 
             return true;
+        }
+    }
+
+    public class ApproachState : State
+    {
+        bool started = false;
+        int entity_id = -1;
+        bool use_bookmark = false;
+        string bm_label;
+
+        public ApproachState(int entity_id)
+        {
+            this.entity_id = entity_id;
+        }
+
+        public ApproachState(BookMark bm)
+        {
+            use_bookmark = true;
+            bm_label = bm.Label;
+        }
+
+        public override bool OnFrame()
+        {
+            if (base.OnFrame())
+                return true;
+
+            if (!started)
+            {
+                if (use_bookmark)
+                {
+                    BookMark bm = g.eve.Bookmark(bm_label);
+                    if (bm == null || !bm.IsValid)
+                    {
+                        Result = "Bookmark not found";
+                        done = true;
+                        return false;
+                    }
+
+                    // TODO: FIXME
+                    Result = "We don't know how to approach a bookmark!";
+                    done = true;
+                    return false;
+                }
+                else
+                {
+                    List<Entity> entities = g.eve.GetEntities("ID", entity_id.ToString());
+                    if (entities.Count == 0)
+                    {
+                        Result = "entity not found";
+                        done = true;
+                        return false;
+                    }
+
+                    if (entities.Count > 1)
+                    {
+                        Result = "entity ambiguous";
+                        done = true;
+                        return false;
+                    }
+
+                    Entity entity = entities[0];
+
+                    entity.Approach();
+                }
+                started = true;
+                return true;
+            }
+            else
+            {
+                // we did enter warp - if we drop out of warp, then we're done
+                if (g.me.ToEntity.Mode != 3)
+                {
+                    Result = "Success";
+                    done = true;
+                    return false;
+                }
+                return true;
+            }
+        }
+    }
+
+    public class WarpState : State
+    {
+        int entity_id = -1;
+        bool started = false;
+        bool warp_start_detected = false;
+        bool use_bookmark = false;
+        string bm_label;
+
+        // state started from a command from the user
+        public WarpState(string command)
+        {
+            // atm we only support "warp <entityID>"
+            try
+            {
+                entity_id = Int32.Parse(command.Substring(5));
+            }
+            catch
+            {
+            }
+        }
+
+        public WarpState(int entity_id)
+        {
+            this.entity_id = entity_id;
+        }
+
+        public WarpState(BookMark bookmark)
+        {
+            use_bookmark = true;
+            bm_label = bookmark.Label;
+        }
+
+        public override string ToString()
+        {
+            if (use_bookmark)
+                return "WarpState to bookmark " + bm_label;
+            return "WarpState to entity id " + entity_id.ToString();
+        }
+
+        public override bool OnFrame()
+        {
+            if (base.OnFrame())
+                return true;
+
+            if (!started)
+            {
+                // check if we're already in warp
+                if (g.me.ToEntity.Mode == 3)
+                {
+                    Result = "already in warp";
+                    done = true;
+                    return false;
+                }
+
+                if (use_bookmark)
+                {
+                    BookMark bm = g.eve.Bookmark(bm_label);
+                    if (bm == null || !bm.IsValid)
+                    {
+                        Result = "Bookmark not found";
+                        done = true;
+                        return false;
+                    }
+
+                    double distance = Util.Distance(bm.X, bm.Y, bm.Z, g.me.ToEntity.X, g.me.ToEntity.Y, g.me.ToEntity.Z);
+
+                    if (distance < 150000.0)
+                    {
+                        Result = "entity too close";
+                        done = true;
+                        return false;
+                    }
+
+                    bm.WarpTo();
+                }
+                else
+                {
+                    List<Entity> entities = g.eve.GetEntities("ID", entity_id.ToString());
+                    if (entities.Count == 0)
+                    {
+                        Result = "entity not found";
+                        done = true;
+                        return false;
+                    }
+
+                    if (entities.Count > 1)
+                    {
+                        Result = "entity ambiguous";
+                        done = true;
+                        return false;
+                    }
+
+                    Entity entity = entities[0];
+
+                    if (entity.Distance < 150000.0)
+                    {
+                        Result = "entity too close";
+                        done = true;
+                        return false;
+                    }
+
+                    entity.WarpTo();
+                }
+                started = true;
+                return true;
+            }
+            else if (!warp_start_detected)
+            {
+                // check if we've entered warp
+                if (g.me.ToEntity.Mode == 3)
+                {
+                    warp_start_detected = true;
+                }
+
+                // TODO: have some way to bail if we don't start warp in enough time
+                return true;
+            }
+            else
+            {
+                // we did enter warp - if we drop out of warp, then we're done
+                if (g.me.ToEntity.Mode != 3)
+                {
+                    Result = "Success";
+                    done = true;
+                    return false;
+                }
+                return true;
+            }
         }
     }
 }

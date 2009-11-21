@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="EveCmd.cs" />
     <Compile Include="Globals.cs" />
+    <Compile Include="MiningStates.cs" />
     <Compile Include="MissionPage.cs" />
     <Compile Include="MissionStates.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

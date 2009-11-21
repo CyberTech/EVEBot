@@ -40,5 +40,10 @@ namespace evecmd
 
             return null;
         }
+
+        public static double Distance(double fromX, double fromY, double fromZ, double toX, double toY, double toZ)
+        {
+            return Math.Sqrt(Math.Pow(fromX - toX, 2.0) + Math.Pow(fromY - toY, 2.0) + Math.Pow(fromZ - toZ, 2.0));
+        }
     }
 }
