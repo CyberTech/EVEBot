@@ -11,45 +11,62 @@ namespace evecmd
 {
     abstract public class State
     {
-        // true means the frame has been 'handled', and we 
-        // shouldn't continue down the state list.
-        private bool on_frame_run = false;
-        public virtual bool OnFrame()
+        protected bool on_frame_run = false;
+
+        // OnFrame
+        // this of OnFrame like an event handler - if its handled the frame event, it returns true
+        // returning false indicates that anyone else waiting to handle the frame should also be given a chance
+
+        // states that want to introduce a state-level mechanism should override this (use SimpleState for normal states)
+        public abstract bool OnFrame();
+
+        // subcalsses that do something specific need to override this
+        public abstract bool OnFrameImpl();
+
+        bool done = false;
+
+        public void SetDone(string result)
         {
-            if (!on_frame_run && !done)
-            {
-                on_frame_run = true;
-                g.Print("Entering State:{0}", this);
-            }
-            return false;
+            Result = result;
+            done = true;
+            if (on_frame_run)
+                g.Print("Finished State:{0}:{1}", this, Result);
         }
 
-        private bool done_ = false;
-        protected bool done
+        public bool IsDone
         {
-            get { return done_; }
-            set
+            get
             {
-                // if the constructor set done = true we don't want to 
-                // spew
-                if (value && !done_ && on_frame_run)
-                    g.Print("Finished State:{0}:{1}", this, Result);
-                done_ = value;
+                return done;
             }
-        }
-        // call this after OnFrame - if its true, abandon the state
-        public virtual bool IsDone()
-        {
-            return done;
         }
 
         // describes what happened so you can show it
         // TODO: maybe change this to some result enum or something
-        public string Result { get; protected set; }
+        public string Result { get; private set; }
+    }
+
+    abstract public class SimpleState : State
+    {
+        public override bool OnFrame()
+        {
+            // finished states can't run
+            if (IsDone)
+                return false;
+
+            // if this is our first time, we're 'entering' the state
+            if (!on_frame_run && !IsDone)
+            {
+                on_frame_run = true;
+                g.Print("Entering State:{0}", this);
+            }
+
+            return OnFrameImpl();
+        }
     }
 
     // will dock at and optionally warp to a station in the current system
-    public class DockState : State
+    public class DockState : SimpleState
     {
         bool started = false;
         bool waiting = false;
@@ -68,10 +85,7 @@ namespace evecmd
                 if (bm != null && bm.ToEntity != null && bm.ToEntity.ID > 0)
                     entity_id = bm.ToEntity.ID;
                 else
-                {
-                    Result = "Bookmark not found";
-                    done = true;
-                }
+                    SetDone("Bookmark not found");
             }
             else
             {
@@ -82,8 +96,7 @@ namespace evecmd
                 }
                 catch
                 {
-                    Result = "Failed to parse command";
-                    done = true;
+                    SetDone("Failed to parse command");
                 }
             }
         }
@@ -98,17 +111,15 @@ namespace evecmd
             return "DockState to entity id " + entity_id.ToString();
         }
 
-        public override bool OnFrame()
+        public override bool OnFrameImpl()
         {
-            base.OnFrame();
-
-            if (done)
+            if (IsDone)
                 return false;
 
             if (warp != null)
             {
                 warp.OnFrame();
-                if (warp.IsDone())
+                if (warp.IsDone)
                     warp = null;
                 else
                     return true;
@@ -119,23 +130,20 @@ namespace evecmd
                 // check if we're already in warp
                 if (g.me.ToEntity.Mode == 3)
                 {
-                    Result = "can't dock in warp";
-                    done = true;
+                    SetDone("can't dock in warp");
                     return false;
                 }
 
                 List<Entity> entities = g.eve.GetEntities("ID", entity_id.ToString());
                 if (entities.Count == 0)
                 {
-                    Result = "entity not found";
-                    done = true;
+                    SetDone("entity not found");
                     return false;
                 }
 
                 if (entities.Count > 1)
                 {
-                    Result = "entity ambiguous";
-                    done = true;
+                    SetDone("entity ambiguous");
                     return false;
                 }
 
@@ -145,11 +153,8 @@ namespace evecmd
                 {
                     warp = new WarpState(entity_id);
                     warp.OnFrame();
-                    if (warp.IsDone())
-                    {
-                        Result = warp.Result;
-                        done = true;
-                    }
+                    if (warp.IsDone)
+                        SetDone(warp.Result);
                 }
                 else
                 {
@@ -162,8 +167,7 @@ namespace evecmd
             {
                 if (DateTime.Now - wait_start > TimeSpan.FromSeconds(5.0))
                 {
-                    Result = "Success";
-                    done = true;
+                    SetDone("Success");
                     return false;
                 }
             }
@@ -185,7 +189,7 @@ namespace evecmd
         }
     }
 
-    public class UndockState : State
+    public class UndockState : SimpleState
     {
         bool started = false;
         // TODO: remove this excpetion crap if and when it stops happening
@@ -196,9 +200,8 @@ namespace evecmd
             return "UndockState";
         }
 
-        public override bool OnFrame()
+        public override bool OnFrameImpl()
         {
-            base.OnFrame();
             bool in_space = false;
             bool in_station = false;
             int station_id = g.me.StationID;
@@ -223,8 +226,7 @@ namespace evecmd
             {
                 if (!in_station)
                 {
-                    Result = "not docked";
-                    done = true;
+                    SetDone("not docked");
                     return false;
                 }
 
@@ -234,8 +236,7 @@ namespace evecmd
             }
             else if (!exception && in_space && !in_station && station_id <= 0)
             {
-                Result = "Success";
-                done = true;
+                SetDone("Success");
                 return false;
             }
          

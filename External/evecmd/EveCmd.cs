@@ -102,7 +102,7 @@ namespace evecmd
                 for (; i >= 0; i--)
                 {
                     State state = states[i];
-                    if (state.IsDone())
+                    if (state.IsDone)
                         states.RemoveAt(i);
                 }
             }
@@ -110,7 +110,9 @@ namespace evecmd
 
         void RunCommand(string command)
         {
-            if (command == "update")
+            if (command == "clear")
+                states.Clear();
+            else if (command == "update")
                 LavishScript.ExecuteCommand("execute evecmd_update woot");
             else if (command == "undock")
             {
@@ -290,6 +292,11 @@ namespace evecmd
                 State state = new MissionState(command);
                 TryToEnterState(state);
             }
+            else if (command.Split(' ')[0] == "dodropoff")
+            {
+                State state = new DoDropoffState(command);
+                TryToEnterState(state);
+            }
             else if (command == "unloadore")
             {
                 State state = new UnloadOreState();
@@ -305,7 +312,7 @@ namespace evecmd
         public void TryToEnterState(State state)
         {
             state.OnFrame();
-            if (!state.IsDone())
+            if (!state.IsDone)
             {
                 states.Insert(0, state);
             }

@@ -9,7 +9,7 @@ using EVE.ISXEVE;
 
 namespace evecmd
 {
-    class GotoState : State
+    class GotoState : SimpleState
     {
         State substate = null;
         string bm_label;
@@ -26,23 +26,14 @@ namespace evecmd
                 if (bm != null && bm.IsValid)
                     bm_label = bm.Label;
                 else
-                {
-                    Result = "Bookmark not found";
-                    done = true;
-                }
+                    SetDone("Bookmark not found");
             }
             else
-            {
-                Result = "Invalid arguments";
-                done = true;
-            }
+                SetDone("Invalid arguments");
         }
 
-        public override bool OnFrame()
+        public override bool OnFrameImpl()
         {
-            if (base.OnFrame())
-                return true;
-
             if (substate != null)
             {
                 if (substate.OnFrame())
@@ -52,10 +43,7 @@ namespace evecmd
             BookMark bm = g.eve.Bookmark(bm_label);
 
             if (bm == null || !bm.IsValid)
-            {
-                Result = "Bookmark no longer available";
-                done = true;
-            }
+                SetDone("Bookmark no longer available");
 
             // check if we're in a station
             if (g.me.InStation)
@@ -63,8 +51,7 @@ namespace evecmd
                 // maybe we're at our destination already
                 if (bm.ToEntity != null && g.me.StationID == bm.ToEntity.ID)
                 {
-                    Result = "We're already docked at the place we're trying to go";
-                    done = true;
+                    SetDone("We're already docked at the place we're trying to go");
                     return false;
                 }
                 else
@@ -101,8 +88,7 @@ namespace evecmd
                     else
                     {
                         // we've made it!
-                        Result = "Success";
-                        done = true;
+                        SetDone("Success");
                         return false;
                     }
                 }
@@ -114,7 +100,7 @@ namespace evecmd
     }
 
     // TODO: make this use the GotoState
-    class TravelToStationState : State
+    class TravelToStationState : SimpleState
     {
         State substate = null;
         int station_id;
@@ -133,11 +119,8 @@ namespace evecmd
             this.solarsystem_id = solarsystem_id;
         }
 
-        public override bool OnFrame()
+        public override bool OnFrameImpl()
         {
-            if (base.OnFrame())
-                return true;
-
             if (substate != null)
             {
                 if (substate.OnFrame())
@@ -147,8 +130,7 @@ namespace evecmd
             // check if we're done
             if (g.me.InStation && g.me.StationID == station_id)
             {
-                Result = "Reached destination";
-                done = true;
+                SetDone("Reached destination");
                 return false;
             }
             // check if we're in the right solar system and just need to dock
@@ -195,7 +177,7 @@ namespace evecmd
         }
     }
 
-    public class JumpState : State
+    public class JumpState : SimpleState
     {
         WarpState warp_state = null;
         int entity_id, solarsystem_id;
@@ -208,13 +190,12 @@ namespace evecmd
             this.solarsystem_id = solarsystem_id;
         }
 
-        public override bool OnFrame()
+        public override bool OnFrameImpl()
         {
-            base.OnFrame();
             if (warp_state != null)
             {
                 warp_state.OnFrame();
-                if (warp_state.IsDone())
+                if (warp_state.IsDone)
                     warp_state = null;
                 else
                     return true;
@@ -229,23 +210,20 @@ namespace evecmd
 
             if (g.me.InSpace && g.me.SolarSystemID == solarsystem_id)
             {
-                Result = "Success";
-                done = true;
+                SetDone("Success");
                 return false;
             }
 
             entities = g.eve.GetEntities("ID", entity_id.ToString());
             if (entities.Count == 0)
             {
-                Result = "stargate not found";
-                done = true;
+                SetDone("stargate not found");
                 return false;
             }
 
             if (entities.Count > 1)
             {
-                Result = "stargate id ambiguous";
-                done = true;
+                SetDone("stargate id ambiguous");
                 return false;
             }
 
@@ -276,7 +254,7 @@ namespace evecmd
         }
     }
 
-    public class ApproachState : State
+    public class ApproachState : SimpleState
     {
         bool started = false;
         int entity_id = -1;
@@ -294,11 +272,8 @@ namespace evecmd
             bm_label = bm.Label;
         }
 
-        public override bool OnFrame()
+        public override bool OnFrameImpl()
         {
-            if (base.OnFrame())
-                return true;
-
             if (!started)
             {
                 if (use_bookmark)
@@ -306,14 +281,12 @@ namespace evecmd
                     BookMark bm = g.eve.Bookmark(bm_label);
                     if (bm == null || !bm.IsValid)
                     {
-                        Result = "Bookmark not found";
-                        done = true;
+                        SetDone("Bookmark not found");
                         return false;
                     }
 
                     // TODO: FIXME
-                    Result = "We don't know how to approach a bookmark!";
-                    done = true;
+                    SetDone("We don't know how to approach a bookmark!");
                     return false;
                 }
                 else
@@ -321,15 +294,13 @@ namespace evecmd
                     List<Entity> entities = g.eve.GetEntities("ID", entity_id.ToString());
                     if (entities.Count == 0)
                     {
-                        Result = "entity not found";
-                        done = true;
+                        SetDone("entity not found");
                         return false;
                     }
 
                     if (entities.Count > 1)
                     {
-                        Result = "entity ambiguous";
-                        done = true;
+                        SetDone("entity ambiguous");
                         return false;
                     }
 
@@ -345,8 +316,7 @@ namespace evecmd
                 // we did enter warp - if we drop out of warp, then we're done
                 if (g.me.ToEntity.Mode != 3)
                 {
-                    Result = "Success";
-                    done = true;
+                    SetDone("Success");
                     return false;
                 }
                 return true;
@@ -354,7 +324,7 @@ namespace evecmd
         }
     }
 
-    public class WarpState : State
+    public class WarpState : SimpleState
     {
         int entity_id = -1;
         bool started = false;
@@ -393,18 +363,14 @@ namespace evecmd
             return "WarpState to entity id " + entity_id.ToString();
         }
 
-        public override bool OnFrame()
+        public override bool OnFrameImpl()
         {
-            if (base.OnFrame())
-                return true;
-
             if (!started)
             {
                 // check if we're already in warp
                 if (g.me.ToEntity.Mode == 3)
                 {
-                    Result = "already in warp";
-                    done = true;
+                    SetDone("already in warp");
                     return false;
                 }
 
@@ -413,8 +379,7 @@ namespace evecmd
                     BookMark bm = g.eve.Bookmark(bm_label);
                     if (bm == null || !bm.IsValid)
                     {
-                        Result = "Bookmark not found";
-                        done = true;
+                        SetDone("Bookmark not found");
                         return false;
                     }
 
@@ -422,8 +387,7 @@ namespace evecmd
 
                     if (distance < 150000.0)
                     {
-                        Result = "entity too close";
-                        done = true;
+                        SetDone("entity too close");
                         return false;
                     }
 
@@ -434,15 +398,13 @@ namespace evecmd
                     List<Entity> entities = g.eve.GetEntities("ID", entity_id.ToString());
                     if (entities.Count == 0)
                     {
-                        Result = "entity not found";
-                        done = true;
+                        SetDone("entity not found");
                         return false;
                     }
 
                     if (entities.Count > 1)
                     {
-                        Result = "entity ambiguous";
-                        done = true;
+                        SetDone("entity ambiguous");
                         return false;
                     }
 
@@ -450,8 +412,7 @@ namespace evecmd
 
                     if (entity.Distance < 150000.0)
                     {
-                        Result = "entity too close";
-                        done = true;
+                        SetDone("entity too close");
                         return false;
                     }
 
@@ -476,8 +437,7 @@ namespace evecmd
                 // we did enter warp - if we drop out of warp, then we're done
                 if (g.me.ToEntity.Mode != 3)
                 {
-                    Result = "Success";
-                    done = true;
+                    SetDone("Success");
                     return false;
                 }
                 return true;

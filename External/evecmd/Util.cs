@@ -45,5 +45,15 @@ namespace evecmd
         {
             return Math.Sqrt(Math.Pow(fromX - toX, 2.0) + Math.Pow(fromY - toY, 2.0) + Math.Pow(fromZ - toZ, 2.0));
         }
+
+        public static bool DoWeHaveOre()
+        {
+            List<Item> items = g.me.Ship.GetCargo();
+            foreach (Item item in items)
+                if (item.CategoryType == CategoryType.Asteroid)
+                    return true;
+
+            return false;
+        }
     }
 }

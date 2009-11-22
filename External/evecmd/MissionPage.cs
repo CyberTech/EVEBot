@@ -56,7 +56,7 @@ namespace evecmd
     }
 
     // this state tries to get the mission page of the given mission
-    class MissionPageState : State
+    class MissionPageState : SimpleState
     {
         int agent_id;
         string name;
@@ -71,15 +71,14 @@ namespace evecmd
             Page = null;
         }
 
-        public override bool OnFrame()
+        public override bool OnFrameImpl()
         {
-            base.OnFrame();
             // check if we can see the window
             EVEWindow window = EVEWindow.GetWindowByCaption(name);
             if (window != null && window.IsValid && window.HTML.Length > 0)
             {
                 Page = new MissionPage(window.HTML);
-                done = true;
+                SetDone("Success");
                 return false;
             }
 
@@ -91,11 +90,6 @@ namespace evecmd
                 tried_opening = true;
             }
             return true;
-        }
-
-        public override bool IsDone()
-        {
-            return done;
         }
     }
 }

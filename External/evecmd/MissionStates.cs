@@ -9,7 +9,7 @@ using EVE.ISXEVE;
 
 namespace evecmd
 {
-    public class CompleteQuestState : State
+    public class CompleteQuestState : SimpleState
     {
         int agent_id;
         bool opened_conversation = false;
@@ -22,7 +22,7 @@ namespace evecmd
             convo_name = String.Format("Agent Conversation - {0}", agent.Name);
         }
 
-        public override bool OnFrame()
+        public override bool OnFrameImpl()
         {
             Agent agent;
             if (!opened_conversation)
@@ -55,8 +55,7 @@ namespace evecmd
             if (ds != null)
             {
                 ds.Say(agent_id);
-                Result = "Quest Completed";
-                done = true;
+                SetDone("Quest Completed");
                 return false;
             }
 
@@ -64,7 +63,7 @@ namespace evecmd
         }
     }
 
-    public class MissionState : State
+    public class MissionState : SimpleState
     {
         int agent_id = -1;
         State substate = null;
@@ -91,18 +90,16 @@ namespace evecmd
             return "MissionState to agent id " + agent_id.ToString();
         }
 
-        public override bool OnFrame()
+        public override bool OnFrameImpl()
         {
-            base.OnFrame();
             // first defer to any substate we've assigned
             if (substate != null)
             {
                 substate.OnFrame();
-                if (substate.IsDone())
+                if (substate.IsDone)
                 {
                     // since we just hand off to another state, just return its result
-                    Result = substate.Result;
-                    done = true;
+                    SetDone(substate.Result);
                     return false;
                 }
                 else
@@ -119,15 +116,13 @@ namespace evecmd
 
             if (mission == null)
             {
-                Result = "don't have mission from this agent";
-                done = true;
+                SetDone("don't have mission from this agent");
                 return false;
             }
 
             if (mission.State != 2)
             {
-                Result = "mission isn't accepted - we need an accept mission atm";
-                done = true;
+                SetDone("mission isn't accepted - we need an accept mission atm");
                 return false;
             }
 
@@ -136,10 +131,9 @@ namespace evecmd
             {
                 substate = new CourierMission(agent_id);
                 substate.OnFrame();
-                if (substate.IsDone())
+                if (substate.IsDone)
                 {
-                    Result = substate.Result;
-                    done = true;
+                    SetDone(substate.Result);
                     return false;
                 }
                 else
@@ -147,14 +141,13 @@ namespace evecmd
             }
             else
             {
-                Result = "We only support CourierMissions atm";
-                done = true;
+                SetDone("We only support CourierMissions atm");
                 return false;
             }
         }
     }
 
-    public class CourierMission : State
+    public class CourierMission : SimpleState
     {
         State substate = null;
         MissionPageState page_state = null;
@@ -175,9 +168,8 @@ namespace evecmd
             return "CourierMission with mission " + name;
         }
 
-        public override bool OnFrame()
+        public override bool OnFrameImpl()
         {
-            base.OnFrame();
             if (substate != null)
             {
                 if (substate.OnFrame())
@@ -186,8 +178,7 @@ namespace evecmd
 
             if (substate is CompleteQuestState)
             {
-                Result = substate.Result;
-                done = true;
+                SetDone(substate.Result);
                 return false;
             }
 
@@ -199,7 +190,7 @@ namespace evecmd
                     page_state = new MissionPageState(agent_id);
                     page_state.OnFrame();
 
-                    if (page_state.IsDone())
+                    if (page_state.IsDone)
                         page = page_state.Page;
                     else
                     {
@@ -214,8 +205,7 @@ namespace evecmd
                 }
                 else
                 {
-                    Result = "We failed to get the mission page - aborting";
-                    done = true;
+                    SetDone("We failed to get the mission page - aborting");
                     return false;
                 }
             }
@@ -228,8 +218,7 @@ namespace evecmd
                 Agent agent = new Agent("ByID", agent_id);
                 if (g.me.InStation && g.me.StationID == agent.StationID)
                 {
-                    Result = "Finished Courier mission - please turn in";
-                    done = true;
+                    SetDone("Finished Courier mission - please turn in");
                     return false;
                 }
                 else
@@ -272,8 +261,7 @@ namespace evecmd
                         return OnFrame();
                     else
                     {
-                        Result = "Didn't find all the things we needed";
-                        done = true;
+                        SetDone("Didn't find all the things we needed");
                         return false;
                     }
                 }
