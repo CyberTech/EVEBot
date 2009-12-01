@@ -18,16 +18,16 @@ objectdef obj_Callback
 			return
 		}
 
-	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			if ${EVEBot.SessionValid}
-			{				
-				uplink UpdateClient "${Me.Name}" "${_MyShip.ShieldPct}" "${_MyShip.ArmorPct}" "${_MyShip.CapacitorPct}" "${Defense.Hide}" "${Defense.HideReason}" "${Me.ActiveTarget.Name}" "${EVEBot.Paused}" "${Config.Common.BotMode}"  "${MyShip}" "${Session}" 
+			{
+				uplink UpdateClient "${Me.Name}" "${_MyShip.ShieldPct}" "${_MyShip.ArmorPct}" "${_MyShip.CapacitorPct}" "${Defense.Hide}" "${Defense.HideReason}" "${Me.ActiveTarget.Name}" "${EVEBot.Paused}" "${Config.Common.BotMode}"  "${MyShip}" "${Session}"
 			}
 
-    		This.NextPulse:Set[${Time.Timestamp}]
-    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-    		This.NextPulse:Update
+			This.NextPulse:Set[${Time.Timestamp}]
+			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+			This.NextPulse:Update
 		}
 	}
 

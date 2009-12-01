@@ -292,6 +292,7 @@ objectdef obj_Ship
 		for ( idx:Set[0]; ${idx} <= 7; idx:Inc )
 		{
 			CurrentTurret:Inc
+			UI:UpdateConsole["obj_Ship:BuildLookupTables[]: HiSlot${idx}: ${MyShip.Module[HiSlot${idx}].ToItem.Name} ${MyShip.Module[HiSlot${idx}].ToItem.GroupID}"]
 			switch ${MyShip.Module[HiSlot${idx}].ToItem.GroupID}
 			{
 				case GROUP_PROJECTILEWEAPON
@@ -499,6 +500,7 @@ objectdef obj_Ship
 	member:float TurretBaseOptimal(int turret)
 	{
 		variable string slot = ${This.TurretSlots.Element[${turret}]}
+		UI:UpdateConsole["obj_Ship.GetTurretBaseOptimal[${turret}]: Slot ${slot}, Module ${MyShip.Module[${slot}].ToItem.Name}, GroupID ${MyShip.Module[${slot}].ToItem.GroupID}"]
 		variable float BaseOptimal = 0
 
 		switch ${MyShip.Module[${slot}].ToItem.GroupID}
@@ -543,6 +545,7 @@ objectdef obj_Ship
 		}
 
 		variable string slot = ${This.TurretSlots[${turret}]}
+		UI:UpdateConsole["obj_Ship.GetTurretBaseOptimal[${turret}]: Slot ${slot}"]
 		variable index:item AmmoIndex
 		variable iterator AmmoIterator
 
@@ -1715,7 +1718,7 @@ objectdef obj_Ship
 		variable iterator FleetMember
 
 		FleetMembers:Clear
-		Me.Fleet:GetMembers[FleetMembers]}
+		Me.Fleet:GetMembers[FleetMembers]
 		FleetMembers:GetIterator[FleetMember]
 
 		if ${FleetMember:First(exists)}
