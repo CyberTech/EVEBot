@@ -162,7 +162,7 @@ objectdef obj_LoginHandler
 				}
 			case SERVERDOWN
 				UI:UpdateConsole["DEBUG: Server Status: ${Login.ServerStatus}", LOG_DEBUG]
-				if ${Login.ServerStatus.Equal[LIVE]} || ${Login.ServerStatus.Equal[EVE-EVE-RELEASE]}
+				if ${Login.ServerStatus.Equal["OK"]}
 				{
 					This.CurrentState:Set["SERVERUP"]
 				}
