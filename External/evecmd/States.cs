@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright 2009 Francis Crick fcrick@gmail.com
+// License: http://creativecommons.org/licenses/by-nc-sa/3.0/us/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

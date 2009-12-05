@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright 2009 Francis Crick fcrick@gmail.com
+// License: http://creativecommons.org/licenses/by-nc-sa/3.0/us/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -54,6 +57,36 @@ namespace evecmd
                     return true;
 
             return false;
+        }
+
+        public class Ship
+        {
+            public static double GetOptimalMiningRange()
+            {
+                // just returns the range of the first one it finds
+                for (int i = 0; i < 8; i++)
+                {
+                    Module module = g.me.Ship.Module(SlotType.HiSlot, i);
+                    if (module != null && module.IsValid && module.MiningAmount.HasValue)
+                        return module.OptimalRange.Value;
+                }
+
+                return 0.0;
+            }
+
+            public static int GetMiningLaserCount()
+            {
+                int count = 0;
+
+                for (int i = 0; i < 8; i++)
+                {
+                    Module module = g.me.Ship.Module(SlotType.HiSlot, i);
+                    if (module != null && module.IsValid && module.MiningAmount.HasValue)
+                        count++;
+                }
+                
+                return count;
+            }
         }
     }
 }

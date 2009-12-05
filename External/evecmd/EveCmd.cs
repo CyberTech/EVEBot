@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright 2009 Francis Crick fcrick@gmail.com
+// License: http://creativecommons.org/licenses/by-nc-sa/3.0/us/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -58,8 +61,14 @@ namespace evecmd
             return 0;
         }
 
+        DateTime dont_run_until;
         void OnFrame(object sender, LSEventArgs e)
         {
+            if (dont_run_until > DateTime.Now)
+                return;
+
+            dont_run_until = DateTime.Now + new TimeSpan(5000000);
+
             using (new FrameLock(true))
             {
                 Initialize();
@@ -272,6 +281,25 @@ namespace evecmd
                     i++;
                 }
             }
+            else if (command == "printroids")
+            {
+                List<Entity> roids = g.eve.GetEntities("CategoryID", "25");
+                g.Print("Found {0} Asteroids:", roids.Count);
+                int i = 0;
+                foreach (Entity roid in roids)
+                {
+                    if (i >= 10)
+                        break;
+                    g.Print("#{0} {1}", i, roid.Name);
+                    g.Print("    Distance: {0}", roid.Distance);
+                    g.Print("    Type: [{0}] {1}", roid.TypeID, roid.Type);
+                    g.Print("    Category: [{0}] {1} ({2})", roid.CategoryID, roid.Category, roid.CategoryType);
+                    g.Print("    Location: {0},{1},{2}", roid.X, roid.Y, roid.Z);
+                    g.Print("    IsActiveTarget: {0} IsLockedTarget: {1}", roid.IsActiveTarget ? "Yes" : "No", roid.IsLockedTarget ? "Yes" : "No");
+                    i++;
+                }
+
+            }
             else if (command.StartsWith("warp "))
             {
                 State state = new WarpState(command);
@@ -297,6 +325,11 @@ namespace evecmd
                 State state = new DoDropoffState(command);
                 TryToEnterState(state);
             }
+            else if (command.Split(' ')[0] == "mineloop")
+            {
+                State state = new MineLoopState(command);
+                TryToEnterState(state);
+            }
             else if (command == "unloadore")
             {
                 State state = new UnloadOreState();
@@ -306,6 +339,10 @@ namespace evecmd
             {
                 State state = new TravelToStationState(command);
                 TryToEnterState(state);
+            }
+            else if (command == "runlasers")
+            {
+                TryToEnterState(new RunMiningLasersState());
             }
         }
 
