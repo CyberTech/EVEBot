@@ -22,17 +22,17 @@ function main()
 		echo "- DoGetPilots took ${Math.Calc[${Script.RunningTime}-${RTime}]} ms."
 		variable iterator PilotIterator
 		PilotIndex:GetIterator[PilotIterator]
-	
-	
-			
+
+
+
 		if ${PilotIterator:First(exists)}
 		{
 			do
 			{
-				echo PilotIterator.Value.Name ${PilotIterator.Value.Name}
-				echo PilotIterator.Value.CharID ${PilotIterator.Value.CharID}
-				echo PilotIterator.Value.ToEntity(exists) ${PilotIterator.Value.ToEntity(exists)}
-				echo PilotIterator.Value.ToEntity.IsPC ${PilotIterator.Value.ToEntity.IsPC}
+				echo ${System.TickCount}: PilotIterator.Value.Name ${PilotIterator.Value.Name}
+				echo ${System.TickCount}: PilotIterator.Value.CharID ${PilotIterator.Value.CharID}
+				echo ${System.TickCount}: PilotIterator.Value.ToEntity(exists) ${PilotIterator.Value.ToEntity(exists)}
+				echo ${System.TickCount}: PilotIterator.Value.ToEntity.IsPC ${PilotIterator.Value.ToEntity.IsPC}
 				echo PilotIterator.Value.ToEntity.Distance ${PilotIterator.Value.ToEntity.Distance}
 				echo PilotIterator.Value.ToFleetMember ${PilotIterator.Value.ToFleetMember}
 			}

@@ -22,7 +22,16 @@ function main()
 			do
 			{
 				echo EntityIterator.Value.Name ${EntityIterator.Value.Name}
-			}
+				echo EntityIterator.Value.ID ${EntityIterator.Value.ID}
+				echo EntityIterator.Value.ShieldPct ${EntityIterator.Value.ShieldPct}
+				echo EntityIterator.Value.ArmorPct ${EntityIterator.Value.ArmorPct}
+				echo EntityIterator.Value.IsLockedTarget ${EntityIterator.Value.IsLockedTarget}
+				echo EntityIterator.Value.IsActiveTarget ${EntityIterator.Value.IsActiveTarget}
+				echo EntityIterator.Value.BeingTargeted ${EntityIterator.Value.BeingTargeted}
+				echo EntityIterator.Value.BeingTargeted ${EntityIterator.Value.BeingTargeted}
+				echo EntityIterator.Value.IsTargetingMe ${EntityIterator.Value.IsTargetingMe}
+
+}
 			while ${EntityIterator:Next(exists)}
 		}
 }
