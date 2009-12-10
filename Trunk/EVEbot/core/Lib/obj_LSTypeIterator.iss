@@ -7,6 +7,16 @@
 
 		-- CyberTech, cybertech@gmail.com
 
+		Some background for those doing testing:
+
+		Given 'Me' - 'Me' is a Top Level Object, of datatype 'character'.  To test 'Me',
+		you must pass the 'character' datatype to LSTypeIterator object, then pass
+		an instance of the character datatype to the IterateMembers method.  In this case,
+		the only instance of the 'character' datatype is "Me"
+
+		In some other cases, this is not the case, for example, if you want the 'ability' datatype,
+		it can be accessed via the instance 'Me.Ability[xxx,#]", or 'Me.Ability[id,1571882540]'
+
 		An example is below:
 
 		Example:
@@ -183,6 +193,11 @@ objectdef obj_LSTypeIterator
 			{
 				temp:Set[${temp.Replace[\r, ""]}]
 				temp:Set[${temp.Replace[\n, ""]}]
+				if ${temp.Equal["No type '${This.TypeName}' found. Type names are case sensitive."]}
+				{
+					echo "Invalid datatype passed to ${This.ObjectName}.Initialize"
+					return
+				}
 				if ${temp.Equal["Members of type ${This.TypeName}"]}
 				{
 					temp:Set[${This.TypeList.Read}]
@@ -277,12 +292,10 @@ objectdef obj_LSTypeIterator
 				{
 					temp:Concat[" "]
 				}
-
-				echo "  ${temp} == ${Result}"
-			}
-			else
-			{
-				noop ${${ObjectName}.${Member.Key}}
+				if !${OutputNullOnly} || ${Result.Equal["NULL"]}
+				{
+					echo "  ${temp} == ${Result}"
+				}
 			}
 		}
 		while ${Member:Next(exists)}
