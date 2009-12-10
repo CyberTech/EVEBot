@@ -106,6 +106,9 @@ objectdef obj_LSTypeIterator
 	variable int MaxMemberLen
 	variable int MaxMethodLen
 
+	/*
+		Initialize with the type being tested.  ie, for most isxGames extensions to test "Me", the type would be "character"
+	*/
 	method Initialize(string typename)
 	{
 		TypeMembers:Clear
@@ -238,13 +241,19 @@ objectdef obj_LSTypeIterator
 		This.TypeList:Delete
 	}
 
-	; Given a script or global variable name, dump the value of each member of that variable
-	; Pass output = false to avoid the cost of the echo to console call, for timing purposes.
-	method IterateMembers(string ObjectName, bool Output = TRUE)
+	/*
+		Given a script or global variable name, dump the value of each member of that variable
+		Pass output = false to avoid the cost of the echo to console call, for timing purposes.
+
+		ObjectName should be a script or globally defined object name, of type TypeName
+
+	*/
+	method IterateMembers(string ObjectName, bool Output = TRUE, bool OutputNullOnly = FALSE)
 	{
 		variable iterator Member
 		variable string temp
 		variable int PadLength
+		declarevariable Result string
 
 		PadLength:Set[${This.MaxMemberLen}]
 		PadLength:Inc[${ObjectName.Length}]
@@ -260,6 +269,7 @@ objectdef obj_LSTypeIterator
 		if ${Member:First(exists)}
 		do
 		{
+			Result:Set[${${ObjectName}.${Member.Key}}]
 			if ${Output}
 			{
 				temp:Set["${ObjectName}.${Member.Key}"]
@@ -268,7 +278,7 @@ objectdef obj_LSTypeIterator
 					temp:Concat[" "]
 				}
 
-				echo "  ${temp} == ${${ObjectName}.${Member.Key}}"
+				echo "  ${temp} == ${Result}"
 			}
 			else
 			{
