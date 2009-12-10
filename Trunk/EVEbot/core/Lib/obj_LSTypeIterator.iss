@@ -108,6 +108,11 @@ objectdef obj_LSTypeIterator
 
 	method Initialize(string typename)
 	{
+		TypeMembers:Clear
+		TypeMethods:Clear
+		MaxMemberLen:Set[0]
+		MaxMethodLen:Set[0]
+
 		This.TypeName:Set[${typename}]
 		TypeList:SetFilename["${Script.CurrentDirectory}/lstypes.${Script.Filename}.txt"]
 	}
@@ -234,7 +239,8 @@ objectdef obj_LSTypeIterator
 	}
 
 	; Given a script or global variable name, dump the value of each member of that variable
-	method IterateMembers(string ObjectName)
+	; Pass output = false to avoid the cost of the echo to console call, for timing purposes.
+	method IterateMembers(string ObjectName, bool Output = TRUE)
 	{
 		variable iterator Member
 		variable string temp
@@ -246,16 +252,28 @@ objectdef obj_LSTypeIterator
 
 		This.TypeMembers:GetIterator[Member]
 
-		echo "Members of datatype \"${This.TypeName}\", instance \"${ObjectName}\""
+		if ${Output}
+		{
+			echo "Members of datatype \"${This.TypeName}\", instance \"${ObjectName}\""
+		}
+
 		if ${Member:First(exists)}
 		do
 		{
-			temp:Set["${ObjectName}.${Member.Key}"]
-			while ${temp.Length} < ${PadLength}
+			if ${Output}
 			{
-				temp:Concat[" "]
+				temp:Set["${ObjectName}.${Member.Key}"]
+				while ${temp.Length} < ${PadLength}
+				{
+					temp:Concat[" "]
+				}
+
+				echo "  ${temp} == ${${ObjectName}.${Member.Key}}"
 			}
-			echo "  ${temp} == ${${ObjectName}.${Member.Key}}"
+			else
+			{
+				noop ${${ObjectName}.${Member.Key}}
+			}
 		}
 		while ${Member:Next(exists)}
 	}
