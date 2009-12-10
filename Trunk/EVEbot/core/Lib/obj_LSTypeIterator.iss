@@ -72,6 +72,10 @@
 
 objectdef obj_LSTypeIterator
 {
+	variable string SVN_REVISION = "$Rev$"
+	variable string SVN_PATH = "$HeadURL$"
+	variable string SVN_AUTHOR = "$Author$"
+
 	variable file TypeList = "${Script.CurrentDirectory}/lstypes.${Script.Filename}.txt"
 	variable string TypeName
 	variable set TypeMembers
