@@ -23,7 +23,7 @@ function main()
 	EVE:DoGetEntities[Entities]
 	variable float CallTime
 	CallTime:Set[${Math.Calc[(${Script.RunningTime}-${StartTime}) / 1000]}]
-	echo "EVE:DoGetBuddies returned ${Entities.Used} entities in ${CallTime} seconds"
+	echo "EVE:DoGetEntities returned ${Entities.Used} entities in ${CallTime} seconds"
 
 	Entities:GetIterator[EntityIterator]
 	if ${EntityIterator:First(exists)}
@@ -35,6 +35,6 @@ function main()
 	}
 	while ${EntityIterator:Next(exists)}
 
-	echo "EVE:DoGetBuddies returned ${Entities.Used} entities in ${CallTime} seconds"
+	echo "EVE:DoGetEntities returned ${Entities.Used} entities in ${CallTime} seconds"
 	echo "Testing of datatype ${ItemTest.TypeName} completed in ${Math.Calc[(${Script.RunningTime}-${StartTime}) / 1000]} seconds"
 }
