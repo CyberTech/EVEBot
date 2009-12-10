@@ -62,8 +62,8 @@ function main()
 	{
 		echo " ${Time} EVEBot: Waiting for cache to initialize - ${_Me.Name} != ${Me.Name}"
 		wait 10
-		obj_Cache_Me:Initialize
-		obj_Cache_EVETime:Initialize
+		_Me:Initialize
+		_EVETime:Initialize
 	}
 
 	echo "${Time} EVEBot: Loading Objects..."
