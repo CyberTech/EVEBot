@@ -230,6 +230,7 @@ objectdef obj_LSTypeIterator
 		while ${This.TypeList.EOF(exists)} && !${This.TypeList.EOF}
 
 		This.TypeList:Close
+		This.TypeList:Delete
 	}
 
 	; Given a script or global variable name, dump the value of each member of that variable
