@@ -30,7 +30,7 @@ function main()
 	do
 	{
 		StartTime2:Set[${Script.RunningTime}]
-		ItemTest:IterateMembers["EntityIterator.Value"]
+		ItemTest:IterateMembers["EntityIterator.Value", TRUE, FALSE]
 		echo "Single entity dump completed  ${Math.Calc[(${Script.RunningTime}-${StartTime2}) / 1000]} seconds"
 	}
 	while ${EntityIterator:Next(exists)}
