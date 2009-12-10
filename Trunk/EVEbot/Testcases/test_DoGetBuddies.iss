@@ -26,7 +26,9 @@ function main()
 	ItemTest:ParseMembers
 
 	EVE:DoGetBuddies[Beings]
-	echo "EVE:DoGetBuddies returned ${Beings.Used} buddies in ${Math.Calc[(${Script.RunningTime}-${StartTime}) / 1000]} seconds"
+	variable float CallTime
+	CallTime:Set[${Math.Calc[(${Script.RunningTime}-${StartTime}) / 1000]}]
+	echo "EVE:DoGetBuddies returned ${Beings.Used} buddies in ${CallTime} seconds"
 
 	Beings:GetIterator[Buddy]
 	if ${Buddy:First(exists)}
@@ -36,5 +38,6 @@ function main()
 	}
 	while ${Buddy:Next(exists)}
 
+	echo "EVE:DoGetBuddies returned ${Beings.Used} buddies in ${CallTime} seconds"
 	echo "Testing of datatype ${ItemTest.TypeName} completed in ${Math.Calc[(${Script.RunningTime}-${StartTime}) / 1000]} seconds"
 }
