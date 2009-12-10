@@ -109,7 +109,7 @@ objectdef obj_LSTypeIterator
 	method Initialize(string typename)
 	{
 		This.TypeName:Set[${typename}]
-		TypeList:SetFilename["${Script.CurrentDirectory}/lstypes.${Script.Filename}.txt"
+		TypeList:SetFilename["${Script.CurrentDirectory}/lstypes.${Script.Filename}.txt"]
 	}
 
 	method Shutdown()
