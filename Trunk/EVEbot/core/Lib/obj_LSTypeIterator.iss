@@ -73,33 +73,6 @@
 			  Me.GetActiveDroneIDs      == NULL
 			  Me.GetActiveDrones        == NULL
 			  Me.GetAssets              == 0
-			  Me.GetAttackers           == 0
-			  Me.GetCorpHangarItems     == NULL
-			  Me.GetHangarItems         == 13
-			  Me.GetHangarShips         == 5
-			  Me.GetJammers             == NULL
-			  Me.GetMyOrders            == NULL
-			  Me.GetSkillQueue          == 1
-			  Me.GetSkills              == NULL
-			  Me.GetStationsWithAssets  == 0
-			  Me.GetTargetedBy          == NULL
-			  Me.GetTargeting           == NULL
-			  Me.GetTargets             == NULL
-			  Me.InSpace                == FALSE
-			  Me.InStation              == TRUE
-			  Me.Intelligence           == 30.800000
-			  Me.MaxActiveDrones        == 5.000000
-			  Me.MaxJumpClones          == 4.000000
-			  Me.MaxLockedTargets       == 6.000000
-			  Me.Memory                 == 23.100000
-			  Me.MiningDroneAmountBonus == 100.000000
-			  Me.Perception             == 22.000000
-			  Me.RegionID               == 10000033
-			  Me.Skill                  == NULL
-			  Me.SkillCurrentlyTraining == NULL
-			  Me.SkillPoints            == NULL
-			  Me.StandingTo             == NULL
-			  Me.Willpower              == 20.900000
 			Testing of datatype character completed in 0.156000 seconds
 */
 
@@ -109,12 +82,19 @@ objectdef obj_LSTypeIterator
 	variable string SVN_PATH = "$HeadURL$"
 	variable string SVN_AUTHOR = "$Author$"
 
-	variable file TypeList = "${Script.CurrentDirectory}/lstypes.${Script.Filename}.txt"
+	variable file TypeListTempFile = "${Script.CurrentDirectory}/lstypes.${Script.Filename}.txt"
 	variable string TypeName
 	variable set TypeMembers
 	variable set TypeMethods
 	variable int MaxMemberLen
 	variable int MaxMethodLen
+
+	/*
+		The following sets allow you to exclude certain members from testing; for example if they're known to cause a crash.
+		Use them with Instance.ExcludedMembers:Add["Membername"]
+	*/
+	variable set ExcludedMembers
+	variable set ExcludedMethod
 
 	/*
 		Initialize with the type being tested.  ie, for most isxGames extensions to test "Me", the type would be "character"
@@ -127,12 +107,12 @@ objectdef obj_LSTypeIterator
 		MaxMethodLen:Set[0]
 
 		This.TypeName:Set[${typename}]
-		TypeList:SetFilename["${Script.CurrentDirectory}/lstypes.${Script.Filename}.txt"]
+		TypeListTempFile:SetFilename["${Script.CurrentDirectory}/lstypes.${Script.Filename}.txt"]
 	}
 
 	method Shutdown()
 	{
-		This.TypeList:Delete
+		This.TypeListTempFile:Delete
 	}
 
 	; Dump the list of members to a single line for review or loggging
@@ -179,16 +159,16 @@ objectdef obj_LSTypeIterator
 		echo "========================================================"
 		echo "Parsing datatype ${This.TypeName} members and methods..."
 		redirect "lstypes.${Script.Filename}.txt" "lstype ${This.TypeName}"
-		This.TypeList:Open
-		if !${This.TypeList.Open}
+		This.TypeListTempFile:Open
+		if !${This.TypeListTempFile.Open}
 		{
-			echo "Unable to open file ${This.TypeList.Filename}"
+			echo "Unable to open file ${This.TypeListTempFile.Filename}"
 			return
 		}
 		do
 		{
 			declarevariable Position int 0
-			temp:Set[${This.TypeList.Read}]
+			temp:Set[${This.TypeListTempFile.Read}]
 			if ${temp(exists)} && !${temp.Equal[NULL]}
 			{
 				temp:Set[${temp.Replace[\r, ""]}]
@@ -200,8 +180,8 @@ objectdef obj_LSTypeIterator
 				}
 				if ${temp.Equal["Members of type ${This.TypeName}"]}
 				{
-					temp:Set[${This.TypeList.Read}]
-					temp:Set[${This.TypeList.Read}]
+					temp:Set[${This.TypeListTempFile.Read}]
+					temp:Set[${This.TypeListTempFile.Read}]
 					temp:Set[${temp.Replace[\r, ""]}]
 					temp:Set[${temp.Replace[\n, ""]}]
 					while ${temp.NotEqual["Methods of type ${This.TypeName}"]}
@@ -219,17 +199,17 @@ objectdef obj_LSTypeIterator
 							}
 							Position:Inc
 						}
-						temp:Set[${This.TypeList.Read}]
+						temp:Set[${This.TypeListTempFile.Read}]
 						temp:Set[${temp.Replace[\r, ""]}]
 						temp:Set[${temp.Replace[\n, ""]}]
 					}
 				}
 				if ${temp.Equal["Methods of type ${This.TypeName}"]}
 				{
-					temp:Set[${This.TypeList.Read}]
+					temp:Set[${This.TypeListTempFile.Read}]
 					do
 					{
-						temp:Set[${This.TypeList.Read}]
+						temp:Set[${This.TypeListTempFile.Read}]
 						temp:Set[${temp.Replace[\r, ""]}]
 						temp:Set[${temp.Replace[\n, ""]}]
 						Position:Set[1]
@@ -246,14 +226,14 @@ objectdef obj_LSTypeIterator
 							Position:Inc
 						}
 					}
-					while ${This.TypeList.EOF(exists)} && !${This.TypeList.EOF}
+					while ${This.TypeListTempFile.EOF(exists)} && !${This.TypeListTempFile.EOF}
 				}
 			}
 		}
-		while ${This.TypeList.EOF(exists)} && !${This.TypeList.EOF}
+		while ${This.TypeListTempFile.EOF(exists)} && !${This.TypeListTempFile.EOF}
 
-		This.TypeList:Close
-		This.TypeList:Delete
+		This.TypeListTempFile:Close
+		This.TypeListTempFile:Delete
 	}
 
 	/*
@@ -276,6 +256,12 @@ objectdef obj_LSTypeIterator
 		if ${Member:First(exists)}
 		do
 		{
+			if ${This.ExcludedMembers.Contains["${Member.Key}"]}
+			{
+				; Comment out the echo in the output file
+				redirect -append ${testfile} echo "  ;echo ${Member.Key} == \\$\\{${ObjectName}.${Member.Key}\\}"
+				continue
+			}
 			redirect -append ${testfile} echo "  echo ${Member.Key} == \\$\\{${ObjectName}.${Member.Key}\\}"
 			redirect -append ${testfile} echo "  wait 20"
 		}
@@ -316,6 +302,11 @@ objectdef obj_LSTypeIterator
 		if ${Member:First(exists)}
 		do
 		{
+			if ${This.ExcludedMembers.Contains["${Member.Key}"]}
+			{
+				echo "Excluded member: ${Member.Key}"
+				continue
+			}
 			Result:Set[${${ObjectName}.${Member.Key}}]
 			if ${Output}
 			{
