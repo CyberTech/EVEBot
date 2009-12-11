@@ -257,10 +257,11 @@ objectdef obj_LSTypeIterator
 	}
 
 	/*
-		Given a script or global variable name, dump the value of each member of that variable
-		Pass output = false to avoid the cost of the echo to console call, for timing purposes.
-
-		ObjectName should be a script or globally defined object name, of type TypeName
+		In some cases, a member may be causing crashes. By calling this _instead_
+		of IterateMembers, you can write a script to disk which contains each member
+		echo'd with 2 second delay between each member.  You can then watch the screen
+		for which member crashes, or (hopefully) see the crashing member in the lavishsoft
+		crash report.
 
 	*/
 	method WriteTestScript(string ObjectName)
@@ -270,18 +271,30 @@ objectdef obj_LSTypeIterator
 		declarevariable testfile string "lstypes.${Script.Filename}.iss"
 
 		redirect ${testfile} echo "; Manual test script for ${ObjectName} members"
+		redirect -append ${testfile} echo "function main()"
+		redirect -append ${testfile} echo "\{"
 		if ${Member:First(exists)}
 		do
 		{
-			redirect -append ${testfile} echo "echo ${Member.Key} == \\$\\{${ObjectName}.${Member.Key}\\}"
-			redirect -append ${testfile} echo "wait 20"
+			redirect -append ${testfile} echo "  echo ${Member.Key} == \\$\\{${ObjectName}.${Member.Key}\\}"
+			redirect -append ${testfile} echo "  wait 20"
 		}
 		while ${Member:Next(exists)}
+		redirect -append ${testfile} echo "\}"
+
 		echo "---"
 		echo "Created manual test script: ${Script.CurrentDirectory}/${testfile}""
 		echo "---"
 
 	}
+
+	/*
+		Given a script or global variable name, dump the value of each member of that variable
+		Pass output = false to avoid the cost of the echo to console call, for timing purposes.
+
+		ObjectName should be a script or globally defined object name, of type TypeName
+
+	*/
 	method IterateMembers(string ObjectName, bool Output = TRUE, bool OutputNullOnly = FALSE)
 	{
 		variable iterator Member
