@@ -263,6 +263,25 @@ objectdef obj_LSTypeIterator
 		ObjectName should be a script or globally defined object name, of type TypeName
 
 	*/
+	method WriteTestScript(string ObjectName)
+	{
+		variable iterator Member
+		This.TypeMembers:GetIterator[Member]
+		declarevariable testfile string "lstypes.${Script.Filename}.iss"
+
+		redirect ${testfile} echo "; Manual test script for ${ObjectName} members"
+		if ${Member:First(exists)}
+		do
+		{
+			redirect -append ${testfile} echo "echo ${Member.Key} == \\$\\{${ObjectName}.${Member.Key}\\}"
+			redirect -append ${testfile} echo "wait 20"
+		}
+		while ${Member:Next(exists)}
+		echo "---"
+		echo "Created manual test script: ${Script.CurrentDirectory}/${testfile}""
+		echo "---"
+
+	}
 	method IterateMembers(string ObjectName, bool Output = TRUE, bool OutputNullOnly = FALSE)
 	{
 		variable iterator Member
