@@ -30,8 +30,8 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 #define LOG_CRITICAL 3
 #define LOG_DEBUG 4
 
-#define EVENT_ONFRAME OnFrame
-;#define EVENT_ONFRAME ISXEVE_onFrame
+;#define EVENT_ONFRAME OnFrame
+#define EVENT_ONFRAME ISXEVE_onFrame
 
 #define WAIT_CARGO_WINDOW 15
 #define WAIT_UNDOCK 130
