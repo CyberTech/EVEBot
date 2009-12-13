@@ -26,8 +26,8 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 ;#define USE_ISXIRC 1
 #define USE_ISXIRC 0
 
-#define EVENT_ONFRAME OnFrame
-;#define EVENT_ONFRAME ISXEVE_onFrame
+;#define EVENT_ONFRAME OnFrame
+#define EVENT_ONFRAME ISXEVE_onFrame
 
 
 #define LOG_MINOR 1
