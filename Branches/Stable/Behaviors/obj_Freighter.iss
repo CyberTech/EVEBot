@@ -86,7 +86,7 @@ objectdef obj_Freighter
 
 	method Shutdown()
 	{
-		Event[OnFrame]:DetachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}
 
 	/* SetupEvents will attach atoms to all of the events used by the bot */
@@ -95,7 +95,7 @@ objectdef obj_Freighter
 		This[parent]:SetupEvents[]
 
 		/* override any events setup by the base class */
-		Event[OnFrame]:AttachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 	}
 
 	/* this function is called repeatedly by the main loop in EveBot.iss */

@@ -1,6 +1,6 @@
  #ifndef __OBJ_COMBAT__
  #define __OBJ_COMBAT__
- 
+
 /*
 		The combat object
 
@@ -125,7 +125,7 @@ objectdef obj_Combat
 	  		This.CurrentState:Set["INSTATION"]
 	  		return
 		}
-		
+
 		if ${EVEBot.ReturnToStation}
 		{
 			This.CurrentState:Set["FLEE"]
@@ -170,19 +170,22 @@ objectdef obj_Combat
 			}
 			elseif !${Social.IsSafe}
 			{
+				This.CurrentState:Set["FLEE"]
 				call This.Flee
 				This.Override:Set[TRUE]
+				return
 			}
-			
-			if (!${Ship.IsAmmoAvailable} &&  ${Config.Combat.RunOnLowAmmo})
+			elseif (!${Ship.IsAmmoAvailable} &&  ${Config.Combat.RunOnLowAmmo})
 			{
 				; TODO - what to do about being warp scrambled in this case?
+				This.CurrentState:Set["FLEE"]
 				call This.Flee
 				This.Override:Set[TRUE]
+				return
 			}
 			call This.ManageTank
 		}
-		
+
 		switch ${This.CurrentState}
 		{
 			case INSTATION
@@ -288,7 +291,7 @@ objectdef obj_Combat
 			UI:UpdateConsole["Armor is at ${_Me.Ship.ArmorPct.Int}%: ${Me.Ship.Armor.Int}/${Me.Ship.MaxArmor.Int}", LOG_CRITICAL]
 			UI:UpdateConsole["Shield is at ${_Me.Ship.ShieldPct.Int}%: ${Me.Ship.Shield.Int}/${Me.Ship.MaxShield.Int}", LOG_CRITICAL]
 			UI:UpdateConsole["Cap is at ${_Me.Ship.CapacitorPct.Int}%: ${Me.Ship.Capacitor.Int}/${Me.Ship.MaxCapacitor.Int}", LOG_CRITICAL]
-			
+
 			if !${Config.Combat.RunOnLowTank}
 			{
 				UI:UpdateConsole["Run On Low Tank Disabled: Fighting", LOG_CRITICAL]
@@ -309,7 +312,7 @@ objectdef obj_Combat
 	{
 		if ${_Me.Ship.ArmorPct} < 100
 		{
-			/* Turn on armor reps, if you have them 
+			/* Turn on armor reps, if you have them
 				Armor reps do not rep right away -- they rep at the END of the cycle.
 				To counter this we start the rep as soon as any damage occurs.
 			*/
@@ -345,7 +348,7 @@ objectdef obj_Combat
 			Ship:Activate_Hardeners[]
 
 			/* We have aggro now, yay! Let's launch some drones */
-			if ${Config.Combat.LaunchCombatDrones} && \
+			if !${This.Fled} && ${Config.Combat.LaunchCombatDrones} && \
 				${Ship.Drones.DronesInSpace} == 0 && \
 				!${Ship.InWarp}
 			{

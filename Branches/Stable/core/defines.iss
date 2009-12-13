@@ -20,7 +20,7 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 
 #define EVEBOT_DEBUG 0
 
-; Do not set this to 1 unless you have downloaded and installed the ISXIRC 
+; Do not set this to 1 unless you have downloaded and installed the ISXIRC
 ; extension from http://www.isxgames.com/forums/forumdisplay.php?f=19
 ;#define USE_ISXIRC 1
 #define USE_ISXIRC 0
@@ -29,6 +29,9 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 #define LOG_STANDARD 2
 #define LOG_CRITICAL 3
 #define LOG_DEBUG 4
+
+#define EVENT_ONFRAME OnFrame
+;#define EVENT_ONFRAME ISXEVE_onFrame
 
 #define WAIT_CARGO_WINDOW 15
 #define WAIT_UNDOCK 130

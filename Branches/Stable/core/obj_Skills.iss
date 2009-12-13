@@ -18,7 +18,7 @@ objectdef obj_Skills
 		if ${This.SkillFile:Open[readonly](exists)} || ${Config.Common.TrainFastest}
 		{
 			Me:DoGetSkills[This.OwnedSkills]
-			Event[OnFrame]:AttachAtom[This:Pulse]
+			Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 			This.SkillFile:Close
 
 			if ${Config.Common.TrainFastest}
@@ -36,7 +36,7 @@ objectdef obj_Skills
 	
 	method Shutdown()
 	{
-		Event[OnFrame]:DetachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}
 	
 	method Pulse()

@@ -28,7 +28,7 @@ objectdef obj_EVEBotUI
 		This:InitializeLogs
 		This:LogSystemStats
 
-		Event[OnFrame]:AttachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		This:UpdateConsole["obj_EVEBotUI: Initialized", LOG_MINOR]
 	}
 
@@ -59,14 +59,13 @@ objectdef obj_EVEBotUI
 
 	method Shutdown()
 	{
-		Event[OnFrame]:DetachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 		ui -unload interface/evebotgui.xml
 		ui -unload interface/eveskin/eveskin.xml
 	}
 
 	method Pulse()
 	{
-
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
     		This:LogSystemStats
