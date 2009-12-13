@@ -178,7 +178,7 @@ objectdef obj_MinerHauler inherits obj_Hauler
 		m_BeltID:Set[-1]
 		m_CheckedCargo:Set[FALSE]
 		UI:UpdateConsole["obj_MinerHauler: Initialized", LOG_MINOR]
-		Event[OnFrame]:AttachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		This:SetupEvents[]
 		BotModules:Insert["MinerHauler"]
 	}
@@ -206,7 +206,7 @@ objectdef obj_MinerHauler inherits obj_Hauler
 
 	method Shutdown()
 	{
-		Event[OnFrame]:DetachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 		Event[EVEBot_Miner_Full]:DetachAtom[This:MinerFull]
 	}
 

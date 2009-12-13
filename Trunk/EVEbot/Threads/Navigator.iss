@@ -24,7 +24,7 @@ objectdef obj_Navigator
 	method Initialize()
 	{
 		/* attach the pulse method to the onframe event */
-		Event[OnFrame]:AttachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["Thread: obj_Navigator: Initialized", LOG_MINOR]
 		/* set the entity cache update frequency */
 		;if ${NavigatorCache.PulseIntervalInSeconds} != 9999

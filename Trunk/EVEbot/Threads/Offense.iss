@@ -30,7 +30,7 @@ objectdef obj_Offense
 
 	method Initialize()
 	{
-		Event[OnFrame]:AttachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["Thread: obj_Offense: Initialized", LOG_MINOR]
 
 	}

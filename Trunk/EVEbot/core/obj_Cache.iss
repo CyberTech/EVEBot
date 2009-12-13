@@ -33,12 +33,12 @@ objectdef obj_Cache
 		}
 
 		This:Pulse
-		Event[OnFrame]:AttachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 	}
 
 	method Shutdown()
 	{
-		Event[OnFrame]:DetachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}
 
 	/* Runs every other frame, and updates one member per run */

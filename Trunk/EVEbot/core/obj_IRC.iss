@@ -24,14 +24,14 @@ objectdef obj_IRC
 		Event[IRC_UnhandledEvent]:AttachAtom[This:IRC_UnhandledEvent]
 
 		UI:UpdateConsole["obj_IRC: Initialized", LOG_MINOR]
-		Event[OnFrame]:AttachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 #endif
 	}
 
 	method Shutdown()
 	{
 #if USE_ISXIRC
-		Event[OnFrame]:DetachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 
 		Event[IRC_ReceivedNotice]:DetachAtom[This:IRC_ReceivedNotice]
 		Event[IRC_ReceivedChannelMsg]:DetachAtom[This:IRC_ReceivedChannelMsg]

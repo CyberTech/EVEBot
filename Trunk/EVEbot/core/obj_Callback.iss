@@ -7,7 +7,7 @@ objectdef obj_Callback
 
 	method Initialize()
 	{
-		Event[OnFrame]:AttachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_Callback: Initialized", LOG_MINOR]
 	}
 
@@ -33,6 +33,6 @@ objectdef obj_Callback
 
 	method Shutdown()
 	{
-		Event[OnFrame]:DetachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}
 }

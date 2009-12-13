@@ -125,12 +125,12 @@ objectdef obj_UplinkManager
 		This.NextPulse:Set[${Time.Timestamp}]
 		This.NextPulse.Second:Inc[5]
 		This.NextPulse:Update
-		Event[OnFrame]:AttachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 	}
 
 	method Shutdown()
 	{
-		Event[OnFrame]:DetachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}
 
 	method Pulse()

@@ -36,7 +36,7 @@ objectdef obj_MissionCombat
 	method Initialize()
 	{
 		;attach our pulse atom to the onframe even so we fire the pulse every frame
-		Event[OnFrame]:AttachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 	}
 	method Pulse()
 	{
@@ -60,7 +60,7 @@ objectdef obj_MissionCombat
 	method Shutdown()
 	{
 		; detach the atom when we get garbaged
-		Event[OnFrame]:DetachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}
 
 	/* All of this should be getting called from Behaviors/obj_Missioneer.iss so

@@ -29,7 +29,7 @@ objectdef obj_Ratter
 
 	method Initialize()
 	{
-		Event[OnFrame]:AttachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 
 		BotModules:Insert["Ratter"]
 		RatCache:UpdateSearchParams["Unused","CategoryID,CATEGORYID_ENTITY,radius,100000"]
@@ -73,7 +73,7 @@ objectdef obj_Ratter
 
 	method Shutdown()
 	{
-		Event[OnFrame]:DetachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}
 
 	/* NOTE: The order of these if statements is important!! */

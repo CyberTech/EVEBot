@@ -40,13 +40,13 @@ objectdef obj_LoginHandler
 
 	method Start()
 	{
-		Event[OnFrame]:AttachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		This.NextPulse:Set[${Time.Timestamp}]
 	}
 
 	method Shutdown()
 	{
-		Event[OnFrame]:DetachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}
 
 	method Pulse()

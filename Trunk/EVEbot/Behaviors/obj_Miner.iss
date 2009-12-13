@@ -44,13 +44,13 @@ objectdef obj_Miner
 		Defense.Option_RunIfTargetJammed:Set[TRUE]
 
 		This.TripStartTime:Set[${Time.Timestamp}]
-		Event[OnFrame]:AttachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_Miner: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
 	{
-		Event[OnFrame]:DetachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}
 
 	method Pulse()

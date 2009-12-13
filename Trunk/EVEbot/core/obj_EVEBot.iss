@@ -23,13 +23,13 @@ objectdef obj_EVEBot
 	method Initialize()
 	{
 		This:SetVersion
-		Event[OnFrame]:AttachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_EVEBot: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
 	{
-		Event[OnFrame]:DetachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}
 
 	method EndBot()
