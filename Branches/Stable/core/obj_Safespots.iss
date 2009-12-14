@@ -90,7 +90,7 @@ objectdef obj_Safespots
 		; Are we within warp range of the bookmark?
 		if ${SafeSpotIterator.Value.ItemID} > -1
 		{
-            UI:UpdateConsole["DEBUG: obj_Safespots.IsAtSafespot: ItemID = ${SafeSpotIterator.Value.ItemID}"]
+            ;UI:UpdateConsole["DEBUG: obj_Safespots.IsAtSafespot: ItemID = ${SafeSpotIterator.Value.ItemID}"]
 			if ${Me.ToEntity.DistanceTo[${SafeSpotIterator.Value.ItemID}]} < WARP_RANGE
 			{
 				return TRUE

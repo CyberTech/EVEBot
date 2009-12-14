@@ -54,7 +54,7 @@ objectdef obj_LoginHandler
 		if ${This.LoginTimer} > 0
 		{
 			This.PulseIntervalInSeconds:Set[${This.LoginTimer}]
-			UI:UpdateConsole["DEBUG: Pulse: ${This.LoginTimer} - ${This.CurrentState}", LOG_DEBUG]
+			;UI:UpdateConsole["DEBUG: Pulse: ${This.LoginTimer} - ${This.CurrentState}", LOG_DEBUG]
 			This.LoginTimer:Set[0]
 		}
 
@@ -133,7 +133,7 @@ objectdef obj_LoginHandler
 	{
 		EVE:CloseAllMessageBoxes
 
-		UI:UpdateConsole["DEBUG: Current state: ${This.CurrentState}", LOG_DEBUG]
+		;UI:UpdateConsole["DEBUG: Current state: ${This.CurrentState}", LOG_DEBUG]
 		switch ${This.CurrentState}
 		{
 			case POSSIBLE_ACCOUNT_EXPIRED
@@ -161,7 +161,7 @@ objectdef obj_LoginHandler
 					break
 				}
 			case SERVERDOWN
-				UI:UpdateConsole["DEBUG: Server Status: ${Login.ServerStatus}", LOG_DEBUG]
+				;UI:UpdateConsole["DEBUG: Server Status: ${Login.ServerStatus}", LOG_DEBUG]
 				if ${Login.ServerStatus.Equal["OK"]}
 				{
 					This.CurrentState:Set["SERVERUP"]
