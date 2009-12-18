@@ -56,12 +56,12 @@ objectdef obj_EntityCache inherits BaseClass
 		;TODO: propagate this syntax to all other objects. it's spiffy handy.
 		LogPrefix:Set["EntityCache(${This.ObjectName})"]
 		UI:UpdateConsole["${LogPrefix}: Initialized"]
-		Event[OnFrame]:AttachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 	}
 
 	method Shutdown()
 	{
-		Event[OnFrame]:DetachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}
 
 	method Pulse()

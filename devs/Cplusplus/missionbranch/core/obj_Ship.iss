@@ -142,7 +142,7 @@ objectdef obj_Ship
 		This:StopShip[]
 		This:UpdateModuleList[]
 
-		Event[OnFrame]:AttachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		This:CalculateMaxLockedTargets
 		This:PopulateNameModPairs[]
 		UI:UpdateConsole["obj_Ship: Initialized", LOG_MINOR]
@@ -150,7 +150,7 @@ objectdef obj_Ship
 
 	method Shutdown()
 	{
-		Event[OnFrame]:DetachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}
 
 	method Pulse()
@@ -1313,7 +1313,7 @@ objectdef obj_Ship
 
 		if ${Target:First(exists)}
 		{
-			UI:ConsoleUpdate["Unlocking all targets", LOG_MINOR]
+			UI:UpdateConsole["Unlocking all targets", LOG_MINOR]
 			do
 			{
 				Target.Value:UnlockTarget

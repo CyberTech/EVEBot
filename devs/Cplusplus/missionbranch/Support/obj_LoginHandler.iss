@@ -40,13 +40,13 @@ objectdef obj_LoginHandler
 
 	method Start()
 	{
-		Event[OnFrame]:AttachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		This.NextPulse:Set[${Time.Timestamp}]
 	}
 
 	method Shutdown()
 	{
-		Event[OnFrame]:DetachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}
 
 	method Pulse()
@@ -162,7 +162,7 @@ objectdef obj_LoginHandler
 				}
 			case SERVERDOWN
 				UI:UpdateConsole["DEBUG: Server Status: ${Login.ServerStatus}", LOG_DEBUG]
-				if ${Login.ServerStatus.Equal[LIVE]} || ${Login.ServerStatus.Equal[EVE-EVE-RELEASE]}
+				if ${Login.ServerStatus.Equal["OK"]}
 				{
 					This.CurrentState:Set["SERVERUP"]
 				}
@@ -206,6 +206,7 @@ objectdef obj_LoginHandler
 				}
 				*/
 				if ${EVEWindow[ByCaption,Connection in Progress](exists)} || \
+					${EVEWindow[ByCaption,CONNECTION IN PROGRESS](exists)} || \
 					${EVEWindow[ByCaption,Connection Not Allowed](exists)} || \
 					${EVEWindow[ByCaption,CONNECTION FAILED](exists)}
 				{

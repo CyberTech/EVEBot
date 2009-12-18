@@ -125,12 +125,12 @@ objectdef obj_UplinkManager
 		This.NextPulse:Set[${Time.Timestamp}]
 		This.NextPulse.Second:Inc[5]
 		This.NextPulse:Update
-		Event[OnFrame]:AttachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 	}
 
 	method Shutdown()
 	{
-		Event[OnFrame]:DetachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}
 
 	method Pulse()
@@ -225,10 +225,9 @@ objectdef obj_UplinkManager
 					else
 					{
 						RegisteredSession.Value.VariableScope:CreateVariable[${VarType}, "${VarName}", "${Value}"]
-						UI:UpdateConsole["${LogPrefix}:UpdateInfo: DEBUG: Received new info from ${RemoteSessionName} (${VarName}=${Value})", LOG_DEBUG]
 					}
 					RegisteredSession.Value.LastPing:Set[${Time.Timestamp}]
-					UI:UpdateConsole["${LogPrefix}:UpdateInfo: Updated info from ${RemoteSessionName} (${VarName}=${Value})", LOG_DEBUG]
+					UI:UpdateConsole["${LogPrefix}:UpdateInfo: ${RegisteredSession.Value.CharName}: ${VarName}=${Value}", LOG_DEBUG]
 					return
 				}
 			}

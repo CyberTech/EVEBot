@@ -30,7 +30,7 @@ objectdef obj_Offense
 
 	method Initialize()
 	{
-		Event[OnFrame]:AttachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["Thread: obj_Offense: Initialized", LOG_MINOR]
 
 	}
@@ -262,8 +262,8 @@ objectdef obj_Offense
 							{
 								This.LastTurretTypeID:Set[${MyShip.Module[${slot}].ToItem.TypeID}]
 								This.LastTurretTypeID:Set[${MyShip.Module[${slot}].Charge.TypeID}]
-								This.MinRange:Set[100]
-								This.MaxRange:Set[9000]
+								This.MinRange:Set[${Ship.GetMinimumTurretRange[${idx}]}]
+								This.MaxRange:Set[${Ship.GetMaximumTurretRange[${idx}]}]
 							}
 							
 							;If we didn't need an ammo change, check if we need to activate or deactivate the weapon.
@@ -304,7 +304,8 @@ objectdef obj_Offense
 						Defense:RunAway["Offense: Drone shortage detected"]
 						return
 					}
-					if ${Me.ActiveTarget.Distance} < ${Math.Calc[${Me.DroneControlDistance} * 0.975]}
+					if ${Me.ActiveTarget.Distance} < ${Math.Calc[${Me.DroneControlDistance} * 0.975]} && \
+						${Me.ActiveTarget.Distance} < ${Config.Combat.MaxDroneRange}
 					{
 						if ${ShouldLaunchCombatDrones}
 						{

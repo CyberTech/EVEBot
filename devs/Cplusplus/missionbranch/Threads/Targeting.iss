@@ -45,15 +45,10 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 	variable int TargetingThisFrame = 0
 	variable int Counter_TargetingJammed = 0
 
-	variable obj_EntityCache EntityCache
-	
 	method Initialize()
 	{
-		Event[OnFrame]:AttachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["Thread: obj_EVEBOT_Targeting: Initialized", LOG_MINOR]
-		echo "ENTITYCAAAACHE"
-		EntityCache:UpdateSearchParams["Unused","CategoryID,CATEGORYID_ENTITY,radius,100000"]
-		EntityCache:SetUpdateFrequency[1]
 	}
 
 	method Pulse()
@@ -330,7 +325,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 		variable int Pos
 		for ( Pos:Set[1]; ${Pos} <= ${MandatoryQueue.Used}; Pos:Inc )
 		{
-			if !${Entity[${MandatoryQueue[${Pos}].EntityID}](exists)} || ${Entity[${MandatoryQueue[${Pos}].EntityID}].IsMoribund} || ${Entity[${MandatoryQueue[${Pos}].EntityID}].GroupID} == GROUP_WRECK
+			if !${Entity[${MandatoryQueue[${Pos}].EntityID}](exists)}
 			{
 				MandatoryQueue:Remove[${Pos}]
 			}
@@ -339,7 +334,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 
 		for ( Pos:Set[1]; ${Pos} <= ${TargetQueue.Used}; Pos:Inc )
 		{
-			if !${Entity[${TargetQueue[${Pos}].EntityID}](exists)} || ${Entity[${TargetQueue[${Pos}].EntityID}].IsMoribund} || ${Entity[${TargetQueue[${Pos}].EntityID}].GroupID} == GROUP_WRECK
+			if !${Entity[${TargetQueue[${Pos}].EntityID}](exists)}
 			{
 				TargetQueue:Remove[${Pos}]
 			}
@@ -470,67 +465,6 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 		return ${MaxDistance}
 	}
 
-member:int CurrentEntityCount()
-	{
-		variable iterator EntityIterator
-		variable int ValidEntities = 0
-		This.EntityCache.Entities:GetIterator[EntityIterator]
-		if ${EntityIterator:First(exists)}
-		{
-			do
-			{
-				echo ${EntityIterator.Value}
-				if ${EntityIterator.Value.GroupID} != GROUP_LARGECOLLIDABLEOBJECT && ${EntityIterator.Value.GroupID} != GROUP_LARGECOLLIDABLESTRUCTURE && ${EntityIterator.Value.GroupID} != GROUP_WRECK
-				{
-					ValidEntities:Inc[1]
-				}
-			}
-			while ${EntityIterator:Next(exists)}
-		}
-		return ${ValidEntities}
-	}
-	member:int AgressionCount()
-	{
-		variable iterator EntityIterator
-		variable int ValidEntities = 0
-		This.EntityCache.Entities:GetIterator[EntityIterator]
-		if ${EntityIterator:First(exists)}
-		{
-			do
-			{
-				if ${EntityIterator.Value.IsTargetingMe}
-				{
-					ValidEntities:Inc[1]
-				}
-			}
-			while ${EntityIterator:Next(exists)}
-		}
-		return ${ValidEntities}
-	}
-	
-	member:int ClosestEntity()
-	{
-		variable iterator EntityIterator
-		variable int ClosestDistance = 100000000000
-		variable int ClosestID = 0
-		This.EntityCache.Entities:GetIterator[EntityIterator]
-		if ${EntityIterator:First(exists)}
-		{
-			do
-			{
-				if ${EntityIterator.Value.GroupID} != GROUP_LARGECOLLIDABLEOBJECT && ${EntityIterator.Value.GroupID} != GROUP_LARGECOLLIDABLESTRUCTURE && ${EntityIterator.Value.GroupID} != GROUP_WRECK
-				{
-					if ${EntityIterator.Value.Distance} < ${ClosestDistance}
-					{
-						ClosestID:Set[${EntityIterator.Value.ID}]
-						ClosestDistance:Set[${EntityIterator.Value.Distance}]
-					}
-				}
-			}
-			while ${EntityIterator:Next(exists)}
-		}
-		return ${ClosestID}		
-	}
 
 }
 

@@ -99,7 +99,7 @@ objectdef obj_Drones
 		;echo "Heavy Drones in Bay : " ${This.HaveHeavyDroneInBay}
 		;echo "Medium Drones in Bay: " ${This.HaveMediumDroneInBay}
 
-		Event[OnFrame]:AttachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_Drones: Initialized", LOG_MINOR]
 	}
 	method Shutdown()
@@ -112,7 +112,7 @@ objectdef obj_Drones
 				EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
 			}
 		}
-		Event[OnFrame]:DetachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}
 
 	method Pulse()
@@ -376,8 +376,20 @@ objectdef obj_Drones
 	
 	method QuickReturnAllToOrbit()
 	{
+		if ${This.ActiveDrone:First(exists)}
+		{
+			do
+			{
+				if ${This.ActiveDrone.Value.ToEntity.Distance} > 5000 &&
+					${This.ActiveDrone.Value.State} != DRONESTATE_RETURNING
+				{
 		UI:UpdateConsole["obj_Drones: Returning all drones to orbit."]
 		EVE:Execute[CmdDronesReturnAndOrbit]
+					return
+	}
+			}
+			while ${This.ActiveDrone:Next(exists)}
+		}
 	}
 
 	function ReturnAllToDroneBay()

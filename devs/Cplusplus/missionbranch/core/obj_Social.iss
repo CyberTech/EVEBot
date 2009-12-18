@@ -109,7 +109,7 @@ objectdef obj_Social
 		}
 		while ${This.BlackListAllianceIterator:Next(exists)}
 
-		Event[OnFrame]:AttachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		Event[EVE_OnChannelMessage]:AttachAtom[This:OnChannelMessage]
 		EVE:ActivateChannelMessageEvents
 
@@ -120,7 +120,7 @@ objectdef obj_Social
 	{
 		EVE:ActivateChannelMessageEvents
 		Event[EVE_OnChannelMessage]:DetachAtom[This:OnChannelMessage]
-		Event[OnFrame]:DetachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}
 
 	method Pulse()

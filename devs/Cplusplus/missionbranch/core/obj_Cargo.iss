@@ -359,7 +359,6 @@ objectdef obj_Cargo
 
 	function TransferListToCorpHangarArray()
 	{
-		/*
 		variable iterator CargoIterator
 		This.CargoToTransfer:GetIterator[CargoIterator]
 
@@ -379,11 +378,41 @@ objectdef obj_Cargo
 		}
 		else
 		{
-			UI:UpdateConsole["DEBUG: obj_Cargo:TransferListToCorpHangarArray: Nothing found to move"]
+			UI:UpdateConsole["DEBUG: TransferListToCorpHangarArray: Nothing found to move"]
 		}
-		*/
+		/* TODO - moveitemsto is not working with ids at the moment
 		UI:UpdateConsole["obj_Cargo:TransferListToCorpHangarArray: Moving all items in index This.CargoToTransfer to corp hangar array ID ${CorpHangarArray.ActiveCan}",LOG_DEBUG]
 		EVE:MoveItemsTo[This.CargoToTransfer,CorpHangarArray.ActiveCan]
+		*/
+	}
+
+	function TransferListToAssemblyArray()
+	{
+		variable iterator CargoIterator
+		This.CargoToTransfer:GetIterator[CargoIterator]
+
+		if ${CargoIterator:First(exists)}
+		{
+			do
+			{
+				if ${AssemblyArray.IsReady[TRUE]}
+				{
+					call AssemblyArray.Open ${AssemblyArray.ActiveCan}
+					UI:UpdateConsole["TransferListToAssemblyArray: Transferring Cargo: ${CargoIterator.Value.Name}"]
+					CargoIterator.Value:MoveTo[${AssemblyArray.ActiveCan},${CargoIterator.Value.Quantity},Corporation Folder 1]
+				}
+			}
+			while ${CargoIterator:Next(exists)}
+			AssemblyArray:StackAllCargo
+		}
+		else
+		{
+			UI:UpdateConsole["DEBUG: TransferListToAssemblyArray: Nothing found to move"]
+		}
+		/* TODO - moveitemsto is not working with ids at the moment
+		UI:UpdateConsole["obj_Cargo:TransferListToCorpHangarArray: Moving all items in index This.CargoToTransfer to corp hangar array ID ${CorpHangarArray.ActiveCan}",LOG_DEBUG]
+		EVE:MoveItemsTo[This.CargoToTransfer,CorpHangarArray.ActiveCan]
+		*/
 	}
 
 	function TransferListToJetCan()
@@ -640,6 +669,39 @@ objectdef obj_Cargo
 		}
 	}
 
+
+	function TransferOreToAssemblyArray()
+	{
+		if ${AssemblyArray.IsReady}
+		{
+			if ${Entity[${AssemblyArray.ActiveCan}].Distance} > CORP_HANGAR_LOOT_RANGE
+			{
+				call Ship.Approach ${AssemblyArray.ActiveCan} CORP_HANGAR_LOOT_RANGE
+			}
+		}
+		else
+		{
+			UI:UpdateConsole["No Assembly Array found - nothing moved"]
+			return
+		}
+		echo "TransferOreToAssemblyArray found can"
+
+		call Ship.OpenCargo
+		This:FindShipCargo[CATEGORYID_ORE]
+		call TransferListToAssemblyArray
+
+		/* TODO - moveitems to isn't working with ID's atm - cybertech
+		if ${AssemblyArray.IsReady[TRUE]}
+		{
+			call AssemblyArray.Open ${AssemblyArray.ActiveCan}
+			UI:UpdateConsole["TransferOreToAssemblyArray: Moving ${This.CargoToTransfer.Used} items to assembly array ID ${AssemblyArray.ActiveCan}"]
+			EVE:MoveItemsTo[CargoToTransfer,AssemblyArray.ActiveCan]
+			AssemblyArray:StackAllCargo
+		}
+		*/
+		This.CargoToTransfer:Clear[]
+	}
+
 	function TransferOreToCorpHangarArray()
 	{
 		if ${CorpHangarArray.IsReady}
@@ -651,15 +713,23 @@ objectdef obj_Cargo
 		}
 		else
 		{
-			UI:ConsoleUpdate["No Hangar Array found - nothing moved"]
+			UI:UpdateConsole["No Hangar Array found - nothing moved"]
 			return
 		}
 
 		call Ship.OpenCargo
 
 		This:FindShipCargo[CATEGORYID_ORE]
-		call This.TransferListToCorpHangarArray
-
+		call TransferListToCorpHangarArray
+		/* TODO - moveitems to isn't working with ID's atm - cybertech
+		if ${CorpHangarArray.IsReady[TRUE]}
+		{
+			call CorpHangarArray.Open ${CorpHangarArray.ActiveCan}
+			UI:UpdateConsole["TransferOreToCorpHangarArray: Moving  ${This.CargoToTransfer.Used} items to corp hangar array ID ${CorpHangarArray.ActiveCan}"]
+			EVE:MoveItemsTo[CargoToTransfer,CorpHangarArray.ActiveCan]
+			CorpHangarArray:StackAllCargo
+		}
+		*/
 		This.CargoToTransfer:Clear[]
 	}
 

@@ -8,6 +8,9 @@
 
 #define TESTAPI_DEBUG 0
 #include ../core/defines.iss
+;#include ../core/Lib/obj_PulseTimer.iss
+;#include ../core/Lib/obj_BaseClass.iss
+#include ../core/Lib/obj_LSTypeIterator.iss
 
 objectdef obj_UI
 {
@@ -58,4 +61,5 @@ objectdef obj_UI
 	}
 
 }
+
 

@@ -178,7 +178,7 @@ objectdef obj_MinerHauler inherits obj_Hauler
 		m_BeltID:Set[-1]
 		m_CheckedCargo:Set[FALSE]
 		UI:UpdateConsole["obj_MinerHauler: Initialized", LOG_MINOR]
-		Event[OnFrame]:AttachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		This:SetupEvents[]
 		BotModules:Insert["MinerHauler"]
 	}
@@ -206,7 +206,7 @@ objectdef obj_MinerHauler inherits obj_Hauler
 
 	method Shutdown()
 	{
-		Event[OnFrame]:DetachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 		Event[EVEBot_Miner_Full]:DetachAtom[This:MinerFull]
 	}
 
@@ -371,23 +371,6 @@ objectdef obj_MinerHauler inherits obj_Hauler
 
 	function DropOff()
 	{
-		if ${EVE.Bookmark[${Config.Hauler.DropOffBookmark}](exists)}
-		{
-			variable bookmark bm
-			bm:Set[${EVE.Bookmark[${Config.Hauler.DropOffBookmark}]}]
-			call Ship.WarpToBookMarkName "${Config.Hauler.DropOffBookmark}"
-			if ${bm.ToEntity(exists)}
-			{
-				switch ${bm.ToEntity.TypeID}
-				{
-					case TYPEID_CORPORATE_HANGAR_ARRAY
-						call Cargo.TransferOreToCorpHangarArray
-						break
-				}
-			}
-		}
-		else
-		{
 			switch ${Config.Miner.DeliveryLocationType}
 			{
 				case Station
@@ -397,13 +380,16 @@ objectdef obj_MinerHauler inherits obj_Hauler
 					call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
 					call Cargo.TransferOreToCorpHangarArray
 					break
+			case Assembly Array
+				call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
+				call Cargo.TransferOreToAssemblyArray
+				break
 				case Jetcan
 					UI:UpdateConsole["Error: ORE Delivery location may not be jetcan when in hauler mode - docking"]
 					EVEBot.ReturnToStation:Set[TRUE]
 					break
 			}
 		}
-	}
 
 	/* The HaulOnDemand function will be called repeatedly   */
 	/* until we leave the HAUL state due to downtime,        */

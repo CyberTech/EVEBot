@@ -85,7 +85,7 @@ function main(... Args)
 
 			    if !${FoundThem}
 			    {
-			        echo "- There does not seem to be a fleet member with the name '${Args[${Iterator}]}'..."
+			        echo "- There does not seem to be a fleet member with the name '${Args[${Iterator}]}', is he in the current system?"
 			        echo "- Aborting script"
 			        return
 			    }

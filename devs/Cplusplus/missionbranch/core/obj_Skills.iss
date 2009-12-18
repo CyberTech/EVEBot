@@ -39,13 +39,13 @@ objectdef obj_Skills inherits obj_BaseClass
 			This.SkillFile:Truncate
 			This.SkillFile:Close
 		}
-		Event[OnFrame]:AttachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_Skills: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
 	{
-		Event[OnFrame]:DetachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}
 
 	method Pulse()

@@ -687,7 +687,7 @@
 							<Y>90</Y>
 							<Height>20</Height>
 							<Width>100</Width>
-							<Text>Use Mining Drones </text>
+							<Text>Use Mining Drones </Text>
 							<AutoTooltip>When checked mining drones will be used instead of combat drones</AutoTooltip>
 							<OnLoad>
 								if ${Config.Miner.UseMiningDrones}
@@ -757,6 +757,7 @@
 							<Items>
 								<Item>Station</Item>
 								<Item>Hangar Array</Item>
+								<Item>Assembly Array</Item>
 								<Item>Jetcan</Item>
 							</Items>
 							<OnSelect>
@@ -1540,7 +1541,6 @@
 						Config.Hauler:MultiSystemSupport[${This.Checked}]
 						</OnLeftClick>
 						</checkbox>
-						-->
 						<Text name='DropOffLabel'>
 							<X>10</X>
 							<Y>55</Y>
@@ -1564,6 +1564,7 @@
 								}
 							</OnChange>
 						</Textentry>
+						-->
 						<Text name='MiningSystemLabel'>
 							<X>10</X>
 							<Y>80</Y>

@@ -23,13 +23,13 @@ objectdef obj_EVEBot
 	method Initialize()
 	{
 		This:SetVersion
-		Event[OnFrame]:AttachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_EVEBot: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
 	{
-		Event[OnFrame]:DetachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}
 
 	method EndBot()
@@ -124,7 +124,7 @@ objectdef obj_EVEBot
 				if !${This.ReturnToStation} && ${Me(exists)}
 				{
 					if ( ${This.GameHour} == 10 && \
-						( ${This.GameMinute} >= 50 || ${This.GameMinute} <= 57) )
+						( ${This.GameMinute} >= 50 && ${This.GameMinute} <= 57) )
 					{
 						UI:UpdateConsole["EVE downtime approaching, pausing operations", LOG_CRITICAL]
 						This.ReturnToStation:Set[TRUE]

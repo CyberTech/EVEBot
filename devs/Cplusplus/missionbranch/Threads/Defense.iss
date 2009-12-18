@@ -29,7 +29,7 @@ objectdef obj_Defense
 
 	method Initialize()
 	{
-		Event[OnFrame]:AttachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["Thread: obj_Defense: Initialized", LOG_MINOR]
 		if ${DefenseCache.PulseIntervalInSeconds} != 9999
 		{

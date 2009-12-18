@@ -10,19 +10,31 @@
 variable obj_UI UI
 function main()
 {
-		variable index:entity EntityIndex
-		variable int RTime = ${Script.RunningTime}
-		EVE:DoGetEntities[EntityIndex]
-		echo "- DoGetEntities took ${Math.Calc[${Script.RunningTime}-${RTime}]} ms. (Used: ${EntityIndex.Used})"
-		variable iterator EntityIterator
-		EntityIndex:GetIterator[EntityIterator]
+	variable int StartTime = ${Script.RunningTime}
+	variable int StartTime2
 
+	declarevariable Entities index:entity script
+	declarevariable EntityIterator iterator script
+
+	variable obj_LSTypeIterator ItemTest = "entity"
+
+	ItemTest:ParseMembers
+
+	EVE:DoGetEntities[Entities]
+	variable float CallTime
+	CallTime:Set[${Math.Calc[(${Script.RunningTime}-${StartTime}) / 1000]}]
+	echo "EVE:DoGetEntities returned ${Entities.Used} entities in ${CallTime} seconds"
+
+	Entities:GetIterator[EntityIterator]
 		if ${EntityIterator:First(exists)}
-		{
 			do
 			{
-				echo EntityIterator.Value.Name ${EntityIterator.Value.Name}
+		StartTime2:Set[${Script.RunningTime}]
+		ItemTest:IterateMembers["EntityIterator.Value", TRUE, FALSE]
+		echo "Single entity dump completed  ${Math.Calc[(${Script.RunningTime}-${StartTime2}) / 1000]} seconds"
 			}
 			while ${EntityIterator:Next(exists)}
-		}
+
+	echo "EVE:DoGetEntities returned ${Entities.Used} entities in ${CallTime} seconds"
+	echo "Testing of datatype ${ItemTest.TypeName} completed in ${Math.Calc[(${Script.RunningTime}-${StartTime}) / 1000]} seconds"
 }

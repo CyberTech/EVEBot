@@ -94,17 +94,17 @@ function main()
 
 #if EVEBOT_PROFILING
 	Script:Unsquelch
-	Script:EnableDebugLogging[evebot_profile.txt]
 	Script[EVEBot]:EnableProfiling
+	Script:EnableDebugLogging[evebot_profile.txt]
 #endif
 
 	while !${_Me.Name(exists)} || ${_Me.Name.Equal[NULL]} || ${_Me.Name.Length} == 0
 	{
 		echo " ${Time} EVEBot: Waiting for cache to initialize - ${_Me.Name} != ${Me.Name} (if this continues, restart isxeve)"
 		wait 10
-		obj_Cache_Me:Initialize
-		obj_Cache_MyShip:Initialize
-		obj_Cache_EVETime:Initialize
+		_Me:Initialize
+		_MyShip:Initialize
+		_EVETime:Initialize
 	}
 
 	echo "${Time} EVEBot: Loading Base & Config..."
@@ -134,10 +134,11 @@ function main()
 	declarevariable Ship obj_Ship global
 	declarevariable Station obj_Station global
 	declarevariable Cargo obj_Cargo global
-	declarevariable Skills obj_Skills global
+	;declarevariable Skills obj_Skills global
 	declarevariable Bookmarks obj_Bookmarks global
 	declarevariable JetCan obj_JetCan global
 	declarevariable CorpHangarArray obj_CorpHangerArray global
+	declarevariable AssemblyArray obj_AssemblyArray global
 	declarevariable Social obj_Social global
 	declarevariable Fleet obj_Fleet global
 	declarevariable Assets obj_Assets global
@@ -175,7 +176,7 @@ function main()
 	runscript Threads/Targeting.iss
 	runscript Threads/Defense.iss
 	runscript Threads/Offense.iss
-
+	runscript Threads/Navigator.iss
 	echo "${Time} EVEBot: Loaded"
 
 	; This is a TimedCommand so that it executes in global scope, so we can get the list of global vars.

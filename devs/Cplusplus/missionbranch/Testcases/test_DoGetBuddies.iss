@@ -10,30 +10,34 @@
 	Requirements:
 		You:
 		Buddy List: Populated
-		People & Places window must have been opened at least once
+		People & Places window must have been opened at least once, to the buddies tab
 */
 
 variable obj_UI UI
 function main()
 {
-		variable index:being BeingIndex
-		EVE:DoGetBuddies[BeingIndex]
+	variable int StartTime = ${Script.RunningTime}
 
-		variable iterator Buddy
-		BeingIndex:GetIterator[Buddy]
+	declarevariable Beings index:being script
+	declarevariable Buddy iterator script
 
-		echo "Buddies Detected: ${BeingIndex.Used}"
+	variable obj_LSTypeIterator ItemTest = "being"
+
+	ItemTest:ParseMembers
+
+	EVE:DoGetBuddies[Beings]
+	variable float CallTime
+	CallTime:Set[${Math.Calc[(${Script.RunningTime}-${StartTime}) / 1000]}]
+	echo "EVE:DoGetBuddies returned ${Beings.Used} buddies in ${CallTime} seconds"
+
+	Beings:GetIterator[Buddy]
 		if ${Buddy:First(exists)}
-		{
 			do
 			{
-				echo Buddy.Value.CharID ${Buddy.Value.CharID}
-				echo Buddy.Value.Name ${Buddy.Value.Name}
-				echo Buddy.Value.IsNPC ${Buddy.Value.IsNPC}
-				echo Buddy.Value.IsPC ${Buddy.Value.IsPC}
-				echo Buddy.Value.IsOnline ${Buddy.Value.IsOnline}
-				;Buddy.Value:InviteToFleet
+		ItemTest:IterateMembers["Buddy.Value"]
 			}
 			while ${Buddy:Next(exists)}
-		}
+
+	echo "EVE:DoGetBuddies returned ${Beings.Used} buddies in ${CallTime} seconds"
+	echo "Testing of datatype ${ItemTest.TypeName} completed in ${Math.Calc[(${Script.RunningTime}-${StartTime}) / 1000]} seconds"
 }

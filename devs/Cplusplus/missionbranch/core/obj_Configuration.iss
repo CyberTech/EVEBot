@@ -378,6 +378,7 @@ objectdef obj_Configuration_Combat
 	Define_ConfigItem(int, CapacitorPctEnable, 20)
 	Define_ConfigItem(int, CapacitorPctDisable, 80)
 	Define_ConfigItem(bool, ConserveDrones, TRUE)
+	Define_ConfigItem(int, MaxDroneRange, 15000)
 }
 
 /* ************************************************************************* */
