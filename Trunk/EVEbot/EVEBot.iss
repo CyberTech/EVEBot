@@ -138,6 +138,7 @@ function main()
 	declarevariable Bookmarks obj_Bookmarks global
 	declarevariable JetCan obj_JetCan global
 	declarevariable CorpHangarArray obj_CorpHangerArray global
+	declarevariable AssemblyArray obj_AssemblyArray global
 	declarevariable Social obj_Social global
 	declarevariable Fleet obj_Fleet global
 	declarevariable Assets obj_Assets global

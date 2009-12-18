@@ -132,16 +132,21 @@ echo ${This.CurrentState}
 						}
 						break
 					case Hangar Array
-						UI:UpdateConsole["Delivering ore to hangary array"]
+						UI:UpdateConsole["Delivering ore to hangar array"]
 						call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
 						call Cargo.TransferOreToCorpHangarArray
+						break
+					case Assembly Array
+						UI:UpdateConsole["Delivering ore to assembly array"]
+						call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
+						call Cargo.TransferOreToAssemblyArray
 						break
 					case Jetcan
 						UI:UpdateConsole["Delivering ore to jetcan"]
 						call Cargo.TransferOreToJetCan
 						This:NotifyHaulers[]
 						break
-					Default
+					default
 						UI:UpdateConsole["ERROR: Delivery Location Type ${Config.Miner.DeliveryLocationType} unknown"]
 						EVEBot.ReturnToStation:Set[TRUE]
 						break

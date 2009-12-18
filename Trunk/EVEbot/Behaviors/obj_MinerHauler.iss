@@ -371,37 +371,23 @@ objectdef obj_MinerHauler inherits obj_Hauler
 
 	function DropOff()
 	{
-		if ${EVE.Bookmark[${Config.Hauler.DropOffBookmark}](exists)}
+		switch ${Config.Miner.DeliveryLocationType}
 		{
-			variable bookmark bm
-			bm:Set[${EVE.Bookmark[${Config.Hauler.DropOffBookmark}]}]
-			call Ship.WarpToBookMarkName "${Config.Hauler.DropOffBookmark}"
-			if ${bm.ToEntity(exists)}
-			{
-				switch ${bm.ToEntity.TypeID}
-				{
-					case TYPEID_CORPORATE_HANGAR_ARRAY
-						call Cargo.TransferOreToCorpHangarArray
-						break
-				}
-			}
-		}
-		else
-		{
-			switch ${Config.Miner.DeliveryLocationType}
-			{
-				case Station
-					call Station.Dock
-					break
-				case Hangar Array
-					call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
-					call Cargo.TransferOreToCorpHangarArray
-					break
-				case Jetcan
-					UI:UpdateConsole["Error: ORE Delivery location may not be jetcan when in hauler mode - docking"]
-					EVEBot.ReturnToStation:Set[TRUE]
-					break
-			}
+			case Station
+				call Station.Dock
+				break
+			case Hangar Array
+				call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
+				call Cargo.TransferOreToCorpHangarArray
+				break
+			case Assembly Array
+				call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
+				call Cargo.TransferOreToAssemblyArray
+				break
+			case Jetcan
+				UI:UpdateConsole["Error: ORE Delivery location may not be jetcan when in hauler mode - docking"]
+				EVEBot.ReturnToStation:Set[TRUE]
+				break
 		}
 	}
 
