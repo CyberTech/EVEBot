@@ -97,6 +97,16 @@ objectdef obj_EVEBotUI
 		ChatIRC:QueueMessage["${StatusMessage}"]
 	}
 
+	method UpdateConsoleDebug(string StatusMessage)
+	{
+#if EVEBOT_DEBUG
+		variable string msg
+		msg:Set["DEBUG: "]
+		msg:Concat["${StatusMessage}"]
+		this:UpdateConsole(${msg}, LOG_DEBUG, 0)
+#endif						
+	}
+	
 	method UpdateConsole(string StatusMessage, int Level=LOG_STANDARD, int Indent=0)
 	{
 		/*

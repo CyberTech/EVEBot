@@ -24,20 +24,22 @@ objectdef obj_Miner
 	variable int AverageTripSeconds = 0
 	variable int CurrentState
 
+	variable bool AsteroidCacheInvalid = TRUE
+
 	; Are we running out of asteroids to target?
 	variable bool ConcentrateFire = FALSE
 
-	variable int STATE_ERROR = 0
+	variable int STATE_IDLE = 0
 	variable int STATE_WAIT_WARP = 1
-	variable int STATE_IDLE = 2
-	variable int STATE_DOCKED = 3
-	variable int STATE_MINE = 4
-	variable int STATE_CHANGE_BELT = 5
-	variable int STATE_BELTSFULL = 6
-	variable int STATE_TRANSFER_TO_JETCAN = 7
-	variable int STATE_DELIVER_ORE = 8
-	variable int STATE_RETURN_TO_STATION = 11
-
+	variable int STATE_DOCKED = 2
+	variable int STATE_MINE = 3
+	variable int STATE_CHANGE_BELT = 4
+	variable int STATE_BELTSFULL = 5
+	variable int STATE_TRANSFER_TO_JETCAN = 6
+	variable int STATE_DELIVER_ORE = 7
+	variable int STATE_RETURN_TO_STATION = 8
+	variable int STATE_ERROR = 99
+	
 	method Initialize()
 	{
 		BotModules:Insert["Miner"]
@@ -45,7 +47,7 @@ objectdef obj_Miner
 
 		This.TripStartTime:Set[${Time.Timestamp}]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-		UI:UpdateConsole["obj_Miner: Initialized", LOG_MINOR]
+		UI:UpdateConsole["${This.ObjectName}: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -60,16 +62,16 @@ objectdef obj_Miner
 			return
 		}
 
-	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			if !${EVEBot.Paused}
 			{
 				This:SetState[]
-            }
+			}
 
-    		This.NextPulse:Set[${Time.Timestamp}]
-    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-    		This.NextPulse:Update
+			This.NextPulse:Set[${Time.Timestamp}]
+			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+			This.NextPulse:Update
 		}
 	}
 
@@ -79,7 +81,9 @@ objectdef obj_Miner
 		{
 			return
 		}
-echo ${This.CurrentState}
+		
+		echo ${This.CurrentState}
+		
 		switch ${This.CurrentState}
 		{
 			variablecase ${STATE_WAIT_WARP}
@@ -172,6 +176,7 @@ echo ${This.CurrentState}
 		if ${Ship.InWarp}
 		{
 			This.CurrentState:Set[${STATE_WAIT_WARP}]
+			This.AsteroidCacheInvalid:Set[TRUE]
 			return
 		}
 
@@ -206,9 +211,13 @@ echo ${This.CurrentState}
 			return
 		}
 
-	    if ${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
+	  if ${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 		{
-			This.CurrentState:Set[${STATE_DELIVER_ORE}]
+			; ignore this condition if the cargo window is not open
+			if ${Ship.IsCargoOpen}
+			{
+				This.CurrentState:Set[${STATE_DELIVER_ORE}]
+			}
 			return
 		}
 
@@ -246,6 +255,18 @@ echo ${This.CurrentState}
 			}
 		}
 
+		if ${This.AsteroidCacheInvalid} && (${BeltBookmarks.AtBelt} || ${Belts.AtBelt})
+		{
+			UI:UpdateConsole["${This.ObjectName}: Forcing asteroid cache update."]
+
+			; EntityCache update will happen on the next pulse.
+			AsteroidCache:ForceUpdate[]
+			This.AsteroidCacheInvalid:Set[FALSE]
+		 	This.CurrentState:Set[${STATE_IDLE}]
+
+			return
+		}
+
 		if ${Asteroids.Count} == 0
 		{
 			UI:UpdateConsole["Belt is empty (or nothing we want), moving"]
@@ -253,7 +274,12 @@ echo ${This.CurrentState}
 			return
 		}
 
-	 	This.CurrentState:Set[${STATE_MINING}]
+	 	This.CurrentState:Set[${STATE_MINE}]
+	 	
+	 	; delay the next state transition for a little bit
+		This.NextPulse:Set[${Time.Timestamp}]
+		This.NextPulse.Second:Inc[${Math.Calc[${This.PulseIntervalInSeconds}*5]}]
+		This.NextPulse:Update
 	}
 
 	; Enable defenses, launch drones
@@ -314,7 +340,86 @@ echo ${This.CurrentState}
 		return TRUE
 	}
 
+	; Mine() function
+	;
+	;	1) If asteroids are locked, in range, and lasers are idle, activate lasers
+	; 2) If asteroids are locked and out of range, approach asteroids
+	; 3) If no asteroids are locked add some to the targeting queue
+	; 4) If cargohold is not opened open it
+	;
 	function Mine()
+	{
+		if !${Me.InSpace}
+		{
+			UI:UpdateConsole["DEBUG: obj_Miner.Mine called while not in space!"]
+			return
+		}
+		
+		; Make sure the cargo window is open.  
+		; This call does nothing if it is already open.
+		call Ship.OpenCargo
+		
+		Me:DoGetTargets[LockedTargets]
+		LockedTargets:GetIterator[Target]
+		if ${Target:First(exists)}
+		{
+			do
+			{
+				; check if this target is an asteroid, if not continue to next target
+				if ${Target.Value.CategoryID} != ${Asteroids.AsteroidCategoryID}
+				{
+					continue
+				}
+				
+				if ${Target.Value.Distance} > ${Ship.OptimalMiningRange}
+				{
+					; if we are not approach something already, approach this target
+					if !${Me.ToEntity.Approaching(exists)}
+					{
+						UI:UpdateConsoleDebug["${This.ObjectName}: Approaching ${Target.Value.ID} from ${Target.Value.Distance} meters."]
+						Navigator:Approach[${Target.Value.ID}, ${Ship.OptimalMiningRange}]
+					}
+				}
+				elseif ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers}
+				{
+					/* TODO: CyberTech - this concentrates fire fine if there's only 1 target, but if there's multiple targets
+						it still prefers to distribute. Ice mining shouldn't distribute
+					*/
+					if (${This.ConcentrateFire} || \
+						${Config.Miner.MinerType.Equal["Ice"]} || \
+						!${Ship.IsMiningAsteroidID[${Target.Value.ID}]})
+					{
+						; TODO - CyberTech: None of this should be here. it should be in a TARGETING state
+						Target.Value:MakeActiveTarget
+						while ${Target.Value.ID} != ${Me.ActiveTarget.ID}
+						{
+							wait 0.5
+						}
+	
+						if ${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
+						{
+							break
+						}
+
+						call Ship.ActivateFreeMiningLaser
+	
+						if (${Ship.Drones.DronesInSpace} > 0 && \
+							${Config.Miner.UseMiningDrones})
+						{
+							Ship.Drones:ActivateMiningDrones
+						}
+					}
+				}
+			}
+			while ${Target:Next(exists)}
+		}
+		else
+		{
+			; Queue up some asteroids here
+		}
+	}
+	
+	function Old_Mine()
 	{
 		UI:UpdateConsole["Mining"]
 		if !${Me.InSpace}

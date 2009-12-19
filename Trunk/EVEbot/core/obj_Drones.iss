@@ -263,7 +263,7 @@ objectdef obj_Drones
 
 	member:bool ShouldLaunchCombatDrones()
 	{
-		UI:UpdateConsole["obj_Drones:ShouldLaunchCombatDrones(): ${Ship.InWarp} ${Defense.Hiding} ${Offense.HaveFullAggro}",LOG_DEBUG]
+		;UI:UpdateConsole["obj_Drones:ShouldLaunchCombatDrones(): ${Ship.InWarp} ${Defense.Hiding} ${Offense.HaveFullAggro}",LOG_DEBUG]
 		if ${Ship.InWarp} || ${Defense.Hiding}
 		{
 			return FALSE

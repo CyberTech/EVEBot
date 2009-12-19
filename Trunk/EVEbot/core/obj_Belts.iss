@@ -64,9 +64,9 @@ objectdef obj_Belts
 			return FALSE
 		}
 
-		if ${beltIterator.Value.EntityID} > 0
+		if ${beltIterator.Value.ID(exists)}
 		{
-			if ${Me.ToEntity.DistanceTo[${beltIterator.Value.EntityID}]} < WARP_RANGE
+			if ${Me.ToEntity.DistanceTo[${beltIterator.Value.ID}]} < WARP_RANGE
 			{
 				return TRUE
 			}

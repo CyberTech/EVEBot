@@ -36,9 +36,9 @@ objectdef obj_Asteroids
 
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_Asteroids: Initialized", LOG_MINOR]
 		AsteroidCache:UpdateSearchParams["AsteroidCache", "CategoryID,CATEGORYID_ORE"]
 		AsteroidCache:SetUpdateFrequency[15]
+		UI:UpdateConsole["${This.ObjectName}: Initialized", LOG_MINOR]
 	}
 
 	; Checks the belt name against the empty belt list.
@@ -76,7 +76,8 @@ objectdef obj_Asteroids
 
 	member:int Count()
 	{
-		return 0
+		; FOR NOW just return count of all asteroids.  add filtering later.
+		return ${AsteroidCache.Count}
 	}
 
 	function MoveToField(bool ForceMove)
@@ -379,12 +380,12 @@ objectdef obj_Asteroids
 					{
 						if ${AsteroidIterator.Value.Distance} < ${This.MaxDistanceToAsteroid}
 						{
-							UI:UpdateConsole["obj_Asteroids: ChooseTargets: No Asteroids in range & All lasers idle: Approaching nearest"]
+							UI:UpdateConsole["${This.ObjectName}: ChooseTargets: No Asteroids in range & All lasers idle: Approaching nearest"]
 							call Ship.Approach ${AsteroidIterator.Value} ${Ship.OptimalMiningRange}
 						}
 						else
 						{
-							UI:UpdateConsole["obj_Asteroids: ChooseTargets: No Asteroids within ${EVEBot.MetersToKM_Str[${This.MaxDistanceToAsteroid}], changing fields."]
+							UI:UpdateConsole["${This.ObjectName}: ChooseTargets: No Asteroids within ${EVEBot.MetersToKM_Str[${This.MaxDistanceToAsteroid}], changing fields."]
 							/* The nearest asteroid is farfar away.  Let's just warp out. */
 
 							if ${CalledFromMoveRoutine}
@@ -402,7 +403,7 @@ objectdef obj_Asteroids
 		}
 		else
 		{
-			UI:UpdateConsole["obj_Asteroids: No Asteroids within overview range"]
+			UI:UpdateConsole["${This.ObjectName}: No Asteroids within overview range"]
 			if ${Entity[GroupID, GROUP_ASTEROIDBELT].Distance} < CONFIG_OVERVIEW_RANGE
 			{
 				This:MarkBeltEmpty["${Entity[GroupID, GROUP_ASTEROIDBELT]}"]
