@@ -90,6 +90,8 @@ function LoadBehaviors(string Label, string Path)
 
 function main()
 {
+	; Set turbo to 4000 per frame for startup.
+	Turbo 4000
 	echo "${Time} EVEBot: Starting"
 
 #if EVEBOT_PROFILING
@@ -176,7 +178,7 @@ function main()
 	runscript Threads/Targeting.iss
 	runscript Threads/Defense.iss
 	runscript Threads/Offense.iss
-	runscript Threads/Navigator.iss
+	;runscript Threads/Navigator.iss
 	echo "${Time} EVEBot: Loaded"
 
 	; This is a TimedCommand so that it executes in global scope, so we can get the list of global vars.
@@ -228,6 +230,7 @@ function main()
 #endif
 
 	UI:UpdateConsole["-=Paused: Press Run-="]
+	Turbo 100
 	Script:Pause
 
 	while ${EVEBot.Paused}

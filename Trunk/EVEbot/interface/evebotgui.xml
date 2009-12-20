@@ -70,7 +70,7 @@
 				<Height>100%</Height>
 				<Tabs>
 					<Tab Name='Status'>
-						<text name='script_runtime'>
+						<text name='script_runtime' template='EVESkin.Font.Description'>
 							<X>10</X>
 							<Y>10</Y>
 							<Width>115</Width>
@@ -84,7 +84,6 @@
 							<Height>20</Height>
 							<Text>${UI.Runtime}</Text>
 						</Text>
-
 						<text name='state' template='EVESkin.Font.Description'>
 							<X>10</X>
 							<Y>25</Y>
@@ -101,65 +100,65 @@
 						</text>
 						<text name='Trips' template='EVESkin.Font.Description'>
 							<X>10</X>
-							<Y>40</Y>
+							<Y>35</Y>
 							<Width>100</Width>
 							<Height>20</Height>
 							<Text>Runs this Session:</Text>
 						</text>
 						<text name='Trips_Data' template='EVESkin.Font.Value'>
 							<X>150</X>
-							<Y>40</Y>
+							<Y>35</Y>
 							<Width>100</Width>
 							<Height>20</Height>
 							<text>${Miner.TotalTrips}</text>
 						</text>
 						<text name='avg_time' template='EVESkin.Font.Description'>
 							<X>10</X>
-							<Y>70</Y>
+							<Y>45</Y>
 							<Width>175</Width>
 							<Height>20</Height>
 							<Text>Time For Current Trip:</Text>
 						</text>
 						<text name='avg_time_data' template='EVESkin.Font.Value'>
 							<X>150</X>
-							<Y>70</Y>
+							<Y>45</Y>
 							<Width>150</Width>
 							<Height>20</Height>
 							<text>${ISXEVE.SecsToString[${Miner.TripDuration}]}</text>
 						</text>
 						<text name='Currently Training' template='EVESkin.Font.Description'>
 							<X>10</X>
-							<Y>115</Y>
+							<Y>55</Y>
 							<Width>175</Width>
 							<Height>20</Height>
 							<Text>Currently Training:</Text>
 						</text>
 						<text name='CurrentlyTrainingDATA' template='EVESkin.Font.Value'>
 							<X>150</X>
-							<Y>115</Y>
+							<Y>55</Y>
 							<Width>150</Width>
 							<Height>20</Height>
 							<text>${Skills.CurrentlyTrainingSkill}</text>
 						</text>
 						<text name='Next to be trained' template='EVESkin.Font.Description'>
 							<X>10</X>
-							<Y>130</Y>
+							<Y>65</Y>
 							<Width>175</Width>
 							<Height>20</Height>
 							<Text>Next Queued:</Text>
 						</text>
 						<text name='nexttobetrainedDATA' template='EVESkin.Font.Value'>
 							<X>150</X>
-							<Y>130</Y>
+							<Y>65</Y>
 							<Width>150</Width>
 							<Height>20</Height>
 							<text>${Skills.NextInLine}</text>
 						</text>
 						<console Name="StatusConsole" template='EVESkin.Console'>
 							<X>5</X>
-							<Y>r120</Y>
+							<Y>90</Y>
 							<Width>97.5%</Width>
-							<Height>115</Height>
+							<Height>195</Height>
 						</console>
 					</Tab>
 
@@ -187,20 +186,6 @@
 							</Items>
 							<OnSelect>
 								Config.Common:BotMode[${This.SelectedItem.Text}]
-								switch ${This.SelectedItem.Text}
-								{
-									case Miner
-										UIElement[EVEBot].FindUsableChild[Miner,frame]:Show
-										;UIElement[EVEBot].FindUsableChild[Hauler,frame]:Hide
-										UIElement[Hauler@EVEBotOptionsTab@EVEBot_Children@EVEBot]:Hide
-										break
-									case MinerHauler
-										UIElement[EVEBot].FindUsableChild[Miner,frame]:Hide
-										UIElement[EVEBot].FindUsableChild[Hauler,frame]:Show
-										break
-									Default
-										break
-								}
 							</OnSelect>
 							<OnLoad>
 								This.ItemByText[${Config.Common.BotMode}]:Select
@@ -230,80 +215,13 @@
 							<Text>Minimum Drones in Bay</Text>
 							<AutoTooltip>This will set the amount of drones you want in your drone bay.</AutoTooltip>
 						</Text>
-						<checkbox Name='cbAutoLogin'>
-							<X>10</X>
-							<Y>50</Y>
-							<Height>20</Height>
-							<Width>100</Width>
-							<Text>Auto Login</Text>
-							<AutoTooltip>Auto Login when at Login window</AutoTooltip>
-							<OnLoad>
-								if ${Config.Common.AutoLogin}
-								{
-								This:SetChecked
-								}
-							</OnLoad>
-							<OnLeftClick>
-								Config.Common:AutoLogin[${This.Checked}]
-							</OnLeftClick>
-						</checkbox>
-						<Text name='LoginNameText'>
-							<X>10</X>
-							<Y>70</Y>
-							<Width>100</Width>
-							<Height>18</Height>
-							<Text>EVE Login</Text>
-							<AutoTooltip>The EVE Login name for ${_Me.Name}</AutoTooltip>
-						</Text>
-						<Textentry name='LoginName'>
-							<X>140</X>
-							<Y>70</Y>
-							<Width>100</Width>
-							<Height>18</Height>
-							<MaxLength>25</MaxLength>
-							<OnLoad>
-								This:SetText[${Config.Common.LoginName}]
-							</OnLoad>
-							<OnChange>
-								if ${This.Text.Length} > 0
-								{
-								Config.Common:LoginName[${This.Text}]
-								}
-							</OnChange>
-						</Textentry>
-						<Text name='LoginPasswordText'>
-							<X>10</X>
-							<Y>90</Y>
-							<Width>100</Width>
-							<Height>18</Height>
-							<Text>EVE Password</Text>
-							<AutoTooltip>The EVE Login Password for ${_Me.Name}</AutoTooltip>
-						</Text>
-						<Textentry name='LoginPassword'>
-							<X>140</X>
-							<Y>90</Y>
-							<Width>100</Width>
-							<Height>18</Height>
-							<MaxLength>25</MaxLength>
-							<PasswordCharacter>*</PasswordCharacter>
-							<OnLoad>
-								This:SetText[${Config.Common.LoginPassword}]
-							</OnLoad>
-							<OnChange>
-								if ${This.Text.Length} > 0
-								{
-								Config.Common:LoginPassword[${This.Text}]
-								}
-							</OnChange>
-						</Textentry>
-
 						<Text name='lblMaxRuntime'>
 							<X>10</X>
 							<Y>130</Y>
 							<Width>130</Width>
 							<Height>18</Height>
-							<Text>Maximum Runtime</Text>
-							<AutoTooltip>The maximum time to run the script before it aborts.</AutoTooltip>
+							<Text>Max Run Hours</Text>
+							<AutoTooltip>The maximum hours to run the script before it aborts.</AutoTooltip>
 						</Text>
 						<Textentry name='tbMaxRuntime'>
 							<X>140</X>
@@ -802,7 +720,7 @@
 							<Children>
 								<checkbox name='cbRunOnLowAmmo'>
 									<X>10</X>
-									<Y>10</Y>
+									<Y>2</Y>
 									<Height>20</Height>
 									<Width>100</Width>
 									<Text>Run On Low Ammo</text>
@@ -819,7 +737,7 @@
 								</checkbox>
 								<checkbox name='cbRunOnLowCap'>
 									<X>10</X>
-									<Y>30</Y>
+									<Y>22</Y>
 									<Height>20</Height>
 									<Width>100</Width>
 									<Text>Run On Low Cap</text>
@@ -836,7 +754,7 @@
 								</checkbox>
 								<checkbox name='cbRunOnLowTank'>
 									<X>10</X>
-									<Y>50</Y>
+									<Y>42</Y>
 									<Height>20</Height>
 									<Width>100</Width>
 									<Text>Run On Low Tank</text>
@@ -853,7 +771,7 @@
 								</checkbox>
 								<checkbox name='cbRunToStation'>
 									<X>10</X>
-									<Y>70</Y>
+									<Y>62</Y>
 									<Height>20</Height>
 									<Width>100</Width>
 									<Text>Run To Station</text>
@@ -870,7 +788,7 @@
 								</checkbox>
 								<checkbox name='cbUseWhiteList'>
 									<X>10</X>
-									<Y>90</Y>
+									<Y>82</Y>
 									<Height>20</Height>
 									<Width>100</Width>
 									<Text>Run On Non-Whitelisted Pilot</text>
@@ -887,7 +805,7 @@
 								</checkbox>
 								<checkbox name='cbUseBlackList'>
 									<X>10</X>
-									<Y>110</Y>
+									<Y>102</Y>
 									<Height>20</Height>
 									<Width>100</Width>
 									<Text>Run On Blacklisted Pilot</text>
@@ -1087,7 +1005,7 @@
 									<Y>50</Y>
 									<Height>20</Height>
 									<Width>100</Width>
-									<Text>Use Belt Bookmarks</text>
+									<Text>Use Belt Bookmarks (Disabled)</text>
 									<AutoTooltip>Will warp to bookmarks instead of belts.</AutoTooltip>
 									<OnLoad>
 										if ${Config.Combat.UseBeltBookmarks}

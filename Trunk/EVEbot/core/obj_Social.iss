@@ -6,7 +6,6 @@ This contains all stuff dealing with other players around us. - Hessinger
 
 	Members
 		- (bool) PlayerDetection(): Returns TRUE if a Player is near us. (Notes: Ignores Fleet Members)
-		- (bool) NPCDetection(): Returns TRUE if an NPC is near us.
 		- (bool) PilotsWithinDectection(int Distance): Returns True if there are pilots within the distance passed to the member. (Notes: Only works for players)
 		- (bool) StandingDetection(): Returns True if there are pilots below the standing passed to the member. (Notes: Only works for players)
 		- (bool) PossibleHostiles(): Returns True if there are ships targeting us.
@@ -17,17 +16,18 @@ objectdef obj_Social
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
+	variable set ClearedPilots
+	variable set ReportedPilotsSinceLastSafe
+	variable int LastSystemID
+	variable int LastStationID
+
 	variable index:pilot PilotIndex
-	variable index:entity EntityIndex
-	variable collection:time WhiteListPilotLog
-	variable collection:time BlackListPilotLog
 
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 2
 
 	variable bool Passed_LowStandingCheck = TRUE
-	variable bool Passed_WhiteListCheck = TRUE
-	variable bool Passed_BlackListCheck = TRUE
+	variable bool Passed_PilotCheck = TRUE
 
 	variable iterator WhiteListPilotIterator
 	variable iterator WhiteListCorpIterator
@@ -111,6 +111,10 @@ objectdef obj_Social
 
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		Event[EVE_OnChannelMessage]:AttachAtom[This:OnChannelMessage]
+		This.NextPulse:Set[${Time.Timestamp}]
+		This.NextPulse.Second:Inc[10]
+		This.NextPulse:Update
+
 		EVE:ActivateChannelMessageEvents
 
 		UI:UpdateConsole["obj_Social: Initialized", LOG_MINOR]
@@ -131,14 +135,16 @@ objectdef obj_Social
 			{
 				This:CheckChatInvitation[]
 
-   				if ${Me.InSpace}
+				if ${_Me.SystemID} != ${This.LastSystemID}
 				{
-					; TODO - replace with with entityache after entitycache is merged to not be multi-instance - CyberTech
-					EVE:DoGetEntities[This.EntityIndex,CategoryID,CATEGORYID_ENTITY]
+					This.ClearedPilots:Clear
+					This.LastSystemID:Set[${_Me.SystemID}]
 				}
-				else
+
+				if ${_Me.StationID} != ${This.LastStationID}
 				{
-					This.EntityIndex:Clear
+					This.ClearedPilots:Clear
+					This.LastStationID:Set[${_Me.StationID}]
 				}
 
 				; DoGetPilots is relatively expensive vs just the pilotcount.  Check if we're alone before calling.
@@ -147,21 +153,23 @@ objectdef obj_Social
 					EVE:DoGetPilots[This.PilotIndex]
 
 					Passed_LowStandingCheck:Set[!${This.LowStandingDetected}]
-		   			Passed_BlackListCheck:Set[${This.CheckLocalBlackList}]
-					Passed_WhiteListCheck:Set[${This.CheckLocalWhiteList}]
+					Passed_PilotCheck:Set[${This.CheckLocalPilots}]
+					if ${Passed_LowStandingCheck} && ${Passed_PilotCheck}
+					{
+							This.ReportedPilotsSinceLastSafe:Clear
+					}
 				}
 				else
 				{
 					Passed_LowStandingCheck:Set[TRUE]
-   					Passed_BlackListCheck:Set[TRUE]
-					Passed_WhiteListCheck:Set[TRUE]
+					Passed_PilotCheck:Set[TRUE]
 					This.PilotIndex:Clear
 				}
 			}
 
-    		This.NextPulse:Set[${Time.Timestamp}]
-    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-    		This.NextPulse:Update
+			This.NextPulse:Set[${Time.Timestamp}]
+			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+			This.NextPulse:Update
 		}
 	}
 
@@ -202,12 +210,7 @@ objectdef obj_Social
 			is_safe:Set[FALSE]
 		}
 
-		if !${Passed_WhiteListCheck}
-		{
-			is_safe:Set[FALSE]
-		}
-
-		if !${Passed_BlackListCheck}
+		if !${Passed_PilotCheck}
 		{
 			is_safe:Set[FALSE]
 		}
@@ -215,8 +218,8 @@ objectdef obj_Social
 		return ${is_safe}
 	}
 
-	; Returns TRUE if the Check passes and there are no non-whitelisted pilots in local
-	member:bool CheckLocalWhiteList()
+	; Returns TRUE if the Check passes and there are no non-whitelisted and no blacklisted pilots in local
+	member:bool CheckLocalPilots()
 	{
 		variable iterator PilotIterator
 		variable int CorpID
@@ -224,81 +227,83 @@ objectdef obj_Social
 		variable int PilotID
 		variable string PilotName
 		variable bool Result
-
 		Result:Set[TRUE]
 
-		if !${Config.Combat.UseWhiteList}
+		if ${This.PilotIndex.Used} < 2
 		{
 			return TRUE
 		}
 
-		if ${This.PilotIndex.Used} < 2 || \
-			(${PilotWhiteList.Used} == 0 && \
-			${CorpWhiteList.Used} == 0 && \
-			${AllianceWhiteList.Used} == 0)
+		if !${Config.Combat.UseWhiteList} && !${Config.Combat.UseBlackList}
 		{
-			return TRUE
+			This.ReportedPilotsSinceLastSafe:Clear
 		}
+
 
 		This.PilotIndex:GetIterator[PilotIterator]
 		if ${PilotIterator:First(exists)}
 		do
 		{
+			PilotID:Set[${PilotIterator.Value.CharID}]
+			if ${This.ClearedPilots.Contains[${PilotID}]}
+			{
+				continue
+			}
+			if ${This.ReportedPilotsSinceLastSafe.Contains[${PilotID}]}
+			{
+				; We already reported this pilot, since the last time the system was safe. We'll go ahead and
+				; declare the system still not safe, and not re-report.
+				;UI:UpdateConsole["Note: Previously Reported PilotID: ${PilotID}", LOG_DEBUG]
+				Result:Set[FALSE]
+				continue
+			}
+
 			CorpID:Set[${PilotIterator.Value.CorporationID}]
 			AllianceID:Set[${PilotIterator.Value.AllianceID}]
-			PilotID:Set[${PilotIterator.Value.CharID}]
 			PilotName:Set[${PilotIterator.Value.Name}]
-			if !${This.AllianceWhiteList.Contains[${AllianceID}]} && \
-				!${This.CorpWhiteList.Contains[${CorpID}]} && \
-				!${This.PilotWhiteList.Contains[${PilotID}]}
+
+			/*
+				The whitelist OVERRIDES the blacklist, at all times.
+				_IF_ UseWhiteList is checked, then pilots who are not whitelisted are implicitly blacklisted
+			*/
+			if ${This.CorpWhiteList.Contains[${CorpID}]} || \
+				${This.AllianceWhiteList.Contains[${AllianceID}]} || \
+				${This.PilotWhiteList.Contains[${PilotID}]}
+			{
+				UI:UpdateConsole["Note: Whitelisted Pilot: ${PilotName} ID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_DEBUG]
+			}
+			elseif ${Config.Combat.UseBlackList}
+			{
+				if ${This.AllianceBlackList.Contains[${AllianceID}]}
+				{
+					UI:UpdateConsole["Alert: Blacklisted Alliance: Pilot: ${PilotName} AllianceID: ${AllianceID}", LOG_CRITICAL]
+					Result:Set[FALSE]
+					This.ReportedPilotsSinceLastSafe:Add[${PilotID}]
+				}
+				if ${This.CorpBlackList.Contains[${CorpID}]}
+				{
+					UI:UpdateConsole["Alert: Blacklisted Corporation: Pilot: ${PilotName} CorpID: ${CorpID}", LOG_CRITICAL]
+					Result:Set[FALSE]
+					This.ReportedPilotsSinceLastSafe:Add[${PilotID}]
+				}
+				if ${This.PilotBlackList.Contains[${PilotID}]}
+				{
+					UI:UpdateConsole["Alert: Blacklisted Pilot: ${PilotName}", LOG_CRITICAL]
+					Result:Set[FALSE]
+					This.ReportedPilotsSinceLastSafe:Add[${PilotID}]
+				}
+			}
+			elseif ${Config.Combat.UseWhiteList}
 			{
 				UI:UpdateConsole["Alert: Non-Whitelisted Pilot: ${PilotName} ID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_CRITICAL]
 				Result:Set[FALSE]
+				This.ReportedPilotsSinceLastSafe:Add[${PilotID}]
 			}
-		}
-		while ${PilotIterator:Next(exists)}
-		return ${Result}
-	}
 
-	; Returns TRUE if the Check passes and there are no blacklisted pilots in local
-	member:bool CheckLocalBlackList()
-	{
-		variable iterator PilotIterator
-		variable bool Result
-
-		Result:Set[TRUE]
-
-   		if !${Config.Combat.UseBlackList}
-   		{
-   			return TRUE
-   		}
-
-   		if ${This.PilotIndex.Used} < 2 || \
-   			(${PilotBlackList.Used} == 0 && \
-   			${CorpBlackList.Used} == 0 && \
-   			${AllianceBlackList.Used} == 0)
-   		{
-   			return TRUE
-   		}
-
-		This.PilotIndex:GetIterator[PilotIterator]
-		if ${PilotIterator:First(exists)}
-		do
-		{
-			if ${This.AllianceBlackList.Contains[${PilotIterator.Value.AllianceID}]}
+			if ${Result}
 			{
-				UI:UpdateConsole["Alert: Blacklisted Alliance: Pilot: ${PilotIterator.Value.Name} AllianceID: ${PilotIterator.Value.AllianceID}", LOG_CRITICAL]
-				Result:Set[FALSE]
-			}
-			if ${This.CorpBlackList.Contains[${PilotIterator.Value.CorporationID}]}
-			{
-				UI:UpdateConsole["Alert: Blacklisted Corporation: Pilot: ${PilotIterator.Value.Name} CorpID: ${PilotIterator.Value.CorporationID}", LOG_CRITICAL]
-				Result:Set[FALSE]
-			}
-			if ${This.PilotBlackList.Contains[${PilotIterator.Value.CharID}]}
-			{
-				UI:UpdateConsole["Alert: Blacklisted Pilot: ${PilotIterator.Value.Name}!", LOG_CRITICAL]
-				Result:Set[FALSE]
+				; Result is still true, so the pilot has passed whitelist and blacklist checks
+				This.ClearedPilots:Add[${PilotID}]
 			}
 		}
 		while ${PilotIterator:Next(exists)}
@@ -316,6 +321,11 @@ objectdef obj_Social
    		{
    			return FALSE
    		}
+
+		if !${Me.InSpace}
+		{
+			return
+		}
 
 		variable iterator PilotIterator
 		This.PilotIndex:GetIterator[PilotIterator]
@@ -336,31 +346,6 @@ objectdef obj_Social
 			}
 			while ${PilotIterator:Next(exists)}
 		}
-		return FALSE
-	}
-
-	member:bool NPCDetection()
-	{
-		if !${This.EntityIndex.Used}
-		{
-			return FALSE
-		}
-
-		variable iterator EntityIterator
-		This.EntityIndex:GetIterator[EntityIterator]
-
-		if ${EntityIterator:First(exists)}
-		{
-			do
-			{
-				if ${EntityIterator.Value.IsNPC}
-				{
-					return TRUE
-				}
-			}
-			while ${EntityIterator:Next(exists)}
-		}
-
 		return FALSE
 	}
 
@@ -453,46 +438,5 @@ objectdef obj_Social
 
 		return FALSE
 	}
-
-	member:bool PossibleHostiles()
-	{
-		variable iterator EntityIterator
-		This.EntityIndex:GetIterator[EntityIterator]
-
-		if ${EntityIterator:First(exists)}
-		{
-			do
-			{
-				if ${EntityIterator.Value.IsTargetingMe}
-				{
-					return TRUE
-				}
-			}
-			while ${EntityIterator:Next(exists)}
-		}
-
-		if ${This.PilotIndex.Used} < 2
-		{
-			return FALSE
-		}
-
-		variable iterator PilotIterator
-		This.PilotIndex:GetIterator[PilotIterator]
-
-		if ${PilotIterator:First(exists)}
-		{
-			do
-			{
-				if ${PilotIterator.Value.IsTargetingMe}
-				{
-					return TRUE
-				}
-			}
-			while ${PilotIterator:Next(exists)}
-		}
-
-		return FALSE
-	}
-
 }
 

@@ -49,9 +49,12 @@ objectdef obj_Defense
 		{
 			if ${EVEBot.SessionValid} && ${This.Running}
 			{
-				This:CheckWarpScramble
-				This:TakeDefensiveAction[]
-				This:CheckTankMinimums[]
+				if ${Me.InSpace}
+				{
+					This:CheckWarpScramble
+					This:TakeDefensiveAction[]
+					This:CheckTankMinimums[]
+				}
 				This:CheckLocal[]
 
 				if ${Config.Combat.RunIfTargetJammed} && ${Targeting.IsTargetingJammed}
@@ -78,10 +81,10 @@ objectdef obj_Defense
 
 			This.NextPulse:Set[${Time.Timestamp}]
 			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-			This.NextPulse:Update
+ 			This.NextPulse:Update
 		}
 	}
-	
+
 	method CheckWarpScramble()
 	{
 		if ${_Me.IsWarpScrambled}

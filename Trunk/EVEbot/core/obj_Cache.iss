@@ -14,10 +14,9 @@ objectdef obj_Cache
 	variable int Version
 
 	variable bool Initialized = false
-	variable float RunTime
-	variable float NextPulse2Sec = 0
-	variable float NextPulse1Sec = 0
-	variable float NextPulseHalfSec = 0
+	variable time NextPulse2Sec = 0
+	variable time NextPulse1Sec = 0
+	variable time NextPulseHalfSec = 0
 
 	variable collection:string StaticList
 	variable collection:string ObjectList
@@ -44,13 +43,10 @@ objectdef obj_Cache
 	/* Runs every other frame, and updates one member per run */
 	method Pulse()
 	{
-		; Changing the /1000 is not going to make your script faster or your dog smarter. it will just break things.
-		This.RunTime:Set[${Math.Calc[${Script.RunningTime}/1000]}]
-
 		This:UpdateList[FrameObjectList]
-		
+
 		/* Process FastObjectList every half second */
-		if ${This.RunTime} > ${This.NextPulseHalfSec}
+		if ${Time.Timestamp} >= ${This.NextPulseHalfSec.Timestamp}
 		{
 			/*
 			if ${EVEBot(exists)} && !${EVEBot.SessionValid}
@@ -62,24 +58,27 @@ objectdef obj_Cache
 			}
 			*/
 			This:UpdateList[FastObjectList]
-			This.NextPulseHalfSec:Set[${This.RunTime}]
-    		This.NextPulseHalfSec:Inc[0.5]
+			This.NextPulseHalfSec:Set[${Time.Timestamp}]
+			This.NextPulseHalfSec.Second:Inc[0.5]
+			This.NextPulseHalfSec:Update
 		}
 
 		/* Process ObjectList every 1 second */
-		if ${This.RunTime} > ${This.NextPulse1Sec}
+		if ${Time.Timestamp} >= ${This.NextPulse1Sec.Timestamp}
 		{
 			This:UpdateList[OneSecondObjectList]
-			This.NextPulse1Sec:Set[${This.RunTime}]
-    		This.NextPulse1Sec:Inc[2.0]
+			This.NextPulse1Sec:Set[${Time.Timestamp}]
+			This.NextPulse1Sec.Second:Inc[2.0]
+			This.NextPulse1Sec:Update
 		}
 
 		/* Process ObjectList every 2 seconds */
-		if ${This.RunTime} > ${This.NextPulse2Sec}
+		if ${Time.Timestamp} >= ${This.NextPulse2Sec.Timestamp}
 		{
 			This:UpdateList[ObjectList]
-			This.NextPulse2Sec:Set[${This.RunTime}]
-    		This.NextPulse2Sec:Inc[2.0]
+			This.NextPulse2Sec:Set[${Time.Timestamp}]
+			This.NextPulse2Sec.Second:Inc[2.0]
+			This.NextPulse2Sec:Update
 		}
 	}
 

@@ -152,9 +152,9 @@ objectdef obj_EVEBot
 				}
 			}
 
-    		This.NextPulse:Set[${Time.Timestamp}]
-    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-    		This.NextPulse:Update
+			This.NextPulse:Set[${Time.Timestamp}]
+			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+			This.NextPulse:Update
 		}
 	}
 
@@ -164,7 +164,8 @@ objectdef obj_EVEBot
 		{
 			return ${This.LastSessionResult}
 		}
-		if ${EVE(exists)} && ${MyShip(exists)}
+
+		if ${Me.InSpace} || ${Me.InStation}
 		{
 			This.LastSessionFrame:Set[${Script.RunningTime}]
 			This.LastSessionResult:Set[TRUE]
@@ -179,8 +180,12 @@ objectdef obj_EVEBot
 	member:bool Paused()
 	{
 		if ${This._Paused} || \
-			${Script.Paused} || \
-			!${This.SessionValid}
+			${Script.Paused}
+		{
+			return TRUE
+		}
+
+		if !${This.SessionValid}
 		{
 			return TRUE
 		}
