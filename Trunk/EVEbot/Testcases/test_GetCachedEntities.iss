@@ -7,8 +7,7 @@
 
 */
 
-variable obj_UI UI
-function main()
+atom RunAtomicTestCase()
 {
 	variable int StartTime = ${Script.RunningTime}
 	variable int StartTime2
@@ -20,7 +19,7 @@ function main()
 
 	ItemTest:ParseMembers
 
-	EVE:GetCachedEntities[Entities]
+	EVE:GetCachedEntities[Entities, CategoryID, 25]
 	variable float CallTime
 	CallTime:Set[${Math.Calc[(${Script.RunningTime}-${StartTime}) / 1000]}]
 	echo "EVE:GetCachedEntities returned ${Entities.Used} entities in ${CallTime} seconds"
@@ -37,4 +36,10 @@ function main()
 
 	echo "EVE:GetCachedEntities returned ${Entities.Used} entities in ${CallTime} seconds"
 	echo "Testing of datatype ${ItemTest.TypeName} completed in ${Math.Calc[(${Script.RunningTime}-${StartTime}) / 1000]} seconds"
+}
+
+variable obj_UI UI
+function main()
+{
+	RunAtomicTestCase
 }
