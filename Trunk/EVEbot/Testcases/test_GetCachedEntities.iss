@@ -13,17 +13,17 @@ function main()
 	variable int StartTime = ${Script.RunningTime}
 	variable int StartTime2
 
-	declarevariable Entities index:entity script
+	declarevariable Entities index:cachedentity script
 	declarevariable EntityIterator iterator script
 
-	variable obj_LSTypeIterator ItemTest = "entity"
+	variable obj_LSTypeIterator ItemTest = "cachedentity"
 
 	ItemTest:ParseMembers
 
-	EVE:DoGetEntities[Entities]
+	EVE:GetCachedEntities[Entities]
 	variable float CallTime
 	CallTime:Set[${Math.Calc[(${Script.RunningTime}-${StartTime}) / 1000]}]
-	echo "EVE:DoGetEntities returned ${Entities.Used} entities in ${CallTime} seconds"
+	echo "EVE:GetCachedEntities returned ${Entities.Used} entities in ${CallTime} seconds"
 
 	Entities:GetIterator[EntityIterator]
 	if ${EntityIterator:First(exists)}
@@ -35,6 +35,6 @@ function main()
 	}
 	while ${EntityIterator:Next(exists)}
 
-	echo "EVE:DoGetEntities returned ${Entities.Used} entities in ${CallTime} seconds"
+	echo "EVE:GetCachedEntities returned ${Entities.Used} entities in ${CallTime} seconds"
 	echo "Testing of datatype ${ItemTest.TypeName} completed in ${Math.Calc[(${Script.RunningTime}-${StartTime}) / 1000]} seconds"
 }
