@@ -182,7 +182,7 @@ namespace evecmd
             List<Entity> not_locked = new List<Entity>();
             Entity active = null;
 
-            if (roids == null)
+            if (roids == null || roids.Count == 0)
             {
                 SetDone("No asteroids in range");
                 return false;
@@ -240,23 +240,15 @@ namespace evecmd
             // if we fire something, then just wait until next frame
             if (available.Count > 0 && need_activating.Count > 0)
             {
-                Module laser = need_activating[0];
-                Entity roid = available[0];
-
-                if (active != null && active.IsValid &&
-                    active.ID == roid.ID)
-                {
-                    laser.Click();
-                    start_times[laser.ToItem.ID] = DateTime.Now;
-                    g.Print("Mining: [{0}] {1}", roid.ID, roid.Name);
-                }
-                else
-                    roid.MakeActiveTarget();
-
-                do_nothing_until = DateTime.Now + new TimeSpan(0, 0, 1);
+                TryToActivateLaser(active, need_activating[0], available[0]);
                 return true;
             }
-            
+            // if there are none available, but we still have lasers, feel free to double up
+            else if (need_activating.Count > 0 && locked.Count > 0)
+            {
+                TryToActivateLaser(active, need_activating[0], locked[0]);
+                return true;
+            }
 
             // if our capacitor is at more than half, turn off the laser furthest along
             //Module furthest = null;
@@ -289,6 +281,21 @@ namespace evecmd
             }
 
             return true;
+        }
+
+        private void TryToActivateLaser(Entity active, Module laser, Entity roid)
+        {
+            if (active != null && active.IsValid &&
+                active.ID == roid.ID)
+            {
+                laser.Click();
+                start_times[laser.ToItem.ID] = DateTime.Now;
+                g.Print("Mining: [{0}] {1}", roid.ID, roid.Name);
+            }
+            else
+                roid.MakeActiveTarget();
+
+            do_nothing_until = DateTime.Now + TimeSpan.FromSeconds(0.5);
         }
     }
     
