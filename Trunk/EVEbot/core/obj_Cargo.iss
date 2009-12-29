@@ -43,6 +43,33 @@ objectdef obj_Cargo
 		call Station.CloseHangar
 	}
 
+	member:int MaxQuantityForVolume(float FreeSpace, float Volume, int QuantityOnHand)
+	{
+		variable int64 Quantity
+
+		if ${Volume} == 0
+		{
+			UI:UpdateConsole["Error: CalcMaxQuantityInSpace passed 0 for item volume"]
+			return ${QuantityOnHand}
+		}
+		Quantity:Set[${Math.Calc[${FreeSpace} / ${Volume}].Round}
+
+		if ${Volume} < 1
+		{
+			; With large #'s of small volume items, sometimes EVE rounding errors cause us not to be able to move as much as we calc'd
+			Quantity:Dec
+		}
+
+		if ${Quantity} < ${QuantityOnHand}
+		{
+			UI:UpdateConsole["DEBUG: CalcMaxQuantityInSpace returning ${Quantity}", LOG_DEBUG]
+			return ${Quantity}
+		}
+
+		UI:UpdateConsole["DEBUG: CalcMaxQuantityInSpace returning ${QuantityOnHand}", LOG_DEBUG]
+		return ${QuantityOnHand}
+	}
+
 	member:bool ShipHasContainers()
 	{
 		variable index:item anItemIndex
@@ -429,15 +456,7 @@ objectdef obj_Cargo
 				{
 					call JetCan.Open ${JetCan.ActiveCan}
 
-					if ${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}]} > ${JetCan.CargoFreeSpace}
-					{
-						/* Move only what will fit, minus 1 to account for CCP rounding errors. */
-						QuantityToMove:Set[${Math.Calc[${JetCan.CargoFreeSpace} / ${CargoIterator.Value.Volume} - 1]}]
-					}
-					else
-					{
-						QuantityToMove:Set[${CargoIterator.Value.Quantity}]
-					}
+					QuantityToMove:Set[${This.MaxQuantityForVolume[${JetCan.CargoFreeSpace}, ${CargoIterator.Value.Volume}, ${CargoIterator.Value.Quantity}]}]
 
 					UI:UpdateConsole["TransferListToJetCan: Transferring Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
 					CargoIterator.Value:MoveTo[${JetCan.ActiveCan}, ${QuantityToMove}]
@@ -459,43 +478,6 @@ objectdef obj_Cargo
 		}
 	}
 
-	member:int QuantityToMove(item src, item dest)
-	{
-		variable int qty = 0
-
-		UI:UpdateConsole["DEBUG: QuantityToMove: ${src} ${dest}"]
-
-		if ${src(exists)}
-		{
-			if ${dest(exists)} && ${dest} > 0
-			{	/* assume destination is a container */
-				if ${Math.Calc[${src.Quantity} * ${src.Volume}]} > ${This.ContainerFreeSpace[${dest}]}
-				{	/* Move only what will fit, minus 1 to account for CCP rounding errors. */
-					qty:Set[${This.ContainerFreeSpace[${dest}]} / ${src.Volume} - 1]
-				}
-				else
-				{
-					qty:Set[${src.Quantity}]
-				}
-			}
-			else
-			{	/* assume destination is ship's cargo hold */
-				if ${Math.Calc[${src.Quantity} * ${src.Volume}]} > ${Ship.CargoFreeSpace}
-				{	/* Move only what will fit, minus 1 to account for CCP rounding errors. */
-					qty:Set[${Ship.CargoFreeSpace} / ${src.Volume} - 1]
-				}
-				else
-				{
-					qty:Set[${src.Quantity}]
-				}
-			}
-		}
-
-		UI:UpdateConsole["DEBUG: QuantityToMove: returning ${qty}"]
-
-		return ${qty}
-	}
-
 	function TransferListToShipWithContainers()
 	{
 		variable iterator   listItemIterator
@@ -503,7 +485,7 @@ objectdef obj_Cargo
 		variable iterator   shipItemIterator
 		variable index:item shipContainerIndex
 		variable iterator   shipContainerIterator
-		variable int qty
+		variable int QuantityToMove
 		variable int cnt
 		variable int idx
 
@@ -548,24 +530,17 @@ objectdef obj_Cargo
 				}
 				while ${usedSpace} < 0
 				totalSpace:Set[${shipContainerIterator.Value.Capacity}]
-				;;UI:UpdateConsole["DEBUG: TransferListToShipWithContainers: used space = ${usedSpace}"]
-				;;UI:UpdateConsole["DEBUG: TransferListToShipWithContainers: total space = ${totalSpace}"]
-				if ${Math.Calc[${This.CargoToTransfer.Get[${idx}].Quantity} * ${This.CargoToTransfer.Get[${idx}].Volume}]} > ${Math.Calc[${totalSpace}-${usedSpace}]}
-				{	/* Move only what will fit, minus 1 to account for CCP rounding errors. */
-					qty:Set[${Math.Calc[${totalSpace}-${usedSpace}]} / ${This.CargoToTransfer.Get[${idx}].Volume} - 1]
-				}
-				else
+				;;UI:UpdateConsole["DEBUG: TransferListToShipWithContainers: Container used space = ${usedSpace}"]
+				;;UI:UpdateConsole["DEBUG: TransferListToShipWithContainers: Container total space = ${totalSpace}"]
+				QuantityToMove:Set[${This.MaxQuantityForVolume[${Math.Calc[${totalSpace}-${usedSpace}]}, ${This.CargoToTransfer.Get[${idx}].Volume}, ${This.CargoToTransfer.Get[${idx}].Quantity}]}]
+
+				if ${QuantityToMove} > 0
 				{
-					qty:Set[${This.CargoToTransfer.Get[${idx}].Quantity}]
-				}
-				;;UI:UpdateConsole["DEBUG: TransferListToShipWithContainers: quantity = ${qty}"]
-				if ${qty} > 0
-				{
-					UI:UpdateConsole["TransferListToShipWithContainers: Loading Cargo: ${qty} units (${Math.Calc[${qty} * ${This.CargoToTransfer.Get[${idx}].Volume}]}m3) of ${This.CargoToTransfer.Get[${idx}].Name}"]
-					This.CargoToTransfer.Get[${idx}]:MoveTo[${shipContainerIterator.Value.ID},${qty}]
+					UI:UpdateConsole["TransferListToShipWithContainers: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${This.CargoToTransfer.Get[${idx}].Volume}]}m3) of ${This.CargoToTransfer.Get[${idx}].Name}"]
+					This.CargoToTransfer.Get[${idx}]:MoveTo[${shipContainerIterator.Value.ID},${QuantityToMove}]
 					wait 15
 				}
-				if ${qty} == ${This.CargoToTransfer.Get[${idx}].Quantity}
+				if ${QuantityToMove} == ${This.CargoToTransfer.Get[${idx}].Quantity}
 				{
 					This.CargoToTransfer:Remove[${idx}]
 				}
@@ -575,7 +550,7 @@ objectdef obj_Cargo
 					wait 2
 				}
 				while ${usedSpace} < 0
-				;;UI:UpdateConsole["DEBUG: TransferListToShipWithContainers: used space = ${usedSpace}"]
+				;;UI:UpdateConsole["DEBUG: TransferListToShipWithContainers: Contsainer used space = ${usedSpace}"]
 				if ${Math.Calc[${totalSpace}-${usedSpace}]} > ${Math.Calc[${totalSpace}*0.98]}
 				{
 					UI:UpdateConsole["DEBUG: TransferListToShipWithContainers: Container full."]
@@ -597,14 +572,14 @@ objectdef obj_Cargo
 		cnt:Set[${This.CargoToTransfer.Used}]
 		for (idx:Set[1] ; ${idx}<=${cnt} ; idx:Inc)
 		{
-			qty:Set[${This.QuantityToMove[${This.CargoToTransfer.Get[${idx}]},0]}]
-			if ${qty} > 0
+			QuantityToMove:Set[${This.MaxQuantityForVolume[${Ship.CargoFreeSpace}, ${This.CargoToTransfer.Get[${idx}].Volume}, ${This.CargoToTransfer.Get[${idx}].Quantity}]}]
+			if ${QuantityToMove} > 0
 			{
-				UI:UpdateConsole["TransferListToShipWithContainers: Loading Cargo: ${qty} units (${Math.Calc[${qty} * ${This.CargoToTransfer.Get[${idx}].Volume}]}m3) of ${This.CargoToTransfer.Get[${idx}].Name}"]
-				This.CargoToTransfer.Get[${idx}]:MoveTo[MyShip,${qty}]
+				UI:UpdateConsole["TransferListToShipWithContainers: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${This.CargoToTransfer.Get[${idx}].Volume}]}m3) of ${This.CargoToTransfer.Get[${idx}].Name}"]
+				This.CargoToTransfer.Get[${idx}]:MoveTo[MyShip,${QuantityToMove}]
 				wait 15
 			}
-			if ${qty} == ${This.CargoToTransfer.Get[${idx}].Quantity}
+			if ${QuantityToMove} == ${This.CargoToTransfer.Get[${idx}].Quantity}
 			{
 				This.CargoToTransfer:Remove[${idx}]
 			}
@@ -634,19 +609,10 @@ objectdef obj_Cargo
 			{
 				do
 				{
-					if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${Ship.CargoFreeSpace}
-					{
-						/* Move only what will fit, minus 1 to account for CCP rounding errors. */
-						/* TODO - CyberTech - this should only apply to small items with m3 sizes with decimal places, not large items */
-						QuantityToMove:Set[${Ship.CargoFreeSpace} / ${CargoIterator.Value.Volume} - 1]
-					}
-					else
-					{
-						QuantityToMove:Set[${CargoIterator.Value.Quantity}]
-					}
+					QuantityToMove:Set[${This.MaxQuantityForVolume[${Ship.CargoFreeSpace}, ${CargoIterator.Value.Volume}, ${CargoIterator.Value.Quantity}]}]
 
 					UI:UpdateConsole["TransferListToShip: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
-					UI:UpdateConsole["TransferListToShip: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
+					UI:UpdateConsole["TransferListToShip: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}", LOG_DEBUG]
 					if ${QuantityToMove} > 0
 					{
 						CargoIterator.Value:MoveTo[MyShip,${QuantityToMove}]
