@@ -52,7 +52,7 @@ objectdef obj_Cargo
 			UI:UpdateConsole["Error: CalcMaxQuantityInSpace passed 0 for item volume"]
 			return ${QuantityOnHand}
 		}
-		Quantity:Set[${Math.Calc[${FreeSpace} / ${Volume}].Round}
+		Quantity:Set[${Math.Calc[${FreeSpace} / ${Volume}].Round}]
 
 		if ${Volume} < 1
 		{
