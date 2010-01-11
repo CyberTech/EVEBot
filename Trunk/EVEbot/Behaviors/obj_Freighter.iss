@@ -244,6 +244,7 @@ objectdef obj_Freighter
 	function MoveToSourceStation()
 	{
 		if ${SourceLocations.Used} == 0
+		{
 			UI:UpdateConsole["DEBUG: No more source locations!"]
 			EVEBot.ReturnToStation:Set[TRUE]
 		}
