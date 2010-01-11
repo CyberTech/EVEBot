@@ -99,6 +99,7 @@ objectdef obj_Freighter
 	{
 		switch ${Config.Freighter.FreighterMode}
 		{
+			;echo "Freighter: ProcessState: ${This.CurrentState}"
 			case Move Minerals to Buyer
 				/* not implemented yet */
 				break
@@ -126,6 +127,9 @@ objectdef obj_Freighter
 						break
 					case BASE
 						call This.DoBaseAction
+						break
+					case UNDOCK
+						call Station.Undock
 						break
 					case TRANSPORT
 						call This.Transport
@@ -163,7 +167,7 @@ objectdef obj_Freighter
 		{
 	  		This.CurrentState:Set["BASE"]
 		}
-		elseif ${This.ExcessCargoAtSource} || ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
+		elseif ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
 		{
 			This.CurrentState:Set["CARGOFULL"]
 		}
@@ -240,7 +244,7 @@ objectdef obj_Freighter
 	function MoveToSourceStation()
 	{
 		if ${SourceLocations.Used} == 0
-		{	/* sources emptied, abort */
+			UI:UpdateConsole["DEBUG: No more source locations!"]
 			EVEBot.ReturnToStation:Set[TRUE]
 		}
 		elseif ${SourceLocations.Peek(exists)}
@@ -341,8 +345,8 @@ objectdef obj_Freighter
 			UI:UpdateConsole["DEBUG: /${EVE.Bookmark[${Config.Freighter.Destination}](exists)} = ${EVE.Bookmark[${Config.Freighter.Destination}](exists)}"]
 			UI:UpdateConsole["DEBUG: /${m_DestinationID} = ${m_DestinationID}"]
 			UI:UpdateConsole["DEBUG: /${Me.StationID} = ${Me.StationID}"]
-			if ${EVE.Bookmark[${Config.Freighter.Destination}](exists)} && \
-			   ${m_DestinationID} == ${Me.StationID}
+
+			if ${Me.StationID} == ${EVE.Bookmark[${Config.Freighter.Destination}].ItemID}
 			{	/* this is the destination station, drop off stuff */
 				call Cargo.TransferCargoToHangar
 			}
