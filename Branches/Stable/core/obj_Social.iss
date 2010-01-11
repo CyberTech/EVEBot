@@ -441,7 +441,7 @@ objectdef obj_Social
 		{
 			do
 			{
-				if ${PilotIterator.Value.IsTargetingMe}
+				if ${PilotIterator.Value.ToEntity.IsTargetingMe}
 				{
 					return TRUE
 				}
