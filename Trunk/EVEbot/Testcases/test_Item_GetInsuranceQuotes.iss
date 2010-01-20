@@ -3,7 +3,10 @@
 #include ../Support/TestAPI.iss
 
 /*
- *	Test Item:GetInsuranceQuotes, where item is a ship
+ *	Test:
+ *		Item:GetInsuranceQuotes, where item is a ship
+ *  	Item.Insured
+ *		Item.InsuranceLeveL
  *
  *  Revision $Id$
  *
@@ -38,6 +41,8 @@ function main()
 		echo " " Silver: ${Quotes.Element["Silver"]}
 		echo " " Gold: ${Quotes.Element["Gold"]}
 		echo " " Platinum: ${Quotes.Element["Platinum"]}
+		echo "  Insured: ${HangarShips.Get[${i}].IsInsured}"
+		echo "  InsuranceLevel: ${HangarShips.Get[${i}].InsuranceLevel}"
 	}
 
 	EndTime:Set[${Script.RunningTime}]
