@@ -3,24 +3,24 @@
 #include Scripts/EVEBot/Support/TestAPI.iss
 
 /*
-	Test Fleet Member Iteration, FleetMember.ToPilot
-
-	Revision $Id$
-
-	Tests:
-		Me.Fleet:GetWings
-		Me.Fleet:GetSquads
-		Me.Fleet:GetMembers
-		Me.Fleet.WingName
-		Me.Fleet.Size
-		FleetMember - All Members
-		FleetMember:SetScout
-		FleetMember:SetBooster
-
-	Requirements:
-		You: In Space
-		Other: In Fleet, In Space, on Grid
-*/
+ * 	Test Fleet Member Iteration, FleetMember.ToPilot
+ *
+ *	Revision $Id$
+ *
+ *	Tests:
+ *		Me.Fleet:GetWings
+ *		Me.Fleet:GetSquads
+ *		Me.Fleet:GetMembers
+ *		Me.Fleet.WingName
+ *		Me.Fleet.Size
+ *		FleetMember - All Members
+ *		FleetMember:SetScout
+ *		FleetMember:SetBooster
+ *
+ *	Requirements:
+ *		You: In Space
+ *		Other: In Fleet, In Space, on Grid
+ */
 
 variable obj_UI UI
 function main(string Invitee)

@@ -3,9 +3,17 @@
 #include ../Support/TestAPI.iss
 
 /*
-	Test Entity Iteration
-
-*/
+ *	Cached Entity Retrieval and Member Access
+ *
+ *	Revision $Id$
+ *
+ *	Tests:
+ *		EVE:GetCachedEntities
+ *		cachedentity Members
+ *
+ *	Requirements:
+ *		You: In Space
+ */
 
 atom RunAtomicTestCase()
 {
@@ -19,7 +27,7 @@ atom RunAtomicTestCase()
 
 	ItemTest:ParseMembers
 
-	EVE:GetCachedEntities[Entities, CategoryID, 25]
+	EVE:GetCachedEntities[Entities]
 	variable float CallTime
 	CallTime:Set[${Math.Calc[(${Script.RunningTime}-${StartTime}) / 1000]}]
 	echo "EVE:GetCachedEntities returned ${Entities.Used} entities in ${CallTime} seconds"

@@ -4,6 +4,8 @@
 /*
  *	Test DoGetHangarItems
  *
+ *	Revision $Id$
+ *
  *	Requirements:
  *		Docked, have items in station hangar
  *

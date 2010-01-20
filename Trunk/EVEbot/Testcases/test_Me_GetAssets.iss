@@ -5,6 +5,8 @@
 /*
  *	Test DoGetAssets (Listed as GetAssets) [Shiva]
  *
+ *	Revision $Id$
+ *
  *	Requirements:
  *		Open Assets window & Have a Station Micro-tabbed out.
  *
