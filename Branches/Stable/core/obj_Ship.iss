@@ -1007,7 +1007,7 @@ objectdef obj_Ship
 				UI:UpdateConsole["obj_Ship: Waiting for cargo to load...(${LoopCheck})", LOG_MINOR]
 				while !${This.IsCargoOpen}
 				{
-					wait 0.5
+					wait 1
 				}
 				wait 10
 				LoopCheck:Inc
@@ -1024,7 +1024,7 @@ objectdef obj_Ship
 			wait WAIT_CARGO_WINDOW
 			while ${This.IsCargoOpen}
 			{
-				wait 0.5
+				wait 1
 			}
 			wait 10
 		}

@@ -114,7 +114,7 @@ objectdef obj_Station
 			wait WAIT_CARGO_WINDOW
 			while !${This.IsHangarOpen}
 			{
-				wait 0.5
+				wait 1
 			}
 			wait 10
 		}
@@ -134,7 +134,7 @@ objectdef obj_Station
 			wait WAIT_CARGO_WINDOW
 			while ${This.IsHangarOpen}
 			{
-				wait 0.5
+				wait 1
 			}
 			wait 10
 		}
@@ -319,8 +319,8 @@ objectdef obj_Station
 
 		Config.Common:SetHomeStation[${Entity[CategoryID,3].Name}]
 
-		Me:SetVelocity[100]
-		wait 100
+		;Me:SetVelocity[100]
+		wait 30
 
 		Ship:UpdateModuleList[]
 		Ship:SetType[${Entity[CategoryID,CATEGORYID_SHIP].Type}]

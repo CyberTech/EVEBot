@@ -1,15 +1,15 @@
 /*
 	Asteroids Class
 		Handles selection & prioritization of asteroid fields and asteroids, as well as targeting of same.
-	
+
 	AsteroidGroup Class
 		Handles information about a group of asteroids for weighting purposes
-		
+
 	-- CyberTech
-	
+
 BUGS:
 	we don't differentiate between ice fields and ore fields, need to match field type to laser type.
-			
+
 */
 
 objectdef obj_AsteroidGroup
@@ -22,7 +22,7 @@ objectdef obj_Asteroids
 	variable int Version
 
 	variable int AsteroidCategoryID = 25
-	
+
 	variable index:entity BestAsteroidList
 	variable index:entity AsteroidList
 	variable iterator OreTypeIterator
@@ -32,27 +32,27 @@ objectdef obj_Asteroids
 
 	variable index:string EmptyBeltList
 	variable iterator EmptyBelt
-	
+
 	variable index:bookmark BeltBookMarkList
 	variable iterator BeltBookMarkIterator
 	variable int LastBookMarkIndex
 	variable int LastBeltIndex
 	variable bool UsingBookMarks = FALSE
 	variable time BeltArrivalTime
-	variable float MaxDistanceToAsteroid 
-	
+	variable float MaxDistanceToAsteroid
+
 	method Initialize()
-	{	
+	{
 		UI:UpdateConsole["obj_Asteroids: Initialized", LOG_MINOR]
 	}
-		
+
 	; Checks the belt name against the empty belt list.
 	member IsBeltEmpty(string BeltName)
 	{
 		if !${BeltName(exists)}
 		{
 			return FALSE
-		}		
+		}
 
 		EmptyBeltList:GetIterator[EmptyBelt]
 		if ${EmptyBelt:First(exists)}
@@ -67,7 +67,7 @@ objectdef obj_Asteroids
 		while ${EmptyBelt:Next(exists)}
 		return FALSE
 	}
-	
+
 	; Adds the named belt to the empty belt list
 	method BeltIsEmpty(string BeltName)
 	{
@@ -77,11 +77,11 @@ objectdef obj_Asteroids
 			UI:UpdateConsole["Excluding empty belt ${BeltName}"]
 		}
 	}
-	
+
 	function MoveToRandomBeltBookMark()
-	{	
+	{
 		EVE:DoGetBookmarks[BeltBookMarkList]
-		
+
 		variable int RandomBelt
 		variable string Label
 		variable string prefix
@@ -117,16 +117,16 @@ objectdef obj_Asteroids
 			return
 		}
 	}
-		
+
 	function MoveToField(bool ForceMove)
-	{			
+	{
 		variable int curBelt
 		variable index:entity Belts
 		variable iterator BeltIterator
 		variable int TryCount
 		variable string beltsubstring
 		variable bool AsteroidsInRange = FALSE
-		
+
 		if ${Config.Miner.IceMining}
 		{
 			beltsubstring:Set["ICE FIELD"]
@@ -135,17 +135,17 @@ objectdef obj_Asteroids
 		{
 			beltsubstring:Set["ASTEROID BELT"]
 		}
-		
+
 		EVE:DoGetEntities[Belts,GroupID, GROUP_ASTEROIDBELT]
 		Belts:GetIterator[BeltIterator]
 		if ${BeltIterator:First(exists)}
-		{			
+		{
 			if !${ForceMove}
 			{
 				call TargetNext TRUE
 				AsteroidsInRange:Set[${Return}]
 			}
-			
+
 			if ${ForceMove} || !${AsteroidsInRange}
 			{
 				if (${Config.Miner.BookMarkLastPosition} && \
@@ -158,7 +158,7 @@ objectdef obj_Asteroids
 					Bookmarks:RemoveStoredLocation
 					return
 				}
-		
+
 				if ${Config.Miner.UseFieldBookmarks}
 				{
 					call This.MoveToRandomBeltBookMark
@@ -180,7 +180,7 @@ objectdef obj_Asteroids
 				}
 				while ( !${Belts[${curBelt}].Name.Find[${beltsubstring}](exists)} || \
 						${This.IsBeltEmpty[${Belts[${curBelt}].Name}]} )
-				
+
 				UI:UpdateConsole["Warping to Asteroid Belt: ${Belts[${curBelt}].Name}"]
 				call Ship.WarpToID ${Belts[${curBelt}]}
 				This.BeltArrivalTime:Set[${Time.Timestamp}]
@@ -190,11 +190,11 @@ objectdef obj_Asteroids
 			else
 			{
 				UI:UpdateConsole["Staying at Asteroid Belt: ${BeltIterator.Value.Name}"]
-			}		
+			}
 		}
 		else
 		{
-			/* There is a corner case here, in the event the user is in a system with no overview-visible 
+			/* There is a corner case here, in the event the user is in a system with no overview-visible
 				bookmarks, but has Belt bookmarks to hidden belts. We duplicate this code here from above
 				to avoid yet another level of */
 
@@ -208,7 +208,7 @@ objectdef obj_Asteroids
 				Bookmarks:RemoveStoredLocation
 				return
 			}
-			
+
 			if ${Config.Miner.UseFieldBookmarks}
 			{
 				call This.MoveToRandomBeltBookMark
@@ -220,11 +220,11 @@ objectdef obj_Asteroids
 			return
 		}
 	}
-	
+
 	method Find_Best_Asteroids()
 	{
 		Config.Miner.OreTypesRef:GetSettingIterator[This.OreTypeIterator]
-		
+
 		if ${This.OreTypeIterator:First(exists)}
 		{
 			do
@@ -233,20 +233,19 @@ objectdef obj_Asteroids
 				This.AsteroidList:Clear
 				EVE:DoGetEntities[This.AsteroidList,CategoryID,${This.AsteroidCategoryID},${This.OreTypeIterator.Key}]
 
-				This.AsteroidList:GetIterator[AsteroidIterator]		
+				This.AsteroidList:GetIterator[AsteroidIterator]
 				if ${AsteroidIterator:First(exists)}
 				do
-				{	
-					
+				{
+
 					This.BestAsteroidList:Insert[${AsteroidIterator.Value}]
 				}
 				while ${This.Asteroidlist:Next(exists)}
-				
+
 				;This.BestAsteroidList:Insert[${This.AsteroidList
-				wait 0.5
 			}
 			while ( (${This.BestAsteroidList.Used} < 10) && (${This.OreTypeIterator:Next(exists)}) )
-			
+
 			if ${This.AsteroidList.Used}
 			{
 					;echo "DEBUG: obj_Asteroids:UpdateList - Found ${This.AsteroidList.Used} ${This.OreTypeIterator.Key} asteroids"
@@ -256,7 +255,7 @@ objectdef obj_Asteroids
 		{
 			echo "WARNING: obj_Asteroids: Ore Type list is empty, please check config"
 		}
-		
+
 	}
 
 	function UpdateList()
@@ -264,9 +263,9 @@ objectdef obj_Asteroids
 		variable index:entity asteroid_index
 		variable index:entity AsteroidList_outofrange
 		variable iterator asteroid_iterator
-		
+
 		This.MaxDistanceToAsteroid:Set[${Math.Calc[${Ship.OptimalMiningRange} * ${Config.Miner.MiningRangeMultipler}]}]
-			
+
 		if ${Config.Miner.IceMining}
 		{
 			Config.Miner.IceTypesRef:GetSettingIterator[This.OreTypeIterator]
@@ -275,12 +274,12 @@ objectdef obj_Asteroids
 		{
 			Config.Miner.OreTypesRef:GetSettingIterator[This.OreTypeIterator]
 		}
-		
+
 		if ${This.OreTypeIterator:First(exists)}
 		{
 			This.AsteroidList:Clear
 			do
-			{			
+			{
 				EVE:DoGetEntities[asteroid_index,CategoryID,${This.AsteroidCategoryID}, ${This.OreTypeIterator.Key}]
 				asteroid_index:GetIterator[asteroid_iterator]
 				if ${asteroid_iterator:First(exists)}
@@ -311,7 +310,7 @@ objectdef obj_Asteroids
 			while ${This.AsteroidList.Used} < ${Ship.TotalMiningLasers} && ${This.OreTypeIterator:Next(exists)}
 
 			if ${Config.Miner.StripMine}
-			{	
+			{
 				/* Append the OOR index to the good one */
 				AsteroidList_outofrange:GetIterator[asteroid_iterator]
 				if ${asteroid_iterator:First(exists)}
@@ -321,7 +320,7 @@ objectdef obj_Asteroids
 						This.AsteroidList:Insert[${asteroid_iterator.Value.ID}]
 					}
 					while ${asteroid_iterator:Next(exists)}
-				}				
+				}
 			}
 		}
 		else
@@ -329,12 +328,12 @@ objectdef obj_Asteroids
 			echo "WARNING: obj_Asteroids: Ore Type list is empty, please check config"
 		}
 	}
-	
+
 	method NextAsteroid()
 	{
 		AsteroidList:GetSettingIterator
 	}
-	
+
 	function:bool TargetNext(bool CalledFromMoveRoutine=FALSE)
 	{
 		variable iterator AsteroidIterator
@@ -344,7 +343,7 @@ objectdef obj_Asteroids
 			call This.UpdateList
 		}
 
-		This.AsteroidList:GetIterator[AsteroidIterator]		
+		This.AsteroidList:GetIterator[AsteroidIterator]
 		if ${AsteroidIterator:First(exists)}
 		{
 			do
@@ -369,14 +368,14 @@ objectdef obj_Asteroids
 					return TRUE
 				}
 				UI:UpdateConsole["Locking Asteroid ${AsteroidIterator.Value.Name}: ${EVEBot.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"]
-				
+
 				;; This member does not exist in obj_Combat!!  -- GP
 				;;while ${Combat.CombatPause}
 				;;{
 				;;	wait 30
 				;;	echo "DEBUG: Obj_Asteroids In Combat Pause Loop"
 				;;}
-								
+
 				AsteroidIterator.Value:LockTarget
 				do
 				{
@@ -390,7 +389,7 @@ objectdef obj_Asteroids
 			else
 			{
 				call This.UpdateList
-				if ${Ship.TotalActivatedMiningLasers} == 0				
+				if ${Ship.TotalActivatedMiningLasers} == 0
 				{
 					if ${Ship.CargoFull}
 					{

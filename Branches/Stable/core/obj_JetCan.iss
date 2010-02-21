@@ -392,7 +392,7 @@ objectdef obj_JetCan
 					UI:UpdateConsole["JetCan.Open timed out (40 seconds)", LOG_CRITICAL]
 					break
 				}
-				wait 0.5
+				wait 5
 			}
 			wait 10
 		}
@@ -412,7 +412,7 @@ objectdef obj_JetCan
 			wait WAIT_CARGO_WINDOW
 			while ${This.IsCargoOpen[${ID}]}
 			{
-				wait 0.5
+				waitframe
 			}
 			wait 10
 		}
