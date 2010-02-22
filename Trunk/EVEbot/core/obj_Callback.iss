@@ -22,7 +22,7 @@ objectdef obj_Callback
 		{
 			if ${EVEBot.SessionValid}
 			{
-				uplink UpdateClient "${Me.Name}" "${_MyShip.ShieldPct}" "${_MyShip.ArmorPct}" "${_MyShip.CapacitorPct}" "${Defense.Hide}" "${Defense.HideReason}" "${Me.ActiveTarget.Name}" "${EVEBot.Paused}" "${Config.Common.BotMode}"  "${MyShip}" "${Session}"
+				;uplink UpdateClient "${Me.Name}" "${MyShip.ShieldPct}" "${MyShip.ArmorPct}" "${MyShip.CapacitorPct}" "${Defense.Hide}" "${Defense.HideReason}" "${Me.ActiveTarget.Name}" "${EVEBot.Paused}" "${Config.Common.BotMode}"  "${MyShip}" "${Session}"
 			}
 
 			This.NextPulse:Set[${Time.Timestamp}]

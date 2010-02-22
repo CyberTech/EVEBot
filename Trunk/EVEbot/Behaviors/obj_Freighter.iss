@@ -283,7 +283,7 @@ objectdef obj_Freighter
 		        }
 		    }
 
-	        if ${nextStationID} && (${_Me.SolarSystemID} != ${Universe[${tmp_string}].ID})
+	        if ${nextStationID} && (${Me.SolarSystemID} != ${Universe[${tmp_string}].ID})
 	        {	/* check for low-sec jumps */
 	        	Universe[${tmp_string}]:SetDestination
 	        	wait 5
@@ -308,7 +308,7 @@ objectdef obj_Freighter
 				}
 	        }
 
-			if ${nextStationID} && (${_Me.SolarSystemID} != ${Universe[${tmp_string}].ID})
+			if ${nextStationID} && (${Me.SolarSystemID} != ${Universe[${tmp_string}].ID})
 			{
 	    		UI:UpdateConsole["Freighter moving to ${EVE.GetLocationNameByID[${nextStationID}]}."]
 

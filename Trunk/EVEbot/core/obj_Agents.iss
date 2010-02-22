@@ -12,9 +12,9 @@ objectdef obj_AgentList
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
-	variable string CONFIG_FILE = "${BaseConfig.CONFIG_PATH}/${_Me.Name} Agents.xml"
-	variable string SET_NAME1 = "${_Me.Name} Agents"
-	variable string SET_NAME2 = "${_Me.Name} Research Agents"
+	variable string CONFIG_FILE = "${BaseConfig.CONFIG_PATH}/${Me.Name} Agents.xml"
+	variable string SET_NAME1 = "${Me.Name} Agents"
+	variable string SET_NAME2 = "${Me.Name} Research Agents"
 	variable iterator agentIterator
 	variable iterator researchAgentIterator
 
@@ -93,8 +93,8 @@ objectdef obj_MissionBlacklist
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
-	variable string CONFIG_FILE = "${BaseConfig.CONFIG_PATH}/${_Me.Name} Mission Blacklist.xml"
-	variable string SET_NAME = "${_Me.Name} Mission Blacklist"
+	variable string CONFIG_FILE = "${BaseConfig.CONFIG_PATH}/${Me.Name} Mission Blacklist.xml"
+	variable string SET_NAME = "${Me.Name} Mission Blacklist"
 	variable iterator levelIterator
 
 	method Initialize()

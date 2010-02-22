@@ -102,9 +102,9 @@ objectdef obj_JetCan
 			EVEWindow[loot_${This.ActiveCan}]:Close
 		}
 
-		variable index:entity Cans
+		variable index:cachedentity Cans
 		variable iterator Can
-		EVE:DoGetEntities[Cans, GroupID, GROUPID_CARGO_CONTAINER, Radius, LOOT_RANGE]
+		EVE:GetCachedEntities[Cans, GroupID, GROUPID_CARGO_CONTAINER, Radius, LOOT_RANGE]
 
 		Cans:GetIterator[Can]
 
@@ -196,34 +196,34 @@ objectdef obj_JetCan
 		switch ${Config.Miner.JetCanNaming}
 		{
 			case 1
-				NewName:Set[${_Me.CorporationTicker} ${EVE.Time[short]}]
+				NewName:Set[${Me.CorporationTicker} ${EVE.Time[short]}]
 				break
 			case 2
-				NewName:Set[${_Me.CorporationTicker}:${EVE.Time[short]}]
+				NewName:Set[${Me.CorporationTicker}:${EVE.Time[short]}]
 				break
 			case 3
-				NewName:Set[${_Me.CorporationTicker}_${EVE.Time[short]}]
+				NewName:Set[${Me.CorporationTicker}_${EVE.Time[short]}]
 				break
 			case 4
-				NewName:Set[${_Me.CorporationTicker}.${EVE.Time[short]}]
+				NewName:Set[${Me.CorporationTicker}.${EVE.Time[short]}]
 				break
 			case 5
-				NewName:Set[${_Me.CorporationTicker}]
+				NewName:Set[${Me.CorporationTicker}]
 				break
 			case 6
 				NewName:Set[${EVE.Time[short]}]
 				break
 			case 7
-				NewName:Set[${_Me.Name.Token[1, " "]} ${EVE.Time[short]}]
+				NewName:Set[${Me.Name.Token[1, " "]} ${EVE.Time[short]}]
 				break
 			case 8
-				NewName:Set[${_Me.Name.Token[1, " "]}]
+				NewName:Set[${Me.Name.Token[1, " "]}]
 				break
 			case 9
-				NewName:Set[${_Me.Name}]
+				NewName:Set[${Me.Name}]
 				break
 			default
-				NewName:Set[${_Me.Name}]
+				NewName:Set[${Me.Name}]
 				break
 		}
 
@@ -392,7 +392,7 @@ objectdef obj_JetCan
 					UI:UpdateConsole["JetCan.Open timed out (40 seconds)", LOG_CRITICAL]
 					break
 				}
-				wait 0.5
+				wait 5
 			}
 			wait 10
 		}
@@ -412,7 +412,7 @@ objectdef obj_JetCan
 			wait WAIT_CARGO_WINDOW
 			while ${This.IsCargoOpen[${ID}]}
 			{
-				wait 0.5
+				wait 1
 			}
 			wait 10
 		}
@@ -448,9 +448,9 @@ objectdef obj_CorpHangerArray inherits obj_JetCan
 			;EVEWindow[loot_${This.ActiveCan}]:Close
 		}
 
-		variable index:entity Cans
+		variable index:cachedentity Cans
 		variable iterator Can
-		EVE:DoGetEntities[Cans, GroupID, GROUP_CORPORATEHANGARARRAY]
+		EVE:GetCachedEntities[Cans, GroupID, GROUP_CORPORATEHANGARARRAY]
 
 		Cans:GetIterator[Can]
 
@@ -523,9 +523,9 @@ objectdef obj_AssemblyArray inherits obj_JetCan
 			;EVEWindow[loot_${This.ActiveCan}]:Close
 		}
 
-		variable index:entity Cans
+		variable index:cachedentity Cans
 		variable iterator Can
-		EVE:DoGetEntities[Cans, GroupID, GROUP_ASSEMBLYARRAY]
+		EVE:GetCachedEntities[Cans, GroupID, GROUP_ASSEMBLYARRAY]
 		Cans:GetIterator[Can]
 
 		if ${Can:First(exists)}
@@ -583,9 +583,9 @@ objectdef obj_SpawnContainer inherits obj_JetCan
 			EVEWindow[loot_${This.ActiveCan}]:Close
 		}
 
-		variable index:entity Cans
+		variable index:cachedentity Cans
 		variable iterator Can
-		EVE:DoGetEntities[Cans, GroupID, GROUPID_SPAWN_CONTAINER]
+		EVE:GetCachedEntities[Cans, GroupID, GROUPID_SPAWN_CONTAINER]
 
 		Cans:GetIterator[Can]
 

@@ -18,13 +18,13 @@ objectdef obj_Social
 
 	variable set ClearedPilots
 	variable set ReportedPilotsSinceLastSafe
-	variable int LastSystemID
+	variable int LastSolarSystemID
 	variable int LastStationID
 
 	variable index:pilot PilotIndex
 
 	variable time NextPulse
-	variable int PulseIntervalInSeconds = 2
+	variable int PulseIntervalInSeconds = 1
 
 	variable bool Passed_LowStandingCheck = TRUE
 	variable bool Passed_PilotCheck = TRUE
@@ -56,14 +56,14 @@ objectdef obj_Social
 		Blacklist.AlliancesRef:GetSettingIterator[This.BlackListAllianceIterator]
 
 		UI:UpdateConsole["obj_Social: Initializing whitelist...", LOG_MINOR]
-		PilotWhiteList:Add[${_Me.CharID}]
-		if ${_Me.CorporationID} > 0
+		PilotWhiteList:Add[${Me.CharID}]
+		if ${Me.CorporationID} > 0
 		{
-			This.CorpWhiteList:Add[${_Me.CorporationID}]
+			This.CorpWhiteList:Add[${Me.CorporationID}]
 		}
-		if ${_Me.AllianceID} > 0
+		if ${Me.AllianceID} > 0
 		{
-			This.AllianceWhiteList:Add[${_Me.AllianceID}]
+			This.AllianceWhiteList:Add[${Me.AllianceID}]
 		}
 
 		if ${This.WhiteListPilotIterator:First(exists)}
@@ -135,28 +135,49 @@ objectdef obj_Social
 			{
 				This:CheckChatInvitation[]
 
-				if ${_Me.SystemID} != ${This.LastSystemID}
+				if ${Me.SolarSystemID} != ${This.LastSolarSystemID}
 				{
 					This.ClearedPilots:Clear
-					This.LastSystemID:Set[${_Me.SystemID}]
+					This.ClearedPilots:Add[${Me.CharID}]
+					This.LastSolarSystemID:Set[${Me.SolarSystemID}]
 				}
 
-				if ${_Me.StationID} != ${This.LastStationID}
+				if ${Me.StationID} != ${This.LastStationID}
 				{
 					This.ClearedPilots:Clear
-					This.LastStationID:Set[${_Me.StationID}]
+					This.ClearedPilots:Add[${Me.CharID}]
+					This.LastStationID:Set[${Me.StationID}]
 				}
 
 				; DoGetPilots is relatively expensive vs just the pilotcount.  Check if we're alone before calling.
 				if ${EVE.GetPilots} > 1
 				{
-					EVE:DoGetPilots[This.PilotIndex]
+					variable int i
+					i:Set[${EVE.GetPilots[This.PilotIndex]}]
+
+					for (i:Set[1]; ${i} <= ${This.PilotIndex.Used}; i:Inc)
+					{
+						if ${Me.CharID} == ${This.PilotIndex.Get[${i}].CharID}
+						{
+							;UI:UpdateConsole["Social: StandingDetection: Ignoring Self", LOG_DEBUG]
+							This.PilotIndex:Remove[${i}]
+							continue
+						}
+
+						if ${PilotIterator.Get[${i}].ToFleetMember(exists)}
+						{
+							;UI:UpdateConsole["Social: StandingDetection Ignoring Fleet Member: ${PilotIterator.Value.Name}", LOG_DEBUG]
+							This.PilotIndex:Remove[${i}]
+							continue
+						}
+					}
+					This.PiloteIndex:Collapse
 
 					Passed_LowStandingCheck:Set[!${This.LowStandingDetected}]
 					Passed_PilotCheck:Set[${This.CheckLocalPilots}]
 					if ${Passed_LowStandingCheck} && ${Passed_PilotCheck}
 					{
-							This.ReportedPilotsSinceLastSafe:Clear
+						This.ReportedPilotsSinceLastSafe:Clear
 					}
 				}
 				else
@@ -312,21 +333,6 @@ objectdef obj_Social
 
 	member:bool PlayerInRange(float Range=0)
 	{
-		if ${Range} == 0
-		{
-			return FALSE
-		}
-
-   		if ${This.PilotIndex.Used} < 2
-   		{
-   			return FALSE
-   		}
-
-		if !${Me.InSpace}
-		{
-			return
-		}
-
 		variable iterator PilotIterator
 		This.PilotIndex:GetIterator[PilotIterator]
 
@@ -334,11 +340,8 @@ objectdef obj_Social
 		{
 			do
 			{
-				if 	${_Me.CharID} != ${PilotIterator.Value.CharID} && \
-					${PilotIterator.Value.ToEntity(exists)} && \
-					!${PilotIterator.Value.ToFleetMember} && \
-					${PilotIterator.Value.ToEntity.IsPC} && \
-					${PilotIterator.Value.ToEntity.Distance} < ${Config.Miner.AvoidPlayerRange}
+				if 	${PilotIterator.Value.ToEntity(exists)} && \
+					${PilotIterator.Value.ToEntity.Distance} <= ${Config.Miner.AvoidPlayerRange}
 				{
 					UI:UpdateConsole["PlayerInRange: ${PilotIterator.Value.Name} (${EVEBot.MetersToKM_Str[${PilotIterator.Value.ToEntity.Distance}])"]
 					return TRUE
@@ -358,11 +361,6 @@ objectdef obj_Social
 			return FALSE
 		}
 
-   		if ${This.PilotIndex.Used} < 2
-   		{
-   			return FALSE
-   		}
-
 		variable iterator PilotIterator
 		This.PilotIndex:GetIterator[PilotIterator]
 
@@ -372,18 +370,6 @@ objectdef obj_Social
 			do
 			{
 				;echo "DEBUG: ${PilotIterator.Value.Name} ${PilotIterator.Value.CharID} ${PilotIterator.Value.CorporationID} ${PilotIterator.Value.Corporation} ${PilotIterator.Value.AllianceID} ${PilotIterator.Value.Alliance}"
-
-				if ${_Me.CharID} == ${PilotIterator.Value.CharID}
-				{
-					;UI:UpdateConsole["Social: StandingDetection: Ignoring Self", LOG_DEBUG]
-					continue
-				}
-
-				if ${PilotIterator.Value.ToFleetMember(exists)}
-				{
-					;UI:UpdateConsole["Social: StandingDetection Ignoring Fleet Member: ${PilotIterator.Value.Name}", LOG_DEBUG]
-					continue
-				}
 
 				;echo "  DEBUG: ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].CorpToAlliance} ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].CorpToCorp} ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].CorpToPilot} ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].MeToCorp} ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].MeToPilot} ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].AllianceToAlliance}"
 				;echo "  DEBUG: ${PilotIterator.Value.Standing.CorpToAlliance} ${PilotIterator.Value.Standing.CorpToCorp} ${PilotIterator.Value.Standing.CorpToPilot} ${PilotIterator.Value.Standing.MeToCorp} ${PilotIterator.Value.Standing.MeToPilot} ${PilotIterator.Value.Standing.AllianceToAlliance}"
@@ -410,33 +396,6 @@ objectdef obj_Social
 		}
 
 		return ${HostilesPresent}
-	}
-
-	member:bool PilotsWithinDetection(int Dist)
-	{
-   		if ${This.PilotIndex.Used} < 2
-   		{
-   			return FALSE
-   		}
-
-		variable iterator PilotIterator
-		This.PilotIndex:GetIterator[PilotIterator]
-
-		if ${PilotIterator:First(exists)}
-		{
-			do
-			{
-				if (${_Me.CharID} != ${PilotIterator.Value.CharID}) && \
-					!${PilotIterator.Value.ToFleetMember} && \
-					${PilotIterator.Value.ToEntity.Distance} < ${Dist}
-				{
-					return TRUE
-				}
-			}
-			while ${PilotIterator:Next(exists)}
-		}
-
-		return FALSE
 	}
 }
 

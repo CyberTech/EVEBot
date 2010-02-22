@@ -150,7 +150,7 @@ objectdef obj_Targets
 
 		; Special targets will (eventually) trigger an alert
 		; This should include haulers / faction / officers
-		; 
+		;
 		; Asteroid Angel Cartel Officers
 		SpecialTargets:Insert["Gotan Kreiss"]
 		SpecialTargets:Insert["Hakim Stormare"]
@@ -162,7 +162,7 @@ objectdef obj_Targets
 		SpecialTargets:Insert["Draclira Merlonne"]
 		SpecialTargets:Insert["Raysere Giant"]
 		SpecialTargets:Insert["Tairei Namazoth"]
-		
+
 		; Asteroid Guristas Officers
 		SpecialTargets:Insert["Estamel Tharchon"]
 		SpecialTargets:Insert["Kaikka Peunato"]
@@ -315,56 +315,6 @@ objectdef obj_Targets
 		return FALSE
 	}
 
-	/* bool HaveFullAggro(string entities):
-	Iterate through entities and determine if any are not targeting me. If so, return FALSE. Otherwise, return TRUE. */
-	member:bool HaveFullAggro(string EntityCache)
-	{
-		${EntityCache}.CachedEntities:GetIterator[${EntityCache}.EntityIterator]
-
-		if ${${EntityCache}.EntityIterator:First(exists)}
-		{
-			do
-			{
-				/* ; Ignore anything that isn't a player or npc.
-				TODO: Before we can do this, need to validate that structures that target you (missile silos, etc) are NPCs
-					Would remove the need for the struct checks below. -- CyberTech
-				if !${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].IsNPC} && \
-					!${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].IsPC}
-				{
-					continue
-				}
-				*/
-
-				;If our target is a hauler, it won't be targeting us.
-				;Same goes for assorted deadspace entities
-				;Also make sure we're not accounting for a wreck or moribund object
-				;Something in here is giving us a false positive.
-				UI:UpdateConsole["obj_Targets: ${${EntityCache}.EntityIterator.Value.EntityID} IsMoribund: ${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].IsMoribund}",LOG_DEBUG]
-				if ${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].Group.Find["Hauler"](exists)} || \
-					${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].GroupID} == GROUP_DEADSPACEOVERSEERSSTRUCTURE || \
-					${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].GroupID} == GROUP_LARGECOLLIDABLESTRUCTURE || \
-					${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].IsMoribund}
-					; TODO - why aren't these 2 group checks above in IsNPCTarget so they don't end up in the index to begin with? -- CyberTech
-				{
-					continue
-				}
-
-				; Just waiting on Ama to release the new ISXEVE before I enable this awesome targeting check.
-				UI:UpdateConsole["obj_Targets.HaveFullAggro[]: ${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].Name} is attacking me: ${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].ToAttacker.IsCurrentlyAttacking}",LOG_DEBUG]
-				if ${Entity[${${EntityCache}.EntityIterator.Value.EntityID}].ToAttacker.IsCurrentlyAttacking}
-				{
-					continue
-				}
-				else
-				{
-					return FALSE
-				}
-			}
-			while ${${EntityCache}.EntityIterator:Next(exists)}
-		}
-		return TRUE
-	}
-
 	member:bool IsNPCTarget(int groupID)
 	{
 		switch ${groupID}
@@ -452,7 +402,7 @@ objectdef obj_Targets_Rats
 
 	method UpdateTargetList()
 	{
-		if ${_MyShip.MaxLockedTargets} == 0
+		if ${MyShip.MaxLockedTargets} == 0
 		{
 			UI:UpdateConsole["Jammed: Unable to Target"]
 			return
@@ -465,7 +415,7 @@ objectdef obj_Targets_Rats
 		}
 		else
 		{
-			EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY, radius, ${_MyShip.MaxTargetRange}]
+			EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY, radius, ${MyShip.MaxTargetRange}]
 		}
 		This.Targets:GetIterator[This.Target]
 
@@ -700,7 +650,7 @@ objectdef obj_Targets_Rats
 		;if ${HasTargets} && ${Me.ActiveTarget(exists)}
 		;{
 		;	variable int OrbitDistance
-		;	OrbitDistance:Set[${Math.Calc[${_MyShip.MaxTargetRange}*0.40/1000].Round}]
+		;	OrbitDistance:Set[${Math.Calc[${MyShip.MaxTargetRange}*0.40/1000].Round}]
 		;	OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
 		;	Me.ActiveTarget:Orbit[${OrbitDistance}]
 		;}

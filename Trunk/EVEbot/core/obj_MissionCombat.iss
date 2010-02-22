@@ -40,11 +40,11 @@ objectdef obj_MissionCombat
 	}
 	method Pulse()
 	{
-		if !${Config.Common.BotMode.Equal[Missioneer]}
+		if ${Config.Common.BotMode.NotEqual[Missioneer]}
 		{
-			; finish if we are not running missions, should be we finish if we are not running a combat mission
 			return
 		}
+
 		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			if !${EVEBot.Paused}

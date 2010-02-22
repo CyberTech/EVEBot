@@ -39,7 +39,7 @@ objectdef obj_Miner
 	variable int STATE_DELIVER_ORE = 7
 	variable int STATE_RETURN_TO_STATION = 8
 	variable int STATE_ERROR = 99
-	
+
 	method Initialize()
 	{
 		BotModules:Insert["Miner"]
@@ -57,13 +57,15 @@ objectdef obj_Miner
 
 	method Pulse()
 	{
-		if !${Config.Common.BotMode.Equal[Miner]}
+		if ${Config.Common.BotMode.NotEqual[Miner]}
 		{
+			AsteroidCache.Enabled:Set[FALSE]
 			return
 		}
 
 		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
+			AsteroidCache.Enabled:Set[TRUE]
 			if !${EVEBot.Paused}
 			{
 				This:SetState[]
@@ -81,9 +83,9 @@ objectdef obj_Miner
 		{
 			return
 		}
-		
+
 		echo ${This.CurrentState}
-		
+
 		switch ${This.CurrentState}
 		{
 			variablecase ${STATE_WAIT_WARP}
@@ -275,7 +277,7 @@ objectdef obj_Miner
 		}
 
 	 	This.CurrentState:Set[${STATE_MINE}]
-	 	
+
 	 	; delay the next state transition for a little bit
 		This.NextPulse:Set[${Time.Timestamp}]
 		This.NextPulse.Second:Inc[${Math.Calc[${This.PulseIntervalInSeconds}*5]}]
@@ -354,11 +356,11 @@ objectdef obj_Miner
 			UI:UpdateConsole["DEBUG: obj_Miner.Mine called while not in space!"]
 			return
 		}
-		
-		; Make sure the cargo window is open.  
+
+		; Make sure the cargo window is open.
 		; This call does nothing if it is already open.
 		call Ship.OpenCargo
-		
+
 		Me:DoGetTargets[LockedTargets]
 		LockedTargets:GetIterator[Target]
 		if ${Target:First(exists)}
@@ -370,14 +372,14 @@ objectdef obj_Miner
 				{
 					continue
 				}
-				
+
 				if ${Target.Value.Distance} > ${Ship.OptimalMiningRange}
 				{
 					; if we are not approach something already, approach this target
-					if !${Me.ToEntity.Approaching(exists)}
+					if !${Me.ToEntity.Approaching}
 					{
 						UI:UpdateConsoleDebug["${This.ObjectName}: Approaching ${Target.Value.ID} from ${Target.Value.Distance} meters."]
-						Navigator:Approach[${Target.Value.ID}, ${Ship.OptimalMiningRange}]
+						call Ship.Approach ${Target.Value.ID} ${Ship.OptimalMiningRange}
 					}
 				}
 				elseif ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers}
@@ -393,18 +395,18 @@ objectdef obj_Miner
 						Target.Value:MakeActiveTarget
 						while ${Target.Value.ID} != ${Me.ActiveTarget.ID}
 						{
-							wait 0.5
+							waitframe
 						}
-	
+
 						if ${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 						{
 							break
 						}
 
 						call Ship.ActivateFreeMiningLaser
-	
-						if (${Ship.Drones.DronesInSpace} > 0 && \
-							${Config.Miner.UseMiningDrones})
+
+						if ${Config.Miner.UseMiningDrones} && \
+							${Ship.Drones.DronesInSpace} > 0
 						{
 							Ship.Drones:ActivateMiningDrones
 						}
@@ -415,10 +417,10 @@ objectdef obj_Miner
 		}
 		else
 		{
-			; Queue up some asteroids here
+			call Asteroids.ChooseTargets
 		}
 	}
-	
+
 	function Old_Mine()
 	{
 		UI:UpdateConsole["Mining"]
@@ -475,7 +477,7 @@ objectdef obj_Miner
 					Target.Value:MakeActiveTarget
 					while ${Target.Value.ID} != ${Me.ActiveTarget.ID}
 					{
-						wait 0.5
+						waitframe
 					}
 
 					if ${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
@@ -544,7 +546,7 @@ objectdef obj_Miner
 	{
 		/* notify hauler there is ore in space */
 		variable string tempString
-		tempString:Set["${_Me.CharID},${_Me.SolarSystemID},${Entity[GroupID, GROUP_ASTEROIDBELT].ID}"]
+		tempString:Set["${Me.CharID},${Me.SolarSystemID},${Entity[GroupID, GROUP_ASTEROIDBELT].ID}"]
 		relay all -event EVEBot_Miner_Full ${tempString}
 
 		/* TO MANUALLY CALL A HAULER ENTER THIS IN THE CONSOLE

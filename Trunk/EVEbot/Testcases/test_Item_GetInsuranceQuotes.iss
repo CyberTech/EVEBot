@@ -29,7 +29,8 @@ function main()
 	wait 15
 	Me.Station:DoGetHangarShips[HangarShips]
 	echo "Me.Station:DoGetHangarShips returned ${HangarShips.Used} ships"
-
+	EVE:Execute[OpenInsurance]
+	wait 15
 	variable int i
 	for (i:Set[1]; ${i} <= ${HangarShips.Used}; i:Inc)
 	{

@@ -4,7 +4,7 @@ objectdef obj_Belts
 	variable int Version
 	variable string LogPrefix
 
-	variable index:entity beltIndex
+	variable index:cachedentity beltIndex
 	variable iterator beltIterator
 
 	variable set EmptyBelts
@@ -18,7 +18,7 @@ objectdef obj_Belts
 
 	method ResetBeltList()
 	{
-		EVE:DoGetEntities[beltIndex, GroupID, GROUP_ASTEROIDBELT]
+		EVE:GetCachedEntities[beltIndex, GroupID, GROUP_ASTEROIDBELT]
 		beltIndex:GetIterator[beltIterator]
 		beltIterator:First
 		UI:UpdateConsole["${LogPrefix}: ResetBeltList found ${beltIndex.Used} belts in this system.", LOG_DEBUG]

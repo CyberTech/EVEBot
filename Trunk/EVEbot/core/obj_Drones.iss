@@ -106,7 +106,7 @@ objectdef obj_Drones
 	{
 		if ${Me.InSpace}
 		{
-			if (${_Me.ToEntity.Mode} != 3)
+			if (${Me.ToEntity.Mode} != 3)
 			{
 				UI:UpdateConsole["Recalling Drones prior to shutdown..."]
 				EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
@@ -116,7 +116,7 @@ objectdef obj_Drones
 	}
 
 	method Pulse()
-	{		
+	{
 		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			if !${EVEBot.Paused}
@@ -192,7 +192,7 @@ objectdef obj_Drones
 					;only do the shield check if we haven't already recalled
 					if !${recalledDrone} && ${StoredDroneShield.Element[${ActiveDrone.Value.ID}](exists)} && \
 						${Math.Calc[${StoredDroneShield.Element[${ActiveDrone.Value.ID}]} - ${ActiveDrone.Value.ToEntity.ShieldPct}]} > 2
-						
+
 					{
 						if ${ActiveDrone.Value.ToEntity.ShieldPct} < ${StoredDroneShield.Element[${ActiveDrone.Value.ID}]}
 						{
@@ -263,13 +263,13 @@ objectdef obj_Drones
 
 	member:bool ShouldLaunchCombatDrones()
 	{
-		;UI:UpdateConsole["obj_Drones:ShouldLaunchCombatDrones(): ${Ship.InWarp} ${Defense.Hiding} ${Offense.HaveFullAggro}",LOG_DEBUG]
+		;UI:UpdateConsole["obj_Drones:ShouldLaunchCombatDrones(): ${Ship.InWarp} ${Defense.Hiding} ${Offense.HaveFullNPCAggro}",LOG_DEBUG]
 		if ${Ship.InWarp} || ${Defense.Hiding}
 		{
 			return FALSE
 		}
 
-		if ${Offense.HaveFullAggro} || ${Config.Common.BotMode.Equal["Missioneer"]}
+		if ${Offense.HaveFullNPCAggro} || ${Config.Common.BotMode.Equal["Missioneer"]}
 		{
 			return TRUE
 		}
@@ -362,18 +362,18 @@ objectdef obj_Drones
 					UI:UpdateConsole["obj_Drones: Scooping drone ${This.ActiveDrone.Value.ToEntity.Name} (${This.ActiveDrone.Value.ToEntity.ID})"]
 					return
 				}
-				
+
 				if ${This.ActiveDrone.Value.State} != DRONESTATE_RETURNING
 				{
 					EVE:Execute[CmdDronesReturnToBay]
-					UI:UpdateConsole["obj_Drones: Returning all drones to bay."]					
+					UI:UpdateConsole["obj_Drones: Returning all drones to bay."]
 					return
 				}
 			}
 			while ${This.ActiveDrone:Next(exists)}
 		}
 	}
-	
+
 	method QuickReturnAllToOrbit()
 	{
 		if ${This.ActiveDrone:First(exists)}
@@ -399,8 +399,8 @@ objectdef obj_Drones
 			UI:UpdateConsole["Recalling ${This.ActiveDroneIDList.Used} Drones"]
 			;EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
 			EVE:Execute[CmdDronesReturnToBay]
-			if (${_MyShip.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
-				${_MyShip.ShieldPct} < ${Config.Combat.MinimumShieldPct})
+			if (${MyShip.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
+				${MyShip.ShieldPct} < ${Config.Combat.MinimumShieldPct})
 			{
 				; We don't wait for drones if we're on emergency warp out
 				wait 10
@@ -451,7 +451,7 @@ objectdef obj_Drones
 ;						UI:UpdateConsole["Recalling Damaged Drone ${DroneIterator.Value.ID}"]
 ;						;UI:UpdateConsole["Debug: Shield: ${DroneIterator.Value.ToEntity.ShieldPct}, Armor: ${DroneIterator.Value.ToEntity.ArmorPct}, Structure: ${DroneIterator.Value.ToEntity.StructurePct}"]
 ;						returnIndex:Insert[${DroneIterator.Value.ID}]
-;     	
+;
 ;					}
 ;					else
 ;					{

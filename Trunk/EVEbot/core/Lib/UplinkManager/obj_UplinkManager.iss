@@ -199,7 +199,7 @@ objectdef obj_UplinkManager
 	; Register this session with other peers
 	method RelayRegistration(string Destination, bool Update=FALSE)
 	{
-		relay "${Destination}" -noredirect "UplinkManager:UpdatePeerSession[${Session},${_Me.CharID},${_Me.Name},${Config.Common.BotMode}]"
+		relay "${Destination}" -noredirect "UplinkManager:UpdatePeerSession[${Session},${Me.CharID},${Me.Name},${Config.Common.BotMode}]"
 	}
 
 	; Called by the script to send misc info to all peers

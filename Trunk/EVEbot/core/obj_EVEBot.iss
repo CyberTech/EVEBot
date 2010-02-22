@@ -220,7 +220,7 @@ objectdef obj_EVEBot
 
 	member:int GameHour()
 	{
-		variable string HourStr = ${_EVETime.Time}
+		variable string HourStr = ${EVETime.Time}
 		variable string Hour = 00
 
 		if ${HourStr(exists)}
@@ -232,7 +232,7 @@ objectdef obj_EVEBot
 
 	member:int GameMinute()
 	{
-		variable string MinuteStr = ${_EVETime.Time}
+		variable string MinuteStr = ${EVETime.Time}
 		variable string Minute = 18
 
 		if ${MinuteStr(exists)}

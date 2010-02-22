@@ -103,7 +103,7 @@ objectdef obj_Station
 			wait WAIT_CARGO_WINDOW
 			while !${This.IsHangarOpen}
 			{
-				wait 0.5
+				wait 1
 			}
 			wait 10
 		}
@@ -123,7 +123,7 @@ objectdef obj_Station
 			wait WAIT_CARGO_WINDOW
 			while ${This.IsHangarOpen}
 			{
-				wait 0.5
+				wait 1
 			}
 			wait 10
 		}
@@ -322,8 +322,7 @@ objectdef obj_Station
 		}
 		while ${This.Docked}
 
-		Me:SetVelocity[100]
-		wait 100
+		wait 30
 		Config.Common:HomeStation[${Entity[CategoryID,3].Name}]
 		UI:UpdateConsole["Undock: Complete - Home Station set to ${Config.Common.HomeStation}"]
 

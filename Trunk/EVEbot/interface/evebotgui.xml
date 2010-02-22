@@ -124,7 +124,7 @@
 							<Y>45</Y>
 							<Width>150</Width>
 							<Height>20</Height>
-							<text>${ISXEVE.SecsToString[${Miner.TripDuration}]}</text>
+							<text>${Miner.TripDuration}</text>
 						</text>
 						<text name='Currently Training' template='EVESkin.Font.Description'>
 							<X>10</X>

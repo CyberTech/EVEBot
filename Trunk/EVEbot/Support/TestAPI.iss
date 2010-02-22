@@ -8,9 +8,9 @@
 
 #define TESTAPI_DEBUG 0
 #include ../core/defines.iss
-;#include ../core/Lib/obj_PulseTimer.iss
+;#include ${LavishScript.HomeDirectory}/Scripts/isxGamesCommon/CyberTech/obj_PulseTimer.iss
 ;#include ../core/Lib/obj_BaseClass.iss
-#include ../core/Lib/obj_LSTypeIterator.iss
+#include ../External/isxGamesCommon/CyberTech/obj_LSTypeIterator.iss
 
 objectdef obj_UI
 {

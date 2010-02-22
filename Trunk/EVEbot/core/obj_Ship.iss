@@ -820,16 +820,16 @@ objectdef obj_Ship
 
 	member:float CargoMinimumFreeSpace()
 	{
-		return ${Math.Calc[${_MyShip.CargoCapacity}*0.02]}
+		return ${Math.Calc[${MyShip.CargoCapacity}*0.02]}
 	}
 
 	member:float CargoFreeSpace()
 	{
 		if ${MyShip.UsedCargoCapacity} < 0
 		{
-			return ${_MyShip.CargoCapacity}
+			return ${MyShip.CargoCapacity}
 		}
-		return ${Math.Calc[${_MyShip.CargoCapacity}-${MyShip.UsedCargoCapacity}]}
+		return ${Math.Calc[${MyShip.CargoCapacity}-${MyShip.UsedCargoCapacity}]}
 	}
 
 	member:bool CargoFull()
@@ -843,7 +843,7 @@ objectdef obj_Ship
 
 	member:bool CargoHalfFull()
 	{
-		if ${This.CargoFreeSpace} <= ${Math.Calc[${_MyShip.CargoCapacity}*0.50]}
+		if ${This.CargoFreeSpace} <= ${Math.Calc[${MyShip.CargoCapacity}*0.50]}
 		{
 			return TRUE
 		}
@@ -852,7 +852,7 @@ objectdef obj_Ship
 
 	member:bool IsDamped()
 	{
-		return ${_MyShip.MaxTargetRange} < ${This.m_MaxTargetRange}
+		return ${MyShip.MaxTargetRange} < ${This.m_MaxTargetRange}
 	}
 
 	member:float MaxTargetRange()
@@ -872,7 +872,7 @@ objectdef obj_Ship
 		}
 
 		/* save ship values that may change in combat */
-		This.m_MaxTargetRange:Set[${_MyShip.MaxTargetRange}]
+		This.m_MaxTargetRange:Set[${MyShip.MaxTargetRange}]
 		This:SetType[${Me.ToEntity.Type}]
 		This:SetTypeID[${Me.ToEntity.TypeID}]
 
@@ -1326,13 +1326,13 @@ objectdef obj_Ship
 	{
 		Validate_Ship()
 
-		if ${_Me.MaxLockedTargets} < ${_MyShip.MaxLockedTargets}
+		if ${Me.MaxLockedTargets} < ${MyShip.MaxLockedTargets}
 		{
-			Calculated_MaxLockedTargets:Set[${_Me.MaxLockedTargets}]
+			Calculated_MaxLockedTargets:Set[${Me.MaxLockedTargets}]
 		}
 		else
 		{
-			Calculated_MaxLockedTargets:Set[${_MyShip.MaxLockedTargets}]
+			Calculated_MaxLockedTargets:Set[${MyShip.MaxLockedTargets}]
 		}
 	}
 
@@ -1647,7 +1647,7 @@ objectdef obj_Ship
 				UI:UpdateConsole["obj_Ship: Waiting for cargo to load...(${LoopCheck})", LOG_MINOR]
 				while !${This.IsCargoOpen}
 				{
-					wait 0.5
+					wait 1
 				}
 				wait 10
 				LoopCheck:Inc
@@ -1666,7 +1666,7 @@ objectdef obj_Ship
 			wait WAIT_CARGO_WINDOW
 			while ${This.IsCargoOpen}
 			{
-				wait 0.5
+				wait 1
 			}
 			wait 10
 		}
@@ -1801,14 +1801,14 @@ objectdef obj_Ship
 		EVE:ClearAllWaypoints
 		wait 10
 
-		while ${DestinationSystemID} != ${_Me.SolarSystemID}
+		while ${DestinationSystemID} != ${Me.SolarSystemID}
 		{
 			EVE:DoGetToDestinationPath[apRoute]
 			UI:UpdateConsole["DEBUG: apRoute.Used = ${apRoute.Used}",LOG_DEBUG]
 			if ${apRoute.Used} == 0
 			{
-				UI:UpdateConsole["DEBUG: To: ${DestinationSystemID} At: ${_Me.SolarSystemID}"]
-				UI:UpdateConsole["Setting autopilot from ${Universe[${_Me.SolarSystemID}].Name} to ${Universe[${DestinationSystemID}].Name}"]
+				UI:UpdateConsole["DEBUG: To: ${DestinationSystemID} At: ${Me.SolarSystemID}"]
+				UI:UpdateConsole["Setting autopilot from ${Universe[${Me.SolarSystemID}].Name} to ${Universe[${DestinationSystemID}].Name}"]
 				Universe[${DestinationSystemID}]:SetDestination
 			}
 
@@ -2042,12 +2042,14 @@ objectdef obj_Ship
 
 		if ${This.Drones.WaitingForDrones}
 		{
-			UI:UpdateConsole["Drone deployment already in process, delaying warp", LOG_CRITICAL]
+			UI:UpdateConsole["Drone deployment already in process, delaying warp up to 1 second", LOG_CRITICAL]
+			variable int timeout = 0
 			do
 			{
-				waitframe
+				wait 1
+				timeout:Inc
 			}
-			while ${This.Drones.WaitingForDrones}
+			while ${This.Drones.WaitingForDrones} && ${timeout} < 10
 		}
 
 		This:DeactivateAllMiningLasers[]
@@ -2060,7 +2062,7 @@ objectdef obj_Ship
 	{
 		Validate_Ship()
 
-		if ${_Me.ToEntity.Mode} == 3
+		if ${Me.ToEntity.Mode} == 3
 		{
 			return TRUE
 		}
@@ -2122,7 +2124,7 @@ objectdef obj_Ship
 	{
 		Validate_Ship()
 
-		if ${Me.ToEntity(exists)} && ${_Me.ToEntity.IsCloaked}
+		if ${Me.ToEntity(exists)} && ${Me.ToEntity.IsCloaked}
 		{
 			return TRUE
 		}
@@ -2174,7 +2176,7 @@ objectdef obj_Ship
 	; Returns the targeting range minus 10%
 	member:float OptimalTargetingRange()
 	{
-		return ${Math.Calc[${_MyShip.MaxTargetRange}*0.90]}
+		return ${Math.Calc[${MyShip.MaxTargetRange}*0.90]}
 	}
 
 	; Returns the highest weapon optimal range minus

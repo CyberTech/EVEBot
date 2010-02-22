@@ -12,7 +12,7 @@ objectdef obj_MissionCache
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
-	variable string CONFIG_FILE = "${Script.CurrentDirectory}/Config/${_Me.Name} Mission Cache.xml"
+	variable string CONFIG_FILE = "${Script.CurrentDirectory}/Config/${Me.Name} Mission Cache.xml"
 	variable string SET_NAME = "Missions"
 
 	variable index:entity entityIndex

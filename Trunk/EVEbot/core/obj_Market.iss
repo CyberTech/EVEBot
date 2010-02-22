@@ -1,24 +1,24 @@
 /*
 	Market class
-	
+
 	Object to contain members related to market interaction.
-	
+
 	-- GliderPro
-	
+
 */
 
 objectdef obj_Market
 {
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
-	
+
 	variable index:marketorder  sellOrders
 	variable index:marketorder  buyOrders
 	variable index:myorder      mySellOrders
 	variable index:myorder      myBuyOrders
 	variable int                m_BestSellOrderSystem
 	variable int                m_BestSellOrderStation
-	
+
 	method Initialize()
 	{
 		UI:UpdateConsole["obj_Market: Initialized", LOG_MINOR]
@@ -30,10 +30,10 @@ objectdef obj_Market
  	function GetMarketOrders(int typeID)
  	{
 		UI:UpdateConsole["obj_Market: Obtaining market data for ${EVEDB_Items.Name[${typeID}]} (${typeID})"]
-		
+
 		This.sellOrders:Clear
 		This.buyOrders:Clear
-		
+
 		EVE:UpdateMarketOrders_A[${typeID}]
 		wait 40
 		EVE:UpdateMarketOrders_B[${typeID}]
@@ -42,14 +42,14 @@ objectdef obj_Market
 		wait 10
 		EVE:DoGetMarketOrders[This.buyOrders,"Buy",${typeID}]
 		wait 10
-		
+
 		UI:UpdateConsole["obj_Market: Found ${This.sellOrders.Used} sell orders."]
 		UI:UpdateConsole["obj_Market: Found ${This.buyOrders.Used} buy orders."]
-		
+
 		call This.QuicksortSellOrders 1 ${This.sellOrders.Used}
 		call This.QuicksortBuyOrders 1 ${This.buyOrders.Used}
  	}
-   	   	
+
 	function GetMarketSellOrders(int typeID)
 	{
 		;UI:UpdateConsole["${This.ObjectName}: Obtaining market sell orders for item ${typeID}:${EVEDB_Items.Name[${typeID}]}"]
@@ -89,26 +89,26 @@ objectdef obj_Market
 	{
 		return ${This.m_BestSellOrderSystem}
 	}
-	
+
 	member:int BestSellOrderStation()
 	{
 		return ${This.m_BestSellOrderStation}
 	}
-	
+
 	;; This must be a function because you need a wait between setting a destination and getting the path
 	function FindBestSellOrder(bool avoidLowSec, int quantity)
 	{
 		variable iterator orderIterator
-		
+
 		UI:UpdateConsole["obj_Market.BestSellOrderSystem(${avoidLowSec},${quantity})"]
 
 		This.sellOrders:GetIterator[orderIterator]
-		
+
 		if ${Station.Docked}
 		{
 			UI:UpdateConsole["obj_Market.BestSellOrderSystem: WARNING:  Called while docked."]
 		}
-		
+
 		if ${orderIterator:First(exists)}
 		{
 			do
@@ -124,7 +124,7 @@ objectdef obj_Market
 					else
 					{
 						Autopilot:SetDestination[${orderIterator.Value.SolarSystemID}]
-						wait 10	
+						wait 10
 						if ${Autopilot.LowSecRoute} == FALSE
 						{
 							This.m_BestSellOrderSystem:Set[${orderIterator.Value.SolarSystemID}]
@@ -153,7 +153,7 @@ objectdef obj_Market
 		variable int     count
 		variable int     bestIdx
 		variable float64 bestWeight
-				
+
 		UI:UpdateConsole["obj_Market.BestSellOrderSystem(${avoidLowSec},${quantity})"]
 
 		if ${Station.Docked}
@@ -163,12 +163,12 @@ objectdef obj_Market
 
 		; if avoiding low-sec, remove all orders that go through low-sec
 		if ${avoidLowSec} == TRUE
-		{				
-			count:Set[${This.sellOrders.Used}]	
+		{
+			count:Set[${This.sellOrders.Used}]
 			for ( idx:Set[1]; ${idx} <= ${count}; idx:Inc )
 			{
 				Autopilot:SetDestination[${This.sellOrders.Get[${idx}].SolarSystemID}]
-				wait 10	
+				wait 10
 				if ${Autopilot.LowSecRoute} == FALSE
 				{
 					This.sellOrders:Remove[${idx}]
@@ -178,19 +178,19 @@ objectdef obj_Market
 			UI:UpdateConsole["DEBUG: obj_Market.FindBestWeightedSellOrder: ${This.sellOrders.Used} remain after purging low-sec routes."]
 		}
 
-		count:Set[${This.sellOrders.Used}]	
+		count:Set[${This.sellOrders.Used}]
 		bestIdx:Set[-1]
 		bestWeight:Set[999999999.99]
 
 		for ( idx:Set[1]; ${idx} <= ${count}; idx:Inc )
 		{
 			variable float64 weight
-		
+
 			if 	${This.sellOrders.Get[${idx}].QuantityRemaining} < ${quantity}
 			{
 				continue
 			}
-			
+
 			weight:Set[${Math.Calc[${This.sellOrders.Get[${idx}].Price}*${This.Weight[${This.sellOrders.Get[${idx}].Jumps}]}]}]
 
 			;;UI:UpdateConsole["DEBUG: obj_Market.FindBestWeightedSellOrder ${This.sellOrders.Get[${idx}].Price} ${This.sellOrders.Get[${idx}].Jumps} ${weight}"]
@@ -201,7 +201,7 @@ objectdef obj_Market
 				bestIdx:Set[${idx}]
 			}
 		}
-		
+
 		if ${bestIdx} >= 1
 		{
 			This.m_BestSellOrderSystem:Set[${This.sellOrders.Get[${bestIdx}].SolarSystemID}]
@@ -220,23 +220,23 @@ objectdef obj_Market
 		{
 			return 0.20
 		}
-		
+
 		return ${Math.Calc[${jumps}*0.50]}
 	}
-	
+
 	function PurchaseItem(int typeID, int quantity)
 	{
 		variable iterator orderIterator
-		
+
 		call This.GetMarketOrders ${typeID}
 
 		This.sellOrders:GetIterator[orderIterator]
-		
+
 		if ${Station.Docked} == FALSE
 		{
 			UI:UpdateConsole["obj_Market.PurchaseItem: WARNING:  Called while undocked."]
 		}
-		
+
 		if ${orderIterator:First(exists)}
 		{
 			do
@@ -258,25 +258,25 @@ objectdef obj_Market
 			}
 			while ${orderIterator:Next(exists)}
 		}
-	}	
-	
+	}
+
 	member:int PartitionSellOrders(int left, int right, int pivotIndex)
 	{
 		variable float64 pivotValue
 		variable int     storeIndex
 		variable int     idx
-				
+
 		pivotValue:Set[${This.sellOrders.Get[${pivotIndex}].Price}]
-		
+
 		This.sellOrders:Swap[${pivotIndex},${right}]
 
 		storeIndex:Set[${left}]
-		
+
 		for ( idx:Set[${left}]; ${idx} < ${right}; idx:Inc )
 		{
 			if ${This.sellOrders.Get[${idx}].Price} <= ${pivotValue}
 			{
-				This.sellOrders:Swap[${storeIndex},${idx}]			
+				This.sellOrders:Swap[${storeIndex},${idx}]
 				storeIndex:Inc
 			}
 		}
@@ -290,7 +290,7 @@ objectdef obj_Market
  	{
  		variable int pivotIndex
  		variable int pivotNewIndex
- 		
+
 		if ${right} > ${left}
 		{
 			pivotIndex:Set[${left}]
@@ -305,22 +305,22 @@ objectdef obj_Market
 		variable float64 pivotValue
 		variable int     storeIndex
 		variable int     idx
-				
+
 		pivotValue:Set[${This.buyOrders.Get[${pivotIndex}].Price}]
-		
+
 		;UI:UpdateConsole["DEBUG: ${left} ${right} ${pivotIndex} ${pivotValue}"]
 
 		;UI:UpdateConsole["DEBUG: SWAP ${pivotIndex} ${right}"]
 		This.buyOrders:Swap[${pivotIndex},${right}]
 
 		storeIndex:Set[${left}]
-		
+
 		for ( idx:Set[${left}]; ${idx} < ${right}; idx:Inc )
 		{
 			if ${This.buyOrders.Get[${idx}].Price} <= ${pivotValue}
 			{
 				;UI:UpdateConsole["DEBUG: SWAP ${storeIndex} ${idx} ${This.buyOrders.Get[${idx}].Price} <= ${pivotValue}"]
-				This.buyOrders:Swap[${storeIndex},${idx}]			
+				This.buyOrders:Swap[${storeIndex},${idx}]
 				storeIndex:Inc
 			}
 		}
@@ -329,7 +329,7 @@ objectdef obj_Market
 		This.buyOrders:Swap[${storeIndex},${right}]
 
 		;UI:UpdateConsole["DEBUG: RTN ${storeIndex}"]
-		
+
 		return ${storeIndex}
 	}
 
@@ -337,9 +337,9 @@ objectdef obj_Market
    	{
  		variable int pivotIndex
  		variable int pivotNewIndex
- 		
+
  		;This:DumpBuyOrders
- 		
+
 		if ${right} > ${left}
 		{
 			pivotIndex:Set[${left}]
@@ -348,12 +348,12 @@ objectdef obj_Market
 			call This.QuicksortBuyOrders ${Math.Calc[${pivotNewIndex} + 1]} ${right}
 		}
    	}
-   	
+
  	function FilterOrdersByRange(int jumps)
  	{
 		variable int idx
 		variable int count
-				
+
 		UI:UpdateConsole["obj_Market: Filtering all orders more than ${jumps} jumps away from your present location."]
 
 		count:Set[${This.sellOrders.Used}]
@@ -364,9 +364,9 @@ objectdef obj_Market
 				This.sellOrders:Remove[${idx}]
 			}
 		}
-		This.sellOrders:Collapse		
+		This.sellOrders:Collapse
 		UI:UpdateConsole["obj_Market: Filtered ${Math.Calc[${count}-${This.sellOrders.Used}].Int} sell orders."]
-		
+
 		count:Set[${This.buyOrders.Used}]
 		removed:Set[0]
 		for ( idx:Set[1]; ${idx} <= ${count}; idx:Inc )
@@ -384,7 +384,7 @@ objectdef obj_Market
  	{
 		variable int idx
 		variable int count
-				
+
 		UI:UpdateConsole["${This.ObjectName}: Filtering all orders more than ${jumps} jumps away from your present location."]
 
 		count:Set[${This.buyOrders.Used}]
@@ -491,13 +491,13 @@ objectdef obj_Market
 		; Shouldn't get here.  If we do, return the highest entry.
 		return ${This.buyOrders.Get[${This.buyOrders.Used}].Price}
 	}
-	
+
 	function GetMyBuyOrders(int typeID=0)
 	{
 		variable int TotalOrders
 
 		This.myBuyOrders:Clear
-		
+
 		if ${typeID} != 0
 		{
 			UI:UpdateConsole["${This.ObjectName}: Obtaining my buy orders for ${EVEDB_Items.Name[${typeID}]}"]
@@ -533,7 +533,7 @@ objectdef obj_Market
 			TotalOrders:Set[${Me.GetMyOrders[This.mySellOrders,"Sell"]}]
 			wait 30
 		}
-		
+
 		if ${TotalOrders} > 0
 		{
 			UI:UpdateConsole["${This.ObjectName}: Waiting up to 1 minute to retrieve ${TotalOrders} orders"]
@@ -546,7 +546,7 @@ objectdef obj_Market
 		UI:UpdateConsole["obj_Market: Obtaining my orders for ${EVEDB_Items.Name[${typeID}]}"]
 		Me:UpdateMyOrders
 		wait 40
-		Me:DoGetMyOrders[This.myBuyOrders,"Buy",${typeID}] 
+		Me:DoGetMyOrders[This.myBuyOrders,"Buy",${typeID}]
 		wait 10
 		Me:DoGetMyOrders[This.mySellOrders,"Sell",${typeID}]
 		wait 10
@@ -554,7 +554,7 @@ objectdef obj_Market
 		UI:UpdateConsole["obj_Market: Found ${This.mySellOrders.Used} active sell orders for ${EVEDB_Items.Name[${typeID}]}."]
 		UI:UpdateConsole["obj_Market: Found ${This.myBuyOrders.Used} active buy orders for ${EVEDB_Items.Name[${typeID}]}."]
 	}
-	
+
 	member:bool IsMySellOrder(int OrderID)
 	{
 		variable int idx
@@ -593,18 +593,18 @@ objectdef obj_Market
 	{
 		return ${This.mySellOrders.Used}
 	}
-	
+
 	member:int MyBuyOrderCount()
 	{
 		return ${This.myBuyOrders.Used}
 	}
-	
+
 	function UpdateMySellOrders(float64 delta)
 	{
 		variable iterator orderIterator
-		
+
 		This.mySellOrders:GetIterator[orderIterator]
-		
+
 		if ${orderIterator:First(exists)}
 		{
 			do
@@ -612,9 +612,9 @@ objectdef obj_Market
 				if ${orderIterator.Value.Price} > ${This.LowestSellOrder}
 				{
 					variable float64 sellPrice
-					sellPrice:Set[${Math.Calc[${This.LowestSellOrder}-${delta}]}]							
+					sellPrice:Set[${Math.Calc[${This.LowestSellOrder}-${delta}]}]
 					sellPrice:Set[${sellPrice.Precision[2]}]
-					
+
 					if ${sellPrice} < 5000000
 					{
 						UI:UpdateConsole["obj_Market: Adjusting order ${orderIterator.Value.ID} to ${sellPrice}."]
@@ -704,7 +704,7 @@ objectdef obj_Market
 				{
 					UI:UpdateConsole["Skipping Order: ${Orders.Value.Name} Price: ${Orders.Value.Price.Centi}, already lowest"]
 				}
-				waitframe
+				wait 5
 			}
 			while ${Orders:Next(exists)}
 		}
@@ -713,9 +713,9 @@ objectdef obj_Market
 	function UpdateMyBuyOrders(float64 delta)
 	{
 		variable iterator orderIterator
-		
+
 		This.myBuyOrders:GetIterator[orderIterator]
-		
+
 		if ${orderIterator:First(exists)}
 		{
 			do
@@ -723,9 +723,9 @@ objectdef obj_Market
 				if ${orderIterator.Value.Price} < ${This.HighestBuyOrder}
 				{
 					variable float64 buyPrice
-					buyPrice:Set[${Math.Calc[${This.HighestBuyOrder}+${delta}]}]							
+					buyPrice:Set[${Math.Calc[${This.HighestBuyOrder}+${delta}]}]
 					buyPrice:Set[${buyPrice.Precision[2]}]
-					
+
 					if ${buyPrice} < 5000000
 					{
 						UI:UpdateConsole["obj_Market: Adjusting order ${orderIterator.Value.ID} to ${buyPrice}."]
@@ -748,11 +748,11 @@ objectdef obj_Market
 	method DumpSellOrders()
 	{
 		variable iterator orderIterator
-		
+
 		UI:UpdateConsole["obj_Market.DumpSellOrders: dumping..."]
-		
+
 		This.sellOrders:GetIterator[orderIterator]
-		
+
 		if ${orderIterator:First(exists)}
 		{
 			do
@@ -766,11 +766,11 @@ objectdef obj_Market
 	method DumpBuyOrders()
 	{
 		variable iterator orderIterator
-		
+
 		UI:UpdateConsole["obj_Market.DumpBuyOrders: dumping..."]
-		
+
 		This.buyOrders:GetIterator[orderIterator]
-		
+
 		if ${orderIterator:First(exists)}
 		{
 			do

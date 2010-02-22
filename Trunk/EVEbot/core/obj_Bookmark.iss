@@ -37,7 +37,7 @@ objectdef obj_Bookmark
 		Used:Set[${Bookmarks.Used}]
 		for(Pos:Set[1]; ${Pos} <= ${Used}; Pos:Inc)
 		{
-			if (${This.CheckSystemID} && ${Bookmarks[${Pos}].SolarSystemID} != ${_Me.SolarSystemID})
+			if (${This.CheckSystemID} && ${Bookmarks[${Pos}].SolarSystemID} != ${Me.SolarSystemID})
 			{
 #if EVEBOT_DEBUG
 				UI:UpdateConsole["${LogPrefix}: Ignoring Out-of-System Bookmark: ${Bookmarks[${Pos}].Label}", LOG_DEBUG]
@@ -66,7 +66,7 @@ objectdef obj_Bookmark
 			This:Reset
 		}
 
-		if ${Bookmarks.Get[1](exists)} && ${Bookmarks.Get[1].SolarSystemID} != ${_Me.SolarSystemID}
+		if ${Bookmarks.Get[1](exists)} && ${Bookmarks.Get[1].SolarSystemID} != ${Me.SolarSystemID}
 		{
 #if EVEBOT_DEBUG
 			UI:UpdateConsole["${LogPrefix}: System changed, resetting", LOG_DEBUG]

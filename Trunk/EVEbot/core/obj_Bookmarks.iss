@@ -27,7 +27,7 @@ objectdef obj_Bookmarks
 	method StoreLocation()
 	{
 		UI:UpdateConsole["Storing current location"]
-		;This.StoredLocation:Set["${_Me.Name} ${Math.Rand[500000]:Inc[100000]}"]
+		;This.StoredLocation:Set["${Me.Name} ${Math.Rand[500000]:Inc[100000]}"]
 		This.StoredLocation:Set["${Math.Rand[5000]:Inc[1000]}"]
 		
 		/* Create the bookmark, but don't mark it as temporary, we'll handle it's cleanup thru RemoveStoredLocation */
@@ -77,7 +77,7 @@ objectdef obj_Bookmarks
 	{
 		if ${Label.Equal["Default"]}
 		{
-			Label:Set["${_Me.Name} ${Math.Rand[500000]:Inc[100000]}]
+			Label:Set["${Me.Name} ${Math.Rand[500000]:Inc[100000]}]
 		}
 		
 		EVE:CreateBookmark["${Label}"]

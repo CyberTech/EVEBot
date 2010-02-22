@@ -142,7 +142,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 			return
 		}
 
-		if ${_MyShip.MaxTargetRange} <= ${Entity[${EntityID}].Distance}
+		if ${MyShip.MaxTargetRange} <= ${Entity[${EntityID}].Distance}
 		{
 			return
 		}
@@ -168,7 +168,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 
 		This.TargetingThisFrame:Set[0]
 
-		if ${_MyShip.MaxLockedTargets} == 0
+		if ${MyShip.MaxLockedTargets} == 0
 		{
 			UI:UpdateConsole["Targeting: Jammed - Unable to target"]
 			This.Counter_TargetingJammed:Inc
@@ -191,7 +191,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 				if ${Entity[${Target.Value.EntityID}](exists)} && \
 					!${Entity[${Target.Value.EntityID}].IsLockedTarget} && \
 					!${Entity[${Target.Value.EntityID}].BeingTargeted} && \
-					${_MyShip.MaxTargetRange} > ${Entity[${Target.Value.EntityID}].Distance}
+					${MyShip.MaxTargetRange} > ${Entity[${Target.Value.EntityID}].Distance}
 				{
 					if ${This.TargetCount} >= ${Ship.MaxLockedTargets}
 					{
@@ -213,7 +213,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 				if ${Target.Value.Blocker} && ${Entity[${Target.Value.EntityID}](exists)}
 				{
 					; Don't target anything else until this is gone. Note that this will block if you queue a blocking entity outside targeting range. Don't be stupid.
-					; Actually, no - go ahead and target any other mandatory blockers. 
+					; Actually, no - go ahead and target any other mandatory blockers.
 					return
 				}
 			}
@@ -238,7 +238,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 				if ${Entity[${Target.Value.EntityID}](exists)} && \
 					!${Entity[${Target.Value.EntityID}].IsLockedTarget} && \
 					!${Entity[${Target.Value.EntityID}].BeingTargeted} && \
-					${_MyShip.MaxTargetRange} > ${Entity[${Target.Value.EntityID}].Distance}
+					${MyShip.MaxTargetRange} > ${Entity[${Target.Value.EntityID}].Distance}
 				{
 					This:TargetEntity[${Target.Value.EntityID}]
 					Target.Value.Targeting:Set[TRUE]
@@ -302,7 +302,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 	method UnlockRandomTarget()
 	{
 		variable iterator Target
-		variable index:entity LockedTargets
+		variable index:cachedentity LockedTargets
 
 		Me:DoGetTargets[LockedTargets]
 		LockedTargets:GetIterator[Target]
