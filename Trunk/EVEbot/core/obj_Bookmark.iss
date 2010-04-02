@@ -97,9 +97,9 @@ objectdef obj_Bookmark
 	{
 		variable iterator TempIterator
 #if EVEBOT_DEBUG
-		UI:UpdateConsole["${LogPrefix} DEBUG: obj_Safespots.IsAtSafespot: ME_X = ${Me.ToEntity.X}", LOG_DEBUG]
-		UI:UpdateConsole["${LogPrefix} DEBUG: obj_Safespots.IsAtSafespot: ME_Y = ${Me.ToEntity.Y}", LOG_DEBUG]
-		UI:UpdateConsole["${LogPrefix} DEBUG: obj_Safespots.IsAtSafespot: ME_Z = ${Me.ToEntity.Z}", LOG_DEBUG]
+		;UI:UpdateConsole["${LogPrefix} DEBUG: obj_Safespots.IsAtSafespot: ME_X = ${Me.ToEntity.X}", LOG_DEBUG]
+		;UI:UpdateConsole["${LogPrefix} DEBUG: obj_Safespots.IsAtSafespot: ME_Y = ${Me.ToEntity.Y}", LOG_DEBUG]
+		;UI:UpdateConsole["${LogPrefix} DEBUG: obj_Safespots.IsAtSafespot: ME_Z = ${Me.ToEntity.Z}", LOG_DEBUG]
 #endif
 
 		Bookmarks:GetIterator[TempIterator]
@@ -108,17 +108,17 @@ objectdef obj_Bookmark
 			do
 			{
 #if EVEBOT_DEBUG
-				UI:UpdateConsole["${LogPrefix} DEBUG: AtBookmark: Label = ${TempIterator.Value.Label}", LOG_DEBUG]
-				UI:UpdateConsole["${LogPrefix} DEBUG: AtBookmark:  ItemID = ${TempIterator.Value.ItemID}", LOG_DEBUG]
-				UI:UpdateConsole["${LogPrefix} DEBUG: AtBookmark:  BM_X = ${TempIterator.Value.X}", LOG_DEBUG]
-				UI:UpdateConsole["${LogPrefix} DEBUG: AtBookmark:  BM_Y = ${TempIterator.Value.Y}", LOG_DEBUG]
-				UI:UpdateConsole["${LogPrefix} DEBUG: AtBookmark:  BM_Z = ${TempIterator.Value.Z}", LOG_DEBUG]
-				UI:UpdateConsole["${LogPrefix} DEBUG: AtBookmark:  DIST = ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${TempIterator.Value.X}, ${TempIterator.Value.Y}, ${TempIterator.Value.Z}]}", LOG_DEBUG]
+				;UI:UpdateConsole["${LogPrefix} DEBUG: AtBookmark: Label = ${TempIterator.Value.Label}", LOG_DEBUG]
+				;UI:UpdateConsole["${LogPrefix} DEBUG: AtBookmark:  ItemID = ${TempIterator.Value.ItemID}", LOG_DEBUG]
+				;UI:UpdateConsole["${LogPrefix} DEBUG: AtBookmark:  BM_X = ${TempIterator.Value.X}", LOG_DEBUG]
+				;UI:UpdateConsole["${LogPrefix} DEBUG: AtBookmark:  BM_Y = ${TempIterator.Value.Y}", LOG_DEBUG]
+				;UI:UpdateConsole["${LogPrefix} DEBUG: AtBookmark:  BM_Z = ${TempIterator.Value.Z}", LOG_DEBUG]
+				;UI:UpdateConsole["${LogPrefix} DEBUG: AtBookmark:  DIST = ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${TempIterator.Value.X}, ${TempIterator.Value.Y}, ${TempIterator.Value.Z}]}", LOG_DEBUG]
 #endif
 				; Are we within warp range of the bookmark?
 				if ${TempIterator.Value.ItemID} > -1
 				{
-            		UI:UpdateConsole["DEBUG: obj_Safespots.IsAtSafespot: ItemID = ${TempIterator.Value.ItemID}"]
+					UI:UpdateConsole["DEBUG: obj_Safespots.IsAtSafespot: ItemID = ${TempIterator.Value.ItemID}", LOG_DEBUG]
 					if ${Me.ToEntity.DistanceTo[${TempIterator.Value.ItemID}]} < WARP_RANGE
 					{
 						return TRUE

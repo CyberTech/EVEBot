@@ -97,6 +97,11 @@ objectdef obj_Freighter
 	/* this function is called repeatedly by the main loop in EveBot.iss */
 	function ProcessState()
 	{
+		if !${Config.Common.BotMode.Equal[Freighter]}
+		{
+			return
+		}
+
 		switch ${Config.Freighter.FreighterMode}
 		{
 			;echo "Freighter: ProcessState: ${This.CurrentState}"
@@ -148,6 +153,11 @@ objectdef obj_Freighter
 	/* NOTE: The order of these if statements is important!! */
 	method SetState()
 	{
+		if !${Config.Common.BotMode.Equal[Freighter]}
+		{
+			return
+		}
+
 		if ${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity(exists)} && ${m_DestinationID} == 0
 		{
 			m_DestinationID:Set[${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity.ID}]

@@ -34,6 +34,11 @@ objectdef obj_Scavenger
 	/* NOTE: The order of these if statements is important!! */
 	method SetState()
 	{
+		if ${Config.Common.BotMode.NotEqual[Scavenger]}
+		{
+			return
+		}
+
 		if ${EVEBot.ReturnToStation} && ${Me.InSpace}
 		{
 			This.CurrentState:Set["ABORT"]
@@ -61,6 +66,11 @@ objectdef obj_Scavenger
 
 	function ProcessState()
 	{
+		if ${Config.Common.BotMode.NotEqual[Scavenger]}
+		{
+			return
+		}
+
 		switch ${This.CurrentState}
 		{
 			case ABORT

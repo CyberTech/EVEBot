@@ -243,6 +243,11 @@ objectdef obj_MinerHauler inherits obj_Hauler
 	/* this function is called repeatedly by the main loop in EveBot.iss */
 	function ProcessState()
 	{
+		if ${Config.Common.BotMode.NotEqual[MinerHauler]}
+		{
+			return
+		}
+
 		switch ${This.CurrentState}
 		{
 			case IDLE
@@ -272,6 +277,11 @@ objectdef obj_MinerHauler inherits obj_Hauler
 	/* NOTE: The order of these if statements is important!! */
 	method SetState()
 	{
+		if ${Config.Common.BotMode.NotEqual[MinerHauler]}
+		{
+			return
+		}
+
 		if ${EVEBot.ReturnToStation} && ${Me.InSpace}
 		{
 			This.CurrentState:Set["ABORT"]

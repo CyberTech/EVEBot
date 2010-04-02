@@ -148,10 +148,10 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 		}
 
 #if EVEBOT_DEBUG
-		UI:UpdateConsole["Debug: Targets: ${Me.GetTargets}"]
-		UI:UpdateConsole["Debug: Targeting: ${Me.GetTargeting}"]
-		UI:UpdateConsole["Debug: Current Targets: ${Math.Calc[${Me.GetTargets} + ${Me.GetTargeting}]}"]
-		UI:UpdateConsole["Debug: Max Targets: ${Ship.MaxLockedTargets}"]
+		UI:UpdateConsole["Debug: TargetEntity - Target Count: ${Me.GetTargets}"]
+		UI:UpdateConsole["Debug: TargetEntity - Targeting Count: ${Me.GetTargeting}"]
+		UI:UpdateConsole["Debug: TargetEntity - Targeting this frame: ${This.TargetingThisFrame}"]
+		UI:UpdateConsole["Debug: TargetEntity - Max Targets: ${Ship.MaxLockedTargets}"]
 #endif
 		if !${Entity[${EntityID}].IsLockedTarget} && !${Entity[${EntityID}].BeingTargeted} && ${Entity[${EntityID}].Name.NotEqual[NULL]}
 		{
@@ -253,6 +253,11 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 
 	method Queue(int EntityID, int Priority, int TargetType, bool Mandatory=FALSE, bool Blocker=FALSE)
 	{
+		if ${EntityID} == 0
+		{
+			UI:UpdateConsole["Targeting: Who the fuck tried to queue EntityID 0?"]
+			return
+		}
 		if ${This.IsQueued[${EntityID}]}
 		{
 			UI:UpdateConsole["Targeting: Already queued ${Entity[${EntityID}].Name} (${EntityID}) Type: ${TargetType}"]

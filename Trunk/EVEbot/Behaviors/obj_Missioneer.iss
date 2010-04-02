@@ -24,7 +24,7 @@ objectdef obj_Missioneer
 
 	method Pulse()
 	{
-		if !${Config.Common.BotMode.Equal[Missioneer]}
+		if ${Config.Common.BotMode.NotEqual[Missioneer]}
 		{
 			return
 		}
@@ -50,6 +50,11 @@ objectdef obj_Missioneer
 	/* NOTE: The order of these if statements is important!! */
 	method SetState()
 	{
+		if ${Config.Common.BotMode.NotEqual[Missioneer]}
+		{
+			return
+		}
+
 		if ${Defense.Hiding}
 		{
 			This.CurrentState:Set["IDLE"]
@@ -78,6 +83,11 @@ objectdef obj_Missioneer
 
 	function ProcessState()
 	{
+		if ${Config.Common.BotMode.NotEqual[Missioneer]}
+		{
+			return
+		}
+
 		switch ${This.CurrentState}
 		{
 			case ABORT
