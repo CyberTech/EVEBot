@@ -44,6 +44,7 @@
 #include core/obj_Market.iss
 #include core/obj_Items.iss
 #include core/obj_Autopilot.iss
+#include core/obj_MissionParser.iss
 #include core/obj_MissionCombat.iss
 #include core/obj_MissionCombatConfig.iss
 #include core/obj_MissionCommands.iss
@@ -245,7 +246,7 @@ function main()
 		{
 			while ${EVEBot.Paused}
 			{
-				wait 10
+				wait 1
 			}
 			call ${BotModule.Value}.ProcessState
 			waitframe
