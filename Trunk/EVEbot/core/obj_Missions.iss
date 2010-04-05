@@ -185,7 +185,7 @@ objectdef obj_Missions
 	variable int Version
 
 	variable obj_MissionCache MissionCache
-  variable obj_MissionDatabase MissionDatabase
+	variable obj_MissionDatabase MissionDatabase
 	variable obj_MissionCombat missionCombat
 
 	method Initialize()
@@ -307,7 +307,7 @@ objectdef obj_Missions
 			call Cargo.CloseHolds
 			call Cargo.OpenHolds
 
-			UI:UpdateConsole["DEBUG: RunCourierMission: Checking ship's cargohold for ${QuantityRequired} units of ${itemName}."]
+			UI:UpdateConsole["DEBUG: RunCourierMission: Checking ship's cargohold for ${QuantityRequired} units of ${itemName}.", LOG_DEBUG]
 			MyShip:DoGetCargo[CargoIndex]
 			CargoIndex:GetIterator[CargoIterator]
 			if ${CargoIterator:First(exists)}
@@ -316,12 +316,12 @@ objectdef obj_Missions
 				{
 					TypeID:Set[${CargoIterator.Value.TypeID}]
 					ItemQuantity:Set[${CargoIterator.Value.Quantity}]
-					UI:UpdateConsole["DEBUG: RunCourierMission: Ship's Cargo: ${ItemQuantity} units of ${CargoIterator.Value.Name}(${TypeID})."]
+					UI:UpdateConsole["DEBUG: RunCourierMission: Ship's Cargo: ${ItemQuantity} units of ${CargoIterator.Value.Name}(${TypeID}).", LOG_DEBUG]
 
 					if (${TypeID} == ${This.MissionCache.TypeID[${agentID}]}) && \
 					   (${ItemQuantity} >= ${QuantityRequired})
 					{
-						UI:UpdateConsole["DEBUG: RunCourierMission: Found required items in ship's cargohold."]
+						UI:UpdateConsole["DEBUG: RunCourierMission: Found required items in ship's cargohold.", LOG_DEBUG]
 						haveCargo:Set[TRUE]
 						break
 					}
@@ -339,7 +339,7 @@ objectdef obj_Missions
 
 			if ${Station.Docked}
 			{
-				UI:UpdateConsole["DEBUG: RunCourierMission: Checking station hangar for ${QuantityRequired} units of ${itemName}."]
+				UI:UpdateConsole["DEBUG: RunCourierMission: Checking station hangar for ${QuantityRequired} units of ${itemName}.", LOG_DEBUG]
 				Me:DoGetHangarItems[CargoIndex]
 				CargoIndex:GetIterator[CargoIterator]
 
@@ -349,12 +349,12 @@ objectdef obj_Missions
 					{
 						TypeID:Set[${CargoIterator.Value.TypeID}]
 						ItemQuantity:Set[${CargoIterator.Value.Quantity}]
-						UI:UpdateConsole["DEBUG: RunCourierMission: Station Hangar: ${ItemQuantity} units of ${CargoIterator.Value.Name}(${TypeID})."]
+						UI:UpdateConsole["DEBUG: RunCourierMission: Station Hangar: ${ItemQuantity} units of ${CargoIterator.Value.Name}(${TypeID}).", LOG_DEBUG]
 
 						if (${TypeID} == ${This.MissionCache.TypeID[${agentID}]}) && \
 						   (${ItemQuantity} >= ${QuantityRequired})
 						{
-							UI:UpdateConsole["DEBUG: RunCourierMission: Found required items in station hangar."]
+							UI:UpdateConsole["DEBUG: RunCourierMission: Found required items in station hangar.", LOG_DEBUG]
 							allDone:Set[TRUE]
 							break
 						}

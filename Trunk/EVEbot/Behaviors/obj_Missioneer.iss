@@ -67,17 +67,17 @@ objectdef obj_Missioneer
 		{
 			This.CurrentState:Set["IDLE"]
 		}
+		elseif ${This.CurentState.Equal["RUN_MISSION"]}
+		{
+			return
+		}
 		elseif ${Agents.HaveMission}
 		{
 			This.CurrentState:Set["RUN_MISSION"]
 		}
-		elseif !${Agents.HaveMission}
-		{
-			This.CurrentState:Set["GET_MISSION"]
-		}
 		else
 		{
-			This.CurrentState:Set["Unknown"]
+			This.CurrentState:Set["GET_MISSION"]
 		}
 	}
 
