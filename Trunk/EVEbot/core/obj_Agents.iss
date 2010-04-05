@@ -1000,17 +1000,12 @@ objectdef obj_Agents
 		EVEWindow[ByCaption, "Journal"]:Close
 		EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"]:Close
 		
-		variable int Waiting
-		variable int timesWaited
-		if ${Math.Rand[2]} > 0 && ${Config.Common.Randomize}
-		{
-			Waiting:Set[1200]
-		}
-		else
+		variable int Waiting = 1200
+		if ${Math.Rand[2]} == 0 && ${Config.Common.Randomize}
 		{
 			Waiting:Set[${Math.Rand[18000]:Inc[2400]}]
 		}
-		UI:UpdateConsole["Delaying ${Waiting} before next mission request"]
+		UI:UpdateConsole["Delaying ${Math.Calc[${Waiting}/10/60]} minutes before next mission request"]
 		wait ${Waiting} ${EVEBot.Paused}
 	}
 
