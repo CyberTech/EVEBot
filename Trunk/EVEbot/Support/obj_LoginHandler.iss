@@ -109,26 +109,6 @@ objectdef obj_LoginHandler
 		while (!${${EXTNAME}(exists)})
 	 }
 
-	method StartBot()
-	{
-		EVE:CloseAllMessageBoxes
-
-		;UI:UpdateConsole["DEBUG: Current state: ${This.CurrentState}"]
-		switch ${This.CurrentState}
-		{
-			case FINISHED
-				run evebot/evebot
-				This.CurrentState:Set["EVEBOT_STARTED"]
-				break
-			case EVEBOT_STARTED
-				Script[EVEBot]:Resume
-				break
-			default
-				UI:UpdateConsole["Login: StartBot called in unknown state!"]
-				break
-		}
-	}
-
 	method DoLogin()
 	{
 		EVE:CloseAllMessageBoxes

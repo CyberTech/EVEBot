@@ -26,7 +26,7 @@ variable obj_LoginHandler LoginHandler
 variable obj_Configuration_BaseConfig BaseConfig
 variable obj_Configuration Config
 
-function main(string unchar="", bool StartBot=FALSE)
+function main(string unchar="", string StartBot=FALSE)
 {
 	if !${ISXEVE(exists)}
 	{
@@ -56,9 +56,6 @@ function main(string unchar="", bool StartBot=FALSE)
 
 	if ${ISXEVE(exists)} && ${ISXEVE.IsReady}
 	{
-		UI:UpdateConsole["Launcher: Starting EveCallback"]
-		runscript "${Script.CurrentDirectory}/EveCallback.iss"
-
 		LoginHandler:Start
 		LoginHandler:DoLogin
 
@@ -67,22 +64,52 @@ function main(string unchar="", bool StartBot=FALSE)
 			waitframe
 		}
 
-		if ${StartBot}
+		if ${StartBot.Upper.NotEqual[FALSE]}
 		{
-			UI:UpdateConsole["Launcher: Starting Bot"]
-			LoginHandler:StartBot
-
-			while !${Script[EVEBot](exists)}
+			switch ${StartBot.Upper}
 			{
-				wait 10
-			}
+				case EVEBOT
+					EVE:CloseAllMessageBoxes
+					; TODO - get rid of this callback shit.
+					UI:UpdateConsole["Launcher: Starting EveCallback"]
+					runscript "${Script.CurrentDirectory}/EveCallback.iss"
 
-			wait 600 ${Script[EVEBot].Paused}
+					UI:UpdateConsole["Launcher: Starting EVEBot"]
+					runscript evebot/evebot
+					wait 600 ${Script[EVEBot].Paused}
+					while ${Script[EVEBot].Paused}
+					{
+						Script[EVEBot]:Resume
+						wait 15
+					}
+					break
+				case EVEBOT_DEV
+				case EVEBOT_TRUNK
+					EVE:CloseAllMessageBoxes
+					; TODO - get rid of this callback shit.
+					UI:UpdateConsole["Launcher: Starting EveCallback"]
+					runscript "${Script.CurrentDirectory}/EveCallback.iss"
 
-			while ${Script[EVEBot].Paused}
-			{
-				LoginHandler:StartBot
-				wait 15
+					UI:UpdateConsole["Launcher: Starting EVEBot Trunk(Dev)"]
+					runscript evebot_trunk/evebot
+					wait 600 ${Script[EVEBot].Paused}
+					while ${Script[EVEBot].Paused}
+					{
+						Script[EVEBot]:Resume
+						wait 15
+					}
+					break
+				case STEALTHBOT
+					UI:UpdateConsole["Launcher: Starting StealthBot"]
+					wait 100
+					EVE:CloseAllMessageBoxes
+					dotnet sb${Session} stealthbot true
+					windowpos -viewable 0,0
+					break
+				case default
+					UI:UpdateConsole["Launcher: Unknown bot specified for launch, attempting to run as script name"]
+					run ${StartBot}
+					break
 			}
 		}
 	}
