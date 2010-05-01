@@ -68,6 +68,8 @@ function main(string unchar="", string StartBot=FALSE)
 		{
 			switch ${StartBot.Upper}
 			{
+				; TRUE check is for backwards compat from when StartBot was a bool
+				case TRUE
 				case EVEBOT
 					EVE:CloseAllMessageBoxes
 					; TODO - get rid of this callback shit.
