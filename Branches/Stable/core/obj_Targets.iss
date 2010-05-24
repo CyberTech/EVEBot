@@ -118,12 +118,17 @@ objectdef obj_Targets
 		PriorityTargets:Insert["Guardian Patroller"]	    /* damp */
 		PriorityTargets:Insert["Serpentis Patroller"]	    /* damp */
 
-        PriorityTargets:Insert["Elder Blood Upholder"]	    /* web/scram */
-        PriorityTargets:Insert["Elder Blood Worshipper"]    /* web/scram */
-        PriorityTargets:Insert["Elder Blood Follower"]	    /* web/scram */
-        PriorityTargets:Insert["Elder Blood Herald"]	    /* web/scram */
-        PriorityTargets:Insert["Blood Wraith"]	            /* web/scram */
-        PriorityTargets:Insert["Blood Disciple"]	        /* web/scram */
+		PriorityTargets:Insert["Elder Blood Upholder"]	    /* web/scram */
+		PriorityTargets:Insert["Elder Blood Worshipper"]    /* web/scram */
+		PriorityTargets:Insert["Elder Blood Follower"]	    /* web/scram */
+		PriorityTargets:Insert["Elder Blood Herald"]	    /* web/scram */
+		PriorityTargets:Insert["Blood Wraith"]	            /* web/scram */
+		PriorityTargets:Insert["Blood Disciple"]	        /* web/scram */
+
+		PriorityTargets:Insert["Strain Decimator Drone"]    /* web/scram */
+		PriorityTargets:Insert["Strain Infester Drone"]     /* web/scram */
+		PriorityTargets:Insert["Strain Render Drone"]       /* web/scram */
+		PriorityTargets:Insert["Strain Splinter Drone"]     /* web/scram */
 
 		; Chain targets will be scanned for the first time
 		; and then the script will determin if its safe / alright
@@ -559,7 +564,7 @@ objectdef obj_Targets
 		{
 			if ${tgtIterator.Value.Owner.CharID} != ${Me.CharID}
 			{	/* A player is already present here ! */
-				UI:UpdateConsole["Player found ${tgtIterator.Value.Owner}"]
+				UI:UpdateConsole["Player found ${tgtIterator.Value.Owner} ${tgtIterator.Value.Owner.CharID} ${tgtIterator.Value}"]
 				return TRUE
 			}
 		}
