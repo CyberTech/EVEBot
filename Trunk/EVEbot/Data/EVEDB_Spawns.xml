@@ -7736,5 +7736,38 @@
 	<Set Name="Zor">
 		<Setting Name="bounty">500000</Setting>
 	</Set>
+	<Set Name="Domination Drone">
+		<Setting Name="bounty">1000000</Setting>
+	</Set>
+	<Set Name="Drone Controller">
+		<Setting Name="bounty">1000000</Setting>
+	</Set>
+	<Set Name="Drone Creator">
+		<Setting Name="bounty">1000000</Setting>
+	</Set>
+	<Set Name="Drone Queen">
+		<Setting Name="bounty">1000000</Setting>
+	</Set>
+	<Set Name="Drone Ruler">
+		<Setting Name="bounty">1000000</Setting>
+	</Set>
+	<Set Name="Matriarch Drone">
+		<Setting Name="bounty">1500000</Setting>
+	</Set>
+	<Set Name="Patriarch Drone">
+		<Setting Name="bounty">1500000</Setting>
+	</Set>
+	<Set Name="Spearhead Drone">
+		<Setting Name="bounty">1000000</Setting>
+	</Set>
+	<Set Name="Supreme Drone Parasite">
+		<Setting Name="bounty">1000000</Setting>
+	</Set>
+	<Set Name="Swarm Preserver Drone">
+		<Setting Name="bounty">1000000</Setting>
+	</Set>
+	<Set Name="Annihilator Drone">
+		<Setting Name="bounty">0</Setting>
+	</Set>
 </Set>
 </InnerSpaceSettings>
