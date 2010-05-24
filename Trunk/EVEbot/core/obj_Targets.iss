@@ -120,6 +120,11 @@ objectdef obj_Targets
 		PriorityTargets:Insert["Blood Wraith"]				/* web/scram */
 		PriorityTargets:Insert["Blood Disciple"]			/* web/scram */
 
+		PriorityTargets:Insert["Strain Decimator Drone"]    /* web/scram */
+		PriorityTargets:Insert["Strain Infester Drone"]     /* web/scram */
+		PriorityTargets:Insert["Strain Render Drone"]       /* web/scram */
+		PriorityTargets:Insert["Strain Splinter Drone"]     /* web/scram */
+
 		; Chain targets will be scanned for the first time
 		; and then the script will determin if its safe / alright
 		; to chain the belt.
