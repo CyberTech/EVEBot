@@ -34,6 +34,7 @@ objectdef obj_Ship
 	variable index:module ModuleList_Cloaks
 	variable index:module ModuleList_StasisWeb
 	variable index:module ModuleList_SensorBoost
+	variable index:module ModuleList_TargetPainter
 	variable bool Repairing_Armor = FALSE
 	variable bool Repairing_Hull = FALSE
 	variable float m_MaxTargetRange
@@ -307,6 +308,7 @@ objectdef obj_Ship
 		This.ModuleList_Cloaks:Clear
 		This.ModuleList_StasisWeb:Clear
 		This.ModuleList_SensorBoost:Clear
+		This.ModuleList_TargetPainter:Clear
 
 		Me.Ship:DoGetModules[This.ModuleList]
 
@@ -400,6 +402,8 @@ objectdef obj_Ship
 					continue
 				case GROUP_SENSORBOOSTER
 					This.ModuleList_SensorBoost:Insert[${Module.Value}]
+				case GROUP_TARGETPAINTER
+					This.ModuleList_TargetPainter:Insert[${Module.Value}]
 				default
 					continue
 			}
@@ -501,6 +505,7 @@ objectdef obj_Ship
 			UI:UpdateConsole["	 Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
 		while ${Module:Next(exists)}
+
 		UI:UpdateConsole["Stasis Web Modules:", LOG_MINOR, 2]
 		This.ModuleList_StasisWeb:GetIterator[Module]
 		if ${Module:First(exists)}
@@ -509,8 +514,18 @@ objectdef obj_Ship
 			UI:UpdateConsole["	 Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
 		while ${Module:Next(exists)}
+
 		UI:UpdateConsole["Sensor Boost Modules:", LOG_MINOR, 2]
 		This.ModuleList_SensorBoost:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			UI:UpdateConsole["	 Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
+		}
+		while ${Module:Next(exists)}
+
+		UI:UpdateConsole["Target Painter Modules:", LOG_MINOR, 2]
+		This.ModuleList_TargetPainter:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{
@@ -1668,6 +1683,61 @@ objectdef obj_Ship
 		variable iterator Module
 
 		This.ModuleList_StasisWeb:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			if ${Module.Value.IsActive} && ${Module.Value.IsOnline} && !${Module.Value.IsDeactivating}
+			{
+				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}", LOG_MINOR]
+				Module.Value:Click
+			}
+		}
+		while ${Module:Next(exists)}
+	}
+
+	method Activate_TargetPainters()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+
+		variable iterator Module
+
+		This.ModuleList_TargetPainter:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			if !${Module.Value.IsActive} && ${Module.Value.IsOnline}
+			{
+/*
+    * from 0m to optimal range, there's a 100% chance the paint will hit;
+    * at optimal + falloff, there's roughly a 50% chance the paint will hit;
+    * at optimal + 2 * falloff, there's roughly a 2% chance the paint will hit.
+    http://eve.grismar.net/wikka.php?wakka=TargetPainter
+*/
+				if ${Me.ActiveTarget.Distance} < ${Math.Calc[${TargetPainter.Value.OptimalRange} + ${TargetPainter.Value.AccuracyFalloff]}
+				{
+					UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
+					Module.Value:Click
+					;TODO We don't break here, we activate all painters on the current target. Future versions will want to user-select distribution
+				}
+			}
+		}
+		while ${Module:Next(exists)}
+	}
+
+	method Deactivate_TargetPainters()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		variable iterator Module
+
+		This.ModuleList_TargetPainter:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
 		{

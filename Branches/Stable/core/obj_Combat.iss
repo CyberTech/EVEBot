@@ -220,6 +220,7 @@ objectdef obj_Combat
 		Ship:Reload_Weapons[FALSE]
 
 		; Activate the weapons, the modules class checks if there's a target (no it doesn't - ct)
+		Ship:Activate_TargetPainters
 		Ship:Activate_StasisWebs
 		Ship:Activate_Weapons
 		Ship.Drones:SendDrones
