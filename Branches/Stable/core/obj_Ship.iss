@@ -1718,7 +1718,7 @@ objectdef obj_Ship
     * at optimal + 2 * falloff, there's roughly a 2% chance the paint will hit.
     http://eve.grismar.net/wikka.php?wakka=TargetPainter
 */
-				if ${Me.ActiveTarget.Distance} < ${Math.Calc[${Module.Value.OptimalRange} + ${Module.Value.AccuracyFalloff]}
+				if ${Me.ActiveTarget.Distance} < ${Math.Calc[${Module.Value.OptimalRange} + ${Module.Value.AccuracyFalloff}]}
 				{
 					UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
 					Module.Value:Click
