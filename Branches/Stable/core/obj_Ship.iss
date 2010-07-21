@@ -375,39 +375,40 @@ objectdef obj_Ship
 					break
 				case GROUPID_SHIELD_BOOSTER
 					This.ModuleList_Regen_Shield:Insert[${Module.Value}]
-					continue
+					break
 				case GROUPID_AFTERBURNER
 					This.ModuleList_AB_MWD:Insert[${Module.Value}]
-					continue
+					break
 				case GROUPID_ARMOR_REPAIRERS
 					This.ModuleList_Repair_Armor:Insert[${Module.Value}]
-					continue
+					break
 				case GROUPID_DATA_MINER
 					if ${TypeID} == TYPEID_SALVAGER
 					{
 						This.ModuleList_Salvagers:Insert[${Module.Value}]
 					}
-					continue
+					break
 				case GROUPID_TRACTOR_BEAM
 					This.ModuleList_TractorBeams:Insert[${Module.Value}]
-					continue
+					break
 				case NONE
 					This.ModuleList_Repair_Hull:Insert[${Module.Value}]
-					continue
+					break
 				case GROUPID_CLOAKING_DEVICE
 					This.ModuleList_Cloaks:Insert[${Module.Value}]
-					continue
+					break
 				case GROUPID_STASIS_WEB
 					This.ModuleList_StasisWeb:Insert[${Module.Value}]
-					continue
+					break
 				case GROUP_SENSORBOOSTER
 					This.ModuleList_SensorBoost:Insert[${Module.Value}]
+					break
 				case GROUP_TARGETPAINTER
 					This.ModuleList_TargetPainter:Insert[${Module.Value}]
+					break
 				default
-					continue
+					break
 			}
-
 		}
 		while ${Module:Next(exists)}
 
