@@ -1,0 +1,2 @@
+The UserDefined directory is a place for developers to test out behaviors that (what is this directory for again??)
+The custom directory is reserved for custom behaviors that are not included with the evebot releases.
