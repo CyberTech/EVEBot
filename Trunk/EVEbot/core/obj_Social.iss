@@ -142,12 +142,14 @@ objectdef obj_Social
 					This.LastSolarSystemID:Set[${Me.SolarSystemID}]
 				}
 
+				/* Not sure why I added this, no reason to clear pilot list on station entry/exit
 				if ${Me.StationID} != ${This.LastStationID}
 				{
 					This.ClearedPilots:Clear
 					This.ClearedPilots:Add[${Me.CharID}]
 					This.LastStationID:Set[${Me.StationID}]
 				}
+				*/
 
 				; DoGetPilots is relatively expensive vs just the pilotcount.  Check if we're alone before calling.
 				if ${EVE.GetPilots} > 1
@@ -157,14 +159,14 @@ objectdef obj_Social
 
 					for (i:Set[1]; ${i} <= ${This.PilotIndex.Used}; i:Inc)
 					{
-						if ${Me.CharID} == ${This.PilotIndex.Get[${i}].CharID}
+						if ${Me.CharID} == ${This.PilotIndex[${i}]}
 						{
 							;UI:UpdateConsole["Social: StandingDetection: Ignoring Self", LOG_DEBUG]
 							This.PilotIndex:Remove[${i}]
 							continue
 						}
 
-						if ${PilotIterator.Get[${i}].ToFleetMember(exists)}
+						if ${This.PilotIndex[${i}].ToFleetMember(exists)}
 						{
 							;UI:UpdateConsole["Social: StandingDetection Ignoring Fleet Member: ${PilotIterator.Value.Name}", LOG_DEBUG]
 							This.PilotIndex:Remove[${i}]
@@ -265,7 +267,7 @@ objectdef obj_Social
 		if ${PilotIterator:First(exists)}
 		do
 		{
-			PilotID:Set[${PilotIterator.Value.CharID}]
+			PilotID:Set[${PilotIterator.Value}]
 			if ${This.ClearedPilots.Contains[${PilotID}]}
 			{
 				continue
@@ -369,10 +371,10 @@ objectdef obj_Social
 		{
 			do
 			{
-				;echo "DEBUG: ${PilotIterator.Value.Name} ${PilotIterator.Value.CharID} ${PilotIterator.Value.CorporationID} ${PilotIterator.Value.Corporation} ${PilotIterator.Value.AllianceID} ${PilotIterator.Value.Alliance}"
-
+				;echo "DEBUG: ${PilotIterator.Value.Name} ID: ${PilotIterator.Value.CharID} CorpID: ${PilotIterator.Value.CorporationID} Corp: ${PilotIterator.Value.Corporation} AllianceID: ${PilotIterator.Value.AllianceID} Alliance: ${PilotIterator.Value.Alliance}"
 				;echo "  DEBUG: ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].CorpToAlliance} ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].CorpToCorp} ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].CorpToPilot} ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].MeToCorp} ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].MeToPilot} ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].AllianceToAlliance}"
 				;echo "  DEBUG: ${PilotIterator.Value.Standing.CorpToAlliance} ${PilotIterator.Value.Standing.CorpToCorp} ${PilotIterator.Value.Standing.CorpToPilot} ${PilotIterator.Value.Standing.MeToCorp} ${PilotIterator.Value.Standing.MeToPilot} ${PilotIterator.Value.Standing.AllianceToAlliance}"
+
 				if (${PilotIterator.Value.Standing.AllianceToAlliance} < ${Config.Defense.MinimumAllianceStanding} || \
 					${PilotIterator.Value.Standing.CorpToAlliance} < ${Config.Defense.MinimumAllianceStanding})
 				{
