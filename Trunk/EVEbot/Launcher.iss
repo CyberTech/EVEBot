@@ -28,6 +28,11 @@ variable obj_Configuration Config
 
 function main(string unchar="", string StartBot=FALSE)
 {
+	if !${LavishScript.Executable.Find["ExeFile.exe"](exists)}
+	{
+		Script:End
+	}
+
 	if !${ISXEVE(exists)}
 	{
 		call LoginHandler.LoadExtension
