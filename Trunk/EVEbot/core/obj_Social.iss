@@ -17,6 +17,7 @@ objectdef obj_Social
 	variable int Version
 
 	variable set ClearedPilots
+	variable set ClearedPilotsStanding
 	variable set ReportedPilotsSinceLastSafe
 	variable int LastSolarSystemID
 	variable int LastStationID
@@ -56,7 +57,7 @@ objectdef obj_Social
 		Blacklist.AlliancesRef:GetSettingIterator[This.BlackListAllianceIterator]
 
 		UI:UpdateConsole["obj_Social: Initializing whitelist...", LOG_MINOR]
-		PilotWhiteList:Add[${Me.CharID}]
+		PilotWhiteList:Add[${EVEBot.CharID}]
 		if ${Me.CorporationID} > 0
 		{
 			This.CorpWhiteList:Add[${Me.CorporationID}]
@@ -137,8 +138,14 @@ objectdef obj_Social
 
 				if ${Me.SolarSystemID} != ${This.LastSolarSystemID}
 				{
+					; TODO - I need to clear this when blacklist or whitelist are updated during bot operation, if that is ever possible.
 					This.ClearedPilots:Clear
-					This.ClearedPilots:Add[${Me.CharID}]
+					This.ClearedPilots:Add[${EVEBot.CharID}]
+
+					; TODO - I should find a way to reset this if we find out that standings have updated (events?)
+					This.ClearedPilotsStanding:Clear
+					This.ClearedPilotsStanding:Add[${EVEBot.CharID}]
+
 					This.LastSolarSystemID:Set[${Me.SolarSystemID}]
 				}
 
@@ -146,7 +153,7 @@ objectdef obj_Social
 				if ${Me.StationID} != ${This.LastStationID}
 				{
 					This.ClearedPilots:Clear
-					This.ClearedPilots:Add[${Me.CharID}]
+					This.ClearedPilots:Add[${EVEBot.CharID}]
 					This.LastStationID:Set[${Me.StationID}]
 				}
 				*/
@@ -156,17 +163,19 @@ objectdef obj_Social
 				{
 					variable int i
 					i:Set[${EVE.GetPilots[This.PilotIndex]}]
+					variable int FleetID
+					FleetID:Set[${Me.Fleet}]
 
 					for (i:Set[1]; ${i} <= ${This.PilotIndex.Used}; i:Inc)
 					{
-						if ${Me.CharID} == ${This.PilotIndex[${i}]}
+						if ${EVEBot.CharID} == ${This.PilotIndex[${i}]}
 						{
 							;UI:UpdateConsole["Social: StandingDetection: Ignoring Self", LOG_DEBUG]
 							This.PilotIndex:Remove[${i}]
 							continue
 						}
 
-						if ${This.PilotIndex[${i}].ToFleetMember(exists)}
+						if ${FleetID} > 0 && ${This.PilotIndex[${i}].ToFleetMember(exists)}
 						{
 							;UI:UpdateConsole["Social: StandingDetection Ignoring Fleet Member: ${PilotIterator.Value.Name}", LOG_DEBUG]
 							This.PilotIndex:Remove[${i}]
@@ -354,9 +363,11 @@ objectdef obj_Social
 		return FALSE
 	}
 
-	member:bool LowStandingDetected()
+	member:int LowStandingDetected()
 	{
-		variable bool HostilesPresent
+		variable int HostilesPresent
+		variable bool HostilePilot
+		variable string LogMsg
 
 		if !${Config.Defense.DetectLowStanding}
 		{
@@ -375,23 +386,49 @@ objectdef obj_Social
 				;echo "  DEBUG: ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].CorpToAlliance} ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].CorpToCorp} ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].CorpToPilot} ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].MeToCorp} ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].MeToPilot} ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].AllianceToAlliance}"
 				;echo "  DEBUG: ${PilotIterator.Value.Standing.CorpToAlliance} ${PilotIterator.Value.Standing.CorpToCorp} ${PilotIterator.Value.Standing.CorpToPilot} ${PilotIterator.Value.Standing.MeToCorp} ${PilotIterator.Value.Standing.MeToPilot} ${PilotIterator.Value.Standing.AllianceToAlliance}"
 
+				if ${This.ClearedPilotsStanding.Contains[${PilotIterator.Value}]}
+				{
+					continue
+				}
+
+				if ${This.ReportedPilotsSinceLastSafe.Contains[${PilotID}]}
+				{
+					; We already reported this pilot, since the last time the system was safe. We'll go ahead and
+					; declare the system still not safe, and not re-report.
+					;UI:UpdateConsole["Note: Previously Reported PilotID: ${PilotID}", LOG_DEBUG]
+					Result:Set[FALSE]
+					continue
+				}
+				LogMsg:Set["Social: "]
 				if (${PilotIterator.Value.Standing.AllianceToAlliance} < ${Config.Defense.MinimumAllianceStanding} || \
 					${PilotIterator.Value.Standing.CorpToAlliance} < ${Config.Defense.MinimumAllianceStanding})
 				{
-					UI:UpdateConsole["Social: Pilot Alliance Below Standing Threshold: ${PilotIterator.Value.Name} CorpID: ${PilotIterator.Value.CorporationID} AllianceID: ${PilotIterator.Value.AllianceID}", LOG_CRITICAL]
-					HostilesPresent:Set[TRUE]
+					LogMsg:Concat[" Alliance"]
+					HostilePilot:Set[TRUE]
 				}
 				if (${PilotIterator.Value.Standing.CorpToCorp} < ${Config.Defense.MinimumCorpStanding} || \
 					${PilotIterator.Value.Standing.MeToCorp} < ${Config.Defense.MinimumCorpStanding})
 				{
-					UI:UpdateConsole["Social: Pilot Corp Below Standing Threshold: ${PilotIterator.Value.Name} CorpID: ${PilotIterator.Value.CorporationID} AllianceID: ${PilotIterator.Value.AllianceID}", LOG_CRITICAL]
-					HostilesPresent:Set[TRUE]
+					LogMsg:Concat[" Corp"]
+					HostilePilot:Set[TRUE]
 				}
 				if (${PilotIterator.Value.Standing.CorpToPilot} < ${Config.Defense.MinimumPilotStanding} || \
 					${PilotIterator.Value.Standing.MeToPilot} < ${Config.Defense.MinimumPilotStanding})
 				{
-					UI:UpdateConsole["Social: Pilot Below Standing Threshold: ${PilotIterator.Value.Name} CorpID: ${PilotIterator.Value.CorporationID} Alliance: ${PilotIterator.Value.AllianceID}", LOG_CRITICAL]
-					HostilesPresent:Set[TRUE]
+					LogMsg:Concat[" Pilot"]
+					HostilePilot:Set[TRUE]
+				}
+
+				if ${HostilePilot}
+				{
+					LogMsg:Concat[" Below Standing Threshold: ${PilotIterator.Value.Name} CorpID: ${PilotIterator.Value.CorporationID} AllianceID: ${PilotIterator.Value.AllianceID}"]
+					UI:UpdateConsole[${LogMsg}, LOG_CRITICAL]
+					HostilesPresent:Inc
+					{This.ReportedPilotsSinceLastSafe:Add[${PilotIterator.Value}]
+				}
+				else
+				{
+					This.ClearedPilotsStanding:Add[${PilotIterator.Value}]
 				}
 			}
 			while ${PilotIterator:Next(exists)}
