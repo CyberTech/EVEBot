@@ -20,6 +20,7 @@ objectdef obj_Ship
 	variable int Calculated_MaxLockedTargets
 	variable float BaselineUsedCargo
 	variable bool CargoIsOpen
+	variable int RetryUpdateModuleList
 	variable index:module ModuleList
 	variable index:module ModuleList_MiningLaser
 	variable index:module ModuleList_Weapon
@@ -70,6 +71,18 @@ objectdef obj_Ship
 			if !${_Me.InStation}
 			{
 				This:ValidateModuleTargets
+				
+				if ${RetryUpdateModuleList} = 10
+				{
+					UI:UpdateConsole["ERROR: obj_Ship:UpdateModuleList - No modules found. Pausing - If this ship has slots, you must have at least one module equipped, of any type.", LOG_CRITICAL]
+					RetryUpdateModuleList:Set[0]
+					EVEBot:Pause
+				}
+
+				if ${RetryUpdateModuleList} > 0
+				{
+					This:UpdateModuleList
+				}
 
 				if (${_Me.ToEntity.Mode} == 3 || !${Config.Common.BotModeName.Equal[Ratter]})
 				{	/* ratter was converted to use obj_Combat already */
@@ -314,10 +327,11 @@ objectdef obj_Ship
 
 		if !${This.ModuleList.Used} && ${Me.Ship.HighSlots} > 0
 		{
-			UI:UpdateConsole["ERROR: obj_Ship:UpdateModuleList - No modules found. Pausing - If this ship has slots, you must have at least one module equipped, of any type.", LOG_CRITICAL]
-			EVEBot:Pause
+			UI:UpdateConsole["ERROR: obj_Ship:UpdateModuleList - No modules found. Retrying in a few seconds - If this ship has slots, you must have at least one module equipped, of any type.", LOG_CRITICAL]
+			RetryUpdateModuleList:Inc
 			return
 		}
+		RetryUpdateModuleList:Set[0]
 
 		variable iterator Module
 
