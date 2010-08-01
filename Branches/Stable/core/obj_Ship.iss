@@ -72,7 +72,7 @@ objectdef obj_Ship
 			{
 				This:ValidateModuleTargets
 				
-				if ${RetryUpdateModuleList} = 10
+				if ${RetryUpdateModuleList} == 10
 				{
 					UI:UpdateConsole["ERROR: obj_Ship:UpdateModuleList - No modules found. Pausing - If this ship has slots, you must have at least one module equipped, of any type.", LOG_CRITICAL]
 					RetryUpdateModuleList:Set[0]
