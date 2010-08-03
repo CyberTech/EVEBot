@@ -9,9 +9,6 @@
 #include core/obj_EVEBot.iss
 #include core/obj_Configuration.iss
 
-/* Cache Objects */
-#include core/obj_Cache.iss
-
 /* Core Library (Non-EVE Related code) */
 #include core/Lib/obj_BaseClass.iss
 #include core/Lib/obj_Vector.iss
@@ -48,7 +45,7 @@
 #include core/obj_MissionCombat.iss
 #include core/obj_MissionCombatConfig.iss
 #include core/obj_MissionCommands.iss
-#include core/obj_Callback.iss
+;#include core/obj_Callback.iss
 
 /* Behavior/Mode Includes */
 #includeoptional Behaviors/includes.iss
@@ -58,11 +55,6 @@
 
 /* Custom Includes  - Custom directory is assumed to be an external SVN repository */
 #includeoptional Behaviors/Custom/includes.iss
-
-/* Cache Objects */
-variable(global) obj_Cache_Me _Me
-variable(global) obj_Cache_MyShip _MyShip
-variable(global) obj_Cache_EVETime _EVETime
 
 function atexit()
 {
@@ -101,15 +93,6 @@ function main()
 	Script:EnableDebugLogging[evebot_profile.txt]
 #endif
 
-	while !${_Me.Name(exists)} || ${_Me.Name.Equal[NULL]} || ${_Me.Name.Length} == 0
-	{
-		echo " ${Time} EVEBot: Waiting for cache to initialize - ${_Me.Name} != ${Me.Name} (if this continues, restart isxeve)"
-		wait 10
-		_Me:Initialize
-		_MyShip:Initialize
-		_EVETime:Initialize
-	}
-
 	echo "${Time} EVEBot: Loading Base & Config..."
 
 	/* All variables that would normally be defined script scope should be defined global scope to simplify threads */
@@ -121,6 +104,7 @@ function main()
 	declarevariable Config obj_Configuration global
 	declarevariable Whitelist obj_Config_Whitelist global
 	declarevariable Blacklist obj_Config_Blacklist global
+	declarevariable EntityCache obj_EntityCache global
 
 	echo "${Time} EVEBot: Loading Databases..."
 

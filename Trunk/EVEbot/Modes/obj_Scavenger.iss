@@ -104,7 +104,7 @@ objectdef obj_Scavenger
 		variable index:entity Wrecks
 		variable iterator     Wreck
 
-		EVE:DoGetEntities[Wrecks,GroupID,GROUPID_WRECK]
+		EVE:DoGetEntities[Wrecks,GroupID,GROUP_WRECK]
 		UI:UpdateConsole["obj_Scavenger: DEBUG: Found ${Wrecks.Used} wrecks."]
 
 		Wrecks:GetIterator[Wreck]
@@ -134,7 +134,7 @@ objectdef obj_Scavenger
 		variable float        ItemVolume = 0
 
 		/* only look for wrecks within 3000 meters */
-		EVE:DoGetEntities[Wrecks,GroupID,GROUPID_WRECK,Radius,3000]
+		EVE:DoGetEntities[Wrecks,GroupID,GROUP_WRECK,Radius,3000]
 		Wrecks:GetIterator[Wreck]
 		if ${Wreck:First(exists)}
 		{

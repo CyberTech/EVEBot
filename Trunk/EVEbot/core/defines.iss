@@ -79,7 +79,6 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 #define GROUPID_SPAWN_CONTAINER 306
 #define GROUPID_SECURE_CONTAINER 340
 #define GROUPID_DAMAGE_CONTROL 60
-#define GROUPID_WRECK 186
 #define GROUPID_STASIS_WEB 65
 #define GROUPID_DATA_MINER 538
 #define GROUPID_TRACTOR_BEAM 650
@@ -118,7 +117,6 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 #define CATEGORYID_GLACIAL_MASS 25
 
 #define CATEGORYID_STRUCTURE	23
-#define GROUPID_CONTROL_TOWER   365
 
 /* for obj_Sound.iss */
 #define ALARMSOUND	"${Script.CurrentDirectory}/sounds/alarm.wav"

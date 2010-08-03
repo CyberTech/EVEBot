@@ -719,13 +719,13 @@ objectdef obj_Missions
 				if ${gateCounter} > 45
 				{
 					/* activate gate and go to next room */
-					call Ship.Approach ${Entity[TypeID,TYPE_ACCELERATION_GATE].ID} DOCKING_RANGE
+					call Ship.Approach ${Entity[TypeID = TYPE_ACCELERATION_GATE].ID} DOCKING_RANGE
 					wait 10
 					call Ship.WarpPrepare
 					UI:UpdateConsole["Activating Acceleration Gate..."]
 					while !${Ship.WarpEntered}
 					{
-						Entity[TypeID,TYPE_ACCELERATION_GATE]:Activate
+						Entity[TypeID = TYPE_ACCELERATION_GATE]:Activate
 						wait 50
 					}
 					call Ship.WarpWait

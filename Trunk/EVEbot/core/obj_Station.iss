@@ -205,8 +205,8 @@ objectdef obj_Station
 
 		UI:UpdateConsole["Docking at ${EVE.GetLocationNameByID[${StationID}]}"]
 
-		Ship:SetType[${Entity[CategoryID,CATEGORYID_SHIP].Type}]
-		Ship:SetTypeID[${Entity[CategoryID,CATEGORYID_SHIP].TypeID}]
+		Ship:SetType[${Entity[CategoryID = CATEGORYID_SHIP].Type}]
+		Ship:SetTypeID[${Entity[CategoryID = CATEGORYID_SHIP].TypeID}]
 
 		if ${Entity[${StationID}](exists)}
 		{
@@ -259,7 +259,7 @@ objectdef obj_Station
 	function Dock()
 	{
 		variable int Counter = 0
-		variable int StationID = ${Entity[CategoryID,3,${Config.Common.HomeStation}].ID}
+		variable int StationID = ${Entity[CategoryID = CATEGORYID_STATION && Name = ${Config.Common.HomeStation}].ID}
 
 		if ${Me.InStation}
 		{
@@ -269,13 +269,13 @@ objectdef obj_Station
 
 		UI:UpdateConsole["Docking at ${StationID}:${Config.Common.HomeStation}"]
 
-		Ship:SetType[${Entity[CategoryID,CATEGORYID_SHIP].Type}]
-		Ship:SetTypeID[${Entity[CategoryID,CATEGORYID_SHIP].TypeID}]
+		Ship:SetType[${Entity[CategoryID = CATEGORYID_SHIP].Type}]
+		Ship:SetTypeID[${Entity[CategoryID = CATEGORYID_SHIP].TypeID}]
 
 		if ${StationID} <= 0 || !${Entity[${StationID}](exists)}
 		{
 			UI:UpdateConsole["Warning: Home station not found, going to nearest base", LOG_CRITICAL]
-			StationID:Set[${Entity[CategoryID,3].ID}]
+			StationID:Set[${Entity[CategoryID = CATEGORYID_STATION].ID}]
 		}
 
 		if ${Entity[${StationID}](exists)}
@@ -323,13 +323,13 @@ objectdef obj_Station
 		while ${This.Docked}
 
 		wait 30
-		Config.Common:HomeStation[${Entity[CategoryID,3].Name}]
+		Config.Common:HomeStation[${Entity[CategoryID = CATEGORYID_STATION].Name}]
 		UI:UpdateConsole["Undock: Complete - Home Station set to ${Config.Common.HomeStation}"]
 
 
 		Ship:UpdateModuleList[]
-		Ship:SetType[${Entity[CategoryID,CATEGORYID_SHIP].Type}]
-		Ship:SetTypeID[${Entity[CategoryID,CATEGORYID_SHIP].TypeID}]
+		Ship:SetType[${Entity[CategoryID = CATEGORYID_SHIP].Type}]
+		Ship:SetTypeID[${Entity[CategoryID = CATEGORYID_SHIP].TypeID}]
 	}
 
 }

@@ -368,7 +368,7 @@ objectdef obj_Miner
 			do
 			{
 				; check if this target is an asteroid, if not continue to next target
-				if ${Target.Value.CategoryID} != ${Asteroids.AsteroidCategoryID}
+				if ${Target.Value.CategoryID} != CATEGORYID_ORE
 				{
 					continue
 				}
@@ -461,7 +461,7 @@ objectdef obj_Miner
 					break
 				}
 
-				if ${Target.Value.CategoryID} != ${Asteroids.AsteroidCategoryID}
+				if ${Target.Value.CategoryID} != CATEGORYID_ORE
 				{
 					continue
 				}
@@ -546,11 +546,11 @@ objectdef obj_Miner
 	{
 		/* notify hauler there is ore in space */
 		variable string tempString
-		tempString:Set["${Me.CharID},${Me.SolarSystemID},${Entity[GroupID, GROUP_ASTEROIDBELT].ID}"]
+		tempString:Set["${EVEBot.CharID},${Me.SolarSystemID},${Entity[GroupID = GROUP_ASTEROIDBELT].ID}"]
 		relay all -event EVEBot_Miner_Full ${tempString}
 
 		/* TO MANUALLY CALL A HAULER ENTER THIS IN THE CONSOLE
-		 * relay all -event EVEBot_Miner_Full "${Me.CharID},${Me.SolarSystemID},0"
+		 * relay all -event EVEBot_Miner_Full "${EVEBot.CharID},${Me.SolarSystemID},0"
 		 */
 	}
 

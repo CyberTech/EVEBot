@@ -459,12 +459,12 @@ objectdef obj_MinerHauler inherits obj_Hauler
 			return
 		}
 
-		if !${Entity[OwnerID,${charID},CategoryID,6](exists)}
+		if !${Entity[OwnerID = ${charID} && CategoryID = 6](exists)}
 		{
 			call Ship.WarpToFleetMember ${charID}
 		}
 
-		if ${Entity[OwnerID,${charID},CategoryID,6].Distance} > CONFIG_MAX_SLOWBOAT_RANGE
+		if ${Entity[OwnerID = ${charID} && CategoryID = 6].Distance} > CONFIG_MAX_SLOWBOAT_RANGE
 		{
 			if ${Entity[OwnerID,${charID},CategoryID,6].Distance} < WARP_RANGE
 			{
@@ -479,12 +479,12 @@ objectdef obj_MinerHauler inherits obj_Hauler
 		This:BuildJetCanList[${charID}]
 		while ${Entities.Peek(exists)}
 		{
-			UI:UpdateConsole["DEBUG: ${Entity[OwnerID,${charID},CategoryID,6]}"]
-			UI:UpdateConsole["DEBUG: ${Entity[OwnerID,${charID},CategoryID,6].ID}"]
-			UI:UpdateConsole["DEBUG: ${Entity[OwnerID,${charID},CategoryID,6].DistanceTo[${Entities.Peek.ID}]}"]
+			UI:UpdateConsole["DEBUG: ${Entity[OwnerID = ${charID} && CategoryID = 6]}"]
+			UI:UpdateConsole["DEBUG: ${Entity[OwnerID = ${charID} && CategoryID = 6].ID}"]
+			UI:UpdateConsole["DEBUG: ${Entity[OwnerID = ${charID} && CategoryID = 6].DistanceTo[${Entities.Peek.ID}]}"]
 
-			if ${Entity[OwnerID,${charID},CategoryID,6](exists)} && \
-			   ${Entity[OwnerID,${charID},CategoryID,6].DistanceTo[${Entities.Peek.ID}]} > LOOT_RANGE
+			if ${Entity[OwnerID = ${charID} && CategoryID = 6](exists)} && \
+			   ${Entity[OwnerID = ${charID} && CategoryID = 6].DistanceTo[${Entities.Peek.ID}]} > LOOT_RANGE
 			{
 				/* TODO: approach within tractor range and tractor entity */
 				/* FOR NOW approach within loot range */
@@ -532,7 +532,7 @@ objectdef obj_MinerHauler inherits obj_Hauler
 
 		while ${idx} > 0
 		{
-			if ${MyFleet.Get[${idx}].CharID} != ${Me.CharID}
+			if ${MyFleet.Get[${idx}].CharID} != ${EVEBot.CharID}
 			{
 				if ${MyFleet.Get[${idx}].ToPilot(exists)} && \
 				   ( ${MyFleet.Get[${idx}].ToPilot.Name.Equal["Joe The Tank"]} || \

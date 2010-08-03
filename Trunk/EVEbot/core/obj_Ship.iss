@@ -1425,7 +1425,7 @@ objectdef obj_Ship
 		{
 			if ${Module.Value.IsActive} && \
 				!${Module.Value.IsDeactivating} && \
-				( !${Module.Value.LastTarget(exists)} || !${Entity[id,${Module.Value.LastTarget.ID}](exists)} )
+				( !${Module.Value.LastTarget(exists)} || !${Entity[${Module.Value.LastTarget.ID}](exists)} )
 			{
 				UI:UpdateConsole["${Module.Value.ToItem.Slot}:${Module.Value.ToItem.Name} has no target: Deactivating"]
 				Module.Value:Click
@@ -1465,7 +1465,7 @@ objectdef obj_Ship
 
 		if ${Activate.Equal[ON]} && \
 			(	!${MyShip.Module[${Slot}].LastTarget(exists)} || \
-				!${Entity[id,${MyShip.Module[${Slot}].LastTarget.ID}](exists)} \
+				!${Entity[${MyShip.Module[${Slot}].LastTarget.ID}](exists)} \
 			)
 		{
 			echo "obj_Ship:CycleMiningLaser: Target doesn't exist"
@@ -1517,12 +1517,6 @@ objectdef obj_Ship
 	function ActivateFreeMiningLaser()
 	{
 		Validate_Ship()
-
-		if ${Me.ActiveTarget.CategoryID} != ${Asteroids.AsteroidCategoryID}
-		{
-			UI:UpdateConsole["Error: Mining Lasers may only be used on Asteroids"]
-			return
-		}
 
 		variable iterator Module
 
@@ -1731,7 +1725,7 @@ objectdef obj_Ship
 					UI:UpdateConsole["Debug: WarpToFleetMember ${charID} ${distance}"]
 #endif
 					call This.WarpPrepare
-					while !${Entity[OwnerID,${charID},CategoryID,6](exists)}
+					while !${Entity[OwnerID = ${charID} && CategoryID = 6](exists)}
 					{
 						UI:UpdateConsole["Warping to Fleet Member: ${FleetMember.Value.ToPilot.Name}"]
 						while !${This.WarpEntered}
@@ -1848,9 +1842,9 @@ objectdef obj_Ship
 		echo \${DestinationBookmark.LocationType} = ${DestinationBookmark.LocationType}
 		echo \${DestinationBookmark.LocationID} = ${DestinationBookmark.LocationID}
 		echo DestinationBookmark Location: ${DestinationBookmark.X}, ${DestinationBookmark.Y}, ${DestinationBookmark.Z}
-		echo \${Entity[CategoryID,6].X} = ${Entity[CategoryID,6].X}
-		echo \${Entity[CategoryID,6].Y} = ${Entity[CategoryID,6].Y}
-		echo \${Entity[CategoryID,6].Z} = ${Entity[CategoryID,6].Z}
+		echo \${Entity[CategoryID = 6].X} = ${Entity[CategoryID = 6].X}
+		echo \${Entity[CategoryID = 6].Y} = ${Entity[CategoryID = 6].Y}
+		echo \${Entity[CategoryID = 6].Z} = ${Entity[CategoryID = 6].Z}
 		echo \${Me.ToEntity.X} = ${Me.ToEntity.X}
 		echo \${Me.ToEntity.Y} = ${Me.ToEntity.Y}
 		echo \${Me.ToEntity.Z} = ${Me.ToEntity.Z}
@@ -1944,16 +1938,16 @@ objectdef obj_Ship
 				}
 
 				if ${DestinationBookmark.AgentID(exists)} && ${DestinationBookmark.LocationID(exists)} && \
-					${Entity[TypeID,TYPE_ACCELERATION_GATE](exists)}
+					${Entity[TypeID = TYPE_ACCELERATION_GATE](exists)}
 				{
 					if ${EnterGate}
 					{
-						call This.Approach ${Entity[TypeID,TYPE_ACCELERATION_GATE].ID} DOCKING_RANGE
+						call This.Approach ${Entity[TypeID = TYPE_ACCELERATION_GATE].ID} DOCKING_RANGE
 						wait 10
 						UI:UpdateConsole["Activating Acceleration Gate..."]
 						while !${This.WarpEntered}
 						{
-							Entity[TypeID,TYPE_ACCELERATION_GATE]:Activate
+							Entity[TypeID = TYPE_ACCELERATION_GATE]:Activate
 							wait 10
 						}
 						call This.WarpWait

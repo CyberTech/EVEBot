@@ -27,7 +27,7 @@ function main()
 		echo "There are ${Me.Fleet.Size} fleet members"
 
 		echo "Broadcast Tests:"
-		Me.Fleet:Broadcast_AlignTo[${Entity["Stargate"].ID}]
+		Me.Fleet:Broadcast_AlignTo[${Entity[Name = "Stargate"].ID}]
 		wait 10
 		Me.Fleet:Broadcast_EnemySpotted
 		wait 10
@@ -53,7 +53,7 @@ function main()
 		wait 10
 		Me.Fleet:Broadcast_TravelTo[${Universe["Jita"].ID}]
 		wait 10
-		Me.Fleet:Broadcast_WarpTo[${Entity["Stargate"].ID}]
+		Me.Fleet:Broadcast_WarpTo[${Entity[Name = "Stargate"].ID}]
 		wait 10
 		Me.Fleet:Broadcast_WarpTo[${Me.ToEntity.ID}]
 		wait 10
