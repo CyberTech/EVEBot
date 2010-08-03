@@ -241,7 +241,7 @@ objectdef obj_Agents
 			else
 			{
 				This.AgentName:Set[${name}]
-				UI:UpdateConsole["obj_Agents: name: ${name}."]
+				UI:UpdateConsole["obj_Agents: Updating agent data for ${name} ${agentIndex}"]
 				Config.Agents:SetAgentIndex[${name},${agentIndex}]
 				Config.Agents:SetAgentID[${name},${Agent[${agentIndex}].ID}]
 				Config.Agents:SetLastDecline[${name},0]
