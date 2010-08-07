@@ -20,10 +20,14 @@ objectdef obj_EVEBot
 	variable bool LastSessionResult
 	variable index:string Threads
 
+	; Cached static items
+	variable int CharID
 	method Initialize()
 	{
 		This:SetVersion
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+		This.CharID:Set[${Me.CharID}]
+
 		UI:UpdateConsole["obj_EVEBot: Initialized", LOG_MINOR]
 	}
 

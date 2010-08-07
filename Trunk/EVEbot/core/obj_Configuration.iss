@@ -38,7 +38,8 @@ objectdef obj_Configuration_BaseConfig
 {
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
-
+	variable float ConfigVersion = 2.0
+	
 	variable filepath CONFIG_PATH = "${Script.CurrentDirectory}/Config"
 	variable filepath DATA_PATH = "${Script.CurrentDirectory}/Data"
 
@@ -51,10 +52,16 @@ objectdef obj_Configuration_BaseConfig
 		LavishSettings:AddSet[EVEBotSettings]
 
 		; Check new config file first, then fallball to original name for import
-
 		UI:UpdateConsole["Configuration file is ${CONFIG_FILE}"]
 		LavishSettings[EVEBotSettings]:Import[${CONFIG_FILE}]
-
+		if !${LavishSettings[EVEBotSettings].FindSetting[Version](exists)} || \
+			!${LavishSettings[EVEBotSettings].FindSetting[Version].Float} < ${ConfigVersion}
+		{
+			UI:UpdateConsole["obj_Configuration_BaseConfig: Resetting configuration to version ${ConfigVersion}", LOG_MINOR]
+			LavishSettings[EVEBotSettings]:Remove
+			LavishSettings:AddSet[EVEBotSettings]
+			LavishSettings[EVEBotSettings]:AddSetting[Version, ${ConfigVersion}]
+		}
 		BaseRef:Set[${LavishSettings[EVEBotSettings]}]
 		UI:UpdateConsole["obj_Configuration_BaseConfig: Initialized", LOG_MINOR]
 	}
@@ -176,11 +183,6 @@ objectdef obj_Configuration_Miner
 		return ${BaseConfig.BaseRef.FindSet[${This.SetName}].FindSet[Ice_Types]}
 	}
 
-	member:settingsetref OreVolumesRef()
-	{
-		return ${BaseConfig.BaseRef.FindSet[${This.SetName}].FindSet[Ore_Volumes]}
-	}
-
 	method Set_Default_Values()
 	{
 		BaseConfig.BaseRef:AddSet[${This.SetName}]
@@ -190,101 +192,100 @@ objectdef obj_Configuration_Miner
 		This:Set_Default_Values_Ice[]
 	}
 
+	method Set_Default_Values_Ore_Template(string OreName, int TypeID, int Enabled, int Priority)
+	{
+		This.OreTypesRef.FindSetting[${TypeID}, ${OreName}]:AddAttribute[Enabled, ${Enabled}]
+		This.OreTypesRef.FindSetting[${TypeID}, ${OreName}]:AddAttribute[Priority, ${Priority}]
+	}
+	
 	method Set_Default_Values_Ore()
 	{
 		This.Ref:AddSet[ORE_Types]
 
-		This.OreTypesRef:AddSetting[Prime Arkonor, 0]
-		This.OreTypesRef:AddSetting[Crimson Arkonor, 0]
-		This.OreTypesRef:AddSetting[Arkonor, 0]
-		This.OreTypesRef:AddSetting[Monoclinic Bistot, 0]
-		This.OreTypesRef:AddSetting[Triclinic Bistot, 0]
-		This.OreTypesRef:AddSetting[Bistot, 0]
-		This.OreTypesRef:AddSetting[Crystalline Crokite, 0]
-		This.OreTypesRef:AddSetting[Sharp Crokite, 0]
-		This.OreTypesRef:AddSetting[Crokite, 0]
-		This.OreTypesRef:AddSetting[Gleaming Spodumain, 0]
-		This.OreTypesRef:AddSetting[Bright Spodumain, 0]
-		This.OreTypesRef:AddSetting[Spodumain, 0]
-		This.OreTypesRef:AddSetting[Obsidian Ochre, 0]
-		This.OreTypesRef:AddSetting[Onyx Ochre, 0]
-		This.OreTypesRef:AddSetting[Dark Ochre, 0]
-		This.OreTypesRef:AddSetting[Prismatic Gneiss, 0]
-		This.OreTypesRef:AddSetting[Iridescent Gneiss, 0]
-		This.OreTypesRef:AddSetting[Gneiss, 0]
-		This.OreTypesRef:AddSetting[Glazed Hedbergite, 0]
-		This.OreTypesRef:AddSetting[Vitric Hedbergite, 0]
-		This.OreTypesRef:AddSetting[Hedbergite, 0]
-		This.OreTypesRef:AddSetting[Radiant Hemorphite, 0]
-		This.OreTypesRef:AddSetting[Vivid Hemorphite, 0]
-		This.OreTypesRef:AddSetting[Hemorphite, 0]
-		This.OreTypesRef:AddSetting[Pristine Jaspet, 0]
-		This.OreTypesRef:AddSetting[Pure Jaspet, 0]
-		This.OreTypesRef:AddSetting[Jaspet, 0]
-		This.OreTypesRef:AddSetting[Fiery Kernite, 0]
-		This.OreTypesRef:AddSetting[Luminous Kernite, 0]
-		This.OreTypesRef:AddSetting[Kernite, 0]
-		This.OreTypesRef:AddSetting[Golden Omber, 0]
-		This.OreTypesRef:AddSetting[Silvery Omber, 0]
-		This.OreTypesRef:AddSetting[Omber, 0]
-		This.OreTypesRef:AddSetting[Rich Plagioclase, 0]
-		This.OreTypesRef:AddSetting[Azure Plagioclase, 0]
-		This.OreTypesRef:AddSetting[Plagioclase, 0]
-		This.OreTypesRef:AddSetting[Viscous Pyroxeres, 0]
-		This.OreTypesRef:AddSetting[Solid Pyroxeres, 0]
-		This.OreTypesRef:AddSetting[Pyroxeres, 0]
-		This.OreTypesRef:AddSetting[Massive Scordite, 0]
-		This.OreTypesRef:AddSetting[Condensed Scordite, 0]
-		This.OreTypesRef:AddSetting[Scordite, 0]
-		This.OreTypesRef:AddSetting[Dense Veldspar, 0]
-		This.OreTypesRef:AddSetting[Concentrated Veldspar, 0]
-		This.OreTypesRef:AddSetting[Veldspar, 0]
+		This:Set_Default_Values_Ore_Template[Prime Arkonor, 17426, 1, 1]
+		This:Set_Default_Values_Ore_Template[Crimson Arkonor, 17425, 1, 2]
+		This:Set_Default_Values_Ore_Template[Arkonor, 22, 1, 3]
+		This:Set_Default_Values_Ore_Template[Monoclinic Bistot, 17429, 1, 4]
+		This:Set_Default_Values_Ore_Template[Triclinic Bistot, 17428, 1, 5]
+		This:Set_Default_Values_Ore_Template[Bistot, 1223, 1, 6]
+		This:Set_Default_Values_Ore_Template[Crystalline Crokite, 17433, 1, 7]
+		This:Set_Default_Values_Ore_Template[Sharp Crokite, 17432, 1, 8]
+		This:Set_Default_Values_Ore_Template[Crokite, 1225, 1, 9]
+		This:Set_Default_Values_Ore_Template[Gleaming Spodumain, 17467, 1, 10]
+		This:Set_Default_Values_Ore_Template[Bright Spodumain, 17466, 1, 11]
+		This:Set_Default_Values_Ore_Template[Spodumain, 19, 1, 12]
+		This:Set_Default_Values_Ore_Template[Obsidian Ochre, 17437, 1, 13]
+		This:Set_Default_Values_Ore_Template[Onyx Ochre, 17436, 1, 14]
+		This:Set_Default_Values_Ore_Template[Dark Ochre, 1232, 1, 15]
+		This:Set_Default_Values_Ore_Template[Prismatic Gneiss, 17866, 1, 16]
+		This:Set_Default_Values_Ore_Template[Iridescent Gneiss, 17865, 1, 17]
+		This:Set_Default_Values_Ore_Template[Gneiss, 1229, 1, 18]
+		This:Set_Default_Values_Ore_Template[Glazed Hedbergite, 17441, 1, 19]
+		This:Set_Default_Values_Ore_Template[Vitric Hedbergite, 17440, 1, 20]
+		This:Set_Default_Values_Ore_Template[Hedbergite, 21, 1, 21]
+		This:Set_Default_Values_Ore_Template[Radiant Hemorphite, 17445, 1, 22]
+		This:Set_Default_Values_Ore_Template[Vivid Hemorphite, 17444, 1, 23]
+		This:Set_Default_Values_Ore_Template[Hemorphite, 1231, 1, 24]
+		This:Set_Default_Values_Ore_Template[Pristine Jaspet, 17449, 1, 25]
+		This:Set_Default_Values_Ore_Template[Pure Jaspet, 17448, 1, 26]
+		This:Set_Default_Values_Ore_Template[Jaspet, 1226, 1, 27]
+		This:Set_Default_Values_Ore_Template[Fiery Kernite, 17453, 1, 28]
+		This:Set_Default_Values_Ore_Template[Luminous Kernite, 17452, 1, 29]
+		This:Set_Default_Values_Ore_Template[Kernite, 20, 1, 30]
+		This:Set_Default_Values_Ore_Template[Golden Omber, 17868, 1, 31]
+		This:Set_Default_Values_Ore_Template[Silvery Omber, 17867, 1, 32]
+		This:Set_Default_Values_Ore_Template[Omber, 1227, 1, 33]
+		This:Set_Default_Values_Ore_Template[Rich Plagioclase, 17456, 1, 34]
+		This:Set_Default_Values_Ore_Template[Azure Plagioclase, 17455, 1, 35]
+		This:Set_Default_Values_Ore_Template[Plagioclase, 18, 1, 36]
+		This:Set_Default_Values_Ore_Template[Viscous Pyroxeres, 17460, 1, 37]
+		This:Set_Default_Values_Ore_Template[Solid Pyroxeres, 17459, 1, 38]
+		This:Set_Default_Values_Ore_Template[Pyroxeres, 1224, 1, 39]
+		This:Set_Default_Values_Ore_Template[Massive Scordite, 17464, 1, 40]
+		This:Set_Default_Values_Ore_Template[Condensed Scordite, 17463, 1, 41]
+		This:Set_Default_Values_Ore_Template[Scordite, 1228, 1, 42]
+		This:Set_Default_Values_Ore_Template[Dense Veldspar, 17471, 1, 43]
+		This:Set_Default_Values_Ore_Template[Concentrated Veldspar, 17470, 1, 44]
+		This:Set_Default_Values_Ore_Template[Veldspar, 1230, 1, 45]
+	}
 
-		This.Ref:AddSet[ORE_Volumes]
-
-		This.OreVolumesRef:AddSetting[Mercoxit,40]
-		This.OreVolumesRef:AddSetting[Arkonor,16]
-		This.OreVolumesRef:AddSetting[Bistot,16]
-		This.OreVolumesRef:AddSetting[Crokite,16]
-		This.OreVolumesRef:AddSetting[Spodumain,16]
-		This.OreVolumesRef:AddSetting[Dark Ochre,8]
-		This.OreVolumesRef:AddSetting[Gneiss,5]
-		This.OreVolumesRef:AddSetting[Hedbergite,3]
-		This.OreVolumesRef:AddSetting[Hemorphite,3]
-		This.OreVolumesRef:AddSetting[Jaspet,2]
-		This.OreVolumesRef:AddSetting[Kernite,1.2]
-		This.OreVolumesRef:AddSetting[Omber,0.6]
-		This.OreVolumesRef:AddSetting[Plagioclase,0.35]
-		This.OreVolumesRef:AddSetting[Pyroxeres,0.3]
-		This.OreVolumesRef:AddSetting[Scordite,0.15]
-		This.OreVolumesRef:AddSetting[Veldspar,0.1]
+	method Set_Default_Values_Mercoxit_Template(string OreName, int TypeID, int Enabled, int Priority)
+	{
+		This.MercoxitTypesRef.FindSetting[${TypeID}, ${OreName}]:AddAttribute[Enabled, ${Enabled}] 
+		This.MercoxitTypesRef.FindSetting[${TypeID}, ${OreName}]:AddAttribute[Priority, ${Priority}] 
 	}
 
 	method Set_Default_Values_Mercoxit()
 	{
 		This.Ref:AddSet[Mercoxit_Types]
 
-		This.MercoxitTypesRef:AddSetting[Vitreous Mercoxit, 1]
-		This.MercoxitTypesRef:AddSetting[Magma Mercoxit, 1]
-		This.MercoxitTypesRef:AddSetting[Mercoxit, 1]
+		This:Set_Default_Values_Mercoxit_Template[Vitreous Mercoxit, 17870, 1, 1]
+		This:Set_Default_Values_Mercoxit_Template[Magma Mercoxit, 17869, 1, 2]
+		This:Set_Default_Values_Mercoxit_Template[Mercoxit, 11396, 1, 3]
+	}
+
+	method Set_Default_Values_Ice_Template(string OreName, int TypeID, int Enabled, int Priority)
+	{
+		This.IceTypesRef.FindSetting[${TypeID}, ${OreName}]:AddAttribute[Enabled, ${Enabled}] 
+		This.IceTypesRef.FindSetting[${TypeID}, ${OreName}]:AddAttribute[Priority, ${Priority}] 
 	}
 
 	method Set_Default_Values_Ice()
 	{
 		This.Ref:AddSet[ICE_Types]
 
-		This.IceTypesRef:AddSetting[Dark Glitter, 1]
-		This.IceTypesRef:AddSetting[Gelidus, 1]
-		This.IceTypesRef:AddSetting[Glare Crust, 1]
-		This.IceTypesRef:AddSetting[Krystallos, 1]
-		This.IceTypesRef:AddSetting[Clear Icicle, 1]
-		This.IceTypesRef:AddSetting[Smooth Glacial Mass, 1]
-		This.IceTypesRef:AddSetting[Glacial Mass, 1]
-		This.IceTypesRef:AddSetting[Pristine White Glaze, 1]
-		This.IceTypesRef:AddSetting[White Glaze, 1]
-		This.IceTypesRef:AddSetting[Thick Blue Ice, 1]
-		This.IceTypesRef:AddSetting[Enriched Clear Icicle, 1]
-		This.IceTypesRef:AddSetting[Blue Ice, 1]
+		This:Set_Default_Values_Ice_Template[Dark Glitter, 16267, 1, 1]
+		This:Set_Default_Values_Ice_Template[Gelidus, 16268, 1, 2]
+		This:Set_Default_Values_Ice_Template[Glare Crust, 16266, 1, 3]
+		This:Set_Default_Values_Ice_Template[Krystallos, 16269, 1, 4]
+		This:Set_Default_Values_Ice_Template[Clear Icicle, 16262, 1, 5]
+		This:Set_Default_Values_Ice_Template[Smooth Glacial Mass, 17977, 1, 6]
+		This:Set_Default_Values_Ice_Template[Glacial Mass, 16263, 1, 7]
+		This:Set_Default_Values_Ice_Template[Pristine White Glaze, 17976, 1, 8]
+		This:Set_Default_Values_Ice_Template[White Glaze, 16265, 1, 9]
+		This:Set_Default_Values_Ice_Template[Thick Blue Ice, 17975, 1, 10]
+		This:Set_Default_Values_Ice_Template[Enriched Clear Icicle, 17978, 1, 11]
+		This:Set_Default_Values_Ice_Template[Blue Ice, 16264, 1, 12]
 	}
 
 	Define_ConfigItem(string, JetCanNaming, 1)

@@ -32,7 +32,7 @@
 
 	It is designed to be fairly game-agnostic. Exceptions are as follows:
 		RelayMySkills - EVE-Specific
-		Me.CharID - Possibly requires update
+		EVEBot.CharID - Possibly requires update
 		Me.Name - Possibly requires update
 		Config.Common.BotMode - Possibly requires update
 
@@ -199,7 +199,7 @@ objectdef obj_UplinkManager
 	; Register this session with other peers
 	method RelayRegistration(string Destination, bool Update=FALSE)
 	{
-		relay "${Destination}" -noredirect "UplinkManager:UpdatePeerSession[${Session},${Me.CharID},${Me.Name},${Config.Common.BotMode}]"
+		relay "${Destination}" -noredirect "UplinkManager:UpdatePeerSession[${Session},${EVEBot.CharID},${Me.Name},${Config.Common.BotMode}]"
 	}
 
 	; Called by the script to send misc info to all peers

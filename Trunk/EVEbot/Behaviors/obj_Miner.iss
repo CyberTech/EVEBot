@@ -360,7 +360,7 @@ objectdef obj_Miner
 		; Make sure the cargo window is open.
 		; This call does nothing if it is already open.
 		call Ship.OpenCargo
-
+		Ship:Deactivate_Cloak
 		Me:DoGetTargets[LockedTargets]
 		LockedTargets:GetIterator[Target]
 		if ${Target:First(exists)}
