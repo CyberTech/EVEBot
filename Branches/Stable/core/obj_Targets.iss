@@ -101,10 +101,16 @@ objectdef obj_Targets
 		; leave rats that dont scramble which would help
 		; later when chaining gets added
 
-		PriorityTargets:Insert["Dire Guristas Invader"]		    /* web/scram */
-		PriorityTargets:Insert["Dire Guristas Arrogator"]	    /* web/scram */
-		PriorityTargets:Insert["Dire Guristas Imputor"]		    /* web/scram */
-		PriorityTargets:Insert["Dire Guristas Infiltrator"]	    /* web/scram */
+		PriorityTargets:Insert["Dire Guristas Arrogator"] 		/* web/scram */
+		PriorityTargets:Insert["Dire Guristas Despoiler"] 		/* Jamming */
+		PriorityTargets:Insert["Dire Guristas Imputor"] 		/* web/scram */
+		PriorityTargets:Insert["Dire Guristas Infiltrator"] 	/* web/scram */
+		PriorityTargets:Insert["Dire Guristas Invader"] 		/* web/scram */
+		PriorityTargets:Insert["Dire Guristas Saboteur"] 		/* Jamming */
+		PriorityTargets:Insert["Dire Guristas Annihilator"] 	/* Jamming */
+		PriorityTargets:Insert["Dire Guristas Killer"] 			/* Jamming */
+		PriorityTargets:Insert["Dire Guristas Murderer"] 		/* Jamming */
+		PriorityTargets:Insert["Dire Guristas Nullifier"] 		/* Jamming */
 
 		PriorityTargets:Insert["Arch Angel Hijacker"]
 		PriorityTargets:Insert["Arch Angel Outlaw"]
