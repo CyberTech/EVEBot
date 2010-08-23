@@ -100,7 +100,12 @@ objectdef obj_Targets
 		; You can specify the entire rat name, for example
 		; leave rats that dont scramble which would help
 		; later when chaining gets added
-		PriorityTargets:Insert["Dire Guristas"]
+
+		PriorityTargets:Insert["Dire Guristas Invader"]		    /* web/scram */
+		PriorityTargets:Insert["Dire Guristas Arrogator"]	    /* web/scram */
+		PriorityTargets:Insert["Dire Guristas Imputor"]		    /* web/scram */
+		PriorityTargets:Insert["Dire Guristas Infiltrator"]	    /* web/scram */
+
 		PriorityTargets:Insert["Arch Angel Hijacker"]
 		PriorityTargets:Insert["Arch Angel Outlaw"]
 		PriorityTargets:Insert["Arch Angel Rogue"]
