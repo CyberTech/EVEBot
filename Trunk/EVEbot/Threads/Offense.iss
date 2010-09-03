@@ -24,7 +24,7 @@ objectdef obj_Offense
 	variable index:module TurretIndex
 	variable int LastTurretTypeID = 0
 	variable int LastChargeTypeID = 0
-	
+
 	variable int MinRange = 0
 	variable int MaxRange = 0
 
@@ -66,7 +66,7 @@ objectdef obj_Offense
 	{
 		variable iterator ModuleIterator
 		Ship.ModuleList_Weapon:GetIterator[ModuleIterator]
-		
+
 		if ${ModuleIterator:First(exists)}
 		{
 			do
@@ -114,17 +114,23 @@ objectdef obj_Offense
 
 				Ship:Activate_StasisWebs
 				Ship:Activate_WeaponEnhance
-				
+
 				variable iterator TargetPainter
 				Ship.ModuleList_TargetPainter:GetIterator[TargetPainter]
 				if ${TargetPainter:First(exists)}
 				{
 					do
 					{
-						if !${TargetPainter.Value.IsActive} && ${Me.ActiveTarget.Distance} < ${Math.Calc[${TargetPainter.Value.OptimalRange} * 2]}
+						/*
+    						* from 0m to optimal range, there's a 100% chance the paint will hit;
+    						* at optimal + falloff, there's roughly a 50% chance the paint will hit;
+    						* at optimal + 2 * falloff, there's roughly a 2% chance the paint will hit.
+						    http://eve.grismar.net/wikka.php?wakka=TargetPainter
+						*/
+						if !${TargetPainter.Value.IsActive} && ${Me.ActiveTarget.Distance} < ${Math.Calc[${TargetPainter.Value.OptimalRange} + ${TargetPainter.Value.AccuracyFalloff}]}
 						{
 							TargetPainter.Value:Click
-							break
+							; TODO - we don't break here, so all painters go on one target. future should user select distribution or not, and intelligently do so.
 						}
 					}
 					while ${TargetPainter:Next(exists)}
@@ -166,14 +172,14 @@ objectdef obj_Offense
 						}
 					}
 				}
-				
+
 				if ${This.TurretIndex.Used} > 0
 				{
 					variable int idx
 					variable string slot
 					This.LastTurretTypeID:Set[0]
 					This.LastChargeTypeID:Set[0]
-					
+
 					; iterate through every turret and determine if it needs an ammo change.
 					if ${Time.Timestamp} >= ${This.NextAmmoCheck.Timestamp}
 					{
@@ -182,7 +188,7 @@ objectdef obj_Offense
 						{
 							slot:Set[${Ship.TurretSlots.Element[${idx}]}]
 							tempInt:Inc
-							
+
 							if ${MyShip.Module[${slot}].ToItem.TypeID} == ${This.LastTurretTypeID} && \
 								${MyShip.Module[${slot}].Charge.TypeID} == ${This.LastChargeTypeID}
 							{
@@ -233,7 +239,7 @@ objectdef obj_Offense
 							This.TurretNeedsAmmo:Set[${idx},FALSE]
 							continue
 						}
-						
+
 						;Awesome, our guns are ready for ammo checks. Does our gun need an ammo change?
 						if ${This.TurretNeedsAmmo.Element[${idx}]}
 						{
@@ -265,7 +271,7 @@ objectdef obj_Offense
 								This.MinRange:Set[${Ship.GetMinimumTurretRange[${idx}]}]
 								This.MaxRange:Set[${Ship.GetMaximumTurretRange[${idx}]}]
 							}
-							
+
 							;If we didn't need an ammo change, check if we need to activate or deactivate the weapon.
 							;Account for some falloff in our ammo checks. EFT shows we can maintain about 75% of our dps
 							;at about 1.5* our range, so assume skills suck and we're going for 1.3. The only real problem
@@ -343,24 +349,68 @@ objectdef obj_Offense
 			Ship:Deactivate_WeaponEnhance
 		}
 	}
-	
-	/* bool HaveFullAggro:
-	Using the correct entity cache for a given bot mode, determine if we have aggro from all aggroing entities.
-	This will account for non-aggressing spawns such as hauler spawns. */
-	member:bool HaveFullAggro()
+
+	/*	Using the correct entity cache for a given bot mode, determine if we have aggro from all aggroing NPC entities.
+		This will account for non-aggressing spawns such as hauler spawns.
+	*/
+	member:bool HaveFullNPCAggro()
 	{
-		variable bool HaveAggro = FALSE
-		
+		variable int CacheID = 0
+
 		switch ${Config.Common.BotMode}
 		{
 			case Ratter
-				HaveAggro:Set[${Targets.HaveFullAggro["Ratter.RatCache"]}]
+				CacheID:Set[${Ratter.Rat_CacheID}]
 				break
 			case Missioneer
-				HaveAggro:Set[${Targets.HaveFullAggro["Missions.missionCombat.MissionCommands.EntityCache"]}]
+				CacheID:Set[${Missions.missionCombat.MissionCommands.NPC_CacheID}]
 				break
 		}
-		return ${HaveAggro}
+
+		variable iterator EntityIterator
+		EntityCache.EntityFilters.Get[${CacheID}].Entities:GetIterator[EntityIterator]
+		if ${EntityIterator:First(exists)}
+		{
+			do
+			{
+				/* ; Ignore anything that isn't a player or npc.
+				TODO: Before we can do this, need to validate that structures that target you (missile silos, etc) are NPCs
+					Would remove the need for the struct checks below. -- CyberTech
+				if !${Entity[${EntityIterator.Value.EntityID}].IsNPC} && \
+					!${Entity[${EntityIterator.Value.EntityID}].IsPC}
+				{
+					continue
+				}
+				*/
+
+				;If our target is a hauler, it won't be targeting us.
+				;Same goes for assorted deadspace entities
+				;Also make sure we're not accounting for a wreck or moribund object
+				;Something in here is giving us a false positive.
+				UI:UpdateConsole["Offense: ${EntityIterator.Value.EntityID} IsMoribund: ${Entity[${EntityIterator.Value.EntityID}].IsMoribund}",LOG_DEBUG]
+				if ${Entity[${EntityIterator.Value.EntityID}].Group.Find["Hauler"](exists)} || \
+					${Entity[${EntityIterator.Value.EntityID}].GroupID} == GROUP_DEADSPACEOVERSEERSSTRUCTURE || \
+					${Entity[${EntityIterator.Value.EntityID}].GroupID} == GROUP_LARGECOLLIDABLESTRUCTURE || \
+					${Entity[${EntityIterator.Value.EntityID}].IsMoribund}
+					; TODO - why aren't these 2 group checks above in IsNPCTarget so they don't end up in the index to begin with? -- CyberTech
+				{
+					continue
+				}
+
+				; Just waiting on Ama to release the new ISXEVE before I enable this awesome targeting check.
+				UI:UpdateConsole["Offense:.HaveFullNPCAggro[]: ${Entity[${EntityIterator.Value.EntityID}].Name} is attacking me: ${Entity[${EntityIterator.Value.EntityID}].ToAttacker.IsCurrentlyAttacking}",LOG_DEBUG]
+				if ${Entity[${EntityIterator.Value.EntityID}].ToAttacker.IsCurrentlyAttacking}
+				{
+					continue
+				}
+				else
+				{
+					return FALSE
+				}
+			}
+			while ${EntityIterator:Next(exists)}
+		}
+		return FALSE
 	}
 
 	method CheckAmmo()

@@ -93,7 +93,18 @@ objectdef obj_Targets
 		; You can specify the entire rat name, for example
 		; leave rats that dont scramble which would help
 		; later when chaining gets added
-		PriorityTargets:Insert["Dire Guristas"]
+
+		PriorityTargets:Insert["Dire Guristas Arrogator"] 		/* web/scram */
+		PriorityTargets:Insert["Dire Guristas Despoiler"] 		/* Jamming */
+		PriorityTargets:Insert["Dire Guristas Imputor"] 		/* web/scram */
+		PriorityTargets:Insert["Dire Guristas Infiltrator"] 	/* web/scram */
+		PriorityTargets:Insert["Dire Guristas Invader"] 		/* web/scram */
+		PriorityTargets:Insert["Dire Guristas Saboteur"] 		/* Jamming */
+		PriorityTargets:Insert["Dire Guristas Annihilator"] 	/* Jamming */
+		PriorityTargets:Insert["Dire Guristas Killer"] 			/* Jamming */
+		PriorityTargets:Insert["Dire Guristas Murderer"] 		/* Jamming */
+		PriorityTargets:Insert["Dire Guristas Nullifier"] 		/* Jamming */
+
 		PriorityTargets:Insert["Guristas Nullifier"]
 
 		PriorityTargets:Insert["Arch Angel Hijacker"]
@@ -259,17 +270,15 @@ objectdef obj_Targets
 
 	member:bool PC()
 	{
-		variable index:entity tgtIndex
 		variable iterator tgtIterator
-
-		EVE:DoGetEntities[tgtIndex, CategoryID, CATEGORYID_SHIP]
-		tgtIndex:GetIterator[tgtIterator]
+		EntityCache.EntityFilters.Get[${EntityCache.CacheID_Ships}].Entities:GetIterator[tgtIterator]
 
 		if ${tgtIterator:First(exists)}
 		do
 		{
-			if ${tgtIterator.Value.Owner.CharID} != ${Me.CharID}
+			if ${tgtIterator.Value.Owner.CharID} != ${EVEBot.CharID}
 			{	/* A player is already present here ! */
+				/* TODO - Add optional check for ignoring group members */
 				UI:UpdateConsole["Player found ${tgtIterator.Value.Owner}"]
 				return TRUE
 			}
@@ -282,11 +291,10 @@ objectdef obj_Targets
 
 	member:bool NPC()
 	{
-		variable index:entity tgtIndex
 		variable iterator tgtIterator
+		EntityCache.EntityFilters.Get[${EntityCache.CacheID_Entities}].Entities:GetIterator[tgtIterator]
 
-		EVE:DoGetEntities[tgtIndex, CategoryID, CATEGORYID_ENTITY]
-		UI:UpdateConsole["DEBUG: Found ${tgtIndex.Used} entities."]
+		UI:UpdateConsole["Targets.NPC() Found ${EntityCache.Used[${EntityCache.CacheID_Entities}]} entities.", LOG_DEBUG]
 
 		tgtIndex:GetIterator[tgtIterator]
 		if ${tgtIterator:First(exists)}
@@ -306,7 +314,6 @@ objectdef obj_Targets
 				case GROUP_DEADSPACEOVERSEERSSTRUCTURE
 				case GROUP_LARGECOLLIDABLESTRUCTURE
 					UI:UpdateConsole["DEBUG: Ignoring entity ${tgtIterator.Value.Group} (${tgtIterator.Value.GroupID})"]
-					continue
 					break
 				default
 					UI:UpdateConsole["DEBUG: NPC found: ${tgtIterator.Value.Group} (${tgtIterator.Value.GroupID})"]
@@ -359,10 +366,11 @@ objectdef obj_Targets_Rats
 	member:int CalcTotalBattleShipValue()
 	{
 		variable int iTotalBSValue = 0
-		Ratter.RatCache.Entities:GetIterator[Ratter.RatCache.EntityIterator]
+		variable iterator EntityIterator
+		EntityCache.EntityFilters.Get[${EntityCache.CacheID_Entities}].Entities:GetIterator[EntityIterator]
 
 		; Determine the total spawn value
-		if ${Ratter.RatCache.EntityIterator:First(exists)}
+		if ${EntityIterator:First(exists)}
 		{
 			do
 			{
@@ -371,8 +379,8 @@ objectdef obj_Targets_Rats
 				variable string NPCGroup
 				variable string NPCShipType
 
-				NPCName:Set[${Ratter.RatCache.EntityIterator.Value.Name}]
-				NPCGroup:Set[${Ratter.RatCache.EntityIterator.Value.Group}]
+				NPCName:Set[${EntityIterator.Value.Name}]
+				NPCGroup:Set[${EntityIterator.Value.Group}]
 				pos:Set[1]
 				while ${NPCGroup.Token[${pos}, " "](exists)}
 				{
@@ -381,10 +389,10 @@ objectdef obj_Targets_Rats
 				}
 				UI:UpdateConsole["NPC: ${NPCName}(${NPCShipType}) ${EVEBot.ISK_To_Str[${EVEDB_Spawns.SpawnBounty[${NPCName}]}]}",LOG_DEBUG]
 
-				;UI:UpdateConsole["DEBUG: Type: ${Ratter.RatCache.EntityIterator.Value.Type}(${Ratter.RatCache.EntityIterator.Value.TypeID})"]
-				;UI:UpdateConsole["DEBUG: Category: ${Ratter.RatCache.EntityIterator.Value.Category}(${Ratter.RatCache.EntityIterator.Value.CategoryID})"]
+				;UI:UpdateConsole["DEBUG: Type: ${EntityIterator.Value.Type}(${EntityIterator.Value.TypeID})"]
+				;UI:UpdateConsole["DEBUG: Category: ${EntityIterator.Value.Category}(${EntityIterator.Value.CategoryID})"]
 
-				switch ${Ratter.RatCache.EntityIterator.Value.GroupID}
+				switch ${EntityIterator.Value.GroupID}
 				{
 					case GROUP_LARGECOLLIDABLEOBJECT
 					case GROUP_LARGECOLLIDABLESHIP
@@ -399,7 +407,7 @@ objectdef obj_Targets_Rats
 					iTotalBSValue:Inc[${EVEDB_Spawns.SpawnBounty[${NPCName}]}]
 				}
 			 }
-			 while ${Ratter.RatCache.EntityIterator:Next(exists)}
+			 while ${EntityIterator:Next(exists)}
 			 UI:UpdateConsole["NPC: Total Battleship Value is ${EVEBot.ISK_To_Str[${iTotalBSValue}]}",LOG_DEBUG]
 		}
 		return ${iTotalBSValue}

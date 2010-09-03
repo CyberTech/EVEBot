@@ -25,17 +25,16 @@ objectdef obj_Defense
 	variable bool Hiding = FALSE
 	variable index:entity TargetingMe
 
-	variable obj_EntityCache DefenseCache
+	variable int Entity_CacheID
+	variable iterator Entity_CacheIterator
 
 	method Initialize()
 	{
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["Thread: obj_Defense: Initialized", LOG_MINOR]
-		if ${DefenseCache.PulseIntervalInSeconds} != 9999
-		{
-			DefenseCache:SetUpdateFrequency[9999]
-		}
-		DefenseCache:UpdateSearchParams["Unused","CategoryID,CATEGORYID_ENTITY,radius,60000"]
+
+		This.Entity_CacheID:Set[${EntityCache.AddFilter["obj_Defense", CategoryID = CATEGORYID_ENTITY, 1.5]}]
+		EntityCache.EntityFilters.Get[${This.Entity_CacheID}].Entities:GetIterator[Entity_CacheIterator]
 	}
 
 	method Pulse()
@@ -87,39 +86,21 @@ objectdef obj_Defense
 
 	method CheckWarpScramble()
 	{
-		if ${_Me.IsWarpScrambled}
+		if ${Me.ToEntity.IsWarpScrambled}
 		{
-			if ${DefenseCache.Entities.Used} == 0
+			if ${Entity_CacheIterator:First(exists)}
 			{
-				if ${DefenseCache.PulseIntervalInSeconds} != 1
+				do
 				{
-					DefenseCache:SetUpdateFrequency[1]
-				}
-			}
-			else
-			{
-				DefenseCache.Entities:GetIterator[DefenseCache.EntityIterator]
-				if ${DefenseCache.EntityIterator:First(exists)}
-				{
-					do
+					if !${Targeting.IsMandatoryQueued[${Entity_CacheIterator.Value.ID}]} && \
+						${Entity_CacheIterator.Value.IsWarpScramblingMe}
 					{
-						if !${Targeting.IsMandatoryQueued[${DefenseCache.EntityIterator.Value.ID}]} && \
-							${DefenseCache.EntityIterator.Value.IsWarpScramblingMe}
-						{
-							;method Queue(int EntityID, int Priority, int TargetType, bool Mandatory=FALSE, bool Blocker=FALSE)
-							UI:UpdateConsole["Defense: Targeting warp scrambling rat ${DefenseCache.EntityIterator.Value.Name} ${DefenseCache.EntityIterator.Value.TypeID}!",LOG_CRITICAL]
-							Targeting:Queue[${DefenseCache.EntityIterator.Value.ID},0,${DefenseCache.EntityIterator.Value.TypeID},TRUE]
-						}
+						;method Queue(int EntityID, int Priority, int TargetType, bool Mandatory=FALSE, bool Blocker=FALSE)
+						UI:UpdateConsole["Defense: Targeting warp scrambling rat ${Entity_CacheIterator.Value.Name} ${Entity_CacheIterator.Value.TypeID}!",LOG_CRITICAL]
+						Targeting:Queue[${Entity_CacheIterator.Value.ID},0,${Entity_CacheIterator.Value.TypeID},TRUE]
 					}
-					while ${DefenseCache.EntityIterator:Next(exists)}
 				}
-			}
-		}
-		else
-		{
-			if ${DefenseCache.PulseIntervalInSeconds} != 9999
-			{
-				DefenseCache:SetUpdateFrequency[9999]
+				while ${Entity_CacheIterator:Next(exists)}
 			}
 		}
 	}
@@ -141,23 +122,23 @@ objectdef obj_Defense
 			This:RunAway["We're in a pod! Run Away! Run Away!"]
 		}
 
-		if (${_MyShip.ArmorPct} < ${Config.Combat.MinimumArmorPct}  || \
-			${_MyShip.ShieldPct} < ${Config.Combat.MinimumShieldPct} || \
-			${_MyShip.CapacitorPct} < ${Config.Combat.MinimumCapPct} && ${Config.Combat.RunOnLowCap})
+		if (${MyShip.ArmorPct} < ${Config.Combat.MinimumArmorPct}  || \
+			${MyShip.ShieldPct} < ${Config.Combat.MinimumShieldPct} || \
+			${MyShip.CapacitorPct} < ${Config.Combat.MinimumCapPct} && ${Config.Combat.RunOnLowCap})
 		{
-			UI:UpdateConsole["Armor is at ${_MyShip.ArmorPct.Int}%: ${MyShip.Armor.Int}/${MyShip.MaxArmor.Int}", LOG_CRITICAL]
-			UI:UpdateConsole["Shield is at ${_MyShip.ShieldPct.Int}%: ${MyShip.Shield.Int}/${MyShip.MaxShield.Int}", LOG_CRITICAL]
-			UI:UpdateConsole["Cap is at ${_MyShip.CapacitorPct.Int}%: ${MyShip.Capacitor.Int}/${MyShip.MaxCapacitor.Int}", LOG_CRITICAL]
+			UI:UpdateConsole["Armor is at ${MyShip.ArmorPct.Int}%: ${MyShip.Armor.Int}/${MyShip.MaxArmor.Int}", LOG_CRITICAL]
+			UI:UpdateConsole["Shield is at ${MyShip.ShieldPct.Int}%: ${MyShip.Shield.Int}/${MyShip.MaxShield.Int}", LOG_CRITICAL]
+			UI:UpdateConsole["Cap is at ${MyShip.CapacitorPct.Int}%: ${MyShip.Capacitor.Int}/${MyShip.MaxCapacitor.Int}", LOG_CRITICAL]
 
 			if !${Config.Combat.RunOnLowTank}
 			{
 				UI:UpdateConsole["Running on low tank is disabled", LOG_CRITICAL]
 			}
-			elseif ${_Me.ToEntity.IsWarpScrambled}
+			elseif ${Me.ToEntity.IsWarpScrambled}
 			{
 				UI:UpdateConsole["Warp scrambled, can't run", LOG_CRITICAL]
 			}
-			elseif ${_MyShip.CapacitorPct} < ${Config.Combat.MinimumCapPct} && ${Config.Combat.RunOnLowCap}
+			elseif ${MyShip.CapacitorPct} < ${Config.Combat.MinimumCapPct} && ${Config.Combat.RunOnLowCap}
 			{
 				This:RunAway["Low Capacitor"]
 				return
@@ -210,9 +191,9 @@ objectdef obj_Defense
 			return FALSE
 		}
 
-		if  ${_MyShip.ArmorPct} < ${Config.Combat.ArmorPctReady} || \
-			(${_MyShip.ShieldPct} < ${Config.Combat.ShieldPctReady} && ${Config.Combat.MinimumShieldPct} > 0) || \
-			${_MyShip.CapacitorPct} < ${Config.Combat.CapacitorPctReady}
+		if  ${MyShip.ArmorPct} < ${Config.Combat.ArmorPctReady} || \
+			(${MyShip.ShieldPct} < ${Config.Combat.ShieldPctReady} && ${Config.Combat.MinimumShieldPct} > 0) || \
+			${MyShip.CapacitorPct} < ${Config.Combat.CapacitorPctReady}
 		{
 			return FALSE
 		}
@@ -249,7 +230,7 @@ objectdef obj_Defense
 			return
 		}
 
-		if ${_Me.ToEntity.IsWarpScrambled}
+		if ${Me.ToEntity.IsWarpScrambled}
 		{
 			if ${Config.Combat.QuitIfWarpScrambled}
 			{
@@ -347,7 +328,7 @@ objectdef obj_Defense
 			return
 		}
 
-		if ${_MyShip.ArmorPct} < ${Config.Combat.ArmorPctEnable}
+		if ${MyShip.ArmorPct} < ${Config.Combat.ArmorPctEnable}
 		{
 			/* Turn on armor reps, if you have them
 				Armor reps do not rep right away -- they rep at the END of the cycle.
@@ -355,15 +336,15 @@ objectdef obj_Defense
 			*/
 			Ship:Activate_Armor_Reps[]
 		}
-		elseif ${_MyShip.ArmorPct} > ${Config.Combat.ArmorPctDisable}
+		elseif ${MyShip.ArmorPct} > ${Config.Combat.ArmorPctDisable}
 		{
 			Ship:Deactivate_Armor_Reps[]
 		}
 
-		if (${_Me.ToEntity.Mode} == 3)
+		if (${Me.ToEntity.Mode} == 3)
 		{
 			; We are in warp, we turn on shield regen so we can use up cap while it has time to regen
-			if ${_MyShip.ShieldPct} < 99
+			if ${MyShip.ShieldPct} < 99
 			{
 				Ship:Activate_Shield_Booster[]
 			}
@@ -375,21 +356,21 @@ objectdef obj_Defense
 		else
 		{
 			; We're not in warp, so use normal percentages to enable/disable
-			if ${_MyShip.ShieldPct} < ${Config.Combat.ShieldPctEnable} || ${Config.Combat.AlwaysShieldBoost}
+			if ${MyShip.ShieldPct} < ${Config.Combat.ShieldPctEnable} || ${Config.Combat.AlwaysShieldBoost}
 			{
 				Ship:Activate_Shield_Booster[]
 			}
-			elseif ${_MyShip.ShieldPct} > ${Config.Combat.ShieldPctDisable} && !${Config.Combat.AlwaysShieldBoost}
+			elseif ${MyShip.ShieldPct} > ${Config.Combat.ShieldPctDisable} && !${Config.Combat.AlwaysShieldBoost}
 			{
 				Ship:Deactivate_Shield_Booster[]
 			}
 		}
 
-		if ${_MyShip.CapacitorPct} < ${Config.Combat.CapacitorPctEnable}
+		if ${MyShip.CapacitorPct} < ${Config.Combat.CapacitorPctEnable}
 		{
 			Ship:Activate_Cap_Booster[]
 		}
-		elseif ${_MyShip.CapacitorPct} > ${Config.Combat.CapacitorPctDisable}
+		elseif ${MyShip.CapacitorPct} > ${Config.Combat.CapacitorPctDisable}
 		{
 			Ship:Deactivate_Cap_Booster[]
 		}
@@ -399,7 +380,7 @@ objectdef obj_Defense
 		; This uses shield and uncached GetTargetedBy (to reduce chance of a
 		; volley making it thru before hardeners are up)
 		Me:DoGetTargetedBy[This.TargetingMe]
-		if ${This.TargetingMe.Used} > 0 || ${_MyShip.ShieldPct} < 99
+		if ${This.TargetingMe.Used} > 0 || ${MyShip.ShieldPct} < 99
 		{
 			Ship:Activate_Hardeners[]
 			Ship:Activate_ECCM[]
@@ -422,7 +403,7 @@ function main()
 		if ${Defense.Hide}
 		{
 			call Defense.Flee
-			wait 10 !${Script[EVEBot](exists)}
+			wait 1 !${Script[EVEBot](exists)}
 		}
 		waitframe
 	}
