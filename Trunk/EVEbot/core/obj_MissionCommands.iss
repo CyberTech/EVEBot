@@ -1,10 +1,58 @@
 objectdef obj_MissionCommands
 {
+	variable string SVN_REVISION = "$Rev$"
+	variable int Version
+
+	variable int NPC_CacheID
+	variable iterator NPC_CacheIterator
+
+	variable collection:int TargetPriorities
+	variable string ApproachState = "IDLE"
+	variable int ApproachIDCache
+	variable string GateState = "IDLE"
+	variable string ClearRoomState = "KILLING"
+	variable int KillCache
+	variable string KillState = "START"
+	variable int KillIDCache
+	variable string KillIDState = "START"
+	variable int PullCache
+	variable string PullState = "START"
+	variable time WaitTimeOut = 0
+	variable index:entity containerCache
+	variable index:entity wreckList
+	variable iterator wreckIterator
+	variable iterator containerIterator
+	variable int containerID
+	variable string ContainerState = "START"
+	variable int lootEntityID
+	variable string LootEntityState = "APPROACHING"
+	variable index:item ContainerCargo
+	variable iterator Cargo
+	variable int Recheck = 0
+
 	method Initialize()
 	{
-		EntityCache:UpdateSearchParams["I like big butts can i cannot lie","CategoryID, CATEGORYID_ENTITY","IsNPC"]
-		EntityCache:SetUpdateFrequency[1]
+		variable string QueryString
+		QueryString:Concat["CategoryID = CATEGORYID_ENTITY"]
+		QueryString:Concat[" && IsNPC = 1"]
+		QueryString:Concat[" && IsMoribund = 0"]
+		QueryString:Concat[" && GroupID != GROUP_LARGECOLLIDABLEOBJECT"]
+		QueryString:Concat[" && GroupID != GROUP_LARGECOLLIDABLESHIP"]
+		QueryString:Concat[" && GroupID != GROUP_LARGECOLLIDABLESTRUCTURE"]
+		QueryString:Concat[" && GroupID != GROUP_SENTRYGUN"]
+		QueryString:Concat[" && GroupID != GROUP_CONCORDDRONE"]
+		QueryString:Concat[" && GroupID != GROUP_CUSTOMSOFFICIAL"]
+		QueryString:Concat[" && GroupID != GROUP_POLICEDRONE"]
+		QueryString:Concat[" && GroupID != GROUP_CONVOYDRONE"]
+		QueryString:Concat[" && GroupID != GROUP_FACTIONDRONE"]
+		QueryString:Concat[" && GroupID != GROUP_BILLBOARD"]
+		QueryString:Concat[" && GroupID != GROUPID_SPAWN_CONTAINER"]
+		QueryString:Concat[" && GroupID != GROUP_DEADSPACEOVERSEERSSTRUCTURE"]
+
+		This.NPC_CacheID:Set[${EntityCache.AddFilter["obj_MissionCommands", ${QueryString}, 2.0]}]
+		EntityCache.EntityFilters.Get[${This.NPC_CacheID}].Entities:GetIterator[NPC_CacheIterator]
 	}
+
 	;TODO - Add checks to all members that involve movement to make sure we are actually moving!
 	method MissionComplete()
 	{
@@ -31,30 +79,7 @@ objectdef obj_MissionCommands
 		Recheck:Set[0]
 
 	}
-	variable obj_EntityCache EntityCache
-	variable collection:int TargetPriorities
-	variable string ApproachState = "IDLE"
-	variable int ApproachIDCache
-	variable string GateState = "IDLE"
-	variable string ClearRoomState = "KILLING"
-	variable int KillCache
-	variable string KillState = "START"
-	variable int KillIDCache
-	variable string KillIDState = "START"
-	variable int PullCache
-	variable string PullState = "START"
-	variable time WaitTimeOut = 0
-	variable index:entity containerCache
-	variable index:entity wreckList
-	variable iterator wreckIterator
-	variable iterator containerIterator
-	variable int containerID
-	variable string ContainerState = "START"
-	variable int lootEntityID
-	variable string LootEntityState = "APPROACHING"
-	variable index:item ContainerCargo
-	variable iterator Cargo
-	variable int Recheck = 0
+
 	member:bool Approach(int EntityID, int64 Distance = DOCKING_RANGE)
 	{
 		switch ${ApproachState}
@@ -92,7 +117,7 @@ objectdef obj_MissionCommands
 				{
 					if ${EntityID} == ${ApproachIDCache}
 					{
-						
+
 						Entity[${ApproachIDCache}]:Approach
 						Ship:Activate_AfterBurner[]
 						ApproachState:Set["APPROACHING"]
@@ -276,22 +301,21 @@ objectdef obj_MissionCommands
 
 				;Use "entity" more, please --stealthy
 				;Seems like it doesn't check range until something is a
-				EntityCache.Entities:GetIterator[EntityCache.EntityIterator]
-				if ${EntityCache.EntityIterator:First(exists)}
+				if ${This.NPC_CacheIterator:First(exists)}
 				{
 					do
 					{
-						if ${EntityCache.EntityIterator.Value.IsTargetingMe}
+						if ${This.NPC_CacheIterator.Value.IsTargetingMe}
 						{
-							if ${EntityCache.EntityIterator.Value.Distance} < ${Ship.OptimalWeaponRange} || \
-								${EntityCache.EntityIterator.Value.Distance} < ${Me.DroneControlDistance}
+							if ${This.NPC_CacheIterator.Value.Distance} < ${Ship.OptimalWeaponRange} || \
+								${This.NPC_CacheIterator.Value.Distance} < ${Me.DroneControlDistance}
 							{
 								EntityInRange:Set[TRUE]
 								break
 							}
 						}
 					}
-					while ${EntityCache.EntityIterator:Next(exists)}
+					while ${This.NPC_CacheIterator:Next(exists)}
 				}
 				;Why are we worried about aggro count in clearroom?
 				if ${This.AggroCount} > 0 && ${EntityInRange}
@@ -310,22 +334,21 @@ objectdef obj_MissionCommands
 			{
 				if ${This.HostileCount} > 0
 				{
-					EntityCache.Entities:GetIterator[EntityCache.EntityIterator]
-					if ${EntityCache.EntityIterator:First(exists)}
+					if ${This.NPC_CacheIterator:First(exists)}
 					{
 						do
 						{
-							if ${EntityCache.EntityIterator.Value.IsTargetingMe}
+							if ${This.NPC_CacheIterator.Value.IsTargetingMe}
 							{
-								if ${EntityCache.EntityIterator.Value.Distance} < ${Ship.OptimalWeaponRange} || \
-									${EntityCache.EntityIterator.Value.Distance} < ${Me.DroneControlDistance}
+								if ${This.NPC_CacheIterator.Value.Distance} < ${Ship.OptimalWeaponRange} || \
+									${This.NPC_CacheIterator.Value.Distance} < ${Me.DroneControlDistance}
 								{
 									EntityInRange:Set[TRUE]
 									break
 								}
 							}
 						}
-						while ${EntityCache.EntityIterator:Next(exists)}
+						while ${This.NPC_CacheIterator:Next(exists)}
 					}
 					if ${This.AggroCount} > 0 && ${EntityInRange}
 					{
@@ -427,8 +450,8 @@ objectdef obj_MissionCommands
 		if !${Entity[${entityID}](exists)}
 		{
 			return true
-		}			
-		
+		}
+
 		switch ${KillIDState}
 		{
 			case START
@@ -484,7 +507,7 @@ objectdef obj_MissionCommands
 			{
 				if ${KillIDCache} == ${entityID}
 				{
-					if ${Entity[${KillIDCache}].GroupID(exists)}  && ${Entity[${KillIDCache}].GroupID} != GROUPID_WRECK && ${Entity[${KillIDCache}].GroupID} != GROUPID_CARGO_CONTAINER
+					if ${Entity[${KillIDCache}].GroupID(exists)}  && ${Entity[${KillIDCache}].GroupID} != GROUP_WRECK && ${Entity[${KillIDCache}].GroupID} != GROUPID_CARGO_CONTAINER
 					{
 						;didApproach:Set[${This.Approach[${KillIDCache}, ${dist}]}]
 						;echo "MissionCommands: DidApproach ${didApproach} ${Entity[${KillIDCache}]} ${Entity[${KillIDCache}].ID} ${Entity[${KillIDCache}].Distance} ${dist}"
@@ -523,7 +546,7 @@ objectdef obj_MissionCommands
 			{
 				if ${KillIDCache} == ${entityID}
 				{
-					if ${Entity[${KillIDCache}].GroupID(exists)}  && ${Entity[${KillIDCache}].GroupID} != GROUPID_WRECK && ${Entity[${KillIDCache}].GroupID} != GROUPID_CARGO_CONTAINER
+					if ${Entity[${KillIDCache}].GroupID(exists)}  && ${Entity[${KillIDCache}].GroupID} != GROUP_WRECK && ${Entity[${KillIDCache}].GroupID} != GROUPID_CARGO_CONTAINER
 					{
 						didApproach:Set[${This.Approach[${KillIDCache}, ${dist}]}]
 						UI:UpdateConsole["DEBUG: obj_MissionCommands - Entity with ID ${KillIDCache} still exists, we have no killed it yet :<",LOG_DEBUG]
@@ -855,7 +878,7 @@ objectdef obj_MissionCommands
 	; TODO move blacklist/ignorelist to same
 	member:int HostileCount()
 	{
-		return ${This.EntityCache.CachedEntities.Used}
+		return ${EntityCache.Count[${This.NPC_CacheID}]}
 	}
 
 
@@ -1014,8 +1037,8 @@ objectdef obj_MissionCommands
 				}
 				while ${droneIterator:Next(exists)}
 
-				if (${_MyShip.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
-				${_MyShip.ShieldPct} < ${Config.Combat.MinimumShieldPct})
+				if (${MyShip.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
+				${MyShip.ShieldPct} < ${Config.Combat.MinimumShieldPct})
 				{
 					; We don't wait for drones if we're on emergency warp out
 
@@ -1113,7 +1136,7 @@ objectdef obj_MissionCommands
 			variable iterator targetIterator
 			Me:DoGetTargetedBy[targetIndex]
 			targetIndex:GetIterator[targetIterator]
-			;UI:UpdateConsole["GetTargeting = ${_Me.GetTargeting}, GetTargets = ${_Me.GetTargets}"]
+			;UI:UpdateConsole["GetTargeting = ${Me.GetTargeting}, GetTargets = ${Me.GetTargets}"]
 			if ${targetIterator:First(exists)}
 			{
 				if ${TargetPriorities.Used} > 0
@@ -1163,7 +1186,7 @@ objectdef obj_MissionCommands
 					if !${Targeting.IsQueued[${highestID}]}
 					{
 							UI:UpdateConsole["DEBUG: obj_MissionCommands - NextTarget - Targeting highest priority ${targetIterator.Value.Name}"]
-							
+
 							Targeting:Queue[${highestID},1,1,FALSE]
 					}
 				}
