@@ -72,6 +72,7 @@ objectdef obj_JetCan
 	variable int Version
 
 	variable int64 ActiveCan = -1
+	variable set FullCans
 
 	method Initialize()
 	{
@@ -89,6 +90,7 @@ objectdef obj_JetCan
 			{
 				/* The can we WERE using is full, or has moved out of range; notify the hauler(s) */
 				Miner:NotifyHaulers[]
+				This.FullCans:Add[${This.ActiveCan}]
 			}
 			else
 			{
@@ -116,13 +118,18 @@ objectdef obj_JetCan
 					${Can.Value.ID} > 0 && \
 					${This.AccessAllowed[${Can.Value.ID}]} && \
 					${Can.Value.ID} != ${This.ActiveCan} && \
-					${Can.Value.Distance} <= LOOT_RANGE)
+					${Can.Value.Distance} <= LOOT_RANGE) && \
+					!${This.FullCans.Contains[${Can.Value.ID}]}
 				{
 					This.ActiveCan:Set[${Can.Value.ID}]
 					return ${This.ActiveCan}
 				}
 			}
 			while ${Can:Next(exists)}
+		}
+		else
+		{
+			This.FullCans:Clear
 		}
 
 		This.ActiveCan:Set[-1]
