@@ -8,53 +8,86 @@
 	Keeps entity data in 2 lists -- the original index:int from isxeve, and an expanded
 	index:obj_Entity which contains commonly accessed data fields.
 
+	Proper Use:
+
+	variable int Cached_Entity_Stations
+	Cached_Entity_Stations:Set[${EntityCache.AddFilter["yourobject", GroupID = GROUP_STATION, 10]}]
+	variable iterator EntityIterator
+	EntityCache.Entities.Get[${Cached_Entity_Stations}]:GetIterator[EntityIterator]
+	... use entityiterator ...
+
 	-- CyberTech
 */
 
-objectdef obj_Entity
+
+objectdef obj_EntityFilter
 {
-	variable int EntityID
-	variable string Name
-	variable int TypeID
-	variable int GroupID
-	variable float Distance
+	variable string Owner
+	variable int QueryID
+	variable string LSFilter
 
-	; Special-purpose vars
-	; ORE Density - 1 regular, 2 medium, 3 dense
-	variable int ORE_Density
+	variable int Decay
+	variable int MaxDecay
 
-	method Initialize(int _EntityID, string _Name, int _TypeID, int _GroupID, float _Distance, int _ORE_Density = 0)
+	variable index:entity Entities
+
+	member ToText()
 	{
-		This.EntityID:Set[${_EntityID}]
-		This.Name:Set["${_Name}"]
-		This.TypeID:Set[${_TypeID}]
-		This.GroupID:Set[${_GroupID}]
-		This.Distance:Set[${_Distance}]
-		This.ORE_Density:Set[${_ORE_Density}]
+		return ${QueryID}
+	}
+
+	method Shutdown()
+	{
+		LavishScript:FreeQuery[${QueryID}]
 	}
 }
 
-objectdef obj_EntityCache inherits BaseClass
+objectdef obj_EntityCache inherits obj_BaseClass
 {
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 	variable string LogPrefix
 
 	variable bool Initialized = false
-	variable time NextPulse
-	variable int PulseIntervalInSeconds = 4
+	variable int NextPulse
+	variable int PulseIntervalInMS = 250
 
-	variable string FilterMember = "NONE"
-	variable string SearchParams = "byDist"
-	variable index:entity Entities
-	variable index:obj_Entity CachedEntities
-	variable iterator EntityIterator
+	variable index:entity CachedEntities
+	variable index:obj_EntityFilter EntityFilters
+	variable iterator EntityFilterIterator
+
 	variable bool Initialized = FALSE
+	variable bool Updating = FALSE
+
+	; These are the common and global items, we store them here because they don't belong to any particular behavior.
+	variable int CacheID_Belts
+	variable int CacheID_Stargates
+	variable int CacheID_Stations
+	variable int CacheID_Planets
+	variable int CacheID_Moons
+	variable int CacheID_Moons
+	variable int CacheID_Ships
+	variable int CacheID_Entities
 
 	method Initialize()
 	{
-		;TODO: propagate this syntax to all other objects. it's spiffy handy.
 		LogPrefix:Set["EntityCache(${This.ObjectName})"]
+
+		; Common entity searches that don't belong to any particular module
+		This.CacheID_Belts:Set[${This.AddFilter["EntityCache_Belts", GroupID = GROUP_ASTEROIDBELT, 60]}]
+		This.CacheID_Stargates:Set[${This.AddFilter["EntityCache_Stargates", GroupID = GROUP_STARGATE, 60]}]
+		This.CacheID_Stations:Set[${This.AddFilter["EntityCache_Stations", GroupID = GROUP_STATION, 60]}]
+		This.CacheID_Planets:Set[${This.AddFilter["EntityCache_Planets", GroupID = GROUP_PLANET, 60]}]
+		This.CacheID_Moons:Set[${This.AddFilter["EntityCache_Moons", GroupID = GROUP_MOON, 60]}]
+
+		This.CacheID_Ships:Set[${This.AddFilter["EntityCache_Ships", CategoryID = CATEGORYID_SHIP, 2]}]
+		This.CacheID_Entities:Set[${This.AddFilter["EntityCache_Entities", CategoryID = CATEGORYID_ENTITY, 2]}]
+
+		if ${Me.InSpace}
+		{
+			EVE:PopulateEntities[TRUE]
+		}
+
 		UI:UpdateConsole["${LogPrefix}: Initialized"]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 	}
@@ -66,132 +99,149 @@ objectdef obj_EntityCache inherits BaseClass
 
 	method Pulse()
 	{
-		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+		if ${Script.RunningTime} >= ${This.NextPulse}
 		{
 			This:UpdateEntityCache
-			This.NextPulse:Set[${Time.Timestamp}]
-			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-			This.NextPulse:Update
+			This.NextPulse:Set[${Script.RunningTime}]
+			This.NextPulse:Inc[${This.PulseIntervalInMS}]
 		}
 	}
 
-	method SetUpdateFrequency(float Seconds)
+	/*
+		 Args should be sent as a Query Object comparison: http://www.lavishsoft.com/wiki/index.php/LavishScript:Object_Queries
+
+			Example: "ISNPC = 1 && IsTargetingMe = 1"
+		Allowed Members are any member of Entity datatype
+		Owner is to determine who is setting the Filter
+		Filter is, the filter.
+		DecaySeconds is the # of seconds to keep results around before refreshing them
+	*/
+	member:int AddFilter(string Owner, string Filter, float DecaySeconds=0)
 	{
-		if ${Seconds} != ${This.PulseIntervalInSeconds}
+		variable int ID
+		variable int QueryID
+		variable obj_EntityFilter EntityFilter
+
+		QueryID:Set[${LavishScript.CreateQuery[${Filter}]}]
+		if ${QueryID} == 0
 		{
-			UI:UpdateConsole["${LogPrefix}: Update frequency is ${Seconds.Deci} seconds"]
-			This.PulseIntervalInSeconds:Set[${Seconds}]
+			UI:UpdateConsole["${LogPrefix}: ${Owner} query addition FAILED", LOG_DEBUG]
+			return 0
 		}
+
+		ID:Set[${This.EntityFilters.Insert[${EntityFilter}]}]
+		This.EntityFilters.Get[${ID}].Owner:Set[${Owner}]
+		This.EntityFilters.Get[${ID}].Decay:Set[0]
+		This.EntityFilters.Get[${ID}].MaxDecay:Set[${Math.Calc[${DecaySeconds} * 1000]}]
+		This.EntityFilters.Get[${ID}].LSFilter:Set[${LSFilter}]
+		This.EntityFilters.Get[${ID}].QueryID:Set[${QueryID}]
+
+		UI:UpdateConsole["${LogPrefix}: ${Owner} added entity filter ${ID}: QueryID:${QueryID}:'${Filter}'", LOG_DEBUG]
+
+		return ${ID}
 	}
 
-	method UpdateSearchParams(string VarName, string SearchTerms,string Filter = "NONE")
+	method DeleteFilter(int FilterID)
 	{
-		UI:UpdateConsole["${LogPrefix}: Search Params: ${SearchTerms}"]
-		This.Initialized:Set[FALSE]
-		This.SearchParams:Set["${SearchTerms}"]
-		This.FilterMember:Set["${Filter}"]
-		This:UpdateEntityCache
+		${This.EntityFilters:Remove[${FilterID}]
 	}
 
-	method ForceUpdate()
+	method ClearEntityCaches()
 	{
-		This.NextPulse:Set[${Time.Timestamp}]
+		This.EntityFilters:GetIterator[EntityFilterIterator]
+		if ${EntityFilterIterator:First(exists)}
+		{
+			do
+			{
+				EntityFilterIterator.Value.Entities:Clear
+				EntityFilterIterator.Value.Decay:Set[0]
+			}
+			while ${EntityFilterIterator:Next(exists)}
+		}
 	}
 
 	method UpdateEntityCache()
 	{
-		variable string Name
-		variable int ORE_Density
+		#define DEBUG_LOG_UPDATETIME 0
 
-		if ${Me.InSpace}
+		This.Updating:Set[TRUE]
+
+		if !${Me.InSpace}
 		{
-			EVE:DoGetEntities[This.Entities, ${This.SearchParams}]
-			CachedEntities:Clear
-			This.Entities:GetIterator[EntityIterator]
-			if ${EntityIterator:First(exists)}
-			{
-				do
-				{
-					Name:Set[${EntityIterator.Value.Name}]
-					switch ${EntityIterator.Value.CategoryID}
-					{
-						case CATEGORYID_ENTITY
-							break
-						case CATEGORYID_ORE
-							switch ${Name}
-							{
-								case Crimson Arkonor
-								case Triclinic Bistot
-								case Sharp Crokite
-								case Bright Spodumain
-								case Onyx Ochre
-								case Iridescent Gneiss
-								case Vitric Hedbergite
-								case Vivid Hemorphite
-								case Pure Jaspet
-								case Luminous Kernite
-								case Silvery Omber
-								case Azure Plagioclase
-								case Solid Pyroxeres
-								case Condensed Scordite
-								case Concentrated Veldspar
-									ORE_Density:Set[3]
-									break
-								case Prime Arkonor
-								case Monoclinic Bistot
-								case Crystalline Crokite
-								case Gleaming Spodumain
-								case Obsidian Ochre
-								case Prismatic Gneiss
-								case Glazed Hedbergite
-								case Radiant Hemorphite
-								case Pristine Jaspet
-								case Fiery Kernite
-								case Golden Omber
-								case Rich Plagioclase
-								case Viscous Pyroxeres
-								case Massive Scordite
-								case Dense Veldspar
-									ORE_Density:Set[2]
-									break
-								default
-									ORE_Density:Set[1]
-									break
-							}
-							break
-					}
-					switch ${This.FilterMember}
-					{
-						case NONE
-						{
-							;method Initialize(int _EntityID, string _Name, int _TypeID, int _GroupID, float _Distance, int _ORE_Density = 0)
+			; TODO - only do this once per dock.
+			This:ClearEntityCaches
+		}
+		else
+		{
+			This.EntityFilters:GetIterator[EntityFilterIterator]
 
-							CachedEntities:Insert[${EntityIterator.Value.ID}, "${Name}", ${EntityIterator.Value.TypeID}, ${EntityIterator.Value.GroupID}, ${EntityIterator.Value.Distance}, ${ORE_Density}]
-						}
-						case IsNPC
-						{
-							if ${Targets.IsNPCTarget[${EntityIterator.Value.GroupID}]}
-							{
-								CachedEntities:Insert[${EntityIterator.Value.ID}, "${Name}", ${EntityIterator.Value.TypeID}, ${EntityIterator.Value.GroupID}, ${EntityIterator.Value.Distance}, ${ORE_Density}]
-							}
-						}
+			#if DEBUG_LOG_UPDATETIME
+			variable int StartTime1
+			variable int FiltersPerFrame
+			StartTime1:Set[${Script.RunningTime}]
+			#endif
+
+			if ${Display.FPS.Int} < ${This.EntityFilters.Used}
+			{
+				/* Make this dynamic. This is to avoid taking multiple seconds to iterate the filter list
+				when FPS is very low.
+				Need to scale it so that if FPS drops below filtercount, I let
+				more than 1 filter run per frame, to the point where at 1fps, all filters run per frame */
+				FiltersPerFrame:Set[${Math.Calc[${This.EntityFilters.Used} / ${Display.FPS.Int}].Ceil}]
+			}
+			else
+			{
+				FiltersPerFrame:Set[1]
+			}
+			if !${EntityFilterIterator.IsValid}
+			{
+				EntityFilterIterator:First
+			}
+
+			do
+			{
+				;UI:UpdateConsole["${LogPrefix}: Checking Query #${EntityFilterIterator.Value.QueryID}"]
+				if ${EntityFilterIterator.Value.Decay} > 0
+				{
+					EntityFilterIterator.Value.Decay:Dec[${This.PulseIntervalInMS}]
+				}
+
+				if ${EntityFilterIterator.Value.Decay} <= 0
+				{
+					EVE:QueryEntities[EntityFilterIterator.Value.Entities, ${EntityFilterIterator.Value.QueryID}]
+					#if DEBUG_LOG_UPDATETIME
+					UI:UpdateConsole["${LogPrefix}: Updated Query #${EntityFilterIterator.Value.QueryID}: Entities: ${EntityFilterIterator.Value.Entities.Used} Owner: ${EntityFilterIterator.Value.Owner} MaxDecay: ${EntityFilterIterator.Value.MaxDecay} ${LavishScript.RetrieveQueryExpression[${EntityFilterIterator.Value.QueryID}]}"]
+					#endif
+					EntityFilterIterator.Value.Decay:Set[${EntityFilterIterator.Value.MaxDecay}]
+					FiltersPerFrame:Dec
+					if ${FiltersPerFrame} <= 0
+					{
+						EntityFilterIterator:Next
+						break
 					}
 				}
-				while ${EntityIterator:Next(exists)}
 			}
+			while ${EntityFilterIterator:Next(exists)}
+			#if DEBUG_LOG_UPDATETIME
+			;UI:UpdateConsole["${LogPrefix}: Done: FPS: ${Display.FPS.Int} Time: ${Math.Calc[(${Script.RunningTime}-${StartTime1}) / 1000]} seconds to apply filters against ${EVE.EntitiesCount} Entities"]
+			#endif
 
 			This.Initialized:Set[TRUE]
 		}
+
+		This.Updating:Set[FALSE]
 	}
 
-	member:int Count()
+	member:int Count(int FilterID)
 	{
-		return ${This.Entities.Used}
+		return ${This.EntityFilters.Get[${FilterID}].Entities.Used}
 	}
 
-	member:int NearestByName(string EntityName)
+	member:int NearestByName(int FilterID, string EntityName)
 	{
-		This.Entities:GetIterator[EntityIterator]
+		variable iterator EntityIterator
+; TODO - replace this so it calls proper query
+		This.CachedEntities:GetIterator[EntityIterator]
 		if ${EntityIterator:First(exists)}
 		{
 			do
