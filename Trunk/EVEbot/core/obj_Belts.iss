@@ -4,24 +4,23 @@ objectdef obj_Belts
 	variable int Version
 	variable string LogPrefix
 
-	variable index:cachedentity beltIndex
-	variable iterator beltIterator
-
+	variable iterator Belt_CacheIterator
 	variable set EmptyBelts
 
 	method Initialize()
 	{
 		This[parent]:Initialize
 		LogPrefix:Set["obj_Belts(${This.ObjectName})"]
+		
+		EntityCache.EntityFilters.Get[${EntityCache.CacheID_Belts}].Entities:GetIterator[Belt_CacheIterator]
 		UI:UpdateConsole["${LogPrefix}: Initialized"]
 	}
 
 	method ResetBeltList()
 	{
-		EVE:GetCachedEntities[beltIndex, GroupID, GROUP_ASTEROIDBELT]
-		beltIndex:GetIterator[beltIterator]
-		beltIterator:First
-		UI:UpdateConsole["${LogPrefix}: ResetBeltList found ${beltIndex.Used} belts in this system.", LOG_DEBUG]
+		EntityCache.EntityFilters.Get[${EntityCache.CacheID_Belts}].Entities:GetIterator[Belt_CacheIterator]
+		Belt_CacheIterator:First
+		UI:UpdateConsole["${LogPrefix}: ResetBeltList found ${EntityCache.Count[${EntityCache.CacheID_Belts}]} belts in this system.", LOG_DEBUG]
 	}
 
 	; Checks the belt name against the empty belt list.
@@ -44,34 +43,30 @@ objectdef obj_Belts
 
 	member:int Count()
 	{
-		return ${beltIndex.Used}
+		return ${EntityCache.Count[${EntityCache.CacheID_Belts}]}
 	}
 
 	member:bool AtBelt()
 	{
 		; Check if there is a belt closer than warp range.
-		if (${beltIndex.Used} == 0)
-		{
-			This:ResetBeltList
-			if (${This.Count} == 0)
-			{
-				return FALSE
-			}
-		}
-
-		if !${beltIterator.IsValid}
+		if ${EntityCache.Count[${EntityCache.CacheID_Belts}]} == 0
 		{
 			return FALSE
 		}
 
-		if ${beltIterator.Value.ID(exists)}
+		if !${Belt_CacheIterator.IsValid}
 		{
-			if ${Me.ToEntity.DistanceTo[${beltIterator.Value.ID}]} < WARP_RANGE
+			This:ResetBeltList
+		}
+
+		if ${Belt_CacheIterator.Value.ID(exists)}
+		{
+			if ${Me.ToEntity.DistanceTo[${Belt_CacheIterator.Value.ID}]} < WARP_RANGE
 			{
 				return TRUE
 			}
 		}
-		elseif ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${beltIterator.Value.X}, ${beltIterator.Value.Y}, ${beltIterator.Value.Z}]} < WARP_RANGE
+		elseif ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${Belt_CacheIterator.Value.X}, ${Belt_CacheIterator.Value.Y}, ${Belt_CacheIterator.Value.Z}]} < WARP_RANGE
 		{
 			return TRUE
 		}
@@ -81,14 +76,14 @@ objectdef obj_Belts
 
 	method Next()
 	{
-		if ${beltIndex.Used} == 0
+		if ${EntityCache.Count[${EntityCache.CacheID_Belts}]} == 0
 		{
 			This:ResetBeltList
 		}
 
-		if !${beltIterator:Next(exists)}
+		if !${Belt_CacheIterator:Next(exists)}
 		{
-			beltIterator:First
+			Belt_CacheIterator:First
 		}
 	}
 
@@ -101,9 +96,9 @@ objectdef obj_Belts
 	{
 		variable int RandomBelt
 
-		if ${beltIndex.Used} > 0
+		if ${EntityCache.Count[${EntityCache.CacheID_Belts}]} > 0
 		{
-			RandomBelt:Set[${Math.Rand[${Math.Calc[${beltIndex.Used}-1]}]:Inc[1]}]
+			RandomBelt:Set[${Math.Rand[${Math.Calc[${EntityCache.Count[${EntityCache.CacheID_Belts}]} - 1]}]:Inc[1]}]
 			while ${RandomBelt} > 0
 			{
 				This:Next
@@ -116,33 +111,33 @@ objectdef obj_Belts
 	{
 		This:Next
 
-		if ${beltIterator.Value(exists)}
+		if ${Belt_CacheIterator.Value(exists)}
 		{
-
+			/* Commented out -- uncomment if you wish to avoid belts within scan range of a gate
+			
 			variable int NearestGate
 			variable float DistanceToGate
-			NearestGate:Set[${Entity[fromID,${beltIterator.Value.ID},Radius,SCANNER_RANGE,GroupID,GROUP_STARGATE].ID}]
-			/* Commented as per wishes of CT. -- Stealthy
+			NearestGate:Set[${Entity[fromID,${Belt_CacheIterator.Value.ID},Radius,SCANNER_RANGE,GroupID,GROUP_STARGATE].ID}]
 			if ${NearestGate(exists)} && ${NearestGate} > 0
 			{
-				DistanceToGate:Set[${Entity[${beltIterator.Value.ID}].DistanceTo[${NearestGate}]}]
+				DistanceToGate:Set[${Entity[${Belt_CacheIterator.Value.ID}].DistanceTo[${NearestGate}]}]
 				if ${DistanceToGate} < ${Math.Calc[SCANNER_RANGE/2]}
 				{
 					; TODO - This needs to do a count of belts within range of the gate and make a decision if it's safe enough.
 					; I really, really hate this solution, it relies on the % chance the hostile will pick the wrong belt
 					; when they see you on scanner. -- CyberTech
-					UI:UpdateConsole["obj_Belts: Skipping belt ${beltIterator.Value.Name} - too close to gate (${Entity[${NearestGate}].Name} - ${DistanceToGate}"]
+					UI:UpdateConsole["obj_Belts: Skipping belt ${Belt_CacheIterator.Value.Name} - too close to gate (${Entity[${NearestGate}].Name} - ${DistanceToGate}"]
 					call This.WarpToNext ${WarpInDistance}
 					return
 				}
 			}
 			*/
 
-			call Ship.WarpToID ${beltIterator.Value.ID} ${WarpInDistance}
+			call Ship.WarpToID ${Belt_CacheIterator.Value.ID} ${WarpInDistance}
 		}
 		else
 		{
-			UI:UpdateConsole["${LogPrefix}: WarpToNext ERROR: beltIterator does not exist"]
+			UI:UpdateConsole["${LogPrefix}: WarpToNext ERROR: Belt_CacheIterator does not exist"]
 		}
 	}
 }
