@@ -63,14 +63,14 @@ function main()
 	while 1
 	{
 		wait 10
-		;echo Entity_Stations: ${EntityCache.Count[${Entity_Stations}]}
-		;echo Entity_Moons: ${EntityCache.Count[${Entity_Moons}]}
-		;echo Entity_AsteroidBelts: ${EntityCache.Count[${Entity_AsteroidBelts}]}
-		;echo Entity_NPCs: ${EntityCache.Count[${Entity_NPCs}]}
-		;echo Entity_Defense: ${EntityCache.Count[${Entity_Defense}]}
-		;echo Entity_Rats: ${EntityCache.Count[${Entity_Rats}]}
-		;echo Entity_Mission: ${EntityCache.Count[${Entity_Mission}]}
-		;echo Entity_Asteroids: ${EntityCache.Count[${Entity_Asteroids}]}
+		echo Entity_Stations: ${EntityCache.Count[${Entity_Stations}]}
+		echo Entity_Moons: ${EntityCache.Count[${Entity_Moons}]}
+		echo Entity_AsteroidBelts: ${EntityCache.Count[${Entity_AsteroidBelts}]}
+		echo Entity_NPCs: ${EntityCache.Count[${Entity_NPCs}]}
+		echo Entity_Defense: ${EntityCache.Count[${Entity_Defense}]}
+		echo Entity_Rats: ${EntityCache.Count[${Entity_Rats}]}
+		echo Entity_Mission: ${EntityCache.Count[${Entity_Mission}]}
+		echo Entity_Asteroids: ${EntityCache.Count[${Entity_Asteroids}]}
 	}
 }
 

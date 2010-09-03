@@ -213,7 +213,7 @@ objectdef obj_Miner
 			return
 		}
 
-	  if ${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
+		if ${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 		{
 			; ignore this condition if the cargo window is not open
 			if ${Ship.IsCargoOpen}
