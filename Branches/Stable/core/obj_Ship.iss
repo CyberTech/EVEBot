@@ -829,7 +829,7 @@ objectdef obj_Ship
 
 	method CycleMiningLaser(string Activate, string Slot)
 	{
-		echo CycleMiningLaser: ${Slot} Activate: ${Activate}
+		;echo CycleMiningLaser: ${Slot} Activate: ${Activate}
 		if ${Activate.Equal[ON]} && \
 			( ${Me.Ship.Module[${Slot}].IsActive} || \
 			  ${Me.Ship.Module[${Slot}].IsGoingOnline} || \
@@ -868,14 +868,12 @@ objectdef obj_Ship
 		{
 			; Delay from 30 to 60 seconds before deactivating
 			TimedCommand ${Math.Rand[600]:Inc[300]} "Script[EVEBot].VariableScope.Ship:CycleMiningLaser[OFF, ${Slot}]"
-			echo "next: off"
 			return
 		}
 		else
 		{
 			; Delay for the time it takes the laser to deactivate and be ready for reactivation
 			TimedCommand 20 "Script[EVEBot].VariableScope.Ship:CycleMiningLaser[ON, ${Slot}]"
-			echo "next: on"
 			return
 		}
 	}
