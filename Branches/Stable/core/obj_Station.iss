@@ -210,8 +210,8 @@ objectdef obj_Station
 
 		UI:UpdateConsole["Docking at ${EVE.GetLocationNameByID[${StationID}]}"]
 
-		Ship:SetType[${Entity[CategoryID,CATEGORYID_SHIP].Type}]
-		Ship:SetTypeID[${Entity[CategoryID,CATEGORYID_SHIP].TypeID}]
+		Ship:SetType[${Me.ToEntity.Type}]
+		Ship:SetTypeID[${Me.ToEntity.TypeID}]
 
 		if ${Entity[${StationID}](exists)}
 		{
@@ -323,8 +323,8 @@ objectdef obj_Station
 		wait 30
 
 		Ship:UpdateModuleList[]
-		Ship:SetType[${Entity[CategoryID,CATEGORYID_SHIP].Type}]
-		Ship:SetTypeID[${Entity[CategoryID,CATEGORYID_SHIP].TypeID}]
+		Ship:SetType[${Me.ToEntity.Type}]
+		Ship:SetTypeID[${Me.ToEntity.TypeID}]
 	}
 
 }

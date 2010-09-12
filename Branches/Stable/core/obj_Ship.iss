@@ -863,6 +863,7 @@ objectdef obj_Ship
 			return
 		}
 
+		Me.Ship.Module[${Slot}].LastTarget:MakeActiveTarget
 		Me.Ship.Module[${Slot}]:Click
 		if ${Activate.Equal[ON]}
 		{
