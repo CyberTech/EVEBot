@@ -1476,14 +1476,14 @@ objectdef obj_Ship
 		if ${Activate.Equal[ON]}
 		{
 			; Delay from 18 to 45 seconds before deactivating
-			TimedCommand ${Math.Rand[65]:Inc[30]} Script[EVEBot].ExecuteAtom[Ship:CycleMiningLaser, OFF, ${Slot}]
+			TimedCommand ${Math.Rand[600]:Inc[300]} Script[EVEBot]:ExecuteAtom[Ship:CycleMiningLaser, OFF, ${Slot}]
 			echo "next: off"
 			return
 		}
 		else
 		{
 			; Delay for the time it takes the laser to deactivate and be ready for reactivation
-			TimedCommand 20 Script[EVEBot].ExecuteAtom[Ship:CycleMiningLaser, ON, "${Slot}"]
+			TimedCommand 20 Script[EVEBot]:ExecuteAtom[Ship:CycleMiningLaser, ON, "${Slot}"]
 			echo "next: on"
 			return
 		}
@@ -1518,6 +1518,7 @@ objectdef obj_Ship
 	{
 		Validate_Ship()
 
+		variable string Slot
 		variable iterator Module
 
 		This.ModuleList_MiningLaser:GetIterator[Module]
@@ -1530,7 +1531,6 @@ objectdef obj_Ship
 				!${Module.Value.IsChangingAmmo} &&\
 				!${Module.Value.IsReloadingAmmo}
 			{
-				variable string Slot
 				Slot:Set[${Module.Value.ToItem.Slot}]
 				if ${Module.Value.SpecialtyCrystalMiningAmount(exists)}
 				{
@@ -1542,10 +1542,10 @@ objectdef obj_Ship
 					call This.ChangeMiningLaserCrystal "${OreType}" ${Slot}
 				}
 
-				UI:UpdateConsole["Activating: ${Module.Value.ToItem.Slot}: ${Module.Value.ToItem.Name}"]
+				UI:UpdateConsole["Activating: ${Slot}: ${Module.Value.ToItem.Name}"]
 				Module.Value:Click
 				wait 25
-				;TimedCommand ${Math.Rand[35]:Inc[18]} Script[EVEBot].ExecuteAtom[Ship:CycleMiningLaser, OFF, ${Slot}]
+				;TimedCommand ${Math.Rand[600]:Inc[300]} Script[EVEBot]:ExecuteAtom[Ship:CycleMiningLaser, OFF, ${Slot}]
 				return
 			}
 			wait 10
