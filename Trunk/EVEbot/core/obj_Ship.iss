@@ -1476,14 +1476,14 @@ objectdef obj_Ship
 		if ${Activate.Equal[ON]}
 		{
 			; Delay from 18 to 45 seconds before deactivating
-			TimedCommand ${Math.Rand[600]:Inc[300]} Script[EVEBot]:ExecuteAtom[Ship:CycleMiningLaser, OFF, ${Slot}]
+			TimedCommand ${Math.Rand[600]:Inc[300]} "Script[EVEBot].VariableScope.Ship:CycleMiningLaser[OFF, ${Slot}]"
 			echo "next: off"
 			return
 		}
 		else
 		{
 			; Delay for the time it takes the laser to deactivate and be ready for reactivation
-			TimedCommand 20 Script[EVEBot]:ExecuteAtom[Ship:CycleMiningLaser, ON, "${Slot}"]
+			TimedCommand 20 "Script[EVEBot].VariableScope.Ship:CycleMiningLaser[ON, ${Slot}]"
 			echo "next: on"
 			return
 		}
@@ -1545,7 +1545,7 @@ objectdef obj_Ship
 				UI:UpdateConsole["Activating: ${Slot}: ${Module.Value.ToItem.Name}"]
 				Module.Value:Click
 				wait 25
-				;TimedCommand ${Math.Rand[600]:Inc[300]} Script[EVEBot]:ExecuteAtom[Ship:CycleMiningLaser, OFF, ${Slot}]
+				;TimedCommand ${Math.Rand[600]:Inc[300]} "Script[EVEBot].VariableScope.Ship:CycleMiningLaser[OFF, ${Slot}]"
 				return
 			}
 			wait 10
