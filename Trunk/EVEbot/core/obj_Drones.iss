@@ -18,7 +18,7 @@ objectdef obj_Drones
 	variable index:int ActiveDroneIDList
 	variable int CategoryID_Drones = 18
 	variable int LaunchedDrones = 0
-	variable bool WaitingForDrones = FALSE
+	variable int WaitingForDrones = 0
 	variable bool DronesReady = FALSE
 	variable int ShortageCount
 
@@ -125,10 +125,11 @@ objectdef obj_Drones
 				{
 					if ${This.WaitingForDrones}
 					{
+						This.WaitingForDrones:Dec
 						This.LaunchedDrones:Set[${This.DronesInSpace}]
 						if  ${This.LaunchedDrones} > 0
 						{
-							This.WaitingForDrones:Set[FALSE]
+							This.WaitingForDrones:Set[0]
 							This.DronesReady:Set[TRUE]
 							UI:UpdateConsole["${This.LaunchedDrones} drones deployed"]
 						}
@@ -257,7 +258,7 @@ objectdef obj_Drones
 		{
 			UI:UpdateConsole["Launching all drones..."]
 			MyShip:LaunchAllDrones
-			This.WaitingForDrones:Set[TRUE]
+			This.WaitingForDrones:Set[5]
 		}
 	}
 
