@@ -49,9 +49,9 @@ objectdef obj_Drones
 
 		if ${This.WaitingForDrones}
 		{
-			This.WaitingForDrones:Dec
 		    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 			{
+				This.WaitingForDrones:Dec
     			if !${_Me.InStation}
     			{
     				This.LaunchedDrones:Set[${This.DronesInSpace}]
