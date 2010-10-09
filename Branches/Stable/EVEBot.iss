@@ -90,6 +90,7 @@ function main()
 	declarevariable Bookmarks obj_Bookmarks script
 	declarevariable JetCan obj_JetCan script
 	declarevariable CorpHangarArray obj_CorpHangerArray script
+	declarevariable XLargeShipAssemblyArray obj_XLargeShipAssemblyArray script
 	declarevariable Social obj_Social script
 	declarevariable Fleet obj_Fleet script
 	declarevariable Assets obj_Assets script

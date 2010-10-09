@@ -352,6 +352,31 @@ objectdef obj_Cargo
 		}
 	}
 
+	function TransferListToXLargeShipAssemblyArray()
+	{
+		variable iterator CargoIterator
+		This.CargoToTransfer:GetIterator[CargoIterator]
+		
+		if ${CargoIterator:First(exists)}
+		{
+			do
+			{
+				if ${XLargeShipAssemblyArray.IsReady[TRUE]}
+				{
+					call XLargeShipAssemblyArray.Open ${XLargeShipAssemblyArray.ActiveCan}
+					UI:UpdateConsole["TransferListToXLargeShipAssemblyArray: Transferring Cargo: ${CargoIterator.Value.Name}"]
+					CargoIterator.Value:MoveTo[${XLargeShipAssemblyArray.ActiveCan},${CargoIterator.Value.Quantity},Corporation Folder 1]
+				}
+			}
+			while ${CargoIterator:Next(exists)}
+			XLargeShipAssemblyArray:StackAllCargo
+		}
+		else
+		{
+			UI:UpdateConsole["DEBUG: obj_Cargo:TransferListToXLargeShipAssemblyArray: Nothing found to move"]
+		}
+	}
+	
 	function TransferListToCorpHangarArray()
 	{
 		variable iterator CargoIterator
@@ -654,6 +679,29 @@ objectdef obj_Cargo
 		This.CargoToTransfer:Clear[]
 	}
 
+	function TransferOreToXLargeShipAssemblyArray()
+	{		
+		if ${XLargeShipAssemblyArray.IsReady}
+		{
+			if ${Entity[${XLargeShipAssemblyArray.ActiveCan}].Distance} > CORP_HANGAR_LOOT_RANGE
+			{
+				call Ship.Approach ${XLargeShipAssemblyArray.ActiveCan} CORP_HANGAR_LOOT_RANGE
+			}
+		}
+		else
+		{
+			UI:ConsoleUpdate["No Hangar Array found - nothing moved"]
+			return
+		}
+
+		call Ship.OpenCargo
+
+		This:FindShipCargo[CATEGORYID_ORE]
+		call This.TransferListToXLargeShipAssemblyArray
+		
+		This.CargoToTransfer:Clear[]
+	}
+
 	function TransferOreToJetCan()
 	{
 		UI:UpdateConsole["Transferring Ore to JetCan"]
@@ -855,7 +903,7 @@ objectdef obj_Cargo
    {	
 	  if !${Station.Docked}
 	  {
-		 UI:UpdateConsole["ERROR: obj_Cargo.TransferItemToHangar: Must be docked!"]
+		 UI:UpdateConsole["ERROR: obj_Cargo.TransferItemTypeToHangar: Must be docked!"]
 		 return
 	  }
 

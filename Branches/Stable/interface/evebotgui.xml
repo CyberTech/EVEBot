@@ -762,6 +762,7 @@
 								<Item Value='1'>Station</Item>
 								<Item Value='2'>Hangar Array</Item>
 								<Item Value='3'>Jetcan</Item>
+								<Item Value='4'>XLarge Ship Assembly Array</Item>
 							</Items>
 							<OnSelect>
 								Script[EVEBot].VariableScope.Config.Miner:SetDeliveryLocationType[${This.SelectedItem.Value}]
