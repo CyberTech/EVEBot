@@ -47,6 +47,12 @@ function main(string unchar="", string StartBot=FALSE)
 		wait 10
 	}
 
+	while !${Display.Window(exists)}
+	{
+		waitframe
+	}
+	windowtaskbar on "${unchar}"
+
 	if (${Config.Common.LoginName.Equal[""]} || \
 		${Config.Common.LoginPassword.Equal[""]} || \
 		${Config.Common.LoginName.Equal[NULL]} || \
