@@ -31,8 +31,8 @@ function main()
 	variable int UptimeHour = 7
 	variable string CharacterSet = "SomeSet"	/* Name of the ISBoxer Character Set goes here */
 	variable int CharactersInSet = 0					/* Number of characters in the ISBoxer Set */
-	
-	/* Don't touch below this line */	
+
+	/* Don't touch below this line */
 	/* LS.RT uses time in ms */
 	variable int Timer = ${LavishScript.RunningTime}
 	variable int CrashedSessions = 0
@@ -57,12 +57,12 @@ function main()
 			relay "all other" EVECallback:DoCallback
 			wait 50
 		}
-		
+
 		/* Get our iterators. */
 		EVEWatcher.Characters_CalledBack:GetIterator[CalledBackIterator]
 		EVEWatcher.Characters_Session:GetIterator[SessionIterator]
 		EVEWatcher.Characters_LastUpdate:GetIterator[LastUpdateIterator]
-		
+
 		/* Close any crashed sessions. If we do have to close any, wait a few seconds after closing to
 		give our system a bit of a break between closing sessions and immediately restarting them. */
 		if ${CalledBackIterator:First(exists)} && ${SessionIterator:First(exists)} && ${LastUpdateIterator:First(exists)}
@@ -81,7 +81,7 @@ function main()
 			}
 			while ${CalledBackIterator:Next(exists)} && ${SessionIterator:Next(exists)} && ${LastUpdateIterator:Next(exists)}
 		}
-		
+
 		/* The regeneration check will only run every five mintues. */
 		if ${LavishScript.RunningTime} >= ${Timer}
 		{
@@ -89,8 +89,8 @@ function main()
 				echo "EveBots.iss: Regeneration check."
 			/* Update the timer */
 			Timer:Set[${Math.Calc[${LavishScript.RunningTime} + FIVE_MINUTES_MS]}]
-	
-			/* If we're between downtime and uptime and there are running sessions, kill them. */		
+
+			/* If we're between downtime and uptime and there are running sessions, kill them. */
 			if ${Time.Hour} >= ${DowntimeHour} && ${Time.Hour} < ${UptimeHour} && ${EVEWatcher.Characters_Session.Used} > 0
 			{
 				if DEBUG
@@ -100,11 +100,11 @@ function main()
 				EVEWatcher.Characters_CalledBack:Clear
 				EVEWatcher.Characters_Session:Clear
 			}
-			
+
 			/* If we're after uptime, make sure we have our sessions up. */
 			/* Just use isboxer to launch the char set. Each char will have a different profile and therefore a different evebot,
 				allowing for autologin to work. */
-			if (${CrashedSessions} > 0 || ${EVEWatcher.Characters_CalledBack.Used} < ${CharactersInSet}) && (${Time.Hour} >= ${UptimeHour} || ${Time.Hour} < ${DowntimeHour}) 
+			if (${CrashedSessions} > 0 || ${EVEWatcher.Characters_CalledBack.Used} < ${CharactersInSet}) && (${Time.Hour} >= ${UptimeHour} || ${Time.Hour} < ${DowntimeHour})
 			{
 				/* We need to account for fuckups, i.e. bad login, account expired, account *shudder* closed. Lower CharactersInSet if we repeatedly
 				have CalledBack report less than we're expecting so we don't spam launch. */
@@ -154,17 +154,17 @@ objectdef obj_EveWatcher
 	variable collection:bool Characters_CalledBack
 	variable collection:string Characters_Session
 	variable collection:int Characters_LastUpdate
-	
+
 	/* Timer Launcher will update. */
 	variable int LauncherTimer = ${Math.Calc[${LavishScript.RunningTime} + 60 * 1000]}
-	
+
 	/* Another emtpy initialize function. */
 	method Initialize()
 	{
 		/* This code did not work because of a UTF-8 vs ASCII conflict.
 		 Had to make some hackish modifications to insert names based on callbacks. */
 	}
-	
+
 	/* Reset the CalledBack collection to false. */
 	method ResetCalledBack()
 	{
@@ -181,7 +181,7 @@ objectdef obj_EveWatcher
 			while ${itrCalledBack:Next(exists)}
 		}
 	}
-	
+
 	/* Set the variables from callbacks.
 	session: The session that's calling back.
 	characterName: The name of the character in the session calling back. */
@@ -194,7 +194,7 @@ objectdef obj_EveWatcher
 			Characters_Session:Set[${characterName},${newSession}]
 		}
 	}
-	
+
 	/* Close all of our saved sessions. */
 	method CloseSessions()
 	{
@@ -213,14 +213,14 @@ objectdef obj_EveWatcher
 			while ${itrSession:Next(exists)}
 		}
 	}
-	
+
 	/* Debug methods to dump the collections */
 	method DumpSession()
 	{
 		echo "EveBots: Dumping sessions:"
 		variable iterator itrSession
 		Characters_Session:GetIterator[itrSession]
-		
+
 		if ${itrSession:First(exists)}
 		{
 			do
@@ -230,13 +230,13 @@ objectdef obj_EveWatcher
 			while ${itrSession:Next(exists)}
 		}
 	}
-	
+
 	method DumpCalledBack()
 	{
 		echo "EveBots: Dumping CalledBack:"
 		variable iterator itrCalledBack
 		Characters_CalledBack:GetIterator[itrCalledBack]
-		
+
 		if ${itrCalledBack:First(exists)}
 		{
 			do
@@ -246,13 +246,13 @@ objectdef obj_EveWatcher
 			while ${itrCalledBack:Next(exists)}
 		}
 	}
-	
+
 	method DumpLastUpdate()
 	{
 		echo "EveBots: Dumping LastUpdate:"
 		variable iterator itrLastUpdate
 		Characters_LastUpdate:GetIterator[itrLastUpdate]
-		
+
 		if ${itrLastUpdate:First(exists)}
 		{
 			do
