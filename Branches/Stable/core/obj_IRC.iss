@@ -12,8 +12,8 @@ objectdef obj_IRC
 
 	method Initialize()
 	{
-#if USE_ISXIRC
-		ext -require ISXIRC
+#if USE_ISXIM
+		ext -require ISXIM
 
 		Event[IRC_ReceivedNotice]:AttachAtom[This:IRC_ReceivedNotice]
 		Event[IRC_ReceivedChannelMsg]:AttachAtom[This:IRC_ReceivedChannelMsg]
@@ -30,7 +30,7 @@ objectdef obj_IRC
 
 	method Shutdown()
 	{
-#if USE_ISXIRC
+#if USE_ISXIM
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 
 		Event[IRC_ReceivedNotice]:DetachAtom[This:IRC_ReceivedNotice]
@@ -237,7 +237,7 @@ objectdef obj_IRC
 		; This event is here to handle any events that are not handled otherwise by the
 		; the extension.  There will probably be a lot of spam here, so you won't want to
 		; echo everything.  The best thing to do is only use this event when there is something
-		; that is happening with the client that you want added as a feature to isxIRC and need
+		; that is happening with the client that you want added as a feature to isxIM and need
 		; the data to tell Amadeus.
 
 		; However, we do want any ERROR messages!
@@ -287,7 +287,7 @@ objectdef obj_IRC
 
 	method QueueMessage(string msg)
 	{
-#if USE_ISXIRC
+#if USE_ISXIM
 		This.Buffer:Queue["${msg}"]
 #endif
 	}
