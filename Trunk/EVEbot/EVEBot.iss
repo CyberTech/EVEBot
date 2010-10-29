@@ -210,7 +210,7 @@ function main()
 
 	}
 
-#if USE_ISXIRC
+#if USE_ISXIM
 	call ChatIRC.Connect
 #endif
 
