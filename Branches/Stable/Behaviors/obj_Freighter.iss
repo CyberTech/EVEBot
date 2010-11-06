@@ -21,7 +21,7 @@ objectdef obj_Freighter
 	variable int PulseIntervalInSeconds = 2
 
 	variable queue:bookmark SourceLocations
-	variable int m_DestinationID
+	variable int64 m_DestinationID
 
 	variable obj_Courier 		Courier
 	variable obj_StealthHauler 	StealthHauler
@@ -260,7 +260,7 @@ objectdef obj_Freighter
 
 	function MoveToNextStationWithAssets()
 	{
-		variable int nextStationID
+		variable int64 nextStationID
 
 		if !${EVEWindow[ByCaption,"ASSETS"](exists)}
 		{

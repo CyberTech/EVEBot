@@ -75,7 +75,7 @@ objectdef obj_Assets
 
     member:int NextStation()
     {
-        variable int nextStatonID
+        variable int64 nextStatonID
         
         if ${StationsWithAssets.Used} == 0
         {

@@ -1061,7 +1061,7 @@ objectdef obj_Ship
 	}
 
 
-	function WarpToID(int Id, int WarpInDistance=0)
+	function WarpToID(int64 Id, int WarpInDistance=0)
 	{
 		if (${Id} <= 0)
 		{

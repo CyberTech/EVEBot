@@ -299,7 +299,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		}
 	}
 
-	function LootEntity(int id, int leave = 0)
+	function LootEntity(int64 id, int leave = 0)
 	{
 		variable index:item ContainerCargo
 		variable iterator Cargo
