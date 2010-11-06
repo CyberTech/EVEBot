@@ -9,7 +9,7 @@ variable(script) index:module Salvagers
 variable(script) index:module Afterburners
 variable(script) index:item MyCargo
 variable(script) index:item CargoToTransfer
-variable(script) index:int  NewCargoToTransfer
+variable(script) index:int64  NewCargoToTransfer
 variable(script) int MaxSalvageRange
 variable(script) int MaxTractorRange
 variable(script) int WrecksCount
@@ -23,8 +23,8 @@ variable(script) index:entity Cans
 variable(script) int CanCount
 variable(script) int EntityCargoCount
 variable(script) index:item EntityCargo
-variable(script) collection:int ProcessedEntities
-variable(script) collection:int CargoholdLoot
+variable(script) collection:int64 ProcessedEntities
+variable(script) collection:int64 CargoholdLoot
 variable(script) bool LibraryInitialized
 
 variable(script) string EVELootingFileName

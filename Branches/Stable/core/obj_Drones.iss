@@ -15,7 +15,7 @@ objectdef obj_Drones
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 2
 
-	variable index:int ActiveDroneIDList
+	variable index:int64 ActiveDroneIDList
 	variable int CategoryID_Drones = 18
 	variable int LaunchedDrones = 0
 	variable int WaitingForDrones = 0
@@ -194,8 +194,8 @@ objectdef obj_Drones
 			variable index:activedrone ActiveDroneList
 			Me:DoGetActiveDrones[ActiveDroneList]
 			ActiveDroneList:GetIterator[DroneIterator]
-			variable index:int returnIndex
-			variable index:int engageIndex
+			variable index:int64 returnIndex
+			variable index:int64 engageIndex
 
 			do
 			{

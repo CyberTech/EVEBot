@@ -76,7 +76,7 @@ objectdef obj_Belts
 		if ${beltIterator.Value(exists)}
 		{
 /*
-			variable int NearestGate
+			variable int64 NearestGate
 			variable float DistanceToGate
 			NearestGate:Set[${Entity[fromID,${beltIterator.Value.ID},Radius,SCANNER_RANGE,GroupID,GROUP_STARGATE].ID}]
 			if ${NearestGate(exists)} && ${NearestGate} > 0

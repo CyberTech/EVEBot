@@ -264,7 +264,7 @@ objectdef obj_Station
 	function Dock()
 	{
 		variable int Counter = 0
-		variable int StationID = ${Entity[CategoryID,3,${Config.Common.HomeStation}].ID}
+		variable int64 StationID = ${Entity[CategoryID,3,${Config.Common.HomeStation}].ID}
 
 		UI:UpdateConsole["Docking at ${StationID}:${Config.Common.HomeStation}"]
 

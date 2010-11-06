@@ -291,7 +291,7 @@ objectdef obj_Cargo
 			wait 15
 			
 			variable index:item anItemIndex
-			variable index:int  anIntIndex
+			variable index:int64  anIntIndex
 			variable iterator   anIterator
 			
 			anItem:DoGetCargo[anItemIndex]

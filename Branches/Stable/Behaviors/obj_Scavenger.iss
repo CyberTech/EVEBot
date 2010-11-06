@@ -119,7 +119,7 @@ objectdef obj_Scavenger
 		variable iterator     Wreck
 		variable index:item   Items
 		variable iterator     Item
-		variable index:int    ItemsToMove
+		variable index:int64    ItemsToMove
 		variable float        TotalVolume = 0
 		variable float        ItemVolume = 0
 

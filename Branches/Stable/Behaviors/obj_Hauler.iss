@@ -64,7 +64,7 @@ objectdef obj_Hauler
 
 	member:int NearestMatchingJetCan(int id)
 	{
-		variable index:int JetCan
+		variable index:int64 JetCan
 		variable int JetCanCount
 		variable int JetCanCounter
 		variable string tempString
@@ -95,7 +95,7 @@ objectdef obj_Hauler
 
 	member:int OldNearestMatchingJetCan()
 	{
-		variable index:int JetCan
+		variable index:int64 JetCan
 		variable int JetCanCount
 		variable int JetCanCounter
 		variable string tempString

@@ -140,7 +140,7 @@ objectdef obj_Cache_Me inherits obj_Cache
 
 	variable string Name
 	variable int CharID
-	variable int ShipID
+	variable int64 ShipID
 	variable int StationID
 
 	variable bool InStation = FALSE

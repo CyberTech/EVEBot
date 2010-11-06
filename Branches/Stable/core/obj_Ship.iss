@@ -1219,7 +1219,7 @@ objectdef obj_Ship
 		declarevariable TypeID int ${DestinationBookmark.ToEntity.TypeID}
 		declarevariable GroupID int ${DestinationBookmark.ToEntity.GroupID}
 		declarevariable CategoryID int ${DestinationBookmark.ToEntity.CategoryID}
-		declarevariable EntityID int ${DestinationBookmark.ToEntity.ID}
+		declarevariable EntityID int64 ${DestinationBookmark.ToEntity.ID}
 
 		if ${DestinationBookmark.ToEntity(exists)}
 		{

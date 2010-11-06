@@ -410,7 +410,7 @@ objectdef obj_Miner
 					{
 						continue
 					}
-					variable int TargetID
+					variable int64 TargetID
 					TargetID:Set[${Target.Value.ID}]
 
 					/* TODO: CyberTech - this concentrates fire fine if there's only 1 target, but if there's multiple targets it still prefers to distribute. Ice mining shouldn't distribute */

@@ -80,7 +80,7 @@ objectdef obj_JetCan
 	}
 
 	; Returns -1 for no can, or the entity ID
-	member:int CurrentCan(bool CheckFreeSpace = FALSE)
+	member:int64 CurrentCan(bool CheckFreeSpace = FALSE)
 	{
 		if (${This.ActiveCan} > 0 && \
 			${Entity[${This.ActiveCan}](exists)})
@@ -504,7 +504,7 @@ objectdef obj_CorpHangerArray inherits obj_JetCan
 objectdef obj_SpawnContainer inherits obj_JetCan
 {
 	; Returns -1 for no can, or the entity ID
-	member:int CurrentCan(bool CheckFreeSpace = FALSE)
+	member:int64 CurrentCan(bool CheckFreeSpace = FALSE)
 	{
 		if (${This.ActiveCan} > 0 && \
 			${Entity[${This.ActiveCan}](exists)})
@@ -566,7 +566,7 @@ objectdef obj_SpawnContainer inherits obj_JetCan
 objectdef obj_XLargeShipAssemblyArray inherits obj_JetCan
 {
 	; Returns -1 for no can, or the entity ID
-	member:int CurrentCan(bool CheckFreeSpace = FALSE)
+	member:int64 CurrentCan(bool CheckFreeSpace = FALSE)
 	{
 		if (${This.ActiveCan} > 0 && \
 			${Entity[${This.ActiveCan}](exists)})
