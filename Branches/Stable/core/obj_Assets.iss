@@ -23,7 +23,7 @@ objectdef obj_Assets
     
     method UpdateList()
     {
-        variable index:int AnIndex
+        variable index:int64 AnIndex
         variable iterator  AnIterator
         variable int       tempInt
         
