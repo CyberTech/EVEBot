@@ -700,7 +700,7 @@ objectdef obj_Ship
 	}
 
 	; Returns TRUE if we've got a laser mining this entity already
-	member:bool IsMiningAsteroidID(int EntityID)
+	member:bool IsMiningAsteroidID(int64 EntityID)
 	{
 		if !${Me.Ship(exists)}
 		{
@@ -962,7 +962,7 @@ objectdef obj_Ship
 	}
 
 	; Approaches EntityID to within 5% of Distance, then stops ship.  Momentum will handle the rest.
-	function Approach(int EntityID, int64 Distance)
+	function Approach(int64 EntityID, int64 Distance)
 	{
 		if ${Entity[${EntityID}](exists)}
 		{
@@ -1094,7 +1094,7 @@ objectdef obj_Ship
 	}
 
 	; This takes CHARID, not Entity id
-	function WarpToFleetMember( int charID, int distance=0 )
+	function WarpToFleetMember(int64 charID, int distance=0 )
 	{
 		variable index:fleetmember FleetMembers
 		variable iterator FleetMember
@@ -1167,7 +1167,7 @@ objectdef obj_Ship
 		wait 30
 	}
 
-	function TravelToSystem(int DestinationSystemID)
+	function TravelToSystem(int64 DestinationSystemID)
 	{
 		while ${DestinationSystemID} != ${_Me.SolarSystemID}
 		{
