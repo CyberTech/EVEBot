@@ -1020,7 +1020,7 @@ function CheckShipIsFull(bool LootCans, bool IgnoreCapacity)
 
 }
 
-function LootEntity(int EntityID)
+function LootEntity(int64 EntityID)
 {
 
 		Entity[${EntityID}]:DoGetCargo[EntityCargo]
