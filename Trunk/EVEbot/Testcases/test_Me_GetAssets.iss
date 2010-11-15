@@ -55,6 +55,7 @@ function main()
 	{
 		do
 		{
+			echo AssetsIterator.Value ${AssetsIterator.Value}
 			echo AssetsIterator.Value.ID ${AssetsIterator.Value.ID}
 			echo AssetsIterator.Value.OwnerID ${AssetsIterator.Value.OwnerID}
 			echo AssetsIterator.Value.Group ${AssetsIterator.Value.Group}

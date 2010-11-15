@@ -6,7 +6,7 @@
 		<Border>0</Border>
 		<X>200</X>
 		<Y>300</Y>
-		<Width>500</Width>
+		<Width>800</Width>
 		<Height>326</Height>
 		<Title>EVEBot Options</Title>
 		<TitleBar template='EVESkin.Window.TitleBar'>

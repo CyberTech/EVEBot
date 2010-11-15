@@ -1425,7 +1425,7 @@ objectdef obj_Ship
 		{
 			if ${Module.Value.IsActive} && \
 				!${Module.Value.IsDeactivating} && \
-				( !${Module.Value.LastTarget(exists)} || !${Entity[${Module.Value.LastTarget.ID}](exists)} )
+				!${Module.Value.LastTarget(exists)}
 			{
 				UI:UpdateConsole["${Module.Value.ToItem.Slot}:${Module.Value.ToItem.Name} has no target: Deactivating"]
 				Module.Value:Click

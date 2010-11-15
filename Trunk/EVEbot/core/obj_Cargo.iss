@@ -318,7 +318,7 @@ objectdef obj_Cargo
 			wait 15
 
 			variable index:item ContainerContents
-			variable index:int  anIntIndex
+			variable index:int64  anIntIndex
 			variable iterator   anIterator
 
 			Container:DoGetCargo[ContainerContents]
@@ -381,7 +381,21 @@ objectdef obj_Cargo
 		*/
 		call Station.OpenHangar
 		UI:UpdateConsole["obj_Cargo:TransferListToHangar: Moving all items in index This.CargoToTransfer to hangar",LOG_DEBUG]
-		EVE:MoveItemsTo[This.CargoToTransfer,Hangar]
+
+		variable index:int64  anIntIndex
+		variable iterator   anIterator
+
+		This.CargoToTransfer:GetIterator[anIterator]
+		anIntIndex:Clear
+
+		if ${anIterator:First(exists)}
+		do
+		{
+			anIntIndex:Insert[${anIterator.Value.ID}]
+		}
+		while ${anIterator:Next(exists)}
+
+		EVE:MoveItemsTo[anIntIndex,Hangar]
 	}
 
 	function TransferListToCorpHangarArray()
