@@ -1,0 +1,9 @@
+EVEBot Installation
+
+This folder (https://www.isxgames.com/EVEBot/Trunk/Install) holds one folder "EVEBot". 
+
+This folder should be checked out into your scripts folder, so that it appears as so:
+
+\Program Files\Innerspace\Scripts\EVEBot
+
+-- CyberTech (cybertech@gmail.com)
