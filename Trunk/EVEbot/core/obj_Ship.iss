@@ -225,9 +225,9 @@ objectdef obj_Ship
 		FrequencyNameModPairs:Set["Gleam",0.25]
 	}
 
-	/* float HitChance(int EntityID, int turret):
+	/* float HitChance(int64 EntityID, int turret):
 	Calculate the chance to hit to the best of our ability. */
-	member:float HitChance(int EntityID, int turret, float falloff, float tracking)
+	member:float HitChance(int64 EntityID, int turret, float falloff, float tracking)
 	{
 		variable float Blob
 		variable int AvgSigRadius
@@ -1279,7 +1279,7 @@ objectdef obj_Ship
 	}
 
 	; Returns TRUE if we've got a laser mining this entity already
-	member:bool IsMiningAsteroidID(int EntityID)
+	member:bool IsMiningAsteroidID(int64 EntityID)
 	{
 		Validate_Ship()
 
@@ -1560,7 +1560,7 @@ objectdef obj_Ship
 	}
 
 	; Approaches EntityID to within 5% of Distance, then stops ship.  Momentum will handle the rest.
-	function Approach(int EntityID, int64 Distance)
+	function Approach(int64 EntityID, int64 Distance)
 	{
 		Validate_Ship()
 
@@ -1666,7 +1666,7 @@ objectdef obj_Ship
 	}
 
 
-	function WarpToID(int ID, int WarpInDistance=0)
+	function WarpToID(int64 ID, int WarpInDistance=0)
 	{
 		Validate_Ship()
 

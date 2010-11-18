@@ -55,7 +55,7 @@ objectdef obj_MissionCommands
 	variable index:item ContainerCargo
 	variable iterator Cargo
 	variable int Recheck = 0
-	member:bool Approach(int EntityID, int64 Distance = DOCKING_RANGE)
+	member:bool Approach(int64 EntityID, int64 Distance = DOCKING_RANGE)
 	{
 		switch ${ApproachState}
 		{
@@ -147,7 +147,7 @@ objectdef obj_MissionCommands
 	}
 
 
-	member:bool ApproachBreakOnCombat(int EntityID,int Distance = DOCKING_RANGE)
+	member:bool ApproachBreakOnCombat(int64 EntityID,int Distance = DOCKING_RANGE)
 	{
 		if ${This.AggroCount} > 0
 		{
@@ -169,7 +169,7 @@ objectdef obj_MissionCommands
 	}
 
 
-	member:bool ActivateGate(int EntityID)
+	member:bool ActivateGate(int64 EntityID)
 	{
 		UI:UpdateConsole["DEBUG: obj_MissionCommands - attempting to activate ${Entity[${EntityID}].Name!",LOG_DEBUG]
 		switch ${GateState}
@@ -411,7 +411,7 @@ objectdef obj_MissionCommands
 	}
 
 
-	member:bool KillID(int entityID)
+	member:bool KillID(int64 entityID)
 	{
 		variable float dist
 		variable bool didApproach
@@ -875,7 +875,7 @@ objectdef obj_MissionCommands
 
 	; TODO - move to obj_Cargo
 
-	member:int LootEntity(int entID,string lootItem)
+	member:int LootEntity(int64 entID,string lootItem)
 	{
 		switch ${LootEntityState}
 		{
@@ -1086,7 +1086,7 @@ objectdef obj_MissionCommands
 			return TRUE
 		}
 	}
-	method PullTarget(int entityID)
+	method PullTarget(int64 entityID)
 	{
 		if ${This.KillID[${entityID}]}
 		{

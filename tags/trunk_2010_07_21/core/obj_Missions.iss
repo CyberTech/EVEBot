@@ -812,7 +812,7 @@ objectdef obj_Missions
    }
 
 	; Approach the target while in combat
-	function CombatApproach(int EntityID, int64 Distance)
+	function CombatApproach(int64 EntityID, int64 Distance)
 	{
 		if ${Entity[${EntityID}](exists)}
 		{
@@ -1145,7 +1145,7 @@ objectdef obj_Missions
 		return -1
 	}
 
-	function LootEntity(int entityID, int typeID)
+	function LootEntity(int64 entityID, int typeID)
 	{
 		variable index:item ContainerCargo
 		variable iterator Cargo

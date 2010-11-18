@@ -81,8 +81,8 @@ objectdef obj_Station
 
 	member:bool Docked()
 	{
-		if ${_Me.InStation} && \
-			${_Me.StationID} > 0
+		if ${Me.InStation} && \
+			${Me.StationID} > 0
 		{
 			return TRUE
 		}
@@ -91,8 +91,8 @@ objectdef obj_Station
 
 	member:bool DockedAtStation(int StationID)
 	{
-		if ${_Me.InStation} && \
-			${_Me.StationID} == ${StationID}
+		if ${Me.InStation} && \
+			${Me.StationID} == ${StationID}
 		{
 			return TRUE
 		}

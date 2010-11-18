@@ -20,7 +20,7 @@ objectdef obj_Ratter
 
 	/* Cache for NPCs */
 	variable obj_EntityCache RatCache
-	variable index:int DoNotKillList
+	variable index:int64 DoNotKillList
 
 	/* Used for calculating battleship chain values */
 	variable obj_Targets_Rats RatCalculator
@@ -277,7 +277,7 @@ objectdef obj_Ratter
 				{
 					UI:UpdateConsole["obj_Ratter: We have a priority target: ${RatCache.EntityIterator.Value.Name}."]
 					bHavePriorityTarget:Set[TRUE]
-					/* 	method Queue(int EntityID, int Priority, int TargetType, bool Mandatory=FALSE, bool Blocker=FALSE) */
+					/* 	method Queue(int64 EntityID, int Priority, int TargetType, bool Mandatory=FALSE, bool Blocker=FALSE) */
 					/* Queue it mandatory so we make sure it dies. */
 					UI:UpdateConsole["obj_Ratter: Queueing priority target: ${RatCache.EntityIterator.Value.Name}"]
 					Targeting:Queue[${RatCache.EntityIterator.Value.ID},0,${RatCache.EntityIterator.Value.TypeID},TRUE,FALSE]
@@ -416,9 +416,9 @@ objectdef obj_Ratter
 		return FALSE
 	}
 
-	/* bool IsDoNotKill(int entityID):
+	/* bool IsDoNotKill(int64 entityID):
 	return true if given entity ID is on our do not kill list, otherwise return false */
-	member:bool IsDoNotKill(int entityID)
+	member:bool IsDoNotKill(int64 entityID)
 	{
 		variable iterator DoNotKillIterator
 		DoNotKillList:GetIterator[DoNotKillIterator]

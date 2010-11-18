@@ -28,7 +28,7 @@ objectdef obj_Autopilot
 		Given an entity (or character) ID determine if that item
 		is in the current system.
 	*/
-	member:bool IsEntityLocal(int id)
+	member:bool IsEntityLocal(int64 id)
 	{
 		return FALSE
 	}
@@ -36,7 +36,7 @@ objectdef obj_Autopilot
 	/*
 		Given a system ID set the autopilot destination to that system.
 	*/
-	method SetDestination(int id)
+	method SetDestination(int64 id)
 	{
 		if ${This.Destination} == ${id}
 		{

@@ -12,8 +12,8 @@ objectdef obj_Assets
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
-    variable queue:int StationsWithAssets
-    variable index:int IgnoreTheseStations
+    variable queue:int64 StationsWithAssets
+    variable index:int64 IgnoreTheseStations
     
     method Initialize()
     {
@@ -25,7 +25,7 @@ objectdef obj_Assets
     {
         variable index:int64 AnIndex
         variable iterator  AnIterator
-        variable int       tempInt
+        variable int64       tempInt
         
         StationsWithAssets:Clear[]
         ;;; WHY WHY WHY DOESN'T THIS WORK??? Me:DoGetStationsWithAssets[AnIndex]
@@ -44,13 +44,13 @@ objectdef obj_Assets
         UI:UpdateConsole["Assets:UpdateList found ${StationsWithAssets.Used} stations with assets."]
     }
     
-    method IgnoreStation(int stationID)
+    method IgnoreStation(int64 stationID)
     {
         IgnoreTheseStations:Insert[${stationID}]
         UI:UpdateConsole["Assets module will ignore ${EVE.GetLocationNameByID[${stationID}]}."]
     }
     
-    member:bool IsIgnored(int stationID)
+    member:bool IsIgnored(int64 stationID)
     {
         variable iterator AnIterator
         
@@ -97,7 +97,7 @@ objectdef obj_Assets
         return ${nextStatonID}
     }
     
-    member:string SolarSystem(int stationID)
+    member:string SolarSystem(int64 stationID)
     {
 		variable string tmp_string
 		variable int    spaces

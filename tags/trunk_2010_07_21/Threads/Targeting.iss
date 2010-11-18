@@ -9,7 +9,7 @@
 */
 objectdef obj_QueueTarget
 {
-	variable int EntityID
+	variable int64 EntityID
 	variable int TargetType
 	variable int Priority
 
@@ -19,7 +19,7 @@ objectdef obj_QueueTarget
 	; Are we currently targeting this?
 	variable bool Targeting = FALSE
 
-	method Initialize(int _EntityID, int _TargetType=0, int _Priority=0, bool _Blocker=FALSE, bool _Targeting=FALSE)
+	method Initialize(int64 _EntityID, int _TargetType=0, int _Priority=0, bool _Blocker=FALSE, bool _Targeting=FALSE)
 	{
 		EntityID:Set[${_EntityID}]
 		TargetType:Set[${_TargetType}]
@@ -86,7 +86,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 		return ${Math.Calc[${TargetQueue.Used} + ${MandatoryQueue.Used}]}
 	}
 
-	member:bool IsQueued(int EntityID)
+	member:bool IsQueued(int64 EntityID)
 	{
 		variable iterator Target
 
@@ -110,7 +110,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 		return FALSE
 	}
 
-	member:bool IsMandatoryQueued(int EntityID)
+	member:bool IsMandatoryQueued(int64 EntityID)
 	{
 		variable iterator Target
 
@@ -135,7 +135,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 		return ${This.Counter_TargetingJammed} > 40
 	}
 
-	method TargetEntity(int EntityID)
+	method TargetEntity(int64 EntityID)
 	{
 		if ${This.TargetCount} >= ${Ship.MaxLockedTargets}
 		{
@@ -251,7 +251,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 	}
 
 
-	method Queue(int EntityID, int Priority, int TargetType, bool Mandatory=FALSE, bool Blocker=FALSE)
+	method Queue(int64 EntityID, int Priority, int TargetType, bool Mandatory=FALSE, bool Blocker=FALSE)
 	{
 		if ${EntityID} == 0
 		{
@@ -348,7 +348,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 		return
 	}
 
-	method Remove(int EntityID)
+	method Remove(int64 EntityID)
 	{
 		variable int Pos
 		for ( Pos:Set[1]; ${Pos} <= ${MandatoryQueue.Used}; Pos:Inc )
@@ -399,7 +399,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 		This.Running:Set[FALSE]
 	}
 
-	member:int DistanceFromQueue(int EntityID, int MaxDistanceWanted=2147483647)
+	member:int DistanceFromQueue(int64 EntityID, int MaxDistanceWanted=2147483647)
 	{
 		variable iterator Target
 		variable int MaxDistance

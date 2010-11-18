@@ -318,7 +318,7 @@ objectdef obj_Cargo
 			wait 15
 
 			variable index:item ContainerContents
-			variable index:int  anIntIndex
+			variable index:int64  anIntIndex
 			variable iterator   anIterator
 
 			Container:DoGetCargo[ContainerContents]
@@ -921,7 +921,7 @@ objectdef obj_Cargo
 	  call This.CloseHolds
    }
 
-	function TransferSpawnContainerCargoToShip(int entityID)
+	function TransferSpawnContainerCargoToShip(int64 entityID)
 	{
 	}
 }

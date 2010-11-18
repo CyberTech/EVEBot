@@ -62,7 +62,7 @@ objectdef obj_Hauler
 		/* the base obj_Hauler class does not use events */
 	}
 
-	member:int NearestMatchingJetCan(int id)
+	member:int64 NearestMatchingJetCan(int64 id)
 	{
 		variable index:int64 JetCan
 		variable int JetCanCount
@@ -93,7 +93,7 @@ objectdef obj_Hauler
 		return 0	/* no can found */
 	}
 
-	member:int OldNearestMatchingJetCan()
+	member:int64 OldNearestMatchingJetCan()
 	{
 		variable index:int64 JetCan
 		variable int JetCanCount
@@ -610,7 +610,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		}
 	}
 
-	method BuildJetCanList(int id)
+	method BuildJetCanList(int64 id)
 	{
 		variable index:entity cans
 		variable int idx

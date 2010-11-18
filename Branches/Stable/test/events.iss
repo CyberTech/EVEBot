@@ -1,6 +1,6 @@
 variable bool g_Quit = FALSE
 
-atom EVEBot_Miner_Full_Executed(int id, string name)
+atom EVEBot_Miner_Full_Executed(int64 id, string name)
 {
 	echo "EVEBot_Miner_Full_Executed -- ${id} -- ${name}"
 	

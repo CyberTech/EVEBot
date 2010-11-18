@@ -62,9 +62,9 @@ objectdef obj_Hauler
 		/* the base obj_Hauler class does not use events */
 	}
 
-	member:int NearestMatchingJetCan(int id)
+	member:int64 NearestMatchingJetCan(int64 id)
 	{
-		variable index:int JetCan
+		variable index:int64 JetCan
 		variable int JetCanCount
 		variable int JetCanCounter
 		variable string tempString
@@ -93,9 +93,9 @@ objectdef obj_Hauler
 		return 0	/* no can found */
 	}
 
-	member:int OldNearestMatchingJetCan()
+	member:int64 OldNearestMatchingJetCan()
 	{
-		variable index:int JetCan
+		variable index:int64 JetCan
 		variable int JetCanCount
 		variable int JetCanCounter
 		variable string tempString
@@ -308,7 +308,7 @@ objectdef obj_MinerHauler inherits obj_Hauler
 		}
 	}
 
-	function LootEntity(int id, int leave = 0)
+	function LootEntity(int64 id, int leave = 0)
 	{
 		variable index:item ContainerCargo
 		variable iterator Cargo
@@ -452,7 +452,7 @@ objectdef obj_MinerHauler inherits obj_Hauler
 
 	function WarpToFleetMemberAndLoot(int charID)
 	{
-		variable int id = 0
+		variable int int64 = 0
 
 		if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
 		{	/* if we are already full ignore this request */
@@ -603,7 +603,7 @@ objectdef obj_MinerHauler inherits obj_Hauler
 		}
 	}
 
-	method BuildJetCanList(int id)
+	method BuildJetCanList(int64 id)
 	{
 		variable index:entity cans
 		variable int idx

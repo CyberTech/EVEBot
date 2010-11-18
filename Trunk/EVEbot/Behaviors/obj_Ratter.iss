@@ -22,7 +22,7 @@ objectdef obj_Ratter
 	variable int Rat_CacheID
 	variable iterator Rat_CacheIterator
 
-	variable index:int DoNotKillList
+	variable index:int64 DoNotKillList
 
 	/* Used for calculating battleship chain values */
 	variable obj_Targets_Rats RatCalculator
@@ -271,7 +271,7 @@ objectdef obj_Ratter
 				{
 					UI:UpdateConsole["obj_Ratter: We have a priority target: ${This.Rat_CacheIterator.Value.Name}."]
 					bHavePriorityTarget:Set[TRUE]
-					/* 	method Queue(int EntityID, int Priority, int TargetType, bool Mandatory=FALSE, bool Blocker=FALSE) */
+					/* 	method Queue(int64 EntityID, int Priority, int TargetType, bool Mandatory=FALSE, bool Blocker=FALSE) */
 					/* Queue it mandatory so we make sure it dies. */
 					UI:UpdateConsole["obj_Ratter: Queueing priority target: ${This.Rat_CacheIterator.Value.Name}"]
 					Targeting:Queue[${This.Rat_CacheIterator.Value.ID},0,${This.Rat_CacheIterator.Value.TypeID},TRUE,FALSE]
@@ -410,9 +410,9 @@ objectdef obj_Ratter
 		return FALSE
 	}
 
-	/* bool IsDoNotKill(int entityID):
+	/* bool IsDoNotKill(int64 entityID):
 	return true if given entity ID is on our do not kill list, otherwise return false */
-	member:bool IsDoNotKill(int entityID)
+	member:bool IsDoNotKill(int64 entityID)
 	{
 		variable iterator DoNotKillIterator
 		DoNotKillList:GetIterator[DoNotKillIterator]

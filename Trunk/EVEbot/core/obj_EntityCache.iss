@@ -237,7 +237,7 @@ objectdef obj_EntityCache inherits obj_BaseClass
 		return ${This.EntityFilters.Get[${FilterID}].Entities.Used}
 	}
 
-	member:int NearestByName(int FilterID, string EntityName)
+	member:int64 NearestByName(int FilterID, string EntityName)
 	{
 		variable iterator EntityIterator
 ; TODO - replace this so it calls proper query

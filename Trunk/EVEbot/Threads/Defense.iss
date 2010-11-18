@@ -95,7 +95,7 @@ objectdef obj_Defense
 					if !${Targeting.IsMandatoryQueued[${Entity_CacheIterator.Value.ID}]} && \
 						${Entity_CacheIterator.Value.IsWarpScramblingMe}
 					{
-						;method Queue(int EntityID, int Priority, int TargetType, bool Mandatory=FALSE, bool Blocker=FALSE)
+						;method Queue(int64 EntityID, int Priority, int TargetType, bool Mandatory=FALSE, bool Blocker=FALSE)
 						UI:UpdateConsole["Defense: Targeting warp scrambling rat ${Entity_CacheIterator.Value.Name} ${Entity_CacheIterator.Value.TypeID}!",LOG_CRITICAL]
 						Targeting:Queue[${Entity_CacheIterator.Value.ID},0,${Entity_CacheIterator.Value.TypeID},TRUE]
 					}

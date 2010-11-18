@@ -51,11 +51,11 @@ objectdef obj_Targets
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
-	variable index:int TargetQueue
-	variable index:int TargetQueueOverride
+	variable index:int64 TargetQueue
+	variable index:int64 TargetQueueOverride
 
-	variable index:int DefensiveQueue
-	variable index:int DefensiveQueueOverride
+	variable index:int64 DefensiveQueue
+	variable index:int64 DefensiveQueueOverride
 
 	variable int ReservedDefensiveSlots = 2
 

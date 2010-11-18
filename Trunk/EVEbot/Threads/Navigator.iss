@@ -123,7 +123,7 @@ objectdef obj_Navigator
 		This.ActionState:Set["STOP"]
 	}
 	;removed default entityID , this function should not ever work unless you give it an entityid
-	method Approach(int EntityID, int Distance=DOCKING_RANGE)
+	method Approach(int64 EntityID, int Distance=DOCKING_RANGE)
 	{
 		;If entity exists
 		if ${Entity[${EntityID}](exists)}

@@ -522,7 +522,7 @@ objectdef obj_MissionCombat
 			while ${amIterator:Next(exists)}
 		}
 	}
-	member:int FindID(string entityName,int CatID = CATEGORYID_ENTITY)
+	member:int64 FindID(string entityName,int CatID = CATEGORYID_ENTITY)
 	{
 		variable index:entity targetIndex
 		variable iterator     targetIterator

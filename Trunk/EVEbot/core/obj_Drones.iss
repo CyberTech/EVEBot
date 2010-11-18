@@ -15,7 +15,7 @@ objectdef obj_Drones
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 3
 
-	variable index:int ActiveDroneIDList
+	variable index:int64 ActiveDroneIDList
 	variable int CategoryID_Drones = 18
 	variable int LaunchedDrones = 0
 	variable int WaitingForDrones = 0
@@ -26,13 +26,13 @@ objectdef obj_Drones
 
 	variable collection:float StoredDroneArmor
 	variable collection:float StoredDroneShield
-	variable index:int	RecalledDrones
+	variable index:int64	RecalledDrones
 	variable iterator RecalledDroneIterator
 
 	; All Drones
 	;variable collection:int DroneCollection
 
-	variable index:int ActiveDroneIDs
+	variable index:int64 ActiveDroneIDs
 	variable iterator ActiveDroneID
 	variable index:activedrone ActiveDrones
 	variable iterator ActiveDrone
@@ -40,23 +40,23 @@ objectdef obj_Drones
 	variable iterator DroneInBay
 
 	; Initialize Specific Drone Lists
-	variable index:int SniperDrones
+	variable index:int64 SniperDrones
 	variable iterator SniperDrone
-	variable index:int SentryDrones
+	variable index:int64 SentryDrones
 	variable iterator SentryDrone
-	variable index:int HeavyDrones
+	variable index:int64 HeavyDrones
 	variable iterator HeavyDrone
-	variable index:int MediumDrones
+	variable index:int64 MediumDrones
 	variable iterator MediumDrones
 
 	; Specific Drone TypeID Lists
-	variable index:int SniperDroneTypeIDs
+	variable index:int64 SniperDroneTypeIDs
 	variable iterator SniperDroneTypeID
-	variable index:int SentryDroneTypeIDs
+	variable index:int64 SentryDroneTypeIDs
 	variable iterator SentryDroneTypeID
-	variable index:int HeavyDroneTypeIDs
+	variable index:int64 HeavyDroneTypeIDs
 	variable iterator HeavyDroneTypeID
-	variable index:int MediumDroneTypeIDs
+	variable index:int64 MediumDroneTypeIDs
 	variable iterator MediumDroneTypeID
 
 	method Initialize()
@@ -219,7 +219,7 @@ objectdef obj_Drones
 		}
 	}
 
-	member DroneIsRecalled(int DroneID)
+	member DroneIsRecalled(int64 DroneID)
 	{
 		/* Get an iterator to the recalled drones */
 		RecalledDrones:GetIterator[RecalledDroneIterator]
@@ -437,8 +437,8 @@ objectdef obj_Drones
 			variable index:activedrone ActiveDroneList
 			Me:DoGetActiveDrones[ActiveDroneList]
 			ActiveDroneList:GetIterator[DroneIterator]
-;			variable index:int returnIndex
-			variable index:int engageIndex
+;			variable index:int64 returnIndex
+			variable index:int64 engageIndex
 
 			if ${DroneIterator:First(exists)}
 			{
@@ -493,13 +493,13 @@ objectdef obj_Drones
 		variable int i = 1
 
 		; Specific Drone Lists
-		variable index:int SniperDrones
+		variable index:int64 SniperDrones
 		variable iterator SniperDrone
-		variable index:int SentryDrones
+		variable index:int64 SentryDrones
 		variable iterator SentryDrone
-		variable index:int HeavyDrones
+		variable index:int64 HeavyDrones
 		variable iterator HeavyDrone
-		variable index:int MediumDrones
+		variable index:int64 MediumDrones
 		variable iterator MediumDrones
 
 		do
@@ -644,7 +644,7 @@ objectdef obj_Drones
 
 	method DroneSafetyScoop()
 	{
-		variable index:int ScoopedDrones
+		variable index:int64 ScoopedDrones
 
 		ActiveDroneIDs:GetIterator[ActiveDroneID]
 		if ${ActiveDroneID:First(exists)}

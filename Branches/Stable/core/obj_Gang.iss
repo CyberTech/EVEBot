@@ -56,7 +56,7 @@ objectdef obj_Fleet
 		;echo DEBUG: Populating Fleet member list:: ${FleetMemberCount} members total
 	}
 
-	member:fleetmember CharIdToFleetMember( int charID )
+	member:fleetmember CharIdToFleetMember(int charID)
 	{
 		variable fleetmember ReturnValue
 		ReturnValue:Set[NULL]

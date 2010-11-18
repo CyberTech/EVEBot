@@ -13,7 +13,7 @@
 
 objectdef obj_Entity
 {
-	variable int EntityID
+	variable int64 EntityID
 	variable string Name
 	variable int TypeID
 	variable int GroupID
@@ -23,7 +23,7 @@ objectdef obj_Entity
 	; ORE Density - 1 regular, 2 medium, 3 dense
 	variable int ORE_Density
 
-	method Initialize(int _EntityID, string _Name, int _TypeID, int _GroupID, float _Distance, int _ORE_Density = 0)
+	method Initialize(int64 _EntityID, string _Name, int _TypeID, int _GroupID, float _Distance, int _ORE_Density = 0)
 	{
 		This.EntityID:Set[${_EntityID}]
 		This.Name:Set["${_Name}"]
@@ -164,7 +164,7 @@ objectdef obj_EntityCache inherits BaseClass
 					{
 						case NONE
 						{
-							;method Initialize(int _EntityID, string _Name, int _TypeID, int _GroupID, float _Distance, int _ORE_Density = 0)
+							;method Initialize(int64 _EntityID, string _Name, int _TypeID, int _GroupID, float _Distance, int _ORE_Density = 0)
 
 							CachedEntities:Insert[${EntityIterator.Value.ID}, "${Name}", ${EntityIterator.Value.TypeID}, ${EntityIterator.Value.GroupID}, ${EntityIterator.Value.Distance}, ${ORE_Density}]
 						}
