@@ -37,6 +37,20 @@ objectdef obj_EVEBotUI
 		ui -reload interface/evebotgui.xml
 		This:WriteQueueToLog
 		This.Reloaded:Set[TRUE]
+
+		variable iterator BotModule
+		BotModules:GetIterator[BotModule]
+
+		if ${BotModule:First(exists)}
+		{
+			UIElement[EveBot].FindUsableChild["EVEBotMode","combobox"]:ClearItems
+			do
+			{
+				UIElement[EveBot].FindUsableChild["EVEBotMode","combobox"]:AddItem["${BotModule.Value}"]
+			}
+			while ${BotModule:Next(exists)}
+			UIElement[EveBot].FindUsableChild["EVEBotMode","combobox"].ItemByText[${Config.Common.BotMode}]:Select
+		}
 	}
 
 	method Shutdown()

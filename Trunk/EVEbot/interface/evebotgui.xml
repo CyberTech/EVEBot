@@ -178,11 +178,7 @@
 							<FullHeight>200</FullHeight>
 							<ButtonWidth>20</ButtonWidth>
 							<Items>
-								<Item Value='1'>Miner</Item>
-								<Item Value='2'>MinerHauler</Item>
-								<Item Value='3'>Freighter</Item>
-								<Item Value='4'>Ratter</Item>
-								<Item Value='5'>Missioneer</Item>
+								<Item Value='1'>Idle</Item>
 							</Items>
 							<OnSelect>
 								Config.Common:BotMode[${This.SelectedItem.Text}]

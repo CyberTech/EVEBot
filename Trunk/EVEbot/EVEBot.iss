@@ -53,8 +53,8 @@
 /* Custom Includes */
 #includeoptional Behaviors/UserDefined/includes.iss
 
-/* Custom Includes  - Custom directory is assumed to be an external SVN repository */
-#includeoptional Behaviors/Custom/includes.iss
+/* Custom Includes  - External directory is assumed to be an external SVN repository */
+#includeoptional Behaviors/External/includes.iss
 
 function atexit()
 {
@@ -140,7 +140,7 @@ function main()
 	declarevariable Market obj_Market global
 	declarevariable Autopilot obj_Autopilot global
 	declarevariable Callback obj_Callback global
-
+	
 	declarevariable BotModules index:string global
 	declarevariable GlobalVariableIterator iterator global
 
@@ -152,8 +152,8 @@ function main()
 	; User Defined Behavior Objects
 	call LoadBehaviors "User Defined" "${Script.CurrentDirectory}/\Behaviors/\UserDefined/\*.iss"
 
-	; Custom Behavior Objects (Custom directory is assumed to be from an external repository, it's not part of EVEBot)
-	call LoadBehaviors "Custom" "${Script.CurrentDirectory}/\Behaviors/\Custom/\*.iss"
+	; Custom Behavior Objects (External directory is assumed to be from an external repository, it's not part of EVEBot)
+	call LoadBehaviors "External" "${Script.CurrentDirectory}/\Behaviors/\External/\*.iss"
 
 	variable iterator BotModule
 	BotModules:GetIterator[BotModule]
@@ -197,18 +197,6 @@ function main()
 	EVEBot:SetVersion[${VersionNum}]
 
 	UI:Reload
-
-	if ${BotModule:First(exists)}
-	{
-		UIElement[EveBot].FindUsableChild["EVEBotMode","combobox"]:ClearItems
-		do
-		{
-			UIElement[EveBot].FindUsableChild["EVEBotMode","combobox"]:AddItem["${BotModule.Value}"]
-		}
-		while ${BotModule:Next(exists)}
-		UIElement[EveBot].FindUsableChild["EVEBotMode","combobox"].ItemByText[${Config.Common.BotMode}]:Select
-
-	}
 
 #if USE_ISXIM
 	call ChatIRC.Connect
