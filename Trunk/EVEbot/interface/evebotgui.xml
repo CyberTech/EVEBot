@@ -82,7 +82,7 @@
 							<Y>10</Y>
 							<Width>100</Width>
 							<Height>20</Height>
-							<Text>${UI.Runtime}</Text>
+							<Text>${EVEBot.Runtime}</Text>
 						</Text>
 						<text name='state' template='EVESkin.Font.Description'>
 							<X>10</X>
@@ -96,7 +96,7 @@
 							<Y>25</Y>
 							<Width>100</Width>
 							<Height>20</Height>
-							<text>${Config.Common.BotMode}</text>
+							<text>${Config.Common.Behavior}</text>
 						</text>
 						<text name='Trips' template='EVESkin.Font.Description'>
 							<X>10</X>
@@ -163,14 +163,14 @@
 					</Tab>
 
 					<Tab Name='Main'>
-						<Text name='EVEBotModeLabel'>
+						<Text name='BehaviorLabel'>
 							<X>10</X>
 							<Y>10</Y>
 							<Width>70</Width>
 							<Height>10</Height>
-							<Text>Bot Mode</Text>
+							<Text>Behavior</Text>
 						</Text>
-						<combobox name='EVEBotMode'>
+						<combobox name='Behavior'>
 							<X>80</X>
 							<Y>10</Y>
 							<Width>250</Width>
@@ -181,11 +181,8 @@
 								<Item Value='1'>Idle</Item>
 							</Items>
 							<OnSelect>
-								Config.Common:BotMode[${This.SelectedItem.Text}]
+								Config.Common:Behavior[${This.SelectedItem.Text}]
 							</OnSelect>
-							<OnLoad>
-								This.ItemByText[${Config.Common.BotMode}]:Select
-							</OnLoad>
 						</combobox>
 						<Textentry name='MinimumDronesInBay'>
 							<X>10</X>
@@ -425,7 +422,7 @@
 							<Height>20</Height>
 							<Width>100</Width>
 							<Text>Enable Local Chat Logging</Text>
-							<AutoTooltip>Enable the display of local chat in EveBot.</AutoTooltip>
+							<AutoTooltip>Enable the logging of local chat</AutoTooltip>
 							<OnLoad>
 								if ${Config.Common.EnableChatLogging}
 								{
@@ -632,7 +629,7 @@
 							</OnLoad>
 							<OnChange>
 								Config.Miner:AvoidPlayerRange[${Int[${This.Value}]}]
-								UIElement[AvoidPlayerRangeValue@Miner@EvEBotOptionsTab@EVEBot]:SetText["${EVEBot.MetersToKM_Str[${This.Value}]}"]
+								UIElement[AvoidPlayerRangeValue@Miner@EVEBotOptionsTab@EVEBot]:SetText["${EVEBot.MetersToKM_Str[${This.Value}]}"]
 							</OnChange>
 						</slider>
 						<Text name='AvoidPlayerRangeValue'>
@@ -643,7 +640,7 @@
 							<Text>0km</Text>
 							<AutoTooltip>Minimum distance we will keep other players at</AutoTooltip>
 							<OnLoad>
-								This:SetText["${EVEBot.MetersToKM_Str[${UIElement[AvoidPlayerRange@Miner@EvEBotOptionsTab@EVEBot].Value}]}"]
+								This:SetText["${EVEBot.MetersToKM_Str[${UIElement[AvoidPlayerRange@Miner@EVEBotOptionsTab@EVEBot].Value}]}"]
 							</OnLoad>
 						</Text>
 						<Text name='DeliveryLocationTypeLabel'>
@@ -826,11 +823,11 @@
 							<Range>100</Range>
 							<OnLoad>
 								This:SetValue[${Config.Combat.MinimumArmorPct}]
-								UIElement[MinArmorPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Armor: ${This.Value}"]
+								UIElement[MinArmorPctLabel@Combat@EVEBotOptionsTab@EVEBot]:SetText["Minimum Armor: ${This.Value}"]
 							</OnLoad>
 							<OnChange>
 								Config.Combat:MinimumArmorPct[${Int[${This.Value}]}]
-								UIElement[MinArmorPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Armor: ${This.Value}"]
+								UIElement[MinArmorPctLabel@Combat@EVEBotOptionsTab@EVEBot]:SetText["Minimum Armor: ${This.Value}"]
 							</OnChange>
 						</slider>
 						<Text name='MinArmorPctLabel'>
@@ -841,7 +838,7 @@
 							<Text>Minimum Armor: 0</Text>
 							<AutoTooltip>Lowest armor percent allowed before fleeing</AutoTooltip>
 							<OnLoad>
-								This:SetText["Minimum Armor: ${UIElement[MinArmorPct@Combat@EvEBotOptionsTab@EVEBot].Value}"]
+								This:SetText["Minimum Armor: ${UIElement[MinArmorPct@Combat@EVEBotOptionsTab@EVEBot].Value}"]
 							</OnLoad>
 						</Text>
 						<slider name='MinShieldPct'>
@@ -852,11 +849,11 @@
 							<Range>100</Range>
 							<OnLoad>
 								This:SetValue[${Config.Combat.MinimumShieldPct}]
-								UIElement[MinShieldPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Shield: ${This.Value}"]
+								UIElement[MinShieldPctLabel@Combat@EVEBotOptionsTab@EVEBot]:SetText["Minimum Shield: ${This.Value}"]
 							</OnLoad>
 							<OnChange>
 								Config.Combat:MinimumShieldPct[${Int[${This.Value}]}]
-								UIElement[MinShieldPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Shield: ${This.Value}"]
+								UIElement[MinShieldPctLabel@Combat@EVEBotOptionsTab@EVEBot]:SetText["Minimum Shield: ${This.Value}"]
 							</OnChange>
 						</slider>
 						<Text name='MinShieldPctLabel'>
@@ -867,7 +864,7 @@
 							<Text>Minimum Shield: 0</Text>
 							<AutoTooltip>Lowest Shield Pct Allowed before Running</AutoTooltip>
 							<OnLoad>
-								This:SetText["Minimum Shield: ${UIElement[MinShieldPct@Combat@EvEBotOptionsTab@EVEBot].Value}"]
+								This:SetText["Minimum Shield: ${UIElement[MinShieldPct@Combat@EVEBotOptionsTab@EVEBot].Value}"]
 							</OnLoad>
 						</Text>
 						<slider name='MinCapPct'>
@@ -878,11 +875,11 @@
 							<Range>100</Range>
 							<OnLoad>
 								This:SetValue[${Config.Combat.MinimumCapPct}]
-								UIElement[MinCapPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Cap: ${This.Value}"]
+								UIElement[MinCapPctLabel@Combat@EVEBotOptionsTab@EVEBot]:SetText["Minimum Cap: ${This.Value}"]
 							</OnLoad>
 							<OnChange>
 								Config.Combat:MinimumCapPct[${Int[${This.Value}]}]
-								UIElement[MinCapPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Cap: ${This.Value}"]
+								UIElement[MinCapPctLabel@Combat@EVEBotOptionsTab@EVEBot]:SetText["Minimum Cap: ${This.Value}"]
 							</OnChange>
 						</slider>
 						<Text name='MinCapPctLabel'>
@@ -893,7 +890,7 @@
 							<Text>Minimum Cap: 0</Text>
 							<AutoTooltip>Lowest capacitor percent allowed before fleeing</AutoTooltip>
 							<OnLoad>
-								This:SetText["Minimum Cap: ${UIElement[MinCapPct@Combat@EvEBotOptionsTab@EVEBot].Value}"]
+								This:SetText["Minimum Cap: ${UIElement[MinCapPct@Combat@EVEBotOptionsTab@EVEBot].Value}"]
 							</OnLoad>
 						</Text>
 						<checkbox name='cbAlwaysShieldBoost'>

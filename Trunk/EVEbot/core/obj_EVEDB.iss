@@ -20,7 +20,7 @@ objectdef obj_EVEDB_Spawns
 		LavishSettings[${This.SET_NAME}]:Remove		
 		LavishSettings:Import[${CONFIG_FILE}]
 
-		UI:UpdateConsole["obj_EVEDB_Spawns: Initialized", LOG_MINOR]
+		Logger:Log["obj_EVEDB_Spawns: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -47,7 +47,7 @@ objectdef obj_EVEDB_Stations
 		LavishSettings[${This.SET_NAME}]:Remove
 		LavishSettings:Import[${CONFIG_FILE}]
 
-		UI:UpdateConsole["obj_EVEDB_Stations: Initialized", LOG_MINOR]
+		Logger:Log["obj_EVEDB_Stations: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()

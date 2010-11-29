@@ -6,8 +6,9 @@
 #include core/defines.iss
 
 /* Base Requirements  */
-#include core/obj_EVEBot.iss
+#include core/obj_Logger.iss
 #include core/obj_Configuration.iss
+#include core/obj_EVEBot.iss
 
 /* Core Library (Non-EVE Related code) */
 #include core/Lib/obj_BaseClass.iss
@@ -75,7 +76,7 @@ function LoadBehaviors(string Label, string Path)
 		{
 			obj_name:Set[${file_list.File[${count}].Filename.Left[-4]}]
 			var_name:Set[${obj_name.Right[-4]}]
-			UI:UpdateConsole["Loading ${Label} behavior ${var_name}", LOG_DEBUG]
+			Logger:Log["Loading ${Label} behavior ${var_name}", LOG_DEBUG]
 			declarevariable ${var_name} ${obj_name} global
 		}
 	}
@@ -98,10 +99,12 @@ function main()
 	/* All variables that would normally be defined script scope should be defined global scope to simplify threads */
 
 	/* Script-Defined Support Objects */
-	declarevariable EVEBot obj_EVEBot global
-	declarevariable UI obj_EVEBotUI global
+	declarevariable Logger obj_Logger global
 	declarevariable BaseConfig obj_Configuration_BaseConfig global
 	declarevariable Config obj_Configuration global
+	declarevariable EVEBot obj_EVEBot global
+	declarevariable UI obj_EVEBotUI global
+
 	declarevariable Whitelist obj_Config_Whitelist global
 	declarevariable Blacklist obj_Config_Blacklist global
 	declarevariable EntityCache obj_EntityCache global
@@ -141,7 +144,6 @@ function main()
 	declarevariable Autopilot obj_Autopilot global
 	declarevariable Callback obj_Callback global
 	
-	declarevariable BotModules index:string global
 	declarevariable GlobalVariableIterator iterator global
 
 	echo "${Time} EVEBot: Loading Behavior Modules..."
@@ -154,9 +156,6 @@ function main()
 
 	; Custom Behavior Objects (External directory is assumed to be from an external repository, it's not part of EVEBot)
 	call LoadBehaviors "External" "${Script.CurrentDirectory}/\Behaviors/\External/\*.iss"
-
-	variable iterator BotModule
-	BotModules:GetIterator[BotModule]
 
 	echo "${Time} EVEBot: Starting Threaded Modules..."
 
@@ -202,7 +201,7 @@ function main()
 	call ChatIRC.Connect
 #endif
 
-	UI:UpdateConsole["-=Paused: Press Run-="]
+	Logger:Log["-=Paused: Press Run-="]
 	Turbo 100
 	Script:Pause
 
@@ -213,16 +212,7 @@ function main()
 
 	while TRUE
 	{
-		if ${BotModule:First(exists)}
-		do
-		{
-			while ${EVEBot.Paused}
-			{
-				wait 1
-			}
-			call ${BotModule.Value}.ProcessState
-			waitframe
-		}
-		while ${BotModule:Next(exists)}
+		call ${Config.Common.Behavior}.ProcessState
+		wait 1
 	}
 }

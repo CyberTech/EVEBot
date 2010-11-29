@@ -42,34 +42,23 @@ objectdef obj_Miner
 
 	method Initialize()
 	{
-		BotModules:Insert["Miner"]
+		EVEBot.BehaviorList:Insert["Miner"]
 		Defense.Option_RunIfTargetJammed:Set[TRUE]
 
 		This.TripStartTime:Set[${Time.Timestamp}]
-		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-		UI:UpdateConsole["${This.ObjectName}: Initialized", LOG_MINOR]
+		Logger:Log["${This.ObjectName}: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
 	{
-		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}
 
 	method Pulse()
 	{
-		if ${Config.Common.BotMode.NotEqual[Miner]}
-		{
-			AsteroidCache.Enabled:Set[FALSE]
-			return
-		}
-
 		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			AsteroidCache.Enabled:Set[TRUE]
-			if !${EVEBot.Paused}
-			{
-				This:SetState[]
-			}
+			This:SetState[]
 
 			This.NextPulse:Set[${Time.Timestamp}]
 			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
@@ -79,7 +68,7 @@ objectdef obj_Miner
 
 	function ProcessState()
 	{
-		if !${Config.Common.BotMode.Equal[Miner]}
+		if ${Config.Common.Behavior.NotEqual[Miner]}
 		{
 			return
 		}
@@ -124,7 +113,7 @@ objectdef obj_Miner
 				switch ${Config.Miner.DeliveryLocationType}
 				{
 					case Station
-						UI:UpdateConsole["Delivering ore to station"]
+						Logger:Log["Delivering ore to station"]
 						; Gets info about the crystals currently loaded
 						call Ship.SetActiveCrystals
 
@@ -138,31 +127,31 @@ objectdef obj_Miner
 						}
 						break
 					case Hangar Array
-						UI:UpdateConsole["Delivering ore to hangar array"]
+						Logger:Log["Delivering ore to hangar array"]
 						call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
 						call Cargo.TransferOreToCorpHangarArray
 						break
 					case Assembly Array
-						UI:UpdateConsole["Delivering ore to assembly array"]
+						Logger:Log["Delivering ore to assembly array"]
 						call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
 						call Cargo.TransferOreToAssemblyArray
 						break
 					case Jetcan
-						UI:UpdateConsole["Delivering ore to jetcan"]
+						Logger:Log["Delivering ore to jetcan"]
 						call Cargo.TransferOreToJetCan
 						This:NotifyHaulers[]
 						break
 					default
-						UI:UpdateConsole["ERROR: Delivery Location Type ${Config.Miner.DeliveryLocationType} unknown"]
+						Logger:Log["ERROR: Delivery Location Type ${Config.Miner.DeliveryLocationType} unknown"]
 						EVEBot.ReturnToStation:Set[TRUE]
 						break
 				}
 				break
 			variablecase ${STATE_ERROR}
-				UI:UpdateConsole["CurrentState is ERROR"]
+				Logger:Log["CurrentState is ERROR"]
 				break
 			default
-				UI:UpdateConsole["Error: CurrentState is unknown value ${This.CurrentState}"]
+				Logger:Log["Error: CurrentState is unknown value ${This.CurrentState}"]
 				break
 		}
 	}
@@ -202,7 +191,7 @@ objectdef obj_Miner
 
 		if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]}
 		{
-			UI:UpdateConsole["Avoiding player: Changing Belts"]
+			Logger:Log["Avoiding player: Changing Belts"]
 			This.CurrentState:Set[${STATE_CHANGE_BELT}]
 			return
 		}
@@ -227,11 +216,11 @@ objectdef obj_Miner
 		{
 			if !${BeltBookmarks.AtBelt}
 			{
-				UI:UpdateConsole["Bookmarked Belts: Count: ${BeltBookmarks.Count} Empty: ${BeltBookmarks.EmptyBelts.Used}"]
+				Logger:Log["Bookmarked Belts: Count: ${BeltBookmarks.Count} Empty: ${BeltBookmarks.EmptyBelts.Used}"]
 				if ${BeltBookmarks.Count} == ${BeltBookmarks.EmptyBelts.Used}
 				{
 					; TODO - CyberTech: Add option to switch to non-bookmark use in this case
-					UI:UpdateConsole["All Belt Bookmarks marked empty, aborting"]
+					Logger:Log["All Belt Bookmarks marked empty, aborting"]
 					This.CurrentState:Set[${STATE_RETURN_TO_STATION}]
 					return
 				}
@@ -244,10 +233,10 @@ objectdef obj_Miner
 		{
 			if !${Belts.AtBelt}
 			{
-				UI:UpdateConsole["Normal Belts: Count: ${Belts.Count} Empty: ${Belts.EmptyBelts.Used}"]
+				Logger:Log["Normal Belts: Count: ${Belts.Count} Empty: ${Belts.EmptyBelts.Used}"]
 				if ${Belts.Count} == ${Belts.EmptyBelts.Used}
 				{
-					UI:UpdateConsole["All Belts marked empty, aborting"]
+					Logger:Log["All Belts marked empty, aborting"]
 					This.CurrentState:Set[${STATE_RETURN_TO_STATION}]
 					return
 				}
@@ -259,7 +248,7 @@ objectdef obj_Miner
 
 		if ${This.AsteroidCacheInvalid} && (${BeltBookmarks.AtBelt} || ${Belts.AtBelt})
 		{
-			UI:UpdateConsole["${This.ObjectName}: Forcing asteroid cache update."]
+			Logger:Log["${This.ObjectName}: Forcing asteroid cache update."]
 
 			; EntityCache update will happen on the next pulse.
 			AsteroidCache:ForceUpdate[]
@@ -271,7 +260,7 @@ objectdef obj_Miner
 
 		if ${Asteroids.Count} == 0
 		{
-			UI:UpdateConsole["Belt is empty (or nothing we want), moving"]
+			Logger:Log["Belt is empty (or nothing we want), moving"]
 		 	This.CurrentState:Set[${STATE_CHANGE_BELT}]
 			return
 		}
@@ -296,8 +285,8 @@ objectdef obj_Miner
 		variable string Minutes = ${Math.Calc[(${Script.RunningTime}/1000/60)%60].Int.LeadingZeroes[2]}
 		variable string Seconds = ${Math.Calc[(${Script.RunningTime}/1000)%60].Int.LeadingZeroes[2]}
 
-		UI:UpdateStatStatus["Run ${This.TotalTrips} Done - Took ${ISXEVE.SecsToString[${This.PreviousTripSeconds}]}"]
-		UI:UpdateStatStatus["Total Run Time: ${Hours}:${Minutes}:${Seconds} - Average Run Time: ${ISXEVE.SecsToString[${Math.Calc[${This.TotalTripSeconds}/${This.TotalTrips}]}]}"]
+		Logger:UpdateStatStatus["Run ${This.TotalTrips} Done - Took ${ISXEVE.SecsToString[${This.PreviousTripSeconds}]}"]
+		Logger:UpdateStatStatus["Total Run Time: ${Hours}:${Minutes}:${Seconds} - Average Run Time: ${ISXEVE.SecsToString[${Math.Calc[${This.TotalTripSeconds}/${This.TotalTrips}]}]}"]
 	}
 
 	member:bool ReadyToMine()
@@ -334,7 +323,7 @@ objectdef obj_Miner
 		if ${Targeting.IsTargetingJammed} &&  \
 			${Ship.Drones.DronesInSpace} == 0
 		{
-			UI:UpdateConsole["Warning: Ship target jammed, no drones available. Changing Belts"]
+			Logger:Log["Warning: Ship target jammed, no drones available. Changing Belts"]
 			This.CurrentState:Set[${STATE_CHANGE_BELT}]
 			return FALSE
 		}
@@ -353,7 +342,7 @@ objectdef obj_Miner
 	{
 		if !${Me.InSpace}
 		{
-			UI:UpdateConsole["DEBUG: obj_Miner.Mine called while not in space!"]
+			Logger:Log["DEBUG: obj_Miner.Mine called while not in space!"]
 			return
 		}
 
@@ -378,7 +367,7 @@ objectdef obj_Miner
 					; if we are not approach something already, approach this target
 					if !${Me.ToEntity.Approaching}
 					{
-						UI:UpdateConsoleDebug["${This.ObjectName}: Approaching ${Target.Value.ID} from ${Target.Value.Distance} meters."]
+						Logger:LogDebug["${This.ObjectName}: Approaching ${Target.Value.ID} from ${Target.Value.Distance} meters."]
 						call Ship.Approach ${Target.Value.ID} ${Ship.OptimalMiningRange}
 					}
 				}
@@ -423,10 +412,10 @@ objectdef obj_Miner
 
 	function Old_Mine()
 	{
-		UI:UpdateConsole["Mining"]
+		Logger:Log["Mining"]
 		if !${Me.InSpace}
 		{
-			UI:UpdateConsole["DEBUG: obj_Miner.Mine called while not in space!"]
+			Logger:Log["DEBUG: obj_Miner.Mine called while not in space!"]
 			return
 		}
 
@@ -525,7 +514,7 @@ objectdef obj_Miner
 		This.PreviousTripSeconds:Set[${This.TripDuration}]
 		This.TotalTripSeconds:Inc[${This.PreviousTripSeconds}]
 		This.AverageTripSeconds:Set[${Math.Calc[${This.TotalTripSeconds}/${This.TotalTrips}]}]
-		UI:UpdateConsole["Cargo Hold has reached threshold, returning"]
+		Logger:Log["Cargo Hold has reached threshold, returning"]
 		call ChatIRC.Say "Cargo Hold has reached threshold"
 		call This.Statslog
 */

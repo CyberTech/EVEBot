@@ -48,7 +48,7 @@ objectdef obj_Hauler
 
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_Hauler: Initialized", LOG_MINOR]
+		Logger:Log["obj_Hauler: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -177,26 +177,17 @@ objectdef obj_MinerHauler inherits obj_Hauler
 		m_SystemID:Set[-1]
 		m_BeltID:Set[-1]
 		m_CheckedCargo:Set[FALSE]
-		UI:UpdateConsole["obj_MinerHauler: Initialized", LOG_MINOR]
-		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+		Logger:Log["obj_MinerHauler: Initialized", LOG_MINOR]
 		This:SetupEvents[]
-		BotModules:Insert["MinerHauler"]
+		EVEBot.BehaviorList:Insert["MinerHauler"]
 	}
 
 
 	method Pulse()
 	{
-		if !${Config.Common.BotMode.Equal[MinerHauler]}
-		{
-			return
-		}
-
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-			if !${EVEBot.Paused}
-			{
-				This:SetState[]
-			}
+			This:SetState[]
 
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
@@ -206,7 +197,6 @@ objectdef obj_MinerHauler inherits obj_Hauler
 
 	method Shutdown()
 	{
-		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 		Event[EVEBot_Miner_Full]:DetachAtom[This:MinerFull]
 	}
 
@@ -217,7 +207,6 @@ objectdef obj_MinerHauler inherits obj_Hauler
 		/* override any events setup by the base class */
 
 		LavishScript:RegisterEvent[EVEBot_Miner_Full]
-		Event[EVEBot_Miner_Full]:AttachAtom[This:MinerFull]
 	}
 
 	/* A miner's jetcan is full.  Let's go get the ore.  */
@@ -240,10 +229,10 @@ objectdef obj_MinerHauler inherits obj_Hauler
 		m_BeltID:Set[${beltID}]
 	}
 
-	/* this function is called repeatedly by the main loop in EveBot.iss */
+	/* this function is called repeatedly by the main loop in EVEBot.iss */
 	function ProcessState()
 	{
-		if ${Config.Common.BotMode.NotEqual[MinerHauler]}
+		if ${Config.Common.Behavior.NotEqual[MinerHauler]}
 		{
 			return
 		}
@@ -253,7 +242,7 @@ objectdef obj_MinerHauler inherits obj_Hauler
 			case IDLE
 				break
 			case ABORT
-				UI:UpdateConsole["Aborting operation: Returning to base"]
+				Logger:Log["Aborting operation: Returning to base"]
 				Call Station.Dock
 				break
 			case INSTATION
@@ -277,7 +266,7 @@ objectdef obj_MinerHauler inherits obj_Hauler
 	/* NOTE: The order of these if statements is important!! */
 	method SetState()
 	{
-		if ${Config.Common.BotMode.NotEqual[MinerHauler]}
+		if ${Config.Common.Behavior.NotEqual[MinerHauler]}
 		{
 			return
 		}
@@ -314,7 +303,7 @@ objectdef obj_MinerHauler inherits obj_Hauler
 		variable iterator Cargo
 		variable int QuantityToMove
 
-		UI:UpdateConsole["DEBUG: obj_MinerHauler.LootEntity ${id} ${leave}"]
+		Logger:Log["DEBUG: obj_MinerHauler.LootEntity ${id} ${leave}"]
 
 		Entity[${id}]:DoGetCargo[ContainerCargo]
 		ContainerCargo:GetIterator[Cargo]
@@ -322,7 +311,7 @@ objectdef obj_MinerHauler inherits obj_Hauler
 		{
 			do
 			{
-				UI:UpdateConsole["Hauler: Found ${Cargo.Value.Quantity} x ${Cargo.Value.Name} - ${Math.Calc[${Cargo.Value.Quantity} * ${Cargo.Value.Volume}]}m3"]
+				Logger:Log["Hauler: Found ${Cargo.Value.Quantity} x ${Cargo.Value.Name} - ${Math.Calc[${Cargo.Value.Quantity} * ${Cargo.Value.Volume}]}m3"]
 				if ${Math.Calc[${Cargo.Value.Quantity} * ${Cargo.Value.Volume}]} > ${Ship.CargoFreeSpace}
 				{
 					/* Move only what will fit, minus 1 to account for CCP rounding errors. */
@@ -334,7 +323,7 @@ objectdef obj_MinerHauler inherits obj_Hauler
 					leave:Set[0]
 				}
 
-				UI:UpdateConsole["Hauler: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
+				Logger:Log["Hauler: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
 				if ${QuantityToMove} > 0
 				{
 					Cargo.Value:MoveTo[MyShip,${QuantityToMove}]
@@ -350,7 +339,7 @@ objectdef obj_MinerHauler inherits obj_Hauler
 					/* TODO - this needs to keep a queue of bookmarks, named for the can ie, "Can CORP hh:mm", of partially looted cans */
 					/* Be sure its names, and not ID.  We shouldn't store anything in a bookmark name that we shouldnt know */
 
-					UI:UpdateConsole["DEBUG: obj_MinerHauler.LootEntity: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
+					Logger:Log["DEBUG: obj_MinerHauler.LootEntity: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
 					break
 				}
 			}
@@ -395,7 +384,7 @@ objectdef obj_MinerHauler inherits obj_Hauler
 				call Cargo.TransferOreToAssemblyArray
 				break
 			case Jetcan
-				UI:UpdateConsole["Error: ORE Delivery location may not be jetcan when in hauler mode - docking"]
+				Logger:Log["Error: ORE Delivery location may not be jetcan when in hauler mode - docking"]
 				EVEBot.ReturnToStation:Set[TRUE]
 				break
 		}
@@ -446,7 +435,7 @@ objectdef obj_MinerHauler inherits obj_Hauler
 
 	function HaulAllBelts()
 	{
-    	UI:UpdateConsole["Service All Belts mode not implemented!"]
+    	Logger:Log["Service All Belts mode not implemented!"]
 		EVEBot.ReturnToStation:Set[TRUE]
 	}
 
@@ -468,7 +457,7 @@ objectdef obj_MinerHauler inherits obj_Hauler
 		{
 			if ${Entity[OwnerID,${charID},CategoryID,6].Distance} < WARP_RANGE
 			{
-				UI:UpdateConsole["Fleet member is to far for approach; warping to bounce point"]
+				Logger:Log["Fleet member is to far for approach; warping to bounce point"]
 				call This.WarpToNextSafeSpot
 			}
 			call Ship.WarpToFleetMember ${charID}
@@ -479,9 +468,9 @@ objectdef obj_MinerHauler inherits obj_Hauler
 		This:BuildJetCanList[${charID}]
 		while ${Entities.Peek(exists)}
 		{
-			UI:UpdateConsole["DEBUG: ${Entity[OwnerID = ${charID} && CategoryID = 6]}"]
-			UI:UpdateConsole["DEBUG: ${Entity[OwnerID = ${charID} && CategoryID = 6].ID}"]
-			UI:UpdateConsole["DEBUG: ${Entity[OwnerID = ${charID} && CategoryID = 6].DistanceTo[${Entities.Peek.ID}]}"]
+			Logger:Log["DEBUG: ${Entity[OwnerID = ${charID} && CategoryID = 6]}"]
+			Logger:Log["DEBUG: ${Entity[OwnerID = ${charID} && CategoryID = 6].ID}"]
+			Logger:Log["DEBUG: ${Entity[OwnerID = ${charID} && CategoryID = 6].DistanceTo[${Entities.Peek.ID}]}"]
 
 			if ${Entity[OwnerID = ${charID} && CategoryID = 6](exists)} && \
 			   ${Entity[OwnerID = ${charID} && CategoryID = 6].DistanceTo[${Entities.Peek.ID}]} > LOOT_RANGE
@@ -545,7 +534,7 @@ objectdef obj_MinerHauler inherits obj_Hauler
 			idx:Dec
 		}
 
-		UI:UpdateConsole["BuildFleetMemberList found ${FleetMembers.Used} other fleet members."]
+		Logger:Log["BuildFleetMemberList found ${FleetMembers.Used} other fleet members."]
 	}
 
 
@@ -578,7 +567,7 @@ objectdef obj_MinerHauler inherits obj_Hauler
 		SafeSpots:Collapse
 		SafeSpots:GetIterator[SafeSpotIterator]
 
-		UI:UpdateConsole["BuildSafeSpotList found ${SafeSpots.Used} safespots in this system."]
+		Logger:Log["BuildSafeSpotList found ${SafeSpots.Used} safespots in this system."]
 	}
 
 	function WarpToNextSafeSpot()
@@ -621,7 +610,7 @@ objectdef obj_MinerHauler inherits obj_Hauler
 			idx:Dec
 		}
 
-		UI:UpdateConsole["BuildJetCanList found ${Entities.Used} cans nearby."]
+		Logger:Log["BuildJetCanList found ${Entities.Used} cans nearby."]
 	}
 }
 

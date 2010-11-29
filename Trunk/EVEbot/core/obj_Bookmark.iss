@@ -32,7 +32,7 @@ objectdef obj_Bookmark
 		EVE:DoGetBookmarks[Bookmarks]
 		Bookmarks:GetIterator[BookmarkIterator]
 #if EVEBOT_DEBUG
-		UI:UpdateConsole["${LogPrefix}: Found ${Bookmarks.Used} total bookmarks, filtering by prefix '${This.BookmarkPrefix}'", LOG_DEBUG]
+		Logger:Log["${LogPrefix}: Found ${Bookmarks.Used} total bookmarks, filtering by prefix '${This.BookmarkPrefix}'", LOG_DEBUG]
 #endif
 		Used:Set[${Bookmarks.Used}]
 		for(Pos:Set[1]; ${Pos} <= ${Used}; Pos:Inc)
@@ -40,7 +40,7 @@ objectdef obj_Bookmark
 			if (${This.CheckSystemID} && ${Bookmarks[${Pos}].SolarSystemID} != ${Me.SolarSystemID})
 			{
 #if EVEBOT_DEBUG
-				UI:UpdateConsole["${LogPrefix}: Ignoring Out-of-System Bookmark: ${Bookmarks[${Pos}].Label}", LOG_DEBUG]
+				Logger:Log["${LogPrefix}: Ignoring Out-of-System Bookmark: ${Bookmarks[${Pos}].Label}", LOG_DEBUG]
 #endif
 				Bookmarks:Remove[${Pos}]
 				continue
@@ -49,7 +49,7 @@ objectdef obj_Bookmark
 			if ${Bookmarks[${Pos}].Label.Left[${This.BookmarkPrefix.Length}].NotEqual["${This.BookmarkPrefix}"]}
 			{
 #if EVEBOT_DEBUG
-				UI:UpdateConsole["${LogPrefix}: Ignoring Bookmark: ${Bookmarks[${Pos}].Label}", LOG_DEBUG]
+				Logger:Log["${LogPrefix}: Ignoring Bookmark: ${Bookmarks[${Pos}].Label}", LOG_DEBUG]
 #endif
 				Bookmarks:Remove[${Pos}]
 				continue
@@ -69,7 +69,7 @@ objectdef obj_Bookmark
 		if ${Bookmarks.Get[1](exists)} && ${Bookmarks.Get[1].SolarSystemID} != ${Me.SolarSystemID}
 		{
 #if EVEBOT_DEBUG
-			UI:UpdateConsole["${LogPrefix}: System changed, resetting", LOG_DEBUG]
+			Logger:Log["${LogPrefix}: System changed, resetting", LOG_DEBUG]
 #endif
 			This:Reset
 		}
@@ -97,9 +97,9 @@ objectdef obj_Bookmark
 	{
 		variable iterator TempIterator
 #if EVEBOT_DEBUG
-		;UI:UpdateConsole["${LogPrefix} DEBUG: obj_Safespots.IsAtSafespot: ME_X = ${Me.ToEntity.X}", LOG_DEBUG]
-		;UI:UpdateConsole["${LogPrefix} DEBUG: obj_Safespots.IsAtSafespot: ME_Y = ${Me.ToEntity.Y}", LOG_DEBUG]
-		;UI:UpdateConsole["${LogPrefix} DEBUG: obj_Safespots.IsAtSafespot: ME_Z = ${Me.ToEntity.Z}", LOG_DEBUG]
+		;Logger:Log["${LogPrefix} DEBUG: obj_Safespots.IsAtSafespot: ME_X = ${Me.ToEntity.X}", LOG_DEBUG]
+		;Logger:Log["${LogPrefix} DEBUG: obj_Safespots.IsAtSafespot: ME_Y = ${Me.ToEntity.Y}", LOG_DEBUG]
+		;Logger:Log["${LogPrefix} DEBUG: obj_Safespots.IsAtSafespot: ME_Z = ${Me.ToEntity.Z}", LOG_DEBUG]
 #endif
 
 		Bookmarks:GetIterator[TempIterator]
@@ -108,17 +108,17 @@ objectdef obj_Bookmark
 			do
 			{
 #if EVEBOT_DEBUG
-				;UI:UpdateConsole["${LogPrefix} DEBUG: AtBookmark: Label = ${TempIterator.Value.Label}", LOG_DEBUG]
-				;UI:UpdateConsole["${LogPrefix} DEBUG: AtBookmark:  ItemID = ${TempIterator.Value.ItemID}", LOG_DEBUG]
-				;UI:UpdateConsole["${LogPrefix} DEBUG: AtBookmark:  BM_X = ${TempIterator.Value.X}", LOG_DEBUG]
-				;UI:UpdateConsole["${LogPrefix} DEBUG: AtBookmark:  BM_Y = ${TempIterator.Value.Y}", LOG_DEBUG]
-				;UI:UpdateConsole["${LogPrefix} DEBUG: AtBookmark:  BM_Z = ${TempIterator.Value.Z}", LOG_DEBUG]
-				;UI:UpdateConsole["${LogPrefix} DEBUG: AtBookmark:  DIST = ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${TempIterator.Value.X}, ${TempIterator.Value.Y}, ${TempIterator.Value.Z}]}", LOG_DEBUG]
+				;Logger:Log["${LogPrefix} DEBUG: AtBookmark: Label = ${TempIterator.Value.Label}", LOG_DEBUG]
+				;Logger:Log["${LogPrefix} DEBUG: AtBookmark:  ItemID = ${TempIterator.Value.ItemID}", LOG_DEBUG]
+				;Logger:Log["${LogPrefix} DEBUG: AtBookmark:  BM_X = ${TempIterator.Value.X}", LOG_DEBUG]
+				;Logger:Log["${LogPrefix} DEBUG: AtBookmark:  BM_Y = ${TempIterator.Value.Y}", LOG_DEBUG]
+				;Logger:Log["${LogPrefix} DEBUG: AtBookmark:  BM_Z = ${TempIterator.Value.Z}", LOG_DEBUG]
+				;Logger:Log["${LogPrefix} DEBUG: AtBookmark:  DIST = ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${TempIterator.Value.X}, ${TempIterator.Value.Y}, ${TempIterator.Value.Z}]}", LOG_DEBUG]
 #endif
 				; Are we within warp range of the bookmark?
 				if ${TempIterator.Value.ItemID} > -1
 				{
-					UI:UpdateConsole["DEBUG: obj_Safespots.IsAtSafespot: ItemID = ${TempIterator.Value.ItemID}", LOG_DEBUG]
+					Logger:Log["DEBUG: obj_Safespots.IsAtSafespot: ItemID = ${TempIterator.Value.ItemID}", LOG_DEBUG]
 					if ${Me.ToEntity.DistanceTo[${TempIterator.Value.ItemID}]} < WARP_RANGE
 					{
 						return TRUE
@@ -150,7 +150,7 @@ objectdef obj_Bookmark
 		}
 		else
 		{
-			UI:UpdateConsole["${LogPrefix} ERROR: WarpToNext found an invalid bookmark!"]
+			Logger:Log["${LogPrefix} ERROR: WarpToNext found an invalid bookmark!"]
 		}
 	}
 
@@ -168,7 +168,7 @@ objectdef obj_Bookmark
 			}
 
 #if EVEBOT_DEBUG
-			UI:UpdateConsole["${LogPrefix}: MoveToRandomBeltBookMark: call Ship.WarpToBookMark ${beltIterator.Value.ID}"]
+			Logger:Log["${LogPrefix}: MoveToRandomBeltBookMark: call Ship.WarpToBookMark ${beltIterator.Value.ID}"]
 #endif
 			call Ship.WarpToBookMark ${beltIndex[${RandomBelt}].ID}
 		}

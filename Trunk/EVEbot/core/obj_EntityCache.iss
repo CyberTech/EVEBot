@@ -88,7 +88,7 @@ objectdef obj_EntityCache inherits obj_BaseClass
 			EVE:PopulateEntities[TRUE]
 		}
 
-		UI:UpdateConsole["${LogPrefix}: Initialized"]
+		Logger:Log["${LogPrefix}: Initialized"]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 	}
 
@@ -125,7 +125,7 @@ objectdef obj_EntityCache inherits obj_BaseClass
 		QueryID:Set[${LavishScript.CreateQuery[${Filter}]}]
 		if ${QueryID} == 0
 		{
-			UI:UpdateConsole["${LogPrefix}: ${Owner} query addition FAILED", LOG_DEBUG]
+			Logger:Log["${LogPrefix}: ${Owner} query addition FAILED", LOG_DEBUG]
 			return 0
 		}
 
@@ -136,7 +136,7 @@ objectdef obj_EntityCache inherits obj_BaseClass
 		This.EntityFilters.Get[${ID}].LSFilter:Set[${LSFilter}]
 		This.EntityFilters.Get[${ID}].QueryID:Set[${QueryID}]
 
-		UI:UpdateConsole["${LogPrefix}: ${Owner} added entity filter ${ID}: QueryID:${QueryID}:'${Filter}'", LOG_DEBUG]
+		Logger:Log["${LogPrefix}: ${Owner} added entity filter ${ID}: QueryID:${QueryID}:'${Filter}'", LOG_DEBUG]
 
 		return ${ID}
 	}
@@ -200,7 +200,7 @@ objectdef obj_EntityCache inherits obj_BaseClass
 
 			do
 			{
-				;UI:UpdateConsole["${LogPrefix}: Checking Query #${EntityFilterIterator.Value.QueryID}"]
+				;Logger:Log["${LogPrefix}: Checking Query #${EntityFilterIterator.Value.QueryID}"]
 				if ${EntityFilterIterator.Value.Decay} > 0
 				{
 					EntityFilterIterator.Value.Decay:Dec[${This.PulseIntervalInMS}]
@@ -210,7 +210,7 @@ objectdef obj_EntityCache inherits obj_BaseClass
 				{
 					EVE:QueryEntities[EntityFilterIterator.Value.Entities, ${EntityFilterIterator.Value.QueryID}]
 					#if DEBUG_LOG_UPDATETIME
-					UI:UpdateConsole["${LogPrefix}: Updated Query #${EntityFilterIterator.Value.QueryID}: Entities: ${EntityFilterIterator.Value.Entities.Used} Owner: ${EntityFilterIterator.Value.Owner} MaxDecay: ${EntityFilterIterator.Value.MaxDecay} ${LavishScript.RetrieveQueryExpression[${EntityFilterIterator.Value.QueryID}]}"]
+					Logger:Log["${LogPrefix}: Updated Query #${EntityFilterIterator.Value.QueryID}: Entities: ${EntityFilterIterator.Value.Entities.Used} Owner: ${EntityFilterIterator.Value.Owner} MaxDecay: ${EntityFilterIterator.Value.MaxDecay} ${LavishScript.RetrieveQueryExpression[${EntityFilterIterator.Value.QueryID}]}"]
 					#endif
 					EntityFilterIterator.Value.Decay:Set[${EntityFilterIterator.Value.MaxDecay}]
 					FiltersPerFrame:Dec
@@ -223,7 +223,7 @@ objectdef obj_EntityCache inherits obj_BaseClass
 			}
 			while ${EntityFilterIterator:Next(exists)}
 			#if DEBUG_LOG_UPDATETIME
-			;UI:UpdateConsole["${LogPrefix}: Done: FPS: ${Display.FPS.Int} Time: ${Math.Calc[(${Script.RunningTime}-${StartTime1}) / 1000]} seconds to apply filters against ${EVE.EntitiesCount} Entities"]
+			;Logger:Log["${LogPrefix}: Done: FPS: ${Display.FPS.Int} Time: ${Math.Calc[(${Script.RunningTime}-${StartTime1}) / 1000]} seconds to apply filters against ${EVE.EntitiesCount} Entities"]
 			#endif
 
 			This.Initialized:Set[TRUE]

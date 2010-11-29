@@ -24,7 +24,7 @@ objectdef obj_Scavenger
 
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_Scavenger: Initialized", LOG_MINOR]
+		Logger:Log["obj_Scavenger: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -34,7 +34,7 @@ objectdef obj_Scavenger
 	/* NOTE: The order of these if statements is important!! */
 	method SetState()
 	{
-		if ${Config.Common.BotMode.NotEqual[Scavenger]}
+		if ${Config.Common.Behavior.NotEqual[Scavenger]}
 		{
 			return
 		}
@@ -59,14 +59,14 @@ objectdef obj_Scavenger
 		}
 		else
 		{
-			UI:UpdateConsole["obj_Scavenger: ERROR!  Unknown State."]
+			Logger:Log["obj_Scavenger: ERROR!  Unknown State."]
 			This.CurrentState:Set["Unknown"]
 		}
 	}
 
 	function ProcessState()
 	{
-		if ${Config.Common.BotMode.NotEqual[Scavenger]}
+		if ${Config.Common.Behavior.NotEqual[Scavenger]}
 		{
 			return
 		}
@@ -105,14 +105,14 @@ objectdef obj_Scavenger
 		variable iterator     Wreck
 
 		EVE:DoGetEntities[Wrecks,GroupID,GROUP_WRECK]
-		UI:UpdateConsole["obj_Scavenger: DEBUG: Found ${Wrecks.Used} wrecks."]
+		Logger:Log["obj_Scavenger: DEBUG: Found ${Wrecks.Used} wrecks."]
 
 		Wrecks:GetIterator[Wreck]
 		if ${Wreck:First(exists)}
 		{
 			do
 			{
-				UI:UpdateConsole["obj_Scavenger: DEBUG: ${Wreck.Value.ID} ${Wreck.Value.Distance} ${Wreck.Value.IsWreckEmpty}"]
+				Logger:Log["obj_Scavenger: DEBUG: ${Wreck.Value.ID} ${Wreck.Value.Distance} ${Wreck.Value.IsWreckEmpty}"]
 				if ${Wreck.Value(exists)} && ${Wreck.Value.Distance} > WARP_RANGE && ${Wreck.Value.IsWreckEmpty} == FALSE
 				{
 					call Ship.WarpToID ${Wreck.Value.ID}
@@ -148,7 +148,7 @@ objectdef obj_Scavenger
 					call Ship.OpenCargo
 					wait 10
 					Wreck.Value:DoGetCargo[Items]
-					UI:UpdateConsole["obj_Scavenger: DEBUG:  Wreck contains ${Items.Used} items."]
+					Logger:Log["obj_Scavenger: DEBUG:  Wreck contains ${Items.Used} items."]
 
 					Items:GetIterator[Item]
 					if ${Item:First(exists)}

@@ -18,7 +18,7 @@ objectdef obj_BeltBookmarks inherits obj_Bookmark
 	{
 		LogPrefix:Set["obj_BeltBookmarks(${This.ObjectName})"]
 		This:Reset
-		UI:UpdateConsole["${LogPrefix}: Initialized"]
+		Logger:Log["${LogPrefix}: Initialized"]
 	}
 
 	method Reset()
@@ -32,7 +32,7 @@ objectdef obj_BeltBookmarks inherits obj_Bookmark
 		{
 			This[parent]:Reset["${Config.Labels.OreBeltPrefix}"]
 		}
-		UI:UpdateConsole["${LogPrefix}: Found ${Bookmarks.Used} bookmarks in this system"]
+		Logger:Log["${LogPrefix}: Found ${Bookmarks.Used} bookmarks in this system"]
 	}
 
 	; Checks the belt name against the empty belt list.
@@ -40,7 +40,7 @@ objectdef obj_BeltBookmarks inherits obj_Bookmark
 	{
 		if ${This.EmptyBelts.Contains["${BeltName}"]}
 		{
-			UI:UpdateConsole["${LogPrefix}:IsBeltEmpty - ${BeltName} - TRUE", LOG_DEBUG]
+			Logger:Log["${LogPrefix}:IsBeltEmpty - ${BeltName} - TRUE", LOG_DEBUG]
 			return TRUE
 		}
 		return FALSE
@@ -50,7 +50,7 @@ objectdef obj_BeltBookmarks inherits obj_Bookmark
 	method MarkBeltEmpty(string BeltName)
 	{
 		EmptyBelts:Add["${BeltName}"]
-		UI:UpdateConsole["${LogPrefix}: Excluding empty belt ${BeltName}"]
+		Logger:Log["${LogPrefix}: Excluding empty belt ${BeltName}"]
 	}
 
 	member:bool AtBelt()

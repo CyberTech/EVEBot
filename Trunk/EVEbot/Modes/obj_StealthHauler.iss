@@ -26,7 +26,7 @@ objectdef obj_StealthHauler
 	
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_StealthHauler: Initialized", LOG_MINOR]
+		Logger:Log["obj_StealthHauler: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -86,7 +86,7 @@ objectdef obj_StealthHauler
 						
 						if ${sgIterator.Value(exists)}
 						{
-							UI:UpdateConsole["Setting speed to full throttle"]
+							Logger:Log["Setting speed to full throttle"]
 							Me:SetVelocity[${Math.Calc[90 + ${Math.Rand[9]} + ${Math.Calc[0.10 * ${Math.Rand[9]}]}]}]
 							do
 							{
@@ -122,7 +122,7 @@ objectdef obj_StealthHauler
 						}
 						else
 						{
-							UI:UpdateConsole["obj_StealthHauler: Could not find stargate to ${Universe[${apIterator.Value}].Name}!!", LOG_CRITICAL]
+							Logger:Log["obj_StealthHauler: Could not find stargate to ${Universe[${apIterator.Value}].Name}!!", LOG_CRITICAL]
 						}
 					}	
 				}
@@ -139,7 +139,7 @@ objectdef obj_StealthHauler
 		}
 		else
 		{
-			UI:UpdateConsole["obj_StealthHauler: ERROR: You need a CovOps cloak to use this script!!", LOG_CRITICAL]
+			Logger:Log["obj_StealthHauler: ERROR: You need a CovOps cloak to use this script!!", LOG_CRITICAL]
 		}
 	}
 }

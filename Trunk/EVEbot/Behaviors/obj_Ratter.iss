@@ -31,9 +31,7 @@ objectdef obj_Ratter
 
 	method Initialize()
 	{
-		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-
-		BotModules:Insert["Ratter"]
+		EVEBot.BehaviorList:Insert["Ratter"]
 
 		This.Rat_CacheID:Set[${EntityCache.AddFilter["obj_Ratter", CategoryID = CATEGORYID_ENTITY && IsNPC = 1 && IsMoribund = 0, 2.0]}]
 		EntityCache.EntityFilters.Get[${This.Rat_CacheID}].Entities:GetIterator[Rat_CacheIterator]
@@ -41,7 +39,7 @@ objectdef obj_Ratter
 		; Startup in fight mode, so that it checks current belt for rats, if we happen to be in one.
 		This.CurrentState:Set["FIGHT"]
 
-		UI:UpdateConsole["obj_Ratter: Initialized", LOG_MINOR]
+		Logger:Log["obj_Ratter: Initialized", LOG_MINOR]
 	}
 
 
@@ -49,10 +47,7 @@ objectdef obj_Ratter
 	{
 	  	if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-			if !${EVEBot.Paused}
-			{
-				This:SetState[]
-			}
+			This:SetState[]
 
 			bPlayerCheck:Set[${Targets.PC}]
 
@@ -64,7 +59,6 @@ objectdef obj_Ratter
 
 	method Shutdown()
 	{
-		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}
 
 	/* NOTE: The order of these if statements is important!! */
@@ -72,12 +66,12 @@ objectdef obj_Ratter
 	;; STATE MACHINE:  * -> IDLE -> MOVE -> PCCHECK -> FIGHT -> *
 	method SetState()
 	{
-		if ${Config.Common.BotMode.NotEqual[Ratter]}
+		if ${Config.Common.Behavior.NotEqual[Ratter]}
 		{
 			return
 		}
 
-		UI:UpdateConsole["obj_Ratter: Hiding: ${Defense.Hiding}, Hide Reason: ${Defense.HideReason}",LOG_DEBUG]
+		Logger:Log["obj_Ratter: Hiding: ${Defense.Hiding}, Hide Reason: ${Defense.HideReason}",LOG_DEBUG]
 		if ${Defense.Hiding}
 		{
 			This.CurrentState:Set["DEFENSE_HAS_CONTROL"]
@@ -90,7 +84,7 @@ objectdef obj_Ratter
 			return
 		}
 
-		UI:UpdateConsole["obj_Ratter: NPC Check: ${This.NPCCheck}",LOG_DEBUG]
+		Logger:Log["obj_Ratter: NPC Check: ${This.NPCCheck}",LOG_DEBUG]
 		if ${Me.GetTargets} > 0 || (${This.NPCCheck} && !${Targets.PC})
 		{
 			This.CurrentState:Set["FIGHT"]
@@ -103,12 +97,12 @@ objectdef obj_Ratter
 
 	function ProcessState()
 	{
-		if ${Config.Common.BotMode.NotEqual[Ratter]}
+		if ${Config.Common.Behavior.NotEqual[Ratter]}
 		{
 			return
 		}
-		UI:UpdateConsole["obj_Ratter: Processing State: ${This.CurrentState}",LOG_DEBUG]
-		;UI:UpdateConsole["DEBUG: ${This.CurrentState}"]
+		Logger:Log["obj_Ratter: Processing State: ${This.CurrentState}",LOG_DEBUG]
+		;Logger:Log["DEBUG: ${This.CurrentState}"]
 		switch ${This.CurrentState}
 		{
 			case STATE_WAIT_WARP
@@ -159,7 +153,7 @@ objectdef obj_Ratter
 				}
 				elseif ${This.RatWaitCounter} > 30
 				{
-					UI:UpdateConsole["Rats didn't show up, moving"]
+					Logger:Log["Rats didn't show up, moving"]
 					This.CurrentState:Set["STATE_CHANGE_BELT"]
 				}
 				else
@@ -189,10 +183,10 @@ objectdef obj_Ratter
 				This:QueueTargets
 				break
 			case STATE_ERROR
-				UI:UpdateConsole["CurrentState is ERROR"]
+				Logger:Log["CurrentState is ERROR"]
 				break
 			default
-				UI:UpdateConsole["Error: CurrentState is unknown value ${This.CurrentState}"]
+				Logger:Log["Error: CurrentState is unknown value ${This.CurrentState}"]
 				break
 		}
 	}
@@ -261,7 +255,7 @@ objectdef obj_Ratter
 					{
 						bHavePriorityTarget:Set[TRUE]
 					}
-					UI:UpdateConsole["obj_Ratter: ${This.Rat_CacheIterator.Value.ID} is queued, concord, or DNK, skipping in priority target iteration.", LOG_DEBUG]
+					Logger:Log["obj_Ratter: ${This.Rat_CacheIterator.Value.ID} is queued, concord, or DNK, skipping in priority target iteration.", LOG_DEBUG]
 					continue
 				}
 
@@ -269,11 +263,11 @@ objectdef obj_Ratter
 				all priority targets are dead. Gotta kill those scrambling bastards... */
 				if ${Targets.IsPriorityTarget[${This.Rat_CacheIterator.Value.Name}]}
 				{
-					UI:UpdateConsole["obj_Ratter: We have a priority target: ${This.Rat_CacheIterator.Value.Name}."]
+					Logger:Log["obj_Ratter: We have a priority target: ${This.Rat_CacheIterator.Value.Name}."]
 					bHavePriorityTarget:Set[TRUE]
 					/* 	method Queue(int64 EntityID, int Priority, int TargetType, bool Mandatory=FALSE, bool Blocker=FALSE) */
 					/* Queue it mandatory so we make sure it dies. */
-					UI:UpdateConsole["obj_Ratter: Queueing priority target: ${This.Rat_CacheIterator.Value.Name}"]
+					Logger:Log["obj_Ratter: Queueing priority target: ${This.Rat_CacheIterator.Value.Name}"]
 					Targeting:Queue[${This.Rat_CacheIterator.Value.ID},0,${This.Rat_CacheIterator.Value.TypeID},TRUE,FALSE]
 				}
 			}
@@ -295,16 +289,16 @@ objectdef obj_Ratter
 					if ${Targeting.IsQueued[${This.Rat_CacheIterator.Value.ID}]} || ${Offense.IsConcordTarget[${This.Rat_CacheIterator.Value.GroupID}]} || \
 						${This.IsDoNotKill[${This.Rat_CacheIterator.Value.ID}]}
 					{
-						UI:UpdateConsole["obj_Ratter: ${This.Rat_CacheIterator.Value.ID} already queued, concord, or DNK, skipping", LOG_DEBUG]
+						Logger:Log["obj_Ratter: ${This.Rat_CacheIterator.Value.ID} already queued, concord, or DNK, skipping", LOG_DEBUG]
 						continue
 					}
 
 					; Since we're chaining, if it isn't a special spawn or a battleship, and we've already queued any priority targets, we don't want it.
 					; Add it to do not kill.
-					UI:UpdateConsole["obj_Ratter: Find Battleship? Name: ${This.Rat_CacheIterator.Value.Name}, Group: ${This.Rat_CacheIterator.Value.Group}, Exists? ${This.Rat_CacheIterator.Value.Group.Find["Battleship"](exists)}, Mutli? ${bHaveMultipleTypes}", LOG_DEBUG]
+					Logger:Log["obj_Ratter: Find Battleship? Name: ${This.Rat_CacheIterator.Value.Name}, Group: ${This.Rat_CacheIterator.Value.Group}, Exists? ${This.Rat_CacheIterator.Value.Group.Find["Battleship"](exists)}, Mutli? ${bHaveMultipleTypes}", LOG_DEBUG]
 					if !${This.Rat_CacheIterator.Value.Group.Find["Battleship"](exists)} && !${Targets.IsSpecialTarget[${This.Rat_CacheIterator.Value.Name}]} && !${bHavePriorityTarget}
 					{
-						UI:UpdateConsole["obj_Ratter: ${This.Rat_CacheIterator.Value.Name} isn't a battleship or special target and we have no priority targets -- adding to DNK list.", LOG_DEBUG]
+						Logger:Log["obj_Ratter: ${This.Rat_CacheIterator.Value.Name} isn't a battleship or special target and we have no priority targets -- adding to DNK list.", LOG_DEBUG]
 						DoNotKillList:Insert[${This.Rat_CacheIterator.Value.ID}]
 						continue
 					}
@@ -313,7 +307,7 @@ objectdef obj_Ratter
 					; Currently it does nothing because combat doesn't detect "higher priority" targets
 					if ${Targets.IsSpecialTarget[${This.Rat_CacheIterator.Value.Name}]}
 					{
-						UI:UpdateConsole["obj_Ratter: Queueing special target ${This.Rat_CacheIterator.Value.Name}, ${This.Rat_CacheIterator.Value.ID}.",LOG_CRITICAL]
+						Logger:Log["obj_Ratter: Queueing special target ${This.Rat_CacheIterator.Value.Name}, ${This.Rat_CacheIterator.Value.ID}.",LOG_CRITICAL]
 						if ${Config.Common.UseSound}
 						{
 							Sound:PlayDetectSound
@@ -324,7 +318,7 @@ objectdef obj_Ratter
 
 					; Basically, the only way we get this far is our entity is a battleship we haven't queued.
 					; So queue it!
-					UI:UpdateConsole["obj_Ratter: Queueing chainable battleship ${This.Rat_CacheIterator.Value.Name}",LOG_DEBUG]
+					Logger:Log["obj_Ratter: Queueing chainable battleship ${This.Rat_CacheIterator.Value.Name}",LOG_DEBUG]
 					Targeting:Queue[${This.Rat_CacheIterator.Value.ID},2,${This.Rat_CacheIterator.Value.TypeID},FALSE,FALSE]
 				}
 				while ${This.Rat_CacheIterator:Next(exists)}
@@ -340,7 +334,7 @@ objectdef obj_Ratter
 					if ${Targeting.IsQueued[${This.Rat_CacheIterator.Value.ID}]} || ${Offense.IsConcordTarget[${This.Rat_CacheIterator.Value.GroupID}]} || \
 						${This.IsDoNotKill[${This.Rat_CacheIterator.Value.ID}]}
 					{
-						UI:UpdateConsole["obj_Ratter: ${This.Rat_CacheIterator.Value.ID} already queued, concord, or DNK, skipping", LOG_DEBUG]
+						Logger:Log["obj_Ratter: ${This.Rat_CacheIterator.Value.ID} already queued, concord, or DNK, skipping", LOG_DEBUG]
 						continue
 					}
 
@@ -348,7 +342,7 @@ objectdef obj_Ratter
 					; Currently it does nothing because combat doesn't detect "higher priority" targets
 					if ${Targets.IsSpecialTarget[${This.Rat_CacheIterator.Value.Name}]}
 					{
-						UI:UpdateConsole["obj_Ratter: Not chaining, queueing special target ${This.Rat_CacheIterator.Value.Name}, ${This.Rat_CacheIterator.Value.ID}.",LOG_CRITICAL]
+						Logger:Log["obj_Ratter: Not chaining, queueing special target ${This.Rat_CacheIterator.Value.Name}, ${This.Rat_CacheIterator.Value.ID}.",LOG_CRITICAL]
 						if ${Config.Common.UseSound}
 						{
 							Sound:PlayDetectSound
@@ -357,7 +351,7 @@ objectdef obj_Ratter
 						continue
 					}
 
-					UI:UpdateConsole["obj_Ratter: Not chaining, queueing target ${This.Rat_CacheIterator.Value.Name}.",LOG_DEBUG]
+					Logger:Log["obj_Ratter: Not chaining, queueing target ${This.Rat_CacheIterator.Value.Name}.",LOG_DEBUG]
 					Targeting:Queue[${This.Rat_CacheIterator.Value.ID},2,${This.Rat_CacheIterator.Value.TypeID},FALSE,FALSE]
 				}
 				while ${This.Rat_CacheIterator:Next(exists)}
@@ -376,7 +370,7 @@ objectdef obj_Ratter
 		{
 			do
 			{
-				UI:UpdateConsole["obj_Ratter: ${CachedEntityIterator.Value.Type} ${CachedEntityIterator.Value.TypeID} ${CachedEntityIterator.Value.Group} ${CachedEntityIterator.Value.GroupID}",LOG_DEBUG]
+				Logger:Log["obj_Ratter: ${CachedEntityIterator.Value.Type} ${CachedEntityIterator.Value.TypeID} ${CachedEntityIterator.Value.Group} ${CachedEntityIterator.Value.GroupID}",LOG_DEBUG]
 				if ${TempTypeID} == 0
 				{
 					TempTypeID:Set[${CachedEntityIterator.Value.TypeID}]
@@ -389,7 +383,7 @@ objectdef obj_Ratter
 			}
 			while ${CachedEntityIterator:Next(exists)}
 		}
-		UI:UpdateConsole["obj_Ratter: HaveMultipleTypes? ${HaveMultipleTypes}",LOG_DEBUG]
+		Logger:Log["obj_Ratter: HaveMultipleTypes? ${HaveMultipleTypes}",LOG_DEBUG]
 		if ${CachedEntityIterator:First(exists)}
 		{
 			do

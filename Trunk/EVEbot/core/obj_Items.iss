@@ -23,10 +23,10 @@ objectdef obj_EVEDB_Items
 
 	method Initialize()
 	{
-		UI:UpdateConsole["${This.ObjectName}: Loading database from ${This.CONFIG_FILE}", LOG_MINOR]
+		Logger:Log["${This.ObjectName}: Loading database from ${This.CONFIG_FILE}", LOG_MINOR]
 		LavishSettings[${This.SET_NAME}]:Remove
 		LavishSettings:Import[${This.CONFIG_FILE}]
-		UI:UpdateConsole["${This.ObjectName}: Initialized", LOG_MINOR]
+		Logger:Log["${This.ObjectName}: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()

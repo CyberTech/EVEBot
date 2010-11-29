@@ -24,7 +24,7 @@ objectdef obj_Courier
 
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_Courier: Initialized", LOG_MINOR]
+		Logger:Log["obj_Courier: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -77,18 +77,18 @@ objectdef obj_Courier
 				call Agents.RequestCourierMission
 				break
 			case PICKUP
-				UI:UpdateConsole["obj_Courier: MoveToPickup"]
+				Logger:Log["obj_Courier: MoveToPickup"]
 				call Agents.MoveToPickup
-				UI:UpdateConsole["obj_Courier: TransferCargoToShip"]
+				Logger:Log["obj_Courier: TransferCargoToShip"]
 				wait 100
 				call Cargo.TransferCargoToShip
 				bHaveCargo:Set[TRUE]
 				break
 			case DROPOFF
-				UI:UpdateConsole["obj_Courier: MoveToDropOff"]
+				Logger:Log["obj_Courier: MoveToDropOff"]
 				call Agents.MoveToDropOff
 				wait 100
-				UI:UpdateConsole["obj_Courier: TurnInMission"]
+				Logger:Log["obj_Courier: TurnInMission"]
 				call Agents.TurnInMission
 				bHaveCargo:Set[FALSE]
 				break

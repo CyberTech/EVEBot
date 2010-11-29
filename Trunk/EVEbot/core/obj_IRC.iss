@@ -23,7 +23,7 @@ objectdef obj_IRC
 		Event[IRC_JOINErrorResponse]:AttachAtom[This:IRC_JOINErrorResponse]
 		Event[IRC_UnhandledEvent]:AttachAtom[This:IRC_UnhandledEvent]
 
-		UI:UpdateConsole["obj_IRC: Initialized", LOG_MINOR]
+		Logger:Log["obj_IRC: Initialized", LOG_MINOR]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 #endif
 	}

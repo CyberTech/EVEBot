@@ -56,7 +56,7 @@ objectdef obj_Social
 		Blacklist.CorporationsRef:GetSettingIterator[This.BlackListCorpIterator]
 		Blacklist.AlliancesRef:GetSettingIterator[This.BlackListAllianceIterator]
 
-		UI:UpdateConsole["obj_Social: Initializing whitelist...", LOG_MINOR]
+		Logger:Log["obj_Social: Initializing whitelist...", LOG_MINOR]
 		PilotWhiteList:Add[${EVEBot.CharID}]
 		if ${Me.CorporationID} > 0
 		{
@@ -88,7 +88,7 @@ objectdef obj_Social
 		}
 		while ${This.WhiteListAllianceIterator:Next(exists)}
 
-		UI:UpdateConsole["obj_Social: Initializing blacklist...", LOG_MINOR]
+		Logger:Log["obj_Social: Initializing blacklist...", LOG_MINOR]
 		if ${This.BlackListPilotIterator:First(exists)}
 		do
 		{
@@ -118,7 +118,7 @@ objectdef obj_Social
 
 		EVE:ActivateChannelMessageEvents
 
-		UI:UpdateConsole["obj_Social: Initialized", LOG_MINOR]
+		Logger:Log["obj_Social: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -170,14 +170,14 @@ objectdef obj_Social
 					{
 						if ${EVEBot.CharID} == ${This.PilotIndex[${i}]}
 						{
-							;UI:UpdateConsole["Social: StandingDetection: Ignoring Self", LOG_DEBUG]
+							;Logger:Log["Social: StandingDetection: Ignoring Self", LOG_DEBUG]
 							This.PilotIndex:Remove[${i}]
 							continue
 						}
 
 						if ${FleetID} > 0 && ${This.PilotIndex[${i}].ToFleetMember(exists)}
 						{
-							;UI:UpdateConsole["Social: StandingDetection Ignoring Fleet Member: ${PilotIterator.Value.Name}", LOG_DEBUG]
+							;Logger:Log["Social: StandingDetection Ignoring Fleet Member: ${PilotIterator.Value.Name}", LOG_DEBUG]
 							This.PilotIndex:Remove[${i}]
 							continue
 						}
@@ -214,11 +214,11 @@ objectdef obj_Social
 				Sound:PlayTellSound
 				if ${Config.Common.EnableChatLogging}
 				{
-					UI:UpdateConsoleIRC["Channel Local: ${sAuthor.Escape}: ${sMessageText.Escape}"]
+					Logger:LogIRC["Channel Local: ${sAuthor.Escape}: ${sMessageText.Escape}"]
 				}
 				else
 				{
-					UI:UpdateConsole["Channel Local: ${sAuthor.Escape}: ${sMessageText.Escape}", LOG_MINOR]
+					Logger:Log["Channel Local: ${sAuthor.Escape}: ${sMessageText.Escape}", LOG_MINOR]
 				}
 			}
 		}
@@ -229,7 +229,7 @@ objectdef obj_Social
 		if ${EVEWindow[ByCaption, "Chat Invite"](exists)}
 		{
 			Sound:PlayTellSound
-			UI:UpdateConsole["Notice: ${EVEWindow[ByCaption, Chat Invite].Name}", LOG_CRITICAL]
+			Logger:Log["Notice: ${EVEWindow[ByCaption, Chat Invite].Name}", LOG_CRITICAL]
 		}
 	}
 
@@ -285,7 +285,7 @@ objectdef obj_Social
 			{
 				; We already reported this pilot, since the last time the system was safe. We'll go ahead and
 				; declare the system still not safe, and not re-report.
-				;UI:UpdateConsole["Note: Previously Reported PilotID: ${PilotID}", LOG_DEBUG]
+				;Logger:Log["Note: Previously Reported PilotID: ${PilotID}", LOG_DEBUG]
 				Result:Set[FALSE]
 				continue
 			}
@@ -302,32 +302,32 @@ objectdef obj_Social
 				${This.AllianceWhiteList.Contains[${AllianceID}]} || \
 				${This.PilotWhiteList.Contains[${PilotID}]}
 			{
-				UI:UpdateConsole["Note: Whitelisted Pilot: ${PilotName} ID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_DEBUG]
+				Logger:Log["Note: Whitelisted Pilot: ${PilotName} ID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_DEBUG]
 			}
 			elseif ${Config.Combat.UseBlackList}
 			{
 				if ${This.AllianceBlackList.Contains[${AllianceID}]}
 				{
-					UI:UpdateConsole["Alert: Blacklisted Alliance: Pilot: ${PilotName} AllianceID: ${AllianceID}", LOG_CRITICAL]
+					Logger:Log["Alert: Blacklisted Alliance: Pilot: ${PilotName} AllianceID: ${AllianceID}", LOG_CRITICAL]
 					Result:Set[FALSE]
 					This.ReportedPilotsSinceLastSafe:Add[${PilotID}]
 				}
 				if ${This.CorpBlackList.Contains[${CorpID}]}
 				{
-					UI:UpdateConsole["Alert: Blacklisted Corporation: Pilot: ${PilotName} CorpID: ${CorpID}", LOG_CRITICAL]
+					Logger:Log["Alert: Blacklisted Corporation: Pilot: ${PilotName} CorpID: ${CorpID}", LOG_CRITICAL]
 					Result:Set[FALSE]
 					This.ReportedPilotsSinceLastSafe:Add[${PilotID}]
 				}
 				if ${This.PilotBlackList.Contains[${PilotID}]}
 				{
-					UI:UpdateConsole["Alert: Blacklisted Pilot: ${PilotName}", LOG_CRITICAL]
+					Logger:Log["Alert: Blacklisted Pilot: ${PilotName}", LOG_CRITICAL]
 					Result:Set[FALSE]
 					This.ReportedPilotsSinceLastSafe:Add[${PilotID}]
 				}
 			}
 			elseif ${Config.Combat.UseWhiteList}
 			{
-				UI:UpdateConsole["Alert: Non-Whitelisted Pilot: ${PilotName} ID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_CRITICAL]
+				Logger:Log["Alert: Non-Whitelisted Pilot: ${PilotName} ID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_CRITICAL]
 				Result:Set[FALSE]
 				This.ReportedPilotsSinceLastSafe:Add[${PilotID}]
 			}
@@ -354,7 +354,7 @@ objectdef obj_Social
 				if 	${PilotIterator.Value.ToEntity(exists)} && \
 					${PilotIterator.Value.ToEntity.Distance} <= ${Config.Miner.AvoidPlayerRange}
 				{
-					UI:UpdateConsole["PlayerInRange: ${PilotIterator.Value.Name} (${EVEBot.MetersToKM_Str[${PilotIterator.Value.ToEntity.Distance}])"]
+					Logger:Log["PlayerInRange: ${PilotIterator.Value.Name} (${EVEBot.MetersToKM_Str[${PilotIterator.Value.ToEntity.Distance}])"]
 					return TRUE
 				}
 			}
@@ -395,7 +395,7 @@ objectdef obj_Social
 				{
 					; We already reported this pilot, since the last time the system was safe. We'll go ahead and
 					; declare the system still not safe, and not re-report.
-					;UI:UpdateConsole["Note: Previously Reported PilotID: ${PilotID}", LOG_DEBUG]
+					;Logger:Log["Note: Previously Reported PilotID: ${PilotID}", LOG_DEBUG]
 					Result:Set[FALSE]
 					continue
 				}
@@ -422,7 +422,7 @@ objectdef obj_Social
 				if ${HostilePilot}
 				{
 					LogMsg:Concat[" Below Standing Threshold: ${PilotIterator.Value.Name} CorpID: ${PilotIterator.Value.CorporationID} AllianceID: ${PilotIterator.Value.AllianceID}"]
-					UI:UpdateConsole[${LogMsg}, LOG_CRITICAL]
+					Logger:Log[${LogMsg}, LOG_CRITICAL]
 					HostilesPresent:Inc
 					{This.ReportedPilotsSinceLastSafe:Add[${PilotIterator.Value}]
 				}

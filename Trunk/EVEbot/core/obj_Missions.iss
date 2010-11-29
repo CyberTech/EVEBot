@@ -24,7 +24,7 @@ objectdef obj_MissionCache
 		LavishSettings:AddSet[MissionCache]
 		LavishSettings[MissionCache]:AddSet[${This.SET_NAME}]
 		LavishSettings[MissionCache]:Import[${This.CONFIG_FILE}]
-		UI:UpdateConsole["obj_MissionCache: Initialized", LOG_MINOR]
+		Logger:Log["obj_MissionCache: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -126,9 +126,9 @@ objectdef obj_MissionDatabase
 	{
 		LavishSettings[${This.SET_NAME}]:Remove
 		LavishSettings:Import[${CONFIG_FILE}]
-		UI:UpdateConsole["obj_MissionDatabase: Initialized", LOG_MINOR]
+		Logger:Log["obj_MissionDatabase: Initialized", LOG_MINOR]
 
-		;UI:UpdateConsole["obj_MissionDatabase: Dumping database...",LOG_MINOR]
+		;Logger:Log["obj_MissionDatabase: Dumping database...",LOG_MINOR]
 		;This:DumpSet[${LavishSettings[${This.SET_NAME}]},1]
 	}
 
@@ -142,7 +142,7 @@ objectdef obj_MissionDatabase
 	}
 	method DumpSet(settingsetref Set, uint Indent=1)
 	{
-		UI:UpdateConsole["${Set.Name} - ${Set.GUID}",LOG_MINOR,Indent]
+		Logger:Log["${Set.Name} - ${Set.GUID}",LOG_MINOR,Indent]
 
 		variable iterator Iterator
 		Set:GetSetIterator[Iterator]
@@ -172,7 +172,7 @@ objectdef obj_MissionDatabase
 		{
 			do
 			{
-				UI:UpdateConsole["${sIndent}${Iterator.Key} - ${Iterator.Value}",LOG_MINOR,Indent]
+				Logger:Log["${sIndent}${Iterator.Key} - ${Iterator.Value}",LOG_MINOR,Indent]
 			}
 			while ${Iterator:Next(exists)}
 		}
@@ -190,7 +190,7 @@ objectdef obj_Missions
 
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_Missions: Initialized", LOG_MINOR]
+		Logger:Log["obj_Missions: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -205,14 +205,14 @@ objectdef obj_Missions
 		EVE:DoGetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
-		UI:UpdateConsole["obj_Missions: DEBUG: amIndex.Used = ${amIndex.Used}",LOG_DEBUG]
+		Logger:Log["obj_Missions: DEBUG: amIndex.Used = ${amIndex.Used}",LOG_DEBUG]
 		if ${amIterator:First(exists)}
 		{
 			do
 			{
-				;UI:UpdateConsole["obj_Missions: DEBUG: amIterator.Value.AgentID = ${amIterator.Value.AgentID}"]
-				;UI:UpdateConsole["obj_Missions: DEBUG: amIterator.Value.State = ${amIterator.Value.State}"]
-				;UI:UpdateConsole["obj_Missions: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}"]
+				;Logger:Log["obj_Missions: DEBUG: amIterator.Value.AgentID = ${amIterator.Value.AgentID}"]
+				;Logger:Log["obj_Missions: DEBUG: amIterator.Value.State = ${amIterator.Value.State}"]
+				;Logger:Log["obj_Missions: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}"]
 				if ${amIterator.Value.State} == 2
 				{
 					if ${amIterator.Value.Type.Find[Courier](exists)}
@@ -229,12 +229,12 @@ objectdef obj_Missions
 					}
 					elseif ${amIterator.Value.Type.Find[Encounter](exists)}
 					{
-						UI:UpdateConsole["obj_Missions: DEBUG: Run Combat Mission being called",LOG_DEBUG]
+						Logger:Log["obj_Missions: DEBUG: Run Combat Mission being called",LOG_DEBUG]
 						call This.RunCombatMission ${amIterator.Value.AgentID}
 					}
 					else
 					{
-						UI:UpdateConsole["obj_Missions: ERROR!  Unknown mission type!"]
+						Logger:Log["obj_Missions: ERROR!  Unknown mission type!"]
 						Script:Pause
 					}
 				}
@@ -278,12 +278,12 @@ objectdef obj_Missions
 		itemVolume:Set[${EVEDB_Items.Volume[${This.MissionCache.TypeID[${agentID}]}]}]
 		if ${itemVolume} > 0
 		{
-			UI:UpdateConsole["DEBUG: RunCourierMission: ${This.MissionCache.TypeID[${agentID}]}:${itemName} has volume ${itemVolume}."]
+			Logger:Log["DEBUG: RunCourierMission: ${This.MissionCache.TypeID[${agentID}]}:${itemName} has volume ${itemVolume}."]
 			QuantityRequired:Set[${Math.Calc[${This.MissionCache.Volume[${agentID}]}/${itemVolume}]}]
 		}
 		else
 		{
-			UI:UpdateConsole["DEBUG: RunCourierMission: ${This.MissionCache.TypeID[${agentID}]}: Item not found!  Assuming one unit to move."]
+			Logger:Log["DEBUG: RunCourierMission: ${This.MissionCache.TypeID[${agentID}]}: Item not found!  Assuming one unit to move."]
 			QuantityRequired:Set[1]
 		}
 
@@ -292,22 +292,22 @@ objectdef obj_Missions
 			Cargo:FindShipCargoByType[${This.MissionCache.TypeID[${agentID}]}]
 			if ${Cargo.CargoToTransferCount} == 0
 			{
-				UI:UpdateConsole["obj_Missions: MoveToPickup"]
+				Logger:Log["obj_Missions: MoveToPickup"]
 				call Agents.MoveToPickup
-				UI:UpdateConsole["obj_Missions: TransferCargoToShip"]
+				Logger:Log["obj_Missions: TransferCargoToShip"]
 				wait 50
 				call Cargo.TransferHangarItemToShip ${This.MissionCache.TypeID[${agentID}]}
 				allDone:Set[${Cargo.LastTransferComplete}]
 			}
 
-			UI:UpdateConsole["obj_Missions: MoveToDropOff"]
+			Logger:Log["obj_Missions: MoveToDropOff"]
 			call Agents.MoveToDropOff
 			wait 50
 
 			call Cargo.CloseHolds
 			call Cargo.OpenHolds
 
-			UI:UpdateConsole["DEBUG: RunCourierMission: Checking ship's cargohold for ${QuantityRequired} units of ${itemName}.", LOG_DEBUG]
+			Logger:Log["DEBUG: RunCourierMission: Checking ship's cargohold for ${QuantityRequired} units of ${itemName}.", LOG_DEBUG]
 			MyShip:DoGetCargo[CargoIndex]
 			CargoIndex:GetIterator[CargoIterator]
 			if ${CargoIterator:First(exists)}
@@ -316,12 +316,12 @@ objectdef obj_Missions
 				{
 					TypeID:Set[${CargoIterator.Value.TypeID}]
 					ItemQuantity:Set[${CargoIterator.Value.Quantity}]
-					UI:UpdateConsole["DEBUG: RunCourierMission: Ship's Cargo: ${ItemQuantity} units of ${CargoIterator.Value.Name}(${TypeID}).", LOG_DEBUG]
+					Logger:Log["DEBUG: RunCourierMission: Ship's Cargo: ${ItemQuantity} units of ${CargoIterator.Value.Name}(${TypeID}).", LOG_DEBUG]
 
 					if (${TypeID} == ${This.MissionCache.TypeID[${agentID}]}) && \
 					   (${ItemQuantity} >= ${QuantityRequired})
 					{
-						UI:UpdateConsole["DEBUG: RunCourierMission: Found required items in ship's cargohold.", LOG_DEBUG]
+						Logger:Log["DEBUG: RunCourierMission: Found required items in ship's cargohold.", LOG_DEBUG]
 						haveCargo:Set[TRUE]
 						break
 					}
@@ -339,7 +339,7 @@ objectdef obj_Missions
 
 			if ${Station.Docked}
 			{
-				UI:UpdateConsole["DEBUG: RunCourierMission: Checking station hangar for ${QuantityRequired} units of ${itemName}.", LOG_DEBUG]
+				Logger:Log["DEBUG: RunCourierMission: Checking station hangar for ${QuantityRequired} units of ${itemName}.", LOG_DEBUG]
 				Me:DoGetHangarItems[CargoIndex]
 				CargoIndex:GetIterator[CargoIterator]
 
@@ -349,12 +349,12 @@ objectdef obj_Missions
 					{
 						TypeID:Set[${CargoIterator.Value.TypeID}]
 						ItemQuantity:Set[${CargoIterator.Value.Quantity}]
-						UI:UpdateConsole["DEBUG: RunCourierMission: Station Hangar: ${ItemQuantity} units of ${CargoIterator.Value.Name}(${TypeID}).", LOG_DEBUG]
+						Logger:Log["DEBUG: RunCourierMission: Station Hangar: ${ItemQuantity} units of ${CargoIterator.Value.Name}(${TypeID}).", LOG_DEBUG]
 
 						if (${TypeID} == ${This.MissionCache.TypeID[${agentID}]}) && \
 						   (${ItemQuantity} >= ${QuantityRequired})
 						{
-							UI:UpdateConsole["DEBUG: RunCourierMission: Found required items in station hangar.", LOG_DEBUG]
+							Logger:Log["DEBUG: RunCourierMission: Found required items in station hangar.", LOG_DEBUG]
 							allDone:Set[TRUE]
 							break
 						}
@@ -365,7 +365,7 @@ objectdef obj_Missions
 		}
 		while !${allDone}
 
-		UI:UpdateConsole["obj_Missions: TurnInMission"]
+		Logger:Log["obj_Missions: TurnInMission"]
 		call Agents.TurnInMission
 	}
 
@@ -386,7 +386,7 @@ objectdef obj_Missions
 		itemVolume:Set[${EVEDB_Items.Volume[${This.MissionCache.TypeID[${agentID}]}]}]
 		QuantityRequired:Set[${Math.Calc[${This.MissionCache.Volume[${agentID}]}/${itemVolume}]}]
 
-		UI:UpdateConsole["RunTradeMission: Looking for ${QuantityRequired} units of ${itemName}"]
+		Logger:Log["RunTradeMission: Looking for ${QuantityRequired} units of ${itemName}"]
 		call Cargo.CloseHolds
 		call Cargo.OpenHolds
 
@@ -399,12 +399,12 @@ objectdef obj_Missions
 			{
 				TypeID:Set[${CargoIterator.Value.TypeID}]
 				ItemQuantity:Set[${CargoIterator.Value.Quantity}]
-				UI:UpdateConsole["DEBUG: RunTradeMission: Ship's Cargo: ${ItemQuantity} units of ${CargoIterator.Value.Name}(${TypeID})."]
+				Logger:Log["DEBUG: RunTradeMission: Ship's Cargo: ${ItemQuantity} units of ${CargoIterator.Value.Name}(${TypeID})."]
 
 				if (${TypeID} == ${This.MissionCache.TypeID[${agentID}]}) && \
 				   (${ItemQuantity} >= ${QuantityRequired})
 				{
-					UI:UpdateConsole["DEBUG: RunTradeMission: Found required items in ship's cargohold."]
+					Logger:Log["DEBUG: RunTradeMission: Found required items in ship's cargohold."]
 					haveCargo:Set[TRUE]
 				}
 			}
@@ -432,12 +432,12 @@ objectdef obj_Missions
 				{
 					TypeID:Set[${CargoIterator.Value.TypeID}]
 					ItemQuantity:Set[${CargoIterator.Value.Quantity}]
-					UI:UpdateConsole["DEBUG: RunTradeMission: Station Hangar: ${ItemQuantity} units of ${CargoIterator.Value.Name}(${TypeID})."]
+					Logger:Log["DEBUG: RunTradeMission: Station Hangar: ${ItemQuantity} units of ${CargoIterator.Value.Name}(${TypeID})."]
 
 					if (${TypeID} == ${This.MissionCache.TypeID[${agentID}]}) && \
 					   (${ItemQuantity} >= ${QuantityRequired})
 					{
-						UI:UpdateConsole["DEBUG: RunTradeMission: Found required items in station hangar."]
+						Logger:Log["DEBUG: RunTradeMission: Found required items in station hangar."]
 						if ${Agents.InAgentStation} == FALSE
 						{
 							call Cargo.TransferHangarItemToShip ${This.MissionCache.TypeID[${agentID}]}
@@ -467,24 +467,24 @@ objectdef obj_Missions
 
 			if ${Cargo.LastTransferComplete} == FALSE
 			{
-				UI:UpdateConsole["obj_Missions: ERROR: Couldn't carry all the trade goods!  Pasuing script!!"]
+				Logger:Log["obj_Missions: ERROR: Couldn't carry all the trade goods!  Pasuing script!!"]
 				Script:Pause
 			}
 		}
 
-		;;;UI:UpdateConsole["obj_Missions: MoveTo Agent"]
+		;;;Logger:Log["obj_Missions: MoveTo Agent"]
 		call Agents.MoveTo
 		wait 50
 		;;;call Cargo.TransferItemTypeToHangar ${This.MissionCache.TypeID[${agentID}]}
 		;;;wait 50
 
-		UI:UpdateConsole["obj_Missions: TurnInMission"]
+		Logger:Log["obj_Missions: TurnInMission"]
 		call Agents.TurnInMission
 	}
 
 	function RunMiningMission(int agentID)
 	{
-		UI:UpdateConsole["obj_Missions: ERROR!  Mining missions are not supported!"]
+		Logger:Log["obj_Missions: ERROR!  Mining missions are not supported!"]
 		Script:Pause
 	}
 
@@ -502,7 +502,7 @@ objectdef obj_Missions
 
 
 ;
-;		UI:UpdateConsole["obj_Missions: DEBUG: Shiptype ${Ship.Type} (${Ship.TypeID}) Mission agent (${MissionCache.Name[${agentID}]}) (${Agents.AgentName})"]
+;		Logger:Log["obj_Missions: DEBUG: Shiptype ${Ship.Type} (${Ship.TypeID}) Mission agent (${MissionCache.Name[${agentID}]}) (${Agents.AgentName})"]
 ;
 ;		variable string missLevel = ${Agent[id,${agentID}].Level}
 ;		variable string missionName = ${MissionCache.Name[${agentID}]}
@@ -511,7 +511,7 @@ objectdef obj_Missions
 ;		;echo ${MissionDatabase.MissionCommands[${missionName},${missLevel}]}
 ;		if ${MissionDatabase.MissionCommands[${missionName},${missLevel}].Children(exists)}
 ;		{
-;			UI:UpdateConsole["obj_Missions: DEBUG: Mission Name : __${missionName}__ , level ${missLevel}"]
+;			Logger:Log["obj_Missions: DEBUG: Mission Name : __${missionName}__ , level ${missLevel}"]
 ;
 ;			call This.WarpToEncounter ${agentID}
 ;
@@ -523,26 +523,26 @@ objectdef obj_Missions
 ;				;we go home and hand the mission in
 ;				call This.WarpToHomeBase ${agentID}
 ;				wait 50
-;				UI:UpdateConsole["obj_Missions: TurnInMission"]
+;				Logger:Log["obj_Missions: TurnInMission"]
 ;				call Agents.TurnInMission
 ;			}
 ;		}
 ;		else
 ;		{
-;			UI:UpdateConsole["obj_Missions: Paused Script. No commands available for mission, complete mission manually then run the script."]
+;			Logger:Log["obj_Missions: Paused Script. No commands available for mission, complete mission manually then run the script."]
 ;			Script:Pause
 ;		}
 ;	}
 
 	function DefaultCombat(int agentID)
 	{
-		UI:UpdateConsole["obj_Missions: Paused Script.  Complete mission manually and then run the script."]
+		Logger:Log["obj_Missions: Paused Script.  Complete mission manually and then run the script."]
 		Script:Pause
 	}
 
 	function PunisherCombat(int agentID)
 	{
-		UI:UpdateConsole["obj_Missions: Paused Script.  Complete mission manually and then run the script."]
+		Logger:Log["obj_Missions: Paused Script.  Complete mission manually and then run the script."]
 		Script:Pause
 	}
 
@@ -553,13 +553,13 @@ objectdef obj_Missions
 
 	function RavenCombat(int agentID)
 	{
-		UI:UpdateConsole["obj_Missions: Paused Script.  Complete mission manually and then run the script."]
+		Logger:Log["obj_Missions: Paused Script.  Complete mission manually and then run the script."]
 		Script:Pause
 	}
 
 	function HawkCombat(int agentID)
 	{
-		UI:UpdateConsole["obj_Missions: Paused Script.  Complete mission manually and then run the script."]
+		Logger:Log["obj_Missions: Paused Script.  Complete mission manually and then run the script."]
 		Script:Pause
 	}
 
@@ -596,9 +596,9 @@ objectdef obj_Missions
 
 		while !${missionComplete}
 		{
-			UI:UpdateConsole["obj_Missions: DEBUG: TypeID = ${This.MissionCache.TypeID[${agentID}]}."]
+			Logger:Log["obj_Missions: DEBUG: TypeID = ${This.MissionCache.TypeID[${agentID}]}."]
 
-			UI:UpdateConsole["obj_Missions: DEBUG: Targeting.QueueSize = ${Targeting.QueueSize}."]
+			Logger:Log["obj_Missions: DEBUG: Targeting.QueueSize = ${Targeting.QueueSize}."]
 
 			if ${This.HostileCount} > 0
 			{
@@ -610,7 +610,7 @@ objectdef obj_Missions
 				breakTime.Second:Inc[15]
 				breakTime:Update
 
-				UI:UpdateConsole["obj_Missions: ${This.HostileCount} hostiles present."]
+				Logger:Log["obj_Missions: ${This.HostileCount} hostiles present."]
 
 				while TRUE
 				{
@@ -656,7 +656,7 @@ objectdef obj_Missions
 				variable int structureID
 
 				structureID:Set[${This.SpecialStructureID[${agentID}]}]
-				UI:UpdateConsole["obj_Missions: Special structure present."]
+				Logger:Log["obj_Missions: Special structure present."]
 				if !${Targeting.IsQueued[${structureID}]}
 				{
 					Targeting:Queue[${structureID},1,1,FALSE]
@@ -674,7 +674,7 @@ objectdef obj_Missions
 
 				if ${containerIterator:First(exists)}
 				{
-					UI:UpdateConsole["obj_Missions: There are ${containerIndex.Used} cargo containers nearby."]
+					Logger:Log["obj_Missions: There are ${containerIndex.Used} cargo containers nearby."]
 					do
 					{
 						call This.CombatApproach ${containerIterator.Value.ID} LOOT_RANGE
@@ -688,7 +688,7 @@ objectdef obj_Missions
 
 				if ${containerIterator:First(exists)}
 				{
-					UI:UpdateConsole["obj_Missions: There are ${containerIndex.Used} spawn containers nearby."]
+					Logger:Log["obj_Missions: There are ${containerIndex.Used} spawn containers nearby."]
 					do
 					{
 						call This.CombatApproach ${containerIterator.Value.ID} LOOT_RANGE
@@ -703,7 +703,7 @@ objectdef obj_Missions
 					variable int wreckID
 
 					wreckID:Set[${This.SpecialWreckID[${agentID}]}]
-					UI:UpdateConsole["obj_Missions: Special wreck present."]
+					Logger:Log["obj_Missions: Special wreck present."]
 					call This.CombatApproach ${wreckID} LOOT_RANGE
 					call This.LootEntity ${wreckID}
 				}
@@ -714,7 +714,7 @@ objectdef obj_Missions
 			{
 				gateCounter:Inc
 
-				UI:UpdateConsole["DEBUG: obj_Missions: gateCounter = ${gateCounter}.",LOG_MINOR]
+				Logger:Log["DEBUG: obj_Missions: gateCounter = ${gateCounter}.",LOG_MINOR]
 
 				if ${gateCounter} > 45
 				{
@@ -722,7 +722,7 @@ objectdef obj_Missions
 					call Ship.Approach ${Entity[TypeID = TYPE_ACCELERATION_GATE].ID} DOCKING_RANGE
 					wait 10
 					call Ship.WarpPrepare
-					UI:UpdateConsole["Activating Acceleration Gate..."]
+					Logger:Log["Activating Acceleration Gate..."]
 					while !${Ship.WarpEntered}
 					{
 						Entity[TypeID = TYPE_ACCELERATION_GATE]:Activate
@@ -739,7 +739,7 @@ objectdef obj_Missions
 			{
 				doneCounter:Inc
 
-				UI:UpdateConsole["DEBUG: obj_Missions: doneCounter = ${doneCounter}.",LOG_MINOR]
+				Logger:Log["DEBUG: obj_Missions: doneCounter = ${doneCounter}.",LOG_MINOR]
 
 				if ${doneCounter} > 45
 				{
@@ -752,7 +752,7 @@ objectdef obj_Missions
 
 	function KestrelCombat(int agentID)
 	{
-		UI:UpdateConsole["obj_Missions: Paused Script.  Complete mission manually and then run the script."]
+		Logger:Log["obj_Missions: Paused Script.  Complete mission manually and then run the script."]
 		Script:Pause
 	}
 
@@ -764,7 +764,7 @@ objectdef obj_Missions
 	  EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
 	  targetIndex:GetIterator[targetIterator]
 
-	  ;;UI:UpdateConsole["GetTargeting = ${Me.GetTargeting}, GetTargets = ${Me.GetTargets}"]
+	  ;;Logger:Log["GetTargeting = ${Me.GetTargeting}, GetTargets = ${Me.GetTargets}"]
 	  if ${targetIterator:First(exists)}
 	  {
 		 do
@@ -793,7 +793,7 @@ objectdef obj_Missions
 		 {
 		 	if ${This.IsNPCTarget[${targetIterator.Value.GroupID}]}
 			{
-				UI:UpdateConsole["obj_Missions: DEBUG: Pulling ${targetIterator.Value} (${targetIterator.Value.ID})..."]
+				Logger:Log["obj_Missions: DEBUG: Pulling ${targetIterator.Value} (${targetIterator.Value.ID})..."]
 
 				if !${Targeting.IsQueued[${targetIterator.Value.ID}]}
 				{
@@ -826,7 +826,7 @@ objectdef obj_Missions
 			OriginalDistance:Inc[10]
 
 			CurrentDistance:Set[${Entity[${EntityID}].Distance}]
-			UI:UpdateConsole["Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc[(${CurrentDistance} - ${Distance}) / ${MyShip.MaxVelocity}].Ceil} Seconds away"]
+			Logger:Log["Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc[(${CurrentDistance} - ${Distance}) / ${MyShip.MaxVelocity}].Ceil} Seconds away"]
 
 			Ship:Activate_AfterBurner[]
 			do
@@ -838,7 +838,7 @@ objectdef obj_Missions
 				if ${Entity[${EntityID}](exists)} && \
 					${OriginalDistance} < ${CurrentDistance}
 				{
-					UI:UpdateConsole["DEBUG: obj_Ship:Approach: ${Entity[${EntityID}].Name} is getting further away!  Is it moving? Are we stuck, or colliding?", LOG_MINOR]
+					Logger:Log["DEBUG: obj_Ship:Approach: ${Entity[${EntityID}].Name} is getting further away!  Is it moving? Are we stuck, or colliding?", LOG_MINOR]
 				}
 
 				This.Combat:SetState
@@ -909,7 +909,7 @@ objectdef obj_Missions
 
 		EVE:DoGetEntities[gateIndex, TypeID, TYPE_ACCELERATION_GATE]
 
-		UI:UpdateConsole["obj_Missions: DEBUG There are ${gateIndex.Used} gates nearby."]
+		Logger:Log["obj_Missions: DEBUG There are ${gateIndex.Used} gates nearby."]
 
 		return ${gateIndex.Used} > 0
    }
@@ -974,7 +974,7 @@ objectdef obj_Missions
 					{
 						do
 						{
-							UI:UpdateConsole["obj_Missions: DEBUG: mbIterator.Value.LocationType = ${mbIterator.Value.LocationType}"]
+							Logger:Log["obj_Missions: DEBUG: mbIterator.Value.LocationType = ${mbIterator.Value.LocationType}"]
 							if ${mbIterator.Value.LocationType.Equal["agenthomebase"]} || \
 							   ${mbIterator.Value.LocationType.Equal["objective"]}
 							{
@@ -994,12 +994,12 @@ objectdef obj_Missions
 	{
 		variable string missionName
 
-		;;;UI:UpdateConsole["obj_Agents: DEBUG: IsSpecialStructure(${agentID},${structureName}) >>> ${This.MissionCache.Name[${agentID}]}"]
+		;;;Logger:Log["obj_Agents: DEBUG: IsSpecialStructure(${agentID},${structureName}) >>> ${This.MissionCache.Name[${agentID}]}"]
 
 		missionName:Set[${This.MissionCache.Name[${agentID}]}]
 		if ${missionName.NotEqual[NULL]}
 		{
-			UI:UpdateConsole["obj_Missions: DEBUG: missionName = ${missionName}"]
+			Logger:Log["obj_Missions: DEBUG: missionName = ${missionName}"]
 			if ${missionName.Equal["avenge a fallen comrade"]} && \
 				${structureName.Equal["habitat"]}
 			{
@@ -1035,7 +1035,7 @@ objectdef obj_Missions
 		EVE:DoGetEntities[targetIndex, GroupID, GROUP_LARGECOLLIDABLESTRUCTURE]
 		targetIndex:GetIterator[targetIterator]
 
-		UI:UpdateConsole["obj_Missions: DEBUG: SpecialStructurePresent found ${targetIndex.Used} structures"]
+		Logger:Log["obj_Missions: DEBUG: SpecialStructurePresent found ${targetIndex.Used} structures"]
 
 		if ${targetIterator:First(exists)}
 		{
@@ -1079,12 +1079,12 @@ objectdef obj_Missions
 	{
 		variable string missionName
 
-		;;;UI:UpdateConsole["obj_Missions: DEBUG: IsSpecialWreck(${agentID},${wreckName}) >>> ${This.MissionCache.Name[${agentID}]}"]
+		;;;Logger:Log["obj_Missions: DEBUG: IsSpecialWreck(${agentID},${wreckName}) >>> ${This.MissionCache.Name[${agentID}]}"]
 
 		missionName:Set[${This.MissionCache.Name[${agentID}]}]
 		if ${missionName.NotEqual[NULL]}
 		{
-			UI:UpdateConsole["obj_Missions: DEBUG: missionName = ${missionName}"]
+			Logger:Log["obj_Missions: DEBUG: missionName = ${missionName}"]
 			if ${missionName.Equal["smuggler interception"]} && \
 				${wreckName.Find["transport"]} > 0
 			{
@@ -1105,7 +1105,7 @@ objectdef obj_Missions
 		EVE:DoGetEntities[targetIndex, GroupID, GROUP_LARGECOLLIDABLESTRUCTURE]
 		targetIndex:GetIterator[targetIterator]
 
-		UI:UpdateConsole["obj_Missions: DEBUG: SpecialWreckPresent found ${targetIndex.Used} wrecks",LOG_MINOR]
+		Logger:Log["obj_Missions: DEBUG: SpecialWreckPresent found ${targetIndex.Used} wrecks",LOG_MINOR]
 
 		if ${targetIterator:First(exists)}
 		{
@@ -1151,7 +1151,7 @@ objectdef obj_Missions
 		variable iterator Cargo
 		variable int QuantityToMove
 
-		UI:UpdateConsole["DEBUG: obj_Missions.LootEntity ${entityID} ${typeID}"]
+		Logger:Log["DEBUG: obj_Missions.LootEntity ${entityID} ${typeID}"]
 
 		Entity[${entityID}]:OpenCargo
 		wait 50
@@ -1161,11 +1161,11 @@ objectdef obj_Missions
 		{
 			do
 			{
-				UI:UpdateConsole["DEBUG: obj_Missions.LootEntity: Found ${Cargo.Value.Quantity} x ${Cargo.Value.Name} - ${Math.Calc[${Cargo.Value.Quantity} * ${Cargo.Value.Volume}]}m3"]
+				Logger:Log["DEBUG: obj_Missions.LootEntity: Found ${Cargo.Value.Quantity} x ${Cargo.Value.Name} - ${Math.Calc[${Cargo.Value.Quantity} * ${Cargo.Value.Volume}]}m3"]
 
 				if ${typeID} != ${Cargo.Value.TypeID}
 				{
-					UI:UpdateConsole["DEBUG: obj_Missions.LootEntity: Skipping ${Cargo.Value.Name}..."]
+					Logger:Log["DEBUG: obj_Missions.LootEntity: Skipping ${Cargo.Value.Name}..."]
 					continue
 				}
 
@@ -1179,7 +1179,7 @@ objectdef obj_Missions
 					QuantityToMove:Set[${Cargo.Value.Quantity}]
 				}
 
-				UI:UpdateConsole["DEBUG: obj_Missions.LootEntity: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
+				Logger:Log["DEBUG: obj_Missions.LootEntity: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
 				if ${QuantityToMove} > 0
 				{
 					Cargo.Value:MoveTo[MyShip,${QuantityToMove}]
@@ -1188,7 +1188,7 @@ objectdef obj_Missions
 
 				if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
 				{
-					UI:UpdateConsole["DEBUG: obj_Missions.LootEntity: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
+					Logger:Log["DEBUG: obj_Missions.LootEntity: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
 					break
 				}
 			}
@@ -1225,12 +1225,12 @@ objectdef obj_Missions
 			{
 				TypeID:Set[${CargoIterator.Value.TypeID}]
 				ItemQuantity:Set[${CargoIterator.Value.Quantity}]
-				;;UI:UpdateConsole["DEBUG: HaveLoot: Ship's Cargo: ${ItemQuantity} units of ${CargoIterator.Value.Name}(${TypeID})."]
+				;;Logger:Log["DEBUG: HaveLoot: Ship's Cargo: ${ItemQuantity} units of ${CargoIterator.Value.Name}(${TypeID})."]
 
 				if (${TypeID} == ${This.MissionCache.TypeID[${agentID}]}) && \
 				   (${ItemQuantity} >= ${QuantityRequired})
 				{
-					UI:UpdateConsole["DEBUG: HaveLoot: Found required items in ship's cargohold."]
+					Logger:Log["DEBUG: HaveLoot: Found required items in ship's cargohold."]
 					haveCargo:Set[TRUE]
 				}
 			}

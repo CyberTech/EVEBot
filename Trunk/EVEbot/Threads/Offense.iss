@@ -31,7 +31,7 @@ objectdef obj_Offense
 	method Initialize()
 	{
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-		UI:UpdateConsole["Thread: obj_Offense: Initialized", LOG_MINOR]
+		Logger:Log["Thread: obj_Offense: Initialized", LOG_MINOR]
 
 	}
 
@@ -91,7 +91,7 @@ objectdef obj_Offense
 						TurretIndex:Insert[${ModuleIterator.Value}]
 						break
 					default
-						UI:UpdateConsole["Offense:BuildIndices[]: Cannot insert ${ModuleIterator.Value.ToItem.Name} ${ModuleIterator.Value.ToItem.Group} ${ModuleIterator.Value.ToItem.GroupID} - no matching case!",LOG_CRITICAL]
+						Logger:Log["Offense:BuildIndices[]: Cannot insert ${ModuleIterator.Value.ToItem.Name} ${ModuleIterator.Value.ToItem.Group} ${ModuleIterator.Value.ToItem.GroupID} - no matching case!",LOG_CRITICAL]
 						break
 				}
 			}
@@ -247,14 +247,14 @@ objectdef obj_Offense
 							;We can't change ammo 'til it's inactive so just continue after deactivating.
 							if ${MyShip.Module[${slot}].IsActive}
 							{
-								UI:UpdateConsole["Offense: Turret ${idx}: active during ammo change, deactivating and continuing.",LOG_DEBUG]
+								Logger:Log["Offense: Turret ${idx}: active during ammo change, deactivating and continuing.",LOG_DEBUG]
 								MyShip.Module[${slot}]:Click
 								break
 							}
 							else
 							{
 								;If the weapon's off, go ahead and change ammo.
-								UI:UpdateConsole["Offense: Turret ${idx}: Loading optimal ammo and breaking. Active? ${MyShip.Module[${slot}].IsActive}",LOG_DEBUG]
+								Logger:Log["Offense: Turret ${idx}: Loading optimal ammo and breaking. Active? ${MyShip.Module[${slot}].IsActive}",LOG_DEBUG]
 								Ship:LoadOptimalAmmo[${Me.ActiveTarget.Distance},${idx}]
 								This.TurretNeedsAmmo:Set[${idx},FALSE]
 								;Break after loading a turret's ammo, because chaging too much ammo too fast will REALLY fuck things up and make ammo disappear
@@ -276,13 +276,13 @@ objectdef obj_Offense
 							;Account for some falloff in our ammo checks. EFT shows we can maintain about 75% of our dps
 							;at about 1.5* our range, so assume skills suck and we're going for 1.3. The only real problem
 							;with overshooting is tracking speed, and we need some sort of entity.rad/s member to check that.
-							UI:UpdateConsole["Offense: Turret ${idx}: IsActive? ${MyShip.Module[${slot}].IsActive}, Distance? ${Me.ActiveTarget.Distance}, Min? ${Math.Calc[${This.MinRange}]}, Max? ${Math.Calc[${This.MaxRange}]}",LOG_DEBUG]
+							Logger:Log["Offense: Turret ${idx}: IsActive? ${MyShip.Module[${slot}].IsActive}, Distance? ${Me.ActiveTarget.Distance}, Min? ${Math.Calc[${This.MinRange}]}, Max? ${Math.Calc[${This.MaxRange}]}",LOG_DEBUG]
 							if ${MyShip.Module[${slot}].IsActive}
 							{
 								if ${Me.ActiveTarget.Distance} > ${This.MaxRange} || \
 									${Me.ActiveTarget.Distance} < ${This.MinRange}
 								{
-									UI:UpdateConsole["Offense: Turret ${idx}: Turret on but we're either below or above range, deactivating",LOG_DEBUG]
+									Logger:Log["Offense: Turret ${idx}: Turret on but we're either below or above range, deactivating",LOG_DEBUG]
 									MyShip.Module[${slot}]:Click
 									break
 								}
@@ -292,7 +292,7 @@ objectdef obj_Offense
 								if ${Me.ActiveTarget.Distance} <= ${This.MaxRange} && \
 									${Me.ActiveTarget.Distance} >= ${This.MinRange}
 								{
-									UI:UpdateConsole["Offense: Turret ${idx}: Turret off but we're within range, activating",LOG_DEBUG]
+									Logger:Log["Offense: Turret ${idx}: Turret off but we're within range, activating",LOG_DEBUG]
 									MyShip.Module[${slot}]:Click
 									break
 								}
@@ -328,14 +328,14 @@ objectdef obj_Offense
 						{
 							if ${Ship.Drones.DronesInSpace} > 0
 							{
-								UI:UpdateConsole["Offense: Shouldn't have combat drones out but we do, recalling!"]
+								Logger:Log["Offense: Shouldn't have combat drones out but we do, recalling!"]
 								Ship.Drones:QuickReturnAllToDroneBay
 							}
 						}
 					}
 					elseif ${Ship.Drones.DeployedDroneCount} > 0
 					{
-						UI:UpdateConsole["Offense: Active target is out of range but we have drones out; recalling to orbit if they aren't already here.",LOG_DEBUG]
+						Logger:Log["Offense: Active target is out of range but we have drones out; recalling to orbit if they aren't already here.",LOG_DEBUG]
 						Ship.Drones:QuickReturnAllToOrbit
 					}
 				}
@@ -357,7 +357,7 @@ objectdef obj_Offense
 	{
 		variable int CacheID = 0
 
-		switch ${Config.Common.BotMode}
+		switch ${Config.Common.Behavior}
 		{
 			case Ratter
 				CacheID:Set[${Ratter.Rat_CacheID}]
@@ -387,7 +387,7 @@ objectdef obj_Offense
 				;Same goes for assorted deadspace entities
 				;Also make sure we're not accounting for a wreck or moribund object
 				;Something in here is giving us a false positive.
-				UI:UpdateConsole["Offense: ${EntityIterator.Value.EntityID} IsMoribund: ${Entity[${EntityIterator.Value.EntityID}].IsMoribund}",LOG_DEBUG]
+				Logger:Log["Offense: ${EntityIterator.Value.EntityID} IsMoribund: ${Entity[${EntityIterator.Value.EntityID}].IsMoribund}",LOG_DEBUG]
 				if ${Entity[${EntityIterator.Value.EntityID}].Group.Find["Hauler"](exists)} || \
 					${Entity[${EntityIterator.Value.EntityID}].GroupID} == GROUP_DEADSPACEOVERSEERSSTRUCTURE || \
 					${Entity[${EntityIterator.Value.EntityID}].GroupID} == GROUP_LARGECOLLIDABLESTRUCTURE || \
@@ -398,7 +398,7 @@ objectdef obj_Offense
 				}
 
 				; Just waiting on Ama to release the new ISXEVE before I enable this awesome targeting check.
-				UI:UpdateConsole["Offense:.HaveFullNPCAggro[]: ${Entity[${EntityIterator.Value.EntityID}].Name} is attacking me: ${Entity[${EntityIterator.Value.EntityID}].ToAttacker.IsCurrentlyAttacking}",LOG_DEBUG]
+				Logger:Log["Offense:.HaveFullNPCAggro[]: ${Entity[${EntityIterator.Value.EntityID}].Name} is attacking me: ${Entity[${EntityIterator.Value.EntityID}].ToAttacker.IsCurrentlyAttacking}",LOG_DEBUG]
 				if ${Entity[${EntityIterator.Value.EntityID}].ToAttacker.IsCurrentlyAttacking}
 				{
 					continue
@@ -434,7 +434,7 @@ objectdef obj_Offense
 			elseif !${This.Warned_LowAmmo}
 			{
 				This.Warned_LowAmmo:Set[TRUE]
-				UI:UpdateConsole["Offense: Warning - Out of ammo!"]
+				Logger:Log["Offense: Warning - Out of ammo!"]
 			}
 		}
 		else
@@ -465,7 +465,7 @@ objectdef obj_Offense
 	method Enable()
 	{
 #if EVEBOT_DEBUG
-		UI:UpdateConsole["Offense: Enabled"]
+		Logger:Log["Offense: Enabled"]
 #endif
 		This.Running:Set[TRUE]
 	}
@@ -473,7 +473,7 @@ objectdef obj_Offense
 	method Disable()
 	{
 #if EVEBOT_DEBUG
-		UI:UpdateConsole["Offense: Disabled"]
+		Logger:Log["Offense: Disabled"]
 #endif
 		This.Running:Set[FALSE]
 	}

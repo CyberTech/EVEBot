@@ -16,7 +16,7 @@ objectdef obj_FleetManager
 	method Initialize()
 	{
 		LogPrefix:Set["${This.ObjectName}"]
-		UI:UpdateConsole["${LogPrefix}: Initialized"]
+		Logger:Log["${LogPrefix}: Initialized"]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 	}
 

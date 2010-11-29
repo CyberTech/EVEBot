@@ -48,7 +48,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 	method Initialize()
 	{
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-		UI:UpdateConsole["Thread: obj_EVEBOT_Targeting: Initialized", LOG_MINOR]
+		Logger:Log["Thread: obj_EVEBOT_Targeting: Initialized", LOG_MINOR]
 	}
 
 	method Pulse()
@@ -148,14 +148,14 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 		}
 
 #if EVEBOT_DEBUG
-		UI:UpdateConsole["Debug: TargetEntity - Target Count: ${Me.GetTargets}"]
-		UI:UpdateConsole["Debug: TargetEntity - Targeting Count: ${Me.GetTargeting}"]
-		UI:UpdateConsole["Debug: TargetEntity - Targeting this frame: ${This.TargetingThisFrame}"]
-		UI:UpdateConsole["Debug: TargetEntity - Max Targets: ${Ship.MaxLockedTargets}"]
+		Logger:Log["Debug: TargetEntity - Target Count: ${Me.GetTargets}"]
+		Logger:Log["Debug: TargetEntity - Targeting Count: ${Me.GetTargeting}"]
+		Logger:Log["Debug: TargetEntity - Targeting this frame: ${This.TargetingThisFrame}"]
+		Logger:Log["Debug: TargetEntity - Max Targets: ${Ship.MaxLockedTargets}"]
 #endif
 		if !${Entity[${EntityID}].IsLockedTarget} && !${Entity[${EntityID}].BeingTargeted} && ${Entity[${EntityID}].Name.NotEqual[NULL]}
 		{
-			UI:UpdateConsole["Locking ${Entity[${EntityID}].Name} (${EntityID}): ${EVEBot.MetersToKM_Str[${Entity[${EntityID}].Distance}]}"]
+			Logger:Log["Locking ${Entity[${EntityID}].Name} (${EntityID}): ${EVEBot.MetersToKM_Str[${Entity[${EntityID}].Distance}]}"]
 			Entity[${EntityID}]:LockTarget
 			This.TargetingThisFrame:Inc
 		}
@@ -170,7 +170,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 
 		if ${MyShip.MaxLockedTargets} == 0
 		{
-			UI:UpdateConsole["Targeting: Jammed - Unable to target"]
+			Logger:Log["Targeting: Jammed - Unable to target"]
 			This.Counter_TargetingJammed:Inc
 			return
 		}
@@ -178,7 +178,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 		{
 			if ${This.Counter_TargetingJammed}
 			{
-				UI:UpdateConsole["Targeting: Jamming ended"]
+				Logger:Log["Targeting: Jamming ended"]
 				This.Counter_TargetingJammed:Set[0]
 			}
 		}
@@ -255,12 +255,12 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 	{
 		if ${EntityID} == 0
 		{
-			UI:UpdateConsole["Targeting: Who the fuck tried to queue EntityID 0?"]
+			Logger:Log["Targeting: Who the fuck tried to queue EntityID 0?"]
 			return
 		}
 		if ${This.IsQueued[${EntityID}]}
 		{
-			UI:UpdateConsole["Targeting: Already queued ${Entity[${EntityID}].Name} (${EntityID}) Type: ${TargetType}"]
+			Logger:Log["Targeting: Already queued ${Entity[${EntityID}].Name} (${EntityID}) Type: ${TargetType}"]
 			; TODO: This needs to update the appropriate queue with the possibly new priority, targetype, mandatory settings instead of just returning - CyberTech
 			return
 		}
@@ -269,13 +269,13 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 		{
 			if !${Mandatory}
 			{
-				UI:UpdateConsole["Targeting: BUG: Attempted to queue ${Entity[${EntityID}].Name} as non-mandatory Blocker - forcing mandatory"]
+				Logger:Log["Targeting: BUG: Attempted to queue ${Entity[${EntityID}].Name} as non-mandatory Blocker - forcing mandatory"]
 				Mandatory:Set[TRUE]
 			}
 
 			if ${Priority}
 			{
-				UI:UpdateConsole["Targeting: BUG: Attempted to queue ${Entity[${EntityID}].Name} as low-priority Blocker - forcing highest"]
+				Logger:Log["Targeting: BUG: Attempted to queue ${Entity[${EntityID}].Name} as low-priority Blocker - forcing highest"]
 				Priority:Set[0]
 			}
 		}
@@ -285,21 +285,21 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 			This.Running:Set[TRUE]
 			if ${Mandatory}
 			{
-				UI:UpdateConsole["Targeting: Queueing mandatory target ${Entity[${EntityID}].Name} (${EntityID}) Type: ${TargetType} Priority: ${Priority}"]
+				Logger:Log["Targeting: Queueing mandatory target ${Entity[${EntityID}].Name} (${EntityID}) Type: ${TargetType} Priority: ${Priority}"]
 
 				MandatoryQueue:Insert[${EntityID}, ${TargetType}, ${Priority}, ${Blocker}]
 				This:Sort[MandatoryQueue, Priority]
 			}
 			else
 			{
-				UI:UpdateConsole["Targeting: Queueing target ${Entity[${EntityID}].Name} (${EntityID}) Type: ${TargetType} Priority: ${Priority}"]
+				Logger:Log["Targeting: Queueing target ${Entity[${EntityID}].Name} (${EntityID}) Type: ${TargetType} Priority: ${Priority}"]
 				TargetQueue:Insert[${EntityID}, ${TargetType}, ${Priority}, FALSE]
 				This:Sort[TargetQueue, Priority]
 			}
 		}
 		else
 		{
-			UI:UpdateConsole["Targeting: Attempted queue of non-existent entity ${EntityID}"]
+			Logger:Log["Targeting: Attempted queue of non-existent entity ${EntityID}"]
 		}
 	}
 
@@ -386,7 +386,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 	method Enable()
 	{
 #if EVEBOT_DEBUG
-		UI:UpdateConsole["Targeting: Enabled"]
+		Logger:Log["Targeting: Enabled"]
 #endif
 		This.Running:Set[TRUE]
 	}
@@ -394,7 +394,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 	method Disable()
 	{
 #if EVEBOT_DEBUG
-		UI:UpdateConsole["Targeting: Disabled"]
+		Logger:Log["Targeting: Disabled"]
 #endif
 		This.Running:Set[FALSE]
 	}

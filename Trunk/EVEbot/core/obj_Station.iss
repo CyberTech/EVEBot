@@ -22,9 +22,9 @@ objectdef obj_EVEDB_StationID
 	method Initialize()
 	{
 		LavishSettings[${This.SET_NAME}]:Remove
-		UI:UpdateConsole["${This.ObjectName}: Loading database from ${This.CONFIG_FILE}", LOG_MINOR]
+		Logger:Log["${This.ObjectName}: Loading database from ${This.CONFIG_FILE}", LOG_MINOR]
 		LavishSettings:Import[${This.CONFIG_FILE}]
-		UI:UpdateConsole["obj_EVEDB_StationID: Initialized", LOG_MINOR]
+		Logger:Log["obj_EVEDB_StationID: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -48,7 +48,7 @@ objectdef obj_Station
 
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_Station: Initialized", LOG_MINOR]
+		Logger:Log["obj_Station: Initialized", LOG_MINOR]
 	}
 
 	member IsHangarOpen()
@@ -98,7 +98,7 @@ objectdef obj_Station
 
 		if !${This.IsHangarOpen}
 		{
-			UI:UpdateConsole["Opening Cargo Hangar"]
+			Logger:Log["Opening Cargo Hangar"]
 			EVE:Execute[OpenHangarFloor]
 			wait WAIT_CARGO_WINDOW
 			while !${This.IsHangarOpen}
@@ -118,7 +118,7 @@ objectdef obj_Station
 
 		if ${This.IsHangarOpen}
 		{
-			UI:UpdateConsole["Closing Cargo Hangar"]
+			Logger:Log["Closing Cargo Hangar"]
 			EVEWindow[hangarFloor]:Close
 			wait WAIT_CARGO_WINDOW
 			while ${This.IsHangarOpen}
@@ -133,7 +133,7 @@ objectdef obj_Station
 	{
 		while (${Me.InSpace} || !${Me.InStation})
 		{
-			UI:UpdateConsole["obj_Cargo: Waiting for InStation..."]
+			Logger:Log["obj_Cargo: Waiting for InStation..."]
 			wait 10
 		}
 
@@ -199,11 +199,11 @@ objectdef obj_Station
 
 		if ${Me.InStation}
 		{
-			UI:UpdateConsole["DockAtStation called, but we're already in station!"]
+			Logger:Log["DockAtStation called, but we're already in station!"]
 			return
 		}
 
-		UI:UpdateConsole["Docking at ${EVE.GetLocationNameByID[${StationID}]}"]
+		Logger:Log["Docking at ${EVE.GetLocationNameByID[${StationID}]}"]
 
 		Ship:SetType[${Me.ToEntity.Type}]
 		Ship:SetTypeID[${Me.ToEntity.TypeID}]
@@ -212,7 +212,7 @@ objectdef obj_Station
 		{
 			if ${Entity[${StationID}].Distance} > WARP_RANGE
 			{
-				UI:UpdateConsole["Warping to Station"]
+				Logger:Log["Warping to Station"]
 				call Ship.WarpToID ${StationID}
 				do
 				{
@@ -224,14 +224,14 @@ objectdef obj_Station
 			do
 			{
 				Entity[${StationID}]:Approach
-				UI:UpdateConsole["Approaching docking range..."]
+				Logger:Log["Approaching docking range..."]
 				wait 30
 			}
 			while (${Entity[${StationID}].Distance} > DOCKING_RANGE)
 
 			Counter:Set[0]
-			UI:UpdateConsole["In Docking Range ... Docking"]
-			;UI:UpdateConsole["DEBUG: StationExists = ${Entity[${StationID}](exists)}"]
+			Logger:Log["In Docking Range ... Docking"]
+			;Logger:Log["DEBUG: StationExists = ${Entity[${StationID}](exists)}"]
 			do
 			{
 				Entity[${StationID}]:Dock
@@ -239,19 +239,19 @@ objectdef obj_Station
 		   		Counter:Inc[1]
 		   		if (${Counter} > 20)
 		   		{
-					UI:UpdateConsole["Warning: Docking incomplete after 60 seconds", LOG_CRITICAL]
+					Logger:Log["Warning: Docking incomplete after 60 seconds", LOG_CRITICAL]
 					Entity[${StationID}]:Dock
 		      		Counter:Set[0]
 		   		}
-				;UI:UpdateConsole["DEBUG: StationExists = ${Entity[${StationID}](exists)}"]
+				;Logger:Log["DEBUG: StationExists = ${Entity[${StationID}](exists)}"]
 			}
 			while !${This.DockedAtStation[${StationID}]}
 			wait 75
-			UI:UpdateConsoleIRC["Finished Docking"]
+			Logger:LogIRC["Finished Docking"]
 		}
 		else
 		{
-			UI:UpdateConsole["Station Requested does not exist!  Trying Safespots...", LOG_CRITICAL]
+			Logger:Log["Station Requested does not exist!  Trying Safespots...", LOG_CRITICAL]
 			call Safespots.WarpToNext
 		}
 	}
@@ -263,18 +263,18 @@ objectdef obj_Station
 
 		if ${Me.InStation}
 		{
-			UI:UpdateConsole["Dock called, but we're already instation!"]
+			Logger:Log["Dock called, but we're already instation!"]
 			return
 		}
 
-		UI:UpdateConsole["Docking at ${StationID}:${Config.Common.HomeStation}"]
+		Logger:Log["Docking at ${StationID}:${Config.Common.HomeStation}"]
 
 		Ship:SetType[${Me.ToEntity.Type}]
 		Ship:SetTypeID[${Me.ToEntity.TypeID}]
 
 		if ${StationID} <= 0 || !${Entity[${StationID}](exists)}
 		{
-			UI:UpdateConsole["Warning: Home station not found, going to nearest base", LOG_CRITICAL]
+			Logger:Log["Warning: Home station not found, going to nearest base", LOG_CRITICAL]
 			StationID:Set[${Entity[CategoryID = CATEGORYID_STATION].ID}]
 		}
 
@@ -284,7 +284,7 @@ objectdef obj_Station
 		}
 		else
 		{
-			UI:UpdateConsole["No stations in this system!  Trying Safespots...", LOG_CRITICAL]
+			Logger:Log["No stations in this system!  Trying Safespots...", LOG_CRITICAL]
 			call Safespots.WarpToNext
 		}
 	}
@@ -297,11 +297,11 @@ objectdef obj_Station
 
 		if !${Me.InStation}
 		{
-			UI:UpdateConsole["Undock called, but we're already undocking!"]
+			Logger:Log["Undock called, but we're already undocking!"]
 			return
 		}
 
-		UI:UpdateConsole["Undocking"]
+		Logger:Log["Undocking"]
 
 		EVE:Execute[CmdExitStation]
 		wait WAIT_UNDOCK
@@ -314,17 +314,17 @@ objectdef obj_Station
 			{
 			   Counter:Set[0]
 			   EVE:Execute[CmdExitStation]
-			   UI:UpdateConsole["Undock: Unexpected failure, retrying...", LOG_CRITICAL]
-			   UI:UpdateConsole["Undock: Debug: EVEWindow[Local]=${EVEWindow[Local](exists)}", LOG_CRITICAL]
-			   UI:UpdateConsole["Undock: Debug: Me.InStation=${Me.InStation}", LOG_CRITICAL]
-			   UI:UpdateConsole["Undock: Debug: Me.StationID=${Me.StationID}", LOG_CRITICAL]
+			   Logger:Log["Undock: Unexpected failure, retrying...", LOG_CRITICAL]
+			   Logger:Log["Undock: Debug: EVEWindow[Local]=${EVEWindow[Local](exists)}", LOG_CRITICAL]
+			   Logger:Log["Undock: Debug: Me.InStation=${Me.InStation}", LOG_CRITICAL]
+			   Logger:Log["Undock: Debug: Me.StationID=${Me.StationID}", LOG_CRITICAL]
 			}
 		}
 		while ${This.Docked}
 
 		wait 30
 		Config.Common:HomeStation[${Entity[CategoryID = CATEGORYID_STATION].Name}]
-		UI:UpdateConsole["Undock: Complete - Home Station set to ${Config.Common.HomeStation}"]
+		Logger:Log["Undock: Complete - Home Station set to ${Config.Common.HomeStation}"]
 
 
 		Ship:UpdateModuleList[]

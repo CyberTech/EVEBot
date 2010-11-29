@@ -8,7 +8,7 @@ objectdef obj_Callback
 	method Initialize()
 	{
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-		UI:UpdateConsole["obj_Callback: Initialized", LOG_MINOR]
+		Logger:Log["obj_Callback: Initialized", LOG_MINOR]
 	}
 
 	method Pulse()
@@ -22,7 +22,7 @@ objectdef obj_Callback
 		{
 			if ${EVEBot.SessionValid}
 			{
-				;uplink UpdateClient "${Me.Name}" "${MyShip.ShieldPct}" "${MyShip.ArmorPct}" "${MyShip.CapacitorPct}" "${Defense.Hide}" "${Defense.HideReason}" "${Me.ActiveTarget.Name}" "${EVEBot.Paused}" "${Config.Common.BotMode}"  "${MyShip}" "${Session}"
+				;uplink UpdateClient "${Me.Name}" "${MyShip.ShieldPct}" "${MyShip.ArmorPct}" "${MyShip.CapacitorPct}" "${Defense.Hide}" "${Defense.HideReason}" "${Me.ActiveTarget.Name}" "${EVEBot.Paused}" "${Config.Common.Behavior}"  "${MyShip}" "${Session}"
 			}
 
 			This.NextPulse:Set[${Time.Timestamp}]

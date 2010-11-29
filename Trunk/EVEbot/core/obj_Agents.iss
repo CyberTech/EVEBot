@@ -32,7 +32,7 @@ objectdef obj_AgentList
 		LavishSettings:Import[${CONFIG_FILE}]
 		LavishSettings[${This.SET_NAME1}]:GetSettingIterator[This.agentIterator]
 		LavishSettings[${This.SET_NAME2}]:GetSettingIterator[This.researchAgentIterator]
-		UI:UpdateConsole["obj_AgentList: Initialized.", LOG_MINOR]
+		Logger:Log["obj_AgentList: Initialized.", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -78,7 +78,7 @@ objectdef obj_AgentList
 			{
 				variable time lastCompletionTime
 				lastCompletionTime:Set[${Config.Agents.LastCompletionTime[${This.researchAgentIterator.Key}]}]
-				UI:UpdateConsole["DEBUG: Last mission for ${This.researchAgentIterator.Key} was completed at ${lastCompletionTime} on ${lastCompletionTime.Date}."]
+				Logger:Log["DEBUG: Last mission for ${This.researchAgentIterator.Key} was completed at ${lastCompletionTime} on ${lastCompletionTime.Date}."]
 				lastCompletionTime.Hour:Inc[24]
 				lastCompletionTime:Update
 				if ${lastCompletionTime.Timestamp} < ${Time.Timestamp}
@@ -108,7 +108,7 @@ objectdef obj_MissionBlacklist
 		LavishSettings[${This.SET_NAME}]:Remove
 		LavishSettings:Import[${CONFIG_FILE}]
 		LavishSettings[${This.SET_NAME}]:GetSetIterator[This.levelIterator]
-		UI:UpdateConsole["obj_MissionBlacklist: Initialized.", LOG_MINOR]
+		Logger:Log["obj_MissionBlacklist: Initialized.", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -142,7 +142,7 @@ objectdef obj_MissionBlacklist
 				break
 		}
 
-		UI:UpdateConsole["DEBUG: obj_MissionBlacklist: Searching for ${levelString} mission blacklist...", LOG_DEBUG]
+		Logger:Log["DEBUG: obj_MissionBlacklist: Searching for ${levelString} mission blacklist...", LOG_DEBUG]
 
 		if ${This.levelIterator:First(exists)}
 		{
@@ -150,7 +150,7 @@ objectdef obj_MissionBlacklist
 			{
 				if ${levelString.Equal[${This.levelIterator.Key}]}
 				{
-					UI:UpdateConsole["DEBUG: obj_MissionBlacklist: Searching ${levelString} mission blacklist for ${mission}...", LOG_DEBUG]
+					Logger:Log["DEBUG: obj_MissionBlacklist: Searching ${levelString} mission blacklist for ${mission}...", LOG_DEBUG]
 
 					variable iterator missionIterator
 
@@ -161,7 +161,7 @@ objectdef obj_MissionBlacklist
 						{
 							if ${mission.Equal[${missionIterator.Key}]}
 							{
-								UI:UpdateConsole["DEBUG: obj_MissionBlacklist: ${mission} is blacklisted!", LOG_DEBUG]
+								Logger:Log["DEBUG: obj_MissionBlacklist: ${mission} is blacklisted!", LOG_DEBUG]
 								return TRUE
 							}
 						}
@@ -198,11 +198,11 @@ objectdef obj_Agents
     	{
     		;This:SetActiveAgent[${This.AgentList.FirstAgent}]
     		This:PickAgent
-    		UI:UpdateConsole["obj_Agents: Initialized", LOG_MINOR]
+    		Logger:Log["obj_Agents: Initialized", LOG_MINOR]
     	}
     	else
     	{
-			UI:UpdateConsole["obj_Agents: Initialized (No Agents Found)", LOG_MINOR]
+			Logger:Log["obj_Agents: Initialized (No Agents Found)", LOG_MINOR]
 		}
     }
 
@@ -222,11 +222,11 @@ objectdef obj_Agents
 
 	method SetActiveAgent(string name)
 	{
-		UI:UpdateConsole["obj_Agents: SetActiveAgent ${name}"]
+		Logger:Log["obj_Agents: SetActiveAgent ${name}"]
 
 		if ${Config.Agents.AgentIndex[${name}]} > 0
 		{
-			UI:UpdateConsole["obj_Agents: SetActiveAgent: Found agent data. (${Config.Agents.AgentIndex[${name}]})"]
+			Logger:Log["obj_Agents: SetActiveAgent: Found agent data. (${Config.Agents.AgentIndex[${name}]})"]
 			This.AgentName:Set[${name}]
 		}
 		else
@@ -235,13 +235,13 @@ objectdef obj_Agents
 			agentIndex:Set[${Agent[${name}].Index}]
 			if (${agentIndex} <= 0)
 			{
-				UI:UpdateConsole["obj_Agents: ERROR!  Cannot get Index for Agent ${name}.", LOG_CRITICAL]
+				Logger:Log["obj_Agents: ERROR!  Cannot get Index for Agent ${name}.", LOG_CRITICAL]
 				This.AgentName:Set[""]
 			}
 			else
 			{
 				This.AgentName:Set[${name}]
-				UI:UpdateConsole["obj_Agents: Updating agent data for ${name} ${agentIndex}"]
+				Logger:Log["obj_Agents: Updating agent data for ${name} ${agentIndex}"]
 				Config.Agents:SetAgentIndex[${name},${agentIndex}]
 				Config.Agents:SetAgentID[${name},${Agent[${agentIndex}].ID}]
 				Config.Agents:SetLastDecline[${name},0]
@@ -290,7 +290,7 @@ objectdef obj_Agents
 								rVal:Set[${mbIterator.Value.Label}]
 								pos:Set[${rVal.Find[" - "]}]
 								rVal:Set[${rVal.Right[${Math.Calc[${rVal.Length}-${pos}-2]}]}]
-								UI:UpdateConsole["obj_Agents: rVal = ${rVal}"]
+								Logger:Log["obj_Agents: rVal = ${rVal}"]
 								break
 							}
 						}
@@ -324,15 +324,15 @@ objectdef obj_Agents
 		amIndex:GetIterator[MissionInfo]
 		skipList:Clear
 
-		UI:UpdateConsole["obj_Agents: DEBUG: amIndex.Used = ${amIndex.Used}"]
+		Logger:Log["obj_Agents: DEBUG: amIndex.Used = ${amIndex.Used}"]
 		if ${MissionInfo:First(exists)}
 		{
 			do
 			{
-				UI:UpdateConsole["obj_Agents: DEBUG: This.AgentID = ${This.AgentID}"]
-				UI:UpdateConsole["obj_Agents: DEBUG: MissionInfo.AgentID = ${MissionInfo.Value.AgentID}"]
-				UI:UpdateConsole["obj_Agents: DEBUG: MissionInfo.State = ${MissionInfo.Value.State}"]
-				UI:UpdateConsole["obj_Agents: DEBUG: MissionInfo.Type = ${MissionInfo.Value.Type}"]
+				Logger:Log["obj_Agents: DEBUG: This.AgentID = ${This.AgentID}"]
+				Logger:Log["obj_Agents: DEBUG: MissionInfo.AgentID = ${MissionInfo.Value.AgentID}"]
+				Logger:Log["obj_Agents: DEBUG: MissionInfo.State = ${MissionInfo.Value.State}"]
+				Logger:Log["obj_Agents: DEBUG: MissionInfo.Type = ${MissionInfo.Value.Type}"]
 				if ${MissionInfo.Value.State} == 1
 				{
 					variable bool isLowSec
@@ -355,12 +355,12 @@ objectdef obj_Agents
 					/* if we get here the mission is not acceptable */
 					variable time lastDecline
 					lastDecline:Set[${Config.Agents.LastDecline[${Agent[id,${MissionInfo.Value.AgentID}]}]}]
-					UI:UpdateConsole["obj_Agents: DEBUG: lastDecline = ${lastDecline}"]
+					Logger:Log["obj_Agents: DEBUG: lastDecline = ${lastDecline}"]
 					lastDecline.Hour:Inc[4]
 					lastDecline:Update
 					if ${lastDecline.Timestamp} >= ${Time.Timestamp}
 					{
-						UI:UpdateConsole["obj_Agents: DEBUG: Skipping mission to avoid standing loss: ${MissionInfo.Value.Name}"]
+						Logger:Log["obj_Agents: DEBUG: Skipping mission to avoid standing loss: ${MissionInfo.Value.Name}"]
 						skipList:Add[${MissionInfo.Value.AgentID}]
 						continue
 					}
@@ -376,7 +376,7 @@ objectdef obj_Agents
 		{
 			if ${skipList.Contains[${Config.Agents.AgentID[${agentName}]}]} == FALSE
 			{
-				UI:UpdateConsole["obj_Agents: DEBUG: Setting agent to ${agentName}"]
+				Logger:Log["obj_Agents: DEBUG: Setting agent to ${agentName}"]
 				This:SetActiveAgent[${agentName}]
 				return
 			}
@@ -389,7 +389,7 @@ objectdef obj_Agents
 			{
 				if ${skipList.Contains[${Config.Agents.AgentID[${This.AgentList.agentIterator.Key}]}]} == FALSE
 				{
-					UI:UpdateConsole["obj_Agents: DEBUG: Setting agent to ${This.AgentList.agentIterator.Key}"]
+					Logger:Log["obj_Agents: DEBUG: Setting agent to ${This.AgentList.agentIterator.Key}"]
 					This:SetActiveAgent[${This.AgentList.agentIterator.Key}]
 					return
 				}
@@ -398,7 +398,7 @@ objectdef obj_Agents
 		}
 
 		/* we should never get here */
-		UI:UpdateConsole["obj_Agents.PickAgent: DEBUG: Script paused."]
+		Logger:Log["obj_Agents.PickAgent: DEBUG: Script paused."]
 		Script:Pause
 	}
 
@@ -433,7 +433,7 @@ objectdef obj_Agents
 								rVal:Set[${mbIterator.Value.Label}]
 								pos:Set[${rVal.Find[" - "]}]
 								rVal:Set[${rVal.Right[${Math.Calc[${rVal.Length}-${pos}-2]}]}]
-								UI:UpdateConsole["obj_Agents: rVal = ${rVal}"]
+								Logger:Log["obj_Agents: rVal = ${rVal}"]
 								break
 							}
 						}
@@ -503,7 +503,7 @@ objectdef obj_Agents
 	{
 		variable string stationName
 		stationName:Set[${EVEDB_Stations.StationName[${Me.StationID}]}]
-		UI:UpdateConsole["obj_Agents: DEBUG: stationName = ${stationName}"]
+		Logger:Log["obj_Agents: DEBUG: stationName = ${stationName}"]
 
 		if ${stationName.Length} > 0
 		{
@@ -520,7 +520,7 @@ objectdef obj_Agents
 		; sometimes Ship.WarpToBookmark fails so make sure we are docked
 		if !${Station.Docked}
 		{
-			UI:UpdateConsole["obj_Agents.MoveToPickup: ERROR!  Not Docked."]
+			Logger:Log["obj_Agents.MoveToPickup: ERROR!  Not Docked."]
 			call This.WarpToPickupStation
 		}
 	}
@@ -529,7 +529,7 @@ objectdef obj_Agents
 	{
 		variable string stationName
 		stationName:Set[${EVEDB_Stations.StationName[${Me.StationID}]}]
-		UI:UpdateConsole["obj_Agents: DEBUG: stationName = ${stationName}"]
+		Logger:Log["obj_Agents: DEBUG: stationName = ${stationName}"]
 
 		if ${stationName.Length} > 0
 		{
@@ -546,7 +546,7 @@ objectdef obj_Agents
 		; sometimes Ship.WarpToBookmark fails so make sure we are docked
 		if !${Station.Docked}
 		{
-			UI:UpdateConsole["obj_Agents.MoveToDropOff: ERROR!  Not Docked."]
+			Logger:Log["obj_Agents.MoveToDropOff: ERROR!  Not Docked."]
 			call This.WarpToDropOffStation
 		}
 	}
@@ -574,7 +574,7 @@ objectdef obj_Agents
 					{
 						do
 						{
-							UI:UpdateConsole["obj_Agents: DEBUG: mbIterator.Value.LocationType = ${mbIterator.Value.LocationType}"]
+							Logger:Log["obj_Agents: DEBUG: mbIterator.Value.LocationType = ${mbIterator.Value.LocationType}"]
 							if ${mbIterator.Value.LocationType.Equal["objective.source"]}
 							{
 								call Ship.WarpToBookMark ${mbIterator.Value}
@@ -612,7 +612,7 @@ objectdef obj_Agents
 					{
 						do
 						{
-							UI:UpdateConsole["obj_Agents: DEBUG: mbIterator.Value.LocationType = ${mbIterator.Value.LocationType}"]
+							Logger:Log["obj_Agents: DEBUG: mbIterator.Value.LocationType = ${mbIterator.Value.LocationType}"]
 							if ${mbIterator.Value.LocationType.Equal["objective.destination"]}
 							{
 								call Ship.WarpToBookMark ${mbIterator.Value}
@@ -636,9 +636,9 @@ objectdef obj_Agents
 				call Station.Undock
 			}
 
-			;UI:UpdateConsole["obj_Agents: DEBUG: agentSystem (byname) = ${Universe[${Agent[${This.AgentName}].Solarsystem}].ID}"]
-			;UI:UpdateConsole["obj_Agents: DEBUG: agentSystem = ${Universe[${Agent[${This.AgentIndex}].Solarsystem}].ID}"]
-			;UI:UpdateConsole["obj_Agents: DEBUG: agentStation = ${Agent[${This.AgentIndex}].StationID}"]
+			;Logger:Log["obj_Agents: DEBUG: agentSystem (byname) = ${Universe[${Agent[${This.AgentName}].Solarsystem}].ID}"]
+			;Logger:Log["obj_Agents: DEBUG: agentSystem = ${Universe[${Agent[${This.AgentIndex}].Solarsystem}].ID}"]
+			;Logger:Log["obj_Agents: DEBUG: agentStation = ${Agent[${This.AgentIndex}].StationID}"]
 			call Ship.TravelToSystem ${Universe[${Agent[${This.AgentIndex}].Solarsystem}].ID}
 			wait 50
 			call Station.DockAtStation ${Agent[${This.AgentIndex}].StationID}
@@ -671,11 +671,11 @@ objectdef obj_Agents
 
 		if !${amIterator.Value(exists)}
 		{
-			UI:UpdateConsole["obj_Agents: ERROR: Did not find mission!  Will retry...", LOG_CRITICAL]
+			Logger:Log["obj_Agents: ERROR: Did not find mission!  Will retry...", LOG_CRITICAL]
 			RetryCount:Inc
 			if ${RetryCount} > 4
 			{
-				UI:UpdateConsole["obj_Agents: ERROR: Retry count exceeded!  Aborting...", LOG_CRITICAL]
+				Logger:Log["obj_Agents: ERROR: Retry count exceeded!  Aborting...", LOG_CRITICAL]
 				EVEBot.ReturnToStation:Set[TRUE]
 			}
 			return
@@ -683,11 +683,11 @@ objectdef obj_Agents
 
 		RetryCount:Set[0]
 
-		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.AgentID = ${amIterator.Value.AgentID}", LOG_DEBUG]
-		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.State = ${amIterator.Value.State}", LOG_DEBUG]
-		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}", LOG_DEBUG]
-		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Name = ${amIterator.Value.Name}", LOG_DEBUG]
-		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Expires = ${amIterator.Value.Expires.DateAndTime}", LOG_DEBUG]
+		Logger:Log["obj_Agents: DEBUG: amIterator.Value.AgentID = ${amIterator.Value.AgentID}", LOG_DEBUG]
+		Logger:Log["obj_Agents: DEBUG: amIterator.Value.State = ${amIterator.Value.State}", LOG_DEBUG]
+		Logger:Log["obj_Agents: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}", LOG_DEBUG]
+		Logger:Log["obj_Agents: DEBUG: amIterator.Value.Name = ${amIterator.Value.Name}", LOG_DEBUG]
+		Logger:Log["obj_Agents: DEBUG: amIterator.Value.Expires = ${amIterator.Value.Expires.DateAndTime}", LOG_DEBUG]
 
 		; Opens the details window for the mission
 		amIterator.Value:GetDetails
@@ -702,8 +702,8 @@ objectdef obj_Agents
 		}
 		else
 		{
-			UI:UpdateConsole["obj_Agents: ERROR: Mission details window was not found: ${amIterator.Value.Name}", LOG_CRITICAL]
-			UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Name.Escape = ${amIterator.Value.Name.Escape}"]
+			Logger:Log["obj_Agents: ERROR: Mission details window was not found: ${amIterator.Value.Name}", LOG_CRITICAL]
+			Logger:Log["obj_Agents: DEBUG: amIterator.Value.Name.Escape = ${amIterator.Value.Name.Escape}"]
 			return
 		}
 
@@ -723,16 +723,16 @@ objectdef obj_Agents
 		variable index:dialogstring dsIndex
 		variable iterator dsIterator
 
-		UI:UpdateConsole["obj_Agents:RequestMission: Starting conversation with agent ${This.ActiveAgent}."]
+		Logger:Log["obj_Agents:RequestMission: Starting conversation with agent ${This.ActiveAgent}."]
 		Agent[${This.AgentIndex}]:StartConversation
 		do
 		{
-			UI:UpdateConsole["obj_Agents:RequestMission: Waiting for conversation window..."]
+			Logger:Log["obj_Agents:RequestMission: Waiting for conversation window..."]
 			wait 10
 		}
 		while !${EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"](exists)}
 
-		UI:UpdateConsole["obj_Agents: Retrieving Dialog Responses"]
+		Logger:Log["obj_Agents: Retrieving Dialog Responses"]
 		;; The dialog caption fills in long before the details do.
 		;; Wait for dialog strings to become valid before proceeding.
 		variable int WaitCount
@@ -747,30 +747,30 @@ objectdef obj_Agents
 		}
 		dsIndex:GetIterator[dsIterator]
 
-		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
+		Logger:Log["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
 
 		/* Fix for locator agents that also have missions, by Stealthy */
 		if (${dsIterator:First(exists)})
 		{
-			UI:UpdateConsole["obj_Agents: Checking agent responses...", LOG_DEBUG]
+			Logger:Log["obj_Agents: Checking agent responses...", LOG_DEBUG]
 			do
 			{
-				UI:UpdateConsole["obj_Agents: dsIterator.Value.Text: ${dsIterator.Value.Text}"]
+				Logger:Log["obj_Agents: dsIterator.Value.Text: ${dsIterator.Value.Text}"]
 
 				if ${dsIterator.Value.Text.Find["${This.BUTTON_BUY_DATACORES}"]}
 				{
-					UI:UpdateConsole["obj_Agents: Agent has no mission available, trying next agent"]
+					Logger:Log["obj_Agents: Agent has no mission available, trying next agent"]
 					This:SetActiveAgent[${This.AgentList.NextAgent}]
 					return
 				}
 
 				if (${dsIterator.Value.Text.Find["${This.BUTTON_VIEW_MISSION}"]} || ${dsIterator.Value.Text.Find["${This.BUTTON_REQUEST_MISSION}"]})
 				{
-					UI:UpdateConsole["obj_Agents: May be a locator agent, attempting to view mission..."]
+					Logger:Log["obj_Agents: May be a locator agent, attempting to view mission..."]
 					dsIterator.Value:Say[${This.AgentID}]
-					;UI:UpdateConsole["obj_Agents: Waiting for dialog to update..."]
+					;Logger:Log["obj_Agents: Waiting for dialog to update..."]
 					wait 100
-					UI:UpdateConsole["obj_Agents: Refreshing Dialog Responses"]
+					Logger:Log["obj_Agents: Refreshing Dialog Responses"]
 					Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
 					dsIndex:GetIterator[dsIterator]
 					break
@@ -781,11 +781,11 @@ objectdef obj_Agents
 
 		if ${dsIndex.Used} != 3
 		{
-			UI:UpdateConsole["obj_Agents: ERROR: Did not find expected dialog! (Response count is ${dsIndex.Used} Will retry...", LOG_CRITICAL]
+			Logger:Log["obj_Agents: ERROR: Did not find expected dialog! (Response count is ${dsIndex.Used} Will retry...", LOG_CRITICAL]
 			RetryCount:Inc
 			if ${RetryCount} > 4
 			{
-				UI:UpdateConsole["obj_Agents: ERROR: Retry count exceeded!  Aborting...", LOG_CRITICAL]
+				Logger:Log["obj_Agents: ERROR: Retry count exceeded!  Aborting...", LOG_CRITICAL]
 				EVEBot.ReturnToStation:Set[TRUE]
 			}
 			EVEWindow[ByCaption, "Agent Conversation - ${This.ActiveAgent}"]:Close
@@ -817,11 +817,11 @@ objectdef obj_Agents
 
 		if !${amIterator.Value(exists)}
 		{
-			UI:UpdateConsole["obj_Agents: ERROR: Did not find mission!  Will retry...", LOG_CRITICAL]
+			Logger:Log["obj_Agents: ERROR: Did not find mission!  Will retry...", LOG_CRITICAL]
 			RetryCount:Inc
 			if ${RetryCount} > 4
 			{
-				UI:UpdateConsole["obj_Agents: ERROR: Retry count exceeded!  Aborting...", LOG_CRITICAL]
+				Logger:Log["obj_Agents: ERROR: Retry count exceeded!  Aborting...", LOG_CRITICAL]
 				EVEBot.ReturnToStation:Set[TRUE]
 			}
 			return
@@ -829,11 +829,11 @@ objectdef obj_Agents
 
 		RetryCount:Set[0]
 
-		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.AgentID = ${amIterator.Value.AgentID}", LOG_DEBUG]
-		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.State = ${amIterator.Value.State}", LOG_DEBUG]
-		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}", LOG_DEBUG]
-		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Name = ${amIterator.Value.Name}", LOG_DEBUG]
-		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Expires = ${amIterator.Value.Expires.DateAndTime}", LOG_DEBUG]
+		Logger:Log["obj_Agents: DEBUG: amIterator.Value.AgentID = ${amIterator.Value.AgentID}", LOG_DEBUG]
+		Logger:Log["obj_Agents: DEBUG: amIterator.Value.State = ${amIterator.Value.State}", LOG_DEBUG]
+		Logger:Log["obj_Agents: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}", LOG_DEBUG]
+		Logger:Log["obj_Agents: DEBUG: amIterator.Value.Name = ${amIterator.Value.Name}", LOG_DEBUG]
+		Logger:Log["obj_Agents: DEBUG: amIterator.Value.Expires = ${amIterator.Value.Expires.DateAndTime}", LOG_DEBUG]
 
 		; Opens the details window for the mission
 		amIterator.Value:GetDetails
@@ -849,8 +849,8 @@ objectdef obj_Agents
 		}
 		else
 		{
-			UI:UpdateConsole["obj_Agents: ERROR: Mission details window was not found: ${amIterator.Value.Name}", LOG_CRITICAL]
-			UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Name.Escape = ${amIterator.Value.Name.Escape}"]
+			Logger:Log["obj_Agents: ERROR: Mission details window was not found: ${amIterator.Value.Name}", LOG_CRITICAL]
+			Logger:Log["obj_Agents: DEBUG: amIterator.Value.Name.Escape = ${amIterator.Value.Name.Escape}"]
 			return
 		}
 
@@ -873,7 +873,7 @@ objectdef obj_Agents
 		{
 			if ${lastDecline.Timestamp} >= ${Time.Timestamp}
 			{
-				UI:UpdateConsole["obj_Agents: ERROR: You declined a mission less than four hours ago!  Switching agents...", LOG_CRITICAL]
+				Logger:Log["obj_Agents: ERROR: You declined a mission less than four hours ago!  Switching agents...", LOG_CRITICAL]
 				This:SetActiveAgent[${This.AgentList.NextAgent}]
 				return
 			}
@@ -881,7 +881,7 @@ objectdef obj_Agents
 			{
 				dsIndex.Get[AGENTRESPONSEINDEX_DECLINE]:Say[${This.AgentID}]
 				Config.Agents:SetLastDecline[${This.AgentName},${Time.Timestamp}]
-				UI:UpdateConsole["obj_Agents: Declined low-sec mission."]
+				Logger:Log["obj_Agents: Declined low-sec mission."]
 				Config:Save[]
 			}
 		}
@@ -889,7 +889,7 @@ objectdef obj_Agents
 		{
 			if ${lastDecline.Timestamp} >= ${Time.Timestamp}
 			{
-				UI:UpdateConsole["obj_Agents: ERROR: You declined a mission less than four hours ago!  Switching agents...", LOG_CRITICAL]
+				Logger:Log["obj_Agents: ERROR: You declined a mission less than four hours ago!  Switching agents...", LOG_CRITICAL]
 				This:SetActiveAgent[${This.AgentList.NextAgent}]
 				return
 			}
@@ -897,35 +897,35 @@ objectdef obj_Agents
 			{
 				dsIndex.Get[AGENTRESPONSEINDEX_DECLINE]:Say[${This.AgentID}]
 				Config.Agents:SetLastDecline[${This.AgentName},${Time.Timestamp}]
-				UI:UpdateConsole["obj_Agents: Declined blacklisted mission."]
+				Logger:Log["obj_Agents: Declined blacklisted mission."]
 				Config:Save[]
 			}
 		}
 		elseif ${amIterator.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions} == TRUE
 		{
-			UI:UpdateConsole["obj_Agents: Accepting Courier mission from agent ${This.AgentID}", LOG_DEBUG]
+			Logger:Log["obj_Agents: Accepting Courier mission from agent ${This.AgentID}", LOG_DEBUG]
 			dsIndex.Get[AGENTRESPONSEINDEX_ACCEPT]:Say[${This.AgentID}]
 		}
 		elseif ${amIterator.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} == TRUE
 		{
-			UI:UpdateConsole["obj_Agents: Accepting Trade mission from agent ${This.AgentID}", LOG_DEBUG]
+			Logger:Log["obj_Agents: Accepting Trade mission from agent ${This.AgentID}", LOG_DEBUG]
 			dsIndex.Get[AGENTRESPONSEINDEX_ACCEPT]:Say[${This.AgentID}]
 		}
 		elseif ${amIterator.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} == TRUE
 		{
-			UI:UpdateConsole["obj_Agents: Accepting Mining mission from agent ${This.AgentID}", LOG_DEBUG]
+			Logger:Log["obj_Agents: Accepting Mining mission from agent ${This.AgentID}", LOG_DEBUG]
 			dsIndex.Get[AGENTRESPONSEINDEX_ACCEPT]:Say[${This.AgentID}]
 		}
 		elseif ${amIterator.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions} == TRUE
 		{
-			UI:UpdateConsole["obj_Agents: Accepting Kill mission from agent ${This.AgentID}", LOG_DEBUG]
+			Logger:Log["obj_Agents: Accepting Kill mission from agent ${This.AgentID}", LOG_DEBUG]
 			dsIndex.Get[AGENTRESPONSEINDEX_ACCEPT]:Say[${This.AgentID}]
 		}
 		else
 		{
 			if ${lastDecline.Timestamp} >= ${Time.Timestamp}
 			{
-				UI:UpdateConsole["obj_Agents: ERROR: You declined a mission less than four hours ago!  Switching agents...", LOG_CRITICAL]
+				Logger:Log["obj_Agents: ERROR: You declined a mission less than four hours ago!  Switching agents...", LOG_CRITICAL]
 				This:SetActiveAgent[${This.AgentList.NextAgent}]
 				return
 			}
@@ -933,14 +933,14 @@ objectdef obj_Agents
 			{
 				dsIndex.Get[AGENTRESPONSEINDEX_DECLINE]:Say[${This.AgentID}]
 				Config.Agents:SetLastDecline[${This.AgentName},${Time.Timestamp}]
-				UI:UpdateConsole["obj_Agents: Declined mission."]
+				Logger:Log["obj_Agents: Declined mission."]
 				Config:Save[]
 			}
 		}
 
-		UI:UpdateConsole["Waiting for mission dialog to update..."]
+		Logger:Log["Waiting for mission dialog to update..."]
 		wait 60
-		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
+		Logger:Log["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
 
 		EVE:Execute[OpenJournal]
 		wait 50
@@ -950,17 +950,17 @@ objectdef obj_Agents
 
 	function TurnInMission()
 	{
-		UI:UpdateConsole["obj_Agents:TurnInMission: Starting conversation with agent ${This.ActiveAgent}."]
+		Logger:Log["obj_Agents:TurnInMission: Starting conversation with agent ${This.ActiveAgent}."]
 		Agent[${This.AgentIndex}]:StartConversation
 
 		do
 		{
-			UI:UpdateConsole["obj_Agents:TurnInMission: Waiting for conversation window..."]
+			Logger:Log["obj_Agents:TurnInMission: Waiting for conversation window..."]
 			wait 10
 		}
 		while !${EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"](exists)}
 
-		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
+		Logger:Log["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
 
 		; display your dialog options
 		variable index:dialogstring dsIndex
@@ -972,7 +972,7 @@ objectdef obj_Agents
 		{
 			do
 			{
-				UI:UpdateConsole["obj_Agents:TurnInMission dsIterator.Value.Text: ${dsIterator.Value.Text}"]
+				Logger:Log["obj_Agents:TurnInMission dsIterator.Value.Text: ${dsIterator.Value.Text}"]
 				if (${dsIterator.Value.Text.Find["View Mission"]})
 				{
 					dsIterator.Value:Say[${This.AgentID}]
@@ -984,16 +984,16 @@ objectdef obj_Agents
 		}
 
 		; Now wait a couple of seconds and then get the new dialog options...and so forth.  The "Wait" needed may differ from person to person.
-		UI:UpdateConsole["obj_Agents:TurnInMission: Waiting for agent dialog to update..."]
+		Logger:Log["obj_Agents:TurnInMission: Waiting for agent dialog to update..."]
 		wait 60
 		Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
 		dsIndex:GetIterator[dsIterator]
-		UI:UpdateConsole["Completing Mission..."]
+		Logger:Log["Completing Mission..."]
 		dsIndex.Get[AGENTRESPONSEINDEX_COMPLETE_MISSION]:Say[${This.AgentID}]
 
-		UI:UpdateConsole["Waiting for mission dialog to update..."]
+		Logger:Log["Waiting for mission dialog to update..."]
 		wait 60
-		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
+		Logger:Log["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
 
 		EVE:Execute[OpenJournal]
 		wait 50
@@ -1005,27 +1005,27 @@ objectdef obj_Agents
 		{
 			Waiting:Set[${Math.Rand[18000]:Inc[2400]}]
 		}
-		UI:UpdateConsole["Delaying ${Math.Calc[${Waiting}/10/60]} minutes before next mission request"]
+		Logger:Log["Delaying ${Math.Calc[${Waiting}/10/60]} minutes before next mission request"]
 		wait ${Waiting} ${EVEBot.Paused}
 	}
 
 	function QuitMission()
 	{
 		echo "CANNOT COMPLETE MISSION - QUIT MISSION OR COMPLETE IT MANUALLY"
-		UI:UpdateConsole["obj_Agents:QuitMission - CANNOT COMPLETE MISSION - QUIT MISSION OR COMPLETE IT MANUALLY"]
+		Logger:Log["obj_Agents:QuitMission - CANNOT COMPLETE MISSION - QUIT MISSION OR COMPLETE IT MANUALLY"]
 		EVEBot:Pause
 		return
 
-		UI:UpdateConsole["obj_Agents:QuitMission: Starting conversation with agent ${This.ActiveAgent}."]
+		Logger:Log["obj_Agents:QuitMission: Starting conversation with agent ${This.ActiveAgent}."]
 		Agent[${This.AgentIndex}]:StartConversation
 		do
 		{
-			UI:UpdateConsole["obj_Agents:QuitMission: Waiting for conversation window..."]
+			Logger:Log["obj_Agents:QuitMission: Waiting for conversation window..."]
 			wait 10
 		}
 		while !${EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"](exists)}
 
-		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
+		Logger:Log["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
 
 		; display your dialog options
 		variable index:dialogstring dsIndex
@@ -1041,9 +1041,9 @@ objectdef obj_Agents
 		}
 
 		; Now wait a couple of seconds and then get the new dialog options...and so forth.  The "Wait" needed may differ from person to person.
-		UI:UpdateConsole["Waiting for agent dialog to update..."]
+		Logger:Log["Waiting for agent dialog to update..."]
 		wait 60
-		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
+		Logger:Log["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
 
 		EVE:Execute[OpenJournal]
 		wait 50

@@ -13,14 +13,14 @@ objectdef obj_Belts
 		LogPrefix:Set["obj_Belts(${This.ObjectName})"]
 		
 		EntityCache.EntityFilters.Get[${EntityCache.CacheID_Belts}].Entities:GetIterator[Belt_CacheIterator]
-		UI:UpdateConsole["${LogPrefix}: Initialized"]
+		Logger:Log["${LogPrefix}: Initialized"]
 	}
 
 	method ResetBeltList()
 	{
 		EntityCache.EntityFilters.Get[${EntityCache.CacheID_Belts}].Entities:GetIterator[Belt_CacheIterator]
 		Belt_CacheIterator:First
-		UI:UpdateConsole["${LogPrefix}: ResetBeltList found ${EntityCache.Count[${EntityCache.CacheID_Belts}]} belts in this system.", LOG_DEBUG]
+		Logger:Log["${LogPrefix}: ResetBeltList found ${EntityCache.Count[${EntityCache.CacheID_Belts}]} belts in this system.", LOG_DEBUG]
 	}
 
 	; Checks the belt name against the empty belt list.
@@ -28,7 +28,7 @@ objectdef obj_Belts
 	{
 		if ${This.EmptyBelts.Contains["${BeltName}"]}
 		{
-			UI:UpdateConsole["DEBUG: ${LogPrefix}:IsBeltEmpty - ${BeltName} - TRUE", LOG_DEBUG]
+			Logger:Log["DEBUG: ${LogPrefix}:IsBeltEmpty - ${BeltName} - TRUE", LOG_DEBUG]
 			return TRUE
 		}
 		return FALSE
@@ -38,7 +38,7 @@ objectdef obj_Belts
 	method MarkBeltEmpty(string BeltName)
 	{
 		EmptyBelts:Add["${BeltName}"]
-		UI:UpdateConsole["Excluding empty belt ${BeltName}"]
+		Logger:Log["Excluding empty belt ${BeltName}"]
 	}
 
 	member:int Count()
@@ -126,7 +126,7 @@ objectdef obj_Belts
 					; TODO - This needs to do a count of belts within range of the gate and make a decision if it's safe enough.
 					; I really, really hate this solution, it relies on the % chance the hostile will pick the wrong belt
 					; when they see you on scanner. -- CyberTech
-					UI:UpdateConsole["obj_Belts: Skipping belt ${Belt_CacheIterator.Value.Name} - too close to gate (${Entity[${NearestGate}].Name} - ${DistanceToGate}"]
+					Logger:Log["obj_Belts: Skipping belt ${Belt_CacheIterator.Value.Name} - too close to gate (${Entity[${NearestGate}].Name} - ${DistanceToGate}"]
 					call This.WarpToNext ${WarpInDistance}
 					return
 				}
@@ -137,7 +137,7 @@ objectdef obj_Belts
 		}
 		else
 		{
-			UI:UpdateConsole["${LogPrefix}: WarpToNext ERROR: Belt_CacheIterator does not exist"]
+			Logger:Log["${LogPrefix}: WarpToNext ERROR: Belt_CacheIterator does not exist"]
 		}
 	}
 }

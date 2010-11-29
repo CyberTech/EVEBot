@@ -100,7 +100,7 @@ objectdef obj_Drones
 		;echo "Medium Drones in Bay: " ${This.HaveMediumDroneInBay}
 
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-		UI:UpdateConsole["obj_Drones: Initialized", LOG_MINOR]
+		Logger:Log["obj_Drones: Initialized", LOG_MINOR]
 	}
 	method Shutdown()
 	{
@@ -108,7 +108,7 @@ objectdef obj_Drones
 		{
 			if (${Me.ToEntity.Mode} != 3)
 			{
-				UI:UpdateConsole["Recalling Drones prior to shutdown..."]
+				Logger:Log["Recalling Drones prior to shutdown..."]
 				EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
 			}
 		}
@@ -131,7 +131,7 @@ objectdef obj_Drones
 						{
 							This.WaitingForDrones:Set[0]
 							This.DronesReady:Set[TRUE]
-							UI:UpdateConsole["${This.LaunchedDrones} drones deployed"]
+							Logger:Log["${This.LaunchedDrones} drones deployed"]
 						}
 					}
 					else
@@ -163,15 +163,15 @@ objectdef obj_Drones
 				;only do the checks if the drone has a valid ToEntity
 				if ${ActiveDrone.Value.ToEntity(exists)} && ${ActiveDrone.Value.State} != DRONESTATE_RETURNING
 				{
-					UI:UpdateConsole["obj_Drones: Drone ${ActiveDrone.Value.ID}: Armor %: ${ActiveDrone.Value.ToEntity.ArmorPct}, Stored: ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}]}, Shield %: ${ActiveDrone.Value.ToEntity.ShieldPct}, Stored: ${StoredDroneShield.Element[${ActiveDrone.Value.ID}]}",LOG_DEBUG]
+					Logger:Log["obj_Drones: Drone ${ActiveDrone.Value.ID}: Armor %: ${ActiveDrone.Value.ToEntity.ArmorPct}, Stored: ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}]}, Shield %: ${ActiveDrone.Value.ToEntity.ShieldPct}, Stored: ${StoredDroneShield.Element[${ActiveDrone.Value.ID}]}",LOG_DEBUG]
 					/* Only compare hp if the stored hp isn't null and activedrone is a valid entity*/
-					UI:UpdateConsole["obj_Drones: Drone ${ActiveDrone.Value.ID}, state: ${ActiveDrone.Value.State}",LOG_DEBUG]
+					Logger:Log["obj_Drones: Drone ${ActiveDrone.Value.ID}, state: ${ActiveDrone.Value.State}",LOG_DEBUG]
 					if ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}](exists)} && \
 						${Math.Calc[${StoredDroneArmor.Element[${ActiveDrone.Value.ID}]} - ${ActiveDrone.Value.ToEntity.ArmorPct}]} > 2
 					{
 						if ${ActiveDrone.Value.ToEntity.ArmorPct} < ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}]}
 						{
-							UI:UpdateConsole["obj_Drones: Drone ${ActiveDrone.Value.ID} is losing armor (${ActiveDrone.Value.ToEntity.ArmorPct} < ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}]}). Recalling."]
+							Logger:Log["obj_Drones: Drone ${ActiveDrone.Value.ID} is losing armor (${ActiveDrone.Value.ToEntity.ArmorPct} < ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}]}). Recalling."]
 							if ${ActiveDrone.Value.ToEntity.ArmorPct} < 50
 							{
 								;Recall it and do not relaunch it
@@ -197,7 +197,7 @@ objectdef obj_Drones
 					{
 						if ${ActiveDrone.Value.ToEntity.ShieldPct} < ${StoredDroneShield.Element[${ActiveDrone.Value.ID}]}
 						{
-							UI:UpdateConsole["obj_Drones: Drone ${ActiveDrone.Value.ID} is losing shield (${ActiveDrone.Value.ToEntity.ShieldPct} < ${StoredDroneShield.Element[${ActiveDrone.Value.ID}]}). Recalling."]
+							Logger:Log["obj_Drones: Drone ${ActiveDrone.Value.ID} is losing shield (${ActiveDrone.Value.ToEntity.ShieldPct} < ${StoredDroneShield.Element[${ActiveDrone.Value.ID}]}). Recalling."]
 							;This:RecallDrone[${ActiveDrone.Value}]
 							;This:QuickReturnAllToDroneBay
 							recalledDrone:Set[TRUE]
@@ -243,7 +243,7 @@ objectdef obj_Drones
 	{
 		if ${Drone.ToEntity(exists)} && ${Drone.State} != DRONESTATE_RETURNING
 		{
-			UI:UpdateConsole["obj_Drones: Recalling drone ${Drone.ID}, Relaunchable: ${Relaunchable}"]
+			Logger:Log["obj_Drones: Recalling drone ${Drone.ID}, Relaunchable: ${Relaunchable}"]
 			if !${Relaunchable}
 			{
 				RecalledDrones:Insert[${Drone.ID}]
@@ -256,7 +256,7 @@ objectdef obj_Drones
 	{
 		if ${MyShip.GetDrones} > 0
 		{
-			UI:UpdateConsole["Launching all drones..."]
+			Logger:Log["Launching all drones..."]
 			MyShip:LaunchAllDrones
 			This.WaitingForDrones:Set[5]
 		}
@@ -264,13 +264,13 @@ objectdef obj_Drones
 
 	member:bool ShouldLaunchCombatDrones()
 	{
-		;UI:UpdateConsole["obj_Drones:ShouldLaunchCombatDrones(): ${Ship.InWarp} ${Defense.Hiding} ${Offense.HaveFullNPCAggro}",LOG_DEBUG]
+		;Logger:Log["obj_Drones:ShouldLaunchCombatDrones(): ${Ship.InWarp} ${Defense.Hiding} ${Offense.HaveFullNPCAggro}",LOG_DEBUG]
 		if ${Ship.InWarp} || ${Defense.Hiding}
 		{
 			return FALSE
 		}
 
-		if ${Offense.HaveFullNPCAggro} || ${Config.Common.BotMode.Equal["Missioneer"]}
+		if ${Offense.HaveFullNPCAggro} || ${Config.Common.Behavior.Equal["Missioneer"]}
 		{
 			return TRUE
 		}
@@ -341,7 +341,7 @@ objectdef obj_Drones
 		if ${CargoIterator:First(exists)}
 		do
 		{
-			;UI:UpdateConsole["obj_Drones:TransferToDroneBay: ${CargoIterator.Value.Name}"]
+			;Logger:Log["obj_Drones:TransferToDroneBay: ${CargoIterator.Value.Name}"]
 			CargoIterator.Value:MoveTo[DroneBay,1]
 			wait 30
 		}
@@ -360,14 +360,14 @@ objectdef obj_Drones
 				if ${This.ActiveDrone.Value.ToEntity.Distance} < 2500
 				{
 					This.ActiveDrone.Value.ToEntity:ScoopToDroneBay
-					UI:UpdateConsole["obj_Drones: Scooping drone ${This.ActiveDrone.Value.ToEntity.Name} (${This.ActiveDrone.Value.ToEntity.ID})"]
+					Logger:Log["obj_Drones: Scooping drone ${This.ActiveDrone.Value.ToEntity.Name} (${This.ActiveDrone.Value.ToEntity.ID})"]
 					return
 				}
 
 				if ${This.ActiveDrone.Value.State} != DRONESTATE_RETURNING
 				{
 					EVE:Execute[CmdDronesReturnToBay]
-					UI:UpdateConsole["obj_Drones: Returning all drones to bay."]
+					Logger:Log["obj_Drones: Returning all drones to bay."]
 					return
 				}
 			}
@@ -384,7 +384,7 @@ objectdef obj_Drones
 				if ${This.ActiveDrone.Value.ToEntity.Distance} > 5000 &&
 					${This.ActiveDrone.Value.State} != DRONESTATE_RETURNING
 				{
-					UI:UpdateConsole["obj_Drones: Returning all drones to orbit."]
+					Logger:Log["obj_Drones: Returning all drones to orbit."]
 					EVE:Execute[CmdDronesReturnAndOrbit]
 					return
 				}
@@ -397,7 +397,7 @@ objectdef obj_Drones
 	{
 		while ${This.DronesInSpace} > 0
 		{
-			UI:UpdateConsole["Recalling ${This.ActiveDroneIDList.Used} Drones"]
+			Logger:Log["Recalling ${This.ActiveDroneIDList.Used} Drones"]
 			;EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
 			EVE:Execute[CmdDronesReturnToBay]
 			if (${MyShip.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
@@ -449,15 +449,15 @@ objectdef obj_Drones
 ;						${DroneIterator.Value.ToEntity.ArmorPct} < 80 || \
 ;						${DroneIterator.Value.ToEntity.StructurePct} < 100
 ;					{
-;						UI:UpdateConsole["Recalling Damaged Drone ${DroneIterator.Value.ID}"]
-;						;UI:UpdateConsole["Debug: Shield: ${DroneIterator.Value.ToEntity.ShieldPct}, Armor: ${DroneIterator.Value.ToEntity.ArmorPct}, Structure: ${DroneIterator.Value.ToEntity.StructurePct}"]
+;						Logger:Log["Recalling Damaged Drone ${DroneIterator.Value.ID}"]
+;						;Logger:Log["Debug: Shield: ${DroneIterator.Value.ToEntity.ShieldPct}, Armor: ${DroneIterator.Value.ToEntity.ArmorPct}, Structure: ${DroneIterator.Value.ToEntity.StructurePct}"]
 ;						returnIndex:Insert[${DroneIterator.Value.ID}]
 ;
 ;					}
 ;					else
 ;					{
 						; if Drone's target isn't our active target
-						UI:UpdateConsole["obj_Drones: DroneIterator.Value.Target.ID: ${DroneIterator.Value.Target.ID}, Me.ActiveTarget.ID: ${Me.ActiveTarget.ID}",LOG_DEBUG]
+						Logger:Log["obj_Drones: DroneIterator.Value.Target.ID: ${DroneIterator.Value.Target.ID}, Me.ActiveTarget.ID: ${Me.ActiveTarget.ID}",LOG_DEBUG]
 						if ${DroneIterator.Value.Target.ID} != ${Me.ActiveTarget.ID} && \
 							${DroneIterator.Value.State} != DRONESTATE_RETURNING && \
 							(!${Config.Combat.ConserveDrones} || !${DroneIsRecalled[${DroneIterator.Value.ID}]})

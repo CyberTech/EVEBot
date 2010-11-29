@@ -17,25 +17,15 @@ objectdef obj_Missioneer
 
 	method Initialize()
 	{
-		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-		BotModules:Insert["Missioneer"]
-		UI:UpdateConsole["obj_Missioneer: Initialized", LOG_MINOR]
+		EVEBot.BehaviorList:Insert["Missioneer"]
+		Logger:Log["obj_Missioneer: Initialized", LOG_MINOR]
 	}
 
 	method Pulse()
 	{
-		if ${Config.Common.BotMode.NotEqual[Missioneer]}
-		{
-			return
-		}
-
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-			if !${EVEBot.Paused}
-			{
-				This:SetState
-			}
-
+			This:SetState
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
     		This.NextPulse:Update
@@ -44,13 +34,12 @@ objectdef obj_Missioneer
 
 	method Shutdown()
 	{
-		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}
 
 	/* NOTE: The order of these if statements is important!! */
 	method SetState()
 	{
-		if ${Config.Common.BotMode.NotEqual[Missioneer]}
+		if ${Config.Common.Behavior.NotEqual[Missioneer]}
 		{
 			return
 		}
@@ -83,7 +72,7 @@ objectdef obj_Missioneer
 
 	function ProcessState()
 	{
-		if ${Config.Common.BotMode.NotEqual[Missioneer]}
+		if ${Config.Common.Behavior.NotEqual[Missioneer]}
 		{
 			return
 		}

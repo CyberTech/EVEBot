@@ -17,13 +17,13 @@ objectdef obj_Safespots inherits obj_Bookmark
 	{
 		LogPrefix:Set["obj_Safespots(${This.ObjectName})"]
 		This:Reset
-		UI:UpdateConsole["${LogPrefix}: Initialized"]
+		Logger:Log["${LogPrefix}: Initialized"]
 	}
 
 	method Reset()
 	{
 		This[parent]:Reset["${Config.Labels.SafeSpotPrefix}"]
-		UI:UpdateConsole["${LogPrefix}: Found ${Bookmarks.Used} safespots in this system"]
+		Logger:Log["${LogPrefix}: Found ${Bookmarks.Used} safespots in this system"]
 	}
 
 	member:bool AtSafespot()

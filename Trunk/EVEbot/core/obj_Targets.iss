@@ -279,7 +279,7 @@ objectdef obj_Targets
 			if ${tgtIterator.Value.Owner.CharID} != ${EVEBot.CharID}
 			{	/* A player is already present here ! */
 				/* TODO - Add optional check for ignoring group members */
-				UI:UpdateConsole["Player found ${tgtIterator.Value.Owner}"]
+				Logger:Log["Player found ${tgtIterator.Value.Owner}"]
 				return TRUE
 			}
 		}
@@ -294,7 +294,7 @@ objectdef obj_Targets
 		variable iterator tgtIterator
 		EntityCache.EntityFilters.Get[${EntityCache.CacheID_Entities}].Entities:GetIterator[tgtIterator]
 
-		UI:UpdateConsole["Targets.NPC() Found ${EntityCache.Used[${EntityCache.CacheID_Entities}]} entities.", LOG_DEBUG]
+		Logger:Log["Targets.NPC() Found ${EntityCache.Used[${EntityCache.CacheID_Entities}]} entities.", LOG_DEBUG]
 
 		tgtIndex:GetIterator[tgtIterator]
 		if ${tgtIterator:First(exists)}
@@ -313,10 +313,10 @@ objectdef obj_Targets
 				case GROUP_BILLBOARD
 				case GROUP_DEADSPACEOVERSEERSSTRUCTURE
 				case GROUP_LARGECOLLIDABLESTRUCTURE
-					UI:UpdateConsole["DEBUG: Ignoring entity ${tgtIterator.Value.Group} (${tgtIterator.Value.GroupID})"]
+					Logger:Log["DEBUG: Ignoring entity ${tgtIterator.Value.Group} (${tgtIterator.Value.GroupID})"]
 					break
 				default
-					UI:UpdateConsole["DEBUG: NPC found: ${tgtIterator.Value.Group} (${tgtIterator.Value.GroupID})"]
+					Logger:Log["DEBUG: NPC found: ${tgtIterator.Value.Group} (${tgtIterator.Value.GroupID})"]
 					return TRUE
 					break
 			}
@@ -387,10 +387,10 @@ objectdef obj_Targets_Rats
 					NPCShipType:Set[${NPCGroup.Token[${pos}, " "]}]
 					pos:Inc
 				}
-				UI:UpdateConsole["NPC: ${NPCName}(${NPCShipType}) ${EVEBot.ISK_To_Str[${EVEDB_Spawns.SpawnBounty[${NPCName}]}]}",LOG_DEBUG]
+				Logger:Log["NPC: ${NPCName}(${NPCShipType}) ${EVEBot.ISK_To_Str[${EVEDB_Spawns.SpawnBounty[${NPCName}]}]}",LOG_DEBUG]
 
-				;UI:UpdateConsole["DEBUG: Type: ${EntityIterator.Value.Type}(${EntityIterator.Value.TypeID})"]
-				;UI:UpdateConsole["DEBUG: Category: ${EntityIterator.Value.Category}(${EntityIterator.Value.CategoryID})"]
+				;Logger:Log["DEBUG: Type: ${EntityIterator.Value.Type}(${EntityIterator.Value.TypeID})"]
+				;Logger:Log["DEBUG: Category: ${EntityIterator.Value.Category}(${EntityIterator.Value.CategoryID})"]
 
 				switch ${EntityIterator.Value.GroupID}
 				{
@@ -408,7 +408,7 @@ objectdef obj_Targets_Rats
 				}
 			 }
 			 while ${EntityIterator:Next(exists)}
-			 UI:UpdateConsole["NPC: Total Battleship Value is ${EVEBot.ISK_To_Str[${iTotalBSValue}]}",LOG_DEBUG]
+			 Logger:Log["NPC: Total Battleship Value is ${EVEBot.ISK_To_Str[${iTotalBSValue}]}",LOG_DEBUG]
 		}
 		return ${iTotalBSValue}
 	}
@@ -417,7 +417,7 @@ objectdef obj_Targets_Rats
 	{
 		if ${MyShip.MaxLockedTargets} == 0
 		{
-			UI:UpdateConsole["Jammed: Unable to Target"]
+			Logger:Log["Jammed: Unable to Target"]
 			return
 		}
 
@@ -442,20 +442,20 @@ objectdef obj_Targets_Rats
 
 				if !${This.Target:First(exists)}
 				{
-					UI:UpdateConsole["No targets found"]
+					Logger:Log["No targets found"]
 					UpdateSucceeded:Set[FALSE]
 					return
 				}
 				else
 				{
-					UI:UpdateConsole["Damped: Unable to Target"]
+					Logger:Log["Damped: Unable to Target"]
 					UpdateSucceeded:Set[TRUE]
 					return
 				}
 			}
 			else
 			{
-				UI:UpdateConsole["No targets found..."]
+				Logger:Log["No targets found..."]
 				UpdateSucceeded:Set[FALSE]
 				return
 			}
@@ -478,7 +478,7 @@ objectdef obj_Targets_Rats
 		{
 			 HasChainableTarget:Set[TRUE]
 		}
-		UI:UpdateConsole["obj_Targets: Total BS Value: ${This.TotalBattleShipValue}, Minimum: ${Config.Combat.MinChainBounty}, Chainable: ${HasChainableTarget}"]
+		Logger:Log["obj_Targets: Total BS Value: ${This.TotalBattleShipValue}, Minimum: ${Config.Combat.MinChainBounty}, Chainable: ${HasChainableTarget}"]
 
 		if ${This.Target:First(exists)}
 		{
@@ -518,7 +518,7 @@ objectdef obj_Targets_Rats
 				}
 
 				; Loop through the priority targets
-				UI:UpdateConsole["obj_Targets: IsPriorityTarget(${This.Target.Value.Name}): ${Targets.IsPriorityTarget[${This.Target.Value.Name}]}"]
+				Logger:Log["obj_Targets: IsPriorityTarget(${This.Target.Value.Name}): ${Targets.IsPriorityTarget[${This.Target.Value.Name}]}"]
 				if ${Targets.IsPriorityTarget[${This.Target.Value.Name}]}
 				{
 					/* We have a priority target, set the flag true. */
@@ -528,7 +528,7 @@ objectdef obj_Targets_Rats
 					{
 						/* Queue[ID, Priority, TypeID, Mandatory] */
 						; No, report it and lock it.
-						UI:UpdateConsole["obj_Targets: Queueing priority target ${This.Target.Value.Name}"]
+						Logger:Log["obj_Targets: Queueing priority target ${This.Target.Value.Name}"]
 						Targeting:Queue[${This.Target.Value.ID},5,${RatCache.EntityIterator.Value.TypeID},TRUE]
 					}
 
@@ -551,7 +551,7 @@ objectdef obj_Targets_Rats
 		/* if we have priority targets just return until they're dead */
 		if ${HasPriorityTarget}
 		{
-			UI:UpdateConsole["obj_Targets: Have priority target, returning 'til it's DEAD"]
+			Logger:Log["obj_Targets: Have priority target, returning 'til it's DEAD"]
 			return
 		}
 
@@ -574,17 +574,17 @@ objectdef obj_Targets_Rats
 			/* skip chaining if chain solo == false and we are alone */
 			if !${Config.Combat.ChainSolo} && ${EVE.LocalsCount} == 1
 			{
-				;UI:UpdateConsole["NPC: We are alone.  Skip chaining!!"]
+				;Logger:Log["NPC: We are alone.  Skip chaining!!"]
 				Chaining:Set[FALSE]
 			}
 
 			if ${Chaining}
 			{
-				UI:UpdateConsole["NPC: Chaining Spawn"]
+				Logger:Log["NPC: Chaining Spawn"]
 			}
 			else
 			{
-				UI:UpdateConsole["NPC: Not Chaining Spawn"]
+				Logger:Log["NPC: Not Chaining Spawn"]
 			}
 			CheckChain:Set[FALSE]
 		}
@@ -637,7 +637,7 @@ objectdef obj_Targets_Rats
 			{
 				if !${Targeting.IsQueued[${This.Target.Value.ID}]}
 				{
-					UI:UpdateConsole["Queueing ${This.Target.Value.Name}"]
+					Logger:Log["Queueing ${This.Target.Value.Name}"]
 					Targeting:Queue[${This.Target.Value.ID},1,${This.Target.Value.TypeID},FALSE]
 				}
 
@@ -648,7 +648,7 @@ objectdef obj_Targets_Rats
 			{
 				if !${DoNotKillList.Contains[${This.Target.Value.ID}]}
 				{
-					UI:UpdateConsole["NPC: Adding ${This.Target.Value.Name} (${This.Target.Value.ID}) to the \"do not kill list\"!"]
+					Logger:Log["NPC: Adding ${This.Target.Value.Name} (${This.Target.Value.ID}) to the \"do not kill list\"!"]
 					DoNotKillList:Add[${This.Target.Value.ID}]
 				}
 				; Make sure (due to auto-targeting) that its not targeted

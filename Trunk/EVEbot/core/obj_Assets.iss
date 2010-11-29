@@ -18,7 +18,7 @@ objectdef obj_Assets
     method Initialize()
     {
         IgnoreTheseStations:Clear[]
-        UI:UpdateConsole["obj_Assets: Initialized", LOG_MINOR]
+        Logger:Log["obj_Assets: Initialized", LOG_MINOR]
     }
     
     method UpdateList()
@@ -41,20 +41,20 @@ objectdef obj_Assets
             while ${AnIterator:Next(exists)}        
         }
         
-        UI:UpdateConsole["Assets:UpdateList found ${StationsWithAssets.Used} stations with assets."]
+        Logger:Log["Assets:UpdateList found ${StationsWithAssets.Used} stations with assets."]
     }
     
     method IgnoreStation(int64 stationID)
     {
         IgnoreTheseStations:Insert[${stationID}]
-        UI:UpdateConsole["Assets module will ignore ${EVE.GetLocationNameByID[${stationID}]}."]
+        Logger:Log["Assets module will ignore ${EVE.GetLocationNameByID[${stationID}]}."]
     }
     
     member:bool IsIgnored(int64 stationID)
     {
         variable iterator AnIterator
         
-        ;;;UI:UpdateConsole["DEBUG: Assets.IsIgnored(${stationID})"]
+        ;;;Logger:Log["DEBUG: Assets.IsIgnored(${stationID})"]
         IgnoreTheseStations:GetIterator[AnIterator]
         if ${AnIterator:First(exists)}
         {
@@ -62,14 +62,14 @@ objectdef obj_Assets
             {
                 if ${stationID} == ${AnIterator.Value}
                 {
-                    ;;;UI:UpdateConsole["DEBUG: Assets.IsIgnored returning TRUE."]
+                    ;;;Logger:Log["DEBUG: Assets.IsIgnored returning TRUE."]
                     return TRUE
                 }
             }
             while ${AnIterator:Next(exists)}        
         }
         
-        ;;;UI:UpdateConsole["DEBUG: Assets.IsIgnored returning FALSE."]
+        ;;;Logger:Log["DEBUG: Assets.IsIgnored returning FALSE."]
         return FALSE
     }
 
@@ -93,7 +93,7 @@ objectdef obj_Assets
             StationsWithAssets:Dequeue[]
         }
         
-        ;;;UI:UpdateConsole["DEBUG: Assets.NextStation returning ${nextStatonID}."]
+        ;;;Logger:Log["DEBUG: Assets.NextStation returning ${nextStatonID}."]
         return ${nextStatonID}
     }
     

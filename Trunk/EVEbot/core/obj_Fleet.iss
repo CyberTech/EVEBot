@@ -29,8 +29,8 @@ objectdef obj_Fleet
 		}
 		while ${This.FleetMembersIterator:Next(exists)}
 
-		UI:UpdateConsole["obj_Fleet: Initialized", LOG_MINOR]
-		UI:UpdateConsole["obj_Fleet: ${This.AllowedFleetMembers.Used} permitted fleet members added"]
+		Logger:Log["obj_Fleet: Initialized", LOG_MINOR]
+		Logger:Log["obj_Fleet: ${This.AllowedFleetMembers.Used} permitted fleet members added"]
 	}
 
 	method ProcessInvitations()
@@ -49,12 +49,12 @@ objectdef obj_Fleet
 
 		if ${This.AllowedFleetMembers.Contains["${Inviter}"]}
 		{
-			UI:UpdateConsole["obj_Fleet: Accepting fleet invitation from ${Inviter}"]
+			Logger:Log["obj_Fleet: Accepting fleet invitation from ${Inviter}"]
 			Me.Fleet:AcceptInvite
 		}
 		else
 		{
-			UI:UpdateConsole["obj_Fleet: Rejecting fleet invitation from ${Inviter}"]
+			Logger:Log["obj_Fleet: Rejecting fleet invitation from ${Inviter}"]
 			Me.Fleet:RejectInvite
 		}
 	}

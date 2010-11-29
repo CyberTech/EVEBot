@@ -88,26 +88,26 @@ objectdef obj_MissionCommands
 			{
 				if ${Entity[${EntityID}](exists)}
 				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - ENTITY EXISTS , GROUPID READS AS ${Entity[${EntityID}].GroupID} NAME IS ${Entity[${EntityID}].Name} ",LOG_DEBUG]
+					Logger:Log["DEBUG: obj_MissionCommands - ENTITY EXISTS , GROUPID READS AS ${Entity[${EntityID}].GroupID} NAME IS ${Entity[${EntityID}].Name} ",LOG_DEBUG]
 				}
 				if ${Entity[${EntityID}].GroupID(exists)}
 				{
 					if ${Entity[${EntityID}].Distance} > ${Distance}
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - found entity with Name ${Entity[${EntityID}].Name} ID ${EntityID} , we are ${Entity[${EntityID}].Distance} away, we want to be ${Distance} away will approach"]
+						Logger:Log["DEBUG: obj_MissionCommands - found entity with Name ${Entity[${EntityID}].Name} ID ${EntityID} , we are ${Entity[${EntityID}].Distance} away, we want to be ${Distance} away will approach"]
 						ApproachIDCache:Set[${EntityID}]
 						ApproachState:Set["APPROACH"]
 						return FALSE
 					}
 					else
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Entity with name ${Entity[${EntityID}].Name} already in range"]
+						Logger:Log["DEBUG: obj_MissionCommands - Entity with name ${Entity[${EntityID}].Name} already in range"]
 						return TRUE
 					}
 				}
 				else
 				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - Error , could not find entity with ID ${EntityID} to approach"]
+					Logger:Log["DEBUG: obj_MissionCommands - Error , could not find entity with ID ${EntityID} to approach"]
 					return TRUE
 				}
 			}
@@ -125,14 +125,14 @@ objectdef obj_MissionCommands
 					}
 					else
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - AprroachIDCache and EntityID do not match ,resetting to idle"]
+						Logger:Log["DEBUG: obj_MissionCommands - AprroachIDCache and EntityID do not match ,resetting to idle"]
 						ApproachState:Set["IDLE"]
 						return FALSE
 					}
 				}
 				else
 				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - Entity no longer exists cannot approach"]
+					Logger:Log["DEBUG: obj_MissionCommands - Entity no longer exists cannot approach"]
 					ApproachState:Set["IDLE"]
 					return TRUE
 				}
@@ -145,8 +145,8 @@ objectdef obj_MissionCommands
 					{
 						if ${Entity[${ApproachIDCache}].Distance} < ${Distance}
 						{
-							UI:UpdateConsole["DEBUG: obj_MissionCommands - Name ${Entity[${EntityID}].Name} ID ${EntityID} , we are ${Entity[${EntityID}].Distance} away, we want to be ${Distance} we have succeeded!",LOG_DEBUG]
-							UI:UpdateConsole["DEBUG: obj_MissionCommands - Reached ${EntityID} "]
+							Logger:Log["DEBUG: obj_MissionCommands - Name ${Entity[${EntityID}].Name} ID ${EntityID} , we are ${Entity[${EntityID}].Distance} away, we want to be ${Distance} we have succeeded!",LOG_DEBUG]
+							Logger:Log["DEBUG: obj_MissionCommands - Reached ${EntityID} "]
 							EVE:Execute[CmdStopShip]
 							ApproachState:Set["IDLE"]
 							return TRUE
@@ -154,7 +154,7 @@ objectdef obj_MissionCommands
 					}
 					else
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - AprroachIDCache and EntityID do not match ,resetting to idle",LOG_DEBUG]
+						Logger:Log["DEBUG: obj_MissionCommands - AprroachIDCache and EntityID do not match ,resetting to idle",LOG_DEBUG]
 						EVE:Execute[CmdStopShip]
 						ApproachState:Set["IDLE"]
 						return FALSE
@@ -162,7 +162,7 @@ objectdef obj_MissionCommands
 				}
 				else
 				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - Entity no longer exists cannot approach",LOG_DEBUG]
+					Logger:Log["DEBUG: obj_MissionCommands - Entity no longer exists cannot approach",LOG_DEBUG]
 					ApproachState:Set["IDLE"]
 					return TRUE
 				}
@@ -196,7 +196,7 @@ objectdef obj_MissionCommands
 
 	member:bool ActivateGate(int64 EntityID)
 	{
-		UI:UpdateConsole["DEBUG: obj_MissionCommands - attempting to activate ${Entity[${EntityID}].Name!",LOG_DEBUG]
+		Logger:Log["DEBUG: obj_MissionCommands - attempting to activate ${Entity[${EntityID}].Name!",LOG_DEBUG]
 		switch ${GateState}
 		{
 			case IDLE
@@ -207,26 +207,26 @@ objectdef obj_MissionCommands
 					{
 						if ${This.WarpPrepare}
 						{
-							UI:UpdateConsole["DEBUG: obj_MissionCommands - attempting to activate ${Entity[${EntityID}].Name!",LOG_DEBUG]
+							Logger:Log["DEBUG: obj_MissionCommands - attempting to activate ${Entity[${EntityID}].Name!",LOG_DEBUG]
 							Entity[${EntityID}]:Activate
 							GateState:Set["ACTIVATED_GATE"]
 							return FALSE
 						}
 						else
 						{
-							UI:UpdateConsole["DEBUG: obj_MissionCommands - not ready for warping will wait untill ready",LOG_DEBUG]
+							Logger:Log["DEBUG: obj_MissionCommands - not ready for warping will wait untill ready",LOG_DEBUG]
 							return FALSE
 						}
 					}
 					else
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands -  Not Close enough to acceleration gate, will get closer",LOG_DEBUG]
+						Logger:Log["DEBUG: obj_MissionCommands -  Not Close enough to acceleration gate, will get closer",LOG_DEBUG]
 					}
 					return FALSE
 				}
 				else
 				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - Could not find gate!",LOG_DEBUG]
+					Logger:Log["DEBUG: obj_MissionCommands - Could not find gate!",LOG_DEBUG]
 					return TRUE
 				}
 			}
@@ -234,10 +234,10 @@ objectdef obj_MissionCommands
 			{
 				if ${Ship.WarpEntered}
 				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - Warp was entered",LOG_DEBUG]
+					Logger:Log["DEBUG: obj_MissionCommands - Warp was entered",LOG_DEBUG]
 					GateState:Set["WARPWAIT"]
 				}
-				UI:UpdateConsole["DEBUG: obj_MissionCommands - Waiting for ship to enter warp",LOG_DEBUG]
+				Logger:Log["DEBUG: obj_MissionCommands - Waiting for ship to enter warp",LOG_DEBUG]
 				;TODO - put a timer here so we retry activating the gate
 				return FALSE
 			}
@@ -245,11 +245,11 @@ objectdef obj_MissionCommands
 			{
 				if ${This.WarpWait}
 				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - We dropped out of warp!",LOG_DEBUG]
+					Logger:Log["DEBUG: obj_MissionCommands - We dropped out of warp!",LOG_DEBUG]
 					GateState:Set["IDLE"]
 					return TRUE
 				}
-				UI:UpdateConsole["DEBUG: obj_MissionCommands -  We are still in warp, This.WarpWait is ${This.WarpWait}",LOG_DEBUG]
+				Logger:Log["DEBUG: obj_MissionCommands -  We are still in warp, This.WarpWait is ${This.WarpWait}",LOG_DEBUG]
 				return FALSE
 			}
 		}
@@ -320,12 +320,12 @@ objectdef obj_MissionCommands
 				;Why are we worried about aggro count in clearroom?
 				if ${This.AggroCount} > 0 && ${EntityInRange}
 				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - Killing stuff",LOG_DEBUG]
+					Logger:Log["DEBUG: obj_MissionCommands - Killing stuff",LOG_DEBUG]
 					This:NextTarget[]
 				}
 				else
 				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - Switching to pulling stuff",LOG_DEBUG]
+					Logger:Log["DEBUG: obj_MissionCommands - Switching to pulling stuff",LOG_DEBUG]
 					ClearRoomState:Set["PULLING"]
 				}
 				return FALSE
@@ -352,13 +352,13 @@ objectdef obj_MissionCommands
 					}
 					if ${This.AggroCount} > 0 && ${EntityInRange}
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - ClearRoom got some aggro, switching to killing",LOG_DEBUG]
+						Logger:Log["DEBUG: obj_MissionCommands - ClearRoom got some aggro, switching to killing",LOG_DEBUG]
 						This.ClearRoomState:Set["KILLING"]
 						return FALSE
 					}
 					else
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Clearroom trying to pull stuff",LOG_DEBUG]
+						Logger:Log["DEBUG: obj_MissionCommands - Clearroom trying to pull stuff",LOG_DEBUG]
 						if ${This.Pull[]}
 						{
 							This.ClearRoomState:Set["KILLING"]
@@ -393,17 +393,17 @@ objectdef obj_MissionCommands
 						{
 							KillState:Set["KILLING"]
 							KillCache:Set[${targetIterator.Value.ID}]
-						  UI:UpdateConsole["DEBUG: obj_MissionCommands - found kill target will try and kill it",LOG_DEBUG]"
+						  Logger:Log["DEBUG: obj_MissionCommands - found kill target will try and kill it",LOG_DEBUG]"
 						  ;echo "DEBUG: obj_MissionCommands - found kill target will try and kill it"
 							return FALSE
 						}
 					}
 					while ${targetIterator:Next(exists)}
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - Could not find ${entityName}",LOG_DEBUG]
+					Logger:Log["DEBUG: obj_MissionCommands - Could not find ${entityName}",LOG_DEBUG]
 					;echo "DEBUG: obj_MissionCommands - Could not find ${entityName}"
 					return TRUE
 				}
-				UI:UpdateConsole["DEBUG: obj_MissionCommands - Could not find find any entities",LOG_DEBUG]
+				Logger:Log["DEBUG: obj_MissionCommands - Could not find find any entities",LOG_DEBUG]
 				;echo "DEBUG: obj_MissionCommands - Could not find find any entities"
 				return TRUE
 			}
@@ -421,12 +421,12 @@ objectdef obj_MissionCommands
 					}
 					else
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Cached name does not match ${targetName}, resetting",LOG_DEBUG]
+						Logger:Log["DEBUG: obj_MissionCommands - Cached name does not match ${targetName}, resetting",LOG_DEBUG]
 						KillState:Set["START"]
 						return FALSE
 					}
 				}
-				UI:UpdateConsole["DEBUG: obj_MissionCommands - entity in cache dissapeared, resetting ",LOG_DEBUG]
+				Logger:Log["DEBUG: obj_MissionCommands - entity in cache dissapeared, resetting ",LOG_DEBUG]
 				KillState:Set["START"]
 				return FALSE
 			}
@@ -460,13 +460,13 @@ objectdef obj_MissionCommands
 				{
 					KillIDCache:Set[${entityID}]
 					KillIDState:Set["APPROACHING"]
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - found entity with Name ${Entity[${entityID}].Name} ID ${entityID} , we are ${Entity[${entityID}].Distance} away, lets kill it",LOG_DEBUG]
+					Logger:Log["DEBUG: obj_MissionCommands - found entity with Name ${Entity[${entityID}].Name} ID ${entityID} , we are ${Entity[${entityID}].Distance} away, lets kill it",LOG_DEBUG]
 					return FALSE
 				}
 				else
 				{
 					KillIDState:Set["START"]
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - Entity does not exist ,it must be dead already!",LOG_DEBUG]
+					Logger:Log["DEBUG: obj_MissionCommands - Kill - Entity does not exist ,it must be dead already!",LOG_DEBUG]
 					return TRUE
 				}
 
@@ -477,28 +477,28 @@ objectdef obj_MissionCommands
 				{
 					if ${Entity[${entityID}].GroupID(exists)}
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - Approaching entity with Name ${Entity[${entityID}].Name} ID ${entityID} , we are ${Entity[${entityID}].Distance} away, we want to be ${dist} away will approach",LOG_DEBUG]
+						Logger:Log["DEBUG: obj_MissionCommands - Kill - Approaching entity with Name ${Entity[${entityID}].Name} ID ${entityID} , we are ${Entity[${entityID}].Distance} away, we want to be ${dist} away will approach",LOG_DEBUG]
 
 						didApproach:Set[${This.Approach[${KillIDCache},${dist}]}]
 						if ${didApproach}
 						{
-							UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - In weapons range, will target and fire",LOG_DEBUG]
+							Logger:Log["DEBUG: obj_MissionCommands - Kill - In weapons range, will target and fire",LOG_DEBUG]
 							KillIDState:Set["TARGETING"]
 							return FALSE
 						}
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - Out of range of  ${KillIDCache} moving closer",LOG_DEBUG]
+						Logger:Log["DEBUG: obj_MissionCommands - Kill - Out of range of  ${KillIDCache} moving closer",LOG_DEBUG]
 						return FALSE
 					}
 					else
 					{
 						KillIDState:Set["START"]
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - Entity does not exist ,it must be dead already!",LOG_DEBUG]
+						Logger:Log["DEBUG: obj_MissionCommands - Kill - Entity does not exist ,it must be dead already!",LOG_DEBUG]
 						return TRUE
 					}
 				}
 				else
 				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - EntityID does not match cached one, returning to start state",LOG_DEBUG]
+					Logger:Log["DEBUG: obj_MissionCommands - Kill - EntityID does not match cached one, returning to start state",LOG_DEBUG]
 					KillIDState:Set["START"]
 					return FALSE
 				}
@@ -515,14 +515,14 @@ objectdef obj_MissionCommands
 						;{
 							if !${Targeting.IsMandatoryQueued[${KillIDCache}]}
 							{
-								UI:UpdateConsole["DEBUG: obj_MissionCommands - Targeting ${KillIDCache}"]
+								Logger:Log["DEBUG: obj_MissionCommands - Targeting ${KillIDCache}"]
 								Targeting:Queue[${KillIDCache},1,1,FALSE]
 								KillIDState:Set["KILLING"]
 								return FALSE
 							}
 							else
 							{
-								UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - Target is in range and in the targeting queue,should be killing it now"]
+								Logger:Log["DEBUG: obj_MissionCommands - Kill - Target is in range and in the targeting queue,should be killing it now"]
 								KillIDState:Set["KILLING"]
 								return FALSE
 							}
@@ -531,13 +531,13 @@ objectdef obj_MissionCommands
 					else
 					{
 						KillIDState:Set["START"]
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - Entity does not exist ,it must be dead already!",LOG_DEBUG]
+						Logger:Log["DEBUG: obj_MissionCommands - Kill - Entity does not exist ,it must be dead already!",LOG_DEBUG]
 						return TRUE
 					}
 				}
 				else
 				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - EntityID does not match cached one, returning to start state",LOG_DEBUG]
+					Logger:Log["DEBUG: obj_MissionCommands - Kill - EntityID does not match cached one, returning to start state",LOG_DEBUG]
 					KillIDState:Set["START"]
 					return FALSE
 				}
@@ -549,19 +549,19 @@ objectdef obj_MissionCommands
 					if ${Entity[${KillIDCache}].GroupID(exists)}  && ${Entity[${KillIDCache}].GroupID} != GROUP_WRECK && ${Entity[${KillIDCache}].GroupID} != GROUPID_CARGO_CONTAINER
 					{
 						didApproach:Set[${This.Approach[${KillIDCache}, ${dist}]}]
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Entity with ID ${KillIDCache} still exists, we have no killed it yet :<",LOG_DEBUG]
+						Logger:Log["DEBUG: obj_MissionCommands - Entity with ID ${KillIDCache} still exists, we have no killed it yet :<",LOG_DEBUG]
 						return FALSE
 					}
 					else
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill-  ${KillIDCache} is destroyed",LOG_DEBUG]
+						Logger:Log["DEBUG: obj_MissionCommands - Kill-  ${KillIDCache} is destroyed",LOG_DEBUG]
 						KillIDState:Set["START"]
 						return TRUE
 					}
 				}
 				else
 				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - Kill - EntityID does not match cached one, returning to start state",LOG_DEBUG]
+					Logger:Log["DEBUG: obj_MissionCommands - Kill - EntityID does not match cached one, returning to start state",LOG_DEBUG]
 					KillIDState:Set["START"]
 					return FALSE
 				}
@@ -600,15 +600,15 @@ objectdef obj_MissionCommands
 							{
 								PullState:Set["PULL"]
 								PullCache:Set[${targetIterator.Value.ID}]
-								UI:UpdateConsole["DEBUG: obj_MissionCommands - targeting closest npc"]
+								Logger:Log["DEBUG: obj_MissionCommands - targeting closest npc"]
 								return FALSE
 							}
 						}
 						while ${targetIterator:Next(exists)}
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Could not find NPC target to shoot!",LOG_DEBUG]
+						Logger:Log["DEBUG: obj_MissionCommands - Could not find NPC target to shoot!",LOG_DEBUG]
 						return TRUE
 					}
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - Could not find find any entities",LOG_DEBUG]
+					Logger:Log["DEBUG: obj_MissionCommands - Could not find find any entities",LOG_DEBUG]
 					return FALSE
 
 				}
@@ -624,15 +624,15 @@ objectdef obj_MissionCommands
 							{
 								PullState:Set["PULL"]
 								PullCache:Set[${targetIterator.Value.ID}]
-								UI:UpdateConsole["DEBUG: obj_MissionCommands - found ${targetName} will pull it"]
+								Logger:Log["DEBUG: obj_MissionCommands - found ${targetName} will pull it"]
 								return FALSE
 							}
 						}
 						while ${targetIterator:Next(exists)}
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Could not find ${targetName}",LOG_DEBUG]
+						Logger:Log["DEBUG: obj_MissionCommands - Could not find ${targetName}",LOG_DEBUG]
 						return TRUE
 					}
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - Could not find find any entities",LOG_DEBUG]
+					Logger:Log["DEBUG: obj_MissionCommands - Could not find find any entities",LOG_DEBUG]
 					return FALSE
 				}
 			}
@@ -642,12 +642,12 @@ objectdef obj_MissionCommands
 				{
 					if ${Entity[${PullCache}].Name.Equal[${targetName}]} || ${targetName.Equal["NONE"]}
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands.Pull.Pull - attempting to kill ${targetName}"]
+						Logger:Log["DEBUG: obj_MissionCommands.Pull.Pull - attempting to kill ${targetName}"]
 						This:PullTarget[${PullCache}]
 						if ${Entity[${PullCache}].Distance} <= ${dist} && ${This.AggroCount} > 0
 						{
 							Targeting:UnlockRandomTarget[]
-							UI:UpdateConsole["DEBUG: obj_MissionCommands - we pulled something, success!"]
+							Logger:Log["DEBUG: obj_MissionCommands - we pulled something, success!"]
 							PullState:Set["START"]
 							return TRUE
 						}
@@ -656,14 +656,14 @@ objectdef obj_MissionCommands
 					}
 					else
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - name does not match cached name, resetting"]
+						Logger:Log["DEBUG: obj_MissionCommands - name does not match cached name, resetting"]
 						PullState:Set["START"]
 						return FALSE
 					}
 				}
 				else
 				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - cached entity no longer exists, resetting"]
+					Logger:Log["DEBUG: obj_MissionCommands - cached entity no longer exists, resetting"]
 					PullState:Set["START"]
 					return FALSE
 				}
@@ -681,7 +681,7 @@ objectdef obj_MissionCommands
 
 		if ${This.WaitTimeOut.Timestamp} == 0 && ${This.HostileCount} < 1
 		{
-			UI:UpdateConsole["DEBUG: obj_MissionCommands -  Waiting for waves , timeout ${timeoutMinutes} minutes",LOG_DEBUG]
+			Logger:Log["DEBUG: obj_MissionCommands -  Waiting for waves , timeout ${timeoutMinutes} minutes",LOG_DEBUG]
 			WaitTimeOut:Set[${Time.Timestamp}]
 			WaitTimeOut.Minute:Inc[${timeoutMinutes}]
 			WaitTimeOut:Update
@@ -691,7 +691,7 @@ objectdef obj_MissionCommands
 		{
 			if ${Time.Timestamp} >= ${This.WaitTimeOut.Timestamp}
 			{
-				UI:UpdateConsole["DEBUG: obj_MissionCommands - No hostiles present after timer expired, Waves finished",LOG_DEBUG]
+				Logger:Log["DEBUG: obj_MissionCommands - No hostiles present after timer expired, Waves finished",LOG_DEBUG]
 
 				WaitTimeOut:Set[0]
 				return TRUE
@@ -702,11 +702,11 @@ objectdef obj_MissionCommands
 			WaitTimeOut:Set[0]
 			if ${This.ClearRoom}
 			{
-				UI:UpdateConsole["DEBUG: obj_MissionCommands -  Waiting untill ${This.WaitTimeOut.Time24}",LOG_DEBUG]
+				Logger:Log["DEBUG: obj_MissionCommands -  Waiting untill ${This.WaitTimeOut.Time24}",LOG_DEBUG]
 				return FALSE
 			}
 		}
-		UI:UpdateConsole["DEBUG: obj_MissionCommands -  Waiting untill ${This.WaitTimeOut.Time24}",LOG_DEBUG]
+		Logger:Log["DEBUG: obj_MissionCommands -  Waiting untill ${This.WaitTimeOut.Time24}",LOG_DEBUG]
 		return FALSE
 	}
 
@@ -735,18 +735,18 @@ objectdef obj_MissionCommands
 			{
 				EVE:DoGetEntities[containerCache, GroupID, ${groupID}]
 				containerCache:GetIterator[containerIterator]
-				UI:UpdateConsole["DEBUG: obj_MissionCommands - Looking for containers to loot",LOG_DEBUG]
+				Logger:Log["DEBUG: obj_MissionCommands - Looking for containers to loot",LOG_DEBUG]
 				if ${containerName.Equal["NONE"]}
 				{
 					if ${containerIterator:First(exists)}
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Searching all nearby cargo cans",LOG_DEBUG]
+						Logger:Log["DEBUG: obj_MissionCommands - Searching all nearby cargo cans",LOG_DEBUG]
 						ContainerState:Set["CHECKINGCANS"]
 						return FALSE
 					}
 					else
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Error , Could not find any nearby cargo cans",LOG_DEBUG]
+						Logger:Log["DEBUG: obj_MissionCommands - Error , Could not find any nearby cargo cans",LOG_DEBUG]
 						return TRUE
 					}
 				}
@@ -754,7 +754,7 @@ objectdef obj_MissionCommands
 				{
 					if ${containerIterator:First(exists)}
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - looking for containers with name ${containerName}",LOG_DEBUG]
+						Logger:Log["DEBUG: obj_MissionCommands - looking for containers with name ${containerName}",LOG_DEBUG]
 						do
 						{
 							if ${containerIterator.Value.Name.Find[${containerName}]} > 0
@@ -767,18 +767,18 @@ objectdef obj_MissionCommands
 					}
 					else
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Error , could not find any nearby wrecks",LOG_DEBUG]
+						Logger:Log["DEBUG: obj_MissionCommands - Error , could not find any nearby wrecks",LOG_DEBUG]
 						return TRUE
 					}
 					if ${wreckIterator:First(exists)}
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Searching all nearby wrecks",LOG_DEBUG]
+						Logger:Log["DEBUG: obj_MissionCommands - Searching all nearby wrecks",LOG_DEBUG]
 						ContainerState:Set["CHECKINGWRECKS"]
 						return FALSE
 					}
 					else
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Error - Found no wrecks with name ${containerName}",LOG_DEBUG]
+						Logger:Log["DEBUG: obj_MissionCommands - Error - Found no wrecks with name ${containerName}",LOG_DEBUG]
 						return TRUE
 					}
 				}
@@ -787,17 +787,17 @@ objectdef obj_MissionCommands
 			{
 				if ${containerIterator.Value(exists)}
 				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - Attempting to loot from ${containerIterator.Value.Name} ID ${containerIterator.Value.ID}",LOG_DEBUG]
+					Logger:Log["DEBUG: obj_MissionCommands - Attempting to loot from ${containerIterator.Value.Name} ID ${containerIterator.Value.ID}",LOG_DEBUG]
 					result:Set[${This.LootEntity[${containerIterator.Value.ID},${lootItem}]}]
 					if ${result} == 3
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Found the item",LOG_DEBUG]
+						Logger:Log["DEBUG: obj_MissionCommands - Found the item",LOG_DEBUG]
 						ContainerState:Set["START"]
 						return TRUE
 					}
 					if ${result} == 2
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Item was not in this container",LOG_DEBUG]
+						Logger:Log["DEBUG: obj_MissionCommands - Item was not in this container",LOG_DEBUG]
 						if ${containerIterator:Next(exists)}
 						{
 							return FALSE
@@ -811,13 +811,13 @@ objectdef obj_MissionCommands
 					}
 					if ${result} == 1
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Moving to container",LOG_DEBUG]
+						Logger:Log["DEBUG: obj_MissionCommands - Moving to container",LOG_DEBUG]
 						return FALSE
 					}
 				}
 				else
 				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands Entity no longer exists , resetting",LOG_DEBUG]
+					Logger:Log["DEBUG: obj_MissionCommands Entity no longer exists , resetting",LOG_DEBUG]
 					ContainerState:Set["START"]
 					return FALSE
 				}
@@ -826,17 +826,17 @@ objectdef obj_MissionCommands
 			{
 				if ${wreckIterator.Value(exists)}
 				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - Attempting to loot from ${wreckIterator.Value.Name} ID ${wreckIterator.Value.ID}",LOG_DEBUG]
+					Logger:Log["DEBUG: obj_MissionCommands - Attempting to loot from ${wreckIterator.Value.Name} ID ${wreckIterator.Value.ID}",LOG_DEBUG]
 					result:Set[${This.LootEntity[${wreckIterator.Value.ID}, ${lootItem}]}]
 					if ${result} == 3
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Found the item",LOG_DEBUG]
+						Logger:Log["DEBUG: obj_MissionCommands - Found the item",LOG_DEBUG]
 						ContainerState:Set["START"]
 						return TRUE
 					}
 					if ${result} == 2
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Did not find the item",LOG_DEBUG]
+						Logger:Log["DEBUG: obj_MissionCommands - Did not find the item",LOG_DEBUG]
 						if ${wreckIterator:Next(exists)}
 						{
 							return FALSE
@@ -850,7 +850,7 @@ objectdef obj_MissionCommands
 					}
 					if ${result} == 1
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Moving to the container",LOG_DEBUG]
+						Logger:Log["DEBUG: obj_MissionCommands - Moving to the container",LOG_DEBUG]
 						return FALSE
 					}
 				}
@@ -889,7 +889,7 @@ objectdef obj_MissionCommands
 
 		EVE:DoGetEntities[gateIndex, TypeID, TYPE_ACCELERATION_GATE]
 
-		UI:UpdateConsole["obj_Missions: DEBUG There are ${gateIndex.Used} gates nearby."]
+		Logger:Log["obj_Missions: DEBUG There are ${gateIndex.Used} gates nearby."]
 
 		return ${gateIndex.Used} > 0
 	}
@@ -904,10 +904,10 @@ objectdef obj_MissionCommands
 		{
 			case APPROACHING
 			{
-				UI:UpdateConsole["DEBUG: obj_MissionCommands - LootEntity moving closer to loot ${entID}",LOG_DEBUG]
+				Logger:Log["DEBUG: obj_MissionCommands - LootEntity moving closer to loot ${entID}",LOG_DEBUG]
 				if ${This.Approach[${entID},LOOT_RANGE]}
 				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - In range attempting to open cargo",LOG_DEBUG]
+					Logger:Log["DEBUG: obj_MissionCommands - In range attempting to open cargo",LOG_DEBUG]
 					lootEntityID:Set[${entID}]
 					LootEntityState:Set["OPENCARGO"]
 					Entity[${entID}]:OpenCargo
@@ -921,7 +921,7 @@ objectdef obj_MissionCommands
 				{
 					if ${Entity[${entID}].LootWindow(exists)}
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Found the loot window checking for itamz",LOG_DEBUG]
+						Logger:Log["DEBUG: obj_MissionCommands - Found the loot window checking for itamz",LOG_DEBUG]
 
 						LootEntityState:Set["LOOTING"]
 						return 1
@@ -939,11 +939,11 @@ objectdef obj_MissionCommands
 				{
 					do
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Found item : ${Cargo.Value.Name}",LOG_DEBUG]
+						Logger:Log["DEBUG: obj_MissionCommands - Found item : ${Cargo.Value.Name}",LOG_DEBUG]
 						if ${Cargo.Value.Name.Equal[${lootItem}]}
 						{
 							QuantityToMove:Set[${Cargo.Value.Quantity}]
-							UI:UpdateConsole["DEBUG: obj_Missions.LootEntity: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
+							Logger:Log["DEBUG: obj_Missions.LootEntity: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
 							if ${QuantityToMove} > 0
 							{
 								LootEntityState:Set["APPROACHING"]
@@ -955,7 +955,7 @@ objectdef obj_MissionCommands
 					}
 					while ${Cargo:Next(exists)}
 				}
-				UI:UpdateConsole["DEBUG: obj_MissionCommands - Did not find any items to loot!, could be because we are going too fast",LOG_DEBUG]
+				Logger:Log["DEBUG: obj_MissionCommands - Did not find any items to loot!, could be because we are going too fast",LOG_DEBUG]
 				if ${Recheck} > 20
 				{
 					Recheck:Set[0]
@@ -1002,12 +1002,12 @@ objectdef obj_MissionCommands
 			{
 				TypeID:Set[${CargoIterator.Value.TypeID}]
 				ItemQuantity:Set[${CargoIterator.Value.Quantity}]
-				;;UI:UpdateConsole["DEBUG: HaveLoot: Ship's Cargo: ${ItemQuantity} units of ${CargoIterator.Value.Name}(${TypeID})."]
+				;;Logger:Log["DEBUG: HaveLoot: Ship's Cargo: ${ItemQuantity} units of ${CargoIterator.Value.Name}(${TypeID})."]
 
 				if (${TypeID} == ${This.MissionCache.TypeID[${agentID}]}) && \
 				(${ItemQuantity} >= ${QuantityRequired})
 				{
-					UI:UpdateConsole["DEBUG: HaveLoot: Found required items in ship's cargohold."]
+					Logger:Log["DEBUG: HaveLoot: Found required items in ship's cargohold."]
 					haveCargo:Set[TRUE]
 					break
 				}
@@ -1029,7 +1029,7 @@ objectdef obj_MissionCommands
 				{
 					if ${droneIterator.Value.State} != DRONESTATE_RETURNING
 					{
-						UI:UpdateConsole["DEBUG: obj_MissionCommands - Attempting to recall drones!",LOG_DEBUG]
+						Logger:Log["DEBUG: obj_MissionCommands - Attempting to recall drones!",LOG_DEBUG]
 
 						EVE:Execute[CmdDronesReturnToBay]
 						return FALSE
@@ -1042,7 +1042,7 @@ objectdef obj_MissionCommands
 				{
 					; We don't wait for drones if we're on emergency warp out
 
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - below safe minimums,sorry drones but im saving myself!",LOG_DEBUG]
+					Logger:Log["DEBUG: obj_MissionCommands - below safe minimums,sorry drones but im saving myself!",LOG_DEBUG]
 
 					return TRUE
 				}
@@ -1050,7 +1050,7 @@ objectdef obj_MissionCommands
 			}
 			else
 			{
-				UI:UpdateConsole["DEBUG: obj_MissionCommands - We dont have any drones!",LOG_DEBUG]
+				Logger:Log["DEBUG: obj_MissionCommands - We dont have any drones!",LOG_DEBUG]
 				return TRUE
 			}
 		}
@@ -1063,14 +1063,14 @@ objectdef obj_MissionCommands
 	member:bool WarpPrepare()
 	{
 
-		UI:UpdateConsole["DEBUG: obj_MissionCommands - preparing for warp",LOG_DEBUG]
+		Logger:Log["DEBUG: obj_MissionCommands - preparing for warp",LOG_DEBUG]
 
 		This:Deactivate_SensorBoost
 
 		if ${Ship.Drones.WaitingForDrones}
 		{
 
-			UI:UpdateConsole["DEBUG: obj_MissionCommands - we were deploying drones, delaying warp untill drones are finished deploying",LOG_DEBUG]
+			Logger:Log["DEBUG: obj_MissionCommands - we were deploying drones, delaying warp untill drones are finished deploying",LOG_DEBUG]
 
 			return FALSE
 		}
@@ -1081,14 +1081,14 @@ objectdef obj_MissionCommands
 		if ${This.ReturnAllToDroneBay[]}
 		{
 
-			UI:UpdateConsole["DEBUG: obj_MissionCommands - drones returned we are ready for warp",LOG_DEBUG]
+			Logger:Log["DEBUG: obj_MissionCommands - drones returned we are ready for warp",LOG_DEBUG]
 
 			return TRUE
 		}
 		else
 		{
 
-			UI:UpdateConsole["DEBUG: obj_MissionCommands - drones still returning to bay ,not ready for warp yet",LOG_DEBUG]
+			Logger:Log["DEBUG: obj_MissionCommands - drones still returning to bay ,not ready for warp yet",LOG_DEBUG]
 
 			return FALSE
 		}
@@ -1099,12 +1099,12 @@ objectdef obj_MissionCommands
 
 		if ${Ship.InWarp}
 		{
-			UI:UpdateConsole["DEBUG: obj_MissionCommands - Warpwait : Ship.InWarp is ${Ship.InWarp}!",LOG_DEBUG]
+			Logger:Log["DEBUG: obj_MissionCommands - Warpwait : Ship.InWarp is ${Ship.InWarp}!",LOG_DEBUG]
 			return FALSE
 		}
 		else
 		{
-			UI:UpdateConsole["DEBUG: obj_MissionCommands - Warpwait : we dropped out of warp!",LOG_DEBUG]
+			Logger:Log["DEBUG: obj_MissionCommands - Warpwait : we dropped out of warp!",LOG_DEBUG]
 
 			return TRUE
 		}
@@ -1136,7 +1136,7 @@ objectdef obj_MissionCommands
 			variable iterator targetIterator
 			Me:DoGetTargetedBy[targetIndex]
 			targetIndex:GetIterator[targetIterator]
-			;UI:UpdateConsole["GetTargeting = ${Me.GetTargeting}, GetTargets = ${Me.GetTargets}"]
+			;Logger:Log["GetTargeting = ${Me.GetTargeting}, GetTargets = ${Me.GetTargets}"]
 			if ${targetIterator:First(exists)}
 			{
 				if ${TargetPriorities.Used} > 0
@@ -1147,7 +1147,7 @@ objectdef obj_MissionCommands
 						{
 							if ${TargetPriorities.Element[${targetIterator.Value.Name}]} > ${highestPriority}
 							{
-								UI:UpdateConsole["DEBUG: obj_MissionCommands - NextTarget - Found new highest priority ${targetIterator.Value.Name}",LOG_DEBUG]
+								Logger:Log["DEBUG: obj_MissionCommands - NextTarget - Found new highest priority ${targetIterator.Value.Name}",LOG_DEBUG]
 								highestPriority:Set[${TargetPriorities.Element[${targetIterator.Value.Name}]}]
 								highestID:Set[${targetIterator.Value.ID}]
 							}
@@ -1166,7 +1166,7 @@ objectdef obj_MissionCommands
 				}
 				if ${highestPriority} == 5
 				{
-					UI:UpdateConsole["DEBUG: obj_MissionCommands - NextTarget - All priority targets dead, will go hog wild killing non priority targets!",LOG_DEBUG]
+					Logger:Log["DEBUG: obj_MissionCommands - NextTarget - All priority targets dead, will go hog wild killing non priority targets!",LOG_DEBUG]
 					if ${targetIterator:First(exists)}
 					do
 					{
@@ -1174,7 +1174,7 @@ objectdef obj_MissionCommands
 						{
 							if !${Targeting.IsQueued[${targetIterator.Value.ID}]}
 							{
-									UI:UpdateConsole["DEBUG: obj_MissionCommands - NextTarget - Targeting ${targetIterator.Value.Name} ID ${targetIterator.Value.ID}"]
+									Logger:Log["DEBUG: obj_MissionCommands - NextTarget - Targeting ${targetIterator.Value.Name} ID ${targetIterator.Value.ID}"]
 									Targeting:Queue[${targetIterator.Value.ID},1,1,FALSE]
 							}
 						}
@@ -1185,7 +1185,7 @@ objectdef obj_MissionCommands
 				{
 					if !${Targeting.IsQueued[${highestID}]}
 					{
-							UI:UpdateConsole["DEBUG: obj_MissionCommands - NextTarget - Targeting highest priority ${targetIterator.Value.Name}"]
+							Logger:Log["DEBUG: obj_MissionCommands - NextTarget - Targeting highest priority ${targetIterator.Value.Name}"]
 
 							Targeting:Queue[${highestID},1,1,FALSE]
 					}
@@ -1193,7 +1193,7 @@ objectdef obj_MissionCommands
 			}
 			else
 			{
-				UI:UpdateConsole["DEBUG: obj_MissionCommands - NextTarget - No hostiles!",LOG_DEBUG]
+				Logger:Log["DEBUG: obj_MissionCommands - NextTarget - No hostiles!",LOG_DEBUG]
 			}
 		}
 	}

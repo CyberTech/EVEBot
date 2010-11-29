@@ -20,6 +20,9 @@ objectdef obj_EVEBot
 	variable bool LastSessionResult
 	variable index:string Threads
 
+	variable index:string BehaviorList
+	variable iterator Behaviors
+
 	; Cached static items
 	variable int CharID
 	method Initialize()
@@ -27,8 +30,9 @@ objectdef obj_EVEBot
 		This:SetVersion
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		This.CharID:Set[${Me.CharID}]
+		BehaviorList:GetIterator[Behaviors]
 
-		UI:UpdateConsole["obj_EVEBot: Initialized", LOG_MINOR]
+		Logger:Log["obj_EVEBot: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -39,13 +43,13 @@ objectdef obj_EVEBot
 	method EndBot()
 	{
 		variable int i
-		UI:UpdateConsole["EVEBot shutting down..."]
+		Logger:Log["EVEBot shutting down..."]
 		for (i:Set[1]; ${i} <= ${Threads.Used}; i:Inc)
 		{
-			UI:UpdateConsole[" Stopping ${Threads.Get[${i}]} thread..."]
+			Logger:Log[" Stopping ${Threads.Get[${i}]} thread..."]
 			endscript ${Threads.Get[${i}]}
 		}
-		UI:UpdateConsole["Finished"]
+		Logger:Log["Finished"]
 		endscript ${Script.Filename}
 	}
 
@@ -66,13 +70,13 @@ objectdef obj_EVEBot
 					if ${EVE.IsUIDisplayOn}
 					{
 						EVE:ToggleUIDisplay
-						UI:UpdateConsole["Disabling UI Rendering"]
+						Logger:Log["Disabling UI Rendering"]
 					}
 				}
 				elseif !${EVE.IsUIDisplayOn}
 				{
 					EVE:ToggleUIDisplay
-					UI:UpdateConsole["Enabling UI Rendering"]
+					Logger:Log["Enabling UI Rendering"]
 				}
 
 				if ${Config.Common.Disable3D}
@@ -80,13 +84,13 @@ objectdef obj_EVEBot
 					if ${EVE.Is3DDisplayOn}
 					{
 						EVE:Toggle3DDisplay
-						UI:UpdateConsole["Disabling 3D Rendering"]
+						Logger:Log["Disabling 3D Rendering"]
 					}
 				}
 				elseif !${EVE.Is3DDisplayOn}
 				{
 					EVE:Toggle3DDisplay
-					UI:UpdateConsole["Enabling 3D Rendering"]
+					Logger:Log["Enabling 3D Rendering"]
 				}
 			}
 			elseif ${Config.Common.DisableScreenWhenBackgrounded}
@@ -94,12 +98,12 @@ objectdef obj_EVEBot
 				if ${EVE.IsUIDisplayOn}
 				{
 					EVE:ToggleUIDisplay
-					UI:UpdateConsole["Background EVE: Disabling UI Rendering"]
+					Logger:Log["Background EVE: Disabling UI Rendering"]
 				}
 				if ${EVE.Is3DDisplayOn}
 				{
 					EVE:Toggle3DDisplay
-					UI:UpdateConsole["Background EVE: Disabling 3D Rendering"]
+					Logger:Log["Background EVE: Disabling 3D Rendering"]
 				}
 			}
 
@@ -122,17 +126,17 @@ objectdef obj_EVEBot
 					if ( ${This.GameHour} == 10 && \
 						( ${This.GameMinute} >= 50 && ${This.GameMinute} <= 57) )
 					{
-						UI:UpdateConsole["EVE downtime approaching, pausing operations", LOG_CRITICAL]
+						Logger:Log["EVE downtime approaching, pausing operations", LOG_CRITICAL]
 						This.ReturnToStation:Set[TRUE]
 					}
 					else
 					{
 						variable int Hours = ${Math.Calc[(${Script.RunningTime}/1000/60/60)%60].Int}
 
-						;;; UI:UpdateConsole["DEBUG: ${Config.Common.MaxRuntime} ${Hours}"]
+						;;; Logger:Log["DEBUG: ${Config.Common.MaxRuntime} ${Hours}"]
 						if ${Config.Common.MaxRuntime} > 0 && ${Config.Common.MaxRuntime} <= ${Hours}
 						{
-							UI:UpdateConsole["Maximum runtime exceeded, pausing operations", LOG_CRITICAL]
+							Logger:Log["Maximum runtime exceeded, pausing operations", LOG_CRITICAL]
 							This.ReturnToStation:Set[TRUE]
 						}
 					}
@@ -142,10 +146,21 @@ objectdef obj_EVEBot
 				{
 					if (${This.GameHour} == 10 && ${This.GameMinute} >= 58)
 					{
-						UI:UpdateConsole["EVE downtime approaching - Quitting Eve", LOG_CRITICAL]
+						Logger:Log["EVE downtime approaching - Quitting Eve", LOG_CRITICAL]
 						EVE:Execute[CmdQuitGame]
 					}
 				}
+
+				if ${This.Behaviors:First(exists)}
+				do
+				{
+					if ${This.Behaviors.Value(exists)}
+					{
+						${This.Behaviors.Value}:Pulse
+					}
+				}
+				while ${This.Behaviors:Next(exists)}
+
 			}
 
 			This.NextPulse:Set[${Time.Timestamp}]
@@ -191,13 +206,13 @@ objectdef obj_EVEBot
 
 	method Pause(string ErrMsg)
 	{
-		UI:UpdateConsole["${ErrMsg}", LOG_CRITICAL]
+		Logger:Log["${ErrMsg}", LOG_CRITICAL]
 		This._Paused:Set[TRUE]
 	}
 
 	method Resume()
 	{
-		UI:UpdateConsole["Resumed", LOG_CRITICAL]
+		Logger:Log["Resumed", LOG_CRITICAL]
 		This._Paused:Set[FALSE]
 		Script:Resume
 	}
@@ -273,5 +288,17 @@ objectdef obj_EVEBot
 		}
 
 		return "0 isk"
+	}
+
+	member Runtime()
+	{
+		/* TODO - this is expensive (4-5fps for me), replace with something better -- CyberTech */
+		DeclareVariable RunTime float ${Math.Calc[${Script.RunningTime}/1000/60]}
+
+		DeclareVariable Hours string ${Math.Calc[(${RunTime}/60)%60].Int.LeadingZeroes[2]}
+		DeclareVariable Minutes string ${Math.Calc[${RunTime}%60].Int.LeadingZeroes[2]}
+		DeclareVariable Seconds string ${Math.Calc[(${RunTime}*60)%60].Int.LeadingZeroes[2]}
+
+		return "${Hours}:${Minutes}:${Seconds}"
 	}
 }

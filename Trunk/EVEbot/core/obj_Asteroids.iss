@@ -42,7 +42,7 @@ objectdef obj_Asteroids
 
 		This:Populate_AsteroidFilter
 
-		UI:UpdateConsole["${This.LogPrefix}: Initialized", LOG_MINOR]
+		Logger:Log["${This.LogPrefix}: Initialized", LOG_MINOR]
 	}
 
 	; Checks the belt name against the empty belt list.
@@ -74,7 +74,7 @@ objectdef obj_Asteroids
 		if ${BeltName(exists)}
 		{
 			EmptyBeltList:Insert[${BeltName}]
-			UI:UpdateConsole["Excluding empty belt ${BeltName}"]
+			Logger:Log["Excluding empty belt ${BeltName}"]
 		}
 	}
 
@@ -107,12 +107,12 @@ objectdef obj_Asteroids
 			if !${ForceMove}
 			{
 				call ChooseTargets TRUE
-				UI:UpdateConsole["DEBUG: MoveToField: T.QS: ${Targeting.QueueSize}"]
+				Logger:Log["DEBUG: MoveToField: T.QS: ${Targeting.QueueSize}"]
 				AsteroidsInRange:Set[${Targeting.QueueSize}]
 			}
 
 #if EVEBOT_DEBUG
-			UI:UpdateConsole["DEBUG: MoveToField: ForceMove=${ForceMove} AsteroidsInRange=${AsteroidsInRange}"]
+			Logger:Log["DEBUG: MoveToField: ForceMove=${ForceMove} AsteroidsInRange=${AsteroidsInRange}"]
 #endif
 			if ${ForceMove} || !${AsteroidsInRange}
 			{
@@ -122,7 +122,7 @@ objectdef obj_Asteroids
 					${Bookmarks.StoredLocationExists})
 				{
 					/* We have a stored location, we should return to it. */
-					UI:UpdateConsole["Returning to last location (${Bookmarks.StoredLocation})"]
+					Logger:Log["Returning to last location (${Bookmarks.StoredLocation})"]
 					call Ship.WarpToBookMarkName "${Bookmarks.StoredLocation}"
 					This.BeltArrivalTime:Set[${Time.Timestamp}]
 					Bookmarks:RemoveStoredLocation
@@ -142,7 +142,7 @@ objectdef obj_Asteroids
 					TryCount:Inc
 					if ${TryCount} > ${Math.Calc[${Belts.Used} * 10]}
 					{
-						UI:UpdateConsole["All belts empty!", LOG_CRITICAL]
+						Logger:Log["All belts empty!", LOG_CRITICAL]
 						EVEBot.ReturnToStation:Set[TRUE]
 						return
 					}
@@ -150,7 +150,7 @@ objectdef obj_Asteroids
 				while ( !${Belts[${curBelt}].Name.Find[${beltsubstring}](exists)} || \
 						${This.IsBeltEmpty[${Belts[${curBelt}].Name}]} )
 
-				UI:UpdateConsole["Warping to Asteroid Belt: ${Belts[${curBelt}].Name}"]
+				Logger:Log["Warping to Asteroid Belt: ${Belts[${curBelt}].Name}"]
 				call Ship.WarpToID ${Belts[${curBelt}]}
 				This.BeltArrivalTime:Set[${Time.Timestamp}]
 				This.UsingMookMarks:Set[TRUE]
@@ -158,7 +158,7 @@ objectdef obj_Asteroids
 			}
 			else
 			{
-				UI:UpdateConsole["Staying at Asteroid Belt: ${BeltIterator.Value.Name}"]
+				Logger:Log["Staying at Asteroid Belt: ${BeltIterator.Value.Name}"]
 			}
 		}
 		else
@@ -171,7 +171,7 @@ objectdef obj_Asteroids
 				${Bookmarks.StoredLocationExists})
 			{
 				/* We have a stored location, we should return to it. */
-				UI:UpdateConsole["Returning to last location (${Bookmarks.StoredLocation})"]
+				Logger:Log["Returning to last location (${Bookmarks.StoredLocation})"]
 				call Ship.WarpToBookMarkName "${Bookmarks.StoredLocation}"
 				This.BeltArrivalTime:Set[${Time.Timestamp}]
 				Bookmarks:RemoveStoredLocation
@@ -184,7 +184,7 @@ objectdef obj_Asteroids
 				return
 			}
 
-			UI:UpdateConsole["ERROR: OBJ_Asteroids:MoveToField: No asteroid belts in the area...", LOG_CRITICAL]
+			Logger:Log["ERROR: OBJ_Asteroids:MoveToField: No asteroid belts in the area...", LOG_CRITICAL]
 			EVEBot.ReturnToStation:Set[TRUE]
 			return
 		}
@@ -207,7 +207,7 @@ objectdef obj_Asteroids
 				Config.Miner.MercoxitTypesRef:GetSettingIterator[This.OreTypeIterator]
 				break
 			Default
-				UI:UpdateConsole["ERROR: OBJ_Asteroids:Populate_AsteroidFilter: Config.Miner.MinerType is unknown: ${Config.Miner.MinerType}", LOG_CRITICAL]
+				Logger:Log["ERROR: OBJ_Asteroids:Populate_AsteroidFilter: Config.Miner.MinerType is unknown: ${Config.Miner.MinerType}", LOG_CRITICAL]
 				Config.Miner.OreTypesRef:GetSettingIterator[This.OreTypeIterator]
 				break
 		}
@@ -219,7 +219,7 @@ objectdef obj_Asteroids
 			{
 				if ${This.OreTypeIterator.Value.FindAttribute[Enabled, 1]} == 1
 				{
-					UI:UpdateConsole["DEBUG: obj_Asteroids:Populate_AsteroidFilter: Adding ore type ${This.OreTypeIterator.Value} to query", LOG_DEBUG]
+					Logger:Log["DEBUG: obj_Asteroids:Populate_AsteroidFilter: Adding ore type ${This.OreTypeIterator.Value} to query", LOG_DEBUG]
 					if ${TypeFilter.Length} > 1
 					{
 						TypeFilter:Concat[" || "]
@@ -233,7 +233,7 @@ objectdef obj_Asteroids
 				}
 				else
 				{
-					UI:UpdateConsole["DEBUG: obj_Asteroids:Populate_AsteroidFilter: Skipping disabled ore: ${This.OreTypeIterator.Key}", LOG_DEBUG]
+					Logger:Log["DEBUG: obj_Asteroids:Populate_AsteroidFilter: Skipping disabled ore: ${This.OreTypeIterator.Key}", LOG_DEBUG]
 				}
 			}
 			while ${This.OreTypeIterator:Next(exists)}
@@ -244,14 +244,14 @@ objectdef obj_Asteroids
 				Filter:Concat[" && "]
 				Filter:Concat[${TypeFilter}]
 			}
-			UI:UpdateConsole["DEBUG: obj_Asteroids:Populate_AsteroidFilter: Filter is ${Filter}", LOG_DEBUG]
+			Logger:Log["DEBUG: obj_Asteroids:Populate_AsteroidFilter: Filter is ${Filter}", LOG_DEBUG]
 			EntityCache:DeleteFilter[${This.Asteroid_CacheID}]
 			This.Asteroid_CacheID:Set[${EntityCache.AddFilter["obj_Asteroids", ${Filter}, 20]}]
 			EntityCache.EntityFilters.Get[${This.Asteroid_CacheID}].Entities:GetIterator[Asteroid_CacheIterator]
 		}
 		else
 		{
-			UI:UpdateConsole["WARNING: obj_Asteroids:Populate_AsteroidFilter: Ore Type list is empty, please check config"]
+			Logger:Log["WARNING: obj_Asteroids:Populate_AsteroidFilter: Ore Type list is empty, please check config"]
 		}
 	}
 
@@ -330,14 +330,14 @@ objectdef obj_Asteroids
 
 		This.MaxDistanceToAsteroid:Set[${Math.Calc[${Ship.OptimalMiningRange} * ${Config.Miner.MiningRangeMultipler}]}]
 
-		UI:UpdateConsole["DEBUG: obj_Asteroids:ChooseTargets: Checking ${This.AsteroidList.Used} asteroids", LOG_DEBUG]
+		Logger:Log["DEBUG: obj_Asteroids:ChooseTargets: Checking ${This.AsteroidList.Used} asteroids", LOG_DEBUG]
 		if ${This.AsteroidList.Used}
 		{
 			variable int AsteroidID
 			for ( IndexPos:Set[1]; ${IndexPos} <= ${This.AsteroidList.Used}; IndexPos:Inc )
 			{
 				AsteroidID:Set[${This.AsteroidList[${IndexPos}]}]
-				UI:UpdateConsole["DEBUG: obj_Asteroids:ChooseTargets: ${IndexPos}: ID: ${AsteroidID} EntityResult: ${Entity[${AsteroidID}]}", LOG_DEBUG]
+				Logger:Log["DEBUG: obj_Asteroids:ChooseTargets: ${IndexPos}: ID: ${AsteroidID} EntityResult: ${Entity[${AsteroidID}]}", LOG_DEBUG]
 				if ${Entity[${AsteroidID}](exists)} && \
 					${Targeting.TargetCount} < ${Ship.MaxLockedTargets} && \
 					${Targeting.QueueSize} < ${Ship.MaxLockedTargets} && \
@@ -364,12 +364,12 @@ objectdef obj_Asteroids
 					{
 						if ${AsteroidIterator.Value.Distance} < ${This.MaxDistanceToAsteroid}
 						{
-							UI:UpdateConsole["${This.ObjectName}: ChooseTargets: No Asteroids in range & All lasers idle: Approaching nearest"]
+							Logger:Log["${This.ObjectName}: ChooseTargets: No Asteroids in range & All lasers idle: Approaching nearest"]
 							call Ship.Approach ${AsteroidIterator.Value} ${Ship.OptimalMiningRange}
 						}
 						else
 						{
-							UI:UpdateConsole["${This.ObjectName}: ChooseTargets: No Asteroids within ${EVEBot.MetersToKM_Str[${This.MaxDistanceToAsteroid}], changing fields."]
+							Logger:Log["${This.ObjectName}: ChooseTargets: No Asteroids within ${EVEBot.MetersToKM_Str[${This.MaxDistanceToAsteroid}], changing fields."]
 							/* The nearest asteroid is farfar away.  Let's just warp out. */
 
 							if ${CalledFromMoveRoutine}
@@ -387,7 +387,7 @@ objectdef obj_Asteroids
 		}
 		else
 		{
-			UI:UpdateConsole["${This.ObjectName}: No Asteroids within overview range"]
+			Logger:Log["${This.ObjectName}: No Asteroids within overview range"]
 			if ${Entity[GroupID = GROUP_ASTEROIDBELT].Distance} < CONFIG_OVERVIEW_RANGE
 			{
 				This:MarkBeltEmpty["${Entity[GroupID = GROUP_ASTEROIDBELT]}"]

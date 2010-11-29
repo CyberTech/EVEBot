@@ -25,7 +25,7 @@ objectdef obj_Navigator
 	{
 		/* attach the pulse method to the onframe event */
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-		UI:UpdateConsole["Thread: obj_Navigator: Initialized", LOG_MINOR]
+		Logger:Log["Thread: obj_Navigator: Initialized", LOG_MINOR]
 		/* set the entity cache update frequency */
 		;if ${NavigatorCache.PulseIntervalInSeconds} != 9999
 		;{
@@ -135,7 +135,7 @@ objectdef obj_Navigator
 		}
 		else
 		{
-			UI:UpdateConsole["Entity ID not found"]
+			Logger:Log["Entity ID not found"]
 		}
 	}
 

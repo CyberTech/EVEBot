@@ -40,7 +40,7 @@ objectdef obj_Skills inherits obj_BaseClass
 			This.SkillFile:Close
 		}
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-		UI:UpdateConsole["obj_Skills: Initialized", LOG_MINOR]
+		Logger:Log["obj_Skills: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -62,7 +62,7 @@ objectdef obj_Skills inherits obj_BaseClass
 						; Skillfile has not yet been checked or has changed
 						if ${This.SkillFile.Size} > 0
 						{
-							UI:UpdateConsole["obj_Skill: Reloading skillfile"]
+							Logger:Log["obj_Skill: Reloading skillfile"]
 							This:UpdateSkillFileQueue[]
 						}
 						This.PrevSkillFileSize:Set[${This.SkillFile.Size}]
@@ -82,7 +82,7 @@ objectdef obj_Skills inherits obj_BaseClass
 						if ${EVEWindow[ByName,MessageBox](exists)} && \
 							${EVEWindow[ByCaption,Information](exists)}
 						{
-							UI:UpdateConsole["obj_Skill: Already training on another character on this account, detaching pulse and turning off TrainSkills"]
+							Logger:Log["obj_Skill: Already training on another character on this account, detaching pulse and turning off TrainSkills"]
 							Press Esc
 							This:Shutdown[]
 							Config.Common:TrainSkills[FALSE]
@@ -111,13 +111,13 @@ objectdef obj_Skills inherits obj_BaseClass
 		}
 		if !${This.Training}
 		{
-			UI:UpdateConsole["Training ${SkillName}"]
+			Logger:Log["Training ${SkillName}"]
 			Me.Skill[${SkillName}]:StartTraining
 			CurrentlyTrainingSkill:Set[${SkillName}]
 		}
 		elseif ${SkillName.NotEqual[${Me.SkillCurrentlyTraining.Name}]}
 		{
-			UI:UpdateConsole["Changing skill to ${SkillName} from ${This.CurrentlyTraining}"]
+			Logger:Log["Changing skill to ${SkillName} from ${This.CurrentlyTraining}"]
 			Me.Skill[${SkillName}]:StartTraining
 			CurrentlyTrainingSkill:Set[${SkillName}]
 		}
@@ -166,22 +166,22 @@ objectdef obj_Skills inherits obj_BaseClass
 				;; EVETime ticks are 0.1 microseconds
 				;; skill time is in minutes
 				variable int64 endTime = ${EVETime.AsInt64}
-				;UI:UpdateConsole["DEBUG: endTime  = ${endTime}", LOG_DEBUG]
-				;UI:UpdateConsole["DEBUG: ${skillIterator.Value.Name} >> ${skillIterator.Value.TimeToTrain}", LOG_DEBUG]
+				;Logger:Log["DEBUG: endTime  = ${endTime}", LOG_DEBUG]
+				;Logger:Log["DEBUG: ${skillIterator.Value.Name} >> ${skillIterator.Value.TimeToTrain}", LOG_DEBUG]
 				endTime:Inc[${Math.Calc[${skillIterator.Value.TimeToTrain}*10000000*60].Round}]
-				;UI:UpdateConsole["DEBUG: endTime+ = ${endTime}", LOG_DEBUG]
-				;UI:UpdateConsole["DEBUG: endTime >> ${EVETime[${endTime}].Time}", LOG_DEBUG]
+				;Logger:Log["DEBUG: endTime+ = ${endTime}", LOG_DEBUG]
+				;Logger:Log["DEBUG: endTime >> ${EVETime[${endTime}].Time}", LOG_DEBUG]
 				;; Skip skills that end during downtime
 
 				variable int hour
 				hour:Set[${EVETime[${endTime}].Time.Token[1, :]}]
-				;UI:UpdateConsole["DEBUG: hour >> ${hour}", LOG_DEBUG]
+				;Logger:Log["DEBUG: hour >> ${hour}", LOG_DEBUG]
 
 				;;; do not switch to a skill that ends between DT and 8AM PST
 				;;; I need my beauty rest -- GP
 				if ${hour} < 11 || ${hour} > 15
 				{
-					;UI:UpdateConsole["DEBUG: NextInLine >> ${skillIterator.Value.Name}", LOG_DEBUG]
+					;Logger:Log["DEBUG: NextInLine >> ${skillIterator.Value.Name}", LOG_DEBUG]
 					This.NextInLine:Set[${skillIterator.Value.Name}]
 					return ${This.NextInLine}
 				}
@@ -189,7 +189,7 @@ objectdef obj_Skills inherits obj_BaseClass
 			while ${skillIterator:Next(exists)}
 		}
 
-		UI:UpdateConsole["Error: None of the skills specified were found (or all were already to requested level)", LOG_CRITICAL]
+		Logger:Log["Error: None of the skills specified were found (or all were already to requested level)", LOG_CRITICAL]
 		return "None"
 	}
 
@@ -286,7 +286,7 @@ objectdef obj_Skills inherits obj_BaseClass
 		This.SkillFileQueue:Clear
 		if !${This.SkillFile:Open[readonly](exists)}
 		{
-			UI:UpdateConsole["obj_Skills: Unable to open skillfile!", LOG_CRITICAL]
+			Logger:Log["obj_Skills: Unable to open skillfile!", LOG_CRITICAL]
 			return
 		}
 
@@ -303,7 +303,7 @@ objectdef obj_Skills inherits obj_BaseClass
 				ReadSkillName:Set[${This.RemoveNumerals[${ReadLine}]}]
 				ReadSkillLevel:Set[${This.SkillLevel[${ReadLine}]}]
 
-				UI:UpdateConsole["DEBUG: ReadSkillName: ${ReadSkillName} - ReadSkillLevel: ${ReadSkillLevel}", LOG_DEBUG]
+				Logger:Log["DEBUG: ReadSkillName: ${ReadSkillName} - ReadSkillLevel: ${ReadSkillLevel}", LOG_DEBUG]
 
 				if ${Me.Skill[${ReadSkillName}](exists)}
 				{
@@ -313,12 +313,12 @@ objectdef obj_Skills inherits obj_BaseClass
 					}
 					else
 					{
-						UI:UpdateConsole["DEBUG: Skill: ${ReadSkillName} to Level ${ReadSkillLevel}: Done", LOG_DEBUG]
+						Logger:Log["DEBUG: Skill: ${ReadSkillName} to Level ${ReadSkillLevel}: Done", LOG_DEBUG]
 					}
 				}
 				else
 				{
-					UI:UpdateConsole["DEBUG: Skill: ${ReadSkillName} to Level ${ReadSkillLevel}: Skill not known", LOG_DEBUG]
+					Logger:Log["DEBUG: Skill: ${ReadSkillName} to Level ${ReadSkillLevel}: Skill not known", LOG_DEBUG]
 				}
 			}
 		}
@@ -339,20 +339,20 @@ objectdef obj_Skills inherits obj_BaseClass
 		if ${skillIterator:First(exists)}
 		{
 			currentlyTraining:Set[${Me.SkillCurrentlyTraining.Name}]
-			;UI:UpdateConsole["DEBUG: currentlyTraining = ${currentlyTraining}", LOG_DEBUG]
+			;Logger:Log["DEBUG: currentlyTraining = ${currentlyTraining}", LOG_DEBUG]
 
 			do
 			{
 				if ${skillIterator.Value.TimeToTrain} > 0 && ${currentlyTraining.NotEqual[${skillIterator.Value.Name}]}
 				{
-					;;UI:UpdateConsole["DEBUG: ${skillIterator.Value.Name} ${skillIterator.Value.Level}", LOG_DEBUG]
+					;;Logger:Log["DEBUG: ${skillIterator.Value.Name} ${skillIterator.Value.Level}", LOG_DEBUG]
 					variable int maxLevelToTrain
 					maxLevelToTrain:Set[${This.SkillFilteredLevel["${skillIterator.Value.Name}"]}]
-					;;;UI:UpdateConsole["DEBUG: maxLevelToTrain = ${maxLevelToTrain}", LOG_DEBUG]
-					;;;UI:UpdateConsole["DEBUG: currentLevel = ${skillIterator.Value.Level}", LOG_DEBUG]
+					;;;Logger:Log["DEBUG: maxLevelToTrain = ${maxLevelToTrain}", LOG_DEBUG]
+					;;;Logger:Log["DEBUG: currentLevel = ${skillIterator.Value.Level}", LOG_DEBUG]
 					if ${maxLevelToTrain} > ${skillIterator.Value.Level}
 					{
-						UI:UpdateConsole["DEBUG: Queueing ${skillIterator.Value.Name} up to level ${maxLevelToTrain}", LOG_DEBUG]
+						Logger:Log["DEBUG: Queueing ${skillIterator.Value.Name} up to level ${maxLevelToTrain}", LOG_DEBUG]
 						SkillQueue:Insert[${skillIterator.Value.Name}, ${skillIterator.Value.TimeToTrain}]
 					}
 				}
@@ -367,7 +367,7 @@ objectdef obj_Skills inherits obj_BaseClass
 		;;;{
 		;;;	do
 		;;;	{
-		;;;		UI:UpdateConsole["DEBUG: ${skillIterator.Value.Name} >> ${skillIterator.Value.TimeToTrain}", LOG_DEBUG]
+		;;;		Logger:Log["DEBUG: ${skillIterator.Value.Name} >> ${skillIterator.Value.TimeToTrain}", LOG_DEBUG]
 		;;;	}
 		;;;	while ${skillIterator:Next(exists)}
 		;;;}
@@ -392,12 +392,12 @@ objectdef obj_Skills inherits obj_BaseClass
 				level:Set[${This.SkillFileQueue.Get[${idx}].Level}]
 				if ${level} > ${Me.Skill[${SkillName}].Level}
 				{
-					UI:UpdateConsole["DEBUG: SkillFilteredLevel found skill at ${idx} (${name} ${level})", LOG_MINOR]
+					Logger:Log["DEBUG: SkillFilteredLevel found skill at ${idx} (${name} ${level})", LOG_MINOR]
 					return ${level}
 				}
 				else
 				{
-					UI:UpdateConsole["obj_Skills.SkillFilteredLevel removing invalid filter at ${idx} (${name} ${level})"]
+					Logger:Log["obj_Skills.SkillFilteredLevel removing invalid filter at ${idx} (${name} ${level})"]
 					This.SkillFileQueue:Remove[${idx}]
 					This.SkillFileQueue:Collapse
 					break

@@ -31,7 +31,7 @@ objectdef obj_Defense
 	method Initialize()
 	{
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-		UI:UpdateConsole["Thread: obj_Defense: Initialized", LOG_MINOR]
+		Logger:Log["Thread: obj_Defense: Initialized", LOG_MINOR]
 
 		This.Entity_CacheID:Set[${EntityCache.AddFilter["obj_Defense", CategoryID = CATEGORYID_ENTITY, 1.5]}]
 		EntityCache.EntityFilters.Get[${This.Entity_CacheID}].Entities:GetIterator[Entity_CacheIterator]
@@ -72,7 +72,7 @@ objectdef obj_Defense
 
 				if !${This.Hide} && ${This.Hiding} && ${This.TankReady} && ${Social.IsSafe}
 				{
-					UI:UpdateConsole["Thread: obj_Defense: No longer hiding"]
+					Logger:Log["Thread: obj_Defense: No longer hiding"]
 					This.Hiding:Set[FALSE]
 				}
 
@@ -96,7 +96,7 @@ objectdef obj_Defense
 						${Entity_CacheIterator.Value.IsWarpScramblingMe}
 					{
 						;method Queue(int64 EntityID, int Priority, int TargetType, bool Mandatory=FALSE, bool Blocker=FALSE)
-						UI:UpdateConsole["Defense: Targeting warp scrambling rat ${Entity_CacheIterator.Value.Name} ${Entity_CacheIterator.Value.TypeID}!",LOG_CRITICAL]
+						Logger:Log["Defense: Targeting warp scrambling rat ${Entity_CacheIterator.Value.Name} ${Entity_CacheIterator.Value.TypeID}!",LOG_CRITICAL]
 						Targeting:Queue[${Entity_CacheIterator.Value.ID},0,${Entity_CacheIterator.Value.TypeID},TRUE]
 					}
 				}
@@ -126,17 +126,17 @@ objectdef obj_Defense
 			${MyShip.ShieldPct} < ${Config.Combat.MinimumShieldPct} || \
 			${MyShip.CapacitorPct} < ${Config.Combat.MinimumCapPct} && ${Config.Combat.RunOnLowCap})
 		{
-			UI:UpdateConsole["Armor is at ${MyShip.ArmorPct.Int}%: ${MyShip.Armor.Int}/${MyShip.MaxArmor.Int}", LOG_CRITICAL]
-			UI:UpdateConsole["Shield is at ${MyShip.ShieldPct.Int}%: ${MyShip.Shield.Int}/${MyShip.MaxShield.Int}", LOG_CRITICAL]
-			UI:UpdateConsole["Cap is at ${MyShip.CapacitorPct.Int}%: ${MyShip.Capacitor.Int}/${MyShip.MaxCapacitor.Int}", LOG_CRITICAL]
+			Logger:Log["Armor is at ${MyShip.ArmorPct.Int}%: ${MyShip.Armor.Int}/${MyShip.MaxArmor.Int}", LOG_CRITICAL]
+			Logger:Log["Shield is at ${MyShip.ShieldPct.Int}%: ${MyShip.Shield.Int}/${MyShip.MaxShield.Int}", LOG_CRITICAL]
+			Logger:Log["Cap is at ${MyShip.CapacitorPct.Int}%: ${MyShip.Capacitor.Int}/${MyShip.MaxCapacitor.Int}", LOG_CRITICAL]
 
 			if !${Config.Combat.RunOnLowTank}
 			{
-				UI:UpdateConsole["Running on low tank is disabled", LOG_CRITICAL]
+				Logger:Log["Running on low tank is disabled", LOG_CRITICAL]
 			}
 			elseif ${Me.ToEntity.IsWarpScrambled}
 			{
-				UI:UpdateConsole["Warp scrambled, can't run", LOG_CRITICAL]
+				Logger:Log["Warp scrambled, can't run", LOG_CRITICAL]
 			}
 			elseif ${MyShip.CapacitorPct} < ${Config.Combat.MinimumCapPct} && ${Config.Combat.RunOnLowCap}
 			{
@@ -163,13 +163,13 @@ objectdef obj_Defense
 		This.HideReason:Set[${Reason}]
 		if !${This.Hiding}
 		{
-			UI:UpdateConsole["Fleeing: ${Reason}", LOG_CRITICAL]
+			Logger:Log["Fleeing: ${Reason}", LOG_CRITICAL]
 		}
 	}
 
 	method ReturnToDuty()
 	{
-		UI:UpdateConsole["Returning to duty", LOG_CRITICAL]
+		Logger:Log["Returning to duty", LOG_CRITICAL]
 		This.Hide:Set[FALSE]
 	}
 
@@ -234,13 +234,13 @@ objectdef obj_Defense
 		{
 			if ${Config.Combat.QuitIfWarpScrambled}
 			{
-				UI:UpdateConsole["Warp Scrambled: Quitting game."]
+				Logger:Log["Warp Scrambled: Quitting game."]
 				exit
 				; Todo: Optionally start the launcher to restart EVE in a while.
 			}
 			else
 			{
-				UI:UpdateConsole["Warp Scrambled: Not quitting game. Don't blame us if you pop."]
+				Logger:Log["Warp Scrambled: Not quitting game. Don't blame us if you pop."]
 				; Return because we can't do anything else.
 				return
 			}

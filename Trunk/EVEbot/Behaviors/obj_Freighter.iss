@@ -30,7 +30,7 @@ objectdef obj_Freighter
 	method Initialize()
 	{
 		This:SetupEvents[]
-		BotModules:Insert["Freighter"]
+		EVEBot.BehaviorList:Insert["Freighter"]
 
 		m_DestinationID:Set[0]
 
@@ -41,39 +41,32 @@ objectdef obj_Freighter
 		 */
 		This:BuildSourceList
 
-		UI:UpdateConsole["obj_Freighter: Initialized", LOG_MINOR]
+		Logger:Log["obj_Freighter: Initialized", LOG_MINOR]
 	}
 
 	method Pulse()
 	{
-		if !${Config.Common.BotMode.Equal[Freighter]}
-		{
-			return
-		}
-
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-			if !${EVEBot.Paused}
+			switch ${Config.Freighter.FreighterMode}
 			{
-				switch ${Config.Freighter.FreighterMode}
-				{
-					case Move Minerals to Buyer
-						/* not implemented yet */
-						break
-					case Mission Runner
-						This.Courier:SetState
-						break
-					case Stealth Hauler
-						This.StealthHauler:SetState
-						break
-					case Scavenger
-						This.Scavenger:SetState
-						break
-					default
-						This:SetState[]
-						break
-				}
+				case Move Minerals to Buyer
+					/* not implemented yet */
+					break
+				case Mission Runner
+					This.Courier:SetState
+					break
+				case Stealth Hauler
+					This.StealthHauler:SetState
+					break
+				case Scavenger
+					This.Scavenger:SetState
+					break
+				default
+					This:SetState[]
+					break
 			}
+
    			This.NextPulse:Set[${Time.Timestamp}]
    			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
 			This.NextPulse:Update
@@ -82,7 +75,6 @@ objectdef obj_Freighter
 
 	method Shutdown()
 	{
-		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}
 
 	/* SetupEvents will attach atoms to all of the events used by the bot */
@@ -91,13 +83,12 @@ objectdef obj_Freighter
 		This[parent]:SetupEvents[]
 
 		/* override any events setup by the base class */
-		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 	}
 
-	/* this function is called repeatedly by the main loop in EveBot.iss */
+	/* this function is called repeatedly by the main loop in EVEBot.iss */
 	function ProcessState()
 	{
-		if !${Config.Common.BotMode.Equal[Freighter]}
+		if !${Config.Common.Behavior.Equal[Freighter]}
 		{
 			return
 		}
@@ -124,7 +115,7 @@ objectdef obj_Freighter
 					case IDLE
 						break
 					case ABORT
-						UI:UpdateConsole["Aborting operation: Returning to base"]
+						Logger:Log["Aborting operation: Returning to base"]
 						if ${EVE.Bookmark[${Config.Freighter.Destination}](exists)}
 						{
 							call Ship.WarpToBookMarkName "${Config.Freighter.Destination}"
@@ -153,7 +144,7 @@ objectdef obj_Freighter
 	/* NOTE: The order of these if statements is important!! */
 	method SetState()
 	{
-		if !${Config.Common.BotMode.Equal[Freighter]}
+		if !${Config.Common.Behavior.Equal[Freighter]}
 		{
 			return
 		}
@@ -215,8 +206,8 @@ objectdef obj_Freighter
 
 		if ${Cargo.ShipHasContainers}
 		{
-			UI:UpdateConsole["obj_Freighter: Ship has containers."]
-			UI:UpdateConsole["obj_Freighter: Station contains ${Me.GetHangarItems} items."]
+			Logger:Log["obj_Freighter: Ship has containers."]
+			Logger:Log["obj_Freighter: Station contains ${Me.GetHangarItems} items."]
 			if ${Me.GetHangarItems} > 0
 			{	/* move from hangar to ship */
 				call Cargo.TransferCargoToShip
@@ -228,7 +219,7 @@ objectdef obj_Freighter
 		}
 		else
 		{
-			UI:UpdateConsole["obj_Freighter: Ship doesn't have containers."]
+			Logger:Log["obj_Freighter: Ship doesn't have containers."]
 		}
 
 		wait 50
@@ -255,7 +246,7 @@ objectdef obj_Freighter
 	{
 		if ${SourceLocations.Used} == 0
 		{
-			UI:UpdateConsole["DEBUG: No more source locations!"]
+			Logger:Log["DEBUG: No more source locations!"]
 			EVEBot.ReturnToStation:Set[TRUE]
 		}
 		elseif ${SourceLocations.Peek(exists)}
@@ -277,15 +268,15 @@ objectdef obj_Freighter
 		if ${nextStationID}
 		{
    			variable string tmp_string
-			UI:UpdateConsole["DEBUG: StationID = ${nextStationID}"]
-   			UI:UpdateConsole["DEBUG: Location = ${EVE.GetLocationNameByID[${nextStationID}]}"]
+			Logger:Log["DEBUG: StationID = ${nextStationID}"]
+   			Logger:Log["DEBUG: Location = ${EVE.GetLocationNameByID[${nextStationID}]}"]
    			tmp_string:Set[${Assets.SolarSystem[${nextStationID}]}]
-			UI:UpdateConsole["DEBUG: Solar System = ${tmp_string}"]
-			UI:UpdateConsole["DEBUG: Region = ${Universe[${tmp_string}].Region}"]
+			Logger:Log["DEBUG: Solar System = ${tmp_string}"]
+			Logger:Log["DEBUG: Region = ${Universe[${tmp_string}].Region}"]
 
 		    if ${Config.Freighter.RegionName.Length} > 0
 		    {   /* limit to the given region */
-	   			UI:UpdateConsole["DEBUG: Config.Freighter.RegionName = ${Config.Freighter.RegionName}"]
+	   			Logger:Log["DEBUG: Config.Freighter.RegionName = ${Config.Freighter.RegionName}"]
 		        if ${Config.Freighter.RegionName.NotEqual[${Universe[${tmp_string}].Region}]}
 		        {
         			Assets:IgnoreStation[${nextStationID}]
@@ -308,7 +299,7 @@ objectdef obj_Freighter
 					{
 				        if ${Universe[${ap_path_iterator.Value}].Security} <= 0.45
 				        {	/* avoid low-sec */
-							UI:UpdateConsole["DEBUG: Avoiding low-sec routes."]
+							Logger:Log["DEBUG: Avoiding low-sec routes."]
 		        			Assets:IgnoreStation[${nextStationID}]
 		               		nextStationID:Set[0]
 		               		break
@@ -320,7 +311,7 @@ objectdef obj_Freighter
 
 			if ${nextStationID} && (${Me.SolarSystemID} != ${Universe[${tmp_string}].ID})
 			{
-	    		UI:UpdateConsole["Freighter moving to ${EVE.GetLocationNameByID[${nextStationID}]}."]
+	    		Logger:Log["Freighter moving to ${EVE.GetLocationNameByID[${nextStationID}]}."]
 
 				call Ship.ActivateAutoPilot
 	    	}
@@ -341,7 +332,7 @@ objectdef obj_Freighter
 		}
 		else
 		{	/* no more assets, abort */
-			UI:UpdateConsole["No more work to do.  Freighter aborting."]
+			Logger:Log["No more work to do.  Freighter aborting."]
 			EVEBot.ReturnToStation:Set[TRUE]
 		}
 	}
@@ -353,9 +344,9 @@ objectdef obj_Freighter
 	{
 		if ${Me.InStation}
 		{	/* don't call this function if you are not in station */
-			UI:UpdateConsole["DEBUG: /${EVE.Bookmark[${Config.Freighter.Destination}](exists)} = ${EVE.Bookmark[${Config.Freighter.Destination}](exists)}"]
-			UI:UpdateConsole["DEBUG: /${m_DestinationID} = ${m_DestinationID}"]
-			UI:UpdateConsole["DEBUG: /${Me.StationID} = ${Me.StationID}"]
+			Logger:Log["DEBUG: /${EVE.Bookmark[${Config.Freighter.Destination}](exists)} = ${EVE.Bookmark[${Config.Freighter.Destination}](exists)}"]
+			Logger:Log["DEBUG: /${m_DestinationID} = ${m_DestinationID}"]
+			Logger:Log["DEBUG: /${Me.StationID} = ${Me.StationID}"]
 
 			if ${Me.StationID} == ${EVE.Bookmark[${Config.Freighter.Destination}].ItemID}
 			{	/* this is the destination station, drop off stuff */
@@ -402,9 +393,9 @@ objectdef obj_Freighter
 				{
 					if ${bm_collection.Element[${bm_iterator.Value.Label}](exists)}
 					{
-						UI:UpdateConsole["Label ${bm_iterator.Value.Label} exists more than once."]
-						UI:UpdateConsole["Freighter will visit stations with the same bookmark label in a"]
-						UI:UpdateConsole["random order.  Try to use unique bookmark labels in the future."]
+						Logger:Log["Label ${bm_iterator.Value.Label} exists more than once."]
+						Logger:Log["Freighter will visit stations with the same bookmark label in a"]
+						Logger:Log["random order.  Try to use unique bookmark labels in the future."]
 						bm_collection:Set["${bm_iterator.Value.Label}_${Math.Rand[5000]:Inc[1000]}",${bm_iterator.Value}]
 					}
 					else
@@ -426,6 +417,6 @@ objectdef obj_Freighter
 			while ${bm_collection.NextValue(exists)}
 		}
 
-		UI:UpdateConsole["BuildSourceList found ${SourceLocations.Used} source locations."]
+		Logger:Log["BuildSourceList found ${SourceLocations.Used} source locations."]
 	}
 }
