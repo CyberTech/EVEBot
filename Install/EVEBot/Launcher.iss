@@ -82,6 +82,7 @@ function main(string unchar="", string StartBot=FALSE)
 				; TRUE check is for backwards compat from when StartBot was a bool
 				case TRUE
 				case EVEBOT
+				case EVEBOT_STABLE
 					EVE:CloseAllMessageBoxes
 					; TODO - get rid of this callback shit.
 					UI:UpdateConsole["Launcher: Starting EveCallback"]
@@ -111,8 +112,7 @@ function main(string unchar="", string StartBot=FALSE)
 						wait 15
 					}
 					break
-				case EVEBOT_TEST
-				case EVEBOT_TRUNK
+				case EVEBOT_DEV_TEST
 					EVE:CloseAllMessageBoxes
 					; TODO - get rid of this callback shit.
 					UI:UpdateConsole["Launcher: Starting EveCallback"]
