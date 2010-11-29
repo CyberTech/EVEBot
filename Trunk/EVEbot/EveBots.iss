@@ -1,4 +1,4 @@
- /* EveBots.iss - The purpose of this script is to automatically launch all accounts
+ /* EVEBots.iss - The purpose of this script is to automatically launch all accounts
  in an ISBoxer character set.
  WHAT YOU NEED TO DO:
  1) Set up the launcher for your characters.
@@ -20,7 +20,7 @@ function main()
 	/* Make sure we're run in the uplink */
 	if ${Session} != NULL
 	{
-		echo "EveBots.iss: This script may only be run from the uplink. Use \"uplink run EveBots\" or"
+		echo "EVEBots.iss: This script may only be run from the uplink. Use \"uplink run EVEBots\" or"
 		echo "open the uplink console and run it from there."
 		return
 	}
@@ -48,12 +48,12 @@ function main()
 
 		/* Wait until a bit after the last launcher says it's in-game */
 		if DEBUG
-			echo "EveBots.iss: LS.RT: ${LavishScript.RunningTime}, EW.LauncherTimer: ${EVEWatcher.LauncherTimer}"
+			echo "EVEBots.iss: LS.RT: ${LavishScript.RunningTime}, EW.LauncherTimer: ${EVEWatcher.LauncherTimer}"
 		if ${LavishScript.RunningTime} >= ${EVEWatcher.LauncherTimer}
 		{
 			/* Broadcast for our callback */
 			if DEBUG
-				echo "EveBots.iss: Broadcasting callback request to all other sessions then waiting 5 seconds."
+				echo "EVEBots.iss: Broadcasting callback request to all other sessions then waiting 5 seconds."
 			relay "all other" EVECallback:DoCallback
 			wait 50
 		}
@@ -73,7 +73,7 @@ function main()
 				if (${LavishScript.RunningTime} - ${LastUpdateIterator.Value}) > FIVE_MINUTES_MS && ${LastUpdateIterator.Value} != NULL
 				{
 					if DEBUG
-						echo "EveBots.iss: Haven't heard from ${CalledBackIterator.Key} in over five minutes. Killing ${SessionIterator.Value}."
+						echo "EVEBots.iss: Haven't heard from ${CalledBackIterator.Key} in over five minutes. Killing ${SessionIterator.Value}."
 					kill ${SessionIterator.Value}
 					CrashedSessions:Inc
 					wait 10
@@ -86,7 +86,7 @@ function main()
 		if ${LavishScript.RunningTime} >= ${Timer}
 		{
 			if DEBUG
-				echo "EveBots.iss: Regeneration check."
+				echo "EVEBots.iss: Regeneration check."
 			/* Update the timer */
 			Timer:Set[${Math.Calc[${LavishScript.RunningTime} + FIVE_MINUTES_MS]}]
 
@@ -94,7 +94,7 @@ function main()
 			if ${Time.Hour} >= ${DowntimeHour} && ${Time.Hour} < ${UptimeHour} && ${EVEWatcher.Characters_Session.Used} > 0
 			{
 				if DEBUG
-					echo "EveBots.iss: Downtime started, killing all Watched sessions."
+					echo "EVEBots.iss: Downtime started, killing all Watched sessions."
 				EVEWatcher:CloseSessions[]
 				EVEWatcher:ResetCalledBack[]
 				EVEWatcher.Characters_CalledBack:Clear
@@ -111,24 +111,24 @@ function main()
 				if ${EVEWatcher.Characters_CalledBack.Used} < ${CharactersInSet}
 				{
 					if DEBUG
-						echo "EveBots.iss: CallBacks reporting low, incrementing counter..."
+						echo "EVEBots.iss: CallBacks reporting low, incrementing counter..."
 					TimesReportedLow:Inc
 					if ${TimesReportedLow} > 5
 					{
 						if DEBUG
-							echo "EveBots.iss: Characters reported low five times, problems? Lowering CharactersInSet just in case."
+							echo "EVEBots.iss: Characters reported low five times, problems? Lowering CharactersInSet just in case."
 						CharactersInSet:Set[${EVEWatcher.Characters_CalledBack.Used}]
 						TimesReportedLow:Set[0]
 					}
 				}
 				if DEBUG
-					echo "EveBots.iss: Downtime passed and ${CrashedSessions} crashed sessions detected or no sessions running; regenerating bots."
+					echo "EVEBots.iss: Downtime passed and ${CrashedSessions} crashed sessions detected or no sessions running; regenerating bots."
 				run isboxer -launch "${CharacterSet}"
 				/* If this is our first run give at least five minutes for everything to start up. */
 				if ${EVEWatcher.Characters_CalledBack.Used} == 0
 				{
 					if DEBUG
-						echo "EveBots.iss: First launch, giving sessions some time to start so that Me.Name isn't null for callback..."
+						echo "EVEBots.iss: First launch, giving sessions some time to start so that Me.Name isn't null for callback..."
 					TimesReportedLow:Dec
 					/* Must change this wait into a real timer, maybe? */
 					wait ${Math.Calc[10 * 60 * 4]}
@@ -140,7 +140,7 @@ function main()
 		/* Sleep for 1 minute. */
 		/* 10 deciseconds per second, 60 seconds per minute */
 		if DEBUG
-			echo "EveBots.iss: Sleeping 1 minute."
+			echo "EVEBots.iss: Sleeping 1 minute."
 		wait ${Math.Calc[10 * 60]}
 	}
 }
@@ -171,7 +171,7 @@ objectdef obj_EveWatcher
 		variable iterator itrCalledBack
 		Characters_CalledBack:GetIterator[itrCalledBack]
 		if DEBUG
-			echo "EveBots.iss: Resetting CalledBack list."
+			echo "EVEBots.iss: Resetting CalledBack list."
 		if ${itrCalledBack:First(exists)}
 		{
 			do
@@ -206,7 +206,7 @@ objectdef obj_EveWatcher
 			{
 				if DEBUG
 				{
-					echo "EveBots.iss: Closing session ${itrSession.Value}"
+					echo "EVEBots.iss: Closing session ${itrSession.Value}"
 				}
 				kill ${itrSession.Value}
 			}
@@ -217,7 +217,7 @@ objectdef obj_EveWatcher
 	/* Debug methods to dump the collections */
 	method DumpSession()
 	{
-		echo "EveBots: Dumping sessions:"
+		echo "EVEBots: Dumping sessions:"
 		variable iterator itrSession
 		Characters_Session:GetIterator[itrSession]
 
@@ -225,7 +225,7 @@ objectdef obj_EveWatcher
 		{
 			do
 			{
-				echo "EveBots: ${itrSession.Key} ${itrSession.Value}"
+				echo "EVEBots: ${itrSession.Key} ${itrSession.Value}"
 			}
 			while ${itrSession:Next(exists)}
 		}
@@ -233,7 +233,7 @@ objectdef obj_EveWatcher
 
 	method DumpCalledBack()
 	{
-		echo "EveBots: Dumping CalledBack:"
+		echo "EVEBots: Dumping CalledBack:"
 		variable iterator itrCalledBack
 		Characters_CalledBack:GetIterator[itrCalledBack]
 
@@ -241,7 +241,7 @@ objectdef obj_EveWatcher
 		{
 			do
 			{
-				echo "EveBots: ${itrCalledBack.Key} ${itrCalledBack.Value}"
+				echo "EVEBots: ${itrCalledBack.Key} ${itrCalledBack.Value}"
 			}
 			while ${itrCalledBack:Next(exists)}
 		}
@@ -249,7 +249,7 @@ objectdef obj_EveWatcher
 
 	method DumpLastUpdate()
 	{
-		echo "EveBots: Dumping LastUpdate:"
+		echo "EVEBots: Dumping LastUpdate:"
 		variable iterator itrLastUpdate
 		Characters_LastUpdate:GetIterator[itrLastUpdate]
 
@@ -257,7 +257,7 @@ objectdef obj_EveWatcher
 		{
 			do
 			{
-				echo "EveBots: ${itrLastUpdate.Key} ${itrLastUpdate.Value}"
+				echo "EVEBots: ${itrLastUpdate.Key} ${itrLastUpdate.Value}"
 			}
 			while ${itrLastUpdate:Next(exists)}
 		}
