@@ -154,7 +154,7 @@ objectdef obj_EVEBot
 				if ${This.Behaviors:First(exists)}
 				do
 				{
-					if ${This.Behaviors.Value(exists)}
+					if ${This.Behaviors.Value(exists)} && ${This.Behaviors.Value.Equal[${Config.Common.Behavior}]}
 					{
 						${This.Behaviors.Value}:Pulse
 					}
