@@ -152,14 +152,12 @@ objectdef obj_Combat
 		return ${This.CombatMode}
 	}
 
-	member:bool Override()
-	{
-		return ${This.Override}
-	}
-
 	function ProcessState()
 	{
-		This.Override:Set[FALSE]
+		if ${This.CurrentState.NotEqual["FLEE"]}
+		{
+			This.Override:Set[FALSE]
+		}
 
 		if ${This.CurrentState.NotEqual["INSTATION"]}
 		{
@@ -170,17 +168,17 @@ objectdef obj_Combat
 			}
 			elseif !${Social.IsSafe}
 			{
+				UI:UpdateConsole["Debug: Fleeing: Local isn't safe"]
 				This.CurrentState:Set["FLEE"]
 				call This.Flee
-				This.Override:Set[TRUE]
 				return
 			}
-			elseif (!${Ship.IsAmmoAvailable} &&  ${Config.Combat.RunOnLowAmmo})
+			elseif (!${Ship.IsAmmoAvailable} && ${Config.Combat.RunOnLowAmmo})
 			{
+				UI:UpdateConsole["Debug: Fleeing: Low ammo"]
 				; TODO - what to do about being warp scrambled in this case?
 				This.CurrentState:Set["FLEE"]
 				call This.Flee
-				This.Override:Set[TRUE]
 				return
 			}
 			call This.ManageTank
@@ -198,7 +196,6 @@ objectdef obj_Combat
 				break
 			case FLEE
 				call This.Flee
-				This.Override:Set[TRUE]
 				break
 			case FIGHT
 				call This.Fight
@@ -228,6 +225,7 @@ objectdef obj_Combat
 
 	function Flee()
 	{
+		This.Override:Set[TRUE]
 		This.Fled:Set[TRUE]
 
 		if ${Config.Combat.RunToStation}
