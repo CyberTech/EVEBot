@@ -159,6 +159,8 @@ objectdef obj_Combat
 			This.Override:Set[FALSE]
 		}
 
+		UI:UpdateConsole["Debug: This.Override = ${This.Override} This.CurrentState = ${This.CurrentState} Social.IsSafe = ${Social.IsSafe}"]
+
 		if ${This.CurrentState.NotEqual["INSTATION"]}
 		{
 			if ${_Me.ToEntity.IsWarpScrambled}
@@ -169,15 +171,13 @@ objectdef obj_Combat
 			elseif !${Social.IsSafe}
 			{
 				UI:UpdateConsole["Debug: Fleeing: Local isn't safe"]
-				This.CurrentState:Set["FLEE"]
 				call This.Flee
 				return
 			}
 			elseif (!${Ship.IsAmmoAvailable} && ${Config.Combat.RunOnLowAmmo})
 			{
 				UI:UpdateConsole["Debug: Fleeing: Low ammo"]
-				; TODO - what to do about being warp scrambled in this case?
-				This.CurrentState:Set["FLEE"]
+				; TODO - what to do about being warp scrambled in this case?		
 				call This.Flee
 				return
 			}
@@ -225,6 +225,7 @@ objectdef obj_Combat
 
 	function Flee()
 	{
+		This.CurrentState:Set["FLEE"]
 		This.Override:Set[TRUE]
 		This.Fled:Set[TRUE]
 
