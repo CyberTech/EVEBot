@@ -32,7 +32,7 @@
 				<text name='EVEBot_TitleBar_Title' template='EVESkin.Font.TitleBar'>
 					<X>200</X>
 					<Y>3</Y>
-					<Width>120</Width>
+					<Width>130</Width>
 					<Height>20</Height>
 					<Text>${Script[EVEBot].VariableScope.AppVersion}</Text>
 					<OnLoad>
