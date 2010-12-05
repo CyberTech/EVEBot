@@ -50,36 +50,11 @@
 
 /* Behavior/Mode Includes */
 #includeoptional Behaviors/includes.iss
-
-/* Custom Includes */
-#includeoptional Behaviors/UserDefined/includes.iss
-
-/* Custom Includes  - External directory is assumed to be an external SVN repository */
-#includeoptional Behaviors/External/includes.iss
+#includeoptional Modes/includes.iss
 
 function atexit()
 {
 	;redirect profile.txt Script:DumpProfiling
-}
-
-function LoadBehaviors(string Label, string Path)
-{
-	variable int count = 0
-	variable filelist file_list
-	variable string obj_name
-	variable string var_name
-
-	file_list:GetFiles["${Path}"]
-	while (${count:Inc}<=${file_list.Files})
-	{
-		if ${file_list.File[${count}].Filename.NotEqual["includes.iss"]}
-		{
-			obj_name:Set[${file_list.File[${count}].Filename.Left[-4]}]
-			var_name:Set[${obj_name.Right[-4]}]
-			Logger:Log["Loading ${Label} behavior ${var_name}", LOG_DEBUG]
-			declarevariable ${var_name} ${obj_name} global
-		}
-	}
 }
 
 function main()
@@ -147,15 +122,7 @@ function main()
 	declarevariable GlobalVariableIterator iterator global
 
 	echo "${Time} EVEBot: Loading Behavior Modules..."
-
-	; Script-Defined Behavior Objects
-	call LoadBehaviors "Stock" "${Script.CurrentDirectory}/\Behaviors/\*.iss"
-
-	; User Defined Behavior Objects
-	call LoadBehaviors "User Defined" "${Script.CurrentDirectory}/\Behaviors/\UserDefined/\*.iss"
-
-	; Custom Behavior Objects (External directory is assumed to be from an external repository, it's not part of EVEBot)
-	call LoadBehaviors "External" "${Script.CurrentDirectory}/\Behaviors/\External/\*.iss"
+	#includeoptional Behaviors/globals.iss
 
 	echo "${Time} EVEBot: Starting Threaded Modules..."
 
