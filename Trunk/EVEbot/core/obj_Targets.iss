@@ -173,6 +173,56 @@ objectdef obj_Targets
 		SpecialTargets:Insert["Mizuro Cybon"]
 		SpecialTargets:Insert["Tobias Kruzhoryy"]
 
+		; Asteroid Angel Cartel Battlecruiser
+		SpecialTargets:Insert["Domination Legatus"]
+		SpecialTargets:Insert["Domination Legionnaire"]
+		SpecialTargets:Insert["Domination Praefectus"]
+		SpecialTargets:Insert["Domination Primus"]
+		SpecialTargets:Insert["Domination Tribuni"]
+		SpecialTargets:Insert["Domination Tribunus"]
+
+		; Asteroid Angel Cartel Cruiser
+		SpecialTargets:Insert["Domination Breaker"]
+		SpecialTargets:Insert["Domination Centurion"]
+		SpecialTargets:Insert["Domination Crusher"]
+		SpecialTargets:Insert["Domination Defeater"]
+		SpecialTargets:Insert["Domination Depredator"]
+		SpecialTargets:Insert["Domination Liquidator"]
+		SpecialTargets:Insert["Domination Marauder"]
+		SpecialTargets:Insert["Domination Phalanx"]
+		SpecialTargets:Insert["Domination Predator"]
+		SpecialTargets:Insert["Domination Smasher"]
+
+		; Asteroid Angel Cartel Destroyer
+		SpecialTargets:Insert["Domination Defacer"]
+		SpecialTargets:Insert["Domination Defiler"]
+		SpecialTargets:Insert["Domination Haunter"]
+		SpecialTargets:Insert["Domination Seizer"]
+		SpecialTargets:Insert["Domination Shatterer"]
+		SpecialTargets:Insert["Domination Trasher"]
+
+		; Asteroid Angel Cartel Frigate
+		SpecialTargets:Insert["Domination Ambusher"]
+		SpecialTargets:Insert["Domination Hijacker"]
+		SpecialTargets:Insert["Domination Hunter"]
+		SpecialTargets:Insert["Domination Impaler"]
+		SpecialTargets:Insert["Domination Nomad"]
+		SpecialTargets:Insert["Domination Outlaw"]
+		SpecialTargets:Insert["Domination Raider"]
+		SpecialTargets:Insert["Domination Rogue"]
+		SpecialTargets:Insert["Domination Ruffian"]
+		SpecialTargets:Insert["Domination Thug"]
+		SpecialTargets:Insert["Psycho Ambusher"]
+		SpecialTargets:Insert["Psycho Hijacker"]
+		SpecialTargets:Insert["Psycho Hunter"]
+		SpecialTargets:Insert["Psycho Impaler"]
+		SpecialTargets:Insert["Psycho Nomad"]
+		SpecialTargets:Insert["Psycho Outlaw"]
+		SpecialTargets:Insert["Psycho Raider"]
+		SpecialTargets:Insert["Psycho Rogue"]
+		SpecialTargets:Insert["Psycho Ruffian"]
+		SpecialTargets:Insert["Psycho Thug"]
+
 		; Asteroid Blood Raiders Officers
 		SpecialTargets:Insert["Ahremen Arkah"]
 		SpecialTargets:Insert["Draclira Merlonne"]
@@ -199,6 +249,10 @@ objectdef obj_Targets
 
 
 		SpecialTargets:Insert["Dread Guristas"]
+		SpecialTargets:Insert["Shadow Serpentis"]
+		SpecialTargets:Insert["True Sansha"]
+		SpecialTargets:Insert["Dark Blood"]
+
 		SpecialTargets:Insert["Courier"]
 		SpecialTargets:Insert["Ferrier"]
 		SpecialTargets:Insert["Gatherer"]
@@ -211,9 +265,6 @@ objectdef obj_Targets
 		SpecialTargets:Insert["Trailer"]
 		SpecialTargets:Insert["Transporter"]
 		SpecialTargets:Insert["Trucker"]
-		SpecialTargets:Insert["Shadow Serpentis"]
-		SpecialTargets:Insert["True Sansha"]
-		SpecialTargets:Insert["Dark Blood"]
 
 		; Get the iterators
 		PriorityTargets:GetIterator[PriorityTarget]

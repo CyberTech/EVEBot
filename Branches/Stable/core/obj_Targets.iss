@@ -6,43 +6,43 @@ sec rating.
 Faction: Guristas/Pithi/Dread Guristas
 Home Region: Venal
 Officers:
-Estamel
-Vepas
-Thon
-Kaikka
+Estamel Tharchon
+Vepas Minimala
+Thon Eney
+Kaikka Peunato
 
 
 Faction: Angels/Gisi/Domination
 Home Region: Curse
 Officers:
-Tobias
-Gotan
-Hakim
-Mizuro
+Tobias Kruzhor
+Gotan Kreiss
+Hakim Stormare
+Mizuro Cybon
 
 Faction: Serpentis/Coreli/Shadow:
 Home Region: Fountain
 Officers:
-Cormack
-Setele
-Tuvan
-Brynn
+Cormack Vaaja
+Setele Schellan
+Tuvan Orth
+Brynn Jerdola
 
 Faction: Sanshas/Centi/True Sansha:
 Home Region: Stain
 Officers:
-Chelm
-Vizan
-Selynne
-Brokara
+Chelm Soran
+Vizan Ankonin
+Selynne Mardakar
+Brokara Ryver
 
 Faction: Blood/Corpi/Dark Blood:
-Home Region: Not sure actually... Delve?
+Home Region: Delve
 Officers:
-Draclira
-Ahremen
-Raysere
-Tairei
+Draclira Merlonne
+Ahremen Arkah
+Raysere Giant
+Tairei Namazoth
 */
 
 objectdef obj_EVEDB_Spawns
@@ -112,6 +112,8 @@ objectdef obj_Targets
 		PriorityTargets:Insert["Dire Guristas Murderer"] 		/* Jamming */
 		PriorityTargets:Insert["Dire Guristas Nullifier"] 		/* Jamming */
 
+		PriorityTargets:Insert["Guristas Nullifier"]
+
 		PriorityTargets:Insert["Arch Angel Hijacker"]
 		PriorityTargets:Insert["Arch Angel Outlaw"]
 		PriorityTargets:Insert["Arch Angel Rogue"]
@@ -171,11 +173,93 @@ objectdef obj_Targets
 
 		; Special targets will (eventually) trigger an alert
 		; This should include haulers / faction / officers
-		SpecialTargets:Insert["Dread Guristas"]
+		;
+		; Asteroid Angel Cartel Officers
+		SpecialTargets:Insert["Gotan Kreiss"]
+		SpecialTargets:Insert["Hakim Stormare"]
+		SpecialTargets:Insert["Mizuro Cybon"]
+		SpecialTargets:Insert["Tobias Kruzhoryy"]
+
+		; Asteroid Angel Cartel Battlecruiser
+		SpecialTargets:Insert["Domination Legatus"]
+		SpecialTargets:Insert["Domination Legionnaire"]
+		SpecialTargets:Insert["Domination Praefectus"]
+		SpecialTargets:Insert["Domination Primus"]
+		SpecialTargets:Insert["Domination Tribuni"]
+		SpecialTargets:Insert["Domination Tribunus"]
+
+		; Asteroid Angel Cartel Cruiser
+		SpecialTargets:Insert["Domination Breaker"]
+		SpecialTargets:Insert["Domination Centurion"]
+		SpecialTargets:Insert["Domination Crusher"]
+		SpecialTargets:Insert["Domination Defeater"]
+		SpecialTargets:Insert["Domination Depredator"]
+		SpecialTargets:Insert["Domination Liquidator"]
+		SpecialTargets:Insert["Domination Marauder"]
+		SpecialTargets:Insert["Domination Phalanx"]
+		SpecialTargets:Insert["Domination Predator"]
+		SpecialTargets:Insert["Domination Smasher"]
+
+		; Asteroid Angel Cartel Destroyer
+		SpecialTargets:Insert["Domination Defacer"]
+		SpecialTargets:Insert["Domination Defiler"]
+		SpecialTargets:Insert["Domination Haunter"]
+		SpecialTargets:Insert["Domination Seizer"]
+		SpecialTargets:Insert["Domination Shatterer"]
+		SpecialTargets:Insert["Domination Trasher"]
+
+		; Asteroid Angel Cartel Frigate
+		SpecialTargets:Insert["Domination Ambusher"]
+		SpecialTargets:Insert["Domination Hijacker"]
+		SpecialTargets:Insert["Domination Hunter"]
+		SpecialTargets:Insert["Domination Impaler"]
+		SpecialTargets:Insert["Domination Nomad"]
+		SpecialTargets:Insert["Domination Outlaw"]
+		SpecialTargets:Insert["Domination Raider"]
+		SpecialTargets:Insert["Domination Rogue"]
+		SpecialTargets:Insert["Domination Ruffian"]
+		SpecialTargets:Insert["Domination Thug"]
+		SpecialTargets:Insert["Psycho Ambusher"]
+		SpecialTargets:Insert["Psycho Hijacker"]
+		SpecialTargets:Insert["Psycho Hunter"]
+		SpecialTargets:Insert["Psycho Impaler"]
+		SpecialTargets:Insert["Psycho Nomad"]
+		SpecialTargets:Insert["Psycho Outlaw"]
+		SpecialTargets:Insert["Psycho Raider"]
+		SpecialTargets:Insert["Psycho Rogue"]
+		SpecialTargets:Insert["Psycho Ruffian"]
+		SpecialTargets:Insert["Psycho Thug"]
+
+		; Asteroid Blood Raiders Officers
+		SpecialTargets:Insert["Ahremen Arkah"]
+		SpecialTargets:Insert["Draclira Merlonne"]
+		SpecialTargets:Insert["Raysere Giant"]
+		SpecialTargets:Insert["Tairei Namazoth"]
+
+		; Asteroid Guristas Officers
 		SpecialTargets:Insert["Estamel Tharchon"]
 		SpecialTargets:Insert["Kaikka Peunato"]
 		SpecialTargets:Insert["Thon Eney"]
 		SpecialTargets:Insert["Vepas Minimala"]
+
+		; Asteroid Sansha's Nation Officers
+		SpecialTargets:Insert["Brokara Ryver"]
+		SpecialTargets:Insert["Chelm Soran"]
+		SpecialTargets:Insert["Selynne Mardakar"]
+		SpecialTargets:Insert["Vizan Ankonin"]
+
+		; Asteroid Serpentis Officers
+		SpecialTargets:Insert["Brynn Jerdola"]
+		SpecialTargets:Insert["Cormack Vaaja"]
+		SpecialTargets:Insert["Setele Schellan"]
+		SpecialTargets:Insert["Tuvan Orth"]
+
+
+		SpecialTargets:Insert["Dread Guristas"]
+		SpecialTargets:Insert["Shadow Serpentis"]
+		SpecialTargets:Insert["True Sansha"]
+		SpecialTargets:Insert["Dark Blood"]
+
 		SpecialTargets:Insert["Courier"]
 		SpecialTargets:Insert["Ferrier"]
 		SpecialTargets:Insert["Gatherer"]
@@ -188,13 +272,6 @@ objectdef obj_Targets
 		SpecialTargets:Insert["Trailer"]
 		SpecialTargets:Insert["Transporter"]
 		SpecialTargets:Insert["Trucker"]
-		SpecialTargets:Insert["Cormack"]
-		SpecialTargets:Insert["Setele"]
-		SpecialTargets:Insert["Tuvan"]
-		SpecialTargets:Insert["Brynn"]
-		SpecialTargets:Insert["Shadow Serpentis"]
-		SpecialTargets:Insert["True Sansha"]
-		SpecialTargets:Insert["Dark Blood"]
 
 		; Get the iterators
 		PriorityTargets:GetIterator[PriorityTarget]
