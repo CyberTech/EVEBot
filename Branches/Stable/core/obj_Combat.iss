@@ -159,7 +159,7 @@ objectdef obj_Combat
 			This.Override:Set[FALSE]
 		}
 
-		UI:UpdateConsole["Debug: This.Override = ${This.Override} This.CurrentState = ${This.CurrentState} Social.IsSafe = ${Social.IsSafe}"]
+		UI:UpdateConsole["Debug: Combat: This.Override = ${This.Override} This.CurrentState = ${This.CurrentState} Social.IsSafe = ${Social.IsSafe}"]
 
 		if ${This.CurrentState.NotEqual["INSTATION"]}
 		{

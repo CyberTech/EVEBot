@@ -93,12 +93,13 @@ objectdef obj_Ratter
 		; call the combat object state processing
 		call This.Combat.ProcessState
 
+		UI:UpdateConsole["Debug: Ratter: This.Combat.Override = ${This.Combat.Override} This.CurrentState = ${This.CurrentState} Social.IsSafe = ${Social.IsSafe}"]
+
 		; see if combat object wants to
 		; override bot module state.
 		if ${This.Combat.Override}
 			return
 
-		;UI:UpdateConsole["DEBUG: ${This.CurrentState}"]
 		switch ${This.CurrentState}
 		{
 			case MOVE
