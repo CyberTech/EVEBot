@@ -51,8 +51,8 @@
 #include core/obj_Callback.iss
 
 /* Behavior/Mode Includes */
-#includeoptional Behaviors/includes.iss
-#includeoptional Modes/includes.iss
+#includeoptional Behaviors/_includes.iss
+#includeoptional Modes/_includes.iss
 
 /* Cache Objects */
 variable(global) obj_Cache_Me _Me
@@ -135,8 +135,9 @@ function main()
 	declarevariable BotModules index:string global
 	declarevariable GlobalVariableIterator iterator global
 
-	echo "${Time} EVEBot: Loading Behavior Modules..."
-	#includeoptional Behaviors/globals.iss
+	echo "${Time} EVEBot: Loading Behaviors..."
+	#includeoptional Behaviors/_variables.iss
+	#includeoptional Modes/_variables.iss
 
 	variable iterator BotModule
 	BotModules:GetIterator[BotModule]
