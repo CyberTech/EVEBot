@@ -52,7 +52,7 @@
 
 						; see if combat object wants to
 						; override bot module state.
-						if ${This.Combat.Override}
+						if ${This.Combat.Fled}
 								return
 
 						; process bot module "states"
@@ -85,15 +85,12 @@ objectdef obj_Combat
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 1
 
-	variable bool   Override
 	variable string CombatMode
-	variable string CurrentState
-	variable bool   Fled
+	variable string CurrentState = "IDLE"
+	variable bool   Fled = FALSE
 
 	method Initialize()
 	{
-		This.CurrentState:Set["IDLE"]
-		This.Fled:Set[FALSE]
 		UI:UpdateConsole["obj_Combat: Initialized", LOG_MINOR]
 	}
 
@@ -154,13 +151,6 @@ objectdef obj_Combat
 
 	function ProcessState()
 	{
-		if ${This.CurrentState.NotEqual["FLEE"]}
-		{
-			This.Override:Set[FALSE]
-		}
-
-		UI:UpdateConsole["Debug: Combat: This.Override = ${This.Override} This.CurrentState = ${This.CurrentState} Social.IsSafe = ${Social.IsSafe}"]
-
 		if ${This.CurrentState.NotEqual["INSTATION"]}
 		{
 			if ${_Me.ToEntity.IsWarpScrambled}
@@ -183,6 +173,8 @@ objectdef obj_Combat
 			}
 			call This.ManageTank
 		}
+
+		UI:UpdateConsole["Debug: Combat: This.Fled = ${This.Fled} This.CurrentState = ${This.CurrentState} Social.IsSafe = ${Social.IsSafe}"]
 
 		switch ${This.CurrentState}
 		{
@@ -226,7 +218,6 @@ objectdef obj_Combat
 	function Flee()
 	{
 		This.CurrentState:Set["FLEE"]
-		This.Override:Set[TRUE]
 		This.Fled:Set[TRUE]
 
 		if ${Config.Combat.RunToStation}
@@ -277,6 +268,7 @@ objectdef obj_Combat
 				${_Me.Ship.CapacitorPct} < 80 )
 			{
 					This.CurrentState:Set["FLEE"]
+					UI:UpdateConsole["Debug: Staying in Flee State: Armor: ${_Me.Ship.ArmorPct} Shield: ${_Me.Ship.ShieldPct} Cap: ${_Me.Ship.CapacitorPct}", LOG_DEBUG]
 			}
 			else
 			{
