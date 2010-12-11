@@ -1,5 +1,3 @@
-#echo _FILE_
-
 #include Behaviors/obj_Courier.iss
 #include Behaviors/obj_Freighter.iss
 #include Behaviors/obj_Hauler.iss

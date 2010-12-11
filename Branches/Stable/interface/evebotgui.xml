@@ -763,6 +763,7 @@
 								<Item Value='2'>Hangar Array</Item>
 								<Item Value='3'>Jetcan</Item>
 								<Item Value='4'>XLarge Ship Assembly Array</Item>
+								<Item Value='5'>Large Ship Assembly Array</Item>
 							</Items>
 							<OnSelect>
 								Script[EVEBot].VariableScope.Config.Miner:SetDeliveryLocationType[${This.SelectedItem.Value}]
@@ -1490,29 +1491,6 @@
 							</OnLeftClick>
 						</checkbox>
 						-->
-						<Text name='DropOffLabel'>
-							<X>10</X>
-							<Y>55</Y>
-							<Width>180</Width>
-							<Height>10</Height>
-							<Text>Drop Off Bookmark</Text>
-							<AutoTooltip>The bookmark name for the drop off location.</AutoTooltip>
-						</Text>
-						<Textentry name='DropOffBookmark'>
-							<X>200</X>
-							<Y>55</Y>
-							<Width>250</Width>
-							<Height>18</Height>
-							<OnLoad>
-								This:SetText[${Script[EVEBot].VariableScope.Config.Hauler.DropOffBookmark}]
-							</OnLoad>
-							<OnChange>
-								if ${This.Text.Length} > 0
-								{
-									Script[EVEBot].VariableScope.Config.Hauler:SetDropOffBookmark[${This.Text}]
-								}
-							</OnChange>
-						</Textentry>
 						<Text name='MiningSystemLabel'>
 							<X>10</X>
 							<Y>80</Y>

@@ -1,5 +1,3 @@
-#echo _FILE_
-
 Logger:Log["Creating global obj_Courier as Courier", LOG_DEBUG]
 declarevariable Courier obj_Courier global
 

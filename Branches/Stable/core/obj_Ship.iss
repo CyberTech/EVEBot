@@ -1426,6 +1426,12 @@ objectdef obj_Ship
 
 		; We reload weapons here, because we know we're in warp, so they're deactivated.
 		This:Reload_Weapons[TRUE]
+
+		if (!${Me.ToEntity.IsCloaked} && ${This.HasCovOpsCloak})
+		{
+			This:Activate_Cloak[]
+		}
+
 		while ${This.InWarp}
 		{
 			Warped:Set[TRUE]

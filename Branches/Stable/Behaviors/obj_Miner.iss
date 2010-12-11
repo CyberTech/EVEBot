@@ -120,11 +120,14 @@ objectdef obj_Miner
 						call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
 						call Cargo.TransferOreToCorpHangarArray
 						break
+					case Large Ship Assembly Array
+						call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
+						call Cargo.TransferOreToLargeShipAssemblyArray
+						break
 					case XLarge Ship Assembly Array
 						call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
 						call Cargo.TransferOreToXLargeShipAssemblyArray
 						break
-						
 					case Jetcan
 						UI:UpdateConsole["Warning: Cargo filled during jetcan mining, delays may occur"]
 						call Cargo.TransferOreToJetCan

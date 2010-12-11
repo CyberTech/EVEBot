@@ -372,41 +372,37 @@ objectdef obj_OreHauler inherits obj_Hauler
 
 	function DropOff()
 	{
-		if ${EVE.Bookmark[${Config.Hauler.DropOffBookmark}](exists)}
+		if !${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)}
 		{
-			variable bookmark bm
-			bm:Set[${EVE.Bookmark[${Config.Hauler.DropOffBookmark}]}]
-			call Ship.WarpToBookMarkName "${Config.Hauler.DropOffBookmark}"
-			if ${bm.ToEntity(exists)}
-			{
-				switch ${bm.ToEntity.TypeID}
-				{
-					case TYPEID_CORPORATE_HANGAR_ARRAY
-						call Cargo.TransferOreToCorpHangarArray
-						break
-				}
-			}
+			UI:UpdateConsole["ERROR: ORE Delivery location & type must be specified (on the miner tab) - docking"]
+			EVEBot.ReturnToStation:Set[TRUE]
+			return
 		}
-		else
+		switch ${Config.Miner.DeliveryLocationTypeName}
 		{
-			switch ${Config.Miner.DeliveryLocationTypeName}
-			{
-				case Station
-					call Station.Dock
-					break
-				case Hangar Array
-					call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
-					call Cargo.TransferOreToCorpHangarArray
-					break
-				case XLarge Ship Assembly Array
-					call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
-					call Cargo.TransferOreToXLargeShipAssemblyArray
-					break					
-				case Jetcan
-					UI:UpdateConsole["Error: ORE Delivery location may not be jetcan when in hauler mode - docking"]
-					EVEBot.ReturnToStation:Set[TRUE]
-					break
-			}
+			case Station
+				call Station.Dock
+				break
+			case Hangar Array
+				call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
+				call Cargo.TransferOreToCorpHangarArray
+				break
+			case Large Ship Assembly Array
+				call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
+				call Cargo.TransferOreToLargeShipAssemblyArray
+				break
+			case XLarge Ship Assembly Array
+				call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
+				call Cargo.TransferOreToXLargeShipAssemblyArray
+				break					
+			case Jetcan
+				UI:UpdateConsole["ERROR: ORE Delivery location may not be jetcan when in hauler mode - docking"]
+				EVEBot.ReturnToStation:Set[TRUE]
+				break
+			Default
+				UI:UpdateConsole["ERROR: Delivery Location Type ${Config.Miner.DeliveryLocationTypeName} unknown"]
+				EVEBot.ReturnToStation:Set[TRUE]
+				break
 		}
 	}
 

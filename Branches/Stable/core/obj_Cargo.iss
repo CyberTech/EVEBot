@@ -352,6 +352,31 @@ objectdef obj_Cargo
 		}
 	}
 
+	function TransferListToLargeShipAssemblyArray()
+	{
+		variable iterator CargoIterator
+		This.CargoToTransfer:GetIterator[CargoIterator]
+		
+		if ${CargoIterator:First(exists)}
+		{
+			do
+			{
+				if ${LargeShipAssemblyArray.IsReady[TRUE]}
+				{
+					call LargeShipAssemblyArray.Open ${LargeShipAssemblyArray.ActiveCan}
+					UI:UpdateConsole["TransferListToLargeShipAssemblyArray: Transferring Cargo: ${CargoIterator.Value.Name}"]
+					CargoIterator.Value:MoveTo[${LargeShipAssemblyArray.ActiveCan},${CargoIterator.Value.Quantity},Corporation Folder 1]
+				}
+			}
+			while ${CargoIterator:Next(exists)}
+			LargeShipAssemblyArray:StackAllCargo
+		}
+		else
+		{
+			UI:UpdateConsole["DEBUG: obj_Cargo:TransferListToLargeShipAssemblyArray: Nothing found to move"]
+		}
+	}
+
 	function TransferListToXLargeShipAssemblyArray()
 	{
 		variable iterator CargoIterator
@@ -679,6 +704,29 @@ objectdef obj_Cargo
 		This.CargoToTransfer:Clear[]
 	}
 
+	function TransferOreToLargeShipAssemblyArray()
+	{		
+		if ${LargeShipAssemblyArray.IsReady}
+		{
+			if ${Entity[${LargeShipAssemblyArray.ActiveCan}].Distance} > CORP_HANGAR_LOOT_RANGE
+			{
+				call Ship.Approach ${LargeShipAssemblyArray.ActiveCan} CORP_HANGAR_LOOT_RANGE
+			}
+		}
+		else
+		{
+			UI:ConsoleUpdate["No Large Ship Assembly Array found - nothing moved"]
+			return
+		}
+
+		call Ship.OpenCargo
+
+		This:FindShipCargo[CATEGORYID_ORE]
+		call This.TransferListToLargeShipAssemblyArray
+		
+		This.CargoToTransfer:Clear[]
+	}
+
 	function TransferOreToXLargeShipAssemblyArray()
 	{		
 		if ${XLargeShipAssemblyArray.IsReady}
@@ -690,7 +738,7 @@ objectdef obj_Cargo
 		}
 		else
 		{
-			UI:ConsoleUpdate["No Hangar Array found - nothing moved"]
+			UI:ConsoleUpdate["No Extra Large Ship Assembly Array found - nothing moved"]
 			return
 		}
 

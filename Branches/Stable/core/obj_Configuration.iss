@@ -904,16 +904,6 @@ objectdef obj_Configuration_Hauler
 		This.HaulerRef:AddSetting[Multi System Support, ${value}]
 	}
 
-	member:string DropOffBookmark()
-	{
-		return ${This.HaulerRef.FindSetting[Drop Off Bookmark, ""]}
-	}
-
-	method SetDropOffBookmark(string Bookmark)
-	{
-		This.HaulerRef:AddSetting[Drop Off Bookmark,${Bookmark}]
-	}
-
 	member:string MiningSystemBookmark()
 	{
 		return ${This.HaulerRef.FindSetting[Mining System Bookmark, ""]}
