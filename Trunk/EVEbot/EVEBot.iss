@@ -1,9 +1,23 @@
 #if ${ISXEVE(exists)}
 #else
-	#error This script requires ISXEVE to be loaded before running
+	#error EVEBot requires ISXEVE to be loaded before running
 #endif
 
 #include core/defines.iss
+
+#if !${ISXEVE.IsBeta}
+	#echo 
+	#echo 
+	#echo Trunk EVEBot requires ISXEVE _BETA_, which is not public 
+	#echo at the moment. It will not operate properly with ISXEVE 
+	#echo Live. Please use Stable or Tagged Trunk.  See IRC for 
+	#echo more information.
+	#echo 
+	#echo -- CyberTech
+	#echo 
+	#echo 
+	#error Aborting
+#endif
 
 /* Base Requirements  */
 #include core/obj_Logger.iss
@@ -11,10 +25,10 @@
 #include core/obj_EVEBot.iss
 
 /* Core Library (Non-EVE Related code) */
-#include core/Lib/obj_BaseClass.iss
-#include core/Lib/obj_Vector.iss
+;#include core/Lib/obj_BaseClass.iss
+;#include core/Lib/obj_Vector.iss
 ;#include core/Lib/obj_Mutex.iss
-#include core/Lib/obj_Sound.iss
+;#include core/Lib/obj_Sound.iss
 
 /* Core EVEBot API Includes */
 #include core/obj_EntityCache.iss
@@ -40,7 +54,6 @@
 #include core/obj_Agents.iss
 #include core/obj_Missions.iss
 #include core/obj_Market.iss
-#include core/obj_Items.iss
 #include core/obj_Autopilot.iss
 #include core/obj_MissionParser.iss
 #include core/obj_MissionCombat.iss
