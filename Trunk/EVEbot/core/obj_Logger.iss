@@ -83,7 +83,7 @@ objectdef obj_Logger
 			{
 				if ${Level} > LOG_MINOR && !${Filter}
 				{
-					UIElement[StatusConsole@Status@EVEBotOptionsTab@EVEBot]:Echo["${msg}"]
+					UIElement[StatusConsole@Status@Tabs@EVEBot]:Echo["${msg}"]
 				}
 
 				if ${Level} == LOG_ECHOTOO
@@ -117,7 +117,7 @@ objectdef obj_Logger
 	{
 		while ${This.ConsoleBuffer.Peek(exists)}
 		{
-			UIElement[StatusConsole@Status@EVEBotOptionsTab@EVEBot]:Echo["${This.ConsoleBuffer.Peek}"]
+			UIElement[StatusConsole@Status@Tabs@EVEBot]:Echo["${This.ConsoleBuffer.Peek}"]
 			redirect -append "${This.LogFile}" Echo "${This.ConsoleBuffer.Peek}"
 			This.ConsoleBuffer:Dequeue
 		}

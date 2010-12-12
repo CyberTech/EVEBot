@@ -28,7 +28,7 @@ objectdef obj_EVEBotUI
 		variable iterator Behavior
 		EVEBot.BehaviorList:GetIterator[Behavior]
 
-		if ${BotModule:First(exists)}
+		if ${Behavior:First(exists)}
 		{
 			UIElement[EVEBot].FindUsableChild["Behavior","combobox"]:ClearItems
 			UIElement[EVEBot].FindUsableChild["Behavior","combobox"]:AddItem["Idle"]
@@ -36,7 +36,7 @@ objectdef obj_EVEBotUI
 			{
 				UIElement[EVEBot].FindUsableChild["Behavior","combobox"]:AddItem["${Behavior.Value}"]
 			}
-			while ${BotModule:Next(exists)}
+			while ${Behavior:Next(exists)}
 			UIElement[EVEBot].FindUsableChild["Behavior","combobox"].ItemByText[${Config.Common.Behavior}]:Select
 		}
 	}

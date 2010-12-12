@@ -48,7 +48,7 @@ objectdef obj_Defense
 		{
 			if ${EVEBot.SessionValid} && ${This.Running}
 			{
-				if ${Me.InSpace}
+				if ${Me.InSpace} && !${Me.InStation}
 				{
 					This:CheckWarpScramble
 					This:TakeDefensiveAction[]
