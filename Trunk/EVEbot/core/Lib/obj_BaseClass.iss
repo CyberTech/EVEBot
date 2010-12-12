@@ -74,6 +74,10 @@ Example Usage:
 
 objectdef obj_BaseClass
 {
+	variable int Version
+	variable string LogPrefix
+	variable obj_PulseTimer PulseTimer
+
 	method Sort(string IndexName, string MemberName)
 	{
 		variable string vartype = ${${IndexName}(type).Name}
@@ -87,6 +91,35 @@ objectdef obj_BaseClass
 				echo "Unexpected object type (${vartype}), cannot sort:"
 				break
 		}
+	}
+
+	/*
+		This can be extremely slow, but is quick for small data sets and one of the fastest for mostly pre-sorted sets.
+	*/
+	method BubbleSort(string IndexName, string MemberName)
+	{
+		variable int Pos
+		variable int Length
+		variable bool Swapped
+
+		Length:Set[${${IndexName}.Used}]
+
+		do
+		{
+			Swapped:Set[FALSE]
+
+			Pos:Set[0]
+			while ${Pos:Inc} < ${Length}
+			{
+				if  ${${IndexName}[${Pos}].${MemberName}} > ${${IndexName}[${Math.Calc[${Pos}+1]}].${MemberName}}
+				{
+					${IndexName}:Swap[${Pos}, ${Math.Calc[${Pos}+1]}]
+					Swapped:Set[TRUE]
+				}
+			}
+			Length:Dec
+		}
+		while ${Swapped}
 	}
 
 	/* 	This is a stable sort, slow, but should be fine for most of our sets sizes.
