@@ -1,14 +1,14 @@
-objectdef obj_Callback
+objectdef obj_Callback inherits obj_BaseClass
 {
 	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-	variable time NextPulse
-	variable int PulseIntervalInSeconds = 2
 
 	method Initialize()
 	{
+		LogPrefix:Set["${This.ObjectName}"]
+
+		PulseTimer:SetIntervals[2.0,3.0]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-		Logger:Log["obj_Callback: Initialized", LOG_MINOR]
+		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
 	method Pulse()
@@ -18,17 +18,16 @@ objectdef obj_Callback
 			return
 		}
 
-		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+		if ${This.PulseTimer.Ready}
 		{
 			if ${EVEBot.SessionValid}
 			{
 				;uplink UpdateClient "${Me.Name}" "${MyShip.ShieldPct}" "${MyShip.ArmorPct}" "${MyShip.CapacitorPct}" "${Defense.Hide}" "${Defense.HideReason}" "${Me.ActiveTarget.Name}" "${EVEBot.Paused}" "${Config.Common.Behavior}"  "${MyShip}" "${Session}"
 			}
 
-			This.NextPulse:Set[${Time.Timestamp}]
-			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-			This.NextPulse:Update
+			This.PulseTimer:Update
 		}
+
 	}
 
 	method Shutdown()

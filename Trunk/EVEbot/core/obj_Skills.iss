@@ -15,7 +15,6 @@ objectdef obj_SkillData
 objectdef obj_Skills inherits obj_BaseClass
 {
 	variable string SVN_REVISION = "$Rev$"
-	variable int Version
 
 	variable file SkillFile = "${BaseConfig.CONFIG_PATH}/${Me.Name} Training.txt"
 	variable int PrevSkillFileSize = -1
@@ -24,14 +23,13 @@ objectdef obj_Skills inherits obj_BaseClass
 	variable index:obj_SkillData SkillQueue
 	variable index:obj_SkillData SkillFileQueue
 
-	variable time NextPulse
-	variable int PulseIntervalInSeconds = 15
-
 	variable string CurrentlyTrainingSkill
 	variable string NextInLine
 
 	method Initialize()
 	{
+		LogPrefix:Set["${This.ObjectName}"]
+
 		if !${This.SkillFile.Size(exists)}
 		{
 			; Create an empty skillfile to make it easier for the user
@@ -39,8 +37,10 @@ objectdef obj_Skills inherits obj_BaseClass
 			This.SkillFile:Truncate
 			This.SkillFile:Close
 		}
+
+		PulseTimer:SetIntervals[15.0,25.0]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-		Logger:Log["obj_Skills: Initialized", LOG_MINOR]
+		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -50,7 +50,12 @@ objectdef obj_Skills inherits obj_BaseClass
 
 	method Pulse()
 	{
-		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+		if !${EVEBot.Loaded} || ${EVEBot.Disabled}
+		{
+			return
+		}
+
+		if ${This.PulseTimer.Ready}
 		{
 			if ${EVEBot.SessionValid}
 			{
@@ -96,9 +101,7 @@ objectdef obj_Skills inherits obj_BaseClass
 				}
 			}
 
-			This.NextPulse:Set[${Time.Timestamp}]
-			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-			This.NextPulse:Update
+			This.PulseTimer:Update
 		}
 	}
 

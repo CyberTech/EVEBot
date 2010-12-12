@@ -1,10 +1,6 @@
-objectdef obj_IRC
+objectdef obj_IRC inherits obj_BaseClass
 {
 	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
-	variable time NextPulse
-	variable int PulseIntervalInSeconds = 1
 
 	variable bool IsConnected = FALSE
 	variable queue:string Buffer
@@ -13,6 +9,7 @@ objectdef obj_IRC
 	method Initialize()
 	{
 #if USE_ISXIM
+		LogPrefix:Set["${This.ObjectName}"]
 		ext -require ISXIM
 
 		Event[IRC_ReceivedNotice]:AttachAtom[This:IRC_ReceivedNotice]
@@ -23,8 +20,11 @@ objectdef obj_IRC
 		Event[IRC_JOINErrorResponse]:AttachAtom[This:IRC_JOINErrorResponse]
 		Event[IRC_UnhandledEvent]:AttachAtom[This:IRC_UnhandledEvent]
 
+		PulseTimer:SetIntervals[1.0,1.0]
 		Logger:Log["obj_IRC: Initialized", LOG_MINOR]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+
+		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 #endif
 	}
 
@@ -50,7 +50,12 @@ objectdef obj_IRC
 
 	method Pulse()
 	{
-		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+		if !${EVEBot.Loaded} || ${EVEBot.Disabled}
+		{
+			return
+		}
+
+		if ${This.PulseTimer.Ready}
 		{
 			if ${This.IsConnected}
 			{
@@ -61,9 +66,7 @@ objectdef obj_IRC
 				}
 			}
 
-			This.NextPulse:Set[${Time.Timestamp}]
-			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-			This.NextPulse:Update
+			This.PulseTimer:Update
 		}
 	}
 

@@ -97,13 +97,9 @@ objectdef obj_RegisteredSession
 	}
 }
 
-objectdef obj_UplinkManager
+objectdef obj_UplinkManager inherits obj_BaseClass
 {
 	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-	variable string LogPrefix
-	variable time NextPulse
-	variable int PulseIntervalInSeconds = 15
 
 	variable int MaxHeartBeat = 35	/* Max time, in seconds, since we last heard from a session */
 	variable index:obj_RegisteredSession RegisteredSessions
@@ -116,16 +112,16 @@ objectdef obj_UplinkManager
 
 		Logger:Log["${LogPrefix}: Setting IS Session Name & Window Title"]
 
-		Uplink name ${Me.Name}
-		WindowText "EVE - ${Me.Name}"
+		Squelch Uplink name ${Me.Name}
+		Squelch WindowText "EVE - ${Me.Name}"
 
-		Logger:Log["${LogPrefix}: Initialized"]
-
+		PulseTimer:SetIntervals[0.5,1.0]
+		PulseTimer:Increase[5.0]
 		; Schedule the first pulse for 5 seconds from now, instead of immediate, to allow the uplink time to update name.
-		This.NextPulse:Set[${Time.Timestamp}]
-		This.NextPulse.Second:Inc[5]
-		This.NextPulse:Update
+
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+
+		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -135,7 +131,12 @@ objectdef obj_UplinkManager
 
 	method Pulse()
 	{
-		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+		if !${EVEBot.Loaded} || ${EVEBot.Disabled}
+		{
+			return
+		}
+
+		if ${This.PulseTimer.Ready}
 		{
 			if !${Initialized}
 			{
@@ -148,9 +149,8 @@ objectdef obj_UplinkManager
 				This:RelayRegistration["all", TRUE]
 				This:PrunePeerSessions[]
 			}
-			This.NextPulse:Set[${Time.Timestamp}]
-			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-			This.NextPulse:Update
+
+			This.PulseTimer:Update
 		}
 	}
 

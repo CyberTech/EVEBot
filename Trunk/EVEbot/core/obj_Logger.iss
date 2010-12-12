@@ -49,9 +49,17 @@ objectdef obj_Logger
 
 		if ${StatusMessage(exists)}
 		{
-			if ${Level} == LOG_DEBUG && EVEBOT_DEBUG == 0
+			if ${Level} == LOG_DEBUG
 			{
-				return
+				if EVEBOT_DEBUG == 0
+				{
+					return
+				}
+
+				if ${String["All"].NotEqual[DEBUG_TARGET]} && !${StatusMessage.Token[1, " "].Find[DEBUG_TARGET](exists)}
+				{
+					return
+				}
 			}
 
 			if ${StatusMessage.Equal["${This.PreviousMsg}"]}
@@ -78,6 +86,11 @@ objectdef obj_Logger
 					UIElement[StatusConsole@Status@EVEBotOptionsTab@EVEBot]:Echo["${msg}"]
 				}
 
+				if ${Level} == LOG_ECHOTOO
+				{
+					echo "${msg}"
+				}
+
 				redirect -append "${This.LogFile}" Echo "${msg}"
 
 				if ${Level} == LOG_CRITICAL
@@ -88,6 +101,11 @@ objectdef obj_Logger
 			}
 			else
 			{
+				if ${Level} == LOG_ECHOTOO
+				{
+					echo "${msg}"
+				}
+
 				; Just queue the lines till we reload the UI after config data is loaded
 				This.ConsoleBuffer:Queue["${msg}"]
 			}
@@ -115,6 +133,11 @@ objectdef obj_Logger
 	{
 		redirect -append "${This.LogFile}" echo "--------------------------------------------------------------------------------------"
 		redirect -append "${This.LogFile}" echo "** ${AppVersion} starting on ${Time.Date} at ${Time.Time24}"
+		if EVEBOT_DEBUG == 1
+		{
+			redirect -append "${This.LogFile}" echo "** Debugging DEBUG_TARGET"
+			redirect -append "${This.CriticalLogFile}" echo "** Debugging DEBUG_TARGET"
+		}
 
 		redirect -append "${This.CriticalLogFile}" echo "--------------------------------------------------------------------------------------"
 		redirect -append "${This.CriticalLogFile}" echo "** ${AppVersion} starting on ${Time.Date} at ${Time.Time24}"

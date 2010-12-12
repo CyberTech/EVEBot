@@ -19,31 +19,39 @@ variable string AppVersion = "${APP_NAME} Version ${SVN_REVISION.Token[2, " "]}"
 variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 
 #define EVEBOT_DEBUG 0
+#define EVEBOT_DEBUG_TIMING 0
 #define EVEBOT_PROFILING 0
 
-; Do not set this to 1 unless you have downloaded and installed the ISXIM
+; If you want to debug specific modules or classes, place the class name here.
+; Provided the class is using the proper ${LogPrefix} standard, it will be filtered appropriately -- CyberTech
+; Default is "All" for everything
+#define DEBUG_TARGET All
+
+; Do not set this to 1 unless you have downloaded and installed ISXIM
 ; extension from http://www.isxgames.com/forums/showthread.php?t=3829
 #define USE_ISXIM 0
 
 ;#define EVENT_ONFRAME OnFrame
 #define EVENT_ONFRAME ISXEVE_onFrame
 
+/* Core Library (Non-EVE Related code) */
+#include ../External/isxGamesCommon/CyberTech/obj_PulseTimer.iss
+#include Lib/obj_BaseClass.iss
+#include Lib/obj_Vector.iss
+;#include Lib/obj_Mutex.iss
+#include Lib/obj_Sound.iss
+#include Lib/UplinkManager/obj_UplinkManager.iss
+
+/* End EVEBot Defines, Begin EVE Defines */
 
 #define LOG_MINOR 1
 #define LOG_STANDARD 2
-#define LOG_CRITICAL 3
-#define LOG_DEBUG 4
+#define LOG_ECHOTOO 3
+#define LOG_CRITICAL 4
+#define LOG_DEBUG 5
 
 #define WAIT_CARGO_WINDOW 15
 #define WAIT_UNDOCK 130
-
-/* If the miner's cargo hold doesn't increase during
- * this period, return to base.  Interval depends on the
- * PulseIntervalInSeconds value used in obj_Miner.Pulse
- * This value is currently set to 2 seconds so 240*2 = 8 minutes
- * The check interval is set high to compensate for slowboating
- */
-#define MINER_SANITY_CHECK_INTERVAL 240
 
 /*
  * DEBUG: Slot: MedSlot3  Ballistic Deflection Field II
@@ -67,7 +75,7 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 #define GROUPID_CLOAKING_DEVICE		 		330
 #define TYPEID_PROTOTYPE_CLOAKING_DEVICE	11370
 #define TYPEID_COVERT_OPS_CLOAKING_DEVICE	11578
-#define TYPEID_SMOKESCREEN_CLOAKING_DEVICE	99999	/* TBD */
+#define TYPEID_SMOKESCREEN_CLOAKING_DEVICE	99999	/* TODO  */
 #define TYPEID_MOON	14
 
 /* Same group and type for secure cargo containers as well */
@@ -90,7 +98,7 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 #define DOCKING_RANGE 200
 #define LOOT_RANGE 2490
 #define DRONE_SCOOP_RANGE 2490
-#define JUMP_RANGE 2350
+#define JUMP_RANGE 2450
 #define CORP_HANGAR_LOOT_RANGE 3000
 #define SCANNER_RANGE 2147483647000
 
@@ -124,10 +132,10 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 #define LEVELSOUND	"${Script.CurrentDirectory}/sounds/level.wav"
 #define WARNSOUND	"${Script.CurrentDirectory}/sounds/warning.wav"
 
-#define GANGBOOSTERNONE 0
-#define GANGBOOSTERFLEET 1
-#define GANGBOOSTERWING 2
-#define GANGBOOSTERSQUAD 3
+#define FLEETBOOSTERNONE 0
+#define FLEETBOOSTERFLEET 1
+#define FLEETBOOSTERWING 2
+#define FLEETBOOSTERSQUAD 3
 
 #define GROUP_ACCELERATIONGATEKEYS 474
 #define GROUP_AGENTSINSPACE 517
@@ -559,6 +567,41 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 #define DRONESTATE_FIGHTING 1
 #define DRONESTATE_RETURNING 4
 
+#define ENTITY_STATE_OFFLINING -7
+#define ENTITY_STATE_ANCHORING -6
+#define ENTITY_STATE_ONLINING -5
+#define ENTITY_STATE_ANCHORED -4
+#define ENTITY_STATE_UNANCHORING -3
+#define ENTITY_STATE_UNANCHORED -2
+#define ENTITY_STATE_INCAPACITATED -1
+#define ENTITY_STATE_IDLE 0
+#define ENTITY_STATE_COMBAT 1
+#define ENTITY_STATE_MINING 2
+#define ENTITY_STATE_APPROACHING 3
+#define ENTITY_STATE_DEPARTING 4
+#define ENTITY_STATE_DEPARTING_2 5
+#define ENTITY_STATE_PURSUIT 6
+#define ENTITY_STATE_FLEEING 7
+#define ENTITY_STATE_REINFORCED 8
+#define ENTITY_STATE_OPERATING 9
+; 10 = non-offensive engaged -- repair drone, etc
+#define ENTITY_STATE_ENGAGE 10
+#define ENTITY_STATE_VULNERABLE 11
+#define ENTITY_STATE_SHIELD_REINFORCE 12
+#define ENTITY_STATE_ARMOR_REINFORCE 13
+#define ENTITY_STATE_INVULNERABLE 14
+
+#define POS_STATE_STRUCTURE_UNANCHORED 0
+#define POS_STATE_STRUCTURE_ANCHORED 1
+#define POS_STATE_STRUCTURE_ONLINING 2
+#define POS_STATE_STRUCTURE_REINFORCED 3
+#define POS_STATE_STRUCTURE_ONLINE 4
+#define POS_STATE_STRUCTURE_OPERATING 5
+#define POS_STATE_STRUCTURE_VULNERABLE 6
+#define POS_STATE_STRUCTURE_SHIELD_REINFORCE 7
+#define POS_STATE_STRUCTURE_ARMOR_REINFORCE 8
+#define POS_STATE_STRUCTURE_INVULNERABLE 9
+
 ; Ore TypeID's
 #define TYPEID_ASTEROID_PLAGIOCLASE 18
 #define TYPEID_ASTEROID_SPODUMAIN 19
@@ -612,3 +655,4 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 #define TYPEID_ASTEROID_FOOLS_CROKITE 26851
 #define TYPEID_ASTEROID_FLAWED_ARKONOR 26852
 #define TYPEID_ASTEROID_CHONDRITE 27028
+

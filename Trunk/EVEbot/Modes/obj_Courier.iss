@@ -1,22 +1,21 @@
 /*
 	The courier object
-	
-	The obj_Courier object is a bot mode designed to be used with 
+
+	The obj_Courier object is a bot mode designed to be used with
 	obj_Freighter bot module in EVEBOT.  It will obtain and complete
 	courier missions for a single agent.
-	
-	-- GliderPro	
+
+	-- GliderPro
 */
 
 /* obj_Courier is a "bot-mode" which is similar to a bot-module.
- * obj_Courier runs within the obj_Freighter bot-module.  It would 
- * be very straightforward to turn obj_Courier into a independent 
+ * obj_Courier runs within the obj_Freighter bot-module.  It would
+ * be very straightforward to turn obj_Courier into a independent
  * bot-module in the future if it outgrows its place in obj_Freighter.
  */
-objectdef obj_Courier
+objectdef obj_Courier inherits obj_BaseClass
 {
 	variable string SVN_REVISION = "$Rev$"
-	variable int Version
 
 	/* the bot logic is currently based on a state machine */
 	variable string CurrentState
@@ -24,13 +23,18 @@ objectdef obj_Courier
 
 	method Initialize()
 	{
-		Logger:Log["obj_Courier: Initialized", LOG_MINOR]
+		LogPrefix:Set["${This.ObjectName}"]
+
+		;PulseTimer:SetIntervals[0.5,1.0]
+		;Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+
+		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
 	{
 	}
-	
+
 	/* NOTE: The order of these if statements is important!! */
 	method SetState()
 	{
@@ -38,7 +42,7 @@ objectdef obj_Courier
 		;{
 		;	Agents:SetActiveAgent[${Config.Freighter.AgentName}]
 		;}
-		
+
 		if ${EVEBot.ReturnToStation} && ${Me.InSpace}
 		{
 			This.CurrentState:Set["ABORT"]
@@ -94,7 +98,7 @@ objectdef obj_Courier
 				break
 			case IDLE
 				break
-		}	
+		}
 	}
 }
 

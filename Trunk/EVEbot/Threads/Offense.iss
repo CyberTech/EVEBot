@@ -7,17 +7,15 @@
 	-- GliderPro
 
 */
-objectdef obj_Offense
+objectdef obj_Offense inherits obj_BaseClass
 {
 	variable string SVN_REVISION = "$Rev$"
-	variable int Version
 
-	variable bool Running = TRUE
+	variable bool Enabled = TRUE
 
-	variable time NextPulse
 	variable time NextAmmoCheck
-	variable int PulseIntervalInSeconds = 1
 	variable int AmmoCheckIntervalInSeconds = 10
+
 	variable bool Warned_LowAmmo = FALSE
 	variable collection:bool TurretNeedsAmmo
 	variable index:module LauncherIndex
@@ -30,9 +28,12 @@ objectdef obj_Offense
 
 	method Initialize()
 	{
-		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-		Logger:Log["Thread: obj_Offense: Initialized", LOG_MINOR]
+		LogPrefix:Set["${This.ObjectName}"]
 
+		PulseTimer:SetIntervals[0.5,1.0]
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+
+		Logger:Log["Thread: ${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
 	method Pulse()
@@ -42,9 +43,14 @@ objectdef obj_Offense
 			Script:End
 		}
 
-		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+		if !${EVEBot.Loaded} || ${EVEBot.Disabled}
 		{
-			if ${This.Running} && !${EVEBot.Paused}
+			return
+		}
+
+		if ${This.Enabled} && ${This.PulseTimer.Ready}
+		{
+			if !${EVEBot.Paused}
 			{
 				This:TakeOffensiveAction
 				This:CheckAmmo[]
@@ -54,9 +60,7 @@ objectdef obj_Offense
 				}
 			}
 
-			This.NextPulse:Set[${Time.Timestamp}]
-			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-			This.NextPulse:Update
+			This.PulseTimer:Update
 		}
 	}
 
@@ -467,7 +471,7 @@ objectdef obj_Offense
 #if EVEBOT_DEBUG
 		Logger:Log["Offense: Enabled"]
 #endif
-		This.Running:Set[TRUE]
+		This.Enabled:Set[TRUE]
 	}
 
 	method Disable()
@@ -475,7 +479,7 @@ objectdef obj_Offense
 #if EVEBOT_DEBUG
 		Logger:Log["Offense: Disabled"]
 #endif
-		This.Running:Set[FALSE]
+		This.Enabled:Set[FALSE]
 	}
 }
 
@@ -484,6 +488,10 @@ variable(global) obj_Offense Offense
 function main()
 {
 	EVEBot.Threads:Insert[${Script.Filename}]
+	while !${EVEBot.Loaded}
+	{
+		waitframe
+	}
 	while ${Script[EVEBot](exists)}
 	{
 		waitframe

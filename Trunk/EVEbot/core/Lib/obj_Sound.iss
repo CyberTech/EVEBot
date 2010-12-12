@@ -7,20 +7,23 @@
 
 */
 
-objectdef obj_Sound
+objectdef obj_Sound inherits obj_BaseClass
 {
 	variable string SVN_REVISION = "$Rev$"
-	variable int Version
 
-    variable int m_LastSoundTime
-    variable int m_SoundDelay
+	variable int m_LastSoundTime
+	variable int m_SoundDelay
 
 	method Initialize()
 	{
+		LogPrefix:Set["${This.ObjectName}"]
+
 		m_LastSoundTime:Set[${LavishScript.RunningTime}]
 		m_SoundDelay:Set[15000]	/* milliseconds */
+		;PulseTimer:SetIntervals[0.5,1.0]
+		;Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 
-		Logger:Log["obj_Sound: Initialized", LOG_MINOR]
+		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
 	method TryPlaySound(string Filename)

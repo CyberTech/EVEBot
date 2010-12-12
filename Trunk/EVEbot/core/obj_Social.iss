@@ -11,10 +11,9 @@ This contains all stuff dealing with other players around us. - Hessinger
 		- (bool) PossibleHostiles(): Returns True if there are ships targeting us.
 */
 
-objectdef obj_Social
+objectdef obj_Social inherits obj_BaseClass
 {
 	variable string SVN_REVISION = "$Rev$"
-	variable int Version
 
 	variable set ClearedPilots
 	variable set ClearedPilotsStanding
@@ -23,9 +22,6 @@ objectdef obj_Social
 	variable int LastStationID
 
 	variable index:pilot PilotIndex
-
-	variable time NextPulse
-	variable int PulseIntervalInSeconds = 1
 
 	variable bool Passed_LowStandingCheck = TRUE
 	variable bool Passed_PilotCheck = TRUE
@@ -46,6 +42,8 @@ objectdef obj_Social
 
 	method Initialize()
 	{
+		LogPrefix:Set["${This.ObjectName}"]
+
 		EVE:RefreshStandings
 
 		Whitelist.PilotsRef:GetSettingIterator[This.WhiteListPilotIterator]
@@ -56,7 +54,7 @@ objectdef obj_Social
 		Blacklist.CorporationsRef:GetSettingIterator[This.BlackListCorpIterator]
 		Blacklist.AlliancesRef:GetSettingIterator[This.BlackListAllianceIterator]
 
-		Logger:Log["obj_Social: Initializing whitelist...", LOG_MINOR]
+		Logger:Log["${LogPrefix}: Initializing whitelist...", LOG_MINOR]
 		PilotWhiteList:Add[${EVEBot.CharID}]
 		if ${Me.CorporationID} > 0
 		{
@@ -88,7 +86,7 @@ objectdef obj_Social
 		}
 		while ${This.WhiteListAllianceIterator:Next(exists)}
 
-		Logger:Log["obj_Social: Initializing blacklist...", LOG_MINOR]
+		Logger:Log["${LogPrefix}: Initializing blacklist...", LOG_MINOR]
 		if ${This.BlackListPilotIterator:First(exists)}
 		do
 		{
@@ -110,15 +108,15 @@ objectdef obj_Social
 		}
 		while ${This.BlackListAllianceIterator:Next(exists)}
 
+		PulseTimer:SetIntervals[2.0,2.5]
+		PulseTimer:Increase[2.0]
+
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		Event[EVE_OnChannelMessage]:AttachAtom[This:OnChannelMessage]
-		This.NextPulse:Set[${Time.Timestamp}]
-		This.NextPulse.Second:Inc[10]
-		This.NextPulse:Update
 
 		EVE:ActivateChannelMessageEvents
 
-		Logger:Log["obj_Social: Initialized", LOG_MINOR]
+		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -130,7 +128,12 @@ objectdef obj_Social
 
 	method Pulse()
 	{
-		if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
+		if !${EVEBot.Loaded} || ${EVEBot.Disabled}
+		{
+			return
+		}
+
+		if ${This.PulseTimer.Ready}
 		{
 			if ${EVEBot.SessionValid}
 			{
@@ -199,9 +202,7 @@ objectdef obj_Social
 				}
 			}
 
-			This.NextPulse:Set[${Time.Timestamp}]
-			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-			This.NextPulse:Update
+			This.PulseTimer:Update
 		}
 	}
 

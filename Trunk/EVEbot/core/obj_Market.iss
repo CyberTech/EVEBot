@@ -7,7 +7,7 @@
 
 */
 
-objectdef obj_Market
+objectdef obj_Market inherits obj_BaseClass
 {
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
@@ -21,15 +21,21 @@ objectdef obj_Market
 
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_Market: Initialized", LOG_MINOR]
+		LogPrefix:Set["${This.ObjectName}"]
+
+		;PulseTimer:SetIntervals[0.5,1.0]
+		;Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+
+		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
 	{
 	}
+
  	function GetMarketOrders(int typeID)
  	{
-		UI:UpdateConsole["obj_Market: Obtaining market data for ${EVEDB_Items.Name[${typeID}]} (${typeID})"]
+		Logger:Log["obj_Market: Obtaining market data for ${EVEDB_Items.Name[${typeID}]} (${typeID})"]
 
 		This.sellOrders:Clear
 		This.buyOrders:Clear
@@ -43,8 +49,8 @@ objectdef obj_Market
 		EVE:DoGetMarketOrders[This.buyOrders,"Buy",${typeID}]
 		wait 10
 
-		UI:UpdateConsole["obj_Market: Found ${This.sellOrders.Used} sell orders."]
-		UI:UpdateConsole["obj_Market: Found ${This.buyOrders.Used} buy orders."]
+		Logger:Log["obj_Market: Found ${This.sellOrders.Used} sell orders."]
+		Logger:Log["obj_Market: Found ${This.buyOrders.Used} buy orders."]
 
 		call This.QuicksortSellOrders 1 ${This.sellOrders.Used}
 		call This.QuicksortBuyOrders 1 ${This.buyOrders.Used}
@@ -52,7 +58,7 @@ objectdef obj_Market
 
 	function GetMarketSellOrders(int typeID)
 	{
-		;UI:UpdateConsole["${This.ObjectName}: Obtaining market sell orders for item ${typeID}:${EVEDB_Items.Name[${typeID}]}"]
+		;Logger:Log["${This.ObjectName}: Obtaining market sell orders for item ${typeID}:${EVEDB_Items.Name[${typeID}]}"]
 
 		This.sellOrders:Clear
 
@@ -63,7 +69,7 @@ objectdef obj_Market
 		EVE:DoGetMarketOrders[This.sellOrders,"Sell",${typeID}]
 		wait 20
 
-		UI:UpdateConsole["${This.ObjectName}: GetMarketSellOrders Item ${typeID}:${EVEDB_Items.Name[${typeID}]} Orders - Sell: ${This.sellOrders.Used}"]
+		Logger:Log["${This.ObjectName}: GetMarketSellOrders Item ${typeID}:${EVEDB_Items.Name[${typeID}]} Orders - Sell: ${This.sellOrders.Used}"]
 
 		call This.QuicksortSellOrders 1 ${This.sellOrders.Used}
  	}
@@ -80,7 +86,7 @@ objectdef obj_Market
 		EVE:DoGetMarketOrders[This.buyOrders,"Buy",${typeID}]
 		wait 20
 
-		UI:UpdateConsole["${This.ObjectName}: GetMarketBuyOrders: Item ${typeID}:${EVEDB_Items.Name[${typeID}]} Orders - Buy: ${This.buyOrders.Used}"]
+		Logger:Log["${This.ObjectName}: GetMarketBuyOrders: Item ${typeID}:${EVEDB_Items.Name[${typeID}]} Orders - Buy: ${This.buyOrders.Used}"]
 
 		call This.QuicksortBuyOrders 1 ${This.buyOrders.Used}
   }
@@ -100,13 +106,13 @@ objectdef obj_Market
 	{
 		variable iterator orderIterator
 
-		UI:UpdateConsole["obj_Market.BestSellOrderSystem(${avoidLowSec},${quantity})"]
+		Logger:Log["obj_Market.BestSellOrderSystem(${avoidLowSec},${quantity})"]
 
 		This.sellOrders:GetIterator[orderIterator]
 
 		if ${Station.Docked}
 		{
-			UI:UpdateConsole["obj_Market.BestSellOrderSystem: WARNING:  Called while docked."]
+			Logger:Log["obj_Market.BestSellOrderSystem: WARNING:  Called while docked."]
 		}
 
 		if ${orderIterator:First(exists)}
@@ -138,7 +144,7 @@ objectdef obj_Market
 		}
 
 		; If this happens just pause the script to avoid errors
-		UI:UpdateConsole["obj_Market.BestSellOrderSystem: ERROR:  Could not find a system to purchase the item.  Pausing script!"]
+		Logger:Log["obj_Market.BestSellOrderSystem: ERROR:  Could not find a system to purchase the item.  Pausing script!"]
 		Script:Pause
 	}
 
@@ -154,11 +160,11 @@ objectdef obj_Market
 		variable int     bestIdx
 		variable float64 bestWeight
 
-		UI:UpdateConsole["obj_Market.BestSellOrderSystem(${avoidLowSec},${quantity})"]
+		Logger:Log["obj_Market.BestSellOrderSystem(${avoidLowSec},${quantity})"]
 
 		if ${Station.Docked}
 		{
-			UI:UpdateConsole["obj_Market.BestSellOrderSystem: WARNING:  Called while docked."]
+			Logger:Log["obj_Market.BestSellOrderSystem: WARNING:  Called while docked."]
 		}
 
 		; if avoiding low-sec, remove all orders that go through low-sec
@@ -175,7 +181,7 @@ objectdef obj_Market
 				}
 			}
 			This.sellOrders:Collapse
-			UI:UpdateConsole["DEBUG: obj_Market.FindBestWeightedSellOrder: ${This.sellOrders.Used} remain after purging low-sec routes."]
+			Logger:Log["DEBUG: obj_Market.FindBestWeightedSellOrder: ${This.sellOrders.Used} remain after purging low-sec routes."]
 		}
 
 		count:Set[${This.sellOrders.Used}]
@@ -193,7 +199,7 @@ objectdef obj_Market
 
 			weight:Set[${Math.Calc[${This.sellOrders.Get[${idx}].Price}*${This.Weight[${This.sellOrders.Get[${idx}].Jumps}]}]}]
 
-			;;UI:UpdateConsole["DEBUG: obj_Market.FindBestWeightedSellOrder ${This.sellOrders.Get[${idx}].Price} ${This.sellOrders.Get[${idx}].Jumps} ${weight}"]
+			;;Logger:Log["DEBUG: obj_Market.FindBestWeightedSellOrder ${This.sellOrders.Get[${idx}].Price} ${This.sellOrders.Get[${idx}].Jumps} ${weight}"]
 
 			if ${weight} < ${bestWeight}
 			{
@@ -210,7 +216,7 @@ objectdef obj_Market
 		}
 
 		; If this happens just pause the script to avoid errors
-		UI:UpdateConsole["obj_Market.FindBestWeightedSellOrder: ERROR:  Could not find a system to purchase the item.  Pausing script!"]
+		Logger:Log["obj_Market.FindBestWeightedSellOrder: ERROR:  Could not find a system to purchase the item.  Pausing script!"]
 		Script:Pause
 	}
 
@@ -234,7 +240,7 @@ objectdef obj_Market
 
 		if ${Station.Docked} == FALSE
 		{
-			UI:UpdateConsole["obj_Market.PurchaseItem: WARNING:  Called while undocked."]
+			Logger:Log["obj_Market.PurchaseItem: WARNING:  Called while undocked."]
 		}
 
 		if ${orderIterator:First(exists)}
@@ -251,7 +257,7 @@ objectdef obj_Market
 					else
 					{
 						; If this happens just pause the script to avoid errors
-						UI:UpdateConsole["obj_Market.PurchaseItem: ERROR:  Could not find a valid sell order.  Pausing script!"]
+						Logger:Log["obj_Market.PurchaseItem: ERROR:  Could not find a valid sell order.  Pausing script!"]
 						Script:Pause
 					}
 				}
@@ -308,9 +314,9 @@ objectdef obj_Market
 
 		pivotValue:Set[${This.buyOrders.Get[${pivotIndex}].Price}]
 
-		;UI:UpdateConsole["DEBUG: ${left} ${right} ${pivotIndex} ${pivotValue}"]
+		;Logger:Log["DEBUG: ${left} ${right} ${pivotIndex} ${pivotValue}"]
 
-		;UI:UpdateConsole["DEBUG: SWAP ${pivotIndex} ${right}"]
+		;Logger:Log["DEBUG: SWAP ${pivotIndex} ${right}"]
 		This.buyOrders:Swap[${pivotIndex},${right}]
 
 		storeIndex:Set[${left}]
@@ -319,16 +325,16 @@ objectdef obj_Market
 		{
 			if ${This.buyOrders.Get[${idx}].Price} <= ${pivotValue}
 			{
-				;UI:UpdateConsole["DEBUG: SWAP ${storeIndex} ${idx} ${This.buyOrders.Get[${idx}].Price} <= ${pivotValue}"]
+				;Logger:Log["DEBUG: SWAP ${storeIndex} ${idx} ${This.buyOrders.Get[${idx}].Price} <= ${pivotValue}"]
 				This.buyOrders:Swap[${storeIndex},${idx}]
 				storeIndex:Inc
 			}
 		}
 
-		;UI:UpdateConsole["DEBUG: SWAP ${storeIndex} ${right}"]
+		;Logger:Log["DEBUG: SWAP ${storeIndex} ${right}"]
 		This.buyOrders:Swap[${storeIndex},${right}]
 
-		;UI:UpdateConsole["DEBUG: RTN ${storeIndex}"]
+		;Logger:Log["DEBUG: RTN ${storeIndex}"]
 
 		return ${storeIndex}
 	}
@@ -354,7 +360,7 @@ objectdef obj_Market
 		variable int idx
 		variable int count
 
-		UI:UpdateConsole["obj_Market: Filtering all orders more than ${jumps} jumps away from your present location."]
+		Logger:Log["obj_Market: Filtering all orders more than ${jumps} jumps away from your present location."]
 
 		count:Set[${This.sellOrders.Used}]
 		for ( idx:Set[1]; ${idx} <= ${count}; idx:Inc )
@@ -365,7 +371,7 @@ objectdef obj_Market
 			}
 		}
 		This.sellOrders:Collapse
-		UI:UpdateConsole["obj_Market: Filtered ${Math.Calc[${count}-${This.sellOrders.Used}].Int} sell orders."]
+		Logger:Log["obj_Market: Filtered ${Math.Calc[${count}-${This.sellOrders.Used}].Int} sell orders."]
 
 		count:Set[${This.buyOrders.Used}]
 		removed:Set[0]
@@ -377,7 +383,7 @@ objectdef obj_Market
 			}
 		}
 		This.buyOrders:Collapse
-		UI:UpdateConsole["obj_Market: Filtered ${Math.Calc[${count}-${This.buyOrders.Used}].Int} buy orders."]
+		Logger:Log["obj_Market: Filtered ${Math.Calc[${count}-${This.buyOrders.Used}].Int} buy orders."]
  	}
 
  	function FilterBuyOrdersByRange(int jumps)
@@ -385,14 +391,14 @@ objectdef obj_Market
 		variable int idx
 		variable int count
 
-		UI:UpdateConsole["${This.ObjectName}: Filtering all orders more than ${jumps} jumps away from your present location."]
+		Logger:Log["${This.ObjectName}: Filtering all orders more than ${jumps} jumps away from your present location."]
 
 		count:Set[${This.buyOrders.Used}]
 		for ( idx:Set[1]; ${idx} <= ${count}; idx:Inc )
 		{
 			if ${This.buyOrders.Get[${idx}].Jumps} > ${jumps}
 			{
-				UI:UpdateConsole["${This.ObjectName}: Removing order ${This.buyOrders.Get[${idx}].ID}."]
+				Logger:Log["${This.ObjectName}: Removing order ${This.buyOrders.Get[${idx}].ID}."]
 				This.buyOrders:Remove[${idx}]
 			}
 		}
@@ -428,16 +434,16 @@ objectdef obj_Market
 					}
 					else
 					{
-						UI:UpdateConsoleIRC["LowestSellOrder: Ignored Order: ${This.sellOrders.Get[${idx}].Name}: ${This.sellOrders.Get[${idx}].QuantityRemaining.Int} @ ${This.sellOrders.Get[${idx}].Price.Centi} (Price Delta)", LOG_CRITICAL]
+						Logger:LogIRC["LowestSellOrder: Ignored Order: ${This.sellOrders.Get[${idx}].Name}: ${This.sellOrders.Get[${idx}].QuantityRemaining.Int} @ ${This.sellOrders.Get[${idx}].Price.Centi} (Price Delta)", LOG_CRITICAL]
 					}
 				}
 				else
 				{
-					UI:UpdateConsoleIRC["LowestSellOrder: Ignored Order: ${This.sellOrders.Get[${idx}].Name}: ${This.sellOrders.Get[${idx}].QuantityRemaining.Int} @ ${This.sellOrders.Get[${idx}].Price.Centi} (Small order)", LOG_CRITICAL]
+					Logger:LogIRC["LowestSellOrder: Ignored Order: ${This.sellOrders.Get[${idx}].Name}: ${This.sellOrders.Get[${idx}].QuantityRemaining.Int} @ ${This.sellOrders.Get[${idx}].Price.Centi} (Small order)", LOG_CRITICAL]
 				}
 			}
 			; Fell thru -- no order have the min quantity, so return the lowest
-			UI:UpdateConsoleIRC["LowestSellOrder: Warning: No orders had requested min quantity of ${MinQuantity} and min price of ${MinPrice.Centi}, returning lowest price of all orders", LOG_CRITICAL]
+			Logger:LogIRC["LowestSellOrder: Warning: No orders had requested min quantity of ${MinQuantity} and min price of ${MinPrice.Centi}, returning lowest price of all orders", LOG_CRITICAL]
 		}
 
 		; Return the lowest order that is NOT ours AND meets our min price
@@ -455,9 +461,9 @@ objectdef obj_Market
 				{
 					return ${This.sellOrders.Get[${idx}].Price}
 				}
-				UI:UpdateConsoleIRC["LowestSellOrder: Ignored Order: ${This.sellOrders.Get[${idx}].Name}: ${This.sellOrders.Get[${idx}].QuantityRemaining.Int} @ ${This.sellOrders.Get[${idx}].Price.Centi} (Price Delta)", LOG_CRITICAL]
+				Logger:LogIRC["LowestSellOrder: Ignored Order: ${This.sellOrders.Get[${idx}].Name}: ${This.sellOrders.Get[${idx}].QuantityRemaining.Int} @ ${This.sellOrders.Get[${idx}].Price.Centi} (Price Delta)", LOG_CRITICAL]
 			}
-			UI:UpdateConsoleIRC["LowestSellOrder: Warning: No orders had requested min price of ${MinPrice.Centi}, returning lowest price of all orders", LOG_CRITICAL]
+			Logger:LogIRC["LowestSellOrder: Warning: No orders had requested min price of ${MinPrice.Centi}, returning lowest price of all orders", LOG_CRITICAL]
 		}
 
 		; Return the lowest order that is NOT ours
@@ -500,18 +506,18 @@ objectdef obj_Market
 
 		if ${typeID} != 0
 		{
-			UI:UpdateConsole["${This.ObjectName}: Obtaining my buy orders for ${EVEDB_Items.Name[${typeID}]}"]
+			Logger:Log["${This.ObjectName}: Obtaining my buy orders for ${EVEDB_Items.Name[${typeID}]}"]
 			TotalOrders:Set[${Me.GetMyOrders[This.myBuyOrders,"Buy",${typeID}]}]
 		}
 		else
 		{
-			UI:UpdateConsole["${This.ObjectName}: Obtaining my buy orders for all items"]
+			Logger:Log["${This.ObjectName}: Obtaining my buy orders for all items"]
 			TotalOrders:Set[${Me.GetMyOrders[This.myBuyOrders,"Buy"]}]
 		}
 
 		if ${TotalOrders} > 0
 		{
-			UI:UpdateConsole["${This.ObjectName}: Waiting up to 1 minute to retrieve ${TotalOrders} orders"]
+			Logger:Log["${This.ObjectName}: Waiting up to 1 minute to retrieve ${TotalOrders} orders"]
 			wait 600 ${This.myBuyOrders.Get[${TotalOrders}].Name(exists)}
 		}
 	}
@@ -523,27 +529,27 @@ objectdef obj_Market
 		This.mySellOrders:Clear
 		if ${typeID} != 0
 		{
-			UI:UpdateConsole["${This.ObjectName}: Obtaining my sell orders for ${EVEDB_Items.Name[${typeID}]}"]
+			Logger:Log["${This.ObjectName}: Obtaining my sell orders for ${EVEDB_Items.Name[${typeID}]}"]
 			TotalOrders:Set[${Me.GetMyOrders[This.mySellOrders,"Sell",${typeID}]}]
 			wait 30
 		}
 		else
 		{
-			UI:UpdateConsole["${This.ObjectName}: Obtaining my sell orders for all items"]
+			Logger:Log["${This.ObjectName}: Obtaining my sell orders for all items"]
 			TotalOrders:Set[${Me.GetMyOrders[This.mySellOrders,"Sell"]}]
 			wait 30
 		}
 
 		if ${TotalOrders} > 0
 		{
-			UI:UpdateConsole["${This.ObjectName}: Waiting up to 1 minute to retrieve ${TotalOrders} orders"]
+			Logger:Log["${This.ObjectName}: Waiting up to 1 minute to retrieve ${TotalOrders} orders"]
 			wait 600 ${This.mySellOrders.Get[${TotalOrders}].Name(exists)}
 		}
 	}
 
 	function GetMyOrders(int typeID)
 	{
-		UI:UpdateConsole["obj_Market: Obtaining my orders for ${EVEDB_Items.Name[${typeID}]}"]
+		Logger:Log["obj_Market: Obtaining my orders for ${EVEDB_Items.Name[${typeID}]}"]
 		Me:UpdateMyOrders
 		wait 40
 		Me:DoGetMyOrders[This.myBuyOrders,"Buy",${typeID}]
@@ -551,8 +557,8 @@ objectdef obj_Market
 		Me:DoGetMyOrders[This.mySellOrders,"Sell",${typeID}]
 		wait 10
 
-		UI:UpdateConsole["obj_Market: Found ${This.mySellOrders.Used} active sell orders for ${EVEDB_Items.Name[${typeID}]}."]
-		UI:UpdateConsole["obj_Market: Found ${This.myBuyOrders.Used} active buy orders for ${EVEDB_Items.Name[${typeID}]}."]
+		Logger:Log["obj_Market: Found ${This.mySellOrders.Used} active sell orders for ${EVEDB_Items.Name[${typeID}]}."]
+		Logger:Log["obj_Market: Found ${This.myBuyOrders.Used} active buy orders for ${EVEDB_Items.Name[${typeID}]}."]
 	}
 
 	member:bool IsMySellOrder(int OrderID)
@@ -617,17 +623,17 @@ objectdef obj_Market
 
 					if ${sellPrice} < 5000000
 					{
-						UI:UpdateConsole["obj_Market: Adjusting order ${orderIterator.Value.ID} to ${sellPrice}."]
+						Logger:Log["obj_Market: Adjusting order ${orderIterator.Value.ID} to ${sellPrice}."]
 						orderIterator.Value:Modify[${sellPrice}]
 					}
 					else
 					{
-						UI:UpdateConsole["obj_Market: ERROR: Sell price (${sellPrice}) exceeds limit!!"]
+						Logger:Log["obj_Market: ERROR: Sell price (${sellPrice}) exceeds limit!!"]
 					}
 				}
 				else
 				{
-					UI:UpdateConsole["obj_Market: Order ${orderIterator.Value.ID} is currently the lowest sell order."]
+					Logger:Log["obj_Market: Order ${orderIterator.Value.ID} is currently the lowest sell order."]
 				}
 			}
 			while ${orderIterator:Next(exists)}
@@ -646,22 +652,22 @@ objectdef obj_Market
 			{
 				if !${Orders.Value(exists)}
 				{
-					UI:UpdateConsole["UpdateMySellOrders: ERROR - Found null order", LOG_CRITICAL]
+					Logger:Log["UpdateMySellOrders: ERROR - Found null order", LOG_CRITICAL]
 					continue
 				}
 
 				if ${Orders.Value.TypeID} != ${TypeID}
 				{
-					;UI:UpdateConsole["UpdateMySellOrders: TypeID: ${Orders.Value.TypeID} != ${TypeID}"]
+					;Logger:Log["UpdateMySellOrders: TypeID: ${Orders.Value.TypeID} != ${TypeID}"]
 					continue
 				}
 				if ${Orders.Value.RegionID} != ${Me.RegionID}
 				{
-					UI:UpdateConsole["UpdateMySellOrders: RegionID: ${Orders.Value.RegionID} != ${Me.RegionID}"]
+					Logger:Log["UpdateMySellOrders: RegionID: ${Orders.Value.RegionID} != ${Me.RegionID}"]
 					continue
 				}
 
-				UI:UpdateConsoleIRC["Processing Sell Order: ${Orders.Value.Name} ${Orders.Value.QuantityRemaining.Int}/${Orders.Value.InitialQuantity} @ ${Orders.Value.Price.Centi}"]
+				Logger:LogIRC["Processing Sell Order: ${Orders.Value.Name} ${Orders.Value.QuantityRemaining.Int}/${Orders.Value.InitialQuantity} @ ${Orders.Value.Price.Centi}"]
 
 				; Find the lowest price that has both the minquantity AND ourprice-maxchange in price
 				; This is so that if we are at 10, our maxchange is 2, and there are orders for 5, 8, and 10, we will still pricematch the 8, but ignore the 5
@@ -678,7 +684,7 @@ objectdef obj_Market
 
 					if ${PriceDiff} > 0
 					{
-						UI:UpdateConsoleIRC["UpdateMySellOrders: Increasing Sell Price: ${Orders.Value.Name} Old: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Increase: ${PriceDiff.Centi}", LOG_CRITICAL]
+						Logger:LogIRC["UpdateMySellOrders: Increasing Sell Price: ${Orders.Value.Name} Old: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Increase: ${PriceDiff.Centi}", LOG_CRITICAL]
 						Orders.Value:Modify[${sellPrice}]
 					}
 					else
@@ -687,22 +693,22 @@ objectdef obj_Market
 						PriceDiff:Set[${Math.Calc[${Orders.Value.Price} - ${sellPrice}]}]
 						if ${sellPrice} > ${MaxPrice}
 						{
-							UI:UpdateConsoleIRC["UpdateMySellOrders: Ignoring Order: ${Orders.Value.Name} Old: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Decrease: ${PriceDiff.Centi}, maximum price (${MaxPrice.Centi}) exceeded", LOG_CRITICAL]
+							Logger:LogIRC["UpdateMySellOrders: Ignoring Order: ${Orders.Value.Name} Old: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Decrease: ${PriceDiff.Centi}, maximum price (${MaxPrice.Centi}) exceeded", LOG_CRITICAL]
 						}
 						elseif ${PriceDiff} > ${MaxChange}
 						{
-							UI:UpdateConsoleIRC["UpdateMySellOrders: Warning: ${Orders.Value.Name} Current: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Decrease: ${PriceDiff.Centi}, price change limit (${MaxChange.Centi}) exceeded", LOG_CRITICAL]
+							Logger:LogIRC["UpdateMySellOrders: Warning: ${Orders.Value.Name} Current: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Decrease: ${PriceDiff.Centi}, price change limit (${MaxChange.Centi}) exceeded", LOG_CRITICAL]
 						}
 						else
 						{
-							UI:UpdateConsoleIRC["UpdateMySellOrders: Decreasing Price: ${Orders.Value.Name} Old: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Decrease: ${PriceDiff.Centi}", LOG_CRITICAL]
+							Logger:LogIRC["UpdateMySellOrders: Decreasing Price: ${Orders.Value.Name} Old: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Decrease: ${PriceDiff.Centi}", LOG_CRITICAL]
 							Orders.Value:Modify[${sellPrice}]
 						}
 					}
 				}
 				else
 				{
-					UI:UpdateConsole["Skipping Order: ${Orders.Value.Name} Price: ${Orders.Value.Price.Centi}, already lowest"]
+					Logger:Log["Skipping Order: ${Orders.Value.Name} Price: ${Orders.Value.Price.Centi}, already lowest"]
 				}
 				wait 5
 			}
@@ -728,17 +734,17 @@ objectdef obj_Market
 
 					if ${buyPrice} < 5000000
 					{
-						UI:UpdateConsole["obj_Market: Adjusting order ${orderIterator.Value.ID} to ${buyPrice}."]
+						Logger:Log["obj_Market: Adjusting order ${orderIterator.Value.ID} to ${buyPrice}."]
 						orderIterator.Value:Modify[${buyPrice}]
 					}
 					else
 					{
-						UI:UpdateConsole["obj_Market: ERROR: Buy price (${buyPrice}) exceeds limit!!"]
+						Logger:Log["obj_Market: ERROR: Buy price (${buyPrice}) exceeds limit!!"]
 					}
 				}
 				else
 				{
-					UI:UpdateConsole["obj_Market: Order ${orderIterator.Value.ID} is currently the highest buy order."]
+					Logger:Log["obj_Market: Order ${orderIterator.Value.ID} is currently the highest buy order."]
 				}
 			}
 			while ${orderIterator:Next(exists)}
@@ -749,7 +755,7 @@ objectdef obj_Market
 	{
 		variable iterator orderIterator
 
-		UI:UpdateConsole["obj_Market.DumpSellOrders: dumping..."]
+		Logger:Log["obj_Market.DumpSellOrders: dumping..."]
 
 		This.sellOrders:GetIterator[orderIterator]
 
@@ -757,7 +763,7 @@ objectdef obj_Market
 		{
 			do
 			{
-				UI:UpdateConsole["obj_Market.DumpSellOrders: ${orderIterator.Value.ID} ${orderIterator.Value.Jumps} ${orderIterator.Value.Price} ${orderIterator.Value.QuantityRemaining.Int}/${orderIterator.Value.InitialQuantity}."]
+				Logger:Log["obj_Market.DumpSellOrders: ${orderIterator.Value.ID} ${orderIterator.Value.Jumps} ${orderIterator.Value.Price} ${orderIterator.Value.QuantityRemaining.Int}/${orderIterator.Value.InitialQuantity}."]
 			}
 			while ${orderIterator:Next(exists)}
 		}
@@ -767,7 +773,7 @@ objectdef obj_Market
 	{
 		variable iterator orderIterator
 
-		UI:UpdateConsole["obj_Market.DumpBuyOrders: dumping..."]
+		Logger:Log["obj_Market.DumpBuyOrders: dumping..."]
 
 		This.buyOrders:GetIterator[orderIterator]
 
@@ -775,7 +781,7 @@ objectdef obj_Market
 		{
 			do
 			{
-				UI:UpdateConsole["obj_Market.DumpBuyOrders: ${orderIterator.Value.ID} ${orderIterator.Value.Jumps} ${orderIterator.Value.Price} ${orderIterator.Value.QuantityRemaining.Int}/${orderIterator.Value.InitialQuantity}."]
+				Logger:Log["obj_Market.DumpBuyOrders: ${orderIterator.Value.ID} ${orderIterator.Value.Jumps} ${orderIterator.Value.Price} ${orderIterator.Value.QuantityRemaining.Int}/${orderIterator.Value.InitialQuantity}."]
 			}
 			while ${orderIterator:Next(exists)}
 		}

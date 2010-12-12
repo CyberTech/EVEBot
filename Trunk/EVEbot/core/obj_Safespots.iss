@@ -10,14 +10,17 @@
 objectdef obj_Safespots inherits obj_Bookmark
 {
 	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-	variable string LogPrefix
 
 	method Initialize()
 	{
-		LogPrefix:Set["obj_Safespots(${This.ObjectName})"]
+		LogPrefix:Set["${This.ObjectName}"]
+
 		This:Reset
-		Logger:Log["${LogPrefix}: Initialized"]
+
+		;PulseTimer:SetIntervals[0.5,1.0]
+		;Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+
+		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
 	method Reset()
