@@ -333,37 +333,37 @@ objectdef obj_Ship
 		}
 		RetryUpdateModuleList:Set[0]
 
-		variable iterator Module
+		variable iterator ModuleIter
 
 		UI:UpdateConsole["Module Inventory:", LOG_MINOR, 1]
-		This.ModuleList:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
 			variable int GroupID
-			GroupID:Set[${Module.Value.ToItem.GroupID}]
+			GroupID:Set[${ModuleIter.Value.ToItem.GroupID}]
 			variable int TypeID
-			TypeID:Set[${Module.Value.ToItem.TypeID}]
+			TypeID:Set[${ModuleIter.Value.ToItem.TypeID}]
 
-			if !${Module.Value(exists)}
+			if !${ModuleIter.Value(exists)}
 			{
 				UI:UpdateConsole["ERROR: obj_Ship:UpdateModuleList - Null module found. Retrying in a few seconds.", LOG_CRITICAL]
 				RetryUpdateModuleList:Inc
 				return
 			}
-			if !${Module.Value.IsActivatable}
+			if !${ModuleIter.Value.IsActivatable}
 			{
-				This.ModuleList_Passive:Insert[${Module.Value}]
+				This.ModuleList_Passive:Insert[${ModuleIter.Value}]
 				continue
 			}
 
-			;echo "DEBUG: Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}"
-			;echo " DEBUG: Group: ${Module.Value.ToItem.Group}  ${GroupID}"
-			;echo " DEBUG: Type: ${Module.Value.ToItem.Type}  ${TypeID}"
+			;echo "DEBUG: Slot: ${ModuleIter.Value.ToItem.Slot}  ${ModuleIter.Value.ToItem.Name}"
+			;echo " DEBUG: Group: ${ModuleIter.Value.ToItem.Group}  ${GroupID}"
+			;echo " DEBUG: Type: ${ModuleIter.Value.ToItem.Type}  ${TypeID}"
 
-			if ${Module.Value.MiningAmount(exists)}
+			if ${ModuleIter.Value.MiningAmount(exists)}
 			{
-				This.ModuleList_MiningLaser:Insert[${Module.Value}]
+				This.ModuleList_MiningLaser:Insert[${ModuleIter.Value}]
 				continue
 			}
 
@@ -372,7 +372,7 @@ objectdef obj_Ship
 				case GROUPID_DAMAGE_CONTROL
 				case GROUPID_SHIELD_HARDENER
 				case GROUPID_ARMOR_HARDENERS
-					This.ModuleList_ActiveResists:Insert[${Module.Value}]
+					This.ModuleList_ActiveResists:Insert[${ModuleIter.Value}]
 					break
 				case GROUP_ENERGYWEAPON
 				case GROUP_PROJECTILEWEAPON
@@ -389,111 +389,111 @@ objectdef obj_Ship
 				case GROUP_MISSILELAUNCHERSIEGE
 				case GROUP_MISSILELAUNCHERSNOWBALL
 				case GROUP_MISSILELAUNCHERSTANDARD
-					This.ModuleList_Weapon:Insert[${Module.Value}]
+					This.ModuleList_Weapon:Insert[${ModuleIter.Value}]
 					break
 				case GROUPID_FREQUENCY_MINING_LASER
 					break
 				case GROUPID_SHIELD_BOOSTER
-					This.ModuleList_Regen_Shield:Insert[${Module.Value}]
+					This.ModuleList_Regen_Shield:Insert[${ModuleIter.Value}]
 					break
 				case GROUPID_AFTERBURNER
-					This.ModuleList_AB_MWD:Insert[${Module.Value}]
+					This.ModuleList_AB_MWD:Insert[${ModuleIter.Value}]
 					break
 				case GROUPID_ARMOR_REPAIRERS
-					This.ModuleList_Repair_Armor:Insert[${Module.Value}]
+					This.ModuleList_Repair_Armor:Insert[${ModuleIter.Value}]
 					break
 				case GROUPID_DATA_MINER
 					if ${TypeID} == TYPEID_SALVAGER
 					{
-						This.ModuleList_Salvagers:Insert[${Module.Value}]
+						This.ModuleList_Salvagers:Insert[${ModuleIter.Value}]
 					}
 					break
 				case GROUPID_TRACTOR_BEAM
-					This.ModuleList_TractorBeams:Insert[${Module.Value}]
+					This.ModuleList_TractorBeams:Insert[${ModuleIter.Value}]
 					break
 				case NONE
-					This.ModuleList_Repair_Hull:Insert[${Module.Value}]
+					This.ModuleList_Repair_Hull:Insert[${ModuleIter.Value}]
 					break
 				case GROUPID_CLOAKING_DEVICE
-					This.ModuleList_Cloaks:Insert[${Module.Value}]
+					This.ModuleList_Cloaks:Insert[${ModuleIter.Value}]
 					break
 				case GROUPID_STASIS_WEB
-					This.ModuleList_StasisWeb:Insert[${Module.Value}]
+					This.ModuleList_StasisWeb:Insert[${ModuleIter.Value}]
 					break
 				case GROUP_SENSORBOOSTER
-					This.ModuleList_SensorBoost:Insert[${Module.Value}]
+					This.ModuleList_SensorBoost:Insert[${ModuleIter.Value}]
 					break
 				case GROUP_TARGETPAINTER
-					This.ModuleList_TargetPainter:Insert[${Module.Value}]
+					This.ModuleList_TargetPainter:Insert[${ModuleIter.Value}]
 					break
 				default
 					break
 			}
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 
 		UI:UpdateConsole["Weapons:", LOG_MINOR, 2]
-		This.ModuleList_Weapon:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_Weapon:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			UI:UpdateConsole["Slot: ${Module.Value.ToItem.Slot} ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
+			UI:UpdateConsole["Slot: ${ModuleIter.Value.ToItem.Slot} ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 
 		UI:UpdateConsole["Active Resistance Modules:", LOG_MINOR, 2]
-		This.ModuleList_ActiveResists:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_ActiveResists:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			UI:UpdateConsole["	Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
+			UI:UpdateConsole["	Slot: ${ModuleIter.Value.ToItem.Slot}  ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 
 		UI:UpdateConsole["Passive Modules:", LOG_MINOR, 2]
-		This.ModuleList_Passive:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_Passive:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			UI:UpdateConsole["	 Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
+			UI:UpdateConsole["	 Slot: ${ModuleIter.Value.ToItem.Slot}  ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 
 		UI:UpdateConsole["Mining Modules:", LOG_MINOR, 2]
-		This.ModuleList_MiningLaser:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_MiningLaser:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			UI:UpdateConsole["	 Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
+			UI:UpdateConsole["	 Slot: ${ModuleIter.Value.ToItem.Slot}  ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 
 		UI:UpdateConsole["Armor Repair Modules:", LOG_MINOR, 2]
-		This.ModuleList_Repair_Armor:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_Repair_Armor:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			UI:UpdateConsole["	 Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
+			UI:UpdateConsole["	 Slot: ${ModuleIter.Value.ToItem.Slot}  ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 
 		UI:UpdateConsole["Shield Regen Modules:", LOG_MINOR, 2]
-		This.ModuleList_Regen_Shield:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_Regen_Shield:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			UI:UpdateConsole["	 Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
+			UI:UpdateConsole["	 Slot: ${ModuleIter.Value.ToItem.Slot}  ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 
 		UI:UpdateConsole["AfterBurner Modules:", LOG_MINOR, 2]
-		This.ModuleList_AB_MWD:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_AB_MWD:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			UI:UpdateConsole["	 Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
+			UI:UpdateConsole["	 Slot: ${ModuleIter.Value.ToItem.Slot}  ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 
 		if ${This.ModuleList_AB_MWD.Used} > 1
 		{
@@ -501,58 +501,58 @@ objectdef obj_Ship
 		}
 
 		UI:UpdateConsole["Salvaging Modules:", LOG_MINOR, 2]
-		This.ModuleList_Salvagers:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_Salvagers:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			UI:UpdateConsole["	 Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
+			UI:UpdateConsole["	 Slot: ${ModuleIter.Value.ToItem.Slot}  ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 
 		UI:UpdateConsole["Tractor Beam Modules:", LOG_MINOR, 2]
-		This.ModuleList_TractorBeams:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_TractorBeams:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			UI:UpdateConsole["	 Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
+			UI:UpdateConsole["	 Slot: ${ModuleIter.Value.ToItem.Slot}  ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 
 		UI:UpdateConsole["Cloaking Device Modules:", LOG_MINOR, 2]
-		This.ModuleList_Cloaks:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_Cloaks:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			UI:UpdateConsole["	 Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
+			UI:UpdateConsole["	 Slot: ${ModuleIter.Value.ToItem.Slot}  ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 
 		UI:UpdateConsole["Stasis Web Modules:", LOG_MINOR, 2]
-		This.ModuleList_StasisWeb:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_StasisWeb:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			UI:UpdateConsole["	 Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
+			UI:UpdateConsole["	 Slot: ${ModuleIter.Value.ToItem.Slot}  ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 
 		UI:UpdateConsole["Sensor Boost Modules:", LOG_MINOR, 2]
-		This.ModuleList_SensorBoost:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_SensorBoost:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			UI:UpdateConsole["	 Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
+			UI:UpdateConsole["	 Slot: ${ModuleIter.Value.ToItem.Slot}  ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 
 		UI:UpdateConsole["Target Painter Modules:", LOG_MINOR, 2]
-		This.ModuleList_TargetPainter:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_TargetPainter:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			UI:UpdateConsole["	 Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
+			UI:UpdateConsole["	 Slot: ${ModuleIter.Value.ToItem.Slot}  ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 	}
 
 	method UpdateBaselineUsedCargo()
@@ -595,22 +595,22 @@ objectdef obj_Ship
 		}
 
 		variable int count
-		variable iterator Module
+		variable iterator ModuleIter
 
-		This.ModuleList_MiningLaser:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_MiningLaser:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			if ${Module.Value.IsActive} || \
-				${Module.Value.IsGoingOnline} || \
-				${Module.Value.IsDeactivating} || \
-				${Module.Value.IsChangingAmmo} || \
-				${Module.Value.IsReloadingAmmo}
+			if ${ModuleIter.Value.IsActive} || \
+				${ModuleIter.Value.IsGoingOnline} || \
+				${ModuleIter.Value.IsDeactivating} || \
+				${ModuleIter.Value.IsChangingAmmo} || \
+				${ModuleIter.Value.IsReloadingAmmo}
 			{
 				count:Inc
 			}
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 
 		return ${count}
 	}
@@ -624,18 +624,18 @@ objectdef obj_Ship
 			return 0
 		}
 
-		variable iterator Module
+		variable iterator ModuleIter
 
-		This.ModuleList_MiningLaser:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_MiningLaser:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		{
-			if ${Module.Value.SpecialtyCrystalMiningAmount(exists)}
+			if ${ModuleIter.Value.SpecialtyCrystalMiningAmount(exists)}
 			{
-				return ${Module.Value.SpecialtyCrystalMiningAmount}
+				return ${ModuleIter.Value.SpecialtyCrystalMiningAmount}
 			}
 			else
 			{
-				return ${Module.Value.MiningAmount}
+				return ${ModuleIter.Value.MiningAmount}
 			}
 		}
 		return 0
@@ -650,12 +650,12 @@ objectdef obj_Ship
 			return 0
 		}
 
-		variable iterator Module
+		variable iterator ModuleIter
 
-		This.ModuleList_MiningLaser:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_MiningLaser:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		{
-			return ${Math.Calc[${Module.Value.OptimalRange}*0.90]}
+			return ${Math.Calc[${ModuleIter.Value.OptimalRange}*0.90]}
 		}
 
 		return 0
@@ -683,24 +683,24 @@ objectdef obj_Ship
 		}
 		return "NOCHARGE"
 
-		variable iterator Module
+		variable iterator ModuleIter
 
 		This.ModuleList_MiningLaser:GetIteratorModule]
-		if ${Module:First(exists)}
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			if !${Module.Value.SpecialtyCrystalMiningAmount(exists)}
+			if !${ModuleIter.Value.SpecialtyCrystalMiningAmount(exists)}
 			{
 				continue
 			}
-			if ${Module.Value.ToItem.Slot.Equal[${SlotName}]} && \
-				${Module.Value.Charge(exists)}
+			if ${ModuleIter.Value.ToItem.Slot.Equal[${SlotName}]} && \
+				${ModuleIter.Value.Charge(exists)}
 			{
-				;UI:UpdateConsole["DEBUG: obj_Ship:LoadedMiningLaserCrystal Returning ${Module.Value.Charge.Name.Token[1, " "]}]
-				return ${Module.Value.Charge.Name.Token[1, " "]}
+				;UI:UpdateConsole["DEBUG: obj_Ship:LoadedMiningLaserCrystal Returning ${ModuleIter.Value.Charge.Name.Token[1, " "]}]
+				return ${ModuleIter.Value.Charge.Name.Token[1, " "]}
 			}
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 
 		return "NOCHARGE"
 	}
@@ -713,20 +713,20 @@ objectdef obj_Ship
 			return
 		}
 
-		variable iterator Module
+		variable iterator ModuleIter
 
-		This.ModuleList_MiningLaser:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_MiningLaser:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			if ${Module.Value.LastTarget(exists)} && \
-				${Module.Value.LastTarget.ID} == ${EntityID} && \
-				( ${Module.Value.IsActive} || ${Module.Value.IsGoingOnline} )
+			if ${ModuleIter.Value.LastTarget(exists)} && \
+				${ModuleIter.Value.LastTarget.ID} == ${EntityID} && \
+				( ${ModuleIter.Value.IsActive} || ${ModuleIter.Value.IsGoingOnline} )
 			{
 				return TRUE
 			}
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 
 		return FALSE
 	}
@@ -816,21 +816,21 @@ objectdef obj_Ship
 			return
 		}
 
-		variable iterator Module
+		variable iterator ModuleIter
 
-		This.ModuleList_MiningLaser:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_MiningLaser:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			if ${Module.Value.IsActive} && \
-				!${Module.Value.IsDeactivating} && \
-				!${Module.Value.LastTarget(exists)}
+			if ${ModuleIter.Value.IsActive} && \
+				!${ModuleIter.Value.IsDeactivating} && \
+				!${ModuleIter.Value.LastTarget(exists)}
 			{
-				UI:UpdateConsole["${Module.Value.ToItem.Slot}:${Module.Value.ToItem.Name} has no target: Deactivating"]
-				Module.Value:Click
+				UI:UpdateConsole["${ModuleIter.Value.ToItem.Slot}:${ModuleIter.Value.ToItem.Name} has no target: Deactivating"]
+				ModuleIter.Value:Click
 			}
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 	}
 
 	method CycleMiningLaser(string Activate, string Slot)
@@ -892,26 +892,26 @@ objectdef obj_Ship
 			return
 		}
 
-		variable iterator Module
+		variable iterator ModuleIter
 
-		This.ModuleList_MiningLaser:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_MiningLaser:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		{
-			if ${Module.Value.IsActive} && \
-				!${Module.Value.IsDeactivating}
+			if ${ModuleIter.Value.IsActive} && \
+				!${ModuleIter.Value.IsDeactivating}
 			{
 				UI:UpdateConsole["Deactivating all mining lasers..."]
 			}
 		}
 		do
 		{
-			if ${Module.Value.IsActive} && \
-				!${Module.Value.IsDeactivating}
+			if ${ModuleIter.Value.IsActive} && \
+				!${ModuleIter.Value.IsDeactivating}
 			{
-				Module.Value:Click
+				ModuleIter.Value:Click
 			}
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 	}
 	function ActivateFreeMiningLaser()
 	{
@@ -928,20 +928,20 @@ objectdef obj_Ship
 			return
 		}
 
-		variable iterator Module
+		variable iterator ModuleIter
 
-		This.ModuleList_MiningLaser:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_MiningLaser:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			if !${Module.Value.IsActive} && \
-				!${Module.Value.IsGoingOnline} && \
-				!${Module.Value.IsDeactivating} && \
-				!${Module.Value.IsChangingAmmo} &&\
-				!${Module.Value.IsReloadingAmmo}
+			if !${ModuleIter.Value.IsActive} && \
+				!${ModuleIter.Value.IsGoingOnline} && \
+				!${ModuleIter.Value.IsDeactivating} && \
+				!${ModuleIter.Value.IsChangingAmmo} &&\
+				!${ModuleIter.Value.IsReloadingAmmo}
 			{
-				Slot:Set[${Module.Value.ToItem.Slot}]
-				if ${Module.Value.SpecialtyCrystalMiningAmount(exists)}
+				Slot:Set[${ModuleIter.Value.ToItem.Slot}]
+				if ${ModuleIter.Value.SpecialtyCrystalMiningAmount(exists)}
 				{
 					variable string OreType
 					OreType:Set[${Me.ActiveTarget.Name.Token[2,"("]}]
@@ -951,15 +951,15 @@ objectdef obj_Ship
 					call This.ChangeMiningLaserCrystal "${OreType}" ${Slot}
 				}
 
-				UI:UpdateConsole["Activating: ${Slot}: ${Module.Value.ToItem.Name}"]
-				Module.Value:Click
+				UI:UpdateConsole["Activating: ${Slot}: ${ModuleIter.Value.ToItem.Name}"]
+				ModuleIter.Value:Click
 				wait 25
 				;TimedCommand ${Math.Rand[600]:Inc[300]} "Script[EVEBot].VariableScope.Ship:CycleMiningLaser[OFF, ${Slot}]"
 				return
 			}
 			wait 10
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 	}
 
 	method StopShip()
@@ -1460,15 +1460,15 @@ objectdef obj_Ship
 			return
 		}
 
-		variable iterator Module
+		variable iterator ModuleIter
 
-		This.ModuleList_AB_MWD:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_AB_MWD:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		{
-			if !${Module.Value.IsActive} && ${Module.Value.IsOnline}
+			if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline}
 			{
-				UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
-				Module.Value:Click
+				UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
+				ModuleIter.Value:Click
 			}
 		}
 	}
@@ -1485,20 +1485,20 @@ objectdef obj_Ship
 			return
 		}
 
-		variable iterator Module
+		variable iterator ModuleIter
 
-		This.ModuleList_Repair_Armor:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_Repair_Armor:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			if !${Module.Value.IsActive} && ${Module.Value.IsOnline}
+			if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline}
 			{
-				UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
-				Module.Value:Click
+				UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
+				ModuleIter.Value:Click
 				This.Repairing_Armor:Set[TRUE]
 			}
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 	}
 
 	method Deactivate_Armor_Reps()
@@ -1508,15 +1508,15 @@ objectdef obj_Ship
 			return
 		}
 
-		variable iterator Module
+		variable iterator ModuleIter
 
-		This.ModuleList_Repair_Armor:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_Repair_Armor:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		{
-			if ${Module.Value.IsActive} && ${Module.Value.IsOnline} && !${Module.Value.IsDeactivating}
+			if ${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsDeactivating}
 			{
-				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}", LOG_MINOR]
-				Module.Value:Click
+				UI:UpdateConsole["Deactivating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
+				ModuleIter.Value:Click
 			}
 		}
 	}
@@ -1528,15 +1528,15 @@ objectdef obj_Ship
 			return
 		}
 
-		variable iterator Module
+		variable iterator ModuleIter
 
-		This.ModuleList_AB_MWD:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_AB_MWD:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		{
-			if ${Module.Value.IsActive} && ${Module.Value.IsOnline} && !${Module.Value.IsDeactivating}
+			if ${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsDeactivating}
 			{
-				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}", LOG_MINOR]
-				Module.Value:Click
+				UI:UpdateConsole["Deactivating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
+				ModuleIter.Value:Click
 			}
 		}
 	}
@@ -1548,19 +1548,19 @@ objectdef obj_Ship
 			return
 		}
 
-		variable iterator Module
+		variable iterator ModuleIter
 
-		This.ModuleList_Regen_Shield:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_Regen_Shield:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			if !${Module.Value.IsActive} && ${Module.Value.IsOnline}
+			if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline}
 			{
-				UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
-				Module.Value:Click
+				UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
+				ModuleIter.Value:Click
 			}
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 	}
 
 	method Deactivate_Shield_Booster()
@@ -1570,19 +1570,19 @@ objectdef obj_Ship
 			return
 		}
 
-		variable iterator Module
+		variable iterator ModuleIter
 
-		This.ModuleList_Regen_Shield:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_Regen_Shield:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			if ${Module.Value.IsActive} && ${Module.Value.IsOnline} && !${Module.Value.IsDeactivating}
+			if ${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsDeactivating}
 			{
-				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}", LOG_MINOR]
-				Module.Value:Click
+				UI:UpdateConsole["Deactivating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
+				ModuleIter.Value:Click
 			}
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 	}
 
 	method Activate_Hardeners()
@@ -1592,19 +1592,19 @@ objectdef obj_Ship
 			return
 		}
 
-		variable iterator Module
+		variable iterator ModuleIter
 
-		This.ModuleList_ActiveResists:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_ActiveResists:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			if !${Module.Value.IsActive} && ${Module.Value.IsOnline}
+			if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline}
 			{
-				UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
-				Module.Value:Click
+				UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
+				ModuleIter.Value:Click
 			}
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 	}
 
 	method Deactivate_Hardeners()
@@ -1614,19 +1614,19 @@ objectdef obj_Ship
 			return
 		}
 
-		variable iterator Module
+		variable iterator ModuleIter
 
-		This.ModuleList_ActiveResists:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_ActiveResists:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			if ${Module.Value.IsActive} && ${Module.Value.IsOnline} && !${Module.Value.IsDeactivating}
+			if ${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsDeactivating}
 			{
-				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}", LOG_MINOR]
-				Module.Value:Click
+				UI:UpdateConsole["Deactivating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
+				ModuleIter.Value:Click
 			}
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 	}
 
 	method Activate_SensorBoost()
@@ -1637,19 +1637,19 @@ objectdef obj_Ship
 		}
 
 
-		variable iterator Module
+		variable iterator ModuleIter
 
-		This.ModuleList_SensorBoost:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_SensorBoost:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			if !${Module.Value.IsActive} && ${Module.Value.IsOnline}
+			if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline}
 			{
-				UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
-				Module.Value:Click
+				UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
+				ModuleIter.Value:Click
 			}
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 	}
 
 	method Deactivate_SensorBoost()
@@ -1659,19 +1659,19 @@ objectdef obj_Ship
 			return
 		}
 
-		variable iterator Module
+		variable iterator ModuleIter
 
-		This.ModuleList_SensorBoost:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_SensorBoost:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			if ${Module.Value.IsActive} && ${Module.Value.IsOnline} && !${Module.Value.IsDeactivating}
+			if ${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsDeactivating}
 			{
-				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}", LOG_MINOR]
-				Module.Value:Click
+				UI:UpdateConsole["Deactivating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
+				ModuleIter.Value:Click
 			}
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 	}
 
 	method Activate_StasisWebs()
@@ -1682,22 +1682,22 @@ objectdef obj_Ship
 		}
 
 
-		variable iterator Module
+		variable iterator ModuleIter
 
-		This.ModuleList_StasisWeb:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_StasisWeb:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			if ${Me.ActiveTarget.Distance} < ${Module.Value.OptimalRange}
+			if ${Me.ActiveTarget.Distance} < ${ModuleIter.Value.OptimalRange}
 			{
-				if !${Module.Value.IsActive} && ${Module.Value.IsOnline}
+				if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline}
 				{
-					UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
-					Module.Value:Click
+					UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
+					ModuleIter.Value:Click
 				}
 			}
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 	}
 
 	method Deactivate_StasisWebs()
@@ -1707,19 +1707,19 @@ objectdef obj_Ship
 			return
 		}
 
-		variable iterator Module
+		variable iterator ModuleIter
 
-		This.ModuleList_StasisWeb:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_StasisWeb:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			if ${Module.Value.IsActive} && ${Module.Value.IsOnline} && !${Module.Value.IsDeactivating}
+			if ${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsDeactivating}
 			{
-				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}", LOG_MINOR]
-				Module.Value:Click
+				UI:UpdateConsole["Deactivating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
+				ModuleIter.Value:Click
 			}
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 	}
 
 	method Activate_TargetPainters()
@@ -1730,13 +1730,13 @@ objectdef obj_Ship
 		}
 
 
-		variable iterator Module
+		variable iterator ModuleIter
 
-		This.ModuleList_TargetPainter:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_TargetPainter:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			if !${Module.Value.IsActive} && ${Module.Value.IsOnline}
+			if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline}
 			{
 /*
     * from 0m to optimal range, there's a 100% chance the paint will hit;
@@ -1744,15 +1744,15 @@ objectdef obj_Ship
     * at optimal + 2 * falloff, there's roughly a 2% chance the paint will hit.
     http://eve.grismar.net/wikka.php?wakka=TargetPainter
 */
-				if ${Me.ActiveTarget.Distance} < ${Math.Calc[${Module.Value.OptimalRange} + ${Module.Value.AccuracyFalloff}]}
+				if ${Me.ActiveTarget.Distance} < ${Math.Calc[${ModuleIter.Value.OptimalRange} + ${ModuleIter.Value.AccuracyFalloff}]}
 				{
-					UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
-					Module.Value:Click
+					UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
+					ModuleIter.Value:Click
 					;TODO We don't break here, we activate all painters on the current target. Future versions will want to user-select distribution
 				}
 			}
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 	}
 
 	method Deactivate_TargetPainters()
@@ -1762,19 +1762,19 @@ objectdef obj_Ship
 			return
 		}
 
-		variable iterator Module
+		variable iterator ModuleIter
 
-		This.ModuleList_TargetPainter:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_TargetPainter:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			if ${Module.Value.IsActive} && ${Module.Value.IsOnline} && !${Module.Value.IsDeactivating}
+			if ${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsDeactivating}
 			{
-				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}", LOG_MINOR]
-				Module.Value:Click
+				UI:UpdateConsole["Deactivating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
+				ModuleIter.Value:Click
 			}
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 	}
 
 	method Activate_Cloak()
@@ -1784,26 +1784,26 @@ objectdef obj_Ship
 			return
 		}
 
-		variable iterator Module
+		variable iterator ModuleIter
 		variable iterator Salvagers
 
 		This.ModuleList_Salvagers:GetIterator[Salvagers]
-		This.ModuleList_Cloaks:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_Cloaks:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			if !${Module.Value.IsActive} && ${Module.Value.IsOnline}
+			if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline}
 			{
-				UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
-				Module.Value:Click
+				UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
+				ModuleIter.Value:Click
 			}
 /*
-			elseif !${Module.Value.IsOnline} && !${Module.Value.IsGoingOnline} && \
+			elseif !${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsGoingOnline} && \
 				${_Me.Ship.CapacitorPct} > 97
 			{
 
-				if ${Math.Calc[${Me.Ship.CPUOutput}-${Me.Ship.CPULoad}]} <  ${Module.Value.CPUUsage} || \
-					${Math.Calc[${Me.Ship.PowerOutput}-${Me.Ship.PowerLoad}]} <  ${Module.Value.PowergridUsage}
+				if ${Math.Calc[${Me.Ship.CPUOutput}-${Me.Ship.CPULoad}]} <  ${ModuleIter.Value.CPUUsage} || \
+					${Math.Calc[${Me.Ship.PowerOutput}-${Me.Ship.PowerLoad}]} <  ${ModuleIter.Value.PowergridUsage}
 				{
 					if ${Salvagers:First(exists)} && ${Salvagers.Value.IsOnline} && !${Salvagers.Value.IsGoingOnline}
 					{
@@ -1813,13 +1813,13 @@ objectdef obj_Ship
 				}
 				else
 				{
-					UI:UpdateConsole["Putting ${Module.Value.ToItem.Name} online."]
-					Module.Value:PutOnline
+					UI:UpdateConsole["Putting ${ModuleIter.Value.ToItem.Name} online."]
+					ModuleIter.Value:PutOnline
 				}
 			}
 */
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 	}
 
 	method Deactivate_Cloak()
@@ -1829,19 +1829,19 @@ objectdef obj_Ship
 			return
 		}
 
-		variable iterator Module
+		variable iterator ModuleIter
 
-		This.ModuleList_Cloaks:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_Cloaks:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			if ${Module.Value.IsActive} && ${Module.Value.IsOnline} && !${Module.Value.IsDeactivating}
+			if ${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsDeactivating}
 			{
-				UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}", LOG_MINOR]
-				Module.Value:Click
+				UI:UpdateConsole["Deactivating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
+				ModuleIter.Value:Click
 			}
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 	}
 
 	method Offline_Cloak()
@@ -1853,19 +1853,19 @@ objectdef obj_Ship
 			return
 		}
 
-		variable iterator Module
+		variable iterator ModuleIter
 
-		This.ModuleList_Cloaks:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_Cloaks:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			if ${Module.Value.IsOnline}
+			if ${ModuleIter.Value.IsOnline}
 			{
-				UI:UpdateConsole["Putting ${Module.Value.ToItem.Name} offline."]
-				Module.Value:PutOffline
+				UI:UpdateConsole["Putting ${ModuleIter.Value.ToItem.Name} offline."]
+				ModuleIter.Value:PutOffline
 			}
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 	}
 
 	method Online_Salvager()
@@ -1875,19 +1875,19 @@ objectdef obj_Ship
 			return
 		}
 
-		variable iterator Module
+		variable iterator ModuleIter
 
-		This.ModuleList_Salvagers:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_Salvagers:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			if !${Module.Value.IsOnline}
+			if !${ModuleIter.Value.IsOnline}
 			{
-				UI:UpdateConsole["Putting ${Module.Value.ToItem.Name} online."]
-				Module.Value:PutOnline
+				UI:UpdateConsole["Putting ${ModuleIter.Value.ToItem.Name} online."]
+				ModuleIter.Value:PutOnline
 			}
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 	}
 
 	member:bool IsCloaked()
@@ -1926,12 +1926,12 @@ objectdef obj_Ship
 			return 0
 		}
 
-		variable iterator Module
+		variable iterator ModuleIter
 
-		This.ModuleList_Salvagers:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_Salvagers:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		{
-			return ${Math.Calc[${Module.Value.OptimalRange}*0.90]}
+			return ${Math.Calc[${ModuleIter.Value.OptimalRange}*0.90]}
 		}
 
 		return 0
@@ -1945,12 +1945,12 @@ objectdef obj_Ship
 			return 0
 		}
 
-		variable iterator Module
+		variable iterator ModuleIter
 
-		This.ModuleList_TractorBeams:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_TractorBeams:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		{
-			return ${Math.Calc[${Module.Value.OptimalRange}*0.90]}
+			return ${Math.Calc[${ModuleIter.Value.OptimalRange}*0.90]}
 		}
 
 		return 0
@@ -1996,19 +1996,19 @@ objectdef obj_Ship
 			return
 		}
 
-		variable iterator Module
+		variable iterator ModuleIter
 
-		This.ModuleList_TractorBeams:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_TractorBeams:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			if !${Module.Value.IsActive} && ${Module.Value.IsOnline}
+			if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline}
 			{
-				UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
-				Module.Value:Click
+				UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
+				ModuleIter.Value:Click
 			}
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 	}
 
 	method Activate_Weapons()
@@ -2018,19 +2018,19 @@ objectdef obj_Ship
 			return
 		}
 
-		variable iterator Module
+		variable iterator ModuleIter
 
-		This.ModuleList_Weapon:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_Weapon:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			if !${Module.Value.IsActive} && !${Module.Value.IsChangingAmmo} && !${Module.Value.IsReloadingAmmo} && ${Module.Value.IsOnline}
+			if !${ModuleIter.Value.IsActive} && !${ModuleIter.Value.IsChangingAmmo} && !${ModuleIter.Value.IsReloadingAmmo} && ${ModuleIter.Value.IsOnline}
 			{
-				;;UI:UpdateConsole["Activating ${Module.Value.ToItem.Name}"]
-				Module.Value:Click
+				;;UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
+				ModuleIter.Value:Click
 			}
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 	}
 
 	method Deactivate_Weapons()
@@ -2040,19 +2040,19 @@ objectdef obj_Ship
 			return
 		}
 
-		variable iterator Module
+		variable iterator ModuleIter
 
-		This.ModuleList_Weapon:GetIterator[Module]
-		if ${Module:First(exists)}
+		This.ModuleList_Weapon:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
 		do
 		{
-			if (${Module.Value.IsActive} || ${Module.Value.IsWaitingForActiveTarget}) && ${Module.Value.IsOnline} && !${Module.Value.IsDeactivating}
+			if (${ModuleIter.Value.IsActive} || ${ModuleIter.Value.IsWaitingForActiveTarget}) && ${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsDeactivating}
 			{
-				;;UI:UpdateConsole["Deactivating ${Module.Value.ToItem.Name}", LOG_MINOR]
-				Module.Value:Click
+				;;UI:UpdateConsole["Deactivating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
+				ModuleIter.Value:Click
 			}
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
 	}
 
 	method Reload_Weapons(bool ForceReload)
@@ -2066,15 +2066,15 @@ objectdef obj_Ship
 
 		if !${ForceReload}
 		{
-			variable iterator Module
-			This.ModuleList_Weapon:GetIterator[Module]
-			if ${Module:First(exists)}
+			variable iterator ModuleIter
+			This.ModuleList_Weapon:GetIterator[ModuleIter]
+			if ${ModuleIter:First(exists)}
 			do
 			{
-				if !${Module.Value.IsActive} && !${Module.Value.IsChangingAmmo} && !${Module.Value.IsReloadingAmmo}
+				if !${ModuleIter.Value.IsActive} && !${ModuleIter.Value.IsChangingAmmo} && !${ModuleIter.Value.IsReloadingAmmo}
 				{
 					; Sometimes this value can be NULL
-					if !${Module.Value.MaxCharges(exists)}
+					if !${ModuleIter.Value.MaxCharges(exists)}
 					{
 						;UI:UpdateConsole["Sanity check failed... weapon has no MaxCharges!"]
 						NeedReload:Set[TRUE]
@@ -2082,10 +2082,10 @@ objectdef obj_Ship
 					}
 
 					; Has ammo been used?
-					if ${Module.Value.CurrentCharges} != ${Module.Value.MaxCharges}
+					if ${ModuleIter.Value.CurrentCharges} != ${ModuleIter.Value.MaxCharges}
 					{
 						; Is there still more then 30% ammo available?
-						if ${Math.Calc[${Module.Value.CurrentCharges}/${Module.Value.MaxCharges}]} < 0.3
+						if ${Math.Calc[${ModuleIter.Value.CurrentCharges}/${ModuleIter.Value.MaxCharges}]} < 0.3
 						{
 							; No, reload
 							NeedReload:Set[TRUE]
@@ -2093,7 +2093,7 @@ objectdef obj_Ship
 					}
 				}
 			}
-			while ${Module:Next(exists)}
+			while ${ModuleIter:Next(exists)}
 		}
 
 		if ${ForceReload} || ${NeedReload}
