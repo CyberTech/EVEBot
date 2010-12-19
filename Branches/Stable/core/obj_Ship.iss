@@ -345,6 +345,12 @@ objectdef obj_Ship
 			variable int TypeID
 			TypeID:Set[${Module.Value.ToItem.TypeID}]
 
+			if !${Module.Value(exists)}
+			{
+				UI:UpdateConsole["ERROR: obj_Ship:UpdateModuleList - Null module found. Retrying in a few seconds.", LOG_CRITICAL]
+				RetryUpdateModuleList:Inc
+				return
+			}
 			if !${Module.Value.IsActivatable}
 			{
 				This.ModuleList_Passive:Insert[${Module.Value}]
