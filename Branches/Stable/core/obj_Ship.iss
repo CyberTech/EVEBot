@@ -351,18 +351,14 @@ objectdef obj_Ship
 				RetryUpdateModuleList:Inc
 				return
 			}
+		
+			UI:UpdateConsole["DEBUG: ID: ${ModuleIter.Value} ID: ${ModuleIter.Value.ID} Activatable: ${ModuleIter.Value.IsActivatable} Name: ${ModuleIter.Value.ToItem.Name} Slot: ${ModuleIter.Value.ToItem.Slot} Group: ${ModuleIter.Value.ToItem.Group} ${GroupID} Type: ${ModuleIter.Value.ToItem.Type} ${TypeID}", LOG_DEBUG]
+
 			if !${ModuleIter.Value.IsActivatable}
 			{
 				This.ModuleList_Passive:Insert[${ModuleIter.Value}]
 				continue
 			}
-
-			;echo "DEBUG: ID: ${ModuleIter.Value}  ${ModuleIter.Value}"
-			;echo "DEBUG: ID: ${ModuleIter.Value.ID}  ${ModuleIter.Value.ID}"
-			;echo "DEBUG: Name: ${ModuleIter.Value.ToItem.Name}"
-			;echo "DEBUG: Slot: ${ModuleIter.Value.ToItem.Slot}"
-			;echo "DEBUG: Group: ${ModuleIter.Value.ToItem.Group}  ${GroupID}"
-			;echo "DEBUG: Type: ${ModuleIter.Value.ToItem.Type}  ${TypeID}"
 
 			if ${ModuleIter.Value.MiningAmount(exists)}
 			{
