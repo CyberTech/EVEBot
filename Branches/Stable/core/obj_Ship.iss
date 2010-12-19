@@ -357,9 +357,12 @@ objectdef obj_Ship
 				continue
 			}
 
-			;echo "DEBUG: Slot: ${ModuleIter.Value.ToItem.Slot}  ${ModuleIter.Value.ToItem.Name}"
-			;echo " DEBUG: Group: ${ModuleIter.Value.ToItem.Group}  ${GroupID}"
-			;echo " DEBUG: Type: ${ModuleIter.Value.ToItem.Type}  ${TypeID}"
+			;echo "DEBUG: ID: ${ModuleIter.Value}  ${ModuleIter.Value}"
+			;echo "DEBUG: ID: ${ModuleIter.Value.ID}  ${ModuleIter.Value.ID}"
+			;echo "DEBUG: Name: ${ModuleIter.Value.ToItem.Name}"
+			;echo "DEBUG: Slot: ${ModuleIter.Value.ToItem.Slot}"
+			;echo "DEBUG: Group: ${ModuleIter.Value.ToItem.Group}  ${GroupID}"
+			;echo "DEBUG: Type: ${ModuleIter.Value.ToItem.Type}  ${TypeID}"
 
 			if ${ModuleIter.Value.MiningAmount(exists)}
 			{
