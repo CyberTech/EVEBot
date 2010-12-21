@@ -308,10 +308,7 @@ objectdef obj_Ratter
 					if ${Targets.IsSpecialTarget[${This.Rat_CacheIterator.Value.Name}]}
 					{
 						Logger:Log["obj_Ratter: Queueing special target ${This.Rat_CacheIterator.Value.Name}, ${This.Rat_CacheIterator.Value.ID}.",LOG_CRITICAL]
-						if ${Config.Common.UseSound}
-						{
-							Sound:PlayDetectSound
-						}
+						Sound:PlayDetectSound
 						Targeting:Queue[${This.Rat_CacheIterator.Value.ID},1,${This.Rat_CacheIterator.Value.TypeID},FALSE,FALSE]
 						continue
 					}
@@ -343,10 +340,7 @@ objectdef obj_Ratter
 					if ${Targets.IsSpecialTarget[${This.Rat_CacheIterator.Value.Name}]}
 					{
 						Logger:Log["obj_Ratter: Not chaining, queueing special target ${This.Rat_CacheIterator.Value.Name}, ${This.Rat_CacheIterator.Value.ID}.",LOG_CRITICAL]
-						if ${Config.Common.UseSound}
-						{
-							Sound:PlayDetectSound
-						}
+						Sound:PlayDetectSound
 						Targeting:Queue[${This.Rat_CacheIterator.Value.ID},1,${This.Rat_CacheIterator.Value.TypeID},FALSE,FALSE]
 						continue
 					}
