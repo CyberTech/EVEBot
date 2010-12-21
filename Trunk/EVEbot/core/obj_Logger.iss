@@ -42,6 +42,7 @@ objectdef obj_Logger
 			Level = LOG_MINOR - Minor - Log, do not print to screen.
 			Level = LOG_STANDARD - Standard, Log and Print to Screen
 			Level = LOG_CRITICAL - Critical, Log, Log to Critical Log, and print to screen
+			Level = LOG_ECHOTOO - Standard, Log, and print to screen
 		*/
 		variable string msg
 		variable int Count
