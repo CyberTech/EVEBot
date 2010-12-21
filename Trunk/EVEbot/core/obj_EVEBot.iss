@@ -142,15 +142,6 @@ objectdef obj_EVEBot
 					}
 				}
 
-				if ${This.ReturnToStation} && ${Me(exists)}
-				{
-					if (${This.GameHour} == 10 && ${This.GameMinute} >= 58)
-					{
-						Logger:Log["EVE downtime approaching - Quitting Eve", LOG_CRITICAL]
-						EVE:Execute[CmdQuitGame]
-					}
-				}
-
 				if ${This.Behaviors:First(exists)}
 				do
 				{
