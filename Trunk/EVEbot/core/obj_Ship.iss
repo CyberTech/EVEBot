@@ -89,7 +89,6 @@ objectdef obj_Ship
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 2
 
-	variable int Calculated_MaxLockedTargets
 	variable float BaselineUsedCargo
 	variable bool CargoIsOpen
 	variable index:module ModuleList
@@ -143,7 +142,6 @@ objectdef obj_Ship
 		This:UpdateModuleList[]
 
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-		This:CalculateMaxLockedTargets
 		This:PopulateNameModPairs[]
 		Logger:Log["obj_Ship: Initialized", LOG_MINOR]
 	}
@@ -1161,8 +1159,10 @@ objectdef obj_Ship
 
 	member:int MaxLockedTargets()
 	{
-		This:CalculateMaxLockedTargets[]
-		return ${This.Calculated_MaxLockedTargets}
+		if ${Me.MaxLockedTargets} < ${MyShip.MaxLockedTargets}
+			return ${Me.MaxLockedTargets}
+		else
+			return ${MyShip.MaxLockedTargets}
 	}
 
 	member:int TotalMiningLasers()
@@ -1319,20 +1319,6 @@ objectdef obj_Ship
 				Target.Value:UnlockTarget
 			}
 			while ${Target:Next(exists)}
-		}
-	}
-
-	method CalculateMaxLockedTargets()
-	{
-		Validate_Ship()
-
-		if ${Me.MaxLockedTargets} < ${MyShip.MaxLockedTargets}
-		{
-			Calculated_MaxLockedTargets:Set[${Me.MaxLockedTargets}]
-		}
-		else
-		{
-			Calculated_MaxLockedTargets:Set[${MyShip.MaxLockedTargets}]
 		}
 	}
 
@@ -2084,6 +2070,12 @@ objectdef obj_Ship
 
 		; We reload weapons here, because we know we're in warp, so they're deactivated.
 		This:Reload_Weapons[TRUE]
+
+		if (!${Me.ToEntity.IsCloaked} && ${This.HasCovOpsCloak})
+		{
+			This:Activate_Cloak[]
+		}
+
 		while ${This.InWarp}
 		{
 			Warped:Set[TRUE]
