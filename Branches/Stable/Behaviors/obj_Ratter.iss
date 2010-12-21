@@ -116,6 +116,7 @@ objectdef obj_Ratter
 		if ${Social.IsSafe}
 		{
 			Ship:Deactivate_Weapons
+			Ship:Deactivate_Tracking_Computer
 			call Belts.WarpToNextBelt
 			; This will reset target information about the belt
 			; (its needed for chaining)
@@ -169,6 +170,7 @@ objectdef obj_Ratter
 	{	/* combat logic */
 		;; just handle targetting, obj_Combat does the rest
 		Ship:Activate_SensorBoost
+		Ship:Activate_Tracking_Computer
 
 		if ${Targets.TargetNPCs} && ${Social.IsSafe}
 		{

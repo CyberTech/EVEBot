@@ -36,6 +36,7 @@ objectdef obj_Ship
 	variable index:module ModuleList_StasisWeb
 	variable index:module ModuleList_SensorBoost
 	variable index:module ModuleList_TargetPainter
+	variable index:module ModuleList_TrackingComputer
 	variable bool Repairing_Armor = FALSE
 	variable bool Repairing_Hull = FALSE
 	variable float m_MaxTargetRange
@@ -322,6 +323,7 @@ objectdef obj_Ship
 		This.ModuleList_StasisWeb:Clear
 		This.ModuleList_SensorBoost:Clear
 		This.ModuleList_TargetPainter:Clear
+		This.ModuleList_TrackingComputer:Clear
 
 		Me.Ship:DoGetModules[This.ModuleList]
 
@@ -424,6 +426,9 @@ objectdef obj_Ship
 					break
 				case GROUP_TARGETPAINTER
 					This.ModuleList_TargetPainter:Insert[${ModuleIter.Value}]
+					break
+				case GROUP_TRACKINGCOMPUTER
+					This.ModuleList_TrackingComputer:Insert[${ModuleIter.Value}]
 					break
 				default
 					break
@@ -552,6 +557,15 @@ objectdef obj_Ship
 			UI:UpdateConsole["	 Slot: ${ModuleIter.Value.ToItem.Slot}  ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
 		while ${ModuleIter:Next(exists)}
+
+		UI:UpdateConsole["Tracking Computer Modules:", LOG_MINOR, 2]
+		This.ModuleList_TrackingComputer:GetIterator[ModuleIter]
+		if ${Module:First(exists)}
+		do
+		{
+			UI:UpdateConsole["	 Slot: ${ModuleIter.Value.ToItem.Slot}  ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
+		}
+		while ${Module:Next(exists)}
 	}
 
 	method UpdateBaselineUsedCargo()
@@ -1572,6 +1586,50 @@ objectdef obj_Ship
 		variable iterator ModuleIter
 
 		This.ModuleList_Regen_Shield:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if ${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsDeactivating}
+			{
+				UI:UpdateConsole["Deactivating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
+				ModuleIter.Value:Click
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+	}
+
+	method Activate_Tracking_Computer()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		variable iterator ModuleIter
+
+		This.ModuleList_TrackingComputer:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline}
+			{
+				UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
+				ModuleIter.Value:Click
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+	}
+
+	method Deactivate_Tracking_Computer()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		variable iterator ModuleIter
+
+		This.ModuleList_Tracking_Computer:GetIterator[ModuleIter]
 		if ${ModuleIter:First(exists)}
 		do
 		{
