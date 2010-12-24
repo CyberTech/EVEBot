@@ -6,14 +6,15 @@ SELECT
  order by invTypes.typeID
  into outfile '/tmp/EVEDB_Items.xml'
 
-; Don't forget to replace & with &amp; in new file before committing!
+; Dont forget to replace & with &amp; in new file before committing!
 
-SELECT stationID, solarSystemID, stationName
-FROM staStations
+;SELECT stationID, solarSystemID, stationName
+;FROM staStations
+
 SELECT
  concat_ws('','  <Setting Name="', stationName, '"',' StationID="', stationID, '"',' SolarSystemID="', solarSystemID, '"','>0</Setting>') as SetString
  FROM `staStations`
  order by staStations.solarSystemID
- into outfile '/tmp/EVEDB_Items.xml'
+ into outfile '/tmp/EVEDB_Stations.xml'
 
- Don't forget to replace & with &amp; in new file before committing!
+ Dont forget to replace & with &amp; in new file before committing!
