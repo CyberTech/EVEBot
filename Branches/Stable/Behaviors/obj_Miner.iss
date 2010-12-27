@@ -161,6 +161,13 @@ objectdef obj_Miner
 			UI:UpdateConsole["Warning: Low Standing player or system unsafe, docking"]
 		}
 
+		if ${Ship.IsPod}
+		{
+			UI:UpdateConsole["Warning: We're in a pod, running"]
+			EVEBot.ReturnToStation:Set[TRUE]
+			This.CurrentState:Set["ABORT"]
+		}
+
 		if ${EVEBot.ReturnToStation} && ${_Me.InStation} == TRUE
 		{
 			This.CurrentState:Set["IDLE"]

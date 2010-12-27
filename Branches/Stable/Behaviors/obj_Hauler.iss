@@ -277,6 +277,12 @@ objectdef obj_OreHauler inherits obj_Hauler
 		{
 			This.CurrentState:Set["ABORT"]
 		}
+		elseif ${Ship.IsPod}
+		{
+			UI:UpdateConsole["Warning: We're in a pod, running"]
+			EVEBot.ReturnToStation:Set[TRUE]
+			This.CurrentState:Set["ABORT"]
+		}
 		elseif ${EVEBot.ReturnToStation}
 		{
 			This.CurrentState:Set["IDLE"]

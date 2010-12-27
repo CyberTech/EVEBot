@@ -123,6 +123,13 @@ objectdef obj_Combat
 	  		return
 		}
 
+		if ${Ship.IsPod}
+		{
+			UI:UpdateConsole["Warning: We're in a pod, running"]
+			This.CurrentState:Set["FLEE"]
+			return
+		}
+
 		if ${EVEBot.ReturnToStation}
 		{
 			This.CurrentState:Set["FLEE"]

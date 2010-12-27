@@ -2019,6 +2019,22 @@ objectdef obj_Ship
       return ${Math.Calc[${_Me.Ship.MaxTargetRange}*0.90]}
    }
 
+	member:bool IsPod()
+	{
+		variable string ShipName = ${MyShip}
+
+		if ${ShipName.Right[10].Equal["'s Capsule"]} || \
+			${Me.ToEntity.GroupID} == GROUP_CAPSULE
+		{
+			if ${This.m_TypeID} != ${Me.ToEntity.TypeID}
+			{
+				This:UpdateModuleList[]
+			}
+			return TRUE
+		}
+		return FALSE
+	}
+
 	function SetActiveCrystals()
 	{
 		 variable iterator ModuleIterator
