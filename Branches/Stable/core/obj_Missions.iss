@@ -593,7 +593,7 @@ objectdef obj_Missions
 			   Entity[TypeID,TYPE_ACCELERATION_GATE]:Activate
 			   wait 10
 			}
-			call This.WarpWait
+			call Ship.WarpWait
 			if ${Return} == 2
 			{
 			   return
