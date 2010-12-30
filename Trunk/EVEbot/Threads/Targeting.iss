@@ -47,9 +47,14 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 
 	method Initialize()
 	{
-		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+		Event[EVENT_EVEBOT_ONFRAME]:AttachAtom[This:Pulse]
 		Logger:Log["Thread: obj_EVEBOT_Targeting: Initialized", LOG_MINOR]
 	}
+
+	method Shutdown()
+	{
+		Event[EVENT_EVEBOT_ONFRAME]:DetachAtom
+	}	
 
 	method Pulse()
 	{

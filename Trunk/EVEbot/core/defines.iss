@@ -18,7 +18,7 @@ variable string APP_MANIFEST_TRUNK = "https://www.isxgames.com/EVEBot/Trunk/EVEb
 variable string AppVersion = "${APP_NAME} Version ${SVN_REVISION.Token[2, " "]}"
 variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 
-#define EVEBOT_DEBUG 0
+#define EVEBOT_DEBUG 1
 #define EVEBOT_DEBUG_TIMING 0
 #define EVEBOT_PROFILING 0
 
@@ -33,6 +33,7 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 
 ;#define EVENT_ONFRAME OnFrame
 #define EVENT_ONFRAME ISXEVE_onFrame
+#define EVENT_EVEBOT_ONFRAME EVEBOT_OnFrame
 
 /* Core Library (Non-EVE Related code) */
 #include ../External/isxGamesCommon/CyberTech/obj_PulseTimer.iss
@@ -41,6 +42,7 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 ;#include Lib/obj_Mutex.iss
 #include Lib/obj_Sound.iss
 #include Lib/UplinkManager/obj_UplinkManager.iss
+#include Lib/obj_LSGUI.iss
 
 /* End EVEBot Defines, Begin EVE Defines */
 

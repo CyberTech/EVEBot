@@ -31,11 +31,16 @@ objectdef obj_Offense inherits obj_BaseClass
 		LogPrefix:Set["${This.ObjectName}"]
 
 		PulseTimer:SetIntervals[0.5,1.0]
-		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+		Event[EVENT_EVEBOT_ONFRAME]:AttachAtom[This:Pulse]
 
 		Logger:Log["Thread: ${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
+	method Shutdown()
+	{
+		Event[EVENT_EVEBOT_ONFRAME]:DetachAtom
+	}
+	
 	method Pulse()
 	{
 		if !${Script[EVEBot](exists)}

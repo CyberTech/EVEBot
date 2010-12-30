@@ -99,7 +99,7 @@ objectdef obj_Drones
 		;echo "Heavy Drones in Bay : " ${This.HaveHeavyDroneInBay}
 		;echo "Medium Drones in Bay: " ${This.HaveMediumDroneInBay}
 
-		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+		Event[EVENT_EVEBOT_ONFRAME]:AttachAtom[This:Pulse]
 		Logger:Log["obj_Drones: Initialized", LOG_MINOR]
 	}
 	method Shutdown()
@@ -112,7 +112,7 @@ objectdef obj_Drones
 				EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
 			}
 		}
-		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
+		Event[EVENT_EVEBOT_ONFRAME]:DetachAtom[This:Pulse]
 	}
 
 	method Pulse()

@@ -83,6 +83,8 @@ objectdef obj_Configuration_BaseConfig
 objectdef obj_Configuration
 {
 	variable obj_Configuration_Common Common
+	variable obj_Configuration_Sound Sound
+	variable obj_Configuration_Logging Logging
 	variable obj_Configuration_Combat Combat
 	variable obj_Configuration_Defense Defense
 	variable obj_Configuration_Miner Miner
@@ -135,14 +137,71 @@ objectdef obj_Configuration_Common
 	Define_ConfigItem(string, IRCChannel, "#EVEBot_${Math.Rand[999999]}")
 	Define_ConfigItem(string, IRCUser, "Test${Math.Rand[5000]:Inc[1000]}")
 	Define_ConfigItem(string, IRCPassword, "evebot")
-	Define_ConfigItem(bool, UseSound, FALSE)
 	Define_ConfigItem(bool, Disable3D, FALSE)
 	Define_ConfigItem(bool, DisableUI, FALSE)
 	Define_ConfigItem(bool, DisableScreenWhenBackgrounded, FALSE)
 	Define_ConfigItem(bool, TrainSkills, FALSE)
-	Define_ConfigItem(bool, EnableChatLogging, FALSE)
 	Define_ConfigItem(bool, Randomize, TRUE)
 }
+
+/* ************************************************************************* */
+objectdef obj_Configuration_Sound
+{
+	variable string SetName = "Sound"
+
+	method Initialize()
+	{
+		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
+		{
+			Logger:Log["Warning: ${This.SetName} settings missing - initializing"]
+			BaseConfig.BaseRef:AddSet[${This.SetName}]
+		}
+		Logger:Log["obj_Configuration_Sound: Initialized", LOG_MINOR]
+	}
+
+	member:settingsetref Ref()
+	{
+		return ${BaseConfig.BaseRef.FindSet[${This.SetName}]}
+	}
+	Define_ConfigItem(bool, EnableSound, TRUE)
+;TODO - add config items for EnableChatAlerts
+	Define_ConfigItem(bool, EnableChatAlerts, TRUE)
+}
+
+/* ************************************************************************* */
+objectdef obj_Configuration_Logging
+{
+	variable string SetName = "Logging"
+
+	method Initialize()
+	{
+		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
+		{
+			Logger:Log["Warning: ${This.SetName} settings missing - initializing"]
+			BaseConfig.BaseRef:AddSet[${This.SetName}]
+		}
+		Logger:Log["obj_Configuration_Sound: Initialized", LOG_MINOR]
+	}
+
+	member:settingsetref Ref()
+	{
+		return ${BaseConfig.BaseRef.FindSet[${This.SetName}]}
+	}
+
+;TODO - add config items for LogLocalChat
+;TODO - add config items for LogLocalChatToIRC
+;TODO - add config items for LogCorpChat
+;TODO - add config items for LogCorpChatToIRC
+;TODO - add config items for LogAllianceChat
+;TODO - add config items for LogAllianceChatToIRC
+	Define_ConfigItem(bool, LogLocalChat, FALSE)
+	Define_ConfigItem(bool, LogLocalChatToIRC, FALSE)
+	Define_ConfigItem(bool, LogCorpChat, FALSE)
+	Define_ConfigItem(bool, LogCorpChatToIRC, FALSE)
+	Define_ConfigItem(bool, LogAllianceChat, FALSE)
+	Define_ConfigItem(bool, LogAllianceChatToIRC, FALSE)
+}
+
 
 /* ************************************************************************* */
 objectdef obj_Configuration_Miner

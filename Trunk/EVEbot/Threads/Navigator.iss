@@ -24,7 +24,7 @@ objectdef obj_Navigator
 	method Initialize()
 	{
 		/* attach the pulse method to the onframe event */
-		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+		Event[EVENT_EVEBOT_ONFRAME]:AttachAtom[This:Pulse]
 		Logger:Log["Thread: obj_Navigator: Initialized", LOG_MINOR]
 		/* set the entity cache update frequency */
 		;if ${NavigatorCache.PulseIntervalInSeconds} != 9999
@@ -34,6 +34,11 @@ objectdef obj_Navigator
 		;NavigatorCache:UpdateSearchParams["Unused","CategoryID,CATEGORYID_ENTITY,radius,60000"]
 	}
 
+	method Shutdown()
+	{
+		Event[EVENT_EVEBOT_ONFRAME]:DetachAtom
+	}
+	
 	method Pulse()
 	{
 		if !${Script[EVEBot](exists)}

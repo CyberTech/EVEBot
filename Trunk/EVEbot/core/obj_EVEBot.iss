@@ -25,11 +25,16 @@ objectdef obj_EVEBot
 
 	; Cached static items
 	variable int CharID
+
 	method Initialize()
 	{
 		This:SetVersion
+
+		LavishScript:RegisterEvent[EVENT_EVEBOT_ONFRAME]	
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+
 		This.CharID:Set[${Me.CharID}]
+
 		BehaviorList:GetIterator[Behaviors]
 
 		Logger:Log["obj_EVEBot: Initialized", LOG_MINOR]
@@ -142,16 +147,11 @@ objectdef obj_EVEBot
 					}
 				}
 
-				if ${This.Behaviors:First(exists)}
-				do
+				if !${Defense.Hiding}
 				{
-					if ${This.Behaviors.Value(exists)} && ${This.Behaviors.Value.Equal[${Config.Common.Behavior}]}
-					{
-						${This.Behaviors.Value}:Pulse
-					}
+					${Config.Common.Behavior}:Pulse
+					Event[EVENT_EVEBOT_ONFRAME]:Execute
 				}
-				while ${This.Behaviors:Next(exists)}
-
 			}
 
 			This.NextPulse:Set[${Time.Timestamp}]

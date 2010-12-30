@@ -26,13 +26,14 @@ objectdef obj_Courier inherits obj_BaseClass
 		LogPrefix:Set["${This.ObjectName}"]
 
 		;PulseTimer:SetIntervals[0.5,1.0]
-		;Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+		;Event[EVENT_EVEBOT_ONFRAME]:AttachAtom[This:Pulse]
 
 		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
 	{
+		;Event[EVENT_EVEBOT_ONFRAME]:DetachAtom
 	}
 
 	/* NOTE: The order of these if statements is important!! */
@@ -43,7 +44,7 @@ objectdef obj_Courier inherits obj_BaseClass
 		;	Agents:SetActiveAgent[${Config.Freighter.AgentName}]
 		;}
 
-		if ${EVEBot.ReturnToStation} && ${Me.InSpace}
+		if ${Defense.Hiding} && ${Me.InSpace}
 		{
 			This.CurrentState:Set["ABORT"]
 		}

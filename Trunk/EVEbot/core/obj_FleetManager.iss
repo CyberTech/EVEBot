@@ -17,12 +17,12 @@ objectdef obj_FleetManager
 	{
 		LogPrefix:Set["${This.ObjectName}"]
 		Logger:Log["${LogPrefix}: Initialized"]
-		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+		Event[EVENT_EVEBOT_ONFRAME]:AttachAtom[This:Pulse]
 	}
 
 	method Shutdown()
 	{
-		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
+		Event[EVENT_EVEBOT_ONFRAME]:DetachAtom[This:Pulse]
 	}
 
 	method Pulse()

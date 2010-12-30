@@ -18,11 +18,16 @@ objectdef obj_Safespots inherits obj_Bookmark
 		This:Reset
 
 		;PulseTimer:SetIntervals[0.5,1.0]
-		;Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+		;Event[EVENT_EVEBOT_ONFRAME]:AttachAtom[This:Pulse]
 
 		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
+	method Shutdown()
+	{
+		;Event[EVENT_EVEBOT_ONFRAME]:DetachAtom
+	}
+	
 	method Reset()
 	{
 		This[parent]:Reset["${Config.Labels.SafeSpotPrefix}"]

@@ -21,14 +21,19 @@ objectdef obj_Sound inherits obj_BaseClass
 		m_LastSoundTime:Set[${LavishScript.RunningTime}]
 		m_SoundDelay:Set[15000]	/* milliseconds */
 		;PulseTimer:SetIntervals[0.5,1.0]
-		;Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+		;Event[EVENT_EVEBOT_ONFRAME]:AttachAtom[This:Pulse]
 
 		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
+	method Shutdown()
+	{
+		;Event[EVENT_EVEBOT_ONFRAME]:DetachAtom
+	}
+	
 	method TryPlaySound(string Filename)
 	{
-		if !${Config.Common.UseSound}
+		if !${Config.Sound.EnableSound}
 			return
 
 		if ${Math.Calc64[${m_LastSoundTime} + ${m_SoundDelay}]} < ${LavishScript.RunningTime}

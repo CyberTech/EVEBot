@@ -141,14 +141,14 @@ objectdef obj_Ship
 		This:StopShip[]
 		This:UpdateModuleList[]
 
-		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+		Event[EVENT_EVEBOT_ONFRAME]:AttachAtom[This:Pulse]
 		This:PopulateNameModPairs[]
 		Logger:Log["obj_Ship: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
 	{
-		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
+		Event[EVENT_EVEBOT_ONFRAME]:DetachAtom[This:Pulse]
 	}
 
 	method Pulse()
@@ -2186,7 +2186,7 @@ objectdef obj_Ship
 		if ${ShipName.Right[10].Equal["'s Capsule"]} || \
 			${Me.ToEntity.GroupID} == GROUP_CAPSULE
 		{
-			if ${This.TypeID} != ${Me.ToEntity.TypeID}
+			if ${This.m_TypeID} != ${Me.ToEntity.TypeID}
 			{
 				This:UpdateModuleList[]
 			}

@@ -36,6 +36,11 @@ objectdef obj_Defense
 		This.Entity_CacheID:Set[${EntityCache.AddFilter["obj_Defense", CategoryID = CATEGORYID_ENTITY, 1.5]}]
 		EntityCache.EntityFilters.Get[${This.Entity_CacheID}].Entities:GetIterator[Entity_CacheIterator]
 	}
+	
+	method Shutdown()
+	{
+		Event[EVENT_ONFRAME]:DetachAtom
+	}
 
 	method Pulse()
 	{
@@ -213,7 +218,7 @@ objectdef obj_Defense
 			return
 		}
 
-		if ${Social.IsSafe} == FALSE
+		if !${Social.IsSafe}
 		{
 			This:RunAway["Hostiles in Local"]
 		}

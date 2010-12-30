@@ -339,13 +339,13 @@
 							<Text>Enable sound</Text>
 							<AutoTooltip>Enable audio events</AutoTooltip>
 							<OnLoad>
-								if ${Config.Common.UseSound}
+								if ${Config.Sound.EnableSound}
 								{
 								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
-								Config.Common:UseSound[${This.Checked}]
+								Config.Sound:EnableSound[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
 						<checkbox Name='cbDisableUI'>
@@ -424,13 +424,13 @@
 							<Text>Enable Local Chat Logging</Text>
 							<AutoTooltip>Enable the logging of local chat</AutoTooltip>
 							<OnLoad>
-								if ${Config.Common.EnableChatLogging}
+								if ${Config.Logging.LogLocalChat}
 								{
 								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
-								Config.Common:EnableChatLogging[${This.Checked}]
+								Config.Logging:LogLocalChat[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
 					</Tab>

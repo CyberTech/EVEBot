@@ -39,13 +39,13 @@ objectdef obj_Skills inherits obj_BaseClass
 		}
 
 		PulseTimer:SetIntervals[15.0,25.0]
-		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+		Event[EVENT_EVEBOT_ONFRAME]:AttachAtom[This:Pulse]
 		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
 	{
-		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
+		Event[EVENT_EVEBOT_ONFRAME]:DetachAtom[This:Pulse]
 	}
 
 	method Pulse()

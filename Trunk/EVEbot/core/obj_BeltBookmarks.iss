@@ -18,7 +18,7 @@ objectdef obj_BeltBookmarks inherits obj_Bookmark
 
 		This:Reset
 		;PulseTimer:SetIntervals[0.5,1.0]
-		;Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+		;Event[EVENT_EVEBOT_ONFRAME]:AttachAtom[This:Pulse]
 
 		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}

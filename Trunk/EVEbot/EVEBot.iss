@@ -29,6 +29,7 @@
 ;#include core/Lib/obj_Vector.iss
 ;#include core/Lib/obj_Mutex.iss
 ;#include core/Lib/obj_Sound.iss
+;#include core/Lib/obj_LSGUI.iss
 
 /* Core EVEBot API Includes */
 #include core/obj_EntityCache.iss
@@ -106,6 +107,7 @@ function main()
 	/* All variables that would normally be defined script scope should be defined global scope to simplify threads */
 
 	/* Script-Defined Support Objects */
+	declarevariable LSGUI obj_LSGUI global
 	declarevariable Logger obj_Logger global
 	declarevariable BaseConfig obj_Configuration_BaseConfig global
 	declarevariable Config obj_Configuration global
