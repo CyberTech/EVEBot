@@ -6,40 +6,6 @@
  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
     <meta name="Generator" content="StatSVN 0.7.0"/>
 <link rel="stylesheet" href="objectlab-statcvs.css" type="text/css"/>
-<script type="text/javascript" charset="utf-8" src="http://bit.ly/javascript-api.js?version=latest&#38;login=statsvn&#38;apiKey=R_2c362b417d0517c27876cbaca1bb68cc"></script>
-<script type="text/javascript" charset="utf-8">
-   // wait until page is loaded to call API
-   var redir_url;
-   var short_url;
-   BitlyCB.myShortenCallback = function(data) {
-      // this is how to get a result of shortening a single url
-      var result;
-      short_url=null;
-      for (var r in data.results) {
-         result = data.results[r];
-         result['longUrl'] = r;
-         short_url = result['shortUrl'];
-         break;
-      }
-      if (short_url==null) // bit.ly failed
-      document.location=redir_url;
-      else
-      redirToTwitter();
-   };
-   function shortenTweet(url) {
-      if (short_url == null || redir_url!=url) {
-      redir_url = url;
-      BitlyClient.shorten(document.location, 'BitlyCB.myShortenCallback');
-      }
-      else
-      redirToTwitter();
-      return false;
-   }
-   function redirToTwitter() { 
-      // replace {0} which is visible as %7B0} in the link
-      document.location = redir_url.replace('%7B0}', short_url);
-   }
-</script>
   </head>
 
 <body>
@@ -96,34 +62,15 @@
 </ul>
 </div><dl class="attributes">
     <dt>Number of Commits:</dt>
-    <dd>6</dd>
+    <dd>4</dd>
     <dt>Number of Active Developers:</dt>
     <dd>1</dd>
 </dl>
 <dl class="commitlist">
-  <dt><a name="6"></a>
-    <a href="user_cybertech.html" class="author">cybertech</a>
-    <span class="date">2010-05-24 03:04</span>
-    <a class="permalink" title="Permalink to this commit" href="#6">#6</a>
-    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1578</span></span>
-  </dt>
-  <dd>
-    <p class="comment">
-Automation: Updating changelog
-    </p>
-    <p class="commitdetails"><strong>2320</strong> lines of code changed in <span class="files">1 file</span>:</p>
-    <ul class="commitdetails">
-      <li>
-        <strong>Trunk/EVEbot/Docs</strong>:
-        changelog.html&#160;<span class="change">(+2320&#160;-1301)</span>
-      </li>
-    </ul>
-  </dd>
-
-  <dt><a name="5"></a>
+  <dt><a name="4"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2010-05-24 01:02</span>
-    <a class="permalink" title="Permalink to this commit" href="#5">#5</a>
+    <a class="permalink" title="Permalink to this commit" href="#4">#4</a>
   </dt>
   <dd>
     <p class="comment">
@@ -142,10 +89,10 @@ Drone region web/scram names
     </ul>
   </dd>
 
-  <dt><a name="4"></a>
+  <dt><a name="3"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2010-05-24 00:55</span>
-    <a class="permalink" title="Permalink to this commit" href="#4">#4</a>
+    <a class="permalink" title="Permalink to this commit" href="#3">#3</a>
   </dt>
   <dd>
     <p class="comment">
@@ -160,25 +107,6 @@ Add NPC names for drone regions, plus simulated bounty values.
       <li>
         <strong>branches/stable/config</strong>:
         EVEDB_Spawns.xml&#160;<span class="change">(changed)</span>
-      </li>
-    </ul>
-  </dd>
-
-  <dt><a name="3"></a>
-    <a href="user_cybertech.html" class="author">cybertech</a>
-    <span class="date">2010-05-02 03:02</span>
-    <a class="permalink" title="Permalink to this commit" href="#3">#3</a>
-    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1573</span></span>
-  </dt>
-  <dd>
-    <p class="comment">
-Automation: Updating changelog
-    </p>
-    <p class="commitdetails"><strong>5</strong> lines of code changed in <span class="files">1 file</span>:</p>
-    <ul class="commitdetails">
-      <li>
-        <strong>Trunk/EVEbot/Docs</strong>:
-        changelog.html&#160;<span class="change">(+5)</span>
       </li>
     </ul>
   </dd>

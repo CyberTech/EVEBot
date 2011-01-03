@@ -6,40 +6,6 @@
  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
     <meta name="Generator" content="StatSVN 0.7.0"/>
 <link rel="stylesheet" href="objectlab-statcvs.css" type="text/css"/>
-<script type="text/javascript" charset="utf-8" src="http://bit.ly/javascript-api.js?version=latest&#38;login=statsvn&#38;apiKey=R_2c362b417d0517c27876cbaca1bb68cc"></script>
-<script type="text/javascript" charset="utf-8">
-   // wait until page is loaded to call API
-   var redir_url;
-   var short_url;
-   BitlyCB.myShortenCallback = function(data) {
-      // this is how to get a result of shortening a single url
-      var result;
-      short_url=null;
-      for (var r in data.results) {
-         result = data.results[r];
-         result['longUrl'] = r;
-         short_url = result['shortUrl'];
-         break;
-      }
-      if (short_url==null) // bit.ly failed
-      document.location=redir_url;
-      else
-      redirToTwitter();
-   };
-   function shortenTweet(url) {
-      if (short_url == null || redir_url!=url) {
-      redir_url = url;
-      BitlyClient.shorten(document.location, 'BitlyCB.myShortenCallback');
-      }
-      else
-      redirToTwitter();
-      return false;
-   }
-   function redirToTwitter() { 
-      // replace {0} which is visible as %7B0} in the link
-      document.location = redir_url.replace('%7B0}', short_url);
-   }
-</script>
   </head>
 
 <body>
@@ -96,34 +62,15 @@
 </ul>
 </div><dl class="attributes">
     <dt>Number of Commits:</dt>
-    <dd>26</dd>
+    <dd>19</dd>
     <dt>Number of Active Developers:</dt>
     <dd>2</dd>
 </dl>
 <dl class="commitlist">
-  <dt><a name="26"></a>
-    <a href="user_cybertech.html" class="author">cybertech</a>
-    <span class="date">2009-02-25 04:02</span>
-    <a class="permalink" title="Permalink to this commit" href="#26">#26</a>
-    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">901</span></span>
-  </dt>
-  <dd>
-    <p class="comment">
-Automation: Updating changelog
-    </p>
-    <p class="commitdetails"><strong>3</strong> lines of code changed in <span class="files">1 file</span>:</p>
-    <ul class="commitdetails">
-      <li>
-        <strong>Trunk/EVEbot/Docs</strong>:
-        changelog.html&#160;<span class="change">(+3)</span>
-      </li>
-    </ul>
-  </dd>
-
-  <dt><a name="25"></a>
+  <dt><a name="19"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2009-02-24 13:23</span>
-    <a class="permalink" title="Permalink to this commit" href="#25">#25</a>
+    <a class="permalink" title="Permalink to this commit" href="#19">#19</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">900</span></span>
   </dt>
   <dd>
@@ -139,29 +86,10 @@ Moving Ship test into loop for module iteration
     </ul>
   </dd>
 
-  <dt><a name="24"></a>
-    <a href="user_cybertech.html" class="author">cybertech</a>
-    <span class="date">2009-02-19 04:02</span>
-    <a class="permalink" title="Permalink to this commit" href="#24">#24</a>
-    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">899</span></span>
-  </dt>
-  <dd>
-    <p class="comment">
-Automation: Updating changelog
-    </p>
-    <p class="commitdetails"><strong>4</strong> lines of code changed in <span class="files">1 file</span>:</p>
-    <ul class="commitdetails">
-      <li>
-        <strong>Trunk/EVEbot/Docs</strong>:
-        changelog.html&#160;<span class="change">(+4)</span>
-      </li>
-    </ul>
-  </dd>
-
-  <dt><a name="23"></a>
+  <dt><a name="18"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2009-02-18 17:56</span>
-    <a class="permalink" title="Permalink to this commit" href="#23">#23</a>
+    <a class="permalink" title="Permalink to this commit" href="#18">#18</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">898</span></span>
   </dt>
   <dd>
@@ -177,10 +105,10 @@ Ensuring Me.Ship is validated in all cases it's needed in obj_Ship. Should solve
     </ul>
   </dd>
 
-  <dt><a name="22"></a>
+  <dt><a name="17"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2009-02-18 10:28</span>
-    <a class="permalink" title="Permalink to this commit" href="#22">#22</a>
+    <a class="permalink" title="Permalink to this commit" href="#17">#17</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">897</span></span>
   </dt>
   <dd>
@@ -196,29 +124,10 @@ Fixing inverted bool test in Missions.IsNPCTarget
     </ul>
   </dd>
 
-  <dt><a name="21"></a>
-    <a href="user_cybertech.html" class="author">cybertech</a>
-    <span class="date">2009-02-18 04:02</span>
-    <a class="permalink" title="Permalink to this commit" href="#21">#21</a>
-    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">896</span></span>
-  </dt>
-  <dd>
-    <p class="comment">
-Automation: Updating changelog
-    </p>
-    <p class="commitdetails"><strong>8</strong> lines of code changed in <span class="files">1 file</span>:</p>
-    <ul class="commitdetails">
-      <li>
-        <strong>Trunk/EVEbot/Docs</strong>:
-        changelog.html&#160;<span class="change">(+8)</span>
-      </li>
-    </ul>
-  </dd>
-
-  <dt><a name="20"></a>
+  <dt><a name="16"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2009-02-18 02:45</span>
-    <a class="permalink" title="Permalink to this commit" href="#20">#20</a>
+    <a class="permalink" title="Permalink to this commit" href="#16">#16</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">895</span></span>
   </dt>
   <dd>
@@ -234,10 +143,10 @@ Updates to skill shit
     </ul>
   </dd>
 
-  <dt><a name="19"></a>
+  <dt><a name="15"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2009-02-17 19:27</span>
-    <a class="permalink" title="Permalink to this commit" href="#19">#19</a>
+    <a class="permalink" title="Permalink to this commit" href="#15">#15</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">894</span></span>
   </dt>
   <dd>
@@ -253,10 +162,10 @@ drone notes
     </ul>
   </dd>
 
-  <dt><a name="18"></a>
+  <dt><a name="14"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2009-02-17 19:14</span>
-    <a class="permalink" title="Permalink to this commit" href="#18">#18</a>
+    <a class="permalink" title="Permalink to this commit" href="#14">#14</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">893</span></span>
   </dt>
   <dd>
@@ -272,10 +181,10 @@ Remove some logging that's no longer appropriate
     </ul>
   </dd>
 
-  <dt><a name="17"></a>
+  <dt><a name="13"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2009-02-17 18:59</span>
-    <a class="permalink" title="Permalink to this commit" href="#17">#17</a>
+    <a class="permalink" title="Permalink to this commit" href="#13">#13</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">892</span></span>
   </dt>
   <dd>
@@ -296,10 +205,10 @@ Changed obj_ship return codes for consistency.
     </ul>
   </dd>
 
-  <dt><a name="16"></a>
+  <dt><a name="12"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2009-02-17 18:39</span>
-    <a class="permalink" title="Permalink to this commit" href="#16">#16</a>
+    <a class="permalink" title="Permalink to this commit" href="#12">#12</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">891</span></span>
   </dt>
   <dd>
@@ -315,10 +224,10 @@ Initial merge of drone code contributed by Cade -- doesn't change any functional
     </ul>
   </dd>
 
-  <dt><a name="15"></a>
+  <dt><a name="11"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2009-02-17 18:13</span>
-    <a class="permalink" title="Permalink to this commit" href="#15">#15</a>
+    <a class="permalink" title="Permalink to this commit" href="#11">#11</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">890</span></span>
   </dt>
   <dd>
@@ -348,29 +257,10 @@ obj_EVEBotUI.iss: Log messages of level LOG_DEBUG will not be logged (or sent to
     </ul>
   </dd>
 
-  <dt><a name="14"></a>
-    <a href="user_cybertech.html" class="author">cybertech</a>
-    <span class="date">2009-02-12 04:02</span>
-    <a class="permalink" title="Permalink to this commit" href="#14">#14</a>
-    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">889</span></span>
-  </dt>
-  <dd>
-    <p class="comment">
-Automation: Updating changelog
-    </p>
-    <p class="commitdetails"><strong>4</strong> lines of code changed in <span class="files">1 file</span>:</p>
-    <ul class="commitdetails">
-      <li>
-        <strong>Trunk/EVEbot/Docs</strong>:
-        changelog.html&#160;<span class="change">(+4)</span>
-      </li>
-    </ul>
-  </dd>
-
-  <dt><a name="13"></a>
+  <dt><a name="10"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2009-02-12 01:09</span>
-    <a class="permalink" title="Permalink to this commit" href="#13">#13</a>
+    <a class="permalink" title="Permalink to this commit" href="#10">#10</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">888</span></span>
   </dt>
   <dd>
@@ -386,10 +276,10 @@ Test for isxeve loaded before preprocessing begins.
     </ul>
   </dd>
 
-  <dt><a name="12"></a>
+  <dt><a name="9"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2009-02-11 17:00</span>
-    <a class="permalink" title="Permalink to this commit" href="#12">#12</a>
+    <a class="permalink" title="Permalink to this commit" href="#9">#9</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">887</span></span>
   </dt>
   <dd>
@@ -405,29 +295,10 @@ Add chat invitation detection &amp; logging.
     </ul>
   </dd>
 
-  <dt><a name="11"></a>
-    <a href="user_cybertech.html" class="author">cybertech</a>
-    <span class="date">2009-02-11 04:02</span>
-    <a class="permalink" title="Permalink to this commit" href="#11">#11</a>
-    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">886</span></span>
-  </dt>
-  <dd>
-    <p class="comment">
-Automation: Updating changelog
-    </p>
-    <p class="commitdetails"><strong>6</strong> lines of code changed in <span class="files">1 file</span>:</p>
-    <ul class="commitdetails">
-      <li>
-        <strong>Trunk/EVEbot/Docs</strong>:
-        changelog.html&#160;<span class="change">(+6)</span>
-      </li>
-    </ul>
-  </dd>
-
-  <dt><a name="10"></a>
+  <dt><a name="8"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2009-02-10 16:33</span>
-    <a class="permalink" title="Permalink to this commit" href="#10">#10</a>
+    <a class="permalink" title="Permalink to this commit" href="#8">#8</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">885</span></span>
   </dt>
   <dd>
@@ -443,10 +314,10 @@ Miner should flee on black/whitelist functionality now.
     </ul>
   </dd>
 
-  <dt><a name="9"></a>
+  <dt><a name="7"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2009-02-10 16:14</span>
-    <a class="permalink" title="Permalink to this commit" href="#9">#9</a>
+    <a class="permalink" title="Permalink to this commit" href="#7">#7</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">884</span></span>
   </dt>
   <dd>
@@ -462,10 +333,10 @@ Do not check ammo state during paused state
     </ul>
   </dd>
 
-  <dt><a name="8"></a>
+  <dt><a name="6"></a>
     <a href="user_gliderpro.html" class="author">gliderpro</a>
     <span class="date">2009-02-10 06:13</span>
-    <a class="permalink" title="Permalink to this commit" href="#8">#8</a>
+    <a class="permalink" title="Permalink to this commit" href="#6">#6</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">883</span></span>
   </dt>
   <dd>
@@ -487,10 +358,10 @@ See Threads/Defense.iss line 257 if you want to use this code.  USE AT YOUR OWN 
     </ul>
   </dd>
 
-  <dt><a name="7"></a>
+  <dt><a name="5"></a>
     <a href="user_gliderpro.html" class="author">gliderpro</a>
     <span class="date">2009-02-10 05:49</span>
-    <a class="permalink" title="Permalink to this commit" href="#7">#7</a>
+    <a class="permalink" title="Permalink to this commit" href="#5">#5</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">882</span></span>
   </dt>
   <dd>
@@ -506,29 +377,10 @@ Fixed typo in defense thread that would prevent you from fleeing to a safe spot.
     </ul>
   </dd>
 
-  <dt><a name="6"></a>
-    <a href="user_cybertech.html" class="author">cybertech</a>
-    <span class="date">2009-02-10 04:02</span>
-    <a class="permalink" title="Permalink to this commit" href="#6">#6</a>
-    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">881</span></span>
-  </dt>
-  <dd>
-    <p class="comment">
-Automation: Updating changelog
-    </p>
-    <p class="commitdetails"><strong>7</strong> lines of code changed in <span class="files">1 file</span>:</p>
-    <ul class="commitdetails">
-      <li>
-        <strong>Trunk/EVEbot/Docs</strong>:
-        changelog.html&#160;<span class="change">(+7)</span>
-      </li>
-    </ul>
-  </dd>
-
-  <dt><a name="5"></a>
+  <dt><a name="4"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2009-02-10 02:33</span>
-    <a class="permalink" title="Permalink to this commit" href="#5">#5</a>
+    <a class="permalink" title="Permalink to this commit" href="#4">#4</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">880</span></span>
   </dt>
   <dd>
@@ -544,10 +396,10 @@ Escape more strings for mission data
     </ul>
   </dd>
 
-  <dt><a name="4"></a>
+  <dt><a name="3"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2009-02-10 01:08</span>
-    <a class="permalink" title="Permalink to this commit" href="#4">#4</a>
+    <a class="permalink" title="Permalink to this commit" href="#3">#3</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">879</span></span>
   </dt>
   <dd>
@@ -573,10 +425,10 @@ in-work updates to obj_asteroids
     </ul>
   </dd>
 
-  <dt><a name="3"></a>
+  <dt><a name="2"></a>
     <a href="user_gliderpro.html" class="author">gliderpro</a>
     <span class="date">2009-02-09 11:28</span>
-    <a class="permalink" title="Permalink to this commit" href="#3">#3</a>
+    <a class="permalink" title="Permalink to this commit" href="#2">#2</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">878</span></span>
   </dt>
   <dd>
@@ -588,25 +440,6 @@ Added fix for the downtime exit check.
       <li>
         <strong>Trunk/EVEbot/core</strong>:
         obj_EVEBot.iss&#160;<span class="change">(+9&#160;-6)</span>
-      </li>
-    </ul>
-  </dd>
-
-  <dt><a name="2"></a>
-    <a href="user_cybertech.html" class="author">cybertech</a>
-    <span class="date">2009-02-04 04:01</span>
-    <a class="permalink" title="Permalink to this commit" href="#2">#2</a>
-    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">877</span></span>
-  </dt>
-  <dd>
-    <p class="comment">
-Automation: Updating changelog
-    </p>
-    <p class="commitdetails"><strong>4</strong> lines of code changed in <span class="files">1 file</span>:</p>
-    <ul class="commitdetails">
-      <li>
-        <strong>Trunk/EVEbot/Docs</strong>:
-        changelog.html&#160;<span class="change">(+4)</span>
       </li>
     </ul>
   </dd>

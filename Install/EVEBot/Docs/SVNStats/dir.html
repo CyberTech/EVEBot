@@ -6,40 +6,6 @@
  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
     <meta name="Generator" content="StatSVN 0.7.0"/>
 <link rel="stylesheet" href="objectlab-statcvs.css" type="text/css"/>
-<script type="text/javascript" charset="utf-8" src="http://bit.ly/javascript-api.js?version=latest&#38;login=statsvn&#38;apiKey=R_2c362b417d0517c27876cbaca1bb68cc"></script>
-<script type="text/javascript" charset="utf-8">
-   // wait until page is loaded to call API
-   var redir_url;
-   var short_url;
-   BitlyCB.myShortenCallback = function(data) {
-      // this is how to get a result of shortening a single url
-      var result;
-      short_url=null;
-      for (var r in data.results) {
-         result = data.results[r];
-         result['longUrl'] = r;
-         short_url = result['shortUrl'];
-         break;
-      }
-      if (short_url==null) // bit.ly failed
-      document.location=redir_url;
-      else
-      redirToTwitter();
-   };
-   function shortenTweet(url) {
-      if (short_url == null || redir_url!=url) {
-      redir_url = url;
-      BitlyClient.shorten(document.location, 'BitlyCB.myShortenCallback');
-      }
-      else
-      redirToTwitter();
-      return false;
-   }
-   function redirToTwitter() { 
-      // replace {0} which is visible as %7B0} in the link
-      document.location = redir_url.replace('%7B0}', short_url);
-   }
-</script>
   </head>
 
 <body>
@@ -54,7 +20,7 @@
     <dt>Total Files:</dt>
     <dd>0</dd>
     <dt>Deleted Files:</dt>
-    <dd>2</dd>
+    <dd>1</dd>
     <dt>Lines of Code:</dt>
     <dd>0</dd>
 </dl>
@@ -73,6 +39,12 @@
 <a href="dir_Install_EVEBot_Config_Config_Templates.html">Config_Templates</a> 
 (1 files, 23 lines)<br />
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
+<a href="dir_Install_EVEBot_Docs.html">Docs</a> 
+(0 files, 0 lines)<br />
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
+<a href="dir_Install_EVEBot_Docs_SVNStats.html">SVNStats</a> 
+(429 files, 86453 lines)<br />
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
 <a href="dir_Install_EVEBot_Support.html">Support</a> 
 (1 files, 66 lines)<br />
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
@@ -84,240 +56,6 @@
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
 <a href="dir_Install_EVEBot_Testcases_ISXEVE.html">ISXEVE</a> 
 (22 files, 1126 lines)<br />
-&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags.html">Tags</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.5.html">0.5</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.5_EVEBot.html">EVEBot</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.5_EVEBot_core.html">core</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.65.html">0.65</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.65_Evebot.html">Evebot</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.65_Evebot_core.html">core</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.65_Evebot_interface.html">interface</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.68.html">0.68</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.68_core.html">core</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.7.html">0.7</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.7_EVEbot.html">EVEbot</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.7_EVEbot_core.html">core</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.71.html">0.71</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.71_EVEbot.html">EVEbot</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.71_EVEbot_core.html">core</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.711.html">0.711</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.711_EVEbot.html">EVEbot</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.711_EVEbot_core.html">core</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.711_EVEbot_interface.html">interface</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.711_EVEbot_interface_eveskin.html">eveskin</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.712.html">0.712</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.712_EVEbot.html">EVEbot</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.712_EVEbot_core.html">core</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.712_EVEbot_interface.html">interface</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.712_EVEbot_interface_eveskin.html">eveskin</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.8.html">0.8</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.8_EVEbot.html">EVEbot</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.8_EVEbot_core.html">core</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.8_EVEbot_interface.html">interface</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.8_EVEbot_interface_eveskin.html">eveskin</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.2.html">0.801.2</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.2_EVEbot.html">EVEbot</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.2_EVEbot_core.html">core</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.2_EVEbot_interface.html">interface</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.2_EVEbot_interface_eveskin.html">eveskin</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.3.html">0.801.3</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.3_EVEbot.html">EVEbot</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.3_EVEbot_core.html">core</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.3_EVEbot_interface.html">interface</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.3_EVEbot_interface_eveskin.html">eveskin</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.4.html">0.801.4</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.4_EVEbot.html">EVEbot</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.4_EVEbot_config.html">config</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.4_EVEbot_config_logs.html">logs</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.4_EVEbot_core.html">core</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.4_EVEbot_interface.html">interface</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.4_EVEbot_interface_eveskin.html">eveskin</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.5.html">0.801.5</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.5_EVEbot.html">EVEbot</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.5_EVEbot_config.html">config</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.5_EVEbot_config_logs.html">logs</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.5_EVEbot_core.html">core</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.5_EVEbot_interface.html">interface</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.5_EVEbot_interface_eveskin.html">eveskin</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.6.html">0.801.6</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.6_config.html">config</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.6_config_logs.html">logs</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.6_core.html">core</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.6_interface.html">interface</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.6_interface_eveskin.html">eveskin</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801.html">0.801</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801_EVEbot.html">EVEbot</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801_EVEbot_core.html">core</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801_EVEbot_interface.html">interface</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.801_EVEbot_interface_eveskin.html">eveskin</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.81.2Lasers+ISXEVEUpdate.html">0.81.2Lasers+ISXEVEUpdate</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.81.2Lasers+ISXEVEUpdate_config.html">config</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.81.2Lasers+ISXEVEUpdate_config_logs.html">logs</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.81.2Lasers+ISXEVEUpdate_core.html">core</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.81.2Lasers+ISXEVEUpdate_interface.html">interface</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.81.2Lasers+ISXEVEUpdate_interface_eveskin.html">eveskin</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.8TagTest.html">0.8TagTest</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.8TagTest_EVEbot.html">EVEbot</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.8TagTest_EVEbot_config.html">config</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.8TagTest_EVEbot_config_logs.html">logs</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.8TagTest_EVEbot_core.html">core</a> 
-(0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
-<a href="dir_Tags_0.9.html">0.9</a> 
-(0 files, 0 lines)<br />
 &#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
 <a href="dir_Trunk.html">Trunk</a> 
 (0 files, 0 lines)<br />
@@ -338,7 +76,7 @@
 (0 files, 0 lines)<br />
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
 <a href="dir_Trunk_EVEbot_Docs.html">Docs</a> 
-(4 files, 3860 lines)<br />
+(2 files, 1713 lines)<br />
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
 <a href="dir_Trunk_EVEbot_External.html">External</a> 
 (2 files, 1534 lines)<br />
@@ -372,18 +110,18 @@
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
 <a href="dir_Trunk_EVEbot_interface.html">interface</a> 
 (1 files, 1730 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
 <a href="dir_Trunk_EVEbot_interface_eveskin.html">eveskin</a> 
-(7 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
+(0 files, 0 lines)<br />
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
 <a href="dir_Trunk_EVEbot_interface_eveskin_MainGUI.html">MainGUI</a> 
-(23 files, 0 lines)<br />
+(0 files, 0 lines)<br />
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
 <a href="dir_Trunk_EVEbot_interface_eveskin_MainGUI_Unused.html">Unused</a> 
 (0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
 <a href="dir_Trunk_EVEbot_interface_eveskin_OptionsGUI.html">OptionsGUI</a> 
-(11 files, 0 lines)<br />
+(0 files, 0 lines)<br />
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
 <a href="dir_Trunk_EVEbot_sounds.html">sounds</a> 
 (7 files, 0 lines)<br />
@@ -431,7 +169,7 @@
 (8 files, 2065 lines)<br />
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
 <a href="dir_branches_stable_Docs.html">Docs</a> 
-(2 files, 1266 lines)<br />
+(1 files, 79 lines)<br />
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
 <a href="dir_branches_stable_Support.html">Support</a> 
 (4 files, 575 lines)<br />
@@ -476,7 +214,7 @@
 (3 files, 18772 lines)<br />
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
 <a href="dir_devs_Cplusplus_missionbranch_Docs.html">Docs</a> 
-(2 files, 3689 lines)<br />
+(1 files, 1634 lines)<br />
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
 <a href="dir_devs_Cplusplus_missionbranch_External.html">External</a> 
 (1 files, 431 lines)<br />
@@ -642,7 +380,7 @@
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
 <a href="dir_devs_Tehtsuo_EVEBot_core.html">core</a> 
 (0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
 <a href="dir_devs_gliderpro.html">gliderpro</a> 
 (0 files, 0 lines)<br />
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
@@ -660,12 +398,12 @@
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
 <a href="dir_devs_gliderpro_evebot_core.html">core</a> 
 (0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
 <a href="dir_devs_gliderpro_npcbot.html">npcbot</a> 
 (0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
 <a href="dir_devs_gliderpro_npcbot_sounds.html">sounds</a> 
-(6 files, 0 lines)<br />
+(0 files, 0 lines)<br />
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
 <a href="dir_devs_gliderpro_ratbot.html">ratbot</a> 
 (0 files, 0 lines)<br />
@@ -678,7 +416,7 @@
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
 <a href="dir_devs_gliderpro_wc_events_core.html">core</a> 
 (0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
 <a href="dir_devs_override13.html">override13</a> 
 (0 files, 0 lines)<br />
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
@@ -690,18 +428,18 @@
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
 <a href="dir_devs_override13_core.html">core</a> 
 (0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
 <a href="dir_devs_override13_interface.html">interface</a> 
 (0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
 <a href="dir_devs_override13_interface_eveskin.html">eveskin</a> 
-(1 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
+(0 files, 0 lines)<br />
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
 <a href="dir_devs_override13_interface_eveskin_MainGUI.html">MainGUI</a> 
-(10 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
+(0 files, 0 lines)<br />
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
 <a href="dir_devs_override13_interface_eveskin_MainGUI_Unused.html">Unused</a> 
-(10 files, 0 lines)<br />
+(0 files, 0 lines)<br />
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
 <a href="dir_devs_risky.html">risky</a> 
 (0 files, 0 lines)<br />
@@ -747,9 +485,6 @@
 </p>
 
 <div class="section">
-<h2>Lines of Code</h2>
-<p class="chart"><img src="loc_module.png" alt="Lines of Code" width="800" height="500" /></p></div>
-<div class="section">
 <h2>Developers</h2>
   <table  rules="groups" summary="All authors and the number of their changes and lines of code in this directory">
     <colgroup align="left"/>
@@ -764,26 +499,12 @@
         <th>Lines per Change</th>
       </tr>
     </thead>
-    <tfoot>
-      <tr>
-        <th>Totals</th>
-        <td>7 (100.0%)</td>
-        <td>115 (100.0%)</td>
-        <td>16.4</td>
-      </tr>
-    </tfoot>
     <tbody>
       <tr  class="odd">
-        <th><a href="user_thehazard.html" class="author">thehazard</a></th>
-        <td>2 (28.6%)</td>
-        <td>81 (70.4%)</td>
-        <td>40.5</td>
-      </tr>
-      <tr  class="even">
         <th><a href="user_cybertech.html" class="author">cybertech</a></th>
-        <td>5 (71.4%)</td>
-        <td>34 (29.6%)</td>
-        <td>6.8</td>
+        <td>2 (100.0%)</td>
+        <td>0 (-)</td>
+        <td>0.0</td>
       </tr>
     </tbody>
   </table>
@@ -792,7 +513,7 @@
 <div class="section">
 <h2>Most Recent Commits</h2>
 <dl class="commitlist">
-  <dt><a name="6"></a>
+  <dt><a name="2"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2009-09-03 22:50</span>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1394</span></span>
@@ -809,74 +530,6 @@ Remove old dirs
     </ul>
   </dd>
 
-  <dt><a name="5"></a>
-    <a href="user_cybertech.html" class="author">cybertech</a>
-    <span class="date">2007-07-24 14:55</span>
-    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">42</span></span>
-  </dt>
-  <dd>
-    <p class="comment">
-Moving the changelog into the EVEBot tree so it ships with releases.
-    </p>
-    <p class="commitdetails"><strong>0</strong> lines of code changed in <span class="files">1 file</span>:</p>
-    <ul class="commitdetails">
-      <li>
-        changelog.txt&#160;<span class="del">(del)</span>
-      </li>
-    </ul>
-  </dd>
-
-  <dt><a name="4"></a>
-    <a href="user_cybertech.html" class="author">cybertech</a>
-    <span class="date">2007-07-24 01:39</span>
-    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">34</span></span>
-  </dt>
-  <dd>
-    <p class="comment">
-
-    </p>
-    <p class="commitdetails"><strong>28</strong> lines of code changed in <span class="files">1 file</span>:</p>
-    <ul class="commitdetails">
-      <li>
-        changelog.txt&#160;<span class="change">(+28&#160;-5)</span>
-      </li>
-    </ul>
-  </dd>
-
-  <dt><a name="3"></a>
-    <a href="user_thehazard.html" class="author">thehazard</a>
-    <span class="date">2007-07-23 13:08</span>
-    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">27</span></span>
-  </dt>
-  <dd>
-    <p class="comment">
-- changelog.txt modified
-    </p>
-    <p class="commitdetails"><strong>31</strong> lines of code changed in <span class="files">1 file</span>:</p>
-    <ul class="commitdetails">
-      <li>
-        changelog.txt&#160;<span class="change">(+31&#160;-11)</span>
-      </li>
-    </ul>
-  </dd>
-
-  <dt><a name="2"></a>
-    <a href="user_thehazard.html" class="author">thehazard</a>
-    <span class="date">2007-07-16 22:34</span>
-    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">3</span></span>
-  </dt>
-  <dd>
-    <p class="comment">
-- Modified the changelog.txt so it's updated now. (Please update it when releasing a trunk Release)
-    </p>
-    <p class="commitdetails"><strong>50</strong> lines of code changed in <span class="files">1 file</span>:</p>
-    <ul class="commitdetails">
-      <li>
-        changelog.txt&#160;<span class="change">(+50&#160;-6)</span>
-      </li>
-    </ul>
-  </dd>
-
   <dt><a name="1"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2007-07-16 17:23</span>
@@ -886,11 +539,10 @@ Moving the changelog into the EVEBot tree so it ships with releases.
     <p class="comment">
 Initial commit of files from TheHazards svn
     </p>
-    <p class="commitdetails"><strong>6</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <p class="commitdetails"><strong>0</strong> lines of code changed in <span class="files">1 file</span>:</p>
     <ul class="commitdetails">
       <li>
-        HowToUseSVN.txt&#160;<span class="new">(new)</span>,
-        changelog.txt&#160;<span class="new">(new&#160;6)</span>
+        HowToUseSVN.txt&#160;<span class="new">(new)</span>
       </li>
     </ul>
   </dd>

@@ -6,40 +6,6 @@
  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
     <meta name="Generator" content="StatSVN 0.7.0"/>
 <link rel="stylesheet" href="objectlab-statcvs.css" type="text/css"/>
-<script type="text/javascript" charset="utf-8" src="http://bit.ly/javascript-api.js?version=latest&#38;login=statsvn&#38;apiKey=R_2c362b417d0517c27876cbaca1bb68cc"></script>
-<script type="text/javascript" charset="utf-8">
-   // wait until page is loaded to call API
-   var redir_url;
-   var short_url;
-   BitlyCB.myShortenCallback = function(data) {
-      // this is how to get a result of shortening a single url
-      var result;
-      short_url=null;
-      for (var r in data.results) {
-         result = data.results[r];
-         result['longUrl'] = r;
-         short_url = result['shortUrl'];
-         break;
-      }
-      if (short_url==null) // bit.ly failed
-      document.location=redir_url;
-      else
-      redirToTwitter();
-   };
-   function shortenTweet(url) {
-      if (short_url == null || redir_url!=url) {
-      redir_url = url;
-      BitlyClient.shorten(document.location, 'BitlyCB.myShortenCallback');
-      }
-      else
-      redirToTwitter();
-      return false;
-   }
-   function redirToTwitter() { 
-      // replace {0} which is visible as %7B0} in the link
-      document.location = redir_url.replace('%7B0}', short_url);
-   }
-</script>
   </head>
 
 <body>
@@ -52,7 +18,7 @@
     <dt>Total Files:</dt>
     <dd>3</dd>
     <dt>Deleted Files:</dt>
-    <dd>11</dd>
+    <dd>9</dd>
     <dt>Lines of Code:</dt>
     <dd>534</dd>
 </dl>
@@ -72,7 +38,7 @@
 (0 files, 0 lines)<br />
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
 <a href="dir_Trunk_EVEbot_Docs.html">Docs</a> 
-(4 files, 3860 lines)<br />
+(2 files, 1713 lines)<br />
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
 <a href="dir_Trunk_EVEbot_External.html">External</a> 
 (2 files, 1534 lines)<br />
@@ -106,18 +72,18 @@
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
 <a href="dir_Trunk_EVEbot_interface.html">interface</a> 
 (1 files, 1730 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
 <a href="dir_Trunk_EVEbot_interface_eveskin.html">eveskin</a> 
-(7 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
+(0 files, 0 lines)<br />
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
 <a href="dir_Trunk_EVEbot_interface_eveskin_MainGUI.html">MainGUI</a> 
-(23 files, 0 lines)<br />
+(0 files, 0 lines)<br />
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
 <a href="dir_Trunk_EVEbot_interface_eveskin_MainGUI_Unused.html">Unused</a> 
 (0 files, 0 lines)<br />
-&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
 <a href="dir_Trunk_EVEbot_interface_eveskin_OptionsGUI.html">OptionsGUI</a> 
-(11 files, 0 lines)<br />
+(0 files, 0 lines)<br />
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
 <a href="dir_Trunk_EVEbot_sounds.html">sounds</a> 
 (7 files, 0 lines)<br />
@@ -165,53 +131,53 @@
     <tfoot>
       <tr>
         <th>Totals</th>
-        <td>216 (100.0%)</td>
-        <td>3169 (100.0%)</td>
-        <td>14.6</td>
+        <td>184 (100.0%)</td>
+        <td>2941 (100.0%)</td>
+        <td>15.9</td>
       </tr>
     </tfoot>
     <tbody>
       <tr  class="odd">
         <th><a href="user_cybertech.html" class="author">cybertech</a></th>
-        <td>145 (67.1%)</td>
-        <td>2064 (65.1%)</td>
-        <td>14.2</td>
+        <td>117 (63.6%)</td>
+        <td>1846 (62.8%)</td>
+        <td>15.7</td>
       </tr>
       <tr  class="even">
         <th><a href="user_gliderpro.html" class="author">gliderpro</a></th>
-        <td>36 (16.7%)</td>
-        <td>504 (15.9%)</td>
+        <td>36 (19.6%)</td>
+        <td>504 (17.1%)</td>
         <td>14.0</td>
       </tr>
       <tr  class="odd">
         <th><a href="user_stealthy.html" class="author">stealthy</a></th>
-        <td>8 (3.7%)</td>
-        <td>346 (10.9%)</td>
+        <td>8 (4.3%)</td>
+        <td>346 (11.8%)</td>
         <td>43.2</td>
       </tr>
       <tr  class="even">
         <th><a href="user_Hessinger.html" class="author">Hessinger</a></th>
-        <td>13 (6.0%)</td>
-        <td>136 (4.3%)</td>
-        <td>10.4</td>
+        <td>12 (6.5%)</td>
+        <td>130 (4.4%)</td>
+        <td>10.8</td>
       </tr>
       <tr  class="odd">
         <th><a href="user_trupoet.html" class="author">trupoet</a></th>
-        <td>3 (1.4%)</td>
-        <td>105 (3.3%)</td>
+        <td>3 (1.6%)</td>
+        <td>105 (3.6%)</td>
         <td>35.0</td>
       </tr>
       <tr  class="even">
         <th><a href="user_Cplusplus.html" class="author">Cplusplus</a></th>
-        <td>7 (3.2%)</td>
+        <td>7 (3.8%)</td>
         <td>8 (0.3%)</td>
         <td>1.1</td>
       </tr>
       <tr  class="odd">
         <th><a href="user_override13.html" class="author">override13</a></th>
-        <td>4 (1.9%)</td>
-        <td>6 (0.2%)</td>
-        <td>1.5</td>
+        <td>1 (0.5%)</td>
+        <td>2 (0.1%)</td>
+        <td>2.0</td>
       </tr>
     </tbody>
   </table>
@@ -1062,7 +1028,7 @@ Added code to populate the bot mode combo box based on the bot modules index.
 
 </dl>
 
-<p>(142 more)</p>
+<p>(121 more)</p>
 </div><div id="generatedby">Generated by <a href="http://www.statsvn.org">StatSVN</a> 0.7.0</div>
 </body>
 </html>

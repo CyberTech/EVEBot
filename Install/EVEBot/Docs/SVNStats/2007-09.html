@@ -6,40 +6,6 @@
  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
     <meta name="Generator" content="StatSVN 0.7.0"/>
 <link rel="stylesheet" href="objectlab-statcvs.css" type="text/css"/>
-<script type="text/javascript" charset="utf-8" src="http://bit.ly/javascript-api.js?version=latest&#38;login=statsvn&#38;apiKey=R_2c362b417d0517c27876cbaca1bb68cc"></script>
-<script type="text/javascript" charset="utf-8">
-   // wait until page is loaded to call API
-   var redir_url;
-   var short_url;
-   BitlyCB.myShortenCallback = function(data) {
-      // this is how to get a result of shortening a single url
-      var result;
-      short_url=null;
-      for (var r in data.results) {
-         result = data.results[r];
-         result['longUrl'] = r;
-         short_url = result['shortUrl'];
-         break;
-      }
-      if (short_url==null) // bit.ly failed
-      document.location=redir_url;
-      else
-      redirToTwitter();
-   };
-   function shortenTweet(url) {
-      if (short_url == null || redir_url!=url) {
-      redir_url = url;
-      BitlyClient.shorten(document.location, 'BitlyCB.myShortenCallback');
-      }
-      else
-      redirToTwitter();
-      return false;
-   }
-   function redirToTwitter() { 
-      // replace {0} which is visible as %7B0} in the link
-      document.location = redir_url.replace('%7B0}', short_url);
-   }
-</script>
   </head>
 
 <body>
@@ -96,15 +62,15 @@
 </ul>
 </div><dl class="attributes">
     <dt>Number of Commits:</dt>
-    <dd>56</dd>
+    <dd>55</dd>
     <dt>Number of Active Developers:</dt>
     <dd>3</dd>
 </dl>
 <dl class="commitlist">
-  <dt><a name="56"></a>
+  <dt><a name="55"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2007-09-30 23:50</span>
-    <a class="permalink" title="Permalink to this commit" href="#56">#56</a>
+    <a class="permalink" title="Permalink to this commit" href="#55">#55</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">249</span></span>
   </dt>
   <dd>
@@ -120,10 +86,10 @@ fix JetCan.Open possible infiniate wait
     </ul>
   </dd>
 
-  <dt><a name="55"></a>
+  <dt><a name="54"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2007-09-30 23:07</span>
-    <a class="permalink" title="Permalink to this commit" href="#55">#55</a>
+    <a class="permalink" title="Permalink to this commit" href="#54">#54</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">248</span></span>
   </dt>
   <dd>
@@ -143,10 +109,10 @@ Added delay before warping out if there are no drones and ship gets target jamme
     </ul>
   </dd>
 
-  <dt><a name="54"></a>
+  <dt><a name="53"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2007-09-30 00:39</span>
-    <a class="permalink" title="Permalink to this commit" href="#54">#54</a>
+    <a class="permalink" title="Permalink to this commit" href="#53">#53</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">247</span></span>
   </dt>
   <dd>
@@ -165,10 +131,10 @@ Refactoring of obj_Cargo to help with debugging issues and hopefully make it les
     </ul>
   </dd>
 
-  <dt><a name="53"></a>
+  <dt><a name="52"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2007-09-26 21:55</span>
-    <a class="permalink" title="Permalink to this commit" href="#53">#53</a>
+    <a class="permalink" title="Permalink to this commit" href="#52">#52</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">246</span></span>
   </dt>
   <dd>
@@ -185,10 +151,10 @@ Fixed lowest standing slider from ui.
     </ul>
   </dd>
 
-  <dt><a name="52"></a>
+  <dt><a name="51"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2007-09-24 14:17</span>
-    <a class="permalink" title="Permalink to this commit" href="#52">#52</a>
+    <a class="permalink" title="Permalink to this commit" href="#51">#51</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">245</span></span>
   </dt>
   <dd>
@@ -204,10 +170,10 @@ Attempt to fix wierdness da_Teach is seeing in one belt.
     </ul>
   </dd>
 
-  <dt><a name="51"></a>
+  <dt><a name="50"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2007-09-18 22:16</span>
-    <a class="permalink" title="Permalink to this commit" href="#51">#51</a>
+    <a class="permalink" title="Permalink to this commit" href="#50">#50</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">244</span></span>
   </dt>
   <dd>
@@ -223,10 +189,10 @@ Ship will warp away if you are being jammed and there are no drones to defend.
     </ul>
   </dd>
 
-  <dt><a name="50"></a>
+  <dt><a name="49"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2007-09-18 18:31</span>
-    <a class="permalink" title="Permalink to this commit" href="#50">#50</a>
+    <a class="permalink" title="Permalink to this commit" href="#49">#49</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">243</span></span>
   </dt>
   <dd>
@@ -246,10 +212,10 @@ Renamed obj_Login.iss to obj_LoginHandler.iss so it reflects usage -- at the tim
     </ul>
   </dd>
 
-  <dt><a name="49"></a>
+  <dt><a name="48"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2007-09-18 18:30</span>
-    <a class="permalink" title="Permalink to this commit" href="#49">#49</a>
+    <a class="permalink" title="Permalink to this commit" href="#48">#48</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">242</span></span>
   </dt>
   <dd>
@@ -273,10 +239,10 @@ Moving obj_Login.iss to Support dir.
     </ul>
   </dd>
 
-  <dt><a name="48"></a>
+  <dt><a name="47"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2007-09-18 18:28</span>
-    <a class="permalink" title="Permalink to this commit" href="#48">#48</a>
+    <a class="permalink" title="Permalink to this commit" href="#47">#47</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">241</span></span>
   </dt>
   <dd>
@@ -311,10 +277,10 @@ Added Launcher.iss
     </ul>
   </dd>
 
-  <dt><a name="47"></a>
+  <dt><a name="46"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2007-09-18 00:19</span>
-    <a class="permalink" title="Permalink to this commit" href="#47">#47</a>
+    <a class="permalink" title="Permalink to this commit" href="#46">#46</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">240</span></span>
   </dt>
   <dd>
@@ -331,10 +297,10 @@ more tuning jetcan
     </ul>
   </dd>
 
-  <dt><a name="46"></a>
+  <dt><a name="45"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2007-09-17 15:54</span>
-    <a class="permalink" title="Permalink to this commit" href="#46">#46</a>
+    <a class="permalink" title="Permalink to this commit" href="#45">#45</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">239</span></span>
   </dt>
   <dd>
@@ -350,10 +316,10 @@ TODO removed.  Now tracked at <a href="http://code.google.com/p/cybertech/issues
     </ul>
   </dd>
 
-  <dt><a name="45"></a>
+  <dt><a name="44"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2007-09-17 09:08</span>
-    <a class="permalink" title="Permalink to this commit" href="#45">#45</a>
+    <a class="permalink" title="Permalink to this commit" href="#44">#44</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">238</span></span>
   </dt>
   <dd>
@@ -369,10 +335,10 @@ Tuning main miner loop for speed
     </ul>
   </dd>
 
-  <dt><a name="44"></a>
+  <dt><a name="43"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2007-09-17 00:41</span>
-    <a class="permalink" title="Permalink to this commit" href="#44">#44</a>
+    <a class="permalink" title="Permalink to this commit" href="#43">#43</a>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">237</span></span>
   </dt>
   <dd>
@@ -403,25 +369,6 @@ Added Hauler mode selction dropdown to UI in preparation for Hauler support
       <li>
         <strong>Trunk/EVEbot/interface</strong>:
         evebotgui.xml&#160;<span class="change">(+45&#160;-1)</span>
-      </li>
-    </ul>
-  </dd>
-
-  <dt><a name="43"></a>
-    <a href="user_cybertech.html" class="author">cybertech</a>
-    <span class="date">2007-09-16 03:03</span>
-    <a class="permalink" title="Permalink to this commit" href="#43">#43</a>
-    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">236</span></span>
-  </dt>
-  <dd>
-    <p class="comment">
-Updated changelog
-    </p>
-    <p class="commitdetails"><strong>43</strong> lines of code changed in <span class="files">1 file</span>:</p>
-    <ul class="commitdetails">
-      <li>
-        <strong>Trunk/EVEbot</strong>:
-        changelog.txt&#160;<span class="change">(+43&#160;-5)</span>
       </li>
     </ul>
   </dd>
@@ -594,7 +541,7 @@ Fix wrong variable name causing bot not to unpause after an abort condition is f
     <p class="comment">
 Removing inactive dev folders.
     </p>
-    <p class="commitdetails"><strong>0</strong> lines of code changed in <span class="files">101 files</span>:</p>
+    <p class="commitdetails"><strong>0</strong> lines of code changed in <span class="files">99 files</span>:</p>
     <ul class="commitdetails">
       <li>
         <strong>devs</strong>:
@@ -643,7 +590,6 @@ Removing inactive dev folders.
         <strong>devs/gliderpro</strong>:
         EVEBot TODO.txt&#160;<span class="del">(del)</span>,
         EVEBot.iss&#160;<span class="del">(del)</span>,
-        changelog.txt&#160;<span class="del">(del)</span>,
         interface&#160;<span class="del">(del)</span>
       </li>
       <li>
@@ -672,8 +618,7 @@ Removing inactive dev folders.
       </li>
       <li>
         <strong>devs/override13</strong>:
-        EVEBot.iss&#160;<span class="del">(del)</span>,
-        changelog.txt&#160;<span class="del">(del)</span>
+        EVEBot.iss&#160;<span class="del">(del)</span>
       </li>
       <li>
         <strong>devs/override13/config</strong>:
@@ -720,33 +665,33 @@ Removing inactive dev folders.
         MinimiseWindow-Up.png&#160;<span class="del">(del)</span>,
         Thumbs.db&#160;<span class="del">(del)</span>,
         eveskin.xml&#160;<span class="del">(del)</span>,
-        ui_sample.png&#160;<span class="change">(changed)</span>
+        ui_sample.png&#160;<span class="del">(del)</span>
       </li>
       <li>
         <strong>devs/override13/interface/eveskin/MainGUI</strong>:
-        Button-Up.png&#160;<span class="change">(changed)</span>,
-        button_close.png&#160;<span class="change">(changed)</span>,
-        button_empty.png&#160;<span class="change">(changed)</span>,
-        button_fill.png&#160;<span class="change">(changed)</span>,
-        button_minimize.png&#160;<span class="change">(changed)</span>,
-        button_pause.png&#160;<span class="change">(changed)</span>,
-        button_run.png&#160;<span class="change">(changed)</span>,
-        optionswindow_main.png&#160;<span class="change">(changed)</span>,
-        optionswindow_titlebar.png&#160;<span class="change">(changed)</span>,
-        tab_frametexture.png&#160;<span class="change">(changed)</span>
+        Button-Up.png&#160;<span class="del">(del)</span>,
+        button_close.png&#160;<span class="del">(del)</span>,
+        button_empty.png&#160;<span class="del">(del)</span>,
+        button_fill.png&#160;<span class="del">(del)</span>,
+        button_minimize.png&#160;<span class="del">(del)</span>,
+        button_pause.png&#160;<span class="del">(del)</span>,
+        button_run.png&#160;<span class="del">(del)</span>,
+        optionswindow_main.png&#160;<span class="del">(del)</span>,
+        optionswindow_titlebar.png&#160;<span class="del">(del)</span>,
+        tab_frametexture.png&#160;<span class="del">(del)</span>
       </li>
       <li>
         <strong>devs/override13/interface/eveskin/MainGUI/Unused</strong>:
-        MainWindow-Bottom.png&#160;<span class="change">(changed)</span>,
-        MainWindow-TopTitleBar.png&#160;<span class="change">(changed)</span>,
-        button_about.png&#160;<span class="change">(changed)</span>,
-        button_combat.png&#160;<span class="change">(changed)</span>,
-        button_fitting.png&#160;<span class="change">(changed)</span>,
-        button_main.png&#160;<span class="change">(changed)</span>,
-        button_market.png&#160;<span class="change">(changed)</span>,
-        button_mining.png&#160;<span class="change">(changed)</span>,
-        button_options.png&#160;<span class="change">(changed)</span>,
-        button_skills.png&#160;<span class="change">(changed)</span>
+        MainWindow-Bottom.png&#160;<span class="del">(del)</span>,
+        MainWindow-TopTitleBar.png&#160;<span class="del">(del)</span>,
+        button_about.png&#160;<span class="del">(del)</span>,
+        button_combat.png&#160;<span class="del">(del)</span>,
+        button_fitting.png&#160;<span class="del">(del)</span>,
+        button_main.png&#160;<span class="del">(del)</span>,
+        button_market.png&#160;<span class="del">(del)</span>,
+        button_mining.png&#160;<span class="del">(del)</span>,
+        button_options.png&#160;<span class="del">(del)</span>,
+        button_skills.png&#160;<span class="del">(del)</span>
       </li>
       <li>
         <strong>devs/thehazard</strong>:
@@ -1357,12 +1302,11 @@ removed wreck and jetcan window names from defines.iss
     <p class="comment">
 Minor changes
     </p>
-    <p class="commitdetails"><strong>11</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <p class="commitdetails"><strong>9</strong> lines of code changed in <span class="files">2 files</span>:</p>
     <ul class="commitdetails">
       <li>
         <strong>Trunk/EVEbot</strong>:
-        EVEBot.iss&#160;<span class="change">(+1)</span>,
-        changelog.txt&#160;<span class="change">(+2)</span>
+        EVEBot.iss&#160;<span class="change">(+1)</span>
       </li>
       <li>
         <strong>Trunk/EVEbot/core</strong>:
@@ -1463,12 +1407,8 @@ Fixed loot window closing<br />
 Fixed Jetcan support: check distance on existing/known cans as well<br />
 Fixed Jetcan support: fix rename function
     </p>
-    <p class="commitdetails"><strong>26</strong> lines of code changed in <span class="files">4 files</span>:</p>
+    <p class="commitdetails"><strong>24</strong> lines of code changed in <span class="files">3 files</span>:</p>
     <ul class="commitdetails">
-      <li>
-        <strong>Trunk/EVEbot</strong>:
-        changelog.txt&#160;<span class="change">(+2)</span>
-      </li>
       <li>
         <strong>Trunk/EVEbot/core</strong>:
         obj_Cargo.iss&#160;<span class="change">(+1&#160;-1)</span>,
@@ -1516,13 +1456,12 @@ Added obj_Ship:CargoHalfFull<br />
 Updated TODO<br />
 Updated UI element for Use JetCan
     </p>
-    <p class="commitdetails"><strong>424</strong> lines of code changed in <span class="files">9 files</span>:</p>
+    <p class="commitdetails"><strong>418</strong> lines of code changed in <span class="files">8 files</span>:</p>
     <ul class="commitdetails">
       <li>
         <strong>Trunk/EVEbot</strong>:
         EVEBot TODO.txt&#160;<span class="change">(+48&#160;-47)</span>,
-        EVEBot.iss&#160;<span class="change">(+3)</span>,
-        changelog.txt&#160;<span class="change">(+6)</span>
+        EVEBot.iss&#160;<span class="change">(+3)</span>
       </li>
       <li>
         <strong>Trunk/EVEbot/core</strong>:

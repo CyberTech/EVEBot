@@ -6,40 +6,6 @@
  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
     <meta name="Generator" content="StatSVN 0.7.0"/>
 <link rel="stylesheet" href="objectlab-statcvs.css" type="text/css"/>
-<script type="text/javascript" charset="utf-8" src="http://bit.ly/javascript-api.js?version=latest&#38;login=statsvn&#38;apiKey=R_2c362b417d0517c27876cbaca1bb68cc"></script>
-<script type="text/javascript" charset="utf-8">
-   // wait until page is loaded to call API
-   var redir_url;
-   var short_url;
-   BitlyCB.myShortenCallback = function(data) {
-      // this is how to get a result of shortening a single url
-      var result;
-      short_url=null;
-      for (var r in data.results) {
-         result = data.results[r];
-         result['longUrl'] = r;
-         short_url = result['shortUrl'];
-         break;
-      }
-      if (short_url==null) // bit.ly failed
-      document.location=redir_url;
-      else
-      redirToTwitter();
-   };
-   function shortenTweet(url) {
-      if (short_url == null || redir_url!=url) {
-      redir_url = url;
-      BitlyClient.shorten(document.location, 'BitlyCB.myShortenCallback');
-      }
-      else
-      redirToTwitter();
-      return false;
-   }
-   function redirToTwitter() { 
-      // replace {0} which is visible as %7B0} in the link
-      document.location = redir_url.replace('%7B0}', short_url);
-   }
-</script>
   </head>
 
 <body>
@@ -47,12 +13,14 @@
 <h1>Directory devs/Cplusplus/missionbranch/Docs/</h1>
 <div id="parentlink">&#171; <a href="index.html">Development Statistics for EVEBot</a></div>
 <dl class="attributes">
+    <dt>Directory Created:</dt>
+    <dd><span class="date">2009-12-18 08:48</span></dd>
     <dt>Total Files:</dt>
-    <dd>2</dd>
+    <dd>1</dd>
     <dt>Deleted Files:</dt>
     <dd>0</dd>
     <dt>Lines of Code:</dt>
-    <dd>3689</dd>
+    <dd>1634</dd>
 </dl>
 <p class="dirtree">
 <a href="dir.html">[root]</a>/<a href="dir_devs.html">devs</a>/<a href="dir_devs_Cplusplus.html">Cplusplus</a>/<a href="dir_devs_Cplusplus_missionbranch.html">missionbranch</a>/<strong>Docs</strong><br/>
@@ -79,9 +47,9 @@
     <tbody>
       <tr  class="odd">
         <th><a href="user_Cplusplus.html" class="author">Cplusplus</a></th>
-        <td>3 (100.0%)</td>
-        <td>1739 (100.0%)</td>
-        <td>579.6</td>
+        <td>1 (100.0%)</td>
+        <td>1634 (100.0%)</td>
+        <td>1634.0</td>
       </tr>
     </tbody>
   </table>
@@ -99,12 +67,11 @@
     <p class="comment">
 Merging crap
     </p>
-    <p class="commitdetails"><strong>1739</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <p class="commitdetails"><strong>1634</strong> lines of code changed in <span class="files">1 file</span>:</p>
     <ul class="commitdetails">
       <li>
         <strong>devs/Cplusplus/missionbranch/Docs</strong>:
-        Navigator.uml&#160;<span class="new">(new&#160;1634)</span>,
-        changelog.html&#160;<span class="new">(new)</span>
+        Navigator.uml&#160;<span class="new">(new&#160;1634)</span>
       </li>
     </ul>
   </dd>

@@ -6,40 +6,6 @@
  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
     <meta name="Generator" content="StatSVN 0.7.0"/>
 <link rel="stylesheet" href="objectlab-statcvs.css" type="text/css"/>
-<script type="text/javascript" charset="utf-8" src="http://bit.ly/javascript-api.js?version=latest&#38;login=statsvn&#38;apiKey=R_2c362b417d0517c27876cbaca1bb68cc"></script>
-<script type="text/javascript" charset="utf-8">
-   // wait until page is loaded to call API
-   var redir_url;
-   var short_url;
-   BitlyCB.myShortenCallback = function(data) {
-      // this is how to get a result of shortening a single url
-      var result;
-      short_url=null;
-      for (var r in data.results) {
-         result = data.results[r];
-         result['longUrl'] = r;
-         short_url = result['shortUrl'];
-         break;
-      }
-      if (short_url==null) // bit.ly failed
-      document.location=redir_url;
-      else
-      redirToTwitter();
-   };
-   function shortenTweet(url) {
-      if (short_url == null || redir_url!=url) {
-      redir_url = url;
-      BitlyClient.shorten(document.location, 'BitlyCB.myShortenCallback');
-      }
-      else
-      redirToTwitter();
-      return false;
-   }
-   function redirToTwitter() { 
-      // replace {0} which is visible as %7B0} in the link
-      document.location = redir_url.replace('%7B0}', short_url);
-   }
-</script>
   </head>
 
 <body>
@@ -49,10 +15,12 @@
 <dl class="attributes">
     <dt>Directory Created:</dt>
     <dd><span class="date">2007-07-27 11:33</span></dd>
+    <dt>Directory Deleted:</dt>
+    <dd><span class="date">2007-09-10 16:16</span></dd>
     <dt>Total Files:</dt>
-    <dd>10</dd>
-    <dt>Deleted Files:</dt>
     <dd>0</dd>
+    <dt>Deleted Files:</dt>
+    <dd>10</dd>
     <dt>Lines of Code:</dt>
     <dd>0</dd>
 </dl>
@@ -116,16 +84,16 @@ Removing inactive dev folders.
     <ul class="commitdetails">
       <li>
         <strong>devs/override13/interface/eveskin/MainGUI/Unused</strong>:
-        MainWindow-Bottom.png&#160;<span class="change">(changed)</span>,
-        MainWindow-TopTitleBar.png&#160;<span class="change">(changed)</span>,
-        button_about.png&#160;<span class="change">(changed)</span>,
-        button_combat.png&#160;<span class="change">(changed)</span>,
-        button_fitting.png&#160;<span class="change">(changed)</span>,
-        button_main.png&#160;<span class="change">(changed)</span>,
-        button_market.png&#160;<span class="change">(changed)</span>,
-        button_mining.png&#160;<span class="change">(changed)</span>,
-        button_options.png&#160;<span class="change">(changed)</span>,
-        button_skills.png&#160;<span class="change">(changed)</span>
+        MainWindow-Bottom.png&#160;<span class="del">(del)</span>,
+        MainWindow-TopTitleBar.png&#160;<span class="del">(del)</span>,
+        button_about.png&#160;<span class="del">(del)</span>,
+        button_combat.png&#160;<span class="del">(del)</span>,
+        button_fitting.png&#160;<span class="del">(del)</span>,
+        button_main.png&#160;<span class="del">(del)</span>,
+        button_market.png&#160;<span class="del">(del)</span>,
+        button_mining.png&#160;<span class="del">(del)</span>,
+        button_options.png&#160;<span class="del">(del)</span>,
+        button_skills.png&#160;<span class="del">(del)</span>
       </li>
     </ul>
   </dd>

@@ -6,40 +6,6 @@
  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
     <meta name="Generator" content="StatSVN 0.7.0"/>
 <link rel="stylesheet" href="objectlab-statcvs.css" type="text/css"/>
-<script type="text/javascript" charset="utf-8" src="http://bit.ly/javascript-api.js?version=latest&#38;login=statsvn&#38;apiKey=R_2c362b417d0517c27876cbaca1bb68cc"></script>
-<script type="text/javascript" charset="utf-8">
-   // wait until page is loaded to call API
-   var redir_url;
-   var short_url;
-   BitlyCB.myShortenCallback = function(data) {
-      // this is how to get a result of shortening a single url
-      var result;
-      short_url=null;
-      for (var r in data.results) {
-         result = data.results[r];
-         result['longUrl'] = r;
-         short_url = result['shortUrl'];
-         break;
-      }
-      if (short_url==null) // bit.ly failed
-      document.location=redir_url;
-      else
-      redirToTwitter();
-   };
-   function shortenTweet(url) {
-      if (short_url == null || redir_url!=url) {
-      redir_url = url;
-      BitlyClient.shorten(document.location, 'BitlyCB.myShortenCallback');
-      }
-      else
-      redirToTwitter();
-      return false;
-   }
-   function redirToTwitter() { 
-      // replace {0} which is visible as %7B0} in the link
-      document.location = redir_url.replace('%7B0}', short_url);
-   }
-</script>
   </head>
 
 <body>
@@ -48,11 +14,11 @@
 <div id="parentlink">&#171; <a href="index.html">Development Statistics for EVEBot</a></div>
 <dl class="attributes">
     <dt>Total Files:</dt>
-    <dd>346</dd>
+    <dd>703</dd>
     <dt>Average File Size:</dt>
-    <dd>1029.1 lines</dd>
+    <dd>621.8 lines</dd>
     <dt>Average Revisions Per File:</dt>
-    <dd>9.1</dd>
+    <dd>4.5</dd>
 </dl>
 <p class="chart"><img src="file_count.png" alt="File Count" width="800" height="500" /></p><p class="chart"><img src="file_size.png" alt="Average File Size" width="800" height="500" /></p>
 <div class="section">
@@ -73,81 +39,81 @@
     <tfoot>
       <tr>
         <th>Totals</th>
-        <td>346 (100.0%)</td>
-        <td>356062 (100.0%)</td>
-        <td>1029.0</td>
+        <td>703 (100.0%)</td>
+        <td>437126 (100.0%)</td>
+        <td>621.8</td>
       </tr>
     </tfoot>
     <tbody>
       <tr  class="odd">
         <th>*.xml</th>
-        <td>19 (5.5%)</td>
-        <td>264659 (74.3%)</td>
+        <td>19 (2.7%)</td>
+        <td>264659 (60.5%)</td>
         <td>13929.4</td>
       </tr>
       <tr  class="even">
-        <th>*.iss</th>
-        <td>202 (58.4%)</td>
-        <td>71946 (20.2%)</td>
-        <td>356.1</td>
+        <th>*.html</th>
+        <td>293 (41.7%)</td>
+        <td>85483 (19.6%)</td>
+        <td>291.7</td>
       </tr>
       <tr  class="odd">
-        <th>*.resx</th>
-        <td>4 (1.2%)</td>
-        <td>5437 (1.5%)</td>
-        <td>1359.2</td>
+        <th>*.iss</th>
+        <td>202 (28.7%)</td>
+        <td>71946 (16.5%)</td>
+        <td>356.1</td>
       </tr>
       <tr  class="even">
-        <th>*.html</th>
-        <td>3 (0.9%)</td>
-        <td>5004 (1.4%)</td>
-        <td>1668.0</td>
+        <th>*.resx</th>
+        <td>4 (0.6%)</td>
+        <td>5437 (1.2%)</td>
+        <td>1359.2</td>
       </tr>
       <tr  class="odd">
         <th>*.cs</th>
-        <td>22 (6.4%)</td>
-        <td>3704 (1.0%)</td>
+        <td>22 (3.1%)</td>
+        <td>3704 (0.8%)</td>
         <td>168.3</td>
       </tr>
       <tr  class="even">
         <th>*.uml</th>
-        <td>2 (0.6%)</td>
-        <td>3268 (0.9%)</td>
+        <td>2 (0.3%)</td>
+        <td>3268 (0.7%)</td>
         <td>1634.0</td>
       </tr>
       <tr  class="odd">
         <th>*.txt</th>
-        <td>5 (1.4%)</td>
-        <td>467 (0.1%)</td>
-        <td>93.4</td>
+        <td>5 (0.7%)</td>
+        <td>877 (0.2%)</td>
+        <td>175.4</td>
       </tr>
       <tr  class="even">
-        <th>*.csproj</th>
-        <td>2 (0.6%)</td>
-        <td>214 (0.1%)</td>
-        <td>107.0</td>
+        <th>*.css</th>
+        <td>3 (0.4%)</td>
+        <td>333 (0.1%)</td>
+        <td>111.0</td>
       </tr>
       <tr  class="odd">
-        <th>*.css</th>
-        <td>2 (0.6%)</td>
-        <td>158 (0.0%)</td>
-        <td>79.0</td>
+        <th>*.csproj</th>
+        <td>2 (0.3%)</td>
+        <td>214 (0.0%)</td>
+        <td>107.0</td>
       </tr>
       <tr  class="even">
         <th>*.sql</th>
-        <td>3 (0.9%)</td>
+        <td>3 (0.4%)</td>
         <td>56 (0.0%)</td>
         <td>18.6</td>
       </tr>
       <tr  class="odd">
         <th>Others</th>
-        <td>3 (0.9%)</td>
+        <td>3 (0.4%)</td>
         <td>1149 (0.3%)</td>
         <td>383.0</td>
       </tr>
       <tr  class="even">
         <th>Non-Code Files</th>
-        <td>79 (22.8%)</td>
+        <td>145 (20.6%)</td>
         <td>0 (0.0%)</td>
         <td>0.0</td>
       </tr>
@@ -204,48 +170,48 @@
         <td>5077</td>
       </tr>
       <tr  class="even">
+        <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> Install/EVEBot/Docs/SVNStats/2009-06.html</th>
+        <td>3976</td>
+      </tr>
+      <tr  class="odd">
+        <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> Install/EVEBot/Docs/SVNStats/2007-08.html</th>
+        <td>2980</td>
+      </tr>
+      <tr  class="even">
+        <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> Install/EVEBot/Docs/SVNStats/2007-07.html</th>
+        <td>2458</td>
+      </tr>
+      <tr  class="odd">
         <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> tags/trunk_2010_07_21/core/obj_Ship.iss</th>
         <td>2388</td>
       </tr>
-      <tr  class="odd">
+      <tr  class="even">
         <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> devs/Cplusplus/missionbranch/core/obj_Ship.iss</th>
         <td>2380</td>
       </tr>
-      <tr  class="even">
+      <tr  class="odd">
         <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> Trunk/EVEbot/core/obj_Ship.iss</th>
         <td>2367</td>
       </tr>
-      <tr  class="odd">
+      <tr  class="even">
         <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> branches/stable/core/obj_Ship.iss</th>
         <td>2248</td>
       </tr>
+      <tr  class="odd">
+        <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> Install/EVEBot/Docs/SVNStats/user_cybertech.html</th>
+        <td>2187</td>
+      </tr>
       <tr  class="even">
-        <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> devs/Cplusplus/missionbranch/Docs/changelog.html</th>
-        <td>2055</td>
+        <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> Install/EVEBot/Docs/SVNStats/2007-10.html</th>
+        <td>1948</td>
       </tr>
       <tr  class="odd">
         <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> devs/Cplusplus/missionbranch/interface/evebotgui.xml</th>
         <td>1819</td>
       </tr>
       <tr  class="even">
-        <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> Trunk/EVEbot/Docs/changelog.html</th>
-        <td>1762</td>
-      </tr>
-      <tr  class="odd">
         <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> branches/stable/interface/evebotgui.xml</th>
         <td>1745</td>
-      </tr>
-      <tr  class="even">
-        <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> Trunk/EVEbot/interface/evebotgui.xml</th>
-        <td>1730</td>
-      </tr>
-      <tr  class="odd">
-        <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> Trunk/EVEbot/Data/Mission Database.xml</th>
-        <td>1702</td>
-      </tr>
-      <tr  class="even">
-        <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> devs/Cplusplus/missionbranch/Data/Mission Database.xml</th>
-        <td>1702</td>
       </tr>
     </tbody>
   </table>
@@ -268,80 +234,80 @@
         <td>258</td>
       </tr>
       <tr  class="even">
-        <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> Trunk/EVEbot/Docs/changelog.html</th>
-        <td>243</td>
-      </tr>
-      <tr  class="odd">
         <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> Trunk/EVEbot/EVEBot.iss</th>
         <td>113</td>
       </tr>
-      <tr  class="even">
+      <tr  class="odd">
         <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> Trunk/EVEbot/core/obj_Configuration.iss</th>
         <td>111</td>
       </tr>
-      <tr  class="odd">
+      <tr  class="even">
         <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> Trunk/EVEbot/interface/evebotgui.xml</th>
         <td>103</td>
       </tr>
-      <tr  class="even">
+      <tr  class="odd">
         <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> Trunk/EVEbot/core/defines.iss</th>
         <td>101</td>
       </tr>
-      <tr  class="odd">
+      <tr  class="even">
         <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> Trunk/EVEbot/core/obj_Social.iss</th>
         <td>73</td>
       </tr>
-      <tr  class="even">
+      <tr  class="odd">
         <th><img src="file-deleted.png" width="15" height="13" alt="File removed from repo" title="File removed from repo"/> Trunk/EVEbot/core/obj_Miner.iss</th>
         <td>72</td>
       </tr>
-      <tr  class="odd">
+      <tr  class="even">
         <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> Trunk/EVEbot/Threads/Offense.iss</th>
         <td>70</td>
       </tr>
-      <tr  class="even">
+      <tr  class="odd">
         <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> Trunk/EVEbot/core/obj_Cargo.iss</th>
         <td>68</td>
       </tr>
-      <tr  class="odd">
+      <tr  class="even">
         <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> Trunk/EVEbot/Behaviors/obj_Ratter.iss</th>
         <td>67</td>
       </tr>
-      <tr  class="even">
+      <tr  class="odd">
         <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> Trunk/EVEbot/core/obj_Targets.iss</th>
         <td>67</td>
       </tr>
-      <tr  class="odd">
+      <tr  class="even">
         <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> Trunk/EVEbot/core/obj_Agents.iss</th>
         <td>66</td>
       </tr>
-      <tr  class="even">
+      <tr  class="odd">
         <th><img src="file-deleted.png" width="15" height="13" alt="File removed from repo" title="File removed from repo"/> Trunk/EVEbot/core/obj_Combat.iss</th>
         <td>66</td>
       </tr>
-      <tr  class="odd">
+      <tr  class="even">
         <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> Trunk/EVEbot/core/obj_Drones.iss</th>
         <td>65</td>
       </tr>
-      <tr  class="even">
+      <tr  class="odd">
         <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> Trunk/EVEbot/core/obj_Station.iss</th>
         <td>62</td>
       </tr>
-      <tr  class="odd">
+      <tr  class="even">
         <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> Trunk/EVEbot/core/obj_EVEBot.iss</th>
         <td>61</td>
       </tr>
-      <tr  class="even">
+      <tr  class="odd">
         <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> Trunk/EVEbot/core/obj_Missions.iss</th>
         <td>54</td>
       </tr>
-      <tr  class="odd">
+      <tr  class="even">
         <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> Trunk/EVEbot/core/obj_Asteroids.iss</th>
         <td>52</td>
       </tr>
-      <tr  class="even">
+      <tr  class="odd">
         <th><img src="file.png" width="15" height="13" alt="file in repo" title="file in repo"/> Trunk/EVEbot/core/obj_MissionCommands.iss</th>
         <td>51</td>
+      </tr>
+      <tr  class="even">
+        <th><img src="file-deleted.png" width="15" height="13" alt="File removed from repo" title="File removed from repo"/> Trunk/EVEbot/core/obj_Hauler.iss</th>
+        <td>49</td>
       </tr>
     </tbody>
   </table>
