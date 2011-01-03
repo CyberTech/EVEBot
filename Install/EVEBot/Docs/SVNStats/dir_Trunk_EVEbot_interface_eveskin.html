@@ -1,0 +1,379 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>StatSVN - Directory Trunk/EVEbot/interface/eveskin/</title>
+ <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
+    <meta name="Generator" content="StatSVN 0.7.0"/>
+<link rel="stylesheet" href="objectlab-statcvs.css" type="text/css"/>
+<script type="text/javascript" charset="utf-8" src="http://bit.ly/javascript-api.js?version=latest&#38;login=statsvn&#38;apiKey=R_2c362b417d0517c27876cbaca1bb68cc"></script>
+<script type="text/javascript" charset="utf-8">
+   // wait until page is loaded to call API
+   var redir_url;
+   var short_url;
+   BitlyCB.myShortenCallback = function(data) {
+      // this is how to get a result of shortening a single url
+      var result;
+      short_url=null;
+      for (var r in data.results) {
+         result = data.results[r];
+         result['longUrl'] = r;
+         short_url = result['shortUrl'];
+         break;
+      }
+      if (short_url==null) // bit.ly failed
+      document.location=redir_url;
+      else
+      redirToTwitter();
+   };
+   function shortenTweet(url) {
+      if (short_url == null || redir_url!=url) {
+      redir_url = url;
+      BitlyClient.shorten(document.location, 'BitlyCB.myShortenCallback');
+      }
+      else
+      redirToTwitter();
+      return false;
+   }
+   function redirToTwitter() { 
+      // replace {0} which is visible as %7B0} in the link
+      document.location = redir_url.replace('%7B0}', short_url);
+   }
+</script>
+  </head>
+
+<body>
+
+<h1>Directory Trunk/EVEbot/interface/eveskin/</h1>
+<div id="parentlink">&#171; <a href="index.html">Development Statistics for EVEBot</a></div>
+<dl class="attributes">
+    <dt>Directory Created:</dt>
+    <dd><span class="date">2007-07-16 17:23</span></dd>
+    <dt>Total Files:</dt>
+    <dd>7</dd>
+    <dt>Deleted Files:</dt>
+    <dd>2</dd>
+    <dt>Lines of Code:</dt>
+    <dd>0</dd>
+</dl>
+<p class="dirtree">
+<a href="dir.html">[root]</a>/<a href="dir_Trunk.html">Trunk</a>/<a href="dir_Trunk_EVEbot.html">EVEbot</a>/<a href="dir_Trunk_EVEbot_interface.html">interface</a>/<strong>eveskin</strong><br/>
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
+<a href="dir_Trunk_EVEbot_interface_eveskin_MainGUI.html">MainGUI</a> 
+(23 files, 0 lines)<br />
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder-deleted.png" width="15" height="13" alt="Folder removed from repo" title="Folder removed from repo"/> 
+<a href="dir_Trunk_EVEbot_interface_eveskin_MainGUI_Unused.html">Unused</a> 
+(0 files, 0 lines)<br />
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
+<a href="dir_Trunk_EVEbot_interface_eveskin_OptionsGUI.html">OptionsGUI</a> 
+(11 files, 0 lines)<br />
+</p>
+
+<div class="section">
+<h2>Lines of Code</h2>
+<p class="chart"><img src="loc_module_Trunk_EVEbot_interface_eveskin.png" alt="Trunk/EVEbot/interface/eveskin/ Lines of Code" width="800" height="500" /></p></div>
+<div class="section">
+<h2>Developers</h2>
+  <table  rules="groups" summary="All authors and the number of their changes and lines of code in this directory">
+    <colgroup align="left"/>
+    <colgroup align="right"/>
+    <colgroup align="right"/>
+    <colgroup align="right"/>
+    <thead>
+      <tr>
+        <th>Author</th>
+        <th>Changes</th>
+        <th>Lines of Code</th>
+        <th>Lines per Change</th>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <th>Totals</th>
+        <td>28 (100.0%)</td>
+        <td>341 (100.0%)</td>
+        <td>12.1</td>
+      </tr>
+    </tfoot>
+    <tbody>
+      <tr  class="odd">
+        <th><a href="user_cybertech.html" class="author">cybertech</a></th>
+        <td>20 (71.4%)</td>
+        <td>185 (54.3%)</td>
+        <td>9.2</td>
+      </tr>
+      <tr  class="even">
+        <th><a href="user_gliderpro.html" class="author">gliderpro</a></th>
+        <td>5 (17.9%)</td>
+        <td>149 (43.7%)</td>
+        <td>29.8</td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="user_altered.html" class="author">altered</a></th>
+        <td>3 (10.7%)</td>
+        <td>7 (2.1%)</td>
+        <td>2.3</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+<div class="section">
+<h2>Most Recent Commits</h2>
+<dl class="commitlist">
+  <dt><a name="13"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-01-03 02:54</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1686</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Remove crap no longer used in the new ui
+    </p>
+    <p class="commitdetails"><strong>0</strong> lines of code changed in <span class="files">9 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/interface/eveskin</strong>:
+        CloseWindow-Down.png&#160;<span class="change">(changed)</span>,
+        CloseWindow-Up.png&#160;<span class="change">(changed)</span>,
+        MaximiseWindow-Down.png&#160;<span class="change">(changed)</span>,
+        MaximiseWindow-Up.png&#160;<span class="change">(changed)</span>,
+        MinimiseWindow-Down.png&#160;<span class="change">(changed)</span>,
+        MinimiseWindow-Up.png&#160;<span class="change">(changed)</span>,
+        Thumbs.db&#160;<span class="change">(changed)</span>,
+        eveskin.xml&#160;<span class="del">(del)</span>,
+        ui_sample.png&#160;<span class="del">(del)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="12"></a>
+    <a href="user_gliderpro.html" class="author">gliderpro</a>
+    <span class="date">2008-10-22 17:07</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">812</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fixed GUI oddities.  Whole GUI needs an overhaul...
+    </p>
+    <p class="commitdetails"><strong>4</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/interface/eveskin</strong>:
+        eveskin.xml&#160;<span class="change">(+4&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="11"></a>
+    <a href="user_gliderpro.html" class="author">gliderpro</a>
+    <span class="date">2007-08-10 16:15</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">135</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Added a combobox and a listbox
+    </p>
+    <p class="commitdetails"><strong>52</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/interface/eveskin</strong>:
+        eveskin.xml&#160;<span class="change">(+52&#160;-7)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="10"></a>
+    <a href="user_gliderpro.html" class="author">gliderpro</a>
+    <span class="date">2007-08-10 15:34</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">133</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+
+    </p>
+    <p class="commitdetails"><strong>9</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/interface/eveskin</strong>:
+        eveskin.xml&#160;<span class="change">(+9)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="9"></a>
+    <a href="user_gliderpro.html" class="author">gliderpro</a>
+    <span class="date">2007-08-10 14:35</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">129</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Changed JetCan checkbox to a checkboxcommand.
+    </p>
+    <p class="commitdetails"><strong>40</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/interface/eveskin</strong>:
+        eveskin.xml&#160;<span class="change">(+40)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="8"></a>
+    <a href="user_gliderpro.html" class="author">gliderpro</a>
+    <span class="date">2007-08-10 13:38</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">128</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Added a checkbox for jetcan mining option.
+    </p>
+    <p class="commitdetails"><strong>44</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/interface/eveskin</strong>:
+        eveskin.xml&#160;<span class="change">(+44)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="7"></a>
+    <a href="user_altered.html" class="author">altered</a>
+    <span class="date">2007-07-24 11:11</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">39</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Play button converted to Run
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/interface/eveskin</strong>:
+        eveskin.xml&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="6"></a>
+    <a href="user_altered.html" class="author">altered</a>
+    <span class="date">2007-07-24 10:28</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">37</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+UI cleanup rearranging and console font fix
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/interface/eveskin</strong>:
+        eveskin.xml&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="5"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2007-07-24 01:19</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">33</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+moved unused files to subdir, added sample screenshot.
+    </p>
+    <p class="commitdetails"><strong>0</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/interface/eveskin</strong>:
+        ui_sample.png&#160;<span class="new">(new)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="4"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2007-07-24 00:59</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">32</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Modified UI quite a bit.  Still some cleanup to do.<br />
+<br />
+Various text-only changes to files.
+    </p>
+    <p class="commitdetails"><strong>71</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/interface/eveskin</strong>:
+        eveskin.xml&#160;<span class="change">(+71&#160;-64)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="3"></a>
+    <a href="user_altered.html" class="author">altered</a>
+    <span class="date">2007-07-23 14:03</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">30</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+path fix for the templates
+    </p>
+    <p class="commitdetails"><strong>5</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/interface/eveskin</strong>:
+        eveskin.xml&#160;<span class="change">(+5&#160;-5)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="2"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2007-07-23 13:43</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">29</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Merged in Altereed UI updates, changed ocore to point to new console window location.
+    </p>
+    <p class="commitdetails"><strong>95</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/interface/eveskin</strong>:
+        eveskin.xml&#160;<span class="change">(+95&#160;-19)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="1"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2007-07-16 17:23</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Initial commit of files from TheHazards svn
+    </p>
+    <p class="commitdetails"><strong>19</strong> lines of code changed in <span class="files">8 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/interface/eveskin</strong>:
+        CloseWindow-Down.png&#160;<span class="new">(new)</span>,
+        CloseWindow-Up.png&#160;<span class="new">(new)</span>,
+        MaximiseWindow-Down.png&#160;<span class="new">(new)</span>,
+        MaximiseWindow-Up.png&#160;<span class="new">(new)</span>,
+        MinimiseWindow-Down.png&#160;<span class="new">(new)</span>,
+        MinimiseWindow-Up.png&#160;<span class="new">(new)</span>,
+        Thumbs.db&#160;<span class="new">(new)</span>,
+        eveskin.xml&#160;<span class="new">(new&#160;19)</span>
+      </li>
+    </ul>
+  </dd>
+
+</dl>
+
+</div><div id="generatedby">Generated by <a href="http://www.statsvn.org">StatSVN</a> 0.7.0</div>
+</body>
+</html>

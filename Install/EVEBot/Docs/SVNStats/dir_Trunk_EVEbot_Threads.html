@@ -1,0 +1,976 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>StatSVN - Directory Trunk/EVEbot/Threads/</title>
+ <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
+    <meta name="Generator" content="StatSVN 0.7.0"/>
+<link rel="stylesheet" href="objectlab-statcvs.css" type="text/css"/>
+<script type="text/javascript" charset="utf-8" src="http://bit.ly/javascript-api.js?version=latest&#38;login=statsvn&#38;apiKey=R_2c362b417d0517c27876cbaca1bb68cc"></script>
+<script type="text/javascript" charset="utf-8">
+   // wait until page is loaded to call API
+   var redir_url;
+   var short_url;
+   BitlyCB.myShortenCallback = function(data) {
+      // this is how to get a result of shortening a single url
+      var result;
+      short_url=null;
+      for (var r in data.results) {
+         result = data.results[r];
+         result['longUrl'] = r;
+         short_url = result['shortUrl'];
+         break;
+      }
+      if (short_url==null) // bit.ly failed
+      document.location=redir_url;
+      else
+      redirToTwitter();
+   };
+   function shortenTweet(url) {
+      if (short_url == null || redir_url!=url) {
+      redir_url = url;
+      BitlyClient.shorten(document.location, 'BitlyCB.myShortenCallback');
+      }
+      else
+      redirToTwitter();
+      return false;
+   }
+   function redirToTwitter() { 
+      // replace {0} which is visible as %7B0} in the link
+      document.location = redir_url.replace('%7B0}', short_url);
+   }
+</script>
+  </head>
+
+<body>
+
+<h1>Directory Trunk/EVEbot/Threads/</h1>
+<div id="parentlink">&#171; <a href="index.html">Development Statistics for EVEBot</a></div>
+<dl class="attributes">
+    <dt>Directory Created:</dt>
+    <dd><span class="date">2008-10-21 16:01</span></dd>
+    <dt>Total Files:</dt>
+    <dd>6</dd>
+    <dt>Deleted Files:</dt>
+    <dd>0</dd>
+    <dt>Lines of Code:</dt>
+    <dd>1666</dd>
+</dl>
+<p class="dirtree">
+<a href="dir.html">[root]</a>/<a href="dir_Trunk.html">Trunk</a>/<a href="dir_Trunk_EVEbot.html">EVEbot</a>/<strong>Threads</strong><br/>
+</p>
+
+<div class="section">
+<h2>Lines of Code</h2>
+<p class="chart"><img src="loc_module_Trunk_EVEbot_Threads.png" alt="Trunk/EVEbot/Threads/ Lines of Code" width="800" height="500" /></p></div>
+<div class="section">
+<h2>Developers</h2>
+  <table  rules="groups" summary="All authors and the number of their changes and lines of code in this directory">
+    <colgroup align="left"/>
+    <colgroup align="right"/>
+    <colgroup align="right"/>
+    <colgroup align="right"/>
+    <thead>
+      <tr>
+        <th>Author</th>
+        <th>Changes</th>
+        <th>Lines of Code</th>
+        <th>Lines per Change</th>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <th>Totals</th>
+        <td>168 (100.0%)</td>
+        <td>3360 (100.0%)</td>
+        <td>20.0</td>
+      </tr>
+    </tfoot>
+    <tbody>
+      <tr  class="odd">
+        <th><a href="user_cybertech.html" class="author">cybertech</a></th>
+        <td>79 (47.0%)</td>
+        <td>1721 (51.2%)</td>
+        <td>21.7</td>
+      </tr>
+      <tr  class="even">
+        <th><a href="user_stealthy.html" class="author">stealthy</a></th>
+        <td>60 (35.7%)</td>
+        <td>940 (28.0%)</td>
+        <td>15.6</td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="user_Cplusplus.html" class="author">Cplusplus</a></th>
+        <td>15 (8.9%)</td>
+        <td>363 (10.8%)</td>
+        <td>24.2</td>
+      </tr>
+      <tr  class="even">
+        <th><a href="user_gliderpro.html" class="author">gliderpro</a></th>
+        <td>14 (8.3%)</td>
+        <td>336 (10.0%)</td>
+        <td>24.0</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+<div class="section">
+<h2>Most Recent Commits</h2>
+<dl class="commitlist">
+  <dt><a name="40"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-12-30 01:22</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1684</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Move most objects to event_evebot_onframe event instead of isxeve_onframe. <br />
+ This event is registered by obj_EVEBot and conditionally triggered by obj_EVEBot::Pulse<br />
+Create Config.Sound<br />
+Create Config.Logging<br />
+ Move Config.Common.UseSound to Config.Sound.EnableSound<br />
+ Move Config.EnableChatLogging to Config.Logging.LogLocalChat<br />
+ Add Config.Logging.LogLocalChat and Config.Logging.LogLocalChatToIRC, and Corp/Alliance equiv for each.<br />
+ Add Config.Sound.EnableChatAlerts<br />
+Fix Ship.IsPod Module update condition<br />
+Ensure all objects with initializers have correct shutdown.<br />
+<br />
+
+    </p>
+    <p class="commitdetails"><strong>24</strong> lines of code changed in <span class="files">4 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Defense.iss&#160;<span class="change">(+6&#160;-1)</span>,
+        Navigator.iss&#160;<span class="change">(+6&#160;-1)</span>,
+        Offense.iss&#160;<span class="change">(+6&#160;-1)</span>,
+        Targeting.iss&#160;<span class="change">(+6&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="39"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-12-12 02:37</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1666</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Check instation as well as inspace in defense.<br />
+Rename tabframe<br />
+Fix behavioral module dropdown population<br />
+
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Defense.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="38"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-12-12 01:32</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1665</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Switch to Pulsetimer class<br />
+Use ObjectName everywhere<br />
+Merge obj_Items into obj_EVEDB<br />
+Add LOG_ECHOTOO logging levels.<br />
+Add specific module debugging support, rather than global debugging.<br />
+
+    </p>
+    <p class="commitdetails"><strong>21</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+21&#160;-13)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="37"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-11-29 03:00</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1651</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Disable skill training by default.<br />
+Enhance dynamic behavior system.<br />
+Only call behavioral pulses if they're enabled<br />
+Only call the current behaviors ProcessState<br />
+Move Logging routines to obj_Logger (as Logger)<br />
+- Rename UpdateConsole* to Log*<br />
+Rename bot mode on UI dropdown to Behavior.<br />
+Populate behavior dropdown dynamically based on loaded behaviors, to better facilitate custom/private behaviors.<br />
+Behaviors no longer attach to onframe, but are called from EVEBot:Pulse<br />
+
+    </p>
+    <p class="commitdetails"><strong>46</strong> lines of code changed in <span class="files">4 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Defense.iss&#160;<span class="change">(+12&#160;-12)</span>,
+        Navigator.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        Offense.iss&#160;<span class="change">(+15&#160;-15)</span>,
+        Targeting.iss&#160;<span class="change">(+17&#160;-17)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="36"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-11-18 00:44</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1643</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+64Bit Conversions.<br />
+Removal of redundant testcases directories in prep for reorg.
+    </p>
+    <p class="commitdetails"><strong>10</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Defense.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        Navigator.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        Targeting.iss&#160;<span class="change">(+8&#160;-8)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="35"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-09-03 13:38</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1604</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Targets, Ratter, Defense, Offense: Remove object cache references<br />
+Update Ratter, Defense, Offense for new entity query system.<br />
+Offense: Calc max range for target painters<br />
+Offense: Put all target painters on the current target, don't spread them.<br />
+Offense: HaveFullAggro -&gt; HaveFullNPCAggro, move code from obj_Targets to this function.<br />
+Targets: USe entity query system<br />
+
+    </p>
+    <p class="commitdetails"><strong>106</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Defense.iss&#160;<span class="change">(+36&#160;-55)</span>,
+        Offense.iss&#160;<span class="change">(+70&#160;-20)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="34"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-04-01 23:10</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1561</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Clearing minor optimizations from my WC<br />
+Set default value for each ore type to 0 instead of 1 to avoid confusion.<br />
+
+    </p>
+    <p class="commitdetails"><strong>9</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Targeting.iss&#160;<span class="change">(+9&#160;-4)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="33"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-02-22 14:40</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1559</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Replace all fractional waits with waitframe or int waits. Should help performance, and reliablity in some cases<br />
+Remove _Var evebot-based system.<br />
+Fix various miner related things.<br />
+Convert obj_Belts to use cachedentity<br />
+Convert obj_JetCan to use cachedentity<br />
+Change negated .Equal to .NotEqual where it makes sense.<br />
+Fix possible delay-warp forever on drone screwup<br />
+Massively improve obj_Socials performance, caching results of checks on pilots, remove ourselves and our fleet members from consideration, etc.<br />
+Fix obj_Social PlayerInRange<br />
+Remove obj_Social PilotsWithinDetection<br />
+Do not set velocity on undocking, since we have CCP superspeed at undock now.<br />
+Update testapi with new include paths.<br />
+Added testcase for the new EntityCache<br />
+Updated insurance quote testcase to open insurance window.<br />
+<br />
+
+    </p>
+    <p class="commitdetails"><strong>6</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Targeting.iss&#160;<span class="change">(+6&#160;-6)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="32"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-12-20 01:36</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1530</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Update obj_Cache to use Time instead of Script.Runningtime<br />
+Optimize EVEBot.SessionValid and EVEBot.Paused<br />
+obj_Social: Track reported black/non-whitelisted pilots, and do not report again during the same danger period.<br />
+obj_Social: Track cleared (safe) pilots, and do not check them again until we dock or systems.<br />
+Remove obj_Social.PossibleHostiles<br />
+Remove obj_Social.NPCDetection<br />
+Merge obj_Social.CheckWhiteList and obj_Social.CheckBlackList into CheckLocalPilots, for optimization.<br />
+Redo blacklist/whitelist logic a tad:<br />
+    The whitelist OVERRIDES the blacklist, at all times, for pilot, corp, and alliance<br />
+    _IF_ UseWhiteList is checked, then pilots who are not whitelisted are implicitly blacklisted<br />
+Increase turbo level during startup to load faster.<br />
+UI: Fix Status page to have less empty space<br />
+UI: Increase console height on status page<br />
+UI: Fix random hide/unhide of certain tabs<br />
+UI: Realign combat tab subgroup to fit inside the box<br />
+UI: Remove autologin info boxes<br />
+UI: Make max runtime explicit for scale<br />
+Defense.iss: Some checks in pulse() only need called if InSpace
+    </p>
+    <p class="commitdetails"><strong>8</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Defense.iss&#160;<span class="change">(+8&#160;-5)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="31"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-12-13 00:48</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1513</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Convert all OnFrame event attachments to constant declared in defines.iss.<br />
+Define OnFrame and ISXEVE_onFrame constants in defines.iss so that the test build of isxeve can be tested.
+    </p>
+    <p class="commitdetails"><strong>4</strong> lines of code changed in <span class="files">4 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Defense.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        Navigator.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        Offense.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        Targeting.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="30"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-11-30 17:55</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1478</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+EVE Database Thread<br />
+Loads XML files containing EVE Database dumps.  Only threaded so that it reduces load time.
+    </p>
+    <p class="commitdetails"><strong>31</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        EVEDatabase.iss&#160;<span class="new">(new&#160;31)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="29"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-11-18 15:30</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1468</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+typo in a UI message
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Navigator.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="28"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-11-18 15:25</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1466</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Stuff to integrate navigator into evebot properly
+    </p>
+    <p class="commitdetails"><strong>13</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Navigator.iss&#160;<span class="change">(+13&#160;-13)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="27"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-11-18 14:58</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1463</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Navigator Rev2<br />
+<br />
+HELP HOW DID THIS GET HERE I AM NOT GOOD WITH STATE MACHINES
+    </p>
+    <p class="commitdetails"><strong>103</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Navigator.iss&#160;<span class="change">(+103&#160;-93)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="26"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-11-13 11:04</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1455</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Drones: Do some validation on QuickReturnAllToOrbit to avoid EVE:Execute spam<br />
+obj_Configuration: Add MaxDroneRange config item to Combat.<br />
+Mission Database: Added some missions.<br />
+Offense: Make use of Config.Combat.MaxDroneRange to limit the range at which you'll send drones.
+    </p>
+    <p class="commitdetails"><strong>2</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+2&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="25"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-11-12 14:35</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1453</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Navigator thread courtesy of Python
+    </p>
+    <p class="commitdetails"><strong>208</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Navigator.iss&#160;<span class="change">(+208)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="24"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-10-18 21:51</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1446</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+defines: Remove extra warpgate define<br />
+obj_Agents: Add a semi-random wait on mission turnin.<br />
+obj_Drones: Fix drone recall. No more crashes! Also, it scoops if the drones are close enough.<br />
+obj_Ship: Add some debug spew for BuildLookupTables when debug is enabled.<br />
+Offense: Remove extra call to Drones:CheckDroneHP<br />
+EVEBot.iss: Remove the instance of obj_Skills. Also helps with crashes.<br />
+Mission Database: As usual, added missions.
+    </p>
+    <p class="commitdetails"><strong>0</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="23"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-08-07 20:03</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1347</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Targeting: Finally removed the source of the annoying "Target.Value.EntityID" error spam, fixed UnlockRandomTarget to not try to use .EntityID on an index:entity.
+    </p>
+    <p class="commitdetails"><strong>2</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Targeting.iss&#160;<span class="change">(+2&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="22"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-08-06 20:18</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1345</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Mission Database: Added more missions.<br />
+Offense: Attempted fix for a very rare drone issue.<br />
+Defense: Fix entitycache throttling.<br />
+Social: Fix a LOT of the checks.<br />
+obj_Ship: Few ammo-code fixes.<br />
+obj_MissionCommands: Lots of fixes for everyone, works right with guns, approaches much better, much mor viable for drone users.<br />
+obj_Drones: Dirty hack for the ShouldLaunchDrones check for missions. Yes, you WILL have damaged drones.<br />
+obj_Cargo: Attempted conversion to EVE:MoveItemsTo<br />
+obj_Asteroids: Fix typo for belt bookmarks.<br />
+obj_Agents: Pick an agent on startup to help avoid the retarded convoing of the wrong agent.<br />
+obj_Ratter: Fix throttling of entitycache.
+    </p>
+    <p class="commitdetails"><strong>14</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Defense.iss&#160;<span class="change">(+12&#160;-3)</span>,
+        Offense.iss&#160;<span class="change">(+2&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="21"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-07-13 03:16</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1332</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Added NonCombat thread stub file.
+    </p>
+    <p class="commitdetails"><strong>0</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        NonCombat.iss&#160;<span class="new">(new)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="20"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-07-12 09:46</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1330</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Rattle: Throttle back EntityCache updates when we're not the active mode.<br />
+obj_Drones: Add a method for returning drones to orbit.<br />
+obj_Ship: Add a quick and probably dirty fix for OptimalWeaponRange for ships with both turrets and launchers, i.e. tristan<br />
+Defense: Queue up any warpscrambling rats, untested<br />
+Offense: Recall drones to orbit if our active target is out of drone reach
+    </p>
+    <p class="commitdetails"><strong>43</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Defense.iss&#160;<span class="change">(+38)</span>,
+        Offense.iss&#160;<span class="change">(+5)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="19"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-07-08 22:42</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1321</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Ship: Clean up the ammo code. Remove a ton of hungarian notation (I probably missed some of it) and all of my old and now useless code. Condense a Get/TurretMinimumRange and Get/TurretMaximumRange since there was no point at all in keeping them separate, while it was causing more work.<br />
+Offense: Make use of the GetTurretMinimumRange and GetTurretMaximumRange members. Somewhere between the last couple revisions and now I added a break in the deactivation of out-of-range Launchers.
+    </p>
+    <p class="commitdetails"><strong>2</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+2&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="18"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-07-08 21:03</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1320</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Offense: Fixed the ammo result caching. It was broken because of use of itrWeapon after the for loop conversion. Also fixed the typo in the target painter module list. I also made every iterator much more local and single use, and removed itrWeapon.
+    </p>
+    <p class="commitdetails"><strong>26</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+26&#160;-29)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="17"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-07-08 18:45</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1319</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Offense: I hate race conditions with a passion I cannot put into words. EVEBot dev emorage count: 2.
+    </p>
+    <p class="commitdetails"><strong>15</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+15&#160;-11)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="16"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-07-08 17:45</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1318</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Ship: Factor in Tracking Enhancers in optimal range calcs.<br />
+defines: Add a define for tracking enhancers.<br />
+Defense: Resuming when fleeing to station for "low cap" should work, if it doesn't let me know.<br />
+Offense: Activate target painters at 2 * their optimal range since they have such a massive friggin' falloff.
+    </p>
+    <p class="commitdetails"><strong>46</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Defense.iss&#160;<span class="change">(+11)</span>,
+        Offense.iss&#160;<span class="change">(+35&#160;-20)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="15"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-07-07 07:21</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1314</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Navigator thread. As in Flight of the
+    </p>
+    <p class="commitdetails"><strong>0</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Navigator.iss&#160;<span class="new">(new)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="14"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-07-06 20:01</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1310</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Targeting: Fix a bad check for entity's range
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Targeting.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="13"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-07-06 19:54</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1309</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Ship: Fix the caching of base optimals.<br />
+Defense: Make use of ECCM modules.
+    </p>
+    <p class="commitdetails"><strong>2</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Defense.iss&#160;<span class="change">(+2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="12"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-07-06 18:57</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1307</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Ratter: Add a check for queued targets to the NPC check.<br />
+obj_Ship: Rework a lot of the ammo code to be less loop-intensive and rely heavily on caching info.<br />
+Offense: Rework a lot of the turret code, rely on caching, remove as much looping as possible.<br />
+defines: Add a define for GROUP_ECCM.
+    </p>
+    <p class="commitdetails"><strong>80</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+80&#160;-92)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="11"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-07-06 08:35</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1306</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Offense: Remove the "break" in laucher activation. Fix the damn turret optimization.
+    </p>
+    <p class="commitdetails"><strong>29</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+29&#160;-8)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="10"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-07-06 07:35</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1305</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Offense: Fix the NeedAmmo optimization.
+    </p>
+    <p class="commitdetails"><strong>28</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+28&#160;-20)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="9"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-07-05 18:44</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1303</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Offense: Add another optimization
+    </p>
+    <p class="commitdetails"><strong>18</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+18&#160;-3)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="8"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-07-05 18:14</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1302</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Bandaid the bandaided bandaid... it's like putting a bandaid on cancer, man.
+    </p>
+    <p class="commitdetails"><strong>10</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+10&#160;-9)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="7"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-07-05 17:48</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1301</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Offense: Bandaid the bandaid
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="6"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-07-05 17:39</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1300</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Offense: Bandaid fix, more caching
+    </p>
+    <p class="commitdetails"><strong>8</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+8&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="5"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-07-05 17:30</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1299</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Offense: Fix a bad member call
+    </p>
+    <p class="commitdetails"><strong>12</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+12&#160;-5)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="4"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-07-05 15:34</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1298</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+defines: Added defines for all tech2 ammo.<br />
+obj_Ship: Added the ability to make use of tech2 ammo.<br />
+Offense: Reset ammo check to 5 sec.
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="3"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-07-05 14:04</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1295</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Targeting: Fixed queueing/targeting of blocking targets and the targeting of all and only all mandatory targets.<br />
+Offense: Launchers and Turrets will now co-exist and both work instead of using one or the other.<br />
+obj_Ratter: Remove a workaround for the broken stuff that I just fixed in Targeting.<br />
+obj_Configuration: Remove Config.Combat.ShouldUseMissiles
+    </p>
+    <p class="commitdetails"><strong>74</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+66&#160;-5)</span>,
+        Targeting.iss&#160;<span class="change">(+8&#160;-4)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="2"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-07-05 10:07</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1294</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Targeting: Slow down the rate of targeting to something a human can actually do.
+    </p>
+    <p class="commitdetails"><strong>2</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Targeting.iss&#160;<span class="change">(+2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="1"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-07-04 23:52</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1291</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+defines: Added a define for advanced pulse crystals.<br />
+obj_Drones: Remove a debug spew. Drones are now working very well.<br />
+obj_MissionCommands: Fix a typo (DRONESTATE_RETURNINGTOBAY vs DRONESTATE_RETURNING)<br />
+obj_Ship: Reworked the ammo code again. Initial cycle of ammo is no longer required, and evebot should now work with tech2 pulse crystals. Tech2 hybrid charges and projectiles are still out of the question for now.<br />
+obj_Targets: Update HaveFullAggro to use the new .ToAttacker code.<br />
+Offense: Make use of the new ammo code, partially cache some of the calls to avoid FPS nuking.
+    </p>
+    <p class="commitdetails"><strong>40</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+40&#160;-11)</span>
+      </li>
+    </ul>
+  </dd>
+
+</dl>
+
+<p>(86 more)</p>
+</div><div id="generatedby">Generated by <a href="http://www.statsvn.org">StatSVN</a> 0.7.0</div>
+</body>
+</html>

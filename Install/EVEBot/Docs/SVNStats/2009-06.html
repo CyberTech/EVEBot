@@ -1,0 +1,4428 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>StatSVN - June 2009 Commit Log</title>
+ <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
+    <meta name="Generator" content="StatSVN 0.7.0"/>
+<link rel="stylesheet" href="objectlab-statcvs.css" type="text/css"/>
+<script type="text/javascript" charset="utf-8" src="http://bit.ly/javascript-api.js?version=latest&#38;login=statsvn&#38;apiKey=R_2c362b417d0517c27876cbaca1bb68cc"></script>
+<script type="text/javascript" charset="utf-8">
+   // wait until page is loaded to call API
+   var redir_url;
+   var short_url;
+   BitlyCB.myShortenCallback = function(data) {
+      // this is how to get a result of shortening a single url
+      var result;
+      short_url=null;
+      for (var r in data.results) {
+         result = data.results[r];
+         result['longUrl'] = r;
+         short_url = result['shortUrl'];
+         break;
+      }
+      if (short_url==null) // bit.ly failed
+      document.location=redir_url;
+      else
+      redirToTwitter();
+   };
+   function shortenTweet(url) {
+      if (short_url == null || redir_url!=url) {
+      redir_url = url;
+      BitlyClient.shorten(document.location, 'BitlyCB.myShortenCallback');
+      }
+      else
+      redirToTwitter();
+      return false;
+   }
+   function redirToTwitter() { 
+      // replace {0} which is visible as %7B0} in the link
+      document.location = redir_url.replace('%7B0}', short_url);
+   }
+</script>
+  </head>
+
+<body>
+
+<h1>June 2009 Commit Log</h1>
+<div id="parentlink">&#171; <a href="index.html">Development Statistics for EVEBot</a></div>
+
+<div id="nav" class="section">
+<h2>Commit Logs</h2>
+<ul>
+    <li><a href="commitlog.html">January 2011</a></li>
+    <li><a href="2010-12.html">December 2010</a></li>
+    <li><a href="2010-11.html">November 2010</a></li>
+    <li><a href="2010-10.html">October 2010</a></li>
+    <li><a href="2010-09.html">September 2010</a></li>
+    <li><a href="2010-08.html">August 2010</a></li>
+    <li><a href="2010-07.html">July 2010</a></li>
+    <li><a href="2010-06.html">June 2010</a></li>
+    <li><a href="2010-05.html">May 2010</a></li>
+    <li><a href="2010-04.html">April 2010</a></li>
+    <li><a href="2010-03.html">March 2010</a></li>
+    <li><a href="2010-02.html">February 2010</a></li>
+    <li><a href="2010-01.html">January 2010</a></li>
+    <li><a href="2009-12.html">December 2009</a></li>
+    <li><a href="2009-11.html">November 2009</a></li>
+    <li><a href="2009-10.html">October 2009</a></li>
+    <li><a href="2009-09.html">September 2009</a></li>
+    <li><a href="2009-08.html">August 2009</a></li>
+    <li><a href="2009-07.html">July 2009</a></li>
+    <li><span class="here">June 2009</span></li>
+    <li><a href="2009-05.html">May 2009</a></li>
+    <li><a href="2009-04.html">April 2009</a></li>
+    <li><a href="2009-03.html">March 2009</a></li>
+    <li><a href="2009-02.html">February 2009</a></li>
+    <li><a href="2009-01.html">January 2009</a></li>
+    <li><a href="2008-12.html">December 2008</a></li>
+    <li><a href="2008-11.html">November 2008</a></li>
+    <li><a href="2008-10.html">October 2008</a></li>
+    <li><a href="2008-09.html">September 2008</a></li>
+    <li><a href="2008-08.html">August 2008</a></li>
+    <li><a href="2008-07.html">July 2008</a></li>
+    <li><a href="2008-06.html">June 2008</a></li>
+    <li><a href="2008-05.html">May 2008</a></li>
+    <li><a href="2008-04.html">April 2008</a></li>
+    <li><a href="2008-03.html">March 2008</a></li>
+    <li><a href="2008-02.html">February 2008</a></li>
+    <li><a href="2008-01.html">January 2008</a></li>
+    <li><a href="2007-12.html">December 2007</a></li>
+    <li><a href="2007-11.html">November 2007</a></li>
+    <li><a href="2007-10.html">October 2007</a></li>
+    <li><a href="2007-09.html">September 2007</a></li>
+    <li><a href="2007-08.html">August 2007</a></li>
+    <li><a href="2007-07.html">July 2007</a></li>
+</ul>
+</div><dl class="attributes">
+    <dt>Number of Commits:</dt>
+    <dd>192</dd>
+    <dt>Number of Active Developers:</dt>
+    <dd>4</dd>
+</dl>
+<dl class="commitlist">
+  <dt><a name="192"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-30 19:34</span>
+    <a class="permalink" title="Permalink to this commit" href="#192">#192</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1281</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+defines: Added defines for drone state idle, fighting, and returning.<br />
+obj_Drones: Make use of defines, add a few checks to prevent crashes
+    </p>
+    <p class="commitdetails"><strong>48</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        defines.iss&#160;<span class="change">(+5&#160;-1)</span>,
+        obj_Drones.iss&#160;<span class="change">(+43&#160;-30)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="191"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-30 03:03</span>
+    <a class="permalink" title="Permalink to this commit" href="#191">#191</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1280</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Automation: Updating changelog
+    </p>
+    <p class="commitdetails"><strong>4</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Docs</strong>:
+        changelog.html&#160;<span class="change">(+4)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="190"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-29 10:38</span>
+    <a class="permalink" title="Permalink to this commit" href="#190">#190</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1279</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Ship: Fix a typo in UpdateModuleLists
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Ship.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="189"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-27 03:03</span>
+    <a class="permalink" title="Permalink to this commit" href="#189">#189</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1278</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Automation: Updating changelog
+    </p>
+    <p class="commitdetails"><strong>7</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Docs</strong>:
+        changelog.html&#160;<span class="change">(+7)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="188"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-26 20:46</span>
+    <a class="permalink" title="Permalink to this commit" href="#188">#188</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1277</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Belts: Comment out the stargate check as per CyberTech's instructions.<br />
+Mission Database: Add a couple more missions and part of yet another.<br />
+obj_Drones: Fix the attempts to recall a NULL drone.<br />
+obj_Sound: Fix playing of sound.<br />
+obj_Ratter: Fix an issue where NPCCheck would think we have a chain in progress if we had and killed priority targets and left only one type of rat.
+    </p>
+    <p class="commitdetails"><strong>70</strong> lines of code changed in <span class="files">5 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Ratter.iss&#160;<span class="change">(+18&#160;-8)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Data</strong>:
+        Mission Database.xml&#160;<span class="change">(+41)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Belts.iss&#160;<span class="change">(+2)</span>,
+        obj_Drones.iss&#160;<span class="change">(+8&#160;-2)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core/Lib</strong>:
+        obj_Sound.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="187"></a>
+    <a href="user_gliderpro.html" class="author">gliderpro</a>
+    <span class="date">2009-06-26 10:22</span>
+    <a class="permalink" title="Permalink to this commit" href="#187">#187</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1276</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Updated Ship.TravelToSystem to use the new ClearAllWaypoints method.
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Ship.iss&#160;<span class="change">(+1&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="186"></a>
+    <a href="user_gliderpro.html" class="author">gliderpro</a>
+    <span class="date">2009-06-26 10:10</span>
+    <a class="permalink" title="Permalink to this commit" href="#186">#186</a>
+  </dt>
+  <dd>
+    <p class="comment">
+Added note with location of ISXIRC extension download.
+    </p>
+    <p class="commitdetails"><strong>4</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        defines.iss&#160;<span class="change">(+2)</span>
+      </li>
+      <li>
+        <strong>branches/stable/core</strong>:
+        defines.iss&#160;<span class="change">(+2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="185"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-26 03:04</span>
+    <a class="permalink" title="Permalink to this commit" href="#185">#185</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1273</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Automation: Updating changelog
+    </p>
+    <p class="commitdetails"><strong>3</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Docs</strong>:
+        changelog.html&#160;<span class="change">(+3)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="184"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-25 03:11</span>
+    <a class="permalink" title="Permalink to this commit" href="#184">#184</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1272</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Defense.FleetToSafeSpot Changes<br />
+- If we're at safespot<br />
+-- if tank is low and system is safe, decloak so reppers/boosters can run. Warp-Cycle safespots.<br />
+-- otherwise, if ship has cloak, activate it and pretend we don't exist. don't move.<br />
+-- otherwise, warp cycle safespots, if there's more than one.<br />
+
+    </p>
+    <p class="commitdetails"><strong>24</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Defense.iss&#160;<span class="change">(+24&#160;-14)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="183"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-25 03:03</span>
+    <a class="permalink" title="Permalink to this commit" href="#183">#183</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1271</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Automation: Updating changelog
+    </p>
+    <p class="commitdetails"><strong>4</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Docs</strong>:
+        changelog.html&#160;<span class="change">(+4)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="182"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-24 07:44</span>
+    <a class="permalink" title="Permalink to this commit" href="#182">#182</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1270</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Drones: Drones will focus on a target and will be recalled when taking damage.
+    </p>
+    <p class="commitdetails"><strong>39</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Drones.iss&#160;<span class="change">(+39&#160;-31)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="181"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-23 03:03</span>
+    <a class="permalink" title="Permalink to this commit" href="#181">#181</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1269</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Automation: Updating changelog
+    </p>
+    <p class="commitdetails"><strong>7</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Docs</strong>:
+        changelog.html&#160;<span class="change">(+7)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="180"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-22 15:41</span>
+    <a class="permalink" title="Permalink to this commit" href="#180">#180</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1268</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Me.Fleet:Broadcast_* testcases
+    </p>
+    <p class="commitdetails"><strong>4</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Testcases</strong>:
+        test_Me.Fleet_Broadcasts.iss&#160;<span class="new">(new&#160;4)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="179"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-22 11:08</span>
+    <a class="permalink" title="Permalink to this commit" href="#179">#179</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1267</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Deleted some deprecated wip
+    </p>
+    <p class="commitdetails"><strong>0</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot</strong>:
+        EVEBotCache.iss&#160;<span class="del">(del)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="178"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-22 08:28</span>
+    <a class="permalink" title="Permalink to this commit" href="#178">#178</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1266</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Targets: Fixed the "No such member EntityID" bug. We were iterating the cache's index:entity instead of the index:obj_Entity.
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Targets.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="177"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-22 03:03</span>
+    <a class="permalink" title="Permalink to this commit" href="#177">#177</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1265</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Automation: Updating changelog
+    </p>
+    <p class="commitdetails"><strong>14</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Docs</strong>:
+        changelog.html&#160;<span class="change">(+14)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="176"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-21 19:43</span>
+    <a class="permalink" title="Permalink to this commit" href="#176">#176</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1264</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Targets: Fix the problem causing the console spam of the "No such variable member"... crap by making HaveFullAggro take the path to the entitycache and making use of it.<br />
+Offense: Comply with above change.<br />
+Mission Database: Added a mission.
+    </p>
+    <p class="commitdetails"><strong>57</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Data</strong>:
+        Mission Database.xml&#160;<span class="change">(+44&#160;-8)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+2&#160;-2)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Targets.iss&#160;<span class="change">(+11&#160;-12)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="175"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-21 15:16</span>
+    <a class="permalink" title="Permalink to this commit" href="#175">#175</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1263</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fixed drones slightly<br />
+Missioncommands , a few fixes mostly minor
+    </p>
+    <p class="commitdetails"><strong>26</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Drones.iss&#160;<span class="change">(+19&#160;-18)</span>,
+        obj_MissionCombat.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_MissionCommands.iss&#160;<span class="change">(+6&#160;-3)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="174"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-21 08:39</span>
+    <a class="permalink" title="Permalink to this commit" href="#174">#174</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1262</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Add TODOs<br />
+Rename iterator to singular<br />
+Remove defines.iss include from Launcher.iss<br />
+Add defines.iss include to TestAPI.iss<br />
+
+    </p>
+    <p class="commitdetails"><strong>38</strong> lines of code changed in <span class="files">4 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot</strong>:
+        Launcher.iss&#160;<span class="change">(-1)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Support</strong>:
+        TestAPI.iss&#160;<span class="change">(+2)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Testcases</strong>:
+        test_Drones.iss&#160;<span class="change">(+10&#160;-7)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Targets.iss&#160;<span class="change">(+26&#160;-13)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="173"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-21 08:00</span>
+    <a class="permalink" title="Permalink to this commit" href="#173">#173</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1261</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Targets: Removed a duplicate case
+    </p>
+    <p class="commitdetails"><strong>0</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Targets.iss&#160;<span class="change">(-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="172"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-21 08:00</span>
+    <a class="permalink" title="Permalink to this commit" href="#172">#172</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1260</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Targets: Added the same things to Targets.IsNPC
+    </p>
+    <p class="commitdetails"><strong>2</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Targets.iss&#160;<span class="change">(+2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="171"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-21 07:54</span>
+    <a class="permalink" title="Permalink to this commit" href="#171">#171</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1259</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Targets: Add a check for deadspace overseer's structures and large collidable structures to Targets.NPC.
+    </p>
+    <p class="commitdetails"><strong>2</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Targets.iss&#160;<span class="change">(+2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="170"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-21 03:35</span>
+    <a class="permalink" title="Permalink to this commit" href="#170">#170</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1258</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Pulling should unlock the target we pull when it finishes
+    </p>
+    <p class="commitdetails"><strong>6</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCommands.iss&#160;<span class="change">(+6&#160;-5)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="169"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-21 03:04</span>
+    <a class="permalink" title="Permalink to this commit" href="#169">#169</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1257</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Automation: Updating changelog
+    </p>
+    <p class="commitdetails"><strong>23</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Docs</strong>:
+        changelog.html&#160;<span class="change">(+23)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="168"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-20 20:05</span>
+    <a class="permalink" title="Permalink to this commit" href="#168">#168</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1256</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Drones: Attempt at sending drones only if they're idle to avoid server calls<br />
+obj_MissionCommands: Attempt at fixing the not approaching when just on the edge of your max range<br />
+obj_Targets: Don't count LargeCollidableStructures or DeadspaceOverseersStructures in the Aggro check.<br />
+Mission Database: Added another mission.
+    </p>
+    <p class="commitdetails"><strong>29</strong> lines of code changed in <span class="files">4 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Data</strong>:
+        Mission Database.xml&#160;<span class="change">(+15&#160;-2)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Drones.iss&#160;<span class="change">(+7&#160;-3)</span>,
+        obj_MissionCommands.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Targets.iss&#160;<span class="change">(+6&#160;-3)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="167"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-20 16:48</span>
+    <a class="permalink" title="Permalink to this commit" href="#167">#167</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1255</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Drone returning might work now
+    </p>
+    <p class="commitdetails"><strong>463</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCommands.iss&#160;<span class="change">(+463&#160;-446)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="166"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-20 16:44</span>
+    <a class="permalink" title="Permalink to this commit" href="#166">#166</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1254</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Offense: Call CheckDroneHP<br />
+Mission Database: Added a couple missions. STOP USING SPACES INSTEAD OF TABS.
+    </p>
+    <p class="commitdetails"><strong>19</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Data</strong>:
+        Mission Database.xml&#160;<span class="change">(+18&#160;-11)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="165"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-20 15:38</span>
+    <a class="permalink" title="Permalink to this commit" href="#165">#165</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1253</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fixed waitaggro
+    </p>
+    <p class="commitdetails"><strong>3</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCombat.iss&#160;<span class="change">(+3&#160;-3)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="164"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-20 15:10</span>
+    <a class="permalink" title="Permalink to this commit" href="#164">#164</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1252</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+This is the last time that its fixed , it really works this time i even tested it
+    </p>
+    <p class="commitdetails"><strong>3</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Targets.iss&#160;<span class="change">(+3&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="163"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-20 14:58</span>
+    <a class="permalink" title="Permalink to this commit" href="#163">#163</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1251</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+I swear to god i fixed it now
+    </p>
+    <p class="commitdetails"><strong>2</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+2&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="162"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-20 14:29</span>
+    <a class="permalink" title="Permalink to this commit" href="#162">#162</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1250</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fixed mission drones properly this time
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="161"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-20 14:19</span>
+    <a class="permalink" title="Permalink to this commit" href="#161">#161</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1249</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Added a mission
+    </p>
+    <p class="commitdetails"><strong>7</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Data</strong>:
+        Mission Database.xml&#160;<span class="change">(+7)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="160"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-20 13:56</span>
+    <a class="permalink" title="Permalink to this commit" href="#160">#160</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1248</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fixed a typo that was messing with drone deployment for missions
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="159"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-20 13:34</span>
+    <a class="permalink" title="Permalink to this commit" href="#159">#159</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1247</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Waves should be working as intended now
+    </p>
+    <p class="commitdetails"><strong>7</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCommands.iss&#160;<span class="change">(+7&#160;-3)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="158"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-20 13:17</span>
+    <a class="permalink" title="Permalink to this commit" href="#158">#158</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1246</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+OptimalTargetingRange != OptimalWeaponRange! Fixed non approaching bug!
+    </p>
+    <p class="commitdetails"><strong>5</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCommands.iss&#160;<span class="change">(+5&#160;-5)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="157"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-20 13:07</span>
+    <a class="permalink" title="Permalink to this commit" href="#157">#157</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1245</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fix for nextroom not finishing
+    </p>
+    <p class="commitdetails"><strong>12</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCommands.iss&#160;<span class="change">(+12&#160;-16)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="156"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-20 10:21</span>
+    <a class="permalink" title="Permalink to this commit" href="#156">#156</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1244</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Added GROUP_WARPGATE - it should be used instead of TYPEID for detecting warpgates instead of TYPE_ACCELERATION_GATE and TYPE_ANCIENT_ACCELERATION_GATE
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        defines.iss&#160;<span class="change">(+1&#160;-8)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="155"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-20 09:31</span>
+    <a class="permalink" title="Permalink to this commit" href="#155">#155</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1243</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Turn off debug. Cyber, you didn't see this.
+    </p>
+    <p class="commitdetails"><strong>2</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        defines.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_MissionCommands.iss&#160;<span class="change">(+1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="154"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-20 08:47</span>
+    <a class="permalink" title="Permalink to this commit" href="#154">#154</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1242</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Mission Database: Add a "kill" command for the Habitat in 'Avenge a fallen comrade'
+    </p>
+    <p class="commitdetails"><strong>3</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Data</strong>:
+        Mission Database.xml&#160;<span class="change">(+3&#160;-4)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="153"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-20 08:41</span>
+    <a class="permalink" title="Permalink to this commit" href="#153">#153</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1241</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Mission Database: Added another mission.<br />
+defines.iss: Added a define for TYPE_ANCIENT_ACCELERATION_GATE<br />
+MissionCommands: Added a check for Ancient Acceleration Gates, used in some missions.
+    </p>
+    <p class="commitdetails"><strong>21</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Data</strong>:
+        Mission Database.xml&#160;<span class="change">(+11)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        defines.iss&#160;<span class="change">(+2&#160;-1)</span>,
+        obj_MissionCommands.iss&#160;<span class="change">(+8&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="152"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-20 03:02</span>
+    <a class="permalink" title="Permalink to this commit" href="#152">#152</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1240</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Automation: Updating changelog
+    </p>
+    <p class="commitdetails"><strong>25</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Docs</strong>:
+        changelog.html&#160;<span class="change">(+25)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="151"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-20 00:36</span>
+    <a class="permalink" title="Permalink to this commit" href="#151">#151</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1239</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+More defines
+    </p>
+    <p class="commitdetails"><strong>5</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        defines.iss&#160;<span class="change">(+5)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="150"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-20 00:16</span>
+    <a class="permalink" title="Permalink to this commit" href="#150">#150</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1238</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Launcher is even faster<br />
+Move Launcher.xml to EVEBot/Config (NOTE CHANGE, update your scripts)<br />
+Move Launcher_Example.xml to EVEBot/Config<br />
+Update TestAPI to support logging to files. By default, logs to config/logs/TestAPI_ScriptName.log<br />
+Update logging in TestAPI, Launcher, Support/obj_Configuration.iss<br />
+Enable LOG_MINOR, LOG_DEBUG from TestAPI users. Log_DEBUG is enabled by setting TESTPAI_DEBUG in TestAPI.iss
+    </p>
+    <p class="commitdetails"><strong>184</strong> lines of code changed in <span class="files">12 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot</strong>:
+        Launcher.iss&#160;<span class="change">(+13&#160;-11)</span>,
+        launcher_config_example.xml&#160;<span class="del">(del)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Support</strong>:
+        TestAPI.iss&#160;<span class="change">(+41&#160;-7)</span>,
+        obj_Configuration.iss&#160;<span class="change">(+23&#160;-23)</span>,
+        obj_LoginHandler.iss&#160;<span class="change">(+30&#160;-31)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/config</strong>:
+        Sample User Agents.xml&#160;<span class="del">(del)</span>,
+        Sample User Market.xml&#160;<span class="del">(del)</span>,
+        Sample User Mission Blacklist.xml&#160;<span class="del">(del)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/config/Examples</strong>:
+        Launcher_Example.xml&#160;<span class="new">(new&#160;23)</span>,
+        Sample User Agents.xml&#160;<span class="new">(new&#160;24)</span>,
+        Sample User Market.xml&#160;<span class="new">(new&#160;7)</span>,
+        Sample User Mission Blacklist.xml&#160;<span class="new">(new&#160;23)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="149"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-19 21:44</span>
+    <a class="permalink" title="Permalink to this commit" href="#149">#149</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1237</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Reduced the time it takes Launcher.iss to login by 60%<br />
+Added 2nd parameter to launcher to say whether to launch evebot after login or not - defaults to false.<br />
+Example: Launcher ProfileName TRUE
+    </p>
+    <p class="commitdetails"><strong>52</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot</strong>:
+        Launcher.iss&#160;<span class="change">(+15&#160;-10)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Support</strong>:
+        obj_LoginHandler.iss&#160;<span class="change">(+37&#160;-15)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="148"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-19 21:13</span>
+    <a class="permalink" title="Permalink to this commit" href="#148">#148</a>
+  </dt>
+  <dd>
+    <p class="comment">
+Redux: Fix freighter behavior when cargo to move is larger per individual unit than we have free cargo.
+    </p>
+    <p class="commitdetails"><strong>4</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Freighter.iss&#160;<span class="change">(+2&#160;-2)</span>
+      </li>
+      <li>
+        <strong>branches/stable/Behaviors</strong>:
+        obj_Freighter.iss&#160;<span class="change">(+2&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="147"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-19 20:45</span>
+    <a class="permalink" title="Permalink to this commit" href="#147">#147</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1234</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fix freighter behavior when cargo to move is larger per individual unit than we have free cargo.
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>branches/stable/Behaviors</strong>:
+        obj_Freighter.iss&#160;<span class="change">(+1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="146"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-19 20:35</span>
+    <a class="permalink" title="Permalink to this commit" href="#146">#146</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1233</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fix freighter behavior when cargo to move is larger per individual unit than we have free cargo.
+    </p>
+    <p class="commitdetails"><strong>0</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>branches/stable/Behaviors</strong>:
+        obj_Freighter.iss&#160;<span class="new">(new)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="145"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-19 20:26</span>
+    <a class="permalink" title="Permalink to this commit" href="#145">#145</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1232</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fix freighter behavior when cargo to move is larger per individual unit than we have free cargo.
+    </p>
+    <p class="commitdetails"><strong>9</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Freighter.iss&#160;<span class="change">(+9&#160;-6)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="144"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-19 18:23</span>
+    <a class="permalink" title="Permalink to this commit" href="#144">#144</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1231</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_MissionCommands: Forgot an iterator's .Value
+    </p>
+    <p class="commitdetails"><strong>7</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCommands.iss&#160;<span class="change">(+7&#160;-4)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="143"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-19 17:37</span>
+    <a class="permalink" title="Permalink to this commit" href="#143">#143</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1230</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Mission Database: Added a few lvl3's.<br />
+obj_Ship: Fixed a bug in GetBestAmmoTypeByRange resulting from not resetting iTurret before re-using it and expecting it to be 0.<br />
+obj_MissionCommands: Fixed approaching of out-of-range entities.
+    </p>
+    <p class="commitdetails"><strong>156</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Data</strong>:
+        Mission Database.xml&#160;<span class="change">(+26)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCommands.iss&#160;<span class="change">(+25&#160;-1)</span>,
+        obj_Ship.iss&#160;<span class="change">(+105&#160;-59)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="142"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-19 15:26</span>
+    <a class="permalink" title="Permalink to this commit" href="#142">#142</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1229</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+For future release, will not work as-is<br />
+
+    </p>
+    <p class="commitdetails"><strong>68</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Testcases</strong>:
+        test_DoGetFleet.iss&#160;<span class="change">(+68&#160;-10)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="141"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-19 15:12</span>
+    <a class="permalink" title="Permalink to this commit" href="#141">#141</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1228</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+MissionCommands uses defense.targetingme instead of Me:GetTargetedBy
+    </p>
+    <p class="commitdetails"><strong>2</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCommands.iss&#160;<span class="change">(+2&#160;-4)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="140"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-19 15:05</span>
+    <a class="permalink" title="Permalink to this commit" href="#140">#140</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1227</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Added Defense.TargetingMe (index:entity)
+    </p>
+    <p class="commitdetails"><strong>3</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Defense.iss&#160;<span class="change">(+3&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="139"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-19 14:08</span>
+    <a class="permalink" title="Permalink to this commit" href="#139">#139</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1226</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Sound: Fixed the call to a nonexistent PlaySound by renaming all calls to the correct TryPlaySound.
+    </p>
+    <p class="commitdetails"><strong>5</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core/Lib</strong>:
+        obj_Sound.iss&#160;<span class="change">(+5&#160;-5)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="138"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-19 13:52</span>
+    <a class="permalink" title="Permalink to this commit" href="#138">#138</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1225</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+TODO item example for mission templating
+    </p>
+    <p class="commitdetails"><strong>18</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Data</strong>:
+        Mission Database.xml&#160;<span class="change">(+18&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="137"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-19 13:40</span>
+    <a class="permalink" title="Permalink to this commit" href="#137">#137</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1224</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Agents: Typo in logmsg<br />
+Drones: Cleanup appearance, semantics, make log debug only<br />
+EntityCache: Undo reformatting<br />
+
+    </p>
+    <p class="commitdetails"><strong>60</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Agents.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Drones.iss&#160;<span class="change">(+11&#160;-17)</span>,
+        obj_EntityCache.iss&#160;<span class="change">(+48&#160;-50)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="136"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-19 12:00</span>
+    <a class="permalink" title="Permalink to this commit" href="#136">#136</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1223</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Moved IsNPC to obj_Targets , missioncommands uses cache more , added a filter option to the entitycache to filter by "IsNPC" , filled in the blanks for drones stuff in Offense.iss
+    </p>
+    <p class="commitdetails"><strong>97</strong> lines of code changed in <span class="files">5 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+1&#160;-2)</span>,
+        Targeting.iss&#160;<span class="change">(-20)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_EntityCache.iss&#160;<span class="change">(+72&#160;-56)</span>,
+        obj_MissionCommands.iss&#160;<span class="change">(+3&#160;-6)</span>,
+        obj_Targets.iss&#160;<span class="change">(+21)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="135"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-19 08:47</span>
+    <a class="permalink" title="Permalink to this commit" href="#135">#135</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1222</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Ratter: NPCCheck: Account for single-types with battleships due to destroying of priority frigs/cruisers.<br />
+obj_Drones: Fixes all around.<br />
+Mission Database: Added two lvl3 missions.<br />
+Offense: Change frequency of ammo checks.
+    </p>
+    <p class="commitdetails"><strong>26</strong> lines of code changed in <span class="files">5 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Ratter.iss&#160;<span class="change">(+1)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Data</strong>:
+        Mission Database.xml&#160;<span class="change">(+21&#160;-16)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Testcases</strong>:
+        test_Drones.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Drones.iss&#160;<span class="change">(+2&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="134"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-19 03:03</span>
+    <a class="permalink" title="Permalink to this commit" href="#134">#134</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1221</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Automation: Updating changelog
+    </p>
+    <p class="commitdetails"><strong>17</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Docs</strong>:
+        changelog.html&#160;<span class="change">(+17)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="133"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-18 23:30</span>
+    <a class="permalink" title="Permalink to this commit" href="#133">#133</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1220</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fix mixed line endings. How the fuck that happens i have no idea.
+    </p>
+    <p class="commitdetails"><strong>449</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Ratter.iss&#160;<span class="change">(+449&#160;-449)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="132"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-18 23:25</span>
+    <a class="permalink" title="Permalink to this commit" href="#132">#132</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1219</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Typo fx
+    </p>
+    <p class="commitdetails"><strong>2</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCombat.iss&#160;<span class="change">(+2&#160;-4)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="131"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-18 22:54</span>
+    <a class="permalink" title="Permalink to this commit" href="#131">#131</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1218</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fix formatting. Remove conflict. Fix line endings (hopefully). Re-apply previous commit to latest.
+    </p>
+    <p class="commitdetails"><strong>26</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Ratter.iss&#160;<span class="change">(+26&#160;-707)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="130"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-18 22:36</span>
+    <a class="permalink" title="Permalink to this commit" href="#130">#130</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1217</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Commit!!!
+    </p>
+    <p class="commitdetails"><strong>461</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Ratter.iss&#160;<span class="change">(+461)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="129"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-18 22:33</span>
+    <a class="permalink" title="Permalink to this commit" href="#129">#129</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1216</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Drones: Actually use the drone hp checking code I wrote so long ago. <br />
+obj_Ratter: Totally boned thanks to some svn screwery.<br />
+obj_Ship: Some fix somewhere.<br />
+obj_Targets: See above. <br />
+Defense: Not sure, too pissed to remember.<br />
+Offense: New member and slight code change for drone aggro handling.
+    </p>
+    <p class="commitdetails"><strong>121</strong> lines of code changed in <span class="files">6 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Defense.iss&#160;<span class="change">(+4)</span>,
+        Offense.iss&#160;<span class="change">(+28&#160;-2)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Configuration.iss&#160;<span class="change">(+1)</span>,
+        obj_Drones.iss&#160;<span class="change">(+30&#160;-35)</span>,
+        obj_Ship.iss&#160;<span class="change">(+54&#160;-34)</span>,
+        obj_Targets.iss&#160;<span class="change">(+4&#160;-4)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="128"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-18 16:55</span>
+    <a class="permalink" title="Permalink to this commit" href="#128">#128</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1215</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Turning off evebot_debug from being default (don't goddamn commit this as 1!)<br />
+missioncombat: Remove totally fucking useless debug message. Just because it's optional doesn't mean we need to print garbage.
+    </p>
+    <p class="commitdetails"><strong>2</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        defines.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_MissionCombat.iss&#160;<span class="change">(+1&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="127"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-18 16:49</span>
+    <a class="permalink" title="Permalink to this commit" href="#127">#127</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1214</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Ratter: Remove unnecessary bool<br />
+Targeting: Formatting fixes
+    </p>
+    <p class="commitdetails"><strong>19</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Ratter.iss&#160;<span class="change">(+2&#160;-8)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Targeting.iss&#160;<span class="change">(+17&#160;-20)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="126"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-18 16:47</span>
+    <a class="permalink" title="Permalink to this commit" href="#126">#126</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1213</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fix broken defense.hiding spam (wtf stealthy!)<br />
+Remove extra line feeds between every goddamn line that apparently happened when I converted to native line endings.
+    </p>
+    <p class="commitdetails"><strong>270</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Ratter.iss&#160;<span class="change">(+270&#160;-484)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="125"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-18 16:14</span>
+    <a class="permalink" title="Permalink to this commit" href="#125">#125</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1212</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fixed rejected commit.
+    </p>
+    <p class="commitdetails"><strong>4</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Drones.iss&#160;<span class="change">(+4&#160;-19)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="124"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-18 15:32</span>
+    <a class="permalink" title="Permalink to this commit" href="#124">#124</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1211</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Drones no longer fear the wrath of immobile structures<br />
+Moved IsNPCTarget to Targeting.iss<br />
+Changed mission commands to accept this
+    </p>
+    <p class="commitdetails"><strong>46</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Targeting.iss&#160;<span class="change">(+25)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Drones.iss&#160;<span class="change">(+19&#160;-4)</span>,
+        obj_MissionCommands.iss&#160;<span class="change">(+2&#160;-28)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="123"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-18 15:05</span>
+    <a class="permalink" title="Permalink to this commit" href="#123">#123</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1210</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+MissionCommands now uses the entity cache, a little bit
+    </p>
+    <p class="commitdetails"><strong>12</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCommands.iss&#160;<span class="change">(+12&#160;-183)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="122"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-18 03:03</span>
+    <a class="permalink" title="Permalink to this commit" href="#122">#122</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1209</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Automation: Updating changelog
+    </p>
+    <p class="commitdetails"><strong>12</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Docs</strong>:
+        changelog.html&#160;<span class="change">(+12)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="121"></a>
+    <a href="user_gliderpro.html" class="author">gliderpro</a>
+    <span class="date">2009-06-17 15:12</span>
+    <a class="permalink" title="Permalink to this commit" href="#121">#121</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1208</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Market object fixes.
+    </p>
+    <p class="commitdetails"><strong>126</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Testcases</strong>:
+        test_DoGetMyOrders.iss&#160;<span class="new">(new&#160;63)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/config</strong>:
+        Sample User Market.xml&#160;<span class="new">(new&#160;7)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Market.iss&#160;<span class="change">(+56&#160;-37)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="120"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-17 12:34</span>
+    <a class="permalink" title="Permalink to this commit" href="#120">#120</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1207</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Ratter: Missed a LOG_DEBUG.
+    </p>
+    <p class="commitdetails"><strong>861</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Ratter.iss&#160;<span class="change">(+861&#160;-418)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="119"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-17 12:32</span>
+    <a class="permalink" title="Permalink to this commit" href="#119">#119</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1206</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Ratter: Removed useless Orbit, IsOrbiting, KeepAtRange, and IsKeepAtRange methods/members.<br />
+obj_Ratter/obj_Targets: Made more UI:UpdateConsole calls use LOG_DEBUG.
+    </p>
+    <p class="commitdetails"><strong>4</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Ratter.iss&#160;<span class="change">(+2&#160;-63)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Targets.iss&#160;<span class="change">(+2&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="118"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-17 09:31</span>
+    <a class="permalink" title="Permalink to this commit" href="#118">#118</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1205</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Offense: Finish range-based ammo swapping and turret use. Using this with debug messages on will hurt your fps.<br />
+Mission Database: Added a mission requiring specific ship types and listed those types.<br />
+obj_Ratter: KeepAtRange fix. 
+    </p>
+    <p class="commitdetails"><strong>168</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Ratter.iss&#160;<span class="change">(+19&#160;-3)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Data</strong>:
+        Mission Database.xml&#160;<span class="change">(+21&#160;-3)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+128&#160;-46)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="117"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-17 09:30</span>
+    <a class="permalink" title="Permalink to this commit" href="#117">#117</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1204</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Targets: Return true in HaveFullAggro if we have a ship that won't aggro, i.e. hauler spawn.
+    </p>
+    <p class="commitdetails"><strong>6</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Targets.iss&#160;<span class="change">(+6&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="116"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-17 09:28</span>
+    <a class="permalink" title="Permalink to this commit" href="#116">#116</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1203</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Ship: All ammo/turret functions now take an int for which turret, fixed GetMinimum/MaximumTurretRange, fixed a nested loop in GetBestAmmoTypeByRange
+    </p>
+    <p class="commitdetails"><strong>360</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Ship.iss&#160;<span class="change">(+360&#160;-381)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="115"></a>
+    <a href="user_gliderpro.html" class="author">gliderpro</a>
+    <span class="date">2009-06-17 08:30</span>
+    <a class="permalink" title="Permalink to this commit" href="#115">#115</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1202</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fixed obj_EVEDB_StationID.<br />
+Added test case for obj_EVEDB_StationID.
+    </p>
+    <p class="commitdetails"><strong>34</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Testcases</strong>:
+        test_evebot_stationdb.iss&#160;<span class="new">(new&#160;27)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Station.iss&#160;<span class="change">(+7&#160;-5)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="114"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-17 03:06</span>
+    <a class="permalink" title="Permalink to this commit" href="#114">#114</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1201</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Automation: Updating changelog
+    </p>
+    <p class="commitdetails"><strong>42</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Docs</strong>:
+        changelog.html&#160;<span class="change">(+42)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="113"></a>
+    <a href="user_gliderpro.html" class="author">gliderpro</a>
+    <span class="date">2009-06-16 16:36</span>
+    <a class="permalink" title="Permalink to this commit" href="#113">#113</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1200</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fixed EVEDB_Items.TypeID<br />
+Fixed GetMyBuyOrders<br />
+Converted Testcases/test_evebot_itemdb.iss to use relative path.
+    </p>
+    <p class="commitdetails"><strong>33</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Testcases</strong>:
+        test_evebot_itemdb.iss&#160;<span class="change">(+3&#160;-2)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Items.iss&#160;<span class="change">(+8&#160;-32)</span>,
+        obj_Market.iss&#160;<span class="change">(+22&#160;-8)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="112"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-16 16:26</span>
+    <a class="permalink" title="Permalink to this commit" href="#112">#112</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1199</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Comments for future conversions.
+    </p>
+    <p class="commitdetails"><strong>10</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Data</strong>:
+        EVEDB_Items.sql&#160;<span class="change">(+5&#160;-2)</span>,
+        EVEDB_Items_As_Attributes.sql&#160;<span class="change">(+5&#160;-3)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="111"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-16 16:26</span>
+    <a class="permalink" title="Permalink to this commit" href="#111">#111</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1198</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Replacing &amp; with &amp;amp;
+    </p>
+    <p class="commitdetails"><strong>10</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Data</strong>:
+        EVEDB_Items.xml&#160;<span class="change">(+10&#160;-10)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="110"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-16 15:18</span>
+    <a class="permalink" title="Permalink to this commit" href="#110">#110</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1197</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Consolidate duplicate behavior loading code<br />
+Add UserDefined dir to dirs to check for behaviors.
+    </p>
+    <p class="commitdetails"><strong>28</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot</strong>:
+        EVEBot.iss&#160;<span class="change">(+28&#160;-31)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="109"></a>
+    <a href="user_gliderpro.html" class="author">gliderpro</a>
+    <span class="date">2009-06-16 15:13</span>
+    <a class="permalink" title="Permalink to this commit" href="#109">#109</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1196</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Added a UI element to disable display of local chat in EveBot.<br />
+Local chat is still logged to the EveBot log file.
+    </p>
+    <p class="commitdetails"><strong>28</strong> lines of code changed in <span class="files">4 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        readme.txt&#160;<span class="new">(new&#160;2)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Configuration.iss&#160;<span class="change">(+1)</span>,
+        obj_Social.iss&#160;<span class="change">(+8&#160;-1)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/interface</strong>:
+        evebotgui.xml&#160;<span class="change">(+17)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="108"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-16 14:57</span>
+    <a class="permalink" title="Permalink to this commit" href="#108">#108</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1195</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Update logging for dynamic behavior load
+    </p>
+    <p class="commitdetails"><strong>2</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot</strong>:
+        EVEBot.iss&#160;<span class="change">(+2&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="107"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-16 14:48</span>
+    <a class="permalink" title="Permalink to this commit" href="#107">#107</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1194</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Update OreHauler/Hauler references to MinerHauler
+    </p>
+    <p class="commitdetails"><strong>14</strong> lines of code changed in <span class="files">4 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot</strong>:
+        EVEBot.iss&#160;<span class="change">(+1&#160;-9)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        includes.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_MinerHauler.iss&#160;<span class="change">(+10&#160;-10)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/interface</strong>:
+        evebotgui.xml&#160;<span class="change">(+2&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="106"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-16 14:31</span>
+    <a class="permalink" title="Permalink to this commit" href="#106">#106</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1193</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Rename hauler to more appropriate name
+    </p>
+    <p class="commitdetails"><strong>630</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Hauler.iss&#160;<span class="del">(del)</span>,
+        obj_MinerHauler.iss&#160;<span class="new">(new&#160;630)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="105"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-16 14:15</span>
+    <a class="permalink" title="Permalink to this commit" href="#105">#105</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1192</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Updating user-defined behavior layout.
+    </p>
+    <p class="commitdetails"><strong>8</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot</strong>:
+        EVEBot.iss&#160;<span class="change">(+8&#160;-5)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        Custom&#160;<span class="del">(del)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Behaviors/UserDefined</strong>:
+        includes.iss&#160;<span class="new">(new)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="104"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-16 14:09</span>
+    <a class="permalink" title="Permalink to this commit" href="#104">#104</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1191</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Adding the Custom directory for user-defined behaviors.<br />
+
+    </p>
+    <p class="commitdetails"><strong>0</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        Custom&#160;<span class="new">(new)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="103"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-16 13:46</span>
+    <a class="permalink" title="Permalink to this commit" href="#103">#103</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1190</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Update SVN properties.
+    </p>
+    <p class="commitdetails"><strong>17873</strong> lines of code changed in <span class="files">75 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot</strong>:
+        EVEBot.iss&#160;<span class="change">(+259&#160;-259)</span>,
+        EVEBotCache.iss&#160;<span class="change">(changed)</span>,
+        EveBots.iss&#160;<span class="change">(+264&#160;-264)</span>,
+        EveCallback.iss&#160;<span class="change">(+40&#160;-40)</span>,
+        Launcher.iss&#160;<span class="change">(+68&#160;-68)</span>,
+        SuperLauncher.iss&#160;<span class="change">(+32&#160;-32)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        includes.iss&#160;<span class="change">(+7&#160;-7)</span>,
+        obj_Freighter.iss&#160;<span class="change">(+413&#160;-413)</span>,
+        obj_Hauler.iss&#160;<span class="change">(+630&#160;-630)</span>,
+        obj_Miner.iss&#160;<span class="change">(+445&#160;-445)</span>,
+        obj_Missioneer.iss&#160;<span class="change">(+99&#160;-99)</span>,
+        obj_Ratter.iss&#160;<span class="change">(changed)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Modes</strong>:
+        obj_Courier.iss&#160;<span class="change">(+100&#160;-100)</span>,
+        obj_Scavenger.iss&#160;<span class="change">(+171&#160;-171)</span>,
+        obj_StealthHauler.iss&#160;<span class="change">(changed)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Support</strong>:
+        TestAPI.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_AutoPatcher.iss&#160;<span class="change">(changed)</span>,
+        obj_Configuration.iss&#160;<span class="change">(+178&#160;-178)</span>,
+        obj_LoginHandler.iss&#160;<span class="change">(+208&#160;-208)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Testcases</strong>:
+        test_AmmoNames.iss&#160;<span class="change">(+36&#160;-36)</span>,
+        test_DoGetActiveDroneIDs.iss&#160;<span class="change">(+37&#160;-37)</span>,
+        test_DoGetActiveDrones.iss&#160;<span class="change">(+36&#160;-36)</span>,
+        test_DoGetAgents.iss&#160;<span class="change">(changed)</span>,
+        test_DoGetAvailableAmmo.iss&#160;<span class="change">(+61&#160;-61)</span>,
+        test_DoGetBookmarks.iss&#160;<span class="change">(+32&#160;-32)</span>,
+        test_DoGetBuddies.iss&#160;<span class="change">(+38&#160;-38)</span>,
+        test_DoGetEntities.iss&#160;<span class="change">(changed)</span>,
+        test_DoGetFleet.iss&#160;<span class="change">(changed)</span>,
+        test_DoGetPilots.iss&#160;<span class="change">(changed)</span>,
+        test_DoGetSkillQueue.iss&#160;<span class="change">(+39&#160;-39)</span>,
+        test_Drones.iss&#160;<span class="change">(changed)</span>,
+        test_GetAssets.iss&#160;<span class="change">(changed)</span>,
+        test_evebot_itemdb.iss&#160;<span class="change">(changed)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Defense.iss&#160;<span class="change">(+350&#160;-350)</span>,
+        Offense.iss&#160;<span class="change">(changed)</span>,
+        Targeting.iss&#160;<span class="change">(changed)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        EVESalvage.iss&#160;<span class="change">(+429&#160;-429)</span>,
+        EVESalvageLibrary.ISS&#160;<span class="change">(+1094&#160;-1094)</span>,
+        defines.iss&#160;<span class="change">(+546&#160;-546)</span>,
+        obj_Agents.iss&#160;<span class="change">(+1343&#160;-1343)</span>,
+        obj_Assets.iss&#160;<span class="change">(+123&#160;-123)</span>,
+        obj_Asteroids.iss&#160;<span class="change">(changed)</span>,
+        obj_Autopilot.iss&#160;<span class="change">(+96&#160;-96)</span>,
+        obj_BeltBookmarks.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Belts.iss&#160;<span class="change">(+146&#160;-146)</span>,
+        obj_Bookmark.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Bookmarks.iss&#160;<span class="change">(changed)</span>,
+        obj_Cache.iss&#160;<span class="change">(+248&#160;-248)</span>,
+        obj_Callback.iss&#160;<span class="change">(+37&#160;-37)</span>,
+        obj_Cargo.iss&#160;<span class="change">(changed)</span>,
+        obj_Configuration.iss&#160;<span class="change">(+783&#160;-783)</span>,
+        obj_Drones.iss&#160;<span class="change">(changed)</span>,
+        obj_EVEBot.iss&#160;<span class="change">(+276&#160;-276)</span>,
+        obj_EVEBotUI.iss&#160;<span class="change">(changed)</span>,
+        obj_EVEDB.iss&#160;<span class="change">(changed)</span>,
+        obj_EntityCache.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Fleet.iss&#160;<span class="change">(+134&#160;-134)</span>,
+        obj_IRC.iss&#160;<span class="change">(+313&#160;-313)</span>,
+        obj_Items.iss&#160;<span class="change">(+118&#160;-118)</span>,
+        obj_JetCan.iss&#160;<span class="change">(changed)</span>,
+        obj_Market.iss&#160;<span class="change">(+750&#160;-750)</span>,
+        obj_MissionCombat.iss&#160;<span class="change">(+543&#160;-543)</span>,
+        obj_MissionCombatConfig.iss&#160;<span class="change">(+11&#160;-11)</span>,
+        obj_MissionCommands.iss&#160;<span class="change">(+1280&#160;-1280)</span>,
+        obj_Missions.iss&#160;<span class="change">(+1242&#160;-1242)</span>,
+        obj_Safespots.iss&#160;<span class="change">(+34&#160;-34)</span>,
+        obj_Ship.iss&#160;<span class="change">(+2680&#160;-2680)</span>,
+        obj_Skills.iss&#160;<span class="change">(+409&#160;-409)</span>,
+        obj_Social.iss&#160;<span class="change">(+494&#160;-494)</span>,
+        obj_Station.iss&#160;<span class="change">(+334&#160;-334)</span>,
+        obj_Targets.iss&#160;<span class="change">(+634&#160;-634)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core/Lib</strong>:
+        obj_BaseClass.iss&#160;<span class="change">(changed)</span>,
+        obj_Mutex.iss&#160;<span class="change">(+40&#160;-40)</span>,
+        obj_Sound.iss&#160;<span class="change">(+62&#160;-62)</span>,
+        obj_Vector.iss&#160;<span class="change">(+127&#160;-127)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="102"></a>
+    <a href="user_gliderpro.html" class="author">gliderpro</a>
+    <span class="date">2009-06-16 13:29</span>
+    <a class="permalink" title="Permalink to this commit" href="#102">#102</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1189</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Made private behaviors sound less elitist.
+    </p>
+    <p class="commitdetails"><strong>5</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot</strong>:
+        EVEBot.iss&#160;<span class="change">(+5&#160;-5)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="101"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-16 13:11</span>
+    <a class="permalink" title="Permalink to this commit" href="#101">#101</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1188</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Added communications cold war, blocked out as the missioner does not support ship switching yet
+    </p>
+    <p class="commitdetails"><strong>16</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Data</strong>:
+        Mission Database.xml&#160;<span class="change">(+16&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="100"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-16 12:42</span>
+    <a class="permalink" title="Permalink to this commit" href="#100">#100</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1187</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Another tentative fix for the problem of trying to kill entities that no longer exist
+    </p>
+    <p class="commitdetails"><strong>13</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCommands.iss&#160;<span class="change">(+13&#160;-9)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="99"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-16 12:09</span>
+    <a class="permalink" title="Permalink to this commit" href="#99">#99</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1186</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Mission Database: Added mission 'Terrorism!', level 2.<br />
+Sample User Mission Blacklist: Added "Delving Into the Past (1 of 3)" until proper ship-checking support is built in.<br />
+Also adding "Data Mining" as it is a mining mission labeled as an encounter.
+    </p>
+    <p class="commitdetails"><strong>10</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Data</strong>:
+        Mission Database.xml&#160;<span class="change">(+8)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/config</strong>:
+        Sample User Mission Blacklist.xml&#160;<span class="change">(+2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="98"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-16 11:40</span>
+    <a class="permalink" title="Permalink to this commit" href="#98">#98</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1185</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+!= is not a lavishscript operator apparently
+    </p>
+    <p class="commitdetails"><strong>2</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCommands.iss&#160;<span class="change">(+2&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="97"></a>
+    <a href="user_gliderpro.html" class="author">gliderpro</a>
+    <span class="date">2009-06-16 11:28</span>
+    <a class="permalink" title="Permalink to this commit" href="#97">#97</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1184</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Removed the item list from obj_Market.iss.<br />
+Made integration of private behaviors more suitable for dual SVN repositories.<br />
+EVEBot now loads behaviors from a directory named "private" in addition to the "behaviors" directory.
+    </p>
+    <p class="commitdetails"><strong>37</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot</strong>:
+        EVEBot.iss&#160;<span class="change">(+29&#160;-19)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        includes.iss&#160;<span class="new">(new&#160;8)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Market.iss&#160;<span class="change">(-86)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="96"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-16 11:24</span>
+    <a class="permalink" title="Permalink to this commit" href="#96">#96</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1183</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Another operator error
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCommands.iss&#160;<span class="change">(+1&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="95"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-16 11:20</span>
+    <a class="permalink" title="Permalink to this commit" href="#95">#95</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1182</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fixed stuff in approach in missioncommands<br />
+added entitycache to the project file
+    </p>
+    <p class="commitdetails"><strong>599</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot</strong>:
+        evebot.prj&#160;<span class="change">(+1)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCommands.iss&#160;<span class="change">(+598&#160;-609)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="94"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-16 10:51</span>
+    <a class="permalink" title="Permalink to this commit" href="#94">#94</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1181</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+!&lt; == &gt; hurrrr
+    </p>
+    <p class="commitdetails"><strong>4</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCommands.iss&#160;<span class="change">(+4&#160;-4)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="93"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-16 10:22</span>
+    <a class="permalink" title="Permalink to this commit" href="#93">#93</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1180</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Reverting drone changes that accidentally got committed
+    </p>
+    <p class="commitdetails"><strong>0</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Drones.iss&#160;<span class="change">(-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="92"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-16 10:01</span>
+    <a class="permalink" title="Permalink to this commit" href="#92">#92</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1179</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fixed trying to kill wrecks<br />
+Fixed killing spawn containers<br />
+KillID now checks to make sure the entityID has not been taken by a wreck
+    </p>
+    <p class="commitdetails"><strong>25</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        defines.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Drones.iss&#160;<span class="change">(+1)</span>,
+        obj_MissionCommands.iss&#160;<span class="change">(+23&#160;-13)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="91"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-16 09:15</span>
+    <a class="permalink" title="Permalink to this commit" href="#91">#91</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1178</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+I SPEL REEL GUD
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCommands.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="90"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-16 09:11</span>
+    <a class="permalink" title="Permalink to this commit" href="#90">#90</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1177</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fixed an even dumber mistake with braces
+    </p>
+    <p class="commitdetails"><strong>744</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCommands.iss&#160;<span class="change">(+744&#160;-743)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="89"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-16 09:09</span>
+    <a class="permalink" title="Permalink to this commit" href="#89">#89</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1176</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fixed a dumb mistake with checking entities exist in nextroom
+    </p>
+    <p class="commitdetails"><strong>763</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCommands.iss&#160;<span class="change">(+763&#160;-764)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="88"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-16 09:04</span>
+    <a class="permalink" title="Permalink to this commit" href="#88">#88</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1175</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Whoops , passing parameters is hard
+    </p>
+    <p class="commitdetails"><strong>2</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCombat.iss&#160;<span class="change">(+2&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="87"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-16 08:38</span>
+    <a class="permalink" title="Permalink to this commit" href="#87">#87</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1174</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Loot entity fixed<br />
+ship.WarpToBookMark now takes an extra bool parameter which controls whether it will use any  acceleration gate it finds, it is true by default
+    </p>
+    <p class="commitdetails"><strong>25</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCombat.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_MissionCommands.iss&#160;<span class="change">(+6&#160;-1)</span>,
+        obj_Ship.iss&#160;<span class="change">(+17&#160;-11)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="86"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-16 08:17</span>
+    <a class="permalink" title="Permalink to this commit" href="#86">#86</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1173</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Added entity(exists) to approach functions<br />
+
+    </p>
+    <p class="commitdetails"><strong>26</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCommands.iss&#160;<span class="change">(+26&#160;-15)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="85"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-16 07:41</span>
+    <a class="permalink" title="Permalink to this commit" href="#85">#85</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1172</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Ship.WarpToBookmark no longer decides to go through gates if it finds them<br />
+Added target priorities,  ,  anything below 5 dies last , anything above it will get targeted first, 5 should not be used as it is assigned to targets not in the list automatically
+    </p>
+    <p class="commitdetails"><strong>137</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCombat.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_MissionCommands.iss&#160;<span class="change">(+132&#160;-73)</span>,
+        obj_Ship.iss&#160;<span class="change">(+4&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="84"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-16 03:04</span>
+    <a class="permalink" title="Permalink to this commit" href="#84">#84</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1171</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Automation: Updating changelog
+    </p>
+    <p class="commitdetails"><strong>24</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Docs</strong>:
+        changelog.html&#160;<span class="change">(+24)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="83"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-15 19:33</span>
+    <a class="permalink" title="Permalink to this commit" href="#83">#83</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1170</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Ratter: Yet again re-did targeting logic. It won't need re-done again.<br />
+obj_Ship: Removed Ship.GetNumberTurrets and Ship.NumberTurrets. Ship.ModuleList_Weapon.Used will be used in its place.<br />
+Mission Database: Added part of another mission.<br />
+Offense: Use Ship.ModuleList_Weapon in the place of Ship.NumberTurrets.
+    </p>
+    <p class="commitdetails"><strong>93</strong> lines of code changed in <span class="files">4 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Ratter.iss&#160;<span class="change">(+73&#160;-59)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Data</strong>:
+        Mission Database.xml&#160;<span class="change">(+16)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+3&#160;-3)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Ship.iss&#160;<span class="change">(+1&#160;-23)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="82"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-15 19:06</span>
+    <a class="permalink" title="Permalink to this commit" href="#82">#82</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1169</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Targeting:<br />
+ Added "Blocker" status for queued targets. Such targets MUST be mandatory, they MUST be highest priority, and they will block all further targeting until they are  removed from queue (by destruction, leaving grid, or Target:Remove[])<br />
+
+    </p>
+    <p class="commitdetails"><strong>30</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Targeting.iss&#160;<span class="change">(+30&#160;-4)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="81"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-15 16:59</span>
+    <a class="permalink" title="Permalink to this commit" href="#81">#81</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1168</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Agents: Consolidate duplicated code blocks<br />
+Drones: Add todo<br />
+EntityCache: Fix ordering of ore density and remove extra case
+    </p>
+    <p class="commitdetails"><strong>22</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Agents.iss&#160;<span class="change">(+8&#160;-59)</span>,
+        obj_Drones.iss&#160;<span class="change">(+9&#160;-8)</span>,
+        obj_EntityCache.iss&#160;<span class="change">(+5&#160;-8)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="80"></a>
+    <a href="user_gliderpro.html" class="author">gliderpro</a>
+    <span class="date">2009-06-15 16:29</span>
+    <a class="permalink" title="Permalink to this commit" href="#80">#80</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1167</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Added code to populate the bot mode combo box based on the bot modules index.
+    </p>
+    <p class="commitdetails"><strong>12</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot</strong>:
+        EVEBot.iss&#160;<span class="change">(+12)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="79"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-15 16:08</span>
+    <a class="permalink" title="Permalink to this commit" href="#79">#79</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1166</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Mission Database: Added Human Cattle 1, 3, 4, and 5 of 5.
+    </p>
+    <p class="commitdetails"><strong>30</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Data</strong>:
+        Mission Database.xml&#160;<span class="change">(+30)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="78"></a>
+    <a href="user_gliderpro.html" class="author">gliderpro</a>
+    <span class="date">2009-06-15 14:14</span>
+    <a class="permalink" title="Permalink to this commit" href="#78">#78</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1165</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+minor fix to logging
+    </p>
+    <p class="commitdetails"><strong>10</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Market.iss&#160;<span class="change">(+10&#160;-20)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="77"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-15 12:59</span>
+    <a class="permalink" title="Permalink to this commit" href="#77">#77</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1164</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Various: Make sure all math equations are using Math.Calc - doing math inside if statements by using parenthesis is not reliable.<br />
+Offense: Remove duplicate drone shortage check
+    </p>
+    <p class="commitdetails"><strong>40</strong> lines of code changed in <span class="files">5 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Hauler.iss&#160;<span class="change">(+3&#160;-3)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Modes</strong>:
+        obj_Scavenger.iss&#160;<span class="change">(+16&#160;-16)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+10&#160;-14)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Cargo.iss&#160;<span class="change">(+5&#160;-6)</span>,
+        obj_Missions.iss&#160;<span class="change">(+6&#160;-6)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="76"></a>
+    <a href="user_gliderpro.html" class="author">gliderpro</a>
+    <span class="date">2009-06-15 12:25</span>
+    <a class="permalink" title="Permalink to this commit" href="#76">#76</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1163</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Updated obj_Market.iss to include new market routines.
+    </p>
+    <p class="commitdetails"><strong>277</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Market.iss&#160;<span class="change">(+277&#160;-10)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="75"></a>
+    <a href="user_gliderpro.html" class="author">gliderpro</a>
+    <span class="date">2009-06-15 11:25</span>
+    <a class="permalink" title="Permalink to this commit" href="#75">#75</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1162</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Added code to make all behaviors optional.<br />
+Added code to dynamically create behavior objects.
+    </p>
+    <p class="commitdetails"><strong>31</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot</strong>:
+        EVEBot.iss&#160;<span class="change">(+31&#160;-13)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="74"></a>
+    <a href="user_gliderpro.html" class="author">gliderpro</a>
+    <span class="date">2009-06-15 11:23</span>
+    <a class="permalink" title="Permalink to this commit" href="#74">#74</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1161</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Moved freighter mode object files into new Modes directory.
+    </p>
+    <p class="commitdetails"><strong>416</strong> lines of code changed in <span class="files">6 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Courier.iss&#160;<span class="del">(del)</span>,
+        obj_Scavenger.iss&#160;<span class="del">(del)</span>,
+        obj_StealthHauler.iss&#160;<span class="del">(del)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Modes</strong>:
+        obj_Courier.iss&#160;<span class="new">(new&#160;100)</span>,
+        obj_Scavenger.iss&#160;<span class="new">(new&#160;171)</span>,
+        obj_StealthHauler.iss&#160;<span class="new">(new&#160;145)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="73"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-15 10:27</span>
+    <a class="permalink" title="Permalink to this commit" href="#73">#73</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1159</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Defense: ReturnToDuty if we're hiding because of a local check but local is clear.
+    </p>
+    <p class="commitdetails"><strong>12</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Data</strong>:
+        Mission Database.xml&#160;<span class="change">(+8)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Defense.iss&#160;<span class="change">(+4)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="72"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-15 10:12</span>
+    <a class="permalink" title="Permalink to this commit" href="#72">#72</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1158</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Configuration: Removed Config.Combat.MaximumDroneRange.<br />
+Offense: Use Me.DroneControlRange instead of Config.Combat.MaximumDroneRange
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Configuration.iss&#160;<span class="change">(-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="71"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-15 10:07</span>
+    <a class="permalink" title="Permalink to this commit" href="#71">#71</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1157</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Targets: Added bool Targets.HaveFullAggro for detecting whether or not we have full aggro.<br />
+obj_Configuration: Added int Config.Combat.MaximumDroneRange, default 45000.<br />
+Offense: Only launch drones if we have full aggro and our target is in maximum drone range. This will help prevent our drones getting beat the hell up.<br />
+Mission Database: Added mission 'The Mordus Headhunters', level 2.<br />
+obj_Ratter: Added a detection for chains-in-progress, i.e. only one type of rat is present.<br />
+obj_Social: Fixed some formatting that was pissing me off while I was debugging.
+    </p>
+    <p class="commitdetails"><strong>82</strong> lines of code changed in <span class="files">6 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Ratter.iss&#160;<span class="change">(+28&#160;-6)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Data</strong>:
+        Mission Database.xml&#160;<span class="change">(+10&#160;-1)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+10&#160;-7)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Configuration.iss&#160;<span class="change">(+2&#160;-1)</span>,
+        obj_Social.iss&#160;<span class="change">(+11&#160;-11)</span>,
+        obj_Targets.iss&#160;<span class="change">(+21)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="70"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-15 03:03</span>
+    <a class="permalink" title="Permalink to this commit" href="#70">#70</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1156</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Automation: Updating changelog
+    </p>
+    <p class="commitdetails"><strong>27</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Docs</strong>:
+        changelog.html&#160;<span class="change">(+27)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="69"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-14 22:18</span>
+    <a class="permalink" title="Permalink to this commit" href="#69">#69</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1155</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Ratter: Chaining works, I promise! Moved the QueueTargets check to where it was supposed to be, and now it works. I need people to test the ammo swapping in minmatar, gallente, and amarr ships!
+    </p>
+    <p class="commitdetails"><strong>2</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Ratter.iss&#160;<span class="change">(+2&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="68"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-14 22:06</span>
+    <a class="permalink" title="Permalink to this commit" href="#68">#68</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1154</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Ratter: Prepend a call to PlayDetectSound with the class the method is a part of. I.e. PlayDetectSound -&gt; Sound:PlayDetectSound. Also, add the IsSpecial check that was left out, which caused the crash that pointed out the missing Sound:<br />
+As of now, ammo swapping and ratter are both working quite stably.
+    </p>
+    <p class="commitdetails"><strong>2</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Ratter.iss&#160;<span class="change">(+2&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="67"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-14 22:00</span>
+    <a class="permalink" title="Permalink to this commit" href="#67">#67</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1153</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Ship: Added NeedAmmoChange(float range).<br />
+obj_Ratter: Fixed a logical error (&amp;&amp; instead of ||) in chain targeting.<br />
+Offense: Made use of NeedAmmoChange.
+    </p>
+    <p class="commitdetails"><strong>84</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Ratter.iss&#160;<span class="change">(+3&#160;-2)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+47&#160;-37)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Ship.iss&#160;<span class="change">(+34&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="66"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-14 21:36</span>
+    <a class="permalink" title="Permalink to this commit" href="#66">#66</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1152</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Ratter: Completely re-did targeting logic, QueueTargets is the result. It can chain, play sound on special spawn, etc. It can do everything the Stable ratter can, but BETTER! Now with 100% more EntityCache. By default ratter uses KeepAtRange[${Ship.MinimumTurretRange}] for non-missile boats, in the future this will be optional (see: very soon).<br />
+obj_Defense: Fixed a typo pointed out by Shiva.<br />
+obj_Offense: Change low range multi for turrets to 0.33.<br />
+obj_Ship: No longer update the module list every second; it's not needed.<br />
+obj_Targets: Do some fixes to CalcTotalBattleShipValue.<br />
+Mission Database: Add the mission "The Serpentis Spies". Level 3's soon to come!
+    </p>
+    <p class="commitdetails"><strong>217</strong> lines of code changed in <span class="files">6 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Ratter.iss&#160;<span class="change">(+193&#160;-121)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Data</strong>:
+        Mission Database.xml&#160;<span class="change">(+7)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Defense.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        Offense.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Ship.iss&#160;<span class="change">(-1)</span>,
+        obj_Targets.iss&#160;<span class="change">(+15&#160;-11)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="65"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-14 15:09</span>
+    <a class="permalink" title="Permalink to this commit" href="#65">#65</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1151</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fixed a {
+    </p>
+    <p class="commitdetails"><strong>611</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCommands.iss&#160;<span class="change">(+611&#160;-613)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="64"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-14 15:06</span>
+    <a class="permalink" title="Permalink to this commit" href="#64">#64</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1150</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Did some more tweaking to help fix rat chaining.<br />
+Mixing legacy and new code tends to not work well.
+    </p>
+    <p class="commitdetails"><strong>13</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Ratter.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        defines.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Targets.iss&#160;<span class="change">(+11&#160;-6)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="63"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-14 14:56</span>
+    <a class="permalink" title="Permalink to this commit" href="#63">#63</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1149</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fixed the mission stuff trying to target non existent rats
+    </p>
+    <p class="commitdetails"><strong>634</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCommands.iss&#160;<span class="change">(+634&#160;-586)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="62"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-14 14:10</span>
+    <a class="permalink" title="Permalink to this commit" href="#62">#62</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1148</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fixed wreck looting bug aswell
+    </p>
+    <p class="commitdetails"><strong>2</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCommands.iss&#160;<span class="change">(+2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="61"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-14 14:08</span>
+    <a class="permalink" title="Permalink to this commit" href="#61">#61</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1147</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fix for attempting to loot null
+    </p>
+    <p class="commitdetails"><strong>7</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        defines.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_MissionCommands.iss&#160;<span class="change">(+6&#160;-4)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="60"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-14 13:16</span>
+    <a class="permalink" title="Permalink to this commit" href="#60">#60</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1146</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fixed some more stuff in ratter.
+    </p>
+    <p class="commitdetails"><strong>140</strong> lines of code changed in <span class="files">4 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Ratter.iss&#160;<span class="change">(+106&#160;-82)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        defines.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Targets.iss&#160;<span class="change">(+32&#160;-19)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="59"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-14 13:13</span>
+    <a class="permalink" title="Permalink to this commit" href="#59">#59</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1145</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Tweaked approach distances<br />
+added a mission
+    </p>
+    <p class="commitdetails"><strong>12</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Data</strong>:
+        Mission Database.xml&#160;<span class="change">(+11)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCommands.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="58"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-14 11:54</span>
+    <a class="permalink" title="Permalink to this commit" href="#58">#58</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1144</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Changed looting a little
+    </p>
+    <p class="commitdetails"><strong>15</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCombat.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_MissionCommands.iss&#160;<span class="change">(+14&#160;-3)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="57"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-14 11:03</span>
+    <a class="permalink" title="Permalink to this commit" href="#57">#57</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1143</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Added a bit of tolerance to approaching, fixed kill so if the target goes out of range before we try and shoot at it it will approach more<br />
+Havemission will update the mission cache if the names do not match
+    </p>
+    <p class="commitdetails"><strong>56</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Agents.iss&#160;<span class="change">(+37&#160;-4)</span>,
+        obj_MissionCommands.iss&#160;<span class="change">(+19&#160;-13)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="56"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-14 09:30</span>
+    <a class="permalink" title="Permalink to this commit" href="#56">#56</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1142</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fixed the waves function in obj_MissionCommands<br />
+
+    </p>
+    <p class="commitdetails"><strong>15</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCommands.iss&#160;<span class="change">(+15&#160;-7)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="55"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-14 09:12</span>
+    <a class="permalink" title="Permalink to this commit" href="#55">#55</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1141</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Turret optimals will not be recalculated every second when we are using missles, for obvious reasons
+    </p>
+    <p class="commitdetails"><strong>8</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+1&#160;-2)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Ship.iss&#160;<span class="change">(+7&#160;-4)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="54"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-14 08:59</span>
+    <a class="permalink" title="Permalink to this commit" href="#54">#54</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1140</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Ratter: Added chaining, added a better "npc check", ratter now makes full use of entitycache, ratter orbits if you're not a missile boat (only until keepatrange is fixed). Added a logging check for entity mode to try and figure out which mode is the new "warp".<br />
+Offense: Further ironed out ammo swapping<br />
+obj_Ship: Still needs an "NeedsAmmoChange" bool. Rest works great.
+    </p>
+    <p class="commitdetails"><strong>180</strong> lines of code changed in <span class="files">4 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Ratter.iss&#160;<span class="change">(+122&#160;-30)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+43&#160;-24)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        defines.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Ship.iss&#160;<span class="change">(+14&#160;-9)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="53"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-14 08:54</span>
+    <a class="permalink" title="Permalink to this commit" href="#53">#53</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1139</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Bot uses missiles by default as god intended
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Configuration.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="52"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-14 03:03</span>
+    <a class="permalink" title="Permalink to this commit" href="#52">#52</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1138</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Automation: Updating changelog
+    </p>
+    <p class="commitdetails"><strong>4</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Docs</strong>:
+        changelog.html&#160;<span class="change">(+4)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="51"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-13 14:15</span>
+    <a class="permalink" title="Permalink to this commit" href="#51">#51</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1137</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+All functions in obj_missioncommands appear to be at least semi functional now
+    </p>
+    <p class="commitdetails"><strong>13</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Data</strong>:
+        Mission Database.xml&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCombat.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_MissionCommands.iss&#160;<span class="change">(+11&#160;-14)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="50"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-13 03:03</span>
+    <a class="permalink" title="Permalink to this commit" href="#50">#50</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1136</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Automation: Updating changelog
+    </p>
+    <p class="commitdetails"><strong>9</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Docs</strong>:
+        changelog.html&#160;<span class="change">(+9)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="49"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-13 02:40</span>
+    <a class="permalink" title="Permalink to this commit" href="#49">#49</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1135</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Ratter: Changed "keepatrange" to "orbit" because keepatrange seems to be broken.<br />
+I need to fix chaining, npc detection, etc. and convert to making use of Entity Cache.<br />
+<br />
+obj_Ship: Fixed numerous problems in GetMinimumTurretRange and GetMaximumTurretRange that would contribute to weirdness when using projectile and energy turrets because it was setting the wrong variable.<br />
+GetBestAmmoTypeByRange(float range) will now take into account currently loaded ammo.
+    </p>
+    <p class="commitdetails"><strong>114</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Ratter.iss&#160;<span class="change">(+4&#160;-1)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Ship.iss&#160;<span class="change">(+110&#160;-6)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="48"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-12 18:03</span>
+    <a class="permalink" title="Permalink to this commit" href="#48">#48</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1134</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Added some more debug spam.<br />
+Frikkin' lasers.
+    </p>
+    <p class="commitdetails"><strong>7</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+6&#160;-3)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        defines.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="47"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-12 17:21</span>
+    <a class="permalink" title="Permalink to this commit" href="#47">#47</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1133</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+More tweaks n changes<br />
+Added Ship.WeaponsActive to check if any weapons are active for reloading
+    </p>
+    <p class="commitdetails"><strong>29</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+10&#160;-4)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Ship.iss&#160;<span class="change">(+19)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="46"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-12 16:48</span>
+    <a class="permalink" title="Permalink to this commit" href="#46">#46</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1132</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Few range check fixes, factor slight falloff and overshooting.
+    </p>
+    <p class="commitdetails"><strong>22</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Ratter.iss&#160;<span class="change">(+8&#160;-1)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+13&#160;-6)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Ship.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="45"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-12 15:53</span>
+    <a class="permalink" title="Permalink to this commit" href="#45">#45</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1131</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+More tweaks
+    </p>
+    <p class="commitdetails"><strong>33</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+27&#160;-9)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Ship.iss&#160;<span class="change">(+6)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="44"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-12 14:30</span>
+    <a class="permalink" title="Permalink to this commit" href="#44">#44</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1130</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Finished all the ammo swapping code. Numerous changes, workarounds, fixes, typo fixes, etc. done in obj_Ship.
+    </p>
+    <p class="commitdetails"><strong>397</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(-4)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Ship.iss&#160;<span class="change">(+397&#160;-35)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="43"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-12 03:03</span>
+    <a class="permalink" title="Permalink to this commit" href="#43">#43</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1129</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Automation: Updating changelog
+    </p>
+    <p class="commitdetails"><strong>24</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Docs</strong>:
+        changelog.html&#160;<span class="change">(+24)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="42"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-12 02:47</span>
+    <a class="permalink" title="Permalink to this commit" href="#42">#42</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1128</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Add new test cases from Shiva<br />
+Modify DoGetFleet for new access method.
+    </p>
+    <p class="commitdetails"><strong>76</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Testcases</strong>:
+        test_DoGetActiveDroneIDs.iss&#160;<span class="new">(new&#160;38)</span>,
+        test_DoGetActiveDrones.iss&#160;<span class="new">(new&#160;37)</span>,
+        test_DoGetFleet.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="41"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-12 02:32</span>
+    <a class="permalink" title="Permalink to this commit" href="#41">#41</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1127</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+current testing build.<br />
+Ship:LoadOptimalAmmo is crashing for an unknown reason.<br />
+Whoever figures it out gets three internets, on me.
+    </p>
+    <p class="commitdetails"><strong>44</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Testcases</strong>:
+        test_AmmoNames.iss&#160;<span class="change">(+4)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+5&#160;-3)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Ship.iss&#160;<span class="change">(+35&#160;-18)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="40"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-12 01:46</span>
+    <a class="permalink" title="Permalink to this commit" href="#40">#40</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1126</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Change the string comparison to use to variable strings because of an isxeve bug
+    </p>
+    <p class="commitdetails"><strong>9</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Testcases</strong>:
+        test_AmmoNames.iss&#160;<span class="change">(+9&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="39"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-12 01:35</span>
+    <a class="permalink" title="Permalink to this commit" href="#39">#39</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1125</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+actually add the ammo Testcases/test_AmmoNames.iss
+    </p>
+    <p class="commitdetails"><strong>25</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Testcases</strong>:
+        test_AmmoNames.iss&#160;<span class="new">(new&#160;25)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="38"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-12 01:31</span>
+    <a class="permalink" title="Permalink to this commit" href="#38">#38</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1124</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Added a testcase for ammo name comparison<br />
+Tweaked a few things in ratter, ship, etc.
+    </p>
+    <p class="commitdetails"><strong>32</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Ratter.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+10)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Ship.iss&#160;<span class="change">(+21&#160;-13)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="37"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-11 23:45</span>
+    <a class="permalink" title="Permalink to this commit" href="#37">#37</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1123</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Show the reason for hiding in ratter if we're hiding
+    </p>
+    <p class="commitdetails"><strong>2</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Ratter.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        defines.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="36"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-11 23:29</span>
+    <a class="permalink" title="Permalink to this commit" href="#36">#36</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1122</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Ratter now toggles Offense:Enable and Offense:Disable on its own<br />
+
+    </p>
+    <p class="commitdetails"><strong>2</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Ratter.iss&#160;<span class="change">(+2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="35"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-11 23:21</span>
+    <a class="permalink" title="Permalink to this commit" href="#35">#35</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1121</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fixed a few caps issues<br />
+
+    </p>
+    <p class="commitdetails"><strong>4</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Ratter.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Ship.iss&#160;<span class="change">(+3&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="34"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-11 23:09</span>
+    <a class="permalink" title="Permalink to this commit" href="#34">#34</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1120</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+CYBERTECH SAPPIN' MAH RATTER<br />
+Fixed ratter not doing a goddamn thing.
+    </p>
+    <p class="commitdetails"><strong>7</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Ratter.iss&#160;<span class="change">(+7&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="33"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-11 22:50</span>
+    <a class="permalink" title="Permalink to this commit" href="#33">#33</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1119</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+maybe it'll work?<br />
+Made Ship:Pulse() update module list.
+    </p>
+    <p class="commitdetails"><strong>5</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+2)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Configuration.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Ship.iss&#160;<span class="change">(+2&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="32"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-11 21:41</span>
+    <a class="permalink" title="Permalink to this commit" href="#32">#32</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1118</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fixed a missing */<br />
+Fixed a missing }<br />
+FUCK YOU SYNTAX
+    </p>
+    <p class="commitdetails"><strong>5</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Ship.iss&#160;<span class="change">(+5&#160;-5)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="31"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-11 21:28</span>
+    <a class="permalink" title="Permalink to this commit" href="#31">#31</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1117</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Removed all the added defines<br />
+Added a config item bool for whether or not missiles are being used<br />
+Added Ship.PopulateNamedModPairs, Ship:LoadOptimalAmmo(float range), Ship.GetMaximumTurretRange, Ship.GetTurretBaseOptimal, and Ship.GetBestAmmoTypeByRange(float range).<br />
+Added a couple lines to Offense to make use of the ammo swapping.
+    </p>
+    <p class="commitdetails"><strong>418</strong> lines of code changed in <span class="files">4 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Offense.iss&#160;<span class="change">(+1)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        defines.iss&#160;<span class="change">(+1&#160;-555)</span>,
+        obj_Configuration.iss&#160;<span class="change">(+1)</span>,
+        obj_Ship.iss&#160;<span class="change">(+415&#160;-4)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="30"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-11 19:20</span>
+    <a class="permalink" title="Permalink to this commit" href="#30">#30</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1116</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Updated TODO.txt
+    </p>
+    <p class="commitdetails"><strong>5</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Testcases</strong>:
+        TODO.txt&#160;<span class="change">(+5&#160;-5)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="29"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-11 19:18</span>
+    <a class="permalink" title="Permalink to this commit" href="#29">#29</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1115</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+More testcases from Shiva
+    </p>
+    <p class="commitdetails"><strong>65</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Testcases</strong>:
+        test_DoGetAvailableAmmo.iss&#160;<span class="new">(new&#160;61)</span>,
+        test_GetAssets.iss&#160;<span class="new">(new&#160;4)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="28"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-11 15:13</span>
+    <a class="permalink" title="Permalink to this commit" href="#28">#28</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1114</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Rewrote nearly all functions in obj_missioncommands<br />
+Wore out keyboard<br />
+
+    </p>
+    <p class="commitdetails"><strong>789</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Data</strong>:
+        Mission Database.xml&#160;<span class="change">(+4&#160;-9)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCombat.iss&#160;<span class="change">(+138&#160;-174)</span>,
+        obj_MissionCommands.iss&#160;<span class="change">(+647&#160;-420)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="27"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-11 15:08</span>
+    <a class="permalink" title="Permalink to this commit" href="#27">#27</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1113</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+JESUS CHRIST, THE DEFINES MAN, THE DEFINES<br />
+Added a define for pretty much every hybrid charge, laser crystal, and projectile charge.
+    </p>
+    <p class="commitdetails"><strong>554</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        defines.iss&#160;<span class="change">(+554)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="26"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-11 14:47</span>
+    <a class="permalink" title="Permalink to this commit" href="#26">#26</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1112</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+DoGetAgents testcase from Shiva-san
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Testcases</strong>:
+        test_DoGetAgents.iss&#160;<span class="new">(new&#160;1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="25"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-11 14:10</span>
+    <a class="permalink" title="Permalink to this commit" href="#25">#25</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1111</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Adding a log to see if the ammo search failed
+    </p>
+    <p class="commitdetails"><strong>4</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>branches/stable/core</strong>:
+        obj_Ship.iss&#160;<span class="change">(+4)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="24"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-11 03:03</span>
+    <a class="permalink" title="Permalink to this commit" href="#24">#24</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1110</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Automation: Updating changelog
+    </p>
+    <p class="commitdetails"><strong>7</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Docs</strong>:
+        changelog.html&#160;<span class="change">(+7)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="23"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-10 12:45</span>
+    <a class="permalink" title="Permalink to this commit" href="#23">#23</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1109</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Tweaking the combat mission sections<br />
+They will work eventually!
+    </p>
+    <p class="commitdetails"><strong>251</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCombat.iss&#160;<span class="change">(+227&#160;-164)</span>,
+        obj_MissionCommands.iss&#160;<span class="change">(+18&#160;-19)</span>,
+        obj_Missions.iss&#160;<span class="change">(+6&#160;-5)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="22"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-10 08:34</span>
+    <a class="permalink" title="Permalink to this commit" href="#22">#22</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1108</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Tidying up some brackets! Oops!
+    </p>
+    <p class="commitdetails"><strong>65</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCombat.iss&#160;<span class="change">(+65&#160;-62)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="21"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-10 08:26</span>
+    <a class="permalink" title="Permalink to this commit" href="#21">#21</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1107</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Finished database conversion because my chicken is taking too long to cook
+    </p>
+    <p class="commitdetails"><strong>15</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Data</strong>:
+        Mission Database.xml&#160;<span class="change">(+15&#160;-43)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="20"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-10 08:12</span>
+    <a class="permalink" title="Permalink to this commit" href="#20">#20</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1106</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Major rewrite of obj_missioncombat<br />
+Split off commands to obj_missionCommands<br />
+conversion of Mission Database.xml to new format 50% complete
+    </p>
+    <p class="commitdetails"><strong>1307</strong> lines of code changed in <span class="files">7 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot</strong>:
+        EVEBot.iss&#160;<span class="change">(+1)</span>,
+        evebot.prj&#160;<span class="change">(+1)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Data</strong>:
+        Mission Database.xml&#160;<span class="change">(+23&#160;-73)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCombat.iss&#160;<span class="change">(+333&#160;-913)</span>,
+        obj_MissionCombatConfig.iss&#160;<span class="change">(+1&#160;-2)</span>,
+        obj_MissionCommands.iss&#160;<span class="new">(new&#160;905)</span>,
+        obj_Missions.iss&#160;<span class="change">(+43&#160;-30)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="19"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-10 03:03</span>
+    <a class="permalink" title="Permalink to this commit" href="#19">#19</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1105</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Automation: Updating changelog
+    </p>
+    <p class="commitdetails"><strong>2</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Docs</strong>:
+        changelog.html&#160;<span class="change">(+2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="18"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-09 07:41</span>
+    <a class="permalink" title="Permalink to this commit" href="#18">#18</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1104</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+updated documentation 
+    </p>
+    <p class="commitdetails"><strong>37</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>devs/Cplusplus/EVEBots_dotNET</strong>:
+        READ ME.txt&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+      <li>
+        <strong>devs/Cplusplus/EVEBots_dotNET/C# stuff/EveBots</strong>:
+        EveBots.csproj&#160;<span class="change">(+36&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="17"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-09 07:32</span>
+    <a class="permalink" title="Permalink to this commit" href="#17">#17</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1103</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Built executable for testing<br />
+<br />
+Added some documentation
+    </p>
+    <p class="commitdetails"><strong>17</strong> lines of code changed in <span class="files">5 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>devs/Cplusplus/EVEBots_dotNET</strong>:
+        EveBots.exe&#160;<span class="new">(new)</span>,
+        EveCallback.iss&#160;<span class="del">(del)</span>,
+        READ ME.txt&#160;<span class="new">(new&#160;16)</span>,
+        SuperLauncher.iss&#160;<span class="del">(del)</span>
+      </li>
+      <li>
+        <strong>devs/Cplusplus/EVEBots_dotNET/C# stuff/EveBots</strong>:
+        EveBots.csproj&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="16"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-09 03:03</span>
+    <a class="permalink" title="Permalink to this commit" href="#16">#16</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1102</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Automation: Updating changelog
+    </p>
+    <p class="commitdetails"><strong>4</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Docs</strong>:
+        changelog.html&#160;<span class="change">(+4)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="15"></a>
+    <a href="user_gliderpro.html" class="author">gliderpro</a>
+    <span class="date">2009-06-08 10:20</span>
+    <a class="permalink" title="Permalink to this commit" href="#15">#15</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1101</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Added alternate method for finding the home directory.<br />
+Added check for both "Eve Online" and "Eve" profiles.<br />
+Added check to prevent exception when Lavishsettings set is empty.
+    </p>
+    <p class="commitdetails"><strong>26</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>devs/Cplusplus/EVEBots_dotNET/C# stuff/EveBots</strong>:
+        ISBoxerSettings.cs&#160;<span class="change">(+9&#160;-1)</span>,
+        LauncherProfiles.cs&#160;<span class="change">(+17&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="14"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-08 08:53</span>
+    <a class="permalink" title="Permalink to this commit" href="#14">#14</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1100</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+added obj_missioncombatconfig to the project file
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot</strong>:
+        evebot.prj&#160;<span class="change">(+1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="13"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-08 03:03</span>
+    <a class="permalink" title="Permalink to this commit" href="#13">#13</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1099</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Automation: Updating changelog
+    </p>
+    <p class="commitdetails"><strong>5</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Docs</strong>:
+        changelog.html&#160;<span class="change">(+5)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="12"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-07 06:58</span>
+    <a class="permalink" title="Permalink to this commit" href="#12">#12</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1098</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Drones: Actually call my added methods...
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Drones.iss&#160;<span class="change">(+1&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="11"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-07 06:56</span>
+    <a class="permalink" title="Permalink to this commit" href="#11">#11</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1097</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Drones: Added detection of damaged drones and the recalling of damaged drones. It will only recall a drone once, so if you're running evebot in the background and REALLY want to use that damaged drone, it will only stop you once.<br />
+Next, avoiding launching damaged drones...
+    </p>
+    <p class="commitdetails"><strong>77</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Drones.iss&#160;<span class="change">(+77)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="10"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-06 03:03</span>
+    <a class="permalink" title="Permalink to this commit" href="#10">#10</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1096</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Automation: Updating changelog
+    </p>
+    <p class="commitdetails"><strong>8</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Docs</strong>:
+        changelog.html&#160;<span class="change">(+8)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="9"></a>
+    <a href="user_gliderpro.html" class="author">gliderpro</a>
+    <span class="date">2009-06-05 09:27</span>
+    <a class="permalink" title="Permalink to this commit" href="#9">#9</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1095</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Defense.iss explicitly checks IsSafe for FALSE<br />
+Changed IsSafe so it doesn't have multiple return points.<br />
+Fixed TravelToSystem so it doesn't set the autopilot destination over and over.
+    </p>
+    <p class="commitdetails"><strong>26</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Defense.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Ship.iss&#160;<span class="change">(+16&#160;-4)</span>,
+        obj_Social.iss&#160;<span class="change">(+9&#160;-4)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="8"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-05 07:37</span>
+    <a class="permalink" title="Permalink to this commit" href="#8">#8</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1094</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+add todo
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Ship.iss&#160;<span class="change">(+1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="7"></a>
+    <a href="user_gliderpro.html" class="author">gliderpro</a>
+    <span class="date">2009-06-05 07:32</span>
+    <a class="permalink" title="Permalink to this commit" href="#7">#7</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1093</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+removed testcommit.txt
+    </p>
+    <p class="commitdetails"><strong>0</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot</strong>:
+        testcommit.txt&#160;<span class="del">(del)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="6"></a>
+    <a href="user_gliderpro.html" class="author">gliderpro</a>
+    <span class="date">2009-06-05 07:32</span>
+    <a class="permalink" title="Permalink to this commit" href="#6">#6</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1092</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+test commit 
+    </p>
+    <p class="commitdetails"><strong>0</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot</strong>:
+        testcommit.txt&#160;<span class="new">(new)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="5"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-05 03:03</span>
+    <a class="permalink" title="Permalink to this commit" href="#5">#5</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1091</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Automation: Updating changelog
+    </p>
+    <p class="commitdetails"><strong>7</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Docs</strong>:
+        changelog.html&#160;<span class="change">(+7)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="4"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-04 23:04</span>
+    <a class="permalink" title="Permalink to this commit" href="#4">#4</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1090</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Test case for drones.<br />
+Update svn:keywords
+    </p>
+    <p class="commitdetails"><strong>47</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Testcases</strong>:
+        test_DoGetEntities.iss&#160;<span class="change">(changed)</span>,
+        test_Drones.iss&#160;<span class="new">(new&#160;47)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="3"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-04 15:11</span>
+    <a class="permalink" title="Permalink to this commit" href="#3">#3</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1089</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+test commit
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot</strong>:
+        EVEBot.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="2"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-04 14:10</span>
+    <a class="permalink" title="Permalink to this commit" href="#2">#2</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1088</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Add EVEBot:EndBot[]<br />
+Change close window (X) behavior so that when the script closes it calls EndBot to ensure the threads are shut down before EVEBot itself is.
+    </p>
+    <p class="commitdetails"><strong>22</strong> lines of code changed in <span class="files">5 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Defense.iss&#160;<span class="change">(+1)</span>,
+        Offense.iss&#160;<span class="change">(+1)</span>,
+        Targeting.iss&#160;<span class="change">(+1)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_EVEBot.iss&#160;<span class="change">(+14)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/interface</strong>:
+        evebotgui.xml&#160;<span class="change">(+5&#160;-5)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="1"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-04 13:47</span>
+    <a class="permalink" title="Permalink to this commit" href="#1">#1</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1087</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Remove some debug msgs in social.<br />
+Fix social.issafe to return properly so the bot doesn't flee on startup.<br />
+Fix Social.Passed_LowStandingCheck<br />
+Remove Ship.IsSafe<br />
+
+    </p>
+    <p class="commitdetails"><strong>16</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Ship.iss&#160;<span class="change">(-33)</span>,
+        obj_Social.iss&#160;<span class="change">(+16&#160;-4)</span>
+      </li>
+    </ul>
+  </dd>
+
+</dl>
+
+<p class="previous"><a href="2009-05.html">May 2009</a> &#187; </p>
+<div id="generatedby">Generated by <a href="http://www.statsvn.org">StatSVN</a> 0.7.0</div>
+</body>
+</html>

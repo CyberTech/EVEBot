@@ -1,0 +1,400 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>StatSVN - Directory devs/Cplusplus/EVEBots_dotNET/C# stuff/EveBots/</title>
+ <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
+    <meta name="Generator" content="StatSVN 0.7.0"/>
+<link rel="stylesheet" href="objectlab-statcvs.css" type="text/css"/>
+<script type="text/javascript" charset="utf-8" src="http://bit.ly/javascript-api.js?version=latest&#38;login=statsvn&#38;apiKey=R_2c362b417d0517c27876cbaca1bb68cc"></script>
+<script type="text/javascript" charset="utf-8">
+   // wait until page is loaded to call API
+   var redir_url;
+   var short_url;
+   BitlyCB.myShortenCallback = function(data) {
+      // this is how to get a result of shortening a single url
+      var result;
+      short_url=null;
+      for (var r in data.results) {
+         result = data.results[r];
+         result['longUrl'] = r;
+         short_url = result['shortUrl'];
+         break;
+      }
+      if (short_url==null) // bit.ly failed
+      document.location=redir_url;
+      else
+      redirToTwitter();
+   };
+   function shortenTweet(url) {
+      if (short_url == null || redir_url!=url) {
+      redir_url = url;
+      BitlyClient.shorten(document.location, 'BitlyCB.myShortenCallback');
+      }
+      else
+      redirToTwitter();
+      return false;
+   }
+   function redirToTwitter() { 
+      // replace {0} which is visible as %7B0} in the link
+      document.location = redir_url.replace('%7B0}', short_url);
+   }
+</script>
+  </head>
+
+<body>
+
+<h1>Directory devs/Cplusplus/EVEBots_dotNET/C# stuff/EveBots/</h1>
+<div id="parentlink">&#171; <a href="index.html">Development Statistics for EVEBot</a></div>
+<dl class="attributes">
+    <dt>Directory Created:</dt>
+    <dd><span class="date">2009-04-07 13:15</span></dd>
+    <dt>Total Files:</dt>
+    <dd>18</dd>
+    <dt>Deleted Files:</dt>
+    <dd>4</dd>
+    <dt>Lines of Code:</dt>
+    <dd>7212</dd>
+</dl>
+<p class="dirtree">
+<a href="dir.html">[root]</a>/<a href="dir_devs.html">devs</a>/<a href="dir_devs_Cplusplus.html">Cplusplus</a>/<a href="dir_devs_Cplusplus_EVEBots_dotNET.html">EVEBots_dotNET</a>/<a href="dir_devs_Cplusplus_EVEBots_dotNET_C# stuff.html">C# stuff</a>/<strong>EveBots</strong><br/>
+</p>
+
+<div class="section">
+<h2>Lines of Code</h2>
+<p class="chart"><img src="loc_module_devs_Cplusplus_EVEBots_dotNET_C# stuff_EveBots.png" alt="devs/Cplusplus/EVEBots_dotNET/C# stuff/EveBots/ Lines of Code" width="800" height="500" /></p></div>
+<div class="section">
+<h2>Developers</h2>
+  <table  rules="groups" summary="All authors and the number of their changes and lines of code in this directory">
+    <colgroup align="left"/>
+    <colgroup align="right"/>
+    <colgroup align="right"/>
+    <colgroup align="right"/>
+    <thead>
+      <tr>
+        <th>Author</th>
+        <th>Changes</th>
+        <th>Lines of Code</th>
+        <th>Lines per Change</th>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <th>Totals</th>
+        <td>56 (100.0%)</td>
+        <td>7768 (100.0%)</td>
+        <td>138.7</td>
+      </tr>
+    </tfoot>
+    <tbody>
+      <tr  class="odd">
+        <th><a href="user_Cplusplus.html" class="author">Cplusplus</a></th>
+        <td>54 (96.4%)</td>
+        <td>7742 (99.7%)</td>
+        <td>143.3</td>
+      </tr>
+      <tr  class="even">
+        <th><a href="user_gliderpro.html" class="author">gliderpro</a></th>
+        <td>2 (3.6%)</td>
+        <td>26 (0.3%)</td>
+        <td>13.0</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+<div class="section">
+<h2>Most Recent Commits</h2>
+<dl class="commitlist">
+  <dt><a name="12"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-09 07:41</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1104</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+updated documentation 
+    </p>
+    <p class="commitdetails"><strong>36</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>devs/Cplusplus/EVEBots_dotNET/C# stuff/EveBots</strong>:
+        EveBots.csproj&#160;<span class="change">(+36&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="11"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-06-09 07:32</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1103</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Built executable for testing<br />
+<br />
+Added some documentation
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>devs/Cplusplus/EVEBots_dotNET/C# stuff/EveBots</strong>:
+        EveBots.csproj&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="10"></a>
+    <a href="user_gliderpro.html" class="author">gliderpro</a>
+    <span class="date">2009-06-08 10:20</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1101</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Added alternate method for finding the home directory.<br />
+Added check for both "Eve Online" and "Eve" profiles.<br />
+Added check to prevent exception when Lavishsettings set is empty.
+    </p>
+    <p class="commitdetails"><strong>26</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>devs/Cplusplus/EVEBots_dotNET/C# stuff/EveBots</strong>:
+        ISBoxerSettings.cs&#160;<span class="change">(+9&#160;-1)</span>,
+        LauncherProfiles.cs&#160;<span class="change">(+17&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="9"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-04-13 05:38</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1012</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Regeneration should work<br />
+Set up an isxboxer profile, and press launch!<br />
+Trunk is the only compatible version of evebot.
+    </p>
+    <p class="commitdetails"><strong>120</strong> lines of code changed in <span class="files">6 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>devs/Cplusplus/EVEBots_dotNET/C# stuff/EveBots</strong>:
+        BotControl.Designer.cs&#160;<span class="change">(+35&#160;-33)</span>,
+        BotControl.cs&#160;<span class="change">(+46&#160;-1)</span>,
+        ClientsWindow.Designer.cs&#160;<span class="change">(+2&#160;-2)</span>,
+        ClientsWindow.cs&#160;<span class="change">(+5&#160;-9)</span>,
+        ISBoxerSettings.cs&#160;<span class="change">(+12)</span>,
+        Session.cs&#160;<span class="change">(+20&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="8"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-04-12 15:51</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1010</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+TODO : <br />
+Launch <br />
+Kill<br />
+Regeneration<br />
+~pretty colors for listview~
+    </p>
+    <p class="commitdetails"><strong>617</strong> lines of code changed in <span class="files">6 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>devs/Cplusplus/EVEBots_dotNET/C# stuff/EveBots</strong>:
+        BotControl.Designer.cs&#160;<span class="new">(new&#160;192)</span>,
+        BotControl.cs&#160;<span class="new">(new&#160;62)</span>,
+        BotControl.resx&#160;<span class="new">(new&#160;120)</span>,
+        ClientsWindow.cs&#160;<span class="change">(+11&#160;-12)</span>,
+        ISBoxerSettings.cs&#160;<span class="new">(new&#160;108)</span>,
+        Session.cs&#160;<span class="change">(+124&#160;-28)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="7"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-04-11 16:06</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1007</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Will now catch "Update 'profile name' ShieldPct ArmorPct CapacitorPct" and push them to the gui if the profile name exists in any isboxer charsets<br />
+<br />
+TODO : <br />
+Hook up the kill and launch buttons<br />
+FIX BUGS
+    </p>
+    <p class="commitdetails"><strong>116</strong> lines of code changed in <span class="files">8 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>devs/Cplusplus/EVEBots_dotNET/C# stuff/EveBots</strong>:
+        Client.cs&#160;<span class="del">(del)</span>,
+        ClientsWindow.Designer.cs&#160;<span class="change">(-1)</span>,
+        ClientsWindow.cs&#160;<span class="change">(+5&#160;-4)</span>,
+        EveBots.csproj&#160;<span class="change">(+12&#160;-1)</span>,
+        LauncherProfiles.cs&#160;<span class="change">(+1&#160;-1)</span>,
+        MainInterface.Designer.cs&#160;<span class="change">(+13)</span>,
+        MainInterface.cs&#160;<span class="change">(+2&#160;-37)</span>,
+        Session.cs&#160;<span class="new">(new&#160;83)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="6"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-04-09 15:36</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1002</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Profile editor usercontrol finished
+    </p>
+    <p class="commitdetails"><strong>137</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>devs/Cplusplus/EVEBots_dotNET/C# stuff/EveBots</strong>:
+        ProfileControl.Designer.cs&#160;<span class="change">(+84&#160;-30)</span>,
+        ProfileControl.cs&#160;<span class="change">(+53&#160;-9)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="5"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-04-09 09:45</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1001</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+~ Commits with no changes dont count ~<br />
+~ 1000th commit ~ <br />
+<br />
+~~ OWNED ~~<br />
+<br />
+-Cplusplus
+    </p>
+    <p class="commitdetails"><strong>5556</strong> lines of code changed in <span class="files">8 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>devs/Cplusplus/EVEBots_dotNET/C# stuff/EveBots</strong>:
+        EveBots.csproj&#160;<span class="change">(+10)</span>,
+        LauncherProfiles.cs&#160;<span class="change">(+64&#160;-4)</span>,
+        MainInterface.Designer.cs&#160;<span class="change">(+5&#160;-3)</span>,
+        MainInterface.cs&#160;<span class="change">(+4&#160;-2)</span>,
+        MainInterface.resx&#160;<span class="change">(+4957)</span>,
+        ProfileControl.Designer.cs&#160;<span class="new">(new&#160;292)</span>,
+        ProfileControl.cs&#160;<span class="new">(new&#160;104)</span>,
+        ProfileControl.resx&#160;<span class="new">(new&#160;120)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="4"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-04-08 15:55</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">998</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+nobody liked form1 anyway
+    </p>
+    <p class="commitdetails"><strong>258</strong> lines of code changed in <span class="files">8 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>devs/Cplusplus/EVEBots_dotNET/C# stuff/EveBots</strong>:
+        EveBots.csproj&#160;<span class="change">(+5&#160;-5)</span>,
+        Form1.Designer.cs&#160;<span class="del">(del)</span>,
+        Form1.cs&#160;<span class="del">(del)</span>,
+        Form1.resx&#160;<span class="del">(del)</span>,
+        MainInterface.Designer.cs&#160;<span class="new">(new&#160;60)</span>,
+        MainInterface.cs&#160;<span class="new">(new&#160;72)</span>,
+        MainInterface.resx&#160;<span class="new">(new&#160;120)</span>,
+        Program.cs&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="3"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-04-08 15:54</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">997</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+LauncherProfiles.cs handles profile creation and management , sits around being generally cool and stuff. Needs a usercontrol built for it.
+    </p>
+    <p class="commitdetails"><strong>126</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>devs/Cplusplus/EVEBots_dotNET/C# stuff/EveBots</strong>:
+        EveBots.csproj&#160;<span class="change">(+4&#160;-25)</span>,
+        Form1.cs&#160;<span class="change">(+2&#160;-1)</span>,
+        LauncherProfiles.cs&#160;<span class="change">(+120&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="2"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-04-07 13:48</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">995</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+removed some nefarious if statements without brackets , added some of stealthys stuff to work with
+    </p>
+    <p class="commitdetails"><strong>10</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>devs/Cplusplus/EVEBots_dotNET/C# stuff/EveBots</strong>:
+        LauncherProfiles.cs&#160;<span class="new">(new&#160;10)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="1"></a>
+    <a href="user_Cplusplus.html" class="author">Cplusplus</a>
+    <span class="date">2009-04-07 13:15</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">994</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Stealthys EVEBots , done in C# with a GUI! Totally unfinished stage , finished project will use LS callback script to update the C# app <br />
+TODO : <br />
+Client Launching via ISBoxer<br />
+Dead Client Detection<br />
+Ship in trouble detection<br />
+Use of evebot cache for MyShip<br />
+EVEBot status relaying<br />
+Adding Characters via gui instead of manual xml altering<br />
+
+    </p>
+    <p class="commitdetails"><strong>765</strong> lines of code changed in <span class="files">10 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>devs/Cplusplus/EVEBots_dotNET/C# stuff/EveBots</strong>:
+        Client.cs&#160;<span class="new">(new&#160;87)</span>,
+        ClientsWindow.Designer.cs&#160;<span class="new">(new&#160;62)</span>,
+        ClientsWindow.cs&#160;<span class="new">(new&#160;82)</span>,
+        ClientsWindow.resx&#160;<span class="new">(new&#160;120)</span>,
+        EVEWatcher.cs&#160;<span class="new">(new&#160;40)</span>,
+        EveBots.csproj&#160;<span class="new">(new&#160;103)</span>,
+        Form1.Designer.cs&#160;<span class="new">(new&#160;60)</span>,
+        Form1.cs&#160;<span class="new">(new&#160;71)</span>,
+        Form1.resx&#160;<span class="new">(new&#160;120)</span>,
+        Program.cs&#160;<span class="new">(new&#160;20)</span>
+      </li>
+    </ul>
+  </dd>
+
+</dl>
+
+</div><div id="generatedby">Generated by <a href="http://www.statsvn.org">StatSVN</a> 0.7.0</div>
+</body>
+</html>

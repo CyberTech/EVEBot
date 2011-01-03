@@ -1,0 +1,1077 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>StatSVN - Directory Trunk/EVEbot/core/</title>
+ <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
+    <meta name="Generator" content="StatSVN 0.7.0"/>
+<link rel="stylesheet" href="objectlab-statcvs.css" type="text/css"/>
+<script type="text/javascript" charset="utf-8" src="http://bit.ly/javascript-api.js?version=latest&#38;login=statsvn&#38;apiKey=R_2c362b417d0517c27876cbaca1bb68cc"></script>
+<script type="text/javascript" charset="utf-8">
+   // wait until page is loaded to call API
+   var redir_url;
+   var short_url;
+   BitlyCB.myShortenCallback = function(data) {
+      // this is how to get a result of shortening a single url
+      var result;
+      short_url=null;
+      for (var r in data.results) {
+         result = data.results[r];
+         result['longUrl'] = r;
+         short_url = result['shortUrl'];
+         break;
+      }
+      if (short_url==null) // bit.ly failed
+      document.location=redir_url;
+      else
+      redirToTwitter();
+   };
+   function shortenTweet(url) {
+      if (short_url == null || redir_url!=url) {
+      redir_url = url;
+      BitlyClient.shorten(document.location, 'BitlyCB.myShortenCallback');
+      }
+      else
+      redirToTwitter();
+      return false;
+   }
+   function redirToTwitter() { 
+      // replace {0} which is visible as %7B0} in the link
+      document.location = redir_url.replace('%7B0}', short_url);
+   }
+</script>
+  </head>
+
+<body>
+
+<h1>Directory Trunk/EVEbot/core/</h1>
+<div id="parentlink">&#171; <a href="index.html">Development Statistics for EVEBot</a></div>
+<dl class="attributes">
+    <dt>Directory Created:</dt>
+    <dd><span class="date">2007-07-16 17:23</span></dd>
+    <dt>Total Files:</dt>
+    <dd>34</dd>
+    <dt>Deleted Files:</dt>
+    <dd>37</dd>
+    <dt>Lines of Code:</dt>
+    <dd>15962</dd>
+</dl>
+<p class="dirtree">
+<a href="dir.html">[root]</a>/<a href="dir_Trunk.html">Trunk</a>/<a href="dir_Trunk_EVEbot.html">EVEbot</a>/<strong>core</strong><br/>
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
+<a href="dir_Trunk_EVEbot_core_Lib.html">Lib</a> 
+(5 files, 464 lines)<br />
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
+<a href="dir_Trunk_EVEbot_core_Lib_UplinkManager.html">UplinkManager</a> 
+(1 files, 319 lines)<br />
+</p>
+
+<div class="section">
+<h2>Lines of Code</h2>
+<p class="chart"><img src="loc_module_Trunk_EVEbot_core.png" alt="Trunk/EVEbot/core/ Lines of Code" width="800" height="500" /></p></div>
+<div class="section">
+<h2>Developers</h2>
+  <table  rules="groups" summary="All authors and the number of their changes and lines of code in this directory">
+    <colgroup align="left"/>
+    <colgroup align="right"/>
+    <colgroup align="right"/>
+    <colgroup align="right"/>
+    <thead>
+      <tr>
+        <th>Author</th>
+        <th>Changes</th>
+        <th>Lines of Code</th>
+        <th>Lines per Change</th>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <th>Totals</th>
+        <td>1872 (100.0%)</td>
+        <td>70952 (100.0%)</td>
+        <td>37.9</td>
+      </tr>
+    </tfoot>
+    <tbody>
+      <tr  class="odd">
+        <th><a href="user_cybertech.html" class="author">cybertech</a></th>
+        <td>1131 (60.4%)</td>
+        <td>37907 (53.4%)</td>
+        <td>33.5</td>
+      </tr>
+      <tr  class="even">
+        <th><a href="user_gliderpro.html" class="author">gliderpro</a></th>
+        <td>429 (22.9%)</td>
+        <td>16973 (23.9%)</td>
+        <td>39.5</td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="user_Cplusplus.html" class="author">Cplusplus</a></th>
+        <td>73 (3.9%)</td>
+        <td>7182 (10.1%)</td>
+        <td>98.3</td>
+      </tr>
+      <tr  class="even">
+        <th><a href="user_stealthy.html" class="author">stealthy</a></th>
+        <td>129 (6.9%)</td>
+        <td>4464 (6.3%)</td>
+        <td>34.6</td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="user_Amadeus.html" class="author">Amadeus</a></th>
+        <td>42 (2.2%)</td>
+        <td>2395 (3.4%)</td>
+        <td>57.0</td>
+      </tr>
+      <tr  class="even">
+        <th><a href="user_Hessinger.html" class="author">Hessinger</a></th>
+        <td>48 (2.6%)</td>
+        <td>1649 (2.3%)</td>
+        <td>34.3</td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="user_trupoet.html" class="author">trupoet</a></th>
+        <td>13 (0.7%)</td>
+        <td>254 (0.4%)</td>
+        <td>19.5</td>
+      </tr>
+      <tr  class="even">
+        <th><a href="user_altered.html" class="author">altered</a></th>
+        <td>2 (0.1%)</td>
+        <td>75 (0.1%)</td>
+        <td>37.5</td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="user_override13.html" class="author">override13</a></th>
+        <td>4 (0.2%)</td>
+        <td>50 (0.1%)</td>
+        <td>12.5</td>
+      </tr>
+      <tr  class="even">
+        <th><a href="user_tsumari.html" class="author">tsumari</a></th>
+        <td>1 (0.1%)</td>
+        <td>3 (0.0%)</td>
+        <td>3.0</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+<div class="section">
+<h2>Most Recent Commits</h2>
+<dl class="commitlist">
+  <dt><a name="40"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-12-30 01:22</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1684</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Move most objects to event_evebot_onframe event instead of isxeve_onframe. <br />
+ This event is registered by obj_EVEBot and conditionally triggered by obj_EVEBot::Pulse<br />
+Create Config.Sound<br />
+Create Config.Logging<br />
+ Move Config.Common.UseSound to Config.Sound.EnableSound<br />
+ Move Config.EnableChatLogging to Config.Logging.LogLocalChat<br />
+ Add Config.Logging.LogLocalChat and Config.Logging.LogLocalChatToIRC, and Corp/Alliance equiv for each.<br />
+ Add Config.Sound.EnableChatAlerts<br />
+Fix Ship.IsPod Module update condition<br />
+Ensure all objects with initializers have correct shutdown.<br />
+<br />
+
+    </p>
+    <p class="commitdetails"><strong>90</strong> lines of code changed in <span class="files">10 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        defines.iss&#160;<span class="change">(+3&#160;-1)</span>,
+        obj_BeltBookmarks.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Configuration.iss&#160;<span class="change">(+61&#160;-2)</span>,
+        obj_Drones.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_EVEBot.iss&#160;<span class="change">(+8&#160;-8)</span>,
+        obj_FleetManager.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_MissionCombat.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_Safespots.iss&#160;<span class="change">(+6&#160;-1)</span>,
+        obj_Ship.iss&#160;<span class="change">(+3&#160;-3)</span>,
+        obj_Skills.iss&#160;<span class="change">(+2&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="39"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-12-21 02:36</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1679</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Activate covops cloak while warping.<br />
+Don't calculate max locked targets, not saving us anything worth the lack of clarity.
+    </p>
+    <p class="commitdetails"><strong>10</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Ship.iss&#160;<span class="change">(+10&#160;-18)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="38"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-12-21 02:31</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1678</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Document LOG_ECHOTOO
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Logger.iss&#160;<span class="change">(+1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="37"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-12-21 02:31</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1677</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+No need to quit eve at DT, we're already either safespotted or docked at this point.
+    </p>
+    <p class="commitdetails"><strong>0</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_EVEBot.iss&#160;<span class="change">(-9)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="36"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-12-12 02:37</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1666</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Check instation as well as inspace in defense.<br />
+Rename tabframe<br />
+Fix behavioral module dropdown population<br />
+
+    </p>
+    <p class="commitdetails"><strong>4</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_EVEBotUI.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_Logger.iss&#160;<span class="change">(+2&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="35"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-12-12 01:32</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1665</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Switch to Pulsetimer class<br />
+Use ObjectName everywhere<br />
+Merge obj_Items into obj_EVEDB<br />
+Add LOG_ECHOTOO logging levels.<br />
+Add specific module debugging support, rather than global debugging.<br />
+
+    </p>
+    <p class="commitdetails"><strong>320</strong> lines of code changed in <span class="files">11 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        defines.iss&#160;<span class="change">(+61&#160;-17)</span>,
+        obj_BeltBookmarks.iss&#160;<span class="change">(+6&#160;-4)</span>,
+        obj_Callback.iss&#160;<span class="change">(+8&#160;-9)</span>,
+        obj_EVEDB.iss&#160;<span class="change">(+106&#160;-9)</span>,
+        obj_IRC.iss&#160;<span class="change">(+12&#160;-9)</span>,
+        obj_Items.iss&#160;<span class="del">(del)</span>,
+        obj_Logger.iss&#160;<span class="change">(+25&#160;-2)</span>,
+        obj_Market.iss&#160;<span class="change">(+67&#160;-61)</span>,
+        obj_Safespots.iss&#160;<span class="change">(+7&#160;-4)</span>,
+        obj_Skills.iss&#160;<span class="change">(+12&#160;-9)</span>,
+        obj_Social.iss&#160;<span class="change">(+16&#160;-15)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="34"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-12-06 01:19</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1658</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Backport special spawn list from trunk to stable.<br />
+Add special spawns for Angel Cartel
+    </p>
+    <p class="commitdetails"><strong>54</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Targets.iss&#160;<span class="change">(+54&#160;-3)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="33"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-12-04 14:55</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1654</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Really only run behavioral pulses when they're for the current behavior.
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_EVEBot.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="32"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-11-29 03:00</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1651</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Disable skill training by default.<br />
+Enhance dynamic behavior system.<br />
+Only call behavioral pulses if they're enabled<br />
+Only call the current behaviors ProcessState<br />
+Move Logging routines to obj_Logger (as Logger)<br />
+- Rename UpdateConsole* to Log*<br />
+Rename bot mode on UI dropdown to Behavior.<br />
+Populate behavior dropdown dynamically based on loaded behaviors, to better facilitate custom/private behaviors.<br />
+Behaviors no longer attach to onframe, but are called from EVEBot:Pulse<br />
+
+    </p>
+    <p class="commitdetails"><strong>957</strong> lines of code changed in <span class="files">33 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Agents.iss&#160;<span class="change">(+90&#160;-90)</span>,
+        obj_Assets.iss&#160;<span class="change">(+7&#160;-7)</span>,
+        obj_Asteroids.iss&#160;<span class="change">(+20&#160;-20)</span>,
+        obj_Autopilot.iss&#160;<span class="change">(+5&#160;-5)</span>,
+        obj_BeltBookmarks.iss&#160;<span class="change">(+4&#160;-4)</span>,
+        obj_Belts.iss&#160;<span class="change">(+6&#160;-6)</span>,
+        obj_Bookmark.iss&#160;<span class="change">(+16&#160;-16)</span>,
+        obj_Bookmarks.iss&#160;<span class="change">(+6&#160;-6)</span>,
+        obj_Callback.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_Cargo.iss&#160;<span class="change">(+87&#160;-87)</span>,
+        obj_Configuration.iss&#160;<span class="change">(+43&#160;-42)</span>,
+        obj_Drones.iss&#160;<span class="change">(+19&#160;-19)</span>,
+        obj_EVEBot.iss&#160;<span class="change">(+43&#160;-16)</span>,
+        obj_EVEBotUI.iss&#160;<span class="change">(+8&#160;-136)</span>,
+        obj_EVEDB.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_EntityCache.iss&#160;<span class="change">(+6&#160;-6)</span>,
+        obj_Fleet.iss&#160;<span class="change">(+4&#160;-4)</span>,
+        obj_FleetManager.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_IRC.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Items.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_JetCan.iss&#160;<span class="change">(+11&#160;-11)</span>,
+        obj_Logger.iss&#160;<span class="new">(new&#160;127)</span>,
+        obj_MissionCombat.iss&#160;<span class="change">(+27&#160;-27)</span>,
+        obj_MissionCombatConfig.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_MissionCommands.iss&#160;<span class="change">(+96&#160;-96)</span>,
+        obj_MissionParser.iss&#160;<span class="change">(+31&#160;-31)</span>,
+        obj_Missions.iss&#160;<span class="change">(+71&#160;-71)</span>,
+        obj_Safespots.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_Ship.iss&#160;<span class="change">(+130&#160;-130)</span>,
+        obj_Skills.iss&#160;<span class="change">(+24&#160;-24)</span>,
+        obj_Social.iss&#160;<span class="change">(+17&#160;-17)</span>,
+        obj_Station.iss&#160;<span class="change">(+27&#160;-27)</span>,
+        obj_Targets.iss&#160;<span class="change">(+21&#160;-21)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="31"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-11-26 03:04</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1647</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Move dynamic mode UI feature into UI:Reload. <br />
+Update external behavior load system.<br />
+Remove static list of modes from UI xml.
+    </p>
+    <p class="commitdetails"><strong>14</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_EVEBotUI.iss&#160;<span class="change">(+14)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="30"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-11-18 00:44</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1643</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+64Bit Conversions.<br />
+Removal of redundant testcases directories in prep for reorg.
+    </p>
+    <p class="commitdetails"><strong>48</strong> lines of code changed in <span class="files">9 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Assets.iss&#160;<span class="change">(+8&#160;-8)</span>,
+        obj_Autopilot.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_Cargo.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Drones.iss&#160;<span class="change">(+19&#160;-19)</span>,
+        obj_EntityCache.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_MissionCommands.iss&#160;<span class="change">(+6&#160;-6)</span>,
+        obj_Missions.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_Ship.iss&#160;<span class="change">(+5&#160;-5)</span>,
+        obj_Targets.iss&#160;<span class="change">(+4&#160;-4)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="29"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-11-14 19:27</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1637</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Make the window wider so i can see shit when i'm testing.<br />
+Remove redundant check from ValidateModuleTargets<br />
+Int64 changes.<br />
+
+    </p>
+    <p class="commitdetails"><strong>17</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Cargo.iss&#160;<span class="change">(+16&#160;-2)</span>,
+        obj_Ship.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="28"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-10-29 14:10</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1623</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Convert to ISXIM from ISXIRC
+    </p>
+    <p class="commitdetails"><strong>8</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        defines.iss&#160;<span class="change">(+3&#160;-4)</span>,
+        obj_IRC.iss&#160;<span class="change">(+5&#160;-5)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="27"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-09-14 13:24</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1617</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Put waiting for drone deployment flag on timer.
+    </p>
+    <p class="commitdetails"><strong>4</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Drones.iss&#160;<span class="change">(+4&#160;-3)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="26"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-09-12 13:48</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1615</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Make last target for the module active before cycling the module back on.<br />
+Fix potentially getting wrong ship type on undock.
+    </p>
+    <p class="commitdetails"><strong>7</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Ship.iss&#160;<span class="change">(+1)</span>,
+        obj_Station.iss&#160;<span class="change">(+6&#160;-6)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="25"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-09-12 00:08</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1613</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Remove debugging code for laser cycling.
+    </p>
+    <p class="commitdetails"><strong>2</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Ship.iss&#160;<span class="change">(+2&#160;-4)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="24"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-09-11 23:51</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1611</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fix cycle mining laser code
+    </p>
+    <p class="commitdetails"><strong>3</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Ship.iss&#160;<span class="change">(+3&#160;-3)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="23"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-09-11 23:11</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1609</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fix commented laser cycling code.
+    </p>
+    <p class="commitdetails"><strong>5</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Ship.iss&#160;<span class="change">(+5&#160;-5)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="22"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-09-03 13:51</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1607</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Update EntityCache to be the entity query manager using the new query system in isxeve beta.
+    </p>
+    <p class="commitdetails"><strong>166</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_EntityCache.iss&#160;<span class="change">(+166&#160;-116)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="21"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-09-03 13:47</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1606</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Belts.iss: Convert to entity query system<br />
+
+    </p>
+    <p class="commitdetails"><strong>27</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Belts.iss&#160;<span class="change">(+27&#160;-32)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="20"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-09-03 13:44</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1605</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+MissionCommands: Remove cache object references<br />
+MissionCommands: Convert to new entity query syntax.
+    </p>
+    <p class="commitdetails"><strong>71</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCommands.iss&#160;<span class="change">(+71&#160;-48)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="19"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-09-03 13:38</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1604</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Targets, Ratter, Defense, Offense: Remove object cache references<br />
+Update Ratter, Defense, Offense for new entity query system.<br />
+Offense: Calc max range for target painters<br />
+Offense: Put all target painters on the current target, don't spread them.<br />
+Offense: HaveFullAggro -&gt; HaveFullNPCAggro, move code from obj_Targets to this function.<br />
+Targets: USe entity query system<br />
+
+    </p>
+    <p class="commitdetails"><strong>26</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Targets.iss&#160;<span class="change">(+26&#160;-18)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="18"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-09-03 12:59</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1602</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fix miner getting stuck switching between 2 cans when they're both full. Port change from stable rev 1601
+    </p>
+    <p class="commitdetails"><strong>8</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_JetCan.iss&#160;<span class="change">(+8&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="17"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-08-07 03:09</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1596</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Miner: Decloak before mining. Likely only useful if you happen to be testing in a cloaked ship :)<br />
+obj_UplinkManager.iss: Use cached charid<br />
+obj_Asteroids.iss: New entity syntax and use of entity manager.<br />
+obj_Configuration.iss: Version the config file. Reset if less than current ver. Add attributes to asteroid, ice, and merc config items to allow disabling, prioritizing, and stroking.<br />
+obj_EVEBot: Cache Me.CharID. Pretty sure it won't change.<br />
+
+    </p>
+    <p class="commitdetails"><strong>174</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Asteroids.iss&#160;<span class="change">(+83&#160;-99)</span>,
+        obj_Configuration.iss&#160;<span class="change">(+87&#160;-86)</span>,
+        obj_EVEBot.iss&#160;<span class="change">(+4)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="16"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-08-03 12:27</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1595</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Note: Live ISXEVE users should be using /branches/stable or /tags/trunk_2010_07_21, this trunk is for beta isxeve<br />
+<br />
+Commit to clean up lots of small changes out of my wc...<br />
+Misc updates for defines instead of magic values.<br />
+Update for new entity syntax<br />
+Testcase for Agents.DoGetDialogResponses<br />
+Testcase for evebot entitycache updated for new cache<br />
+Remove testcase for eve.getcachedentities<br />
+
+    </p>
+    <p class="commitdetails"><strong>25</strong> lines of code changed in <span class="files">7 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        defines.iss&#160;<span class="change">(-2)</span>,
+        obj_Bookmarks.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_EVEBotUI.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Fleet.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_Missions.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_Ship.iss&#160;<span class="change">(+9&#160;-15)</span>,
+        obj_Station.iss&#160;<span class="change">(+9&#160;-9)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="15"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-08-03 11:26</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1594</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Note: Live ISXEVE users should be using /branches/stable or /tags/trunk_2010_07_21, this trunk is for beta isxeve<br />
+<br />
+Improve log message for agent lookups
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Agents.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="14"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-07-23 16:44</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1591</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Reduce impact of the standing check the same way the black/whitelist check was improved.<br />
+Remove calls to ToFleetMember if not in fleet.<br />
+LowStandingDetected now returns the # of folks detected, not just a bool.<br />
+
+    </p>
+    <p class="commitdetails"><strong>50</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Social.iss&#160;<span class="change">(+50&#160;-13)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="13"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-07-23 15:49</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1590</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Remove cache class. Hope you fuckers switched to the trunk tag.
+    </p>
+    <p class="commitdetails"><strong>0</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Cache.iss&#160;<span class="del">(del)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="12"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-07-23 15:22</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1589</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Remove login &amp; charselect checks, they're covered by SessionValid
+    </p>
+    <p class="commitdetails"><strong>0</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_EVEBot.iss&#160;<span class="change">(-8)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="11"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-07-23 15:17</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1588</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Optimize away .CharID references.<br />
+Fix Fleet member check<br />
+
+    </p>
+    <p class="commitdetails"><strong>7</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Social.iss&#160;<span class="change">(+7&#160;-5)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="10"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-05-24 01:02</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1576</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Drone region web/scram names
+    </p>
+    <p class="commitdetails"><strong>5</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Targets.iss&#160;<span class="change">(+5)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="9"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-04-05 00:46</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1567</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Tune random wait after mission to have 66% chance of 2 minutes, and 33% chance of 4 to 40 min.<br />
+Configurable via Common.Randomize
+    </p>
+    <p class="commitdetails"><strong>3</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Agents.iss&#160;<span class="change">(+3&#160;-8)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="8"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-04-05 00:37</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1565</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fix mission acceptance. This will require a pending fix to ISXEVE as well.<br />
+Tune Missioneer(sigh, fucking name) setstate to not repeatedly call havemission when we're running a mission.<br />
+Tune mission acceptance, should be much more reliable<br />
+Tune mission parsing, consolidate mission parsing code<br />
+Consolidate agent conversation code<br />
+Improve window handling behavior to specifically address windows instead of using closecurrent/closeall windows<br />
+Move much of the mission bot output to LOG_DEBUG
+    </p>
+    <p class="commitdetails"><strong>324</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Agents.iss&#160;<span class="change">(+150&#160;-466)</span>,
+        obj_MissionParser.iss&#160;<span class="change">(+167)</span>,
+        obj_Missions.iss&#160;<span class="change">(+7&#160;-7)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="7"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-04-05 00:34</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1564</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Mission Parser object.
+    </p>
+    <p class="commitdetails"><strong>0</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionParser.iss&#160;<span class="new">(new)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="6"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-04-01 23:10</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1561</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Clearing minor optimizations from my WC<br />
+Set default value for each ore type to 0 instead of 1 to avoid confusion.<br />
+
+    </p>
+    <p class="commitdetails"><strong>55</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Bookmark.iss&#160;<span class="change">(+10&#160;-10)</span>,
+        obj_Configuration.iss&#160;<span class="change">(+45&#160;-45)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="5"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-02-22 14:40</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1559</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Replace all fractional waits with waitframe or int waits. Should help performance, and reliablity in some cases<br />
+Remove _Var evebot-based system.<br />
+Fix various miner related things.<br />
+Convert obj_Belts to use cachedentity<br />
+Convert obj_JetCan to use cachedentity<br />
+Change negated .Equal to .NotEqual where it makes sense.<br />
+Fix possible delay-warp forever on drone screwup<br />
+Massively improve obj_Socials performance, caching results of checks on pilots, remove ourselves and our fleet members from consideration, etc.<br />
+Fix obj_Social PlayerInRange<br />
+Remove obj_Social PilotsWithinDetection<br />
+Do not set velocity on undocking, since we have CCP superspeed at undock now.<br />
+Update testapi with new include paths.<br />
+Added testcase for the new EntityCache<br />
+Updated insurance quote testcase to open insurance window.<br />
+<br />
+
+    </p>
+    <p class="commitdetails"><strong>188</strong> lines of code changed in <span class="files">19 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Agents.iss&#160;<span class="change">(+5&#160;-5)</span>,
+        obj_Belts.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_Bookmark.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_Bookmarks.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_Callback.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Configuration.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Drones.iss&#160;<span class="change">(+11&#160;-11)</span>,
+        obj_EVEBot.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_EVEBotUI.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Fleet.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_JetCan.iss&#160;<span class="change">(+19&#160;-19)</span>,
+        obj_Market.iss&#160;<span class="change">(+70&#160;-70)</span>,
+        obj_MissionCombat.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_Missions.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Ship.iss&#160;<span class="change">(+22&#160;-20)</span>,
+        obj_Skills.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Social.iss&#160;<span class="change">(+36&#160;-77)</span>,
+        obj_Station.iss&#160;<span class="change">(+3&#160;-4)</span>,
+        obj_Targets.iss&#160;<span class="change">(+5&#160;-55)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="4"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-01-11 15:35</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1547</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fix continuation markers on reordered lines.<br />
+Oops.
+    </p>
+    <p class="commitdetails"><strong>2</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Social.iss&#160;<span class="change">(+2&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="3"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-01-10 17:18</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1545</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Social: Fix PilotsWithinDetection to correctly find pilots in range of us, and exclude ourselfs.<br />
+Freighter: Port stable fixes from rev 1544:<br />
+  Freighter: Fix undocking and redocking repeatedly after dropoff<br />
+  Freighter: Fix barfing when started inside the target station. You can start anywhere now.<br />
+  Freighter: Add log msg when freighter decides it's out of source locations.
+    </p>
+    <p class="commitdetails"><strong>3</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Social.iss&#160;<span class="change">(+3&#160;-3)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="2"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-12-30 02:23</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1542</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Missing ]
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Cargo.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="1"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-12-29 11:13</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1541</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Update &amp; consolidate code to calc maximum # of items to fit in a given volume.<br />
+- Added int:Cargo.MaxQuantityForVolume[]<br />
+- Update all calcs to use new code<br />
+- Remove int:Cargo.QuantityToMove, which was using the old method and wasn't used for it's purpose.
+    </p>
+    <p class="commitdetails"><strong>45</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Cargo.iss&#160;<span class="change">(+45&#160;-79)</span>
+      </li>
+    </ul>
+  </dd>
+
+</dl>
+
+<p>(867 more)</p>
+</div><div id="generatedby">Generated by <a href="http://www.statsvn.org">StatSVN</a> 0.7.0</div>
+</body>
+</html>

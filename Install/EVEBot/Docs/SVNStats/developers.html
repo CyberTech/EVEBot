@@ -1,0 +1,715 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>StatSVN - EVEBot Developers</title>
+ <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
+    <meta name="Generator" content="StatSVN 0.7.0"/>
+<link rel="stylesheet" href="objectlab-statcvs.css" type="text/css"/>
+<script type="text/javascript" charset="utf-8" src="http://bit.ly/javascript-api.js?version=latest&#38;login=statsvn&#38;apiKey=R_2c362b417d0517c27876cbaca1bb68cc"></script>
+<script type="text/javascript" charset="utf-8">
+   // wait until page is loaded to call API
+   var redir_url;
+   var short_url;
+   BitlyCB.myShortenCallback = function(data) {
+      // this is how to get a result of shortening a single url
+      var result;
+      short_url=null;
+      for (var r in data.results) {
+         result = data.results[r];
+         result['longUrl'] = r;
+         short_url = result['shortUrl'];
+         break;
+      }
+      if (short_url==null) // bit.ly failed
+      document.location=redir_url;
+      else
+      redirToTwitter();
+   };
+   function shortenTweet(url) {
+      if (short_url == null || redir_url!=url) {
+      redir_url = url;
+      BitlyClient.shorten(document.location, 'BitlyCB.myShortenCallback');
+      }
+      else
+      redirToTwitter();
+      return false;
+   }
+   function redirToTwitter() { 
+      // replace {0} which is visible as %7B0} in the link
+      document.location = redir_url.replace('%7B0}', short_url);
+   }
+</script>
+  </head>
+
+<body>
+
+<h1>EVEBot Developers</h1>
+<div id="parentlink">&#171; <a href="index.html">Development Statistics for EVEBot</a></div>
+<dl class="attributes">
+    <dt>Number of Developers:</dt>
+    <dd>13</dd>
+</dl>
+  <table  rules="groups" summary="All authors and the number of their changes and lines of code">
+    <colgroup align="left"/>
+    <colgroup align="right"/>
+    <colgroup align="right"/>
+    <colgroup align="right"/>
+    <colgroup align="right"/>
+    <thead>
+      <tr>
+        <th>Author</th>
+        <th>Author Id</th>
+        <th>Changes</th>
+        <th>Lines of Code</th>
+        <th>Lines per Change</th>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <th></th>
+        <td>Totals</td>
+        <td>5332 (100.0%)</td>
+        <td>757367 (100.0%)</td>
+        <td>142.0</td>
+      </tr>
+    </tfoot>
+    <tbody>
+      <tr  class="odd">
+        <th><a href="user_cybertech.html" class="author">cybertech</a></th>
+        <td><a href="user_cybertech.html" class="author">cybertech</a></td>
+        <td>3675 (68.9%)</td>
+        <td>591982 (78.2%)</td>
+        <td>161.0</td>
+      </tr>
+      <tr  class="even">
+        <th><a href="user_gliderpro.html" class="author">gliderpro</a></th>
+        <td><a href="user_gliderpro.html" class="author">gliderpro</a></td>
+        <td>683 (12.8%)</td>
+        <td>114999 (15.2%)</td>
+        <td>168.3</td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="user_Cplusplus.html" class="author">Cplusplus</a></th>
+        <td><a href="user_Cplusplus.html" class="author">Cplusplus</a></td>
+        <td>309 (5.8%)</td>
+        <td>27789 (3.7%)</td>
+        <td>89.9</td>
+      </tr>
+      <tr  class="even">
+        <th><a href="user_stealthy.html" class="author">stealthy</a></th>
+        <td><a href="user_stealthy.html" class="author">stealthy</a></td>
+        <td>263 (4.9%)</td>
+        <td>9109 (1.2%)</td>
+        <td>34.6</td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="user_override13.html" class="author">override13</a></th>
+        <td><a href="user_override13.html" class="author">override13</a></td>
+        <td>47 (0.9%)</td>
+        <td>5645 (0.7%)</td>
+        <td>120.1</td>
+      </tr>
+      <tr  class="even">
+        <th><a href="user_risky.html" class="author">risky</a></th>
+        <td><a href="user_risky.html" class="author">risky</a></td>
+        <td>39 (0.7%)</td>
+        <td>2515 (0.3%)</td>
+        <td>64.4</td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="user_Amadeus.html" class="author">Amadeus</a></th>
+        <td><a href="user_Amadeus.html" class="author">Amadeus</a></td>
+        <td>54 (1.0%)</td>
+        <td>2452 (0.3%)</td>
+        <td>45.4</td>
+      </tr>
+      <tr  class="even">
+        <th><a href="user_Hessinger.html" class="author">Hessinger</a></th>
+        <td><a href="user_Hessinger.html" class="author">Hessinger</a></td>
+        <td>192 (3.6%)</td>
+        <td>2052 (0.3%)</td>
+        <td>10.6</td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="user_trupoet.html" class="author">trupoet</a></th>
+        <td><a href="user_trupoet.html" class="author">trupoet</a></td>
+        <td>23 (0.4%)</td>
+        <td>600 (0.1%)</td>
+        <td>26.0</td>
+      </tr>
+      <tr  class="even">
+        <th><a href="user_altered.html" class="author">altered</a></th>
+        <td><a href="user_altered.html" class="author">altered</a></td>
+        <td>10 (0.2%)</td>
+        <td>121 (0.0%)</td>
+        <td>12.1</td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="user_thehazard.html" class="author">thehazard</a></th>
+        <td><a href="user_thehazard.html" class="author">thehazard</a></td>
+        <td>3 (0.1%)</td>
+        <td>82 (0.0%)</td>
+        <td>27.3</td>
+      </tr>
+      <tr  class="even">
+        <th><a href="user_Neutro.html" class="author">Neutro</a></th>
+        <td><a href="user_Neutro.html" class="author">Neutro</a></td>
+        <td>33 (0.6%)</td>
+        <td>18 (0.0%)</td>
+        <td>0.5</td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="user_tsumari.html" class="author">tsumari</a></th>
+        <td><a href="user_tsumari.html" class="author">tsumari</a></td>
+        <td>1 (0.0%)</td>
+        <td>3 (0.0%)</td>
+        <td>3.0</td>
+      </tr>
+    </tbody>
+  </table>
+
+
+<div class="section">
+<h2>Last 12 Months</h2>
+  <table  rules="groups" summary="All authors and the number of their changes and lines of code">
+    <colgroup align="left"/>
+    <colgroup align="right"/>
+    <colgroup align="right"/>
+    <colgroup align="right"/>
+    <colgroup align="right"/>
+    <colgroup align="right"/>
+    <colgroup align="right"/>
+    <colgroup align="right"/>
+    <colgroup align="right"/>
+    <colgroup align="right"/>
+    <colgroup align="right"/>
+    <colgroup align="right"/>
+    <colgroup align="right"/>
+    <colgroup align="right"/>
+    <thead>
+      <tr>
+        <th>Author</th>
+        <th>Up to 1/2010</th>
+        <th>2/2010</th>
+        <th>3/2010</th>
+        <th>4/2010</th>
+        <th>5/2010</th>
+        <th>6/2010</th>
+        <th>7/2010</th>
+        <th>8/2010</th>
+        <th>9/2010</th>
+        <th>10/2010</th>
+        <th>11/2010</th>
+        <th>12/2010</th>
+        <th>1/2011</th>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <th>Totals</th>
+        <td>641763 (100.0%)</td>
+        <td>535 (100.0%)</td>
+        <td>0 (-)</td>
+        <td>97041 (100.0%)</td>
+        <td>2420 (100.0%)</td>
+        <td>0 (-)</td>
+        <td>172 (100.0%)</td>
+        <td>328 (100.0%)</td>
+        <td>558 (100.0%)</td>
+        <td>181 (100.0%)</td>
+        <td>1949 (100.0%)</td>
+        <td>11262 (100.0%)</td>
+        <td>1158 (100.0%)</td>
+      </tr>
+    </tfoot>
+    <tbody>
+      <tr  class="odd">
+        <th><a href="user_cybertech.html" class="author">cybertech</a></th>
+        <td>476479 (74.2%)</td>
+        <td>535 (100.0%)</td>
+        <td>0 (-)</td>
+        <td>97041 (100.0%)</td>
+        <td>2420 (100.0%)</td>
+        <td>0 (-)</td>
+        <td>172 (100.0%)</td>
+        <td>328 (100.0%)</td>
+        <td>558 (100.0%)</td>
+        <td>181 (100.0%)</td>
+        <td>1938 (99.4%)</td>
+        <td>11172 (99.2%)</td>
+        <td>1158 (100.0%)</td>
+      </tr>
+      <tr  class="even">
+        <th><a href="user_gliderpro.html" class="author">gliderpro</a></th>
+        <td>114909 (17.9%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (-)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (-)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>90 (0.8%)</td>
+        <td>0 (0.0%)</td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="user_Cplusplus.html" class="author">Cplusplus</a></th>
+        <td>27789 (4.3%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (-)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (-)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+      </tr>
+      <tr  class="even">
+        <th><a href="user_stealthy.html" class="author">stealthy</a></th>
+        <td>9109 (1.4%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (-)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (-)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="user_override13.html" class="author">override13</a></th>
+        <td>5645 (0.9%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (-)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (-)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+      </tr>
+      <tr  class="even">
+        <th><a href="user_risky.html" class="author">risky</a></th>
+        <td>2515 (0.4%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (-)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (-)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="user_Amadeus.html" class="author">Amadeus</a></th>
+        <td>2441 (0.4%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (-)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (-)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>11 (0.6%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+      </tr>
+      <tr  class="even">
+        <th><a href="user_Hessinger.html" class="author">Hessinger</a></th>
+        <td>2052 (0.3%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (-)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (-)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="user_trupoet.html" class="author">trupoet</a></th>
+        <td>600 (0.1%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (-)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (-)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+      </tr>
+      <tr  class="even">
+        <th><a href="user_altered.html" class="author">altered</a></th>
+        <td>121 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (-)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (-)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="user_thehazard.html" class="author">thehazard</a></th>
+        <td>82 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (-)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (-)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+      </tr>
+      <tr  class="even">
+        <th><a href="user_Neutro.html" class="author">Neutro</a></th>
+        <td>18 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (-)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (-)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="user_tsumari.html" class="author">tsumari</a></th>
+        <td>3 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (-)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (-)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+        <td>0 (0.0%)</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+<div class="section">
+<h2>Lines of Code</h2>
+<p class="chart"><img src="loc_per_author.png" alt="Contributed Lines of Code" width="800" height="500" /></p></div>
+<div class="section">
+<h2>Developer of the Month</h2>
+  <table  rules="groups" summary="Repository Tags">
+    <colgroup align="left"/>
+    <colgroup align="right"/>
+    <colgroup align="right"/>
+    <colgroup align="right"/>
+    <thead>
+      <tr>
+        <th>Month</th>
+        <th>Author</th>
+        <th>Lines</th>
+        <th>Tweet This</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr  class="odd">
+        <th><a href="2011-01.html">January 2011</a></th>
+        <td><a href="user_cybertech.html" class="author">cybertech</a></td>
+        <td>1158</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=cybertech%20is%20Developer%20of%20The%20Month%20for%20January%202011%20for%20EVEBot%20%7B0}%20with%201%2C158%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="even">
+        <th><a href="2010-12.html">December 2010</a></th>
+        <td><a href="user_cybertech.html" class="author">cybertech</a></td>
+        <td>11172</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=cybertech%20is%20Developer%20of%20The%20Month%20for%20December%202010%20for%20EVEBot%20%7B0}%20with%2011%2C172%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="2010-11.html">November 2010</a></th>
+        <td><a href="user_cybertech.html" class="author">cybertech</a></td>
+        <td>1938</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=cybertech%20is%20Developer%20of%20The%20Month%20for%20November%202010%20for%20EVEBot%20%7B0}%20with%201%2C938%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="even">
+        <th><a href="2010-10.html">October 2010</a></th>
+        <td><a href="user_cybertech.html" class="author">cybertech</a></td>
+        <td>181</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=cybertech%20is%20Developer%20of%20The%20Month%20for%20October%202010%20for%20EVEBot%20%7B0}%20with%20181%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="2010-09.html">September 2010</a></th>
+        <td><a href="user_cybertech.html" class="author">cybertech</a></td>
+        <td>558</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=cybertech%20is%20Developer%20of%20The%20Month%20for%20September%202010%20for%20EVEBot%20%7B0}%20with%20558%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="even">
+        <th><a href="2010-08.html">August 2010</a></th>
+        <td><a href="user_cybertech.html" class="author">cybertech</a></td>
+        <td>328</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=cybertech%20is%20Developer%20of%20The%20Month%20for%20August%202010%20for%20EVEBot%20%7B0}%20with%20328%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="2010-07.html">July 2010</a></th>
+        <td><a href="user_cybertech.html" class="author">cybertech</a></td>
+        <td>172</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=cybertech%20is%20Developer%20of%20The%20Month%20for%20July%202010%20for%20EVEBot%20%7B0}%20with%20172%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="even">
+        <th><a href="2010-05.html">May 2010</a></th>
+        <td><a href="user_cybertech.html" class="author">cybertech</a></td>
+        <td>2420</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=cybertech%20is%20Developer%20of%20The%20Month%20for%20May%202010%20for%20EVEBot%20%7B0}%20with%202%2C420%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="2010-04.html">April 2010</a></th>
+        <td><a href="user_cybertech.html" class="author">cybertech</a></td>
+        <td>97041</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=cybertech%20is%20Developer%20of%20The%20Month%20for%20April%202010%20for%20EVEBot%20%7B0}%20with%2097%2C041%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="even">
+        <th><a href="2010-02.html">February 2010</a></th>
+        <td><a href="user_cybertech.html" class="author">cybertech</a></td>
+        <td>535</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=cybertech%20is%20Developer%20of%20The%20Month%20for%20February%202010%20for%20EVEBot%20%7B0}%20with%20535%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="2010-01.html">January 2010</a></th>
+        <td><a href="user_cybertech.html" class="author">cybertech</a></td>
+        <td>359</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=cybertech%20is%20Developer%20of%20The%20Month%20for%20January%202010%20for%20EVEBot%20%7B0}%20with%20359%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="even">
+        <th><a href="2009-12.html">December 2009</a></th>
+        <td><a href="user_Cplusplus.html" class="author">Cplusplus</a></td>
+        <td>9253</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=Cplusplus%20is%20Developer%20of%20The%20Month%20for%20December%202009%20for%20EVEBot%20%7B0}%20with%209%2C253%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="2009-11.html">November 2009</a></th>
+        <td><a href="user_Cplusplus.html" class="author">Cplusplus</a></td>
+        <td>3238</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=Cplusplus%20is%20Developer%20of%20The%20Month%20for%20November%202009%20for%20EVEBot%20%7B0}%20with%203%2C238%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="even">
+        <th><a href="2009-10.html">October 2009</a></th>
+        <td><a href="user_cybertech.html" class="author">cybertech</a></td>
+        <td>505</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=cybertech%20is%20Developer%20of%20The%20Month%20for%20October%202009%20for%20EVEBot%20%7B0}%20with%20505%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="2009-09.html">September 2009</a></th>
+        <td><a href="user_cybertech.html" class="author">cybertech</a></td>
+        <td>1674</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=cybertech%20is%20Developer%20of%20The%20Month%20for%20September%202009%20for%20EVEBot%20%7B0}%20with%201%2C674%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="even">
+        <th><a href="2009-08.html">August 2009</a></th>
+        <td><a href="user_cybertech.html" class="author">cybertech</a></td>
+        <td>1635</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=cybertech%20is%20Developer%20of%20The%20Month%20for%20August%202009%20for%20EVEBot%20%7B0}%20with%201%2C635%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="2009-07.html">July 2009</a></th>
+        <td><a href="user_stealthy.html" class="author">stealthy</a></td>
+        <td>1932</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=stealthy%20is%20Developer%20of%20The%20Month%20for%20July%202009%20for%20EVEBot%20%7B0}%20with%201%2C932%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="even">
+        <th><a href="2009-06.html">June 2009</a></th>
+        <td><a href="user_cybertech.html" class="author">cybertech</a></td>
+        <td>20427</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=cybertech%20is%20Developer%20of%20The%20Month%20for%20June%202009%20for%20EVEBot%20%7B0}%20with%2020%2C427%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="2009-05.html">May 2009</a></th>
+        <td><a href="user_cybertech.html" class="author">cybertech</a></td>
+        <td>904</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=cybertech%20is%20Developer%20of%20The%20Month%20for%20May%202009%20for%20EVEBot%20%7B0}%20with%20904%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="even">
+        <th><a href="2009-04.html">April 2009</a></th>
+        <td><a href="user_cybertech.html" class="author">cybertech</a></td>
+        <td>16972</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=cybertech%20is%20Developer%20of%20The%20Month%20for%20April%202009%20for%20EVEBot%20%7B0}%20with%2016%2C972%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="2009-03.html">March 2009</a></th>
+        <td><a href="user_cybertech.html" class="author">cybertech</a></td>
+        <td>19910</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=cybertech%20is%20Developer%20of%20The%20Month%20for%20March%202009%20for%20EVEBot%20%7B0}%20with%2019%2C910%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="even">
+        <th><a href="2009-02.html">February 2009</a></th>
+        <td><a href="user_cybertech.html" class="author">cybertech</a></td>
+        <td>1290</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=cybertech%20is%20Developer%20of%20The%20Month%20for%20February%202009%20for%20EVEBot%20%7B0}%20with%201%2C290%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="2009-01.html">January 2009</a></th>
+        <td><a href="user_cybertech.html" class="author">cybertech</a></td>
+        <td>259</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=cybertech%20is%20Developer%20of%20The%20Month%20for%20January%202009%20for%20EVEBot%20%7B0}%20with%20259%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="even">
+        <th><a href="2008-12.html">December 2008</a></th>
+        <td><a href="user_gliderpro.html" class="author">gliderpro</a></td>
+        <td>176</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=gliderpro%20is%20Developer%20of%20The%20Month%20for%20December%202008%20for%20EVEBot%20%7B0}%20with%20176%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="2008-11.html">November 2008</a></th>
+        <td><a href="user_gliderpro.html" class="author">gliderpro</a></td>
+        <td>8949</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=gliderpro%20is%20Developer%20of%20The%20Month%20for%20November%202008%20for%20EVEBot%20%7B0}%20with%208%2C949%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="even">
+        <th><a href="2008-10.html">October 2008</a></th>
+        <td><a href="user_cybertech.html" class="author">cybertech</a></td>
+        <td>323216</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=cybertech%20is%20Developer%20of%20The%20Month%20for%20October%202008%20for%20EVEBot%20%7B0}%20with%20323%2C216%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="2008-09.html">September 2008</a></th>
+        <td><a href="user_gliderpro.html" class="author">gliderpro</a></td>
+        <td>255</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=gliderpro%20is%20Developer%20of%20The%20Month%20for%20September%202008%20for%20EVEBot%20%7B0}%20with%20255%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="even">
+        <th><a href="2008-08.html">August 2008</a></th>
+        <td><a href="user_cybertech.html" class="author">cybertech</a></td>
+        <td>50350</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=cybertech%20is%20Developer%20of%20The%20Month%20for%20August%202008%20for%20EVEBot%20%7B0}%20with%2050%2C350%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="2008-07.html">July 2008</a></th>
+        <td><a href="user_gliderpro.html" class="author">gliderpro</a></td>
+        <td>44797</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=gliderpro%20is%20Developer%20of%20The%20Month%20for%20July%202008%20for%20EVEBot%20%7B0}%20with%2044%2C797%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="even">
+        <th><a href="2008-06.html">June 2008</a></th>
+        <td><a href="user_cybertech.html" class="author">cybertech</a></td>
+        <td>2327</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=cybertech%20is%20Developer%20of%20The%20Month%20for%20June%202008%20for%20EVEBot%20%7B0}%20with%202%2C327%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="2008-05.html">May 2008</a></th>
+        <td><a href="user_gliderpro.html" class="author">gliderpro</a></td>
+        <td>7831</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=gliderpro%20is%20Developer%20of%20The%20Month%20for%20May%202008%20for%20EVEBot%20%7B0}%20with%207%2C831%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="even">
+        <th><a href="2008-04.html">April 2008</a></th>
+        <td><a href="user_gliderpro.html" class="author">gliderpro</a></td>
+        <td>21563</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=gliderpro%20is%20Developer%20of%20The%20Month%20for%20April%202008%20for%20EVEBot%20%7B0}%20with%2021%2C563%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="2008-03.html">March 2008</a></th>
+        <td><a href="user_cybertech.html" class="author">cybertech</a></td>
+        <td>3563</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=cybertech%20is%20Developer%20of%20The%20Month%20for%20March%202008%20for%20EVEBot%20%7B0}%20with%203%2C563%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="even">
+        <th><a href="2008-02.html">February 2008</a></th>
+        <td><a href="user_gliderpro.html" class="author">gliderpro</a></td>
+        <td>3536</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=gliderpro%20is%20Developer%20of%20The%20Month%20for%20February%202008%20for%20EVEBot%20%7B0}%20with%203%2C536%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="2008-01.html">January 2008</a></th>
+        <td><a href="user_gliderpro.html" class="author">gliderpro</a></td>
+        <td>1295</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=gliderpro%20is%20Developer%20of%20The%20Month%20for%20January%202008%20for%20EVEBot%20%7B0}%20with%201%2C295%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="even">
+        <th><a href="2007-12.html">December 2007</a></th>
+        <td><a href="user_Amadeus.html" class="author">Amadeus</a></td>
+        <td>177</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=Amadeus%20is%20Developer%20of%20The%20Month%20for%20December%202007%20for%20EVEBot%20%7B0}%20with%20177%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="2007-11.html">November 2007</a></th>
+        <td><a href="user_gliderpro.html" class="author">gliderpro</a></td>
+        <td>294</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=gliderpro%20is%20Developer%20of%20The%20Month%20for%20November%202007%20for%20EVEBot%20%7B0}%20with%20294%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="even">
+        <th><a href="2007-10.html">October 2007</a></th>
+        <td><a href="user_gliderpro.html" class="author">gliderpro</a></td>
+        <td>1483</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=gliderpro%20is%20Developer%20of%20The%20Month%20for%20October%202007%20for%20EVEBot%20%7B0}%20with%201%2C483%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="2007-09.html">September 2007</a></th>
+        <td><a href="user_cybertech.html" class="author">cybertech</a></td>
+        <td>2399</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=cybertech%20is%20Developer%20of%20The%20Month%20for%20September%202007%20for%20EVEBot%20%7B0}%20with%202%2C399%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="even">
+        <th><a href="2007-08.html">August 2007</a></th>
+        <td><a href="user_cybertech.html" class="author">cybertech</a></td>
+        <td>2227</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=cybertech%20is%20Developer%20of%20The%20Month%20for%20August%202007%20for%20EVEBot%20%7B0}%20with%202%2C227%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+      <tr  class="odd">
+        <th><a href="2007-07.html">July 2007</a></th>
+        <td><a href="user_cybertech.html" class="author">cybertech</a></td>
+        <td>7010</td>
+        <td><a onclick="return shortenTweet(this.href);" href="http://twitter.com/home?status=cybertech%20is%20Developer%20of%20The%20Month%20for%20July%202007%20for%20EVEBot%20%7B0}%20with%207%2C010%20lines.%20Stats%20by%20StatSVN%20http%3A%2F%2Fstatsvn.org"><img style="border:0px" alt="Tweet this" src="tt-twitter-micro3.png"/></a></td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+<div class="section">
+<h2>Developer Activity </h2>
+<p class="chart"><img src="commitscatterauthors.png" alt="Commit Activity" width="800" height="1090" /></p><p class="chart"><img src="activity.png" alt="Author Activity" width="512" height="357" /></p></div>
+<div class="section">
+<h2>Activity by Clock Time</h2>
+<p class="chart"><img src="activity_time.png" alt="Activity by Hour of Day" width="800" height="500" /></p><p class="chart"><img src="activity_day.png" alt="Activity by Day of Week" width="800" height="500" /></p></div><div id="generatedby">Generated by <a href="http://www.statsvn.org">StatSVN</a> 0.7.0</div>
+</body>
+</html>
