@@ -2,11 +2,6 @@
 <root>
   <label>[root]</label>
     <branch>
-        <label>Install</label>
-        <leaf><label>Installation.txt</label><weight>9</weight><value>0.0</value></leaf>
-    </branch>
-
-    <branch>
         <label>tags</label>
       <branch>
           <label>trunk_2010_07_21</label>
