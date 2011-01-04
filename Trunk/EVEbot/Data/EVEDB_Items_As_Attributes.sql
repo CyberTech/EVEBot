@@ -1,11 +1,13 @@
 ; Reference: http://wiki.eve-id.net/Database_Tables_-_Inventory
 
 SELECT
- concat_ws('','  <Setting Name="', invTypes.typeID, '"',' ItemName="', typeName, '"',' GroupID="', groupID, '"',' Metalevel="', IFNULL(MT.metaGroupID, 1), '"',' Volume="', volume, '"',' Capacity="', capacity, '"',' PortionSize="', portionSize, '"',' BasePrice="', basePrice, '"',' weaponRangeMultiplier="', (select valueFloat from dgmTypeAttributes where dgmTypeAttributes.typeID=invTypes.typeID and dgmTypeAttributes.attributeID = 120), '"','>0</Setting>') as SetString
+ concat_ws('','  <Setting Name="', invTypes.typeID, '"',' ItemName="', typeName, '"',' GroupID="', groupID, '"',' Metalevel="', IFNULL(IFNULL(TA.valueInt,TA.valueFloat),1), '"',' Volume="', volume, '"',' Capacity="', capacity, '"',' PortionSize="', portionSize, '"',' BasePrice="', basePrice, '"',' weaponRangeMultiplier="', (select valueFloat from dgmTypeAttributes where dgmTypeAttributes.typeID=invTypes.typeID and dgmTypeAttributes.attributeID = 120), '"','>0</Setting>') as SetString
  FROM `invTypes`
- left outer join invMetaTypes as MT on MT.typeID = invTypes.typeID
+ left outer join dgmTypeAttributes as TA on TA.typeID = invTypes.typeID and TA.attributeID=633
  order by invTypes.typeID
  into outfile '/tmp/EVEDB_Items.xml'
+
+; attributeID 633 is metalevel
 
 ; Dont forget to replace & with &amp; in new file before committing!
 
