@@ -62,10 +62,158 @@
 </ul>
 </div><dl class="attributes">
     <dt>Number of Commits:</dt>
-    <dd>0</dd>
+    <dd>6</dd>
     <dt>Number of Active Developers:</dt>
-    <dd>0</dd>
+    <dd>1</dd>
 </dl>
+<dl class="commitlist">
+  <dt><a name="6"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-04-05 00:46</span>
+    <a class="permalink" title="Permalink to this commit" href="#6">#6</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1567</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Tune random wait after mission to have 66% chance of 2 minutes, and 33% chance of 4 to 40 min.<br />
+Configurable via Common.Randomize
+    </p>
+    <p class="commitdetails"><strong>3</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Agents.iss&#160;<span class="change">(+3&#160;-8)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="5"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-04-05 00:40</span>
+    <a class="permalink" title="Permalink to this commit" href="#5">#5</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1566</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Add missing include for new MissionParser
+    </p>
+    <p class="commitdetails"><strong>2</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot</strong>:
+        EVEBot.iss&#160;<span class="change">(+2&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="4"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-04-05 00:37</span>
+    <a class="permalink" title="Permalink to this commit" href="#4">#4</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1565</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fix mission acceptance. This will require a pending fix to ISXEVE as well.<br />
+Tune Missioneer(sigh, fucking name) setstate to not repeatedly call havemission when we're running a mission.<br />
+Tune mission acceptance, should be much more reliable<br />
+Tune mission parsing, consolidate mission parsing code<br />
+Consolidate agent conversation code<br />
+Improve window handling behavior to specifically address windows instead of using closecurrent/closeall windows<br />
+Move much of the mission bot output to LOG_DEBUG
+    </p>
+    <p class="commitdetails"><strong>329</strong> lines of code changed in <span class="files">4 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Missioneer.iss&#160;<span class="change">(+5&#160;-5)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Agents.iss&#160;<span class="change">(+150&#160;-466)</span>,
+        obj_MissionParser.iss&#160;<span class="change">(+167)</span>,
+        obj_Missions.iss&#160;<span class="change">(+7&#160;-7)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="3"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-04-05 00:34</span>
+    <a class="permalink" title="Permalink to this commit" href="#3">#3</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1564</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Mission Parser object.
+    </p>
+    <p class="commitdetails"><strong>0</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionParser.iss&#160;<span class="new">(new)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="2"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-04-01 23:12</span>
+    <a class="permalink" title="Permalink to this commit" href="#2">#2</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1562</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Remote decimal waits<br />
+Move wreck check before module check to avoid needless work
+    </p>
+    <p class="commitdetails"><strong>150</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/External</strong>:
+        EVESalvageLibrary.ISS&#160;<span class="change">(+150&#160;-144)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="1"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-04-01 23:10</span>
+    <a class="permalink" title="Permalink to this commit" href="#1">#1</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1561</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Clearing minor optimizations from my WC<br />
+Set default value for each ore type to 0 instead of 1 to avoid confusion.<br />
+
+    </p>
+    <p class="commitdetails"><strong>105</strong> lines of code changed in <span class="files">7 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Freighter.iss&#160;<span class="change">(+10)</span>,
+        obj_MinerHauler.iss&#160;<span class="change">(+10)</span>,
+        obj_Missioneer.iss&#160;<span class="change">(+11&#160;-1)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Modes</strong>:
+        obj_Scavenger.iss&#160;<span class="change">(+10)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Targeting.iss&#160;<span class="change">(+9&#160;-4)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Bookmark.iss&#160;<span class="change">(+10&#160;-10)</span>,
+        obj_Configuration.iss&#160;<span class="change">(+45&#160;-45)</span>
+      </li>
+    </ul>
+  </dd>
+
+</dl>
+
 <p class="previous"><a href="2010-03.html">March 2010</a> &#187; </p>
 <div id="generatedby">Generated by <a href="http://www.statsvn.org">StatSVN</a> 0.7.0</div>
 </body>

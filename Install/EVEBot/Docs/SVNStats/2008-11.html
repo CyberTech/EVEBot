@@ -62,10 +62,193 @@
 </ul>
 </div><dl class="attributes">
     <dt>Number of Commits:</dt>
-    <dd>0</dd>
+    <dd>7</dd>
     <dt>Number of Active Developers:</dt>
-    <dd>0</dd>
+    <dd>2</dd>
 </dl>
+<dl class="commitlist">
+  <dt><a name="7"></a>
+    <a href="user_gliderpro.html" class="author">gliderpro</a>
+    <span class="date">2008-11-28 08:16</span>
+    <a class="permalink" title="Permalink to this commit" href="#7">#7</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">845</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Updated the item database for the Quantum Rise patch.  <br />
+Thanks go to LRonSmith for converting the SQL database into a LavishSettings file!!
+    </p>
+    <p class="commitdetails"><strong>8570</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Data</strong>:
+        EVEDB_Items.xml&#160;<span class="change">(+8570&#160;-16179)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="6"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2008-11-27 00:19</span>
+    <a class="permalink" title="Permalink to this commit" href="#6">#6</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">843</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fixed issue #59: Patch to save pilot config file anytime a mission is declined<br />
+
+    </p>
+    <p class="commitdetails"><strong>179</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Agents.iss&#160;<span class="change">(+179&#160;-176)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="5"></a>
+    <a href="user_gliderpro.html" class="author">gliderpro</a>
+    <span class="date">2008-11-26 11:02</span>
+    <a class="permalink" title="Permalink to this commit" href="#5">#5</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">842</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fixed blackout hours logic in obj_Skills.iss
+    </p>
+    <p class="commitdetails"><strong>2</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Skills.iss&#160;<span class="change">(+2&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="4"></a>
+    <a href="user_gliderpro.html" class="author">gliderpro</a>
+    <span class="date">2008-11-25 12:25</span>
+    <a class="permalink" title="Permalink to this commit" href="#4">#4</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">840</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fixed bug in obj_EVEBot.iss.  Eve is supposed to be shutdown at downtime.<br />
+Modified obj_Skills.iss to use a list of skills sorted by training time.  <br />
+Also added lockout around downtime so EveBot doesn't start a skill that will end during downtime.
+    </p>
+    <p class="commitdetails"><strong>81</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_EVEBot.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_Skills.iss&#160;<span class="change">(+79&#160;-19)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="3"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2008-11-06 12:11</span>
+    <a class="permalink" title="Permalink to this commit" href="#3">#3</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">838</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Safespots: fix :next used in wrong place<br />
+obj_ship, Defense: Add in-pod detection and safespotting.<br />
+obj_ship: Trigger safespotting instead of pausing if modules are undetected<br />
+
+    </p>
+    <p class="commitdetails"><strong>120</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Defense.iss&#160;<span class="change">(+58&#160;-6)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Safespots.iss&#160;<span class="change">(+5&#160;-5)</span>,
+        obj_Ship.iss&#160;<span class="change">(+57&#160;-40)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="2"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2008-11-06 04:45</span>
+    <a class="permalink" title="Permalink to this commit" href="#2">#2</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">837</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Change default for TrainShortestSkill to true<br />
+Refactor SafeSpot object a bit.<br />
+ Added Safespots.Count<br />
+ Renamed SafeSpots.WarpTo -&gt; WarpToNext<br />
+ Removed SafeSpots.WarptoNextbookmark<br />
+Made all script-scope objects global.<br />
+Lots of changes to Threads/Defense, in order to try to clean up the safespotting code.<br />
+Glider, test this new code, i wasn't able to before bed.<br />
+
+    </p>
+    <p class="commitdetails"><strong>391</strong> lines of code changed in <span class="files">9 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot</strong>:
+        EVEBot.iss&#160;<span class="change">(+45&#160;-43)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Defense.iss&#160;<span class="change">(+125&#160;-104)</span>,
+        Offense.iss&#160;<span class="change">(+16&#160;-16)</span>,
+        Targeting.iss&#160;<span class="change">(+21&#160;-21)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Combat.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Configuration.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Safespots.iss&#160;<span class="change">(+37&#160;-31)</span>,
+        obj_Station.iss&#160;<span class="change">(+2&#160;-2)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/interface</strong>:
+        evebotgui.xml&#160;<span class="change">(+143&#160;-143)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="1"></a>
+    <a href="user_gliderpro.html" class="author">gliderpro</a>
+    <span class="date">2008-11-05 15:16</span>
+    <a class="permalink" title="Permalink to this commit" href="#1">#1</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">836</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+THIS CODE IS BROKEN!  DO NOT USE!<br />
+Cyber, take a look at Defense.iss and tell me why Flee doesn't work.
+    </p>
+    <p class="commitdetails"><strong>296</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Data</strong>:
+        Mission Database.xml&#160;<span class="new">(new&#160;80)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Defense.iss&#160;<span class="change">(+155)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Missions.iss&#160;<span class="change">(+61&#160;-27)</span>
+      </li>
+    </ul>
+  </dd>
+
+</dl>
+
 <p class="previous"><a href="2008-10.html">October 2008</a> &#187; </p>
 <div id="generatedby">Generated by <a href="http://www.statsvn.org">StatSVN</a> 0.7.0</div>
 </body>

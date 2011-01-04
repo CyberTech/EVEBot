@@ -62,10 +62,131 @@
 </ul>
 </div><dl class="attributes">
     <dt>Number of Commits:</dt>
-    <dd>0</dd>
+    <dd>6</dd>
     <dt>Number of Active Developers:</dt>
-    <dd>0</dd>
+    <dd>2</dd>
 </dl>
+<dl class="commitlist">
+  <dt><a name="6"></a>
+    <a href="user_gliderpro.html" class="author">gliderpro</a>
+    <span class="date">2008-09-29 13:39</span>
+    <a class="permalink" title="Permalink to this commit" href="#6">#6</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">791</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+fixed bug with multi-trip courier missions.
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Missions.iss&#160;<span class="change">(+1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="5"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2008-09-28 23:58</span>
+    <a class="permalink" title="Permalink to this commit" href="#5">#5</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">789</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Added TrainFastest - it's on by default.  Continually trains the known skill with the shortest time to completion.  Does not override currently running skills, so it'll keep you from forgetting the end of a longish train.  No UI option for it yet, if you want to use the skills file, change TrainFastest to FALSE in the config file for that character.
+    </p>
+    <p class="commitdetails"><strong>90</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Configuration.iss&#160;<span class="change">(+11)</span>,
+        obj_Skills.iss&#160;<span class="change">(+79&#160;-43)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="4"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2008-09-08 03:00</span>
+    <a class="permalink" title="Permalink to this commit" href="#4">#4</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">787</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fix failure of hauler to work if ship cargo is not divisible by 1k for ice hauling.
+    </p>
+    <p class="commitdetails"><strong>14</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Hauler.iss&#160;<span class="change">(+14&#160;-7)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="3"></a>
+    <a href="user_gliderpro.html" class="author">gliderpro</a>
+    <span class="date">2008-09-06 10:12</span>
+    <a class="permalink" title="Permalink to this commit" href="#3">#3</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">785</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Check for missing items in RunCourierMission.<br />
+Check for quantity when filtering sell orders.
+    </p>
+    <p class="commitdetails"><strong>21</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Market.iss&#160;<span class="change">(+5)</span>,
+        obj_Missions.iss&#160;<span class="change">(+16&#160;-8)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="2"></a>
+    <a href="user_gliderpro.html" class="author">gliderpro</a>
+    <span class="date">2008-09-06 09:37</span>
+    <a class="permalink" title="Permalink to this commit" href="#2">#2</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">784</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Integrated some of THC's patch.
+    </p>
+    <p class="commitdetails"><strong>233</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Agents.iss&#160;<span class="change">(+194)</span>,
+        obj_Missions.iss&#160;<span class="change">(+39&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="1"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2008-09-05 16:35</span>
+    <a class="permalink" title="Permalink to this commit" href="#1">#1</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">782</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Adding comment for strip mine behavior.
+    </p>
+    <p class="commitdetails"><strong>2</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Asteroids.iss&#160;<span class="change">(+2)</span>
+      </li>
+    </ul>
+  </dd>
+
+</dl>
+
 <p class="previous"><a href="2008-08.html">August 2008</a> &#187; </p>
 <div id="generatedby">Generated by <a href="http://www.statsvn.org">StatSVN</a> 0.7.0</div>
 </body>

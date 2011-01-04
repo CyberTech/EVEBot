@@ -1,0 +1,605 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>StatSVN - Directory Trunk/EVEbot/core/Lib/</title>
+ <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
+    <meta name="Generator" content="StatSVN 0.7.0"/>
+<link rel="stylesheet" href="objectlab-statcvs.css" type="text/css"/>
+  </head>
+
+<body>
+
+<h1>Directory Trunk/EVEbot/core/Lib/</h1>
+<div id="parentlink">&#171; <a href="index.html">Development Statistics for EVEBot</a></div>
+<dl class="attributes">
+    <dt>Directory Created:</dt>
+    <dd><span class="date">2009-04-01 10:10</span></dd>
+    <dt>Total Files:</dt>
+    <dd>5</dd>
+    <dt>Deleted Files:</dt>
+    <dd>2</dd>
+    <dt>Lines of Code:</dt>
+    <dd>464</dd>
+</dl>
+<p class="dirtree">
+<a href="dir.html">[root]</a>/<a href="dir_Trunk.html">Trunk</a>/<a href="dir_Trunk_EVEbot.html">EVEbot</a>/<a href="dir_Trunk_EVEbot_core.html">core</a>/<strong>Lib</strong><br/>
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<img src="folder.png" width="15" height="13" alt="directory in repo" title="directory in repo"/> 
+<a href="dir_Trunk_EVEbot_core_Lib_UplinkManager.html">UplinkManager</a> 
+(1 files, 319 lines)<br />
+</p>
+
+<div class="section">
+<h2>Lines of Code</h2>
+<p class="chart"><img src="loc_module_Trunk_EVEbot_core_Lib.png" alt="Trunk/EVEbot/core/Lib/ Lines of Code" width="800" height="500" /></p></div>
+<div class="section">
+<h2>Developers</h2>
+  <table  rules="groups" summary="All authors and the number of their changes and lines of code in this directory">
+    <colgroup align="left"/>
+    <colgroup align="right"/>
+    <colgroup align="right"/>
+    <colgroup align="right"/>
+    <thead>
+      <tr>
+        <th>Author</th>
+        <th>Changes</th>
+        <th>Lines of Code</th>
+        <th>Lines per Change</th>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <th>Totals</th>
+        <td>34 (100.0%)</td>
+        <td>1216 (100.0%)</td>
+        <td>35.7</td>
+      </tr>
+    </tfoot>
+    <tbody>
+      <tr  class="odd">
+        <th><a href="user_cybertech.html" class="author">cybertech</a></th>
+        <td>31 (91.2%)</td>
+        <td>1206 (99.2%)</td>
+        <td>38.9</td>
+      </tr>
+      <tr  class="even">
+        <th><a href="user_stealthy.html" class="author">stealthy</a></th>
+        <td>3 (8.8%)</td>
+        <td>10 (0.8%)</td>
+        <td>3.3</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+<div class="section">
+<h2>Most Recent Commits</h2>
+<dl class="commitlist">
+  <dt><a name="26"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-12-30 01:22</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1684</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Move most objects to event_evebot_onframe event instead of isxeve_onframe. <br />
+ This event is registered by obj_EVEBot and conditionally triggered by obj_EVEBot::Pulse<br />
+Create Config.Sound<br />
+Create Config.Logging<br />
+ Move Config.Common.UseSound to Config.Sound.EnableSound<br />
+ Move Config.EnableChatLogging to Config.Logging.LogLocalChat<br />
+ Add Config.Logging.LogLocalChat and Config.Logging.LogLocalChatToIRC, and Corp/Alliance equiv for each.<br />
+ Add Config.Sound.EnableChatAlerts<br />
+Fix Ship.IsPod Module update condition<br />
+Ensure all objects with initializers have correct shutdown.<br />
+<br />
+
+    </p>
+    <p class="commitdetails"><strong>7</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core/Lib</strong>:
+        obj_Sound.iss&#160;<span class="change">(+7&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="25"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-12-30 01:04</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1683</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Class for dynamically creating LSGUI objects with callbacks. Mainly stub for now, will be fleshed out as needed.
+    </p>
+    <p class="commitdetails"><strong>39</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core/Lib</strong>:
+        obj_LSGUI.iss&#160;<span class="new">(new&#160;39)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="24"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-12-12 01:32</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1665</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Switch to Pulsetimer class<br />
+Use ObjectName everywhere<br />
+Merge obj_Items into obj_EVEDB<br />
+Add LOG_ECHOTOO logging levels.<br />
+Add specific module debugging support, rather than global debugging.<br />
+
+    </p>
+    <p class="commitdetails"><strong>8</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core/Lib</strong>:
+        obj_LSTypeIterator.iss&#160;<span class="del">(del)</span>,
+        obj_PulseTimer.iss&#160;<span class="del">(del)</span>,
+        obj_Sound.iss&#160;<span class="change">(+8&#160;-5)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="23"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-12-12 01:08</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1664</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Add BubbleSort alg
+    </p>
+    <p class="commitdetails"><strong>33</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core/Lib</strong>:
+        obj_BaseClass.iss&#160;<span class="change">(+33)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="22"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-11-29 03:00</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1651</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Disable skill training by default.<br />
+Enhance dynamic behavior system.<br />
+Only call behavioral pulses if they're enabled<br />
+Only call the current behaviors ProcessState<br />
+Move Logging routines to obj_Logger (as Logger)<br />
+- Rename UpdateConsole* to Log*<br />
+Rename bot mode on UI dropdown to Behavior.<br />
+Populate behavior dropdown dynamically based on loaded behaviors, to better facilitate custom/private behaviors.<br />
+Behaviors no longer attach to onframe, but are called from EVEBot:Pulse<br />
+
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core/Lib</strong>:
+        obj_Sound.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="21"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-02-21 12:15</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1556</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Update pulsetimer object with documentation before moving to common repo.
+    </p>
+    <p class="commitdetails"><strong>42</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core/Lib</strong>:
+        obj_PulseTimer.iss&#160;<span class="change">(+42&#160;-5)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="20"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-12-11 13:19</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1510</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Remove some excess log examples<br />
+Rename a var to be more clear<br />
+Add exclusion of specific members to continue testing in the face of crashes
+    </p>
+    <p class="commitdetails"><strong>34</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core/Lib</strong>:
+        obj_LSTypeIterator.iss&#160;<span class="change">(+34&#160;-43)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="19"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-12-11 13:06</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1509</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fix new WriteTestScript method to have properly formed function main()<br />
+Add documentation for same.
+    </p>
+    <p class="commitdetails"><strong>19</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core/Lib</strong>:
+        obj_LSTypeIterator.iss&#160;<span class="change">(+19&#160;-6)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="18"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-12-11 12:52</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1508</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Added WriteTestCase which will created a manual test script with hard coded members to iterate thru the members slowly, in order to help find problems with individual members.
+    </p>
+    <p class="commitdetails"><strong>19</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core/Lib</strong>:
+        obj_LSTypeIterator.iss&#160;<span class="change">(+19)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="17"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-12-10 14:21</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1505</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Allow the test to only print NULL member returns<br />
+Check for invalid datatype specified on init<br />
+Add more background on how testing of IS TLO/DTYPES works.
+    </p>
+    <p class="commitdetails"><strong>19</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core/Lib</strong>:
+        obj_LSTypeIterator.iss&#160;<span class="change">(+19&#160;-6)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="16"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-12-10 13:47</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1504</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Comments.
+    </p>
+    <p class="commitdetails"><strong>14</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core/Lib</strong>:
+        obj_LSTypeIterator.iss&#160;<span class="change">(+14&#160;-4)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="15"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-12-10 13:10</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1503</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Add ability to shut off output of values, for timing purposes.<br />
+Add re-initialize of sets and lengths so the object can be reused.
+    </p>
+    <p class="commitdetails"><strong>24</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core/Lib</strong>:
+        obj_LSTypeIterator.iss&#160;<span class="change">(+24&#160;-6)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="14"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-12-10 10:55</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1497</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Try to get the damn temp file to delete.
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core/Lib</strong>:
+        obj_LSTypeIterator.iss&#160;<span class="change">(+1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="13"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-12-10 09:54</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1494</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fix missing ]
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core/Lib</strong>:
+        obj_LSTypeIterator.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="12"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-12-10 01:47</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1492</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Additional examples
+    </p>
+    <p class="commitdetails"><strong>23</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core/Lib</strong>:
+        obj_LSTypeIterator.iss&#160;<span class="change">(+23)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="11"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-12-10 01:16</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1491</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Keywords
+    </p>
+    <p class="commitdetails"><strong>4</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core/Lib</strong>:
+        obj_LSTypeIterator.iss&#160;<span class="change">(+4)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="10"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-12-10 01:03</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1490</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+LSTypeIterator by CyberTech<br />
+Download: <a href="https://www.isxgames.com/EVEBot/Trunk/EVEbot/core/Lib/obj_LSTypeIterator.iss">https://www.isxgames.com/EVEBot/Trunk/EVEbot/core/Lib/obj_LSTypeIterator.iss</a><br />
+    This object is designed to allow for rapid testing of the members of a datatype, without needing to have<br />
+    advance knowledge or hardcoding of the members and methods of the datatype.<br />
+<br />
+Update test_GetHangarItems.iss for LSTypeIterator<br />
+Create test_Me.iss using LsTypeIterator<br />
+Include LSTypeIterator in TestAPI.iss
+    </p>
+    <p class="commitdetails"><strong>234</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core/Lib</strong>:
+        obj_LSTypeIterator.iss&#160;<span class="new">(new&#160;234)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="9"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-11-18 18:00</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1469</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fix loginhandler not detecting queue window -- window title appears to have changed to uppercase.<br />
+Commit obj_PulseTimer, which handles randomization of pulses.
+    </p>
+    <p class="commitdetails"><strong>67</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core/Lib</strong>:
+        obj_PulseTimer.iss&#160;<span class="new">(new&#160;67)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="8"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-26 20:46</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1277</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Belts: Comment out the stargate check as per CyberTech's instructions.<br />
+Mission Database: Add a couple more missions and part of yet another.<br />
+obj_Drones: Fix the attempts to recall a NULL drone.<br />
+obj_Sound: Fix playing of sound.<br />
+obj_Ratter: Fix an issue where NPCCheck would think we have a chain in progress if we had and killed priority targets and left only one type of rat.
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core/Lib</strong>:
+        obj_Sound.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="7"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-06-19 14:08</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1226</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Sound: Fixed the call to a nonexistent PlaySound by renaming all calls to the correct TryPlaySound.
+    </p>
+    <p class="commitdetails"><strong>5</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core/Lib</strong>:
+        obj_Sound.iss&#160;<span class="change">(+5&#160;-5)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="6"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-06-16 13:46</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1190</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Update SVN properties.
+    </p>
+    <p class="commitdetails"><strong>229</strong> lines of code changed in <span class="files">4 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core/Lib</strong>:
+        obj_BaseClass.iss&#160;<span class="change">(changed)</span>,
+        obj_Mutex.iss&#160;<span class="change">(+40&#160;-40)</span>,
+        obj_Sound.iss&#160;<span class="change">(+62&#160;-62)</span>,
+        obj_Vector.iss&#160;<span class="change">(+127&#160;-127)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="5"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-04-24 09:53</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1043</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+More notes on missile acceleration and distance, orbital speeds
+    </p>
+    <p class="commitdetails"><strong>34</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core/Lib</strong>:
+        obj_Vector.iss&#160;<span class="change">(+34&#160;-6)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="4"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-04-24 09:38</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1042</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Notes on solutions for ship and missile acceleration, time to warp, distance traveled before entering warp, missile range, align time.
+    </p>
+    <p class="commitdetails"><strong>47</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core/Lib</strong>:
+        obj_Vector.iss&#160;<span class="change">(+47)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="3"></a>
+    <a href="user_stealthy.html" class="author">stealthy</a>
+    <span class="date">2009-04-06 07:50</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">990</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Add an objectdef in obj_Vector.iss because one was utterly missing.
+    </p>
+    <p class="commitdetails"><strong>4</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core/Lib</strong>:
+        obj_Vector.iss&#160;<span class="change">(+4&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="2"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-04-05 19:12</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">988</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Committing evebot.iss for core/lib change.<br />
+Typo in miner comment.<br />
+Re-use code in Targeting.iss<br />
+Move TryLockWait to a function
+    </p>
+    <p class="commitdetails"><strong>11</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core/Lib</strong>:
+        obj_Mutex.iss&#160;<span class="change">(+11&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="1"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2009-04-01 10:10</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">981</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Added obj_Mutex<br />
+Moved non-eve related class files into core/Lib
+    </p>
+    <p class="commitdetails"><strong>296</strong> lines of code changed in <span class="files">4 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core/Lib</strong>:
+        obj_BaseClass.iss&#160;<span class="new">(new&#160;154)</span>,
+        obj_Mutex.iss&#160;<span class="new">(new&#160;31)</span>,
+        obj_Sound.iss&#160;<span class="new">(new&#160;62)</span>,
+        obj_Vector.iss&#160;<span class="new">(new&#160;49)</span>
+      </li>
+    </ul>
+  </dd>
+
+</dl>
+
+</div><div id="generatedby">Generated by <a href="http://www.statsvn.org">StatSVN</a> 0.7.0</div>
+</body>
+</html>

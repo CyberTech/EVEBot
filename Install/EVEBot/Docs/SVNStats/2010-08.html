@@ -62,23 +62,26 @@
 </ul>
 </div><dl class="attributes">
     <dt>Number of Commits:</dt>
-    <dd>2</dd>
+    <dd>5</dd>
     <dt>Number of Active Developers:</dt>
     <dd>1</dd>
 </dl>
 <dl class="commitlist">
-  <dt><a name="2"></a>
+  <dt><a name="5"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
-    <span class="date">2010-08-23 15:45</span>
-    <a class="permalink" title="Permalink to this commit" href="#2">#2</a>
-    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1600</span></span>
+    <span class="date">2010-08-23 15:44</span>
+    <a class="permalink" title="Permalink to this commit" href="#5">#5</a>
   </dt>
   <dd>
     <p class="comment">
 Dire Guristas priority target update from 'Chimp'
     </p>
-    <p class="commitdetails"><strong>10</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <p class="commitdetails"><strong>20</strong> lines of code changed in <span class="files">2 files</span>:</p>
     <ul class="commitdetails">
+      <li>
+        <strong>branches/stable/core</strong>:
+        obj_Targets.iss&#160;<span class="change">(+10&#160;-4)</span>
+      </li>
       <li>
         <strong>tags/trunk_2010_07_21/core</strong>:
         obj_Targets.iss&#160;<span class="change">(+10&#160;-4)</span>
@@ -86,21 +89,132 @@ Dire Guristas priority target update from 'Chimp'
     </ul>
   </dd>
 
-  <dt><a name="1"></a>
+  <dt><a name="4"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2010-08-23 15:00</span>
-    <a class="permalink" title="Permalink to this commit" href="#1">#1</a>
-    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1598</span></span>
+    <a class="permalink" title="Permalink to this commit" href="#4">#4</a>
   </dt>
   <dd>
     <p class="comment">
 Dire Guristas priority target update
     </p>
-    <p class="commitdetails"><strong>0</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <p class="commitdetails"><strong>6</strong> lines of code changed in <span class="files">3 files</span>:</p>
     <ul class="commitdetails">
+      <li>
+        <strong>branches/stable/core</strong>:
+        obj_Targets.iss&#160;<span class="change">(+6&#160;-1)</span>
+      </li>
       <li>
         <strong>tags/trunk_2010_07_21/core</strong>:
         obj_Targets.iss&#160;<span class="change">(changed)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="3"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-08-07 03:09</span>
+    <a class="permalink" title="Permalink to this commit" href="#3">#3</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1596</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Miner: Decloak before mining. Likely only useful if you happen to be testing in a cloaked ship :)<br />
+obj_UplinkManager.iss: Use cached charid<br />
+obj_Asteroids.iss: New entity syntax and use of entity manager.<br />
+obj_Configuration.iss: Version the config file. Reset if less than current ver. Add attributes to asteroid, ice, and merc config items to allow disabling, prioritizing, and stroking.<br />
+obj_EVEBot: Cache Me.CharID. Pretty sure it won't change.<br />
+
+    </p>
+    <p class="commitdetails"><strong>177</strong> lines of code changed in <span class="files">5 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Miner.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Asteroids.iss&#160;<span class="change">(+83&#160;-99)</span>,
+        obj_Configuration.iss&#160;<span class="change">(+87&#160;-86)</span>,
+        obj_EVEBot.iss&#160;<span class="change">(+4)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core/Lib/UplinkManager</strong>:
+        obj_UplinkManager.iss&#160;<span class="change">(+2&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="2"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-08-03 12:27</span>
+    <a class="permalink" title="Permalink to this commit" href="#2">#2</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1595</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Note: Live ISXEVE users should be using /branches/stable or /tags/trunk_2010_07_21, this trunk is for beta isxeve<br />
+<br />
+Commit to clean up lots of small changes out of my wc...<br />
+Misc updates for defines instead of magic values.<br />
+Update for new entity syntax<br />
+Testcase for Agents.DoGetDialogResponses<br />
+Testcase for evebot entitycache updated for new cache<br />
+Remove testcase for eve.getcachedentities<br />
+
+    </p>
+    <p class="commitdetails"><strong>124</strong> lines of code changed in <span class="files">15 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot</strong>:
+        EVEBot.iss&#160;<span class="change">(+2&#160;-18)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Miner.iss&#160;<span class="change">(+4&#160;-4)</span>,
+        obj_MinerHauler.iss&#160;<span class="change">(+8&#160;-8)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Modes</strong>:
+        obj_Scavenger.iss&#160;<span class="change">(+2&#160;-2)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Testcases</strong>:
+        test_Agent_DoGetDialogResponses.iss&#160;<span class="new">(new&#160;45)</span>,
+        test_EVE_GetCachedEntities.iss&#160;<span class="del">(del)</span>,
+        test_Me.Fleet_Broadcasts.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        test_evebot_EntityCache.iss&#160;<span class="change">(+36&#160;-18)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        defines.iss&#160;<span class="change">(-2)</span>,
+        obj_Bookmarks.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_EVEBotUI.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Fleet.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_Missions.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_Ship.iss&#160;<span class="change">(+9&#160;-15)</span>,
+        obj_Station.iss&#160;<span class="change">(+9&#160;-9)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="1"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-08-03 11:26</span>
+    <a class="permalink" title="Permalink to this commit" href="#1">#1</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1594</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Note: Live ISXEVE users should be using /branches/stable or /tags/trunk_2010_07_21, this trunk is for beta isxeve<br />
+<br />
+Improve log message for agent lookups
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Agents.iss&#160;<span class="change">(+1&#160;-1)</span>
       </li>
     </ul>
   </dd>

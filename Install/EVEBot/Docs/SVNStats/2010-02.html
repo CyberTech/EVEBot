@@ -62,10 +62,143 @@
 </ul>
 </div><dl class="attributes">
     <dt>Number of Commits:</dt>
-    <dd>0</dd>
+    <dd>3</dd>
     <dt>Number of Active Developers:</dt>
-    <dd>0</dd>
+    <dd>1</dd>
 </dl>
+<dl class="commitlist">
+  <dt><a name="3"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-02-22 14:40</span>
+    <a class="permalink" title="Permalink to this commit" href="#3">#3</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1559</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Replace all fractional waits with waitframe or int waits. Should help performance, and reliablity in some cases<br />
+Remove _Var evebot-based system.<br />
+Fix various miner related things.<br />
+Convert obj_Belts to use cachedentity<br />
+Convert obj_JetCan to use cachedentity<br />
+Change negated .Equal to .NotEqual where it makes sense.<br />
+Fix possible delay-warp forever on drone screwup<br />
+Massively improve obj_Socials performance, caching results of checks on pilots, remove ourselves and our fleet members from consideration, etc.<br />
+Fix obj_Social PlayerInRange<br />
+Remove obj_Social PilotsWithinDetection<br />
+Do not set velocity on undocking, since we have CCP superspeed at undock now.<br />
+Update testapi with new include paths.<br />
+Added testcase for the new EntityCache<br />
+Updated insurance quote testcase to open insurance window.<br />
+<br />
+
+    </p>
+    <p class="commitdetails"><strong>291</strong> lines of code changed in <span class="files">30 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Freighter.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_Miner.iss&#160;<span class="change">(+22&#160;-20)</span>,
+        obj_MinerHauler.iss&#160;<span class="change">(+4&#160;-4)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Data</strong>:
+        EVEDB_Items.sql&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Modes</strong>:
+        obj_StealthHauler.iss&#160;<span class="change">(+4&#160;-4)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Support</strong>:
+        TestAPI.iss&#160;<span class="change">(+2&#160;-2)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Testcases</strong>:
+        test_Item_GetInsuranceQuotes.iss&#160;<span class="change">(+2&#160;-1)</span>,
+        test_evebot_EntityCache.iss&#160;<span class="new">(new&#160;58)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Targeting.iss&#160;<span class="change">(+6&#160;-6)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Agents.iss&#160;<span class="change">(+5&#160;-5)</span>,
+        obj_Belts.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_Bookmark.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_Bookmarks.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_Callback.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Configuration.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Drones.iss&#160;<span class="change">(+11&#160;-11)</span>,
+        obj_EVEBot.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_EVEBotUI.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Fleet.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_JetCan.iss&#160;<span class="change">(+19&#160;-19)</span>,
+        obj_Market.iss&#160;<span class="change">(+70&#160;-70)</span>,
+        obj_MissionCombat.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_Missions.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Ship.iss&#160;<span class="change">(+22&#160;-20)</span>,
+        obj_Skills.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Social.iss&#160;<span class="change">(+36&#160;-77)</span>,
+        obj_Station.iss&#160;<span class="change">(+3&#160;-4)</span>,
+        obj_Targets.iss&#160;<span class="change">(+5&#160;-55)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core/Lib/UplinkManager</strong>:
+        obj_UplinkManager.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/interface</strong>:
+        evebotgui.xml&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="2"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-02-21 12:15</span>
+    <a class="permalink" title="Permalink to this commit" href="#2">#2</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1556</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Update pulsetimer object with documentation before moving to common repo.
+    </p>
+    <p class="commitdetails"><strong>42</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core/Lib</strong>:
+        obj_PulseTimer.iss&#160;<span class="change">(+42&#160;-5)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="1"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2010-02-21 09:57</span>
+    <a class="permalink" title="Permalink to this commit" href="#1">#1</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1555</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fix waits with fractional times, which are noops. should improve performance<br />
+Do not change velocity on undocking, we have CCP-given superspeed.
+    </p>
+    <p class="commitdetails"><strong>195</strong> lines of code changed in <span class="files">8 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>branches/stable/core</strong>:
+        EVESalvageLibrary.ISS&#160;<span class="change">(+141&#160;-141)</span>,
+        obj_Asteroids.iss&#160;<span class="new">(new)</span>,
+        obj_JetCan.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_Ship.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_Station.iss&#160;<span class="change">(+4&#160;-4)</span>
+      </li>
+    </ul>
+  </dd>
+
+</dl>
+
 <p class="previous"><a href="2010-01.html">January 2010</a> &#187; </p>
 <div id="generatedby">Generated by <a href="http://www.statsvn.org">StatSVN</a> 0.7.0</div>
 </body>
