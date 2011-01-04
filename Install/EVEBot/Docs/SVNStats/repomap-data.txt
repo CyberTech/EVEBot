@@ -81,7 +81,7 @@
             <label>Data</label>
             <leaf><label>EVEDB_Items.sql</label><weight>17</weight><value>0.0</value></leaf>
             <leaf><label>EVEDB_Items.xml</label><weight>18762</weight><value>1.7215648651529687</value></leaf>
-            <leaf><label>EVEDB_Items_As_Attributes.sql</label><weight>21</weight><value>9.523809523809524</value></leaf>
+            <leaf><label>EVEDB_Items_As_Attributes.sql</label><weight>23</weight><value>17.391304347826086</value></leaf>
             <leaf><label>EVEDB_Spawns.xml</label><weight>7773</weight><value>0.0</value></leaf>
             <leaf><label>EVEDB_StationID.xml</label><weight>15282</weight><value>0.0</value></leaf>
             <leaf><label>EVEDB_Stations.xml</label><weight>20378</weight><value>0.0</value></leaf>
