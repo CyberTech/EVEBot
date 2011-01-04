@@ -54,7 +54,7 @@
               <leaf><label>test_Station_GetHangarShips.iss</label><weight>50</weight><value>100.0</value></leaf>
           </branch>
         </branch>
-          <leaf><label>EVEBot.iss</label><weight>76</weight><value>88.1578947368421</value></leaf>
+          <leaf><label>EVEBot.iss</label><weight>86</weight><value>89.53488372093024</value></leaf>
           <leaf><label>EVECallback.iss</label><weight>45</weight><value>0.0</value></leaf>
           <leaf><label>EVEWatcher.iss</label><weight>265</weight><value>0.0</value></leaf>
           <leaf><label>Launcher.iss</label><weight>150</weight><value>0.0</value></leaf>
