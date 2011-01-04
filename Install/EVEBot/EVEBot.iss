@@ -3,7 +3,7 @@
 	#error This script requires ISXEVE to be loaded before running
 #endif
 
-function MakeIncludeFiles(string RootDir, string SubDir, bool Define_Globals = TRUE)
+function MakeIncludeFiles(string RootDir, string SubDir, bool Define_Globals = TRUE, bool Testcases = FALSE)
 {
 	variable int Pos = 0
 	variable file Includes_File = "${RootDir}${SubDir}/_includes.iss"
@@ -11,11 +11,20 @@ function MakeIncludeFiles(string RootDir, string SubDir, bool Define_Globals = T
 
 	variable filelist Script_List
 	variable filelist Subdir_list
+	
+	Script_List:Reset
+	Subdir_List:Reset
+	
 	Script_List:GetFiles["${RootDir}${SubDir}/\*"]
 	Subdir_list:GetDirectories["${RootDir}${SubDir}/\*"]
 
-	for (Pos:Set[0] ; ${Pos}<=${Subdir_list.Files} ; Pos:Inc)
+	for (Pos:Set[1] ; ${Pos}<=${Subdir_list.Files} ; Pos:Inc)
 	{
+		if ${Subdir_list.File[${Pos}].Filename.Equal["Testcases"]} || \
+			${Subdir_list.File[${Pos}].Filename.Equal[".svn"]}
+		{
+			continue
+		}
 		Script_List:GetFiles["${Subdir_list.File[${Pos}].FullPath}/\*"]
 	}
 
@@ -33,7 +42,7 @@ function MakeIncludeFiles(string RootDir, string SubDir, bool Define_Globals = T
 	variable string CurrentFile
 	variable string obj_name
 	variable string var_name
-	for (Pos:Set[0] ; ${Pos}<=${Script_List.Files} ; Pos:Inc)
+	for (Pos:Set[1] ; ${Pos}<=${Script_List.Files} ; Pos:Inc)
 	{
 		CurrentFile:Set[${Script_List.File[${Pos}].Filename}]
 
@@ -71,6 +80,7 @@ function main(string Branch = "Stable")
 {
 	call MakeIncludeFiles "${Script.CurrentDirectory}/Branches/${Branch}/" "Behaviors" TRUE
 	call MakeIncludeFiles "${Script.CurrentDirectory}/Branches/${Branch}/" "Modes" FALSE
+	call MakeIncludeFiles "${Script.CurrentDirectory}/Branches/${Branch}/" "Behaviors/Testcases" TRUE TRUE
 
 	timedcommand 5 "runscript \"${Script.CurrentDirectory}/Branches/${Branch}/EVEBot.iss\""
 }
