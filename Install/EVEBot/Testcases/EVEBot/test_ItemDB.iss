@@ -11,7 +11,7 @@
 */
 
 #include ../Support/TestAPI.iss
-#include ../core/obj_Items.iss
+#include ../Branches/Dev/core/obj_EVEDB.iss
 
 variable obj_UI UI
 
@@ -23,6 +23,7 @@ function main()
 
 	echo TypeID: ${itemdb.TypeID[Tritanium]}
 	echo Name: ${itemdb.Name[34]}
+	echo Volume: ${itemdb.Metalevel[34]}
 	echo Volume: ${itemdb.Volume[34]}
 	echo Capacity: ${itemdb.Capacity[34]}
 	echo GroupID: ${itemdb.GroupID[34]}

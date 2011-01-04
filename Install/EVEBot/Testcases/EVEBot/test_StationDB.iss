@@ -11,7 +11,7 @@
 */
 
 #include ../Support/TestAPI.iss
-#include ../core/obj_Station.iss
+#include ../Branches/Dev/core/obj_Station.iss
 
 variable obj_UI UI
 
