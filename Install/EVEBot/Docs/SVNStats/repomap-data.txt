@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<root>
+  <label>[root]</label>
+    <branch>
+        <label>Install</label>
+        <leaf><label>Installation.txt</label><weight>9</weight><value>0.0</value></leaf>
+    </branch>
+
+    <branch>
+        <label>tags</label>
+      <branch>
+          <label>trunk_2010_07_21</label>
+        <branch>
+            <label>Behaviors</label>
+            <leaf><label>_includes.iss</label><weight>5</weight><value>100.0</value></leaf>
+            <leaf><label>_variables.iss</label><weight>15</weight><value>100.0</value></leaf>
+            <leaf><label>obj_MinerHauler.iss</label><weight>627</weight><value>0.0</value></leaf>
+            <leaf><label>obj_Ratter.iss</label><weight>439</weight><value>0.0</value></leaf>
+        </branch>
+
+        <branch>
+            <label>Data</label>
+            <leaf><label>EVEDB_Items.xml</label><weight>18762</weight><value>1.7215648651529687</value></leaf>
+        </branch>
+
+        <branch>
+            <label>Modes</label>
+            <leaf><label>_includes.iss</label><weight>3</weight><value>100.0</value></leaf>
+            <leaf><label>obj_Scavenger.iss</label><weight>181</weight><value>0.0</value></leaf>
+        </branch>
+
+        <branch>
+            <label>Threads</label>
+            <leaf><label>Defense.iss</label><weight>430</weight><value>0.0</value></leaf>
+            <leaf><label>Navigator.iss</label><weight>218</weight><value>0.0</value></leaf>
+            <leaf><label>Targeting.iss</label><weight>486</weight><value>0.0</value></leaf>
+        </branch>
+
+        <branch>
+            <label>core</label>
+            <leaf><label>obj_Assets.iss</label><weight>123</weight><value>0.0</value></leaf>
+            <leaf><label>obj_Autopilot.iss</label><weight>97</weight><value>0.0</value></leaf>
+            <leaf><label>obj_Cache.iss</label><weight>248</weight><value>0.0</value></leaf>
+            <leaf><label>obj_Cargo.iss</label><weight>927</weight><value>0.0</value></leaf>
+            <leaf><label>obj_Drones.iss</label><weight>967</weight><value>0.0</value></leaf>
+            <leaf><label>obj_EntityCache.iss</label><weight>208</weight><value>0.0</value></leaf>
+            <leaf><label>obj_Fleet.iss</label><weight>136</weight><value>0.0</value></leaf>
+            <leaf><label>obj_MissionCombat.iss</label><weight>545</weight><value>0.0</value></leaf>
+            <leaf><label>obj_MissionCommands.iss</label><weight>1178</weight><value>0.0</value></leaf>
+            <leaf><label>obj_Missions.iss</label><weight>1242</weight><value>0.0</value></leaf>
+            <leaf><label>obj_Ship.iss</label><weight>2388</weight><value>0.25125628140703515</value></leaf>
+            <leaf><label>obj_Targets.iss</label><weight>728</weight><value>7.0054945054945055</value></leaf>
+        </branch>
+          <leaf><label>EVEBot.iss</label><weight>224</weight><value>-14.285714285714285</value></leaf>
+      </branch>
+    </branch>
+</root>
