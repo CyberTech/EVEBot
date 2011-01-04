@@ -131,6 +131,11 @@ objectdef obj_EVEDB_Items inherits obj_BaseClass
 		return ${LavishSettings[${This.SET_NAME}].FindSetting[${TypeID}].FindAttribute[ItemName, NOTSET]}
 	}
 
+	member:int Metalevel(int TypeID)
+	{
+		return ${LavishSettings[${This.SET_NAME}].FindSetting[${TypeID}].FindAttribute[Metalevel, NOTSET]}
+	}
+
 	member:int GroupID(int TypeID)
 	{
 		return ${LavishSettings[${This.SET_NAME}].FindSetting[${TypeID}].FindAttribute[GroupID, NOTSET]}

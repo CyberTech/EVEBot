@@ -65,6 +65,11 @@ objectdef obj_EVEDB_Items
 		return ${LavishSettings[${This.SET_NAME}].FindSetting[${TypeID}].FindAttribute[GroupID, NOTSET]}
 	}
 
+	member:int Metalevel(int TypeID)
+	{
+		return ${LavishSettings[${This.SET_NAME}].FindSetting[${TypeID}].FindAttribute[Metalevel, NOTSET]}
+	}
+
 	member:float Volume(int TypeID)
 	{
 		return ${LavishSettings[${This.SET_NAME}].FindSetting[${TypeID}].FindAttribute[Volume, NOTSET]}
