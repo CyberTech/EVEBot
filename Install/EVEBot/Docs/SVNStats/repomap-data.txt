@@ -40,6 +40,7 @@
             <leaf><label>obj_Drones.iss</label><weight>967</weight><value>0.0</value></leaf>
             <leaf><label>obj_EntityCache.iss</label><weight>208</weight><value>0.0</value></leaf>
             <leaf><label>obj_Fleet.iss</label><weight>136</weight><value>0.0</value></leaf>
+            <leaf><label>obj_Items.iss</label><weight>99</weight><value>5.05050505050505</value></leaf>
             <leaf><label>obj_MissionCombat.iss</label><weight>545</weight><value>0.0</value></leaf>
             <leaf><label>obj_MissionCommands.iss</label><weight>1178</weight><value>0.0</value></leaf>
             <leaf><label>obj_Missions.iss</label><weight>1242</weight><value>0.0</value></leaf>
