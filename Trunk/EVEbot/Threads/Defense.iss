@@ -10,15 +10,12 @@
 
 */
 
-objectdef obj_Defense
+objectdef obj_Defense inherits obj_BaseClass
 {
 	variable string SVN_REVISION = "$Rev$"
-	variable int Version
 
-	variable bool Running = TRUE
+	variable bool Enabled = TRUE
 
-	variable time NextPulse
-	variable int PulseIntervalInSeconds = 1
 
 	variable bool Hide = FALSE
 	variable string HideReason
@@ -30,11 +27,14 @@ objectdef obj_Defense
 
 	method Initialize()
 	{
+		This.LogPrefix:Set["${This.ObjectName}"]
+
+		This.PulseTimer:SetIntervals[0.5,1.0]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-		Logger:Log["Thread: obj_Defense: Initialized", LOG_MINOR]
 
 		This.Entity_CacheID:Set[${EntityCache.AddFilter["obj_Defense", CategoryID = CATEGORYID_ENTITY, 1.5]}]
 		EntityCache.EntityFilters.Get[${This.Entity_CacheID}].Entities:GetIterator[Entity_CacheIterator]
+		Logger:Log["Thread: ${This.LogPrefix}: Initialized", LOG_MINOR]
 	}
 	
 	method Shutdown()
@@ -49,17 +49,23 @@ objectdef obj_Defense
 			Script:End
 		}
 
-		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+		if !${EVEBot.Loaded} || ${EVEBot.Disabled}
 		{
-			if ${EVEBot.SessionValid} && ${This.Running}
+			return
+		}
+
+		if ${This.Enabled} && ${This.PulseTimer.Ready}
+		{
+			if ${EVEBot.SessionValid}
 			{
 				if ${Me.InSpace} && !${Me.InStation}
 				{
 					This:CheckWarpScramble
-					This:TakeDefensiveAction[]
-					This:CheckTankMinimums[]
+					This:TakeDefensiveAction
+					This:CheckTankMinimums
 				}
-				This:CheckLocal[]
+
+				This:CheckLocal
 
 				if ${Config.Combat.RunIfTargetJammed} && ${Targeting.IsTargetingJammed}
 				{
@@ -80,16 +86,22 @@ objectdef obj_Defense
 					Logger:Log["Thread: obj_Defense: No longer hiding"]
 					This.Hiding:Set[FALSE]
 				}
-
 			}
 
-			This.NextPulse:Set[${Time.Timestamp}]
-			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
- 			This.NextPulse:Update
+			if (${This.Hide} || ${This.Hiding})
+			{
+				; Disable timer randomization
+				This.PulseTimer:Update[FALSE]
+			}
+			else
+			{
+				This.PulseTimer:Update
+			}
 		}
 	}
 
-	method CheckWarpScramble()
+; TODO - this targets the entities that are scrambling us. These need to be separated
+	method CheckWarpScrambled()
 	{
 		if ${Me.ToEntity.IsWarpScrambled}
 		{
@@ -102,7 +114,7 @@ objectdef obj_Defense
 					{
 						;method Queue(int64 EntityID, int Priority, int TargetType, bool Mandatory=FALSE, bool Blocker=FALSE)
 						Logger:Log["Defense: Targeting warp scrambling rat ${Entity_CacheIterator.Value.Name} ${Entity_CacheIterator.Value.TypeID}!",LOG_CRITICAL]
-						Targeting:Queue[${Entity_CacheIterator.Value.ID},0,${Entity_CacheIterator.Value.TypeID},TRUE]
+						Targeting:Queue[${Entity_CacheIterator.Value.ID},${Targeting.TYPE_HOSTILE_SCRAMBLER},0,TRUE]
 					}
 				}
 				while ${Entity_CacheIterator:Next(exists)}
@@ -254,15 +266,15 @@ objectdef obj_Defense
 		This.Hiding:Set[TRUE]
 		if ${Config.Combat.RunToStation} || ${Safespots.Count} == 0
 		{
-			call This.FleeToStation
+			This:FleeToStation
 		}
 		else
 		{
-			call This.FleeToSafespot
+			This:FleeToSafespot
 		}
 	}
 
-	function FleeToStation()
+	method FleeToStation()
 	{
 		if !${Script[EVEBot](exists)}
 		{
@@ -271,11 +283,12 @@ objectdef obj_Defense
 
 		if !${Station.Docked}
 		{
-			call Station.Dock
+; TODO - replace this station.dock call
+			;call Station.Dock
 		}
 	}
 
-	function FleeToSafespot()
+	method FleeToSafespot()
 	{
 		if !${Script[EVEBot](exists)}
 		{
@@ -295,10 +308,10 @@ objectdef obj_Defense
 			}
 			elseif ${Ship.HasCloak}
 			{
+				KeepMoving:Set[FALSE]
 				if !${Ship.IsCloaked}
 				{
 					Ship:Activate_Cloak[]
-					KeepMoving:Set[FALSE]
 				}
 			}
 			elseif ${Safespots.Count} > 1
@@ -316,8 +329,7 @@ objectdef obj_Defense
 		{
 			; Are we at the safespot and not warping?
 			; TODO - Shutdown Eve or dock if we are fleeing without a cloak for more than (configurable) minutes - CyberTech
-			call Safespots.WarpToNext
-			wait 30
+			Safespots:WarpToNext
 		}
 	}
 
@@ -403,6 +415,10 @@ variable(global) obj_Defense Defense
 function main()
 {
 	EVEBot.Threads:Insert[${Script.Filename}]
+	while !${EVEBot.Loaded}
+	{
+		waitframe
+	}
 	while ${Script[EVEBot](exists)}
 	{
 		if ${Defense.Hide}

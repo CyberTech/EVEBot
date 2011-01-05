@@ -513,16 +513,16 @@ objectdef obj_MissionCommands
 						;echo "MissionCommands: DidApproach ${didApproach} ${Entity[${KillIDCache}]} ${Entity[${KillIDCache}].ID} ${Entity[${KillIDCache}].Distance} ${dist}"
 						;if ${didApproach}
 						;{
-							if !${Targeting.IsMandatoryQueued[${KillIDCache}]}
+							if !${Targeting.IsQueued[${KillIDCache}]}
 							{
-								Logger:Log["DEBUG: obj_MissionCommands - Targeting ${KillIDCache}"]
-								Targeting:Queue[${KillIDCache},1,1,FALSE]
+								Logger:Log["DEBUG: obj_MissionCommands - Targeting ${KillIDCache}", LOG_DEBUG]
+								Targeting:Queue[${KillIDCache},${Targeting.TYPE_HOSTILE}]
 								KillIDState:Set["KILLING"]
 								return FALSE
 							}
 							else
 							{
-								Logger:Log["DEBUG: obj_MissionCommands - Kill - Target is in range and in the targeting queue,should be killing it now"]
+								Logger:Log["DEBUG: obj_MissionCommands - Kill - Target is in range and in the targeting queue,should be killing it now", LOG_DEBUG]
 								KillIDState:Set["KILLING"]
 								return FALSE
 							}
@@ -1134,6 +1134,9 @@ objectdef obj_MissionCommands
 			variable int highestID
 			variable index:entity targetIndex
 			variable iterator targetIterator
+
+; TODO - this is confusing clusterfuck, review it - CT
+
 			Me:DoGetTargetedBy[targetIndex]
 			targetIndex:GetIterator[targetIterator]
 			;Logger:Log["GetTargeting = ${Me.GetTargeting}, GetTargets = ${Me.GetTargets}"]
@@ -1174,8 +1177,8 @@ objectdef obj_MissionCommands
 						{
 							if !${Targeting.IsQueued[${targetIterator.Value.ID}]}
 							{
-									Logger:Log["DEBUG: obj_MissionCommands - NextTarget - Targeting ${targetIterator.Value.Name} ID ${targetIterator.Value.ID}"]
-									Targeting:Queue[${targetIterator.Value.ID},1,1,FALSE]
+								Logger:Log["DEBUG: obj_MissionCommands - NextTarget - Targeting ${targetIterator.Value.Name} ID ${targetIterator.Value.ID}",LOG_DEBUG]
+								Targeting:Queue[${targetIterator.Value.ID}, ${Targeting.TYPE_HOSTILE}]
 							}
 						}
 					}
@@ -1185,9 +1188,8 @@ objectdef obj_MissionCommands
 				{
 					if !${Targeting.IsQueued[${highestID}]}
 					{
-							Logger:Log["DEBUG: obj_MissionCommands - NextTarget - Targeting highest priority ${targetIterator.Value.Name}"]
-
-							Targeting:Queue[${highestID},1,1,FALSE]
+						Logger:Log["DEBUG: obj_MissionCommands - NextTarget - Targeting highest priority ${targetIterator.Value.Name}",LOG_DEBUG]
+						Targeting:Queue[${highestID}, ${Targeting.TYPE_HOSTILE}, 10]
 					}
 				}
 			}
