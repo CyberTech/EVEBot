@@ -45,13 +45,8 @@ objectdef obj_EntityFilter
 objectdef obj_EntityCache inherits obj_BaseClass
 {
 	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-	variable string LogPrefix
 
 	variable bool Initialized = false
-	variable int NextPulse
-	variable int PulseIntervalInMS = 250
-
 	variable index:entity CachedEntities
 	variable index:obj_EntityFilter EntityFilters
 	variable iterator EntityFilterIterator
@@ -88,8 +83,9 @@ objectdef obj_EntityCache inherits obj_BaseClass
 			EVE:PopulateEntities[TRUE]
 		}
 
-		Logger:Log["${LogPrefix}: Initialized"]
+		PulseTimer:SetIntervals[3.0,5.0]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+		Logger:Log["${LogPrefix}: Initialized"]
 	}
 
 	method Shutdown()
@@ -99,11 +95,16 @@ objectdef obj_EntityCache inherits obj_BaseClass
 
 	method Pulse()
 	{
-		if ${Script.RunningTime} >= ${This.NextPulse}
+		; We don't check paused state here -- only disabled (which is 100% stop bot operation)
+		if ${EVEBot.Disabled}
+		{
+			return
+		}
+
+		if ${This.PulseTimer.Ready}
 		{
 			This:UpdateEntityCache
-			This.NextPulse:Set[${Script.RunningTime}]
-			This.NextPulse:Inc[${This.PulseIntervalInMS}]
+			This.PulseTimer:Update
 		}
 	}
 
@@ -118,6 +119,11 @@ objectdef obj_EntityCache inherits obj_BaseClass
 	*/
 	member:int AddFilter(string Owner, string Filter, float DecaySeconds=0)
 	{
+		if ${DecaySeconds} != ${PulseTimer.MinPulseInterval}
+		{
+			PulseTimer:SetIntervals[${Seconds},${Math.Calc[${Seconds} + (${Seconds}*0.25)]}]
+			Logger:Log["${LogPrefix}: Update frequency is ${PulseTimer.MinPulseInterval.Deci} to ${PulseTimer.MaxPulseInterval.Deci} seconds"]
+		}
 		variable int ID
 		variable int QueryID
 		variable obj_EntityFilter EntityFilter
@@ -148,6 +154,8 @@ objectdef obj_EntityCache inherits obj_BaseClass
 
 	method ClearEntityCaches()
 	{
+		PulseTimer:Expire
+
 		This.EntityFilters:GetIterator[EntityFilterIterator]
 		if ${EntityFilterIterator:First(exists)}
 		{

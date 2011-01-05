@@ -7,15 +7,14 @@
 
 */
 
-objectdef obj_EVEBot
+objectdef obj_EVEBot inherits obj_BaseClass
 {
 	variable string SVN_REVISION = "$Rev$"
-	variable int Version
 
 	variable bool ReturnToStation = FALSE
 	variable bool _Paused = FALSE
-	variable time NextPulse
-	variable int PulseIntervalInSeconds = 4
+	variable bool Disabled = FALSE			/* If true, ALL functionality should be disabled  - everything. no pulses, no nothing */
+	variable bool Loaded					/* Set true once the bot is fully loaded */
 	variable int LastSessionFrame
 	variable bool LastSessionResult
 	variable index:string Threads
@@ -28,6 +27,9 @@ objectdef obj_EVEBot
 
 	method Initialize()
 	{
+		LogPrefix:Set["${This.ObjectName}"]
+
+		PulseTimer:SetIntervals[4.0,5.0]
 		This:SetVersion
 
 		LavishScript:RegisterEvent[EVENT_EVEBOT_ONFRAME]	
@@ -36,8 +38,7 @@ objectdef obj_EVEBot
 		This.CharID:Set[${Me.CharID}]
 
 		BehaviorList:GetIterator[Behaviors]
-
-		Logger:Log["obj_EVEBot: Initialized", LOG_MINOR]
+		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -49,10 +50,14 @@ objectdef obj_EVEBot
 	{
 		variable int i
 		Logger:Log["EVEBot shutting down..."]
+
 		for (i:Set[1]; ${i} <= ${Threads.Used}; i:Inc)
 		{
 			Logger:Log[" Stopping ${Threads.Get[${i}]} thread..."]
-			endscript ${Threads.Get[${i}]}
+			if ${Script[${Threads.Get[${i}]}](exists)}
+			{
+				endscript ${Threads.Get[${i}]}
+			}
 		}
 		Logger:Log["Finished"]
 		endscript ${Script.Filename}
@@ -60,10 +65,16 @@ objectdef obj_EVEBot
 
 	method Pulse()
 	{
-	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+		if !${This.Loaded} || ${This.Disabled}
+		{
+			return
+		}
+
+		if ${This.PulseTimer.Ready}
 		{
 			if !${This.SessionValid}
 			{
+				This.PulseTimer:Update
 				return
 			}
 
@@ -112,7 +123,8 @@ objectdef obj_EVEBot
 				}
 			}
 
-			; This is processed here rather than in the obj_Fleet pulse to avoid timing issues closing the invite.
+			; This is processed here rather than in the obj_Fleet pulse to avoid timing issues closing the invite - CyberTech
+			; TODO - huh? - CyberTech
 			Fleet:ProcessInvitations
 
 			if !${This._Paused}
@@ -154,9 +166,7 @@ objectdef obj_EVEBot
 				}
 			}
 
-			This.NextPulse:Set[${Time.Timestamp}]
-			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-			This.NextPulse:Update
+			This.PulseTimer:Update
 		}
 	}
 
@@ -195,28 +205,37 @@ objectdef obj_EVEBot
 		return FALSE
 	}
 
-	method Pause(string ErrMsg)
+	method Pause(string Reason)
 	{
-		Logger:Log["${ErrMsg}", LOG_CRITICAL]
+		echo "${Time}: Paused: ${Reason}"
+		Logger:Log["Paused: ${Reason}", LOG_CRITICAL]
 		This._Paused:Set[TRUE]
+		Script:Pause
 	}
 
-	method Resume()
+	method Resume(string Reason)
 	{
-		Logger:Log["Resumed", LOG_CRITICAL]
+		echo "${Time}: Resumed: ${Reason}"
+		Logger:Log["Resumed: ${Reason}", LOG_CRITICAL]
 		This._Paused:Set[FALSE]
 		Script:Resume
 	}
 
 	method SetVersion(int Version=${VersionNum})
 	{
+		declarevariable tmpstr string
+		if EVEBOT_DEBUG == 1
+		{
+			tmpstr:Set[" - Debugging (Objects: DEBUG_TARGET)"]
+		}
+
 		if ${APP_HEADURL.Find["EVEBot/branches/stable"]}
 		{
-			AppVersion:Set["${APP_NAME} Stable Revision ${VersionNum}"]
+			AppVersion:Set["${APP_NAME} Stable Revision ${VersionNum}${tmpstr}"]
 		}
 		else
 		{
-			AppVersion:Set["${APP_NAME} Dev Revision ${VersionNum}"]
+			AppVersion:Set["${APP_NAME} Dev Revision ${VersionNum}${tmpstr}"]
 		}
 	}
 
