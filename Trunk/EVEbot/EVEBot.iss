@@ -35,7 +35,6 @@
 #include core/obj_EntityCache.iss
 #include core/obj_Bookmark.iss
 #include core/obj_BeltBookmarks.iss
-#include core/obj_EVEDB.iss
 #include core/obj_Skills.iss
 #include core/obj_Asteroids.iss
 #include core/obj_Drones.iss
@@ -47,6 +46,7 @@
 #include core/obj_Jetcan.iss
 #include core/obj_Social.iss
 #include core/obj_Fleet.iss
+#include core/obj_FleetManager.iss
 #include core/obj_Assets.iss
 #include core/obj_IRC.iss
 #include core/obj_Safespots.iss
@@ -63,8 +63,12 @@
 ;#include core/obj_Callback.iss
 
 /* Behavior/Mode Includes */
-#includeoptional Behaviors/_includes.iss
-#includeoptional Modes/_includes.iss
+#if EVEBOT_DEBUG
+	#includeoptional Behaviors/Testcases/_includes.iss
+#else
+	#includeoptional Behaviors/_includes.iss
+	#includeoptional Modes/_includes.iss
+#endif
 
 function atexit()
 {
@@ -73,28 +77,66 @@ function atexit()
 
 function LoadBehaviors(string Label, string Path)
 {
-	variable int count = 0
-	variable filelist file_list
-	variable string obj_name
-	variable string var_name
+	variable int Position = 0
+	variable filelist Files
+	variable string NewObjectName
+	variable string NewVarName
+	variable string Log
 
-	file_list:GetFiles["${Path}"]
-	while (${count:Inc}<=${file_list.Files})
+	Files:GetFiles["${Path}"]
+	while (${Position:Inc}<=${Files.Files})
 	{
-		if ${file_list.File[${count}].Filename.NotEqual["_includes.iss"]}
+		if ${Files.File[${Position}].Filename.NotEqual["_includes.iss"]}
 		{
-			obj_name:Set[${file_list.File[${count}].Filename.Left[-4]}]
-			var_name:Set[${obj_name.Right[-4]}]
-			Logger:Log["Loading ${Label} behavior ${var_name}", LOG_DEBUG]
-			declarevariable ${var_name} ${obj_name} global
+			NewObjectName:Set[${Files.File[${Position}].Filename.Left[-4]}]
+			NewVarName:Set[${NewObjectName.Right[-4]}]
+			Logger:Log["Loading ${Label} behavior ${NewVarName}", LOG_DEBUG]
+			declarevariable ${NewVarName} ${NewObjectName} global
 		}
 	}
+	if ${Log.Length} > 0
+	{
+		Logger:Log["EVEBot:   ${Log}", LOG_ECHOTOO]
+	}
 }
+
+function LoadThreads(string Label, string Path)
+{
+	variable int Position = 0
+	variable filelist Files
+	variable string Log
+
+	Files:GetFiles["${Path}"]
+	while (${Position:Inc}<=${Files.Files})
+	{
+		Log:Concat["${Files.File[${Position}]} "]
+		TimedCommand 0 runscript \"${Files.File[${Position}].FullPath}\"
+	}
+	if ${Log.Length} > 0
+	{
+		Logger:Log["EVEBot:   ${Log}", LOG_ECHOTOO]
+	}
+}
+
+function CreateVariable(string VarName, string VarType, string Scope)
+{
+	variable time StartTime
+	variable time EndTime
+
+	StartTime:Set[${Time.Timestamp}]
+	declarevariable ${VarName} ${VarType} ${Scope}
+	EndTime:Set[${Time.Timestamp}]
+
+#if EVEBOT_DEBUG_TIMING
+	Logger:Log["DEBUG: Declared ${VarName} in ${Math.Calc[${EndTime.Timestamp} - ${StartTime.Timestamp}]}", LOG_ECHOTOO]
+#endif
+}
+
 function main()
 {
 	; Set turbo to 4000 per frame for startup.
 	Turbo 4000
-	echo "${Time} EVEBot: Starting"
+	echo "${Time}: EVEBot: Starting"
 
 #if EVEBOT_PROFILING
 	Script:Unsquelch
@@ -102,85 +144,84 @@ function main()
 	Script:EnableDebugLogging[evebot_profile.txt]
 #endif
 
-	echo "${Time} EVEBot: Loading Base & Config..."
+	echo "${Time}: EVEBot: Loading Base & Config..."
 
 	/* All variables that would normally be defined script scope should be defined global scope to simplify threads */
 
 	/* Script-Defined Support Objects */
-	declarevariable LSGUI obj_LSGUI global
-	declarevariable Logger obj_Logger global
-	declarevariable BaseConfig obj_Configuration_BaseConfig global
-	declarevariable Config obj_Configuration global
-	declarevariable EVEBot obj_EVEBot global
-	declarevariable UI obj_EVEBotUI global
+	call CreateVariable LSGUI obj_LSGUI global
+	call CreateVariable Logger obj_Logger global
+	call CreateVariable BaseConfig obj_Configuration_BaseConfig global
+	call CreateVariable Config obj_Configuration global
+	call CreateVariable EVEBot obj_EVEBot global
+	call CreateVariable UI obj_EVEBotUI global
+	call CreateVariable UplinkManager obj_UplinkManager global
+	call CreateVariable Whitelist obj_Config_Whitelist global
+	call CreateVariable Blacklist obj_Config_Blacklist global
+	call CreateVariable EntityCache obj_EntityCache global
 
-	declarevariable Whitelist obj_Config_Whitelist global
-	declarevariable Blacklist obj_Config_Blacklist global
-	declarevariable EntityCache obj_EntityCache global
-
-	echo "${Time} EVEBot: Loading Databases..."
-
-	/* EVE Database Exports */
-	declarevariable EVEDB_Stations obj_EVEDB_Stations global
-	declarevariable EVEDB_StationID obj_EVEDB_StationID global
-	declarevariable EVEDB_Spawns obj_EVEDB_Spawns global
-	declarevariable EVEDB_Items obj_EVEDB_Items global
-
-	echo "${Time} EVEBot: Loading Core Objects..."
+	Logger:Log["EVEBot: Loading Core Objects...", LOG_ECHOTOO]
 
 	/* Core Objects */
-	declarevariable Asteroids obj_Asteroids global
-	declarevariable Ship obj_Ship global
-	declarevariable Station obj_Station global
-	declarevariable Cargo obj_Cargo global
-	;declarevariable Skills obj_Skills global
-	declarevariable Bookmarks obj_Bookmarks global
-	declarevariable JetCan obj_JetCan global
-	declarevariable CorpHangarArray obj_CorpHangerArray global
-	declarevariable AssemblyArray obj_AssemblyArray global
-	declarevariable Social obj_Social global
-	declarevariable Fleet obj_Fleet global
-	declarevariable Assets obj_Assets global
-	declarevariable ChatIRC obj_IRC global
-	declarevariable Safespots obj_Safespots global
-	declarevariable Belts obj_Belts global
-	declarevariable BeltBookmarks obj_BeltBookmarks global
-	declarevariable Targets obj_Targets global
-	declarevariable Sound obj_Sound global
-	declarevariable Agents obj_Agents global
-	declarevariable Missions obj_Missions global
-	declarevariable Market obj_Market global
-	declarevariable Autopilot obj_Autopilot global
-	declarevariable Callback obj_Callback global
+	call CreateVariable Asteroids obj_Asteroids global
+	call CreateVariable Ship obj_Ship global
+	call CreateVariable Station obj_Station global
+	call CreateVariable Cargo obj_Cargo global
+	;call CreateVariable Skills obj_Skills global
+	call CreateVariable Bookmarks obj_Bookmarks global
+	call CreateVariable JetCan obj_JetCan global
+	call CreateVariable CorpHangarArray obj_CorpHangerArray global
+	call CreateVariable AssemblyArray obj_AssemblyArray global
+	call CreateVariable Social obj_Social global
+	call CreateVariable Fleet obj_Fleet global
+	call CreateVariable FleetManager obj_FleetManager global
+	call CreateVariable Assets obj_Assets global
+	call CreateVariable ChatIRC obj_IRC global
+	call CreateVariable Safespots obj_Safespots global
+	call CreateVariable Belts obj_Belts global
+	call CreateVariable BeltBookmarks obj_BeltBookmarks global
+	call CreateVariable Targets obj_Targets global
+	call CreateVariable Sound obj_Sound global
+	call CreateVariable Agents obj_Agents global
+	call CreateVariable Missions obj_Missions global
+	call CreateVariable Market obj_Market global
+	call CreateVariable Autopilot obj_Autopilot global
+	call CreateVariable Callback obj_Callback global
 	
-	declarevariable GlobalVariableIterator iterator global
+	call CreateVariable  GlobalVariableIterator iterator global
 
-	echo "${Time} EVEBot: Loading Behaviors..."
+	wait 0.5
+	; Threads need to load after globals but before behaviors.
+	Logger:Log["EVEBot: Starting EVEBot Threads...", LOG_ECHOTOO]
+	call LoadThreads "Thread" "${Script.CurrentDirectory}/\Threads/\*.iss"
+
+#if EVEBOT_DEBUG
+	Logger:Log["EVEBot: Loading debugging behaviors...", LOG_ECHOTOO]
+	#includeoptional Behaviors/Testcases/_variables.iss
+#else
+	Logger:Log["EVEBot: Loading behaviors...", LOG_ECHOTOO]
 	#includeoptional Behaviors/_variables.iss
 	#includeoptional Modes/_variables.iss
+#endif
 
 	; Script-Defined Behavior Objects
 	;call LoadBehaviors "Stock" "${Script.CurrentDirectory}/\Behaviors/\*.iss"
 	; Custom Behavior Objects (External directory is assumed to be from an external repository, it's not part of EVEBot)
 	;call LoadBehaviors "External" "${Script.CurrentDirectory}/\Behaviors/\External/\*.iss"
-	echo "${Time} EVEBot: Starting Threaded Modules..."
-
-	runscript Threads/Targeting.iss
-	runscript Threads/Defense.iss
-	runscript Threads/Offense.iss
-	;runscript Threads/Navigator.iss
-	echo "${Time} EVEBot: Loaded"
-
+	
+	Logger:Log["EVEBot: Parsing object versions...", LOG_ECHOTOO]
+	wait 0.5
+	
 	; This is a TimedCommand so that it executes in global scope, so we can get the list of global vars.
-	TimedCommand 1 VariableScope:GetIterator[GlobalVariableIterator]
-	wait 10
+	TimedCommand 0 VariableScope:GetIterator[GlobalVariableIterator]
+	wait 10 ${GlobalVariableIterator:First(exists)}
 
 	/* 	This code iterates thru the variables list, looking for classes that have been
 		defined with an SVN_REVISION variable.  It then converts that to a numeric
 		Version(int), which is then used to calculate the highest version (VersionNum),
 		for display on the UI. -- CyberTech
 	*/
-	;echo "Listing EVEBot Class Versions:"
+	;Logger:Log["DEBUG: Dumping EVEBot Class Versions:". LOG_ECHOTOO]
 	if ${GlobalVariableIterator:First(exists)}
 	do
 	{
@@ -190,7 +231,7 @@ function main()
 			${GlobalVariableIterator.Value.Version(exists)}
 		{
 			GlobalVariableIterator.Value.Version:Set[${GlobalVariableIterator.Value.SVN_REVISION.Token[2, " "]}]
-			;echo " ${GlobalVariableIterator.Value.ObjectName} Revision ${GlobalVariableIterator.Value.Version}"
+			;Logger:Log["DEBUG: ${GlobalVariableIterator.Value.ObjectName} Revision ${GlobalVariableIterator.Value.Version}", LOG_ECHOTOO]
 			if ${VersionNum} < ${GlobalVariableIterator.Value.Version}
 			{
 				VersionNum:Set[${GlobalVariableIterator.Value.Version}]
@@ -204,11 +245,19 @@ function main()
 	UI:Reload
 
 #if USE_ISXIM
+	Logger:Log["EVEBot: Connecting to IRC", LOG_ECHOTOO]
 	call ChatIRC.Connect
 #endif
 
-	Logger:Log["-=Paused: Press Run-="]
+	if !${EVEBot.Behaviors:First(exists)}
+	{
+		Logger:Log["ERROR: No Behavioral modules loaded, exiting", LOG_ECHOTOO]
+		EVEBot:EndBot[]
+	}
+
+	Logger:Log["EVEBot: Loaded ${AppVersion}: Paused - Press Run", LOG_ECHOTOO]
 	Turbo 100
+	EVEBot.Loaded:Set[TRUE]
 	Script:Pause
 
 	while ${EVEBot.Paused}
@@ -218,7 +267,10 @@ function main()
 
 	while TRUE
 	{
-		call ${Config.Common.Behavior}.ProcessState
+		if !${EVEBot.Disabled}
+		{
+			call ${Config.Common.Behavior}.ProcessState
+		}
 		wait 1
 	}
 }
