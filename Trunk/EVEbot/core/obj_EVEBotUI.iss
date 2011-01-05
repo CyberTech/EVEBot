@@ -1,30 +1,32 @@
 
-objectdef obj_EVEBotUI
+objectdef obj_EVEBotUI inherits obj_BaseClass
 {
 	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
-	variable time NextPulse
-	variable time NextMsgBoxPulse
-	variable int PulseIntervalInSeconds = 60
-	variable int PulseMsgBoxIntervalInSeconds = 15
 
 	method Initialize()
 	{
-		ui -load interface/eveskin/eveskin.xml
-		ui -load interface/evebotgui.xml
+		LogPrefix:Set["${This.ObjectName}"]
+
+		ui -load interface/EVESkin.xml
+		ui -load -skin EVESkin interface/evebotgui.xml
 
 		This:LogSystemStats
+		This:CheckUIPosition
 
+		PulseTimer:SetIntervals[60.0,60.0]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-		This:UpdateConsole["obj_EVEBotUI: Initialized", LOG_MINOR]
+		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
 	method Reload()
 	{
-		;ui -reload interface/evebotgui.xml
+		;ui -reload -skin EVESkin interface/evebotgui.xml
 		Logger:WriteQueue
+		This:PopulateBehavioralComboBox
+	}
 
+	method PopulateBehavioralComboBox()
+	{
 		variable iterator Behavior
 		EVEBot.BehaviorList:GetIterator[Behavior]
 
@@ -41,39 +43,52 @@ objectdef obj_EVEBotUI
 		}
 	}
 
+	method CheckUIPosition()
+	{
+		if ${UIElement[EVEBot].X} <= -${Math.Calc[${UIElement[EVEBot].Width} * 0.66].Int} || \
+			${UIElement[EVEBot].X} >= ${Math.Calc[${Display.Width} - ${UIElement[EVEBot].Width}]}
+		{
+			echo ${UIElement[EVEBot].X} <= -${Math.Calc[${UIElement[EVEBot].Width} * 0.66].Int}
+			echo ${UIElement[EVEBot].X} >= ${Math.Calc[${Display.Width} - ${UIElement[EVEBot].Width}]}
+
+			echo "----"
+			echo "    Warning: EVEBot window is outside window area: ${UIElement[EVEBot].X} > ${Display.Width}"
+			echo "    You may fix this with 'UIElement[EVEbot]:Reset"
+			echo "----"
+		}
+
+		if ${UIElement[EVEBot].Y} <= 1 || \
+			${UIElement[EVEBot].Y} >= ${Math.Calc[${Display.Height} - ${UIElement[EVEBot].Height}]}
+		{
+			echo ${UIElement[EVEBot].Y} <= 1
+			echo ${UIElement[EVEBot].Y} >= ${Math.Calc[${Display.Height} - ${UIElement[EVEBot].Height}]}
+
+			echo "----"
+			echo "    Warning: EVEBot window is outside window area: ${UIElement[EVEBot].Y} > ${Display.Height}"
+			echo "    You may fix this with 'UIElement[EVEbot]:Reset"
+			echo "----"
+		}
+	}
+
 	method Shutdown()
 	{
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 		ui -unload interface/evebotgui.xml
-		ui -unload interface/eveskin/eveskin.xml
+		ui -unload interface/EVESkin.xml
 	}
 
 	method Pulse()
 	{
-	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+		if !${EVEBot.Loaded} || ${EVEBot.Disabled}
 		{
-    		; This:LogSystemStats
-    		This.NextPulse:Set[${Time.Timestamp}]
-    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-    		This.NextPulse:Update
+			return
 		}
 
-	    if ${Time.Timestamp} > ${This.NextMsgBoxPulse.Timestamp}
+		if ${This.PulseTimer.Ready}
 		{
-
-			if !${EVEBot.Paused}
-			{
-				if ${Me(exists)}
-				{
-					Config.Common:AutoLoginCharID[${EVEBot.CharID}]
-				}
-			}
-
-    		This.NextMsgBoxPulse:Set[${Time.Timestamp}]
-    		This.NextMsgBoxPulse.Second:Inc[${This.PulseMsgBoxIntervalInSeconds}]
-    		This.NextMsgBoxPulse:Update
+			This.PulseTimer:Update
+			; This:LogSystemStats
 		}
-
 	}
 
 	method LogSystemStats()
