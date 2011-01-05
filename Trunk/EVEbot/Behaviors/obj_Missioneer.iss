@@ -7,28 +7,31 @@
 	-- GliderPro
 */
 
-objectdef obj_Missioneer
+objectdef obj_Missioneer inherits obj_BaseClass
 {
 	variable string SVN_REVISION = "$Rev$"
-	variable int Version
 	variable string CurrentState
-	variable time NextPulse
-	variable int PulseIntervalInSeconds = 2
 
 	method Initialize()
 	{
 		EVEBot.BehaviorList:Insert["Missioneer"]
-		Logger:Log["obj_Missioneer: Initialized", LOG_MINOR]
+		LogPrefix:Set["${This.ObjectName}"]
+
+		This.PulseTimer:SetIntervals[2.0,4.0]
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+		BotModules:Insert["Missioneer"]
+
+		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
 	method Pulse()
 	{
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+		if ${This.PulseTimer.Ready}
 		{
 			This:SetState
     		This.NextPulse:Set[${Time.Timestamp}]
-    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-    		This.NextPulse:Update
+			This.PulseTimer:Update
 		}
 	}
 
