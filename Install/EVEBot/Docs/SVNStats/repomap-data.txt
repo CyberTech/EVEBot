@@ -54,7 +54,7 @@
               <leaf><label>test_Station_GetHangarShips.iss</label><weight>50</weight><value>100.0</value></leaf>
           </branch>
         </branch>
-          <leaf><label>EVEBot.iss</label><weight>86</weight><value>89.53488372093024</value></leaf>
+          <leaf><label>EVEBot.iss</label><weight>86</weight><value>-10.465116279069768</value></leaf>
           <leaf><label>EVECallback.iss</label><weight>45</weight><value>0.0</value></leaf>
           <leaf><label>EVEWatcher.iss</label><weight>265</weight><value>0.0</value></leaf>
           <leaf><label>Launcher.iss</label><weight>150</weight><value>0.0</value></leaf>
@@ -67,14 +67,19 @@
       <branch>
           <label>EVEbot</label>
         <branch>
-            <label>Behaviors</label>            <leaf><label>_includes.iss</label><weight>5</weight><value>100.0</value></leaf>
+            <label>Behaviors</label>
+          <branch>
+              <label>Testcases</label>
+              <leaf><label>_includes.iss</label><weight>1</weight><value>100.0</value></leaf>
+              <leaf><label>_variables.iss</label><weight>3</weight><value>100.0</value></leaf>
+          </branch>
+            <leaf><label>_includes.iss</label><weight>5</weight><value>100.0</value></leaf>
             <leaf><label>_variables.iss</label><weight>14</weight><value>100.0</value></leaf>
             <leaf><label>obj_Freighter.iss</label><weight>422</weight><value>0.0</value></leaf>
             <leaf><label>obj_Miner.iss</label><weight>546</weight><value>0.0</value></leaf>
             <leaf><label>obj_MinerHauler.iss</label><weight>616</weight><value>0.0</value></leaf>
-            <leaf><label>obj_Missioneer.iss</label><weight>98</weight><value>0.0</value></leaf>
+            <leaf><label>obj_Missioneer.iss</label><weight>101</weight><value>2.9702970297029703</value></leaf>
             <leaf><label>obj_Ratter.iss</label><weight>421</weight><value>-1.4251781472684086</value></leaf>
-            <leaf><label>readme.txt</label><weight>2</weight><value>0.0</value></leaf>
         </branch>
 
         <branch>
@@ -109,7 +114,7 @@
 
         <branch>
             <label>Threads</label>
-            <leaf><label>Defense.iss</label><weight>416</weight><value>1.201923076923077</value></leaf>
+            <leaf><label>Defense.iss</label><weight>432</weight><value>4.861111111111112</value></leaf>
             <leaf><label>EVEDatabase.iss</label><weight>31</weight><value>0.0</value></leaf>
             <leaf><label>Navigator.iss</label><weight>223</weight><value>2.242152466367713</value></leaf>
             <leaf><label>Offense.iss</label><weight>505</weight><value>2.5742574257425743</value></leaf>
@@ -154,10 +159,10 @@
             <leaf><label>obj_Cargo.iss</label><weight>941</weight><value>0.0</value></leaf>
             <leaf><label>obj_Configuration.iss</label><weight>849</weight><value>6.9493521790341575</value></leaf>
             <leaf><label>obj_Drones.iss</label><weight>968</weight><value>0.0</value></leaf>
-            <leaf><label>obj_EVEBot.iss</label><weight>295</weight><value>-3.050847457627119</value></leaf>
-            <leaf><label>obj_EVEBotUI.iss</label><weight>83</weight><value>0.0</value></leaf>
+            <leaf><label>obj_EVEBot.iss</label><weight>314</weight><value>3.1847133757961785</value></leaf>
+            <leaf><label>obj_EVEBotUI.iss</label><weight>98</weight><value>15.306122448979592</value></leaf>
             <leaf><label>obj_EVEDB.iss</label><weight>169</weight><value>60.35502958579882</value></leaf>
-            <leaf><label>obj_EntityCache.iss</label><weight>258</weight><value>0.0</value></leaf>
+            <leaf><label>obj_EntityCache.iss</label><weight>266</weight><value>3.007518796992481</value></leaf>
             <leaf><label>obj_Fleet.iss</label><weight>136</weight><value>0.0</value></leaf>
             <leaf><label>obj_FleetManager.iss</label><weight>39</weight><value>0.0</value></leaf>
             <leaf><label>obj_IRC.iss</label><weight>317</weight><value>0.9463722397476341</value></leaf>
@@ -166,7 +171,7 @@
             <leaf><label>obj_Market.iss</label><weight>789</weight><value>0.7604562737642585</value></leaf>
             <leaf><label>obj_MissionCombat.iss</label><weight>545</weight><value>0.0</value></leaf>
             <leaf><label>obj_MissionCombatConfig.iss</label><weight>11</weight><value>0.0</value></leaf>
-            <leaf><label>obj_MissionCommands.iss</label><weight>1201</weight><value>0.0</value></leaf>
+            <leaf><label>obj_MissionCommands.iss</label><weight>1203</weight><value>0.1662510390689942</value></leaf>
             <leaf><label>obj_MissionParser.iss</label><weight>167</weight><value>0.0</value></leaf>
             <leaf><label>obj_Missions.iss</label><weight>1242</weight><value>0.0</value></leaf>
             <leaf><label>obj_Safespots.iss</label><weight>42</weight><value>19.047619047619047</value></leaf>
@@ -180,7 +185,7 @@
         <branch>
             <label>interface</label>            <leaf><label>evebotgui.xml</label><weight>1730</weight><value>0.0</value></leaf>
         </branch>
-          <leaf><label>EVEBot.iss</label><weight>224</weight><value>2.6785714285714284</value></leaf>
+          <leaf><label>EVEBot.iss</label><weight>276</weight><value>32.971014492753625</value></leaf>
           <leaf><label>EveBots.iss</label><weight>265</weight><value>0.0</value></leaf>
           <leaf><label>EveCallback.iss</label><weight>45</weight><value>0.0</value></leaf>
           <leaf><label>Launcher.iss</label><weight>135</weight><value>-100.0</value></leaf>
@@ -306,7 +311,7 @@
             <leaf><label>obj_Ship.iss</label><weight>2388</weight><value>0.25125628140703515</value></leaf>
             <leaf><label>obj_Targets.iss</label><weight>728</weight><value>7.0054945054945055</value></leaf>
         </branch>
-          <leaf><label>EVEBot.iss</label><weight>224</weight><value>-14.285714285714285</value></leaf>
+          <leaf><label>EVEBot.iss</label><weight>224</weight><value>0.4464285714285714</value></leaf>
       </branch>
     </branch>
 </root>

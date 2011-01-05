@@ -62,11 +62,142 @@
 </ul>
 </div><dl class="attributes">
     <dt>Number of Commits:</dt>
-    <dd>10</dd>
+    <dd>15</dd>
     <dt>Number of Active Developers:</dt>
     <dd>1</dd>
 </dl>
 <dl class="commitlist">
+  <dt><a name="15"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-01-04 19:10</span>
+    <a class="permalink" title="Permalink to this commit" href="#15">#15</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1722</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Defense: Convert to obj_PulseTimer<br />
+obj_Defense: Disable PulseTimer randomizing for self if we're hiding.<br />
+obj_Defense: move to new Targeting syntax.<br />
+obj_Defense: FleetToStation and FleetoSafespot are now methods, not functions<br />
+obj_Defense: Wait for EVEBot before starting up.<br />
+obj_MissionCommands: Move to new Targeting syntax<br />
+obj_MissionCommands: Move log statements to debug-only.
+    </p>
+    <p class="commitdetails"><strong>52</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Defense.iss&#160;<span class="change">(+41&#160;-25)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_MissionCommands.iss&#160;<span class="change">(+11&#160;-9)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="14"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-01-04 19:03</span>
+    <a class="permalink" title="Permalink to this commit" href="#14">#14</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1721</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Missioneer.iss: Convert to obj_PulseTimer<br />
+
+    </p>
+    <p class="commitdetails"><strong>10</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Missioneer.iss&#160;<span class="change">(+10&#160;-7)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="13"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-01-04 18:56</span>
+    <a class="permalink" title="Permalink to this commit" href="#13">#13</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1720</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Convert to obj_PulseTimer<br />
+Load skin properly<br />
+Move relevant code from Reload() to PopulateBehavioralComboBox()<br />
+Add CheckUIPosition to report off-screen window and give instructions for fixing on startup<br />
+
+    </p>
+    <p class="commitdetails"><strong>46</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_EVEBotUI.iss&#160;<span class="change">(+46&#160;-31)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="12"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-01-04 18:50</span>
+    <a class="permalink" title="Permalink to this commit" href="#12">#12</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1719</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_EntityCache: Convert to obj_PulseTimer<br />
+obj_EVEBOT: Convert to obj_PulseTimer<br />
+obj_EVEBot: Respect EVEBot.Disabled<br />
+obj_EVEBot: Pause and Resume methods take string param for reason.<br />
+obj_EVEBot: SetVersion includes the module(s) being debugged
+    </p>
+    <p class="commitdetails"><strong>54</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_EVEBot.iss&#160;<span class="change">(+37&#160;-18)</span>,
+        obj_EntityCache.iss&#160;<span class="change">(+17&#160;-9)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="11"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-01-04 18:41</span>
+    <a class="permalink" title="Permalink to this commit" href="#11">#11</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1718</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Add dir layout for testcase behaviors<br />
+EVEBot.iss: Move all var instantiation thru CreateVariable for timing of per-object initialization in debug cases.<br />
+EVEBot.iss: Load testcase behaviors if EVEBOT_DEBUG is set. This will get its own define later when it annoys me.<br />
+EVEBot.iss: Move all echos to Logger:Log in startup.<br />
+EVEBot.iss: Optimize startup time (from 10-20 seconds down to &lt;2 sec so far)<br />
+EVEBot.iss: Abort if some numbskull has failed to include any behaviors.<br />
+EVEBot.iss: Load threads by wildcard<br />
+
+    </p>
+    <p class="commitdetails"><strong>130</strong> lines of code changed in <span class="files">4 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot</strong>:
+        EVEBot.iss&#160;<span class="change">(+126&#160;-74)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        readme.txt&#160;<span class="del">(del)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Behaviors/Testcases</strong>:
+        _includes.iss&#160;<span class="new">(new&#160;1)</span>,
+        _variables.iss&#160;<span class="new">(new&#160;3)</span>
+      </li>
+    </ul>
+  </dd>
+
   <dt><a name="10"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2011-01-04 02:19</span>
