@@ -23,7 +23,7 @@ function main()
 
 	echo TypeID: ${itemdb.TypeID[Tritanium]}
 	echo Name: ${itemdb.Name[34]}
-	echo Volume: ${itemdb.Metalevel[34]}
+	echo Metalevel: ${itemdb.Metalevel[34]}
 	echo Volume: ${itemdb.Volume[34]}
 	echo Capacity: ${itemdb.Capacity[34]}
 	echo GroupID: ${itemdb.GroupID[34]}
