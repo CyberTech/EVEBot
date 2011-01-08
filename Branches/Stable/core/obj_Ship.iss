@@ -69,10 +69,10 @@ objectdef obj_Ship
 	{
 		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-			if !${_Me.InStation}
+			if !${Me.InStation}
 			{
 				This:ValidateModuleTargets
-				
+
 				if ${RetryUpdateModuleList} == 10
 				{
 					UI:UpdateConsole["ERROR: obj_Ship:UpdateModuleList - No modules found. Pausing - If this ship has slots, you must have at least one module equipped, of any type.", LOG_CRITICAL]
@@ -296,7 +296,7 @@ objectdef obj_Ship
 
 	method UpdateModuleList()
 	{
-		if ${_Me.InStation}
+		if ${Me.InStation}
 		{
 			; GetModules cannot be used in station as of 07/15/2007
 			UI:UpdateConsole["DEBUG: obj_Ship:UpdateModuleList called while in station", LOG_DEBUG]
@@ -353,7 +353,7 @@ objectdef obj_Ship
 				RetryUpdateModuleList:Inc
 				return
 			}
-		
+
 			UI:UpdateConsole["DEBUG: ID: ${ModuleIter.Value} ID: ${ModuleIter.Value.ID} Activatable: ${ModuleIter.Value.IsActivatable} Name: ${ModuleIter.Value.ToItem.Name} Slot: ${ModuleIter.Value.ToItem.Slot} Group: ${ModuleIter.Value.ToItem.Group} ${GroupID} Type: ${ModuleIter.Value.ToItem.Type} ${TypeID}", LOG_DEBUG]
 
 			if !${ModuleIter.Value.IsActivatable}
