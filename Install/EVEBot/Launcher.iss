@@ -85,10 +85,9 @@ function main(string unchar="", string StartBot=FALSE)
 				case EVEBOT_STABLE
 					EVE:CloseAllMessageBoxes
 					; TODO - get rid of this callback shit.
-					UI:UpdateConsole["Launcher: Starting EveCallback"]
 					runscript "${Script.CurrentDirectory}/EveCallback.iss"
 
-					UI:UpdateConsole["Launcher: Starting EVEBot"]
+					UI:UpdateConsole["Launcher: Starting EVEBot by CyberTech"]
 					runscript EVEBot/EVEBot Stable
 					wait 600 ${Script[EVEBot].Paused}
 					while ${Script[EVEBot].Paused}
@@ -103,7 +102,7 @@ function main(string unchar="", string StartBot=FALSE)
 					UI:UpdateConsole["Launcher: Starting EveCallback"]
 					runscript "${Script.CurrentDirectory}/EveCallback.iss"
 
-					UI:UpdateConsole["Launcher: Starting EVEBot Dev"]
+					UI:UpdateConsole["Launcher: Starting EVEBot Dev by CyberTech"]
 					runscript EVEBot/EVEBot Dev
 					wait 600 ${Script[EVEBot].Paused}
 					while ${Script[EVEBot].Paused}
@@ -118,7 +117,7 @@ function main(string unchar="", string StartBot=FALSE)
 					UI:UpdateConsole["Launcher: Starting EveCallback"]
 					runscript "${Script.CurrentDirectory}/EveCallback.iss"
 
-					UI:UpdateConsole["Launcher: Starting EVEBot Test"]
+					UI:UpdateConsole["Launcher: Starting EVEBot Test by CyberTech"]
 					runscript EVEBot/EVEBot Test
 					wait 600 ${Script[EVEBot].Paused}
 					while ${Script[EVEBot].Paused}
@@ -128,11 +127,17 @@ function main(string unchar="", string StartBot=FALSE)
 					}
 					break
 				case STEALTHBOT
-					UI:UpdateConsole["Launcher: Starting StealthBot"]
+					UI:UpdateConsole["Launcher: Starting StealthBot by Stealthy"]
 					wait 100
 					EVE:CloseAllMessageBoxes
 					dotnet sb${Session} stealthbot true
 					windowpos -viewable 0,0
+					break
+				case QUESTOR
+					UI:UpdateConsole["Launcher: Starting Questor by Da_Teach"]
+					wait 100
+					EVE:CloseAllMessageBoxes
+					dotnet questor
 					break
 				case default
 					UI:UpdateConsole["Launcher: Unknown bot specified for launch, attempting to run as script name"]
