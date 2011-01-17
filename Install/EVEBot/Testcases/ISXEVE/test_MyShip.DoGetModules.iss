@@ -1,6 +1,6 @@
 #define TESTCASE 1
 
-#include ../Support/TestAPI.iss
+#include ../../Support/TestAPI.iss
 
 /*
 	Test Modules
@@ -29,7 +29,7 @@ function main()
 	do
 	{
 		StartTime2:Set[${Script.RunningTime}]
-		ItemTest:IterateMembers["ModuleIterator.Value", TRUE, FALSE]
+		ItemTest:IterateMembers["ModuleIterator.Value", FALSE, FALSE]
 		echo "Single ${ItemTest.TypeName} dump completed ${Math.Calc[(${Script.RunningTime}-${StartTime2}) / 1000]} seconds"
 	}
 	while ${ModuleIterator:Next(exists)}
