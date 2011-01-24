@@ -492,6 +492,26 @@ objectdef obj_CorpHangerArray inherits obj_JetCan
 		return 1400000
 	}
 
+	member:bool AccessAllowed(int64 ID)
+	{
+		if (${ID} == 0 && ${This.ActiveCan} > 0)
+		{
+			ID:Set[${This.ActiveCan}]
+		}
+
+		if !${Entity[${ID}](exists)}
+		{
+			return FALSE
+		}
+
+		if ${Entity[${ID}].CorporationID} == ${Me.CorporationID}
+		{
+			return TRUE
+		}
+
+		return FALSE
+	}
+
 }
 
 objectdef obj_AssemblyArray inherits obj_JetCan
@@ -563,6 +583,26 @@ objectdef obj_AssemblyArray inherits obj_JetCan
 		/* TODO: hard coded capacity b/c of isxeve cargocapcity breakage */
 		;return ${Entity[${ID}].CargoCapacity}
 		return 1000000
+	}
+
+	member:bool AccessAllowed(int64 ID)
+	{
+		if (${ID} == 0 && ${This.ActiveCan} > 0)
+		{
+			ID:Set[${This.ActiveCan}]
+		}
+
+		if !${Entity[${ID}](exists)}
+		{
+			return FALSE
+		}
+
+		if ${Entity[${ID}].CorporationID} == ${Me.CorporationID}
+		{
+			return TRUE
+		}
+
+		return FALSE
 	}
 }
 

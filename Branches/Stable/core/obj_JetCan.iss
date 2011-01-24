@@ -499,6 +499,25 @@ objectdef obj_CorpHangerArray inherits obj_JetCan
 		return 1400000
 	}
 
+	member:bool AccessAllowed(int64 ID)
+	{
+		if (${ID} == 0 && ${This.ActiveCan} > 0)
+		{
+			ID:Set[${This.ActiveCan}]
+		}
+
+		if !${Entity[${ID}](exists)}
+		{
+			return FALSE
+		}
+
+		if ${Entity[${ID}].CorporationID} == ${Me.CorporationID}
+		{
+			return TRUE
+		}
+
+		return FALSE
+	}
 }
 
 objectdef obj_SpawnContainer inherits obj_JetCan
@@ -635,6 +654,26 @@ objectdef obj_LargeShipAssemblyArray inherits obj_JetCan
 		;return ${Entity[${ID}].CargoCapacity}
 		return 18500500
 	}
+
+	member:bool AccessAllowed(int64 ID)
+	{
+		if (${ID} == 0 && ${This.ActiveCan} > 0)
+		{
+			ID:Set[${This.ActiveCan}]
+		}
+
+		if !${Entity[${ID}](exists)}
+		{
+			return FALSE
+		}
+
+		if ${Entity[${ID}].CorporationID} == ${Me.CorporationID}
+		{
+			return TRUE
+		}
+
+		return FALSE
+	}
 }
 
 objectdef obj_XLargeShipAssemblyArray inherits obj_JetCan
@@ -710,4 +749,23 @@ objectdef obj_XLargeShipAssemblyArray inherits obj_JetCan
 		return 18500500
 	}
 
+	member:bool AccessAllowed(int64 ID)
+	{
+		if (${ID} == 0 && ${This.ActiveCan} > 0)
+		{
+			ID:Set[${This.ActiveCan}]
+		}
+
+		if !${Entity[${ID}](exists)}
+		{
+			return FALSE
+		}
+
+		if ${Entity[${ID}].CorporationID} == ${Me.CorporationID}
+		{
+			return TRUE
+		}
+
+		return FALSE
+	}
 }
