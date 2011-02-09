@@ -66,6 +66,8 @@ function main()
 		_EVETime:Initialize
 	}
 
+	turbo 150
+
 	echo "${Time} EVEBot: Loading Objects..."
 
 	/* Script-Defined Support Objects */
@@ -114,8 +116,6 @@ function main()
 	declarevariable Missioneer obj_Missioneer script
 
 	echo "${Time} EVEBot: Loaded"
-
-	/* Set Turbo to lowest value to try and avoid overloading the EVE Python engine */
 
 	variable iterator BotModule
 	BotModules:GetIterator[BotModule]
@@ -175,9 +175,9 @@ function main()
 				wait 10
 			}
 			call ${BotModule.Value}.ProcessState
-			wait 10
+			wait 5
 		}
 		while ${BotModule:Next(exists)}
-		waitframe
+		wait 1
 	}
 }

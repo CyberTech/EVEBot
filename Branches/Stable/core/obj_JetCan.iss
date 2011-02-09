@@ -419,7 +419,7 @@ objectdef obj_JetCan
 			wait WAIT_CARGO_WINDOW
 			while ${This.IsCargoOpen[${ID}]}
 			{
-				waitframe
+				wait 1
 			}
 			wait 10
 		}

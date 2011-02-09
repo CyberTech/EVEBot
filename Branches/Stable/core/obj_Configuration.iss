@@ -1125,18 +1125,21 @@ objectdef obj_Config_Whitelist
 		{
 			This.BaseRef:AddSet[Pilots]
 			This.PilotsRef:AddSetting[Sample_Pilot_Comment, 0]
+			This:Save
 		}
 
 		if !${This.BaseRef.FindSet[Corporations](exists)}
 		{
 			This.BaseRef:AddSet[Corporations]
 			This.CorporationsRef:AddSetting[Sample_Corporation_Comment, 0]
+			This:Save
 		}
 
 		if !${This.BaseRef.FindSet[Alliances](exists)}
 		{
 			This.BaseRef:AddSet[Alliances]
 			This.AlliancesRef:AddSetting[Sample_Alliance_Comment, 0]
+			This:Save
 		}
 
 		UI:UpdateConsole["obj_Config_Whitelist: Initialized", LOG_MINOR]
@@ -1144,7 +1147,8 @@ objectdef obj_Config_Whitelist
 
 	method Shutdown()
 	{
-		This:Save[]
+		; Don't save this on shutdown, we'll save it explicitly when needed
+		; This:Save[]
 		LavishSettings[EVEBotWhitelist]:Clear
 	}
 
@@ -1187,18 +1191,21 @@ objectdef obj_Config_Blacklist
 		{
 			This.BaseRef:AddSet[Pilots]
 			This.PilotsRef:AddSetting[Sample_Pilot_Comment, 0]
+			This:Save
 		}
 
 		if !${This.BaseRef.FindSet[Corporations](exists)}
 		{
 			This.BaseRef:AddSet[Corporations]
 			This.CorporationsRef:AddSetting[Sample_Corporation_Comment, 0]
+			This:Save
 		}
 
 		if !${This.BaseRef.FindSet[Alliances](exists)}
 		{
 			This.BaseRef:AddSet[Alliances]
 			This.AlliancesRef:AddSetting[Sample_Alliance_Comment, 0]
+			This:Save
 		}
 
 		UI:UpdateConsole["obj_Config_Blacklist: Initialized", LOG_MINOR]
@@ -1206,7 +1213,8 @@ objectdef obj_Config_Blacklist
 
 	method Shutdown()
 	{
-		This:Save[]
+		; Don't save this on shutdown, we'll save it explicitly when needed
+		; This:Save[]
 		LavishSettings[EVEBotBlacklist]:Clear
 	}
 

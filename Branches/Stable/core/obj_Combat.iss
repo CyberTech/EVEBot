@@ -174,7 +174,7 @@ objectdef obj_Combat
 			elseif (!${Ship.IsAmmoAvailable} && ${Config.Combat.RunOnLowAmmo})
 			{
 				UI:UpdateConsole["Debug: Fleeing: Low ammo"]
-				; TODO - what to do about being warp scrambled in this case?		
+				; TODO - what to do about being warp scrambled in this case?
 				call This.Flee
 				return
 			}
@@ -207,7 +207,7 @@ objectdef obj_Combat
 		Ship:Deactivate_Cloak
 		while ${Ship.IsCloaked}
 		{
-			waitframe
+			wait 1
 		}
 		;Ship:Offline_Cloak
 		;Ship:Online_Salvager

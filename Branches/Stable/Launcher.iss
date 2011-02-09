@@ -49,7 +49,7 @@ function main(string unchar="", bool StartBot=FALSE)
 
 	while !${Display.Window(exists)}
 	{
-		waitframe
+		wait 1
 	}
 	windowtaskbar on "${unchar}"
 
@@ -72,7 +72,7 @@ function main(string unchar="", bool StartBot=FALSE)
 
 		while ${LoginHandler.CurrentState.NotEqual["FINISHED"]}
 		{
-			waitframe
+			wait 1
 		}
 
 		if ${StartBot}

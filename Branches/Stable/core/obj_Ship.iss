@@ -1406,10 +1406,10 @@ objectdef obj_Ship
 
 		if ${This.Drones.WaitingForDrones}
 		{
-			UI:UpdateConsole["Drone deployment already in process, delaying warp", LOG_CRITICAL]
+			UI:UpdateConsole["Drone deployment already in process, delaying warp (${This.Drones.WaitingForDrones})", LOG_CRITICAL]
 			do
 			{
-				waitframe
+				wait 1
 			}
 			while ${This.Drones.WaitingForDrones}
 		}
@@ -1963,7 +1963,7 @@ objectdef obj_Ship
 		{
 			UI:UpdateConsole["Locking ${Entity[${TargetID}].Name}: ${EVEBot.MetersToKM_Str[${Entity[${TargetID}].Distance}]}"]
 			Entity[${TargetID}]:LockTarget
-			waitframe
+			wait 1
 		}
 	}
 
