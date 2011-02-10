@@ -387,7 +387,8 @@ objectdef obj_OreHauler inherits obj_Hauler
 		switch ${Config.Miner.DeliveryLocationTypeName}
 		{
 			case Station
-				call Station.Dock
+				call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
+				call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
 				break
 			case Hangar Array
 				call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
