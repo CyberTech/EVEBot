@@ -58,7 +58,7 @@
           <leaf><label>EVEBot.iss</label><weight>86</weight><value>0.0</value></leaf>
           <leaf><label>EVECallback.iss</label><weight>45</weight><value>0.0</value></leaf>
           <leaf><label>EVEWatcher.iss</label><weight>265</weight><value>0.0</value></leaf>
-          <leaf><label>Launcher.iss</label><weight>155</weight><value>3.225806451612903</value></leaf>
+          <leaf><label>Launcher.iss</label><weight>155</weight><value>0.0</value></leaf>
       </branch>
         <leaf><label>Installation.txt</label><weight>9</weight><value>0.0</value></leaf>
     </branch>
@@ -201,7 +201,7 @@
             <leaf><label>_includes.iss</label><weight>8</weight><value>0.0</value></leaf>
             <leaf><label>_variables.iss</label><weight>24</weight><value>0.0</value></leaf>
             <leaf><label>obj_Freighter.iss</label><weight>425</weight><value>0.0</value></leaf>
-            <leaf><label>obj_Hauler.iss</label><weight>636</weight><value>0.0</value></leaf>
+            <leaf><label>obj_Hauler.iss</label><weight>637</weight><value>0.15698587127158556</value></leaf>
             <leaf><label>obj_Miner.iss</label><weight>515</weight><value>0.0</value></leaf>
             <leaf><label>obj_Missioneer.iss</label><weight>96</weight><value>0.0</value></leaf>
             <leaf><label>obj_Ratter.iss</label><weight>190</weight><value>0.0</value></leaf>
