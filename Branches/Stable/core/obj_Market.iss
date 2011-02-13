@@ -7,99 +7,11 @@
 
 */
 
-objectdef obj_MarketItemList
-{
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
-	variable string CONFIG_FILE = "${BaseConfig.CONFIG_PATH}/${_Me.Name} Market.xml"
-	variable string SET_NAME = "${_Me.Name} Market"
-	variable iterator itemIterator
-
-	method Initialize()
-	{
-		if ${LavishSettings[${This.SET_NAME}](exists)}
-		{
-			LavishSettings[${This.SET_NAME}]:Clear
-		}
-		LavishSettings:Import[${CONFIG_FILE}]
-		LavishSettings[${This.SET_NAME}]:GetSetIterator[This.itemIterator]
-		UI:UpdateConsole["obj_MarketItemList: Initialized", LOG_MINOR]
-
-		;This:DumpList
-	}
-
-	method Shutdown()
-	{
-		LavishSettings[${This.SET_NAME}]:Clear
-	}
-
-	member:string FirstItem()
-	{
-		if ${This.itemIterator:First(exists)}
-		{
-			return ${This.itemIterator.Key}
-		}
-
-		return NULL
-	}
-
-	member:string NextItem()
-	{
-		if ${This.itemIterator:Next(exists)}
-		{
-			return ${This.itemIterator.Key}
-		}
-
-		return NULL
-	}
-
-	member:string CurrentItem()
-	{
-		return ${This.itemIterator.Key}
-	}
-
-	method DumpList()
-	{
-		UI:UpdateConsole["obj_MarketItemList: Dumping list..."]
-
-		UI:UpdateConsole["obj_MarketItemList: This.FirstItem   = ${This.FirstItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.CurrentItem = ${This.CurrentItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.NextItem    = ${This.NextItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.CurrentItem = ${This.CurrentItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.NextItem    = ${This.NextItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.CurrentItem = ${This.CurrentItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.NextItem    = ${This.NextItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.CurrentItem = ${This.CurrentItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.NextItem    = ${This.NextItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.CurrentItem = ${This.CurrentItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.NextItem    = ${This.NextItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.CurrentItem = ${This.CurrentItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.NextItem    = ${This.NextItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.CurrentItem = ${This.CurrentItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.NextItem    = ${This.NextItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.CurrentItem = ${This.CurrentItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.NextItem    = ${This.NextItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.CurrentItem = ${This.CurrentItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.NextItem    = ${This.NextItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.CurrentItem = ${This.CurrentItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.NextItem    = ${This.NextItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.CurrentItem = ${This.CurrentItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.NextItem    = ${This.NextItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.CurrentItem = ${This.CurrentItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.NextItem    = ${This.NextItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.CurrentItem = ${This.CurrentItem}"]
-		UI:UpdateConsole["obj_MarketItemList: This.NextItem(exists)    = ${This.NextItem(exists)}"]
-		UI:UpdateConsole["obj_MarketItemList: This.CurrentItem(exists) = ${This.CurrentItem(exists)}"]
-	}
-}
-
 objectdef obj_Market
 {
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
-	variable obj_MarketItemList ItemList
 	variable index:marketorder  sellOrders
 	variable index:marketorder  buyOrders
 	variable index:myorder      mySellOrders
@@ -473,77 +385,6 @@ objectdef obj_Market
 	member:int MyBuyOrderCount()
 	{
 		return ${This.myBuyOrders.Used}
-	}
-
-
-	function UpdateMySellOrders(float64 delta)
-	{
-		variable iterator orderIterator
-
-		This.mySellOrders:GetIterator[orderIterator]
-
-		if ${orderIterator:First(exists)}
-		{
-			do
-			{
-				if ${orderIterator.Value.Price} > ${This.LowestSellOrder}
-				{
-					variable float64 sellPrice
-					sellPrice:Set[${Math.Calc[${This.LowestSellOrder}-${delta}]}]
-					sellPrice:Set[${sellPrice.Precision[2]}]
-
-					if ${sellPrice} < 5000000
-					{
-						UI:UpdateConsole["obj_Market: Adjusting order ${orderIterator.Value.ID} to ${sellPrice}."]
-						orderIterator.Value:Modify[${sellPrice}]
-					}
-					else
-					{
-						UI:UpdateConsole["obj_Market: ERROR: Sell price (${sellPrice}) exceeds limit!!"]
-					}
-				}
-				else
-				{
-					UI:UpdateConsole["obj_Market: Order ${orderIterator.Value.ID} is currently the lowest sell order."]
-				}
-			}
-			while ${orderIterator:Next(exists)}
-		}
-	}
-
-	function UpdateMyBuyOrders(float64 delta)
-	{
-		variable iterator orderIterator
-
-		This.myBuyOrders:GetIterator[orderIterator]
-
-		if ${orderIterator:First(exists)}
-		{
-			do
-			{
-				if ${orderIterator.Value.Price} < ${This.HighestBuyOrder}
-				{
-					variable float64 buyPrice
-					buyPrice:Set[${Math.Calc[${This.HighestBuyOrder}+${delta}]}]
-					buyPrice:Set[${buyPrice.Precision[2]}]
-
-					if ${buyPrice} < 5000000
-					{
-						UI:UpdateConsole["obj_Market: Adjusting order ${orderIterator.Value.ID} to ${buyPrice}."]
-						orderIterator.Value:Modify[${buyPrice}]
-					}
-					else
-					{
-						UI:UpdateConsole["obj_Market: ERROR: Buy price (${buyPrice}) exceeds limit!!"]
-					}
-				}
-				else
-				{
-					UI:UpdateConsole["obj_Market: Order ${orderIterator.Value.ID} is currently the highest buy order."]
-				}
-			}
-			while ${orderIterator:Next(exists)}
-		}
 	}
 
 	method DumpSellOrders()

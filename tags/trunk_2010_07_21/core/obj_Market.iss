@@ -333,7 +333,7 @@ objectdef obj_Market
 		return ${storeIndex}
 	}
 
-   	function QuicksortBuyOrders(int left, int right)
+	function QuicksortBuyOrders(int left, int right)
    	{
  		variable int pivotIndex
  		variable int pivotNewIndex
@@ -400,95 +400,13 @@ objectdef obj_Market
 		;This:DumpBuyOrders
  	}
 
-;	member:float64 LowestSellOrder()
-;	{
-;		return ${This.sellOrders.Get[1].Price}
-;	}
-	member:float64 LowestSellOrder(int MinQuantity=1, float MinPrice=0.0)
+	member:float64 LowestSellOrder()
 	{
-		variable int idx
-		variable int count
-
-		; Return the lowest order that is NOT ours AND meets our min price AND meets our minquantity remaining
-		if ${MinQuantity} > 1
-		{
-			count:Set[${This.sellOrders.Used}]
-			for ( idx:Set[1]; ${idx} <= ${count}; idx:Inc )
-			{
-				if ${This.IsMySellOrder[${This.sellOrders.Get[${idx}].ID}]}
-				{
-					continue
-				}
-
-				if ${This.sellOrders.Get[${idx}].QuantityRemaining} >= ${MinQuantity}
-				{
-					if ${This.sellOrders.Get[${idx}].Price} >= ${MinPrice}
-					{
-						return ${This.sellOrders.Get[${idx}].Price}
-					}
-					else
-					{
-						UI:UpdateConsoleIRC["LowestSellOrder: Ignored Order: ${This.sellOrders.Get[${idx}].Name}: ${This.sellOrders.Get[${idx}].QuantityRemaining.Int} @ ${This.sellOrders.Get[${idx}].Price.Centi} (Price Delta)", LOG_CRITICAL]
-					}
-				}
-				else
-				{
-					UI:UpdateConsoleIRC["LowestSellOrder: Ignored Order: ${This.sellOrders.Get[${idx}].Name}: ${This.sellOrders.Get[${idx}].QuantityRemaining.Int} @ ${This.sellOrders.Get[${idx}].Price.Centi} (Small order)", LOG_CRITICAL]
-				}
-			}
-			; Fell thru -- no order have the min quantity, so return the lowest
-			UI:UpdateConsoleIRC["LowestSellOrder: Warning: No orders had requested min quantity of ${MinQuantity} and min price of ${MinPrice.Centi}, returning lowest price of all orders", LOG_CRITICAL]
-		}
-
-		; Return the lowest order that is NOT ours AND meets our min price
-		if ${MinPrice} > 0.0
-		{
-			count:Set[${This.sellOrders.Used}]
-			for ( idx:Set[1]; ${idx} <= ${count}; idx:Inc )
-			{
-				if ${This.IsMySellOrder[${This.sellOrders.Get[${idx}].ID}]}
-				{
-					continue
-				}
-
-				if ${This.sellOrders.Get[${idx}].Price} >= ${MinPrice}
-				{
-					return ${This.sellOrders.Get[${idx}].Price}
-				}
-				UI:UpdateConsoleIRC["LowestSellOrder: Ignored Order: ${This.sellOrders.Get[${idx}].Name}: ${This.sellOrders.Get[${idx}].QuantityRemaining.Int} @ ${This.sellOrders.Get[${idx}].Price.Centi} (Price Delta)", LOG_CRITICAL]
-			}
-			UI:UpdateConsoleIRC["LowestSellOrder: Warning: No orders had requested min price of ${MinPrice.Centi}, returning lowest price of all orders", LOG_CRITICAL]
-		}
-
-		; Return the lowest order that is NOT ours
-		count:Set[${This.sellOrders.Used}]
-		for ( idx:Set[1]; ${idx} <= ${count}; idx:Inc )
-		{
-			if ${This.IsMySellOrder[${This.sellOrders.Get[${idx}].ID}]}
-			{
-				continue
-			}
-			return ${This.sellOrders.Get[${idx}].Price}
-		}
-
-		; Fell thru -- no order have the min quantity, so return the lowest
 		return ${This.sellOrders.Get[1].Price}
 	}
 
 	member:float64 HighestBuyOrder()
 	{
-		variable int idx
-
-		for ( idx:Set[${This.buyOrders.Used}]; ${idx} > 0; idx:Dec )
-		{
-			if ${This.IsMyBuyOrder[${This.buyOrders.Get[${idx}].ID}]}
-			{
-				continue
-			}
-			return ${This.buyOrders.Get[${idx}].Price}
-		}
-
-		; Shouldn't get here.  If we do, return the highest entry.
 		return ${This.buyOrders.Get[${This.buyOrders.Used}].Price}
 	}
 
@@ -555,40 +473,6 @@ objectdef obj_Market
 		UI:UpdateConsole["obj_Market: Found ${This.myBuyOrders.Used} active buy orders for ${EVEDB_Items.Name[${typeID}]}."]
 	}
 
-	member:bool IsMySellOrder(int OrderID)
-	{
-		variable int idx
-		variable int count
-
-		count:Set[${This.mySellOrders.Used}]
-		for ( idx:Set[1]; ${idx} <= ${count}; idx:Inc )
-		{
-			if ${This.mySellOrders.Get[${idx}].ID} == ${OrderID}
-			{
-				return TRUE
-			}
-		}
-
-		return FALSE
-	}
-
-	member:bool IsMyBuyOrder(int OrderID)
-	{
-		variable int idx
-		variable int count
-
-		count:Set[${This.myBuyOrders.Used}]
-		for ( idx:Set[1]; ${idx} <= ${count}; idx:Inc )
-		{
-			if ${This.myBuyOrders.Get[${idx}].ID} == ${OrderID}
-			{
-				return TRUE
-			}
-		}
-
-		return FALSE
-	}
-
 	member:int MySellOrderCount()
 	{
 		return ${This.mySellOrders.Used}
@@ -597,152 +481,6 @@ objectdef obj_Market
 	member:int MyBuyOrderCount()
 	{
 		return ${This.myBuyOrders.Used}
-	}
-
-	function UpdateMySellOrders(float64 delta)
-	{
-		variable iterator orderIterator
-
-		This.mySellOrders:GetIterator[orderIterator]
-
-		if ${orderIterator:First(exists)}
-		{
-			do
-			{
-				if ${orderIterator.Value.Price} > ${This.LowestSellOrder}
-				{
-					variable float64 sellPrice
-					sellPrice:Set[${Math.Calc[${This.LowestSellOrder}-${delta}]}]
-					sellPrice:Set[${sellPrice.Precision[2]}]
-
-					if ${sellPrice} < 5000000
-					{
-						UI:UpdateConsole["obj_Market: Adjusting order ${orderIterator.Value.ID} to ${sellPrice}."]
-						orderIterator.Value:Modify[${sellPrice}]
-					}
-					else
-					{
-						UI:UpdateConsole["obj_Market: ERROR: Sell price (${sellPrice}) exceeds limit!!"]
-					}
-				}
-				else
-				{
-					UI:UpdateConsole["obj_Market: Order ${orderIterator.Value.ID} is currently the lowest sell order."]
-				}
-			}
-			while ${orderIterator:Next(exists)}
-		}
-	}
-
-	function UpdateMySellOrdersEx(int TypeID, float64 delta=0.01, float64 MaxChange=481, float64 MaxPrice=5000000, MinQuantity=2)
-	{
-		variable iterator Orders
-		variable float LowestPrice
-
-		This.mySellOrders:GetIterator[Orders]
-		if ${Orders:First(exists)}
-		{
-			do
-			{
-				if !${Orders.Value(exists)}
-				{
-					UI:UpdateConsole["UpdateMySellOrders: ERROR - Found null order", LOG_CRITICAL]
-					continue
-				}
-
-				if ${Orders.Value.TypeID} != ${TypeID}
-				{
-					;UI:UpdateConsole["UpdateMySellOrders: TypeID: ${Orders.Value.TypeID} != ${TypeID}"]
-					continue
-				}
-				if ${Orders.Value.RegionID} != ${Me.RegionID}
-				{
-					UI:UpdateConsole["UpdateMySellOrders: RegionID: ${Orders.Value.RegionID} != ${Me.RegionID}"]
-					continue
-				}
-
-				UI:UpdateConsoleIRC["Processing Sell Order: ${Orders.Value.Name} ${Orders.Value.QuantityRemaining.Int}/${Orders.Value.InitialQuantity} @ ${Orders.Value.Price.Centi}"]
-
-				; Find the lowest price that has both the minquantity AND ourprice-maxchange in price
-				; This is so that if we are at 10, our maxchange is 2, and there are orders for 5, 8, and 10, we will still pricematch the 8, but ignore the 5
-				sellPrice:Set[${Math.Calc[${Orders.Value.Price}-${MaxChange}]}]
-				LowestPrice:Set[${This.LowestSellOrder[${MinQuantity}, ${sellPrice}]}]
-
-				if ${Orders.Value.Price} > ${LowestPrice}
-				{
-					variable float64 sellPrice
-					variable float64 PriceDiff
-					sellPrice:Set[${Math.Calc[${LowestPrice}-${delta}]}]
-					sellPrice:Set[${sellPrice.Precision[2]}]
-					PriceDiff:Set[${Math.Calc[${sellPrice} - ${Orders.Value.Price}]}]
-
-					if ${PriceDiff} > 0
-					{
-						UI:UpdateConsoleIRC["UpdateMySellOrders: Increasing Sell Price: ${Orders.Value.Name} Old: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Increase: ${PriceDiff.Centi}", LOG_CRITICAL]
-						Orders.Value:Modify[${sellPrice}]
-					}
-					else
-					{
-						; Get a positive difference
-						PriceDiff:Set[${Math.Calc[${Orders.Value.Price} - ${sellPrice}]}]
-						if ${sellPrice} > ${MaxPrice}
-						{
-							UI:UpdateConsoleIRC["UpdateMySellOrders: Ignoring Order: ${Orders.Value.Name} Old: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Decrease: ${PriceDiff.Centi}, maximum price (${MaxPrice.Centi}) exceeded", LOG_CRITICAL]
-						}
-						elseif ${PriceDiff} > ${MaxChange}
-						{
-							UI:UpdateConsoleIRC["UpdateMySellOrders: Warning: ${Orders.Value.Name} Current: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Decrease: ${PriceDiff.Centi}, price change limit (${MaxChange.Centi}) exceeded", LOG_CRITICAL]
-						}
-						else
-						{
-							UI:UpdateConsoleIRC["UpdateMySellOrders: Decreasing Price: ${Orders.Value.Name} Old: ${Orders.Value.Price.Centi} New: ${sellPrice.Centi} Decrease: ${PriceDiff.Centi}", LOG_CRITICAL]
-							Orders.Value:Modify[${sellPrice}]
-						}
-					}
-				}
-				else
-				{
-					UI:UpdateConsole["Skipping Order: ${Orders.Value.Name} Price: ${Orders.Value.Price.Centi}, already lowest"]
-				}
-				wait 5
-			}
-			while ${Orders:Next(exists)}
-		}
-	}
-
-	function UpdateMyBuyOrders(float64 delta)
-	{
-		variable iterator orderIterator
-
-		This.myBuyOrders:GetIterator[orderIterator]
-
-		if ${orderIterator:First(exists)}
-		{
-			do
-			{
-				if ${orderIterator.Value.Price} < ${This.HighestBuyOrder}
-				{
-					variable float64 buyPrice
-					buyPrice:Set[${Math.Calc[${This.HighestBuyOrder}+${delta}]}]
-					buyPrice:Set[${buyPrice.Precision[2]}]
-
-					if ${buyPrice} < 5000000
-					{
-						UI:UpdateConsole["obj_Market: Adjusting order ${orderIterator.Value.ID} to ${buyPrice}."]
-						orderIterator.Value:Modify[${buyPrice}]
-					}
-					else
-					{
-						UI:UpdateConsole["obj_Market: ERROR: Buy price (${buyPrice}) exceeds limit!!"]
-					}
-				}
-				else
-				{
-					UI:UpdateConsole["obj_Market: Order ${orderIterator.Value.ID} is currently the highest buy order."]
-				}
-			}
-			while ${orderIterator:Next(exists)}
-		}
 	}
 
 	method DumpSellOrders()
