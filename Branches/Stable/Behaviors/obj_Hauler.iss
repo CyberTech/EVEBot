@@ -35,6 +35,21 @@ objectdef lootable
 	}
 }
 
+objectdef obj_FullMiner
+{
+	variable int FleetMemberID
+	variable int SystemID
+	variable int BeltID
+
+	method Initialize(int arg_FleetMemberID, int arg_SystemID, int arg_BeltID)
+	{
+		FleetMemberID:Set[${arg_FleetMemberID}]
+		SystemID:Set[${arg_SystemID}]
+		BeltID:Set[${arg_BeltID}]
+		UI:UpdateConsole[ "DEBUG: obj_OreHauler:FullMiner: FleetMember: ${FleetMemberID} System: ${SystemID} Belt: ${BeltID}", LOG_DEBUG]
+	}
+}
+
 objectdef obj_Hauler
 {
 	variable string SVN_REVISION = "$Rev$"
@@ -149,12 +164,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
-	/* This variable is set by a remote event.  When it is non-zero, */
-	/* the bot will undock and seek out the fleet memeber.  After the */
-	/* member's cargo has been loaded the bot will zero this out.    */
-	variable int m_fleetMemberID
-	variable int m_SystemID
-	variable int m_BeltID
+	variable collection:obj_FullMiner FullMiners
 
 	/* the bot logic is currently based on a state machine */
 	variable string CurrentState
@@ -172,9 +182,6 @@ objectdef obj_OreHauler inherits obj_Hauler
 
 	method Initialize(string player, string corp)
 	{
-		m_fleetMemberID:Set[-1]
-		m_SystemID:Set[-1]
-		m_BeltID:Set[-1]
 		m_CheckedCargo:Set[FALSE]
 		UI:UpdateConsole["obj_OreHauler: Initialized", LOG_MINOR]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
@@ -224,8 +231,6 @@ objectdef obj_OreHauler inherits obj_Hauler
 	/* A miner's jetcan is full.  Let's go get the ore.  */
 	method MinerFull(string haulParams)
 	{
-		echo "DEBUG: obj_OreHauler:MinerFull... ${haulParams}"
-
 		variable int charID = -1
 		variable int systemID = -1
 		variable int beltID = -1
@@ -234,11 +239,9 @@ objectdef obj_OreHauler inherits obj_Hauler
 		systemID:Set[${haulParams.Token[2,","]}]
 		beltID:Set[${haulParams.Token[3,","]}]
 
-		echo "DEBUG: obj_OreHauler:MinerFull... ${charID} ${systemID} ${beltID}"
+		UI:UpdateConsole["DEBUG: obj_OreHauler:MinerFull... ${charID} ${systemID} ${beltID}", LOG_DEBUG]
 
-		m_fleetMemberID:Set[${charID}]
-		m_SystemID:Set[${systemID}]
-		m_BeltID:Set[${beltID}]
+		FullMiners:Set[${charID},${charID},${systemID},${beltID}]
 	}
 
 	/* this function is called repeatedly by the main loop in EveBot.iss */
@@ -257,7 +260,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 				call Station.Undock
 				if ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}](exists)}
 				{
-					call Ship.WarpToBookMarkName "${Config.Hauler.MiningSystemBookmark}"
+					call Ship.TravelToSystem ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID}
 				}
 				break
 			case HAUL
@@ -387,7 +390,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		switch ${Config.Miner.DeliveryLocationTypeName}
 		{
 			case Station
-				call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
+				call Ship.TravelToSystem ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID}
 				call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
 				break
 			case Hangar Array
@@ -401,7 +404,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 			case XLarge Ship Assembly Array
 				call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
 				call Cargo.TransferOreToXLargeShipAssemblyArray
-				break					
+				break
 			case Jetcan
 				UI:UpdateConsole["ERROR: ORE Delivery location may not be jetcan when in hauler mode - docking"]
 				EVEBot.ReturnToStation:Set[TRUE]
@@ -425,14 +428,20 @@ objectdef obj_OreHauler inherits obj_Hauler
 	/*                                                       */
 	function HaulOnDemand()
 	{
-		if ${m_fleetMemberID} > 0 && ${m_SystemID} == ${_Me.SolarSystemID}
+		while ${CurrentState.Equal[HAUL]} && ${FullMiners.FirstValue(exists)}
 		{
-			call This.WarpToFleetMemberAndLoot ${m_fleetMemberID}
+			UI:UpdateConsole["${FullMiners.Used} cans to get! Picking up can at ${FullMiners.FirstKey}", LOG_DEBUG]
+			if ${FullMiners.CurrentValue.SystemID} == ${_Me.SolarSystemID}
+			{
+				call This.WarpToFleetMemberAndLoot ${FullMiners.CurrentValue.FleetMemberID}
+			}
+			else
+			{
+				FullMiners:Erase[${FullMiners.FirstKey}]
+			}
 		}
-		else
-		{
-			call This.WarpToNextSafeSpot
-		}
+
+		call This.WarpToNextSafeSpot
 	}
 
 	/* 1) Warp to fleet member and loot nearby cans           */
@@ -480,7 +489,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		{
 			if ${Entity[OwnerID,${charID},CategoryID,6].Distance} < WARP_RANGE
 			{
-				UI:UpdateConsole["Fleet member is to far for approach; warping to bounce point"]
+				UI:UpdateConsole["Fleet member is too far for approach; warping to bounce point"]
 				call This.WarpToNextSafeSpot
 			}
 			call Ship.WarpToFleetMember ${charID}
@@ -525,11 +534,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 			}
 		}
 
-		/* TODO: add code to loot and salvage any nearby wrecks */
-
-		m_fleetMemberID:Set[-1]
-		m_SystemID:Set[-1]
-		m_BeltID:Set[-1]
+		FullMiners:Erase[${charID}]
 		;;; call Ship.CloseCargo
 	}
 
