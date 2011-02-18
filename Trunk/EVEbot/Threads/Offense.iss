@@ -493,7 +493,7 @@ variable(global) obj_Offense Offense
 function main()
 {
 	EVEBot.Threads:Insert[${Script.Filename}]
-	while !${EVEBot.Loaded}
+	while ${Script[EVEBot](exists)} && !${EVEBot.Loaded}
 	{
 		waitframe
 	}

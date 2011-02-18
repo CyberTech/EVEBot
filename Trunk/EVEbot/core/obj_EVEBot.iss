@@ -207,16 +207,14 @@ objectdef obj_EVEBot inherits obj_BaseClass
 
 	method Pause(string Reason)
 	{
-		echo "${Time}: Paused: ${Reason}"
-		Logger:Log["Paused: ${Reason}", LOG_CRITICAL]
+		Logger:Log["Paused: ${Reason}", LOG_ECHOTOO]
 		This._Paused:Set[TRUE]
 		Script:Pause
 	}
 
 	method Resume(string Reason)
 	{
-		echo "${Time}: Resumed: ${Reason}"
-		Logger:Log["Resumed: ${Reason}", LOG_CRITICAL]
+		Logger:Log["Resumed: ${Reason}", LOG_ECHOTOO]
 		This._Paused:Set[FALSE]
 		Script:Resume
 	}

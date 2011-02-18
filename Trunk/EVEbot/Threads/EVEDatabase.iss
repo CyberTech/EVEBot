@@ -19,7 +19,7 @@ function main()
 	declarevariable EVEDB_Items obj_EVEDB_Items global
 
 	EVEBot.Threads:Insert[${Script.Filename}]
-	while !${EVEBot.Loaded}
+	while ${Script[EVEBot](exists)} && !${EVEBot.Loaded}
 	{
 		waitframe
 	}

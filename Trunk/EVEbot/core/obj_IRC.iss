@@ -21,9 +21,7 @@ objectdef obj_IRC inherits obj_BaseClass
 		Event[IRC_UnhandledEvent]:AttachAtom[This:IRC_UnhandledEvent]
 
 		PulseTimer:SetIntervals[1.0,1.0]
-		Logger:Log["obj_IRC: Initialized", LOG_MINOR]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-
 		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 #endif
 	}
@@ -262,6 +260,12 @@ objectdef obj_IRC inherits obj_BaseClass
 
 	function Connect()
 	{
+	#if USE_ISXIM
+		Logger:Log["${This.LogPrefix}: Connecting to IRC", LOG_ECHOTOO]
+	#else
+		return
+	#endif
+
 		IRC:Connect[${Config.Common.IRCServer},${Config.Common.IRCUser}]
 
 		wait 10
@@ -295,6 +299,7 @@ objectdef obj_IRC inherits obj_BaseClass
 #endif
 	}
 
+	; This should not be called by users of this object.
 	method SendMessage(string msg)
 	{
 		if ${This.IsConnected}
@@ -305,11 +310,8 @@ objectdef obj_IRC inherits obj_BaseClass
 
 	function Say(string msg)
 	{
-		if ${This.IsConnected}
-		{
-			IRCUser[${Config.Common.IRCUser}].Channel[${Config.Common.IRCChannel}]:Say["${msg}"]
-		}
-		else
+		This:QueueMessage["${msg}"]
+		if !${This.IsConnected}
 		{
 			call This.Connect
 		}
