@@ -63,12 +63,8 @@
 ;#include core/obj_Callback.iss
 
 /* Behavior/Mode Includes */
-#if EVEBOT_DEBUG
-	#includeoptional Behaviors/Testcases/_includes.iss
-#else
-	#includeoptional Behaviors/_includes.iss
-	#includeoptional Modes/_includes.iss
-#endif
+#includeoptional Behaviors/Testcases/_includes.iss
+#includeoptional Behaviors/_includes.iss
 
 function atexit()
 {
@@ -195,22 +191,22 @@ function main()
 	Logger:Log["EVEBot: Starting EVEBot Threads...", LOG_ECHOTOO]
 	call LoadThreads "Thread" "${Script.CurrentDirectory}/\Threads/\*.iss"
 
-#if EVEBOT_DEBUG
-	Logger:Log["EVEBot: Loading debugging behaviors...", LOG_ECHOTOO]
-	#includeoptional Behaviors/Testcases/_variables.iss
-#else
 	Logger:Log["EVEBot: Loading behaviors...", LOG_ECHOTOO]
 	#includeoptional Behaviors/_variables.iss
-	#includeoptional Modes/_variables.iss
-#endif
+	#includeoptional Behaviors/Testcases/_variables.iss
 
 	; Script-Defined Behavior Objects
 	;call LoadBehaviors "Stock" "${Script.CurrentDirectory}/\Behaviors/\*.iss"
 	; Custom Behavior Objects (External directory is assumed to be from an external repository, it's not part of EVEBot)
 	;call LoadBehaviors "External" "${Script.CurrentDirectory}/\Behaviors/\External/\*.iss"
 	
+	if !${EVEBot.BehaviorList.Used}
+	{
+		Logger:Log["ERROR: No Behavioral modules loaded, exiting", LOG_ECHOTOO]
+		EVEBot:EndBot[]
+	}
+
 	Logger:Log["EVEBot: Parsing object versions...", LOG_ECHOTOO]
-	wait 0.5
 	
 	; This is a TimedCommand so that it executes in global scope, so we can get the list of global vars.
 	TimedCommand 0 VariableScope:GetIterator[GlobalVariableIterator]
@@ -239,38 +235,27 @@ function main()
 		}
 	}
 	while ${GlobalVariableIterator:Next(exists)}
-
 	EVEBot:SetVersion[${VersionNum}]
 
 	UI:Reload
 
-#if USE_ISXIM
-	Logger:Log["EVEBot: Connecting to IRC", LOG_ECHOTOO]
 	call ChatIRC.Connect
-#endif
 
-	if !${EVEBot.Behaviors:First(exists)}
-	{
-		Logger:Log["ERROR: No Behavioral modules loaded, exiting", LOG_ECHOTOO]
-		EVEBot:EndBot[]
-	}
+	Turbo 125
 
-	Logger:Log["EVEBot: Loaded ${AppVersion}: Paused - Press Run", LOG_ECHOTOO]
-	Turbo 100
+	; Clear the EVEBotBehaviors globalkeep now that we're done with it
+	TimedCommand 0 VariableScope:DeleteVariable["EVEBotBehaviors"]
 	EVEBot.Loaded:Set[TRUE]
-	Script:Pause
-
-	while ${EVEBot.Paused}
-	{
-		wait 10
-	}
+	EVEBot:Pause["EVEBot: Loaded ${AppVersion}: Paused - Press Run"]
 
 	while TRUE
 	{
-		if !${EVEBot.Disabled}
+		if !${EVEBot.Paused} && \
+			!${EVEBot.Disabled} && \
+			${${Config.Common.Behavior}(exists)}
 		{
 			call ${Config.Common.Behavior}.ProcessState
 		}
-		wait 1
+		wait 5
 	}
 }
