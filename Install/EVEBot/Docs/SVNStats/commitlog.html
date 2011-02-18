@@ -63,11 +63,130 @@
 </ul>
 </div><dl class="attributes">
     <dt>Number of Commits:</dt>
-    <dd>3</dd>
+    <dd>7</dd>
     <dt>Number of Active Developers:</dt>
     <dd>1</dd>
 </dl>
 <dl class="commitlist">
+  <dt><a name="7"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-02-17 23:35</span>
+    <a class="permalink" title="Permalink to this commit" href="#7">#7</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1786</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Log EVEBot:Resume/Pause to console as well<br />
+IRC: Handle all #ifdefs for ISXIM internally.<br />
+Default copy of _ActiveModules.iss, which will be recreated by the top level EVEBot.iss<br />
+Updated copies of _includes.iss and _variables.iss<br />
+Update startup checks for Threads to avoid inf loop if main script crashes during load.
+    </p>
+    <p class="commitdetails"><strong>110</strong> lines of code changed in <span class="files">9 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot</strong>:
+        _ActiveModules.iss&#160;<span class="new">(new&#160;17)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        _includes.iss&#160;<span class="change">(+34&#160;-5)</span>,
+        _variables.iss&#160;<span class="change">(+38&#160;-10)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Behaviors/Testcases</strong>:
+        _includes.iss&#160;<span class="change">(+2&#160;-1)</span>,
+        _variables.iss&#160;<span class="change">(+6&#160;-2)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        EVEDatabase.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        Offense.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_EVEBot.iss&#160;<span class="change">(+2&#160;-4)</span>,
+        obj_IRC.iss&#160;<span class="change">(+9&#160;-7)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="6"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-02-17 23:08</span>
+    <a class="permalink" title="Permalink to this commit" href="#6">#6</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1785</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Add support for running testcase behaviors instead of operational behaviors (-testcases param)<br />
+Add support for disabling behaviors from being loaded<br />
+Add support for not re-creating the behavior files at startup (-nocreate param), in order to preserve disabled options.<br />
+Remove Modes/* includes, as the files have been moved to Behaviors<br />
+
+    </p>
+    <p class="commitdetails"><strong>87</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Install/EVEBot</strong>:
+        EVEBot.iss&#160;<span class="change">(+70&#160;-23)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot</strong>:
+        EVEBot.iss&#160;<span class="change">(+17&#160;-32)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="5"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-02-17 21:31</span>
+    <a class="permalink" title="Permalink to this commit" href="#5">#5</a>
+  </dt>
+  <dd>
+    <p class="comment">
+Consolidating behavioral modules.
+    </p>
+    <p class="commitdetails"><strong>431</strong> lines of code changed in <span class="files">7 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors</strong>:
+        obj_Courier.iss&#160;<span class="new">(new&#160;105)</span>,
+        obj_Scavenger.iss&#160;<span class="new">(new&#160;181)</span>,
+        obj_StealthHauler.iss&#160;<span class="new">(new&#160;145)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/Modes</strong>:
+        _includes.iss&#160;<span class="del">(del)</span>,
+        obj_Courier.iss&#160;<span class="del">(del)</span>,
+        obj_Scavenger.iss&#160;<span class="del">(del)</span>,
+        obj_StealthHauler.iss&#160;<span class="del">(del)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="4"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-02-17 13:01</span>
+    <a class="permalink" title="Permalink to this commit" href="#4">#4</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1782</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Patch from Valerian:<br />
+Fix dock/undock loop when hauler is delivering to a station in the same system<br />
+Use queue for full haulers, so they aren't lost for a miner cycle (till the miner re-calls). Note that this may cause un-necessary pickups if you're using multiple haulers.<br />
+
+    </p>
+    <p class="commitdetails"><strong>35</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>branches/stable/Behaviors</strong>:
+        obj_Hauler.iss&#160;<span class="change">(+35&#160;-30)</span>
+      </li>
+    </ul>
+  </dd>
+
   <dt><a name="3"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2011-02-13 13:15</span>

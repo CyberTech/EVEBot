@@ -18,7 +18,7 @@
     <dt>Deleted Files:</dt>
     <dd>0</dd>
     <dt>Lines of Code:</dt>
-    <dd>2066</dd>
+    <dd>2071</dd>
 </dl>
 <p class="dirtree">
 <a href="dir.html">[root]</a>/<a href="dir_branches.html">branches</a>/<a href="dir_branches_stable.html">stable</a>/<strong>Behaviors</strong><br/>
@@ -45,9 +45,9 @@
     <tbody>
       <tr  class="odd">
         <th><a href="user_cybertech.html" class="author">cybertech</a></th>
-        <td>46 (100.0%)</td>
-        <td>260 (100.0%)</td>
-        <td>5.6</td>
+        <td>47 (100.0%)</td>
+        <td>295 (100.0%)</td>
+        <td>6.2</td>
       </tr>
     </tbody>
   </table>
@@ -56,6 +56,27 @@
 <div class="section">
 <h2>Most Recent Commits</h2>
 <dl class="commitlist">
+  <dt><a name="27"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-02-17 13:01</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1782</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Patch from Valerian:<br />
+Fix dock/undock loop when hauler is delivering to a station in the same system<br />
+Use queue for full haulers, so they aren't lost for a miner cycle (till the miner re-calls). Note that this may cause un-necessary pickups if you're using multiple haulers.<br />
+
+    </p>
+    <p class="commitdetails"><strong>35</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>branches/stable/Behaviors</strong>:
+        obj_Hauler.iss&#160;<span class="change">(+35&#160;-30)</span>
+      </li>
+    </ul>
+  </dd>
+
   <dt><a name="26"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2011-02-10 08:40</span>
