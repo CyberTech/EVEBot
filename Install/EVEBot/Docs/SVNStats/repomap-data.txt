@@ -137,7 +137,7 @@
                 <leaf><label>obj_UplinkManager.iss</label><weight>319</weight><value>0.0</value></leaf>
             </branch>
               <leaf><label>obj_BaseClass.iss</label><weight>187</weight><value>0.0</value></leaf>
-              <leaf><label>obj_LSGUI.iss</label><weight>39</weight><value>0.0</value></leaf>
+              <leaf><label>obj_LSGUI.iss</label><weight>118</weight><value>66.94915254237289</value></leaf>
               <leaf><label>obj_Mutex.iss</label><weight>41</weight><value>0.0</value></leaf>
               <leaf><label>obj_Sound.iss</label><weight>70</weight><value>0.0</value></leaf>
               <leaf><label>obj_Vector.iss</label><weight>127</weight><value>0.0</value></leaf>
@@ -153,17 +153,17 @@
             <leaf><label>obj_Bookmarks.iss</label><weight>96</weight><value>0.0</value></leaf>
             <leaf><label>obj_Callback.iss</label><weight>37</weight><value>0.0</value></leaf>
             <leaf><label>obj_Cargo.iss</label><weight>941</weight><value>0.0</value></leaf>
-            <leaf><label>obj_Configuration.iss</label><weight>849</weight><value>0.0</value></leaf>
+            <leaf><label>obj_Configuration.iss</label><weight>886</weight><value>4.17607223476298</value></leaf>
             <leaf><label>obj_Drones.iss</label><weight>968</weight><value>0.0</value></leaf>
             <leaf><label>obj_EVEBot.iss</label><weight>312</weight><value>-0.641025641025641</value></leaf>
             <leaf><label>obj_EVEBotUI.iss</label><weight>98</weight><value>0.0</value></leaf>
             <leaf><label>obj_EVEDB.iss</label><weight>169</weight><value>0.0</value></leaf>
-            <leaf><label>obj_EntityCache.iss</label><weight>266</weight><value>0.0</value></leaf>
+            <leaf><label>obj_EntityCache.iss</label><weight>263</weight><value>-1.1406844106463878</value></leaf>
             <leaf><label>obj_Fleet.iss</label><weight>136</weight><value>0.0</value></leaf>
             <leaf><label>obj_FleetManager.iss</label><weight>39</weight><value>0.0</value></leaf>
             <leaf><label>obj_IRC.iss</label><weight>319</weight><value>0.6269592476489028</value></leaf>
             <leaf><label>obj_JetCan.iss</label><weight>636</weight><value>0.0</value></leaf>
-            <leaf><label>obj_Logger.iss</label><weight>151</weight><value>0.0</value></leaf>
+            <leaf><label>obj_Logger.iss</label><weight>154</weight><value>1.948051948051948</value></leaf>
             <leaf><label>obj_Market.iss</label><weight>526</weight><value>-50.0</value></leaf>
             <leaf><label>obj_MissionCombat.iss</label><weight>545</weight><value>0.0</value></leaf>
             <leaf><label>obj_MissionCombatConfig.iss</label><weight>11</weight><value>0.0</value></leaf>
@@ -181,7 +181,7 @@
         <branch>
             <label>interface</label>            <leaf><label>evebotgui.xml</label><weight>1730</weight><value>0.0</value></leaf>
         </branch>
-          <leaf><label>EVEBot.iss</label><weight>261</weight><value>-5.747126436781609</value></leaf>
+          <leaf><label>EVEBot.iss</label><weight>262</weight><value>-5.343511450381679</value></leaf>
           <leaf><label>EveBots.iss</label><weight>265</weight><value>0.0</value></leaf>
           <leaf><label>EveCallback.iss</label><weight>45</weight><value>0.0</value></leaf>
           <leaf><label>_ActiveModules.iss</label><weight>17</weight><value>100.0</value></leaf>
