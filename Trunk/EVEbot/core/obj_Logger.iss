@@ -26,14 +26,16 @@ objectdef obj_Logger
 		ChatIRC:QueueMessage["${StatusMessage}"]
 	}
 
-	method LogDebug(string StatusMessage)
+	method LogChat(string StatusMessage, int Level=LOG_STANDARD, int Indent=0)
 	{
-#if EVEBOT_DEBUG
-		variable string msg
-		msg:Set["DEBUG: "]
-		msg:Concat["${StatusMessage}"]
-		This:Log(${msg}, LOG_DEBUG, 0)
-#endif						
+		; TODO - make this log to its own file
+		This:Log["${StatusMessage}", ${Level}, ${Indent}]
+	}
+	
+	method LogPilot(string StatusMessage, int Level=LOG_STANDARD, int Indent=0)
+	{
+		; TODO - make this log to its own file
+		This:Log["${StatusMessage}", ${Level}, ${Indent}]
 	}
 	
 	method Log(string StatusMessage, int Level=LOG_STANDARD, int Indent=0)
@@ -43,6 +45,7 @@ objectdef obj_Logger
 			Level = LOG_STANDARD - Standard, Log and Print to Screen
 			Level = LOG_CRITICAL - Critical, Log, Log to Critical Log, and print to screen
 			Level = LOG_ECHOTOO - Standard, Log, and print to screen
+			Level = LOG_DEBUG - Debug Logging
 		*/
 		variable string msg
 		variable int Count

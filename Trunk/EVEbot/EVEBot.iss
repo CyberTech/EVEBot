@@ -114,13 +114,13 @@ function LoadThreads(string Label, string Path)
 	}
 }
 
-function CreateVariable(string VarName, string VarType, string Scope)
+function CreateVariable(string VarName, string VarType, string Scope, string DefaultValue)
 {
 	variable time StartTime
 	variable time EndTime
 
 	StartTime:Set[${Time.Timestamp}]
-	declarevariable ${VarName} ${VarType} ${Scope}
+	declarevariable ${VarName} ${VarType} ${Scope} ${DefaultValue}
 	EndTime:Set[${Time.Timestamp}]
 
 #if EVEBOT_DEBUG_TIMING
@@ -145,7 +145,7 @@ function main()
 	/* All variables that would normally be defined script scope should be defined global scope to simplify threads */
 
 	/* Script-Defined Support Objects */
-	call CreateVariable LSGUI obj_LSGUI global
+	call CreateVariable LSGUI obj_LSGUI global "Tabs@EVEBot"
 	call CreateVariable Logger obj_Logger global
 	call CreateVariable BaseConfig obj_Configuration_BaseConfig global
 	call CreateVariable Config obj_Configuration global
@@ -237,6 +237,7 @@ function main()
 	while ${GlobalVariableIterator:Next(exists)}
 	EVEBot:SetVersion[${VersionNum}]
 
+	Logger:Log["EVEBot: Completing startup...", LOG_ECHOTOO]
 	UI:Reload
 
 	call ChatIRC.Connect

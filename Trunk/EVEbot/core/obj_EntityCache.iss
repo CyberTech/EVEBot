@@ -66,7 +66,7 @@ objectdef obj_EntityCache inherits obj_BaseClass
 
 	method Initialize()
 	{
-		LogPrefix:Set["EntityCache(${This.ObjectName})"]
+		LogPrefix:Set["${This.ObjectName}"]
 
 		; Common entity searches that don't belong to any particular module
 		This.CacheID_Belts:Set[${This.AddFilter["EntityCache_Belts", GroupID = GROUP_ASTEROIDBELT, 60]}]
@@ -117,13 +117,8 @@ objectdef obj_EntityCache inherits obj_BaseClass
 		Filter is, the filter.
 		DecaySeconds is the # of seconds to keep results around before refreshing them
 	*/
-	member:int AddFilter(string Owner, string Filter, float DecaySeconds=0)
+	member:int AddFilter(string Owner, string Filter, float DecaySeconds=2.0)
 	{
-		if ${DecaySeconds} != ${PulseTimer.MinPulseInterval}
-		{
-			PulseTimer:SetIntervals[${Seconds},${Math.Calc[${Seconds} + (${Seconds}*0.25)]}]
-			Logger:Log["${LogPrefix}: Update frequency is ${PulseTimer.MinPulseInterval.Deci} to ${PulseTimer.MaxPulseInterval.Deci} seconds"]
-		}
 		variable int ID
 		variable int QueryID
 		variable obj_EntityFilter EntityFilter
@@ -142,7 +137,9 @@ objectdef obj_EntityCache inherits obj_BaseClass
 		This.EntityFilters.Get[${ID}].LSFilter:Set[${LSFilter}]
 		This.EntityFilters.Get[${ID}].QueryID:Set[${QueryID}]
 
-		Logger:Log["${LogPrefix}: ${Owner} added entity filter ${ID}: QueryID:${QueryID}:'${Filter}'", LOG_DEBUG]
+		This.PulseTimer:SetIntervals[${DecaySeconds},${Math.Calc[${DecaySeconds} + (${DecaySeconds}*0.25)]}]
+
+		Logger:Log["${LogPrefix}: ${Owner} created query ${ID} @ ${PulseTimer.MinPulseInterval}-${PulseTimer.MaxPulseInterval} seconds: QueryID:${QueryID}:'${Filter}'", LOG_DEBUG]
 
 		return ${ID}
 	}
