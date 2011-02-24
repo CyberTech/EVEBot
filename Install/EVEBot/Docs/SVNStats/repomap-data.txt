@@ -47,6 +47,8 @@
               <leaf><label>test_EVE_GetCachedEntities.iss</label><weight>53</weight><value>0.0</value></leaf>
               <leaf><label>test_Item_GetInsuranceQuotes.iss</label><weight>51</weight><value>0.0</value></leaf>
               <leaf><label>test_Item_Insure.iss</label><weight>48</weight><value>0.0</value></leaf>
+              <leaf><label>test_Me.DoGetAttackers.iss</label><weight>45</weight><value>100.0</value></leaf>
+              <leaf><label>test_Me.DoGetJammers.iss</label><weight>45</weight><value>100.0</value></leaf>
               <leaf><label>test_Me.Fleet_Broadcasts.iss</label><weight>62</weight><value>0.0</value></leaf>
               <leaf><label>test_Me.iss</label><weight>23</weight><value>0.0</value></leaf>
               <leaf><label>test_Me_GetAssets.iss</label><weight>84</weight><value>0.0</value></leaf>
