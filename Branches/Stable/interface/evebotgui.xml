@@ -1075,7 +1075,7 @@
 									<Y>30</Y>
 									<Height>20</Height>
 									<Width>100</Width>
-									<Text>Chain Spawns (while alone)</text>
+									<Text>Also chain while alone</text>
 									<AutoTooltip>If not checked chaining will be suspended if you are alone in a system.</AutoTooltip>
 									<OnLoad>
 										if ${Script[EVEBot].VariableScope.Config.Combat.ChainSolo}
@@ -1087,21 +1087,21 @@
 											Script[EVEBot].VariableScope.Config.Combat:SetChainSolo[${This.Checked}]
 									</OnLeftClick>
 								</checkbox>
-								<checkbox name='cbUseBeltBookmarks'>
+								<checkbox name='cbAnomalyAssistMode'>
 									<X>10</X>
 									<Y>50</Y>
 									<Height>20</Height>
 									<Width>100</Width>
-									<Text>Use Belt Bookmarks</text>
-									<AutoTooltip>Will warp to bookmarks instead of belts.</AutoTooltip>
+									<Text>Use AnomalyAssistMode</text>
+									<AutoTooltip>Keeps the ratter stationary, ignores belts and players</AutoTooltip>
 									<OnLoad>
-										if ${Script[EVEBot].VariableScope.Config.Combat.UseBeltBookmarks}
+										if ${Script[EVEBot].VariableScope.Config.Combat.AnomalyAssistMode}
 										{
 											This:SetChecked
 										}
 									</OnLoad>
 									<OnLeftClick>
-											Script[EVEBot].VariableScope.Config.Combat:SetUseBeltBookmarks[${This.Checked}]
+											Script[EVEBot].VariableScope.Config.Combat:SetAnomalyAssistMode[${This.Checked}]
 									</OnLeftClick>
 								</checkbox>
 								<Text name='lblMinChainBounty'>

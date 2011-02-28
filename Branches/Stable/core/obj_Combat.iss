@@ -342,17 +342,20 @@ objectdef obj_Combat
 
 		; Active shield (or armor) hardeners
 		; If you don't have hardeners this code does nothing.
-		if ${_Me.GetTargetedBy} > 0
+		if (${Config.Combat.AnomalyAssistMode} && ${Me.GetTargets} > 0) || \
+		   (!${Config.Combat.AnomalyAssistMode} && ${Me.GetTargetedBy} > 0)
 		{
-			Ship:Activate_Hardeners[]
-
-			/* We have aggro now, yay! Let's launch some drones */
 			if !${This.Fled} && ${Config.Combat.LaunchCombatDrones} && \
 				${Ship.Drones.DronesInSpace} == 0 && \
 				!${Ship.InWarp}
 			{
 				Ship.Drones:LaunchAll[]
 			}
+		}
+		
+		if ${_Me.GetTargetedBy} > 0
+		{
+			Ship:Activate_Hardeners[]
 		}
 		else
 		{

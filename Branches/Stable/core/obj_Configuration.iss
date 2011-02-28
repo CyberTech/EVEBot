@@ -665,6 +665,7 @@ objectdef obj_Configuration_Combat
 	{
 		BaseConfig.BaseRef:AddSet[${This.SetName}]
 
+		This.CombatRef:AddSetting[AnomalyAssistMode, FALSE]
 		This.CombatRef:AddSetting[MinimumDronesInSpace,3]
 		This.CombatRef:AddSetting[MinimumArmorPct, 35]
 		This.CombatRef:AddSetting[MinimumShieldPct, 25]
@@ -681,6 +682,11 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[Chain Solo, TRUE]
 		This.CombatRef:AddSetting[Use Belt Bookmarks, FALSE]
 		This.CombatRef:AddSetting[Min Chain Bounty, 1500000]
+	}
+
+	member:bool AnomalyAssistMode()
+	{
+		return ${This.CombatRef.FindSetting[AnomalyAssistMode, FALSE]}
 	}
 
 	member:bool RunOnLowAmmo()
@@ -706,6 +712,11 @@ objectdef obj_Configuration_Combat
 	member:bool RunOnLowTank()
 	{
 		return ${This.CombatRef.FindSetting[Run On Low Tank, TRUE]}
+	}
+
+	method SetAnomalyAssistMode(bool value)
+	{
+		This.CombatRef:AddSetting[AnomalyAssistMode, ${value}]
 	}
 
 	method SetRunOnLowTank(bool value)

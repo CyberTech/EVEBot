@@ -117,7 +117,11 @@ objectdef obj_Ratter
 		{
 			Ship:Deactivate_Weapons
 			Ship:Deactivate_Tracking_Computer
-			call Belts.WarpToNextBelt
+			if !${Config.Combat.AnomalyAssistMode}
+			{
+				call Belts.WarpToNextBelt
+			}
+
 			; This will reset target information about the belt
 			; (its needed for chaining)
 			Targets:ResetTargets
@@ -131,7 +135,8 @@ objectdef obj_Ratter
 		variable int Count
 		for (Count:Set[0] ; ${Count}<=30 ; Count:Inc)
 		{
-			if ${Targets.PC} || ${Targets.NPC} || !${Social.IsSafe}
+			if ((${Config.Combat.AnomalyAssistMode} && (${Targets.NPC} || !${Social.IsSafe})) || \
+				(!${Config.Combat.AnomalyAssistMode} && (${Targets.PC} || ${Targets.NPC} || !${Social.IsSafe})))
 			{
 				break
 			}
@@ -146,15 +151,26 @@ objectdef obj_Ratter
 		call This.PlayerCheck
 
 		Count:Set[0]
-		while (${Count:Inc} < 10) && ${Social.IsSafe} && !${Targets.PC} && ${Targets.NPC}
+		if ${Config.Combat.AnomalyAssistMode}
 		{
-			wait 10
+			while (${Count:Inc} < 10) && ${Social.IsSafe} && ${Targets.NPC}
+			{
+				wait 10
+			}
+		}
+		else
+		{
+			while (${Count:Inc} < 10) && ${Social.IsSafe} && !${Targets.PC} && ${Targets.NPC}
+			{
+				wait 10
+			}
 		}
 	}
 
 	function PlayerCheck()
 	{
-		if !${Targets.PC} && ${Targets.NPC}
+		if ((${Config.Combat.AnomalyAssistMode} && ${Targets.NPC}) || \
+			(!${Config.Combat.AnomalyAssistMode} && (!${Targets.PC} || ${Targets.NPC})))
 		{
 			UI:UpdateConsole["PlayerCheck - Fight"]
 			This.CurrentState:Set["FIGHT"]
