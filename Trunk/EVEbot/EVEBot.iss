@@ -42,7 +42,7 @@
 #include core/obj_Station.iss
 #include core/obj_Cargo.iss
 #include core/obj_EVEBotUI.iss
-#include core/obj_Bookmarks.iss
+#include core/obj_TempBookmarks.iss
 #include core/obj_Jetcan.iss
 #include core/obj_Social.iss
 #include core/obj_Fleet.iss
@@ -164,7 +164,7 @@ function main()
 	call CreateVariable Station obj_Station global
 	call CreateVariable Cargo obj_Cargo global
 	;call CreateVariable Skills obj_Skills global
-	call CreateVariable Bookmarks obj_Bookmarks global
+	call CreateVariable TempBookmarks obj_TempBookmarks global
 	call CreateVariable JetCan obj_JetCan global
 	call CreateVariable CorpHangarArray obj_CorpHangerArray global
 	call CreateVariable AssemblyArray obj_AssemblyArray global

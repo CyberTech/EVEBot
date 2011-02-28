@@ -7,7 +7,7 @@
 	
 */
 
-objectdef obj_Bookmarks
+objectdef obj_TempBookmarks
 {
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
@@ -17,7 +17,7 @@ objectdef obj_Bookmarks
 		
 	method Initialize()
 	{
-		Logger:Log["obj_Bookmarks: Initialized", LOG_MINOR]
+		Logger:Log["obj_TempBookmarks: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
