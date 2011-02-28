@@ -170,7 +170,7 @@ objectdef obj_Ratter
 	function PlayerCheck()
 	{
 		if ((${Config.Combat.AnomalyAssistMode} && ${Targets.NPC}) || \
-			(!${Config.Combat.AnomalyAssistMode} && (!${Targets.PC} || ${Targets.NPC})))
+			(!${Config.Combat.AnomalyAssistMode} && (!${Targets.PC} && ${Targets.NPC})))
 		{
 			UI:UpdateConsole["PlayerCheck - Fight"]
 			This.CurrentState:Set["FIGHT"]
