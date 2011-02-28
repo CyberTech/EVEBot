@@ -63,11 +63,83 @@
 </ul>
 </div><dl class="attributes">
     <dt>Number of Commits:</dt>
-    <dd>11</dd>
+    <dd>14</dd>
     <dt>Number of Active Developers:</dt>
     <dd>1</dd>
 </dl>
 <dl class="commitlist">
+  <dt><a name="14"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-02-28 00:20</span>
+    <a class="permalink" title="Permalink to this commit" href="#14">#14</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1806</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Rename obj_Bookmarks to obj_CustomBookmarks
+    </p>
+    <p class="commitdetails"><strong>96</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Bookmarks.iss&#160;<span class="del">(del)</span>,
+        obj_CustomBookmarks.iss&#160;<span class="new">(new&#160;96)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="13"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-02-27 18:20</span>
+    <a class="permalink" title="Permalink to this commit" href="#13">#13</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1805</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Don't log the shit we're ignoring, there's too much of it in anoms.
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>branches/stable/core</strong>:
+        obj_Targets.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="12"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-02-27 18:03</span>
+    <a class="permalink" title="Permalink to this commit" href="#12">#12</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1804</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Remove check for armor/hull on drone recall<br />
+Remove belt bookmark checkbox on ratter mode.<br />
+Add Use AnomalyAssistMode for ratter mode (See checkbox on combat tab)<br />
+ - Keeps bot stationary. Ignores players, does not warp to belts. Intended to assist a real player.<br />
+Change "Chain Spawns (while alone)" to "Also chain while alone" on UI
+    </p>
+    <p class="commitdetails"><strong>46</strong> lines of code changed in <span class="files">5 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>branches/stable/Behaviors</strong>:
+        obj_Ratter.iss&#160;<span class="change">(+21&#160;-5)</span>
+      </li>
+      <li>
+        <strong>branches/stable/core</strong>:
+        obj_Combat.iss&#160;<span class="change">(+7&#160;-4)</span>,
+        obj_Configuration.iss&#160;<span class="change">(+11)</span>,
+        obj_Drones.iss&#160;<span class="change">(+1&#160;-2)</span>
+      </li>
+      <li>
+        <strong>branches/stable/interface</strong>:
+        evebotgui.xml&#160;<span class="change">(+6&#160;-6)</span>
+      </li>
+    </ul>
+  </dd>
+
   <dt><a name="11"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2011-02-23 11:05</span>
