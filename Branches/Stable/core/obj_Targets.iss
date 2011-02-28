@@ -682,7 +682,7 @@ objectdef obj_Targets
 				case GROUP_LARGECOLLIDABLEOBJECT
 				case GROUP_LARGECOLLIDABLESHIP
 				case GROUP_LARGECOLLIDABLESTRUCTURE
-					UI:UpdateConsole["DEBUG: Ignoring entity ${tgtIterator.Value.Group} (${tgtIterator.Value.GroupID})"]
+					;UI:UpdateConsole["DEBUG: Ignoring entity ${tgtIterator.Value.Group} (${tgtIterator.Value.GroupID})"]
 					continue
 					break
 				default
