@@ -2,22 +2,24 @@
 	Bookmark class
 
 	Base class for bookmark lists
+	
+	Users of this class are expected to overload Reset so that it calls This[parent]:Reset with the correct parameters.
 
 	-- CyberTech
 
 */
 
-objectdef obj_Bookmark
+objectdef obj_Bookmarks inherits obj_BaseClass
 {
 	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-	variable string LogPrefix
 
 	variable index:bookmark Bookmarks
 	variable iterator BookmarkIterator
 	variable string BookmarkPrefix
 	variable bool CheckSystemID
 
+	variable set RecentlyUsed
+	
 	method Reset(string _BookmarkPrefix = "", bool _CheckSystemID = TRUE)
 	{
 		variable int Pos
@@ -27,69 +29,73 @@ objectdef obj_Bookmark
 			This.BookmarkPrefix:Set[${_BookmarkPrefix}]
 			This.CheckSystemID:Set[${_CheckSystemID}]
 		}
-
-		Bookmarks:Clear
-		EVE:DoGetBookmarks[Bookmarks]
-		Bookmarks:GetIterator[BookmarkIterator]
-#if EVEBOT_DEBUG
-		Logger:Log["${LogPrefix}: Found ${Bookmarks.Used} total bookmarks, filtering by prefix '${This.BookmarkPrefix}'", LOG_DEBUG]
-#endif
-		Used:Set[${Bookmarks.Used}]
-		for(Pos:Set[1]; ${Pos} <= ${Used}; Pos:Inc)
+		else
 		{
-			if (${This.CheckSystemID} && ${Bookmarks[${Pos}].SolarSystemID} != ${Me.SolarSystemID})
+			Logger:Log["${LogPrefix}:Reset: ERROR: Called with no prefix, did someone forget to override the inherited function from obj_Bookmark?", LOG_CRITICAL]
+			return
+		}	
+
+		This.RecentlyUsed:Clear
+		This.Bookmarks:Clear
+		
+		; TODO - Enhance this in ISXEVE using query syntax
+		EVE:DoGetBookmarks[Bookmarks]
+		This.Bookmarks:GetIterator[BookmarkIterator]
+		Logger:Log["${LogPrefix}: Found ${This.Bookmarks.Used} total bookmarks, filtering by prefix '${This.BookmarkPrefix}'", LOG_DEBUG]
+
+		; We iterate this backwards to invalidating our index during removal
+		Used:Set[${This.Bookmarks.Used}]
+		for(Pos:Set[${Used}]; ${Pos} >= 1; Pos:Dec)
+		{
+			if (${This.CheckSystemID} && ${This.Bookmarks[${Pos}].SolarSystemID} != ${Me.SolarSystemID})
 			{
-#if EVEBOT_DEBUG
-				Logger:Log["${LogPrefix}: Ignoring Out-of-System Bookmark: ${Bookmarks[${Pos}].Label}", LOG_DEBUG]
-#endif
+				Logger:Log["${LogPrefix}: Ignoring Out-of-System Bookmark: ${This.Bookmarks[${Pos}].Label}", LOG_DEBUG]
 				Bookmarks:Remove[${Pos}]
 				continue
 			}
 
-			if ${Bookmarks[${Pos}].Label.Left[${This.BookmarkPrefix.Length}].NotEqual["${This.BookmarkPrefix}"]}
+			if ${This.Bookmarks[${Pos}].Label.Left[${This.BookmarkPrefix.Length}].NotEqual["${This.BookmarkPrefix}"]}
 			{
-#if EVEBOT_DEBUG
-				Logger:Log["${LogPrefix}: Ignoring Bookmark: ${Bookmarks[${Pos}].Label}", LOG_DEBUG]
-#endif
-				Bookmarks:Remove[${Pos}]
+				Logger:Log["${LogPrefix}: Ignoring Bookmark: ${This.Bookmarks[${Pos}].Label}", LOG_DEBUG]
+				This.Bookmarks:Remove[${Pos}]
 				continue
 			}
 		}
-		Bookmarks:Collapse
+		
+		This.Bookmarks:Collapse
 		BookmarkIterator:First
 	}
 
 	method ValidateList()
 	{
-		if ${Bookmarks.Used} == 0
+		if ${This.Bookmarks.Used} == 0
 		{
 			This:Reset
 		}
 
-		if ${Bookmarks.Get[1](exists)} && ${Bookmarks.Get[1].SolarSystemID} != ${Me.SolarSystemID}
+; TODO - need another method of resetting this in the case where the caller didn't want to check systemid for the list - CT
+		if ${This.Bookmarks.Get[1](exists)} && ${This.Bookmarks.Get[1].SolarSystemID} != ${Me.SolarSystemID}
 		{
-#if EVEBOT_DEBUG
 			Logger:Log["${LogPrefix}: System changed, resetting", LOG_DEBUG]
-#endif
 			This:Reset
 		}
 	}
 
 	member:int Count()
 	{
-		return ${Bookmarks.Used}
+		return ${This.Bookmarks.Used}
 	}
 
 	method Next()
 	{
-		if ${beltIndex.Used} == 0
+		if ${This.Bookmarks.Used} == 0
 		{
-			This:ResetBeltList
+			This:Reset
 		}
 
-		if !${beltIterator:Next(exists)}
+		if !${BookmarkIterator:Next(exists)}
 		{
-			beltIterator:First
+			BookmarkIterator:First
 		}
 	}
 
@@ -97,10 +103,12 @@ objectdef obj_Bookmark
 	{
 		variable iterator TempIterator
 #if EVEBOT_DEBUG
-		;Logger:Log["${LogPrefix} DEBUG: obj_Safespots.IsAtSafespot: ME_X = ${Me.ToEntity.X}", LOG_DEBUG]
-		;Logger:Log["${LogPrefix} DEBUG: obj_Safespots.IsAtSafespot: ME_Y = ${Me.ToEntity.Y}", LOG_DEBUG]
-		;Logger:Log["${LogPrefix} DEBUG: obj_Safespots.IsAtSafespot: ME_Z = ${Me.ToEntity.Z}", LOG_DEBUG]
+		;Logger:Log["${LogPrefix} AtBookmark:", LOG_DEBUG]
+		;Logger:Log["${LogPrefix}: ME_X = ${Me.ToEntity.X}", LOG_DEBUG]
+		;Logger:Log["${LogPrefix}: ME_Y = ${Me.ToEntity.Y}", LOG_DEBUG]
+		;Logger:Log["${LogPrefix}: ME_Z = ${Me.ToEntity.Z}", LOG_DEBUG]
 #endif
+; todo - check to see if we're INSIDE the station that was bookmarked, as well.
 
 		Bookmarks:GetIterator[TempIterator]
 		if ${TempIterator:First(exists)}
@@ -116,9 +124,9 @@ objectdef obj_Bookmark
 				;Logger:Log["${LogPrefix} DEBUG: AtBookmark:  DIST = ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${TempIterator.Value.X}, ${TempIterator.Value.Y}, ${TempIterator.Value.Z}]}", LOG_DEBUG]
 #endif
 				; Are we within warp range of the bookmark?
-				if ${TempIterator.Value.ItemID} > -1
+				if ${This.DistanceTo} > -1
 				{
-					Logger:Log["DEBUG: obj_Safespots.IsAtSafespot: ItemID = ${TempIterator.Value.ItemID}", LOG_DEBUG]
+					Logger:Log["${LogPrefix}: ItemID = ${TempIterator.Value.ItemID}", LOG_DEBUG]
 					if ${Me.ToEntity.DistanceTo[${TempIterator.Value.ItemID}]} < WARP_RANGE
 					{
 						return TRUE
@@ -135,7 +143,7 @@ objectdef obj_Bookmark
 		return FALSE
 	}
 
-	function WarpToNext()
+	method WarpToNext()
 	{
 		This:ValidateList[]
 
@@ -146,31 +154,76 @@ objectdef obj_Bookmark
 
 		if ${BookmarkIterator.Value(exists)}
 		{
-			call Ship.WarpToBookMark ${BookmarkIterator.Value.ID}
+			Logger:Log["${LogPrefix}:WarpToNext: ${BookmarkIterator.Value.Label}", LOG_DEBUG]
+			Navigator:FlyToBookmark["${BookmarkIterator.Value.ID}"]
+			This.RecentlyUsed:Add[${BookmarkIterator.Value.ID}]
 		}
 		else
 		{
-			Logger:Log["${LogPrefix} ERROR: WarpToNext found an invalid bookmark!"]
+			Logger:Log["${LogPrefix}:WarpToNext: Invalid bookmark!"]
 		}
 	}
 
-	; TODO: MoveToRandomBeltBookMark ->
-	function WarpToRandom()
+	method WarpToRandom()
 	{
-		variable int RandomBelt
+		This:ValidateList[]
 
-		if ${beltIndex.Used} > 0
+		if !${This.Bookmarks.Used}
 		{
-			RandomBelt:Set[${Math.Rand[${Math.Calc[${beltIndex.Used}-1]}]:Inc[1]}]
-			while ${RandomBelt} > 0
+			Logger:Log["${LogPrefix}:WarpToRandom: No bookmarks found", LOG_DEBUG]
+			return
+		}
+	
+		variable int Tries = 0
+		variable set TestedBookmarks
+
+		BookmarkIterator:First
+		do
+		{
+			TestedBookmarkPositions:Add[${BookmarkIterator.Value.ID}]
+		}
+		while ${BookmarkIterator:Next(exists)}
+
+		BookmarkIterator:Jump[${Math.Rand[${This.Bookmarks.Used:Dec}]:Inc[1]}]
+		TestedBookmarkPositions:Remove[${BookmarkIterator.Value.ID}]
+		
+		while !${BookmarkIterator.Value(exists)} || \
+				${This.RecentlyUsed.Contains[${BookmarkIterator.Value.ID}]} || \
+				${This.DistanceTo} < WARP_RANGE
+		{
+			if ${TestedBookmarkPositions.Used} == 0
 			{
-				This:Next
+				Logger:Log["${LogPrefix}:WarpToRandom: Exhausted bookmark list in WarpToRandom, failing", LOG_DEBUG]
+				This:Reset
+				return
 			}
 
-#if EVEBOT_DEBUG
-			Logger:Log["${LogPrefix}: MoveToRandomBeltBookMark: call Ship.WarpToBookMark ${beltIterator.Value.ID}"]
-#endif
-			call Ship.WarpToBookMark ${beltIndex[${RandomBelt}].ID}
+			BookmarkIterator:Jump[${Math.Rand[${This.Bookmarks.Used:Dec}]:Inc[1]}]
+			TestedBookmarkPositions:Remove[${BookmarkIterator.Value.ID}]
 		}
+
+		Logger:Log["${LogPrefix}:WarpToRandom: ${BookmarkIterator.Value.Label}", LOG_DEBUG]
+		Navigator:FlyToBookmarkID["${BookmarkIterator.Value.ID}"]
+
+		; TODO - Enhance to store only the x most recently used bookmarks. Ensure that X isn't ever higher than Bookmarks/2 - CyberTech
+		This.RecentlyUsed:Add[${BookmarkIterator.Value.ID}]
+	}
+	
+	; TODO - Move this to the bookmark class once its created.
+	member:float64 DistanceTo()
+	{
+		if ${BookmarkIterator.Value.ItemID} > -1 && ${Me.ToEntity(exists)}
+		{
+			return ${Me.ToEntity.DistanceTo[${BookmarkIterator.Value.ItemID}]}
+		}
+		elseif ${BookmarkIterator.Value.ToEntity(exists)}
+		{
+			return ${BookmarkIterator.Value.ToEntity.Distance}
+		}
+		else 
+		{
+			return ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${BookmarkIterator.Value.X}, ${BookmarkIterator.Value.Y}, ${BookmarkIterator.Value.Z}]}
+		}
+		
 	}
 }

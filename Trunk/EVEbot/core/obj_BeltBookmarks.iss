@@ -7,7 +7,7 @@
 
 */
 
-objectdef obj_BeltBookmarks inherits obj_Bookmark
+objectdef obj_BeltBookmarks inherits obj_Bookmarks
 {
 	variable string SVN_REVISION = "$Rev$"
 	variable set EmptyBelts
@@ -28,11 +28,11 @@ objectdef obj_BeltBookmarks inherits obj_Bookmark
 		; TODO - Check mode, use ratter prefix, hauler prefix, etc.
 		if ${Config.Miner.IceMining}
 		{
-			This[parent]:Reset["${Config.Labels.IceBeltPrefix}"]
+			This[parent]:Reset["${Config.Labels.IceBeltPrefix}", TRUE]
 		}
 		else
 		{
-			This[parent]:Reset["${Config.Labels.OreBeltPrefix}"]
+			This[parent]:Reset["${Config.Labels.OreBeltPrefix}", TRUE]
 		}
 		Logger:Log["${LogPrefix}: Found ${Bookmarks.Used} bookmarks in this system"]
 	}
@@ -53,10 +53,5 @@ objectdef obj_BeltBookmarks inherits obj_Bookmark
 	{
 		EmptyBelts:Add["${BeltName}"]
 		Logger:Log["${LogPrefix}: Excluding empty belt ${BeltName}"]
-	}
-
-	member:bool AtBelt()
-	{
-		return ${This[parent].AtBookmark}
 	}
 }
