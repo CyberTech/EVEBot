@@ -60,7 +60,7 @@ objectdef obj_Assets
         {
             do
             {
-                if ${stationID} == ${AnIterator.Value}
+                if ${stationID.Equal[${AnIterator.Value}]}
                 {
                     ;;;UI:UpdateConsole["DEBUG: Assets.IsIgnored returning TRUE."]
                     return TRUE

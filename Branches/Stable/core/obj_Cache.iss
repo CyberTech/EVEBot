@@ -66,7 +66,7 @@ objectdef obj_Cache
 			}
 
 			This.NextPulseHalfSec:Set[${This.RunTime}]
-    		This.NextPulseHalfSec:Inc[0.5]
+			This.NextPulseHalfSec:Inc[0.5]
 		}
 
 		/* Process ObjectList every 1 second */

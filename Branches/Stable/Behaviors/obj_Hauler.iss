@@ -327,6 +327,10 @@ objectdef obj_OreHauler inherits obj_Hauler
 				{
 					/* Move only what will fit, minus 1 to account for CCP rounding errors. */
 					QuantityToMove:Set[${Ship.CargoFreeSpace} / ${Cargo.Value.Volume} - 1]
+					if ${QuantityToMove} <= 0
+					{
+						This.PickupFailed:Set[TRUE]
+					}
 				}
 				else
 				{
@@ -339,10 +343,6 @@ objectdef obj_OreHauler inherits obj_Hauler
 				{
 					Cargo.Value:MoveTo[MyShip,${QuantityToMove}]
 					wait 30
-				}
-				else
-				{
-					This.PickupFailed:Set[TRUE]
 				}
 
 				if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
@@ -629,7 +629,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 
 		while ${idx} > 0
 		{
-			if ${cans.Get[${idx}].Owner.CharID} == ${id}
+			if ${id.Equal[${cans.Get[${idx}].Owner.CharID}]}
 			{
 				Entities:Queue[${cans.Get[${idx}]}]
 			}

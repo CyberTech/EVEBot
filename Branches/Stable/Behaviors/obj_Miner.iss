@@ -431,7 +431,7 @@ objectdef obj_Miner
 					{
 
 						Target.Value:MakeActiveTarget
-						while ${Target.Value.ID} != ${Me.ActiveTarget.ID}
+						while !${Target.Value.ID.Equal[${Me.ActiveTarget.ID}]}
 						{
 							wait 5
 						}

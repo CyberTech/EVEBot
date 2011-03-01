@@ -38,7 +38,7 @@ objectdef obj_Autopilot
 	*/
 	method SetDestination(int64 id)
 	{
-		if ${This.Destination} == ${id}
+		if ${id.Equal[${This.Destination}]}
 		{
 			return
 		}

@@ -322,7 +322,7 @@ objectdef obj_Freighter
 	        if ${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity(exists)}
 	        {	/* Unfortunately you cannot get the station ID cooresponding to the book- */
 	        	/* mark until you are in the same system as the bookmark destination.     */
-	        	if ${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity.ID} == ${nextStationID}
+	        	if ${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity.ID.Equal[${nextStationID}]}
 	        	{
                		nextStationID:Set[0]
 	        	}
