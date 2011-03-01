@@ -392,7 +392,7 @@ objectdef obj_Configuration_Miner
 	Define_ConfigItem(string, MinerType, Ore)
 	Define_ConfigItem(string, DeliveryLocationType, STATION)
 	Define_ConfigItem(string, DeliveryLocation, NOTSET)
-	Define_ConfigItem(bool, UseFieldBookmarks, TRUE)
+	Define_ConfigItem(bool, UseBeltBookmarks, TRUE)
 	Define_ConfigItem(bool, StripMine, FALSE)
 	Define_ConfigItem(float, MiningRangeMultipler, 2.2)
 	Define_ConfigItem(bool, StripMine, FALSE)
