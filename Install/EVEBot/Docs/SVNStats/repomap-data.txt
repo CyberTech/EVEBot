@@ -75,6 +75,7 @@
               <label>Testcases</label>
               <leaf><label>_includes.iss</label><weight>2</weight><value>50.0</value></leaf>
               <leaf><label>_variables.iss</label><weight>7</weight><value>57.14285714285714</value></leaf>
+              <leaf><label>obj_BeltRunner.iss</label><weight>112</weight><value>100.0</value></leaf>
           </branch>
             <leaf><label>_includes.iss</label><weight>34</weight><value>85.29411764705883</value></leaf>
             <leaf><label>_variables.iss</label><weight>42</weight><value>66.66666666666666</value></leaf>
@@ -112,7 +113,7 @@
 
         <branch>
             <label>Threads</label>
-            <leaf><label>Defense.iss</label><weight>432</weight><value>0.0</value></leaf>
+            <leaf><label>Defense.iss</label><weight>437</weight><value>1.1441647597254003</value></leaf>
             <leaf><label>EVEDatabase.iss</label><weight>31</weight><value>0.0</value></leaf>
             <leaf><label>Navigator.iss</label><weight>223</weight><value>0.0</value></leaf>
             <leaf><label>Offense.iss</label><weight>505</weight><value>0.0</value></leaf>
@@ -149,14 +150,13 @@
             <leaf><label>obj_Assets.iss</label><weight>123</weight><value>0.0</value></leaf>
             <leaf><label>obj_Asteroids.iss</label><weight>400</weight><value>0.0</value></leaf>
             <leaf><label>obj_Autopilot.iss</label><weight>97</weight><value>0.0</value></leaf>
-            <leaf><label>obj_BeltBookmarks.iss</label><weight>62</weight><value>0.0</value></leaf>
+            <leaf><label>obj_BeltBookmarks.iss</label><weight>57</weight><value>-8.771929824561402</value></leaf>
             <leaf><label>obj_Belts.iss</label><weight>143</weight><value>0.0</value></leaf>
-            <leaf><label>obj_Bookmark.iss</label><weight>176</weight><value>0.0</value></leaf>
+            <leaf><label>obj_Bookmark.iss</label><weight>229</weight><value>23.144104803493452</value></leaf>
             <leaf><label>obj_Bookmarks.iss</label><weight>96</weight><value>-100.0</value></leaf>
             <leaf><label>obj_Callback.iss</label><weight>37</weight><value>0.0</value></leaf>
-            <leaf><label>obj_Cargo.iss</label><weight>941</weight><value>0.0</value></leaf>
+            <leaf><label>obj_Cargo.iss</label><weight>953</weight><value>1.2591815320041972</value></leaf>
             <leaf><label>obj_Configuration.iss</label><weight>886</weight><value>4.17607223476298</value></leaf>
-            <leaf><label>obj_CustomBookmarks.iss</label><weight>96</weight><value>100.0</value></leaf>
             <leaf><label>obj_Drones.iss</label><weight>968</weight><value>0.0</value></leaf>
             <leaf><label>obj_EVEBot.iss</label><weight>312</weight><value>-0.641025641025641</value></leaf>
             <leaf><label>obj_EVEBotUI.iss</label><weight>98</weight><value>0.0</value></leaf>
@@ -174,15 +174,18 @@
             <leaf><label>obj_MissionParser.iss</label><weight>167</weight><value>0.0</value></leaf>
             <leaf><label>obj_Missions.iss</label><weight>1242</weight><value>0.0</value></leaf>
             <leaf><label>obj_Safespots.iss</label><weight>42</weight><value>0.0</value></leaf>
-            <leaf><label>obj_Ship.iss</label><weight>2367</weight><value>0.0</value></leaf>
+            <leaf><label>obj_Ship.iss</label><weight>1773</weight><value>-33.50253807106599</value></leaf>
             <leaf><label>obj_Skills.iss</label><weight>413</weight><value>0.0</value></leaf>
             <leaf><label>obj_Social.iss</label><weight>441</weight><value>0.0</value></leaf>
             <leaf><label>obj_Station.iss</label><weight>335</weight><value>0.0</value></leaf>
-            <leaf><label>obj_Targets.iss</label><weight>725</weight><value>0.0</value></leaf>
+            <leaf><label>obj_Targets.iss</label><weight>731</weight><value>0.8207934336525308</value></leaf>
+            <leaf><label>obj_TempBookmarks.iss</label><weight>96</weight><value>100.0</value></leaf>
         </branch>
 
         <branch>
-            <label>interface</label>            <leaf><label>evebotgui.xml</label><weight>1730</weight><value>0.0</value></leaf>
+            <label>interface</label>            <leaf><label>EVEBot.xml</label><weight>1730</weight><value>100.0</value></leaf>
+            <leaf><label>EVESkin.xml</label><weight>793</weight><value>100.0</value></leaf>
+            <leaf><label>evebotgui.xml</label><weight>1614</weight><value>-100.0</value></leaf>
         </branch>
           <leaf><label>EVEBot.iss</label><weight>262</weight><value>-5.343511450381679</value></leaf>
           <leaf><label>EveBots.iss</label><weight>265</weight><value>0.0</value></leaf>

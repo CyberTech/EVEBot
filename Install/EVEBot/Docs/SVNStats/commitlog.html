@@ -63,11 +63,279 @@
 </ul>
 </div><dl class="attributes">
     <dt>Number of Commits:</dt>
-    <dd>14</dd>
+    <dd>26</dd>
     <dt>Number of Active Developers:</dt>
     <dd>1</dd>
 </dl>
 <dl class="commitlist">
+  <dt><a name="26"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-02-28 23:47</span>
+    <a class="permalink" title="Permalink to this commit" href="#26">#26</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1821</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Fix too-liberal search and replace<br />
+Reformat for indentation and tabs.
+    </p>
+    <p class="commitdetails"><strong>786</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/interface</strong>:
+        EVESkin.xml&#160;<span class="change">(+786&#160;-786)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="25"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-02-28 23:06</span>
+    <a class="permalink" title="Permalink to this commit" href="#25">#25</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1820</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Rename UI file.
+    </p>
+    <p class="commitdetails"><strong>1730</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/interface</strong>:
+        EVEBot.xml&#160;<span class="new">(new&#160;1730)</span>,
+        evebotgui.xml&#160;<span class="del">(del)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="24"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-02-28 23:04</span>
+    <a class="permalink" title="Permalink to this commit" href="#24">#24</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1819</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+New EVEBot UI Skin
+    </p>
+    <p class="commitdetails"><strong>793</strong> lines of code changed in <span class="files">7 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/interface</strong>:
+        EVESkin.xml&#160;<span class="new">(new&#160;793)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/interface/Images</strong>:
+        EVESkin.png&#160;<span class="new">(new)</span>,
+        checkboxtexture.png&#160;<span class="new">(new)</span>,
+        checkboxtexturechecked.png&#160;<span class="new">(new)</span>,
+        checkboxtexturecheckedhover.png&#160;<span class="new">(new)</span>,
+        checkboxtexturehover.png&#160;<span class="new">(new)</span>,
+        checkboxtexturepressed.png&#160;<span class="new">(new)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="23"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-02-28 22:55</span>
+    <a class="permalink" title="Permalink to this commit" href="#23">#23</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1818</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+:Click -&gt; Activate/Deactivate<br />
+obj_Ship inherit baseclass, standardize Initialize(), convert to PulseTimer with 2.0-3.0 second delay<br />
+Fix typo in GetTurretBaseOptimal cached result return<br />
+Add Ship.HasTractorBeams<br />
+Add Ship:PrintModuleList to refactor duplicated code from UpdateModuleList<br />
+Remove Ship:StopShip, Ship.Approach, Ship.WarpToID, Ship.WarpToFleetMember, Ship.WarpToBookMarkName, Ship.ActivateAutoPilot, Ship.TravelToSystem<br />
+Remove Ship.WarpToBookMark, Ship.WarpPrepare, Ship.InWarp, Ship.WarpEntered, Ship.WarpWait<br />
+Change Ship.IsCloaked to check InSpace<br />
+Reformatting in ActivateShip<br />
+
+    </p>
+    <p class="commitdetails"><strong>68</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Ship.iss&#160;<span class="change">(+68&#160;-662)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="22"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-02-28 21:49</span>
+    <a class="permalink" title="Permalink to this commit" href="#22">#22</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1817</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+obj_Safespots: Update for obj_Bookmarks rename<br />
+obj_Targets: Update for new Targeting module syntax<br />
+obj_Targets: Standardize Initialize(), inherit baseclass<br />
+Defense: Wig out if flee is called while in station.<br />
+Defense: Max interval 0.5-1.0 (down from 1.2)<br />
+Offense: Use :Activate/Deactivate rather than :Click<br />
+obj_Cargo: Notify UplinkManager with can count and current usage levels when transferring
+    </p>
+    <p class="commitdetails"><strong>37</strong> lines of code changed in <span class="files">5 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Threads</strong>:
+        Defense.iss&#160;<span class="change">(+6&#160;-1)</span>,
+        Offense.iss&#160;<span class="change">(+6&#160;-6)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Cargo.iss&#160;<span class="change">(+12)</span>,
+        obj_Safespots.iss&#160;<span class="change">(+3&#160;-3)</span>,
+        obj_Targets.iss&#160;<span class="change">(+10&#160;-4)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="21"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-02-28 21:30</span>
+    <a class="permalink" title="Permalink to this commit" href="#21">#21</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1816</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Rename Config.Miner.UseFieldBookmarks -&gt; UseBeltBookmarks
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_Configuration.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="20"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-02-28 21:25</span>
+    <a class="permalink" title="Permalink to this commit" href="#20">#20</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1815</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Adapt to pulsetimer Increase-&gt;Extend rename.
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core/Lib/UplinkManager</strong>:
+        obj_UplinkManager.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="19"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-02-28 13:51</span>
+    <a class="permalink" title="Permalink to this commit" href="#19">#19</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1814</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+&amp;&amp; not || makes the sad people happy
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>branches/stable/Behaviors</strong>:
+        obj_Ratter.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="18"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-02-28 09:54</span>
+    <a class="permalink" title="Permalink to this commit" href="#18">#18</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1813</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Complete the Bookmarks baseclass, handles bookmark aquisition, filtering, next/random, and AtBookmark. Intended to be inherited, not used directly.
+    </p>
+    <p class="commitdetails"><strong>104</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_BeltBookmarks.iss&#160;<span class="change">(+3&#160;-8)</span>,
+        obj_Bookmark.iss&#160;<span class="change">(+101&#160;-48)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="17"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-02-28 09:51</span>
+    <a class="permalink" title="Permalink to this commit" href="#17">#17</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1812</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Behavior testcase: BeltRunner - iterate all belts in the system endlessly<br />
+
+    </p>
+    <p class="commitdetails"><strong>112</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/Behaviors/Testcases</strong>:
+        obj_BeltRunner.iss&#160;<span class="new">(new&#160;112)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="16"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-02-28 08:42</span>
+    <a class="permalink" title="Permalink to this commit" href="#16">#16</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1811</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Rename Booksmarks/CustomBookmarks -&gt; TempBookmarks
+    </p>
+    <p class="commitdetails"><strong>4</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot</strong>:
+        EVEBot.iss&#160;<span class="change">(+2&#160;-2)</span>
+      </li>
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_TempBookmarks.iss&#160;<span class="change">(+2&#160;-2)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="15"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-02-28 08:39</span>
+    <a class="permalink" title="Permalink to this commit" href="#15">#15</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1810</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Didn't like that name
+    </p>
+    <p class="commitdetails"><strong>96</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Trunk/EVEbot/core</strong>:
+        obj_CustomBookmarks.iss&#160;<span class="del">(del)</span>,
+        obj_TempBookmarks.iss&#160;<span class="new">(new&#160;96)</span>
+      </li>
+    </ul>
+  </dd>
+
   <dt><a name="14"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2011-02-28 00:20</span>
@@ -78,12 +346,12 @@
     <p class="comment">
 Rename obj_Bookmarks to obj_CustomBookmarks
     </p>
-    <p class="commitdetails"><strong>96</strong> lines of code changed in <span class="files">2 files</span>:</p>
+    <p class="commitdetails"><strong>0</strong> lines of code changed in <span class="files">2 files</span>:</p>
     <ul class="commitdetails">
       <li>
         <strong>Trunk/EVEbot/core</strong>:
         obj_Bookmarks.iss&#160;<span class="del">(del)</span>,
-        obj_CustomBookmarks.iss&#160;<span class="new">(new&#160;96)</span>
+        obj_CustomBookmarks.iss&#160;<span class="new">(new)</span>
       </li>
     </ul>
   </dd>
