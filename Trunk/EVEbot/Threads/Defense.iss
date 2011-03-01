@@ -29,7 +29,7 @@ objectdef obj_Defense inherits obj_BaseClass
 	{
 		This.LogPrefix:Set["${This.ObjectName}"]
 
-		This.PulseTimer:SetIntervals[0.5,1.0]
+		This.PulseTimer:SetIntervals[0.5,1.2]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 
 		This.Entity_CacheID:Set[${EntityCache.AddFilter["obj_Defense", CategoryID = CATEGORYID_ENTITY, 1.5]}]
@@ -295,6 +295,11 @@ objectdef obj_Defense inherits obj_BaseClass
 			return
 		}
 
+		if ${Me.InStation}
+		{
+			Logger:Log["Error: FleeToSafeSpot called while in station", LOG_ERROR]
+			return
+		}
 		variable bool KeepMoving = TRUE
 
 		if ${Safespots.AtSafespot}

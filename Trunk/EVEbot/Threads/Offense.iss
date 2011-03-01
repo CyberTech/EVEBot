@@ -138,7 +138,7 @@ objectdef obj_Offense inherits obj_BaseClass
 						*/
 						if !${TargetPainter.Value.IsActive} && ${Me.ActiveTarget.Distance} < ${Math.Calc[${TargetPainter.Value.OptimalRange} + ${TargetPainter.Value.AccuracyFalloff}]}
 						{
-							TargetPainter.Value:Click
+							TargetPainter.Value:Activate
 							; TODO - we don't break here, so all painters go on one target. future should user select distribution or not, and intelligently do so.
 						}
 					}
@@ -158,7 +158,7 @@ objectdef obj_Offense inherits obj_BaseClass
 							{
 								if !${Launcher.Value.IsActive} && !${Launcher.Value.IsReloadingAmmo} && !${Launcher.Value.IsChangingAmmo}
 								{
-									Launcher.Value:Click
+									Launcher.Value:Activate
 									break
 								}
 							}
@@ -173,7 +173,7 @@ objectdef obj_Offense inherits obj_BaseClass
 							{
 								if ${Launcher.Value.IsActive}
 								{
-									Launcher.Value:Click
+									Launcher.Value:Deactivate
 									break
 								}
 							}
@@ -257,7 +257,7 @@ objectdef obj_Offense inherits obj_BaseClass
 							if ${MyShip.Module[${slot}].IsActive}
 							{
 								Logger:Log["Offense: Turret ${idx}: active during ammo change, deactivating and continuing.",LOG_DEBUG]
-								MyShip.Module[${slot}]:Click
+								MyShip.Module[${slot}]:Deactivate
 								break
 							}
 							else
@@ -292,7 +292,7 @@ objectdef obj_Offense inherits obj_BaseClass
 									${Me.ActiveTarget.Distance} < ${This.MinRange}
 								{
 									Logger:Log["Offense: Turret ${idx}: Turret on but we're either below or above range, deactivating",LOG_DEBUG]
-									MyShip.Module[${slot}]:Click
+									MyShip.Module[${slot}]:Deactivate
 									break
 								}
 							}
@@ -302,7 +302,7 @@ objectdef obj_Offense inherits obj_BaseClass
 									${Me.ActiveTarget.Distance} >= ${This.MinRange}
 								{
 									Logger:Log["Offense: Turret ${idx}: Turret off but we're within range, activating",LOG_DEBUG]
-									MyShip.Module[${slot}]:Click
+									MyShip.Module[${slot}]:Activate
 									break
 								}
 							}

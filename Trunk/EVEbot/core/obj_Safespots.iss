@@ -1,13 +1,13 @@
 /*
 	Safespots class
 
-	Safespot access.  Inherits obj_Bookmark
+	Safespot access.  Inherits obj_Bookmarks
 
 	-- CyberTech
 
 */
 
-objectdef obj_Safespots inherits obj_Bookmark
+objectdef obj_Safespots inherits obj_Bookmarks
 {
 	variable string SVN_REVISION = "$Rev$"
 
@@ -30,7 +30,7 @@ objectdef obj_Safespots inherits obj_Bookmark
 	
 	method Reset()
 	{
-		This[parent]:Reset["${Config.Labels.SafeSpotPrefix}"]
+		This[parent]:Reset["${Config.Labels.SafeSpotPrefix}", TRUE]
 		Logger:Log["${LogPrefix}: Found ${Bookmarks.Used} safespots in this system"]
 	}
 

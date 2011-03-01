@@ -46,10 +46,9 @@ Raysere Giant
 Tairei Namazoth
 */
 
-objectdef obj_Targets
+objectdef obj_Targets inherits obj_BaseClass
 {
 	variable string SVN_REVISION = "$Rev$"
-	variable int Version
 
 	variable index:int64 TargetQueue
 	variable index:int64 TargetQueueOverride
@@ -77,6 +76,8 @@ objectdef obj_Targets
 
 	method Initialize()
 	{
+		LogPrefix:Set["${This.ObjectName}"]
+
 		m_SpecialTargetPresent:Set[FALSE]
 
 		ReservedDefensiveSlots:Set[${Ship.MaxLockedTargets}]
@@ -272,6 +273,11 @@ objectdef obj_Targets
 		SpecialTargets:GetIterator[SpecialTarget]
 
 		DoNotKillList:Clear
+
+		;PulseTimer:SetIntervals[0.5,1.0]
+		;Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+
+		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
 	method ResetTargets()
@@ -580,7 +586,7 @@ objectdef obj_Targets_Rats
 						/* Queue[ID, Priority, TypeID, Mandatory] */
 						; No, report it and lock it.
 						Logger:Log["obj_Targets: Queueing priority target ${This.Target.Value.Name}"]
-						Targeting:Queue[${This.Target.Value.ID},5,${RatCache.EntityIterator.Value.TypeID},TRUE]
+						Targeting:Queue[${This.Target.Value.ID},${Targeting.TYPE_HOSTILE},5,TRUE]
 					}
 
 					; By only saying there's priority targets when they arent
@@ -689,7 +695,7 @@ objectdef obj_Targets_Rats
 				if !${Targeting.IsQueued[${This.Target.Value.ID}]}
 				{
 					Logger:Log["Queueing ${This.Target.Value.Name}"]
-					Targeting:Queue[${This.Target.Value.ID},1,${This.Target.Value.TypeID},FALSE]
+					Targeting:Queue[${This.Target.Value.ID},${Targeting.TYPE_HOSTILE}]
 				}
 
 				; Set the return value so we know we have targets

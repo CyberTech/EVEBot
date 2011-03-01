@@ -723,6 +723,18 @@ objectdef obj_Cargo
 		call This.TransferListToJetCan
 
 		This.CargoToTransfer:Clear[]
+
+		UplinkManager:RelayInfo["JetCan_CargoFreeSpace", ${JetCan.CargoFreeSpace(type)}, "${This.CargoFreeSpace}"]
+		UplinkManager:RelayInfo["JetCan_Count", ${JetCan.JetCanCache.Used(type)}, "${This.JetCanCache.Used}"]
+
+		if ${This.CargoHalfFull}
+		{
+			; TODO - this is temp for backwards compat
+			variable string tempString
+			tempString:Set["${Me.CharID},${Me.SolarSystemID},${Entity[GroupID, GROUP_ASTEROIDBELT].ID}"]
+			relay all -event EVEBot_Miner_Full ${tempString}
+			; TODO - since we don't notify the hauler of WHERE the cans are, there's potential to lose cans if the miner warps out before a hauler warps in
+		}
 	}
 
 	function TransferOreToHangar()
