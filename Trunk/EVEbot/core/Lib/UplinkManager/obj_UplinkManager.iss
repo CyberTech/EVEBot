@@ -116,8 +116,8 @@ objectdef obj_UplinkManager inherits obj_BaseClass
 		Squelch WindowText "EVE - ${Me.Name}"
 
 		PulseTimer:SetIntervals[0.5,1.0]
-		PulseTimer:Increase[5.0]
 		; Schedule the first pulse for 5 seconds from now, instead of immediate, to allow the uplink time to update name.
+		PulseTimer:Extend[5.0]
 
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 
