@@ -1,0 +1,793 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ISUI>
+  <!-- Much of this is from WoWSkin, with portions from VGSkin -- CyberTech -->
+  <Skin Name="EVESkin" Template="Default Skin">
+    <!--
+    Every template in the Default Skin template is listed below. You do not need to change every
+    template, just the ones you want. You do not need to change any of the SkinTemplate tags
+    except to change the SkinPrefix (use find/replace to change the entire file)
+    -->
+    <SkinTemplate Base='Default Font' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='Default Fixed Font' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='button.Texture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='button.TextureHover' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='button.TexturePressed' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='button.Font' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='button' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='scrollbar.UpTexture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='scrollbar.UpTexturePressed' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='scrollbar.DownTexture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='scrollbar.DownTexturePressed' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='scrollbar.SliderTexture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='scrollbar.SliderHandleTexture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='scrollbar.upbutton' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='scrollbar.downbutton' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='scrollbar.Slider' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='scrollbar' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='verticalscrollbar.UpTexture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='verticalscrollbar.UpTexturePressed' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='verticalscrollbar.DownTexture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='verticalscrollbar.DownTexturePressed' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='verticalscrollbar.SliderTexture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='verticalscrollbar.SliderHandleTexture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='verticalscrollbar.upbutton' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='verticalscrollbar.downbutton' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='verticalscrollbar.Slider' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='verticalscrollbar' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='checkbox.Texture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='checkbox.TextureHover' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='checkbox.TexturePressed' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='checkbox.TextureChecked' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='checkbox.TextureCheckedHover' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='checkbox.TextureCheckedPressed' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='checkbox.Font' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='checkbox' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='commandbutton.Texture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='commandbutton.TexturePressed' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='commandbutton.Font' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='commandbutton' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='commandcheckbox.Texture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='commandcheckbox.TextureHover' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='commandcheckbox.TexturePressed' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='commandcheckbox.TextureChecked' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='commandcheckbox.TextureCheckedHover' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='commandcheckbox.TextureCheckedPressed' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='commandcheckbox.Font' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='commandcheckbox' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='console.Font' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='console.ScrollBar' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='console' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='frame.Texture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='frame' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='gauge.Texture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='gaugefiller.Texture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='gaugefiller' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='gauge' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='verticalgauge' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='hud' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='hudelement.Font' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='hudelement' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='listbox.Texture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='listbox.Font' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='listbox.ScrollBar' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='listbox' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='combobox.Texture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='combobox.ButtonTexture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='combobox.ListBoxTexture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='combobox.ListBox' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='combobox.Font' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='combobox' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='map' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='mapblip.font' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='mapblip' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='slider.Texture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='slider.HandleTexture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='slider' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='verticalslider.Texture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='verticalslider.HandleTexture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='verticalslider' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='tabcontrol.LeftTexture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='tabcontrol.LeftPressedTexture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='tabcontrol.LeftHoverTexture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='tabcontrol.RightTexture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='tabcontrol.RightPressedTexture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='tabcontrol.RightHoverTexture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='tabcontrol.FrameTexture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='tabcontrol.TabTexture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='tabcontrol.TabSelectedTexture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='tabcontrol.Font' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='tabcontrol.LeftButton' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='tabcontrol.RightButton' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='tabcontrol' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='text.Font' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='text' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='textentry.Font' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='textentry' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='tree.ScrollBar' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='tree.Font' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='tree' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='commandentry' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='tooltip.Font' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='tooltip' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='variablegauge.Texture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='variablegaugefiller.Texture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='variablegauge' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='verticalvariablegauge' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='variableslider.Texture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='variableslider.HandleTexture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='variableslider' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='verticalvariableslider' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='window.TitleBar.Title.Font' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='window.TitleBar.Title' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='window.TitleBar.Minimize.Texture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='window.TitleBar.Minimize.TexturePressed' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='window.TitleBar.Minimize' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='window.TitleBar.Maximize.Texture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='window.TitleBar.Maximize.TexturePressed' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='window.TitleBar.Maximize' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='window.TitleBar.Close.Texture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='window.TitleBar.Close.TexturePressed' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='window.TitleBar.Close' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='window.TitleBar' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='window.Client' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='window' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='horizontalwindow.TitleBar.Title.Font' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='horizontalwindow.TitleBar.Title' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='horizontalwindow.TitleBar.Minimize.Texture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='horizontalwindow.TitleBar.Minimize.TexturePressed' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='horizontalwindow.TitleBar.Minimize' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='horizontalwindow.TitleBar.Maximize.Texture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='horizontalwindow.TitleBar.Maximize.TexturePressed' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='horizontalwindow.TitleBar.Maximize' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='horizontalwindow.TitleBar.Close.Texture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='horizontalwindow.TitleBar.Close.TexturePressed' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='horizontalwindow.TitleBar.Close' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='horizontalwindow.TitleBar' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='horizontalwindow.Client' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='horizontalwindow' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='messagebox.OKTexture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='messagebox.OKTexturePressed' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='messagebox.YesTexture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='messagebox.YesTexturePressed' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='messagebox.NoTexture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='messagebox.NoTexturePressed' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='messagebox.CancelTexture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='messagebox.CancelTexturePressed' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='messagebox.Font' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='messagebox' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='scriptinputbox.OKTexture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='scriptinputbox.OKTexturePressed' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='scriptinputbox.CancelTexture' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='scriptinputbox.CancelTexturePressed' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='scriptinputbox.Font' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='scriptinputbox' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='textedit.VerticalScrollBar' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='textedit.HorizontalScrollBar' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='contextmenu.Font' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='contextmenu' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='textedit.Font' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='textedit' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <!-- Ventrilo templates -->
+    <SkinTemplate Base='Ventrilo.User.Texture.voiceoff.ico' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='Ventrilo.User.Texture.voiceon.ico' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='Ventrilo.User.Texture.voicegroup.ico' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='Ventrilo.User.Texture.voicechan.ico' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='Ventrilo.User.Texture.voicebegin.ico' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='Ventrilo.User.Texture.voiceu2u.ico' SkinPrefix='&filepath;/Images/EVESkin.' />
+    <SkinTemplate Base='Ventrilo.User.Texture.voicep2p.ico' SkinPrefix='&filepath;/Images/EVESkin.' />
+  </Skin>
+  <Template Name="EVESkin.Default Font">
+    <Name>Courier</Name>
+<!--    <Name>Courier</Name> -->
+    <Size>10</Size>
+    <Color>FFFFFFFF</Color>
+<!--    <Color>FFEECC00</Color> -->
+  </Template>
+  <Template Name="EVESkin.Default Fixed Font">
+    <Name>Courier</Name>
+    <Size>10</Size>
+    <Color>FFFFFFFF</Color>
+<!--    <Color>FFEECC00</Color> -->
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.Button.Texture' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Border>6</Border>
+    <Left>193</Left>
+    <Right>288</Right>
+    <Top>89</Top>
+    <Bottom>111</Bottom>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.Button.TextureHover' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Border>6</Border>
+    <Left>193</Left>
+    <Right>288</Right>
+    <Top>112</Top>
+    <Bottom>134</Bottom>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.Button.TexturePressed' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Border>6</Border>
+    <Left>193</Left>
+    <Right>288</Right>
+    <Top>135</Top>
+    <Bottom>157</Bottom>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.button.Font' Template='&filepath;/Images/EVESkin.Default Font'>
+    <Color>FFEECC00</Color>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.button' Template='button'>
+    <Font Template='&filepath;/Images/EVESkin.button.Font' />
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.scrollbar.DownTexture' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Left>314</Left>
+    <Right>336</Right>
+    <Top>189</Top>
+    <Bottom>210</Bottom>
+    <Border>4</Border>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.scrollbar.DownTexturePressed' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Left>314</Left>
+    <Right>336</Right>
+    <Top>167</Top>
+    <Bottom>188</Bottom>
+    <Border>4</Border>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.scrollbar.DownTextureHover' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Left>291</Left>
+    <Right>313</Right>
+    <Top>167</Top>
+    <Bottom>188</Bottom>
+    <Border>4</Border>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.scrollbar.UpTexture' Template='&filepath;/Images/EVESkin.scrollbar.DownTexture' />
+  <Template name='&filepath;/Images/EVESkin.scrollbar.UpTexturePressed' Template='&filepath;/Images/EVESkin.scrollbar.DownTexturePressed'/>
+  <Template name='&filepath;/Images/EVESkin.scrollbar.UpTextureHover' Template='&filepath;/Images/EVESkin.scrollbar.DownTextureHover'/>
+  <Template name='&filepath;/Images/EVESkin.scrollbar.SliderTexture' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Left>314</Left>
+    <Right>336</Right>
+    <Top>76</Top>
+    <Bottom>166</Bottom>
+    <Border>3</Border>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.scrollbar.SliderHandleTexture' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Left>274</Left>
+    <Right>287</Right>
+    <Top>35</Top>
+    <Bottom>50</Bottom>
+  </Template>
+  <template name='&filepath;/Images/EVESkin.scrollbar.upbutton' template='scrollbar.upbutton'>
+    <Border>2</Border>
+    <Texture template='&filepath;/Images/EVESkin.scrollbar.UpTexture'>
+      <Orientation>3</Orientation>
+    </Texture>
+    <TexturePressed template='&filepath;/Images/EVESkin.scrollbar.UpTexturePressed'>
+      <Orientation>3</Orientation>
+    </TexturePressed>
+    <TextureHover template='&filepath;/Images/EVESkin.scrollbar.UpTextureHover'>
+      <Orientation>3</Orientation>
+    </TextureHover>
+  </template>
+  <template name='&filepath;/Images/EVESkin.scrollbar.downbutton' template='scrollbar.downbutton'>
+    <Border>2</Border>
+    <Texture template='&filepath;/Images/EVESkin.scrollbar.DownTexture'>
+      <Orientation>1</Orientation>
+    </Texture>
+    <TexturePressed template='&filepath;/Images/EVESkin.scrollbar.DownTexturePressed'>
+      <Orientation>1</Orientation>
+    </TexturePressed>
+    <TextureHover template='&filepath;/Images/EVESkin.scrollbar.DownTextureHover'>
+      <Orientation>1</Orientation>
+    </TextureHover>
+  </template>
+  <template name='&filepath;/Images/EVESkin.scrollbar.Slider' template='scrollbar.Slider'>
+    <Border>2</Border>
+    <Texture template='&filepath;/Images/EVESkin.scrollbar.SliderTexture'>
+      <Orientation>1</Orientation>
+    </Texture>
+    <HandleTexture template='&filepath;/Images/EVESkin.scrollbar.SliderHandleTexture'>
+      <Orientation>1</Orientation>
+    </HandleTexture>
+  </template>
+  <Template name='&filepath;/Images/EVESkin.scrollbar' Template='scrollbar'>
+  </Template>
+  <template name='&filepath;/Images/EVESkin.verticalscrollbar.upbutton' Template='verticalscrollbar.upbutton'>
+    <Border>2</Border>
+    <Texture template='&filepath;/Images/EVESkin.scrollbar.UpTexture'>
+      <Orientation>2</Orientation>
+    </Texture>
+    <TexturePressed template='&filepath;/Images/EVESkin.scrollbar.UpTexturePressed'>
+      <Orientation>2</Orientation>
+    </TexturePressed>
+    <TextureHover template='&filepath;/Images/EVESkin.scrollbar.UpTextureHover'>
+      <Orientation>2</Orientation>
+    </TextureHover>
+  </template>
+  <template name='&filepath;/Images/EVESkin.verticalscrollbar.downbutton' Template='verticalscrollbar.downbutton'>
+    <Border>2</Border>
+    <Texture template='&filepath;/Images/EVESkin.scrollbar.DownTexture'>
+      <Orientation>0</Orientation>
+    </Texture>
+    <TexturePressed template='&filepath;/Images/EVESkin.scrollbar.DownTexturePressed'>
+      <Orientation>0</Orientation>
+    </TexturePressed>
+    <TextureHover template='&filepath;/Images/EVESkin.scrollbar.DownTextureHover'>
+      <Orientation>0</Orientation>
+    </TextureHover>
+  </template>
+  <template name='&filepath;/Images/EVESkin.verticalscrollbar.Slider' Template='verticalscrollbar.Slider'>
+    <Border>1</Border>
+    <Texture template='&filepath;/Images/EVESkin.scrollbar.SliderTexture'>
+      <Orientation>0</Orientation>
+    </Texture>
+    <HandleTexture template='scrollbar.SliderHandleTexture' />
+  </template>
+  <Template name='&filepath;/Images/EVESkin.verticalscrollbar' Template='verticalscrollbar'>
+    <Vertical>1</Vertical>
+    <UpButton template='&filepath;/Images/EVESkin.verticalscrollbar.upbutton' />
+    <DownButton template='&filepath;/Images/EVESkin.verticalscrollbar.downbutton' />
+    <Slider template='&filepath;/Images/EVESkin.verticalscrollbar.slider' />
+  </Template>
+
+	<!-- Checkbox Green Check Circle -->
+	<template name='&filepath;/Images/EVESkin.checkbox.Texture' Filename='&filepath;/Images/checkboxtexture.png' ColorKey='FFFF00FF' />
+	<template name='&filepath;/Images/EVESkin.checkbox.TextureHover' Filename='&filepath;/Images/checkboxtexturehover.png' ColorKey='FFFF00FF' />
+	<template name='&filepath;/Images/EVESkin.checkbox.TexturePressed' Filename='&filepath;/Images/checkboxtexturepressed.png' ColorKey='FFFF00FF' />
+	<template name='&filepath;/Images/EVESkin.checkbox.TextureChecked' Filename='&filepath;/Images/checkboxtexturechecked.png' ColorKey='FFFF00FF' />
+	<template name='&filepath;/Images/EVESkin.checkbox.TextureCheckedHover' Filename='&filepath;/Images/checkboxtexturecheckedhover.png' ColorKey='FFFF00FF' />
+	<template name='&filepath;/Images/EVESkin.checkbox.TextureCheckedPressed' Filename='&filepath;/Images/checkboxtexturecheckedpressed.png' ColorKey='FFFF00FF' />
+	<template name='&filepath;/Images/EVESkin.checkbox.Font' Template='&filepath;/Images/EVESkin.Default Font' />
+	<template name='&filepath;/Images/EVESkin.checkbox' template='checkbox'>
+		<TextColor>FFEECC00</TextColor>
+	</template>
+<!--
+  <Template name='&filepath;/Images/EVESkin.checkbox.Texture' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Left>220</Left>
+    <Right>243</Right>
+    <Top>2</Top>
+    <Bottom>23</Bottom>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.checkbox.TextureHover' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Left>220</Left>
+    <Right>243</Right>
+    <Top>24</Top>
+    <Bottom>45</Bottom>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.checkbox.TexturePressed' Template='&filepath;/Images/EVESkin.checkbox.Texture' />
+  <Template name='&filepath;/Images/EVESkin.checkbox.TextureChecked' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Left>245</Left>
+    <Right>268</Right>
+    <Top>2</Top>
+    <Bottom>23</Bottom>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.checkbox.TextureCheckedHover' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Left>245</Left>
+    <Right>268</Right>
+    <Top>24</Top>
+    <Bottom>45</Bottom>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.checkbox.TextureCheckedPressed' Template='&filepath;/Images/EVESkin.checkbox.TextureChecked' />
+  <Template name='&filepath;/Images/EVESkin.checkbox.Font' Template='&filepath;/Images/EVESkin.Default Font' />
+  <Template name='&filepath;/Images/EVESkin.checkbox' Template='checkbox'>
+    <TextColor>FFEECC00</TextColor>
+  </Template>
+  -->
+  <Template name='&filepath;/Images/EVESkin.commandbutton.Texture' Template='&filepath;/Images/EVESkin.button.Texture' />
+  <Template name='&filepath;/Images/EVESkin.commandbutton.TexturePressed' Template='&filepath;/Images/EVESkin.button.TexturePressed' />
+  <Template name='&filepath;/Images/EVESkin.commandbutton.Font' Template='&filepath;/Images/EVESkin.button.Font' />
+  <Template name='&filepath;/Images/EVESkin.commandbutton' Template='&filepath;/Images/EVESkin.button' />
+  <Template name='&filepath;/Images/EVESkin.commandcheckbox.Texture' Template='&filepath;/Images/EVESkin.checkbox.Texture' />
+  <Template name='&filepath;/Images/EVESkin.commandcheckbox.TextureHover' Template='&filepath;/Images/EVESkin.checkbox.TextureHover' />
+  <Template name='&filepath;/Images/EVESkin.commandcheckbox.TexturePressed' Template='&filepath;/Images/EVESkin.checkbox.TexturePressed' />
+  <Template name='&filepath;/Images/EVESkin.commandcheckbox.TextureChecked' Template='&filepath;/Images/EVESkin.checkbox.TextureChecked' />
+  <Template name='&filepath;/Images/EVESkin.commandcheckbox.TextureCheckedHover' Template='&filepath;/Images/EVESkin.checkbox.TextureCheckedHover' />
+  <Template name='&filepath;/Images/EVESkin.commandcheckbox.TextureCheckedPressed' Template='&filepath;/Images/EVESkin.checkbox.TextureCheckedPressed' />
+  <Template name='&filepath;/Images/EVESkin.commandcheckbox.Font' Template='&filepath;/Images/EVESkin.checkbox.Font' />
+  <Template name='&filepath;/Images/EVESkin.commandcheckbox' Template='&filepath;/Images/EVESkin.checkbox' />
+  <Template name='&filepath;/Images/EVESkin.console.Font' Template='&filepath;/Images/EVESkin.Default Font'>  
+  	<Name>Lucida Console</Name>
+    <Size>10</Size>
+ </Template>
+  <Template name='&filepath;/Images/EVESkin.console.ScrollBar' Template='&filepath;/Images/EVESkin.VerticalScrollBar' />
+  <Template name='&filepath;/Images/EVESkin.console' Template='console'>
+    <BackgroundColor>FF080808</BackgroundColor>
+    <Border>1</Border>
+    <BorderColor>FF282828</BorderColor>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.frame.Texture' Template='frame.Texture' />
+  <Template name='&filepath;/Images/EVESkin.frame' Template='frame' />
+  <Template name='&filepath;/Images/EVESkin.gauge.Texture' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Left>166</Left>
+    <Right>273</Right>
+    <Top>71</Top>
+    <Bottom>87</Bottom>
+    <Border>5</Border>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.gauge.TopTexture' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Left>1</Left>
+    <Right>249</Right>
+    <Top>231</Top>
+    <Bottom>242</Bottom>
+    <Border>1</Border>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.gaugefiller.Texture' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Left>1</Left>
+    <Right>12</Right>
+    <Top>222</Top>
+    <Bottom>230</Bottom>
+    <Border>0</Border>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.gaugefiller' Template='gaugefiller'>
+    <Texture template='&filepath;/Images/EVESkin.gaugefiller.Texture' />
+    <!--<Texture template='&filepath;/Images/EVESkin.Button.TextureHover' /> -->
+    <Repeat>1</Repeat>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.gauge' Template='variablegauge'>
+    <BackgroundColor>FF000000</BackgroundColor>
+    <BorderColor>FF000000</BorderColor>
+   <TopTexture template='&filepath;/Images/EVESkin.gauge.TopTexture' />
+    <Filler template='&filepath;/Images/EVESkin.gaugefiller' />
+    <Border>1</Border>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.verticalgauge' Template='verticalgauge' />
+  <Template name='&filepath;/Images/EVESkin.hud' Template='hud' />
+  <Template name='&filepath;/Images/EVESkin.hudelement.Font' Template='hudelement.Font' />
+  <Template name='&filepath;/Images/EVESkin.hudelement' Template='hudelement' />
+  <Template name='&filepath;/Images/EVESkin.listbox.Texture' Template='listbox.Texture' />
+  <Template name='&filepath;/Images/EVESkin.listbox.Font' Template='listbox.Font' />
+  <Template name='&filepath;/Images/EVESkin.listbox.ScrollBar' Template='&filepath;/Images/EVESkin.VerticalScrollBar' />
+  <Template name='&filepath;/Images/EVESkin.listbox' Template='listbox'>
+    <BorderColor>FF000000</BorderColor>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.combobox.Texture' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Border>5</Border>
+    <Left>15</Left>
+    <Right>74</Right>
+    <Top>195</Top>
+    <Bottom>219</Bottom>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.combobox.ButtonTexture' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Border>2</Border>
+    <Left>75</Left>
+    <Right>95</Right>
+    <Top>195</Top>
+    <Bottom>219</Bottom>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.combobox.ListBoxTexture' Template='&filepath;/Images/EVESkin.listbox.ListBox.Texture' />
+  <Template name='&filepath;/Images/EVESkin.combobox.ListBox' Template='combobox.ListBox' />
+  <Template name='&filepath;/Images/EVESkin.combobox.Font' Template='combobox.Font'>
+    <Color>FFEECC00</Color>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.combobox' Template='combobox'>
+    <Border>2</Border>
+    <TextColor>FFEECC00</TextColor>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.map' Template='map' />
+  <Template name='&filepath;/Images/EVESkin.mapblip.font' Template='mapblip.font' />
+  <Template name='&filepath;/Images/EVESkin.mapblip' Template='mapblip' />
+  <Template name='&filepath;/Images/EVESkin.slider.Texture' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Border>2</Border>
+    <Left>0</Left>
+    <Right>127</Right>
+    <Top>1</Top>
+    <Bottom>16</Bottom>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.slider.HandleTexture' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <ColorMask>FFFFFFFF</ColorMask>
+    <Left>206</Left>
+    <Right>213</Right>
+    <Top>1</Top>
+    <Bottom>15</Bottom>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.slider' Template='slider'>
+    <Border>2</Border>
+    <Texture template='&filepath;/Images/EVESkin.slider.Texture'>
+      <Orientation>0</Orientation>
+    </Texture>
+    <HandleTexture template='&filepath;/Images/EVESkin.slider.HandleTexture'>
+      <Orientation>0</Orientation>
+    </HandleTexture>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.verticalslider' Template='verticalslider'>
+  <Border>2</Border>
+  <Texture template='&filepath;/Images/EVESkin.slider.Texture'>
+    <Orientation>1</Orientation>
+  </Texture>
+  <HandleTexture template='&filepath;/Images/EVESkin.slider.HandleTexture'>
+    <Orientation>1</Orientation>
+  </HandleTexture>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.tabcontrol.LeftTexture' Template='&filepath;/Images/EVESkin.scrollbar.DownTexture' />
+  <Template name='&filepath;/Images/EVESkin.tabcontrol.LeftPressedTexture' Template='&filepath;/Images/EVESkin.scrollbar.DownTexturePressed' />
+  <Template name='&filepath;/Images/EVESkin.tabcontrol.LeftHoverTexture' Template='&filepath;/Images/EVESkin.scrollbar.DownTextureHover' />
+  <Template name='&filepath;/Images/EVESkin.tabcontrol.RightTexture' Template='&filepath;/Images/EVESkin.scrollbar.DownTexture' />
+  <Template name='&filepath;/Images/EVESkin.tabcontrol.RightPressedTexture' Template='&filepath;/Images/EVESkin.scrollbar.DownTexturePressed' />
+  <Template name='&filepath;/Images/EVESkin.tabcontrol.RightHoverTexture' Template='&filepath;/Images/EVESkin.scrollbar.DownTextureHover' />
+  <Template name='&filepath;/Images/EVESkin.tabcontrol.LeftButton' Template='tabcontrol.LeftButton'>
+    <Texture template='&filepath;/Images/EVESkin.scrollbar.DownTexture'>
+      <Orientation>3</Orientation>
+    </Texture>
+    <TexturePressed template='&filepath;/Images/EVESkin.scrollbar.DownTexturePressed'>
+      <Orientation>1</Orientation>
+    </TexturePressed>
+    <TextureHover template='&filepath;/Images/EVESkin.scrollbar.DownTextureHover'>
+      <Orientation>1</Orientation>
+    </TextureHover>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.tabcontrol.RightButton' Template='tabcontrol.RightButton'>
+    <Texture template='&filepath;/Images/EVESkin.scrollbar.DownTexture'>
+      <Orientation>1</Orientation>
+    </Texture>
+    <TexturePressed template='&filepath;/Images/EVESkin.scrollbar.DownTexturePressed'>
+      <Orientation>3</Orientation>
+    </TexturePressed>
+    <TextureHover template='&filepath;/Images/EVESkin.scrollbar.DownTextureHover'>
+      <Orientation>3</Orientation>
+    </TextureHover>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.tabcontrol.FrameTexture' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Border>5</Border>
+    <Left>138</Left>
+    <Right>217</Right>
+    <Top>165</Top>
+    <Bottom>228</Bottom>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.tabcontrol.TabTexture' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Border>5</Border>
+    <Left>135</Left>
+    <Right>198</Right>
+    <Top>36</Top>
+    <Bottom>63</Bottom>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.tabcontrol.TabSelectedTexture' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Border>5</Border>
+    <Left>3</Left>
+    <Right>70</Right>
+    <Top>35</Top>
+    <Bottom>63</Bottom>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.tabcontrol.Font' Template='tabcontrol.Font' />
+  <Template name='&filepath;/Images/EVESkin.tabcontrol' Template='tabcontrol'>
+    <TabBorder>2</TabBorder>
+    <FrameBackgroundColor>66282828</FrameBackgroundColor>
+    <FrameBorderColor>66282828</FrameBorderColor>
+    <SelectedTextColor>FFEECC00</SelectedTextColor>
+    <FrameTexture template='&filepath;/Images/EVESkin.tabcontrol.FrameTexture'/>
+    <FrameBorder>4</FrameBorder>
+   <TabTexture template='&filepath;/Images/EVESkin.tabcontrol.TabTexture'>
+      <Orientation>2</Orientation>
+    </TabTexture>
+    <TabSelectedTexture template='&filepath;/Images/EVESkin.tabcontrol.TabSelectedTexture'>
+      <Orientation>2</Orientation>
+    </TabSelectedTexture>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.text.Font' Template='text.Font' />
+  <Template name='&filepath;/Images/EVESkin.text' Template='text' />
+  <Template name='&filepath;/Images/EVESkin.textentry.Font' Template='textentry.Font' />
+  <Template name='&filepath;/Images/EVESkin.textentry.Texture' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Border>4</Border>
+    <Left>166</Left>
+    <Right>273</Right>
+    <Top>71</Top>
+    <Bottom>87</Bottom>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.textentry' Template='textentry'>
+    <!--<BorderColor>66DC1105</BorderColor>
+    <BackgroundColor>66282828</BackgroundColor>-->
+    <Texture template='&filepath;/Images/EVESkin.textentry.Texture' />
+    <Border>2</Border>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.commandentry' Template='&filepath;/Images/EVESkin.textentry'>
+    <CommandHistory>50</CommandHistory>
+    <Texture template='&filepath;/Images/EVESkin.textentry.Texture' />
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.Tree.Font' Template='&filepath;/Images/EVESkin.Default Font' />
+  <Template name='&filepath;/Images/EVESkin.Tree.ScrollBar' Template='&filepath;/Images/EVESkin.VerticalScrollBar' />
+  <Template name='&filepath;/Images/EVESkin.Tree.ImageTexture' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Left>167</Left>
+    <Right>178</Right>
+    <Top>122</Top>
+    <Bottom>132</Bottom>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.Tree.ImageTextureCollapsible' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Left>167</Left>
+    <Right>178</Right>
+    <Top>122</Top>
+    <Bottom>132</Bottom>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.Tree.ImageTextureCollapsed' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Left>167</Left>
+    <Right>178</Right>
+    <Top>137</Top>
+    <Bottom>147</Bottom>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.Tree.Texture' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Left>223</Left>
+    <Right>235</Right>
+    <Top>191</Top>
+    <Bottom>199</Bottom>
+    <Border>1</Border>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.Tree' Template='tree'>
+    <BorderColor>FF000000</BorderColor>
+    <Texture Template='&filepath;/Images/EVESkin.Tree.Texture' />
+    <ImageTexture template='&filepath;/Images/EVESkin.Tree.ImageTexture' />
+    <ImageTextureCollapsible template='&filepath;/Images/EVESkin.Tree.ImageTextureCollapsible' />
+    <ImageTextureCollapsed template='&filepath;/Images/EVESkin.Tree.ImageTextureCollapsed' />
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.tooltip.Font' Template='tooltip.Font' />
+  <Template name='&filepath;/Images/EVESkin.tooltip' Template='tooltip' />
+  <Template name='&filepath;/Images/EVESkin.variablegauge.Texture' Template='variablegauge.Texture' />
+  <Template name='&filepath;/Images/EVESkin.variablegaugefiller.Texture' Template='variablegaugefiller.Texture' />
+  <Template name='&filepath;/Images/EVESkin.variablegauge' Template='variablegauge' />
+  <Template name='&filepath;/Images/EVESkin.verticalvariablegauge' Template='verticalvariablegauge' />
+  <Template name='&filepath;/Images/EVESkin.variableslider.Texture' Template='&filepath;/Images/EVESkin.slider.Texture' />
+  <Template name='&filepath;/Images/EVESkin.variableslider.HandleTexture' Template='&filepath;/Images/EVESkin.slider.HandleTexture' />
+  <Template name='&filepath;/Images/EVESkin.variableslider' Template='&filepath;/Images/EVESkin.slider' />
+  <Template name='&filepath;/Images/EVESkin.verticalvariableslider' Template='&filepath;/Images/EVESkin.verticalslider' />
+  <Template name='&filepath;/Images/EVESkin.window.TitleBar.Title.Font' Template='&filepath;/Images/EVESkin.Default Font'>
+    <Size>14</Size>
+    <Color>FFEECC00</Color>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.window.TitleBar.Title' Template='window.TitleBar.Title' />
+  <Template name='&filepath;/Images/EVESkin.window.TitleBar.Minimize.Texture' Filename='interface/EVESkin.png' ColorKey='FFFF00FF'>
+    <Left>149</Left>
+    <Right>165</Right>
+    <Top>103</Top>
+    <Bottom>118</Bottom>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.window.TitleBar.Minimize.TexturePressed' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Left>132</Left>
+    <Right>148</Right>
+    <Top>103</Top>
+    <Bottom>118</Bottom>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.window.TitleBar.Minimize' Template='window.TitleBar.Minimize' />
+  <Template name='&filepath;/Images/EVESkin.window.TitleBar.Maximize.Texture' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Left>149</Left>
+    <Right>165</Right>
+    <Top>86</Top>
+    <Bottom>101</Bottom>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.window.TitleBar.Maximize.TexturePressed' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Left>132</Left>
+    <Right>148</Right>
+    <Top>86</Top>
+    <Bottom>101</Bottom>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.window.TitleBar.Maximize' Template='window.TitleBar.Maximize' />
+  <Template name='&filepath;/Images/EVESkin.window.TitleBar.Close.Texture' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Left>149</Left>
+    <Right>165</Right>
+    <Top>69</Top>
+    <Bottom>84</Bottom>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.window.TitleBar.Close.TexturePressed' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Left>132</Left>
+    <Right>148</Right>
+    <Top>69</Top>
+    <Bottom>84</Bottom>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.window.TitleBar.Close' Template='window.TitleBar.Close' />
+  <Template name='&filepath;/Images/EVESkin.window.TitleBar.Texture' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Left>166</Left>
+    <Right>273</Right>
+    <Top>71</Top>
+    <Bottom>87</Bottom>
+    <Border>5</Border>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.window.TitleBar' Template='window.TitleBar'>
+    <Border>3</Border>
+    <Texture Template='&filepath;/Images/EVESkin.window.TitleBar.Texture' />
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.window.Client.Texture' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
+    <Left>223</Left>
+    <Right>235</Right>
+    <Top>191</Top>
+    <Bottom>199</Bottom>
+    <Border>1</Border>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.window.Client' Template='window.Client'>
+    <BackgroundColor>66282828</BackgroundColor>
+    <Texture Template='&filepath;/Images/EVESkin.window.Client.Texture' />
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.window' Template='window'>
+    <Border>1</Border>
+    <!--<FadeAlpha>.2</FadeAlpha>
+    <FadeDelay>1000</FadeDelay>
+    <FadeDuration>1000</FadeDuration>-->
+    <BorderColor>66999999</BorderColor>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.horizontalwindow.TitleBar.Title.Font' Template='&filepath;/Images/EVESkin.Default Font' />
+  <Template name='&filepath;/Images/EVESkin.horizontalwindow.TitleBar.Title' Template='horizontalwindow.TitleBar.Title' />
+  <Template name='&filepath;/Images/EVESkin.horizontalwindow.TitleBar.Minimize.Texture' Template='&filepath;/Images/EVESkin.window.TitleBar.Minimize.Texture' />
+  <Template name='&filepath;/Images/EVESkin.horizontalwindow.TitleBar.Minimize.TexturePressed' Template='&filepath;/Images/EVESkin.window.TitleBar.Minimize.TexturePressed' />
+  <Template name='&filepath;/Images/EVESkin.horizontalwindow.TitleBar.Minimize' Template='horizontalwindow.TitleBar.Minimize' />
+  <Template name='&filepath;/Images/EVESkin.horizontalwindow.TitleBar.Maximize.Texture' Template='&filepath;/Images/EVESkin.window.TitleBar.Maximize.Texture' />
+  <Template name='&filepath;/Images/EVESkin.horizontalwindow.TitleBar.Maximize.TexturePressed' Template='&filepath;/Images/EVESkin.window.TitleBar.Maximize.TexturePressed' />
+  <Template name='&filepath;/Images/EVESkin.horizontalwindow.TitleBar.Maximize' Template='horizontalwindow.TitleBar.Maximize' />
+  <Template name='&filepath;/Images/EVESkin.horizontalwindow.TitleBar.Close.Texture' Template='&filepath;/Images/EVESkin.window.TitleBar.Close.Texture' />
+  <Template name='&filepath;/Images/EVESkin.horizontalwindow.TitleBar.Close.TexturePressed' Template='&filepath;/Images/EVESkin.window.TitleBar.Close.TexturePressed' />
+  <Template name='&filepath;/Images/EVESkin.horizontalwindow.TitleBar.Close' Template='horizontalwindow.TitleBar.Close' />
+  <Template name='&filepath;/Images/EVESkin.horizontalwindow.TitleBar' Template='horizontalwindow.TitleBar'>
+    <Border>3</Border>
+    <Texture Template='&filepath;/Images/EVESkin.window.TitleBar.Texture' />
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.horizontalwindow.Client' Template='horizontalwindow.Client'>
+    <BackgroundColor>66282828</BackgroundColor>
+    <Texture Template='&filepath;/Images/EVESkin.window.Client.Texture' />
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.horizontalwindow' Template='horizontalwindow'>
+    <Border>1</Border>
+    <!--
+    <FadeAlpha>.2</FadeAlpha>
+    <FadeDelay>1000</FadeDelay>
+    <FadeDuration>1000</FadeDuration>-->
+    <BorderColor>66282828</BorderColor>
+  </Template>
+  <Template name='&filepath;/Images/EVESkin.messagebox.OKTexture' Template='messagebox.OKTexture' />
+  <Template name='&filepath;/Images/EVESkin.messagebox.OKTexturePressed' Template='messagebox.OKTexturePressed' />
+  <Template name='&filepath;/Images/EVESkin.messagebox.YesTexture' Template='messagebox.YesTexture' />
+  <Template name='&filepath;/Images/EVESkin.messagebox.YesTexturePressed' Template='messagebox.YesTexturePressed' />
+  <Template name='&filepath;/Images/EVESkin.messagebox.NoTexture' Template='messagebox.NoTexture' />
+  <Template name='&filepath;/Images/EVESkin.messagebox.NoTexturePressed' Template='messagebox.NoTexturePressed' />
+  <Template name='&filepath;/Images/EVESkin.messagebox.CancelTexture' Template='messagebox.CancelTexture' />
+  <Template name='&filepath;/Images/EVESkin.messagebox.CancelTexturePressed' Template='messagebox.CancelTexturePressed' />
+  <Template name='&filepath;/Images/EVESkin.messagebox.Font' Template='messagebox.Font' />
+  <Template name='&filepath;/Images/EVESkin.messagebox' Template='messagebox' />
+  <Template name='&filepath;/Images/EVESkin.scriptinputbox.OKTexture' Template='scriptinputbox.OKTexture' />
+  <Template name='&filepath;/Images/EVESkin.scriptinputbox.OKTexturePressed' Template='scriptinputbox.OKTexturePressed' />
+  <Template name='&filepath;/Images/EVESkin.scriptinputbox.CancelTexture' Template='scriptinputbox.CancelTexture' />
+  <Template name='&filepath;/Images/EVESkin.scriptinputbox.CancelTexturePressed' Template='scriptinputbox.CancelTexturePressed' />
+  <Template name='&filepath;/Images/EVESkin.scriptinputbox.Font' Template='scriptinputbox.Font' />
+  <Template name='&filepath;/Images/EVESkin.scriptinputbox' Template='scriptinputbox' />
+  <Template name='&filepath;/Images/EVESkin.textedit.VerticalScrollBar' Template='textedit.VerticalScrollBar' />
+  <Template name='&filepath;/Images/EVESkin.textedit.HorizontalScrollBar' Template='textedit.HorizontalScrollBar' />
+  <Template name='&filepath;/Images/EVESkin.contextmenu.Font' Template='contextmenu.Font' />
+  <Template name='&filepath;/Images/EVESkin.contextmenu' Template='contextmenu' />
+  <Template name='&filepath;/Images/EVESkin.textedit.Font' Template='textedit.Font' />
+  <Template name='&filepath;/Images/EVESkin.textedit' Template='textedit'>
+    <BorderColor>FF000000</BorderColor>
+    <BackgroundColor>FF111111</BackgroundColor>
+  </Template>
+  <!-- ventrilo templates -->
+  <Template Name='&filepath;/Images/EVESkin.Ventrilo.User.Texture.voiceoff.ico' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF' >
+    <Left>156</Left>
+    <Top>19</Top>
+    <Right>168</Right>
+    <Bottom>34</Bottom>
+  </Template>
+  <Template Name='&filepath;/Images/EVESkin.Ventrilo.User.Texture.voiceon.ico' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF' >
+    <Left>141</Left>
+    <Top>19</Top>
+    <Right>153</Right>
+    <Bottom>34</Bottom>
+  </Template>
+  <Template Name='&filepath;/Images/EVESkin.Ventrilo.User.Texture.voicegroup.ico' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF' >
+    <Left>141</Left>
+    <Top>19</Top>
+    <Right>153</Right>
+    <Bottom>34</Bottom>
+  </Template>
+  <Template Name='&filepath;/Images/EVESkin.Ventrilo.User.Texture.voicechan.ico' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF' >
+    <Left>201</Left>
+    <Top>19</Top>
+    <Right>213</Right>
+    <Bottom>34</Bottom>
+  </Template>
+  <Template Name='&filepath;/Images/EVESkin.Ventrilo.User.Texture.voicebegin.ico' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF' >
+    <Left>201</Left>
+    <Top>35</Top>
+    <Right>213</Right>
+    <Bottom>50</Bottom>
+  </Template>
+  <Template Name='&filepath;/Images/EVESkin.Ventrilo.User.Texture.voiceu2u.ico' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF' >
+    <Left>171</Left>
+    <Top>19</Top>
+    <Right>183</Right>
+    <Bottom>34</Bottom>
+  </Template>
+  <Template Name='&filepath;/Images/EVESkin.Ventrilo.User.Texture.voicep2p.ico' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF' >
+    <Left>171</Left>
+    <Top>19</Top>
+    <Right>183</Right>
+    <Bottom>34</Bottom>
+  </Template>
+</ISUI>
