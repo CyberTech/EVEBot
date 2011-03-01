@@ -44,7 +44,7 @@
 				{
 					Logger:Log["Activating ${Module.Value.ToItem.Name}"]
 				}
-				Module.Value:Click
+				Module.Value:Activate
 			}
 
 			if !${EVEBot.SessionValid}
@@ -72,22 +72,18 @@
 				{
 					Logger:Log["Deactivating ${Module.Value.ToItem.Name}", LOG_MINOR]
 				}
-				Module.Value:Click
+				Module.Value:Deactivate
 			}
 		}
 		while ${Module:Next(exists)}
 	}
 #endmac
 
-objectdef obj_Ship
+objectdef obj_Ship inherits obj_BaseClass
 {
 	variable string SVN_REVISION = "$Rev$"
-	variable int Version
 
 	variable int MODE_WARPING = 3
-
-	variable time NextPulse
-	variable int PulseIntervalInSeconds = 2
 
 	variable float BaselineUsedCargo
 	variable bool CargoIsOpen
@@ -138,12 +134,16 @@ objectdef obj_Ship
 
 	method Initialize()
 	{
+		LogPrefix:Set["${This.ObjectName}"]
+
 		This:StopShip[]
 		This:UpdateModuleList[]
-
-		Event[EVENT_EVEBOT_ONFRAME]:AttachAtom[This:Pulse]
 		This:PopulateNameModPairs[]
-		Logger:Log["obj_Ship: Initialized", LOG_MINOR]
+
+		PulseTimer:SetIntervals[2.0,3.0]
+		Event[EVENT_EVEBOT_ONFRAME]:AttachAtom[This:Pulse]
+
+		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -153,7 +153,12 @@ objectdef obj_Ship
 
 	method Pulse()
 	{
-		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+		if !${EVEBot.Loaded} || ${EVEBot.Disabled}
+		{
+			return
+		}
+
+		if ${This.PulseTimer.Ready}
 		{
 			if ${EVEBot.SessionValid}
 			{
@@ -175,9 +180,7 @@ objectdef obj_Ship
 				}
 			}
 
-			This.NextPulse:Set[${Time.Timestamp}]
-			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-			This.NextPulse:Update
+			This.PulseTimer:Update
 		}
 	}
 
@@ -539,7 +542,7 @@ objectdef obj_Ship
 	{
 		if ${This.TurretBaseOptimals.Element[${turret}](exists)}
 		{
-			return ${This.TurretBaseOptimals.Element[${turret}](exists)}
+			return ${This.TurretBaseOptimals.Element[${turret}]}
 		}
 
 		variable string slot = ${This.TurretSlots[${turret}]}
@@ -811,6 +814,11 @@ objectdef obj_Ship
 		return FALSE
 	}
 
+	member:bool HasTractorBeams()
+	{
+		return ${This.ModuleList_TractorBeams.Used(bool)}
+	}
+
 	member:bool HasCloak()
 	{
 		return ${This.ModuleList_Cloaks.Used(bool)}
@@ -856,6 +864,19 @@ objectdef obj_Ship
 	member:float MaxTargetRange()
 	{
 		return ${m_MaxTargetRange}
+	}
+
+	method Print_ModuleList(string Title, string List)
+	{
+		variable iterator Module
+		Logger:Log[" ${Title}", LOG_MINOR, 2]
+		${List}:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			Logger:Log["Slot: ${Module.Value.ToItem.Slot} ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
+		}
+		while ${Module:Next(exists)}
 	}
 
 	method UpdateModuleList()
@@ -1004,149 +1025,21 @@ objectdef obj_Ship
 		}
 		while ${Module:Next(exists)}
 
-		Logger:Log["Weapons:", LOG_MINOR, 2]
-		This.ModuleList_Weapon:GetIterator[Module]
-		if ${Module:First(exists)}
-		do
-		{
-			Logger:Log["Slot: ${Module.Value.ToItem.Slot} ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
-		}
-		while ${Module:Next(exists)}
-
-		Logger:Log["Weapon Enhance:",LOG_MINOR,2]
-		This.ModuleList_WeaponEnhance:GetIterator[Module]
-		if ${Module:First(exists)}
-		{
-			do
-			{
-				Logger:Log["	Slot: ${Module.Value.ToItem.Slot} ${Module.Value.ToItem.Name}",LOG_MINOR,4]
-			}
-			while ${Module:Next(exists)}
-		}
-
-		Logger:Log["ECCM:",LOG_MINOR,2]
-		This.ModuleList_ECCM:GetIterator[Module]
-		if ${Module:First(exists)}
-		{
-			do
-			{
-				Logger:Log["	Slot: ${Module.Value.ToItem.Slot} ${Module.Value.ToItem.Name}",LOG_MINOR,4]
-			}
-			while ${Module:Next(exists)}
-		}
-
-		Logger:Log["Active Resistance Modules:", LOG_MINOR, 2]
-		This.ModuleList_ActiveResists:GetIterator[Module]
-		if ${Module:First(exists)}
-		do
-		{
-			Logger:Log["	Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
-		}
-		while ${Module:Next(exists)}
-
-		Logger:Log["Passive Modules:", LOG_MINOR, 2]
-		This.ModuleList_Passive:GetIterator[Module]
-		if ${Module:First(exists)}
-		do
-		{
-			Logger:Log["	 Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
-		}
-		while ${Module:Next(exists)}
-
-		Logger:Log["Mining Modules:", LOG_MINOR, 2]
-		This.ModuleList_MiningLaser:GetIterator[Module]
-		if ${Module:First(exists)}
-		do
-		{
-			Logger:Log["	 Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
-		}
-		while ${Module:Next(exists)}
-
-		Logger:Log["Armor Repair Modules:", LOG_MINOR, 2]
-		This.ModuleList_Repair_Armor:GetIterator[Module]
-		if ${Module:First(exists)}
-		do
-		{
-			Logger:Log["	 Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
-		}
-		while ${Module:Next(exists)}
-
-		Logger:Log["Shield Regen Modules:", LOG_MINOR, 2]
-		This.ModuleList_Regen_Shield:GetIterator[Module]
-		if ${Module:First(exists)}
-		do
-		{
-			Logger:Log["	 Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
-		}
-		while ${Module:Next(exists)}
-
-		Logger:Log["AfterBurner Modules:", LOG_MINOR, 2]
-		This.ModuleList_AB_MWD:GetIterator[Module]
-		if ${Module:First(exists)}
-		do
-		{
-			Logger:Log["	 Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
-		}
-		while ${Module:Next(exists)}
-
-		if ${This.ModuleList_AB_MWD.Used} > 1
-		{
-			Logger:Log["Warning: More than 1 Afterburner or MWD was detected, I will only use the first one.", LOG_MINOR, 4]
-		}
-
-		Logger:Log["Salvaging Modules:", LOG_MINOR, 2]
-		This.ModuleList_Salvagers:GetIterator[Module]
-		if ${Module:First(exists)}
-		do
-		{
-			Logger:Log["	 Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
-		}
-		while ${Module:Next(exists)}
-
-		Logger:Log["Tractor Beam Modules:", LOG_MINOR, 2]
-		This.ModuleList_TractorBeams:GetIterator[Module]
-		if ${Module:First(exists)}
-		do
-		{
-			Logger:Log["	 Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
-		}
-		while ${Module:Next(exists)}
-
-		Logger:Log["Cloaking Device Modules:", LOG_MINOR, 2]
-		This.ModuleList_Cloaks:GetIterator[Module]
-		if ${Module:First(exists)}
-		do
-		{
-			Logger:Log["	 Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
-		}
-		while ${Module:Next(exists)}
-
-		Logger:Log["Stasis Web Modules:", LOG_MINOR, 2]
-		This.ModuleList_StasisWeb:GetIterator[Module]
-		if ${Module:First(exists)}
-		do
-		{
-			Logger:Log["	 Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
-		}
-		while ${Module:Next(exists)}
-
-		Logger:Log["Sensor Boost Modules:", LOG_MINOR, 2]
-		This.ModuleList_SensorBoost:GetIterator[Module]
-		if ${Module:First(exists)}
-		do
-		{
-			Logger:Log["	 Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
-		}
-		while ${Module:Next(exists)}
-
-		Logger:Log["Target Painter Modules:", LOG_MINOR, 2]
-		This.ModuleList_TargetPainter:GetIterator[Module]
-		if ${Module:First(exists)}
-		do
-		{
-			Logger:Log["	 Slot: ${Module.Value.ToItem.Slot}  ${Module.Value.ToItem.Name}", LOG_MINOR, 4]
-		}
-		while ${Module:Next(exists)}
+		This:Print_ModuleList["Weapons:", 			"This.ModuleList_Weapon"]
+		This:Print_ModuleList["Weapon Enhance:",	"This.ModuleList_WeaponEnhance"]
+		This:Print_ModuleList["ECCM:",				"This.ModuleList_ECCM"]
+		This:Print_ModuleList["Active Resistance:",	"This.ModuleList_ActiveResists"]
+		This:Print_ModuleList["Passive:",			"This.ModuleList_Passive"]
+		This:Print_ModuleList["Mining:",			"This.ModuleList_MiningLaser"]
+		This:Print_ModuleList["Armor Repair :",		"This.ModuleList_Repair_Armor"]
+		This:Print_ModuleList["Shield Boost:",		"This.ModuleList_Regen_Shield"]
+		This:Print_ModuleList["AfterBurner/MWD:",	"This.ModuleList_AB_MWD"]
+		This:Print_ModuleList["Salvager:",			"This.ModuleList_Salvagers"]
+		This:Print_ModuleList["Tractor Beam:",		"This.ModuleList_TractorBeams"]
+		This:Print_ModuleList["Cloaking Device:",	"This.ModuleList_Cloaks"]
+		This:Print_ModuleList["Stasis Webs:",		"This.ModuleList_StasisWeb"]
+		This:Print_ModuleList["Sensor Boost:",		"This.ModuleList_SensorBoost"]
+		This:Print_ModuleList["Target Painter:",	"This.ModuleList_TargetPainter"]
 	}
 
 	method UpdateBaselineUsedCargo()
@@ -1301,6 +1194,7 @@ objectdef obj_Ship
 		return FALSE
 	}
 
+	; TODO MOVE THIS TO TARGETING THREAD
 	method UnlockAllTargets()
 	{
 		Validate_Ship()
@@ -1414,7 +1308,7 @@ objectdef obj_Ship
 				!${Module.Value.LastTarget(exists)}
 			{
 				Logger:Log["${Module.Value.ToItem.Slot}:${Module.Value.ToItem.Name} has no target: Deactivating"]
-				Module.Value:Click
+				Module.Value:Deactivate
 			}
 		}
 		while ${Module:Next(exists)}
@@ -1459,15 +1353,16 @@ objectdef obj_Ship
 		}
 
 		Me.Ship.Module[${Slot}].LastTarget:MakeActiveTarget
-		MyShip.Module[${Slot}]:Click
 		if ${Activate.Equal[ON]}
 		{
+			MyShip.Module[${Slot}]:Activate
 			; Delay from 30 to 60 seconds before deactivating
 			TimedCommand ${Math.Rand[600]:Inc[300]} "Script[EVEBot].VariableScope.Ship:CycleMiningLaser[OFF, ${Slot}]"
 			return
 		}
 		else
 		{
+			MyShip.Module[${Slot}]:Deactivate
 			; Delay for the time it takes the laser to deactivate and be ready for reactivation
 			TimedCommand 20 "Script[EVEBot].VariableScope.Ship:CycleMiningLaser[ON, ${Slot}]"
 			return
@@ -1494,7 +1389,7 @@ objectdef obj_Ship
 			if ${Module.Value.IsActive} && \
 				!${Module.Value.IsDeactivating}
 			{
-				Module.Value:Click
+				Module.Value:Deactivate
 			}
 		}
 		while ${Module:Next(exists)}
@@ -1528,7 +1423,7 @@ objectdef obj_Ship
 				}
 
 				Logger:Log["Activating: ${Slot}: ${Module.Value.ToItem.Name}"]
-				Module.Value:Click
+				Module.Value:Activate
 				wait 25
 				;TimedCommand ${Math.Rand[600]:Inc[300]} "Script[EVEBot].VariableScope.Ship:CycleMiningLaser[OFF, ${Slot}]"
 				return
@@ -1536,52 +1431,6 @@ objectdef obj_Ship
 			wait 10
 		}
 		while ${Module:Next(exists)}
-	}
-
-	method StopShip()
-	{
-		Validate_Ship()
-
-		EVE:Execute[CmdStopShip]
-	}
-
-	; Approaches EntityID to within 5% of Distance, then stops ship.  Momentum will handle the rest.
-	function Approach(int64 EntityID, int64 Distance)
-	{
-		Validate_Ship()
-
-		if ${Entity[${EntityID}](exists)}
-		{
-			variable float64 OriginalDistance = ${Entity[${EntityID}].Distance}
-			variable float64 CurrentDistance
-
-			If ${OriginalDistance} < ${Distance}
-			{
-				EVE:Execute[CmdStopShip]
-				return
-			}
-			OriginalDistance:Inc[10]
-
-			CurrentDistance:Set[${Entity[${EntityID}].Distance}]
-			Logger:Log["Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc[(${CurrentDistance} - ${Distance}) / ${MyShip.MaxVelocity}].Ceil} Seconds away"]
-
-			This:Activate_AfterBurner[]
-			do
-			{
-				Entity[${EntityID}]:Approach
-				wait 50
-				CurrentDistance:Set[${Entity[${EntityID}].Distance}]
-
-				if ${Entity[${EntityID}](exists)} && \
-					${OriginalDistance} < ${CurrentDistance}
-				{
-					Logger:Log["DEBUG: obj_Ship:Approach: ${Entity[${EntityID}].Name} is getting further away!  Is it moving? Are we stuck, or colliding?", LOG_MINOR]
-				}
-			}
-			while ${CurrentDistance} > ${Math.Calc64[${Distance} * 1.05]}
-			EVE:Execute[CmdStopShip]
-			This:Deactivate_AfterBurner[]
-		}
 	}
 
 	member IsCargoOpen()
@@ -1651,447 +1500,6 @@ objectdef obj_Ship
 		}
 	}
 
-
-	function WarpToID(int64 ID, int WarpInDistance=0)
-	{
-		Validate_Ship()
-
-		if (${ID} <= 0)
-		{
-			Logger:Log["Error: obj_Ship:WarpToID: Id is <= 0 (${ID})"]
-			return
-		}
-
-		if !${Entity[${ID}](exists)}
-		{
-			Logger:Log["Error: obj_Ship:WarpToID: No entity matched the ID given."]
-			return
-		}
-#if EVEBOT_DEBUG
-		Logger:Log["Debug: WarpToID ${ID} ${WarpInDistance}"]
-#endif
-		Entity[${ID}]:AlignTo
-		call This.WarpPrepare
-		while ${Entity[${ID}].Distance} >= WARP_RANGE
-		{
-			Logger:Log["Warping to ${Entity[${ID}].Name} @ ${EVEBot.MetersToKM_Str[${WarpInDistance}]}"]
-			while !${This.WarpEntered}
-			{
-				Entity[${ID}]:WarpTo[${WarpInDistance}]
-				wait 10
-			}
-			call This.WarpWait
-			if ${Return} == 2
-			{
-				return
-			}
-		}
-	}
-
-	; This takes CHARID, not Entity id
-	function WarpToFleetMember( int charID, int distance=0 )
-	{
-		Validate_Ship()
-
-		variable index:fleetmember FleetMembers
-		variable iterator FleetMember
-
-		FleetMembers:Clear
-		Me.Fleet:GetMembers[FleetMembers]
-		FleetMembers:GetIterator[FleetMember]
-
-		if ${FleetMember:First(exists)}
-		{
-			do
-			{
-				if ${FleetMember.Value.CharID} == ${charID} && ${Local[${FleetMember.Value.ToPilot.Name}](exists)}
-				{
-#if EVEBOT_DEBUG
-					Logger:Log["Debug: WarpToFleetMember ${charID} ${distance}"]
-#endif
-					call This.WarpPrepare
-					while !${Entity[OwnerID = ${charID} && CategoryID = 6](exists)}
-					{
-						Logger:Log["Warping to Fleet Member: ${FleetMember.Value.ToPilot.Name}"]
-						while !${This.WarpEntered}
-						{
-							FleetMember.Value:WarpTo[${distance}]
-							wait 10
-						}
-						call This.WarpWait
-						if ${Return} == 2
-						{
-							return
-						}
-					}
-					Logger:Log["ERROR: Ship.WarpToFleetMember never reached fleet member!"]
-					return
-				}
-			}
-			while ${FleetMember:Next(exists)}
-		}
-		Logger:Log["ERROR: Ship.WarpToFleetMember could not find fleet member!"]
-	}
-
-	function WarpToBookMarkName(string DestinationBookmarkLabel)
-	{
-		Validate_Ship()
-
-		if (!${EVE.Bookmark[${DestinationBookmarkLabel}](exists)})
-		{
-			Logger:Log["ERROR: Bookmark: '${DestinationBookmarkLabel}' does not exist!", LOG_CRITICAL]
-			return
-		}
-
-		call This.WarpToBookMark ${EVE.Bookmark[${DestinationBookmarkLabel}].ID}
-	}
-
-	; TODO - Move this to obj_AutoPilot when it is ready - CyberTech
-	function ActivateAutoPilot()
-	{
-		Validate_Ship()
-
-		variable int Counter
-		Logger:Log["Activating autopilot and waiting until arrival..."]
-		if !${Me.AutoPilotOn}
-		{
-			EVE:Execute[CmdToggleAutopilot]
-		}
-		do
-		{
-			do
-			{
-				Counter:Inc
-				wait 10
-			}
-			while ${Me.AutoPilotOn(exists)} && !${Me.AutoPilotOn} && (${Counter} < 10)
-			wait 10
-		}
-		while ${Me.AutoPilotOn(exists)} && ${Me.AutoPilotOn}
-		Logger:Log["Arrived - Waiting for system load"]
-		wait 150
-	}
-
-	function TravelToSystem(int DestinationSystemID)
-	{
-		variable index:int apRoute
-		variable iterator  apIterator
-
-		EVE:ClearAllWaypoints
-		wait 10
-
-		while ${DestinationSystemID} != ${Me.SolarSystemID}
-		{
-			EVE:DoGetToDestinationPath[apRoute]
-			Logger:Log["DEBUG: apRoute.Used = ${apRoute.Used}",LOG_DEBUG]
-			if ${apRoute.Used} == 0
-			{
-				Logger:Log["DEBUG: To: ${DestinationSystemID} At: ${Me.SolarSystemID}"]
-				Logger:Log["Setting autopilot from ${Universe[${Me.SolarSystemID}].Name} to ${Universe[${DestinationSystemID}].Name}"]
-				Universe[${DestinationSystemID}]:SetDestination
-			}
-
-			call This.ActivateAutoPilot
-		}
-	}
-
-	function WarpToBookMark(bookmark DestinationBookmark,bool EnterGate = TRUE)
-	{
-		Validate_Ship()
-
-		variable int Counter
-
-		if ${Me.InStation}
-		{
-			call Station.Undock
-		}
-
-		if ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${DestinationBookmark.X}, ${DestinationBookmark.Y}, ${DestinationBookmark.Z}]} < WARP_RANGE
-		{
-			Logger:Log["obj_Ship:WarpToBookMark - We are already at the bookmark"]
-			return
-		}
-
-		call This.WarpPrepare
-		call This.TravelToSystem ${DestinationBookmark.SolarSystemID}
-
-#if EVEBOT_DEBUG
-		echo \${DestinationBookmark.Type} = ${DestinationBookmark.Type}
-		echo \${DestinationBookmark.TypeID} = ${DestinationBookmark.TypeID}
-		echo \${DestinationBookmark.ToEntity(exists)} = ${DestinationBookmark.ToEntity(exists)}
-		echo \${DestinationBookmark.ToEntity.Category} = ${DestinationBookmark.ToEntity.Category}
-		echo \${DestinationBookmark.ToEntity.CategoryID} = ${DestinationBookmark.ToEntity.CategoryID}
-		echo \${DestinationBookmark.ToEntity.Distance} = ${DestinationBookmark.ToEntity.Distance}
-		echo \${DestinationBookmark.AgentID} = ${DestinationBookmark.AgentID}
-		echo \${DestinationBookmark.ItemID} = ${DestinationBookmark.ItemID}
-		echo \${DestinationBookmark.LocationType} = ${DestinationBookmark.LocationType}
-		echo \${DestinationBookmark.LocationID} = ${DestinationBookmark.LocationID}
-		echo DestinationBookmark Location: ${DestinationBookmark.X}, ${DestinationBookmark.Y}, ${DestinationBookmark.Z}
-		echo \${Entity[CategoryID = 6].X} = ${Entity[CategoryID = 6].X}
-		echo \${Entity[CategoryID = 6].Y} = ${Entity[CategoryID = 6].Y}
-		echo \${Entity[CategoryID = 6].Z} = ${Entity[CategoryID = 6].Z}
-		echo \${Me.ToEntity.X} = ${Me.ToEntity.X}
-		echo \${Me.ToEntity.Y} = ${Me.ToEntity.Y}
-		echo \${Me.ToEntity.Z} = ${Me.ToEntity.Z}
-#endif
-
-
-		variable int MinWarpRange
-		declarevariable WarpCounter int 0
-		declarevariable Label string ${DestinationBookmark.Label}
-
-		declarevariable TypeID int ${DestinationBookmark.ToEntity.TypeID}
-		declarevariable GroupID int ${DestinationBookmark.ToEntity.GroupID}
-		declarevariable CategoryID int ${DestinationBookmark.ToEntity.CategoryID}
-		declarevariable EntityID int ${DestinationBookmark.ToEntity.ID}
-
-		if ${DestinationBookmark.ToEntity(exists)}
-		{
-			/* This is a station bookmark, we can use .Distance properly */
-			switch ${CategoryID}
-			{
-				case CATEGORYID_STATION
-					MinWarpRange:Set[WARP_RANGE]
-					break
-				case CATEGORYID_CELESTIAL
-					switch ${GroupID}
-					{
-						case GROUP_SUN
-							Logger:Log["obj_Ship:WarpToBookMark - Sun/Star Entity Bookmarks are not supported", LOG_CRITICAL]
-							return
-							break
-						case GROUP_STARGATE
-							MinWarpRange:Set[WARP_RANGE]
-							break
-						case GROUP_MOON
-							MinWarpRange:Set[WARP_RANGE_MOON]
-							break
-						case GROUP_PLANET
-							MinWarpRange:Set[WARP_RANGE_PLANET]
-							break
-						default
-							MinWarpRange:Set[WARP_RANGE]
-							break
-					}
-					break
-				default
-					MinWarpRange:Set[WARP_RANGE]
-					break
-			}
-
-
-			WarpCounter:Set[1]
-			while ${DestinationBookmark.ToEntity.Distance} > ${MinWarpRange}
-			{
-				if ${WarpCounter} > 10
-				{
-					/* 	We return here, instead of breaking. We're either in a HUGE-ass system, which takes more
-						than 10 jumps to cross, or some putz with no Warp Drive Op skill is trying to cross a large system,
-						or, more likely, we're not actually warping anywhere.  So we'll return and let the bot do something
-						useful with itself -- CyberTech
-					*/
-					Logger:Log["obj_Ship:WarpToBookMark - Failed to arrive at bookmark after ${WarpCounter} warps", LOG_CRITICAL]
-					return
-				}
-				Logger:Log["1: Warping to bookmark ${Label} (Attempt #${WarpCounter})"]
-				while !${This.WarpEntered}
-				{
-					DestinationBookmark:WarpTo
-					wait 10
-				}
-				call This.WarpWait
-				if ${Return} == 2
-				{
-					return
-				}
-				WarpCounter:Inc
-			}
-		}
-		elseif ${DestinationBookmark.ItemID} == -1 || \
-				(${DestinationBookmark.AgentID(exists)} && ${DestinationBookmark.LocationID(exists)})
-		{
-			/* This is an in-space bookmark, or a dungeon bookmark, just warp to it. */
-
-			WarpCounter:Set[1]
-			while ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${DestinationBookmark.X}, ${DestinationBookmark.Y}, ${DestinationBookmark.Z}]} > WARP_RANGE
-			{
-				;echo Bookmark Distance: ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${DestinationBookmark.X}, ${DestinationBookmark.Y}, ${DestinationBookmark.Z}]} > WARP_RANGE
-				if ${WarpCounter} > 10
-				{
-					Logger:Log["obj_Ship:WarpToBookMark - Failed to arrive at bookmark after ${WarpCounter} warps", LOG_CRITICAL]
-					return
-				}
-
-				if ${DestinationBookmark.AgentID(exists)} && ${DestinationBookmark.LocationID(exists)} && \
-					${Entity[TypeID = TYPE_ACCELERATION_GATE](exists)}
-				{
-					if ${EnterGate}
-					{
-						call This.Approach ${Entity[TypeID = TYPE_ACCELERATION_GATE].ID} DOCKING_RANGE
-						wait 10
-						Logger:Log["Activating Acceleration Gate..."]
-						while !${This.WarpEntered}
-						{
-							Entity[TypeID = TYPE_ACCELERATION_GATE]:Activate
-							wait 10
-						}
-						call This.WarpWait
-						if ${Return} == 2
-						{
-							return
-						}
-					}
-					else
-					{
-						;we should not be going through acceleration gates , this is handled by the missioneer!
-						return
-					}
-				}
-				else
-				{
-
-					Logger:Log["2: Warping to bookmark ${Label} (Attempt #${WarpCounter})"]
-					while !${This.WarpEntered}
-					{
-						DestinationBookmark:WarpTo
-						wait 10
-					}
-					call This.WarpWait
-					if ${Return} == 2
-					{
-						return
-					}
-					WarpCounter:Inc
-				}
-			}
-		}
-		else
-		{
-			/* This is an entity bookmark, but that entity is not on the overhead yet. */
-
-			WarpCounter:Set[1]
-			while !${DestinationBookmark.ToEntity(exists)}
-			{
-				if ${WarpCounter} > 10
-				{
-					Logger:Log["obj_Ship:WarpToBookMark - Failed to arrive at bookmark after ${WarpCounter} warps", LOG_CRITICAL]
-					return
-				}
-				Logger:Log["3: Warping to bookmark ${Label} (Attempt #${WarpCounter})"]
-				while !${This.WarpEntered}
-				{
-					DestinationBookmark:WarpTo
-					wait 10
-				}
-				call This.WarpWait
-				if ${Return} == 2
-				{
-					return
-				}
-				WarpCounter:Inc
-			}
-		}
-
-		/* Special-Case Code for docking or getting in proper range for known objects we'll warp to */
-		if ${DestinationBookmark.ToEntity(exists)}
-		{
-			switch ${CategoryID}
-			{
-				case CATEGORYID_STATION
-					call Station.DockAtStation ${EntityID}
-					break
-				Default
-					break
-			}
-		}
-		wait 20
-		;Logger:Log["obj_Ship:WarpToBookMark: Exiting", LOG_DEBUG]
-	}
-
-	function WarpPrepare()
-	{
-		Validate_Ship()
-
-		Logger:Log["Preparing for warp"]
-		if !${This.HasCovOpsCloak}
-		{
-			This:Deactivate_Cloak[]
-		}
-		This:Deactivate_SensorBoost
-
-		if ${This.Drones.WaitingForDrones}
-		{
-			Logger:Log["Drone deployment already in process, delaying warp up to 1 second", LOG_CRITICAL]
-			variable int timeout = 0
-			do
-			{
-				wait 1
-				timeout:Inc
-			}
-			while ${This.Drones.WaitingForDrones} && ${timeout} < 10
-		}
-
-		This:DeactivateAllMiningLasers[]
-		Targeting:Disable[]
-		This:UnlockAllTargets[]
-		call This.Drones.ReturnAllToDroneBay
-	}
-
-	member:bool InWarp()
-	{
-		Validate_Ship()
-
-		if ${Me.ToEntity.Mode} == 3
-		{
-			return TRUE
-		}
-		return FALSE
-	}
-
-	member:bool WarpEntered()
-	{
-		Validate_Ship()
-
-		variable bool Warped = FALSE
-
-		if ${This.InWarp}
-		{
-			Warped:Set[TRUE]
-			Logger:Log["Warping..."]
-		}
-		return ${Warped}
-	}
-
-	function WarpWait()
-	{
-		Validate_Ship()
-
-		variable bool Warped = FALSE
-
-		; We reload weapons here, because we know we're in warp, so they're deactivated.
-		This:Reload_Weapons[TRUE]
-
-		if (!${Me.ToEntity.IsCloaked} && ${This.HasCovOpsCloak})
-		{
-			This:Activate_Cloak[]
-		}
-
-		while ${This.InWarp}
-		{
-			Warped:Set[TRUE]
-			wait 10
-			if ${This.InteruptWarpWait}
-			{
-				; TODO - implement this. not sure what i was thinking of for it. i can see it's use -- CyberTech
-				Logger:Log["Leaving WarpWait due to emergency condition", LOG_CRITICAL]
-				This.InteruptWarpWait:Set[False]
-				return 2
-			}
-		}
-		Logger:Log["Dropped out of warp"]
-		return ${Warped}
-	}
-
 	Define_ModuleMethod(Activate_Armor_Reps, Deactivate_Armor_Reps, This.ModuleList_Repair_Armor, TRUE)
 	Define_ModuleMethod(Activate_AfterBurner, Deactivate_AfterBurner, This.ModuleList_AB_MWD, TRUE)
 	Define_ModuleMethod(Activate_Shield_Booster, Deactivate_Shield_Booster, This.ModuleList_Regen_Shield, TRUE)
@@ -2109,7 +1517,7 @@ objectdef obj_Ship
 	{
 		Validate_Ship()
 
-		if ${Me.ToEntity(exists)} && ${Me.ToEntity.IsCloaked}
+		if ${Me.InSpace} && ${Me.ToEntity.IsCloaked}
 		{
 			return TRUE
 		}
@@ -2343,24 +1751,22 @@ objectdef obj_Ship
 			hsIndex:GetIterator[hsIterator]
 
 			shipName:Set[${MyShip}]
-			if ${shipName.NotEqual[${name}]}
+			if ${shipName.NotEqual[${name}]} && \
+				${hsIterator:First(exists)}
 			{
-				if ${hsIterator:First(exists)}
+				do
 				{
-					do
+					if ${hsIterator.Value.GivenName.Equal[${name}]}
 					{
-						if ${hsIterator.Value.GivenName.Equal[${name}]}
-						{
-							Logger:Log["obj_Ship: Switching to ship named ${hsIterator.Value.GivenName}."]
-							hsIterator.Value:MakeActive
-							wait 10
-							This:SetType[${hsIterator.Value.Type}]
-							This:SetTypeID[${hsIterator.Value.TypeID}]
-							break
-						}
+						Logger:Log["obj_Ship: Switching to ship named ${hsIterator.Value.GivenName}."]
+						hsIterator.Value:MakeActive
+						wait 10
+						This:SetType[${hsIterator.Value.Type}]
+						This:SetTypeID[${hsIterator.Value.TypeID}]
+						break
 					}
-					while ${hsIterator:Next(exists)}
 				}
+				while ${hsIterator:Next(exists)}
 			}
 		}
 	}
