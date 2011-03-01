@@ -733,7 +733,7 @@ objectdef obj_Ship
 		do
 		{
 			if ${ModuleIter.Value.LastTarget(exists)} && \
-				${ModuleIter.Value.LastTarget.ID} == ${EntityID} && \
+				${ModuleIter.Value.LastTarget.ID.Equal[${EntityID}]} && \
 				( ${ModuleIter.Value.IsActive} || ${ModuleIter.Value.IsGoingOnline} )
 			{
 				return TRUE
@@ -1126,7 +1126,7 @@ objectdef obj_Ship
 		{
 			do
 			{
-				if ${FleetMember.Value.CharID} == ${charID} && ${Local[${FleetMember.Value.ToPilot.Name}](exists)}
+				if ${charID.Equal[${FleetMember.Value.CharID}]} && ${Local[${FleetMember.Value.ToPilot.Name}](exists)}
 				{
 					call This.WarpPrepare
 					while !${Entity[OwnerID,${charID},CategoryID,6](exists)}
@@ -1188,7 +1188,7 @@ objectdef obj_Ship
 
 	function TravelToSystem(int64 DestinationSystemID)
 	{
-		while ${DestinationSystemID} != ${_Me.SolarSystemID}
+		while !${DestinationSystemID.Equal[${_Me.SolarSystemID}]}
 		{
 			UI:UpdateConsole["DEBUG: To: ${DestinationSystemID} At: ${_Me.SolarSystemID}"]
 			UI:UpdateConsole["Setting autopilot from ${Universe[${_Me.SolarSystemID}].Name} to ${Universe[${DestinationSystemID}].Name}"]
