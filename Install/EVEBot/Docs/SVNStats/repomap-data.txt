@@ -200,8 +200,8 @@
           <label>stable</label>
         <branch>
             <label>Behaviors</label>
-            <leaf><label>_includes.iss</label><weight>8</weight><value>0.0</value></leaf>
-            <leaf><label>_variables.iss</label><weight>24</weight><value>0.0</value></leaf>
+            <leaf><label>_includes.iss</label><weight>34</weight><value>76.47058823529412</value></leaf>
+            <leaf><label>_variables.iss</label><weight>42</weight><value>42.857142857142854</value></leaf>
             <leaf><label>obj_Freighter.iss</label><weight>425</weight><value>0.0</value></leaf>
             <leaf><label>obj_Hauler.iss</label><weight>642</weight><value>0.9345794392523363</value></leaf>
             <leaf><label>obj_Miner.iss</label><weight>515</weight><value>0.0</value></leaf>
@@ -244,7 +244,7 @@
             <leaf><label>obj_Market.iss</label><weight>425</weight><value>-37.411764705882355</value></leaf>
             <leaf><label>obj_Missions.iss</label><weight>926</weight><value>0.0</value></leaf>
             <leaf><label>obj_Safespots.iss</label><weight>112</weight><value>0.0</value></leaf>
-            <leaf><label>obj_Ship.iss</label><weight>2248</weight><value>0.0</value></leaf>
+            <leaf><label>obj_Ship.iss</label><weight>2257</weight><value>0.39875941515285773</value></leaf>
             <leaf><label>obj_Skills.iss</label><weight>285</weight><value>0.0</value></leaf>
             <leaf><label>obj_Social.iss</label><weight>456</weight><value>0.0</value></leaf>
             <leaf><label>obj_Station.iss</label><weight>330</weight><value>0.0</value></leaf>
@@ -264,6 +264,7 @@
           <leaf><label>EveBots.iss</label><weight>265</weight><value>0.0</value></leaf>
           <leaf><label>EveCallback.iss</label><weight>45</weight><value>0.0</value></leaf>
           <leaf><label>Launcher.iss</label><weight>102</weight><value>0.0</value></leaf>
+          <leaf><label>_ActiveModules.iss</label><weight>17</weight><value>100.0</value></leaf>
       </branch>
     </branch>
 
