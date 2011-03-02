@@ -45,6 +45,7 @@ objectdef obj_Ship
 	variable bool InteruptWarpWait = FALSE
 	variable string m_Type
 	variable int m_TypeID
+	variable uint ReloadingWeapons = 0
 
 	variable iterator ModulesIterator
 
@@ -123,6 +124,11 @@ objectdef obj_Ship
 						This:Deactivate_Shield_Booster[]
 					}
 				}
+			}
+			if ${This.ReloadingWeapons}
+			{
+				if ${Math.Calc[${Time.Timestamp} - ${This.ReloadingWeapons}]} > 12
+					This.ReloadingWeapons:Set[0]
 			}
 			This.NextPulse:Set[${Time.Timestamp}]
 			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
@@ -2090,6 +2096,8 @@ objectdef obj_Ship
 		{
 			return
 		}
+		if ${This.ReloadingWeapons}
+			return
 
 		variable iterator ModuleIter
 
@@ -2173,6 +2181,7 @@ objectdef obj_Ship
 		{
 			UI:UpdateConsole["Reloading Weapons..."]
 			EVE:Execute[CmdReloadAmmo]
+			This.ReloadingWeapons:Set[${Time.Timestamp}]
 		}
 	}
 
