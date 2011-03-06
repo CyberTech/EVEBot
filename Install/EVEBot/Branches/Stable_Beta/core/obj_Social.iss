@@ -108,14 +108,12 @@ objectdef obj_Social
 
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		Event[EVE_OnChannelMessage]:AttachAtom[This:OnChannelMessage]
-		EVE:ActivateChannelMessageEvents
 
 		UI:UpdateConsole["obj_Social: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
 	{
-		EVE:ActivateChannelMessageEvents
 		Event[EVE_OnChannelMessage]:DetachAtom[This:OnChannelMessage]
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}
@@ -124,19 +122,15 @@ objectdef obj_Social
 	{
 		if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
 		{
-			if ${EVE.GetPilots} > 1
-			{
-				; DoGetPilots is relatively expensive vs just the pilotcount.  Check if we're alone before calling.
-				EVE:DoGetPilots[This.PilotIndex]
-			}
-			else
+			EVE:GetLocalPilots[This.PilotIndex]
+			if ${This.PilotIndex.Used} == 1
 			{
 				This.PilotIndex:Clear
 			}
 
 			if !${_Me.InStation}
 			{
-				EVE:DoGetEntities[This.EntityIndex,CategoryID,CATEGORYID_ENTITY]
+				EVE:QueryEntities[This.EntityIndex,"CategoryID = CATEGORYID_ENTITY"]
 			}
 			else
 			{
@@ -151,14 +145,14 @@ objectdef obj_Social
 		}
 	}
 
-	method OnChannelMessage(int64 iTimeStamp, string sDate, string sTime, string sChannel, string sAuthor, int iAuthorID, string sMessageText)
+	method OnChannelMessage(int ChannelID, int64 CharID, int64 CorpID, int64 AllianceID, string CharName, string MessageText)
 	{
-		if ${sChannel.Equal["Local"]}
+		if ${ChannelID} == ${Me.SolarSystemID}
 		{
-			if ${sAuthor.NotEqual["EVE System"]}
+			if ${CharName.NotEqual["EVE System"]}
 			{
 				call Sound.PlayTellSound
-				UI:UpdateConsole["Channel Local: ${sAuthor.Escape}: ${sMessageText.Escape}", LOG_CRITICAL]
+				UI:UpdateConsole["Channel Local: ${CharName.Escape}: ${MessageText.Escape}", LOG_CRITICAL]
 			}
 		}
 	}

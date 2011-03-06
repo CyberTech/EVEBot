@@ -1,5 +1,19 @@
 #include core/defines.iss
 
+#if !${ISXEVE.IsBeta}
+	#echo 
+	#echo 
+	#echo Stable_Beta EVEBot requires ISXEVE _BETA_, which is not public 
+	#echo at the moment. It will not operate properly with Live ISXEVE 
+	#echo Please use Stable or Tagged Trunk.  See IRC for 
+	#echo more information.
+	#echo 
+	#echo -- CyberTech
+	#echo 
+	#echo 
+	#error Aborting
+#endif
+
 /* Cache Objects */
 #include core/obj_Cache.iss
 
@@ -66,6 +80,10 @@ function main()
 		_EVETime:Initialize
 	}
 
+	if ${Me.InSpace}
+	{
+		EVE:PopulateEntities[TRUE]
+	}
 	turbo 150
 
 	echo "${Time} EVEBot: Loading Objects..."

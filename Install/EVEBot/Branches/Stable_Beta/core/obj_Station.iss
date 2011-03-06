@@ -264,17 +264,17 @@ objectdef obj_Station
 	function Dock()
 	{
 		variable int Counter = 0
-		variable int64 StationID = ${Entity[CategoryID,3,${Config.Common.HomeStation}].ID}
+		variable int64 StationID = ${Entity["CategoryID = 3 && Name = ${Config.Common.HomeStation}"].ID}
 
 		UI:UpdateConsole["Docking at ${StationID}:${Config.Common.HomeStation}"]
 
-		Ship:SetType[${Entity[CategoryID,CATEGORYID_SHIP].Type}]
-		Ship:SetTypeID[${Entity[CategoryID,CATEGORYID_SHIP].TypeID}]
+		Ship:SetType[${Me.ToEntity.Type}]
+		Ship:SetTypeID[${Me.ToEntity.TypeID}]
 
 		if ${StationID} <= 0 || !${Entity[${StationID}](exists)}
 		{
 			UI:UpdateConsole["Warning: Home station not found, going to nearest base", LOG_CRITICAL]
-			StationID:Set[${Entity[CategoryID,3].ID}]
+			StationID:Set[${Entity["CategoryID = 3"].ID}]
 		}
 
 		if ${Entity[${StationID}](exists)}
@@ -317,7 +317,7 @@ objectdef obj_Station
 		UI:UpdateConsole["Undock: Complete"]
    		call ChatIRC.Say "Undock: Complete"
 
-		Config.Common:SetHomeStation[${Entity[CategoryID,3].Name}]
+		Config.Common:SetHomeStation[${Entity["CategoryID = 3"].Name}]
 
 		;Me:SetVelocity[100]
 		wait 30

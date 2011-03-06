@@ -334,11 +334,11 @@ objectdef obj_Targets
 		/* Me.Ship.MaxTargetRange contains the (possibly) damped value */
 		if ${Ship.TypeID} == TYPE_RIFTER
 		{
-			EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY, radius, 100000]
+			EVE:QueryEntities[Targets, "CategoryID = CATEGORYID_ENTITY && Distance <= 100000"]
 		}
 		else
 		{
-			EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY, radius, ${_Me.Ship.MaxTargetRange}]
+			EVE:QueryEntities[Targets, "CategoryID = CATEGORYID_ENTITY && Distance <= ${_Me.Ship.MaxTargetRange}"]
 		}
 		Targets:GetIterator[Target]
 
@@ -346,7 +346,7 @@ objectdef obj_Targets
 		{
 			if ${Ship.IsDamped}
 			{	/* Ship.MaxTargetRange contains the maximum undamped value */
-				EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY, radius, ${Ship.MaxTargetRange}]
+				EVE:QueryEntities[Targets, "CategoryID = CATEGORYID_ENTITY && Distance <= ${Ship.MaxTargetRange}"]
 				Targets:GetIterator[Target]
 
 				if !${Target:First(exists)}
@@ -644,7 +644,7 @@ objectdef obj_Targets
 		variable index:entity tgtIndex
 		variable iterator tgtIterator
 
-		EVE:DoGetEntities[tgtIndex, CategoryID, CATEGORYID_SHIP]
+		EVE:QueryEntities[tgtIndex, "CategoryID = CATEGORYID_SHIP"]
 		tgtIndex:GetIterator[tgtIterator]
 
 		if ${tgtIterator:First(exists)}
@@ -667,7 +667,7 @@ objectdef obj_Targets
 		variable index:entity tgtIndex
 		variable iterator tgtIterator
 
-		EVE:DoGetEntities[tgtIndex, CategoryID, CATEGORYID_ENTITY]
+		EVE:QueryEntities[tgtIndex, "CategoryID = CATEGORYID_ENTITY"]
 		UI:UpdateConsole["DEBUG: Found ${tgtIndex.Used} entities."]
 
 		tgtIndex:GetIterator[tgtIterator]

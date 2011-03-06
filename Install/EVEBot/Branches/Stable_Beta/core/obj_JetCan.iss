@@ -106,7 +106,7 @@ objectdef obj_JetCan
 
 		variable index:entity Cans
 		variable iterator Can
-		EVE:DoGetEntities[Cans, GroupID, GROUPID_CARGO_CONTAINER, Radius, LOOT_RANGE]
+		EVE:QueryEntities[Cans, "GroupID = GROUPID_CARGO_CONTAINER && Distance <= LOOT_RANGE"]
 
 		Cans:GetIterator[Can]
 
@@ -457,7 +457,7 @@ objectdef obj_CorpHangerArray inherits obj_JetCan
 
 		variable index:entity Cans
 		variable iterator Can
-		EVE:DoGetEntities[Cans, GroupID, GROUP_CORPORATEHANGARARRAY]
+		EVE:QueryEntities[Cans, "GroupID = GROUP_CORPORATEHANGARARRAY"]
 
 		Cans:GetIterator[Can]
 
@@ -539,7 +539,7 @@ objectdef obj_SpawnContainer inherits obj_JetCan
 
 		variable index:entity Cans
 		variable iterator Can
-		EVE:DoGetEntities[Cans, GroupID, GROUPID_SPAWN_CONTAINER]
+		EVE:QueryEntities[Cans, "GroupID = GROUPID_SPAWN_CONTAINER"]
 
 		Cans:GetIterator[Can]
 
@@ -613,7 +613,7 @@ objectdef obj_LargeShipAssemblyArray inherits obj_JetCan
 
 		variable index:entity Cans
 		variable iterator Can
-		EVE:DoGetEntities[Cans, TypeID, TYPEID_LARGE_ASSEMBLY_ARRAY]
+		EVE:QueryEntities[Cans, "TypeID = TYPEID_LARGE_ASSEMBLY_ARRAY"]
 
 		Cans:GetIterator[Can]
 
@@ -707,7 +707,7 @@ objectdef obj_XLargeShipAssemblyArray inherits obj_JetCan
 
 		variable index:entity Cans
 		variable iterator Can
-		EVE:DoGetEntities[Cans, TypeID, TYPEID_XLARGE_ASSEMBLY_ARRAY]
+		EVE:QueryEntities[Cans, "TypeID = TYPEID_XLARGE_ASSEMBLY_ARRAY"]
 
 		Cans:GetIterator[Can]
 

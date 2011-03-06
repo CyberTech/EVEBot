@@ -881,7 +881,7 @@ objectdef obj_Ship
 
 		if ${Activate.Equal[ON]} && \
 			(	!${Me.Ship.Module[${Slot}].LastTarget(exists)} || \
-				!${Entity[id,${Me.Ship.Module[${Slot}].LastTarget.ID}](exists)} \
+				!${Entity[${Me.Ship.Module[${Slot}].LastTarget.ID}](exists)} \
 			)
 		{
 			echo "obj_Ship:CycleMiningLaser: Target doesn't exist"
@@ -1135,7 +1135,7 @@ objectdef obj_Ship
 				if ${charID.Equal[${FleetMember.Value.CharID}]} && ${Local[${FleetMember.Value.ToPilot.Name}](exists)}
 				{
 					call This.WarpPrepare
-					while !${Entity[OwnerID,${charID},CategoryID,6](exists)}
+					while !${Entity["OwnerID = ${charID} && CategoryID = 6"](exists)}
 					{
 						UI:UpdateConsole["Warping to Fleet Member: ${FleetMember.Value.ToPilot.Name}"]
 						while !${This.WarpEntered}
@@ -1228,9 +1228,9 @@ objectdef obj_Ship
 		echo \${DestinationBookmark.LocationType} = ${DestinationBookmark.LocationType}
 		echo \${DestinationBookmark.LocationID} = ${DestinationBookmark.LocationID}
 		echo DestinationBookmark Location: ${DestinationBookmark.X}, ${DestinationBookmark.Y}, ${DestinationBookmark.Z}
-		echo \${Entity[CategoryID,6].X} = ${Entity[CategoryID,6].X}
-		echo \${Entity[CategoryID,6].Y} = ${Entity[CategoryID,6].Y}
-		echo \${Entity[CategoryID,6].Z} = ${Entity[CategoryID,6].Z}
+		echo \${Entity["CategoryID = 6"].X} = ${Entity["CategoryID = 6"].X}
+		echo \${Entity["CategoryID = 6"].Y} = ${Entity["CategoryID = 6"].Y}
+		echo \${Entity["CategoryID = 6"].Z} = ${Entity["CategoryID = 6"].Z}
 		echo \${Me.ToEntity.X} = ${Me.ToEntity.X}
 		echo \${Me.ToEntity.Y} = ${Me.ToEntity.Y}
 		echo \${Me.ToEntity.Z} = ${Me.ToEntity.Z}
@@ -1324,14 +1324,14 @@ objectdef obj_Ship
 				}
 
 				if ${DestinationBookmark.AgentID(exists)} && ${DestinationBookmark.LocationID(exists)} && \
-					${Entity[TypeID,TYPE_ACCELERATION_GATE](exists)}
+					${Entity["TypeID = TYPE_ACCELERATION_GATE"](exists)}
 				{
-					call This.Approach ${Entity[TypeID,TYPE_ACCELERATION_GATE].ID} DOCKING_RANGE
+					call This.Approach ${Entity["TypeID = TYPE_ACCELERATION_GATE"].ID} DOCKING_RANGE
 					wait 10
 					UI:UpdateConsole["Activating Acceleration Gate..."]
 					while !${This.WarpEntered}
 					{
-						Entity[TypeID,TYPE_ACCELERATION_GATE]:Activate
+						Entity["TypeID = TYPE_ACCELERATION_GATE"]:Activate
 						wait 10
 					}
 					call This.WarpWait

@@ -53,13 +53,13 @@ objectdef obj_Bookmarks
 	
 	method CreateEntityBookMark(int32 ID, bool Temporary=FALSE, string Label="Default")
 	{
-		if !${Entity[id,${ID}](exists)}
+		if !${Entity[${ID}](exists)}
 		{
 			UI:UpdateConsole["Debug: CreateBookMark: Invalid ID"]
 			return
 		}
 		
-		EntityName:Set[${Entity[id,${ID}].Name}
+		EntityName:Set[${Entity[${ID}].Name}
 		
 		if ${Label.Equal["Default"]}
 		{

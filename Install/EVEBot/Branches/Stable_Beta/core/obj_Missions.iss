@@ -451,7 +451,7 @@ objectdef obj_Missions
 
 ;       do
 ;       {
-;            EVE:DoGetEntities[entityIndex,TypeID,TYPE_ACCELERATION_GATE]
+;            EVE:QueryEntities[entityIndex, "TypeID = TYPE_ACCELERATION_GATE"]
 ;            call Ship.Approach ${entityIndex.Get[1].ID} JUMP_RANGE
 ;            entityIndex.Get[1]:Activate
 ;        }
@@ -585,12 +585,12 @@ objectdef obj_Missions
 		elseif ${This.GatePresent}
 		{
 			/* activate gate and go to next room */
-			call Ship.Approach ${Entity[TypeID,TYPE_ACCELERATION_GATE].ID} DOCKING_RANGE
+			call Ship.Approach ${Entity["TypeID = TYPE_ACCELERATION_GATE"].ID} DOCKING_RANGE
 			wait 10
 			UI:UpdateConsole["Activating Acceleration Gate..."]
 			while !${This.WarpEntered}
 			{
-			   Entity[TypeID,TYPE_ACCELERATION_GATE]:Activate
+			   Entity["TypeID = TYPE_ACCELERATION_GATE"]:Activate
 			   wait 10
 			}
 			call Ship.WarpWait
@@ -613,7 +613,7 @@ objectdef obj_Missions
 	  variable index:entity targetIndex
 	  variable iterator     targetIterator
 
-	  EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
+	  EVE:QueryEntities[targetIndex, "CategoryID = CATEGORYID_ENTITY"]
 	  targetIndex:GetIterator[targetIterator]
 
 	  UI:UpdateConsole["GetTargeting = ${_Me.GetTargeting}, GetTargets = ${_Me.GetTargets}"]
@@ -650,7 +650,7 @@ objectdef obj_Missions
 	  variable index:entity targetIndex
 	  variable iterator     targetIterator
 
-	  EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
+	  EVE:QueryEntities[targetIndex, "CategoryID = CATEGORYID_ENTITY"]
 	  targetIndex:GetIterator[targetIterator]
 
 	  /* FOR NOW just pull the closest target */
@@ -692,7 +692,7 @@ objectdef obj_Missions
 	  variable iterator     targetIterator
 	  variable int          targetCount = 0
 
-	  EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
+	  EVE:QueryEntities[targetIndex, "CategoryID = CATEGORYID_ENTITY"]
 	  targetIndex:GetIterator[targetIterator]
 
 	  if ${targetIterator:First(exists)}
@@ -724,7 +724,7 @@ objectdef obj_Missions
 
    member:bool GatePresent()
    {
-	  return ${Entity[TypeID,TYPE_ACCELERATION_GATE](exists)}
+	  return ${Entity["TypeID = TYPE_ACCELERATION_GATE"](exists)}
    }
 
 	function WarpToEncounter(int agentID)
@@ -817,7 +817,7 @@ objectdef obj_Missions
 			return TRUE
 		}
 
-		EVE:DoGetEntities[Targets, GroupID, GROUP_LARGECOLLIDABLESTRUCTURE]
+		EVE:QueryEntities[Targets, "GroupID = GROUP_LARGECOLLIDABLESTRUCTURE"]
 		Targets:GetIterator[Target]
 
 		if ${Target:First(exists)}
@@ -864,7 +864,7 @@ objectdef obj_Missions
 			return TRUE
 		}
 
-		EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY]
+		EVE:QueryEntities[Targets, "CategoryID = CATEGORYID_ENTITY"]
 		Targets:GetIterator[Target]
 
 		if ${Target:First(exists)}

@@ -13,7 +13,7 @@ objectdef obj_Belts
 	
 	method ResetBeltList()
 	{
-		EVE:DoGetEntities[beltIndex, GroupID, GROUP_ASTEROIDBELT]
+		EVE:QueryEntities[beltIndex, "GroupID = GROUP_ASTEROIDBELT"]
 		beltIndex:GetIterator[beltIterator]	
 		UI:UpdateConsole["obj_Belts: ResetBeltList found ${beltIndex.Used} belts in this system.", LOG_DEBUG]
 	}
@@ -78,7 +78,8 @@ objectdef obj_Belts
 /*
 			variable int64 NearestGate
 			variable float DistanceToGate
-			NearestGate:Set[${Entity[fromID,${beltIterator.Value.ID},Radius,SCANNER_RANGE,GroupID,GROUP_STARGATE].ID}]
+			; fromID is not enabled in isxeve beta.
+			NearestGate:Set[${Entity[fromID,${beltIterator.Value.ID} && Distance <= SCANNER_RANGE && GroupID = GROUP_STARGATE].ID}]
 			if ${NearestGate(exists)} && ${NearestGate} > 0
 			{
 				DistanceToGate:Set[${Entity[${beltIterator.Value.ID}].DistanceTo[${NearestGate}]}]

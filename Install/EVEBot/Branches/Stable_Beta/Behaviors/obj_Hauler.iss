@@ -79,23 +79,22 @@ objectdef obj_Hauler
 
 	member:int64 NearestMatchingJetCan(int64 id)
 	{
-		variable index:int64 JetCan
-		variable int JetCanCount
+		variable index:entity JetCans
 		variable int JetCanCounter
 		variable string tempString
 
-		JetCanCounter:Set[1]
-		JetCanCount:Set[${EVE.GetEntityIDs[JetCan,GroupID,12]}]
-		do
+		JetCanCounter:Set[0]
+		EVE.QueryEntities[JetCans,"GroupID = 12"]
+		while ${JetCanCounter:Inc} <= ${JetCans.Used}
 		{
-			if ${Entity[${JetCan.Get[${JetCanCounter}]}](exists)}
+			if ${JetCans.Get[${JetCanCounter}](exists)}
 			{
- 				if ${Entity[${JetCan.Get[${JetCanCounter}]}].Owner.CharID} == ${id}
+ 				if ${JetCans.Get[${JetCanCounter}].Owner.CharID} == ${id}
  				{
  					echo "DEBUG: owner matched"
-					echo "DEBUG: ${Entity[${JetCan.Get[${JetCanCounter}]}]}"
-					echo "DEBUG: ${Entity[${JetCan.Get[${JetCanCounter}]}].ID}"
-					return ${Entity[${JetCan.Get[${JetCanCounter}]}].ID}
+					echo "DEBUG: ${JetCans.Get[${JetCanCounter}]}"
+					echo "DEBUG: ${JetCans.Get[${JetCanCounter}].ID}"
+					return ${JetCans.Get[${JetCanCounter}].ID}
  				}
 			}
 			else
@@ -103,57 +102,6 @@ objectdef obj_Hauler
 				echo "No jetcans found"
 			}
 		}
-		while ${JetCanCounter:Inc} <= ${JetCanCount}
-
-		return 0	/* no can found */
-	}
-
-	member:int64 OldNearestMatchingJetCan()
-	{
-		variable index:int64 JetCan
-		variable int JetCanCount
-		variable int JetCanCounter
-		variable string tempString
-
-		JetCanCounter:Set[1]
-		JetCanCount:Set[${EVE.GetEntityIDs[JetCan,GroupID,12]}]
-		do
-		{
-			if ${Entity[${JetCan.Get[${JetCanCounter}]}](exists)}
-			{
- 				if ${m_playerName.Length}
- 				{
- 					tempString:Set[${Entity[${JetCan.Get[${JetCanCounter}]}].Owner.Name}]
- 					echo "DEBUG: owner ${tempString}"
- 					if ${tempString.Equal[${m_playerName}]}
- 					{
-	 					echo "DEBUG: owner matched"
-						echo "DEBUG: ${Entity[${JetCan.Get[${JetCanCounter}]}]}"
-						echo "DEBUG: ${Entity[${JetCan.Get[${JetCanCounter}]}].ID}"
-						return ${Entity[${JetCan.Get[${JetCanCounter}]}].ID}
- 					}
- 				}
- 				elseif ${m_corpName.Length}
- 				{
- 					tempString:Set[${Entity[${JetCan.Get[${JetCanCounter}]}].Owner.Corporation}]
- 					echo "DEBUG: corp ${tempString}"
- 					if ${tempString.Equal[${m_corpName}]}
- 					{
-	 					echo "DEBUG: corp matched"
-						return ${Entity[${JetCan.Get[${JetCanCounter}]}].ID}
- 					}
- 				}
- 				else
- 				{
-					echo "No matching jetcans found"
- 				}
-			}
-			else
-			{
-				echo "No jetcans found"
-			}
-		}
-		while ${JetCanCounter:Inc} <= ${JetCanCount}
 
 		return 0	/* no can found */
 	}
@@ -480,14 +428,14 @@ objectdef obj_OreHauler inherits obj_Hauler
 			return
 		}
 
-		if !${Entity[OwnerID,${charID},CategoryID,6](exists)}
+		if !${Entity["OwnerID = ${charID} && CategoryID = 6"](exists)}
 		{
 			call Ship.WarpToFleetMember ${charID}
 		}
 
-		if ${Entity[OwnerID,${charID},CategoryID,6].Distance} > CONFIG_MAX_SLOWBOAT_RANGE
+		if ${Entity["OwnerID = ${charID} && CategoryID = 6"].Distance} > CONFIG_MAX_SLOWBOAT_RANGE
 		{
-			if ${Entity[OwnerID,${charID},CategoryID,6].Distance} < WARP_RANGE
+			if ${Entity["OwnerID = ${charID} && CategoryID = 6"].Distance} < WARP_RANGE
 			{
 				UI:UpdateConsole["Fleet member is too far for approach; warping to bounce point"]
 				call This.WarpToNextSafeSpot
@@ -500,12 +448,12 @@ objectdef obj_OreHauler inherits obj_Hauler
 		This:BuildJetCanList[${charID}]
 		while ${Entities.Peek(exists)}
 		{
-			UI:UpdateConsole["DEBUG: ${Entity[OwnerID,${charID},CategoryID,6]}"]
-			UI:UpdateConsole["DEBUG: ${Entity[OwnerID,${charID},CategoryID,6].ID}"]
-			UI:UpdateConsole["DEBUG: ${Entity[OwnerID,${charID},CategoryID,6].DistanceTo[${Entities.Peek.ID}]}"]
+			UI:UpdateConsole["DEBUG: ${Entity["OwnerID = ${charID} && CategoryID = 6"]}"]
+			UI:UpdateConsole["DEBUG: ${Entity["OwnerID = ${charID} && CategoryID = 6"].ID}"]
+			UI:UpdateConsole["DEBUG: ${Entity["OwnerID = ${charID} && CategoryID = 6"].DistanceTo[${Entities.Peek.ID}]}"]
 
-			if ${Entity[OwnerID,${charID},CategoryID,6](exists)} && \
-			   ${Entity[OwnerID,${charID},CategoryID,6].DistanceTo[${Entities.Peek.ID}]} > LOOT_RANGE
+			if ${Entity["OwnerID = ${charID} && CategoryID = 6"](exists)} && \
+			   ${Entity["OwnerID = ${charID} && CategoryID = 6"].DistanceTo[${Entities.Peek.ID}]} > LOOT_RANGE
 			{
 				/* TODO: approach within tractor range and tractor entity */
 				/* FOR NOW approach within loot range */
@@ -623,7 +571,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		variable index:entity cans
 		variable int idx
 
-		EVE:DoGetEntities[cans,GroupID,12]
+		EVE:QueryEntities[cans,"GroupID = 12"]
 		idx:Set[${cans.Used}]
 		Entities:Clear
 

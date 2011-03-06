@@ -136,7 +136,7 @@ objectdef obj_Asteroids
 			beltsubstring:Set["ASTEROID BELT"]
 		}
 
-		EVE:DoGetEntities[Belts,GroupID, GROUP_ASTEROIDBELT]
+		EVE:QueryEntities[Belts, "GroupID = GROUP_ASTEROIDBELT"]
 		Belts:GetIterator[BeltIterator]
 		if ${BeltIterator:First(exists)}
 		{
@@ -231,7 +231,7 @@ objectdef obj_Asteroids
 			{
 				;echo "DEBUG: obj_Asteroids: Checking for Ore Type ${This.OreTypeIterator.Key}"
 				This.AsteroidList:Clear
-				EVE:DoGetEntities[This.AsteroidList,CategoryID,${This.AsteroidCategoryID},${This.OreTypeIterator.Key}]
+				EVE:QueryEntities[This.AsteroidList, "CategoryID = ${This.AsteroidCategoryID} && Name =- ${This.OreTypeIterator.Key}"]
 
 				This.AsteroidList:GetIterator[AsteroidIterator]
 				if ${AsteroidIterator:First(exists)}
@@ -280,7 +280,7 @@ objectdef obj_Asteroids
 			This.AsteroidList:Clear
 			do
 			{
-				EVE:DoGetEntities[asteroid_index,CategoryID,${This.AsteroidCategoryID}, ${This.OreTypeIterator.Key}]
+				EVE:QueryEntities[asteroid_index,CategoryID, "CategoryID = ${This.AsteroidCategoryID} && Name =- ${This.OreTypeIterator.Key}"]
 				asteroid_index:GetIterator[asteroid_iterator]
 				if ${asteroid_iterator:First(exists)}
 				{
@@ -424,9 +424,9 @@ objectdef obj_Asteroids
 		else
 		{
 			UI:UpdateConsole["obj_Asteroids: No Asteroids within overview range"]
-			if ${Entity[GroupID, GROUP_ASTEROIDBELT].Distance} < CONFIG_OVERVIEW_RANGE
+			if ${Entity["GroupID = GROUP_ASTEROIDBELT"].Distance} < CONFIG_OVERVIEW_RANGE
 			{
-				This:BeltIsEmpty["${Entity[GroupID, GROUP_ASTEROIDBELT]}"]
+				This:BeltIsEmpty["${Entity[GroupID = GROUP_ASTEROIDBELT]}"]
 			}
 			call This.MoveToField TRUE
 			return TRUE

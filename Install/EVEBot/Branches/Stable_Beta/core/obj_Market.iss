@@ -39,9 +39,9 @@ objectdef obj_Market
 		wait 40
 		EVE:UpdateMarketOrders_B[${typeID}]
 		wait 10
-		EVE:DoGetMarketOrders[This.sellOrders,"Sell",${typeID}]
+		EVE:GetMarketOrders[This.sellOrders,${typeID}, "Sell"]
 		wait 10
-		EVE:DoGetMarketOrders[This.buyOrders,"Buy",${typeID}]
+		EVE:GetMarketOrders[This.buyOrders,${typeID}, "Buy"]
 		wait 10
 
 		UI:UpdateConsole["obj_Market: Found ${This.sellOrders.Used} sell orders."]
@@ -368,9 +368,9 @@ objectdef obj_Market
 		UI:UpdateConsole["obj_Market: Obtaining my orders for ${EVEDB_Items.Name[${typeID}]}"]
 		Me:UpdateMyOrders
 		wait 40
-		Me:DoGetMyOrders[This.myBuyOrders,"Buy",${typeID}]
+		Me:GetMyOrders[This.myBuyOrders,"Buy",${typeID}]
 		wait 10
-		Me:DoGetMyOrders[This.mySellOrders,"Sell",${typeID}]
+		Me:GetMyOrders[This.mySellOrders,"Sell",${typeID}]
 		wait 10
 
 		UI:UpdateConsole["obj_Market: Found ${This.mySellOrders.Used} active sell orders for ${EVEDB_Items.Name[${typeID}]}."]
