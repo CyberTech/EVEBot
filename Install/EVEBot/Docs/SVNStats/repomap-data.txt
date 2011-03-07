@@ -6,6 +6,35 @@
       <branch>
           <label>EVEBot</label>
         <branch>
+            <label>Branches</label>
+          <branch>
+              <label>Stable_Beta</label>
+            <branch>
+                <label>Behaviors</label>
+                <leaf><label>obj_Hauler.iss</label><weight>590</weight><value>0.0</value></leaf>
+                <leaf><label>obj_Miner.iss</label><weight>515</weight><value>0.0</value></leaf>
+                <leaf><label>obj_Scavenger.iss</label><weight>171</weight><value>0.0</value></leaf>
+                <leaf><label>obj_StealthHauler.iss</label><weight>145</weight><value>0.0</value></leaf>
+            </branch>
+
+            <branch>
+                <label>core</label>
+                <leaf><label>obj_Asteroids.iss</label><weight>436</weight><value>0.0</value></leaf>
+                <leaf><label>obj_Belts.iss</label><weight>106</weight><value>0.0</value></leaf>
+                <leaf><label>obj_Bookmarks.iss</label><weight>96</weight><value>0.0</value></leaf>
+                <leaf><label>obj_JetCan.iss</label><weight>771</weight><value>0.0</value></leaf>
+                <leaf><label>obj_Market.iss</label><weight>425</weight><value>0.0</value></leaf>
+                <leaf><label>obj_Missions.iss</label><weight>926</weight><value>0.0</value></leaf>
+                <leaf><label>obj_Ship.iss</label><weight>2257</weight><value>0.0</value></leaf>
+                <leaf><label>obj_Social.iss</label><weight>450</weight><value>0.0</value></leaf>
+                <leaf><label>obj_Station.iss</label><weight>330</weight><value>0.0</value></leaf>
+                <leaf><label>obj_Targets.iss</label><weight>699</weight><value>0.0</value></leaf>
+            </branch>
+              <leaf><label>EVEBot.iss</label><weight>201</weight><value>0.0</value></leaf>
+          </branch>
+        </branch>
+
+        <branch>
             <label>Config</label>
           <branch>
               <label>Config_Templates</label>
