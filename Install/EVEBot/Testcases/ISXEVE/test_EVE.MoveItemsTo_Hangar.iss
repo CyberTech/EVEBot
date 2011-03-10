@@ -3,20 +3,20 @@
 #include Scripts/EVEBot/Support/TestAPI.iss
 
 /*
- * 	Test moving all items from station hangar to ship cargo
+ * 	Test moving all items from ship cargo to station hangar
  *
  *	Revision $Id$
  *
  *	Tests:
- *		EVE:MoveItemsTo (MyShip dest)
- *		Station:DoGetHangarItems
+ *		EVE:MoveItemsTo (Hangar dest)
+ *		MyShip:DoGetCargo
  *
  *	Requirements:
  *		You: In station
- *		Cargo: In station hangar
+ *		Cargo: In ship cargo
  */
  
- function main()
+function main()
 {
 	variable index:item MyCargo
 	variable iterator CargoIterator
@@ -28,8 +28,8 @@
 	EVE:Execute[OpenHangarFloor]
 	Wait 100
 
-	Me.Station:DoGetHangarItems[MyCargo]
-	echo "Station Hangar contains ${MyCargo.Used} Items"
+	MyShip:DoGetCargo[MyCargo]
+	echo "Ship Cargo contains ${MyCargo.Used} Items"
 
 	MyCargo:GetIterator[CargoIterator]
 	if ${CargoIterator:First(exists)}
@@ -42,7 +42,7 @@
 
 	;IDList:Clear
 	;IDList:Insert[${MyCargo[1].ID}]
-	echo "Have ${IDList.Used} Items to move to ship cargo"
+	echo "Have ${IDList.Used} Items to move to station hangar"
 
-	EVE:MoveItemsTo[IDList, MyShip]
+	EVE:MoveItemsTo[IDList, Hangar]
 }

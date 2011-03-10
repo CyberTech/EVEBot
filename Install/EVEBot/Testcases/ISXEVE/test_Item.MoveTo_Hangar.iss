@@ -8,8 +8,8 @@
  *	Revision $Id$
  *
  *	Tests:
- *		EVE:MoveItemsTo (MyShip dest)
- *		Station:DoGetHangarItems
+ *		Item:Moveto (Hangar dest)
+ *		MyShip:DoGetCargo
  *
  *	Requirements:
  *		You: In station
@@ -22,27 +22,27 @@
 	variable iterator CargoIterator
 	variable index:int64 IDList
 
+	if !${Me.InStation}
+	{
+		echo "Must be docked"
+		return
+	}
+	
 	echo "Version: ${ISXEVE.Version}"
 
 	EVE:Execute[OpenCargoHoldOfActiveShip]
 	EVE:Execute[OpenHangarFloor]
 	Wait 100
 
-	Me.Station:DoGetHangarItems[MyCargo]
-	echo "Station Hangar contains ${MyCargo.Used} Items"
+	MyShip:DoGetCargo[MyCargo]
+	echo "Ship Cargo contains ${MyCargo.Used} Items"
 
 	MyCargo:GetIterator[CargoIterator]
 	if ${CargoIterator:First(exists)}
 	do
 	{
-		echo "Adding ID: ${CargoIterator.Value} ${CargoIterator.Value.ID}"
-		IDList:Insert[${CargoIterator.Value.ID}]
+		echo "Moving ID: ${CargoIterator.Value} ${CargoIterator.Value.ID} Count: ${CargoIterator.Value.Quantity}"
+		CargoIterator.Value:MoveTo[Hangar, ${CargoIterator.Value.Quantity}]
 	}
 	while ${CargoIterator:Next(exists)}
-
-	;IDList:Clear
-	;IDList:Insert[${MyCargo[1].ID}]
-	echo "Have ${IDList.Used} Items to move to ship cargo"
-
-	EVE:MoveItemsTo[IDList, MyShip]
 }
