@@ -71,9 +71,12 @@
               <leaf><label>test_DoGetSkillQueue.iss</label><weight>40</weight><value>0.0</value></leaf>
               <leaf><label>test_DoGetStationsWithAssets.iss</label><weight>41</weight><value>0.0</value></leaf>
               <leaf><label>test_Drones.iss</label><weight>50</weight><value>0.0</value></leaf>
-              <leaf><label>test_EVE.MoveItemsTo.iss</label><weight>30</weight><value>0.0</value></leaf>
+              <leaf><label>test_EVE.MoveItemsTo.iss</label><weight>5</weight><value>-100.0</value></leaf>
+              <leaf><label>test_EVE.MoveItemsTo_Hangar.iss</label><weight>48</weight><value>100.0</value></leaf>
+              <leaf><label>test_EVE.MoveItemsTo_MyShip.iss</label><weight>48</weight><value>100.0</value></leaf>
               <leaf><label>test_EVE.QueryEntities.iss</label><weight>86</weight><value>0.0</value></leaf>
               <leaf><label>test_EVE_GetCachedEntities.iss</label><weight>53</weight><value>0.0</value></leaf>
+              <leaf><label>test_Item.MoveTo_Hangar.iss</label><weight>48</weight><value>100.0</value></leaf>
               <leaf><label>test_Item_GetInsuranceQuotes.iss</label><weight>51</weight><value>0.0</value></leaf>
               <leaf><label>test_Item_Insure.iss</label><weight>48</weight><value>0.0</value></leaf>
               <leaf><label>test_Me.DoGetAttackers.iss</label><weight>45</weight><value>100.0</value></leaf>
