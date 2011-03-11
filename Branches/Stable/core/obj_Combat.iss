@@ -220,6 +220,7 @@ objectdef obj_Combat
 		Ship:Activate_StasisWebs
 		Ship:Activate_Weapons
 		Ship.Drones:SendDrones
+		Ship:OrbitAtOptimal
 	}
 
 	function Flee()
