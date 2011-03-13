@@ -2234,7 +2234,8 @@ objectdef obj_Ship
 		}
 		
 		; ignore forced reload if we can only have one charge
-		if (${ForceReload} && ${ModuleIter.Value.MaxCharges} > 1) || ${NeedReload}
+		; Can't use an iterator that hasn't been initialized OR has no value. Reverting this change. - Valerian
+		if ${ForceReload} || ${NeedReload}
 		{
 			UI:UpdateConsole["Reloading Weapons..."]
 			EVE:Execute[CmdReloadAmmo]
