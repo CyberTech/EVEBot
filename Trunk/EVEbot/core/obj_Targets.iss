@@ -366,6 +366,7 @@ objectdef obj_Targets inherits obj_BaseClass
 				case GROUP_CUSTOMSOFFICIAL
 				case GROUP_POLICEDRONE
 				case GROUP_CONVOYDRONE
+				case GROUP_CONVOY
 				case GROUP_FACTIONDRONE
 				case GROUP_BILLBOARD
 				case GROUP_DEADSPACEOVERSEERSSTRUCTURE
@@ -396,6 +397,7 @@ objectdef obj_Targets inherits obj_BaseClass
 			case GROUP_CUSTOMSOFFICIAL
 			case GROUP_POLICEDRONE
 			case GROUP_CONVOYDRONE
+			case GROUP_CONVOY
 			case GROUP_FACTIONDRONE
 			case GROUP_BILLBOARD
 			case GROUPID_SPAWN_CONTAINER
@@ -553,6 +555,7 @@ objectdef obj_Targets_Rats
 					case GROUP_CUSTOMSOFFICIAL
 					case GROUP_POLICEDRONE
 					case GROUP_CONVOYDRONE
+					case GROUP_CONVOY
 					case GROUP_FACTIONDRONE
 					case GROUP_BILLBOARD
 						continue
@@ -660,6 +663,7 @@ objectdef obj_Targets_Rats
 			case GROUP_CUSTOMSOFFICIAL
 			case GROUP_POLICEDRONE
 			case GROUP_CONVOYDRONE
+			case GROUP_CONVOY
 			case GROUP_FACTIONDRONE
 			case GROUP_BILLBOARD
 			   continue

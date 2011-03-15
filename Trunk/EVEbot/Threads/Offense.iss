@@ -463,6 +463,7 @@ objectdef obj_Offense inherits obj_BaseClass
 			case GROUP_CUSTOMSOFFICIAL
 			case GROUP_POLICEDRONE
 			case GROUP_CONVOYDRONE
+			case GROUP_CONVOY
 			case GROUP_FACTIONDRONE
 			case GROUP_BILLBOARD
 				return TRUE
