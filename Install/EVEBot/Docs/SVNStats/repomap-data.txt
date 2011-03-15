@@ -148,7 +148,7 @@
             <leaf><label>Defense.iss</label><weight>437</weight><value>1.1441647597254003</value></leaf>
             <leaf><label>EVEDatabase.iss</label><weight>31</weight><value>0.0</value></leaf>
             <leaf><label>Navigator.iss</label><weight>223</weight><value>0.0</value></leaf>
-            <leaf><label>Offense.iss</label><weight>505</weight><value>0.0</value></leaf>
+            <leaf><label>Offense.iss</label><weight>506</weight><value>0.1976284584980237</value></leaf>
             <leaf><label>Targeting.iss</label><weight>491</weight><value>0.0</value></leaf>
         </branch>
 
@@ -210,7 +210,7 @@
             <leaf><label>obj_Skills.iss</label><weight>413</weight><value>0.0</value></leaf>
             <leaf><label>obj_Social.iss</label><weight>441</weight><value>0.0</value></leaf>
             <leaf><label>obj_Station.iss</label><weight>335</weight><value>0.0</value></leaf>
-            <leaf><label>obj_Targets.iss</label><weight>731</weight><value>0.8207934336525308</value></leaf>
+            <leaf><label>obj_Targets.iss</label><weight>735</weight><value>1.3605442176870748</value></leaf>
             <leaf><label>obj_TempBookmarks.iss</label><weight>96</weight><value>100.0</value></leaf>
         </branch>
 
@@ -238,7 +238,7 @@
             <leaf><label>obj_Hauler.iss</label><weight>642</weight><value>0.778816199376947</value></leaf>
             <leaf><label>obj_Miner.iss</label><weight>515</weight><value>0.0</value></leaf>
             <leaf><label>obj_Missioneer.iss</label><weight>96</weight><value>0.0</value></leaf>
-            <leaf><label>obj_Ratter.iss</label><weight>206</weight><value>7.766990291262135</value></leaf>
+            <leaf><label>obj_Ratter.iss</label><weight>315</weight><value>39.682539682539684</value></leaf>
             <leaf><label>obj_Scavenger.iss</label><weight>171</weight><value>0.0</value></leaf>
         </branch>
 
@@ -280,7 +280,7 @@
             <leaf><label>obj_Skills.iss</label><weight>285</weight><value>0.0</value></leaf>
             <leaf><label>obj_Social.iss</label><weight>456</weight><value>0.0</value></leaf>
             <leaf><label>obj_Station.iss</label><weight>330</weight><value>0.0</value></leaf>
-            <leaf><label>obj_Targets.iss</label><weight>699</weight><value>0.0</value></leaf>
+            <leaf><label>obj_Targets.iss</label><weight>701</weight><value>0.28530670470756064</value></leaf>
         </branch>
 
         <branch>
