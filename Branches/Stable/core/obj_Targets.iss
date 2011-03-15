@@ -557,6 +557,7 @@ objectdef obj_Targets
 				case GROUP_CUSTOMSOFFICIAL
 				case GROUP_POLICEDRONE
 				case GROUP_CONVOYDRONE
+				case GROUP_CONVOY
 				case GROUP_FACTIONDRONE
 			    case GROUP_BILLBOARD
 					continue
