@@ -8,6 +8,9 @@
 	-- GliderPro
 */
 
+; Set to 1 to enable looting
+#define ENABLE_RATTER_LOOTING 0
+
 objectdef obj_Ratter
 {
 	variable string SVN_REVISION = "$Rev$"
@@ -69,7 +72,7 @@ objectdef obj_Ratter
 
 	/* NOTE: The order of these if statements is important!! */
 
-	;; STATE MACHINE:  * -> IDLE -> MOVE -> PCCHECK -> FIGHT -> *
+	;; STATE MACHINE:  * -> IDLE -> MOVE -> PCCHECK -> FIGHT -> LOOT -> DROP -> *
 	method SetState()
 	{
 		/* Combat module handles all fleeing states now */
@@ -107,6 +110,12 @@ objectdef obj_Ratter
 				break
 			case FIGHT
 				call This.Fight
+				break
+			case LOOT
+				call This.Loot
+				break
+			case DROP
+				call This.Drop
 				break
 		}
 	}
@@ -200,7 +209,107 @@ objectdef obj_Ratter
 		}
 		else
 		{
-			This.CurrentState:Set["IDLE"]
+			This.CurrentState:Set["LOOT"]
 		}
 	}
+
+	function Loot()
+	{
+#if ENABLE_RATTER_LOOTING
+		variable index:entity Wrecks
+		variable iterator     Wreck
+		variable index:item   Items
+		variable iterator     Item
+		variable index:int64  ItemsToMove
+		variable float        TotalVolume = 0
+		variable float        ItemVolume = 0
+		variable int QuantityToMove
+
+		EVE:DoGetEntities[Wrecks,GroupID,GROUP_WRECK,Radius,WARP_RANGE]
+		Wrecks:GetIterator[Wreck]
+		if ${Wreck:First(exists)}
+		{
+			do
+			{
+				if ${Wreck.Value(exists)} && ${Wreck.Value.IsWreckEmpty} == FALSE && ${Wreck.Value.HaveLootRights} == TRUE
+				{
+					call Ship.Approach ${Wreck.Value.ID} LOOT_RANGE
+      		if ((${Config.Combat.AnomalyAssistMode} && ${Targets.NPC}) || \
+      			(!${Config.Combat.AnomalyAssistMode} && (!${Targets.PC} && ${Targets.NPC})))
+      		{
+      			This.CurrentState:Set["FIGHT"]
+      			break
+      		}
+					Wreck.Value:OpenCargo
+					wait 10
+					call Ship.OpenCargo
+					wait 10
+					Wreck.Value:DoGetCargo[Items]
+    			UI:UpdateConsole["obj_Ratter: DEBUG:  Wreck contains ${Items.Used} items."]
+
+					Items:GetIterator[Item]
+					if ${Item:First(exists)}
+					{
+						do
+						{
+      				UI:UpdateConsole["obj_Ratter: Found ${Item.Value.Quantity} x ${Item.Value.Name} - ${Math.Calc[${Item.Value.Quantity} * ${Item.Value.Volume}]}m3"]
+      				if (${Item.Value.Quantity} * ${Item.Value.Volume}) > ${Ship.CargoFreeSpace}
+      				{
+      					/* Move only what will fit, minus 1 to account for CCP rounding errors. */
+      					QuantityToMove:Set[${Ship.CargoFreeSpace} / ${Item.Value.Volume} - 1]
+      					if ${QuantityToMove} <= 0
+      					{
+        					UI:UpdateConsole["ERROR: obj_Ratter: QuantityToMove = ${QuantityToMove}!"]
+        					This.CurrentState:Set["DROP"]
+        					break
+      					}
+      				}
+      				else
+      				{
+      					QuantityToMove:Set[${Item.Value.Quantity}]
+      				}
+      
+      				UI:UpdateConsole["obj_Ratter: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Item.Value.Volume}]}m3"]
+      				if ${QuantityToMove} > 0
+      				{
+      					Item.Value:MoveTo[MyShip,${QuantityToMove}]
+      					wait 30
+      				}
+      
+      				if ${Ship.CargoFull}
+      				{
+      					UI:UpdateConsole["DEBUG: obj_Ratter: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
+      					This.CurrentState:Set["DROP"]
+      					break
+      				}
+						}
+						while ${Item:Next(exists)}
+					}
+				}
+     		call Ship.CloseCargo
+ 				if ${Ship.CargoFull}
+				{
+					UI:UpdateConsole["DEBUG: obj_Ratter: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
+					This.CurrentState:Set["DROP"]
+					break
+				}
+			}
+			while ${Wreck:Next(exists)}
+		}
+#endif
+		if ${This.CurrentState.Equal["LOOT"]} 
+		{
+		  This.CurrentState:Set["IDLE"]
+		}
+  }
+
+	function Drop()
+	{
+		call Station.Dock
+		wait 100
+		call Cargo.TransferCargoToHangar
+		wait 100
+		; need to restock ammo here
+	  This.CurrentState:Set["IDLE"]
+  }
 }

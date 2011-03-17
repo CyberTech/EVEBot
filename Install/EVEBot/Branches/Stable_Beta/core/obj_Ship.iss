@@ -381,7 +381,7 @@ objectdef obj_Ship
 				case GROUPID_ARMOR_HARDENERS
 					This.ModuleList_ActiveResists:Insert[${ModuleIter.Value}]
 					break
-				case GROUP_ENERGYWEAPON
+				case GROUP_ENERGYWEAPON 
 				case GROUP_PROJECTILEWEAPON
 				case GROUP_HYBRIDWEAPON
 				case GROUP_MISSILELAUNCHER
@@ -2090,6 +2090,46 @@ objectdef obj_Ship
 		while ${ModuleIter:Next(exists)}
 	}
 
+	method OrbitAtOptimal()
+	{
+		variable int OrbitDistance = 5000
+
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+		if ${This.ReloadingWeapons}
+		{
+			return
+		}
+		if ${Me.ToEntity.Mode} == 4
+		{	
+			; already orbiting something
+			This:Activate_AfterBurner
+			return
+		}
+
+		variable iterator ModuleIter
+		This.ModuleList_Weapon:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			; only support laser turrets FOR NOW
+			if ${ModuleIter.Value.ToItem.GroupID} != GROUP_ENERGYWEAPON
+			{
+				continue
+			}
+			
+			OrbitDistance:Set[${Math.Calc[(${ModuleIter.Value.OptimalRange}*0.85)/500]}]
+			OrbitDistance:Set[${Math.Calc[${OrbitDistance}*500]}]
+			UI:UpdateConsole["OrbitDistance = ${OrbitDistance}"]
+			
+			Me.ActiveTarget:Orbit[${OrbitDistance}]
+			
+		}
+		while ${ModuleIter:Next(exists)}
+	}
+
 	method Activate_Weapons()
 	{
 		if !${Me.Ship(exists)}
@@ -2105,6 +2145,10 @@ objectdef obj_Ship
 		if ${ModuleIter:First(exists)}
 		do
 		{
+			;UI:UpdateConsole["ModuleIter.Value.IsActive = ${ModuleIter.Value.IsActive}"]
+			;UI:UpdateConsole["ModuleIter.Value.IsChangingAmmo = ${ModuleIter.Value.IsChangingAmmo}"]
+			;UI:UpdateConsole["ModuleIter.Value.IsReloadingAmmo = ${ModuleIter.Value.IsReloadingAmmo}"]
+			;UI:UpdateConsole["ModuleIter.Value.IsOnline = ${ModuleIter.Value.IsOnline}"]
 			if !${ModuleIter.Value.IsActive} && !${ModuleIter.Value.IsChangingAmmo} && !${ModuleIter.Value.IsReloadingAmmo} && ${ModuleIter.Value.IsOnline}
 			{
 				;;UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
@@ -2139,6 +2183,7 @@ objectdef obj_Ship
 	method Reload_Weapons(bool ForceReload)
 	{
 		variable bool NeedReload = FALSE
+		variable int CurrentCharges = 0
 
 		if !${Me.Ship(exists)}
 		{
@@ -2163,8 +2208,19 @@ objectdef obj_Ship
 					}
 
 					; Has ammo been used?
-					if ${ModuleIter.Value.CurrentCharges} != ${ModuleIter.Value.MaxCharges}
+					if ${ModuleIter.Value.CurrentCharges} > 0
 					{
+						CurrentCharges:Set[${ModuleIter.Value.CurrentCharges}]
+					}
+					else
+					{
+						CurrentCharges:Set[${ModuleIter.Value.Charge.Quantity}]
+					}
+					if ${CurrentCharges} != ${ModuleIter.Value.MaxCharges}
+					{
+						;UI:UpdateConsole["ModuleIter.Value.CurrentCharges = ${ModuleIter.Value.CurrentCharges}"]
+						;UI:UpdateConsole["ModuleIter.Value.MaxCharges = ${ModuleIter.Value.MaxCharges}"]
+						;UI:UpdateConsole["ModuleIter.Value.Charge.Quantity = ${ModuleIter.Value.Charge.Quantity}"]
 						; Is there still more then 30% ammo available?
 						if ${Math.Calc[${ModuleIter.Value.CurrentCharges}/${ModuleIter.Value.MaxCharges}]} < 0.3
 						{
@@ -2176,7 +2232,9 @@ objectdef obj_Ship
 			}
 			while ${ModuleIter:Next(exists)}
 		}
-
+		
+		; ignore forced reload if we can only have one charge
+		; Can't use an iterator that hasn't been initialized OR has no value. Reverting this change. - Valerian
 		if ${ForceReload} || ${NeedReload}
 		{
 			UI:UpdateConsole["Reloading Weapons..."]
