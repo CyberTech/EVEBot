@@ -225,7 +225,7 @@ objectdef obj_Ratter
 		variable float        ItemVolume = 0
 		variable int QuantityToMove
 
-		EVE:DoGetEntities[Wrecks,GroupID,GROUP_WRECK,Radius,WARP_RANGE]
+		EVE:QueryEntities[Wrecks, "GroupID = GROUP_WRECK && Distance <= WARP_RANGE"]
 		Wrecks:GetIterator[Wreck]
 		if ${Wreck:First(exists)}
 		{
@@ -234,18 +234,18 @@ objectdef obj_Ratter
 				if ${Wreck.Value(exists)} && ${Wreck.Value.IsWreckEmpty} == FALSE && ${Wreck.Value.HaveLootRights} == TRUE
 				{
 					call Ship.Approach ${Wreck.Value.ID} LOOT_RANGE
-      		if ((${Config.Combat.AnomalyAssistMode} && ${Targets.NPC}) || \
-      			(!${Config.Combat.AnomalyAssistMode} && (!${Targets.PC} && ${Targets.NPC})))
-      		{
-      			This.CurrentState:Set["FIGHT"]
-      			break
-      		}
+					if ((${Config.Combat.AnomalyAssistMode} && ${Targets.NPC}) || \
+						(!${Config.Combat.AnomalyAssistMode} && (!${Targets.PC} && ${Targets.NPC})))
+					{
+						This.CurrentState:Set["FIGHT"]
+						break
+					}
 					Wreck.Value:OpenCargo
 					wait 10
 					call Ship.OpenCargo
 					wait 10
 					Wreck.Value:DoGetCargo[Items]
-    			UI:UpdateConsole["obj_Ratter: DEBUG:  Wreck contains ${Items.Used} items."]
+					UI:UpdateConsole["obj_Ratter: DEBUG:  Wreck contains ${Items.Used} items."]
 
 					Items:GetIterator[Item]
 					if ${Item:First(exists)}
@@ -268,14 +268,14 @@ objectdef obj_Ratter
       				{
       					QuantityToMove:Set[${Item.Value.Quantity}]
       				}
-      
+
       				UI:UpdateConsole["obj_Ratter: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Item.Value.Volume}]}m3"]
       				if ${QuantityToMove} > 0
       				{
       					Item.Value:MoveTo[MyShip,${QuantityToMove}]
       					wait 30
       				}
-      
+
       				if ${Ship.CargoFull}
       				{
       					UI:UpdateConsole["DEBUG: obj_Ratter: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
@@ -297,7 +297,7 @@ objectdef obj_Ratter
 			while ${Wreck:Next(exists)}
 		}
 #endif
-		if ${This.CurrentState.Equal["LOOT"]} 
+		if ${This.CurrentState.Equal["LOOT"]}
 		{
 		  This.CurrentState:Set["IDLE"]
 		}
