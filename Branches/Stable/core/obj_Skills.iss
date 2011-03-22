@@ -221,7 +221,7 @@ objectdef obj_Skills
 			variable index:skill SkillList
 			if ${Me.GetSkills[SkillList]}
 			{
-				for (i:Set[1] ; ${i} <= ${Me.GetSkills} ; i:Inc)
+				for (i:Set[1] ; ${i} <= ${SkillList.Used} ; i:Inc)
 				{
 					if ${SkillList[${i}].IsTraining}
 					{
