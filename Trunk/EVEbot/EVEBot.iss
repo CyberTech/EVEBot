@@ -6,16 +6,16 @@
 #include core/defines.iss
 
 #if !${ISXEVE.IsBeta}
-	#echo 
-	#echo 
-	#echo Trunk EVEBot requires ISXEVE _BETA_, which is not public 
-	#echo at the moment. It will not operate properly with ISXEVE 
-	#echo Live. Please use Stable or Tagged Trunk.  See IRC for 
+	#echo
+	#echo
+	#echo Trunk EVEBot requires ISXEVE _BETA_, which is not public
+	#echo at the moment. It will not operate properly with ISXEVE
+	#echo Live. Please use Stable or Tagged Trunk.  See IRC for
 	#echo more information.
-	#echo 
+	#echo
 	#echo -- CyberTech
-	#echo 
-	#echo 
+	#echo
+	#echo
 	#error Aborting
 #endif
 
@@ -166,7 +166,7 @@ function main()
 	;call CreateVariable Skills obj_Skills global
 	call CreateVariable TempBookmarks obj_TempBookmarks global
 	call CreateVariable JetCan obj_JetCan global
-	call CreateVariable CorpHangarArray obj_CorpHangerArray global
+	call CreateVariable CorpHangarArray obj_CorpHangarArray global
 	call CreateVariable AssemblyArray obj_AssemblyArray global
 	call CreateVariable Social obj_Social global
 	call CreateVariable Fleet obj_Fleet global
@@ -183,7 +183,7 @@ function main()
 	call CreateVariable Market obj_Market global
 	call CreateVariable Autopilot obj_Autopilot global
 	call CreateVariable Callback obj_Callback global
-	
+
 	call CreateVariable  GlobalVariableIterator iterator global
 
 	wait 0.5
@@ -199,7 +199,7 @@ function main()
 	;call LoadBehaviors "Stock" "${Script.CurrentDirectory}/\Behaviors/\*.iss"
 	; Custom Behavior Objects (External directory is assumed to be from an external repository, it's not part of EVEBot)
 	;call LoadBehaviors "External" "${Script.CurrentDirectory}/\Behaviors/\External/\*.iss"
-	
+
 	if !${EVEBot.BehaviorList.Used}
 	{
 		Logger:Log["ERROR: No Behavioral modules loaded, exiting", LOG_ECHOTOO]
@@ -207,7 +207,7 @@ function main()
 	}
 
 	Logger:Log["EVEBot: Parsing object versions...", LOG_ECHOTOO]
-	
+
 	; This is a TimedCommand so that it executes in global scope, so we can get the list of global vars.
 	TimedCommand 0 VariableScope:GetIterator[GlobalVariableIterator]
 	wait 10 ${GlobalVariableIterator:First(exists)}

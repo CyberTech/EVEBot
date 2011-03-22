@@ -115,7 +115,7 @@ function main()
 	;declarevariable Skills obj_Skills global
 	declarevariable Bookmarks obj_Bookmarks global
 	declarevariable JetCan obj_JetCan global
-	declarevariable CorpHangarArray obj_CorpHangerArray global
+	declarevariable CorpHangarArray obj_CorpHangarArray global
 	declarevariable AssemblyArray obj_AssemblyArray global
 	declarevariable Social obj_Social global
 	declarevariable Fleet obj_Fleet global

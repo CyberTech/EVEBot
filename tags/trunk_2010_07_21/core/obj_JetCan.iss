@@ -419,7 +419,7 @@ objectdef obj_JetCan
 	}
 }
 
-objectdef obj_CorpHangerArray inherits obj_JetCan
+objectdef obj_CorpHangarArray inherits obj_JetCan
 {
 	; Returns -1 for no can, or the entity ID
 	member:int CurrentCan(bool CheckFreeSpace = FALSE)
