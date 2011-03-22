@@ -483,11 +483,11 @@ objectdef obj_Targets_Rats
 		/* MyShip.MaxTargetRange contains the (possibly) damped value */
 		if ${Ship.TypeID} == TYPE_RIFTER
 		{
-			EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY, radius, 100000]
+			EVE:QueryEntities[Targets, "CategoryID = CATEGORYID_ENTITY && Distance <= 100000"]
 		}
 		else
 		{
-			EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY, radius, ${MyShip.MaxTargetRange}]
+			EVE:QueryEntities[Targets, "CategoryID = CATEGORYID_ENTITY && Distance <= ${MyShip.MaxTargetRange}"]
 		}
 		This.Targets:GetIterator[This.Target]
 
@@ -496,7 +496,7 @@ objectdef obj_Targets_Rats
 			if ${Ship.IsDamped}
 			{
 				/* Ship.MaxTargetRange contains the maximum undamped value */
-				EVE:DoGetEntities[This.Targets, CategoryID, CATEGORYID_ENTITY, radius, ${Ship.MaxTargetRange}]
+				EVE:QueryEntities[This.Targets, "CategoryID = CATEGORYID_ENTITY && Distance <= ${Ship.MaxTargetRange}"]
 				This.Targets:GetIterator[This.Target]
 
 				if !${This.Target:First(exists)}
