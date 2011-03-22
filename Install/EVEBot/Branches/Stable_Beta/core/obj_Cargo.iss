@@ -48,7 +48,7 @@ objectdef obj_Cargo
 		variable index:item anItemIndex
 		variable iterator   anIterator
 
-		Me.Ship:DoGetCargo[anItemIndex]
+		Me.Ship:GetCargo[anItemIndex]
 		anItemIndex:GetIterator[anIterator]
 		if ${anIterator:First(exists)}
 		do
@@ -103,7 +103,7 @@ objectdef obj_Cargo
 	
 	method FindAllShipCargo()
 	{
-		Me.Ship:DoGetCargo[This.MyCargo]
+		Me.Ship:GetCargo[This.MyCargo]
 		
 		variable iterator CargoIterator
 		
@@ -124,7 +124,7 @@ objectdef obj_Cargo
 		
 	method FindShipCargo(int CategoryIDToMove)
 	{
-		Me.Ship:DoGetCargo[This.MyCargo]
+		Me.Ship:GetCargo[This.MyCargo]
 		
 		variable iterator CargoIterator
 		
@@ -149,7 +149,7 @@ objectdef obj_Cargo
 
    method FindShipCargoByType(int TypeIDToMove)
    {
-	  Me.Ship:DoGetCargo[This.MyCargo]
+	  Me.Ship:GetCargo[This.MyCargo]
 
 	  variable iterator CargoIterator
 
@@ -226,7 +226,7 @@ objectdef obj_Cargo
 		}
 		
 		call Station.OpenHangar
-		Me:DoGetHangarItems[HangarItems]
+		Me:GetHangarItems[HangarItems]
 		HangarItems:GetIterator[HangarIterator]
 
 		; Cycle thru the Hangar looking for the needed Crystals and move them to the ship
@@ -294,7 +294,7 @@ objectdef obj_Cargo
 			variable index:int64  anIntIndex
 			variable iterator   anIterator
 			
-			anItem:DoGetCargo[anItemIndex]
+			anItem:GetCargo[anItemIndex]
 			anItemIndex:GetIterator[anIterator]
 			anIntIndex:Clear
 			
@@ -528,7 +528,7 @@ objectdef obj_Cargo
 		call Ship.OpenCargo
 		
 		/* build the container list */
-		Me.Ship:DoGetCargo[shipItemIndex]
+		Me.Ship:GetCargo[shipItemIndex]
 		shipItemIndex:GetIterator[shipItemIterator]
 		shipContainerIndex:Clear
 		if ${shipItemIterator:First(exists)}
@@ -832,7 +832,7 @@ objectdef obj_Cargo
 			call This.OpenHolds
 
 			/* FOR NOW move all cargo.  Add filtering later */
-			Me:DoGetHangarItems[This.CargoToTransfer]
+			Me:GetHangarItems[This.CargoToTransfer]
 
 			if ${This.CargoToTransfer.Used} > 0
 			{
@@ -846,7 +846,7 @@ objectdef obj_Cargo
 				
 				/* Check for leftover items in the station */
 				/* FOR NOW check all cargo.  Add filtering later */
-				Me:DoGetHangarItems[This.CargoToTransfer]
+				Me:GetHangarItems[This.CargoToTransfer]
 				if ${This.CargoToTransfer.Used} > 0
 				{
 					This.CargoToTransfer:Clear[]
@@ -884,7 +884,7 @@ objectdef obj_Cargo
 
 			variable index:item cargoIndex
 			variable iterator cargoIterator
-			Me:DoGetHangarItems[cargoIndex]
+			Me:GetHangarItems[cargoIndex]
 			cargoIndex:GetIterator[cargoIterator]						
 			This.CargoToTransfer:Clear
 			
@@ -912,7 +912,7 @@ objectdef obj_Cargo
 				call This.CloseHolds
 				
 				/* Check for leftover items in the station */
-				Me:DoGetHangarItems[cargoIndex]
+				Me:GetHangarItems[cargoIndex]
 				cargoIndex:GetIterator[cargoIterator]						
 				This.CargoToTransfer:Clear
 				

@@ -183,7 +183,7 @@ objectdef obj_Ship
 				;UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable:"]
 				;UI:UpdateConsole["Slot: ${aWeaponIterator.Value.ToItem.Slot}  ${aWeaponIterator.Value.ToItem.Name}"]
 
-				aWeaponIterator.Value:DoGetAvailableAmmo[anItemIndex]
+				aWeaponIterator.Value:GetAvailableAmmo[anItemIndex]
 				;UI:UpdateConsole["Ammo: Used = ${anItemIndex.Used}"]
 
 				anItemIndex:GetIterator[anItemIterator]
@@ -331,7 +331,7 @@ objectdef obj_Ship
 		This.ModuleList_TargetPainter:Clear
 		This.ModuleList_TrackingComputer:Clear
 
-		Me.Ship:DoGetModules[This.ModuleList]
+		Me.Ship:GetModules[This.ModuleList]
 
 		if !${This.ModuleList.Used} && ${Me.Ship.HighSlots} > 0
 		{
@@ -755,7 +755,7 @@ objectdef obj_Ship
 		variable index:entity LockedTargets
 		variable iterator Target
 
-		Me:DoGetTargets[LockedTargets]
+		Me:GetTargets[LockedTargets]
 		LockedTargets:GetIterator[Target]
 
 		if ${Target:First(exists)}
@@ -798,7 +798,7 @@ objectdef obj_Ship
 			variable index:item CrystalList
 			variable iterator CrystalIterator
 
-			Me.Ship.Module[${SlotName}]:DoGetAvailableAmmo[CrystalList]
+			Me.Ship.Module[${SlotName}]:GetAvailableAmmo[CrystalList]
 
 			if ${CrystalList.Used} == 0
 			{
@@ -1056,7 +1056,9 @@ objectdef obj_Ship
 			LoopCheck:Set[0]
 			CaptionCount:Set[${EVEWindow[MyShipCargo].Caption.Token[2,"["].Token[1,"]"]}]
 			;UI:UpdateConsole["obj_Ship: Waiting for cargo to load: CaptionCount: ${CaptionCount}", LOG_DEBUG]
-			while ( ${CaptionCount} > ${Me.Ship.GetCargo} && \
+			variable index:item MyCargo
+			MyShip:GetCargo[MyCargo]
+			while ( ${CaptionCount} > ${MyCargo.Used} && \
 					${LoopCheck} < 10 )
 			{
 				UI:UpdateConsole["obj_Ship: Waiting for cargo to load...(${LoopCheck})", LOG_MINOR]
@@ -1066,6 +1068,7 @@ objectdef obj_Ship
 				}
 				wait 10
 				LoopCheck:Inc
+				MyShip:GetCargo[MyCargo]
 			}
 		}
 	}
@@ -2287,7 +2290,7 @@ objectdef obj_Ship
 
 		if ${Station.Docked}
 		{
-			Me:DoGetHangarShips[hsIndex]
+			Me:GetHangarShips[hsIndex]
 			hsIndex:GetIterator[hsIterator]
 
 			shipName:Set[${Me.Ship}]

@@ -136,7 +136,7 @@ objectdef obj_Combat
 			return
 		}
 
-		if ${_Me.GetTargets} > 0
+		if ${Me.TargetCount} > 0
 		{
 			This.CurrentState:Set["FIGHT"]
 		}
@@ -343,8 +343,8 @@ objectdef obj_Combat
 
 		; Active shield (or armor) hardeners
 		; If you don't have hardeners this code does nothing.
-		if (${Config.Combat.AnomalyAssistMode} && ${Me.GetTargets} > 0) || \
-		   (!${Config.Combat.AnomalyAssistMode} && ${Me.GetTargetedBy} > 0)
+		if (${Config.Combat.AnomalyAssistMode} && ${Me.TargetCount} > 0) || \
+		   (!${Config.Combat.AnomalyAssistMode} && ${Me.TargetedByCount} > 0)
 		{
 			if !${This.Fled} && ${Config.Combat.LaunchCombatDrones} && \
 				${Ship.Drones.DronesInSpace} == 0 && \
@@ -354,7 +354,7 @@ objectdef obj_Combat
 			}
 		}
 		
-		if ${_Me.GetTargetedBy} > 0
+		if ${Me.TargetedByCount} > 0
 		{
 			Ship:Activate_Hardeners[]
 		}

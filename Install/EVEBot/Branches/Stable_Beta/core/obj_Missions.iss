@@ -160,7 +160,7 @@ objectdef obj_Missions
 		variable index:agentmission amIndex
 		variable iterator amIterator
 
-		EVE:DoGetAgentMissions[amIndex]
+		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		UI:UpdateConsole["obj_Missions: DEBUG: amIndex.Used = ${amIndex.Used}"]
@@ -265,7 +265,7 @@ objectdef obj_Missions
 			call Cargo.OpenHolds
 
 			UI:UpdateConsole["DEBUG: RunCourierMission: Checking ship's cargohold for ${QuantityRequired} units of ${itemName}."]
-			Me.Ship:DoGetCargo[CargoIndex]
+			Me.Ship:GetCargo[CargoIndex]
 			CargoIndex:GetIterator[CargoIterator]
 			if ${CargoIterator:First(exists)}
 			{
@@ -297,7 +297,7 @@ objectdef obj_Missions
 			if ${Station.Docked}
 			{
 				UI:UpdateConsole["DEBUG: RunCourierMission: Checking station hangar for ${QuantityRequired} units of ${itemName}."]
-				Me:DoGetHangarItems[CargoIndex]
+				Me:GetHangarItems[CargoIndex]
 				CargoIndex:GetIterator[CargoIterator]
 
 				if ${CargoIterator:First(exists)}
@@ -345,7 +345,7 @@ objectdef obj_Missions
 		call Cargo.OpenHolds
 
 		;;; Check the cargohold of your ship
-		Me.Ship:DoGetCargo[CargoIndex]
+		Me.Ship:GetCargo[CargoIndex]
 		CargoIndex:GetIterator[CargoIterator]
 		if ${CargoIterator:First(exists)}
 		{
@@ -377,7 +377,7 @@ objectdef obj_Missions
 		;;; Check the hangar of the current station
 		if ${haveCargo} == FALSE && ${Station.Docked}
 		{
-			Me:DoGetHangarItems[CargoIndex]
+			Me:GetHangarItems[CargoIndex]
 			CargoIndex:GetIterator[CargoIterator]
 
 			if ${CargoIterator:First(exists)}
@@ -548,7 +548,7 @@ objectdef obj_Missions
 
 			while TRUE
 			{
-			   if ${_Me.GetTargetedBy} > 0
+			   if ${Me.TargetedByCount} > 0
 			   {
 				  break
 			   }
@@ -563,7 +563,7 @@ objectdef obj_Missions
 
 			while ${This.HostileCount} > 0
 			{
-			   if ${_Me.GetTargetedBy} > 0 || ${Math.Calc[${_Me.GetTargeting}+${_Me.GetTargets}]} > 0
+			   if ${Me.TargetedByCount} > 0 || ${Math.Calc[${Me.TargetingCount}+${Me.TargetCount}]} > 0
 			   {
 				  call This.TargetAgressors
 			   }
@@ -616,7 +616,7 @@ objectdef obj_Missions
 	  EVE:QueryEntities[targetIndex, "CategoryID = CATEGORYID_ENTITY"]
 	  targetIndex:GetIterator[targetIterator]
 
-	  UI:UpdateConsole["GetTargeting = ${_Me.GetTargeting}, GetTargets = ${_Me.GetTargets}"]
+	  UI:UpdateConsole["TargetingCount = ${Me.TargetingCount}, TargetCount = ${Me.TargetCount}"]
 	  if ${targetIterator:First(exists)}
 	  {
 		 do
@@ -624,7 +624,7 @@ objectdef obj_Missions
 			if ${targetIterator.Value.IsTargetingMe} && \
 			   !${targetIterator.Value.BeingTargeted} && \
 			   !${targetIterator.Value.IsLockedTarget} && \
-			   ${Ship.SafeMaxLockedTargets} > ${Math.Calc[${_Me.GetTargeting}+${_Me.GetTargets}]}
+			   ${Ship.SafeMaxLockedTargets} > ${Math.Calc[${Me.TargetingCount}+${Me.TargetCount}]}
 			{
 			   if ${targetIterator.Value.Distance} > ${Ship.OptimalTargetingRange}
 			   {
@@ -734,7 +734,7 @@ objectdef obj_Missions
 		variable iterator amIterator
 		variable iterator mbIterator
 
-		EVE:DoGetAgentMissions[amIndex]
+		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		if ${amIterator:First(exists)}
@@ -743,7 +743,7 @@ objectdef obj_Missions
 			{
 				if ${amIterator.Value.AgentID} == ${agentID}
 				{
-					amIterator.Value:DoGetBookmarks[mbIndex]
+					amIterator.Value:GetBookmarks[mbIndex]
 					mbIndex:GetIterator[mbIterator]
 
 					if ${mbIterator:First(exists)}
@@ -771,7 +771,7 @@ objectdef obj_Missions
 		variable iterator amIterator
 		variable iterator mbIterator
 
-		EVE:DoGetAgentMissions[amIndex]
+		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		if ${amIterator:First(exists)}
@@ -780,7 +780,7 @@ objectdef obj_Missions
 			{
 				if ${amIterator.Value.AgentID} == ${agentID}
 				{
-					amIterator.Value:DoGetBookmarks[mbIndex]
+					amIterator.Value:GetBookmarks[mbIndex]
 					mbIndex:GetIterator[mbIterator]
 
 					if ${mbIterator:First(exists)}
@@ -824,7 +824,7 @@ objectdef obj_Missions
 		{
 		   do
 		   {
-			if ${_Me.GetTargetedBy} > 0 && ${Target.Value.IsLockedTarget}
+			if ${Me.TargetedByCount} > 0 && ${Target.Value.IsLockedTarget}
 			{
 				   Target.Value:UnlockTarget
 			}
@@ -836,7 +836,7 @@ objectdef obj_Missions
 				  OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
 				  Target.Value:Orbit[${OrbitDistance}]
 
-				   if ${_Me.GetTargets} < ${Ship.MaxLockedTargets}
+				   if ${Me.TargetCount} < ${Ship.MaxLockedTargets}
 				   {
 					   UI:UpdateConsole["Locking ${Target.Value.Name}"]
 					   Target.Value:LockTarget
@@ -884,7 +884,7 @@ objectdef obj_Missions
 
 			   if !${Target.Value.IsLockedTarget} && !${Target.Value.BeingTargeted}
 			   {
-				   if ${_Me.GetTargets} < ${Ship.MaxLockedTargets}
+				   if ${Me.TargetCount} < ${Ship.MaxLockedTargets}
 				   {
 					   UI:UpdateConsole["Locking ${Target.Value.Name}"]
 					   Target.Value:LockTarget

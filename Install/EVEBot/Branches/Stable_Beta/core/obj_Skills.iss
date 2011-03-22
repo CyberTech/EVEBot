@@ -17,7 +17,7 @@ objectdef obj_Skills
 		
 		if ${This.SkillFile:Open[readonly](exists)} || ${Config.Common.TrainFastest}
 		{
-			Me:DoGetSkills[This.OwnedSkills]
+			Me:GetSkills[This.OwnedSkills]
 			Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 			This.SkillFile:Close
 
@@ -52,7 +52,7 @@ objectdef obj_Skills
 					if !${This.NextSkill.Equal[None]} && \
 						!${Me.Skill[${This.NextSkill}].IsTraining}
 					{
-						Me:DoGetSkills[This.OwnedSkills]
+						Me:GetSkills[This.OwnedSkills]
 						This:Train[${This.NextInLine}]
 					}
 				}
@@ -219,9 +219,9 @@ objectdef obj_Skills
 		{
 			variable int i
 			variable index:skill SkillList
-			if ${Me.GetSkills[SkillList]}
+			if ${Me:GetSkills[SkillList]}
 			{
-				for (i:Set[1] ; ${i} <= ${Me.GetSkills} ; i:Inc)
+				for (i:Set[1] ; ${i} <= ${SkillList.Used} ; i:Inc)
 				{
 					if ${SkillList[${i}].IsTraining}
 					{

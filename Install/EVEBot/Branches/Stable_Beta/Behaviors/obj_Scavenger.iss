@@ -137,7 +137,7 @@ objectdef obj_Scavenger
 					wait 10				
 					call Ship.OpenCargo
 					wait 10				
-					Wreck.Value:DoGetCargo[Items]
+					Wreck.Value:GetCargo[Items]
 					UI:UpdateConsole["obj_Scavenger: DEBUG:  Wreck contains ${Items.Used} items."]
 					
 					Items:GetIterator[Item]

@@ -173,9 +173,6 @@ objectdef obj_Cache_Me inherits obj_Cache
 		FastObjectList:Set["StationID", "Me.StationID"]
 		FastObjectList:Set["InStation", "Me.InStation"]
 		FastObjectList:Set["AutoPilotOn", "Me.AutoPilotOn"]
-		FastObjectList:Set["GetTargets", "Me.GetTargets"]
-		FastObjectList:Set["GetTargeting", "Me.GetTargeting"]
-		FastObjectList:Set["GetTargetedBy", "Me.GetTargetedBy"]
 
 		This[parent]:Initialize
 	}

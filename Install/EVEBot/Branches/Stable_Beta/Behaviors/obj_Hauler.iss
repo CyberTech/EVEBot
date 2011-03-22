@@ -264,7 +264,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 
 		UI:UpdateConsole["DEBUG: obj_OreHauler.LootEntity ${id} ${leave}"]
 
-		Entity[${id}]:DoGetCargo[ContainerCargo]
+		Entity[${id}]:GetCargo[ContainerCargo]
 		ContainerCargo:GetIterator[Cargo]
 		if ${Cargo:First(exists)}
 		{
@@ -515,7 +515,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 	method BuildSafeSpotList()
 	{
 		SafeSpots:Clear
-		EVE:DoGetBookmarks[SafeSpots]
+		EVE:GetBookmarks[SafeSpots]
 
 		variable int idx
 		idx:Set[${SafeSpots.Used}]

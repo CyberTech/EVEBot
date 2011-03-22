@@ -264,7 +264,7 @@ objectdef obj_Agents
 		variable iterator amIterator
 		variable iterator mbIterator
 
-	    EVE:DoGetAgentMissions[amIndex]
+	    EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		if ${amIterator:First(exists)}
@@ -273,7 +273,7 @@ objectdef obj_Agents
 			{
 				if ${amIterator.Value.AgentID} == ${This.AgentID}
 				{
-					amIterator.Value:DoGetBookmarks[mbIndex]
+					amIterator.Value:GetBookmarks[mbIndex]
 					mbIndex:GetIterator[mbIterator]
 
 					if ${mbIterator:First(exists)}
@@ -315,7 +315,7 @@ objectdef obj_Agents
 		variable iterator amIterator
 		variable set skipList
 
-		EVE:DoGetAgentMissions[amIndex]
+		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 		skipList:Clear
 
@@ -423,7 +423,7 @@ objectdef obj_Agents
 		variable iterator amIterator
 		variable iterator mbIterator
 
-	    EVE:DoGetAgentMissions[amIndex]
+	    EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		if ${amIterator:First(exists)}
@@ -432,7 +432,7 @@ objectdef obj_Agents
 			{
 				if ${amIterator.Value.AgentID} == ${This.AgentID}
 				{
-					amIterator.Value:DoGetBookmarks[mbIndex]
+					amIterator.Value:GetBookmarks[mbIndex]
 					mbIndex:GetIterator[mbIterator]
 
 					if ${mbIterator:First(exists)}
@@ -470,7 +470,7 @@ objectdef obj_Agents
 	    variable index:agentmission amIndex
 		variable iterator amIterator
 
-		EVE:DoGetAgentMissions[amIndex]
+		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		if ${amIterator:First(exists)}
@@ -575,7 +575,7 @@ objectdef obj_Agents
 		variable iterator amIterator
 		variable iterator mbIterator
 
-	    EVE:DoGetAgentMissions[amIndex]
+	    EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		if ${amIterator:First(exists)}
@@ -584,7 +584,7 @@ objectdef obj_Agents
 			{
 				if ${amIterator.Value.AgentID} == ${This.AgentID}
 				{
-					amIterator.Value:DoGetBookmarks[mbIndex]
+					amIterator.Value:GetBookmarks[mbIndex]
 					mbIndex:GetIterator[mbIterator]
 
 					if ${mbIterator:First(exists)}
@@ -613,7 +613,7 @@ objectdef obj_Agents
 		variable iterator amIterator
 		variable iterator mbIterator
 
-	    EVE:DoGetAgentMissions[amIndex]
+	    EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		if ${amIterator:First(exists)}
@@ -622,7 +622,7 @@ objectdef obj_Agents
 			{
 				if ${amIterator.Value.AgentID} == ${This.AgentID}
 				{
-					amIterator.Value:DoGetBookmarks[mbIndex]
+					amIterator.Value:GetBookmarks[mbIndex]
 					mbIndex:GetIterator[mbIterator]
 
 					if ${mbIterator:First(exists)}
@@ -676,7 +676,7 @@ objectdef obj_Agents
 	    variable index:agentmission amIndex
 		variable iterator amIterator
 
-		EVE:DoGetAgentMissions[amIndex]
+		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		if ${amIterator:First(exists)}
@@ -885,7 +885,7 @@ objectdef obj_Agents
 		variable int WaitCount
 		for( WaitCount:Set[0]; ${WaitCount} < 6; WaitCount:Inc )
 		{
-			Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
+			Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
 			if ${dsIndex.Used} > 0
 			{
 				break
@@ -897,7 +897,7 @@ objectdef obj_Agents
 
 ;;;;  You now longer have to ask for work.  An agent will automatically offer work.  This may break
 ;;;;  with research or locator agents!
-;;;;	    Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
+;;;;	    Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
 ;;;;	    dsIndex:GetIterator[dsIterator]
 ;;;;
 ;;;;		if ${dsIterator:First(exists)}
@@ -943,7 +943,7 @@ objectdef obj_Agents
 ;;;;	    wait 60
 ;;;;		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
 ;;;;
-	    Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
+	    Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
 	    dsIndex:GetIterator[dsIterator]
 
 		if ${dsIndex.Used} != 3
@@ -968,7 +968,7 @@ objectdef obj_Agents
 	    variable index:agentmission amIndex
 		variable iterator amIterator
 
-		EVE:DoGetAgentMissions[amIndex]
+		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		if ${amIterator:First(exists)}
@@ -1249,7 +1249,7 @@ objectdef obj_Agents
 	    variable index:dialogstring dsIndex
 	    variable iterator dsIterator
 
-	    Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
+	    Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
 	    dsIndex:GetIterator[dsIterator]
 
 		if ${dsIterator:First(exists)}
@@ -1292,7 +1292,7 @@ objectdef obj_Agents
 	    variable index:dialogstring dsIndex
 	    variable iterator dsIterator
 
-	    Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
+	    Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
 	    dsIndex:GetIterator[dsIterator]
 
 		if ${dsIndex.Used} == 2

@@ -592,7 +592,7 @@ objectdef obj_Targets
 			{
 				if !${Target.Value.IsLockedTarget} && !${Target.Value.BeingTargeted}
 				{
-					if ${_Me.GetTargets} < ${Ship.MaxLockedTargets}
+					if ${Me.TargetCount} < ${Ship.MaxLockedTargets}
 					{
 						if ${Ship.TypeID} == TYPE_RIFTER
 						{

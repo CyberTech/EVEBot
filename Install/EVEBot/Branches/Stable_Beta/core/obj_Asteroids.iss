@@ -80,7 +80,7 @@ objectdef obj_Asteroids
 
 	function MoveToRandomBeltBookMark()
 	{
-		EVE:DoGetBookmarks[BeltBookMarkList]
+		EVE:GetBookmarks[BeltBookMarkList]
 
 		variable int RandomBelt
 		variable string Label
@@ -381,7 +381,7 @@ objectdef obj_Asteroids
 				{
 				  wait 30
 				}
-				while ${_Me.GetTargeting} > 0
+				while ${Me.TargetingCount} > 0
 
 				call This.UpdateList
 				return TRUE

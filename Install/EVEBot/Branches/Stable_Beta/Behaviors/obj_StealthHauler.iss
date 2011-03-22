@@ -48,8 +48,8 @@ objectdef obj_StealthHauler
 		{
 			if ${apRoute.Used} == 0
 			{
-				EVE:DoGetToDestinationPath[apRoute]	
-				EVE:DoGetWaypoints[apWaypoints]
+				EVE:GetToDestinationPath[apRoute]	
+				EVE:GetWaypoints[apWaypoints]
 				apRoute:GetIterator[apIterator]
 				apIterator:First
 				
