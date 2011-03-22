@@ -25,8 +25,8 @@ function main()
 	}
 
 	StartTime:Set[${Script.RunningTime}]
-	Me:DoGetStationsWithAssets[Stations]
-	echo "Me:DoGetStationsWithAssets returned ${Stations.Used} stations"
+	Me:GetStationsWithAssets[Stations]
+	echo "Me:GetStationsWithAssets returned ${Stations.Used} stations"
 
 	Stations:GetIterator[StationIterator]
 	if ${StationIterator:First(exists)}
@@ -37,5 +37,5 @@ function main()
 	while ${StationIterator:Next(exists)}
 
 	EndTime:Set[${Script.RunningTime}]
-	echo "Testing of DoGetStationsWithAssets completed in ${Math.Calc[(${EndTime}-${StartTime}) / 1000]} seconds"
+	echo "Testing of GetStationsWithAssets completed in ${Math.Calc[(${EndTime}-${StartTime}) / 1000]} seconds"
 }

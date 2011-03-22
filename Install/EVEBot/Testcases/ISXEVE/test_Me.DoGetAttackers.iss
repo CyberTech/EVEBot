@@ -3,7 +3,7 @@
 #include ../../Support/TestAPI.iss
 
 /*
-	Test DoGetAttackers
+	Test GetAttackers
 
 	Revision $Id$
 
@@ -25,10 +25,10 @@ function main()
 
 	AttackerTest:ParseMembers
 
-	Me:DoGetAttackers[Attackers]
+	Me:GetAttackers[Attackers]
 	variable float CallTime
 	CallTime:Set[${Math.Calc[(${Script.RunningTime}-${StartTime}) / 1000]}]
-	echo "Me:DoGetAttackers returned ${Attackers.Used} modules in ${CallTime} seconds"
+	echo "Me:GetAttackers returned ${Attackers.Used} modules in ${CallTime} seconds"
 
 	Modules:GetIterator[ModuleIterator]
 	if ${ModuleIterator:First(exists)}
@@ -40,6 +40,6 @@ function main()
 	}
 	while ${ModuleIterator:Next(exists)}
 
-	echo "Me:DoGetAttackers returned ${Attackers.Used} modules in ${CallTime} seconds"
+	echo "Me:GetAttackers returned ${Attackers.Used} modules in ${CallTime} seconds"
 	echo "Testing of datatype ${AttackerTest.TypeName} completed in ${Math.Calc[(${Script.RunningTime}-${StartTime}) / 1000]} seconds"
 }

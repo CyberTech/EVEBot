@@ -18,8 +18,8 @@ function main()
 {
 		variable index:pilot PilotIndex
 		variable int RTime = ${Script.RunningTime}
-		EVE:DoGetPilots[PilotIndex]
-		echo "- DoGetPilots took ${Math.Calc[${Script.RunningTime}-${RTime}]} ms."
+		EVE:GetPilots[PilotIndex]
+		echo "- GetPilots took ${Math.Calc[${Script.RunningTime}-${RTime}]} ms."
 		variable iterator PilotIterator
 		PilotIndex:GetIterator[PilotIterator]
 

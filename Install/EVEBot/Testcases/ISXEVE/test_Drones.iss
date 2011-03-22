@@ -37,13 +37,13 @@ function main()
 		echo " Engaging Drones..."
 		;EVE:DronesEngageMyTarget[ActiveDroneIDList]
 
-		Me:DoGetActiveDroneIDs[ActiveDroneIDList]
+		Me:GetActiveDroneIDs[ActiveDroneIDList]
 		while ${ActiveDroneIDList.Used}
 		{
 			echo " Recalling ${ActiveDroneIDList.Used} Drones..."
 			EVE:DronesReturnToDroneBay[ActiveDroneIDList]
 			wait 50
-			Me:DoGetActiveDroneIDs[ActiveDroneIDList]
+			Me:GetActiveDroneIDs[ActiveDroneIDList]
 		}
 		wait 20
 	}

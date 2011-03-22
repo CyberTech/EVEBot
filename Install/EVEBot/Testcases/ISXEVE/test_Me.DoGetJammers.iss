@@ -3,7 +3,7 @@
 #include ../../Support/TestAPI.iss
 
 /*
-	Test DoGetJammers
+	Test GetJammers
 
 	Revision $Id$
 
@@ -25,10 +25,10 @@ function main()
 
 	JammerTest:ParseMembers
 
-	Me:DoGetJammers[Jammers]
+	Me:GetJammers[Jammers]
 	variable float CallTime
 	CallTime:Set[${Math.Calc[(${Script.RunningTime}-${StartTime}) / 1000]}]
-	echo "Me:DoGetJammers returned ${Jammers.Used} modules in ${CallTime} seconds"
+	echo "Me:GetJammers returned ${Jammers.Used} modules in ${CallTime} seconds"
 
 	Modules:GetIterator[ModuleIterator]
 	if ${ModuleIterator:First(exists)}
@@ -40,6 +40,6 @@ function main()
 	}
 	while ${ModuleIterator:Next(exists)}
 
-	echo "Me:DoGetJammers returned ${Jammers.Used} modules in ${CallTime} seconds"
+	echo "Me:GetJammers returned ${Jammers.Used} modules in ${CallTime} seconds"
 	echo "Testing of datatype ${JammerTest.TypeName} completed in ${Math.Calc[(${Script.RunningTime}-${StartTime}) / 1000]} seconds"
 }

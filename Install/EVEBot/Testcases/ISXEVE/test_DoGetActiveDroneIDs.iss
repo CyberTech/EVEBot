@@ -3,7 +3,7 @@
 #include Scripts/EVEBotDev/Support/TestAPI.iss
 
 /*
- *	Test DoGetActiveDroneIDs [Shiva]
+ *	Test GetActiveDroneIDs [Shiva]
  *	Requires:	Must be in space.
  */
 
@@ -13,7 +13,7 @@ function main()
 {
 	variable index:int64 ActiveDroneIDsIndex
 
-	Me:DoGetActiveDroneIDs[ActiveDroneIDsIndex]
+	Me:GetActiveDroneIDs[ActiveDroneIDsIndex]
 
 	echo ActiveDroneIDsIndex.Used: ${ActiveDroneIDsIndex.Used}
 

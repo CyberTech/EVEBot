@@ -3,7 +3,7 @@
 #include Scripts/EVEBot/Support/TestAPI.iss
 
 /*
- *	Test DoGetAvailableAmmo [Shiva]
+ *	Test GetAvailableAmmo [Shiva]
  *
  *	Requirements:
  *		Cargohold having been opened prior.
@@ -16,13 +16,13 @@ function main()
 	if ${Me.InStation}
 	{
 		echo Can't be done while in a station.
-		endscript test_dogetavailableammo.iss
+		return
 	}
 
 	variable index:item AmmoIndex
 	variable index:module ModuleIndex
 
-	MyShip:DoGetModules[ModuleIndex]
+	MyShip:GetModules[ModuleIndex]
 
 	variable iterator ModuleIterator
 
@@ -34,7 +34,7 @@ function main()
 		{
 			if ${ModuleIterator.Value.Charge(exists)}
 			{
-				ModuleIterator.Value:DoGetAvailableAmmo[AmmoIndex]
+				ModuleIterator.Value:GetAvailableAmmo[AmmoIndex]
 
 				echo ${ModuleIterator.Value.ToItem.Name} has ${AmmoIndex.Used} types of ammo in cargo.
 

@@ -3,7 +3,7 @@
 #include Scripts/EVEBot/Support/TestAPI.iss
 
 /*
-	Test DoGetAgents
+	Test GetAgents
 	Shiva
 */
 
@@ -13,8 +13,8 @@ function main()
 		variable index:being AgentIndex
 		variable int RTime = ${Script.RunningTime}
 
-		EVE:DoGetAgents[AgentIndex]
-		echo "- DoGetAgents took ${Math.Calc[${Script.RunningTime}-${RTime}]} ms. (Used: ${AgentIndex.Used})"
+		EVE:GetAgents[AgentIndex]
+		echo "- GetAgents took ${Math.Calc[${Script.RunningTime}-${RTime}]} ms. (Used: ${AgentIndex.Used})"
 
 		variable iterator AgentIterator
 		AgentIndex:GetIterator[AgentIterator]

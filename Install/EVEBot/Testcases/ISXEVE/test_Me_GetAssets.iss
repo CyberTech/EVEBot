@@ -3,7 +3,7 @@
 #include Scripts/EVEBot/Support/TestAPI.iss
 
 /*
- *	Test DoGetAssets (Listed as GetAssets) [Shiva]
+ *	Test GetAssets (Listed as GetAssets) [Shiva]
  *
  *	Revision $Id$
  *
@@ -33,11 +33,11 @@ function main()
 	{
 		; Shiva: Just a value from known list... You could just check entity list in system for a station and then check assets there?
 		;        Ala Asset Gatherer.
-		Me:DoGetAssets[AssetsIndex,60012157]
+		Me:GetAssets[AssetsIndex,60012157]
 	}
 	else
 	{
-		Me:DoGetAssets[AssetsIndex]
+		Me:GetAssets[AssetsIndex]
 	}
 
 	echo "- GetAssets took ${Math.Calc[${Script.RunningTime}-${RTime}]} ms. (Used: ${AssetsIndex.Used})"

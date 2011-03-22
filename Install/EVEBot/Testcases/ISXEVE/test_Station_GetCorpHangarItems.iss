@@ -26,8 +26,8 @@ function main()
 
 	Me.Station:OpenCorpHangar
 	wait 15
-	Me.Station:DoGetCorpHangarItems[HangarItems]
-	echo "Me.Station:DoGetCorpHangarItems returned ${HangarItems.Used} items"
+	Me.Station:GetCorpHangarItems[HangarItems]
+	echo "Me.Station:GetCorpHangarItems returned ${HangarItems.Used} items"
 	ItemTest:IterateMembers["HangarItems.Get[1]"]
 
 	EndTime:Set[${Script.RunningTime}]

@@ -3,7 +3,7 @@
 #include Scripts/EVEBot/Support/TestAPI.iss
 
 /*
-	Test DoGetAgents
+	Test GetAgents
 	Shiva
 */
 
@@ -29,7 +29,7 @@ function main()
 	echo Agent[${EVEAgentIndex}].StationID ${Agent[${EVEAgentIndex}].StationID}
 	echo Agent[${EVEAgentIndex}].Index ${Agent[${EVEAgentIndex}].Index}
 
-	Agent[${EVEAgentIndex}]:DoGetDialogResponses[dsIndex]
+	Agent[${EVEAgentIndex}]:GetDialogResponses[dsIndex]
 
 	dsIndex:GetIterator[dsIterator]
 

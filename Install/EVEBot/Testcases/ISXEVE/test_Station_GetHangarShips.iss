@@ -2,7 +2,7 @@
 
 #include ../Support/TestAPI.iss
 /*
- *	Test DoGetHangarItems
+ *	Test GetHangarItems
  *
  *  Revision $Id$
  *
@@ -27,8 +27,8 @@ function main()
 
 	EVE:Execute[OpenShipHangar]
 	wait 15
-	Me.Station:DoGetHangarShips[HangarShips]
-	echo "Me.Station:DoGetHangarShips returned ${HangarShips.Used} ships"
+	Me.Station:GetHangarShips[HangarShips]
+	echo "Me.Station:GetHangarShips returned ${HangarShips.Used} ships"
 	ItemTest:IterateMembers["HangarShips.Get[1]"]
 
 /*

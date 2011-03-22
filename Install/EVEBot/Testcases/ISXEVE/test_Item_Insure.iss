@@ -26,8 +26,8 @@ function main()
 
 	EVE:Execute[OpenShipHangar]
 	wait 15
-	Me.Station:DoGetHangarShips[HangarShips]
-	echo "Me.Station:DoGetHangarShips returned ${HangarShips.Used} ships"
+	Me.Station:GetHangarShips[HangarShips]
+	echo "Me.Station:GetHangarShips returned ${HangarShips.Used} ships"
 
 	variable int i
 	for (i:Set[1]; ${i} <= ${HangarShips.Used}; i:Inc)

@@ -20,7 +20,7 @@ function main()
 	variable iterator SafeSpotIterator
 
 	SafeSpots:Clear
-	EVE:DoGetBookmarks[SafeSpots]
+	EVE:GetBookmarks[SafeSpots]
 
 	SafeSpots:GetIterator[SafeSpotIterator]
 	if ${SafeSpotIterator:First(exists)}

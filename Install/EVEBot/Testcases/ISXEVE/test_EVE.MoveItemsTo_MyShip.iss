@@ -9,7 +9,7 @@
  *
  *	Tests:
  *		EVE:MoveItemsTo (MyShip dest)
- *		Station:DoGetHangarItems
+ *		Station:GetHangarItems
  *
  *	Requirements:
  *		You: In station
@@ -28,7 +28,7 @@
 	EVE:Execute[OpenHangarFloor]
 	Wait 100
 
-	Me.Station:DoGetHangarItems[MyCargo]
+	Me.Station:GetHangarItems[MyCargo]
 	echo "Station Hangar contains ${MyCargo.Used} Items"
 
 	MyCargo:GetIterator[CargoIterator]

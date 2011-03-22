@@ -19,10 +19,10 @@ function main()
 
 	ItemTest:ParseMembers
 
-	MyShip:DoGetModules[Modules]
+	MyShip:GetModules[Modules]
 	variable float CallTime
 	CallTime:Set[${Math.Calc[(${Script.RunningTime}-${StartTime}) / 1000]}]
-	echo "MyShip:DoGetModules returned ${Modules.Used} modules in ${CallTime} seconds"
+	echo "MyShip:GetModules returned ${Modules.Used} modules in ${CallTime} seconds"
 
 	Modules:GetIterator[ModuleIterator]
 	if ${ModuleIterator:First(exists)}
@@ -34,6 +34,6 @@ function main()
 	}
 	while ${ModuleIterator:Next(exists)}
 
-	echo "MyShip:DoGetModules returned ${Modules.Used} modules in ${CallTime} seconds"
+	echo "MyShip:GetModules returned ${Modules.Used} modules in ${CallTime} seconds"
 	echo "Testing of datatype ${ItemTest.TypeName} completed in ${Math.Calc[(${Script.RunningTime}-${StartTime}) / 1000]} seconds"
 }

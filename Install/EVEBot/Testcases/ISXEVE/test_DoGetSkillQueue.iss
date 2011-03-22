@@ -3,7 +3,7 @@
 #include Scripts/EVEBot/Support/TestAPI.iss
 
 /*
-	Test Me:DoGetSkillQueue
+	Test Me:GetSkillQueue
 	Test queuedskill (Being) Member Iteration
 
 
@@ -18,12 +18,12 @@ variable obj_UI UI
 function main()
 {
 		variable index:queuedskill SkillQueueIndex
-		Me:DoGetSkillQueue[SkillQueueIndex]
+		Me:GetSkillQueue[SkillQueueIndex]
 
 		variable iterator Skill
 		SkillQueueIndex:GetIterator[Skill]
 
-		echo "Skills Queued Me:DoGetSkillQueue: ${SkillQueueIndex.Used}"
+		echo "Skills Queued Me:GetSkillQueue: ${SkillQueueIndex.Used}"
 		echo "Skills Queued Me.GetSkillQueue: ${Me.GetSkillQueue}"
 		echo "Skills Queued Me.GetSkillQueue[]: ${Me.GetSkillQueue[SkillQueueIndex]}"
 
