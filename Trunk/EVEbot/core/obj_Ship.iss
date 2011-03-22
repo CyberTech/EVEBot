@@ -311,7 +311,7 @@ objectdef obj_Ship inherits obj_BaseClass
 				BaseOptimal:Set[${This.TurretBaseOptimal[${Weapon.Key}]}]
 				Logger:Log["obj_Ship:BuildLookupTables[]: TurretBaseOptimals.Element[${Weapon.Key}]: ${TurretBaseOptimals.Element[${Weapon.Key}]}"]
 
-				Weapon.Value:DoGetAvailableAmmo[AvailableCharges]
+				Weapon.Value:GetAvailableAmmo[AvailableCharges]
 				AvailableCharges:GetIterator[AvailableCharge]
 
 				Logger:Log["obj_Ship:BuildLookupTables[]: GroupID: ${Weapon.Value.ToItem.GroupID}"]
@@ -406,7 +406,7 @@ objectdef obj_Ship inherits obj_BaseClass
 		variable index:item AmmoIndex
 		variable iterator AmmoIterator
 
-		MyShip.Module[${slot}]:DoGetAvailableAmmo[AmmoIndex]
+		MyShip.Module[${slot}]:GetAvailableAmmo[AmmoIndex]
 		AmmoIndex:GetIterator[AmmoIterator]
 		if ${AmmoIterator:First(exists)}
 		{
@@ -660,7 +660,7 @@ objectdef obj_Ship inherits obj_BaseClass
 
 		;Moved these down here = doesn't help at all to get available ammo for a freakin' nonexistent WeaponIterator value!
 		; This must have worked previously out of pure luck
-		MyShip.Module[${slot}]:DoGetAvailableAmmo[AmmoIndex]
+		MyShip.Module[${slot}]:GetAvailableAmmo[AmmoIndex]
 		AmmoIndex:GetIterator[AmmoIterator]
 
 		variable float BaseOptimal = ${TurretBaseOptimals.Element[${turret}]}
@@ -758,7 +758,7 @@ objectdef obj_Ship inherits obj_BaseClass
 				;Logger:Log["DEBUG: obj_Ship.IsAmmoAvailable:"]
 				;Logger:Log["Slot: ${aWeaponIterator.Value.ToItem.Slot}  ${aWeaponIterator.Value.ToItem.Name}"]
 
-				aWeaponIterator.Value:DoGetAvailableAmmo[anItemIndex]
+				aWeaponIterator.Value:GetAvailableAmmo[anItemIndex]
 				;Logger:Log["Ammo: Used = ${anItemIndex.Used}"]
 
 				anItemIndex:GetIterator[anItemIterator]
@@ -915,7 +915,7 @@ objectdef obj_Ship inherits obj_BaseClass
 		This.ModuleList_ECCM:Clear
 		This.ModuleList_WeaponEnhance:Clear
 
-		MyShip:DoGetModules[This.ModuleList]
+		MyShip:GetModules[This.ModuleList]
 
 		if !${This.ModuleList.Used} && ${MyShip.HighSlots} > 0
 		{
@@ -1202,7 +1202,7 @@ objectdef obj_Ship inherits obj_BaseClass
 		variable index:entity LockedTargets
 		variable iterator Target
 
-		Me:DoGetTargets[LockedTargets]
+		Me:GetTargets[LockedTargets]
 		LockedTargets:GetIterator[Target]
 
 		if ${Target:First(exists)}
@@ -1232,7 +1232,7 @@ objectdef obj_Ship inherits obj_BaseClass
 			variable index:item CrystalListT2
 			variable iterator CrystalIterator
 
-			MyShip.Module[${SlotName}]:DoGetAvailableAmmo[CrystalList]
+			MyShip.Module[${SlotName}]:GetAvailableAmmo[CrystalList]
 
 			CrystalList:GetIterator[CrystalIterator]
 			if ${CrystalIterator:First(exists)}
@@ -1469,7 +1469,9 @@ objectdef obj_Ship inherits obj_BaseClass
 			LoopCheck:Set[0]
 			CaptionCount:Set[${EVEWindow[MyShipCargo].Caption.Token[2,"["].Token[1,"]"]}]
 			;Logger:Log["obj_Ship: Waiting for cargo to load: CaptionCount: ${CaptionCount}", LOG_DEBUG]
-			while ( ${CaptionCount} > ${MyShip.GetCargo} && \
+			variable index:item MyCargo
+			MyShip:GetCargo[MyCargo]
+			while ( ${CaptionCount} > ${MyCargo.Used} && \
 					${LoopCheck} < 10 )
 			{
 				Logger:Log["obj_Ship: Waiting for cargo to load...(${LoopCheck})", LOG_MINOR]
@@ -1479,6 +1481,7 @@ objectdef obj_Ship inherits obj_BaseClass
 				}
 				wait 10
 				LoopCheck:Inc
+				MyShip:GetCargo[MyCargo]
 			}
 		}
 	}
@@ -1747,7 +1750,7 @@ objectdef obj_Ship inherits obj_BaseClass
 
 		if ${Station.Docked}
 		{
-			Me:DoGetHangarShips[hsIndex]
+			Me:GetHangarShips[hsIndex]
 			hsIndex:GetIterator[hsIterator]
 
 			shipName:Set[${MyShip}]

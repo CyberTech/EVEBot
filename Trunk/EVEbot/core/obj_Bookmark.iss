@@ -39,7 +39,7 @@ objectdef obj_Bookmarks inherits obj_BaseClass
 		This.Bookmarks:Clear
 		
 		; TODO - Enhance this in ISXEVE using query syntax
-		EVE:DoGetBookmarks[Bookmarks]
+		EVE:GetBookmarks[Bookmarks]
 		This.Bookmarks:GetIterator[BookmarkIterator]
 		Logger:Log["${LogPrefix}: Found ${This.Bookmarks.Used} total bookmarks, filtering by prefix '${This.BookmarkPrefix}'", LOG_DEBUG]
 

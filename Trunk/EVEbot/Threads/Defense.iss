@@ -401,7 +401,7 @@ objectdef obj_Defense inherits obj_BaseClass
 		; If you don't have hardeners this code does nothing.
 		; This uses shield and uncached GetTargetedBy (to reduce chance of a
 		; volley making it thru before hardeners are up)
-		Me:DoGetTargetedBy[This.TargetingMe]
+		Me:GetTargetedBy[This.TargetingMe]
 		if ${This.TargetingMe.Used} > 0 || ${MyShip.ShieldPct} < 99
 		{
 			Ship:Activate_Hardeners[]

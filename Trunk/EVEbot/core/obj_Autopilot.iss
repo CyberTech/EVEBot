@@ -57,7 +57,7 @@ objectdef obj_Autopilot
 		if ${This.IsLowSecRoute} == -999
 		{
 	
-	    	EVE:DoGetToDestinationPath[This.Path]
+	    	EVE:GetToDestinationPath[This.Path]
 	    	This.Path:GetIterator[This.PathIterator]
 	    	
 			;;Logger:Log["obj_Autopilot: DEBUG: ${Universe[${This.Destination}]} is ${This.Path.Used} jumps away."]

@@ -215,9 +215,9 @@ objectdef obj_Skills inherits obj_BaseClass
 		{
 			variable int i
 			variable index:skill SkillList
-			if ${Me.GetSkills[SkillList]}
+			if ${Me:GetSkills[SkillList]}
 			{
-				for (i:Set[1] ; ${i} <= ${Me.GetSkills} ; i:Inc)
+				for (i:Set[1] ; ${i} <= ${SkillList.Used} ; i:Inc)
 				{
 					if ${SkillList[${i}].IsTraining}
 					{
@@ -335,7 +335,7 @@ objectdef obj_Skills inherits obj_BaseClass
 		variable iterator skillIterator
 		variable string currentlyTraining
 
-		Me:DoGetSkills[This.OwnedSkills]
+		Me:GetSkills[This.OwnedSkills]
 		This.SkillQueue:Clear
 
 		This.OwnedSkills:GetIterator[skillIterator]

@@ -324,7 +324,7 @@ objectdef obj_Offense inherits obj_BaseClass
 					{
 						if ${ShouldLaunchCombatDrones}
 						{
-							if ${Ship.Drones.DeployedDroneCount} < 5 && ${Ship.Drones.DeployedDroneCount} < ${MyShip.GetDrones}
+							if ${Ship.Drones.DeployedDroneCount} < 5 && ${Ship.Drones.DeployedDroneCount} < ${Ship.Drones.DronesInBay}
 							{
 								Ship.Drones:LaunchAll
 							}
