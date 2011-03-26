@@ -20,7 +20,7 @@
 objectdef obj_LSGUI inherits obj_BaseClass
 {
 	variable string SVN_REVISION = "$Rev$"
-	variable string SVN_PATH = "$HeadURL: http://www.isxgames.com/isxScripts/isxGamesCommon/CyberTech/obj_PulseTimer.iss $"
+	variable string SVN_PATH = "$HeadURL$"
 	variable string SVN_AUTHOR = "$Author$"
 	variable string Root = ""
 
