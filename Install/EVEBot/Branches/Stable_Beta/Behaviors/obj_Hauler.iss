@@ -456,8 +456,8 @@ objectdef obj_OreHauler inherits obj_Hauler
 			   ${Entity["OwnerID = ${charID} && CategoryID = 6"].DistanceTo[${Entities.Peek.ID}]} > LOOT_RANGE
 			{
 				/* approach within tractor range and tractor entity */
-				variable float ApproachRange = ${Ship.OptimalTractorRange
-				if ${Ship.OptimalTractorRange} > ${Ship.OptimalTargetingRange}
+				variable float ApproachRange = ${Ship.OptimalTractorRange}
+				if ${ApproachRange} > ${Ship.OptimalTargetingRange}
 				{
 					ApproachRange:Set[${Ship.OptimalTargetingRange}]
 				}
