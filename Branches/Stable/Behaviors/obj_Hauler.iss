@@ -507,9 +507,42 @@ objectdef obj_OreHauler inherits obj_Hauler
 			if ${Entity[OwnerID,${charID},CategoryID,6](exists)} && \
 			   ${Entity[OwnerID,${charID},CategoryID,6].DistanceTo[${Entities.Peek.ID}]} > LOOT_RANGE
 			{
-				/* TODO: approach within tractor range and tractor entity */
-				/* FOR NOW approach within loot range */
-				call Ship.Approach ${Entities.Peek.ID} LOOT_RANGE
+				/* approach within tractor range and tractor entity */
+				variable float ApproachRange = ${Ship.OptimalTractorRange
+				if ${Ship.OptimalTractorRange} > ${Ship.OptimalTargetingRange}
+				{
+					ApproachRange:Set[${Ship.OptimalTargetingRange}]
+				}
+
+				if ${ApproachRange} > 0 /* we have a tractor beam */
+				{
+					if ${Entities.Peek.Distance} > ${ApproachRange}
+					{
+						call Ship.Approach ${Entities.Peek.ID} ${ApproachRange}
+					}
+					Entities.Peek:LockTarget
+					wait 10 ${Entities.Peek.BeingTargeted} || ${Entities.Peek.IsLockedTarget}
+					while !${Entities.Peek.IsLockedTarget}
+					{
+						wait 1
+					}
+					Entities.Peek:MakeActiveTarget
+					while !${Me.ActiveTarget.ID.Equal[${Entities.Peek.ID}]}
+					{
+						wait 1
+					}
+					Ship:Activate_Tractor
+					while ${Entities.Peek.Distance} > LOOT_RANGE
+					{
+						wait 1
+					}
+				}
+				else
+				{
+					/* approach within loot range */
+					call Ship.Approach ${Entities.Peek.ID} LOOT_RANGE
+					Entities.Peek:Approach
+				}
 				Entities.Peek:OpenCargo
 				wait 30
 				call This.LootEntity ${Entities.Peek.ID}
