@@ -185,7 +185,7 @@ objectdef obj_Social inherits obj_BaseClass
 							continue
 						}
 					}
-					This.PiloteIndex:Collapse
+					This.PilotIndex:Collapse
 
 					Passed_LowStandingCheck:Set[!${This.LowStandingDetected}]
 					Passed_PilotCheck:Set[${This.CheckLocalPilots}]
