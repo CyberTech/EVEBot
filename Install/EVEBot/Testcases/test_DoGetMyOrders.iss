@@ -17,14 +17,14 @@ function main()
 	variable index:myorder OrderIndex
 
 	variable int RTime = ${Script.RunningTime}
-	Me:UpdateMyOrders[OrderIndex]
+	Me:UpdateMyOrders
 	echo "- UpdateMyOrders took ${Math.Calc[${Script.RunningTime}-${RTime}]} ms."
 
 	waitframe
 
 	RTime:Set[${Script.RunningTime}]
-	Me:DoGetMyOrders[OrderIndex]
-	echo "- DoGetMyOrders took ${Math.Calc[${Script.RunningTime}-${RTime}]} ms."
+	Me:GetMyOrders[OrderIndex]
+	echo "- GetMyOrders took ${Math.Calc[${Script.RunningTime}-${RTime}]} ms."
 
 	waitframe
 

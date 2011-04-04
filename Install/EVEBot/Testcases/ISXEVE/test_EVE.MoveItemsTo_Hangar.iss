@@ -22,7 +22,7 @@ function main()
 	variable iterator CargoIterator
 	variable index:int64 IDList
 
-	echo "Version: ${ISXEVE.Version}"
+	echo "Version: $ISXEVE.Version}"
 
 	EVE:Execute[OpenCargoHoldOfActiveShip]
 	EVE:Execute[OpenHangarFloor]

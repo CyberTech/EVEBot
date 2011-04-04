@@ -24,8 +24,6 @@ function main()
 		SkillQueueIndex:GetIterator[Skill]
 
 		echo "Skills Queued Me:GetSkillQueue: ${SkillQueueIndex.Used}"
-		echo "Skills Queued Me.GetSkillQueue: ${Me.GetSkillQueue}"
-		echo "Skills Queued Me.GetSkillQueue[]: ${Me.GetSkillQueue[SkillQueueIndex]}"
 
 		if ${Skill:First(exists)}
 		{

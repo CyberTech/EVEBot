@@ -8,7 +8,7 @@ function main()
 	variable string sLoadedAmmo
 	variable string sIteratedAmmo
 	
-	MyShip.Module[HiSlot0]:DoGetAvailableAmmo[idxAmmo]
+	MyShip.Module[HiSlot0]:GetAvailableAmmo[idxAmmo]
 	idxAmmo:GetIterator[itrAmmo]
 	
 	echo "itrAmmo:First(exists): ${itrAmmo:First(exists)}"
