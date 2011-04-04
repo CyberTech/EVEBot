@@ -23,7 +23,7 @@
 objectdef obj_EntityFilter
 {
 	variable string Owner
-	variable int QueryID
+	variable uint QueryID
 	variable string LSFilter
 
 	variable int Decay
@@ -120,7 +120,7 @@ objectdef obj_EntityCache inherits obj_BaseClass
 	member:int AddFilter(string Owner, string Filter, float DecaySeconds=2.0)
 	{
 		variable int ID
-		variable int QueryID
+		variable uint QueryID
 		variable obj_EntityFilter EntityFilter
 
 		QueryID:Set[${LavishScript.CreateQuery[${Filter}]}]
