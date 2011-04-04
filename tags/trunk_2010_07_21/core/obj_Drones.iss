@@ -162,7 +162,7 @@ objectdef obj_Drones
 				;only do the checks if the drone has a valid ToEntity
 				if ${ActiveDrone.Value.ToEntity(exists)} && ${ActiveDrone.Value.State} != DRONESTATE_RETURNING
 				{
-					UI:UpdateConsole["obj_Drones: Drone ${ActiveDrone.Value.ID}: Armor %: ${ActiveDrone.Value.ToEntity.ArmorPct}, Stored: ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}]}, Shield %: ${ActiveDrone.Value.ToEntity.ShieldPct}, Stored: ${StoredDroneShield.Element[${ActiveDrone.Value.ID}]}",LOG_DEBUG]
+					UI:UpdateConsole["obj_Drones: Drone ${ActiveDrone.Value.ID}: Armor %%: ${ActiveDrone.Value.ToEntity.ArmorPct}, Stored: ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}]}, Shield %: ${ActiveDrone.Value.ToEntity.ShieldPct}, Stored: ${StoredDroneShield.Element[${ActiveDrone.Value.ID}]}",LOG_DEBUG]
 					/* Only compare hp if the stored hp isn't null and activedrone is a valid entity*/
 					UI:UpdateConsole["obj_Drones: Drone ${ActiveDrone.Value.ID}, state: ${ActiveDrone.Value.State}",LOG_DEBUG]
 					if ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}](exists)} && \

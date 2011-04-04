@@ -288,9 +288,9 @@ objectdef obj_Combat
 				${_Me.Ship.ShieldPct} < ${Config.Combat.MinimumShieldPct} || \
 				${_Me.Ship.CapacitorPct} < ${Config.Combat.MinimumCapPct})
 		{
-			UI:UpdateConsole["Armor is at ${_Me.Ship.ArmorPct.Int}%: ${Me.Ship.Armor.Int}/${Me.Ship.MaxArmor.Int}", LOG_CRITICAL]
-			UI:UpdateConsole["Shield is at ${_Me.Ship.ShieldPct.Int}%: ${Me.Ship.Shield.Int}/${Me.Ship.MaxShield.Int}", LOG_CRITICAL]
-			UI:UpdateConsole["Cap is at ${_Me.Ship.CapacitorPct.Int}%: ${Me.Ship.Capacitor.Int}/${Me.Ship.MaxCapacitor.Int}", LOG_CRITICAL]
+			UI:UpdateConsole["Armor is at ${_Me.Ship.ArmorPct.Int}%%: ${Me.Ship.Armor.Int}/${Me.Ship.MaxArmor.Int}", LOG_CRITICAL]
+			UI:UpdateConsole["Shield is at ${_Me.Ship.ShieldPct.Int}%%: ${Me.Ship.Shield.Int}/${Me.Ship.MaxShield.Int}", LOG_CRITICAL]
+			UI:UpdateConsole["Cap is at ${_Me.Ship.CapacitorPct.Int}%%: ${Me.Ship.Capacitor.Int}/${Me.Ship.MaxCapacitor.Int}", LOG_CRITICAL]
 
 			if !${Config.Combat.RunOnLowTank}
 			{
@@ -353,7 +353,7 @@ objectdef obj_Combat
 				Ship.Drones:LaunchAll[]
 			}
 		}
-		
+
 		if ${_Me.GetTargetedBy} > 0
 		{
 			Ship:Activate_Hardeners[]

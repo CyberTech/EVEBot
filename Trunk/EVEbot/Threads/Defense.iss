@@ -36,7 +36,7 @@ objectdef obj_Defense inherits obj_BaseClass
 		EntityCache.EntityFilters.Get[${This.Entity_CacheID}].Entities:GetIterator[Entity_CacheIterator]
 		Logger:Log["Thread: ${This.LogPrefix}: Initialized", LOG_MINOR]
 	}
-	
+
 	method Shutdown()
 	{
 		Event[EVENT_ONFRAME]:DetachAtom
@@ -143,9 +143,9 @@ objectdef obj_Defense inherits obj_BaseClass
 			${MyShip.ShieldPct} < ${Config.Combat.MinimumShieldPct} || \
 			${MyShip.CapacitorPct} < ${Config.Combat.MinimumCapPct} && ${Config.Combat.RunOnLowCap})
 		{
-			Logger:Log["Armor is at ${MyShip.ArmorPct.Int}%: ${MyShip.Armor.Int}/${MyShip.MaxArmor.Int}", LOG_CRITICAL]
-			Logger:Log["Shield is at ${MyShip.ShieldPct.Int}%: ${MyShip.Shield.Int}/${MyShip.MaxShield.Int}", LOG_CRITICAL]
-			Logger:Log["Cap is at ${MyShip.CapacitorPct.Int}%: ${MyShip.Capacitor.Int}/${MyShip.MaxCapacitor.Int}", LOG_CRITICAL]
+			Logger:Log["Armor is at ${MyShip.ArmorPct.Int}%%: ${MyShip.Armor.Int}/${MyShip.MaxArmor.Int}", LOG_CRITICAL]
+			Logger:Log["Shield is at ${MyShip.ShieldPct.Int}%%: ${MyShip.Shield.Int}/${MyShip.MaxShield.Int}", LOG_CRITICAL]
+			Logger:Log["Cap is at ${MyShip.CapacitorPct.Int}%%: ${MyShip.Capacitor.Int}/${MyShip.MaxCapacitor.Int}", LOG_CRITICAL]
 
 			if !${Config.Combat.RunOnLowTank}
 			{
