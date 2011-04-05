@@ -627,7 +627,7 @@
 		<Color>FFEECC00</Color>
 	</Template>
 	<Template name='EVESkin.window.TitleBar.Title' Template='window.TitleBar.Title' />
-	<Template name='EVESkin.window.TitleBar.Minimize.Texture' Filename='interface/EVESkin.png' ColorKey='FFFF00FF'>
+	<Template name='EVESkin.window.TitleBar.Minimize.Texture' Filename='&filepath;/Images/EVESkin.png' ColorKey='FFFF00FF'>
 		<Left>149</Left>
 		<Right>165</Right>
 		<Top>103</Top>
