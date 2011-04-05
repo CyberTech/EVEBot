@@ -37,6 +37,7 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 
 /* Core Library (Non-EVE Related code) */
 #include ../External/isxGamesCommon/CyberTech/obj_PulseTimer.iss
+#include ../External/isxGamesCommon/CyberTech/obj_LSQuery.iss
 #include Lib/obj_BaseClass.iss
 #include Lib/obj_Vector.iss
 ;#include Lib/obj_Mutex.iss

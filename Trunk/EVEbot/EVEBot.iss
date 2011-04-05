@@ -144,6 +144,9 @@ function main()
 
 	/* All variables that would normally be defined script scope should be defined global scope to simplify threads */
 
+	/* NON-EVE Related Objects */
+	call CreateVariable LSQueryCache obj_LSQueryCache global
+
 	/* Script-Defined Support Objects */
 	call CreateVariable LSGUI obj_LSGUI global "Tabs@EVEBot"
 	call CreateVariable Logger obj_Logger global
