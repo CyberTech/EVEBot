@@ -21,7 +21,6 @@
 #include Support/obj_AutoPatcher.iss
 #include Support/obj_Configuration.iss
 
-variable obj_UI UI
 variable obj_LoginHandler LoginHandler
 variable obj_Configuration_BaseConfig BaseConfig
 variable obj_Configuration Config
@@ -104,10 +103,11 @@ function main(string unchar="", string StartBot=FALSE)
 
 					UI:UpdateConsole["Launcher: Starting EVEBot Dev by CyberTech"]
 					runscript EVEBot/EVEBot Dev
-					wait 600 ${Script[EVEBot].Paused}
-					while ${Script[EVEBot].Paused}
+					wait 600 ${EVEBot.Paused}
+					while ${EVEBot.Paused}
 					{
 						Script[EVEBot]:Resume
+						EVEBot:Resume["Resume called via Launcher"]
 						wait 15
 					}
 					break

@@ -63,4 +63,4 @@ objectdef obj_UI
 
 }
 
-
+variable obj_UI UI
