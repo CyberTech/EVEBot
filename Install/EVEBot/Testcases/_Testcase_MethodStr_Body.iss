@@ -10,8 +10,15 @@
 	ItemTest:ParseMembers
 
 	CallTime:Set[${Script.RunningTime}]
-	noop ${MethodStr}\[TestIndex\]
-	EVE:GetAgentMissions[TestIndex]
+	if ${MethodStrParm(exists)}
+	{
+		noop ${${MethodStr}\[TestIndex, ${MethodStrParam}\]}
+	}
+	else
+	{
+		noop ${${MethodStr}\[TestIndex\]}
+	}
+
 	echo " * ${MethodStr} returned ${TestIndex.Used} ${ItemTest.TypeName}s in ${Math.Calc[(${Script.RunningTime}-${CallTime}) / 1000]} seconds"
 
 	if ${TestIterator:First(exists)}
