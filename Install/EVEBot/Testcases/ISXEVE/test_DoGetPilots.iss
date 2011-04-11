@@ -13,7 +13,6 @@
 		Other2: In Space, Off Grid
 */
 
-variable obj_UI UI
 function main()
 {
 		variable index:pilot PilotIndex

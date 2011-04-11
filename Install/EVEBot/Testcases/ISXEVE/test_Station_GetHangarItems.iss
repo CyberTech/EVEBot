@@ -1,6 +1,6 @@
 #define TESTCASE 1
 
-#include ../../Support/TestAPI.iss
+#include Scripts/EVEBot/Support/TestAPI.iss
 /*
  *	Test GetHangarItems
  *

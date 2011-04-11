@@ -1,6 +1,6 @@
 #define TESTCASE 1
 
-#include ../Support/TestAPI.iss
+#include Scripts/EVEBot/Support/TestAPI.iss
 
 /*
  *	Test retrieval of character's market orders
@@ -11,7 +11,6 @@
  *
  */
 
-variable obj_UI UI
 function main()
 {
 	variable index:myorder OrderIndex

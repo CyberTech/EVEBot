@@ -1,6 +1,6 @@
 #define TESTCASE 1
 
-#include ../Support/TestAPI.iss
+#include Scripts/EVEBot/Support/TestAPI.iss
 
 /*
  *	Test Item:GetInsuranceQuotes, where item is a ship

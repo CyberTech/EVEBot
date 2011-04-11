@@ -13,7 +13,6 @@
 		People & Places window must have been opened at least once
 */
 
-variable obj_UI UI
 function main()
 {
 	variable index:bookmark SafeSpots

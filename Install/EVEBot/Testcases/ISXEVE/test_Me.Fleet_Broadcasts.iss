@@ -1,6 +1,6 @@
 #define TESTCASE 1
 
-#include ../Support/TestAPI.iss
+#include Scripts/EVEBot/Support/TestAPI.iss
 
 /*
 	Test Fleet Broadcasts
@@ -18,7 +18,6 @@
 		Active Cyno (if you want the beacon broadcast to succeed)
 */
 
-variable obj_UI UI
 function main()
 {
 		echo " "

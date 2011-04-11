@@ -8,7 +8,6 @@
  *	Note: Detects ALL drones in space that are in your window.
  */
 
-variable obj_UI UI
 
 function main()
 {

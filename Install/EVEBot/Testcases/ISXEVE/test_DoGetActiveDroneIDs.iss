@@ -7,7 +7,6 @@
  *	Requires:	Must be in space.
  */
 
-variable obj_UI UI
 
 function main()
 {

@@ -7,7 +7,6 @@
 	Shiva
 */
 
-variable obj_UI UI
 function main()
 {
 	variable int EVEAgentIndex = 4130

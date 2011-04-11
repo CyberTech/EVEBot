@@ -10,10 +10,9 @@
 
 */
 
-#include ../Support/TestAPI.iss
+#include Scripts/EVEBot/Support/TestAPI.iss
 #include ../Branches/Dev/core/obj_EVEDB.iss
 
-variable obj_UI UI
 
 function main()
 {

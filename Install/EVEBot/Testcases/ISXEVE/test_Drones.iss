@@ -1,6 +1,6 @@
 #define TESTCASE 1
 
-#include ../Support/TestAPI.iss
+#include Scripts/EVEBot/Support/TestAPI.iss
 
 /*
 	Test Drone Launch, Recall, ID collection, activedrone member, engage
@@ -12,7 +12,6 @@
 		Other1: In Fleet, In Space, Targeted
 */
 
-variable obj_UI UI
 function main()
 {
 	variable index:int64 ActiveDroneIDList
@@ -21,6 +20,7 @@ function main()
 	while TRUE
 	{
 		echo Drone Bay Capacity: ${Me.Ship.DronebayCapacity}
+#echo needs rewritten to use methods
 		echo Drones in Bay: ${Me.Ship.GetDrones}
 
 		UI:UpdateConsole["Launching drones..."]

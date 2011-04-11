@@ -1,12 +1,11 @@
 #define TESTCASE 1
 
-#include ../../Support/TestAPI.iss
+#include Scripts/EVEBot/Support/TestAPI.iss
 
 /*
 	Test Modules
 */
 
-variable obj_UI UI
 function main()
 {
 	variable int StartTime = ${Script.RunningTime}

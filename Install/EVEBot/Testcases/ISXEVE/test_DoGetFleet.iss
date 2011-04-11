@@ -22,7 +22,6 @@
  *		Other: In Fleet, In Space, on Grid
  */
 
-variable obj_UI UI
 function main(string Invitee)
 {
 		variable index:fleetmember FleetIndex

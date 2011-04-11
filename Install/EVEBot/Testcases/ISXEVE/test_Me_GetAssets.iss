@@ -16,7 +16,6 @@
 
 #define WITH_STATIONID 0
 
-variable obj_UI UI
 function main()
 {
 	if !${EVEWindow[ByCaption,"ASSETS"](exists)}

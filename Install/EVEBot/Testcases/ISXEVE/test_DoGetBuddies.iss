@@ -13,7 +13,6 @@
 		People & Places window must have been opened at least once, to the buddies tab
 */
 
-variable obj_UI UI
 function main()
 {
 	variable int StartTime = ${Script.RunningTime}

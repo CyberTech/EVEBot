@@ -1,6 +1,6 @@
 #define TESTCASE 1
 
-#include ../Support/TestAPI.iss
+#include Scripts/EVEBot/Support/TestAPI.iss
 
 /*
  *	Cached Entity Retrieval and Member Access
@@ -46,7 +46,6 @@ atom RunAtomicTestCase()
 	echo "Testing of datatype ${ItemTest.TypeName} completed in ${Math.Calc[(${Script.RunningTime}-${StartTime}) / 1000]} seconds"
 }
 
-variable obj_UI UI
 function main()
 {
 	RunAtomicTestCase

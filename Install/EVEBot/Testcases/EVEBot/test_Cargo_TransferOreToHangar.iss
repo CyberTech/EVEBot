@@ -10,14 +10,13 @@
 
 */
 
-#include ../Support/TestAPI.iss
+#include Scripts/EVEBot/Support/TestAPI.iss
 #include ../core/obj_EVEBot.iss
 #include ../core/obj_Drones.iss
 #include ../core/obj_Ship.iss
 #include ../core/obj_Station.iss
 #include ../core/obj_Cargo.iss
 
-variable obj_UI UI
 
 function main()
 {

@@ -14,7 +14,6 @@
 		Skill Queue Window Must be open
 */
 
-variable obj_UI UI
 function main()
 {
 		variable index:queuedskill SkillQueueIndex
