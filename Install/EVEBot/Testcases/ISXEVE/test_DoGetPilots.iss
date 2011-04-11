@@ -15,26 +15,8 @@
 
 function main()
 {
-		variable index:pilot PilotIndex
-		variable int RTime = ${Script.RunningTime}
-		EVE:GetPilots[PilotIndex]
-		echo "- GetPilots took ${Math.Calc[${Script.RunningTime}-${RTime}]} ms."
-		variable iterator PilotIterator
-		PilotIndex:GetIterator[PilotIterator]
+	variable obj_LSTypeIterator ItemTest = "pilot"
+	variable string MethodStr = "EVE:GetPilots"
 
-
-
-		if ${PilotIterator:First(exists)}
-		{
-			do
-			{
-				echo ${System.TickCount}: PilotIterator.Value.Name ${PilotIterator.Value.Name}
-				echo ${System.TickCount}: PilotIterator.Value.CharID ${PilotIterator.Value.CharID}
-				echo ${System.TickCount}: PilotIterator.Value.ToEntity(exists) ${PilotIterator.Value.ToEntity(exists)}
-				echo ${System.TickCount}: PilotIterator.Value.ToEntity.IsPC ${PilotIterator.Value.ToEntity.IsPC}
-				echo PilotIterator.Value.ToEntity.Distance ${PilotIterator.Value.ToEntity.Distance}
-				echo PilotIterator.Value.ToFleetMember ${PilotIterator.Value.ToFleetMember}
-			}
-			while ${PilotIterator:Next(exists)}
-		}
+	#include "../_Testcase_MethodStr_Body.iss"
 }

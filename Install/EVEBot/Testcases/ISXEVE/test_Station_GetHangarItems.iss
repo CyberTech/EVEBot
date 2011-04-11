@@ -14,22 +14,11 @@
 
 function main()
 {
-	variable int StartTime = ${Script.RunningTime}
-	variable int EndTime
-
-	declarevariable HangarItems index:item script
 	variable obj_LSTypeIterator ItemTest = "item"
-
-	ItemTest:ParseMembers
-	;ItemTest:PrintKnownMembers
-	;ItemTest:PrintKnownMethods
+	variable string MethodStr = "Me.Station:GetHangarItems"
 
 	EVE:Execute[OpenHangarFloor]
 	wait 15
-	Me.Station:GetHangarItems[HangarItems]
-	echo "Me.Station:GetHangarItems returned ${HangarItems.Used} items"
-	ItemTest:IterateMembers["HangarItems.Get[1]"]
 
-	EndTime:Set[${Script.RunningTime}]
-	echo "Testing of datatype ${ItemTest.TypeName} completed in ${Math.Calc[(${EndTime}-${StartTime}) / 1000]} seconds"
+	#include "../_Testcase_MethodStr_Body.iss"
 }

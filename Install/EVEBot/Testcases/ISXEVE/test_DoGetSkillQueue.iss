@@ -16,22 +16,8 @@
 
 function main()
 {
-		variable index:queuedskill SkillQueueIndex
-		Me:GetSkillQueue[SkillQueueIndex]
+	variable obj_LSTypeIterator ItemTest = "queuedskill"
+	variable string MethodStr = "Me:GetSkillQueue"
 
-		variable iterator Skill
-		SkillQueueIndex:GetIterator[Skill]
-
-		echo "Skills Queued Me:GetSkillQueue: ${SkillQueueIndex.Used}"
-
-		if ${Skill:First(exists)}
-		{
-			do
-			{
-				echo Skill.Value.TrainingTo ${Skill.Value.TrainingTo}
-				echo Skill.Value.ToSkill ${Skill.Value.ToSkill}
-				;Skill.Value:Remove
-			}
-			while ${Skill:Next(exists)}
-		}
+	#include "../_Testcase_MethodStr_Body.iss"
 }

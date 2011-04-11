@@ -15,17 +15,8 @@
 
 function main()
 {
-	variable index:bookmark SafeSpots
-	variable iterator SafeSpotIterator
+	variable obj_LSTypeIterator ItemTest = "bookmark"
+	variable string MethodStr = "EVE:GetBookmarks"
 
-	SafeSpots:Clear
-	EVE:GetBookmarks[SafeSpots]
-
-	SafeSpots:GetIterator[SafeSpotIterator]
-	if ${SafeSpotIterator:First(exists)}
-	do
-	{
-		echo "${SafeSpotIterator.Value.ID} - ${SafeSpotIterator.Value.Type} - ${SafeSpotIterator.Value.TypeID} - ${SafeSpotIterator.Value.SolarSystemID} ${Universe[${SafeSpotIterator.Value.SolarSystemID}].Name}"
-	}
-	while ${SafeSpotIterator:Next(exists)}
+	#include "../_Testcase_MethodStr_Body.iss"
 }
