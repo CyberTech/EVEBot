@@ -63,7 +63,7 @@ objectdef obj_Belts
 		}		
 		
 		; This is for belt bookmarks only
-		;if ${beltIndex.Get[1](exists)} && ${beltIndex.Get[1].SolarSystemID} != ${_Me.SolarSystemID}
+		;if ${beltIndex.Get[1](exists)} && ${beltIndex.Get[1].SolarSystemID} != ${Me.SolarSystemID}
 		;{
 		;	This:ResetBeltList
 		;}

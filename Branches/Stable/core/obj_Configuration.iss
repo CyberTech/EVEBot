@@ -26,15 +26,15 @@ objectdef obj_Configuration_BaseConfig
 
 	variable filepath CONFIG_PATH = "${Script.CurrentDirectory}/Config"
 	variable string ORG_CONFIG_FILE = "evebot.xml"
-	variable string NEW_CONFIG_FILE = "${_Me.Name} Config.xml"
-	variable string CONFIG_FILE = "${_Me.Name} Config.xml"
+	variable string NEW_CONFIG_FILE = "${Me.Name} Config.xml"
+	variable string CONFIG_FILE = "${Me.Name} Config.xml"
 	variable settingsetref BaseRef
 
 	method Initialize()
 	{
 		LavishSettings[EVEBotSettings]:Clear
 		LavishSettings:AddSet[EVEBotSettings]
-		LavishSettings[EVEBotSettings]:AddSet[${_Me.Name}]
+		LavishSettings[EVEBotSettings]:AddSet[${Me.Name}]
 
 		; Check new config file first, then fallball to original name for import
 
@@ -53,7 +53,7 @@ objectdef obj_Configuration_BaseConfig
 			LavishSettings[EVEBotSettings]:Import[${CONFIG_FILE}]
 		}
 
-		BaseRef:Set[${LavishSettings[EVEBotSettings].FindSet[${_Me.Name}]}]
+		BaseRef:Set[${LavishSettings[EVEBotSettings].FindSet[${Me.Name}]}]
 		UI:UpdateConsole["obj_Configuration_BaseConfig: Initialized", LOG_MINOR]
 	}
 
@@ -609,16 +609,16 @@ objectdef obj_Configuration_Miner
 	{
 		variable float threshold
 		threshold:Set[${This.MinerRef.FindSetting[Cargo Threshold, 0]}]
-		if !${_Me.InStation}
+		if !${Me.InStation}
 		{
 			if (${threshold} == 0) || \
-				(${threshold} > ${_Me.Ship.CargoCapacity})
+				(${threshold} > ${Me.Ship.CargoCapacity})
 			{
 				if ${Ship.MiningAmountPerLaser} > 0
 				{
-					threshold:Set[${Math.Calc[${_Me.Ship.CargoCapacity} / ${Ship.MiningAmountPerLaser}].Int}]
+					threshold:Set[${Math.Calc[${Me.Ship.CargoCapacity} / ${Ship.MiningAmountPerLaser}].Int}]
 					threshold:Set[${Math.Calc[(${threshold} * ${Ship.MiningAmountPerLaser}) * 0.99]}]
-					if ${This.MinerRef.FindSetting[Cargo Threshold, 0]} > ${_Me.Ship.CargoCapacity}
+					if ${This.MinerRef.FindSetting[Cargo Threshold, 0]} > ${Me.Ship.CargoCapacity}
 					{
 						;UI:UpdateConsole["ERROR: Mining Cargo Threshold is set higher than ship capacity: Using dynamic value of ${threshold}"]
 					}
@@ -627,7 +627,7 @@ objectdef obj_Configuration_Miner
 				{
 					;UI:UpdateConsole["ERROR: Unable to retrieve Ship.MiningAmountPerLaser"]
 					;UI:UpdateConsole["ERROR: Mining Cargo Threshold is set higher than ship capacity: Using cargo capacity"]
-					threshold:Set[${_Me.Ship.CargoCapacity}]
+					threshold:Set[${Me.Ship.CargoCapacity}]
 				}
 			}
 		}
@@ -1121,7 +1121,7 @@ objectdef obj_Configuration_Freighter
 /* ************************************************************************* */
 objectdef obj_Config_Whitelist
 {
-	variable string DATA_FILE = "${BaseConfig.CONFIG_PATH}/${_Me.Name} Whitelist.xml"
+	variable string DATA_FILE = "${BaseConfig.CONFIG_PATH}/${Me.Name} Whitelist.xml"
 	variable settingsetref BaseRef
 
 	method Initialize()
@@ -1187,7 +1187,7 @@ objectdef obj_Config_Whitelist
 /* ************************************************************************* */
 objectdef obj_Config_Blacklist
 {
-	variable string DATA_FILE = "${BaseConfig.CONFIG_PATH}/${_Me.Name} Blacklist.xml"
+	variable string DATA_FILE = "${BaseConfig.CONFIG_PATH}/${Me.Name} Blacklist.xml"
 	variable settingsetref BaseRef
 
 	method Initialize()

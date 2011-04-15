@@ -86,7 +86,7 @@ objectdef obj_Ship
 					This:UpdateModuleList
 				}
 
-				if (${_Me.ToEntity.Mode} == 3 || !${Config.Common.BotModeName.Equal[Ratter]})
+				if (${Me.ToEntity.Mode} == 3 || !${Config.Common.BotModeName.Equal[Ratter]})
 				{	/* ratter was converted to use obj_Combat already */
 
 					/* Ship Armor Repair
@@ -94,14 +94,14 @@ objectdef obj_Ship
 					*/
 					if ${This.Total_Armor_Reps} > 0
 					{
-						if ${_Me.Ship.ArmorPct} < 100
+						if ${Me.Ship.ArmorPct} < 100
 						{
 							This:Activate_Armor_Reps
 						}
 
 						if ${This.Repairing_Armor}
 						{
-							if ${_Me.Ship.ArmorPct} >= 98
+							if ${Me.Ship.ArmorPct} >= 98
 							{
 								This:Deactivate_Armor_Reps
 								This.Repairing_Armor:Set[FALSE]
@@ -112,13 +112,13 @@ objectdef obj_Ship
 					/* Shield Boosters
 						We boost to a higher % in here, as it's done during warp, so cap has time to regen.
 					*/
-					if ${_Me.Ship.ShieldPct} < 95 || ${Config.Combat.AlwaysShieldBoost}
+					if ${Me.Ship.ShieldPct} < 95 || ${Config.Combat.AlwaysShieldBoost}
 					{	/* Turn on the shield booster */
 						Ship:Activate_Hardeners[]
 						This:Activate_Shield_Booster[]
 					}
 
-					if ${_Me.Ship.ShieldPct} > 99 && !${Config.Combat.AlwaysShieldBoost}
+					if ${Me.Ship.ShieldPct} > 99 && !${Config.Combat.AlwaysShieldBoost}
 					{	/* Turn off the shield booster */
 						Ship:Deactivate_Hardeners[]
 						This:Deactivate_Shield_Booster[]
@@ -141,7 +141,7 @@ objectdef obj_Ship
 	/* TODO - Rename to SystemsReady (${Ship.SystemsReady}) or similar for clarity - CyberTech */
 	member:bool IsSafe()
 	{
-		if ${m_WaitForCapRecharge} && ${_Me.Ship.CapacitorPct} < 90
+		if ${m_WaitForCapRecharge} && ${Me.Ship.CapacitorPct} < 90
 		{
 			return FALSE
 		}
@@ -151,14 +151,14 @@ objectdef obj_Ship
 		}
 
 		/* TODO - These functions are not reliable. Redo per Looped armor/shield test in obj_Miner.Mine() (then consolidate code) -- CyberTech */
-		if ${_Me.Ship.CapacitorPct} < 10
+		if ${Me.Ship.CapacitorPct} < 10
 		{
 			UI:UpdateConsole["Capacitor low!  Run for cover!", LOG_CRITICAL]
 			m_WaitForCapRecharge:Set[TRUE]
 			return FALSE
 		}
 
-		if ${_Me.Ship.ArmorPct} < 25
+		if ${Me.Ship.ArmorPct} < 25
 		{
 			UI:UpdateConsole["Armor low!  Run for cover!", LOG_CRITICAL]
 			return FALSE
@@ -245,7 +245,7 @@ objectdef obj_Ship
 			return
 		}
 
-		return ${Math.Calc[${_Me.Ship.CargoCapacity}*0.02]}
+		return ${Math.Calc[${Me.Ship.CargoCapacity}*0.02]}
 	}
 
 	member:float CargoFreeSpace()
@@ -255,11 +255,11 @@ objectdef obj_Ship
 			return 0
 		}
 
-		if ${_Me.Ship.UsedCargoCapacity} < 0
+		if ${Me.Ship.UsedCargoCapacity} < 0
 		{
-			return ${_Me.Ship.CargoCapacity}
+			return ${Me.Ship.CargoCapacity}
 		}
-		return ${Math.Calc[${_Me.Ship.CargoCapacity}-${_Me.Ship.UsedCargoCapacity}]}
+		return ${Math.Calc[${Me.Ship.CargoCapacity}-${Me.Ship.UsedCargoCapacity}]}
 	}
 
 	member:bool CargoFull()
@@ -283,7 +283,7 @@ objectdef obj_Ship
 			return FALSE
 		}
 
-		if ${This.CargoFreeSpace} <= ${Math.Calc[${_Me.Ship.CargoCapacity}*0.50]}
+		if ${This.CargoFreeSpace} <= ${Math.Calc[${Me.Ship.CargoCapacity}*0.50]}
 		{
 			return TRUE
 		}
@@ -292,7 +292,7 @@ objectdef obj_Ship
 
 	member:bool IsDamped()
 	{
-		return ${_Me.Ship.MaxTargetRange} < ${This.m_MaxTargetRange}
+		return ${Me.Ship.MaxTargetRange} < ${This.m_MaxTargetRange}
 	}
 
 	member:float MaxTargetRange()
@@ -310,7 +310,7 @@ objectdef obj_Ship
 		}
 
 		/* save ship values that may change in combat */
-		This.m_MaxTargetRange:Set[${_Me.Ship.MaxTargetRange}]
+		This.m_MaxTargetRange:Set[${Me.Ship.MaxTargetRange}]
 
 		/* build module lists */
 		This.ModuleList:Clear
@@ -776,13 +776,13 @@ objectdef obj_Ship
 			return
 		}
 
-		if ${_Me.MaxLockedTargets} < ${_Me.Ship.MaxLockedTargets}
+		if ${Me.MaxLockedTargets} < ${Me.Ship.MaxLockedTargets}
 		{
-			Calculated_MaxLockedTargets:Set[${_Me.MaxLockedTargets}]
+			Calculated_MaxLockedTargets:Set[${Me.MaxLockedTargets}]
 		}
 		else
 		{
-			Calculated_MaxLockedTargets:Set[${_Me.Ship.MaxLockedTargets}]
+			Calculated_MaxLockedTargets:Set[${Me.Ship.MaxLockedTargets}]
 		}
 	}
 
@@ -1174,7 +1174,7 @@ objectdef obj_Ship
 	{
 		variable int Counter
 		UI:UpdateConsole["Activating autopilot and waiting until arrival..."]
-		if !${_Me.AutoPilotOn}
+		if !${Me.AutoPilotOn}
 		{
 			EVE:Execute[CmdToggleAutopilot]
 		}
@@ -1185,19 +1185,19 @@ objectdef obj_Ship
 				Counter:Inc
 				wait 10
 			}
-			while !${_Me.AutoPilotOn} && (${Counter} < 10)
+			while !${Me.AutoPilotOn} && (${Counter} < 10)
 			wait 10
 		}
-		while ${_Me.AutoPilotOn}
+		while ${Me.AutoPilotOn}
 		wait 30
 	}
 
 	function TravelToSystem(int64 DestinationSystemID)
 	{
-		while !${DestinationSystemID.Equal[${_Me.SolarSystemID}]}
+		while !${DestinationSystemID.Equal[${Me.SolarSystemID}]}
 		{
-			UI:UpdateConsole["DEBUG: To: ${DestinationSystemID} At: ${_Me.SolarSystemID}"]
-			UI:UpdateConsole["Setting autopilot from ${Universe[${_Me.SolarSystemID}].Name} to ${Universe[${DestinationSystemID}].Name}"]
+			UI:UpdateConsole["DEBUG: To: ${DestinationSystemID} At: ${Me.SolarSystemID}"]
+			UI:UpdateConsole["Setting autopilot from ${Universe[${Me.SolarSystemID}].Name} to ${Universe[${DestinationSystemID}].Name}"]
 			Universe[${DestinationSystemID}]:SetDestination
 
 			call This.ActivateAutoPilot
@@ -1208,7 +1208,7 @@ objectdef obj_Ship
 	{
 		variable int Counter
 
-		if ${_Me.InStation}
+		if ${Me.InStation}
 		{
 			call Station.Undock
 		}
@@ -1426,7 +1426,7 @@ objectdef obj_Ship
 
 	member:bool InWarp()
 	{
-		if ${_Me.ToEntity.Mode} == 3
+		if ${Me.ToEntity.Mode} == 3
 		{
 			return TRUE
 		}
@@ -1862,7 +1862,7 @@ objectdef obj_Ship
 			}
 /*
 			elseif !${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsGoingOnline} && \
-				${_Me.Ship.CapacitorPct} > 97
+				${Me.Ship.CapacitorPct} > 97
 			{
 
 				if ${Math.Calc[${Me.Ship.CPUOutput}-${Me.Ship.CPULoad}]} <  ${ModuleIter.Value.CPUUsage} || \
@@ -1955,7 +1955,7 @@ objectdef obj_Ship
 
 	member:bool IsCloaked()
 	{
-		if ${Me.ToEntity(exists)} && ${_Me.ToEntity.IsCloaked}
+		if ${Me.ToEntity(exists)} && ${Me.ToEntity.IsCloaked}
 		{
 			return TRUE
 		}
@@ -2022,7 +2022,7 @@ objectdef obj_Ship
    ; Returns the targeting range minus 10%
    member:int OptimalTargetingRange()
    {
-      return ${Math.Calc[${_Me.Ship.MaxTargetRange}*0.90]}
+      return ${Math.Calc[${Me.Ship.MaxTargetRange}*0.90]}
    }
 
 	member:bool IsPod()

@@ -3,7 +3,7 @@ objectdef obj_Skills
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
-	variable file SkillFile = "${BaseConfig.CONFIG_PATH}/${_Me.Name} Training.txt"
+	variable file SkillFile = "${BaseConfig.CONFIG_PATH}/${Me.Name} Training.txt"
 	variable index:skill OwnedSkills
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 15

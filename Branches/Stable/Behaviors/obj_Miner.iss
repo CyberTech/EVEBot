@@ -168,7 +168,7 @@ objectdef obj_Miner
 			This.CurrentState:Set["ABORT"]
 		}
 
-		if ${EVEBot.ReturnToStation} && ${_Me.InStation} == TRUE
+		if ${EVEBot.ReturnToStation} && ${Me.InStation} == TRUE
 		{
 			This.CurrentState:Set["IDLE"]
 			return
@@ -180,20 +180,20 @@ objectdef obj_Miner
 			return
 		}
 
-		if ${_Me.InStation} == TRUE
+		if ${Me.InStation} == TRUE
 		{
 	  		This.CurrentState:Set["BASE"]
 	  		return
 		}
 
-		if ${_Me.Ship.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold} && \
+		if ${Me.Ship.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold} && \
 		    ${SanityCheckAbort} == FALSE
 		{
 		 	This.CurrentState:Set["MINE"]
 			return
 		}
 
-	    if ${_Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold} || \
+	    if ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold} || \
     	    ${EVEBot.ReturnToStation}  || \
     	    ${SanityCheckAbort} == TRUE
 		{
@@ -214,24 +214,24 @@ objectdef obj_Miner
 			{
 				UI:UpdateConsole["Warning: Paused. Combat type abort."]
 
-				if ((${_Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct}) && ${Ship.ArmorRepairUnits} == 0)
+				if ((${Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct}) && ${Ship.ArmorRepairUnits} == 0)
 				{
 					UI:UpdateConsole["Warning: Script paused due to Armor Precentage."]
 					Script:Pause
 				}
 
 				; To.Do NEED TO ADD CHECK FOR HULL REPAIRER in SHIP OBJECT.
-				if ((${_Me.Ship.StructurePct} < 100))
+				if ((${Me.Ship.StructurePct} < 100))
 				{
 					UI:UpdateConsole["Warning: Aborted. Script paused due to Structure Percentage."]
 
 					Script:Pause
 				}
 
-				if ${_Me.Ship.ShieldPct} < 100
+				if ${Me.Ship.ShieldPct} < 100
 				{
 					UI:UpdateConsole["Warning: Waiting for Shields to Regen."]
-					while ${_Me.Ship.ShieldPct} < 95
+					while ${Me.Ship.ShieldPct} < 95
 					{
 						wait 20
 					}
@@ -276,7 +276,7 @@ objectdef obj_Miner
 		variable string buddyTest
 		variable bool buddyOnline
 
-		if ${_Me.InStation} != FALSE
+		if ${Me.InStation} != FALSE
 		{
 			UI:UpdateConsole["DEBUG: obj_Miner.Mine called while zoning or while in station!"]
 			return
@@ -294,7 +294,7 @@ objectdef obj_Miner
 		UI:UpdateConsole["Mining"]
 
 		while ( !${EVEBot.ReturnToStation} && \
-				${_Me.Ship.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold}	)
+				${Me.Ship.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold}	)
 		{
 			/* TODO: CyberTech: Move this to the state machine, have it check for when the system is clear */
 			if (${Config.Miner.StandingDetection} && \
@@ -321,11 +321,11 @@ objectdef obj_Miner
 				return
 			}
 
-			if ${_Me.Ship.UsedCargoCapacity} != ${LastUsedCargoCapacity}
+			if ${Me.Ship.UsedCargoCapacity} != ${LastUsedCargoCapacity}
 			{
-				;UI:UpdateConsole["DEBUG: ${_Me.Ship.UsedCargoCapacity} != ${LastUsedCargoCapacity}"]
+				;UI:UpdateConsole["DEBUG: ${Me.Ship.UsedCargoCapacity} != ${LastUsedCargoCapacity}"]
 			    SanityCheckCounter:Set[0]
-			    LastUsedCargoCapacity:Set[${_Me.Ship.UsedCargoCapacity}]
+			    LastUsedCargoCapacity:Set[${Me.Ship.UsedCargoCapacity}]
 			}
 
 			if (!${Config.Miner.IceMining} && \
@@ -343,7 +343,7 @@ objectdef obj_Miner
 				Ship.Drones:LaunchAll[]
 			}
 
-			if ${_Me.Ship.MaxLockedTargets} == 0 && \
+			if ${Me.Ship.MaxLockedTargets} == 0 && \
 				 ${Ship.Drones.DronesInSpace} == 0
 			{
 				TargetJammedCounter:Inc
@@ -375,16 +375,16 @@ objectdef obj_Miner
 				wait 20
 			}
 
-			if (${_Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
-				${_Me.Ship.ShieldPct} < ${Config.Combat.MinimumShieldPct})
+			if (${Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
+				${Me.Ship.ShieldPct} < ${Config.Combat.MinimumShieldPct})
 			{
 				/*
 					TODO - CyberTech: This should be checked in a defensive class that runs regardless of which bot module is active
 					instead of being checked in each module
 				*/
 
-				UI:UpdateConsole["Armor is at ${_Me.Ship.ArmorPct}: ${Me.Ship.Armor}/${Me.Ship.MaxArmor}", LOG_CRITICAL]
-				UI:UpdateConsole["Shield is at ${_Me.Ship.ShieldPct}: ${Me.Ship.Shield}/${Me.Ship.MaxShield}", LOG_CRITICAL]
+				UI:UpdateConsole["Armor is at ${Me.Ship.ArmorPct}: ${Me.Ship.Armor}/${Me.Ship.MaxArmor}", LOG_CRITICAL]
+				UI:UpdateConsole["Shield is at ${Me.Ship.ShieldPct}: ${Me.Ship.Shield}/${Me.Ship.MaxShield}", LOG_CRITICAL]
 				UI:UpdateConsole["Miner aborting due to defensive status", LOG_CRITICAL]
 
 				EVEBot.ReturnToStation:Set[TRUE]
@@ -401,7 +401,7 @@ objectdef obj_Miner
 			if ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers}
 			{
 				; We've got idle lasers, and available targets. Do something with them.
-				while ${_Me.GetTargeting} > 0
+				while ${Me.GetTargeting} > 0
 				{
 				 	wait 10
 				}
@@ -411,7 +411,7 @@ objectdef obj_Miner
 				if ${Target:First(exists)}
 				do
 				{
-					if ${_Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
+					if ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 					{
 						break
 					}
@@ -436,7 +436,7 @@ objectdef obj_Miner
 							wait 5
 						}
 
-						if ${_Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
+						if ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 						{
 							break
 						}
@@ -456,15 +456,15 @@ objectdef obj_Miner
 			if (!${Config.Miner.IceMining} || \
 				(${Ship.TotalActivatedMiningLasers} == 0))
 			{
-				if ${Math.Calc[${_Me.GetTargets} + ${_Me.GetTargeting}]} < ${Ship.SafeMaxLockedTargets}
+				if ${Math.Calc[${Me.GetTargets} + ${Me.GetTargeting}]} < ${Ship.SafeMaxLockedTargets}
 				{
 					call Asteroids.TargetNext
 					This.ConcentrateFire:Set[!${Return}]
-					;echo DEBUG: Target Locking: ${Math.Calc[${_Me.GetTargets} + ${_Me.GetTargeting}].Int} out of ${Ship.SafeMaxLockedTargets} (Limited Asteroids: ${This.ConcentrateFire})
+					;echo DEBUG: Target Locking: ${Math.Calc[${Me.GetTargets} + ${Me.GetTargeting}].Int} out of ${Ship.SafeMaxLockedTargets} (Limited Asteroids: ${This.ConcentrateFire})
 				}
 				else
 				{
-					if ( ${_Me.GetTargets} >= ${Ship.SafeMaxLockedTargets} && \
+					if ( ${Me.GetTargets} >= ${Ship.SafeMaxLockedTargets} && \
 						 ${Ship.TotalMiningLasers} > ${Ship.SafeMaxLockedTargets} )
 					{
 						This.ConcentrateFire:Set[TRUE]
@@ -504,7 +504,7 @@ objectdef obj_Miner
 	{
 		/* notify hauler there is ore in space */
 		variable string tempString
-		tempString:Set["${_Me.CharID},${_Me.SolarSystemID},${Entity[GroupID, GROUP_ASTEROIDBELT].ID}"]
+		tempString:Set["${Me.CharID},${Me.SolarSystemID},${Entity[GroupID, GROUP_ASTEROIDBELT].ID}"]
 		relay all -event EVEBot_Miner_Full ${tempString}
 
 		/* TO MANUALLY CALL A HAULER ENTER THIS IN THE CONSOLE

@@ -86,7 +86,7 @@ objectdef obj_EVEBotUI
 
 			if ${Me(exists)}
 			{
-				Config.Common:SetAutoLoginCharID[${_Me.CharID}]
+				Config.Common:SetAutoLoginCharID[${Me.CharID}]
 			}
 
     		This.NextMsgBoxPulse:Set[${Time.Timestamp}]

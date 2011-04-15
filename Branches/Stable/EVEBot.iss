@@ -1,8 +1,5 @@
 #include core/defines.iss
 
-/* Cache Objects */
-#include core/obj_Cache.iss
-
 /* Base Requirements */
 #include core/obj_EVEBot.iss
 #include core/obj_Configuration.iss
@@ -42,29 +39,18 @@
 #include Behaviors/obj_Scavenger.iss
 #include Behaviors/obj_Missioneer.iss
 
-/* Cache Objects */
-variable(global) obj_Cache_Me _Me
-variable(global) obj_Cache_EVETime _EVETime
-
 function atexit()
 {
-	;redirect profile.txt Script:DumpProfiling
+	;Redirect EVEBot_Profiling.txt Script[EVEBot]:DumpProfiling
 }
 
 function main()
 {
 	echo "${Time} EVEBot: Starting"
 	;Script:Unsquelch
-	;Script:EnableDebugLogging[debug.txt]
+	;Script[EVEBot]:EnableDebugLogging[EVEBot_Debug.txt]
 	;Script[EVEBot]:EnableProfiling
-
-	while !${_Me.Name(exists)} || ${_Me.Name.Equal[NULL]} || ${_Me.Name.Length} == 0
-	{
-		echo " ${Time} EVEBot: Waiting for cache to initialize - ${_Me.Name} != ${Me.Name}"
-		wait 30
-		_Me:Initialize
-		_EVETime:Initialize
-	}
+	;Redirect EVEBot_Profiling.txt Script[EVEBot]:DumpProfiling
 
 	turbo 150
 

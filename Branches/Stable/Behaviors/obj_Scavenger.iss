@@ -34,7 +34,7 @@ objectdef obj_Scavenger
 	/* NOTE: The order of these if statements is important!! */
 	method SetState()
 	{
-		if ${EVEBot.ReturnToStation} && !${_Me.InStation}
+		if ${EVEBot.ReturnToStation} && !${Me.InStation}
 		{
 			This.CurrentState:Set["ABORT"]
 		}
@@ -42,12 +42,12 @@ objectdef obj_Scavenger
 		{
 			This.CurrentState:Set["IDLE"]
 		}
-		elseif ${_Me.Ship.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold}
+		elseif ${Me.Ship.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold}
 		{
 		 	This.CurrentState:Set["SCAVENGE"]
 			return
 		}		
-	    elseif ${_Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
+	    elseif ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 		{
 			This.CurrentState:Set["DROPOFF"]
 			return
