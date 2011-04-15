@@ -52,7 +52,7 @@ function main()
 	;Script[EVEBot]:EnableProfiling
 	;Redirect EVEBot_Profiling.txt Script[EVEBot]:DumpProfiling
 
-	turbo 150
+	turbo 4000
 
 	echo "${Time} EVEBot: Loading Objects..."
 
@@ -142,6 +142,7 @@ function main()
 #if USE_ISXIM
 	call ChatIRC.Connect
 #endif
+	turbo 100
 
 	UI:UpdateConsole["-=Paused: Press Run-="]
 	Script:Pause
