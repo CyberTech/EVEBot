@@ -213,7 +213,6 @@ objectdef obj_LoginHandler
 				{
 					if ${ISXEVE.IsBeta} && ${EVEWindow[ByName,modal].Text.Find["has been flagged for recustomization."](exists)}
 					{
-						echo clicking
 						EVEWindow[ByName,modal]:ClickButtonNo
 						break
 					}
