@@ -28,7 +28,7 @@ objectdef obj_LoginHandler
 	; Added these in so no magic numbers are used
 	variable int startWaitTime = 0
 	variable int loginWaitTime = 2
-	variable int connectWaitTime = 10
+	variable int connectWaitTime = 5
 	variable int inspaceWaitTime = 60
 	variable int evebotWaitTime = 30
 
@@ -111,18 +111,21 @@ objectdef obj_LoginHandler
 
 	method DoLogin()
 	{
-		EVE:CloseAllMessageBoxes
-
 		UI:UpdateConsole["DEBUG: Current state: ${This.CurrentState}", LOG_DEBUG]
+
 		switch ${This.CurrentState}
 		{
-			case POSSIBLE_ACCOUNT_EXPIRED
-			case BANNED_HAHAHAHA
-				{
-					This.LoginTimer:Set[100]
-					break
-				}
 			case START
+				if ${ISXEVE.IsBeta} && ${EVEWindow[ByName,modal](exists)}
+				{
+					if ${EVEWindow[ByName,modal].Text.Find["A client update is available."](exists)}
+					{
+						EVEWindow[ByName,modal]:ClickButtonNo
+					}
+				}
+
+				EVE:CloseAllMessageBoxes
+		
 				if ${Login(exists)}
 				{
 					This.CurrentState:Set["SERVERDOWN"]
@@ -151,12 +154,14 @@ objectdef obj_LoginHandler
 					This.CurrentState:Set["SERVERDOWN"]
 					This.LoginTimer:Set[${This.connectWaitTime}]
 				}
+				EVE:CloseAllMessageBoxes
 				break
 			case SERVERUP
 				Login:SetUsername[${Config.Common.LoginName}]
 				Login:SetPassword[${Config.Common.LoginPassword}]
 				This.CurrentState:Set["LOGIN_ENTERED"]
 				This.LoginTimer:Set[1]
+				EVE:CloseAllMessageBoxes
 				break
 			case LOGIN_ENTERED
 				Login:Connect
@@ -164,48 +169,41 @@ objectdef obj_LoginHandler
 				This.LoginTimer:Set[${This.connectWaitTime}]
 				break
 			case CONNECTING
-				if ${EVEWindow[ByCaption,BANNED](exists)}
-				{
-					This.CurrentState:Set["BANNED_HAHAHAHA"]
-					This.LoginTimer:Set[100]
-					break
-				}
-				if ${EVEWindow[ByCaption,LOGIN DATA INCORRECT](exists)}
-				{
-					; TODO - add a retry count here so we don't spam.
-					This.CurrentState:Set["SERVERUP"]
-					This.LoginTimer:Set[50]
-					break
-				}
-				/* this one causes false positives in overloaded systems
-				if ${EVEWindow[ByCaption,INFORMATION](exists)}
-				{
-					This.CurrentState:Set["POSSIBLE_ACCOUNT_EXPIRED"]
-					This.LoginTimer:Set[100]
-					break
-				}
-				*/
-				if ${EVEWindow[ByCaption,Connection in Progress](exists)} || \
-					${EVEWindow[ByCaption,CONNECTION IN PROGRESS](exists)} || \
-					${EVEWindow[ByCaption,Connection Not Allowed](exists)} || \
-					${EVEWindow[ByCaption,CONNECTION FAILED](exists)}
-				{
-					; Server is still coming up, or you are queued. Wait 10 seconds.
-					Press Esc
-					This.CurrentState:Set["PASS_ENTERED"]
-					This.LoginTimer:Set[10]
-					break
-				}
-				if ${EVEWindow[ByName,MessageBox](exists)} || \
-					${EVEWindow[ByCaption,System Congested](exists)}
-				{
-					; This happens at character select, when the system is full
-					Press Esc
-					This.LoginTimer:Set[2]
-					break
-				}
 				if ${Login(exists)}
 				{
+					if ${EVEWindow[ByCaption,LOGIN DATA INCORRECT](exists)}
+					{
+						; TODO - add a retry count here so we don't spam.
+						This.CurrentState:Set["SERVERUP"]
+						This.LoginTimer:Set[50]
+						break
+					}
+				
+					if ${EVEWindow[ByName,modal].Text.Find["Account subscription expired"](exists)}
+					{
+						echo "Launcher: Account Expired, ending script"
+						Script:End
+						break
+					}
+
+					if ${EVEWindow[ByName,modal].Text.Find["has been disabled"](exists)}
+					{
+						echo "Launcher: Account banned?"
+						Script:End
+						break
+					}
+
+					if ${EVEWindow[ByCaption,Connection in Progress](exists)} || \
+						${EVEWindow[ByCaption,CONNECTION IN PROGRESS](exists)} || \
+						${EVEWindow[ByCaption,Connection Not Allowed](exists)} || \
+						${EVEWindow[ByCaption,CONNECTION FAILED](exists)}
+					{
+						; Server is still coming up, or you are queued. Wait 10 seconds.
+						Press Esc
+						This.CurrentState:Set["PASS_ENTERED"]
+						This.LoginTimer:Set[10]
+						break
+					}
 					; Reconnect if we're still at the login screen
 					Login:Connect
 					This.LoginTimer:Set[${This.connectWaitTime}]
@@ -213,6 +211,22 @@ objectdef obj_LoginHandler
 				}
 				if ${CharSelect(exists)}
 				{
+					if ${ISXEVE.IsBeta} && ${EVEWindow[ByName,modal].Text.Find["has been flagged for recustomization."](exists)}
+					{
+						echo clicking
+						EVEWindow[ByName,modal]:ClickButtonNo
+						break
+					}
+
+					if ${EVEWindow[ByName,MessageBox](exists)} || \
+						${EVEWindow[ByCaption,System Congested](exists)}
+					{
+						; This happens at character select, when the system is full
+						Press Esc
+						This.LoginTimer:Set[2]
+						break
+					}
+
 					;UI:UpdateConsole["DEBUG: AutoLoginCharID: ${Config.Common.AutoLoginCharID}", LOG_DEBUG]
 					CharSelect:ClickCharacter[${Config.Common.AutoLoginCharID}]
 					This.LoginTimer:Set[${This.connectWaitTime}]
@@ -223,7 +237,7 @@ objectdef obj_LoginHandler
 					; Now we're just waiting to get fully into the game. This can take a while, especially in systems like Jita.
 					if ${EVEWindow[ByCaption,ENTERING STATION](exists)} || \
 						${EVEWindow[ByCaption,PREPARE TO UNDOCK](exists)} || \
-						${EVEWindow[ByCaption,ENTERING SPACE](exists)}
+						${EVEWindow[ByCaption,ENTERING SPACE](exists)} || \
 						${EVEWindow[ByCaption,CHARACTER SELECTION](exists)}
 					{
 						This.LoginTimer:Set[1]
