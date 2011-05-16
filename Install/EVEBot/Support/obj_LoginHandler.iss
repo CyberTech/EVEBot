@@ -78,7 +78,10 @@ objectdef obj_LoginHandler
 			return
 		}
 
-		wait 50 ${${EXTNAME}.IsReady}
+		if ${${EXTNAME}(exists)}
+		{
+			wait 100 ${${EXTNAME}.IsReady}
+		}
 
 		UI:UpdateConsole["Login: Loading Extension ${EXTNAME}", LOG_MINOR]
 		do
@@ -181,14 +184,20 @@ objectdef obj_LoginHandler
 				
 					if ${EVEWindow[ByName,modal].Text.Find["Account subscription expired"](exists)}
 					{
+						echo " "
 						echo "Launcher: Account Expired, ending script"
+						echo " "
+						Display.Window:Flash
 						Script:End
 						break
 					}
 
 					if ${EVEWindow[ByName,modal].Text.Find["has been disabled"](exists)}
 					{
+						echo " "
 						echo "Launcher: Account banned?"
+						echo " "
+						Display.Window:Flash
 						Script:End
 						break
 					}
