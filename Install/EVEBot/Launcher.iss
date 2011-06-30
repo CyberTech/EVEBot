@@ -131,7 +131,6 @@ function main(string unchar="", string StartBot=FALSE)
 					wait 100
 					EVE:CloseAllMessageBoxes
 					dotnet sb${Session} stealthbot true
-					windowpos -viewable 0,0
 					break
 				case QUESTOR
 					UI:UpdateConsole["Launcher: Starting Questor by Da_Teach"]
