@@ -416,6 +416,7 @@ objectdef obj_JetCan
 		{
 			UI:UpdateConsole["Closing JetCan"]
 			Entity[${ID}]:CloseCargo
+			Entity[${ID}]:CloseStorage
 			wait WAIT_CARGO_WINDOW
 			while ${This.IsCargoOpen[${ID}]}
 			{
@@ -480,6 +481,23 @@ objectdef obj_CorpHangarArray inherits obj_JetCan
 
 		This.ActiveCan:Set[-1]
 		return ${This.ActiveCan}
+	}
+
+	member IsCargoOpen(int64 ID=0)
+	{
+		if (${ID} == 0 && ${This.ActiveCan} > 0)
+		{
+			ID:Set[${This.ActiveCan}]
+		}
+
+		if ${Entity[${ID}].StorageWindow(exists)}
+		{
+			return TRUE
+		}
+		else
+		{
+			return FALSE
+		}
 	}
 
 	member:float CargoCapacity(int64 ID=0)
