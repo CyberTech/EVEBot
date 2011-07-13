@@ -138,7 +138,7 @@ function main(string unchar="", string StartBot=FALSE)
 					EVE:CloseAllMessageBoxes
 					dotnet questor
 					break
-				case default
+				default
 					UI:UpdateConsole["Launcher: Unknown bot specified for launch, attempting to run as script name"]
 					run ${StartBot}
 					break
