@@ -6,18 +6,7 @@
 	-- CyberTech
 
 	Description:
-	obj_Configuration defines the config file and the root.  It contains an instantiation of obj_Configuration_MODE,
-	where MODE is Hauler,Miner, Combat, etc.
-
-	Each obj_Configuration_MODE is responsible for setting it's own default	values and for providing access members
-	and update methods for the config items. ALL configuration items should receive both a member and a method.
-
-	Instructions:
-		To add a new module, add a variable to obj_Configuration, name it with the thought that it will be accessed
-		as Config.Module (ie, Config.Miner).  Create the class, and it's members and methods, following the example
-		of the existing classes below.
-
-	Copied and modified by TruPoet for use with Launcher.iss config handling
+		Derived from EVEBot main configuration handler, see there for more advanced version
 */
 
 objectdef obj_Configuration_BaseConfig
@@ -66,27 +55,18 @@ objectdef obj_Configuration_BaseConfig
 					return
 				}
 			}
-			else
-			{
-
-				if ${mySet.Value.FindSetting["Default Login"].String.Equal["TRUE"]}
-				{
-					BaseRef:Set[${mySet.Value}]
-					return
-				}
-			}
 		}
 		while ${mySet:Next(exists)}
 	}
 
-        method ChangeConfig(string unchar)
-        {
-                This:Shutdown
+	method ChangeConfig(string unchar)
+	{
+		This:Shutdown
 		;echo unchar going to be ${unchar}
-                This.unchar:Set[${unchar}]
+		This.unchar:Set[${unchar}]
 		;echo unchar now ${This.unchar}
-                This:Initialize
-        }
+		This:Initialize
+	}
 
 }
 
@@ -127,10 +107,8 @@ objectdef obj_Configuration_Common
 		; We use both so we have an ID to use to set the default selection in the UI.
 		This.CommonRef:AddSetting[Login Name, ""]
 		This.CommonRef:AddSetting[Login Password, ""]
-		This.CommonRef:AddSetting[CharacterName, ""]
 		This.CommonRef:AddSetting[AutoLoginCharID, 0]
 	}
-
 
 
 	/* TODO - Encrypt this as much as lavishcript will allow */
@@ -163,16 +141,6 @@ objectdef obj_Configuration_Common
 	{
 		This.CommonRef:AddSetting[AutoLoginCharID,${value}]
 	}
-	member:string CharacterName()
-	{
-		return ${This.CommonRef.FindSetting[CharacterName, ""]}
-	}
-
-	method SetCharacterName(string value)
-	{
-		This.CommonRef:AddSetting[CharacterName, ${value}]
-	}
-
 
 }
 
