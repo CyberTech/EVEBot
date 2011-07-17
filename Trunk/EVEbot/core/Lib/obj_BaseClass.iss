@@ -23,53 +23,53 @@
 	-- CyberTech/GliderPro
 
 Example Usage:
-****		objectdef obj_session
-****		{
-****			variable int Lastping
-****			variable string SessionName
-****
-****			method Initialize(string sessname, int ping)
-****			{
-****				Lastping:Set[${ping}]
-****				SessionName:Set[${sessname}]
-****			}
-****
-****		}
-****
-****		objectdef obj_Main inherits obj_QuickSort
-****		{
-****			variable index:obj_session sessionlist
-****
-****			method Initialize()
-****			{
-****				sessionlist:Insert["session01", 4]
-****
-****				sessionlist:Insert["session01", 3]
-****				sessionlist:Insert["session20", 20]
-****				sessionlist:Insert["session11", 11]
-****				sessionlist:Insert["session34", 34]
-****				sessionlist:Insert["session22", 22]
-****				sessionlist:Insert["session03", 1]
-****				sessionlist:Insert["session44", 44]
-****				sessionlist:Insert["session04", 0]
-****
-****				variable iterator temps
-****				sessionlist:GetIterator[temps]
-****				if ${temps:First(exists)}
-****				do
-****				{
-****					echo ${temps.Value.SessionName}: ${temps.Value.Lastping}
-****				}
-****				while ${temps:Next(exists)}
-****				This:Sort[sessionlist, Lastping]
-****				if ${temps:First(exists)}
-****				do
-****				{
-****					echo ${temps.Value.SessionName}: ${temps.Value.Lastping}
-****				}
-****				while ${temps:Next(exists)}
-****			}
-****		}
+		objectdef obj_session
+		{
+			variable int Lastping
+			variable string SessionName
+
+			method Initialize(string sessname, int ping)
+			{
+				Lastping:Set[${ping}]
+				SessionName:Set[${sessname}]
+			}
+
+		}
+
+		objectdef obj_Main inherits obj_QuickSort
+		{
+			variable index:obj_session sessionlist
+
+			method Initialize()
+			{
+				sessionlist:Insert["session01", 4]
+
+				sessionlist:Insert["session01", 3]
+				sessionlist:Insert["session20", 20]
+				sessionlist:Insert["session11", 11]
+				sessionlist:Insert["session34", 34]
+				sessionlist:Insert["session22", 22]
+				sessionlist:Insert["session03", 1]
+				sessionlist:Insert["session44", 44]
+				sessionlist:Insert["session04", 0]
+
+				variable iterator temps
+				sessionlist:GetIterator[temps]
+				if ${temps:First(exists)}
+				do
+				{
+					echo ${temps.Value.SessionName}: ${temps.Value.Lastping}
+				}
+				while ${temps:Next(exists)}
+				This:Sort[sessionlist, Lastping]
+				if ${temps:First(exists)}
+				do
+				{
+					echo ${temps.Value.SessionName}: ${temps.Value.Lastping}
+				}
+				while ${temps:Next(exists)}
+			}
+		}
 */
 
 objectdef obj_BaseClass
@@ -167,7 +167,7 @@ objectdef obj_BaseClass
 	}
 
 	/* 	This is not a stable sort, but should be much faster for larger sets.
-		Ordering of equivilent objects is not guaranteed to tbe the same as the input.
+		Ordering of equivilent objects is not guaranteed to be the same as the input.
 		-- CyberTech
 	*/
 	method QuickSort(string IndexName, string MemberName, int First, int Last)

@@ -22,9 +22,6 @@ objectdef obj_EVEBot inherits obj_BaseClass
 	variable index:string BehaviorList
 	variable iterator Behaviors
 
-	; Cached static items
-	variable int CharID
-
 	method Initialize()
 	{
 		LogPrefix:Set["${This.ObjectName}"]
@@ -32,10 +29,9 @@ objectdef obj_EVEBot inherits obj_BaseClass
 		PulseTimer:SetIntervals[4.0,5.0]
 		This:SetVersion
 
-		LavishScript:RegisterEvent[EVENT_EVEBOT_ONFRAME]	
+		LavishScript:RegisterEvent[EVENT_EVEBOT_ONFRAME]
+		LavishScript:RegisterEvent[EVENT_EVEBOT_ONFRAME_INSPACE]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-
-		This.CharID:Set[${Me.CharID}]
 
 		BehaviorList:GetIterator[Behaviors]
 		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
@@ -72,9 +68,11 @@ objectdef obj_EVEBot inherits obj_BaseClass
 
 		if ${This.PulseTimer.Ready}
 		{
+			ISXEVE:Debug_LogMsg["${This.LogPrefix}", "============================================= Pulse Start"]
 			if !${This.SessionValid}
 			{
 				This.PulseTimer:Update
+				ISXEVE:Debug_LogMsg["${This.LogPrefix}", "============================================= Pulse End"]
 				return
 			}
 
@@ -159,6 +157,12 @@ objectdef obj_EVEBot inherits obj_BaseClass
 					}
 				}
 
+
+				if ${Me.InSpace} && !${Station.Docked}
+				{
+					Event[EVENT_EVEBOT_ONFRAME_INSPACE]:Execute
+				}
+				
 				if !${Defense.Hiding}
 				{
 					${Config.Common.Behavior}:Pulse
@@ -167,6 +171,7 @@ objectdef obj_EVEBot inherits obj_BaseClass
 			}
 
 			This.PulseTimer:Update
+			ISXEVE:Debug_LogMsg["${This.LogPrefix}", "============================================= Pulse End"]
 		}
 	}
 

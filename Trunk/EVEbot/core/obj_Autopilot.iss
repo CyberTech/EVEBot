@@ -57,21 +57,21 @@ objectdef obj_Autopilot
 		if ${This.IsLowSecRoute} == -999
 		{
 	
-	    	EVE:GetToDestinationPath[This.Path]
-	    	This.Path:GetIterator[This.PathIterator]
-	    	
+			EVE:GetToDestinationPath[This.Path]
+			This.Path:GetIterator[This.PathIterator]
+			
 			;;Logger:Log["obj_Autopilot: DEBUG: ${Universe[${This.Destination}]} is ${This.Path.Used} jumps away."]
 			if ${This.PathIterator:First(exists)}
 			{
 				do
 				{
 					;;Logger:Log["obj_Autopilot: DEBUG: ${This.PathIterator.Value} ${Universe[${This.PathIterator.Value}]} (${Universe[${This.PathIterator.Value}].Security})"]
-			        if ${This.PathIterator.Value} > 0 && ${Universe[${This.PathIterator.Value}].Security} <= 0.45
-			        {
+					if ${This.PathIterator.Value} > 0 && ${Universe[${This.PathIterator.Value}].Security} <= 0.45
+					{
 						Logger:Log["obj_Autopilot: Low-Sec system found"]
 						This.IsLowSecRoute:Set[TRUE]
 						break
-			        }
+					}
 				}
 				while ${This.PathIterator:Next(exists)}
 			}		

@@ -333,7 +333,7 @@ objectdef obj_Targets inherits obj_BaseClass
 		if ${tgtIterator:First(exists)}
 		do
 		{
-			if ${tgtIterator.Value.Owner.CharID} != ${EVEBot.CharID}
+			if ${tgtIterator.Value.OwnerID} != ${Me.CharID}
 			{	/* A player is already present here ! */
 				/* TODO - Add optional check for ignoring group members */
 				Logger:Log["Player found ${tgtIterator.Value.Owner}"]

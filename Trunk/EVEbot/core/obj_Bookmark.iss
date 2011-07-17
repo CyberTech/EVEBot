@@ -126,7 +126,7 @@ objectdef obj_Bookmarks inherits obj_BaseClass
 				; Are we within warp range of the bookmark?
 				if ${This.DistanceTo} > -1
 				{
-					Logger:Log["${LogPrefix}: ItemID = ${TempIterator.Value.ItemID}", LOG_DEBUG]
+					Logger:Log["${LogPrefix}:AtBookmark ItemID = ${TempIterator.Value.ItemID}", LOG_DEBUG]
 					if ${Me.ToEntity.DistanceTo[${TempIterator.Value.ItemID}]} < WARP_RANGE
 					{
 						return TRUE
@@ -155,7 +155,7 @@ objectdef obj_Bookmarks inherits obj_BaseClass
 		if ${BookmarkIterator.Value(exists)}
 		{
 			Logger:Log["${LogPrefix}:WarpToNext: ${BookmarkIterator.Value.Label}", LOG_DEBUG]
-			Navigator:FlyToBookmark["${BookmarkIterator.Value.ID}"]
+			Navigator:FlyToBookmarkID["${BookmarkIterator.Value.ID}"]
 			This.RecentlyUsed:Add[${BookmarkIterator.Value.ID}]
 		}
 		else
@@ -209,7 +209,6 @@ objectdef obj_Bookmarks inherits obj_BaseClass
 		This.RecentlyUsed:Add[${BookmarkIterator.Value.ID}]
 	}
 	
-	; TODO - Move this to the bookmark class once its created.
 	member:float64 DistanceTo()
 	{
 		if ${BookmarkIterator.Value.ItemID} > -1 && ${Me.ToEntity(exists)}
