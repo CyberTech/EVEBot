@@ -38,7 +38,6 @@ function main(string unchar="", string StartBot=FALSE)
 	}
 
 	wait 200 ${ISXEVE.IsReady}
-	wait 200 ${Login(exists)}
 
 	if !${unchar.Equal[""]}
 	{
@@ -52,17 +51,15 @@ function main(string unchar="", string StartBot=FALSE)
 	}
 	windowtaskbar on "${unchar}"
 
-	if (${Config.Common.LoginName.Equal[""]} || \
-		${Config.Common.LoginPassword.Equal[""]} || \
-		${Config.Common.LoginName.Equal[NULL]} || \
-		${Config.Common.LoginPassword.Equal[NULL]} || \
-		${Config.Common.AutoLoginCharID} == 0 || )
+	if ${Config.Common.LoginName.Equal["username1"]} || ${Config.Common.AutoLoginCharID} == 0
 	{
-		UI:UpdateConsole["No login, pw, or CharID found in Launcher config"]
+		UI:UpdateConsole["Launcher: No character specified, or character not found in ${BaseConfig.CONFIG_FILE}"]
+		UI:UpdateConsole["  Syntax: run EVEBot/Launcher ""CharName"" <Optional Botname>"]
 		; do config gui here, the next line will save a blank template for a config if none exists
-		Config:Save
 		return
 	}
+
+	wait 200 ${Login(exists)}
 
 	if ${ISXEVE(exists)} && ${ISXEVE.IsReady}
 	{

@@ -36,7 +36,7 @@ objectdef obj_Configuration_BaseConfig
 
 	method Save()
 	{
-		LavishSettings[LauncherSettings]:Export[${CONFIG_FILE}]
+		;LavishSettings[LauncherSettings]:Export[${CONFIG_FILE}]
 	}
 
 	method GetDefaultSet()
@@ -87,12 +87,13 @@ objectdef obj_Configuration_Common
 
 	method Initialize()
 	{
-		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
-		{
-			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
-			This:Set_Default_Values[]
-		}
-		s"obj_Configuration_Common: Initialized", LOG_MINOR]
+		; We don't initialize this file, as we provide a template
+		;if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
+		;{
+		;	UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
+		;	This:Set_Default_Values[]
+		;}
+		UI:UpdateConsole["obj_Configuration_Common: Initialized", LOG_MINOR]
 	}
 
 	member:settingsetref CommonRef()
@@ -105,8 +106,8 @@ objectdef obj_Configuration_Common
 		BaseConfig.BaseRef:AddSet[${This.SetName}]
 
 		; We use both so we have an ID to use to set the default selection in the UI.
-		This.CommonRef:AddSetting[Login Name, ""]
-		This.CommonRef:AddSetting[Login Password, ""]
+		This.CommonRef:AddSetting[Login Name, "username1"]
+		This.CommonRef:AddSetting[Login Password, "password1"]
 		This.CommonRef:AddSetting[AutoLoginCharID, 0]
 	}
 
