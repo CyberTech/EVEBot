@@ -76,48 +76,31 @@ objectdef obj_EVEBot inherits obj_BaseClass
 				return
 			}
 
-			; TODO this doesn't disable rendering if it's not forground and disablescreenwhenbackgrounded = false
-			if ${Display.Foreground}
+			if (${Config.Common.DisableUI} || (${Config.Common.DisableScreenWhenBackgrounded} && !${Display.Foreground})) && \
+				${EVE.IsUIDisplayOn}
 			{
-				if ${Config.Common.DisableUI}
-				{
-					if ${EVE.IsUIDisplayOn}
-					{
-						EVE:ToggleUIDisplay
-						Logger:Log["Disabling UI Rendering"]
-					}
-				}
-				elseif !${EVE.IsUIDisplayOn}
-				{
-					EVE:ToggleUIDisplay
-					Logger:Log["Enabling UI Rendering"]
-				}
+				EVE:ToggleUIDisplay
+				Logger:Log["Disabling UI Rendering"]
+			}
+			elseif !${Config.Common.DisableUI} && !${EVE.IsUIDisplayOn}
+			{
+				EVE:ToggleUIDisplay
+				Logger:Log["Enabling UI Rendering"]
+			}
 
-				if ${Config.Common.Disable3D}
+			; TODO - ISXEVE Bug - 3D disable only works in space 2011/07/17
+			if ${Me.InSpace}
+			{
+				if (${Config.Common.Disable3D} || (${Config.Common.DisableScreenWhenBackgrounded} && !${Display.Foreground})) && \
+					${EVE.Is3DDisplayOn}
 				{
-					if ${EVE.Is3DDisplayOn}
-					{
-						EVE:Toggle3DDisplay
-						Logger:Log["Disabling 3D Rendering"]
-					}
+					EVE:Toggle3DDisplay
+					Logger:Log["Disabling 3D Rendering"]
 				}
-				elseif !${EVE.Is3DDisplayOn}
+				elseif !${Config.Common.Disable3D} && !${EVE.Is3DDisplayOn}
 				{
 					EVE:Toggle3DDisplay
 					Logger:Log["Enabling 3D Rendering"]
-				}
-			}
-			elseif ${Config.Common.DisableScreenWhenBackgrounded}
-			{
-				if ${EVE.IsUIDisplayOn}
-				{
-					EVE:ToggleUIDisplay
-					Logger:Log["Background EVE: Disabling UI Rendering"]
-				}
-				if ${EVE.Is3DDisplayOn}
-				{
-					EVE:Toggle3DDisplay
-					Logger:Log["Background EVE: Disabling 3D Rendering"]
 				}
 			}
 
@@ -156,7 +139,6 @@ objectdef obj_EVEBot inherits obj_BaseClass
 						}
 					}
 				}
-
 
 				if ${Me.InSpace} && !${Station.Docked}
 				{
