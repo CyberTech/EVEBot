@@ -5,7 +5,7 @@
 
 #include core/defines.iss
 
-#if !${ISXEVE.IsBeta}
+#if ${Type[isxeve].Member[IsBeta]} && !${ISXEVE.IsBeta}
 	#echo
 	#echo
 	#echo Trunk EVEBot requires ISXEVE _BETA_, which is not public
