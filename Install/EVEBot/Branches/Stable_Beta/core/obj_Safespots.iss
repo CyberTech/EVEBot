@@ -30,7 +30,7 @@ objectdef obj_Safespots
 			{
 				SafeSpots:Remove[${idx}]
 			}
-			elseif ${SafeSpots.Get[${idx}].SolarSystemID} != ${_Me.SolarSystemID}
+			elseif ${SafeSpots.Get[${idx}].SolarSystemID} != ${Me.SolarSystemID}
 			{
 				SafeSpots:Remove[${idx}]
 			}
@@ -50,7 +50,7 @@ objectdef obj_Safespots
 			This:ResetSafeSpotList
 		}
 
-		if ${SafeSpots.Get[1](exists)} && ${SafeSpots.Get[1].SolarSystemID} != ${_Me.SolarSystemID}
+		if ${SafeSpots.Get[1](exists)} && ${SafeSpots.Get[1].SolarSystemID} != ${Me.SolarSystemID}
 		{
 			This:ResetSafeSpotList
 		}

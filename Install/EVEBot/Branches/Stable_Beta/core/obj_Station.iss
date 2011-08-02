@@ -142,7 +142,7 @@ objectdef obj_Station
 
 	function GetStationItems()
 	{
-		while !${_Me.InStation}
+		while !${Me.InStation}
 		{
 			UI:UpdateConsole["obj_Cargo: Waiting for InStation..."]
 			wait 10
@@ -292,7 +292,7 @@ objectdef obj_Station
 	{
 		variable int Counter
 		variable int StationID
-		StationID:Set[${_Me.StationID}]
+		StationID:Set[${Me.StationID}]
 
 		UI:UpdateConsole["Undocking"]
 
@@ -309,8 +309,8 @@ objectdef obj_Station
 			   EVE:Execute[CmdExitStation]
 			   UI:UpdateConsole["Undock: Unexpected failure, retrying...", LOG_CRITICAL]
 			   UI:UpdateConsole["Undock: Debug: EVEWindow[Local]=${EVEWindow[Local](exists)}", LOG_CRITICAL]
-			   UI:UpdateConsole["Undock: Debug: Me.InStation=${_Me.InStation}", LOG_CRITICAL]
-			   UI:UpdateConsole["Undock: Debug: Me.StationID=${_Me.StationID}", LOG_CRITICAL]
+			   UI:UpdateConsole["Undock: Debug: Me.InStation=${Me.InStation}", LOG_CRITICAL]
+			   UI:UpdateConsole["Undock: Debug: Me.StationID=${Me.StationID}", LOG_CRITICAL]
 			}
 		}
 		while ${This.Docked}

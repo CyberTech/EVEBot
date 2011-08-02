@@ -367,7 +367,7 @@ objectdef obj_Targets
 			}
 		}
 
-		if ${_Me.Ship.MaxLockedTargets} == 0
+		if ${Me.Ship.MaxLockedTargets} == 0
 		{
 			UI:UpdateConsole["Jammed, cant target..."]
 			return TRUE
@@ -596,7 +596,7 @@ objectdef obj_Targets
 					{
 						if ${Ship.TypeID} == TYPE_RIFTER
 						{
-							if ${Target.Value.Distance} > ${_Me.Ship.MaxTargetRange}
+							if ${Target.Value.Distance} > ${Me.Ship.MaxTargetRange}
 							{
 								if ${Me.ToEntity.Approaching.NotEqual[NULL]}
 								{
@@ -634,7 +634,7 @@ objectdef obj_Targets
 		;if ${HasTargets} && ${Me.ActiveTarget(exists)}
 		;{
 		;	variable int OrbitDistance
-		;	OrbitDistance:Set[${Math.Calc[${_Me.Ship.MaxTargetRange}*0.40/1000].Round}]
+		;	OrbitDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.40/1000].Round}]
 		;	OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
 		;	Me.ActiveTarget:Orbit[${OrbitDistance}]
 		;}

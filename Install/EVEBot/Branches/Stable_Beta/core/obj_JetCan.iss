@@ -203,34 +203,34 @@ objectdef obj_JetCan
 		switch ${Config.Miner.JetCanNaming}
 		{
 			case 1
-				NewName:Set[${_Me.CorporationTicker} ${EVE.Time[short]}]
+				NewName:Set[${Me.CorporationTicker} ${EVE.Time[short]}]
 				break
 			case 2
-				NewName:Set[${_Me.CorporationTicker}:${EVE.Time[short]}]
+				NewName:Set[${Me.CorporationTicker}:${EVE.Time[short]}]
 				break
 			case 3
-				NewName:Set[${_Me.CorporationTicker}_${EVE.Time[short]}]
+				NewName:Set[${Me.CorporationTicker}_${EVE.Time[short]}]
 				break
 			case 4
-				NewName:Set[${_Me.CorporationTicker}.${EVE.Time[short]}]
+				NewName:Set[${Me.CorporationTicker}.${EVE.Time[short]}]
 				break
 			case 5
-				NewName:Set[${_Me.CorporationTicker}]
+				NewName:Set[${Me.CorporationTicker}]
 				break
 			case 6
 				NewName:Set[${EVE.Time[short]}]
 				break
 			case 7
-				NewName:Set[${_Me.Name.Token[1, " "]} ${EVE.Time[short]}]
+				NewName:Set[${Me.Name.Token[1, " "]} ${EVE.Time[short]}]
 				break
 			case 8
-				NewName:Set[${_Me.Name.Token[1, " "]}]
+				NewName:Set[${Me.Name.Token[1, " "]}]
 				break
 			case 9
-				NewName:Set[${_Me.Name}]
+				NewName:Set[${Me.Name}]
 				break
 			default
-				NewName:Set[${_Me.Name}]
+				NewName:Set[${Me.Name}]
 				break
 		}
 

@@ -117,7 +117,7 @@ objectdef obj_Combat
 
 	method SetState()
 	{
-		if ${_Me.InStation} == TRUE
+		if ${Me.InStation} == TRUE
 		{
 	  		This.CurrentState:Set["INSTATION"]
 	  		return
@@ -160,7 +160,7 @@ objectdef obj_Combat
 	{
 		if ${This.CurrentState.NotEqual["INSTATION"]}
 		{
-			if ${_Me.ToEntity.IsWarpScrambled}
+			if ${Me.ToEntity.IsWarpScrambled}
 			{
 				; TODO - we need to quit if a red warps in while we're scrambled -- cybertech
 				UI:UpdateConsole["Warp Scrambled: Ignoring System Status"]
@@ -258,7 +258,7 @@ objectdef obj_Combat
 		else
 		{
 			; Are we at the safespot and not warping?
-			if ${_Me.ToEntity.Mode} != 3
+			if ${Me.ToEntity.Mode} != 3
 			{
 				call Safespots.WarpTo
 				wait 30
@@ -271,12 +271,12 @@ objectdef obj_Combat
 		if ${This.Fled}
 		{
 			/* don't leave the "fled" state until we regen */
-			if (${_Me.Ship.ArmorPct} < 50 || \
-				(${_Me.Ship.ShieldPct} < 80 && ${Config.Combat.MinimumShieldPct} > 0) || \
-				${_Me.Ship.CapacitorPct} < 80 )
+			if (${Me.Ship.ArmorPct} < 50 || \
+				(${Me.Ship.ShieldPct} < 80 && ${Config.Combat.MinimumShieldPct} > 0) || \
+				${Me.Ship.CapacitorPct} < 80 )
 			{
 					This.CurrentState:Set["FLEE"]
-					UI:UpdateConsole["Debug: Staying in Flee State: Armor: ${_Me.Ship.ArmorPct} Shield: ${_Me.Ship.ShieldPct} Cap: ${_Me.Ship.CapacitorPct}", LOG_DEBUG]
+					UI:UpdateConsole["Debug: Staying in Flee State: Armor: ${Me.Ship.ArmorPct} Shield: ${Me.Ship.ShieldPct} Cap: ${Me.Ship.CapacitorPct}", LOG_DEBUG]
 			}
 			else
 			{
@@ -284,19 +284,19 @@ objectdef obj_Combat
 					This.CurrentState:Set["IDLE"]
 			}
 		}
-		elseif (${_Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct}  || \
-				${_Me.Ship.ShieldPct} < ${Config.Combat.MinimumShieldPct} || \
-				${_Me.Ship.CapacitorPct} < ${Config.Combat.MinimumCapPct})
+		elseif (${Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct}  || \
+				${Me.Ship.ShieldPct} < ${Config.Combat.MinimumShieldPct} || \
+				${Me.Ship.CapacitorPct} < ${Config.Combat.MinimumCapPct})
 		{
-			UI:UpdateConsole["Armor is at ${_Me.Ship.ArmorPct.Int}%%: ${Me.Ship.Armor.Int}/${Me.Ship.MaxArmor.Int}", LOG_CRITICAL]
-			UI:UpdateConsole["Shield is at ${_Me.Ship.ShieldPct.Int}%%: ${Me.Ship.Shield.Int}/${Me.Ship.MaxShield.Int}", LOG_CRITICAL]
-			UI:UpdateConsole["Cap is at ${_Me.Ship.CapacitorPct.Int}%%: ${Me.Ship.Capacitor.Int}/${Me.Ship.MaxCapacitor.Int}", LOG_CRITICAL]
+			UI:UpdateConsole["Armor is at ${Me.Ship.ArmorPct.Int}%%: ${Me.Ship.Armor.Int}/${Me.Ship.MaxArmor.Int}", LOG_CRITICAL]
+			UI:UpdateConsole["Shield is at ${Me.Ship.ShieldPct.Int}%%: ${Me.Ship.Shield.Int}/${Me.Ship.MaxShield.Int}", LOG_CRITICAL]
+			UI:UpdateConsole["Cap is at ${Me.Ship.CapacitorPct.Int}%%: ${Me.Ship.Capacitor.Int}/${Me.Ship.MaxCapacitor.Int}", LOG_CRITICAL]
 
 			if !${Config.Combat.RunOnLowTank}
 			{
 				UI:UpdateConsole["Run On Low Tank Disabled: Fighting", LOG_CRITICAL]
 			}
-			elseif ${_Me.ToEntity.IsWarpScrambled}
+			elseif ${Me.ToEntity.IsWarpScrambled}
 			{
 				UI:UpdateConsole["Warp Scrambled: Fighting", LOG_CRITICAL]
 			}
@@ -310,7 +310,7 @@ objectdef obj_Combat
 
 	function ManageTank()
 	{
-		if ${_Me.Ship.ArmorPct} < 100
+		if ${Me.Ship.ArmorPct} < 100
 		{
 			/* Turn on armor reps, if you have them
 				Armor reps do not rep right away -- they rep at the END of the cycle.
@@ -318,25 +318,25 @@ objectdef obj_Combat
 			*/
 			Ship:Activate_Armor_Reps[]
 		}
-		elseif ${_Me.Ship.ArmorPct} > 98
+		elseif ${Me.Ship.ArmorPct} > 98
 		{
 			Ship:Deactivate_Armor_Reps[]
 		}
 
-		if ${_Me.Ship.ShieldPct} < 85 || ${Config.Combat.AlwaysShieldBoost}
+		if ${Me.Ship.ShieldPct} < 85 || ${Config.Combat.AlwaysShieldBoost}
 		{   /* Turn on the shield booster, if present */
 			Ship:Activate_Shield_Booster[]
 		}
-		elseif ${_Me.Ship.ShieldPct} > 95 && !${Config.Combat.AlwaysShieldBoost}
+		elseif ${Me.Ship.ShieldPct} > 95 && !${Config.Combat.AlwaysShieldBoost}
 		{
 			Ship:Deactivate_Shield_Booster[]
 		}
 
-		if ${_Me.Ship.CapacitorPct} < 20
+		if ${Me.Ship.CapacitorPct} < 20
 		{   /* Turn on the cap booster, if present */
 			Ship:Activate_Cap_Booster[]
 		}
-		elseif ${_Me.Ship.CapacitorPct} > 80
+		elseif ${Me.Ship.CapacitorPct} > 80
 		{
 			Ship:Deactivate_Cap_Booster[]
 		}

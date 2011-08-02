@@ -101,7 +101,7 @@ objectdef obj_Asteroids
 
 			Label:Set[${BeltBookMarkList[${RandomBelt}].Label}]
 
-			if (${BeltBookMarkList[${RandomBelt}].SolarSystemID} != ${_Me.SolarSystemID} || \
+			if (${BeltBookMarkList[${RandomBelt}].SolarSystemID} != ${Me.SolarSystemID} || \
 				${Label.Left[${prefix.Length}].NotEqual[${prefix}]})
 			{
 				BeltBookMarkList:Remove[${RandomBelt}]
@@ -351,7 +351,7 @@ objectdef obj_Asteroids
 				if ${Entity[${AsteroidIterator.Value}](exists)} && \
 					!${AsteroidIterator.Value.IsLockedTarget} && \
 					!${AsteroidIterator.Value.BeingTargeted} && \
-					${AsteroidIterator.Value.Distance} < ${_Me.Ship.MaxTargetRange} && \
+					${AsteroidIterator.Value.Distance} < ${Me.Ship.MaxTargetRange} && \
 					( !${Me.ActiveTarget(exists)} || ${AsteroidIterator.Value.DistanceTo[${Me.ActiveTarget.ID}]} <= ${Math.Calc[${Ship.OptimalMiningRange}* 1.1]} )
 				{
 					break

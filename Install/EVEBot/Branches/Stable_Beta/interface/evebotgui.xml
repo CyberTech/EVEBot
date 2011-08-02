@@ -268,7 +268,7 @@
 							<Width>100</Width>
 							<Height>18</Height>
 							<Text>EVE Login</Text>
-							<AutoTooltip>The EVE Login name for ${_Me.Name}</AutoTooltip>
+							<AutoTooltip>The EVE Login name for ${Me.Name}</AutoTooltip>
 						</Text>
 						<Textentry name='LoginName'>
 							<X>140</X>
@@ -292,7 +292,7 @@
 							<Width>100</Width>
 							<Height>18</Height>
 							<Text>EVE Password</Text>
-							<AutoTooltip>The EVE Login Password for ${_Me.Name}</AutoTooltip>
+							<AutoTooltip>The EVE Login Password for ${Me.Name}</AutoTooltip>
 						</Text>
 						<Textentry name='LoginPassword'>
 							<X>140</X>

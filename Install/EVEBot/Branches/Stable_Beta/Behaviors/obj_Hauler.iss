@@ -224,7 +224,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 	/* NOTE: The order of these if statements is important!! */
 	method SetState()
 	{
-		if ${EVEBot.ReturnToStation} && !${_Me.InStation}
+		if ${EVEBot.ReturnToStation} && !${Me.InStation}
 		{
 			This.CurrentState:Set["ABORT"]
 		}
@@ -238,7 +238,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		{
 			This.CurrentState:Set["IDLE"]
 		}
-		elseif ${_Me.InStation}
+		elseif ${Me.InStation}
 		{
 	  		This.CurrentState:Set["INSTATION"]
 		}
@@ -379,7 +379,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		while ${CurrentState.Equal[HAUL]} && ${FullMiners.FirstValue(exists)}
 		{
 			UI:UpdateConsole["${FullMiners.Used} cans to get! Picking up can at ${FullMiners.FirstKey}", LOG_DEBUG]
-			if ${FullMiners.CurrentValue.SystemID} == ${_Me.SolarSystemID}
+			if ${FullMiners.CurrentValue.SystemID} == ${Me.SolarSystemID}
 			{
 				call This.WarpToFleetMemberAndLoot ${FullMiners.CurrentValue.FleetMemberID}
 			}
@@ -530,7 +530,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 
 		while ${idx} > 0
 		{
-			if ${myfleet.Get[${idx}].CharID} != ${_Me.CharID}
+			if ${myfleet.Get[${idx}].CharID} != ${Me.CharID}
 			{
 				if ${myfleet.Get[${idx}].ToPilot(exists)} && \
 					${myfleet.Get[${idx}].ToPilot.Name.NotEqual["Joe The Tank"]}
@@ -564,7 +564,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 			{
 				SafeSpots:Remove[${idx}]
 			}
-			elseif ${SafeSpots.Get[${idx}].SolarSystemID} != ${_Me.SolarSystemID}
+			elseif ${SafeSpots.Get[${idx}].SolarSystemID} != ${Me.SolarSystemID}
 			{
 				SafeSpots:Remove[${idx}]
 			}
@@ -580,7 +580,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 	function WarpToNextSafeSpot()
 	{
 		if ${SafeSpots.Used} == 0 || \
-			${SafeSpots.Get[1].SolarSystemID} != ${_Me.SolarSystemID}
+			${SafeSpots.Get[1].SolarSystemID} != ${Me.SolarSystemID}
 		{
 			This:BuildSafeSpotList
 		}
