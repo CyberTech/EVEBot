@@ -134,10 +134,6 @@ objectdef obj_Ratter
 			; This will reset target information about the belt
 			; (its needed for chaining)
 			Targets:ResetTargets
-			; Reload just before targeting everything, the ship
-			; has been through warp so we're sure that no weapons are still
-			; active
-			Ship:Reload_Weapons[TRUE]
 		}
 
 		; Wait for the rats to warp into the belt. Reports are between 10 and 20 seconds.
