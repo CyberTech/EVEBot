@@ -30,7 +30,8 @@ objectdef obj_Sound
 			
 		if ${Math.Calc64[${m_LastSoundTime} + ${m_SoundDelay}]} < ${LavishScript.RunningTime}
 		{
-			System:APICall[${System.GetProcAddress[WinMM.dll,PlaySound].Hex},Filename.String,0,"Math.Dec[22001]"]
+			PlaySound "${Filename}"
+			;System:APICall[${System.GetProcAddress[WinMM.dll,PlaySound].Hex},Filename.String,0,"Math.Dec[22001]"]
 			m_LastSoundTime:Set[${LavishScript.RunningTime}]
 		}
 	}

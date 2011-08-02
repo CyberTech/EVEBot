@@ -1149,10 +1149,10 @@ objectdef obj_Ship
 						call This.WarpWait
 						if ${Return} == 2
 						{
+							UI:UpdateConsole["ERROR: Ship.WarpToFleetMember never reached fleet member!"]
 							return
 						}
 					}
-					UI:UpdateConsole["ERROR: Ship.WarpToFleetMember never reached fleet member!"]
 					return
 				}
 			}

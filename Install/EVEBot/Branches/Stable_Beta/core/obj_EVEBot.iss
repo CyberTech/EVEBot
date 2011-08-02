@@ -56,13 +56,13 @@ objectdef obj_EVEBot
 
 			if ${Config.Common.Disable3D}
 			{
-				if ${EVE.Is3DDisplayOn}
+				if ${Me.InSpace} && ${EVE.Is3DDisplayOn}
 				{
 					EVE:Toggle3DDisplay
 					UI:UpdateConsole["Disabling 3D Rendering"]
 				}
 			}
-			elseif !${EVE.Is3DDisplayOn}
+			elseif ${Me.InSpace} && !${EVE.Is3DDisplayOn}
 			{
 				EVE:Toggle3DDisplay
 				UI:UpdateConsole["Enabling 3D Rendering"]

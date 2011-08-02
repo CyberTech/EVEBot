@@ -1,6 +1,11 @@
+#if ${ISXEVE(exists)}
+#else
+	#error EVEBot requires ISXEVE to be loaded before running
+#endif
+
 #include core/defines.iss
 
-#if !${ISXEVE.IsBeta}
+#if ${Type[isxeve].Member[IsBeta]} && !${ISXEVE.IsBeta}
 	#echo 
 	#echo 
 	#echo Stable_Beta EVEBot requires ISXEVE _BETA_, which is not public 
@@ -64,13 +69,13 @@ function main()
 	;Script:Unsquelch
 	;Script[EVEBot]:EnableDebugLogging[EVEBot_Debug.txt]
 	;Script[EVEBot]:EnableProfiling
-	;Redirect EVEBot_Profiling.txt Script[EVEBot]:DumpProfiling
+	;;Redirect EVEBot_Profiling.txt Script[EVEBot]:DumpProfiling
 
 	if ${Me.InSpace}
 	{
 		EVE:PopulateEntities[TRUE]
 	}
-	turbo 150
+	turbo 4000
 
 	echo "${Time} EVEBot: Loading Objects..."
 
@@ -160,6 +165,7 @@ function main()
 #if USE_ISXIM
 	call ChatIRC.Connect
 #endif
+	turbo 100
 
 	UI:UpdateConsole["-=Paused: Press Run-="]
 	Script:Pause
