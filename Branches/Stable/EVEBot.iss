@@ -1,4 +1,21 @@
+#if ${ISXEVE(exists)}
+#else
+	#error EVEBot requires ISXEVE to be loaded before running
+#endif
+
 #include core/defines.iss
+
+#if ${Type[isxeve].Member[IsBeta]} && ${ISXEVE.IsBeta}
+	#echo
+	#echo
+	#echo Stable EVEBot does not support ISXEVE Beta.
+	#echo Reinstall isxeve.dll from https://www.isxGames.com/isxeve/Extensions/ISXEVE.dll
+	#echo
+	#echo -- CyberTech
+	#echo
+	#echo
+	#error Aborting
+#endif
 
 /* Base Requirements */
 #include core/obj_EVEBot.iss
@@ -50,7 +67,7 @@ function main()
 	;Script:Unsquelch
 	;Script[EVEBot]:EnableDebugLogging[EVEBot_Debug.txt]
 	;Script[EVEBot]:EnableProfiling
-	;Redirect EVEBot_Profiling.txt Script[EVEBot]:DumpProfiling
+	;;Redirect EVEBot_Profiling.txt Script[EVEBot]:DumpProfiling
 
 	turbo 4000
 
