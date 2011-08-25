@@ -16,11 +16,11 @@
     <dt>Directory Created:</dt>
     <dd><span class="date">2010-12-18 22:28</span></dd>
     <dt>Total Files:</dt>
-    <dd>27</dd>
+    <dd>35</dd>
     <dt>Deleted Files:</dt>
     <dd>1</dd>
     <dt>Lines of Code:</dt>
-    <dd>1416</dd>
+    <dd>1277</dd>
 </dl>
 <p class="dirtree">
 <a href="dir.html">[root]</a>/<a href="dir_Install.html">Install</a>/<a href="dir_Install_EVEBot.html">EVEBot</a>/<a href="dir_Install_EVEBot_Testcases.html">Testcases</a>/<strong>ISXEVE</strong><br/>
@@ -47,9 +47,9 @@
     <tbody>
       <tr  class="odd">
         <th><a href="user_cybertech.html" class="author">cybertech</a></th>
-        <td>32 (100.0%)</td>
-        <td>1447 (100.0%)</td>
-        <td>45.2</td>
+        <td>104 (100.0%)</td>
+        <td>1794 (100.0%)</td>
+        <td>17.2</td>
       </tr>
     </tbody>
   </table>
@@ -58,6 +58,239 @@
 <div class="section">
 <h2>Most Recent Commits</h2>
 <dl class="commitlist">
+  <dt><a name="14"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-04-11 01:50</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1888</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Update testcase TODO <br />
+Me:GetTargetedBy, Me:GetTargeting, Me:GetTargets, Me:GetJammers, Me:GetAttackers
+    </p>
+    <p class="commitdetails"><strong>95</strong> lines of code changed in <span class="files">5 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Install/EVEBot/Testcases/ISXEVE</strong>:
+        Me_GetAttackers.iss&#160;<span class="new">(new&#160;19)</span>,
+        Me_GetJammers.iss&#160;<span class="new">(new&#160;19)</span>,
+        Me_GetTargetedBy.iss&#160;<span class="new">(new&#160;19)</span>,
+        Me_GetTargeting.iss&#160;<span class="new">(new&#160;19)</span>,
+        Me_GetTargets.iss&#160;<span class="new">(new&#160;19)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="13"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-04-11 01:38</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1887</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Add optional param to the method
+    </p>
+    <p class="commitdetails"><strong>10</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Install/EVEBot/Testcases/ISXEVE</strong>:
+        test_EVE_GetCachedEntities.iss&#160;<span class="change">(+2&#160;-25)</span>,
+        test_Me.DoGetAttackers.iss&#160;<span class="change">(+3&#160;-26)</span>,
+        test_Me_GetAssets.iss&#160;<span class="change">(+5&#160;-56)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="12"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-04-11 00:49</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1886</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Convert to _Testcase_MethodStr_Body.iss usage
+    </p>
+    <p class="commitdetails"><strong>31</strong> lines of code changed in <span class="files">12 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Install/EVEBot/Testcases/ISXEVE</strong>:
+        test_DoGetActiveDroneIDs.iss&#160;<span class="change">(+3&#160;-23)</span>,
+        test_DoGetActiveDrones.iss&#160;<span class="change">(+3&#160;-21)</span>,
+        test_DoGetBookmarks.iss&#160;<span class="change">(+3&#160;-12)</span>,
+        test_DoGetBuddies.iss&#160;<span class="change">(+2&#160;-22)</span>,
+        test_DoGetPilots.iss&#160;<span class="change">(+3&#160;-21)</span>,
+        test_DoGetSkillQueue.iss&#160;<span class="change">(+3&#160;-17)</span>,
+        test_DoGetStationsWithAssets.iss&#160;<span class="change">(+3&#160;-19)</span>,
+        test_Me.DoGetJammers.iss&#160;<span class="change">(+3&#160;-26)</span>,
+        test_MyShip.DoGetModules.iss&#160;<span class="change">(+2&#160;-25)</span>,
+        test_Station_GetCorpHangarItems.iss&#160;<span class="change">(+2&#160;-13)</span>,
+        test_Station_GetHangarItems.iss&#160;<span class="change">(+2&#160;-13)</span>,
+        test_Station_GetHangarShips.iss&#160;<span class="change">(+2&#160;-27)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="11"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-04-11 00:33</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1885</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Remove obj_UI, standardize path to testapi.iss
+    </p>
+    <p class="commitdetails"><strong>13</strong> lines of code changed in <span class="files">21 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Install/EVEBot/Testcases/ISXEVE</strong>:
+        test_Agent_DoGetDialogResponses.iss&#160;<span class="change">(-1)</span>,
+        test_DoGetActiveDroneIDs.iss&#160;<span class="change">(-1)</span>,
+        test_DoGetActiveDrones.iss&#160;<span class="change">(-1)</span>,
+        test_DoGetBookmarks.iss&#160;<span class="change">(-1)</span>,
+        test_DoGetBuddies.iss&#160;<span class="change">(-1)</span>,
+        test_DoGetFleet.iss&#160;<span class="change">(-1)</span>,
+        test_DoGetPilots.iss&#160;<span class="change">(-1)</span>,
+        test_DoGetSkillQueue.iss&#160;<span class="change">(-1)</span>,
+        test_DoGetStationsWithAssets.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        test_Drones.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        test_EVE_GetCachedEntities.iss&#160;<span class="change">(+1&#160;-2)</span>,
+        test_Item_GetInsuranceQuotes.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        test_Item_Insure.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        test_Me.DoGetAttackers.iss&#160;<span class="change">(+1&#160;-2)</span>,
+        test_Me.DoGetJammers.iss&#160;<span class="change">(+1&#160;-2)</span>,
+        test_Me.Fleet_Broadcasts.iss&#160;<span class="change">(+1&#160;-2)</span>,
+        test_Me_GetAssets.iss&#160;<span class="change">(-1)</span>,
+        test_MyShip.DoGetModules.iss&#160;<span class="change">(+1&#160;-2)</span>,
+        test_Station_GetCorpHangarItems.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        test_Station_GetHangarItems.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        test_Station_GetHangarShips.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="10"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-04-11 00:28</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1884</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Declare OBJ_UI UI in Support/TestAPI.iss
+    </p>
+    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Install/EVEBot/Testcases/ISXEVE</strong>:
+        test_DoGetAgents.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="9"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-04-11 00:26</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1883</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Move common code for TLO:Method testcases to _Testcase_MethodStr_Body.iss, makes for a 3-line testcase<br />
+Add EVE:GetAgentMissions testcase<br />
+Revamp test_DoGetAgents.iss for new syntax<br />
+Declare OBJ_UI UI in Support/TestAPI.iss
+    </p>
+    <p class="commitdetails"><strong>31</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Install/EVEBot/Testcases/ISXEVE</strong>:
+        EVE_GetAgentMissions.iss&#160;<span class="new">(new&#160;20)</span>,
+        test_DoGetAgents.iss&#160;<span class="change">(+10&#160;-49)</span>,
+        test_Me.iss&#160;<span class="change">(+1&#160;-1)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="8"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-04-04 15:54</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1880</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+QueryEntities2: Entity Retrieval and Member Access, using index:RemoveByQuery method<br />
+MoveItems: Fix missing {<br />
+SkillQueue: DoGet -&gt; Get<br />
+AmmoNames: DoGet -&gt; Get<br />
+MyOrders: DoGet -&gt; Get
+    </p>
+    <p class="commitdetails"><strong>72</strong> lines of code changed in <span class="files">3 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Install/EVEBot/Testcases/ISXEVE</strong>:
+        test_DoGetSkillQueue.iss&#160;<span class="change">(-2)</span>,
+        test_EVE.MoveItemsTo_Hangar.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        test_EVE.QueryEntities2.iss&#160;<span class="new">(new&#160;71)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="7"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-03-22 02:31</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1864</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Update testcases
+    </p>
+    <p class="commitdetails"><strong>59</strong> lines of code changed in <span class="files">23 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Install/EVEBot/Testcases/ISXEVE</strong>:
+        test_Agent_DoGetDialogResponses.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        test_DoGetActiveDroneIDs.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        test_DoGetActiveDrones.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        test_DoGetAgents.iss&#160;<span class="change">(+3&#160;-3)</span>,
+        test_DoGetAvailableAmmo.iss&#160;<span class="change">(+4&#160;-4)</span>,
+        test_DoGetBookmarks.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        test_DoGetBuddies.iss&#160;<span class="change">(+3&#160;-3)</span>,
+        test_DoGetPilots.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        test_DoGetSkillQueue.iss&#160;<span class="change">(+3&#160;-3)</span>,
+        test_DoGetStationsWithAssets.iss&#160;<span class="change">(+3&#160;-3)</span>,
+        test_Drones.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        test_EVE.MoveItemsTo_Hangar.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        test_EVE.MoveItemsTo_MyShip.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        test_Item.MoveTo_Hangar.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        test_Item_GetInsuranceQuotes.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        test_Item_Insure.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        test_Me.DoGetAttackers.iss&#160;<span class="change">(+4&#160;-4)</span>,
+        test_Me.DoGetJammers.iss&#160;<span class="change">(+4&#160;-4)</span>,
+        test_Me_GetAssets.iss&#160;<span class="change">(+3&#160;-3)</span>,
+        test_MyShip.DoGetModules.iss&#160;<span class="change">(+3&#160;-3)</span>,
+        test_Station_GetCorpHangarItems.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        test_Station_GetHangarItems.iss&#160;<span class="change">(+3&#160;-3)</span>,
+        test_Station_GetHangarShips.iss&#160;<span class="change">(+3&#160;-3)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="6"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-03-21 14:10</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1863</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+New for DoGetCorpHangarItems
+    </p>
+    <p class="commitdetails"><strong>35</strong> lines of code changed in <span class="files">1 file</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Install/EVEBot/Testcases/ISXEVE</strong>:
+        test_Station_GetCorpHangarItems.iss&#160;<span class="new">(new&#160;35)</span>
+      </li>
+    </ul>
+  </dd>
+
   <dt><a name="5"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2011-03-10 03:47</span>
