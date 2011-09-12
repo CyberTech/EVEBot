@@ -128,7 +128,7 @@ objectdef obj_Ratter
 			Ship:Deactivate_Tracking_Computer
 			if !${Config.Combat.AnomalyAssistMode}
 			{
-				call Belts.WarpToNextBelt
+				call Belts.WarpToNextBelt ${Config.Combat.WarpRange}
 			}
 
 			; This will reset target information about the belt

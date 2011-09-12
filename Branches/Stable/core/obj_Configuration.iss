@@ -682,6 +682,17 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[Chain Solo, TRUE]
 		This.CombatRef:AddSetting[Use Belt Bookmarks, FALSE]
 		This.CombatRef:AddSetting[Min Chain Bounty, 1500000]
+		This.CombatRef:AddSetting[WarpRange, 0]
+	}
+	
+	member:int WarpRange()
+	{
+		return ${This.CombatRef.FindSetting[WarpRange, 0]}
+	}
+	
+	method SetWarpRange(int value)
+	{
+		This.CombatRef:AddSetting[WarpRange,${value}]
 	}
 
 	member:bool AnomalyAssistMode()
