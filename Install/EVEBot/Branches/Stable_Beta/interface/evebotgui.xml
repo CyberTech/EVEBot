@@ -1045,11 +1045,34 @@
 							<Text>Minimum Drones in Space</Text>
 							<AutoTooltip>We will return to base when available drones falls below this number</AutoTooltip>
 						</Text>
-
+						<Textentry name='WarpRange'>
+							<X>10</X>
+							<Y>130</Y>
+							<Width>64</Width>
+							<Height>18</Height>
+							<MaxLength>7</MaxLength>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Combat.WarpRange}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Combat:SetWarpRange[${Int[${This.Text}]}]
+								}
+							</OnChange>
+						</Textentry>
+						<Text name='WarpRangeText'>
+							<X>76</X>
+							<Y>130</Y>
+							<Width>200</Width>
+							<Height>10</Height>
+							<Text>Belt Warp Range</Text>
+							<AutoTooltip>What range to warp to belts at. Default is 0</AutoTooltip>
+						</Text>
 						<Frame name='frmRatter'>
 							<X>2%</X>
-							<Y>50%</Y>
-							<Height>47%</Height>
+							<Y>60%</Y>
+							<Height>38%</Height>
 							<Width>96%</Width>
 							<Border>2</Border>
 							<Children>
