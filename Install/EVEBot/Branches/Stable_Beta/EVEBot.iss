@@ -5,7 +5,7 @@
 
 #include core/defines.iss
 
-#if ${Type[isxeve].Member[IsBeta]} && !${ISXEVE.IsBeta}
+#if !${Type[isxeve].Member[IsBeta]} || !${ISXEVE.IsBeta}
 	#echo 
 	#echo 
 	#echo Stable_Beta EVEBot requires ISXEVE _BETA_, which is not public 
