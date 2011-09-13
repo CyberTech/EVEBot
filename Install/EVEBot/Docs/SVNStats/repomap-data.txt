@@ -31,7 +31,7 @@
                 <leaf><label>obj_Bookmarks.iss</label><weight>96</weight><value>0.0</value></leaf>
                 <leaf><label>obj_Cargo.iss</label><weight>978</weight><value>0.0</value></leaf>
                 <leaf><label>obj_Combat.iss</label><weight>370</weight><value>0.0</value></leaf>
-                <leaf><label>obj_Configuration.iss</label><weight>1527</weight><value>0.0</value></leaf>
+                <leaf><label>obj_Configuration.iss</label><weight>1538</weight><value>0.7152145643693107</value></leaf>
                 <leaf><label>obj_Drones.iss</label><weight>224</weight><value>0.0</value></leaf>
                 <leaf><label>obj_EVEBot.iss</label><weight>194</weight><value>0.0</value></leaf>
                 <leaf><label>obj_EVEBotUI.iss</label><weight>201</weight><value>0.0</value></leaf>
@@ -50,7 +50,7 @@
 
             <branch>
                 <label>interface</label>
-                <leaf><label>evebotgui.xml</label><weight>1745</weight><value>0.0</value></leaf>
+                <leaf><label>evebotgui.xml</label><weight>1768</weight><value>1.3009049773755657</value></leaf>
             </branch>
               <leaf><label>EVEBot.iss</label><weight>193</weight><value>0.0</value></leaf>
           </branch>
@@ -303,7 +303,7 @@
             <leaf><label>obj_Bookmarks.iss</label><weight>96</weight><value>0.0</value></leaf>
             <leaf><label>obj_Cargo.iss</label><weight>978</weight><value>0.0</value></leaf>
             <leaf><label>obj_Combat.iss</label><weight>370</weight><value>0.0</value></leaf>
-            <leaf><label>obj_Configuration.iss</label><weight>1527</weight><value>0.0</value></leaf>
+            <leaf><label>obj_Configuration.iss</label><weight>1538</weight><value>0.7152145643693107</value></leaf>
             <leaf><label>obj_Drones.iss</label><weight>221</weight><value>0.0</value></leaf>
             <leaf><label>obj_EVEBot.iss</label><weight>194</weight><value>0.0</value></leaf>
             <leaf><label>obj_EVEBotUI.iss</label><weight>201</weight><value>0.0</value></leaf>
@@ -323,7 +323,7 @@
 
         <branch>
             <label>interface</label>
-            <leaf><label>evebotgui.xml</label><weight>1745</weight><value>0.0</value></leaf>
+            <leaf><label>evebotgui.xml</label><weight>1768</weight><value>1.3009049773755657</value></leaf>
         </branch>
 
         <branch>
