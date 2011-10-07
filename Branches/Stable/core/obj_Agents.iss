@@ -566,6 +566,11 @@ objectdef obj_Agents
 			UI:UpdateConsole["obj_Agents.MoveToDropOff: ERROR!  Not Docked."]
 			call This.WarpToDropOffStation
 		}
+		if !${Station.Docked}
+		{
+			UI:UpdateConsole["obj_Agents.MoveToDropOff: ERROR!  Not Docked."]
+			call This.WarpToDropOffStation
+		}
 	}
 
 	function WarpToPickupStation()
