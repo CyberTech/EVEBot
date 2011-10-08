@@ -295,7 +295,7 @@
         <branch>
             <label>core</label>
             <leaf><label>defines.iss</label><weight>551</weight><value>0.0</value></leaf>
-            <leaf><label>obj_Agents.iss</label><weight>1316</weight><value>0.0</value></leaf>
+            <leaf><label>obj_Agents.iss</label><weight>1321</weight><value>0.3785011355034065</value></leaf>
             <leaf><label>obj_Assets.iss</label><weight>123</weight><value>0.0</value></leaf>
             <leaf><label>obj_Asteroids.iss</label><weight>436</weight><value>0.0</value></leaf>
             <leaf><label>obj_Autopilot.iss</label><weight>97</weight><value>0.0</value></leaf>
