@@ -90,7 +90,7 @@
               <leaf><label>Me_GetTargeting.iss</label><weight>19</weight><value>0.0</value></leaf>
               <leaf><label>Me_GetTargets.iss</label><weight>19</weight><value>0.0</value></leaf>
               <leaf><label>test_Agent_DoGetDialogResponses.iss</label><weight>44</weight><value>0.0</value></leaf>
-              <leaf><label>test_Container_Open.iss</label><weight>40</weight><value>100.0</value></leaf>
+              <leaf><label>test_Container_Open.iss</label><weight>40</weight><value>0.0</value></leaf>
               <leaf><label>test_DoGetActiveDroneIDs.iss</label><weight>17</weight><value>0.0</value></leaf>
               <leaf><label>test_DoGetActiveDrones.iss</label><weight>18</weight><value>0.0</value></leaf>
               <leaf><label>test_DoGetAgents.iss</label><weight>21</weight><value>0.0</value></leaf>
@@ -108,7 +108,7 @@
               <leaf><label>test_EVE.QueryEntities2.iss</label><weight>71</weight><value>0.0</value></leaf>
               <leaf><label>test_EVE_GetCachedEntities.iss</label><weight>29</weight><value>0.0</value></leaf>
               <leaf><label>test_Item.MoveTo_Hangar.iss</label><weight>48</weight><value>0.0</value></leaf>
-              <leaf><label>test_Item.MoveTo_Myship.iss</label><weight>49</weight><value>100.0</value></leaf>
+              <leaf><label>test_Item.MoveTo_Myship.iss</label><weight>49</weight><value>0.0</value></leaf>
               <leaf><label>test_Item_GetInsuranceQuotes.iss</label><weight>51</weight><value>0.0</value></leaf>
               <leaf><label>test_Item_Insure.iss</label><weight>48</weight><value>0.0</value></leaf>
               <leaf><label>test_Me.DoGetAttackers.iss</label><weight>21</weight><value>0.0</value></leaf>
@@ -272,7 +272,7 @@
             <leaf><label>obj_Courier.iss</label><weight>100</weight><value>0.0</value></leaf>
             <leaf><label>obj_Freighter.iss</label><weight>425</weight><value>0.0</value></leaf>
             <leaf><label>obj_Hauler.iss</label><weight>675</weight><value>0.0</value></leaf>
-            <leaf><label>obj_Miner.iss</label><weight>515</weight><value>0.0</value></leaf>
+            <leaf><label>obj_Miner.iss</label><weight>521</weight><value>1.1516314779270633</value></leaf>
             <leaf><label>obj_Missioneer.iss</label><weight>92</weight><value>0.0</value></leaf>
             <leaf><label>obj_Ratter.iss</label><weight>311</weight><value>0.0</value></leaf>
             <leaf><label>obj_Scavenger.iss</label><weight>171</weight><value>0.0</value></leaf>
@@ -303,7 +303,7 @@
             <leaf><label>obj_Bookmarks.iss</label><weight>96</weight><value>0.0</value></leaf>
             <leaf><label>obj_Cargo.iss</label><weight>978</weight><value>0.0</value></leaf>
             <leaf><label>obj_Combat.iss</label><weight>370</weight><value>0.0</value></leaf>
-            <leaf><label>obj_Configuration.iss</label><weight>1538</weight><value>0.7152145643693107</value></leaf>
+            <leaf><label>obj_Configuration.iss</label><weight>1549</weight><value>1.4202711426726922</value></leaf>
             <leaf><label>obj_Drones.iss</label><weight>221</weight><value>0.0</value></leaf>
             <leaf><label>obj_EVEBot.iss</label><weight>194</weight><value>0.0</value></leaf>
             <leaf><label>obj_EVEBotUI.iss</label><weight>201</weight><value>0.0</value></leaf>
@@ -315,7 +315,7 @@
             <leaf><label>obj_Safespots.iss</label><weight>112</weight><value>0.0</value></leaf>
             <leaf><label>obj_Ship.iss</label><weight>2315</weight><value>0.0</value></leaf>
             <leaf><label>obj_Skills.iss</label><weight>285</weight><value>0.0</value></leaf>
-            <leaf><label>obj_Social.iss</label><weight>456</weight><value>0.0</value></leaf>
+            <leaf><label>obj_Social.iss</label><weight>461</weight><value>1.0845986984815619</value></leaf>
             <leaf><label>obj_Sound.iss</label><weight>63</weight><value>0.0</value></leaf>
             <leaf><label>obj_Station.iss</label><weight>330</weight><value>0.0</value></leaf>
             <leaf><label>obj_Targets.iss</label><weight>702</weight><value>0.0</value></leaf>
@@ -323,7 +323,7 @@
 
         <branch>
             <label>interface</label>
-            <leaf><label>evebotgui.xml</label><weight>1768</weight><value>1.3009049773755657</value></leaf>
+            <leaf><label>evebotgui.xml</label><weight>1792</weight><value>2.622767857142857</value></leaf>
         </branch>
 
         <branch>
