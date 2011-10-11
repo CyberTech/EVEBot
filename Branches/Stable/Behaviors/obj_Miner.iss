@@ -22,7 +22,7 @@ objectdef obj_Miner
 	variable int PreviousTripSeconds = 0
 	variable int TotalTripSeconds = 0
 	variable int AverageTripSeconds = 0
-	variable string CurrentState
+	variable string CurrentState = "IDLE"
 	variable bool CombatAbort = FALSE
 	variable int SanityCheckCounter = 0
 	variable bool SanityCheckAbort = FALSE
@@ -159,6 +159,12 @@ objectdef obj_Miner
 		{
 			EVEBot.ReturnToStation:Set[TRUE]
 			UI:UpdateConsole["Warning: Low Standing player or system unsafe, docking"]
+		}
+
+		if ${Social.PossibleHostiles}
+		{
+			EVEBot.ReturnToStation:Set[TRUE]
+			UI:UpdateConsole["Warning: Possible Hostiles on grid, docking"]
 		}
 
 		if ${Ship.IsPod}
