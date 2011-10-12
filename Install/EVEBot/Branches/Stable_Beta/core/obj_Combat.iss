@@ -165,7 +165,7 @@ objectdef obj_Combat
 				; TODO - we need to quit if a red warps in while we're scrambled -- cybertech
 				UI:UpdateConsole["Warp Scrambled: Ignoring System Status"]
 			}
-			elseif !${Social.IsSafe}
+			elseif !${Social.IsSafe} || ${Social.PossibleHostiles}
 			{
 				UI:UpdateConsole["Debug: Fleeing: Local isn't safe"]
 				call This.Flee

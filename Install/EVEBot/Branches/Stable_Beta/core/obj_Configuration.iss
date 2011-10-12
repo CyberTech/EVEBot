@@ -365,6 +365,7 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Avoid Player Range, 10000]
 		This.MinerRef:AddSetting[Standing Detection, FALSE]
 		This.MinerRef:AddSetting[Lowest Standing, 0]
+		This.MinerRef:AddSetting[Minimum Security Status, -10.00]
 		This.MinerRef:AddSetting[Ice Mining, 0]
 		This.MinerRef:AddSetting[Delivery Location Type, 1]
 		This.MinerRef:AddSetting[Delivery Location Type Name, Station]
@@ -535,6 +536,16 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Lowest Standing, ${value}]
 	}
 
+	member:int MinimumSecurityStatus()
+	{
+		return ${This.MinerRef.FindSetting[Minimum Security Status, -10.00]}
+	}
+
+	method SetMinimumSecurityStatus(float Value)
+	{
+		This.MinerRef:AddSetting[Minimum Security Status, ${Value}]
+	}
+
 	member:bool IceMining()
 	{
 		return ${This.MinerRef.FindSetting[Ice Mining, 0]}
@@ -684,12 +695,12 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[Min Chain Bounty, 1500000]
 		This.CombatRef:AddSetting[WarpRange, 0]
 	}
-	
+
 	member:int WarpRange()
 	{
 		return ${This.CombatRef.FindSetting[WarpRange, 0]}
 	}
-	
+
 	method SetWarpRange(int value)
 	{
 		This.CombatRef:AddSetting[WarpRange,${value}]

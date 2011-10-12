@@ -408,42 +408,47 @@ objectdef obj_Social
 
 	member:bool PossibleHostiles()
 	{
-		variable iterator EntityIterator
-		This.EntityIndex:GetIterator[EntityIterator]
-
-		if ${EntityIterator:First(exists)}
-		{
-			do
-			{
-				if ${EntityIterator.Value.IsTargetingMe}
-				{
-					return TRUE
-				}
-			}
-			while ${EntityIterator:Next(exists)}
-		}
-
 		if ${This.PilotIndex.Used} < 2
 		{
 			return FALSE
 		}
 
+		variable bool bReturn = FALSE
 		variable iterator PilotIterator
+		variable float PilotSecurityStatus
+
 		This.PilotIndex:GetIterator[PilotIterator]
 
 		if ${PilotIterator:First(exists)}
 		{
 			do
 			{
+				if 	${Me.CharID} == ${PilotIterator.Value.CharID} || \
+					!${PilotIterator.Value.ToEntity(exists)} || \
+					${PilotIterator.Value.ToFleetMember(exists)}
+				{
+					continue
+				}
+
 				if ${PilotIterator.Value.ToEntity.IsTargetingMe}
 				{
-					return TRUE
+					UI:UpdateConsole["obj_Social: Hostile on grid: ${PilotIterator.Value.Name} is targeting me", LOG_CRITICAL]
+					bReturn:Set[TRUE]
+				}
+
+				; Entity.Security returns -9999.00 if it fails, so we need to check for that
+				PilotSecurityStatus:Set[${PilotIterator.Value.ToEntity.Security}]
+				if ${PilotSecurityStatus} > -11.0 && \
+					${PilotSecurityStatus} < ${Config.Miner.MinimumSecurityStatus}
+				{
+					UI:UpdateConsole["obj_Social: Possible hostile: ${PilotIterator.Value.Name} Sec Status: ${PilotSecurityStatus.Centi}", LOG_CRITICAL]
+					bReturn:Set[TRUE]
 				}
 			}
 			while ${PilotIterator:Next(exists)}
 		}
 
-		return FALSE
+		return ${bReturn}
 	}
 
 }

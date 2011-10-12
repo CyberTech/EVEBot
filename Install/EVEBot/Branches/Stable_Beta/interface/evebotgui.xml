@@ -736,16 +736,40 @@
 								Script[EVEBot].VariableScope.Config.Miner:SetIceMining[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
-						<Text name='DeliveryLocationTypeLabel'>
+						<Text name='MinimumSecurityStatusLabel'>
 							<X>10</X>
 							<Y>170</Y>
+							<Width>250</Width>
+							<Height>18</Height>
+							<Text>Min. Security Status</Text>
+						</Text>
+						<Textentry name='MinimumSecurityStatus'>
+							<X>175</X>
+							<Y>168</Y>
+							<Width>45</Width>
+							<Height>18</Height>
+							<MaxLength>6</MaxLength>
+							<AutoTooltip>Move to another field when a player enters yours and is below the security status you set</AutoTooltip>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Miner.MinimumSecurityStatus}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Miner:SetMinimumSecurityStatus[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+						<Text name='DeliveryLocationTypeLabel'>
+							<X>10</X>
+							<Y>190</Y>
 							<Width>250</Width>
 							<Height>18</Height>
 							<Text>ORE Delivery Configuration</Text>
 						</Text>
 						<Text name='DeliveryLocationTypeText'>
 							<X>15</X>
-							<Y>190</Y>
+							<Y>210</Y>
 							<Width>110</Width>
 							<Height>18</Height>
 							<Text>Location Type</Text>
@@ -753,7 +777,7 @@
 						</Text>
 						<combobox name='DeliveryLocationType'>
 							<X>135</X>
-							<Y>190</Y>
+							<Y>210</Y>
 							<Width>150</Width>
 							<Height>15</Height>
 							<FullHeight>200</FullHeight>
@@ -775,7 +799,7 @@
 						</combobox>
 						<Text name='DeliveryLocationText'>
 							<X>15</X>
-							<Y>210</Y>
+							<Y>225</Y>
 							<Width>110</Width>
 							<Height>18</Height>
 							<Text>Location Name</Text>
@@ -783,7 +807,7 @@
 						</Text>
 						<Textentry name='DeliveryLocation'>
 							<X>135</X>
-							<Y>210</Y>
+							<Y>225</Y>
 							<Width>350</Width>
 							<Height>18</Height>
 							<OnLoad>

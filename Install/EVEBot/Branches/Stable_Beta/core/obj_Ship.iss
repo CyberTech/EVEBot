@@ -57,7 +57,6 @@ objectdef obj_Ship
 		This:UpdateModuleList[]
 
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-		This:CalculateMaxLockedTargets
 		UI:UpdateConsole["obj_Ship: Initialized", LOG_MINOR]
 	}
 
@@ -381,7 +380,7 @@ objectdef obj_Ship
 				case GROUPID_ARMOR_HARDENERS
 					This.ModuleList_ActiveResists:Insert[${ModuleIter.Value}]
 					break
-				case GROUP_ENERGYWEAPON 
+				case GROUP_ENERGYWEAPON
 				case GROUP_PROJECTILEWEAPON
 				case GROUP_HYBRIDWEAPON
 				case GROUP_MISSILELAUNCHER
@@ -593,6 +592,7 @@ objectdef obj_Ship
 	member:int SafeMaxLockedTargets()
 	{
 		variable int result
+		This:CalculateMaxLockedTargets[]
 		result:Set[${This.Calculated_MaxLockedTargets}]
 		if ${result} > 3
 		{
@@ -2106,7 +2106,7 @@ objectdef obj_Ship
 			return
 		}
 		if ${Me.ToEntity.Mode} == 4
-		{	
+		{
 			; already orbiting something
 			This:Activate_AfterBurner
 			return
@@ -2122,13 +2122,13 @@ objectdef obj_Ship
 			{
 				continue
 			}
-			
+
 			OrbitDistance:Set[${Math.Calc[(${ModuleIter.Value.OptimalRange}*0.85)/500]}]
 			OrbitDistance:Set[${Math.Calc[${OrbitDistance}*500]}]
 			UI:UpdateConsole["OrbitDistance = ${OrbitDistance}"]
-			
+
 			Me.ActiveTarget:Orbit[${OrbitDistance}]
-			
+
 		}
 		while ${ModuleIter:Next(exists)}
 	}
@@ -2235,7 +2235,7 @@ objectdef obj_Ship
 			}
 			while ${ModuleIter:Next(exists)}
 		}
-		
+
 		; ignore forced reload if we can only have one charge
 		; Can't use an iterator that hasn't been initialized OR has no value. Reverting this change. - Valerian
 		if ${ForceReload} || ${NeedReload}
