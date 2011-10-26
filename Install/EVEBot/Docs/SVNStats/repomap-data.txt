@@ -31,7 +31,7 @@
                 <leaf><label>obj_Bookmarks.iss</label><weight>96</weight><value>0.0</value></leaf>
                 <leaf><label>obj_Cargo.iss</label><weight>978</weight><value>0.0</value></leaf>
                 <leaf><label>obj_Combat.iss</label><weight>370</weight><value>0.0</value></leaf>
-                <leaf><label>obj_Configuration.iss</label><weight>1549</weight><value>1.4202711426726922</value></leaf>
+                <leaf><label>obj_Configuration.iss</label><weight>1549</weight><value>0.7101355713363461</value></leaf>
                 <leaf><label>obj_Drones.iss</label><weight>224</weight><value>0.0</value></leaf>
                 <leaf><label>obj_EVEBot.iss</label><weight>194</weight><value>0.0</value></leaf>
                 <leaf><label>obj_EVEBotUI.iss</label><weight>201</weight><value>0.0</value></leaf>
@@ -50,7 +50,7 @@
 
             <branch>
                 <label>interface</label>
-                <leaf><label>evebotgui.xml</label><weight>1792</weight><value>2.622767857142857</value></leaf>
+                <leaf><label>evebotgui.xml</label><weight>1792</weight><value>1.3392857142857142</value></leaf>
             </branch>
               <leaf><label>EVEBot.iss</label><weight>193</weight><value>0.0</value></leaf>
           </branch>
@@ -129,7 +129,7 @@
           <leaf><label>EVEBot.iss</label><weight>133</weight><value>0.0</value></leaf>
           <leaf><label>EVECallback.iss</label><weight>45</weight><value>0.0</value></leaf>
           <leaf><label>EVEWatcher.iss</label><weight>265</weight><value>0.0</value></leaf>
-          <leaf><label>Launcher.iss</label><weight>151</weight><value>0.0</value></leaf>
+          <leaf><label>Launcher.iss</label><weight>167</weight><value>9.580838323353294</value></leaf>
       </branch>
         <leaf><label>Installation.txt</label><weight>9</weight><value>0.0</value></leaf>
     </branch>
@@ -303,7 +303,7 @@
             <leaf><label>obj_Bookmarks.iss</label><weight>96</weight><value>0.0</value></leaf>
             <leaf><label>obj_Cargo.iss</label><weight>978</weight><value>0.0</value></leaf>
             <leaf><label>obj_Combat.iss</label><weight>370</weight><value>0.0</value></leaf>
-            <leaf><label>obj_Configuration.iss</label><weight>1549</weight><value>1.4202711426726922</value></leaf>
+            <leaf><label>obj_Configuration.iss</label><weight>1549</weight><value>0.7101355713363461</value></leaf>
             <leaf><label>obj_Drones.iss</label><weight>221</weight><value>0.0</value></leaf>
             <leaf><label>obj_EVEBot.iss</label><weight>194</weight><value>0.0</value></leaf>
             <leaf><label>obj_EVEBotUI.iss</label><weight>201</weight><value>0.0</value></leaf>
@@ -323,7 +323,7 @@
 
         <branch>
             <label>interface</label>
-            <leaf><label>evebotgui.xml</label><weight>1792</weight><value>2.622767857142857</value></leaf>
+            <leaf><label>evebotgui.xml</label><weight>1792</weight><value>1.3392857142857142</value></leaf>
         </branch>
 
         <branch>
