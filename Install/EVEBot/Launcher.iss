@@ -16,6 +16,8 @@
 
 */
 
+
+; To Enable debug output, enable TESTAPI_DEBUG in Support/TestAPI.iss
 #include Support/TestAPI.iss
 #include Support/obj_LoginHandler.iss
 #include Support/obj_AutoPatcher.iss
@@ -85,6 +87,20 @@ function main(string unchar="", string StartBot=FALSE)
 
 					UI:UpdateConsole["Launcher: Starting EVEBot by CyberTech"]
 					runscript EVEBot/EVEBot Stable
+					wait 600 ${Script[EVEBot].Paused}
+					while ${Script[EVEBot].Paused}
+					{
+						Script[EVEBot]:Resume
+						wait 15
+					}
+					break
+				case EVEBOT_BETA
+					EVE:CloseAllMessageBoxes
+					; TODO - get rid of this callback shit.
+					runscript "${Script.CurrentDirectory}/EveCallback.iss"
+
+					UI:UpdateConsole["Launcher: Starting EVEBot for ISXEVE Beta by CyberTech"]
+					runscript EVEBot/EVEBot EVEBot_Beta
 					wait 600 ${Script[EVEBot].Paused}
 					while ${Script[EVEBot].Paused}
 					{
