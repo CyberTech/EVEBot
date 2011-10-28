@@ -182,7 +182,7 @@ objectdef obj_Asteroids
 						${This.IsBeltEmpty[${Belts[${curBelt}].Name}]} )
 
 				UI:UpdateConsole["Warping to Asteroid Belt: ${Belts[${curBelt}].Name}"]
-				call Ship.WarpToID ${Belts[${curBelt}]}
+				call Ship.WarpToID ${Belts[${curBelt}].ID}
 				This.BeltArrivalTime:Set[${Time.Timestamp}]
 				This.UsingMookMarks:Set[TRUE]
 				This.LastBeltIndex:Set[${curBelt}]
