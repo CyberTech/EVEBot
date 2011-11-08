@@ -30,6 +30,7 @@ objectdef obj_LoginHandler
 	variable int loginWaitTime = 2
 	variable int connectWaitTime = 10
 	variable int inspaceWaitTime = 60
+	variable int AfterCharSelectClickWaitTime = 20
 	variable int evebotWaitTime = 30
 
 	method Initialize()
@@ -227,7 +228,7 @@ objectdef obj_LoginHandler
 				{
 					;UI:UpdateConsole["DEBUG: AutoLoginCharID: ${Config.Common.AutoLoginCharID}", LOG_DEBUG]
 					CharSelect:ClickCharacter[${Config.Common.AutoLoginCharID}]
-					This.LoginTimer:Set[${This.connectWaitTime}]
+					This.LoginTimer:Set[${This.AfterCharSelectClickWaitTime}]
 					break
 				}
 				else
