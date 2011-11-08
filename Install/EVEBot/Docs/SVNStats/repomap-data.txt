@@ -68,7 +68,7 @@
             <label>Support</label>
             <leaf><label>TestAPI.iss</label><weight>66</weight><value>0.0</value></leaf>
             <leaf><label>obj_Configuration.iss</label><weight>147</weight><value>0.0</value></leaf>
-            <leaf><label>obj_LoginHandler.iss</label><weight>271</weight><value>0.0</value></leaf>
+            <leaf><label>obj_LoginHandler.iss</label><weight>272</weight><value>0.3676470588235294</value></leaf>
         </branch>
 
         <branch>
@@ -289,13 +289,13 @@
             <leaf><label>TestAPI.iss</label><weight>61</weight><value>0.0</value></leaf>
             <leaf><label>obj_AutoPatcher.iss</label><weight>75</weight><value>0.0</value></leaf>
             <leaf><label>obj_Configuration.iss</label><weight>178</weight><value>0.0</value></leaf>
-            <leaf><label>obj_LoginHandler.iss</label><weight>261</weight><value>0.0</value></leaf>
+            <leaf><label>obj_LoginHandler.iss</label><weight>262</weight><value>0.38167938931297707</value></leaf>
         </branch>
 
         <branch>
             <label>core</label>
             <leaf><label>defines.iss</label><weight>551</weight><value>0.0</value></leaf>
-            <leaf><label>obj_Agents.iss</label><weight>1321</weight><value>0.3785011355034065</value></leaf>
+            <leaf><label>obj_Agents.iss</label><weight>1321</weight><value>0.0</value></leaf>
             <leaf><label>obj_Assets.iss</label><weight>123</weight><value>0.0</value></leaf>
             <leaf><label>obj_Asteroids.iss</label><weight>436</weight><value>0.0</value></leaf>
             <leaf><label>obj_Autopilot.iss</label><weight>97</weight><value>0.0</value></leaf>
