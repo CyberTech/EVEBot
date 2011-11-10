@@ -291,12 +291,19 @@ objectdef obj_Ship
 
 	member:bool IsDamped()
 	{
-		return ${Me.Ship.MaxTargetRange} < ${This.m_MaxTargetRange}
+		return ${MyShip.MaxTargetRange.Centi} < ${This.m_MaxTargetRange.Centi}
 	}
 
 	member:float MaxTargetRange()
 	{
-		return ${m_MaxTargetRange}
+		variable float CurrentTargetRange = ${MyShip.MaxTargetRange}
+		
+		if ${This.m_MaxTargetRange.Centi} < ${CurrentTargetRange.Centi}
+		{
+			This.m_MaxTargetRange:Set[${CurrentTargetRange}]
+		}
+			
+		return ${CurrentTargetRange}
 	}
 
 	method UpdateModuleList()
@@ -307,9 +314,6 @@ objectdef obj_Ship
 			UI:UpdateConsole["DEBUG: obj_Ship:UpdateModuleList called while in station", LOG_DEBUG]
 			return
 		}
-
-		/* save ship values that may change in combat */
-		This.m_MaxTargetRange:Set[${Me.Ship.MaxTargetRange}]
 
 		/* build module lists */
 		This.ModuleList:Clear
@@ -339,6 +343,9 @@ objectdef obj_Ship
 			return
 		}
 		RetryUpdateModuleList:Set[0]
+
+		/* save ship values that may change in combat */
+		This.m_MaxTargetRange:Set[${Me.Ship.MaxTargetRange}]
 
 		variable iterator ModuleIter
 

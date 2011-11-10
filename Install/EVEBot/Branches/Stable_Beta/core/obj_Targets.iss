@@ -338,7 +338,7 @@ objectdef obj_Targets
 		}
 		else
 		{
-			EVE:QueryEntities[Targets, "CategoryID = CATEGORYID_ENTITY && Distance <= ${_Me.Ship.MaxTargetRange}"]
+			EVE:QueryEntities[Targets, "CategoryID = CATEGORYID_ENTITY && Distance <= ${MyShip.MaxTargetRange}"]
 		}
 		Targets:GetIterator[Target]
 
