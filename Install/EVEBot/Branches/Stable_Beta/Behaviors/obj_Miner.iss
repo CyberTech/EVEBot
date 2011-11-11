@@ -466,7 +466,7 @@ objectdef obj_Miner
 				{
 					call Asteroids.TargetNext
 					This.ConcentrateFire:Set[!${Return}]
-					;echo DEBUG: Target Locking: ${Math.Calc[${Me.GetTargets} + ${Me.TargetingCount}].Int} out of ${Ship.SafeMaxLockedTargets} (Limited Asteroids: ${This.ConcentrateFire})
+					;echo DEBUG: Target Locking: ${Math.Calc[${Me.TargetCount} + ${Me.TargetingCount}].Int} out of ${Ship.SafeMaxLockedTargets} (Limited Asteroids: ${This.ConcentrateFire})
 				}
 				else
 				{
