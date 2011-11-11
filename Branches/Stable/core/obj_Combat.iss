@@ -341,19 +341,22 @@ objectdef obj_Combat
 			Ship:Deactivate_Cap_Booster[]
 		}
 
-		; Active shield (or armor) hardeners
-		; If you don't have hardeners this code does nothing.
-		if (${Config.Combat.AnomalyAssistMode} && ${Me.GetTargets} > 0) || \
-		   (!${Config.Combat.AnomalyAssistMode} && ${Me.GetTargetedBy} > 0)
+		if !${This.Fled} && ${Config.Combat.LaunchCombatDrones} && \
+			${Ship.Drones.DronesInSpace} == 0 && !${Ship.InWarp} && \
+			${Me.GetTargets} > 0
 		{
-			if !${This.Fled} && ${Config.Combat.LaunchCombatDrones} && \
-				${Ship.Drones.DronesInSpace} == 0 && \
-				!${Ship.InWarp}
+			if ${Config.Combat.AnomalyAssistMode}
+			{
+				Ship.Drones:LaunchAll[]
+			}
+			elseif ${Me.GetTargets} >= 1 && ${Me.GetTargetedBy} >= ${Me.GetTargets}
 			{
 				Ship.Drones:LaunchAll[]
 			}
 		}
 
+		; Active shield (or armor) hardeners
+		; If you don't have hardeners this code does nothing.
 		if ${Me.GetTargetedBy} > 0
 		{
 			Ship:Activate_Hardeners[]
