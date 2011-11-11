@@ -370,13 +370,13 @@ objectdef obj_Ship
 
 			if !${ModuleIter.Value.IsActivatable}
 			{
-				This.ModuleList_Passive:Insert[${ModuleIter.Value}]
+				This.ModuleList_Passive:Insert[${ModuleIter.Value.ID}]
 				continue
 			}
 
 			if ${ModuleIter.Value.MiningAmount(exists)}
 			{
-				This.ModuleList_MiningLaser:Insert[${ModuleIter.Value}]
+				This.ModuleList_MiningLaser:Insert[${ModuleIter.Value.ID}]
 				continue
 			}
 
@@ -385,7 +385,7 @@ objectdef obj_Ship
 				case GROUPID_DAMAGE_CONTROL
 				case GROUPID_SHIELD_HARDENER
 				case GROUPID_ARMOR_HARDENERS
-					This.ModuleList_ActiveResists:Insert[${ModuleIter.Value}]
+					This.ModuleList_ActiveResists:Insert[${ModuleIter.Value.ID}]
 					break
 				case GROUP_ENERGYWEAPON
 				case GROUP_PROJECTILEWEAPON
@@ -402,45 +402,45 @@ objectdef obj_Ship
 				case GROUP_MISSILELAUNCHERSIEGE
 				case GROUP_MISSILELAUNCHERSNOWBALL
 				case GROUP_MISSILELAUNCHERSTANDARD
-					This.ModuleList_Weapon:Insert[${ModuleIter.Value}]
+					This.ModuleList_Weapon:Insert[${ModuleIter.Value.ID}]
 					break
 				case GROUPID_FREQUENCY_MINING_LASER
 					break
 				case GROUPID_SHIELD_BOOSTER
-					This.ModuleList_Regen_Shield:Insert[${ModuleIter.Value}]
+					This.ModuleList_Regen_Shield:Insert[${ModuleIter.Value.ID}]
 					break
 				case GROUPID_AFTERBURNER
-					This.ModuleList_AB_MWD:Insert[${ModuleIter.Value}]
+					This.ModuleList_AB_MWD:Insert[${ModuleIter.Value.ID}]
 					break
 				case GROUPID_ARMOR_REPAIRERS
-					This.ModuleList_Repair_Armor:Insert[${ModuleIter.Value}]
+					This.ModuleList_Repair_Armor:Insert[${ModuleIter.Value.ID}]
 					break
 				case GROUPID_DATA_MINER
 					if ${TypeID} == TYPEID_SALVAGER
 					{
-						This.ModuleList_Salvagers:Insert[${ModuleIter.Value}]
+						This.ModuleList_Salvagers:Insert[${ModuleIter.Value.ID}]
 					}
 					break
 				case GROUPID_TRACTOR_BEAM
-					This.ModuleList_TractorBeams:Insert[${ModuleIter.Value}]
+					This.ModuleList_TractorBeams:Insert[${ModuleIter.Value.ID}]
 					break
 				case NONE
-					This.ModuleList_Repair_Hull:Insert[${ModuleIter.Value}]
+					This.ModuleList_Repair_Hull:Insert[${ModuleIter.Value.ID}]
 					break
 				case GROUPID_CLOAKING_DEVICE
-					This.ModuleList_Cloaks:Insert[${ModuleIter.Value}]
+					This.ModuleList_Cloaks:Insert[${ModuleIter.Value.ID}]
 					break
 				case GROUPID_STASIS_WEB
-					This.ModuleList_StasisWeb:Insert[${ModuleIter.Value}]
+					This.ModuleList_StasisWeb:Insert[${ModuleIter.Value.ID}]
 					break
 				case GROUP_SENSORBOOSTER
-					This.ModuleList_SensorBoost:Insert[${ModuleIter.Value}]
+					This.ModuleList_SensorBoost:Insert[${ModuleIter.Value.ID}]
 					break
 				case GROUP_TARGETPAINTER
-					This.ModuleList_TargetPainter:Insert[${ModuleIter.Value}]
+					This.ModuleList_TargetPainter:Insert[${ModuleIter.Value.ID}]
 					break
 				case GROUP_TRACKINGCOMPUTER
-					This.ModuleList_TrackingComputer:Insert[${ModuleIter.Value}]
+					This.ModuleList_TrackingComputer:Insert[${ModuleIter.Value.ID}]
 					break
 				default
 					break
@@ -2226,6 +2226,7 @@ objectdef obj_Ship
 					{
 						CurrentCharges:Set[${ModuleIter.Value.Charge.Quantity}]
 					}
+					
 					if ${CurrentCharges} != ${ModuleIter.Value.MaxCharges}
 					{
 						;UI:UpdateConsole["ModuleIter.Value.CurrentCharges = ${ModuleIter.Value.CurrentCharges}"]
