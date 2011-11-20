@@ -72,11 +72,43 @@
 </ul>
 </div><dl class="attributes">
     <dt>Number of Commits:</dt>
-    <dd>7</dd>
+    <dd>8</dd>
     <dt>Number of Active Developers:</dt>
     <dd>1</dd>
 </dl>
 <dl class="commitlist">
+  <dt><a name="8"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-11-20 00:19</span>
+    <a class="permalink" title="Permalink to this commit" href="#8">#8</a>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">2024</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Beta changes. Explicitly use the member we want when using index objects, instead of relying on the datatype default value. Fixes various things.<br />
+Use MyShip.ToItem when in station to get ship type/typeid, instead of hoping we waited long enough after undock to grab it via ToEntity.
+    </p>
+    <p class="commitdetails"><strong>34</strong> lines of code changed in <span class="files">10 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Install/EVEBot/Branches/Stable_Beta/Behaviors</strong>:
+        obj_Freighter.iss&#160;<span class="change">(+2&#160;-2)</span>
+      </li>
+      <li>
+        <strong>Install/EVEBot/Branches/Stable_Beta/core</strong>:
+        obj_Agents.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_Asteroids.iss&#160;<span class="change">(+4&#160;-4)</span>,
+        obj_Cargo.iss&#160;<span class="change">(+13&#160;-13)</span>,
+        obj_Gang.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Missions.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_Ship.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Social.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Station.iss&#160;<span class="change">(+5&#160;-3)</span>,
+        obj_Targets.iss&#160;<span class="change">(+3&#160;-3)</span>
+      </li>
+    </ul>
+  </dd>
+
   <dt><a name="7"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2011-11-11 00:26</span>

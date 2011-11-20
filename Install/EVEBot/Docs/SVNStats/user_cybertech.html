@@ -16,11 +16,11 @@
     <dt>Login name:</dt>
     <dd>cybertech</dd>
     <dt>Total Commits:</dt>
-    <dd>2,833 (68.5%)</dd>
+    <dd>2,843 (68.5%)</dd>
     <dt>Lines of Code:</dt>
-    <dd>566,408 (80.5%)</dd>
+    <dd>566,442 (80.5%)</dd>
     <dt>Most Recent Commit:</dt>
-    <dd><span class="date">2011-11-11 00:26</span></dd>
+    <dd><span class="date">2011-11-20 00:19</span></dd>
 </dl>
 
 <div class="section">
@@ -44,9 +44,9 @@
     <tfoot>
       <tr>
         <th>Totals</th>
-        <td>2833 (100.0%)</td>
-        <td>566408 (100.0%)</td>
-        <td>199.9</td>
+        <td>2843 (100.0%)</td>
+        <td>566442 (100.0%)</td>
+        <td>199.2</td>
       </tr>
     </tfoot>
     <tbody>
@@ -70,7 +70,7 @@
       </tr>
       <tr  class="even">
         <th><a href="dir_Trunk_EVEbot_core.html" class="directory">Trunk/EVEbot/core/</a></th>
-        <td>1169 (41.3%)</td>
+        <td>1169 (41.1%)</td>
         <td>38611 (6.8%)</td>
         <td>33.0</td>
       </tr>
@@ -147,16 +147,16 @@
         <td>16.5</td>
       </tr>
       <tr  class="odd">
+        <th><a href="dir_Install_EVEBot_Branches_Stable_Beta_core.html" class="directory">Install/EVEBot/Branches/Stable_Beta/core/</a></th>
+        <td>98 (3.4%)</td>
+        <td>486 (0.1%)</td>
+        <td>4.9</td>
+      </tr>
+      <tr  class="even">
         <th><a href="dir_branches_stable_Behaviors.html" class="directory">branches/stable/Behaviors/</a></th>
         <td>69 (2.4%)</td>
         <td>459 (0.1%)</td>
         <td>6.6</td>
-      </tr>
-      <tr  class="even">
-        <th><a href="dir_Install_EVEBot_Branches_Stable_Beta_core.html" class="directory">Install/EVEBot/Branches/Stable_Beta/core/</a></th>
-        <td>89 (3.1%)</td>
-        <td>454 (0.1%)</td>
-        <td>5.1</td>
       </tr>
       <tr  class="odd">
         <th><a href="dir_Trunk_EVEbot_core_Lib_UplinkManager.html" class="directory">Trunk/EVEbot/core/Lib/UplinkManager/</a></th>
@@ -178,9 +178,9 @@
       </tr>
       <tr  class="even">
         <th><a href="dir_Install_EVEBot_Branches_Stable_Beta_Behaviors.html" class="directory">Install/EVEBot/Branches/Stable_Beta/Behaviors/</a></th>
-        <td>34 (1.2%)</td>
-        <td>204 (0.0%)</td>
-        <td>6.0</td>
+        <td>35 (1.2%)</td>
+        <td>206 (0.0%)</td>
+        <td>5.8</td>
       </tr>
       <tr  class="odd">
         <th><a href="dir_Trunk_EVEbot_interface_eveskin.html" class="directory">Trunk/EVEbot/interface/eveskin/</a></th>
@@ -370,7 +370,7 @@
       </tr>
       <tr  class="even">
         <th><a href="dir_Trunk_EVEbot_interface_eveskin_MainGUI.html" class="directory">Trunk/EVEbot/interface/eveskin/MainGUI/</a></th>
-        <td>44 (1.6%)</td>
+        <td>44 (1.5%)</td>
         <td>0 (0.0%)</td>
         <td>0.0</td>
       </tr>
@@ -407,6 +407,37 @@
 <dl class="commitlist">
   <dt><a name="20"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
+    <span class="date">2011-11-20 00:19</span>
+    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">2024</span></span>
+  </dt>
+  <dd>
+    <p class="comment">
+Beta changes. Explicitly use the member we want when using index objects, instead of relying on the datatype default value. Fixes various things.<br />
+Use MyShip.ToItem when in station to get ship type/typeid, instead of hoping we waited long enough after undock to grab it via ToEntity.
+    </p>
+    <p class="commitdetails"><strong>34</strong> lines of code changed in <span class="files">10 files</span>:</p>
+    <ul class="commitdetails">
+      <li>
+        <strong>Install/EVEBot/Branches/Stable_Beta/Behaviors</strong>:
+        obj_Freighter.iss&#160;<span class="change">(+2&#160;-2)</span>
+      </li>
+      <li>
+        <strong>Install/EVEBot/Branches/Stable_Beta/core</strong>:
+        obj_Agents.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_Asteroids.iss&#160;<span class="change">(+4&#160;-4)</span>,
+        obj_Cargo.iss&#160;<span class="change">(+13&#160;-13)</span>,
+        obj_Gang.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Missions.iss&#160;<span class="change">(+2&#160;-2)</span>,
+        obj_Ship.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Social.iss&#160;<span class="change">(+1&#160;-1)</span>,
+        obj_Station.iss&#160;<span class="change">(+5&#160;-3)</span>,
+        obj_Targets.iss&#160;<span class="change">(+3&#160;-3)</span>
+      </li>
+    </ul>
+  </dd>
+
+  <dt><a name="19"></a>
+    <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2011-11-11 00:26</span>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">2013</span></span>
   </dt>
@@ -423,7 +454,7 @@ Fix debugging code for beta
     </ul>
   </dd>
 
-  <dt><a name="19"></a>
+  <dt><a name="18"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2011-11-11 00:02</span>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">2012</span></span>
@@ -450,7 +481,7 @@ Don't launch drones till everything we're targeting is targeting us.<br />
     </ul>
   </dd>
 
-  <dt><a name="18"></a>
+  <dt><a name="17"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2011-11-10 23:54</span>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">2011</span></span>
@@ -468,7 +499,7 @@ Don't launch drones till everything we're targeting is targeting us.
     </ul>
   </dd>
 
-  <dt><a name="17"></a>
+  <dt><a name="16"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2011-11-10 22:45</span>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">2010</span></span>
@@ -486,7 +517,7 @@ Update module extraction for beta.
     </ul>
   </dd>
 
-  <dt><a name="16"></a>
+  <dt><a name="15"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2011-11-10 00:33</span>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">2008</span></span>
@@ -506,7 +537,7 @@ Improve maxtargetrange and isdamped check to round the result before comparing.
     </ul>
   </dd>
 
-  <dt><a name="15"></a>
+  <dt><a name="14"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2011-11-07 21:06</span>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">2004</span></span>
@@ -528,7 +559,7 @@ Fix random hang after character select during autologin.
     </ul>
   </dd>
 
-  <dt><a name="14"></a>
+  <dt><a name="13"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2011-11-01 07:21</span>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1995</span></span>
@@ -546,7 +577,7 @@ Fix hauler when used with bookmark names with escapable chars in it
     </ul>
   </dd>
 
-  <dt><a name="13"></a>
+  <dt><a name="12"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2011-10-27 22:08</span>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1989</span></span>
@@ -564,7 +595,7 @@ Explicitly use .ID for entity
     </ul>
   </dd>
 
-  <dt><a name="12"></a>
+  <dt><a name="11"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2011-10-25 23:21</span>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1986</span></span>
@@ -582,7 +613,7 @@ Add evebot_beta to the launcher.
     </ul>
   </dd>
 
-  <dt><a name="11"></a>
+  <dt><a name="10"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2011-10-11 20:16</span>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1972</span></span>
@@ -613,7 +644,7 @@ Merge from /branches/stable:1964,1969
     </ul>
   </dd>
 
-  <dt><a name="10"></a>
+  <dt><a name="9"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2011-10-10 21:41</span>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1969</span></span>
@@ -644,7 +675,7 @@ UI config for this is on the miner tab. Default mininum security status is -10.0
     </ul>
   </dd>
 
-  <dt><a name="9"></a>
+  <dt><a name="8"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2011-10-07 14:55</span>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1964</span></span>
@@ -664,7 +695,7 @@ Calculate maxlockedtargets on every call, not just on startup.
     </ul>
   </dd>
 
-  <dt><a name="8"></a>
+  <dt><a name="7"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2011-09-28 22:54</span>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1954</span></span>
@@ -683,7 +714,7 @@ Update stable_beta for latest beta changes
     </ul>
   </dd>
 
-  <dt><a name="7"></a>
+  <dt><a name="6"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2011-09-12 16:03</span>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1936</span></span>
@@ -701,7 +732,7 @@ Revert the change to the branch that didn't need to be changed, because even tho
     </ul>
   </dd>
 
-  <dt><a name="6"></a>
+  <dt><a name="5"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2011-09-12 11:47</span>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1935</span></span>
@@ -719,7 +750,7 @@ Merge rev 1934
     </ul>
   </dd>
 
-  <dt><a name="5"></a>
+  <dt><a name="4"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2011-09-12 11:45</span>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1934</span></span>
@@ -737,7 +768,7 @@ Invert IsBeta check so it you know, works.
     </ul>
   </dd>
 
-  <dt><a name="4"></a>
+  <dt><a name="3"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2011-09-12 11:33</span>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1933</span></span>
@@ -763,7 +794,7 @@ Merge stable -&gt; Stable_Beta
     </ul>
   </dd>
 
-  <dt><a name="3"></a>
+  <dt><a name="2"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2011-09-12 11:32</span>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1932</span></span>
@@ -790,7 +821,7 @@ Create UI option for same, on Combat tab.
     </ul>
   </dd>
 
-  <dt><a name="2"></a>
+  <dt><a name="1"></a>
     <a href="user_cybertech.html" class="author">cybertech</a>
     <span class="date">2011-09-10 21:21</span>
     <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1929</span></span>
@@ -809,27 +840,9 @@ New test cases.
     </ul>
   </dd>
 
-  <dt><a name="1"></a>
-    <a href="user_cybertech.html" class="author">cybertech</a>
-    <span class="date">2011-08-01 17:22</span>
-    <span class="revisionNumberOuter">Rev.: <span class="revisionNumberInner">1910</span></span>
-  </dt>
-  <dd>
-    <p class="comment">
-Improve testing .IsBeta member without needless IS error if it doesn't exist.
-    </p>
-    <p class="commitdetails"><strong>1</strong> lines of code changed in <span class="files">1 file</span>:</p>
-    <ul class="commitdetails">
-      <li>
-        <strong>Trunk/EVEbot</strong>:
-        EVEBot.iss&#160;<span class="change">(+1&#160;-1)</span>
-      </li>
-    </ul>
-  </dd>
-
 </dl>
 
-<p>(794 more)</p>
+<p>(795 more)</p>
 </div><div id="generatedby">Generated by <a href="http://www.statsvn.org">StatSVN</a> 0.7.0</div>
 </body>
 </html>

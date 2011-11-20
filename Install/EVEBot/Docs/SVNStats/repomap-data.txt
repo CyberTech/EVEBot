@@ -44,7 +44,7 @@
                 <leaf><label>obj_Skills.iss</label><weight>285</weight><value>0.0</value></leaf>
                 <leaf><label>obj_Social.iss</label><weight>455</weight><value>0.0</value></leaf>
                 <leaf><label>obj_Sound.iss</label><weight>63</weight><value>0.0</value></leaf>
-                <leaf><label>obj_Station.iss</label><weight>330</weight><value>0.0</value></leaf>
+                <leaf><label>obj_Station.iss</label><weight>332</weight><value>0.6024096385542169</value></leaf>
                 <leaf><label>obj_Targets.iss</label><weight>702</weight><value>0.0</value></leaf>
             </branch>
 
