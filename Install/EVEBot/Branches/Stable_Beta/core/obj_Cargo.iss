@@ -53,7 +53,7 @@ objectdef obj_Cargo
 		if ${anIterator:First(exists)}
 		do
 		{
-			;This:DumpItem[${anIterator.Value}]			
+			;This:DumpItem[${anIterator.Value.ID}]
 			if ${anIterator.Value.GroupID} == GROUPID_SECURE_CONTAINER
 			{
 				return TRUE
@@ -114,8 +114,8 @@ objectdef obj_Cargo
 			variable int CategoryID
 
 			CategoryID:Set[${CargoIterator.Value.CategoryID}]
-			;UI:UpdateConsole["DEBUG: obj_Cargo:FindAllShipCargo: CategoryID: ${CategoryID} ${CargoIterator.Value.Name} - ${CargoIterator.Value.Quantity} (CargoToTransfer.Used: ${This.CargoToTransfer.Used})"]
-			This.CargoToTransfer:Insert[${CargoIterator.Value}]
+			;UI:UpdateConsole["DEBUG: obj_Cargo:FindAllShipCargo: CategoryID: ${CategoryID} ${CargoIterator.Value.ID} ${CargoIterator.Value.Name} - ${CargoIterator.Value.Quantity} (CargoToTransfer.Used: ${This.CargoToTransfer.Used})"]
+			This.CargoToTransfer:Insert[${CargoIterator.Value.ID}]
 		}
 		while ${CargoIterator:Next(exists)}
 		
@@ -135,11 +135,11 @@ objectdef obj_Cargo
 			variable int CategoryID
 
 			CategoryID:Set[${CargoIterator.Value.CategoryID}]
-			;UI:UpdateConsole["DEBUG: obj_Cargo:FindShipCargo: CategoryID: ${CategoryID} ${CargoIterator.Value.Name} (${CargoIterator.Value.Quantity}) (CargoToTransfer.Used: ${This.CargoToTransfer.Used})"]
+			;UI:UpdateConsole["DEBUG: obj_Cargo:FindShipCargo: CategoryID: ${CategoryID} ${CargoIterator.Value.ID} ${CargoIterator.Value.Name} - ${CargoIterator.Value.Quantity} (CargoToTransfer.Used: ${This.CargoToTransfer.Used})"]
 
 			if (${CategoryID} == ${CategoryIDToMove})
 			{
-				This.CargoToTransfer:Insert[${CargoIterator.Value}]
+				This.CargoToTransfer:Insert[${CargoIterator.Value.ID}]
 			}
 		}
 		while ${CargoIterator:Next(exists)}
@@ -160,11 +160,11 @@ objectdef obj_Cargo
 		 variable int TypeID
 
 		 TypeID:Set[${CargoIterator.Value.TypeID}]
-		 UI:UpdateConsole["DEBUG: obj_Cargo:FindShipCargo: TypeID: ${TypeID} ${CargoIterator.Value.Name} (${CargoIterator.Value.Quantity}) (CargoToTransfer.Used: ${This.CargoToTransfer.Used})"]
+		 ;UI:UpdateConsole["DEBUG: obj_Cargo:FindShipCargo: TypeID: ${TypeID} ${CargoIterator.Value.Name} (${CargoIterator.Value.Quantity}) (CargoToTransfer.Used: ${This.CargoToTransfer.Used})"]
 
 		 if (${TypeID} == ${TypeIDToMove})
 		 {
-			This.CargoToTransfer:Insert[${CargoIterator.Value}]
+			This.CargoToTransfer:Insert[${CargoIterator.Value.ID}]
 		 }
 	  }
 	  while ${CargoIterator:Next(exists)}
@@ -192,8 +192,8 @@ objectdef obj_Cargo
 		if ${CrystalIterator:First(exists)}
 		do
 		{
-			;echo Setting active crystal: ${CrystalIterator.Value}
-			Crystals:Set[${CrystalIterator.Value}, ${Math.Calc[${Crystals.Element[${CrystalIterator.Value}]} + 1]}]
+			;echo Setting active crystal: ${CrystalIterator.Value.ID} ${CrystalIterator.Value.Name}
+			Crystals:Set[${CrystalIterator.Value.ID}, ${Math.Calc[${Crystals.Element[${CrystalIterator.Value.ID}]} + 1]}]
 		}
 		while ${CrystalIterator:Next(exists)}
 
@@ -335,7 +335,7 @@ objectdef obj_Cargo
 				UI:UpdateConsole["TransferListToShip: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
 				if ${CargoIterator.Value.GroupID} == GROUPID_SECURE_CONTAINER
 				{
-					call This.TransferContainerToHangar ${CargoIterator.Value}
+					call This.TransferContainerToHangar ${CargoIterator.Value.ID}
 				}
 				else
 				{
@@ -536,7 +536,7 @@ objectdef obj_Cargo
 		{
 			if ${shipItemIterator.Value.GroupID} == GROUPID_SECURE_CONTAINER
 			{
-				shipContainerIndex:Insert[${shipItemIterator.Value}]					
+				shipContainerIndex:Insert[${shipItemIterator.Value.ID}]					
 			}
 		}
 		while ${shipItemIterator:Next(exists)}
@@ -895,7 +895,7 @@ objectdef obj_Cargo
 					UI:UpdateConsole["DEBUG: ${cargoIterator.Value.Type}(${cargoIterator.Value.TypeID})"]	
 					if ${typeID} == ${cargoIterator.Value.TypeID}
 					{
-						This.CargoToTransfer:Insert[${cargoIterator.Value}]	
+						This.CargoToTransfer:Insert[${cargoIterator.Value.ID}]	
 					}
 				}
 				while ${cargoIterator:Next(exists)}
@@ -922,7 +922,7 @@ objectdef obj_Cargo
 					{
 						if ${typeID} == ${cargoIterator.Value.TypeID}
 						{
-							This.CargoToTransfer:Insert[${cargoIterator.Value}]	
+							This.CargoToTransfer:Insert[${cargoIterator.Value.ID}]	
 						}
 					}
 					while ${cargoIterator:Next(exists)}

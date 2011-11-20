@@ -599,7 +599,7 @@ objectdef obj_Agents
 							UI:UpdateConsole["obj_Agents: DEBUG: mbIterator.Value.LocationType = ${mbIterator.Value.LocationType}"]
 							if ${mbIterator.Value.LocationType.Equal["objective.source"]}
 							{
-								call Ship.WarpToBookMark ${mbIterator.Value}
+								call Ship.WarpToBookMark ${mbIterator.Value.ID}
 								return
 							}
 						}
@@ -637,7 +637,7 @@ objectdef obj_Agents
 							UI:UpdateConsole["obj_Agents: DEBUG: mbIterator.Value.LocationType = ${mbIterator.Value.LocationType}"]
 							if ${mbIterator.Value.LocationType.Equal["objective.destination"]}
 							{
-								call Ship.WarpToBookMark ${mbIterator.Value}
+								call Ship.WarpToBookMark ${mbIterator.Value.ID}
 								return
 							}
 						}

@@ -169,7 +169,7 @@ objectdef obj_Station
 					default
 						break
 					case 18
-						This.DronesInStation:Insert[${CargoIterator.Value}]
+						This.DronesInStation:Insert[${CargoIterator.Value.ID}]
 				}
 			}
 			while ${CargoIterator:Next(exists)}
@@ -294,7 +294,11 @@ objectdef obj_Station
 		variable int StationID
 		StationID:Set[${Me.StationID}]
 
+
 		UI:UpdateConsole["Undocking"]
+
+		Ship:SetType[${MyShip.ToItem.Type}]
+		Ship:SetTypeID[${MyShip.ToItem.TypeID}]
 
 		EVE:Execute[CmdExitStation]
 		wait WAIT_UNDOCK
@@ -323,8 +327,6 @@ objectdef obj_Station
 		wait 30
 
 		Ship:UpdateModuleList[]
-		Ship:SetType[${Me.ToEntity.Type}]
-		Ship:SetTypeID[${Me.ToEntity.TypeID}]
 	}
 
 }

@@ -393,7 +393,7 @@ objectdef obj_Social
 		{
 			do
 			{
-				if (${Me.ShipID} != ${PilotIterator.Value}) && \
+				if (${Me.ShipID} != ${PilotIterator.Value.ID}) && \
 					!${PilotIterator.Value.ToFleetMember} && \
 					${PilotIterator.Value.Distance} < ${Dist}
 				{

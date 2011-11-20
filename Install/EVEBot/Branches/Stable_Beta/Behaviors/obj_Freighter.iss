@@ -401,11 +401,11 @@ objectdef obj_Freighter
 						UI:UpdateConsole["Label ${bm_iterator.Value.Label} exists more than once."]
 						UI:UpdateConsole["Freighter will visit stations with the same bookmark label in a"]
 						UI:UpdateConsole["random order.  Try to use unique bookmark labels in the future."]
-						bm_collection:Set["${bm_iterator.Value.Label}_${Math.Rand[5000]:Inc[1000]}",${bm_iterator.Value}]
+						bm_collection:Set["${bm_iterator.Value.Label}_${Math.Rand[5000]:Inc[1000]}",${bm_iterator.Value.ID}]
 					}
 					else
 					{
-						bm_collection:Set[${bm_iterator.Value.Label},${bm_iterator.Value}]
+						bm_collection:Set[${bm_iterator.Value.Label},${bm_iterator.Value.ID}]
 					}
 				}
 			}

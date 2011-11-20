@@ -238,7 +238,7 @@ objectdef obj_Asteroids
 				do
 				{
 
-					This.BestAsteroidList:Insert[${AsteroidIterator.Value}]
+					This.BestAsteroidList:Insert[${AsteroidIterator.Value.ID}]
 				}
 				while ${This.Asteroidlist:Next(exists)}
 
@@ -348,7 +348,7 @@ objectdef obj_Asteroids
 		{
 			do
 			{
-				if ${Entity[${AsteroidIterator.Value}](exists)} && \
+				if ${Entity[${AsteroidIterator.Value.ID}](exists)} && \
 					!${AsteroidIterator.Value.IsLockedTarget} && \
 					!${AsteroidIterator.Value.BeingTargeted} && \
 					${AsteroidIterator.Value.Distance} < ${Me.Ship.MaxTargetRange} && \
@@ -360,7 +360,7 @@ objectdef obj_Asteroids
 			while ${AsteroidIterator:Next(exists)}
 
 			if ${AsteroidIterator.Value(exists)} && \
-				${Entity[${AsteroidIterator.Value}](exists)}
+				${Entity[${AsteroidIterator.Value.ID}](exists)}
 			{
 				if ${AsteroidIterator.Value.IsLockedTarget} || \
 					${AsteroidIterator.Value.BeingTargeted}
@@ -401,7 +401,7 @@ objectdef obj_Asteroids
 						if ${AsteroidIterator.Value.Distance} < ${This.MaxDistanceToAsteroid}
 						{
 							UI:UpdateConsole["obj_Asteroids: TargetNext: No Asteroids in range & All lasers idle: Approaching nearest"]
-							call Ship.Approach ${AsteroidIterator.Value} ${Ship.OptimalMiningRange}
+							call Ship.Approach ${AsteroidIterator.Value.ID} ${Ship.OptimalMiningRange}
 						}
 						else
 						{

@@ -300,7 +300,7 @@ objectdef obj_Targets
 		if ${PriorityTarget:First(exists)}
 		do
 		{
-			if ${name.Find[${PriorityTarget.Value}]} > 0
+			if ${name.Find[${PriorityTarget.Value.ID}]} > 0
 			{
 				return TRUE
 			}
@@ -316,7 +316,7 @@ objectdef obj_Targets
 			if ${SpecialTarget:First(exists)}
 			do
 			{
-				if ${name.Find[${SpecialTarget.Value}]} > 0
+				if ${name.Find[${SpecialTarget.Value.ID}]} > 0
 				{
 					return TRUE
 				}
@@ -655,7 +655,7 @@ objectdef obj_Targets
 		{
 			if ${tgtIterator.Value.Owner.CharID} != ${Me.CharID}
 			{	/* A player is already present here ! */
-				UI:UpdateConsole["Player found ${tgtIterator.Value.Owner} ${tgtIterator.Value.Owner.CharID} ${tgtIterator.Value}"]
+				UI:UpdateConsole["Player found ${tgtIterator.Value.Owner} ${tgtIterator.Value.Owner.CharID} ${tgtIterator.Value.ID}"]
 				return TRUE
 			}
 		}
