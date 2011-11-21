@@ -280,7 +280,7 @@ objectdef obj_Asteroids
 			This.AsteroidList:Clear
 			do
 			{
-				EVE:QueryEntities[asteroid_index,CategoryID, "CategoryID = ${This.AsteroidCategoryID} && Name =- ${This.OreTypeIterator.Key}"]
+				EVE:QueryEntities[asteroid_index, "CategoryID = ${This.AsteroidCategoryID} && Name =- \"${This.OreTypeIterator.Key}\""]
 				asteroid_index:GetIterator[asteroid_iterator]
 				if ${asteroid_iterator:First(exists)}
 				{
