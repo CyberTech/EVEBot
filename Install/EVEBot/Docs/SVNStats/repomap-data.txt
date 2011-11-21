@@ -27,7 +27,7 @@
                 <leaf><label>obj_Assets.iss</label><weight>122</weight><value>0.0</value></leaf>
                 <leaf><label>obj_Asteroids.iss</label><weight>436</weight><value>0.0</value></leaf>
                 <leaf><label>obj_Autopilot.iss</label><weight>97</weight><value>0.0</value></leaf>
-                <leaf><label>obj_Belts.iss</label><weight>106</weight><value>0.0</value></leaf>
+                <leaf><label>obj_Belts.iss</label><weight>107</weight><value>0.9345794392523363</value></leaf>
                 <leaf><label>obj_Bookmarks.iss</label><weight>96</weight><value>0.0</value></leaf>
                 <leaf><label>obj_Cargo.iss</label><weight>978</weight><value>0.0</value></leaf>
                 <leaf><label>obj_Combat.iss</label><weight>373</weight><value>0.8042895442359249</value></leaf>
