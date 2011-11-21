@@ -69,13 +69,14 @@ objectdef obj_Ship
 	{
 		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-			if !${Me.InStation}
+			if !${Me.InStation} && ${Me.InSpace}
 			{
 				This:ValidateModuleTargets
 
 				if ${RetryUpdateModuleList} == 10
 				{
-					UI:UpdateConsole["ERROR: obj_Ship:UpdateModuleList - No modules found. Pausing - If this ship has slots, you must have at least one module equipped, of any type.", LOG_CRITICAL]
+					UI:UpdateConsole["ERROR: obj_Ship:UpdateModuleList - No modules found. Pausing.", LOG_CRITICAL]
+					UI:UpdateConsole["ERROR: obj_Ship:UpdateModuleList - If this ship has slots, you must have at least one module equipped, of any type.", LOG_CRITICAL]
 					RetryUpdateModuleList:Set[0]
 					EVEBot:Pause
 				}

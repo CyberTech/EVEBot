@@ -49,7 +49,7 @@ objectdef obj_Skills
 		    	; mode, since that iterates the entire skill list and is slow.
 		    	if !${Config.Common.TrainFastest} || !${Me.SkillCurrentlyTraining(exists)}
 		    	{
-					if !${This.NextSkill.Equal[None]} && \
+					if ${This.NextSkill.NotEqual[None]} && \
 						!${Me.Skill[${This.NextSkill}].IsTraining}
 					{
 						Me:GetSkills[This.OwnedSkills]
@@ -205,7 +205,6 @@ objectdef obj_Skills
 	{
 		if ${SkillName.Length} > 0
 		{
-			/* TODO - this randomly fails for a skill that's being trained.  Amadeus informed */
 			if ${Me.Skill[${SkillName}](exists)} && ${Me.Skill[${SkillName}].IsTraining}
 			{
 				return TRUE
@@ -217,17 +216,9 @@ objectdef obj_Skills
 		}
 		else
 		{
-			variable int i
-			variable index:skill SkillList
-			if ${Me:GetSkills[SkillList]}
+			if ${Me.SkillCurrentlyTraining(exists)}
 			{
-				for (i:Set[1] ; ${i} <= ${SkillList.Used} ; i:Inc)
-				{
-					if ${SkillList[${i}].IsTraining}
-					{
-						return TRUE
-					}
-				}
+				return TRUE
 			}
 		}
 		return FALSE
