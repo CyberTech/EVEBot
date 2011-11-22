@@ -216,6 +216,10 @@ objectdef obj_Asteroids
 			}
 
 			UI:UpdateConsole["ERROR: OBJ_Asteroids:MoveToField: No asteroid belts in the area...", LOG_CRITICAL]
+			#if EVEBOT_DEBUG
+			UI:UpdateConsole["OBJ_Asteroids:MoveToField: Total Entities: ${EVE.EntitiesCount}", LOG_DEBUG]
+			UI:UpdateConsole["OBJ_Asteroids:MoveToField: Size of Belts List ${Belts.Used}", LOG_DEBUG]
+			#endif
 			EVEBot.ReturnToStation:Set[TRUE]
 			return
 		}
