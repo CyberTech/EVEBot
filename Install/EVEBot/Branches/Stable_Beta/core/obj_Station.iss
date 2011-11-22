@@ -210,9 +210,6 @@ objectdef obj_Station
 
 		UI:UpdateConsole["Docking at ${EVE.GetLocationNameByID[${StationID}]}"]
 
-		Ship:SetType[${Me.ToEntity.Type}]
-		Ship:SetTypeID[${Me.ToEntity.TypeID}]
-
 		if ${Entity[${StationID}](exists)}
 		{
 			if ${Entity[${StationID}].Distance} > WARP_RANGE
@@ -263,22 +260,18 @@ objectdef obj_Station
 
 	function Dock()
 	{
-		variable int Counter = 0
 		variable int64 StationID = ${Entity["CategoryID = 3 && Name = ${Config.Common.HomeStation}"].ID}
 
-		UI:UpdateConsole["Docking at ${StationID}:${Config.Common.HomeStation}"]
-
-		Ship:SetType[${Me.ToEntity.Type}]
-		Ship:SetTypeID[${Me.ToEntity.TypeID}]
-
+		UI:UpdateConsole["Docking - Trying Home station..."]
 		if ${StationID} <= 0 || !${Entity[${StationID}](exists)}
 		{
-			UI:UpdateConsole["Warning: Home station not found, going to nearest base", LOG_CRITICAL]
+			UI:UpdateConsole["Warning: Home station not found, finding nearest station"]
 			StationID:Set[${Entity["CategoryID = 3"].ID}]
 		}
 
 		if ${Entity[${StationID}](exists)}
 		{
+			UI:UpdateConsole["Docking at ${StationID}:${Entity[${StationID}].Name}"]
 			call This.DockAtStation ${StationID}
 		}
 		else
@@ -294,11 +287,8 @@ objectdef obj_Station
 		variable int StationID
 		StationID:Set[${Me.StationID}]
 
-
-		UI:UpdateConsole["Undocking"]
-
-		Ship:SetType[${MyShip.ToItem.Type}]
-		Ship:SetTypeID[${MyShip.ToItem.TypeID}]
+		UI:UpdateConsole["Undocking from ${Me.Station.Name}"]
+		Config.Common:SetHomeStation[${Me.Station.Name}]
 
 		EVE:Execute[CmdExitStation]
 		wait WAIT_UNDOCK

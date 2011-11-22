@@ -298,12 +298,12 @@ objectdef obj_Ship
 	member:float MaxTargetRange()
 	{
 		variable float CurrentTargetRange = ${MyShip.MaxTargetRange}
-		
+
 		if ${This.m_MaxTargetRange.Centi} < ${CurrentTargetRange.Centi}
 		{
 			This.m_MaxTargetRange:Set[${CurrentTargetRange}]
 		}
-			
+
 		return ${CurrentTargetRange}
 	}
 
@@ -2227,7 +2227,7 @@ objectdef obj_Ship
 					{
 						CurrentCharges:Set[${ModuleIter.Value.Charge.Quantity}]
 					}
-					
+
 					if ${CurrentCharges} != ${ModuleIter.Value.MaxCharges}
 					{
 						;UI:UpdateConsole["ModuleIter.Value.CurrentCharges = ${ModuleIter.Value.CurrentCharges}"]
@@ -2259,7 +2259,7 @@ objectdef obj_Ship
 	{
 		if ${Station.Docked}
 		{
-			return ${This.m_Type}
+			return ${MyShip.ToItem.Type}
 		}
 		else
 		{
@@ -2267,28 +2267,16 @@ objectdef obj_Ship
 		}
 	}
 
-	method SetType(string typeString)
-	{
-		UI:UpdateConsole["obj_Ship: DEBUG: Setting ship type to ${typeString}"]
-		This.m_Type:Set[${typeString}]
-	}
-
 	member:int TypeID()
 	{
 		if ${Station.Docked}
 		{
-			return ${This.m_TypeID}
+			return ${MyShip.ToItem.TypeID}
 		}
 		else
 		{
 			return ${Me.ToEntity.TypeID}
 		}
-	}
-
-	method SetTypeID(int typeID)
-	{
-		UI:UpdateConsole["obj_Ship: DEBUG: Setting ship type ID to ${typeID}"]
-		This.m_TypeID:Set[${typeID}]
 	}
 
 	function ActivateShip(string name)
@@ -2313,9 +2301,6 @@ objectdef obj_Ship
 						{
 							UI:UpdateConsole["obj_Ship: Switching to ship named ${hsIterator.Value.GivenName}."]
 							hsIterator.Value:MakeActive
-							wait 10
-							This:SetType[${hsIterator.Value.Type}]
-							This:SetTypeID[${hsIterator.Value.TypeID}]
 							break
 						}
 					}
