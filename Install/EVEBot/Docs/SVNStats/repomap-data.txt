@@ -25,7 +25,7 @@
                 <label>core</label>
                 <leaf><label>obj_Agents.iss</label><weight>1321</weight><value>0.0</value></leaf>
                 <leaf><label>obj_Assets.iss</label><weight>122</weight><value>0.0</value></leaf>
-                <leaf><label>obj_Asteroids.iss</label><weight>436</weight><value>0.0</value></leaf>
+                <leaf><label>obj_Asteroids.iss</label><weight>440</weight><value>0.9090909090909091</value></leaf>
                 <leaf><label>obj_Autopilot.iss</label><weight>97</weight><value>0.0</value></leaf>
                 <leaf><label>obj_Belts.iss</label><weight>107</weight><value>0.9345794392523363</value></leaf>
                 <leaf><label>obj_Bookmarks.iss</label><weight>96</weight><value>0.0</value></leaf>
@@ -40,11 +40,11 @@
                 <leaf><label>obj_Market.iss</label><weight>425</weight><value>0.0</value></leaf>
                 <leaf><label>obj_Missions.iss</label><weight>926</weight><value>0.0</value></leaf>
                 <leaf><label>obj_Safespots.iss</label><weight>112</weight><value>0.0</value></leaf>
-                <leaf><label>obj_Ship.iss</label><weight>2327</weight><value>0.3867640739149119</value></leaf>
+                <leaf><label>obj_Ship.iss</label><weight>2312</weight><value>-0.25951557093425603</value></leaf>
                 <leaf><label>obj_Skills.iss</label><weight>276</weight><value>-3.260869565217391</value></leaf>
                 <leaf><label>obj_Social.iss</label><weight>455</weight><value>0.0</value></leaf>
                 <leaf><label>obj_Sound.iss</label><weight>63</weight><value>0.0</value></leaf>
-                <leaf><label>obj_Station.iss</label><weight>332</weight><value>0.6024096385542169</value></leaf>
+                <leaf><label>obj_Station.iss</label><weight>322</weight><value>-2.484472049689441</value></leaf>
                 <leaf><label>obj_Targets.iss</label><weight>702</weight><value>0.0</value></leaf>
             </branch>
 
