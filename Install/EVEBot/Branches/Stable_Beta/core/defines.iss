@@ -18,7 +18,7 @@ variable string APP_MANIFEST_TRUNK = "https://www.isxgames.com/EVEBot/Trunk/EVEb
 variable string AppVersion = "${APP_NAME} Version ${SVN_REVISION.Token[2, " "]}"
 variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 
-#define EVEBOT_DEBUG 0
+#define EVEBOT_DEBUG 1
 
 ; Do not set this to 1 unless you have downloaded and installed the ISXIM
 ; extension from http://www.isxgames.com/forums/showthread.php?t=3829
