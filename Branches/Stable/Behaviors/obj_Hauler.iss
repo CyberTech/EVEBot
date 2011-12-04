@@ -611,7 +611,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 			Prefix:Set["${Config.Labels.SafeSpotPrefix}"]
 
 			variable string Label
-			Label:Set["${SafeSpots.Get[${idx}].Label}"]
+			Label:Set["${SafeSpots.Get[${idx}].Label.Escape}"]
 			if ${Label.Left[${Prefix.Length}].NotEqual[${Prefix}]}
 			{
 				SafeSpots:Remove[${idx}]
