@@ -23,6 +23,7 @@
 
             <branch>
                 <label>core</label>
+                <leaf><label>defines.iss</label><weight>551</weight><value>0.0</value></leaf>
                 <leaf><label>obj_Agents.iss</label><weight>1321</weight><value>0.0</value></leaf>
                 <leaf><label>obj_Assets.iss</label><weight>122</weight><value>0.0</value></leaf>
                 <leaf><label>obj_Asteroids.iss</label><weight>440</weight><value>0.9090909090909091</value></leaf>
@@ -129,7 +130,7 @@
           <leaf><label>EVEBot.iss</label><weight>133</weight><value>0.0</value></leaf>
           <leaf><label>EVECallback.iss</label><weight>45</weight><value>0.0</value></leaf>
           <leaf><label>EVEWatcher.iss</label><weight>265</weight><value>0.0</value></leaf>
-          <leaf><label>Launcher.iss</label><weight>167</weight><value>9.580838323353294</value></leaf>
+          <leaf><label>Launcher.iss</label><weight>167</weight><value>0.0</value></leaf>
       </branch>
         <leaf><label>Installation.txt</label><weight>9</weight><value>0.0</value></leaf>
     </branch>
@@ -330,7 +331,7 @@
             <label>test</label>
             <leaf><label>events.iss</label><weight>38</weight><value>0.0</value></leaf>
         </branch>
-          <leaf><label>EVEBot.iss</label><weight>187</weight><value>0.0</value></leaf>
+          <leaf><label>EVEBot.iss</label><weight>200</weight><value>6.5</value></leaf>
           <leaf><label>EveBots.iss</label><weight>265</weight><value>0.0</value></leaf>
           <leaf><label>EveCallback.iss</label><weight>45</weight><value>0.0</value></leaf>
           <leaf><label>Launcher.iss</label><weight>102</weight><value>0.0</value></leaf>
