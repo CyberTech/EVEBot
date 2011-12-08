@@ -43,7 +43,6 @@
 	{
 		echo "Moving ID: ${CargoIterator.Value} ${CargoIterator.Value.ID} Count: ${CargoIterator.Value.Quantity}"
 		CargoIterator.Value:MoveTo[MyShip, ${CargoIterator.Value.Quantity}]
-		wait 50
 	}
 	while ${CargoIterator:Next(exists)}
 }
