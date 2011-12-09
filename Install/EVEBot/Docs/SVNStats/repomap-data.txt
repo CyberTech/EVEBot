@@ -69,7 +69,7 @@
             <label>Support</label>
             <leaf><label>TestAPI.iss</label><weight>66</weight><value>0.0</value></leaf>
             <leaf><label>obj_Configuration.iss</label><weight>147</weight><value>0.0</value></leaf>
-            <leaf><label>obj_LoginHandler.iss</label><weight>272</weight><value>0.3676470588235294</value></leaf>
+            <leaf><label>obj_LoginHandler.iss</label><weight>272</weight><value>0.0</value></leaf>
         </branch>
 
         <branch>
@@ -85,6 +85,7 @@
           <branch>
               <label>ISXEVE</label>
               <leaf><label>EVE_GetAgentMissions.iss</label><weight>20</weight><value>0.0</value></leaf>
+              <leaf><label>EVE_GetBookMarks.iss</label><weight>22</weight><value>100.0</value></leaf>
               <leaf><label>Me_GetAttackers.iss</label><weight>19</weight><value>0.0</value></leaf>
               <leaf><label>Me_GetJammers.iss</label><weight>19</weight><value>0.0</value></leaf>
               <leaf><label>Me_GetTargetedBy.iss</label><weight>19</weight><value>0.0</value></leaf>
@@ -96,7 +97,7 @@
               <leaf><label>test_DoGetActiveDrones.iss</label><weight>18</weight><value>0.0</value></leaf>
               <leaf><label>test_DoGetAgents.iss</label><weight>21</weight><value>0.0</value></leaf>
               <leaf><label>test_DoGetAvailableAmmo.iss</label><weight>62</weight><value>0.0</value></leaf>
-              <leaf><label>test_DoGetBookmarks.iss</label><weight>22</weight><value>0.0</value></leaf>
+              <leaf><label>test_DoGetBookmarks.iss</label><weight>31</weight><value>29.03225806451613</value></leaf>
               <leaf><label>test_DoGetBuddies.iss</label><weight>22</weight><value>0.0</value></leaf>
               <leaf><label>test_DoGetFleet.iss</label><weight>161</weight><value>0.0</value></leaf>
               <leaf><label>test_DoGetPilots.iss</label><weight>22</weight><value>0.0</value></leaf>
@@ -109,7 +110,7 @@
               <leaf><label>test_EVE.QueryEntities2.iss</label><weight>71</weight><value>0.0</value></leaf>
               <leaf><label>test_EVE_GetCachedEntities.iss</label><weight>29</weight><value>0.0</value></leaf>
               <leaf><label>test_Item.MoveTo_Hangar.iss</label><weight>48</weight><value>0.0</value></leaf>
-              <leaf><label>test_Item.MoveTo_Myship.iss</label><weight>49</weight><value>0.0</value></leaf>
+              <leaf><label>test_Item.MoveTo_Myship.iss</label><weight>48</weight><value>-2.083333333333333</value></leaf>
               <leaf><label>test_Item_GetInsuranceQuotes.iss</label><weight>51</weight><value>0.0</value></leaf>
               <leaf><label>test_Item_Insure.iss</label><weight>48</weight><value>0.0</value></leaf>
               <leaf><label>test_Me.DoGetAttackers.iss</label><weight>21</weight><value>0.0</value></leaf>
@@ -290,7 +291,7 @@
             <leaf><label>TestAPI.iss</label><weight>61</weight><value>0.0</value></leaf>
             <leaf><label>obj_AutoPatcher.iss</label><weight>75</weight><value>0.0</value></leaf>
             <leaf><label>obj_Configuration.iss</label><weight>178</weight><value>0.0</value></leaf>
-            <leaf><label>obj_LoginHandler.iss</label><weight>262</weight><value>0.38167938931297707</value></leaf>
+            <leaf><label>obj_LoginHandler.iss</label><weight>262</weight><value>0.0</value></leaf>
         </branch>
 
         <branch>
