@@ -316,7 +316,7 @@ objectdef obj_Targets
 			if ${SpecialTarget:First(exists)}
 			do
 			{
-				if ${name.Find[${SpecialTarget.Value.ID}]} > 0
+				if ${name.Find[${SpecialTarget.Value}]} > 0
 				{
 					return TRUE
 				}
