@@ -300,7 +300,7 @@ objectdef obj_Targets
 		if ${PriorityTarget:First(exists)}
 		do
 		{
-			if ${name.Find[${PriorityTarget.Value.ID}]} > 0
+			if ${name.Find[${PriorityTarget.Value}]} > 0
 			{
 				return TRUE
 			}
