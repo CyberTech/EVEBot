@@ -31,7 +31,7 @@
                 <leaf><label>obj_Belts.iss</label><weight>107</weight><value>0.9345794392523363</value></leaf>
                 <leaf><label>obj_Bookmarks.iss</label><weight>96</weight><value>0.0</value></leaf>
                 <leaf><label>obj_Cargo.iss</label><weight>978</weight><value>0.0</value></leaf>
-                <leaf><label>obj_Combat.iss</label><weight>373</weight><value>0.8042895442359249</value></leaf>
+                <leaf><label>obj_Combat.iss</label><weight>373</weight><value>0.0</value></leaf>
                 <leaf><label>obj_Configuration.iss</label><weight>1549</weight><value>0.0</value></leaf>
                 <leaf><label>obj_Drones.iss</label><weight>224</weight><value>0.0</value></leaf>
                 <leaf><label>obj_EVEBot.iss</label><weight>194</weight><value>0.0</value></leaf>
@@ -41,7 +41,7 @@
                 <leaf><label>obj_Market.iss</label><weight>425</weight><value>0.0</value></leaf>
                 <leaf><label>obj_Missions.iss</label><weight>926</weight><value>0.0</value></leaf>
                 <leaf><label>obj_Safespots.iss</label><weight>112</weight><value>0.0</value></leaf>
-                <leaf><label>obj_Ship.iss</label><weight>2312</weight><value>-0.25951557093425603</value></leaf>
+                <leaf><label>obj_Ship.iss</label><weight>2312</weight><value>-0.6055363321799307</value></leaf>
                 <leaf><label>obj_Skills.iss</label><weight>276</weight><value>-3.260869565217391</value></leaf>
                 <leaf><label>obj_Social.iss</label><weight>455</weight><value>0.0</value></leaf>
                 <leaf><label>obj_Sound.iss</label><weight>63</weight><value>0.0</value></leaf>
@@ -304,7 +304,7 @@
             <leaf><label>obj_Belts.iss</label><weight>105</weight><value>0.0</value></leaf>
             <leaf><label>obj_Bookmarks.iss</label><weight>96</weight><value>0.0</value></leaf>
             <leaf><label>obj_Cargo.iss</label><weight>978</weight><value>0.0</value></leaf>
-            <leaf><label>obj_Combat.iss</label><weight>373</weight><value>0.8042895442359249</value></leaf>
+            <leaf><label>obj_Combat.iss</label><weight>373</weight><value>0.0</value></leaf>
             <leaf><label>obj_Configuration.iss</label><weight>1549</weight><value>0.0</value></leaf>
             <leaf><label>obj_Drones.iss</label><weight>221</weight><value>0.0</value></leaf>
             <leaf><label>obj_EVEBot.iss</label><weight>194</weight><value>0.0</value></leaf>
