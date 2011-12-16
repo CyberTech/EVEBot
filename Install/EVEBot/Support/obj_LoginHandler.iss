@@ -129,7 +129,7 @@ objectdef obj_LoginHandler
 				}
 
 				EVE:CloseAllMessageBoxes
-		
+
 				if ${Login(exists)}
 				{
 					This.CurrentState:Set["SERVERDOWN"]
@@ -149,7 +149,7 @@ objectdef obj_LoginHandler
 				}
 			case SERVERDOWN
 				UI:UpdateConsole["DEBUG: Server Status: ${Login.ServerStatus}", LOG_DEBUG]
-				if ${Login.ServerStatus.Equal["OK"]}
+				if ${Login.ServerStatus.Equal["OK"]} || ${Login.ServerStatus.Equal[" OK"]}
 				{
 					This.CurrentState:Set["SERVERUP"]
 				}
@@ -182,7 +182,7 @@ objectdef obj_LoginHandler
 						This.LoginTimer:Set[50]
 						break
 					}
-				
+
 					if ${EVEWindow[ByName,modal].Text.Find["Account subscription expired"](exists)}
 					{
 						echo " "
