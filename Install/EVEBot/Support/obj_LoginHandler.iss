@@ -111,7 +111,30 @@ objectdef obj_LoginHandler
 			UI:UpdateConsole["Login:LoadExtension: Loading extension ${EXTNAME} timed out, retrying"]
 		}
 		while (!${${EXTNAME}(exists)})
-	 }
+	}
+	
+	function Load_isxStealth()
+	{
+		variable int Timer = 0
+		variable string EXTNAME = "ISXSTEALTH"
+		extension -unload ${EXTNAME}
+		wait 20
+		extension ${EXTNAME}
+		wait 100
+		BlockMiniDump true;
+		StealthModule isxstealth.dll
+		StealthModule isxeve.dll
+		StealthModule innerspace.dll
+		StealthModule lavish.dll
+		StealthModule is-kernel.dll
+		StealthModule isui.dll
+		StealthModule is-d3d9.dll
+		StealthModule is-d3d8.dll
+		StealthModule is-d3d11.dll
+		StealthModule is-virtualinput.dll
+		StealthModule lavish.lavishvmruntime.dll
+		StealthModule lavish.innerspace.dll
+	}
 
 	method DoLogin()
 	{

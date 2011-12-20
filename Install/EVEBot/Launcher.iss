@@ -41,6 +41,13 @@ function main(string unchar="", string StartBot=FALSE)
 
 	wait 200 ${ISXEVE.IsReady}
 
+	if !${ISXSTEALTH(exists)}
+	{
+		call LoginHandler.Load_isxStealth
+	}
+
+	wait 200 ${ISXSTEALTH.IsReady}
+	
 	if !${unchar.Equal[""]}
 	{
 		BaseConfig:ChangeConfig[${unchar}]
