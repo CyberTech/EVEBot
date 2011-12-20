@@ -79,7 +79,7 @@ objectdef obj_Targets
 
 	variable index:string SpecialTargets
 	variable iterator SpecialTarget
-	
+
 	variable index:string SpecialTargetsToLoot
 	variable iterator SpecialTargetToLoot
 
@@ -290,19 +290,19 @@ objectdef obj_Targets
 		SpecialTargetsToLoot:Insert["Shadow Serpentis"]
 		SpecialTargetsToLoot:Insert["True Sansha"]
 		SpecialTargetsToLoot:Insert["Dark Blood"]
-		
+
 		; Asteroid Serpentis Officers
 		SpecialTargetsToLoot:Insert["Brynn Jerdola"]
 		SpecialTargetsToLoot:Insert["Cormack Vaaja"]
 		SpecialTargetsToLoot:Insert["Setele Schellan"]
 		SpecialTargetsToLoot:Insert["Tuvan Orth"]
-		
+
 		; Asteroid Guristas Officers
 		SpecialTargetsToLoot:Insert["Estamel Tharchon"]
 		SpecialTargetsToLoot:Insert["Kaikka Peunato"]
 		SpecialTargetsToLoot:Insert["Thon Eney"]
 		SpecialTargetsToLoot:Insert["Vepas Minimala"]
-		
+
 		; Get the iterators
 		PriorityTargets:GetIterator[PriorityTarget]
 		ChainTargets:GetIterator[ChainTarget]
@@ -356,7 +356,7 @@ objectdef obj_Targets
 
 			return FALSE
 	}
-	
+
 	member:bool IsSpecialTargetToLoot(string name)
 	{
 			; Loop through the special targets
@@ -449,7 +449,7 @@ objectdef obj_Targets
 			pos:Set[1]
         	while ${NPCGroup.Token[${pos}, " "](exists)}
         	{
-				echo ${NPCGroup.Token[${pos}, " "]}
+				;echo ${NPCGroup.Token[${pos}, " "]}
         		NPCShipType:Set[${NPCGroup.Token[${pos}, " "]}]
         		pos:Inc
         	}
