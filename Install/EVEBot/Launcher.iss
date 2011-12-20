@@ -43,10 +43,10 @@ function main(string unchar="", string StartBot=FALSE)
 
 	if !${ISXSTEALTH(exists)}
 	{
-		call LoginHandler.Load_isxStealth
+		;call LoginHandler.Load_isxStealth
 	}
 
-	wait 200 ${ISXSTEALTH.IsReady}
+	;wait 200 ${ISXSTEALTH.IsReady}
 	
 	if !${unchar.Equal[""]}
 	{

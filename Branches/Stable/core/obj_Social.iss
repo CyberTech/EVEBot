@@ -143,7 +143,8 @@ objectdef obj_Social
 				This.EntityIndex:Clear
 			}
 
-    		SystemSafe:Set[${Math.Calc[${This.CheckLocalWhiteList} & ${This.CheckLocalBlackList}].Int(bool)}]
+    		;SystemSafe:Set[${Math.Calc[${This.CheckLocalWhiteList} & ${This.CheckLocalBlackList}].Int(bool)}]
+			SystemSafe:Set[${This.CheckStanding}]
 
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
@@ -200,6 +201,39 @@ objectdef obj_Social
 				!${This.PilotWhiteList.Contains[${PilotID}]}
 			{
 				UI:UpdateConsole["Alert: Non-Whitelisted Pilot: ${PilotName}: CharID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_CRITICAL]
+				return FALSE
+			}
+		}
+		while ${PilotIterator:Next(exists)}
+		return TRUE
+	}
+	
+	member:bool CheckStanding()
+	{
+		variable iterator PilotIterator
+		variable int CorpID
+		variable int AllianceID
+		variable int PilotID
+		variable string PilotName
+
+
+		if ${This.PilotIndex.Used} < 2
+		{
+			return TRUE
+		}
+
+		This.PilotIndex:GetIterator[PilotIterator]
+		if ${PilotIterator:First(exists)}
+		do
+		{
+			CorpID:Set[${PilotIterator.Value.CorporationID}]
+			AllianceID:Set[${PilotIterator.Value.AllianceID}]
+			PilotID:Set[${PilotIterator.Value.CharID}]
+			PilotName:Set[${PilotIterator.Value.Name}]
+
+			if ${PilotIterator.Value.Standing.AllianceToAlliance} <= 0 && ${Me.AllianceID} != ${AllianceID} && ${PilotIterator.Value.Standing.AllianceToCorp} <=0 && ${PilotID} != -1
+			{
+				UI:UpdateConsole["Alert: Bad Standing Pilot: ${PilotName}: CharID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_CRITICAL]
 				return FALSE
 			}
 		}
