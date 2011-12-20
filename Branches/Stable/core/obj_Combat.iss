@@ -102,7 +102,6 @@ objectdef obj_Combat
 	{
 		if ${EVEBot.Paused}
 		{
-			This.ManageTank
 			return
 		}
 
@@ -172,7 +171,7 @@ objectdef obj_Combat
 				call This.Flee
 				return
 			}
-			if (!${Ship.IsAmmoAvailable} && ${Config.Combat.RunOnLowAmmo})
+			elseif (!${Ship.IsAmmoAvailable} && ${Config.Combat.RunOnLowAmmo})
 			{
 				UI:UpdateConsole["Debug: Fleeing: Low ammo"]
 				; TODO - what to do about being warp scrambled in this case?
@@ -182,7 +181,7 @@ objectdef obj_Combat
 			call This.ManageTank
 		}
 
-		;UI:UpdateConsole["Debug: Combat: This.Fled = ${This.Fled} This.CurrentState = ${This.CurrentState} Social.IsSafe = ${Social.IsSafe}"]
+		UI:UpdateConsole["Debug: Combat: This.Fled = ${This.Fled} This.CurrentState = ${This.CurrentState} Social.IsSafe = ${Social.IsSafe}"]
 
 		switch ${This.CurrentState}
 		{
@@ -215,9 +214,7 @@ objectdef obj_Combat
 
 		; Reload the weapons -if- ammo is below 30% and they arent firing
 		Ship:Reload_Weapons[FALSE]
-		Ship:Activate_ECCM
-		;Me.ActiveTarget:Orbit[40000]
-		;Ship:Activate_AfterBurner
+
 		; Activate the weapons, the modules class checks if there's a target (no it doesn't - ct)
 		Ship:Activate_TargetPainters
 		Ship:Activate_StasisWebs
@@ -234,77 +231,6 @@ objectdef obj_Combat
 		if ${Config.Combat.RunToStation}
 		{
 			call This.FleeToStation
-		}
-		
-		elseif (!${Ship.IsAmmoAvailable} && ${Config.Combat.RunOnLowAmmo})
-		{
-			variable int QuantityToMove 
-			variable index:item ContainerItems
-			variable iterator CargoIterator
-			call Ship.WarpToBookMarkName "AMMO"
-			UI:UpdateConsole["Restocking ammo"]
-			
-			if ${Entity[TypeID,17621].ID} != NULL
-			{
-				UI:UpdateConsole["Restocking from ${Entity[TypeID,17621]} (${Entity[TypeID,17621].ID})"]
-				call Ship.Approach ${Entity[TypeID,17621].ID} 2000
-				call Ship.OpenCargo
-				Entity[${Entity[TypeID,17621].ID}]:OpenCargo			
-				Entity[${Entity[TypeID,17621].ID}]:DoGetCargo[ContainerItems]
-			}
-			else
-			{
-				UI:UpdateConsole["Restocking from ${Entity[GroupID,340]} (${Entity[GroupID,340].ID})"]
-				call Ship.Approach ${Entity[GroupID,340].ID} 2000
-				call Ship.OpenCargo
-				Entity[${Entity[GroupID,340].ID}]:OpenCargo			
-				Entity[${Entity[GroupID,340].ID}]:DoGetCargo[ContainerItems]
-			}
-			
-			ContainerItems:GetIterator[CargoIterator]
-			
-			
-			
-		if ${CargoIterator:First(exists)}
-		{
-			do
-			{
-				if ${CargoIterator.Value.TypeID} == 2629 || ${CargoIterator.Value.TypeID} == 209
-				{
-					if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${Ship.CargoFreeSpace}
-					{
-						/* Move only what will fit, minus 1 to account for CCP rounding errors. 3000 to leave space for faction loot */
-						QuantityToMove:Set[${Ship.CargoFreeSpace} / ${CargoIterator.Value.Volume} - 3000]
-					}
-					else
-					{
-						QuantityToMove:Set[${CargoIterator.Value.Quantity}]
-					}
-
-					UI:UpdateConsole["TransferListToShip: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
-					UI:UpdateConsole["TransferListToShip: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
-					if ${QuantityToMove} > 0
-					{
-						CargoIterator.Value:MoveTo[MyShip,${QuantityToMove}]
-						wait 30
-					}
-									
-					if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
-					{
-						UI:UpdateConsole["DEBUG: TransferListToShip: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
-						break
-					}
-					Me.Ship:StackAllCargo
-				}
-			}
-			while ${CargoIterator:Next(exists)}
-			wait 10
-		}
-		else
-		{
-			UI:UpdateConsole["DEBUG: obj_Cargo:TransferListToShip: Nothing found to move"]
-		}
-			
 		}
 		else
 		{
