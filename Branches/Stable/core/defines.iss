@@ -116,7 +116,7 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 
 #define CATEGORYID_CELESTIAL	2
 #define CATEGORYID_STATION 		3
-#define CATEGORYID_MINERAL ``		4
+#define CATEGORYID_MINERAL 		4
 #define CATEGORYID_SHIP    		6
 #define CATEGORYID_CHARGE  		8
 #define CATEGORYID_ENTITY		11
