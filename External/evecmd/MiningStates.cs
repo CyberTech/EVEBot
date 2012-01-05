@@ -132,7 +132,7 @@ namespace evecmd
         int laser_count = -1;
         double max_range = -1;
         DateTime do_nothing_until, dont_cycle_until;
-        Dictionary<int, DateTime> start_times = new Dictionary<int, DateTime>();
+        Dictionary<long, DateTime> start_times = new Dictionary<long, DateTime>();
         public override bool OnFrameImpl()
         {
             if (DateTime.Now < do_nothing_until)
@@ -176,7 +176,7 @@ namespace evecmd
                 return false;
             }
 
-            List<Entity> roids = g.eve.GetEntities("CategoryID", "25", "Radius", max_range.ToString());
+            List<Entity> roids = g.eve.QueryEntities("CategoryID = 25 && Radius = {0}".Format(max_range));
             List<Entity> locked = new List<Entity>();
             List<Entity> locking = new List<Entity>();
             List<Entity> not_locked = new List<Entity>();

@@ -1,9 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "evecmd", "evecmd.csproj", "{9988B7E1-9389-4AE5-92E8-C4580A08E6B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVE.ISXEVE", "..\evesvn\ISXEVEWrapper\EVE.ISXEVE.csproj", "{A9583204-C40D-4496-BB62-0F9546E5D613}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVE.ISXEVE", "..\..\..\..\ISXEVEWrapper\branches\Beta\EVE.ISXEVE.csproj", "{A9583204-C40D-4496-BB62-0F9546E5D613}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

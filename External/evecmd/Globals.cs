@@ -4,6 +4,7 @@
 using System;
 using System.Text;
 using EVE.ISXEVE;
+using InnerSpaceAPI;
 
 namespace evecmd
 {
@@ -15,7 +16,7 @@ namespace evecmd
         public static EVE.ISXEVE.ISXEVE isxeve = null;
         public static void Print(string format, params object[] args)
         {
-            Console.WriteLine(String.Format(format, args));
+            InnerSpace.Echo(String.Format(format, args));
         }
     }
 }

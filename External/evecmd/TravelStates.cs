@@ -106,7 +106,7 @@ namespace evecmd
     class TravelToStationState : SimpleState
     {
         State substate = null;
-        int station_id;
+        long station_id;
         int solarsystem_id;
 
         public TravelToStationState(string command)
@@ -116,7 +116,7 @@ namespace evecmd
             this.solarsystem_id = Int32.Parse(strs[2]);
         }
 
-        public TravelToStationState(int station_id, int solarsystem_id)
+        public TravelToStationState(long station_id, int solarsystem_id)
         {
             this.station_id = station_id;
             this.solarsystem_id = solarsystem_id;
@@ -161,7 +161,7 @@ namespace evecmd
                 
                 systems = g.eve.GetToDestinationPath();
                 Interstellar next_system = Universe.ByID(systems[0]);
-                List<Entity> entities = g.eve.GetEntities("GroupID", "10");
+                List<Entity> entities = g.eve.QueryEntities("GroupID = 10");
                 Entity next_gate = null;
                 foreach (Entity stargate in entities)
                     if (stargate.Name.Contains(next_system.Name))
@@ -183,11 +183,11 @@ namespace evecmd
     public class JumpState : SimpleState
     {
         WarpState warp_state = null;
-        int entity_id, solarsystem_id;
+        long entity_id, solarsystem_id;
         bool approached = false;
         bool jumped = false;
 
-        public JumpState(int entity_id, int solarsystem_id)
+        public JumpState(long entity_id, int solarsystem_id)
         {
             this.entity_id = entity_id;
             this.solarsystem_id = solarsystem_id;
@@ -204,7 +204,7 @@ namespace evecmd
                     return true;
             }
 
-            List<Entity> entities = g.eve.GetEntities();
+            List<Entity> entities = g.eve.QueryEntities();
             if (entities == null || entities.Count <= 0)
             {
                 // we're probably jumping right now - just chill
@@ -217,7 +217,7 @@ namespace evecmd
                 return false;
             }
 
-            entities = g.eve.GetEntities("ID", entity_id.ToString());
+            entities = g.eve.QueryEntities("ID = {0}".Format(entity_id));
             if (entities.Count == 0)
             {
                 SetDone("stargate not found");
@@ -294,7 +294,7 @@ namespace evecmd
                 }
                 else
                 {
-                    List<Entity> entities = g.eve.GetEntities("ID", entity_id.ToString());
+                    List<Entity> entities = g.eve.QueryEntities("ID = {0}".Format(entity_id));
                     if (entities.Count == 0)
                     {
                         SetDone("entity not found");
@@ -329,7 +329,7 @@ namespace evecmd
 
     public class WarpState : SimpleState
     {
-        int entity_id = -1;
+        long entity_id = -1;
         bool started = false;
         bool warp_start_detected = false;
         bool use_bookmark = false;
@@ -348,7 +348,7 @@ namespace evecmd
             }
         }
 
-        public WarpState(int entity_id)
+        public WarpState(long entity_id)
         {
             this.entity_id = entity_id;
         }
@@ -398,7 +398,7 @@ namespace evecmd
                 }
                 else
                 {
-                    List<Entity> entities = g.eve.GetEntities("ID", entity_id.ToString());
+                    List<Entity> entities = g.eve.QueryEntities("ID = {0}".Format(entity_id));
                     if (entities.Count == 0)
                     {
                         SetDone("entity not found");

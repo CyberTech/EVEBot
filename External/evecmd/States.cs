@@ -74,7 +74,7 @@ namespace evecmd
         bool started = false;
         bool waiting = false;
         DateTime wait_start;
-        int entity_id = -1;
+        long entity_id = -1;
         WarpState warp = null;
 
         public DockState(string command)
@@ -104,7 +104,7 @@ namespace evecmd
             }
         }
 
-        public DockState(int entity_id)
+        public DockState(long entity_id)
         {
             this.entity_id = entity_id;
         }
@@ -137,7 +137,7 @@ namespace evecmd
                     return false;
                 }
 
-                List<Entity> entities = g.eve.GetEntities("ID", entity_id.ToString());
+                List<Entity> entities = g.eve.QueryEntities("ID = {0}".Format(entity_id));
                 if (entities.Count == 0)
                 {
                     SetDone("entity not found");

@@ -12,8 +12,12 @@ using EVE.ISXEVE;
 
 namespace evecmd
 {
-    public class Util
+    public static class Util
     {
+        public static string Format(this string message, params object[] paramList) {
+            return string.Format(message, paramList);
+        }
+
         public static AgentMission FindMission(int agent_id)
         {
             List<AgentMission> missions = g.eve.GetAgentMissions();
