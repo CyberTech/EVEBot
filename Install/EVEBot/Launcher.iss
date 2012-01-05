@@ -20,7 +20,7 @@
 ; To Enable debug output, enable TESTAPI_DEBUG in Support/TestAPI.iss
 #include Support/TestAPI.iss
 #include Support/obj_LoginHandler.iss
-#include Support/obj_AutoPatcher.iss
+;#include Support/obj_AutoPatcher.iss
 #include Support/obj_Configuration.iss
 
 variable obj_LoginHandler LoginHandler
@@ -29,6 +29,9 @@ variable obj_Configuration Config
 
 function main(string unchar="", string StartBot=FALSE)
 {
+	;Script:Unsquelch
+	;Script[Launcher]:EnableProfiling
+	;Script:EnableDebugLogging[launcher_profile.txt]	
 	if !${LavishScript.Executable.Find["ExeFile.exe"](exists)}
 	{
 		Script:End
@@ -38,9 +41,7 @@ function main(string unchar="", string StartBot=FALSE)
 	{
 		call LoginHandler.LoadExtension
 	}
-
 	wait 200 ${ISXEVE.IsReady}
-
 	if !${ISXSTEALTH(exists)}
 	{
 		;call LoginHandler.Load_isxStealth
@@ -54,7 +55,7 @@ function main(string unchar="", string StartBot=FALSE)
 		wait 10
 	}
 
-	while !${Display.Window(exists)}
+	while !${Display.Window.Text(exists)}
 	{
 		waitframe
 	}
@@ -67,9 +68,8 @@ function main(string unchar="", string StartBot=FALSE)
 		; do config gui here, the next line will save a blank template for a config if none exists
 		return
 	}
-
+	
 	wait 200 ${Login(exists)}
-
 	if ${ISXEVE(exists)} && ${ISXEVE.IsReady}
 	{
 		LoginHandler:Start
