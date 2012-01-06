@@ -91,6 +91,7 @@ objectdef obj_Combat
 
 	method Initialize()
 	{
+		This.CombatMode:Set["AGGRESSIVE"]
 		UI:UpdateConsole["obj_Combat: Initialized", LOG_MINOR]
 	}
 
@@ -136,7 +137,7 @@ objectdef obj_Combat
 			return
 		}
 
-		if ${Me.GetTargets} > 0
+		if ${This.CombatMode.NotEqual["TANK"]} && ${Me.GetTargets} > 0
 		{
 			This.CurrentState:Set["FIGHT"]
 		}
@@ -171,7 +172,7 @@ objectdef obj_Combat
 				call This.Flee
 				return
 			}
-			elseif (!${Ship.IsAmmoAvailable} && ${Config.Combat.RunOnLowAmmo})
+			elseif (${This.CombatMode.NotEqual["TANK"]} && !${Ship.IsAmmoAvailable} && ${Config.Combat.RunOnLowAmmo})
 			{
 				UI:UpdateConsole["Debug: Fleeing: Low ammo"]
 				; TODO - what to do about being warp scrambled in this case?
@@ -181,7 +182,7 @@ objectdef obj_Combat
 			call This.ManageTank
 		}
 
-		UI:UpdateConsole["Debug: Combat: This.Fled = ${This.Fled} This.CurrentState = ${This.CurrentState} Social.IsSafe = ${Social.IsSafe}"]
+		UI:UpdateConsole["Debug: Combat: This.Fled = ${This.Fled} This.CurrentState = ${This.CurrentState} Social.IsSafe = ${Social.IsSafe}", LOG_DEBUG]
 
 		switch ${This.CurrentState}
 		{
@@ -298,7 +299,7 @@ objectdef obj_Combat
 			}
 			elseif ${Me.ToEntity.IsWarpScrambled}
 			{
-				UI:UpdateConsole["Warp Scrambled: Fighting", LOG_CRITICAL]
+				UI:UpdateConsole["Warp Scrambled: Unable To Flee", LOG_CRITICAL]
 			}
 			else
 			{
@@ -341,17 +342,20 @@ objectdef obj_Combat
 			Ship:Deactivate_Cap_Booster[]
 		}
 
-		if !${This.Fled} && ${Config.Combat.LaunchCombatDrones} && \
-			${Ship.Drones.DronesInSpace} == 0 && !${Ship.InWarp} && \
-			${Me.GetTargets} > 0
+		if ${This.CombatMode.NotEqual["TANK"]}
 		{
-			if ${Config.Combat.AnomalyAssistMode}
+			if !${This.Fled} && ${Config.Combat.LaunchCombatDrones} && \
+				${Ship.Drones.DronesInSpace} == 0 && !${Ship.InWarp} && \
+				${Me.GetTargets} > 0
 			{
-				Ship.Drones:LaunchAll[]
-			}
-			elseif ${Me.GetTargets} >= 1 && ${Me.GetTargetedBy} >= ${Me.GetTargets}
-			{
-				Ship.Drones:LaunchAll[]
+				if ${Config.Combat.AnomalyAssistMode}
+				{
+					Ship.Drones:LaunchAll[]
+				}
+				elseif ${Me.GetTargets} >= 1 && ${Me.GetTargetedBy} >= ${Me.GetTargets}
+				{
+					Ship.Drones:LaunchAll[]
+				}
 			}
 		}
 
