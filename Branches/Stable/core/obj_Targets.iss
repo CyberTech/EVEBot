@@ -88,6 +88,7 @@ objectdef obj_Targets
     variable int  TotalSpawnValue
 
 	variable bool m_SpecialTargetPresent
+	variable string m_SpecialTargetName
     variable set DoNotKillList
 	variable bool CheckedSpawnValues = FALSE
 
@@ -527,6 +528,7 @@ objectdef obj_Targets
 				{
 					HasSpecialTarget:Set[TRUE]
 					m_SpecialTargetPresent:Set[TRUE]
+					m_SpecialTargetName:Set[${Target.Value.Name}]
 				}
 
 				; Loop through the priority targets
