@@ -143,7 +143,7 @@ objectdef obj_Social
 				This.EntityIndex:Clear
 			}
 
-    		SystemSafe:Set[${Math.Calc[${This.CheckLocalWhiteList} & ${This.CheckLocalBlackList}].Int(bool)}]
+			SystemSafe:Set[${Math.Calc[${This.CheckLocalWhiteList} & ${This.CheckLocalBlackList} & ${This.CheckStanding}].Int(bool)}]
 
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
@@ -197,9 +197,56 @@ objectdef obj_Social
 
 			if !${This.AllianceWhiteList.Contains[${AllianceID}]} && \
 				!${This.CorpWhiteList.Contains[${CorpID}]} && \
-				!${This.PilotWhiteList.Contains[${PilotID}]}
+				!${This.PilotWhiteList.Contains[${PilotID}]} && \
+				!${Me.Fleet.IsMember[${PilotID}]}
 			{
 				UI:UpdateConsole["Alert: Non-Whitelisted Pilot: ${PilotName}: CharID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_CRITICAL]
+				return FALSE
+			}
+		}
+		while ${PilotIterator:Next(exists)}
+		return TRUE
+	}
+	
+	; Returns false if pilots with failed standing are in system
+	member:bool CheckStanding()
+	{
+		variable iterator PilotIterator
+		variable int CorpID
+		variable int AllianceID
+		variable int PilotID
+
+		if ${Config.Combat.LowestStanding} < -10
+			return TRUE
+
+		if ${This.PilotIndex.Used} < 2
+		{
+			return TRUE
+		}
+
+		This.PilotIndex:GetIterator[PilotIterator]
+		if ${PilotIterator:First(exists)}
+		do
+		{
+			CorpID:Set[${PilotIterator.Value.CorporationID}]
+			AllianceID:Set[${PilotIterator.Value.AllianceID}]
+			PilotID:Set[${PilotIterator.Value.CharID}]
+
+			if ${PilotID} != -1 && \
+				${PilotID} != ${Me.CharID} && \
+				!${Me.Fleet.IsMember[${PilotID}]} && \
+				${Me.AllianceID} != ${AllianceID} && \
+				(	${PilotIterator.Value.Standing.MeToPilot} < ${Config.Combat.LowestStanding} || \
+					${PilotIterator.Value.Standing.MeToCorp} < ${Config.Combat.LowestStanding} || \
+					${PilotIterator.Value.Standing.MeToAlliance} < ${Config.Combat.LowestStanding} || \
+					${PilotIterator.Value.Standing.CorpToPilot} < ${Config.Combat.LowestStanding} || \
+					${PilotIterator.Value.Standing.CorpToCorp} < ${Config.Combat.LowestStanding} || \
+					${PilotIterator.Value.Standing.CorpToAlliance} < ${Config.Combat.LowestStanding} || \
+					${PilotIterator.Value.Standing.AllianceToCorp} < ${Config.Combat.LowestStanding} || \
+					${PilotIterator.Value.Standing.AllianceToAlliance} < ${Config.Combat.LowestStanding} \
+				)				
+			{
+				UI:UpdateConsole["Alert: Low Standing Pilot: ${PilotIterator.Value.Name}: CharID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_CRITICAL]
 				return FALSE
 			}
 		}
@@ -225,9 +272,12 @@ objectdef obj_Social
 		if ${PilotIterator:First(exists)}
 		do
 		{
-			if ${This.PilotBlackList.Contains[${PilotIterator.Value.CharID}]} || \
-				${This.AllianceBlackList.Contains[${PilotIterator.Value.AllianceID}]} || \
-				${This.CorpBlackList.Contains[${PilotIterator.Value.CorporationID}]}
+			if !${Me.Fleet.IsMember[${PilotID}]} && \
+				${Me.CharID} != ${PilotIterator.Value.CharID} && \
+				(	${This.PilotBlackList.Contains[${PilotIterator.Value.CharID}]} || \
+					${This.AllianceBlackList.Contains[${PilotIterator.Value.AllianceID}]} || \
+					${This.CorpBlackList.Contains[${PilotIterator.Value.CorporationID}]} \
+				)
 			{
 				UI:UpdateConsole["Alert: Blacklisted Pilot: ${PilotIterator.Value.Name}!", LOG_CRITICAL]
 				return FALSE
