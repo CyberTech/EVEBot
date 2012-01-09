@@ -395,7 +395,8 @@ objectdef obj_Combat
 		variable int QuantityToMove
 		variable index:item ContainerItems
 		variable iterator CargoIterator
-		if ${Config.Combat.AmmoBookmark} == NULL
+
+		if !${EVE.Bookmark[${Config.Combat.AmmoBookmark}](exists)}
 		{
 			UI:UpdateConsole["RestockAmmo: Fleeing: No ammo bookmark"]
 			call This.Flee
