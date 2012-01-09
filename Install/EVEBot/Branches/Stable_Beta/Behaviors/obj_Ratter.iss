@@ -206,6 +206,10 @@ objectdef obj_Ratter
 			{
 				This.CurrentState:Set["LOOT"]
 			}
+			else
+			{
+				This.CurrentState:Set["IDLE"]
+			}
 		}
 	}
 

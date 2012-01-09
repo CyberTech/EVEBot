@@ -226,7 +226,7 @@ objectdef obj_Combat
 
 		; Reload the weapons -if- ammo is below 30% and they arent firing
 		Ship:Reload_Weapons[FALSE]
-		Ship:Activate_ECCM
+		
 		if ${Config.Combat.Orbit}
 		{
 			Ship:Activate_AfterBurner
@@ -395,7 +395,8 @@ objectdef obj_Combat
 		variable int QuantityToMove
 		variable index:item ContainerItems
 		variable iterator CargoIterator
-		if ${Config.Combat.AmmoBookmark} == NULL
+
+		if !${EVE.Bookmark[${Config.Combat.AmmoBookmark}](exists)}
 		{
 			UI:UpdateConsole["RestockAmmo: Fleeing: No ammo bookmark"]
 			call This.Flee
