@@ -80,9 +80,12 @@ objectdef obj_Targets
 	variable index:string SpecialTargets
 	variable iterator SpecialTarget
 
+	variable index:string SpecialTargetsToLoot
+	variable iterator SpecialTargetToLoot
+
 	variable bool CheckChain
 	variable bool Chaining
-   variable int  TotalSpawnValue
+    variable int  TotalSpawnValue
 
 	variable bool m_SpecialTargetPresent
     variable set DoNotKillList
@@ -100,7 +103,17 @@ objectdef obj_Targets
 		; You can specify the entire rat name, for example
 		; leave rats that dont scramble which would help
 		; later when chaining gets added
-
+		PriorityTargets:Insert["Factory Defense Battery"] 		/* web/scram */
+		PriorityTargets:Insert["Dire Pithi Arrogator"] 		/* web/scram */
+		PriorityTargets:Insert["Dire Pithi Despoiler"] 		/* Jamming */
+		PriorityTargets:Insert["Dire Pithi Imputor"] 		/* web/scram */
+		PriorityTargets:Insert["Dire Pithi Infiltrator"] 	/* web/scram */
+		PriorityTargets:Insert["Dire Pithi Invader"] 		/* web/scram */
+		PriorityTargets:Insert["Dire Pithi Saboteur"] 		/* Jamming */
+		PriorityTargets:Insert["Dire Pithi Annihilator"] 	/* Jamming */
+		PriorityTargets:Insert["Dire Pithi Killer"] 			/* Jamming */
+		PriorityTargets:Insert["Dire Pithi Murderer"] 		/* Jamming */
+		PriorityTargets:Insert["Dire Pithi Nullifier"] 		/* Jamming */
 		PriorityTargets:Insert["Dire Guristas Arrogator"] 		/* web/scram */
 		PriorityTargets:Insert["Dire Guristas Despoiler"] 		/* Jamming */
 		PriorityTargets:Insert["Dire Guristas Imputor"] 		/* web/scram */
@@ -273,10 +286,28 @@ objectdef obj_Targets
 		SpecialTargets:Insert["Transporter"]
 		SpecialTargets:Insert["Trucker"]
 
+		SpecialTargetsToLoot:Insert["Dread Guristas"]
+		SpecialTargetsToLoot:Insert["Shadow Serpentis"]
+		SpecialTargetsToLoot:Insert["True Sansha"]
+		SpecialTargetsToLoot:Insert["Dark Blood"]
+
+		; Asteroid Serpentis Officers
+		SpecialTargetsToLoot:Insert["Brynn Jerdola"]
+		SpecialTargetsToLoot:Insert["Cormack Vaaja"]
+		SpecialTargetsToLoot:Insert["Setele Schellan"]
+		SpecialTargetsToLoot:Insert["Tuvan Orth"]
+
+		; Asteroid Guristas Officers
+		SpecialTargetsToLoot:Insert["Estamel Tharchon"]
+		SpecialTargetsToLoot:Insert["Kaikka Peunato"]
+		SpecialTargetsToLoot:Insert["Thon Eney"]
+		SpecialTargetsToLoot:Insert["Vepas Minimala"]
+
 		; Get the iterators
 		PriorityTargets:GetIterator[PriorityTarget]
 		ChainTargets:GetIterator[ChainTarget]
 		SpecialTargets:GetIterator[SpecialTarget]
+		SpecialTargetsToLoot:GetIterator[SpecialTargetToLoot]
 
         DoNotKillList:Clear
 	}
@@ -322,6 +353,22 @@ objectdef obj_Targets
 				}
 			}
 			while ${SpecialTarget:Next(exists)}
+
+			return FALSE
+	}
+
+	member:bool IsSpecialTargetToLoot(string name)
+	{
+			; Loop through the special targets
+			if ${SpecialTargetToLoot:First(exists)}
+			do
+			{
+				if ${name.Find[${SpecialTargetToLoot.Value}]} > 0
+				{
+					return TRUE
+				}
+			}
+			while ${SpecialTargetToLoot:Next(exists)}
 
 			return FALSE
 	}
@@ -402,7 +449,7 @@ objectdef obj_Targets
 			pos:Set[1]
         	while ${NPCGroup.Token[${pos}, " "](exists)}
         	{
-				echo ${NPCGroup.Token[${pos}, " "]}
+				;echo ${NPCGroup.Token[${pos}, " "]}
         		NPCShipType:Set[${NPCGroup.Token[${pos}, " "]}]
         		pos:Inc
         	}
@@ -617,11 +664,11 @@ objectdef obj_Targets
 			}
 			else
 			{
-                if !${DoNotKillList.Contains[${Target.Value.ID}]}
-                {
-                    UI:UpdateConsole["NPC: Adding ${Target.Value.Name} (${Target.Value.Group})(${Target.Value.ID}) to the \"do not kill list\"!"]
-                    DoNotKillList:Add[${Target.Value.ID}]
-                }
+				if !${DoNotKillList.Contains[${Target.Value.ID}]}
+				{
+					UI:UpdateConsole["NPC: Adding ${Target.Value.Name} (${Target.Value.Group})(${Target.Value.ID}) to the \"do not kill list\"!"]
+					DoNotKillList:Add[${Target.Value.ID}]
+				}
 				; Make sure (due to auto-targeting) that its not targeted
 				if ${Target.Value.IsLockedTarget}
 				{
@@ -653,7 +700,7 @@ objectdef obj_Targets
 		if ${tgtIterator:First(exists)}
 		do
 		{
-			if ${tgtIterator.Value.Owner.CharID} != ${Me.CharID}
+			if ${tgtIterator.Value.Owner.CharID} != ${Me.CharID} && !${Social.PilotWhiteList.Contains[${tgtIterator.Value.Owner.CharID}]}
 			{	/* A player is already present here ! */
 				UI:UpdateConsole["Player found ${tgtIterator.Value.Owner} ${tgtIterator.Value.Owner.CharID} ${tgtIterator.Value.ID}"]
 				return TRUE

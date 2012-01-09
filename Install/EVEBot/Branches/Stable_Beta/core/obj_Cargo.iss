@@ -810,6 +810,26 @@ objectdef obj_Cargo
 		call This.TransferListToHangar
 		
 		This.CargoToTransfer:Clear[]
+		Ship:UpdateBaselineUsedCargo[]
+		wait 25
+		call This.CloseHolds
+	}
+	
+	function TransferCargoToCorpHangarArray()
+	{	
+
+		/* Need to cycle the the cargohold after docking to update the list. */
+		call This.CloseHolds
+
+		UI:UpdateConsole["Transferring Cargo to Corp Hangar Array"]
+		call This.OpenHolds
+
+		/* FOR NOW move all cargo.  Add filtering later */
+		This:FindAllShipCargo
+		
+		call This.TransferListToCorpHangarArray
+		
+		This.CargoToTransfer:Clear[]
 		Me:StackAllHangarItems
 		Ship:UpdateBaselineUsedCargo[]
 		wait 25
