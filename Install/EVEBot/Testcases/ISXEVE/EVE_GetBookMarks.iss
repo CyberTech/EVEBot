@@ -1,5 +1,4 @@
 #define TESTCASE 1
-
 #include Scripts/EVEBot/Support/TestAPI.iss
 
 /*
