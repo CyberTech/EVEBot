@@ -237,7 +237,7 @@ objectdef obj_Social
 				${PilotIterator.Value.Standing.CorpToCorp} < ${Config.Combat.LowestStanding} && \
 				${PilotIterator.Value.Standing.CorpToAlliance} < ${Config.Combat.LowestStanding} & \
 				${PilotIterator.Value.Standing.AllianceToCorp} < ${Config.Combat.LowestStanding} && \
-				${PilotIterator.Value.Standing.AllianceToAlliance} < ${Config.Combat.LowestStanding} \
+				${PilotIterator.Value.Standing.AllianceToAlliance} < ${Config.Combat.LowestStanding}
 			{
 				UI:UpdateConsole["Alert: Low Standing Pilot: ${PilotIterator.Value.Name}: CharID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_CRITICAL]
 				return FALSE
