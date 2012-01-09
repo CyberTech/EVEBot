@@ -30,11 +30,16 @@ objectdef obj_Miner
 
 	; Are we running out of asteroids to target?
 	variable bool ConcentrateFire = FALSE
-
+	variable obj_Combat Combat
+	
 	method Initialize()
 	{
 		BotModules:Insert["Miner"]
 
+		This.Combat:Initialize
+		;; set the combat "mode"
+		This.Combat:SetMode["TANK"]
+		
 		This.TripStartTime:Set[${Time.Timestamp}]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_Miner: Initialized", LOG_MINOR]
@@ -77,6 +82,12 @@ objectdef obj_Miner
 			return
 		}
 
+		; call the combat object state processing
+		call This.Combat.ProcessState
+		;UI:UpdateConsole["Debug: Miner: This.Combat.Fled = ${This.Combat.Fled} This.CurrentState = ${This.CurrentState} Social.IsSafe = ${Social.IsSafe}"]
+		if ${This.Combat.Fled}
+			return
+			
 		switch ${This.CurrentState}
 		{
 			case IDLE
