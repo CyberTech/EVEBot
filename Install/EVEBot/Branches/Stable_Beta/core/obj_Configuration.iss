@@ -677,6 +677,7 @@ objectdef obj_Configuration_Combat
 		BaseConfig.BaseRef:AddSet[${This.SetName}]
 
 		This.CombatRef:AddSetting[AnomalyAssistMode, FALSE]
+		This.CombatRef:AddSetting[RestockAmmo, FALSE]
 		This.CombatRef:AddSetting[MinimumDronesInSpace,3]
 		This.CombatRef:AddSetting[MinimumArmorPct, 35]
 		This.CombatRef:AddSetting[MinimumShieldPct, 25]
@@ -693,7 +694,13 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[Chain Solo, TRUE]
 		This.CombatRef:AddSetting[Use Belt Bookmarks, FALSE]
 		This.CombatRef:AddSetting[Min Chain Bounty, 1500000]
+		This.CombatRef:AddSetting[AmmoBookmark, AMMO]
+		This.CombatRef:AddSetting[AmmoTypeID, 2629]
+		This.CombatRef:AddSetting[OrbitDistance, 30000]
+		This.CombatRef:AddSetting[Orbit, FALSE]
 		This.CombatRef:AddSetting[WarpRange, 0]
+		This.CombatRef:AddSetting[Lowest Standing, 0]
+		This.CombatRef:AddSetting[LootMyKills, 0]
 	}
 
 	member:int WarpRange()
@@ -705,7 +712,56 @@ objectdef obj_Configuration_Combat
 	{
 		This.CombatRef:AddSetting[WarpRange,${value}]
 	}
+	member:int AmmoTypeID()
+	{
+		return ${This.CombatRef.FindSetting[AmmoTypeID, 2629]}
+	}
 
+	method SetAmmoTypeID(int value)
+	{
+		This.CombatRef:AddSetting[AmmoTypeID,${value}]
+	}
+
+	member:bool RestockAmmo()
+	{
+		return ${This.CombatRef.FindSetting[RestockAmmo, FALSE]}
+	}
+	
+	method SetRestockAmmo(bool value)
+	{
+		This.CombatRef:AddSetting[RestockAmmo,${value}]
+	}
+
+	method SetAmmoBookmark(string value)
+	{
+		This.CombatRef.AddSetting[AmmoBookmark, ${value}]
+	}
+	
+	member:string AmmoBookmark()
+	{
+		return ${This.CombatRef.FindSetting[AmmoBookmark, AMMO]}
+	}
+	
+	method SetOrbit(bool value)
+	{
+		This.CombatRef:AddSetting[Orbit,${value}]
+	}
+	
+	member:bool Orbit()
+	{
+		return ${This.CombatRef.FindSetting[Orbit, FALSE]}
+	}
+	
+	method SetOrbitDistance(int value)
+	{
+		This.CombatRef:AddSetting[OrbitDistance,${value}]
+	}
+	
+	member:int OrbitDistance()
+	{
+		return ${This.CombatRef.FindSetting[OrbitDistance, 30000]}
+	}
+	
 	member:bool AnomalyAssistMode()
 	{
 		return ${This.CombatRef.FindSetting[AnomalyAssistMode, FALSE]}
@@ -874,6 +930,26 @@ objectdef obj_Configuration_Combat
 	method SetAlwaysShieldBoost(bool value)
 	{
 		This.CombatRef:AddSetting[AlwaysShieldBoost, ${value}]
+	}
+
+	member:int LowestStanding()
+	{
+		return ${This.CombatRef.FindSetting[Lowest Standing, 0]}
+	}
+
+	method SetLowestStanding(int value)
+	{
+		This.CombatRef:AddSetting[Lowest Standing, ${value}]
+	}
+	
+	member:bool LootMyKills()
+	{
+		return ${This.CombatRef.FindSetting[LootMyKills, FALSE]}
+	}
+
+	method SetLootMyKills(bool value)
+	{
+		This.CombatRef:AddSetting[LootMyKills, ${value}]
 	}
 }
 

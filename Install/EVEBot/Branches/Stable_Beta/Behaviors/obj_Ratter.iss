@@ -8,9 +8,6 @@
 	-- GliderPro
 */
 
-; Set to 1 to enable looting
-#define ENABLE_RATTER_LOOTING 0
-
 objectdef obj_Ratter
 {
 	variable string SVN_REVISION = "$Rev$"
@@ -205,13 +202,15 @@ objectdef obj_Ratter
 		}
 		else
 		{
-			This.CurrentState:Set["LOOT"]
+			if ${Config.Combat.LootMyKills}
+			{
+				This.CurrentState:Set["LOOT"]
+			}
 		}
 	}
 
 	function Loot()
 	{
-#if ENABLE_RATTER_LOOTING
 		variable index:entity Wrecks
 		variable iterator     Wreck
 		variable index:item   Items
@@ -227,7 +226,10 @@ objectdef obj_Ratter
 		{
 			do
 			{
-				if ${Wreck.Value(exists)} && ${Wreck.Value.IsWreckEmpty} == FALSE && ${Wreck.Value.HaveLootRights} == TRUE && ${Targets.IsSpecialTargetToLoot[${Wreck.Value.Name}]} == TRUE
+				if ${Wreck.Value(exists)} && \
+					!${Wreck.Value.IsWreckEmpty} && \
+					${Wreck.Value.HaveLootRights} && \
+					${Targets.IsSpecialTargetToLoot[${Wreck.Value.Name}]}
 				{
 					call Ship.Approach ${Wreck.Value.ID} LOOT_RANGE
 					if ((${Config.Combat.AnomalyAssistMode} && ${Targets.NPC}) || \
@@ -292,7 +294,7 @@ objectdef obj_Ratter
 			}
 			while ${Wreck:Next(exists)}
 		}
-#endif
+
 		if ${This.CurrentState.Equal["LOOT"]}
 		{
 		  This.CurrentState:Set["IDLE"]

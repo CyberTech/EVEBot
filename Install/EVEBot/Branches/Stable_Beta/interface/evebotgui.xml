@@ -6,7 +6,7 @@
 		<Border>0</Border>
 		<X>200</X>
 		<Y>300</Y>
-		<Width>500</Width>
+		<Width>550</Width>
 		<Height>326</Height>
 		<Title>EVEBot Options</Title>
 		<TitleBar template='EVESkin.Window.TitleBar'>
@@ -245,80 +245,13 @@
 							<Text>Minimum Drones in Bay</Text>
 							<AutoTooltip>This will set the amount of drones you want in your drone bay.</AutoTooltip>
 						</Text>
-						<checkbox Name='cbAutoLogin'>
-							<X>10</X>
-							<Y>50</Y>
-							<Height>20</Height>
-							<Width>100</Width>
-							<Text>Auto Login</Text>
-							<AutoTooltip>Auto Login when at Login window</AutoTooltip>
-							<OnLoad>
-								if ${Script[EVEBot].VariableScope.Config.Common.AutoLogin}
-								{
-									This:SetChecked
-								}
-							</OnLoad>
-							<OnLeftClick>
-								Script[EVEBot].VariableScope.Config.Common:SetAutoLogin[${This.Checked}]
-							</OnLeftClick>
-						</checkbox>
-						<Text name='LoginNameText'>
-							<X>10</X>
-							<Y>70</Y>
-							<Width>100</Width>
-							<Height>18</Height>
-							<Text>EVE Login</Text>
-							<AutoTooltip>The EVE Login name for ${Me.Name}</AutoTooltip>
-						</Text>
-						<Textentry name='LoginName'>
-							<X>140</X>
-							<Y>70</Y>
-							<Width>100</Width>
-							<Height>18</Height>
-							<MaxLength>25</MaxLength>
-							<OnLoad>
-								This:SetText[${Script[EVEBot].VariableScope.Config.Common.LoginName}]
-							</OnLoad>
-							<OnChange>
-								if ${This.Text.Length} > 0
-								{
-									Script[EVEBot].VariableScope.Config.Common:SetLoginName[${This.Text}]
-								}
-							</OnChange>
-						</Textentry>
-						<Text name='LoginPasswordText'>
-							<X>10</X>
-							<Y>90</Y>
-							<Width>100</Width>
-							<Height>18</Height>
-							<Text>EVE Password</Text>
-							<AutoTooltip>The EVE Login Password for ${Me.Name}</AutoTooltip>
-						</Text>
-						<Textentry name='LoginPassword'>
-							<X>140</X>
-							<Y>90</Y>
-							<Width>100</Width>
-							<Height>18</Height>
-							<MaxLength>25</MaxLength>
-							<PasswordCharacter>*</PasswordCharacter>
-							<OnLoad>
-								This:SetText[${Script[EVEBot].VariableScope.Config.Common.LoginPassword}]
-							</OnLoad>
-							<OnChange>
-								if ${This.Text.Length} > 0
-								{
-									Script[EVEBot].VariableScope.Config.Common:SetLoginPassword[${This.Text}]
-								}
-							</OnChange>
-						</Textentry>
-
 						<Text name='lblMaxRuntime'>
 							<X>10</X>
 							<Y>130</Y>
 							<Width>130</Width>
 							<Height>18</Height>
 							<Text>Maximum Runtime</Text>
-							<AutoTooltip>The maximum time to run the script before it aborts.</AutoTooltip>
+							<AutoTooltip>The maximum time in hours to run the script before it aborts.</AutoTooltip>
 						</Text>
 						<Textentry name='tbMaxRuntime'>
 							<X>140</X>
@@ -687,33 +620,18 @@
 							<FullHeight>200</FullHeight>
 							<ButtonWidth>20</ButtonWidth>
 							<Items>
+								<Item Value='-11'>-11</Item>
 								<Item Value='-10'>-10</Item>
-								<Item Value='-9'>-9</Item>
-								<Item Value='-8'>-8</Item>
-								<Item Value='-7'>-7</Item>
-								<Item Value='-6'>-6</Item>
 								<Item Value='-5'>-5</Item>
-								<Item Value='-4'>-4</Item>
-								<Item Value='-3'>-3</Item>
-								<Item Value='-2'>-2</Item>
-								<Item Value='-1'>-1</Item>
 								<Item Value='0'>0</Item>
-								<Item Value='1'>1</Item>
-								<Item Value='2'>2</Item>
-								<Item Value='3'>3</Item>
-								<Item Value='4'>4</Item>
 								<Item Value='5'>5</Item>
-								<Item Value='6'>6</Item>
-								<Item Value='7'>7</Item>
-								<Item Value='8'>8</Item>
-								<Item Value='9'>9</Item>
 								<Item Value='10'>10</Item>
 							</Items>
 							<OnSelect>
-								Script[EVEBot].VariableScope.Config.Miner:SetStandingDetection[${This.SelectedItem.Value}]
+								Script[EVEBot].VariableScope.Config.Miner:SetLowestStanding[${This.SelectedItem.Value}]
 							</OnSelect>
 							<OnLoad>
-								This:SetSelection[${Script[EVEBot].VariableScope.Config.Miner.StandingDetection}]
+								This:SetSelection[${This.ItemByText[${Script[EVEBot].VariableScope.Config.Miner.LowestStanding}].ID}]
 							</OnLoad>
 						</combobox>
 						<checkbox Name='cbIceMining'>
@@ -822,198 +740,9 @@
 						</Textentry>
 					</Tab>
 					<Tab name='Combat'>
-						<Frame name='frmRunOptions'>
-							<X>52%</X>
-							<Y>4%</Y>
-							<Height>44%</Height>
-							<Width>46%</Width>
-							<Border>2</Border>
-							<Children>
-								<checkbox name='cbRunOnLowAmmo'>
-									<X>10</X>
-									<Y>10</Y>
-									<Height>20</Height>
-									<Width>100</Width>
-									<Text>Run On Low Ammo</Text>
-									<AutoTooltip>If checked, run to safe spot when low on ammo.</AutoTooltip>
-									<OnLoad>
-										if ${Script[EVEBot].VariableScope.Config.Combat.RunOnLowAmmo}
-										{
-											This:SetChecked
-										}
-									</OnLoad>
-									<OnLeftClick>
-										Script[EVEBot].VariableScope.Config.Combat:SetRunOnLowAmmo[${This.Checked}]
-									</OnLeftClick>
-								</checkbox>
-								<checkbox name='cbRunOnLowCap'>
-									<X>10</X>
-									<Y>30</Y>
-									<Height>20</Height>
-									<Width>100</Width>
-									<Text>Run On Low Cap</Text>
-									<AutoTooltip>If checked, run to safe spot when capacitor is empty.</AutoTooltip>
-									<OnLoad>
-										if ${Script[EVEBot].VariableScope.Config.Combat.RunOnLowCap}
-										{
-											This:SetChecked
-										}
-									</OnLoad>
-									<OnLeftClick>
-										Script[EVEBot].VariableScope.Config.Combat:SetRunOnLowCap[${This.Checked}]
-									</OnLeftClick>
-								</checkbox>
-								<checkbox name='cbRunOnLowTank'>
-									<X>10</X>
-									<Y>50</Y>
-									<Height>20</Height>
-									<Width>100</Width>
-									<Text>Run On Low Tank</Text>
-									<AutoTooltip>If checked, run to safe spot when tank (shield or armor) has failed.</AutoTooltip>
-									<OnLoad>
-										if ${Script[EVEBot].VariableScope.Config.Combat.RunOnLowTank}
-										{
-											This:SetChecked
-										}
-									</OnLoad>
-									<OnLeftClick>
-										Script[EVEBot].VariableScope.Config.Combat:SetRunOnLowTank[${This.Checked}]
-									</OnLeftClick>
-								</checkbox>
-								<checkbox name='cbRunToStation'>
-									<X>10</X>
-									<Y>70</Y>
-									<Height>20</Height>
-									<Width>100</Width>
-									<Text>Run To Station</Text>
-									<AutoTooltip>If checked, run to a station instead of a safe-spot.</AutoTooltip>
-									<OnLoad>
-										if ${Script[EVEBot].VariableScope.Config.Combat.RunToStation}
-										{
-											This:SetChecked
-										}
-									</OnLoad>
-									<OnLeftClick>
-										Script[EVEBot].VariableScope.Config.Combat:SetRunToStation[${This.Checked}]
-									</OnLeftClick>
-								</checkbox>
-								<checkbox name='cbUseWhiteList'>
-									<X>10</X>
-									<Y>90</Y>
-									<Height>20</Height>
-									<Width>100</Width>
-									<Text>Run On Non-Whitelisted Pilot</Text>
-									<AutoTooltip>If checked, run to safe spot when any non-whitelisted pilot enters system.</AutoTooltip>
-									<OnLoad>
-										if ${Script[EVEBot].VariableScope.Config.Combat.UseWhiteList}
-										{
-											This:SetChecked
-										}
-									</OnLoad>
-									<OnLeftClick>
-										Script[EVEBot].VariableScope.Config.Combat:SetUseWhiteList[${This.Checked}]
-									</OnLeftClick>
-								</checkbox>
-								<checkbox name='cbUseBlackList'>
-									<X>10</X>
-									<Y>110</Y>
-									<Height>20</Height>
-									<Width>100</Width>
-									<Text>Run On Blacklisted Pilot</Text>
-									<AutoTooltip>If checked, run to safe spot when any blacklisted pilot enters system.</AutoTooltip>
-									<OnLoad>
-										if ${Script[EVEBot].VariableScope.Config.Combat.UseBlackList}
-										{
-											This:SetChecked
-										}
-									</OnLoad>
-									<OnLeftClick>
-										Script[EVEBot].VariableScope.Config.Combat:SetUseBlackList[${This.Checked}]
-									</OnLeftClick>
-								</checkbox>
-							</Children>
-						</Frame>
-						<slider name='MinArmorPct'>
-							<X>10</X>
-							<Y>10</Y>
-							<Width>40</Width>
-							<Height>18</Height>
-							<Range>100</Range>
-							<OnLoad>
-								This:SetValue[${Script[EVEBot].VariableScope.Config.Combat.MinimumArmorPct}]
-								UIElement[MinArmorPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Armor: ${This.Value}"]
-							</OnLoad>
-							<OnChange>
-								Script[EVEBot].VariableScope.Config.Combat:SetMinimumArmorPct[${Int[${This.Value}]}]
-								UIElement[MinArmorPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Armor: ${This.Value}"]
-							</OnChange>
-						</slider>
-						<Text name='MinArmorPctLabel'>
-							<X>55</X>
-							<Y>10</Y>
-							<Width>150</Width>
-							<Height>10</Height>
-							<Text>Minimum Armor: 0</Text>
-							<AutoTooltip>Lowest armor percent allowed before fleeing</AutoTooltip>
-							<OnLoad>
-								This:SetText["Minimum Armor: ${UIElement[MinArmorPct@Combat@EvEBotOptionsTab@EVEBot].Value}"]
-							</OnLoad>
-						</Text>
-						<slider name='MinShieldPct'>
-							<X>10</X>
-							<Y>30</Y>
-							<Width>40</Width>
-							<Height>18</Height>
-							<Range>100</Range>
-							<OnLoad>
-								This:SetValue[${Script[EVEBot].VariableScope.Config.Combat.MinimumShieldPct}]
-								UIElement[MinShieldPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Shield: ${This.Value}"]
-							</OnLoad>
-							<OnChange>
-								Script[EVEBot].VariableScope.Config.Combat:SetMinimumShieldPct[${Int[${This.Value}]}]
-								UIElement[MinShieldPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Shield: ${This.Value}"]
-							</OnChange>
-						</slider>
-						<Text name='MinShieldPctLabel'>
-							<X>55</X>
-							<Y>30</Y>
-							<Width>150</Width>
-							<Height>10</Height>
-							<Text>Minimum Shield: 0</Text>
-							<AutoTooltip>Lowest Shield Pct Allowed before Running</AutoTooltip>
-							<OnLoad>
-								This:SetText["Minimum Shield: ${UIElement[MinShieldPct@Combat@EvEBotOptionsTab@EVEBot].Value}"]
-							</OnLoad>
-						</Text>
-						<slider name='MinCapPct'>
-							<X>10</X>
-							<Y>50</Y>
-							<Width>40</Width>
-							<Height>18</Height>
-							<Range>100</Range>
-							<OnLoad>
-								This:SetValue[${Script[EVEBot].VariableScope.Config.Combat.MinimumCapPct}]
-								UIElement[MinCapPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Cap: ${This.Value}"]
-							</OnLoad>
-							<OnChange>
-								Script[EVEBot].VariableScope.Config.Combat:SetMinimumCapPct[${Int[${This.Value}]}]
-								UIElement[MinCapPctLabel@Combat@EvEBotOptionsTab@EVEBot]:SetText["Minimum Cap: ${This.Value}"]
-							</OnChange>
-						</slider>
-						<Text name='MinCapPctLabel'>
-							<X>55</X>
-							<Y>50</Y>
-							<Width>150</Width>
-							<Height>10</Height>
-							<Text>Minimum Cap: 0</Text>
-							<AutoTooltip>Lowest capacitor percent allowed before fleeing</AutoTooltip>
-							<OnLoad>
-								This:SetText["Minimum Cap: ${UIElement[MinCapPct@Combat@EvEBotOptionsTab@EVEBot].Value}"]
-							</OnLoad>
-						</Text>
 						<checkbox name='cbAlwaysShieldBoost'>
 							<X>10</X>
-							<Y>70</Y>
+							<Y>10</Y>
 							<Height>20</Height>
 							<Width>100</Width>
 							<Text>Always Shield Boost</Text>
@@ -1030,7 +759,7 @@
 						</checkbox>
 						<checkbox name='cbLaunchCombatDrones'>
 							<X>10</X>
-							<Y>90</Y>
+							<Y>30</Y>
 							<Height>20</Height>
 							<Width>130</Width>
 							<Text>Launch Combat Drones</Text>
@@ -1045,9 +774,119 @@
 								Script[EVEBot].VariableScope.Config.Combat:SetLaunchCombatDrones[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
-						<Textentry name='MinimumDronesInSpace'>
+						<checkbox name='cbChainSpawns'>
+							<X>10</X>
+							<Y>50</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Chain Spawns</Text>
+							<AutoTooltip>Will chain high value spawns if checked</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Combat.ChainSpawns}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Combat:SetChainSpawns[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox name='cbChainSolo'>
+							<X>10</X>
+							<Y>70</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Also Chain While Alone</Text>
+							<AutoTooltip>If not checked chaining will be suspended if you are alone in a system.</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Combat.ChainSolo}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Combat:SetChainSolo[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox name='cbAnomalyAssistMode'>
+							<X>10</X>
+							<Y>90</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Use AnomalyAssistMode</Text>
+							<AutoTooltip>Keeps the ratter stationary, ignores belts and players</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Combat.AnomalyAssistMode}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Combat:SetAnomalyAssistMode[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox name='cbReloadFromCan'>
 							<X>10</X>
 							<Y>110</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Restock Ammo From GSC</Text>
+							<AutoTooltip>Warp to Ammo Bookmark to restock ammunition?</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Combat.RestockAmmo}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Combat:SetRestockAmmo[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox name='cbOrbit'>
+							<X>10</X>
+							<Y>130</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Orbit NPC Targets</Text>
+							<AutoTooltip>Orbit the current NPC target?</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Combat.Orbit}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Combat:SetOrbit[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox name='cbLootMyKills'>
+							<X>10</X>
+							<Y>150</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Loot My Kills</Text>
+							<AutoTooltip>Loot the rats you kill</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Combat.LootMyKills}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Combat:SetLootMyKills[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<Text name='MinimumDronesInSpaceText'>
+							<X>200</X>
+							<Y>10</Y>
+							<Width>200</Width>
+							<Height>10</Height>
+							<Text>Min. Available Drones</Text>
+							<AutoTooltip>We will return to base when available drones falls below this number</AutoTooltip>
+						</Text>
+						<Textentry name='MinimumDronesInSpace'>
+							<X>375</X>
+							<Y>10</Y>
 							<Width>32</Width>
 							<Height>18</Height>
 							<MaxLength>2</MaxLength>
@@ -1061,20 +900,19 @@
 								}
 							</OnChange>
 						</Textentry>
-						<Text name='MinimumDronesInSpaceText'>
-							<X>44</X>
-							<Y>110</Y>
+						<Text name='WarpRangeText'>
+							<X>200</X>
+							<Y>30</Y>
 							<Width>200</Width>
 							<Height>10</Height>
-							<Text>Minimum Drones in Space</Text>
-							<AutoTooltip>We will return to base when available drones falls below this number</AutoTooltip>
+							<Text>Belt Warp Range (m)</Text>
+							<AutoTooltip>What range to warp to belts at. Default is 0</AutoTooltip>
 						</Text>
 						<Textentry name='WarpRange'>
-							<X>10</X>
-							<Y>130</Y>
-							<Width>64</Width>
+							<X>350</X>
+							<Y>30</Y>
+							<Width>100</Width>
 							<Height>18</Height>
-							<MaxLength>7</MaxLength>
 							<OnLoad>
 								This:SetText[${Script[EVEBot].VariableScope.Config.Combat.WarpRange}]
 							</OnLoad>
@@ -1085,100 +923,314 @@
 								}
 							</OnChange>
 						</Textentry>
-						<Text name='WarpRangeText'>
-							<X>76</X>
-							<Y>130</Y>
+						<Text name='lblMinChainBounty'>
+							<X>200</X>
+							<Y>50</Y>
 							<Width>200</Width>
-							<Height>10</Height>
-							<Text>Belt Warp Range</Text>
-							<AutoTooltip>What range to warp to belts at. Default is 0</AutoTooltip>
+							<Height>18</Height>
+							<Text>Min Chain Bounty</Text>
+							<AutoTooltip>NPC ships with a bounty above this value will be chained (if enabled).</AutoTooltip>
 						</Text>
-						<Frame name='frmRatter'>
-							<X>2%</X>
-							<Y>60%</Y>
-							<Height>38%</Height>
-							<Width>96%</Width>
-							<Border>2</Border>
-							<Children>
-								<checkbox name='cbChainSpawns'>
-									<X>10</X>
-									<Y>10</Y>
-									<Height>20</Height>
-									<Width>100</Width>
-									<Text>Chain Spawns</Text>
-									<AutoTooltip>Will chain high value spawns if checked</AutoTooltip>
-									<OnLoad>
-										if ${Script[EVEBot].VariableScope.Config.Combat.ChainSpawns}
-										{
-											This:SetChecked
-										}
-									</OnLoad>
-									<OnLeftClick>
-										Script[EVEBot].VariableScope.Config.Combat:SetChainSpawns[${This.Checked}]
-									</OnLeftClick>
-								</checkbox>
-								<checkbox name='cbChainSolo'>
-									<X>10</X>
-									<Y>30</Y>
-									<Height>20</Height>
-									<Width>100</Width>
-									<Text>Also chain while alone</Text>
-									<AutoTooltip>If not checked chaining will be suspended if you are alone in a system.</AutoTooltip>
-									<OnLoad>
-										if ${Script[EVEBot].VariableScope.Config.Combat.ChainSolo}
-										{
-											This:SetChecked
-										}
-									</OnLoad>
-									<OnLeftClick>
-										Script[EVEBot].VariableScope.Config.Combat:SetChainSolo[${This.Checked}]
-									</OnLeftClick>
-								</checkbox>
-								<checkbox name='cbAnomalyAssistMode'>
-									<X>10</X>
-									<Y>50</Y>
-									<Height>20</Height>
-									<Width>100</Width>
-									<Text>Use AnomalyAssistMode</Text>
-									<AutoTooltip>Keeps the ratter stationary, ignores belts and players</AutoTooltip>
-									<OnLoad>
-										if ${Script[EVEBot].VariableScope.Config.Combat.AnomalyAssistMode}
-										{
-											This:SetChecked
-										}
-									</OnLoad>
-									<OnLeftClick>
-										Script[EVEBot].VariableScope.Config.Combat:SetAnomalyAssistMode[${This.Checked}]
-									</OnLeftClick>
-								</checkbox>
-								<Text name='lblMinChainBounty'>
-									<X>50%</X>
-									<Y>10</Y>
-									<Width>200</Width>
-									<Height>18</Height>
-									<Text>Minimum Chain Bounty</Text>
-									<AutoTooltip>NPC ships with a bounty above this value will be chained (if enabled).</AutoTooltip>
-								</Text>
-								<Textentry name='tbMinChainBounty'>
-									<X>52%</X>
-									<Y>30</Y>
-									<Width>100</Width>
-									<Height>18</Height>
-									<MaxLength>10</MaxLength>
-									<OnLoad>
-										This:SetText[${Script[EVEBot].VariableScope.Config.Combat.MinChainBounty}]
-									</OnLoad>
-									<OnChange>
-										if ${This.Text.Length} > 0
-										{
-											Script[EVEBot].VariableScope.Config.Combat:SetMinChainBounty[${Int[${This.Text}]}]
-										}
-									</OnChange>
-								</Textentry>
-							</Children>
-						</Frame>
+						<Textentry name='tbMinChainBounty'>
+							<X>350</X>
+							<Y>50</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<MaxLength>10</MaxLength>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Combat.MinChainBounty}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Combat:SetMinChainBounty[${Int[${This.Text}]}]
+								}
+							</OnChange>
+						</Textentry>
+						<Text name='lblOrbitDistance'>
+							<X>200</X>
+							<Y>70</Y>
+							<Width>200</Width>
+							<Height>18</Height>
+							<Text>Orbit Distance (m)</Text>
+							<AutoTooltip>Distance you want to orbit the current target</AutoTooltip>
+						</Text>
+						<Textentry name='tbOrbitDistance'>
+							<X>350</X>
+							<Y>70</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<MaxLength>10</MaxLength>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Combat.OrbitDistance}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Combat:SetOrbitDistance[${Int[${This.Text}]}]
+								}
+							</OnChange>
+						</Textentry>														
+						<Text name='lblAmmoBookmark'>
+							<X>200</X>
+							<Y>90</Y>
+							<Width>110</Width>
+							<Height>18</Height>
+							<Text>Ammo Bookmark</Text>
+							<AutoTooltip>Name of bookmark where the ammo can is located.</AutoTooltip>
+						</Text>
+						<Textentry name='tbAmmoBookmark'>
+							<X>350</X>
+							<Y>90</Y>
+							<Width>150</Width>
+							<Height>18</Height>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Combat.AmmoBookmark}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Combat:SetAmmoBookmark[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+						<Text name='lblAmmoTypeID'>
+							<X>200</X>
+							<Y>110</Y>
+							<Width>110</Width>
+							<Height>18</Height>
+							<Text>Ammo TypeID</Text>
+							<AutoTooltip>Name of bookmark where the ammo can is located.</AutoTooltip>
+						</Text>
+						<Textentry name='tbAmmoTypeID'>
+							<X>350</X>
+							<Y>110</Y>
+							<Width>150</Width>
+							<Height>18</Height>
+							<MaxLength>10</MaxLength>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Combat.AmmoTypeID}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Combat:SetAmmoTypeID[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
 					</Tab>
-
+					<Tab name='Fleeing'>
+						<checkbox name='cbRunOnLowAmmo'>
+							<X>10</X>
+							<Y>10</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Run On Low Ammo</Text>
+							<AutoTooltip>If checked, run to safe spot when low on ammo.</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Combat.RunOnLowAmmo}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Combat:SetRunOnLowAmmo[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox name='cbRunOnLowCap'>
+							<X>10</X>
+							<Y>30</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Run On Low Cap</Text>
+							<AutoTooltip>If checked, run to safe spot when capacitor is empty.</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Combat.RunOnLowCap}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Combat:SetRunOnLowCap[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox name='cbRunOnLowTank'>
+							<X>10</X>
+							<Y>50</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Run On Low Tank</Text>
+							<AutoTooltip>If checked, run to safe spot when tank (shield or armor) has failed.</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Combat.RunOnLowTank}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Combat:SetRunOnLowTank[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox name='cbRunToStation'>
+							<X>10</X>
+							<Y>70</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Run To Station</Text>
+							<AutoTooltip>If checked, run to a station instead of a safe-spot.</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Combat.RunToStation}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Combat:SetRunToStation[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox name='cbUseWhiteList'>
+							<X>10</X>
+							<Y>90</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Run On Non-Whitelisted Pilot</Text>
+							<AutoTooltip>If checked, run to safe spot when any non-whitelisted pilot enters system.</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Combat.UseWhiteList}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Combat:SetUseWhiteList[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox name='cbUseBlackList'>
+							<X>10</X>
+							<Y>110</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Run On Blacklisted Pilot</Text>
+							<AutoTooltip>If checked, run to safe spot when any blacklisted pilot enters system.</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Combat.UseBlackList}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Combat:SetUseBlackList[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<combobox name='cbLowestStandingCombat'>
+							<X>10</X>
+							<Y>130</Y>
+							<Width>50</Width>
+							<Height>15</Height>
+							<FullHeight>200</FullHeight>
+							<ButtonWidth>20</ButtonWidth>
+							<Items>
+								<Item Value='-11'>-11</Item>
+								<Item Value='-10'>-10</Item>
+								<Item Value='-5'>-5</Item>
+								<Item Value='0'>0</Item>
+								<Item Value='5'>5</Item>
+								<Item Value='10'>10</Item>
+							</Items>
+							<OnSelect>
+								Script[EVEBot].VariableScope.Config.Combat:SetLowestStanding[${This.SelectedItem.Value}]
+							</OnSelect>
+							<OnLoad>
+								This:SetSelection[${This.ItemByText[${Script[EVEBot].VariableScope.Config.Combat.LowestStanding}].ID}]
+							</OnLoad>
+						</combobox>
+						<Text name='lblAmmoTypeID'>
+							<X>65</X>
+							<Y>130</Y>
+							<Width>120</Width>
+							<Height>18</Height>
+							<Text>Lowest Standing</Text>
+							<AutoTooltip>The lowest standing pilot we tolerate in system before we flee. It goes to -11!</AutoTooltip>
+						</Text>
+						<slider name='MinArmorPct'>
+							<X>210</X>
+							<Y>10</Y>
+							<Width>40</Width>
+							<Height>18</Height>
+							<Range>100</Range>
+							<OnLoad>
+								This:SetValue[${Script[EVEBot].VariableScope.Config.Combat.MinimumArmorPct}]
+								UIElement[MinArmorPctLabel@Fleeing@EvEBotOptionsTab@EVEBot]:SetText["Minimum Armor: ${This.Value}"]
+							</OnLoad>
+							<OnChange>
+								Script[EVEBot].VariableScope.Config.Combat:SetMinimumArmorPct[${Int[${This.Value}]}]
+								UIElement[MinArmorPctLabel@Fleeing@EvEBotOptionsTab@EVEBot]:SetText["Minimum Armor: ${This.Value}"]
+							</OnChange>
+						</slider>
+						<Text name='MinArmorPctLabel'>
+							<X>255</X>
+							<Y>10</Y>
+							<Width>150</Width>
+							<Height>10</Height>
+							<Text>Minimum Armor: 0</Text>
+							<AutoTooltip>Lowest armor percent allowed before fleeing</AutoTooltip>
+							<OnLoad>
+								This:SetText["Minimum Armor: ${UIElement[MinArmorPct@Fleeing@EvEBotOptionsTab@EVEBot].Value}"]
+							</OnLoad>
+						</Text>
+						<slider name='MinShieldPct'>
+							<X>210</X>
+							<Y>30</Y>
+							<Width>40</Width>
+							<Height>18</Height>
+							<Range>100</Range>
+							<OnLoad>
+								This:SetValue[${Script[EVEBot].VariableScope.Config.Combat.MinimumShieldPct}]
+								UIElement[MinShieldPctLabel@Fleeing@EvEBotOptionsTab@EVEBot]:SetText["Minimum Shield: ${This.Value}"]
+							</OnLoad>
+							<OnChange>
+								Script[EVEBot].VariableScope.Config.Combat:SetMinimumShieldPct[${Int[${This.Value}]}]
+								UIElement[MinShieldPctLabel@Fleeing@EvEBotOptionsTab@EVEBot]:SetText["Minimum Shield: ${This.Value}"]
+							</OnChange>
+						</slider>
+						<Text name='MinShieldPctLabel'>
+							<X>255</X>
+							<Y>30</Y>
+							<Width>150</Width>
+							<Height>10</Height>
+							<Text>Minimum Shield: 0</Text>
+							<AutoTooltip>Lowest Shield Pct Allowed before Running</AutoTooltip>
+							<OnLoad>
+								This:SetText["Minimum Shield: ${UIElement[MinShieldPct@Fleeing@EvEBotOptionsTab@EVEBot].Value}"]
+							</OnLoad>
+						</Text>
+						<slider name='MinCapPct'>
+							<X>210</X>
+							<Y>50</Y>
+							<Width>40</Width>
+							<Height>18</Height>
+							<Range>100</Range>
+							<OnLoad>
+								This:SetValue[${Script[EVEBot].VariableScope.Config.Combat.MinimumCapPct}]
+								UIElement[MinCapPctLabel@Fleeing@EvEBotOptionsTab@EVEBot]:SetText["Minimum Cap: ${This.Value}"]
+							</OnLoad>
+							<OnChange>
+								Script[EVEBot].VariableScope.Config.Combat:SetMinimumCapPct[${Int[${This.Value}]}]
+								UIElement[MinCapPctLabel@Fleeing@EvEBotOptionsTab@EVEBot]:SetText["Minimum Cap: ${This.Value}"]
+							</OnChange>
+						</slider>
+						<Text name='MinCapPctLabel'>
+							<X>255</X>
+							<Y>50</Y>
+							<Width>150</Width>
+							<Height>10</Height>
+							<Text>Minimum Cap: 0</Text>
+							<AutoTooltip>Lowest capacitor percent allowed before fleeing</AutoTooltip>
+							<OnLoad>
+								This:SetText["Minimum Cap: ${UIElement[MinCapPct@Fleeing@EvEBotOptionsTab@EVEBot].Value}"]
+							</OnLoad>
+						</Text>
+					</Tab>
 					<Tab name='Missions'>
 						<Text name='lblRunTheseTypes'>
 							<X>10</X>
