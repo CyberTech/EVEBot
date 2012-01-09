@@ -52,13 +52,13 @@ objectdef obj_Ratter
 			return
 		}
 
-	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			This:SetState[]
 
-    		This.NextPulse:Set[${Time.Timestamp}]
-    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-    		This.NextPulse:Update
+			This.NextPulse:Set[${Time.Timestamp}]
+			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+			This.NextPulse:Update
 		}
 
 		;; call the combat frame action code
@@ -138,7 +138,7 @@ objectdef obj_Ratter
 
 		; Wait for the rats to warp into the belt. Reports are between 10 and 20 seconds.
 		variable int Count
-		for (Count:Set[0] ; ${Count}<=30 ; Count:Inc)
+		for (Count:Set[0] ; ${Count}<=17 ; Count:Inc)
 		{
 			if ((${Config.Combat.AnomalyAssistMode} && (${Targets.NPC} || !${Social.IsSafe})) || \
 				(!${Config.Combat.AnomalyAssistMode} && (${Targets.PC} || ${Targets.NPC} || !${Social.IsSafe})))
@@ -227,7 +227,7 @@ objectdef obj_Ratter
 		{
 			do
 			{
-				if ${Wreck.Value(exists)} && ${Wreck.Value.IsWreckEmpty} == FALSE && ${Wreck.Value.HaveLootRights} == TRUE
+				if ${Wreck.Value(exists)} && ${Wreck.Value.IsWreckEmpty} == FALSE && ${Wreck.Value.HaveLootRights} == TRUE && ${Targets.IsSpecialTargetToLoot[${Wreck.Value.Name}]} == TRUE
 				{
 					call Ship.Approach ${Wreck.Value.ID} LOOT_RANGE
 					if ((${Config.Combat.AnomalyAssistMode} && ${Targets.NPC}) || \
@@ -241,51 +241,51 @@ objectdef obj_Ratter
 					call Ship.OpenCargo
 					wait 10
 					Wreck.Value:GetCargo[Items]
-					UI:UpdateConsole["obj_Ratter: DEBUG:  Wreck contains ${Items.Used} items."]
+					UI:UpdateConsole["obj_Ratter: DEBUG:  Wreck contains ${Items.Used} items.", LOG_DEBUG]
 
 					Items:GetIterator[Item]
 					if ${Item:First(exists)}
 					{
 						do
 						{
-      				UI:UpdateConsole["obj_Ratter: Found ${Item.Value.Quantity} x ${Item.Value.Name} - ${Math.Calc[${Item.Value.Quantity} * ${Item.Value.Volume}]}m3"]
-      				if (${Item.Value.Quantity} * ${Item.Value.Volume}) > ${Ship.CargoFreeSpace}
-      				{
-      					/* Move only what will fit, minus 1 to account for CCP rounding errors. */
-      					QuantityToMove:Set[${Ship.CargoFreeSpace} / ${Item.Value.Volume} - 1]
-      					if ${QuantityToMove} <= 0
-      					{
-        					UI:UpdateConsole["ERROR: obj_Ratter: QuantityToMove = ${QuantityToMove}!"]
-        					This.CurrentState:Set["DROP"]
-        					break
-      					}
-      				}
-      				else
-      				{
-      					QuantityToMove:Set[${Item.Value.Quantity}]
-      				}
-
-      				UI:UpdateConsole["obj_Ratter: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Item.Value.Volume}]}m3"]
-      				if ${QuantityToMove} > 0
-      				{
-      					Item.Value:MoveTo[MyShip,${QuantityToMove}]
-      					wait 30
-      				}
-
-      				if ${Ship.CargoFull}
-      				{
-      					UI:UpdateConsole["DEBUG: obj_Ratter: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
-      					This.CurrentState:Set["DROP"]
-      					break
-      				}
+							UI:UpdateConsole["obj_Ratter: Found ${Item.Value.Quantity} x ${Item.Value.Name} - ${Math.Calc[${Item.Value.Quantity} * ${Item.Value.Volume}]}m3"]
+							if (${Item.Value.Quantity} * ${Item.Value.Volume}) > ${Ship.CargoFreeSpace}
+							{
+								/* Move only what will fit, minus 1 to account for CCP rounding errors. */
+								QuantityToMove:Set[${Ship.CargoFreeSpace} / ${Item.Value.Volume} - 1]
+								if ${QuantityToMove} <= 0
+								{
+								UI:UpdateConsole["ERROR: obj_Ratter: QuantityToMove = ${QuantityToMove}!"]
+								This.CurrentState:Set["DROP"]
+								break
+								}
+							}
+							else
+							{
+								QuantityToMove:Set[${Item.Value.Quantity}]
+							}
+			
+							UI:UpdateConsole["obj_Ratter: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Item.Value.Volume}]}m3"]
+							if ${QuantityToMove} > 0
+							{
+								Item.Value:MoveTo[MyShip,${QuantityToMove}]
+								wait 30
+							}
+			
+							if ${Ship.CargoFull}
+							{
+								UI:UpdateConsole["DEBUG: obj_Ratter: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}", LOG_DEBUG]
+								This.CurrentState:Set["DROP"]
+								break
+							}
 						}
 						while ${Item:Next(exists)}
 					}
 				}
-     		call Ship.CloseCargo
- 				if ${Ship.CargoFull}
+				call Ship.CloseCargo
+				if ${Ship.CargoFull}
 				{
-					UI:UpdateConsole["DEBUG: obj_Ratter: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
+					UI:UpdateConsole["DEBUG: obj_Ratter: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}", LOG_DEBUG]
 					This.CurrentState:Set["DROP"]
 					break
 				}
@@ -297,7 +297,7 @@ objectdef obj_Ratter
 		{
 		  This.CurrentState:Set["IDLE"]
 		}
-  }
+	}
 
 	function Drop()
 	{
@@ -306,6 +306,6 @@ objectdef obj_Ratter
 		call Cargo.TransferCargoToHangar
 		wait 100
 		; need to restock ammo here
-	  This.CurrentState:Set["IDLE"]
-  }
+		This.CurrentState:Set["IDLE"]
+	}
 }
