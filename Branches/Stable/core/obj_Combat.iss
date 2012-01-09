@@ -226,11 +226,11 @@ objectdef obj_Combat
 
 		; Reload the weapons -if- ammo is below 30% and they arent firing
 		Ship:Reload_Weapons[FALSE]
-		
+
 		if ${Config.Combat.Orbit}
 		{
 			Ship:Activate_AfterBurner
-			
+
 			if ${Config.Combat.OrbitAtOptimal}
 			{
 				Ship:OrbitAtOptimal
@@ -295,7 +295,8 @@ objectdef obj_Combat
 		if ${This.Fled}
 		{
 			/* don't leave the "fled" state until we regen */
-			if (${Me.Ship.ArmorPct} < 50 || \
+			if (${Ship.IsPod} || \
+				${Me.Ship.ArmorPct} < 50 || \
 				(${Me.Ship.ShieldPct} < 80 && ${Config.Combat.MinimumShieldPct} > 0) || \
 				${Me.Ship.CapacitorPct} < 80 )
 			{
@@ -425,7 +426,7 @@ objectdef obj_Combat
 				; Drop off all loot/leftover ammo
 				; TODO - don't dump the ammo we're using for our own weapons. Do dump other ammo that we might have looted.
 				call Cargo.TransferCargoToCorpHangarArray
-				
+
 				Entity[${Entity[TypeID,17621].ID}]:DoGetCargo[ContainerItems]
 			}
 
