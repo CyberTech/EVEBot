@@ -2,7 +2,7 @@
 
 #include Scripts/EVEBot/Support/TestAPI.iss
 /*
- *	Test DoGetStationsWithAssets
+ *	Test GetStationsWithAssets
  *
  *	Requirements:
  *		Open assets window

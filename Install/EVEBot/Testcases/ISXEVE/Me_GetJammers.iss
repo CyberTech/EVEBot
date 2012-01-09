@@ -2,12 +2,13 @@
 #include Scripts/EVEBot/Support/TestAPI.iss
 
 /*
-	Test Me:GetTargets
+	Test GetJammers
 
 	Revision $Id$
 
 	Requirements:
-		You: Have targets
+		You: In Space
+		Other1: Jamming you
 */
 
 function main()
