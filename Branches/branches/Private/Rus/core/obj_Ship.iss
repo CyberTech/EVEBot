@@ -2122,10 +2122,9 @@ objectdef obj_Ship
 
 			OrbitDistance:Set[${Math.Calc[(${ModuleIter.Value.OptimalRange}*0.85)/500]}]
 			OrbitDistance:Set[${Math.Calc[${OrbitDistance}*500]}]
-			UI:UpdateConsole["OrbitDistance = ${OrbitDistance}"]
+			UI:UpdateConsole["OrbitDistance = ${OrbitDistance}", LOG_DEBUG]
 
 			Me.ActiveTarget:Orbit[${OrbitDistance}]
-
 		}
 		while ${ModuleIter:Next(exists)}
 	}
