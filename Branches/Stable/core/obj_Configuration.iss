@@ -698,6 +698,7 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[AmmoTypeID, 2629]
 		This.CombatRef:AddSetting[OrbitDistance, 30000]
 		This.CombatRef:AddSetting[Orbit, FALSE]
+		This.CombatRef:AddSetting[OrbitAtOptimal, FALSE]
 		This.CombatRef:AddSetting[WarpRange, 0]
 		This.CombatRef:AddSetting[Lowest Standing, 0]
 		This.CombatRef:AddSetting[LootMyKills, 0]
@@ -751,6 +752,16 @@ objectdef obj_Configuration_Combat
 	{
 		return ${This.CombatRef.FindSetting[Orbit, FALSE]}
 	}
+
+	method SetOrbitAtOptimal(bool value)
+	{
+		This.CombatRef:AddSetting[OrbitAtOptimal,${value}]
+	}
+	
+	member:bool OrbitAtOptimal()
+	{
+		return ${This.CombatRef.FindSetting[OrbitAtOptimal, FALSE]}
+	}
 	
 	method SetOrbitDistance(int value)
 	{
@@ -762,6 +773,11 @@ objectdef obj_Configuration_Combat
 		return ${This.CombatRef.FindSetting[OrbitDistance, 30000]}
 	}
 	
+	method SetAnomalyAssistMode(bool value)
+	{
+		This.CombatRef:AddSetting[AnomalyAssistMode, ${value}]
+	}
+
 	member:bool AnomalyAssistMode()
 	{
 		return ${This.CombatRef.FindSetting[AnomalyAssistMode, FALSE]}
@@ -790,11 +806,6 @@ objectdef obj_Configuration_Combat
 	member:bool RunOnLowTank()
 	{
 		return ${This.CombatRef.FindSetting[Run On Low Tank, TRUE]}
-	}
-
-	method SetAnomalyAssistMode(bool value)
-	{
-		This.CombatRef:AddSetting[AnomalyAssistMode, ${value}]
 	}
 
 	method SetRunOnLowTank(bool value)

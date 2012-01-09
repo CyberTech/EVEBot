@@ -859,9 +859,26 @@
 								Script[EVEBot].VariableScope.Config.Combat:SetOrbit[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
-						<checkbox name='cbLootMyKills'>
+						<checkbox name='cbOrbitAtOptimal'>
 							<X>10</X>
 							<Y>150</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Calculate Optimal (lasers only)</Text>
+							<AutoTooltip>Attempt to calculate optimal?</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Combat.OrbitAtOptimal}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Combat:SetOrbitAtOptimal[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox name='cbLootMyKills'>
+							<X>10</X>
+							<Y>170</Y>
 							<Height>20</Height>
 							<Width>100</Width>
 							<Text>Loot My Kills</Text>
