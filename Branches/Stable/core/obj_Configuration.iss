@@ -734,7 +734,7 @@ objectdef obj_Configuration_Combat
 
 	method SetAmmoBookmark(string value)
 	{
-		This.CombatRef.AddSetting[AmmoBookmark, ${value}]
+		This.CombatRef:AddSetting[AmmoBookmark, ${value}]
 	}
 	
 	member:string AmmoBookmark()
