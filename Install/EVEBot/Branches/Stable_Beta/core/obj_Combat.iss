@@ -219,7 +219,7 @@ objectdef obj_Combat
 		Ship:Deactivate_Cloak
 		while ${Ship.IsCloaked}
 		{
-			wait 1
+			waitframe
 		}
 		;Ship:Offline_Cloak
 		;Ship:Online_Salvager
@@ -230,14 +230,21 @@ objectdef obj_Combat
 		if ${Config.Combat.Orbit}
 		{
 			Ship:Activate_AfterBurner
-			Me.ActiveTarget:Orbit[${Config.Combat.OrbitDistance}]
+			
+			if ${Config.Combat.OrbitAtOptimal}
+			{
+				Ship:OrbitAtOptimal
+			}
+			else
+			{
+				Me.ActiveTarget:Orbit[${Config.Combat.OrbitDistance}]
+			}
 		}
 		; Activate the weapons, the modules class checks if there's a target (no it doesn't - ct)
 		Ship:Activate_TargetPainters
 		Ship:Activate_StasisWebs
 		Ship:Activate_Weapons
 		Ship.Drones:SendDrones
-		Ship:OrbitAtOptimal
 	}
 
 	function Flee()
