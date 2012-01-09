@@ -226,7 +226,7 @@ objectdef obj_Combat
 
 		; Reload the weapons -if- ammo is below 30% and they arent firing
 		Ship:Reload_Weapons[FALSE]
-		Ship:Activate_ECCM
+		
 		if ${Config.Combat.Orbit}
 		{
 			Ship:Activate_AfterBurner
