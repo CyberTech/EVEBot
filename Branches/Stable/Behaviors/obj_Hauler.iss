@@ -235,6 +235,11 @@ objectdef obj_OreHauler inherits obj_Hauler
 		variable int systemID = -1
 		variable int beltID = -1
 
+		if !${Config.Common.BotModeName.Equal[Hauler]}
+		{
+			return
+		}
+
 		charID:Set[${haulParams.Token[1,","]}]
 		systemID:Set[${haulParams.Token[2,","]}]
 		beltID:Set[${haulParams.Token[3,","]}]

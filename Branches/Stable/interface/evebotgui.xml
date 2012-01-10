@@ -1188,9 +1188,9 @@
 						<Text name='lblLowestStandingCombat'>
 							<X>65</X>
 							<Y>130</Y>
-							<Width>120</Width>
+							<Width>200</Width>
 							<Height>18</Height>
-							<Text>Min Acceotable Standing</Text>
+							<Text>Min Acceptable Standing</Text>
 							<AutoTooltip>The lowest standing pilot we tolerate in system before we flee. It goes to -11!</AutoTooltip>
 						</Text>
 						<slider name='MinArmorPct'>
