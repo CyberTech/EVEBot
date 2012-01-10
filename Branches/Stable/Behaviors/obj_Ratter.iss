@@ -191,7 +191,7 @@ objectdef obj_Ratter
 		Ship:Activate_SensorBoost
 		Ship:Activate_Tracking_Computer
 		Ship:Activate_ECCM
- 
+
 
 		if ${Targets.TargetNPCs} && ${Social.IsSafe}
 		{
@@ -263,7 +263,7 @@ objectdef obj_Ratter
 								if (${Item.Value.Quantity} * ${Item.Value.Volume}) > ${Ship.CargoFreeSpace}
 								{
 									/* Move only what will fit, minus 1 to account for CCP rounding errors. */
-									QuantityToMove:Set[${Ship.CargoFreeSpace} / ${Item.Value.Volume} - 1]
+									QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${Item.Value.Volume} - 1]}]
 									if ${QuantityToMove} <= 0
 									{
 										UI:UpdateConsole["ERROR: obj_Ratter: QuantityToMove = ${QuantityToMove}!"]
@@ -275,14 +275,14 @@ objectdef obj_Ratter
 								{
 									QuantityToMove:Set[${Item.Value.Quantity}]
 								}
-				  
+
 								UI:UpdateConsole["obj_Ratter: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Item.Value.Volume}]}m3"]
 								if ${QuantityToMove} > 0
 								{
 									Item.Value:MoveTo[MyShip,${QuantityToMove}]
 									wait 30
 								}
-				  
+
 								if ${Ship.CargoFull}
 								{
 									UI:UpdateConsole["DEBUG: obj_Ratter: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}", LOG_DEBUG]
@@ -305,7 +305,7 @@ objectdef obj_Ratter
 			while ${Wreck:Next(exists)}
 		}
 
-		if ${This.CurrentState.Equal["LOOT"]} 
+		if ${This.CurrentState.Equal["LOOT"]}
 		{
 		  This.CurrentState:Set["IDLE"]
 		}
