@@ -123,6 +123,7 @@ objectdef obj_Ratter
 		{
 			Ship:Deactivate_Weapons
 			Ship:Deactivate_Tracking_Computer
+			Ship:Deactivate_ECCM
 			if !${Config.Combat.AnomalyAssistMode}
 			{
 				call Belts.WarpToNextBelt ${Config.Combat.WarpRange}
@@ -189,6 +190,8 @@ objectdef obj_Ratter
 		;; just handle targetting, obj_Combat does the rest
 		Ship:Activate_SensorBoost
 		Ship:Activate_Tracking_Computer
+		Ship:Activate_ECCM
+ 
 
 		if ${Targets.TargetNPCs} && ${Social.IsSafe}
 		{

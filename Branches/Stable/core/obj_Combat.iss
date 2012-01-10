@@ -298,7 +298,7 @@ objectdef obj_Combat
 			if (${Ship.IsPod} || \
 				${Me.Ship.ArmorPct} < 50 || \
 				(${Me.Ship.ShieldPct} < 80 && ${Config.Combat.MinimumShieldPct} > 0) || \
-				${Me.Ship.CapacitorPct} < 80 )
+				${Me.Ship.CapacitorPct} < 60 )
 			{
 					This.CurrentState:Set["FLEE"]
 					UI:UpdateConsole["Debug: Staying in Flee State: Armor: ${Me.Ship.ArmorPct} Shield: ${Me.Ship.ShieldPct} Cap: ${Me.Ship.CapacitorPct}", LOG_DEBUG]
