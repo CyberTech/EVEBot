@@ -372,6 +372,30 @@ objectdef obj_Freighter
 				}
 			}
 		}
+		else
+		{
+			if ${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity(exists)}
+			{
+				switch ${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity.TypeID}
+				{
+					case TYPEID_LARGE_ASSEMBLY_ARRAY
+						call Cargo.TransferOreToLargeShipAssemblyArray
+						break
+					case TYPEID_XLARGE_ASSEMBLY_ARRAY
+						call Cargo.TransferOreToXLargeShipAssemblyArray
+						break
+					case TYPEID_LARGE_ASSEMBLY_ARRAY
+						call Cargo.TransferOreToLargeShipAssemblyArray
+						break
+				}
+				switch ${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity.GroupID}
+				{
+					case GROUP_CORPORATEHANGARARRAY
+						call Cargo.TransferOreToCorpHangarArray
+						break
+				}
+			}
+		}
 	}
 
 	method BuildSourceList()
