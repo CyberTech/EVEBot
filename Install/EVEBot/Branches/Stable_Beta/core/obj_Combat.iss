@@ -298,7 +298,7 @@ objectdef obj_Combat
 			if (${Ship.IsPod} || \
 				${Me.Ship.ArmorPct} < 50 || \
 				(${Me.Ship.ShieldPct} < 80 && ${Config.Combat.MinimumShieldPct} > 0) || \
-				${Me.Ship.CapacitorPct} < 80 )
+				${Me.Ship.CapacitorPct} < 60 )
 			{
 					This.CurrentState:Set["FLEE"]
 					UI:UpdateConsole["Debug: Staying in Flee State: Armor: ${Me.Ship.ArmorPct} Shield: ${Me.Ship.ShieldPct} Cap: ${Me.Ship.CapacitorPct}", LOG_DEBUG]
@@ -450,8 +450,7 @@ objectdef obj_Combat
 					{
 						if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${Ship.CargoFreeSpace}
 						{
-							/* Move only what will fit, minus 1 to account for CCP rounding errors. 3000 to leave space for faction loot */
-							QuantityToMove:Set[${Ship.CargoFreeSpace} / ${CargoIterator.Value.Volume} - 3000]
+							QuantityToMove:Set[${Math.Calc[(${Ship.CargoFreeSpace} - ${Config.Combat.RestockAmmoFreeSpace}) / ${CargoIterator.Value.Volume} - 1]}]
 						}
 						else
 						{
@@ -464,21 +463,18 @@ objectdef obj_Combat
 						{
 							CargoIterator.Value:MoveTo[MyShip,${QuantityToMove}]
 							wait 30
-							break
+							MyShip:StackAllCargo
+							wait 10
 						}
 
-						/*
-						if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
+						if ${Ship.CargoFreeSpace} <= ${Config.Combat.RestockAmmoFreeSpace}
 						{
-							UI:UpdateConsole["DEBUG: TransferListToShip: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
+							UI:UpdateConsole["DEBUG: RestockAmmo Done: Ship Cargo: ${Ship.CargoFreeSpace} < ${Config.Combat.RestockAmmoFreeSpace}", LOG_DEBUG]
 							break
 						}
-						*/
-						Me.Ship:StackAllCargo
 					}
 				}
 				while ${CargoIterator:Next(exists)}
-				wait 10
 			}
 			else
 			{
