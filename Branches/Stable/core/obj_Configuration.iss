@@ -678,7 +678,7 @@ objectdef obj_Configuration_Combat
 
 		This.CombatRef:AddSetting[AnomalyAssistMode, FALSE]
 		This.CombatRef:AddSetting[RestockAmmo, FALSE]
-		This.CombatRef:AddSetting[RestockAmmoFreeSpace, 2900]
+		This.CombatRef:AddSetting[RestockAmmoFreeSpace, 150]
 		This.CombatRef:AddSetting[MinimumDronesInSpace,3]
 		This.CombatRef:AddSetting[MinimumArmorPct, 35]
 		This.CombatRef:AddSetting[MinimumShieldPct, 25]
@@ -736,7 +736,7 @@ objectdef obj_Configuration_Combat
 
 	member:int RestockAmmoFreeSpace()
 	{
-		return ${This.CombatRef.FindSetting[RestockAmmoFreeSpace, 2900]}
+		return ${This.CombatRef.FindSetting[RestockAmmoFreeSpace, 150]}
 	}
 
 	method SetRestockAmmoFreeSpace(int value)
