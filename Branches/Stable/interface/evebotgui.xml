@@ -1161,12 +1161,12 @@
 								This:SetSelection[${This.ItemByText[${Script[EVEBot].VariableScope.Config.Combat.LowestStanding}].ID}]
 							</OnLoad>
 						</combobox>
-						<Text name='lblAmmoTypeID'>
+						<Text name='lblLowestStandingCombat'>
 							<X>65</X>
 							<Y>130</Y>
 							<Width>120</Width>
 							<Height>18</Height>
-							<Text>Lowest Standing</Text>
+							<Text>Min Acceotable Standing</Text>
 							<AutoTooltip>The lowest standing pilot we tolerate in system before we flee. It goes to -11!</AutoTooltip>
 						</Text>
 						<slider name='MinArmorPct'>
