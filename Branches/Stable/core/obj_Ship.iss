@@ -396,11 +396,11 @@ objectdef obj_Ship
 				case GROUP_MISSILELAUNCHERROCKET
 				case GROUP_MISSILELAUNCHERSIEGE
 				case GROUP_MISSILELAUNCHERSNOWBALL
-				case GROUP_ECCM
-					This.ModuleList_ECCM:Insert[${ModuleIter.Value}]
-					break
 				case GROUP_MISSILELAUNCHERSTANDARD
 					This.ModuleList_Weapon:Insert[${ModuleIter.Value}]
+					break
+				case GROUP_ECCM
+					This.ModuleList_ECCM:Insert[${ModuleIter.Value}]
 					break
 				case GROUPID_FREQUENCY_MINING_LASER
 					break
