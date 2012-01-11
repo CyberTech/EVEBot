@@ -235,6 +235,11 @@ objectdef obj_OreHauler inherits obj_Hauler
 		variable int systemID = -1
 		variable int beltID = -1
 
+		if !${Config.Common.BotModeName.Equal[Hauler]}
+		{
+			return
+		}
+
 		charID:Set[${haulParams.Token[1,","]}]
 		systemID:Set[${haulParams.Token[2,","]}]
 		beltID:Set[${haulParams.Token[3,","]}]
@@ -326,7 +331,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 				if (${Cargo.Value.Quantity} * ${Cargo.Value.Volume}) > ${Ship.CargoFreeSpace}
 				{
 					/* Move only what will fit, minus 1 to account for CCP rounding errors. */
-					QuantityToMove:Set[${Ship.CargoFreeSpace} / ${Cargo.Value.Volume} - 1]
+					QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${Cargo.Value.Volume} - 1]}]
 					if ${QuantityToMove} <= 0
 					{
 						This.PickupFailed:Set[TRUE]
@@ -334,7 +339,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 				}
 				else
 				{
-					QuantityToMove:Set[${Cargo.Value.Quantity} - ${leave}]
+					QuantityToMove:Set[${Math.Calc[${Cargo.Value.Quantity} - ${leave}]}]
 					leave:Set[0]
 				}
 

@@ -24,6 +24,7 @@ objectdef obj_Ship
 	variable index:module ModuleList
 	variable index:module ModuleList_MiningLaser
 	variable index:module ModuleList_Weapon
+	variable index:module ModuleList_ECCM
 	variable index:module ModuleList_ActiveResists
 	variable index:module ModuleList_Regen_Shield
 	variable index:module ModuleList_Repair_Armor
@@ -314,6 +315,7 @@ objectdef obj_Ship
 		/* build module lists */
 		This.ModuleList:Clear
 		This.ModuleList_MiningLaser:Clear
+		This.ModuleList_ECCM:Clear
 		This.ModuleList_Weapon:Clear
 		This.ModuleList_ActiveResists:Clear
 		This.ModuleList_Regen_Shield:Clear
@@ -397,6 +399,9 @@ objectdef obj_Ship
 				case GROUP_MISSILELAUNCHERSTANDARD
 					This.ModuleList_Weapon:Insert[${ModuleIter.Value}]
 					break
+				case GROUP_ECCM
+					This.ModuleList_ECCM:Insert[${ModuleIter.Value}]
+					break
 				case GROUPID_FREQUENCY_MINING_LASER
 					break
 				case GROUPID_SHIELD_BOOSTER
@@ -447,6 +452,15 @@ objectdef obj_Ship
 		do
 		{
 			UI:UpdateConsole["Slot: ${ModuleIter.Value.ToItem.Slot} ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
+		}
+		while ${ModuleIter:Next(exists)}
+		
+		UI:UpdateConsole["ECCM Modules:", LOG_MINOR, 2]
+		This.ModuleList_ECCM:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			UI:UpdateConsole["	 Slot: ${ModuleIter.Value.ToItem.Slot}  ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
 		while ${ModuleIter:Next(exists)}
 
@@ -1604,6 +1618,50 @@ objectdef obj_Ship
 		while ${ModuleIter:Next(exists)}
 	}
 
+	method Activate_ECCM()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		variable iterator ModuleIter
+
+		This.ModuleList_ECCM:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline}
+			{
+				UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
+				ModuleIter.Value:Click
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+	}
+
+	method Deactivate_ECCM()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		variable iterator ModuleIter
+
+		This.ModuleList_ECCM:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+		if ${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsDeactivating}
+			{
+				UI:UpdateConsole["Deactivating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
+				ModuleIter.Value:Click
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+	}
+	
 	method Activate_Tracking_Computer()
 	{
 		if !${Me.Ship(exists)}

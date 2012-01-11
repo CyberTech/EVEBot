@@ -678,6 +678,7 @@ objectdef obj_Configuration_Combat
 
 		This.CombatRef:AddSetting[AnomalyAssistMode, FALSE]
 		This.CombatRef:AddSetting[RestockAmmo, FALSE]
+		This.CombatRef:AddSetting[RestockAmmoFreeSpace, 150]
 		This.CombatRef:AddSetting[MinimumDronesInSpace,3]
 		This.CombatRef:AddSetting[MinimumArmorPct, 35]
 		This.CombatRef:AddSetting[MinimumShieldPct, 25]
@@ -727,27 +728,37 @@ objectdef obj_Configuration_Combat
 	{
 		return ${This.CombatRef.FindSetting[RestockAmmo, FALSE]}
 	}
-	
+
 	method SetRestockAmmo(bool value)
 	{
 		This.CombatRef:AddSetting[RestockAmmo,${value}]
+	}
+
+	member:int RestockAmmoFreeSpace()
+	{
+		return ${This.CombatRef.FindSetting[RestockAmmoFreeSpace, 150]}
+	}
+
+	method SetRestockAmmoFreeSpace(int value)
+	{
+		This.CombatRef:AddSetting[RestockAmmoFreeSpace,${value}]
 	}
 
 	method SetAmmoBookmark(string value)
 	{
 		This.CombatRef:AddSetting[AmmoBookmark, ${value}]
 	}
-	
+
 	member:string AmmoBookmark()
 	{
 		return ${This.CombatRef.FindSetting[AmmoBookmark, AMMO]}
 	}
-	
+
 	method SetOrbit(bool value)
 	{
 		This.CombatRef:AddSetting[Orbit,${value}]
 	}
-	
+
 	member:bool Orbit()
 	{
 		return ${This.CombatRef.FindSetting[Orbit, FALSE]}
@@ -757,22 +768,22 @@ objectdef obj_Configuration_Combat
 	{
 		This.CombatRef:AddSetting[OrbitAtOptimal,${value}]
 	}
-	
+
 	member:bool OrbitAtOptimal()
 	{
 		return ${This.CombatRef.FindSetting[OrbitAtOptimal, FALSE]}
 	}
-	
+
 	method SetOrbitDistance(int value)
 	{
 		This.CombatRef:AddSetting[OrbitDistance,${value}]
 	}
-	
+
 	member:int OrbitDistance()
 	{
 		return ${This.CombatRef.FindSetting[OrbitDistance, 30000]}
 	}
-	
+
 	method SetAnomalyAssistMode(bool value)
 	{
 		This.CombatRef:AddSetting[AnomalyAssistMode, ${value}]
@@ -952,7 +963,7 @@ objectdef obj_Configuration_Combat
 	{
 		This.CombatRef:AddSetting[Lowest Standing, ${value}]
 	}
-	
+
 	member:bool LootMyKills()
 	{
 		return ${This.CombatRef.FindSetting[LootMyKills, FALSE]}
