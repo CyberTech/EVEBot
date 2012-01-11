@@ -257,39 +257,36 @@ objectdef obj_Ratter
 					{
 						do
 						{
-							;if (${Item.Value.MetaLevel} > 4 || ${Item.Value.GroupID} == 27) && ${Item.Value.GroupID} != 11
-							;{
-								UI:UpdateConsole["obj_Ratter: Found ${Item.Value.Quantity} x ${Item.Value.Name} - ${Math.Calc[${Item.Value.Quantity} * ${Item.Value.Volume}]}m3"]
-								if (${Item.Value.Quantity} * ${Item.Value.Volume}) > ${Ship.CargoFreeSpace}
+							UI:UpdateConsole["obj_Ratter: Found ${Item.Value.Quantity} x ${Item.Value.Name} - ${Math.Calc[${Item.Value.Quantity} * ${Item.Value.Volume}]}m3"]
+							if (${Item.Value.Quantity} * ${Item.Value.Volume}) > ${Ship.CargoFreeSpace}
+							{
+								/* Move only what will fit, minus 1 to account for CCP rounding errors. */
+								QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${Item.Value.Volume} - 1]}]
+								if ${QuantityToMove} <= 0
 								{
-									/* Move only what will fit, minus 1 to account for CCP rounding errors. */
-									QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${Item.Value.Volume} - 1]}]
-									if ${QuantityToMove} <= 0
-									{
-										UI:UpdateConsole["ERROR: obj_Ratter: QuantityToMove = ${QuantityToMove}!"]
-										This.CurrentState:Set["DROP"]
-										break
-									}
-								}
-								else
-								{
-									QuantityToMove:Set[${Item.Value.Quantity}]
-								}
-
-								UI:UpdateConsole["obj_Ratter: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Item.Value.Volume}]}m3"]
-								if ${QuantityToMove} > 0
-								{
-									Item.Value:MoveTo[MyShip,${QuantityToMove}]
-									wait 30
-								}
-
-								if ${Ship.CargoFull}
-								{
-									UI:UpdateConsole["DEBUG: obj_Ratter: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}", LOG_DEBUG]
+									UI:UpdateConsole["ERROR: obj_Ratter: QuantityToMove = ${QuantityToMove}!"]
 									This.CurrentState:Set["DROP"]
 									break
 								}
-							;}
+							}
+							else
+							{
+								QuantityToMove:Set[${Item.Value.Quantity}]
+							}
+
+							UI:UpdateConsole["obj_Ratter: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Item.Value.Volume}]}m3"]
+							if ${QuantityToMove} > 0
+							{
+								Item.Value:MoveTo[MyShip,${QuantityToMove}]
+								wait 30
+							}
+
+							if ${Ship.CargoFull}
+							{
+								UI:UpdateConsole["DEBUG: obj_Ratter: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}", LOG_DEBUG]
+								This.CurrentState:Set["DROP"]
+								break
+							}
 						}
 						while ${Item:Next(exists)}
 					}
