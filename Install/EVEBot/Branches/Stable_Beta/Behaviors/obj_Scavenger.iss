@@ -1,16 +1,16 @@
 /*
 	The scavenger object
-	
-	The obj_Scavenger object is a bot mode designed to be used with 
+
+	The obj_Scavenger object is a bot mode designed to be used with
 	obj_Freighter bot module in EVEBOT.  It warp to asteroid belts
 	snag some loot and warp off.
-	
-	-- GliderPro	
+
+	-- GliderPro
 */
 
 /* obj_Scavenger is a "bot-mode" which is similar to a bot-module.
- * obj_Scavenger runs within the obj_Freighter bot-module.  It would 
- * be very straightforward to turn obj_Scavenger into a independent 
+ * obj_Scavenger runs within the obj_Freighter bot-module.  It would
+ * be very straightforward to turn obj_Scavenger into a independent
  * bot-module in the future if it outgrows its place in obj_Freighter.
  */
 objectdef obj_Scavenger
@@ -30,7 +30,7 @@ objectdef obj_Scavenger
 	method Shutdown()
 	{
 	}
-	
+
 	/* NOTE: The order of these if statements is important!! */
 	method SetState()
 	{
@@ -46,7 +46,7 @@ objectdef obj_Scavenger
 		{
 		 	This.CurrentState:Set["SCAVENGE"]
 			return
-		}		
+		}
 	    elseif ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 		{
 			This.CurrentState:Set["DROPOFF"]
@@ -86,9 +86,9 @@ objectdef obj_Scavenger
 				break
 			case IDLE
 				break
-		}	
+		}
 	}
-	
+
 	function WarpToFirstNonEmptyWreck()
 	{
 		variable index:entity Wrecks
@@ -134,19 +134,19 @@ objectdef obj_Scavenger
 				{
 					call Ship.Approach ${Wreck.Value.ID} LOOT_RANGE
 					Wreck.Value:OpenCargo
-					wait 10				
+					wait 10
 					call Ship.OpenCargo
-					wait 10				
+					wait 10
 					Wreck.Value:GetCargo[Items]
 					UI:UpdateConsole["obj_Scavenger: DEBUG:  Wreck contains ${Items.Used} items."]
-					
+
 					Items:GetIterator[Item]
 					if ${Item:First(exists)}
 					{
 						do
 						{
-							ItemVolume:Set[${Item.Value.Quantity} * ${Item.Value.Volume}]
-							if ${Math.Calc[${ItemVolume} + ${TotalVolume}]} < ${Ship.CargoFreeSpace}				
+							ItemVolume:Set[${Math.Calc[${Item.Value.Quantity} * ${Item.Value.Volume}]}]
+							if ${Math.Calc[${ItemVolume} + ${TotalVolume}]} < ${Ship.CargoFreeSpace}
 							{
 								ItemsToMove:Insert[${Item.Value.ID}]
 								TotalVolume:Set[${Math.Calc[${ItemVolume} + ${TotalVolume}]}]
@@ -154,7 +154,7 @@ objectdef obj_Scavenger
 						}
 						while ${Item:Next(exists)}
 					}
-					
+
 					if ${ItemsToMove.Used} > 0
 					{
 						EVE:MoveItemsTo[ItemsToMove, MyShip]

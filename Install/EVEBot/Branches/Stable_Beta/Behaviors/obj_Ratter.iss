@@ -261,7 +261,7 @@ objectdef obj_Ratter
 							if (${Item.Value.Quantity} * ${Item.Value.Volume}) > ${Ship.CargoFreeSpace}
 							{
 								/* Move only what will fit, minus 1 to account for CCP rounding errors. */
-								QuantityToMove:Set[${Ship.CargoFreeSpace} / ${Item.Value.Volume} - 1]
+									QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${Item.Value.Volume} - 1]}]
 								if ${QuantityToMove} <= 0
 								{
 								UI:UpdateConsole["ERROR: obj_Ratter: QuantityToMove = ${QuantityToMove}!"]
