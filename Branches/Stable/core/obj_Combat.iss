@@ -404,6 +404,7 @@ objectdef obj_Combat
 		variable index:item ContainerItems
 		variable iterator CargoIterator
 
+		; TODO - This will find the first bookmark matching this name, even if it's out of the system. This would be bad. Need to iterate and find the right one.
 		if !${EVE.Bookmark[${Config.Combat.AmmoBookmark}](exists)}
 		{
 			UI:UpdateConsole["RestockAmmo: Fleeing: No ammo bookmark"]

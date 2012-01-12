@@ -702,6 +702,7 @@ objectdef obj_Targets
 		if ${tgtIterator:First(exists)}
 		do
 		{
+			; todo - make ignoring whitelisted chars in your belt an optional action.
 			if ${tgtIterator.Value.Owner.CharID} != ${Me.CharID} && !${Social.PilotWhiteList.Contains[${tgtIterator.Value.Owner.CharID}]}
 			{	/* A player is already present here ! */
 				UI:UpdateConsole["Player found ${tgtIterator.Value.Owner} ${tgtIterator.Value.Owner.CharID} ${tgtIterator.Value}"]
