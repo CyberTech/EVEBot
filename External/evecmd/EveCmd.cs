@@ -41,7 +41,7 @@ namespace evecmd
         {
             // set up the handler for events coming back from InnerSpace
             LavishScript.Events.AttachEventTarget(LavishScript.Events.RegisterEvent("OnFrame"), OnFrame);
-            LavishScript.Commands.AddCommand("evecmd", Update);
+            LavishScript.Commands.AddCommand("ee", Update);
 
             lock (lock_) {
                 Monitor.Wait(lock_);
@@ -126,7 +126,7 @@ namespace evecmd
                 InnerSpace.Echo("Exiting...");
                 // set up the handler for events coming back from InnerSpace
                 LavishScript.Events.DetachEventTarget("OnFrame", OnFrame);
-                LavishScript.Commands.RemoveCommand("evecmd");
+                LavishScript.Commands.RemoveCommand("ee");
 
                 lock (lock_) {
                     Monitor.Pulse(lock_);
@@ -146,6 +146,13 @@ namespace evecmd
                     g.Print("#{0}: [{2}] {1}", i, entity.Name, entity.ID);
                     i++;
                 }
+            }
+            else if (command == "agents") {
+                var agents = g.eve.GetAgents();
+                if (agents == null)
+                    g.Print("EVE.GetAgents() return null");
+                else
+                    g.Print("Found {0} Agents:", agents.Count);
             }
             else if (command == "stations") {
                 List<Entity> entities = g.eve.QueryEntities("GroupID = 15");

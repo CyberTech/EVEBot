@@ -18,6 +18,15 @@ namespace evecmd
             return string.Format(message, paramList);
         }
 
+        public static double Distance(this BookMark bookmark) {
+            if (bookmark.ToEntity.IsValid)
+                return bookmark.ToEntity.Distance;
+            else {
+                var me = g.me.ToEntity;
+                return Distance(me.X, me.Y, me.Z, bookmark.X, bookmark.Y, bookmark.Z);
+            }
+        }
+
         public static AgentMission FindMission(int agent_id)
         {
             List<AgentMission> missions = g.eve.GetAgentMissions();

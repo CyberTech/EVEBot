@@ -69,30 +69,26 @@ namespace evecmd
                 // if we're in the right solar system, then warp to or approach the bookmark
                 if (g.me.SolarSystemID == bm.SolarSystemID)
                 {
-                    double distance;
-                    if (bm.ToEntity != null && bm.ToEntity.IsValid)
-                        distance = bm.ToEntity.Distance;
-                    else
-                        distance = Util.Distance(bm.X, bm.Y, bm.Z, g.me.ToEntity.X, g.me.ToEntity.Y, g.me.ToEntity.Z);
+                    double distance = bm.Distance();
 
-                    // if we're too far away, warp
-                    if (distance > 150000.0)
-                    {
-                        substate = new WarpState(bm);
-                        substate.OnFrame();
-                        return true;
-                    }
-                    else if (distance > 10000.0)
-                    {
-                        substate = new ApproachState(bm);
-                        substate.OnFrame();
-                        return true;
-                    }
-                    else
-                    {
-                        // we've made it!
-                        SetDone("Success");
-                        return false;
+                    // returns -1 if we're in some kind of transition
+                    if (distance >= 0.0) {
+                        // if we're too far away, warp
+                        if (distance > 150000.0) {
+                            substate = new WarpState(bm);
+                            substate.OnFrame();
+                            return true;
+                        }
+                        else if (distance > 10000.0) {
+                            substate = new ApproachState(bm);
+                            substate.OnFrame();
+                            return true;
+                        }
+                        else {
+                            // we've made it!
+                            SetDone("Success");
+                            return false;
+                        }
                     }
                 }
             }
@@ -260,11 +256,11 @@ namespace evecmd
     public class ApproachState : SimpleState
     {
         bool started = false;
-        int entity_id = -1;
+        long entity_id = -1;
         bool use_bookmark = false;
         string bm_label;
 
-        public ApproachState(int entity_id)
+        public ApproachState(long entity_id)
         {
             this.entity_id = entity_id;
         }
@@ -277,48 +273,16 @@ namespace evecmd
 
         public override bool OnFrameImpl()
         {
+            Entity entity = use_bookmark ? g.eve.Bookmark(bm_label).ToEntity : g.eve.QueryEntities("ID = {0}".Format(entity_id)).Single();
             if (!started)
             {
-                if (use_bookmark)
-                {
-                    BookMark bm = g.eve.Bookmark(bm_label);
-                    if (bm == null || !bm.IsValid)
-                    {
-                        SetDone("Bookmark not found");
-                        return false;
-                    }
-
-                    // TODO: FIXME
-                    SetDone("We don't know how to approach a bookmark!");
-                    return false;
-                }
-                else
-                {
-                    List<Entity> entities = g.eve.QueryEntities("ID = {0}".Format(entity_id));
-                    if (entities.Count == 0)
-                    {
-                        SetDone("entity not found");
-                        return false;
-                    }
-
-                    if (entities.Count > 1)
-                    {
-                        SetDone("entity ambiguous");
-                        return false;
-                    }
-
-                    Entity entity = entities[0];
-
-                    entity.Approach();
-                }
+                entity.Approach();
                 started = true;
                 return true;
             }
             else
             {
-                // we did enter warp - if we drop out of warp, then we're done
-                if (g.me.ToEntity.Mode != 3)
-                {
+                if (entity.Distance < 10000.0) {
                     SetDone("Success");
                     return false;
                 }
