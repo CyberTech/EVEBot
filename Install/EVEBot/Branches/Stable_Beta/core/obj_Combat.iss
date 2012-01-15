@@ -428,7 +428,7 @@ objectdef obj_Combat
 				; TODO - don't dump the ammo we're using for our own weapons. Do dump other ammo that we might have looted.
 				call Cargo.TransferCargoToCorpHangarArray
 
-				Entity[${Entity["TypeID = 17621"].ID}]:DoGetCargo[ContainerItems]
+				Entity[${Entity["TypeID = 17621"].ID}]:GetCargo[ContainerItems]
 			}
 
 			; If there is no CHA, but there is a GSC, Take Ammo, do not drop off items
@@ -438,7 +438,7 @@ objectdef obj_Combat
 				call Ship.Approach ${Entity["GroupID = 340"].ID} 2000
 
 				Entity[${Entity["GroupID = 340"].ID}]:OpenCargo
-				Entity[${Entity["GroupID = 340"].ID}]:DoGetCargo[ContainerItems]
+				Entity[${Entity["GroupID = 340"].ID}]:GetCargo[ContainerItems]
 			}
 
 			ContainerItems:GetIterator[CargoIterator]
