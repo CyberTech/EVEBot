@@ -201,7 +201,7 @@ objectdef obj_Social
 		while ${PilotIterator:Next(exists)}
 		return TRUE
 	}
-	
+
 	; Returns false if pilots with failed standing are in system
 	member:bool CheckStanding()
 	{
@@ -222,7 +222,7 @@ objectdef obj_Social
 		if ${PilotIterator:First(exists)}
 		do
 		{
-			CorpID:Set[${PilotIterator.Value.CorporationID}]
+			CorpID:Set[${PilotIterator.Value.Corp.ID}]
 			AllianceID:Set[${PilotIterator.Value.AllianceID}]
 			PilotID:Set[${PilotIterator.Value.CharID}]
 
@@ -269,7 +269,7 @@ objectdef obj_Social
 				${Me.CharID} != ${PilotIterator.Value.CharID} && \
 				(	${This.PilotBlackList.Contains[${PilotIterator.Value.CharID}]} || \
 					${This.AllianceBlackList.Contains[${PilotIterator.Value.AllianceID}]} || \
-					${This.CorpBlackList.Contains[${PilotIterator.Value.CorporationID}]} \
+					${This.CorpBlackList.Contains[${PilotIterator.Value.Corp.ID}]} \
 				)
 			{
 				UI:UpdateConsole["Alert: Blacklisted Pilot: ${PilotIterator.Value.Name}!", LOG_CRITICAL]
