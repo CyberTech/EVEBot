@@ -408,7 +408,7 @@ objectdef obj_Ship
 					This.ModuleList_Weapon:Insert[${ModuleIter.Value.ID}]
 					break
 				case GROUP_ECCM
-					This.ModuleList_ECCM:Insert[${ModuleIter.Value}]
+					This.ModuleList_ECCM:Insert[${ModuleIter.Value.ID}]
 					break
 				case GROUPID_FREQUENCY_MINING_LASER
 					break
@@ -462,7 +462,7 @@ objectdef obj_Ship
 			UI:UpdateConsole["Slot: ${ModuleIter.Value.ToItem.Slot} ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
 		while ${ModuleIter:Next(exists)}
-		
+
 		UI:UpdateConsole["ECCM Modules:", LOG_MINOR, 2]
 		This.ModuleList_ECCM:GetIterator[ModuleIter]
 		if ${ModuleIter:First(exists)}
@@ -1672,7 +1672,7 @@ objectdef obj_Ship
 		}
 		while ${ModuleIter:Next(exists)}
 	}
-	
+
 	method Activate_Tracking_Computer()
 	{
 		if !${Me.Ship(exists)}
