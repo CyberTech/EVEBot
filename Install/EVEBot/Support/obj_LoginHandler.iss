@@ -14,35 +14,34 @@
 
 */
 
-objectdef obj_LoginHandler
+objectdef obj_LoginHandler inherits obj_BaseClass
 {
 	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
-	variable time NextPulse
 
 	variable int LoginTimer = 0
 	variable string CurrentState
-	variable int PulseIntervalInSeconds = 1
 
 	; Added these in so no magic numbers are used
-	variable int startWaitTime = 0
-	variable int loginWaitTime = 2
-	variable int connectWaitTime = 5
-	variable int AfterCharSelectClickWaitTime = 20
-	variable int inspaceWaitTime = 60
-	variable int evebotWaitTime = 30
+	variable float loginWaitTime = 2.0
+	variable float connectWaitTime = 5.0
+	variable float inspaceWaitTime = 15.0
+	variable float CharSelectWaitTime = 10.0
 
 	method Initialize()
 	{
-		UI:UpdateConsole["${This.ObjectName}: Initialized", LOG_MINOR]
+		LogPrefix:Set["${This.ObjectName}"]
+
 		This.CurrentState:Set["START"]
+
+		PulseTimer:SetIntervals[1.0,1.5]
+
+		UI:UpdateConsole["${LogPrefix}: Initialized", LOG_DEBUG]
 	}
 
 	method Start()
 	{
+		This.PulseTimer:Expire
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-		This.NextPulse:Set[${Time.Timestamp}]
 	}
 
 	method Shutdown()
@@ -54,18 +53,17 @@ objectdef obj_LoginHandler
 	{
 		if ${This.LoginTimer} > 0
 		{
-			This.PulseIntervalInSeconds:Set[${This.LoginTimer}]
-			UI:UpdateConsole["DEBUG: Pulse: ${This.LoginTimer} - ${This.CurrentState}", LOG_DEBUG]
+			UI:UpdateConsole["DEBUG: Pulse: Setting Timer: ${This.LoginTimer}s - ${This.CurrentState}", LOG_DEBUG]
+			This.PulseTimer:SetMinInterval[${This.LoginTimer}]
+			This.PulseTimer:Update[FALSE]
 			This.LoginTimer:Set[0]
 		}
 
-		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+		if ${This.PulseTimer.Ready}
 		{
 			This:DoLogin
-
-			This.NextPulse:Set[${Time.Timestamp}]
-			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-			This.NextPulse:Update
+			This.PulseTimer:SetMinInterval[1.0]
+			This.PulseTimer:Update[FALSE]
 		}
 	}
 
@@ -81,16 +79,24 @@ objectdef obj_LoginHandler
 
 		if ${${EXTNAME}(exists)}
 		{
-			wait 100 ${${EXTNAME}.IsReady}
+			UI:UpdateConsole["Login: Waiting for Extension ${EXTNAME}", LOG_DEBUG]
+			wait 300 ${${EXTNAME}.IsReady}
+			if ${${EXTNAME}.IsReady}
+			{
+				return
+			}
 		}
 
-		UI:UpdateConsole["Login: Loading Extension ${EXTNAME}", LOG_MINOR]
+		UI:UpdateConsole["Login: Loading Extension ${EXTNAME}", LOG_DEBUG]
 		do
 		{
 			if !${${EXTNAME}.IsLoading} && !${${EXTNAME}.IsReady}
 			{
-				extension -unload ${EXTNAME}
-				wait 20
+				if !${${EXTNAME}(exists)}
+				{
+					extension -unload ${EXTNAME}
+					wait 20
+				}
 				extension ${EXTNAME}
 				wait 100 ${${EXTNAME}.IsReady}
 			}
@@ -108,11 +114,11 @@ objectdef obj_LoginHandler
 				wait 10
 			}
 			while (${Timer} < 20)
-			UI:UpdateConsole["Login:LoadExtension: Loading extension ${EXTNAME} timed out, retrying"]
+			UI:UpdateConsole["Login:LoadExtension: Loading extension ${EXTNAME} timed out, retrying", LOG_STANDARD]
 		}
 		while (!${${EXTNAME}(exists)})
 	}
-	
+
 	function Load_isxStealth()
 	{
 		variable int Timer = 0
@@ -138,20 +144,41 @@ objectdef obj_LoginHandler
 
 	method DoLogin()
 	{
-		UI:UpdateConsole["DEBUG: Current state: ${This.CurrentState}", LOG_DEBUG]
+		if ${ISXEVE.IsBeta} && ${EVEWindow[ByName,modal](exists)}
+		{
+			if ${EVEWindow[ByName,modal].Text.Find["A client update is available"](exists)}
+			{
+				EVEWindow[ByName,modal]:ClickButtonOK
+				This.CurrentState:Set["START"]
+				This.LoginTimer:Set[5.0]
+				return
+			}
+			elseif ${EVEWindow[ByName,modal].Text.Find["The client update has been installed."](exists)} || \
+				${EVEWindow[ByName,modal].Text.Find["The update has been downloaded."](exists)}
+			{
+				UI:UpdateConsole["Restarting client due to patch...", LOG_STANDARD]
+				timedcommand 5 EVEWindow[ByName,modal]:ClickButtonOK
+				Script:End
+			}
+			else
+			{
+				UI:UpdateConsole["Error: Unexpected Modal dialog with text:", LOG_STANDARD]
+				UI:UpdateConsole["${EVEWindow[ByName,modal].Text}", LOG_STANDARD]
+				UI:UpdateConsole["--- Launcher Ended ---", LOG_STANDARD]
+				Display.Window:Flash
+				Script:End
+			}
+		}
 
 		switch ${This.CurrentState}
 		{
 			case START
-				if ${ISXEVE.IsBeta} && ${EVEWindow[ByName,modal](exists)}
+				if ${Type[isxeve].Member[IsBeta]} && ${ISXEVE.IsBeta} && ${EVE.IsProgressWindowOpen}
 				{
-					if ${EVEWindow[ByName,modal].Text.Find["A client update is available."](exists)}
-					{
-						EVEWindow[ByName,modal]:ClickButtonNo
-					}
+					break
 				}
 
-				EVE:CloseAllMessageBoxes
+				;EVE:CloseAllMessageBoxes
 
 				if ${Login(exists)}
 				{
@@ -161,7 +188,6 @@ objectdef obj_LoginHandler
 				if ${CharSelect(exists)}
 				{
 					This.CurrentState:Set["CONNECTING"]
-					This.LoginTimer:Set[1]
 					break
 				}
 				if !${Login(exists)} && !${CharSelect(exists)}
@@ -172,6 +198,12 @@ objectdef obj_LoginHandler
 				}
 			case SERVERDOWN
 				UI:UpdateConsole["DEBUG: Server Status: ${Login.ServerStatus}", LOG_DEBUG]
+				/*
+					Known States:
+						"OK"
+						"Starting up (1 minute and 17 seconds)"
+						"Not accepting connections"
+				*/
 				if ${Login.ServerStatus.Equal["OK"]} || ${Login.ServerStatus.Equal[" OK"]}
 				{
 					This.CurrentState:Set["SERVERUP"]
@@ -181,14 +213,13 @@ objectdef obj_LoginHandler
 					This.CurrentState:Set["SERVERDOWN"]
 					This.LoginTimer:Set[${This.connectWaitTime}]
 				}
-				EVE:CloseAllMessageBoxes
+				;EVE:CloseAllMessageBoxes
 				break
 			case SERVERUP
 				Login:SetUsername[${Config.Common.LoginName}]
 				Login:SetPassword[${Config.Common.LoginPassword}]
 				This.CurrentState:Set["LOGIN_ENTERED"]
-				This.LoginTimer:Set[1]
-				EVE:CloseAllMessageBoxes
+				;EVE:CloseAllMessageBoxes
 				break
 			case LOGIN_ENTERED
 				Login:Connect
@@ -202,15 +233,16 @@ objectdef obj_LoginHandler
 					{
 						; TODO - add a retry count here so we don't spam.
 						This.CurrentState:Set["SERVERUP"]
-						This.LoginTimer:Set[50]
+						This.LoginTimer:Set[50.0]
 						break
 					}
 
 					if ${EVEWindow[ByName,modal].Text.Find["Account subscription expired"](exists)}
 					{
-						echo " "
-						echo "Launcher: Account Expired, ending script"
-						echo " "
+						UI:UpdateConsole[" ", LOG_STANDARD]
+						UI:UpdateConsole["Launcher: Account Expired, ending script", LOG_STANDARD]
+						UI:UpdateConsole["${EVEWindow[ByName,modal].Text}", LOG_STANDARD]
+						UI:UpdateConsole[" ", LOG_STANDARD]
 						Display.Window:Flash
 						Script:End
 						break
@@ -218,9 +250,10 @@ objectdef obj_LoginHandler
 
 					if ${EVEWindow[ByName,modal].Text.Find["has been disabled"](exists)}
 					{
-						echo " "
-						echo "Launcher: Account banned?"
-						echo " "
+						UI:UpdateConsole[" ", LOG_STANDARD]
+						UI:UpdateConsole["Launcher: Account banned?", LOG_STANDARD]
+						UI:UpdateConsole["${EVEWindow[ByName,modal].Text}", LOG_STANDARD]
+						UI:UpdateConsole[" ", LOG_STANDARD]
 						Display.Window:Flash
 						Script:End
 						break
@@ -234,7 +267,7 @@ objectdef obj_LoginHandler
 						; Server is still coming up, or you are queued. Wait 10 seconds.
 						Press Esc
 						This.CurrentState:Set["PASS_ENTERED"]
-						This.LoginTimer:Set[10]
+						This.LoginTimer:Set[10.0]
 						break
 					}
 					; Reconnect if we're still at the login screen
@@ -242,16 +275,45 @@ objectdef obj_LoginHandler
 					This.LoginTimer:Set[${This.connectWaitTime}]
 					break
 				}
-				if ${CharSelect(exists)}
+				if ${Type[isxeve].Member[IsBeta]} && ${ISXEVE.IsBeta}
 				{
-					if ${ISXEVE.IsBeta} && ${EVEWindow[ByName,modal].Text.Find["has been flagged for recustomization."](exists)}
+					if ${CharSelect(exists)} && !${EVE.IsProgressWindowOpen}
 					{
-						EVEWindow[ByName,modal]:ClickButtonNo
+						This.CurrentState:Set["CHARSELECT"]
+						This.LoginTimer:Set[${This.CharSelectWaitTime}]
+						break
+					}
+				}
+				else
+				{
+					if ${CharSelect(exists)}
+					{
+						This.CurrentState:Set["CHARSELECT"]
+						This.LoginTimer:Set[${This.CharSelectWaitTime}]
+						break
+					}
+				}
+			case CHARSELECT
+				{
+					if !${CharSelect(exists)}
+					{
+						if ${Me(exists)} && ${MyShip(exists)} && (${Me.InSpace} || ${Me.InStation})
+						{
+							This.CurrentState:Set["LOGGED_IN"]
+							This.LoginTimer:Set[${This.inspaceWaitTime}]
+							break
+						}
 						break
 					}
 
-					if ${EVEWindow[ByName,MessageBox](exists)} || \
-						${EVEWindow[ByCaption,System Congested](exists)}
+					if ${Type[isxeve].Member[IsBeta]} && ${ISXEVE.IsBeta} && ${EVE.IsProgressWindowOpen}
+					{
+						;echo {EVE.ProgressWindowTitle} == ${EVE.ProgressWindowTitle}
+						This.LoginTimer:Set[2]
+						break
+					}
+
+					if ${EVEWindow[ByName,MessageBox](exists)} || ${EVEWindow[ByCaption,System Congested](exists)}
 					{
 						; This happens at character select, when the system is full
 						Press Esc
@@ -259,34 +321,36 @@ objectdef obj_LoginHandler
 						break
 					}
 
-					;UI:UpdateConsole["DEBUG: AutoLoginCharID: ${Config.Common.AutoLoginCharID}", LOG_DEBUG]
+					if ${Type[isxeve].Member[IsBeta]} && ${ISXEVE.IsBeta}
+					{
+						if ${EVEWindow[ByName,modal].Text.Find["has been flagged for recustomization."](exists)}
+						{
+							EVEWindow[ByName,modal]:ClickButtonNo
+							break
+						}
+					}
+					else
+					{
+						EVE:CloseAllMessageBoxes
+					}
+
+					if !${CharSelect.CharExists[${Config.Common.AutoLoginCharID}]}
+					{
+						UI:UpdateConsole["DEBUG: Waiting for ${Config.Common.AutoLoginCharID} to be ready", LOG_DEBUG]
+						break
+					}
+					; Do the actual login, if the rest has been gotten thru
+					UI:UpdateConsole["DEBUG: Logging in with CharID: ${Config.Common.AutoLoginCharID}", LOG_DEBUG]
 					CharSelect:ClickCharacter[${Config.Common.AutoLoginCharID}]
-					This.LoginTimer:Set[${This.AfterCharSelectClickWaitTime}]
-					break
-				}
-				else
-				{
-					; Now we're just waiting to get fully into the game. This can take a while, especially in systems like Jita.
-					if ${EVEWindow[ByCaption,ENTERING STATION](exists)} || \
-						${EVEWindow[ByCaption,PREPARE TO UNDOCK](exists)} || \
-						${EVEWindow[ByCaption,ENTERING SPACE](exists)} || \
-						${EVEWindow[ByCaption,CHARACTER SELECTION](exists)}
-					{
-						This.LoginTimer:Set[1]
-						break
-					}
-					if ${Me(exists)} && ${MyShip(exists)} && (${Me.InSpace} || ${Me.InStation})
-					{
-						This.CurrentState:Set["LOGGED_IN"]
-						This.LoginTimer:Set[${This.inspaceWaitTime}]
-						break
-					}
-					This.LoginTimer:Set[1]
+					This.LoginTimer:Set[${This.inspaceWaitTime}]
 					break
 				}
 			case LOGGED_IN
 				{
-					This.CurrentState:Set["FINISHED"]
+					if ${Me(exists)} && ${MyShip(exists)} && (${Me.InSpace} || ${Me.InStation})
+					{
+						This.CurrentState:Set["FINISHED"]
+					}
 					break
 				}
 				break
