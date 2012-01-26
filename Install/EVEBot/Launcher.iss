@@ -31,7 +31,7 @@ function main(string unchar="", string StartBot=FALSE)
 {
 	;Script:Unsquelch
 	;Script[Launcher]:EnableProfiling
-	;Script:EnableDebugLogging[launcher_profile.txt]	
+	;Script:EnableDebugLogging[launcher_profile.txt]
 	if !${LavishScript.Executable.Find["ExeFile.exe"](exists)}
 	{
 		Script:End
@@ -48,7 +48,7 @@ function main(string unchar="", string StartBot=FALSE)
 	}
 
 	;wait 200 ${ISXSTEALTH.IsReady}
-	
+
 	if !${unchar.Equal[""]}
 	{
 		BaseConfig:ChangeConfig[${unchar}]
@@ -68,7 +68,7 @@ function main(string unchar="", string StartBot=FALSE)
 		; do config gui here, the next line will save a blank template for a config if none exists
 		return
 	}
-	
+
 	wait 200 ${Login(exists)}
 	if ${ISXEVE(exists)} && ${ISXEVE.IsReady}
 	{
@@ -101,13 +101,14 @@ function main(string unchar="", string StartBot=FALSE)
 						wait 15
 					}
 					break
+				case STABLE_BETA
 				case EVEBOT_BETA
 					EVE:CloseAllMessageBoxes
 					; TODO - get rid of this callback shit.
 					runscript "${Script.CurrentDirectory}/EveCallback.iss"
 
 					UI:UpdateConsole["Launcher: Starting EVEBot for ISXEVE Beta by CyberTech"]
-					runscript EVEBot/EVEBot EVEBot_Beta
+					runscript EVEBot/EVEBot stable_beta
 					wait 600 ${Script[EVEBot].Paused}
 					while ${Script[EVEBot].Paused}
 					{
