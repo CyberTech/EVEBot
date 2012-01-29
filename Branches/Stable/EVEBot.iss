@@ -8,10 +8,7 @@
 #if !${Type[isxeve].Member[IsBeta]} || !${ISXEVE.IsBeta}
 	#echo 
 	#echo 
-	#echo Stable_Beta EVEBot requires ISXEVE _BETA_, which is not public 
-	#echo at the moment. It will not operate properly with Live ISXEVE 
-	#echo Please use Stable or Tagged Trunk.  See IRC for 
-	#echo more information.
+	#echo Stable EVEBot requires ISXEVE 20120124.0121 or later
 	#echo 
 	#echo -- CyberTech
 	#echo 
