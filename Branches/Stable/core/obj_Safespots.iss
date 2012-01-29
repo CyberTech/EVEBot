@@ -14,7 +14,7 @@ objectdef obj_Safespots
 	method ResetSafeSpotList()
 	{
 		SafeSpots:Clear
-		EVE:DoGetBookmarks[SafeSpots]
+		EVE:GetBookmarks[SafeSpots]
 
 		variable int idx
 		idx:Set[${SafeSpots.Used}]

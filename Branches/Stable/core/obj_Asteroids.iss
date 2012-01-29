@@ -80,7 +80,7 @@ objectdef obj_Asteroids
 
 	function MoveToRandomBeltBookMark()
 	{
-		EVE:DoGetBookmarks[BeltBookMarkList]
+		EVE:GetBookmarks[BeltBookMarkList]
 
 		variable int RandomBelt
 		variable string Label
@@ -136,7 +136,7 @@ objectdef obj_Asteroids
 			beltsubstring:Set["ASTEROID BELT"]
 		}
 
-		EVE:DoGetEntities[Belts,GroupID, GROUP_ASTEROIDBELT]
+		EVE:QueryEntities[Belts, "GroupID = GROUP_ASTEROIDBELT"]
 		Belts:GetIterator[BeltIterator]
 		if ${BeltIterator:First(exists)}
 		{
@@ -182,7 +182,7 @@ objectdef obj_Asteroids
 						${This.IsBeltEmpty[${Belts[${curBelt}].Name}]} )
 
 				UI:UpdateConsole["Warping to Asteroid Belt: ${Belts[${curBelt}].Name}"]
-				call Ship.WarpToID ${Belts[${curBelt}]}
+				call Ship.WarpToID ${Belts[${curBelt}].ID}
 				This.BeltArrivalTime:Set[${Time.Timestamp}]
 				This.UsingMookMarks:Set[TRUE]
 				This.LastBeltIndex:Set[${curBelt}]
@@ -216,6 +216,10 @@ objectdef obj_Asteroids
 			}
 
 			UI:UpdateConsole["ERROR: OBJ_Asteroids:MoveToField: No asteroid belts in the area...", LOG_CRITICAL]
+			#if EVEBOT_DEBUG
+			UI:UpdateConsole["OBJ_Asteroids:MoveToField: Total Entities: ${EVE.EntitiesCount}", LOG_DEBUG]
+			UI:UpdateConsole["OBJ_Asteroids:MoveToField: Size of Belts List ${Belts.Used}", LOG_DEBUG]
+			#endif
 			EVEBot.ReturnToStation:Set[TRUE]
 			return
 		}
@@ -231,14 +235,14 @@ objectdef obj_Asteroids
 			{
 				;echo "DEBUG: obj_Asteroids: Checking for Ore Type ${This.OreTypeIterator.Key}"
 				This.AsteroidList:Clear
-				EVE:DoGetEntities[This.AsteroidList,CategoryID,${This.AsteroidCategoryID},${This.OreTypeIterator.Key}]
+				EVE:QueryEntities[This.AsteroidList, "CategoryID = ${This.AsteroidCategoryID} && Name =- ${This.OreTypeIterator.Key}"]
 
 				This.AsteroidList:GetIterator[AsteroidIterator]
 				if ${AsteroidIterator:First(exists)}
 				do
 				{
 
-					This.BestAsteroidList:Insert[${AsteroidIterator.Value}]
+					This.BestAsteroidList:Insert[${AsteroidIterator.Value.ID}]
 				}
 				while ${This.Asteroidlist:Next(exists)}
 
@@ -280,7 +284,7 @@ objectdef obj_Asteroids
 			This.AsteroidList:Clear
 			do
 			{
-				EVE:DoGetEntities[asteroid_index,CategoryID,${This.AsteroidCategoryID}, ${This.OreTypeIterator.Key}]
+				EVE:QueryEntities[asteroid_index, "CategoryID = ${This.AsteroidCategoryID} && Name =- \"${This.OreTypeIterator.Key}\""]
 				asteroid_index:GetIterator[asteroid_iterator]
 				if ${asteroid_iterator:First(exists)}
 				{
@@ -348,7 +352,7 @@ objectdef obj_Asteroids
 		{
 			do
 			{
-				if ${Entity[${AsteroidIterator.Value}](exists)} && \
+				if ${Entity[${AsteroidIterator.Value.ID}](exists)} && \
 					!${AsteroidIterator.Value.IsLockedTarget} && \
 					!${AsteroidIterator.Value.BeingTargeted} && \
 					${AsteroidIterator.Value.Distance} < ${Me.Ship.MaxTargetRange} && \
@@ -360,7 +364,7 @@ objectdef obj_Asteroids
 			while ${AsteroidIterator:Next(exists)}
 
 			if ${AsteroidIterator.Value(exists)} && \
-				${Entity[${AsteroidIterator.Value}](exists)}
+				${Entity[${AsteroidIterator.Value.ID}](exists)}
 			{
 				if ${AsteroidIterator.Value.IsLockedTarget} || \
 					${AsteroidIterator.Value.BeingTargeted}
@@ -381,7 +385,7 @@ objectdef obj_Asteroids
 				{
 				  wait 30
 				}
-				while ${Me.GetTargeting} > 0
+				while ${Me.TargetingCount} > 0
 
 				call This.UpdateList
 				return TRUE
@@ -401,7 +405,7 @@ objectdef obj_Asteroids
 						if ${AsteroidIterator.Value.Distance} < ${This.MaxDistanceToAsteroid}
 						{
 							UI:UpdateConsole["obj_Asteroids: TargetNext: No Asteroids in range & All lasers idle: Approaching nearest"]
-							call Ship.Approach ${AsteroidIterator.Value} ${Ship.OptimalMiningRange}
+							call Ship.Approach ${AsteroidIterator.Value.ID} ${Ship.OptimalMiningRange}
 						}
 						else
 						{
@@ -424,9 +428,9 @@ objectdef obj_Asteroids
 		else
 		{
 			UI:UpdateConsole["obj_Asteroids: No Asteroids within overview range"]
-			if ${Entity[GroupID, GROUP_ASTEROIDBELT].Distance} < CONFIG_OVERVIEW_RANGE
+			if ${Entity["GroupID = GROUP_ASTEROIDBELT"].Distance} < CONFIG_OVERVIEW_RANGE
 			{
-				This:BeltIsEmpty["${Entity[GroupID, GROUP_ASTEROIDBELT]}"]
+				This:BeltIsEmpty["${Entity[GroupID = GROUP_ASTEROIDBELT]}"]
 			}
 			call This.MoveToField TRUE
 			return TRUE

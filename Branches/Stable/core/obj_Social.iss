@@ -52,9 +52,9 @@ objectdef obj_Social
 
 		UI:UpdateConsole["obj_Social: Initializing whitelist...", LOG_MINOR]
 		PilotWhiteList:Add[${Me.CharID}]
-		if ${Me.CorporationID} > 0
+		if ${Me.Corp.ID} > 0
 		{
-			This.CorpWhiteList:Add[${Me.CorporationID}]
+			This.CorpWhiteList:Add[${Me.Corp.ID}]
 		}
 		if ${Me.AllianceID} > 0
 		{
@@ -108,14 +108,12 @@ objectdef obj_Social
 
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		Event[EVE_OnChannelMessage]:AttachAtom[This:OnChannelMessage]
-		EVE:ActivateChannelMessageEvents
 
 		UI:UpdateConsole["obj_Social: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
 	{
-		EVE:ActivateChannelMessageEvents
 		Event[EVE_OnChannelMessage]:DetachAtom[This:OnChannelMessage]
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}
@@ -124,19 +122,15 @@ objectdef obj_Social
 	{
 		if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
 		{
-			if ${EVE.GetPilots} > 1
-			{
-				; DoGetPilots is relatively expensive vs just the pilotcount.  Check if we're alone before calling.
-				EVE:DoGetPilots[This.PilotIndex]
-			}
-			else
+			EVE:GetLocalPilots[This.PilotIndex]
+			if ${This.PilotIndex.Used} == 1
 			{
 				This.PilotIndex:Clear
 			}
 
 			if !${Me.InStation}
 			{
-				EVE:DoGetEntities[This.EntityIndex,CategoryID,CATEGORYID_ENTITY]
+				EVE:QueryEntities[This.EntityIndex,"CategoryID = CATEGORYID_ENTITY"]
 			}
 			else
 			{
@@ -151,14 +145,14 @@ objectdef obj_Social
 		}
 	}
 
-	method OnChannelMessage(int64 iTimeStamp, string sDate, string sTime, string sChannel, string sAuthor, int iAuthorID, string sMessageText)
+	method OnChannelMessage(int ChannelID, int64 CharID, int64 CorpID, int64 AllianceID, string CharName, string MessageText)
 	{
-		if ${sChannel.Equal["Local"]}
+		if ${ChannelID} == ${Me.SolarSystemID}
 		{
-			if ${sAuthor.NotEqual["EVE System"]}
+			if ${CharName.NotEqual["EVE System"]}
 			{
 				call Sound.PlayTellSound
-				UI:UpdateConsole["Channel Local: ${sAuthor.Escape}: ${sMessageText.Escape}", LOG_CRITICAL]
+				UI:UpdateConsole["Channel Local: ${CharName.Escape}: ${MessageText.Escape}", LOG_CRITICAL]
 			}
 		}
 	}
@@ -190,7 +184,7 @@ objectdef obj_Social
 		if ${PilotIterator:First(exists)}
 		do
 		{
-			CorpID:Set[${PilotIterator.Value.CorporationID}]
+			CorpID:Set[${PilotIterator.Value.Corp.ID}]
 			AllianceID:Set[${PilotIterator.Value.AllianceID}]
 			PilotID:Set[${PilotIterator.Value.CharID}]
 			PilotName:Set[${PilotIterator.Value.Name}]
@@ -208,6 +202,7 @@ objectdef obj_Social
 		return TRUE
 	}
 	
+
 	; Returns false if pilots with failed standing are in system
 	member:bool CheckStanding()
 	{
@@ -228,7 +223,7 @@ objectdef obj_Social
 		if ${PilotIterator:First(exists)}
 		do
 		{
-			CorpID:Set[${PilotIterator.Value.CorporationID}]
+			CorpID:Set[${PilotIterator.Value.Corp.ID}]
 			AllianceID:Set[${PilotIterator.Value.AllianceID}]
 			PilotID:Set[${PilotIterator.Value.CharID}]
 
@@ -275,7 +270,7 @@ objectdef obj_Social
 				${Me.CharID} != ${PilotIterator.Value.CharID} && \
 				(	${This.PilotBlackList.Contains[${PilotIterator.Value.CharID}]} || \
 					${This.AllianceBlackList.Contains[${PilotIterator.Value.AllianceID}]} || \
-					${This.CorpBlackList.Contains[${PilotIterator.Value.CorporationID}]} \
+					${This.CorpBlackList.Contains[${PilotIterator.Value.Corp.ID}]} \
 				)
 			{
 				UI:UpdateConsole["Alert: Blacklisted Pilot: ${PilotIterator.Value.Name}!", LOG_CRITICAL]
@@ -365,9 +360,9 @@ objectdef obj_Social
 		{
 			do
 			{
-				echo ${PilotIterator.Value.Name} ${PilotIterator.Value.CharID} ${PilotIterator.Value.CorporationID} ${PilotIterator.Value.AllianceID}
+				echo ${PilotIterator.Value.Name} ${PilotIterator.Value.CharID} ${PilotIterator.Value.Corp.ID} ${PilotIterator.Value.AllianceID}
 				echo ${Me.Standing[${PilotIterator.Value.CharID}]}
-				echo ${Me.Standing[${PilotIterator.Value.CorporationID}]}
+				echo ${Me.Standing[${PilotIterator.Value.Corp.ID}]}
 				echo ${Me.Standing[${PilotIterator.Value.AllianceID}]}
 
 				if ${Me.CharID} == ${PilotIterator.Value.CharID}
@@ -384,42 +379,42 @@ objectdef obj_Social
 
 				/* Check Standing */
 				echo Me -> Them ${EVE.Standing[${Me.CharID},${PilotIterator.Value.CharID}]}
-				echo Corp -> Them ${EVE.Standing[${Me.CorporationID},${PilotIterator.Value.CharID}]}
+				echo Corp -> Them ${EVE.Standing[${Me.Corp.ID},${PilotIterator.Value.CharID}]}
 				echo Alliance -> Them ${EVE.Standing[${Me.AllianceID},${PilotIterator.Value.CharID}]}
-				echo Me -> TheyCorp	${EVE.Standing[${Me.CharID},${PilotIterator.Value.CorporationID}]}
-				echo MeCorp -> TheyCorp	${EVE.Standing[${Me.CorporationID},${PilotIterator.Value.CorporationID}]}
-				echo MeAlliance -> TheyCorp ${EVE.Standing[${Me.AllianceID},${PilotIterator.Value.CorporationID}]}
+				echo Me -> TheyCorp	${EVE.Standing[${Me.CharID},${PilotIterator.Value.Corp.ID}]}
+				echo MeCorp -> TheyCorp	${EVE.Standing[${Me.Corp.ID},${PilotIterator.Value.Corp.ID}]}
+				echo MeAlliance -> TheyCorp ${EVE.Standing[${Me.AllianceID},${PilotIterator.Value.Corp.ID}]}
 				echo Me -> TheyAlliance ${EVE.Standing[${Me.CharID},${PilotIterator.Value.AllianceID}]}
-				echo MeCorp -> TheyAlliance ${EVE.Standing[${Me.CorporationID},${PilotIterator.Value.AllianceID}]}
+				echo MeCorp -> TheyAlliance ${EVE.Standing[${Me.Corp.ID},${PilotIterator.Value.AllianceID}]}
 				echo MeAlliance -> TheyAlliance ${EVE.Standing[${Me.AllianceID},${PilotIterator.Value.AllianceID}]}
 
 				echo They -> Me	${EVE.Standing[${PilotIterator.Value.CharID},${Me.CharID}]}
-				echo TheyCorp -> Me ${EVE.Standing[${PilotIterator.Value.CorporationID},${Me.CharID}]}
+				echo TheyCorp -> Me ${EVE.Standing[${PilotIterator.Value.Corp.ID},${Me.CharID}]}
 				echo TheyAlliance -> Me ${EVE.Standing[${PilotIterator.Value.AllianceID},${Me.CharID}]}
-				echo They -> MeCorp ${EVE.Standing[${PilotIterator.Value.CharID},${Me.CorporationID}]}
-				echo TheyCorp -> MeCorp ${EVE.Standing[${PilotIterator.Value.CorporationID},${Me.CorporationID}]}
-				echo TheyAlliance -> MeCorp ${EVE.Standing[${PilotIterator.Value.AllianceID},${Me.CorporationID}]}
+				echo They -> MeCorp ${EVE.Standing[${PilotIterator.Value.CharID},${Me.Corp.ID}]}
+				echo TheyCorp -> MeCorp ${EVE.Standing[${PilotIterator.Value.Corp.ID},${Me.Corp.ID}]}
+				echo TheyAlliance -> MeCorp ${EVE.Standing[${PilotIterator.Value.AllianceID},${Me.Corp.ID}]}
 				echo They -> MeAlliance ${EVE.Standing[${PilotIterator.Value.CharID},${Me.AllianceID}]}
-				echo TheyCorp -> MeAlliance ${EVE.Standing[${PilotIterator.Value.CorporationID},${Me.AllianceID}]}
+				echo TheyCorp -> MeAlliance ${EVE.Standing[${PilotIterator.Value.Corp.ID},${Me.AllianceID}]}
 				echo TheyAlliance -> MeAlliance ${EVE.Standing[${PilotIterator.Value.AllianceID},${Me.AllianceID}]}
 
 				if	${EVE.Standing[${Me.CharID},${PilotIterator.Value.CharID}]} < ${Standing} || \
-					${EVE.Standing[${Me.CorporationID},${PilotIterator.Value.CharID}]} < ${Standing} || \
+					${EVE.Standing[${Me.Corp.ID},${PilotIterator.Value.CharID}]} < ${Standing} || \
 					${EVE.Standing[${Me.AllianceID},${PilotIterator.Value.CharID}]} < ${Standing} || \
-					${EVE.Standing[${Me.CharID},${PilotIterator.Value.CorporationID}]} < ${Standing} || \
-					${EVE.Standing[${Me.CorporationID},${PilotIterator.Value.CorporationID}]} < ${Standing} || \
-					${EVE.Standing[${Me.AllianceID},${PilotIterator.Value.CorporationID}]} < ${Standing} || \
+					${EVE.Standing[${Me.CharID},${PilotIterator.Value.Corp.ID}]} < ${Standing} || \
+					${EVE.Standing[${Me.Corp.ID},${PilotIterator.Value.Corp.ID}]} < ${Standing} || \
+					${EVE.Standing[${Me.AllianceID},${PilotIterator.Value.Corp.ID}]} < ${Standing} || \
 					${EVE.Standing[${Me.CharID},${PilotIterator.Value.AllianceID}]} < ${Standing} || \
-					${EVE.Standing[${Me.CorporationID},${PilotIterator.Value.AllianceID}]} < ${Standing} || \
+					${EVE.Standing[${Me.Corp.ID},${PilotIterator.Value.AllianceID}]} < ${Standing} || \
 					${EVE.Standing[${Me.AllianceID},${PilotIterator.Value.AllianceID}]} < ${Standing} || \
 					${EVE.Standing[${PilotIterator.Value.CharID},${Me.CharID}]} < ${Standing} || \
-					${EVE.Standing[${PilotIterator.Value.CorporationID},${Me.CharID}]} < ${Standing} || \
+					${EVE.Standing[${PilotIterator.Value.Corp.ID},${Me.CharID}]} < ${Standing} || \
 					${EVE.Standing[${PilotIterator.Value.AllianceID},${Me.CharID}]} < ${Standing} || \
-					${EVE.Standing[${PilotIterator.Value.CharID},${Me.CorporationID}]} < ${Standing} || \
-					${EVE.Standing[${PilotIterator.Value.CorporationID},${Me.CorporationID}]} < ${Standing} || \
-					${EVE.Standing[${PilotIterator.Value.AllianceID},${Me.CorporationID}]} < ${Standing} || \
+					${EVE.Standing[${PilotIterator.Value.CharID},${Me.Corp.ID}]} < ${Standing} || \
+					${EVE.Standing[${PilotIterator.Value.Corp.ID},${Me.Corp.ID}]} < ${Standing} || \
+					${EVE.Standing[${PilotIterator.Value.AllianceID},${Me.Corp.ID}]} < ${Standing} || \
 					${EVE.Standing[${PilotIterator.Value.CharID},${Me.AllianceID}]} < ${Standing} || \
-					${EVE.Standing[${PilotIterator.Value.CorporationID},${Me.AllianceID}]} < ${Standing} || \
+					${EVE.Standing[${PilotIterator.Value.Corp.ID},${Me.AllianceID}]} < ${Standing} || \
 					${EVE.Standing[${PilotIterator.Value.AllianceID},${Me.AllianceID}]} < ${Standing}
 				{
 					/* Yep, I'm laughing right now as well -- CyberTech */
@@ -448,7 +443,7 @@ objectdef obj_Social
 		{
 			do
 			{
-				if (${Me.ShipID} != ${PilotIterator.Value}) && \
+				if (${Me.ShipID} != ${PilotIterator.Value.ID}) && \
 					!${PilotIterator.Value.ToFleetMember} && \
 					${PilotIterator.Value.Distance} < ${Dist}
 				{

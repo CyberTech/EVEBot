@@ -25,11 +25,10 @@ objectdef obj_Assets
     {
         variable index:int64 AnIndex
         variable iterator  AnIterator
-        variable int64       tempInt
         
         StationsWithAssets:Clear[]
-        ;;; WHY WHY WHY DOESN'T THIS WORK??? Me:DoGetStationsWithAssets[AnIndex]
-        tempInt:Set[${Me.GetStationsWithAssets[AnIndex]}]
+        ;;; WHY WHY WHY DOESN'T THIS WORK??? Me:GetStationsWithAssets[AnIndex]
+        Me:GetStationsWithAssets[AnIndex]
         AnIndex:GetIterator[AnIterator]
         
         if ${AnIterator:First(exists)}

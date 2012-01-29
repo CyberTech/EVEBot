@@ -191,6 +191,7 @@ objectdef obj_Ratter
 		Ship:Activate_SensorBoost
 		Ship:Activate_Tracking_Computer
 		Ship:Activate_ECCM
+ 
 
 
 		if ${Targets.TargetNPCs} && ${Social.IsSafe}
@@ -227,7 +228,7 @@ objectdef obj_Ratter
 		variable float        ItemVolume = 0
 		variable int QuantityToMove
 
-		EVE:DoGetEntities[Wrecks,GroupID,GROUP_WRECK,Radius,WARP_RANGE]
+		EVE:QueryEntities[Wrecks, "GroupID = GROUP_WRECK && Distance <= WARP_RANGE"]
 		Wrecks:GetIterator[Wreck]
 		if ${Wreck:First(exists)}
 		{
@@ -249,7 +250,7 @@ objectdef obj_Ratter
 					wait 10
 					call Ship.OpenCargo
 					wait 10
-					Wreck.Value:DoGetCargo[Items]
+					Wreck.Value:GetCargo[Items]
 					UI:UpdateConsole["obj_Ratter: DEBUG:  Wreck contains ${Items.Used} items.", LOG_DEBUG]
 
 					Items:GetIterator[Item]
@@ -261,26 +262,26 @@ objectdef obj_Ratter
 							if (${Item.Value.Quantity} * ${Item.Value.Volume}) > ${Ship.CargoFreeSpace}
 							{
 								/* Move only what will fit, minus 1 to account for CCP rounding errors. */
-								QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${Item.Value.Volume} - 1]}]
+									QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${Item.Value.Volume} - 1]}]
 								if ${QuantityToMove} <= 0
 								{
-									UI:UpdateConsole["ERROR: obj_Ratter: QuantityToMove = ${QuantityToMove}!"]
-									This.CurrentState:Set["DROP"]
-									break
+								UI:UpdateConsole["ERROR: obj_Ratter: QuantityToMove = ${QuantityToMove}!"]
+								This.CurrentState:Set["DROP"]
+								break
 								}
 							}
 							else
 							{
 								QuantityToMove:Set[${Item.Value.Quantity}]
 							}
-
+			
 							UI:UpdateConsole["obj_Ratter: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Item.Value.Volume}]}m3"]
 							if ${QuantityToMove} > 0
 							{
 								Item.Value:MoveTo[MyShip,${QuantityToMove}]
 								wait 30
 							}
-
+			
 							if ${Ship.CargoFull}
 							{
 								UI:UpdateConsole["DEBUG: obj_Ratter: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}", LOG_DEBUG]
@@ -292,7 +293,7 @@ objectdef obj_Ratter
 					}
 				}
 				call Ship.CloseCargo
- 				if ${Ship.CargoFull}
+				if ${Ship.CargoFull}
 				{
 					UI:UpdateConsole["DEBUG: obj_Ratter: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}", LOG_DEBUG]
 					This.CurrentState:Set["DROP"]
@@ -306,7 +307,7 @@ objectdef obj_Ratter
 		{
 		  This.CurrentState:Set["IDLE"]
 		}
-  }
+	}
 
 	function Drop()
 	{
@@ -315,6 +316,6 @@ objectdef obj_Ratter
 		call Cargo.TransferCargoToHangar
 		wait 100
 		; need to restock ammo here
-	  This.CurrentState:Set["IDLE"]
-  }
+		This.CurrentState:Set["IDLE"]
+	}
 }

@@ -5,15 +5,17 @@
 
 #include core/defines.iss
 
-#if ${Type[isxeve].Member[IsBeta]} && ${ISXEVE.IsBeta}
-	#echo
-	#echo
-	#echo Stable EVEBot does not support ISXEVE Beta.
-	#echo Reinstall isxeve.dll from https://www.isxGames.com/isxeve/Extensions/ISXEVE.dll
-	#echo
+#if !${Type[isxeve].Member[IsBeta]} || !${ISXEVE.IsBeta}
+	#echo 
+	#echo 
+	#echo Stable_Beta EVEBot requires ISXEVE _BETA_, which is not public 
+	#echo at the moment. It will not operate properly with Live ISXEVE 
+	#echo Please use Stable or Tagged Trunk.  See IRC for 
+	#echo more information.
+	#echo 
 	#echo -- CyberTech
-	#echo
-	#echo
+	#echo 
+	#echo 
 	#error Aborting
 #endif
 
@@ -64,24 +66,15 @@ function atexit()
 function main()
 {
 	echo "${Time} EVEBot: Starting"
-
-	echo "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
-	echo " "
-	echo "ATTENTION - ISXEVE Beta (long term revamp) is now in public testing. If you wish to test, please"
-	echo "            go to http://eve.isxGames.com/wiki/index.php?title=ISXEVE_Beta"
-	echo " "
-	echo "            NOTE: Support for ISXEVE Beta is ONLY on irc at irc.lavishsoft.com #ISXEVE, if you"
-	echo "                  can not or will not use IRC, then stick with ISXEVE Live until the transition"
-	echo " -- CyberTech"
-	echo " "
-	echo "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
-	echo "Resuming in 5 seconds "
-	wait 50
 	;Script:Unsquelch
 	;Script[EVEBot]:EnableDebugLogging[EVEBot_Debug.txt]
 	;Script[EVEBot]:EnableProfiling
 	;;Redirect EVEBot_Profiling.txt Script[EVEBot]:DumpProfiling
 
+	if ${Me.InSpace}
+	{
+		EVE:PopulateEntities[TRUE]
+	}
 	turbo 4000
 
 	echo "${Time} EVEBot: Loading Objects..."

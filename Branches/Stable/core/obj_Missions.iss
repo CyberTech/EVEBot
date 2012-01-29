@@ -160,7 +160,7 @@ objectdef obj_Missions
 		variable index:agentmission amIndex
 		variable iterator amIterator
 
-		EVE:DoGetAgentMissions[amIndex]
+		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		UI:UpdateConsole["obj_Missions: DEBUG: amIndex.Used = ${amIndex.Used}"]
@@ -265,7 +265,7 @@ objectdef obj_Missions
 			call Cargo.OpenHolds
 
 			UI:UpdateConsole["DEBUG: RunCourierMission: Checking ship's cargohold for ${QuantityRequired} units of ${itemName}."]
-			Me.Ship:DoGetCargo[CargoIndex]
+			Me.Ship:GetCargo[CargoIndex]
 			CargoIndex:GetIterator[CargoIterator]
 			if ${CargoIterator:First(exists)}
 			{
@@ -297,7 +297,7 @@ objectdef obj_Missions
 			if ${Station.Docked}
 			{
 				UI:UpdateConsole["DEBUG: RunCourierMission: Checking station hangar for ${QuantityRequired} units of ${itemName}."]
-				Me:DoGetHangarItems[CargoIndex]
+				Me:GetHangarItems[CargoIndex]
 				CargoIndex:GetIterator[CargoIterator]
 
 				if ${CargoIterator:First(exists)}
@@ -345,7 +345,7 @@ objectdef obj_Missions
 		call Cargo.OpenHolds
 
 		;;; Check the cargohold of your ship
-		Me.Ship:DoGetCargo[CargoIndex]
+		Me.Ship:GetCargo[CargoIndex]
 		CargoIndex:GetIterator[CargoIterator]
 		if ${CargoIterator:First(exists)}
 		{
@@ -377,7 +377,7 @@ objectdef obj_Missions
 		;;; Check the hangar of the current station
 		if ${haveCargo} == FALSE && ${Station.Docked}
 		{
-			Me:DoGetHangarItems[CargoIndex]
+			Me:GetHangarItems[CargoIndex]
 			CargoIndex:GetIterator[CargoIterator]
 
 			if ${CargoIterator:First(exists)}
@@ -451,7 +451,7 @@ objectdef obj_Missions
 
 ;       do
 ;       {
-;            EVE:DoGetEntities[entityIndex,TypeID,TYPE_ACCELERATION_GATE]
+;            EVE:QueryEntities[entityIndex, "TypeID = TYPE_ACCELERATION_GATE"]
 ;            call Ship.Approach ${entityIndex.Get[1].ID} JUMP_RANGE
 ;            entityIndex.Get[1]:Activate
 ;        }
@@ -548,7 +548,7 @@ objectdef obj_Missions
 
 			while TRUE
 			{
-			   if ${Me.GetTargetedBy} > 0
+			   if ${Me.TargetedByCount} > 0
 			   {
 				  break
 			   }
@@ -563,7 +563,7 @@ objectdef obj_Missions
 
 			while ${This.HostileCount} > 0
 			{
-			   if ${Me.GetTargetedBy} > 0 || ${Math.Calc[${Me.GetTargeting}+${Me.GetTargets}]} > 0
+			   if ${Me.TargetedByCount} > 0 || ${Math.Calc[${Me.TargetingCount}+${Me.TargetCount}]} > 0
 			   {
 				  call This.TargetAgressors
 			   }
@@ -585,12 +585,12 @@ objectdef obj_Missions
 		elseif ${This.GatePresent}
 		{
 			/* activate gate and go to next room */
-			call Ship.Approach ${Entity[TypeID,TYPE_ACCELERATION_GATE].ID} DOCKING_RANGE
+			call Ship.Approach ${Entity["TypeID = TYPE_ACCELERATION_GATE"].ID} DOCKING_RANGE
 			wait 10
 			UI:UpdateConsole["Activating Acceleration Gate..."]
 			while !${This.WarpEntered}
 			{
-			   Entity[TypeID,TYPE_ACCELERATION_GATE]:Activate
+			   Entity["TypeID = TYPE_ACCELERATION_GATE"]:Activate
 			   wait 10
 			}
 			call Ship.WarpWait
@@ -613,10 +613,10 @@ objectdef obj_Missions
 	  variable index:entity targetIndex
 	  variable iterator     targetIterator
 
-	  EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
+	  EVE:QueryEntities[targetIndex, "CategoryID = CATEGORYID_ENTITY"]
 	  targetIndex:GetIterator[targetIterator]
 
-	  UI:UpdateConsole["GetTargeting = ${Me.GetTargeting}, GetTargets = ${Me.GetTargets}"]
+	  UI:UpdateConsole["TargetingCount = ${Me.TargetingCount}, TargetCount = ${Me.TargetCount}"]
 	  if ${targetIterator:First(exists)}
 	  {
 		 do
@@ -624,7 +624,7 @@ objectdef obj_Missions
 			if ${targetIterator.Value.IsTargetingMe} && \
 			   !${targetIterator.Value.BeingTargeted} && \
 			   !${targetIterator.Value.IsLockedTarget} && \
-			   ${Ship.SafeMaxLockedTargets} > ${Math.Calc[${Me.GetTargeting}+${Me.GetTargets}]}
+			   ${Ship.SafeMaxLockedTargets} > ${Math.Calc[${Me.TargetingCount}+${Me.TargetCount}]}
 			{
 			   if ${targetIterator.Value.Distance} > ${Ship.OptimalTargetingRange}
 			   {
@@ -650,7 +650,7 @@ objectdef obj_Missions
 	  variable index:entity targetIndex
 	  variable iterator     targetIterator
 
-	  EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
+	  EVE:QueryEntities[targetIndex, "CategoryID = CATEGORYID_ENTITY"]
 	  targetIndex:GetIterator[targetIterator]
 
 	  /* FOR NOW just pull the closest target */
@@ -692,7 +692,7 @@ objectdef obj_Missions
 	  variable iterator     targetIterator
 	  variable int          targetCount = 0
 
-	  EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
+	  EVE:QueryEntities[targetIndex, "CategoryID = CATEGORYID_ENTITY"]
 	  targetIndex:GetIterator[targetIterator]
 
 	  if ${targetIterator:First(exists)}
@@ -724,7 +724,7 @@ objectdef obj_Missions
 
    member:bool GatePresent()
    {
-	  return ${Entity[TypeID,TYPE_ACCELERATION_GATE](exists)}
+	  return ${Entity["TypeID = TYPE_ACCELERATION_GATE"](exists)}
    }
 
 	function WarpToEncounter(int agentID)
@@ -734,7 +734,7 @@ objectdef obj_Missions
 		variable iterator amIterator
 		variable iterator mbIterator
 
-		EVE:DoGetAgentMissions[amIndex]
+		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		if ${amIterator:First(exists)}
@@ -743,7 +743,7 @@ objectdef obj_Missions
 			{
 				if ${amIterator.Value.AgentID} == ${agentID}
 				{
-					amIterator.Value:DoGetBookmarks[mbIndex]
+					amIterator.Value:GetBookmarks[mbIndex]
 					mbIndex:GetIterator[mbIterator]
 
 					if ${mbIterator:First(exists)}
@@ -752,7 +752,7 @@ objectdef obj_Missions
 						{
 							if ${mbIterator.Value.LocationType.Equal["dungeon"]}
 							{
-								call Ship.WarpToBookMark ${mbIterator.Value}
+								call Ship.WarpToBookMark ${mbIterator.Value.ID}
 								return
 							}
 						}
@@ -771,7 +771,7 @@ objectdef obj_Missions
 		variable iterator amIterator
 		variable iterator mbIterator
 
-		EVE:DoGetAgentMissions[amIndex]
+		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		if ${amIterator:First(exists)}
@@ -780,7 +780,7 @@ objectdef obj_Missions
 			{
 				if ${amIterator.Value.AgentID} == ${agentID}
 				{
-					amIterator.Value:DoGetBookmarks[mbIndex]
+					amIterator.Value:GetBookmarks[mbIndex]
 					mbIndex:GetIterator[mbIterator]
 
 					if ${mbIterator:First(exists)}
@@ -791,7 +791,7 @@ objectdef obj_Missions
 							if ${mbIterator.Value.LocationType.Equal["agenthomebase"]} || \
 							   ${mbIterator.Value.LocationType.Equal["objective"]}
 							{
-								call Ship.WarpToBookMark ${mbIterator.Value}
+								call Ship.WarpToBookMark ${mbIterator.Value.ID}
 								return
 							}
 						}
@@ -817,14 +817,14 @@ objectdef obj_Missions
 			return TRUE
 		}
 
-		EVE:DoGetEntities[Targets, GroupID, GROUP_LARGECOLLIDABLESTRUCTURE]
+		EVE:QueryEntities[Targets, "GroupID = GROUP_LARGECOLLIDABLESTRUCTURE"]
 		Targets:GetIterator[Target]
 
 		if ${Target:First(exists)}
 		{
 		   do
 		   {
-			if ${Me.GetTargetedBy} > 0 && ${Target.Value.IsLockedTarget}
+			if ${Me.TargetedByCount} > 0 && ${Target.Value.IsLockedTarget}
 			{
 				   Target.Value:UnlockTarget
 			}
@@ -836,7 +836,7 @@ objectdef obj_Missions
 				  OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
 				  Target.Value:Orbit[${OrbitDistance}]
 
-				   if ${Me.GetTargets} < ${Ship.MaxLockedTargets}
+				   if ${Me.TargetCount} < ${Ship.MaxLockedTargets}
 				   {
 					   UI:UpdateConsole["Locking ${Target.Value.Name}"]
 					   Target.Value:LockTarget
@@ -864,7 +864,7 @@ objectdef obj_Missions
 			return TRUE
 		}
 
-		EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY]
+		EVE:QueryEntities[Targets, "CategoryID = CATEGORYID_ENTITY"]
 		Targets:GetIterator[Target]
 
 		if ${Target:First(exists)}
@@ -884,7 +884,7 @@ objectdef obj_Missions
 
 			   if !${Target.Value.IsLockedTarget} && !${Target.Value.BeingTargeted}
 			   {
-				   if ${Me.GetTargets} < ${Ship.MaxLockedTargets}
+				   if ${Me.TargetCount} < ${Ship.MaxLockedTargets}
 				   {
 					   UI:UpdateConsole["Locking ${Target.Value.Name}"]
 					   Target.Value:LockTarget

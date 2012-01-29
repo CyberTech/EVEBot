@@ -72,7 +72,7 @@ objectdef obj_Fleet
 			{
 				if ${FleetMemberIterator.Value.CharID} == ${charID}
 				{
-					ReturnValue:Set[${FleetMemberIterator.Value}]
+					ReturnValue:Set[${FleetMemberIterator.Value.ID}]
 					break
 				}
 			}
