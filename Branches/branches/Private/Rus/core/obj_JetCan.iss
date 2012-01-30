@@ -106,7 +106,7 @@ objectdef obj_JetCan
 
 		variable index:entity Cans
 		variable iterator Can
-		EVE:DoGetEntities[Cans, GroupID, GROUPID_CARGO_CONTAINER, Radius, LOOT_RANGE]
+		EVE:QueryEntities[Cans, "GroupID = GROUPID_CARGO_CONTAINER && Distance <= LOOT_RANGE"]
 
 		Cans:GetIterator[Can]
 
@@ -203,19 +203,19 @@ objectdef obj_JetCan
 		switch ${Config.Miner.JetCanNaming}
 		{
 			case 1
-				NewName:Set[${Me.CorporationTicker} ${EVE.Time[short]}]
+				NewName:Set[${Me.Corp.Ticker} ${EVE.Time[short]}]
 				break
 			case 2
-				NewName:Set[${Me.CorporationTicker}:${EVE.Time[short]}]
+				NewName:Set[${Me.Corp.Ticker}:${EVE.Time[short]}]
 				break
 			case 3
-				NewName:Set[${Me.CorporationTicker}_${EVE.Time[short]}]
+				NewName:Set[${Me.Corp.Ticker}_${EVE.Time[short]}]
 				break
 			case 4
-				NewName:Set[${Me.CorporationTicker}.${EVE.Time[short]}]
+				NewName:Set[${Me.Corp.Ticker}.${EVE.Time[short]}]
 				break
 			case 5
-				NewName:Set[${Me.CorporationTicker}]
+				NewName:Set[${Me.Corp.Ticker}]
 				break
 			case 6
 				NewName:Set[${EVE.Time[short]}]
@@ -458,7 +458,7 @@ objectdef obj_CorpHangarArray inherits obj_JetCan
 
 		variable index:entity Cans
 		variable iterator Can
-		EVE:DoGetEntities[Cans, GroupID, GROUP_CORPORATEHANGARARRAY]
+		EVE:QueryEntities[Cans, "GroupID = GROUP_CORPORATEHANGARARRAY"]
 
 		Cans:GetIterator[Can]
 
@@ -529,7 +529,7 @@ objectdef obj_CorpHangarArray inherits obj_JetCan
 			return FALSE
 		}
 
-		if ${Entity[${ID}].CorporationID} == ${Me.CorporationID}
+		if ${Entity[${ID}].Corp.ID} == ${Me.Corp.ID}
 		{
 			return TRUE
 		}
@@ -557,7 +557,7 @@ objectdef obj_SpawnContainer inherits obj_JetCan
 
 		variable index:entity Cans
 		variable iterator Can
-		EVE:DoGetEntities[Cans, GroupID, GROUPID_SPAWN_CONTAINER]
+		EVE:QueryEntities[Cans, "GroupID = GROUPID_SPAWN_CONTAINER"]
 
 		Cans:GetIterator[Can]
 
@@ -631,7 +631,7 @@ objectdef obj_LargeShipAssemblyArray inherits obj_JetCan
 
 		variable index:entity Cans
 		variable iterator Can
-		EVE:DoGetEntities[Cans, TypeID, TYPEID_LARGE_ASSEMBLY_ARRAY]
+		EVE:QueryEntities[Cans, "TypeID = TYPEID_LARGE_ASSEMBLY_ARRAY"]
 
 		Cans:GetIterator[Can]
 
@@ -685,7 +685,7 @@ objectdef obj_LargeShipAssemblyArray inherits obj_JetCan
 			return FALSE
 		}
 
-		if ${Entity[${ID}].CorporationID} == ${Me.CorporationID}
+		if ${Entity[${ID}].Corp.ID} == ${Me.Corp.ID}
 		{
 			return TRUE
 		}
@@ -725,7 +725,7 @@ objectdef obj_XLargeShipAssemblyArray inherits obj_JetCan
 
 		variable index:entity Cans
 		variable iterator Can
-		EVE:DoGetEntities[Cans, TypeID, TYPEID_XLARGE_ASSEMBLY_ARRAY]
+		EVE:QueryEntities[Cans, "TypeID = TYPEID_XLARGE_ASSEMBLY_ARRAY"]
 
 		Cans:GetIterator[Can]
 
@@ -779,7 +779,7 @@ objectdef obj_XLargeShipAssemblyArray inherits obj_JetCan
 			return FALSE
 		}
 
-		if ${Entity[${ID}].CorporationID} == ${Me.CorporationID}
+		if ${Entity[${ID}].Corp.ID} == ${Me.Corp.ID}
 		{
 			return TRUE
 		}

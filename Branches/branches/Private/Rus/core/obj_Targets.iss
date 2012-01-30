@@ -382,11 +382,11 @@ objectdef obj_Targets
 		/* Me.Ship.MaxTargetRange contains the (possibly) damped value */
 		if ${Ship.TypeID} == TYPE_RIFTER
 		{
-			EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY, radius, 100000]
+			EVE:QueryEntities[Targets, "CategoryID = CATEGORYID_ENTITY && Distance <= 100000"]
 		}
 		else
 		{
-			EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY, radius, ${Me.Ship.MaxTargetRange}]
+			EVE:QueryEntities[Targets, "CategoryID = CATEGORYID_ENTITY && Distance <= ${MyShip.MaxTargetRange}"]
 		}
 		Targets:GetIterator[Target]
 
@@ -394,7 +394,7 @@ objectdef obj_Targets
 		{
 			if ${Ship.IsDamped}
 			{	/* Ship.MaxTargetRange contains the maximum undamped value */
-				EVE:DoGetEntities[Targets, CategoryID, CATEGORYID_ENTITY, radius, ${Ship.MaxTargetRange}]
+				EVE:QueryEntities[Targets, "CategoryID = CATEGORYID_ENTITY && Distance <= ${Ship.MaxTargetRange}"]
 				Targets:GetIterator[Target]
 
 				if !${Target:First(exists)}
@@ -641,7 +641,7 @@ objectdef obj_Targets
 			{
 				if !${Target.Value.IsLockedTarget} && !${Target.Value.BeingTargeted}
 				{
-					if ${Me.GetTargets} < ${Ship.MaxLockedTargets}
+					if ${Me.TargetCount} < ${Ship.MaxLockedTargets}
 					{
 						if ${Ship.TypeID} == TYPE_RIFTER
 						{
@@ -696,15 +696,16 @@ objectdef obj_Targets
 		variable index:entity tgtIndex
 		variable iterator tgtIterator
 
-		EVE:DoGetEntities[tgtIndex, CategoryID, CATEGORYID_SHIP]
+		EVE:QueryEntities[tgtIndex, "CategoryID = CATEGORYID_SHIP"]
 		tgtIndex:GetIterator[tgtIterator]
 
 		if ${tgtIterator:First(exists)}
 		do
 		{
+			; todo - make ignoring whitelisted chars in your belt an optional action.
 			if ${tgtIterator.Value.Owner.CharID} != ${Me.CharID} && !${Social.PilotWhiteList.Contains[${tgtIterator.Value.Owner.CharID}]}
 			{	/* A player is already present here ! */
-				UI:UpdateConsole["Player found ${tgtIterator.Value.Owner} ${tgtIterator.Value.Owner.CharID} ${tgtIterator.Value}"]
+				UI:UpdateConsole["Player found ${tgtIterator.Value.Owner} ${tgtIterator.Value.Owner.CharID} ${tgtIterator.Value.ID}"]
 				return TRUE
 			}
 		}
@@ -719,7 +720,7 @@ objectdef obj_Targets
 		variable index:entity tgtIndex
 		variable iterator tgtIterator
 
-		EVE:DoGetEntities[tgtIndex, CategoryID, CATEGORYID_ENTITY]
+		EVE:QueryEntities[tgtIndex, "CategoryID = CATEGORYID_ENTITY"]
 		UI:UpdateConsole["DEBUG: Found ${tgtIndex.Used} entities."]
 
 		tgtIndex:GetIterator[tgtIterator]

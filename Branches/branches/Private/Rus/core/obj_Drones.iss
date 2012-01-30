@@ -73,7 +73,7 @@ objectdef obj_Drones
 
 	method LaunchAll()
 	{
-		if ${Me.Ship.GetDrones} > 0
+		if ${This.DronesInBay} > 0
 		{
 			UI:UpdateConsole["Launching drones..."]
 			Me.Ship:LaunchAllDrones
@@ -83,12 +83,15 @@ objectdef obj_Drones
 
 	member:int DronesInBay()
 	{
-		return ${Me.GetActiveDroneIDs[This.ActiveDroneIDList]}
+		variable index:item DroneList
+		MyShip:GetDrones[DroneList]
+		return ${DroneList.Used}
 	}
 
 	member:int DronesInSpace()
 	{
-		return ${Me.GetActiveDroneIDs[This.ActiveDroneIDList]}
+		Me:GetActiveDroneIDs[This.ActiveDroneIDList]
+		return ${This.ActiveDroneIDList.Used}
 	}
 
 	member:bool CombatDroneShortage()
@@ -99,7 +102,7 @@ objectdef obj_Drones
 		}
 
 		if (${Me.Ship.DronebayCapacity} > 0 && \
-   			${Me.Ship.GetDrones} == 0 && \
+   			${This.DronesInBay} == 0 && \
    			${This.DronesInSpace} < ${Config.Combat.MinimumDronesInSpace})
    		{
 			ShortageCount:Inc
@@ -192,7 +195,7 @@ objectdef obj_Drones
 		{
 			variable iterator DroneIterator
 			variable index:activedrone ActiveDroneList
-			Me:DoGetActiveDrones[ActiveDroneList]
+			Me:GetActiveDrones[ActiveDroneList]
 			ActiveDroneList:GetIterator[DroneIterator]
 			variable index:int64 returnIndex
 			variable index:int64 engageIndex

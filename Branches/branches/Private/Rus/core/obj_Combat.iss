@@ -138,7 +138,7 @@ objectdef obj_Combat
 			return
 		}
 
-		if ${This.CombatMode.NotEqual["TANK"]} && ${Me.GetTargets} > 0
+		if ${This.CombatMode.NotEqual["TANK"]} && ${Me.TargetCount} > 0
 		{
 			This.CurrentState:Set["FIGHT"]
 		}
@@ -371,22 +371,22 @@ objectdef obj_Combat
 		{
 			if !${This.Fled} && ${Config.Combat.LaunchCombatDrones} && \
 				${Ship.Drones.DronesInSpace} == 0 && !${Ship.InWarp} && \
-				${Me.GetTargets} > 0
+			${Me.TargetCount} > 0
 			{
 				if ${Config.Combat.AnomalyAssistMode}
 				{
 					Ship.Drones:LaunchAll[]
 				}
-				elseif ${Me.GetTargets} >= 1 && ${Me.GetTargetedBy} >= ${Me.GetTargets}
+			elseif ${Me.TargetCount} >= 1 && ${Me.TargetedByCount} >= ${Me.TargetCount}
 				{
 					Ship.Drones:LaunchAll[]
 				}
 			}
 		}
 
-		; Active shield (or armor) hardeners
+		; Activate shield (or armor) hardeners
 		; If you don't have hardeners this code does nothing.
-		if ${Me.GetTargetedBy} > 0
+		if ${Me.TargetedByCount} > 0
 		{
 			Ship:Activate_Hardeners[]
 		}
@@ -408,6 +408,7 @@ objectdef obj_Combat
 		variable index:item ContainerItems
 		variable iterator CargoIterator
 
+		; TODO - This will find the first bookmark matching this name, even if it's out of the system. This would be bad. Need to iterate and find the right one.
 		if !${EVE.Bookmark[${Config.Combat.AmmoBookmark}](exists)}
 		{
 			UI:UpdateConsole["RestockAmmo: Fleeing: No ammo bookmark"]
@@ -420,28 +421,28 @@ objectdef obj_Combat
 			UI:UpdateConsole["Restocking ammo"]
 			call Ship.OpenCargo
 			; If a corp hangar array is on grid - drop loot
-			if ${Entity[TypeID,17621].ID} != NULL
+			if ${Entity["TypeID = 17621"].ID} != NULL
 			{
-				UI:UpdateConsole["Restocking from ${Entity[TypeID,17621]} (${Entity[TypeID,17621].ID})"]
+				UI:UpdateConsole["Restocking from ${Entity["TypeID = 17621"]} (${Entity["TypeID = 17621"].ID})"]
 				call Ship.Approach ${Entity[TypeID,17621].ID} 2000
 				call Ship.OpenCargo
-				Entity[${Entity[TypeID,17621].ID}]:OpenCargo
+				Entity[${Entity["TypeID = 17621"].ID}]:OpenCargo
 
 				; Drop off all loot/leftover ammo
 				; TODO - don't dump the ammo we're using for our own weapons. Do dump other ammo that we might have looted.
 				call Cargo.TransferCargoToCorpHangarArray
 
-				Entity[${Entity[TypeID,17621].ID}]:DoGetCargo[ContainerItems]
+				Entity[${Entity["TypeID = 17621"].ID}]:GetCargo[ContainerItems]
 			}
 
 			; If there is no CHA, but there is a GSC, Take Ammo, do not drop off items
 			else
 			{
-				UI:UpdateConsole["Restocking from ${Entity[GroupID,340]} (${Entity[GroupID,340].ID})"]
-				call Ship.Approach ${Entity[GroupID,340].ID} 2000
+				UI:UpdateConsole["Restocking from ${Entity["GroupID =340"]} (${Entity["GroupID = 340"].ID})"]
+				call Ship.Approach ${Entity["GroupID = 340"].ID} 2000
 
-				Entity[${Entity[GroupID,340].ID}]:OpenCargo
-				Entity[${Entity[GroupID,340].ID}]:DoGetCargo[ContainerItems]
+				Entity[${Entity["GroupID = 340"].ID}]:OpenCargo
+				Entity[${Entity["GroupID = 340"].ID}]:GetCargo[ContainerItems]
 			}
 
 			ContainerItems:GetIterator[CargoIterator]

@@ -70,13 +70,14 @@ objectdef obj_Ship
 	{
 		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-			if !${Me.InStation}
+			if !${Me.InStation} && ${Me.InSpace}
 			{
 				This:ValidateModuleTargets
 
 				if ${RetryUpdateModuleList} == 10
 				{
-					UI:UpdateConsole["ERROR: obj_Ship:UpdateModuleList - No modules found. Pausing - If this ship has slots, you must have at least one module equipped, of any type.", LOG_CRITICAL]
+					UI:UpdateConsole["ERROR: obj_Ship:UpdateModuleList - No modules found. Pausing.", LOG_CRITICAL]
+					UI:UpdateConsole["ERROR: obj_Ship:UpdateModuleList - If this ship has slots, you must have at least one module equipped, of any type.", LOG_CRITICAL]
 					RetryUpdateModuleList:Set[0]
 					EVEBot:Pause
 				}
@@ -183,7 +184,7 @@ objectdef obj_Ship
 				;UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable:"]
 				;UI:UpdateConsole["Slot: ${aWeaponIterator.Value.ToItem.Slot}  ${aWeaponIterator.Value.ToItem.Name}"]
 
-				aWeaponIterator.Value:DoGetAvailableAmmo[anItemIndex]
+				aWeaponIterator.Value:GetAvailableAmmo[anItemIndex]
 				;UI:UpdateConsole["Ammo: Used = ${anItemIndex.Used}"]
 
 				anItemIndex:GetIterator[anItemIterator]
@@ -292,12 +293,19 @@ objectdef obj_Ship
 
 	member:bool IsDamped()
 	{
-		return ${Me.Ship.MaxTargetRange} < ${This.m_MaxTargetRange}
+		return ${MyShip.MaxTargetRange.Centi} < ${This.m_MaxTargetRange.Centi}
 	}
 
 	member:float MaxTargetRange()
 	{
-		return ${m_MaxTargetRange}
+		variable float CurrentTargetRange = ${MyShip.MaxTargetRange}
+
+		if ${This.m_MaxTargetRange.Centi} < ${CurrentTargetRange.Centi}
+		{
+			This.m_MaxTargetRange:Set[${CurrentTargetRange}]
+	}
+
+		return ${CurrentTargetRange}
 	}
 
 	method UpdateModuleList()
@@ -308,9 +316,6 @@ objectdef obj_Ship
 			UI:UpdateConsole["DEBUG: obj_Ship:UpdateModuleList called while in station", LOG_DEBUG]
 			return
 		}
-
-		/* save ship values that may change in combat */
-		This.m_MaxTargetRange:Set[${Me.Ship.MaxTargetRange}]
 
 		/* build module lists */
 		This.ModuleList:Clear
@@ -332,7 +337,7 @@ objectdef obj_Ship
 		This.ModuleList_TargetPainter:Clear
 		This.ModuleList_TrackingComputer:Clear
 
-		Me.Ship:DoGetModules[This.ModuleList]
+		Me.Ship:GetModules[This.ModuleList]
 
 		if !${This.ModuleList.Used} && ${Me.Ship.HighSlots} > 0
 		{
@@ -341,6 +346,9 @@ objectdef obj_Ship
 			return
 		}
 		RetryUpdateModuleList:Set[0]
+
+		/* save ship values that may change in combat */
+		This.m_MaxTargetRange:Set[${Me.Ship.MaxTargetRange}]
 
 		variable iterator ModuleIter
 
@@ -361,17 +369,17 @@ objectdef obj_Ship
 				return
 			}
 
-			UI:UpdateConsole["DEBUG: ID: ${ModuleIter.Value} ID: ${ModuleIter.Value.ID} Activatable: ${ModuleIter.Value.IsActivatable} Name: ${ModuleIter.Value.ToItem.Name} Slot: ${ModuleIter.Value.ToItem.Slot} Group: ${ModuleIter.Value.ToItem.Group} ${GroupID} Type: ${ModuleIter.Value.ToItem.Type} ${TypeID}", LOG_DEBUG]
+			UI:UpdateConsole["DEBUG: ID: ${ModuleIter.Value.ID} Activatable: ${ModuleIter.Value.IsActivatable} Name: ${ModuleIter.Value.ToItem.Name} Slot: ${ModuleIter.Value.ToItem.Slot} Group: ${ModuleIter.Value.ToItem.Group} ${GroupID} Type: ${ModuleIter.Value.ToItem.Type} ${TypeID}", LOG_DEBUG]
 
 			if !${ModuleIter.Value.IsActivatable}
 			{
-				This.ModuleList_Passive:Insert[${ModuleIter.Value}]
+				This.ModuleList_Passive:Insert[${ModuleIter.Value.ID}]
 				continue
 			}
 
 			if ${ModuleIter.Value.MiningAmount(exists)}
 			{
-				This.ModuleList_MiningLaser:Insert[${ModuleIter.Value}]
+				This.ModuleList_MiningLaser:Insert[${ModuleIter.Value.ID}]
 				continue
 			}
 
@@ -380,7 +388,7 @@ objectdef obj_Ship
 				case GROUPID_DAMAGE_CONTROL
 				case GROUPID_SHIELD_HARDENER
 				case GROUPID_ARMOR_HARDENERS
-					This.ModuleList_ActiveResists:Insert[${ModuleIter.Value}]
+					This.ModuleList_ActiveResists:Insert[${ModuleIter.Value.ID}]
 					break
 				case GROUP_ENERGYWEAPON
 				case GROUP_PROJECTILEWEAPON
@@ -397,48 +405,48 @@ objectdef obj_Ship
 				case GROUP_MISSILELAUNCHERSIEGE
 				case GROUP_MISSILELAUNCHERSNOWBALL
 				case GROUP_MISSILELAUNCHERSTANDARD
-					This.ModuleList_Weapon:Insert[${ModuleIter.Value}]
+					This.ModuleList_Weapon:Insert[${ModuleIter.Value.ID}]
 					break
 				case GROUP_ECCM
-					This.ModuleList_ECCM:Insert[${ModuleIter.Value}]
+					This.ModuleList_ECCM:Insert[${ModuleIter.Value.ID}]
 					break
 				case GROUPID_FREQUENCY_MINING_LASER
 					break
 				case GROUPID_SHIELD_BOOSTER
-					This.ModuleList_Regen_Shield:Insert[${ModuleIter.Value}]
+					This.ModuleList_Regen_Shield:Insert[${ModuleIter.Value.ID}]
 					break
 				case GROUPID_AFTERBURNER
-					This.ModuleList_AB_MWD:Insert[${ModuleIter.Value}]
+					This.ModuleList_AB_MWD:Insert[${ModuleIter.Value.ID}]
 					break
 				case GROUPID_ARMOR_REPAIRERS
-					This.ModuleList_Repair_Armor:Insert[${ModuleIter.Value}]
+					This.ModuleList_Repair_Armor:Insert[${ModuleIter.Value.ID}]
 					break
 				case GROUPID_DATA_MINER
 					if ${TypeID} == TYPEID_SALVAGER
 					{
-						This.ModuleList_Salvagers:Insert[${ModuleIter.Value}]
+						This.ModuleList_Salvagers:Insert[${ModuleIter.Value.ID}]
 					}
 					break
 				case GROUPID_TRACTOR_BEAM
-					This.ModuleList_TractorBeams:Insert[${ModuleIter.Value}]
+					This.ModuleList_TractorBeams:Insert[${ModuleIter.Value.ID}]
 					break
 				case NONE
-					This.ModuleList_Repair_Hull:Insert[${ModuleIter.Value}]
+					This.ModuleList_Repair_Hull:Insert[${ModuleIter.Value.ID}]
 					break
 				case GROUPID_CLOAKING_DEVICE
-					This.ModuleList_Cloaks:Insert[${ModuleIter.Value}]
+					This.ModuleList_Cloaks:Insert[${ModuleIter.Value.ID}]
 					break
 				case GROUPID_STASIS_WEB
-					This.ModuleList_StasisWeb:Insert[${ModuleIter.Value}]
+					This.ModuleList_StasisWeb:Insert[${ModuleIter.Value.ID}]
 					break
 				case GROUP_SENSORBOOSTER
-					This.ModuleList_SensorBoost:Insert[${ModuleIter.Value}]
+					This.ModuleList_SensorBoost:Insert[${ModuleIter.Value.ID}]
 					break
 				case GROUP_TARGETPAINTER
-					This.ModuleList_TargetPainter:Insert[${ModuleIter.Value}]
+					This.ModuleList_TargetPainter:Insert[${ModuleIter.Value.ID}]
 					break
 				case GROUP_TRACKINGCOMPUTER
-					This.ModuleList_TrackingComputer:Insert[${ModuleIter.Value}]
+					This.ModuleList_TrackingComputer:Insert[${ModuleIter.Value.ID}]
 					break
 				default
 					break
@@ -454,7 +462,7 @@ objectdef obj_Ship
 			UI:UpdateConsole["Slot: ${ModuleIter.Value.ToItem.Slot} ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
 		while ${ModuleIter:Next(exists)}
-		
+
 		UI:UpdateConsole["ECCM Modules:", LOG_MINOR, 2]
 		This.ModuleList_ECCM:GetIterator[ModuleIter]
 		if ${ModuleIter:First(exists)}
@@ -769,7 +777,7 @@ objectdef obj_Ship
 		variable index:entity LockedTargets
 		variable iterator Target
 
-		Me:DoGetTargets[LockedTargets]
+		Me:GetTargets[LockedTargets]
 		LockedTargets:GetIterator[Target]
 
 		if ${Target:First(exists)}
@@ -812,7 +820,7 @@ objectdef obj_Ship
 			variable index:item CrystalList
 			variable iterator CrystalIterator
 
-			Me.Ship.Module[${SlotName}]:DoGetAvailableAmmo[CrystalList]
+			Me.Ship.Module[${SlotName}]:GetAvailableAmmo[CrystalList]
 
 			if ${CrystalList.Used} == 0
 			{
@@ -895,7 +903,7 @@ objectdef obj_Ship
 
 		if ${Activate.Equal[ON]} && \
 			(	!${Me.Ship.Module[${Slot}].LastTarget(exists)} || \
-				!${Entity[id,${Me.Ship.Module[${Slot}].LastTarget.ID}](exists)} \
+				!${Entity[${Me.Ship.Module[${Slot}].LastTarget.ID}](exists)} \
 			)
 		{
 			echo "obj_Ship:CycleMiningLaser: Target doesn't exist"
@@ -1070,7 +1078,9 @@ objectdef obj_Ship
 			LoopCheck:Set[0]
 			CaptionCount:Set[${EVEWindow[MyShipCargo].Caption.Token[2,"["].Token[1,"]"]}]
 			;UI:UpdateConsole["obj_Ship: Waiting for cargo to load: CaptionCount: ${CaptionCount}", LOG_DEBUG]
-			while ( ${CaptionCount} > ${Me.Ship.GetCargo} && \
+			variable index:item MyCargo
+			MyShip:GetCargo[MyCargo]
+			while ( ${CaptionCount} > ${MyCargo.Used} && \
 					${LoopCheck} < 10 )
 			{
 				UI:UpdateConsole["obj_Ship: Waiting for cargo to load...(${LoopCheck})", LOG_MINOR]
@@ -1080,6 +1090,7 @@ objectdef obj_Ship
 				}
 				wait 10
 				LoopCheck:Inc
+				MyShip:GetCargo[MyCargo]
 			}
 		}
 	}
@@ -1149,7 +1160,7 @@ objectdef obj_Ship
 				if ${charID.Equal[${FleetMember.Value.CharID}]} && ${Local[${FleetMember.Value.ToPilot.Name}](exists)}
 				{
 					call This.WarpPrepare
-					while !${Entity[OwnerID,${charID},CategoryID,6](exists)}
+					while !${Entity["OwnerID = ${charID} && CategoryID = 6"](exists)}
 					{
 						UI:UpdateConsole["Warping to Fleet Member: ${FleetMember.Value.ToPilot.Name}"]
 						while !${This.WarpEntered}
@@ -1242,9 +1253,9 @@ objectdef obj_Ship
 		echo \${DestinationBookmark.LocationType} = ${DestinationBookmark.LocationType}
 		echo \${DestinationBookmark.LocationID} = ${DestinationBookmark.LocationID}
 		echo DestinationBookmark Location: ${DestinationBookmark.X}, ${DestinationBookmark.Y}, ${DestinationBookmark.Z}
-		echo \${Entity[CategoryID,6].X} = ${Entity[CategoryID,6].X}
-		echo \${Entity[CategoryID,6].Y} = ${Entity[CategoryID,6].Y}
-		echo \${Entity[CategoryID,6].Z} = ${Entity[CategoryID,6].Z}
+		echo \${Entity["CategoryID = 6"].X} = ${Entity["CategoryID = 6"].X}
+		echo \${Entity["CategoryID = 6"].Y} = ${Entity["CategoryID = 6"].Y}
+		echo \${Entity["CategoryID = 6"].Z} = ${Entity["CategoryID = 6"].Z}
 		echo \${Me.ToEntity.X} = ${Me.ToEntity.X}
 		echo \${Me.ToEntity.Y} = ${Me.ToEntity.Y}
 		echo \${Me.ToEntity.Z} = ${Me.ToEntity.Z}
@@ -1338,14 +1349,14 @@ objectdef obj_Ship
 				}
 
 				if ${DestinationBookmark.AgentID(exists)} && ${DestinationBookmark.LocationID(exists)} && \
-					${Entity[TypeID,TYPE_ACCELERATION_GATE](exists)}
+					${Entity["TypeID = TYPE_ACCELERATION_GATE"](exists)}
 				{
-					call This.Approach ${Entity[TypeID,TYPE_ACCELERATION_GATE].ID} DOCKING_RANGE
+					call This.Approach ${Entity["TypeID = TYPE_ACCELERATION_GATE"].ID} DOCKING_RANGE
 					wait 10
 					UI:UpdateConsole["Activating Acceleration Gate..."]
 					while !${This.WarpEntered}
 					{
-						Entity[TypeID,TYPE_ACCELERATION_GATE]:Activate
+						Entity["TypeID = TYPE_ACCELERATION_GATE"]:Activate
 						wait 10
 					}
 					call This.WarpWait
@@ -1661,7 +1672,7 @@ objectdef obj_Ship
 		}
 		while ${ModuleIter:Next(exists)}
 	}
-	
+
 	method Activate_Tracking_Computer()
 	{
 		if !${Me.Ship(exists)}
@@ -2273,6 +2284,7 @@ objectdef obj_Ship
 					{
 						CurrentCharges:Set[${ModuleIter.Value.Charge.Quantity}]
 					}
+
 					if ${CurrentCharges} != ${ModuleIter.Value.MaxCharges}
 					{
 						;UI:UpdateConsole["ModuleIter.Value.CurrentCharges = ${ModuleIter.Value.CurrentCharges}"]
@@ -2304,7 +2316,7 @@ objectdef obj_Ship
 	{
 		if ${Station.Docked}
 		{
-			return ${This.m_Type}
+			return ${MyShip.ToItem.Type}
 		}
 		else
 		{
@@ -2312,28 +2324,16 @@ objectdef obj_Ship
 		}
 	}
 
-	method SetType(string typeString)
-	{
-		UI:UpdateConsole["obj_Ship: DEBUG: Setting ship type to ${typeString}"]
-		This.m_Type:Set[${typeString}]
-	}
-
 	member:int TypeID()
 	{
 		if ${Station.Docked}
 		{
-			return ${This.m_TypeID}
+			return ${MyShip.ToItem.TypeID}
 		}
 		else
 		{
 			return ${Me.ToEntity.TypeID}
 		}
-	}
-
-	method SetTypeID(int typeID)
-	{
-		UI:UpdateConsole["obj_Ship: DEBUG: Setting ship type ID to ${typeID}"]
-		This.m_TypeID:Set[${typeID}]
 	}
 
 	function ActivateShip(string name)
@@ -2344,7 +2344,7 @@ objectdef obj_Ship
 
 		if ${Station.Docked}
 		{
-			Me:DoGetHangarShips[hsIndex]
+			Me:GetHangarShips[hsIndex]
 			hsIndex:GetIterator[hsIterator]
 
 			shipName:Set[${Me.Ship}]
@@ -2358,9 +2358,6 @@ objectdef obj_Ship
 						{
 							UI:UpdateConsole["obj_Ship: Switching to ship named ${hsIterator.Value.GivenName}."]
 							hsIterator.Value:MakeActive
-							wait 10
-							This:SetType[${hsIterator.Value.Type}]
-							This:SetTypeID[${hsIterator.Value.TypeID}]
 							break
 						}
 					}

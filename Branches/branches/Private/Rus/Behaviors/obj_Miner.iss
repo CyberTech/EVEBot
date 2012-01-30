@@ -418,12 +418,12 @@ objectdef obj_Miner
 			if ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers}
 			{
 				; We've got idle lasers, and available targets. Do something with them.
-				while ${Me.GetTargeting} > 0
+				while ${Me.TargetingCount} > 0
 				{
 				 	wait 10
 				}
 
-				Me:DoGetTargets[LockedTargets]
+				Me:GetTargets[LockedTargets]
 				LockedTargets:GetIterator[Target]
 				if ${Target:First(exists)}
 				do
@@ -473,15 +473,15 @@ objectdef obj_Miner
 			if (!${Config.Miner.IceMining} || \
 				(${Ship.TotalActivatedMiningLasers} == 0))
 			{
-				if ${Math.Calc[${Me.GetTargets} + ${Me.GetTargeting}]} < ${Ship.SafeMaxLockedTargets}
+				if ${Math.Calc[${Me.TargetCount} + ${Me.TargetingCount}]} < ${Ship.SafeMaxLockedTargets}
 				{
 					call Asteroids.TargetNext
 					This.ConcentrateFire:Set[!${Return}]
-					;echo DEBUG: Target Locking: ${Math.Calc[${Me.GetTargets} + ${Me.GetTargeting}].Int} out of ${Ship.SafeMaxLockedTargets} (Limited Asteroids: ${This.ConcentrateFire})
+					;echo DEBUG: Target Locking: ${Math.Calc[${Me.TargetCount} + ${Me.TargetingCount}].Int} out of ${Ship.SafeMaxLockedTargets} (Limited Asteroids: ${This.ConcentrateFire})
 				}
 				else
 				{
-					if ( ${Me.GetTargets} >= ${Ship.SafeMaxLockedTargets} && \
+					if ( ${Me.TargetCount} >= ${Ship.SafeMaxLockedTargets} && \
 						 ${Ship.TotalMiningLasers} > ${Ship.SafeMaxLockedTargets} )
 					{
 						This.ConcentrateFire:Set[TRUE]
@@ -521,7 +521,7 @@ objectdef obj_Miner
 	{
 		/* notify hauler there is ore in space */
 		variable string tempString
-		tempString:Set["${Me.CharID},${Me.SolarSystemID},${Entity[GroupID, GROUP_ASTEROIDBELT].ID}"]
+		tempString:Set["${Me.CharID},${Me.SolarSystemID},${Entity[GroupID = GROUP_ASTEROIDBELT].ID}"]
 		relay all -event EVEBot_Miner_Full ${tempString}
 
 		/* TO MANUALLY CALL A HAULER ENTER THIS IN THE CONSOLE

@@ -209,9 +209,11 @@ objectdef obj_Freighter
 
 		if ${Cargo.ShipHasContainers}
 		{
+			variable index:items HangarItems
+			Me:GetHangarItems[HangarItems]
 			UI:UpdateConsole["obj_Freighter: Ship has containers."]
-			UI:UpdateConsole["obj_Freighter: Station contains ${Me.GetHangarItems} items."]
-			if ${Me.GetHangarItems} > 0
+			UI:UpdateConsole["obj_Freighter: Station contains ${HangarItems.Used} items."]
+			if ${HangarItemsUsed} > 0
 			{	/* move from hangar to ship */
 				call Cargo.TransferCargoToShip
 			}
@@ -292,7 +294,7 @@ objectdef obj_Freighter
 	        	Universe[${tmp_string}]:SetDestination
 	        	wait 5
 	        	variable index:int ap_path
-	        	EVE:DoGetToDestinationPath[ap_path]
+	        	EVE:GetToDestinationPath[ap_path]
 	        	variable iterator ap_path_iterator
 	        	ap_path:GetIterator[ap_path_iterator]
 
@@ -401,7 +403,7 @@ objectdef obj_Freighter
 		bm_prefix:Set[${Config.Freighter.SourcePrefix}]
 
 		variable index:bookmark bm_index
-		EVE:DoGetBookmarks[bm_index]
+		EVE:GetBookmarks[bm_index]
 
 		variable iterator bm_iterator
 		bm_index:GetIterator[bm_iterator]
@@ -420,11 +422,11 @@ objectdef obj_Freighter
 						UI:UpdateConsole["Label ${bm_iterator.Value.Label} exists more than once."]
 						UI:UpdateConsole["Freighter will visit stations with the same bookmark label in a"]
 						UI:UpdateConsole["random order.  Try to use unique bookmark labels in the future."]
-						bm_collection:Set["${bm_iterator.Value.Label}_${Math.Rand[5000]:Inc[1000]}",${bm_iterator.Value}]
+						bm_collection:Set["${bm_iterator.Value.Label}_${Math.Rand[5000]:Inc[1000]}",${bm_iterator.Value.ID}]
 					}
 					else
 					{
-						bm_collection:Set[${bm_iterator.Value.Label},${bm_iterator.Value}]
+						bm_collection:Set[${bm_iterator.Value.Label},${bm_iterator.Value.ID}]
 					}
 				}
 			}
