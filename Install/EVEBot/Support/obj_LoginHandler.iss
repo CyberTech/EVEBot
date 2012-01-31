@@ -190,7 +190,7 @@ objectdef obj_LoginHandler inherits obj_BaseClass
 					This.CurrentState:Set["CONNECTING"]
 					break
 				}
-				if !${Login(exists)} && !${CharSelect(exists)}
+				if !${Login(exists)} && !${CharSelect(exists)} && ${Me(exists)}
 				{
 					This.CurrentState:Set["LOGGED_IN"]
 					This.LoginTimer:Set[${This.inspaceWaitTime}]
