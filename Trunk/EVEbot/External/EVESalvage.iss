@@ -1,12 +1,12 @@
 ;; Declare all script or global variables here
 variable(script) int NumSalvageLocations
 variable(script) index:bookmark MyBookmarks
-variable(script) int MyBookmarksCount
 variable(script) bool LeftStation
 variable(script) bool SalvagerHomeBaseFound
 variable(script) int Counter
 variable(script) bool SalvageYardFound
 variable(script) bool DoLoot
+variable(script) bool SalvageHereOnly
 variable(script) index:string SalvageLocationLabels
 variable(script) index:fleetmember MyFleet
 variable(script) int MyFleetCount
@@ -36,6 +36,7 @@ function main(... Args)
   SalvageYardFound:Set[FALSE]
   LeftStation:Set[FALSE]
   DoLoot:Set[FALSE]
+  SalvageHereOnly:Set[FALSE]
   UsingAt:Set[FALSE]
   StopAfterSalvaging:Set[FALSE]
 
@@ -50,7 +51,7 @@ function main(... Args)
   }
   while !${ISXEVE.IsReady}
 
-  echo " \n \n \n** EVE Salvager 3.3 Script by Amadeus ** \n \n"
+  echo " \n \n \n** EVE Salvager Script 3.5 by Amadeus ** \n \n"
 
   ; 'Args' is an array ... arrays are static.  Copying to an index just in case we have a desire at some point to add/remove elements.
 	if ${Args.Size} > 0
@@ -59,6 +60,8 @@ function main(... Args)
 		{
 			if (${Args[${Iterator}].Equal[-LOOT]} || ${Args[${Iterator}].Equal[-loot]})
 				DoLoot:Set[TRUE]
+			elseif (${Args[${Iterator}].Equal[-HERE]} || ${Args[${Iterator}].Equal[-here]})
+				SalvageHereOnly:Set[TRUE]				
 			elseif (${Args[${Iterator}].Equal[-AT]} || ${Args[${Iterator}].Equal[-at]})
 			{
 				UsingAt:Set[TRUE]
@@ -85,7 +88,7 @@ function main(... Args)
 
 			    if !${FoundThem}
 			    {
-			        echo "- There does not seem to be a fleet member with the name '${Args[${Iterator}]}', is he in the current system?"
+			        echo "- There does not seem to be a fleet member with the name '${Args[${Iterator}]}'..."
 			        echo "- Aborting script"
 			        return
 			    }
@@ -103,11 +106,12 @@ function main(... Args)
 
   if (${Args.Size} <= 1)
   {
-  	echo "* Syntax:  'run EVESalvage <bookmarklabel1> <bookmarklabel2> ...'"
+  	echo "* Syntax:  'run EVESalvage [flags] <bookmarklabel1> <bookmarklabel2> ...'"
   	echo "*          'run EVESalvage -at <FleetMemberName>"
   	echo "*"
   	echo "* Flags:   '-loot'  (the script will loot all cans that are found in space)"
   	echo "*          '-stop'  (the script will stop after the last wreck is handled and will not return to the base/location from which you started)"
+  	echo "*          '-here'  (the script will only work at its current location)"
   	return
   }
 
@@ -116,87 +120,86 @@ function main(... Args)
   else
   	echo "- The Salvager will *NOT* loot cans as it goes."
 
-  MyBookmarksCount:Set[${EVE.GetBookmarks[MyBookmarks]}]
+  EVE:GetBookmarks[MyBookmarks]
 
   ;;; For use with the -at flag
   if ${UsingAt}
   {
-	if !${LeftStation}
-	{
-		if ${Me.InStation}
+		if !${LeftStation}
 		{
-			   ;; First, make sure we have a bookmark labeled "Salvager Home Base" -- otherwise, create it ;;;;;;;;;;;;;
-			   SalvagerHomeBaseFound:Set[FALSE]
-			   do
+			if ${Me.InStation}
+			{
+				   ;; First, make sure we have a bookmark labeled "Salvager Home Base" -- otherwise, create it ;;;;;;;;;;;;;
+				   SalvagerHomeBaseFound:Set[FALSE]
+				   do
+				   {
+				    	if (${MyBookmarks.Get[${k}].Label.Find["Salvager Home Base"]} > 0)
+				  		{
+				  			SalvagerHomeBaseFound:Set[TRUE]
+				  		}
+				   }
+				   while ${k:Inc} <= ${MyBookmarks.Used}
+	
+				   if !${SalvagerHomeBaseFound}
+				   {
+				   		echo "- Creating 'Salvager Home Base' bookmark..."
+				  		EVE:CreateBookmark["Salvager Home Base"]
+				  		wait 10
+				 	 }
+	
+			   echo "- Undocking from station..."
+			   EVE:Execute[CmdExitStation]
+			   wait 150
+			   Counter:Set[0]
+			   if (${Me.InStation})
 			   {
-			    	if (${MyBookmarks.Get[${k}].Label.Find["Salvager Home Base"]} > 0)
-			  		{
-			  			SalvagerHomeBaseFound:Set[TRUE]
-			  		}
+			   		do
+			   		{
+			   			wait 20
+			   			Counter:Inc[20]
+				   			if (${Counter} > 300)
+				   			{
+				   			  echo "- Undocking attempt failed ... trying again."
+				   				EVE:Execute[CmdExitStation]
+				   				Counter:Set[0]
+				   			}
+			   		}
+			   		while (${Me.InStation} || !${EVEWindow[Local](exists)} || !${Me.InStation(exists)})
 			   }
-			   while ${k:Inc} <= ${MyBookmarksCount}
-
-			   if !${SalvagerHomeBaseFound}
-			   {
-			   		echo "- Creating 'Salvager Home Base' bookmark..."
-			  		EVE:CreateBookmark["Salvager Home Base"]
-			  		wait 10
-			 	 }
-
-		   echo "- Undocking from station..."
-		   EVE:Execute[CmdExitStation]
-		   wait 150
-		   Counter:Set[0]
-		   if (${Me.InStation})
-		   {
-		   		do
-		   		{
-		   			wait 20
-		   			Counter:Inc[20]
-			   			if (${Counter} > 300)
-			   			{
-			   			  echo "- Undocking attempt failed ... trying again."
-			   				EVE:Execute[CmdExitStation]
-			   				Counter:Set[0]
-			   			}
-		   		}
-		   		while (${Me.InStation} || !${EVEWindow[Local](exists)} || !${Me.InStation(exists)})
-		   }
-		   wait 5
-		   LeftStation:Set[TRUE]
+			   wait 5
+			   LeftStation:Set[TRUE]
+			}
+			wait 1
 		}
-		wait 1
-	}
 
-	echo "- Warping to '${MyFleet.Get[${FleetIterator}].ToPilot.Name}' for salvage operation..."
-	MyFleet.Get[${FleetIterator}]:WarpTo
-	do
-	{
-		wait 20
-	}
-	while (${Me.ToEntity.Mode} == 3)
-
-    wait 10
-	call DoSalvage ${DoLoot}
-
-	; Remove bookmark now that we're done
-	wait 2
-	echo "- Salvage operation at '${MyFleet.Get[${FleetIterator}].ToPilot.Name}' complete..."
+		echo "- Warping to '${MyFleet.Get[${FleetIterator}].ToPilot.Name}' for salvage operation..."
+		MyFleet.Get[${FleetIterator}]:WarpTo
+		do
+		{
+			wait 20
+		}
+		while (${Me.ToEntity.Mode} == 3)
+	
+	  wait 10
+		call DoSalvage ${DoLoot}
+	
+		; Remove bookmark now that we're done
+		wait 2
+		echo "- Salvage operation at '${MyFleet.Get[${FleetIterator}].ToPilot.Name}' complete..."
   }
 
   ; Checks required for using bookmarks...
-  if (!${UsingAt})
+  if (!${UsingAt} && !${SalvageHereOnly})
   {
-      if ${MyBookmarksCount} == 0
+      if ${MyBookmarks.Used} == 0
       {
         echo "- Sorry, you do not appear to have any bookmarks!"
         return
       }
   }
 
-
-  ;;; Loop for use with bookmarks...we skip this if using -at ;;;;;;;
-  if !${UsingAt}
+  ;;; Loop for use with bookmarks...we skip this if using -at or -here ;;;;;;;
+  if (!${UsingAt} && !${SalvageHereOnly})
   {
       NumSalvageLocations:Set[${SalvageLocationLabels.Used}]
       do
@@ -204,127 +207,130 @@ function main(... Args)
       	j:Set[1]
         do
         {
-    		if (${MyBookmarks.Get[${j}].Label.Find[${SalvageLocationLabels[${i}]}]} > 0)
-    		{
-    		  SalvageYardFound:Set[TRUE]
-    	      if (!${SalvageYardFound})
-    	      {
-                 echo "- Sorry, no bookmarks were found that matched the arguments given."
-                 return
-    	      }
-    	      else
-    	      {
-    	         echo "- Salvage location found in bookmarks: (${SalvageLocationLabels[${i}]})..."
-    		  }
+	    		if (${MyBookmarks.Get[${j}].Label.Find[${SalvageLocationLabels[${i}]}]} > 0)
+	    		{
+	    		  	SalvageYardFound:Set[TRUE]
+	    	      if (!${SalvageYardFound})
+	    	      {
+	                 echo "- Sorry, no bookmarks were found that matched the arguments given."
+	                 return
+	    	      }
+	    	      else
+	    	      {
+	    	         echo "- Salvage location found in bookmarks: (${SalvageLocationLabels[${i}]})..."
+	    		  	}
 
+			    		;;; Leave station
+			    		if !${LeftStation}
+			    		{
+			       			if ${Me.InStation}
+			       			{
+			    				   ;; First, make sure we have a bookmark labeled "Salvager Home Base" -- otherwise, create it ;;;;;;;;;;;;;
+			    				   SalvagerHomeBaseFound:Set[FALSE]
+			    				   do
+			    				   {
+			    				    	if (${MyBookmarks.Get[${k}].Label.Find["Salvager Home Base"]} > 0)
+			    				  		{
+			    				  			SalvagerHomeBaseFound:Set[TRUE]
+			    				  		}
+			    				   }
+			    				   while ${k:Inc} <= ${MyBookmarks.Used}
+			
+			    				   if !${SalvagerHomeBaseFound}
+			    				   {
+			    				   		echo "- Creating 'Salvager Home Base' bookmark..."
+			    				  		EVE:CreateBookmark["Salvager Home Base"]
+			    				  		wait 10
+			    				   }
+			
+			       			   echo "- Undocking from station..."
+			       			   EVE:Execute[CmdExitStation]
+			       			   wait 150
+			       			   Counter:Set[0]
+			       			   if (${Me.InStation})
+			       			   {
+			       			   		do
+			       			   		{
+			       			   			wait 20
+			       			   			Counter:Inc[20]
+			    				   			if (${Counter} > 300)
+			    				   			{
+			    				   			  echo "- Undocking atttempt failed ... trying again."
+			    				   				EVE:Execute[CmdExitStation]
+			    				   				Counter:Set[0]
+			    				   			}
+			       			   		}
+			       			   		while (${Me.InStation} || !${EVEWindow[Local](exists)} || !${Me.InStation(exists)})
+			       			   }
+			       			   wait 5
+			       			   LeftStation:Set[TRUE]
+			       			}
+			       			else
+			       			   echo "- WARNING: You must be in a station to properly utilize this script."
+			       			wait 1
+			    		}
 
-    		;;; Leave station
-    		if !${LeftStation}
-    		{
-       			if ${Me.InStation}
-       			{
-    				   ;; First, make sure we have a bookmark labeled "Salvager Home Base" -- otherwise, create it ;;;;;;;;;;;;;
-    				   SalvagerHomeBaseFound:Set[FALSE]
-    				   do
-    				   {
-    				    	if (${MyBookmarks.Get[${k}].Label.Find["Salvager Home Base"]} > 0)
-    				  		{
-    				  			SalvagerHomeBaseFound:Set[TRUE]
-    				  		}
-    				   }
-    				   while ${k:Inc} <= ${MyBookmarksCount}
+			    		;;; Set destination and then activate autopilot (if we're not in that system to begin with)
+			    		if (!${MyBookmarks[${j}].SolarSystemID.Equal[${Me.SolarSystemID}]})
+			    		{
+			    		  echo "- Setting Destination and activating auto pilot for salvage operation ${i} (${MyBookmarks.Get[${j}].Label})."
+			    		  wait 5
+			    			MyBookmarks[${j}]:SetDestination
+			    			wait 5
+			    			EVE:Execute[CmdToggleAutopilot]
+			    				do
+			    				{
+			    				   wait 50
+			    				   if !${Me.AutoPilotOn(exists)}
+			    				   {
+			    				     do
+			    				     {
+			    				        wait 5
+			    				     }
+			    				     while !${Me.AutoPilotOn(exists)}
+			    				   }
+			    				}
+			    			while ${Me.AutoPilotOn}
+			    			wait 20
+			    			do
+			    			{
+			    			   wait 10
+			    			}
+			    			while !${Me.ToEntity.IsCloaked}
+			    			wait 5
+			    		}
 
-    				   if !${SalvagerHomeBaseFound}
-    				   {
-    				   		echo "- Creating 'Salvager Home Base' bookmark..."
-    				  		EVE:CreateBookmark["Salvager Home Base"]
-    				  		wait 10
-    				   }
+			    		;;; Warp to location
+			    		echo "- Warping to salvage location..."
+			    		MyBookmarks[${j}]:WarpTo
+			    		wait 120
+			    		do
+			    		{
+			    			wait 20
+			    		}
+			    		while (${Me.ToEntity.Mode} == 3)
 
-       			   echo "- Undocking from station..."
-       			   EVE:Execute[CmdExitStation]
-       			   wait 150
-       			   Counter:Set[0]
-       			   if (${Me.InStation})
-       			   {
-       			   		do
-       			   		{
-       			   			wait 20
-       			   			Counter:Inc[20]
-    				   			if (${Counter} > 300)
-    				   			{
-    				   			  echo "- Undocking atttempt failed ... trying again."
-    				   				EVE:Execute[CmdExitStation]
-    				   				Counter:Set[0]
-    				   			}
-       			   		}
-       			   		while (${Me.InStation} || !${EVEWindow[Local](exists)} || !${Me.InStation(exists)})
-       			   }
-       			   wait 5
-       			   LeftStation:Set[TRUE]
-       			}
-       			else
-       			   echo "- WARNING: You must be in a station to properly utilize this script."
-       			wait 1
-    		}
+            	wait 10
+    					call DoSalvage ${DoLoot}
 
-    		;;; Set destination and then activate autopilot (if we're not in that system to begin with)
-    		if (${MyBookmarks[${j}].SolarSystemID} != ${Me.SolarSystemID})
-    		{
-    		  echo "- Setting Destination and activating auto pilot for salvage operation ${i} (${MyBookmarks.Get[${j}].Label})."
-    		  wait 5
-    			MyBookmarks[${j}]:SetDestination
-    			wait 5
-    			EVE:Execute[CmdToggleAutopilot]
-    				do
-    				{
-    				   wait 50
-    				   if !${Me.AutoPilotOn(exists)}
-    				   {
-    				     do
-    				     {
-    				        wait 5
-    				     }
-    				     while !${Me.AutoPilotOn(exists)}
-    				   }
-    				}
-    			while ${Me.AutoPilotOn}
-    			wait 20
-    			do
-    			{
-    			   wait 10
-    			}
-    			while !${Me.ToEntity.IsCloaked}
-    			wait 5
-    		}
-
-    		;;; Warp to location
-    		echo "- Warping to salvage location..."
-    		MyBookmarks[${j}]:WarpTo
-    		wait 120
-    		do
-    		{
-    			wait 20
-    		}
-    		while (${Me.ToEntity.Mode} == 3)
-
-            wait 10
-    		call DoSalvage ${DoLoot}
-
-    		; Remove bookmark now that we're done
-    		wait 2
-    		echo "- Salvage operation at '${SalvageLocationLabels[${i}]}' complete ... removing bookmark."
-    		EVE.Bookmark[${SalvageLocationLabels[${i}]}]:Remove
-    		wait 10
-          }
+			    		; Remove bookmark now that we're done
+			    		wait 2
+			    		echo "- Salvage operation at '${SalvageLocationLabels[${i}]}' complete ... removing bookmark."
+			    		EVE.Bookmark[${SalvageLocationLabels[${i}]}]:Remove
+			    		wait 10
+			    }
         }
-       	while ${j:Inc} <= ${MyBookmarksCount}
+       	while ${j:Inc} <= ${MyBookmarks.Used}
       }
       while ${i:Inc} <= ${NumSalvageLocations}
   }
   ; Loop for use with bookmarks ENDS ;;;;;;;;;;;;;;;;;;;
 
-
+	;; Salvage just this particular area, and then go home (or not)
+	if (${SalvageHereOnly})
+	{
+		call DoSalvage ${DoLoot}
+	}
 
   if (${StopAfterSalvaging})
     return
@@ -333,13 +339,13 @@ function main(... Args)
   echo "- Salvage operations completed .. returning to home base"
   if (${EVEWindow[MyShipCargo](exists)})
   	EVEWindow[MyShipCargo]:Close
-  MyBookmarksCount:Set[${EVE.GetBookmarks[MyBookmarks]}]
+  EVE:GetBookmarks[MyBookmarks]
 	j:Set[1]
 	do
 	{
 		if (${MyBookmarks.Get[${j}].Label.Find["Salvager Home Base"]} > 0)
 		{
-			if (${MyBookmarks[${j}].SolarSystemID} != ${Me.SolarSystemID})
+			if (!${MyBookmarks[${j}].SolarSystemID.Equal[${Me.SolarSystemID}]})
 			{
 				echo "- Setting destination and activating auto pilot for return to home base"
 				MyBookmarks[${j}]:SetDestination
@@ -359,56 +365,53 @@ function main(... Args)
 				}
  				while ${Me.AutoPilotOn}
  				wait 20
- 				do
- 				{
- 				   wait 10
- 				}
- 				while !${Me.ToEntity.IsCloaked}
 			}
-
-			;;; Warp to location
-			echo "- Warping to home base location"
-			MyBookmarks[${j}]:WarpTo
-			wait 120
-			do
+			else
 			{
-				wait 20
-			}
-			while (${Me.ToEntity.Mode} == 3)
-			wait 20
-
-			;;; Dock, if applicable
-			if ${MyBookmarks[${j}].ToEntity(exists)}
-			{
-				if (${MyBookmarks[${j}].ToEntity.CategoryID} == 3)
+				;;; Warp to location
+				echo "- Warping to home base location"
+				MyBookmarks[${j}]:WarpTo
+				wait 120
+				do
 				{
-					MyBookmarks[${j}].ToEntity:Approach
-					do
+					wait 20
+				}
+				while (${Me.ToEntity.Mode} == 3)
+				wait 20
+	
+				;;; Dock, if applicable
+				if ${MyBookmarks[${j}].ToEntity(exists)}
+				{
+					if (${MyBookmarks[${j}].ToEntity.CategoryID} == 3)
 					{
-						wait 20
+						MyBookmarks[${j}].ToEntity:Approach
+						do
+						{
+							wait 20
+						}
+						while (${MyBookmarks[${j}].ToEntity.Distance} > 50)
+	
+						MyBookmarks[${j}].ToEntity:Dock
+						Counter:Set[0]
+						do
+						{
+						   wait 20
+						   Counter:Inc[20]
+						   if (${Counter} > 200)
+						   {
+						      echo " - Docking atttempt failed ... trying again."
+						      ;EVE.Bookmark[${Destination}].ToEntity:Dock
+						      Entity[CategoryID = 3]:Dock
+						      Counter:Set[0]
+						   }
+						}
+						while (!${Me.InStation})
 					}
-					while (${MyBookmarks[${j}].ToEntity.Distance} > 50)
-
-					MyBookmarks[${j}].ToEntity:Dock
-					Counter:Set[0]
-					do
-					{
-					   wait 20
-					   Counter:Inc[20]
-					   if (${Counter} > 200)
-					   {
-					      echo " - Docking atttempt failed ... trying again."
-					      ;EVE.Bookmark[${Destination}].ToEntity:Dock
-					      Entity[CategoryID,3]:Dock
-					      Counter:Set[0]
-					   }
-					}
-					while (!${Me.InStation})
 				}
 			}
 		}
 	}
-	while ${j:Inc} <= ${MyBookmarksCount}
+	while ${j:Inc} <= ${MyBookmarks.Used}
  	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
