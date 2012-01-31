@@ -181,24 +181,24 @@ objectdef obj_Ship
 		{
 			if ${aWeaponIterator.Value.Charge(exists)}
 			{
-				;UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable:"]
-				;UI:UpdateConsole["Slot: ${aWeaponIterator.Value.ToItem.Slot}  ${aWeaponIterator.Value.ToItem.Name}"]
+				UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable:", LOG_DEBUG]
+				UI:UpdateConsole["Slot: ${aWeaponIterator.Value.ToItem.Slot}  ${aWeaponIterator.Value.ToItem.Name}", LOG_DEBUG]
 
 				aWeaponIterator.Value:GetAvailableAmmo[anItemIndex]
-				;UI:UpdateConsole["Ammo: Used = ${anItemIndex.Used}"]
+				UI:UpdateConsole["Ammo: Used = ${anItemIndex.Used}", LOG_DEBUG]
 
 				anItemIndex:GetIterator[anItemIterator]
 				if ${anItemIterator:First(exists)}
 				{
 					do
 					{
-						;UI:UpdateConsole["Ammo: Type = ${anItemIterator.Value.Type}"]
+						UI:UpdateConsole["Ammo: Type = ${anItemIterator.Value.Type}", LOG_DEBUG]
 						if ${anItemIterator.Value.TypeID} == ${aWeaponIterator.Value.Charge.TypeID}
 						{
-							;UI:UpdateConsole["Ammo: Match!"]
-							;UI:UpdateConsole["Ammo: Qty = ${anItemIterator.Value.Quantity}"]
-							;UI:UpdateConsole["Ammo: Max = ${aWeaponIterator.Value.MaxCharges}"]
-							if ${anItemIterator.Value.Quantity} < ${Math.Calc[${aWeaponIterator.Value.MaxCharges}*6]}
+							UI:UpdateConsole["Ammo: Match!", LOG_DEBUG]
+							UI:UpdateConsole["Ammo: Qty = ${anItemIterator.Value.Quantity}", LOG_DEBUG]
+							UI:UpdateConsole["Ammo: Max = ${aWeaponIterator.Value.MaxCharges}", LOG_DEBUG]
+							if ${anItemIterator.Value.Quantity} < ${Math.Calc[${aWeaponIterator.Value.MaxCharges}*12]}
 							{
 								UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable: FALSE!", LOG_CRITICAL]
 								bAmmoAvailable:Set[FALSE]
@@ -382,7 +382,7 @@ objectdef obj_Ship
 				This.ModuleList_MiningLaser:Insert[${ModuleIter.Value.ID}]
 				continue
 			}
-
+			
 			switch ${GroupID}
 			{
 				case GROUPID_DAMAGE_CONTROL
@@ -427,6 +427,9 @@ objectdef obj_Ship
 						This.ModuleList_Salvagers:Insert[${ModuleIter.Value.ID}]
 					}
 					break
+				case GROUPID_SALVAGER
+						This.ModuleList_Salvagers:Insert[${ModuleIter.Value.ID}]
+					break	
 				case GROUPID_TRACTOR_BEAM
 					This.ModuleList_TractorBeams:Insert[${ModuleIter.Value.ID}]
 					break
@@ -627,6 +630,15 @@ objectdef obj_Ship
 	{
 		return ${This.ModuleList_MiningLaser.Used}
 	}
+	
+	member:int TotalTractorBeams()
+	{
+		return ${This.ModuleList_TractorBeams.Used}
+	}
+	member:int TotalSalvagers()
+	{
+		return ${This.ModuleList_Salvagers.Used}
+	}
 
 	member:int TotalActivatedMiningLasers()
 	{
@@ -647,6 +659,56 @@ objectdef obj_Ship
 				${ModuleIter.Value.IsDeactivating} || \
 				${ModuleIter.Value.IsChangingAmmo} || \
 				${ModuleIter.Value.IsReloadingAmmo}
+			{
+				count:Inc
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+
+		return ${count}
+	}
+	member:int TotalActivatedTractorBeams()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return 0
+		}
+
+		variable int count
+		variable iterator ModuleIter
+
+		This.ModuleList_TractorBeams:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if (${ModuleIter.Value.IsActive} || \
+				${ModuleIter.Value.IsGoingOnline} || \
+				${ModuleIter.Value.IsDeactivating})
+			{
+				count:Inc
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+
+		return ${count}
+	}
+	member:int TotalActivatedSalvagers()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return 0
+		}
+
+		variable int count
+		variable iterator ModuleIter
+
+		This.ModuleList_Salvagers:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if ${ModuleIter.Value.IsActive} || \
+				${ModuleIter.Value.IsGoingOnline} || \
+				${ModuleIter.Value.IsDeactivating}
 			{
 				count:Inc
 			}
@@ -772,6 +834,58 @@ objectdef obj_Ship
 		return FALSE
 	}
 
+	member:bool IsTractoringWreckID(int64 EntityID)
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		variable iterator ModuleIter
+
+		This.ModuleList_TractorBeams:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if ${ModuleIter.Value.LastTarget(exists)} && \
+				${ModuleIter.Value.LastTarget.ID.Equal[${EntityID}]} && \
+				( ${ModuleIter.Value.IsActive} || ${ModuleIter.Value.IsGoingOnline} )
+			{
+				return TRUE
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+
+		return FALSE
+	}
+
+	member:bool IsSalvagingWreckID(int64 EntityID)
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		variable iterator ModuleIter
+
+		This.ModuleList_Salvagers:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if ${ModuleIter.Value.LastTarget(exists)} && \
+				${ModuleIter.Value.LastTarget.ID.Equal[${EntityID}]} && \
+				( ${ModuleIter.Value.IsActive} || ${ModuleIter.Value.IsGoingOnline} )
+			{
+				return TRUE
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+
+		return FALSE
+	}
+
+	
+	
 	method UnlockAllTargets()
 	{
 		variable index:entity LockedTargets
@@ -1002,6 +1116,73 @@ objectdef obj_Ship
 		}
 		while ${ModuleIter:Next(exists)}
 	}
+	
+	function ActivateFreeTractorBeam()
+	{
+		variable string Slot
+
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		variable iterator ModuleIter
+
+		This.ModuleList_TractorBeams:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if !${ModuleIter.Value.IsActive} && \
+				!${ModuleIter.Value.IsGoingOnline} && \
+				!${ModuleIter.Value.IsDeactivating} && \
+				!${ModuleIter.Value.IsChangingAmmo} &&\
+				!${ModuleIter.Value.IsReloadingAmmo}
+			{
+				Slot:Set[${ModuleIter.Value.ToItem.Slot}]
+
+				UI:UpdateConsole["Activating: ${Slot}: ${ModuleIter.Value.ToItem.Name}"]
+				ModuleIter.Value:Click
+				wait 25
+				return
+			}
+			wait 10
+		}
+		while ${ModuleIter:Next(exists)}
+	}
+	
+	function ActivateFreeSalvager()
+	{
+		variable string Slot
+
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		variable iterator ModuleIter
+
+		This.ModuleList_Salvagers:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if !${ModuleIter.Value.IsActive} && \
+				!${ModuleIter.Value.IsGoingOnline} && \
+				!${ModuleIter.Value.IsDeactivating} && \
+				!${ModuleIter.Value.IsChangingAmmo} &&\
+				!${ModuleIter.Value.IsReloadingAmmo}
+			{
+				Slot:Set[${ModuleIter.Value.ToItem.Slot}]
+
+				UI:UpdateConsole["Activating: ${Slot}: ${ModuleIter.Value.ToItem.Name}"]
+				ModuleIter.Value:Click
+				wait 25
+				return
+			}
+			wait 10
+		}
+		while ${ModuleIter:Next(exists)}
+	}
+	
 
 	method StopShip()
 	{
@@ -2063,7 +2244,7 @@ objectdef obj_Ship
 		This.ModuleList_Salvagers:GetIterator[ModuleIter]
 		if ${ModuleIter:First(exists)}
 		{
-			return ${Math.Calc[${ModuleIter.Value.OptimalRange}*0.90]}
+			return ${ModuleIter.Value.OptimalRange}
 		}
 
 		return 0
@@ -2082,7 +2263,7 @@ objectdef obj_Ship
 		This.ModuleList_TractorBeams:GetIterator[ModuleIter]
 		if ${ModuleIter:First(exists)}
 		{
-			return ${Math.Calc[${ModuleIter.Value.OptimalRange}*0.90]}
+			return ${ModuleIter.Value.OptimalRange}
 		}
 
 		return 0
@@ -2270,7 +2451,7 @@ objectdef obj_Ship
 					; Sometimes this value can be NULL
 					if !${ModuleIter.Value.MaxCharges(exists)}
 					{
-						;UI:UpdateConsole["Sanity check failed... weapon has no MaxCharges!"]
+						UI:UpdateConsole["Sanity check failed... weapon has no MaxCharges!"]
 						NeedReload:Set[TRUE]
 						break
 					}
