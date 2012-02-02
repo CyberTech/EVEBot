@@ -144,7 +144,7 @@ objectdef obj_LoginHandler inherits obj_BaseClass
 
 	method DoLogin()
 	{
-		if ${ISXEVE.IsBeta} && ${EVEWindow[ByName,modal](exists)}
+		if ${EVEWindow[ByName,modal](exists)}
 		{
 			if ${EVEWindow[ByName,modal].Text.Find["A client update is available"](exists)}
 			{
@@ -173,7 +173,7 @@ objectdef obj_LoginHandler inherits obj_BaseClass
 		switch ${This.CurrentState}
 		{
 			case START
-				if ${Type[isxeve].Member[IsBeta]} && ${ISXEVE.IsBeta} && ${EVE.IsProgressWindowOpen}
+				if ${EVE.IsProgressWindowOpen}
 				{
 					break
 				}
@@ -275,23 +275,11 @@ objectdef obj_LoginHandler inherits obj_BaseClass
 					This.LoginTimer:Set[${This.connectWaitTime}]
 					break
 				}
-				if ${Type[isxeve].Member[IsBeta]} && ${ISXEVE.IsBeta}
+				if ${CharSelect(exists)} && !${EVE.IsProgressWindowOpen}
 				{
-					if ${CharSelect(exists)} && !${EVE.IsProgressWindowOpen}
-					{
-						This.CurrentState:Set["CHARSELECT"]
-						This.LoginTimer:Set[${This.CharSelectWaitTime}]
-						break
-					}
-				}
-				else
-				{
-					if ${CharSelect(exists)}
-					{
-						This.CurrentState:Set["CHARSELECT"]
-						This.LoginTimer:Set[${This.CharSelectWaitTime}]
-						break
-					}
+					This.CurrentState:Set["CHARSELECT"]
+					This.LoginTimer:Set[${This.CharSelectWaitTime}]
+					break
 				}
 			case CHARSELECT
 				{
@@ -306,7 +294,7 @@ objectdef obj_LoginHandler inherits obj_BaseClass
 						break
 					}
 
-					if ${Type[isxeve].Member[IsBeta]} && ${ISXEVE.IsBeta} && ${EVE.IsProgressWindowOpen}
+					if ${EVE.IsProgressWindowOpen}
 					{
 						;echo {EVE.ProgressWindowTitle} == ${EVE.ProgressWindowTitle}
 						This.LoginTimer:Set[2]
@@ -321,17 +309,16 @@ objectdef obj_LoginHandler inherits obj_BaseClass
 						break
 					}
 
-					if ${Type[isxeve].Member[IsBeta]} && ${ISXEVE.IsBeta}
+					if ${EVEWindow[ByName,modal].Text.Find["The daily downtime will begin in"](exists)}
 					{
-						if ${EVEWindow[ByName,modal].Text.Find["has been flagged for recustomization."](exists)}
-						{
-							EVEWindow[ByName,modal]:ClickButtonNo
-							break
-						}
+						EVEWindow[ByName,modal]:ClickButtonOK
+						break
 					}
-					else
+
+					if ${EVEWindow[ByName,modal].Text.Find["has been flagged for recustomization."](exists)}
 					{
-						EVE:CloseAllMessageBoxes
+						EVEWindow[ByName,modal]:ClickButtonNo
+						break
 					}
 
 					if !${CharSelect.CharExists[${Config.Common.AutoLoginCharID}]}
