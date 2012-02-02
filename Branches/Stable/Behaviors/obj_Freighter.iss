@@ -256,7 +256,7 @@ objectdef obj_Freighter
 		}
 		elseif ${SourceLocations.Peek(exists)}
 		{
-			call Ship.WarpToBookMark ${SourceLocations.Peek}
+			call Ship.WarpToBookMark ${SourceLocations.Peek.ID}
 		}
 	}
 
@@ -438,7 +438,7 @@ objectdef obj_Freighter
 		{
 			do
 			{
-				SourceLocations:Queue[${bm_collection.CurrentValue}]
+				SourceLocations:Queue[${bm_collection.CurrentValue.ID}]
 			}
 			while ${bm_collection.NextValue(exists)}
 		}
