@@ -5,17 +5,6 @@
 
 #include core/defines.iss
 
-#if !${Type[isxeve].Member[IsBeta]} || !${ISXEVE.IsBeta}
-	#echo 
-	#echo 
-	#echo Stable EVEBot requires ISXEVE 20120124.0121 or later
-	#echo 
-	#echo -- CyberTech
-	#echo 
-	#echo 
-	#error Aborting
-#endif
-
 /* Base Requirements */
 #include core/obj_EVEBot.iss
 #include core/obj_Configuration.iss
