@@ -5,20 +5,6 @@
 
 #include core/defines.iss
 
-#if ${Type[isxeve].Member[IsBeta]} && !${ISXEVE.IsBeta}
-	#echo
-	#echo
-	#echo Trunk EVEBot requires ISXEVE _BETA_, which is not public
-	#echo at the moment. It will not operate properly with ISXEVE
-	#echo Live. Please use Stable or Tagged Trunk.  See IRC for
-	#echo more information.
-	#echo
-	#echo -- CyberTech
-	#echo
-	#echo
-	#error Aborting
-#endif
-
 /* Base Requirements  */
 #include core/obj_Logger.iss
 #include core/obj_Configuration.iss

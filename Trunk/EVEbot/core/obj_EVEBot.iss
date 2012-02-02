@@ -110,6 +110,10 @@ objectdef obj_EVEBot inherits obj_BaseClass
 
 			if !${This._Paused}
 			{
+				if ${EVEWindow[ByName,modal].Text.Find["The daily downtime will begin in"](exists)}
+				{
+					EVEWindow[ByName,modal]:ClickButtonOK
+				}
 				EVE:CloseAllMessageBoxes
 				EVE:CloseAllChatInvites
 
