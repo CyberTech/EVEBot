@@ -417,7 +417,7 @@ objectdef obj_Combat
 		}
 		else
 		{
-			call Ship.WarpToBookMarkName ${Config.Combat.AmmoBookmark}
+			call Ship.WarpToBookMarkName "${Config.Combat.AmmoBookmark}"
 			UI:UpdateConsole["Restocking ammo"]
 			call Ship.OpenCargo
 			; If a corp hangar array is on grid - drop loot
