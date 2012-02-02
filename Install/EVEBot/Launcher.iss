@@ -101,21 +101,6 @@ function main(string unchar="", string StartBot=FALSE)
 						wait 15
 					}
 					break
-				case STABLE_BETA
-				case EVEBOT_BETA
-					EVE:CloseAllMessageBoxes
-					; TODO - get rid of this callback shit.
-					runscript "${Script.CurrentDirectory}/EveCallback.iss"
-
-					UI:UpdateConsole["Launcher: Starting EVEBot for ISXEVE Beta by CyberTech"]
-					runscript EVEBot/EVEBot stable_beta
-					wait 600 ${Script[EVEBot].Paused}
-					while ${Script[EVEBot].Paused}
-					{
-						Script[EVEBot]:Resume
-						wait 15
-					}
-					break
 				case EVEBOT_DEV
 					EVE:CloseAllMessageBoxes
 					; TODO - get rid of this callback shit.
@@ -129,21 +114,6 @@ function main(string unchar="", string StartBot=FALSE)
 					{
 						Script[EVEBot]:Resume
 						EVEBot:Resume["Resume called via Launcher"]
-						wait 15
-					}
-					break
-				case EVEBOT_DEV_TEST
-					EVE:CloseAllMessageBoxes
-					; TODO - get rid of this callback shit.
-					UI:UpdateConsole["Launcher: Starting EveCallback"]
-					runscript "${Script.CurrentDirectory}/EveCallback.iss"
-
-					UI:UpdateConsole["Launcher: Starting EVEBot Test by CyberTech"]
-					runscript EVEBot/EVEBot Test
-					wait 600 ${Script[EVEBot].Paused}
-					while ${Script[EVEBot].Paused}
-					{
-						Script[EVEBot]:Resume
 						wait 15
 					}
 					break
