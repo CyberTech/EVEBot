@@ -437,8 +437,8 @@ objectdef obj_Combat
 				UI:UpdateConsole["Restocking from ${Entity["GroupID =340"]} (${Entity["GroupID = 340"].ID})"]
 				call Ship.Approach ${Entity["GroupID = 340"].ID} 2000
 
-				Entity[${Entity["GroupID = 340"].ID}]:OpenCargo
-				Entity[${Entity["GroupID = 340"].ID}]:GetCargo[ContainerItems]
+				Entity["GroupID = 340"].ID:OpenCargo
+				Entity["GroupID = 340"].ID:GetCargo[ContainerItems]
 			}
 
 			ContainerItems:GetIterator[CargoIterator]
