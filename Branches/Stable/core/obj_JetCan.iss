@@ -115,7 +115,7 @@ objectdef obj_JetCan
 		{
 			do
 			{
-				if (${Can.Value.ID(exists)} && \
+				if ${Can.Value.ID(exists)} && \
 					${Can.Value.ID} > 0 && \
 					${This.AccessAllowed[${Can.Value.ID}]} && \
 					!${This.FullCans.Contains[${Can.Value.ID}]}
