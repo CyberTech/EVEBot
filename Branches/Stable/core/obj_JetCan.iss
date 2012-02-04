@@ -82,8 +82,9 @@ objectdef obj_JetCan
 	; Returns -1 for no can, or the entity ID
 	member:int64 CurrentCan(bool CheckFreeSpace = FALSE)
 	{
-		if (${This.ActiveCan} > 0 && \
-			${Entity[${This.ActiveCan}](exists)})
+		if ${This.ActiveCan} > 0 && \
+			${Entity[${This.ActiveCan}](exists)} && \
+			${This.AccessAllowed[${This.ActiveCan}]}
 		{
 			if ((${Entity[${This.ActiveCan}].Distance} >= LOOT_RANGE) || \
 				(${CheckFreeSpace} && ${This.CargoFull[${This.ActiveCan}]}))
@@ -106,7 +107,7 @@ objectdef obj_JetCan
 
 		variable index:entity Cans
 		variable iterator Can
-		EVE:QueryEntities[Cans, "GroupID = GROUPID_CARGO_CONTAINER && Distance <= LOOT_RANGE"]
+		EVE:QueryEntities[Cans, "GroupID = GROUPID_CARGO_CONTAINER && Distance < LOOT_RANGE"]
 
 		Cans:GetIterator[Can]
 
@@ -117,8 +118,6 @@ objectdef obj_JetCan
 				if (${Can.Value.ID(exists)} && \
 					${Can.Value.ID} > 0 && \
 					${This.AccessAllowed[${Can.Value.ID}]} && \
-					${Can.Value.ID} != ${This.ActiveCan} && \
-					${Can.Value.Distance} <= LOOT_RANGE) && \
 					!${This.FullCans.Contains[${Can.Value.ID}]}
 				{
 					This.ActiveCan:Set[${Can.Value.ID}]
@@ -153,14 +152,7 @@ objectdef obj_JetCan
 			ID:Set[${This.ActiveCan}]
 		}
 
-		if !${Entity[${ID}](exists)}
-		{
-			return FALSE
-		}
-
-		variable int OwnerID = ${Entity[${ID}].OwnerID}
-
-		if ${Entity[${ID}].HaveLootRights}
+		if ${Entity[${ID}].HaveLootRights} || ${Entity[${ID}].IsAbandoned}
 		{
 			return TRUE
 		}
@@ -430,7 +422,7 @@ objectdef obj_JetCan
 objectdef obj_CorpHangarArray inherits obj_JetCan
 {
 	; Returns -1 for no can, or the entity ID
-	member:int CurrentCan(bool CheckFreeSpace = FALSE)
+	member:int64 CurrentCan(bool CheckFreeSpace = FALSE)
 	{
 		if (${This.ActiveCan} > 0 && \
 			${Entity[${This.ActiveCan}](exists)})
