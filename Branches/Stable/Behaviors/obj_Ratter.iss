@@ -127,6 +127,10 @@ objectdef obj_Ratter
 			if !${Config.Combat.AnomalyAssistMode}
 			{
 				call Belts.WarpToNextBelt ${Config.Combat.WarpRange}
+				if !${Social.IsSafe}
+				{
+					return
+				}
 			}
 
 			; This will reset target information about the belt
@@ -144,6 +148,10 @@ objectdef obj_Ratter
 				break
 			}
 			wait 10
+			if !${Social.IsSafe}
+			{
+				return
+			}
 		}
 
 		if (${Count} > 1)
@@ -159,6 +167,10 @@ objectdef obj_Ratter
 			while (${Count:Inc} < 10) && ${Social.IsSafe} && ${Targets.NPC}
 			{
 				wait 10
+				if !${Social.IsSafe}
+				{
+					return
+				}
 			}
 		}
 		else
@@ -166,6 +178,10 @@ objectdef obj_Ratter
 			while (${Count:Inc} < 10) && ${Social.IsSafe} && !${Targets.PC} && ${Targets.NPC}
 			{
 				wait 10
+				if !${Social.IsSafe}
+				{
+					return
+				}
 			}
 		}
 	}
@@ -191,7 +207,7 @@ objectdef obj_Ratter
 		Ship:Activate_SensorBoost
 		Ship:Activate_Tracking_Computer
 		Ship:Activate_ECCM
- 
+
 
 
 		if ${Targets.TargetNPCs} && ${Social.IsSafe}
@@ -274,14 +290,14 @@ objectdef obj_Ratter
 							{
 								QuantityToMove:Set[${Item.Value.Quantity}]
 							}
-			
+
 							UI:UpdateConsole["obj_Ratter: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Item.Value.Volume}]}m3"]
 							if ${QuantityToMove} > 0
 							{
 								Item.Value:MoveTo[MyShip,${QuantityToMove}]
 								wait 30
 							}
-			
+
 							if ${Ship.CargoFull}
 							{
 								UI:UpdateConsole["DEBUG: obj_Ratter: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}", LOG_DEBUG]
