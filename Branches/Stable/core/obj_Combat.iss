@@ -420,15 +420,15 @@ objectdef obj_Combat
 			if ${Entity["TypeID = 17621"].ID} != NULL
 			{
 				UI:UpdateConsole["Restocking from ${Entity["TypeID = 17621"]} (${Entity["TypeID = 17621"].ID})"]
-				call Ship.Approach ${Entity[TypeID,17621].ID} 2000
+				call Ship.Approach ${Entity["TypeID = 17621"].ID} 2000
 				call Ship.OpenCargo
-				Entity[${Entity["TypeID = 17621"].ID}]:OpenCargo
+				Entity["TypeID = 17621"]:OpenCargo
 
 				; Drop off all loot/leftover ammo
 				; TODO - don't dump the ammo we're using for our own weapons. Do dump other ammo that we might have looted.
 				call Cargo.TransferCargoToCorpHangarArray
 
-				Entity[${Entity["TypeID = 17621"].ID}]:GetCargo[ContainerItems]
+				Entity["TypeID = 17621"]:GetCargo[ContainerItems]
 			}
 
 			; If there is no CHA, but there is a GSC, Take Ammo, do not drop off items
@@ -437,8 +437,8 @@ objectdef obj_Combat
 				UI:UpdateConsole["Restocking from ${Entity["GroupID =340"]} (${Entity["GroupID = 340"].ID})"]
 				call Ship.Approach ${Entity["GroupID = 340"].ID} 2000
 
-				Entity["GroupID = 340"].ID:OpenCargo
-				Entity["GroupID = 340"].ID:GetCargo[ContainerItems]
+				Entity["GroupID = 340"]:OpenCargo
+				Entity["GroupID = 340"]:GetCargo[ContainerItems]
 			}
 
 			ContainerItems:GetIterator[CargoIterator]
