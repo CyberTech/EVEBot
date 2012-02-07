@@ -714,7 +714,7 @@ objectdef obj_Agents
 		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.State = ${amIterator.Value.State}"]
 		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}"]
 		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Name = ${amIterator.Value.Name}"]
-		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Expires = ${amIterator.Value.Expires.DateAndTime}"]
+		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.ExpirationTime = ${amIterator.Value.ExpirationTime.DateAndTime}"]
 
 		amIterator.Value:GetDetails
 		wait 50
@@ -749,7 +749,7 @@ objectdef obj_Agents
 		EVE:Execute[CmdCloseActiveWindow]
 
 		variable file detailsFile
-		detailsFile:SetFilename["./config/logs/${amIterator.Value.Expires.AsInt64.Hex} ${amIterator.Value.Name.Replace[",",""]}.html"]
+		detailsFile:SetFilename["./config/logs/${amIterator.Value.ExpirationTime.AsInt64.Hex} ${amIterator.Value.Name.Replace[",",""]}.html"]
 		if ${detailsFile:Open(exists)}
 		{
 			detailsFile:Write["${details.Escape}"]
@@ -1006,7 +1006,7 @@ objectdef obj_Agents
 		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.State = ${amIterator.Value.State}"]
 		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}"]
 		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Name = ${amIterator.Value.Name}"]
-		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Expires = ${amIterator.Value.Expires.DateAndTime}"]
+		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.ExpirationTime = ${amIterator.Value.ExpirationTime.DateAndTime}"]
 
 		amIterator.Value:GetDetails
 		wait 50
@@ -1041,7 +1041,7 @@ objectdef obj_Agents
 		EVE:Execute[CmdCloseActiveWindow]
 
 		variable file detailsFile
-		detailsFile:SetFilename["./config/logs/${amIterator.Value.Expires.AsInt64.Hex} ${amIterator.Value.Name.Replace[",",""]}.html"]
+		detailsFile:SetFilename["./config/logs/${amIterator.Value.ExpirationTime.AsInt64.Hex} ${amIterator.Value.Name.Replace[",",""]}.html"]
 		if ${detailsFile:Open(exists)}
 		{
 			detailsFile:Write["${details.Escape}"]

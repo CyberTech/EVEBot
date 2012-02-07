@@ -687,7 +687,7 @@ objectdef obj_Agents
 		Logger:Log["obj_Agents: DEBUG: amIterator.Value.State = ${amIterator.Value.State}", LOG_DEBUG]
 		Logger:Log["obj_Agents: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}", LOG_DEBUG]
 		Logger:Log["obj_Agents: DEBUG: amIterator.Value.Name = ${amIterator.Value.Name}", LOG_DEBUG]
-		Logger:Log["obj_Agents: DEBUG: amIterator.Value.Expires = ${amIterator.Value.Expires.DateAndTime}", LOG_DEBUG]
+		Logger:Log["obj_Agents: DEBUG: amIterator.Value.ExpirationTime = ${amIterator.Value.ExpirationTime.DateAndTime}", LOG_DEBUG]
 
 		; Opens the details window for the mission
 		amIterator.Value:GetDetails
@@ -707,7 +707,7 @@ objectdef obj_Agents
 			return
 		}
 
-		MissionParser.MissionExpiresHex:Set[${amIterator.Value.Expires.AsInt64.Hex}]
+		MissionParser.MissionExpiresHex:Set[${amIterator.Value.ExpirationTime.AsInt64.Hex}]
 		MissionParser.MissionName:Set[${amIterator.Value.Name}]
 		MissionParser:SaveCacheFile
 
@@ -794,7 +794,7 @@ objectdef obj_Agents
 
 		EVE:Execute[OpenJournal]
 		wait 50
-		
+
 		EVEWindow[ByCaption, "Journal"]:Close
 
 		variable index:agentmission amIndex
@@ -833,7 +833,7 @@ objectdef obj_Agents
 		Logger:Log["obj_Agents: DEBUG: amIterator.Value.State = ${amIterator.Value.State}", LOG_DEBUG]
 		Logger:Log["obj_Agents: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}", LOG_DEBUG]
 		Logger:Log["obj_Agents: DEBUG: amIterator.Value.Name = ${amIterator.Value.Name}", LOG_DEBUG]
-		Logger:Log["obj_Agents: DEBUG: amIterator.Value.Expires = ${amIterator.Value.Expires.DateAndTime}", LOG_DEBUG]
+		Logger:Log["obj_Agents: DEBUG: amIterator.Value.ExpirationTime = ${amIterator.Value.ExpirationTime.DateAndTime}", LOG_DEBUG]
 
 		; Opens the details window for the mission
 		amIterator.Value:GetDetails
@@ -854,10 +854,10 @@ objectdef obj_Agents
 			return
 		}
 
-		MissionParser.MissionExpiresHex:Set[${amIterator.Value.Expires.AsInt64.Hex}]
+		MissionParser.MissionExpiresHex:Set[${amIterator.Value.ExpirationTime.AsInt64.Hex}]
 		MissionParser.MissionName:Set[${amIterator.Value.Name}]
 		MissionParser:SaveCacheFile
-		
+
 		Missions.MissionCache:AddMission[${amIterator.Value.AgentID}, "${amIterator.Value.Name}"]
 		Missions.MissionCache:SetFactionID[${amIterator.Value.AgentID}, ${MissionParser.FactionID}]
 		Missions.MissionCache:SetTypeID[${amIterator.Value.AgentID}, ${MissionParser.TypeID}]
@@ -999,7 +999,7 @@ objectdef obj_Agents
 		wait 50
 		EVEWindow[ByCaption, "Journal"]:Close
 		EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"]:Close
-		
+
 		variable int Waiting = 1200
 		if ${Math.Rand[2]} == 0 && ${Config.Common.Randomize}
 		{
