@@ -146,7 +146,14 @@ objectdef obj_LoginHandler inherits obj_BaseClass
 	{
 		if ${EVEWindow[ByName,modal](exists)}
 		{
-			if ${EVEWindow[ByName,modal].Text.Find["A client update is available"](exists)}
+			if ${EVEWindow[ByName,modal].Text.Find["There is a new build available"](exists)}
+			{
+				EVEWindow[ByName,modal]:ClickButtonYes
+				This.CurrentState:Set["START"]
+				This.LoginTimer:Set[5.0]
+				return
+			}
+			elseif ${EVEWindow[ByName,modal].Text.Find["A client update is available"](exists)}
 			{
 				EVEWindow[ByName,modal]:ClickButtonOK
 				This.CurrentState:Set["START"]
