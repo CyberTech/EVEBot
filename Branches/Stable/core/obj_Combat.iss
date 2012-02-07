@@ -438,6 +438,7 @@ objectdef obj_Combat
 				call Ship.Approach ${Entity["GroupID = 340"].ID} 2000
 
 				Entity["GroupID = 340"]:OpenCargo
+				wait 30
 				Entity["GroupID = 340"]:GetCargo[ContainerItems]
 			}
 
