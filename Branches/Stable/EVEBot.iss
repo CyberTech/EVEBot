@@ -57,6 +57,10 @@ function main()
 	;Script[EVEBot]:EnableProfiling
 	;;Redirect EVEBot_Profiling.txt Script[EVEBot]:DumpProfiling
 
+	if ${Me.InSpace}
+	{
+		EVE:PopulateEntities[TRUE]
+	}
 	turbo 4000
 
 	echo "${Time} EVEBot: Loading Objects..."
@@ -155,11 +159,6 @@ function main()
 	while ${EVEBot.Paused}
 	{
 		wait 10
-	}
-
-	if ${Me.InSpace}
-	{
-		EVE:PopulateEntities[TRUE]
 	}
 
 	while TRUE
