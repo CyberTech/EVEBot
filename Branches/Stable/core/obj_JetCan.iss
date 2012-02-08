@@ -385,15 +385,14 @@ objectdef obj_JetCan
 			variable float TimeOut = 0
 			while !${This.IsCargoOpen[${ID}]}
 			{
-				TimeOut:Inc[0.5]
+				TimeOut:Inc[0.1]
 				if ${TimeOut} > 20
 				{
-					UI:UpdateConsole["JetCan.Open timed out (40 seconds)", LOG_CRITICAL]
+					UI:UpdateConsole["JetCan.Open timed out (20 seconds)", LOG_CRITICAL]
 					break
 				}
-				wait 5
+				wait 1
 			}
-			wait 10
 		}
 	}
 
@@ -414,7 +413,6 @@ objectdef obj_JetCan
 			{
 				wait 1
 			}
-			wait 10
 		}
 	}
 }
@@ -469,7 +467,6 @@ objectdef obj_CorpHangarArray inherits obj_JetCan
 			}
 			while ${Can:Next(exists)}
 		}
-
 
 		This.ActiveCan:Set[-1]
 		return ${This.ActiveCan}
@@ -568,7 +565,6 @@ objectdef obj_SpawnContainer inherits obj_JetCan
 			while ${Can:Next(exists)}
 		}
 
-
 		This.ActiveCan:Set[-1]
 		return ${This.ActiveCan}
 	}
@@ -589,7 +585,6 @@ objectdef obj_SpawnContainer inherits obj_JetCan
 		;return ${Entity[${ID}].CargoCapacity}
 		return 1400000
 	}
-
 }
 
 objectdef obj_LargeShipAssemblyArray inherits obj_JetCan
@@ -642,7 +637,6 @@ objectdef obj_LargeShipAssemblyArray inherits obj_JetCan
 			}
 			while ${Can:Next(exists)}
 		}
-
 
 		This.ActiveCan:Set[-1]
 		return ${This.ActiveCan}
@@ -736,7 +730,6 @@ objectdef obj_XLargeShipAssemblyArray inherits obj_JetCan
 			}
 			while ${Can:Next(exists)}
 		}
-
 
 		This.ActiveCan:Set[-1]
 		return ${This.ActiveCan}

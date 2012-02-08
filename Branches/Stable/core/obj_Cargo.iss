@@ -312,7 +312,6 @@ objectdef obj_Cargo
 			}
 
 			anItem:Close
-			wait 15
 		}
 		else
 		{
@@ -341,7 +340,7 @@ objectdef obj_Cargo
 				{
 					CargoIterator.Value:MoveTo[Hangar]
 				}
-				wait 30
+				wait 10
 			}
 			while ${CargoIterator:Next(exists)}
 			wait 10
@@ -597,7 +596,6 @@ objectdef obj_Cargo
 			}
 			This.CargoToTransfer:Collapse
 			shipContainerIterator.Value:Close
-			wait 15
 
 			if ${This.CargoToTransfer.Used} == 0
 			{	/* everything moved */
@@ -662,7 +660,7 @@ objectdef obj_Cargo
 					if ${QuantityToMove} > 0
 					{
 						CargoIterator.Value:MoveTo[MyShip,${QuantityToMove}]
-						wait 30
+						wait 15
 					}
 
 					if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
@@ -782,11 +780,7 @@ objectdef obj_Cargo
 		This.CargoToTransfer:Clear[]
 		Me:StackAllHangarItems
 		Ship:UpdateBaselineUsedCargo[]
-		wait 25
-
 		call This.ReplenishCrystals
-		wait 10
-
 		call This.CloseHolds
 	}
 
@@ -811,7 +805,6 @@ objectdef obj_Cargo
 
 		This.CargoToTransfer:Clear[]
 		Ship:UpdateBaselineUsedCargo[]
-		wait 25
 		call This.CloseHolds
 	}
 
@@ -832,7 +825,6 @@ objectdef obj_Cargo
 		This.CargoToTransfer:Clear[]
 		Me:StackAllHangarItems
 		Ship:UpdateBaselineUsedCargo[]
-		wait 25
 		call This.CloseHolds
 	}
 
@@ -861,7 +853,6 @@ objectdef obj_Cargo
 				This.CargoToTransfer:Clear[]
 				Me.Ship:StackAllCargo
 				Ship:UpdateBaselineUsedCargo[]
-				wait 25
 				call This.CloseHolds
 
 				/* Check for leftover items in the station */
@@ -928,7 +919,6 @@ objectdef obj_Cargo
 				This.CargoToTransfer:Clear[]
 				Me.Ship:StackAllCargo
 				Ship:UpdateBaselineUsedCargo[]
-				wait 25
 				call This.CloseHolds
 
 				/* Check for leftover items in the station */
@@ -988,7 +978,6 @@ objectdef obj_Cargo
 	  This.CargoToTransfer:Clear[]
 	  Me:StackAllHangarItems
 	  Ship:UpdateBaselineUsedCargo[]
-	  wait 25
 	  call This.CloseHolds
    }
 
