@@ -291,6 +291,7 @@ objectdef obj_Targets
 		SpecialTargetsToLoot:Insert["Shadow Serpentis"]
 		SpecialTargetsToLoot:Insert["True Sansha"]
 		SpecialTargetsToLoot:Insert["Dark Blood"]
+		SpecialTargetsToLoot:Insert["Domination"]
 
 		; Asteroid Serpentis Officers
 		SpecialTargetsToLoot:Insert["Brynn Jerdola"]
@@ -303,6 +304,24 @@ objectdef obj_Targets
 		SpecialTargetsToLoot:Insert["Kaikka Peunato"]
 		SpecialTargetsToLoot:Insert["Thon Eney"]
 		SpecialTargetsToLoot:Insert["Vepas Minimala"]
+
+		; Asteroid Angel Cartel Officers
+		SpecialTargetsToLoot:Insert["Gotan Kreiss"]
+		SpecialTargetsToLoot:Insert["Hakim Stormare"]
+		SpecialTargetsToLoot:Insert["Mizuro Cybon"]
+		SpecialTargetsToLoot:Insert["Tobias Kruzhoryy"]
+		
+		; Asteroid Blood Raiders Officers
+		SpecialTargetsToLoot:Insert["Ahremen Arkah"]
+		SpecialTargetsToLoot:Insert["Draclira Merlonne"]
+		SpecialTargetsToLoot:Insert["Raysere Giant"]
+		SpecialTargetsToLoot:Insert["Tairei Namazoth"]
+		
+		; Asteroid Sansha's Nation Officers
+		SpecialTargetsToLoot:Insert["Brokara Ryver"]
+		SpecialTargetsToLoot:Insert["Chelm Soran"]
+		SpecialTargetsToLoot:Insert["Selynne Mardakar"]
+		SpecialTargetsToLoot:Insert["Vizan Ankonin"]
 
 		; Get the iterators
 		PriorityTargets:GetIterator[PriorityTarget]
