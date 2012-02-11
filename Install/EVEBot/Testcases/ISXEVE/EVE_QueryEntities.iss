@@ -1,6 +1,6 @@
 #define TESTCASE 1
 
-#include ../../Support/TestAPI.iss
+#include Scripts/EVEBot/Support/TestAPI.iss
 
 /*
  *	Entity Retrieval and Member Access
@@ -15,7 +15,6 @@
  *		You: In Space
  */
 
-variable obj_UI UI
 function main()
 {
 	declarevariable Entities index:entity script
@@ -50,10 +49,12 @@ function main()
 
 	variable iterator CurrentMember
 
-	EVE:PopulateEntities[TRUE]
-	UI:UpdateConsole["EVE:PopulateEntities: ${Math.Calc[(${Script.RunningTime}-${StartTime2}) / 1000]} seconds"]
+	;EVE:PopulateEntities[TRUE]
+	;UI:UpdateConsole["EVE:PopulateEntities: ${Math.Calc[(${Script.RunningTime}-${StartTime2}) / 1000]} seconds"]
 
-	EVE:QueryEntities[Entities, "Distance < 100000"]
+	StartTime:Set[${Script.RunningTime}]
+	EVE:QueryEntities[Entities]
+	;EVE:QueryEntities[Entities, Distance < 100000 && Name =- "Guristas"]
 	;EVE:QueryEntities[Entities, "CategoryID = 25"]
 
 	CallTime:Set[${Math.Calc[(${Script.RunningTime}-${StartTime}) / 1000]}]
@@ -63,7 +64,6 @@ function main()
 	MemberList:GetIterator[CurrentMember]
 
 	StartTime:Set[${Script.RunningTime}]
-	EVE:QueryEntities[Entities, "Distance < 200000"]
 	if ${CurrentMember:First(exists)}
 	do
 	{
@@ -71,12 +71,11 @@ function main()
 		if ${EntityIterator:First(exists)}
 		do
 		{
-			ItemTest:IterateMembers["EntityIterator.Value", FALSE, FALSE]
-			;echo ${EntityIterator.Value}: ${EntityIterator.Value.ID} ${EntityIterator.Value.Distance}
+			ItemTest:IterateMembers["EntityIterator.Value", TRUE, FALSE]
+			;echo ${EntityIterator.Value}: ${EntityIterator.Value.ID} ${EntityIterator.Value.Distance} ${EntityIterator.Value.Name}
 		}
 		while ${EntityIterator:Next(exists)}
-		UI:UpdateConsole[" ${ItemTest.TypeName}.${CurrentMember.Value} * ${Entities.Used} completed  ${Math.Calc[(${Script.RunningTime}-${StartTime2}) / 1000]} seconds"]
-		wait 20
+		UI:UpdateConsole["${ItemTest.TypeName}.${CurrentMember.Value}/Name/Distance * ${Entities.Used} completed  ${Math.Calc[(${Script.RunningTime}-${StartTime2}) / 1000]} seconds"]
 	}
 	while ${CurrentMember:Next(exists)}
 

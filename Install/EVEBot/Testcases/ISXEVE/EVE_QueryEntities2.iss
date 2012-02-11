@@ -1,6 +1,6 @@
 #define TESTCASE 1
 
-#include ../../Support/TestAPI.iss
+#include Scripts/EVEBot/Support/TestAPI.iss
 
 /*
  *	Entity Retrieval and Member Access, using lavishscript RemoveByQuery method
@@ -15,7 +15,6 @@
  *		You: In Space
  */
 
-variable obj_UI UI
 function main()
 {
 	declarevariable Entities index:entity script
@@ -29,16 +28,16 @@ function main()
 
 	ItemTest:ParseMembers
 
-	EVE:PopulateEntities[TRUE]
-	UI:UpdateConsole["EVE:PopulateEntities: ${Math.Calc[(${Script.RunningTime}-${StartTime2}) / 1000]} seconds"]
+	;EVE:PopulateEntities[TRUE]
+	;UI:UpdateConsole["EVE:PopulateEntities: ${Math.Calc[(${Script.RunningTime}-${StartTime2}) / 1000]} seconds"]
 
 	EVE:QueryEntities[Entities]
 
 	CallTime:Set[${Math.Calc[(${Script.RunningTime}-${StartTime}) / 1000]}]
-	UI:UpdateConsole["EVE:QueryEntities: ${Entities.Used} entities in ${CallTime} seconds"]
+	UI:UpdateConsole["EVE:QueryEntities: ${Entities.Used} entities in ${CallTime} seconds - Count should be ${EVE.EntitiesCount}"]
 
 	Entities:GetIterator[EntityIterator]
-
+*
 	variable uint QueryID
 	;variable string Filter = "Distance < 1000000"
 	variable string Filter = "Distance > 200000"
@@ -58,14 +57,16 @@ function main()
 	if ${EntityIterator:First(exists)}
 	do
 	{
-		;ItemTest:IterateMembers["EntityIterator.Value", TRUE, FALSE]
-		echo ${EntityIterator.Value}: ${EntityIterator.Value.ID} ${EntityIterator.Value.Distance} ${EntityIterator.Value.CategoryID}
+		;if ${EntityIterator.Value.Distance} < 200000
+		;{
+			;ItemTest:IterateMembers["EntityIterator.Value", TRUE, FALSE]
+			echo ${EntityIterator.Value}: ${EntityIterator.Value.ID} ${EntityIterator.Value.Distance} ${EntityIterator.Value.CategoryID}
+		;}
 	}
 	while ${EntityIterator:Next(exists)}
-	UI:UpdateConsole[" ${ItemTest.TypeName} * ${Entities.Used} completed  ${Math.Calc[(${Script.RunningTime}-${StartTime2}) / 1000]} seconds"]
-	wait 20
+	;UI:UpdateConsole[" ${ItemTest.TypeName} * ${Entities.Used} completed  ${Math.Calc[(${Script.RunningTime}-${StartTime2}) / 1000]} seconds"]
 
-	UI:UpdateConsole["EVE:QueryEntities returned ${Entities.Used} entities in ${CallTime} seconds"]
+	UI:UpdateConsole["EVE:QueryEntities: ${Entities.Used} entities in ${CallTime} seconds - Count should be ${EVE.EntitiesCount}"]
 	UI:UpdateConsole["Testing of datatype ${ItemTest.TypeName} completed in ${Math.Calc[(${Script.RunningTime}-${StartTime}) / 1000]} seconds"]
 }
 
