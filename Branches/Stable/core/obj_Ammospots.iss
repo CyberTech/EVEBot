@@ -1,9 +1,9 @@
 /*
 	Ammospots Object
-	
+
 	Creates an index of ammo bookmarks that exist in current system.
 	Code copied from obj_Safespots.iss and modified.
-	
+
 	-- NoOne
 
 */
@@ -31,7 +31,7 @@ objectdef obj_Ammospots
 		while ${idx} > 0
 		{
 			variable string Prefix
-			Prefix:Set[${Config.Combat.AmmoBookmark}]
+			Prefix:Set[${Config.Labels.AmmoPrefix}]
 
 			variable string Label
 			Label:Set["${AmmoSpots.Get[${idx}].Label.Escape}"]
@@ -101,12 +101,12 @@ objectdef obj_Ammospots
 
 		return FALSE
 	}
-	
+
 	function WarpTo()
 	{
 		call This.WarpToNextAmmoSpot
 	}
-	
+
 	; Does an Ammo Bookmark exist in this system?
 	member:bool IsThereAmmospotBookmark()
 	{

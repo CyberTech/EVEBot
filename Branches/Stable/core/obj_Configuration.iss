@@ -695,7 +695,6 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[Chain Solo, TRUE]
 		This.CombatRef:AddSetting[Use Belt Bookmarks, FALSE]
 		This.CombatRef:AddSetting[Min Chain Bounty, 1500000]
-		This.CombatRef:AddSetting[AmmoBookmark, AMMO]
 		This.CombatRef:AddSetting[AmmoTypeID, 2629]
 		This.CombatRef:AddSetting[OrbitDistance, 30000]
 		This.CombatRef:AddSetting[Orbit, FALSE]
@@ -742,16 +741,6 @@ objectdef obj_Configuration_Combat
 	method SetRestockAmmoFreeSpace(int value)
 	{
 		This.CombatRef:AddSetting[RestockAmmoFreeSpace,${value}]
-	}
-
-	method SetAmmoBookmark(string value)
-	{
-		This.CombatRef:AddSetting[AmmoBookmark, ${value}]
-	}
-
-	member:string AmmoBookmark()
-	{
-		return ${This.CombatRef.FindSetting[AmmoBookmark, AMMO]}
 	}
 
 	method SetOrbit(bool value)
@@ -1101,6 +1090,7 @@ objectdef obj_Configuration_Labels
 		This.LabelsRef:AddSetting[Safe Spot Prefix,"Safe:"]
 		This.LabelsRef:AddSetting[Ore Belt Prefix,"Belt:"]
 		This.LabelsRef:AddSetting[Ice Belt Prefix,"Ice Belt:"]
+		This.LabelsRef:AddSetting[Ammo Prefix,"Ammo:"]
 	}
 
 	member:string SafeSpotPrefix()
@@ -1131,6 +1121,16 @@ objectdef obj_Configuration_Labels
 	method SetIceBeltPrefix(string value)
 	{
 		This.LabelsRef:AddSetting[Ice Belt Prefix,${value}]
+	}
+
+	member:string AmmoPrefix()
+	{
+		return ${This.LabelsRef.FindSetting[Ammo Prefix, "Ammo:"]}
+	}
+
+	method SetAmmoPrefix(string value)
+	{
+		This.LabelsRef:AddSetting[Ammo Prefix,${value}]
 	}
 }
 

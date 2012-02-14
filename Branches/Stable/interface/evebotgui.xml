@@ -988,29 +988,6 @@
 								}
 							</OnChange>
 						</Textentry>
-						<Text name='lblAmmoBookmark'>
-							<X>200</X>
-							<Y>90</Y>
-							<Width>110</Width>
-							<Height>18</Height>
-							<Text>Ammo Bookmark</Text>
-							<AutoTooltip>Name of bookmark where the ammo can is located.</AutoTooltip>
-						</Text>
-						<Textentry name='tbAmmoBookmark'>
-							<X>350</X>
-							<Y>90</Y>
-							<Width>150</Width>
-							<Height>18</Height>
-							<OnLoad>
-								This:SetText[${Script[EVEBot].VariableScope.Config.Combat.AmmoBookmark}]
-							</OnLoad>
-							<OnChange>
-								if ${This.Text.Length} > 0
-								{
-									Script[EVEBot].VariableScope.Config.Combat:SetAmmoBookmark[${This.Text}]
-								}
-							</OnChange>
-						</Textentry>
 						<Text name='lblAmmoTypeID'>
 							<X>200</X>
 							<Y>110</Y>
@@ -1874,6 +1851,34 @@
 								else
 								{
 									Script[EVEBot].VariableScope.Config.Labels:SetIceBeltPrefix[""]
+								}
+							</OnChange>
+						</Textentry>
+						<Text name='AmmoBookMarkLabel'>
+							<X>25</X>
+							<Y>70</Y>
+							<Width>200</Width>
+							<Height>10</Height>
+							<Text>Ammo Supplies</Text>
+							<AutoTooltip>The prefix for Ammo bookmark names.</AutoTooltip>
+						</Text>
+						<Textentry name='AmmoBookMarkPrefix'>
+							<X>230</X>
+							<Y>70</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<MaxLength>10</MaxLength>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Labels.AmmoPrefix}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Labels:SetAmmoPrefix[${This.Text}]
+								}
+								else
+								{
+									Script[EVEBot].VariableScope.Config.Labels:SetAmmoPrefix[""]
 								}
 							</OnChange>
 						</Textentry>
