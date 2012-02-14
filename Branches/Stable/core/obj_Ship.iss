@@ -382,7 +382,7 @@ objectdef obj_Ship
 				This.ModuleList_MiningLaser:Insert[${ModuleIter.Value.ID}]
 				continue
 			}
-			
+
 			switch ${GroupID}
 			{
 				case GROUPID_DAMAGE_CONTROL
@@ -429,7 +429,7 @@ objectdef obj_Ship
 					break
 				case GROUPID_SALVAGER
 						This.ModuleList_Salvagers:Insert[${ModuleIter.Value.ID}]
-					break	
+					break
 				case GROUPID_TRACTOR_BEAM
 					This.ModuleList_TractorBeams:Insert[${ModuleIter.Value.ID}]
 					break
@@ -630,7 +630,7 @@ objectdef obj_Ship
 	{
 		return ${This.ModuleList_MiningLaser.Used}
 	}
-	
+
 	member:int TotalTractorBeams()
 	{
 		return ${This.ModuleList_TractorBeams.Used}
@@ -884,8 +884,8 @@ objectdef obj_Ship
 		return FALSE
 	}
 
-	
-	
+
+
 	method UnlockAllTargets()
 	{
 		variable index:entity LockedTargets
@@ -1116,7 +1116,7 @@ objectdef obj_Ship
 		}
 		while ${ModuleIter:Next(exists)}
 	}
-	
+
 	function ActivateFreeTractorBeam()
 	{
 		variable string Slot
@@ -1149,7 +1149,7 @@ objectdef obj_Ship
 		}
 		while ${ModuleIter:Next(exists)}
 	}
-	
+
 	function ActivateFreeSalvager()
 	{
 		variable string Slot
@@ -1182,7 +1182,7 @@ objectdef obj_Ship
 		}
 		while ${ModuleIter:Next(exists)}
 	}
-	
+
 
 	method StopShip()
 	{
