@@ -294,8 +294,14 @@ objectdef obj_JetCan
 		{
 			return FALSE
 		}
-
-		return ${Math.Calc[${This.CargoCapacity}*0.05]}
+		if ${Config.Common.BotModeName.Equal[Miner]} && ${Config.Miner.IceMining}
+		{
+			return 1000.00
+		}
+		else
+		{
+			return ${Math.Calc[${This.CargoCapacity}*0.05]}
+		}
 	}
 
 	member:float CargoFreeSpace(int64 ID=0)
