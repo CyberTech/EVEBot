@@ -280,9 +280,7 @@ objectdef obj_JetCan
 			return FALSE
 		}
 
-		/* TODO: hard coded capacity b/c of isxeve cargocapcity breakage */
-		;return ${Entity[${ID}].CargoCapacity}
-		return 27500
+		return ${Entity[${ID}].CargoCapacity}
 	}
 
 	member:float CargoMinimumFreeSpace(int64 ID=0)
@@ -501,9 +499,8 @@ objectdef obj_CorpHangarArray inherits obj_JetCan
 			return FALSE
 		}
 
-		/* TODO: hard coded capacity b/c of isxeve cargocapcity breakage */
-		;return ${Entity[${ID}].CargoCapacity}
-		return 1400000
+		return ${Entity[${ID}].CargoCapacity}
+		;return 1400000
 	}
 
 	member:bool AccessAllowed(int64 ID)
@@ -582,8 +579,8 @@ objectdef obj_SpawnContainer inherits obj_JetCan
 		}
 
 		/* TODO: hard coded capacity b/c of isxeve cargocapcity breakage */
-		;return ${Entity[${ID}].CargoCapacity}
-		return 1400000
+		return ${Entity[${ID}].CargoCapacity}
+		;return 1400000
 	}
 }
 
@@ -655,8 +652,8 @@ objectdef obj_LargeShipAssemblyArray inherits obj_JetCan
 		}
 
 		/* TODO: hard coded capacity b/c of isxeve cargocapcity breakage */
-		;return ${Entity[${ID}].CargoCapacity}
-		return 18500500
+		return ${Entity[${ID}].CargoCapacity}
+		;return 18500500
 	}
 
 	member:bool AccessAllowed(int64 ID)
@@ -747,9 +744,8 @@ objectdef obj_XLargeShipAssemblyArray inherits obj_JetCan
 			return FALSE
 		}
 
-		/* TODO: hard coded capacity b/c of isxeve cargocapcity breakage */
-		;return ${Entity[${ID}].CargoCapacity}
-		return 18500500
+		return ${Entity[${ID}].CargoCapacity}
+		;return 18500500
 	}
 
 	member:bool AccessAllowed(int64 ID)
