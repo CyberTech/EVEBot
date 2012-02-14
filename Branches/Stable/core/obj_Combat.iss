@@ -404,8 +404,7 @@ objectdef obj_Combat
 		variable index:item ContainerItems
 		variable iterator CargoIterator
 
-		; TODO - This will find the first bookmark matching this name, even if it's out of the system. This would be bad. Need to iterate and find the right one.
-		if !${EVE.Bookmark[${Config.Combat.AmmoBookmark}](exists)}
+		if ${Ammospots:IsThereAmmospotBookmark}
 		{
 			UI:UpdateConsole["RestockAmmo: Fleeing: No ammo bookmark"]
 			call This.Flee
@@ -413,7 +412,7 @@ objectdef obj_Combat
 		}
 		else
 		{
-			call Ship.WarpToBookMarkName "${Config.Combat.AmmoBookmark}"
+			call Ammospots.WarpTo
 			UI:UpdateConsole["Restocking ammo"]
 			call Ship.OpenCargo
 			; If a corp hangar array is on grid - drop loot

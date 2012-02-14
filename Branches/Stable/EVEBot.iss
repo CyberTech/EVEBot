@@ -24,6 +24,7 @@
 #include core/obj_Assets.iss
 #include core/obj_IRC.iss
 #include core/obj_Safespots.iss
+#include core/obj_Ammospots.iss
 #include core/obj_Belts.iss
 #include core/obj_Targets.iss
 #include core/obj_Sound.iss
@@ -94,6 +95,7 @@ function main()
 	declarevariable Assets obj_Assets script
 	declarevariable ChatIRC obj_IRC script
 	declarevariable Safespots obj_Safespots script
+	declarevariable Ammospots obj_Ammospots script
 	declarevariable Belts obj_Belts script
 	declarevariable Targets obj_Targets script
 	declarevariable Sound obj_Sound script
