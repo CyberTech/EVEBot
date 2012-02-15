@@ -13,7 +13,6 @@ objectdef obj_Belts
 	
 	method ResetBeltList()
 	{
-		EVE:PopulateEntities[TRUE]
 		EVE:QueryEntities[beltIndex, "GroupID = GROUP_ASTEROIDBELT"]
 		beltIndex:GetIterator[beltIterator]	
 		UI:UpdateConsole["obj_Belts: ResetBeltList found ${beltIndex.Used} belts in this system.", LOG_DEBUG]

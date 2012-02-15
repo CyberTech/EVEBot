@@ -58,10 +58,6 @@ function main()
 	;Script[EVEBot]:EnableProfiling
 	;;Redirect EVEBot_Profiling.txt Script[EVEBot]:DumpProfiling
 
-	if ${Me.InSpace}
-	{
-		EVE:PopulateEntities[TRUE]
-	}
 	turbo 4000
 
 	echo "${Time} EVEBot: Loading Objects..."
@@ -129,11 +125,10 @@ function main()
 	if ${VariableIterator:First(exists)}
 	do
 	{
-
 		if ${VariableIterator.Value(exists)} && \
-			${VariableIterator.Value(type).Name.Left[4].Equal["obj_"]} && \
-			${VariableIterator.Value.SVN_REVISION(exists)} && \
-			${VariableIterator.Value.Version(exists)}
+		${VariableIterator.Value(type).Name.Left[4].Equal["obj_"]} && \
+		${VariableIterator.Value.SVN_REVISION(exists)} && \
+		${VariableIterator.Value.Version(exists)}
 		{
 			VariableIterator.Value.Version:Set[${VariableIterator.Value.SVN_REVISION.Token[2, " "]}]
 			;echo " ${VariableIterator.Value.ObjectName} Revision ${VariableIterator.Value.Version}"

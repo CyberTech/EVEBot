@@ -78,11 +78,6 @@ objectdef obj_EntityCache inherits obj_BaseClass
 		This.CacheID_Ships:Set[${This.AddFilter["EntityCache_Ships", CategoryID = CATEGORYID_SHIP, 2]}]
 		This.CacheID_Entities:Set[${This.AddFilter["EntityCache_Entities", CategoryID = CATEGORYID_ENTITY, 2]}]
 
-		if ${Me.InSpace}
-		{
-			EVE:PopulateEntities[TRUE]
-		}
-
 		PulseTimer:SetIntervals[3.0,5.0]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		Logger:Log["${LogPrefix}: Initialized"]
