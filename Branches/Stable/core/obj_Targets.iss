@@ -669,37 +669,42 @@ objectdef obj_Targets
 			while ${Target:Next(exists)}
 		}
 
-		; Do we need to determin if we need to chain ?
+		; Determine if we need to chain
 		if ${Config.Combat.ChainSpawns} && ${CheckChain}
 		{
 			; Is there a chainable target? Is there a special or priority target?
 			if ${HasChainableTarget} && !${HasSpecialTarget} && !${HasPriorityTarget}
 			{
+	        	UI:UpdateConsole["NPC: Chaining Spawn"]
 				Chaining:Set[TRUE]
 			}
 
-			; Special exception, if there is only 1 type its most likely
-			; a chain in progress
+			; Special exception, if there is only 1 type its most likely a chain in progress
 			if !${HasMultipleTypes} && !${HasPriorityTarget}
 			{
+	        	UI:UpdateConsole["NPC: Chaining Spawn"]
 				Chaining:Set[TRUE]
 			}
 
-			/* skip chaining if chain solo == false and we are alone */
-			if !${Config.Combat.ChainSolo} && ${EVE.LocalsCount} == 1
+			if ${HasSpecialTarget}
 			{
-				;UI:UpdateConsole["NPC: We are alone.  Skip chaining!!"]
+				UI:UpdateConsole["NPC: Not Chaining: Special targets present"]
 				Chaining:Set[FALSE]
 			}
 
-	        if ${Chaining}
-	        {
-	        	UI:UpdateConsole["NPC: Chaining Spawn"]
-	        }
-	        else
-	        {
-	        	UI:UpdateConsole["NPC: Not Chaining Spawn"]
-	        }
+			if ${HasPriorityTarget}
+			{
+				UI:UpdateConsole["NPC: Not Chaining: EWar Rats present"]
+				Chaining:Set[FALSE]
+			}
+
+			;skip chaining if chain solo == false and we are alone
+			if !${Config.Combat.ChainSolo} && ${EVE.LocalsCount} == 1
+			{
+				UI:UpdateConsole["NPC: Not Chaining: ChainSolo disabled"]
+				Chaining:Set[FALSE]
+			}
+
 			CheckChain:Set[FALSE]
 		}
 
