@@ -192,8 +192,8 @@ objectdef obj_Cargo
 		if ${CrystalIterator:First(exists)}
 		do
 		{
-			;echo Setting active crystal: ${CrystalIterator.Value.ID} ${CrystalIterator.Value.Name}
-			Crystals:Set[${CrystalIterator.Value.ID}, ${Math.Calc[${Crystals.Element[${CrystalIterator.Value.ID}]} + 1]}]
+			;echo Setting active crystal: ${CrystalIterator.Value} ${CrystalIterator.Value}
+			Crystals:Set[${CrystalIterator.Value}, ${Math.Calc[${Crystals.Element[${CrystalIterator.Value}]} + 1]}]
 		}
 		while ${CrystalIterator:Next(exists)}
 
