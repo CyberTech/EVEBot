@@ -217,9 +217,14 @@ objectdef obj_Combat
 	function Fight()
 	{
 		Ship:Deactivate_Cloak
-		while ${Ship.IsCloaked}
+		int Count = 0
+		while ${Count:Inc} < 10 && ${Ship.IsCloaked}
 		{
-			waitframe
+			wait 5
+		}
+		if ${Ship.IsCloaked}
+		{
+			UI:UpdateConsole["Error: Ship.IsCloaked still true after 5 seconds", LOG_CRITICAL]
 		}
 		;Ship:Offline_Cloak
 		;Ship:Online_Salvager
