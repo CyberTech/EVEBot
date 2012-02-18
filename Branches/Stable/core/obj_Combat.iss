@@ -217,7 +217,7 @@ objectdef obj_Combat
 	function Fight()
 	{
 		Ship:Deactivate_Cloak
-		int Count = 0
+		variable int Count = 0
 		while ${Count:Inc} < 10 && ${Ship.IsCloaked}
 		{
 			wait 5
