@@ -129,6 +129,14 @@ function main(string unchar="", string StartBot=FALSE)
 					EVE:CloseAllMessageBoxes
 					dotnet questor
 					break
+				case EVESALVAGE
+					UI:UpdateConsole["Launcher: Starting EVESalvage by Amadeus"]
+					runscript EVEBot/External/EVESalvage/EVESalvage.iss
+					break
+				case WRECKINGBALL2
+					UI:UpdateConsole["Launcher: Starting WreckingBall2"]
+					runscript EVEBot/External/WreckingBall2/wreckingball2.iss"
+					break
 				default
 					UI:UpdateConsole["Launcher: Unknown bot specified for launch, attempting to run as script name"]
 					run ${StartBot}
