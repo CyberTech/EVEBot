@@ -135,7 +135,7 @@ function main(string unchar="", string StartBot=FALSE)
 					break
 				case WRECKINGBALL2
 					UI:UpdateConsole["Launcher: Starting WreckingBall2"]
-					runscript EVEBot/External/WreckingBall2/wreckingball2.iss"
+					runscript EVEBot/External/WreckingBall2/wreckingball2.iss
 					break
 				default
 					UI:UpdateConsole["Launcher: Unknown bot specified for launch, attempting to run as script name"]
