@@ -256,7 +256,8 @@ objectdef obj_Combat
 	{
 		This.CurrentState:Set["FLEE"]
 		This.Fled:Set[TRUE]
-
+		EVE:Execute[CmdDronesReturnToBay]
+		
 		if ${Config.Combat.RunToStation}
 		{
 			call This.FleeToStation
