@@ -565,7 +565,7 @@ objectdef obj_Targets
         		NPCShipType:Set[${NPCGroup.Token[${pos}, " "]}]
         		pos:Inc
         	}
-            UI:UpdateConsole["NPC: ${NPCName}(${NPCShipType}) ${EVEBot.ISK_To_Str[${EVEDB_Spawns.SpawnBounty[${NPCName}]}]}"]
+            UI:UpdateConsole["NPC: ${NPCName}(${NPCShipType}) ${EVEBot.ISK_To_Str[${Target.Value.Bounty}]}"]
 
             ;UI:UpdateConsole["DEBUG: Type: ${Target.Value.Type}(${Target.Value.TypeID})"]
             ;UI:UpdateConsole["DEBUG: Category: ${Target.Value.Category}(${Target.Value.CategoryID})"]
@@ -590,7 +590,7 @@ objectdef obj_Targets
             }
 			if ${NPCGroup.Find["Battleship"](exists)}
 			{
-            	This.TotalSpawnValue:Inc[${EVEDB_Spawns.SpawnBounty[${NPCName}]}]
+            	This.TotalSpawnValue:Inc[${Target.Value.Bounty}]
             }
          }
          while ${Target:Next(exists)}
