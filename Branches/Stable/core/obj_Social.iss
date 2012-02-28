@@ -165,9 +165,9 @@ objectdef obj_Social
 	member:bool CheckLocalWhiteList()
 	{
 		variable iterator PilotIterator
-		variable int CorpID
-		variable int AllianceID
-		variable int PilotID
+		variable int64 CorpID
+		variable int64 AllianceID
+		variable int64 PilotID
 		variable string PilotName
 
 		if !${Config.Combat.UseWhiteList}
@@ -207,9 +207,9 @@ objectdef obj_Social
 	member:bool CheckStanding()
 	{
 		variable iterator PilotIterator
-		variable int CorpID
-		variable int AllianceID
-		variable int PilotID
+		variable int64 CorpID
+		variable int64 AllianceID
+		variable int64 PilotID
 
 		if ${Config.Combat.LowestStanding} < -10
 			return TRUE

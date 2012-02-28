@@ -22,12 +22,12 @@ objectdef obj_EVEDB_Stations
 		UI:UpdateConsole["obj_EVEDB_Stations: Initialized", LOG_MINOR]
 	}
 
-	member:string StationName(int stationID)
+	member:string StationName(int64 stationID)
 	{
 		return ${LavishSettings[${This.SET_NAME}].FindSet[${stationID}].FindSetting[stationName, NOTSET]}
 	}
 
-	member:int SolarSystemID(int stationID)
+	member:int SolarSystemID(int64 stationID)
 	{
 		return ${LavishSettings[${This.SET_NAME}].FindSet[${stationID}].FindSetting[solarSystemID, NOTSET]}
 	}
@@ -89,7 +89,7 @@ objectdef obj_Station
 	    return FALSE
 	}
 
-	member:bool DockedAtStation(int StationID)
+	member:bool DockedAtStation(int64 StationID)
 	{
 		if ${Me.InStation} && \
 			${Me.StationID} == ${StationID}
@@ -204,7 +204,7 @@ objectdef obj_Station
 
 	}
 
-	function DockAtStation(int StationID)
+	function DockAtStation(int64 StationID)
 	{
 		variable int Counter = 0
 
@@ -284,7 +284,7 @@ objectdef obj_Station
 	function Undock()
 	{
 		variable int Counter
-		variable int StationID
+		variable int64 StationID
 		StationID:Set[${Me.StationID}]
 
 		UI:UpdateConsole["Undocking from ${Me.Station.Name}"]

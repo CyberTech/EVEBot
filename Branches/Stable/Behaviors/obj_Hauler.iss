@@ -37,11 +37,11 @@ objectdef lootable
 
 objectdef obj_FullMiner
 {
-	variable int FleetMemberID
-	variable int SystemID
-	variable int BeltID
+	variable int64 FleetMemberID
+	variable int64 SystemID
+	variable int64 BeltID
 
-	method Initialize(int arg_FleetMemberID, int arg_SystemID, int arg_BeltID)
+	method Initialize(int64 arg_FleetMemberID, int64 arg_SystemID, int64 arg_BeltID)
 	{
 		FleetMemberID:Set[${arg_FleetMemberID}]
 		SystemID:Set[${arg_SystemID}]
@@ -179,9 +179,9 @@ objectdef obj_OreHauler inherits obj_Hauler
 	/* A miner's jetcan is full.  Let's go get the ore.  */
 	method MinerFull(string haulParams)
 	{
-		variable int charID = -1
-		variable int systemID = -1
-		variable int beltID = -1
+		variable int64 charID = -1
+		variable int64 systemID = -1
+		variable int64 beltID = -1
 
 		if !${Config.Common.BotModeName.Equal[Hauler]}
 		{
@@ -424,9 +424,9 @@ objectdef obj_OreHauler inherits obj_Hauler
 		EVEBot.ReturnToStation:Set[TRUE]
 	}
 
-	function WarpToFleetMemberAndLoot(int charID)
+	function WarpToFleetMemberAndLoot(int64 charID)
 	{
-		variable int id = 0
+		variable int64 id = 0
 
 		if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
 		{	/* if we are already full ignore this request */

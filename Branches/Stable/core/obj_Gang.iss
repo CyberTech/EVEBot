@@ -44,7 +44,7 @@ objectdef obj_Fleet
 		Issues a Fleet formation request to the player given
 		by the id parameter.
 	*/
-	method FormFleetWithPlayer(int id)
+	method FormFleetWithPlayer(int64 id)
 	{
 	}
 
@@ -56,7 +56,7 @@ objectdef obj_Fleet
 		;echo DEBUG: Populating Fleet member list:: ${FleetMemberCount} members total
 	}
 
-	member:fleetmember CharIdToFleetMember(int charID)
+	member:fleetmember CharIdToFleetMember(int64 charID)
 	{
 		variable fleetmember ReturnValue
 		ReturnValue:Set[NULL]
