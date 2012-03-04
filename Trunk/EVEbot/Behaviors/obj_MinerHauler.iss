@@ -326,7 +326,7 @@ objectdef obj_MinerHauler inherits obj_Hauler
 				Logger:Log["Hauler: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
 				if ${QuantityToMove} > 0
 				{
-					Cargo.Value:MoveTo[MyShip,${QuantityToMove}]
+					Cargo.Value:MoveTo[${MyShip.ID},${QuantityToMove}]
 					wait 30
 				}
 				else

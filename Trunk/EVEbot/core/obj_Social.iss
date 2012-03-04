@@ -56,9 +56,9 @@ objectdef obj_Social inherits obj_BaseClass
 
 		Logger:Log["${LogPrefix}: Initializing whitelist...", LOG_MINOR]
 		PilotWhiteList:Add[${EVEBot.CharID}]
-		if ${Me.CorporationID} > 0
+		if ${Me.Corp.ID} > 0
 		{
-			This.CorpWhiteList:Add[${Me.CorporationID}]
+			This.CorpWhiteList:Add[${Me.Corp.ID}]
 		}
 		if ${Me.AllianceID} > 0
 		{
@@ -291,7 +291,7 @@ objectdef obj_Social inherits obj_BaseClass
 				continue
 			}
 
-			CorpID:Set[${PilotIterator.Value.CorporationID}]
+			CorpID:Set[${PilotIterator.Value.Corp.ID}]
 			AllianceID:Set[${PilotIterator.Value.AllianceID}]
 			PilotName:Set[${PilotIterator.Value.Name}]
 
@@ -383,8 +383,8 @@ objectdef obj_Social inherits obj_BaseClass
 		{
 			do
 			{
-				;echo "DEBUG: ${PilotIterator.Value.Name} ID: ${PilotIterator.Value.CharID} CorpID: ${PilotIterator.Value.CorporationID} Corp: ${PilotIterator.Value.Corporation} AllianceID: ${PilotIterator.Value.AllianceID} Alliance: ${PilotIterator.Value.Alliance}"
-				;echo "  DEBUG: ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].CorpToAlliance} ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].CorpToCorp} ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].CorpToPilot} ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].MeToCorp} ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].MeToPilot} ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].AllianceToAlliance}"
+				;echo "DEBUG: ${PilotIterator.Value.Name} ID: ${PilotIterator.Value.CharID} CorpID: ${PilotIterator.Value.Corp.ID} Corp: ${PilotIterator.Value.Corporation} AllianceID: ${PilotIterator.Value.AllianceID} Alliance: ${PilotIterator.Value.Alliance}"
+				;echo "  DEBUG: ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.Corp.ID},${PilotIterator.Value.AllianceID}].CorpToAlliance} ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].CorpToCorp} ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].CorpToPilot} ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].MeToCorp} ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].MeToPilot} ${Me.StandingTo[${PilotIterator.Value.CharID},${PilotIterator.Value.CorporationID},${PilotIterator.Value.AllianceID}].AllianceToAlliance}"
 				;echo "  DEBUG: ${PilotIterator.Value.Standing.CorpToAlliance} ${PilotIterator.Value.Standing.CorpToCorp} ${PilotIterator.Value.Standing.CorpToPilot} ${PilotIterator.Value.Standing.MeToCorp} ${PilotIterator.Value.Standing.MeToPilot} ${PilotIterator.Value.Standing.AllianceToAlliance}"
 
 				if ${This.ClearedPilotsStanding.Contains[${PilotIterator.Value}]}
@@ -422,7 +422,7 @@ objectdef obj_Social inherits obj_BaseClass
 
 				if ${HostilePilot}
 				{
-					LogMsg:Concat[" Below Standing Threshold: ${PilotIterator.Value.Name} CorpID: ${PilotIterator.Value.CorporationID} AllianceID: ${PilotIterator.Value.AllianceID}"]
+					LogMsg:Concat[" Below Standing Threshold: ${PilotIterator.Value.Name} CorpID: ${PilotIterator.Value.Corp.ID} AllianceID: ${PilotIterator.Value.AllianceID}"]
 					Logger:Log[${LogMsg}, LOG_CRITICAL]
 					HostilesPresent:Inc
 					{This.ReportedPilotsSinceLastSafe:Add[${PilotIterator.Value}]

@@ -281,12 +281,12 @@ objectdef obj_Cargo
 						{
 							if ${quant} >= ${needed}
 							{
-								HangarIterator.Value:MoveTo[MyShip, ${needed}]
+								HangarIterator.Value:MoveTo[${MyShip.ID}, ${needed}]
 								Crystals:Set[${Crystals.CurrentKey}, ${Math.Calc[${Crystals.CurrentValue} + ${needed}]}]
 							}
 							else
 							{
-								HangarIterator.Value:MoveTo[MyShip]
+								HangarIterator.Value:MoveTo[${MyShip.ID}]
 								Crystals:Set[${Crystals.CurrentKey}, ${Math.Calc[${Crystals.CurrentValue} + ${quant}]}]
 							}
 						}
@@ -589,7 +589,7 @@ objectdef obj_Cargo
 			if ${QuantityToMove} > 0
 			{
 				Logger:Log["TransferListToShipWithContainers: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${This.CargoToTransfer.Get[${idx}].Volume}]}m3) of ${This.CargoToTransfer.Get[${idx}].Name}"]
-				This.CargoToTransfer.Get[${idx}]:MoveTo[MyShip,${QuantityToMove}]
+				This.CargoToTransfer.Get[${idx}]:MoveTo[${MyShip.ID},${QuantityToMove}]
 				wait 15
 			}
 			if ${QuantityToMove} == ${This.CargoToTransfer.Get[${idx}].Quantity}
@@ -628,7 +628,7 @@ objectdef obj_Cargo
 					Logger:Log["TransferListToShip: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}", LOG_DEBUG]
 					if ${QuantityToMove} > 0
 					{
-						CargoIterator.Value:MoveTo[MyShip,${QuantityToMove}]
+						CargoIterator.Value:MoveTo[${MyShip.ID},${QuantityToMove}]
 						wait 30
 					}
 
