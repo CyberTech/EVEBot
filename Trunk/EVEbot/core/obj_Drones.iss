@@ -342,7 +342,7 @@ objectdef obj_Drones
 		do
 		{
 			;Logger:Log["obj_Drones:TransferToDroneBay: ${CargoIterator.Value.Name}"]
-			CargoIterator.Value:MoveTo[DroneBay,1]
+			CargoIterator.Value::MoveTo[${MyShip.ID}, DroneBay,1]
 			wait 30
 		}
 		while ${CargoIterator:Next(exists)}
