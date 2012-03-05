@@ -702,6 +702,8 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[WarpRange, 0]
 		This.CombatRef:AddSetting[Lowest Standing, 0]
 		This.CombatRef:AddSetting[LootMyKills, 0]
+		This.CombatRef:AddSetting[Use Anom Bookmarks, FALSE]
+		This.CombatRef:AddSetting[AnomBookmarkLabel, Anom:]
 	}
 
 	member:int WarpRange()
@@ -713,6 +715,28 @@ objectdef obj_Configuration_Combat
 	{
 		This.CombatRef:AddSetting[WarpRange,${value}]
 	}
+
+	member:bool UseAnomBookmarks()
+	{
+		return ${This.CombatRef.FindSetting[Use Anom Bookmarks, FALSE]}
+	}
+
+	method SetUseAnomBookmarks(bool value)
+	{
+		This.CombatRef:AddSetting[Use Anom Bookmarks,${value}]
+	}
+	
+	method SetAnomBookmarkLabel(string value)
+	{
+		This.CombatRef:AddSetting[AnomBookmarkLabel,${value}]
+	}
+	
+	member:string AnomBookmarkLabel()
+	{
+		return ${This.CombatRef.FindSetting[AnomBookmarkLabel, AMMO]}
+	}
+	
+	
 	member:int AmmoTypeID()
 	{
 		return ${This.CombatRef.FindSetting[AmmoTypeID, 2629]}

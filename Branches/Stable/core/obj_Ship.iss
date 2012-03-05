@@ -181,23 +181,23 @@ objectdef obj_Ship
 		{
 			if ${aWeaponIterator.Value.Charge(exists)}
 			{
-				UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable:", LOG_DEBUG]
-				UI:UpdateConsole["Slot: ${aWeaponIterator.Value.ToItem.Slot}  ${aWeaponIterator.Value.ToItem.Name}", LOG_DEBUG]
+				;UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable:", LOG_DEBUG]
+				;UI:UpdateConsole["Slot: ${aWeaponIterator.Value.ToItem.Slot}  ${aWeaponIterator.Value.ToItem.Name}", LOG_DEBUG]
 
 				aWeaponIterator.Value:GetAvailableAmmo[anItemIndex]
-				UI:UpdateConsole["Ammo: Used = ${anItemIndex.Used}", LOG_DEBUG]
+				;UI:UpdateConsole["Ammo: Used = ${anItemIndex.Used}", LOG_DEBUG]
 
 				anItemIndex:GetIterator[anItemIterator]
 				if ${anItemIterator:First(exists)}
 				{
 					do
 					{
-						UI:UpdateConsole["Ammo: Type = ${anItemIterator.Value.Type}", LOG_DEBUG]
+						;UI:UpdateConsole["Ammo: Type = ${anItemIterator.Value.Type}", LOG_DEBUG]
 						if ${anItemIterator.Value.TypeID} == ${aWeaponIterator.Value.Charge.TypeID}
 						{
-							UI:UpdateConsole["Ammo: Match!", LOG_DEBUG]
-							UI:UpdateConsole["Ammo: Qty = ${anItemIterator.Value.Quantity}", LOG_DEBUG]
-							UI:UpdateConsole["Ammo: Max = ${aWeaponIterator.Value.MaxCharges}", LOG_DEBUG]
+							;UI:UpdateConsole["Ammo: Match!", LOG_DEBUG]
+							;UI:UpdateConsole["Ammo: Qty = ${anItemIterator.Value.Quantity}", LOG_DEBUG]
+							;UI:UpdateConsole["Ammo: Max = ${aWeaponIterator.Value.MaxCharges}", LOG_DEBUG]
 							if ${anItemIterator.Value.Quantity} < ${Math.Calc[${aWeaponIterator.Value.MaxCharges}*12]}
 							{
 								UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable: FALSE!", LOG_CRITICAL]
@@ -1145,11 +1145,10 @@ objectdef obj_Ship
 				wait 25
 				return
 			}
-			wait 10
-		}
+			}
 		while ${ModuleIter:Next(exists)}
 	}
-
+	
 	function ActivateFreeSalvager()
 	{
 		variable string Slot
@@ -1550,12 +1549,12 @@ objectdef obj_Ship
 				{
 
 					UI:UpdateConsole["2: Warping to bookmark ${Label} (Attempt #${WarpCounter})"]
-					while !${This.WarpEntered}
-					{
-						DestinationBookmark:WarpTo
-						wait 10
-					}
-					call This.WarpWait
+				while !${This.WarpEntered}
+				{
+					DestinationBookmark:WarpTo
+					wait 10
+				}
+				call This.WarpWait
 					if ${Return} == 2
 					{
 						return
