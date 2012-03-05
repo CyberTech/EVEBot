@@ -409,89 +409,114 @@ objectdef obj_Combat
 		variable int QuantityToMove
 		variable index:item ContainerItems
 		variable iterator CargoIterator
-
-		if ${Ammospots:IsThereAmmospotBookmark}
+		
+		if ${Config.Combat.RunToStation}
 		{
-			UI:UpdateConsole["RestockAmmo: Fleeing: No ammo bookmark"]
-			call This.Flee
-			return
-		}
-		else
-		{
-			call Ammospots.WarpTo
-			UI:UpdateConsole["Restocking ammo"]
-			call Ship.OpenCargo
-			; If a corp hangar array is on grid - drop loot
-			if ${Entity["TypeID = 17621"].ID} != NULL
+			if !${Station.Docked}
 			{
-				UI:UpdateConsole["Restocking from ${Entity["TypeID = 17621"]} (${Entity["TypeID = 17621"].ID})"]
-				call Ship.Approach ${Entity["TypeID = 17621"].ID} 2000
-				call Ship.OpenCargo
-				Entity["TypeID = 17621"]:OpenCargo
-
-				; Drop off all loot/leftover ammo
-				; TODO - don't dump the ammo we're using for our own weapons. Do dump other ammo that we might have looted.
-				call Cargo.TransferCargoToCorpHangarArray
-
-				Entity["TypeID = 17621"]:GetCargo[ContainerItems]
+				call Station.Dock
 			}
 
-			; If there is no CHA, but there is a GSC, Take Ammo, do not drop off items
-			else
-			{
-				UI:UpdateConsole["Restocking from ${Entity["GroupID =340"]} (${Entity["GroupID = 340"].ID})"]
-				call Ship.Approach ${Entity["GroupID = 340"].ID} 2000
-
-				Entity["GroupID = 340"]:OpenCargo
-				wait 30
-				Entity["GroupID = 340"]:GetCargo[ContainerItems]
-			}
-
+			EVE:Execute[OpenHangarFloor]
+			wait 10
+			MyShip:GetCargo[ContainerItems]
 			ContainerItems:GetIterator[CargoIterator]
-
 			if ${CargoIterator:First(exists)}
 			{
 				do
 				{
-					if ${CargoIterator.Value.TypeID} == ${Config.Combat.AmmoTypeID}
-					{
-						if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${Ship.CargoFreeSpace}
-						{
-							QuantityToMove:Set[${Math.Calc[(${Ship.CargoFreeSpace} - ${Config.Combat.RestockAmmoFreeSpace}) / ${CargoIterator.Value.Volume} - 1]}]
-						}
-						else
-						{
-							QuantityToMove:Set[${CargoIterator.Value.Quantity}]
-						}
-
-						UI:UpdateConsole["TransferListToShip: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
-						UI:UpdateConsole["TransferListToShip: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
-						if ${QuantityToMove} > 0
-						{
-							CargoIterator.Value:MoveTo[${MyShip.ID},CargoHold,${QuantityToMove}]
-							wait 30
-							MyShip:StackAllCargo
-							wait 10
-						}
-
-						if ${Ship.CargoFreeSpace} <= ${Config.Combat.RestockAmmoFreeSpace}
-						{
-							UI:UpdateConsole["DEBUG: RestockAmmo Done: Ship Cargo: ${Ship.CargoFreeSpace} < ${Config.Combat.RestockAmmoFreeSpace}", LOG_DEBUG]
-							break
-						}
-					}
+					CargoIterator.Value:MoveTo[Hangar]
+					wait 2
 				}
 				while ${CargoIterator:Next(exists)}
 			}
-			else
+			Me.Station:StackAllHangarItems
+			wait 20
+			ContainerItems:Clear
+			Me.Station:GetHangarItems[ContainerItems]
+		}
+		else
+		{
+			if ${Ammospots:IsThereAmmospotBookmark}
 			{
-				UI:UpdateConsole["DEBUG: obj_Cargo:TransferListToShip: Nothing found to move"]
-				UI:UpdateConsole["Debug: Fleeing: No ammo left in can"]
+				UI:UpdateConsole["RestockAmmo: Fleeing: No ammo bookmark"]
 				call This.Flee
 				return
 			}
+			else
+			{
+				call Ammospots.WarpTo
+				UI:UpdateConsole["Restocking ammo"]
+				call Ship.OpenCargo
+				; If a corp hangar array is on grid - drop loot
+				if ${Entity["TypeID = 17621"].ID} != NULL
+				{
+					UI:UpdateConsole["Restocking from ${Entity["TypeID = 17621"]} (${Entity["TypeID = 17621"].ID})"]
+					call Ship.Approach ${Entity["TypeID = 17621"].ID} 2000
+					call Ship.OpenCargo
+					Entity["TypeID = 17621"]:OpenCargo
+
+					; Drop off all loot/leftover ammo
+					; TODO - don't dump the ammo we're using for our own weapons. Do dump other ammo that we might have looted.
+					call Cargo.TransferCargoToCorpHangarArray
+
+					Entity["TypeID = 17621"]:GetCargo[ContainerItems]
+				}
+
+				; If there is no CHA, but there is a GSC, Take Ammo, do not drop off items
+				else
+				{
+					UI:UpdateConsole["Restocking from ${Entity["GroupID =340"]} (${Entity["GroupID = 340"].ID})"]
+					call Ship.Approach ${Entity["GroupID = 340"].ID} 2000
+
+					Entity["GroupID = 340"]:OpenCargo
+					wait 30
+					Entity["GroupID = 340"]:GetCargo[ContainerItems]
+				}
+			}
+		}
+		ContainerItems:GetIterator[CargoIterator]
+		if ${CargoIterator:First(exists)}
+		{
+			do
+			{
+				if ${CargoIterator.Value.TypeID} == ${Config.Combat.AmmoTypeID}
+				{
+					if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${Ship.CargoFreeSpace}
+					{
+						QuantityToMove:Set[${Math.Calc[(${Ship.CargoFreeSpace} - ${Config.Combat.RestockAmmoFreeSpace}) / ${CargoIterator.Value.Volume} - 1]}]
+					}
+					else
+					{
+						QuantityToMove:Set[${CargoIterator.Value.Quantity}]
+					}
+					UI:UpdateConsole["TransferListToShip: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
+					UI:UpdateConsole["TransferListToShip: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
+					if ${QuantityToMove} > 0
+					{
+						CargoIterator.Value:MoveTo[${MyShip.ID},CargoHold,${QuantityToMove}]
+						wait 30
+						MyShip:StackAllCargo
+						wait 10
+					}
+						if ${Ship.CargoFreeSpace} <= ${Config.Combat.RestockAmmoFreeSpace}
+					{
+						UI:UpdateConsole["DEBUG: RestockAmmo Done: Ship Cargo: ${Ship.CargoFreeSpace} < ${Config.Combat.RestockAmmoFreeSpace}", LOG_DEBUG]
+						break
+					}
+				}
+			}
+			while ${CargoIterator:Next(exists)}
+		}
+		else
+		{
+			UI:UpdateConsole["DEBUG: obj_Cargo:TransferListToShip: Nothing found to move"]
+			UI:UpdateConsole["Debug: Fleeing: No ammo left in can"]
+			call This.Flee
+			return
 		}
 	}
 }
+
 
 #endif /* __OBJ_COMBAT__ */
