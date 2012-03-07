@@ -1901,6 +1901,10 @@ objectdef obj_Ship
 
 	method Activate_Hardeners()
 	{
+		if !${Me.InStation}
+		{
+			return
+		}
 		if !${Me.Ship(exists)}
 		{
 			return
