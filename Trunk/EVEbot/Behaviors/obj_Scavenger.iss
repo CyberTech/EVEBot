@@ -167,7 +167,7 @@ objectdef obj_Scavenger
 
 					if ${ItemsToMove.Used} > 0
 					{
-						EVE:MoveItemsTo[ItemsToMove, MyShip]
+						EVE:MoveItemsTo[ItemsToMove, ${MyShip.ID}, CargoHold]
 						wait 10
 					}
 

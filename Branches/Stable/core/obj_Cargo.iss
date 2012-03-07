@@ -307,7 +307,7 @@ objectdef obj_Cargo
 
 			if ${anIntIndex.Used} > 0
 			{
-				EVE:MoveItemsTo[anIntIndex, Hangar]
+				EVE:MoveItemsTo[anIntIndex, ${Me.Station.ID}, Hangar]
 				wait 15
 			}
 

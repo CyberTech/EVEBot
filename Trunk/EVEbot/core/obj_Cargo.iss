@@ -333,7 +333,7 @@ objectdef obj_Cargo
 
 			if ${anIntIndex.Used} > 0
 			{
-				EVE:MoveItemsTo[anIntIndex, Hangar]
+				EVE:MoveItemsTo[anIntIndex, ${Me.Station.ID}, Hangar]
 				wait 15
 			}
 
@@ -394,7 +394,7 @@ objectdef obj_Cargo
 		}
 		while ${anIterator:Next(exists)}
 
-		EVE:MoveItemsTo[anIntIndex,Hangar]
+		EVE:MoveItemsTo[anIntIndex, ${Me.Station.ID}, Hangar]
 	}
 
 	function TransferListToCorpHangarArray()
