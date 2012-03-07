@@ -1273,6 +1273,8 @@ objectdef obj_Ship
 				MyShip:GetCargo[MyCargo]
 			}
 		}
+		MyShip:StackAllCargo
+		wait 5
 	}
 
 	function CloseCargo()
