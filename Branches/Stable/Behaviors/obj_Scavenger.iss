@@ -24,7 +24,7 @@ objectdef obj_Scavenger
 
 	variable index:entity LockedTargets
 	variable iterator Target
-	
+
 	method Initialize()
 	{
 		UI:UpdateConsole["obj_Scavenger: Initialized", LOG_MINOR]
@@ -47,10 +47,10 @@ objectdef obj_Scavenger
 		}
 		elseif ${Me.Ship.UsedCargoCapacity} <= ${Math.Calc[${Me.Ship.CargoCapacity}*.95]}
 		{
-		 	This.CurrentState:Set["SCAVENGE"]
+			This.CurrentState:Set["SCAVENGE"]
 			return
 		}
-	    elseif ${Me.Ship.UsedCargoCapacity} > ${Math.Calc[${Me.Ship.CargoCapacity}*.95]}
+		elseif ${Me.Ship.UsedCargoCapacity} > ${Math.Calc[${Me.Ship.CargoCapacity}*.95]}
 		{
 			This.CurrentState:Set["DROPOFFTOCHA"]
 			return
@@ -65,36 +65,36 @@ objectdef obj_Scavenger
 	function ProcessState()
 	{
 		if !${Config.Common.BotModeName.Equal[Freighter]}
-			return
-			
+		return
+
 		switch ${This.CurrentState}
 		{
 			case ABORT
-				call Station.Dock
-				break
+			call Station.Dock
+			break
 			case SCAVENGE
-				wait 10
-				call This.SalvageSite
-				;call Asteroids.MoveToRandomBeltBookMark
-				;wait 10
-				;call This.WarpToFirstNonEmptyWreck
-				;wait 10
-				;call This.LootClosestWreck
-				break
+			wait 10
+			call This.SalvageSite
+			;call Asteroids.MoveToRandomBeltBookMark
+			;wait 10
+			;call This.WarpToFirstNonEmptyWreck
+			;wait 10
+			;call This.LootClosestWreck
+			break
 			case DROPOFFTOSTATION
-				call Station.Dock
-				wait 100
-				call Cargo.TransferCargoToHangar
-				wait 100
-				break
+			call Station.Dock
+			wait 100
+			call Cargo.TransferCargoToHangar
+			wait 100
+			break
 			case DROPOFFTOCHA
-				call This.DropAtCHA
-				break
+			call This.DropAtCHA
+			break
 			case FLEE
-				call This.Flee
-				break	
+			call This.Flee
+			break
 			case IDLE
-				break
+			break
 		}
 	}
 
@@ -116,22 +116,20 @@ objectdef obj_Scavenger
 			UI:UpdateConsole["Dropping off Loot"]
 			call Ship.OpenCargo
 			; If a corp hangar array is on grid - drop loot
-			if ${Entity["TypeID = 17621"].ID} != NULL
+			if ${Entity[TypeID = 17621].ID} != NULL
 			{
-				UI:UpdateConsole["Dropping off Loot at ${Entity["TypeID = 17621"]} (${Entity["TypeID = 17621"].ID})"]
-				call Ship.Approach ${Entity[TypeID,17621].ID} 1500
+				UI:UpdateConsole["Dropping off Loot at ${Entity[TypeID = 17621]} (${Entity[TypeID = 17621].ID})"]
+				call Ship.Approach ${Entity[TypeID = 17621].ID} 1500
 				call Ship.OpenCargo
-				Entity[${Entity["TypeID = 17621"].ID}]:OpenCargo
+				Entity[${Entity[TypeID = 17621].ID}]:OpenCargo
 
 				call Cargo.TransferCargoToCorpHangarArray
 				return
 			}
 		}
 		This.CurrentState:Set["SCAVENGE"]
-		
-		
 	}
-	
+
 	function SalvageSite()
 	{
 		Ship:Activate_SensorBoost
@@ -143,10 +141,11 @@ objectdef obj_Scavenger
 		variable float        TotalVolume = 0
 		variable float        ItemVolume = 0
 		variable int QuantityToMove
+
 		UI:UpdateConsole["Salvaging Site"]
 		while (${Ship.CargoFreeSpace} >= 100)
 		{
-			
+
 			if (${Config.Miner.StandingDetection} && \
 				${Social.StandingDetection[${Config.Miner.LowestStanding}]}) || \
 				!${Social.IsSafe}
@@ -155,25 +154,23 @@ objectdef obj_Scavenger
 				return
 			}
 
-			
 			if ${Math.Calc[${Me.TargetCount} + ${Me.TargetingCount}]} < ${Ship.SafeMaxLockedTargets}
-				{
-					call This.TargetNext
-				}
-			
-			
+			{
+				call This.TargetNext
+			}
+
 			EVE:QueryEntities[Wrecks, "GroupID = GROUPID_WRECK"]
 			UI:UpdateConsole["obj_Scavenger: DEBUG: Found ${Wrecks.Used} wrecks."]
 			if ${Ship.TotalActivatedTractorBeams} < ${Ship.TotalTractorBeams}
 			{
 				if ${Me.TargetingCount} < ${Ship.SafeMaxLockedTargets}
 				{
-				;echo "getting another target"
-				 	call This.TargetNext
+					;echo "getting another target"
+					call This.TargetNext
 				}
 				while ${Me.TargetingCount} > 0
 				{
-				 	wait 10
+					wait 10
 				}
 				Me:GetTargets[LockedTargets]
 				LockedTargets:GetIterator[Target]
@@ -191,7 +188,7 @@ objectdef obj_Scavenger
 						}
 						if ${Target.Value.Distance} > ${Ship.OptimalTractorRange}
 						{
-							
+
 							call Ship.Approach ${Target.Value.ID} ${Ship.OptimalTractorRange}
 						}
 						Call Ship.ActivateFreeTractorBeam
@@ -200,7 +197,7 @@ objectdef obj_Scavenger
 					{
 						;echo "within range, attempted to turn off tractor beam"
 						variable iterator ModuleIter
-				
+
 						Ship.ModuleList_TractorBeams:GetIterator[ModuleIter]
 						if ${ModuleIter:First(exists)}
 						do
@@ -214,12 +211,12 @@ objectdef obj_Scavenger
 						}
 						while ${ModuleIter:Next(exists)}
 					}
-					
+
 				}
 				while ${Target:Next(exists)}
 			}
-			
-			if ${Ship.TotalActivatedSalvagers} < ${Ship.TotalSalvagers} 
+
+			if ${Ship.TotalActivatedSalvagers} < ${Ship.TotalSalvagers}
 			{
 				Me:GetTargets[LockedTargets]
 				LockedTargets:GetIterator[Target]
@@ -229,7 +226,7 @@ objectdef obj_Scavenger
 					if !${Ship.IsSalvagingWreckID[${Target.Value.ID}]} && ${Target.Value.Distance} < 2500
 					{
 						;echo "Salvaging"
-						
+
 						;echo "Salvaging: target in range"
 						Target.Value:MakeActiveTarget
 						while !${Target.Value.ID.Equal[${Me.ActiveTarget.ID}]} && ${Me.TargetingCount} != 0
@@ -237,7 +234,7 @@ objectdef obj_Scavenger
 							;echo "Salvaging: waiting for switch"
 							wait 5
 						}
-						
+
 						;echo "Salvaging: Looting"
 						call Ship.Approach ${Target.Value.ID} LOOT_RANGE
 						Target.Value:OpenCargo
@@ -248,53 +245,52 @@ objectdef obj_Scavenger
 						UI:UpdateConsole["obj_Scavenger: DEBUG:  Wreck contains ${Items.Used} items."]
 
 						Items:GetIterator[Item]
-					if ${Item:First(exists)}
-					{
-						do
+						if ${Item:First(exists)}
 						{
-							;UI:UpdateConsole["obj_Ratter: Found ${Item.Value.Quantity} x ${Item.Value.Name} - ${Math.Calc[${Item.Value.Quantity} * ${Item.Value.Volume}]}m3"]
-							if (${Math.Calc[${Item.Value.Quantity}*${Item.Value.Volume}]}) > ${Ship.CargoFreeSpace}
+							do
 							{
-								/* Move only what will fit, minus 1 to account for CCP rounding errors. */
-									QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${Item.Value.Volume} - 1]}]
-								if ${QuantityToMove} <= 0
+								;UI:UpdateConsole["obj_Ratter: Found ${Item.Value.Quantity} x ${Item.Value.Name} - ${Math.Calc[${Item.Value.Quantity} * ${Item.Value.Volume}]}m3"]
+								if (${Math.Calc[${Item.Value.Quantity}*${Item.Value.Volume}]}) > ${Ship.CargoFreeSpace}
 								{
-								UI:UpdateConsole["ERROR: obj_Ratter: QuantityToMove = ${QuantityToMove}!"]
-								break
+									/* Move only what will fit, minus 1 to account for CCP rounding errors. */
+									QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${Item.Value.Volume} - 1]}]
+									if ${QuantityToMove} <= 0
+									{
+										UI:UpdateConsole["ERROR: obj_Ratter: QuantityToMove = ${QuantityToMove}!"]
+										break
+									}
+								}
+								else
+								{
+									QuantityToMove:Set[${Item.Value.Quantity}]
+								}
+
+								UI:UpdateConsole["obj_Ratter: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Item.Value.Volume}]}m3"]
+								if ${QuantityToMove} > 0
+								{
+									Item.Value:MoveTo[MyShip,${QuantityToMove}]
+									wait 5
+								}
+
+								if ${Ship.CargoFull}
+								{
+									UI:UpdateConsole["DEBUG: obj_Ratter: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}", LOG_DEBUG]
+									break
 								}
 							}
-							else
-							{
-								QuantityToMove:Set[${Item.Value.Quantity}]
-							}
-			
-							UI:UpdateConsole["obj_Ratter: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Item.Value.Volume}]}m3"]
-							if ${QuantityToMove} > 0
-							{
-								Item.Value:MoveTo[MyShip,${QuantityToMove}]
-								wait 5
-							}
-			
-							if ${Ship.CargoFull}
-							{
-								UI:UpdateConsole["DEBUG: obj_Ratter: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}", LOG_DEBUG]
-								break
-							}
+							while ${Item:Next(exists)}
 						}
-						while ${Item:Next(exists)}
-					}
 						Call Ship.ActivateFreeSalvager
 					}
 				}
 				while ${Target:Next(exists)}
 			}
-			
 		}
-		
+
 		Ship:Deactivate_SensorBoost
 	}
 
-	
+
 	function TargetNext()
 	{
 		variable index:entity Wrecks
@@ -302,7 +298,7 @@ objectdef obj_Scavenger
 
 		EVE:QueryEntities[Wrecks, "GroupID = GROUPID_WRECK"]
 		Wrecks:GetIterator[Wreck]
-		
+
 		if ${Wreck:First(exists)}
 		{
 			do
@@ -317,7 +313,7 @@ objectdef obj_Scavenger
 				}
 			}
 			while ${Wreck:Next(exists)}
-			
+
 			if ${Wreck.Value(exists)} && \
 				${Entity[${Wreck.Value.ID}](exists)}
 			{
@@ -331,7 +327,7 @@ objectdef obj_Scavenger
 				Wreck.Value:LockTarget
 				do
 				{
-				  wait 10
+					wait 10
 				}
 				while ${Me.TargetingCount} > 0
 
@@ -339,19 +335,18 @@ objectdef obj_Scavenger
 		}
 		else
 		{
-			
 			if ${Ship.TotalActivatedTractorBeams} == 0
 			{
 				This.Wrecks:GetIterator[Wreck]
 				if !${Wreck:First(exists)}
 				{
-						UI:UpdateConsole["obj_Scavenger: TargetNext: No Wrecks within ${EVEBot.MetersToKM_Str[${This.MaxDistanceToAsteroid}], Going Home"]
-						call This.Flee
+					UI:UpdateConsole["obj_Scavenger: TargetNext: No Wrecks within ${EVEBot.MetersToKM_Str[${This.MaxDistanceToAsteroid}], Going Home"]
+					call This.Flee
 				}
 			}
-		}	
-	}	
-	
+		}
+	}
+
 	function Flee()
 	{
 		Ship:Deactivate_SensorBoost
