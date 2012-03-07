@@ -338,7 +338,7 @@ objectdef obj_Cargo
 				}
 				else
 				{
-					CargoIterator.Value:MoveTo[Hangar]
+					CargoIterator.Value:MoveTo[${Me.Station.ID}, Hangar]
 				}
 				wait 10
 			}

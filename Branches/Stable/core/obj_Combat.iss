@@ -425,7 +425,7 @@ objectdef obj_Combat
 			{
 				do
 				{
-					CargoIterator.Value:MoveTo[Hangar]
+					CargoIterator.Value:MoveTo[${Me.Station.ID}, Hangar]
 					wait 2
 				}
 				while ${CargoIterator:Next(exists)}

@@ -143,7 +143,7 @@ objectdef obj_Drones
 		do
 		{
 			;UI:UpdateConsole["obj_Drones:TransferToDroneBay: ${CargoIterator.Value.Name}"]
-			CargoIterator.Value::MoveTo[${MyShip.ID}, DroneBay,1]
+			CargoIterator.Value:MoveTo[${MyShip.ID}, DroneBay,1]
 			wait 30
 		}
 		while ${CargoIterator:Next(exists)}

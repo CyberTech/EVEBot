@@ -1182,7 +1182,7 @@ objectdef obj_Missions
 				Logger:Log["DEBUG: obj_Missions.LootEntity: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
 				if ${QuantityToMove} > 0
 				{
-					Cargo.Value:MoveTo[${MyShip.ID},${QuantityToMove}]
+					Cargo.Value:MoveTo[${MyShip.ID}, CargoHold, ${QuantityToMove}]
 					wait 30
 				}
 

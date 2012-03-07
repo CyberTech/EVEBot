@@ -366,7 +366,7 @@ objectdef obj_Cargo
 				}
 				else
 				{
-					CargoIterator.Value:MoveTo[Hangar]
+					CargoIterator.Value:MoveTo[${Me.Station.ID}, Hangar]
 				}
 				wait 30
 			}
@@ -589,7 +589,7 @@ objectdef obj_Cargo
 			if ${QuantityToMove} > 0
 			{
 				Logger:Log["TransferListToShipWithContainers: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${This.CargoToTransfer.Get[${idx}].Volume}]}m3) of ${This.CargoToTransfer.Get[${idx}].Name}"]
-				This.CargoToTransfer.Get[${idx}]:MoveTo[${MyShip.ID},${QuantityToMove}]
+				This.CargoToTransfer.Get[${idx}]:MoveTo[${MyShip.ID}, CargoHold, ${QuantityToMove}]
 				wait 15
 			}
 			if ${QuantityToMove} == ${This.CargoToTransfer.Get[${idx}].Quantity}
@@ -628,7 +628,7 @@ objectdef obj_Cargo
 					Logger:Log["TransferListToShip: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}", LOG_DEBUG]
 					if ${QuantityToMove} > 0
 					{
-						CargoIterator.Value:MoveTo[${MyShip.ID},${QuantityToMove}]
+						CargoIterator.Value:MoveTo[${MyShip.ID}, CargoHold, ${QuantityToMove}]
 						wait 30
 					}
 
