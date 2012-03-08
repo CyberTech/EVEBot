@@ -200,12 +200,13 @@ objectdef obj_OreHauler inherits obj_Hauler
 	/* this function is called repeatedly by the main loop in EveBot.iss */
 	function ProcessState()
 	{
-		Ship:Activate_Gang_Links
 		switch ${This.CurrentState}
 		{
 			case IDLE
+				Ship:Activate_Gang_Links
 				break
 			case ABORT
+				Ship:Activate_Gang_Links
 				UI:UpdateConsole["Aborting operation: Returning to base"]
 				Call Station.Dock
 				break
@@ -218,9 +219,11 @@ objectdef obj_OreHauler inherits obj_Hauler
 				}
 				break
 			case HAUL
+				Ship:Activate_Gang_Links
 				call This.Haul
 				break
 			case CARGOFULL
+				Ship:Activate_Gang_Links
 				call This.DropOff
 				This.PickupFailed:Set[FALSE]
 				break
