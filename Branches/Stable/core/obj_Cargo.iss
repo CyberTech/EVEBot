@@ -255,7 +255,7 @@ objectdef obj_Cargo
 						{
 							if ${quant} >= ${needed}
 							{
-								HangarIterator.Value:MoveTo[${MyShip.ID},CargoHold,${needed}]
+								HangarIterator.Value:MoveTo[${MyShip.ID}, CargoHold, ${needed}]
 								Crystals:Set[${Crystals.CurrentKey}, ${Math.Calc[${Crystals.CurrentValue} + ${needed}]}]
 							}
 							else
@@ -450,12 +450,12 @@ objectdef obj_Cargo
 						QuantityToMove:Set[${CargoIterator.Value.Quantity}]
 					}
 
-					UI:UpdateConsole["TransferListToJetCan: Transferring Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
-					CargoIterator.Value:MoveTo[${JetCan.ActiveCan}, ${QuantityToMove}]
+					UI:UpdateConsole["TransferListToJetCan: Transferring Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name} - Jetcan Free Space: ${JetCan.CargoFreeSpace}"]
+					CargoIterator.Value:MoveTo[${JetCan.ActiveCan}, CargoHold, ${QuantityToMove}]
 				}
 				else
 				{
-					UI:UpdateConsole["TransferListToJetCan: Ejecting Cargo: ${CargoIterator.Value.Name}"]
+					UI:UpdateConsole["TransferListToJetCan: Ejecting Cargo: ${CargoIterator.Value.Quantity} units of ${CargoIterator.Value.Name}"]
 					CargoIterator.Value:Jettison
 					call JetCan.WaitForCan
 					/* This isn't a botter giveaway; I don't know a single miner who doesn't rename cans - failure to do so affects can life. */
@@ -612,7 +612,7 @@ objectdef obj_Cargo
 			if ${qty} > 0
 			{
 				UI:UpdateConsole["TransferListToShipWithContainers: Loading Cargo: ${qty} units (${Math.Calc[${qty} * ${This.CargoToTransfer.Get[${idx}].Volume}]}m3) of ${This.CargoToTransfer.Get[${idx}].Name}"]
-				This.CargoToTransfer.Get[${idx}]:MoveTo[${MyShip.ID},CargoHold,${qty}]
+				This.CargoToTransfer.Get[${idx}]:MoveTo[${MyShip.ID}, CargoHold, ${qty}]
 				wait 15
 			}
 			if ${qty} == ${This.CargoToTransfer.Get[${idx}].Quantity}
@@ -659,7 +659,7 @@ objectdef obj_Cargo
 					UI:UpdateConsole["TransferListToShip: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
 					if ${QuantityToMove} > 0
 					{
-						CargoIterator.Value:MoveTo[${MyShip.ID},CargoHold,${QuantityToMove}]
+						CargoIterator.Value:MoveTo[${MyShip.ID}, CargoHold, ${QuantityToMove}]
 						wait 15
 					}
 
