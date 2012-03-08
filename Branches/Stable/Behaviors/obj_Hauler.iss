@@ -200,6 +200,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 	/* this function is called repeatedly by the main loop in EveBot.iss */
 	function ProcessState()
 	{
+		Ship:Activate_Gang_Links
 		switch ${This.CurrentState}
 		{
 			case IDLE

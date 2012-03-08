@@ -38,6 +38,7 @@ objectdef obj_Ship
 	variable index:module ModuleList_SensorBoost
 	variable index:module ModuleList_TargetPainter
 	variable index:module ModuleList_TrackingComputer
+	variable index:module ModuleList_GangLinks
 	variable bool Repairing_Armor = FALSE
 	variable bool Repairing_Hull = FALSE
 	variable float m_MaxTargetRange
@@ -336,6 +337,7 @@ objectdef obj_Ship
 		This.ModuleList_SensorBoost:Clear
 		This.ModuleList_TargetPainter:Clear
 		This.ModuleList_TrackingComputer:Clear
+		This.ModuleList_GangLinks:Clear
 
 		Me.Ship:GetModules[This.ModuleList]
 
@@ -450,6 +452,9 @@ objectdef obj_Ship
 					break
 				case GROUP_TRACKINGCOMPUTER
 					This.ModuleList_TrackingComputer:Insert[${ModuleIter.Value.ID}]
+					break
+				case GROUP_GANGLINK
+					This.ModuleList_GangLinks:Insert[${ModuleIter.Value.ID}]
 					break
 				default
 					break
@@ -1148,7 +1153,7 @@ objectdef obj_Ship
 			}
 		while ${ModuleIter:Next(exists)}
 	}
-	
+
 	function ActivateFreeSalvager()
 	{
 		variable string Slot
@@ -1799,6 +1804,50 @@ objectdef obj_Ship
 		variable iterator ModuleIter
 
 		This.ModuleList_Regen_Shield:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if ${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsDeactivating}
+			{
+				UI:UpdateConsole["Deactivating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
+				ModuleIter.Value:Click
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+	}
+
+	method Activate_Gang_Links()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		variable iterator ModuleIter
+
+		This.ModuleList_GangLinks:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline}
+			{
+				UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
+				ModuleIter.Value:Click
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+	}
+
+	method Deactivate_Gang_Links()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		variable iterator ModuleIter
+
+		This.ModuleList_GangLinks:GetIterator[ModuleIter]
 		if ${ModuleIter:First(exists)}
 		do
 		{
