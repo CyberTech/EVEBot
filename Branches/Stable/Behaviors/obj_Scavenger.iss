@@ -268,7 +268,7 @@ objectdef obj_Scavenger
 								UI:UpdateConsole["obj_Ratter: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Item.Value.Volume}]}m3"]
 								if ${QuantityToMove} > 0
 								{
-									Item.Value:MoveTo[MyShip,${QuantityToMove}]
+									Item.Value:MoveTo[${MyShip.ID}, CargoHold, ${QuantityToMove}]
 									wait 5
 								}
 

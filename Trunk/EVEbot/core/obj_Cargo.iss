@@ -281,12 +281,12 @@ objectdef obj_Cargo
 						{
 							if ${quant} >= ${needed}
 							{
-								HangarIterator.Value:MoveTo[${MyShip.ID}, ${needed}]
+								HangarIterator.Value:MoveTo[${MyShip.ID}, CargoHold, ${needed}]
 								Crystals:Set[${Crystals.CurrentKey}, ${Math.Calc[${Crystals.CurrentValue} + ${needed}]}]
 							}
 							else
 							{
-								HangarIterator.Value:MoveTo[${MyShip.ID}]
+								HangarIterator.Value:MoveTo[${MyShip.ID}, CargoHold]
 								Crystals:Set[${Crystals.CurrentKey}, ${Math.Calc[${Crystals.CurrentValue} + ${quant}]}]
 							}
 						}
@@ -410,7 +410,7 @@ objectdef obj_Cargo
 				{
 					call CorpHangarArray.Open ${CorpHangarArray.ActiveCan}
 					Logger:Log["TransferListToCorpHangarArray: Transferring Cargo: ${CargoIterator.Value.Name}"]
-					CargoIterator.Value:MoveTo[${CorpHangarArray.ActiveCan},${CargoIterator.Value.Quantity},Corporation Folder 1]
+					CargoIterator.Value:MoveTo[${CorpHangarArray.ActiveCan}, CorpHangars, ${CargoIterator.Value.Quantity},Corporation Folder 1]
 				}
 			}
 			while ${CargoIterator:Next(exists)}
@@ -439,7 +439,7 @@ objectdef obj_Cargo
 				{
 					call AssemblyArray.Open ${AssemblyArray.ActiveCan}
 					Logger:Log["TransferListToAssemblyArray: Transferring Cargo: ${CargoIterator.Value.Name}"]
-					CargoIterator.Value:MoveTo[${AssemblyArray.ActiveCan},${CargoIterator.Value.Quantity},Corporation Folder 1]
+					CargoIterator.Value:MoveTo[${AssemblyArray.ActiveCan}, CorpHangars, ${CargoIterator.Value.Quantity},Corporation Folder 1]
 				}
 			}
 			while ${CargoIterator:Next(exists)}
@@ -472,7 +472,7 @@ objectdef obj_Cargo
 					QuantityToMove:Set[${This.MaxQuantityForVolume[${JetCan.CargoFreeSpace}, ${CargoIterator.Value.Volume}, ${CargoIterator.Value.Quantity}]}]
 
 					Logger:Log["TransferListToJetCan: Transferring Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
-					CargoIterator.Value:MoveTo[${JetCan.ActiveCan}, ${QuantityToMove}]
+					CargoIterator.Value:MoveTo[${JetCan.ActiveCan}, CargoHold, ${QuantityToMove}]
 				}
 				else
 				{
@@ -550,7 +550,7 @@ objectdef obj_Cargo
 				if ${QuantityToMove} > 0
 				{
 					Logger:Log["TransferListToShipWithContainers: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${This.CargoToTransfer.Get[${idx}].Volume}]}m3) of ${This.CargoToTransfer.Get[${idx}].Name}"]
-					This.CargoToTransfer.Get[${idx}]:MoveTo[${shipContainerIterator.Value.ID},${QuantityToMove}]
+					This.CargoToTransfer.Get[${idx}]:MoveTo[${shipContainerIterator.Value.ID}, CargoHold, ${QuantityToMove}]
 					wait 15
 				}
 				if ${QuantityToMove} == ${This.CargoToTransfer.Get[${idx}].Quantity}

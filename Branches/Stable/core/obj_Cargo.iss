@@ -260,7 +260,7 @@ objectdef obj_Cargo
 							}
 							else
 							{
-								HangarIterator.Value:MoveTo[${MyShip.ID}]
+								HangarIterator.Value:MoveTo[${MyShip.ID}, CargoHold]
 								Crystals:Set[${Crystals.CurrentKey}, ${Math.Calc[${Crystals.CurrentValue} + ${quant}]}]
 							}
 						}
@@ -364,7 +364,7 @@ objectdef obj_Cargo
 				{
 					call LargeShipAssemblyArray.Open ${LargeShipAssemblyArray.ActiveCan}
 					UI:UpdateConsole["TransferListToLargeShipAssemblyArray: Transferring Cargo: ${CargoIterator.Value.Name}"]
-					CargoIterator.Value:MoveTo[${LargeShipAssemblyArray.ActiveCan},${CargoIterator.Value.Quantity},Corporation Folder 1]
+					CargoIterator.Value:MoveTo[${LargeShipAssemblyArray.ActiveCan}, CorpHangars, ${CargoIterator.Value.Quantity},Corporation Folder 1]
 				}
 			}
 			while ${CargoIterator:Next(exists)}
@@ -389,7 +389,7 @@ objectdef obj_Cargo
 				{
 					call XLargeShipAssemblyArray.Open ${XLargeShipAssemblyArray.ActiveCan}
 					UI:UpdateConsole["TransferListToXLargeShipAssemblyArray: Transferring Cargo: ${CargoIterator.Value.Name}"]
-					CargoIterator.Value:MoveTo[${XLargeShipAssemblyArray.ActiveCan},${CargoIterator.Value.Quantity},Corporation Folder 1]
+					CargoIterator.Value:MoveTo[${XLargeShipAssemblyArray.ActiveCan}, CorpHangars, ${CargoIterator.Value.Quantity},Corporation Folder 1]
 				}
 			}
 			while ${CargoIterator:Next(exists)}
@@ -414,7 +414,7 @@ objectdef obj_Cargo
 				{
 					call CorpHangarArray.Open ${CorpHangarArray.ActiveCan}
 					UI:UpdateConsole["TransferListToCorpHangarArray: Transferring Cargo: ${CargoIterator.Value.Name}"]
-					CargoIterator.Value:MoveTo[${CorpHangarArray.ActiveCan},${CargoIterator.Value.Quantity},Corporation Folder 1]
+					CargoIterator.Value:MoveTo[${CorpHangarArray.ActiveCan}, CorpHangars, ${CargoIterator.Value.Quantity},Corporation Folder 1]
 				}
 			}
 			while ${CargoIterator:Next(exists)}
@@ -458,7 +458,6 @@ objectdef obj_Cargo
 					UI:UpdateConsole["TransferListToJetCan: Ejecting Cargo: ${CargoIterator.Value.Quantity} units of ${CargoIterator.Value.Name}"]
 					CargoIterator.Value:Jettison
 					call JetCan.WaitForCan
-					/* This isn't a botter giveaway; I don't know a single miner who doesn't rename cans - failure to do so affects can life. */
 					JetCan:Rename
 				}
 			}
@@ -574,7 +573,7 @@ objectdef obj_Cargo
 				if ${qty} > 0
 				{
 					UI:UpdateConsole["TransferListToShipWithContainers: Loading Cargo: ${qty} units (${Math.Calc[${qty} * ${This.CargoToTransfer.Get[${idx}].Volume}]}m3) of ${This.CargoToTransfer.Get[${idx}].Name}"]
-					This.CargoToTransfer.Get[${idx}]:MoveTo[${shipContainerIterator.Value.ID},${qty}]
+					This.CargoToTransfer.Get[${idx}]:MoveTo[${shipContainerIterator.Value.ID}, CargoHold, ${qty}]
 					wait 15
 				}
 				if ${qty} == ${This.CargoToTransfer.Get[${idx}].Quantity}
