@@ -988,7 +988,7 @@ objectdef obj_MissionCommands
 		variable int        TypeID
 		variable int        ItemQuantity
 
-		;;Agents:SetActiveAgent[${Agent[id,${agentID}]}]
+		;;Agents:SetActiveAgent[${Agent[id,${agentID}].Name}]
 
 		itemName:Set[${EVEDB_Items.Name[${This.MissionCache.TypeID[${agentID}]}]}]
 		QuantityRequired:Set[${Math.Calc[${This.MissionCache.Volume[${agentID}]}/${EVEDB_Items.Volume[${itemName}]}]}]

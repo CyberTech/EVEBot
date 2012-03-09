@@ -340,25 +340,25 @@ objectdef obj_Agents
 						{
 							if ${amIterator.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions} == TRUE
 							{
-								This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}]}]
+								This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}].Name}]
 								return
 							}
 
 							if ${amIterator.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} == TRUE
 							{
-								This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}]}]
+								This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}].Name}]
 								return
 							}
 
 							if ${amIterator.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} == TRUE
 							{
-								This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}]}]
+								This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}].Name}]
 								return
 							}
 
 							if ${amIterator.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions} == TRUE
 							{
-								This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}]}]
+								This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}].Name}]
 								return
 							}
 						}

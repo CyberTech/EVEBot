@@ -380,7 +380,7 @@ objectdef obj_Missions
 		variable int        TypeID
 		variable int        ItemQuantity
 
-		Agents:SetActiveAgent[${Agent[id,${agentID}]}]
+		Agents:SetActiveAgent[${Agent[id,${agentID}].Name}]
 
 		itemName:Set[${EVEDB_Items.Name[${This.MissionCache.TypeID[${agentID}]}]}]
 		itemVolume:Set[${EVEDB_Items.Volume[${This.MissionCache.TypeID[${agentID}]}]}]
@@ -1210,7 +1210,7 @@ objectdef obj_Missions
 		variable int        TypeID
 		variable int        ItemQuantity
 
-		;;Agents:SetActiveAgent[${Agent[id,${agentID}]}]
+		;;Agents:SetActiveAgent[${Agent[id,${agentID}].Name}]
 
 		itemName:Set[${EVEDB_Items.Name[${This.MissionCache.TypeID[${agentID}]}]}]
 		itemVolume:Set[${EVEDB_Items.Volume[${This.MissionCache.TypeID[${agentID}]}]}]

@@ -347,7 +347,7 @@ objectdef obj_Agents
 							(${MissionInfo.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} || \
 							(${MissionInfo.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions})
 						{
-							This:SetActiveAgent[${Agent[id,${MissionInfo.Value.AgentID}]}]
+							This:SetActiveAgent[${Agent[id,${MissionInfo.Value.AgentID}].Name}]
 							return
 						}
 					}
