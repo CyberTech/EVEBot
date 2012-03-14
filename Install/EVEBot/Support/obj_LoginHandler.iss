@@ -167,6 +167,10 @@ objectdef obj_LoginHandler inherits obj_BaseClass
 				timedcommand 5 EVEWindow[ByName,modal]:ClickButtonOK
 				Script:End
 			}
+			elseif ${EVEWindow[ByName,modal].Text.Find["The daily downtime will begin in"](exists)}
+			{
+				EVEWindow[ByName,modal]:ClickButtonOK
+			}
 			else
 			{
 				UI:UpdateConsole["Error: Unexpected Modal dialog with text:", LOG_STANDARD]
