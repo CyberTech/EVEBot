@@ -225,7 +225,7 @@ objectdef obj_Station
 
 			do
 			{
-				Entity[${StationID}]:Approach
+				Entity[${StationID}]:Dock
 				UI:UpdateConsole["Approaching docking range..."]
 				wait 30
 			}
