@@ -330,15 +330,15 @@ objectdef obj_Cargo
 			call Station.OpenHangar
 			do
 			{
-				UI:UpdateConsole["TransferListToHangar: Unloading Cargo: ${CargoIterator.Value.Name}"]
-				UI:UpdateConsole["TransferListToShip: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
+				UI:UpdateConsole["TransferListToHangar: Unloading Cargo: ${CargoIterator.Value.Name} x ${CargoIterator.Value.Quantity}"]
+				UI:UpdateConsole["TransferListToHangar: Unloading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}", LOG_DEBUG]
 				if ${CargoIterator.Value.GroupID} == GROUPID_SECURE_CONTAINER
 				{
 					call This.TransferContainerToHangar ${CargoIterator.Value.ID}
 				}
 				else
 				{
-					CargoIterator.Value:MoveTo[${Me.Station.ID}, Hangar]
+					CargoIterator.Value:MoveTo[MyStationHangar, Hangar]
 				}
 				wait 10
 			}
@@ -905,7 +905,7 @@ objectdef obj_Cargo
 					UI:UpdateConsole["DEBUG: ${cargoIterator.Value.Type}(${cargoIterator.Value.TypeID})"]
 					if ${typeID} == ${cargoIterator.Value.TypeID}
 					{
-						This.CargoToTransfer:Insert[${cargoIterator.Value.ID}]	
+						This.CargoToTransfer:Insert[${cargoIterator.Value.ID}]
 					}
 				}
 				while ${cargoIterator:Next(exists)}
