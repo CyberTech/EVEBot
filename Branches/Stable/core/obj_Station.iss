@@ -316,7 +316,7 @@ objectdef obj_Station
 		;Me:SetVelocity[100]
 		wait 30
 
-		Ship:UpdateModuleList[]
+		Ship.RetryUpdateModuleList:Set[1]
 	}
 
 }
