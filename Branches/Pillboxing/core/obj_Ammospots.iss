@@ -39,45 +39,28 @@ objectdef obj_Ammospots
 			{
 				AmmoSpots:Remove[${idx}]
 			}
-			elseif ${AmmoSpots.Get[${idx}].SolarSystemID} != ${Me.SolarSystemID}
+		/*	elseif ${AmmoSpots.Get[${idx}].SolarSystemID} != ${Me.SolarSystemID}
 			{
-				AmmoSpots:Remove[${idx}]
-			}
+				AmmoSpots:Remove[${idx}] ;Need to sort by number of jumps away
+			} */
 
 			idx:Dec
 		}
 		AmmoSpots:Collapse
 		AmmoSpots:GetIterator[AmmoSpotIterator]
 
-		UI:UpdateConsole["ResetAmmoSpotList found ${AmmoSpots.Used} ammospots in this system."]
+		UI:UpdateConsole["ResetAmmoSpotList found ${AmmoSpots.Used} ammospots in total."]
+		do 
+		{
+			UI:UpdateConsole["Removing bookmarks with jumps > ${AmmoSpots[1].JumpsTo}. Current number of bookmarks is ${AmmoSpots.Used}."]
+			AmmoSpots:RemoveByQuery[${LavishScript.CreateQuery[JumpsTo > ${AmmoSpots[1].JumpsTo}]}]
+		}
+		while ${AmmoSpots.Used} > 1 && !${AmmoSpots[1].JumpsTo.Equal[${AmmoSpots[2].JumpsTo}]}
+		AmmoSpots:Collapse
+		UI:UpdateConsole["${AmmoSpots.Used} ammo bookmarks found in closest system (ideally this should be 1)]
+		;Not sure if it can cope with multiple bms in the same system yet	
 	}
 
-	function WarpToNextAmmoSpot()
-	{
-		if ${AmmoSpots.Used} == 0
-		{
-			This:ResetAmmoSpotList
-		}
-
-		if ${AmmoSpots.Get[1](exists)} && ${AmmoSpots.Get[1].SolarSystemID} != ${Me.SolarSystemID}
-		{
-			This:ResetAmmoSpotList
-		}
-
-		if !${AmmoSpotIterator:Next(exists)}
-		{
-			AmmoSpotIterator:First
-		}
-
-		if ${AmmoSpotIterator.Value(exists)}
-		{
-			call Ship.WarpToBookMark ${AmmoSpotIterator.Value.ID}
-		}
-		else
-		{
-			UI:UpdateConsole["ERROR: obj_Ammospots.WarpToNextAmmoSpot found an invalid bookmark!"]
-		}
-	}
 
 	member:bool IsAtAmmospot()
 	{
@@ -104,7 +87,34 @@ objectdef obj_Ammospots
 
 	function WarpTo()
 	{
-		call This.WarpToNextAmmoSpot
+		if ${AmmoSpots.Used} == 0
+		{
+			This:ResetAmmoSpotList
+		}
+
+		if ${AmmoSpots.Get[1](exists)} && ${AmmoSpots.Get[1].SolarSystemID} != ${Me.SolarSystemID}
+		{
+			This:ResetAmmoSpotList
+		}
+
+		if !${AmmoSpotIterator:Next(exists)}
+		{
+			AmmoSpotIterator:First
+		}
+
+		if ${AmmoSpotIterator.Value(exists)}
+		{
+
+			;Breaking non station bm support now from what I know
+			while ${Me.Station.ID} != ${AmmoSpotIterator.Value.ItemID}
+			{
+				call Ship.WarpToBookMark ${AmmoSpotIterator.Value.ID}
+			}
+		}
+		else
+		{
+			UI:UpdateConsole["ERROR: obj_Ammospots.WarpToNextAmmoSpot found an invalid bookmark!"]
+		}
 	}
 
 	; Does an Ammo Bookmark exist in this system?

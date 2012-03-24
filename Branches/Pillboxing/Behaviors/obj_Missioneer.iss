@@ -6,14 +6,13 @@
 
 	-- GliderPro
 */
-
 objectdef obj_Missioneer
 {
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 	variable string CurrentState
 	variable time NextPulse
-	variable int PulseIntervalInSeconds = 2
+	variable int PulseIntervalInSeconds = 6	
 
 	method Initialize()
 	{
@@ -57,7 +56,7 @@ objectdef obj_Missioneer
 		}
 		elseif ${EVEBot.ReturnToStation}
 		{
-			This.CurrentState:Set["IDLE"]
+			This.CurrentState:Set["IDLE"] 
 		}
 		elseif ${Agents.HaveMission}
 		{
@@ -77,7 +76,8 @@ objectdef obj_Missioneer
 				call Station.Dock
 				break
 			case GET_MISSION
-				Agents:PickAgent
+				EVE:Execute[OpenJournal]
+				wait 40
 				call Agents.MoveTo
 				call Agents.RequestMission
 				break

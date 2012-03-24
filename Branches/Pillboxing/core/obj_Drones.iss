@@ -21,12 +21,18 @@ objectdef obj_Drones
 	variable int WaitingForDrones = 0
 	variable bool DronesReady = FALSE
 	variable int ShortageCount
+	variable bool IsDroneBoat
 
 	method Initialize()
 	{
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_Drones: Initialized", LOG_MINOR]
+		if ${MyShip.DroneBandwidth.Equal[125]}
+		{
+			IsDroneBoat:Set[TRUE]
+		}
 	}
+
 	method Shutdown()
 	{
 	    if !${Me.InStation}
@@ -40,13 +46,48 @@ objectdef obj_Drones
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}
 
+	member:bool IsSentryDrone(int TypeID)
+	{
+		Switch ${TypeID}
+		{
+			case 23561
+			case 28211
+			case 31886
+			case 31868
+			case 23525
+			case 28213
+			case 23559
+			case 28209
+			case 31878
+			case 31894
+			case 23563
+			case 28215
+				return TRUE
+			default
+				return FALSE
+		}
+	}
+
 	method Pulse()
 	{
 		if ${EVEBot.Paused}
 		{
 			return
 		}
-
+		if ${IsDroneBoat.Equal[NULL]}
+		{
+			if ${MyShip.ToEntity(exists)}
+			{
+				if ${MyShip.DroneBandwidth.Equal[125]}
+				{
+					IsDroneBoat:Set[TRUE]
+				}
+				else
+				{
+					IsDroneBoat:Set{FALSE}
+				}
+			}
+		}
 		if ${This.WaitingForDrones}
 		{
 		    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
@@ -71,21 +112,76 @@ objectdef obj_Drones
 		}
 	}
 
+	method LaunchLightDrones()
+	{
+		;These methods can't really return drones, since returndrones is a function, we can't have waits, etc
+	}
+
 	method LaunchAll()
 	{
-		if ${This.DronesInBay} > 0
+		variable index:item ListOfDrones
+		variable iterator itty
+		variable int Count = 1
+		;This includes a check for sentry/heavy drones, going to have to put some SERIOUS beef into this method to select *which* drones to launch
+		if ${This.DronesInBay} > 0 && (${Me.ActiveTarget.Name.NotEqual["Kruul's Pleasure Garden"]} || ((${Me.ActiveTarget.Distance} < ${Me.DroneControlDistance}) && ${IsDroneBoat}))
 		{
-			UI:UpdateConsole["Launching drones..."]
-			Me.Ship:LaunchAllDrones
-			This.WaitingForDrones:Set[5]
+			if !${IsDroneBoat}
+			{
+				UI:UpdateConsole["Launching drones..."]
+				MyShip:LaunchAllDrones
+				This.WaitingForDrones:Set[5]
+			}
+			else
+			{
+				MyShip:GetDrones[ListOfDrones]
+				if ${ListOfDrones.Used} > 0
+				{
+					ListOfDrones:GetIterator[itty]
+					itty:First
+					do
+					{
+						if ${This.IsSentryDrone[${itty.Value.TypeID}]} && ${Count} <= 5
+						{
+							UI:UpdateConsole["Launching Sentry Drone: ${itty.Value.Name}."]
+							itty.Value:Launch
+							Count:Increase
+						}
+					}
+					while ${itty:Next(exists)}
+				}
+				else
+				{
+					UI:UpdateConsole["No drones found, can't launch anything...Call restock ammo?"]
+				}
+			}
 		}
 	}
 
 	member:int DronesInBay()
 	{
 		variable index:item DroneList
+		variable iterator Itty
 		MyShip:GetDrones[DroneList]
-		return ${DroneList.Used}
+		DroneList:GetIterator[Itty]
+		if ${DroneList.Used} <= 3
+		{
+			if ${Itty:First(exists)}
+			{
+				do
+				{
+					if ${Itty.Value.Quantity} > 1
+					{
+						return 5
+						;assume we've refilled if there's a stack
+					}
+				}
+				while ${Itty:Next(exists)}
+			}
+		}
+		else
+		{
+			return ${DroneList.Used}
+		}
 	}
 
 	member:int DronesInSpace()
@@ -103,7 +199,7 @@ objectdef obj_Drones
 
 		if (${Me.Ship.DronebayCapacity} > 0 && \
    			${This.DronesInBay} == 0 && \
-   			${This.DronesInSpace} < ${Config.Combat.MinimumDronesInSpace})
+   			${This.DronesInSpace} < 3
    		{
 			ShortageCount:Inc
    			if ${ShortageCount} > 10
@@ -135,7 +231,7 @@ objectdef obj_Drones
 
 		EVE:Execute[OpenDroneBayOfActiveShip]
 		wait 15
-
+		
 		variable iterator CargoIterator
 		Station.DronesInStation:GetIterator[CargoIterator]
 
@@ -143,7 +239,7 @@ objectdef obj_Drones
 		do
 		{
 			;UI:UpdateConsole["obj_Drones:TransferToDroneBay: ${CargoIterator.Value.Name}"]
-			CargoIterator.Value:MoveTo[${MyShip.ID}, DroneBay,1]
+			CargoIterator.Value:MoveTo[DroneBay,1]
 			wait 30
 		}
 		while ${CargoIterator:Next(exists)}
@@ -155,17 +251,17 @@ objectdef obj_Drones
 
 	function ReturnAllToDroneBay()
 	{
+		variable iterator Droner
+		variable index:int ToReturn
 		while ${This.DronesInSpace} > 0
 		{
 			UI:UpdateConsole["Recalling ${This.ActiveDroneIDList.Used} Drones"]
 			EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
-			EVE:Execute[CmdDronesReturnToBay]
-			if (${Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
-				${Me.Ship.ShieldPct} < ${Config.Combat.MinimumShieldPct})
+			if	${MyShip.ShieldPct} < 25
 			{
-				; We don't wait for drones if we're on emergency warp out
-				wait 10
-				return
+				echo ${Me.Ship.ShieldPct}
+				UI:UpdateConsole["OUR SHIT IS FUCKED UP FUCK THE DRONES"]
+				break
 			}
 			wait 50
 		}
@@ -193,32 +289,41 @@ objectdef obj_Drones
 
 		if (${This.DronesInSpace} > 0)
 		{
-			variable iterator DroneIterator
-			variable index:activedrone ActiveDroneList
-			Me:GetActiveDrones[ActiveDroneList]
-			ActiveDroneList:GetIterator[DroneIterator]
-			variable index:int64 returnIndex
-			variable index:int64 engageIndex
-
-			do
+			if ${Me.ActiveTarget.Name.Equal["Kruul's Pleasure Gardens"]}
 			{
-				if ${DroneIterator.Value.ToEntity.ShieldPct} < 50 || \
-					${DroneIterator.Value.ToEntity.ArmorPct} < 0
-				{
-					UI:UpdateConsole["Recalling Damaged Drone ${DroneIterator.Value.ID}"]
-					;UI:UpdateConsole["Debug: Shield: ${DroneIterator.Value.ToEntity.ShieldPct}, Armor: ${DroneIterator.Value.ToEntity.ArmorPct}, Structure: ${DroneIterator.Value.ToEntity.StructurePct}"]
-					returnIndex:Insert[${DroneIterator.Value.ID}]
+				call This.ReturnAllToDroneBay
 
-				}
-				else
+			}
+			else
+			{
+				variable iterator DroneIterator
+				variable index:activedrone ActiveDroneList
+				Me:GetActiveDrones[ActiveDroneList]
+				ActiveDroneList:GetIterator[DroneIterator]
+				variable index:int64 returnIndex
+				variable index:int64 engageIndex
+				do
 				{
-					;UI:UpdateConsole["Debug: Engage Target ${DroneIterator.Value.ID}"]
-					engageIndex:Insert[${DroneIterator.Value.ID}]
+					if ${DroneIterator.Value.ToEntity.ShieldPct} < 100
+					{
+						UI:UpdateConsole["Recalling Damaged Drone ${DroneIterator.Value.ID}"]
+						UI:UpdateConsole["Debug: Shield: ${DroneIterator.Value.ToEntity.ShieldPct}, Armor: ${DroneIterator.Value.ToEntity.ArmorPct}, Structure: ${DroneIterator.Value.ToEntity.StructurePct}"]
+						returnIndex:Insert[${DroneIterator.Value.ID}]
+
+					}
+					else
+					{
+						UI:UpdateConsole["Debug: Engage Target ${DroneIterator.Value.ID}"]
+						engageIndex:Insert[${DroneIterator.Value.ID}]
+					}
+				}
+				while ${DroneIterator:Next(exists)}
+				EVE:DronesReturnToDroneBay[returnIndex]
+				if ${Me.ActiveTarget.Distance} < ${Me.DroneControlDistance}
+				{
+					EVE:DronesEngageMyTarget[engageIndex]
 				}
 			}
-			while ${DroneIterator:Next(exists)}
-			EVE:DronesReturnToDroneBay[returnIndex]
-			EVE:DronesEngageMyTarget[engageIndex]
 		}
 	}
 }

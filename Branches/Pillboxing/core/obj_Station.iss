@@ -212,24 +212,27 @@ objectdef obj_Station
 
 		if ${Entity[${StationID}](exists)}
 		{
-			if ${Entity[${StationID}].Distance} > WARP_RANGE
-			{
-				UI:UpdateConsole["Warping to Station"]
-				call Ship.WarpToID ${StationID}
-				do
-				{
-				   wait 30
-				}
-				while ${Entity[${StationID}].Distance} > WARP_RANGE
-			}
 
 			do
-			{
-				Entity[${StationID}]:Dock
-				UI:UpdateConsole["Approaching docking range..."]
-				wait 30
+			{	
+				if ${Entity[${StationID}].Distance} > 150000
+				{
+					UI:UpdateConsole["Warping to Station"]
+					call Ship.WarpToID ${StationID}
+					do
+					{
+					   wait 30
+					}
+					while ${Entity[${StationID}].Distance} > WARP_RANGE
+				}
+				else
+				{
+					Entity[${StationID}]:Approach
+					UI:UpdateConsole["Approaching docking range..."]
+					wait 30
+				}
 			}
-			while (${Entity[${StationID}].Distance} > DOCKING_RANGE)
+			while (${Entity[${StationID}].Distance} > DOCKING_RANGE) && ${Me.ToEntity.Mode} != 1
 
 			Counter:Set[0]
 			UI:UpdateConsole["In Docking Range ... Docking"]

@@ -21,81 +21,262 @@ objectdef obj_Scavenger
 	/* the bot logic is currently based on a state machine */
 	variable string CurrentState
 	variable bool bHaveCargo = FALSE
-
+	variable bool bGoHome = FALSE
+	variable bool bFocusSalvagers = FALSE
 	variable index:entity LockedTargets
+	variable int Destination
+	variable int CharacterName
+	variable index:bookmark MyBookmarks
+	variable index:bookmark BookmarkListToSalvage
 	variable iterator Target
-
+	variable index:fleetmember MyFleet
+	variable int MyFleetCount
+	variable int SolarID = NULL
+	variable int FleetIterator
+	;variable index:bookmark 
+	variable bool FoundThem
+	variable int j
+	variable index:int64  ItemsToMove
+  	variable int WaitCount = 0
+  	variable int Iterator = 1
+  	variable index:bookmark BookmarksForMeToPissOn
+  	variable index:int64 BookmarkIDs
 	method Initialize()
 	{
 		UI:UpdateConsole["obj_Scavenger: Initialized", LOG_MINOR]
+		LavishScript:RegisterEvent[TOSALVAGE]
+		Event[TOSALVAGE]:AttachAtom[This:ToSalvage]
+		CurrentState:Set["IDLE"]
+		LavishScript:RegisterEvent[HERE]
+		Event[HERE]:AttachAtom[This:HERE]
 	}
 
 	method Shutdown()
 	{
 	}
-
+	method ToSalvage()
+	{	
+		if ${Config.Common.BotModeName.Equal[Freighter]}
+		{
+				EVEWindow[ByCaption,"People & Places"]:Close
+				;PULL A LIST OF OUR CORP BMS NOW
+				This.CurrentState:Set["SCAVENGE"]
+				echo ${This.CurrentState}
+				UI:UpdateConsole["Request received from salvager, starting operation."]
+		}
+	}
 	/* NOTE: The order of these if statements is important!! */
 	method SetState()
 	{
-		if ${EVEBot.ReturnToStation} && !${Me.InStation}
-		{
-			This.CurrentState:Set["ABORT"]
-		}
-		elseif ${EVEBot.ReturnToStation}
-		{
-			This.CurrentState:Set["IDLE"]
-		}
-		elseif ${Me.Ship.UsedCargoCapacity} <= ${Math.Calc[${Me.Ship.CargoCapacity}*.95]}
-		{
-			This.CurrentState:Set["SCAVENGE"]
-			return
-		}
-		elseif ${Me.Ship.UsedCargoCapacity} > ${Math.Calc[${Me.Ship.CargoCapacity}*.95]}
-		{
-			This.CurrentState:Set["DROPOFFTOCHA"]
-			return
-		}
-		else
-		{
-			UI:UpdateConsole["obj_Scavenger: ERROR!  Unknown State."]
-			This.CurrentState:Set["Unknown"]
-		}
 	}
 
 	function ProcessState()
 	{
 		if !${Config.Common.BotModeName.Equal[Freighter]}
-		return
-
+			return
+			
 		switch ${This.CurrentState}
 		{
 			case ABORT
-			call Station.Dock
-			break
+				call Station.Dock
+				break
 			case SCAVENGE
-			wait 10
-			call This.SalvageSite
-			;call Asteroids.MoveToRandomBeltBookMark
-			;wait 10
-			;call This.WarpToFirstNonEmptyWreck
-			;wait 10
-			;call This.LootClosestWreck
-			break
+				RoomCounter:Set[0]
+				call This.Scavenger
+				break
 			case DROPOFFTOSTATION
-			call Station.Dock
-			wait 100
-			call Cargo.TransferCargoToHangar
-			wait 100
-			break
-			case DROPOFFTOCHA
-			call This.DropAtCHA
-			break
+				call This.GoHome
+				wait 100
+				call Cargo.TransferCargoToHangar
+				wait 20
+				This:Setting
+				break
 			case FLEE
-			call This.Flee
-			break
+				call This.Flee
+				break	
 			case IDLE
-			break
+				break
 		}
+	}
+	
+	method Setting()
+	{
+			CurrentState:Set["SCAVENGE"]
+			UI:UpdateConsole["Going to salvage moar wrecks. Maybe xD"]
+	}
+
+	method HERE(... Params)
+	{
+		BookmarkListToSalvage:Clear
+		if ${Config.Common.BotModeName.Equal[Freighter]}
+		{
+			variable int i
+			for (i:Set[1] ; ${i} <= ${Params.Size} ; i:Inc)
+			{
+				BookmarkListToSalvage:Insert[${Params[${i}]}]
+			}
+		}
+	}
+
+	member:int BMCOUNT()
+	{
+		EVE:GetBookmarks[BookmarksForMeToPissOn]
+		BookmarksForMeToPissOn:RemoveByQuery[${LavishScript.CreateQuery[OwnerID != "${Me.Corp.ID}"]}]
+		BookmarksForMeToPissOn:Collapse
+		variable iterator itty
+		BookmarksForMeToPissOn:GetIterator[itty]
+		SolarID:Set[NULL]
+		if ${itty:First(exists)}
+		{
+			do
+			{
+				relay all Event[WHERE]:Execute[${itty.Value.CreatorID}]
+				while !${SolarID}
+				{
+					waitframe
+				}
+				if !${itty.Value.SolarSystemID.Equal[${SolarID}]}
+				{
+					BookmarksForMeToPissOn:RemoveByQuery[${LavishScript.CreateQuery[SolarSystemID != "${itty.Value.SolarSystemID}"]}]
+					BookmarksForMeToPissOn:Collapse
+					break
+				}
+			}
+			while ${itty:Next(exists)}
+		}
+		SolarID:Set[NULL]
+		return ${BookmarksForMeToPissOn.Used}
+	}
+
+	function Scavenger()
+	{
+		EVE:Execute[OpenPeopleAndPlaces]
+		while !${EVEWindow[ByCaption,"People & Places"](exists)}
+		{
+			wait 5
+		}
+		wait 50
+		EVE:GetBookmarks[BookmarksForMeToPissOn]
+		BookmarksForMeToPissOn:RemoveByQuery[${LavishScript.CreateQuery[OwnerID != "${Me.Corp.ID}"]}]
+		BookmarksForMeToPissOn:Collapse
+		if ${BookmarksForMeToPissOn.Used} == 0
+		{
+			UI:UpdateConsole["No corp bookmarks found, returning."]
+			return
+		}
+		variable iterator itty
+		BookmarksForMeToPissOn:GetIterator[itty]
+		variable iterator ittyCreators
+		variable index:int64 intCreators
+		variable bool found
+		variable iterator BookmarkID
+		intCreators:GetIterator[ittyCreators]
+		if ${itty:First(exists)}
+		{
+			cache:Set[${intCreators.Used}]
+			do
+			{
+				if ${ittyCreators:First(exists)}
+				{
+					do
+					{ 
+						found:Set[FALSE]
+						if ${ittyCreators.Value.Equal[${itty.Value.CreatorID}]}
+						{
+							found:Set[TRUE]
+							break
+						}
+					}
+					while ${ittyCreators:Next(exists)}
+					if !${found}
+					{
+						intCreators:Insert[itty.Value.CreatorID]
+					}
+				}
+				else
+				{
+					intCreators:Insert[${itty.Value.CreatorID}]
+				}
+			}
+			while ${itty:Next(exists)}
+		}
+		UI:UpdateConsole["Getting list of bookmarks now."]
+		if ${ittyCreators:First(exists)}
+		{
+			do
+			{
+				BookmarkIDs:Clear
+				BookmarkIDs:Set[NULL]
+				UI:UpdateConsole["Clearing list of bookmarks now."]
+				relay all Event[WHERE]:Execute[${ittyCreators.Value}]
+				UI:UpdateConsole["Just relayed request for bm."]
+				wait 50
+				UI:UpdateConsole["received a list of ${BookmarkListToSalvage.Used} bookmarks from missioner."]
+
+			}
+			while ${ittyCreators:Next(exists)}
+		}
+		BookmarkListToSalvage:RemoveByQuery[${LavishScript.CreateQuery[SolarSystemID != "${BookmarkListToSalvage[1].SolarSystemID}"]}]
+		if ${BookmarkListToSalvage.Used} > 0
+		{
+			Destination:Set[${BookmarkListToSalvage[1].SolarSystemID}]
+			UI:UpdateConsole["Heading to ${Destination}"]
+			call ChatIRC.Say "Starting salvage run now."
+			if !${Me.InSpace}
+			{
+				EVE:Execute[CmdExitStation]
+			}
+			while !${Me.InSpace}
+			{
+				wait 100
+			}
+		}
+		else
+		{
+			relay all Event[QUERY]:Execute[]
+			UI:UpdateConsole["No bookmarks found"]
+			This.CurrentState:Set["IDLE"]
+			return
+		}
+		;UI:UpdateConsole["${Destination "]
+		if ${Me.SolarSystemID} != ${Destination}
+			{
+				Universe[${Destination}]:SetDestination
+				while ${Me.SolarSystemID} != ${Destination}
+				{
+					if !${Me.AutoPilotOn}
+					{
+						EVE:Execute[CmdToggleAutopilot]
+					}
+					wait 5
+				}
+			}
+		wait 100
+		;THIS HAS TO WARP TO FIRST BM
+		UI:UpdateConsole["Warping to first bookmark"]
+		BookmarkListToSalvage[1]:WarpTo 
+		wait 100
+		while ${Me.ToEntity.Mode} == 3
+		{
+			wait 10
+		}	
+		Ship:UpdateModuleList
+		do
+		{
+			while ${Me.ToEntity.Mode} == 3
+			{
+				wait 10
+				UI:UpdateConsole["Warping, do nothing"]
+			}
+			UI:UpdateConsole["Starting salvage of a room now"]
+			call This.SalvageSite
+
+		}
+		while ${BookmarkListToSalvage.Used} > 0
+		Destinaton:Set[0]
+		This.CurrentState:Set["DROPOFFTOSTATION"]
+		UI:UpdateConsole["Going home!"]
+
 	}
 
 	function DropAtCHA()
@@ -116,36 +297,24 @@ objectdef obj_Scavenger
 			UI:UpdateConsole["Dropping off Loot"]
 			call Ship.OpenCargo
 			; If a corp hangar array is on grid - drop loot
-			if ${Entity[TypeID = 17621].ID} != NULL
+			if ${Entity["TypeID = 17621"].ID} != NULL
 			{
-				UI:UpdateConsole["Dropping off Loot at ${Entity[TypeID = 17621]} (${Entity[TypeID = 17621].ID})"]
-				call Ship.Approach ${Entity[TypeID = 17621].ID} 1500
+				UI:UpdateConsole["Dropping off Loot at ${Entity["TypeID = 17621"]} (${Entity["TypeID = 17621"].ID})"]
+				call Ship.Approach ${Entity[TypeID,17621].ID} 1500
 				call Ship.OpenCargo
-				Entity[${Entity[TypeID = 17621].ID}]:OpenCargo
+				Entity[${Entity["TypeID = 17621"].ID}]:OpenCargo
 
 				call Cargo.TransferCargoToCorpHangarArray
 				return
 			}
 		}
 		This.CurrentState:Set["SCAVENGE"]
+		
+		
 	}
-
-	function SalvageSite()
-	{
-		Ship:Activate_SensorBoost
-		variable index:entity Wrecks
-		variable iterator     Wreck
-		variable index:item   Items
-		variable iterator     Item
-		variable index:int64  ItemsToMove
-		variable float        TotalVolume = 0
-		variable float        ItemVolume = 0
-		variable int QuantityToMove
-
-		UI:UpdateConsole["Salvaging Site"]
-		while (${Ship.CargoFreeSpace} >= 100)
+		function SalvageSite()
 		{
-
+			UI:UpdateConsole["Salvaging Site"]
 			if (${Config.Miner.StandingDetection} && \
 				${Social.StandingDetection[${Config.Miner.LowestStanding}]}) || \
 				!${Social.IsSafe}
@@ -153,200 +322,36 @@ objectdef obj_Scavenger
 				call This.Flee
 				return
 			}
-
-			if ${Math.Calc[${Me.TargetCount} + ${Me.TargetingCount}]} < ${Ship.SafeMaxLockedTargets}
+			run evesalvage -here -stop
+			while ${Script[Evesalvage](exists)}
 			{
-				call This.TargetNext
+				wait 100
 			}
-
-			EVE:QueryEntities[Wrecks, "GroupID = GROUPID_WRECK"]
-			UI:UpdateConsole["obj_Scavenger: DEBUG: Found ${Wrecks.Used} wrecks."]
-			if ${Ship.TotalActivatedTractorBeams} < ${Ship.TotalTractorBeams}
+			if ${BookmarkListToSalvage.Used} > 1
 			{
-				if ${Me.TargetingCount} < ${Ship.SafeMaxLockedTargets}
-				{
-					;echo "getting another target"
-					call This.TargetNext
-				}
-				while ${Me.TargetingCount} > 0
+				UI:UpdateConsole["Deleting current old bookmark, warping to new one"]
+				BookmarkListToSalvage[2]:WarpTo
+				while ${Me.ToEntity.Mode} != 3
 				{
 					wait 10
 				}
-				Me:GetTargets[LockedTargets]
-				LockedTargets:GetIterator[Target]
-				if ${Target:First(exists)}
-				do
-				{
-					;echo "doing stuff"
-					if !${Ship.IsTractoringWreckID[${Target.Value.ID}]} && ${Target.Value.Distance} > 2500
-					{
-						;echo "Tactoring"
-						Target.Value:MakeActiveTarget
-						while !${Target.Value.ID.Equal[${Me.ActiveTarget.ID}]} && ${Me.TargetingCount} != 0
-						{
-							wait 5
-						}
-						if ${Target.Value.Distance} > ${Ship.OptimalTractorRange}
-						{
-
-							call Ship.Approach ${Target.Value.ID} ${Ship.OptimalTractorRange}
-						}
-						Call Ship.ActivateFreeTractorBeam
-					}
-					elseif ${Target.Value.Distance} < 2500
-					{
-						;echo "within range, attempted to turn off tractor beam"
-						variable iterator ModuleIter
-
-						Ship.ModuleList_TractorBeams:GetIterator[ModuleIter]
-						if ${ModuleIter:First(exists)}
-						do
-						{
-							;echo "Checking a Beam"
-							if (${ModuleIter.Value.TargetID} == ${Target.Value.ID})
-							{
-								;echo "Beam found, turning it off"
-								ModuleIter.Value:Click
-							}
-						}
-						while ${ModuleIter:Next(exists)}
-					}
-
-				}
-				while ${Target:Next(exists)}
-			}
-
-			if ${Ship.TotalActivatedSalvagers} < ${Ship.TotalSalvagers}
-			{
-				Me:GetTargets[LockedTargets]
-				LockedTargets:GetIterator[Target]
-				if ${Target:First(exists)}
-				do
-				{
-					if !${Ship.IsSalvagingWreckID[${Target.Value.ID}]} && ${Target.Value.Distance} < 2500
-					{
-						;echo "Salvaging"
-
-						;echo "Salvaging: target in range"
-						Target.Value:MakeActiveTarget
-						while !${Target.Value.ID.Equal[${Me.ActiveTarget.ID}]} && ${Me.TargetingCount} != 0
-						{
-							;echo "Salvaging: waiting for switch"
-							wait 5
-						}
-
-						;echo "Salvaging: Looting"
-						call Ship.Approach ${Target.Value.ID} LOOT_RANGE
-						Target.Value:OpenCargo
-						wait 10
-						call Ship.OpenCargo
-						wait 10
-						Target.Value:GetCargo[Items]
-						UI:UpdateConsole["obj_Scavenger: DEBUG:  Wreck contains ${Items.Used} items."]
-
-						Items:GetIterator[Item]
-						if ${Item:First(exists)}
-						{
-							do
-							{
-								;UI:UpdateConsole["obj_Ratter: Found ${Item.Value.Quantity} x ${Item.Value.Name} - ${Math.Calc[${Item.Value.Quantity} * ${Item.Value.Volume}]}m3"]
-								if (${Math.Calc[${Item.Value.Quantity}*${Item.Value.Volume}]}) > ${Ship.CargoFreeSpace}
-								{
-									/* Move only what will fit, minus 1 to account for CCP rounding errors. */
-									QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${Item.Value.Volume} - 1]}]
-									if ${QuantityToMove} <= 0
-									{
-										UI:UpdateConsole["ERROR: obj_Ratter: QuantityToMove = ${QuantityToMove}!"]
-										break
-									}
-								}
-								else
-								{
-									QuantityToMove:Set[${Item.Value.Quantity}]
-								}
-
-								UI:UpdateConsole["obj_Ratter: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Item.Value.Volume}]}m3"]
-								if ${QuantityToMove} > 0
-								{
-									Item.Value:MoveTo[${MyShip.ID}, CargoHold, ${QuantityToMove}]
-									wait 5
-								}
-
-								if ${Ship.CargoFull}
-								{
-									UI:UpdateConsole["DEBUG: obj_Ratter: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}", LOG_DEBUG]
-									break
-								}
-							}
-							while ${Item:Next(exists)}
-						}
-						Call Ship.ActivateFreeSalvager
-					}
-				}
-				while ${Target:Next(exists)}
-			}
-		}
-
-		Ship:Deactivate_SensorBoost
-	}
-
-
-	function TargetNext()
-	{
-		variable index:entity Wrecks
-		variable iterator     Wreck
-
-		EVE:QueryEntities[Wrecks, "GroupID = GROUPID_WRECK"]
-		Wrecks:GetIterator[Wreck]
-
-		if ${Wreck:First(exists)}
-		{
-			do
-			{
-				if ${Entity[${Wreck.Value.ID}](exists)} && \
-					!${Wreck.Value.IsLockedTarget} && \
-					!${Wreck.Value.BeingTargeted} && \
-					${Wreck.Value.Distance} < ${Me.Ship.MaxTargetRange} && \
-					( !${Me.ActiveTarget(exists)} || ${Wreck.Value.DistanceTo[${Me.ActiveTarget.ID}]} <= ${Ship.OptimalTractorRange} )
-				{
-					break
-				}
-			}
-			while ${Wreck:Next(exists)}
-
-			if ${Wreck.Value(exists)} && \
-				${Entity[${Wreck.Value.ID}](exists)}
-			{
-				if ${Wreck.Value.IsLockedTarget} || \
-					${Wreck.Value.BeingTargeted}
-				{
-					return TRUE
-				}
-				UI:UpdateConsole["Locking Wreck ${Wreck.Value.Name}: ${EVEBot.MetersToKM_Str[${Wreck.Value.Distance}]}"]
-
-				Wreck.Value:LockTarget
-				do
+				while ${Me.ToEntity.Mode} == 3
 				{
 					wait 10
+					UI:UpdateConsole["Warping, do nothing"]
 				}
-				while ${Me.TargetingCount} > 0
-
+				BookmarkListToSalvage[1]:Remove
+				BookmarkListToSalvage:Remove[1]
+				BookmarkListToSalvage:Collapse	
 			}
-		}
-		else
-		{
-			if ${Ship.TotalActivatedTractorBeams} == 0
+			else
 			{
-				This.Wrecks:GetIterator[Wreck]
-				if !${Wreck:First(exists)}
-				{
-					UI:UpdateConsole["obj_Scavenger: TargetNext: No Wrecks within ${EVEBot.MetersToKM_Str[${This.MaxDistanceToAsteroid}], Going Home"]
-					call This.Flee
-				}
+				UI:UpdateConsole["No more bookmarks, going home!"]
+				BookmarkListToSalvage[1]:Remove
+				BookmarkListToSalvage:Clear
 			}
 		}
-	}
-
+	
 	function Flee()
 	{
 		Ship:Deactivate_SensorBoost
@@ -369,6 +374,132 @@ objectdef obj_Scavenger
 		{
 			call Station.Dock
 		}
+	}
+	function GoHome()
+	{
+		variable index:item Items
+		variable iterator Item
+		MyShip:GetCargo[Items]
+		Items:GetIterator[Item]
+		variable index:string Contraband
+		variable iterator ittyContraband
+		Contraband:Insert["Crystal Egg"]
+		Contraband:Insert["X-Instinct"]
+		Contraband:Insert["Exile"]
+		Contraband:Insert["Vitoc"]
+		Contraband:Insert["Blue Pill"]
+		Contraband:Insert["Drop"]
+		Contraband:Insert["Mindflood"]
+		Contraband:Insert["Sooth Sayer"]
+
+		wait 1
+		Contraband:GetIterator[ittyContraband]
+		if ${Item:First(exists)}
+		do
+		{
+			if ${ittyContraband:First(exists)}
+			{
+				do 
+				{
+					if ${Item.Value.Name.Equal[${ittyContraband.Value}]}
+						{
+							echo "Contraband found"
+							if !${Entity[Name =- "Cargo Container"](exists)}
+								{
+									Item.Value:Jettison
+									echo "Jettisoning Contraband"
+									wait 50
+								}
+							else	
+							{
+								Entity[Name =- "Cargo Container"]:OpenCargo
+								Item.Value:MoveTo[${Entity[Name =- "Cargo Container"].ID}]
+								wait 20
+							}
+						}
+				}
+				while ${ittyContraband:Next(exists)}
+			}
+		}
+		while ${Item:Next(exists)}
+		MyShip:StackAllCargo	
+		EVE:GetBookmarks[MyBookmarks]
+		j:Set[1]
+		do
+		{
+			if (${MyBookmarks.Get[${j}].Label.Find["SHB"]} > 0)
+			{
+				if (!${MyBookmarks[${j}].SolarSystemID.Equal[${Me.SolarSystemID}]})
+				{
+					echo "- Setting destination and activating auto pilot for return to home base"
+					MyBookmarks[${j}]:SetDestination
+					wait 5
+					EVE:Execute[CmdToggleAutopilot]
+					do
+					{
+					   wait 50
+					   if !${Me.AutoPilotOn(exists)}
+					   {
+					     do
+					     {
+					        wait 5
+					     }
+					     while !${Me.AutoPilotOn(exists)}
+					   }
+					}
+	 				while ${Me.AutoPilotOn}
+	 				wait 20
+				}
+				else
+				{
+					;;; Warp to location
+					echo "- Warping to home base location"
+					MyBookmarks[${j}]:WarpTo
+					wait 120
+					do
+					{
+						wait 20
+					}
+					while (${Me.ToEntity.Mode} == 3)
+					wait 20
+		
+					;;; Dock, if applicable
+					if ${MyBookmarks[${j}].ToEntity(exists)}
+					{
+						if (${MyBookmarks[${j}].ToEntity.CategoryID} == 3)
+						{
+							MyBookmarks[${j}].ToEntity:Approach
+							do
+							{
+								wait 20
+							}
+							while (${MyBookmarks[${j}].ToEntity.Distance} > 50)
+		
+							MyBookmarks[${j}].ToEntity:Dock
+							Counter:Set[0]
+							do
+							{
+							   wait 20
+							   Counter:Inc[20]
+							   if (${Counter} > 200)
+							   {
+							      echo " - Docking atttempt failed ... trying again."
+							      ;EVE.Bookmark[${Destination}].ToEntity:Dock
+							      Entity[CategoryID = 3]:Dock
+							      Counter:Set[0]
+							   }
+							}
+							while (!${Me.InStation})
+						}
+					}
+				}
+			}
+	}
+	while ${j:Inc} <= ${MyBookmarks.Used}
+ 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+ 	;;; unload all "salvaged" items to hangar ;;;;;;;;;;;;;;
 	}
 
 	function FleeToSafespot()

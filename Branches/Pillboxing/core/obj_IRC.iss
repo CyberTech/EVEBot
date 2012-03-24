@@ -7,8 +7,26 @@ objectdef obj_IRC
 	variable int PulseIntervalInSeconds = 1
 
 	variable bool IsConnected = FALSE
-	variable queue:string Buffer
+	variable queue:string Buffer	
+	variable string query2 = "CategoryID = 11 && GroupID != 226 && GroupID != 784 && GroupID != 319 && GroupID != 99 && GroupID != 301 && GroupID != 446 && GroupID != 182 && GroupID != 298 && GroupID != 297 && GroupID != 288 && GroupID != 323 && GroupID != 306 && GroupID != 494"
 
+	method Report()
+	{
+		variable index:entity InRange
+		variable float Sum
+		EVE:QueryEntities[InRange, ${query2}]
+		call ChatIRC.Say "Found ${InRange.Used} entities in range. InSpace = ${Me.InSpace}. Cargo is at ${Math.Calc[${MyShip.UsedCargoCapacity}/${MyShip.CargoCapacity}*100]}% Shields are at ${MyShip.ShieldPct}%. Armor is at ${MyShip.ArmorPct}%. Speed is ${Me.ToEntity.Velocity}."
+	}
+	method ReportMishDetails()
+	{
+		call ChatIRC.Say "Correct Ammo: ${Missions.Combat.HaveMissionAmmo} Mission Name = ${Missions.MissionCache.Name[${Agents.AgentID}]} HaveMissionKey: ${Missions.HaveMissionKey} HaveMishItem = ${Missions.HaveMishItem} Room # = ${Missions.RoomCounter}"
+	}
+	method ReportLocation()
+	{
+		variable index:int Path
+		EVE:GetToDestinationPath[Path]
+		call ChatIRC.Say "Currently located in ${Universe[${Me.SolarSystemID}].Name}, Destination is ${Universe[${Path[${Path.Used}]}].Name}, jumps left is ${EVE.JumpsTo[${Path[${Path.Used}]}]}"
+	}
 
 	method Initialize()
 	{
@@ -40,11 +58,6 @@ objectdef obj_IRC
 		Event[IRC_PRIVMSGErrorResponse]:DetachAtom[This:IRC_PRIVMSGErrorResponse]
 		Event[IRC_JOINErrorResponse]:DetachAtom[This:IRC_JOINErrorResponse]
 		Event[IRC_UnhandledEvent]:DetachAtom[This:IRC_UnhandledEvent]
-
-		if ${This.IsConnected}
-		{
-			IRCUser[${Config.Common.IRCUser}]:Disconnect
-		}
 #endif
 	}
 
@@ -142,8 +155,21 @@ objectdef obj_IRC
 		; This event is fired every time that an IRCUser that you have connected
 		; receives a Channel Message.  You can do anything fancy you want with this,
 		; but, for now, we're just going to echo it to the console window.
-
-		echo "[${User.Escape} - ${Channel.Escape}] -- (${From.Escape}) ${Message.Escape}"
+		Switch ${Message.Escape}
+		{
+			case report
+				This:Report
+				break
+			case reportlocation
+				This:ReportLocation
+				break
+			case reportmish
+				This:ReportMishDetails
+				break
+			default
+				echo "[${User.Escape} - ${Channel.Escape}] -- (${From.Escape}) ${Message.Escape}"
+				break
+		}
 	}
 
 	method IRC_ReceivedPrivateMsg(string User, string From, string To, string Message)
@@ -260,7 +286,7 @@ objectdef obj_IRC
 	function Connect()
 	{
 		IRC:Connect[${Config.Common.IRCServer},${Config.Common.IRCUser}]
-
+		echo ${Config.Common.IRCServer} ${Config.Common.IRCUser} ${Config.Common.IRCChannel}
 		wait 10
 
 		IRCUser[${Config.Common.IRCUser}]:Join[${Config.Common.IRCChannel}]

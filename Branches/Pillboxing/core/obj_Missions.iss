@@ -1,4 +1,4 @@
-/*
+	/*
 	Missions class
 
 	Object to contain members related to missions.
@@ -17,7 +17,6 @@ objectdef obj_MissionCache
 
 	variable index:entity entityIndex
 	variable iterator     entityIterator
-
 	method Initialize()
 	{
 		LavishSettings[MissionCache]:Clear
@@ -26,7 +25,6 @@ objectdef obj_MissionCache
 		LavishSettings[MissionCache]:Import[${This.CONFIG_FILE}]
 		UI:UpdateConsole["obj_MissionCache: Initialized", LOG_MINOR]
 	}
-
 	method Shutdown()
 	{
 		LavishSettings[MissionCache]:Export[${This.CONFIG_FILE}]
@@ -67,6 +65,10 @@ objectdef obj_MissionCache
 	member:int TypeID(int agentID)
 	{
 		return ${This.MissionRef[${agentID}].FindSetting[TypeID,0]}
+	}
+	member:string Name(int agentID)
+	{
+		return ${This.MissionRef[${agentID}].FindSetting[Name,0]}
 	}
 
 	method SetTypeID(int agentID, int typeID)
@@ -145,14 +147,41 @@ objectdef obj_Missions
 	variable obj_MissionCache MissionCache
 ;   variable obj_MissionDatabase MissionDatabase
 	variable obj_Combat Combat
-
+	variable int RoomCounter
+	variable bool bSalvaging = TRUE
+	variable bool bWait
+	variable int MissionTimer
+	variable collection:int Keys
 	method Initialize()
 	{
 		UI:UpdateConsole["obj_Missions: Initialized", LOG_MINOR]
+		This.Combat:Initialize
+		Keys:Set["Guristas Extravaganza", 17206]
+		Keys:Set["Angel Extravaganza", 17192]
+		Keys:Set["Dread Pirate Scarlet", 2076]
+		;; set the combat "mode"
+		LavishScript:RegisterEvent[WHERE]
+		Event[WHERE]:AttachAtom[This:Where]
+		This.Combat:SetMode["AGGRESSIVE"]
 	}
 
 	method Shutdown()
 	{
+	}
+	method Where(int64 ID)
+	{
+		if ${Me.ID} == ${ID}
+		{
+			if !${Me.InSpace} && ((${This.Combat.CurrentState.Equal["FLEE"]} || ${This.Combat.CurrentState.Equal["RESTOCK"]}) && !${Me.AtHomeBase})
+			{
+				relay all Event[HERE]:Execute["0"]
+			}
+			else
+			{
+				echo "Relaying bookmarks"
+				This:RelayBookMarks
+			}
+		}
 	}
 
 	function RunMission()
@@ -168,39 +197,46 @@ objectdef obj_Missions
 		{
 			do
 			{
-				UI:UpdateConsole["obj_Missions: DEBUG: amIterator.Value.AgentID = ${amIterator.Value.AgentID}"]
-				UI:UpdateConsole["obj_Missions: DEBUG: amIterator.Value.State = ${amIterator.Value.State}"]
-				UI:UpdateConsole["obj_Missions: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}"]
-				if ${amIterator.Value.State} == 2
-				{
-					if ${amIterator.Value.Type.Find[Courier](exists)}
+					UI:UpdateConsole["obj_Missions: DEBUG: amIterator.Value.AgentID = ${amIterator.Value.AgentID}"]
+					UI:UpdateConsole["obj_Missions: DEBUG: amIterator.Value.State = ${amIterator.Value.State}"]
+					UI:UpdateConsole["obj_Missions: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}"]
+					if ${amIterator.Value.State} == 2 && ${amIterator.Value.AgentID} == ${Agents.AgentID}
 					{
-						call This.RunCourierMission ${amIterator.Value.AgentID}
+						call Agents.MissionDetails
+						if ${amIterator.Value.Type.Find[Courier](exists)}
+						{
+							call This.RunCourierMission ${amIterator.Value.AgentID}
+						}
+						elseif ${amIterator.Value.Type.Find[Trade](exists)}
+						{
+							call This.RunTradeMission ${amIterator.Value.AgentID}
+						}
+						elseif ${amIterator.Value.Type.Find[Mining](exists)}
+						{
+							call This.RunMiningMission ${amIterator.Value.AgentID}
+						}
+						elseif ${amIterator.Value.Type.Find[Encounter](exists)}
+						{
+							call This.RunCombatMission ${amIterator.Value.AgentID}
+						}
+						else
+						{
+							UI:UpdateConsole["obj_Missions: ERROR!  Unknown mission type!"]
+							Script:Pause
+						}
 					}
-					elseif ${amIterator.Value.Type.Find[Trade](exists)}
-					{
-						call This.RunTradeMission ${amIterator.Value.AgentID}
-					}
-					elseif ${amIterator.Value.Type.Find[Mining](exists)}
-					{
-						call This.RunMiningMission ${amIterator.Value.AgentID}
-					}
-					elseif ${amIterator.Value.Type.Find[Encounter](exists)}
-					{
-						call This.RunCombatMission ${amIterator.Value.AgentID}
-					}
-					else
-					{
-						UI:UpdateConsole["obj_Missions: ERROR!  Unknown mission type!"]
-						Script:Pause
-					}
-				}
 			}
 			while ${amIterator:Next(exists)}
 		}
 	}
 
-	function RunCourierMission(int agentID)
+method MoveOn()
+{
+	bWait:Set[FALSE]
+	UI:UpdateConsole["All clear received from salvager > moving on!"]
+}
+
+function RunCourierMission(int agentID)
 	{
 		variable int        QuantityRequired
 		variable string     itemName
@@ -209,13 +245,15 @@ objectdef obj_Missions
 		variable bool       allDone = FALSE
 		variable index:item CargoIndex
 		variable iterator   CargoIterator
+		variable index:item HangItems
+		variable iterator Items
 		variable int        TypeID
 		variable int        ItemQuantity
 
 		call Cargo.CloseHolds
 		call Cargo.OpenHolds
 
-	    Agents:SetActiveAgent[${Agent[id, ${agentID}].Name}]
+		Agents:SetActiveAgent[${Agent[id, ${agentID}].Name}]
 
 		if ${This.MissionCache.Volume[${agentID}]} == 0
 		{
@@ -252,9 +290,24 @@ objectdef obj_Missions
 				UI:UpdateConsole["obj_Missions: MoveToPickup"]
 				call Agents.MoveToPickup
 				UI:UpdateConsole["obj_Missions: TransferCargoToShip"]
+				EVE:Execute[OpenHangarFloor]
 				wait 50
-				call Cargo.TransferHangarItemToShip ${This.MissionCache.TypeID[${agentID}]}
-				allDone:Set[${Cargo.LastTransferComplete}]
+				;call Cargo.TransferHangarItemToShip ${This.MissionCache.TypeID[${agentID}]}
+				;allDone:Set[${Cargo.LastTransferComplete}]
+				Me.Station:GetHangarItems[HangItems]
+				HangItems:GetIterator[Items]
+				if ${Items:First(exists)}
+				{
+					do
+					{
+						if ${Items.Value.TypeID} == ${This.MissionCache.TypeID[${Agents.AgentID}]}
+						{
+							UI:UpdateConsole["Found '${Items.Value.Name}', transferring to ship."]
+							Items.Value:MoveTo[${MyShip.ID},CargoHold]
+						}
+					}
+					while ${Items:Next(exists)}
+				}
 			}
 
 			UI:UpdateConsole["obj_Missions: MoveToDropOff"]
@@ -265,7 +318,7 @@ objectdef obj_Missions
 			call Cargo.OpenHolds
 
 			UI:UpdateConsole["DEBUG: RunCourierMission: Checking ship's cargohold for ${QuantityRequired} units of ${itemName}."]
-			Me.Ship:GetCargo[CargoIndex]
+			MyShip:GetCargo[CargoIndex]
 			CargoIndex:GetIterator[CargoIterator]
 			if ${CargoIterator:First(exists)}
 			{
@@ -406,10 +459,10 @@ objectdef obj_Missions
 		;;;  Try to buy the item
 		if ${haveCargo} == FALSE
 		{
-		  	if ${Station.Docked}
-		  	{
-			 	call Station.Undock
-		  	}
+			if ${Station.Docked}
+			{
+				call Station.Undock
+			}
 
 			call Market.GetMarketOrders ${This.MissionCache.TypeID[${agentID}]}
 			call Market.FindBestWeightedSellOrder ${Config.Missioneer.AvoidLowSec} ${quantity}
@@ -443,288 +496,335 @@ objectdef obj_Missions
 	}
 
 	function RunCombatMission(int agentID)
-	{
-		call Ship.ActivateShip "${Config.Missioneer.CombatShip}"
-		wait 10
-		call This.WarpToEncounter ${agentID}
-		wait 50
-
-;       do
-;       {
-;            EVE:QueryEntities[entityIndex, "TypeID = TYPE_ACCELERATION_GATE"]
-;            call Ship.Approach ${entityIndex.Get[1].ID} JUMP_RANGE
-;            entityIndex.Get[1]:Activate
-;        }
-;        while ${entityIndex.Used} == 1
-
-		UI:UpdateConsole["obj_Missions: DEBUG: ${Ship.Type} (${Ship.TypeID})"]
-		switch ${Ship.TypeID}
+	{	
+		if !${Combat.HaveMissionAmmo}
 		{
-			case TYPE_PUNISHER
-				call This.PunisherCombat ${agentID}
-				break
-			case TYPE_HAWK
-				call This.HawkCombat ${agentID}
-				break
-			case TYPE_KESTREL
-				call This.KestrelCombat ${agentID}
-				break
-			case TYPE_RAVEN
-				call This.RavenCombat ${agentID}
-				break
-			default
-				UI:UpdateConsole["obj_Missions: WARNING!  Unknown Ship Type."]
-				call This.DefaultCombat ${agentID}
-				break
+			UI:UpdateConsole["We have the wrong ammo for mission, heading to nearest ammo bookmark."]
+			call Combat.RestockAmmo
 		}
-
+		else
+		{
+			UI:UpdateConsole["We have correct ammo for our mission."]
+		}
+		call This.GetMissionKey
+		UI:UpdateConsole["Starting combat mission now."]
+		call ChatIRC.Say "${Me.Name}: Starting new mission. Name = ${This.MissionCache.Name[${Agents.AgentID}]}"
+		;call Ship.ActivateShip "${Config.Missioneer.CombatShip}"
+		;wait 10
+		call This.WarpToEncounter ${Agents.AgentID}
+		wait 100
+		while ${Me.AutoPilotOn}
+		{
+			UI:UpdateConsole["Activating autopilot."]
+		}
+		call This.StartMish ${Agents.AgentID}
+		UI:UpdateConsole["Mission complete! Heading home to turn in!"]
 		call This.WarpToHomeBase ${agentID}
 		wait 50
-		UI:UpdateConsole["obj_Missions: TurnInMission"]
 		call Agents.TurnInMission
 	}
 
-	function DefaultCombat(int agentID)
+	function StartMish(int agentID)
 	{
-		UI:UpdateConsole["obj_Missions: Paused Script.  Complete mission manually and then run the script."]
-		Script:Pause
-	}
-
-	function PunisherCombat(int agentID)
-	{
-		UI:UpdateConsole["obj_Missions: Paused Script.  Complete mission manually and then run the script."]
-		Script:Pause
-	}
-
-	function RavenCombat(int agentID)
-	{
-		UI:UpdateConsole["obj_Missions: Paused Script.  Complete mission manually and then run the script."]
-		Script:Pause
-	}
-	function HawkCombat(int agentID)
-	{
-		wait 100
-		while ${This.TargetNPCs} && ${Social.IsSafe}
-		{
-			This.Combat:SetState
-			call This.Combat.ProcessState
-			wait 10
-		}
-	}
-
-	function KestrelCombat(int agentID)
-	{
-	  variable bool missionComplete = FALSE
-	  variable time breakTime
-
-	  while !${missionComplete}
-	  {
+	UI:UpdateConsole["obj_Missions: DEBUG: Calling mission start"]
+	MissionTimer:Set[${Script.RunningTime}]
+	variable bool missionComplete = FALSE
+	variable time breakTime = ${Time.Timestamp}
+	variable int Counter = 1
+	variable int64 GateToUse
+	variable int Offset = ${This.CorpBMCount}
+	RoomCounter:Set[0]
 		 ; wait up to 15 seconds for spawns to appear
-		 breakTime:Set[${Time.Timestamp}]
-		 breakTime.Second:Inc[15]
-		 breakTime:Update
-
-		 while TRUE
-		 {
-			if ${This.HostileCount} > 0
+	breakTime:Set[${Time.Timestamp}]
+	if ${This.MissionCache.Name[${Agents.AgentID}].Equal["Attack of the Drones"]}
+	{
+		breakTime.Second:Inc[60]
+	}
+	else
+	{
+		breakTime.Second:Inc[15]		
+	}
+	breakTime:Update
+	;while TRUE
+;	{
+	do
+	{
+		while !${Targets.TargetNPCs}
+		{
+		   if ${Time.Timestamp} >= ${breakTime.Timestamp}
+		   {
+		   		UI:UpdateConsole["No rats found in timeout time, moving on."]
+				break    
+		   }
+		   wait 10
+		}
+		if ${Targets.TargetNPCs}
+		{
+			if ${Me.TargetCount} > 0
 			{
-			   break
+				Combat:SetState
 			}
-
-			if ${Time.Timestamp} >= ${breakTime.Timestamp}
+			while ${Targets.TargetNPCs} && ${Me.TargetCount} > 0
 			{
-			   break
-			}
-
-			wait 1
-		 }
-
-		 if ${This.HostileCount} > 0
-		 {
-			; wait up to 15 seconds for agro
-			breakTime:Set[${Time.Timestamp}]
-			breakTime.Second:Inc[15]
-			breakTime:Update
-
-			while TRUE
-			{
-			   if ${Me.TargetedByCount} > 0
+				
+			   if ${This.Combat.CurrentState.Equal["FIGHT"]}
 			   {
-				  break
-			   }
-
-			   if ${Time.Timestamp} >= ${breakTime.Timestamp}
-			   {
-				  break
-			   }
-
-			   wait 1
-			}
-
-			while ${This.HostileCount} > 0
-			{
-			   if ${Me.TargetedByCount} > 0 || ${Math.Calc[${Me.TargetingCount}+${Me.TargetCount}]} > 0
-			   {
-				  call This.TargetAgressors
+					if ${Targets.ToTarget.Used} > 0 && ${Entity[${Targets.ToTarget[1]}].IsActiveTarget}
+					{
+						call This.Combat.ProcessState
+					}
+					elseif ${Targets.ToTarget.Used} == 0 || !${Entity[${Targets.ToTarget[1]}](exists)}
+					{
+						call This.Combat.ProcessState
+					}
 			   }
 			   else
 			   {
-				  call This.PullTarget
+				   	if !${Combat.CurrentState.Equal["RESTOCK"]}
+				   	{
+						Combat:SetState
+						UI:UpdateConsole["Setting state on combat!"]
+					}
 			   }
-
-			   This.Combat:SetState
-			   call This.Combat.ProcessState
-
-			   wait 1
+			   wait 20
+			}
+		} 
+		elseif ((${This.MissionCache.Volume[${Agents.AgentID}]} > 0 && !${This.GatePresent}) || (!${This.HaveMissionKey} && ${RoomCounter} == 0)) && ((${Entity[GroupID = "12" || GroupID = "306" || Name =- "Rolette Residence"](exists)}) && (!${This.HaveMishItem} || !${This.HaveMissionKey}))
+		; this check should be incorporated into if statement
+		{
+			variable index:entity Ents
+			variable iterator Ent
+			variable index:item   Items
+			variable iterator   Item
+			EVE:QueryEntities[Ents, GroupID = "12" || GroupID = "306" || Name =- "Rolette"]
+			UI:UpdateConsole["Found ${Ents.Used} entities in total to loot."]
+			Ents:GetIterator[Ent]
+			UI:UpdateConsole["Looting ${This.MissionCache.TypeID[${agentID}]}"]
+			if ${Ent:First(exists)}
+			{
+				do
+				{
+						while ${Ent.Value.Distance} > 2500 && ${Ent.Value(exists)}
+						{
+							wait 100
+							if ${Me.ToEntity.Mode} != 1 || !${Ent.Value.Approaching}
+							{
+								Ent.Value:Approach
+								UI:UpdateConsole["Approaching ${Ent.Value.Name}"]
+							}
+							UI:UpdateConsole["Waiting until arrival at ${Ent.Value.Name}"]
+						}
+						Ent.Value:OpenCargo
+						wait 10
+						call Ship.OpenCargo
+						wait 10
+						Ent.Value:GetCargo[Items]
+						Items:GetIterator[Item]
+						if ${Item:First(exists)}
+						{
+							do
+							{
+								if ${This.MissionCache.Name[${agentID}].Equal["Dread Pirate Scarlet"]}
+								{
+									Item.Value:MoveTo[${MyShip.ID},CargoHold]
+									break
+								}
+								if ${Item.Value.TypeID} == ${This.MissionCache.TypeID[${agentID}]}
+								{
+									UI:UpdateConsole["Found mission item: Looting!"]
+									Item.Value:MoveTo[${MyShip.ID},CargoHold]
+									wait 10
+									breakTime:Set[${Time.Timestamp}]
+									breakTime.Second:Inc[15]
+									breakTime:Update
+									if ${bSalvaging}
+									{
+										if !${This.BookmarkExists}
+										{
+											UI:UpdateConsole["Bookmarking closest entity now."]
+											Entity["GroupID = 186"]:CreateBookmark["Salvage","S","Corporation Locations"]
+										}			
+										break
+									}
+								}
+							}
+							while ${Item:Next(exists)}
+						}
+				}
+				while ${Ent:Next(exists)}       
 			}
 		}
-		elseif ${This.MissionCache.TypeID[${agentID}]} && ${This.ContainerCount} > 0
+		elseif ${This.GatePresent} && (${RoomCounter} < 5 || ${This.HaveMissionKey}) && !${Targets.TargetNPCs} 
 		{
-			/* loot containers */
-		}
-		elseif ${This.GatePresent}
-		{
+			if ${Entity["TypeID = TYPE_ACCELERATION_GATE"].Name.Equal["Gate To The Serpentis Base"]}
+			{
+				GateToUse:Set[${Entity["TypeID = TYPE_ACCELERATION_GATE && Distance > ${Entity["TypeID = TYPE_ACCELERATION_GATE"].Distance}"].ID}]
+			}
+			else
+			{
+				GateToUse:Set[${Entity["TypeID = TYPE_ACCELERATION_GATE"].ID}]
+			}
+			EVE:Execute[CmdDronesReturnToBay]
+			if !${This.BookmarkExists}
+			{
+				UI:UpdateConsole["Bookmarking closest entitity now."]
+				Entity["GroupID = 186 || GroupID = 12"]:CreateBookmark["Salvage","S","Corporation Locations"]
+			}				
+			UI:UpdateConsole["No Entities found, moving to next room. ${Entity["TypeID = TYPE_ACCELERATION_GATE"].Name} found."]
+			Entity[${GateToUse}]:Approach[1500]
+			while ${Entity[${GateToUse}].Distance} > 2000
+			{
+				wait 45
+			}
+			call Ship.WarpPrepare
 			/* activate gate and go to next room */
-			call Ship.Approach ${Entity["TypeID = TYPE_ACCELERATION_GATE"].ID} DOCKING_RANGE
 			wait 10
-			UI:UpdateConsole["Activating Acceleration Gate..."]
-			while !${This.WarpEntered}
+			if ${Entity[${GateToUse}].Distance} < 2500
 			{
-			   Entity["TypeID = TYPE_ACCELERATION_GATE"]:Activate
-			   wait 10
+			   	UI:UpdateConsole["Activating Acceleration Gate..."]
+			   	Entity[${GateToUse}]:Activate
+				while ${Me.ToEntity.Mode} != 3
+				{
+					Entity[${GateToUse}]:Activate
+				}
+				wait 10
+				RoomCounter:Inc
+				UI:UpdateConsole["Room Number: ${RoomCounter}"]
+				call ChatIRC.Say "${Me.Name}: Moving rooms, now entering ${RoomCounter}"
+				call Ship.WarpWait
+				breakTime:Set[${Time.Timestamp}]
+				breakTime.Second:Inc[15]
+				breakTime:Update
 			}
-			call Ship.WarpWait
-			if ${Return} == 2
+		}
+		elseif ${Me.ToEntity.Mode} == 3
+		{
+				wait 5
+		}
+		else
+		{
+				
+			if !${Target.TargetNPCs} && ${This.HaveMishItem}
 			{
-			   return
+				if !${This.Combat.CurrentState.Equal["FLEE"]} && !${This.Combat.CurrentState.Equal["RESTOCK"]}
+				{
+					if ${bSalvaging} && ${Me.InSpace}
+					{
+						if !${This.BookmarkExists}
+						{
+							UI:UpdateConsole["Bookmarking closest entity now."]
+							Entity["GroupID = 186 || GroupID = 12"]:CreateBookmark["Salvage","S","Corporation Locations"]
+						}			
+						echo ${This.HaveMishItem}
+						missionComplete:Set[TRUE]
+					}
+					else
+					{
+						missionComplete:Set[TRUE]
+						UI:UpdateConsole["${This.Combat.CurrentState}"]
+					}
+				}
+				else
+				{
+					call This.WarpToEncounter ${Agents.AgentID}
+					RoomCounter:Set[0]
+				}
+			}		
+		}                         
+		wait 1
+	}
+		while !${missionComplete}
+		MissionTimer:Set[${Math.Calc[${Script.RunningTime}-${MissionTimer}]}]
+		MissionTimer:Set[${Math.Calc[${MissionTimer}/60000]}]
+		call ChatIRC.Say "Finished mission, heading to active agent for new one. This mission took ${MissionTimer} minutes and ${Math.Calc[${MissionTimer}%60]} seconds. :O"
+		;I should probably do some actual logging and stuff, as well as assigning this to a cleaner algrothim, however for the time being I'll fix this if it doesn't work and leave it as is.
+		
+	}
+	member:bool HaveMissionKey()
+	{
+		variable index:item Items
+		variable uint querie = ${LavishScript.CreateQuery[TypeID != "${Keys.Element[${This.MissionCache.Name[${Agents.AgentID}]}]}"]}
+		if ${Keys.Element[${This.MissionCache.Name[${Agents.AgentID}]}]} > 0
+		{
+			MyShip:GetCargo[Items]
+			if ${Items.Used} == 0
+			{
+				UI:UpdateConsole["HaveMissionKey: No items found in cargo, we have to return false"]
+				return FALSE
+			}
+			Items:RemoveByQuery[${querie}]
+			Items:Collapse
+			if ${Items.Used} > 0
+			{
+				UI:UpdateConsole["We have key in cargo, time for a spot of tea old chap."]
+				return TRUE
+			}
+			else
+			{
+				return FALSE
 			}
 		}
 		else
 		{
-			missionComplete:Set[TRUE]
-		}
-
-		wait 1
+			return TRUE
 		}
 	}
 
-   function TargetAgressors()
-   {
-	  variable index:entity targetIndex
-	  variable iterator     targetIterator
-
-	  EVE:QueryEntities[targetIndex, "CategoryID = CATEGORYID_ENTITY"]
-	  targetIndex:GetIterator[targetIterator]
-
-	  UI:UpdateConsole["TargetingCount = ${Me.TargetingCount}, TargetCount = ${Me.TargetCount}"]
-	  if ${targetIterator:First(exists)}
-	  {
-		 do
-		 {
-			if ${targetIterator.Value.IsTargetingMe} && \
-			   !${targetIterator.Value.BeingTargeted} && \
-			   !${targetIterator.Value.IsLockedTarget} && \
-			   ${Ship.SafeMaxLockedTargets} > ${Math.Calc[${Me.TargetingCount}+${Me.TargetCount}]}
+	function GetMissionKey()
+	{
+		variable index:item Items
+		variable uint querie = ${LavishScript.CreateQuery[TypeID != "${Keys.Element[${This.MissionCache.Name[${Agents.AgentID}]}]}"]}
+		if ${Keys.Element[${This.MissionCache.Name[${Agents.AgentID}]}]} > 0
+		{
+			MyShip:GetCargo[Items]
+			Items:RemoveByQuery[${querie}]
+			Items:Collapse
+			if ${Items.Used} > 0
 			{
-			   if ${targetIterator.Value.Distance} > ${Ship.OptimalTargetingRange}
-			   {
-				  Ship:Activate_AfterBurner
-				  targetIterator.Value:Approach
-				  wait 10
-			   }
-			   else
-			   {
-				  EVE:Execute[CmdStopShip]
-				  Ship:Deactivate_AfterBurner
-				  targetIterator.Value:LockTarget
-				  wait 10
-			   }
+				UI:UpdateConsole["We have key in cargo already, time for a spot of tea old chap."]
 			}
-		 }
-		 while ${targetIterator:Next(exists)}
-	  }
-   }
-
-   function PullTarget()
-   {
-	  variable index:entity targetIndex
-	  variable iterator     targetIterator
-
-	  EVE:QueryEntities[targetIndex, "CategoryID = CATEGORYID_ENTITY"]
-	  targetIndex:GetIterator[targetIterator]
-
-	  /* FOR NOW just pull the closest target */
-	  if ${targetIterator:First(exists)}
-	  {
-		 do
-		 {
-			switch ${targetIterator.Value.GroupID}
+			else
 			{
-			   case GROUP_LARGECOLLIDABLEOBJECT
-			   case GROUP_LARGECOLLIDABLESHIP
-			   case GROUP_LARGECOLLIDABLESTRUCTURE
-				  continue
-
-			   default
-				  if ${targetIterator.Value.Distance} > ${Ship.OptimalTargetingRange}
-				  {
-					 Ship:Activate_AfterBurner
-					 targetIterator.Value:Approach
-				  }
-				  else
-				  {
-					 EVE:Execute[CmdStopShip]
-					 Ship:Deactivate_AfterBurner
-					 targetIterator.Value:LockTarget
-					 wait 10
-					 return
-				  }
-				  break
+				if !${Me.InSpace}
+				{
+					UI:UpdateConsole["Not in space, and the key wasn't found in cargo, so I shall look in the hangar old bean."]
+					Items:Clear
+					Me.Station:GetHangarItems[Items]
+					UI:UpdateConsole["Found ${Items.Used} items in hangar."]
+					Items:RemoveByQuery[${query}]
+					if ${Items.Used} > 0
+					{
+						UI:UpdateConsole["Found key in hangar, moving to cargo"]
+						Items[1]:MoveTo[${MyShip.ID},CargoHold]
+					}
+					else
+					{
+						UI:UpdateConsole["No key found in hangar, moving on!"]
+					}
+				}
 			}
-		 }
-		 while ${targetIterator:Next(exists)}
-	  }
-   }
+		}
+		else
+		{
+			UI:UpdateConsole["No key needed old chap, no big deal. ${This.MissionCache.Name[${Agents.AgentID}]}"]
+		}
+	}
 
-   member:int HostileCount()
-   {
-	  variable index:entity targetIndex
-	  variable iterator     targetIterator
-	  variable int          targetCount = 0
-
-	  EVE:QueryEntities[targetIndex, "CategoryID = CATEGORYID_ENTITY"]
-	  targetIndex:GetIterator[targetIterator]
-
-	  if ${targetIterator:First(exists)}
-	  {
-		 do
-		 {
-			switch ${targetIterator.Value.GroupID}
-			{
-			   case GROUP_LARGECOLLIDABLEOBJECT
-			   case GROUP_LARGECOLLIDABLESHIP
-			   case GROUP_LARGECOLLIDABLESTRUCTURE
-				  continue
-
-			   default
-				  targetCount:Inc
-				  break
-			}
-		 }
-		 while ${targetIterator:Next(exists)}
-	  }
-
-	  return ${targetCount}
-   }
-
-   member:int ContainerCount()
-   {
-	  return 0
-   }
 
    member:bool GatePresent()
    {
-	  return ${Entity["TypeID = TYPE_ACCELERATION_GATE"](exists)}
+   		if ${Entity["TypeID = TYPE_ACCELERATION_GATE"](exists)}
+   		{
+   			if ${Entity["TypeID = TYPE_ACCELERATION_GATE"].Name.Equal["Gate to the Warzone"]}
+   			{
+   				UI:UpdateConsole["Gate to the warzone found, TOTALLY IGNORING IT."]
+	  			return FALSE
+	  		}
+	  		else
+	  		{
+	  			return ${Entity["TypeID = TYPE_ACCELERATION_GATE"](exists)}
+	  		}
+	  }
    }
 
 	function WarpToEncounter(int agentID)
@@ -741,7 +841,7 @@ objectdef obj_Missions
 		{
 			do
 			{
-				if ${amIterator.Value.AgentID} == ${agentID}
+				if ${amIterator.Value.AgentID} == ${Agents.AgentID}
 				{
 					amIterator.Value:GetBookmarks[mbIndex]
 					mbIndex:GetIterator[mbIterator]
@@ -752,8 +852,27 @@ objectdef obj_Missions
 						{
 							if ${mbIterator.Value.LocationType.Equal["dungeon"]}
 							{
-								call Ship.WarpToBookMark ${mbIterator.Value.ID}
-								return
+								if ${mbIterator.Value.Distance} > 80000000 || !${mbIterator.Value.Distance(exists)}
+								{
+									while ${mbIterator.Value.Distance} > 80000000 || !${mbIterator.Value.Distance(exists)}
+									{
+										if ${mbIterator.Value.ID.Equal[-1]}
+										{
+											UI:UpdateConsole["NULL Bookmark found, calling WarpToEncounter again and then breaking this version"]
+											call This.WarpToEncounter ${Agents.AgentID}
+											return
+										}
+										if !${mbIterator.Value.ID.Equal[-1]}
+										{
+											call Ship.WarpToBookMark ${mbIterator.Value.ID}
+										}
+									}
+									return
+								}
+								else
+								{
+									UI:UpdateConsole["We're probably already at mission, not warping this time old chap."]
+								}
 							}
 						}
 						while ${mbIterator:Next(exists)}
@@ -764,13 +883,57 @@ objectdef obj_Missions
 		}
 	}
 
-	function WarpToHomeBase(int agentID)
+	member:bool BookmarkExists()
+	{
+		variable index:bookmark BookmarksForMeToPissOn
+		variable iterator BookmarkIter
+		EVE:GetBookmarks[BookmarksForMeToPissOn]
+		BookmarksForMeToPissOn:RemoveByQuery[${LavishScript.CreateQuery[OwnerID != "${Me.Corp.ID}"]}]
+		BookmarksForMeToPissOn:Collapse
+		BookmarksForMeToPissOn:GetIterator[BookmarkIter]
+		if ${BookmarkIter:First(exists)}
+		{
+			do
+			{
+				if ${BookmarkIter.Value.Distance} < 500000
+				{
+					return TRUE
+				}
+			}
+			while ${BookmarkIter:Next(exists)}
+		}
+		return FALSE
+	}
+
+	method RelayBookMarks()
+	{
+		variable index:bookmark BookmarksForMeToPissOn
+		variable string BM
+		variable iterator BookmarkIter
+		EVE:GetBookmarks[BookmarksForMeToPissOn]
+		BookmarksForMeToPissOn:RemoveByQuery[${LavishScript.CreateQuery[CreatorID != "${Me.ID}" && OwnerID != "${Me.Corp.ID}" && (Distance < "200000000" && Distance != "NULL")]}]
+		BookmarksForMeToPissOn:Collapse
+		BookmarksForMeToPissOn:GetIterator[BookmarkIter]
+		if ${BookmarkIter:First(exists)}
+		{
+			UI:UpdateConsole["Found BM at distance ${BookmarkIter.Value.Distance}"]
+			BM:Set[${BookmarkIter.Value.ID}]
+			BookmarkIter:Next
+			do
+			{
+				BM:Concat[",${BookmarkIter.Value.ID}"]
+			}
+			while ${BookmarkIter:Next(exists)}
+		}
+		relay all Event[HERE]:Execute[${BM}]
+	}
+
+	member:bool AtHomeBase()
 	{
 		variable index:agentmission amIndex
 		variable index:bookmark mbIndex
 		variable iterator amIterator
 		variable iterator mbIterator
-
 		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
@@ -778,7 +941,7 @@ objectdef obj_Missions
 		{
 			do
 			{
-				if ${amIterator.Value.AgentID} == ${agentID}
+				if ${amIterator.Value.AgentID} == ${Agents.AgentID}
 				{
 					amIterator.Value:GetBookmarks[mbIndex]
 					mbIndex:GetIterator[mbIterator]
@@ -791,7 +954,66 @@ objectdef obj_Missions
 							if ${mbIterator.Value.LocationType.Equal["agenthomebase"]} || \
 							   ${mbIterator.Value.LocationType.Equal["objective"]}
 							{
-								call Ship.WarpToBookMark ${mbIterator.Value.ID}
+								if ${mbIterator.Value.ItemID.Equal[${Me.Station.ID}]}
+								{
+									return TRUE
+								}
+							}
+						}
+						while ${mbIterator:Next(exists)}
+					}
+				}
+			}
+			while ${amIterator:Next(exists)}
+		}
+		else
+		{
+			UI:UpdateConsole["obj_Missions:AtHomeBase: No Missions found."]
+		}
+		return FALSE
+	}
+	function WarpToHomeBase()
+	{
+		variable index:agentmission amIndex
+		variable index:bookmark mbIndex
+		variable iterator amIterator
+		variable iterator mbIterator
+		EVE:GetAgentMissions[amIndex]
+		amIndex:GetIterator[amIterator]
+		if ${amIterator:First(exists)}
+		{
+			do
+			{
+				if ${amIterator.Value.AgentID} == ${Agents.AgentID}
+				{
+					amIterator.Value:GetBookmarks[mbIndex]
+					mbIndex:GetIterator[mbIterator]
+
+					if ${mbIterator:First(exists)}
+					{
+						do
+						{
+							UI:UpdateConsole["obj_Agents: DEBUG: mbIterator.Value.LocationType = ${mbIterator.Value.LocationType}"]
+							if ${mbIterator.Value.LocationType.Equal["agenthomebase"]} || \
+							   ${mbIterator.Value.LocationType.Equal["objective"]}
+							{
+								while !${This.AtHomeBase}
+								{
+									if ${mbIterator.Value.ID} < 0
+									{
+										UI:UpdateConsole["NULL bookmark found, calling WarpToHomeBase again and then terminating this thread."]
+										call This.WarpToHomeBase
+										return
+									}
+									UI:UpdateConsole["Warping to ${mbIterator.Value.ID} shouldn't happen more than once but we'll see. "]
+									call Ship.WarpToBookMark ${mbIterator.Value.ID}
+								}
+								;mbIterator.Value:SetDestination
+								;EVE:Execute[CmdToggleAutopilot]
+								;while ${Me.AutoPilotOn} && ${Me.Station} != ${mbIterator.Value.ItemID}
+								;{
+								;	wait 100
+								;}
 								return
 							}
 						}
@@ -803,124 +1025,17 @@ objectdef obj_Missions
 		}
 	}
 
-	member:bool TargetStructures(int agentID)
-	{
-		variable index:entity Targets
-		variable iterator Target
-		variable bool HasTargets = FALSE
-
-	  UI:UpdateConsole["DEBUG: TargetStructures"]
-
-		if ${Me.Ship.MaxLockedTargets} == 0
-		{
-			UI:UpdateConsole["Jammed, cant target..."]
-			return TRUE
-		}
-
-		EVE:QueryEntities[Targets, "GroupID = GROUP_LARGECOLLIDABLESTRUCTURE"]
-		Targets:GetIterator[Target]
-
-		if ${Target:First(exists)}
-		{
-		   do
-		   {
-			if ${Me.TargetedByCount} > 0 && ${Target.Value.IsLockedTarget}
-			{
-				   Target.Value:UnlockTarget
-			}
-			   elseif ${This.SpecialStructure[${agentID},${Target.Value.Name}]} && \
-				 !${Target.Value.IsLockedTarget} && !${Target.Value.BeingTargeted}
-			   {
-				  variable int OrbitDistance
-				  OrbitDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.40/1000].Round}]
-				  OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
-				  Target.Value:Orbit[${OrbitDistance}]
-
-				   if ${Me.TargetCount} < ${Ship.MaxLockedTargets}
-				   {
-					   UI:UpdateConsole["Locking ${Target.Value.Name}"]
-					   Target.Value:LockTarget
-				   }
-			   }
-
-			   ; Set the return value so we know we have targets
-			   HasTargets:Set[TRUE]
-		   }
-		   while ${Target:Next(exists)}
-	  }
-
-		return ${HasTargets}
-	}
-
-	member:bool TargetNPCs()
-	{
-		variable index:entity Targets
-		variable iterator Target
-		variable bool HasTargets = FALSE
-
-		if ${Me.Ship.MaxLockedTargets} == 0
-		{
-			UI:UpdateConsole["Jammed, cant target..."]
-			return TRUE
-		}
-
-		EVE:QueryEntities[Targets, "CategoryID = CATEGORYID_ENTITY"]
-		Targets:GetIterator[Target]
-
-		if ${Target:First(exists)}
-		{
-		   do
-		   {
-			switch ${Target.Value.GroupID}
-			{
-			   case GROUP_LARGECOLLIDABLEOBJECT
-			   case GROUP_LARGECOLLIDABLESHIP
-			   case GROUP_LARGECOLLIDABLESTRUCTURE
-				  continue
-
-			   default
-				  break
-			}
-
-			   if !${Target.Value.IsLockedTarget} && !${Target.Value.BeingTargeted}
-			   {
-				   if ${Me.TargetCount} < ${Ship.MaxLockedTargets}
-				   {
-					   UI:UpdateConsole["Locking ${Target.Value.Name}"]
-					   Target.Value:LockTarget
-				   }
-			   }
-
-			   ; Set the return value so we know we have targets
-			   HasTargets:Set[TRUE]
-		   }
-		   while ${Target:Next(exists)}
-	  }
-
-		if ${HasTargets} && ${Me.ActiveTarget(exists)}
-		{
-			variable int OrbitDistance
-			OrbitDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.40/1000].Round}]
-			OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
-			Me.ActiveTarget:Orbit[${OrbitDistance}]
-		}
-
-		return ${HasTargets}
-	}
-
-   member:bool SpecialStructure(int agentID, string name)
+   member:bool HaveMishItem()
    {
-	  if ${This.MissionCache.Name[${agentID}](exists)}
-	  {
-		 if ${This.MissionCache.Name.Equal["avenge a fallen comrade"]} && \
-			${name.Equal["habitat"]}
-		 {
+		variable index:item cargo
+		MyShip:GetCargo[cargo]
+		cargo:RemoveByQuery[${LavishScript.CreateQuery[TypeID != "${This.MissionCache.TypeID[${Agents.AgentID}]}"]}]
+		cargo:Collapse
+		if ${cargo.Used} > 0 || ${This.MissionCache.Volume[${Agents.AgentID}]} == 0 
+		{
+			UI:UpdateConsole["Found mish item in cargo or no mish required for mission."]
 			return TRUE
-		 }
-		 ; elseif {...}
-		 ; etc...
-	  }
-
-	  return FALSE
+		}
+		return FALSE
    }
 }
