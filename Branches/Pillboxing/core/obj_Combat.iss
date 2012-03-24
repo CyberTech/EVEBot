@@ -195,6 +195,8 @@ objectdef obj_Combat
 			 	AmmoGroup:Set[89]
 			case 510
 				AmmoGroup:Set[385]
+			case 74
+				AmmoGroup:Set[85]
 		}
 		variable index:item ContainerItems
 		variable iterator CargoIterator	
@@ -212,6 +214,19 @@ objectdef obj_Combat
 		ContainerItems:RemoveByQuery[${LavishScript.CreateQuery[GroupID != "${AmmoGroup}"]}]
 		ContainerItems:Collapse
 		UI:UpdateConsole["Found ${ContainerItems.Used} ammo stacks suitable for this weapon"]
+		;This needs to be more advanced that it is now, but for now we won't select ammo type based on fuck all except groupID
+		if ${AmmoGroup.Equal[85]}
+		{
+			if ${ContainerItems.Used} > 0
+			{
+				return ${ContainerItems[1].TypeID}
+			}
+			else
+			{
+				UI:UpdateConsole["No items found to reload with, returning -1"]
+				return -1
+			}
+		}
 		if ${MishDB.Element[${mission}]} > 0
 		{
 			UI:UpdateConsole["Found ${mission} in MishDB, damage type is ${MishDB.Element[${mission}]}"]
@@ -403,6 +418,7 @@ objectdef obj_Combat
 		}
 	}
 
+
 	function Fight()
 	{
 		Ship:Deactivate_Cloak
@@ -447,24 +463,15 @@ objectdef obj_Combat
 			Ship:Activate_TargetPainters
 			Ship:Activate_StasisWebs
 			Ship:Activate_Weapons
-			if ${Me.ActiveTarget(exists)} && ${Me.ActiveTarget.ShieldPct} > 90
+			if ${Me.ActiveTarget(exists)} && ${Me.ActiveTarget.ShieldPct} > 80
 			{
-				if ${DroneTimer.Timestamp.Equal[NULL]}
-				{
-					DroneTimer:Set[${Time.Timestamp}]
-					DroneTimer.Second:Inc[15]
-					DroneTimer:Update
-				}
-				if ${Me.ActiveTarget.Radius} < 100
+				if ${Me.ActiveTarget.Radius} < 100 && ${Ship.Drones.DronesOut} > 10
 				{
 					UI:UpdateConsole["Active target is a frigate for sure, switching to smaller drones"]
-					;Should probably add some proper checking for other reasons that might be affecting this...(definitely a check to see if we even have sentry drones out)
+					call Ship.Drones.ReturnAllToDroneBay
+					Ship.Drones:LaunchLightDrones
+					;might have to fix
 				}
-			}
-			else
-			{
-				UI:UpdateConsole["Resetting drone timer."]
-				DroneTimer:Set[NULL]
 			}
 			Ship.Drones:SendDrones
 		}

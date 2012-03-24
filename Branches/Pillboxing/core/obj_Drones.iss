@@ -115,6 +115,27 @@ objectdef obj_Drones
 	method LaunchLightDrones()
 	{
 		;These methods can't really return drones, since returndrones is a function, we can't have waits, etc
+		variable index:item ListOfDrones
+		variable iterator itty
+		MyShip:GetDrones[ListOfDrones]
+		ListOfDrones:RemoveByQuery[${LavishScript.CreateQuery[Volume > "10"]}]
+		ListOfDrones:Collapse
+		if ${ListOfDrones.Used} > 0
+		{	
+			ListOfDrones:GetIterator[itty]
+			itty:First
+			do
+			{
+				UI:UpdateConsole["Launching ${itty.Value.Name}."]
+				itty.Value:Launch
+			}
+			while ${itty:Next(exists)}
+		}
+		else
+		{
+			UI:UpdateConsole["No light drones in bay"]
+			;We should probably flee here and restock drones, hopefully no one loses a ship before this becomes a problem, but it shouldn't unless our secondary drones are popped in mission
+		}
 	}
 
 	method LaunchAll()
@@ -144,10 +165,11 @@ objectdef obj_Drones
 						{
 							UI:UpdateConsole["Launching Sentry Drone: ${itty.Value.Name}."]
 							itty.Value:Launch
-							Count:Increase
+							Count:Inc
 						}
 					}
 					while ${itty:Next(exists)}
+					This.WaitingForDrones:Set[5]
 				}
 				else
 				{
@@ -264,6 +286,21 @@ objectdef obj_Drones
 				break
 			}
 			wait 50
+		}
+	}
+
+	member:int DronesOut()
+	{
+		;I think I'll make this member return the VOLUME of the first Drone in space, this will work fine unless we're going to do hybrid size launching (which is stupid!)
+		variable index:activedrone ListOfDrones
+		Me:GetActiveDrones[ListOfDrones]
+		if ${ListOfDrones.Used} > 0
+		{
+			return ${Math.Calc[${ListOfDrones[1].ToEntity.Radius}-10]}
+		}
+		else
+		{
+			UI:UpdateConsole[obj_drones: No drones in space, can't return drone type. Why is this member being checked?]
 		}
 	}
 
