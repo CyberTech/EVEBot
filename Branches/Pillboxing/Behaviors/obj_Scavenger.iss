@@ -156,6 +156,7 @@ objectdef obj_Scavenger
 			wait 5
 		}
 		wait 50
+		BookmarksForMeToPissOn:Clear
 		EVE:GetBookmarks[BookmarksForMeToPissOn]
 		BookmarksForMeToPissOn:RemoveByQuery[${LavishScript.CreateQuery[OwnerID != "${Me.Corp.ID}"]}]
 		BookmarksForMeToPissOn:Collapse

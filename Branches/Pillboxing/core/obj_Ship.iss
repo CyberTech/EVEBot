@@ -68,6 +68,20 @@ objectdef obj_Ship
 	{
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}
+	member:int AmmoGroup()
+	{
+		Switch "${Ship.WEAPONGROUPID}"
+		{
+			case 509
+			 	return 384
+			case 508
+			 	return 89
+			case 510
+				return 385
+			case 74
+				return 85
+		}
+	}
 	method ClearModules()
 	{
 		This.ModuleList:Clear

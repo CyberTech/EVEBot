@@ -154,14 +154,14 @@ objectdef obj_Combat
 	method Shutdown()
 	{
 	}
-	
+
+
 	member:int AmmoSelection()
 	{
 		variable string mission = ${Missions.MissionCache.Name[${Agents.AgentID}]}
 		UI:UpdateConsole["${Ship.WEAPONGROUPID}"]
 		;variable int Group = ${Ship.ModuleList_Weapon[1].ToItem.GroupID}
 		;variable int Group = 510
-		variable int AmmoGroup
 		variable iterator ittyDamage
 		variable string DmgType
 		variable int ReloadTypeID
@@ -187,17 +187,6 @@ objectdef obj_Combat
 				}
 			}
 		}
-		Switch "${Ship.WEAPONGROUPID}"
-		{
-			case 509
-			 	AmmoGroup:Set[384]
-			case 508
-			 	AmmoGroup:Set[89]
-			case 510
-				AmmoGroup:Set[385]
-			case 74
-				AmmoGroup:Set[85]
-		}
 		variable index:item ContainerItems
 		variable iterator CargoIterator	
 		;EVE:Execute[OpenHangarFloor]
@@ -211,7 +200,7 @@ objectdef obj_Combat
 			MyShip:GetCargo[ContainerItems]
 		}
 		UI:UpdateConsole["${AmmoGroup}"]
-		ContainerItems:RemoveByQuery[${LavishScript.CreateQuery[GroupID != "${AmmoGroup}"]}]
+		ContainerItems:RemoveByQuery[${LavishScript.CreateQuery[GroupID != "${Ship.AmmoGroup}"]}]
 		ContainerItems:Collapse
 		UI:UpdateConsole["Found ${ContainerItems.Used} ammo stacks suitable for this weapon"]
 		;This needs to be more advanced that it is now, but for now we won't select ammo type based on fuck all except groupID
@@ -821,26 +810,21 @@ objectdef obj_Combat
 			return TRUE
 		}
 		;variable int Group = 510
-		variable int AmmoGroup
 		variable iterator ittyDamage
 		variable string DmgType
 		variable int ReloadTypeID
 		 ; Damage types on x, 1 = em, 2 = therm, 3 = kin, 4 = exp, order is descending down the page, ie em first, exp last for each groupID
-		 Switch "${Ship.WEAPONGROUPID}"
-		 {
-			case 509
-			 	AmmoGroup:Set[384]
-			case 508
-			 	AmmoGroup:Set[89]
-			case 510
-				AmmoGroup:Set[385]
-		}
 		variable index:item ContainerItems
 		variable iterator CargoIterator	
 		EVE:Execute[OpenHangarFloor]
 		MyShip:OpenCargo
 		MyShip:GetCargo[ContainerItems]
-		ContainerItems:RemoveByQuery[${LavishScript.CreateQuery[GroupID != "${AmmoGroup}"]}]		
+		if ${Ship.AmmoGroup.Equal[85]}
+		{
+			UI:UpdateConsole["We're using hybrid weapons, until more support is added no checks are done on this."]
+			return TRUE
+		} 
+		ContainerItems:RemoveByQuery[${LavishScript.CreateQuery[GroupID != "${Ship.AmmoGroup}"]}]		
 		ContainerItems:Collapse
 		UI:UpdateConsole["HaveMissionAmmo: ${ContainerItems.Used} stacks of ammo found in cargo for weapons."]
 		if ${MishDB.Element[${mission}]} > 0

@@ -637,12 +637,16 @@ function RunCourierMission(int agentID)
 									breakTime:Set[${Time.Timestamp}]
 									breakTime.Second:Inc[15]
 									breakTime:Update
-									if ${bSalvaging}
+									if ${Config.Missioneer.SalvageModeName.Equal["Relay"]}
 									{
 										if !${This.BookmarkExists}
 										{
 											UI:UpdateConsole["Bookmarking closest entity now."]
 											Entity["GroupID = 186"]:CreateBookmark["Salvage","S","Corporation Locations"]
+										}
+										else
+										{
+											UI:UpdateConsole["We already have a bookmark for this room, not doing anything."]
 										}			
 										break
 									}
@@ -665,11 +669,18 @@ function RunCourierMission(int agentID)
 				GateToUse:Set[${Entity["TypeID = TYPE_ACCELERATION_GATE"].ID}]
 			}
 			EVE:Execute[CmdDronesReturnToBay]
-			if !${This.BookmarkExists}
+			if ${Config.Missioneer.SalvageModeName.Equal["Relay"]}
 			{
-				UI:UpdateConsole["Bookmarking closest entitity now."]
-				Entity["GroupID = 186 || GroupID = 12"]:CreateBookmark["Salvage","S","Corporation Locations"]
-			}				
+				if !${This.BookmarkExists}
+				{
+					UI:UpdateConsole["Bookmarking closest entitity now."]
+					Entity["GroupID = 186 || GroupID = 12"]:CreateBookmark["Salvage","S","Corporation Locations"]
+				}
+				else
+				{
+					UI:UpdateConsole["We already have a bookmark for this room, moving on."]
+				}	
+			}			
 			UI:UpdateConsole["No Entities found, moving to next room. ${Entity["TypeID = TYPE_ACCELERATION_GATE"].Name} found."]
 			Entity[${GateToUse}]:Approach[1500]
 			while ${Entity[${GateToUse}].Distance} > 2000
@@ -708,14 +719,18 @@ function RunCourierMission(int agentID)
 			{
 				if !${This.Combat.CurrentState.Equal["FLEE"]} && !${This.Combat.CurrentState.Equal["RESTOCK"]}
 				{
-					if ${bSalvaging} && ${Me.InSpace}
+					;not sure why I have this inspace check here, remove it at your own peril and inform me if it doesn't break stuff
+					if ${Config.Missioneer.SalvageModeName.Equal["Relay"]} && ${Me.InSpace}
 					{
 						if !${This.BookmarkExists}
 						{
 							UI:UpdateConsole["Bookmarking closest entity now."]
 							Entity["GroupID = 186 || GroupID = 12"]:CreateBookmark["Salvage","S","Corporation Locations"]
 						}			
-						echo ${This.HaveMishItem}
+						else
+						{
+							UI:UpdateConsole["We already have a bookmark for this room, going on!"]
+						}
 						missionComplete:Set[TRUE]
 					}
 					else
