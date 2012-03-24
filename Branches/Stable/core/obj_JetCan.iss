@@ -248,8 +248,23 @@ objectdef obj_JetCan
 			return
 		}
 
-		;; TODO -- there is probably a better way to do this with the 'StackItems' method of the "eve" datatype.   However, for now....
-		EVEWindow[ByName,${ID}]:StackAll
+		;;;;;;;;;;;;
+		;; Stack all items in any window that contains the entity's ID in the name (should be any open cargo/storage/etc. windows)
+		variable index:evewindow Windows
+		variable iterator iWindow
+		EVE:GetEVEWindows[Windows]
+		Windows:GetIterator[iWindow]
+		if ${iWindow:First(exists)}
+		{
+			do
+			{
+				if (${iWindow.Value.Name.Find[${ID}]} > 0)
+					iWindow.Value:StackItems
+			}
+			while ${iWindow:Next(exists)}
+		}
+		;;
+		;;;;;;;;;;;;
 	}
 
 	member IsCargoOpen(int64 ID=0)
