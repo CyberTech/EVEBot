@@ -40,6 +40,7 @@ objectdef obj_Scavenger
   	variable int WaitCount = 0
   	variable int Iterator = 1
   	variable index:bookmark BookmarksForMeToPissOn
+  	variable int RoomTimer
   	variable index:int64 BookmarkIDs
 	method Initialize()
 	{
@@ -89,7 +90,7 @@ objectdef obj_Scavenger
 				wait 100
 				call Cargo.TransferCargoToHangar
 				wait 20
-				This:Setting
+				CurrentState:Set["SCAVENGE"]
 				break
 			case FLEE
 				call This.Flee
@@ -101,8 +102,7 @@ objectdef obj_Scavenger
 	
 	method Setting()
 	{
-			CurrentState:Set["SCAVENGE"]
-			UI:UpdateConsole["Going to salvage moar wrecks. Maybe xD"]
+
 	}
 
 	method HERE(... Params)
@@ -116,36 +116,6 @@ objectdef obj_Scavenger
 				BookmarkListToSalvage:Insert[${Params[${i}]}]
 			}
 		}
-	}
-
-	member:int BMCOUNT()
-	{
-		EVE:GetBookmarks[BookmarksForMeToPissOn]
-		BookmarksForMeToPissOn:RemoveByQuery[${LavishScript.CreateQuery[OwnerID != "${Me.Corp.ID}"]}]
-		BookmarksForMeToPissOn:Collapse
-		variable iterator itty
-		BookmarksForMeToPissOn:GetIterator[itty]
-		SolarID:Set[NULL]
-		if ${itty:First(exists)}
-		{
-			do
-			{
-				relay all Event[WHERE]:Execute[${itty.Value.CreatorID}]
-				while !${SolarID}
-				{
-					waitframe
-				}
-				if !${itty.Value.SolarSystemID.Equal[${SolarID}]}
-				{
-					BookmarksForMeToPissOn:RemoveByQuery[${LavishScript.CreateQuery[SolarSystemID != "${itty.Value.SolarSystemID}"]}]
-					BookmarksForMeToPissOn:Collapse
-					break
-				}
-			}
-			while ${itty:Next(exists)}
-		}
-		SolarID:Set[NULL]
-		return ${BookmarksForMeToPissOn.Used}
 	}
 
 	function Scavenger()
@@ -261,7 +231,6 @@ objectdef obj_Scavenger
 		{
 			wait 10
 		}	
-		Ship:UpdateModuleList
 		do
 		{
 			while ${Me.ToEntity.Mode} == 3
@@ -310,48 +279,51 @@ objectdef obj_Scavenger
 			}
 		}
 		This.CurrentState:Set["SCAVENGE"]
-		
-		
 	}
-		function SalvageSite()
+	
+	function SalvageSite()
+	{
+		UI:UpdateConsole["Salvaging Site"]
+		if (${Config.Miner.StandingDetection} && \
+			${Social.StandingDetection[${Config.Miner.LowestStanding}]}) || \
+			!${Social.IsSafe}
 		{
-			UI:UpdateConsole["Salvaging Site"]
-			if (${Config.Miner.StandingDetection} && \
-				${Social.StandingDetection[${Config.Miner.LowestStanding}]}) || \
-				!${Social.IsSafe}
+			call This.Flee
+			return
+		}
+		RoomTimer:Set[${Script.RunningTime}]
+		run evesalvage -here -stop
+		while ${Script[Evesalvage](exists)}
+		{
+			wait 100
+		}
+		RoomTimer:Set[${Math.Calc[${Script.RunningTime}-${RoomTimer}]}]
+		RoomTimer:Set[${Math.Calc[${RoomTimer}/60000]}]
+		call ChatIRC.Say "Finished room, it took ${RoomTimer} minutes and ${Math.Calc[${RoomTimer}%60]} seconds. :O"
+		if ${BookmarkListToSalvage.Used} > 1
+		{
+			UI:UpdateConsole["Deleting current old bookmark, warping to new one"]
+			BookmarkListToSalvage[2]:WarpTo
+			while ${Me.ToEntity.Mode} != 3
 			{
-				call This.Flee
-				return
+				wait 10
 			}
-			run evesalvage -here -stop
-			while ${Script[Evesalvage](exists)}
+			while ${Me.ToEntity.Mode} == 3
 			{
 				wait 100
+				UI:UpdateConsole["Warping, do nothing"]
 			}
-			if ${BookmarkListToSalvage.Used} > 1
-			{
-				UI:UpdateConsole["Deleting current old bookmark, warping to new one"]
-				BookmarkListToSalvage[2]:WarpTo
-				while ${Me.ToEntity.Mode} != 3
-				{
-					wait 10
-				}
-				while ${Me.ToEntity.Mode} == 3
-				{
-					wait 10
-					UI:UpdateConsole["Warping, do nothing"]
-				}
-				BookmarkListToSalvage[1]:Remove
-				BookmarkListToSalvage:Remove[1]
-				BookmarkListToSalvage:Collapse	
-			}
-			else
-			{
-				UI:UpdateConsole["No more bookmarks, going home!"]
-				BookmarkListToSalvage[1]:Remove
-				BookmarkListToSalvage:Clear
-			}
+			BookmarkListToSalvage[1]:Remove
+			BookmarkListToSalvage:Remove[1]
+			BookmarkListToSalvage:Collapse	
 		}
+		else
+		{
+			UI:UpdateConsole["No more bookmarks, going home!"]
+			BookmarkListToSalvage[1]:Remove
+			BookmarkListToSalvage:Clear
+		}
+	}
 	
 	function Flee()
 	{

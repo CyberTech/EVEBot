@@ -589,14 +589,14 @@ function RunCourierMission(int agentID)
 			   wait 20
 			}
 		} 
-		elseif ((${This.MissionCache.Volume[${Agents.AgentID}]} > 0 && !${This.GatePresent}) || (!${This.HaveMissionKey} && ${RoomCounter} == 0)) && ((${Entity[GroupID = "12" || GroupID = "306" || Name =- "Rolette Residence"](exists)}) && (!${This.HaveMishItem} || !${This.HaveMissionKey}))
+		elseif ((${This.MissionCache.Volume[${Agents.AgentID}]} > 0 && !${This.GatePresent}) || (!${This.HaveMissionKey} && ${RoomCounter} == 0)) && ((${Entity[GroupID = "12" || Name =- "Blood Raider Personnel Transport" || GroupID = "306" || Name =- "Rolette Residence"](exists)}) && (!${This.HaveMishItem} || !${This.HaveMissionKey}))
 		; this check should be incorporated into if statement
 		{
 			variable index:entity Ents
 			variable iterator Ent
 			variable index:item   Items
 			variable iterator   Item
-			EVE:QueryEntities[Ents, GroupID = "12" || GroupID = "306" || Name =- "Rolette"]
+			EVE:QueryEntities[Ents, GroupID = "12" || GroupID = "306" || Name =- "Rolette Residence" || Name =- "Blood Raider Personnel Transport"]
 			UI:UpdateConsole["Found ${Ents.Used} entities in total to loot."]
 			Ents:GetIterator[Ent]
 			UI:UpdateConsole["Looting ${This.MissionCache.TypeID[${agentID}]}"]
@@ -607,7 +607,7 @@ function RunCourierMission(int agentID)
 						while ${Ent.Value.Distance} > 2500 && ${Ent.Value(exists)}
 						{
 							wait 100
-							if ${Me.ToEntity.Mode} != 1 || !${Ent.Value.Approaching}
+							if ${Me.ToEntity.Mode} != 1 || !${Me.ToEntity.Approaching.Equal[${Ent.Value.ID}]}
 							{
 								Ent.Value:Approach
 								UI:UpdateConsole["Approaching ${Ent.Value.Name}"]
@@ -751,6 +751,7 @@ function RunCourierMission(int agentID)
 		while !${missionComplete}
 		MissionTimer:Set[${Math.Calc[${Script.RunningTime}-${MissionTimer}]}]
 		MissionTimer:Set[${Math.Calc[${MissionTimer}/60000]}]
+		UI:UpdateConsole
 		call ChatIRC.Say "Finished mission, heading to active agent for new one. This mission took ${MissionTimer} minutes and ${Math.Calc[${MissionTimer}%60]} seconds. :O"
 		;I should probably do some actual logging and stuff, as well as assigning this to a cleaner algrothim, however for the time being I'll fix this if it doesn't work and leave it as is.
 		

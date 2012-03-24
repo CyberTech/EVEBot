@@ -322,6 +322,7 @@ objectdef obj_Cargo
 	; Transfer ALL items in MyCargo index
 	function TransferListToHangar()
 	{
+		variable index:int64 ListToMove
 		variable iterator CargoIterator
 		This.CargoToTransfer:GetIterator[CargoIterator]
 
@@ -338,7 +339,8 @@ objectdef obj_Cargo
 				}
 				else
 				{
-					CargoIterator.Value:MoveTo[MyStationHangar, Hangar]
+					ListToMove:Insert[${CargoIterator.Value.ID}]
+					Eve:MoveItemsTo[ListToMove,MyStationHangar, Hangar]
 				}
 				wait 10
 			}
@@ -349,6 +351,7 @@ objectdef obj_Cargo
 		{
 			UI:UpdateConsole["DEBUG: obj_Cargo:TransferListToHangar: Nothing found to move"]
 		}
+		EVE:StackItems[MyStationHangar,HangarItems]
 	}
 
 	function TransferListToLargeShipAssemblyArray()
