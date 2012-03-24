@@ -314,7 +314,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 			while ${Cargo:Next(exists)}
 		}
 
-		Me.Ship:StackAllCargo
+		EVEWindow[ByName,${MyShip.ID}]:StackAll
 		wait 10
 	}
 
