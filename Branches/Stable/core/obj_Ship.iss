@@ -1278,7 +1278,7 @@ objectdef obj_Ship
 				MyShip:GetCargo[MyCargo]
 			}
 		}
-		MyShip:StackAllCargo
+		EVEWindow[ByName,${MyShip.ID}]:StackAll
 		wait 5
 	}
 
@@ -2277,7 +2277,7 @@ objectdef obj_Ship
 	{
 		if ${This.IsCargoOpen}
 		{
-			Me.Ship:StackAllCargo
+			EVEWindow[ByName,${MyShip.ID}]:StackAll
 		}
 	}
 

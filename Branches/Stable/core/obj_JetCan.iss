@@ -248,7 +248,8 @@ objectdef obj_JetCan
 			return
 		}
 
-		Entity[${ID}]:StackAllCargo
+		;; TODO -- there is probably a better way to do this with the 'StackItems' method of the "eve" datatype.   However, for now....
+		EVEWindow[ByName,${ID}]:StackAll
 	}
 
 	member IsCargoOpen(int64 ID=0)

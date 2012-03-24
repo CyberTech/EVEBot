@@ -850,7 +850,7 @@ objectdef obj_Cargo
 				call This.TransferListToShip
 
 				This.CargoToTransfer:Clear[]
-				Me.Ship:StackAllCargo
+				EVEWindow[ByName,${MyShip.ID}]:StackAll
 				Ship:UpdateBaselineUsedCargo[]
 				call This.CloseHolds
 
@@ -916,7 +916,7 @@ objectdef obj_Cargo
 				call This.TransferListToShip
 
 				This.CargoToTransfer:Clear[]
-				Me.Ship:StackAllCargo
+				EVEWindow[ByName,${MyShip.ID}]:StackAll
 				Ship:UpdateBaselineUsedCargo[]
 				call This.CloseHolds
 

@@ -496,7 +496,7 @@ objectdef obj_Combat
 					{
 						CargoIterator.Value:MoveTo[${MyShip.ID},CargoHold,${QuantityToMove}]
 						wait 30
-						MyShip:StackAllCargo
+						EVEWindow[ByName,${MyShip.ID}]:StackAll
 						wait 10
 					}
 						if ${Ship.CargoFreeSpace} <= ${Config.Combat.RestockAmmoFreeSpace}
