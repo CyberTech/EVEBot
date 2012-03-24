@@ -799,6 +799,7 @@ objectdef obj_Combat
 	member:bool HaveMissionAmmo()
 	{
 		variable string mission = ${Missions.MissionCache.Name[${Agents.AgentID}]}
+		UI:UpdateConsole["HaveMissionAmmo: Mission name is ${mission}"]
 		;variable int Group = ${Ship.ModuleList_Weapon[1].ToItem.GroupID}
 		if ${Ship.WEAPONGROUPID} > 0
 		{
@@ -807,6 +808,7 @@ objectdef obj_Combat
 		}
 		else
 		{
+			UI:UpdateConsole["Can't find our Weapon type, compensate for this somehow. Odds are you started bot in a station."]
 			return TRUE
 		}
 		;variable int Group = 510

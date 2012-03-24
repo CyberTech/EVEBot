@@ -715,7 +715,7 @@ function RunCourierMission(int agentID)
 		else
 		{
 				
-			if !${Target.TargetNPCs} && ${This.HaveMishItem}
+			if !${Target.TargetNPCs} && (${This.HaveMishItem} || !${Entity[Name =- "Cargo Container"]})
 			{
 				if !${This.Combat.CurrentState.Equal["FLEE"]} && !${This.Combat.CurrentState.Equal["RESTOCK"]}
 				{
@@ -904,15 +904,21 @@ function RunCourierMission(int agentID)
 		variable iterator BookmarkIter
 		EVE:GetBookmarks[BookmarksForMeToPissOn]
 		BookmarksForMeToPissOn:RemoveByQuery[${LavishScript.CreateQuery[OwnerID != "${Me.Corp.ID}"]}]
+		UI:UpdateConsole["BookmarkExists: Found ${BookmarksForMeToPissOn.Used} corp bookmarks."]
 		BookmarksForMeToPissOn:Collapse
 		BookmarksForMeToPissOn:GetIterator[BookmarkIter]
 		if ${BookmarkIter:First(exists)}
 		{
+			UI:UpdateConsole["Corp Bookmark found, name is ${BookmarkIter.Value.Label}"]
 			do
 			{
-				if ${BookmarkIter.Value.Distance} < 500000
+				if ${BookmarkIter.Value.Distance} < 500000 && ${BookmarkIter.Value.Distance} > 0
 				{
 					return TRUE
+				}
+				else
+				{
+					UI:UpdateConsole["Bookmark found, name ${BookmarkIter.Value.Label}, Distance ${BookmarkIter.Value.Distance}"]
 				}
 			}
 			while ${BookmarkIter:Next(exists)}

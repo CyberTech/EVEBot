@@ -423,7 +423,7 @@ objectdef obj_Scavenger
 			}
 		}
 		while ${Item:Next(exists)}
-		MyShip:StackAllCargo	
+		EVEWindow[ByName,${MyShip.ID}]:StackAll
 		EVE:GetBookmarks[MyBookmarks]
 		j:Set[1]
 		do
