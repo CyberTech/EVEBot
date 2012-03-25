@@ -607,7 +607,7 @@ function RunCourierMission(int agentID)
 						while ${Ent.Value.Distance} > 2500 && ${Ent.Value(exists)}
 						{
 							wait 100
-							if ${Me.ToEntity.Mode} != 1 || !${Me.ToEntity.Approaching.Equal[${Ent.Value.ID}]}
+							if ${Me.ToEntity.Mode} != 1 || !${Me.ToEntity.Approaching.ID.Equal[${Ent.Value.ID}]}
 							{
 								Ent.Value:Approach
 								UI:UpdateConsole["Approaching ${Ent.Value.Name}"]
@@ -934,7 +934,7 @@ function RunCourierMission(int agentID)
 		variable iterator BookmarkIter
 		EVE:GetBookmarks[BookmarksForMeToPissOn]
 		BookmarksForMeToPissOn:Collapse
-		BookmarksForMeToPissOn:RemoveByQuery[${LavishScript.CreateQuery[OwnerID != "${Me.Corp.ID}" || CreatorID != "${Me.ID}" || (Distance < "200000000" || ${SolarSystemID} != "${Me.SolarSystemID}")]}]
+		BookmarksForMeToPissOn:RemoveByQuery[${LavishScript.CreateQuery[OwnerID != "${Me.Corp.ID}" || CreatorID != "${Me.ID}" || (Distance < "200000000" && SolarSystemID = "${Me.SolarSystemID}")]}]
 		BookmarksForMeToPissOn:Collapse
 		UI:UpdateConsole["RelayBookMarks: Found ${BookmarksForMeToPissOn.Used} bookmarks after query"]
 		BookmarksForMeToPissOn:GetIterator[BookmarkIter]

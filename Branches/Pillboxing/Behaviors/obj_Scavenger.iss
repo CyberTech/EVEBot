@@ -61,7 +61,7 @@ objectdef obj_Scavenger
 		{
 				EVEWindow[ByCaption,"People & Places"]:Close
 				;PULL A LIST OF OUR CORP BMS NOW
-				This.CurrentState:Set["SCAVENGE"]
+				CurrentState:Set["SCAVENGE"]
 				UI:UpdateConsole["Request received from salvager, starting operation."]
 		}
 	}
@@ -75,12 +75,13 @@ objectdef obj_Scavenger
 		if !${Config.Common.BotModeName.Equal[Freighter]}
 			return
 			
-		switch ${This.CurrentState}
+		switch ${CurrentState}
 		{
 			case ABORT
 				call Station.Dock
 				break
 			case SCAVENGE
+				echo "SCAVENGE"
 				RoomCounter:Set[0]
 				call This.Scavenger
 				break
@@ -303,6 +304,9 @@ objectdef obj_Scavenger
 		if ${BookmarkListToSalvage.Used} > 1
 		{
 			UI:UpdateConsole["Deleting current old bookmark, warping to new one"]
+			BookmarkListToSalvage[1]:Remove
+			BookmarkListToSalvage:Remove[1]
+			wait 50
 			BookmarkListToSalvage[2]:WarpTo
 			while ${Me.ToEntity.Mode} != 3
 			{
@@ -313,8 +317,6 @@ objectdef obj_Scavenger
 				wait 100
 				UI:UpdateConsole["Warping, do nothing"]
 			}
-			BookmarkListToSalvage[1]:Remove
-			BookmarkListToSalvage:Remove[1]
 			BookmarkListToSalvage:Collapse	
 		}
 		else

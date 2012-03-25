@@ -133,7 +133,7 @@ objectdef obj_Targets
 				{
 					if ${Me.TargetCount} == 0 && ${MyShip.MaxLockedTargets} > 0
 					{
-						if ${Me.ToEntity.Mode} != 1
+						if ${Me.ToEntity.Mode} != 1 && ${Entity["TypeID = TYPE_ACCELERATION_GATE"].Distance} < 110000 
 						{
 							Target2.Value:Approach[${MyShip.MaxTargetRange}]
 							UI:UpdateConsole["Approaching rat out of range. Name = ${Target2.Value.Name} and distance < ${Target2.Value.Distance}."]
