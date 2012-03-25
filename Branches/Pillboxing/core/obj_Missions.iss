@@ -933,12 +933,14 @@ function RunCourierMission(int agentID)
 		variable string BM
 		variable iterator BookmarkIter
 		EVE:GetBookmarks[BookmarksForMeToPissOn]
-		BookmarksForMeToPissOn:RemoveByQuery[${LavishScript.CreateQuery[CreatorID != "${Me.ID}" && OwnerID != "${Me.Corp.ID}" && (Distance < "200000000" && Distance != "NULL")]}]
 		BookmarksForMeToPissOn:Collapse
+		BookmarksForMeToPissOn:RemoveByQuery[${LavishScript.CreateQuery[OwnerID != "${Me.Corp.ID}" || CreatorID != "${Me.ID}" || (Distance < "200000000" || ${SolarSystemID} != "${Me.SolarSystemID}")]}]
+		BookmarksForMeToPissOn:Collapse
+		UI:UpdateConsole["RelayBookMarks: Found ${BookmarksForMeToPissOn.Used} bookmarks after query"]
 		BookmarksForMeToPissOn:GetIterator[BookmarkIter]
 		if ${BookmarkIter:First(exists)}
 		{
-			UI:UpdateConsole["Found BM at distance ${BookmarkIter.Value.Distance}"]
+			UI:UpdateConsole["Found BM at distance ${BookmarkIter.Value.Distance}, Name - ${BookmarkIter.Value.Label}"]
 			BM:Set[${BookmarkIter.Value.ID}]
 			BookmarkIter:Next
 			do

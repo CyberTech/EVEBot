@@ -342,7 +342,6 @@ objectdef obj_Cargo
 					ListToMove:Insert[${CargoIterator.Value.ID}]
 					Eve:MoveItemsTo[ListToMove,MyStationHangar, Hangar]
 				}
-				wait 10
 			}
 			while ${CargoIterator:Next(exists)}
 			wait 10
@@ -351,7 +350,7 @@ objectdef obj_Cargo
 		{
 			UI:UpdateConsole["DEBUG: obj_Cargo:TransferListToHangar: Nothing found to move"]
 		}
-		EVE:StackItems[MyStationHangar,HangarItems]
+		EVE:StackItems[MyStationHangar,Hangar]
 	}
 
 	function TransferListToLargeShipAssemblyArray()
@@ -633,6 +632,7 @@ objectdef obj_Cargo
 	function TransferListToShip()
 	{
 		variable int QuantityToMove
+		variable index:int64 ListToMove
 		variable iterator CargoIterator
 		This.CargoToTransfer:GetIterator[CargoIterator]
 
@@ -651,14 +651,17 @@ objectdef obj_Cargo
 					{
 						/* Move only what will fit, minus 1 to account for CCP rounding errors. */
 						QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${CargoIterator.Value.Volume} - 1]}]
+						UI:UpdateConsole["TransferListToShip: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
 					}
 					else
 					{
-						QuantityToMove:Set[${CargoIterator.Value.Quantity}]
+						ListToMove:Insert[${CargoIterator.Value.ID}]
+						UI:UpdateConsole["TransferListToShip: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
 					}
-
-					UI:UpdateConsole["TransferListToShip: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
-					UI:UpdateConsole["TransferListToShip: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
+					if ${ListToMove.Used} > 0
+					{
+						EVE:MoveItemsTo[ListToMove,MyShip,CargoHold]
+					}
 					if ${QuantityToMove} > 0
 					{
 						CargoIterator.Value:MoveTo[${MyShip.ID}, CargoHold, ${QuantityToMove}]
@@ -853,7 +856,7 @@ objectdef obj_Cargo
 				call This.TransferListToShip
 
 				This.CargoToTransfer:Clear[]
-				Me.Ship:StackAllCargo
+				EVEWindow[ByName,${MyShip.ID}]
 				Ship:UpdateBaselineUsedCargo[]
 				call This.CloseHolds
 
@@ -919,7 +922,7 @@ objectdef obj_Cargo
 				call This.TransferListToShip
 
 				This.CargoToTransfer:Clear[]
-				Me.Ship:StackAllCargo
+				EVEWindow[ByName,${MyShip.ID}]
 				Ship:UpdateBaselineUsedCargo[]
 				call This.CloseHolds
 

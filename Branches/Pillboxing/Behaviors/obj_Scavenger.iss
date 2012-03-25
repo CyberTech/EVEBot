@@ -62,7 +62,6 @@ objectdef obj_Scavenger
 				EVEWindow[ByCaption,"People & Places"]:Close
 				;PULL A LIST OF OUR CORP BMS NOW
 				This.CurrentState:Set["SCAVENGE"]
-				echo ${This.CurrentState}
 				UI:UpdateConsole["Request received from salvager, starting operation."]
 		}
 	}
@@ -133,6 +132,7 @@ objectdef obj_Scavenger
 		if ${BookmarksForMeToPissOn.Used} == 0
 		{
 			UI:UpdateConsole["No corp bookmarks found, returning."]
+			CurrentState:Set["IDLE"]
 			return
 		}
 		variable iterator itty
@@ -161,7 +161,7 @@ objectdef obj_Scavenger
 					while ${ittyCreators:Next(exists)}
 					if !${found}
 					{
-						intCreators:Insert[itty.Value.CreatorID]
+						intCreators:Insert[${itty.Value.CreatorID}]
 					}
 				}
 				else
@@ -204,7 +204,7 @@ objectdef obj_Scavenger
 		}
 		else
 		{
-			relay all Event[QUERY]:Execute[]
+			;relay all Event[QUERY]:Execute[]
 			UI:UpdateConsole["No bookmarks found"]
 			This.CurrentState:Set["IDLE"]
 			return
