@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ISUI>
+	<window name="OrePriority">
+		<x>200</x>
+		<y>200</y>
+		<Width>200</Width>
+		<Height>310</Height>
+		<Title>Ore Prioritizer</Title>
+		<Children>
+			<Text Name="typeslabel>">
+				<Text>Ore Types</Text>
+				<X>5</X>
+				<Y>5</Y>
+				<Width>r10</Width>
+				<Height>10</Height>
+			</Text>
+			<Listbox Name="OreList">
+				<X>5</X>
+				<Y>22</Y>
+				<Width>r10</Width>
+				<Height>r82</Height>
+				<SelectMultiple>1</SelectMultiple>
+				<Sort>User</Sort>
+				<Items>
+				</Items>
+					<OnLeftClick>
+						;echo leftclick
+						;if ${Input.Button[ctrl].Pressed}
+						;This:Toggle
+					</OnLeftClick>
+				<OnLoad>
+					variable int count
+					variable settingsetref Ores
+					Ores:Set[${LavishSettings[EVEBotSettings].FindSet[${Me.Name}].FindSet[Miner].FindSet[Ore_Types]}]
+					if ${Ores(exists)}
+					{
+						variable collection:bool MineOre
+						variable int oresupdated[16]
+						variable iterator iter
+						Ores:GetSettingIterator[iter]
+						if ${iter:First(exists)}
+						{
+							do
+							{
+								MineOre:Set[${iter.Value.Name},TRUE]
+								switch ${iter.Value.Name}
+								{
+								case Mercoxit
+									This:AddItem[Mercoxit]
+									This.Item[${This.Items}]:Select
+									break
+								case Arkonor
+									This:AddItem[Arkonor]
+									This.Item[${This.Items}]:Select
+									break
+								case Bistot
+									This:AddItem[Bistot]
+									This.Item[${This.Items}]:Select
+									break
+								case Crokite
+									This:AddItem[Crokite]
+									This.Item[${This.Items}]:Select
+									break
+								case Spodumain
+									This:AddItem[Spodumain]
+									This.Item[${This.Items}]:Select
+									break
+								case Dark Ochre
+									This:AddItem[Dark Ochre]
+									This.Item[${This.Items}]:Select
+									break
+								case Gneiss
+									This:AddItem[Gneiss]
+									This.Item[${This.Items}]:Select
+									break
+								case Hedbergite
+									This:AddItem[Hedbergite]
+									This.Item[${This.Items}]:Select
+									break
+								case Hemorphite
+									This:AddItem[Hemorphite]
+									This.Item[${This.Items}]:Select
+									break
+								case Jaspet
+									This:AddItem[Jaspet]
+									This.Item[${This.Items}]:Select
+									break
+								case Kernite
+									This:AddItem[Kernite]
+									This.Item[${This.Items}]:Select
+									break
+								case Omber
+									This:AddItem[Omber]
+									This.Item[${This.Items}]:Select
+									break
+								case Plagioclase
+									This:AddItem[Plagioclase]
+									This.Item[${This.Items}]:Select
+									break
+								case Pyroxeres
+									This:AddItem[Pyroxeres]
+									This.Item[${This.Items}]:Select
+									break
+								case Scordite
+									This:AddItem[Scordite]
+									This.Item[${This.Items}]:Select
+									break
+								case Veldspar
+									This:AddItem[Veldspar]
+									This.Item[${This.Items}]:Select
+									break
+								default
+									break
+								}
+							}
+							while ${iter:Next(exists)}
+						}
+						variable string OreTypes="Mercoxit,Arkonor,Bistot,Crokite,Spodumain,Dark Ochre,Gneiss,Hedbergite,Hemorphite,Jaspet,Pyroxeres,Kernite,Plagioclase,Omber,Scordite,Veldspar"
+						for ( count:Set[1] ; ${count} &lt;= 16 ; count:Inc )
+						{
+							if !${MineOre[${Arg[${count},${OreTypes}]}](exists)}
+							{
+								This:AddItem[${Arg[${count},${OreTypes}]}]
+							}
+						}
+					}
+				</OnLoad>
+			</Listbox>
+			<Button Name="ResetAll">
+				<X>5</X>
+				<Y>r52</Y>
+				<Width>r10</Width>
+				<Height>20</Height>
+				<Text>Reset All</Text>
+				<OnLeftClick>
+					UIElement[OrePriority].FindUsableChild[OreList,listbox]:ClearItems
+					UIElement[OrePriority].FindUsableChild[OreList,listbox]:AddItem[Mercoxit]
+					UIElement[OrePriority].FindUsableChild[OreList,listbox]:AddItem[Arkonor]
+					UIElement[OrePriority].FindUsableChild[OreList,listbox]:AddItem[Bistot]
+					UIElement[OrePriority].FindUsableChild[OreList,listbox]:AddItem[Crokite]
+					UIElement[OrePriority].FindUsableChild[OreList,listbox]:AddItem[Spodumain]
+					UIElement[OrePriority].FindUsableChild[OreList,listbox]:AddItem[Dark Ochre]
+					UIElement[OrePriority].FindUsableChild[OreList,listbox]:AddItem[Gneiss]
+					UIElement[OrePriority].FindUsableChild[OreList,listbox]:AddItem[Hedbergite]
+					UIElement[OrePriority].FindUsableChild[OreList,listbox]:AddItem[Hemorphite]
+					UIElement[OrePriority].FindUsableChild[OreList,listbox]:AddItem[Jaspet]
+					UIElement[OrePriority].FindUsableChild[OreList,listbox]:AddItem[Kernite]
+					UIElement[OrePriority].FindUsableChild[OreList,listbox]:AddItem[Omber]
+					UIElement[OrePriority].FindUsableChild[OreList,listbox]:AddItem[Plagioclase]
+					UIElement[OrePriority].FindUsableChild[OreList,listbox]:AddItem[Pyroxeres]
+					UIElement[OrePriority].FindUsableChild[OreList,listbox]:AddItem[Scordite]
+					UIElement[OrePriority].FindUsableChild[OreList,listbox]:AddItem[Veldspar]
+					This.Parent.FindChild[SelectAll]:LeftClick
+				</OnLeftClick>
+			</Button>
+			<Button Name="SelectAll">
+				<X>5</X>
+				<Y>r27</Y>
+				<Width>90</Width>
+				<Height>20</Height>
+				<Text>Select All</Text>
+				<OnLeftClick>
+					variable int items
+					for ( items:Set[${UIElement[OrePriority].FindUsableChild[OreList,listbox].Items}] ; ${items} > 0 ; items:Dec )
+					{
+					UIElement[OrePriority].FindUsableChild[OreList,listbox]:SelectItem[${items}]
+					}
+				</OnLeftClick>
+			</Button>
+			<Button Name="Update">
+				<X>105</X>
+				<Y>r27</Y>
+				<Width>90</Width>
+				<Height>20</Height>
+				<Text>Update</Text>
+				<OnLeftClick>
+					variable settingsetref Ores
+					variable int counter
+					variable collection:bool selected
+					Ores:Set[${LavishSettings[EVEBotSettings].FindSet[${Me.Name}].FindSet[Miner].FindSet[Ore_Types]}]
+					Ores:Clear
+					for ( counter:Set[1] ; ${counter} &lt;= ${UIElement[OrePriority].FindUsableChild[OreList,listbox].SelectedItems} ; counter:Inc )
+					{
+					selected:Set[${UIElement[OrePriority].FindUsableChild[OreList,listbox].SelectedItem[${counter}]},TRUE]
+					}
+					for ( counter:Set[1] ; ${counter} &lt;= ${UIElement[OrePriority].FindUsableChild[OreList,listbox].Items} ; counter:Inc )
+					{
+					if ${selected[${UIElement[OrePriority].FindUsableChild[OreList,listbox].OrderedItem[${counter}]}]}
+					switch ${UIElement[OrePriority].FindUsableChild[OreList,listbox].OrderedItem[${counter}]}
+					{
+					case Mercoxit
+					Ores:AddSetting[Vitreous Mercoxit,1]
+					Ores:AddSetting[Magma Mercoxit,1]
+					Ores:AddSetting[Mercoxit,1]
+					break
+					case Arkonor
+					Ores:AddSetting[Prime Arkonor,1]
+					Ores:AddSetting[Crimson Arkonor,1]
+					Ores:AddSetting[Arkonor,1]
+					break
+					case Bistot
+					Ores:AddSetting[Monoclinic Bistot,1]
+					Ores:AddSetting[Triclinic Bistot,1]
+					Ores:AddSetting[Bistot,1]
+					break
+					case Crokite
+					Ores:AddSetting[Crystalline Crokite,1]
+					Ores:AddSetting[Sharp Crokite,1]
+					Ores:AddSetting[Crokite,1]
+					break
+					case Spodumain
+					Ores:AddSetting[Gleaming Spodumain,1]
+					Ores:AddSetting[Bright Spodumain,1]
+					Ores:AddSetting[Spodumain,1]
+					break
+					case Dark Ochre
+					Ores:AddSetting[Obsidian Ochre,1]
+					Ores:AddSetting[Onyx Ochre,1]
+					Ores:AddSetting[Dark Ochre,1]
+					break
+					case Gneiss
+					Ores:AddSetting[Prismatic Gneiss,1]
+					Ores:AddSetting[Iridescent Gneiss,1]
+					Ores:AddSetting[Gneiss,1]
+					break
+					case Hedbergite
+					Ores:AddSetting[Glazed Hedbergite,1]
+					Ores:AddSetting[Vitric Hedbergite,1]
+					Ores:AddSetting[Hedbergite,1]
+					break
+					case Hemorphite
+					Ores:AddSetting[Radiant Hemorphite,1]
+					Ores:AddSetting[Vivid Hemorphite,1]
+					Ores:AddSetting[Hemorphite,1]
+					break
+					case Jaspet
+					Ores:AddSetting[Pristine Jaspet,1]
+					Ores:AddSetting[Pure Jaspet,1]
+					Ores:AddSetting[Jaspet,1]
+					break
+					case Kernite
+					Ores:AddSetting[Fiery Kernite,1]
+					Ores:AddSetting[Luminous Kernite,1]
+					Ores:AddSetting[Kernite,1]
+					break
+					case Omber
+					Ores:AddSetting[Golden Omber,1]
+					Ores:AddSetting[Silvery Omber,1]
+					Ores:AddSetting[Omber,1]
+					break
+					case Plagioclase
+					Ores:AddSetting[Rich Plagioclase,1]
+					Ores:AddSetting[Azure Plagioclase,1]
+					Ores:AddSetting[Plagioclase,1]
+					break
+					case Pyroxeres
+					Ores:AddSetting[Viscous Pyroxeres,1]
+					Ores:AddSetting[Solid Pyroxeres,1]
+					Ores:AddSetting[Pyroxeres,1]
+					break
+					case Scordite
+					Ores:AddSetting[Massive Scordite,1]
+					Ores:AddSetting[Condensed Scordite,1]
+					Ores:AddSetting[Scordite,1]
+					break
+					case Veldspar
+					Ores:AddSetting[Dense Veldspar,1]
+					Ores:AddSetting[Concentrated Veldspar,1]
+					Ores:AddSetting[Veldspar,1]
+					break
+					}
+					}
+				</OnLeftClick>
+			</Button>
+		</Children>
+	</window>
+</ISUI>
