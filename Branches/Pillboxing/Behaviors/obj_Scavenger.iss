@@ -120,11 +120,13 @@ objectdef obj_Scavenger
 
 	function Scavenger()
 	{
-		EVE:Execute[OpenPeopleAndPlaces]
-		while !${EVEWindow[ByCaption,"People & Places"](exists)}
+		EVEWindow[ByCaption,"People & Places"]:Close
+		while ${EVEWindow[ByCaption,"People & Places"](exists)}
 		{
-			wait 5
+			UI:UpdateConsole["Waiting for People & Places window to close."]
+			wait 100
 		}
+		EVE:Execute[OpenPeopleAndPlaces]
 		wait 50
 		BookmarksForMeToPissOn:Clear
 		EVE:GetBookmarks[BookmarksForMeToPissOn]
@@ -301,11 +303,12 @@ objectdef obj_Scavenger
 		RoomTimer:Set[${Math.Calc[${Script.RunningTime}-${RoomTimer}]}]
 		RoomTimer:Set[${Math.Calc[${RoomTimer}/60000]}]
 		call ChatIRC.Say "Finished room, it took ${RoomTimer} minutes and ${Math.Calc[${RoomTimer}%60]} seconds. :O"
+		RoomTimer:Clear
 		if ${BookmarkListToSalvage.Used} > 1
 		{
 			UI:UpdateConsole["Deleting current old bookmark, warping to new one"]
-			BookmarkListToSalvage[1]:Remove
 			BookmarkListToSalvage:Remove[1]
+			BookmarkListToSalvage[1]:Remove
 			wait 50
 			BookmarkListToSalvage[2]:WarpTo
 			while ${Me.ToEntity.Mode} != 3
