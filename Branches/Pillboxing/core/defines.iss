@@ -89,7 +89,7 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 #define WARP_RANGE_MOON   10000000
 #define WARP_RANGE_PLANET 55000000
 
-#define DOCKING_RANGE 200
+#define DOCKING_RANGE 2500
 #define LOOT_RANGE 2490
 #define JUMP_RANGE 2350
 #define CORP_HANGAR_LOOT_RANGE 3000

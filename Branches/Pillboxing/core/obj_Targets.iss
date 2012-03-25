@@ -149,11 +149,10 @@ objectdef obj_Targets
 			}
 			while ${Target2:Next(exists)}
 		}
-		if ${Me.TargetedByCount} > 0
+		if ${Me.TargetedByCount} > 0 && ${InRange.Used} > 0
 		{
-			HasTargets:Set[TRUE]
+			HasTargets:Set[TRUE] 
 		}
-
 		Me:GetJammers[Jammers]
 		Jammers:GetIterator[Jammer]
 		if ${Jammer:First(exists)} && (!${Entity[${ToTarget[1]}](exists)} || ${Me.ToEntity.IsWarpScrambled})

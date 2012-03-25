@@ -340,10 +340,11 @@ objectdef obj_Cargo
 				else
 				{
 					ListToMove:Insert[${CargoIterator.Value.ID}]
-					Eve:MoveItemsTo[ListToMove,MyStationHangar, Hangar]
 				}
 			}
 			while ${CargoIterator:Next(exists)}
+			UI:UpdateConsole["Moving ${ListToMove.Used} items to hangar."]
+			EVE:MoveItemsTo[ListToMove,MyStationHangar, Hangar]
 			wait 10
 		}
 		else

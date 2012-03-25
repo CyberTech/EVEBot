@@ -178,7 +178,6 @@ objectdef obj_Missions
 			}
 			else
 			{
-				echo "Relaying bookmarks"
 				This:RelayBookMarks
 			}
 		}
@@ -551,12 +550,13 @@ function RunCourierMission(int agentID)
 	{
 		while !${Targets.TargetNPCs}
 		{
+			UI:UpdateConsole["No rats found, waiting on spawn."]
 		   if ${Time.Timestamp} >= ${breakTime.Timestamp}
 		   {
 		   		UI:UpdateConsole["No rats found in timeout time, moving on."]
 				break    
 		   }
-		   wait 10
+		   wait 50
 		}
 		if ${Targets.TargetNPCs}
 		{
