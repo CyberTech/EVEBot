@@ -777,7 +777,7 @@ objectdef obj_Cargo
 		call This.TransferListToHangar
 
 		This.CargoToTransfer:Clear[]
-		Me:StackAllHangarItems
+		EVEWindow[ByName,hangarFloor]:StackAll
 		Ship:UpdateBaselineUsedCargo[]
 		call This.ReplenishCrystals
 		call This.CloseHolds
@@ -822,7 +822,7 @@ objectdef obj_Cargo
 		call This.TransferListToCorpHangarArray
 
 		This.CargoToTransfer:Clear[]
-		Me:StackAllHangarItems
+		EVEWindow[ByName,hangarFloor]:StackAll
 		Ship:UpdateBaselineUsedCargo[]
 		call This.CloseHolds
 	}
@@ -975,7 +975,7 @@ objectdef obj_Cargo
 	  call This.TransferListToHangar
 
 	  This.CargoToTransfer:Clear[]
-	  Me:StackAllHangarItems
+	  EVEWindow[ByName,hangarFloor]:StackAll
 	  Ship:UpdateBaselineUsedCargo[]
 	  call This.CloseHolds
    }

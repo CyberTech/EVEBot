@@ -430,7 +430,7 @@ objectdef obj_Combat
 				}
 				while ${CargoIterator:Next(exists)}
 			}
-			Me.Station:StackAllHangarItems
+			EVEWindow[ByName,hangarFloor]:StackAll
 			wait 20
 			ContainerItems:Clear
 			Me.Station:GetHangarItems[ContainerItems]
