@@ -864,7 +864,7 @@
 							<Y>150</Y>
 							<Height>20</Height>
 							<Width>100</Width>
-							<Text>Calculate Optimal (lasers only)</Text>
+							<Text>Calculate Optimal</Text>
 							<AutoTooltip>Attempt to calculate optimal?</AutoTooltip>
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Combat.OrbitAtOptimal}

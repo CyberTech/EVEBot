@@ -227,9 +227,12 @@ objectdef obj_Station
 				}
 				else
 				{
-					Entity[${StationID}]:Approach
-					UI:UpdateConsole["Approaching docking range...Is at range - ${Entity[${StationID}].Distance}"]
-					wait 30
+					if ${Entity[${StationID}].Distance} > DOCKING_RANGE
+					{
+						Entity[${StationID}]:Approach
+						UI:UpdateConsole["Approaching docking range...Is at range - ${Entity[${StationID}].Distance}"]
+						wait 30
+					}
 				}
 			}
 			while (${Entity[${StationID}].Distance} > DOCKING_RANGE) && ${Me.ToEntity.Mode} != 1

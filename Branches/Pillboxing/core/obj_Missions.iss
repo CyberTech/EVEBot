@@ -751,7 +751,7 @@ function RunCourierMission(int agentID)
 		while !${missionComplete}
 		MissionTimer:Set[${Math.Calc[${Script.RunningTime}-${MissionTimer}]}]
 		MissionTimer:Set[${Math.Calc[${MissionTimer}/60000]}]
-		UI:UpdateConsole
+		UI:UpdateConsole["Finished mission, heading to active agent for new one. This mission took ${MissionTimer} minutes and ${Math.Calc[${MissionTimer}%60]} seconds. :O"]
 		call ChatIRC.Say "Finished mission, heading to active agent for new one. This mission took ${MissionTimer} minutes and ${Math.Calc[${MissionTimer}%60]} seconds. :O"
 		;I should probably do some actual logging and stuff, as well as assigning this to a cleaner algrothim, however for the time being I'll fix this if it doesn't work and leave it as is.
 		
