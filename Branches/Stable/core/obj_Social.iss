@@ -463,6 +463,10 @@ objectdef obj_Social
 			return FALSE
 		}
 
+		if ${Me.InStation}
+		{
+			return FALSE
+		}
 		variable bool bReturn = FALSE
 		variable iterator PilotIterator
 		variable float PilotSecurityStatus
