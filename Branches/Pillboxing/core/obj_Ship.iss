@@ -182,13 +182,13 @@ objectdef obj_Ship
 					/* Shield Boosters
 						We boost to a higher % in here, as it's done during warp, so cap has time to regen.
 					*/
-					if ${Me.Ship.ShieldPct} < 95 || ${Config.Combat.AlwaysShieldBoost}
+					if !${MyShip.ToEntity.IsCloaked} && (${Me.Ship.ShieldPct} < 95 || ${Config.Combat.AlwaysShieldBoost})
 					{	/* Turn on the shield booster */
 						Ship:Activate_Hardeners[]
 						This:Activate_Shield_Booster[]
 					}
 
-					if ${Me.Ship.ShieldPct} > 99 && !${Config.Combat.AlwaysShieldBoost}
+					if !${MyShip.ToEntity.IsCloaked} && (${Me.Ship.ShieldPct} > 99 && !${Config.Combat.AlwaysShieldBoost})
 					{	/* Turn off the shield booster */
 						This:Deactivate_Shield_Booster[]
 					}
@@ -1417,6 +1417,8 @@ objectdef obj_Ship
 				MyShip:GetCargo[MyCargo]
 			}
 		}
+		EVEWindow[ByName,${MyShip.ID}]:StackAll
+		wait 5
 	}
 
 	function CloseCargo()
@@ -1435,7 +1437,7 @@ objectdef obj_Ship
 	}
 
 
-	function WarpToID(int64 Id, int WarpInDistance=0)
+	function WarpToID(int64 Id, int WarpInDistance=0, bool WarpFleet=FALSE)
 	{
 		if (${Id} <= 0)
 		{
@@ -1458,7 +1460,14 @@ objectdef obj_Ship
 			UI:UpdateConsole["Warping to ${Entity[${Id}].Name} @ ${EVEBot.MetersToKM_Str[${WarpInDistance}]}"]
 			while !${This.WarpEntered}
 			{
-				Entity[${Id}]:WarpTo[${WarpInDistance}]
+				if ${WarpFleet}
+				{
+					Entity[${Id}]:WarpFleetTo[${WarpInDistance}]
+				}
+				else
+				{
+					Entity[${Id}]:WarpTo[${WarpInDistance}]
+				}
 				wait 10
 			}
 			call This.WarpWait
@@ -1470,7 +1479,7 @@ objectdef obj_Ship
 	}
 
 	; This takes CHARID, not Entity id
-	function WarpToFleetMember(int64 charID, int distance=0 )
+	function WarpToFleetMember(int64 charID, int distance=0, bool WarpFleet=FALSE)
 	{
 		variable index:fleetmember FleetMembers
 		variable iterator FleetMember
@@ -1491,7 +1500,14 @@ objectdef obj_Ship
 						UI:UpdateConsole["Warping to Fleet Member: ${FleetMember.Value.ToPilot.Name}"]
 						while !${This.WarpEntered}
 						{
-							FleetMember.Value:WarpTo[${distance}]
+							if ${WarpFleet}
+							{
+								FleetMember.Value:WarpFleetTo[${distance}]
+							}
+							else
+							{
+								FleetMember.Value:WarpTo[${distance}]
+							}
 							wait 10
 						}
 						call This.WarpWait
@@ -1509,7 +1525,7 @@ objectdef obj_Ship
 		UI:UpdateConsole["ERROR: Ship.WarpToFleetMember could not find fleet member!"]
 	}
 
-	function WarpToBookMarkName(string DestinationBookmarkLabel)
+	function WarpToBookMarkName(string DestinationBookmarkLabel, bool WarpFleet=FALSE)
 	{
 		if (!${EVE.Bookmark[${DestinationBookmarkLabel}](exists)})
 		{
@@ -1517,7 +1533,7 @@ objectdef obj_Ship
 			return
 		}
 
-		call This.WarpToBookMark ${EVE.Bookmark[${DestinationBookmarkLabel}].ID}
+		call This.WarpToBookMark ${EVE.Bookmark[${DestinationBookmarkLabel}].ID} ${WarpFleet}
 	}
 
 	; TODO - Move this to obj_AutoPilot when it is ready - CyberTech
@@ -1547,7 +1563,7 @@ objectdef obj_Ship
 	{
 		while !${DestinationSystemID.Equal[${Me.SolarSystemID}]}
 		{
-			UI:UpdateConsole["DEBUG: To: ${DestinationSystemID} At: ${Me.SolarSystemID}"]
+			UI:UpdateConsole["DEBUG: To: ${DestinationSystemID} At: ${Me.SolarSystemID}", LOG_DEBUG]
 			UI:UpdateConsole["Setting autopilot from ${Universe[${Me.SolarSystemID}].Name} to ${Universe[${DestinationSystemID}].Name}"]
 			Universe[${DestinationSystemID}]:SetDestination
 			while !${Me.SolarSystemID.Equal[${DestinationSystemID}]}			
@@ -1559,9 +1575,14 @@ objectdef obj_Ship
 				wait 100
 			}
 		}
+		wait 20
+		while ${EVE.EntitiesCount} == 2
+		{
+			wait 5
+		}
 	}
 
-	function WarpToBookMark(bookmark DestinationBookmark)
+	function WarpToBookMark(bookmark DestinationBookmark, bool WarpFleet=FALSE)
 	{
 		variable int Counter
 		if ${Me.Station} == ${DestinationBookmark.ItemID}
@@ -1574,6 +1595,7 @@ objectdef obj_Ship
 		}
 
 		call This.WarpPrepare
+		; Note -- this does not handle WarpFleet=true (the fleet wont' change systems)
 		if ${EVE.Station[DestinationBookmark.ItemID]}
 		{
 			UI:UpdateConsole["New WarpToBookMark code is working!"]
@@ -1669,7 +1691,14 @@ objectdef obj_Ship
 				UI:UpdateConsole["1: Warping to bookmark ${Label} (Attempt #${WarpCounter})"]
 				while !${This.WarpEntered}
 				{
-					DestinationBookmark:WarpTo
+					if ${WarpFleet}
+					{
+						DestinationBookmark:WarpFleetTo
+					}
+					else
+					{
+						DestinationBookmark:WarpTo
+					}
 					wait 10
 				}
 				call This.WarpWait
@@ -1688,7 +1717,14 @@ objectdef obj_Ship
 						;Aka, this shouldn't be firing at all for stations
 						echo "Warping to ${DestinationBookmark.LocationID} && ${DestinationBookmark.ItemID}"
 						wait 100
-						DestinationBookmark:WarpTo
+						if ${WarpFleet}
+						{
+							DestinationBookmark:WarpFleetTo
+						}
+						else
+						{
+							DestinationBookmark:WarpTo
+						}
 						UI:UpdateConsole["Attempting to warp to mission now."]
 						wait 20
 						variable int intCount = 0
@@ -1721,7 +1757,14 @@ objectdef obj_Ship
 				UI:UpdateConsole["3: Warping to bookmark ${Label} (Attempt #${WarpCounter})"]
 				while !${This.WarpEntered}
 				{
-					DestinationBookmark:WarpTo
+					if ${WarpFleet}
+					{
+						DestinationBookmark:WarpFleetTo
+					}
+					else
+					{
+						DestinationBookmark:WarpTo
+					}
 					wait 10
 				}
 				call This.WarpWait
@@ -2418,7 +2461,7 @@ objectdef obj_Ship
 	{
 		if ${This.IsCargoOpen}
 		{
-			Me.Ship:StackAllCargo
+			EVEWindow[ByName,${MyShip.ID}]:StackAll
 		}
 	}
 
@@ -2469,13 +2512,25 @@ objectdef obj_Ship
 	member:bool IsPod()
 	{
 		variable string ShipName = ${MyShip}
-
-		if ${ShipName.Right[10].Equal["'s Capsule"]} || \
-			${Me.ToEntity.GroupID} == GROUP_CAPSULE
+		variable int GroupID
+		variable int TypeID
+		
+		if ${Me.InSpace}
 		{
-			if ${This.m_TypeID} != ${Me.ToEntity.TypeID}
+			GroupID:Set[${MyShip.ToEntity.GroupID}]
+			TypeID:Set[${MyShip.ToEntity.TypeID}]
+		}
+		else
+		{
+			GroupID:Set[${MyShip.ToItem.GroupID}]
+			TypeID:Set[${MyShip.ToItem.TypeID}]
+		}
+		if ${ShipName.Right[10].Equal["'s Capsule"]} || \
+			${GroupID} == GROUP_CAPSULE
+		{
+			if ${This.m_TypeID} != ${TypeID}
 			{
-				This:UpdateModuleList[]
+				This.RetryUpdateModuleList:Set[1]
 			}
 			return TRUE
 		}
@@ -2525,6 +2580,28 @@ objectdef obj_Ship
 			if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline}
 			{
 				UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
+				ModuleIter.Value:Click
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+	}
+
+	method Deactivate_Tractor()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		variable iterator ModuleIter
+
+		This.ModuleList_TractorBeams:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+		if ${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsDeactivating}
+			{
+				UI:UpdateConsole["Deactivating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
 				ModuleIter.Value:Click
 			}
 		}

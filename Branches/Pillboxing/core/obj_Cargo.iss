@@ -255,12 +255,12 @@ objectdef obj_Cargo
 						{
 							if ${quant} >= ${needed}
 							{
-								HangarIterator.Value:MoveTo[${MyShip.ID}, CargoHold, ${needed}]
+								HangarIterator.Value:MoveTo[MyShip, CargoHold, ${needed}]
 								Crystals:Set[${Crystals.CurrentKey}, ${Math.Calc[${Crystals.CurrentValue} + ${needed}]}]
 							}
 							else
 							{
-								HangarIterator.Value:MoveTo[${MyShip.ID}, CargoHold]
+								HangarIterator.Value:MoveTo[MyShip, CargoHold]
 								Crystals:Set[${Crystals.CurrentKey}, ${Math.Calc[${Crystals.CurrentValue} + ${quant}]}]
 							}
 						}
@@ -614,7 +614,7 @@ objectdef obj_Cargo
 			if ${qty} > 0
 			{
 				UI:UpdateConsole["TransferListToShipWithContainers: Loading Cargo: ${qty} units (${Math.Calc[${qty} * ${This.CargoToTransfer.Get[${idx}].Volume}]}m3) of ${This.CargoToTransfer.Get[${idx}].Name}"]
-				This.CargoToTransfer.Get[${idx}]:MoveTo[${MyShip.ID}, CargoHold, ${qty}]
+				This.CargoToTransfer.Get[${idx}]:MoveTo[MyShip, CargoHold, ${qty}]
 				wait 15
 			}
 			if ${qty} == ${This.CargoToTransfer.Get[${idx}].Quantity}
@@ -665,7 +665,7 @@ objectdef obj_Cargo
 					}
 					if ${QuantityToMove} > 0
 					{
-						CargoIterator.Value:MoveTo[${MyShip.ID}, CargoHold, ${QuantityToMove}]
+						CargoIterator.Value:MoveTo[MyShip, CargoHold, ${QuantityToMove}]
 						wait 15
 					}
 
@@ -784,7 +784,7 @@ objectdef obj_Cargo
 		call This.TransferListToHangar
 
 		This.CargoToTransfer:Clear[]
-		Me:StackAllHangarItems
+		EVEWindow[ByName,hangarFloor]:StackAll
 		Ship:UpdateBaselineUsedCargo[]
 		call This.ReplenishCrystals
 		call This.CloseHolds
@@ -829,7 +829,7 @@ objectdef obj_Cargo
 		call This.TransferListToCorpHangarArray
 
 		This.CargoToTransfer:Clear[]
-		Me:StackAllHangarItems
+		EVEWindow[ByName,hangarFloor]:StackAll
 		Ship:UpdateBaselineUsedCargo[]
 		call This.CloseHolds
 	}
@@ -857,7 +857,7 @@ objectdef obj_Cargo
 				call This.TransferListToShip
 
 				This.CargoToTransfer:Clear[]
-				EVEWindow[ByName,${MyShip.ID}]
+				EVEWindow[ByName,${MyShip.ID}]:StackAll
 				Ship:UpdateBaselineUsedCargo[]
 				call This.CloseHolds
 
@@ -923,7 +923,7 @@ objectdef obj_Cargo
 				call This.TransferListToShip
 
 				This.CargoToTransfer:Clear[]
-				EVEWindow[ByName,${MyShip.ID}]
+				EVEWindow[ByName,${MyShip.ID}]:StackAll
 				Ship:UpdateBaselineUsedCargo[]
 				call This.CloseHolds
 
@@ -982,7 +982,7 @@ objectdef obj_Cargo
 	  call This.TransferListToHangar
 
 	  This.CargoToTransfer:Clear[]
-	  Me:StackAllHangarItems
+	  EVEWindow[ByName,hangarFloor]:StackAll
 	  Ship:UpdateBaselineUsedCargo[]
 	  call This.CloseHolds
    }

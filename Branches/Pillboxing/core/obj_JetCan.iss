@@ -248,7 +248,21 @@ objectdef obj_JetCan
 			return
 		}
 
-		Entity[${ID}]:StackAllCargo
+		variable index:evewindow Windows
+		variable iterator iWindow
+		EVE:GetEVEWindows[Windows]
+		Windows:GetIterator[iWindow]
+		if ${iWindow:First(exists)}
+		{
+			do
+			{
+				if (${iWindow.Value.Name.Find[${ID}]} > 0)
+				{
+					iWindow.Value:StackAll
+				}
+			}
+			while ${iWindow:Next(exists)}
+		}
 	}
 
 	member IsCargoOpen(int64 ID=0)
