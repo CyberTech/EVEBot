@@ -146,36 +146,36 @@ objectdef obj_Drones
 		;This includes a check for sentry/heavy drones, going to have to put some SERIOUS beef into this method to select *which* drones to launch
 		if ${This.DronesInBay} > 0 && (${Me.ActiveTarget.Name.NotEqual["Kruul's Pleasure Garden"]} || ((${Me.ActiveTarget.Distance} < ${Me.DroneControlDistance}) && ${IsDroneBoat}))
 		{
-			if !${IsDroneBoat}
-			{
+			;if !${IsDroneBoat}
+			;{
 				UI:UpdateConsole["Launching drones..."]
 				MyShip:LaunchAllDrones
 				This.WaitingForDrones:Set[5]
-			}
-			else
-			{
-				MyShip:GetDrones[ListOfDrones]
-				if ${ListOfDrones.Used} > 0
-				{
-					ListOfDrones:GetIterator[itty]
-					itty:First
-					do
-					{
-						if ${This.IsSentryDrone[${itty.Value.TypeID}]} && ${Count} <= 5
-						{
-							UI:UpdateConsole["Launching Sentry Drone: ${itty.Value.Name}."]
-							itty.Value:Launch
-							Count:Inc
-						}
-					}
-					while ${itty:Next(exists)}
-					This.WaitingForDrones:Set[5]
-				}
-				else
-				{
-					UI:UpdateConsole["No drones found, can't launch anything...Call restock ammo?"]
-				}
-			}
+			;}
+			;else
+			;{
+			;	MyShip:GetDrones[ListOfDrones]
+			;	if ${ListOfDrones.Used} > 0
+			;	{
+			;		ListOfDrones:GetIterator[itty]
+			;		itty:First
+			;		do
+			;		{
+			;			if ${This.IsSentryDrone[${itty.Value.TypeID}]} && ${Count} <= 5
+			;			{
+			;				UI:UpdateConsole["Launching Sentry Drone: ${itty.Value.Name}."]
+			;				itty.Value:Launch
+			;				Count:Inc
+			;			}
+			;		}
+			;		while ${itty:Next(exists)}
+			;		This.WaitingForDrones:Set[5]
+			;	}
+			;	else
+			;	{
+			;		UI:UpdateConsole["No drones found, can't launch anything...Call restock ammo?"]
+			;	}
+			;}
 		}
 	}
 
@@ -341,7 +341,7 @@ objectdef obj_Drones
 				variable index:int64 engageIndex
 				do
 				{
-					if ${DroneIterator.Value.ToEntity.ShieldPct} < 100
+					if ${DroneIterator.Value.ToEntity.ShieldPct} < 99
 					{
 						UI:UpdateConsole["Recalling Damaged Drone ${DroneIterator.Value.ID}"]
 						UI:UpdateConsole["Debug: Shield: ${DroneIterator.Value.ToEntity.ShieldPct}, Armor: ${DroneIterator.Value.ToEntity.ArmorPct}, Structure: ${DroneIterator.Value.ToEntity.StructurePct}"]
