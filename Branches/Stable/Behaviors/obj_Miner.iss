@@ -514,7 +514,7 @@ objectdef obj_Miner
 		relay all -event EVEBot_Miner_Full ${tempString}
 
 		/* TO MANUALLY CALL A HAULER ENTER THIS IN THE CONSOLE
-		 * relay all -event EVEBot_Miner_Full "${Me.CharID},${Me.SolarSystemID},0"
+		 * relay all -event EVEBot_Miner_Full "${Me.CharID},${Me.SolarSystemID},${Entity[GroupID = 9].ID}"
 		 */
 	}
 
