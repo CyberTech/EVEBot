@@ -2546,7 +2546,6 @@ objectdef obj_Ship
 		if ${Me.ToEntity.Mode} == 4 || ${Me.ToEntity.Mode} == 1
 		{
 			; already orbiting something
-			This:Activate_AfterBurner
 			return
 		}
 
@@ -2556,12 +2555,17 @@ objectdef obj_Ship
 		do
 		{
 			OrbitDistance:Set[${Math.Calc[${ModuleIter.Value.Charge.MaxFlightTime}*${ModuleIter.Value.Charge.MaxVelocity}*.88]}]
+			if ${ModuleIter.Value.OptimalRange} > ${OrbitDistance}
+			{
+				OrbitDistance:Set[${ModuleIter.Value.OptimalRange}]
+			}
 			if ${OrbitDistance} == 0
 			{
 				return
 			}
 			UI:UpdateConsole["Orbiting active target at ${Math.Calc[${OrbitDistance}/1000]} KM."]
 			Me.ActiveTarget:Orbit[${OrbitDistance}]
+			return
 		}
 		while ${ModuleIter:Next(exists)}
 		Me.ActiveTarget:Orbit[${OrbitDistance}]
@@ -2586,7 +2590,7 @@ objectdef obj_Ship
 			;UI:UpdateConsole["ModuleIter.Value.IsChangingAmmo = ${ModuleIter.Value.IsChangingAmmo}"]
 			;UI:UpdateConsole["ModuleIter.Value.IsReloadingAmmo = ${ModuleIter.Value.IsReloadingAmmo}"]
 			;UI:UpdateConsole["ModuleIter.Value.IsOnline = ${ModuleIter.Value.IsOnline}"]
-			if !${ModuleIter.Value.IsActive} && !${ModuleIter.Value.IsChangingAmmo} && !${ModuleIter.Value.IsReloadingAmmo} && ${ModuleIter.Value.IsOnline} && ${Me.ActiveTarget.Distance} < ${Math.Calc[${ModuleIter.Value.Charge.MaxFlightTime}*${ModuleIter.Value.Charge.MaxVelocity}*.95]}
+			if !${ModuleIter.Value.IsActive} && !${ModuleIter.Value.IsChangingAmmo} && !${ModuleIter.Value.IsReloadingAmmo} && ${ModuleIter.Value.IsOnline} && (${Me.ActiveTarget.Distance} < ${Math.Calc[${ModuleIter.Value.Charge.MaxFlightTime}*${ModuleIter.Value.Charge.MaxVelocity}*.95]} || ${Me.ActiveTarget.Distance} < ${ModuleIter.Value.OptimalRange})
 			{	
 				;;UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
 				ModuleIter.Value:Activate

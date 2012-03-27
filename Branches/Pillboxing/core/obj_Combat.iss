@@ -427,12 +427,12 @@ objectdef obj_Combat
 
 			if ${Config.Combat.OrbitAtOptimal}
 			{
-				if !${Ship.Drones.IsDroneBoat}
-				{
+				;if !${Ship.Drones.IsDroneBoat}
+				;{
 					;don't orbit if we're in a drone boat
 
 					Ship:OrbitAtOptimal
-				}
+				;}
 			}
 			else
 			{
