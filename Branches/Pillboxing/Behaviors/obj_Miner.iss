@@ -192,14 +192,14 @@ objectdef obj_Miner
 	  		return
 		}
 
-		if ${Me.Ship.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold} && \
+		if ${MyShip.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold} && \
 		    ${SanityCheckAbort} == FALSE
 		{
 		 	This.CurrentState:Set["MINE"]
 			return
 		}
 
-	    if ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold} || \
+	    if ${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold} || \
     	    ${EVEBot.ReturnToStation}  || \
     	    ${SanityCheckAbort} == TRUE
 		{
@@ -220,24 +220,24 @@ objectdef obj_Miner
 			{
 				UI:UpdateConsole["Warning: Paused. Combat type abort."]
 
-				if ((${Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct}) && ${Ship.ArmorRepairUnits} == 0)
+				if ((${MyShip.ArmorPct} < ${Config.Combat.MinimumArmorPct}) && ${Ship.ArmorRepairUnits} == 0)
 				{
 					UI:UpdateConsole["Warning: Script paused due to Armor Precentage."]
 					Script:Pause
 				}
 
 				; To.Do NEED TO ADD CHECK FOR HULL REPAIRER in SHIP OBJECT.
-				if ((${Me.Ship.StructurePct} < 100))
+				if ((${MyShip.StructurePct} < 100))
 				{
 					UI:UpdateConsole["Warning: Aborted. Script paused due to Structure Percentage."]
 
 					Script:Pause
 				}
 
-				if ${Me.Ship.ShieldPct} < 100
+				if ${MyShip.ShieldPct} < 100
 				{
 					UI:UpdateConsole["Warning: Waiting for Shields to Regen."]
-					while ${Me.Ship.ShieldPct} < 95
+					while ${MyShip.ShieldPct} < 95
 					{
 						wait 20
 					}
@@ -300,7 +300,7 @@ objectdef obj_Miner
 		UI:UpdateConsole["Mining"]
 
 		while ( !${EVEBot.ReturnToStation} && \
-				${Me.Ship.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold}	)
+				${MyShip.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold}	)
 		{
 			/* TODO: CyberTech: Move this to the state machine, have it check for when the system is clear */
 			if (${Config.Miner.StandingDetection} && \
@@ -327,11 +327,11 @@ objectdef obj_Miner
 				return
 			}
 
-			if ${Me.Ship.UsedCargoCapacity} != ${LastUsedCargoCapacity}
+			if ${MyShip.UsedCargoCapacity} != ${LastUsedCargoCapacity}
 			{
-				;UI:UpdateConsole["DEBUG: ${Me.Ship.UsedCargoCapacity} != ${LastUsedCargoCapacity}"]
+				;UI:UpdateConsole["DEBUG: ${MyShip.UsedCargoCapacity} != ${LastUsedCargoCapacity}"]
 			    SanityCheckCounter:Set[0]
-			    LastUsedCargoCapacity:Set[${Me.Ship.UsedCargoCapacity}]
+			    LastUsedCargoCapacity:Set[${MyShip.UsedCargoCapacity}]
 			}
 
 			if (!${Config.Miner.IceMining} && \
@@ -349,7 +349,7 @@ objectdef obj_Miner
 				Ship.Drones:LaunchAll[]
 			}
 
-			if ${Me.Ship.MaxLockedTargets} == 0 && \
+			if ${MyShip.MaxLockedTargets} == 0 && \
 				 ${Ship.Drones.DronesInSpace} == 0
 			{
 				TargetJammedCounter:Inc
@@ -381,16 +381,16 @@ objectdef obj_Miner
 				wait 20
 			}
 
-			if (${Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
-				${Me.Ship.ShieldPct} < ${Config.Combat.MinimumShieldPct})
+			if (${MyShip.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
+				${MyShip.ShieldPct} < ${Config.Combat.MinimumShieldPct})
 			{
 				/*
 					TODO - CyberTech: This should be checked in a defensive class that runs regardless of which bot module is active
 					instead of being checked in each module
 				*/
 
-				UI:UpdateConsole["Armor is at ${Me.Ship.ArmorPct}: ${Me.Ship.Armor}/${Me.Ship.MaxArmor}", LOG_CRITICAL]
-				UI:UpdateConsole["Shield is at ${Me.Ship.ShieldPct}: ${Me.Ship.Shield}/${Me.Ship.MaxShield}", LOG_CRITICAL]
+				UI:UpdateConsole["Armor is at ${MyShip.ArmorPct}: ${MyShip.Armor}/${MyShip.MaxArmor}", LOG_CRITICAL]
+				UI:UpdateConsole["Shield is at ${MyShip.ShieldPct}: ${MyShip.Shield}/${MyShip.MaxShield}", LOG_CRITICAL]
 				UI:UpdateConsole["Miner aborting due to defensive status", LOG_CRITICAL]
 
 				EVEBot.ReturnToStation:Set[TRUE]
@@ -417,7 +417,7 @@ objectdef obj_Miner
 				if ${Target:First(exists)}
 				do
 				{
-					if ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
+					if ${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 					{
 						break
 					}
@@ -442,7 +442,7 @@ objectdef obj_Miner
 							wait 5
 						}
 
-						if ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
+						if ${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 						{
 							break
 						}

@@ -452,17 +452,28 @@ objectdef obj_Combat
 			Ship:Activate_TargetPainters
 			Ship:Activate_StasisWebs
 			Ship:Activate_Weapons
-			if ${Me.ActiveTarget(exists)} && ${Me.ActiveTarget.ShieldPct} > 80
+			if ${Me.ActiveTarget(exists)} 
 			{
-				if ${Me.ActiveTarget.Radius} < 100 && ${Ship.Drones.DronesOut} > 10
+				if ${Me.ActiveTarget.Radius} < 100 && ${Ship.Drones.DronesOut} > 10 && ${Ship.Drones.IsDroneBoat}
 				{
 					UI:UpdateConsole["Active target is a frigate for sure, switching to smaller drones"]
 					call Ship.Drones.ReturnAllToDroneBay
-					Ship.Drones:LaunchLightDrones
+					call Ship.Drones.LaunchAll
 					;might have to fix
+				}
+				elseif ${Me.ActiveTarget.Radius} > 100 && ${Ship.Drones.DronesOut} < 25 && ${Ship.Drones.IsDroneBoat}
+				{
+					UI:UpdateConsole["Active target is a large target for sure, switching to larger drones"]
+					call Ship.Drones.ReturnAllToDroneBay
+					call Ship.Drones.LaunchAll
+				}
+				elseif !${Ship.Drones.IsDroneBoat}
+				{
+					call Ship.Drones.LaunchAll
 				}
 			}
 			Ship.Drones:SendDrones
+			
 		}
 		if !${Ship.IsAmmoAvailable}
 		{
@@ -532,12 +543,12 @@ objectdef obj_Combat
 		{
 			/* don't leave the "fled" state until we regen */
 			if (${Ship.IsPod} || \
-				${Me.Ship.ArmorPct} < 50 || \
-				(${Me.Ship.ShieldPct} < 80 && ${Config.Combat.MinimumShieldPct} > 0) || \
-				${Me.Ship.CapacitorPct} < 60 )
+				${MyShip.ArmorPct} < 50 || \
+				(${MyShip.ShieldPct} < 80 && ${Config.Combat.MinimumShieldPct} > 0) || \
+				${MyShip.CapacitorPct} < 60 )
 			{
 					This.CurrentState:Set["FLEE"]
-					UI:UpdateConsole["Debug: Staying in Flee State: Armor: ${Me.Ship.ArmorPct} Shield: ${Me.Ship.ShieldPct} Cap: ${Me.Ship.CapacitorPct}", LOG_DEBUG]
+					UI:UpdateConsole["Debug: Staying in Flee State: Armor: ${MyShip.ArmorPct} Shield: ${MyShip.ShieldPct} Cap: ${MyShip.CapacitorPct}", LOG_DEBUG]
 			}
 			else
 			{
@@ -545,11 +556,11 @@ objectdef obj_Combat
 					This.CurrentState:Set["IDLE"]
 			}
 		}
-		elseif ${Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct}  || ${Me.Ship.ShieldPct} < ${Config.Combat.MinimumShieldPct} || ${Me.Ship.CapacitorPct} < ${Config.Combat.MinimumCapPct}
+		elseif ${MyShip.ArmorPct} < ${Config.Combat.MinimumArmorPct}  || ${MyShip.ShieldPct} < ${Config.Combat.MinimumShieldPct} || ${MyShip.CapacitorPct} < ${Config.Combat.MinimumCapPct}
 		{	
-			UI:UpdateConsole["Armor is at ${Me.Ship.ArmorPct.Int}%%: ${Me.Ship.Armor.Int}/${Me.Ship.MaxArmor.Int}", LOG_CRITICAL]
-			UI:UpdateConsole["Shield is at ${Me.Ship.ShieldPct.Int}%%: ${Me.Ship.Shield.Int}/${Me.Ship.MaxShield.Int}", LOG_CRITICAL]
-			UI:UpdateConsole["Cap is at ${Me.Ship.CapacitorPct.Int}%%: ${Me.Ship.Capacitor.Int}/${Me.Ship.MaxCapacitor.Int}", LOG_CRITICAL]
+			UI:UpdateConsole["Armor is at ${MyShip.ArmorPct.Int}%%: ${MyShip.Armor.Int}/${MyShip.MaxArmor.Int}", LOG_CRITICAL]
+			UI:UpdateConsole["Shield is at ${MyShip.ShieldPct.Int}%%: ${MyShip.Shield.Int}/${MyShip.MaxShield.Int}", LOG_CRITICAL]
+			UI:UpdateConsole["Cap is at ${MyShip.CapacitorPct.Int}%%: ${MyShip.Capacitor.Int}/${MyShip.MaxCapacitor.Int}", LOG_CRITICAL]
 			if ${Me.ToEntity.IsWarpScrambled}
 			{
 				UI:UpdateConsole["Warp Scrambled: Fighting", LOG_CRITICAL]
@@ -564,7 +575,7 @@ objectdef obj_Combat
 
 	function ManageTank()
 	{
-		if ${Me.Ship.ArmorPct} < 100
+		if ${MyShip.ArmorPct} < 100
 		{
 			/* Turn on armor reps, if you have them
 				Armor reps do not rep right away -- they rep at the END of the cycle.
@@ -572,25 +583,25 @@ objectdef obj_Combat
 			*/
 			Ship:Activate_Armor_Reps[]
 		}
-		elseif ${Me.Ship.ArmorPct} > 98
+		elseif ${MyShip.ArmorPct} > 98
 		{
 			Ship:Deactivate_Armor_Reps[]
 		}
 
-		if ${Me.Ship.ShieldPct} < 85 || ${Config.Combat.AlwaysShieldBoost}
+		if ${MyShip.ShieldPct} < 85 || ${Config.Combat.AlwaysShieldBoost}
 		{   /* Turn on the shield booster, if present */
 			Ship:Activate_Shield_Booster[]
 		}
-		elseif ${Me.Ship.ShieldPct} > 95 && !${Config.Combat.AlwaysShieldBoost}
+		elseif ${MyShip.ShieldPct} > 95 && !${Config.Combat.AlwaysShieldBoost}
 		{
 			Ship:Deactivate_Shield_Booster[]
 		}
 
-		if ${Me.Ship.CapacitorPct} < 20
+		if ${MyShip.CapacitorPct} < 20
 		{   /* Turn on the cap booster, if present */
 			Ship:Activate_Cap_Booster[]
 		}
-		elseif ${Me.Ship.CapacitorPct} > 80
+		elseif ${MyShip.CapacitorPct} > 80
 		{
 			Ship:Deactivate_Cap_Booster[]
 		}
@@ -599,7 +610,10 @@ objectdef obj_Combat
 		{
 			if ${Me.TargetCount} > 0 && ${Me.TargetedByCount} >= ${Me.TargetCount}
 			{
-				Ship.Drones:LaunchAll[]
+				if !${Ship.Drones.IsDroneBoat}
+				{
+					call Ship.Drones.LaunchAll
+				}
 			}
 			else
 			{

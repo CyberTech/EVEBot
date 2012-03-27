@@ -623,13 +623,13 @@ objectdef obj_Configuration_Miner
 		if !${Me.InStation}
 		{
 			if (${threshold} == 0) || \
-				(${threshold} > ${Me.Ship.CargoCapacity})
+				(${threshold} > ${MyShip.CargoCapacity})
 			{
 				if ${Ship.MiningAmountPerLaser} > 0
 				{
-					threshold:Set[${Math.Calc[${Me.Ship.CargoCapacity} / ${Ship.MiningAmountPerLaser}].Int}]
+					threshold:Set[${Math.Calc[${MyShip.CargoCapacity} / ${Ship.MiningAmountPerLaser}].Int}]
 					threshold:Set[${Math.Calc[(${threshold} * ${Ship.MiningAmountPerLaser}) * 0.99]}]
-					if ${This.MinerRef.FindSetting[Cargo Threshold, 0]} > ${Me.Ship.CargoCapacity}
+					if ${This.MinerRef.FindSetting[Cargo Threshold, 0]} > ${MyShip.CargoCapacity}
 					{
 						;UI:UpdateConsole["ERROR: Mining Cargo Threshold is set higher than ship capacity: Using dynamic value of ${threshold}"]
 					}
@@ -638,7 +638,7 @@ objectdef obj_Configuration_Miner
 				{
 					;UI:UpdateConsole["ERROR: Unable to retrieve Ship.MiningAmountPerLaser"]
 					;UI:UpdateConsole["ERROR: Mining Cargo Threshold is set higher than ship capacity: Using cargo capacity"]
-					threshold:Set[${Me.Ship.CargoCapacity}]
+					threshold:Set[${MyShip.CargoCapacity}]
 				}
 			}
 		}

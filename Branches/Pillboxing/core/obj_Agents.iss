@@ -249,8 +249,8 @@ objectdef obj_Agents
 	{
 		return ${This.AgentName}
 	}
-
-	member:bool InAgentStation()
+ 
+	member:bool InAgentStation() 
 	{
 		return ${Station.DockedAtStation[${Agent[${This.AgentIndex}].StationID}]}
 	}
@@ -314,72 +314,95 @@ objectdef obj_Agents
 	    variable index:agentmission amIndex
 		variable iterator amIterator
 		variable set skipList
-
+		variable time lastDecline
+		lastDecline:Set[${Config.Agents.LastDecline[${This.AgentName}]}]
+		lastDecline.Hour:Inc[4]
+		lastDecline:Update
+		;echo "${lastDecline.Timestamp} - ${Time.Timestamp}"
 		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
-		skipList:Clear
-		UI:UpdateConsole["obj_Agents: DEBUG: amIndex.Used = ${amIndex.Used}"]
-		if ${amIterator:First(exists)}
+		;UI:UpdateConsole["obj_Agents: DEBUG: amIndex.Used = ${amIndex.Used}"]
+		if ${This.AgentList.agentIterator:First(exists)} && ${lastDecline.Timestamp} < ${Time.Timestamp} 
+		;&& ${lastDecline.Timestamp} <= ${This.Timestamp}
 		{
 			do
 			{
-					UI:UpdateConsole["obj_Agents: DEBUG: This.AgentID = ${This.AgentID}"]
-					UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.AgentID = ${amIterator.Value.AgentID}"]
-					UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.State = ${amIterator.Value.State}"]
-					UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}"]
-					if ${amIterator.Value.State} == 1
-					{					
-						if ${MissionBlacklist.IsBlacklisted[${Agent[id,${amIterator.Value.AgentID}].Level},"${amIterator.Value.Name}"]} == FALSE
-						{
-							variable bool isLowSec
-							variable bool avoidLowSec
-							isLowSec:Set[${Missions.MissionCache.LowSec[${amIterator.Value.AgentID}]}]
-		
-							if ${isLowSec} == FALSE
+				if ${amIterator:First(exists)}
+				{
+					do
+					{
+
+							;UI:UpdateConsole["obj_Agents: DEBUG: This.AgentID = ${This.AgentID}"]
+							;UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.AgentID = ${amIterator.Value.AgentID}"]
+							;UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.State = ${amIterator.Value.State}"]
+							;UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}"]
+							if ${amIterator.Value.State} == 1
+							{					
+								if ${MissionBlacklist.IsBlacklisted[${Agent[id,${amIterator.Value.AgentID}].Level},"${amIterator.Value.Name}"]} == FALSE
+								{
+									variable bool isLowSec
+									variable bool avoidLowSec
+									isLowSec:Set[${Missions.MissionCache.LowSec[${amIterator.Value.AgentID}]}]
+				
+									if ${isLowSec} == FALSE
+									{
+
+										if ${amIterator.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions} == TRUE
+										{
+											This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}]}]
+											return
+										}
+
+										if ${amIterator.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} == TRUE
+										{
+											This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}]}]
+											return
+										}
+
+										if ${amIterator.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} == TRUE
+										{
+											This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}]}]
+											return
+										}
+
+										if ${amIterator.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions} == TRUE
+										{
+											;UI:UpdateConsole["Setting ActiveAgent to ${Agent[id,${amIterator.Value.AgentID}].Name}"]
+											This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}].Name}]
+											return
+										}
+								}
+							}
+							else
 							{
-
-								if ${amIterator.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions} == TRUE
+								/* if we get here the mission is not acceptable */
+								lastDecline:Set[${Config.Agents.LastDecline[${Agent[id,${amIterator.Value.AgentID}]}]}]
+								UI:UpdateConsole["obj_Agents: DEBUG: lastDecline = ${lastDecline}"]
+								lastDecline.Hour:Inc[4]
+								lastDecline:Update
+								;echo "${Math.Calc[${lastDecline.Timestamp} - ${Time.Timestamp}]}"
+								if ${lastDecline.Timestamp} >= ${Time.Timestamp}
 								{
-									This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}]}]
-									return
+									UI:UpdateConsole["obj_Agents: DEBUG: Skipping mission to avoid standing loss: ${amIterator.Value.Name}"]
+									;skipList:Add[${amIterator.Value.AgentID}]
 								}
-
-								if ${amIterator.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} == TRUE
+								else
 								{
-									This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}]}]
-									return
+									if ${Agent[id,${amIterator.Value.AgentID}].Name.Equal[${This.AgentList.agentIterator.Key}]}
+									{
+										UI:UpdateConsole["Looks like agent ${Agent[id,${amIterator.Value.AgentID}].Name}'s mission can be declined. Setting Active Agent."]
+										This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}].Name}]
+										return
+									}
 								}
-
-								if ${amIterator.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} == TRUE
-								{
-									This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}]}]
-									return
-								}
-
-								if ${amIterator.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions} == TRUE
-								{
-									;UI:UpdateConsole["Setting ActiveAgent to ${Agent[id,${amIterator.Value.AgentID}].Name}"]
-									This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}].Name}]
-									return
-								}
+							}
 						}
 					}
-
-						/* if we get here the mission is not acceptable */
-						variable time lastDecline
-						lastDecline:Set[${Config.Agents.LastDecline[${Agent[id,${amIterator.Value.AgentID}]}]}]
-						UI:UpdateConsole["obj_Agents: DEBUG: lastDecline = ${lastDecline}"]
-						lastDecline.Hour:Inc[4]
-						lastDecline:Update
-						if ${lastDecline.Timestamp} >= ${Time.Timestamp}
-						{
-							UI:UpdateConsole["obj_Agents: DEBUG: Skipping mission to avoid standing loss: ${amIterator.Value.Name}"]
-							skipList:Add[${amIterator.Value.AgentID}]
-							continue
-						}
+					while ${amIterator:Next(exists)}
 				}
 			}
-			while ${amIterator:Next(exists)}
+			while ${This.AgentList.agentIterator:Next(exists)}
+
 		}
 
 		/* if we get here none of the missions in the journal are valid */
@@ -414,7 +437,7 @@ objectdef obj_Agents
 		*/
 		/* we should never get here */
 		UI:UpdateConsole["obj_Agents.PickAgent: DEBUG: Script paused."]
-		Script:Pause
+		;Script:Pause
 	}
 
 	member:string DropOffStation()
@@ -516,7 +539,60 @@ objectdef obj_Agents
 			}
 			while ${amIterator:Next(exists)}
 		}
+		;We can only come to this point if we have no accepted missions
+		if ${amIterator:First(exists)}
+		{
+			;iterate though agent missions
+			do
+			{
+				if ${This.AgentList.agentIterator:First(exists)}
+				{
+					;iterate through agents in our agent list
+					do
+					{
+						lastDecline:Set[${Config.Agents.LastDecline[${This.AgentList.agentIterator.Key}]}]
+						;UI:UpdateConsole["obj_Agents: DEBUG: lastDecline = ${lastDecline}"]
+						lastDecline.Hour:Inc[4]
+						lastDecline:Update
+						;echo "${Math.Calc[${lastDecline.Timestamp} - ${Time.Timestamp}]}"
+						if ${This.AgentList.agentIterator.Key.Equal[${Agent[id,${amIterator.Value.AgentID}].Name}]} && ${lastDecline.Timestamp} <= ${Time.Timestamp} && \
+						${This.AgentList.agentIterator.Key.Equal[${This.AgentName}]}
+						{
+							UI:UpdateConsole["WE can move back an agent."]
+							return FALSE
+						}
 
+					}
+					while ${This.AgentList.agentIterator:Next(exists)}
+ 				}
+			}
+			while ${amIterator:Next(exists)}
+		}
+		if ${This.AgentList.agentIterator:First(exists)}
+		{
+			do
+			{
+				amIndex:RemoveByQuery[${LavishScript.CreateQuery[AgentID != ${Agent[name,${This.AgentList.agentIterator.Key}].ID}]}]
+				amIndex:Collapse
+				if ${amIndex.Used} == 0 
+				{
+					if !${This.AgentName.Equal[${This.AgentList.agentIterator.Key}]}
+					{
+						echo ${This.AgentName} ${This.AgentList.agentIterator.Key}
+						UI:UpdateConsole["We have an agent without a mission, setting this to active agent"]
+						This:SetActiveAgent[${This.AgentList.agentIterator.Key}]
+						return FALSE
+					}
+					else
+					{
+						return FALSE
+					}
+				}
+
+			}
+			while ${This.AgentList.agentIterator:Next(exists)}
+		}
+		This:PickAgent
 		return FALSE
 	}
 

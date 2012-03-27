@@ -58,7 +58,7 @@ objectdef obj_Targets
 			TIMER.Second:Inc[1]
 			TIMER:Update	
 		}
-		/* Me.Ship.MaxTargetRange contains the (possibly) damped value */
+		/* MyShip.MaxTargetRange contains the (possibly) damped value */
 		EVE:QueryEntities[InRange, ${query2}]
 		Targets:GetIterator[Target]
 		ToLock:Set[${Math.Calc[${MyShip.MaxLockedTargets} - ${Me.TargetCount} - ${Me.TargetingCount}]}]
@@ -158,7 +158,7 @@ objectdef obj_Targets
 		if ${Jammer:First(exists)} && (!${Entity[${ToTarget[1]}](exists)} || ${Me.ToEntity.IsWarpScrambled})
 		{
 			ToTarget:Clear
-			if ${Me.Ship.MaxLockedTargets} == 0
+			if ${MyShip.MaxLockedTargets} == 0
 			{
 				UI:UpdateConsole["Jammed, cant target..."]
 			}
@@ -189,7 +189,7 @@ objectdef obj_Targets
 		;if ${HasTargets} && ${Me.ActiveTarget(exists)}
 		;{
 		;	variable int OrbitDistance
-		;	OrbitDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.40/1000].Round}]
+		;	OrbitDistance:Set[${Math.Calc[${MyShip.MaxTargetRange}*0.40/1000].Round}]
 		;	OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
 		;	Me.ActiveTarget:Orbit[${OrbitDistance}]
 		;}

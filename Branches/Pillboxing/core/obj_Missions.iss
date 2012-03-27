@@ -397,7 +397,7 @@ function RunCourierMission(int agentID)
 		call Cargo.OpenHolds
 
 		;;; Check the cargohold of your ship
-		Me.Ship:GetCargo[CargoIndex]
+		MyShip:GetCargo[CargoIndex]
 		CargoIndex:GetIterator[CargoIterator]
 		if ${CargoIterator:First(exists)}
 		{

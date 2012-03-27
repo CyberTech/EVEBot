@@ -295,7 +295,7 @@ objectdef obj_Scavenger
 			return
 		}
 		RoomTimer:Set[${Script.RunningTime}]
-		run evesalvage -here -stop
+		run evesalvage -here -stop -waittimevar 5
 		while ${Script[Evesalvage](exists)}
 		{
 			wait 100
