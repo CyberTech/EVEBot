@@ -91,9 +91,6 @@ objectdef obj_Hauler
 			{
  				if ${JetCans.Get[${JetCanCounter}].Owner.CharID} == ${id}
  				{
- 					echo "DEBUG: owner matched"
-					echo "DEBUG: ${JetCans.Get[${JetCanCounter}]}"
-					echo "DEBUG: ${JetCans.Get[${JetCanCounter}].ID}"
 					return ${JetCans.Get[${JetCanCounter}].ID}
  				}
 			}
@@ -271,8 +268,10 @@ objectdef obj_OreHauler inherits obj_Hauler
 		variable iterator Cargo
 		variable int QuantityToMove
 
-		UI:UpdateConsole["DEBUG: obj_OreHauler.LootEntity ${id} ${leave}"]
+		UI:UpdateConsole["obj_OreHauler.LootEntity ${Entity[${id}].Name}(${id}) - Leaving ${leave} units"]
 
+		Entities.Peek:OpenCargo
+		wait 20
 		Entity[${id}]:GetCargo[ContainerCargo]
 		ContainerCargo:GetIterator[Cargo]
 		if ${Cargo:First(exists)}
@@ -298,7 +297,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 				UI:UpdateConsole["Hauler: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
 				if ${QuantityToMove} > 0
 				{
-					Cargo.Value:MoveTo[${MyShip.ID},CargoHold,${QuantityToMove}]
+					Cargo.Value:MoveTo[MyShip,CargoHold,${QuantityToMove}]
 					wait 30
 				}
 
@@ -307,7 +306,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 					/* TODO - this needs to keep a queue of bookmarks, named for the can ie, "Can CORP hh:mm", of partially looted cans */
 					/* Be sure its names, and not ID.  We shouldn't store anything in a bookmark name that we shouldnt know */
 
-					UI:UpdateConsole["DEBUG: obj_Hauler.LootEntity: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
+					UI:UpdateConsole["DEBUG: obj_Hauler.LootEntity: Ship Cargo Free Space: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
 					break
 				}
 			}
@@ -315,6 +314,8 @@ objectdef obj_OreHauler inherits obj_Hauler
 		}
 
 		EVEWindow[ByName,${MyShip.ID}]:StackAll
+		wait 10
+		EVEWindow[ByName,${MyShip.ID}]:Close
 		wait 10
 	}
 
@@ -446,7 +447,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		{
 			if ${Entity["OwnerID = ${charID} && CategoryID = 6"].Distance} < WARP_RANGE
 			{
-				UI:UpdateConsole["Fleet member is too far for approach; warping to bounce point"]
+				UI:UpdateConsole["Fleet member is too far for approach; warping to a bounce point"]
 				call This.WarpToNextSafeSpot
 			}
 			call Ship.WarpToFleetMember ${charID}
@@ -457,67 +458,87 @@ objectdef obj_OreHauler inherits obj_Hauler
 		This:BuildJetCanList[${charID}]
 		while ${Entities.Peek(exists)}
 		{
-			UI:UpdateConsole["DEBUG: ${Entity["OwnerID = ${charID} && CategoryID = 6"]}"]
-			UI:UpdateConsole["DEBUG: ${Entity["OwnerID = ${charID} && CategoryID = 6"].ID}"]
-			UI:UpdateConsole["DEBUG: ${Entity["OwnerID = ${charID} && CategoryID = 6"].DistanceTo[${Entities.Peek.ID}]}"]
-
-			if ${Entity["OwnerID = ${charID} && CategoryID = 6"](exists)} && \
-			   ${Entity["OwnerID = ${charID} && CategoryID = 6"].DistanceTo[${Entities.Peek.ID}]} > LOOT_RANGE
+			variable int64 PlayerID
+			variable bool PopCan = FALSE
+			
+			; Find the player who owns this can
+			if ${Entity["OwnerID = ${charID} && CategoryID = 6"](exists)}
 			{
-				/* approach within tractor range and tractor entity */
+				PlayerID:Set[${Entity["OwnerID = ${charID} && CategoryID = 6"].ID}]
+			}
+		
+			if ${Entities.Peek.Distance} >= ${LOOT_RANGE} && \
+				(!${Entity[${PlayerID}](exists)} || ${Entity[${PlayerID}].DistanceTo[${Entities.Peek.ID}]} > LOOT_RANGE)
+			{
+				UI:UpdateConsole["Checking: ${Entities.Peek.ID}: ${Entity[${PlayerID}].Name} is ${Entity[${PlayerID}].DistanceTo[${Entities.Peek.ID}]}m away from jetcan"]
+				PopCan:Set[TRUE]
+
+				Entities.Peek:Approach
+
+				; approach within tractor range and tractor entity
 				variable float ApproachRange = ${Ship.OptimalTractorRange}
 				if ${ApproachRange} > ${Ship.OptimalTargetingRange}
 				{
 					ApproachRange:Set[${Ship.OptimalTargetingRange}]
 				}
 
-				if ${ApproachRange} > 0 /* we have a tractor beam */
+				if ${Ship.OptimalTractorRange} > 0
 				{
-					if ${Entities.Peek.Distance} > ${ApproachRange}
+					variable int Counter
+					if ${Entities.Peek.Distance} > ${Ship.OptimalTargetingRange}
 					{
-						call Ship.Approach ${Entities.Peek.ID} ${ApproachRange}
+						call Ship.Approach ${Entities.Peek.ID} ${Ship.OptimalTargetingRange}
 					}
+					Entities.Peek:Approach
 					Entities.Peek:LockTarget
 					wait 10 ${Entities.Peek.BeingTargeted} || ${Entities.Peek.IsLockedTarget}
-					while !${Entities.Peek.IsLockedTarget}
+					if !${Entities.Peek.BeingTargeted} && !${Entities.Peek.IsLockedTarget}
+					{
+						if !${Entities.Peek(exists)}
+						{
+							Entities:Dequeue
+							continue
+						}
+						UI:UpdateConsole["Hauler: Failed to target, retrying"]
+						Entities.Peek:LockTarget
+						wait 10 ${Entities.Peek.BeingTargeted} || ${Entities.Peek.IsLockedTarget}
+					}
+					if ${Entities.Peek.Distance} > ${Ship.OptimalTractorRange}
+					{
+						call Ship.Approach ${Entities.Peek.ID} ${Ship.OptimalTractorRange}
+					}
+					Counter:Set[0]
+					while !${Entities.Peek.IsLockedTarget} && ${Counter:Inc} < 300 
 					{
 						wait 1
 					}
 					Entities.Peek:MakeActiveTarget
-					while !${Me.ActiveTarget.ID.Equal[${Entities.Peek.ID}]}
+					Counter:Set[0]
+					while !${Me.ActiveTarget.ID.Equal[${Entities.Peek.ID}]} && ${Counter:Inc} < 300
 					{
 						wait 1
 					}
 					Ship:Activate_Tractor
-					while ${Entities.Peek.Distance} > LOOT_RANGE
-					{
-						wait 1
-					}
 				}
-				else
-				{
-					/* approach within loot range */
-					call Ship.Approach ${Entities.Peek.ID} LOOT_RANGE
-					Entities.Peek:Approach
-				}
-				Entities.Peek:OpenCargo
-				wait 30
-				call This.LootEntity ${Entities.Peek.ID}
+			}
+
+			if ${Entities.Peek.Distance} >= ${LOOT_RANGE}
+			{
+				call Ship.Approach ${Entities.Peek.ID} LOOT_RANGE
+			}
+			Ship:Deactivate_Tractor
+			EVE:Execute[CmdStopShip]
+
+			if ${PopCan}
+			{
+				call This.LootEntity ${Entities.Peek.ID} 0
 			}
 			else
 			{
-				call Ship.Approach ${Entities.Peek.ID} LOOT_RANGE
-				Entities.Peek:OpenCargo
-				wait 30
 				call This.LootEntity ${Entities.Peek.ID} 1
 			}
 
-			if ${Entities.Peek(exists)}
-			{
-				Entities.Peek:CloseCargo
-			}
 			Entities:Dequeue
-
 			if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
 			{
 				break
@@ -525,7 +546,6 @@ objectdef obj_OreHauler inherits obj_Hauler
 		}
 
 		FullMiners:Erase[${charID}]
-		;;; call Ship.CloseCargo
 	}
 
 	method BuildFleetMemberList()
@@ -541,8 +561,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		{
 			if ${myfleet.Get[${idx}].CharID} != ${Me.CharID}
 			{
-				if ${myfleet.Get[${idx}].ToPilot(exists)} && \
-					${myfleet.Get[${idx}].ToPilot.Name.NotEqual["Joe The Tank"]}
+				if ${myfleet.Get[${idx}].ToPilot(exists)}
 				{
 					FleetMembers:Queue[${myfleet.Get[${idx}]}]
 				}
