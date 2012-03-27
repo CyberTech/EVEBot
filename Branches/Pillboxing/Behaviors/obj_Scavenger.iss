@@ -303,31 +303,31 @@ objectdef obj_Scavenger
 		RoomTimer:Set[${Math.Calc[${Script.RunningTime}-${RoomTimer}]}]
 		RoomTimer:Set[${Math.Calc[${RoomTimer}/60000]}]
 		call ChatIRC.Say "Finished room, it took ${RoomTimer} minutes and ${Math.Calc[${RoomTimer}%60]} seconds. :O"
-		RoomTimer:Clear
-		if ${BookmarkListToSalvage.Used} > 1
+		RoomTimer:Set[0]
+		UI:UpdateConsole["Deleting current old bookmark, warping to new one"]
+		BookmarkListToSalvage[1]:Remove
+		BookmarkListToSalvage:Remove[1]
+		wait 50
+		if ${BookmarkListToSalvage[2](exists)}
 		{
-			UI:UpdateConsole["Deleting current old bookmark, warping to new one"]
-			BookmarkListToSalvage:Remove[1]
-			BookmarkListToSalvage[1]:Remove
-			wait 50
 			BookmarkListToSalvage[2]:WarpTo
-			while ${Me.ToEntity.Mode} != 3
-			{
-				wait 10
-			}
-			while ${Me.ToEntity.Mode} == 3
-			{
-				wait 100
-				UI:UpdateConsole["Warping, do nothing"]
-			}
-			BookmarkListToSalvage:Collapse	
 		}
 		else
 		{
-			UI:UpdateConsole["No more bookmarks, going home!"]
-			BookmarkListToSalvage[1]:Remove
-			BookmarkListToSalvage:Clear
+			UI:UpdateConsole["No bookmarks left."]
+			return
 		}
+		while ${Me.ToEntity.Mode} != 3
+		{
+			wait 10
+		}
+		while ${Me.ToEntity.Mode} == 3
+		{
+			wait 100
+			UI:UpdateConsole["Warping, do nothing"]
+		}
+		BookmarkListToSalvage:Collapse	
+		
 	}
 	
 	function Flee()

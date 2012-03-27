@@ -22,7 +22,7 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 
 ; Do not set this to 1 unless you have downloaded and installed the ISXIM
 ; extension from http://www.isxgames.com/forums/showthread.php?t=3829
-#define USE_ISXIM 1
+#define USE_ISXIM 0
 
 #define LOG_MINOR 1
 #define LOG_STANDARD 2

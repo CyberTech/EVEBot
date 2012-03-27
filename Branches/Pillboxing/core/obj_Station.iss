@@ -228,7 +228,7 @@ objectdef obj_Station
 				else
 				{
 					Entity[${StationID}]:Approach
-					UI:UpdateConsole["Approaching docking range..."]
+					UI:UpdateConsole["Approaching docking range...Is at range - ${Entity[${StationID}].Distance}"]
 					wait 30
 				}
 			}

@@ -771,7 +771,7 @@ objectdef obj_Combat
 								UI:UpdateConsole["TransferListToShip: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
 								if ${QuantityToMove} > 0
 								{
-									CargoIterator.Value:MoveTo[${MyShip.ID},CargoHold,${QuantityToMove}]
+									CargoIterator.Value:MoveTo[MyShip,CargoHold,${QuantityToMove}]
 									wait 30
 									EVEWindow[ByName,${MyShip.ID}]:StackAll
 									wait 10

@@ -172,7 +172,7 @@ objectdef obj_Missions
 	{
 		if ${Me.ID} == ${ID}
 		{
-			if !${Me.InSpace} && ((${This.Combat.CurrentState.Equal["FLEE"]} || ${This.Combat.CurrentState.Equal["RESTOCK"]}) && !${Me.AtHomeBase})
+			if !${Me.InSpace} && ((${This.Combat.CurrentState.Equal["FLEE"]} || ${This.Combat.CurrentState.Equal["RESTOCK"]}) && !${This.AtHomeBase})
 			{
 				relay all Event[HERE]:Execute["0"]
 			}
@@ -201,7 +201,7 @@ objectdef obj_Missions
 					UI:UpdateConsole["obj_Missions: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}"]
 					if ${amIterator.Value.State} == 2 && ${amIterator.Value.AgentID} == ${Agents.AgentID}
 					{
-						call Agents.MissionDetails
+						call Agents.MissionDetails	
 						if ${amIterator.Value.Type.Find[Courier](exists)}
 						{
 							call This.RunCourierMission ${amIterator.Value.AgentID}
