@@ -352,7 +352,7 @@ objectdef obj_Cargo
 		{
 			UI:UpdateConsole["DEBUG: obj_Cargo:TransferListToHangar: Nothing found to move"]
 		}
-		EVE:StackItems[MyStationHangar,HangarItems]
+		EVE:StackItems[MyStationHangar,Hangar]
 	}
 
 	function TransferListToLargeShipAssemblyArray()
