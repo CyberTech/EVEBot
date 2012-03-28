@@ -1527,7 +1527,7 @@ objectdef obj_Ship
 					return
 				}
 				UI:UpdateConsole["1: Warping to bookmark ${Label} (Attempt #${WarpCounter})"]
-				while !${This.WarpEntered}
+				while !${This.WarpEntered} && ${DestinationBookmark.ToEntity.Distance} > ${MinWarpRange}
 				{
 					if ${WarpFleet}
 					{
@@ -1583,19 +1583,19 @@ objectdef obj_Ship
 				{
 
 					UI:UpdateConsole["2: Warping to bookmark ${Label} (Attempt #${WarpCounter})"]
-				while !${This.WarpEntered}
-				{
-					if ${WarpFleet}
+					while !${This.WarpEntered} && ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${DestinationBookmark.X}, ${DestinationBookmark.Y}, ${DestinationBookmark.Z}]} > WARP_RANGE
 					{
-						DestinationBookmark:WarpFleetTo
+						if ${WarpFleet}
+						{
+							DestinationBookmark:WarpFleetTo
+						}
+						else
+						{
+							DestinationBookmark:WarpTo
+						}
+						wait 10
 					}
-					else
-					{
-						DestinationBookmark:WarpTo
-					}
-					wait 10
-				}
-				call This.WarpWait
+					call This.WarpWait
 					if ${Return} == 2
 					{
 						return
@@ -2371,7 +2371,7 @@ objectdef obj_Ship
 		variable string ShipName = ${MyShip}
 		variable int GroupID
 		variable int TypeID
-		
+
 		if ${Me.InSpace}
 		{
 			GroupID:Set[${MyShip.ToEntity.GroupID}]
