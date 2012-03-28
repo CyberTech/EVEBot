@@ -9,32 +9,6 @@
 	-- GliderPro
 */
 
-objectdef lootable
-{
-	variable bool m_empty		/* used for wrecks  */
-	variable bool m_skip			/* used for jetcans */
-
-	method Initialize()
-	{
-		m_empty:Set[FALSE]
-		m_skip:Set[FALSE]
-	}
-
-	method Shutdown()
-	{
-	}
-
-	member:bool Empty()
-	{
-		return ${m_skip}
-	}
-
-	member:bool Skipped()
-	{
-		return ${m_skip}
-	}
-}
-
 objectdef obj_FullMiner
 {
 	variable int64 FleetMemberID
@@ -46,7 +20,7 @@ objectdef obj_FullMiner
 		FleetMemberID:Set[${arg_FleetMemberID}]
 		SystemID:Set[${arg_SystemID}]
 		BeltID:Set[${arg_BeltID}]
-		UI:UpdateConsole[ "DEBUG: obj_OreHauler:FullMiner: FleetMember: ${FleetMemberID} System: ${SystemID} Belt: ${BeltID}", LOG_DEBUG]
+		UI:UpdateConsole[ "DEBUG: obj_OreHauler:FullMiner: FleetMember: ${FleetMemberID} System: ${SystemID} Belt: ${Entity[${BeltID}].Name}", LOG_DEBUG]
 	}
 }
 
@@ -189,8 +163,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		systemID:Set[${haulParams.Token[2,","]}]
 		beltID:Set[${haulParams.Token[3,","]}]
 
-		UI:UpdateConsole["DEBUG: obj_OreHauler:MinerFull... ${charID} ${systemID} ${beltID}", LOG_DEBUG]
-
+		; Logging is done by obj_FullMiner initialize
 		FullMiners:Set[${charID},${charID},${systemID},${beltID}]
 	}
 
@@ -267,6 +240,11 @@ objectdef obj_OreHauler inherits obj_Hauler
 		variable index:item ContainerCargo
 		variable iterator Cargo
 		variable int QuantityToMove
+
+		if ${id.Equal[0]}
+		{
+			return
+		}
 
 		UI:UpdateConsole["obj_OreHauler.LootEntity ${Entity[${id}].Name}(${id}) - Leaving ${leave} units"]
 
@@ -460,19 +438,24 @@ objectdef obj_OreHauler inherits obj_Hauler
 		{
 			variable int64 PlayerID
 			variable bool PopCan = FALSE
-			
+
 			; Find the player who owns this can
 			if ${Entity["OwnerID = ${charID} && CategoryID = 6"](exists)}
 			{
 				PlayerID:Set[${Entity["OwnerID = ${charID} && CategoryID = 6"].ID}]
 			}
-		
+
 			if ${Entities.Peek.Distance} >= ${LOOT_RANGE} && \
 				(!${Entity[${PlayerID}](exists)} || ${Entity[${PlayerID}].DistanceTo[${Entities.Peek.ID}]} > LOOT_RANGE)
 			{
-				UI:UpdateConsole["Checking: ${Entities.Peek.ID}: ${Entity[${PlayerID}].Name} is ${Entity[${PlayerID}].DistanceTo[${Entities.Peek.ID}]}m away from jetcan"]
+				UI:UpdateConsole["Checking: ID: ${Entities.Peek.ID}: ${Entity[${PlayerID}].Name} is ${Entity[${PlayerID}].DistanceTo[${Entities.Peek.ID}]}m away from jetcan"]
 				PopCan:Set[TRUE]
 
+				if !${Entities.Peek(exists)}
+				{
+					Entities:Dequeue
+					continue
+				}
 				Entities.Peek:Approach
 
 				; approach within tractor range and tractor entity
@@ -488,6 +471,11 @@ objectdef obj_OreHauler inherits obj_Hauler
 					if ${Entities.Peek.Distance} > ${Ship.OptimalTargetingRange}
 					{
 						call Ship.Approach ${Entities.Peek.ID} ${Ship.OptimalTargetingRange}
+					}
+					if !${Entities.Peek(exists)}
+					{
+						Entities:Dequeue
+						continue
 					}
 					Entities.Peek:Approach
 					Entities.Peek:LockTarget
@@ -507,8 +495,13 @@ objectdef obj_OreHauler inherits obj_Hauler
 					{
 						call Ship.Approach ${Entities.Peek.ID} ${Ship.OptimalTractorRange}
 					}
+					if !${Entities.Peek(exists)}
+					{
+						Entities:Dequeue
+						continue
+					}
 					Counter:Set[0]
-					while !${Entities.Peek.IsLockedTarget} && ${Counter:Inc} < 300 
+					while !${Entities.Peek.IsLockedTarget} && ${Counter:Inc} < 300
 					{
 						wait 1
 					}
@@ -522,6 +515,11 @@ objectdef obj_OreHauler inherits obj_Hauler
 				}
 			}
 
+			if !${Entities.Peek(exists)}
+			{
+				Entities:Dequeue
+				continue
+			}
 			if ${Entities.Peek.Distance} >= ${LOOT_RANGE}
 			{
 				call Ship.Approach ${Entities.Peek.ID} LOOT_RANGE
@@ -529,6 +527,12 @@ objectdef obj_OreHauler inherits obj_Hauler
 			Ship:Deactivate_Tractor
 			EVE:Execute[CmdStopShip]
 
+			if ${Entities.Peek.ID.Equal[0]}
+			{
+				UI:Updateconsole["Hauler: Jetcan disappeared suddently. WTF?"]
+				Entities:Dequeue
+				continue
+			}
 			if ${PopCan}
 			{
 				call This.LootEntity ${Entities.Peek.ID} 0
