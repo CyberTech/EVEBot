@@ -253,7 +253,7 @@ objectdef obj_Combat
 		{
 			Ship.Drones:SendDrones
 		}
-		else if ${Me.TargetedByCount} < ${Me.TargetCount}
+		elseif ${Me.TargetedByCount} < ${Me.TargetCount}
 		{
 ; Note - this will break if targetedby is greater than we can target, such as in an anomaly, or low sp char.
 			EVE:Execute[CmdDronesReturnToBay]
