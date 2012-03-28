@@ -249,7 +249,15 @@ objectdef obj_Combat
 		Ship:Activate_TargetPainters
 		Ship:Activate_StasisWebs
 		Ship:Activate_Weapons
-		Ship.Drones:SendDrones
+		if ${Me.TargetedByCount} >= ${Me.TargetCount}
+		{
+			Ship.Drones:SendDrones
+		}
+		else if ${Me.TargetedByCount} < ${Me.TargetCount}
+		{
+; Note - this will break if targetedby is greater than we can target, such as in an anomaly, or low sp char.
+			EVE:Execute[CmdDronesReturnToBay]
+		}
 	}
 
 	function Flee()

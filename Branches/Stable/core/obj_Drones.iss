@@ -202,7 +202,7 @@ objectdef obj_Drones
 
 			do
 			{
-				if ${DroneIterator.Value.ToEntity.ShieldPct} < 50 || \
+				if ${DroneIterator.Value.ToEntity.ShieldPct} < 80 || \
 					${DroneIterator.Value.ToEntity.ArmorPct} < 0
 				{
 					UI:UpdateConsole["Recalling Damaged Drone ${DroneIterator.Value.ID}"]
