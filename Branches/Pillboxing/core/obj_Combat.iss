@@ -103,19 +103,73 @@ objectdef obj_Combat
 		ThermalDamage:Insert[27449]
 		ThermalDamage:Insert[27445]
 		ThermalDamage:Insert[208]
+		ThermalDamage:Insert[24525]
+		ThermalDamage:Insert[31886]
+		ThermalDamage:Insert[31882]
+		ThermalDamage:Insert[31880]
+		ThermalDamage:Insert[31884]
+		ThermalDamage:Insert[23561]
+		ThermalDamage:Insert[28211]
+		ThermalDamage:Insert[2183]
+		ThermalDamage:Insert[2185]
+		ThermalDamage:Insert[2454]
+		ThermalDamage:Insert[2456]
+		ThermalDamage:Insert[2444]
+		ThermalDamage:Insert[2446]
 		EMDamage:Insert[27435]
 		EMDamage:Insert[27437]
 		EMDamage:Insert[27433]
 		EMDamage:Insert[27890]
 		EMDamage:Insert[207]
+		EMDamage:Insert[24527]
+		EMDamage:Insert[2203]
+		EMDamage:Insert[2205]
+		EMDamage:Insert[23525]
+		EMDamage:Insert[28213]
+		EMDamage:Insert[31864]
+		EMDamage:Insert[31868]
+		EMDamage:Insert[31866]
+		EMDamage:Insert[31870]
+		EMDamage:Insert[2173]
+		EMDamage:Insert[2175]
+		EMDamage:Insert[2193]
+		EMDamage:Insert[2195]
+		EMDamage:Insert[2203]
+		EMDamage:Insert[2205]
 		ExplosiveDamage:Insert[27453]
 		ExplosiveDamage:Insert[27455]
 		ExplosiveDamage:Insert[27451]
 		ExplosiveDamage:Insert[206]
+		ExplosiveDamage:Insert[2801]
+		ExplosiveDamage:Insert[2476]
+		ExplosiveDamage:Insert[2478]
+		ExplosiveDamage:Insert[28215]
+		ExplosiveDamage:Insert[23563]
+		ExplosiveDamage:Insert[31892]
+		ExplosiveDamage:Insert[31894]
+		ExplosiveDamage:Insert[31890]
+		ExplosiveDamage:Insert[31888]
+		ExplosiveDamage:Insert[15510]
+		ExplosiveDamage:Insert[2486]
+		ExplosiveDamage:Insert[2488]
+		ExplosiveDamage:Insert[21640]
+		KineticDamage:Insert[31872]
+		KineticDamage:Insert[1201]
+		KineticDamage:Insert[2436]
+		KineticDamage:Insert[2464]
+		KineticDamage:Insert[2466]
+		KineticDamage:Insert[31874]
+		KineticDamage:Insert[31878]
+		KineticDamage:Insert[31876]
 		KineticDamage:Insert[27441]
 		KineticDamage:Insert[27443]
 		KineticDamage:Insert[27439]
 		KineticDamage:Insert[209]
+		KineticDamage:Insert[15508]
+		KineticDamage:Insert[21638]
+		KineticDamage:Insert[23559]
+		KineticDamage:Insert[28209]
+		KineticDamage:Insert[24529]
 		MishDB:Set["Silence The Informant", 2]
 		MishDB:Set["Worlds Collide", 3]
 		MishDB:Set["The Score", 1]
@@ -159,57 +213,68 @@ objectdef obj_Combat
 	member:int AmmoSelection()
 	{
 		variable string mission = ${Missions.MissionCache.Name[${Agents.AgentID}]}
-		UI:UpdateConsole["${Ship.WEAPONGROUPID}"]
+		;UI:UpdateConsole["${Ship.WEAPONGROUPID}"]
 		;variable int Group = ${Ship.ModuleList_Weapon[1].ToItem.GroupID}
 		;variable int Group = 510
 		variable iterator ittyDamage
-		variable string DmgType
 		variable int ReloadTypeID
 		 ; Damage types on x, 1 = em, 2 = therm, 3 = kin, 4 = exp, order is descending down the page, ie em first, exp last for each groupID
-		 if ${Group.Equal[0]}
-		{
-			if !${Me.InSpace}
-			{
-				UI:UpdateConsole["Unable to obtain module type, trying to undock and shit in order to compensate."]
-				EVE:Execute[CmdExitStation]
-				;while !${Me.InSpace}
-				;{
-				;	wait 20
-				;}
-				wait 150
-				Ship:UpdateModuleList
-				wait 5
-				;Group:Set[${Ship.ModuleList_Weapon[1].ToItem.GroupID}]
-				Entity[Type =- "Station"]:Dock
-				while ${Me.InSpace}
-				{
-					wait 10
-				}
-			}
-		}
 		variable index:item ContainerItems
+		variable int intCounter = 1
 		variable iterator CargoIterator	
 		;EVE:Execute[OpenHangarFloor]
 		MyShip:OpenCargo
 		if !${Me.InSpace}
 		{
+			UI:UpdateConsole["Combat.AmmoSelection: Starting in a station."]
 			Me.Station:GetHangarItems[ContainerItems]
 		}
 		else
 		{
-			MyShip:GetCargo[ContainerItems]
+			UI:UpdateConsole["You have no business calling 'Combat.AmmoSelection' from in space!"]
 		}
-		UI:UpdateConsole["${AmmoGroup}"]
-		ContainerItems:RemoveByQuery[${LavishScript.CreateQuery[GroupID != "${Ship.AmmoGroup}"]}]
-		ContainerItems:Collapse
-		UI:UpdateConsole["Found ${ContainerItems.Used} ammo stacks suitable for this weapon"]
+		if ${Ship.AmmoGroup.Equal[85]}
+		{
+			if ${ContainerItems.Used} > 0
+			{
+				return ${ContainerItems[1].TypeID}
+			}
+			else
+			{
+				UI:UpdateConsole["No items found to reload with, returning -1"]
+				return -1
+			}
+		}
+		do
+		{ 
+			echo "Checking for AmmoType: ${Ship.AmmoGroup.Token[${intCounter},-]}"
+			ContainerItems:RemoveByQuery[${LavishScript.CreateQuery[GroupID != "${Ship.AmmoGroup.Token[${intCounter},-]}"]}]		
+			ContainerItems:Collapse
+			if ${ContainerItems.Used} > 0
+			{
+				UI:UpdateConsole["AmmoSelection: ${ContainerItems.Used} stacks of ammo found in cargo for weapons."]
+				break
+			}
+			else
+			{
+				Me.Station:GetHangarItems[ContainerItems]
+				intCounter:Inc
+			}
+		}
+		while ${intCounter} <= ${Math.Calc[${Ship.AmmoGroup.Count[-]}+1]}
+		;If we have no items to iterate through after all our queries, return false (this should cause restockAmmo to be called)
+		if ${ContainerItems.Used.Equal[0]}
+		{
+			UI:UpdateConsole["No ammo matching this weapon was found."]
+			return -1
+		}
 		;This needs to be more advanced that it is now, but for now we won't select ammo type based on fuck all except groupID
 		if ${AmmoGroup.Equal[85]}
 		{
 			if ${ContainerItems.Used} > 0
 			{
 				return ${ContainerItems[1].TypeID}
-			}
+			}	
 			else
 			{
 				UI:UpdateConsole["No items found to reload with, returning -1"]
@@ -427,12 +492,12 @@ objectdef obj_Combat
 
 			if ${Config.Combat.OrbitAtOptimal}
 			{
-				;if !${Ship.Drones.IsDroneBoat}
-				;{
-					;don't orbit if we're in a drone boat
+				if !${MyShip.DroneBandwidth.Equal[125]}
+				{
+					;TODO, change this to a sentry drone check of some sort
 
 					Ship:OrbitAtOptimal
-				;}
+				}
 			}
 			else
 			{
@@ -454,23 +519,20 @@ objectdef obj_Combat
 			Ship:Activate_Weapons
 			if ${Me.ActiveTarget(exists)} 
 			{
-				if ${Me.ActiveTarget.Radius} < 100 && ${Ship.Drones.DronesOut} > 10 && ${Ship.Drones.IsDroneBoat}
+				if ${Me.ActiveTarget.Radius} < 100 && ${Ship.Drones.DronesOut} > 10 && ${MyShip.DroneBandwidth.Equal[125]}
 				{
 					UI:UpdateConsole["Active target is a frigate for sure, switching to smaller drones"]
 					call Ship.Drones.ReturnAllToDroneBay
 					call Ship.Drones.LaunchAll
 					;might have to fix
 				}
-				elseif ${Me.ActiveTarget.Radius} > 100 && ${Ship.Drones.DronesOut} < 25 && ${Ship.Drones.IsDroneBoat}
+				elseif ${Me.ActiveTarget.Radius} > 100 && ${Ship.Drones.DronesOut} < 25 && ${MyShip.DroneBandwidth.Equal[125]}
 				{
 					UI:UpdateConsole["Active target is a large target for sure, switching to larger drones"]
 					call Ship.Drones.ReturnAllToDroneBay
 					call Ship.Drones.LaunchAll
 				}
-				elseif !${Ship.Drones.IsDroneBoat}
-				{
-					call Ship.Drones.LaunchAll
-				}
+				;TODO This part of the code should really be pulled out of this function, placed into it's own function, and called with the rest of the drone code in managetank
 			}
 			Ship.Drones:SendDrones
 			
@@ -606,7 +668,7 @@ objectdef obj_Combat
 			Ship:Deactivate_Cap_Booster[]
 		}
 
-		if !${This.Fled} && ${Config.Combat.LaunchCombatDrones} && ${Ship.Drones.DronesInSpace} == 0 && !${Ship.InWarp} && ${Me.TargetCount} > 0 
+		if (!${This.Fled} && ${Config.Combat.LaunchCombatDrones} && !${Ship.InWarp} && ${Me.TargetCount} > 0 || ${Me.ToEntity.IsWarpScrambled}) && ${Ship.Drones.DronesInSpace} == 0 
 		{
 			if ${Me.TargetCount} > 0 && ${Me.TargetedByCount} >= ${Me.TargetCount}
 			{
@@ -644,10 +706,6 @@ objectdef obj_Combat
 			variable int QuantityToMove
 			variable index:item ContainerItems
 			variable iterator CargoIterator	
-			variable index:item indDrones
-			variable int typetorefill = -1
-			variable float64 ToFill = ${Math.Calc[${MyShip.DronebayCapacity} - ${MyShip.UsedDronebayCapacity}]}
-			UI:UpdateConsole["We have ${ToFill} m3 of space in dronebay to fill. ${MyShip.DronebayCapacity} - ${MyShip.UsedDronebayCapacity}"]
 			if ${Ammospots:IsThereAmmospotBookmark}
 			{
 				UI:UpdateConsole["RestockAmmo: Fleeing: No ammo bookmark"]
@@ -656,16 +714,12 @@ objectdef obj_Combat
 			}
 			else
 			{
-				MyShip:GetDrones[indDrones]
 				call Ammospots.WarpTo
 				while ${Me.InSpace}
 				{
 					wait 10
 					;VERY LAZY WORKAROUND
 				}
-				EVE:Execute[OpenDroneBayOfActiveShip]
-				wait 20
-				ToFill:Set[${Math.Calc[${MyShip.DronebayCapacity} - ${MyShip.UsedDronebayCapacity}]}]
 				UI:UpdateConsole["Restocking ammo"]
 				call Ship.OpenCargo
 				; If a corp hangar array is on grid - drop loot
@@ -674,8 +728,7 @@ objectdef obj_Combat
 						EVE:Execute[OpenHangarFloor]
 						wait 10
 						call Cargo.TransferCargoToHangar
-						wait 15
-						Me.Station:StackAllHangarItems
+						;Add stack code here
 						wait 20
 						ContainerItems:Clear
 						Me.Station:GetHangarItems[ContainerItems]
@@ -716,54 +769,15 @@ objectdef obj_Combat
 					UI:UpdateConsole["Found ${ContainerItems.Used} items to loop through!"]
 					if ${This.AmmoSelection} > 0
 					{
-					UI:UpdateConsole["Ammo found for ${Missions.MissionCache.Name[${Agents.AgentID}]} ${This.AmmoSelection[${Missions.MissionCache.Name[${Agents.AgentID}]},${Ship.ModuleList_Weapon[1].ToItem.GroupID}]}"]
+					UI:UpdateConsole["Ammotype found for ${Missions.MissionCache.Name[${Agents.AgentID}]}"]
 					}
 					else
 					{
 						 UI:UpdateConsole["Mish "${Missions.MissionCache.Name[${Agents.AgentID}]}" not found in mishDB"]
-						 return
+						 Script:Pause
+						 ;return
 					}
-					if  ${ToFill} > 0
-					{
-							UI:UpdateConsole["Drones need refilling, doing that now"]
-						if ${Math.Calc[${ToFill}/25]} >= 5
-						{
-							;ADD HEAVY DRONE SUPPORT
-						}
-						if ${Math.Calc[${ToFill}/10]} >= 5
-						{
-							;ADD MED DRONE SUPPORT
-						}
-						if  ${Math.Calc[${ToFill}/5]} > 1
-						{
-							typetorefill:Set[2466]
-							UI:UpdateConsole["Reloading drones with type ${typetorefill}"]
-						}
-						else
-						{
-							UI:UpdateConsole["${Math.Calc[${ToFill}/5]} drones to fill"]
-						}
-					}
-					if ${typetorefill} > 0
-					{
-						if ${CargoIterator:First(exists)}
-						{	
-								
-							do
-							{
-								if ${CargoIterator.Value.TypeID} == ${typetorefill}
-								{
-									QuantityToMove:Set[${Math.Calc[${ToFill}/${CargoIterator.Value.Volume}]}]
-									UI:UpdateConsole["Transferring ${QuantityToMove} drones to bay"]
-									;CargoIterator.Value:MoveTo[DroneBay,${QuantityToMove}]
-									;Drone reloading is fucked m8
-									wait 30
-									break
-								}	
-							}
-							while ${CargoIterator:Next(exists)}
-						}
-					}
+					call This.RefillDrones
 					if ${CargoIterator:First(exists)}
 					{	
 
@@ -810,6 +824,169 @@ objectdef obj_Combat
 			}
 		}
 	}
+
+	function RefillDrones()
+	{
+		variable index:item indDrones
+		variable iterator ittyDrones
+		variable bool IsFound
+		variable iterator ittyDamage
+		variable index:int Counter
+		variable index:item ContainerItems
+		variable iterator CargoIterator
+		variable index:int64 DronesToMove
+		EVE:Execute[OpenDroneBayOfActiveShip]
+		wait 20
+		;This is going to assume we're in a station for now
+		;This is going to hurt...so first we're going to see what kind of drones we have in bay first...then see if they're right for our mission
+		;If they're not the correct drone for our mish, we add it to the stack to be moved from bay TO hangar. If they are, we'll check how many of them we have.
+		MyShip:GetDrones[indDrones]
+		indDrones:GetIterator[ittyDrones]
+		Me.Station:GetHangarItems[ContainerItems]
+		ContainerItems:RemoveByQuery[${LavishScript.CreateQuery[GroupID != "100"]}]
+		;Container Items will only have drones left in it now.
+		ContainerItems:GetIterator[CargoIterator]
+		;Now we have an iterator and index for everything in Hangar and drone bay
+		if ${MishDB.Element[${Missions.MissionCache.Name[${Agents.AgentID}]}]} > 0
+		{
+			UI:UpdateConsole["Found ${mission} in MishDB, damage type is ${MishDB.Element[${mission}]}"]
+			Switch "${MishDB.Element[${Missions.MissionCache.Name[${Agents.AgentID}]}]}"
+			{
+				case 1
+					EMDamage:GetIterator[ittyDamage]
+				case 2
+					ThermalDamage:GetIterator[ittyDamage]
+				case 3
+					KineticDamage:GetIterator[ittyDamage]
+				case 4
+					ExplosiveDamage:GetIterator[ittyDamage]
+			}
+		}
+		else
+		{
+			UI:UpdateConsole["This mission was not found in mishDB, can't restock drones."]
+			return
+		}
+		;At this point, ittyDamage should now contain an iterator for all the typeids that match the damagetype for the active mission
+		if ${ittyDrones:First(exists)}
+		{
+			;Now we're going to iterate through the drones in our drone bay
+			do
+			{
+				if ${ittyDamage:First(exists)}
+				{
+					;Inside the iteration for the drones in bay, we're now going to loop through all the typeids in the list of typeids for our mission type
+					do
+					{
+						if ${ittyDamage.Value.Equal[${ittyDrones.Value.TypeID}]}
+						{
+							IsFound:Set[TRUE]
+						}
+					}
+					while ${ittyDamage:Next(exists)}
+				}
+				;We reset the IsFound bool here ready for the next iteration, and also check it after the current one
+				if ${IsFound}
+				{
+					IsFound:Set[FALSE]
+				}
+				else
+				{
+					UI:UpdateConsole["Found drone in bay that doesn't match our current required damage type."]
+					DronesToMove:Insert[${ittyDrones.Value.ID}]
+				}
+			}
+			while ${ittyDrones:Next(exists)}
+			;Now if I've written the previous code right, DronesToMove should now contain a list of drones that we need to move to hangar
+			UI:UpdateConsole["Moving ${DronesToMove.Used} items from drone bay to hangar."]
+			EVE:MoveItemsTo[DronesToMove,MyStationHangar, Hangar]
+			wait 50
+		}
+		else
+		{
+			UI:UpdateConsole["Combat.RefillDrones: No drones found in drone bay"]
+		}
+			;This wait could be reduced, I'm only setting it this high out of preference
+			;So now we have no drones in our bay that aren't right for our mission (this is so when I start taking multiple damage types on a mission it's ready to use with no mods)
+			;We're going to iterate through what's left in our drones to see how many extra we may need
+			Me.Station:GetHangarItems[ContainerItems]
+			if ${CargoIterator:First(exists)}
+			{
+				do
+				{
+					if ${Ship.Drones.NumberOfDronesInBay[SENTRY]} < 5
+					{
+						UI:UpdateConsole["Reloading sentry drones now."]
+						if ${ittyDamage:First(exists)}
+						{
+							do
+							{
+								if ${CargoIterator.Value.TypeID.Equal[${ittyDamage.Value}]} && \
+									${CargoIterator.Value.Volume.Equal[25]} && \
+									${Ship.Drones.IsSentryDrone[${CargoIterator.Value.TypeID}]}
+									{
+										call Cargo.TransferTypeIDToShip ${CargoIterator.Value.TypeID} ${Math.Calc[5-${Ship.Drones.NumberOfDronesInBay[SENTRY]}]}
+									}
+
+							}
+							while ${ittyDamage:Next(exists)}
+						}
+					}
+					elseif ${Ship.Drones.NumberOfDronesInBay[HEAVY]} < 5
+					{
+						;if ${ittyDamage:First(exists)}
+						;{
+							;do
+							;{
+								;if ${CargoIterator.Value.TypeID.Equal[${ittyDamage.Value}]} && \
+								;	${CargoIterator.Value.Volume.Equal[25]} && \
+								;	!${Ship.Drones.IsSentryDrone[${CargoIterator.Value.TypeID}]}
+								;	{
+									;	call Cargo.TransferTypeIDToShip ${CargoIterator.Value.TypeID} ${Math.Calc[5-${Ship.Drones.NumberOfDronesInBay[HEAVY]}]}
+								;	}
+
+							;}
+							;while ${ittyDamage:Next(exists)}
+						;}
+					}
+					elseif ${Ship.Drones.NumberOfDronesInBay[MEDIUM]} < 5
+					{
+						UI:UpdateConsole["Reloading Light Drones."]
+						if ${ittyDamage:First(exists)}
+						{
+							do
+							{
+								if ${CargoIterator.Value.TypeID.Equal[${ittyDamage.Value}]} && \
+									${CargoIterator.Value.Volume.Equal[10]}
+									{
+										call Cargo.TransferTypeIDToShip ${CargoIterator.Value.TypeID} ${Math.Calc[5-${Ship.Drones.NumberOfDronesInBay[MEDIUM]}]}
+									}
+
+							}
+							while ${ittyDamage:Next(exists)}
+						}
+					}
+					elseif ${Ship.Drones.NumberOfDronesInBay[LIGHT]} < 5
+					{
+						if ${ittyDamage:First(exists)}
+						{
+							do
+							{
+								if ${CargoIterator.Value.TypeID.Equal[${ittyDamage.Value}]} && \
+									${CargoIterator.Value.Volume.Equal[5]}
+									{
+										call Cargo.TransferTypeIDToShip ${CargoIterator.Value.TypeID} ${Math.Calc[5-${Ship.Drones.NumberOfDronesInBay[LIGHT]}]}
+									}
+
+							}
+							while ${ittyDamage:Next(exists)}
+						}
+					}
+				}
+				while ${CargoIterator:Next(exists)}
+			}
+	}
+
 	member:bool HaveMissionAmmo()
 	{
 		variable string mission = ${Missions.MissionCache.Name[${Agents.AgentID}]}
@@ -827,7 +1004,7 @@ objectdef obj_Combat
 		}
 		;variable int Group = 510
 		variable iterator ittyDamage
-		variable string DmgType
+		variable int intCounter = 1
 		variable int ReloadTypeID
 		 ; Damage types on x, 1 = em, 2 = therm, 3 = kin, 4 = exp, order is descending down the page, ie em first, exp last for each groupID
 		variable index:item ContainerItems
@@ -839,10 +1016,28 @@ objectdef obj_Combat
 		{
 			UI:UpdateConsole["We're using hybrid weapons, until more support is added no checks are done on this."]
 			return TRUE
-		} 
-		ContainerItems:RemoveByQuery[${LavishScript.CreateQuery[GroupID != "${Ship.AmmoGroup}"]}]		
-		ContainerItems:Collapse
-		UI:UpdateConsole["HaveMissionAmmo: ${ContainerItems.Used} stacks of ammo found in cargo for weapons."]
+		}
+		do
+		{ 
+			ContainerItems:RemoveByQuery[${LavishScript.CreateQuery[GroupID != "${Ship.AmmoGroup.Token[${intCounter},-]}"]}]		
+			ContainerItems:Collapse
+			if ${ContainerItems.Used} > 0
+			{
+				UI:UpdateConsole["HaveMissionAmmo: ${ContainerItems.Used} stacks of ammo found in cargo for weapons."]
+				break
+			}
+			else
+			{
+				MyShip:GetCargo[ContainerItems]
+				intCounter:Inc
+			}
+		}
+		while ${intCounter} <= ${Math.Calc[${Ship.AmmoGroup.Count[-]}+1]}
+		;If we have no items to iterate through after all our queries, return false (this should cause restockAmmo to be called)
+		if ${ContainerItems.Used.Equal[0]}
+		{
+			return FALSE
+		}
 		if ${MishDB.Element[${mission}]} > 0
 		{
 			UI:UpdateConsole["HaveMissionAmmo: Found ${mission} in MishDB, damage type is ${MishDB.Element[${mission}]}"]

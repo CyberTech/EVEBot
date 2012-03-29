@@ -68,18 +68,20 @@ objectdef obj_Ship
 	{
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}
-	member:int AmmoGroup()
+	member:string AmmoGroup()
 	{
 		Switch "${Ship.WEAPONGROUPID}"
 		{
 			case 509
 			 	return 384
 			case 508
-			 	return 89
+			 	return 89-657
 			case 510
 				return 385
 			case 74
 				return 85
+			default
+				UI:UpdateConsole["obj_Ship: AmmoGroup: ${WEAPONGROUPID} weapon typeID not found"]
 		}
 	}
 	method ClearModules()

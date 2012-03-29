@@ -212,7 +212,7 @@ objectdef obj_Station
 
 		if ${Entity[${StationID}](exists)}
 		{
-
+			;TODO, rewrite this whole nasty approach business
 			do
 			{	
 				if ${Entity[${StationID}].Distance} > 150000
@@ -231,11 +231,14 @@ objectdef obj_Station
 					{
 						Entity[${StationID}]:Approach
 						UI:UpdateConsole["Approaching docking range...Is at range - ${Entity[${StationID}].Distance}"]
-						wait 30
+						while (${Entity[${StationID}].Distance} > DOCKING_RANGE)
+						{
+							wait 10
+						}
 					}
 				}
 			}
-			while (${Entity[${StationID}].Distance} > DOCKING_RANGE) && ${Me.ToEntity.Mode} != 1
+			while (${Entity[${StationID}].Distance} > DOCKING_RANGE)
 
 			Counter:Set[0]
 			UI:UpdateConsole["In Docking Range ... Docking"]

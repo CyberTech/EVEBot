@@ -1037,7 +1037,7 @@ objectdef obj_Agents
 	    	;if ${dsIndex[2].Text.Find["View"]} > 0
 	    	;{
 	    	UI:UpdateConsole["obj_Agents: Locator Agent detected, selecting view mission button."]
-	    	dsIndex[2]:Say[${This.AgentID}]	
+	    	dsIndex[1]:Say[${This.AgentID}]	
 	    	;}
 	    	while ${dsIndex.Used.Equal[2]}
 	    	{

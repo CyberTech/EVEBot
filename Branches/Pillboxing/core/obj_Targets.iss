@@ -93,7 +93,6 @@ objectdef obj_Targets
 						if ${Entity[${ToTarget[1]}].Distance} > ${MyShip.MaxTargetRange} && ${Me.ToEntity.Mode} != 1
 						{
 							Entity[${ToTarget[1]}]:Approach[${MyShip.MaxTargetRange}]
-							Ship:Activate_AfterBurner
 						}
 
 					}						
@@ -133,9 +132,14 @@ objectdef obj_Targets
 				{
 					if ${Me.TargetCount} == 0 && ${MyShip.MaxLockedTargets} > 0
 					{
-						if ${Me.ToEntity.Mode} != 1 && ${Entity["TypeID = TYPE_ACCELERATION_GATE"].Distance} < 110000 
+						if ${Me.ToEntity.Mode} != 1 && !${Entity[Distance <= ${MyShip.MaxTargetRange}](exists)} && (${Entity["TypeID = TYPE_ACCELERATION_GATE"].Distance} < 110000 || ${Entity[Name =- "Beacon"].Distance} < 110000)
 						{
 							Target2.Value:Approach[${MyShip.MaxTargetRange}]
+							;I'm going to have to update this into a check that checks for sentry drones in space before approaching.
+							if ${MyShip.DroneBandwidth.Equal[125]}
+							{
+								call Ship.Drones.ReturnAllToDroneBay
+							} 
 							UI:UpdateConsole["Approaching rat out of range. Name = ${Target2.Value.Name} and distance < ${Target2.Value.Distance}."]
 							Ship:Activate_AfterBurner
 						}

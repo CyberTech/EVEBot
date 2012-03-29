@@ -319,6 +319,38 @@ objectdef obj_Cargo
 		}
 	}
 
+	function TransferTypeIDToShip(int TypeID, int Quantity)
+	{
+		;I should either put a third/fourth parameter in here for source/destination, until it's needed I can't be fucking bothered though
+		variable index:item ListOfItems
+		variable index:item ItemsToMove
+		variable iterator itty
+		Me.Station:GetHangarItems[ListOfItems]
+		ListOfItems:RemoveByQuery[${LavishScript.CreateQuery[TypeID != "${TypeID}"]}]
+		ListOfItems:GetIterator[itty]
+		if ${itty:First(exists)}
+		{
+			do
+			{
+				if ${itty.Value.Quantity} >= ${Quantity}
+				{
+					itty.Value:MoveTo[MyShip,DroneBay,${Quantity}]
+					Quantity:Set[0]
+				}
+				else
+				{
+					ItemsToMove:Insert[${itty.Value.ID}]
+					Quantity:Dec[${itty.Value.Quantity}]
+				}
+			}
+			while ${itty:Next(exists)} && ${Quantity} > 0
+			if ${ItemsToMove.Used} > 0
+			{
+				EVE:MoveItemsTo[ItemsToMove,MyShip,DroneBay]
+			}
+		}
+	}
+
 	; Transfer ALL items in MyCargo index
 	function TransferListToHangar()
 	{

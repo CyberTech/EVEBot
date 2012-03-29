@@ -27,10 +27,6 @@ objectdef obj_Drones
 	{
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_Drones: Initialized", LOG_MINOR]
-		if ${MyShip.DroneBandwidth.Equal[125]}
-		{
-			IsDroneBoat:Set[TRUE]
-		}
 	}
 
 	method Shutdown()
@@ -74,20 +70,6 @@ objectdef obj_Drones
 		{
 			return
 		}
-		if ${IsDroneBoat.Equal[NULL]}
-		{
-			if ${MyShip.ToEntity(exists)}
-			{
-				if ${MyShip.DroneBandwidth.Equal[125]}
-				{
-					IsDroneBoat:Set[TRUE]
-				}
-				else
-				{
-					IsDroneBoat:Set{FALSE}
-				}
-			}
-		}
 		if ${This.WaitingForDrones}
 		{
 		    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
@@ -114,8 +96,10 @@ objectdef obj_Drones
 
 	function LaunchLightDrones()
 	{
+		UI:UpdateConsole["Launching Light Drones."]
 		variable index:item ListOfDrones
 		variable iterator itty
+		variable index:int64 ToLaunch
 		MyShip:GetDrones[ListOfDrones]
 		ListOfDrones:RemoveByQuery[${LavishScript.CreateQuery[Volume > "10"]}]
 		ListOfDrones:Collapse
@@ -125,11 +109,11 @@ objectdef obj_Drones
 			itty:First
 			do
 			{
-				UI:UpdateConsole["Launching ${itty.Value.Name}."]
-				itty.Value:Launch
-				wait 5
+			
+				ToLaunch:Insert[${itty.Value.ID}]
 			}
-			while ${itty:Next(exists)}
+			while ${itty:Next(exists)} && ${ToLaunch.Used} < 5
+			EVE:LaunchDrones[ToLaunch]
 		}
 		else
 		{
@@ -137,10 +121,13 @@ objectdef obj_Drones
 			;We should probably flee here and restock drones, hopefully no one loses a ship before this becomes a problem, but it shouldn't unless our secondary drones are popped in mission
 		}
 	}
+
 	function LaunchSentryDrones()
 	{
+		UI:UpdateConsole["Launching Sentry drones in bay."]
 		variable index:item ListOfDrones
 		variable iterator itty
+		variable index:int64 ToLaunch
 		MyShip:GetDrones[ListOfDrones]
 		ListOfDrones:RemoveByQuery[${LavishScript.CreateQuery[Volume < "25"]}]
 		ListOfDrones:Collapse
@@ -149,14 +136,21 @@ objectdef obj_Drones
 			ListOfDrones:GetIterator[itty]
 			itty:First
 			do
-			{
-			 	if ${This.IsSentryDrone[${itty.Value.TypeID}]}
-			 	{
-			 		UI:UpdateConsole["Launching ${itty.Value.Name}."]
-			 		itty.Value:Launch
-			 	}
+			{	
+				if ${This.IsSentryDrone[${itty.Value.TypeID}]}
+				{	
+					ToLaunch:Insert[${itty.Value.ID}]
+				}
 			}
-			while ${itty:Next(exists)}
+			while ${itty:Next(exists)} && ${ToLaunch.Used} < 5
+		}
+		if ${ToLaunch.Used} > 0
+		{
+			EVE:LaunchDrones[ToLaunch]
+		}
+		else
+		{
+			UI:UpdateConsole["No sentry drones found in bay, we should probably flee here."]
 		}
 	}
 
@@ -168,7 +162,7 @@ objectdef obj_Drones
 		;This includes a check for sentry/heavy drones, going to have to put some SERIOUS beef into this method to select *which* drones to launch
 		if ${This.DronesInBay} > 0 && (${Me.ActiveTarget.Name.NotEqual["Kruul's Pleasure Garden"]} || ((${Me.ActiveTarget.Distance} < ${Me.DroneControlDistance}) && ${IsDroneBoat}))
 		{
-			if !${IsDroneBoat}
+			if !${MyShip.DroneBandwidth.Equal[125]}
 			{
 				UI:UpdateConsole["Launching drones..."]
 				MyShip:LaunchAllDrones
@@ -311,7 +305,8 @@ objectdef obj_Drones
 		}
 		else
 		{
-			UI:UpdateConsole[obj_drones: No drones in space, can't return drone type. Why is this member being checked?]
+			;UI:UpdateConsole["obj_drones: No drones in space, can't return drone type. Why is this member being checked?"]
+			return 0
 		}
 	}
 
@@ -328,6 +323,53 @@ objectdef obj_Drones
 		}
 	}
 
+	member:int NumberOfDronesInBay(string DroneType)
+	{
+		variable index:item ListOfDrones
+		variable iterator itty
+		variable int Counter = 0
+		MyShip:GetDrones[ListOfDrones]
+		Switch "${DroneType}"
+		{
+			case SENTRY
+			case HEAVY
+				ListOfDrones:RemoveByQuery[${LavishScript.CreateQuery[Volume < "25"]}]
+				break
+			case MEDIUM
+				ListOfDrones:RemoveByQuery[${LavishScript.CreateQuery[Volume != "10"]}]
+				break
+			case LIGHT
+				ListOfDrones:RemoveByQuery[${LavishScript.CreateQuery[Volume > "5"]}]
+				break
+		}
+		;At this point in time the ListOfDrones will only contain drones matching the volume of the type we're looking for
+		ListOfDrones:Collapse
+		ListOfDrones:GetIterator[itty]
+		if ${itty:First(exists)}
+		{
+			do
+			{
+				if ${DroneType.Equal[SENTRY]}
+				{
+					if ${This.IsSentryDrone[${itty.Value.TypeID}]}
+					{
+						Counter:Inc[${itty.Value.Quantity}]
+					}
+				}
+				else
+				{
+					Counter:Inc[${itty.Value.Quantity}]
+				}
+			}
+			while ${itty:Next(exists)}
+			return ${Counter}
+		}
+		else
+		{
+			return 0
+		}
+
+	}
 	method SendDrones()
 	{
 		if !${This.DronesReady}
@@ -352,7 +394,7 @@ objectdef obj_Drones
 				variable index:int64 engageIndex
 				do
 				{
-					if ${DroneIterator.Value.ToEntity.ShieldPct} < 99
+					if ${DroneIterator.Value.ToEntity.ShieldPct} < 95
 					{
 						UI:UpdateConsole["Recalling Damaged Drone ${DroneIterator.Value.ID}"]
 						UI:UpdateConsole["Debug: Shield: ${DroneIterator.Value.ToEntity.ShieldPct}, Armor: ${DroneIterator.Value.ToEntity.ArmorPct}, Structure: ${DroneIterator.Value.ToEntity.StructurePct}"]
@@ -361,9 +403,10 @@ objectdef obj_Drones
 					}
 					else
 					{
+						;This is a check to see if drones are returning (if they are we don't want them to engage fuck all), also a check to see if this drones target is our activetarget
 						if ${DroneIterator.Value.State} != 4
 						{
-							UI:UpdateConsole["Debug: Engage Target ${DroneIterator.Value.ID}"]
+							;UI:UpdateConsole["Debug: Engage Target ${DroneIterator.Value.ID}"]
 							engageIndex:Insert[${DroneIterator.Value.ID}]
 						}
 
