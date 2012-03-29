@@ -1032,16 +1032,21 @@ objectdef obj_Agents
 		}
 		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
 	    Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
-	    dsIndex:GetIterator[dsIterator]
 	    if ${dsIndex.Used.Equal[2]}
 	    {
-	    	if ${dsIndex[2].Text.Find["View"]} > 0
+	    	;if ${dsIndex[2].Text.Find["View"]} > 0
+	    	;{
+	    	UI:UpdateConsole["obj_Agents: Locator Agent detected, selecting view mission button."]
+	    	dsIndex[2]:Say[${This.AgentID}]	
+	    	;}
+	    	while ${dsIndex.Used.Equal[2]}
 	    	{
-	    		UI:UpdateConsole["obj_Agents: Locator Agent detected, selecting view mission button."]
-	    		dsIndex[2]:Say[${This.AgentID}]	
+	    		UI:UpdateConsole["Waiting for locator agent conversation to update."]
+	    		Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
+	    		wait 20
 	    	}
-	    	return
 	    }
+	    dsIndex:GetIterator[dsIterator]
 		if ${dsIndex.Used} != 3
 		{
 			UI:UpdateConsole["obj_Agents: ERROR: Did not find expected dialog! Found ${dsIndex.Used} responses.  Will retry...", LOG_CRITICAL]
@@ -1080,7 +1085,7 @@ objectdef obj_Agents
 			UI:UpdateConsole["obj_Agents: ERROR: Did not find mission!  Will retry...", LOG_CRITICAL]
 			RetryCount:Inc
 			if ${RetryCount} > 4
-			{
+			{	
 				UI:UpdateConsole["obj_Agents: ERROR: Retry count exceeded!  Aborting...", LOG_CRITICAL]
 				EVEBot.ReturnToStation:Set[TRUE]
 			}
