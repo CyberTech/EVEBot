@@ -21,8 +21,7 @@ objectdef obj_Drones
 	variable int WaitingForDrones = 0
 	variable bool DronesReady = FALSE
 	variable int ShortageCount
-	variable bool IsDroneBoat
-
+	variable int DroneTimer
 	method Initialize()
 	{
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
@@ -169,7 +168,8 @@ objectdef obj_Drones
 		variable int Count = 1
 		;This includes a check for sentry/heavy drones, going to have to put some SERIOUS beef into this method to select *which* drones to launch
 		if ${This.DronesInBay} > 0 && \
-		(${Me.ActiveTarget.Name.NotEqual["Kruul's Pleasure Garden"]} || ((${Me.ActiveTarget.Distance} < ${Me.DroneControlDistance}) && ${IsDroneBoat}))
+		(${Me.ActiveTarget.Name.NotEqual["Kruul's Pleasure Garden"]} || ((${Me.ActiveTarget.Distance} < ${Me.DroneControlDistance}) && ${IsDroneBoat})) &&\
+		${Script.RunningTime} >= ${DroneTimer}
 		{
 			if !${MyShip.DroneBandwidth.Equal[125]}
 			{
@@ -405,10 +405,11 @@ objectdef obj_Drones
 				{
 					if ${DroneIterator.Value.ToEntity.ShieldPct} < 95
 					{
-						UI:UpdateConsole["Recalling Damaged Drone ${DroneIterator.Value.ID}"]
-						UI:UpdateConsole["Debug: Shield: ${DroneIterator.Value.ToEntity.ShieldPct}, Armor: ${DroneIterator.Value.ToEntity.ArmorPct}, Structure: ${DroneIterator.Value.ToEntity.StructurePct}"]
-						returnIndex:Insert[${DroneIterator.Value.ID}]
-
+						;UI:UpdateConsole["Recalling Damaged Drone ${DroneIterator.Value.ID}"]
+						;UI:UpdateConsole["Debug: Shield: ${DroneIterator.Value.ToEntity.ShieldPct}, Armor: ${DroneIterator.Value.ToEntity.ArmorPct}, Structure: ${DroneIterator.Value.ToEntity.StructurePct}"]
+						;returnIndex:Insert[${DroneIterator.Value.ID}]
+						call This.ReturnAllToDroneBay
+						DroneTimer:Set[${Math.Calc[(${Script.RunningTime}/1000)+20000]}]
 					}
 					else
 					{

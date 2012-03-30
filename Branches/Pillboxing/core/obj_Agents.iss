@@ -1145,19 +1145,23 @@ objectdef obj_Agents
 		}
 			if ${amIterator.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions} == TRUE
 			{
-				dsIndex.Get[1]:Say[${This.AgentID}]
+				UI:UpdateConsole["Saying ${dsIndex[1].Text}"]
+				dsIndex[1]:Say[${This.AgentID}]
 			}
 			elseif ${amIterator.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} == TRUE
 			{
-				dsIndex.Get[1]:Say[${This.AgentID}]
+				UI:UpdateConsole["Saying ${dsIndex[1].Text}"]
+				dsIndex[1]:Say[${This.AgentID}]
 			}
 			elseif ${amIterator.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} == TRUE
 			{
-				dsIndex.Get[1]:Say[${This.AgentID}]
+				UI:UpdateConsole["Saying ${dsIndex[1].Text}"]
+				dsIndex[1]:Say[${This.AgentID}]
 			}
 			elseif ${amIterator.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions} == TRUE
 			{
-				dsIndex.Get[1]:Say[${This.AgentID}]
+				UI:UpdateConsole["Saying ${dsIndex[1].Text}"]
+				dsIndex[1]:Say[${This.AgentID}]
 			}
 			else
 			{
