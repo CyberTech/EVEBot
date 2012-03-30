@@ -1,4 +1,4 @@
-/*
+	/*
 	Ship class
 
 	Main object for interacting with the ship and its functions
@@ -257,13 +257,13 @@ objectdef obj_Ship
 				{
 					do
 					{
-						if ${anItemIterator.Value.Quantity} > ${Math.Calc[${aWeaponIterator.MaxCharges}*${This.ModuleList_Weapon.Used}]}
-						{
-							UI:UpdateConsole["Changing ammo to ${anItemIterator.Value.Name}."]
-							aWeaponIterator.Value:ChangeAmmo[${anItemIterator.Value.ID}]
-						}
+						aWeaponIterator.Value:ChangeAmmo[${anItemIterator.Value.ID}]
 					}
 					while ${anItemIterator:Next(exists)}
+				}
+				else
+				{
+					UI:UpdateConsole["No ammo found in cargo for our weapons, can't reload with anything."]
 				}
 			}
 			while ${aWeaponIterator:Next(exists)}

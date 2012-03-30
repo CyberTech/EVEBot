@@ -286,7 +286,6 @@ objectdef obj_Scavenger
 	
 	function SalvageSite()
 	{
-		UI:UpdateConsole["Salvaging Site"]
 		if (${Config.Miner.StandingDetection} && \
 			${Social.StandingDetection[${Config.Miner.LowestStanding}]}) || \
 			!${Social.IsSafe}
@@ -314,7 +313,7 @@ objectdef obj_Scavenger
 		}
 		else
 		{
-			UI:UpdateConsole["No bookmarks left."]
+			UI:UpdateConsole["No bookmarks left. ${BookmarkListToSalvage.Used}"]
 			return
 		}
 		while ${Me.ToEntity.Mode} != 3

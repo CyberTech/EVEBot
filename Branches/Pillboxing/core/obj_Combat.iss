@@ -243,6 +243,21 @@ objectdef obj_Combat
 			UI:UpdateConsole["Mission ${mission} was not found in mishdb"]
 		}
 	}
+	member:string DamageString(int Number)
+	{
+		Switch "${Number}"
+		{
+			case 1
+				return "EM"
+			case 2
+				return "Thermal"
+			case 3
+				return "Kinetic"
+			case 4
+				return "Explosive"
+		}
+	}
+
 	member:int GetTypeIDByDamageType(string LOCATION, int GROUPID, int DAMAGETYPE)
 	{
 		;This member will return the typeid matching that damage in the location specified in the parameter, with the groupID specified
@@ -292,12 +307,13 @@ objectdef obj_Combat
 
 		}
 	}
+
 	member:int AmmoSelection()
 	{
-		variable string mission = ${Missions.MissionCache.Name[${Agents.AgentID}]}
 		;UI:UpdateConsole["${Ship.WEAPONGROUPID}"]
 		;variable int Group = ${Ship.ModuleList_Weapon[1].ToItem.GroupID}
 		;variable int Group = 510
+		variable string mission = ${Missions.MissionCache.Name[${Agents.AgentID}]}	
 		variable iterator ittyDamage
 		variable int ReloadTypeID
 		 ; Damage types on x, 1 = em, 2 = therm, 3 = kin, 4 = exp, order is descending down the page, ie em first, exp last for each groupID
@@ -365,7 +381,7 @@ objectdef obj_Combat
 		}
 		if ${MishDB.Element[${mission}]} > 0
 		{
-			UI:UpdateConsole["Found ${mission} in MishDB, damage type is ${MishDB.Element[${mission}]}"]
+			UI:UpdateConsole["Found ${Missions.MissionCache.Name[${Agents.AgentID}]} in MishDB, damage type is ${This.DamageString[${MishDB.Element[${mission}]}]}"]
 			ContainerItems:GetIterator[CargoIterator]
 			Switch "${MishDB.Element[${mission}]}"
 			{
@@ -858,7 +874,7 @@ objectdef obj_Combat
 						 Script:Pause
 						 ;return
 					}
-					call This.RefillDrones
+					;call This.RefillDrones
 					if ${CargoIterator:First(exists)}
 					{	
 
@@ -923,7 +939,7 @@ objectdef obj_Combat
 		;If they're not the correct drone for our mish, we add it to the stack to be moved from bay TO hangar. If they are, we'll check how many of them we have.
 		if ${Math.Calc[${MyShip.DronebayCapacity}-${MyShip.UsedDroneBayCapacity}]} <= 0
 		{
-			UI:UpdateConsole["Either this isn't a drone boat, or ISXEVE is returning wrong."]
+			UI:UpdateConsole["Either this isn't a drone boat, or ISXEVE is returning wrong....or our drone bay is full :D."]
 		}
 		MyShip:GetDrones[indDrones]
 		indDrones:GetIterator[ittyDrones]
@@ -934,7 +950,7 @@ objectdef obj_Combat
 		;Now we have an iterator and index for everything in Hangar and drone bay
 		if ${MishDB.Element[${Missions.MissionCache.Name[${Agents.AgentID}]}]} > 0
 		{
-			UI:UpdateConsole["Found ${mission} in MishDB, damage type is ${MishDB.Element[${mission}]}"]
+			;UI:UpdateConsole["Found ${mission} in MishDB, damage type is ${This.DamageString[${MishDB.Element[${mission}]}]}"]
 			Switch "${MishDB.Element[${Missions.MissionCache.Name[${Agents.AgentID}]}]}"
 			{
 				case 1
@@ -991,13 +1007,14 @@ objectdef obj_Combat
 		{
 			UI:UpdateConsole["Combat.RefillDrones: No drones found in drone bay"]
 		}
+			UI:UpdateConsole["We have ${Math.Calc[${MyShip.DronebayCapacity}-${MyShip.UsedDroneBayCapacity}]} m3 to fill."]
 			;So now we have no drones in our bay that aren't right for our mission (this is so when I start taking multiple damage types on a mission it's ready to use with no mods)
 			Me.Station:GetHangarItems[ContainerItems]
 			if ${CargoIterator:First(exists)}
 			{
 				do
 				{
-					if ${Ship.Drones.NumberOfDronesInBay[SENTRY]} < 5 && ${MyShip.DronebayCapacity}
+					if ${Ship.Drones.NumberOfDronesInBay[SENTRY]} < 5 && ${MyShip.DronebayCapacity} >= 150
 					{
 						UI:UpdateConsole["Reloading sentry drones now."]
 						if ${ittyDamage:First(exists)}
@@ -1074,7 +1091,7 @@ objectdef obj_Combat
 	member:bool HaveMissionAmmo()
 	{
 		variable string mission = ${Missions.MissionCache.Name[${Agents.AgentID}]}
-		UI:UpdateConsole["HaveMissionAmmo: Mission name is ${mission}"]
+		;UI:UpdateConsole["HaveMissionAmmo: Mission name is ${mission}"]
 		;variable int Group = ${Ship.ModuleList_Weapon[1].ToItem.GroupID}
 		if ${Ship.WEAPONGROUPID} > 0
 		{
@@ -1124,7 +1141,7 @@ objectdef obj_Combat
 		}
 		if ${MishDB.Element[${mission}]} > 0
 		{
-			UI:UpdateConsole["HaveMissionAmmo: Found ${mission} in MishDB, damage type is ${MishDB.Element[${mission}]}"]
+			UI:UpdateConsole["HaveMissionAmmo: Found ${mission} in MishDB, damage type is ${This.DamageString[${MishDB.Element[${mission}]}]}."]
 			ContainerItems:GetIterator[CargoIterator]
 			Switch "${MishDB.Element[${mission}]}"
 			{
