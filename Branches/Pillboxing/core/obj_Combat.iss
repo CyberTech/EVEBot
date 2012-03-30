@@ -117,6 +117,15 @@ objectdef obj_Combat
 		ThermalDamage:Insert[2456]
 		ThermalDamage:Insert[2444]
 		ThermalDamage:Insert[2446]
+
+		ThermalDamage:Insert[21918]
+		ThermalDamage:Insert[20733]
+		ThermalDamage:Insert[20797]
+		ThermalDamage:Insert[200]
+		EMDamage:Insert[21894]
+		EMDamage:Insert[20735]
+		EMDamage:Insert[20799]
+		EMDamage:Insert[201]
 		EMDamage:Insert[27435]
 		EMDamage:Insert[27437]
 		EMDamage:Insert[24490]
@@ -139,6 +148,10 @@ objectdef obj_Combat
 		EMDamage:Insert[2203]
 		EMDamage:Insert[2205]
 		ExplosiveDamage:Insert[27453]
+		ExplosiveDamage:Insert[199]
+		ExplosiveDamage:Insert[21902]
+		ExplosiveDamage:Insert[20731]
+		ExplosiveDamage:Insert[20795]
 		ExplosiveDamage:Insert[24488]
 		ExplosiveDamage:Insert[27455]
 		ExplosiveDamage:Insert[27451]
@@ -156,6 +169,10 @@ objectdef obj_Combat
 		ExplosiveDamage:Insert[2486]
 		ExplosiveDamage:Insert[2488]
 		ExplosiveDamage:Insert[21640]
+		KineticDamage:Insert[21918]
+		KineticDamage:Insert[20733]
+		KineticDamage:Insert[20797]
+		KineticDamage:Insert[200]
 		KineticDamage:Insert[31872]
 		KineticDamage:Insert[1201]
 		KineticDamage:Insert[2436]
@@ -202,7 +219,7 @@ objectdef obj_Combat
 		MishDB:Set["Smuggler Interception", 1]
 		MishDB:Set["Stop The Thief", 2]
 		MishDB:Set["Attack of the Drones", 1]
-		MishDB:Set["Rogue Drone Harassment", 1]
+		MishDB:Set["Rogue Drone Harassment", 1]	
 		MishDB:Set["The Wildcat Strike", 1]
 		MishDB:Set["Dread Pirate Scarlet", 3]
 		MishDB:Set[" The Assault ", 3]
@@ -213,7 +230,68 @@ objectdef obj_Combat
 	{
 	}
 
+	member:int DamageTypeForMish()
+	{
+		;This will only return what the name implies
+		variable string mission = ${Missions.MissionCache.Name[${Agents.AgentID}]}
+		if ${MishDB.Element[${mission}]} > 0
+		{
+			return ${MishDB.Element[${mission}]}
+		}
+		else
+		{
+			UI:UpdateConsole["Mission ${mission} was not found in mishdb"]
+		}
+	}
+	member:int GetTypeIDByDamageType(string LOCATION, int GROUPID, int DAMAGETYPE)
+	{
+		;This member will return the typeid matching that damage in the location specified in the parameter, with the groupID specified
+		;I should probably just make the switch get the list of items from the location specified and keep every else general, but right now I only support loading from stations
+		;So whateverrrr
+		variable index:item ListOfItems
+		variable iterator itty 
+		Switch "${LOCATION}"
+		{
+			case HANGAR
+				Me.Station:GetHangarItems[ListOfItems]
+				if ${GROUPID} > 0
+				{
+					ListOfItems:RemoveByQuery[${LavishScript.CreateQuery[GroupID != "${GROUPID}"]}]
+					ListOfItems:Collapse
+					if ${ListOfItems.Used} > 0
+					{
+						Switch "${DAMAGETYPE}"
+						{
+							case 1
+								EMDamage:GetIterator[itty]
+								break
+							case 2
+								ThermalDamage:GetIterator[itty]
+								break
+							case 3
+								KineticDamage:GetIterator[itty]
+								break
+							case 4
+								ExplosiveDamage:GetIterator[itty]
+								break
+							default
+								UI:UpdateConsole["What in the fuck did you pass to GetTypeIDByDamageType, ABORT ABORT ABORT"]
+						}
+						;now itty has an iterator of the damage type we're looking for, and listofitems contains a list of items matching our groupid, let's make some magic
 
+					}
+					else
+					{
+						UI:UpdateConsole["No items found matching that group ID"]
+					}
+				}
+				else
+				{
+					UI:UpdateConsole["Bad GroupID passed to Combat.GetTypeIDByDamageType, abort abort!"]
+				}
+
+		}
+	}
 	member:int AmmoSelection()
 	{
 		variable string mission = ${Missions.MissionCache.Name[${Agents.AgentID}]}
@@ -521,7 +599,7 @@ objectdef obj_Combat
 			Ship:Activate_TargetPainters
 			Ship:Activate_StasisWebs
 			Ship:Activate_Weapons
-			if ${Me.ActiveTarget(exists)} 
+			if ${Me.ActiveTarget(exists)} && ${Ship.Drones.DronesInSpace} > 0
 			{
 				if ${Me.ActiveTarget.Radius} < 100 && ${Ship.Drones.DronesOut} > 10 && ${MyShip.DroneBandwidth.Equal[125]}
 				{
@@ -672,14 +750,13 @@ objectdef obj_Combat
 			Ship:Deactivate_Cap_Booster[]
 		}
 
-		if (!${This.Fled} && ${Config.Combat.LaunchCombatDrones} && !${Ship.InWarp} && ${Me.TargetCount} > 0 || ${Me.ToEntity.IsWarpScrambled}) && ${Ship.Drones.DronesInSpace} == 0 
+		if (!${This.Fled} && ${Config.Combat.LaunchCombatDrones} && \
+		!${Ship.InWarp} && ${Me.TargetCount} > 0 || ${Me.ToEntity.IsWarpScrambled}) && \
+		${Ship.Drones.DronesInSpace} == 0 
 		{
-			if ${Me.TargetCount} > 0 && ${Me.TargetedByCount} >= ${Me.TargetCount}
+			if ${Me.TargetCount} > 0 && (${Me.TargetedByCount} >= ${Me.TargetCount} || ${MyShip.DroneBandwidth.Equal[125]})
 			{
-				if !${Ship.Drones.IsDroneBoat}
-				{
-					call Ship.Drones.LaunchAll
-				}
+				call Ship.Drones.LaunchAll
 			}
 			else
 			{

@@ -80,6 +80,8 @@ objectdef obj_Ship
 				return 385
 			case 771
 				return 654
+			case 55
+				return 83
 			case 74
 				return 85
 			default
@@ -2635,7 +2637,7 @@ objectdef obj_Ship
 		if ${ModuleIter:First(exists)}
 		do
 		{
-			OrbitDistance:Set[${Math.Calc[${ModuleIter.Value.Charge.MaxFlightTime}*${ModuleIter.Value.Charge.MaxVelocity}*.88]}]
+			OrbitDistance:Set[${Math.Calc[${ModuleIter.Value.Charge.MaxFlightTime}*${ModuleIter.Value.Charge.MaxVelocity}*.85]}]
 			if ${ModuleIter.Value.OptimalRange} > ${OrbitDistance}
 			{
 				OrbitDistance:Set[${ModuleIter.Value.OptimalRange}]
@@ -2671,7 +2673,9 @@ objectdef obj_Ship
 			;UI:UpdateConsole["ModuleIter.Value.IsChangingAmmo = ${ModuleIter.Value.IsChangingAmmo}"]
 			;UI:UpdateConsole["ModuleIter.Value.IsReloadingAmmo = ${ModuleIter.Value.IsReloadingAmmo}"]
 			;UI:UpdateConsole["ModuleIter.Value.IsOnline = ${ModuleIter.Value.IsOnline}"]
-			if !${ModuleIter.Value.IsActive} && !${ModuleIter.Value.IsChangingAmmo} && !${ModuleIter.Value.IsReloadingAmmo} && ${ModuleIter.Value.IsOnline} && (${Me.ActiveTarget.Distance} < ${Math.Calc[${ModuleIter.Value.Charge.MaxFlightTime}*${ModuleIter.Value.Charge.MaxVelocity}*.95]} || ${Me.ActiveTarget.Distance} < ${ModuleIter.Value.OptimalRange})
+			if !${ModuleIter.Value.IsActive} && !${ModuleIter.Value.IsChangingAmmo} &&\ 
+			!${ModuleIter.Value.IsReloadingAmmo} && ${ModuleIter.Value.IsOnline} &&\
+			 (${Me.ActiveTarget.Distance} < ${Math.Calc[${ModuleIter.Value.Charge.MaxFlightTime}*${ModuleIter.Value.Charge.MaxVelocity}*.90]} || ${Me.ActiveTarget.Distance} < ${ModuleIter.Value.AccuracyFalloff})
 			{	
 				;;UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
 				ModuleIter.Value:Activate

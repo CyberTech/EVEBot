@@ -1004,7 +1004,7 @@ objectdef obj_Agents
 
 		if ${Agent[${This.AgentIndex}].Division.Equal["R&D"]}
 		{
-			UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: R&D agents not supported after patch."]
+			UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: R&D agents not supported after patch. OWNED!"]
 			return
 		}
 
@@ -1032,13 +1032,13 @@ objectdef obj_Agents
 		}
 		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
 	    Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
-	    if ${dsIndex.Used.Equal[2]}
+	    if ${dsIndex.Used.Equal[2]} && ${dsIndex[1].Text.Find["View"]} > 0
 	    {
-	    	;if ${dsIndex[2].Text.Find["View"]} > 0
-	    	;{
-	    	UI:UpdateConsole["obj_Agents: Locator Agent detected, selecting view mission button."]
-	    	dsIndex[1]:Say[${This.AgentID}]	
-	    	;}
+	    	if ${dsIndex[1].Text.Find["View"]} > 0
+	    	{
+	    		UI:UpdateConsole["obj_Agents: Locator Agent detected, selecting view mission button."]
+	    		dsIndex[1]:Say[${This.AgentID}]	
+	    	}
 	    	while ${dsIndex.Used.Equal[2]}
 	    	{
 	    		UI:UpdateConsole["Waiting for locator agent conversation to update."]
@@ -1093,160 +1093,16 @@ objectdef obj_Agents
 		}
 
 		RetryCount:Set[0]
-
-		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.AgentID = ${amIterator.Value.AgentID}"]
-		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.State = ${amIterator.Value.State}"]
-		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}"]
-		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Name = ${amIterator.Value.Name}"]
-		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.ExpirationTime = ${amIterator.Value.ExpirationTime.DateAndTime}"]
-
-		amIterator.Value:GetDetails
-		wait 50
-		variable string details
-		variable string caption
-		variable int left = 0
-		variable int right = 0
-		caption:Set["Mission Journal - ${This.ActiveAgent}"]}
-		left:Set[${caption.Escape.Find["u2013"]}]
-
-		if ${left} > 0
-		{
-			UI:UpdateConsole["obj_Agents: WARNING: Mission name contains u2013"]
-			UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Name.Escape = ${amIterator.Value.Name.Escape}"]
-
-			caption:Set["${caption.Escape.Right[${Math.Calc[${caption.Escape.Length} - ${left} - 5]}]}"]
-
-			UI:UpdateConsole["obj_Agents: DEBUG: caption.Escape = ${caption.Escape}"]
-		}
-
-		while !${EVEWindow[ByCaption,"${caption}"](exists)}
-		{
-			UI:UpdateConsole["obj_Agents: ERROR: Mission details window was not found!"]
-			wait 10
-		}
-		; The embedded quotes look odd here, but this is required to escape the comma that exists in the caption and in the resulting html.
-		details:Set["${EVEWindow[ByCaption,"${caption}"].HTML.Escape}"]
-
-		UI:UpdateConsole["obj_Agents: DEBUG: HTML.Length = ${EVEWindow[ByCaption,${caption}].HTML.Length}"]
-		UI:UpdateConsole["obj_Agents: DEBUG: details.Length = ${details.Length}"]
-
-		;EVE:Execute[CmdCloseActiveWindow]
-
-		variable file detailsFile
-		detailsFile:SetFilename["./config/logs/${amIterator.Value.ExpirationTime.AsInt64.Hex} ${amIterator.Value.Name.Replace[",",""]}.html"]
-		if ${detailsFile:Open(exists)}
-		{
-			detailsFile:Write["${details.Escape}"]
-		}
-		detailsFile:Close
-
-		Missions.MissionCache:AddMission[${amIterator.Value.AgentID},"${amIterator.Value.Name}"]
-
-		variable int factionID = 0
-		left:Set[${details.Escape.Find["<img src=\\\"factionlogo:"]}]
-		if ${left} > 0
-		{
-			;UI:UpdateConsole["obj_Agents: DEBUG: Found \"factionlogo\" at ${left}."]
-			left:Inc[23]
-			;UI:UpdateConsole["obj_Agents: DEBUG: Found \"factionlogo\" at ${left}."]
-			;UI:UpdateConsole["obj_Agents: DEBUG: factionlogo substring = ${details.Escape.Mid[${left},16]}"]
-			right:Set[${details.Escape.Mid[${left},16].Find["\" "]}]
-			if ${right} > 0
-			{
-				right:Dec[2]
-				;UI:UpdateConsole["obj_Agents: DEBUG: left = ${left}"]
-				;UI:UpdateConsole["obj_Agents: DEBUG: right = ${right}"]
-				;UI:UpdateConsole["obj_Agents: DEBUG: string = ${details.Escape.Mid[${left},${right}]}"]
-				factionID:Set[${details.Escape.Mid[${left},${right}]}]
-				UI:UpdateConsole["obj_Agents: DEBUG: factionID = ${factionID}"]
-			}
-			else
-			{
-				UI:UpdateConsole["obj_Agents: ERROR: Did not find end of \"factionlogo\"!"]
-			}
-		}
-		else
-		{
-			UI:UpdateConsole["obj_Agents: DEBUG: Did not find \"factionlogo\".  Rouge Drones???"]
-		}
-
-		Missions.MissionCache:SetFactionID[${amIterator.Value.AgentID},${factionID}]
-
-		variable int typeID = 0
-		left:Set[${details.Escape.Find["<img src=\\\"typeicon:"]}]
-		if ${left} > 0
-		{
-			;UI:UpdateConsole["obj_Agents: DEBUG: Found \"typeicon\" at ${left}."]
-			left:Inc[20]
-			;UI:UpdateConsole["obj_Agents: DEBUG: typeicon substring = ${details.Escape.Mid[${left},16]}"]
-			right:Set[${details.Escape.Mid[${left},16].Find["\" "]}]
-			if ${right} > 0
-			{
-				right:Dec[2]
-				;UI:UpdateConsole["obj_Agents: DEBUG: left = ${left}"]
-				;UI:UpdateConsole["obj_Agents: DEBUG: right = ${right}"]
-				;UI:UpdateConsole["obj_Agents: DEBUG: string = ${details.Escape.Mid[${left},${right}]}"]
-				typeID:Set[${details.Escape.Mid[${left},${right}]}]
-				UI:UpdateConsole["obj_Agents: DEBUG: typeID = ${typeID}"]
-			}
-			else
-			{
-				UI:UpdateConsole["obj_Agents: ERROR: Did not find end of \"typeicon\"!"]
-			}
-		}
-		else
-		{
-			UI:UpdateConsole["obj_Agents: DEBUG: Did not find \"typeicon\".  No cargo???"]
-		}
-
-		Missions.MissionCache:SetTypeID[${amIterator.Value.AgentID},${typeID}]
-
-		variable float volume = 0
-
-		right:Set[${details.Escape.Find["msup3"]}]
-		if ${right} > 0
-		{
-			;UI:UpdateConsole["obj_Agents: DEBUG: Found \"msup3\" at ${right}."]
-			right:Dec
-			left:Set[${details.Escape.Mid[${Math.Calc[${right}-16]},16].Find[" ("]}]
-			if ${left} > 0
-			{
-				left:Set[${Math.Calc[${right}-16+${left}+1]}]
-				right:Set[${Math.Calc[${right}-${left}]}]
-				;UI:UpdateConsole["obj_Agents: DEBUG: left = ${left}"]
-				;UI:UpdateConsole["obj_Agents: DEBUG: right = ${right}"]
-				;UI:UpdateConsole["obj_Agents: DEBUG: string = ${details.Escape.Mid[${left},${right}]}"]
-				volume:Set[${details.Escape.Mid[${left},${right}]}]
-				UI:UpdateConsole["obj_Agents: DEBUG: volume = ${volume}"]
-			}
-			else
-			{
-				UI:UpdateConsole["obj_Agents: ERROR: Did not find number before \"msup3\"!"]
-			}
-		}
-		else
-		{
-			UI:UpdateConsole["obj_Agents: DEBUG: Did not find \"msup3\".  No cargo???"]
-		}
-
-		Missions.MissionCache:SetVolume[${amIterator.Value.AgentID},${volume}]
-   		variable bool isLowSec = FALSE
-		left:Set[${details.Escape.Find["(Low Sec Warning!)"]}]
-        right:Set[${details.Escape.Find["(The route generated by current autopilot settings contains low security systems!)"]}]
-		if ${left} > 0 || ${right} > 0
-		{
-            UI:UpdateConsole["obj_Agents: DEBUG: left = ${left}"]
-            UI:UpdateConsole["obj_Agents: DEBUG: right = ${right}"]
-			isLowSec:Set[TRUE]
-			UI:UpdateConsole["obj_Agents: DEBUG: isLowSec = ${isLowSec}"]
-		}
-
-		Missions.MissionCache:SetLowSec[${amIterator.Value.AgentID},${isLowSec}]
+		call This.MissionDetails
+		isLowSec:Set[${Missions.MissionCache.LowSec[${amIterator.Value.AgentID}]}]
 		variable time lastDecline
 		lastDecline:Set[${Config.Agents.LastDecline[${This.AgentName}]}]
 		lastDecline.Hour:Inc[4]
 		lastDecline:Update
-
+		if ${isLowSec}
+		{
+			UI:UpdateConsole["LowSec Mission found: DANGER! DANGER! DANGER!"]
+		}
 		if ${isLowSec} && ${Config.Missioneer.AvoidLowSec} == TRUE
 		{
 			if ${lastDecline.Timestamp} >= ${Time.Timestamp}

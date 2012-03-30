@@ -7,7 +7,7 @@
 
 */
 
-variable string APP_NAME = "EVEBot"
+variable string APP_NAME = "PillBot"
 variable string APP_PATH = "EVEBot/EVEBot.iss"
 variable string SVN_REVISION = "$Rev$"
 variable string APP_HEADURL = "$HeadURL$"
