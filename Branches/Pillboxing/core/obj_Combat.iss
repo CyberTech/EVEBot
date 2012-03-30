@@ -113,11 +113,13 @@ objectdef obj_Combat
 		ThermalDamage:Insert[2183]
 		ThermalDamage:Insert[2185]
 		ThermalDamage:Insert[2454]
+		ThermalDamage:Insert[24486]
 		ThermalDamage:Insert[2456]
 		ThermalDamage:Insert[2444]
 		ThermalDamage:Insert[2446]
 		EMDamage:Insert[27435]
 		EMDamage:Insert[27437]
+		EMDamage:Insert[24490]
 		EMDamage:Insert[27433]
 		EMDamage:Insert[27890]
 		EMDamage:Insert[207]
@@ -137,6 +139,7 @@ objectdef obj_Combat
 		EMDamage:Insert[2203]
 		EMDamage:Insert[2205]
 		ExplosiveDamage:Insert[27453]
+		ExplosiveDamage:Insert[24488]
 		ExplosiveDamage:Insert[27455]
 		ExplosiveDamage:Insert[27451]
 		ExplosiveDamage:Insert[206]
@@ -158,6 +161,7 @@ objectdef obj_Combat
 		KineticDamage:Insert[2436]
 		KineticDamage:Insert[2464]
 		KineticDamage:Insert[2466]
+		KineticDamage:Insert[2479]
 		KineticDamage:Insert[31874]
 		KineticDamage:Insert[31878]
 		KineticDamage:Insert[31876]
@@ -840,6 +844,10 @@ objectdef obj_Combat
 		;This is going to assume we're in a station for now
 		;This is going to hurt...so first we're going to see what kind of drones we have in bay first...then see if they're right for our mission
 		;If they're not the correct drone for our mish, we add it to the stack to be moved from bay TO hangar. If they are, we'll check how many of them we have.
+		if ${Math.Calc[${MyShip.DronebayCapacity}-${MyShip.UsedDroneBayCapacity}]} <= 0
+		{
+			UI:UpdateConsole["Either this isn't a drone boat, or ISXEVE is returning wrong."]
+		}
 		MyShip:GetDrones[indDrones]
 		indDrones:GetIterator[ittyDrones]
 		Me.Station:GetHangarItems[ContainerItems]
@@ -854,7 +862,7 @@ objectdef obj_Combat
 			{
 				case 1
 					EMDamage:GetIterator[ittyDamage]
-				case 2
+				case 2DronebayCapacity
 					ThermalDamage:GetIterator[ittyDamage]
 				case 3
 					KineticDamage:GetIterator[ittyDamage]

@@ -78,6 +78,8 @@ objectdef obj_Ship
 			 	return 89-657
 			case 510
 				return 385
+			case 771
+				return 654
 			case 74
 				return 85
 			default
