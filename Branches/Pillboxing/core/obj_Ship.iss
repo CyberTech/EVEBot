@@ -241,7 +241,34 @@ objectdef obj_Ship
 
 		return TRUE
 	}
-
+	method SwapAmmo()
+	{
+		variable iterator aWeaponIterator
+		variable index:item anItemIndex
+		variable iterator anItemIterator
+		This.ModuleList_Weapon:GetIterator[aWeaponIterator]
+		if ${aWeaponIterator:First(exists)}
+		{
+			do
+			{
+				aWeaponIterator.Value:GetAvailableAmmo[anItemIndex]
+				anItemIndex:GetIterator[anItemIterator]
+				if ${anItemIterator:First(exists)}
+				{
+					do
+					{
+						if ${anItemIterator.Value.Quantity} > ${Math.Calc[${aWeaponIterator.MaxCharges}*${This.ModuleList_Weapon.Used}]}
+						{
+							UI:UpdateConsole["Changing ammo to ${anItemIterator.Value.Name}."]
+							aWeaponIterator.Value:ChangeAmmo[${anItemIterator.Value.ID}]
+						}
+					}
+					while ${anItemIterator:Next(exists)}
+				}
+			}
+			while ${aWeaponIterator:Next(exists)}
+		}
+	}
 	member:bool IsAmmoAvailable()
 	{
 		variable iterator aWeaponIterator
@@ -285,34 +312,6 @@ objectdef obj_Ship
 				{
 					UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable: FALSE! NoAmmo Found", LOG_CRITICAL]
 					bAmmoAvailable:Set[FALSE]
-				}
-			}
-			else
-			{
-				if !${aWeaponIterator.Value.IsReloadingAmmo} && !${aWeaponIterator.Value.IsChangingAmmo} && ${MyShip.UsedCargoCapacity} > 100
-				{
-					aWeaponIterator.Value:GetAvailableAmmo[anItemIndex]
-					anItemIndex:GetIterator[anItemIterator]
-					if ${anItemIterator:First(exists)}
-					{
-						do
-						{
-							if ${anItemIterator.Value.Quantity} <= ${Math.Calc[${aWeaponIterator.Value.MaxCharges} * ${This.ModuleList_Weapon.Used}]}
-							{
-								;dunno
-							}
-							else
-							{
-								aWeaponIterator.Value:ChangeAmmo[${anItemIterator.Value.ID}]
-							}
-						}
-						while ${anItemIterator:Next(exists)}
-					}
-					else
-					{
-						UI:UpdateConsole["No charges loaded and < 100 m3 cargo, bailing and refilling ammo."]
-						return FALSE
-					}
 				}
 			}
 			

@@ -991,15 +991,13 @@ objectdef obj_Combat
 		{
 			UI:UpdateConsole["Combat.RefillDrones: No drones found in drone bay"]
 		}
-			;This wait could be reduced, I'm only setting it this high out of preference
 			;So now we have no drones in our bay that aren't right for our mission (this is so when I start taking multiple damage types on a mission it's ready to use with no mods)
-			;We're going to iterate through what's left in our drones to see how many extra we may need
 			Me.Station:GetHangarItems[ContainerItems]
 			if ${CargoIterator:First(exists)}
 			{
 				do
 				{
-					if ${Ship.Drones.NumberOfDronesInBay[SENTRY]} < 5
+					if ${Ship.Drones.NumberOfDronesInBay[SENTRY]} < 5 && ${MyShip.DronebayCapacity}
 					{
 						UI:UpdateConsole["Reloading sentry drones now."]
 						if ${ittyDamage:First(exists)}
@@ -1034,7 +1032,7 @@ objectdef obj_Combat
 							;while ${ittyDamage:Next(exists)}
 						;}
 					}
-					elseif ${Ship.Drones.NumberOfDronesInBay[MEDIUM]} < 5
+					elseif ${Ship.Drones.NumberOfDronesInBay[MEDIUM]} < 5 && ${MyShip.DronebayCapacity} > 100
 					{
 						UI:UpdateConsole["Reloading Light Drones."]
 						if ${ittyDamage:First(exists)}
@@ -1051,7 +1049,7 @@ objectdef obj_Combat
 							while ${ittyDamage:Next(exists)}
 						}
 					}
-					elseif ${Ship.Drones.NumberOfDronesInBay[LIGHT]} < 5
+					elseif ${Ship.Drones.NumberOfDronesInBay[LIGHT]} < 5 && ${MyShip.DronebayCapacity} > 0
 					{
 						if ${ittyDamage:First(exists)}
 						{
@@ -1060,7 +1058,8 @@ objectdef obj_Combat
 								if ${CargoIterator.Value.TypeID.Equal[${ittyDamage.Value}]} && \
 									${CargoIterator.Value.Volume.Equal[5]}
 									{
-										call Cargo.TransferTypeIDToShip ${CargoIterator.Value.TypeID} ${Math.Calc[5-${Ship.Drones.NumberOfDronesInBay[LIGHT]}]}
+										UI:UpdateConsole["Transferring ${Math.Calc[(${MyShip.DronebayCapacity}/5)-${Ship.Drones.NumberOfDronesInBay[LIGHT]}]} of ${CargoIterator.Value.Name} to drone bay."]
+										call Cargo.TransferTypeIDToShip ${CargoIterator.Value.TypeID} ${Math.Calc[(${MyShip.DronebayCapacity}/5)-${Ship.Drones.NumberOfDronesInBay[LIGHT]}]}
 									}
 
 							}

@@ -30,6 +30,10 @@ objectdef obj_AgentList
 		}
 		LavishSettings:Import[${CONFIG_FILE}]
 		LavishSettings[${This.SET_NAME1}]:GetSettingIterator[This.agentIterator]
+		if !${This.agentIterator:First(exists)}
+		{
+			UI:UpdateConsole["obj_AgentList: Found no agents"]
+		}
 		LavishSettings[${This.SET_NAME2}]:GetSettingIterator[This.researchAgentIterator]
 		UI:UpdateConsole["obj_AgentList: Initialized.", LOG_MINOR]
 	}
@@ -322,8 +326,7 @@ objectdef obj_Agents
 		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 		;UI:UpdateConsole["obj_Agents: DEBUG: amIndex.Used = ${amIndex.Used}"]
-		if ${This.AgentList.agentIterator:First(exists)} && ${lastDecline.Timestamp} < ${Time.Timestamp} 
-		;&& ${lastDecline.Timestamp} <= ${This.Timestamp}
+		if ${This.AgentList.agentIterator:First(exists)}
 		{
 			do
 			{
@@ -384,17 +387,17 @@ objectdef obj_Agents
 								if ${lastDecline.Timestamp} >= ${Time.Timestamp}
 								{
 									UI:UpdateConsole["obj_Agents: DEBUG: Skipping mission to avoid standing loss: ${amIterator.Value.Name}"]
-									;skipList:Add[${amIterator.Value.AgentID}]
+									skipList:Add[${amIterator.Value.AgentID}]
 								}
-								else
-								{
-									if ${Agent[id,${amIterator.Value.AgentID}].Name.Equal[${This.AgentList.agentIterator.Key}]}
-									{
-										UI:UpdateConsole["Looks like agent ${Agent[id,${amIterator.Value.AgentID}].Name}'s mission can be declined. Setting Active Agent."]
-										This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}].Name}]
-										return
-									}
-								}
+								;else
+								;{
+								;	if ${Agent[id,${amIterator.Value.AgentID}].Name.Equal[${This.AgentList.agentIterator.Key}]}
+								;	{
+								;		UI:UpdateConsole["Looks like agent ${Agent[id,${amIterator.Value.AgentID}].Name}'s mission can be declined. Setting Active Agent."]
+								;		This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}].Name}]
+								;		return
+								;	}
+								;}
 							}
 						}
 					}
@@ -403,6 +406,10 @@ objectdef obj_Agents
 			}
 			while ${This.AgentList.agentIterator:Next(exists)}
 
+		}
+		else
+		{
+			UI:UpdateConsole["No agents found in agent list, please check you have a valid agent list in the config folder."]
 		}
 
 		/* if we get here none of the missions in the journal are valid */
@@ -419,13 +426,13 @@ objectdef obj_Agents
 			agentName:Set[${This.AgentList.NextAvailableResearchAgent}]
 		}
 
-		/*
+		
 
 		if ${This.AgentList.agentIterator:First(exists)}
 		{
 			do
 			{
-				if ${skipList.Contains[${Config.Agents.AgentID[${This.AgentList.agentIterator.Key}]}]} == FALSE
+				if ${skipList.Contains[${Config.Agents.AgentID[${This.AgentList.agentIterator.Key}]}]} == FALSE && !${This.AgentList.agentIterator.Key.Equal[${This.AgentName}]}
 				{
 					UI:UpdateConsole["obj_Agents: DEBUG: Setting agent to ${This.AgentList.agentIterator.Key}"]
 					This:SetActiveAgent[${This.AgentList.agentIterator.Key}]
@@ -434,10 +441,9 @@ objectdef obj_Agents
 			}
 			while ${This.AgentList.agentIterator:Next(exists)}
 		}
-		*/
 		/* we should never get here */
 		UI:UpdateConsole["obj_Agents.PickAgent: DEBUG: Script paused."]
-		;Script:Pause
+		Script:Pause
 	}
 
 	member:string DropOffStation()

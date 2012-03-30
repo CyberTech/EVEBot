@@ -496,16 +496,23 @@ function RunCourierMission(int agentID)
 
 	function RunCombatMission(int agentID)
 	{	
+		call This.GetMissionKey
 		if !${Combat.HaveMissionAmmo}
 		{
 			UI:UpdateConsole["We have the wrong ammo for mission, heading to nearest ammo bookmark."]
 			call Combat.RestockAmmo
+			if !${Me.InSpace}
+			{
+				EVE:Execute[CmdExitStation]
+				wait 100
+			}
+			UI:UpdateConsole["We should have undocked by now, calling swap ammo."]
+			Ship:SwapAmmo
 		}
 		else
 		{
 			UI:UpdateConsole["We have correct ammo for our mission."]
 		}
-		call This.GetMissionKey
 		UI:UpdateConsole["Starting combat mission now."]
 		call ChatIRC.Say "${Me.Name}: Starting new mission. Name = ${This.MissionCache.Name[${Agents.AgentID}]}"
 		;call Ship.ActivateShip "${Config.Missioneer.CombatShip}"
