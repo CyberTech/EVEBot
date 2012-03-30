@@ -132,7 +132,7 @@ objectdef obj_Targets
 				{
 					if ${Me.TargetCount} == 0 && ${MyShip.MaxLockedTargets} > 0
 					{
-						if ${Me.ToEntity.Mode} != 1 && !${Entity[Distance <= ${MyShip.MaxTargetRange}](exists)} && (${Entity["TypeID = TYPE_ACCELERATION_GATE"].Distance} < 110000 || ${Entity[Name =- "Beacon"].Distance} < 110000)
+						if ${Me.ToEntity.Mode} != 1 && !${Entity[${query2} && Distance <= "${MyShip.MaxTargetRange}"](exists)} && (${Entity["TypeID = TYPE_ACCELERATION_GATE"].Distance} < 110000 || ${Entity[Name =- "Beacon"].Distance} < 110000)
 						{
 							Target2.Value:Approach[${MyShip.MaxTargetRange}]
 							;I'm going to have to update this into a check that checks for sentry drones in space before approaching.

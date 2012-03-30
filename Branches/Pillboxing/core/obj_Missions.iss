@@ -694,7 +694,7 @@ function RunCourierMission(int agentID)
 			{
 			   	UI:UpdateConsole["Activating Acceleration Gate..."]
 			   	Entity[${GateToUse}]:Activate
-				while ${Me.ToEntity.Mode} != 3
+				while ${Me.ToEntity.Mode} != 3 && ${Entity[${GateToUse}](exists)}
 				{
 					Entity[${GateToUse}]:Activate
 				}
