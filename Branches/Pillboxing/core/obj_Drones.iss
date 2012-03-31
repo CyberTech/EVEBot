@@ -287,19 +287,25 @@ objectdef obj_Drones
 
 	function ReturnAllToDroneBay()
 	{
-		variable iterator Droner
-		variable index:int ToReturn
+		if ${This.WaitingForDrones} > 0
+		{
+			return	
+		}
 		while ${This.DronesInSpace} > 0
 		{
-			UI:UpdateConsole["Recalling ${This.ActiveDroneIDList.Used} Drones"]
-			EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
 			if	${MyShip.ShieldPct} < 25
 			{
-				echo ${MyShip.ShieldPct}
 				UI:UpdateConsole["OUR SHIT IS FUCKED UP FUCK THE DRONES"]
 				break
 			}
-			wait 50
+			if ${This.WaitingForDrones} > 0
+			{
+				continue
+			}
+			UI:UpdateConsole["Recalling ${This.ActiveDroneIDList.Used} Drones"]
+			This.WaitingForDrones:Set[5]
+			EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
+			wait 5
 		}
 	}
 
