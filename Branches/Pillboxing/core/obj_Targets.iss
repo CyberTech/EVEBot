@@ -29,16 +29,318 @@ objectdef obj_Targets
 	variable int Counter = 0
 	variable time TIMER
 	variable index:int64 ToTarget
-	variable uint WINNING
+	
+	variable index:string SpecialTargets
+	variable iterator SpecialTarget
+
+	variable index:string SpecialTargetsToLoot
+	variable iterator SpecialTargetToLoot
 	method Initialize()
 	{
 		;WINNING:Set[${LavishScript.CreateQuery[]}]
 		;UI:UpdateConsole["Query set to ${WINNING}"]
+			SpecialTargets:Insert["Gotan Kreiss"]
+		SpecialTargets:Insert["Hakim Stormare"]
+		SpecialTargets:Insert["Mizuro Cybon"]
+		SpecialTargets:Insert["Tobias Kruzhoryy"]
+
+		; Asteroid Angel Cartel Battleship
+		SpecialTargets:Insert["Domination Cherubim"]
+		SpecialTargets:Insert["Domination Commander"]
+		SpecialTargets:Insert["Domination General"]
+		SpecialTargets:Insert["Domination Malakim"]
+		SpecialTargets:Insert["Domination Nephilim"]
+		SpecialTargets:Insert["Domination Saint"]
+		SpecialTargets:Insert["Domination Seraphim"]
+		SpecialTargets:Insert["Domination Throne"]
+		SpecialTargets:Insert["Domination War General"]
+		SpecialTargets:Insert["Domination Warlord"]
+
+		; Asteroid Angel Cartel Battlecruiser
+		SpecialTargets:Insert["Domination Legatus"]
+		SpecialTargets:Insert["Domination Legionnaire"]
+		SpecialTargets:Insert["Domination Praefectus"]
+		SpecialTargets:Insert["Domination Primus"]
+		SpecialTargets:Insert["Domination Tribuni"]
+		SpecialTargets:Insert["Domination Tribunus"]
+
+		; Asteroid Angel Cartel Cruiser
+		SpecialTargets:Insert["Domination Breaker"]
+		SpecialTargets:Insert["Domination Centurion"]
+		SpecialTargets:Insert["Domination Crusher"]
+		SpecialTargets:Insert["Domination Defeater"]
+		SpecialTargets:Insert["Domination Depredator"]
+		SpecialTargets:Insert["Domination Liquidator"]
+		SpecialTargets:Insert["Domination Marauder"]
+		SpecialTargets:Insert["Domination Phalanx"]
+		SpecialTargets:Insert["Domination Predator"]
+		SpecialTargets:Insert["Domination Smasher"]
+
+		; Asteroid Angel Cartel Destroyer
+		SpecialTargets:Insert["Domination Defacer"]
+		SpecialTargets:Insert["Domination Defiler"]
+		SpecialTargets:Insert["Domination Haunter"]
+		SpecialTargets:Insert["Domination Seizer"]
+		SpecialTargets:Insert["Domination Shatterer"]
+		SpecialTargets:Insert["Domination Trasher"]
+
+		; Asteroid Angel Cartel Frigate
+		SpecialTargets:Insert["Domination Ambusher"]
+		SpecialTargets:Insert["Domination Hijacker"]
+		SpecialTargets:Insert["Domination Hunter"]
+		SpecialTargets:Insert["Domination Impaler"]
+		SpecialTargets:Insert["Domination Nomad"]
+		SpecialTargets:Insert["Domination Outlaw"]
+		SpecialTargets:Insert["Domination Raider"]
+		SpecialTargets:Insert["Domination Rogue"]
+		SpecialTargets:Insert["Domination Ruffian"]
+		SpecialTargets:Insert["Domination Thug"]
+		SpecialTargets:Insert["Psycho Ambusher"]
+		SpecialTargets:Insert["Psycho Hijacker"]
+		SpecialTargets:Insert["Psycho Hunter"]
+		SpecialTargets:Insert["Psycho Impaler"]
+		SpecialTargets:Insert["Psycho Nomad"]
+		SpecialTargets:Insert["Psycho Outlaw"]
+		SpecialTargets:Insert["Psycho Raider"]
+		SpecialTargets:Insert["Psycho Rogue"]
+		SpecialTargets:Insert["Psycho Ruffian"]
+		SpecialTargets:Insert["Psycho Thug"]
+
+		; Asteroid Blood Raiders Officers
+		SpecialTargets:Insert["Ahremen Arkah"]
+		SpecialTargets:Insert["Draclira Merlonne"]
+		SpecialTargets:Insert["Raysere Giant"]
+		SpecialTargets:Insert["Tairei Namazoth"]
+
+		; Asteroid Guristas Officers
+		SpecialTargets:Insert["Estamel Tharchon"]
+		SpecialTargets:Insert["Kaikka Peunato"]
+		SpecialTargets:Insert["Thon Eney"]
+		SpecialTargets:Insert["Vepas Minimala"]
+
+		; Asteroid Sansha's Nation Officers
+		SpecialTargets:Insert["Brokara Ryver"]
+		SpecialTargets:Insert["Chelm Soran"]
+		SpecialTargets:Insert["Selynne Mardakar"]
+		SpecialTargets:Insert["Vizan Ankonin"]
+
+		; Asteroid Serpentis Officers
+		SpecialTargets:Insert["Brynn Jerdola"]
+		SpecialTargets:Insert["Cormack Vaaja"]
+		SpecialTargets:Insert["Setele Schellan"]
+		SpecialTargets:Insert["Tuvan Orth"]
+
+
+		SpecialTargets:Insert["Dread Guristas"]
+		SpecialTargets:Insert["Shadow Serpentis"]
+		SpecialTargets:Insert["True Sansha"]
+		SpecialTargets:Insert["Dark Blood"]
+
+		SpecialTargets:Insert["Courier"]
+		SpecialTargets:Insert["Ferrier"]
+		SpecialTargets:Insert["Gatherer"]
+		SpecialTargets:Insert["Harvester"]
+		SpecialTargets:Insert["Loader"]
+		SpecialTargets:Insert["Bulker"]
+		SpecialTargets:Insert["Carrier"]
+		SpecialTargets:Insert["Convoy"]
+		SpecialTargets:Insert["Hauler"]
+		SpecialTargets:Insert["Trailer"]
+		SpecialTargets:Insert["Transporter"]
+		SpecialTargets:Insert["Trucker"]
+
+		SpecialTargetsToLoot:Insert["Dread Guristas"]
+		SpecialTargetsToLoot:Insert["Shadow Serpentis"]
+		SpecialTargetsToLoot:Insert["True Sansha"]
+		SpecialTargetsToLoot:Insert["Dark Blood"]
+		SpecialTargetsToLoot:Insert["Domination"]
+
+		; Asteroid Serpentis Officers
+		SpecialTargetsToLoot:Insert["Brynn Jerdola"]
+		SpecialTargetsToLoot:Insert["Cormack Vaaja"]
+		SpecialTargetsToLoot:Insert["Setele Schellan"]
+		SpecialTargetsToLoot:Insert["Tuvan Orth"]
+
+		; Asteroid Guristas Officers
+		SpecialTargetsToLoot:Insert["Estamel Tharchon"]
+		SpecialTargetsToLoot:Insert["Kaikka Peunato"]
+		SpecialTargetsToLoot:Insert["Thon Eney"]
+		SpecialTargetsToLoot:Insert["Vepas Minimala"]
+
+		; Asteroid Angel Cartel Battleship
+		SpecialTargetsToLoot:Insert["Domination Cherubim"]
+		SpecialTargetsToLoot:Insert["Domination Commander"]
+		SpecialTargetsToLoot:Insert["Domination General"]
+		SpecialTargetsToLoot:Insert["Domination Malakim"]
+		SpecialTargetsToLoot:Insert["Domination Nephilim"]
+		SpecialTargetsToLoot:Insert["Domination Saint"]
+		SpecialTargetsToLoot:Insert["Domination Seraphim"]
+		SpecialTargetsToLoot:Insert["Domination Throne"]
+		SpecialTargetsToLoot:Insert["Domination War General"]
+		SpecialTargetsToLoot:Insert["Domination Warlord"]
+
+		; Asteroid Angel Cartel Battlecruiser
+		SpecialTargetsToLoot:Insert["Domination Legatus"]
+		SpecialTargetsToLoot:Insert["Domination Legionnaire"]
+		SpecialTargetsToLoot:Insert["Domination Praefectus"]
+		SpecialTargetsToLoot:Insert["Domination Primus"]
+		SpecialTargetsToLoot:Insert["Domination Tribuni"]
+		SpecialTargetsToLoot:Insert["Domination Tribunus"]
+
+		; Asteroid Angel Cartel Cruiser
+		SpecialTargetsToLoot:Insert["Domination Breaker"]
+		SpecialTargetsToLoot:Insert["Domination Centurion"]
+		SpecialTargetsToLoot:Insert["Domination Crusher"]
+		SpecialTargetsToLoot:Insert["Domination Defeater"]
+		SpecialTargetsToLoot:Insert["Domination Depredator"]
+		SpecialTargetsToLoot:Insert["Domination Liquidator"]
+		SpecialTargetsToLoot:Insert["Domination Marauder"]
+		SpecialTargetsToLoot:Insert["Domination Phalanx"]
+		SpecialTargetsToLoot:Insert["Domination Predator"]
+		SpecialTargetsToLoot:Insert["Domination Smasher"]
+
+		; Asteroid Angel Cartel Destroyer
+		SpecialTargetsToLoot:Insert["Domination Defacer"]
+		SpecialTargetsToLoot:Insert["Domination Defiler"]
+		SpecialTargetsToLoot:Insert["Domination Haunter"]
+		SpecialTargetsToLoot:Insert["Domination Seizer"]
+		SpecialTargetsToLoot:Insert["Domination Shatterer"]
+		SpecialTargetsToLoot:Insert["Domination Trasher"]
+
+		; Asteroid Angel Cartel Frigate
+		SpecialTargetsToLoot:Insert["Domination Ambusher"]
+		SpecialTargetsToLoot:Insert["Domination Hijacker"]
+		SpecialTargetsToLoot:Insert["Domination Hunter"]
+		SpecialTargetsToLoot:Insert["Domination Impaler"]
+		SpecialTargetsToLoot:Insert["Domination Nomad"]
+		SpecialTargetsToLoot:Insert["Domination Outlaw"]
+		SpecialTargetsToLoot:Insert["Domination Raider"]
+		SpecialTargetsToLoot:Insert["Domination Rogue"]
+		SpecialTargetsToLoot:Insert["Domination Ruffian"]
+		SpecialTargetsToLoot:Insert["Domination Thug"]
+		SpecialTargetsToLoot:Insert["Psycho Ambusher"]
+		SpecialTargetsToLoot:Insert["Psycho Hijacker"]
+		SpecialTargetsToLoot:Insert["Psycho Hunter"]
+		SpecialTargetsToLoot:Insert["Psycho Impaler"]
+		SpecialTargetsToLoot:Insert["Psycho Nomad"]
+		SpecialTargetsToLoot:Insert["Psycho Outlaw"]
+		SpecialTargetsToLoot:Insert["Psycho Raider"]
+		SpecialTargetsToLoot:Insert["Psycho Rogue"]
+		SpecialTargetsToLoot:Insert["Psycho Ruffian"]
+		SpecialTargetsToLoot:Insert["Psycho Thug"]
+
+		; Asteroid Angel Cartel Officers
+		SpecialTargetsToLoot:Insert["Gotan Kreiss"]
+		SpecialTargetsToLoot:Insert["Hakim Stormare"]
+		SpecialTargetsToLoot:Insert["Mizuro Cybon"]
+		SpecialTargetsToLoot:Insert["Tobias Kruzhoryy"]
+
+		; Asteroid Blood Raiders Officers
+		SpecialTargetsToLoot:Insert["Ahremen Arkah"]
+		SpecialTargetsToLoot:Insert["Draclira Merlonne"]
+		SpecialTargetsToLoot:Insert["Raysere Giant"]
+		SpecialTargetsToLoot:Insert["Tairei Namazoth"]
+
+		; Asteroid Sansha's Nation Officers
+		SpecialTargetsToLoot:Insert["Brokara Ryver"]
+		SpecialTargetsToLoot:Insert["Chelm Soran"]
+		SpecialTargetsToLoot:Insert["Selynne Mardakar"]
+		SpecialTargetsToLoot:Insert["Vizan Ankonin"]
+
+		; Asteroid Angel Cartel Officers
+		SpecialTargetsToLoot:Insert["Gotan Kreiss"]
+		SpecialTargetsToLoot:Insert["Hakim Stormare"]
+		SpecialTargetsToLoot:Insert["Mizuro Cybon"]
+		SpecialTargetsToLoot:Insert["Tobias Kruzhoryy"]
+
+		; Asteroid Blood Raiders Officers
+		SpecialTargetsToLoot:Insert["Ahremen Arkah"]
+		SpecialTargetsToLoot:Insert["Draclira Merlonne"]
+		SpecialTargetsToLoot:Insert["Raysere Giant"]
+		SpecialTargetsToLoot:Insert["Tairei Namazoth"]
+
+		; Asteroid Sansha's Nation Officers
+		SpecialTargetsToLoot:Insert["Brokara Ryver"]
+		SpecialTargetsToLoot:Insert["Chelm Soran"]
+		SpecialTargetsToLoot:Insert["Selynne Mardakar"]
+		SpecialTargetsToLoot:Insert["Vizan Ankonin"]
+
+		; Get the iterators
+		PriorityTargets:GetIterator[PriorityTarget]
+		SpecialTargets:GetIterator[SpecialTarget]
+		SpecialTargetsToLoot:GetIterator[SpecialTargetToLoot]
+
 	}
+
+	method ResetTargets()
+	{
+		This.CheckChain:Set[TRUE]
+		This.Chaining:Set[FALSE]
+		This.CheckedSpawnValues:Set[FALSE]
+		This.TotalSpawnValue:Set[0]
+	}
+
+	member:bool SpecialTargetPresent()
+	{
+		return ${m_SpecialTargetPresent}
+	}
+
+	member:bool IsPriorityTarget(string name)
+	{
+		; Loop through the priority targets
+		if ${PriorityTarget:First(exists)}
+		do
+		{
+			if ${name.Find[${PriorityTarget.Value}]} > 0
+			{
+				return TRUE
+			}
+		}
+		while ${PriorityTarget:Next(exists)}
+
+		return FALSE
+	}
+
+	member:bool IsSpecialTarget(string name)
+	{
+			; Loop through the special targets
+			if ${SpecialTarget:First(exists)}
+			do
+			{
+				if ${name.Find[${SpecialTarget.Value}]} > 0
+				{
+					return TRUE
+				}
+			}
+			while ${SpecialTarget:Next(exists)}
+
+			return FALSE
+	}
+
+	member:bool IsSpecialTargetToLoot(string name)
+	{
+			; Loop through the special targets
+			if ${SpecialTargetToLoot:First(exists)}
+			do
+			{
+				if ${name.Find[${SpecialTargetToLoot.Value}]} > 0
+				{
+					return TRUE
+				}
+			}
+			while ${SpecialTargetToLoot:Next(exists)}
+
+			return FALSE
+	}
+
 
 
 	member:bool TargetNPCs()
 	{
+		if !${Me.InSpace}
+		{
+			return
+		}
 		variable index:entity Targets
 		variable iterator Target
 		variable iterator Target2
@@ -47,6 +349,7 @@ objectdef obj_Targets
 		variable index:jammer Jammers
 		variable iterator Jammer
 	  	variable time breakTime
+	  	variable index:entity
 	 	variable index:entity InRange
 	 	variable index:entity NotInRange
 		variable bool HasTargets = FALSE
@@ -60,9 +363,26 @@ objectdef obj_Targets
 			TIMER.Second:Inc[1]
 			TIMER:Update	
 		}
+		if ${Config.Common.BotModeName.Equal[Ratter]}
+		{
+			Me:GetTargets[Targets]	
+			Targets:GetIterator[Target]
+			if ${Target:First(exists)}
+			{
+				do
+				{
+					if ${This.IsSpecialTarget[${Target.Value.Name}]}
+					{
+						HasSpecialTarget:Set[TRUE]
+						m_SpecialTargetPresent:Set[TRUE]
+						m_SpecialTargetName:Set[${Target.Value.Name}]
+					}
+				}
+				while ${Target:Next(exists)}
+			}
+		}
 		/* MyShip.MaxTargetRange contains the (possibly) damped value */
 		EVE:QueryEntities[InRange, ${query2}]
-		Targets:GetIterator[Target]
 		ToLock:Set[${Math.Calc[${Ship.MaxLockedTargets} - ${Me.TargetCount} - ${Me.TargetingCount}]}]
 		InRange:GetIterator[Target2]
 		if	${Me.ToEntity.Mode} != 1  && ${Entity[${query2}](exists)} && (${Entity[${GATEID}].Distance} > 110000 || (${Entity[${BEACONID}].Distance} > 110000 && !${Entity[${GATEID}](exists)})) 
