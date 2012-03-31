@@ -96,9 +96,11 @@ objectdef obj_Combat
 	variable index:int LightDrone
 	variable time DroneTimer
 	variable collection:int MishDB
+	;variable uint WpnQuery = ${LavishScript.CreateQuery[]}
 
 	method Initialize()
 	{
+
 		ThermalDamage:Insert[27447]
 		ThermalDamage:Insert[27449]
 		ThermalDamage:Insert[27445]
@@ -324,7 +326,6 @@ objectdef obj_Combat
 		MyShip:OpenCargo
 		if !${Me.InSpace}
 		{
-			UI:UpdateConsole["Combat.AmmoSelection: Starting in a station."]
 			Me.Station:GetHangarItems[ContainerItems]
 		}
 		else
@@ -610,13 +611,13 @@ objectdef obj_Combat
 		else
 		{
 			;UI:UpdateConsole["Feuer frei!"]
-			if ${Me.ActiveTarget.Radius} > 100 || !${Config.Combat.DontKillFrigates}
+			if ${Me.ActiveTarget.Radius} > 100 || !${Config.Combat.DontKillFrigs}
 			{
 				Ship:Activate_TargetPainters
 				Ship:Activate_StasisWebs
 				Ship:Activate_Weapons
 			}
-			Ship.Drones:SendDrones
+			call Ship.Drones.SendDrones
 			
 		}
 		if !${Ship.IsAmmoAvailable}
@@ -754,7 +755,7 @@ objectdef obj_Combat
 		!${Ship.InWarp} && ${Me.TargetCount} > 0 || ${Me.ToEntity.IsWarpScrambled}) && \
 		${Ship.Drones.DronesInSpace} == 0 
 		{
-			if ${Me.TargetCount} > 0 && (${Me.TargetedByCount} >= ${Me.TargetCount} || ${MyShip.DroneBandwidth.Equal[125]})
+			if ${Me.TargetCount} > 0 && ${Me.TargetedByCount} >= ${Me.TargetCount}
 			{
 				call Ship.Drones.LaunchAll
 			}
@@ -1077,7 +1078,7 @@ objectdef obj_Combat
 		variable string mission = ${Missions.MissionCache.Name[${Agents.AgentID}]}
 		;UI:UpdateConsole["HaveMissionAmmo: Mission name is ${mission}"]
 		;variable int Group = ${Ship.ModuleList_Weapon[1].ToItem.GroupID}
-		if ${Ship.WEAPONGROUPID} > 0
+		if ${Config.Combat.LastWeaponGroup} > 0
 		{
 			;SOMETHING
 			;YA
@@ -1097,7 +1098,7 @@ objectdef obj_Combat
 		EVE:Execute[OpenHangarFloor]
 		MyShip:OpenCargo
 		MyShip:GetCargo[ContainerItems]
-		if ${Ship.AmmoGroup.Equal[85]}
+		if ${Config.Combat.LastWeaponGroup.Equal[85]}
 		{
 			UI:UpdateConsole["We're using hybrid weapons, until more support is added no checks are done on this."]
 			return TRUE
