@@ -128,26 +128,27 @@ objectdef obj_Ship
 				{
 					This:UpdateModuleList
 				}
+
+				/* Ship Armor Repair
+					We rep to a fairly high level here because it's done while we're in warp.
+				*/
+				if ${Me.TargetCount} > 0
+				{
+					This:Activate_Tracking_Computer
+				}
+				if ${Me.ToEntity.Mode} == 1
+				{
+					This:Activate_AfterBurner
+				}
+				if ${This.ReloadingWeapons}
+				{
+					if ${Math.Calc[${Time.Timestamp} - ${This.ReloadingWeapons}]} > 12
+						This.ReloadingWeapons:Set[0]
+				}
+				This.NextPulse:Set[${Time.Timestamp}]
+				This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+				This.NextPulse:Update
 			}
-			/* Ship Armor Repair
-				We rep to a fairly high level here because it's done while we're in warp.
-			*/
-			if ${Me.TargetCount} > 0
-			{
-				This:Activate_Tracking_Computer
-			}
-			if ${Me.ToEntity.Mode} == 1
-			{
-				This:Activate_AfterBurner
-			}
-			if ${This.ReloadingWeapons}
-			{
-				if ${Math.Calc[${Time.Timestamp} - ${This.ReloadingWeapons}]} > 12
-					This.ReloadingWeapons:Set[0]
-			}
-			This.NextPulse:Set[${Time.Timestamp}]
-			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-			This.NextPulse:Update
 		}
 	}
 

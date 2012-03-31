@@ -349,7 +349,6 @@ objectdef obj_Targets
 		variable index:jammer Jammers
 		variable iterator Jammer
 	  	variable time breakTime
-	  	variable index:entity
 	 	variable index:entity InRange
 	 	variable index:entity NotInRange
 		variable bool HasTargets = FALSE
