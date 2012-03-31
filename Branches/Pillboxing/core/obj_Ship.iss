@@ -241,7 +241,8 @@ objectdef obj_Ship
 
 		return TRUE
 	}
-	method SwapAmmo()
+
+	function SwapAmmo()
 	{
 		variable iterator aWeaponIterator
 		variable index:item anItemIndex
@@ -250,14 +251,19 @@ objectdef obj_Ship
 		if ${aWeaponIterator:First(exists)}
 		{
 			do
-			{
+			{	
 				aWeaponIterator.Value:GetAvailableAmmo[anItemIndex]
 				anItemIndex:GetIterator[anItemIterator]
 				if ${anItemIterator:First(exists)}
 				{
 					do
 					{
-						aWeaponIterator.Value:ChangeAmmo[${anItemIterator.Value.ID}]
+						if ${anItemIterator.Value.Quantity} > (${aWeaponIterator.Value.MaxCharges} * ${This.ModuleList_Weapon.Used})
+						{
+							UI:UpdateConsole["Changing ammo of ${aWeaponIterator.Value.ToItem.Name} to ${anItemIterator.Value.Name}."]
+							aWeaponIterator.Value:ChangeAmmo[${anItemIterator.Value.ID}]
+							wait 5
+						}	
 					}
 					while ${anItemIterator:Next(exists)}
 				}
@@ -268,55 +274,77 @@ objectdef obj_Ship
 			}
 			while ${aWeaponIterator:Next(exists)}
 		}
+		else
+		{
+			UI:UpdateConsole["No weapons found :("]
+		}
 	}
+
 	member:bool IsAmmoAvailable()
 	{
 		variable iterator aWeaponIterator
 		variable index:item anItemIndex
-		variable index:item indDrones
-		variable index:int64 inspace
 		variable iterator anItemIterator
-		variable bool bAmmoAvailable = TRUE
-		variable time stampy
+		variable bool bAmmoAvailable
 
 		This.ModuleList_Weapon:GetIterator[aWeaponIterator]
 		if ${aWeaponIterator:First(exists)}
-		do
 		{
-			if ${aWeaponIterator.Value.Charge(exists)}
+			do
 			{
-				;UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable:", LOG_DEBUG]
-				;UI:UpdateConsole["Slot: ${aWeaponIterator.Value.ToItem.Slot}  ${aWeaponIterator.Value.ToItem.Name}", LOG_DEBUG]
-
-				aWeaponIterator.Value:GetAvailableAmmo[anItemIndex]
-				;UI:UpdateConsole["Ammo: Used = ${anItemIndex.Used}", LOG_DEBUG]
-
-				anItemIndex:GetIterator[anItemIterator]
-				if ${anItemIterator:First(exists)}
+				if ${aWeaponIterator.Value.Charge(exists)}
 				{
-					do
+					;UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable:", LOG_DEBUG]
+					;UI:UpdateConsole["Slot: ${aWeaponIterator.Value.ToItem.Slot}  ${aWeaponIterator.Value.ToItem.Name}", LOG_DEBUG]
+
+					aWeaponIterator.Value:GetAvailableAmmo[anItemIndex]
+					;UI:UpdateConsole["Ammo: Used = ${anItemIndex.Used}", LOG_DEBUG]
+
+					anItemIndex:GetIterator[anItemIterator]
+					if ${anItemIterator:First(exists)}
 					{
-						;UI:UpdateConsole["Ammo: Type = ${anItemIterator.Value.Type}", LOG_DEBUG]
-							;UI:UpdateConsole["Ammo: Match!", LOG_DEBUG]
-							;UI:UpdateConsole["Ammo: Qty = ${anItemIterator.Value.Quantity}", LOG_DEBUG]
-							;UI:UpdateConsole["Ammo: Max = ${aWeaponIterator.Value.MaxCharges}", LOG_DEBUG]
-							if ${anItemIterator.Value.Quantity} < ${Math.Calc[${aWeaponIterator.Value.MaxCharges}*12]}
-							{
-								UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable: FALSE! No Ammo Found", LOG_CRITICAL]
-								bAmmoAvailable:Set[FALSE]
-							}
+						do
+						{
+							;UI:UpdateConsole["Ammo: Type = ${anItemIterator.Value.Type}", LOG_DEBUG]
+								;UI:UpdateConsole["Ammo: Match!", LOG_DEBUG]
+								;UI:UpdateConsole["Ammo: Qty = ${anItemIterator.Value.Quantity}", LOG_DEBUG]
+								;UI:UpdateConsole["Ammo: Max = ${aWeaponIterator.Value.MaxCharges}", LOG_DEBUG]
+								if ${anItemIterator.Value.Quantity} < ${Math.Calc[${aWeaponIterator.Value.MaxCharges}*12]} &&\
+								!${bAmmoAvailable} && ${anItemIterator.Key} < ${anItemIndex.Used}
+								{
+									bAmmoAvailable:Set[FALSE]
+								}
+								else
+								{
+									bAmmoAvailable:Set[TRUE]
+								}
+						}
+						while ${anItemIterator:Next(exists)}
+						if !${bAmmoAvailable}
+						{
+							UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable: FALSE! We're running low on ammo.", LOG_CRITICAL]
+						}	
+					}				
+					else
+					{
+						UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable: FALSE! No ammo found in cargo.", LOG_CRITICAL]
+						bAmmoAvailable:Set[FALSE]
 					}
-					while ${anItemIterator:Next(exists)}
 				}
 				else
 				{
-					UI:UpdateConsole["DEBUG: obj_Ship.IsAmmoAvailable: FALSE! NoAmmo Found", LOG_CRITICAL]
-					bAmmoAvailable:Set[FALSE]
+					UI:UpdateConsole["No charges found for weapon, odds are we're reloading."]
+					bAmmoAvailable:Set[TRUE]
 				}
+				
 			}
-			
+			while ${aWeaponIterator:Next(exists)}
 		}
-		while ${aWeaponIterator:Next(exists)}
+		else
+		{
+			UI:UpdateConsole["IsAmmoAvailable: No weapons found, what, the, fuck."]
+			bAmmoAvailable:Set[TRUE]
+		}
 
 		return ${bAmmoAvailable}
 	}

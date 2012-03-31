@@ -830,7 +830,7 @@
 							<Y>110</Y>
 							<Height>20</Height>
 							<Width>100</Width>
-							<Text>Restock Ammo From GSC</Text>
+							<Text>Enable Ammo Reloading</Text>
 							<AutoTooltip>Warp to Ammo Bookmark to restock ammunition?</AutoTooltip>
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Combat.RestockAmmo}
@@ -892,6 +892,22 @@
 							<OnLeftClick>
 								Script[EVEBot].VariableScope.Config.Combat:SetLootMyKills[${This.Checked}]
 							</OnLeftClick>
+						</checkbox>
+						<checkbox name='cbDontShootFrigs'>
+						<X>10</X>
+						<Y>190</Y>
+						<Height>20</Height>
+						<Width>100</Width>
+						<Text>Disable Weapon Activation for Frigates</Text>
+						<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Combat.DontKillFrigs}
+								{
+									This:SetChecked
+								}
+						</OnLoad>
+						<OnLeftClick>
+							Script[EVEBot].VariableScope.Config.Combat:SetDontKilFrigs[${This.Checked}]
+						</OnLeftClick>
 						</checkbox>
 						<Text name='MinimumDronesInSpaceText'>
 							<X>200</X>

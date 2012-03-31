@@ -562,6 +562,7 @@ objectdef obj_Combat
 				call This.Flee
 				break
 			case RESTOCK
+				UI:UpdateConsole["Restocking ammo."]
 				call This.RestockAmmo
 				break
 			case FIGHT
@@ -590,12 +591,9 @@ objectdef obj_Combat
 
 			if ${Config.Combat.OrbitAtOptimal}
 			{
-				if !${MyShip.DroneBandwidth.Equal[125]}
-				{
-					;TODO, change this to a sentry drone check of some sort
+				;TODO, change this to a sentry drone check of some sort
 
-					Ship:OrbitAtOptimal
-				}
+				Ship:OrbitAtOptimal
 			}
 			else
 			{
@@ -612,25 +610,11 @@ objectdef obj_Combat
 		else
 		{
 			;UI:UpdateConsole["Feuer frei!"]
-			Ship:Activate_TargetPainters
-			Ship:Activate_StasisWebs
-			Ship:Activate_Weapons
-			if ${Me.ActiveTarget(exists)} && ${Ship.Drones.DronesInSpace} > 0
+			if ${Me.ActiveTarget.Radius} > 100 || !${Config.Combat.DontKillFrigates}
 			{
-				if ${Me.ActiveTarget.Radius} < 100 && ${Ship.Drones.DronesOut} > 10 && ${MyShip.DroneBandwidth.Equal[125]}
-				{
-					UI:UpdateConsole["Active target is a frigate for sure, switching to smaller drones"]
-					call Ship.Drones.ReturnAllToDroneBay
-					call Ship.Drones.LaunchAll
-					;might have to fix
-				}
-				elseif ${Me.ActiveTarget.Radius} > 100 && ${Ship.Drones.DronesOut} < 25 && ${MyShip.DroneBandwidth.Equal[125]}
-				{
-					UI:UpdateConsole["Active target is a large target for sure, switching to larger drones"]
-					call Ship.Drones.ReturnAllToDroneBay
-					call Ship.Drones.LaunchAll
-				}
-				;TODO This part of the code should really be pulled out of this function, placed into it's own function, and called with the rest of the drone code in managetank
+				Ship:Activate_TargetPainters
+				Ship:Activate_StasisWebs
+				Ship:Activate_Weapons
 			}
 			Ship.Drones:SendDrones
 			
@@ -639,7 +623,7 @@ objectdef obj_Combat
 		{
 			if ${Config.Combat.RestockAmmo}
 			{
-				UI:UpdateConsole["Restocking Ammo: Low ammo"]
+				UI:UpdateConsole["Setting state to restock."]
 				This.CurrentState:Set["RESTOCK"]
 				return
 			}
@@ -1156,10 +1140,9 @@ objectdef obj_Combat
 							{
 								do
 								{
-									if ${ittyDamage.Value.Equal[${CargoIterator.Value.TypeID}]}
+									if ${ittyDamage.Value.Equal[${CargoIterator.Value.TypeID}]} && ${CargoIterator.Value.Quantity} > ${Math.Calc[${Ship.ModuleList_Weapon.Used}*${Ship.ModuleList_Weapon[1].MaxCharges}]}
 									{
 										return TRUE
-										UI:UpdateConsole["Mission ammo found in cargo: Type 1"]
 									}									  
 								}
 								while ${ittyDamage:Next(exists)}
@@ -1179,10 +1162,9 @@ objectdef obj_Combat
 							{
 								do
 								{
-									if ${ittyDamage.Value.Equal[${CargoIterator.Value.TypeID}]}
+									if ${ittyDamage.Value.Equal[${CargoIterator.Value.TypeID}]} && ${CargoIterator.Value.Quantity} > ${Math.Calc[${Ship.ModuleList_Weapon.Used}*${Ship.ModuleList_Weapon[1].MaxCharges}]}
 									{
 										return TRUE
-										UI:UpdateConsole["Mission ammo found in cargo: Type 2"]
 									}  
 								}
 								while ${ittyDamage:Next(exists)}
@@ -1202,10 +1184,9 @@ objectdef obj_Combat
 							{
 								do
 								{
-									if ${ittyDamage.Value.Equal[${CargoIterator.Value.TypeID}]}
+									if ${ittyDamage.Value.Equal[${CargoIterator.Value.TypeID}]} && ${CargoIterator.Value.Quantity} > ${Math.Calc[${Ship.ModuleList_Weapon.Used}*${Ship.ModuleList_Weapon[1].MaxCharges}]}
 									{
 										return TRUE
-										UI:UpdateConsole["Mission ammo found in cargo: Type 3"]
 									}  
 								}
 								while ${ittyDamage:Next(exists)}
@@ -1225,10 +1206,9 @@ objectdef obj_Combat
 							{
 								do
 								{
-									if ${ittyDamage.Value.Equal[${CargoIterator.Value.TypeID}]}
+									if ${ittyDamage.Value.Equal[${CargoIterator.Value.TypeID}]} && ${CargoIterator.Value.Quantity} > ${Math.Calc[${Ship.ModuleList_Weapon.Used}*${Ship.ModuleList_Weapon[1].MaxCharges}]}
 									{
 										return TRUE
-										UI:UpdateConsole["Mission ammo found in cargo: Type 4"]
 									}  
 								}
 								while ${ittyDamage:Next(exists)}

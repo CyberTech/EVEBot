@@ -198,7 +198,7 @@ objectdef obj_Scavenger
 			call ChatIRC.Say "Starting salvage run now."
 			if !${Me.InSpace}
 			{
-				EVE:Execute[CmdExitStation]
+				call Station.Undock
 			}
 			while !${Me.InSpace}
 			{

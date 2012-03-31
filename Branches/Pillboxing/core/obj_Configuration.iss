@@ -986,6 +986,14 @@ objectdef obj_Configuration_Combat
 	{
 		This.CombatRef:AddSetting[LootMyKills, ${value}]
 	}
+	member:bool DontKillFrigs()
+	{
+		return ${This.CombatRef.FindSetting[DontKillFrigs, FALSE]}
+	}
+	method SetDontKilFrigs(bool value)
+	{
+		This.CombatRef:AddSetting[DontKillFrigs, ${value}]
+	}
 }
 
 /* ************************************************************************* */

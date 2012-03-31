@@ -503,11 +503,10 @@ function RunCourierMission(int agentID)
 			call Combat.RestockAmmo
 			if !${Me.InSpace}
 			{
-				EVE:Execute[CmdExitStation]
-				wait 100
+				call Station.Undock
 			}
 			UI:UpdateConsole["We should have undocked by now, calling swap ammo."]
-			Ship:SwapAmmo
+			call Ship.SwapAmmo
 		}
 		else
 		{

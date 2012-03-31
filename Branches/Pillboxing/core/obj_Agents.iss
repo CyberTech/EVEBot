@@ -546,7 +546,7 @@ objectdef obj_Agents
 			while ${amIterator:Next(exists)}
 		}
 		;We can only come to this point if we have no accepted missions
-		if ${amIterator:First(exists)}
+	/*	if ${amIterator:First(exists)}
 		{
 			;iterate though agent missions
 			do
@@ -573,7 +573,8 @@ objectdef obj_Agents
  				}
 			}
 			while ${amIterator:Next(exists)}
-		}
+		} */
+		/*
 		if ${This.AgentList.agentIterator:First(exists)}
 		{
 			do
@@ -584,7 +585,6 @@ objectdef obj_Agents
 				{
 					if !${This.AgentName.Equal[${This.AgentList.agentIterator.Key}]}
 					{
-						echo ${This.AgentName} ${This.AgentList.agentIterator.Key}
 						UI:UpdateConsole["We have an agent without a mission, setting this to active agent"]
 						This:SetActiveAgent[${This.AgentList.agentIterator.Key}]
 						return FALSE
@@ -598,7 +598,7 @@ objectdef obj_Agents
 			}
 			while ${This.AgentList.agentIterator:Next(exists)}
 		}
-		This:PickAgent
+		This:PickAgent */
 		return FALSE
 	}
 
@@ -863,7 +863,6 @@ objectdef obj_Agents
 		variable int left = 0
 		variable int right = 0
 		caption:Set["Mission Journal - ${This.ActiveAgent}"]
-		echo ${caption}
 		left:Set[${caption.Escape.Find["u2013"]}]
 
 		if ${left} > 0
@@ -1184,6 +1183,10 @@ objectdef obj_Agents
 
 	  ; UI:UpdateConsole["Waiting for mission dialog to update..."]
 	    wait 60
+	    if ${Agent[${This.AgentIndex}].Dialog.Equal[NULL]}
+	    {
+	    	UI:UpdateConsole["Null dialog found, this is a bug, and I don't know what to do about it."]
+	    }
 		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
 
 		EVE:Execute[OpenJournal]
