@@ -403,7 +403,7 @@ objectdef obj_Drones
 				variable index:int64 engageIndex
 				do
 				{
-					if ${DroneIterator.Value.ToEntity.ShieldPct} < 95
+					if ${DroneIterator.Value.ToEntity.ShieldPct} < 95 && ${Script.RunningTime} > ${DroneTimer}
 					{
 						;UI:UpdateConsole["Recalling Damaged Drone ${DroneIterator.Value.ID}"]
 						;UI:UpdateConsole["Debug: Shield: ${DroneIterator.Value.ToEntity.ShieldPct}, Armor: ${DroneIterator.Value.ToEntity.ArmorPct}, Structure: ${DroneIterator.Value.ToEntity.StructurePct}"]
