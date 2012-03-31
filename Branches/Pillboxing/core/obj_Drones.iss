@@ -277,11 +277,10 @@ objectdef obj_Drones
 		}
 		while ${This.DronesInSpace} > 0
 		{
-			if	${MyShip.ArmorPct} < (${Config.Combat.MinimumArmorPct}-10)  ||\ 
+			if${MyShip.ArmorPct} < (${Config.Combat.MinimumArmorPct}-10)  ||\ 
 			${MyShip.ShieldPct} < (${Config.Combat.MinimumShieldPct} - 10) ||\
 			(${MyShip.ShieldPct} < 15 && ${Config.Combat.MinimumShieldPct} > 0) ||\
 			${MyShip.ArmorPct} < 15
-
 			{
 				UI:UpdateConsole["OUR SHIT IS FUCKED UP FUCK THE DRONES"]
 				break
@@ -373,7 +372,7 @@ objectdef obj_Drones
 		}
 
 	}
-	method SendDrones()
+	function SendDrones()
 	{
 		if !${This.DronesReady}
 		{
@@ -397,13 +396,12 @@ objectdef obj_Drones
 				variable index:int64 engageIndex
 				do
 				{
-					if ${DroneIterator.Value.ToEntity.ShieldPct} < 95 && ${Script.RunningTime} > ${DroneTimer}
+					if ${DroneIterator.Value.ToEntity.ShieldPct} < 95 && ${This.WaitingForDrones.Equal[0]}
 					{
-						;UI:UpdateConsole["Recalling Damaged Drone ${DroneIterator.Value.ID}"]
-						;UI:UpdateConsole["Debug: Shield: ${DroneIterator.Value.ToEntity.ShieldPct}, Armor: ${DroneIterator.Value.ToEntity.ArmorPct}, Structure: ${DroneIterator.Value.ToEntity.StructurePct}"]
+						UI:UpdateConsole["Recalling Damaged Drone ${DroneIterator.Value.ID}"]
+						UI:UpdateConsole["Debug: Shield: ${DroneIterator.Value.ToEntity.ShieldPct}, Armor: ${DroneIterator.Value.ToEntity.ArmorPct}, Structure: ${DroneIterator.Value.ToEntity.StructurePct}"]
 						;returnIndex:Insert[${DroneIterator.Value.ID}]
 						call This.ReturnAllToDroneBay
-						DroneTimer:Set[${Math.Calc[(${Script.RunningTime}/1000)+20000]}]
 					}
 					else
 					{
