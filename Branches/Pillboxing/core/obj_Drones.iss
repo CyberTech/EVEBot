@@ -171,25 +171,9 @@ objectdef obj_Drones
 		(${Me.ActiveTarget.Name.NotEqual["Kruul's Pleasure Garden"]} || ((${Me.ActiveTarget.Distance} < ${Me.DroneControlDistance}) && ${IsDroneBoat})) &&\
 		${Script.RunningTime} >= ${DroneTimer}
 		{
-			if !${MyShip.DroneBandwidth.Equal[125]}
-			{
-				UI:UpdateConsole["Launching drones..."]
-				MyShip:LaunchAllDrones
-				This.WaitingForDrones:Set[5]
-			}
-			else
-			{
-				if ${Me.ActiveTarget(exists)} && ${Me.ActiveTarget.Radius} > 100
-				{
-					call This.LaunchSentryDrones
-					This.WaitingForDrones:Set[5]
-				}
-				else
-				{
-					call This.LaunchLightDrones
-					This.WaitingForDrones:Set[5]
-				}
-			}
+			UI:UpdateConsole["Launching drones..."]
+			MyShip:LaunchAllDrones
+			This.WaitingForDrones:Set[5]
 		}
 	}
 
@@ -293,12 +277,16 @@ objectdef obj_Drones
 		}
 		while ${This.DronesInSpace} > 0
 		{
-			if	${MyShip.ShieldPct} < 25
+			if	${MyShip.ArmorPct} < (${Config.Combat.MinimumArmorPct}-10)  ||\ 
+			${MyShip.ShieldPct} < (${Config.Combat.MinimumShieldPct} - 10) ||\
+			(${MyShip.ShieldPct} < 15 && ${Config.Combat.MinimumShieldPct} > 0) ||\
+			${MyShip.ArmorPct} < 15
+
 			{
 				UI:UpdateConsole["OUR SHIT IS FUCKED UP FUCK THE DRONES"]
 				break
 			}
-			if ${This.WaitingForDrones} > 0
+			if ${This.WaitingForDrones} > 0 && ${This.DronesInSpace} > 0
 			{
 				continue
 			}
