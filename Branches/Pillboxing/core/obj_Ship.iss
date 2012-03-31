@@ -20,7 +20,6 @@ objectdef obj_Ship
 	variable int Calculated_MaxLockedTargets
 	variable float BaselineUsedCargo
 	variable bool CargoIsOpen
-	variable int WEAPONGROUPID
 	variable int RetryUpdateModuleList
 	variable index:module ModuleList
 	variable index:module ModuleList_MiningLaser
@@ -62,6 +61,7 @@ objectdef obj_Ship
 		Event[WINNING]:AttachAtom[This:UpdateModuleList]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_Ship: Initialized", LOG_MINOR]
+		RetryUpdateModuleList:Set[1]
 	}
 
 	method Shutdown()
@@ -70,7 +70,7 @@ objectdef obj_Ship
 	}
 	member:string AmmoGroup()
 	{
-		Switch "${Ship.WEAPONGROUPID}"
+		Switch "${Config.Combat.LastWeaponGroup}"
 		{
 			case 509
 			 	return 384
@@ -124,81 +124,21 @@ objectdef obj_Ship
 					RetryUpdateModuleList:Set[0]
 					EVEBot:Pause
 				}
-
 				if ${RetryUpdateModuleList} > 0
 				{
 					This:UpdateModuleList
 				}
-				if ${This.ModuleList.Used.Equal[0]}
-				{
-					MyShip:GetModules[This.ModuleList]
-					UI:UpdateConsole["Found ${This.ModuleList.Used} modules."]
-					UI:UpdateConsole["Updating Modules, this shouldn't happen more than once per undock."]
-					if ${MyShip.ToEntity(exists)}
-					{
-						This:UpdateModuleList
-						ModuleList:GetIterator[itty]
-						if ${itty:First(exists)}
-						{
-							do
-							{
-								if ${itty.Value.ID.Equal["NULL"]}
-								{
-									UI:UpdateConsole["Null module found, clearing module list."]
-									This:ClearModules
-								}
-							}
-							while ${itty:Next(exists)}
-						}
-					}
-					else
-					{
-						UI:UpdateConsole["Our ship doesnt exist, we can't possibly update modules."]
-					}
-				}
-				
-
-				if (${Me.ToEntity.Mode} == 3 || !${Config.Common.BotModeName.Equal[Ratter]}) || ${Config.Common.BotModeName.Equal["Missioner"]}
-				{	/* ratter was converted to use obj_Combat already */
-
-					/* Ship Armor Repair
-						We rep to a fairly high level here because it's done while we're in warp.
-					*/
-					if ${This.Total_Armor_Reps} > 0
-					{
-						if ${MyShip.ArmorPct} < 100
-						{
-							This:Activate_Armor_Reps
-						}
-
-						if ${This.Repairing_Armor}
-						{
-							if ${MyShip.ArmorPct} >= 98
-							{
-								This:Deactivate_Armor_Reps
-								This.Repairing_Armor:Set[FALSE]
-							}
-						}
-					}
-					if ${Me.ToEntity.Mode} == 1
-					{
-						This:Activate_AfterBurner
-					}
-
-					/* Shield Boosters
-						We boost to a higher % in here, as it's done during warp, so cap has time to regen.
-					*/
-					if !${MyShip.ToEntity.IsCloaked} && (${MyShip.ShieldPct} < 95 || ${Config.Combat.AlwaysShieldBoost})
-					{	/* Turn on the shield booster */
-						Ship:Activate_Hardeners[]
-						This:Activate_Shield_Booster[]
-					}
-
-					if !${MyShip.ToEntity.IsCloaked} && (${MyShip.ShieldPct} > 99 && !${Config.Combat.AlwaysShieldBoost})
-					{	/* Turn off the shield booster */
-						This:Deactivate_Shield_Booster[]
-					}
-				}
+			}
+			/* Ship Armor Repair
+				We rep to a fairly high level here because it's done while we're in warp.
+			*/
+			if ${Me.TargetCount} > 0
+			{
+				This:Activate_Tracking_Computer
+			}
+			if ${Me.ToEntity.Mode} == 1
+			{
+				This:Activate_AfterBurner
 			}
 			if ${This.ReloadingWeapons}
 			{
@@ -595,7 +535,7 @@ objectdef obj_Ship
 		if ${ModuleIter:First(exists)}
 		do
 		{
-			WEAPONGROUPID:Set[${ModuleIter.Value.ToItem.GroupID}]
+			Config.Combat:SetLastWeaponGroup[${ModuleIter.Value.ToItem.GroupID}]
 			UI:UpdateConsole["Slot: ${ModuleIter.Value.ToItem.Slot} ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
 		while ${ModuleIter:Next(exists)}
@@ -1484,9 +1424,12 @@ objectdef obj_Ship
 			return
 		}
 
-		Entity[${Id}]:AlignTo
-		UI:UpdateConsole["Aligning prior to warp"]
-		wait 2
+		if ${Drones.DronesInSpace} > 0
+		{
+			Entity[${Id}]:AlignTo
+			UI:UpdateConsole["Aligning prior to warp"]
+			wait 2
+		}
 		call This.WarpPrepare
 		while ${Entity[${Id}].Distance} >= WARP_RANGE
 		{
@@ -2702,7 +2645,7 @@ objectdef obj_Ship
 			;UI:UpdateConsole["ModuleIter.Value.IsOnline = ${ModuleIter.Value.IsOnline}"]
 			if !${ModuleIter.Value.IsActive} && !${ModuleIter.Value.IsChangingAmmo} &&\ 
 			!${ModuleIter.Value.IsReloadingAmmo} && ${ModuleIter.Value.IsOnline} &&\
-			 (${Me.ActiveTarget.Distance} < ${Math.Calc[${ModuleIter.Value.Charge.MaxFlightTime}*${ModuleIter.Value.Charge.MaxVelocity}*.90]} || ${Me.ActiveTarget.Distance} < ${ModuleIter.Value.AccuracyFalloff})
+			 (${Me.ActiveTarget.Distance} < ${Math.Calc[${ModuleIter.Value.Charge.MaxFlightTime}*${ModuleIter.Value.Charge.MaxVelocity}*.90]} || ${Me.ActiveTarget.Distance} < (${ModuleIter.Value.AccuracyFalloff}+${ModuleIter.Value.OptimalRange})
 			{	
 				;;UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
 				ModuleIter.Value:Activate

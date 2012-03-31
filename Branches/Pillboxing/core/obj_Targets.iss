@@ -47,10 +47,12 @@ objectdef obj_Targets
 		variable index:jammer Jammers
 		variable iterator Jammer
 	  	variable time breakTime
-	 	 variable index:entity InRange
-	 	 variable index:entity NotInRange
-		  variable bool HasTargets = FALSE
-		  variable int ToLock
+	 	variable index:entity InRange
+	 	variable index:entity NotInRange
+		variable bool HasTargets = FALSE
+		variable int ToLock
+		variable int64 GATEID = ${Entity["TypeID = TYPE_ACCELERATION_GATE"].ID}
+		variable int64 BEACONID = ${Entity[Name =- "Beacon"].ID}
 		if ${Time.Timestamp} > ${TIMER.Timestamp}
 		{
 			Counter:Set[0]
@@ -61,18 +63,18 @@ objectdef obj_Targets
 		/* MyShip.MaxTargetRange contains the (possibly) damped value */
 		EVE:QueryEntities[InRange, ${query2}]
 		Targets:GetIterator[Target]
-		ToLock:Set[${Math.Calc[${MyShip.MaxLockedTargets} - ${Me.TargetCount} - ${Me.TargetingCount}]}]
+		ToLock:Set[${Math.Calc[${Ship.MaxLockedTargets} - ${Me.TargetCount} - ${Me.TargetingCount}]}]
 		InRange:GetIterator[Target2]
-		if ${Entity[${query2}](exists)} && (${Entity["TypeID = TYPE_ACCELERATION_GATE"].Distance} > 110000 || (${Entity[Name =- "Beacon"].Distance} > 110000 && !${Entity["TypeID = TYPE_ACCELERATION_GATE"](exists)}) && ${Me.ToEntity.Mode} != 1
+		if	${Me.ToEntity.Mode} != 1  && ${Entity[${query2}](exists)} && (${Entity[${GATEID}].Distance} > 110000 || (${Entity[${BEACONID}].Distance} > 110000 && !${Entity[${GATEID}](exists)})) 
 		{
-			if ${Entity["TypeID = TYPE_ACCELERATION_GATE"](exists)}
+			if ${Entity[${GATEID}](exists)}
 			{
-				Entity["TypeID = TYPE_ACCELERATION_GATE"]:Approach[10000]
+				Entity[${GATEID}]:Approach[10000]
 				UI:UpdateConsole["Approaching gate."]
 			}
 			else
 			{
-				Entity[Name =- "Beacon"]:Approach[10000]
+				Entity[${BEACONID}]:Approach[10000]
 				UI:UpdateConsole["Approaching beacon."]
 			}
 		}
@@ -84,7 +86,7 @@ objectdef obj_Targets
 				if ${ToTarget.Used} > 0 
 				{
 					if  !${Entity[${ToTarget[1]}].IsActiveTarget} && ${Entity[${ToTarget[1]}].IsLockedTarget}
-					{
+					{	
 						Entity["ID = ${ToTarget[1]}"]:MakeActiveTarget
 						UI:UpdateConsole["Making ${ToTarget[1]} active target."]
 					}
@@ -114,7 +116,7 @@ objectdef obj_Targets
 						}
 					}
 				}
-				if ${Target2.Value.Distance} <= ${MyShip.MaxTargetRange}
+				if ${Target2.Value.Distance} <= ${MyShip.MaxTargetRange} && ${Me.TargetCount} < ${Ship.MaxLockedTargets}
 				{
 					if ${ToTarget.Used} == 0 && !${Target2.Value.IsLockedTarget} && !${Target2.Value.BeingTargeted} && ${ToLock} > ${Counter} && ${Counter}  < 2
 					{
@@ -132,14 +134,10 @@ objectdef obj_Targets
 				{
 					if ${Me.TargetCount} == 0 && ${MyShip.MaxLockedTargets} > 0
 					{
-						if ${Me.ToEntity.Mode} != 1 && !${Entity[${query2} && Distance <= "${MyShip.MaxTargetRange}"](exists)} && (${Entity["TypeID = TYPE_ACCELERATION_GATE"].Distance} < 110000 || ${Entity[Name =- "Beacon"].Distance} < 110000)
+						if ${Me.ToEntity.Mode} != 1 && !${Entity[${query2} && Distance <= "${MyShip.MaxTargetRange}"](exists)} && (${Entity[${GATEID}].Distance} < 110000 || ${Entity[${BEACONID}].Distance} < 110000)
 						{
 							Target2.Value:Approach[${MyShip.MaxTargetRange}]
 							;I'm going to have to update this into a check that checks for sentry drones in space before approaching.
-							if ${MyShip.DroneBandwidth.Equal[125]}
-							{
-								call Ship.Drones.ReturnAllToDroneBay
-							} 
 							UI:UpdateConsole["Approaching rat out of range. Name = ${Target2.Value.Name} and distance < ${Target2.Value.Distance}."]
 							Ship:Activate_AfterBurner
 						}
@@ -159,7 +157,7 @@ objectdef obj_Targets
 		}
 		Me:GetJammers[Jammers]
 		Jammers:GetIterator[Jammer]
-		if ${Jammer:First(exists)} && (!${Entity[${ToTarget[1]}](exists)} || ${Me.ToEntity.IsWarpScrambled})
+		if ${Jammer:First(exists)} && !${Entity[${ToTarget[1]}](exists)} || ${Me.ToEntity.IsWarpScrambled}
 		{
 			ToTarget:Clear
 			if ${MyShip.MaxLockedTargets} == 0
@@ -205,10 +203,10 @@ objectdef obj_Targets
 		Targetser:Insert["Smuggler Stargate"]
 		Targetser:Insert["Outpost Headquarters"]
 		Targetser:GetIterator[Targetse]
-		if ${Targetse:First(exists)}
+		if ${Targetse:First(exists)} && ${InRange.Used.Equal[0]} 
 		do
 		{
-			if ${Entity[Name =-"${Targetse.Value}"](exists)} && !${Entity["TypeID = TYPE_ACCELERATION_GATE"](exists)}
+			if ${Entity[Name =-"${Targetse.Value}"](exists)} && !${Entity[${GATEID}](exists)}
 			{
 				if ${Entity[Name =-"${Targetse.Value}"].Distance} < ${MyShip.MaxTargetRange}
 				{
