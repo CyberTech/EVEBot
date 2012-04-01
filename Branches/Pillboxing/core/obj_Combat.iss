@@ -124,6 +124,7 @@ objectdef obj_Combat
 		ThermalDamage:Insert[20733]
 		ThermalDamage:Insert[20797]
 		ThermalDamage:Insert[200]
+		ThermalDamage:Insert[238]
 		EMDamage:Insert[21894]
 		EMDamage:Insert[20735]
 		EMDamage:Insert[20799]
@@ -149,6 +150,8 @@ objectdef obj_Combat
 		EMDamage:Insert[2195]
 		EMDamage:Insert[2203]
 		EMDamage:Insert[2205]
+		EMDamage:Insert[238]
+		ExplosiveDamage:Insert[238]
 		ExplosiveDamage:Insert[27453]
 		ExplosiveDamage:Insert[199]
 		ExplosiveDamage:Insert[21902]
@@ -171,6 +174,7 @@ objectdef obj_Combat
 		ExplosiveDamage:Insert[2486]
 		ExplosiveDamage:Insert[2488]
 		ExplosiveDamage:Insert[21640]
+		KineticDamage:Insert[238]
 		KineticDamage:Insert[21918]
 		KineticDamage:Insert[20733]
 		KineticDamage:Insert[20797]
@@ -323,7 +327,6 @@ objectdef obj_Combat
 		variable int intCounter = 1
 		variable iterator CargoIterator	
 		;EVE:Execute[OpenHangarFloor]
-		MyShip:OpenCargo
 		if !${Me.InSpace}
 		{
 			Me.Station:GetHangarItems[ContainerItems]
@@ -332,18 +335,6 @@ objectdef obj_Combat
 		{
 			UI:UpdateConsole["You have no business calling 'Combat.AmmoSelection' from in space!"]
 		}
-		if ${Ship.AmmoGroup.Equal[85]}
-		{
-			if ${ContainerItems.Used} > 0
-			{
-				return ${ContainerItems[1].TypeID}
-			}
-			else
-			{
-				UI:UpdateConsole["No items found to reload with, returning -1"]
-				return -1
-			}
-		}
 		do
 		{ 
 			echo "Checking for AmmoType: ${Ship.AmmoGroup.Token[${intCounter},-]}"
@@ -351,7 +342,7 @@ objectdef obj_Combat
 			ContainerItems:Collapse
 			if ${ContainerItems.Used} > 0
 			{
-				UI:UpdateConsole["AmmoSelection: ${ContainerItems.Used} stacks of ammo found in cargo for weapons."]
+				UI:UpdateConsole["AmmoSelection: ${ContainerItems.Used} stacks of ammo found in hangar for weapons."]
 				break
 			}
 			else
@@ -835,7 +826,6 @@ objectdef obj_Combat
 							}
 
 						}
-
 						; If there is no CHA, but there is a GSC, Take Ammo, do not drop off items
 						else
 						{
