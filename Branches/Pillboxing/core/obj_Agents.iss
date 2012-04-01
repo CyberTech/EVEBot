@@ -1030,13 +1030,10 @@ objectdef obj_Agents
 		}
 		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
 	    Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
-	    if ${dsIndex.Used.Equal[2]} && ${dsIndex[1].Text.Find["View"]} > 0
+	    if ${dsIndex.Used.Equal[2]} && ${dsIndex[1].Text.Find["View"]} > 0 || ${dsIndex[1].Text.Find["Request"]} > 0
 	    {
-	    	if ${dsIndex[1].Text.Find["View"]} > 0
-	    	{
-	    		UI:UpdateConsole["obj_Agents: Locator Agent detected, selecting view mission button."]
-	    		dsIndex[1]:Say[${This.AgentID}]	
-	    	}
+	    	UI:UpdateConsole["obj_Agents: Locator Agent detected, selecting view mission button."]
+	    	dsIndex[1]:Say[${This.AgentID}]	
 	    	while ${dsIndex.Used.Equal[2]}
 	    	{
 	    		UI:UpdateConsole["Waiting for locator agent conversation to update."]
