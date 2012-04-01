@@ -383,6 +383,7 @@ objectdef obj_Cargo
 		{
 			UI:UpdateConsole["DEBUG: obj_Cargo:TransferListToHangar: Nothing found to move"]
 		}
+		wait 40
 		EVE:StackItems[MyStationHangar,Hangar]
 	}
 
