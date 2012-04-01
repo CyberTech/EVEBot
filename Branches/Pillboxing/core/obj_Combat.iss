@@ -96,6 +96,7 @@ objectdef obj_Combat
 	variable index:int LightDrone
 	variable time DroneTimer
 	variable collection:int MishDB
+	variable collection:int FactionDB
 	;variable uint WpnQuery = ${LavishScript.CreateQuery[]}
 
 	method Initialize()
@@ -119,7 +120,6 @@ objectdef obj_Combat
 		ThermalDamage:Insert[2456]
 		ThermalDamage:Insert[2444]
 		ThermalDamage:Insert[2446]
-
 		ThermalDamage:Insert[21918]
 		ThermalDamage:Insert[20733]
 		ThermalDamage:Insert[20797]
@@ -230,6 +230,23 @@ objectdef obj_Combat
 		MishDB:Set["Dread Pirate Scarlet", 3]
 		MishDB:Set[" The Assault ", 3]
 		MishDB:Set[" The Assault", 3]
+		MishDB:Set["Illegal Activity (1 of 3)",1]
+		MishDB:Set["Illegal Activity (2 of 3)",3]
+		MishDB:Set["Illegal Activity (3 of 3)",3]
+		FactionDB:Set["500010",3]
+		FactionDB:Set["500003",1]
+		FactionDB:Set["500007",1]
+		FactionDB:Set["500011",4]
+		FactionDB:Set["500006",3]
+		FactionDB:Set["500001",3]
+		FactionDB:Set["500008",1]
+		FactionDB:Set["500002",4]
+		FactionDB:Set["500018",3]
+		FactionDB:Set["500019",1]
+		FactionDB:Set["500020",3]
+		FactionDB:Set["500012",1]
+		FactionDB:Set["500009",3]
+		FactionDB:Set["500015",4]
 	}
 
 	method Shutdown()
@@ -319,7 +336,9 @@ objectdef obj_Combat
 		;UI:UpdateConsole["${Ship.WEAPONGROUPID}"]
 		;variable int Group = ${Ship.ModuleList_Weapon[1].ToItem.GroupID}
 		;variable int Group = 510
-		variable string mission = ${Missions.MissionCache.Name[${Agents.AgentID}]}	
+		variable string mission = ${Missions.MissionCache.Name[${Agents.AgentID}]}
+		variable int FactionID = ${Missions.MissionCache.FactionID[${Agents.AgentID}]}	
+		variable int DmgType
 		variable iterator ittyDamage
 		variable int ReloadTypeID
 		 ; Damage types on x, 1 = em, 2 = therm, 3 = kin, 4 = exp, order is descending down the page, ie em first, exp last for each groupID
@@ -371,11 +390,42 @@ objectdef obj_Combat
 				return -1
 			}
 		}
+
+		if ${FactionID} > 0
+		{
+			if ${FactionDB.Element[${FactionID}]} > 0
+			{
+				UI:UpdateConsole["Found faction ID for mission in database, reloading with ${This.DamageString[${FactionDB.Element[${FactionID}]}]} ammo."]
+				DmgType:Set[${FactionDB.Element[${FactionID}]}]
+			}
+			else
+			{
+				UI:UpdateConsole["FactionID was found, but we don't have a damage type stored for it."]
+			}
+		}
+		else
+		{
+			UI:UpdateConsole["No factionID found for mission, defaulting to Mish DB."]
+		}
 		if ${MishDB.Element[${mission}]} > 0
 		{
-			UI:UpdateConsole["Found ${Missions.MissionCache.Name[${Agents.AgentID}]} in MishDB, damage type is ${This.DamageString[${MishDB.Element[${mission}]}]}"]
+			if ${DmgType.Equal[0]}
+			{	
+				UI:UpdateConsole["Found ${Missions.MissionCache.Name[${Agents.AgentID}]} in MishDB, damage type is ${This.DamageString[${MishDB.Element[${mission}]}]}"]
+			}
+		}
+		else
+		{
+			if ${DmgType.Equal[0]}
+			{
+				UI:UpdateConsole["Mission was not found in mishDB and we have no factionID, defaulting to EM damage."]
+				DmgType:Set[2]
+			}
+		}
+		if ${DmgType} > 0
+		{
 			ContainerItems:GetIterator[CargoIterator]
-			Switch "${MishDB.Element[${mission}]}"
+			Switch "${DmgType}"
 			{
 				case 1
 					if ${CargoIterator:First(exists)}
@@ -1066,6 +1116,7 @@ objectdef obj_Combat
 	member:bool HaveMissionAmmo()
 	{
 		variable string mission = ${Missions.MissionCache.Name[${Agents.AgentID}]}
+		variable int FactionID = ${Missions.MissionCache.FactionID[${Agents.AgentID}]}	
 		;UI:UpdateConsole["HaveMissionAmmo: Mission name is ${mission}"]
 		;variable int Group = ${Ship.ModuleList_Weapon[1].ToItem.GroupID}
 		if ${Config.Combat.LastWeaponGroup} > 0
@@ -1082,6 +1133,7 @@ objectdef obj_Combat
 		variable iterator ittyDamage
 		variable int intCounter = 1
 		variable int ReloadTypeID
+		variable int DmgType
 		 ; Damage types on x, 1 = em, 2 = therm, 3 = kin, 4 = exp, order is descending down the page, ie em first, exp last for each groupID
 		variable index:item ContainerItems
 		variable iterator CargoIterator	
@@ -1090,7 +1142,7 @@ objectdef obj_Combat
 		MyShip:GetCargo[ContainerItems]
 		if ${Config.Combat.LastWeaponGroup.Equal[85]}
 		{
-			UI:UpdateConsole["We're using hybrid weapons, until more support is added no checks are done on this."]
+			UI:UpdateConsole["We're using hybrid weapons, I'm pretty sure these all do the same damage type."]
 			return TRUE
 		}
 		do
@@ -1114,11 +1166,41 @@ objectdef obj_Combat
 		{
 			return FALSE
 		}
+		if ${FactionID} > 0
+		{
+			if ${FactionDB.Element[${FactionID}]} > 0
+			{
+				UI:UpdateConsole["Found faction ID for mission in database, reloading with ${This.DamageString[${FactionDB.Element[${FactionID}]}]} ammo."]
+				DmgType:Set[${FactionDB.Element[${FactionID}]}]
+			}
+			else
+			{
+				UI:UpdateConsole["FactionID was found, but we don't have a damage type stored for it."]
+			}
+		}
+		else
+		{
+			UI:UpdateConsole["No factionID found for mission, defaulting to Mish DB."]
+		}
 		if ${MishDB.Element[${mission}]} > 0
 		{
-			UI:UpdateConsole["HaveMissionAmmo: Found ${mission} in MishDB, damage type is ${This.DamageString[${MishDB.Element[${mission}]}]}."]
+			if ${DmgType.Equal[0]}
+			{	
+				UI:UpdateConsole["Found ${Missions.MissionCache.Name[${Agents.AgentID}]} in MishDB, damage type is ${This.DamageString[${MishDB.Element[${mission}]}]}"]
+			}
+		}
+		else
+		{
+			if ${DmgType.Equal[0]}
+			{
+				UI:UpdateConsole["Mission was not found in mishDB and we have no factionID, defaulting to EM damage."]
+				DmgType:Set[2]
+			}
+		}
+		if ${DmgType} > 0
+		{
 			ContainerItems:GetIterator[CargoIterator]
-			Switch "${MishDB.Element[${mission}]}"
+			Switch "${DmgType}"
 			{
 				case 1
 					if ${CargoIterator:First(exists)}
