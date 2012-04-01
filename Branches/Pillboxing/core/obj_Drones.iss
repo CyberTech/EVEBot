@@ -21,7 +21,7 @@ objectdef obj_Drones
 	variable int WaitingForDrones = 0
 	variable bool DronesReady = FALSE
 	variable int ShortageCount
-	variable int DroneTimer
+	variable time DroneTimer
 	method Initialize()
 	{
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
@@ -144,10 +144,7 @@ objectdef obj_Drones
 			itty:First
 			do
 			{	
-				if ${This.IsSentryDrone[${itty.Value.TypeID}]}
-				{	
-					ToLaunch:Insert[${itty.Value.ID}]
-				}
+				ToLaunch:Insert[${itty.Value.ID}]
 			}
 			while ${itty:Next(exists)} && ${ToLaunch.Used} < 5
 		}
@@ -168,8 +165,8 @@ objectdef obj_Drones
 		variable int Count = 1
 		;This includes a check for sentry/heavy drones, going to have to put some SERIOUS beef into this method to select *which* drones to launch
 		if ${This.DronesInBay} > 0 && \
-		(${Me.ActiveTarget.Name.NotEqual["Kruul's Pleasure Garden"]} || ((${Me.ActiveTarget.Distance} < ${Me.DroneControlDistance}) && ${IsDroneBoat})) &&\
-		${Script.RunningTime} >= ${DroneTimer}
+		(${Me.ActiveTarget.Name.NotEqual["Kruul's Pleasure Garden"]} || ((${Me.ActiveTarget.Distance} < ${Me.DroneControlDistance}) && ${IsDroneBoat})) && \
+		${Time.Timestamp} > ${DroneTimer.Timestamp}
 		{
 			UI:UpdateConsole["Launching drones..."]
 			MyShip:LaunchAllDrones
@@ -277,23 +274,21 @@ objectdef obj_Drones
 		}
 		while ${This.DronesInSpace} > 0
 		{
-			if${MyShip.ArmorPct} < (${Config.Combat.MinimumArmorPct}-10)  ||\ 
-			${MyShip.ShieldPct} < (${Config.Combat.MinimumShieldPct} - 10) ||\
-			(${MyShip.ShieldPct} < 15 && ${Config.Combat.MinimumShieldPct} > 0) ||\
+			if ${MyShip.ArmorPct} < (${Config.Combat.MinimumArmorPct}-10)  || \ 
+			${MyShip.ShieldPct} < (${Config.Combat.MinimumShieldPct} - 10) || \
+			(${MyShip.ShieldPct} < 15 && ${Config.Combat.MinimumShieldPct} > 0) || \
 			${MyShip.ArmorPct} < 15
 			{
 				UI:UpdateConsole["OUR SHIT IS FUCKED UP FUCK THE DRONES"]
 				break
 			}
-			if ${This.WaitingForDrones} > 0 && ${This.DronesInSpace} > 0
-			{
-				continue
-			}
 			UI:UpdateConsole["Recalling ${This.ActiveDroneIDList.Used} Drones"]
-			This.WaitingForDrones:Set[5]
 			EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
-			wait 5
+			wait 20
 		}
+		DroneTimer:Set[${Time.Timestamp}]
+		DroneTimer.Second:Inc[30]
+		DroneTimer:Update
 	}
 
 	member:int DronesOut()
@@ -396,7 +391,7 @@ objectdef obj_Drones
 				variable index:int64 engageIndex
 				do
 				{
-					if ${DroneIterator.Value.ToEntity.ShieldPct} < 95 && ${This.WaitingForDrones.Equal[0]}
+					if ${DroneIterator.Value.ToEntity.ShieldPct} < 95 && ${Time.Timestamp} > ${DroneTimer.Timestamp}
 					{
 						UI:UpdateConsole["Recalling Damaged Drone ${DroneIterator.Value.ID}"]
 						UI:UpdateConsole["Debug: Shield: ${DroneIterator.Value.ToEntity.ShieldPct}, Armor: ${DroneIterator.Value.ToEntity.ArmorPct}, Structure: ${DroneIterator.Value.ToEntity.StructurePct}"]
@@ -405,6 +400,19 @@ objectdef obj_Drones
 					}
 					else
 					{
+						if ${MyShip.DronebayCapacity.Equal[125]}
+						{
+							if ${Me.ActiveTarget.Radius} < 100 && ${This.DronesOut} > 10
+							{
+								call This.ReturnAllToDroneBay
+								call This.LaunchLightDrones
+							}
+							elseif ${Me.ActiveTarget.Radius} > 100 && ${This.DronesOut} <= 10
+							{
+								call This.ReturnAllToDroneBay
+								call This.LaunchSentryDrones
+							}
+						}
 						;This is a check to see if drones are returning (if they are we don't want them to engage fuck all), also a check to see if this drones target is our activetarget
 						if ${DroneIterator.Value.State} != 4
 						{
@@ -415,7 +423,7 @@ objectdef obj_Drones
 					}
 				}
 				while ${DroneIterator:Next(exists)}
-				EVE:DronesReturnToDroneBay[returnIndex]
+				;EVE:DronesReturnToDroneBay[returnIndex]
 				if ${Me.ActiveTarget.Distance} < ${Me.DroneControlDistance}
 				{
 					EVE:DronesEngageMyTarget[engageIndex]
