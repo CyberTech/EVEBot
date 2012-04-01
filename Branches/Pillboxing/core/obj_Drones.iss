@@ -286,9 +286,6 @@ objectdef obj_Drones
 			EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
 			wait 20
 		}
-		DroneTimer:Set[${Time.Timestamp}]
-		DroneTimer.Second:Inc[30]
-		DroneTimer:Update
 	}
 
 	member:int DronesOut()
@@ -397,6 +394,9 @@ objectdef obj_Drones
 						UI:UpdateConsole["Debug: Shield: ${DroneIterator.Value.ToEntity.ShieldPct}, Armor: ${DroneIterator.Value.ToEntity.ArmorPct}, Structure: ${DroneIterator.Value.ToEntity.StructurePct}"]
 						;returnIndex:Insert[${DroneIterator.Value.ID}]
 						call This.ReturnAllToDroneBay
+						DroneTimer:Set[${Time.Timestamp}]
+						DroneTimer.Second:Inc[30]
+						DroneTimer:Update
 					}
 					else
 					{
