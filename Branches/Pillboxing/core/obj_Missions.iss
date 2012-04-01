@@ -151,7 +151,9 @@ objectdef obj_Missions
 	variable bool bSalvaging = TRUE
 	variable bool bWait
 	variable int MissionTimer
+	variable string LootEntityQuery = "GroupID = 12 || Name =- Blood Raider Personnel Transport || GroupID = 306 || Name =- Rolette Residence"
 	variable collection:int Keys
+	variable collection:int MissionsToWait
 	method Initialize()
 	{
 		UI:UpdateConsole["obj_Missions: Initialized", LOG_MINOR]
@@ -159,6 +161,8 @@ objectdef obj_Missions
 		Keys:Set["Guristas Extravaganza", 17206]
 		Keys:Set["Angel Extravaganza", 17192]
 		Keys:Set["Dread Pirate Scarlet", 2076]
+		MissionsToWait:Set["Illegal Activity (1 of 3)", 50]
+		MissionsToWait:Set["Attack of the Drones",60]
 		;; set the combat "mode"
 		LavishScript:RegisterEvent[WHERE]
 		Event[WHERE]:AttachAtom[This:Where]
@@ -541,9 +545,9 @@ function RunCourierMission(int agentID)
 	RoomCounter:Set[0]
 		 ; wait up to 15 seconds for spawns to appear
 	breakTime:Set[${Time.Timestamp}]
-	if ${This.MissionCache.Name[${Agents.AgentID}].Equal["Attack of the Drones"]}
+	if ${MissionsToWait.Element[${This.MissionCache.Name[${Agents.AgentID}]}]} > 0
 	{
-		breakTime.Second:Inc[60]
+		breakTime.Second:Inc[${MissionsToWait.Element[${This.MissionCache.Name[${Agents.AgentID}]}]}]
 	}
 	else
 	{
@@ -595,14 +599,14 @@ function RunCourierMission(int agentID)
 			   wait 20
 			}
 		} 
-		elseif ((${This.MissionCache.Volume[${Agents.AgentID}]} > 0 && !${This.GatePresent}) || (!${This.HaveMissionKey} && ${RoomCounter} == 0)) && ((${Entity[GroupID = "12" || Name =- "Blood Raider Personnel Transport" || GroupID = "306" || Name =- "Rolette Residence"](exists)}) && (!${This.HaveMishItem} || !${This.HaveMissionKey}))
+		elseif ((${This.MissionCache.Volume[${Agents.AgentID}]} > 0 && !${This.GatePresent}) || (!${This.HaveMissionKey} && ${RoomCounter} == 0)) && ((${Entity[${LootEntityQuery}](exists)}) && (!${This.HaveMishItem} || !${This.HaveMissionKey}))
 		; this check should be incorporated into if statement
 		{
 			variable index:entity Ents
 			variable iterator Ent
 			variable index:item   Items
 			variable iterator   Item
-			EVE:QueryEntities[Ents, GroupID = "12" || GroupID = "306" || Name =- "Rolette Residence" || Name =- "Blood Raider Personnel Transport"]
+			EVE:QueryEntities[Ents, ${LootEntityQuery}]
 			UI:UpdateConsole["Found ${Ents.Used} entities in total to loot."]
 			Ents:GetIterator[Ent]
 			UI:UpdateConsole["Looting ${This.MissionCache.TypeID[${agentID}]}"]
@@ -700,7 +704,10 @@ function RunCourierMission(int agentID)
 			{
 			   	UI:UpdateConsole["Activating Acceleration Gate..."]
 			   	Entity[${GateToUse}]:Activate
-				wait 10
+			   	while ${Me.ToEntity.Mode} != 3
+			   	{
+					wait 10			   		
+			   	}
 				RoomCounter:Inc
 				UI:UpdateConsole["Room Number: ${RoomCounter}"]
 				call ChatIRC.Say "${Me.Name}: Moving rooms, now entering ${RoomCounter}"
