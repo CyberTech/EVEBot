@@ -811,13 +811,6 @@ objectdef obj_Agents
 
 	function MissionDetails()
 	{
-		EVE:Execute[CmdCloseAllWindows]
-		wait 50
-
-		EVE:Execute[OpenJournal]
-		wait 50
-		EVE:Execute[CmdCloseActiveWindow]
-		wait 50
 
 	    variable index:agentmission amIndex
 		variable iterator amIterator
@@ -1181,9 +1174,9 @@ objectdef obj_Agents
 
 
 
-	  ; UI:UpdateConsole["Waiting for mission dialog to update..."]
+	  ; UI:UpdateConsole["Waiting for mission dialog to update..."]	
 	    wait 60
-	    if ${Agent[${This.AgentIndex}].Dialog.Equal[NULL]}
+	    if ${Agent[${This.AgentIndex}].Dialog.Length]} <= 4
 	    {
 	    	UI:UpdateConsole["Null dialog found, this is a bug, and I don't know what to do about it."]
 	    }
