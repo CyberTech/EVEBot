@@ -152,6 +152,7 @@ objectdef obj_Missions
 	variable bool bWait
 	variable int MissionTimer
 	variable string LootEntityQuery = "GroupID = 12 || Name =- Blood Raider Personnel Transport || GroupID = 306 || Name =- Rolette Residence"
+	variable string LootKeyQuery = "GroupID = 12 || Name =- Officer"
 	variable collection:int Keys
 	variable collection:int MissionsToWait
 	method Initialize()
@@ -161,6 +162,7 @@ objectdef obj_Missions
 		Keys:Set["Guristas Extravaganza", 17206]
 		Keys:Set["Angel Extravaganza", 17192]
 		Keys:Set["Dread Pirate Scarlet", 2076]
+		Keys:Set["Illegal Activity (2 of 3)",24030]
 		MissionsToWait:Set["Illegal Activity (1 of 3)", 50]
 		MissionsToWait:Set["Attack of the Drones",60]
 		;; set the combat "mode"
@@ -599,9 +601,14 @@ function RunCourierMission(int agentID)
 			   wait 20
 			}
 		} 
-		elseif ((${This.MissionCache.Volume[${Agents.AgentID}]} > 0 && !${This.GatePresent}) || (!${This.HaveMissionKey} && ${RoomCounter} == 0)) && ((${Entity[${LootEntityQuery}](exists)}) && (!${This.HaveMishItem} || !${This.HaveMissionKey}))
+		elseif ((${This.MissionCache.Volume[${Agents.AgentID}]} > 0 && !${This.GatePresent}) || (!${This.HaveMissionKey} && ${RoomCounter} == 0)) && \
+		((${Entity[${LootEntityQuery}](exists)}) && (!${This.HaveMishItem} || !${This.HaveMissionKey}))
 		; this check should be incorporated into if statement
 		{
+			if !${This.HaveMissionKey}
+			{
+				call This.GetMissionKey
+			}
 			variable index:entity Ents
 			variable iterator Ent
 			variable index:item   Items
@@ -634,11 +641,6 @@ function RunCourierMission(int agentID)
 						{
 							do
 							{
-								if ${This.MissionCache.Name[${agentID}].Equal["Dread Pirate Scarlet"]}
-								{
-									Item.Value:MoveTo[${MyShip.ID},CargoHold]
-									break
-								}
 								if ${Item.Value.TypeID} == ${This.MissionCache.TypeID[${agentID}]}
 								{
 									UI:UpdateConsole["Found mission item: Looting!"]
@@ -700,7 +702,7 @@ function RunCourierMission(int agentID)
 			call Ship.WarpPrepare
 			/* activate gate and go to next room */
 			wait 10
-			if ${Entity[${GateToUse}].Distance} < 2500
+			if ${Entity[${GateToUse}].Distance} < 2000
 			{
 			   	UI:UpdateConsole["Activating Acceleration Gate..."]
 			   	Entity[${GateToUse}]:Activate
@@ -794,7 +796,10 @@ function RunCourierMission(int agentID)
 	function GetMissionKey()
 	{
 		variable index:item Items
+		variable iterator Item
+		echo "${Keys.Element[${This.MissionCache.Name[${Agents.AgentID}]}]}"
 		variable uint querie = ${LavishScript.CreateQuery[TypeID != "${Keys.Element[${This.MissionCache.Name[${Agents.AgentID}]}]}"]}
+		
 		if ${Keys.Element[${This.MissionCache.Name[${Agents.AgentID}]}]} > 0
 		{
 			MyShip:GetCargo[Items]
@@ -812,15 +817,57 @@ function RunCourierMission(int agentID)
 					Items:Clear
 					Me.Station:GetHangarItems[Items]
 					UI:UpdateConsole["Found ${Items.Used} items in hangar."]
-					Items:RemoveByQuery[${query}]
+					Items:RemoveByQuery[${querie}]
+					Items:Collapse
 					if ${Items.Used} > 0
 					{
-						UI:UpdateConsole["Found key in hangar, moving to cargo"]
+						UI:UpdateConsole["Found ${Items[1].Name} in hangar, moving to cargo"]
 						Items[1]:MoveTo[${MyShip.ID},CargoHold]
 					}
 					else
 					{
 						UI:UpdateConsole["No key found in hangar, moving on!"]
+					}
+				}
+				else
+				{
+					variable index:entity ThingsToLoot
+					variable iterator itty
+					EVE:QueryEntities[ThingsToLoot,${LootKeyQuery}]
+					if ${ThingsToLoot.Used} > 0
+					{
+						ThingsToLoot:GetIterator[itty]
+						itty:First
+						do
+						{
+							if !${Me.ToEntity.Approaching.ID.Equal[${itty.Value.ID}]}
+							{
+								itty.Value:Approach
+								while ${itty.Value.Distance} > 2500
+								{
+									wait 100
+								}
+								itty.Value:OpenCargo
+								wait 10
+								call Ship.OpenCargo
+								wait 10
+								itty.Value:GetCargo[Items]
+								Items:GetIterator[Item]
+								if ${Item:First(exists)}
+								{
+									do
+									{
+										if ${Item.Value.TypeID.Equal[${Keys.Element[${This.MissionCache.Name[${Agents.AgentID}]}]}]}
+										{
+											UI:UpdateConsole["Looting ${Item.Value.Name} because it's a mission key."]
+											Item.Value:MoveTo[MyShip,CargoHold]
+										}
+									}
+									while ${Item:Next(exists)}
+								}
+							}
+						}
+						while ${itty:Next(exists)}
 					}
 				}
 			}
