@@ -333,7 +333,7 @@ function RunCourierMission(int agentID)
 						UI:UpdateConsole["DEBUG: RunCourierMission: Found required items in ship's cargohold."]
 						haveCargo:Set[TRUE]
 						break
-					}
+					}	
 				}
 				while ${CargoIterator:Next(exists)}
 			}
@@ -615,7 +615,7 @@ function RunCourierMission(int agentID)
 							wait 100
 							if ${Me.ToEntity.Mode} != 1 || !${Me.ToEntity.Approaching.ID.Equal[${Ent.Value.ID}]}
 							{
-								Ent.Value:Approach
+								Ent.Value:Approach[1500]
 								UI:UpdateConsole["Approaching ${Ent.Value.Name}"]
 							}
 							UI:UpdateConsole["Waiting until arrival at ${Ent.Value.Name}"]
@@ -687,7 +687,7 @@ function RunCourierMission(int agentID)
 					UI:UpdateConsole["We already have a bookmark for this room, moving on."]
 				}	
 			}			
-			UI:UpdateConsole["No Entities found, moving to next room. ${Entity["TypeID = TYPE_ACCELERATION_GATE"].Name} found."]
+			UI:UpdateConsole["No Entities found, moving to next room. ${Entity[${GateToUse}].Name} found."]
 			Entity[${GateToUse}]:Approach[1500]
 			while ${Entity[${GateToUse}].Distance} > 2000
 			{
@@ -700,10 +700,6 @@ function RunCourierMission(int agentID)
 			{
 			   	UI:UpdateConsole["Activating Acceleration Gate..."]
 			   	Entity[${GateToUse}]:Activate
-				while ${Me.ToEntity.Mode} != 3 && ${Entity[${GateToUse}](exists)}
-				{
-					Entity[${GateToUse}]:Activate
-				}
 				wait 10
 				RoomCounter:Inc
 				UI:UpdateConsole["Room Number: ${RoomCounter}"]
@@ -714,14 +710,10 @@ function RunCourierMission(int agentID)
 				breakTime:Update
 			}
 		}
-		elseif ${Me.ToEntity.Mode} == 3
-		{
-				wait 5
-		}
 		else
 		{
 				
-			if !${Target.TargetNPCs} && (${This.HaveMishItem} || !${Entity[Name =- "Cargo Container"]})
+			if !${Targets.TargetNPCs} && (${This.HaveMishItem} || !${Entity[Name =- "Cargo Container"]})
 			{
 				if !${This.Combat.CurrentState.Equal["FLEE"]} && !${This.Combat.CurrentState.Equal["RESTOCK"]}
 				{
@@ -751,10 +743,10 @@ function RunCourierMission(int agentID)
 					RoomCounter:Set[0]
 				}
 			}		
-		}                         
-		wait 1
+		} 
+		wait 10                        
 	}
-		while !${missionComplete}
+	while !${missionComplete}
 		MissionTimer:Set[${Math.Calc[${Script.RunningTime}-${MissionTimer}]}]
 		MissionTimer:Set[${Math.Calc[${MissionTimer}/60000]}]
 		UI:UpdateConsole["Finished mission, heading to active agent for new one. This mission took ${MissionTimer} minutes and ${Math.Calc[${MissionTimer}%60]} seconds. :O"]
