@@ -1824,7 +1824,10 @@ objectdef obj_Ship
 		{
 			This:Activate_Cloak[]
 		}
-
+		while !${This.InWarp}
+		{
+			wait 1
+		}
 		while ${This.InWarp}
 		{
 			Warped:Set[TRUE]
