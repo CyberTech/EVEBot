@@ -918,6 +918,11 @@ function RunCourierMission(int agentID)
 										if !${mbIterator.Value.ID.Equal[-1]}
 										{
 											call Ship.WarpToBookMark ${mbIterator.Value.ID}
+											if ${Targets.TargetNPCs}
+											{
+												UI:UpdateConsole["We have NPC targets in range, we're probably at mission. If we're not, tough luck."]
+												break
+											}
 										}
 									}
 									return
