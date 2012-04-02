@@ -410,13 +410,15 @@ objectdef obj_Targets
 					${Entity[${ToTarget[1]}].IsLockedTarget}
 					{	
 						;Adding some drone checks here
-						if (${Entity[${Ship.Drones.DroneTarget}](exists)} && \
-						!${Ship.Drones.DroneTarget.Equal[${ToTarget[1]}]} && \
-						${Config.Combat.DontKillFrigs}) || \
+						if (${Entity[${Ship.Drones.DroneTarget}](exists)} && !${Ship.Drones.DroneTarget.Equal[${ToTarget[1]}]} && ${Config.Combat.DontKillFrigs}) || \
 						!${Config.Combat.DontKillFrigs}
 						{
 							Entity["ID = ${ToTarget[1]}"]:MakeActiveTarget
 							UI:UpdateConsole["Making ${ToTarget[1]} active target."]
+						}
+						else
+						{
+							;echo "if (${Entity[${Ship.Drones.DroneTarget}](exists)} && !${Ship.Drones.DroneTarget.Equal[${ToTarget[1]}]} && ${Config.Combat.DontKillFrigs})"
 						}
 					}					
 					if ${Math.Calc[${Me.TargetCount}+${Me.TargetingCount}]} < ${Ship.MaxLockedTargets}

@@ -663,11 +663,11 @@ objectdef obj_Combat
 				Ship:Activate_StasisWebs
 				Ship:Activate_Weapons
 			}
-			elseif ${Me.ActiveTarget.Radius} < 100 && ${Config.Combat.DontKillFrigs}
+			elseif ${Me.ActiveTarget.Radius} < 100 && ${Config.Combat.DontKillFrigs} && ${Ship.Drones.DronesKillingFrigate}
 			{
 				Targets:NextTarget
 			}
-			if (!${Ship.Drones.DronesKillingFrigate} && ${Config.Combat.DontKillFrigs}) || \
+			if (!${Ship.Drones.DronesKillingFrigate} && ${Config.Combat.DontKillFrigs} || (${Targets.ToTarget.Used} > 1 && ${Me.ActiveTarget.ID.Equal[${Targets.ToTarget[1]}]})) || \
 			!${Config.Combat.DontKillFrigs}
 			{
 				call Ship.Drones.SendDrones
@@ -1200,6 +1200,7 @@ objectdef obj_Combat
 			if ${DmgType.Equal[0]}
 			{	
 				UI:UpdateConsole["Found ${Missions.MissionCache.Name[${Agents.AgentID}]} in MishDB, damage type is ${This.DamageString[${MishDB.Element[${mission}]}]}"]
+				DmgType:Set[${MishDB.Element[${mission}]}]
 			}
 		}
 		else
