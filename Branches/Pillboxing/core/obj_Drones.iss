@@ -418,7 +418,7 @@ objectdef obj_Drones
 		
 		if !${This.DronesReady}
 		{
-			return
+			return "DRONES NOT READY"
 		}
 
 		if (${This.DronesInSpace} > 0)
