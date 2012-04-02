@@ -186,6 +186,10 @@ objectdef obj_Scavenger
 				UI:UpdateConsole["Just relayed request for bm."]
 				wait 50
 				UI:UpdateConsole["received a list of ${BookmarkListToSalvage.Used} bookmarks from missioner."]
+				if ${BookmarkListToSalvage.Used} > 0
+				{
+					break
+				}
 
 			}
 			while ${ittyCreators:Next(exists)}
