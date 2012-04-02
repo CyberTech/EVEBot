@@ -125,6 +125,7 @@ objectdef obj_Combat
 		ThermalDamage:Insert[20797]
 		ThermalDamage:Insert[200]
 		ThermalDamage:Insert[238]
+		ThermalDamage:Insert[204]
 		EMDamage:Insert[21894]
 		EMDamage:Insert[20735]
 		EMDamage:Insert[20799]
@@ -151,6 +152,7 @@ objectdef obj_Combat
 		EMDamage:Insert[2203]
 		EMDamage:Insert[2205]
 		EMDamage:Insert[238]
+		EMDamage:Insert[202]
 		ExplosiveDamage:Insert[238]
 		ExplosiveDamage:Insert[27453]
 		ExplosiveDamage:Insert[199]
@@ -173,6 +175,7 @@ objectdef obj_Combat
 		ExplosiveDamage:Insert[15510]
 		ExplosiveDamage:Insert[2486]
 		ExplosiveDamage:Insert[2488]
+		ExplosiveDamage:Insert[205]
 		ExplosiveDamage:Insert[21640]
 		KineticDamage:Insert[238]
 		KineticDamage:Insert[21918]
@@ -197,6 +200,7 @@ objectdef obj_Combat
 		KineticDamage:Insert[23559]
 		KineticDamage:Insert[28209]
 		KineticDamage:Insert[24529]
+		KineticDamage:Insert[203]
 		MishDB:Set["Silence The Informant", 2]
 		MishDB:Set["Worlds Collide", 3]
 		MishDB:Set["The Score", 1]
@@ -356,7 +360,6 @@ objectdef obj_Combat
 		}
 		do
 		{ 
-			echo "Checking for AmmoType: ${Ship.AmmoGroup.Token[${intCounter},-]}"
 			ContainerItems:RemoveByQuery[${LavishScript.CreateQuery[GroupID != "${Ship.AmmoGroup.Token[${intCounter},-]}"]}]		
 			ContainerItems:Collapse
 			if ${ContainerItems.Used} > 0
@@ -418,7 +421,7 @@ objectdef obj_Combat
 		{
 			if ${DmgType.Equal[0]}
 			{
-				UI:UpdateConsole["Mission was not found in mishDB and we have no factionID, defaulting to EM damage."]
+				UI:UpdateConsole["Mission was not found in mishDB and we have no factionID, defaulting to Thermal damage."]
 				DmgType:Set[2]
 			}
 		}
@@ -658,7 +661,15 @@ objectdef obj_Combat
 				Ship:Activate_StasisWebs
 				Ship:Activate_Weapons
 			}
-			call Ship.Drones.SendDrones
+			elseif ${Me.ActiveTarget.Radius} < 100 && ${Config.Combat.DontKillFrigs}
+			{
+				Targets:NextTarget
+			}
+			if (!${Ship.Drones.DronesKillingFrigate} && ${Config.Combat.DontKillFrigs}) || \
+			!${Config.Combat.DontKillFrigs}
+			{
+				call Ship.Drones.SendDrones
+			}
 			
 		}
 		if !${Ship.IsAmmoAvailable}
@@ -1193,7 +1204,7 @@ objectdef obj_Combat
 		{
 			if ${DmgType.Equal[0]}
 			{
-				UI:UpdateConsole["Mission was not found in mishDB and we have no factionID, defaulting to EM damage."]
+				UI:UpdateConsole["Mission was not found in mishDB and we have no factionID, defaulting to Thermal damage."]
 				DmgType:Set[2]
 			}
 		}

@@ -72,6 +72,8 @@ objectdef obj_Ship
 	{
 		Switch "${Config.Combat.LastWeaponGroup}"
 		{
+			case 506
+				return 386
 			case 509
 			 	return 384
 			case 508
@@ -1504,7 +1506,7 @@ objectdef obj_Ship
 
 	function WarpToBookMarkName(string DestinationBookmarkLabel, bool WarpFleet=FALSE)
 	{
-		if (!${EVE.Bookmark[${DestinationBookmarkLabel}](exists)})
+		if (!${EVE.Bookmark[${DestinationBookmarkLabel}](exists)}) || ${EVE.Bookmark[${DestinationBookmarkLabel}].ID} <= 0
 		{
 			UI:UpdateConsole["ERROR: Bookmark: '${DestinationBookmarkLabel}' does not exist!", LOG_CRITICAL]
 			return
@@ -1692,7 +1694,6 @@ objectdef obj_Ship
 			/* This is an in-space bookmark, or a dungeon bookmark, just warp to it. */
 						;Gonna put a workaround in here for Bookmark.ToEntity not working, since this is firing wrong on a lot of stuff
 						;Aka, this shouldn't be firing at all for stations
-						echo "Warping to ${DestinationBookmark.LocationID} && ${DestinationBookmark.ItemID}"
 						wait 100
 						if ${WarpFleet}
 						{
@@ -1708,8 +1709,7 @@ objectdef obj_Ship
 						while ${Me.ToEntity.Mode} != 3
 						{
 							wait 50
-							intCount:Inc
-							UI:UpdateConsole["Waiting to enter warp, if this happens more than once shit is fucked up"]		
+							intCount:Inc	
 							if ${intCount} >= 3
 							{
 								UI:UpdateConsole["Something is very wrong, calling return to hopefully update bookmark reference"]
