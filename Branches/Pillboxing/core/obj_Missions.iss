@@ -508,6 +508,7 @@ function RunCourierMission(int agentID)
 		;call Ship.ActivateShip "${Config.Missioneer.CombatShip}"
 		;wait 10
 		call This.WarpToEncounter ${Agents.AgentID}
+		call Ship.SwapAmmo
 		wait 100
 		while ${Me.AutoPilotOn}
 		{

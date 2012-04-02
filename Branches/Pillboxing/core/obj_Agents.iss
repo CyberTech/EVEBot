@@ -1127,19 +1127,15 @@ objectdef obj_Agents
 		}
 		if !${Missions.Combat.HaveMissionAmmo}
 		{
+			echo ${Missions.Combat.HaveMissionAmmo}
 			UI:UpdateConsole["We have the wrong ammo for mission, heading to nearest ammo bookmark."]
 			call Missions.Combat.RestockAmmo
-			if !${Me.InSpace}
-			{
-				call Station.Undock
-			}
-			UI:UpdateConsole["We should have undocked by now, calling swap ammo."]
-			call Ship.SwapAmmo
 		}
 		else
 		{
 			UI:UpdateConsole["We have correct ammo for our mission."]
 		}
+
 		if ${amIterator.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions} == TRUE
 		{
 			UI:UpdateConsole["Saying ${dsIndex[1].Text}"]
@@ -1181,10 +1177,6 @@ objectdef obj_Agents
 
 	  ; UI:UpdateConsole["Waiting for mission dialog to update..."]	
 	    wait 60
-	    if ${Agent[${This.AgentIndex}].Dialog.Length]} <= 4
-	    {
-	    	UI:UpdateConsole["Null dialog found, this is a bug, and I don't know what to do about it."]
-	    }
 		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
 
 		EVE:Execute[OpenJournal]

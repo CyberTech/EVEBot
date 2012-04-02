@@ -398,7 +398,7 @@ objectdef obj_Combat
 		{
 			if ${FactionDB.Element[${FactionID}]} > 0
 			{
-				UI:UpdateConsole["Found faction ID for mission in database, reloading with ${This.DamageString[${FactionDB.Element[${FactionID}]}]} ammo."]
+				UI:UpdateConsole["Found faction ID for mission in database, reloading with ${This.DamageString[${FactionDB.Element[${FactionID}]}]} ammo. Mission is ${mission}"]
 				DmgType:Set[${FactionDB.Element[${FactionID}]}]
 			}
 			else
@@ -924,7 +924,7 @@ objectdef obj_Combat
 								UI:UpdateConsole["Trying to move ammo now!"]
 								if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${Ship.CargoFreeSpace}
 								{
-									QuantityToMove:Set[${Math.Calc[(${Ship.CargoFreeSpace} -(${Ship.ModuleList_Weapon.Used}*${Ship.ModuleList_Weapon.MaxCharges}) - ${Missions.MissionCache.Volume[${Agents.AgentID}]}) / ${CargoIterator.Value.Volume}]}]
+									QuantityToMove:Set[${Math.Calc[(${Ship.CargoFreeSpace} -(${Ship.ModuleList_Weapon.Used}*${Ship.ModuleList_Weapon[1].MaxCharges}) - ${Missions.MissionCache.Volume[${Agents.AgentID}]}) / ${CargoIterator.Value.Volume}]}]
 								}
 								else
 								{
