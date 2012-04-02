@@ -1089,6 +1089,21 @@ objectdef obj_Agents
 
 		RetryCount:Set[0]
 		call This.MissionDetails
+		if !${Missions.Combat.HaveMissionAmmo}
+		{
+			UI:UpdateConsole["We have the wrong ammo for mission, heading to nearest ammo bookmark."]
+			call Missions.Combat.RestockAmmo
+			if !${Me.InSpace}
+			{
+				call Station.Undock
+			}
+			UI:UpdateConsole["We should have undocked by now, calling swap ammo."]
+			call Ship.SwapAmmo
+		}
+		else
+		{
+			UI:UpdateConsole["We have correct ammo for our mission."]
+		}
 		isLowSec:Set[${Missions.MissionCache.LowSec[${amIterator.Value.AgentID}]}]
 		variable time lastDecline
 		lastDecline:Set[${Config.Agents.LastDecline[${This.AgentName}]}]

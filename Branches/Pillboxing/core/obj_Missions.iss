@@ -503,21 +503,6 @@ function RunCourierMission(int agentID)
 	function RunCombatMission(int agentID)
 	{	
 		call This.GetMissionKey
-		if !${Combat.HaveMissionAmmo}
-		{
-			UI:UpdateConsole["We have the wrong ammo for mission, heading to nearest ammo bookmark."]
-			call Combat.RestockAmmo
-			if !${Me.InSpace}
-			{
-				call Station.Undock
-			}
-			UI:UpdateConsole["We should have undocked by now, calling swap ammo."]
-			call Ship.SwapAmmo
-		}
-		else
-		{
-			UI:UpdateConsole["We have correct ammo for our mission."]
-		}
 		UI:UpdateConsole["Starting combat mission now."]
 		call ChatIRC.Say "${Me.Name}: Starting new mission. Name = ${This.MissionCache.Name[${Agents.AgentID}]}"
 		;call Ship.ActivateShip "${Config.Missioneer.CombatShip}"
@@ -624,9 +609,9 @@ function RunCourierMission(int agentID)
 						while ${Ent.Value.Distance} > 2500 && ${Ent.Value(exists)}
 						{
 							wait 100
-							if ${Me.ToEntity.Mode} != 1 || !${Me.ToEntity.Approaching.ID.Equal[${Ent.Value.ID}]}
+							if !${Me.ToEntity.Approaching.ID.Equal[${Ent.Value.ID}]}
 							{
-								Ent.Value:Approach[1500]
+								Ent.Value:Approach
 								UI:UpdateConsole["Approaching ${Ent.Value.Name}"]
 							}
 							UI:UpdateConsole["Waiting until arrival at ${Ent.Value.Name}"]
