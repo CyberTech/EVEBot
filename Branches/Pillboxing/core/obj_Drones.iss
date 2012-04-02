@@ -22,6 +22,9 @@ objectdef obj_Drones
 	variable bool DronesReady = FALSE
 	variable int ShortageCount
 	variable time DroneTimer
+	variable uint LightDroneQuery = ${LavishScript.CreateQuery[Volume > "5"]}
+	variable uint MediumDroneQuery = ${LavishScript.CreateQuery[Volume != "10"]}
+	variable uint LargeDroneQuery = ${LavishScript.CreateQuery[Volume < "25"]}
 	method Initialize()
 	{
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
@@ -104,7 +107,7 @@ objectdef obj_Drones
 		variable iterator itty
 		variable index:int64 ToLaunch
 		MyShip:GetDrones[ListOfDrones]
-		ListOfDrones:RemoveByQuery[${LavishScript.CreateQuery[Volume > "10"]}]
+		ListOfDrones:RemoveByQuery[${LightDroneQuery}]
 		ListOfDrones:Collapse
 		if ${ListOfDrones.Used} > 0
 		{	
@@ -125,6 +128,21 @@ objectdef obj_Drones
 		}
 	}
 
+	function LaunchMediumDrones()
+	{
+		if ${This.WaitingForDrones} > 0
+		{
+			return
+		}
+		UI:UpdateConsole["Launching Light Drones."]
+		variable index:item ListOfDrones
+		variable iterator itty
+		variable index:int64 ToLaunch
+		MyShip:GetDrones[ListOfDrones]
+		ListOfDrones:RemoveByQuery[${MediumDroneQuery}]
+		ListOfDrones:Collapse
+	}
+
 	function LaunchSentryDrones()
 	{
 		if ${This.WaitingForDrones} > 0
@@ -136,7 +154,7 @@ objectdef obj_Drones
 		variable iterator itty
 		variable index:int64 ToLaunch
 		MyShip:GetDrones[ListOfDrones]
-		ListOfDrones:RemoveByQuery[${LavishScript.CreateQuery[Volume < "25"]}]
+		ListOfDrones:RemoveByQuery[${LargeDroneQuery}]
 		ListOfDrones:Collapse
 		if ${ListOfDrones.Used} > 0
 		{
@@ -265,7 +283,19 @@ objectdef obj_Drones
 		wait 10
 	}
 
-
+	member:bool DronesKillingFrigate()
+	{
+		variable index:activedrone ListOfDrones
+		Me:GetActiveDrones[ListOfDrones]
+		if ${ListOfDrones[1].Target.Radius} < 100 && ${ListOfDrones[1].Target(exists)}
+		{
+			return TRUE
+		}
+		else
+		{
+			return FALSE
+		}
+	}
 	function ReturnAllToDroneBay()
 	{
 		if ${This.WaitingForDrones} > 0
@@ -411,6 +441,20 @@ objectdef obj_Drones
 							{
 								call This.ReturnAllToDroneBay
 								call This.LaunchSentryDrones
+							}
+						}
+						elseif ${MyShip.DronebayCapacity} > 50 && \
+						${MyShip.DronebayCapacity} < 125
+						{
+							if ${Me.ActiveTarget.Radius} < 100 && ${This.DronesOut} > 10
+							{
+								call This.ReturnAllToDroneBay
+								call This.LaunchLightDrones
+							}
+							elseif ${Me.ActiveTarget.Radius} > 100 && ${This.DronesOut} <= 10
+							{
+								call This.ReturnAllToDroneBay
+								call This.LaunchMediumDrones
 							}
 						}
 						;This is a check to see if drones are returning (if they are we don't want them to engage fuck all), also a check to see if this drones target is our activetarget
