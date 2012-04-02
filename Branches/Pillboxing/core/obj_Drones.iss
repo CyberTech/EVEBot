@@ -128,13 +128,13 @@ objectdef obj_Drones
 		}
 	}
 
-	function LaunchMediumDrones()
+	method LaunchMediumDrones()
 	{
 		if ${This.WaitingForDrones} > 0
 		{
 			return
 		}
-		UI:UpdateConsole["Launching Light Drones."]
+		UI:UpdateConsole["Launching Medium Drones."]
 		variable index:item ListOfDrones
 		variable iterator itty
 		variable index:int64 ToLaunch
@@ -433,7 +433,7 @@ objectdef obj_Drones
 			if ${Me.ActiveTarget.Radius} > 100 && ${This.DronesOut} != 10
 			{
 				call This.ReturnAllToDroneBay
-				call This.LaunchMediumDrones
+				This:LaunchMediumDrones
 			}
 			if ${Me.ActiveTarget.Radius} < 100 && ${This.DronesOut} > 5
 			{
