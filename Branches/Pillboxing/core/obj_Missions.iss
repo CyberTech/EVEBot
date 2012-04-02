@@ -151,8 +151,8 @@ objectdef obj_Missions
 	variable bool bSalvaging = TRUE
 	variable bool bWait
 	variable int MissionTimer
-	variable string LootEntityQuery = "GroupID = 12 || Name =- Blood Raider Personnel Transport || GroupID = 306 || Name =- Rolette Residence"
-	variable string LootKeyQuery = "GroupID = 12 || Name =- Officer"
+	variable string LootEntityQuery = GroupID = "12" || Name =- "Blood Raider Personnel Transport" || GroupID = "306" || Name =- "Rolette Residence"
+	variable string LootKeyQuery = GroupID = "12" || Name =- "Officer"
 	variable collection:int Keys
 	variable collection:int MissionsToWait
 	method Initialize()
@@ -920,9 +920,9 @@ function RunCourierMission(int agentID)
 						{
 							if ${mbIterator.Value.LocationType.Equal["dungeon"]}
 							{
-								if ${mbIterator.Value.Distance} > 80000000 || !${mbIterator.Value.Distance(exists)}
+								if ${mbIterator.Value.Distance} > 100000000 || !${mbIterator.Value.Distance(exists)}
 								{
-									while ${mbIterator.Value.Distance} > 80000000 || !${mbIterator.Value.Distance(exists)}
+									while ${mbIterator.Value.Distance} > 100000000 || !${mbIterator.Value.Distance(exists)}
 									{
 										if ${mbIterator.Value.ID.Equal[-1]}
 										{
