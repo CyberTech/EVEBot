@@ -496,6 +496,7 @@ objectdef obj_Drones
 					if ${Me.ActiveTarget.Distance} < ${Me.DroneControlDistance}
 					{
 						EVE:DronesEngageMyTarget[engageIndex]
+						return "TRY AGAIN"
 					}
 					else
 						return "TARGET TOO FAR AWAY"
