@@ -77,21 +77,21 @@ objectdef obj_Drones
 		    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 			{
 				This.WaitingForDrones:Dec
-    			if !${Me.InStation}
-    			{
-    				This.LaunchedDrones:Set[${This.DronesInSpace}]
-    				if  ${This.LaunchedDrones} > 0
-    				{
-    					This.WaitingForDrones:Set[0]
-    					This.DronesReady:Set[TRUE]
+  			if !${Me.InStation}
+  			{
+  				This.LaunchedDrones:Set[${This.DronesInSpace}]
+  				if (${This.LaunchedDrones} > 0)
+  				{
+  					This.WaitingForDrones:Set[0]
+  					This.DronesReady:Set[TRUE]
 
-    					UI:UpdateConsole["${This.LaunchedDrones} drones deployed"]
-    				}
-                }
+  					UI:UpdateConsole["${This.LaunchedDrones} drones deployed"]
+  				}
+        }
 
-	    		This.NextPulse:Set[${Time.Timestamp}]
-	    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-	    		This.NextPulse:Update
+    		This.NextPulse:Set[${Time.Timestamp}]
+    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+    		This.NextPulse:Update
 			}
 		}
 	}
@@ -305,12 +305,19 @@ objectdef obj_Drones
 			return FALSE
 		}
 	}
+	
 	function ReturnAllToDroneBay()
 	{
 		if ${This.WaitingForDrones} > 0
 		{
 			return	
 		}
+		
+		Me:GetActiveDroneIDs[This.ActiveDroneIDList]
+		UI:UpdateConsole["Recalling ${This.ActiveDroneIDList.Used} Drones"]
+		EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
+		wait 20
+		
 		while ${This.DronesInSpace} > 0
 		{
 			if ${MyShip.ArmorPct} < (${Config.Combat.MinimumArmorPct}-10)  || \ 
@@ -321,10 +328,10 @@ objectdef obj_Drones
 				UI:UpdateConsole["OUR SHIT IS FUCKED UP FUCK THE DRONES"]
 				break
 			}
-			UI:UpdateConsole["Recalling ${This.ActiveDroneIDList.Used} Drones"]
-			EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
 			wait 20
 		}
+		
+		return
 	}
 
 	member:int DronesOut()
@@ -405,6 +412,10 @@ objectdef obj_Drones
 	}
 	function SendDrones()
 	{
+		variable iterator DroneIterator
+		variable index:activedrone ActiveDroneList
+		variable index:int64 engageIndex
+		
 		if !${This.DronesReady}
 		{
 			return
@@ -415,16 +426,12 @@ objectdef obj_Drones
 			if ${Me.ActiveTarget.Name.Equal["Kruul's Pleasure Gardens"]}
 			{
 				call This.ReturnAllToDroneBay
-
+				return "GIViNG UP"
 			}
 			else
 			{
-				variable iterator DroneIterator
-				variable index:activedrone ActiveDroneList
 				Me:GetActiveDrones[ActiveDroneList]
 				ActiveDroneList:GetIterator[DroneIterator]
-				variable index:int64 returnIndex
-				variable index:int64 engageIndex
 				do
 				{
 					if ${DroneIterator.Value.ToEntity.ShieldPct} < 95 && ${Time.Timestamp} > ${DroneTimer.Timestamp}
@@ -436,6 +443,7 @@ objectdef obj_Drones
 						DroneTimer:Set[${Time.Timestamp}]
 						DroneTimer.Second:Inc[30]
 						DroneTimer:Update
+						return "DRONES DAMAGED"
 					}
 					else
 					{
@@ -445,43 +453,57 @@ objectdef obj_Drones
 							{
 								call This.ReturnAllToDroneBay
 								call This.LaunchLightDrones
+								wait 10
+								return "TRY AGAIN"
 							}
 							elseif ${Me.ActiveTarget.Radius} > 100 && ${This.DronesOut} <= 10
 							{
 								call This.ReturnAllToDroneBay
 								call This.LaunchSentryDrones
+								wait 10
+								return "TRY AGAIN"
 							}
 						}
-						elseif ${MyShip.DronebayCapacity} > 50 && \
-						${MyShip.DronebayCapacity} < 125
+						elseif ${MyShip.DronebayCapacity} > 50 && ${MyShip.DronebayCapacity} < 125
 						{
 							if ${Me.ActiveTarget.Radius} < 100 && ${This.DronesOut} > 10
 							{
 								call This.ReturnAllToDroneBay
 								call This.LaunchLightDrones
+								wait 10
+								return "TRY AGAIN"
 							}
 							elseif ${Me.ActiveTarget.Radius} > 100 && ${This.DronesOut} <= 10
 							{
 								call This.ReturnAllToDroneBay
 								call This.LaunchMediumDrones
+								wait 10
+								return "TRY AGAIN"
 							}
 						}
 						;This is a check to see if drones are returning (if they are we don't want them to engage fuck all), also a check to see if this drones target is our activetarget
-						if ${DroneIterator.Value.State} != 4
+						if (${DroneIterator.Value.State} != 4)
 						{
 							;UI:UpdateConsole["Debug: Engage Target ${DroneIterator.Value.ID}"]
 							engageIndex:Insert[${DroneIterator.Value.ID}]
 						}
-
 					}
 				}
 				while ${DroneIterator:Next(exists)}
-				;EVE:DronesReturnToDroneBay[returnIndex]
-				if ${Me.ActiveTarget.Distance} < ${Me.DroneControlDistance}
+				
+				if (${engageIndex.Used} > 0)
 				{
-					EVE:DronesEngageMyTarget[engageIndex]
+					if ${Me.ActiveTarget.Distance} < ${Me.DroneControlDistance}
+					{
+						EVE:DronesEngageMyTarget[engageIndex]
+					}
+					else
+						return "TARGET TOO FAR AWAY"
 				}
+				else
+					return "NO DRONES TO SEND"
 			}
 		}
+		return "OK"
 	}
 }
