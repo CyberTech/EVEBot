@@ -560,6 +560,7 @@ function RunCourierMission(int agentID)
 ;	{
 	do
 	{
+		EVE:QueryEntities[Ents, ${LootEntityQuery}]
 		while !${Targets.TargetNPCs}
 		{
 			UI:UpdateConsole["No rats found, waiting on spawn."]
@@ -602,7 +603,7 @@ function RunCourierMission(int agentID)
 			}
 		} 
 		elseif ((${This.MissionCache.Volume[${Agents.AgentID}]} > 0 && !${This.GatePresent}) || (!${This.HaveMissionKey} && ${RoomCounter} == 0)) && \
-		((${Entity[${LootEntityQuery}](exists)}) && (!${This.HaveMishItem} || !${This.HaveMissionKey}))
+		(${Ents.Used} > 0 && (!${This.HaveMishItem} || !${This.HaveMissionKey}))
 		; this check should be incorporated into if statement
 		{
 			if !${This.HaveMissionKey}
@@ -613,7 +614,6 @@ function RunCourierMission(int agentID)
 			variable iterator Ent
 			variable index:item   Items
 			variable iterator   Item
-			EVE:QueryEntities[Ents, ${LootEntityQuery}]
 			UI:UpdateConsole["Found ${Ents.Used} entities in total to loot."]
 			Ents:GetIterator[Ent]
 			UI:UpdateConsole["Looting ${This.MissionCache.TypeID[${agentID}]}"]
@@ -705,9 +705,9 @@ function RunCourierMission(int agentID)
 			if ${Entity[${GateToUse}].Distance} < 2000
 			{
 			   	UI:UpdateConsole["Activating Acceleration Gate..."]
-			   	Entity[${GateToUse}]:Activate
 			   	while ${Me.ToEntity.Mode} != 3
 			   	{
+			   		Entity[${GateToUse}]:Activate
 					wait 10			   		
 			   	}
 				RoomCounter:Inc
