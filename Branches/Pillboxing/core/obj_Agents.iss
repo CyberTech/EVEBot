@@ -650,13 +650,6 @@ objectdef obj_Agents
 		return NULL
 	}
 
-
-
-
-
-
-
-
 	function MoveToPickup()
 	{
 		variable string stationName
@@ -1089,21 +1082,6 @@ objectdef obj_Agents
 
 		RetryCount:Set[0]
 		call This.MissionDetails
-		if !${Missions.Combat.HaveMissionAmmo}
-		{
-			UI:UpdateConsole["We have the wrong ammo for mission, heading to nearest ammo bookmark."]
-			call Missions.Combat.RestockAmmo
-			if !${Me.InSpace}
-			{
-				call Station.Undock
-			}
-			UI:UpdateConsole["We should have undocked by now, calling swap ammo."]
-			call Ship.SwapAmmo
-		}
-		else
-		{
-			UI:UpdateConsole["We have correct ammo for our mission."]
-		}
 		isLowSec:Set[${Missions.MissionCache.LowSec[${amIterator.Value.AgentID}]}]
 		variable time lastDecline
 		lastDecline:Set[${Config.Agents.LastDecline[${This.AgentName}]}]
@@ -1147,42 +1125,57 @@ objectdef obj_Agents
 				Config:Save[]
 			}
 		}
-			if ${amIterator.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions} == TRUE
+		if !${Missions.Combat.HaveMissionAmmo}
+		{
+			UI:UpdateConsole["We have the wrong ammo for mission, heading to nearest ammo bookmark."]
+			call Missions.Combat.RestockAmmo
+			if !${Me.InSpace}
 			{
-				UI:UpdateConsole["Saying ${dsIndex[1].Text}"]
-				dsIndex[1]:Say[${This.AgentID}]
+				call Station.Undock
 			}
-			elseif ${amIterator.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} == TRUE
+			UI:UpdateConsole["We should have undocked by now, calling swap ammo."]
+			call Ship.SwapAmmo
+		}
+		else
+		{
+			UI:UpdateConsole["We have correct ammo for our mission."]
+		}
+		if ${amIterator.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions} == TRUE
+		{
+			UI:UpdateConsole["Saying ${dsIndex[1].Text}"]
+			dsIndex[1]:Say[${This.AgentID}]
+		}
+		elseif ${amIterator.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} == TRUE
+		{
+			UI:UpdateConsole["Saying ${dsIndex[1].Text}"]
+			dsIndex[1]:Say[${This.AgentID}]
+		}
+		elseif ${amIterator.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} == TRUE
+		{
+			UI:UpdateConsole["Saying ${dsIndex[1].Text}"]
+			dsIndex[1]:Say[${This.AgentID}]
+		}
+		elseif ${amIterator.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions} == TRUE
+		{
+			UI:UpdateConsole["Saying ${dsIndex[1].Text}"]
+			dsIndex[1]:Say[${This.AgentID}]
+		}
+		else
+		{
+			if ${lastDecline.Timestamp} >= ${Time.Timestamp}
 			{
-				UI:UpdateConsole["Saying ${dsIndex[1].Text}"]
-				dsIndex[1]:Say[${This.AgentID}]
-			}
-			elseif ${amIterator.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} == TRUE
-			{
-				UI:UpdateConsole["Saying ${dsIndex[1].Text}"]
-				dsIndex[1]:Say[${This.AgentID}]
-			}
-			elseif ${amIterator.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions} == TRUE
-			{
-				UI:UpdateConsole["Saying ${dsIndex[1].Text}"]
-				dsIndex[1]:Say[${This.AgentID}]
+				UI:UpdateConsole["obj_Agents: ERROR: You declined a mission less than four hours ago!  Switching agents...", LOG_CRITICAL]
+				This:SetActiveAgent[${This.AgentList.NextAgent}]
+				return
 			}
 			else
 			{
-				if ${lastDecline.Timestamp} >= ${Time.Timestamp}
-				{
-					UI:UpdateConsole["obj_Agents: ERROR: You declined a mission less than four hours ago!  Switching agents...", LOG_CRITICAL]
-					This:SetActiveAgent[${This.AgentList.NextAgent}]
-					return
-				}
-				else
-				{
-					dsIndex.Get[2]:Say[${This.AgentID}]
-					Config.Agents:SetLastDecline[${This.AgentName},${Time.Timestamp}]
-					UI:UpdateConsole["obj_Agents: Declined mission."]
-					Config:Save[]
-				}
+				dsIndex.Get[2]:Say[${This.AgentID}]
+				Config.Agents:SetLastDecline[${This.AgentName},${Time.Timestamp}]
+				UI:UpdateConsole["obj_Agents: Declined mission."]
+				Config:Save[]
 			}
+		}
 
 
 

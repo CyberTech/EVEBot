@@ -147,6 +147,7 @@ objectdef obj_Drones
 			itty:First
 			do
 			{
+				UI:UpdateConsole["Launching ${itty.Value.Name}."]
 				Launch:Insert[${itty.Value.ID}]
 			}
 			while ${itty:Next(exists)} && ${ToLaunch.Used} < 5
