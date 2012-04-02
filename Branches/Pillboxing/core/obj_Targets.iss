@@ -384,7 +384,7 @@ objectdef obj_Targets
 		EVE:QueryEntities[InRange, ${query2}]
 		ToLock:Set[${Math.Calc[${Ship.MaxLockedTargets} - ${Me.TargetCount} - ${Me.TargetingCount}]}]
 		InRange:GetIterator[Target2]
-		if	(!${Me.ToEntity.Approaching.ID.Equal[${Entity[${query2}]}]}  && \
+		if	(!${Ship.Approaching.Equal[${Entity[${query2}]}]}  && \
 			${Entity[${query2}](exists)} && \
 			 (${Entity[${GATEID}].Distance} > 110000 || (${Entity[${BEACONID}].Distance} > 110000 && !${Entity[${GATEID}](exists)})) 
 		{
@@ -432,7 +432,7 @@ objectdef obj_Targets
 							}
 							else
 							{
-								if ${Me.ToEntity.Approaching.ID.Equal[${Entity[${ToTarget[1]}]}]}
+								if ${Ship.Approaching.Equal[${Entity[${ToTarget[1]}]}]}
 								{
 									Entity[${ToTarget[1]}]:Approach[${MyShip.MaxTargetRange}]
 								}
@@ -536,6 +536,7 @@ objectdef obj_Targets
 		Targetser:Insert["Roden Shipyard Factory Station"]
 		Targetser:Insert["Smuggler Stargate"]
 		Targetser:Insert["Outpost Headquarters"]
+		Targetser:Insert["Docked bestower"]
 		Targetser:GetIterator[Targetse]
 		if ${Targetse:First(exists)} && ${InRange.Used.Equal[0]} 
 		do

@@ -16,7 +16,7 @@ objectdef obj_Ship
 
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 2
-
+	variable int Approaching
 	variable int Calculated_MaxLockedTargets
 	variable float BaselineUsedCargo
 	variable bool CargoIsOpen
@@ -118,6 +118,7 @@ objectdef obj_Ship
 		{
 			if !${Me.InStation} && ${Me.InSpace}
 			{
+				Approaching:Set[${Me.ToEntity.Approaching}]
 				;This:ValidateModuleTargets
 				if ${RetryUpdateModuleList} == 10
 				{
@@ -276,17 +277,11 @@ objectdef obj_Ship
 				}
 				else
 				{
-					UI:UpdateConsole["No charges found for weapon, odds are we're reloading."]
 					bAmmoAvailable:Set[TRUE]
 				}
 				
 			}
 			while ${aWeaponIterator:Next(exists)}
-		}
-		else
-		{
-			UI:UpdateConsole["IsAmmoAvailable: No weapons found, what, the, fuck."]
-			bAmmoAvailable:Set[TRUE]
 		}
 
 		return ${bAmmoAvailable}

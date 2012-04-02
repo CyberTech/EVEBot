@@ -1004,54 +1004,6 @@
 								}
 							</OnChange>
 						</Textentry>
-						<Text name='lblAmmoTypeID'>
-							<X>200</X>
-							<Y>110</Y>
-							<Width>110</Width>
-							<Height>18</Height>
-							<Text>Ammo TypeID</Text>
-							<AutoTooltip>Name of bookmark where the ammo can is located.</AutoTooltip>
-						</Text>
-						<Textentry name='tbAmmoTypeID'>
-							<X>350</X>
-							<Y>110</Y>
-							<Width>150</Width>
-							<Height>18</Height>
-							<MaxLength>10</MaxLength>
-							<OnLoad>
-								This:SetText[${Script[EVEBot].VariableScope.Config.Combat.AmmoTypeID}]
-							</OnLoad>
-							<OnChange>
-								if ${This.Text.Length} > 0
-								{
-									Script[EVEBot].VariableScope.Config.Combat:SetAmmoTypeID[${This.Text}]
-								}
-							</OnChange>
-						</Textentry>
-						<Text name='lblRestockFreeSpace'>
-							<X>200</X>
-							<Y>130</Y>
-							<Width>120</Width>
-							<Height>18</Height>
-							<Text>Ammo Free Cargo</Text>
-							<AutoTooltip>How much free space to leave in cargo after restocking ammo</AutoTooltip>
-						</Text>
-						<Textentry name='tbRestockFreeSpace'>
-							<X>350</X>
-							<Y>130</Y>
-							<Width>150</Width>
-							<Height>18</Height>
-							<MaxLength>10</MaxLength>
-							<OnLoad>
-								This:SetText[${Script[EVEBot].VariableScope.Config.Combat.RestockAmmoFreeSpace}]
-							</OnLoad>
-							<OnChange>
-								if ${This.Text.Length} > 0
-								{
-									Script[EVEBot].VariableScope.Config.Combat:SetRestockAmmoFreeSpace[${This.Text}]
-								}
-							</OnChange>
-						</Textentry>
 					</Tab>
 					<Tab name='Fleeing'>
 						<checkbox name='cbRunOnLowAmmo'>
