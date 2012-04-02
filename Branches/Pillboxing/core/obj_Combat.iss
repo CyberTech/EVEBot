@@ -670,19 +670,7 @@ objectdef obj_Combat
 			if (!${Ship.Drones.DronesKillingFrigate} && ${Config.Combat.DontKillFrigs} || (${Targets.ToTarget.Used} > 1 && ${Me.ActiveTarget.ID.Equal[${Targets.ToTarget[1]}]})) || \
 			!${Config.Combat.DontKillFrigs}
 			{
-<<<<<<< .mine
 				Ship.Drones:SendDrones
-=======
-				variable int Counter
-				do
-				{
-					call Ship.Drones.SendDrones
-					Counter:Inc
-					if (Counter > 2)
-						break
-				}
-				while (${Return.Equal["TRY AGAIN"]})
->>>>>>> .r2301
 			}
 			call Ship.Drones.CheckDroneTargets
 			
