@@ -426,12 +426,17 @@ objectdef obj_Drones
 			}
 		}
 	}
+	method SetAllDronesToReturn()
+	{
+		Me:GetActiveDroneIDs[This.ActiveDroneIDList]
+		EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]	
+	}
+
 	method SendDrones()
 	{
 		variable iterator DroneIterator
 		variable index:activedrone ActiveDroneList
 		variable index:int64 engageIndex
-		
 		if !${This.DronesReady}
 		{
 			return
@@ -443,15 +448,15 @@ objectdef obj_Drones
 			ActiveDroneList:GetIterator[DroneIterator]
 			do
 			{
-				if ${DroneIterator.Value.ToEntity.ShieldPct} < 95 && ${Time.Timestamp} > ${DroneTimer.Timestamp}
+				if ${DroneIterator.Value.ToEntity.ShieldPct} < 95
 				{
-					UI:UpdateConsole["Recalling Damaged Drone ${DroneIterator.Value.ID}"]
-					UI:UpdateConsole["Debug: Shield: ${DroneIterator.Value.ToEntity.ShieldPct}, Armor: ${DroneIterator.Value.ToEntity.ArmorPct}, Structure: ${DroneIterator.Value.ToEntity.StructurePct}"]
-					;returnIndex:Insert[${DroneIterator.Value.ID}]
-					call This.ReturnAllToDroneBay
+					;UI:UpdateConsole["Recalling Damaged Drone ${DroneIterator.Value.ID}"]
+					;UI:UpdateConsole["Debug: Shield: ${DroneIterator.Value.ToEntity.ShieldPct}, Armor: ${DroneIterator.Value.ToEntity.ArmorPct}, Structure: ${DroneIterator.Value.ToEntity.StructurePct}"]
+					This:SetAllDronesToReturn					
 					DroneTimer:Set[${Time.Timestamp}]
 					DroneTimer.Second:Inc[30]
 					DroneTimer:Update
+					return
 				}
 				else
 				{
@@ -464,7 +469,7 @@ objectdef obj_Drones
 				}
 			}
 			while ${DroneIterator:Next(exists)}
-			
+
 			if (${engageIndex.Used} > 0)
 			{
 				if ${Me.ActiveTarget.Distance} < ${Me.DroneControlDistance}
