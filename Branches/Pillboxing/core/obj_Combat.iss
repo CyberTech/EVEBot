@@ -924,7 +924,7 @@ objectdef obj_Combat
 								UI:UpdateConsole["Trying to move ammo now!"]
 								if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${Ship.CargoFreeSpace}
 								{
-									QuantityToMove:Set[${Math.Calc[(${Ship.CargoFreeSpace} - ${Missions.MissionCache.Volume[${Agents.AgentID}]}) / ${CargoIterator.Value.Volume}]}]
+									QuantityToMove:Set[${Math.Calc[(${Ship.CargoFreeSpace} -(${Ship.ModuleList_Weapon.Used}*${Ship.ModuleList_Weapon.MaxCharges}) - ${Missions.MissionCache.Volume[${Agents.AgentID}]}) / ${CargoIterator.Value.Volume}]}]
 								}
 								else
 								{
