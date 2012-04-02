@@ -151,8 +151,8 @@ objectdef obj_Missions
 	variable bool bSalvaging = TRUE
 	variable bool bWait
 	variable int MissionTimer
-	variable string LootEntityQuery = GroupID = "12" || Name =- "Blood Raider Personnel Transport" || GroupID = "306" || Name =- "Rolette Residence"
-	variable string LootKeyQuery = GroupID = "12" || Name =- "Officer"
+	variable uint LootEntityQuery = ${LavishScript.CreateQuery[GroupID = "12" || Name =- "Blood Raider Personnel Transport" || GroupID = "306" || Name =- "Rolette Residence"]}
+	variable uint LootKeyQuery = ${LavishScript.CreateQuery[GroupID = "12" || Name =- "Officer"]}
 	variable collection:int Keys
 	variable collection:int MissionsToWait
 	method Initialize()
@@ -1109,7 +1109,7 @@ function RunCourierMission(int agentID)
 		cargo:Collapse
 		if ${cargo.Used} > 0 || ${This.MissionCache.Volume[${Agents.AgentID}]} == 0 
 		{
-			UI:UpdateConsole["Found mish item in cargo or no mish required for mission."]
+			;UI:UpdateConsole["Found mish item in cargo or no mish required for mission."]
 			return TRUE
 		}
 		return FALSE
