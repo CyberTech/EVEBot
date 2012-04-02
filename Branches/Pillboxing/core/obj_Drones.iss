@@ -140,7 +140,23 @@ objectdef obj_Drones
 		variable index:int64 ToLaunch
 		MyShip:GetDrones[ListOfDrones]
 		ListOfDrones:RemoveByQuery[${MediumDroneQuery}]
-		ListOfDrones:Collapse
+		ListOfDrones:Collapse 
+		if ${ListOfDrones.Used} > 0
+		{	
+			ListOfDrones:GetIterator[itty]
+			itty:First
+			do
+			{
+				Launch:Insert[${itty.Value.ID}]
+			}
+			while ${itty:Next(exists)} && ${ToLaunch.Used} < 5
+			EVE:LaunchDrones[ToLaunch]
+		}
+		else
+		{
+			UI:UpdateConsole["No Medium drones in bay"]
+			;We should probably flee here and restock drones, hopefully no one loses a ship before this becomes a problem, but it shouldn't unless our secondary drones are popped in mission
+		}
 	}
 
 	function LaunchSentryDrones()
