@@ -384,7 +384,9 @@ objectdef obj_Targets
 		EVE:QueryEntities[InRange, ${query2}]
 		ToLock:Set[${Math.Calc[${Ship.MaxLockedTargets} - ${Me.TargetCount} - ${Me.TargetingCount}]}]
 		InRange:GetIterator[Target2]
-		if	${Me.ToEntity.Mode} != 1  && ${Entity[${query2}](exists)} && (${Entity[${GATEID}].Distance} > 110000 || (${Entity[${BEACONID}].Distance} > 110000 && !${Entity[${GATEID}](exists)})) 
+		if	(!${Me.ToEntity.Approaching.ID.Equal[${Entity[${query2}]}]}  && \
+			${Entity[${query2}](exists)} && \
+			 (${Entity[${GATEID}].Distance} > 110000 || (${Entity[${BEACONID}].Distance} > 110000 && !${Entity[${GATEID}](exists)})) 
 		{
 			if ${Entity[${GATEID}](exists)}
 			{
@@ -404,25 +406,36 @@ objectdef obj_Targets
 			{
 				if ${ToTarget.Used} > 0 
 				{
-					if  !${Entity[${ToTarget[1]}].IsActiveTarget} && ${Entity[${ToTarget[1]}].IsLockedTarget}
+					if !${Entity[${ToTarget[1]}].IsActiveTarget} && \
+					${Entity[${ToTarget[1]}].IsLockedTarget}
 					{	
-						Entity["ID = ${ToTarget[1]}"]:MakeActiveTarget
-						UI:UpdateConsole["Making ${ToTarget[1]} active target."]
-					}
-					else
-					{
-						if ${Entity[${ToTarget[1]}].Distance} > ${MyShip.MaxTargetRange} && ${Me.ToEntity.Mode} != 1
+						;Adding some drone checks here
+						if (${Entity[${Ship.Drones.DroneTarget}](exists)} && \
+						!${Ship.Drones.DroneTarget.Equal[${ToTarget[1]}]} && \
+						${Config.Combat.DontKillFrigs}) || \
+						!${Config.Combat.DontKillFrigs}
 						{
-							Entity[${ToTarget[1]}]:Approach[${MyShip.MaxTargetRange}]
+							Entity["ID = ${ToTarget[1]}"]:MakeActiveTarget
+							UI:UpdateConsole["Making ${ToTarget[1]} active target."]
 						}
-
-					}						
+					}					
 					if ${Math.Calc[${Me.TargetCount}+${Me.TargetingCount}]} < ${Ship.MaxLockedTargets}
 					{
 						if !${Entity[${ToTarget[1]}].IsLockedTarget} && !${Entity[${ToTarget[1]}].BeingTargeted}
 						{
-							Entity["ID = ${ToTarget[1]}"]:LockTarget
-							UI:UpdateConsole["Locking ${ToTarget[1]} && ${ToTarget.Used} to target."]
+							if ${Entity[${ToTarget[1]}].Distance} <= ${MyShip.MaxTargetRange}
+							{
+								Entity["ID = ${ToTarget[1]}"]:LockTarget
+								UI:UpdateConsole["Locking ${ToTarget[1]} && ${ToTarget.Used} to target."]							
+							}
+							else
+							{
+								if ${Me.ToEntity.Approaching.ID.Equal[${Entity[${ToTarget[1]}]}]}
+								{
+									Entity[${ToTarget[1]}]:Approach[${MyShip.MaxTargetRange}]
+								}
+							}	
+
 						}
 					}
 					else
@@ -591,6 +604,30 @@ objectdef obj_Targets
 		variable iterator itter
 		EVE:QueryEntities[sarp, ${Query2}]
 		; ents > 60 km && not agging me approach add code to not orbit if we approaching make sure approach to 10 km below targeting and to toTargets
+	}
+	method NextTarget()
+	{
+		variable index:entity ListOfTargets
+		variable iterator itty
+		Me:GetTargets[ListOfTargets]
+		if ${ListOfTargets.Used} > 0
+		{
+			ListOfTargets:GetIterator[itty]
+			itty:First
+			do
+			{
+				if ${itty.Value.ID.Equal[${Me.ActiveTarget}]}
+				{
+					itty:Next
+					itty.Value:MakeActiveTarget
+				}
+			}
+			while ${itty:Next(exists)}
+		}
+		else
+		{
+			UI:UpdateConsole[obj_Targets - NextTarget: No targets locked. ]
+		}
 	}
 	member:bool NPC()
 	{

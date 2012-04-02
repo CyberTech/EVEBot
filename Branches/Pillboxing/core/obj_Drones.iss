@@ -176,6 +176,15 @@ objectdef obj_Drones
 		}
 	}
 
+	member:int64 DroneTarget()
+	{
+		variable index:activedrone ListOfDrones
+		if ${ListOfDrones.Used} > 0
+		{
+			return ${ListOfDrones[1].Target.ID}
+		}	
+	}
+
 	function LaunchAll()
 	{
 		variable index:item ListOfDrones

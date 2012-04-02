@@ -415,6 +415,7 @@ objectdef obj_Combat
 			if ${DmgType.Equal[0]}
 			{	
 				UI:UpdateConsole["Found ${Missions.MissionCache.Name[${Agents.AgentID}]} in MishDB, damage type is ${This.DamageString[${MishDB.Element[${mission}]}]}"]
+				DmgType:Set[${MishDB.Element[${mission}]}]
 			}
 		}
 		else
@@ -646,7 +647,8 @@ objectdef obj_Combat
 			}
 		}
 		; Activate the weapons, the modules class checks if there's a target (no it doesn't - ct)
-		if ${Ship.TotalActivatedWeapons} > 0 && ${Ship.ChangedTarget}
+		if ${Ship.TotalActivatedWeapons} > 0 && ${Ship.ChangedTarget} && \
+		(${Targets.ToTarget.Used} > 0 && ${Config.Combat.DontKillFrigs})
 		{
 			Ship:Deactivate_TargetPainters
 			Ship:Deactivate_StasisWebs
