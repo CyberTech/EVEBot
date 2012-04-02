@@ -670,6 +670,9 @@ objectdef obj_Combat
 			if (!${Ship.Drones.DronesKillingFrigate} && ${Config.Combat.DontKillFrigs} || (${Targets.ToTarget.Used} > 1 && ${Me.ActiveTarget.ID.Equal[${Targets.ToTarget[1]}]})) || \
 			!${Config.Combat.DontKillFrigs}
 			{
+<<<<<<< .mine
+				Ship.Drones:SendDrones
+=======
 				variable int Counter
 				do
 				{
@@ -679,7 +682,9 @@ objectdef obj_Combat
 						break
 				}
 				while (${Return.Equal["TRY AGAIN"]})
+>>>>>>> .r2301
 			}
+			call Ship.Drones.CheckDroneTargets
 			
 		}
 		if !${Ship.IsAmmoAvailable}
@@ -912,7 +917,7 @@ objectdef obj_Combat
 					UI:UpdateConsole["Found ${ContainerItems.Used} items to loop through!"]
 					if ${This.AmmoSelection} > 0
 					{
-					UI:UpdateConsole["Ammotype found for ${Missions.MissionCache.Name[${Agents.AgentID}]}"]
+						UI:UpdateConsole["Ammotype found for ${Missions.MissionCache.Name[${Agents.AgentID}]}"]
 					}
 					else
 					{

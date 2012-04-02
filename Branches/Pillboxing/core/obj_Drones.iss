@@ -410,7 +410,23 @@ objectdef obj_Drones
 		}
 
 	}
-	function SendDrones()
+	function CheckDroneTargets()
+	{
+		if ${MyShip.DronebayCapacity} > 50 && ${MyShip.DronebayCapacity} < 125
+		{
+			if ${Me.ActiveTarget.Radius} > 100 && ${This.DronesOut} != 10
+			{
+				call This.ReturnAllToDroneBay
+				call This.LaunchMediumDrones
+			}
+			if ${Me.ActiveTarget.Radius} < 100 && ${This.DronesOut} > 5
+			{
+				call This.ReturnAllToDroneBay
+				call This.LaunchLightDrones
+			}
+		}
+	}
+	method SendDrones()
 	{
 		variable iterator DroneIterator
 		variable index:activedrone ActiveDroneList
@@ -418,93 +434,44 @@ objectdef obj_Drones
 		
 		if !${This.DronesReady}
 		{
-			return "DRONES NOT READY"
+			return
 		}
 
 		if (${This.DronesInSpace} > 0)
 		{
-			if ${Me.ActiveTarget.Name.Equal["Kruul's Pleasure Gardens"]}
+			Me:GetActiveDrones[ActiveDroneList]
+			ActiveDroneList:GetIterator[DroneIterator]
+			do
 			{
-				call This.ReturnAllToDroneBay
-				return "GIViNG UP"
-			}
-			else
-			{
-				Me:GetActiveDrones[ActiveDroneList]
-				ActiveDroneList:GetIterator[DroneIterator]
-				do
+				if ${DroneIterator.Value.ToEntity.ShieldPct} < 95 && ${Time.Timestamp} > ${DroneTimer.Timestamp}
 				{
-					if ${DroneIterator.Value.ToEntity.ShieldPct} < 95 && ${Time.Timestamp} > ${DroneTimer.Timestamp}
-					{
-						UI:UpdateConsole["Recalling Damaged Drone ${DroneIterator.Value.ID}"]
-						UI:UpdateConsole["Debug: Shield: ${DroneIterator.Value.ToEntity.ShieldPct}, Armor: ${DroneIterator.Value.ToEntity.ArmorPct}, Structure: ${DroneIterator.Value.ToEntity.StructurePct}"]
-						;returnIndex:Insert[${DroneIterator.Value.ID}]
-						call This.ReturnAllToDroneBay
-						DroneTimer:Set[${Time.Timestamp}]
-						DroneTimer.Second:Inc[30]
-						DroneTimer:Update
-						return "DRONES DAMAGED"
-					}
-					else
-					{
-						if ${MyShip.DronebayCapacity.Equal[125]}
-						{
-							if ${Me.ActiveTarget.Radius} < 100 && ${This.DronesOut} > 10
-							{
-								call This.ReturnAllToDroneBay
-								call This.LaunchLightDrones
-								wait 10
-								return "TRY AGAIN"
-							}
-							elseif ${Me.ActiveTarget.Radius} > 100 && ${This.DronesOut} <= 10
-							{
-								call This.ReturnAllToDroneBay
-								call This.LaunchSentryDrones
-								wait 10
-								return "TRY AGAIN"
-							}
-						}
-						elseif ${MyShip.DronebayCapacity} > 50 && ${MyShip.DronebayCapacity} < 125
-						{
-							if ${Me.ActiveTarget.Radius} < 100 && ${This.DronesOut} > 10
-							{
-								call This.ReturnAllToDroneBay
-								call This.LaunchLightDrones
-								wait 10
-								return "TRY AGAIN"
-							}
-							elseif ${Me.ActiveTarget.Radius} > 100 && ${This.DronesOut} <= 10
-							{
-								call This.ReturnAllToDroneBay
-								call This.LaunchMediumDrones
-								wait 10
-								return "TRY AGAIN"
-							}
-						}
-						;This is a check to see if drones are returning (if they are we don't want them to engage fuck all), also a check to see if this drones target is our activetarget
-						if (${DroneIterator.Value.State} != 4)
-						{
-							;UI:UpdateConsole["Debug: Engage Target ${DroneIterator.Value.ID}"]
-							engageIndex:Insert[${DroneIterator.Value.ID}]
-						}
-					}
-				}
-				while ${DroneIterator:Next(exists)}
-				
-				if (${engageIndex.Used} > 0)
-				{
-					if ${Me.ActiveTarget.Distance} < ${Me.DroneControlDistance}
-					{
-						EVE:DronesEngageMyTarget[engageIndex]
-						return "TRY AGAIN"
-					}
-					else
-						return "TARGET TOO FAR AWAY"
+					UI:UpdateConsole["Recalling Damaged Drone ${DroneIterator.Value.ID}"]
+					UI:UpdateConsole["Debug: Shield: ${DroneIterator.Value.ToEntity.ShieldPct}, Armor: ${DroneIterator.Value.ToEntity.ArmorPct}, Structure: ${DroneIterator.Value.ToEntity.StructurePct}"]
+					;returnIndex:Insert[${DroneIterator.Value.ID}]
+					call This.ReturnAllToDroneBay
+					DroneTimer:Set[${Time.Timestamp}]
+					DroneTimer.Second:Inc[30]
+					DroneTimer:Update
 				}
 				else
-					return "NO DRONES TO SEND"
+				{
+					;This is a check to see if drones are returning (if they are we don't want them to engage fuck all), also a check to see if this drones target is our activetarget
+					if (${DroneIterator.Value.State} != 4)
+					{
+						;UI:UpdateConsole["Debug: Engage Target ${DroneIterator.Value.ID}"]
+						engageIndex:Insert[${DroneIterator.Value.ID}]
+					}
+				}
+			}
+			while ${DroneIterator:Next(exists)}
+			
+			if (${engageIndex.Used} > 0)
+			{
+				if ${Me.ActiveTarget.Distance} < ${Me.DroneControlDistance}
+				{
+					EVE:DronesEngageMyTarget[engageIndex]
+				}
 			}
 		}
-		return "OK"
 	}
 }
