@@ -146,6 +146,23 @@ objectdef obj_Drones
 		}	
 	}
 
+	method LaunchPrimaryDrones()
+	{
+		if ${Me.DronebayCapacity} > 50 && ${Me.DronebayCapacity} < 125
+		{
+			This:LaunchDrones[MEDIUM]
+		}
+		elseif ${Me.DronebayCapacity.Equal[125]}
+		{
+			This:LaunchDrones[HEAVY]
+		}
+	}
+
+	method LaunchSecondaryDrones()
+	{
+		This:LaunchDrones[LIGHT]
+	}
+
 	function LaunchAll()
 	{
 		variable index:item ListOfDrones
@@ -154,45 +171,22 @@ objectdef obj_Drones
 		if ${This.NumberOfDronesInBay[LIGHT]} > 0 && \
 		${Me.ActiveTarget.Name.NotEqual["Kruul's Pleasure Garden"]} && \
 		${Time.Timestamp} > ${DroneTimer.Timestamp} && \
-		${MyShip.DronebayCapacity} <= 25
+		${MyShip.DronebayCapacity} <= 50
 		{
 			UI:UpdateConsole["Launching drones..."]
 			MyShip:LaunchAllDrones
 			This.WaitingForDrones:Set[5]
+			return
 		}
-		if ${This.NumberOfDronesInBay[MEDIUM]} > 0 && \
-		${Me.ActiveTarget.Name.NotEqual["Kruul's Pleasure Garden"]} && \
-		${Time.Timestamp} > ${DroneTimer.Timestamp} && \
-		${MyShip.DronebayCapacity.Equal[50]}
+		if ${Me.ActiveTarget.Radius} > 100
 		{
-			UI:UpdateConsole["Launching drones..."]
-			MyShip:LaunchAllDrones
-			This.WaitingForDrones:Set[5]
+			This:LaunchPrimaryDrones
 		}
-		if ${MyShip.DronebayCapacity} > 50 && ${MyShip.DronebayCapacity} < 125
+		else
 		{
-			if ${Me.ActiveTarget.Radius} > 100
-			{
-				This:LaunchDrones[MEDIUM]
-			}
-			else
-			{
-				This:LaunchDrones[LIGHT]
-			}
-			This.WaitingForDrones:Set[5]
+			This:LaunchSecondaryDrones
 		}
-		if ${MyShip.DronebayCapacity.Equal[125]}
-		{
-			if ${Me.ActiveTarget.Radius} > 100
-			{
-				This:LaunchDrones[HEAVY]
-			}
-			else
-			{
-				This:LaunchDrones[LIGHT]
-			}
-			This.WaitingForDrones:Set[5]
-		}
+		This.WaitingForDrones:Set[5]
 	}
 
 	member:int DronesInBay()
