@@ -672,7 +672,6 @@ objectdef obj_Combat
 			{
 				Ship.Drones:SendDrones
 			}
-			call Ship.Drones.CheckDroneTargets
 			
 		}
 		if !${Ship.IsAmmoAvailable}
@@ -818,13 +817,6 @@ objectdef obj_Combat
 			{
 				UI:UpdateConsole["Waiting on aggro before launching drones"]
 			}
-		}
-
-		; Activate shield (or armor) hardeners
-		; If you don't have hardeners this code does nothing.
-		if ${Me.TargetedByCount} > 0
-		{
-			Ship:Activate_Hardeners[]
 		}
 
 		This:CheckTank
@@ -1130,7 +1122,8 @@ objectdef obj_Combat
 	member:bool HaveMissionAmmo()
 	{
 		variable string mission = ${Missions.MissionCache.Name[${Agents.AgentID}]}
-		variable int FactionID = ${Missions.MissionCache.FactionID[${Agents.AgentID}]}	
+		variable int FactionID = ${Missions.MissionCache.FactionID[${Agents.AgentID}]}
+		echo ${FactionID} ${mission}	
 		;UI:UpdateConsole["HaveMissionAmmo: Mission name is ${mission}"]
 		;variable int Group = ${Ship.ModuleList_Weapon[1].ToItem.GroupID}
 		if ${Config.Combat.LastWeaponGroup} > 0
@@ -1154,6 +1147,7 @@ objectdef obj_Combat
 		EVE:Execute[OpenHangarFloor]
 		MyShip:OpenCargo
 		MyShip:GetCargo[ContainerItems]
+		echo ${ContainerItems.Used}
 		if ${Config.Combat.LastWeaponGroup.Equal[85]}
 		{
 			UI:UpdateConsole["We're using hybrid weapons, I'm pretty sure these all do the same damage type."]
@@ -1178,6 +1172,7 @@ objectdef obj_Combat
 		;If we have no items to iterate through after all our queries, return false (this should cause restockAmmo to be called)
 		if ${ContainerItems.Used.Equal[0]}
 		{
+			UI:UpdateConsole["WE HAVE NO ITEMS IN OUR CARGO."]
 			return FALSE
 		}
 		if ${FactionID} > 0

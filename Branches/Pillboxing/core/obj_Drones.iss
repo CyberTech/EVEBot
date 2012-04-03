@@ -209,11 +209,23 @@ objectdef obj_Drones
 		variable int Count = 1
 		;This includes a check for sentry/heavy drones, going to have to put some SERIOUS beef into this method to select *which* drones to launch
 		if ${This.DronesInBay} > 0 && \
-		(${Me.ActiveTarget.Name.NotEqual["Kruul's Pleasure Garden"]} || ((${Me.ActiveTarget.Distance} < ${Me.DroneControlDistance}) && ${IsDroneBoat})) && \
-		${Time.Timestamp} > ${DroneTimer.Timestamp}
+		(${Me.ActiveTarget.Name.NotEqual["Kruul's Pleasure Garden"]} && \
+		${Time.Timestamp} > ${DroneTimer.Timestamp} && \
+		${MyShip.DronebayCapacity} <= 50
 		{
 			UI:UpdateConsole["Launching drones..."]
 			MyShip:LaunchAllDrones
+			This.WaitingForDrones:Set[5]
+		}
+		if ${MyShip.DronebayCapacity} > 50 && ${MyShip.DronebayCapacity} < 125
+		{
+			if ${Me.ActiveTarget.Radius} > 100
+			{
+				This:LaunchMediumDrones
+			}
+			if ${Me.ActiveTarget.Radius} < 100 
+				call This.LaunchLightDrones
+			}
 			This.WaitingForDrones:Set[5]
 		}
 	}
@@ -427,22 +439,6 @@ objectdef obj_Drones
 		}
 
 	}
-	function CheckDroneTargets()
-	{
-		if ${MyShip.DronebayCapacity} > 50 && ${MyShip.DronebayCapacity} < 125
-		{
-			if ${Me.ActiveTarget.Radius} > 100 && ${This.DronesOut} != 10
-			{
-				call This.ReturnAllToDroneBay
-				This:LaunchMediumDrones
-			}
-			if ${Me.ActiveTarget.Radius} < 100 && ${This.DronesOut} > 5
-			{
-				call This.ReturnAllToDroneBay
-				call This.LaunchLightDrones
-			}
-		}
-	}
 	method SetAllDronesToReturn()
 	{
 		Me:GetActiveDroneIDs[This.ActiveDroneIDList]
@@ -459,6 +455,18 @@ objectdef obj_Drones
 			return
 		}
 
+		if ${MyShip.DronebayCapacity} > 50 && ${MyShip.DronebayCapacity} < 125
+		{
+			if ${Me.ActiveTarget.Radius} < 100 && ${This.DronesOut} != 10
+			{
+				This:SetAllDronesToReturn			
+			}
+			elseif ${Me.ActiveTarget.Radius} > 100 && ${This.DronesOut} > 5
+			{
+				This:SetAllDronesToReturn
+			}
+			return
+		}
 		if (${This.DronesInSpace} > 0)
 		{
 			Me:GetActiveDrones[ActiveDroneList]

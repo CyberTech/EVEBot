@@ -139,6 +139,12 @@ objectdef obj_Ship
 				{
 					This:Activate_Tracking_Computer
 				}
+				; Activate shield (or armor) hardeners
+				; If you don't have hardeners this code does nothing.
+				if ${Me.TargetedByCount} > 0
+				{
+					Ship:Activate_Hardeners
+				}
 				if ${Me.ToEntity.Mode} == 1
 				{
 					This:Activate_AfterBurner
