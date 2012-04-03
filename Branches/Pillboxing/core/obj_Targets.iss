@@ -537,6 +537,11 @@ objectdef obj_Targets
 		Targetser:Insert["Smuggler Stargate"]
 		Targetser:Insert["Outpost Headquarters"]
 		Targetser:Insert["Docked bestower"]
+		Targetser:Insert["Slave Pen"]
+		Targetser:Insert["Lesser Drone Hive"]
+		Targetser:Insert["Repair Station"]
+		Targetser:Insert["Drone Silo"]
+		Targetser:Insert["Powerful EM Forcefield"]
 		Targetser:GetIterator[Targetse]
 		if ${Targetse:First(exists)} && ${InRange.Used.Equal[0]} 
 		do
