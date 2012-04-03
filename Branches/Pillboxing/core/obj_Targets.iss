@@ -285,19 +285,22 @@ objectdef obj_Targets
 		return ${m_SpecialTargetPresent}
 	}
 
-	member:bool IsPriorityTarget(string name)
+	member:bool IsPriorityTarget(int ID)
 	{
 		; Loop through the priority targets
-		if ${PriorityTarget:First(exists)}
-		do
+		variable iterator itty
+		ToTarget:GetIterator[itty]
+		if ${itty:First(exists)}
 		{
-			if ${name.Find[${PriorityTarget.Value}]} > 0
+			do
 			{
-				return TRUE
+				if ${itty.Value.Equal[${ID}]}
+				{
+					return TRUE
+				}
 			}
+			while ${itty:Next(exists)}
 		}
-		while ${PriorityTarget:Next(exists)}
-
 		return FALSE
 	}
 
@@ -410,7 +413,13 @@ objectdef obj_Targets
 					${Entity[${ToTarget[1]}].IsLockedTarget}
 					{	
 						;Adding some drone checks here
-						if (${Entity[${Ship.Drones.DroneTarget}](exists)} && !${Ship.Drones.DroneTarget.Equal[${ToTarget[1]}]} && ${Config.Combat.DontKillFrigs}) || \
+						;The checks need to be as follows: PSEUDOCODE POWER
+						/* 
+						if Drones target is not equal to our prioritised target and the button is checked in cmbat settings, change the target to teh priority target
+						or if the dontkillfrigate options is on
+						So in effect this code shouldn't fire if dont kill frigates is on and the frigates are already attacking our target
+						*/
+						if (!${Ship.Drones.DroneTarget.Equal[${ToTarget[1]}]} && ${Config.Combat.DontKillFrigs}) || \
 						!${Config.Combat.DontKillFrigs}
 						{
 							Entity["ID = ${ToTarget[1]}"]:MakeActiveTarget
@@ -548,6 +557,8 @@ objectdef obj_Targets
 		Targetser:Insert["Caldari Manufacturing Plant"]
 		Targetser:Insert["Caldari Supply Depot"]
 		Targetser:Insert["Patient Zero"]
+		Targetser:Insert["Amarr Shipyard Control Tower"]
+		Targetser:Insert["Blood Raider Cathedral"]
 		Targetser:GetIterator[Targetse]
 		if ${Targetse:First(exists)} && ${InRange.Used.Equal[0]} 
 		do

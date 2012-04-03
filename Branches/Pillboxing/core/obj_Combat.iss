@@ -94,6 +94,7 @@ objectdef obj_Combat
 	variable index:int ThermalDamage
 	variable index:int ExplosiveDamage
 	variable index:int LightDrone
+	variable uint StationQuery = ${LavishScript.CreateQuery[CategoryID != "3"]}
 	variable time DroneTimer
 	variable collection:int MishDB
 	variable collection:int FactionDB
@@ -649,9 +650,9 @@ objectdef obj_Combat
 				}
 			}
 		}
+		Ship.Drones:SendDrones
 		; Activate the weapons, the modules class checks if there's a target (no it doesn't - ct)
-		if ${Ship.TotalActivatedWeapons} > 0 && ${Ship.ChangedTarget} && \
-		(${Targets.ToTarget.Used} > 0 && ${Config.Combat.DontKillFrigs})
+		if ${Ship.TotalActivatedWeapons} > 0 && ${Ship.ChangedTarget}
 		{
 			Ship:Deactivate_TargetPainters
 			Ship:Deactivate_StasisWebs
@@ -666,14 +667,9 @@ objectdef obj_Combat
 				Ship:Activate_StasisWebs
 				Ship:Activate_Weapons
 			}
-			elseif ${Me.ActiveTarget.Radius} < 100 && ${Config.Combat.DontKillFrigs} && ${Ship.Drones.DronesKillingFrigate}
+			elseif ${Me.ActiveTarget.Radius} < 100 && ${Config.Combat.DontKillFrigs}
 			{
 				Targets:NextTarget
-			}
-			if (!${Ship.Drones.DronesKillingFrigate} && ${Config.Combat.DontKillFrigs} || (${Targets.ToTarget.Used} > 1 && ${Me.ActiveTarget.ID.Equal[${Targets.ToTarget[1]}]})) || \
-			!${Config.Combat.DontKillFrigs}
-			{
-				Ship.Drones:SendDrones
 			}
 			
 		}
@@ -713,9 +709,24 @@ objectdef obj_Combat
 
 	function FleeToStation()
 	{
-		if !${Station.Docked}
+		variable index:entity StationsInSystem
+		variable int64 TempID = ${Entity[Type =- "Planet"]}
+		EVE:QueryEntities[StationsInSystem,${StationQuery}]
+		if !${Station.Docked} && ${StationsInSystem.Used} > 0
 		{
 			call Station.Dock
+		}
+		elseif ${StationsInSystem.Used.Equal[0]} && ${Universe[${Me.SolarSystemID}].Security} > .5
+		{
+			if ${TempID} > 0
+			{
+				Entity[${TempID}]:WarpTo
+				UI:UpdateConsole["Warping to ${Entity[${TempID}].Name}!!"]
+			}
+			else
+			{
+				UI:UpdateConsole["Combat.FleeToStation: No stations found and no planets found, we should quit eve prolly. I hope your ship isn't asploding."]
+			}
 		}
 	}
 
@@ -812,14 +823,14 @@ objectdef obj_Combat
 		!${Ship.InWarp} && ${Me.TargetCount} > 0 || ${Me.ToEntity.IsWarpScrambled}) && \
 		${Ship.Drones.DronesInSpace} == 0 
 		{
-			if ${Me.TargetedByCount} >= ${Me.TargetCount}
-			{
-				call Ship.Drones.LaunchAll
-			}
-			else
-			{
-				UI:UpdateConsole["Waiting on aggro before launching drones"]
-			}
+					if ${Me.TargetedByCount} >= ${Me.TargetCount}
+					{
+						call Ship.Drones.LaunchAll
+					}
+					else
+					{
+						UI:UpdateConsole["Waiting on aggro before launching drones"]
+					}
 		}
 
 		This:CheckTank

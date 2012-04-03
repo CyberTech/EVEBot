@@ -539,7 +539,10 @@ function RunCourierMission(int agentID)
 	}
 	else
 	{
-		breakTime.Second:Inc[15]		
+		if !${This.BookmarkExists}
+		{
+			breakTime.Second:Inc[15]		
+		}
 	}
 	breakTime:Update
 	;while TRUE

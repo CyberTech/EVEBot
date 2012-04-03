@@ -506,11 +506,18 @@ objectdef obj_Drones
 				}
 				else
 				{
-					;This is a check to see if drones are returning (if they are we don't want them to engage fuck all), also a check to see if this drones target is our activetarget
+					;This is a check to see if drones are returning (if they are we don't want them to engage fuck all)
 					if (${DroneIterator.Value.State} != 4)
 					{
-						;UI:UpdateConsole["Debug: Engage Target ${DroneIterator.Value.ID}"]
-						engageIndex:Insert[${DroneIterator.Value.ID}]
+						if (${Targets.ToTarget.Used} > 0 && !${Targets.IsPriorityTarget[${DroneIterator.Value.Target.ID}]} && \
+						 ${Combat.Config.DontKillFrigs} && ${Targets.IsPriorityTarget[${Me.ActiveTarget.ID}]}) || \
+						!${Combat.Config.DontKillFrigs} || \
+						(${Targets.ToTarget.Used.Equal[0]} && ${Combat.Config.DontKillFrigs} && ${Me.ActiveTarget.Radius} > 100)
+						{
+							;My fuck what a clusterfuck of an if statement!
+							;UI:UpdateConsole["Debug: Engage Target ${DroneIterator.Value.ID}"]
+							engageIndex:Insert[${DroneIterator.Value.ID}]
+						}
 					}
 				}
 			}
