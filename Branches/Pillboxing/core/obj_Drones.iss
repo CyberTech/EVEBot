@@ -115,7 +115,10 @@ objectdef obj_Drones
 			itty:First
 			do
 			{
-			
+				if ${itty.Value.Quantity} > 1
+				{
+					UI:UpdateConsole["This is a stack of drones, this may or may not fuck with things, but I suggest you manually launch them at least once. If it does fuck with things please report this to Pillboxing"]
+				}
 				ToLaunch:Insert[${itty.Value.ID}]
 			}
 			while ${itty:Next(exists)} && ${ToLaunch.Used} < 5
@@ -147,6 +150,10 @@ objectdef obj_Drones
 			itty:First
 			do
 			{
+				if ${itty.Value.Quantity} > 1
+				{
+					UI:UpdateConsole["This is a stack of drones, this may or may not fuck with things, but I suggest you manually launch them at least once. If it does fuck with things please report this to Pillboxing"]
+				}
 				UI:UpdateConsole["Launching ${itty.Value.Name}."]
 				Launch:Insert[${itty.Value.ID}]
 			}
@@ -179,6 +186,10 @@ objectdef obj_Drones
 			itty:First
 			do
 			{	
+				if ${itty.Value.Quantity} > 1
+				{
+					UI:UpdateConsole["This is a stack of drones, this may or may not fuck with things, but I suggest you manually launch them at least once. If it does fuck with things please report this to Pillboxing"]
+				}
 				ToLaunch:Insert[${itty.Value.ID}]
 			}
 			while ${itty:Next(exists)} && ${ToLaunch.Used} < 5
