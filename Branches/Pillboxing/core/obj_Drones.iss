@@ -96,7 +96,7 @@ objectdef obj_Drones
 		}
 	}
 
-	function LaunchLightDrones()
+	method LaunchLightDrones()
 	{
 		if ${This.WaitingForDrones} > 0
 		{
@@ -160,7 +160,7 @@ objectdef obj_Drones
 		}
 	}
 
-	function LaunchSentryDrones()
+	method LaunchSentryDrones()
 	{
 		if ${This.WaitingForDrones} > 0
 		{
@@ -207,7 +207,7 @@ objectdef obj_Drones
 		variable index:item ListOfDrones
 		;This includes a check for sentry/heavy drones, going to have to put some SERIOUS beef into this method to select *which* drones to launch
 		if ${This.DronesInBay} > 0 && \
-		(${Me.ActiveTarget.Name.NotEqual["Kruul's Pleasure Garden"]} && \
+		${Me.ActiveTarget.Name.NotEqual["Kruul's Pleasure Garden"]} && \
 		${Time.Timestamp} > ${DroneTimer.Timestamp} && \
 		${MyShip.DronebayCapacity} <= 50
 		{
@@ -221,11 +221,22 @@ objectdef obj_Drones
 			{
 				This:LaunchMediumDrones
 			}
-			if ${Me.ActiveTarget.Radius} < 100 
+			else
 			{
-				call This.LaunchLightDrones
+				This:LaunchLightDrones
 			}
 			This.WaitingForDrones:Set[5]
+		}
+		if ${MyShip.DronebayCapacity.Equal[125]}
+		{
+			if ${Me.ActiveTarget.Radius} > 100
+			{
+				This:LaunchSentryDrones
+			}
+			else
+			{
+				This:LaunchLightDrones
+			}
 		}
 	}
 
