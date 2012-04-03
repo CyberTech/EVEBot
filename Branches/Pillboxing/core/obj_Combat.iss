@@ -643,7 +643,10 @@ objectdef obj_Combat
 			}
 			else
 			{
-				Me.ActiveTarget:Orbit[${Config.Combat.OrbitDistance}]
+				if ${Config.Combat.Orbit}
+				{
+					Me.ActiveTarget:Orbit[${Config.Combat.OrbitDistance}]
+				}
 			}
 		}
 		; Activate the weapons, the modules class checks if there's a target (no it doesn't - ct)
@@ -809,7 +812,7 @@ objectdef obj_Combat
 		!${Ship.InWarp} && ${Me.TargetCount} > 0 || ${Me.ToEntity.IsWarpScrambled}) && \
 		${Ship.Drones.DronesInSpace} == 0 
 		{
-			if ${Me.TargetCount} > 0 && ${Me.TargetedByCount} >= ${Me.TargetCount}
+			if ${Me.TargetedByCount} >= ${Me.TargetCount}
 			{
 				call Ship.Drones.LaunchAll
 			}
