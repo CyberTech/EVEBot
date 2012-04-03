@@ -96,18 +96,24 @@ objectdef obj_Drones
 		}
 	}
 
-	method LaunchLightDrones()
+	method LaunchDrones(string SIZE)
 	{
-		if ${This.WaitingForDrones} > 0
-		{
-			return
-		}
-		UI:UpdateConsole["Launching Light Drones."]
 		variable index:item ListOfDrones
 		variable iterator itty
 		variable index:int64 ToLaunch
 		MyShip:GetDrones[ListOfDrones]
-		ListOfDrones:RemoveByQuery[${LightDroneQuery}]
+		Switch "${SIZE}"
+		{
+			case LARGE
+				ListOfDrones:RemoveByQuery[${LargeDroneQuery}]
+				break
+			case MEDIUM
+				ListOfDrones:RemoveByQuery[${MediumDroneQuery}]
+				break
+			case LIGHT
+				ListOfDrones:RemoveByQuery[${LightDroneQuery}]
+				break
+		}
 		ListOfDrones:Collapse
 		if ${ListOfDrones.Used} > 0
 		{	
@@ -126,81 +132,8 @@ objectdef obj_Drones
 		}
 		else
 		{
-			UI:UpdateConsole["No light drones in bay"]
+			UI:UpdateConsole["No ${SIZE.Lower} drones in bay"]
 			;We should probably flee here and restock drones, hopefully no one loses a ship before this becomes a problem, but it shouldn't unless our secondary drones are popped in mission
-		}
-	}
-
-	method LaunchMediumDrones()
-	{
-		if ${This.WaitingForDrones} > 0
-		{
-			return
-		}
-		UI:UpdateConsole["Launching Medium Drones."]
-		variable index:item ListOfDrones
-		variable iterator itty
-		variable index:int64 ToLaunch
-		MyShip:GetDrones[ListOfDrones]
-		ListOfDrones:RemoveByQuery[${MediumDroneQuery}]
-		ListOfDrones:Collapse 
-		if ${ListOfDrones.Used} > 0
-		{	
-			ListOfDrones:GetIterator[itty]
-			itty:First
-			do
-			{
-				if ${itty.Value.Quantity} > 1
-				{
-					UI:UpdateConsole["This is a stack of drones, this may or may not fuck with things, but I suggest you manually launch them at least once. If it does fuck with things please report this to Pillboxing"]
-				}
-				UI:UpdateConsole["Launching ${itty.Value.Name}."]
-				Launch:Insert[${itty.Value.ID}]
-			}
-			while ${itty:Next(exists)} && ${ToLaunch.Used} < 5
-			EVE:LaunchDrones[ToLaunch]
-		}
-		else
-		{
-			UI:UpdateConsole["No Medium drones in bay"]
-			;We should probably flee here and restock drones, hopefully no one loses a ship before this becomes a problem, but it shouldn't unless our secondary drones are popped in mission
-		}
-	}
-
-	method LaunchSentryDrones()
-	{
-		if ${This.WaitingForDrones} > 0
-		{
-			return
-		}
-		UI:UpdateConsole["Launching Sentry drones in bay."]
-		variable index:item ListOfDrones
-		variable iterator itty
-		variable index:int64 ToLaunch
-		MyShip:GetDrones[ListOfDrones]
-		ListOfDrones:RemoveByQuery[${LargeDroneQuery}]
-		ListOfDrones:Collapse
-		if ${ListOfDrones.Used} > 0
-		{
-			ListOfDrones:GetIterator[itty]
-			itty:First
-			do
-			{	
-				if ${itty.Value.Quantity} > 1
-				{
-					UI:UpdateConsole["This is a stack of drones, this may or may not fuck with things, but I suggest you manually launch them at least once. If it does fuck with things please report this to Pillboxing"]
-				}
-				ToLaunch:Insert[${itty.Value.ID}]
-			}
-			while ${itty:Next(exists)} && ${ToLaunch.Used} < 5
-		}
-		if ${ToLaunch.Used} > 0
-		{
-			EVE:LaunchDrones[ToLaunch]
-		}
-		else
-		{
-			UI:UpdateConsole["No sentry drones found in bay, we should probably flee here."]
 		}
 	}
 
@@ -240,11 +173,11 @@ objectdef obj_Drones
 		{
 			if ${Me.ActiveTarget.Radius} > 100
 			{
-				This:LaunchMediumDrones
+				This:LaunchDrones[MEDIUM]
 			}
 			else
 			{
-				This:LaunchLightDrones
+				This:LaunchDrones[LIGHT]
 			}
 			This.WaitingForDrones:Set[5]
 		}
@@ -252,11 +185,11 @@ objectdef obj_Drones
 		{
 			if ${Me.ActiveTarget.Radius} > 100
 			{
-				This:LaunchSentryDrones
+				This:LaunchDrones[HEAVY]
 			}
 			else
 			{
-				This:LaunchLightDrones
+				This:LaunchDrones[LIGHT]
 			}
 			This.WaitingForDrones:Set[5]
 		}
