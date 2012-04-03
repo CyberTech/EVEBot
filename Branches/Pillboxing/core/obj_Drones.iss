@@ -205,8 +205,6 @@ objectdef obj_Drones
 	function LaunchAll()
 	{
 		variable index:item ListOfDrones
-		variable iterator itty
-		variable int Count = 1
 		;This includes a check for sentry/heavy drones, going to have to put some SERIOUS beef into this method to select *which* drones to launch
 		if ${This.DronesInBay} > 0 && \
 		(${Me.ActiveTarget.Name.NotEqual["Kruul's Pleasure Garden"]} && \
@@ -224,6 +222,7 @@ objectdef obj_Drones
 				This:LaunchMediumDrones
 			}
 			if ${Me.ActiveTarget.Radius} < 100 
+			{
 				call This.LaunchLightDrones
 			}
 			This.WaitingForDrones:Set[5]
