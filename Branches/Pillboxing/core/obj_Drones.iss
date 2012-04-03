@@ -206,10 +206,20 @@ objectdef obj_Drones
 	{
 		variable index:item ListOfDrones
 		;This includes a check for sentry/heavy drones, going to have to put some SERIOUS beef into this method to select *which* drones to launch
-		if ${This.DronesInBay} > 0 && \
+		;BEEF IS ALMOST DONE, need to add support for just medium drones.
+		if ${This.NumberOfDronesInBay[LIGHT]} > 0 && \
 		${Me.ActiveTarget.Name.NotEqual["Kruul's Pleasure Garden"]} && \
 		${Time.Timestamp} > ${DroneTimer.Timestamp} && \
-		${MyShip.DronebayCapacity} <= 50
+		${MyShip.DronebayCapacity} <= 25
+		{
+			UI:UpdateConsole["Launching drones..."]
+			MyShip:LaunchAllDrones
+			This.WaitingForDrones:Set[5]
+		}
+		if ${This.NumberOfDronesInBay[MEDIUM]} > 0 && \
+		${Me.ActiveTarget.Name.NotEqual["Kruul's Pleasure Garden"]} && \
+		${Time.Timestamp} > ${DroneTimer.Timestamp} && \
+		${MyShip.DronebayCapacity.Equal[50]}
 		{
 			UI:UpdateConsole["Launching drones..."]
 			MyShip:LaunchAllDrones
@@ -237,6 +247,7 @@ objectdef obj_Drones
 			{
 				This:LaunchLightDrones
 			}
+			This.WaitingForDrones:Set[5]
 		}
 	}
 
