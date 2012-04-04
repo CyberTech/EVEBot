@@ -318,6 +318,7 @@ objectdef obj_Scavenger
 		else
 		{
 			UI:UpdateConsole["No bookmarks left. ${BookmarkListToSalvage.Used}"]
+			BookmarkListToSalvage:Collapse	
 			return
 		}
 		while ${Me.ToEntity.Mode} != 3

@@ -768,6 +768,38 @@ objectdef obj_Combat
 	1) Checks for a CHA on grid. If one exists, it drops off all inventory
 	2) Checks for a GSC, and fills cargo with ammo
 */
+	member:bool HaveMissionAmmo()
+		{	
+			variable index:item ContainerItems
+			variable iterator CargoIterator	
+			MyShip:OpenCargo
+			MyShip:GetCargo[ContainerItems]
+			if ${Config.Combat.LastWeaponGroup.Equal[85]}
+			{
+				UI:UpdateConsole["We're using hybrid weapons, I'm pretty sure these all do the same damage type."]
+				return TRUE
+			}
+			;If we have no items to iterate through after all our queries, return false (this should cause restockAmmo to be called)
+			ContainerItems:RemoveByQuery[${LavishScript.CreateQuery[TypeID != ${This.TypeIDForMish}]}]
+			ContainerItems:Collapse
+			ContainerItems:GetIterator[CargoIterator]
+			if ${CargoIterator:First(exists)}
+			{
+				do
+				{
+					UI:UpdateConsole["Found ${CargoIterator.Value.Name} as acceptable ammo in cargo."]
+					return TRUE
+				}
+				while ${CargoIterator:Next(exists)}
+			}
+			else
+			{
+				UI:UpdateConsole["No items found matching query in cargo."]
+				return FALSE
+			}
+					
+		}
+
 	function RestockAmmo()
 	{
 		if !${Ship.IsAmmoAvailable} || !${This.HaveMissionAmmo}
@@ -779,8 +811,6 @@ objectdef obj_Combat
 			variable iterator CargoIterator	
 			variable int AmmoTypeID
 			AmmoTypeID:Set[${This.TypeIDForMish}]
-			echo ${This.TypeIDForMish}
-			echo ${AmmoTypeID}
 			if ${Ammospots:IsThereAmmospotBookmark}
 			{
 				UI:UpdateConsole["RestockAmmo: Fleeing: No ammo bookmark"]

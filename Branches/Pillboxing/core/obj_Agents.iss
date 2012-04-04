@@ -1125,16 +1125,7 @@ objectdef obj_Agents
 				Config:Save[]
 			}
 		}
-		if !${Missions.Combat.HaveMissionAmmo}
-		{
-			echo ${Missions.Combat.HaveMissionAmmo}
-			UI:UpdateConsole["We have the wrong ammo for mission, heading to nearest ammo bookmark."]
-			call Missions.Combat.RestockAmmo
-		}
-		else
-		{
-			UI:UpdateConsole["We have correct ammo for our mission."]
-		}
+
 
 		if ${amIterator.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions} == TRUE
 		{
@@ -1153,6 +1144,16 @@ objectdef obj_Agents
 		}
 		elseif ${amIterator.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions} == TRUE
 		{
+			if !${Missions.Combat.HaveMissionAmmo}
+			{
+				echo ${Missions.Combat.HaveMissionAmmo}
+				UI:UpdateConsole["We have the wrong ammo for mission, heading to nearest ammo bookmark."]
+				call Missions.Combat.RestockAmmo
+			}
+			else
+			{
+				UI:UpdateConsole["We have correct ammo for our mission."]
+			}
 			UI:UpdateConsole["Saying ${dsIndex[1].Text}"]
 			dsIndex[1]:Say[${This.AgentID}]
 		}
