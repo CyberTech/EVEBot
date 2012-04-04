@@ -151,7 +151,7 @@ objectdef obj_Missions
 	variable bool bSalvaging = TRUE
 	variable bool bWait
 	variable int MissionTimer
-	variable uint LootEntityQuery = ${LavishScript.CreateQuery[GroupID = "12" || Name =- "Blood Raider Personnel Transport" || GroupID = "306" || Name =- "Rolette Residence"]}
+	variable uint LootEntityQuery = ${LavishScript.CreateQuery[GroupID = "12" || Name =- "Transport" || GroupID = "306" || Name =- "Rolette Residence"]}
 	variable uint LootKeyQuery = ${LavishScript.CreateQuery[GroupID = "12" || Name =- "Officer"]}
 	variable collection:int Keys
 	variable collection:int MissionsToWait

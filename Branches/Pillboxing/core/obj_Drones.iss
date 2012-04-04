@@ -172,25 +172,31 @@ objectdef obj_Drones
 		variable index:item ListOfDrones
 		;This includes a check for sentry/heavy drones, going to have to put some SERIOUS beef into this method to select *which* drones to launch
 		;BEEF IS ALMOST DONE, need to add support for just medium drones.
-		if ${This.NumberOfDronesInBay[LIGHT]} > 0 && \
-		${Me.ActiveTarget.Name.NotEqual["Kruul's Pleasure Garden"]} && \
-		${Time.Timestamp} > ${DroneTimer.Timestamp} && \
-		${MyShip.DronebayCapacity} <= 50
+		if ${Time.Timestamp} > ${DroneTimer.Timestamp}
 		{
-			UI:UpdateConsole["Launching drones..."]
-			This:LaunchPrimaryDrones
+			if ${This.NumberOfDronesInBay[LIGHT]} > 0 && \
+			${Me.ActiveTarget.Name.NotEqual["Kruul's Pleasure Garden"]} && \
+			${MyShip.DronebayCapacity} <= 50
+			{
+				UI:UpdateConsole["Launching drones..."]
+				This:LaunchPrimaryDrones
+				This.WaitingForDrones:Set[5]
+				return
+			}
+			if ${Me.ActiveTarget.Radius} > 100 
+			{
+				This:LaunchPrimaryDrones
+			}
+			else
+			{
+				This:LaunchSecondaryDrones
+			}
 			This.WaitingForDrones:Set[5]
-			return
-		}
-		if ${Me.ActiveTarget.Radius} > 100
-		{
-			This:LaunchPrimaryDrones
 		}
 		else
 		{
-			This:LaunchSecondaryDrones
+			UI:UpdateConsole["Sorry sir, can't launch drones for another...I don't know how to calculate how long. Be patient :)."]
 		}
-		This.WaitingForDrones:Set[5]
 	}
 
 	member:int DronesInBay()
@@ -454,7 +460,7 @@ objectdef obj_Drones
 				if ${DroneIterator.Value.ToEntity.ShieldPct} < 95
 				{
 					UI:UpdateConsole["Recalling Drones, a drone has sustained damage"]
-					;UI:UpdateConsole["Debug: Shield: ${DroneIterator.Value.ToEntity.ShieldPct}, Armor: ${DroneIterator.Value.ToEntity.ArmorPct}, Structure: ${DroneIterator.Value.ToEntity.StructurePct}"]
+					UI:UpdateConsole["Debug: Shield: ${DroneIterator.Value.ToEntity.ShieldPct}, Armor: ${DroneIterator.Value.ToEntity.ArmorPct}, Structure: ${DroneIterator.Value.ToEntity.StructurePct}"]
 					This:SetAllDronesToReturn					
 					DroneTimer:Set[${Time.Timestamp}]
 					DroneTimer.Second:Inc[30]
