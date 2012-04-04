@@ -785,8 +785,11 @@ objectdef obj_Combat
 			{
 				do
 				{
-					UI:UpdateConsole["Found ${CargoIterator.Value.Name} as acceptable ammo in cargo."]
-					return TRUE
+					if ${CargoIterator.Value.Quantity} > (${Ship.ModuleList_Weapon[1].MaxCharges} * ${Ship.ModuleList_Weapon.Used})
+					{
+						UI:UpdateConsole["Found ${CargoIterator.Value.Name} as acceptable ammo in cargo."]
+						return TRUE
+					}
 				}
 				while ${CargoIterator:Next(exists)}
 			}
