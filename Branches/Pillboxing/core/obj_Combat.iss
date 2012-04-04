@@ -324,7 +324,6 @@ objectdef obj_Combat
 		{
 			do
 			{ 
-				echo "ITERATING ${Ship.AmmoGroup.Token[${intCounter},-]} ${This.DamageTypeForMish}"
 				TempNumber:Set[${This.GetTypeIDByDamageType[${Ship.AmmoGroup.Token[${intCounter},-]},${This.DamageTypeForMish}]}]
 				if ${TempNumber} > 0
 				{
@@ -333,7 +332,6 @@ objectdef obj_Combat
 				}
 				else
 				{
-					echo "NOT FOUND"
 					intCounter:Inc
 				}
 			}

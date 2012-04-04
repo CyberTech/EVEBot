@@ -420,15 +420,30 @@ objectdef obj_Drones
 
 		if ${MyShip.DronebayCapacity} > 50 && ${MyShip.DronebayCapacity} < 125
 		{
-			if ${Me.ActiveTarget.Radius} < 100 && ${This.DronesOut} != 10
+			if ${Me.ActiveTarget.Radius} < 100 && ${This.DronesOut} > 5
 			{
+				UI:UpdateConsole["We're frighting a frigate and have primary drones out, swapping to secondary."]
 				This:SetAllDronesToReturn			
 			}
-			elseif ${Me.ActiveTarget.Radius} > 100 && ${This.DronesOut} > 5
+			elseif ${Me.ActiveTarget.Radius} > 100 && ${This.DronesOut} != 10
 			{
+				UI:UpdateConsole["We're frighting something larger than a frigate and have secondary drones out, swapping to primary."]
 				This:SetAllDronesToReturn
 			}
 			return
+		}
+		if ${MyShip.DronebayCapacity.Equal[125]}
+		{
+			if ${Me.ActiveTarget.Radius} < 100 && ${This.DronesOut} > 5
+			{
+				UI:UpdateConsole["We're frighting a frigate and have primary drones out, swapping to secondary."]
+				This:SetAllDronesToReturn			
+			}
+			elseif ${Me.ActiveTarget.Radius} > 100 && ${This.DronesOut} < 25
+			{
+				UI:UpdateConsole["We're frighting something larger than a frigate and have secondary drones out, swapping to primary."]
+				This:SetAllDronesToReturn
+			}
 		}
 		if (${This.DronesInSpace} > 0)
 		{
@@ -438,7 +453,7 @@ objectdef obj_Drones
 			{
 				if ${DroneIterator.Value.ToEntity.ShieldPct} < 95
 				{
-					;UI:UpdateConsole["Recalling Damaged Drone ${DroneIterator.Value.ID}"]
+					UI:UpdateConsole["Recalling Drones, a drone has sustained damage"]
 					;UI:UpdateConsole["Debug: Shield: ${DroneIterator.Value.ToEntity.ShieldPct}, Armor: ${DroneIterator.Value.ToEntity.ArmorPct}, Structure: ${DroneIterator.Value.ToEntity.StructurePct}"]
 					This:SetAllDronesToReturn					
 					DroneTimer:Set[${Time.Timestamp}]
