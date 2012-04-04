@@ -502,6 +502,10 @@ function RunCourierMission(int agentID)
 
 	function RunCombatMission(int agentID)
 	{	
+		if !${Combat.HaveMissionAmmo}
+		{
+			call Combat.RestockAmmo
+		}
 		call This.GetMissionKey
 		UI:UpdateConsole["Starting combat mission now."]
 		call ChatIRC.Say "${Me.Name}: Starting new mission. Name = ${This.MissionCache.Name[${Agents.AgentID}]}"
@@ -531,7 +535,7 @@ function RunCourierMission(int agentID)
 	variable int64 GateToUse
 	variable int Offset = ${This.CorpBMCount}
 	RoomCounter:Set[0]
-		 ; wait up to 15 seconds for spawns to appear
+	; wait up to 15 seconds for spawns to appear
 	breakTime:Set[${Time.Timestamp}]
 	if ${MissionsToWait.Element[${This.MissionCache.Name[${Agents.AgentID}]}]} > 0
 	{

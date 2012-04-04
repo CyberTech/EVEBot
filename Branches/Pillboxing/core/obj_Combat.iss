@@ -261,140 +261,9 @@ objectdef obj_Combat
 	member:int DamageTypeForMish()
 	{
 		;This will only return what the name implies
-		variable string mission = ${Missions.MissionCache.Name[${Agents.AgentID}]}
-		if ${MishDB.Element[${mission}]} > 0
-		{
-			return ${MishDB.Element[${mission}]}
-		}
-		else
-		{
-			UI:UpdateConsole["Mission ${mission} was not found in mishdb"]
-		}
-	}
-	member:string DamageString(int Number)
-	{
-		Switch "${Number}"
-		{
-			case 1
-				return "EM"
-			case 2
-				return "Thermal"
-			case 3
-				return "Kinetic"
-			case 4
-				return "Explosive"
-		}
-	}
-
-	member:int GetTypeIDByDamageType(string LOCATION, int GROUPID, int DAMAGETYPE)
-	{
-		;This member will return the typeid matching that damage in the location specified in the parameter, with the groupID specified
-		;I should probably just make the switch get the list of items from the location specified and keep every else general, but right now I only support loading from stations
-		;So whateverrrr
-		variable index:item ListOfItems
-		variable iterator itty 
-		Switch "${LOCATION}"
-		{
-			case HANGAR
-				Me.Station:GetHangarItems[ListOfItems]
-				if ${GROUPID} > 0
-				{
-					ListOfItems:RemoveByQuery[${LavishScript.CreateQuery[GroupID != "${GROUPID}"]}]
-					ListOfItems:Collapse
-					if ${ListOfItems.Used} > 0
-					{
-						Switch "${DAMAGETYPE}"
-						{
-							case 1
-								EMDamage:GetIterator[itty]
-								break
-							case 2
-								ThermalDamage:GetIterator[itty]
-								break
-							case 3
-								KineticDamage:GetIterator[itty]
-								break
-							case 4
-								ExplosiveDamage:GetIterator[itty]
-								break
-							default
-								UI:UpdateConsole["What in the fuck did you pass to GetTypeIDByDamageType, ABORT ABORT ABORT"]
-						}
-						;now itty has an iterator of the damage type we're looking for, and listofitems contains a list of items matching our groupid, let's make some magic
-
-					}
-					else
-					{
-						UI:UpdateConsole["No items found matching that group ID"]
-					}
-				}
-				else
-				{
-					UI:UpdateConsole["Bad GroupID passed to Combat.GetTypeIDByDamageType, abort abort!"]
-				}
-
-		}
-	}
-
-	member:int AmmoSelection()
-	{
-		;UI:UpdateConsole["${Ship.WEAPONGROUPID}"]
-		;variable int Group = ${Ship.ModuleList_Weapon[1].ToItem.GroupID}
-		;variable int Group = 510
+		variable int DmgType
 		variable string mission = ${Missions.MissionCache.Name[${Agents.AgentID}]}
 		variable int FactionID = ${Missions.MissionCache.FactionID[${Agents.AgentID}]}	
-		variable int DmgType
-		variable iterator ittyDamage
-		variable int ReloadTypeID
-		 ; Damage types on x, 1 = em, 2 = therm, 3 = kin, 4 = exp, order is descending down the page, ie em first, exp last for each groupID
-		variable index:item ContainerItems
-		variable int intCounter = 1
-		variable iterator CargoIterator	
-		;EVE:Execute[OpenHangarFloor]
-		if !${Me.InSpace}
-		{
-			Me.Station:GetHangarItems[ContainerItems]
-		}
-		else
-		{
-			UI:UpdateConsole["You have no business calling 'Combat.AmmoSelection' from in space!"]
-		}
-		do
-		{ 
-			ContainerItems:RemoveByQuery[${LavishScript.CreateQuery[GroupID != "${Ship.AmmoGroup.Token[${intCounter},-]}"]}]		
-			ContainerItems:Collapse
-			if ${ContainerItems.Used} > 0
-			{
-				UI:UpdateConsole["AmmoSelection: ${ContainerItems.Used} stacks of ammo found in hangar for weapons."]
-				break
-			}
-			else
-			{
-				Me.Station:GetHangarItems[ContainerItems]
-				intCounter:Inc
-			}
-		}
-		while ${intCounter} <= ${Math.Calc[${Ship.AmmoGroup.Count[-]}+1]}
-		;If we have no items to iterate through after all our queries, return false (this should cause restockAmmo to be called)
-		if ${ContainerItems.Used.Equal[0]}
-		{
-			UI:UpdateConsole["No ammo matching this weapon was found."]
-			return -1
-		}
-		;This needs to be more advanced that it is now, but for now we won't select ammo type based on fuck all except groupID
-		if ${AmmoGroup.Equal[85]}
-		{
-			if ${ContainerItems.Used} > 0
-			{
-				return ${ContainerItems[1].TypeID}
-			}	
-			else
-			{
-				UI:UpdateConsole["No items found to reload with, returning -1"]
-				return -1
-			}
-		}
-
 		if ${FactionID} > 0
 		{
 			if ${FactionDB.Element[${FactionID}]} > 0
@@ -411,113 +280,172 @@ objectdef obj_Combat
 		{
 			UI:UpdateConsole["No factionID found for mission, defaulting to Mish DB."]
 		}
-		if ${MishDB.Element[${mission}]} > 0
+		if ${DmgType.Equal[0]}
 		{
-			if ${DmgType.Equal[0]}
-			{	
+			if ${MishDB.Element[${mission}]} > 0
+			{
+
 				UI:UpdateConsole["Found ${Missions.MissionCache.Name[${Agents.AgentID}]} in MishDB, damage type is ${This.DamageString[${MishDB.Element[${mission}]}]}"]
 				DmgType:Set[${MishDB.Element[${mission}]}]
 			}
-		}
-		else
-		{
-			if ${DmgType.Equal[0]}
+			else
 			{
 				UI:UpdateConsole["Mission was not found in mishDB and we have no factionID, defaulting to Thermal damage."]
 				DmgType:Set[2]
 			}
 		}
-		if ${DmgType} > 0
-		{
-			ContainerItems:GetIterator[CargoIterator]
-			Switch "${DmgType}"
-			{
-				case 1
-					if ${CargoIterator:First(exists)}
-					{
-						do
-						{
-							EMDamage:GetIterator[ittyDamage]
-							if ${ittyDamage:First(exists)}
-							{
-								do
-								{
-									if ${ittyDamage.Value.Equal[${CargoIterator.Value.TypeID}]}
-									{
-										return ${CargoIterator.Value.TypeID}
-									}  
-								}
-								while ${ittyDamage:Next(exists)}
-							}
-						}
-						while ${CargoIterator:Next(exists)}
-					}
-				case 2
-					if ${CargoIterator:First(exists)}
-					{
-						do
-						{
-							ThermalDamage:GetIterator[ittyDamage]
-							if ${ittyDamage:First(exists)}
-							{
-								do
-								{
-									if ${ittyDamage.Value.Equal[${CargoIterator.Value.TypeID}]}
-									{
-										return ${CargoIterator.Value.TypeID}
-									}  
-								}
-								while ${ittyDamage:Next(exists)}
-							}
-						}
-						while ${CargoIterator:Next(exists)}
-					}
-				case 3
-					if ${CargoIterator:First(exists)}
-					{
-						do
-						{
-							KineticDamage:GetIterator[ittyDamage]
-							if ${ittyDamage:First(exists)}
-							{
-								do
-								{
-									if ${ittyDamage.Value.Equal[${CargoIterator.Value.TypeID}]}
-									{
-										return ${CargoIterator.Value.TypeID}
-									}  
-								}
-								while ${ittyDamage:Next(exists)}
-							}
-						}
-						while ${CargoIterator:Next(exists)}
-					}
-				case 4
-					if ${CargoIterator:First(exists)}
-					{
-						do
-						{
-							ExplosiveDamage:GetIterator[ittyDamage]
-							if ${ittyDamage:First(exists)}
-							{
-								do
-								{
-									if ${ittyDamage.Value.Equal[${CargoIterator.Value.TypeID}]}
-									{
-										return ${CargoIterator.Value.TypeID}
-									}  
-								}
-								while ${ittyDamage:Next(exists)}
-							}
-						}
-						while ${CargoIterator:Next(exists)}
-					}
-			}
-			return -1
-		}
-		
+		return ${DmgType}
 	}
 
+	member:int TypeIDForMish()
+	{
+		variable int TempNumber
+		variable int intCounter = 1
+		if ${Me.InSpace}
+		{
+			do
+			{ 
+				echo "ITERATING"
+				TempNumber:Set[${This.GetTypeIDByDamageType[${Ship.AmmoGroup.Token[${intCounter},-]},${This.DamageTypeForMish}]}]
+				if ${TempNumber} > 0
+				{
+					UI:UpdateConsole["TypeIDForMish:Found TypeID ${TempNumber}."]
+					return ${TempNumber}
+				}
+				else
+				{
+					intCounter:Inc
+				}
+			}
+			while ${intCounter} <= ${Math.Calc[${Ship.AmmoGroup.Count[-]}+1]}
+			
+		}
+		else
+		{
+			do
+			{ 
+				echo "ITERATING ${Ship.AmmoGroup.Token[${intCounter},-]} ${This.DamageTypeForMish}"
+				TempNumber:Set[${This.GetTypeIDByDamageType[${Ship.AmmoGroup.Token[${intCounter},-]},${This.DamageTypeForMish}]}]
+				if ${TempNumber} > 0
+				{
+					UI:UpdateConsole["TypeIDForMish:Found TypeID ${TempNumber}."]
+					return ${TempNumber}
+				}
+				else
+				{
+					echo "NOT FOUND"
+					intCounter:Inc
+				}
+			}
+			while ${intCounter} <= ${Math.Calc[${Ship.AmmoGroup.Count[-]}+1]}
+		}
+	}
+	
+
+	member:int GetTypeIDByDamageType( int GROUPID, int DAMAGETYPE)
+	{
+		;This member will return the typeid matching that damage in the location specified in the parameter, with the groupID specified
+		;I should probably just make the switch get the list of items from the location specified and keep every else general, but right now I only support loading from stations
+		;So whateverrrr
+		variable index:item ListOfItems
+		variable iterator ItemIterator
+		variable iterator itty 
+		variable string LOCATION
+		if ${Me.InSpace}
+		{
+			LOCATION:Set[SPACE]
+		}
+		else
+		{
+			LOCATION:Set[HANGAR]
+		}
+		Switch "${LOCATION}"
+		{
+			case HANGAR
+				Me.Station:GetHangarItems[ListOfItems]
+				break
+			case SPACE
+				MyShip:GetCargo[ListOfItems]
+				break	
+			default
+				UI:UpdateConsole["Bad Location passed to GetTypeIDByDamageType. Pausing script."]
+				Script:Pause
+		}
+		UI:UpdateConsole["Getting TypeID for ammo required from ${LOCATION.Lower}."]
+		if ${GROUPID} > 0
+		{
+			ListOfItems:RemoveByQuery[${LavishScript.CreateQuery[GroupID != "${GROUPID}"]}]
+			ListOfItems:Collapse
+			if ${ListOfItems.Used} > 0
+			{
+				Switch "${DAMAGETYPE}"
+				{
+					case 1
+						EMDamage:GetIterator[itty]
+						break
+					case 2
+						ThermalDamage:GetIterator[itty]
+						break
+					case 3
+						KineticDamage:GetIterator[itty]
+						break
+					case 4
+						ExplosiveDamage:GetIterator[itty]
+						break
+					default
+						echo "What in the fuck did you pass to GetTypeIDByDamageType, ABORT ABORT ABORT"
+				}
+				;now itty has an iterator of the damage type we're looking for, and listofitems contains a list of items matching our groupid, let's make some magic
+				;COMMENCE WITH THE MAGIC
+				if ${itty:First(exists)}
+				{
+					do
+					{
+						ListOfItems:GetIterator[ItemIterator]
+						if ${ItemIterator:First(exists)}
+						{
+							do
+							{
+								if ${ItemIterator.Value.TypeID.Equal[${itty.Value}]}
+								{
+									;MAGIC OVER
+									return ${ItemIterator.Value.TypeID}
+								}
+							}
+							while ${ItemIterator:Next(exists)}
+						}
+					}
+					while ${itty:Next(exists)}
+				}
+				
+			}
+			else
+			{
+				echo "No items found matching that group ID"
+			}
+		}
+		else
+		{
+			echo "Bad GroupID passed to Combat.GetTypeIDByDamageType, abort abort!"
+		}
+
+	}
+
+	member:string DamageString(int Number)
+	{
+		Switch "${Number}"
+		{
+			case 1
+				return "EM"
+			case 2
+				return "Thermal"
+			case 3
+				return "Kinetic"
+			case 4
+				return "Explosive"
+		}
+	}
+	
 	method Pulse()
 	{
 		if ${EVEBot.Paused}
@@ -701,7 +629,7 @@ objectdef obj_Combat
 		{
 			call This.FleeToStation
 		}
-	else
+		else
 		{
 			call This.FleeToSafespot
 		}
@@ -849,6 +777,10 @@ objectdef obj_Combat
 			variable int QuantityToMove
 			variable index:item ContainerItems
 			variable iterator CargoIterator	
+			variable int AmmoTypeID
+			AmmoTypeID:Set[${This.TypeIDForMish}]
+			echo ${This.TypeIDForMish}
+			echo ${AmmoTypeID}
 			if ${Ammospots:IsThereAmmospotBookmark}
 			{
 				UI:UpdateConsole["RestockAmmo: Fleeing: No ammo bookmark"]
@@ -907,51 +839,50 @@ objectdef obj_Combat
 							Entity["GroupID = 340"]:GetCargo[ContainerItems]
 						}
 					}
-					ContainerItems:GetIterator[CargoIterator]
-					UI:UpdateConsole["Found ${ContainerItems.Used} items to loop through!"]
-					if ${This.AmmoSelection} > 0
+					if ${AmmoTypeID} > 0
 					{
-						UI:UpdateConsole["Ammotype found for ${Missions.MissionCache.Name[${Agents.AgentID}]}"]
+						UI:UpdateConsole["Ammotype found for ${Missions.MissionCache.Name[${Agents.AgentID}]}. Reloading with ${AmmoTypeID}."]
 					}
 					else
 					{
-						 UI:UpdateConsole["Mish "${Missions.MissionCache.Name[${Agents.AgentID}]}" not found in mishDB"]
+						 UI:UpdateConsole["Mish "${Missions.MissionCache.Name[${Agents.AgentID}]}" could not find something to reload with. ABORT ABORT ABORT."]
 						 Script:Pause
 						 ;return
 					}
 					;call This.RefillDrones
+					ContainerItems:GetIterator[CargoIterator]
+					ContainerItems:RemoveByQuery[${LavishScript.CreateQuery[TypeID != "${AmmoTypeID}"]}]
+					ContainerItems:Collapse
+					UI:UpdateConsole["Found ${ContainerItems.Used} items matching the query for ammo to reload with."]
 					if ${CargoIterator:First(exists)}
 					{	
 
 						do
 						{
-							if ${CargoIterator.Value.TypeID} == ${This.AmmoSelection}
+							UI:UpdateConsole["Trying to move ammo now!"]
+							if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${Ship.CargoFreeSpace}
 							{
-								UI:UpdateConsole["Trying to move ammo now!"]
-								if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${Ship.CargoFreeSpace}
-								{
-									QuantityToMove:Set[${Math.Calc[(${Ship.CargoFreeSpace} -${Math.Rand[20]:Inc[1]} -(${Ship.ModuleList_Weapon.Used}*${Ship.ModuleList_Weapon[1].MaxCharges}) - ${Missions.MissionCache.Volume[${Agents.AgentID}]}) / ${CargoIterator.Value.Volume}]}]
-								}
-								else
-								{
-									QuantityToMove:Set[${CargoIterator.Value.Quantity}]
-								}
+								QuantityToMove:Set[${Math.Calc[(${Ship.CargoFreeSpace} -${Math.Rand[20]:Inc[1]} -(${Ship.ModuleList_Weapon.Used}*${Ship.ModuleList_Weapon[1].MaxCharges}) - ${Missions.MissionCache.Volume[${Agents.AgentID}]}) / ${CargoIterator.Value.Volume}]}]
+							}
+							else
+							{
+								QuantityToMove:Set[${CargoIterator.Value.Quantity}]
+							}
 
-								UI:UpdateConsole["TransferListToShip: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
-								UI:UpdateConsole["TransferListToShip: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
-								if ${QuantityToMove} > 0
-								{
-									CargoIterator.Value:MoveTo[MyShip,CargoHold,${QuantityToMove}]
-									wait 30
-									EVEWindow[ByName,${MyShip.ID}]:StackAll
-									wait 10
-								}
+							UI:UpdateConsole["TransferListToShip: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
+							UI:UpdateConsole["TransferListToShip: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
+							if ${QuantityToMove} > 0
+							{
+								CargoIterator.Value:MoveTo[MyShip,CargoHold,${QuantityToMove}]
+								wait 30
+								EVEWindow[ByName,${MyShip.ID}]:StackAll
+								wait 10
+							}
 
-								if ${Ship.CargoFreeSpace} <= ${Math.Calc[${Missions.MissionCache.Volume[${Agents.AgentID}]} + 5]}
-								{
-									UI:UpdateConsole["DEBUG: RestockAmmo Done: Ship Cargo: ${Ship.CargoFreeSpace} < ${Missions.MissionCache.Volume[${Agents.AgentID}]}", LOG_DEBUG]
-									break
-								}
+							if ${Ship.CargoFreeSpace} <= ${Math.Calc[${Missions.MissionCache.Volume[${Agents.AgentID}]} + 5]}
+							{
+								UI:UpdateConsole["DEBUG: RestockAmmo Done: Ship Cargo: ${Ship.CargoFreeSpace} < ${Missions.MissionCache.Volume[${Agents.AgentID}]}", LOG_DEBUG]
+								break
 							}
 						}
 						while ${CargoIterator:Next(exists)}
@@ -959,7 +890,7 @@ objectdef obj_Combat
 					else
 					{
 						UI:UpdateConsole["DEBUG: obj_Cargo:TransferListToShip: Nothing found to move"]
-						UI:UpdateConsole["Debug: Fleeing: No ammo left in can"]
+						;UI:UpdateConsole["Debug: Fleeing: No ammo left in can"]
 						call This.Flee
 						return
 					}	
@@ -1133,192 +1064,7 @@ objectdef obj_Combat
 			}
 	}
 
-	member:bool HaveMissionAmmo()
-	{
-		variable string mission = ${Missions.MissionCache.Name[${Agents.AgentID}]}
-		variable int FactionID = ${Missions.MissionCache.FactionID[${Agents.AgentID}]}
-		echo ${FactionID} ${mission}	
-		;UI:UpdateConsole["HaveMissionAmmo: Mission name is ${mission}"]
-		;variable int Group = ${Ship.ModuleList_Weapon[1].ToItem.GroupID}
-		if ${Config.Combat.LastWeaponGroup} > 0
-		{
-			;SOMETHING
-			;YA
-		}
-		else
-		{
-			UI:UpdateConsole["Can't find our Weapon type, compensate for this somehow. Odds are you started bot in a station."]
-			return TRUE
-		}
-		;variable int Group = 510
-		variable iterator ittyDamage
-		variable int intCounter = 1
-		variable int ReloadTypeID
-		variable int DmgType
-		 ; Damage types on x, 1 = em, 2 = therm, 3 = kin, 4 = exp, order is descending down the page, ie em first, exp last for each groupID
-		variable index:item ContainerItems
-		variable iterator CargoIterator	
-		EVE:Execute[OpenHangarFloor]
-		MyShip:OpenCargo
-		MyShip:GetCargo[ContainerItems]
-		echo ${ContainerItems.Used}
-		if ${Config.Combat.LastWeaponGroup.Equal[85]}
-		{
-			UI:UpdateConsole["We're using hybrid weapons, I'm pretty sure these all do the same damage type."]
-			return TRUE
-		}
-		do
-		{ 
-			ContainerItems:RemoveByQuery[${LavishScript.CreateQuery[GroupID != "${Ship.AmmoGroup.Token[${intCounter},-]}"]}]		
-			ContainerItems:Collapse
-			if ${ContainerItems.Used} > 0
-			{
-				UI:UpdateConsole["HaveMissionAmmo: ${ContainerItems.Used} stacks of ammo found in cargo for weapons."]
-				break
-			}
-			else
-			{
-				MyShip:GetCargo[ContainerItems]
-				intCounter:Inc
-			}
-		}
-		while ${intCounter} <= ${Math.Calc[${Ship.AmmoGroup.Count[-]}+1]}
-		;If we have no items to iterate through after all our queries, return false (this should cause restockAmmo to be called)
-		if ${ContainerItems.Used.Equal[0]}
-		{
-			UI:UpdateConsole["WE HAVE NO ITEMS IN OUR CARGO."]
-			return FALSE
-		}
-		if ${FactionID} > 0
-		{
-			if ${FactionDB.Element[${FactionID}]} > 0
-			{
-				UI:UpdateConsole["Found faction ID for mission in database, reloading with ${This.DamageString[${FactionDB.Element[${FactionID}]}]} ammo."]
-				DmgType:Set[${FactionDB.Element[${FactionID}]}]
-			}
-			else
-			{
-				UI:UpdateConsole["FactionID was found, but we don't have a damage type stored for it."]
-			}
-		}
-		else
-		{
-			UI:UpdateConsole["No factionID found for mission, defaulting to Mish DB."]
-		}
-		if ${MishDB.Element[${mission}]} > 0
-		{
-			if ${DmgType.Equal[0]}
-			{	
-				UI:UpdateConsole["Found ${Missions.MissionCache.Name[${Agents.AgentID}]} in MishDB, damage type is ${This.DamageString[${MishDB.Element[${mission}]}]}"]
-				DmgType:Set[${MishDB.Element[${mission}]}]
-			}
-		}
-		else
-		{
-			if ${DmgType.Equal[0]}
-			{
-				UI:UpdateConsole["Mission was not found in mishDB and we have no factionID, defaulting to Thermal damage."]
-				DmgType:Set[2]
-			}
-		}
-		if ${DmgType} > 0
-		{
-			ContainerItems:GetIterator[CargoIterator]
-			Switch "${DmgType}"
-			{
-				case 1
-					if ${CargoIterator:First(exists)}
-					{
-						do
-						{
-							UI:UpdateConsole["Ammo found is ${CargoIterator.Value.Name}."]
-							EMDamage:GetIterator[ittyDamage]
-							if ${ittyDamage:First(exists)}
-							{
-								do
-								{
-									if ${ittyDamage.Value.Equal[${CargoIterator.Value.TypeID}]} && ${CargoIterator.Value.Quantity} > ${Math.Calc[${Ship.ModuleList_Weapon.Used}*${Ship.ModuleList_Weapon[1].MaxCharges}]}
-									{
-										return TRUE
-									}									  
-								}
-								while ${ittyDamage:Next(exists)}
-							}
-						}
-						while ${CargoIterator:Next(exists)}
-					}
-					break
-				case 2
-					if ${CargoIterator:First(exists)}
-					{
-						do
-						{
-							UI:UpdateConsole["Ammo found is ${CargoIterator.Value.Name}."]
-							ThermalDamage:GetIterator[ittyDamage]
-							if ${ittyDamage:First(exists)}
-							{
-								do
-								{
-									if ${ittyDamage.Value.Equal[${CargoIterator.Value.TypeID}]} && ${CargoIterator.Value.Quantity} > ${Math.Calc[${Ship.ModuleList_Weapon.Used}*${Ship.ModuleList_Weapon[1].MaxCharges}]}
-									{
-										return TRUE
-									}  
-								}
-								while ${ittyDamage:Next(exists)}
-							}
-						}
-						while ${CargoIterator:Next(exists)}
-					}
-					break
-				case 3
-					if ${CargoIterator:First(exists)}
-					{
-						do
-						{
-							UI:UpdateConsole["Ammo found is ${CargoIterator.Value.Name}."]
-							KineticDamage:GetIterator[ittyDamage]
-							if ${ittyDamage:First(exists)}
-							{
-								do
-								{
-									if ${ittyDamage.Value.Equal[${CargoIterator.Value.TypeID}]} && ${CargoIterator.Value.Quantity} > ${Math.Calc[${Ship.ModuleList_Weapon.Used}*${Ship.ModuleList_Weapon[1].MaxCharges}]}
-									{
-										return TRUE
-									}  
-								}
-								while ${ittyDamage:Next(exists)}
-							}
-						}
-						while ${CargoIterator:Next(exists)}
-					}
-					break
-				case 4
-					if ${CargoIterator:First(exists)}
-					{
-						do
-						{
-							UI:UpdateConsole["Ammo found is ${CargoIterator.Value.Name}."]
-							ExplosiveDamage:GetIterator[ittyDamage]
-							if ${ittyDamage:First(exists)}
-							{
-								do
-								{
-									if ${ittyDamage.Value.Equal[${CargoIterator.Value.TypeID}]} && ${CargoIterator.Value.Quantity} > ${Math.Calc[${Ship.ModuleList_Weapon.Used}*${Ship.ModuleList_Weapon[1].MaxCharges}]}
-									{
-										return TRUE
-									}  
-								}
-								while ${ittyDamage:Next(exists)}
-							}
-						}
-						while ${CargoIterator:Next(exists)}
-					}
-					break
-				}
-			}
-			return FALSE
-		
-	}
+	
 }
 
 #endif /* __OBJ_COMBAT__ */

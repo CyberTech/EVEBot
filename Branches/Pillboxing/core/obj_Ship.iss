@@ -293,6 +293,10 @@ objectdef obj_Ship
 		return ${bAmmoAvailable}
 	}
 
+	function RandomWait(int TIME)
+	{
+		wait ${Math.Rand[${TIME}]:Inc}
+	}
 	member:bool HasCovOpsCloak()
 	{
 		variable bool rVal = FALSE
