@@ -148,13 +148,17 @@ objectdef obj_Drones
 
 	method LaunchPrimaryDrones()
 	{
-		if ${Me.DronebayCapacity} > 50 && ${Me.DronebayCapacity} < 125
+		if ${MyShip.DronebayCapacity} > 25 && ${MyShip.DronebayCapacity} < 125
 		{
 			This:LaunchDrones[MEDIUM]
 		}
-		elseif ${Me.DronebayCapacity.Equal[125]}
+		elseif ${MyShip.DronebayCapacity.Equal[125]}
 		{
 			This:LaunchDrones[HEAVY]
+		}
+		elseif ${MyShip.DronebayCapacity} > 0 && ${MyShip.DronebayCapacity} <=25
+		{
+			This:LaunchDrones[LIGHT]
 		}
 	}
 
@@ -174,7 +178,7 @@ objectdef obj_Drones
 		${MyShip.DronebayCapacity} <= 50
 		{
 			UI:UpdateConsole["Launching drones..."]
-			MyShip:LaunchAllDrones
+			This:LaunchPrimaryDrones
 			This.WaitingForDrones:Set[5]
 			return
 		}
