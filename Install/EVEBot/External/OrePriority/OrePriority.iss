@@ -5,7 +5,7 @@ function main()
 		echo Error: OrePriority requires EVEBot to be running.
 		return
 	}
-	ui -load ${Script.CurrentDirectory}/OrePriorityUI.xml
+	ui -load "${Script.CurrentDirectory}/OrePriorityUI.xml"
 	while ${UIElement[OrePriority].Visible} && ${Script[evebot](exists)}
 		wait 1
 }
