@@ -210,6 +210,7 @@ objectdef obj_Social
 		variable int64 CorpID
 		variable int64 AllianceID
 		variable int64 PilotID
+		variable int MyAllianceID = 0
 
 		if ${Config.Combat.LowestStanding} < -10
 			return TRUE
@@ -217,6 +218,11 @@ objectdef obj_Social
 		if ${This.PilotIndex.Used} < 2
 		{
 			return TRUE
+		}
+
+		if ${Me.AllianceID} > 0
+		{
+			MyAllianceID:Set[${Me.AllianceID}]
 		}
 
 		This.PilotIndex:GetIterator[PilotIterator]
@@ -229,8 +235,8 @@ objectdef obj_Social
 
 			if ${PilotID} != -1 && \
 				${PilotID} != ${Me.CharID} && \
-				!${Me.Fleet.IsMember[${PilotID}]} && \
-				${Me.AllianceID} != ${AllianceID} && \
+				(!${Me.Fleet(exists) || !${Me.Fleet.IsMember[${PilotID}]}) && \
+				${MyAllianceID} != ${AllianceID} && \
 				( \
 					${PilotIterator.Value.Standing.MeToPilot} < ${Config.Combat.LowestStanding} || \
 					${PilotIterator.Value.Standing.MeToCorp} < ${Config.Combat.LowestStanding} || \
