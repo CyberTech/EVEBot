@@ -235,7 +235,7 @@ objectdef obj_Social
 
 			if ${PilotID} != -1 && \
 				${PilotID} != ${Me.CharID} && \
-				(!${Me.Fleet(exists) || !${Me.Fleet.IsMember[${PilotID}]}) && \
+				(!${Me.Fleet(exists)} || !${Me.Fleet.IsMember[${PilotID}]}) && \
 				${MyAllianceID} != ${AllianceID} && \
 				( \
 					${PilotIterator.Value.Standing.MeToPilot} < ${Config.Combat.LowestStanding} || \
