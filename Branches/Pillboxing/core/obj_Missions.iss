@@ -610,27 +610,19 @@ function RunCourierMission(int agentID)
 				}	
 			}			
 			UI:UpdateConsole["No Entities found, moving to next room. ${Entity[${GateToUse}].Name} found."]
-			Entity[${GateToUse}]:Approach[1500]
-			while ${Entity[${GateToUse}].Distance} > 2000
-			{
-				wait 45
-			}
+			call Ship.Approach ${GateToUse} 2500
 			call Ship.WarpPrepare
 			/* activate gate and go to next room */
-			wait 10
-			if ${Entity[${GateToUse}].Distance} < 2000
-			{
-			   	UI:UpdateConsole["Activating Acceleration Gate..."]
-			   	while ${Me.ToEntity.Mode} != 3
-			   	{
-			   		Entity[${GateToUse}]:Activate
-					wait 10			   		
-			   	}
-				RoomCounter:Inc
-				UI:UpdateConsole["Room Number: ${RoomCounter}"]
-				call ChatIRC.Say "${Me.Name}: Moving rooms, now entering ${RoomCounter}"
-				call Ship.WarpWait
-			}
+		   	UI:UpdateConsole["Activating Acceleration Gate..."]
+		   	while ${Me.ToEntity.Mode} != 3
+		   	{
+		   		Entity[${GateToUse}]:Activate
+				wait 10			   		
+		   	}
+			RoomCounter:Inc
+			call Ship.WarpWait
+			UI:UpdateConsole["Room Number: ${RoomCounter}"]
+			call ChatIRC.Say "${Me.Name}: Moving rooms, now entering ${RoomCounter}"
 		}
 		if ${This.Combat.CurrentState.Equal["FLEE"]} || ${This.Combat.CurrentState.Equal["RESTOCK"]}
 		{
@@ -654,53 +646,45 @@ function RunCourierMission(int agentID)
 			{
 				do
 				{
-					;This could be changed to use Ship.Approaching
-						while ${Ent.Value.Distance} > 2500 && ${Ent.Value(exists)}
+					if !${Ship.Approaching.Equal[${Ent.Value.ID}]}
+					{
+						call Ship.Approach ${Ent.Value.ID} 1000
+					}
+					Ent.Value:OpenCargo
+					wait 10
+					call Ship.OpenCargo
+					wait 10
+					Ent.Value:GetCargo[Items]
+					Items:GetIterator[Item]
+					if ${Item:First(exists)}
+					{
+						do
 						{
-							wait 100
-							if !${Ship.Approaching.Equal[${Ent.Value.ID}]}
+							if ${Item.Value.TypeID} == ${This.MissionCache.TypeID[${Agents.AgentID}]}
 							{
-								Ent.Value:Approach
-								Ship.Approaching:Set[${Ent.Value.ID}]
-								UI:UpdateConsole["Approaching ${Ent.Value.Name}"]
-							}
-							UI:UpdateConsole["Waiting until arrival at ${Ent.Value.Name}"]
-						}
-						Ent.Value:OpenCargo
-						wait 10
-						call Ship.OpenCargo
-						wait 10
-						Ent.Value:GetCargo[Items]
-						Items:GetIterator[Item]
-						if ${Item:First(exists)}
-						{
-							do
-							{
-								if ${Item.Value.TypeID} == ${This.MissionCache.TypeID[${Agents.AgentID}]}
+								UI:UpdateConsole["Found mission item: Looting!"]
+								Item.Value:MoveTo[${MyShip.ID},CargoHold]
+								wait 10
+								breakTime:Set[${Time.Timestamp}]
+								breakTime.Second:Inc[15]
+								breakTime:Update
+								if ${Config.Missioneer.SalvageModeName.Equal["Relay"]}
 								{
-									UI:UpdateConsole["Found mission item: Looting!"]
-									Item.Value:MoveTo[${MyShip.ID},CargoHold]
-									wait 10
-									breakTime:Set[${Time.Timestamp}]
-									breakTime.Second:Inc[15]
-									breakTime:Update
-									if ${Config.Missioneer.SalvageModeName.Equal["Relay"]}
+									if !${This.BookmarkExists}
 									{
-										if !${This.BookmarkExists}
-										{
-											UI:UpdateConsole["Bookmarking closest entity now."]
-											Entity["GroupID = 186"]:CreateBookmark["Salvage","S","Corporation Locations"]
-										}
-										else
-										{
-											UI:UpdateConsole["We already have a bookmark for this room, not doing anything."]
-										}			
-										break
+										UI:UpdateConsole["Bookmarking closest entity now."]
+										Entity["GroupID = 186"]:CreateBookmark["Salvage","S","Corporation Locations"]
 									}
+									else
+									{
+										UI:UpdateConsole["We already have a bookmark for this room, not doing anything."]
+									}			
+									break
 								}
 							}
-							while ${Item:Next(exists)}
 						}
+						while ${Item:Next(exists)}
+					}
 				}
 				while ${Ent:Next(exists)}
 				if !${This.HaveMishItem}

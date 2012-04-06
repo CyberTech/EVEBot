@@ -1313,7 +1313,7 @@ objectdef obj_Ship
 		EVE:Execute[CmdStopShip]
 	}
 
-	; Approaches EntityID to within 5% of Distance, then stops ship.  Momentum will handle the rest.
+	; Approaches EntityID to within 5% of Distance, then stops ship.  Momentum will handle the rest. - NO IT JUST APPROACHES, fuck momentum
 	function Approach(int64 EntityID, int64 Distance)
 	{
 		if ${Entity[${EntityID}](exists)}
@@ -1330,7 +1330,6 @@ objectdef obj_Ship
 			CurrentDistance:Set[${Entity[${EntityID}].Distance}]
 			UI:UpdateConsole["Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc[(${CurrentDistance} - ${Distance}) / ${MyShip.MaxVelocity}].Ceil} Seconds away"]
 
-			This:Activate_AfterBurner[]
 			do
 			{
 				Entity[${EntityID}]:Approach
@@ -1343,9 +1342,22 @@ objectdef obj_Ship
 					UI:UpdateConsole["DEBUG: obj_Ship:Approach: ${Entity[${EntityID}].Name} is getting further away!  Is it moving? Are we stuck, or colliding?", LOG_MINOR]
 				}
 			}
-			while ${CurrentDistance} > ${Math.Calc64[${Distance} * 1.05]}
-			EVE:Execute[CmdStopShip]
-			This:Deactivate_AfterBurner[]
+			while ${CurrentDistance} > ${Distance}
+		}
+	}
+	method Approach(int64 EntityID, int64 Distance)
+	{
+		if ${Entity[${EntityID}](exists)}
+		{
+			if ${Distance} > 0
+			{
+				Entity[${EntityID}]:Approach[${Distance}]
+			}
+			else
+			{
+				Entity[${EntityID}]:Approach
+			}
+			Approaching:Set[${EntityID}]
 		}
 	}
 
