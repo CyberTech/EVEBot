@@ -8,7 +8,7 @@
 
 	-- GliderPro
 */
-
+#define GROUP_GANGCOORDINATOR 316
 objectdef obj_FullMiner
 {
 	variable int64 FleetMemberID
@@ -85,6 +85,10 @@ objectdef obj_OreHauler inherits obj_Hauler
 
 	variable collection:obj_FullMiner FullMiners
 
+	variable bool InitReturn=FALSE
+	variable bool CleanupStarted=FALSE
+	variable collection:int64 CleanupBelts /* belt ID, value is system ID */
+
 	/* the bot logic is currently based on a state machine */
 	variable string CurrentState
 
@@ -99,9 +103,18 @@ objectdef obj_OreHauler inherits obj_Hauler
 
 	variable bool PickupFailed = FALSE
 
+	/* status variables */
+	variable int TotalTrips = 0
+	variable time TripStartTime
+	variable int PreviousTripSeconds = 0
+	variable int TotalTripSeconds = 0
+	variable int AverageTripSeconds = 0
+	variable float64 TotalCargo = 0
+
 	method Initialize(string player, string corp)
 	{
 		m_CheckedCargo:Set[FALSE]
+		This.TripStartTime:Set[${Time.Timestamp}]
 		UI:UpdateConsole["obj_OreHauler: Initialized", LOG_MINOR]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		This:SetupEvents[]
@@ -121,6 +134,12 @@ objectdef obj_OreHauler inherits obj_Hauler
 			return
 		}
 
+		if !${UIElement[EVEBot].FindUsableChild[HaulerFrame,frame].Visible}
+		{
+			UIElement[EVEBot].FindUsableChild[MinerFrame,frame]:Hide
+			UIElement[EVEBot].FindUsableChild[HaulerFrame,frame]:Show
+		}
+
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			This:SetState[]
@@ -135,6 +154,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 	{
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 		Event[EVEBot_Miner_Full]:DetachAtom[This:MinerFull]
+		Event[EVEBOT_INTERACTION]:DetachAtom[This:Interaction]
 	}
 
 	/* SetupEvents will attach atoms to all of the events used by the bot */
@@ -144,9 +164,54 @@ objectdef obj_OreHauler inherits obj_Hauler
 		/* override any events setup by the base class */
 
 		LavishScript:RegisterEvent[EVEBot_Miner_Full]
+		LavishScript:RegisterEvent[EVEBOT_INTERACTION]
+		Event[EVEBOT_INTERACTION]:AttachAtom[This:Interaction]
 		Event[EVEBot_Miner_Full]:AttachAtom[This:MinerFull]
+
 	}
 
+	/*
+		COMMANDS:
+		InitReturn <FleetID>
+		CancelReturn <FleetID>
+	*/
+	method Interaction(string Params)
+	{
+		if !${Config.Common.BotModeName.Equal[Hauler]}
+		{
+			return
+		}
+		variable string Command
+		variable int64 FleetID=0
+
+		Command:Set[${Arg[1,${Params}]}]
+		FleetID:Set[${Arg[2,${Params}]}]
+		UI:UpdateConsole["DEBUG: obj_Hauler:Interaction event: Command '${Command}' Params '${FleetID}'", LOG_DEBUG]
+		switch ${Command}
+		{
+		case InitReturn
+			if ${FleetID.Equal[0]} || ${FleetID.Equal[${Me.Fleet.ID}]}
+			{
+				InitReturn:Set[TRUE]
+				relay "all other" -event EVEBOT_INTERACTION "CancelReturn, ${Me.Fleet.ID}"
+				This:SetState
+			}
+			break
+		case CancelReturn
+			if ${FleetID.Equal[0]} || ${FleetID.Equal[${Me.Fleet.ID}]}
+			{
+				InitReturn:Set[FALSE]
+				CleanupStarted:Set[FALSE]
+				This:SetState
+			}
+			break
+		case StopMiner
+		case ReturnNow
+		case MoveMinersTo
+		default
+			break
+		}
+	}
 	/* A miner's jetcan is full.  Let's go get the ore.  */
 	method MinerFull(string haulParams)
 	{
@@ -164,12 +229,14 @@ objectdef obj_OreHauler inherits obj_Hauler
 		beltID:Set[${haulParams.Token[3,","]}]
 
 		; Logging is done by obj_FullMiner initialize
+		CleanupBelts:Set[${beltID},${systemID}]
 		FullMiners:Set[${charID},${charID},${systemID},${beltID}]
 	}
 
 	/* this function is called repeatedly by the main loop in EveBot.iss */
 	function ProcessState()
 	{
+		variable float ThisCargo
 		switch ${This.CurrentState}
 		{
 			case IDLE
@@ -181,7 +248,16 @@ objectdef obj_OreHauler inherits obj_Hauler
 				Call Station.Dock
 				break
 			case INSTATION
-				call Cargo.TransferCargoToHangar
+				call Ship.CloseCargo
+				call Ship.OpenCargo
+				wait 10
+				UI:UpdateConsole["Hauler: Cargo in station: ${MyShip.UsedCargoCapacity}"]
+				if ${MyShip.UsedCargoCapacity} > 0
+				{
+					ThisCargo:Set[${MyShip.UsedCargoCapacity}]
+					call Cargo.TransferCargoToHangar
+					This:IncrementTrip[${ThisCargo}]
+				}
 				call Station.Undock
 				if ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}](exists)}
 				{
@@ -191,6 +267,9 @@ objectdef obj_OreHauler inherits obj_Hauler
 			case HAUL
 				Ship:Activate_Gang_Links
 				call This.Haul
+				break
+			case CLEANUP
+				call This.Cleanup
 				break
 			case CARGOFULL
 				Ship:Activate_Gang_Links
@@ -224,6 +303,10 @@ objectdef obj_OreHauler inherits obj_Hauler
 		elseif ${This.PickupFailed} || ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
 		{
 			This.CurrentState:Set["CARGOFULL"]
+		}
+		elseif ${InitReturn}
+		{
+			This.CurrentState:Set["CLEANUP"]
 		}
 		elseif ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace}
 		{
@@ -312,6 +395,9 @@ objectdef obj_OreHauler inherits obj_Hauler
 			case Service All Belts
 				call This.HaulAllBelts
 				break
+			case Stationary Service
+				call This.StationaryService
+				break
 		}
 	}
 
@@ -323,10 +409,16 @@ objectdef obj_OreHauler inherits obj_Hauler
 			EVEBot.ReturnToStation:Set[TRUE]
 			return
 		}
+
+		if ${Config.Miner.DeliveryLocationTypeName.NotEqual[Station]}
+		{
+			This:IncrementTrip
+		}
 		switch ${Config.Miner.DeliveryLocationTypeName}
 		{
 			case Station
 				call Ship.TravelToSystem ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID}
+				wait 40
 				call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
 				break
 			case Hangar Array
@@ -364,11 +456,20 @@ objectdef obj_OreHauler inherits obj_Hauler
 	/*                                                       */
 	function HaulOnDemand()
 	{
+		variable string MbrName
+		variable string FQN
+		FQN:Set[${UIElement[EVEBot].FindUsableChild[FleetList,listbox].FullName}]
 		while ${CurrentState.Equal[HAUL]} && ${FullMiners.FirstValue(exists)}
 		{
-			UI:UpdateConsole["${FullMiners.Used} cans to get! Picking up can at ${FullMiners.FirstKey}", LOG_DEBUG]
-			if ${FullMiners.CurrentValue.SystemID} == ${Me.SolarSystemID}
+			MbrName:Set[${Me.Fleet.Member[${FullMiners.FirstKey}].ToPilot.Name}]
+			if ${This.IsSelected[${FQN},${MbrName}]} && ${Me.Fleet.IsMember[${FullMiners.FirstKey}]}
 			{
+				UI:UpdateConsole["Hauler: ${FullMiners.Used} pickups waiting! Picking up can at ${MbrName}", LOG_DEBUG]
+				if ${FullMiners.CurrentValue.SystemID} != ${Me.SolarSystemID}
+				{
+					UI:UpdateConsole["Hauler: Moving to ${Universe[${FullMiners.CurrentValue.SystemID}].Name} for pickup.", LOG_DEBUG]
+					call Ship.TravelToSystem ${FullMiners.CurrentValue.SystemID}
+				}
 				call This.WarpToFleetMemberAndLoot ${FullMiners.CurrentValue.FleetMemberID}
 			}
 			else
@@ -376,8 +477,47 @@ objectdef obj_OreHauler inherits obj_Hauler
 				FullMiners:Erase[${FullMiners.FirstKey}]
 			}
 		}
+		if ${CurrentState.Equal[HAUL]}
+			call This.WarpToNextSafeSpot
+	}
+	member:bool IsSelected(string FQN, string Text)
+	{
+		variable int count
+		for (count:Set[${UIElement[${FQN}].SelectedItems}] ; ${count} > 0 ; count:Dec )
+		{
+			if ${UIElement[${FQN}].SelectedItem[${count}].Text.Equal[${Text}]}
+				return TRUE
+		}
+		/* If pilot isn't listed, AND we haul for new fleet members... */
+		if !${UIElement[${FQN}].ItemByText[${Text}](exists)} && ${Config.Hauler.HaulNewFleetMembers}
+			return TRUE
+		return FALSE
+	}
 
-		call This.WarpToNextSafeSpot
+	/* 1) Warp to fleet member and loot nearby cans           */
+	/* 2) Repeat until cargo hold is full                    */
+	/*                                                       */
+	function StationaryService()
+	{
+		variable string FQN
+		FQN:Set[${UIElement[EVEBot].FindUsableChild[FleetList,listbox].FullName}]
+		if ${FleetMembers.Used} == 0
+		{
+			This:BuildFleetMemberList
+		}
+		else
+		{
+			if ${FleetMembers.Peek(exists)} && \
+			   ${Local[${FleetMembers.Peek.ToPilot.Name}](exists)} && \
+			   ${This.IsSelected[${FQN},${FleetMembers.Peek.ToPilot.Name}]}
+			{
+				call This.WarpToFleetMemberAndLootStationary ${FleetMembers.Peek.CharID}
+			}
+			if !${Local[${FleetMembers.Peek.ToPilot.Name}](exists)}
+			{
+				FleetMembers:Dequeue
+			}
+		}
 	}
 
 	/* 1) Warp to fleet member and loot nearby cans           */
@@ -385,6 +525,8 @@ objectdef obj_OreHauler inherits obj_Hauler
 	/*                                                       */
 	function HaulForFleet()
 	{
+		variable string FQN
+		FQN:Set[${UIElement[EVEBot].FindUsableChild[FleetList,listbox].FullName}]
 		if ${FleetMembers.Used} == 0
 		{
 			This:BuildFleetMemberList
@@ -393,7 +535,8 @@ objectdef obj_OreHauler inherits obj_Hauler
 		else
 		{
 			if ${FleetMembers.Peek(exists)} && \
-			   ${Local[${FleetMembers.Peek.ToPilot.Name}](exists)}
+			   ${Local[${FleetMembers.Peek.ToPilot.Name}](exists)} && \
+			   ${This.IsSelected[${FQN},${FleetMembers.Peek.ToPilot.Name}]}
 			{
 				call This.WarpToFleetMemberAndLoot ${FleetMembers.Peek.CharID}
 			}
@@ -401,19 +544,188 @@ objectdef obj_OreHauler inherits obj_Hauler
 		}
 	}
 
+	function Cleanup()
+	{
+		variable string FQN
+		FQN:Set[${UIElement[EVEBot].FindUsableChild[FleetList,listbox].FullName}]
+		if !${CleanupStarted}
+		{
+			This:BuildFleetMemberList
+			CleanupStarted:Set[TRUE]
+			call This.WarpToNextSafeSpot
+		}
+		if ${FleetMembers.Peek(exists)} && \
+			${Local[${FleetMembers.Peek.ToPilot.Name}](exists)} && \
+			${This.IsSelected[${FQN},${FleetMembers.Peek.ToPilot.Name}]}
+		{
+			relay all -event EVEBOT_INTERACTION "StopMiner, ${FleetMembers.Peek.CharID}"
+			call This.WarpToFleetMemberAndLoot ${FleetMembers.Peek.CharID}
+			if ${PickupFailed}
+			{
+				relay all -event EVEBOT_INTERACTION "StartMiner, ${FleetMembers.Peek.CharID}"
+				This:SetState
+				return
+			}
+			if ${Config.Miner.DeliveryLocationTypeName.Equal[Station]}
+				relay all -event EVEBOT_INTERACTION "ReturnNow, ${FleetMembers.Peek.CharID}, ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID}, ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}"
+			else
+				relay all -event EVEBOT_INTERACTION "ReturnNow, ${FleetMembers.Peek.CharID}"
+
+			FleetMembers:Dequeue
+		}
+		elseif ${FleetMembers.Used}
+		{
+			FleetMembers:Dequeue
+		}
+		else /* No more fleet members to clean up */
+		{
+			call This.DropOff
+			if ${MyShip.UsedCargoCapacity} > 0
+			{
+				variable float ThisCargo = ${MyShip.UsedCargoCapacity}
+				call Cargo.TransferCargoToHangar
+				This:IncrementTrip[${ThisCargo}]
+			}
+			EVEBot.ReturnToStation:Set[TRUE]
+		}
+
+	}
+
 	function HaulAllBelts()
 	{
-    	UI:UpdateConsole["Service All Belts mode not implemented!"]
+		UI:UpdateConsole["Service All Belts mode not implemented!"]
 		EVEBot.ReturnToStation:Set[TRUE]
 	}
 
+	function WarpToFleetMemberAndLootStationary(int64 charID)
+	{
+		variable int id = 0
+
+		if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
+		{	/* if we are already full ignore this request */
+			return FULL
+		}
+
+		if !${Entity["OwnerID = ${charID} && CategoryID = 6"](exists)}
+		{
+			call Ship.WarpToFleetMember ${charID}
+		}
+
+		if ${Entity["OwnerID = ${charID} && CategoryID = 6"].Distance} > CONFIG_MAX_SLOWBOAT_RANGE
+		{
+			if ${Entity["OwnerID = ${charID} && CategoryID = 6"].Distance} < WARP_RANGE
+			{
+				UI:UpdateConsole["Fleet member is too far for approach; warping to bounce point"]
+				if ${Ship.Drones.DronesInSpace} > 0
+				{
+					call Ship.Drones.ReturnAllToDroneBay
+				}
+				call This.WarpToNextSafeSpot
+			}
+			call Ship.WarpToFleetMember ${charID}
+		}
+
+		call Ship.OpenCargo
+		if ${Config.Combat.LaunchCombatDrones} && \
+			${Ship.Drones.DronesInSpace} == 0 && \
+			!${Ship.InWarp}
+		{
+			Ship.Drones:LaunchAll[]
+		}
+
+		variable int Slot
+		for ( Slot:Set[0] ; ${Slot} <= 7 ; Slot:Inc )
+		{
+			if ${MyShip.Module[HiSlot${Slot}](exists)}
+			{
+				if ${MyShip.Module[HiSlot${Slot}].ToItem.GroupID} == GROUP_GANGCOORDINATOR
+				{
+					if !${MyShip.Module[HiSlot${Slot}].IsActive} && !${MyShip.Module[HiSlot${Slot}].IsChangingAmmo} && !${MyShip.Module[HiSlot${Slot}].IsReloadingAmmo} /* && !${MyShip.Module[HiSlot${Slot}].IsActivating} <--- BROKEN? */ && !${MyShip.Module[HiSlot${Slot}].IsDeactivating} && ${MyShip.Module[HiSlot${Slot}].IsOnline}
+					{
+						MyShip.Module[HiSlot${Slot}]:Activate
+					}
+				}
+			}
+		}
+
+
+		This:BuildJetCanList[0]
+		wait 50
+		while ${Entities.Peek(exists)}
+		{
+
+			/* approach within tractor range and tractor entity */
+			variable float ApproachRange = ${Ship.OptimalTractorRange}
+			if ${ApproachRange} > ${Ship.OptimalTargetingRange}
+			{
+				ApproachRange:Set[${Ship.OptimalTargetingRange}]
+			}
+
+			if ${Entities.Peek.Distance} > LOOT_RANGE && \
+				${ApproachRange} > 0 /* we have a tractor beam */
+			{
+				if ${Entities.Peek.Distance} > ${ApproachRange}
+				{
+					call Ship.Approach ${Entities.Peek.ID} ${ApproachRange}
+				}
+				Entities.Peek:LockTarget
+				wait 10 ${Entities.Peek.BeingTargeted} || ${Entities.Peek.IsLockedTarget}
+				while !${Entities.Peek.IsLockedTarget}
+				{
+					wait 1
+				}
+				Entities.Peek:MakeActiveTarget
+				while !${Me.ActiveTarget.ID.Equal[${Entities.Peek.ID}]}
+				{
+					wait 1
+				}
+				Ship:Activate_Tractor
+				while ${Entities.Peek.Distance} > LOOT_RANGE
+				{
+					wait 1
+				}
+			}
+			else
+			{
+				/* approach within loot range */
+				call Ship.Approach ${Entities.Peek.ID} LOOT_RANGE
+				Entities.Peek:Approach
+			}
+			Entities.Peek:UnlockTarget
+			Entities.Peek:OpenCargo
+			wait 30
+			call This.LootEntity ${Entities.Peek.ID}
+
+
+			if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
+			{
+				if ${Entities.Peek(exists)} && ${Entities.Used} > 1
+				{
+					This.PickupFailed:Set[TRUE]
+				}
+				if ${Ship.Drones.DronesInSpace} > 0
+				{
+					call Ship.Drones.ReturnAllToDroneBay
+				}
+				return FULL
+			}
+
+			if ${Entities.Peek(exists)}
+			{
+				Entities.Peek:CloseCargo
+			}
+			Entities:Dequeue
+
+		}
+
+	}
 	function WarpToFleetMemberAndLoot(int64 charID)
 	{
 		variable int64 id = 0
 
 		if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
 		{	/* if we are already full ignore this request */
-			return
+			return FULL
 		}
 
 		if !${Entity["OwnerID = ${charID} && CategoryID = 6"](exists)}
@@ -438,6 +750,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		{
 			variable int64 PlayerID
 			variable bool PopCan = FALSE
+			PopCan:Set[${CleanupStarted}]
 
 			; Find the player who owns this can
 			if ${Entity["OwnerID = ${charID} && CategoryID = 6"](exists)}
@@ -513,6 +826,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 					}
 					Ship:Activate_Tractor
 				}
+
 			}
 
 			if !${Entities.Peek(exists)}
@@ -543,10 +857,6 @@ objectdef obj_OreHauler inherits obj_Hauler
 			}
 
 			Entities:Dequeue
-			if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
-			{
-				break
-			}
 		}
 
 		FullMiners:Erase[${charID}]
@@ -636,20 +946,59 @@ objectdef obj_OreHauler inherits obj_Hauler
 		variable index:entity cans
 		variable int idx
 
-		EVE:QueryEntities[cans,"GroupID = 12"]
+		EVE:QueryEntities[cans,"GroupID = GROUPID_CARGO_CONTAINER"]
 		idx:Set[${cans.Used}]
 		Entities:Clear
-
+echo Cans found: ${idx} ID: ${id} 
 		while ${idx} > 0
 		{
+echo elseif ${id.Equal[0]} && ${cans[${idx}].HaveLootRights} (${cans[${idx}].Name})
 			if ${id.Equal[${cans.Get[${idx}].Owner.CharID}]}
 			{
-				Entities:Queue[${cans.Get[${idx}]}]
+				Entities:Queue[${cans.Get[${idx}].ID}]
 			}
+			elseif !${Entity["OwnerID = ${cans[${idx}].Owner.CharID} && CategoryID =6"](exists)} && \
+					${cans[${idx}].HaveLootRights}
+			{
+				Entities:Queue[${cans[${idx}].ID}]
+			}
+			elseif ${id.Equal[0]} && ${cans[${idx}].HaveLootRights}
+			{
+				Entities:Queue[${cans[${idx}].ID}]
+			}
+
 			idx:Dec
 		}
 
-		UI:UpdateConsole["BuildJetCanList found ${Entities.Used} cans nearby."]
+		EVE:QueryEntities[cans,"GroupID = GROUPID_WRECK"]
+		idx:Set[${cans.Used}]
+		while ${idx} > 0
+		{
+			if ${cans[${idx}].HaveLootRights} && !${cans[${idx}].IsWreckEmpty}
+			{
+				Entities:Queue[${cans[${idx}].ID}]
+			}
+
+			idx:Dec
+		}
+
+
+		UI:UpdateConsole["BuildJetCanList found ${Entities.Used} cans/wrecks nearby."]
+	}
+
+	member:int TripDuration()
+	{
+		return ${Math.Calc64[${Time.Timestamp} - ${This.TripStartTime.Timestamp}]}
+	}
+
+	method IncrementTrip(float ThisCargo=0)
+	{
+		This.TotalTrips:Inc
+		This.PreviousTripSeconds:Set[${This.TripDuration}]
+		This.TotalTripSeconds:Inc[${This.PreviousTripSeconds}]
+		This.AverageTripSeconds:Set[${Math.Calc[${This.TotalTripSeconds}/${This.TotalTrips}]}]
+		This.TripStartTime:Set[${Time.Timestamp}]
+		This.TotalCargo:Inc[${ThisCargo} + ${MyShip.UsedCargoCapacity}]
 	}
 }
 

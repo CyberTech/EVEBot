@@ -6,6 +6,7 @@
 	-- CyberTech
 
 */
+#define MINER_MANUAL_MOVEMENT 1
 
 objectdef obj_Miner
 {
@@ -28,6 +29,11 @@ objectdef obj_Miner
 	variable bool SanityCheckAbort = FALSE
 	variable float64 LastUsedCargoCapacity = 0
 
+	variable uint InitReturnTimestamp=0
+	variable string InteractionState
+	variable int64 ReturnSolarSystemID=0
+	variable int64 ReturnStationID=0
+
 	; Are we running out of asteroids to target?
 	variable bool ConcentrateFire = FALSE
 
@@ -38,11 +44,76 @@ objectdef obj_Miner
 		This.TripStartTime:Set[${Time.Timestamp}]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_Miner: Initialized", LOG_MINOR]
+		This:SetupEvents[]
 	}
 
 	method Shutdown()
 	{
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
+		Event[EVEBOT_INTERACTION]:DetachAtom[This:Interaction]
+	}
+
+	method SetupEvents()
+	{
+		LavishScript:RegisterEvent[EVEBOT_INTERACTION]
+		Event[EVEBOT_INTERACTION]:AttachAtom[This:Interaction]
+	}
+	
+	/*
+		COMMANDS:
+		InitReturn <FleetID>
+		CancelReturn <FleetID>
+		StopMiner <CharID>
+		ReturnNow <CharID> <SolarSystemID> <StationID>
+	*/
+	method Interaction(string Params)
+	{
+		variable string Command
+		variable int64 CharID
+		variable int64 FleetID
+
+		Command:Set[${Arg[1,${Params}]}]
+		UI:UpdateConsole["DEBUG: obj_Miner:Interaction event: Command '${Command}' Params '${Params}'", LOG_DEBUG]
+		switch ${Command}
+		{
+		case InitReturn
+			FleetID:Set[${Arg[2,${Params}]}]
+			if ${FleetID.Equal[${Me.Fleet.ID}]} || ${FleetID.Equal[0]}
+				InitReturnTimestamp:Set[${Time.Timestamp}]
+			break
+		case CancelReturn
+			FleetID:Set[${Arg[2,${Params}]}]
+			if ${FleetID.Equal[${Me.Fleet.ID}]} || ${FleetID.Equal[0]}
+			{
+				InitReturnTimestamp:Set[0]
+				InteractionState:Set[""]
+			}
+			break
+		case StopMiner
+			CharID:Set[${Arg[2,${Params}]}]
+			if ${CharID.Equal[${Me.CharID}]}
+				InteractionState:Set[Stop]
+			break
+		case StartMiner
+			CharID:Set[${Arg[2,${Params}]}]
+			if ${CharID.Equal[${Me.CharID}]}
+			{
+				InitReturnTimestamp:Set[0]
+				InteractionState:Set[""]
+			}
+			break
+		case ReturnNow
+			CharID:Set[${Arg[2,${Params}]}]
+			ReturnSolarSystemID:Set[${Arg[3,${Params}]}]
+			ReturnStationID:Set[${Arg[4,${Params}]}]
+			if ${CharID.Equal[${Me.CharID}]}
+				InteractionState:Set[Return]
+			break
+		case MoveMinersTo
+		default
+			echo ${Command}
+			break
+		}
 	}
 
 	method Pulse()
@@ -100,44 +171,36 @@ objectdef obj_Miner
 				UI:UpdateConsole["Hauling"]
 				call Hauler.Haul
 				break
-			case DROPOFF
-				switch ${Config.Miner.DeliveryLocationTypeName}
+			case STOP
+				UI:UpdateConsole["Miner: Received stop command. Disabling lasers.", LOG_MINOR]
+				if ${Config.Miner.DeliveryLocationTypeName.Equal[Jetcan]}
 				{
-					case Station
-						; Gets info about the crystals currently loaded
-						call Ship.SetActiveCrystals
-
-						if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)}
-						{
-							call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
-						}
-						else
-						{
-							call Station.Dock
-						}
-						break
-					case Hangar Array
-						call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
-						call Cargo.TransferOreToCorpHangarArray
-						break
-					case Large Ship Assembly Array
-						call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
-						call Cargo.TransferOreToLargeShipAssemblyArray
-						break
-					case XLarge Ship Assembly Array
-						call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
-						call Cargo.TransferOreToXLargeShipAssemblyArray
-						break
-					case Jetcan
-						UI:UpdateConsole["Warning: Cargo filled during jetcan mining, delays may occur"]
-						call Cargo.TransferOreToJetCan
-						This:NotifyHaulers[]
-						break
-					Default
-						UI:UpdateConsole["ERROR: Delivery Location Type ${Config.Miner.DeliveryLocationTypeName} unknown"]
-						EVEBot.ReturnToStation:Set[TRUE]
-						break
+					; Need to disable mining lasers and drop all ore in can
+					Ship:DeactivateAllMiningLasers
+					wait 30
+					call This.DropOff
+					while ${This.CurrentState.Equal[STOP]}
+						wait 10
 				}
+				else
+				{
+					call This.DropOff
+					EVEBot.ReturnToStation:Set[TRUE]
+				}
+				break
+			case RETURN
+				UI:UpdateConsole["Miner: Received return command. Returning.", LOG_MINOR]
+				call This.DropOff
+				if !${Me.InStation}
+				{
+					if ${ReturnSolarSystemID}
+						call Ship.TravelToSystem ${ReturnSolarSystemID}
+					if ${ReturnStationID}
+						call Station.DockAtStation ${ReturnStationID}
+				}
+				EVEBot.ReturnToStation:Set[TRUE]
+			case DROPOFF
+				call This.DropOff
 			    SanityCheckCounter:Set[0]
 			    SanityCheckAbort:Set[FALSE]
 			    LastUsedCargoCapacity:Set[0]
@@ -192,6 +255,19 @@ objectdef obj_Miner
 	  		return
 		}
 
+		if (${InitReturnTimestamp} > 0 && ${Time.Timestamp} - ${InitReturnTimestamp} > 5) || \
+			${InteractionState.Equal[Return]}
+		{
+			This.CurrentState:Set[RETURN]
+			return
+		}
+
+		if ${InteractionState.Equal[Stop]}
+		{
+			This.CurrentState:Set[STOP]
+			return
+		}
+
 		if ${Me.Ship.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold} && \
 		    ${SanityCheckAbort} == FALSE
 		{
@@ -208,6 +284,38 @@ objectdef obj_Miner
 		}
 
 		This.CurrentState:Set["Unknown"]
+	}
+
+	function DropOff()
+	{
+		switch ${Config.Miner.DeliveryLocationTypeName}
+		{
+			case Station
+				call Ship.TravelToSystem ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID}
+				call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
+				break
+			case Hangar Array
+				call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
+				call Cargo.TransferOreToCorpHangarArray
+				break
+			case Large Ship Assembly Array
+				call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
+				call Cargo.TransferOreToLargeShipAssemblyArray
+				break
+			case XLarge Ship Assembly Array
+				call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
+				call Cargo.TransferOreToXLargeShipAssemblyArray
+				break
+			case Jetcan
+				UI:UpdateConsole["Warning: Cargo filled during jetcan mining, delays may occur"]
+				call Cargo.TransferOreToJetCan
+				This:NotifyHaulers[]
+				break
+			Default
+				UI:UpdateConsole["ERROR: Delivery Location Type ${Config.Miner.DeliveryLocationTypeName} unknown"]
+				EVEBot.ReturnToStation:Set[TRUE]
+				break
+		}
 	}
 
 	function Abort_Check()
@@ -290,7 +398,19 @@ objectdef obj_Miner
 
 		This.TripStartTime:Set[${Time.Timestamp}]
 		; Find an asteroid field, or stay at current one if we're near one.
-		call Asteroids.MoveToField FALSE
+		if !MINER_MANUAL_MOVEMENT
+		{
+			call Asteroids.MoveToField FALSE
+		}
+		else
+		{
+			call Asteroids.TargetNext TRUE
+			if !${Return}
+			{
+				UI:UpdateConsole["DEBUG: obj_Miner.Mine: No asteroids in range and MANUAL_MOVEMENT defined. Doing nothing."]
+				return
+			}
+		}
 		call This.Prepare_Environment
 		call Asteroids.UpdateList
 
@@ -299,8 +419,9 @@ objectdef obj_Miner
 
 		UI:UpdateConsole["Mining"]
 
-		while ( !${EVEBot.ReturnToStation} && \
-				${Me.Ship.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold}	)
+		while ( !${EVEBot.ReturnToStation} && ${This.CurrentState.Equal[MINE]} && \
+				${Me.Ship.UsedCargoCapacity} <= ${Config.Miner.CargoThreshold}	&& \
+				!${Asteroids.FieldEmpty} )
 		{
 			/* TODO: CyberTech: Move this to the state machine, have it check for when the system is clear */
 			if (${Config.Miner.StandingDetection} && \
@@ -464,7 +585,7 @@ objectdef obj_Miner
 			{
 				if ${Math.Calc[${Me.TargetCount} + ${Me.TargetingCount}]} < ${Ship.SafeMaxLockedTargets}
 				{
-					call Asteroids.TargetNext
+					call Asteroids.TargetNext MINER_MANUAL_MOVEMENT
 					This.ConcentrateFire:Set[!${Return}]
 					;echo DEBUG: Target Locking: ${Math.Calc[${Me.TargetCount} + ${Me.TargetingCount}].Int} out of ${Ship.SafeMaxLockedTargets} (Limited Asteroids: ${This.ConcentrateFire})
 				}

@@ -84,78 +84,186 @@
 							<Height>20</Height>
 							<Text>${Script[EVEBot].VariableScope.UI.Runtime}</Text>
 						</Text>
-
-						<Text name='state' template='EVESkin.Font.Description'>
-							<X>10</X>
-							<Y>25</Y>
-							<Width>100</Width>
-							<Height>20</Height>
-							<Text>Action:</Text>
-						</Text>
-						<Text name='state_data' template='EVESkin.Font.Value'>
-							<X>150</X>
-							<Y>25</Y>
-							<Width>100</Width>
-							<Height>20</Height>
-							<Text>${Script[EVEBot].VariableScope.Config.Common.BotModeName}</Text>
-						</Text>
-						<Text name='Trips' template='EVESkin.Font.Description'>
-							<X>10</X>
-							<Y>40</Y>
-							<Width>100</Width>
-							<Height>20</Height>
-							<Text>Runs this Session:</Text>
-						</Text>
-						<Text name='Trips_Data' template='EVESkin.Font.Value'>
-							<X>150</X>
-							<Y>40</Y>
-							<Width>100</Width>
-							<Height>20</Height>
-							<Text>${Script[EVEBot].VariableScope.Miner.TotalTrips}</Text>
-						</Text>
-						<Text name='Aborts' template='EVESkin.Font.Description'>
-							<X>10</X>
-							<Y>55</Y>
-							<Width>100</Width>
-							<Height>20</Height>
-							<Text>Aborts this Session:</Text>
-						</Text>
-						<Text name='Aborts_Data' template='EVESkin.Font.Value'>
-							<X>150</X>
-							<Y>55</Y>
-							<Width>100</Width>
-							<Height>20</Height>
-							<Text>${Script[EVEBot].VariableScope.Config.Common.OurAbortCount}</Text>
-						</Text>
-						<Text name='avg_time' template='EVESkin.Font.Description'>
-							<X>10</X>
-							<Y>70</Y>
-							<Width>175</Width>
-							<Height>20</Height>
-							<Text>Time For Current Trip:</Text>
-						</Text>
-						<Text name='avg_time_data' template='EVESkin.Font.Value'>
-							<X>150</X>
-							<Y>70</Y>
-							<Width>150</Width>
-							<Height>20</Height>
-							<Text>${ISXEVE.SecsToString[${Script[EVEBot].VariableScope.Miner.TripDuration}]}</Text>
-						</Text>
-						<Text name='Average Time/Trip' template='EVESkin.Font.Description'>
-							<X>10</X>
-							<Y>85</Y>
-							<Width>175</Width>
-							<Height>20</Height>
-							<Text>Average Time per Trip:</Text>
-						</Text>
-						<Text name='Average Time/Trip Data' template='EVESkin.Font.Value'>
-							<X>150</X>
-							<Y>85</Y>
-							<Width>150</Width>
-							<Height>20</Height>
-							<Text>${ISXEVE.SecsToString[${Script[EVEBot].VariableScope.Miner.AverageTripSeconds}]}</Text>
-						</Text>
-						<Text name='Currently Training' template='EVESkin.Font.Description'>
+						<Frame Name='MinerFrame'>
+							<X>0%</X>
+							<Y>0%</Y>
+							<Width>100%</Width>
+							<Height>100</Height>
+							<Visible>1</Visible>
+							<Children>
+								<Text name='state' template='EVESkin.Font.Description'>
+									<X>10</X>
+									<Y>25</Y>
+									<Width>100</Width>
+									<Height>20</Height>
+									<Text>Action:</Text>
+								</Text>
+								<Text name='state_data' template='EVESkin.Font.Value'>
+									<X>150</X>
+									<Y>25</Y>
+									<Width>100</Width>
+									<Height>20</Height>
+									<Text>${Script[EVEBot].VariableScope.Config.Common.BotModeName}</Text>
+								</Text>
+								<Text name='Trips' template='EVESkin.Font.Description'>
+									<X>10</X>
+									<Y>40</Y>
+									<Width>100</Width>
+									<Height>20</Height>
+									<Text>Runs this Session:</Text>
+								</Text>
+								<Text name='Trips_Data' template='EVESkin.Font.Value'>
+									<X>150</X>
+									<Y>40</Y>
+									<Width>100</Width>
+									<Height>20</Height>
+									<Text>${Script[EVEBot].VariableScope.Miner.TotalTrips}</Text>
+								</Text>
+								<Text name='Aborts' template='EVESkin.Font.Description'>
+									<X>10</X>
+									<Y>55</Y>
+									<Width>100</Width>
+									<Height>20</Height>
+									<Text>Aborts this Session:</Text>
+								</Text>
+								<Text name='Aborts_Data' template='EVESkin.Font.Value'>
+									<X>150</X>
+									<Y>55</Y>
+									<Width>100</Width>
+									<Height>20</Height>
+									<Text>${Script[EVEBot].VariableScope.Config.Common.OurAbortCount}</Text>
+								</Text>
+								<Text name='avg_time' template='EVESkin.Font.Description'>
+									<X>10</X>
+									<Y>70</Y>
+									<Width>175</Width>
+									<Height>20</Height>
+									<Text>Time For Current Trip:</Text>
+								</Text>
+								<Text name='avg_time_data' template='EVESkin.Font.Value'>
+									<X>150</X>
+									<Y>70</Y>
+									<Width>150</Width>
+									<Height>20</Height>
+									<Text>${ISXEVE.SecsToString[${Script[EVEBot].VariableScope.Miner.TripDuration}]}</Text>
+								</Text>
+								<Text name='Average Time/Trip' template='EVESkin.Font.Description'>
+									<X>10</X>
+									<Y>85</Y>
+									<Width>175</Width>
+									<Height>20</Height>
+									<Text>Average Time per Trip:</Text>
+								</Text>
+								<Text name='Average Time/Trip Data' template='EVESkin.Font.Value'>
+									<X>150</X>
+									<Y>85</Y>
+									<Width>150</Width>
+									<Height>20</Height>
+								<Text>${ISXEVE.SecsToString[${Script[EVEBot].VariableScope.Miner.AverageTripSeconds}]}</Text>
+							</Text>
+						</Children>
+					</Frame>
+					<Frame Name='HaulerFrame'>
+						<X>0%</X>
+						<Y>0%</Y>
+						<Width>100%</Width>
+						<Height>140</Height>
+						<Visible>0</Visible>
+						<Children>
+							<Text name='state' template='EVESkin.Font.Description'>
+								<X>10</X>
+								<Y>25</Y>
+								<Width>100</Width>
+								<Height>20</Height>
+								<Text>Action:</Text>
+							</Text>
+							<Text name='state_data' template='EVESkin.Font.Value'>
+								<X>150</X>
+								<Y>25</Y>
+								<Width>100</Width>
+								<Height>20</Height>
+								<Text>${Script[EVEBot].VariableScope.Config.Common.BotModeName}</Text>
+							</Text>
+							<Text Name='currentstate_data' template='EVESkin.Font.Description'>
+								<x>250</x>
+								<Y>25</Y>
+								<Width>100</Width>
+								<Height>20</Height>
+								<Text>${Script[EVEBot].VariableScope.Hauler.CurrentState}</Text>
+							</Text>
+							<Text name='Trips' template='EVESkin.Font.Description'>
+								<X>10</X>
+								<Y>40</Y>
+								<Width>100</Width>
+								<Height>20</Height>
+								<Text>Runs this Session:</Text>
+							</Text>
+							<Text name='Trips_Data' template='EVESkin.Font.Value'>
+								<X>150</X>
+								<Y>40</Y>
+								<Width>100</Width>
+								<Height>20</Height>
+								<Text>${Script[EVEBot].VariableScope.Hauler.TotalTrips}</Text>
+							</Text>
+							<Text name='Aborts' template='EVESkin.Font.Description'>
+								<X>10</X>
+								<Y>55</Y>
+								<Width>100</Width>
+								<Height>20</Height>
+								<Text>Aborts this Session:</Text>
+							</Text>
+							<Text name='Aborts_Data' template='EVESkin.Font.Value'>
+								<X>150</X>
+								<Y>55</Y>
+								<Width>100</Width>
+								<Height>20</Height>
+								<Text>${Script[EVEBot].VariableScope.Config.Common.OurAbortCount}</Text>
+							</Text>
+							<Text name='avg_time' template='EVESkin.Font.Description'>
+								<X>10</X>
+								<Y>70</Y>
+								<Width>175</Width>
+								<Height>20</Height>
+								<Text>Time For Current Trip:</Text>
+							</Text>
+							<Text name='avg_time_data' template='EVESkin.Font.Value'>
+								<X>150</X>
+								<Y>70</Y>
+								<Width>150</Width>
+								<Height>20</Height>
+								<Text>${ISXEVE.SecsToString[${Script[EVEBot].VariableScope.Hauler.TripDuration}]}</Text>
+							</Text>
+							<Text name='Average Time/Trip' template='EVESkin.Font.Description'>
+								<X>10</X>
+								<Y>85</Y>
+								<Width>175</Width>
+								<Height>20</Height>
+								<Text>Average Time per Trip:</Text>
+							</Text>
+							<Text name='Average Time/Trip Data' template='EVESkin.Font.Value'>
+								<X>150</X>
+								<Y>85</Y>
+								<Width>150</Width>
+								<Height>20</Height>
+								<Text>${ISXEVE.SecsToString[${Script[EVEBot].VariableScope.Hauler.AverageTripSeconds}]}</Text>
+							</Text>
+							<Text name='Total Ore Hauled' template='EVESkin.Font.Description'>
+								<X>10</X>
+								<Y>100</Y>
+								<Width>175</Width>
+								<Height>20</Height>
+								<Text>Total ore hauled:</Text>
+							</Text>
+							<Text name='Total Ore Hauled Data' template='EVESkin.Font.Value'>
+								<X>150</X>
+								<Y>100</Y>
+								<Width>150</Width>
+								<Height>20</Height>
+								<Text>${Script[EVEBot].VariableScope.Hauler.TotalCargo.Centi}m3</Text>
+							</Text>
+						</Children>
+					</Frame>
+					<Text name='Currently Training' template='EVESkin.Font.Description'>
 							<X>10</X>
 							<Y>115</Y>
 							<Width>175</Width>
@@ -1578,6 +1686,7 @@
 								<Item Value='1'>Service Fleet Members</Item>
 								<Item Value='2'>Service All Belts</Item>
 								<Item Value='3'>Service On-Demand</Item>
+								<Item Value='4'>Stationary Service</Item>
 							</Items>
 							<OnSelect>
 								Script[EVEBot].VariableScope.Config.Hauler:SetHaulerMode[${This.SelectedItem.Value}]
@@ -1631,6 +1740,114 @@
 								}
 							</OnChange>
 						</Textentry>
+						<frame name="Fleetmembers">
+							<x>5</x>
+							<y>100</y>
+							<Width>r10</Width>
+							<Height>150</Height>
+							<Title>Fleet Members</Title>
+							<Children>
+								<Text Name="fleetmemberslabel>">
+									<Text>Fleet Members</Text>
+									<X>5</X>
+									<Y>5</Y>
+									<Width>190</Width>
+									<Height>10</Height>
+								</Text>
+								<Listbox Name="FleetList" Template="EVESkin.listbox">
+									<X>5</X>
+									<Y>22</Y>
+									<Width>190</Width>
+									<Height>140</Height>
+									<SelectMultiple>1</SelectMultiple>
+									<Sort>Text</Sort>
+									<Items>
+										
+									</Items>
+								</Listbox>
+								<Button Name="Refresh" Template="EVESkin.Button">
+									<X>205</X>
+									<Y>22</Y>
+									<Width>100</Width>
+									<Height>20</Height>
+									<Text>Refresh</Text>
+									<Texture Template="EVESkin.Window.TabButtonTexture" />
+									<TexturePressed Template="EVESkin.Window.TabButtonSelectedTexture" />
+									<TextureHover Template="EVESkin.Window.TabButtonHoverTexture" />
+									<OnLeftClick>
+										This.Parent.FindChild[FleetList]:ClearItems
+										variable int count
+										variable index:fleetmember FleetMembers
+										Me.Fleet:GetMembers[FleetMembers]
+										for (count:Set[1] ; ${count} &lt;= ${FleetMembers.Used} ; count:Inc)
+										{
+											if ${Me.CharID} != ${FleetMembers[${count}].CharID}
+											{
+												This.Parent.FindChild[FleetList]:AddItem[${FleetMembers[${count}].ToPilot.Name},${FleetMembers[${count}].CharID}]
+											}
+										}
+										This.Parent.FindChild[FleetList]:Sort
+									</OnLeftClick>
+								</Button>
+								<Button Name="SelectAll">
+									<X>205</X>
+									<Y>52</Y>
+									<Width>100</Width>
+									<Height>20</Height>
+									<Texture Template="EVESkin.Window.TabButtonTexture" />
+									<TexturePressed Template="EVESkin.Window.TabButtonSelectedTexture" />
+									<TextureHover Template="EVESkin.Window.TabButtonHoverTexture" />
+									<Text>Select All</Text>
+									<OnLeftClick>
+										variable int items
+										for ( items:Set[${This.Parent.FindChild[FleetList].Items}] ; ${items} > 0 ; items:Dec )
+										{
+										This.Parent.FindChild[FleetList]:SelectItem[${items}]
+										}
+									</OnLeftClick>
+								</Button>
+								<Button Name="UnselectAll">
+									<X>205</X>
+									<Y>82</Y>
+									<Width>100</Width>
+									<Height>20</Height>
+									<Texture Template="EVESkin.Window.TabButtonTexture" />
+									<TexturePressed Template="EVESkin.Window.TabButtonSelectedTexture" />
+									<TextureHover Template="EVESkin.Window.TabButtonHoverTexture" />
+									<Text>Deselect All</Text>
+									<OnLeftClick>
+										variable int items
+										for ( items:Set[${This.Parent.FindChild[FleetList].Items}] ; ${items} > 0 ; items:Dec )
+										{
+										This.Parent.FindChild[FleetList]:DeselectItem[${items}]
+										}
+									</OnLeftClick>
+									<OnLoad>
+										This.Parent.FindChild[Refresh]:LeftClick
+										This.Parent.FindChild[SelectAll]:LeftClick
+									</OnLoad>
+								</Button>
+								<Checkbox Name="DefaultNewFM">
+									<X>205</X>
+									<Y>107</Y>
+									<Width>150</Width>
+									<Height>20</Height>
+									<Text>Haul for unlisted (new) members?</Text>
+									<OnLoad>
+										if ${Script[EVEBot].VariableScope.Config.Hauler.HaulNewFleetMembers}
+										{
+										This:SetChecked
+										}
+										This.Parent.FindChild[Refresh]:LeftClick
+										if ${This.Checked}
+										This.Parent.FindChild[SelectAll]:LeftClick
+									</OnLoad>
+									<OnLeftClick>
+										Script[EVEBot].VariableScope.Config.Hauler:SetHaulNewFleetMembers[${This.Checked}]
+									</OnLeftClick>
+								</Checkbox>
+							</Children>
+						</frame>
 					</Tab>
 
 					<Tab name='Freighter'>
