@@ -649,17 +649,19 @@ function RunCourierMission(int agentID)
 			variable iterator   Item
 			UI:UpdateConsole["Found ${Ents.Used} entities in total to loot."]
 			Ents:GetIterator[Ent]
-			UI:UpdateConsole["Looting ${This.MissionCache.TypeID[${agentID}]}"]
+			UI:UpdateConsole["Looting ${This.MissionCache.TypeID[${Agents.AgentID}]}"]
 			if ${Ent:First(exists)}
 			{
 				do
 				{
+					;This could be changed to use Ship.Approaching
 						while ${Ent.Value.Distance} > 2500 && ${Ent.Value(exists)}
 						{
 							wait 100
-							if !${Me.ToEntity.Approaching.ID.Equal[${Ent.Value.ID}]}
+							if !${Ship.Approaching.Equal[${Ent.Value.ID}]}
 							{
 								Ent.Value:Approach
+								Ship.Approaching:Set[${Ent.Value.ID}]
 								UI:UpdateConsole["Approaching ${Ent.Value.Name}"]
 							}
 							UI:UpdateConsole["Waiting until arrival at ${Ent.Value.Name}"]
@@ -674,7 +676,7 @@ function RunCourierMission(int agentID)
 						{
 							do
 							{
-								if ${Item.Value.TypeID} == ${This.MissionCache.TypeID[${agentID}]}
+								if ${Item.Value.TypeID} == ${This.MissionCache.TypeID[${Agents.AgentID}]}
 								{
 									UI:UpdateConsole["Found mission item: Looting!"]
 									Item.Value:MoveTo[${MyShip.ID},CargoHold]
