@@ -482,6 +482,12 @@ objectdef obj_Drones
 							engageIndex:Insert[${DroneIterator.Value.ID}]
 						}
 					}
+					else
+					{
+						UI:UpdateConsole["Drone is currently returning, drones not engaging"]
+						;if one is returning all should be, and I'm pretty sure this will spam 4 more times otherwise, should be fine to call return here
+						return
+					}
 				}
 			}
 			while ${DroneIterator:Next(exists)}
@@ -491,6 +497,10 @@ objectdef obj_Drones
 				if ${Me.ActiveTarget.Distance} < ${Me.DroneControlDistance}
 				{
 					EVE:DronesEngageMyTarget[engageIndex]
+				}
+				else
+				{
+					UI:UpdateConsole["Active target is beyond drone control range, drones not engaging."]
 				}
 			}
 		}
