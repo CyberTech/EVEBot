@@ -91,6 +91,7 @@ objectdef obj_Combat
 
 	method Initialize()
 	{
+		This.CombatMode:Set["AGGRESSIVE"]
 		UI:UpdateConsole["obj_Combat: Initialized", LOG_MINOR]
 	}
 
@@ -137,7 +138,7 @@ objectdef obj_Combat
 			return
 		}
 
-		if ${Me.TargetCount} > 0
+		if ${This.CombatMode.NotEqual["TANK"]} && ${Me.TargetCount} > 0
 		{
 			This.CurrentState:Set["FIGHT"]
 		}
@@ -172,7 +173,7 @@ objectdef obj_Combat
 				call This.Flee
 				return
 			}
-			elseif !${Ship.IsAmmoAvailable}
+			elseif ${This.CombatMode.NotEqual["TANK"]} && !${Ship.IsAmmoAvailable}
 			{
 				if ${Config.Combat.RestockAmmo}
 				{
@@ -337,7 +338,7 @@ objectdef obj_Combat
 			}
 			elseif ${Me.ToEntity.IsWarpScrambled}
 			{
-				UI:UpdateConsole["Warp Scrambled: Fighting", LOG_CRITICAL]
+				UI:UpdateConsole["Warp Scrambled: Unable To Flee", LOG_CRITICAL]
 			}
 			else
 			{
@@ -380,17 +381,20 @@ objectdef obj_Combat
 			Ship:Deactivate_Cap_Booster[]
 		}
 
-		if !${This.Fled} && ${Config.Combat.LaunchCombatDrones} && \
-			${Ship.Drones.DronesInSpace} == 0 && !${Ship.InWarp} && \
-			${Me.TargetCount} > 0
+		if ${This.CombatMode.NotEqual["TANK"]}
 		{
-			if ${Config.Combat.AnomalyAssistMode}
+			if !${This.Fled} && ${Config.Combat.LaunchCombatDrones} && \
+				${Ship.Drones.DronesInSpace} == 0 && !${Ship.InWarp} && \
+				${Me.TargetCount} > 0
 			{
-				Ship.Drones:LaunchAll[]
-			}
-			elseif ${Me.TargetCount} >= 1 && ${Me.TargetedByCount} >= ${Me.TargetCount}
-			{
-				Ship.Drones:LaunchAll[]
+				if ${Config.Combat.AnomalyAssistMode}
+				{
+					Ship.Drones:LaunchAll[]
+				}
+				elseif ${Me.TargetCount} >= 1 && ${Me.TargetedByCount} >= ${Me.TargetCount}
+				{
+					Ship.Drones:LaunchAll[]
+				}
 			}
 		}
 
