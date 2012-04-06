@@ -536,7 +536,7 @@ function RunCourierMission(int agentID)
 	RoomCounter:Set[0]
 	; wait up to 15 seconds for spawns to appear
 	breakTime:Set[${Time.Timestamp}]
-
+	;START OF LOOP THAT DOESN'T TERMINATE UNTIL THERE ARE NO GATES
 	do
 	{
 		if ${MissionsToWait.Element[${This.MissionCache.Name[${Agents.AgentID}]}]} > 0
@@ -638,7 +638,7 @@ function RunCourierMission(int agentID)
 			RoomCounter:Set[0]
 		}
 	}
-	while ${This.GatePresent} || ${Me.ToEntity.Mode} != 3
+	while ${This.GatePresent} || ${Me.ToEntity.Mode} == 3
 	;If we need to loot something it will happen now, since this code should only do what I want it to
 	if ${This.MissionCache.Volume[${Agents.AgentID}]} > 0 && !${This.HaveMishItem}
 		; this check should be incorporated into if statement
@@ -845,12 +845,11 @@ function RunCourierMission(int agentID)
    		{
    			if ${Entity["TypeID = TYPE_ACCELERATION_GATE"].Name.Equal["Gate to the Warzone"]}
    			{
-   				UI:UpdateConsole["Gate to the warzone found, TOTALLY IGNORING IT."]
 	  			return FALSE
 	  		}
 	  		else
 	  		{
-	  			return ${Entity["TypeID = TYPE_ACCELERATION_GATE"](exists)}
+	  			return TRUE
 	  		}
 	  }
    }
