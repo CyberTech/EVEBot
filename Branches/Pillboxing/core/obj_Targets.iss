@@ -342,6 +342,7 @@ objectdef obj_Targets
 	{
 		if !${Me.InSpace}
 		{
+			echo "TargetNPCs called from in a station, wtf you tard."
 			return
 		}
 		variable index:entity Targets
@@ -387,7 +388,7 @@ objectdef obj_Targets
 		EVE:QueryEntities[InRange, ${query2}]
 		ToLock:Set[${Math.Calc[${Ship.MaxLockedTargets} - ${Me.TargetCount} - ${Me.TargetingCount}]}]
 		InRange:GetIterator[Target2]
-		if	(!${Ship.Approaching.Equal[${Entity[${query2}]}]}  && \
+		if (!${Ship.Approaching.Equal[${Entity[${query2}]}]}  && \
 			${Entity[${query2}](exists)} && \
 			 (${Entity[${GATEID}].Distance} > 110000 || (${Entity[${BEACONID}].Distance} > 110000 && !${Entity[${GATEID}](exists)})) 
 		{
@@ -446,7 +447,6 @@ objectdef obj_Targets
 									Entity[${ToTarget[1]}]:Approach[${MyShip.MaxTargetRange}]
 								}
 							}	
-
 						}
 					}
 					else
@@ -477,20 +477,15 @@ objectdef obj_Targets
 				{
 					if ${Me.TargetCount} == 0 && ${MyShip.MaxLockedTargets} > 0
 					{
-						if ${Me.ToEntity.Mode} != 1 && !${Entity[${query2} && Distance <= "${MyShip.MaxTargetRange}"](exists)} && (${Entity[${GATEID}].Distance} < 110000 || ${Entity[${BEACONID}].Distance} < 110000)
+						if !${Entity[${Ship.Approaching}](exists)} && !${Entity[${query2} && Distance <= "${MyShip.MaxTargetRange}"](exists)} && (${Entity[${GATEID}].Distance} < 110000 || ${Entity[${BEACONID}].Distance} < 110000)
 						{
 							Target2.Value:Approach[${MyShip.MaxTargetRange}]
+							Ship.Approaching:Set[${Target2.Value.ID}]
 							;I'm going to have to update this into a check that checks for sentry drones in space before approaching.
 							UI:UpdateConsole["Approaching rat out of range. Name = ${Target2.Value.Name} and distance < ${Target2.Value.Distance}."]
-							Ship:Activate_AfterBurner
 						}
 					}
 				}
-
-
-
-
-
 			}
 			while ${Target2:Next(exists)}
 		}
@@ -518,26 +513,11 @@ objectdef obj_Targets
 		if !${Entity[${ToTarget[1]}]} && ${ToTarget.Used} > 0
 		{
 			UI:UpdateConsole["Unprioritising target that no longer exists"]
-			;if ${ToTarget.Used} > 1
-			;{
 			ToTarget:Remove[1]
 			ToTarget:Collapse
-			;}
-			;else
-			;{
-			;	ToTarget:Clear
-			;	UI:UpdateConsole["ToTarget.Used is ${ToTarget.Used} after :Clear"]
-			;}
 		}
 
 
-		;if ${HasTargets} && ${Me.ActiveTarget(exists)}
-		;{
-		;	variable int OrbitDistance
-		;	OrbitDistance:Set[${Math.Calc[${MyShip.MaxTargetRange}*0.40/1000].Round}]
-		;	OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
-		;	Me.ActiveTarget:Orbit[${OrbitDistance}]
-		;}
 		variable index:string Targetser
 		variable iterator Targetse
 		Targetser:Insert["Kruul's Pleasure Garden"]
@@ -560,7 +540,8 @@ objectdef obj_Targets
 		Targetser:Insert["Amarr Shipyard Control Tower"]
 		Targetser:Insert["Blood Raider Cathedral"]
 		Targetser:GetIterator[Targetse]
-		if ${Targetse:First(exists)} && ${InRange.Used.Equal[0]} 
+		Targetse:First
+		if ${InRange.Used.Equal[0]} 
 		do
 		{
 			if ${Entity[Name =-"${Targetse.Value}"](exists)} && !${Entity[${GATEID}](exists)}
@@ -589,6 +570,7 @@ objectdef obj_Targets
 						else 
 						{
 							Entity[Name =-"${Targetse.Value}"]:Approach[${MyShip.MaxTargetRange}]
+							return TRUE
 						}
 						HasTargets:Set[TRUE]
 					}

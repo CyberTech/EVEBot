@@ -518,42 +518,39 @@ function RunCourierMission(int agentID)
 		{
 			UI:UpdateConsole["Activating autopilot."]
 		}
-		call This.StartMish ${Agents.AgentID}
-		UI:UpdateConsole["Mission complete! Heading home to turn in!"]
-		call This.WarpToHomeBase ${agentID}
+		call This.RunCombatMish
+		call This.WarpToHomeBase ${Agents.AgentID}
 		wait 50
 		call Agents.TurnInMission
 	}
 
-	function StartMish(int agentID)
+	function RunCombatMish()
 	{
 	UI:UpdateConsole["obj_Missions: DEBUG: Calling mission start"]
 	MissionTimer:Set[${Script.RunningTime}]
 	variable bool missionComplete = FALSE
 	variable time breakTime = ${Time.Timestamp}
 	variable int Counter = 1
+	variable index:entity Ents
 	variable int64 GateToUse
-	variable int Offset = ${This.CorpBMCount}
 	RoomCounter:Set[0]
 	; wait up to 15 seconds for spawns to appear
 	breakTime:Set[${Time.Timestamp}]
-	if ${MissionsToWait.Element[${This.MissionCache.Name[${Agents.AgentID}]}]} > 0
-	{
-		breakTime.Second:Inc[${MissionsToWait.Element[${This.MissionCache.Name[${Agents.AgentID}]}]}]
-	}
-	else
-	{
-		if !${This.BookmarkExists}
-		{
-			breakTime.Second:Inc[15]		
-		}
-	}
-	breakTime:Update
-	;while TRUE
-;	{
+
 	do
 	{
-		EVE:QueryEntities[Ents, ${LootEntityQuery}]
+		if ${MissionsToWait.Element[${This.MissionCache.Name[${Agents.AgentID}]}]} > 0
+		{
+			breakTime.Second:Inc[${MissionsToWait.Element[${This.MissionCache.Name[${Agents.AgentID}]}]}]
+		}
+		else
+		{
+			if !${This.BookmarkExists}
+			{
+				breakTime.Second:Inc[15]		
+			}
+		}
+		breakTime:Update
 		while !${Targets.TargetNPCs}
 		{
 			UI:UpdateConsole["No rats found, waiting on spawn."]
@@ -564,46 +561,89 @@ function RunCourierMission(int agentID)
 		   }
 		   wait 50
 		}
-		if ${Targets.TargetNPCs}
+		;START OF LOOP THAT DOESN'T END UNTIL THERE ARE NO RATS
+		while ${Targets.TargetNPCs}
 		{
-			if ${Me.TargetCount} > 0
+		   if ${This.Combat.CurrentState.Equal["FIGHT"]}
+		   {
+				if ${Targets.ToTarget.Used} == 0
+				{
+					call This.Combat.ProcessState
+				}
+				elseif ${Targets.ToTarget.Used} > 0 && ${Entity[${Targets.ToTarget[1]}].IsActiveTarget}
+				{
+					call This.Combat.ProcessState
+				}
+		   }
+		   else
+		   {
+			   	if !${Combat.CurrentState.Equal["RESTOCK"]} && ${Me.TargetCount} > 0
+			   	{
+					Combat:SetState
+					UI:UpdateConsole["Setting state on combat!"]
+				}
+		   }
+			wait 30
+		}
+		
+		if ${This.GatePresent} && (${RoomCounter} < 5 || ${This.HaveMissionKey})
+		{
+			if ${Entity["TypeID = TYPE_ACCELERATION_GATE"].Name.Equal["Gate To The Serpentis Base"]}
 			{
-				Combat:SetState
+				GateToUse:Set[${Entity["TypeID = TYPE_ACCELERATION_GATE && Distance > ${Entity["TypeID = TYPE_ACCELERATION_GATE"].Distance}"].ID}]
 			}
-			while ${Targets.TargetNPCs} && ${Me.TargetCount} > 0
+			else
 			{
-				
-			   if ${This.Combat.CurrentState.Equal["FIGHT"]}
-			   {
-					if ${Targets.ToTarget.Used} > 0 && ${Entity[${Targets.ToTarget[1]}].IsActiveTarget}
-					{
-						call This.Combat.ProcessState
-					}
-					elseif ${Targets.ToTarget.Used} == 0 || !${Entity[${Targets.ToTarget[1]}](exists)}
-					{
-						call This.Combat.ProcessState
-					}
-			   }
-			   else
-			   {
-				   	if !${Combat.CurrentState.Equal["RESTOCK"]}
-				   	{
-						Combat:SetState
-						UI:UpdateConsole["Setting state on combat!"]
-					}
-			   }
-			   wait 20
+				GateToUse:Set[${Entity["TypeID = TYPE_ACCELERATION_GATE"].ID}]
 			}
-		} 
-		elseif ((${This.MissionCache.Volume[${Agents.AgentID}]} > 0 && !${This.GatePresent}) || (!${This.HaveMissionKey} && ${RoomCounter} == 0)) && \
-		(${Ents.Used} > 0 && (!${This.HaveMishItem} || !${This.HaveMissionKey}))
+			EVE:Execute[CmdDronesReturnToBay]
+			if ${Config.Missioneer.SalvageModeName.Equal["Relay"]}
+			{
+				if !${This.BookmarkExists}
+				{
+					UI:UpdateConsole["Bookmarking closest entitity now."]
+					Entity["GroupID = 186 || GroupID = 12"]:CreateBookmark["Salvage","S","Corporation Locations"]
+				}
+				else
+				{
+					UI:UpdateConsole["We already have a bookmark for this room, moving on."]
+				}	
+			}			
+			UI:UpdateConsole["No Entities found, moving to next room. ${Entity[${GateToUse}].Name} found."]
+			Entity[${GateToUse}]:Approach[1500]
+			while ${Entity[${GateToUse}].Distance} > 2000
+			{
+				wait 45
+			}
+			call Ship.WarpPrepare
+			/* activate gate and go to next room */
+			wait 10
+			if ${Entity[${GateToUse}].Distance} < 2000
+			{
+			   	UI:UpdateConsole["Activating Acceleration Gate..."]
+			   	while ${Me.ToEntity.Mode} != 3
+			   	{
+			   		Entity[${GateToUse}]:Activate
+					wait 10			   		
+			   	}
+				RoomCounter:Inc
+				UI:UpdateConsole["Room Number: ${RoomCounter}"]
+				call ChatIRC.Say "${Me.Name}: Moving rooms, now entering ${RoomCounter}"
+				call Ship.WarpWait
+			}
+		}
+		if ${This.Combat.CurrentState.Equal["FLEE"]} || ${This.Combat.CurrentState.Equal["RESTOCK"]}
+		{
+			call This.WarpToEncounter ${Agents.AgentID}
+			RoomCounter:Set[0]
+		}
+	}
+	while ${This.GatePresent} || ${Me.ToEntity.Mode} != 3
+	;If we need to loot something it will happen now, since this code should only do what I want it to
+	if ${This.MissionCache.Volume[${Agents.AgentID}]} > 0 && !${This.HaveMishItem}
 		; this check should be incorporated into if statement
 		{
-			if !${This.HaveMissionKey}
-			{
-				call This.GetMissionKey
-			}
-			variable index:entity Ents
+			EVE:QueryEntities[Ents, ${LootEntityQuery}]
 			variable iterator Ent
 			variable index:item   Items
 			variable iterator   Item
@@ -660,95 +700,22 @@ function RunCourierMission(int agentID)
 							while ${Item:Next(exists)}
 						}
 				}
-				while ${Ent:Next(exists)}       
+				while ${Ent:Next(exists)}
+				if !${This.HaveMishItem}
+				{
+					UI:UpdateConsole["We still don't have mission item, something is very wrong. ERROR. ABORT ABORT ABORT."]
+				}       
 			}
 		}
-		elseif ${This.GatePresent} && (${RoomCounter} < 5 || ${This.HaveMissionKey}) && !${Targets.TargetNPCs} 
+		if !${This.BookmarkExists} && ${Config.Missioneer.SalvageModeName.Equal["Relay"]}
 		{
-			if ${Entity["TypeID = TYPE_ACCELERATION_GATE"].Name.Equal["Gate To The Serpentis Base"]}
-			{
-				GateToUse:Set[${Entity["TypeID = TYPE_ACCELERATION_GATE && Distance > ${Entity["TypeID = TYPE_ACCELERATION_GATE"].Distance}"].ID}]
-			}
-			else
-			{
-				GateToUse:Set[${Entity["TypeID = TYPE_ACCELERATION_GATE"].ID}]
-			}
-			EVE:Execute[CmdDronesReturnToBay]
-			if ${Config.Missioneer.SalvageModeName.Equal["Relay"]}
-			{
-				if !${This.BookmarkExists}
-				{
-					UI:UpdateConsole["Bookmarking closest entitity now."]
-					Entity["GroupID = 186 || GroupID = 12"]:CreateBookmark["Salvage","S","Corporation Locations"]
-				}
-				else
-				{
-					UI:UpdateConsole["We already have a bookmark for this room, moving on."]
-				}	
-			}			
-			UI:UpdateConsole["No Entities found, moving to next room. ${Entity[${GateToUse}].Name} found."]
-			Entity[${GateToUse}]:Approach[1500]
-			while ${Entity[${GateToUse}].Distance} > 2000
-			{
-				wait 45
-			}
-			call Ship.WarpPrepare
-			/* activate gate and go to next room */
-			wait 10
-			if ${Entity[${GateToUse}].Distance} < 2000
-			{
-			   	UI:UpdateConsole["Activating Acceleration Gate..."]
-			   	while ${Me.ToEntity.Mode} != 3
-			   	{
-			   		Entity[${GateToUse}]:Activate
-					wait 10			   		
-			   	}
-				RoomCounter:Inc
-				UI:UpdateConsole["Room Number: ${RoomCounter}"]
-				call ChatIRC.Say "${Me.Name}: Moving rooms, now entering ${RoomCounter}"
-				call Ship.WarpWait
-				breakTime:Set[${Time.Timestamp}]
-				breakTime.Second:Inc[15]
-				breakTime:Update
-			}
-		}
+			UI:UpdateConsole["Bookmarking closest entity now."]
+			Entity["GroupID = 186 || GroupID = 12"]:CreateBookmark["Salvage","S","Corporation Locations"]
+		}			
 		else
 		{
-				
-			if !${Targets.TargetNPCs} && (${This.HaveMishItem} || !${Entity[Name =- "Cargo Container"]})
-			{
-				if !${This.Combat.CurrentState.Equal["FLEE"]} && !${This.Combat.CurrentState.Equal["RESTOCK"]}
-				{
-					;not sure why I have this inspace check here, remove it at your own peril and inform me if it doesn't break stuff
-					if ${Config.Missioneer.SalvageModeName.Equal["Relay"]} && ${Me.InSpace}
-					{
-						if !${This.BookmarkExists}
-						{
-							UI:UpdateConsole["Bookmarking closest entity now."]
-							Entity["GroupID = 186 || GroupID = 12"]:CreateBookmark["Salvage","S","Corporation Locations"]
-						}			
-						else
-						{
-							UI:UpdateConsole["We already have a bookmark for this room, going on!"]
-						}
-						missionComplete:Set[TRUE]
-					}
-					else
-					{
-						missionComplete:Set[TRUE]
-						UI:UpdateConsole["${This.Combat.CurrentState}"]
-					}
-				}
-				else
-				{
-					call This.WarpToEncounter ${Agents.AgentID}
-					RoomCounter:Set[0]
-				}
-			}		
-		} 
-		wait 10                        
-	}
-	while !${missionComplete}
+			UI:UpdateConsole["We already have a bookmark for this room, going on!"]
+		}
 		MissionTimer:Set[${Math.Calc[${Script.RunningTime}-${MissionTimer}]}]
 		MissionTimer:Set[${Math.Calc[${MissionTimer}/60000]}]
 		UI:UpdateConsole["Finished mission, heading to active agent for new one. This mission took ${MissionTimer} minutes and ${Math.Calc[${MissionTimer}%60]} seconds. :O"]

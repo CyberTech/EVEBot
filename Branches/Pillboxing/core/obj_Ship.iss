@@ -16,7 +16,7 @@ objectdef obj_Ship
 
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 2
-	variable int Approaching
+	variable int64 Approaching
 	variable int Calculated_MaxLockedTargets
 	variable float BaselineUsedCargo
 	variable bool CargoIsOpen
