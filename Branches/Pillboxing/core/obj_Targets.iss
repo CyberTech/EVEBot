@@ -442,9 +442,10 @@ objectdef obj_Targets
 							}
 							else
 							{
-								if ${Ship.Approaching.Equal[${Entity[${ToTarget[1]}]}]}
+								if !${Ship.Approaching.Equal[${Entity[${ToTarget[1]}]}]}
 								{
-									Entity[${ToTarget[1]}]:Approach[${MyShip.MaxTargetRange}]
+									Ship:Approach[${Entity[${ToTarget[1]}]},${MyShip.MaxTargetRange}]
+									UI:UpdateConsole["Approaching rat out of range. Name = ${Target2.Value.Name} and distance < ${Target2.Value.Distance}."]
 								}
 							}	
 						}
@@ -479,8 +480,7 @@ objectdef obj_Targets
 					{
 						if !${Entity[${Ship.Approaching}](exists)} && !${Entity[${query2} && Distance <= "${MyShip.MaxTargetRange}"](exists)} && (${Entity[${GATEID}].Distance} < 110000 || ${Entity[${BEACONID}].Distance} < 110000)
 						{
-							Target2.Value:Approach[${MyShip.MaxTargetRange}]
-							Ship.Approaching:Set[${Target2.Value.ID}]
+							Ship:Approach[${Target2.Value.ID},${MyShip.MaxTargetRange}]
 							;I'm going to have to update this into a check that checks for sentry drones in space before approaching.
 							UI:UpdateConsole["Approaching rat out of range. Name = ${Target2.Value.Name} and distance < ${Target2.Value.Distance}."]
 						}
@@ -560,17 +560,16 @@ objectdef obj_Targets
 				}
 				else
 				{
-					if ${Me.ToEntity.Mode} > 1
+					if !${Ship.Approaching.Equal[${Entity[Name =- "Targetse.Value"].ID}]}
 					{
 						;Check here for sentrydrones
 						if ${Ship.Drones.IsDroneBoat}
 						{
-							Entity[Name =-"${Targetse.Value}"]:Approach[${Me.DroneControlDistance}]
+							Ship:Approach[${Entity[Name =-"${Targetse.Value}"]},${Me.DroneControlDistance}]
 						}
 						else 
 						{
-							Entity[Name =-"${Targetse.Value}"]:Approach[${MyShip.MaxTargetRange}]
-							return TRUE
+							Ship:Approach[${Entity[Name =-"${Targetse.Value}"]},${MyShip.MaxTargetRange}]
 						}
 						HasTargets:Set[TRUE]
 					}
