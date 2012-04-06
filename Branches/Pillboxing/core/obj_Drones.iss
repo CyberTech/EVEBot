@@ -438,7 +438,7 @@ objectdef obj_Drones
 			}
 			return
 		}
-		if ${MyShip.DronebayCapacity.Equal[125]}
+		if ${MyShip.DronebayCapacity} >= 125
 		{
 			if ${Me.ActiveTarget.Radius} < 100 && ${This.DronesOut} > 5
 			{
