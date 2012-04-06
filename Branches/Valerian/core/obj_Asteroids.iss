@@ -80,42 +80,69 @@ objectdef obj_Asteroids
 
 	function MoveToRandomBeltBookMark()
 	{
+		BeltBookMarkList:Clear
 		EVE:GetBookmarks[BeltBookMarkList]
 
 		variable int RandomBelt
 		variable string Label
 		variable string prefix
 
-		while ${BeltBookMarkList.Used} > 0
+		variable int count
+		variable int used
+
+		if ${Config.Miner.IceMining}
 		{
-			RandomBelt:Set[${Math.Rand[${BeltBookMarkList.Used}]:Inc[1]}]
-
-			if ${Config.Miner.IceMining}
-			{
-				prefix:Set[${Config.Labels.IceBeltPrefix}]
-			}
-			else
-			{
-				prefix:Set[${Config.Labels.OreBeltPrefix}]
-			}
-
-			Label:Set[${BeltBookMarkList[${RandomBelt}].Label}]
-
-			if (${BeltBookMarkList[${RandomBelt}].SolarSystemID} != ${Me.SolarSystemID} || \
+			prefix:Set[${Config.Labels.IceBeltPrefix}]
+		}
+		else
+		{
+			prefix:Set[${Config.Labels.OreBeltPrefix}]
+		}
+		used:Set[${BeltBookMarkList.Used}]
+		/* Let's eliminate all bookmarks that don't match our prefix 
+		/* and system first. */
+		for ( count:Set[1] ; ${count} <= ${used} ; count:Inc )
+		{
+			Label:Set[${BeltBookMarkList[${count}].Label}]
+			if (${BeltBookMarkList[${count}].SolarSystemID} != ${Me.SolarSystemID} || \
 				${Label.Left[${prefix.Length}].NotEqual[${prefix}]})
 			{
-				BeltBookMarkList:Remove[${RandomBelt}]
-				BeltBookMarkList:Collapse
+				BeltBookMarkList:Remove[${count}]
 				continue
 			}
+		}
+		BeltBookMarkList:Collapse
+		variable float Distance
+		do
+		{
+			RandomBelt:Set[${Math.Rand[${BeltBookMarkList.Used(int):Dec}]:Inc[1]}]
 
+			Label:Set[${BeltBookMarkList[${RandomBelt}].Label}]
+			if ${BeltBookMarkList[${RandomBelt}].X(exists)}
+				Distance:Set[${Math.Distance[${BeltBookMarkList[${RandomBelt}].X},${BeltBookMarkList[${RandomBelt}].Y},${BeltBookMarkList[${RandomBelt}].Z},${Me.ToEntity.X},${Me.ToEntity.Y},${Me.ToEntity.Z}]}]
+			else
+				Distance:Set[${Math.Distance[${BeltBookMarkList[${RandomBelt}].ToEntity.X},${BeltBookMarkList[${RandomBelt}].ToEntity.Y},${BeltBookMarkList[${RandomBelt}].ToEntity.Z},${Me.ToEntity.X},${Me.ToEntity.Y},${Me.ToEntity.Z}]}]
+
+			if ${Distance} > WARP_RANGE
+			{
+				break
+			}
+		}
+		while ${BeltBookMarkList.Used} > 1
+
+		if ${BeltBookMarkList.Used} /* If it's 0, we don't have any matching bookmarks, don't try to set autopilot to NULL. */
+		{
 			call Ship.WarpToBookMark ${BeltBookMarkList[${RandomBelt}].ID}
 
 			This.BeltArrivalTime:Set[${Time.Timestamp}]
 			This.LastBookMarkIndex:Set[${RandomBelt}]
 			This.UsingBookMarks:Set[TRUE]
-			return
 		}
+		else
+		{
+			UI:UpdateConsole["DEBUG: obj_Asteroids:MoveToRandomBeltBookMark: No belt bookmarks found!",LOG_DEBUG]
+		}
+		return
 	}
 
 	function MoveToField(bool ForceMove)
@@ -153,6 +180,7 @@ objectdef obj_Asteroids
 				{
 					/* We have a stored location, we should return to it. */
 					UI:UpdateConsole["Returning to last location (${Bookmarks.StoredLocation})"]
+					call Ship.TravelToSystem ${EVE.Bookmark[${Bookmarks.StoredLocation}].SolarSystemID}
 					call Ship.WarpToBookMarkName "${Bookmarks.StoredLocation}"
 					This.BeltArrivalTime:Set[${Time.Timestamp}]
 					Bookmarks:RemoveStoredLocation
@@ -338,6 +366,22 @@ objectdef obj_Asteroids
 		AsteroidList:GetSettingIterator
 	}
 
+	member:bool FieldEmpty()
+	{
+		variable iterator AsteroidIterator
+		if ${AsteroidList.Used} == 0
+		{
+			call This.UpdateList
+		}
+
+		This.AsteroidList:GetIterator[AsteroidIterator]
+		if ${AsteroidIterator:First(exists)}
+		{
+			return FALSE
+		}
+		return TRUE
+	}
+
 	function:bool TargetNext(bool CalledFromMoveRoutine=FALSE)
 	{
 		variable iterator AsteroidIterator
@@ -431,6 +475,11 @@ objectdef obj_Asteroids
 			if ${Entity["GroupID = GROUP_ASTEROIDBELT"].Distance} < CONFIG_OVERVIEW_RANGE
 			{
 				This:BeltIsEmpty["${Entity[GroupID = GROUP_ASTEROIDBELT]}"]
+			}
+			if ${CalledFromMoveRoutine}
+			{
+				; Don't do any movement, we're being called from inside another movement function
+				return FALSE
 			}
 			call This.MoveToField TRUE
 			return TRUE
