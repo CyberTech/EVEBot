@@ -55,7 +55,7 @@ objectdef obj_Belts
 		call This.WarpToNextBelt ${WarpInDistance}
 	}
 	
-	function WarpToNextBelt(int WarpInDistance=0)
+	function WarpToNextBelt(int WarpInDistance=0, bool ReverseOrder=FALSE)
 	{
 		if ${beltIndex.Used} == 0 
 		{
@@ -68,9 +68,19 @@ objectdef obj_Belts
 		;	This:ResetBeltList
 		;}
 		
-		if !${beltIterator:Next(exists)}
+		if ${ReverseOrder}
 		{
-			beltIterator:First
+			if !${beltIterator:Previous(exists)}
+			{
+				beltIterator:Last
+			}
+		}
+		else
+		{
+			if !${beltIterator:Next(exists)}
+			{
+				beltIterator:First
+			}
 		}
 		
 		if ${beltIterator.Value(exists)}
