@@ -584,6 +584,11 @@ function RunCourierMission(int agentID)
 				}
 		   }
 			wait 30
+			if ${This.Combat.CurrentState.Equal["FLEE"]} || ${This.Combat.CurrentState.Equal["RESTOCK"]}
+			{
+				call This.WarpToEncounter ${Agents.AgentID}
+				RoomCounter:Set[0]
+			}
 		}
 		
 		if ${This.GatePresent} && (${RoomCounter} < 5 || ${This.HaveMissionKey})
@@ -623,11 +628,6 @@ function RunCourierMission(int agentID)
 			call Ship.WarpWait
 			UI:UpdateConsole["Room Number: ${RoomCounter}"]
 			call ChatIRC.Say "${Me.Name}: Moving rooms, now entering ${RoomCounter}"
-		}
-		if ${This.Combat.CurrentState.Equal["FLEE"]} || ${This.Combat.CurrentState.Equal["RESTOCK"]}
-		{
-			call This.WarpToEncounter ${Agents.AgentID}
-			RoomCounter:Set[0]
 		}
 	}
 	while ${This.GatePresent} || ${Me.ToEntity.Mode} == 3
