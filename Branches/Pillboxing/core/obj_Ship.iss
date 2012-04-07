@@ -1794,7 +1794,7 @@ objectdef obj_Ship
 			This:Deactivate_Cloak[]
 		}
 		;This:Deactivate_SensorBoost
-
+		This:Deactivate_AfterBurner
 		if ${This.Drones.WaitingForDrones}
 		{
 			UI:UpdateConsole["Drone deployment already in process, delaying warp (${This.Drones.WaitingForDrones})", LOG_CRITICAL]
