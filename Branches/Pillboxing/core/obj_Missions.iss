@@ -533,6 +533,7 @@ function RunCourierMission(int agentID)
 	variable int Counter = 1
 	variable index:entity Ents
 	variable int64 GateToUse
+	variable bool SET
 	RoomCounter:Set[0]
 	; wait up to 15 seconds for spawns to appear
 	breakTime:Set[${Time.Timestamp}]
@@ -562,9 +563,14 @@ function RunCourierMission(int agentID)
 		   wait 50
 		}
 		;START OF LOOP THAT DOESN'T END UNTIL THERE ARE NO RATS
-		while ${Targets.TargetNPCs}
+		do 
 		{
-		   if ${This.Combat.CurrentState.Equal["FIGHT"]}
+			while ${breakTime.Timestamp} > ${Time.Timestamp} && !${This.BookmarkExists}
+			{
+				wait 50
+				UI:UpdateConsole["Waiting on spawns"]
+			}
+		   if ${This.Combat.CurrentState.Equal["FIGHT"]} && ${Me.TargetCount} > 0
 		   {
 				if ${Targets.ToTarget.Used} == 0
 				{
@@ -583,14 +589,14 @@ function RunCourierMission(int agentID)
 					UI:UpdateConsole["Setting state on combat!"]
 				}
 		   }
-			wait 30
 			if ${This.Combat.CurrentState.Equal["FLEE"]} || ${This.Combat.CurrentState.Equal["RESTOCK"]}
 			{
 				call This.WarpToEncounter ${Agents.AgentID}
 				RoomCounter:Set[0]
 			}
+			wait 30
 		}
-		
+		while ${Targets.TargetNPCs}
 		if ${This.GatePresent} && (${RoomCounter} < 5 || ${This.HaveMissionKey})
 		{
 			if ${Entity["TypeID = TYPE_ACCELERATION_GATE"].Name.Equal["Gate To The Serpentis Base"]}
@@ -628,9 +634,12 @@ function RunCourierMission(int agentID)
 			call Ship.WarpWait
 			UI:UpdateConsole["Room Number: ${RoomCounter}"]
 			call ChatIRC.Say "${Me.Name}: Moving rooms, now entering ${RoomCounter}"
+			breakTime:Set[${Time.Timestamp}]
+			breakTime.Second:Inc[15]
+			breakTime:Update
 		}
 	}
-	while ${This.GatePresent} || ${Me.ToEntity.Mode} == 3
+	while ${This.GatePresent} || ${Me.ToEntity.Mode} == 3 || ${Targets.TargetNPCs}
 	;If we need to loot something it will happen now, since this code should only do what I want it to
 	if ${This.MissionCache.Volume[${Agents.AgentID}]} > 0 && !${This.HaveMishItem}
 		; this check should be incorporated into if statement
@@ -650,6 +659,7 @@ function RunCourierMission(int agentID)
 					{
 						call Ship.Approach ${Ent.Value.ID} 1000
 					}
+					UI:UpdateConsole["Opening ${Ent.Value.Name} to loot mission item."]
 					Ent.Value:OpenCargo
 					wait 10
 					call Ship.OpenCargo
@@ -682,6 +692,10 @@ function RunCourierMission(int agentID)
 									break
 								}
 							}
+							else
+							{
+								echo "DERP ${Item.Value.TypeID}"
+							}
 						}
 						while ${Item:Next(exists)}
 					}
@@ -691,6 +705,11 @@ function RunCourierMission(int agentID)
 				{
 					UI:UpdateConsole["We still don't have mission item, something is very wrong. ERROR. ABORT ABORT ABORT."]
 				}       
+			}
+			else
+			{
+				UI:UpdateConsole["Nothing found to loot for item mish! Pausing Script."]
+				Script:Pause
 			}
 		}
 		if !${This.BookmarkExists} && ${Config.Missioneer.SalvageModeName.Equal["Relay"]}
@@ -907,12 +926,12 @@ function RunCourierMission(int agentID)
 		variable iterator BookmarkIter
 		EVE:GetBookmarks[BookmarksForMeToPissOn]
 		BookmarksForMeToPissOn:RemoveByQuery[${LavishScript.CreateQuery[OwnerID != "${Me.Corp.ID}"]}]
-		UI:UpdateConsole["BookmarkExists: Found ${BookmarksForMeToPissOn.Used} corp bookmarks."]
+		;UI:UpdateConsole["BookmarkExists: Found ${BookmarksForMeToPissOn.Used} corp bookmarks."]
 		BookmarksForMeToPissOn:Collapse
 		BookmarksForMeToPissOn:GetIterator[BookmarkIter]
 		if ${BookmarkIter:First(exists)}
 		{
-			UI:UpdateConsole["Corp Bookmark found, name is ${BookmarkIter.Value.Label}"]
+			;UI:UpdateConsole["Corp Bookmark found, name is ${BookmarkIter.Value.Label}"]
 			do
 			{
 				if ${BookmarkIter.Value.Distance} < 500000 && ${BookmarkIter.Value.Distance} > 0
@@ -921,7 +940,7 @@ function RunCourierMission(int agentID)
 				}
 				else
 				{
-					UI:UpdateConsole["Bookmark found, name ${BookmarkIter.Value.Label}, Distance ${BookmarkIter.Value.Distance}"]
+					;UI:UpdateConsole["Bookmark found, name ${BookmarkIter.Value.Label}, Distance ${BookmarkIter.Value.Distance}"]
 				}
 			}
 			while ${BookmarkIter:Next(exists)}
