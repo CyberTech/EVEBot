@@ -692,16 +692,6 @@ objectdef obj_Cargo
 						ListToMove:Insert[${CargoIterator.Value.ID}]
 						UI:UpdateConsole["TransferListToShip: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
 					}
-					if ${ListToMove.Used} > 0
-					{
-						EVE:MoveItemsTo[ListToMove,MyShip,CargoHold]
-					}
-					if ${QuantityToMove} > 0
-					{
-						CargoIterator.Value:MoveTo[MyShip, CargoHold, ${QuantityToMove}]
-						wait 15
-					}
-
 					if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
 					{
 						UI:UpdateConsole["DEBUG: TransferListToShip: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
@@ -710,6 +700,16 @@ objectdef obj_Cargo
 				}
 				while ${CargoIterator:Next(exists)}
 			}
+			if ${ListToMove.Used} > 0
+			{
+				EVE:MoveItemsTo[ListToMove,MyShip,CargoHold]
+			}
+			if ${QuantityToMove} > 0
+			{
+				CargoIterator.Value:MoveTo[MyShip, CargoHold, ${QuantityToMove}]
+				wait 15
+			}
+
 			wait 10
 		}
 		else
