@@ -458,7 +458,7 @@ objectdef obj_Drones
 		}
 		if (${This.DronesInSpace} > 0)
 		{
-			if ${Me.TargetedByCount} < ${Me.TargetCount}
+			if (${Me.TargetedByCount}+1) < ${Me.TargetCount}
 			{
 				This:SetAllDronesToReturn
 				UI:UpdateConsole["We no longer have all agro, sucking drones back in my lord!"]

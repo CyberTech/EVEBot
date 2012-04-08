@@ -35,6 +35,7 @@ objectdef obj_Targets
 
 	variable index:string SpecialTargetsToLoot
 	variable iterator SpecialTargetToLoot
+	variable uint WarpScramQuery = ${LavishScript.CreateQuery[IsWarpScramblingMe = "0"]}
 	method Initialize()
 	{
 		;WINNING:Set[${LavishScript.CreateQuery[]}]
@@ -506,9 +507,13 @@ objectdef obj_Targets
 				do
 				{
 					ToTarget:Insert[${Jammer.Value.ID}]
-					UI:UpdateConsole["Jammer found with name ${Jammer.Value.Name}"]
 				}
 				while ${Jammer:Next(exists)}
+			if ${Me.ToEntity.IsWarpScrambled}
+			{
+				UI:UpdateConsole["We are being warp scrambled, all priority targets or jammers are ignored until we're not."]
+				ToTarget:RemoveByQuery[${WarpScramQuery}]
+			}
 		}
 		if !${Entity[${ToTarget[1]}]} && ${ToTarget.Used} > 0
 		{
