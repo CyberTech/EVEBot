@@ -1872,12 +1872,12 @@ objectdef obj_Ship
 		This.ModuleList_AB_MWD:GetIterator[ModuleIter]
 		if ${ModuleIter:First(exists)}
 		{
-			if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline} && ${MyShip.CapacitorPct} > 50
+			if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline} && ${MyShip.CapacitorPct} > 30
 			{
 				UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
 				ModuleIter.Value:Click
 			}
-			elseif ${MyShip.CapacitorPct} < 30 && ${ModuleIter.Value.IsActive}
+			elseif ${MyShip.CapacitorPct} < 10 && ${ModuleIter.Value.IsActive}
 			{
 				ModuleIter.Value:Click
 				UI:UpdateConsole["Deactivating ${ModuleIter.Value.ToItem.Name} to save cap, will be enableable at 50% cap"]
