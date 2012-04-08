@@ -822,7 +822,11 @@ objectdef obj_Agents
 			}
 			while ${amIterator:Next(exists)}
 		}
-
+		if ${Missions.MissionCache.Name[${This.AgentID}].Equal[${amIterator.Value.Name}]}
+		{
+			UI:UpdateConsole["We already have details for this missions, skipping this song and dance."]
+			return
+		}
 		if !${amIterator.Value(exists)}
 		{
 			UI:UpdateConsole["obj_Agents: ERROR: Did not find mission!  Will retry...", LOG_CRITICAL]
