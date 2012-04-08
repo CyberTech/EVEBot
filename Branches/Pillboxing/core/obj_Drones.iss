@@ -310,26 +310,27 @@ objectdef obj_Drones
 		{
 			return	
 		}
-		
-		Me:GetActiveDroneIDs[This.ActiveDroneIDList]
-		UI:UpdateConsole["Recalling ${This.ActiveDroneIDList.Used} Drones"]
-		EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
-		wait 20
-		
-		while ${This.DronesInSpace} > 0
+		if ${This.DronesInSpace} > 0
 		{
-			if ${MyShip.ArmorPct} < (${Config.Combat.MinimumArmorPct}-10)  || \ 
-			${MyShip.ShieldPct} < (${Config.Combat.MinimumShieldPct} - 10) || \
-			(${MyShip.ShieldPct} < 15 && ${Config.Combat.MinimumShieldPct} > 0) || \
-			${MyShip.ArmorPct} < 15
-			{
-				UI:UpdateConsole["OUR SHIT IS FUCKED UP FUCK THE DRONES"]
-				break
-			}
+			Me:GetActiveDroneIDs[This.ActiveDroneIDList]
+			UI:UpdateConsole["Recalling ${This.ActiveDroneIDList.Used} Drones"]
+			EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
 			wait 20
+			
+			while ${This.DronesInSpace} > 0
+			{
+				if ${MyShip.ArmorPct} < (${Config.Combat.MinimumArmorPct}-10)  || \ 
+				${MyShip.ShieldPct} < (${Config.Combat.MinimumShieldPct} - 10) || \
+				(${MyShip.ShieldPct} < 15 && ${Config.Combat.MinimumShieldPct} > 0) || \
+				${MyShip.ArmorPct} < 15
+				{
+					UI:UpdateConsole["OUR SHIT IS FUCKED UP FUCK THE DRONES"]
+					break
+				}
+				wait 20
+			}
 		}
 		
-		return
 	}
 
 	member:int DronesOut()
@@ -420,6 +421,10 @@ objectdef obj_Drones
 		variable index:activedrone ActiveDroneList
 		variable index:int64 engageIndex
 		if !${This.DronesReady}
+		{
+			return
+		}
+		if ${MyShip.DronebayCapacity.Equal[0]}
 		{
 			return
 		}
