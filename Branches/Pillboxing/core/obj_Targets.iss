@@ -359,7 +359,19 @@ objectdef obj_Targets
 		variable bool HasTargets = FALSE
 		variable int ToLock
 		variable int64 GATEID = ${Entity["TypeID = TYPE_ACCELERATION_GATE"].ID}
-		variable int64 BEACONID = ${Entity[Name =- "Beacon"].ID}
+		;variable int64 BEACONID = ${Entity[Name =- "Beacon"].ID}
+		if ${GATEID} > 0
+		{
+			DeclareVariable ThingToOrbit entity local ${Entity[${GATEID}]}
+		}
+		else
+		{
+			DeclareVariable ThingToOrbit entity local ${Entity[Name =- "Beacon"]}
+		}
+		if ${ThingToOrbit.Distance} > 110000 && !${Ship.Approaching.Equal[${ThingToOrbit.ID}]}
+		{
+			Ship:Approach[${ThingToOrbit.ID}]
+		}
 		if ${Time.Timestamp} > ${TIMER.Timestamp}
 		{
 			Counter:Set[0]
@@ -389,21 +401,6 @@ objectdef obj_Targets
 		EVE:QueryEntities[InRange, ${query2}]
 		ToLock:Set[${Math.Calc[${Ship.MaxLockedTargets} - ${Me.TargetCount} - ${Me.TargetingCount}]}]
 		InRange:GetIterator[Target2]
-		if (!${Ship.Approaching.Equal[${Entity[${query2}]}]}  && \
-			${Entity[${query2}](exists)} && \
-			 (${Entity[${GATEID}].Distance} > 110000 || (${Entity[${BEACONID}].Distance} > 110000 && !${Entity[${GATEID}](exists)})) 
-		{
-			if ${Entity[${GATEID}](exists)}
-			{
-				Entity[${GATEID}]:Approach[10000]
-				UI:UpdateConsole["Approaching gate."]
-			}
-			else
-			{
-				Entity[${BEACONID}]:Approach[10000]
-				UI:UpdateConsole["Approaching beacon."]
-			}
-		}
 		if ${Target2:First(exists)}
 		{
 			HasTargets:Set[TRUE]
