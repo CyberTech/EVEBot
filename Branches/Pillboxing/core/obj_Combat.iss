@@ -304,7 +304,7 @@ objectdef obj_Combat
 	member:int TypeIDForMish()
 	{
 		variable int TempNumber
-		variable int intCounter = 1
+		variable int intCounter = 0
 		if ${Me.InSpace}
 		{
 			do
@@ -569,8 +569,6 @@ objectdef obj_Combat
 
 			if ${Config.Combat.OrbitAtOptimal}
 			{
-				;TODO, change this to a sentry drone check of some sort
-
 				Ship:OrbitAtOptimal
 			}
 			else
@@ -624,28 +622,40 @@ objectdef obj_Combat
 
 	function Flee()
 	{
+		variable bool bStop = FALSE
 		call ChatIRC.Say "Fleeing for some reason, TODO: add checking and reporting as to reason."
 		This.CurrentState:Set["FLEE"]
 		This.Fled:Set[TRUE]
 		Ship:Deactivate_AfterBurner
+		if (${MyShip.ArmorPct} < 100 && ${Config.Combat.MinimumShieldPct} > 0) ||
+		(${MyShip.StructurePct} < 100 && ${Config.Combat.MinimumArmorPct} > 100)
+		{
+			bStop:Set[TRUE]
+		}
 		if ${Config.Combat.RunToStation}
 		{
-			call This.FleeToStation
+			call This.FleeToStation ${bStop}
 		}
 		else
 		{
-			call This.FleeToSafespot
+			call This.FleeToSafespot ${bStop}
 		}
 	}
 
-	function FleeToStation()
+	function FleeToStation(bool bStop)
 	{
 		variable index:entity StationsInSystem
-		variable int64 TempID = ${Entity[Type =- "Planet"]}
+		variable int64 TempID
+		TempID:Set[${Entity[Type =- "Planet"].ID}]
 		EVE:QueryEntities[StationsInSystem,${StationQuery}]
 		if !${Station.Docked} && ${StationsInSystem.Used} > 0
 		{
 			call Station.Dock
+			if ${bStop}
+			{
+				UI:UpdateConsole["We have received damage beyond our ability to repair: Pausing Script"]
+				Script:Pause
+			}
 		}
 		elseif ${StationsInSystem.Used.Equal[0]} && ${Universe[${Me.SolarSystemID}].Security} > .5
 		{
@@ -661,7 +671,7 @@ objectdef obj_Combat
 		}
 	}
 
-	function FleeToSafespot()
+	function FleeToSafespot(bool bStop)
 	{
 		if ${Safespots.IsAtSafespot}
 		{
@@ -678,6 +688,11 @@ objectdef obj_Combat
 				call Safespots.WarpTo
 				wait 30
 			}
+		}
+		if ${bStop}
+		{
+			UI:UpdateConsole["We have received damage beyond our ability to repair: Pausing Script"]
+			Script:Pause
 		}
 	}
 
