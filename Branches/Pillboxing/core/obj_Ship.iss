@@ -79,7 +79,7 @@ objectdef obj_Ship
 			case 508
 			 	return 89-657
 			case 510
-				return 385
+				return 385-655
 			case 771
 				return 654
 			case 55
@@ -1328,7 +1328,7 @@ objectdef obj_Ship
 			OriginalDistance:Inc[10]
 
 			CurrentDistance:Set[${Entity[${EntityID}].Distance}]
-			UI:UpdateConsole["Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc[(${CurrentDistance} - ${Distance}) / ${MyShip.MaxVelocity}].Ceil} Seconds away"]
+			UI:UpdateConsole["Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc[(${CurrentDistance} - ${Distance}) / (${MyShip.MaxVelocity}*${This.ModuleList_AB_MWD[1].VelocityBonus}).Ceil} Seconds away"]
 
 			do
 			{

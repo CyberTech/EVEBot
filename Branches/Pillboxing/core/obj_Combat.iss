@@ -127,6 +127,7 @@ objectdef obj_Combat
 		ThermalDamage:Insert[200]
 		ThermalDamage:Insert[238]
 		ThermalDamage:Insert[204]
+		ThermalDamage:Insert[24511]
 		EMDamage:Insert[21894]
 		EMDamage:Insert[20735]
 		EMDamage:Insert[20799]
@@ -154,7 +155,9 @@ objectdef obj_Combat
 		EMDamage:Insert[2205]
 		EMDamage:Insert[238]
 		EMDamage:Insert[202]
+		EMDamage:Insert[24509]
 		ExplosiveDamage:Insert[238]
+		ExplosiveDamage:Insert[24507]
 		ExplosiveDamage:Insert[27453]
 		ExplosiveDamage:Insert[199]
 		ExplosiveDamage:Insert[21902]
@@ -179,6 +182,7 @@ objectdef obj_Combat
 		ExplosiveDamage:Insert[205]
 		ExplosiveDamage:Insert[21640]
 		KineticDamage:Insert[238]
+		KineticDamage:Insert[2629]
 		KineticDamage:Insert[21918]
 		KineticDamage:Insert[20733]
 		KineticDamage:Insert[20797]
@@ -333,6 +337,7 @@ objectdef obj_Combat
 				else
 				{
 					intCounter:Inc
+					echo ${intCounter} ${Ship.AmmoGroup.Count[-]} ${Ship.AmmoGroup.Token[${intCounter},-]}
 				}
 			}
 			while ${intCounter} <= ${Math.Calc[${Ship.AmmoGroup.Count[-]}+1]}
@@ -419,7 +424,7 @@ objectdef obj_Combat
 			}
 			else
 			{
-				echo "No items found matching that group ID"
+				echo "No items found matching that group ID, GroupID is ${GROUPID}"
 			}
 		}
 		else
@@ -931,168 +936,7 @@ objectdef obj_Combat
 
 	function RefillDrones()
 	{
-		variable index:item indDrones
-		variable iterator ittyDrones
-		variable bool IsFound
-		variable iterator ittyDamage
-		variable index:int Counter
-		variable index:item ContainerItems
-		variable iterator CargoIterator
-		variable index:int64 DronesToMove
-		EVE:Execute[OpenDroneBayOfActiveShip]
-		wait 20
-		;This is going to assume we're in a station for now
-		;This is going to hurt...so first we're going to see what kind of drones we have in bay first...then see if they're right for our mission
-		;If they're not the correct drone for our mish, we add it to the stack to be moved from bay TO hangar. If they are, we'll check how many of them we have.
-		if ${Math.Calc[${MyShip.DronebayCapacity}-${MyShip.UsedDroneBayCapacity}]} <= 0
-		{
-			UI:UpdateConsole["Either this isn't a drone boat, or ISXEVE is returning wrong....or our drone bay is full :D."]
-		}
-		MyShip:GetDrones[indDrones]
-		indDrones:GetIterator[ittyDrones]
-		Me.Station:GetHangarItems[ContainerItems]
-		ContainerItems:RemoveByQuery[${LavishScript.CreateQuery[GroupID != "100"]}]
-		;Container Items will only have drones left in it now.
-		ContainerItems:GetIterator[CargoIterator]
-		;Now we have an iterator and index for everything in Hangar and drone bay
-		if ${MishDB.Element[${Missions.MissionCache.Name[${Agents.AgentID}]}]} > 0
-		{
-			;UI:UpdateConsole["Found ${mission} in MishDB, damage type is ${This.DamageString[${MishDB.Element[${mission}]}]}"]
-			Switch "${MishDB.Element[${Missions.MissionCache.Name[${Agents.AgentID}]}]}"
-			{
-				case 1
-					EMDamage:GetIterator[ittyDamage]
-				case 2DronebayCapacity
-					ThermalDamage:GetIterator[ittyDamage]
-				case 3
-					KineticDamage:GetIterator[ittyDamage]
-				case 4
-					ExplosiveDamage:GetIterator[ittyDamage]
-			}
-		}
-		else
-		{
-			UI:UpdateConsole["This mission was not found in mishDB, can't restock drones."]
-			return
-		}
-		;At this point, ittyDamage should now contain an iterator for all the typeids that match the damagetype for the active mission
-		if ${ittyDrones:First(exists)}
-		{
-			;Now we're going to iterate through the drones in our drone bay
-			do
-			{
-				if ${ittyDamage:First(exists)}
-				{
-					;Inside the iteration for the drones in bay, we're now going to loop through all the typeids in the list of typeids for our mission type
-					do
-					{
-						if ${ittyDamage.Value.Equal[${ittyDrones.Value.TypeID}]}
-						{
-							IsFound:Set[TRUE]
-						}
-					}
-					while ${ittyDamage:Next(exists)}
-				}
-				;We reset the IsFound bool here ready for the next iteration, and also check it after the current one
-				if ${IsFound}
-				{
-					IsFound:Set[FALSE]
-				}
-				else
-				{
-					UI:UpdateConsole["Found drone in bay that doesn't match our current required damage type."]
-					DronesToMove:Insert[${ittyDrones.Value.ID}]
-				}
-			}
-			while ${ittyDrones:Next(exists)}
-			;Now if I've written the previous code right, DronesToMove should now contain a list of drones that we need to move to hangar
-			UI:UpdateConsole["Moving ${DronesToMove.Used} items from drone bay to hangar."]
-			EVE:MoveItemsTo[DronesToMove,MyStationHangar, Hangar]
-			wait 50
-		}
-		else
-		{
-			UI:UpdateConsole["Combat.RefillDrones: No drones found in drone bay"]
-		}
-			UI:UpdateConsole["We have ${Math.Calc[${MyShip.DronebayCapacity}-${MyShip.UsedDroneBayCapacity}]} m3 to fill."]
-			;So now we have no drones in our bay that aren't right for our mission (this is so when I start taking multiple damage types on a mission it's ready to use with no mods)
-			Me.Station:GetHangarItems[ContainerItems]
-			if ${CargoIterator:First(exists)}
-			{
-				do
-				{
-					if ${Ship.Drones.NumberOfDronesInBay[SENTRY]} < 5 && ${MyShip.DronebayCapacity} >= 150
-					{
-						UI:UpdateConsole["Reloading sentry drones now."]
-						if ${ittyDamage:First(exists)}
-						{
-							do
-							{
-								if ${CargoIterator.Value.TypeID.Equal[${ittyDamage.Value}]} && \
-									${CargoIterator.Value.Volume.Equal[25]} && \
-									${Ship.Drones.IsSentryDrone[${CargoIterator.Value.TypeID}]}
-									{
-										call Cargo.TransferTypeIDToShip ${CargoIterator.Value.TypeID} ${Math.Calc[5-${Ship.Drones.NumberOfDronesInBay[SENTRY]}]}
-									}
 
-							}
-							while ${ittyDamage:Next(exists)}
-						}
-					}
-					elseif ${Ship.Drones.NumberOfDronesInBay[HEAVY]} < 5
-					{
-						;if ${ittyDamage:First(exists)}
-						;{
-							;do
-							;{
-								;if ${CargoIterator.Value.TypeID.Equal[${ittyDamage.Value}]} && \
-								;	${CargoIterator.Value.Volume.Equal[25]} && \
-								;	!${Ship.Drones.IsSentryDrone[${CargoIterator.Value.TypeID}]}
-								;	{
-									;	call Cargo.TransferTypeIDToShip ${CargoIterator.Value.TypeID} ${Math.Calc[5-${Ship.Drones.NumberOfDronesInBay[HEAVY]}]}
-								;	}
-
-							;}
-							;while ${ittyDamage:Next(exists)}
-						;}
-					}
-					elseif ${Ship.Drones.NumberOfDronesInBay[MEDIUM]} < 5 && ${MyShip.DronebayCapacity} > 100
-					{
-						UI:UpdateConsole["Reloading Light Drones."]
-						if ${ittyDamage:First(exists)}
-						{
-							do
-							{
-								if ${CargoIterator.Value.TypeID.Equal[${ittyDamage.Value}]} && \
-									${CargoIterator.Value.Volume.Equal[10]}
-									{
-										call Cargo.TransferTypeIDToShip ${CargoIterator.Value.TypeID} ${Math.Calc[5-${Ship.Drones.NumberOfDronesInBay[MEDIUM]}]}
-									}
-
-							}
-							while ${ittyDamage:Next(exists)}
-						}
-					}
-					elseif ${Ship.Drones.NumberOfDronesInBay[LIGHT]} < 5 && ${MyShip.DronebayCapacity} > 0
-					{
-						if ${ittyDamage:First(exists)}
-						{
-							do
-							{
-								if ${CargoIterator.Value.TypeID.Equal[${ittyDamage.Value}]} && \
-									${CargoIterator.Value.Volume.Equal[5]}
-									{
-										UI:UpdateConsole["Transferring ${Math.Calc[(${MyShip.DronebayCapacity}/5)-${Ship.Drones.NumberOfDronesInBay[LIGHT]}]} of ${CargoIterator.Value.Name} to drone bay."]
-										call Cargo.TransferTypeIDToShip ${CargoIterator.Value.TypeID} ${Math.Calc[(${MyShip.DronebayCapacity}/5)-${Ship.Drones.NumberOfDronesInBay[LIGHT]}]}
-									}
-
-							}
-							while ${ittyDamage:Next(exists)}
-						}
-					}
-				}
-				while ${CargoIterator:Next(exists)}
-			}
 	}
 
 	
