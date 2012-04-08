@@ -693,12 +693,16 @@ function RunCourierMission(int agentID)
 										{
 											UI:UpdateConsole["We already have a bookmark for this room, not doing anything."]
 										}			
-										break
 									}
+									break
 								}
 								else
 								{
 									echo "DERP ${Item.Value.TypeID}"
+								}
+								if ${This.HaveMishItem}
+								{
+									break
 								}
 							}
 							while ${Item:Next(exists)}
@@ -830,6 +834,7 @@ function RunCourierMission(int agentID)
 										{
 											UI:UpdateConsole["Looting ${Item.Value.Name} because it's a mission key."]
 											Item.Value:MoveTo[MyShip,CargoHold]
+											break
 										}
 									}
 									while ${Item:Next(exists)}

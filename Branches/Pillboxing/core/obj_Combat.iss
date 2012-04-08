@@ -424,12 +424,12 @@ objectdef obj_Combat
 			}
 			else
 			{
-				echo "No items found matching that group ID, GroupID is ${GROUPID}"
+				;echo "No items found matching that group ID, GroupID is ${GROUPID}"
 			}
 		}
 		else
 		{
-			echo "Bad GroupID passed to Combat.GetTypeIDByDamageType, abort abort!"
+			;echo "Bad GroupID passed to Combat.GetTypeIDByDamageType, abort abort!"
 		}
 
 	}
