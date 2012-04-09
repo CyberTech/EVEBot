@@ -338,8 +338,26 @@ objectdef obj_Targets
 	}
 
 
+	member:int64 LockedTargetInWeaponRange(int Distance)
+	{
+		variable index:entity LockedTargets	
+		variable iterator LockedTarget
+		Me:GetTargets[LockedTargets]
+		LockedTargets:GetIterator[LockedTarget]
+		if ${LockedTarget:First(exists)}
+		{
+			do
+			{
+				if ${LockedTarget.Value.Distance} < ${Distance}
+				{
+					return ${LockedTarget.ID}
+				}
+			}
+			while ${LockedTarget:Next(exists)}
+		}
+	}
 
-		member:bool TargetNPCs()
+	member:bool TargetNPCs()
 	{
 		if !${Me.InSpace}
 		{
@@ -357,8 +375,8 @@ objectdef obj_Targets
 	 	variable index:entity InRange
 		variable bool HasTargets = FALSE
 		variable int ToLock
-		variable int64 GATEID = ${Entity["TypeID = TYPE_ACCELERATION_GATE"].ID}
 		ToTarget:GetIterator[PriorityTargetIterator]
+		DeclareVariable ThingToOrbit entity local ${Entity["TypeID = TYPE_ACCELERATION_GATE"].ID}
 		;variable int64 BEACONID = ${Entity[Name =- "Beacon"].ID}
 		Me:GetJammers[Jammers]
 		Jammers:GetIterator[Jammer]
@@ -367,6 +385,7 @@ objectdef obj_Targets
 			ToTarget:Clear
 			if ${MyShip.MaxLockedTargets} == 0
 			{
+				Ship:
 				UI:UpdateConsole["Jammed, cant target..."]
 			}
 			HasTargets:Set[TRUE]
@@ -379,6 +398,7 @@ objectdef obj_Targets
 			{
 				UI:UpdateConsole["We are being warp scrambled, all priority targets or jammers are ignored until we're not."]
 				ToTarget:RemoveByQuery[${WarpScramQuery}]
+				ToTarget:Collapse
 			}
 		}
 		if !${Entity[${ToTarget[1]}]} && ${ToTarget.Used} > 0
@@ -387,13 +407,9 @@ objectdef obj_Targets
 			ToTarget:Remove[1]
 			ToTarget:Collapse
 		}
-		if ${GATEID} > 0
+		if !${ThingToOrbit(exists)}
 		{
-			DeclareVariable ThingToOrbit entity local ${Entity[${GATEID}]}
-		}
-		else
-		{
-			DeclareVariable ThingToOrbit entity local ${Entity[Name =- "Beacon"]}
+			DeclareVariable ThingToOrbit entity local ${Entity[Name =- "Beacon"].ID}
 		}
 		if ${ThingToOrbit.Distance} > 110000 && !${Ship.Approaching.Equal[${ThingToOrbit.ID}]}
 		{
@@ -460,7 +476,7 @@ objectdef obj_Targets
 					PriorityTargetIterator:First
 					do
 					{
-						DeclareVariable PriorityTarget entity local ${Entity[${PriorityTargetIterator.Value}].ID}				
+						DeclareVariable PriorityTarget entity local ${Entity[${PriorityTargetIterator.Value}].ID}
 						if ${Math.Calc[${Me.TargetCount}+${Me.TargetingCount}]} < ${Ship.MaxLockedTargets}
 						{	
 							if !${PriorityTarget.IsLockedTarget} && !${PriorityTarget.BeingTargeted}
@@ -468,7 +484,7 @@ objectdef obj_Targets
 								if ${PriorityTarget.Distance} <= ${MyShip.MaxTargetRange} && ${ToLock} > ${Counter} && ${Counter}  < 2
 								{
 									PriorityTarget:LockTarget
-									UI:UpdateConsole["Locking ${PriorityTarget.Name} & there are ${Math.Calc[${ToTarget.Used}-${PriorityTargetIterator.Key}]} left to target."]
+									UI:UpdateConsole["Locking ${PriorityTarget.Name} & there are ${Math.Calc[${ToTarget.Used}-${PriorityTargetIterator.Key}].Precision} left to target."]
 									Counter:Inc		
 								}
 								else

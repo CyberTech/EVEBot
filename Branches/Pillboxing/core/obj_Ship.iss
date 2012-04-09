@@ -1739,8 +1739,11 @@ objectdef obj_Ship
 		else
 		{
 			/* This is an entity bookmark, but that entity is not on the overhead yet. */
-
-			WarpCounter:Set[8]
+			if ${Label.Equal[NULL]}
+			{
+				UI:UpdateConsole["NULL bookmark found, returning."]
+			}
+			WarpCounter:Set[1]
 			while !${DestinationBookmark.ToEntity(exists)}
 			{
 				if ${WarpCounter} > 10
@@ -2666,10 +2669,21 @@ objectdef obj_Ship
 			;UI:UpdateConsole["ModuleIter.Value.IsOnline = ${ModuleIter.Value.IsOnline}"]
 			if !${ModuleIter.Value.IsActive} && !${ModuleIter.Value.IsChangingAmmo} &&\ 
 			!${ModuleIter.Value.IsReloadingAmmo} && ${ModuleIter.Value.IsOnline} &&\
-			 (${Me.ActiveTarget.Distance} < ${Math.Calc[${ModuleIter.Value.Charge.MaxFlightTime}*${ModuleIter.Value.Charge.MaxVelocity}*.90]} || ${Me.ActiveTarget.Distance} < (${ModuleIter.Value.AccuracyFalloff}+${ModuleIter.Value.OptimalRange})
+			 (${Me.ActiveTarget.Distance} < ${Math.Calc[${ModuleIter.Value.Charge.MaxFlightTime}*${ModuleIter.Value.Charge.MaxVelocity}*.90]} || ${Me.ActiveTarget.Distance} < (${ModuleIter.Value.AccuracyFalloff}+${ModuleIter.Value.OptimalRange}))
 			{	
 				;;UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
 				ModuleIter.Value:Activate
+			}
+			else
+			{
+				if ${Me.ActiveTarget.Distance} < ${Math.Calc[${ModuleIter.Value.Charge.MaxFlightTime}*${ModuleIter.Value.Charge.MaxVelocity}*.90]} || ${Me.ActiveTarget.Distance} < ${ModuleIter.Value.AccuracyFalloff}+${ModuleIter.Value.OptimalRange}
+				{
+					variable int64 EntityToChangeTo = ${Targets.LockedTargetInWeaponRange[${Math.Calc[${ModuleIter.Value.AccuracyFalloff}+${ModuleIter.Value.OptimalRange}]}]}
+					if ${EntityToChangeTo} > 0
+					{
+						Entity[${EntityToChangeTo}]:MakeActiveTarget
+					}
+				}
 			}
 		}
 		while ${ModuleIter:Next(exists)}
