@@ -339,7 +339,7 @@ objectdef obj_Targets
 
 
 
-	member:bool TargetNPCs()
+		member:bool TargetNPCs()
 	{
 		if !${Me.InSpace}
 		{
@@ -347,19 +347,46 @@ objectdef obj_Targets
 			return
 		}
 		variable index:entity Targets
-		variable iterator Target
+		variable iterator PriorityTargetIterator
 		variable iterator Target2
-		variable iterator Target3
 		variable index:entity LockedAssholes
+		variable iterator LockedAsshole
 		variable index:jammer Jammers
 		variable iterator Jammer
 	  	variable time breakTime
 	 	variable index:entity InRange
-	 	variable index:entity NotInRange
 		variable bool HasTargets = FALSE
 		variable int ToLock
 		variable int64 GATEID = ${Entity["TypeID = TYPE_ACCELERATION_GATE"].ID}
+		ToTarget:GetIterator[PriorityTargetIterator]
 		;variable int64 BEACONID = ${Entity[Name =- "Beacon"].ID}
+		Me:GetJammers[Jammers]
+		Jammers:GetIterator[Jammer]
+		if (${Jammer:First(exists)} && !${Entity[${ToTarget[1]}](exists)}) || ${Me.ToEntity.IsWarpScrambled}
+		{
+			ToTarget:Clear
+			if ${MyShip.MaxLockedTargets} == 0
+			{
+				UI:UpdateConsole["Jammed, cant target..."]
+			}
+			HasTargets:Set[TRUE]
+				do
+				{
+					ToTarget:Insert[${Jammer.Value.ID}]
+				}
+				while ${Jammer:Next(exists)}
+			if ${Me.ToEntity.IsWarpScrambled}
+			{
+				UI:UpdateConsole["We are being warp scrambled, all priority targets or jammers are ignored until we're not."]
+				ToTarget:RemoveByQuery[${WarpScramQuery}]
+			}
+		}
+		if !${Entity[${ToTarget[1]}]} && ${ToTarget.Used} > 0
+		{
+			UI:UpdateConsole["Unprioritising target that no longer exists"]
+			ToTarget:Remove[1]
+			ToTarget:Collapse
+		}
 		if ${GATEID} > 0
 		{
 			DeclareVariable ThingToOrbit entity local ${Entity[${GATEID}]}
@@ -418,6 +445,7 @@ objectdef obj_Targets
 						or if the dontkillfrigate options is on
 						So in effect this code shouldn't fire if dont kill frigates is on and the frigates are already attacking our target
 						*/
+						;BUT IT'S FUCKED
 						if (!${Ship.Drones.DroneTarget.Equal[${ToTarget[1]}]} && ${Config.Combat.DontKillFrigs}) || \
 						!${Config.Combat.DontKillFrigs}
 						{
@@ -428,35 +456,51 @@ objectdef obj_Targets
 						{
 							;echo "if (${Entity[${Ship.Drones.DroneTarget}](exists)} && !${Ship.Drones.DroneTarget.Equal[${ToTarget[1]}]} && ${Config.Combat.DontKillFrigs})"
 						}
-					}					
-					if ${Math.Calc[${Me.TargetCount}+${Me.TargetingCount}]} < ${Ship.MaxLockedTargets}
+					}
+					PriorityTargetIterator:First
+					do
 					{
-						if !${Entity[${ToTarget[1]}].IsLockedTarget} && !${Entity[${ToTarget[1]}].BeingTargeted}
-						{
-							if ${Entity[${ToTarget[1]}].Distance} <= ${MyShip.MaxTargetRange}
+						DeclareVariable PriorityTarget entity local ${Entity[${PriorityTargetIterator.Value}].ID}				
+						if ${Math.Calc[${Me.TargetCount}+${Me.TargetingCount}]} < ${Ship.MaxLockedTargets}
+						{	
+							if !${PriorityTarget.IsLockedTarget} && !${PriorityTarget.BeingTargeted}
 							{
-								Entity["ID = ${ToTarget[1]}"]:LockTarget
-								UI:UpdateConsole["Locking ${ToTarget[1]} && ${ToTarget.Used} to target."]							
-							}
-							else
-							{
-								if !${Ship.Approaching.Equal[${Entity[${ToTarget[1]}]}]}
+								if ${PriorityTarget.Distance} <= ${MyShip.MaxTargetRange} && ${ToLock} > ${Counter} && ${Counter}  < 2
 								{
-									Ship:Approach[${Entity[${ToTarget[1]}]},${MyShip.MaxTargetRange}]
-									UI:UpdateConsole["Approaching rat out of range. Name = ${Target2.Value.Name} and distance < ${Target2.Value.Distance}."]
+									PriorityTarget:LockTarget
+									UI:UpdateConsole["Locking ${PriorityTarget.Name} & there are ${Math.Calc[${ToTarget.Used}-${PriorityTargetIterator.Key}]} left to target."]
+									Counter:Inc		
 								}
-							}	
+								else
+								{
+									if !${Ship.Approaching.Equal[${PriorityTarget.ID}]}
+									{
+										Ship:Approach[${PriorityTarget.ID},${MyShip.MaxTargetRange}]
+									}
+								}	
+							}
 						}
-					}
-					else
-					{
-						if !${Entity[${ToTarget[1]}].IsLockedTarget} && ${MyShip.MaxLockedTargets} > 0
+						else
 						{
-							Me:GetTargets[LockedAssholes]
-							LockedAssholes[1]:UnlockTarget
-							UI:UpdateConsole["Unlocking ${LockedAssholes[1].Name}"]
+							if !${PriorityTarget.IsLockedTarget} && !${PriorityTarget.BeingTargeted} && ${MyShip.MaxLockedTargets} > 0
+							{
+								Me:GetTargets[LockedAssholes]
+								LockedAssholes:GetIterator[LockedAsshole]
+								LockedAsshole:First
+								do
+								{
+									if !${This.IsPriorityTarget[${LockedAsshole.Value.ID}]}
+									{
+										LockedAssholes[1]:UnlockTarget
+										UI:UpdateConsole["Unlocking ${LockedAssholes[1].Name} because we need to lock priority targets."]
+										break
+									}
+								}
+								while ${LockedAsshole:Next(exists)}
+							}
 						}
 					}
+					while ${PriorityTargetIterator:Next(exists)}
 				}
 				if ${Target2.Value.Distance} <= ${MyShip.MaxTargetRange} && ${Me.TargetCount} < ${Ship.MaxLockedTargets}
 				{
@@ -464,7 +508,6 @@ objectdef obj_Targets
 					{
 						Target2.Value:LockTarget
 						UI:UpdateConsole["Locking ${Target2.Value.Name}"]
-						UI:UpdateConsole["${Counter} is current amount of locking targets."]
 						Counter:Inc		
 					}
 					else
@@ -477,49 +520,20 @@ objectdef obj_Targets
 					if ${Me.TargetCount} == 0 && ${MyShip.MaxLockedTargets} > 0
 					{
 						if !${Entity[${Ship.Approaching}](exists)} && !${Entity[${query2} && Distance <= "${MyShip.MaxTargetRange}"](exists)} && (${Entity[${GATEID}].Distance} < 110000 || ${Entity[${BEACONID}].Distance} < 110000)
+							;make it so if we're approaching beacon/gate that it doesn't do anything else until we're within minimum distance, and update this to use the newly created
+							;ThingToOrbit entity var
 						{
-							Ship:Approach[${Target2.Value.ID},${MyShip.MaxTargetRange}]
-							;I'm going to have to update this into a check that checks for sentry drones in space before approaching.
-							UI:UpdateConsole["Approaching rat out of range. Name = ${Target2.Value.Name} and distance < ${Target2.Value.Distance}."]
+							Ship:Approach[${Target2.Value.ID},${MyShip.MaxTargetRange}]					
 						}
 					}
 				}
 			}
-			while ${Target2:Next(exists)}
+			while ${Target2:Next(exists)} && ${ToTarget.Used.Equal[0]}
 		}
 		if ${Me.TargetedByCount} > 0 && ${InRange.Used} > 0
 		{
 			HasTargets:Set[TRUE] 
 		}
-		Me:GetJammers[Jammers]
-		Jammers:GetIterator[Jammer]
-		if ${Jammer:First(exists)} && !${Entity[${ToTarget[1]}](exists)} || ${Me.ToEntity.IsWarpScrambled}
-		{
-			ToTarget:Clear
-			if ${MyShip.MaxLockedTargets} == 0
-			{
-				UI:UpdateConsole["Jammed, cant target..."]
-			}
-			HasTargets:Set[TRUE]
-				do
-				{
-					ToTarget:Insert[${Jammer.Value.ID}]
-				}
-				while ${Jammer:Next(exists)}
-			if ${Me.ToEntity.IsWarpScrambled}
-			{
-				UI:UpdateConsole["We are being warp scrambled, all priority targets or jammers are ignored until we're not."]
-				ToTarget:RemoveByQuery[${WarpScramQuery}]
-			}
-		}
-		if !${Entity[${ToTarget[1]}]} && ${ToTarget.Used} > 0
-		{
-			UI:UpdateConsole["Unprioritising target that no longer exists"]
-			ToTarget:Remove[1]
-			ToTarget:Collapse
-		}
-
-
 		variable index:string Targetser
 		variable iterator Targetse
 		Targetser:Insert["Kruul's Pleasure Garden"]
