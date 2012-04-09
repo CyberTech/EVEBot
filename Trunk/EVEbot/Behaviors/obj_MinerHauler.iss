@@ -305,7 +305,7 @@ objectdef obj_MinerHauler inherits obj_Hauler
 
 		Logger:Log["DEBUG: obj_MinerHauler.LootEntity ${id} ${leave}"]
 
-		Entity[${id}]:DoGetCargo[ContainerCargo]
+		Entity[${id}]:GetCargo[ContainerCargo]
 		ContainerCargo:GetIterator[Cargo]
 		if ${Cargo:First(exists)}
 		{
@@ -541,7 +541,7 @@ objectdef obj_MinerHauler inherits obj_Hauler
 	method BuildSafeSpotList()
 	{
 		SafeSpots:Clear
-		EVE:DoGetBookmarks[SafeSpots]
+		EVE:GetBookmarks[SafeSpots]
 
 		variable int idx
 		idx:Set[${SafeSpots.Used}]
@@ -597,7 +597,7 @@ objectdef obj_MinerHauler inherits obj_Hauler
 		variable index:entity cans
 		variable int idx
 
-		EVE:DoGetEntities[cans,GroupID,12]
+		EVE:GetEntities[cans,GroupID,12]
 		idx:Set[${cans.Used}]
 		Entities:Clear
 

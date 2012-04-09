@@ -288,7 +288,7 @@ objectdef obj_MissionCombat
 		variable iterator amIterator
 		variable iterator mbIterator
 
-		EVE:DoGetAgentMissions[amIndex]
+		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		if ${amIterator:First(exists)}
@@ -297,7 +297,7 @@ objectdef obj_MissionCombat
 			{
 				if ${amIterator.Value.AgentID} == ${agentID}
 				{
-					amIterator.Value:DoGetBookmarks[mbIndex]
+					amIterator.Value:GetBookmarks[mbIndex]
 					mbIndex:GetIterator[mbIterator]
 
 					if ${mbIterator:First(exists)}
@@ -491,7 +491,7 @@ objectdef obj_MissionCombat
 		variable iterator amIterator
 		variable iterator mbIterator
 
-		EVE:DoGetAgentMissions[amIndex]
+		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		if ${amIterator:First(exists)}
@@ -500,7 +500,7 @@ objectdef obj_MissionCombat
 			{
 				if ${amIterator.Value.AgentID} == ${agentID}
 				{
-					amIterator.Value:DoGetBookmarks[mbIndex]
+					amIterator.Value:GetBookmarks[mbIndex]
 					mbIndex:GetIterator[mbIterator]
 
 					if ${mbIterator:First(exists)}
@@ -526,7 +526,7 @@ objectdef obj_MissionCombat
 	{
 		variable index:entity targetIndex
 		variable iterator     targetIterator
-		EVE:DoGetEntities[targetIndex, CategoryID, ${CatID}]
+		EVE:GetEntities[targetIndex, CategoryID, ${CatID}]
 		targetIndex:GetIterator[targetIterator]
 		if ${targetIterator:First(exists)}
 		{

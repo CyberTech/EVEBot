@@ -202,7 +202,7 @@ objectdef obj_Missions
 		variable index:agentmission amIndex
 		variable iterator amIterator
 
-		EVE:DoGetAgentMissions[amIndex]
+		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		Logger:Log["obj_Missions: DEBUG: amIndex.Used = ${amIndex.Used}",LOG_DEBUG]
@@ -308,7 +308,7 @@ objectdef obj_Missions
 			call Cargo.OpenHolds
 
 			Logger:Log["DEBUG: RunCourierMission: Checking ship's cargohold for ${QuantityRequired} units of ${itemName}.", LOG_DEBUG]
-			MyShip:DoGetCargo[CargoIndex]
+			MyShip:GetCargo[CargoIndex]
 			CargoIndex:GetIterator[CargoIterator]
 			if ${CargoIterator:First(exists)}
 			{
@@ -340,7 +340,7 @@ objectdef obj_Missions
 			if ${Station.Docked}
 			{
 				Logger:Log["DEBUG: RunCourierMission: Checking station hangar for ${QuantityRequired} units of ${itemName}.", LOG_DEBUG]
-				Me:DoGetHangarItems[CargoIndex]
+				Me:GetHangarItems[CargoIndex]
 				CargoIndex:GetIterator[CargoIterator]
 
 				if ${CargoIterator:First(exists)}
@@ -391,7 +391,7 @@ objectdef obj_Missions
 		call Cargo.OpenHolds
 
 		;;; Check the cargohold of your ship
-		MyShip:DoGetCargo[CargoIndex]
+		MyShip:GetCargo[CargoIndex]
 		CargoIndex:GetIterator[CargoIterator]
 		if ${CargoIterator:First(exists)}
 		{
@@ -423,7 +423,7 @@ objectdef obj_Missions
 		;;; Check the hangar of the current station
 		if ${haveCargo} == FALSE && ${Station.Docked}
 		{
-			Me:DoGetHangarItems[CargoIndex]
+			Me:GetHangarItems[CargoIndex]
 			CargoIndex:GetIterator[CargoIterator]
 
 			if ${CargoIterator:First(exists)}
@@ -669,7 +669,7 @@ objectdef obj_Missions
 				variable index:entity containerIndex
 				variable iterator     containerIterator
 
-				EVE:DoGetEntities[containerIndex, GroupID, GROUP_SPAWNCONTAINER]
+				EVE:GetEntities[containerIndex, GroupID, GROUP_SPAWNCONTAINER]
 				containerIndex:GetIterator[containerIterator]
 
 				if ${containerIterator:First(exists)}
@@ -683,7 +683,7 @@ objectdef obj_Missions
 					while ${containerIterator:Next(exists)}
 				}
 
-				EVE:DoGetEntities[containerIndex, GroupID, GROUP_CARGOCONTAINER]
+				EVE:GetEntities[containerIndex, GroupID, GROUP_CARGOCONTAINER]
 				containerIndex:GetIterator[containerIterator]
 
 				if ${containerIterator:First(exists)}
@@ -761,7 +761,7 @@ objectdef obj_Missions
 	  variable index:entity targetIndex
 	  variable iterator     targetIterator
 
-	  EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
+	  EVE:GetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
 	  targetIndex:GetIterator[targetIterator]
 
 	  ;;Logger:Log["GetTargeting = ${Me.GetTargeting}, GetTargets = ${Me.GetTargets}"]
@@ -783,7 +783,7 @@ objectdef obj_Missions
 	  variable index:entity targetIndex
 	  variable iterator     targetIterator
 
-	  EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
+	  EVE:GetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
 	  targetIndex:GetIterator[targetIterator]
 
 	  /* FOR NOW just pull the closest target */
@@ -880,7 +880,7 @@ objectdef obj_Missions
 	  variable iterator     targetIterator
 	  variable int          targetCount = 0
 
-	  EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
+	  EVE:GetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
 	  targetIndex:GetIterator[targetIterator]
 
 	  if ${targetIterator:First(exists)}
@@ -907,7 +907,7 @@ objectdef obj_Missions
    {
 		variable index:entity gateIndex
 
-		EVE:DoGetEntities[gateIndex, TypeID, TYPE_ACCELERATION_GATE]
+		EVE:GetEntities[gateIndex, TypeID, TYPE_ACCELERATION_GATE]
 
 		Logger:Log["obj_Missions: DEBUG There are ${gateIndex.Used} gates nearby."]
 
@@ -921,7 +921,7 @@ objectdef obj_Missions
 		variable iterator amIterator
 		variable iterator mbIterator
 
-		EVE:DoGetAgentMissions[amIndex]
+		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		if ${amIterator:First(exists)}
@@ -930,7 +930,7 @@ objectdef obj_Missions
 			{
 				if ${amIterator.Value.AgentID} == ${agentID}
 				{
-					amIterator.Value:DoGetBookmarks[mbIndex]
+					amIterator.Value:GetBookmarks[mbIndex]
 					mbIndex:GetIterator[mbIterator]
 
 					if ${mbIterator:First(exists)}
@@ -958,7 +958,7 @@ objectdef obj_Missions
 		variable iterator amIterator
 		variable iterator mbIterator
 
-		EVE:DoGetAgentMissions[amIndex]
+		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		if ${amIterator:First(exists)}
@@ -967,7 +967,7 @@ objectdef obj_Missions
 			{
 				if ${amIterator.Value.AgentID} == ${agentID}
 				{
-					amIterator.Value:DoGetBookmarks[mbIndex]
+					amIterator.Value:GetBookmarks[mbIndex]
 					mbIndex:GetIterator[mbIterator]
 
 					if ${mbIterator:First(exists)}
@@ -1032,7 +1032,7 @@ objectdef obj_Missions
 		variable index:entity targetIndex
 		variable iterator     targetIterator
 
-		EVE:DoGetEntities[targetIndex, GroupID, GROUP_LARGECOLLIDABLESTRUCTURE]
+		EVE:GetEntities[targetIndex, GroupID, GROUP_LARGECOLLIDABLESTRUCTURE]
 		targetIndex:GetIterator[targetIterator]
 
 		Logger:Log["obj_Missions: DEBUG: SpecialStructurePresent found ${targetIndex.Used} structures"]
@@ -1057,7 +1057,7 @@ objectdef obj_Missions
 		variable index:entity targetIndex
 		variable iterator     targetIterator
 
-		EVE:DoGetEntities[targetIndex, GroupID, GROUP_LARGECOLLIDABLESTRUCTURE]
+		EVE:GetEntities[targetIndex, GroupID, GROUP_LARGECOLLIDABLESTRUCTURE]
 		targetIndex:GetIterator[targetIterator]
 
 		if ${targetIterator:First(exists)}
@@ -1102,7 +1102,7 @@ objectdef obj_Missions
 		variable index:entity targetIndex
 		variable iterator     targetIterator
 
-		EVE:DoGetEntities[targetIndex, GroupID, GROUP_LARGECOLLIDABLESTRUCTURE]
+		EVE:GetEntities[targetIndex, GroupID, GROUP_LARGECOLLIDABLESTRUCTURE]
 		targetIndex:GetIterator[targetIterator]
 
 		Logger:Log["obj_Missions: DEBUG: SpecialWreckPresent found ${targetIndex.Used} wrecks",LOG_MINOR]
@@ -1127,7 +1127,7 @@ objectdef obj_Missions
 		variable index:entity targetIndex
 		variable iterator     targetIterator
 
-		EVE:DoGetEntities[targetIndex, GroupID, GROUP_LARGECOLLIDABLESTRUCTURE]
+		EVE:GetEntities[targetIndex, GroupID, GROUP_LARGECOLLIDABLESTRUCTURE]
 		targetIndex:GetIterator[targetIterator]
 
 		if ${targetIterator:First(exists)}
@@ -1155,7 +1155,7 @@ objectdef obj_Missions
 
 		Entity[${entityID}]:OpenCargo
 		wait 50
-		Entity[${entityID}]:DoGetCargo[ContainerCargo]
+		Entity[${entityID}]:GetCargo[ContainerCargo]
 		ContainerCargo:GetIterator[Cargo]
 		if ${Cargo:First(exists)}
 		{
@@ -1217,7 +1217,7 @@ objectdef obj_Missions
 		QuantityRequired:Set[${Math.Calc[${This.MissionCache.Volume[${agentID}]}/${itemVolume}]}]
 
 		;;; Check the cargohold of your ship
-		MyShip:DoGetCargo[CargoIndex]
+		MyShip:GetCargo[CargoIndex]
 		CargoIndex:GetIterator[CargoIterator]
 		if ${CargoIterator:First(exists)}
 		{

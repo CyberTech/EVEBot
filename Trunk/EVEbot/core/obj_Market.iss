@@ -43,9 +43,9 @@ objectdef obj_Market inherits obj_BaseClass
 		wait 40
 		EVE:UpdateMarketOrders_B[${typeID}]
 		wait 10
-		EVE:DoGetMarketOrders[This.sellOrders,"Sell",${typeID}]
+		EVE:GetMarketOrders[This.sellOrders,"Sell",${typeID}]
 		wait 10
-		EVE:DoGetMarketOrders[This.buyOrders,"Buy",${typeID}]
+		EVE:GetMarketOrders[This.buyOrders,"Buy",${typeID}]
 		wait 10
 
 		Logger:Log["obj_Market: Found ${This.sellOrders.Used} sell orders."]
@@ -65,7 +65,7 @@ objectdef obj_Market inherits obj_BaseClass
 		wait 50
 		EVE:UpdateMarketOrders_B[${typeID}]
 		wait 20
-		EVE:DoGetMarketOrders[This.sellOrders,"Sell",${typeID}]
+		EVE:GetMarketOrders[This.sellOrders,"Sell",${typeID}]
 		wait 20
 
 		Logger:Log["${This.ObjectName}: GetMarketSellOrders Item ${typeID}:${EVEDB_Items.Name[${typeID}]} Orders - Sell: ${This.sellOrders.Used}"]
@@ -82,7 +82,7 @@ objectdef obj_Market inherits obj_BaseClass
 		wait 50
 		EVE:UpdateMarketOrders_B[${typeID}]
 		wait 20
-		EVE:DoGetMarketOrders[This.buyOrders,"Buy",${typeID}]
+		EVE:GetMarketOrders[This.buyOrders,"Buy",${typeID}]
 		wait 20
 
 		Logger:Log["${This.ObjectName}: GetMarketBuyOrders: Item ${typeID}:${EVEDB_Items.Name[${typeID}]} Orders - Buy: ${This.buyOrders.Used}"]
@@ -469,9 +469,9 @@ objectdef obj_Market inherits obj_BaseClass
 		Logger:Log["obj_Market: Obtaining my orders for ${EVEDB_Items.Name[${typeID}]}"]
 		Me:UpdateMyOrders
 		wait 40
-		Me:DoGetMyOrders[This.myBuyOrders,"Buy",${typeID}]
+		Me:GetMyOrders[This.myBuyOrders,"Buy",${typeID}]
 		wait 10
-		Me:DoGetMyOrders[This.mySellOrders,"Sell",${typeID}]
+		Me:GetMyOrders[This.mySellOrders,"Sell",${typeID}]
 		wait 10
 
 		Logger:Log["obj_Market: Found ${This.mySellOrders.Used} active sell orders for ${EVEDB_Items.Name[${typeID}]}."]

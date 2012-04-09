@@ -350,7 +350,7 @@ objectdef obj_Miner
 		; This call does nothing if it is already open.
 		call Ship.OpenCargo
 		Ship:Deactivate_Cloak
-		Me:DoGetTargets[LockedTargets]
+		Me:GetTargets[LockedTargets]
 		LockedTargets:GetIterator[Target]
 		if ${Target:First(exists)}
 		{
@@ -440,7 +440,7 @@ objectdef obj_Miner
 		if ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers}
 		{
 			; We've got idle lasers, and available targets. Do something with them.
-			Me:DoGetTargets[LockedTargets]
+			Me:GetTargets[LockedTargets]
 			LockedTargets:GetIterator[Target]
 			if ${Target:First(exists)}
 			do

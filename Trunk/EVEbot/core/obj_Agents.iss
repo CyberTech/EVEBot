@@ -268,7 +268,7 @@ objectdef obj_Agents
 		variable iterator amIterator
 		variable iterator mbIterator
 
-		EVE:DoGetAgentMissions[amIndex]
+		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		if ${amIterator:First(exists)}
@@ -277,7 +277,7 @@ objectdef obj_Agents
 			{
 				if ${amIterator.Value.AgentID} == ${This.AgentID}
 				{
-					amIterator.Value:DoGetBookmarks[mbIndex]
+					amIterator.Value:GetBookmarks[mbIndex]
 					mbIndex:GetIterator[mbIterator]
 
 					if ${mbIterator:First(exists)}
@@ -320,7 +320,7 @@ objectdef obj_Agents
 		variable iterator MissionInfo
 		variable set skipList
 
-		EVE:DoGetAgentMissions[amIndex]
+		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[MissionInfo]
 		skipList:Clear
 
@@ -411,7 +411,7 @@ objectdef obj_Agents
 		variable iterator amIterator
 		variable iterator mbIterator
 
-		EVE:DoGetAgentMissions[amIndex]
+		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		if ${amIterator:First(exists)}
@@ -420,7 +420,7 @@ objectdef obj_Agents
 			{
 				if ${amIterator.Value.AgentID} == ${This.AgentID}
 				{
-					amIterator.Value:DoGetBookmarks[mbIndex]
+					amIterator.Value:GetBookmarks[mbIndex]
 					mbIndex:GetIterator[mbIterator]
 
 					if ${mbIterator:First(exists)}
@@ -458,7 +458,7 @@ objectdef obj_Agents
 		variable index:agentmission amIndex
 		variable iterator amIterator
 
-		EVE:DoGetAgentMissions[amIndex]
+		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		if ${amIterator:First(exists)}
@@ -558,7 +558,7 @@ objectdef obj_Agents
 		variable iterator amIterator
 		variable iterator mbIterator
 
-		EVE:DoGetAgentMissions[amIndex]
+		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		if ${amIterator:First(exists)}
@@ -567,7 +567,7 @@ objectdef obj_Agents
 			{
 				if ${amIterator.Value.AgentID} == ${This.AgentID}
 				{
-					amIterator.Value:DoGetBookmarks[mbIndex]
+					amIterator.Value:GetBookmarks[mbIndex]
 					mbIndex:GetIterator[mbIterator]
 
 					if ${mbIterator:First(exists)}
@@ -577,7 +577,7 @@ objectdef obj_Agents
 							Logger:Log["obj_Agents: DEBUG: mbIterator.Value.LocationType = ${mbIterator.Value.LocationType}"]
 							if ${mbIterator.Value.LocationType.Equal["objective.source"]}
 							{
-								call Ship.WarpToBookMark ${mbIterator.Value}
+								call Ship.WarpToBookMark ${mbIterator.Value.ID}
 								return
 							}
 						}
@@ -596,7 +596,7 @@ objectdef obj_Agents
 		variable iterator amIterator
 		variable iterator mbIterator
 
-		EVE:DoGetAgentMissions[amIndex]
+		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		if ${amIterator:First(exists)}
@@ -605,7 +605,7 @@ objectdef obj_Agents
 			{
 				if ${amIterator.Value.AgentID} == ${This.AgentID}
 				{
-					amIterator.Value:DoGetBookmarks[mbIndex]
+					amIterator.Value:GetBookmarks[mbIndex]
 					mbIndex:GetIterator[mbIterator]
 
 					if ${mbIterator:First(exists)}
@@ -615,7 +615,7 @@ objectdef obj_Agents
 							Logger:Log["obj_Agents: DEBUG: mbIterator.Value.LocationType = ${mbIterator.Value.LocationType}"]
 							if ${mbIterator.Value.LocationType.Equal["objective.destination"]}
 							{
-								call Ship.WarpToBookMark ${mbIterator.Value}
+								call Ship.WarpToBookMark ${mbIterator.Value.ID}
 								return
 							}
 						}
@@ -654,7 +654,7 @@ objectdef obj_Agents
 		variable index:agentmission amIndex
 		variable iterator amIterator
 
-		EVE:DoGetAgentMissions[amIndex]
+		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		if ${amIterator:First(exists)}
@@ -743,7 +743,7 @@ objectdef obj_Agents
 			{
 				break
 			}
-			Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
+			Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
 		}
 		dsIndex:GetIterator[dsIterator]
 
@@ -771,7 +771,7 @@ objectdef obj_Agents
 					;Logger:Log["obj_Agents: Waiting for dialog to update..."]
 					wait 100
 					Logger:Log["obj_Agents: Refreshing Dialog Responses"]
-					Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
+					Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
 					dsIndex:GetIterator[dsIterator]
 					break
 				}
@@ -800,7 +800,7 @@ objectdef obj_Agents
 		variable index:agentmission amIndex
 		variable iterator amIterator
 
-		EVE:DoGetAgentMissions[amIndex]
+		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		if ${amIterator:First(exists)}
@@ -965,10 +965,10 @@ objectdef obj_Agents
 		; display your dialog options
 		variable index:dialogstring dsIndex
 		variable iterator dsIterator
-		Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
+		Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
 		dsIndex:GetIterator[dsIterator]
 
-		if (${dsIterator:First(exists)})
+		if ${dsIterator:First(exists)}
 		{
 			do
 			{
@@ -986,7 +986,7 @@ objectdef obj_Agents
 		; Now wait a couple of seconds and then get the new dialog options...and so forth.  The "Wait" needed may differ from person to person.
 		Logger:Log["obj_Agents:TurnInMission: Waiting for agent dialog to update..."]
 		wait 60
-		Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
+		Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
 		dsIndex:GetIterator[dsIterator]
 		Logger:Log["Completing Mission..."]
 		dsIndex.Get[AGENTRESPONSEINDEX_COMPLETE_MISSION]:Say[${This.AgentID}]
@@ -1031,7 +1031,7 @@ objectdef obj_Agents
 		variable index:dialogstring dsIndex
 		variable iterator dsIterator
 
-		Agent[${This.AgentIndex}]:DoGetDialogResponses[dsIndex]
+		Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
 		dsIndex:GetIterator[dsIterator]
 
 		if ${dsIndex.Used} == 2

@@ -48,8 +48,8 @@ objectdef obj_StealthHauler
 		{
 			if ${apRoute.Used} == 0
 			{
-				EVE:DoGetToDestinationPath[apRoute]	
-				EVE:DoGetWaypoints[apWaypoints]
+				EVE:GetToDestinationPath[apRoute]	
+				EVE:GetWaypoints[apWaypoints]
 				apRoute:GetIterator[apIterator]
 				apIterator:First
 				
@@ -68,7 +68,7 @@ objectdef obj_StealthHauler
 				{
 					variable index:entity sgIndex
 					variable iterator     sgIterator
-					EVE:DoGetEntities[sgIndex,GroupID, GROUP_STARGATE]
+					EVE:GetEntities[sgIndex,GroupID, GROUP_STARGATE]
 					sgIndex:GetIterator[sgIterator]
 					if ${sgIterator:First(exists)}
 					{

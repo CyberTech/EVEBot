@@ -104,7 +104,7 @@ objectdef obj_Scavenger
 		variable index:entity Wrecks
 		variable iterator     Wreck
 
-		EVE:DoGetEntities[Wrecks,GroupID,GROUP_WRECK]
+		EVE:GetEntities[Wrecks,GroupID,GROUP_WRECK]
 		Logger:Log["obj_Scavenger: DEBUG: Found ${Wrecks.Used} wrecks."]
 
 		Wrecks:GetIterator[Wreck]
@@ -134,7 +134,7 @@ objectdef obj_Scavenger
 		variable float        ItemVolume = 0
 
 		/* only look for wrecks within 3000 meters */
-		EVE:DoGetEntities[Wrecks,GroupID,GROUP_WRECK,Radius,3000]
+		EVE:GetEntities[Wrecks,GroupID,GROUP_WRECK,Radius,3000]
 		Wrecks:GetIterator[Wreck]
 		if ${Wreck:First(exists)}
 		{
@@ -147,7 +147,7 @@ objectdef obj_Scavenger
 					wait 10
 					call Ship.OpenCargo
 					wait 10
-					Wreck.Value:DoGetCargo[Items]
+					Wreck.Value:GetCargo[Items]
 					Logger:Log["obj_Scavenger: DEBUG:  Wreck contains ${Items.Used} items."]
 
 					Items:GetIterator[Item]

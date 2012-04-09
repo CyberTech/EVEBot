@@ -383,7 +383,7 @@ objectdef obj_MissionCommands
 			{
 				variable index:entity targetIndex
 				variable iterator     targetIterator
-				EVE:DoGetEntities[targetIndex, CategoryID, ${CatID}]
+				EVE:GetEntities[targetIndex, CategoryID, ${CatID}]
 				targetIndex:GetIterator[targetIterator]
 				if ${targetIterator:First(exists)}
 				{
@@ -590,7 +590,7 @@ objectdef obj_MissionCommands
 			{
 				if ${targetName.Equal["NONE"]}
 				{
-					EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
+					EVE:GetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
 					targetIndex:GetIterator[targetIterator]
 					if ${targetIterator:First(exists)}
 					{
@@ -614,7 +614,7 @@ objectdef obj_MissionCommands
 				}
 				else
 				{
-					EVE:DoGetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
+					EVE:GetEntities[targetIndex, CategoryID, CATEGORYID_ENTITY]
 					targetIndex:GetIterator[targetIterator]
 					if ${targetIterator:First(exists)}
 					{
@@ -733,7 +733,7 @@ objectdef obj_MissionCommands
 
 			case START
 			{
-				EVE:DoGetEntities[containerCache, GroupID, ${groupID}]
+				EVE:GetEntities[containerCache, GroupID, ${groupID}]
 				containerCache:GetIterator[containerIterator]
 				Logger:Log["DEBUG: obj_MissionCommands - Looking for containers to loot",LOG_DEBUG]
 				if ${containerName.Equal["NONE"]}
@@ -887,7 +887,7 @@ objectdef obj_MissionCommands
 	{
 		variable index:entity gateIndex
 
-		EVE:DoGetEntities[gateIndex, TypeID, TYPE_ACCELERATION_GATE]
+		EVE:GetEntities[gateIndex, TypeID, TYPE_ACCELERATION_GATE]
 
 		Logger:Log["obj_Missions: DEBUG There are ${gateIndex.Used} gates nearby."]
 
@@ -933,7 +933,7 @@ objectdef obj_MissionCommands
 			case LOOTING
 			{
 				variable int QuantityToMove
-				Entity[${entID}]:DoGetCargo[ContainerCargo]
+				Entity[${entID}]:GetCargo[ContainerCargo]
 				ContainerCargo:GetIterator[Cargo]
 				if ${Cargo:First(exists)}
 				{
@@ -994,7 +994,7 @@ objectdef obj_MissionCommands
 		QuantityRequired:Set[${Math.Calc[${This.MissionCache.Volume[${agentID}]}/${EVEDB_Items.Volume[${itemName}]}]}]
 
 		;;; Check the cargohold of your ship
-		MyShip:DoGetCargo[CargoIndex]
+		MyShip:GetCargo[CargoIndex]
 		CargoIndex:GetIterator[CargoIterator]
 		if ${CargoIterator:First(exists)}
 		{
@@ -1137,7 +1137,7 @@ objectdef obj_MissionCommands
 
 ; TODO - this is confusing clusterfuck, review it - CT
 
-			Me:DoGetTargetedBy[targetIndex]
+			Me:GetTargetedBy[targetIndex]
 			targetIndex:GetIterator[targetIterator]
 			;Logger:Log["GetTargeting = ${Me.GetTargeting}, GetTargets = ${Me.GetTargets}"]
 			if ${targetIterator:First(exists)}

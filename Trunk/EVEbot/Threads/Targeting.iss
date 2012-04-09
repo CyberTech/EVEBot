@@ -314,7 +314,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 		variable iterator Target
 		variable index:cachedentity LockedTargets
 
-		Me:DoGetTargets[LockedTargets]
+		Me:GetTargets[LockedTargets]
 		LockedTargets:GetIterator[Target]
 		if ${Target:First(exists)}
 		{
@@ -375,7 +375,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 		TargetQueue:Collapse
 
 		variable index:entity LockedTargets
-		Me:DoGetTargets[LockedTargets]
+		Me:GetTargets[LockedTargets]
 
 		for ( Pos:Set[1]; ${Pos} <= ${LockedTargets.Used}; Pos:Inc )
 		{
@@ -416,7 +416,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 		}
 
 		variable index:entity LockedTargets
-		Me:DoGetTargets[LockedTargets]
+		Me:GetTargets[LockedTargets]
 
 		LockedTargets:GetIterator[Target]
 		if ${Target:First(exists)}

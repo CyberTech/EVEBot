@@ -435,7 +435,7 @@ objectdef obj_Drones
 		{
 			variable iterator DroneIterator
 			variable index:activedrone ActiveDroneList
-			Me:DoGetActiveDrones[ActiveDroneList]
+			Me:GetActiveDrones[ActiveDroneList]
 			ActiveDroneList:GetIterator[DroneIterator]
 ;			variable index:int64 returnIndex
 			variable index:int64 engageIndex
@@ -480,12 +480,12 @@ objectdef obj_Drones
 */
 	method GetActiveDrones()
 	{
-		Me:DoGetActiveDrones[This.ActiveDrones]
+		Me:GetActiveDrones[This.ActiveDrones]
 	}
 
 	method GetActiveDroneIDs()
 	{
-		Me:DoGetActiveDroneIDs[This.ActiveDroneIDs]
+		Me:GetActiveDroneIDs[This.ActiveDroneIDs]
 	}
 
 	method GetDronesInBay()
@@ -700,7 +700,7 @@ objectdef obj_Drones
 		variable string activetargetgroup = ${Me.ActiveTarget.Group}
 		variable int targetdistance = ${Me.ActiveTarget.Distance}
 
-		Me:DoGetActiveDrones[This.ActiveDrones]
+		Me:GetActiveDrones[This.ActiveDrones]
 
 		if ${targetdistance} > 30000 && (${This.HaveSniperDroneInBay} || ${This.HaveActiveSniperDrone})
 		{

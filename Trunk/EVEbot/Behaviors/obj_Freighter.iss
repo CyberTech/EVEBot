@@ -289,7 +289,7 @@ objectdef obj_Freighter
 	        	Universe[${tmp_string}]:SetDestination
 	        	wait 5
 	        	variable index:int ap_path
-	        	EVE:DoGetToDestinationPath[ap_path]
+	        	EVE:GetToDestinationPath[ap_path]
 	        	variable iterator ap_path_iterator
 	        	ap_path:GetIterator[ap_path_iterator]
 
@@ -377,7 +377,7 @@ objectdef obj_Freighter
 		bm_prefix:Set[${Config.Freighter.SourceBookmarkPrefix}]
 
 		variable index:bookmark bm_index
-		EVE:DoGetBookmarks[bm_index]
+		EVE:GetBookmarks[bm_index]
 
 		variable iterator bm_iterator
 		bm_index:GetIterator[bm_iterator]
