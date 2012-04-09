@@ -80,6 +80,8 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 #define TYPEID_COVERT_OPS_CLOAKING_DEVICE	11578
 #define TYPEID_SMOKESCREEN_CLOAKING_DEVICE	99999	/* TODO  */
 #define TYPEID_MOON	14
+#define TYPEID_LARGE_ASSEMBLY_ARRAY 29613
+#define TYPEID_XLARGE_ASSEMBLY_ARRAY 24656
 
 /* Same group and type for secure cargo containers as well */
 #define GROUPID_CORPORATE_HANGAR_ARRAY 471
@@ -89,10 +91,12 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 #define GROUPID_SPAWN_CONTAINER 306
 #define GROUPID_SECURE_CONTAINER 340
 #define GROUPID_DAMAGE_CONTROL 60
+#define GROUPID_WRECK 186
 #define GROUPID_STASIS_WEB 65
 #define GROUPID_DATA_MINER 538
 #define GROUPID_TRACTOR_BEAM 650
 #define TYPEID_SALVAGER 25861
+#define GROUPID_SALVAGER 1122
 
 #define WARP_RANGE 150000
 #define WARP_RANGE_MOON   10000000
@@ -127,6 +131,7 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 #define CATEGORYID_GLACIAL_MASS 25
 
 #define CATEGORYID_STRUCTURE	23
+#define GROUPID_CONTROL_TOWER	365
 
 /* for obj_Sound.iss */
 #define ALARMSOUND	"${Script.CurrentDirectory}/sounds/alarm.wav"
@@ -140,6 +145,7 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 #define FLEETBOOSTERWING 2
 #define FLEETBOOSTERSQUAD 3
 
+#define GROUP_GANGLINK 316
 #define GROUP_ACCELERATIONGATEKEYS 474
 #define GROUP_AGENTSINSPACE 517
 #define GROUP_ALLIANCE 32
