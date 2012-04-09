@@ -81,7 +81,6 @@ objectdef obj_Scavenger
 				call Station.Dock
 				break
 			case SCAVENGE
-				echo "SCAVENGE"
 				RoomCounter:Set[0]
 				call This.Scavenger
 				break
@@ -181,9 +180,7 @@ objectdef obj_Scavenger
 			{
 				BookmarkIDs:Clear
 				BookmarkIDs:Set[NULL]
-				UI:UpdateConsole["Clearing list of bookmarks now."]
 				relay all Event[WHERE]:Execute[${ittyCreators.Value}]
-				UI:UpdateConsole["Just relayed request for bm."]
 				wait 50
 				UI:UpdateConsole["received a list of ${BookmarkListToSalvage.Used} bookmarks from missioner."]
 				if ${BookmarkListToSalvage.Used} > 0
@@ -245,6 +242,10 @@ objectdef obj_Scavenger
 				wait 10
 				UI:UpdateConsole["Warping, do nothing"]
 			}
+			if ${BookmarkListToSalvage[1].ID} <= 0
+			{
+				return
+			}
 			UI:UpdateConsole["Starting salvage of a room now"]
 			call This.SalvageSite
 
@@ -298,7 +299,7 @@ objectdef obj_Scavenger
 			return
 		}
 		RoomTimer:Set[${Script.RunningTime}]
-		run EVEBot/External/EVESalvage/EVESalvage -here -stop -waittimevar 5
+		run EVEBot/External/EVESalvage/EVESalvage -here -stop -waittimevar 4
 		while ${Script[Evesalvage](exists)}
 		{
 			wait 100
@@ -311,6 +312,11 @@ objectdef obj_Scavenger
 		BookmarkListToSalvage[1]:Remove
 		BookmarkListToSalvage:Remove[1]
 		wait 50
+		if ${BookmarkListToSalvage[2].ID} <= 0 
+		{
+			UI:UpdateConsole["Our bookmark reference is fucked, calling return, I'm not writing a better workaround than this. EVER. Please email the isxeve debug file to isxeve@isxgames.com"]
+			return
+		}
 		if ${BookmarkListToSalvage[2](exists)}
 		{
 			BookmarkListToSalvage[2]:WarpTo
