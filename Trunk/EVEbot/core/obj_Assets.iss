@@ -28,7 +28,7 @@ objectdef obj_Assets
 
 		StationsWithAssets:Clear[]
 		;;; WHY WHY WHY DOESN'T THIS WORK??? Me:GetStationsWithAssets[AnIndex]
-		${Me:GetStationsWithAssets[AnIndex]}
+		Me:GetStationsWithAssets[AnIndex]
 		AnIndex:GetIterator[AnIterator]
 
 		if ${AnIterator:First(exists)}
@@ -59,7 +59,7 @@ objectdef obj_Assets
 		{
 			do
 			{
-				if ${stationID} == ${AnIterator.Value}
+				if ${stationID.Equal[${AnIterator.Value}]}
 				{
 					;;;Logger:Log["DEBUG: Assets.IsIgnored returning TRUE."]
 					return TRUE
