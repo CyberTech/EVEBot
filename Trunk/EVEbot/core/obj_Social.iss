@@ -161,13 +161,12 @@ objectdef obj_Social inherits obj_BaseClass
 				}
 				*/
 
-				; DoGetPilots is relatively expensive vs just the pilotcount.  Check if we're alone before calling.
-				if ${EVE.GetPilots} > 1
+				EVE:GetLocalPilots[This.PilotIndex]
+				if ${This.PilotIndex.Used} > 1
 				{
 					variable int i
-					i:Set[${EVE.GetPilots[This.PilotIndex]}]
 					variable int FleetID
-					FleetID:Set[${Me.Fleet}]
+					FleetID:Set[${Me.Fleet.ID}]
 
 					for (i:Set[1]; ${i} <= ${This.PilotIndex.Used}; i:Inc)
 					{
