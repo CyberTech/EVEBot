@@ -312,11 +312,6 @@ objectdef obj_Scavenger
 		BookmarkListToSalvage[1]:Remove
 		BookmarkListToSalvage:Remove[1]
 		wait 50
-		if ${BookmarkListToSalvage[2].ID} <= 0 
-		{
-			UI:UpdateConsole["Our bookmark reference is fucked, calling return, I'm not writing a better workaround than this. EVER. Please email the isxeve debug file to isxeve@isxgames.com"]
-			return
-		}
 		if ${BookmarkListToSalvage[2](exists)}
 		{
 			BookmarkListToSalvage[2]:WarpTo
@@ -325,6 +320,11 @@ objectdef obj_Scavenger
 		{
 			UI:UpdateConsole["No bookmarks left. ${BookmarkListToSalvage.Used}"]
 			BookmarkListToSalvage:Collapse	
+			return
+		}
+		if ${BookmarkListToSalvage[2].ID} <= 0 
+		{
+			UI:UpdateConsole["Our bookmark reference is fucked, calling return, I'm not writing a better workaround than this. EVER. Please email the isxeve debug file to isxeve@isxgames.com"]
 			return
 		}
 		while ${Me.ToEntity.Mode} != 3
