@@ -279,17 +279,21 @@ objectdef obj_Drones
 
 	member:int DronesInBay()
 	{
-		;Note: KEEP DRONES UNSTACKED. THIS COUNTS ENTRIES IN THE DRONE BAY. AN ENTIRE STACK COUNTS AS AN ENTRY. KEEP YOUR SHIT UNSTACKED.
-		return ${MyShip.GetDrones}
+		variable index:item DroneList
+		MyShip:GetDrones[DroneList]
+		return ${DroneList.Used}
 	}
 
 	member:int DronesInSpace()
 	{
-		return ${Me.GetActiveDroneIDs[This.ActiveDroneIDList]}
+		Me:GetActiveDroneIDs[This.ActiveDroneIDList]
+		return ${This.ActiveDroneIDList.Used}
 	}
 
 	member:int DeployedDroneCount()
 	{
+;; TODO - this is dupe of DronesInSpace
+		Me:GetActiveDroneIDs[This.ActiveDroneIDList]
 		return ${This.ActiveDroneIDList.Used}
 	}
 
@@ -301,7 +305,7 @@ objectdef obj_Drones
 		}
 
 		if (${MyShip.DronebayCapacity} > 0 && \
-   			${MyShip.GetDrones} == 0 && \
+   			${This.DronesInBay} == 0 && \
    			${This.DronesInSpace} < ${Config.Combat.MinimumDronesInSpace})
    		{
 			ShortageCount:Inc

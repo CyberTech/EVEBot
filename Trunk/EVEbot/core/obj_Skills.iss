@@ -213,19 +213,11 @@ objectdef obj_Skills inherits obj_BaseClass
 		}
 		else
 		{
-			variable int i
-			variable index:skill SkillList
-			if ${Me:GetSkills[SkillList]}
+			if ${Me.SkillCurrentlyTraining(exists)}
 			{
-				for (i:Set[1] ; ${i} <= ${SkillList.Used} ; i:Inc)
-				{
-					if ${SkillList[${i}].IsTraining}
-					{
 						return TRUE
 					}
 				}
-			}
-		}
 		return FALSE
 	}
 

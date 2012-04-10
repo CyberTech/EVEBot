@@ -87,9 +87,11 @@ objectdef obj_Ship inherits obj_BaseClass
 
 	variable float BaselineUsedCargo
 	variable bool CargoIsOpen
+	variable int RetryUpdateModuleList
 	variable index:module ModuleList
 	variable index:module ModuleList_MiningLaser
 	variable index:module ModuleList_Weapon
+	variable index:module ModuleList_ECCM
 	variable index:module ModuleList_ActiveResists
 	variable index:module ModuleList_Regen_Shield
 	variable index:module ModuleList_Repair_Armor
@@ -102,8 +104,8 @@ objectdef obj_Ship inherits obj_BaseClass
 	variable index:module ModuleList_StasisWeb
 	variable index:module ModuleList_SensorBoost
 	variable index:module ModuleList_TargetPainter
-	variable index:module ModuleList_WeaponEnhance
-	variable index:module ModuleList_ECCM
+	variable index:module ModuleList_TrackingComputer
+	variable index:module ModuleList_GangLinks
 	variable bool Repairing_Armor = FALSE
 	variable bool Repairing_Hull = FALSE
 	variable float m_MaxTargetRange
@@ -165,6 +167,20 @@ objectdef obj_Ship inherits obj_BaseClass
 				if ${Me.InSpace}
 				{
 					This:ValidateModuleTargets
+					
+					if ${RetryUpdateModuleList} == 10
+					{
+						Logger:Log["ERROR: obj_Ship:UpdateModuleList - No modules found. Pausing.", LOG_CRITICAL]
+						Logger:Loge["ERROR: obj_Ship:UpdateModuleList - If this ship has slots, you must have at least one module equipped, of any type.", LOG_CRITICAL]
+						RetryUpdateModuleList:Set[0]
+						Defense:RunAway["ERROR: obj_Ship - No modules found"]
+					}
+
+					if ${RetryUpdateModuleList} > 0
+					{
+						This:UpdateModuleList
+					}
+					
 					if !${This.LookupTableBuilt}
 					{
 						;if we have Weapon Enhance modules, slightly lower min range and raise max range
@@ -755,23 +771,23 @@ objectdef obj_Ship inherits obj_BaseClass
 		{
 			if ${aWeaponIterator.Value.Charge(exists)}
 			{
-				;Logger:Log["DEBUG: obj_Ship.IsAmmoAvailable:"]
-				;Logger:Log["Slot: ${aWeaponIterator.Value.ToItem.Slot}  ${aWeaponIterator.Value.ToItem.Name}"]
+				;Logger:Log["DEBUG: obj_Ship.IsAmmoAvailable:", LOG_DEBUG]
+				;Logger:Log["Slot: ${aWeaponIterator.Value.ToItem.Slot}  ${aWeaponIterator.Value.ToItem.Name}", LOG_DEBUG]
 
 				aWeaponIterator.Value:GetAvailableAmmo[anItemIndex]
-				;Logger:Log["Ammo: Used = ${anItemIndex.Used}"]
+				;Logger:Log["Ammo: Used = ${anItemIndex.Used}", LOG_DEBUG]
 
 				anItemIndex:GetIterator[anItemIterator]
 				if ${anItemIterator:First(exists)}
 				{
 					do
 					{
-						;Logger:Log["Ammo: Type = ${anItemIterator.Value.Type}"]
+						;Logger:Log["Ammo: Type = ${anItemIterator.Value.Type}", LOG_DEBUG]
 						if ${anItemIterator.Value.TypeID} == ${aWeaponIterator.Value.Charge.TypeID}
 						{
-							;Logger:Log["Ammo: Match!"]
-							;Logger:Log["Ammo: Qty = ${anItemIterator.Value.Quantity}"]
-							;Logger:Log["Ammo: Max = ${aWeaponIterator.Value.MaxCharges}"]
+							;Logger:Log["Ammo: Match!", LOG_DEBUG]
+							;Logger:Log["Ammo: Qty = ${anItemIterator.Value.Quantity}", LOG_DEBUG]
+							;Logger:Log["Ammo: Max = ${aWeaponIterator.Value.MaxCharges}", LOG_DEBUG]
 							;TODO: This may need work in the future regarding different weapon types. -- stealthy
 							if ${anItemIterator.Value.Quantity} < ${Math.Calc[${aWeaponIterator.Value.MaxCharges}*${This.ModuleList_Weapon.Used}]}
 							{
@@ -858,14 +874,20 @@ objectdef obj_Ship inherits obj_BaseClass
 
 	member:bool IsDamped()
 	{
-		return ${MyShip.MaxTargetRange} < ${This.m_MaxTargetRange}
+		return ${MyShip.MaxTargetRange.Centi} < ${This.m_MaxTargetRange.Centi}
 	}
 
 	member:float MaxTargetRange()
 	{
-		return ${m_MaxTargetRange}
-	}
+		variable float CurrentTargetRange = ${MyShip.MaxTargetRange}
+		if ${This.m_MaxTargetRange.Centi} < ${CurrentTargetRange.Centi}
+		{
+			This.m_MaxTargetRange:Set[${CurrentTargetRange}]
+		}
 
+		return ${CurrentTargetRange}
+	}
+	
 	method Print_ModuleList(string Title, string List)
 	{
 		variable iterator Module
@@ -890,14 +912,10 @@ objectdef obj_Ship inherits obj_BaseClass
 			return
 		}
 
-		/* save ship values that may change in combat */
-		This.m_MaxTargetRange:Set[${MyShip.MaxTargetRange}]
-		This:SetType[${Me.ToEntity.Type}]
-		This:SetTypeID[${Me.ToEntity.TypeID}]
-
 		/* build module lists */
 		This.ModuleList:Clear
 		This.ModuleList_MiningLaser:Clear
+		This.ModuleList_ECCM:Clear
 		This.ModuleList_Weapon:Clear
 		This.ModuleList_ActiveResists:Clear
 		This.ModuleList_Regen_Shield:Clear
@@ -912,6 +930,8 @@ objectdef obj_Ship inherits obj_BaseClass
 		This.ModuleList_StasisWeb:Clear
 		This.ModuleList_SensorBoost:Clear
 		This.ModuleList_TargetPainter:Clear
+		This.ModuleList_TrackingComputer:Clear
+		This.ModuleList_GangLinks:Clear
 		This.ModuleList_ECCM:Clear
 		This.ModuleList_WeaponEnhance:Clear
 
@@ -919,10 +939,14 @@ objectdef obj_Ship inherits obj_BaseClass
 
 		if !${This.ModuleList.Used} && ${MyShip.HighSlots} > 0
 		{
-			Defense:RunAway["ERROR: obj_Ship:UpdateModuleList - No modules found"]
+			Logger:Log["ERROR: obj_Ship:UpdateModuleList - No modules found. Retrying in a few seconds - If this ship has slots, you must have at least one module equipped, of any type.", LOG_CRITICAL]
+			RetryUpdateModuleList:Inc
 			return
 		}
+		RetryUpdateModuleList:Set[0]
 
+		/* save ship values that may change in combat */
+		This.m_MaxTargetRange:Set[${MyShip.MaxTargetRange}]
 		variable iterator Module
 
 		Logger:Log["Module Inventory:", LOG_MINOR, 1]
@@ -935,13 +959,22 @@ objectdef obj_Ship inherits obj_BaseClass
 			variable int TypeID
 			TypeID:Set[${Module.Value.ToItem.TypeID}]
 
+			if !${Module.Value(exists)}
+			{
+				Logger:Log["ERROR: obj_Ship:UpdateModuleList - Null module found. Retrying in a few seconds.", LOG_CRITICAL]
+				RetryUpdateModuleList:Inc
+				return
+			}
+
+			Logger:Log["DEBUG: ID: ${Module.Value.ID} Activatable: ${Module.Value.IsActivatable} Name: ${Module.Value.ToItem.Name} Slot: ${Module.Value.ToItem.Slot} Group: ${Module.Value.ToItem.Group} ${GroupID} Type: ${Module.Value.ToItem.Type} ${TypeID}", LOG_DEBUG]
+
 			if !${Module.Value.IsActivatable}
 			{
 				if ${Module.Value.ToItem.GroupID} == GROUP_TRACKINGENHANCER
 				{
 					This.HaveTrackingEnhancer:Set[TRUE]
 				}
-				This.ModuleList_Passive:Insert[${Module.Value}]
+				This.ModuleList_Passive:Insert[${Module.Value.ID}]
 				continue
 			}
 
@@ -951,22 +984,22 @@ objectdef obj_Ship inherits obj_BaseClass
 
 			if ${Module.Value.MiningAmount(exists)}
 			{
-				This.ModuleList_MiningLaser:Insert[${Module.Value}]
+				This.ModuleList_MiningLaser:Insert[${Module.Value.ID}]
 				continue
 			}
 
 			switch ${GroupID}
 			{
 				case GROUP_ECCM
-					This.ModuleList_ECCM:Insert[${Module.Value}]
+					This.ModuleList_ECCM:Insert[${Module.Value.ID}]
 					break
 				case GROUP_TRACKINGCOMPUTER
-					This.ModuleList_WeaponEnhance:Insert[${Module.Value}]
+					This.ModuleList_WeaponEnhance:Insert[${Module.Value.ID}]
 					break
 				case GROUPID_DAMAGE_CONTROL
 				case GROUPID_SHIELD_HARDENER
 				case GROUPID_ARMOR_HARDENERS
-					This.ModuleList_ActiveResists:Insert[${Module.Value}]
+					This.ModuleList_ActiveResists:Insert[${Module.Value.ID}]
 					break
 				case GROUP_ENERGYWEAPON
 				case GROUP_PROJECTILEWEAPON
@@ -983,41 +1016,54 @@ objectdef obj_Ship inherits obj_BaseClass
 				case GROUP_MISSILELAUNCHERSIEGE
 				case GROUP_MISSILELAUNCHERSNOWBALL
 				case GROUP_MISSILELAUNCHERSTANDARD
-					This.ModuleList_Weapon:Insert[${Module.Value}]
+					This.ModuleList_Weapon:Insert[${Module.Value.ID}]
 					break
+				case GROUP_ECCM
+					This.ModuleList_ECCM:Insert[${Module.Value.ID}]
+					continue
 				case GROUPID_FREQUENCY_MINING_LASER
-					break
+					continue
 				case GROUPID_SHIELD_BOOSTER
-					This.ModuleList_Regen_Shield:Insert[${Module.Value}]
+					This.ModuleList_Regen_Shield:Insert[${Module.Value.ID}]
 					continue
 				case GROUPID_AFTERBURNER
-					This.ModuleList_AB_MWD:Insert[${Module.Value}]
+					This.ModuleList_AB_MWD:Insert[${Module.Value.ID}]
 					continue
 				case GROUPID_ARMOR_REPAIRERS
-					This.ModuleList_Repair_Armor:Insert[${Module.Value}]
+					This.ModuleList_Repair_Armor:Insert[${Module.Value.ID}]
 					continue
 				case GROUPID_DATA_MINER
 					if ${TypeID} == TYPEID_SALVAGER
 					{
-						This.ModuleList_Salvagers:Insert[${Module.Value}]
+						This.ModuleList_Salvagers:Insert[${Module.Value.ID}]
 					}
 					continue
+				case GROUPID_SALVAGER
+					This.ModuleList_Salvagers:Insert[${Module.Value.ID}]
+					continue
 				case GROUPID_TRACTOR_BEAM
-					This.ModuleList_TractorBeams:Insert[${Module.Value}]
+					This.ModuleList_TractorBeams:Insert[${Module.Value.ID}]
 					continue
 				case NONE
-					This.ModuleList_Repair_Hull:Insert[${Module.Value}]
+					This.ModuleList_Repair_Hull:Insert[${Module.Value.ID}]
 					continue
 				case GROUPID_CLOAKING_DEVICE
-					This.ModuleList_Cloaks:Insert[${Module.Value}]
+					This.ModuleList_Cloaks:Insert[${Module.Value.ID}]
 					continue
 				case GROUPID_STASIS_WEB
-					This.ModuleList_StasisWeb:Insert[${Module.Value}]
+					This.ModuleList_StasisWeb:Insert[${Module.Value.ID}]
 					continue
 				case GROUP_SENSORBOOSTER
-					This.ModuleList_SensorBoost:Insert[${Module.Value}]
+					This.ModuleList_SensorBoost:Insert[${Module.Value.ID}]
 				case GROUP_TARGETPAINTER
-					This.ModuleList_TargetPainter:Insert[${Module.Value}]
+					This.ModuleList_TargetPainter:Insert[${Module.Value.ID}]
+					continue
+				case GROUP_TRACKINGCOMPUTER
+					This.ModuleList_TrackingComputer:Insert[${Module.Value.ID}]
+					continue
+				case GROUP_GANGLINK
+					This.ModuleList_GangLinks:Insert[${Module.Value.ID}]
+					continue
 				default
 					continue
 			}
@@ -1063,6 +1109,15 @@ objectdef obj_Ship inherits obj_BaseClass
 		return ${This.ModuleList_MiningLaser.Used}
 	}
 
+	member:int TotalTractorBeams()
+	{
+		return ${This.ModuleList_TractorBeams.Used}
+	}
+	member:int TotalSalvagers()
+	{
+		return ${This.ModuleList_Salvagers.Used}
+	}
+
 	member:int TotalActivatedMiningLasers()
 	{
 		Validate_Ship()
@@ -1079,6 +1134,56 @@ objectdef obj_Ship inherits obj_BaseClass
 				${Module.Value.IsDeactivating} || \
 				${Module.Value.IsChangingAmmo} || \
 				${Module.Value.IsReloadingAmmo}
+			{
+				count:Inc
+			}
+		}
+		while ${Module:Next(exists)}
+
+		return ${count}
+	}
+	member:int TotalActivatedTractorBeams()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return 0
+		}
+
+		variable int count
+		variable iterator Module
+
+		This.ModuleList_TractorBeams:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			if (${Module.Value.IsActive} || \
+				${Module.Value.IsGoingOnline} || \
+				${Module.Value.IsDeactivating})
+			{
+				count:Inc
+			}
+		}
+		while ${Module:Next(exists)}
+
+		return ${count}
+	}
+	member:int TotalActivatedSalvagers()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return 0
+		}
+
+		variable int count
+		variable iterator Module
+
+		This.ModuleList_Salvagers:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			if ${Module.Value.IsActive} || \
+				${Module.Value.IsGoingOnline} || \
+				${Module.Value.IsDeactivating}
 			{
 				count:Inc
 			}
@@ -1131,7 +1236,7 @@ objectdef obj_Ship inherits obj_BaseClass
 	; Returns the loaded crystal in a mining laser, given the slot name ("HiSlot0"...)
 	member:string LoadedMiningLaserCrystal(string SlotName, bool fullName = FALSE)
 	{
-		if !${EVEBot.SessionValid}
+		if !${Me.Ship(exists)}
 		{
 			return "NOCHARGE"
 		}
@@ -1183,7 +1288,7 @@ objectdef obj_Ship inherits obj_BaseClass
 		do
 		{
 			if ${Module.Value.LastTarget(exists)} && \
-				${Module.Value.LastTarget.ID} == ${EntityID} && \
+				${Module.Value.LastTarget.ID.Equal[${EntityID}]} && \
 				( ${Module.Value.IsActive} || ${Module.Value.IsGoingOnline} )
 			{
 				return TRUE
@@ -1433,6 +1538,74 @@ objectdef obj_Ship inherits obj_BaseClass
 		while ${Module:Next(exists)}
 	}
 
+	function ActivateFreeTractorBeam()
+	{
+		variable string Slot
+
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		variable iterator Module
+
+		This.ModuleList_TractorBeams:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			if !${Module.Value.IsActive} && \
+				!${Module.Value.IsGoingOnline} && \
+				!${Module.Value.IsDeactivating} && \
+				!${Module.Value.IsChangingAmmo} &&\
+				!${Module.Value.IsReloadingAmmo}
+			{
+				Slot:Set[${Module.Value.ToItem.Slot}]
+
+				Logger:Log["Activating: ${Slot}: ${Module.Value.ToItem.Name}"]
+				Module.Value:Activate
+				wait 25
+				return
+			}
+			}
+		while ${Module:Next(exists)}
+	}
+
+	function ActivateFreeSalvager()
+	{
+		variable string Slot
+
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		variable iterator Module
+
+		This.ModuleList_Salvagers:GetIterator[Module]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if !${Module.Value.IsActive} && \
+				!${Module.Value.IsGoingOnline} && \
+				!${Module.Value.IsDeactivating} && \
+				!${Module.Value.IsChangingAmmo} &&\
+				!${Module.Value.IsReloadingAmmo}
+			{
+				Slot:Set[${Module.Value.ToItem.Slot}]
+
+				Logger:Log["Activating: ${Slot}: ${Module.Value.ToItem.Name}"]
+				Module.Value:Activate
+				wait 25
+				return
+			}
+			wait 10
+		}
+		while ${Module:Next(exists)}
+	}
+
+
+
+
 	member IsCargoOpen()
 	{
 		if ${EVEWindow[MyShipCargo](exists)}
@@ -1484,6 +1657,8 @@ objectdef obj_Ship inherits obj_BaseClass
 				MyShip:GetCargo[MyCargo]
 			}
 		}
+		EVEWindow[ByName,${MyShip.ID}]:StackAll
+		wait 5
 	}
 
 	function CloseCargo()
@@ -1520,7 +1695,7 @@ objectdef obj_Ship inherits obj_BaseClass
 	{
 		Validate_Ship()
 
-		if ${Me.InSpace} && ${Me.ToEntity.IsCloaked}
+		if ${Me.ToEntity(exists)} && ${Me.ToEntity.IsCloaked}
 		{
 			return TRUE
 		}
@@ -1534,7 +1709,7 @@ objectdef obj_Ship inherits obj_BaseClass
 
 		if ${This.IsCargoOpen}
 		{
-			MyShip:StackAllCargo
+			EVEWindow[ByName,${MyShip.ID}]:StackAll
 		}
 	}
 
@@ -1593,13 +1768,25 @@ objectdef obj_Ship inherits obj_BaseClass
 		Validate_Ship()
 
 		variable string ShipName = ${MyShip}
+		variable int GroupID
+		variable int TypeID
 
-		if ${ShipName.Right[10].Equal["'s Capsule"]} || \
-			${Me.ToEntity.GroupID} == GROUP_CAPSULE
+		if ${Me.InSpace}
 		{
-			if ${This.m_TypeID} != ${Me.ToEntity.TypeID}
+			GroupID:Set[${MyShip.ToEntity.GroupID}]
+			TypeID:Set[${MyShip.ToEntity.TypeID}]
+		}
+		else
+		{
+			GroupID:Set[${MyShip.ToItem.GroupID}]
+			TypeID:Set[${MyShip.ToItem.TypeID}]
+		}
+		if ${ShipName.Right[10].Equal["'s Capsule"]} || \
+			${GroupID} == GROUP_CAPSULE
+		{
+			if ${This.m_TypeID} != ${TypeID}
 			{
-				This:UpdateModuleList[]
+				This.RetryUpdateModuleList:Set[1]
 			}
 			return TRUE
 		}
@@ -1657,7 +1844,7 @@ objectdef obj_Ship inherits obj_BaseClass
 	method Reload_Weapons(bool ForceReload)
 	{
 		variable bool NeedReload = FALSE
-
+		variable int CurrentCharges = 0
 		Validate_Ship()
 
 		if !${This.ModuleList_Weapon.Used}
@@ -1683,8 +1870,20 @@ objectdef obj_Ship inherits obj_BaseClass
 					}
 
 					; Has ammo been used?
-					if ${Module.Value.CurrentCharges} != ${Module.Value.MaxCharges}
+					if ${Module.Value.CurrentCharges} > 0
 					{
+						CurrentCharges:Set[${Module.Value.CurrentCharges}]
+					}
+					else
+					{
+						CurrentCharges:Set[${Module.Value.Charge.Quantity}]
+					}
+
+					if ${CurrentCharges} != ${Module.Value.MaxCharges}
+					{
+						;UI:UpdateConsole["Module.Value.CurrentCharges = ${Module.Value.CurrentCharges}"]
+						;UI:UpdateConsole["Module.Value.MaxCharges = ${Module.Value.MaxCharges}"]
+						;UI:UpdateConsole["Module.Value.Charge.Quantity = ${Module.Value.Charge.Quantity}"]
 						; Is there still more then 30% ammo available?
 						if ${Math.Calc[${Module.Value.CurrentCharges}/${Module.Value.MaxCharges}]} < 0.3
 						{
@@ -1701,6 +1900,7 @@ objectdef obj_Ship inherits obj_BaseClass
 		{
 			Logger:Log["Reloading Weapons..."]
 			EVE:Execute[CmdReloadAmmo]
+			This.ReloadingWeapons:Set[${Time.Timestamp}]
 		}
 	}
 
@@ -1708,7 +1908,7 @@ objectdef obj_Ship inherits obj_BaseClass
 	{
 		if ${Station.Docked}
 		{
-			return ${This.m_Type}
+			return ${MyShip.ToItem.Type}
 		}
 		else
 		{
@@ -1716,28 +1916,16 @@ objectdef obj_Ship inherits obj_BaseClass
 		}
 	}
 
-	method SetType(string typeString)
-	{
-		;Logger:Log["obj_Ship: DEBUG: Setting ship type to ${typeString}"]
-		This.m_Type:Set[${typeString}]
-	}
-
 	member:int TypeID()
 	{
 		if ${Station.Docked}
 		{
-			return ${This.m_TypeID}
+			return ${MyShip.ToItem.TypeID}
 		}
 		else
 		{
 			return ${Me.ToEntity.TypeID}
 		}
-	}
-
-	method SetTypeID(int typeID)
-	{
-		;Logger:Log["obj_Ship: DEBUG: Setting ship type ID to ${typeID}"]
-		This.m_TypeID:Set[${typeID}]
 	}
 
 	function ActivateShip(string name)
@@ -1763,9 +1951,6 @@ objectdef obj_Ship inherits obj_BaseClass
 					{
 						Logger:Log["obj_Ship: Switching to ship named ${hsIterator.Value.GivenName}."]
 						hsIterator.Value:MakeActive
-						wait 10
-						This:SetType[${hsIterator.Value.Type}]
-						This:SetTypeID[${hsIterator.Value.TypeID}]
 						break
 					}
 				}
