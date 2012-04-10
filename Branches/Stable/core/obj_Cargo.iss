@@ -14,6 +14,7 @@ objectdef obj_Cargo
 {
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
+	
 
 	variable index:item MyCargo
 	variable index:item CargoToTransfer
@@ -35,6 +36,7 @@ objectdef obj_Cargo
 	{
 		call Ship.OpenCargo
 		call Station.OpenHangar
+		call Station.OpenCorpHangar
 	}
 
 	function CloseHolds()
@@ -228,7 +230,7 @@ objectdef obj_Cargo
 		call Station.OpenHangar
 		Me:GetHangarItems[HangarItems]
 		HangarItems:GetIterator[HangarIterator]
-
+		
 		; Cycle thru the Hangar looking for the needed Crystals and move them to the ship
 			if ${HangarIterator:First(exists)}
 			do
@@ -340,7 +342,7 @@ objectdef obj_Cargo
 				else
 				{
 					ListToMove:Insert[${CargoIterator.Value.ID}]
-				}
+					CargoIterator.Value:MoveTo[MyStationHangar, Hangar]
 				wait 10
 			}
 			while ${CargoIterator:Next(exists)}
@@ -772,10 +774,10 @@ objectdef obj_Cargo
 		}
 
 		; Need to cycle the the cargohold after docking to update the list.
-		call Ship.CloseCargo
+		call This.CloseHolds
 
 		UI:UpdateConsole["Transferring Ore to Station Hangar"]
-		call Ship.OpenCargo
+		call This.OpenHolds
 
 		This:FindShipCargo[CATEGORYID_ORE]
 		call This.TransferListToHangar
