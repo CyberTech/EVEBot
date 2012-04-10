@@ -67,6 +67,9 @@ objectdef obj_Targets inherits obj_BaseClass
 	variable index:string SpecialTargets
 	variable iterator SpecialTarget
 
+	variable index:string SpecialTargetsToLoot
+	variable iterator SpecialTargetToLoot
+
 	variable bool CheckChain
 	variable bool Chaining
 
@@ -94,7 +97,17 @@ objectdef obj_Targets inherits obj_BaseClass
 		; You can specify the entire rat name, for example
 		; leave rats that dont scramble which would help
 		; later when chaining gets added
-
+		PriorityTargets:Insert["Factory Defense Battery"] 		/* web/scram */
+		PriorityTargets:Insert["Dire Pithi Arrogator"] 		/* web/scram */
+		PriorityTargets:Insert["Dire Pithi Despoiler"] 		/* Jamming */
+		PriorityTargets:Insert["Dire Pithi Imputor"] 		/* web/scram */
+		PriorityTargets:Insert["Dire Pithi Infiltrator"] 	/* web/scram */
+		PriorityTargets:Insert["Dire Pithi Invader"] 		/* web/scram */
+		PriorityTargets:Insert["Dire Pithi Saboteur"] 		/* Jamming */
+		PriorityTargets:Insert["Dire Pithi Annihilator"] 	/* Jamming */
+		PriorityTargets:Insert["Dire Pithi Killer"] 			/* Jamming */
+		PriorityTargets:Insert["Dire Pithi Murderer"] 		/* Jamming */
+		PriorityTargets:Insert["Dire Pithi Nullifier"] 		/* Jamming */
 		PriorityTargets:Insert["Dire Guristas Arrogator"] 		/* web/scram */
 		PriorityTargets:Insert["Dire Guristas Despoiler"] 		/* Jamming */
 		PriorityTargets:Insert["Dire Guristas Imputor"] 		/* web/scram */
@@ -173,6 +186,18 @@ objectdef obj_Targets inherits obj_BaseClass
 		SpecialTargets:Insert["Hakim Stormare"]
 		SpecialTargets:Insert["Mizuro Cybon"]
 		SpecialTargets:Insert["Tobias Kruzhoryy"]
+
+		; Asteroid Angel Cartel Battleship
+		SpecialTargets:Insert["Domination Cherubim"]
+		SpecialTargets:Insert["Domination Commander"]
+		SpecialTargets:Insert["Domination General"]
+		SpecialTargets:Insert["Domination Malakim"]
+		SpecialTargets:Insert["Domination Nephilim"]
+		SpecialTargets:Insert["Domination Saint"]
+		SpecialTargets:Insert["Domination Seraphim"]
+		SpecialTargets:Insert["Domination Throne"]
+		SpecialTargets:Insert["Domination War General"]
+		SpecialTargets:Insert["Domination Warlord"]
 
 		; Asteroid Angel Cartel Battlecruiser
 		SpecialTargets:Insert["Domination Legatus"]
@@ -267,10 +292,127 @@ objectdef obj_Targets inherits obj_BaseClass
 		SpecialTargets:Insert["Transporter"]
 		SpecialTargets:Insert["Trucker"]
 
+		SpecialTargetsToLoot:Insert["Dread Guristas"]
+		SpecialTargetsToLoot:Insert["Shadow Serpentis"]
+		SpecialTargetsToLoot:Insert["True Sansha"]
+		SpecialTargetsToLoot:Insert["Dark Blood"]
+		SpecialTargetsToLoot:Insert["Domination"]
+
+		; Asteroid Serpentis Officers
+		SpecialTargetsToLoot:Insert["Brynn Jerdola"]
+		SpecialTargetsToLoot:Insert["Cormack Vaaja"]
+		SpecialTargetsToLoot:Insert["Setele Schellan"]
+		SpecialTargetsToLoot:Insert["Tuvan Orth"]
+
+		; Asteroid Guristas Officers
+		SpecialTargetsToLoot:Insert["Estamel Tharchon"]
+		SpecialTargetsToLoot:Insert["Kaikka Peunato"]
+		SpecialTargetsToLoot:Insert["Thon Eney"]
+		SpecialTargetsToLoot:Insert["Vepas Minimala"]
+
+		; Asteroid Angel Cartel Battleship
+		SpecialTargetsToLoot:Insert["Domination Cherubim"]
+		SpecialTargetsToLoot:Insert["Domination Commander"]
+		SpecialTargetsToLoot:Insert["Domination General"]
+		SpecialTargetsToLoot:Insert["Domination Malakim"]
+		SpecialTargetsToLoot:Insert["Domination Nephilim"]
+		SpecialTargetsToLoot:Insert["Domination Saint"]
+		SpecialTargetsToLoot:Insert["Domination Seraphim"]
+		SpecialTargetsToLoot:Insert["Domination Throne"]
+		SpecialTargetsToLoot:Insert["Domination War General"]
+		SpecialTargetsToLoot:Insert["Domination Warlord"]
+
+		; Asteroid Angel Cartel Battlecruiser
+		SpecialTargetsToLoot:Insert["Domination Legatus"]
+		SpecialTargetsToLoot:Insert["Domination Legionnaire"]
+		SpecialTargetsToLoot:Insert["Domination Praefectus"]
+		SpecialTargetsToLoot:Insert["Domination Primus"]
+		SpecialTargetsToLoot:Insert["Domination Tribuni"]
+		SpecialTargetsToLoot:Insert["Domination Tribunus"]
+
+		; Asteroid Angel Cartel Cruiser
+		SpecialTargetsToLoot:Insert["Domination Breaker"]
+		SpecialTargetsToLoot:Insert["Domination Centurion"]
+		SpecialTargetsToLoot:Insert["Domination Crusher"]
+		SpecialTargetsToLoot:Insert["Domination Defeater"]
+		SpecialTargetsToLoot:Insert["Domination Depredator"]
+		SpecialTargetsToLoot:Insert["Domination Liquidator"]
+		SpecialTargetsToLoot:Insert["Domination Marauder"]
+		SpecialTargetsToLoot:Insert["Domination Phalanx"]
+		SpecialTargetsToLoot:Insert["Domination Predator"]
+		SpecialTargetsToLoot:Insert["Domination Smasher"]
+
+		; Asteroid Angel Cartel Destroyer
+		SpecialTargetsToLoot:Insert["Domination Defacer"]
+		SpecialTargetsToLoot:Insert["Domination Defiler"]
+		SpecialTargetsToLoot:Insert["Domination Haunter"]
+		SpecialTargetsToLoot:Insert["Domination Seizer"]
+		SpecialTargetsToLoot:Insert["Domination Shatterer"]
+		SpecialTargetsToLoot:Insert["Domination Trasher"]
+
+		; Asteroid Angel Cartel Frigate
+		SpecialTargetsToLoot:Insert["Domination Ambusher"]
+		SpecialTargetsToLoot:Insert["Domination Hijacker"]
+		SpecialTargetsToLoot:Insert["Domination Hunter"]
+		SpecialTargetsToLoot:Insert["Domination Impaler"]
+		SpecialTargetsToLoot:Insert["Domination Nomad"]
+		SpecialTargetsToLoot:Insert["Domination Outlaw"]
+		SpecialTargetsToLoot:Insert["Domination Raider"]
+		SpecialTargetsToLoot:Insert["Domination Rogue"]
+		SpecialTargetsToLoot:Insert["Domination Ruffian"]
+		SpecialTargetsToLoot:Insert["Domination Thug"]
+		SpecialTargetsToLoot:Insert["Psycho Ambusher"]
+		SpecialTargetsToLoot:Insert["Psycho Hijacker"]
+		SpecialTargetsToLoot:Insert["Psycho Hunter"]
+		SpecialTargetsToLoot:Insert["Psycho Impaler"]
+		SpecialTargetsToLoot:Insert["Psycho Nomad"]
+		SpecialTargetsToLoot:Insert["Psycho Outlaw"]
+		SpecialTargetsToLoot:Insert["Psycho Raider"]
+		SpecialTargetsToLoot:Insert["Psycho Rogue"]
+		SpecialTargetsToLoot:Insert["Psycho Ruffian"]
+		SpecialTargetsToLoot:Insert["Psycho Thug"]
+
+		; Asteroid Angel Cartel Officers
+		SpecialTargetsToLoot:Insert["Gotan Kreiss"]
+		SpecialTargetsToLoot:Insert["Hakim Stormare"]
+		SpecialTargetsToLoot:Insert["Mizuro Cybon"]
+		SpecialTargetsToLoot:Insert["Tobias Kruzhoryy"]
+
+		; Asteroid Blood Raiders Officers
+		SpecialTargetsToLoot:Insert["Ahremen Arkah"]
+		SpecialTargetsToLoot:Insert["Draclira Merlonne"]
+		SpecialTargetsToLoot:Insert["Raysere Giant"]
+		SpecialTargetsToLoot:Insert["Tairei Namazoth"]
+
+		; Asteroid Sansha's Nation Officers
+		SpecialTargetsToLoot:Insert["Brokara Ryver"]
+		SpecialTargetsToLoot:Insert["Chelm Soran"]
+		SpecialTargetsToLoot:Insert["Selynne Mardakar"]
+		SpecialTargetsToLoot:Insert["Vizan Ankonin"]
+
+		; Asteroid Angel Cartel Officers
+		SpecialTargetsToLoot:Insert["Gotan Kreiss"]
+		SpecialTargetsToLoot:Insert["Hakim Stormare"]
+		SpecialTargetsToLoot:Insert["Mizuro Cybon"]
+		SpecialTargetsToLoot:Insert["Tobias Kruzhoryy"]
+
+		; Asteroid Blood Raiders Officers
+		SpecialTargetsToLoot:Insert["Ahremen Arkah"]
+		SpecialTargetsToLoot:Insert["Draclira Merlonne"]
+		SpecialTargetsToLoot:Insert["Raysere Giant"]
+		SpecialTargetsToLoot:Insert["Tairei Namazoth"]
+
+		; Asteroid Sansha's Nation Officers
+		SpecialTargetsToLoot:Insert["Brokara Ryver"]
+		SpecialTargetsToLoot:Insert["Chelm Soran"]
+		SpecialTargetsToLoot:Insert["Selynne Mardakar"]
+		SpecialTargetsToLoot:Insert["Vizan Ankonin"]
+
 		; Get the iterators
 		PriorityTargets:GetIterator[PriorityTarget]
 		ChainTargets:GetIterator[ChainTarget]
 		SpecialTargets:GetIterator[SpecialTarget]
+		SpecialTargetsToLoot:GetIterator[SpecialTargetToLoot]
 
 		DoNotKillList:Clear
 
@@ -325,6 +467,21 @@ objectdef obj_Targets inherits obj_BaseClass
 			return FALSE
 	}
 
+	member:bool IsSpecialTargetToLoot(string name)
+	{
+			; Loop through the special targets
+			if ${SpecialTargetToLoot:First(exists)}
+			do
+			{
+				if ${name.Find[${SpecialTargetToLoot.Value}]} > 0
+				{
+					return TRUE
+				}
+			}
+			while ${SpecialTargetToLoot:Next(exists)}
+
+			return FALSE
+	}
 	member:bool PC()
 	{
 		variable iterator tgtIterator
