@@ -20,7 +20,7 @@ objectdef obj_Freighter
 	variable string CurrentState
 
 	variable queue:bookmark SourceLocations
-	variable int m_DestinationID
+	variable int64 m_DestinationID
 
 	variable obj_Courier 		Courier
 	variable obj_StealthHauler 	StealthHauler
@@ -206,9 +206,11 @@ objectdef obj_Freighter
 
 		if ${Cargo.ShipHasContainers}
 		{
+			variable index:items HangarItems
+			Me:GetHangarItems[HangarItems]
 			Logger:Log["obj_Freighter: Ship has containers."]
-			Logger:Log["obj_Freighter: Station contains ${Me.GetHangarItems} items."]
-			if ${Me.GetHangarItems} > 0
+			Logger:Log["obj_Freighter: Station contains ${HangarItems.Used} items."]
+			if ${HangarItems.Used} > 0
 			{	/* move from hangar to ship */
 				call Cargo.TransferCargoToShip
 			}
@@ -251,13 +253,13 @@ objectdef obj_Freighter
 		}
 		elseif ${SourceLocations.Peek(exists)}
 		{
-			call Ship.WarpToBookMark ${SourceLocations.Peek}
+			call Ship.WarpToBookMark ${SourceLocations.Peek.ID}
 		}
 	}
 
 	function MoveToNextStationWithAssets()
 	{
-		variable int nextStationID
+		variable int64 nextStationID
 
 		if !${EVEWindow[ByCaption,"ASSETS"](exists)}
 		{
@@ -319,7 +321,7 @@ objectdef obj_Freighter
 	        if ${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity(exists)}
 	        {	/* Unfortunately you cannot get the station ID cooresponding to the book- */
 	        	/* mark until you are in the same system as the bookmark destination.     */
-	        	if ${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity.ID} == ${nextStationID}
+	        	if ${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity.ID.Equal[${nextStationID}]}
 	        	{
                		nextStationID:Set[0]
 	        	}
@@ -369,6 +371,27 @@ objectdef obj_Freighter
 				}
 			}
 		}
+		else
+		{
+			if ${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity(exists)}
+			{
+				switch ${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity.TypeID}
+				{
+					case TYPEID_LARGE_ASSEMBLY_ARRAY
+						call Cargo.TransferOreToLargeShipAssemblyArray
+						break
+					case TYPEID_XLARGE_ASSEMBLY_ARRAY
+						call Cargo.TransferOreToXLargeShipAssemblyArray
+						break
+				}
+				switch ${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity.GroupID}
+				{
+					case GROUP_CORPORATEHANGARARRAY
+						call Cargo.TransferOreToCorpHangarArray
+						break
+				}
+			}
+		}
 	}
 
 	method BuildSourceList()
@@ -393,14 +416,14 @@ objectdef obj_Freighter
 				{
 					if ${bm_collection.Element[${bm_iterator.Value.Label}](exists)}
 					{
-						Logger:Log["Label ${bm_iterator.Value.Label} exists more than once."]
-						Logger:Log["Freighter will visit stations with the same bookmark label in a"]
-						Logger:Log["random order.  Try to use unique bookmark labels in the future."]
-						bm_collection:Set["${bm_iterator.Value.Label}_${Math.Rand[5000]:Inc[1000]}",${bm_iterator.Value}]
+						UI:UpdateConsole["Label ${bm_iterator.Value.Label} exists more than once."]
+						UI:UpdateConsole["Freighter will visit stations with the same bookmark label in a"]
+						UI:UpdateConsole["random order.  Try to use unique bookmark labels in the future."]
+						bm_collection:Set["${bm_iterator.Value.Label}_${Math.Rand[5000]:Inc[1000]}",${bm_iterator.Value.ID}]
 					}
 					else
 					{
-						bm_collection:Set[${bm_iterator.Value.Label},${bm_iterator.Value}]
+						bm_collection:Set[${bm_iterator.Value.Label},${bm_iterator.Value.ID}]
 					}
 				}
 			}
@@ -412,7 +435,7 @@ objectdef obj_Freighter
 		{
 			do
 			{
-				SourceLocations:Queue[${bm_collection.CurrentValue}]
+				SourceLocations:Queue[${bm_collection.CurrentValue.ID}]
 			}
 			while ${bm_collection.NextValue(exists)}
 		}
