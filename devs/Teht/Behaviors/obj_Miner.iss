@@ -1190,7 +1190,7 @@ objectdef obj_Miner
 			{
 				return TRUE
 			}
-			
+		}	
 		return FALSE
 	}
 	
