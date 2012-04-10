@@ -131,10 +131,15 @@ objectdef obj_Miner
 						call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
 						call Cargo.TransferOreToCorpHangarArray
 						break
-					case Assembly Array
-						Logger:Log["Delivering ore to assembly array"]
+					case Large Ship Assembly Array
+						Logger:Log["Delivering ore to Large Ship Assembly Array"]
 						call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
-						call Cargo.TransferOreToAssemblyArray
+						call Cargo.TransferOreToLargeShipAssemblyArray
+						break
+					case XLarge Ship Assembly Array
+						Logger:Log["Delivering ore to XLarge Ship Assembly Array"]
+						call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
+						call Cargo.TransferOreToXLargeShipAssemblyArray
 						break
 					case Jetcan
 						Logger:Log["Delivering ore to jetcan"]
@@ -535,11 +540,11 @@ objectdef obj_Miner
 	{
 		/* notify hauler there is ore in space */
 		variable string tempString
-		tempString:Set["${EVEBot.CharID},${Me.SolarSystemID},${Entity[GroupID = GROUP_ASTEROIDBELT].ID}"]
+		tempString:Set["${Me.CharID},${Me.SolarSystemID},${Entity[GroupID = GROUP_ASTEROIDBELT].ID}"]
 		relay all -event EVEBot_Miner_Full ${tempString}
 
 		/* TO MANUALLY CALL A HAULER ENTER THIS IN THE CONSOLE
-		 * relay all -event EVEBot_Miner_Full "${EVEBot.CharID},${Me.SolarSystemID},0"
+		 * relay all -event EVEBot_Miner_Full "${Me.CharID},${Me.SolarSystemID},${Entity[GroupID = 9].ID}"
 		 */
 	}
 
