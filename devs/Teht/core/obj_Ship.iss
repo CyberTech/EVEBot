@@ -49,6 +49,7 @@ objectdef obj_Ship
 	variable int m_TypeID
 	variable uint ReloadingWeapons = 0
 
+
 	variable iterator ModulesIterator
 
 	variable obj_Drones Drones
@@ -168,6 +169,7 @@ objectdef obj_Ship
 
 		return TRUE
 	}
+	
 
 	member:bool IsAmmoAvailable()
 	{
@@ -263,6 +265,144 @@ objectdef obj_Ship
 		}
 		return ${Math.Calc[${Me.Ship.CargoCapacity}-${Me.Ship.UsedCargoCapacity}]}
 	}
+	
+	method StackCargoHold()
+	{
+		if ${EVEWindow[MyShipCargo](exists)}
+		{
+			EVEWindow[MyShipCargo]:StackAll
+		}
+	}
+	
+	method  StackOreHold()
+	{
+		if ${EVEWindow[ByCaption, Ore Hold](exists)}
+		{
+			EVEWindow[ByCaption, Ore Hold]:StackAll
+		}
+	}
+	
+	member:float OreHoldMinimumFreeSpace()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		return ${Math.Calc[${EVEWindow[ByCaption, Ore Hold].Capacity}*0.02]}
+	}
+	
+	member:float OreHoldFreeSpace()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return 0
+		}
+		
+		return ${Math.Calc[${EVEWindow[ByCaption, Ore Hold].Capacity}-${EVEWindow[ByCaption, Ore Hold].UsedCapacity}]}
+	}
+	
+	member:bool OreHoldFull()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return FALSE
+		}
+
+		if ${This.OreHoldFreeSpace} <= ${This.OreHoldMinimumFreeSpace}
+		{
+			return TRUE
+		}
+		return FALSE
+	}
+	
+	method OpenOreHold()
+	{
+		if !${EVEWindow[ByCaption, Ore Hold](exists)}
+		{
+			Me.Ship:OpenOreHold
+		}
+	}
+	
+	member:bool OreHoldEmpty()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return FALSE
+		}
+
+		if ${EVEWindow[ByCaption, Ore Hold].UsedCapacity} == 0
+		{
+			return TRUE
+		}
+		return FALSE
+	}
+	
+	
+	method StackCorpHangar()
+	{
+		if ${EVEWindow[ByCaption, Corp Hangar](exists)}
+		{
+			EVEWindow[ByCaption, Corp Hangar]:StackAll
+		}
+	}
+	
+	member:float CorpHangarMinimumFreeSpace()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		return ${Math.Calc[${EVEWindow[ByCaption, Corp Hangar].Capacity}*0.02]}
+	}
+	
+	member:float CorpHangarFreeSpace()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return 0
+		}
+		
+		return ${Math.Calc[${EVEWindow[ByCaption, Corp Hangar].Capacity}-${EVEWindow[ByCaption, Corp Hangar].UsedCapacity}]}
+	}
+	
+	member:bool CorpHangarFull()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return FALSE
+		}
+
+		if ${This.CorpHangarFreeSpace} <= ${This.CorpHangarMinimumFreeSpace}
+		{
+			return TRUE
+		}
+		return FALSE
+	}
+
+	member:bool CorpHangarEmpty()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return FALSE
+		}
+
+		if ${EVEWindow[ByCaption, Corp Hangar].UsedCapacity} == 0
+		{
+			return TRUE
+		}
+		return FALSE
+	}
+	
+
+	method OpenCorpHangars()
+	{
+		if !${EVEWindow[ByCaption, Corp Hangar](exists)}
+		{
+			Me.Ship:OpenCorpHangars
+		}
+	}
 
 	member:bool CargoFull()
 	{
@@ -286,6 +426,20 @@ objectdef obj_Ship
 		}
 
 		if ${This.CargoFreeSpace} <= ${Math.Calc[${Me.Ship.CargoCapacity}*0.50]}
+		{
+			return TRUE
+		}
+		return FALSE
+	}
+	
+	member:bool CargoTenthFull()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return FALSE
+		}
+
+		if ${This.CargoFreeSpace} <= ${Math.Calc[${Me.Ship.CargoCapacity}*0.90]}
 		{
 			return TRUE
 		}
@@ -766,7 +920,7 @@ objectdef obj_Ship
 			return ${Math.Calc[${ModuleIter.Value.OptimalRange}*0.90]}
 		}
 
-		return 0
+		return 5000
 	}
 
 	; Returns the loaded crystal in a mining laser, given the slot name ("HiSlot0"...)
@@ -909,6 +1063,7 @@ objectdef obj_Ship
 			while ${Target:Next(exists)}
 		}
 	}
+	
 
 	method CalculateMaxLockedTargets()
 	{

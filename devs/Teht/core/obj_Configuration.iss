@@ -81,7 +81,8 @@ objectdef obj_Configuration
 	variable obj_Configuration_Freighter Freighter
 	variable obj_Configuration_Agents Agents
 	variable obj_Configuration_Missioneer Missioneer
-
+	variable obj_Configuration_Fleet Fleet
+	
 	method Save()
 	{
 		BaseConfig:Save[]
@@ -506,6 +507,36 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Use Mining Drones, ${value}]
 	}
 
+	member:bool OrcaMode()
+	{
+		return ${This.MinerRef.FindSetting[Orca Mode, FALSE]}
+	}
+
+	method SetOrcaMode(bool value)
+	{
+		This.MinerRef:AddSetting[Orca Mode, ${value}]
+	}
+
+	member:bool OrcaInBelt()
+	{
+		return ${This.MinerRef.FindSetting[Orca In Belt, FALSE]}
+	}
+
+	method SetOrcaInBelt(bool value)
+	{
+		This.MinerRef:AddSetting[Orca In Belt, ${value}]
+	}
+
+	member:bool OrcaDelivery()
+	{
+		return ${This.MinerRef.FindSetting[Orca Delivery, FALSE]}
+	}
+
+	method SetOrcaDelivery(bool value)
+	{
+		This.MinerRef:AddSetting[Orca Delivery, ${value}]
+	}
+	
 	member:int AvoidPlayerRange()
 	{
 		return ${This.MinerRef.FindSetting[Avoid Player Range, 10000]}
@@ -586,6 +617,17 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Delivery Location, ${value}]
 	}
 
+	member:string PanicLocation()
+	{
+		return ${This.MinerRef.FindSetting[Panic Location]}
+	}
+
+	method SetPanicLocation(string value)
+	{
+		This.MinerRef:AddSetting[Panic Location, ${value}]
+	}
+	
+	
 	member:bool UseFieldBookmarks()
 	{
 		return ${This.MinerRef.FindSetting[Use Field Bookmarks, FALSE]}
@@ -1056,6 +1098,15 @@ objectdef obj_Configuration_Hauler
 	method SetMiningSystemBookmark(string Bookmark)
 	{
 		This.HaulerRef:AddSetting[Mining System Bookmark,${Bookmark}]
+	}
+	member:string HaulerPickupName()
+	{
+		return ${This.HaulerRef.FindSetting[Hauler Pickup Name, ""]}
+	}
+
+	method SetHaulerPickupName(string Bookmark)
+	{
+		This.HaulerRef:AddSetting[Hauler Pickup Name,${Bookmark}]
 	}
 }
 
@@ -1666,6 +1717,80 @@ objectdef obj_Configuration_Missioneer
 		This.MissioneerRef:AddSetting[Small Hauler Limit,${value}]
 	}
 
-
 }
 
+/* ************************************************************************* */
+objectdef obj_Configuration_Fleet
+{
+	variable string SetName = "Fleet"
+	variable index:string FleetMembers
+
+	method Initialize()
+	{
+		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)} || !${BaseConfig.BaseRef.FindSet[${This.SetName}].FindSet[FleetMembers](exists)}
+		{
+			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
+			This:Set_Default_Values[]
+		}
+
+		UI:UpdateConsole["obj_Configuration_Fleet: Initialized", LOG_MINOR]
+	}
+
+	member:settingsetref FleetRef()
+	{
+		return ${BaseConfig.BaseRef.FindSet[${This.SetName}]}
+	}
+	member:settingsetref FleetMembersRef()
+	{
+		return ${This.FleetRef.FindSet[FleetMembers]}
+	}
+	method Set_Default_Values()
+	{
+		BaseConfig.BaseRef:AddSet[${This.SetName}]
+		This.FleetRef:AddSet[FleetMembers]
+	}
+
+	member:bool IsLeader()
+	{
+		return ${This.FleetRef.FindSetting[Is Leader, FALSE]}
+	}
+
+	method SetIsLeader(bool value)
+	{
+		This.FleetRef:AddSetting[Is Leader, ${value}]
+	}
+
+	member:string FleetLeader()
+	{
+		return ${This.FleetRef.FindSetting[Fleet Leader, ""]}
+	}
+
+	method SetFleetLeader(string value)
+	{
+		This.FleetRef:AddSetting[Fleet Leader, ${value}]
+	}
+
+	method AddFleetMember(string value)
+	{
+		This.FleetMembersRef:AddSetting[${value}, ${value}]
+	}
+	method RemoveFleetMember(string value)
+	{
+		This.FleetMembersRef.FindSetting[${value}]:Remove
+	}
+	
+	method RefreshFleetMembers()
+	{
+		FleetMembers:Clear
+		variable iterator InfoFromSettings
+		This.FleetMembersRef:GetSettingIterator[InfoFromSettings]
+		if ${InfoFromSettings:First(exists)}
+		{
+			do
+			{
+				FleetMembers:Insert[${InfoFromSettings.Value}]
+			}
+			while ${InfoFromSettings:Next(exists)}
+		}
+	}
+}

@@ -865,4 +865,40 @@ objectdef obj_Targets
 		; No NPCs around
 		return FALSE
 	}
+
+	member:int64 TargetRat()
+	{
+		variable index:entity tgtIndex
+		variable iterator tgtIterator
+
+		EVE:QueryEntities[tgtIndex, "CategoryID = CATEGORYID_ENTITY"]
+
+		tgtIndex:GetIterator[tgtIterator]
+		if ${tgtIterator:First(exists)}
+		do
+		{
+			switch ${tgtIterator.Value.GroupID}
+			{
+				case GROUP_CONCORDDRONE
+				case GROUP_CONVOYDRONE
+				case GROUP_CONVOY
+				case GROUP_LARGECOLLIDABLEOBJECT
+				case GROUP_LARGECOLLIDABLESHIP
+				case GROUP_LARGECOLLIDABLESTRUCTURE
+					;UI:UpdateConsole["DEBUG: Ignoring entity ${tgtIterator.Value.Group} (${tgtIterator.Value.GroupID})"]
+					continue
+					break
+				default
+					UI:UpdateConsole["ALERT: Targeting: ${tgtIterator.Value.Group}"]
+					tgtIterator.Value:LockTarget
+					return ${tgtIterator.Value.ID}
+					break
+			}
+		}
+		while ${tgtIterator:Next(exists)}
+
+		; No NPCs around
+		return -1
+	}
+	
 }

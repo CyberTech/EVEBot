@@ -20,7 +20,6 @@
 #include core/obj_Bookmarks.iss
 #include core/obj_Jetcan.iss
 #include core/obj_Social.iss
-#include core/obj_Gang.iss
 #include core/obj_Assets.iss
 #include core/obj_IRC.iss
 #include core/obj_Safespots.iss
@@ -34,6 +33,7 @@
 #include core/obj_Market.iss
 #include core/obj_Items.iss
 #include core/obj_Autopilot.iss
+#include core/obj_Fleet.iss
 
 /* Behavior/Mode Includes */
 #include Behaviors/obj_Courier.iss

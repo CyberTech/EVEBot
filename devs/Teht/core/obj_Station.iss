@@ -78,6 +78,18 @@ objectdef obj_Station
 			return FALSE
 		}
 	}
+	
+member IsCorpHangarOpen()
+	{
+		if ${EVEWindow[Corporation Hangar](exists)}
+		{
+			return TRUE
+		}
+		else
+		{
+			return FALSE
+		}
+	}
 
 	member:bool Docked()
 	{
@@ -120,6 +132,26 @@ objectdef obj_Station
 		}
 	}
 
+function OpenCorpHangar()
+	{
+		if ${This.Docked} == FALSE
+		{
+			return
+		}
+
+		if !${This.IsCorpHangarOpen}
+		{
+			UI:UpdateConsole["Opening Corp Cargo Hangar"]
+			Me.Station:OpenCorpHangar
+			wait WAIT_CARGO_WINDOW
+			while !${This.IsCorpHangarOpen}
+			{
+				wait 1
+			}
+			wait 10
+		}
+	}
+	
 	function CloseHangar()
 	{
 		if ${This.Docked} == FALSE
@@ -133,6 +165,26 @@ objectdef obj_Station
 			EVEWindow[hangarFloor]:Close
 			wait WAIT_CARGO_WINDOW
 			while ${This.IsHangarOpen}
+			{
+				wait 1
+			}
+			wait 10
+		}
+	}
+	
+function CloseCorpHangar()
+	{
+		if ${This.Docked} == FALSE
+		{
+			return
+		}
+
+		if ${This.IsCorpHangarOpen}
+		{
+			UI:UpdateConsole["Closing Corp Cargo Hangar"]
+			Me.Station:OpenCorpHangar
+			wait WAIT_CARGO_WINDOW
+			while ${This.IsCorpHangarOpen}
 			{
 				wait 1
 			}

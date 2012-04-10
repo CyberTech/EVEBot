@@ -118,7 +118,7 @@ objectdef obj_Asteroids
 		}
 	}
 
-	function MoveToField(bool ForceMove)
+	function MoveToField(bool ForceMove, bool IgnoreTargeting=FALSE)
 	{
 		variable int curBelt
 		variable index:entity Belts
@@ -142,7 +142,7 @@ objectdef obj_Asteroids
 		{
 			if !${ForceMove}
 			{
-				call TargetNext TRUE
+				call TargetNext TRUE ${IgnoreTargeting}
 				AsteroidsInRange:Set[${Return}]
 			}
 
@@ -153,6 +153,11 @@ objectdef obj_Asteroids
 				{
 					/* We have a stored location, we should return to it. */
 					UI:UpdateConsole["Returning to last location (${Bookmarks.StoredLocation})"]
+					
+					if ${EVE.Bookmark[${Bookmarks.StoredLocation}](exists)} && ${EVE.Bookmark[${Bookmarks.StoredLocation}].SolarSystemID} != ${Me.SolarSystemID}
+						{
+							call Ship.TravelToSystem ${EVE.Bookmark[${Bookmarks.StoredLocation}].SolarSystemID}
+						}
 					call Ship.WarpToBookMarkName "${Bookmarks.StoredLocation}"
 					This.BeltArrivalTime:Set[${Time.Timestamp}]
 					Bookmarks:RemoveStoredLocation
@@ -189,7 +194,7 @@ objectdef obj_Asteroids
 			}
 			else
 			{
-				UI:UpdateConsole["Staying at Asteroid Belt: ${BeltIterator.Value.Name}"]
+				;UI:UpdateConsole["Staying at Asteroid Belt: ${BeltIterator.Value.Name}"]
 			}
 		}
 		else
@@ -262,7 +267,7 @@ objectdef obj_Asteroids
 
 	}
 
-	function UpdateList()
+	function UpdateList(bool IgnoreLasers=FALSE)
 	{
 		variable index:entity asteroid_index
 		variable index:entity AsteroidList_outofrange
@@ -311,7 +316,7 @@ objectdef obj_Asteroids
 					while ${asteroid_iterator:Next(exists)}
 				}
 			}
-			while ${This.AsteroidList.Used} < ${Ship.TotalMiningLasers} && ${This.OreTypeIterator:Next(exists)}
+			while (${This.AsteroidList.Used} < ${Ship.TotalMiningLasers} || ${IgnoreLasers}) && ${This.OreTypeIterator:Next(exists)}
 
 			if ${Config.Miner.StripMine}
 			{
@@ -338,7 +343,7 @@ objectdef obj_Asteroids
 		AsteroidList:GetSettingIterator
 	}
 
-	function:bool TargetNext(bool CalledFromMoveRoutine=FALSE)
+	function:bool TargetNext(bool CalledFromMoveRoutine=FALSE, bool IgnoreTargeting=FALSE)
 	{
 		variable iterator AsteroidIterator
 
@@ -371,7 +376,6 @@ objectdef obj_Asteroids
 				{
 					return TRUE
 				}
-				UI:UpdateConsole["Locking Asteroid ${AsteroidIterator.Value.Name}: ${EVEBot.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"]
 
 				;; This member does not exist in obj_Combat!!  -- GP
 				;;while ${Combat.CombatPause}
@@ -380,12 +384,16 @@ objectdef obj_Asteroids
 				;;	echo "DEBUG: Obj_Asteroids In Combat Pause Loop"
 				;;}
 
-				AsteroidIterator.Value:LockTarget
-				do
+				if !${IgnoreTargeting}
 				{
-				  wait 30
+					UI:UpdateConsole["Locking Asteroid ${AsteroidIterator.Value.Name}: ${EVEBot.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"]
+					AsteroidIterator.Value:LockTarget
+					do
+					{
+					  wait 30
+					}
+					while ${Me.TargetingCount} > 0
 				}
-				while ${Me.TargetingCount} > 0
 
 				call This.UpdateList
 				return TRUE

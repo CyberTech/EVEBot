@@ -11,7 +11,7 @@ objectdef obj_Safespots
 		UI:UpdateConsole["obj_Safespots: Initialized", LOG_MINOR]
 	}
 
-	method ResetSafeSpotList()
+	method ResetSafeSpotList(bool SupressSpam=FALSE)
 	{
 		SafeSpots:Clear
 		EVE:GetBookmarks[SafeSpots]
@@ -40,7 +40,10 @@ objectdef obj_Safespots
 		SafeSpots:Collapse
 		SafeSpots:GetIterator[SafeSpotIterator]
 
-		UI:UpdateConsole["ResetSafeSpotList found ${SafeSpots.Used} safespots in this system."]
+		if !${SupressSpam}
+		{
+			UI:UpdateConsole["ResetSafeSpotList found ${SafeSpots.Used} safespots in this system."]
+		}
 	}
 
 	function WarpToNextSafeSpot()
@@ -62,7 +65,8 @@ objectdef obj_Safespots
 
 		if ${SafeSpotIterator.Value(exists)}
 		{
-			call Ship.WarpToBookMark ${SafeSpotIterator.Value.ID}
+			echo ${EVE.Bookmark[${SafeSpotIterator.Value}]} - ${SafeSpotIterator.Value} - ${SafeSpotIterator.Value.ID}
+			EVE.Bookmark[${SafeSpotIterator.Value}]:WarpTo[0]
 		}
 		else
 		{
@@ -70,11 +74,11 @@ objectdef obj_Safespots
 		}
 	}
 
-	member:bool IsAtSafespot()
+	member:bool IsAtSafespot(bool SupressSpam=FALSE)
 	{
 		if ${SafeSpots.Used} == 0
 		{
-			This:ResetSafeSpotList
+			This:ResetSafeSpotList[${SupressSpam}]
 		}
 
 		; big debug block to get to the bottom of the "safe spot problem"

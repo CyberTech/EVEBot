@@ -59,6 +59,8 @@ objectdef obj_EVEBotUI
 
 	method Shutdown()
 	{
+		Uplink relay ${SettingXML[InnerSpace.XML].Set[Remote].GetString[Name].Escape} "Script[Launcher]:QueueCommand[call RemoveHauled \"${Me.Name}\"]"
+
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 		ui -unload interface/evebotgui.xml
 		ui -unload interface/eveskin/eveskin.xml

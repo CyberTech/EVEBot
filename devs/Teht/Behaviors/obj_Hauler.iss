@@ -175,20 +175,34 @@ objectdef obj_OreHauler inherits obj_Hauler
 			case IDLE
 				Ship:Activate_Gang_Links
 				break
-			case ABORT
-				Ship:Activate_Gang_Links
-				UI:UpdateConsole["Aborting operation: Returning to base"]
-				Call Station.Dock
+			case FLEE
+				if ${Me.InStation}
+				{
+					break
+				}
+				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
+				{
+					call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
+					break
+				}
+				if ${Me.ToEntity.Mode} != 3
+				{
+					call Safespots.WarpTo
+					wait 30
+				}
+				; Call Station.Dock
+				; Call This.Abort_Check
 				break
 			case INSTATION
 				call Cargo.TransferCargoToHangar
 				call Station.Undock
-				if ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}](exists)}
+				break
+			case HAUL
+				if ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}](exists)} && ${EVE.Bookmark[${Config.Miner.MiningSystemBookmark}].SolarSystemID} != ${Me.SolarSystemID}
 				{
 					call Ship.TravelToSystem ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID}
 				}
-				break
-			case HAUL
+			
 				Ship:Activate_Gang_Links
 				call This.Haul
 				break
@@ -203,15 +217,22 @@ objectdef obj_OreHauler inherits obj_Hauler
 	/* NOTE: The order of these if statements is important!! */
 	method SetState()
 	{
+		if !${Social.IsSafe}
+		{
+			This.CurrentState:Set["FLEE"]
+			UI:UpdateConsole["Warning: Low Standing player or system unsafe, fleeing"]
+			return
+		}
+	
 		if ${EVEBot.ReturnToStation} && !${Me.InStation}
 		{
-			This.CurrentState:Set["ABORT"]
+			This.CurrentState:Set["FLEE"]
 		}
 		elseif ${Ship.IsPod}
 		{
 			UI:UpdateConsole["Warning: We're in a pod, running"]
 			EVEBot.ReturnToStation:Set[TRUE]
-			This.CurrentState:Set["ABORT"]
+			This.CurrentState:Set["FLEE"]
 		}
 		elseif ${EVEBot.ReturnToStation}
 		{
@@ -221,7 +242,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		{
 	  		This.CurrentState:Set["INSTATION"]
 		}
-		elseif ${This.PickupFailed} || ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
+		elseif ${This.PickupFailed} || ${Ship.CargoFreeSpace} < 1000
 		{
 			This.CurrentState:Set["CARGOFULL"]
 		}
@@ -260,7 +281,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 				if (${Cargo.Value.Quantity} * ${Cargo.Value.Volume}) > ${Ship.CargoFreeSpace}
 				{
 					/* Move only what will fit, minus 1 to account for CCP rounding errors. */
-					QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${Cargo.Value.Volume} - 1]}]
+					QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${Cargo.Value.Volume}]}]
 					if ${QuantityToMove} <= 0
 					{
 						This.PickupFailed:Set[TRUE]
@@ -277,9 +298,13 @@ objectdef obj_OreHauler inherits obj_Hauler
 				{
 					Cargo.Value:MoveTo[MyShip,CargoHold,${QuantityToMove}]
 					wait 30
+					if ${Ship.CargoFreeSpace} < 1000
+					{
+						break
+					}
 				}
 
-				if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
+				if ${Ship.CargoFreeSpace} < 1000
 				{
 					/* TODO - this needs to keep a queue of bookmarks, named for the can ie, "Can CORP hh:mm", of partially looted cans */
 					/* Be sure its names, and not ID.  We shouldn't store anything in a bookmark name that we shouldnt know */
@@ -311,6 +336,9 @@ objectdef obj_OreHauler inherits obj_Hauler
 				break
 			case Service All Belts
 				call This.HaulAllBelts
+				break
+			case Service Orca
+				call This.ServiceOrca
 				break
 		}
 	}
@@ -406,7 +434,146 @@ objectdef obj_OreHauler inherits obj_Hauler
     	UI:UpdateConsole["Service All Belts mode not implemented!"]
 		EVEBot.ReturnToStation:Set[TRUE]
 	}
+	
+	function ServiceOrca()
+	{
+						variable string Orca
+						Orca:Set[Name = "${Config.Hauler.HaulerPickupName}"]
+						if !${Local[${Config.Hauler.HaulerPickupName}](exists)}
+						{
+							UI:UpdateConsole["ALERT:  The specified orca isn't in local - it may be incorrectly configured or out of system doing a dropoff."]
+							return
+						}
+						
+						if ${Me.ToEntity.Mode} == 3
+						{
+							return
+						}				
+						
+						if !${Entity[${Orca.Escape}](exists)} && ${Local[${Config.Hauler.HaulerPickupName}].ToFleetMember}
+						{
+							UI:UpdateConsole["ALERT:  The orca is not nearby.  Warping there first to unload."]
+							Local[${Config.Hauler.HaulerPickupName}].ToFleetMember:WarpTo
+							return
+						}
 
+						;	Find out if we need to approach this target
+						if ${Entity[${Orca.Escape}].Distance} > LOOT_RANGE && ${This.Approaching} == 0
+						{
+							UI:UpdateConsole["ALERT:  Approaching to within loot range."]
+							Entity[${Orca.Escape}]:Approach
+							This.Approaching:Set[${Entity[${Orca.Escape}]}]
+							return
+						}
+						
+						;	If we're approaching a target, find out if we need to stop doing so 
+						if ${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= LOOT_RANGE && ${This.Approaching} != 0
+						{
+							UI:UpdateConsole["ALERT:  Within loot range."]
+							EVE:Execute[CmdStopShip]
+							This.Approaching:Set[0]
+							return
+						}
+						
+						;	Open the Orca if it's not open yet
+						if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && !${EVEWindow[ByName, ${Entity[${Orca.Escape}]}](exists)}
+						{
+							UI:UpdateConsole["ALERT:  Open Hangar."]
+							Entity[${Orca.Escape}]:OpenCorpHangars
+							return
+						}
+						
+						if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && ${EVEWindow[ByName, ${Entity[${Orca.Escape}]}](exists)}
+						{
+							UI:UpdateConsole["ALERT:  Transferring Cargo"]
+							call Cargo.TransferListFromShipCorporateHangar ${Entity[${Orca.Escape}]}
+						}	
+						return
+			
+
+	}
+	
+	
+	function CheckForAttackers()
+	{
+		variable index:attacker attackerslist
+		Me:GetAttackers[attackerslist]
+		attackerslist:RemoveByQuery[LavishScript.CreateQuery[IsNPC=="0"]]
+		if ${attackerslist.Used} > 0
+		{
+			UI:UpdateConsole["Warning: Ship attacked by rats, alerting team to help kill ${attackerslist[1]}"]
+
+			Relay "all other" "Script[EVEBot]:QueueCommand[call Miner.DeployAndDestroy ${attackerslist[1]}]"
+		}
+	}
+	
+	function HangOutAndLootCans()
+	{
+		variable int64 GSC
+
+		if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
+		{	/* if we are already full ignore this request */
+			return
+		}
+
+		call Ship.OpenCargo
+
+		GSC:Set[${Entity[TypeID == 11489 && IsOwnedByCorpMember]}]
+
+		if ${Entity[${GSC}].Distance} > LOOT_RANGE
+		{
+			; /* approach within tractor range and tractor entity */
+			; variable float ApproachRange = ${Ship.OptimalTractorRange}
+			; if ${ApproachRange} > ${Ship.OptimalTargetingRange}
+			; {
+				; ApproachRange:Set[${Ship.OptimalTargetingRange}]
+			; }
+
+			; if ${ApproachRange} > 0 /* we have a tractor beam */
+			; {
+				; if ${Entities.Peek.Distance} > ${ApproachRange}
+				; {
+					; call Ship.Approach ${Entities.Peek.ID} ${ApproachRange}
+				; }
+				; Entities.Peek:LockTarget
+				; wait 10 ${Entities.Peek.BeingTargeted} || ${Entities.Peek.IsLockedTarget}
+				; while !${Entities.Peek.IsLockedTarget}
+				; {
+					; wait 1
+				; }
+				; Entities.Peek:MakeActiveTarget
+				; while !${Me.ActiveTarget.ID.Equal[${Entities.Peek.ID}]}
+				; {
+					; wait 1
+				; }
+				; Ship:Activate_Tractor
+				; while ${Entities.Peek.Distance} > LOOT_RANGE
+				; {
+					; wait 1
+				; }
+			; }
+			; else
+			; {
+				/* approach within loot range */
+				call Ship.Approach ${GSC} LOOT_RANGE
+				Entity[${GSC}]:Approach
+			; }
+		}
+		
+		if !${Entity[${GSC}].LootWindow(exists)}
+		{
+			Entity[${GSC}]:OpenCargo
+		}
+		wait 30
+		while ${Entity[${GSC}].UsedCargoCapacity} > 0 && ${Ship.CargoFreeSpace} > 1000 && ${Entity[${GSC}].Distance} <= LOOT_RANGE
+		{
+			if ${Entity[${GSC}].UsedCargoCapacity} > 0
+			{
+				call This.LootEntity ${GSC}
+			}
+		}
+	}
+	
 	function WarpToFleetMemberAndLoot(int64 charID)
 	{
 		variable int64 id = 0
@@ -650,6 +817,28 @@ objectdef obj_OreHauler inherits obj_Hauler
 		}
 
 		UI:UpdateConsole["BuildJetCanList found ${Entities.Used} cans nearby."]
+	}
+	
+	method BuildCorpJetCanList()
+	{
+		variable index:entity cans
+		variable int idx
+
+		EVE:QueryEntities[cans,"GroupID = 12"]
+		idx:Set[${cans.Used}]
+		Entities:Clear
+
+		while ${idx} > 0
+		{
+
+			if ${cans.Get[${idx}].IsOwnedByCorpMember}
+			{
+				Entities:Queue[${cans.Get[${idx}]}]
+			}
+			idx:Dec
+		}
+
+		UI:UpdateConsole["BuildCorpJetCanList found ${Entities.Used} cans nearby."]
 	}
 }
 

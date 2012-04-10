@@ -21,6 +21,8 @@ objectdef obj_Drones
 	variable int WaitingForDrones = 0
 	variable bool DronesReady = FALSE
 	variable int ShortageCount
+	
+	variable int64 MiningDroneTarget=0
 
 	method Initialize()
 	{
@@ -181,7 +183,17 @@ objectdef obj_Drones
 		if (${This.DronesInSpace} > 0)
 		{
 			EVE:DronesMineRepeatedly[This.ActiveDroneIDList]
+			MiningDroneTarget:Set[${Me.ActiveTarget}]
 		}
+	}
+	
+	member:bool IsMiningAsteroidID(int64 EntityID)
+	{
+		if ${MiningDroneTarget} == ${EntityID}
+		{
+			return TRUE
+		}
+		return FALSE
 	}
 
 	method SendDrones()

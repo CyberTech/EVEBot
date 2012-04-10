@@ -7,7 +7,7 @@
 		<X>200</X>
 		<Y>300</Y>
 		<Width>550</Width>
-		<Height>326</Height>
+		<Height>350</Height>
 		<Title>EVEBot Options</Title>
 		<TitleBar template='EVESkin.Window.TitleBar'>
 			<Width>100%</Width>
@@ -18,6 +18,7 @@
 					<OnLeftClick>
 						Script[EVEBot]:Resume
 						Script[EVEBot].VariableScope.EVEBot:Resume
+						Script[EVEBot].VariableScope.EVEBot.ReturnToStation:Set[FALSE]
 						Echo EVEBot: Resumed
 					</OnLeftClick>
 				</commandbutton>
@@ -570,6 +571,72 @@
 								Script[EVEBot].VariableScope.Config.Miner:SetUseMiningDrones[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
+						<checkbox name='cbOrcaMode'>
+							<X>300</X>
+							<Y>130</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Orca Mode </Text>
+							<AutoTooltip>When checked this will tell Evebot to operate an Orca, including managing boost modules.</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Miner.OrcaMode}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Miner:SetOrcaMode[${This.Checked}]
+								if !${This.Checked}
+								{
+									UIElement[cbOrcaInBelt@Miner@EVEBotOptionsTab@EVEBot]:UnsetChecked
+									Script[EVEBot].VariableScope.Config.Miner:SetOrcaInBelt[FALSE]
+									UIElement[cbOrcaDelivery@Miner@EVEBotOptionsTab@EVEBot]:UnsetChecked
+									Script[EVEBot].VariableScope.Config.Miner:SetOrcaDelivery[FALSE]
+								}
+							</OnLeftClick>
+						</checkbox>						
+						<checkbox name='cbOrcaInBelt'>
+							<X>300</X>
+							<Y>150</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Orca In Belt </Text>
+							<AutoTooltip>Approach asteroids like a Miner so your miners can unload to you.  Uncheck to put your orca at a safe spot to act as a station.</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Miner.OrcaInBelt}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								if !${UIElement[cbOrcaMode@Miner@EVEBotOptionsTab@EVEBot].Checked}
+								{
+									This:UnsetChecked
+								}
+								Script[EVEBot].VariableScope.Config.Miner:SetOrcaInBelt[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>						
+						<checkbox name='cbOrcaDelivery'>
+							<X>300</X>
+							<Y>170</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Orca Delivery </Text>
+							<AutoTooltip>Deliver ore to your delivery location just like if you were mining.  Uncheck if you're having a hauler empty your orca.</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Miner.OrcaDelivery}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								if !${UIElement[cbOrcaMode@Miner@EVEBotOptionsTab@EVEBot].Checked}
+								{
+									This:UnsetChecked
+								}
+								Script[EVEBot].VariableScope.Config.Miner:SetOrcaDelivery[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>						
 						<slider name='AvoidPlayerRange'>
 							<X>10</X>
 							<Y>110</Y>
@@ -706,6 +773,7 @@
 								<Item Value='3'>Jetcan</Item>
 								<Item Value='4'>XLarge Ship Assembly Array</Item>
 								<Item Value='5'>Large Ship Assembly Array</Item>
+								<Item Value='6'>Orca</Item>								
 							</Items>
 							<OnSelect>
 								Script[EVEBot].VariableScope.Config.Miner:SetDeliveryLocationType[${This.SelectedItem.Value}]
@@ -738,6 +806,30 @@
 								}
 							</OnChange>
 						</Textentry>
+						<Text name='PanicLocationLabel'>
+							<X>10</X>
+							<Y>250</Y>
+							<Width>250</Width>
+							<Height>18</Height>
+							<Text>Panic Location</Text>
+							<AutoTooltip>Station bookmark where you want to dock if something goes terribly wrong.  Can be in a different system.</AutoTooltip>
+						</Text>
+						<Textentry name='PanicLocation'>
+							<X>135</X>
+							<Y>250</Y>
+							<Width>350</Width>
+							<Height>18</Height>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Miner.PanicLocation}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Miner:SetPanicLocation[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+						
 					</Tab>
 					<Tab name='Combat'>
 						<checkbox name='cbAlwaysShieldBoost'>
@@ -1578,6 +1670,7 @@
 								<Item Value='1'>Service Fleet Members</Item>
 								<Item Value='2'>Service All Belts</Item>
 								<Item Value='3'>Service On-Demand</Item>
+								<Item Value='4'>Service Orca</Item>
 							</Items>
 							<OnSelect>
 								Script[EVEBot].VariableScope.Config.Hauler:SetHaulerMode[${This.SelectedItem.Value}]
@@ -1628,6 +1721,29 @@
 								if ${This.Text.Length} > 0
 								{
 									Script[EVEBot].VariableScope.Config.Hauler:SetMiningSystemBookmark[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+						<Text name='HaulerPickupLabel'>
+							<X>10</X>
+							<Y>60</Y>
+							<Width>180</Width>
+							<Height>10</Height>
+							<Text>Pickup Location</Text>
+							<AutoTooltip>The name of the fleet member flying your orca</AutoTooltip>
+						</Text>
+						<Textentry name='HaulerPickupName'>
+							<X>200</X>
+							<Y>60</Y>
+							<Width>250</Width>
+							<Height>18</Height>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Hauler.HaulerPickupName}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Hauler:SetHaulerPickupName[${This.Text}]
 								}
 							</OnChange>
 						</Textentry>
@@ -1882,6 +1998,114 @@
 								}
 							</OnChange>
 						</Textentry>
+					</Tab>
+					<Tab name='Fleet'>
+						<checkbox name='cbIsLeader'>
+							<X>10</X>
+							<Y>12</Y>
+							<Height>20</Height>
+							<Width>50</Width>
+							<Text>I am the leader</Text>
+							<AutoTooltip>If checked, this character will invite your fleet.  Don't set more than one!</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Fleet.IsLeader}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Fleet:SetIsLeader[${This.Checked}]
+								if ${This.Checked}
+								{
+									UIElement[tbFleetLeader@Fleet@EVEBotOptionsTab@EVEBot]:SetText[]
+								}
+							</OnLeftClick>
+						</checkbox>
+						<Text name='label2'>
+							<X>230</X>
+							<Y>18</Y>
+							<Width>200</Width>
+							<Height>18</Height>
+							<Text>Accept invites from</Text>
+						</Text>
+						<TextEntry name='tbFleetLeader'>
+							<X>390</X>
+							<Y>16</Y>
+							<Width>150</Width>
+							<Height>18</Height>
+							<MaxLength>50</MaxLength>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Fleet.FleetLeader}]
+							</OnLoad>
+							<OnChange>
+								Script[EVEBot].VariableScope.Config.Fleet:SetFleetLeader[${This.Text}]
+							</OnChange>
+						</Textentry>
+						<Text name='Label1'>
+							<X>10</X>
+							<Y>42</Y>
+							<Width>200</Width>
+							<Height>10</Height>
+							<Text>Manage Fleet Member</Text>
+							<AutoTooltip>Use this to add members to your fleet.  They must be in your corporation or in your contacts list.</AutoTooltip>
+						</Text>
+						<TextEntry name='tbAddFleetMember'>
+							<X>170</X>
+							<Y>40</Y>
+							<Width>330</Width>
+							<Height>18</Height>
+							<MaxLength>50</MaxLength>
+							<OnChange>
+							</OnChange>
+						</Textentry>
+						<button	Name='AddFleetMember' template='EVEskin.Add.Texture'>
+							<X>505</X>
+							<Y>41</Y>
+							<Width>16</Width>
+							<Height>16</Height>
+							<OnLeftClick>
+								UIElement[FleetMembers@Fleet@EVEBotOptionsTab@EVEBot]:AddItem[${UIElement[tbAddFleetMember@Fleet@EVEBotOptionsTab@EVEBot].Text}]
+								Script[EVEBot].VariableScope.Config.Fleet:AddFleetMember[${UIElement[tbAddFleetMember@Fleet@EVEBotOptionsTab@EVEBot].Text}]
+								UIElement[tbAddFleetMember@Fleet@EVEBotOptionsTab@EVEBot]:SetText[]
+							</OnLeftClick>
+						</button>
+						<button	Name='RemoveFleetMember' template='EVEskin.Remove.Texture'>
+							<X>525</X>
+							<Y>41</Y>
+							<Width>16</Width>
+							<Height>16</Height>
+							<OnLeftClick>
+								UIElement[FleetMembers@Fleet@EVEBotOptionsTab@EVEBot].ItemByText[${UIElement[tbAddFleetMember@Fleet@EVEBotOptionsTab@EVEBot].Text}]:Remove
+								Script[EVEBot].VariableScope.Config.Fleet:RemoveFleetMember[${UIElement[tbAddFleetMember@Fleet@EVEBotOptionsTab@EVEBot].Text}]
+							</OnLeftClick>
+						</button>
+						<listbox Name='FleetMembers'>
+							<X>10</X>
+							<Y>65</Y>
+							<Width>530</Width>
+							<Height>245</Height>
+							<SelectMultiple>0</SelectMultiple>
+							<Sort>Text</Sort>
+							<AutoTooltip>These characters will be added to your fleet if EVEBot can find them in your Corporation or Contacts and "I am Leader" is checked.</AutoTooltip>
+							<OnLoad>
+								Script[EVEBot].VariableScope.Config.Fleet:RefreshFleetMembers
+								variable iterator InfoFromSettings
+								Script[EVEBot].VariableScope.Config.Fleet.FleetMembers:GetIterator[InfoFromSettings]
+								if ${InfoFromSettings:First(exists)}
+								{
+									do
+									{
+										This:AddItem[${InfoFromSettings.Value}]
+									}
+									while ${InfoFromSettings:Next(exists)}
+								}
+								
+								
+							</OnLoad>
+							<OnSelect>
+								UIElement[tbAddFleetMember@Fleet@EVEBotOptionsTab@EVEBot]:SetText[${This.SelectedItem.Text}]
+							</OnSelect>
+						</listbox>
 					</Tab>
 				</Tabs>
 			</TabControl>
