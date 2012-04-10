@@ -36,7 +36,7 @@ objectdef obj_Bookmarks
 	
 	member:bool CheckForStoredLocation()
 	{
-		return !${StoredLocation.Equal[""]}
+		return ${StoredLocation.Length} != 0
 	}
 	
 	method RemoveStoredLocation()
