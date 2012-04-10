@@ -343,6 +343,7 @@ objectdef obj_Cargo
 				{
 					ListToMove:Insert[${CargoIterator.Value.ID}]
 					CargoIterator.Value:MoveTo[MyStationHangar, Hangar]
+				}
 				wait 10
 			}
 			while ${CargoIterator:Next(exists)}
