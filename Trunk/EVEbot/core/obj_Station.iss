@@ -158,7 +158,7 @@ objectdef obj_Station
 					default
 						break
 					case 18
-						This.DronesInStation:Insert[${CargoIterator.Value}]
+						This.DronesInStation:Insert[${CargoIterator.Value.ID}]
 				}
 			}
 			while ${CargoIterator:Next(exists)}
@@ -205,9 +205,6 @@ objectdef obj_Station
 
 		Logger:Log["Docking at ${EVE.GetLocationNameByID[${StationID}]}"]
 
-		Ship:SetType[${Me.ToEntity.Type}]
-		Ship:SetTypeID[${Me.ToEntity.TypeID}]
-
 		if ${Entity[${StationID}](exists)}
 		{
 			if ${Entity[${StationID}].Distance} > WARP_RANGE
@@ -223,7 +220,7 @@ objectdef obj_Station
 
 			do
 			{
-				Entity[${StationID}]:Approach
+				Entity[${StationID}]:Dock
 				Logger:Log["Approaching docking range..."]
 				wait 30
 			}
@@ -268,9 +265,6 @@ objectdef obj_Station
 		}
 
 		Logger:Log["Docking at ${StationID}:${Config.Common.HomeStation}"]
-
-		Ship:SetType[${Me.ToEntity.Type}]
-		Ship:SetTypeID[${Me.ToEntity.TypeID}]
 
 		if ${StationID} <= 0 || !${Entity[${StationID}](exists)}
 		{
@@ -326,10 +320,7 @@ objectdef obj_Station
 		Config.Common:HomeStation[${Entity[CategoryID = CATEGORYID_STATION].Name}]
 		Logger:Log["Undock: Complete - Home Station set to ${Config.Common.HomeStation}"]
 
-
-		Ship:UpdateModuleList[]
-		Ship:SetType[${Me.ToEntity.Type}]
-		Ship:SetTypeID[${Me.ToEntity.TypeID}]
+		Ship.RetryUpdateModuleList:Set[1]
 	}
 
 }
