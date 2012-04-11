@@ -167,6 +167,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		FullMiners:Set[${charID},${charID},${systemID},${beltID}]
 	}
 
+	
 	/* this function is called repeatedly by the main loop in EveBot.iss */
 	function ProcessState()
 	{
@@ -532,6 +533,8 @@ objectdef obj_OreHauler inherits obj_Hauler
 			{
 				PlayerID:Set[${Entity["OwnerID = ${charID} && CategoryID = 6"].ID}]
 			}
+			
+			call Ship.Approach ${PlayerID} LOOT_RANGE
 
 			if ${Entities.Peek.Distance} >= ${LOOT_RANGE} && \
 				(!${Entity[${PlayerID}](exists)} || ${Entity[${PlayerID}].DistanceTo[${Entities.Peek.ID}]} > LOOT_RANGE)
@@ -621,6 +624,9 @@ objectdef obj_OreHauler inherits obj_Hauler
 				Entities:Dequeue
 				continue
 			}
+			
+			call Ship.Approach ${Entities.Peek.ID} LOOT_RANGE
+			
 			if ${PopCan}
 			{
 				call This.LootEntity ${Entities.Peek.ID} 0

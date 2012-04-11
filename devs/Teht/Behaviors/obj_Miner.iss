@@ -479,11 +479,12 @@ objectdef obj_Miner
 					case Jetcan
 						UI:UpdateConsole["Warning: Cargo filled during jetcan mining, delays may occur"]
 
-						;	This checks to make sure the player in our delivery location is in range and not warping before we dump a jetcan
-						if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)}  && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3
+						;	This checks to make sure there aren't any potential jet can flippers around before we dump a jetcan
+						if !${Social.PlayerInRange[10000]} && ${Config.Miner.DeliveryLocationTypeName.Equal["Jetcan"]}
 						{
-							;	This checks to make sure there aren't any potential jet can flippers around before we dump a jetcan
-							if !${Social.PlayerInRange[10000]}
+								This:NotifyHaulers[]
+							;	This checks to make sure the player in our delivery location is in range and not warping before we dump a jetcan
+							if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)}  && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 2500 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3
 							{
 								call Cargo.TransferOreToJetCan
 								This:NotifyHaulers[]
@@ -614,7 +615,7 @@ objectdef obj_Miner
 		;	*	If WarpToOrca and the orca is in fleet, warp there instead and clear our saved bookmark
 		;	*	Warp to a belt based on belt labels or a random belt
 		;	Note:  The UpdateList spam is necessary to make sure our actions are based on the closest asteroids
-		if ${WarpToOrca} && !${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)}
+		if ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && ${WarpToOrca} && !${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)}
 		{
 			call Ship.WarpToFleetMember ${Local[${Config.Miner.DeliveryLocation}]}
 			if ${Config.Miner.BookMarkLastPosition} && ${Bookmarks.CheckForStoredLocation}
@@ -667,20 +668,17 @@ objectdef obj_Miner
 			return
 		}
 		
-		;	This performs jetcan dumps if we've got at least a tenth of our cargo hold full
-		if ${Config.Miner.DeliveryLocationTypeName.Equal[Jetcan]} && ${Ship.CargoTenthFull}
+		;	This checks to make sure there aren't any potential jet can flippers around before we dump a jetcan
+		if !${Social.PlayerInRange[10000]} && ${Config.Miner.DeliveryLocationTypeName.Equal["Jetcan"]}
 		{
+				This:NotifyHaulers[]
 			;	This checks to make sure the player in our delivery location is in range and not warping before we dump a jetcan
-			if ${Entity[Name = ${Config.Miner.DeliveryLocation}](exists)}  && ${Entity[Name = ${Config.Miner.DeliveryLocation}].Distance} < 20000 && ${Entity[Name = ${Config.Miner.DeliveryLocation}].Mode} != 3
+			if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)}  && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 2500 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3
 			{
-				;	This checks to make sure there aren't any potential jet can flippers around before we dump a jetcan
-				if !${Social.PlayerInRange[10000]}
-				{
-					call Cargo.TransferOreToJetCan
-					This:NotifyHaulers[]
-					;	Need a wait here because it would try to move the same item more than once
-					wait 20
-				}
+				call Cargo.TransferOreToJetCan
+				This:NotifyHaulers[]
+				;	Need a wait here because it would try to move the same item more than once
+				wait 20
 			}
 		}
 		
@@ -728,10 +726,17 @@ objectdef obj_Miner
 				{
 					if ${Entity[${Target.Value.ID}].Distance} > ${Ship.OptimalMiningRange}
 					{
+						UI:UpdateConsole["ALERT:  unlocking ${Target.Value.Name} as it is out of range after we moved."]
 						Target.Value:UnlockTarget
 					}
 				}
 				while ${Target:Next(exists)}
+				return
+			}
+			
+			;	Don't go further if we're still approaching
+			if ${This.Approaching} != 0
+			{
 				return
 			}
 
@@ -1001,20 +1006,17 @@ objectdef obj_Miner
 			}
 		}
 		
-		;	This performs jetcan dumps if we've got at least a tenth of our cargo hold full
-		if ${Config.Miner.DeliveryLocationTypeName.Equal[Jetcan]} && ${Ship.CargoTenthFull}
+		;	This checks to make sure there aren't any potential jet can flippers around before we dump a jetcan
+		if !${Social.PlayerInRange[10000]} && ${Config.Miner.DeliveryLocationTypeName.Equal["Jetcan"]}
 		{
+				This:NotifyHaulers[]
 			;	This checks to make sure the player in our delivery location is in range and not warping before we dump a jetcan
-			if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)}  && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3
+			if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)}  && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 2500 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3
 			{
-				;	This checks to make sure there aren't any potential jet can flippers around before we dump a jetcan
-				if !${Social.PlayerInRange[10000]}
-				{
-					call Cargo.TransferOreToJetCan
-					This:NotifyHaulers[]
-					;	Need a wait here because it would try to move the same item more than once
-					wait 20
-				}
+				call Cargo.TransferOreToJetCan
+				This:NotifyHaulers[]
+				;	Need a wait here because it would try to move the same item more than once
+				wait 20
 			}
 		}
 		
@@ -1030,13 +1032,6 @@ objectdef obj_Miner
 	
 	
 
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
