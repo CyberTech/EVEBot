@@ -22,7 +22,6 @@ objectdef obj_FullMiner
 		UI:UpdateConsole[ "DEBUG: obj_OreHauler:FullMiner: FleetMember: ${FleetMemberID} System: ${SystemID} Belt: ${Entity[${BeltID}].Name}", LOG_DEBUG]
 	}
 }
-
 	
 objectdef obj_OreHauler inherits obj_Hauler
 {
@@ -39,14 +38,16 @@ objectdef obj_OreHauler inherits obj_Hauler
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 2
 
-	variable index:bookmark SafeSpots
-	variable iterator SafeSpotIterator
-
+	;	Used to get Fleet information
 	variable queue:fleetmember FleetMembers
 	variable queue:entity     Entities
 
-	variable bool PickupFailed = FALSE
-
+	;	This is used to keep track of what we are approaching and when we started
+	variable int64 Approaching = 0
+	variable int TimeStartedApproaching = 0
+	
+	
+	
 	
 /*	
 ;	Step 1:  	Get the module ready.  This includes init and shutdown methods, as well as the pulse method that runs each frame.
@@ -98,7 +99,6 @@ objectdef obj_OreHauler inherits obj_Hauler
 ;				what the module should be doing based on what's going on around you.  This will be used when EVEBot calls your module to ProcessState.
 */		
 	
-	/* NOTE: The order of these if statements is important!! */
 	method SetState()
 	{
 		;	First, we need to check to find out if I should "HARD STOP" - dock and wait for user intervention.  Reasons to do this:
@@ -144,7 +144,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 			return
 		}
 		
-				;	If I'm in a station, I need to perform what I came there to do
+		;	If I'm in a station, I need to perform what I came there to do
 		if ${Me.InStation} == TRUE
 		{
 	  		This.CurrentState:Set["BASE"]
@@ -152,33 +152,334 @@ objectdef obj_OreHauler inherits obj_Hauler
 		}
 
 		;	If I'm not in a station and I'm full, I should head to a station to unload - Ignore dropoff if Orca Delivery is disabled.
-	    if ${This.MinerFull}
+	    if ${This.HaulerFull}
 		{
 			This.CurrentState:Set["DROPOFF"]
 			return
 		}
 
-		if ${Me.InStation}
-		{
-	  		This.CurrentState:Set["INSTATION"]
-		}
-		elseif ${This.PickupFailed} || ${Ship.CargoFreeSpace} < 1000
-		{
-			This.CurrentState:Set["CARGOFULL"]
-		}
-		elseif ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace}
+		;	If I'm not in a station and I have room to haul more, that's what I should do!
+		if !${This.HaulerFull}
 		{
 		 	This.CurrentState:Set["HAUL"]
+			return
 		}
-		else
-		{
-			This.CurrentState:Set["Unknown"]
-		}
+		
+		This.CurrentState:Set["Unknown"]
 	}
 
 
+/*	
+;	Step 3:		ProcessState:  This is the nervous system of the module.  EVEBot calls this; it uses the state information from SetState
+;				to figure out what it needs to do.  Then, it performs the actions, sometimes using functions - think of the functions as 
+;				arms and legs.  Don't ask me why I feel an analogy is needed.
+*/			
 	
-	/* A miner's jetcan is full.  Let's go get the ore.  */
+	function ProcessState()
+	{
+		switch ${This.CurrentState}
+		{
+			;	This means we're somewhere safe, and SetState wants us to stay there without spamming the UI
+			case IDLE
+				break
+
+			;	This means something serious happened, like someone targetted us, we're in a pod, or mining is failing due to something
+			;	weird going on.  In this situation our goal is to get to a station and stay there.
+			;	*	Notify other team members that you're running, and they should too!
+			;	*	Stay in a station if we're there
+			;	*	If we have a panic location and it's in the same system, dock there
+			;	*	If we have a panic location and it's in another system, set autopilot and go there
+			;	*	If we don't have a panic location and our delivery location is in the same system, dock there
+			;	*	If everything above failed and there's a station in the same system, dock there
+			;	*	If everything above failed, check if we're warping and warp to a safe spot
+			case HARDSTOP
+				relay all -event EVEBot_HARDSTOP
+				if ${Me.InStation}
+				{
+					break
+				}
+				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} == ${Me.SolarSystemID}
+				{
+					call Miner.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
+					call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
+					break
+				}				
+				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} != ${Me.SolarSystemID}
+				{
+					call Miner.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID}
+					call Ship.TravelToSystem ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID}
+					break
+				}
+				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
+				{
+					call Miner.FastWarp ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
+					call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
+					break
+				}
+				if ${Entity["CategoryID = 3"](exists)}
+				{
+					UI:UpdateConsole["Docking at ${Entity["CategoryID = 3"].Name}"]
+					call Miner.FastWarp ${Entity["CategoryID = 3"].ID}
+					call Station.DockAtStation ${Entity["CategoryID = 3"].ID}
+					break
+				}
+				if ${Me.ToEntity.Mode} != 3
+				{
+					call Safespots.WarpTo
+					call Miner.FastWarp
+					wait 30
+				}
+
+				UI:UpdateConsole["WARNING:  EVERYTHING has gone wrong. Hauler is in HARDSTOP mode and there are no panic locations, delivery locations, stations, or safe spots to use. You're probably going to get blown up..."]
+				break
+			
+			;	This means there's something dangerous in the system, but once it leaves we're going to go back to mining.
+			;	*	Stay in a station if we're there
+			;	*	If our delivery location is in the same system, dock there
+			;	*	If we have a panic location and it's in the same system, dock there
+			;	*	If there are any stations in this system, dock there
+			;	*	Otherwise, check if we're warping and warp to a safe spot
+			;	*	If none of these work, something is terribly wrong, and we need to panic!
+			case FLEE
+				if ${Me.InStation}
+				{
+					break
+				}
+				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
+				{
+					call Miner.FastWarp ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
+					call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
+					break
+				}
+				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} == ${Me.SolarSystemID}
+				{
+					call Miner.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
+					call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
+					break
+				}
+
+				if ${Entity["CategoryID = 3"](exists)}
+				{
+					UI:UpdateConsole["Docking at ${Entity["CategoryID = 3"].Name}"]
+					call Miner.FastWarp ${Entity["CategoryID = 3"].ID}
+					call This.DockAtStation ${Entity["CategoryID = 3"].ID}
+					break
+				}				
+				
+				if ${Me.ToEntity.Mode} != 3
+				{
+					call Safespots.WarpTo
+					call Miner.FastWarp
+					wait 30
+					break
+				}
+				
+				UI:UpdateConsole["HARD STOP: Unable to flee, no stations available and no Safe spots available"]
+				EVEBot.ReturnToStation:Set[TRUE]
+				break
+
+			;	This means we're in a station and need to do what we need to do and leave.
+			;	*	If this isn't where we're supposed to deliver ore, we need to leave the station so we can go to the right one.
+			;	*	Move ore out of cargo hold if it's there
+			;	*	Undock from station
+			case BASE
+				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID} != ${Me.StationID}
+				{
+					call Station.Undock
+					break
+				}
+				call Cargo.TransferCargoToHangar
+				call Station.Undock
+				relay all -event EVEBot_Orca_InBelt EVEBot_HaulerMSG ${Ship.CargoFreeSpace}
+				break
+
+
+			case HAUL
+				if ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}](exists)} && ${EVE.Bookmark[${Config.Miner.MiningSystemBookmark}].SolarSystemID} != ${Me.SolarSystemID}
+				{
+					call Ship.TravelToSystem ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID}
+				}
+
+				switch ${Config.Hauler.HaulerModeName}
+				{
+					case Service On-Demand
+						call This.HaulOnDemand
+						break
+					case Service Fleet Members
+						call This.HaulForFleet
+						break
+					case Service Orca
+						call This.ServiceOrca
+						break
+					case Jetcan Mode (Flip-guard)
+						call This.FlipGuard
+						break
+				}
+				break
+
+			case DROPOFF
+				call This.DropOff
+				break
+		}
+	}
+	
+	
+/*	
+;	HaulOnDemand
+;	*	Warp to fleet member and loot nearby cans
+;	*	Warp to next safespot
+*/			
+	function HaulOnDemand()
+	{
+		if ${FullMiners.FirstValue(exists)}
+		{
+			UI:UpdateConsole["${FullMiners.Used} cans to get! Picking up can at ${FullMiners.FirstKey}", LOG_DEBUG]
+			if ${FullMiners.CurrentValue.SystemID} == ${Me.SolarSystemID}
+			{
+				call This.WarpToFleetMemberAndLoot ${FullMiners.CurrentValue.FleetMemberID}
+			}
+			else
+			{
+				FullMiners:Erase[${FullMiners.FirstKey}]
+			}
+		}
+
+		call Safespots.WarpTo
+	}	
+	
+/*	
+;	HaulForFleet
+;	*	Warp to fleet member and loot nearby cans
+;	*	Repeat until cargo hold is full
+*/
+	function HaulForFleet()
+	{
+		if ${FleetMembers.Used} == 0
+		{
+			This:BuildFleetMemberList
+			call This.WarpToNextSafeSpot
+		}
+		else
+		{
+			if ${FleetMembers.Peek(exists)} && ${Local[${FleetMembers.Peek.ToPilot.Name}](exists)}
+			{
+				call This.WarpToFleetMemberAndLoot ${FleetMembers.Peek.CharID}
+			}
+			FleetMembers:Dequeue
+		}
+	}
+
+/*	
+;	HaulForFleet
+;	*	Warp to Orca
+;	*	Approach
+;	*	
+*/	
+	function ServiceOrca()
+	{
+		variable string Orca
+		Orca:Set[Name = "${Config.Hauler.HaulerPickupName}"]
+		if !${Local[${Config.Hauler.HaulerPickupName}](exists)}
+		{
+			UI:UpdateConsole["ALERT:  The specified orca isn't in local - it may be incorrectly configured or out of system."]
+			return
+		}
+		
+		if ${Me.ToEntity.Mode} == 3
+		{
+			return
+		}				
+		
+		if !${Entity[${Orca.Escape}](exists)} && ${Local[${Config.Hauler.HaulerPickupName}].ToFleetMember}
+		{
+			UI:UpdateConsole["ALERT:  The orca is not nearby.  Warping there first to unload."]
+			Local[${Config.Hauler.HaulerPickupName}].ToFleetMember:WarpTo
+			return
+		}
+
+		;	Find out if we need to approach this target
+		if ${Entity[${Orca.Escape}].Distance} > LOOT_RANGE && ${This.Approaching} == 0
+		{
+			UI:UpdateConsole["ALERT:  Approaching to within loot range."]
+			Entity[${Orca.Escape}]:Approach
+			This.Approaching:Set[${Entity[${Orca.Escape}]}]
+			This.TimeStartedApproaching:Set[${Time.Timestamp}]
+			break
+		}
+		
+		;	If we've been approaching for more than 2 minutes, we need to give up and try again
+		if ${Math.Calc[${TimeStartedApproaching}-${Time.Timestamp}]} < -120 && ${This.Approaching} != 0
+		{
+			This.Approaching:Set[0]
+			This.TimeStartedApproaching:Set[0]							
+		}
+		
+		;	If we're approaching a target, find out if we need to stop doing so 
+		if ${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= LOOT_RANGE && ${This.Approaching} != 0
+		{
+			UI:UpdateConsole["ALERT:  Within loot range."]
+			EVE:Execute[CmdStopShip]
+			This.Approaching:Set[0]
+			This.TimeStartedApproaching:Set[0]
+		}
+		
+		;	Open the Orca if it's not open yet
+		if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && !${EVEWindow[ByName, ${Entity[${Orca.Escape}]}](exists)}
+		{
+			UI:UpdateConsole["ALERT:  Open Hangar."]
+			Entity[${Orca.Escape}]:OpenCorpHangars
+			return
+		}
+		
+		if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && ${EVEWindow[ByName, ${Entity[${Orca.Escape}]}](exists)}
+		{
+			UI:UpdateConsole["ALERT:  Transferring Cargo"]
+			call Cargo.TransferListFromShipCorporateHangar ${Entity[${Orca.Escape}]}
+		}	
+		return
+	}
+	
+/*	
+;	Jetcan Mode (Flip-guard)
+;	*	Warp to fleet member and get in range
+;	*	Warp to next safespot
+*/			
+	function HaulOnDemand()
+	{
+		if ${FullMiners.FirstValue(exists)}
+		{
+			UI:UpdateConsole["${FullMiners.Used} cans to get! Picking up can at ${FullMiners.FirstKey}", LOG_DEBUG]
+			if ${FullMiners.CurrentValue.SystemID} == ${Me.SolarSystemID}
+			{
+				call Ship.WarpToFleetMember ${FullMiners.CurrentValue.FleetMemberID}
+				
+			}
+			else
+			{
+				FullMiners:Erase[${FullMiners.FirstKey}]
+			}
+		}
+		relay all -event EVEBot_Orca_InBelt EVEBot_HaulerMSG ${Ship.CargoFreeSpace}
+		FullMiners:Clear
+		call Safespots.WarpTo
+	}	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	;	Jetcan full, add it to FullMiners
 	method MinerFull(string haulParams)
 	{
 		variable int64 charID = -1
@@ -199,54 +500,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 	}
 
 	
-	/* this function is called repeatedly by the main loop in EveBot.iss */
-	function ProcessState()
-	{
-		switch ${This.CurrentState}
-		{
-			case IDLE
-				Ship:Activate_Gang_Links
-				break
-			case FLEE
-				if ${Me.InStation}
-				{
-					break
-				}
-				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
-				{
-					call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
-					break
-				}
-				if ${Me.ToEntity.Mode} != 3
-				{
-					call Safespots.WarpTo
-					wait 30
-				}
-				; Call Station.Dock
-				; Call This.Abort_Check
-				break
-			case INSTATION
-				call Cargo.TransferCargoToHangar
-				call Station.Undock
-				break
-			case HAUL
-				if ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}](exists)} && ${EVE.Bookmark[${Config.Miner.MiningSystemBookmark}].SolarSystemID} != ${Me.SolarSystemID}
-				{
-					call Ship.TravelToSystem ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID}
-				}
-			
-				Ship:Activate_Gang_Links
-				call This.Haul
-				break
-			case CARGOFULL
-				Ship:Activate_Gang_Links
-				call This.DropOff
-				This.PickupFailed:Set[FALSE]
-				break
-		}
-	}
-
-
+	
 	function LootEntity(int64 id, int leave = 0)
 	{
 		variable index:item ContainerCargo
@@ -273,10 +527,6 @@ objectdef obj_OreHauler inherits obj_Hauler
 				{
 					/* Move only what will fit, minus 1 to account for CCP rounding errors. */
 					QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${Cargo.Value.Volume}]}]
-					if ${QuantityToMove} <= 0
-					{
-						This.PickupFailed:Set[TRUE]
-					}
 				}
 				else
 				{
@@ -313,26 +563,6 @@ objectdef obj_OreHauler inherits obj_Hauler
 		wait 10
 	}
 
-
-	function Haul()
-	{
-		switch ${Config.Hauler.HaulerModeName}
-		{
-			case Service On-Demand
-				call This.HaulOnDemand
-				break
-			case Service Gang Members
-			case Service Fleet Members
-				call This.HaulForFleet
-				break
-			case Service All Belts
-				call This.HaulAllBelts
-				break
-			case Service Orca
-				call This.ServiceOrca
-				break
-		}
-	}
 
 	function DropOff()
 	{
@@ -371,120 +601,12 @@ objectdef obj_OreHauler inherits obj_Hauler
 		}
 	}
 
-	/* The HaulOnDemand function will be called repeatedly   */
-	/* until we leave the HAUL state due to downtime,        */
-	/* agression, or a full cargo hold.  The Haul function   */
-	/* should do one (and only one) of the following actions */
-	/* each it is called.									 */
-	/*                                                       */
-	/* 1) Warp to fleet member and loot nearby cans           */
-	/* 2) Warp to next safespot                              */
-	/* 3) Travel to new system (if required)                 */
-	/*                                                       */
-	function HaulOnDemand()
+	;	This loots all cans nearby that are available to it
+	function PopCans()
 	{
-		while ${CurrentState.Equal[HAUL]} && ${FullMiners.FirstValue(exists)}
-		{
-			UI:UpdateConsole["${FullMiners.Used} cans to get! Picking up can at ${FullMiners.FirstKey}", LOG_DEBUG]
-			if ${FullMiners.CurrentValue.SystemID} == ${Me.SolarSystemID}
-			{
-				call This.WarpToFleetMemberAndLoot ${FullMiners.CurrentValue.FleetMemberID}
-			}
-			else
-			{
-				FullMiners:Erase[${FullMiners.FirstKey}]
-			}
-		}
-
-		call This.WarpToNextSafeSpot
+		
 	}
 
-	/* 1) Warp to fleet member and loot nearby cans           */
-	/* 2) Repeat until cargo hold is full                    */
-	/*                                                       */
-	function HaulForFleet()
-	{
-		if ${FleetMembers.Used} == 0
-		{
-			This:BuildFleetMemberList
-			call This.WarpToNextSafeSpot
-		}
-		else
-		{
-			if ${FleetMembers.Peek(exists)} && ${Local[${FleetMembers.Peek.ToPilot.Name}](exists)}
-			{
-				call This.WarpToFleetMemberAndLoot ${FleetMembers.Peek.CharID}
-			}
-			FleetMembers:Dequeue
-		}
-	}
-
-	function HaulAllBelts()
-	{
-    	UI:UpdateConsole["Service All Belts mode not implemented!"]
-		EVEBot.ReturnToStation:Set[TRUE]
-	}
-	
-	function ServiceOrca()
-	{
-						variable string Orca
-						Orca:Set[Name = "${Config.Hauler.HaulerPickupName}"]
-						if !${Local[${Config.Hauler.HaulerPickupName}](exists)}
-						{
-							UI:UpdateConsole["ALERT:  The specified orca isn't in local - it may be incorrectly configured or out of system doing a dropoff."]
-							return
-						}
-						
-						if ${Me.ToEntity.Mode} == 3
-						{
-							return
-						}				
-						
-						if !${Entity[${Orca.Escape}](exists)} && ${Local[${Config.Hauler.HaulerPickupName}].ToFleetMember}
-						{
-							UI:UpdateConsole["ALERT:  The orca is not nearby.  Warping there first to unload."]
-							Local[${Config.Hauler.HaulerPickupName}].ToFleetMember:WarpTo
-							return
-						}
-
-						;	Find out if we need to approach this target
-						if ${Entity[${Orca.Escape}].Distance} > LOOT_RANGE && ${This.Approaching} == 0
-						{
-							UI:UpdateConsole["ALERT:  Approaching to within loot range."]
-							Entity[${Orca.Escape}]:Approach
-							This.Approaching:Set[${Entity[${Orca.Escape}]}]
-							return
-						}
-						
-						;	If we're approaching a target, find out if we need to stop doing so 
-						if ${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= LOOT_RANGE && ${This.Approaching} != 0
-						{
-							UI:UpdateConsole["ALERT:  Within loot range."]
-							EVE:Execute[CmdStopShip]
-							This.Approaching:Set[0]
-							return
-						}
-						
-						;	Open the Orca if it's not open yet
-						if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && !${EVEWindow[ByName, ${Entity[${Orca.Escape}]}](exists)}
-						{
-							UI:UpdateConsole["ALERT:  Open Hangar."]
-							Entity[${Orca.Escape}]:OpenCorpHangars
-							return
-						}
-						
-						if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && ${EVEWindow[ByName, ${Entity[${Orca.Escape}]}](exists)}
-						{
-							UI:UpdateConsole["ALERT:  Transferring Cargo"]
-							call Cargo.TransferListFromShipCorporateHangar ${Entity[${Orca.Escape}]}
-						}	
-						return
-			
-
-	}
-	
-	
-	
 	
 	function WarpToFleetMemberAndLoot(int64 charID)
 	{
@@ -636,6 +758,9 @@ objectdef obj_OreHauler inherits obj_Hauler
 		FullMiners:Erase[${charID}]
 	}
 
+	
+	
+	
 	method BuildFleetMemberList()
 	{
 		variable index:fleetmember myfleet
@@ -661,60 +786,15 @@ objectdef obj_OreHauler inherits obj_Hauler
 	}
 
 
-	method BuildSafeSpotList()
-	{
-		SafeSpots:Clear
-		EVE:GetBookmarks[SafeSpots]
+	
+	
 
-		variable int idx
-		idx:Set[${SafeSpots.Used}]
+	
+	
 
-		while ${idx} > 0
-		{
-			variable string Prefix
-			Prefix:Set["${Config.Labels.SafeSpotPrefix}"]
-
-			variable string Label
-			Label:Set["${SafeSpots.Get[${idx}].Label.Escape}"]
-			if ${Label.Left[${Prefix.Length}].NotEqual[${Prefix}]}
-			{
-				SafeSpots:Remove[${idx}]
-			}
-			elseif ${SafeSpots.Get[${idx}].SolarSystemID} != ${Me.SolarSystemID}
-			{
-				SafeSpots:Remove[${idx}]
-			}
-
-			idx:Dec
-		}
-		SafeSpots:Collapse
-		SafeSpots:GetIterator[SafeSpotIterator]
-
-		UI:UpdateConsole["BuildSafeSpotList found ${SafeSpots.Used} safespots in this system."]
-	}
-
-	function WarpToNextSafeSpot()
-	{
-		if ${SafeSpots.Used} == 0 || \
-			${SafeSpots.Get[1].SolarSystemID} != ${Me.SolarSystemID}
-		{
-			This:BuildSafeSpotList
-		}
-
-		if !${SafeSpotIterator:Next(exists)}
-		{
-			SafeSpotIterator:First
-		}
-
-		if ${SafeSpotIterator.Value(exists)}
-		{
-			call Ship.WarpToBookMark ${SafeSpotIterator.Value.ID}
-
-			/* open cargo hold so the CARGOFULL detection has a chance to work */
-			call Ship.OpenCargo
-		}
-	}
-
+	
+	
+	
 	method BuildJetCanList(int64 id)
 	{
 		variable index:entity cans
@@ -735,55 +815,9 @@ objectdef obj_OreHauler inherits obj_Hauler
 
 		UI:UpdateConsole["BuildJetCanList found ${Entities.Used} cans nearby."]
 	}
+		
 	
-	method BuildCorpJetCanList()
-	{
-		variable index:entity cans
-		variable int idx
-
-		EVE:QueryEntities[cans,"GroupID = 12"]
-		idx:Set[${cans.Used}]
-		Entities:Clear
-
-		while ${idx} > 0
-		{
-
-			if ${cans.Get[${idx}].IsOwnedByCorpMember}
-			{
-				Entities:Queue[${cans.Get[${idx}]}]
-			}
-			idx:Dec
-		}
-
-		UI:UpdateConsole["BuildCorpJetCanList found ${Entities.Used} cans nearby."]
-	}
 	
-	member:int64 NearestMatchingJetCan(int64 id)
-	{
-		variable index:entity JetCans
-		variable int JetCanCounter
-		variable string tempString
-
-		JetCanCounter:Set[0]
-		EVE.QueryEntities[JetCans,"GroupID = 12"]
-		while ${JetCanCounter:Inc} <= ${JetCans.Used}
-		{
-			if ${JetCans.Get[${JetCanCounter}](exists)}
-			{
- 				if ${JetCans.Get[${JetCanCounter}].Owner.CharID} == ${id}
- 				{
-					return ${JetCans.Get[${JetCanCounter}].ID}
- 				}
-			}
-			else
-			{
-				echo "No jetcans found"
-			}
-		}
-
-		return 0	/* no can found */
-	}	
-
 	;	This member is used to determine if our hauler is full based on a number of factors:
 	;	*	Config.Miner.CargoThreshold
 	;	*	Are our miners ice mining

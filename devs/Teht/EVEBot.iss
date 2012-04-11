@@ -103,7 +103,7 @@ function main()
 	/* Script-Defined Behavior Objects */
 	declarevariable BotModules index:string script
 	declarevariable Miner obj_Miner script
-	declarevariable Hauler obj_OreHauler script
+	declarevariable Hauler obj_Hauler script
 	declarevariable Freighter obj_Freighter script
 	declarevariable Ratter obj_Ratter script
 	declarevariable Missioneer obj_Missioneer script

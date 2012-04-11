@@ -42,6 +42,8 @@ objectdef obj_Miner
 	;	This is used to keep track of what we are defending against (rats)
 	variable int64 Defending=-1
 
+	;	This is used to keep track of how much space our hauler has available
+	variable int64 HaulerAvailableCapacity=0
 	
 	
 /*	
@@ -59,6 +61,8 @@ objectdef obj_Miner
 		Event[EVEBot_Orca_InBelt]:AttachAtom[This:OrcaInBelt]
 		LavishScript:RegisterEvent[EVEBot_HARDSTOP]
 		Event[EVEBot_HARDSTOP]:AttachAtom[This:TriggerHARDSTOP]
+		LavishScript:RegisterEvent[EVEBot_HaulerMSG]
+		Event[EVEBot_HaulerMSG]:AttachAtom[This:HaulerMSG]
 		
 		UI:UpdateConsole["obj_Miner: Initialized", LOG_MINOR]
 	}
@@ -68,6 +72,7 @@ objectdef obj_Miner
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 		Event[EVEBot_Orca_InBelt]:DetachAtom[This:OrcaInBelt]
 		Event[EVEBot_HARDSTOP]:DetachAtom[This:TriggerHARDSTOP]
+		Event[EVEBot_HaulerMSG]:DetachAtom[This:HaulerMSG]
 	}	
 	
 	method Pulse()
@@ -1077,6 +1082,12 @@ objectdef obj_Miner
 	method TriggerHARDSTOP()
 	{
 		EVEBot.ReturnToStation:Set[TRUE]
+	}
+
+	;This method is triggered by an event.  If triggered, it tells us how much space our hauler has available
+	method HaulerMSG(int64 value)
+	{
+		HaulerAvailableCapacity:Set[${value}]
 	}
 	
 

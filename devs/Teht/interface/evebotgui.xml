@@ -1668,9 +1668,9 @@
 							<ButtonWidth>20</ButtonWidth>
 							<Items>
 								<Item Value='1'>Service Fleet Members</Item>
-								<Item Value='2'>Service All Belts</Item>
-								<Item Value='3'>Service On-Demand</Item>
-								<Item Value='4'>Service Orca</Item>
+								<Item Value='2'>Service On-Demand</Item>
+								<Item Value='3'>Service Orca</Item>
+								<Item Value='4'>Jetcan Mode (Flip-guard)</Item>
 							</Items>
 							<OnSelect>
 								Script[EVEBot].VariableScope.Config.Hauler:SetHaulerMode[${This.SelectedItem.Value}]
