@@ -830,7 +830,10 @@ objectdef obj_Miner
 					}
 					
 					;	The target is locked, it's our active target, and we should be in range.  Get a laser on that puppy!
-					call Ship.ActivateFreeMiningLaser
+					if ${Entity[${Target.Value.ID}].Distance} <= ${Ship.OptimalMiningRange}
+					{
+						call Ship.ActivateFreeMiningLaser
+					}
 
 				}
 			}
