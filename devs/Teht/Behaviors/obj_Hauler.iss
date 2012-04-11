@@ -420,8 +420,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 		}
 		else
 		{
-			if ${FleetMembers.Peek(exists)} && \
-			   ${Local[${FleetMembers.Peek.ToPilot.Name}](exists)}
+			if ${FleetMembers.Peek(exists)} && ${Local[${FleetMembers.Peek.ToPilot.Name}](exists)}
 			{
 				call This.WarpToFleetMemberAndLoot ${FleetMembers.Peek.CharID}
 			}
@@ -494,85 +493,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 	}
 	
 	
-	function CheckForAttackers()
-	{
-		variable index:attacker attackerslist
-		Me:GetAttackers[attackerslist]
-		attackerslist:RemoveByQuery[LavishScript.CreateQuery[IsNPC=="0"]]
-		if ${attackerslist.Used} > 0
-		{
-			UI:UpdateConsole["Warning: Ship attacked by rats, alerting team to help kill ${attackerslist[1]}"]
-
-			Relay "all other" "Script[EVEBot]:QueueCommand[call Miner.DeployAndDestroy ${attackerslist[1]}]"
-		}
-	}
 	
-	function HangOutAndLootCans()
-	{
-		variable int64 GSC
-
-		if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
-		{	/* if we are already full ignore this request */
-			return
-		}
-
-		call Ship.OpenCargo
-
-		GSC:Set[${Entity[TypeID == 11489 && IsOwnedByCorpMember]}]
-
-		if ${Entity[${GSC}].Distance} > LOOT_RANGE
-		{
-			; /* approach within tractor range and tractor entity */
-			; variable float ApproachRange = ${Ship.OptimalTractorRange}
-			; if ${ApproachRange} > ${Ship.OptimalTargetingRange}
-			; {
-				; ApproachRange:Set[${Ship.OptimalTargetingRange}]
-			; }
-
-			; if ${ApproachRange} > 0 /* we have a tractor beam */
-			; {
-				; if ${Entities.Peek.Distance} > ${ApproachRange}
-				; {
-					; call Ship.Approach ${Entities.Peek.ID} ${ApproachRange}
-				; }
-				; Entities.Peek:LockTarget
-				; wait 10 ${Entities.Peek.BeingTargeted} || ${Entities.Peek.IsLockedTarget}
-				; while !${Entities.Peek.IsLockedTarget}
-				; {
-					; wait 1
-				; }
-				; Entities.Peek:MakeActiveTarget
-				; while !${Me.ActiveTarget.ID.Equal[${Entities.Peek.ID}]}
-				; {
-					; wait 1
-				; }
-				; Ship:Activate_Tractor
-				; while ${Entities.Peek.Distance} > LOOT_RANGE
-				; {
-					; wait 1
-				; }
-			; }
-			; else
-			; {
-				/* approach within loot range */
-				call Ship.Approach ${GSC} LOOT_RANGE
-				Entity[${GSC}]:Approach
-			; }
-		}
-		
-		if !${Entity[${GSC}].LootWindow(exists)}
-		{
-			Entity[${GSC}]:OpenCargo
-		}
-		wait 30
-		while ${Entity[${GSC}].UsedCargoCapacity} > 0 && ${Ship.CargoFreeSpace} > 1000 && ${Entity[${GSC}].Distance} <= LOOT_RANGE
-		{
-			if ${Entity[${GSC}].UsedCargoCapacity} > 0
-			{
-				call This.LootEntity ${GSC}
-			}
-		}
-	}
 	
 	function WarpToFleetMemberAndLoot(int64 charID)
 	{
