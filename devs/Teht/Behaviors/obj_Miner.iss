@@ -301,7 +301,7 @@ objectdef obj_Miner
 					break
 				}
 				
-				UI:UpdateConsole["HARD STOP: Unable to flee, no stations available "]
+				UI:UpdateConsole["HARD STOP: Unable to flee, no stations available and no Safe spots available"]
 				EVEBot.ReturnToStation:Set[TRUE]
 				break
 				
@@ -623,9 +623,9 @@ objectdef obj_Miner
 				Bookmarks:RemoveStoredLocation
 			}
 		}
-		call Asteroids.UpdateList TRUE
+		call Asteroids.UpdateList
 		call Asteroids.MoveToField FALSE TRUE
-		call Asteroids.UpdateList TRUE
+		call Asteroids.UpdateList
 		call This.Prepare_Environment
 
 		;	If our ship has no mining lasers, panic so the user knows to correct their configuration and try again
