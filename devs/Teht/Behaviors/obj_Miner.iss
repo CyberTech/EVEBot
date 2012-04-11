@@ -222,24 +222,28 @@ objectdef obj_Miner
 				}
 				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
+					Ship:Activate_Hardeners
 					call This.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
 					call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
 					break
 				}				
 				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} != ${Me.SolarSystemID}
 				{
+					Ship:Activate_Hardeners
 					call This.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID}
 					call Ship.TravelToSystem ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID}
 					break
 				}
 				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
+					Ship:Activate_Hardeners
 					call This.FastWarp ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
 					call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
 					break
 				}
 				if ${Entity["CategoryID = 3"](exists)}
 				{
+					Ship:Activate_Hardeners
 					UI:UpdateConsole["Docking at ${Entity["CategoryID = 3"].Name}"]
 					call This.FastWarp ${Entity["CategoryID = 3"].ID}
 					call Station.DockAtStation ${Entity["CategoryID = 3"].ID}
@@ -247,6 +251,7 @@ objectdef obj_Miner
 				}
 				if ${Me.ToEntity.Mode} != 3
 				{
+					Ship:Activate_Hardeners
 					call Safespots.WarpTo
 					call This.FastWarp
 					wait 30
@@ -475,7 +480,7 @@ objectdef obj_Miner
 						UI:UpdateConsole["Warning: Cargo filled during jetcan mining, delays may occur"]
 
 						;	This checks to make sure the player in our delivery location is in range and not warping before we dump a jetcan
-						if ${Entity[Name = ${Config.Miner.DeliveryLocation}](exists)}  && ${Entity[Name = ${Config.Miner.DeliveryLocation}].Distance} < 20000 && ${Entity[Name = ${Config.Miner.DeliveryLocation}].Mode} != 3
+						if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)}  && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3
 						{
 							;	This checks to make sure there aren't any potential jet can flippers around before we dump a jetcan
 							if !${Social.PlayerInRange[10000]}
@@ -982,7 +987,7 @@ objectdef obj_Miner
 		
 		if !${Ship.CorpHangarEmpty}
 		{
-			if !${Ship.OreHoldFull}
+			if !${Ship.OreHoldFull} && !${Config.Miner.OrcaDelivery}
 			{
 				call Cargo.TransferCargoFromShipCorporateHangarToOreHold
 				Ship:StackOreHold
@@ -996,12 +1001,11 @@ objectdef obj_Miner
 			}
 		}
 		
-				
 		;	This performs jetcan dumps if we've got at least a tenth of our cargo hold full
 		if ${Config.Miner.DeliveryLocationTypeName.Equal[Jetcan]} && ${Ship.CargoTenthFull}
 		{
 			;	This checks to make sure the player in our delivery location is in range and not warping before we dump a jetcan
-			if ${Entity[Name = ${Config.Miner.DeliveryLocation}](exists)}  && ${Entity[Name = ${Config.Miner.DeliveryLocation}].Distance} < 20000 && ${Entity[Name = ${Config.Miner.DeliveryLocation}].Mode} != 3
+			if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)}  && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3
 			{
 				;	This checks to make sure there aren't any potential jet can flippers around before we dump a jetcan
 				if !${Social.PlayerInRange[10000]}
