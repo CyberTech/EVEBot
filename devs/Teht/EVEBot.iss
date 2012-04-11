@@ -177,20 +177,20 @@ function main()
 				wait 10
 			}
 			call ${BotModule.Value}.ProcessState
-			call RandomDelay 5000
+			call RandomDelay 500
 		}
 		while ${BotModule:Next(exists)}
-		call RandomDelay 1000
+		call RandomDelay 100
 	}
 }
 
 ;	This function introduces a random delay to make evebot look more organic to data tracking.
 ;	The delay should be minor and un-noticeable, unless you're a machine
-;	Range = Value plus or minus 500 milliseconds
+;	Range = Value plus or minus 50 milliseconds
 function RandomDelay(int base)
 {
 	variable int WaitTime
-	WaitTime:Set[${Math.Calc[${base} - 500 + ${Math.Rand[1000]}]}]
+	WaitTime:Set[${Math.Calc[${base} - 50 + ${Math.Rand[100]}]}]
 	variable int FinishTime=${LavishScript.RunningTime}
 	FinishTime:Inc[${WaitTime}]
 	do
