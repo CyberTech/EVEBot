@@ -279,7 +279,7 @@ function CloseCorpHangar()
 			{
 				Entity[${StationID}]:Dock
 				UI:UpdateConsole["Approaching docking range..."]
-				wait 30
+				wait 200 ${This.DockedAtStation[${StationID}]}
 			}
 			while (${Entity[${StationID}].Distance} > DOCKING_RANGE)
 
@@ -289,15 +289,7 @@ function CloseCorpHangar()
 			do
 			{
 				Entity[${StationID}]:Dock
-		   		wait 30
-		   		Counter:Inc[1]
-		   		if (${Counter} > 20)
-		   		{
-					UI:UpdateConsole["Warning: Docking incomplete after 60 seconds", LOG_CRITICAL]
-					Entity[${StationID}]:Dock
-		      		Counter:Set[0]
-		   		}
-				;UI:UpdateConsole["DEBUG: StationExists = ${Entity[${StationID}](exists)}"]
+		   		wait 200 ${This.DockedAtStation[${StationID}]}
 			}
 			while !${This.DockedAtStation[${StationID}]}
 			wait 75
