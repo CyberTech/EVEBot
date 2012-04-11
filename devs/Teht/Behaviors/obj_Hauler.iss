@@ -1,12 +1,11 @@
 /*
-	The hauler object and subclasses
-
-	The obj_Hauler object contains functions that a usefull in creating
-	a hauler bot.  The obj_OreHauler object extends obj_Hauler and adds
-	functions that are useful for bots the haul ore in conjunction with
-	one or more miner bots.
-
-	-- GliderPro
+	Hauler Class
+	
+	Primary Hauler behavior module for EVEBot
+	
+	-- Tehtsuo
+	
+	(Recycled mainly from GliderPro I believe)
 */
 
 objectdef obj_FullMiner
@@ -24,70 +23,19 @@ objectdef obj_FullMiner
 	}
 }
 
-objectdef obj_Hauler
-{
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
-	/* The name of the player we are hauling for (null if using m_corpName) */
-	variable string m_playerName
-
-	/* The name of the corp we are hauling for (null if using m_playerName) */
-	variable string m_corpName
-
-	method Initialize()
-	{
-		UI:UpdateConsole["obj_Hauler: Initialized", LOG_MINOR]
-	}
-
-	method Shutdown()
-	{
-		/* nothing needs cleanup AFAIK */
-	}
-
-	/* SetupEvents will attach atoms to all of the events used by the bot */
-	method SetupEvents()
-	{
-		/* the base obj_Hauler class does not use events */
-	}
-
-	member:int64 NearestMatchingJetCan(int64 id)
-	{
-		variable index:entity JetCans
-		variable int JetCanCounter
-		variable string tempString
-
-		JetCanCounter:Set[0]
-		EVE.QueryEntities[JetCans,"GroupID = 12"]
-		while ${JetCanCounter:Inc} <= ${JetCans.Used}
-		{
-			if ${JetCans.Get[${JetCanCounter}](exists)}
-			{
- 				if ${JetCans.Get[${JetCanCounter}].Owner.CharID} == ${id}
- 				{
-					return ${JetCans.Get[${JetCanCounter}].ID}
- 				}
-			}
-			else
-			{
-				echo "No jetcans found"
-			}
-		}
-
-		return 0	/* no can found */
-	}
-}
-
+	
 objectdef obj_OreHauler inherits obj_Hauler
 {
+	;	Versioning information
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
 	variable collection:obj_FullMiner FullMiners
 
-	/* the bot logic is currently based on a state machine */
+	;	State information (What we're doing)
 	variable string CurrentState
 
+	;	Pulse tracking information
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 2
 
@@ -99,12 +47,19 @@ objectdef obj_OreHauler inherits obj_Hauler
 
 	variable bool PickupFailed = FALSE
 
+	
+/*	
+;	Step 1:  	Get the module ready.  This includes init and shutdown methods, as well as the pulse method that runs each frame.
+;				Adjust PulseIntervalInSeconds above to determine how often the module will SetState.
+*/	
+	
 	method Initialize(string player, string corp)
 	{
 		m_CheckedCargo:Set[FALSE]
 		UI:UpdateConsole["obj_OreHauler: Initialized", LOG_MINOR]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-		This:SetupEvents[]
+		LavishScript:RegisterEvent[EVEBot_Miner_Full]
+		Event[EVEBot_Miner_Full]:AttachAtom[This:MinerFull]
 		BotModules:Insert["Hauler"]
 	}
 
@@ -137,16 +92,92 @@ objectdef obj_OreHauler inherits obj_Hauler
 		Event[EVEBot_Miner_Full]:DetachAtom[This:MinerFull]
 	}
 
-	/* SetupEvents will attach atoms to all of the events used by the bot */
-	method SetupEvents()
-	{
-		This[parent]:SetupEvents[]
-		/* override any events setup by the base class */
 
-		LavishScript:RegisterEvent[EVEBot_Miner_Full]
-		Event[EVEBot_Miner_Full]:AttachAtom[This:MinerFull]
+/*	
+;	Step 2:  	SetState:  This is the brain of the module.  Every time it is called - See Step 1 - this method will determine
+;				what the module should be doing based on what's going on around you.  This will be used when EVEBot calls your module to ProcessState.
+*/		
+	
+	/* NOTE: The order of these if statements is important!! */
+	method SetState()
+	{
+		;	First, we need to check to find out if I should "HARD STOP" - dock and wait for user intervention.  Reasons to do this:
+		;	*	If someone targets us
+		;	*	They're lower than acceptable Min Security Status on the Miner tab
+		;	*	I'm in a pod.  Oh no!
+		if (${Social.PossibleHostiles} || ${Ship.IsPod}) && !${EVEBot.ReturnToStation}
+		{
+			This.CurrentState:Set["HARDSTOP"]
+			UI:UpdateConsole["HARD STOP: Possible hostiles, cargo hold not changing, or ship in a pod!"]
+			EVEBot.ReturnToStation:Set[TRUE]
+			return
+		}
+
+		;	If we're in a station HARD STOP has been called for, just idle until user intervention
+		if ${EVEBot.ReturnToStation} && ${Me.InStation}
+		{
+			This.CurrentState:Set["IDLE"]
+			return
+		}
+		
+		;	If we're in space and HARD STOP has been called for, try to get to a station
+		if ${EVEBot.ReturnToStation} && !${Me.InStation}
+		{
+			This.CurrentState:Set["HARDSTOP"]
+			return
+		}
+
+		;	Find out if we should "SOFT STOP" and flee.  Reasons to do this:
+		;	*	Pilot lower than Min Acceptable Standing on the Fleeing tab
+		;	*	Pilot is on Blacklist ("Run on Blacklisted Pilot" enabled on Fleeing tab)
+		;	*	Pilot is not on Whitelist ("Run on Non-Whitelisted Pilot" enabled on Fleeing tab)
+		;	This checks for both In Station and out, preventing spam if you're in a station.
+		if !${Social.IsSafe}  && !${EVEBot.ReturnToStation} && !${Me.InStation}
+		{
+			This.CurrentState:Set["FLEE"]
+			UI:UpdateConsole["FLEE: Low Standing player or system unsafe, fleeing"]
+			return
+		}
+		if !${Social.IsSafe}  && !${EVEBot.ReturnToStation} && ${Me.InStation}
+		{
+			This.CurrentState:Set["IDLE"]
+			return
+		}
+		
+				;	If I'm in a station, I need to perform what I came there to do
+		if ${Me.InStation} == TRUE
+		{
+	  		This.CurrentState:Set["BASE"]
+	  		return
+		}
+
+		;	If I'm not in a station and I'm full, I should head to a station to unload - Ignore dropoff if Orca Delivery is disabled.
+	    if ${This.MinerFull}
+		{
+			This.CurrentState:Set["DROPOFF"]
+			return
+		}
+
+		if ${Me.InStation}
+		{
+	  		This.CurrentState:Set["INSTATION"]
+		}
+		elseif ${This.PickupFailed} || ${Ship.CargoFreeSpace} < 1000
+		{
+			This.CurrentState:Set["CARGOFULL"]
+		}
+		elseif ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace}
+		{
+		 	This.CurrentState:Set["HAUL"]
+		}
+		else
+		{
+			This.CurrentState:Set["Unknown"]
+		}
 	}
 
+
+	
 	/* A miner's jetcan is full.  Let's go get the ore.  */
 	method MinerFull(string haulParams)
 	{
@@ -215,47 +246,6 @@ objectdef obj_OreHauler inherits obj_Hauler
 		}
 	}
 
-	/* NOTE: The order of these if statements is important!! */
-	method SetState()
-	{
-		if !${Social.IsSafe}
-		{
-			This.CurrentState:Set["FLEE"]
-			UI:UpdateConsole["Warning: Low Standing player or system unsafe, fleeing"]
-			return
-		}
-	
-		if ${EVEBot.ReturnToStation} && !${Me.InStation}
-		{
-			This.CurrentState:Set["FLEE"]
-		}
-		elseif ${Ship.IsPod}
-		{
-			UI:UpdateConsole["Warning: We're in a pod, running"]
-			EVEBot.ReturnToStation:Set[TRUE]
-			This.CurrentState:Set["FLEE"]
-		}
-		elseif ${EVEBot.ReturnToStation}
-		{
-			This.CurrentState:Set["IDLE"]
-		}
-		elseif ${Me.InStation}
-		{
-	  		This.CurrentState:Set["INSTATION"]
-		}
-		elseif ${This.PickupFailed} || ${Ship.CargoFreeSpace} < 1000
-		{
-			This.CurrentState:Set["CARGOFULL"]
-		}
-		elseif ${Ship.CargoFreeSpace} > ${Ship.CargoMinimumFreeSpace}
-		{
-		 	This.CurrentState:Set["HAUL"]
-		}
-		else
-		{
-			This.CurrentState:Set["Unknown"]
-		}
-	}
 
 	function LootEntity(int64 id, int leave = 0)
 	{
@@ -767,5 +757,54 @@ objectdef obj_OreHauler inherits obj_Hauler
 
 		UI:UpdateConsole["BuildCorpJetCanList found ${Entities.Used} cans nearby."]
 	}
+	
+	member:int64 NearestMatchingJetCan(int64 id)
+	{
+		variable index:entity JetCans
+		variable int JetCanCounter
+		variable string tempString
+
+		JetCanCounter:Set[0]
+		EVE.QueryEntities[JetCans,"GroupID = 12"]
+		while ${JetCanCounter:Inc} <= ${JetCans.Used}
+		{
+			if ${JetCans.Get[${JetCanCounter}](exists)}
+			{
+ 				if ${JetCans.Get[${JetCanCounter}].Owner.CharID} == ${id}
+ 				{
+					return ${JetCans.Get[${JetCanCounter}].ID}
+ 				}
+			}
+			else
+			{
+				echo "No jetcans found"
+			}
+		}
+
+		return 0	/* no can found */
+	}	
+
+	;	This member is used to determine if our hauler is full based on a number of factors:
+	;	*	Config.Miner.CargoThreshold
+	;	*	Are our miners ice mining
+	member:bool HaulerFull()
+	{
+		if ${Config.Miner.IceMining}
+		{
+			if ${Ship.CargoFreeSpace} < 1000 || ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
+			{
+				return TRUE
+			}
+		}
+		else
+		{
+			if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
+			{
+				return TRUE
+			}
+		}	
+		return FALSE
+	}
+	
 }
 

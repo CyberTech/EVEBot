@@ -813,7 +813,6 @@ objectdef obj_Miner
 						return
 					}			
 					
-					
 					;	If we're approaching a target, find out if we need to stop doing so 
 					if ${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= ${Ship.OptimalMiningRange} && ${This.Approaching} != 0
 					{
@@ -871,6 +870,7 @@ objectdef obj_Miner
 			{
 				call Asteroids.TargetNext
 				This.ConcentrateFire:Set[!${Return}]
+				return
 			}
 			
 			;	We don't need to lock another asteroid.  Let's find out if we need to signal a concentrate fire based on limitations of our ship.
@@ -880,8 +880,10 @@ objectdef obj_Miner
 				if ${Me.TargetCount} >= ${Ship.SafeMaxLockedTargets} &&  ${Ship.TotalMiningLasers} > ${Ship.SafeMaxLockedTargets}
 				{
 					This.ConcentrateFire:Set[TRUE]
+					return
 				}
 			}
+			
 		}
 		
 		;	This calls the defense routine if Launch Combat Drones is turned on
@@ -1112,12 +1114,14 @@ objectdef obj_Miner
 	{
 		if ${Ship.Drones.DronesInSpace} > 0 && ${Defending} == -1
 		{
+			UI:UpdateConsole["Warning: Recalling Drones"]
 			call Ship.Drones.ReturnAllToDroneBay
 		}
 	
 		if ${Defending} == -1
 		{
-			Defending:Set[${Targets.TargetRat}]
+			Defending:Set[${Targets.Rat}]
+			Entity[${Defending}]:LockTarget
 			return
 		}
 		

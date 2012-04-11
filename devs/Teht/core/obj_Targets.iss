@@ -890,7 +890,6 @@ objectdef obj_Targets
 					break
 				default
 					UI:UpdateConsole["ALERT: Targeting: ${tgtIterator.Value.Group}"]
-					tgtIterator.Value:LockTarget
 					return ${tgtIterator.Value.ID}
 					break
 			}
