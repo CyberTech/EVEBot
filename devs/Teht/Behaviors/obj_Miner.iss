@@ -987,7 +987,7 @@ objectdef obj_Miner
 		
 		if !${Ship.CorpHangarEmpty}
 		{
-			if !${Ship.OreHoldFull} && !${Config.Miner.OrcaDelivery}
+			if !${Ship.OreHoldFull} && ${Config.Miner.OrcaDelivery}
 			{
 				call Cargo.TransferCargoFromShipCorporateHangarToOreHold
 				Ship:StackOreHold
