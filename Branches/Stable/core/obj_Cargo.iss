@@ -424,7 +424,6 @@ objectdef obj_Cargo
 			{
 				if (${Cargo.Value.Quantity} * ${Cargo.Value.Volume}) > (${EVEWindow[ByName, ${dest}].Capacity} - ${EVEWindow[ByName, ${dest}].UsedCapacity})
 				{
-					echo ${Math.Calc[${EVEWindow[ByName, ${dest}].Capacity} - ${EVEWindow[ByName, ${dest}].UsedCapacity}]}  / ${Cargo.Value.Volume}
 					QuantityToMove:Set[${Math.Calc[(${EVEWindow[ByName, ${dest}].Capacity} - ${EVEWindow[ByName, ${dest}].UsedCapacity}) / ${Cargo.Value.Volume} - ${Leave}]}]
 				}
 				else
