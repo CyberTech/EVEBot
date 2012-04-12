@@ -563,7 +563,7 @@ objectdef obj_Miner
 						if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && ${EVEWindow[ByName, ${Entity[${Orca.Escape}]}](exists)}
 						{
 							call This.Prepare_Environment
-							call Cargo.TransferListToShipCorporateHangar ${Entity[${Orca.Escape}]} 1
+							call Cargo.TransferOreToShipCorpHangar ${Entity[${Orca.Escape}]}
 						}	
 						break
 						
@@ -746,7 +746,7 @@ objectdef obj_Miner
 				if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && ${EVEWindow[ByName, ${Entity[${Orca.Escape}]}](exists)}
 				{
 					call This.Prepare_Environment
-					call Cargo.TransferListToShipCorporateHangar ${Entity[${Orca.Escape}]} 1
+					call Cargo.TransferOreToShipCorpHangar ${Entity[${Orca.Escape}]}
 					return
 				}
 			}

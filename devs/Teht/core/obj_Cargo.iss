@@ -320,42 +320,7 @@ objectdef obj_Cargo
 		}
 	}
 
-	; Transfer ALL items in MyCargo index
-	function TransferListToHangar()
-	{
-		variable index:int64 ListToMove
-		variable iterator CargoIterator
-		This.CargoToTransfer:GetIterator[CargoIterator]
 
-		if ${CargoIterator:First(exists)}
-		{
-			call Station.OpenHangar
-			do
-			{
-				UI:UpdateConsole["TransferListToHangar: Unloading Cargo: ${CargoIterator.Value.Name} x ${CargoIterator.Value.Quantity}"]
-				UI:UpdateConsole["TransferListToHangar: Unloading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}", LOG_DEBUG]
-				if ${CargoIterator.Value.GroupID} == GROUPID_SECURE_CONTAINER
-				{
-					call This.TransferContainerToHangar ${CargoIterator.Value.ID}
-				}
-				else
-				{
-					ListToMove:Insert[${CargoIterator.Value.ID}]
-					
-				}
-				wait 10
-			}
-			while ${CargoIterator:Next(exists)}
-			UI:UpdateConsole["Moving ${ListToMove.Used} items to hangar."]
-			EVE:MoveItemsTo[ListToMove,MyStationHangar, Hangar]
-			wait 10
-		}
-		else
-		{
-			UI:UpdateConsole["DEBUG: obj_Cargo:TransferListToHangar: Nothing found to move"]
-		}
-		EVE:StackItems[MyStationHangar,Hangar]
-	}
 	
 	function TransferListToGSC(int64 dest)
 	{
@@ -407,46 +372,7 @@ objectdef obj_Cargo
 
 	}
 
-	function TransferListToShipCorporateHangar(int64 dest, int Leave=0)
-	{
-	
-		variable index:item ShipCargo
-		variable iterator Cargo
-		variable int QuantityToMove
 
-		UI:UpdateConsole["DEBUG: Offloading to ShipCorporateHangar"]
-
-		MyShip:GetCargo[ShipCargo]
-		ShipCargo:GetIterator[Cargo]
-		
-		if ${Cargo:First(exists)}
-		{
-			do
-			{
-				if (${Cargo.Value.Quantity} * ${Cargo.Value.Volume}) > (${EVEWindow[ByName, ${dest}].Capacity} - ${EVEWindow[ByName, ${dest}].UsedCapacity})
-				{
-					QuantityToMove:Set[${Math.Calc[(${EVEWindow[ByName, ${dest}].Capacity} - ${EVEWindow[ByName, ${dest}].UsedCapacity}) / ${Cargo.Value.Volume} - ${Leave}]}]
-				}
-				else
-				{
-					QuantityToMove:Set[${Cargo.Value.Quantity}]
-				}
-
-				if ${QuantityToMove} > 0
-				{
-					Cargo.Value:MoveTo[${dest},CorpHangars,${QuantityToMove}]
-					wait 30
-					if (${EVEWindow[ByName, ${dest}].Capacity} - ${EVEWindow[ByName, ${dest}].UsedCapacity}) < 1000
-					{
-						break
-					}
-				}
-			}
-			while ${Cargo:Next(exists)}
-			EVEWindow[ByName, ${dest}]:StackAll
-		}
-
-	}	
 
 	function TransferListFromShipCorporateHangar(int64 dest)
 	{
@@ -1109,7 +1035,83 @@ objectdef obj_Cargo
 		call This.ReplenishCrystals
 		call This.CloseHolds
 	}
+	; Transfer ALL items in MyCargo index
+	function TransferListToHangar()
+	{
+		variable index:int64 ListToMove
+		variable iterator CargoIterator
+		This.CargoToTransfer:GetIterator[CargoIterator]
 
+		if ${CargoIterator:First(exists)}
+		{
+			call Station.OpenHangar
+			do
+			{
+				UI:UpdateConsole["TransferListToHangar: Unloading Cargo: ${CargoIterator.Value.Name} x ${CargoIterator.Value.Quantity}"]
+				UI:UpdateConsole["TransferListToHangar: Unloading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}", LOG_DEBUG]
+				if ${CargoIterator.Value.GroupID} == GROUPID_SECURE_CONTAINER
+				{
+					call This.TransferContainerToHangar ${CargoIterator.Value.ID}
+				}
+				else
+				{
+					ListToMove:Insert[${CargoIterator.Value.ID}]
+					
+				}
+				wait 10
+			}
+			while ${CargoIterator:Next(exists)}
+			UI:UpdateConsole["Moving ${ListToMove.Used} items to hangar."]
+			EVE:MoveItemsTo[ListToMove,MyStationHangar, Hangar]
+			wait 10
+		}
+		else
+		{
+			UI:UpdateConsole["DEBUG: obj_Cargo:TransferListToHangar: Nothing found to move"]
+		}
+		EVE:StackItems[MyStationHangar,Hangar]
+	}
+	
+	function TransferListToShipCorporateHangar(int64 dest, int Leave=0)
+	{
+		variable index:int64 ListToMove
+		variable iterator CargoIterator
+		This.CargoToTransfer:GetIterator[CargoIterator]
+
+		if ${CargoIterator:First(exists)}
+		{
+			do
+			{
+				UI:UpdateConsole["TransferListToShipCorporateHangar: Unloading Cargo: ${CargoIterator.Value.Name} x ${CargoIterator.Value.Quantity}"]
+				UI:UpdateConsole["TransferListToShipCorporateHangar: Unloading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}", LOG_DEBUG]
+
+				ListToMove:Insert[${CargoIterator.Value.ID}]
+					
+			}
+			while ${CargoIterator:Next(exists)}
+			UI:UpdateConsole["Moving ${ListToMove.Used} items to hangar."]
+			EVE:MoveItemsTo[ListToMove, ${dest}, CorpHangars]
+			wait 10
+		}
+		else
+		{
+			UI:UpdateConsole["DEBUG: obj_Cargo:TransferListToShipCorporateHangar: Nothing found to move"]
+		}
+		EVE:StackItems[MyStationHangar,Hangar]
+	}	
+	
+	function TransferOreToShipCorpHangar(int64 dest)
+	{
+		UI:UpdateConsole["Transferring Ore to Corp Hangar"]
+		call This.OpenHolds
+
+		This:FindShipCargo[CATEGORYID_ORE]
+		call This.TransferListToShipCorporateHangar ${dest} 1
+
+		This.CargoToTransfer:Clear[]
+		EVEWindow[ByName,${dest}]:StackAll
+	}	
+	
 	function TransferCargoToHangar()
 	{
 		while !${Station.Docked}
