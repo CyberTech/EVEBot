@@ -61,11 +61,18 @@ function main(string unchar="", string StartBot=FALSE)
 	}
 	windowtaskbar on "${unchar}"
 
-	if ${Config.Common.LoginName.Equal["username1"]} || ${Config.Common.AutoLoginCharID} == 0
+	if ${Config.Common.LoginName.Equal["username1"]}
 	{
 		UI:UpdateConsole["Launcher: No character specified, or character not found in ${BaseConfig.CONFIG_FILE}"]
-		UI:UpdateConsole["  Syntax: run EVEBot/Launcher ""CharName"" <Optional Botname>"]
-		; do config gui here, the next line will save a blank template for a config if none exists
+		UI:UpdateConsole["  Syntax: run EVEBot/Launcher \"CharName\" <Optional Botname>"]
+		UI:UpdateConsole["    Known Botnames: EVEBOT, EVEBOT_STABLE, EVEBOT_DEV, EVEBOT_TEHT, EVEBOT_VALERIAN, EVEBOT_PILLBOXING, STEALTHBOT, QUESTOR, EVESALVAGE, WRECKINGBALL2"]
+		return
+	}
+	if ${Config.Common.AutoLoginCharID} == 0
+	{
+		UI:UpdateConsole["Launcher: Profile for ${Config.Common.LoginName} has no CharID specified in ${BaseConfig.CONFIG_FILE}"]
+		UI:UpdateConsole["  Syntax: run EVEBot/Launcher \"CharName\" <Optional Botname>"]
+		UI:UpdateConsole["    Known Botnames: EVEBOT, EVEBOT_STABLE, EVEBOT_DEV, EVEBOT_TEHT, EVEBOT_VALERIAN, EVEBOT_PILLBOXING, STEALTHBOT, QUESTOR, EVESALVAGE, WRECKINGBALL2"]
 		return
 	}
 
@@ -107,13 +114,55 @@ function main(string unchar="", string StartBot=FALSE)
 					UI:UpdateConsole["Launcher: Starting EveCallback"]
 					runscript "${Script.CurrentDirectory}/EveCallback.iss"
 
-					UI:UpdateConsole["Launcher: Starting EVEBot Dev by CyberTech"]
+					UI:UpdateConsole["Launcher: Starting EVEBot Dev by CyberTech - Dev Branch"]
 					runscript EVEBot/EVEBot Dev
 					wait 600 ${EVEBot.Paused}
 					while ${EVEBot.Paused}
 					{
 						Script[EVEBot]:Resume
 						EVEBot:Resume["Resume called via Launcher"]
+						wait 15
+					}
+					break
+				case EVEBOT_TEHT
+					EVE:CloseAllMessageBoxes
+					; TODO - get rid of this callback shit.
+					runscript "${Script.CurrentDirectory}/EveCallback.iss"
+
+					UI:UpdateConsole["Launcher: Starting EVEBot by CyberTech - Teht Branch"]
+					runscript EVEBot/EVEBot Teht
+					wait 600 ${Script[EVEBot].Paused}
+					while ${Script[EVEBot].Paused}
+					{
+						Script[EVEBot]:Resume
+						wait 15
+					}
+					break
+				case EVEBOT_VALERIAN
+					EVE:CloseAllMessageBoxes
+					; TODO - get rid of this callback shit.
+					runscript "${Script.CurrentDirectory}/EveCallback.iss"
+
+					UI:UpdateConsole["Launcher: Starting EVEBot by CyberTech - Valerian Branch"]
+					runscript EVEBot/EVEBot Valerian
+					wait 600 ${Script[EVEBot].Paused}
+					while ${Script[EVEBot].Paused}
+					{
+						Script[EVEBot]:Resume
+						wait 15
+					}
+					break
+				case EVEBOT_PILLBOXING
+					EVE:CloseAllMessageBoxes
+					; TODO - get rid of this callback shit.
+					runscript "${Script.CurrentDirectory}/EveCallback.iss"
+
+					UI:UpdateConsole["Launcher: Starting EVEBot by CyberTech - Pillboxing Branch"]
+					runscript EVEBot/EVEBot Pillboxing
+					wait 600 ${Script[EVEBot].Paused}
+					while ${Script[EVEBot].Paused}
+					{
+						Script[EVEBot]:Resume
 						wait 15
 					}
 					break
