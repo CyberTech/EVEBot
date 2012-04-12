@@ -1194,7 +1194,7 @@ objectdef obj_Miner
 			{
 				return TRUE
 			}
-			if !${Config.Miner.OrcaDelivery} && !${Config.Miner.OrcaMode} && (${Ship.CargoFreeSpace} < 1000 || ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold})
+			if !${Config.Miner.OrcaDelivery} && (${Ship.CargoFreeSpace} < 1000 || ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold})
 			{
 				return TRUE
 			}
@@ -1205,7 +1205,7 @@ objectdef obj_Miner
 			{
 				return TRUE
 			}
-			if !${Config.Miner.OrcaDelivery} && !${Config.Miner.OrcaMode} && (${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold})
+			if !${Config.Miner.OrcaDelivery} && (${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold})
 			{
 				return TRUE
 			}
