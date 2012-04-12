@@ -445,34 +445,33 @@ objectdef obj_Hauler
 */			
 	function FlipGuard()
 	{
-		if ${FullMiners.FirstValue(exists)}
+		variable string Orca
+		Orca:Set[Name = "${Config.Hauler.HaulerPickupName}"]
+		if !${Local[${Config.Hauler.HaulerPickupName}](exists)}
 		{
-			UI:UpdateConsole["${FullMiners.Used} cans to get! Picking up can at ${FullMiners.FirstKey}", LOG_DEBUG]
-			if ${FullMiners.CurrentValue.SystemID} == ${Me.SolarSystemID}
-			{
-				call Ship.WarpToFleetMember ${FullMiners.CurrentValue.FleetMemberID}
-				call This.FlipGuardLoot ${FullMiners.CurrentValue.FleetMemberID}
-			}
-			else
-			{
-				FullMiners:Erase[${FullMiners.FirstKey}]
-			}
+			UI:UpdateConsole["ALERT:  The specified player isn't in local - it may be incorrectly configured or out of system."]
+			return
 		}
-		relay all -event EVEBot_HaulerMSG ${Ship.CargoFreeSpace}
-		FullMiners:Clear
-		if ${This.HaulerFull}
+		
+		if ${Me.ToEntity.Mode} == 3
 		{
+			return
+		}				
+		
+		if !${Entity[${Orca.Escape}](exists)} && ${Local[${Config.Hauler.HaulerPickupName}].ToFleetMember}
+		{
+			UI:UpdateConsole["ALERT:  The player is not nearby.  Warping there first to unload."]
+			Local[${Config.Hauler.HaulerPickupName}].ToFleetMember:WarpTo
 			return
 		}
 
-		call Safespots.WarpTo
+		call This.FlipGuardLoot
 	}	
 	
 	
 	
-	function FlipGuardLoot(int64 charID)
+	function FlipGuardLoot()
 	{
-		variable int64 id = 0
 
 		if ${This.HaulerFull}
 		{
