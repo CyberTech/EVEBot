@@ -666,7 +666,7 @@ objectdef obj_Miner
 			}
 			
 			;	This checks to make sure the player in our delivery location is in range and not warping before we dump a jetcan
-			if ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3
+			if ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3 && ${Ship.CargoTenthFull}
 			{
 				call Cargo.TransferOreToJetCan
 				;	Need a wait here because it would try to move the same item more than once
@@ -1021,7 +1021,7 @@ objectdef obj_Miner
 			}
 			
 			;	This checks to make sure the player in our delivery location is in range and not warping before we dump a jetcan
-			if ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3
+			if ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3 && ${Ship.CargoTenthFull}
 			{
 				call Cargo.TransferOreToJetCan
 				;	Need a wait here because it would try to move the same item more than once

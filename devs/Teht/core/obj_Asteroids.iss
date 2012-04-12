@@ -316,7 +316,7 @@ objectdef obj_Asteroids
 					while ${asteroid_iterator:Next(exists)}
 				}
 			}
-			while (${This.AsteroidList.Used} < ${Ship.TotalMiningLasers} || ${IgnoreLasers}) && ${This.OreTypeIterator:Next(exists)}
+			while ${This.OreTypeIterator:Next(exists)}
 
 			if ${Config.Miner.StripMine}
 			{

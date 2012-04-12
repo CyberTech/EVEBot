@@ -79,7 +79,6 @@ objectdef obj_Hauler
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			This:SetState[]
-			echo ${FullMiners.Used}
 			
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
@@ -499,6 +498,7 @@ objectdef obj_Hauler
 		if ${Ent:First(exists)}
 		do
 		{
+			call Ship.OpenCargo
 
 			Ent.Value:Approach
 
