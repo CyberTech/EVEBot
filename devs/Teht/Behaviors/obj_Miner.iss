@@ -488,11 +488,13 @@ objectdef obj_Miner
 								{
 									This:NotifyHaulers[]
 								}
+								return
 							}
 							
 							;	This checks to make sure the player in our delivery location is in range and not warping before we dump a jetcan
-							if ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3
+							if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)} && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3
 							{
+								echo  ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} - ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode}
 								call Cargo.TransferOreToJetCan
 								;	Need a wait here because it would try to move the same item more than once
 								wait 20
@@ -628,8 +630,11 @@ objectdef obj_Miner
 			}
 		}
 		call Asteroids.UpdateList
-		call Asteroids.MoveToField FALSE TRUE
-		call Asteroids.UpdateList
+		if ${Ship.TotalActivatedMiningLasers} == 0 
+		{	
+			call Asteroids.MoveToField FALSE TRUE
+			call Asteroids.UpdateList
+		}
 		call This.Prepare_Environment
 
 		;	If our ship has no mining lasers, panic so the user knows to correct their configuration and try again
@@ -666,7 +671,7 @@ objectdef obj_Miner
 			}
 			
 			;	This checks to make sure the player in our delivery location is in range and not warping before we dump a jetcan
-			if ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3 && ${Ship.CargoHalfFull}
+			if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)} && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3 && ${Ship.CargoHalfFull}
 			{
 				call Cargo.TransferOreToJetCan
 				;	Need a wait here because it would try to move the same item more than once
@@ -846,7 +851,7 @@ objectdef obj_Miner
 		
 		;	Here is where we lock new asteroids.  We always want to do this if we have no asteroids locked.  If we have at least one asteroid locked, however,
 		;	we should only lock more asteroids if we're not ice mining
-		if (${Config.Miner.IceMining} && ${AsteroidsLocked} == 0) || (!${Config.Miner.DistributeLasers} && ${AsteroidsLocked} == 0) || (${Config.Miner.DistributeLasers} && ${AsteroidsLocked} >= 0)
+		if (!${Config.Miner.DistributeLasers} || ${Config.Miner.IceMining} && ${AsteroidsLocked} == 0) || ((${Config.Miner.DistributeLasers} && !${Config.Miner.IceMining}) && ${AsteroidsLocked} >= 0)
 		{
 			;	Calculate how many asteroids we need
 			variable int AsteroidsNeeded=${Ship.TotalMiningLasers}
@@ -1021,8 +1026,9 @@ objectdef obj_Miner
 			}
 			
 			;	This checks to make sure the player in our delivery location is in range and not warping before we dump a jetcan
-			if ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3 && ${Ship.CargoHalfFull}
+			if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)} && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3 && ${Ship.CargoHalfFull}
 			{
+				echo ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} - ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode}
 				call Cargo.TransferOreToJetCan
 				;	Need a wait here because it would try to move the same item more than once
 				wait 20
