@@ -265,6 +265,20 @@ objectdef obj_Ship
 		}
 		return ${Math.Calc[${Me.Ship.CargoCapacity}-${Me.Ship.UsedCargoCapacity}]}
 	}
+
+	member:float CargoUsedSpace()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return 0
+		}
+
+		if ${Me.Ship.UsedCargoCapacity} < 0
+		{
+			return ${Me.Ship.CargoCapacity}
+		}
+		return ${Me.Ship.UsedCargoCapacity}
+	}
 	
 	method StackCargoHold()
 	{
@@ -365,6 +379,16 @@ objectdef obj_Ship
 		}
 		
 		return ${Math.Calc[${EVEWindow[ByCaption, Corp Hangar].Capacity}-${EVEWindow[ByCaption, Corp Hangar].UsedCapacity}]}
+	}
+	
+	member:float CorpHangarUsedSpace()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return 0
+		}
+		
+		return ${EVEWindow[ByCaption, Corp Hangar].UsedCapacity}
 	}
 	
 	member:bool CorpHangarFull()

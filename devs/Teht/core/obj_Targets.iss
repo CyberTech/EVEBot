@@ -866,7 +866,7 @@ objectdef obj_Targets
 		return FALSE
 	}
 
-	member:int64 TargetRat()
+	member:int64 Rat()
 	{
 		variable index:entity tgtIndex
 		variable iterator tgtIterator

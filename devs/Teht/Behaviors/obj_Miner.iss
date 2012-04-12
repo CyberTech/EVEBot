@@ -23,9 +23,6 @@ objectdef obj_Miner
 	;	State information (What we're doing)
 	variable string CurrentState = "IDLE"
 	
-	;	Sanity check to find out if we haven't been doing what we're supposed to for long enough
-	variable int SanityCheckCounter = 0
-	
 	;	Used to force a dropoff when the cargo hold isn't full
 	variable bool ForceDropoff = FALSE
 
@@ -43,7 +40,7 @@ objectdef obj_Miner
 	variable int64 Defending=-1
 
 	;	This is used to keep track of how much space our hauler has available
-	variable int64 HaulerAvailableCapacity=0
+	variable int64 HaulerAvailableCapacity=-0
 	
 	
 /*	
@@ -91,7 +88,6 @@ objectdef obj_Miner
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			This:SetState[]
-            SanityCheckCounter:Inc
 
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
@@ -110,7 +106,7 @@ objectdef obj_Miner
 		;	*	If someone targets us
 		;	*	They're lower than acceptable Min Security Status on the Miner tab
 		;	*	I'm in a pod.  Oh no!
-		if (${Social.PossibleHostiles} || ${SanityCheckAbort} == TRUE || ${Ship.IsPod}) && !${EVEBot.ReturnToStation}
+		if (${Social.PossibleHostiles} || ${Ship.IsPod}) && !${EVEBot.ReturnToStation}
 		{
 			This.CurrentState:Set["HARDSTOP"]
 			UI:UpdateConsole["HARD STOP: Possible hostiles, cargo hold not changing, or ship in a pod!"]
@@ -339,8 +335,6 @@ objectdef obj_Miner
 				}
 				
 				
-			    SanityCheckCounter:Set[0]
-			    SanityCheckAbort:Set[FALSE]
 			    LastUsedCargoCapacity:Set[0]
 				call Station.Undock
 				break
@@ -487,12 +481,19 @@ objectdef obj_Miner
 						;	This checks to make sure there aren't any potential jet can flippers around before we dump a jetcan
 						if !${Social.PlayerInRange[10000]} && ${Config.Miner.DeliveryLocationTypeName.Equal["Jetcan"]}
 						{
-								This:NotifyHaulers[]
+							if !${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)}
+							{
+								;	This will notify hauler if the hauler has not reported it's available capacity
+								if ${This.HaulerAvailableCapacity} == -1
+								{
+									This:NotifyHaulers[]
+								}
+							}
+							
 							;	This checks to make sure the player in our delivery location is in range and not warping before we dump a jetcan
-							if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)}  && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 2500 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3
+							if ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3
 							{
 								call Cargo.TransferOreToJetCan
-								This:NotifyHaulers[]
 								;	Need a wait here because it would try to move the same item more than once
 								wait 20
 							}
@@ -572,8 +573,6 @@ objectdef obj_Miner
 						EVEBot.ReturnToStation:Set[TRUE]
 						break
 				}
-			    SanityCheckCounter:Set[0]
-			    SanityCheckAbort:Set[FALSE]
 			    LastUsedCargoCapacity:Set[0]
 				break
 		}
@@ -649,21 +648,6 @@ objectdef obj_Miner
 			return
 		}
 
-		;	This resets the Sanity Check when the cargo hold changes so we know things are still working smoothly
-		if ${Me.Ship.UsedCargoCapacity} != ${LastUsedCargoCapacity}
-		{
-			SanityCheckCounter:Set[0]
-			LastUsedCargoCapacity:Set[${Me.Ship.UsedCargoCapacity}]
-		}
-
-		;	This checks if our Sanity Check has incremented high enough to tell us something's gone wrong.  If it has, panic!
-		if !${Config.Miner.IceMining} && ${SanityCheckCounter} > MINER_SANITY_CHECK_INTERVAL
-		{
-			UI:UpdateConsole["Warning: Cargo volume hasn't changed in a while, docking"]
-			EVEBot.ReturnToStation:Set[TRUE]
-			return
-		}
-
 		;	This changes belts if someone's within Min. Distance to Players
 		if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]}
 		{
@@ -676,14 +660,18 @@ objectdef obj_Miner
 		;	This checks to make sure there aren't any potential jet can flippers around before we dump a jetcan
 		if !${Social.PlayerInRange[10000]} && ${Config.Miner.DeliveryLocationTypeName.Equal["Jetcan"]}
 		{
-				This:NotifyHaulers[]
+			if !${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)}
+			{
+					This:NotifyHaulers[]
+			}
+			
 			;	This checks to make sure the player in our delivery location is in range and not warping before we dump a jetcan
-			if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)}  && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 2500 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3
+			if ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3
 			{
 				call Cargo.TransferOreToJetCan
-				This:NotifyHaulers[]
 				;	Need a wait here because it would try to move the same item more than once
 				wait 20
+				return
 			}
 		}
 		
@@ -1015,18 +1003,30 @@ objectdef obj_Miner
 				return
 			}
 		}
+
+		if ${This.Approaching} != 0
+		{
+			return
+		}
+		
+		;	Tell our miners we're in a belt and they are safe to warp to me
+		relay all -event EVEBot_Orca_InBelt TRUE
 		
 		;	This checks to make sure there aren't any potential jet can flippers around before we dump a jetcan
 		if !${Social.PlayerInRange[10000]} && ${Config.Miner.DeliveryLocationTypeName.Equal["Jetcan"]}
 		{
-				This:NotifyHaulers[]
+			if !${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)}
+			{
+					This:NotifyHaulers[]
+			}
+			
 			;	This checks to make sure the player in our delivery location is in range and not warping before we dump a jetcan
-			if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)}  && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 2500 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3
+			if ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3
 			{
 				call Cargo.TransferOreToJetCan
-				This:NotifyHaulers[]
 				;	Need a wait here because it would try to move the same item more than once
 				wait 20
+				return
 			}
 		}
 		
@@ -1036,8 +1036,6 @@ objectdef obj_Miner
 			call Defend
 		}
 		
-		;	Tell our miners we're in a belt and they are safe to warp to me
-		relay all -event EVEBot_Orca_InBelt TRUE
 	}	
 	
 	
@@ -1125,7 +1123,7 @@ objectdef obj_Miner
 	{
 		if ${Ship.Drones.DronesInSpace} > 0 && ${Defending} == -1
 		{
-			UI:UpdateConsole["Warning: Recalling Drones"]
+			UI:UpdateConsole["Warning: Recalling Drones - ${Defending}"]
 			call Ship.Drones.ReturnAllToDroneBay
 		}
 	
@@ -1143,19 +1141,23 @@ objectdef obj_Miner
 		
 		if ${Ship.Drones.DronesInSpace} == 0  && ${Defending} != -1
 		{
-			UI:UpdateConsole["Warning: Deploying drones to defend"]
+			UI:UpdateConsole["Warning: Deploying drones to defend - ${Defending}"]
 			Ship.Drones:LaunchAll
 			return
 		}
-		
-		if !${Entity[${Defending}](exists)} || !${Entity[${Defending}].IsLockedTarget}
+		if !${Entity[${Defending}].IsLockedTarget} && ${Entity[${Defending}](exists)}
 		{
-			UI:UpdateConsole["Warning: Cancelling Attack"]
+			UI:UpdateConsole["Warning: Relocking Target - ${Defending}"]
+			Entity[${Defending}]:LockTarget
+		}
+		if !${Entity[${Defending}](exists)}
+		{
+			UI:UpdateConsole["Warning: Cancelling Attack - ${Defending}"]
 			Defending:Set[-1]
 			return
 		}
 		
-		UI:UpdateConsole["Warning: Sending Drones"]
+		UI:UpdateConsole["Warning: Sending Drones - ${Defending}"]
 		
 		Entity[${Defending}]:MakeActiveTarget
 		wait 50 ${Me.ActiveTarget.ID} != ${Defending}

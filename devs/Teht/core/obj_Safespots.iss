@@ -65,7 +65,6 @@ objectdef obj_Safespots
 
 		if ${SafeSpotIterator.Value(exists)}
 		{
-			echo ${EVE.Bookmark[${SafeSpotIterator.Value}]} - ${SafeSpotIterator.Value} - ${SafeSpotIterator.Value.ID}
 			EVE.Bookmark[${SafeSpotIterator.Value}]:WarpTo[0]
 		}
 		else
@@ -108,9 +107,17 @@ objectdef obj_Safespots
 		return FALSE
 	}
 
-	function WarpTo()
+	function WarpTo(bool Wait=FALSE)
 	{
 		call This.WarpToNextSafeSpot
+		if ${Wait}
+		{
+			do
+			{
+				wait 1
+			}
+			while ${Me.ToEntity.Mode} == 3
+		}
 	}
 }
 
