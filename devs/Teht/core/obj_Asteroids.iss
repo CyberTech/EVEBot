@@ -186,7 +186,7 @@ objectdef obj_Asteroids
 				while ( !${Belts[${curBelt}].Name.Find[${beltsubstring}](exists)} || \
 						${This.IsBeltEmpty[${Belts[${curBelt}].Name}]} )
 
-				UI:UpdateConsole["Warping to Asteroid Belt: ${Belts[${curBelt}].Name}"]
+				UI:UpdateConsole["EVEBot thinks we're not at a belt.  Warping to Asteroid Belt: ${Belts[${curBelt}].Name}"]
 				call Ship.WarpToID ${Belts[${curBelt}].ID}
 				This.BeltArrivalTime:Set[${Time.Timestamp}]
 				This.UsingMookMarks:Set[TRUE]

@@ -1132,6 +1132,11 @@ objectdef obj_Miner
 		{
 			Defending:Set[${Targets.Rat}]
 			Entity[${Defending}]:LockTarget
+			if ${Ship.Drones.DronesInSpace} > 0 && ${Defending} == -1
+			{
+				UI:UpdateConsole["Warning: Recalling Drones - ${Defending}"]
+				call Ship.Drones.ReturnAllToDroneBay
+			}
 			return
 		}
 		
@@ -1146,11 +1151,6 @@ objectdef obj_Miner
 			Ship.Drones:LaunchAll
 			return
 
-			if ${Ship.Drones.DronesInSpace} > 0 && ${Defending} == -1
-		{
-			UI:UpdateConsole["Warning: Recalling Drones - ${Defending}"]
-			call Ship.Drones.ReturnAllToDroneBay
-		}
 
 		}
 		if !${Entity[${Defending}].IsLockedTarget} && ${Entity[${Defending}](exists)}
