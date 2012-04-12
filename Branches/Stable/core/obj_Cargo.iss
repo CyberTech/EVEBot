@@ -410,6 +410,7 @@ objectdef obj_Cargo
 
 	function TransferListToShipCorporateHangar(int64 dest, int Leave=0)
 	{
+	
 		variable index:item ShipCargo
 		variable iterator Cargo
 		variable int QuantityToMove
