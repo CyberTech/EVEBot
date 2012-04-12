@@ -1127,11 +1127,6 @@ objectdef obj_Miner
 	;	*	Don't use up our targets, we need those for mining - Only one target should ever be used for a rat.
 	function Defend()
 	{
-		if ${Ship.Drones.DronesInSpace} > 0 && ${Defending} == -1
-		{
-			UI:UpdateConsole["Warning: Recalling Drones - ${Defending}"]
-			call Ship.Drones.ReturnAllToDroneBay
-		}
 	
 		if ${Defending} == -1
 		{
@@ -1150,12 +1145,20 @@ objectdef obj_Miner
 			UI:UpdateConsole["Warning: Deploying drones to defend - ${Defending}"]
 			Ship.Drones:LaunchAll
 			return
+
+			if ${Ship.Drones.DronesInSpace} > 0 && ${Defending} == -1
+		{
+			UI:UpdateConsole["Warning: Recalling Drones - ${Defending}"]
+			call Ship.Drones.ReturnAllToDroneBay
+		}
+
 		}
 		if !${Entity[${Defending}].IsLockedTarget} && ${Entity[${Defending}](exists)}
 		{
 			UI:UpdateConsole["Warning: Relocking Target - ${Defending}"]
 			Entity[${Defending}]:LockTarget
 		}
+
 		if !${Entity[${Defending}](exists)}
 		{
 			UI:UpdateConsole["Warning: Cancelling Attack - ${Defending}"]
