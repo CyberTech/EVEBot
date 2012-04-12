@@ -14,6 +14,7 @@ objectdef obj_Cargo
 {
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
+	
 
 	variable index:item MyCargo
 	variable index:item CargoToTransfer
@@ -228,7 +229,7 @@ objectdef obj_Cargo
 		call Station.OpenHangar
 		Me:GetHangarItems[HangarItems]
 		HangarItems:GetIterator[HangarIterator]
-
+		
 		; Cycle thru the Hangar looking for the needed Crystals and move them to the ship
 			if ${HangarIterator:First(exists)}
 			do
@@ -340,6 +341,8 @@ objectdef obj_Cargo
 				else
 				{
 					ListToMove:Insert[${CargoIterator.Value.ID}]
+					CargoIterator.Value:MoveTo[MyStationHangar, Hangar]
+					
 				}
 				wait 10
 			}
@@ -354,7 +357,328 @@ objectdef obj_Cargo
 		}
 		EVE:StackItems[MyStationHangar,Hangar]
 	}
+	
+	function TransferListToGSC(int64 dest)
+	{
+		variable index:item ShipCargo
+		variable iterator Cargo
+		variable int QuantityToMove
 
+		UI:UpdateConsole["DEBUG: Offloading to GSC"]
+
+		MyShip:GetCargo[ShipCargo]
+		ShipCargo:GetIterator[Cargo]
+		
+		if ${Cargo:First(exists)}
+		{
+			do
+			{
+				UI:UpdateConsole["MoveGSC: Found ${Cargo.Value.Quantity} x ${Cargo.Value.Name} - ${Entity[${dest}].CargoCapacity} - ${Entity[${dest}].UsedCargoCapacity}"]
+				if (${Cargo.Value.Quantity} * ${Cargo.Value.Volume}) > (${Entity[${dest}].CargoCapacity} - ${Entity[${dest}].UsedCargoCapacity})
+				{
+					QuantityToMove:Set[${Math.Calc[(${Entity[${dest}].CargoCapacity} - ${Entity[${dest}].UsedCargoCapacity}) / ${Cargo.Value.Volume}]}]
+				}
+				else
+				{
+					QuantityToMove:Set[${Cargo.Value.Quantity}]
+				}
+
+				UI:UpdateConsole["MoveGSC: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
+				if ${QuantityToMove} > 0
+				{
+					Cargo.Value:MoveTo[${dest},CargoHold,${QuantityToMove}]
+					wait 30
+					if (${Entity[${dest}].CargoCapacity} - ${Entity[${dest}].UsedCargoCapacity}) < 1000
+					{
+						break
+					}
+				}
+
+				if (${Entity[${dest}].CargoCapacity} - ${Entity[${dest}].UsedCargoCapacity}) < 1000
+				{
+					/* TODO - this needs to keep a queue of bookmarks, named for the can ie, "Can CORP hh:mm", of partially looted cans */
+					/* Be sure its names, and not ID.  We shouldn't store anything in a bookmark name that we shouldnt know */
+
+					UI:UpdateConsole["MoveGSC: ${Entity[${dest}].CargoCapacity} - ${Entity[${dest}].UsedCargoCapacity} < 1000"]
+					break
+				}
+			}
+			while ${Cargo:Next(exists)}
+		}
+
+	}
+
+	function TransferListToShipCorporateHangar(int64 dest, int Leave=0)
+	{
+	
+		variable index:item ShipCargo
+		variable iterator Cargo
+		variable int QuantityToMove
+
+		UI:UpdateConsole["DEBUG: Offloading to ShipCorporateHangar"]
+
+		MyShip:GetCargo[ShipCargo]
+		ShipCargo:GetIterator[Cargo]
+		
+		if ${Cargo:First(exists)}
+		{
+			do
+			{
+				if (${Cargo.Value.Quantity} * ${Cargo.Value.Volume}) > (${EVEWindow[ByName, ${dest}].Capacity} - ${EVEWindow[ByName, ${dest}].UsedCapacity})
+				{
+					QuantityToMove:Set[${Math.Calc[(${EVEWindow[ByName, ${dest}].Capacity} - ${EVEWindow[ByName, ${dest}].UsedCapacity}) / ${Cargo.Value.Volume} - ${Leave}]}]
+				}
+				else
+				{
+					QuantityToMove:Set[${Cargo.Value.Quantity}]
+				}
+
+				if ${QuantityToMove} > 0
+				{
+					Cargo.Value:MoveTo[${dest},CorpHangars,${QuantityToMove}]
+					wait 30
+					if (${EVEWindow[ByName, ${dest}].Capacity} - ${EVEWindow[ByName, ${dest}].UsedCapacity}) < 1000
+					{
+						break
+					}
+				}
+			}
+			while ${Cargo:Next(exists)}
+			EVEWindow[ByName, ${dest}]:StackAll
+		}
+
+	}	
+
+	function TransferListFromShipCorporateHangar(int64 dest)
+	{
+		variable index:item HangarCargo
+		variable int QuantityToMove
+		variable iterator CargoIterator
+		Entity[${dest}]:GetCorpHangarsCargo[HangarCargo]
+		HangarCargo:GetIterator[CargoIterator]
+
+		if ${CargoIterator:First(exists)}
+		{
+			call Ship.OpenCargo
+				do
+				{
+					if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${Ship.CargoFreeSpace}
+					{
+						/* Move only what will fit, minus 1 to account for CCP rounding errors. */
+						QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${CargoIterator.Value.Volume}]}]
+					}
+					else
+					{
+						QuantityToMove:Set[${CargoIterator.Value.Quantity}]
+					}
+
+					UI:UpdateConsole["TransferListFromShipCorporateHangar: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
+					UI:UpdateConsole["TransferListFromShipCorporateHangar: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
+					if ${QuantityToMove} > 0
+					{
+						CargoIterator.Value:MoveTo[${MyShip.ID}, CargoHold, ${QuantityToMove}]
+						wait 15
+					}
+
+					if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
+					{
+						UI:UpdateConsole["DEBUG: TransferListToShip: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
+						break
+					}
+				}
+				while ${CargoIterator:Next(exists)}
+		}
+		else
+		{
+			UI:UpdateConsole["DEBUG: obj_Cargo:TransferListFromShipCorporateHangar: Nothing found to move"]
+		}
+	}	
+
+	function TransferCargoFromShipCorporateHangarToOreHold()
+	{
+		
+		variable index:item HangarCargo
+		variable int QuantityToMove
+		variable iterator CargoIterator
+		Me.Ship:GetCorpHangarsCargo[HangarCargo]
+		HangarCargo:GetIterator[CargoIterator]
+
+		if ${CargoIterator:First(exists)}
+		{
+				do
+				{
+					if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${Ship.CargoFreeSpace}
+					{
+						/* Move only what will fit, minus 1 to account for CCP rounding errors. */
+						QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${CargoIterator.Value.Volume}]}]
+					}
+					else
+					{
+						QuantityToMove:Set[${CargoIterator.Value.Quantity}]
+					}
+
+					UI:UpdateConsole["TransferCargoFromShipCorporateHangarToOreHold: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
+					UI:UpdateConsole["TransferCargoFromShipCorporateHangarToOreHold: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
+					if ${QuantityToMove} > 0
+					{
+						CargoIterator.Value:MoveTo[${MyShip.ID}, OreHold, ${QuantityToMove}]
+						wait 15
+					}
+
+					if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
+					{
+						UI:UpdateConsole["DEBUG: TransferCargoFromShipCorporateHangarToOreHold: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
+						break
+					}
+				}
+				while ${CargoIterator:Next(exists)}
+		}
+		else
+		{
+			UI:UpdateConsole["DEBUG: obj_Cargo:TransferCargoFromShipCorporateHangarToOreHold: Nothing found to move"]
+		}
+	}	
+
+	function TransferCargoFromShipOreHoldToStation()
+	{
+		
+		variable index:item HangarCargo
+		variable int QuantityToMove
+		variable iterator CargoIterator
+		Me.Ship:GetOreHoldCargo[HangarCargo]
+		HangarCargo:GetIterator[CargoIterator]
+
+		if ${CargoIterator:First(exists)}
+		{
+				do
+				{
+					if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${Ship.CargoFreeSpace}
+					{
+						/* Move only what will fit, minus 1 to account for CCP rounding errors. */
+						QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${CargoIterator.Value.Volume}]}]
+					}
+					else
+					{
+						QuantityToMove:Set[${CargoIterator.Value.Quantity}]
+					}
+
+					UI:UpdateConsole["TransferCargoFromShipOreHoldToStation: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
+					UI:UpdateConsole["TransferCargoFromShipOreHoldToStation: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
+					if ${QuantityToMove} > 0
+					{
+						CargoIterator.Value:MoveTo[MyStationHangar, Hangar, ${QuantityToMove}]
+						wait 15
+					}
+
+					if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
+					{
+						UI:UpdateConsole["DEBUG: TransferCargoFromShipOreHoldToStation: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
+						break
+					}
+				}
+				while ${CargoIterator:Next(exists)}
+		}
+		else
+		{
+			UI:UpdateConsole["DEBUG: obj_Cargo:TransferCargoFromShipOreHoldToStation: Nothing found to move"]
+		}
+	}	
+	
+	
+	function TransferCargoFromShipCorporateHangarToStation()
+	{
+		
+		variable index:item HangarCargo
+		variable int QuantityToMove
+		variable iterator CargoIterator
+		Me.Ship:GetCorpHangarsCargo[HangarCargo]
+		HangarCargo:GetIterator[CargoIterator]
+
+		if ${CargoIterator:First(exists)}
+		{
+				do
+				{
+					if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${Ship.CargoFreeSpace}
+					{
+						/* Move only what will fit, minus 1 to account for CCP rounding errors. */
+						QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${CargoIterator.Value.Volume}]}]
+					}
+					else
+					{
+						QuantityToMove:Set[${CargoIterator.Value.Quantity}]
+					}
+
+					UI:UpdateConsole["TransferCargoFromShipCorporateHangarToStation: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
+					UI:UpdateConsole["TransferCargoFromShipCorporateHangarToStation: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
+					if ${QuantityToMove} > 0
+					{
+						CargoIterator.Value:MoveTo[MyStationHangar, Hangar, ${QuantityToMove}]
+						wait 15
+					}
+
+					if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
+					{
+						UI:UpdateConsole["DEBUG: TransferCargoFromShipCorporateHangarToStation: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
+						break
+					}
+				}
+				while ${CargoIterator:Next(exists)}
+		}
+		else
+		{
+			UI:UpdateConsole["DEBUG: obj_Cargo:TransferCargoFromShipCorporateHangarToStation: Nothing found to move"]
+		}
+	}	
+	
+	
+	function TransferCargoFromShipCorporateHangarToCargoHold()
+	{
+		
+		variable index:item HangarCargo
+		variable int QuantityToMove
+		variable iterator CargoIterator
+		Me.Ship:GetCorpHangarsCargo[HangarCargo]
+		HangarCargo:GetIterator[CargoIterator]
+
+		if ${CargoIterator:First(exists)}
+		{
+				do
+				{
+					if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${Ship.CargoFreeSpace}
+					{
+						/* Move only what will fit, minus 1 to account for CCP rounding errors. */
+						QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${CargoIterator.Value.Volume}]}]
+					}
+					else
+					{
+						QuantityToMove:Set[${CargoIterator.Value.Quantity}]
+					}
+
+					UI:UpdateConsole["TransferCargoFromShipCorporateHangarToCargoHold: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
+					UI:UpdateConsole["TransferCargoFromShipCorporateHangarToCargoHold: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
+					if ${QuantityToMove} > 0
+					{
+						CargoIterator.Value:MoveTo[${MyShip.ID}, CargoHold, ${QuantityToMove}]
+						wait 15
+					}
+
+					if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
+					{
+						UI:UpdateConsole["DEBUG: TransferCargoFromShipCorporateHangarToCargoHold: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
+						break
+					}
+				}
+				while ${CargoIterator:Next(exists)}
+		}
+		else
+		{
+			UI:UpdateConsole["DEBUG: obj_Cargo:TransferCargoFromShipCorporateHangarToCargoHold: Nothing found to move"]
+		}
+	}	
+	
+	
+	
+	
 	function TransferListToLargeShipAssemblyArray()
 	{
 		variable iterator CargoIterator
@@ -772,10 +1096,10 @@ objectdef obj_Cargo
 		}
 
 		; Need to cycle the the cargohold after docking to update the list.
-		call Ship.CloseCargo
+		call This.CloseHolds
 
 		UI:UpdateConsole["Transferring Ore to Station Hangar"]
-		call Ship.OpenCargo
+		call This.OpenHolds
 
 		This:FindShipCargo[CATEGORYID_ORE]
 		call This.TransferListToHangar
