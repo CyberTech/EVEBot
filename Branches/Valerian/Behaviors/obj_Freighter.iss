@@ -213,7 +213,7 @@ objectdef obj_Freighter
 			Me:GetHangarItems[HangarItems]
 			UI:UpdateConsole["obj_Freighter: Ship has containers."]
 			UI:UpdateConsole["obj_Freighter: Station contains ${HangarItems.Used} items."]
-			if ${HangarItemsUsed} > 0
+			if ${HangarItems.Used} > 0
 			{	/* move from hangar to ship */
 				call Cargo.TransferCargoToShip
 			}
