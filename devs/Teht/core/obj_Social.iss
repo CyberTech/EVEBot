@@ -14,6 +14,8 @@ This contains all stuff dealing with other players around us. - Hessinger
 
 objectdef obj_Social
 {
+	variable bool IGNORE_CORP_FOR_INNEEDOFHELP=FALSE
+
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
@@ -233,24 +235,43 @@ objectdef obj_Social
 			AllianceID:Set[${PilotIterator.Value.AllianceID}]
 			PilotID:Set[${PilotIterator.Value.CharID}]
 
-			if ${PilotID} != -1 && \
-				${PilotID} != ${Me.CharID} && \
-				(!${Me.Fleet(exists)} || !${Me.Fleet.IsMember[${PilotID}]}) && \
-				${MyAllianceID} != ${AllianceID} && \
-				( \
-					${PilotIterator.Value.Standing.MeToPilot} < ${Config.Combat.LowestStanding} || \
-					${PilotIterator.Value.Standing.MeToCorp} < ${Config.Combat.LowestStanding} || \
-					${PilotIterator.Value.Standing.MeToAlliance} < ${Config.Combat.LowestStanding} || \
-					${PilotIterator.Value.Standing.CorpToPilot} < ${Config.Combat.LowestStanding} || \
-					${PilotIterator.Value.Standing.CorpToCorp} < ${Config.Combat.LowestStanding} || \
-					${PilotIterator.Value.Standing.CorpToAlliance} < ${Config.Combat.LowestStanding} || \
-					${PilotIterator.Value.Standing.AllianceToCorp} < ${Config.Combat.LowestStanding} || \
-					${PilotIterator.Value.Standing.AllianceToAlliance} < ${Config.Combat.LowestStanding} \
-				)
+			if ${IGNORE_CORP_FOR_INNEEDOFHELP}
 			{
-				UI:UpdateConsole["Alert: Low Standing Pilot: ${PilotIterator.Value.Name}: CharID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_CRITICAL]
-				return FALSE
+				if ${PilotID} != -1 && \
+					${PilotID} != ${Me.CharID} && \
+					(!${Me.Fleet(exists)} || !${Me.Fleet.IsMember[${PilotID}]}) && \
+					${MyAllianceID} != ${AllianceID} && \
+					( \
+						${PilotIterator.Value.Standing.AllianceToCorp} < ${Config.Combat.LowestStanding} || \
+						${PilotIterator.Value.Standing.AllianceToAlliance} < ${Config.Combat.LowestStanding} \
+					)
+				{
+					UI:UpdateConsole["Alert: Low Standing Pilot: ${PilotIterator.Value.Name}: CharID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_CRITICAL]
+					return FALSE
+				}
 			}
+			else
+			{
+				if ${PilotID} != -1 && \
+					${PilotID} != ${Me.CharID} && \
+					(!${Me.Fleet(exists)} || !${Me.Fleet.IsMember[${PilotID}]}) && \
+					${MyAllianceID} != ${AllianceID} && \
+					( \
+						${PilotIterator.Value.Standing.MeToPilot} < ${Config.Combat.LowestStanding} || \
+						${PilotIterator.Value.Standing.MeToCorp} < ${Config.Combat.LowestStanding} || \
+						${PilotIterator.Value.Standing.MeToAlliance} < ${Config.Combat.LowestStanding} || \
+						${PilotIterator.Value.Standing.CorpToPilot} < ${Config.Combat.LowestStanding} || \
+						${PilotIterator.Value.Standing.CorpToCorp} < ${Config.Combat.LowestStanding} || \
+						${PilotIterator.Value.Standing.CorpToAlliance} < ${Config.Combat.LowestStanding} || \
+						${PilotIterator.Value.Standing.AllianceToCorp} < ${Config.Combat.LowestStanding} || \
+						${PilotIterator.Value.Standing.AllianceToAlliance} < ${Config.Combat.LowestStanding} \
+					)
+				{
+					UI:UpdateConsole["Alert: Low Standing Pilot: ${PilotIterator.Value.Name}: CharID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_CRITICAL]
+					return FALSE
+				}
+			}
+			
 		}
 		while ${PilotIterator:Next(exists)}
 		return TRUE
