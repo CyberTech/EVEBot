@@ -14,7 +14,6 @@ objectdef obj_Cargo
 {
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
-	
 
 	variable index:item MyCargo
 	variable index:item CargoToTransfer
@@ -236,7 +235,7 @@ objectdef obj_Cargo
 		call Station.OpenHangar
 		Me:GetHangarItems[HangarItems]
 		HangarItems:GetIterator[HangarIterator]
-		
+
 		; Cycle thru the Hangar looking for the needed Crystals and move them to the ship
 			if ${HangarIterator:First(exists)}
 			do

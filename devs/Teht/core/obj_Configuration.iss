@@ -736,6 +736,7 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[Chain Spawns, TRUE]
 		This.CombatRef:AddSetting[Chain Solo, TRUE]
 		This.CombatRef:AddSetting[Use Belt Bookmarks, FALSE]
+		This.CombatRef:AddSetting[Reverse Belt Order,FALSE]
 		This.CombatRef:AddSetting[Min Chain Bounty, 1500000]
 		This.CombatRef:AddSetting[AmmoTypeID, 2629]
 		This.CombatRef:AddSetting[OrbitDistance, 30000]
@@ -939,6 +940,16 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[Use Belt Bookmarks, ${value}]
 	}
 
+	member:bool ReverseBeltOrder()
+	{
+		return ${This.CombatRef.FindSetting[Reverse Belt Order, FALSE]}
+	}
+
+	method SetReverseBeltOrder(bool value)
+	{
+		This.CombatRef:AddSetting[Reverse Belt Order, ${value}]
+	}
+
 	member:int MinChainBounty()
 	{
 		return ${This.CombatRef.FindSetting[Min Chain Bounty, 1500000]}
@@ -1058,6 +1069,7 @@ objectdef obj_Configuration_Hauler
 		This.HaulerRef:AddSetting[Multi System Support, FALSE]
 		This.HaulerRef:AddSetting[Drop Off Bookmark, ""]
 		This.HaulerRef:AddSetting[Mining System Bookmark, ""]
+		This.HaulerRef:AddSetting[Haul for New Fleet Members, TRUE]
 	}
 
 	member:int HaulerMode()
@@ -1099,6 +1111,17 @@ objectdef obj_Configuration_Hauler
 	{
 		This.HaulerRef:AddSetting[Mining System Bookmark,${Bookmark}]
 	}
+
+	member:bool HaulNewFleetMembers()
+	{
+		return ${This.HaulerRef.FindSetting[Haul for New Fleet Members, TRUE]}
+	}
+
+	method SetHaulNewFleetMembers(bool value)
+	{
+		This.HaulerRef:AddSetting[Haul for New Fleet Members, ${value}]
+	}
+	
 	member:string HaulerPickupName()
 	{
 		return ${This.HaulerRef.FindSetting[Hauler Pickup Name, ""]}
