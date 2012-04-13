@@ -315,6 +315,7 @@ objectdef obj_Ship
 		{
 			; GetModules cannot be used in station as of 07/15/2007
 			UI:UpdateConsole["DEBUG: obj_Ship:UpdateModuleList called while in station", LOG_DEBUG]
+			RetryUpdateModuleList:Set[1]
 			return
 		}
 

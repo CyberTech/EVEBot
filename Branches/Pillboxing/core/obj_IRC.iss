@@ -295,15 +295,22 @@ objectdef obj_IRC
 	{
 		IRC:Connect[${Config.Common.IRCServer},${Config.Common.IRCUser}]
 		echo ${Config.Common.IRCServer} ${Config.Common.IRCUser} ${Config.Common.IRCChannel}
-		wait 10
+		do
+		{
+			wait 5
+		}
+		while (${IRCUser[${Config.Common.IRCUser}](exists)} && ${IRCUser[${Config.Common.IRCUser}].IsConnecting})
 
-		IRCUser[${Config.Common.IRCUser}]:Join[${Config.Common.IRCChannel}]
-
-		wait 10
-		This.IsConnected:Set[TRUE]
-		wait 10
-
-		Call This.Say "${AppVersion} Connected"
+		if (${IRCUser[${Config.Common.IRCUser}](exists)} && ${IRCUser[${Config.Common.IRCUser}].IsConnected})
+		{
+			IRCUser[${Config.Common.IRCUser}]:Join[${Config.Common.IRCChannel}]
+	
+			wait 5
+			This.IsConnected:Set[TRUE]
+			wait 5
+	
+			Call This.Say "${AppVersion} Connected"
+		}
 	}
 
 	function Disconnect()
@@ -312,7 +319,7 @@ objectdef obj_IRC
 		{
 			echo DEBUG: Disconnecting...
 			Call This.Say "Disconnecting"
-			wait 10
+			wait 5
 
 			IRCUser[${Config.Common.IRCUser}]:Disconnect
 			This.IsConnected:Set[FALSE]
