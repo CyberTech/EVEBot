@@ -614,7 +614,6 @@
 								Script[EVEBot].VariableScope.Config.Miner:SetOrcaInBelt[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>						
-						</checkbox>						
 						<slider name='AvoidPlayerRange'>
 							<X>10</X>
 							<Y>110</Y>
