@@ -342,6 +342,10 @@ objectdef obj_Miner
 			;	This means we're in space and should mine some more ore!  Only one choice here - MINE!
 			;	It is prudent to make sure we're not warping, since you can't mine much in warp...
 			case MINE
+				if ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}](exists)} && ${EVE.Bookmark[${Config.Miner.MiningSystemBookmark}].SolarSystemID} != ${Me.SolarSystemID}
+				{
+					call Ship.TravelToSystem ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID}
+				}
 				if ${Me.ToEntity.Mode} != 3
 				{
 					call This.Mine
@@ -353,6 +357,10 @@ objectdef obj_Miner
 			;	*	If Orca In Belt is disabled, warp to a safe spot
 			;	*	If Orca In Belt is enabled, call OrcaInBelt
 			case ORCA
+				if ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}](exists)} && ${EVE.Bookmark[${Config.Miner.MiningSystemBookmark}].SolarSystemID} != ${Me.SolarSystemID}
+				{
+					call Ship.TravelToSystem ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID}
+				}
 				if ${Me.ToEntity.Mode} == 3
 				{
 					break
