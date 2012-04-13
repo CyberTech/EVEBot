@@ -19,6 +19,7 @@ variable string AppVersion = "${APP_NAME} Version ${SVN_REVISION.Token[2, " "]}"
 variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 
 #define EVEBOT_DEBUG 0
+#define DEBUG_ENTITIES 0
 
 ; Do not set this to 1 unless you have downloaded and installed the ISXIM
 ; extension from http://www.isxgames.com/forums/showthread.php?t=3829
