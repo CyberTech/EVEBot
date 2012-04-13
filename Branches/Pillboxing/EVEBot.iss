@@ -150,6 +150,15 @@ function main()
 #endif
 	turbo 100
 
+	if ${Ship.InWarp}
+	{
+		UI:UpdateConsole["Waiting for warp to complete"]
+		while ${Ship.InWarp}
+		{
+			wait 10
+		}
+	}
+	
 	UI:UpdateConsole["-=Paused: Press Run-="]
 	Script:Pause
 

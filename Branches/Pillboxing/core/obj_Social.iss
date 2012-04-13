@@ -201,7 +201,7 @@ objectdef obj_Social
 		while ${PilotIterator:Next(exists)}
 		return TRUE
 	}
-	
+
 
 	; Returns false if pilots with failed standing are in system
 	member:bool CheckStanding()
@@ -231,14 +231,16 @@ objectdef obj_Social
 				${PilotID} != ${Me.CharID} && \
 				!${Me.Fleet.IsMember[${PilotID}]} && \
 				${Me.AllianceID} != ${AllianceID} && \
-				${PilotIterator.Value.Standing.MeToPilot} < ${Config.Combat.LowestStanding} && \
-				${PilotIterator.Value.Standing.MeToCorp} < ${Config.Combat.LowestStanding} && \
-				${PilotIterator.Value.Standing.MeToAlliance} < ${Config.Combat.LowestStanding} && \
-				${PilotIterator.Value.Standing.CorpToPilot} < ${Config.Combat.LowestStanding} && \
-				${PilotIterator.Value.Standing.CorpToCorp} < ${Config.Combat.LowestStanding} && \
-				${PilotIterator.Value.Standing.CorpToAlliance} < ${Config.Combat.LowestStanding} & \
-				${PilotIterator.Value.Standing.AllianceToCorp} < ${Config.Combat.LowestStanding} && \
-				${PilotIterator.Value.Standing.AllianceToAlliance} < ${Config.Combat.LowestStanding}
+				( \
+					${PilotIterator.Value.Standing.MeToPilot} < ${Config.Combat.LowestStanding} || \
+					${PilotIterator.Value.Standing.MeToCorp} < ${Config.Combat.LowestStanding} || \
+					${PilotIterator.Value.Standing.MeToAlliance} < ${Config.Combat.LowestStanding} || \
+					${PilotIterator.Value.Standing.CorpToPilot} < ${Config.Combat.LowestStanding} || \
+					${PilotIterator.Value.Standing.CorpToCorp} < ${Config.Combat.LowestStanding} || \
+					${PilotIterator.Value.Standing.CorpToAlliance} < ${Config.Combat.LowestStanding} || \
+					${PilotIterator.Value.Standing.AllianceToCorp} < ${Config.Combat.LowestStanding} || \
+					${PilotIterator.Value.Standing.AllianceToAlliance} < ${Config.Combat.LowestStanding} \
+				)
 			{
 				UI:UpdateConsole["Alert: Low Standing Pilot: ${PilotIterator.Value.Name}: CharID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_CRITICAL]
 				return FALSE
