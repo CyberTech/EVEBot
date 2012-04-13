@@ -54,7 +54,7 @@
 
 function atexit()
 {
-	;redirect profile.txt Script:DumpProfiling
+	;Redirect EVEBot_Profiling.txt Script[EVEBot]:DumpProfiling
 }
 
 function LoadBehaviors(string Label, string Path)
@@ -229,14 +229,27 @@ function main()
 	Logger:Log["EVEBot: Completing startup...", LOG_ECHOTOO]
 	UI:Reload
 
-	call ChatIRC.Connect
 
+#if USE_ISXIM
+	call ChatIRC.Connect
+#endif
 	Turbo 125
 
 	; Clear the EVEBotBehaviors globalkeep now that we're done with it
 	TimedCommand 0 VariableScope:DeleteVariable["EVEBotBehaviors"]
+	
 	EVEBot.Loaded:Set[TRUE]
 	EVEBot:Pause["EVEBot: Loaded ${AppVersion}: Paused - Press Run"]
+
+	if ${Ship.InWarp}
+	{
+		Logger:Log["Waiting for warp to complete"]
+		while ${Ship.InWarp}
+		{
+			wait 10
+		}
+	}
+	
 
 	while TRUE
 	{
