@@ -1210,38 +1210,8 @@
 								Script[EVEBot].VariableScope.Config.Combat:SetUseBlackList[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
-						<combobox name='cbLowestStandingCombat'>
-							<X>10</X>
-							<Y>130</Y>
-							<Width>50</Width>
-							<Height>15</Height>
-							<FullHeight>200</FullHeight>
-							<ButtonWidth>20</ButtonWidth>
-							<Items>
-								<Item Value='-11'>-11</Item>
-								<Item Value='-10'>-10</Item>
-								<Item Value='-5'>-5</Item>
-								<Item Value='0'>0</Item>
-								<Item Value='5'>5</Item>
-								<Item Value='10'>10</Item>
-							</Items>
-							<OnSelect>
-								Script[EVEBot].VariableScope.Config.Combat:SetLowestStanding[${This.SelectedItem.Value}]
-							</OnSelect>
-							<OnLoad>
-								This:SetSelection[${This.ItemByText[${Script[EVEBot].VariableScope.Config.Combat.LowestStanding}].ID}]
-							</OnLoad>
-						</combobox>
-						<Text name='lblLowestStandingCombat'>
-							<X>65</X>
-							<Y>130</Y>
-							<Width>200</Width>
-							<Height>18</Height>
-							<Text>Min Acceptable Standing</Text>
-							<AutoTooltip>The lowest standing pilot we tolerate in system before we flee. It goes to -11!</AutoTooltip>
-						</Text>
 						<slider name='MinArmorPct'>
-							<X>210</X>
+							<X>250</X>
 							<Y>10</Y>
 							<Width>40</Width>
 							<Height>18</Height>
@@ -1256,7 +1226,7 @@
 							</OnChange>
 						</slider>
 						<Text name='MinArmorPctLabel'>
-							<X>255</X>
+							<X>295</X>
 							<Y>10</Y>
 							<Width>150</Width>
 							<Height>10</Height>
@@ -1267,7 +1237,7 @@
 							</OnLoad>
 						</Text>
 						<slider name='MinShieldPct'>
-							<X>210</X>
+							<X>250</X>
 							<Y>30</Y>
 							<Width>40</Width>
 							<Height>18</Height>
@@ -1282,7 +1252,7 @@
 							</OnChange>
 						</slider>
 						<Text name='MinShieldPctLabel'>
-							<X>255</X>
+							<X>295</X>
 							<Y>30</Y>
 							<Width>150</Width>
 							<Height>10</Height>
@@ -1293,7 +1263,7 @@
 							</OnLoad>
 						</Text>
 						<slider name='MinCapPct'>
-							<X>210</X>
+							<X>250</X>
 							<Y>50</Y>
 							<Width>40</Width>
 							<Height>18</Height>
@@ -1308,7 +1278,7 @@
 							</OnChange>
 						</slider>
 						<Text name='MinCapPctLabel'>
-							<X>255</X>
+							<X>295</X>
 							<Y>50</Y>
 							<Width>150</Width>
 							<Height>10</Height>
@@ -1318,6 +1288,126 @@
 								This:SetText["Minimum Cap: ${UIElement[MinCapPct@Fleeing@EvEBotOptionsTab@EVEBot].Value}"]
 							</OnLoad>
 						</Text>
+						
+						<checkbox name='cbPersonalRatingRun'>
+							<X>10</X>
+							<Y>150</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Run if personal standing below</Text>
+							<AutoTooltip>If checked, run to safe spot when your personal ratings for a pilot is too low. Includes the pilot's corporation and alliance.</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Combat.UseLowestPersonalStanding}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Combat:SetUseLowestPersonalStanding[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<combobox name='comboPersonalRatingRun'>
+							<X>250</X>
+							<Y>150</Y>
+							<Width>50</Width>
+							<Height>15</Height>
+							<FullHeight>200</FullHeight>
+							<ButtonWidth>20</ButtonWidth>
+							<Items>
+								<Item Value='-11'>-11</Item>
+								<Item Value='-10'>-10</Item>
+								<Item Value='-5'>-5</Item>
+								<Item Value='0'>0</Item>
+								<Item Value='5'>5</Item>
+								<Item Value='10'>10</Item>
+							</Items>
+							<OnSelect>
+								Script[EVEBot].VariableScope.Config.Combat:SetLowestPersonalStanding[${This.SelectedItem.Value}]
+							</OnSelect>
+							<OnLoad>
+								This:SetSelection[${This.ItemByText[${Script[EVEBot].VariableScope.Config.Combat.LowestPersonalStanding}].ID}]
+							</OnLoad>
+						</combobox>
+						<checkbox name='cbCorpRatingRun'>
+							<X>10</X>
+							<Y>170</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Run if corp standing below</Text>
+							<AutoTooltip>If checked, run to safe spot when your corporation's rating for this pilot is below. Includes the pilot and their alliance.</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Combat.UseLowestCorpStanding}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Combat:SetUseLowestCorpStanding[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<combobox name='comboCorpRatingRun'>
+							<X>250</X>
+							<Y>170</Y>
+							<Width>50</Width>
+							<Height>15</Height>
+							<FullHeight>200</FullHeight>
+							<ButtonWidth>20</ButtonWidth>
+							<Items>
+								<Item Value='-11'>-11</Item>
+								<Item Value='-10'>-10</Item>
+								<Item Value='-5'>-5</Item>
+								<Item Value='0'>0</Item>
+								<Item Value='5'>5</Item>
+								<Item Value='10'>10</Item>
+							</Items>
+							<OnSelect>
+								Script[EVEBot].VariableScope.Config.Combat:SetLowestCorpStanding[${This.SelectedItem.Value}]
+							</OnSelect>
+							<OnLoad>
+								This:SetSelection[${This.ItemByText[${Script[EVEBot].VariableScope.Config.Combat.LowestCorpStanding}].ID}]
+							</OnLoad>
+						</combobox>
+						
+						<checkbox name='cbAllianceRatingRun'>
+							<X>10</X>
+							<Y>190</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Run if alliance standing below</Text>
+							<AutoTooltip>If checked, run to safe spot when your alliance's rating for this pilot is below. Includes the pilot's and their Allianceoration.</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Combat.UseLowestAllianceStanding}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Combat:SetUseLowestAllianceStanding[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<combobox name='comboAllianceRatingRun'>
+							<X>250</X>
+							<Y>190</Y>
+							<Width>50</Width>
+							<Height>15</Height>
+							<FullHeight>200</FullHeight>
+							<ButtonWidth>20</ButtonWidth>
+							<Items>
+								<Item Value='-11'>-11</Item>
+								<Item Value='-10'>-10</Item>
+								<Item Value='-5'>-5</Item>
+								<Item Value='0'>0</Item>
+								<Item Value='5'>5</Item>
+								<Item Value='10'>10</Item>
+							</Items>
+							<OnSelect>
+								Script[EVEBot].VariableScope.Config.Combat:SetLowestAllianceStanding[${This.SelectedItem.Value}]
+							</OnSelect>
+							<OnLoad>
+								This:SetSelection[${This.ItemByText[${Script[EVEBot].VariableScope.Config.Combat.LowestAllianceStanding}].ID}]
+							</OnLoad>
+						</combobox>
+						
 					</Tab>
 					<Tab name='Missions'>
 						<Text name='lblRunTheseTypes'>
