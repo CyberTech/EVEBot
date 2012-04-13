@@ -590,8 +590,6 @@
 								{
 									UIElement[cbOrcaInBelt@Miner@EVEBotOptionsTab@EVEBot]:UnsetChecked
 									Script[EVEBot].VariableScope.Config.Miner:SetOrcaInBelt[FALSE]
-									UIElement[cbOrcaDelivery@Miner@EVEBotOptionsTab@EVEBot]:UnsetChecked
-									Script[EVEBot].VariableScope.Config.Miner:SetOrcaDelivery[FALSE]
 								}
 							</OnLeftClick>
 						</checkbox>						
@@ -616,26 +614,6 @@
 								Script[EVEBot].VariableScope.Config.Miner:SetOrcaInBelt[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>						
-						<checkbox name='cbOrcaDelivery'>
-							<X>300</X>
-							<Y>170</Y>
-							<Height>20</Height>
-							<Width>100</Width>
-							<Text>Orca Delivery </Text>
-							<AutoTooltip>Deliver ore to your delivery location just like if you were mining.  Uncheck if you're having a hauler empty your orca.</AutoTooltip>
-							<OnLoad>
-								if ${Script[EVEBot].VariableScope.Config.Miner.OrcaDelivery}
-								{
-									This:SetChecked
-								}
-							</OnLoad>
-							<OnLeftClick>
-								if !${UIElement[cbOrcaMode@Miner@EVEBotOptionsTab@EVEBot].Checked}
-								{
-									This:UnsetChecked
-								}
-								Script[EVEBot].VariableScope.Config.Miner:SetOrcaDelivery[${This.Checked}]
-							</OnLeftClick>
 						</checkbox>						
 						<slider name='AvoidPlayerRange'>
 							<X>10</X>
@@ -773,7 +751,8 @@
 								<Item Value='3'>Jetcan</Item>
 								<Item Value='4'>XLarge Ship Assembly Array</Item>
 								<Item Value='5'>Large Ship Assembly Array</Item>
-								<Item Value='6'>Orca</Item>								
+								<Item Value='6'>Orca</Item>
+								<Item Value='6'>No Delivery</Item>
 							</Items>
 							<OnSelect>
 								Script[EVEBot].VariableScope.Config.Miner:SetDeliveryLocationType[${This.SelectedItem.Value}]

@@ -526,16 +526,6 @@ objectdef obj_Configuration_Miner
 	{
 		This.MinerRef:AddSetting[Orca In Belt, ${value}]
 	}
-
-	member:bool OrcaDelivery()
-	{
-		return ${This.MinerRef.FindSetting[Orca Delivery, FALSE]}
-	}
-
-	method SetOrcaDelivery(bool value)
-	{
-		This.MinerRef:AddSetting[Orca Delivery, ${value}]
-	}
 	
 	member:int AvoidPlayerRange()
 	{

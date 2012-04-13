@@ -152,8 +152,8 @@ objectdef obj_Miner
 	  		return
 		}
 
-		;	If I'm not in a station and I'm full, I should head to a station to unload - Ignore dropoff if Orca Delivery is disabled.
-	    if ${This.MinerFull}
+		;	If I'm not in a station and I'm full, I should head to a station to unload unless "No Delivery" is our Delivery Location Type
+	    if ${This.MinerFull} && !${Config.Miner.DeliveryLocationTypeName.Equal["No Delivery"]}
 		{
 			This.CurrentState:Set["DROPOFF"]
 			return
@@ -167,14 +167,7 @@ objectdef obj_Miner
 		}
 				
 		;	If I'm not in a station and I have room to mine more ore, that's what I should do!
-		if !${This.MinerFull}
-		{
-		 	This.CurrentState:Set["MINE"]
-			return
-		}
-
-		;	This should never be used.  In fact, ProcessState will probably just queue a message saying something's WRONG! 
-		This.CurrentState:Set["Unknown"]
+	 	This.CurrentState:Set["MINE"]
 	}	
 	
 	
@@ -1003,7 +996,7 @@ objectdef obj_Miner
 		
 		if !${Ship.CorpHangarEmpty}
 		{
-			if !${Ship.OreHoldFull} && ${Config.Miner.OrcaDelivery}
+			if !${Ship.OreHoldFull} && ${Config.Miner.DeliveryLocationTypeName.Equal["No Delivery"]}
 			{
 				call Cargo.TransferCargoFromShipCorporateHangarToOreHold
 				Ship:StackOreHold
@@ -1207,22 +1200,22 @@ objectdef obj_Miner
 		}
 		if ${Config.Miner.IceMining}
 		{
-			if ${Config.Miner.OrcaDelivery} && ${Ship.CorpHangarFreeSpace} < 1000
+			if ${Config.Miner.OrcaMode} && ${Ship.CorpHangarFreeSpace} < 1000
 			{
 				return TRUE
 			}
-			if !${Config.Miner.OrcaDelivery} && (${Ship.CargoFreeSpace} < 1000 || ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold})
+			if ${Ship.CargoFreeSpace} < 1000 || ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 			{
 				return TRUE
 			}
 		}
 		else
 		{
-			if ${Config.Miner.OrcaDelivery} && ${Ship.CorpHangarFreeSpace} <= ${Ship.CorpHangarMinimumFreeSpace}
+			if ${Config.Miner.OrcaMode} && ${Ship.CorpHangarFreeSpace} <= ${Ship.CorpHangarMinimumFreeSpace}
 			{
 				return TRUE
 			}
-			if !${Config.Miner.OrcaDelivery} && (${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold})
+			if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 			{
 				return TRUE
 			}
