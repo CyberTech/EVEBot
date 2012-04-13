@@ -1087,7 +1087,7 @@ objectdef obj_Cargo
 		HourHauled:Inc[${TripHauled}]
 		TotalHauled:Inc[${TripHauled}]
 
-		call ChatIRC.Say "Hauled: ${TripHauled} m3    This Hour: ${HourHauled} m3    Total: ${TotalHauled} m3"
+		call ChatIRC.Say "Hauled: ${TripHauled.Round} m3    This Hour: ${HourHauled.Round} m3    Total: ${TotalHauled.Round} m3"
 		EVEWindow[ByName,${MyShip.ID}]:StackAll
 		wait 10
 		EVEWindow[ByName,${MyShip.ID}]:Close
