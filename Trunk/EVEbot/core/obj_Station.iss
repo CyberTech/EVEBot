@@ -193,7 +193,7 @@ objectdef obj_Station
 
 	}
 
-	function DockAtStation(int StationID)
+	function DockAtStation(int64 StationID)
 	{
 		variable int Counter = 0
 
@@ -274,6 +274,7 @@ objectdef obj_Station
 
 		if ${Entity[${StationID}](exists)}
 		{
+			Logger:Log["Docking at ${StationID}:${Entity[${StationID}].Name}"]
 			call This.DockAtStation ${StationID}
 		}
 		else
@@ -286,7 +287,7 @@ objectdef obj_Station
 	function Undock()
 	{
 		variable int Counter
-		variable int StationID
+		variable int64 StationID
 		StationID:Set[${Me.StationID}]
 
 		if !${Me.InStation}

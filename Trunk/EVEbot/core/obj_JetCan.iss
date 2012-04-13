@@ -80,10 +80,11 @@ objectdef obj_JetCan
 	}
 
 	; Returns -1 for no can, or the entity ID
-	member:int CurrentCan(bool CheckFreeSpace = FALSE)
+	member:int64 CurrentCan(bool CheckFreeSpace = FALSE)
 	{
-		if (${This.ActiveCan} > 0 && \
-			${Entity[${This.ActiveCan}](exists)})
+		if ${This.ActiveCan} > 0 && \
+			${Entity[${This.ActiveCan}](exists)} && \
+			${This.AccessAllowed[${This.ActiveCan}]}
 		{
 			if ((${Entity[${This.ActiveCan}].Distance} >= LOOT_RANGE) || \
 				(${CheckFreeSpace} && ${This.CargoFull[${This.ActiveCan}]}))
@@ -104,9 +105,9 @@ objectdef obj_JetCan
 			EVEWindow[loot_${This.ActiveCan}]:Close
 		}
 
-		variable index:cachedentity Cans
+		variable index:entity Cans
 		variable iterator Can
-		EVE:GetCachedEntities[Cans, GroupID, GROUPID_CARGO_CONTAINER, Radius, LOOT_RANGE]
+		EVE:QueryEntities[Cans, "GroupID = GROUPID_CARGO_CONTAINER && Distance < LOOT_RANGE"]
 
 		Cans:GetIterator[Can]
 
@@ -160,7 +161,7 @@ objectdef obj_JetCan
 
 		variable int OwnerID = ${Entity[${ID}].OwnerID}
 
-		if ${Entity[${ID}].HaveLootRights}
+		if ${Entity[${ID}].HaveLootRights} || ${Entity[${ID}].IsAbandoned}
 		{
 			return TRUE
 		}
@@ -203,19 +204,19 @@ objectdef obj_JetCan
 		switch ${Config.Miner.JetCanNaming}
 		{
 			case 1
-				NewName:Set[${Me.CorporationTicker} ${EVE.Time[short]}]
+				NewName:Set[${Me.Corp.Ticker} ${EVE.Time[short]}]
 				break
 			case 2
-				NewName:Set[${Me.CorporationTicker}:${EVE.Time[short]}]
+				NewName:Set[${Me.Corp.Ticker}:${EVE.Time[short]}]
 				break
 			case 3
-				NewName:Set[${Me.CorporationTicker}_${EVE.Time[short]}]
+				NewName:Set[${Me.Corp.Ticker}_${EVE.Time[short]}]
 				break
 			case 4
-				NewName:Set[${Me.CorporationTicker}.${EVE.Time[short]}]
+				NewName:Set[${Me.Corp.Ticker}.${EVE.Time[short]}]
 				break
 			case 5
-				NewName:Set[${Me.CorporationTicker}]
+				NewName:Set[${Me.Corp.Ticker}]
 				break
 			case 6
 				NewName:Set[${EVE.Time[short]}]
@@ -256,7 +257,21 @@ objectdef obj_JetCan
 			return
 		}
 
-		Entity[${ID}]:StackAllCargo
+		variable index:evewindow Windows
+		variable iterator iWindow
+		EVE:GetEVEWindows[Windows]
+		Windows:GetIterator[iWindow]
+		if ${iWindow:First(exists)}
+		{
+			do
+			{
+				if (${iWindow.Value.Name.Find[${ID}]} > 0)
+				{
+					iWindow.Value:StackAll
+				}
+			}
+			while ${iWindow:Next(exists)}
+		}
 	}
 
 	member IsCargoOpen(int64 ID=0)
@@ -288,9 +303,7 @@ objectdef obj_JetCan
 			return FALSE
 		}
 
-		/* TODO: hard coded capacity b/c of isxeve cargocapcity breakage */
-		;return ${Entity[${ID}].CargoCapacity}
-		return 27500
+		return ${Entity[${ID}].CargoCapacity}
 	}
 
 	member:float CargoMinimumFreeSpace(int64 ID=0)
@@ -304,8 +317,14 @@ objectdef obj_JetCan
 		{
 			return FALSE
 		}
-
-		return ${Math.Calc[${This.CargoCapacity}*0.05]}
+		if ${Config.Common.BotModeName.Equal[Miner]} && ${Config.Miner.IceMining}
+		{
+			return 1000.00
+		}
+		else
+		{
+			return ${Math.Calc[${This.CargoCapacity}*0.05]}
+		}
 	}
 
 	member:float CargoFreeSpace(int64 ID=0)
@@ -393,15 +412,14 @@ objectdef obj_JetCan
 			variable float TimeOut = 0
 			while !${This.IsCargoOpen[${ID}]}
 			{
-				TimeOut:Inc[0.5]
+				TimeOut:Inc[0.1]
 				if ${TimeOut} > 20
 				{
-					Logger:Log["JetCan.Open timed out (40 seconds)", LOG_CRITICAL]
+					Logger:Log["JetCan.Open timed out (20 seconds)", LOG_CRITICAL]
 					break
 				}
-				wait 5
+				wait 1
 			}
-			wait 10
 		}
 	}
 
@@ -416,20 +434,20 @@ objectdef obj_JetCan
 		{
 			Logger:Log["Closing JetCan"]
 			Entity[${ID}]:CloseCargo
+			Entity[${ID}]:CloseStorage
 			wait WAIT_CARGO_WINDOW
 			while ${This.IsCargoOpen[${ID}]}
 			{
 				wait 1
 			}
-			wait 10
 		}
 	}
 }
 
-objectdef obj_CorpHangerArray inherits obj_JetCan
+objectdef obj_CorpHangarArray inherits obj_JetCan
 {
 	; Returns -1 for no can, or the entity ID
-	member:int CurrentCan(bool CheckFreeSpace = FALSE)
+	member:int64 CurrentCan(bool CheckFreeSpace = FALSE)
 	{
 		if (${This.ActiveCan} > 0 && \
 			${Entity[${This.ActiveCan}](exists)})
@@ -455,84 +473,10 @@ objectdef obj_CorpHangerArray inherits obj_JetCan
 			;EVEWindow[loot_${This.ActiveCan}]:Close
 		}
 
-		variable index:cachedentity Cans
+		variable index:entity Cans
 		variable iterator Can
-		EVE:GetCachedEntities[Cans, GroupID, GROUP_CORPORATEHANGARARRAY]
+		EVE:QueryEntities[Cans, "GroupID = GROUP_CORPORATEHANGARARRAY"]
 
-		Cans:GetIterator[Can]
-
-		if ${Can:First(exists)}
-		{
-			do
-			{
-				if (${Can.Value.ID(exists)} && \
-					${Can.Value.ID} > 0 && \
-					${This.AccessAllowed[${Can.Value.ID}]} && \
-					${Can.Value.ID} != ${This.ActiveCan})
-				{
-					This.ActiveCan:Set[${Can.Value.ID}]
-					return ${This.ActiveCan}
-				}
-			}
-			while ${Can:Next(exists)}
-		}
-
-
-		This.ActiveCan:Set[-1]
-		return ${This.ActiveCan}
-	}
-
-	member:float CargoCapacity(int64 ID=0)
-	{
-		if (${ID} == 0 && ${This.ActiveCan} > 0)
-		{
-			ID:Set[${This.ActiveCan}]
-		}
-
-		if !${This.IsCargoOpen[${ID}]}
-		{
-			return FALSE
-		}
-
-		/* TODO: hard coded capacity b/c of isxeve cargocapcity breakage */
-		;return ${Entity[${ID}].CargoCapacity}
-		return 1400000
-	}
-
-}
-
-objectdef obj_AssemblyArray inherits obj_JetCan
-{
-	; Returns -1 for no can, or the entity ID
-	member:int CurrentCan(bool CheckFreeSpace = FALSE)
-	{
-		if (${This.ActiveCan} > 0 && \
-			${Entity[${This.ActiveCan}](exists)})
-		{
-			if ${CheckFreeSpace} && ${This.CargoFull[${This.ActiveCan}]}
-			{
-				;Logger:Log["oops... Corporate Hangar Array is full. I have no solution for this!", LOG_CRITICAL]
-
-				/* TODO - when we can properly check the cargo full state of pos hangers, remove this */
-				return ${This.ActiveCan}
-			}
-			else
-			{
-				return ${This.ActiveCan}
-			}
-		}
-
-		if ${This.ActiveCan} > 0
-		{
-			/* The can no longer exists, since we passed above checks, so try to compensate for an Eve bug and close the loot window for it. */
-			/* We don't worry about it for corp hangar arrays, it'll close when we warp away */
-			/* TODO - get name in case we do want to ever close it */
-			;EVEWindow[loot_${This.ActiveCan}]:Close
-		}
-
-		variable index:cachedentity Cans
-		variable iterator Can
-		EVE:GetCachedEntities[Cans, GroupID, GROUP_ASSEMBLYARRAY]
 		Cans:GetIterator[Can]
 
 		if ${Can:First(exists)}
@@ -555,6 +499,23 @@ objectdef obj_AssemblyArray inherits obj_JetCan
 		return ${This.ActiveCan}
 	}
 
+	member IsCargoOpen(int64 ID=0)
+	{
+		if (${ID} == 0 && ${This.ActiveCan} > 0)
+		{
+			ID:Set[${This.ActiveCan}]
+		}
+
+		if ${Entity[${ID}].StorageWindow(exists)}
+		{
+			return TRUE
+		}
+		else
+		{
+			return FALSE
+		}
+	}
+
 	member:float CargoCapacity(int64 ID=0)
 	{
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
@@ -567,16 +528,35 @@ objectdef obj_AssemblyArray inherits obj_JetCan
 			return FALSE
 		}
 
-		/* TODO: hard coded capacity b/c of isxeve cargocapcity breakage */
-		;return ${Entity[${ID}].CargoCapacity}
-		return 1000000
+		return ${Entity[${ID}].CargoCapacity}
+		;return 1400000
+	}
+
+	member:bool AccessAllowed(int64 ID)
+	{
+		if (${ID} == 0 && ${This.ActiveCan} > 0)
+		{
+			ID:Set[${This.ActiveCan}]
+		}
+
+		if !${Entity[${ID}](exists)}
+		{
+			return FALSE
+		}
+
+		if ${Entity[${ID}].Corp.ID} == ${Me.Corp.ID}
+		{
+			return TRUE
+		}
+
+		return FALSE
 	}
 }
 
 objectdef obj_SpawnContainer inherits obj_JetCan
 {
 	; Returns -1 for no can, or the entity ID
-	member:int CurrentCan(bool CheckFreeSpace = FALSE)
+	member:int64 CurrentCan(bool CheckFreeSpace = FALSE)
 	{
 		if (${This.ActiveCan} > 0 && \
 			${Entity[${This.ActiveCan}](exists)})
@@ -590,9 +570,9 @@ objectdef obj_SpawnContainer inherits obj_JetCan
 			EVEWindow[loot_${This.ActiveCan}]:Close
 		}
 
-		variable index:cachedentity Cans
+		variable index:entity Cans
 		variable iterator Can
-		EVE:GetCachedEntities[Cans, GroupID, GROUPID_SPAWN_CONTAINER]
+		EVE:QueryEntities[Cans, "GroupID = GROUPID_SPAWN_CONTAINER"]
 
 		Cans:GetIterator[Can]
 
@@ -611,6 +591,79 @@ objectdef obj_SpawnContainer inherits obj_JetCan
 			while ${Can:Next(exists)}
 		}
 
+		This.ActiveCan:Set[-1]
+		return ${This.ActiveCan}
+	}
+
+	member:float CargoCapacity(int64 ID=0)
+	{
+		if (${ID} == 0 && ${This.ActiveCan} > 0)
+		{
+			ID:Set[${This.ActiveCan}]
+		}
+
+		if !${This.IsCargoOpen[${ID}]}
+		{
+			return FALSE
+		}
+
+		/* TODO: hard coded capacity b/c of isxeve cargocapcity breakage */
+		return ${Entity[${ID}].CargoCapacity}
+		;return 1400000
+	}
+
+}
+
+objectdef obj_LargeShipAssemblyArray inherits obj_JetCan
+{
+	; Returns -1 for no can, or the entity ID
+	member:int64 CurrentCan(bool CheckFreeSpace = FALSE)
+	{
+		if (${This.ActiveCan} > 0 && \
+			${Entity[${This.ActiveCan}](exists)})
+		{
+			if ${CheckFreeSpace} && ${This.CargoFull[${This.ActiveCan}]}
+			{
+				;Logger:Log["oops... Corporate Hangar Array is full. I have no solution for this!", LOG_CRITICAL]
+
+				/* TODO - when we can properly check the cargo full state of pos hangers, remove this */
+				return ${This.ActiveCan}
+			}
+			else
+			{
+				return ${This.ActiveCan}
+			}
+		}
+
+		if ${This.ActiveCan} > 0
+		{
+			/* The can no longer exists, since we passed above checks, so try to compensate for an Eve bug and close the loot window for it. */
+			/* We don't worry about it for corp hangar arrays, it'll close when we warp away */
+			/* TODO - get name in case we do want to ever close it */
+			;EVEWindow[loot_${This.ActiveCan}]:Close
+		}
+
+		variable index:entity Cans
+		variable iterator Can
+		EVE:QueryEntities[Cans, "TypeID = TYPEID_LARGE_ASSEMBLY_ARRAY"]
+
+		Cans:GetIterator[Can]
+
+		if ${Can:First(exists)}
+		{
+			do
+			{
+				if (${Can.Value.ID(exists)} && \
+					${Can.Value.ID} > 0 && \
+					${This.AccessAllowed[${Can.Value.ID}]} && \
+					${Can.Value.ID} != ${This.ActiveCan})
+				{
+					This.ActiveCan:Set[${Can.Value.ID}]
+					return ${This.ActiveCan}
+				}
+			}
+			while ${Can:Next(exists)}
+		}
 
 		This.ActiveCan:Set[-1]
 		return ${This.ActiveCan}
@@ -629,8 +682,119 @@ objectdef obj_SpawnContainer inherits obj_JetCan
 		}
 
 		/* TODO: hard coded capacity b/c of isxeve cargocapcity breakage */
-		;return ${Entity[${ID}].CargoCapacity}
-		return 1400000
+		return ${Entity[${ID}].CargoCapacity}
+		;return 18500500
 	}
 
+	member:bool AccessAllowed(int64 ID)
+	{
+		if (${ID} == 0 && ${This.ActiveCan} > 0)
+		{
+			ID:Set[${This.ActiveCan}]
+		}
+
+		if !${Entity[${ID}](exists)}
+		{
+			return FALSE
+		}
+
+		if ${Entity[${ID}].Corp.ID} == ${Me.Corp.ID}
+		{
+			return TRUE
+		}
+
+		return FALSE
+	}
+}
+
+objectdef obj_XLargeShipAssemblyArray inherits obj_JetCan
+{
+	; Returns -1 for no can, or the entity ID
+	member:int64 CurrentCan(bool CheckFreeSpace = FALSE)
+	{
+		if (${This.ActiveCan} > 0 && \
+			${Entity[${This.ActiveCan}](exists)})
+		{
+			if ${CheckFreeSpace} && ${This.CargoFull[${This.ActiveCan}]}
+			{
+				;Logger:Log["oops... Corporate Hangar Array is full. I have no solution for this!", LOG_CRITICAL]
+
+				/* TODO - when we can properly check the cargo full state of pos hangers, remove this */
+				return ${This.ActiveCan}
+			}
+			else
+			{
+				return ${This.ActiveCan}
+			}
+		}
+
+		if ${This.ActiveCan} > 0
+		{
+			/* The can no longer exists, since we passed above checks, so try to compensate for an Eve bug and close the loot window for it. */
+			/* We don't worry about it for corp hangar arrays, it'll close when we warp away */
+			/* TODO - get name in case we do want to ever close it */
+			;EVEWindow[loot_${This.ActiveCan}]:Close
+		}
+
+		variable index:entity Cans
+		variable iterator Can
+		EVE:QueryEntities[Cans, "TypeID = TYPEID_XLARGE_ASSEMBLY_ARRAY"]
+
+		Cans:GetIterator[Can]
+
+		if ${Can:First(exists)}
+		{
+			do
+			{
+				if (${Can.Value.ID(exists)} && \
+					${Can.Value.ID} > 0 && \
+					${This.AccessAllowed[${Can.Value.ID}]} && \
+					${Can.Value.ID} != ${This.ActiveCan})
+				{
+					This.ActiveCan:Set[${Can.Value.ID}]
+					return ${This.ActiveCan}
+				}
+			}
+			while ${Can:Next(exists)}
+		}
+
+		This.ActiveCan:Set[-1]
+		return ${This.ActiveCan}
+	}
+
+	member:float CargoCapacity(int64 ID=0)
+	{
+		if (${ID} == 0 && ${This.ActiveCan} > 0)
+		{
+			ID:Set[${This.ActiveCan}]
+		}
+
+		if !${This.IsCargoOpen[${ID}]}
+		{
+			return FALSE
+		}
+
+		return ${Entity[${ID}].CargoCapacity}
+		;return 18500500
+	}
+
+	member:bool AccessAllowed(int64 ID)
+	{
+		if (${ID} == 0 && ${This.ActiveCan} > 0)
+		{
+			ID:Set[${This.ActiveCan}]
+		}
+
+		if !${Entity[${ID}](exists)}
+		{
+			return FALSE
+		}
+
+		if ${Entity[${ID}].Corp.ID} == ${Me.Corp.ID}
+		{
+			return TRUE
+		}
+
+		return FALSE
+	}
 }
