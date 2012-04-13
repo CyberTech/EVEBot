@@ -22,6 +22,13 @@ objectdef obj_Cargo
 	variable index:string ActiveMiningCrystals
 	variable float m_ContainerFreeSpace
 
+	;	Used to keep track of how much we've hauled per trip, per hour, and per session
+	variable float64 TripHauled
+	variable float64 HourHauled
+	variable int CurrentHour=${Time.Hour}
+	variable float64 TotalHauled
+	
+	
 	method Initialize()
 	{
 		UI:UpdateConsole["obj_Cargo: Initialized", LOG_MINOR]
@@ -1042,6 +1049,7 @@ objectdef obj_Cargo
 		variable iterator CargoIterator
 		This.CargoToTransfer:GetIterator[CargoIterator]
 
+		TripHauled:Set[0]
 		if ${CargoIterator:First(exists)}
 		{
 			call Station.OpenHangar
@@ -1056,7 +1064,7 @@ objectdef obj_Cargo
 				else
 				{
 					ListToMove:Insert[${CargoIterator.Value.ID}]
-					
+					TripHauled:Inc[${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}]}]
 				}
 				wait 10
 			}
@@ -1070,6 +1078,22 @@ objectdef obj_Cargo
 			UI:UpdateConsole["DEBUG: obj_Cargo:TransferListToHangar: Nothing found to move"]
 		}
 		EVE:StackItems[MyStationHangar,Hangar]
+
+		if ${CurrentHour} != ${Time.Hour}
+		{
+			HourHauled:Set[0]
+			CurrentHour:Set[${Time.Hour}]
+		}
+		
+		HourHauled:Inc[${TripHauled}]
+		TotalHauled:Inc[${TripHauled}]
+
+		call ChatIRC.Say "Hauled: ${TripHauled} m3    This Hour: ${HourHauled} m3    Total: ${TotalHauled} m3"
+		EVEWindow[ByName,${MyShip.ID}]:StackAll
+		wait 10
+		EVEWindow[ByName,${MyShip.ID}]:Close
+		wait 10
+		
 	}
 	
 	function TransferListToShipCorporateHangar(int64 dest, int Leave=0)
