@@ -61,7 +61,7 @@ function main(string unchar="", string StartBot=FALSE)
 	}
 	windowtaskbar on "${unchar}"
 
-	if ${Config.Common.LoginName.Equal["username1"]}
+	if !${Config.Common.LoginName(exists)} || ${Config.Common.LoginName.Equal["username1"]}
 	{
 		UI:UpdateConsole["Launcher: No character specified, or character not found in ${BaseConfig.CONFIG_FILE}"]
 		UI:UpdateConsole["  Syntax: run EVEBot/Launcher \"CharName\" <Optional Botname>"]

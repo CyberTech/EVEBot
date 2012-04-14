@@ -179,6 +179,14 @@ objectdef obj_LoginHandler inherits obj_BaseClass
 			{
 				EVEWindow[ByName,modal]:ClickButtonOK
 			}
+			elseif ${EVEWindow[ByName,modal].Text.Find["The connection to the server was closed"](exists)}
+			{
+				EVEWindow[ByName,modal]:ClickButtonOK
+			}
+			elseif ${EVEWindow[ByName,modal].Text.Find["At any time you can log in to the account management page"](exists)}
+			{
+				EVEWindow[ByName,modal]:ClickButtonOK
+			}
 			else
 			{
 				UI:UpdateConsole["Error: Unexpected Modal dialog with text:", LOG_STANDARD]
@@ -197,11 +205,10 @@ objectdef obj_LoginHandler inherits obj_BaseClass
 					break
 				}
 
-				;EVE:CloseAllMessageBoxes
-
 				if ${Login(exists)}
 				{
 					This.CurrentState:Set["SERVERDOWN"]
+					This.LoginTimer:Set[${This.connectWaitTime}]
 					break
 				}
 				if ${CharSelect(exists)}
@@ -237,7 +244,6 @@ objectdef obj_LoginHandler inherits obj_BaseClass
 					This.ServerWasDown:Set[TRUE]
 					This.LoginTimer:Set[${This.connectWaitTime}]
 				}
-				;EVE:CloseAllMessageBoxes
 				break
 			case SERVERUP
 				if ${This.ServerWasDown}
@@ -247,10 +253,17 @@ objectdef obj_LoginHandler inherits obj_BaseClass
 					This.ServerWasDown:Set[FALSE]
 					break
 				}
+				variable int YPos
+				variable int XPos
+
+				YPos:Set[${Math.Calc[${Display.Height} / ${Math.Rand[4]:Inc[2]}]}]
+				XPos:Set[${Math.Calc[${Display.Width} / ${Math.Rand[4]:Inc[1]}]}]
+				Mouse:SetPosition[${XPos}, ${YPos}]
+				Mouse:LeftClick
+
 				Login:SetUsername[${Config.Common.LoginName}]
 				Login:SetPassword[${Config.Common.LoginPassword}]
 				This.CurrentState:Set["LOGIN_ENTERED"]
-				;EVE:CloseAllMessageBoxes
 				break
 			case LOGIN_ENTERED
 				if ${CurrentLoggingAttempts} > ${MaxLoginAttemptsBeforeDelay}
