@@ -89,6 +89,7 @@ objectdef obj_Miner
 		{
 			This:SetState[]
 
+			echo InSpace: ${Me.InSpace} - InStation: ${Me.InStation} - ${CurrentState}
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
     		This.NextPulse:Update
@@ -146,12 +147,18 @@ objectdef obj_Miner
 		}
 		
 		;	If I'm in a station, I need to perform what I came there to do
-		if ${Me.InStation} == TRUE
+		if ${Me.InStation}
 		{
 	  		This.CurrentState:Set["BASE"]
 	  		return
 		}
 
+		if !${Me.InSpace}
+		{
+			This.CurrentState:Set["IDLE"]
+			return
+		}
+		
 		;	If I'm not in a station and I'm full, I should head to a station to unload unless "No Delivery" is our Delivery Location Type
 	    if ${This.MinerFull} && !${Config.Miner.DeliveryLocationTypeName.Equal["No Delivery"]}
 		{
@@ -185,7 +192,7 @@ objectdef obj_Miner
 		{
 			return
 		}
-
+		
 		;	Tell the miners we might not be in a belt and shouldn't be warped to.
 		if ${This.CurrentState.NotEqual[ORCA]} && ${Config.Miner.OrcaMode} && ${Config.Miner.OrcaInBelt}
 		{
@@ -327,9 +334,15 @@ objectdef obj_Miner
 					call Cargo.TransferOreToHangar
 				}
 				
-				
 			    LastUsedCargoCapacity:Set[0]
 				call Station.Undock
+				wait 600 ${Me.InSpace}
+				if ${Config.Miner.OrcaMode}
+				{
+					Ship:OpenOreHold
+					Ship:OpenCorpHangars
+				}
+				call Cargo.OpenHolds
 				break
 				
 			;	This means we're in space and should mine some more ore!  Only one choice here - MINE!
@@ -601,6 +614,11 @@ objectdef obj_Miner
 		if ${Me.InStation} != FALSE
 		{
 			UI:UpdateConsole["DEBUG: obj_Miner.Mine called while zoning or while in station!"]
+			return
+		}
+
+		if !${Me.InSpace}
+		{
 			return
 		}
 
@@ -913,6 +931,11 @@ objectdef obj_Miner
 			return
 		}
 
+		if !${Me.InSpace}
+		{
+			return
+		}
+		
 		;	This checks our armor and shields to determine if we need to run like hell.  If we're being attacked by something
 		;	dangerous enough to get us this damaged, it's best to switch to HARD STOP mode.
 		if (${Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
