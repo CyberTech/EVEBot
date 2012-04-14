@@ -945,7 +945,7 @@ objectdef obj_Ship
 			return ${Math.Calc[${ModuleIter.Value.OptimalRange}*0.90]}
 		}
 
-		return 5000
+		return 0
 	}
 
 	; Returns the loaded crystal in a mining laser, given the slot name ("HiSlot0"...)
@@ -1088,7 +1088,6 @@ objectdef obj_Ship
 			while ${Target:Next(exists)}
 		}
 	}
-	
 
 	method CalculateMaxLockedTargets()
 	{
