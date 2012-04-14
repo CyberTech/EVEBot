@@ -900,7 +900,7 @@ objectdef obj_Hauler
 	method BuildJetCanList()
 	{
 		EVE:QueryEntities[Entities,"GroupID = 12"]
-		Entities:RemoveByQuery[${LavishScript.CreateQuery[HaveLootRights=="0"]}]
+		Entities:RemoveByQuery[${LavishScript.CreateQuery[!HaveLootRights]}]
 		
 		
 		
