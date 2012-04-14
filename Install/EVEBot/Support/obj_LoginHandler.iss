@@ -21,12 +21,19 @@ objectdef obj_LoginHandler inherits obj_BaseClass
 	variable int LoginTimer = 0
 	variable string CurrentState
 
+	variable bool ServerWasDown = FALSE
+
 	; Added these in so no magic numbers are used
 	variable float loginWaitTime = 2.0
 	variable float connectWaitTime = 5.0
 	variable float inspaceWaitTime = 15.0
 	variable float CharSelectWaitTime = 10.0
+	variable float ServerUpWaitTime = 600.0
+	variable float TooManyLoginWaitTime = 1200.0
 
+	variable int CurrentLoggingAttempts = 0
+	variable int MaxLoginAttemptsBeforeDelay = 5
+	variable obj_PulseTimer LastLoginTimer
 	method Initialize()
 	{
 		LogPrefix:Set["${This.ObjectName}"]
@@ -34,6 +41,7 @@ objectdef obj_LoginHandler inherits obj_BaseClass
 		This.CurrentState:Set["START"]
 
 		PulseTimer:SetIntervals[1.0,1.5]
+		LastLoginTimer:SetIntervals[6.0,15.0]
 
 		UI:UpdateConsole["${LogPrefix}: Initialized", LOG_DEBUG]
 	}
@@ -221,20 +229,44 @@ objectdef obj_LoginHandler inherits obj_BaseClass
 				}
 				else
 				{
+					if !${This.ServerWasDown}
+					{
+						UI:UpdateConsole["Launcher: Server down", LOG_DEBUG]
+					}
 					This.CurrentState:Set["SERVERDOWN"]
+					This.ServerWasDown:Set[TRUE]
 					This.LoginTimer:Set[${This.connectWaitTime}]
 				}
 				;EVE:CloseAllMessageBoxes
 				break
 			case SERVERUP
+				if ${This.ServerWasDown}
+				{
+					UI:UpdateConsole["Launcher: Server Up After Downtime - Delaying login ${Math.Calc[${This.ServerUpWaitTime}/60]} minutes", LOG_STANDARD]
+					This.LoginTimer:Set[${This.ServerUpWaitTime}]
+					This.ServerWasDown:Set[FALSE]
+					break
+				}
 				Login:SetUsername[${Config.Common.LoginName}]
 				Login:SetPassword[${Config.Common.LoginPassword}]
 				This.CurrentState:Set["LOGIN_ENTERED"]
 				;EVE:CloseAllMessageBoxes
 				break
 			case LOGIN_ENTERED
-				Login:Connect
-				This.CurrentState:Set["CONNECTING"]
+				if ${CurrentLoggingAttempts} > ${MaxLoginAttemptsBeforeDelay}
+				{
+					UI:UpdateConsole["Warning: ${CurrentLoggingAttempts} login attempts in a row. Delaying next attempt by ${Math.Calc[${This.TooManyLoginWaitTime}/60]} minutes", LOG_STANDARD]
+					This.LoginTimer:Set[${This.TooManyLoginWaitTime}]
+					CurrentLoggingAttempts:Set[0]
+					break
+				}
+				if ${This.LastLoginTimer.Ready}
+				{
+					Login:Connect
+					This.CurrentState:Set["CONNECTING"]
+					This.LastLoginTimer:Update[TRUE]
+					CurrentLoggingAttempts:Inc
+				}
 				This.LoginTimer:Set[${This.connectWaitTime}]
 				break
 			case CONNECTING
