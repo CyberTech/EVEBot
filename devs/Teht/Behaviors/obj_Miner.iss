@@ -89,7 +89,6 @@ objectdef obj_Miner
 		{
 			This:SetState[]
 
-			echo InSpace: ${Me.InSpace} - InStation: ${Me.InStation} - ${CurrentState}
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
     		This.NextPulse:Update
