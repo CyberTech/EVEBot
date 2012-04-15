@@ -112,26 +112,26 @@ objectdef obj_Asteroids
 			}
 		}
 		BeltBookMarkList:Collapse
-		variable float Distance
-		do
-		{
-			RandomBelt:Set[${Math.Rand[${BeltBookMarkList.Used(int):Dec}]:Inc[1]}]
-
-			Label:Set[${BeltBookMarkList[${RandomBelt}].Label}]
-			if ${BeltBookMarkList[${RandomBelt}].X(exists)}
-				Distance:Set[${Math.Distance[${BeltBookMarkList[${RandomBelt}].X},${BeltBookMarkList[${RandomBelt}].Y},${BeltBookMarkList[${RandomBelt}].Z},${Me.ToEntity.X},${Me.ToEntity.Y},${Me.ToEntity.Z}]}]
-			else
-				Distance:Set[${Math.Distance[${BeltBookMarkList[${RandomBelt}].ToEntity.X},${BeltBookMarkList[${RandomBelt}].ToEntity.Y},${BeltBookMarkList[${RandomBelt}].ToEntity.Z},${Me.ToEntity.X},${Me.ToEntity.Y},${Me.ToEntity.Z}]}]
-
-			if ${Distance} > WARP_RANGE
-			{
-				break
-			}
-		}
-		while ${BeltBookMarkList.Used} > 1
-
 		if ${BeltBookMarkList.Used} /* If it's 0, we don't have any matching bookmarks, don't try to set autopilot to NULL. */
 		{
+			variable float Distance
+			do
+			{
+				RandomBelt:Set[${Math.Rand[${BeltBookMarkList.Used(int):Dec}]:Inc[1]}]
+
+				Label:Set[${BeltBookMarkList[${RandomBelt}].Label}]
+				if ${BeltBookMarkList[${RandomBelt}].X(exists)}
+					Distance:Set[${Math.Distance[${BeltBookMarkList[${RandomBelt}].X},${BeltBookMarkList[${RandomBelt}].Y},${BeltBookMarkList[${RandomBelt}].Z},${Me.ToEntity.X},${Me.ToEntity.Y},${Me.ToEntity.Z}]}]
+				else
+					Distance:Set[${Math.Distance[${BeltBookMarkList[${RandomBelt}].ToEntity.X},${BeltBookMarkList[${RandomBelt}].ToEntity.Y},${BeltBookMarkList[${RandomBelt}].ToEntity.Z},${Me.ToEntity.X},${Me.ToEntity.Y},${Me.ToEntity.Z}]}]
+
+				if ${Distance} > WARP_RANGE
+				{
+					break
+				}
+			}
+			while ${BeltBookMarkList.Used} > 1
+
 			call Ship.WarpToBookMark ${BeltBookMarkList[${RandomBelt}].ID}
 
 			This.BeltArrivalTime:Set[${Time.Timestamp}]
