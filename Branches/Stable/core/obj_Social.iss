@@ -260,7 +260,7 @@ objectdef obj_Social
 					${MeToAlliance} < ${Config.Combat.LowestStanding} || \
 					${CorpToPilot} < ${Config.Combat.LowestStanding} || \
 					${CorpToCorp} < ${Config.Combat.LowestStanding} || \
-					${CorpToAlliance} < ${Config.Combat.LowestStanding}
+					${CorpToAlliance} < ${Config.Combat.LowestStanding} \
 				)
 			{
 				UI:UpdateConsole["Alert: Low Standing Pilot: ${PilotIterator.Value.Name}: CharID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_CRITICAL]
