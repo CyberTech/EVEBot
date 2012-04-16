@@ -1067,7 +1067,47 @@ objectdef obj_Configuration_Combat
 	{
 		This.CombatRef:AddSetting[Lowest Alliance Standing, ${value}]
 	}
+
+	member:bool TakeBreaks()
+	{
+		return ${This.CombatRef.FindSetting[Take Breaks, FALSE]}
+	}
+
+	method SetTakeBreaks(bool value)
+	{
+		This.CombatRef:AddSetting[Take Breaks, ${value}]
+	}
+
+	member:int TimeBetweenBreaks()
+	{
+		return ${This.CombatRef.FindSetting[Time Between Breaks, 0]}
+	}
+
+	method SetTimeBetweenBreaks(int value)
+	{
+		This.CombatRef:AddSetting[Time Between Breaks, ${value}]
+	}
+
+	member:int BreakDuration()
+	{
+		return ${This.CombatRef.FindSetting[Break Duration, 0]}
+	}
+
+	method SetBreakDuration(int value)
+	{
+		This.CombatRef:AddSetting[Break Duration, ${value}]
+	}
 	
+	member:bool BroadcastBreaks()
+	{
+		return ${This.CombatRef.FindSetting[Broadcast Breaks, FALSE]}
+	}
+
+	method SetBroadcastBreaks(bool value)
+	{
+		This.CombatRef:AddSetting[Broadcast Breaks, ${value}]
+	}
+
 	
 	member:bool LootMyKills()
 	{

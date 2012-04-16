@@ -56,8 +56,6 @@ objectdef obj_Miner
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		LavishScript:RegisterEvent[EVEBot_Orca_InBelt]
 		Event[EVEBot_Orca_InBelt]:AttachAtom[This:OrcaInBelt]
-		LavishScript:RegisterEvent[EVEBot_HARDSTOP]
-		Event[EVEBot_HARDSTOP]:AttachAtom[This:TriggerHARDSTOP]
 		LavishScript:RegisterEvent[EVEBot_HaulerMSG]
 		Event[EVEBot_HaulerMSG]:AttachAtom[This:HaulerMSG]
 		
@@ -68,7 +66,6 @@ objectdef obj_Miner
 	{
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 		Event[EVEBot_Orca_InBelt]:DetachAtom[This:OrcaInBelt]
-		Event[EVEBot_HARDSTOP]:DetachAtom[This:TriggerHARDSTOP]
 		Event[EVEBot_HaulerMSG]:DetachAtom[This:HaulerMSG]
 	}	
 	
@@ -1039,6 +1036,7 @@ objectdef obj_Miner
 		
 		;	Tell our miners we're in a belt and they are safe to warp to me
 		relay all -event EVEBot_Orca_InBelt TRUE
+		Ship:Activate_Gang_Links
 		
 		;	This checks to make sure there aren't any potential jet can flippers around before we dump a jetcan
 		if !${Social.PlayerInRange[10000]} && ${Config.Miner.DeliveryLocationTypeName.Equal["Jetcan"]}
@@ -1105,11 +1103,6 @@ objectdef obj_Miner
 		WarpToOrca:Set[${State}]
 	}
 
-	;This method is triggered by an event.  If triggered, it tells us one of our fellow miners has entered the HARDSTOP state, and we should also run
-	method TriggerHARDSTOP()
-	{
-		EVEBot.ReturnToStation:Set[TRUE]
-	}
 
 	;This method is triggered by an event.  If triggered, it tells us how much space our hauler has available
 	method HaulerMSG(int64 value)
@@ -1189,23 +1182,26 @@ objectdef obj_Miner
 			return
 		}
 		
-		UI:UpdateConsole["Warning: Sending Drones - ${Defending}"]
-		
-		Entity[${Defending}]:MakeActiveTarget
-		wait 50 ${Me.ActiveTarget.ID} != ${Defending}
+		if ${Entity[${Defending}].IsLockedTarget} && ${Entity[${Defending}](exists)}
+		{
+			UI:UpdateConsole["Warning: Sending Drones - ${Defending}"]
+			
+			Entity[${Defending}]:MakeActiveTarget
+			wait 50 ${Me.ActiveTarget.ID} != ${Defending}
 
-		variable index:activedrone ActiveDroneList
-		variable iterator DroneIterator
-		ActiveDroneList:GetIterator[DroneIterator]
-		variable index:int64 AttackDrones
-		Me:GetActiveDrones[ActiveDroneList]
-			do
-			{
-					AttackDrones:Insert[${DroneIterator.Value.ID}]
-			}
-			while ${DroneIterator:Next(exists)}
+			variable index:activedrone ActiveDroneList
+			variable iterator DroneIterator
+			ActiveDroneList:GetIterator[DroneIterator]
+			variable index:int64 AttackDrones
+			Me:GetActiveDrones[ActiveDroneList]
+				do
+				{
+						AttackDrones:Insert[${DroneIterator.Value.ID}]
+				}
+				while ${DroneIterator:Next(exists)}
 
-		EVE:DronesEngageMyTarget[AttackDrones]
+			EVE:DronesEngageMyTarget[AttackDrones]
+		}
 	}
 	
 	
