@@ -245,7 +245,7 @@ objectdef obj_Social
 			if !${PilotID.Equal[-1]} && \
 				!${PilotID.Equal[${Me.CharID}]} && \
 				(!${Me.Fleet(exists)} || !${Me.Fleet.IsMember[${PilotID}]}) && \
-				${MyAllianceID} != ${AllianceID} && \
+				!${MyAllianceID.Equal[${AllianceID}]} && \
 				( \
 					(${MeToPilot} != 0 && ${MeToPilot} < ${Config.Combat.LowestStanding}) || \
 					(${MeToCorp} != 0 && ${MeToCorp} < ${Config.Combat.LowestStanding}) || \
