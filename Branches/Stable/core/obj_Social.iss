@@ -211,6 +211,14 @@ objectdef obj_Social
 		variable int64 AllianceID
 		variable int64 PilotID
 		variable int MyAllianceID = 0
+		variable float MeToPilot
+		variable float MeToCorp
+		variable float MeToAlliance
+		variable float CorpToPilot
+		variable float CorpToCorp
+		variable float CorpToAlliance
+		variable float AllianceToCorp
+		variable float AllianceToAlliance
 
 		if ${Config.Combat.LowestStanding} < -10
 			return TRUE
@@ -229,14 +237,14 @@ objectdef obj_Social
 		if ${PilotIterator:First(exists)}
 		do
 		{
-			variable float MeToPilot			= ${PilotIterator.Value.Standing.MeToPilot}
-			variable float MeToCorp				= ${PilotIterator.Value.Standing.MeToCorp}
-			variable float MeToAlliance			= ${PilotIterator.Value.Standing.MeToAlliance}
-			variable float CorpToPilot			= ${PilotIterator.Value.Standing.CorpToPilot}
-			variable float CorpToCorp			= ${PilotIterator.Value.Standing.CorpToCorp}
-			variable float CorpToAlliance		= ${PilotIterator.Value.Standing.CorpToAlliance}
-			variable float AllianceToCorp		= ${PilotIterator.Value.Standing.AllianceToCorp}
-			variable float AllianceToAlliance	= ${PilotIterator.Value.Standing.AllianceToAlliance}
+			MeToPilot:Set[${PilotIterator.Value.Standing.MeToPilot}]
+			MeToCorp:Set[${PilotIterator.Value.Standing.MeToCorp}]
+			MeToAlliance:Set[${PilotIterator.Value.Standing.MeToAlliance}]
+			CorpToPilot:Set[${PilotIterator.Value.Standing.CorpToPilot}]
+			CorpToCorp:Set[${PilotIterator.Value.Standing.CorpToCorp}]
+			CorpToAlliance:Set[${PilotIterator.Value.Standing.CorpToAlliance}]
+			AllianceToCorp:Set[${PilotIterator.Value.Standing.AllianceToCorp}]
+			AllianceToAlliance:Set[${PilotIterator.Value.Standing.AllianceToAlliance}]
 
 			CorpID:Set[${PilotIterator.Value.Corp.ID}]
 			AllianceID:Set[${PilotIterator.Value.AllianceID}]
@@ -256,7 +264,7 @@ objectdef obj_Social
 					${AllianceToCorp} < ${Config.Combat.LowestStanding} || \
 					${AllianceToAlliance} < ${Config.Combat.LowestStanding} \
 					${MeToPilot} < ${Config.Combat.LowestStanding} || \
-					${MeToCorp} < ${Config.Combat.LowestStanding})|| \
+					${MeToCorp} < ${Config.Combat.LowestStanding} || \
 					${MeToAlliance} < ${Config.Combat.LowestStanding} || \
 					${CorpToPilot} < ${Config.Combat.LowestStanding} || \
 					${CorpToCorp} < ${Config.Combat.LowestStanding} || \
