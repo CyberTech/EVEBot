@@ -243,7 +243,7 @@ objectdef obj_Social
 			PilotID:Set[${PilotIterator.Value.CharID}]
 
 			if !${PilotID.Equal[-1]} && \
-				!${PilotID.Equal[${Me.CharID]} && \
+				!${PilotID.Equal[${Me.CharID}]} && \
 				(!${Me.Fleet(exists)} || !${Me.Fleet.IsMember[${PilotID}]}) && \
 				${MyAllianceID} != ${AllianceID} && \
 				( \
