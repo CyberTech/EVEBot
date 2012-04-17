@@ -99,7 +99,7 @@ objectdef obj_Asteroids
 			prefix:Set[${Config.Labels.OreBeltPrefix}]
 		}
 		used:Set[${BeltBookMarkList.Used}]
-		/* Let's eliminate all bookmarks that don't match our prefix 
+		/* Let's eliminate all bookmarks that don't match our prefix
 		/* and system first. */
 		for ( count:Set[1] ; ${count} <= ${used} ; count:Inc )
 		{
@@ -112,25 +112,30 @@ objectdef obj_Asteroids
 			}
 		}
 		BeltBookMarkList:Collapse
+
 		if ${BeltBookMarkList.Used} /* If it's 0, we don't have any matching bookmarks, don't try to set autopilot to NULL. */
 		{
-			variable float Distance
-			do
+			RandomBelt:Set[1]
+			if ${BeltBookMarkList.Used} > 1
 			{
-				RandomBelt:Set[${Math.Rand[${BeltBookMarkList.Used(int):Dec}]:Inc[1]}]
-
-				Label:Set[${BeltBookMarkList[${RandomBelt}].Label}]
-				if ${BeltBookMarkList[${RandomBelt}].X(exists)}
-					Distance:Set[${Math.Distance[${BeltBookMarkList[${RandomBelt}].X},${BeltBookMarkList[${RandomBelt}].Y},${BeltBookMarkList[${RandomBelt}].Z},${Me.ToEntity.X},${Me.ToEntity.Y},${Me.ToEntity.Z}]}]
-				else
-					Distance:Set[${Math.Distance[${BeltBookMarkList[${RandomBelt}].ToEntity.X},${BeltBookMarkList[${RandomBelt}].ToEntity.Y},${BeltBookMarkList[${RandomBelt}].ToEntity.Z},${Me.ToEntity.X},${Me.ToEntity.Y},${Me.ToEntity.Z}]}]
-
-				if ${Distance} > WARP_RANGE
+				variable float Distance
+				do
 				{
-					break
+					RandomBelt:Set[${Math.Rand[${BeltBookMarkList.Used(int):Dec}]:Inc[1]}]
+
+					Label:Set[${BeltBookMarkList[${RandomBelt}].Label}]
+					if ${BeltBookMarkList[${RandomBelt}].X(exists)}
+						Distance:Set[${Math.Distance[${BeltBookMarkList[${RandomBelt}].X},${BeltBookMarkList[${RandomBelt}].Y},${BeltBookMarkList[${RandomBelt}].Z},${Me.ToEntity.X},${Me.ToEntity.Y},${Me.ToEntity.Z}]}]
+					else
+						Distance:Set[${Math.Distance[${BeltBookMarkList[${RandomBelt}].ToEntity.X},${BeltBookMarkList[${RandomBelt}].ToEntity.Y},${BeltBookMarkList[${RandomBelt}].ToEntity.Z},${Me.ToEntity.X},${Me.ToEntity.Y},${Me.ToEntity.Z}]}]
+
+					if ${Distance} > WARP_RANGE
+					{
+						break
+					}
 				}
+				while ${BeltBookMarkList.Used} > 1
 			}
-			while ${BeltBookMarkList.Used} > 1
 
 			call Ship.WarpToBookMark ${BeltBookMarkList[${RandomBelt}].ID}
 
