@@ -85,7 +85,7 @@ objectdef obj_Miner
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			This:SetState[]
-
+			echo ${CurrentState}
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
     		This.NextPulse:Update
@@ -118,6 +118,13 @@ objectdef obj_Miner
 			return
 		}
 
+		;	If we're at our panic location bookmark and HARD STOP has been called for, just idle until user intervention
+		if ${EVEBot.ReturnToStation} && ${This.AtPanicBookmark}
+		{
+			This.CurrentState:Set["IDLE"]
+			return
+		}
+
 		;	If we're in space and HARD STOP has been called for, try to get to a station
 		if ${EVEBot.ReturnToStation} && !${Me.InStation}
 		{
@@ -130,15 +137,20 @@ objectdef obj_Miner
 		;	*	Pilot is on Blacklist ("Run on Blacklisted Pilot" enabled on Fleeing tab)
 		;	*	Pilot is not on Whitelist ("Run on Non-Whitelisted Pilot" enabled on Fleeing tab)
 		;	This checks for both In Station and out, preventing spam if you're in a station.
+		if !${Social.IsSafe}  && !${EVEBot.ReturnToStation} && ${Me.InStation}
+		{
+			This.CurrentState:Set["IDLE"]
+			return
+		}
+		if !${Social.IsSafe}  && !${EVEBot.ReturnToStation} && ${This.AtPanicBookmark}
+		{
+			This.CurrentState:Set["IDLE"]
+			return
+		}
 		if !${Social.IsSafe}  && !${EVEBot.ReturnToStation} && !${Me.InStation}
 		{
 			This.CurrentState:Set["FLEE"]
 			UI:UpdateConsole["FLEE: Low Standing player or system unsafe, fleeing"]
-			return
-		}
-		if !${Social.IsSafe}  && !${EVEBot.ReturnToStation} && ${Me.InStation}
-		{
-			This.CurrentState:Set["IDLE"]
 			return
 		}
 		
@@ -227,11 +239,7 @@ objectdef obj_Miner
 					}
 					else
 					{
-						EVE.Bookmark[${Config.Miner.PanicLocation}]:WarpTo[0]
-						wait 100 ${Me.ToEntity.Mode} == 3
-						Ship:Activate_AfterBurner
-						wait 20
-						Ship:Deactivate_AfterBurner
+						call This.FastWarp -1 "${Config.Miner.PanicLocation}"
 					}
 					break
 				}				
@@ -295,11 +303,7 @@ objectdef obj_Miner
 					}
 					else
 					{
-						EVE.Bookmark[${Config.Miner.PanicLocation}]:WarpTo[0]
-						wait 100 ${Me.ToEntity.Mode} == 3
-						Ship:Activate_AfterBurner
-						wait 20
-						Ship:Deactivate_AfterBurner
+						call This.FastWarp -1 "${Config.Miner.PanicLocation}"
 					}
 					break
 				}
@@ -1136,29 +1140,52 @@ objectdef obj_Miner
 	;	This function's sole purpose is to get your ship in warp as fast as possible from a dead stop with a MWD.  It accepts a value and will either Warp to it
 	;	if it is an entity in the current system, or uses the autopilot if it's a bookmark in another system.  It is designed to do what it needs to do and then
 	;	exit, after which the functions in obj_Ship can be used to make sure the navigation completes.
-	function FastWarp(int64 LocationID=0)
+	function FastWarp(int64 LocationID=0,string BookmarkName="")
 	{
-		if ${LocationID} != 0
+		if ${Me.ToEntity.Mode} != 3
 		{
-			if ${Entity[${LocationID}](exists)}
+			if ${LocationID} == -1
 			{
-				Entity[${LocationID}]:WarpTo[0]
+				echo EVE.Bookmark[${BookmarkName}]:WarpTo[0]
+				EVE.Bookmark[${BookmarkName}]:WarpTo[0]
 			}
-			if ${Universe[${LocationID}](exists)}
+			if ${LocationID} != 0
 			{
-				Universe[${LocationID}]:SetDestination
-				if !${Me.AutoPilotOn}
+				if ${Entity[${LocationID}](exists)}
 				{
-					EVE:Execute[CmdToggleAutopilot]
+					Entity[${LocationID}]:WarpTo[0]
+				}
+				if ${Universe[${LocationID}](exists)}
+				{
+					Universe[${LocationID}]:SetDestination
+					if !${Me.AutoPilotOn}
+					{
+						EVE:Execute[CmdToggleAutopilot]
+					}
+				}
+			}
+			wait 100 ${Me.ToEntity.Mode} == 3
+			Ship:Activate_AfterBurner
+			wait 20
+			Ship:Deactivate_AfterBurner
+		}
+	}
+
+	member:bool AtPanicBookmark()
+	{
+		if ${Me.InSpace}
+		{
+			if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].TypeID} == 5
+			{
+				echo ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${EVE.Bookmark[${Config.Miner.PanicLocation}].X}, ${EVE.Bookmark[${Config.Miner.PanicLocation}].Y}, ${EVE.Bookmark[${Config.Miner.PanicLocation}].Z}]} < WARP_RANGE
+				if ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${EVE.Bookmark[${Config.Miner.PanicLocation}].X}, ${EVE.Bookmark[${Config.Miner.PanicLocation}].Y}, ${EVE.Bookmark[${Config.Miner.PanicLocation}].Z}]} < WARP_RANGE
+				{
+					return TRUE
 				}
 			}
 		}
-		wait 100 ${Me.ToEntity.Mode} == 3
-		Ship:Activate_AfterBurner
-		wait 20
-		Ship:Deactivate_AfterBurner
+		return FALSE
 	}
-	
 	
 	;	This function's purpose is to defend against rats which are nearby.  Goals:
 	;	*	Keep it atomic - don't get stuck in here, killing rats quickly is NOT a concern

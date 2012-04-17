@@ -201,16 +201,12 @@ objectdef obj_Hauler
 				{
 					if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].TypeID} != 5
 					{
-						call This.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
+						call Miner.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
 						call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
 					}
 					else
 					{
-						EVE.Bookmark[${Config.Miner.PanicLocation}]:WarpTo[0]
-						wait 100 ${Me.ToEntity.Mode} == 3
-						Ship:Activate_AfterBurner
-						wait 20
-						Ship:Deactivate_AfterBurner
+						call Miner.FastWarp -1 "${Config.Miner.PanicLocation}"
 					}
 					break
 				}				
@@ -265,16 +261,12 @@ objectdef obj_Hauler
 				{
 					if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].TypeID} != 5
 					{
-						call This.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
+						call Miner.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
 						call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
 					}
 					else
 					{
-						EVE.Bookmark[${Config.Miner.PanicLocation}]:WarpTo[0]
-						wait 100 ${Me.ToEntity.Mode} == 3
-						Ship:Activate_AfterBurner
-						wait 20
-						Ship:Deactivate_AfterBurner
+						call Miner.FastWarp -1 "${Config.Miner.PanicLocation}"
 					}
 					break
 				}
