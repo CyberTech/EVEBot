@@ -93,7 +93,6 @@ objectdef obj_Hauler
 	{
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 		Event[EVEBot_Miner_Full]:DetachAtom[This:MinerFull]
-		Event[EVENT_ONFRAME]:DetachAtom[This:OrcaCargoUpdate]
 		Event[EVEBot_Orca_Cargo]:DetachAtom[This:OrcaCargoUpdate]
 	}
 
@@ -148,7 +147,7 @@ objectdef obj_Hauler
 			return
 		}
 		
-		if ${Config.Hauler.HaulerModeName[Service Orca]} && ${OrcaCargo} < ${Config.Miner.CargoThreshold} && ${Me.InStation}
+		if ${Config.Hauler.HaulerModeName.Equal[Service Orca]} && ${OrcaCargo} < ${Config.Miner.CargoThreshold} && ${Me.InStation}
 		{
 			This.CurrentState:Set["IDLE"]
 			return
