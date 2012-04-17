@@ -9,6 +9,7 @@
 	-- GliderPro
 */
 #define GROUP_GANGCOORDINATOR 316
+
 objectdef obj_FullMiner
 {
 	variable int64 FleetMemberID
@@ -376,8 +377,8 @@ objectdef obj_OreHauler inherits obj_Hauler
 
 		EVEWindow[ByName,${MyShip.ID}]:StackAll
 		wait 10
-		EVEWindow[ByName,${MyShip.ID}]:Close
-		wait 10
+		;EVEWindow[ByName,${MyShip.ID}]:Close
+		;wait 10
 	}
 
 
