@@ -615,6 +615,7 @@ objectdef obj_Cargo
 		variable iterator CargoIterator
 		This.CargoToTransfer:GetIterator[CargoIterator]
 
+		TripHauled:Set[0]
 		if ${CargoIterator:First(exists)}
 		{
 			do
