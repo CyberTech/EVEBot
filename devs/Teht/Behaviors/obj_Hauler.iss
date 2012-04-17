@@ -148,6 +148,13 @@ objectdef obj_Hauler
 			return
 		}
 		
+		if ${Config.Hauler.HaulerModeName[Service Orca]} && ${OrcaCargo} < ${Config.Miner.CargoThreshold} && ${Me.InStation}
+		{
+			This.CurrentState:Set["IDLE"]
+			return
+		}
+
+		
 		;	If I'm in a station, I need to perform what I came there to do
 		if ${Me.InStation} == TRUE
 		{
