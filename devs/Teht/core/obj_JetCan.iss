@@ -276,6 +276,10 @@ objectdef obj_JetCan
 		{
 			return TRUE
 		}
+		elseif ${Entity[${ID}].StorageWindow(exists)}
+		{
+			return TRUE
+		}
 		else
 		{
 			return FALSE
