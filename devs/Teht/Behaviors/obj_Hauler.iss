@@ -199,8 +199,19 @@ objectdef obj_Hauler
 				}
 				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
-					call Miner.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
-					call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
+					if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].TypeID} != 5
+					{
+						call This.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
+						call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
+					}
+					else
+					{
+						EVE.Bookmark[${Config.Miner.PanicLocation}]:WarpTo[0]
+						wait 100 ${Me.ToEntity.Mode} == 3
+						Ship:Activate_AfterBurner
+						wait 20
+						Ship:Deactivate_AfterBurner
+					}
 					break
 				}				
 				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} != ${Me.SolarSystemID}
@@ -252,8 +263,19 @@ objectdef obj_Hauler
 				}
 				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
-					call Miner.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
-					call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
+					if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].TypeID} != 5
+					{
+						call This.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
+						call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
+					}
+					else
+					{
+						EVE.Bookmark[${Config.Miner.PanicLocation}]:WarpTo[0]
+						wait 100 ${Me.ToEntity.Mode} == 3
+						Ship:Activate_AfterBurner
+						wait 20
+						Ship:Deactivate_AfterBurner
+					}
 					break
 				}
 
