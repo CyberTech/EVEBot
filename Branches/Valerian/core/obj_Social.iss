@@ -211,6 +211,14 @@ objectdef obj_Social
 		variable int64 AllianceID
 		variable int64 PilotID
 		variable int MyAllianceID = 0
+		variable float MeToPilot
+		variable float MeToCorp
+		variable float MeToAlliance
+		variable float CorpToPilot
+		variable float CorpToCorp
+		variable float CorpToAlliance
+		variable float AllianceToCorp
+		variable float AllianceToAlliance
 
 		if ${Config.Combat.LowestStanding} < -10
 			return TRUE
@@ -229,23 +237,38 @@ objectdef obj_Social
 		if ${PilotIterator:First(exists)}
 		do
 		{
+			MeToPilot:Set[${PilotIterator.Value.Standing.MeToPilot}]
+			MeToCorp:Set[${PilotIterator.Value.Standing.MeToCorp}]
+			MeToAlliance:Set[${PilotIterator.Value.Standing.MeToAlliance}]
+			CorpToPilot:Set[${PilotIterator.Value.Standing.CorpToPilot}]
+			CorpToCorp:Set[${PilotIterator.Value.Standing.CorpToCorp}]
+			CorpToAlliance:Set[${PilotIterator.Value.Standing.CorpToAlliance}]
+			AllianceToCorp:Set[${PilotIterator.Value.Standing.AllianceToCorp}]
+			AllianceToAlliance:Set[${PilotIterator.Value.Standing.AllianceToAlliance}]
+
 			CorpID:Set[${PilotIterator.Value.Corp.ID}]
 			AllianceID:Set[${PilotIterator.Value.AllianceID}]
 			PilotID:Set[${PilotIterator.Value.CharID}]
 
-			if ${PilotID} != -1 && \
-				${PilotID} != ${Me.CharID} && \
+			if !${PilotID.Equal[-1]} && \
+				!${PilotID.Equal[${Me.CharID}]} && \
 				(!${Me.Fleet(exists)} || !${Me.Fleet.IsMember[${PilotID}]}) && \
-				${MyAllianceID} != ${AllianceID} && \
+				!${MyAllianceID.Equal[${AllianceID}]} && \
 				( \
-					${PilotIterator.Value.Standing.MeToPilot} < ${Config.Combat.LowestStanding} || \
-					${PilotIterator.Value.Standing.MeToCorp} < ${Config.Combat.LowestStanding} || \
-					${PilotIterator.Value.Standing.MeToAlliance} < ${Config.Combat.LowestStanding} || \
-					${PilotIterator.Value.Standing.CorpToPilot} < ${Config.Combat.LowestStanding} || \
-					${PilotIterator.Value.Standing.CorpToCorp} < ${Config.Combat.LowestStanding} || \
-					${PilotIterator.Value.Standing.CorpToAlliance} < ${Config.Combat.LowestStanding} || \
-					${PilotIterator.Value.Standing.AllianceToCorp} < ${Config.Combat.LowestStanding} || \
-					${PilotIterator.Value.Standing.AllianceToAlliance} < ${Config.Combat.LowestStanding} \
+					(${MeToPilot} != 0 && ${MeToPilot} < ${Config.Combat.LowestStanding}) || \
+					(${MeToCorp} != 0 && ${MeToCorp} < ${Config.Combat.LowestStanding}) || \
+					(${MeToAlliance} != 0 && ${MeToAlliance} < ${Config.Combat.LowestStanding}) || \
+					(${CorpToPilot} != 0 && ${CorpToPilot} < ${Config.Combat.LowestStanding}) || \
+					(${CorpToCorp} != 0 && ${CorpToCorp} < ${Config.Combat.LowestStanding}) || \
+					(${CorpToAlliance} != 0 && ${CorpToAlliance} < ${Config.Combat.LowestStanding}) || \
+					${AllianceToCorp} < ${Config.Combat.LowestStanding} || \
+					${AllianceToAlliance} < ${Config.Combat.LowestStanding} \
+					${MeToPilot} < ${Config.Combat.LowestStanding} || \
+					${MeToCorp} < ${Config.Combat.LowestStanding} || \
+					${MeToAlliance} < ${Config.Combat.LowestStanding} || \
+					${CorpToPilot} < ${Config.Combat.LowestStanding} || \
+					${CorpToCorp} < ${Config.Combat.LowestStanding} || \
+					${CorpToAlliance} < ${Config.Combat.LowestStanding} \
 				)
 			{
 				UI:UpdateConsole["Alert: Low Standing Pilot: ${PilotIterator.Value.Name}: CharID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_CRITICAL]
