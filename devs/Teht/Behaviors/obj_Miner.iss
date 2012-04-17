@@ -220,10 +220,18 @@ objectdef obj_Miner
 				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
 					Ship:Activate_Hardeners
-					call This.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
 					if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].TypeID} != 5
 					{
+						call This.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
 						call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
+					}
+					else
+					{
+						EVE.Bookmark[${Config.Miner.PanicLocation}]:WarpTo[0]
+						wait 100 ${Me.ToEntity.Mode} == 3
+						Ship:Activate_AfterBurner
+						wait 20
+						Ship:Deactivate_AfterBurner
 					}
 					break
 				}				
@@ -280,10 +288,18 @@ objectdef obj_Miner
 				}
 				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
-					call This.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
 					if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].TypeID} != 5
 					{
+						call This.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
 						call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
+					}
+					else
+					{
+						EVE.Bookmark[${Config.Miner.PanicLocation}]:WarpTo[0]
+						wait 100 ${Me.ToEntity.Mode} == 3
+						Ship:Activate_AfterBurner
+						wait 20
+						Ship:Deactivate_AfterBurner
 					}
 					break
 				}
@@ -1021,13 +1037,13 @@ objectdef obj_Miner
 		
 		if !${Ship.CorpHangarEmpty}
 		{
-			if !${Ship.OreHoldFull} && ${Config.Miner.DeliveryLocationTypeName.Equal["No Delivery"]}
+			if !${Ship.OreHoldFull} && !${Config.Miner.DeliveryLocationTypeName.Equal["No Delivery"]} && !${Config.Miner.DeliveryLocationTypeName.Equal["Jetcan"]}
 			{
 				call Cargo.TransferCargoFromShipCorporateHangarToOreHold
 				Ship:StackOreHold
 				return
 			}
-			if !${Ship.CargoFull}
+			if !${Ship.CargoFull} && !${Config.Miner.DeliveryLocationTypeName.Equal["No Delivery"]}
 			{
 				call Cargo.TransferCargoFromShipCorporateHangarToCargoHold
 				Ship:StackCargoHold
