@@ -46,7 +46,8 @@ objectdef obj_Hauler
 	variable int64 Approaching = 0
 	variable int TimeStartedApproaching = 0
 	
-	
+	;	This is used to keep track of how much cargo our orca has ready
+	variable float OrcaCargo=0
 	
 	
 /*	
@@ -60,6 +61,8 @@ objectdef obj_Hauler
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		LavishScript:RegisterEvent[EVEBot_Miner_Full]
 		Event[EVEBot_Miner_Full]:AttachAtom[This:MinerFull]
+		LavishScript:RegisterEvent[EVEBot_Orca_Cargo]
+		Event[EVEBot_Orca_Cargo]:AttachAtom[This:OrcaCargoUpdate]
 		BotModules:Insert["Hauler"]
 	}
 
@@ -90,6 +93,8 @@ objectdef obj_Hauler
 	{
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 		Event[EVEBot_Miner_Full]:DetachAtom[This:MinerFull]
+		Event[EVENT_ONFRAME]:DetachAtom[This:OrcaCargoUpdate]
+		Event[EVEBot_Orca_Cargo]:DetachAtom[This:OrcaCargoUpdate]
 	}
 
 
@@ -403,6 +408,11 @@ objectdef obj_Hauler
 			return
 		}				
 		
+		if ${OrcaCargo} < ${Config.Miner.CargoThreshold}
+		{
+			return
+		}
+		
 		if !${Entity[${Orca.Escape}](exists)} && ${Local[${Config.Hauler.HaulerPickupName}].ToFleetMember}
 		{
 			UI:UpdateConsole["ALERT:  The orca is not nearby.  Warping there first to unload."]
@@ -590,8 +600,10 @@ objectdef obj_Hauler
 	
 	
 	
-	
-	
+	method OrcaCargoUpdate(float value)
+	{
+		OrcaCargo:Set[${value}]
+	}
 	
 	
 	

@@ -1053,7 +1053,14 @@ objectdef obj_Miner
 				Ship:StackCargoHold
 				return
 			}
+			if ${Config.Miner.DeliveryLocationTypeName.Equal["No Delivery"]}
+			{
+				relay all -event EVEBot_Orca_Cargo ${Ship.CorpHangarUsedSpace}
+			}
 		}
+		
+		
+		
 
 		if ${This.Approaching} != 0
 		{
