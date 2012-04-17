@@ -1169,10 +1169,9 @@ objectdef obj_Miner
 		if ${Defending} == -1
 		{
 			Defending:Set[${Targets.Rat}]
-			Entity[${Defending}]:LockTarget
 			if ${Ship.Drones.DronesInSpace} > 0 && ${Defending} == -1
 			{
-				UI:UpdateConsole["Warning: Recalling Drones - ${Defending}"]
+				UI:UpdateConsole["Warning: Recalling Drones"]
 				call Ship.Drones.ReturnAllToDroneBay
 			}
 			return
@@ -1185,28 +1184,28 @@ objectdef obj_Miner
 		
 		if ${Ship.Drones.DronesInSpace} == 0  && ${Defending} != -1
 		{
-			UI:UpdateConsole["Warning: Deploying drones to defend - ${Defending}"]
+			UI:UpdateConsole["Warning: Deploying drones to defend"]
 			Ship.Drones:LaunchAll
 			return
 
 
 		}
-		if !${Entity[${Defending}].IsLockedTarget} && ${Entity[${Defending}](exists)}
+		if !${Entity[${Defending}].IsLockedTarget} && ${Entity[${Defending}](exists)} && ${Entity[${Defending}].Distance} < ${Ship.OptimalTargetingRange}
 		{
-			UI:UpdateConsole["Warning: Relocking Target - ${Defending}"]
+			UI:UpdateConsole["Warning: Locking Target"]
 			Entity[${Defending}]:LockTarget
 		}
 
 		if !${Entity[${Defending}](exists)}
 		{
-			UI:UpdateConsole["Warning: Cancelling Attack - ${Defending}"]
+			UI:UpdateConsole["Warning: Cancelling Attack"]
 			Defending:Set[-1]
 			return
 		}
 		
 		if ${Entity[${Defending}].IsLockedTarget} && ${Entity[${Defending}](exists)}
 		{
-			UI:UpdateConsole["Warning: Sending Drones - ${Defending}"]
+			UI:UpdateConsole["Warning: Sending Drones"]
 			
 			Entity[${Defending}]:MakeActiveTarget
 			wait 50 ${Me.ActiveTarget.ID} != ${Defending}
