@@ -37,10 +37,14 @@ objectdef obj_Miner
 	variable bool WarpToOrca=FALSE
 	
 	;	This is used to keep track of what we are defending against (rats)
-	variable int64 Defending=-1
+	variable int64 Attacking=-1
 
+	;	This is a list of IDs for rats which are attacking a team member
+	variable set AttackingTeam
+	
 	;	This is used to keep track of how much space our hauler has available
 	variable int64 HaulerAvailableCapacity=-0
+	
 	
 	
 /*	
@@ -58,6 +62,8 @@ objectdef obj_Miner
 		Event[EVEBot_Orca_InBelt]:AttachAtom[This:OrcaInBelt]
 		LavishScript:RegisterEvent[EVEBot_HaulerMSG]
 		Event[EVEBot_HaulerMSG]:AttachAtom[This:HaulerMSG]
+		LavishScript:RegisterEvent[EVEBot_TriggerAttack]
+		Event[EVEBot_TriggerAttack]:AttachAtom[This:UnderAttack]
 		
 		UI:UpdateConsole["obj_Miner: Initialized", LOG_MINOR]
 	}
@@ -67,6 +73,7 @@ objectdef obj_Miner
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 		Event[EVEBot_Orca_InBelt]:DetachAtom[This:OrcaInBelt]
 		Event[EVEBot_HaulerMSG]:DetachAtom[This:HaulerMSG]
+		Event[EVEBot_TriggerAttack]:DetachAtom[This:UnderAttack]
 	}	
 	
 	method Pulse()
@@ -194,7 +201,12 @@ objectdef obj_Miner
 	
 	function ProcessState()
 	{
-
+		;	This should be processed regardless of what mode you're in - this way the hauler can report attacks to the team.
+		if ${Me.InSpace}
+		{
+			This:CheckAttack
+		}
+	
 		;	If Miner isn't the selected bot mode, this function shouldn't have been called.  However, if it was we wouldn't want it to do anything.
 		if !${Config.Common.BotModeName.Equal[Miner]}
 		{
@@ -1142,6 +1154,29 @@ objectdef obj_Miner
 	{
 		HaulerAvailableCapacity:Set[${value}]
 	}
+
+	;This method is triggered by an event.  If triggered, it tells a team-mate is under attack by an NPC and what it is.
+	method UnderAttack(int64 value)
+	{
+		
+		AttackingTeam:Add[${value}]
+		UI:UpdateConsole["Warning: Added ${value} to attackers list.  ${AttackingTeam.Used} attackers now in list."]
+	}
+
+	;This method is used to trigger an event.  It tells our team-mates we are under attack by an NPC and what it is.
+	method CheckAttack()
+	{
+		variable int64 CurrentAttack
+		variable index:attacker attackerslist
+		Me:GetAttackers[attackerslist]
+		attackerslist:RemoveByQuery[${LavishScript.CreateQuery[IsNPC=="0"]}]
+		if ${attackerslist.Used} > 0
+		{
+			CurrentAttack:Set[${attackerslist[1]}]
+			UI:UpdateConsole["Warning: Ship attacked by rats, alerting team to kill ${CurrentAttack}"]
+			Relay all -event EVEBot_TriggerAttack ${CurrentAttack}
+		}
+	}
 	
 
 	;	This function's sole purpose is to get your ship in warp as fast as possible from a dead stop with a MWD.  It accepts a value and will either Warp to it
@@ -1194,21 +1229,26 @@ objectdef obj_Miner
 		return FALSE
 	}
 	
-	;	This function's purpose is to defend against rats which are nearby.  Goals:
+	;	This function's purpose is to defend against rats which are attacking our team.  Goals:
 	;	*	Keep it atomic - don't get stuck in here, killing rats quickly is NOT a concern
 	;	*	Don't use up our targets, we need those for mining - Only one target should ever be used for a rat.
 	function Defend()
 	{
+		variable iterator GetData
 	
-		if ${Defending} == -1
+		if ${Attacking} == -1 && ${AttackingTeam.Used} > 0
 		{
-			Defending:Set[${Targets.Rat}]
-			if ${Ship.Drones.DronesInSpace} > 0 && ${Defending} == -1
-			{
-				UI:UpdateConsole["Warning: Recalling Drones"]
-				call Ship.Drones.ReturnAllToDroneBay
-			}
+			AttackingTeam:GetIterator[GetData]
+			GetData:First
+			Attacking:Set[${GetData.Key}]
+			UI:UpdateConsole["Warning: Current attacking target - ${Attacking}"]
 			return
+		}
+
+		if ${Ship.Drones.DronesInSpace} > 0 && ${AttackingTeam.Used} == 0
+		{
+			UI:UpdateConsole["Warning: Recalling Drones"]
+			call Ship.Drones.ReturnAllToDroneBay
 		}
 		
 		if 	${Me.TargetingCount} != 0
@@ -1216,7 +1256,7 @@ objectdef obj_Miner
 			return
 		}
 		
-		if ${Ship.Drones.DronesInSpace} == 0  && ${Defending} != -1
+		if ${Ship.Drones.DronesInSpace} == 0  && ${AttackingTeam.Used} > 0
 		{
 			UI:UpdateConsole["Warning: Deploying drones to defend"]
 			Ship.Drones:LaunchAll
@@ -1224,25 +1264,26 @@ objectdef obj_Miner
 
 
 		}
-		if !${Entity[${Defending}].IsLockedTarget} && ${Entity[${Defending}](exists)} && ${Entity[${Defending}].Distance} < ${Ship.OptimalTargetingRange}
+		if !${Entity[${Attacking}].IsLockedTarget} && ${Entity[${Attacking}](exists)} && ${Entity[${Attacking}].Distance} < ${Ship.OptimalTargetingRange}
 		{
 			UI:UpdateConsole["Warning: Locking Target"]
-			Entity[${Defending}]:LockTarget
+			Entity[${Attacking}]:LockTarget
 		}
 
-		if !${Entity[${Defending}](exists)}
+		if !${Entity[${Attacking}](exists)} && ${Attacking} != -1
 		{
 			UI:UpdateConsole["Warning: Cancelling Attack"]
-			Defending:Set[-1]
+			AttackingTeam:Remove[${Attacking}]
+			Attacking:Set[-1]
 			return
 		}
 		
-		if ${Entity[${Defending}].IsLockedTarget} && ${Entity[${Defending}](exists)}
+		if ${Entity[${Attacking}].IsLockedTarget} && ${Entity[${Attacking}](exists)}
 		{
 			UI:UpdateConsole["Warning: Sending Drones"]
 			
-			Entity[${Defending}]:MakeActiveTarget
-			wait 50 ${Me.ActiveTarget.ID} != ${Defending}
+			Entity[${Attacking}]:MakeActiveTarget
+			wait 50 ${Me.ActiveTarget.ID} != ${Attacking}
 
 			variable index:activedrone ActiveDroneList
 			variable iterator DroneIterator
