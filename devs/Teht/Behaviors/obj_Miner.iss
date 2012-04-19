@@ -805,12 +805,6 @@ objectdef obj_Miner
 				return
 			}
 			
-			;	Don't go further if we're still approaching
-			if ${This.Approaching} != 0
-			{
-				return
-			}
-
 			;	This performs Orca deliveries if we've got at least a tenth of our cargo hold full
 			if ${Ship.CargoTenthFull}
 			{
@@ -914,12 +908,6 @@ objectdef obj_Miner
 			AsteroidsLocked:Set[-1]
 		}
 		
-		
-		;	Before we do any kind of targetting, we need to finish approaching, here we check to see if we are and return if so.
-		if ${This.Approaching} != 0
-		{
-			return
-		}
 		
 		
 		;	Here is where we lock new asteroids.  We always want to do this if we have no asteroids locked.  If we have at least one asteroid locked, however,
