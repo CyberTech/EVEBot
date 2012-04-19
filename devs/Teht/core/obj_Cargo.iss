@@ -606,6 +606,51 @@ objectdef obj_Cargo
 			UI:UpdateConsole["DEBUG: obj_Cargo:TransferCargoFromShipCorporateHangarToCargoHold: Nothing found to move"]
 		}
 	}	
+
+	function TransferCargoFromCargoHoldToShipCorporateHangar()
+	{
+		
+		variable index:item HangarCargo
+		variable int QuantityToMove
+		variable iterator CargoIterator
+		Me.Ship:GetCargo[HangarCargo]
+		HangarCargo:GetIterator[CargoIterator]
+
+		if ${CargoIterator:First(exists)}
+		{
+				do
+				{
+					if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${Ship.CargoFreeSpace}
+					{
+						/* Move only what will fit, minus 1 to account for CCP rounding errors. */
+						QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${CargoIterator.Value.Volume}]}]
+					}
+					else
+					{
+						QuantityToMove:Set[${CargoIterator.Value.Quantity}]
+					}
+
+					UI:UpdateConsole["TransferCargoFromCargoHoldToShipCorporateHangar: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
+					UI:UpdateConsole["TransferCargoFromCargoHoldToShipCorporateHangar: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
+					if ${QuantityToMove} > 0
+					{
+						CargoIterator.Value:MoveTo[${MyShip.ID}, CorpHangars, ${QuantityToMove}]
+						wait 15
+					}
+
+					if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
+					{
+						UI:UpdateConsole["DEBUG: TransferCargoFromCargoHoldToShipCorporateHangar: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
+						break
+					}
+				}
+				while ${CargoIterator:Next(exists)}
+		}
+		else
+		{
+			UI:UpdateConsole["DEBUG: obj_Cargo:TransferCargoFromCargoHoldToShipCorporateHangar: Nothing found to move"]
+		}
+	}	
 	
 	
 	
@@ -998,6 +1043,30 @@ objectdef obj_Cargo
 		This.CargoToTransfer:Clear[]
 	}
 
+	function TransferCargoToLargeShipAssemblyArray()
+	{
+		if ${LargeShipAssemblyArray.IsReady}
+		{
+			if ${Entity[${LargeShipAssemblyArray.ActiveCan}].Distance} > CORP_HANGAR_LOOT_RANGE
+			{
+				call Ship.Approach ${LargeShipAssemblyArray.ActiveCan} CORP_HANGAR_LOOT_RANGE
+			}
+		}
+		else
+		{
+			UI:ConsoleUpdate["No Large Ship Assembly Array found - nothing moved"]
+			return
+		}
+
+		call Ship.OpenCargo
+
+		This:FindAllShipCargo
+		call This.TransferListToLargeShipAssemblyArray
+
+		This.CargoToTransfer:Clear[]
+	}
+
+	
 	function TransferOreToXLargeShipAssemblyArray()
 	{
 		if ${XLargeShipAssemblyArray.IsReady}

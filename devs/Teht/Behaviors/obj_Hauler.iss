@@ -723,7 +723,7 @@ objectdef obj_Hauler
 				break
 			case Large Ship Assembly Array
 				call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
-				call Cargo.TransferOreToLargeShipAssemblyArray
+				call Cargo.TransferCargoToLargeShipAssemblyArray
 				break
 			case XLarge Ship Assembly Array
 				call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"

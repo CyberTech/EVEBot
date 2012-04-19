@@ -45,6 +45,9 @@ objectdef obj_Miner
 	;	This is used to keep track of how much space our hauler has available
 	variable int64 HaulerAvailableCapacity=-0
 	
+	;	This keeps track of the wreck we are tractoring
+	variable int64 Tractoring=-1
+	
 	
 	
 /*	
@@ -495,7 +498,7 @@ objectdef obj_Miner
 						if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 						{
 							call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
-							call Cargo.TransferOreToLargeShipAssemblyArray
+							call Cargo.TransferCargoToLargeShipAssemblyArray
 							break
 						}
 						UI:UpdateConsole["ALERT:  Large Ship Assembly Array unload failed, check your delivery location!  Switching to HARD STOP mode!"]
@@ -1067,6 +1070,7 @@ objectdef obj_Miner
 			}
 			if ${Config.Miner.DeliveryLocationTypeName.Equal["No Delivery"]}
 			{
+				call Cargo.TransferCargoFromCargoHoldToShipCorporateHangar
 				relay all -event EVEBot_Orca_Cargo ${Ship.CorpHangarUsedSpace}
 			}
 		}
@@ -1107,6 +1111,7 @@ objectdef obj_Miner
 		{
 			call Defend
 		}
+		This:Tractor
 		
 	}	
 	
@@ -1299,7 +1304,7 @@ objectdef obj_Miner
 			EVE:DronesEngageMyTarget[AttackDrones]
 		}
 	}
-	
+
 	
 	;	This member is used to determine if our miner is full based on a number of factors:
 	;	*	Config.Miner.CargoThreshold
@@ -1335,6 +1340,102 @@ objectdef obj_Miner
 			}
 		}	
 		return FALSE
+	}
+
+	method Tractor()
+	{
+		if ${Ship.TotalTractorBeams} > 0
+		{
+			variable index:entity Wrecks
+
+			if 	${Me.TargetingCount} != 0
+			{
+				return
+			}
+			
+			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].IsWreckEmpty}
+			{
+				UI:UpdateConsole["Warning: Wreck empty, clearing"]
+				if ${Entity[${Tractoring}].LootWindow(exists)}
+				{
+					Entity[${Tractoring}]:CloseCargo
+				}
+				if ${Ship.IsTractoringWreckID[${Tractoring}]}
+				{
+					Ship:Deactivate_Tractor
+				}
+				if ${Entity[${Tractoring}].IsLockedTarget}
+				{
+					Entity[${Tractoring}]:UnlockTarget
+				}
+				Tractoring:Set[-1]
+			}
+			
+			if ${Tractoring} == -1
+			{
+				EVE:QueryEntities[Wrecks,${LavishScript.CreateQuery[GroupID = 186 && HaveLootRights && Distance < ${Ship.OptimalTractorRange} && !IsWreckEmpty]}]
+
+				if ${Wrecks.Used} > 0
+				{
+					Tractoring:Set[${Wrecks[1]}]
+					UI:UpdateConsole["Warning: ${Wrecks.Used} wrecks found"]
+				}
+			}
+			
+			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].Distance} <= LOOT_RANGE && !${Entity[${Tractoring}].LootWindow(exists)}
+			{
+				UI:UpdateConsole["Warning: Opening wreck"]
+				Entity[${Tractoring}]:OpenCargo
+				return
+			}
+
+			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].Distance} <= LOOT_RANGE && ${Entity[${Tractoring}].LootWindow(exists)}
+			{
+				UI:UpdateConsole["Warning: Looting wreck"]
+				variable index:item ContainerCargo
+				variable iterator Cargo
+				variable int QuantityToMove
+				Entity[${Tractoring}]:GetCargo[ContainerCargo]
+				ContainerCargo:GetIterator[Cargo]
+				if ${Cargo:First(exists)}
+				{
+						echo Found Loot
+						if (${Cargo.Value.Quantity} * ${Cargo.Value.Volume}) > ${Ship.CargoFreeSpace}
+						{
+							QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${Cargo.Value.Volume}]}]
+						}
+						else
+						{
+							QuantityToMove:Set[${Cargo.Value.Quantity}]
+						}
+						echo ${QuantityToMove}
+						if ${QuantityToMove} > 0
+						{
+							Cargo.Value:MoveTo[MyShip,CargoHold,${QuantityToMove}]
+						}
+
+				}
+				return
+			}
+			
+			if ${Entity[${Tractoring}](exists)} && !${Entity[${Tractoring}].IsLockedTarget}
+			{
+				UI:UpdateConsole["Warning: Locking wreck"]
+				Entity[${Tractoring}]:LockTarget
+				return
+			}
+			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].IsLockedTarget} && !${Entity[${Tractoring}].IsActiveTarget}
+			{
+				UI:UpdateConsole["Warning: Making wreck active target"]
+				Entity[${Tractoring}]:MakeActiveTarget
+				return
+			}
+			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].IsLockedTarget} && ${Entity[${Tractoring}].IsActiveTarget} && !${Ship.IsTractoringWreckID[${Tractoring}]}
+			{
+				Ship:Activate_Tractor
+				return
+			}
+		}
 	}
 	
 }
