@@ -299,18 +299,29 @@ objectdef obj_Miner
 			;	*	Otherwise, check if we're warping and warp to a safe spot
 			;	*	If none of these work, something is terribly wrong, and we need to panic!
 			case FLEE
+				;	Before we go anywhere, make a bookmark so we can get back here
 				if ${Me.InStation}
 				{
 					break
 				}
 				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
+					if ${Config.Miner.BookMarkLastPosition} && !${Bookmarks.CheckForStoredLocation}
+					{
+						Bookmarks:StoreLocation
+					}
+
 					call This.FastWarp ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
 					call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
 					break
 				}
 				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
+					if ${Config.Miner.BookMarkLastPosition} && !${Bookmarks.CheckForStoredLocation}
+					{
+						Bookmarks:StoreLocation
+					}
+
 					if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].TypeID} != 5
 					{
 						call This.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
@@ -325,6 +336,11 @@ objectdef obj_Miner
 
 				if ${Entity["CategoryID = 3"](exists)}
 				{
+					if ${Config.Miner.BookMarkLastPosition} && !${Bookmarks.CheckForStoredLocation}
+					{
+						Bookmarks:StoreLocation
+					}
+
 					UI:UpdateConsole["Docking at ${Entity["CategoryID = 3"].Name}"]
 					call This.FastWarp ${Entity["CategoryID = 3"].ID}
 					call This.DockAtStation ${Entity["CategoryID = 3"].ID}
