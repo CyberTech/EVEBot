@@ -208,7 +208,7 @@ objectdef obj_Ship
 				{
 					do
 					{
-						if ${anItemIterator.Value.Quantity} > (${aWeaponIterator.Value.MaxCharges} * ${This.ModuleList_Weapon.Used}) && !${aWeaponIterator.Value.Charge.TypeID.Equal[${anItemIterator.Value.TypeID}]}
+						if ${anItemIterator.Value.Quantity} > (${aWeaponIterator.Value.MaxCharges} * ${This.ModuleList_Weapon.Used} + 500) && !${aWeaponIterator.Value.Charge.TypeID.Equal[${anItemIterator.Value.TypeID}]}
 						{
 							UI:UpdateConsole["Changing ammo of ${aWeaponIterator.Value.ToItem.Name} to ${anItemIterator.Value.Name}."]
 							aWeaponIterator.Value:ChangeAmmo[${anItemIterator.Value.ID}]
