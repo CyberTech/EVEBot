@@ -147,13 +147,15 @@ objectdef obj_Hauler
 			return
 		}
 		
+		;	If I'm in a station, and servicing an orca, wait until the orca needs serviced.
+		;	Note: Due to "BASE" state causing undock after unload, this needs to be here.
+		;	TODO: Clean up "BASE" state to enter "IDLE" state depending on hauler mode.
 		if ${Config.Hauler.HaulerModeName.Equal[Service Orca]} && (${OrcaCargo} < ${Config.Miner.CargoThreshold} || ${OrcaCargo} < 35000) && ${Me.InStation}
 		{
 			This.CurrentState:Set["IDLE"]
 			return
 		}
 
-		
 		;	If I'm in a station, I need to perform what I came there to do
 		if ${Me.InStation} == TRUE
 		{
@@ -161,6 +163,7 @@ objectdef obj_Hauler
 	  		return
 		}
 
+		
 		;	If I'm not in a station and I'm full, I should head to a station to unload - Ignore dropoff if Orca Delivery is disabled.
 	    if ${This.HaulerFull}
 		{
