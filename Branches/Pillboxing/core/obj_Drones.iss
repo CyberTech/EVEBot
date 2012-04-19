@@ -19,7 +19,7 @@ objectdef obj_Drones
 	variable int CategoryID_Drones = 18
 	variable int LaunchedDrones = 0
 	variable int WaitingForDrones = 0
-	variable bool DronesReady = FALSE
+	variable bool DronesReady = TRUE
 	variable int ShortageCount
 	variable time DroneTimer
 	variable uint LightDroneQuery = ${LavishScript.CreateQuery[Volume > "5"]}
@@ -102,6 +102,10 @@ objectdef obj_Drones
 		variable iterator itty
 		variable index:int64 ToLaunch
 		MyShip:GetDrones[ListOfDrones]
+		if !${This.DronesReady}
+		{
+			return
+		}
 		Switch "${SIZE}"
 		{
 			case LARGE
@@ -129,6 +133,7 @@ objectdef obj_Drones
 			}
 			while ${itty:Next(exists)} && ${ToLaunch.Used} < 5
 			EVE:LaunchDrones[ToLaunch]
+			This.DronesReady:Set[FALSE]
 		}
 		else
 		{
@@ -167,7 +172,7 @@ objectdef obj_Drones
 		This:LaunchDrones[LIGHT]
 	}
 
-	function LaunchAll()
+	method LaunchAll()
 	{
 		variable index:item ListOfDrones
 		;This includes a check for sentry/heavy drones, going to have to put some SERIOUS beef into this method to select *which* drones to launch
@@ -178,8 +183,8 @@ objectdef obj_Drones
 			${Me.ActiveTarget.Name.NotEqual["Kruul's Pleasure Garden"]} && \
 			${MyShip.DronebayCapacity} <= 50
 			{
-				UI:UpdateConsole["Launching drones..."]
 				This:LaunchPrimaryDrones
+				UI:UpdateConsole["Launching drones..."]
 				This.WaitingForDrones:Set[5]
 				return
 			}
@@ -441,7 +446,6 @@ objectdef obj_Drones
 				UI:UpdateConsole["We're frighting something larger than a frigate and have secondary drones out, swapping to primary."]
 				This:SetAllDronesToReturn
 			}
-			return
 		}
 		if ${MyShip.DronebayCapacity} >= 125
 		{
