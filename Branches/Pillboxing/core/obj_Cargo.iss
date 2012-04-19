@@ -1005,11 +1005,9 @@ objectdef obj_Cargo
 	  }
 
 	  /* Need to cycle the the cargohold after docking to update the list. */
-	  call This.CloseHolds
 
 	  UI:UpdateConsole["Transferring Cargo to Station Hangar"]
-	  call This.OpenHolds
-
+  	  call This.OpenHolds
 	  This:FindShipCargoByType[${typeID}]
 
 	  call This.TransferListToHangar
@@ -1017,7 +1015,6 @@ objectdef obj_Cargo
 	  This.CargoToTransfer:Clear[]
 	  EVEWindow[ByName,hangarFloor]:StackAll
 	  Ship:UpdateBaselineUsedCargo[]
-	  call This.CloseHolds
    }
 
 	function TransferSpawnContainerCargoToShip()
