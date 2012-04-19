@@ -616,7 +616,7 @@ objectdef obj_Miner
 						}
 						
 						;	If we're approaching a target, find out if we need to stop doing so 
-						if ${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= LOOT_RANGE && ${This.Approaching} != 0
+						if (${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= LOOT_RANGE && ${This.Approaching} != 0) || (!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
 						{
 							UI:UpdateConsole["ALERT:  Within loot range."]
 							EVE:Execute[CmdStopShip]
@@ -781,7 +781,7 @@ objectdef obj_Miner
 			
 			;	If we're approaching a target, find out if we need to stop doing so.
 			;	After moving, we need to find out if any of our targets are out of mining range and unlock them so we can get new ones.
-			if ${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= LOOT_RANGE && ${This.Approaching} != 0
+			if (${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= LOOT_RANGE && ${This.Approaching} != 0) || (!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
 			{
 				UI:UpdateConsole["ALERT:  Within loot range."]
 				EVE:Execute[CmdStopShip]
@@ -885,7 +885,7 @@ objectdef obj_Miner
 					}			
 					
 					;	If we're approaching a target, find out if we need to stop doing so 
-					if ${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= ${Ship.OptimalMiningRange} && ${This.Approaching} != 0
+					if (${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= ${Ship.OptimalMiningRange} && ${This.Approaching} != 0) || (!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
 					{
 						EVE:Execute[CmdStopShip]
 						This.Approaching:Set[0]
@@ -1050,7 +1050,7 @@ objectdef obj_Miner
 		if ${Entity[${Asteroids.NearestAsteroid}](exists)} && ${This.Approaching} == 0
 		{
 			;	Find out if we need to approach this asteroid
-			if ${Entity[${Asteroids.NearestAsteroid}].Distance} > 5000 
+			if ${Entity[${Asteroids.NearestAsteroid}].Distance} > 1000 
 			{
 				UI:UpdateConsole["Approaching: ${Entity[${Asteroids.NearestAsteroid}].Name}"]
 				Entity[${Asteroids.NearestAsteroid}]:Approach
@@ -1069,7 +1069,7 @@ objectdef obj_Miner
 		}			
 
 		;	If we're approaching a target, find out if we need to stop doing so 
-		if ${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= 5000 && ${This.Approaching} != 0
+		if (${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= 1000 && ${This.Approaching} != 0) || (!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
 		{
 			EVE:Execute[CmdStopShip]
 			This.Approaching:Set[0]
