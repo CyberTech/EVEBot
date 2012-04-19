@@ -1010,63 +1010,16 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[AlwaysShieldBoost, ${value}]
 	}
 
-	member:bool UseLowestPersonalStanding()
+	member:int LowestStanding()
 	{
-		return ${This.CombatRef.FindSetting[Use Lowest Personal Standing, FALSE]}
+		return ${This.CombatRef.FindSetting[Lowest Standing, 0]}
 	}
 
-	method SetUseLowestPersonalStanding(bool value)
+	method SetLowestStanding(int value)
 	{
-		This.CombatRef:AddSetting[Use Lowest Personal Standing, ${value}]
+		This.CombatRef:AddSetting[Lowest Standing, ${value}]
 	}
 
-	member:int LowestPersonalStanding()
-	{
-		return ${This.CombatRef.FindSetting[Lowest Personal Standing, 0]}
-	}
-
-	method SetLowestPersonalStanding(int value)
-	{
-		This.CombatRef:AddSetting[Lowest Personal Standing, ${value}]
-	}
-	member:bool UseLowestCorpStanding()
-	{
-		return ${This.CombatRef.FindSetting[Use Lowest Corp Standing, FALSE]}
-	}
-
-	method SetUseLowestCorpStanding(bool value)
-	{
-		This.CombatRef:AddSetting[Use Lowest Corp Standing, ${value}]
-	}
-
-	member:int LowestCorpStanding()
-	{
-		return ${This.CombatRef.FindSetting[Lowest Corp Standing, 0]}
-	}
-
-	method SetLowestCorpStanding(int value)
-	{
-		This.CombatRef:AddSetting[Lowest Corp Standing, ${value}]
-	}
-	member:bool UseLowestAllianceStanding()
-	{
-		return ${This.CombatRef.FindSetting[Use Lowest Alliance Standing, FALSE]}
-	}
-
-	method SetUseLowestAllianceStanding(bool value)
-	{
-		This.CombatRef:AddSetting[Use Lowest Alliance Standing, ${value}]
-	}
-
-	member:int LowestAllianceStanding()
-	{
-		return ${This.CombatRef.FindSetting[Lowest Alliance Standing, 0]}
-	}
-
-	method SetLowestAllianceStanding(int value)
-	{
-		This.CombatRef:AddSetting[Lowest Alliance Standing, ${value}]
-	}
 
 	member:bool TakeBreaks()
 	{
@@ -1097,7 +1050,6 @@ objectdef obj_Configuration_Combat
 	{
 		This.CombatRef:AddSetting[Break Duration, ${value}]
 	}
-	
 	member:bool BroadcastBreaks()
 	{
 		return ${This.CombatRef.FindSetting[Broadcast Breaks, FALSE]}
@@ -1108,7 +1060,6 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[Broadcast Breaks, ${value}]
 	}
 
-	
 	member:bool LootMyKills()
 	{
 		return ${This.CombatRef.FindSetting[LootMyKills, FALSE]}
