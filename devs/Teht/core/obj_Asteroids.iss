@@ -335,34 +335,8 @@ objectdef obj_Asteroids
 	}
 
 	member:int64 NearestAsteroid()
-	{
-		variable index:entity asteroid_index
-		variable iterator asteroid_iterator
-		variable int64 NearestAsteroid=-1
-		variable float NearestDistance=9999999
-		
-
-
-		do
-		{
-			EVE:QueryEntities[asteroid_index, "CategoryID = ${This.AsteroidCategoryID}"]
-			asteroid_index:GetIterator[asteroid_iterator]
-			if ${asteroid_iterator:First(exists)}
-			{
-				do
-				{
-						if ${asteroid_iterator.Value.Distance} < ${NearestDistance}
-						{
-							NearestAsteroid:Set[${asteroid_iterator.Value.ID}]
-							NearestDistance:Set[${asteroid_iterator.Value.Distance}]
-						}
-				}
-				while ${asteroid_iterator:Next(exists)}
-			}
-		}
-		while ${This.OreTypeIterator:Next(exists)}
-			
-		return ${NearestAsteroid}
+	{		
+		return ${Entity["CategoryID = ${This.AsteroidCategoryID}"].ID}
 	}
 	
 	
