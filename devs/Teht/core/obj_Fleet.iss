@@ -31,6 +31,10 @@ objectdef obj_Fleet
 
 		This.TripStartTime:Set[${Time.Timestamp}]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+		This.NextPulse:Set[${Time.Timestamp}]
+		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+		This.NextPulse:Update
+		
 		UI:UpdateConsole["obj_Fleet: Initialized", LOG_MINOR]
 	}
 
@@ -90,7 +94,16 @@ objectdef obj_Fleet
 					}
 				}
 				while ${InfoFromSettings:Next(exists)}
-			
+		}
+		else
+		{
+			if ${Me.Fleet.IsMember[${Me.CharID}]}
+			{
+				if !${Me.Fleet.IsMember[${This.ResolveCharID[${Config.Fleet.FleetLeader}]}]}
+					{
+					Me.Fleet:LeaveFleet
+					}
+			}
 		}
 		
 				
@@ -106,7 +119,7 @@ objectdef obj_Fleet
 		if ${CorpMember:First(exists)}
 			do
 			{
-				if ${CorpMember.Value.Name.Equal[${value}]}
+				if ${CorpMember.Value.Name.Equal[${value}]} && ${CorpMember.Value.IsOnline}
 					return ${CorpMember.Value.CharID}
 			}
 			while ${CorpMember:Next(exists)}
@@ -119,7 +132,7 @@ objectdef obj_Fleet
 		if ${Buddy:First(exists)}
 			do
 			{
-				if ${Buddy.Value.Name.Equal[${value}]}
+				if ${Buddy.Value.Name.Equal[${value}]} && ${Buddy.Value.IsOnline}
 					return ${Buddy.Value.CharID}
 			}
 			while ${Buddy:Next(exists)}
