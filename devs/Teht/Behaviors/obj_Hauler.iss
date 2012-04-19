@@ -150,7 +150,7 @@ objectdef obj_Hauler
 		;	If I'm in a station, and servicing an orca, wait until the orca needs serviced.
 		;	Note: Due to "BASE" state causing undock after unload, this needs to be here.
 		;	TODO: Clean up "BASE" state to enter "IDLE" state depending on hauler mode.
-		if ${Config.Hauler.HaulerModeName.Equal[Service Orca]} && (${OrcaCargo} < ${Config.Miner.CargoThreshold} || ${OrcaCargo} < 35000) && ${Me.InStation}
+		if ${Config.Hauler.HaulerModeName.Equal[Service Orca]} && (${OrcaCargo} < ${Config.Miner.CargoThreshold} && ${OrcaCargo} < 35000) && ${Me.InStation}
 		{
 			This.CurrentState:Set["IDLE"]
 			return
@@ -417,11 +417,11 @@ objectdef obj_Hauler
 			return
 		}				
 		
-		if ${OrcaCargo} < ${Config.Miner.CargoThreshold} || ${OrcaCargo} < 35000
+		if ${OrcaCargo} < ${Config.Miner.CargoThreshold} && ${OrcaCargo} < 35000
 		{
 			return
 		}
-		
+
 		if !${Entity[${Orca.Escape}](exists)} && ${Local[${Config.Hauler.HaulerPickupName}].ToFleetMember}
 		{
 			UI:UpdateConsole["ALERT:  The orca is not nearby.  Warping there first to unload."]
