@@ -2184,9 +2184,26 @@
 						</Textentry>
 					</Tab>
 					<Tab name='Fleet'>
-						<checkbox name='cbIsLeader'>
+						<checkbox name='cbUseFleet'>
 							<X>10</X>
 							<Y>12</Y>
+							<Height>20</Height>
+							<Width>50</Width>
+							<Text>Manage Fleet</Text>
+							<AutoTooltip>If checked, Evebot will manage your fleet</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Fleet.ManageFleet}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Fleet:SetManageFleet[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox name='cbIsLeader'>
+							<X>10</X>
+							<Y>42</Y>
 							<Height>20</Height>
 							<Width>50</Width>
 							<Text>I am the leader</Text>
@@ -2226,17 +2243,17 @@
 							</OnChange>
 						</Textentry>
 						<Text name='Label1'>
-							<X>10</X>
-							<Y>42</Y>
+							<X>140</X>
+							<Y>46</Y>
 							<Width>200</Width>
 							<Height>10</Height>
 							<Text>Manage Fleet Member</Text>
 							<AutoTooltip>Use this to add members to your fleet.  They must be in your corporation or in your contacts list.</AutoTooltip>
 						</Text>
 						<TextEntry name='tbAddFleetMember'>
-							<X>170</X>
+							<X>300</X>
 							<Y>40</Y>
-							<Width>330</Width>
+							<Width>200</Width>
 							<Height>18</Height>
 							<MaxLength>50</MaxLength>
 							<OnChange>

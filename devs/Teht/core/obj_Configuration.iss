@@ -1852,6 +1852,16 @@ objectdef obj_Configuration_Fleet
 		This.FleetRef:AddSet[FleetMembers]
 	}
 
+	member:bool ManageFleet()
+	{
+		return ${This.FleetRef.FindSetting[Manage Fleet, FALSE]}
+	}
+
+	method SetManageFleet(bool value)
+	{
+		This.FleetRef:AddSetting[Manage Fleet, ${value}]
+	}
+
 	member:bool IsLeader()
 	{
 		return ${This.FleetRef.FindSetting[Is Leader, FALSE]}

@@ -52,7 +52,10 @@ objectdef obj_Fleet
 		
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-			This:Process
+			if ${Config.Fleet.ManageFleet}
+			{
+				This:Process
+			}
 			
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
