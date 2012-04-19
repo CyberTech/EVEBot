@@ -936,9 +936,19 @@ objectdef obj_Miner
 			
 			;	So we need to lock another asteroid.  First make sure that our ship can lock another, and make sure we don't already have enough asteroids locked
 			;	The Asteroids.TargetNext function will let us know if we need to concentrate fire because we're out of new asteroids to target.
+			;	If we're using an orca and it's in the belt, use Asteroids.TargetNextInRange to only target roids nearby
 			if (${Math.Calc[${Me.TargetCount} + ${Me.TargetingCount}]} < ${Ship.SafeMaxLockedTargets}) && (${AsteroidsLocked} < ${AsteroidsNeeded})
 			{
-				call Asteroids.TargetNext
+				variable string Orca
+				Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
+				if ${Config.Miner.DeliveryLocationTypeName.Equal[Orca]} && ${Entity[${Orca.Escape}](exists)}
+				{
+					call Asteroids.TargetNextInRange
+				}
+				else
+				{
+					call Asteroids.TargetNext
+				}
 				This.ConcentrateFire:Set[!${Return}]
 				return
 			}
@@ -1008,7 +1018,8 @@ objectdef obj_Miner
 		Asteroids.AsteroidList:GetIterator[AsteroidIterator]
 		if !${AsteroidIterator:First(exists)}
 		{
-			call Asteroids.MoveToField FALSE
+			call Asteroids.MoveToField FALSE FALSE TRUE
+			call Asteroids.UpdateList TRUE
 		}
 		call This.Prepare_Environment
 
@@ -1031,6 +1042,9 @@ objectdef obj_Miner
 			return
 		}
 		
+		;	Tell our miners we're in a belt and they are safe to warp to me
+		relay all -event EVEBot_Orca_InBelt TRUE
+		Ship:Activate_Gang_Links
 		
 		;	Next we need to move in range of some ore so miners can mine near me
 		if ${Entity[${Asteroids.NearestAsteroid}](exists)} && ${This.Approaching} == 0
@@ -1097,9 +1111,6 @@ objectdef obj_Miner
 			return
 		}
 		
-		;	Tell our miners we're in a belt and they are safe to warp to me
-		relay all -event EVEBot_Orca_InBelt TRUE
-		Ship:Activate_Gang_Links
 		
 		;	This checks to make sure there aren't any potential jet can flippers around before we dump a jetcan
 		if !${Social.PlayerInRange[10000]} && ${Config.Miner.DeliveryLocationTypeName.Equal["Jetcan"]}
