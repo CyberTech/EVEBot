@@ -95,7 +95,7 @@ objectdef obj_Miner
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			This:SetState[]
-			echo ${CurrentState}
+
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
     		This.NextPulse:Update
@@ -1033,16 +1033,14 @@ objectdef obj_Miner
 		
 		
 		;	Next we need to move in range of some ore so miners can mine near me
-		call Asteroids.UpdateList TRUE
-		Asteroids.AsteroidList:GetIterator[AsteroidIterator]
-		if ${AsteroidIterator:First(exists)} && ${This.Approaching} == 0
+		if ${Entity[${Asteroids.NearestAsteroid}](exists)} && ${This.Approaching} == 0
 		{
 			;	Find out if we need to approach this asteroid
-			if ${Entity[${AsteroidIterator.Value.ID}].Distance} > 5000 
+			if ${Entity[${Asteroids.NearestAsteroid}].Distance} > 5000 
 			{
-				UI:UpdateConsole["Approaching: ${AsteroidIterator.Value.Name}"]
-				Entity[${AsteroidIterator.Value.ID}]:Approach
-				This.Approaching:Set[${AsteroidIterator.Value.ID}]
+				UI:UpdateConsole["Approaching: ${Entity[${Asteroids.NearestAsteroid}].Name}"]
+				Entity[${Asteroids.NearestAsteroid}]:Approach
+				This.Approaching:Set[${Asteroids.NearestAsteroid}]
 				This.TimeStartedApproaching:Set[${Time.Timestamp}]			
 				return
 			}
