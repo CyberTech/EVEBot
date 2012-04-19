@@ -337,6 +337,10 @@ objectdef obj_Targets
 			return FALSE
 	}
 
+	member:string EntityFaction(int64 ID)
+	{
+		
+	}
 
 
 	member:bool TargetNPCs()
@@ -347,20 +351,21 @@ objectdef obj_Targets
 			return
 		}
 		variable index:entity Targets
-		variable iterator Target
+		variable iterator PriorityTargetIterator
 		variable iterator Target2
-		variable iterator Target3
 		variable index:entity LockedAssholes
 		variable index:jammer Jammers
 		variable iterator Jammer
 	  	variable time breakTime
 	 	variable index:entity InRange
-	 	variable index:entity NotInRange
+	 	variable index:attack Attacks
+	 	variable iterator Attack
+	 	variable string ListOfAttacks
 		variable bool HasTargets = FALSE
-		variable entity Prioritytarget
 		variable int ToLock
 		variable int64 GATEID = ${Entity["TypeID = TYPE_ACCELERATION_GATE"].ID}
 		variable int64 BEACONID = ${Entity[Name =- "Beacon"].ID}
+		variable iterator LockedAsshole
 		if ${Time.Timestamp} > ${TIMER.Timestamp}
 		{
 			Counter:Set[0]
@@ -412,6 +417,7 @@ objectdef obj_Targets
 			{
 				if ${ToTarget.Used} > 0 
 				{
+
 					if !${Entity[${ToTarget[1]}].IsActiveTarget} && \
 					${Entity[${ToTarget[1]}].IsLockedTarget}
 					{	
@@ -426,41 +432,58 @@ objectdef obj_Targets
 						!${Config.Combat.DontKillFrigs}
 						{
 							Entity["ID = ${ToTarget[1]}"]:MakeActiveTarget
-							UI:UpdateConsole["Making ${ToTarget[1]} active target."]
+							UI:UpdateConsole["Making ${Entity[${ToTarget[1]}].Name} active target."]
 						}
 						else
 						{
 							;echo "if (${Entity[${Ship.Drones.DroneTarget}](exists)} && !${Ship.Drones.DroneTarget.Equal[${ToTarget[1]}]} && ${Config.Combat.DontKillFrigs})"
 						}
-					}					
-					if ${Math.Calc[${Me.TargetCount}+${Me.TargetingCount}]} < ${Ship.MaxLockedTargets}
-					{
-						if !${Entity[${ToTarget[1]}].IsLockedTarget} && !${Entity[${ToTarget[1]}].BeingTargeted}
+					}
+					ToTarget:GetIterator[PriorityTargetIterator]
+					PriorityTargetIterator:First
+					do
+					{				
+						if ${Math.Calc[${Me.TargetCount}+${Me.TargetingCount}]} < ${Ship.MaxLockedTargets}
 						{
-							if ${Entity[${ToTarget[1]}].Distance} <= ${MyShip.MaxTargetRange}
+							if !${Entity[${PriorityTargetIterator.Value}].IsLockedTarget} && !${Entity[${PriorityTargetIterator.Value}].BeingTargeted}
 							{
-								Entity["ID = ${ToTarget[1]}"]:LockTarget
-								UI:UpdateConsole["Locking ${ToTarget[1]} && ${ToTarget.Used} to target."]							
-							}
-							else
-							{
-								if !${Ship.Approaching.Equal[${Entity[${ToTarget[1]}]}]}
+								if ${Entity[${PriorityTargetIterator.Value}].Distance} <= ${MyShip.MaxTargetRange} && ${ToLock} > ${Counter} && ${Counter}  < 2
 								{
-									Ship:Approach[${Entity[${ToTarget[1]}]},${MyShip.MaxTargetRange}]
-									UI:UpdateConsole["Approaching rat out of range. Name = ${Target2.Value.Name} and distance < ${Target2.Value.Distance}."]
+									Entity[${PriorityTargetIterator.Value}]:LockTarget
+									UI:UpdateConsole["Locking ${Entity[${PriorityTargetIterator.Value}].Name} & ${ToTarget.Used} to target."]
+									Counter:Inc								
 								}
-							}	
+								else
+								{
+									if !${Ship.Approaching.Equal[${PriorityTargetIterator.Value}]}
+									{
+										Ship:Approach[${Entity[${PriorityTargetIterator.Value}]},${MyShip.MaxTargetRange}]
+										UI:UpdateConsole["Approaching rat out of range. Name = ${Target2.Value.Name} and distance < ${Target2.Value.Distance}."]
+									}
+								}	
+							}
 						}
-					}
-					else
-					{
-						if !${Entity[${ToTarget[1]}].IsLockedTarget} && ${MyShip.MaxLockedTargets} > 0
+						else
 						{
-							Me:GetTargets[LockedAssholes]
-							LockedAssholes[1]:UnlockTarget
-							UI:UpdateConsole["Unlocking ${LockedAssholes[1].Name}"]
+							if !${Entity[${PriorityTargetIterator.Value}].IsLockedTarget} && ${MyShip.MaxLockedTargets} > 0
+							{
+								Me:GetTargets[LockedAssholes]
+								LockedAssholes:GetIterator[LockedAsshole]
+								LockedAsshole:First
+								do
+								{
+									if !${This.IsPriorityTarget[${LockedAsshole.Value.ID}]}
+									{
+										LockedAssholes[1]:UnlockTarget
+										UI:UpdateConsole["Unlocking ${LockedAssholes[1].Name} because we need to lock priority targets."]
+										break
+									}
+								}
+								while ${LockedAsshole:Next(exists)}
+							}
 						}
 					}
+					while ${PriorityTargetIterator:Next(exists)}
 				}
 				if ${Target2.Value.Distance} <= ${MyShip.MaxTargetRange} && ${Me.TargetCount} < ${Ship.MaxLockedTargets}
 				{
@@ -468,7 +491,6 @@ objectdef obj_Targets
 					{
 						Target2.Value:LockTarget
 						UI:UpdateConsole["Locking ${Target2.Value.Name}"]
-						UI:UpdateConsole["${Counter} is current amount of locking targets."]
 						Counter:Inc		
 					}
 					else
@@ -480,11 +502,10 @@ objectdef obj_Targets
 				{
 					if ${Me.TargetCount} == 0 && ${MyShip.MaxLockedTargets} > 0
 					{
-						if !${Entity[${Ship.Approaching}](exists)} && !${Entity[${query2} && Distance <= "${MyShip.MaxTargetRange}"](exists)} && (${Entity[${GATEID}].Distance} < 110000 || ${Entity[${BEACONID}].Distance} < 110000)
+						if (!${Entity[${Ship.Approaching}](exists)} || (${Entity[${GATEID}].Distance} > 10000 || ${Entity[${BEACONID}].Distance} > 10000)) && !${Entity[${query2} && Distance <= "${MyShip.MaxTargetRange}"](exists)}
 						{
 							Ship:Approach[${Target2.Value.ID},${MyShip.MaxTargetRange}]
 							;I'm going to have to update this into a check that checks for sentry drones in space before approaching.
-							UI:UpdateConsole["Approaching rat out of range. Name = ${Target2.Value.Name} and distance < ${Target2.Value.Distance}."]
 						}
 					}
 				}
@@ -505,16 +526,29 @@ objectdef obj_Targets
 				UI:UpdateConsole["Jammed, cant target..."]
 			}
 			HasTargets:Set[TRUE]
-				do
-				{
-					ToTarget:Insert[${Jammer.Value.ID}]
-				}
-				while ${Jammer:Next(exists)}
 			if ${Me.ToEntity.IsWarpScrambled}
 			{
 				UI:UpdateConsole["We are being warp scrambled, all priority targets or jammers are ignored until we're not."]
-				ToTarget:RemoveByQuery[${WarpScramQuery}]
+				Jammers:RemoveByQuery[${WarpScramQuery}]
+				Jammers:Collapse
 			}
+			do
+			{
+				Jammer.Value:GetAttacks[Attacks]
+				Attacks:GetIterator[Attack]
+				if ${Attack:First(exists)}
+				{
+					ListOfAttacks:Set[""]
+					do
+					{
+						ListOfAttacks:Concat[" ${Attack.Value.Name}"]
+					}
+					while ${Attack:Next(exists)}
+				}
+				UI:UpdateConsole["Jammer found with name ${Jammer.Value.Name}, Attacks:${ListOfAttacks}"]
+				ToTarget:Insert[${Jammer.Value.ID}]
+			}
+			while ${Jammer:Next(exists)}
 		}
 		if !${Entity[${ToTarget[1]}]} && ${ToTarget.Used} > 0
 		{
@@ -547,42 +581,47 @@ objectdef obj_Targets
 		Targetser:Insert["Blood Raider Cathedral"]
 		Targetser:GetIterator[Targetse]
 		Targetse:First
-		if ${InRange.Used.Equal[0]} 
-		do
-		{
-			if ${Entity[Name ="${Targetse.Value}"](exists)} && !${Missions.GatePresent]}
+		variable int64 KILLID
+		if ${InRange.Used.Equal[0]}
+		{	
+			KILLID:Set[${Entity[Name =- "${Targetse.Value}"]}]
+			do
 			{
-				if ${Entity[Name ="${Targetse.Value}"].Distance} < ${MyShip.MaxTargetRange}
+				if ${KILLID} > 0 && !${Missions.GatePresent]}
 				{
-					if !${Entity[Name = "${Targetse.Value}"].IsLockedTarget} && !${Entity[Name = "${Targetse.Value}"].BeingTargeted} && !${HasTargets}
+					if ${Entity[${KILLID}].Distance} < ${MyShip.MaxTargetRange}
 					{
-						Entity[Name = "${Targetse.Value}"]:LockTarget
+						if !${Entity[${KILLID}].IsLockedTarget} && !${Entity[${KILLID}].BeingTargeted} && !${HasTargets}
+						{
+							Entity[${KILLID}]:LockTarget
+						}
+						elseif ${Entity[${KILLID}].IsLockedTarget} && ${This.HasTargets}
+						{
+							Entity[${KILLID}]:UnlockTarget
+						}
 					}
-					elseif ${Entity[Name =- "${Targetse.Value}"].IsLockedTarget} && ${HasTargets}
+					else
 					{
-						Entity[Name = "${Targetse.Value}"]:UnlockTarget
+
+						if !${Ship.Approaching.Equal[${KILLID}]}
+						{
+							;Check here for sentrydrones
+							if ${Ship.Drones.IsDroneBoat}
+							{
+								Ship:Approach[${Entity[${KILLID}]},${Me.DroneControlDistance}]
+							}
+							else 
+							{
+								Ship:Approach[${Entity[${KILLID}]},${MyShip.MaxTargetRange}]
+
+							}
+						}
 					}
 					HasTargets:Set[TRUE]
 				}
-				else
-				{
-					if !${Ship.Approaching.Equal[${Entity[Name =- "Targetse.Value"].ID}]}
-					{
-						;Check here for sentrydrones
-						if ${Ship.Drones.IsDroneBoat}
-						{
-							Ship:Approach[${Entity[Name =-"${Targetse.Value}"]},${Me.DroneControlDistance}]
-						}
-						else 
-						{
-							Ship:Approach[${Entity[Name =-"${Targetse.Value}"]},${MyShip.MaxTargetRange}]
-						}
-						HasTargets:Set[TRUE]
-					}
-				}
 			}
+			while ${Targetse:Next(exists)}
 		}
-		while ${Targetse:Next(exists)}
 
 		return ${HasTargets}
 	}
