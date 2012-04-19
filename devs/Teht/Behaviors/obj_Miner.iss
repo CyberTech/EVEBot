@@ -48,7 +48,9 @@ objectdef obj_Miner
 	;	This keeps track of the wreck we are tractoring
 	variable int64 Tractoring=-1
 	
-	
+	;	Search string for our Orca
+	variable string Orca
+
 	
 /*	
 ;	Step 1:  	Get the module ready.  This includes init and shutdown methods, as well as the pulse method that runs each frame.
@@ -68,6 +70,7 @@ objectdef obj_Miner
 		LavishScript:RegisterEvent[EVEBot_TriggerAttack]
 		Event[EVEBot_TriggerAttack]:AttachAtom[This:UnderAttack]
 		
+
 		UI:UpdateConsole["obj_Miner: Initialized", LOG_MINOR]
 	}
 
@@ -576,7 +579,6 @@ objectdef obj_Miner
 					;	*	If the orca is out of loot range, approach.
 					;	*	Unload to the orca.
 					case Orca
-						variable string Orca
 						Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
 						if !${Local[${Config.Miner.DeliveryLocation}](exists)}
 						{
@@ -757,7 +759,6 @@ objectdef obj_Miner
 		;	We need to make sure we're near our orca if we're using it as a delivery location
 		if ${Config.Miner.DeliveryLocationTypeName.Equal[Orca]}
 		{
-			variable string Orca
 			Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
 
 			;	Find out if we need to approach this target.
@@ -939,7 +940,6 @@ objectdef obj_Miner
 			;	If we're using an orca and it's in the belt, use Asteroids.TargetNextInRange to only target roids nearby
 			if (${Math.Calc[${Me.TargetCount} + ${Me.TargetingCount}]} < ${Ship.SafeMaxLockedTargets}) && (${AsteroidsLocked} < ${AsteroidsNeeded})
 			{
-				variable string Orca
 				Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
 				if ${Config.Miner.DeliveryLocationTypeName.Equal[Orca]} && ${Entity[${Orca.Escape}](exists)}
 				{
