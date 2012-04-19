@@ -147,7 +147,7 @@ objectdef obj_Hauler
 			return
 		}
 		
-		if ${Config.Hauler.HaulerModeName.Equal[Service Orca]} && (${OrcaCargo} < ${Config.Miner.CargoThreshold} || ${OrcaCargo} > 35000) && ${Me.InStation}
+		if ${Config.Hauler.HaulerModeName.Equal[Service Orca]} && (${OrcaCargo} < ${Config.Miner.CargoThreshold} || ${OrcaCargo} < 35000) && ${Me.InStation}
 		{
 			This.CurrentState:Set["IDLE"]
 			return
@@ -414,7 +414,7 @@ objectdef obj_Hauler
 			return
 		}				
 		
-		if ${OrcaCargo} < ${Config.Miner.CargoThreshold} || ${OrcaCargo} > 35000
+		if ${OrcaCargo} < ${Config.Miner.CargoThreshold} || ${OrcaCargo} < 35000
 		{
 			return
 		}
