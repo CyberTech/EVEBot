@@ -306,6 +306,8 @@ objectdef obj_Social
 				UI:UpdateConsole["		${CorpToAlliance} < ${Config.Combat.LowestStanding}  ", LOG_DEBUG]
 				UI:UpdateConsole["	) ", LOG_DEBUG]
 				UI:UpdateConsole["Alert: Low Standing Pilot: ${PilotIterator.Value.Name}: CharID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_CRITICAL]
+				UI:UpdateConsole["Standings: ${MeToPilot} ${MeToCorp} ${MeToAlliance} ${CorpToPilot} ${CorpToCorp} ${CorpToAlliance} ${AllianceToCorp} ${AllianceToAlliance}", LOG_DEBUG]
+
 				return FALSE
 			}
 		}
