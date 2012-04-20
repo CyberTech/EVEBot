@@ -367,7 +367,7 @@ objectdef obj_Asteroids
 		return TRUE
 	}
 
-	function:bool TargetNextInRange()
+	function:bool TargetNextInRange(int64 DistanceToTarget=-1)
 	{
 		variable iterator AsteroidIterator
 
@@ -381,13 +381,27 @@ objectdef obj_Asteroids
 		{
 			do
 			{
-				if ${Entity[${AsteroidIterator.Value.ID}](exists)} && \
-					!${AsteroidIterator.Value.IsLockedTarget} && \
-					!${AsteroidIterator.Value.BeingTargeted} && \
-					${AsteroidIterator.Value.Distance} < ${Me.Ship.MaxTargetRange} && \
-					${AsteroidIterator.Value.Distance} < ${Ship.OptimalMiningRange}
+				if ${DistanceToTarget} == -1
 				{
-					break
+					if ${Entity[${AsteroidIterator.Value.ID}](exists)} && \
+						!${AsteroidIterator.Value.IsLockedTarget} && \
+						!${AsteroidIterator.Value.BeingTargeted} && \
+						${AsteroidIterator.Value.Distance} < ${Me.Ship.MaxTargetRange} && \
+						${AsteroidIterator.Value.Distance} < ${Ship.OptimalMiningRange}
+					{
+						break
+					}
+				}
+				else
+				{
+					if ${Entity[${AsteroidIterator.Value.ID}](exists)} && \
+						!${AsteroidIterator.Value.IsLockedTarget} && \
+						!${AsteroidIterator.Value.BeingTargeted} && \
+						${AsteroidIterator.Value.Distance} < ${Me.Ship.MaxTargetRange} && \
+						${Math.Calc[${AsteroidIterator.Value.DistanceTo[${DistanceToTarget}]} + 1000]} < ${Ship.OptimalMiningRange}
+					{
+						break
+					}
 				}
 			}
 			while ${AsteroidIterator:Next(exists)}

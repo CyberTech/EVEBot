@@ -931,7 +931,7 @@ objectdef obj_Miner
 				Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
 				if ${Config.Miner.DeliveryLocationTypeName.Equal[Orca]} && ${Entity[${Orca.Escape}](exists)}
 				{
-					call Asteroids.TargetNextInRange
+					call Asteroids.TargetNextInRange ${Entity[${Orca.Escape}].ID}
 				}
 				else
 				{
