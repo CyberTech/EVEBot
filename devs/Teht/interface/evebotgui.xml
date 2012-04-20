@@ -628,32 +628,6 @@
 							</OnLoad>
 							<OnLeftClick>
 								Script[EVEBot].VariableScope.Config.Miner:SetOrcaMode[${This.Checked}]
-								if !${This.Checked}
-								{
-									UIElement[cbOrcaInBelt@Miner@EVEBotOptionsTab@EVEBot]:UnsetChecked
-									Script[EVEBot].VariableScope.Config.Miner:SetOrcaInBelt[FALSE]
-								}
-							</OnLeftClick>
-						</checkbox>						
-						<checkbox name='cbOrcaInBelt'>
-							<X>300</X>
-							<Y>150</Y>
-							<Height>20</Height>
-							<Width>100</Width>
-							<Text>Orca In Belt </Text>
-							<AutoTooltip>Approach asteroids like a Miner so your miners can unload to you.  Uncheck to put your orca at a safe spot to act as a station.</AutoTooltip>
-							<OnLoad>
-								if ${Script[EVEBot].VariableScope.Config.Miner.OrcaInBelt}
-								{
-									This:SetChecked
-								}
-							</OnLoad>
-							<OnLeftClick>
-								if !${UIElement[cbOrcaMode@Miner@EVEBotOptionsTab@EVEBot].Checked}
-								{
-									This:UnsetChecked
-								}
-								Script[EVEBot].VariableScope.Config.Miner:SetOrcaInBelt[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>						
 						<slider name='AvoidPlayerRange'>

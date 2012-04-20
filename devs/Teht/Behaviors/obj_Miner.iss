@@ -220,7 +220,7 @@ objectdef obj_Miner
 		}
 		
 		;	Tell the miners we might not be in a belt and shouldn't be warped to.
-		if ${This.CurrentState.NotEqual[ORCA]} && ${Config.Miner.OrcaMode} && ${Config.Miner.OrcaInBelt}
+		if ${This.CurrentState.NotEqual[ORCA]} && ${Config.Miner.OrcaMode}
 		{
 			relay all -event EVEBot_Orca_InBelt FALSE
 		}
@@ -416,7 +416,6 @@ objectdef obj_Miner
 				
 			;	This means we're in space and we should act like an orca.
 			;	*	If we're warping, wait for that to finish up
-			;	*	If Orca In Belt is disabled, warp to a safe spot
 			;	*	If Orca In Belt is enabled, call OrcaInBelt
 			case ORCA
 				if ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}](exists)} && ${EVE.Bookmark[${Config.Miner.MiningSystemBookmark}].SolarSystemID} != ${Me.SolarSystemID}
@@ -427,23 +426,7 @@ objectdef obj_Miner
 				{
 					break
 				}
-				if ${SafeSpots.SafeSpots.Used} == 0 && !${Config.Miner.OrcaInBelt}
-				{
-					UI:UpdateConsole["WARNING:  If you want to use Orca outside of a belt, you probably want to set at least one safe spot.  Otherwise the orca will stay right here!"]
-				}
-				else
-				{
-					if !${Safespots.IsAtSafespot[TRUE]} && !${Config.Miner.OrcaInBelt}
-					{
-						call Safespots.WarpTo
-						wait 30
-						break
-					}
-				}
-				if ${Config.Miner.OrcaInBelt}
-				{
-					call This.OrcaInBelt
-				}
+				call This.OrcaInBelt
 				break
 				
 			;	This means we need to go to our delivery location to unload.
@@ -695,6 +678,7 @@ objectdef obj_Miner
 		;	*	If WarpToOrca and the orca is in fleet, warp there instead and clear our saved bookmark
 		;	*	Warp to a belt based on belt labels or a random belt
 		;	Note:  The UpdateList spam is necessary to make sure our actions are based on the closest asteroids
+		call Asteroids.UpdateList
 		if ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && ${WarpToOrca} && !${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)}
 		{
 			call Ship.WarpToFleetMember ${Local[${Config.Miner.DeliveryLocation}]}
@@ -703,12 +687,11 @@ objectdef obj_Miner
 				Bookmarks:RemoveStoredLocation
 			}
 		}
-		call Asteroids.UpdateList
-		if ${Ship.TotalActivatedMiningLasers} == 0 
+		if ${Ship.TotalActivatedMiningLasers} == 0 && !${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]}
 		{	
 			call Asteroids.MoveToField FALSE TRUE
-			call Asteroids.UpdateList
 		}
+		call Asteroids.UpdateList
 		call This.Prepare_Environment
 
 		;	If our ship has no mining lasers, panic so the user knows to correct their configuration and try again
@@ -1038,7 +1021,7 @@ objectdef obj_Miner
 		if ${Entity[${Asteroids.NearestAsteroid}](exists)} && ${This.Approaching} == 0
 		{
 			;	Find out if we need to approach this asteroid
-			if ${Entity[${Asteroids.NearestAsteroid}].Distance} > 1000 
+			if ${Entity[${Asteroids.NearestAsteroid}].Distance} > 2000 
 			{
 				UI:UpdateConsole["Approaching: ${Entity[${Asteroids.NearestAsteroid}].Name}"]
 				Entity[${Asteroids.NearestAsteroid}]:Approach
@@ -1057,7 +1040,7 @@ objectdef obj_Miner
 		}			
 
 		;	If we're approaching a target, find out if we need to stop doing so 
-		if (${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= 1000 && ${This.Approaching} != 0) || (!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
+		if (${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= 2000 && ${This.Approaching} != 0) || (!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
 		{
 			EVE:Execute[CmdStopShip]
 			This.Approaching:Set[0]
