@@ -276,7 +276,7 @@ objectdef obj_Social
 					(${CorpToCorp} != 0 && ${CorpToCorp} < ${Config.Combat.LowestStanding}) || \
 					(${CorpToAlliance} != 0 && ${CorpToAlliance} < ${Config.Combat.LowestStanding}) || \
 					${AllianceToCorp} < ${Config.Combat.LowestStanding} || \
-					${AllianceToAlliance} < ${Config.Combat.LowestStanding} \
+					${AllianceToAlliance} < ${Config.Combat.LowestStanding} || \
 					${MeToPilot} < ${Config.Combat.LowestStanding} || \
 					${MeToCorp} < ${Config.Combat.LowestStanding} || \
 					${MeToAlliance} < ${Config.Combat.LowestStanding} || \
