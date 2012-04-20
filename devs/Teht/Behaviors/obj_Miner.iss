@@ -1390,27 +1390,16 @@ objectdef obj_Miner
 				UI:UpdateConsole["Warning: Looting wreck"]
 				variable index:item ContainerCargo
 				variable iterator Cargo
-				variable int QuantityToMove
+				variable index:int64 CargoList
 				Entity[${Tractoring}]:GetCargo[ContainerCargo]
 				ContainerCargo:GetIterator[Cargo]
 				if ${Cargo:First(exists)}
-				{
-						echo Found Loot
-						if (${Cargo.Value.Quantity} * ${Cargo.Value.Volume}) > ${Ship.CargoFreeSpace}
-						{
-							QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${Cargo.Value.Volume}]}]
-						}
-						else
-						{
-							QuantityToMove:Set[${Cargo.Value.Quantity}]
-						}
-						echo ${QuantityToMove}
-						if ${QuantityToMove} > 0
-						{
-							Cargo.Value:MoveTo[MyShip,CargoHold,${QuantityToMove}]
-						}
-
-				}
+					do
+					{
+						CargoList:Insert[${Cargo.Value.ID}]
+					}
+					while ${Cargo:Next(exists)}
+				EVE:MoveItemsTo[CargoList, MyShip, CorpHangars]
 				return
 			}
 			
@@ -1420,15 +1409,9 @@ objectdef obj_Miner
 				Entity[${Tractoring}]:LockTarget
 				return
 			}
-			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].IsLockedTarget} && !${Entity[${Tractoring}].IsActiveTarget}
-			{
-				UI:UpdateConsole["Warning: Making wreck active target"]
-				Entity[${Tractoring}]:MakeActiveTarget
-				return
-			}
 			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].IsLockedTarget} && ${Entity[${Tractoring}].IsActiveTarget} && !${Ship.IsTractoringWreckID[${Tractoring}]}
 			{
-				Ship:Activate_Tractor
+				Ship:Activate_Tractor[${Entity[${Tractoring}].ID}]
 				return
 			}
 		}

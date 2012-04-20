@@ -2600,7 +2600,7 @@ objectdef obj_Ship
 		while ${ModuleIterator:Next(exists)}
 	}
 
-	method Activate_Tractor()
+	method Activate_Tractor(int64 id=-1)
 	{
 		if !${Me.Ship(exists)}
 		{
@@ -2616,7 +2616,14 @@ objectdef obj_Ship
 			if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline}
 			{
 				UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
-				ModuleIter.Value:Click
+				if ${id} == -1
+				{
+					ModuleIter.Value:Activate
+				}
+				else
+				{
+					ModuleIter.Value:Activate[${ID}]
+				}
 			}
 		}
 		while ${ModuleIter:Next(exists)}
