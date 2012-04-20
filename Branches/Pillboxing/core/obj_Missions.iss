@@ -595,6 +595,7 @@ function RunCourierMission(int agentID)
 			   }
 				if ${This.Combat.CurrentState.Equal["FLEE"]} || ${This.Combat.CurrentState.Equal["RESTOCK"]}
 				{
+					UI:UpdateConsole["Done Fleeing, returning to mission."]
 					call This.WarpToEncounter ${Agents.AgentID}
 					RoomCounter:Set[0]
 				}

@@ -272,7 +272,7 @@ objectdef obj_Combat
 		{
 			if ${FactionDB.Element[${FactionID}]} > 0
 			{
-				UI:UpdateConsole["Found faction ID for mission in database, reloading with ${This.DamageString[${FactionDB.Element[${FactionID}]}]} ammo. Mission is ${mission}"]
+				;UI:UpdateConsole["Found faction ID for mission in database, reloading with ${This.DamageString[${FactionDB.Element[${FactionID}]}]} ammo. Mission is ${mission}"]
 				DmgType:Set[${FactionDB.Element[${FactionID}]}]
 			}
 			else
@@ -282,14 +282,14 @@ objectdef obj_Combat
 		}
 		else
 		{
-			UI:UpdateConsole["No factionID found for mission, defaulting to Mish DB."]
+			;UI:UpdateConsole["No factionID found for mission, defaulting to Mish DB."]
 		}
 		if ${DmgType.Equal[0]}
 		{
 			if ${MishDB.Element[${mission}]} > 0
 			{
 
-				UI:UpdateConsole["Found ${Missions.MissionCache.Name[${Agents.AgentID}]} in MishDB, damage type is ${This.DamageString[${MishDB.Element[${mission}]}]}"]
+				;UI:UpdateConsole["Found ${Missions.MissionCache.Name[${Agents.AgentID}]} in MishDB, damage type is ${This.DamageString[${MishDB.Element[${mission}]}]}"]
 				DmgType:Set[${MishDB.Element[${mission}]}]
 			}
 			else
@@ -309,7 +309,7 @@ objectdef obj_Combat
 		{
 			do
 			{ 
-				echo "ITERATING"
+				;echo "ITERATING"
 				TempNumber:Set[${This.GetTypeIDByDamageType[${Ship.AmmoGroup.Token[${intCounter},-]},${This.DamageTypeForMish}]}]
 				if ${TempNumber} > 0
 				{
@@ -337,7 +337,7 @@ objectdef obj_Combat
 				else
 				{
 					intCounter:Inc
-					echo ${intCounter} ${Ship.AmmoGroup.Count[-]} ${Ship.AmmoGroup.Token[${intCounter},-]}
+					;echo ${intCounter} ${Ship.AmmoGroup.Count[-]} ${Ship.AmmoGroup.Token[${intCounter},-]}
 				}
 			}
 			while ${intCounter} <= ${Math.Calc[${Ship.AmmoGroup.Count[-]}+1]}
@@ -374,7 +374,7 @@ objectdef obj_Combat
 				UI:UpdateConsole["Bad Location passed to GetTypeIDByDamageType. Pausing script."]
 				Script:Pause
 		}
-		UI:UpdateConsole["Getting TypeID for ammo required from ${LOCATION.Lower}."]
+		;UI:UpdateConsole["Getting TypeID for ammo required from ${LOCATION.Lower}."]
 		if ${GROUPID} > 0
 		{
 			ListOfItems:RemoveByQuery[${LavishScript.CreateQuery[GroupID != "${GROUPID}"]}]
@@ -771,7 +771,7 @@ objectdef obj_Combat
 		{
 					if ${Me.TargetedByCount} >= ${Me.TargetCount}
 					{
-						call Ship.Drones.LaunchAll
+						Ship.Drones:LaunchAll
 					}
 					else
 					{
@@ -807,7 +807,7 @@ objectdef obj_Combat
 				{
 					if ${CargoIterator.Value.Quantity} > (${Ship.ModuleList_Weapon[1].MaxCharges} * ${Ship.ModuleList_Weapon.Used})
 					{
-						UI:UpdateConsole["Found ${CargoIterator.Value.Name} as acceptable ammo in cargo."]
+						UI:UpdateConsole["Found ${CargoIterator.Value.Name} as acceptable ammo in cargo. ${CargoIterator.Value.Quantity} found and ${Math.Calc[${Ship.ModuleList_Weapon[1].MaxCharges} * ${Ship.ModuleList_Weapon.Used}]} needed."]
 						return TRUE
 					}
 				}
@@ -815,7 +815,7 @@ objectdef obj_Combat
 			}
 			else
 			{
-				UI:UpdateConsole["No items found matching query in cargo."]
+				UI:UpdateConsole["We don't have mission ammo, we should probably be reloading after this."]
 				return FALSE
 			}
 					

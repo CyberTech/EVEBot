@@ -260,7 +260,8 @@ objectdef obj_Ship
 								;UI:UpdateConsole["Ammo: Qty = ${anItemIterator.Value.Quantity}", LOG_DEBUG]
 								;UI:UpdateConsole["Ammo: Max = ${aWeaponIterator.Value.MaxCharges}", LOG_DEBUG]
 								if ${anItemIterator.Value.Quantity} < ${Math.Calc[${aWeaponIterator.Value.MaxCharges}*12]} &&\
-								!${bAmmoAvailable} && ${anItemIterator.Key} < ${anItemIndex.Used}
+								!${bAmmoAvailable}
+								;${anItemIterator.Key} < ${anItemIndex.Used}
 								{
 									bAmmoAvailable:Set[FALSE]
 								}
