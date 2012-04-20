@@ -262,7 +262,7 @@ objectdef obj_Social
 					(${CorpToCorp} != 0 && ${CorpToCorp} < ${Config.Combat.LowestStanding}) || \
 					(${CorpToAlliance} != 0 && ${CorpToAlliance} < ${Config.Combat.LowestStanding}) || \
 					${AllianceToCorp} < ${Config.Combat.LowestStanding} || \
-					${AllianceToAlliance} < ${Config.Combat.LowestStanding} \
+					${AllianceToAlliance} < ${Config.Combat.LowestStanding} || \
 					${MeToPilot} < ${Config.Combat.LowestStanding} || \
 					${MeToCorp} < ${Config.Combat.LowestStanding} || \
 					${MeToAlliance} < ${Config.Combat.LowestStanding} || \
@@ -271,7 +271,29 @@ objectdef obj_Social
 					${CorpToAlliance} < ${Config.Combat.LowestStanding} \
 				)
 			{
+				UI:UpdateConsole["if !${PilotID.Equal[-1]} && ", LOG_DEBUG]
+				UI:UpdateConsole["	!${PilotID.Equal[${Me.CharID}]} &&  ", LOG_DEBUG]
+				UI:UpdateConsole["	(!${Me.Fleet(exists)} || !${Me.Fleet.IsMember[${PilotID}]}) &&  ", LOG_DEBUG]
+				UI:UpdateConsole["	!${MyAllianceID.Equal[${AllianceID}]} &&  ", LOG_DEBUG]
+				UI:UpdateConsole["	(  ", LOG_DEBUG]
+				UI:UpdateConsole["		(${MeToPilot} != 0 && ${MeToPilot} < ${Config.Combat.LowestStanding}) ||  ", LOG_DEBUG]
+				UI:UpdateConsole["		(${MeToCorp} != 0 && ${MeToCorp} < ${Config.Combat.LowestStanding}) ||  ", LOG_DEBUG]
+				UI:UpdateConsole["		(${MeToAlliance} != 0 && ${MeToAlliance} < ${Config.Combat.LowestStanding}) ||  ", LOG_DEBUG]
+				UI:UpdateConsole["		(${CorpToPilot} != 0 && ${CorpToPilot} < ${Config.Combat.LowestStanding}) ||  ", LOG_DEBUG]
+				UI:UpdateConsole["		(${CorpToCorp} != 0 && ${CorpToCorp} < ${Config.Combat.LowestStanding}) ||  ", LOG_DEBUG]
+				UI:UpdateConsole["		(${CorpToAlliance} != 0 && ${CorpToAlliance} < ${Config.Combat.LowestStanding}) ||  ", LOG_DEBUG]
+				UI:UpdateConsole["		${AllianceToCorp} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
+				UI:UpdateConsole["		${AllianceToAlliance} < ${Config.Combat.LowestStanding}  ", LOG_DEBUG]
+				UI:UpdateConsole["		${MeToPilot} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
+				UI:UpdateConsole["		${MeToCorp} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
+				UI:UpdateConsole["		${MeToAlliance} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
+				UI:UpdateConsole["		${CorpToPilot} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
+				UI:UpdateConsole["		${CorpToCorp} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
+				UI:UpdateConsole["		${CorpToAlliance} < ${Config.Combat.LowestStanding}  ", LOG_DEBUG]
+				UI:UpdateConsole["	) ", LOG_DEBUG]
 				UI:UpdateConsole["Alert: Low Standing Pilot: ${PilotIterator.Value.Name}: CharID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_CRITICAL]
+				UI:UpdateConsole["Standings: ${MeToPilot} ${MeToCorp} ${MeToAlliance} ${CorpToPilot} ${CorpToCorp} ${CorpToAlliance} ${AllianceToCorp} ${AllianceToAlliance}", LOG_DEBUG]
+
 				return FALSE
 			}
 		}

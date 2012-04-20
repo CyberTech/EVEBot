@@ -10,6 +10,7 @@
 */
 #define GROUP_GANGCOORDINATOR 316
 
+
 objectdef obj_FullMiner
 {
 	variable int64 FleetMemberID
