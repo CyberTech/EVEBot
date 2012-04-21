@@ -1154,7 +1154,6 @@ objectdef obj_Cargo
 					ListToMove:Insert[${CargoIterator.Value.ID}]
 					TripHauled:Inc[${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}]}]
 				}
-				wait 10
 			}
 			while ${CargoIterator:Next(exists)}
 			UI:UpdateConsole["Moving ${ListToMove.Used} items to hangar."]
