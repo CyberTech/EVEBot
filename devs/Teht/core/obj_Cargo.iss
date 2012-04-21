@@ -383,45 +383,36 @@ objectdef obj_Cargo
 	function TransferListFromShipCorporateHangar(int64 dest)
 	{
 		variable index:item HangarCargo
-		variable int QuantityToMove
 		variable iterator CargoIterator
+		variable float VolumeToMove=0
+		variable index:int64 ListToMove
 		Entity[${dest}]:GetCorpHangarsCargo[HangarCargo]
 		HangarCargo:GetIterator[CargoIterator]
+		call Ship.OpenCargo
 
+		
 		if ${CargoIterator:First(exists)}
 		{
-			call Ship.OpenCargo
 				do
 				{
-					if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${Ship.CargoFreeSpace}
+					if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) < ${Math.Calc[${Ship.CargoFreeSpace} - ${VolumeToMove}]}
 					{
-						/* Move only what will fit, minus 1 to account for CCP rounding errors. */
-						QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${CargoIterator.Value.Volume}]}]
+						ListToMove:Insert[${CargoIterator.Value.ID}]
+						VolumeToMove:Inc[${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}]}]
 					}
 					else
 					{
-						QuantityToMove:Set[${CargoIterator.Value.Quantity}]
-					}
-
-					UI:UpdateConsole["TransferListFromShipCorporateHangar: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
-					UI:UpdateConsole["TransferListFromShipCorporateHangar: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
-					if ${QuantityToMove} > 0
-					{
-						CargoIterator.Value:MoveTo[${MyShip.ID}, CargoHold, ${QuantityToMove}]
-						wait 15
-					}
-
-					if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
-					{
-						UI:UpdateConsole["DEBUG: TransferListToShip: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
+						CargoIterator.Value:MoveTo[${MyShip.ID}, CargoHold, ${Math.Calc[(${Ship.CargoFreeSpace} - ${VolumeToMove}) / ${CargoIterator.Value.Volume}]}]
 						break
 					}
 				}
 				while ${CargoIterator:Next(exists)}
+				EVE:MoveItemsTo[ListToMove, MyShip, CargoHold]
 		}
 		else
 		{
 			UI:UpdateConsole["DEBUG: obj_Cargo:TransferListFromShipCorporateHangar: Nothing found to move"]
+			return
 		}
 	}	
 
@@ -661,30 +652,40 @@ objectdef obj_Cargo
 	
 	function TransferListToLargeShipAssemblyArray()
 	{
+		variable float VolumeToMove=0
+		variable index:int64 ListToMove
 		variable iterator CargoIterator
 		This.CargoToTransfer:GetIterator[CargoIterator]
-
+		echo RecentChanges
+		call LargeShipAssemblyArray.Open ${LargeShipAssemblyArray.ActiveCan}
+		
 		TripHauled:Set[0]
 		if ${CargoIterator:First(exists)}
 		{
-			do
-			{
-				if ${LargeShipAssemblyArray.IsReady[TRUE]}
+				do
 				{
-					call LargeShipAssemblyArray.Open ${LargeShipAssemblyArray.ActiveCan}
-					UI:UpdateConsole["TransferListToLargeShipAssemblyArray: Transferring Cargo: ${CargoIterator.Value.Name}"]
-					
-					TripHauled:Inc[${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}]}]
-					CargoIterator.Value:MoveTo[${LargeShipAssemblyArray.ActiveCan}, CorpHangars, ${CargoIterator.Value.Quantity},Corporation Folder 1]
+						if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) < ${Math.Calc[${LargeShipAssemblyArray.CargoFreeSpace} - ${VolumeToMove}]}
+						{
+							TripHauled:Inc[${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}]}]
+							ListToMove:Insert[${CargoIterator.Value.ID}]
+							VolumeToMove:Inc[${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}]}]
+						}
+						else
+						{
+							TripHauled:Inc[${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}]}]
+							CargoIterator.Value:MoveTo[${LargeShipAssemblyArray.ActiveCan}, CorpHangars, ${Math.Calc[(${LargeShipAssemblyArray.CargoFreeSpace} - ${VolumeToMove}) / ${CargoIterator.Value.Volume}]},Corporation Folder 1]
+							break
+						}
 				}
-			}
-			while ${CargoIterator:Next(exists)}
-			LargeShipAssemblyArray:StackAllCargo
+				while ${CargoIterator:Next(exists)}
+				EVE:MoveItemsTo[ListToMove, ${LargeShipAssemblyArray.ActiveCan}, CorpHangars,Corporation Folder 1]
 		}
 		else
 		{
 			UI:UpdateConsole["DEBUG: obj_Cargo:TransferListToLargeShipAssemblyArray: Nothing found to move"]
+			return
 		}
+		
 		
 		if ${CurrentHour} != ${Time.Hour}
 		{
@@ -1183,7 +1184,7 @@ objectdef obj_Cargo
 		
 	}
 	
-	function TransferListToShipCorporateHangar(int64 dest, int Leave=0)
+	function TransferListToShipCorporateHangar(int64 dest)
 	{
 		variable index:int64 ListToMove
 		variable iterator CargoIterator
@@ -1217,7 +1218,7 @@ objectdef obj_Cargo
 		call This.OpenHolds
 
 		This:FindShipCargo[CATEGORYID_ORE]
-		call This.TransferListToShipCorporateHangar ${dest} 1
+		call This.TransferListToShipCorporateHangar ${dest}
 
 		This.CargoToTransfer:Clear[]
 		EVEWindow[ByName,${dest}]:StackAll
