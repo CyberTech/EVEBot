@@ -809,7 +809,6 @@ objectdef obj_Miner
 
 		
 		;	Time to get those lasers working!
-		AsteroidsLocked:Set[0]
 		if ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers}
 		{
 			wait 200 ${Me.TargetingCount} == 0
@@ -817,11 +816,12 @@ objectdef obj_Miner
 			LockedTargets:Clear
 			Me:GetTargets[LockedTargets]
 			LockedTargets:GetIterator[Target]
-			
+
 			;	If we have at least one locked target, get to work on them
 			if ${Target:First(exists)}
 			do
 			{
+
 				;	Ignore any targets we have locked that aren't asteroids
 				if ${Target.Value.CategoryID} != ${Asteroids.AsteroidCategoryID}
 				{
@@ -829,20 +829,11 @@ objectdef obj_Miner
 				}
 				
 				
-				AsteroidsLocked:Inc
-				
 				;	So this is an asteroid.  If we're not mining it or Distributed Laser Targetting is turned off, we should mine it.
 				;	Also, if we're ice mining, we don't need to mine other asteroids, and if there aren't more asteroids to target we should mine this one.
 				if ${This.ConcentrateFire} || ${Config.Miner.IceMining} || !${Config.Miner.DistributeLasers} || (!${Ship.IsMiningAsteroidID[${Target.Value.ID}]} && !${Ship.Drones.IsMiningAsteroidID[${Target.Value.ID}]})
 				{
 					
-					;	Make this the active target
-					Target.Value:MakeActiveTarget
-					while !${Target.Value.ID.Equal[${Me.ActiveTarget.ID}]}
-					{
-						wait 5
-					}
-
 					;	Find out if we need to approach this target - also don't approach if we're approaching another target
 					if ${Entity[${Target.Value.ID}].Distance} > ${Ship.OptimalMiningRange} && ${This.Approaching} == 0
 					{
@@ -879,17 +870,29 @@ objectdef obj_Miner
 					;	The target is locked, it's our active target, and we should be in range.  Get a laser on that puppy!
 					if ${Entity[${Target.Value.ID}].Distance} <= ${Ship.OptimalMiningRange}
 					{
-						call Ship.ActivateFreeMiningLaser
+						call Ship.ActivateFreeMiningLaser ${Target.Value.ID}
 					}
 
 				}
 			}
 			while ${Target:Next(exists)}
 		}
-		else 
+
+		
+		;	Find out how many asteroids we have locked
+		AsteroidsLocked:Set[0]
+		Me:GetTargets[LockedTargets]
+		LockedTargets:GetIterator[Target]
+		
+		if ${Target:First(exists)}
+		do
 		{
-			AsteroidsLocked:Set[-1]
+			if ${Target.Value.CategoryID} == ${Asteroids.AsteroidCategoryID}
+			{
+				AsteroidsLocked:Inc
+			}
 		}
+		while ${Target:Next(exists)}
 		
 		
 		
@@ -909,18 +912,23 @@ objectdef obj_Miner
 			;	So we need to lock another asteroid.  First make sure that our ship can lock another, and make sure we don't already have enough asteroids locked
 			;	The Asteroids.TargetNext function will let us know if we need to concentrate fire because we're out of new asteroids to target.
 			;	If we're using an orca and it's in the belt, use Asteroids.TargetNextInRange to only target roids nearby
-			if (${Math.Calc[${Me.TargetCount} + ${Me.TargetingCount}]} < ${Ship.SafeMaxLockedTargets}) && (${AsteroidsLocked} < ${AsteroidsNeeded})
+			if (${Math.Calc[${Me.TargetCount} + ${Me.TargetingCount}]} < ${Ship.SafeMaxLockedTargets}) && ${AsteroidsLocked} < ${AsteroidsNeeded}
 			{
-				Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
-				if ${Config.Miner.DeliveryLocationTypeName.Equal[Orca]} && ${Entity[${Orca.Escape}](exists)}
+				do
 				{
-					call Asteroids.TargetNextInRange ${Entity[${Orca.Escape}].ID}
+					Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
+					if ${Config.Miner.DeliveryLocationTypeName.Equal[Orca]} && ${Entity[${Orca.Escape}](exists)}
+					{
+						call Asteroids.TargetNextInRange ${Entity[${Orca.Escape}].ID}
+					}
+					else
+					{
+						call Asteroids.TargetNext
+					}
+					This.ConcentrateFire:Set[!${Return}]
+					AsteroidsLocked:Inc
 				}
-				else
-				{
-					call Asteroids.TargetNext
-				}
-				This.ConcentrateFire:Set[!${Return}]
+				while (${Math.Calc[${Me.TargetCount} + ${Me.TargetingCount}]} < ${Ship.SafeMaxLockedTargets}) && ${AsteroidsLocked} < ${AsteroidsNeeded} && !${This.ConcentrateFire}
 				return
 			}
 			
@@ -1389,17 +1397,8 @@ objectdef obj_Miner
 			{
 				UI:UpdateConsole["Warning: Looting wreck"]
 				variable index:item ContainerCargo
-				variable iterator Cargo
-				variable index:int64 CargoList
 				Entity[${Tractoring}]:GetCargo[ContainerCargo]
-				ContainerCargo:GetIterator[Cargo]
-				if ${Cargo:First(exists)}
-					do
-					{
-						CargoList:Insert[${Cargo.Value.ID}]
-					}
-					while ${Cargo:Next(exists)}
-				EVE:MoveItemsTo[CargoList, MyShip, CorpHangars]
+				EVE:MoveItemsTo[ContainerCargo, MyShip, CorpHangars]
 				return
 			}
 			
