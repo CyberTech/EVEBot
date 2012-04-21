@@ -808,6 +808,71 @@ objectdef obj_Miner
 		}
 
 		
+		;	Find out how many asteroids we have locked
+		AsteroidsLocked:Set[0]
+		Me:GetTargets[LockedTargets]
+		LockedTargets:GetIterator[Target]
+		
+		if ${Target:First(exists)}
+		do
+		{
+			if ${Target.Value.CategoryID} == ${Asteroids.AsteroidCategoryID}
+			{
+				AsteroidsLocked:Inc
+			}
+		}
+		while ${Target:Next(exists)}
+		
+		
+		
+		;	Here is where we lock new asteroids.  We always want to do this if we have no asteroids locked.  If we have at least one asteroid locked, however,
+		;	we should only lock more asteroids if we're not ice mining
+		if (!${Config.Miner.DistributeLasers} || ${Config.Miner.IceMining} && ${AsteroidsLocked} == 0) || ((${Config.Miner.DistributeLasers} && !${Config.Miner.IceMining}) && ${AsteroidsLocked} >= 0)
+		{
+			;	Calculate how many asteroids we need
+			variable int AsteroidsNeeded=${Ship.TotalMiningLasers}
+			
+			;	If we're supposed to use Mining Drones, we need one more asteroid
+			if ${Config.Miner.UseMiningDrones}
+			{
+				AsteroidsNeeded:Inc
+			}
+			
+			;	So we need to lock another asteroid.  First make sure that our ship can lock another, and make sure we don't already have enough asteroids locked
+			;	The Asteroids.TargetNext function will let us know if we need to concentrate fire because we're out of new asteroids to target.
+			;	If we're using an orca and it's in the belt, use Asteroids.TargetNextInRange to only target roids nearby
+			if (${Math.Calc[${Me.TargetCount} + ${Me.TargetingCount}]} < ${Ship.SafeMaxLockedTargets}) && ${AsteroidsLocked} < ${AsteroidsNeeded}
+			{
+				do
+				{
+					Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
+					if ${Config.Miner.DeliveryLocationTypeName.Equal[Orca]} && ${Entity[${Orca.Escape}](exists)}
+					{
+						call Asteroids.TargetNextInRange ${Entity[${Orca.Escape}].ID}
+					}
+					else
+					{
+						call Asteroids.TargetNext
+					}
+					This.ConcentrateFire:Set[!${Return}]
+					AsteroidsLocked:Inc
+				}
+				while (${Math.Calc[${Me.TargetCount} + ${Me.TargetingCount}]} < ${Ship.SafeMaxLockedTargets}) && ${AsteroidsLocked} < ${AsteroidsNeeded} && !${This.ConcentrateFire}
+			}
+			
+			;	We don't need to lock another asteroid.  Let's find out if we need to signal a concentrate fire based on limitations of our ship.
+			;	Either our target count more than we can safely lock, or we have more mining lasers than we can safely lock.
+			else
+			{
+				if ${Me.TargetCount} >= ${Ship.SafeMaxLockedTargets} &&  ${Ship.TotalMiningLasers} > ${Ship.SafeMaxLockedTargets}
+				{
+					This.ConcentrateFire:Set[TRUE]
+				}
+			}
+			
+		}
+		
+		
 		;	Time to get those lasers working!
 		if ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers}
 		{
@@ -879,71 +944,6 @@ objectdef obj_Miner
 		}
 
 		
-		;	Find out how many asteroids we have locked
-		AsteroidsLocked:Set[0]
-		Me:GetTargets[LockedTargets]
-		LockedTargets:GetIterator[Target]
-		
-		if ${Target:First(exists)}
-		do
-		{
-			if ${Target.Value.CategoryID} == ${Asteroids.AsteroidCategoryID}
-			{
-				AsteroidsLocked:Inc
-			}
-		}
-		while ${Target:Next(exists)}
-		
-		
-		
-		;	Here is where we lock new asteroids.  We always want to do this if we have no asteroids locked.  If we have at least one asteroid locked, however,
-		;	we should only lock more asteroids if we're not ice mining
-		if (!${Config.Miner.DistributeLasers} || ${Config.Miner.IceMining} && ${AsteroidsLocked} == 0) || ((${Config.Miner.DistributeLasers} && !${Config.Miner.IceMining}) && ${AsteroidsLocked} >= 0)
-		{
-			;	Calculate how many asteroids we need
-			variable int AsteroidsNeeded=${Ship.TotalMiningLasers}
-			
-			;	If we're supposed to use Mining Drones, we need one more asteroid
-			if ${Config.Miner.UseMiningDrones}
-			{
-				AsteroidsNeeded:Inc
-			}
-			
-			;	So we need to lock another asteroid.  First make sure that our ship can lock another, and make sure we don't already have enough asteroids locked
-			;	The Asteroids.TargetNext function will let us know if we need to concentrate fire because we're out of new asteroids to target.
-			;	If we're using an orca and it's in the belt, use Asteroids.TargetNextInRange to only target roids nearby
-			if (${Math.Calc[${Me.TargetCount} + ${Me.TargetingCount}]} < ${Ship.SafeMaxLockedTargets}) && ${AsteroidsLocked} < ${AsteroidsNeeded}
-			{
-				do
-				{
-					Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
-					if ${Config.Miner.DeliveryLocationTypeName.Equal[Orca]} && ${Entity[${Orca.Escape}](exists)}
-					{
-						call Asteroids.TargetNextInRange ${Entity[${Orca.Escape}].ID}
-					}
-					else
-					{
-						call Asteroids.TargetNext
-					}
-					This.ConcentrateFire:Set[!${Return}]
-					AsteroidsLocked:Inc
-				}
-				while (${Math.Calc[${Me.TargetCount} + ${Me.TargetingCount}]} < ${Ship.SafeMaxLockedTargets}) && ${AsteroidsLocked} < ${AsteroidsNeeded} && !${This.ConcentrateFire}
-				return
-			}
-			
-			;	We don't need to lock another asteroid.  Let's find out if we need to signal a concentrate fire based on limitations of our ship.
-			;	Either our target count more than we can safely lock, or we have more mining lasers than we can safely lock.
-			else
-			{
-				if ${Me.TargetCount} >= ${Ship.SafeMaxLockedTargets} &&  ${Ship.TotalMiningLasers} > ${Ship.SafeMaxLockedTargets}
-				{
-					This.ConcentrateFire:Set[TRUE]
-					return
-				}
-			}
-			
-		}
 		
 		;	This calls the defense routine if Launch Combat Drones is turned on
 		if ${Config.Combat.LaunchCombatDrones} && !${Ship.InWarp}
