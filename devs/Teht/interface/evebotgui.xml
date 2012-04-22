@@ -93,6 +93,17 @@
 								relay all -event EVEBot_ABORTHARDSTOP
 							</OnLeftClick>
 						</button>
+						<button	Name='BroadcastRun' template='EveSkin.Window.ClickButton'>
+							<text>Broadcast Run</text>
+							<x>r160</x>
+							<y>50</y>
+							<width>150</width>
+							<height>20</height>
+							<OnLeftClick>
+								relay all Script[EVEBot]:Resume
+								relay all Script[EVEBot].VariableScope.EVEBot:Resume
+							</OnLeftClick>
+						</button>
 						<Text name='script_runtime'>
 							<X>10</X>
 							<Y>10</Y>

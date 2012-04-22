@@ -157,11 +157,12 @@ objectdef obj_Drones
 
 	function ReturnAllToDroneBay()
 	{
-		while ${This.DronesInSpace} > 0
+		if ${This.DronesInSpace} > 0
 		{
 			UI:UpdateConsole["Recalling ${This.ActiveDroneIDList.Used} Drones"]
 			EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
 			EVE:Execute[CmdDronesReturnToBay]
+			
 		}
 	}
 

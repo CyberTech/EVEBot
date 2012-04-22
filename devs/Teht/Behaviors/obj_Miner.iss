@@ -247,6 +247,7 @@ objectdef obj_Miner
 				{
 					break
 				}
+				call This.Cleanup_Environment
 				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
 					Ship:Activate_Hardeners
@@ -307,6 +308,7 @@ objectdef obj_Miner
 				{
 					break
 				}
+				call This.Cleanup_Environment
 				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
 					if ${Config.Miner.BookMarkLastPosition} && !${Bookmarks.CheckForStoredLocation}
@@ -1015,7 +1017,7 @@ objectdef obj_Miner
 		{
 			UI:UpdateConsole["Avoiding player: Changing Belts"]
 			call This.Cleanup_Environment
-			call Asteroids.MoveToField TRUE
+			call Asteroids.MoveToField TRUE FALSE TRUE
 			return
 		}
 		
@@ -1442,7 +1444,7 @@ objectdef obj_Miner
 				Entity[${Tractoring}]:LockTarget
 				return
 			}
-			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].IsLockedTarget} && ${Entity[${Tractoring}].IsActiveTarget} && !${Ship.IsTractoringWreckID[${Tractoring}]}
+			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].IsLockedTarget} && !${Ship.IsTractoringWreckID[${Tractoring}]}
 			{
 				Ship:Activate_Tractor[${Entity[${Tractoring}].ID}]
 				return
