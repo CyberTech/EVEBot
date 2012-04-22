@@ -728,24 +728,12 @@ objectdef obj_Miner
 			return
 		}
 		
-		;	This checks to make sure there aren't any potential jet can flippers around before we dump a jetcan
-		if !${Social.PlayerInRange[10000]} && ${Config.Miner.DeliveryLocationTypeName.Equal["Jetcan"]}
+
+		;	This calls the defense routine if Launch Combat Drones is turned on
+		if ${Config.Combat.LaunchCombatDrones} && !${Ship.InWarp}
 		{
-			if !${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)}
-			{
-					This:NotifyHaulers[]
-			}
-			
-			;	This checks to make sure the player in our delivery location is in range and not warping before we dump a jetcan
-			if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)} && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3 && ${Ship.CargoHalfFull}
-			{
-				call Cargo.TransferOreToJetCan
-				;	Need a wait here because it would try to move the same item more than once
-				wait 20
-				return
-			}
-		}
-		
+			call Defend
+		}		
 		
 
 		;	We need to make sure we're near our orca if we're using it as a delivery location
@@ -943,13 +931,25 @@ objectdef obj_Miner
 			while ${Target:Next(exists)}
 		}
 
-		
-		
-		;	This calls the defense routine if Launch Combat Drones is turned on
-		if ${Config.Combat.LaunchCombatDrones} && !${Ship.InWarp}
+		;	This checks to make sure there aren't any potential jet can flippers around before we dump a jetcan
+		if !${Social.PlayerInRange[10000]} && ${Config.Miner.DeliveryLocationTypeName.Equal["Jetcan"]}
 		{
-			call Defend
+			if !${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)}
+			{
+					This:NotifyHaulers[]
+			}
+			
+			;	This checks to make sure the player in our delivery location is in range and not warping before we dump a jetcan
+			if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)} && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3 && ${Ship.CargoHalfFull}
+			{
+				call Cargo.TransferOreToJetCan
+				;	Need a wait here because it would try to move the same item more than once
+				wait 20
+				return
+			}
 		}
+		
+		
 	}	
 
 
