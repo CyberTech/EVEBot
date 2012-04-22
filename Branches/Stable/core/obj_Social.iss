@@ -263,16 +263,18 @@ objectdef obj_Social
 					(${CorpToAlliance} != 0 && ${CorpToAlliance} < ${Config.Combat.LowestStanding}) || \
 					(${AllianceToCorp} != 0 && ${AllianceToCorp} < ${Config.Combat.LowestStanding}) || \
 					(${AllianceToAlliance} != 0 && ${AllianceToAlliance} < ${Config.Combat.LowestStanding}) || \
-					${Config.Combat.IncludeNeutralInCalc} && \
 					( \
-						${AllianceToAlliance} < ${Config.Combat.LowestStanding} || \
-						${AllianceToCorp} < ${Config.Combat.LowestStanding} || \
-						${MeToPilot} < ${Config.Combat.LowestStanding} || \
-						${MeToCorp} < ${Config.Combat.LowestStanding} || \
-						${MeToAlliance} < ${Config.Combat.LowestStanding} || \
-						${CorpToPilot} < ${Config.Combat.LowestStanding} || \
-						${CorpToCorp} < ${Config.Combat.LowestStanding} || \
-						${CorpToAlliance} < ${Config.Combat.LowestStanding} \
+						${Config.Combat.IncludeNeutralInCalc} && \
+						( \
+							${AllianceToAlliance} < ${Config.Combat.LowestStanding} || \
+							${AllianceToCorp} < ${Config.Combat.LowestStanding} || \
+							${MeToPilot} < ${Config.Combat.LowestStanding} || \
+							${MeToCorp} < ${Config.Combat.LowestStanding} || \
+							${MeToAlliance} < ${Config.Combat.LowestStanding} || \
+							${CorpToPilot} < ${Config.Combat.LowestStanding} || \
+							${CorpToCorp} < ${Config.Combat.LowestStanding} || \
+							${CorpToAlliance} < ${Config.Combat.LowestStanding} \
+						) \
 					) \
 				)
 			{
