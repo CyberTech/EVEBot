@@ -536,6 +536,16 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Lowest Standing, ${value}]
 	}
 
+	member:bool IncludeNeutralInCalc()
+	{
+		return ${This.CombatRef.FindSetting[IncludeNeutralInCalc, FALSE]}
+	}
+
+	method SetIncludeNeutralInCalc(bool value)
+	{
+		This.CombatRef:AddSetting[IncludeNeutralInCalc, ${value}]
+	}
+
 	member:int MinimumSecurityStatus()
 	{
 		return ${This.MinerRef.FindSetting[Minimum Security Status, -10.00]}
@@ -726,18 +736,18 @@ objectdef obj_Configuration_Combat
 	{
 		This.CombatRef:AddSetting[Use Anom Bookmarks,${value}]
 	}
-	
+
 	method SetAnomBookmarkLabel(string value)
 	{
 		This.CombatRef:AddSetting[AnomBookmarkLabel,${value}]
 	}
-	
+
 	member:string AnomBookmarkLabel()
 	{
 		return ${This.CombatRef.FindSetting[AnomBookmarkLabel, AMMO]}
 	}
-	
-	
+
+
 	member:int AmmoTypeID()
 	{
 		return ${This.CombatRef.FindSetting[AmmoTypeID, 2629]}
