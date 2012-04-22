@@ -162,14 +162,6 @@ objectdef obj_Drones
 			UI:UpdateConsole["Recalling ${This.ActiveDroneIDList.Used} Drones"]
 			EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
 			EVE:Execute[CmdDronesReturnToBay]
-			if (${Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
-				${Me.Ship.ShieldPct} < ${Config.Combat.MinimumShieldPct})
-			{
-				; We don't wait for drones if we're on emergency warp out
-				wait 10
-				return
-			}
-			wait 50
 		}
 	}
 

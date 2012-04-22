@@ -115,13 +115,13 @@ objectdef obj_Ship
 					/* Shield Boosters
 						We boost to a higher % in here, as it's done during warp, so cap has time to regen.
 					*/
-					if !${MyShip.ToEntity.IsCloaked} && (${Me.Ship.ShieldPct} < 95 || ${Config.Combat.AlwaysShieldBoost})
+					if (!${MyShip.ToEntity.IsCloaked} && (${Me.Ship.ShieldPct} < 95 || ${Config.Combat.AlwaysShieldBoost})) && !${Miner.AtPanicBookmark}
 					{	/* Turn on the shield booster */
-						Ship:Activate_Hardeners[]
-						This:Activate_Shield_Booster[]
+							Ship:Activate_Hardeners[]
+							This:Activate_Shield_Booster[]
 					}
 
-					if !${MyShip.ToEntity.IsCloaked} && (${Me.Ship.ShieldPct} > 99 && !${Config.Combat.AlwaysShieldBoost})
+					if !${MyShip.ToEntity.IsCloaked} && (${Me.Ship.ShieldPct} > 99 && (!${Config.Combat.AlwaysShieldBoost}) || ${Miner.AtPanicBookmark})
 					{	/* Turn off the shield booster */
 						Ship:Deactivate_Hardeners[]
 						This:Deactivate_Shield_Booster[]
@@ -930,7 +930,7 @@ objectdef obj_Ship
 
 	; Note: This doesn't return ALL the mining amounts, just one.
 	; Returns the laser mining range minus 10%
-	member:int OptimalMiningRange()
+	member:int OptimalMiningRange(float Padding=0.90)
 	{
 		if !${Me.Ship(exists)}
 		{
@@ -942,7 +942,7 @@ objectdef obj_Ship
 		This.ModuleList_MiningLaser:GetIterator[ModuleIter]
 		if ${ModuleIter:First(exists)}
 		{
-			return ${Math.Calc[${ModuleIter.Value.OptimalRange}*0.90]}
+			return ${Math.Calc[${ModuleIter.Value.OptimalRange} * ${Padding}]}
 		}
 
 		return 0

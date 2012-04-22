@@ -517,6 +517,16 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Orca Mode, ${value}]
 	}
 
+	member:bool OrcaTractorLoot()
+	{
+		return ${This.MinerRef.FindSetting[Orca Tractor Loot, FALSE]}
+	}
+
+	method SetOrcaTractorLoot(bool value)
+	{
+		This.MinerRef:AddSetting[Orca Tractor Loot, ${value}]
+	}
+	
 	member:int AvoidPlayerRange()
 	{
 		return ${This.MinerRef.FindSetting[Avoid Player Range, 10000]}
@@ -1050,6 +1060,27 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[Broadcast Breaks, ${value}]
 	}
 
+	member:bool UseSafeCooldown()
+	{
+		return ${This.CombatRef.FindSetting[Use Safe Cooldown, FALSE]}
+	}
+
+	method SetUseSafeCooldown(bool value)
+	{
+		This.CombatRef:AddSetting[Use Safe Cooldown, ${value}]
+	}
+
+	member:int SafeCooldown()
+	{
+		return ${This.CombatRef.FindSetting[Safe Cooldown Duration, 0]}
+	}
+
+	method SetSafeCooldown(int value)
+	{
+		This.CombatRef:AddSetting[Safe Cooldown Duration, ${value}]
+	}
+	
+	
 	member:bool LootMyKills()
 	{
 		return ${This.CombatRef.FindSetting[LootMyKills, FALSE]}

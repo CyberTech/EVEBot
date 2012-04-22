@@ -91,6 +91,10 @@ objectdef obj_Targets
 	variable string m_SpecialTargetName
     variable set DoNotKillList
 	variable bool CheckedSpawnValues = FALSE
+	
+	;	Used to track entities that are locked or being locked
+	variable index:entity LockedOrLocking
+
 
 	method Initialize()
 	{
@@ -900,4 +904,37 @@ objectdef obj_Targets
 		return -1
 	}
 	
+	method UpdateLockedAndLockingTargets()
+	{
+		variable index:entity Targets
+		variable iterator Target
+
+		LockedOrLocking:Clear
+		EVE:QueryEntities[Targets]
+		Targets:GetIterator[Target]
+		if ${Target:First(exists)}
+			do
+			{
+				if ${Target.Value.IsLockedTarget} || ${Target.Value.BeingTargeted}
+					LockedOrLocking:Insert[${Target.Value}]
+			}
+			while ${Target:Next(exists)}
+	}
+	member:int LockedAndLockingTargets()
+	{
+		variable index:entity Targets
+		variable iterator Target
+
+		LockedOrLocking:Clear
+		EVE:QueryEntities[Targets]
+		Targets:GetIterator[Target]
+		if ${Target:First(exists)}
+			do
+			{
+				if ${Target.Value.IsLockedTarget} || ${Target.Value.BeingTargeted}
+					LockedOrLocking:Insert[${Target.Value}]
+			}
+			while ${Target:Next(exists)}
+		return ${LockedOrLocking.Used}
+	}
 }

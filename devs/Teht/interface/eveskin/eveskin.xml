@@ -8,7 +8,7 @@
 
 	<template name='EVEskin.Add.Texture'>
 		<Texture Filename='eveskin/MainGUI/button_plus.png' />
-	</template
+	</template>
 	<template name='EVEskin.Remove.Texture'>
 		<Texture Filename='eveskin/MainGUI/button_minimize.png' />
 	</template
@@ -17,6 +17,13 @@
 	<template name='EVESkin.Window.Texture' Filename='eveskin/MainGUI/tab_frametexture.png' />
 
 	<template name='EVESkin.Window.TabButtonTexture' Filename='eveskin/MainGUI/button_empty.png' />
+	<template name='EVESkin.Window.TabButtonSelectedTexture' Filename='eveskin/MainGUI/button_empty_selected.png' />
+	
+	<template name='EveSkin.Window.ClickButton'>
+		<Font template='Button.Font' />
+		<Texture Filename='eveskin/MainGUI/button_empty.png' />
+		<HoverTexture Filename='eveskin/MainGUI/button_empty_highlight.png' />
+	</template>	
 	<template name='EVESkin.Window.TabButtonLeftTexture'>
 		<Texture Filename='eveskin/MainGUI/button_left_long.png' />
 		<PressedTexture Filename='eveskin/MainGUI/button_left_long.png' />
@@ -28,8 +35,6 @@
 		<HoverTexture Filename='eveskin/MainGUI/button_right_long.png' />
 	</template>
 	
-	<template name='EVESkin.Window.TabButtonSelectedTexture' Filename='eveskin/MainGUI/button_empty.png' />
-	<template name='EVESkin.Window.TabButtonHoverTexture' Filename='eveskin/MainGUI/button_empty.png' />
 
 	<template name='EVESkin.Font.TitleBar'>	
 		<Name>Verdana</Name>

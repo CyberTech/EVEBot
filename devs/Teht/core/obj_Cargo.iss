@@ -643,7 +643,7 @@ objectdef obj_Cargo
 		}
 		else
 		{
-			UI:UpdateConsole["DEBUG: obj_Cargo:TransferCargoFromCargoHoldToShipCorporateHangar: Nothing found to move"]
+			;UI:UpdateConsole["DEBUG: obj_Cargo:TransferCargoFromCargoHoldToShipCorporateHangar: Nothing found to move"]
 		}
 	}	
 	
@@ -686,6 +686,7 @@ objectdef obj_Cargo
 			return
 		}
 		
+		LargeShipAssemblyArray:StackAllCargo[${LargeShipAssemblyArray.ActiveCan}]
 		
 		if ${CurrentHour} != ${Time.Hour}
 		{

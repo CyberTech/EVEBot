@@ -263,7 +263,7 @@ objectdef obj_Asteroids
 
 	}
 
-	function UpdateList(bool IgnoreLasers=FALSE)
+	function UpdateList(int64 DistanceTarget=-1)
 	{
 		variable index:entity asteroid_index
 		variable index:entity AsteroidList_outofrange
@@ -301,13 +301,27 @@ objectdef obj_Asteroids
 							intended to empty a given radius of asteroids */
 						if ${Config.Miner.StripMine}
 						{
-							if ${asteroid_iterator.Value.Distance} < ${Ship.OptimalMiningRange}
+							if ${DistanceTarget} == -1
 							{
-								This.AsteroidList:Insert[${asteroid_iterator.Value.ID}]
+								if ${asteroid_iterator.Value.Distance} < ${Ship.OptimalMiningRange}
+								{
+									This.AsteroidList:Insert[${asteroid_iterator.Value.ID}]
+								}
+								else
+								{
+									AsteroidList_outofrange:Insert[${asteroid_iterator.Value.ID}]
+								}
 							}
 							else
 							{
-								AsteroidList_outofrange:Insert[${asteroid_iterator.Value.ID}]
+								if ${AsteroidIterator.Value.DistanceTo[${DistanceToTarget}]} < ${Math.Calc[${Ship.OptimalMiningRange} + 2000]}
+								{
+									This.AsteroidList:Insert[${asteroid_iterator.Value.ID}]
+								}
+								else
+								{
+									AsteroidList_outofrange:Insert[${asteroid_iterator.Value.ID}]
+								}
 							}
 						}
 						else
@@ -398,9 +412,26 @@ objectdef obj_Asteroids
 						!${AsteroidIterator.Value.IsLockedTarget} && \
 						!${AsteroidIterator.Value.BeingTargeted} && \
 						${AsteroidIterator.Value.Distance} < ${Me.Ship.MaxTargetRange} && \
-						${Math.Calc[${AsteroidIterator.Value.DistanceTo[${DistanceToTarget}]} + 1000]} < ${Ship.OptimalMiningRange}
+						${AsteroidIterator.Value.DistanceTo[${DistanceToTarget}]} < ${Math.Calc[${Ship.OptimalMiningRange} + 2000]}
 					{
-						break
+						variable iterator Target
+						variable bool IsWithinRangeOfOthers=TRUE
+						Targets:UpdateLockedAndLockingTargets
+						Targets.LockedOrLocking:GetIterator[Target]
+						if ${Target:First(exists)}
+							do
+							{
+								if ${AsteroidIterator.Value.CategoryID} == ${Asteroids.AsteroidCategoryID}
+								{
+									if ${AsteroidIterator.Value.DistanceTo[${Target.Value.ID}]} > ${Math.Calc[${Ship.OptimalMiningRange} * 2]}
+									{
+										IsWithinRangeOfOthers:Set[FALSE]
+									}
+								}
+							}
+							while ${Target:Next(exists)}
+						if ${IsWithinRangeOfOthers}
+							break
 					}
 				}
 			}
@@ -536,5 +567,24 @@ objectdef obj_Asteroids
 			return TRUE
 		}
 		return FALSE
+	}
+	
+	member:int LockedAndLocking()
+	{
+		variable iterator Target
+		variable int AsteroidsLocked=0
+		Targets:UpdateLockedAndLockingTargets
+		Targets.LockedOrLocking:GetIterator[Target]
+
+		if ${Target:First(exists)}
+		do
+		{
+			if ${Target.Value.CategoryID} == ${Asteroids.AsteroidCategoryID}
+			{
+				AsteroidsLocked:Inc
+			}
+		}
+		while ${Target:Next(exists)}
+		return ${AsteroidsLocked}
 	}
 }

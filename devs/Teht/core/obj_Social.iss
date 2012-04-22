@@ -46,6 +46,8 @@ objectdef obj_Social
 	variable time CurrentTime
 	variable time NextBreakTime
 	variable time RestartTime
+	
+	variable int IsSafeCooldown=0
 
 	method Initialize()
 	{
@@ -151,6 +153,35 @@ objectdef obj_Social
 			}
 
 			SystemSafe:Set[${Math.Calc[${This.CheckLocalWhiteList} & ${This.CheckLocalBlackList} & ${This.CheckStanding}].Int(bool)}]
+
+			if ${IsSafeCooldown} == 0 && !${SystemSafe} && ${Config.Combat.UseSafeCooldown}
+			{
+				IsSafeCooldown:Set[${Math.Calc[${Time.Timestamp} + (${Config.Combat.SafeCooldown} * 60)]}]
+			}
+
+			if ${IsSafeCooldown} != 0 && ${Config.Combat.UseSafeCooldown}
+			{
+				if ${Time.Timestamp} >= ${IsSafeCooldown}
+				{
+					IsSafeCooldown:Set[0]
+				}
+				else
+				{ 
+					if !${SystemSafe}
+					{
+						IsSafeCooldown:Set[${Math.Calc[${Time.Timestamp} + (${Config.Combat.SafeCooldown} * 60)]}]
+						echo Unsafe pilot still in system - Reset timer to ${IsSafeCooldown}
+					}
+					else
+					{
+						echo No unsafe pilots in system but still on cooldown
+					}
+					SystemSafe:Set[FALSE]
+				}
+			}
+			
+			
+			
 			This:ProcessBreak
 			
     		This.NextPulse:Set[${Time.Timestamp}]
@@ -307,7 +338,7 @@ objectdef obj_Social
 				UI:UpdateConsole["		${CorpToCorp} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
 				UI:UpdateConsole["		${CorpToAlliance} < ${Config.Combat.LowestStanding}  ", LOG_DEBUG]
 				UI:UpdateConsole["	) ", LOG_DEBUG]
-				UI:UpdateConsole["Alert: Low Standing Pilot: ${PilotIterator.Value.Name}: CharID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_CRITICAL]
+				UI:UpdateConsole["Alert: Low Standing Pilot: ${PilotIterator.Value.Name}: CharID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_DEBUG]
 				UI:UpdateConsole["Standings: ${MeToPilot} ${MeToCorp} ${MeToAlliance} ${CorpToPilot} ${CorpToCorp} ${CorpToAlliance} ${AllianceToCorp} ${AllianceToAlliance}", LOG_DEBUG]
 
 				return FALSE

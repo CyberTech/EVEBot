@@ -71,6 +71,28 @@
 				<Height>100%</Height>
 				<Tabs>
 					<Tab Name='Status'>
+						<button	Name='BroadcastBreak' template='EveSkin.Window.ClickButton'>
+							<text>Broadcast Break</text>
+							<x>r160</x>
+							<y>10</y>
+							<width>150</width>
+							<height>20</height>
+							<OnLeftClick>
+								relay all -event EVEBot_HARDSTOP
+							</OnLeftClick>
+						</button>
+						<button	Name='BroadcastResume' template='EveSkin.Window.ClickButton'>
+							<text>Broadcast Resume</text>
+							<x>r160</x>
+							<y>30</y>
+							<width>150</width>
+							<height>20</height>
+							<OnLeftClick>
+								Social.NextBreak:Set[0]
+								Social.OnBreak:Set[FALSE]
+								relay all -event EVEBot_ABORTHARDSTOP
+							</OnLeftClick>
+						</button>
 						<Text name='script_runtime'>
 							<X>10</X>
 							<Y>10</Y>
@@ -619,7 +641,7 @@
 							<Height>20</Height>
 							<Width>100</Width>
 							<Text>Orca Mode </Text>
-							<AutoTooltip>When checked this will tell Evebot to operate an Orca, including managing boost modules.</AutoTooltip>
+							<AutoTooltip>When checked this will tell Evebot to operate an Orca, including managing boost modules</AutoTooltip>
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Miner.OrcaMode}
 								{
@@ -628,6 +650,23 @@
 							</OnLoad>
 							<OnLeftClick>
 								Script[EVEBot].VariableScope.Config.Miner:SetOrcaMode[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>						
+						<checkbox name='cbOrcaWrecks'>
+							<X>300</X>
+							<Y>150</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Loot wrecks </Text>
+							<AutoTooltip>When checked this will have your orca tractor and loot wrecks (Must have a tractor beam)</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Miner.OrcaTractorLoot}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Miner:SetOrcaTractorLoot[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>						
 						<slider name='AvoidPlayerRange'>
@@ -1336,7 +1375,7 @@
 						</Text>
 						<checkbox name='cbBreaks'>
 							<X>10</X>
-							<Y>230</Y>
+							<Y>180</Y>
 							<Height>20</Height>
 							<Width>100</Width>
 							<Text>Take a break for               hours every                hours.</Text>
@@ -1353,7 +1392,7 @@
 						</checkbox>
 						<combobox name='comboBreakDuration'>
 							<X>125</X>
-							<Y>230</Y>
+							<Y>180</Y>
 							<Width>50</Width>
 							<Height>15</Height>
 							<FullHeight>200</FullHeight>
@@ -1371,7 +1410,7 @@
 						</combobox>
 						<combobox name='comboTimeBetweenBreaks'>
 							<X>250</X>
-							<Y>230</Y>
+							<Y>180</Y>
 							<Width>50</Width>
 							<Height>15</Height>
 							<FullHeight>200</FullHeight>
@@ -1379,7 +1418,7 @@
 							<Items>
 								<Item Value='1'>1</Item>
 								<Item Value='2'>2</Item>
-								<Item Value='3.5'>3</Item>
+								<Item Value='3'>3</Item>
 								<Item Value='4'>4</Item>
 								<Item Value='5'>5</Item>
 								<Item Value='6'>6</Item>
@@ -1393,7 +1432,7 @@
 						</combobox>
 						<checkbox name='cbBreakBroadcast'>
 							<X>20</X>
-							<Y>250</Y>
+							<Y>200</Y>
 							<Height>20</Height>
 							<Width>100</Width>
 							<Text>Relay break to all sessions</Text>
@@ -1408,6 +1447,45 @@
 								Script[EVEBot].VariableScope.Config.Combat:SetBroadcastBreaks[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
+						<checkbox name='cbSafeCooldown'>
+							<X>10</X>
+							<Y>150</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Wait               minutes after unsafe pilots have left system</Text>
+							<AutoTooltip>If checked, will dock your ship at your panic location every for a break according to the information specified.  Restart after changing these values.</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Combat.UseSafeCooldown}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Combat:SetUseSafeCooldown[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<combobox name='comboSafeCooldown'>
+							<X>60</X>
+							<Y>150</Y>
+							<Width>50</Width>
+							<Height>15</Height>
+							<FullHeight>200</FullHeight>
+							<ButtonWidth>20</ButtonWidth>
+							<Items>
+								<Item Value='5'>5</Item>
+								<Item Value='10'>10</Item>
+								<Item Value='20'>20</Item>
+								<Item Value='30'>30</Item>
+								<Item Value='40'>40</Item>
+								<Item Value='60'>60</Item>
+							</Items>
+							<OnSelect>
+								Script[EVEBot].VariableScope.Config.Combat:SetSafeCooldown[${This.SelectedItem.Value}]
+							</OnSelect>
+							<OnLoad>
+								This:SetSelection[${This.ItemByText[${Script[EVEBot].VariableScope.Config.Combat.SafeCooldown}].ID}]
+							</OnLoad>
+						</combobox>
 					</Tab>
 					<Tab name='Missions'>
 						<Text name='lblRunTheseTypes'>
