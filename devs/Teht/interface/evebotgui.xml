@@ -7,7 +7,7 @@
 		<X>200</X>
 		<Y>300</Y>
 		<Width>550</Width>
-		<Height>350</Height>
+		<Height>320</Height>
 		<Title>EVEBot Options</Title>
 		<TitleBar template='EVESkin.Window.TitleBar'>
 			<Width>100%</Width>
@@ -133,128 +133,72 @@
 							<Height>20</Height>
 							<Text>${Script[EVEBot].VariableScope.Config.Common.BotModeName}</Text>
 						</Text>
-						<Text name='Trips' template='EVESkin.Font.Description'>
-							<X>10</X>
-							<Y>40</Y>
-							<Width>100</Width>
-							<Height>20</Height>
-							<Text>Runs this Session:</Text>
-						</Text>
-						<Text name='Trips_Data' template='EVESkin.Font.Value'>
-							<X>150</X>
-							<Y>40</Y>
-							<Width>100</Width>
-							<Height>20</Height>
-							<Text>${Script[EVEBot].VariableScope.Miner.TotalTrips}</Text>
-						</Text>
-						<Text name='Aborts' template='EVESkin.Font.Description'>
-							<X>10</X>
-							<Y>55</Y>
-							<Width>100</Width>
-							<Height>20</Height>
-							<Text>Aborts this Session:</Text>
-						</Text>
-						<Text name='Aborts_Data' template='EVESkin.Font.Value'>
-							<X>150</X>
-							<Y>55</Y>
-							<Width>100</Width>
-							<Height>20</Height>
-							<Text>${Script[EVEBot].VariableScope.Config.Common.OurAbortCount}</Text>
-						</Text>
-						<Text name='avg_time' template='EVESkin.Font.Description'>
-							<X>10</X>
-							<Y>70</Y>
-							<Width>175</Width>
-							<Height>20</Height>
-							<Text>Time For Current Trip:</Text>
-						</Text>
-						<Text name='avg_time_data' template='EVESkin.Font.Value'>
-							<X>150</X>
-							<Y>70</Y>
-							<Width>150</Width>
-							<Height>20</Height>
-							<Text>${ISXEVE.SecsToString[${Script[EVEBot].VariableScope.Miner.TripDuration}]}</Text>
-						</Text>
-						<Text name='Average Time/Trip' template='EVESkin.Font.Description'>
-							<X>10</X>
-							<Y>85</Y>
-							<Width>175</Width>
-							<Height>20</Height>
-							<Text>Average Time per Trip:</Text>
-						</Text>
-						<Text name='Average Time/Trip Data' template='EVESkin.Font.Value'>
-							<X>150</X>
-							<Y>85</Y>
-							<Width>150</Width>
-							<Height>20</Height>
-							<Text>${ISXEVE.SecsToString[${Script[EVEBot].VariableScope.Miner.AverageTripSeconds}]}</Text>
-						</Text>
 						<Text name='Currently Training' template='EVESkin.Font.Description'>
 							<X>10</X>
-							<Y>115</Y>
+							<Y>40</Y>
 							<Width>175</Width>
 							<Height>20</Height>
 							<Text>Currently Training:</Text>
 						</Text>
 						<Text name='CurrentlyTrainingDATA' template='EVESkin.Font.Value'>
 							<X>150</X>
-							<Y>115</Y>
+							<Y>40</Y>
 							<Width>150</Width>
 							<Height>20</Height>
 							<Text>${Script[EVEBot].VariableScope.Skills.CurrentlyTrainingSkill}</Text>
 						</Text>
 						<Text name='Next to be trained' template='EVESkin.Font.Description'>
 							<X>10</X>
-							<Y>130</Y>
+							<Y>55</Y>
 							<Width>175</Width>
 							<Height>20</Height>
 							<Text>Next Queued:</Text>
 						</Text>
 						<Text name='nexttobetrainedDATA' template='EVESkin.Font.Value'>
 							<X>150</X>
-							<Y>130</Y>
+							<Y>55</Y>
 							<Width>150</Width>
 							<Height>20</Height>
 							<Text>${Script[EVEBot].VariableScope.Skills.NextInLine}</Text>
 						</Text>
 						<Text name='Current Timestamp' template='EVESkin.Font.Description'>
 							<X>10</X>
-							<Y>160</Y>
+							<Y>80</Y>
 							<Width>175</Width>
 							<Height>20</Height>
 							<Text>Current Timestamp:</Text>
 						</Text>
 						<Text name='CurrentTimestampDATA' template='EVESkin.Font.Value'>
 							<X>150</X>
-							<Y>160</Y>
+							<Y>80</Y>
 							<Width>150</Width>
 							<Height>20</Height>
 							<Text>${Script[EVEBot].VariableScope.Social.CurrentTime}</Text>
 						</Text>
 						<Text name='Next Break' template='EVESkin.Font.Description'>
 							<X>10</X>
-							<Y>170</Y>
+							<Y>95</Y>
 							<Width>175</Width>
 							<Height>20</Height>
 							<Text>Next Break:</Text>
 						</Text>
 						<Text name='NextBreakDATA' template='EVESkin.Font.Value'>
 							<X>150</X>
-							<Y>170</Y>
+							<Y>95</Y>
 							<Width>150</Width>
 							<Height>20</Height>
 							<Text>${Script[EVEBot].VariableScope.Social.NextBreakTime}</Text>
 						</Text>
 						<Text name='Break Over' template='EVESkin.Font.Description'>
 							<X>10</X>
-							<Y>180</Y>
+							<Y>110</Y>
 							<Width>175</Width>
 							<Height>20</Height>
 							<Text>Break Over:</Text>
 						</Text>
 						<Text name='BreakOverDATA' template='EVESkin.Font.Value'>
 							<X>150</X>
-							<Y>180</Y>
+							<Y>110</Y>
 							<Width>150</Width>
 							<Height>20</Height>
 							<Text>${Script[EVEBot].VariableScope.Social.RestartTime}</Text>
@@ -2257,7 +2201,7 @@
 							<X>10</X>
 							<Y>65</Y>
 							<Width>530</Width>
-							<Height>245</Height>
+							<Height>210</Height>
 							<SelectMultiple>0</SelectMultiple>
 							<Sort>Text</Sort>
 							<AutoTooltip>These characters will be added to your fleet if EVEBot can find them in your Corporation or Contacts and "I am Leader" is checked.</AutoTooltip>

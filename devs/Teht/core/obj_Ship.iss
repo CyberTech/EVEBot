@@ -1514,6 +1514,7 @@ objectdef obj_Ship
 				}
 				wait 10
 			}
+			call Miner.FastWarp
 			call This.WarpWait
 			if ${Return} == 2
 			{
@@ -1722,6 +1723,7 @@ objectdef obj_Ship
 					{
 						DestinationBookmark:WarpTo
 					}
+					call Miner.FastWarp
 					wait 10
 				}
 				call This.WarpWait
@@ -1778,6 +1780,7 @@ objectdef obj_Ship
 						{
 							DestinationBookmark:WarpTo
 						}
+						call Miner.FastWarp
 						wait 10
 					}
 					call This.WarpWait
@@ -1812,6 +1815,7 @@ objectdef obj_Ship
 					{
 						DestinationBookmark:WarpTo
 					}
+					call Miner.FastWarp
 					wait 10
 				}
 				call This.WarpWait

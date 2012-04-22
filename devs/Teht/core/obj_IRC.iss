@@ -8,6 +8,8 @@ objectdef obj_IRC
 
 	variable bool IsConnected = FALSE
 	variable queue:string Buffer
+	
+	variable bool Throttle = FALSE
 
 
 	method Initialize()
@@ -61,6 +63,11 @@ objectdef obj_IRC
 				}
 			}
 
+			if ${Throttle}
+			{
+				IsConnected:Set[FALSE]
+			}
+				
 			This.NextPulse:Set[${Time.Timestamp}]
 			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
 			This.NextPulse:Update
@@ -244,6 +251,10 @@ objectdef obj_IRC
 		if (${Command.Equal[ERROR]})
 		{
 			echo "CRITICAL IRC ERROR: ${Rest.Escape}"
+			if ${Rest.Find[Throttled: Reconnecting too fast]}
+			{
+				Throttle:Set[TRUE]
+			}
 		}
 	}
 
@@ -259,6 +270,12 @@ objectdef obj_IRC
 
 	function Connect()
 	{
+		if ${Throttle}
+		{
+			IRCUser[${Config.Common.IRCUser}]:Disconnect
+		}
+		Throttle:Set[FALSE]
+		
 		IRC:Connect[${Config.Common.IRCServer},${Config.Common.IRCUser}]
 
 		do

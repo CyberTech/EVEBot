@@ -181,6 +181,14 @@ function main()
 		}
 		while ${BotModule:Next(exists)}
 		call RandomDelay 100
+
+		#if USE_ISXIM
+			;	Join IRC
+			if !${ChatIRC.IsConnected}
+			{
+				call ChatIRC.Connect
+			}		
+		#endif		
 	}
 }
 

@@ -212,7 +212,7 @@ objectdef obj_Miner
 		{
 			This:CheckAttack
 		}
-	
+		
 		;	If Miner isn't the selected bot mode, this function shouldn't have been called.  However, if it was we wouldn't want it to do anything.
 		if !${Config.Common.BotModeName.Equal[Miner]}
 		{
@@ -250,10 +250,9 @@ objectdef obj_Miner
 				call This.Cleanup_Environment
 				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
-					Ship:Activate_Hardeners
 					if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].TypeID} != 5
 					{
-						call This.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
+						;call This.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
 						call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
 					}
 					else
@@ -264,29 +263,25 @@ objectdef obj_Miner
 				}				
 				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} != ${Me.SolarSystemID}
 				{
-					Ship:Activate_Hardeners
 					call This.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID}
 					call Ship.TravelToSystem ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID}
 					break
 				}
 				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
-					Ship:Activate_Hardeners
-					call This.FastWarp ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
+					;call This.FastWarp ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
 					call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
 					break
 				}
 				if ${Entity["CategoryID = 3"](exists)}
 				{
-					Ship:Activate_Hardeners
 					UI:UpdateConsole["Docking at ${Entity["CategoryID = 3"].Name}"]
-					call This.FastWarp ${Entity["CategoryID = 3"].ID}
+					;call This.FastWarp ${Entity["CategoryID = 3"].ID}
 					call Station.DockAtStation ${Entity["CategoryID = 3"].ID}
 					break
 				}
 				if ${Me.ToEntity.Mode} != 3
 				{
-					Ship:Activate_Hardeners
 					call Safespots.WarpTo
 					call This.FastWarp
 					wait 30
@@ -316,7 +311,7 @@ objectdef obj_Miner
 						Bookmarks:StoreLocation
 					}
 
-					call This.FastWarp ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
+					;call This.FastWarp ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
 					call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
 					break
 				}
@@ -329,7 +324,7 @@ objectdef obj_Miner
 
 					if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].TypeID} != 5
 					{
-						call This.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
+						;call This.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
 						call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
 					}
 					else
@@ -347,8 +342,8 @@ objectdef obj_Miner
 					}
 
 					UI:UpdateConsole["Docking at ${Entity["CategoryID = 3"].Name}"]
-					call This.FastWarp ${Entity["CategoryID = 3"].ID}
-					call This.DockAtStation ${Entity["CategoryID = 3"].ID}
+					;call This.FastWarp ${Entity["CategoryID = 3"].ID}
+					call Station.DockAtStation ${Entity["CategoryID = 3"].ID}
 					break
 				}				
 				
@@ -804,7 +799,6 @@ objectdef obj_Miner
 				{
 					call This.Prepare_Environment
 					call Cargo.TransferOreToShipCorpHangar ${Entity[${Orca.Escape}]}
-					return
 				}
 			}
 		}
@@ -1030,14 +1024,14 @@ objectdef obj_Miner
 		{
 			if ${Entity[${Asteroids.NearestAsteroid}].Distance} > WARP_RANGE 
 			{
-				Entity[${Asteroids.NearestAsteroid}]:WarpTo[1000]
+				Entity[${Asteroids.NearestAsteroid}]:WarpTo[5000]
 			}
 		
 			;	Find out if we need to approach this asteroid
-			if ${Entity[${Asteroids.NearestAsteroid}].Distance} > 3000 
+			if ${Entity[${Asteroids.NearestAsteroid}].Distance} > 5000 
 			{
 				UI:UpdateConsole["Approaching: ${Entity[${Asteroids.NearestAsteroid}].Name}"]
-				Entity[${Asteroids.NearestAsteroid}]:Approach[3000]
+				Entity[${Asteroids.NearestAsteroid}]:Approach[5000]
 				This.Approaching:Set[${Asteroids.NearestAsteroid}]
 				This.TimeStartedApproaching:Set[${Time.Timestamp}]			
 				return
@@ -1053,9 +1047,9 @@ objectdef obj_Miner
 		}			
 
 		;	If we're approaching a target, find out if we need to stop doing so 
-		if (${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= 3000 && ${This.Approaching} != 0) || (!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
+		if (${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= 5000 && ${This.Approaching} != 0) || (!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
 		{
-			UI:UpdateConsole["Approaching: ${Entity[${Asteroids.NearestAsteroid}].Name}"]
+			UI:UpdateConsole["In range of ${Entity[${Asteroids.NearestAsteroid}].Name} - Stopping"]
 			EVE:Execute[CmdStopShip]
 			This.Approaching:Set[0]
 			This.TimeStartedApproaching:Set[0]			
@@ -1228,11 +1222,11 @@ objectdef obj_Miner
 					}
 				}
 			}
-			wait 100 ${Me.ToEntity.Mode} == 3
-			Ship:Activate_AfterBurner
-			wait 20
-			Ship:Deactivate_AfterBurner
 		}
+		wait 100 ${Me.ToEntity.Mode} == 3
+		Ship:Activate_AfterBurner
+		wait 20
+		Ship:Deactivate_AfterBurner
 	}
 
 	member:bool AtPanicBookmark()
@@ -1288,17 +1282,6 @@ objectdef obj_Miner
 			UI:UpdateConsole["Warning: Recalling Drones"]
 			call Ship.Drones.ReturnAllToDroneBay
 		}
-		
-		if 	${Me.TargetingCount} != 0
-		{
-			return
-		}
-		
-		if !${Entity[${Attacking}].IsLockedTarget} && !${Entity[${Attacking}].BeingTargeted} && ${Entity[${Attacking}](exists)} && ${Entity[${Attacking}].Distance} < ${Ship.OptimalTargetingRange}
-		{
-			UI:UpdateConsole["Warning: Locking Target"]
-			Entity[${Attacking}]:LockTarget
-		}
 
 		if ${Ship.Drones.DronesInSpace} == 0  && ${AttackingTeam.Used} > 0
 		{
@@ -1316,7 +1299,7 @@ objectdef obj_Miner
 		
 		if ${Entity[${Attacking}].IsLockedTarget} && ${Entity[${Attacking}](exists)}
 		{
-			UI:UpdateConsole["Warning: Sending Drones"]
+			UI:UpdateConsole["Warning: Sending Drones @ ${Entity[${Attacking}].Name}"]
 			
 			Entity[${Attacking}]:MakeActiveTarget
 			wait 50 ${Me.ActiveTarget.ID} != ${Attacking}
@@ -1417,6 +1400,10 @@ objectdef obj_Miner
 			{
 				UI:UpdateConsole["Warning: Opening wreck"]
 				Entity[${Tractoring}]:OpenCargo
+				if ${Ship.IsTractoringWreckID[${Tractoring}]}
+				{
+					Ship:Deactivate_Tractor
+				}
 				return
 			}
 

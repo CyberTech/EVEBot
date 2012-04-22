@@ -79,7 +79,7 @@ objectdef obj_Station
 		}
 	}
 	
-member IsCorpHangarOpen()
+	member IsCorpHangarOpen()
 	{
 		if ${EVEWindow[Corporation Hangar](exists)}
 		{
@@ -132,7 +132,7 @@ member IsCorpHangarOpen()
 		}
 	}
 
-function OpenCorpHangar()
+	function OpenCorpHangar()
 	{
 		if ${This.Docked} == FALSE
 		{
@@ -172,7 +172,7 @@ function OpenCorpHangar()
 		}
 	}
 	
-function CloseCorpHangar()
+	function CloseCorpHangar()
 	{
 		if ${This.Docked} == FALSE
 		{
