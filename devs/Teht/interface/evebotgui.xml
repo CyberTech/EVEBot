@@ -232,6 +232,7 @@
 								<Item Value='3'>Freighter</Item>
 								<Item Value='4'>Ratter</Item>
 								<Item Value='5'>Missioneer</Item>
+								<Item Value='6'>Guardian</Item>
 							</Items>
 							<OnSelect>
 								Script[EVEBot].VariableScope.Config.Common:SetBotMode[${This.SelectedItem.Value}]

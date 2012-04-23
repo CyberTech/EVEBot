@@ -22,6 +22,7 @@ objectdef obj_Ship
 	variable bool CargoIsOpen
 	variable int RetryUpdateModuleList
 	variable index:module ModuleList
+	variable index:module ModuleList_ShieldTransporters
 	variable index:module ModuleList_MiningLaser
 	variable index:module ModuleList_Weapon
 	variable index:module ModuleList_ECCM
@@ -517,6 +518,7 @@ objectdef obj_Ship
 		This.ModuleList_TargetPainter:Clear
 		This.ModuleList_TrackingComputer:Clear
 		This.ModuleList_GangLinks:Clear
+		This.ModuleList_ShieldTransporters:Clear
 
 		Me.Ship:GetModules[This.ModuleList]
 
@@ -566,6 +568,9 @@ objectdef obj_Ship
 
 			switch ${GroupID}
 			{
+				case GROUPID_SHIELD_TRANSPORTER
+					This.ModuleList_ShieldTransporters:Insert[${ModuleIter.Value.ID}]
+					break
 				case GROUPID_DAMAGE_CONTROL
 				case GROUPID_SHIELD_HARDENER
 				case GROUPID_ARMOR_HARDENERS
@@ -774,12 +779,21 @@ objectdef obj_Ship
 
 		UI:UpdateConsole["Tracking Computer Modules:", LOG_MINOR, 2]
 		This.ModuleList_TrackingComputer:GetIterator[ModuleIter]
-		if ${Module:First(exists)}
+		if ${ModuleIter:First(exists)}
 		do
 		{
 			UI:UpdateConsole["	 Slot: ${ModuleIter.Value.ToItem.Slot}  ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
+
+		UI:UpdateConsole["Shield Transporter Modules:", LOG_MINOR, 2]
+		This.ModuleList_ShieldTransporters:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			UI:UpdateConsole["	 Slot: ${ModuleIter.Value.ToItem.Slot}  ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
+		}
+		while ${ModuleIter:Next(exists)}
 	}
 
 	method UpdateBaselineUsedCargo()
@@ -876,6 +890,31 @@ objectdef obj_Ship
 
 		return ${count}
 	}
+	member:int TotalActivatedShieldTransporters()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return 0
+		}
+
+		variable int count
+		variable iterator ModuleIter
+
+		This.ModuleList_ShieldTransporters:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if (${ModuleIter.Value.IsActive} || \
+				${ModuleIter.Value.IsGoingOnline} || \
+				${ModuleIter.Value.IsDeactivating})
+			{
+				count:Inc
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+
+		return ${count}
+	}	
 	member:int TotalActivatedSalvagers()
 	{
 		if !${Me.Ship(exists)}
@@ -940,6 +979,25 @@ objectdef obj_Ship
 		variable iterator ModuleIter
 
 		This.ModuleList_MiningLaser:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		{
+			return ${Math.Calc[${ModuleIter.Value.OptimalRange} * ${Padding}]}
+		}
+
+		return 0
+	}
+
+	; Returns the shield transporter range minus 10%
+	member:int OptimalShieldTransporterRange(float Padding=0.90)
+	{
+		if !${Me.Ship(exists)}
+		{
+			return 0
+		}
+
+		variable iterator ModuleIter
+
+		This.ModuleList_ShieldTransporters:GetIterator[ModuleIter]
 		if ${ModuleIter:First(exists)}
 		{
 			return ${Math.Calc[${ModuleIter.Value.OptimalRange} * ${Padding}]}
@@ -1018,6 +1076,31 @@ objectdef obj_Ship
 		return FALSE
 	}
 
+	; Returns TRUE if we've got a shield transporter healing this entity already
+	member:bool IsShieldTransportingID(int64 EntityID)
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		variable iterator ModuleIter
+
+		This.ModuleList_ShieldTransporters:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if	${ModuleIter.Value.TargetID} == ${EntityID} && \
+				( ${ModuleIter.Value.IsActive} || ${ModuleIter.Value.IsGoingOnline} )
+			{
+				return TRUE
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+
+		return FALSE
+	}	
+	
 	member:bool IsTractoringWreckID(int64 EntityID)
 	{
 		if !${Me.Ship(exists)}
@@ -1307,7 +1390,7 @@ objectdef obj_Ship
 		while ${ModuleIter:Next(exists)}
 	}
 
-	function ActivateFreeTractorBeam()
+	function ActivateFreeTractorBeam(int64 id=-1)
 	{
 		variable string Slot
 
@@ -1331,14 +1414,60 @@ objectdef obj_Ship
 				Slot:Set[${ModuleIter.Value.ToItem.Slot}]
 
 				UI:UpdateConsole["Activating: ${Slot}: ${ModuleIter.Value.ToItem.Name}"]
-				ModuleIter.Value:Click
-				wait 25
+				if ${id} == -1
+				{
+					ModuleIter.Value:Activate
+				}
+				else
+				{
+					ModuleIter.Value:Activate[${ID}]
+				}
+				wait 25 ${ModuleIter.Value.IsGoingOnline}
 				return
 			}
-			}
+		}
 		while ${ModuleIter:Next(exists)}
 	}
 
+	function ActivateFreeShieldTransporter(int64 id=-1)
+	{
+		variable string Slot
+
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		variable iterator ModuleIter
+
+		This.ModuleList_ShieldTransporters:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if !${ModuleIter.Value.IsActive} && \
+				!${ModuleIter.Value.IsGoingOnline} && \
+				!${ModuleIter.Value.IsDeactivating} && \
+				!${ModuleIter.Value.IsChangingAmmo} &&\
+				!${ModuleIter.Value.IsReloadingAmmo}
+			{
+				Slot:Set[${ModuleIter.Value.ToItem.Slot}]
+
+				UI:UpdateConsole["Activating: ${Slot}: ${ModuleIter.Value.ToItem.Name}"]
+				if ${id} == -1
+				{
+					ModuleIter.Value:Activate
+				}
+				else
+				{
+					ModuleIter.Value:Activate[${ID}]
+				}
+				wait 25 ${ModuleIter.Value.IsGoingOnline}
+				return
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+	}
+	
 	function ActivateFreeSalvager()
 	{
 		variable string Slot
@@ -1982,6 +2111,28 @@ objectdef obj_Ship
 		}
 	}
 
+	function Deactivate_Shield_Transporter(int64 id)
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		variable iterator ModuleIter
+
+		This.ModuleList_ShieldTransporters:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+		if ${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsDeactivating} && ${ModuleIter.Value.TargetID} == ${id}
+			{
+				UI:UpdateConsole["Deactivating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
+				ModuleIter.Value:Deactivate
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+	}	
+	
 	method Deactivate_AfterBurner()
 	{
 		if !${Me.Ship(exists)}
@@ -2610,7 +2761,7 @@ objectdef obj_Ship
 		while ${ModuleIterator:Next(exists)}
 	}
 
-	method Activate_Tractor(int64 id=-1)
+	method Activate_Tractor()
 	{
 		if !${Me.Ship(exists)}
 		{
@@ -2626,14 +2777,8 @@ objectdef obj_Ship
 			if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline}
 			{
 				UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
-				if ${id} == -1
-				{
-					ModuleIter.Value:Activate
-				}
-				else
-				{
-					ModuleIter.Value:Activate[${ID}]
-				}
+
+				ModuleIter.Value:Activate
 			}
 		}
 		while ${ModuleIter:Next(exists)}

@@ -44,6 +44,7 @@
 #include Behaviors/obj_Ratter.iss
 #include Behaviors/obj_Scavenger.iss
 #include Behaviors/obj_Missioneer.iss
+#include Behaviors/obj_Guardian.iss
 
 function atexit()
 {
@@ -107,6 +108,7 @@ function main()
 	declarevariable Freighter obj_Freighter script
 	declarevariable Ratter obj_Ratter script
 	declarevariable Missioneer obj_Missioneer script
+	declarevariable Guardian obj_Guardian script
 
 	echo "${Time} EVEBot: Loaded"
 

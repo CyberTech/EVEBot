@@ -8,6 +8,10 @@
 	#include Behaviors/obj_Freighter.iss
 #endif
 
+#if ${EVEBotBehaviors.Element[obj_Guardian]}
+	#include Behaviors/obj_Guardian.iss
+#endif
+
 #if ${EVEBotBehaviors.Element[obj_Hauler]}
 	#include Behaviors/obj_Hauler.iss
 #endif
