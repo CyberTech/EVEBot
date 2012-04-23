@@ -740,6 +740,7 @@ objectdef obj_Miner
 				{
 					UI:UpdateConsole["ALERT:  ${Entity[${Orca.Escape}].Name} is a long way away.  Warping to it."]
 					Entity[${Orca.Escape}]:WarpTo[1000]
+					return
 				}
 				UI:UpdateConsole["ALERT:  Approaching to within loot range."]
 				Entity[${Orca.Escape}]:Approach[LOOT_RANGE]
@@ -1022,6 +1023,7 @@ objectdef obj_Miner
 			if ${Entity[${Asteroids.NearestAsteroid}].Distance} > WARP_RANGE 
 			{
 				Entity[${Asteroids.NearestAsteroid}]:WarpTo[5000]
+				return
 			}
 		
 			;	Find out if we need to approach this asteroid
@@ -1433,7 +1435,7 @@ objectdef obj_Miner
 			}
 			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].IsLockedTarget} && !${Ship.IsTractoringWreckID[${Tractoring}]}
 			{
-				Ship:Activate_Tractor[${Entity[${Tractoring}].ID}]
+				call Ship.ActivateFreeTractorBeam ${Entity[${Tractoring}].WreckID}
 				return
 			}
 		}

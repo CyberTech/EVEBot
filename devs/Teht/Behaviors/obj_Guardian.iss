@@ -448,6 +448,7 @@ objectdef obj_Guardian
 				{
 					UI:UpdateConsole["ALERT:  ${Entity[${Orca.Escape}].Name} is a long way away.  Warping to it."]
 					Entity[${Orca.Escape}]:WarpTo[1000]
+					return
 				}
 				UI:UpdateConsole["ALERT:  Approaching to within loot range."]
 				Entity[${Orca.Escape}]:Approach[LOOT_RANGE]
