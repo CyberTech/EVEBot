@@ -1459,7 +1459,7 @@ objectdef obj_Ship
 				}
 				else
 				{
-					ModuleIter.Value:Activate[${ID}]
+					ModuleIter.Value:Activate[${id}]
 				}
 				wait 25 ${ModuleIter.Value.IsGoingOnline}
 				return
