@@ -889,22 +889,6 @@ objectdef obj_Miner
 						return
 					}
 
-					;	If we've been approaching for more than 2 minutes, we need to give up and try again
-					if ${Math.Calc[${TimeStartedApproaching}-${Time.Timestamp}]} < -120 && ${This.Approaching} != 0
-					{
-						This.Approaching:Set[0]
-						This.TimeStartedApproaching:Set[0]			
-						return
-					}			
-					
-					;	If we're approaching a target, find out if we need to stop doing so 
-					if (${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= ${Ship.OptimalMiningRange[1]} && ${This.Approaching} != 0) || (!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
-					{
-						EVE:Execute[CmdStopShip]
-						This.Approaching:Set[0]
-						This.TimeStartedApproaching:Set[0]	
-					}
-
 					;	If we're supposed to be using Mining Drones, send them - remember not to do so if we're ice mining
 					if ${Ship.Drones.DronesInSpace} > 0 && ${Config.Miner.UseMiningDrones} && !${Config.Miner.IceMining}
 					{
@@ -922,6 +906,22 @@ objectdef obj_Miner
 			}
 			while ${Target:Next(exists)}
 		}
+		
+		;	If we've been approaching for more than 2 minutes, we need to give up and try again
+		if ${Math.Calc[${TimeStartedApproaching}-${Time.Timestamp}]} < -120 && ${This.Approaching} != 0
+		{
+			This.Approaching:Set[0]
+			This.TimeStartedApproaching:Set[0]			
+			return
+		}			
+
+		;	If we're approaching a target, find out if we need to stop doing so 
+		if (${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= ${Ship.OptimalMiningRange[1]} && ${This.Approaching} != 0) || (!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
+		{
+			EVE:Execute[CmdStopShip]
+			This.Approaching:Set[0]
+			This.TimeStartedApproaching:Set[0]	
+		}		
 
 		;	This checks to make sure there aren't any potential jet can flippers around before we dump a jetcan
 		if !${Social.PlayerInRange[10000]} && ${Config.Miner.DeliveryLocationTypeName.Equal["Jetcan"]}
