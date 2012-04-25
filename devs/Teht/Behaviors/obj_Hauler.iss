@@ -156,6 +156,15 @@ objectdef obj_Hauler
 			return
 		}
 
+		;	If I'm in a station, and servicing on demand, wait until someone needs serviced.
+		;	Note: Due to "BASE" state causing undock after unload, this needs to be here.
+		;	TODO: Clean up "BASE" state to enter "IDLE" state depending on hauler mode.
+		if ${Config.Hauler.HaulerModeName.Equal[Service On-Demand]} && ${Me.InStation} && !${FullMiners.FirstValue(exists)}
+		{
+			This.CurrentState:Set["IDLE"]
+			return
+		}
+
 		;	If I'm in a station, I need to perform what I came there to do
 		if ${Me.InStation} && (!${Config.Hauler.HaulerModeName.Equal[Service Orca]} || (${OrcaCargo} > ${Config.Miner.CargoThreshold} || ${OrcaCargo} > 35000))
 		{
@@ -358,20 +367,60 @@ objectdef obj_Hauler
 */			
 	function HaulOnDemand()
 	{
+		if ${Me.ToEntity.Mode} == 3
+			return
+
 		if ${FullMiners.FirstValue(exists)}
 		{
 			UI:UpdateConsole["${FullMiners.Used} cans to get! Picking up can at ${FullMiners.FirstKey}", LOG_DEBUG]
-			if ${FullMiners.CurrentValue.SystemID} == ${Me.SolarSystemID}
-			{
-;				call This.WarpToFleetMemberAndLoot ${FullMiners.CurrentValue.FleetMemberID}
-			}
-			else
-			{
-				FullMiners:Erase[${FullMiners.FirstKey}]
-			}
-		}
 
-		call Safespots.WarpTo
+			if !${Local[${FullMiners.CurrentValue.FleetMemberID}](exists)}
+			{
+				UI:UpdateConsole["ALERT:  The specified fleet member isn't in local - it may be incorrectly configured or out of system."]
+				return
+			}
+		
+			
+			if !${Entity[${Local[${FullMiners.CurrentValue.FleetMemberID}].ToEntity.ID}](exists)}
+			{
+				UI:UpdateConsole["ALERT:  The fleet member is not nearby.  Warping there first to pick up."]
+				Local[${FullMiners.CurrentValue.FleetMemberID}].ToFleetMember:WarpTo
+				return
+			}
+			
+			;	Find out if we need to approach this target
+			if ${Entity[${Local[${FullMiners.CurrentValue.FleetMemberID}].ToEntity.ID}].Distance} > LOOT_RANGE && ${This.Approaching} == 0
+			{
+				UI:UpdateConsole["ALERT:  Approaching to within loot range."]
+				Entity${Local[${FullMiners.CurrentValue.FleetMemberID}].ToEntity.ID}]:Approach
+				This.Approaching:Set[${Local[${FullMiners.CurrentValue.FleetMemberID}].ToEntity.ID}]
+				This.TimeStartedApproaching:Set[${Time.Timestamp}]
+			}
+			
+			;	If we've been approaching for more than 2 minutes, we need to give up and try again
+			if ${Math.Calc[${TimeStartedApproaching}-${Time.Timestamp}]} < -120 && ${This.Approaching} != 0
+			{
+				This.Approaching:Set[0]
+				This.TimeStartedApproaching:Set[0]							
+			}
+			
+			;	If we're approaching a target, find out if we need to stop doing so 
+			if ${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= LOOT_RANGE && ${This.Approaching} != 0
+			{
+				UI:UpdateConsole["ALERT:  Within loot range."]
+				EVE:Execute[CmdStopShip]
+				This.Approaching:Set[0]
+				This.TimeStartedApproaching:Set[0]
+			}
+			
+			call This.FlipGuardLoot
+			FullMiners:Erase[${FullMiners.FirstKey}]
+		}
+		elseif !${This.HaulerFull}
+		{
+			echo hauler not full
+			call Safespots.WarpTo
+		}
 	}	
 	
 /*	
@@ -390,7 +439,7 @@ objectdef obj_Hauler
 		{
 			if ${FleetMembers.Peek(exists)} && ${Local[${FleetMembers.Peek.ToPilot.Name}](exists)}
 			{
-;				call This.WarpToFleetMemberAndLoot ${FleetMembers.Peek.CharID}
+				call This.WarpToFleetMemberAndLoot ${FleetMembers.Peek.CharID}
 			}
 			FleetMembers:Dequeue
 		}
@@ -424,7 +473,7 @@ objectdef obj_Hauler
 
 		if !${Entity[${Orca.Escape}](exists)} && ${Local[${Config.Hauler.HaulerPickupName}].ToFleetMember}
 		{
-			UI:UpdateConsole["ALERT:  The orca is not nearby.  Warping there first to unload."]
+			UI:UpdateConsole["ALERT:  The orca is not nearby.  Warping there first to pick up."]
 			Local[${Config.Hauler.HaulerPickupName}].ToFleetMember:WarpTo
 			return
 		}
@@ -725,7 +774,9 @@ objectdef obj_Hauler
 				call Cargo.TransferOreToCorpHangarArray
 				break
 			case Large Ship Assembly Array
+				echo Warp to LSAA
 				call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
+				echo Cargo LSAA
 				call Cargo.TransferCargoToLargeShipAssemblyArray
 				break
 			case XLarge Ship Assembly Array
@@ -745,155 +796,155 @@ objectdef obj_Hauler
 
 
 	
-	; function WarpToFleetMemberAndLoot(int64 charID)
-	; {
-		; variable int64 id = 0
+	function WarpToFleetMemberAndLoot(int64 charID)
+	{
+		variable int64 id = 0
 
-		; if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
-		; {	/* if we are already full ignore this request */
-			; return
-		; }
+		if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
+		{	/* if we are already full ignore this request */
+			return
+		}
 
-		; if !${Entity["OwnerID = ${charID} && CategoryID = 6"](exists)}
-		; {
-			; call Ship.WarpToFleetMember ${charID}
-		; }
+		if !${Entity["OwnerID = ${charID} && CategoryID = 6"](exists)}
+		{
+			call Ship.WarpToFleetMember ${charID}
+		}
 
-		; if ${Entity["OwnerID = ${charID} && CategoryID = 6"].Distance} > CONFIG_MAX_SLOWBOAT_RANGE
-		; {
-			; if ${Entity["OwnerID = ${charID} && CategoryID = 6"].Distance} < WARP_RANGE
-			; {
-				; UI:UpdateConsole["Fleet member is too far for approach; warping to a bounce point"]
-				; call Safespots.WarpTo TRUE
-			; }
-			; call Ship.WarpToFleetMember ${charID}
-		; }
+		if ${Entity["OwnerID = ${charID} && CategoryID = 6"].Distance} > CONFIG_MAX_SLOWBOAT_RANGE
+		{
+			if ${Entity["OwnerID = ${charID} && CategoryID = 6"].Distance} < WARP_RANGE
+			{
+				UI:UpdateConsole["Fleet member is too far for approach; warping to a bounce point"]
+				call Safespots.WarpTo TRUE
+			}
+			call Ship.WarpToFleetMember ${charID}
+		}
 
-		; call Ship.OpenCargo
+		call Ship.OpenCargo
 
-		; This:BuildJetCanList[${charID}]
-		; while ${Entities.Peek(exists)}
-		; {
-			; variable int64 PlayerID
-			; variable bool PopCan = FALSE
+		This:BuildJetCanList[${charID}]
+		while ${Entities.Peek(exists)}
+		{
+			variable int64 PlayerID
+			variable bool PopCan = FALSE
 
-			; ; Find the player who owns this can
-			; if ${Entity["OwnerID = ${charID} && CategoryID = 6"](exists)}
-			; {
-				; PlayerID:Set[${Entity["OwnerID = ${charID} && CategoryID = 6"].ID}]
-			; }
+			; Find the player who owns this can
+			if ${Entity["OwnerID = ${charID} && CategoryID = 6"](exists)}
+			{
+				PlayerID:Set[${Entity["OwnerID = ${charID} && CategoryID = 6"].ID}]
+			}
 			
-			; call Ship.Approach ${PlayerID} LOOT_RANGE
+			call Ship.Approach ${PlayerID} LOOT_RANGE
 
-			; if ${Entities.Peek.Distance} >= ${LOOT_RANGE} && \
-				; (!${Entity[${PlayerID}](exists)} || ${Entity[${PlayerID}].DistanceTo[${Entities.Peek.ID}]} > LOOT_RANGE)
-			; {
-				; UI:UpdateConsole["Checking: ID: ${Entities.Peek.ID}: ${Entity[${PlayerID}].Name} is ${Entity[${PlayerID}].DistanceTo[${Entities.Peek.ID}]}m away from jetcan"]
-				; PopCan:Set[TRUE]
+			if ${Entities.Peek.Distance} >= ${LOOT_RANGE} && \
+				(!${Entity[${PlayerID}](exists)} || ${Entity[${PlayerID}].DistanceTo[${Entities.Peek.ID}]} > LOOT_RANGE)
+			{
+				UI:UpdateConsole["Checking: ID: ${Entities.Peek.ID}: ${Entity[${PlayerID}].Name} is ${Entity[${PlayerID}].DistanceTo[${Entities.Peek.ID}]}m away from jetcan"]
+				PopCan:Set[TRUE]
 
-				; if !${Entities.Peek(exists)}
-				; {
-					; Entities:Dequeue
-					; continue
-				; }
-				; Entities.Peek:Approach
+				if !${Entities.Peek(exists)}
+				{
+					Entities:Dequeue
+					continue
+				}
+				Entities.Peek:Approach
 
-				; ; approach within tractor range and tractor entity
-				; variable float ApproachRange = ${Ship.OptimalTractorRange}
-				; if ${ApproachRange} > ${Ship.OptimalTargetingRange}
-				; {
-					; ApproachRange:Set[${Ship.OptimalTargetingRange}]
-				; }
+				; approach within tractor range and tractor entity
+				variable float ApproachRange = ${Ship.OptimalTractorRange}
+				if ${ApproachRange} > ${Ship.OptimalTargetingRange}
+				{
+					ApproachRange:Set[${Ship.OptimalTargetingRange}]
+				}
 
-				; if ${Ship.OptimalTractorRange} > 0
-				; {
-					; variable int Counter
-					; if ${Entities.Peek.Distance} > ${Ship.OptimalTargetingRange}
-					; {
-						; call Ship.Approach ${Entities.Peek.ID} ${Ship.OptimalTargetingRange}
-					; }
-					; if !${Entities.Peek(exists)}
-					; {
-						; Entities:Dequeue
-						; continue
-					; }
-					; Entities.Peek:Approach
-					; Entities.Peek:LockTarget
-					; wait 10 ${Entities.Peek.BeingTargeted} || ${Entities.Peek.IsLockedTarget}
-					; if !${Entities.Peek.BeingTargeted} && !${Entities.Peek.IsLockedTarget}
-					; {
-						; if !${Entities.Peek(exists)}
-						; {
-							; Entities:Dequeue
-							; continue
-						; }
-						; UI:UpdateConsole["Hauler: Failed to target, retrying"]
-						; Entities.Peek:LockTarget
-						; wait 10 ${Entities.Peek.BeingTargeted} || ${Entities.Peek.IsLockedTarget}
-					; }
-					; if ${Entities.Peek.Distance} > ${Ship.OptimalTractorRange}
-					; {
-						; call Ship.Approach ${Entities.Peek.ID} ${Ship.OptimalTractorRange}
-					; }
-					; if !${Entities.Peek(exists)}
-					; {
-						; Entities:Dequeue
-						; continue
-					; }
-					; Counter:Set[0]
-					; while !${Entities.Peek.IsLockedTarget} && ${Counter:Inc} < 300
-					; {
-						; wait 1
-					; }
-					; Entities.Peek:MakeActiveTarget
-					; Counter:Set[0]
-					; while !${Me.ActiveTarget.ID.Equal[${Entities.Peek.ID}]} && ${Counter:Inc} < 300
-					; {
-						; wait 1
-					; }
-					; Ship:Activate_Tractor
-				; }
-			; }
+				if ${Ship.OptimalTractorRange} > 0
+				{
+					variable int Counter
+					if ${Entities.Peek.Distance} > ${Ship.OptimalTargetingRange}
+					{
+						call Ship.Approach ${Entities.Peek.ID} ${Ship.OptimalTargetingRange}
+					}
+					if !${Entities.Peek(exists)}
+					{
+						Entities:Dequeue
+						continue
+					}
+					Entities.Peek:Approach
+					Entities.Peek:LockTarget
+					wait 10 ${Entities.Peek.BeingTargeted} || ${Entities.Peek.IsLockedTarget}
+					if !${Entities.Peek.BeingTargeted} && !${Entities.Peek.IsLockedTarget}
+					{
+						if !${Entities.Peek(exists)}
+						{
+							Entities:Dequeue
+							continue
+						}
+						UI:UpdateConsole["Hauler: Failed to target, retrying"]
+						Entities.Peek:LockTarget
+						wait 10 ${Entities.Peek.BeingTargeted} || ${Entities.Peek.IsLockedTarget}
+					}
+					if ${Entities.Peek.Distance} > ${Ship.OptimalTractorRange}
+					{
+						call Ship.Approach ${Entities.Peek.ID} ${Ship.OptimalTractorRange}
+					}
+					if !${Entities.Peek(exists)}
+					{
+						Entities:Dequeue
+						continue
+					}
+					Counter:Set[0]
+					while !${Entities.Peek.IsLockedTarget} && ${Counter:Inc} < 300
+					{
+						wait 1
+					}
+					Entities.Peek:MakeActiveTarget
+					Counter:Set[0]
+					while !${Me.ActiveTarget.ID.Equal[${Entities.Peek.ID}]} && ${Counter:Inc} < 300
+					{
+						wait 1
+					}
+					Ship:Activate_Tractor
+				}
+			}
 
-			; if !${Entities.Peek(exists)}
-			; {
-				; Entities:Dequeue
-				; continue
-			; }
-			; if ${Entities.Peek.Distance} >= ${LOOT_RANGE}
-			; {
-				; call Ship.Approach ${Entities.Peek.ID} LOOT_RANGE
-			; }
-			; Ship:Deactivate_Tractor
-			; EVE:Execute[CmdStopShip]
+			if !${Entities.Peek(exists)}
+			{
+				Entities:Dequeue
+				continue
+			}
+			if ${Entities.Peek.Distance} >= ${LOOT_RANGE}
+			{
+				call Ship.Approach ${Entities.Peek.ID} LOOT_RANGE
+			}
+			Ship:Deactivate_Tractor
+			EVE:Execute[CmdStopShip]
 
-			; if ${Entities.Peek.ID.Equal[0]}
-			; {
-				; UI:Updateconsole["Hauler: Jetcan disappeared suddently. WTF?"]
-				; Entities:Dequeue
-				; continue
-			; }
+			if ${Entities.Peek.ID.Equal[0]}
+			{
+				UI:Updateconsole["Hauler: Jetcan disappeared suddently. WTF?"]
+				Entities:Dequeue
+				continue
+			}
 			
-			; call Ship.Approach ${Entities.Peek.ID} LOOT_RANGE
+			call Ship.Approach ${Entities.Peek.ID} LOOT_RANGE
 			
-			; if ${PopCan}
-			; {
-				; call This.LootEntity ${Entities.Peek.ID} 0
-			; }
-			; else
-			; {
-				; call This.LootEntity ${Entities.Peek.ID} 1
-			; }
+			if ${PopCan}
+			{
+				call This.LootEntity ${Entities.Peek.ID} 0
+			}
+			else
+			{
+				call This.LootEntity ${Entities.Peek.ID} 1
+			}
 
-			; Entities:Dequeue
-			; if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
-			; {
-				; break
-			; }
-		; }
+			Entities:Dequeue
+			if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
+			{
+				break
+			}
+		}
 
-		; FullMiners:Erase[${charID}]
-	; }
+		FullMiners:Erase[${charID}]
+	}
 
 	
 	
