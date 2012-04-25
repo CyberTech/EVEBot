@@ -254,7 +254,7 @@ objectdef obj_Miner
 					}
 					else
 					{
-						call This.FastWarp -1 "${Config.Miner.PanicLocation}"
+						call Ship.WarpToBookMarkName "${Config.Miner.PanicLocation}"
 					}
 					break
 				}				
