@@ -466,7 +466,7 @@ objectdef obj_Hauler
 			return
 		}				
 		
-		if ${OrcaCargo} < ${Config.Miner.CargoThreshold} && ${OrcaCargo} < 35000
+		if ${OrcaCargo} < ${Config.Miner.CargoThreshold} && ${OrcaCargo} < 35000  && ${OrcaCargo} != -1
 		{
 			return
 		}
