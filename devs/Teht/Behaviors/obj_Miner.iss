@@ -1083,7 +1083,7 @@ objectdef obj_Miner
 		}
 		if ${Config.Miner.OrcaTractorLoot}
 		{
-			This:Tractor
+			call This.Tractor
 		}
 		
 
@@ -1352,7 +1352,7 @@ objectdef obj_Miner
 		return FALSE
 	}
 
-	method Tractor()
+	function Tractor()
 	{
 		if ${Ship.TotalTractorBeams} > 0
 		{
