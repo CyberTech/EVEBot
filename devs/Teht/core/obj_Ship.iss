@@ -1100,6 +1100,33 @@ objectdef obj_Ship
 
 		return FALSE
 	}	
+
+	; Returns how many shield transporters healing this entity already
+	member:int ShieldTransportersOnID(int64 EntityID)
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		variable iterator ModuleIter
+		variable int val=0
+
+		This.ModuleList_ShieldTransporters:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if	${ModuleIter.Value.TargetID} == ${EntityID} && \
+				( ${ModuleIter.Value.IsActive} || ${ModuleIter.Value.IsGoingOnline} )
+			{
+				val:Inc[1]
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+
+		return ${val}
+	}	
+	
 	
 	member:bool IsTractoringWreckID(int64 EntityID)
 	{

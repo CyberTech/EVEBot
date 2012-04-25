@@ -164,7 +164,6 @@ objectdef obj_Guardian
 	
 	function ProcessState()
 	{
-		echo Processing Guardian
 		
 		;	If Miner isn't the selected bot mode, this function shouldn't have been called.  However, if it was we wouldn't want it to do anything.
 		if !${Config.Common.BotModeName.Equal[Guardian]}
@@ -420,11 +419,19 @@ objectdef obj_Guardian
 		if ${MyTarget:First(exists)}
 			do
 			{
-				echo ${MyTarget.Value.ShieldPct}
-				if ${Ship.IsShieldTransportingID[${MyTarget.Value.ID}]} && ${MyTarget.Value.ShieldPct} >= 95
-					call Ship.Deactivate_Shield_Transporter ${MyTarget.Value.ID}
-				if !${Ship.IsShieldTransportingID[${MyTarget.Value.ID}]} && ${MyTarget.Value.ShieldPct} < 95
-					call Ship.ActivateFreeShieldTransporter ${MyTarget.Value.ID}
+				if ${Me.Fleet.IsMember[${MyTarget.Value.CharID}]}
+				{
+					if ${Ship.ShieldTransportersOnID[${MyTarget.Value.ID}]} > 0 && ${MyTarget.Value.ShieldPct} >= 95
+						call Ship.Deactivate_Shield_Transporter ${MyTarget.Value.ID}
+					if !${Ship.ShieldTransportersOnID[${MyTarget.Value.ID}]} == 0 && ${MyTarget.Value.ShieldPct} < 95
+						call Ship.ActivateFreeShieldTransporter ${MyTarget.Value.ID}
+
+					if ${Ship.ShieldTransportersOnID[${MyTarget.Value.ID}]} > 1 && ${MyTarget.Value.ShieldPct} >= 60
+						call Ship.Deactivate_Shield_Transporter ${MyTarget.Value.ID}
+					if !${Ship.ShieldTransportersOnID[${MyTarget.Value.ID}]} <= 1 0 && ${MyTarget.Value.ShieldPct} < 60
+						call Ship.ActivateFreeShieldTransporter ${MyTarget.Value.ID}
+					
+				}
 			}
 			while ${MyTarget:Next(exists)}
 			
