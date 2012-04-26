@@ -1793,11 +1793,25 @@ objectdef obj_Configuration_Missioneer
 
 }
 
+objectdef obj_FleetMember
+{
+	variable string FleetMemberName
+	variable bool Wing
+
+	method Initialize(string arg_FleetMemberName, bool arg_Wing)
+	{
+		FleetMemberName:Set[${arg_FleetMemberName}]
+		Wing:Set[${arg_Wing}]
+	}
+}
+
+
 /* ************************************************************************* */
 objectdef obj_Configuration_Fleet
 {
 	variable string SetName = "Fleet"
-	variable index:string FleetMembers
+	variable index:obj_FleetMember FleetMembers
+	variable bool WingOne=FALSE
 
 	method Initialize()
 	{
@@ -1856,12 +1870,52 @@ objectdef obj_Configuration_Fleet
 
 	method AddFleetMember(string value)
 	{
-		This.FleetMembersRef:AddSetting[${value}, ${value}]
+		if ${This.IsListed[${value}]}
+			This:UpdateFleetMember[${value}]
+		else
+			This.FleetMembersRef:AddSetting[${value}, ${WingOne}]
 	}
 	method RemoveFleetMember(string value)
 	{
 		This.FleetMembersRef.FindSetting[${value}]:Remove
 	}
+	method UpdateFleetMember(string value)
+	{
+		This.FleetMembersRef.FindSetting[${value}]:Set[${WingOne}]
+	}
+	method SetWingOne(bool value)
+	{
+		WingOne:Set[${value}]
+	}
+	
+	member:bool IsWing(string value)
+	{
+		This:RefreshFleetMembers
+		variable iterator InfoFromSettings
+		This.FleetMembers:GetIterator[InfoFromSettings]
+		if ${InfoFromSettings:First(exists)}
+			do
+			{
+				if ${InfoFromSettings.Value.FleetMemberName.Equal[${value}]} && ${InfoFromSettings.Value.Wing}
+					return TRUE
+			}
+			while ${InfoFromSettings:Next(exists)}	
+		return FALSE
+	}
+	member:bool IsListed(string value)
+	{
+		This:RefreshFleetMembers
+		variable iterator InfoFromSettings
+		This.FleetMembers:GetIterator[InfoFromSettings]
+		if ${InfoFromSettings:First(exists)}
+			do
+			{
+				if ${InfoFromSettings.Value.FleetMemberName.Equal[${value}]}
+					return TRUE
+			}
+			while ${InfoFromSettings:Next(exists)}	
+		return FALSE
+	}	
 	
 	method RefreshFleetMembers()
 	{
@@ -1872,7 +1926,7 @@ objectdef obj_Configuration_Fleet
 		{
 			do
 			{
-				FleetMembers:Insert[${InfoFromSettings.Value}]
+				FleetMembers:Insert[${InfoFromSettings.Key},${InfoFromSettings.Value}]
 			}
 			while ${InfoFromSettings:Next(exists)}
 		}

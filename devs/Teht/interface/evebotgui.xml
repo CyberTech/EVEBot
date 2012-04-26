@@ -2175,6 +2175,11 @@
 							<Height>18</Height>
 							<MaxLength>50</MaxLength>
 							<OnChange>
+								if ${Script[EVEBot].VariableScope.Config.Fleet.IsWing[${This.Text}]}
+									UIElement[cbWing@Fleet@EVEBotOptionsTab@EVEBot]:SetChecked
+								else
+									UIElement[cbWing@Fleet@EVEBotOptionsTab@EVEBot]:UnsetChecked 
+								
 							</OnChange>
 						</Textentry>
 						<button	Name='AddFleetMember' template='EVEskin.Add.Texture'>
@@ -2183,7 +2188,8 @@
 							<Width>16</Width>
 							<Height>16</Height>
 							<OnLeftClick>
-								UIElement[FleetMembers@Fleet@EVEBotOptionsTab@EVEBot]:AddItem[${UIElement[tbAddFleetMember@Fleet@EVEBotOptionsTab@EVEBot].Text}]
+								if !${Script[EVEBot].VariableScope.Config.Fleet.IsListed[${UIElement[tbAddFleetMember@Fleet@EVEBotOptionsTab@EVEBot].Text}]}
+									UIElement[FleetMembers@Fleet@EVEBotOptionsTab@EVEBot]:AddItem[${UIElement[tbAddFleetMember@Fleet@EVEBotOptionsTab@EVEBot].Text}]
 								Script[EVEBot].VariableScope.Config.Fleet:AddFleetMember[${UIElement[tbAddFleetMember@Fleet@EVEBotOptionsTab@EVEBot].Text}]
 								UIElement[tbAddFleetMember@Fleet@EVEBotOptionsTab@EVEBot]:SetText[]
 							</OnLeftClick>
@@ -2198,11 +2204,24 @@
 								Script[EVEBot].VariableScope.Config.Fleet:RemoveFleetMember[${UIElement[tbAddFleetMember@Fleet@EVEBotOptionsTab@EVEBot].Text}]
 							</OnLeftClick>
 						</button>
+						
+						<checkbox name='cbWing'>
+							<X>450</X>
+							<Y>65</Y>
+							<Height>20</Height>
+							<Width>50</Width>
+							<Text>Wing 2</Text>
+							<AutoTooltip>If checked, this character will be moved to Wing 2.  Used for people you don't want warped with your fleet.</AutoTooltip>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Fleet:SetWingOne[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>						
+						
 						<listbox Name='FleetMembers'>
 							<X>10</X>
-							<Y>65</Y>
+							<Y>90</Y>
 							<Width>530</Width>
-							<Height>210</Height>
+							<Height>175</Height>
 							<SelectMultiple>0</SelectMultiple>
 							<Sort>Text</Sort>
 							<AutoTooltip>These characters will be added to your fleet if EVEBot can find them in your Corporation or Contacts and "I am Leader" is checked.</AutoTooltip>
@@ -2214,15 +2233,17 @@
 								{
 									do
 									{
-										This:AddItem[${InfoFromSettings.Value}]
+										This:AddItem[${InfoFromSettings.Value.FleetMemberName}]
 									}
 									while ${InfoFromSettings:Next(exists)}
-								}
-								
-								
+								}						
 							</OnLoad>
 							<OnSelect>
 								UIElement[tbAddFleetMember@Fleet@EVEBotOptionsTab@EVEBot]:SetText[${This.SelectedItem.Text}]
+								if ${Script[EVEBot].VariableScope.Config.Fleet.IsWing[${UIElement[tbAddFleetMember@Fleet@EVEBotOptionsTab@EVEBot].Text}]}
+									UIElement[cbWing@Fleet@EVEBotOptionsTab@EVEBot]:SetChecked		
+								else
+									UIElement[cbWing@Fleet@EVEBotOptionsTab@EVEBot]:UnsetChecked		
 							</OnSelect>
 						</listbox>
 					</Tab>

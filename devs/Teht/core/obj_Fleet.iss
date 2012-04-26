@@ -87,13 +87,48 @@ objectdef obj_Fleet
 			Config.Fleet:RefreshFleetMembers
 			variable iterator InfoFromSettings
 			Config.Fleet.FleetMembers:GetIterator[InfoFromSettings]
-
+			
 			if ${InfoFromSettings:First(exists)}
 				do
 				{
-					if !${Me.Fleet.IsMember[${This.ResolveCharID[${InfoFromSettings.Value}]}]}
+					if !${Me.Fleet.IsMember[${This.ResolveCharID[${InfoFromSettings.Value.FleetMemberName}]}]}
 					{
-						This:InviteToFleet[${This.ResolveCharID[${InfoFromSettings.Value}]}]
+						This:InviteToFleet[${This.ResolveCharID[${InfoFromSettings.Value.FleetMemberName}]}]
+					}
+					else
+					{
+						if ${Config.Fleet.IsWing[${InfoFromSettings.Value.FleetMemberName}]}
+						{
+							variable index:int64 Wings
+							variable index:int64 Squads
+							variable int64 OtherWing
+							variable int64 OtherSquad
+							variable iterator Wing
+							Me.Fleet:GetWings[Wings]
+							if ${Wings.Used} == 1
+							{
+								Me.Fleet:CreateWing
+								return
+							}
+							Me.Fleet:GetWings[Wings]
+							Wings:GetIterator[Wing]
+							if ${Wing:First(exists)}
+								do
+								{
+									if ${Wing.Value} != ${Me.Fleet.Member[${Me.CharID}].WingID}
+									{
+										OtherWing:Set[${Wing.Value}]
+										Me.Fleet:GetSquads[Squads, ${Wing.Value}]
+										OtherSquad:Set[${Squads[1]}]
+									}
+								}
+								while ${Wing:Next(exists)}
+							
+							if ${Me.Fleet.Member[${Me.CharID}].WingID} == ${Me.Fleet.Member[${This.ResolveCharID[${InfoFromSettings.Value.FleetMemberName}]}].WingID}
+							{
+								Me.Fleet.Member[${This.ResolveCharID[${InfoFromSettings.Value.FleetMemberName}]}]:Move[${OtherWing}, ${OtherSquad}]
+							}
+						}
 					}
 				}
 				while ${InfoFromSettings:Next(exists)}
