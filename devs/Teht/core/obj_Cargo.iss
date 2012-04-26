@@ -184,7 +184,7 @@ objectdef obj_Cargo
 		return ${This.CargoToTransfer.Used}
 	}
 
-	function ReplenishCrystals()
+	function ReplenishCrystals(int64 from=-1)
 	{
 		variable iterator CargoIterator
 		variable iterator HangarIterator
@@ -232,11 +232,14 @@ objectdef obj_Cargo
 			return
 		}
 
-		call Station.OpenHangar
-		Me:GetHangarItems[HangarItems]
-		HangarItems:GetIterator[HangarIterator]
+		
+		if ${from} == -1
+		{
+			call Station.OpenHangar
+			Me:GetHangarItems[HangarItems]
+			HangarItems:GetIterator[HangarIterator]
 
-		; Cycle thru the Hangar looking for the needed Crystals and move them to the ship
+			; Cycle thru the Hangar looking for the needed Crystals and move them to the ship
 			if ${HangarIterator:First(exists)}
 			do
 			{
@@ -286,8 +289,62 @@ objectdef obj_Cargo
 				}
 			}
 			while ${Crystals.NextKey(exists)}
-
 		}
+		else
+		{
+			variable index:item HangarCargo
+			Entity[${from}]:GetCorpHangarsCargo[HangarCargo]
+			HangarCargo:GetIterator[CargoIterator]
+
+			; Cycle thru the Hangar looking for the needed Crystals and move them to the ship
+			if ${CargoIterator:First(exists)}
+			do
+			{
+				echo CategoryID: ${CargoIterator.Value.CategoryID} Name: ${CargoIterator.Value.Name}
+				if ${CargoIterator.Value.CategoryID} == CATEGORYID_CHARGE
+				{
+
+					name:Set[${CargoIterator.Value.Name}]
+					quant:Set[${CargoIterator.Value.Quantity}]
+
+					if ${Crystals.FirstKey(exists)}
+					do
+					{
+						needed:Set[${Math.Calc[ ${MIN_CRYSTALS} - ${Crystals.CurrentValue}]}]
+
+						;echo "${MIN_CRYSTALS} - ${Crystals.CurrentValue} = ${needed}"
+						;echo Hangar: ${name} : ${quant} == ${Crystals.CurrentKey} : Needed: ${needed}
+
+						if (${name.Equal[${Crystals.CurrentKey}]} && ${needed} > 0)
+						{
+							if ${quant} >= ${needed}
+							{
+								CargoIterator.Value:MoveTo[MyShip, CargoHold, ${needed}]
+								Crystals:Set[${Crystals.CurrentKey}, ${Math.Calc[${Crystals.CurrentValue} + ${needed}]}]
+							}
+							else
+							{
+								CargoIterator.Value:MoveTo[MyShip, CargoHold]
+								Crystals:Set[${Crystals.CurrentKey}, ${Math.Calc[${Crystals.CurrentValue} + ${quant}]}]
+							}
+						}
+					}
+					while ${Crystals.NextKey(exists)}
+				}
+			}
+			while ${CargoIterator:Next(exists)}
+
+			if ${Crystals.FirstKey(exists)}
+			do
+			{
+				if ${Crystals.CurrentValue} < ${MIN_CRYSTALS}
+				{
+						 UI:UpdateConsole["Out of ${Crystals.CurrentKey} !!"]
+				}
+			}
+			while ${Crystals.NextKey(exists)}		
+		}
+	}
 
 
 	function TransferContainerToHangar(item anItem)
@@ -387,6 +444,8 @@ objectdef obj_Cargo
 		variable float VolumeToMove=0
 		variable index:int64 ListToMove
 		Entity[${dest}]:GetCorpHangarsCargo[HangarCargo]
+		HangarCargo:RemoveByQuery[${LavishScript.CreateQuery[Name =- "Mining Crystal"]}]
+		
 		HangarCargo:GetIterator[CargoIterator]
 		call Ship.OpenCargo
 
@@ -1207,6 +1266,7 @@ objectdef obj_Cargo
 		}
 		else
 		{
+			echo ${Ship.CargoFreeSpace}
 			UI:UpdateConsole["DEBUG: obj_Cargo:TransferListToShipCorporateHangar: Nothing found to move"]
 		}
 		EVE:StackItems[MyStationHangar,Hangar]

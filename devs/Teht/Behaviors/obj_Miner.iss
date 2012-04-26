@@ -699,12 +699,12 @@ objectdef obj_Miner
 		}
 
 		;	If configured to launch combat drones and there's a shortage, force a DropOff so we go to our delivery location
-		 if ${Config.Combat.LaunchCombatDrones} && ${Ship.Drones.CombatDroneShortage}
-		{
-			UI:UpdateConsole["Warning: Drone shortage detected.  Forcing a dropoff - make sure drones are available at your delivery location!"]
-			ForceDropoff:Set[TRUE]
-			return
-		}
+		 ; if ${Config.Combat.LaunchCombatDrones} && ${Ship.Drones.CombatDroneShortage}
+		; {
+			; UI:UpdateConsole["Warning: Drone shortage detected.  Forcing a dropoff - make sure drones are available at your delivery location!"]
+			; ForceDropoff:Set[TRUE]
+			; return
+		; }
 
 		;	This changes belts if someone's within Min. Distance to Players
 		if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]}
@@ -792,6 +792,7 @@ objectdef obj_Miner
 				{
 					call This.Prepare_Environment
 					call Cargo.TransferOreToShipCorpHangar ${Entity[${Orca.Escape}]}
+					call Cargo.ReplenishCrystals ${Entity[${Orca.Escape}]}
 				}
 			}
 		}
@@ -1072,7 +1073,7 @@ objectdef obj_Miner
 			if ${Config.Miner.DeliveryLocationTypeName.Equal["No Delivery"]}
 			{
 				call Cargo.TransferCargoFromCargoHoldToShipCorporateHangar
-				relay all -event EVEBot_Orca_Cargo ${Ship.CorpHangarUsedSpace}
+				relay all -event EVEBot_Orca_Cargo ${Ship.CorpHangarUsedSpace[TRUE]}
 			}
 		}
 		

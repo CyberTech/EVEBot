@@ -174,7 +174,7 @@ objectdef obj_Hauler
 
 		
 		;	If I'm not in a station and I'm full, I should head to a station to unload - Ignore dropoff if Orca Delivery is disabled.
-	    if ${This.HaulerFull}
+	    if ${This.HaulerFull} 
 		{
 			This.CurrentState:Set["DROPOFF"]
 			return
@@ -324,6 +324,7 @@ objectdef obj_Hauler
 					call Station.Undock
 					break
 				}
+				echo WHY ARE WE IN BASE MODE
 				call Cargo.TransferCargoToHangar
 				call Station.Undock
 				relay all -event EVEBot_HaulerMSG ${Ship.CargoFreeSpace}
@@ -466,7 +467,7 @@ objectdef obj_Hauler
 			return
 		}				
 		
-		if ${OrcaCargo} < ${Config.Miner.CargoThreshold} && ${OrcaCargo} < 35000  && ${OrcaCargo} != -1
+		if ${OrcaCargo} < ${Config.Miner.CargoThreshold} && ${OrcaCargo} < 35000  && ${OrcaCargo} != -1 && !${Entity[${Orca.Escape}](exists)}
 		{
 			return
 		}

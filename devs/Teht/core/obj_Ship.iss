@@ -382,15 +382,32 @@ objectdef obj_Ship
 		return ${Math.Calc[${EVEWindow[ByCaption, Corp Hangar].Capacity}-${EVEWindow[ByCaption, Corp Hangar].UsedCapacity}]}
 	}
 	
-	member:float CorpHangarUsedSpace()
+	member:float CorpHangarUsedSpace(bool IgnoreCrystals=FALSE)
 	{
 		if !${Me.Ship(exists)}
 		{
 			return 0
 		}
 		
-		return ${EVEWindow[ByCaption, Corp Hangar].UsedCapacity}
+		variable index:item HangarCargo
+		variable iterator CargoIterator
+		variable float Volume=0
+		Me.Ship:GetCorpHangarsCargo[HangarCargo]
+		if ${IgnoreCrystals}
+			HangarCargo:RemoveByQuery[${LavishScript.CreateQuery[Name =- "Mining Crystal"]}]
+		HangarCargo:GetIterator[CargoIterator]
+		if ${CargoIterator:First(exists)}
+			do
+			{
+					Volume:Inc[${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}]}]
+			}
+			while ${CargoIterator:Next(exists)}
+		return ${Volume}
 	}
+
+		
+
+	
 	
 	member:bool CorpHangarFull()
 	{
@@ -457,6 +474,28 @@ objectdef obj_Ship
 		return FALSE
 	}
 	
+	member:float CargoNoCrystals()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return 0
+		}
+		
+		variable index:item HangarCargo
+		variable iterator CargoIterator
+		variable float Volume=0
+		Me.Ship:GetCargo[HangarCargo]
+		HangarCargo:RemoveByQuery[${LavishScript.CreateQuery[Name =- "Mining Crystal"]}]
+		HangarCargo:GetIterator[CargoIterator]
+		if ${CargoIterator:First(exists)}
+			do
+			{
+					Volume:Inc[${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}]}]
+			}
+			while ${CargoIterator:Next(exists)}
+		return ${Volume}
+	}	
+	
 	member:bool CargoTenthFull()
 	{
 		if !${Me.Ship(exists)}
@@ -464,7 +503,7 @@ objectdef obj_Ship
 			return FALSE
 		}
 
-		if ${This.CargoFreeSpace} <= ${Math.Calc[${Me.Ship.CargoCapacity}*0.90]}
+		if ${This.CargoNoCrystals} >= ${Math.Calc[${Me.Ship.CargoCapacity}*0.10]}
 		{
 			return TRUE
 		}
@@ -1393,7 +1432,14 @@ objectdef obj_Ship
 				if ${ModuleIter.Value.SpecialtyCrystalMiningAmount(exists)}
 				{
 					variable string OreType
-					OreType:Set[${Me.ActiveTarget.Name.Token[2,"("]}]
+					if ${id} == -1
+					{
+						OreType:Set[${Me.ActiveTarget.Name.Token[2,"("]}]
+					}
+					else
+					{
+						OreType:Set[${Entity[${id}].Name.Token[2,"("]}]
+					}
 					OreType:Set[${OreType.Token[1,")"]}]
 					;OreType:Set[${OreType.Replace["(",]}]
 					;OreType:Set[${OreType.Replace[")",]}]
