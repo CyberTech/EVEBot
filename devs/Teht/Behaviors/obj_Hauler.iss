@@ -166,7 +166,7 @@ objectdef obj_Hauler
 		}
 
 		;	If I'm in a station, I need to perform what I came there to do
-		if ${Me.InStation} && (!${Config.Hauler.HaulerModeName.Equal["Service Orca"]} || (${OrcaCargo} > ${Config.Miner.CargoThreshold} || ${OrcaCargo} > 35000)) || ${OrcaCargo} == -1
+		if ${Me.InStation} && (!${Config.Hauler.HaulerModeName.Equal["Service Orca"]} || (${OrcaCargo} > ${Config.Miner.CargoThreshold} || ${OrcaCargo} > 35000) || ${OrcaCargo} == -1)
 		{
 	  		This.CurrentState:Set["BASE"]
 	  		return
