@@ -803,7 +803,7 @@ objectdef obj_Miner
 		
 		;	Here is where we lock new asteroids.  We always want to do this if we have no asteroids locked.  If we have at least one asteroid locked, however,
 		;	we should only lock more asteroids if we're not ice mining
-		if (!${Config.Miner.DistributeLasers} || ${Config.Miner.IceMining} && ${Asteroids.LockedAndLocking} == 0) || ((${Config.Miner.DistributeLasers} && !${Config.Miner.IceMining}) && ${Asteroids.LockedAndLocking} >= 0)
+		if ((!${Config.Miner.DistributeLasers} || ${Config.Miner.IceMining}) && ${Asteroids.LockedAndLocking} == 0) || ((${Config.Miner.DistributeLasers} && !${Config.Miner.IceMining}) && ${Asteroids.LockedAndLocking} >= 0)
 		{
 			;	Calculate how many asteroids we need
 			variable int AsteroidsNeeded=${Ship.TotalMiningLasers}
