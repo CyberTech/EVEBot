@@ -187,6 +187,10 @@ objectdef obj_LoginHandler inherits obj_BaseClass
 			{
 				EVEWindow[ByName,modal]:ClickButtonOK
 			}
+			elseif ${EVEWindow[ByName,modal].Text.Find["wants you to join their fleet, do you accept?"](exists)}
+			{
+				EVEWindow[ByName,modal]:ClickButtonNo
+			}
 			else
 			{
 				UI:UpdateConsole["Error: Unexpected Modal dialog with text:", LOG_STANDARD]
