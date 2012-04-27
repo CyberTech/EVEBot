@@ -1013,20 +1013,30 @@ objectdef obj_Miner
 		relay all -event EVEBot_Orca_InBelt TRUE
 		Ship:Activate_Gang_Links
 		
+		variable int OrcaRange
+		if ${Config.Miner.IceMining}
+		{
+			OrcaRange:Set[10000]
+		}
+		else
+		{
+			OrcaRange:Set[5000]
+		}
+		
 		;	Next we need to move in range of some ore so miners can mine near me
 		if ${Entity[${Asteroids.NearestAsteroid}](exists)} && ${This.Approaching} == 0
 		{
 			if ${Entity[${Asteroids.NearestAsteroid}].Distance} > WARP_RANGE 
 			{
-				Entity[${Asteroids.NearestAsteroid}]:WarpTo[5000]
+				Entity[${Asteroids.NearestAsteroid}]:WarpTo[${OrcaRange}]
 				return
 			}
 		
 			;	Find out if we need to approach this asteroid
-			if ${Entity[${Asteroids.NearestAsteroid}].Distance} > 5000 
+			if ${Entity[${Asteroids.NearestAsteroid}].Distance} > ${OrcaRange} 
 			{
 				UI:UpdateConsole["Approaching: ${Entity[${Asteroids.NearestAsteroid}].Name}"]
-				Entity[${Asteroids.NearestAsteroid}]:Approach[5000]
+				Entity[${Asteroids.NearestAsteroid}]:Approach[${OrcaRange}]
 				This.Approaching:Set[${Asteroids.NearestAsteroid}]
 				This.TimeStartedApproaching:Set[${Time.Timestamp}]			
 				return
@@ -1042,7 +1052,7 @@ objectdef obj_Miner
 		}			
 
 		;	If we're approaching a target, find out if we need to stop doing so 
-		if (${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= 5000 && ${This.Approaching} != 0) || (!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
+		if (${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= ${OrcaRange} && ${This.Approaching} != 0) || (!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
 		{
 			UI:UpdateConsole["In range of ${Entity[${Asteroids.NearestAsteroid}].Name} - Stopping"]
 			EVE:Execute[CmdStopShip]
