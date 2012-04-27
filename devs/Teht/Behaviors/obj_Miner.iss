@@ -1396,7 +1396,7 @@ objectdef obj_Miner
 			if ${Tractoring} == -1
 			{
 				Wrecks:Clear
-				EVE:QueryEntities[Wrecks,${LavishScript.CreateQuery[GroupID = 186 && HaveLootRights && Distance < ${Ship.OptimalTractorRange} && !IsWreckEmpty]}]
+				EVE:QueryEntities[Wrecks,${LavishScript.CreateQuery[GroupID = 186 && HaveLootRights && Distance < ${Ship.OptimalTractorRange} && !IsWreckEmpty && Distance < ${Ship.OptimalTargetingRange}]}]
 
 				if ${Wrecks.Used} > 0
 				{
