@@ -79,6 +79,7 @@
 							<height>20</height>
 							<OnLeftClick>
 								relay all -event EVEBot_HARDSTOP
+								Script[EVEBot].VariableScope.UI:UpdateConsole["Forcing Break!!!", LOG_MINOR]
 							</OnLeftClick>
 						</button>
 						<button	Name='BroadcastResume' template='EveSkin.Window.ClickButton'>
@@ -91,6 +92,7 @@
 								Social.NextBreak:Set[0]
 								Social.OnBreak:Set[FALSE]
 								relay all -event EVEBot_ABORTHARDSTOP
+								Script[EVEBot].VariableScope.UI:UpdateConsole["Resuming from break!!!", LOG_MINOR]
 							</OnLeftClick>
 						</button>
 						<button	Name='BroadcastRun' template='EveSkin.Window.ClickButton'>
