@@ -8,7 +8,7 @@ function main()
 		if ${UIElement[EVEAbandon].FindUsableChild[AutoAbandon,checkbox].Checked}
 		{
 			Wrecks:Clear
-			EVE:DoGetEntities[Wrecks,OwnerID,${Me.CharID},GroupID,186]
+			EVE:QueryEntities[Wrecks,OwnerID = ${Me.CharID} && GroupID = 186]
 			/* scan through and check for any non-abandoned wreck */
 			for ( count:Set[1] ; ${count} <= ${Wrecks.Used} ; count:Inc )
 			{
