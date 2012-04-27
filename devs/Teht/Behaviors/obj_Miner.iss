@@ -822,11 +822,11 @@ objectdef obj_Miner
 				do
 				{
 					Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
-					if ${Config.Miner.DeliveryLocationTypeName.Equal[Orca]} && ${Entity[${Orca.Escape}](exists)}
+					if ${Config.Miner.DeliveryLocationTypeName.Equal[Orca]} && ${Entity[${Orca.Escape}](exists)} && !${Config.Miner.IceMining}
 					{
 						call Asteroids.TargetNextInRange ${Entity[${Orca.Escape}].ID}
 					}
-					elseif !${Config.Miner.DeliveryLocationTypeName.Equal[Orca]}
+					elseif !${Config.Miner.DeliveryLocationTypeName.Equal[Orca]} || ${Config.Miner.IceMining}
 					{
 						call Asteroids.TargetNext
 					}
@@ -1287,6 +1287,7 @@ objectdef obj_Miner
 				}
 			}
 			while ${GetData:Next(exists)}
+			
 		if ${Attacking} != -1 && ${Entity[${Attacking}].IsLockedTarget} && ${Entity[${Attacking}](exists)}
 		{
 			Entity[${Attacking}]:MakeActiveTarget
