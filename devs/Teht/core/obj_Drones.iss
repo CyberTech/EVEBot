@@ -155,7 +155,7 @@ objectdef obj_Drones
 	}
 
 
-	function ReturnAllToDroneBay()
+	method ReturnAllToDroneBay()
 	{
 		if ${This.DronesInSpace} > 0
 		{

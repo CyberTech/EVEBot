@@ -715,7 +715,6 @@ objectdef obj_Cargo
 		variable index:int64 ListToMove
 		variable iterator CargoIterator
 		This.CargoToTransfer:GetIterator[CargoIterator]
-		echo RecentChanges
 		call LargeShipAssemblyArray.Open ${LargeShipAssemblyArray.ActiveCan}
 		
 		TripHauled:Set[0]
@@ -760,6 +759,44 @@ objectdef obj_Cargo
 		
 	}
 
+	function TransferListFromLargeShipAssemblyArray()
+	{
+		variable float VolumeToMove=0
+		variable index:int64 ListToMove
+		variable index:item LSAACargo
+		variable iterator CargoIterator
+		
+		call LargeShipAssemblyArray.Open ${LargeShipAssemblyArray.ActiveCan}
+		
+		Entity[${LargeShipAssemblyArray.ActiveCan}]:GetCorpHangarsCargo[LSAACargo]
+		LSAACargo:GetIterator[CargoIterator]
+		
+		if ${CargoIterator:First(exists)}
+		{
+				do
+				{
+						if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) < ${Math.Calc[${Ship.CargoFreeSpace} - ${VolumeToMove}]}
+						{
+							ListToMove:Insert[${CargoIterator.Value.ID}]
+							VolumeToMove:Inc[${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}]}]
+						}
+						else
+						{
+							CargoIterator.Value:MoveTo[MyShip, CargoHold, ${Math.Calc[(${Ship.CargoFreeSpace} - ${VolumeToMove}) / ${CargoIterator.Value.Volume}]}]
+							break
+						}
+				}
+				while ${CargoIterator:Next(exists)}
+				EVE:MoveItemsTo[ListToMove, MyShip, CargoHold]
+		}
+		else
+		{
+			UI:UpdateConsole["DEBUG: obj_Cargo:TransferListFromLargeShipAssemblyArray: Nothing found to move"]
+			return
+		}
+		
+	}	
+	
 	function TransferListToXLargeShipAssemblyArray()
 	{
 		variable iterator CargoIterator
@@ -1131,6 +1168,27 @@ objectdef obj_Cargo
 		This.CargoToTransfer:Clear[]
 	}
 
+	function TransferCargoFromLargeShipAssemblyArray()
+	{
+		if ${LargeShipAssemblyArray.IsReady}
+		{
+			if ${Entity[${LargeShipAssemblyArray.ActiveCan}].Distance} > CORP_HANGAR_LOOT_RANGE
+			{
+				call Ship.Approach ${LargeShipAssemblyArray.ActiveCan} CORP_HANGAR_LOOT_RANGE
+			}
+		}
+		else
+		{
+			UI:ConsoleUpdate["No Large Ship Assembly Array found - nothing moved"]
+			return
+		}
+
+		call Ship.OpenCargo
+
+		call This.TransferListFromLargeShipAssemblyArray
+	}
+
+	
 	
 	function TransferOreToXLargeShipAssemblyArray()
 	{

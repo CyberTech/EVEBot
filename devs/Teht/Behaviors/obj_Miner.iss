@@ -1142,7 +1142,7 @@ objectdef obj_Miner
 	;	If I don't add more than collecting drones, I will likely remove this function...
 	function Cleanup_Environment()
 	{
-		call Ship.Drones.ReturnAllToDroneBay
+		Ship.Drones:ReturnAllToDroneBay
 	}
 	
 	;	Don't fix what isn't broke!

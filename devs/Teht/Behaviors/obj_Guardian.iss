@@ -194,7 +194,12 @@ objectdef obj_Guardian
 				{
 					break
 				}
-				call Miner.Cleanup_Environment
+				if ${Me.ToEntity.Mode} == 3
+				{
+					break
+				}
+				
+				Ship.Drones:ReturnAllToDroneBay
 				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
 					if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].TypeID} != 5
@@ -227,12 +232,9 @@ objectdef obj_Guardian
 					call Station.DockAtStation ${Entity["CategoryID = 3"].ID}
 					break
 				}
-				if ${Me.ToEntity.Mode} != 3
-				{
+
 					call Safespots.WarpTo
 					call Miner.FastWarp
-					wait 30
-				}
 
 				UI:UpdateConsole["WARNING:  EVERYTHING has gone wrong. Miner is in HARDSTOP mode and there are no panic locations, delivery locations, stations, or safe spots to use. You're probably going to get blown up..."]
 				break
@@ -298,7 +300,6 @@ objectdef obj_Guardian
 				{
 					call Safespots.WarpTo
 					call Miner.FastWarp
-					wait 30
 					break
 				}
 				
@@ -312,7 +313,6 @@ objectdef obj_Guardian
 			;	*	Undock from station
 			case BASE
 				call Station.Undock
-				wait 600 ${Me.InSpace}
 				break
 				
 			;	This means we're in space and should go defend someone!  Only one choice here - GUARD!
