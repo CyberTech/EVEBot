@@ -416,20 +416,29 @@ objectdef obj_Guardian
 		variable iterator MyTarget
 		Me:GetTargets[MyTargets]
 		MyTargets:GetIterator[MyTarget]
+
 		if ${MyTarget:First(exists)}
 			do
 			{
 				if ${Me.Fleet.IsMember[${MyTarget.Value.CharID}]}
 				{
 					if ${Ship.ShieldTransportersOnID[${MyTarget.Value.ID}]} > 0 && ${MyTarget.Value.ShieldPct} >= 95
+					{
 						call Ship.Deactivate_Shield_Transporter ${MyTarget.Value.ID}
-					if !${Ship.ShieldTransportersOnID[${MyTarget.Value.ID}]} == 0 && ${MyTarget.Value.ShieldPct} < 95
+					}
+					if ${Ship.ShieldTransportersOnID[${MyTarget.Value.ID}]} == 0 && ${MyTarget.Value.ShieldPct} < 95
+					{
 						call Ship.ActivateFreeShieldTransporter ${MyTarget.Value.ID}
+					}
 
 					if ${Ship.ShieldTransportersOnID[${MyTarget.Value.ID}]} > 1 && ${MyTarget.Value.ShieldPct} >= 60
+					{
 						call Ship.Deactivate_Shield_Transporter ${MyTarget.Value.ID}
-					if !${Ship.ShieldTransportersOnID[${MyTarget.Value.ID}]} <= 1 0 && ${MyTarget.Value.ShieldPct} < 60
+					}
+					if ${Ship.ShieldTransportersOnID[${MyTarget.Value.ID}]} <= 1 && ${MyTarget.Value.ShieldPct} < 60
+					{
 						call Ship.ActivateFreeShieldTransporter ${MyTarget.Value.ID}
+					}
 					
 				}
 			}
