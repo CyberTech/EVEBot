@@ -1276,7 +1276,7 @@ objectdef obj_Miner
 		if ${Ship.Drones.DronesInSpace} > 0 && ${AttackingTeam.Used} == 0
 		{
 			UI:UpdateConsole["Warning: Recalling Drones"]
-			call Ship.Drones.ReturnAllToDroneBay
+			Ship.Drones:ReturnAllToDroneBay
 		}
 
 		if ${Ship.Drones.DronesInSpace} == 0  && ${AttackingTeam.Used} > 0
