@@ -2065,7 +2065,7 @@ objectdef obj_Ship
 		}
 		This:DeactivateAllMiningLasers[]
 		This:UnlockAllTargets[]
-		call This.Drones.ReturnAllToDroneBay
+		This.Drones:ReturnAllToDroneBay
 	}
 
 	member:bool InWarp()
