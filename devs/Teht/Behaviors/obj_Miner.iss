@@ -1395,6 +1395,7 @@ objectdef obj_Miner
 			
 			if ${Tractoring} == -1
 			{
+				Wrecks:Clear
 				EVE:QueryEntities[Wrecks,${LavishScript.CreateQuery[GroupID = 186 && HaveLootRights && Distance < ${Ship.OptimalTractorRange} && !IsWreckEmpty]}]
 
 				if ${Wrecks.Used} > 0
@@ -1417,7 +1418,7 @@ objectdef obj_Miner
 
 			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].Distance} <= LOOT_RANGE && ${Entity[${Tractoring}].LootWindow(exists)}
 			{
-				UI:UpdateConsole["Warning: Looting wreck"]
+				UI:UpdateConsole["Warning: Looting wreck ${Entity[${Tractoring}].Name}"]
 				variable index:item ContainerCargo
 				variable iterator Cargo
 				variable index:int64 CargoList
