@@ -3,24 +3,17 @@
 	<Window name="EVEAbandon">
 		<x>200</x>
 		<y>200</y>
-		<Width>200</Width>
-		<Height>200</Height>
-		<Title>Mine Manager</Title>
+		<Width>140</Width>
+		<Height>50</Height>
+		<Title>Auto-Abandon</Title>
 		<Children>
-			<Text Name="lblAssets">
+			<Checkbox Name="AutoAbandon" template="CommandCheckbox">
 				<X>10</X>
 				<Y>10</Y>
-				<Width>100</Width>
+				<Width>120</Width>
 				<Height>20</Height>
-				<Text>Assets in dropoff:</Text>
-			</Text>
-			<Text Name="Assets">
-				<X>10</X>
-				<Y>110</Y>
-				<Width>80</Width>
-				<Height>20</Height>
-				<Text></Text>
-			</Text>
+				<Text>Abandon wrecks?</Text>
+			</Checkbox>
 		</Children>
 	</Window>
 </ISUI>
