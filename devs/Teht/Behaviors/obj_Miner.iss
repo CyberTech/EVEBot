@@ -1436,7 +1436,7 @@ objectdef obj_Miner
 			
 			if ${Entity[${Tractoring}](exists)} && !${Entity[${Tractoring}].IsLockedTarget}
 			{
-				UI:UpdateConsole["Warning: Locking wreck"]
+				UI:UpdateConsole["Warning: Locking wreck ${Entity[${Tractoring}].Name}"]
 				Entity[${Tractoring}]:LockTarget
 				return
 			}
