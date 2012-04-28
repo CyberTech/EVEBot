@@ -245,7 +245,7 @@ objectdef obj_Miner
 				{
 					break
 				}
-				call This.Cleanup_Environment
+				This:Cleanup_Environment
 				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
 					if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].TypeID} != 5
@@ -301,7 +301,7 @@ objectdef obj_Miner
 				{
 					break
 				}
-				call This.Cleanup_Environment
+				This:Cleanup_Environment
 				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
 					if ${Config.Miner.BookMarkLastPosition} && !${Bookmarks.CheckForStoredLocation}
@@ -427,7 +427,7 @@ objectdef obj_Miner
 			;	This means we need to go to our delivery location to unload.
 			case DROPOFF
 				;	Clean up before we leave
-				call This.Cleanup_Environment
+				This:Cleanup_Environment
 
 			
 				;	Before we go anywhere, make a bookmark so we can get back here
@@ -701,6 +701,7 @@ objectdef obj_Miner
 			}
 			while ${Ship.Drones.DronesInSpace} != 0	
 		}
+		
 		if ${Ship.TotalActivatedMiningLasers} == 0 && !${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]}
 		{	
 			do
@@ -1179,7 +1180,7 @@ objectdef obj_Miner
 	}
 
 	;	If I don't add more than collecting drones, I will likely remove this function...
-	function Cleanup_Environment()
+	method Cleanup_Environment()
 	{
 		Ship.Drones:ReturnAllToDroneBay
 	}

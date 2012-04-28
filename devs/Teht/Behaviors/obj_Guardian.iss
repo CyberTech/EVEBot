@@ -252,7 +252,7 @@ objectdef obj_Guardian
 				{
 					break
 				}
-				call Miner.Cleanup_Environment
+				Miner:Cleanup_Environment
 				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
 					if ${Config.Miner.BookMarkLastPosition} && !${Bookmarks.CheckForStoredLocation}
@@ -377,6 +377,21 @@ objectdef obj_Guardian
 
 		
 		Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
+		if ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && ${Me.ToEntity.Mode} == 3 && ${Entity[${Orca.Escape}].Mode} == 3 && ${Ship.Drones.DronesInSpace} != 0 && !${EVEBot.ReturnToStation}
+		{
+			EVE:Execute[CmdStopShip]				
+			do
+			{
+				if ${Me.ToEntity.Mode} == 3
+				{
+					EVE:Execute[CmdStopShip]				
+				}
+				Ship.Drones:ReturnAllToDroneBay
+				wait 20
+			}
+			while ${Ship.Drones.DronesInSpace} != 0	
+		}
+
 		if ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && ${Miner.WarpToOrca} && !${Entity[${Orca.Escape}](exists)}
 		{
 			call Ship.WarpToFleetMember ${Local[${Config.Miner.DeliveryLocation}]}
@@ -391,7 +406,7 @@ objectdef obj_Guardian
 		if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]}
 		{
 			UI:UpdateConsole["Avoiding player: Changing Belts"]
-			call Miner.Cleanup_Environment
+			Miner:Cleanup_Environment
 			call Asteroids.MoveToField TRUE
 			return
 		}
