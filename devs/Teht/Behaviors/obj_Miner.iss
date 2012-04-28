@@ -32,6 +32,7 @@ objectdef obj_Miner
 	;	This is used to keep track of what we are approaching and when we started
 	variable int64 Approaching = 0
 	variable int TimeStartedApproaching = 0
+	variable bool ApproachingOrca=FALSE
 	
 	;	This is used to keep track of if our orca is in a belt.
 	variable bool WarpToOrca=FALSE
@@ -768,15 +769,17 @@ objectdef obj_Miner
 				Entity[${Orca.Escape}]:Approach[LOOT_RANGE]
 				This.Approaching:Set[${Entity[${Orca.Escape}]}]
 				This.TimeStartedApproaching:Set[${Time.Timestamp}]
+				This.ApproachingOrca:Set[TRUE]
 				return
 			}
 			
 			;	If we've been approaching for more than 2 minutes, we need to give up and try again
-			if ${Math.Calc[${TimeStartedApproaching}-${Time.Timestamp}]} < -120 && ${This.Approaching} != 0
+			if ${Math.Calc[${TimeStartedApproaching} - ${Time.Timestamp}]} < -120 && ${This.Approaching} != 0
 			{
 				echo Approach Orca stopping because of timeout.
 				This.Approaching:Set[0]
 				This.TimeStartedApproaching:Set[0]			
+				This.ApproachingOrca:Set[FALSE]
 				return
 			}			
 			
@@ -788,6 +791,7 @@ objectdef obj_Miner
 				EVE:Execute[CmdStopShip]
 				This.Approaching:Set[0]
 				This.TimeStartedApproaching:Set[0]
+				This.ApproachingOrca:Set[FALSE]
 				
 				LockedTargets:Clear
 				Me:GetTargets[LockedTargets]
@@ -932,15 +936,16 @@ objectdef obj_Miner
 		}
 		
 		;	If we've been approaching for more than 2 minutes, we need to give up and try again
-		if ${Math.Calc[${TimeStartedApproaching}-${Time.Timestamp}]} < -120 && ${This.Approaching} != 0
+		if ${Math.Calc[${TimeStartedApproaching} - ${Time.Timestamp}]} < -120 && ${This.Approaching} != 0
 		{
 			This.Approaching:Set[0]
 			This.TimeStartedApproaching:Set[0]			
+			This.ApproachingOrca:Set[FALSE]
 			return
 		}			
 
 		;	If we're approaching a target, find out if we need to stop doing so 
-		if (${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= ${Ship.OptimalMiningRange[1]} && ${This.Approaching} != 0) || (!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
+		if (${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= ${Ship.OptimalMiningRange[1]} && ${This.Approaching} != 0 && !${This.ApproachingOrca}) || (!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
 		{
 			EVE:Execute[CmdStopShip]
 			This.Approaching:Set[0]
