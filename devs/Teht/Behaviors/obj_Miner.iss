@@ -670,6 +670,7 @@ objectdef obj_Miner
 		call Asteroids.UpdateList
 		
 		Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
+
 		if ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && ${WarpToOrca} && !${Entity[${Orca.Escape}](exists)}
 		{
 			call Ship.WarpToFleetMember ${Local[${Config.Miner.DeliveryLocation}]}
@@ -683,8 +684,34 @@ objectdef obj_Miner
 		{
 			call Asteroids.UpdateList ${Entity[${Orca.Escape}].ID}
 		}
+
+		Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
+		if ${Ship.TotalActivatedMiningLasers} == 0 && ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && ${Me.ToEntity.Mode} == 3 && ${Entity[${Orca.Escape}].Mode} == 3 && ${Ship.Drones.DronesInSpace} != 0 && !${EVEBot.ReturnToStation}
+		{
+			EVE:Execute[CmdStopShip]				
+			do
+			{
+				if ${Me.ToEntity.Mode} == 3
+				{
+					EVE:Execute[CmdStopShip]				
+				}
+				Ship.Drones:ReturnAllToDroneBay
+				wait 20
+			}
+			while ${Ship.Drones.DronesInSpace} != 0	
+		}
 		if ${Ship.TotalActivatedMiningLasers} == 0 && !${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]}
 		{	
+			do
+			{
+				if ${Me.ToEntity.Mode} == 3
+				{
+					EVE:Execute[CmdStopShip]				
+				}
+				Ship.Drones:ReturnAllToDroneBay
+				wait 20
+			}
+			while ${Ship.Drones.DronesInSpace} != 0		
 			call Asteroids.MoveToField FALSE TRUE
 			call Asteroids.UpdateList
 		}
@@ -710,7 +737,7 @@ objectdef obj_Miner
 		if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]}
 		{
 			UI:UpdateConsole["Avoiding player: Changing Belts"]
-			call This.Cleanup_Environment
+			Ship.Drones:ReturnAllToDroneBay
 			call Asteroids.MoveToField TRUE
 			return
 		}
@@ -747,6 +774,7 @@ objectdef obj_Miner
 			;	If we've been approaching for more than 2 minutes, we need to give up and try again
 			if ${Math.Calc[${TimeStartedApproaching}-${Time.Timestamp}]} < -120 && ${This.Approaching} != 0
 			{
+				echo Approach Orca stopping because of timeout.
 				This.Approaching:Set[0]
 				This.TimeStartedApproaching:Set[0]			
 				return
@@ -985,6 +1013,12 @@ objectdef obj_Miner
 		Asteroids.AsteroidList:GetIterator[AsteroidIterator]
 		if !${AsteroidIterator:First(exists)}
 		{
+			do
+			{
+				Ship.Drones:ReturnAllToDroneBay
+				wait 20
+			}
+			while ${Ship.Drones.DronesInSpace} != 0		
 			call Asteroids.MoveToField FALSE FALSE TRUE
 			call Asteroids.UpdateList
 		}
@@ -1004,7 +1038,7 @@ objectdef obj_Miner
 		if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]}
 		{
 			UI:UpdateConsole["Avoiding player: Changing Belts"]
-			call This.Cleanup_Environment
+			Ship.Drones:ReturnAllToDroneBay
 			call Asteroids.MoveToField TRUE FALSE TRUE
 			return
 		}
