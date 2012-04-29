@@ -307,14 +307,20 @@ objectdef obj_Social
 					(${CorpToCorp} != 0 && ${CorpToCorp} < ${Config.Combat.LowestStanding}) || \
 					(${CorpToAlliance} != 0 && ${CorpToAlliance} < ${Config.Combat.LowestStanding}) || \
 					(${AllianceToCorp} != 0 && ${AllianceToCorp} < ${Config.Combat.LowestStanding}) || \
-					${AllianceToAlliance} < ${Config.Combat.LowestStanding} || \
-					${AllianceToCorp} < ${Config.Combat.LowestStanding} || \
-					${MeToPilot} < ${Config.Combat.LowestStanding} || \
-					${MeToCorp} < ${Config.Combat.LowestStanding} || \
-					${MeToAlliance} < ${Config.Combat.LowestStanding} || \
-					${CorpToPilot} < ${Config.Combat.LowestStanding} || \
-					${CorpToCorp} < ${Config.Combat.LowestStanding} || \
-					${CorpToAlliance} < ${Config.Combat.LowestStanding} \
+					(${AllianceToAlliance} != 0 && ${AllianceToAlliance} < ${Config.Combat.LowestStanding}) || \
+					( \
+						${Config.Combat.IncludeNeutralInCalc} && \
+						( \
+							${AllianceToAlliance} < ${Config.Combat.LowestStanding} || \
+							${AllianceToCorp} < ${Config.Combat.LowestStanding} || \
+							${MeToPilot} < ${Config.Combat.LowestStanding} || \
+							${MeToCorp} < ${Config.Combat.LowestStanding} || \
+							${MeToAlliance} < ${Config.Combat.LowestStanding} || \
+							${CorpToPilot} < ${Config.Combat.LowestStanding} || \
+							${CorpToCorp} < ${Config.Combat.LowestStanding} || \
+							${CorpToAlliance} < ${Config.Combat.LowestStanding} \
+						) \
+					) \
 				)
 			{
 				UI:UpdateConsole["if !${PilotID.Equal[-1]} && ", LOG_DEBUG]
@@ -329,14 +335,18 @@ objectdef obj_Social
 				UI:UpdateConsole["		(${CorpToCorp} != 0 && ${CorpToCorp} < ${Config.Combat.LowestStanding}) ||  ", LOG_DEBUG]
 				UI:UpdateConsole["		(${CorpToAlliance} != 0 && ${CorpToAlliance} < ${Config.Combat.LowestStanding}) ||  ", LOG_DEBUG]
 				UI:UpdateConsole["		(${AllianceToCorp} != 0 && ${AllianceToCorp} < ${Config.Combat.LowestStanding}) ||  ", LOG_DEBUG]
-				UI:UpdateConsole["		${AllianceToAlliance} < ${Config.Combat.LowestStanding}  ", LOG_DEBUG]
-				UI:UpdateConsole["		${AllianceToCorp} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
-				UI:UpdateConsole["		${MeToPilot} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
-				UI:UpdateConsole["		${MeToCorp} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
-				UI:UpdateConsole["		${MeToAlliance} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
-				UI:UpdateConsole["		${CorpToPilot} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
-				UI:UpdateConsole["		${CorpToCorp} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
-				UI:UpdateConsole["		${CorpToAlliance} < ${Config.Combat.LowestStanding}  ", LOG_DEBUG]
+				UI:UpdateConsole["		(${AllianceToAlliance} != 0 && ${AllianceToAlliance} < ${Config.Combat.LowestStanding}) ||  ", LOG_DEBUG]
+				UI:UpdateConsole["		${Config.Combat.IncludeNeutralInCalc} && ", LOG_DEBUG]
+				UI:UpdateConsole["		( \", LOG_DEBUG]
+				UI:UpdateConsole["			${AllianceToAlliance} < ${Config.Combat.LowestStanding} || ", LOG_DEBUG]
+				UI:UpdateConsole["			${AllianceToCorp} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
+				UI:UpdateConsole["			${MeToPilot} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
+				UI:UpdateConsole["			${MeToCorp} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
+				UI:UpdateConsole["			${MeToAlliance} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
+				UI:UpdateConsole["			${CorpToPilot} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
+				UI:UpdateConsole["			${CorpToCorp} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
+				UI:UpdateConsole["			${CorpToAlliance} < ${Config.Combat.LowestStanding}  ", LOG_DEBUG]
+				UI:UpdateConsole["		) ", LOG_DEBUG]
 				UI:UpdateConsole["	) ", LOG_DEBUG]
 				UI:UpdateConsole["Alert: Low Standing Pilot: ${PilotIterator.Value.Name}: CharID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_DEBUG]
 				UI:UpdateConsole["Standings: ${MeToPilot} ${MeToCorp} ${MeToAlliance} ${CorpToPilot} ${CorpToCorp} ${CorpToAlliance} ${AllianceToCorp} ${AllianceToAlliance}", LOG_DEBUG]

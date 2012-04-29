@@ -1253,6 +1253,23 @@
 							<Text>Min Acceptable Standing</Text>
 							<AutoTooltip>The lowest standing pilot we tolerate in system before we flee. It goes to -11!</AutoTooltip>
 						</Text>
+						<checkbox name='cbIncludeNeutralInCalc'>
+							<X>10</X>
+							<Y>150</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Include Neutral (0.0) standings in standings check</Text>
+							<AutoTooltip>If checked, include all 0.0 standings (includes corp, alliance, and personal)</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Combat.IncludeNeutralInCalc}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Combat:SetIncludeNeutralInCalc[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
 						<slider name='MinArmorPct'>
 							<X>210</X>
 							<Y>10</Y>
