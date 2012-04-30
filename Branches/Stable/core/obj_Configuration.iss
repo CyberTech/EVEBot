@@ -81,7 +81,8 @@ objectdef obj_Configuration
 	variable obj_Configuration_Freighter Freighter
 	variable obj_Configuration_Agents Agents
 	variable obj_Configuration_Missioneer Missioneer
-
+	variable obj_Configuration_Fleet Fleet
+	
 	method Save()
 	{
 		BaseConfig:Save[]
@@ -506,6 +507,26 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Use Mining Drones, ${value}]
 	}
 
+	member:bool OrcaMode()
+	{
+		return ${This.MinerRef.FindSetting[Orca Mode, FALSE]}
+	}
+
+	method SetOrcaMode(bool value)
+	{
+		This.MinerRef:AddSetting[Orca Mode, ${value}]
+	}
+
+	member:bool OrcaTractorLoot()
+	{
+		return ${This.MinerRef.FindSetting[Orca Tractor Loot, FALSE]}
+	}
+
+	method SetOrcaTractorLoot(bool value)
+	{
+		This.MinerRef:AddSetting[Orca Tractor Loot, ${value}]
+	}
+	
 	member:int AvoidPlayerRange()
 	{
 		return ${This.MinerRef.FindSetting[Avoid Player Range, 10000]}
@@ -534,16 +555,6 @@ objectdef obj_Configuration_Miner
 	method SetLowestStanding(int value)
 	{
 		This.MinerRef:AddSetting[Lowest Standing, ${value}]
-	}
-
-	member:bool IncludeNeutralInCalc()
-	{
-		return ${This.CombatRef.FindSetting[IncludeNeutralInCalc, FALSE]}
-	}
-
-	method SetIncludeNeutralInCalc(bool value)
-	{
-		This.CombatRef:AddSetting[IncludeNeutralInCalc, ${value}]
 	}
 
 	member:int MinimumSecurityStatus()
@@ -596,6 +607,17 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Delivery Location, ${value}]
 	}
 
+	member:string PanicLocation()
+	{
+		return ${This.MinerRef.FindSetting[Panic Location]}
+	}
+
+	method SetPanicLocation(string value)
+	{
+		This.MinerRef:AddSetting[Panic Location, ${value}]
+	}
+	
+	
 	member:bool UseFieldBookmarks()
 	{
 		return ${This.MinerRef.FindSetting[Use Field Bookmarks, FALSE]}
@@ -712,6 +734,7 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[OrbitAtOptimal, FALSE]
 		This.CombatRef:AddSetting[WarpRange, 0]
 		This.CombatRef:AddSetting[Lowest Standing, 0]
+		This.CombatRef:AddSetting[IncludeNeutralInCalc, 1]
 		This.CombatRef:AddSetting[LootMyKills, 0]
 		This.CombatRef:AddSetting[Use Anom Bookmarks, FALSE]
 		This.CombatRef:AddSetting[AnomBookmarkLabel, Anom:]
@@ -998,6 +1021,76 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[Lowest Standing, ${value}]
 	}
 
+	member:bool IncludeNeutralInCalc()
+	{
+		return ${This.CombatRef.FindSetting[IncludeNeutralInCalc, FALSE]}
+	}
+
+	method SetIncludeNeutralInCalc(bool value)
+	{
+		This.CombatRef:AddSetting[IncludeNeutralInCalc, ${value}]
+	}
+
+	member:bool TakeBreaks()
+	{
+		return ${This.CombatRef.FindSetting[Take Breaks, FALSE]}
+	}
+
+	method SetTakeBreaks(bool value)
+	{
+		This.CombatRef:AddSetting[Take Breaks, ${value}]
+	}
+
+	member:int TimeBetweenBreaks()
+	{
+		return ${This.CombatRef.FindSetting[Time Between Breaks, 0]}
+	}
+
+	method SetTimeBetweenBreaks(int value)
+	{
+		This.CombatRef:AddSetting[Time Between Breaks, ${value}]
+	}
+
+	member:int BreakDuration()
+	{
+		return ${This.CombatRef.FindSetting[Break Duration, 0]}
+	}
+
+	method SetBreakDuration(int value)
+	{
+		This.CombatRef:AddSetting[Break Duration, ${value}]
+	}
+	member:bool BroadcastBreaks()
+	{
+		return ${This.CombatRef.FindSetting[Broadcast Breaks, FALSE]}
+	}
+
+	method SetBroadcastBreaks(bool value)
+	{
+		This.CombatRef:AddSetting[Broadcast Breaks, ${value}]
+	}
+
+	member:bool UseSafeCooldown()
+	{
+		return ${This.CombatRef.FindSetting[Use Safe Cooldown, FALSE]}
+	}
+
+	method SetUseSafeCooldown(bool value)
+	{
+		This.CombatRef:AddSetting[Use Safe Cooldown, ${value}]
+	}
+
+	member:int SafeCooldown()
+	{
+		return ${This.CombatRef.FindSetting[Safe Cooldown Duration, 0]}
+	}
+
+	method SetSafeCooldown(int value)
+	{
+		This.CombatRef:AddSetting[Safe Cooldown Duration, ${value}]
+	}
+	
+	
 	member:bool LootMyKills()
 	{
 		return ${This.CombatRef.FindSetting[LootMyKills, FALSE]}
@@ -1088,6 +1181,16 @@ objectdef obj_Configuration_Hauler
 	method SetHaulNewFleetMembers(bool value)
 	{
 		This.HaulerRef:AddSetting[Haul for New Fleet Members, ${value}]
+	}
+	
+	member:string HaulerPickupName()
+	{
+		return ${This.HaulerRef.FindSetting[Hauler Pickup Name, ""]}
+	}
+
+	method SetHaulerPickupName(string Bookmark)
+	{
+		This.HaulerRef:AddSetting[Hauler Pickup Name,${Bookmark}]
 	}
 }
 
@@ -1698,6 +1801,144 @@ objectdef obj_Configuration_Missioneer
 		This.MissioneerRef:AddSetting[Small Hauler Limit,${value}]
 	}
 
-
 }
 
+objectdef obj_FleetMember
+{
+	variable string FleetMemberName
+	variable bool Wing
+
+	method Initialize(string arg_FleetMemberName, bool arg_Wing)
+	{
+		FleetMemberName:Set[${arg_FleetMemberName}]
+		Wing:Set[${arg_Wing}]
+	}
+}
+
+
+/* ************************************************************************* */
+objectdef obj_Configuration_Fleet
+{
+	variable string SetName = "Fleet"
+	variable index:obj_FleetMember FleetMembers
+	variable bool WingOne=FALSE
+
+	method Initialize()
+	{
+		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)} || !${BaseConfig.BaseRef.FindSet[${This.SetName}].FindSet[FleetMembers](exists)}
+		{
+			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
+			This:Set_Default_Values[]
+		}
+
+		UI:UpdateConsole["obj_Configuration_Fleet: Initialized", LOG_MINOR]
+	}
+
+	member:settingsetref FleetRef()
+	{
+		return ${BaseConfig.BaseRef.FindSet[${This.SetName}]}
+	}
+	member:settingsetref FleetMembersRef()
+	{
+		return ${This.FleetRef.FindSet[FleetMembers]}
+	}
+	method Set_Default_Values()
+	{
+		BaseConfig.BaseRef:AddSet[${This.SetName}]
+		This.FleetRef:AddSet[FleetMembers]
+	}
+
+	member:bool ManageFleet()
+	{
+		return ${This.FleetRef.FindSetting[Manage Fleet, FALSE]}
+	}
+
+	method SetManageFleet(bool value)
+	{
+		This.FleetRef:AddSetting[Manage Fleet, ${value}]
+	}
+
+	member:bool IsLeader()
+	{
+		return ${This.FleetRef.FindSetting[Is Leader, FALSE]}
+	}
+
+	method SetIsLeader(bool value)
+	{
+		This.FleetRef:AddSetting[Is Leader, ${value}]
+	}
+
+	member:string FleetLeader()
+	{
+		return ${This.FleetRef.FindSetting[Fleet Leader, ""]}
+	}
+
+	method SetFleetLeader(string value)
+	{
+		This.FleetRef:AddSetting[Fleet Leader, ${value}]
+	}
+
+	method AddFleetMember(string value)
+	{
+		if ${This.IsListed[${value}]}
+			This:UpdateFleetMember[${value}]
+		else
+			This.FleetMembersRef:AddSetting[${value}, ${WingOne}]
+	}
+	method RemoveFleetMember(string value)
+	{
+		This.FleetMembersRef.FindSetting[${value}]:Remove
+	}
+	method UpdateFleetMember(string value)
+	{
+		This.FleetMembersRef.FindSetting[${value}]:Set[${WingOne}]
+	}
+	method SetWingOne(bool value)
+	{
+		WingOne:Set[${value}]
+	}
+	
+	member:bool IsWing(string value)
+	{
+		This:RefreshFleetMembers
+		variable iterator InfoFromSettings
+		This.FleetMembers:GetIterator[InfoFromSettings]
+		if ${InfoFromSettings:First(exists)}
+			do
+			{
+				if ${InfoFromSettings.Value.FleetMemberName.Equal[${value}]} && ${InfoFromSettings.Value.Wing}
+					return TRUE
+			}
+			while ${InfoFromSettings:Next(exists)}	
+		return FALSE
+	}
+	member:bool IsListed(string value)
+	{
+		This:RefreshFleetMembers
+		variable iterator InfoFromSettings
+		This.FleetMembers:GetIterator[InfoFromSettings]
+		if ${InfoFromSettings:First(exists)}
+			do
+			{
+				if ${InfoFromSettings.Value.FleetMemberName.Equal[${value}]}
+					return TRUE
+			}
+			while ${InfoFromSettings:Next(exists)}	
+		return FALSE
+	}	
+	
+	method RefreshFleetMembers()
+	{
+		FleetMembers:Clear
+		variable iterator InfoFromSettings
+		This.FleetMembersRef:GetSettingIterator[InfoFromSettings]
+		if ${InfoFromSettings:First(exists)}
+		{
+			do
+			{
+				FleetMembers:Insert[${InfoFromSettings.Key},${InfoFromSettings.Value}]
+			}
+			while ${InfoFromSettings:Next(exists)}
+		}
+	}
+}
