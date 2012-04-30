@@ -557,16 +557,6 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Lowest Standing, ${value}]
 	}
 
-	member:bool IncludeNeutralInCalc()
-	{
-		return ${This.CombatRef.FindSetting[IncludeNeutralInCalc, FALSE]}
-	}
-
-	method SetIncludeNeutralInCalc(bool value)
-	{
-		This.CombatRef:AddSetting[IncludeNeutralInCalc, ${value}]
-	}
-
 	member:int MinimumSecurityStatus()
 	{
 		return ${This.MinerRef.FindSetting[Minimum Security Status, -10.00]}
@@ -744,6 +734,7 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[OrbitAtOptimal, FALSE]
 		This.CombatRef:AddSetting[WarpRange, 0]
 		This.CombatRef:AddSetting[Lowest Standing, 0]
+		This.CombatRef:AddSetting[IncludeNeutralInCalc, 1]
 		This.CombatRef:AddSetting[LootMyKills, 0]
 		This.CombatRef:AddSetting[Use Anom Bookmarks, FALSE]
 		This.CombatRef:AddSetting[AnomBookmarkLabel, Anom:]
@@ -1030,6 +1021,15 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[Lowest Standing, ${value}]
 	}
 
+	member:bool IncludeNeutralInCalc()
+	{
+		return ${This.CombatRef.FindSetting[IncludeNeutralInCalc, FALSE]}
+	}
+
+	method SetIncludeNeutralInCalc(bool value)
+	{
+		This.CombatRef:AddSetting[IncludeNeutralInCalc, ${value}]
+	}
 
 	member:bool TakeBreaks()
 	{
