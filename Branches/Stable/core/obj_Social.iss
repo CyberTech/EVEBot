@@ -228,6 +228,11 @@ objectdef obj_Social
 			return TRUE
 		}
 
+		if !${Me.AllianceID(exists)}
+		{
+			return TRUE
+		}
+
 		if ${Me.AllianceID} > 0
 		{
 			MyAllianceID:Set[${Me.AllianceID}]
@@ -292,7 +297,7 @@ objectdef obj_Social
 				UI:UpdateConsole["		(${AllianceToCorp} != 0 && ${AllianceToCorp} < ${Config.Combat.LowestStanding}) ||  ", LOG_DEBUG]
 				UI:UpdateConsole["		(${AllianceToAlliance} != 0 && ${AllianceToAlliance} < ${Config.Combat.LowestStanding}) ||  ", LOG_DEBUG]
 				UI:UpdateConsole["		${Config.Combat.IncludeNeutralInCalc} && ", LOG_DEBUG]
-				UI:UpdateConsole["		( \", LOG_DEBUG]
+				UI:UpdateConsole["		( ", LOG_DEBUG]
 				UI:UpdateConsole["			${AllianceToAlliance} < ${Config.Combat.LowestStanding} || ", LOG_DEBUG]
 				UI:UpdateConsole["			${AllianceToCorp} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
 				UI:UpdateConsole["			${MeToPilot} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
@@ -308,6 +313,7 @@ objectdef obj_Social
 
 				return FALSE
 			}
+
 		}
 		while ${PilotIterator:Next(exists)}
 		return TRUE
