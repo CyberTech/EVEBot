@@ -267,7 +267,7 @@ objectdef obj_Social
 					(${CorpToCorp} != 0 && ${CorpToCorp} < ${Config.Combat.LowestStanding}) || \
 					(${CorpToAlliance} != 0 && ${CorpToAlliance} < ${Config.Combat.LowestStanding}) || \
 					(${AllianceToCorp} != 0 && ${AllianceToCorp} < ${Config.Combat.LowestStanding}) || \
-					(${AllianceToAlliance} != 0 && ${AllianceToAlliance} < ${Config.Combat.LowestStanding}) || \
+					(${AllianceToAlliance} < ${Config.Combat.LowestStanding}) || \
 					( \
 						${Config.Combat.IncludeNeutralInCalc} && \
 						( \
@@ -295,7 +295,7 @@ objectdef obj_Social
 				UI:UpdateConsole["		(${CorpToCorp} != 0 && ${CorpToCorp} < ${Config.Combat.LowestStanding}) ||  ", LOG_DEBUG]
 				UI:UpdateConsole["		(${CorpToAlliance} != 0 && ${CorpToAlliance} < ${Config.Combat.LowestStanding}) ||  ", LOG_DEBUG]
 				UI:UpdateConsole["		(${AllianceToCorp} != 0 && ${AllianceToCorp} < ${Config.Combat.LowestStanding}) ||  ", LOG_DEBUG]
-				UI:UpdateConsole["		(${AllianceToAlliance} != 0 && ${AllianceToAlliance} < ${Config.Combat.LowestStanding}) ||  ", LOG_DEBUG]
+				UI:UpdateConsole["		(${AllianceToAlliance} < ${Config.Combat.LowestStanding}) ||  ", LOG_DEBUG]
 				UI:UpdateConsole["		${Config.Combat.IncludeNeutralInCalc} && ", LOG_DEBUG]
 				UI:UpdateConsole["		( ", LOG_DEBUG]
 				UI:UpdateConsole["			${AllianceToAlliance} < ${Config.Combat.LowestStanding} || ", LOG_DEBUG]
