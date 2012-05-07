@@ -823,7 +823,7 @@ objectdef obj_Combat
 
 	function RestockAmmo()
 	{
-		if !${Ship.IsAmmoAvailable} || !${This.HaveMissionAmmo}
+		if !${Ship.IsAmmoAvailable} || (!${This.HaveMissionAmmo} || !${Config.Common.BotModeName.Equal[Missioneer]})
 		{
 			UI:UpdateConsole["Restocking ammunition."]
 			call ChatIRC.Say "Low ammunition, restocking ammo."
@@ -831,7 +831,15 @@ objectdef obj_Combat
 			variable index:item ContainerItems
 			variable iterator CargoIterator	
 			variable int AmmoTypeID
-			AmmoTypeID:Set[${This.TypeIDForMish}]
+			if ${Config.Common.BotModeName.Equal[Missioneer]}
+			{
+				AmmoTypeID:Set[${This.TypeIDForMish}]
+			}
+			else
+			{
+				UI:UpdateConsole["We're ratting, defaulting back to typeID in gui."]
+				AmmoTypeID:Set[${Config.Combat.AmmoTypeID}]
+			}
 			if ${Ammospots:IsThereAmmospotBookmark}
 			{
 				UI:UpdateConsole["RestockAmmo: Fleeing: No ammo bookmark"]
