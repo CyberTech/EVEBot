@@ -830,7 +830,7 @@
 							<Y>110</Y>
 							<Height>20</Height>
 							<Width>100</Width>
-							<Text>Enable Ammo Reloading</Text>
+							<Text>Restock Ammo From GSC</Text>
 							<AutoTooltip>Warp to Ammo Bookmark to restock ammunition?</AutoTooltip>
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Combat.RestockAmmo}
@@ -1004,6 +1004,54 @@
 								}
 							</OnChange>
 						</Textentry>
+						<Text name='lblAmmoTypeID'>
+							<X>200</X>
+							<Y>110</Y>
+							<Width>110</Width>
+							<Height>18</Height>
+							<Text>Ammo TypeID</Text>
+							<AutoTooltip>Name of bookmark where the ammo can is located.</AutoTooltip>
+						</Text>
+						<Textentry name='tbAmmoTypeID'>
+							<X>350</X>
+							<Y>110</Y>
+							<Width>150</Width>
+							<Height>18</Height>
+							<MaxLength>10</MaxLength>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Combat.AmmoTypeID}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Combat:SetAmmoTypeID[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+						<Text name='lblRestockFreeSpace'>
+							<X>200</X>
+							<Y>130</Y>
+							<Width>120</Width>
+							<Height>18</Height>
+							<Text>Ammo Free Cargo</Text>
+							<AutoTooltip>How much free space to leave in cargo after restocking ammo</AutoTooltip>
+						</Text>
+						<Textentry name='tbRestockFreeSpace'>
+							<X>350</X>
+							<Y>130</Y>
+							<Width>150</Width>
+							<Height>18</Height>
+							<MaxLength>10</MaxLength>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Combat.RestockAmmoFreeSpace}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Combat:SetRestockAmmoFreeSpace[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
 					</Tab>
 					<Tab name='Fleeing'>
 						<checkbox name='cbRunOnLowAmmo'>
@@ -1138,6 +1186,23 @@
 							<Text>Min Acceptable Standing</Text>
 							<AutoTooltip>The lowest standing pilot we tolerate in system before we flee. It goes to -11!</AutoTooltip>
 						</Text>
+						<checkbox name='cbIncludeNeutralInCalc'>
+							<X>10</X>
+							<Y>150</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Include Neutral (0.0) standings in standings check</Text>
+							<AutoTooltip>If checked, include all 0.0 standings (includes corp, alliance, and personal)</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Combat.IncludeNeutralInCalc}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Combat:SetIncludeNeutralInCalc[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
 						<slider name='MinArmorPct'>
 							<X>210</X>
 							<Y>10</Y>
