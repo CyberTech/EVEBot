@@ -108,6 +108,12 @@ objectdef obj_JetCan
 		variable index:entity Cans
 		variable iterator Can
 		EVE:QueryEntities[Cans, "GroupID = GROUPID_CARGO_CONTAINER && Distance < LOOT_RANGE"]
+#if DEBUG_ENTITIES
+		UI:UpdateConsole["obj_JetCan:CurrentCan Entities: ${EVE.EntitiesCount}, Cans ${Cans.Used}", LOG_DEBUG]
+		EVE:PopulateEntities
+		EVE:QueryEntities[Cans, "GroupID = GROUPID_CARGO_CONTAINER && Distance < LOOT_RANGE"]
+		UI:UpdateConsole["obj_JetCan:CurrentCan Entities: ${EVE.EntitiesCount}, Cans ${Cans.Used} after refresh", LOG_DEBUG]
+#endif
 
 		Cans:GetIterator[Can]
 
@@ -165,7 +171,6 @@ objectdef obj_JetCan
 		variable int Counter
 		while !${This.IsReady}
 		{
-			echo "JetCan:WaitForCan Waiting"
 			wait 20
 			Counter:Inc[2]
 			if ${Counter} > 30
