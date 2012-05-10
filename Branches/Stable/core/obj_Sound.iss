@@ -1,10 +1,10 @@
 /*
 	Sound class
-	
+
 	Object to handle playing sounds.
-	
+
 	-- GliderPro
-	
+
 */
 
 objectdef obj_Sound
@@ -14,20 +14,20 @@ objectdef obj_Sound
 
     variable int m_LastSoundTime
     variable int m_SoundDelay
-	
+
 	method Initialize()
 	{
 		m_LastSoundTime:Set[${LavishScript.RunningTime}]
 		m_SoundDelay:Set[15000]	/* milliseconds */
-		
+
 		UI:UpdateConsole["obj_Sound: Initialized", LOG_MINOR]
 	}
-	
+
 	function PlaySound(string Filename)
 	{
 		if !${Config.Common.UseSound}
 			return
-			
+
 		if ${Math.Calc64[${m_LastSoundTime} + ${m_SoundDelay}]} < ${LavishScript.RunningTime}
 		{
 			PlaySound "${Filename}"
@@ -35,12 +35,12 @@ objectdef obj_Sound
 			m_LastSoundTime:Set[${LavishScript.RunningTime}]
 		}
 	}
-	
+
 	function PlayAlarmSound()
 	{
 		call This.PlaySound ALARMSOUND
 	}
-	
+
 	function PlayDetectSound()
 	{
 		call This.PlaySound DETECTSOUND
@@ -59,5 +59,16 @@ objectdef obj_Sound
 	function PlayWarningSound()
 	{
 		call This.PlaySound WARNSOUND
+	}
+	
+	method Speak(string Phrase)
+	{
+		if !${Config.Common.UseSound}
+			return
+
+		if ${Speech(exists)}
+		{
+			Speech:Speak[-speed,0.7,${Phrase}]
+		}
 	}
 }

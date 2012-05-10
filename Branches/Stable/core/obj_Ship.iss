@@ -45,8 +45,7 @@ objectdef obj_Ship
 	variable bool  m_WaitForCapRecharge = FALSE
 	variable int	m_CargoSanityCounter = 0
 	variable bool InteruptWarpWait = FALSE
-	variable string m_Type
-	variable int m_TypeID
+	variable bool AlertedInPod
 	variable uint ReloadingWeapons = 0
 
 	variable iterator ModulesIterator
@@ -2386,12 +2385,15 @@ objectdef obj_Ship
 		if ${ShipName.Right[10].Equal["'s Capsule"]} || \
 			${GroupID} == GROUP_CAPSULE
 		{
-			if ${This.m_TypeID} != ${TypeID}
+			if !${This.AlertedInPod}
 			{
-				This.RetryUpdateModuleList:Set[1]
+				Sound:Speak["Critical Information: ${Me.Name} is in a pod"]
+				UI:UpdateConsole["Critical Information: ${Me.Name} is in a pod", LOG_CRITICAL]
+				This.AlertedInPod:Set[TRUE]
 			}
 			return TRUE
 		}
+		This.AlertedInPod:Set[FALSE]
 		return FALSE
 	}
 
