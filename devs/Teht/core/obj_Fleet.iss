@@ -244,4 +244,18 @@ objectdef obj_Fleet
 		
 	}
 	
+	method WarpTo(string value, int distance=0)
+	{
+		if ${Local[${value}](exists)}
+		{
+			if ${Entity[${value}(exists)}
+			{
+				Entity[${value}]:WarpTo[${distance}]
+			}
+			elseif ${Local[${value}].ToFleetMember(exists)}
+			{
+				Local[${value}].ToFleetMember:WarpTo[${distance}]
+			}
+		}
+	}
 }
