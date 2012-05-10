@@ -153,7 +153,7 @@ objectdef obj_Asteroids
 				{
 					/* We have a stored location, we should return to it. */
 					UI:UpdateConsole["Returning to last location (${Bookmarks.StoredLocation})"]
-					call Ship.TravelToSystem ${EVE.Bookmark[${Bookmarks.StoredLocation}].SolarSystemID}
+					Ship:TravelToSystem[${EVE.Bookmark[${Bookmarks.StoredLocation}].SolarSystemID}]
 					call Ship.WarpToBookMarkName "${Bookmarks.StoredLocation}" ${FleetWarp}
 					This.BeltArrivalTime:Set[${Time.Timestamp}]
 					Bookmarks:RemoveStoredLocation
@@ -263,7 +263,7 @@ objectdef obj_Asteroids
 
 	}
 
-	function UpdateList(int64 DistanceTarget=-1)
+	method UpdateList(int64 DistanceTarget=-1)
 	{
 		variable index:entity asteroid_index
 		variable index:entity AsteroidList_outofrange
@@ -370,7 +370,7 @@ objectdef obj_Asteroids
 		variable iterator AsteroidIterator
 		if ${AsteroidList.Used} == 0
 		{
-			call This.UpdateList
+			This:UpdateList
 		}
 
 		This.AsteroidList:GetIterator[AsteroidIterator]
@@ -387,7 +387,7 @@ objectdef obj_Asteroids
 
 		if ${AsteroidList.Used} == 0
 		{
-			call This.UpdateList
+			This:UpdateList
 		}
 
 		This.AsteroidList:GetIterator[AsteroidIterator]
@@ -448,12 +448,12 @@ objectdef obj_Asteroids
 				UI:UpdateConsole["Locking Asteroid ${AsteroidIterator.Value.Name}: ${EVEBot.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"]
 				AsteroidIterator.Value:LockTarget
 
-				call This.UpdateList
+				This:UpdateList
 				return TRUE
 			}
 			else
 			{
-				call This.UpdateList
+				This:UpdateList
 				return FALSE
 			}
 		}
@@ -467,7 +467,7 @@ objectdef obj_Asteroids
 
 		if ${AsteroidList.Used} == 0
 		{
-			call This.UpdateList
+			This:UpdateList
 		}
 
 		This.AsteroidList:GetIterator[AsteroidIterator]
@@ -513,12 +513,12 @@ objectdef obj_Asteroids
 					while ${Me.TargetingCount} > 0
 				}
 
-				call This.UpdateList
+				This:UpdateList
 				return TRUE
 			}
 			else
 			{
-				call This.UpdateList
+				This:UpdateList
 				if ${Ship.TotalActivatedMiningLasers} == 0
 				{
 					if ${Ship.CargoFull}
