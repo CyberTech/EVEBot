@@ -434,7 +434,7 @@ objectdef obj_Hauler
 		if ${FleetMembers.Used} == 0
 		{
 			This:BuildFleetMemberList
-			call This.WarpToNextSafeSpot
+			call Safespots.WarpTo
 		}
 		else
 		{
