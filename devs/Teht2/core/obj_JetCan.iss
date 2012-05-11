@@ -384,7 +384,7 @@ objectdef obj_JetCan
 		return FALSE
 	}
 
-	function Open(int64 ID=0)
+	method Open(int64 ID=0)
 	{
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
@@ -407,19 +407,6 @@ objectdef obj_JetCan
 		{
 			UI:UpdateConsole["Opening JetCan"]
 			Entity[${ID}]:OpenCargo
-			wait WAIT_CARGO_WINDOW
-
-			variable float TimeOut = 0
-			while !${This.IsCargoOpen[${ID}]}
-			{
-				TimeOut:Inc[0.1]
-				if ${TimeOut} > 20
-				{
-					UI:UpdateConsole["JetCan.Open timed out (20 seconds)", LOG_CRITICAL]
-					break
-				}
-				wait 1
-			}
 		}
 	}
 
