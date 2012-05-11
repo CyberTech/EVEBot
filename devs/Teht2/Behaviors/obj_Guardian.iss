@@ -205,7 +205,7 @@ objectdef obj_Guardian
 					if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].TypeID} != 5
 					{
 						;call This.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
-						call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
+						Station:DockAtStation[${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}]
 					}
 					else
 					{
@@ -216,27 +216,34 @@ objectdef obj_Guardian
 				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} != ${Me.SolarSystemID}
 				{
 					call Miner.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID}
-					call Ship.TravelToSystem ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID}
+					Ship:TravelToSystem[${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID}]
 					break
 				}
 				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
 					;call This.FastWarp ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
-					call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
+					Station:DockAtStation[${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}]
 					break
 				}
 				if ${Entity["CategoryID = 3"](exists)}
 				{
 					UI:UpdateConsole["Docking at ${Entity["CategoryID = 3"].Name}"]
 					;call This.FastWarp ${Entity["CategoryID = 3"].ID}
-					call Station.DockAtStation ${Entity["CategoryID = 3"].ID}
+					Station:DockAtStation[${Entity["CategoryID = 3"].ID}]
 					break
 				}
-
-					call Safespots.WarpTo
-					call Miner.FastWarp
-
-				UI:UpdateConsole["WARNING:  EVERYTHING has gone wrong. Miner is in HARDSTOP mode and there are no panic locations, delivery locations, stations, or safe spots to use. You're probably going to get blown up..."]
+				if ${Me.ToEntity.Mode} != 3
+				{
+					if !${Safespots.WarpTo}
+					{
+						UI:UpdateConsole["WARNING:  EVERYTHING has gone wrong. Miner is in HARDSTOP mode and there are no panic locations, delivery locations, stations, or safe spots to use. You're probably going to get blown up..."]
+					}
+					break
+				}
+				else
+				{
+					break
+				}
 				break
 				
 			;	This means there's something dangerous in the system, but once it leaves we're going to go back to mining.
@@ -261,7 +268,7 @@ objectdef obj_Guardian
 					}
 
 					;call This.FastWarp ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
-					call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
+					Station:DockAtStation[${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}]
 					break
 				}
 				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} == ${Me.SolarSystemID}
@@ -274,7 +281,7 @@ objectdef obj_Guardian
 					if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].TypeID} != 5
 					{
 						;call This.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
-						call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
+						Station:DockAtStation[${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}]
 					}
 					else
 					{
@@ -292,19 +299,23 @@ objectdef obj_Guardian
 
 					UI:UpdateConsole["Docking at ${Entity["CategoryID = 3"].Name}"]
 					;call This.FastWarp ${Entity["CategoryID = 3"].ID}
-					call Station.DockAtStation ${Entity["CategoryID = 3"].ID}
+					Station:DockAtStation[${Entity["CategoryID = 3"].ID}]
 					break
 				}				
 				
 				if ${Me.ToEntity.Mode} != 3
 				{
-					call Safespots.WarpTo
-					call Miner.FastWarp
+					if !${Safespots.WarpTo}
+					{
+						UI:UpdateConsole["HARD STOP: Unable to flee, no stations available and no Safe spots available"]
+						EVEBot.ReturnToStation:Set[TRUE]
+					}
 					break
 				}
-				
-				UI:UpdateConsole["HARD STOP: Unable to flee, no stations available and no Safe spots available"]
-				EVEBot.ReturnToStation:Set[TRUE]
+				else
+				{
+					break
+				}
 				break
 				
 			;	This means we're in a station and need to do what we need to leave because it's safe and we're not a miner or a hauler
@@ -312,15 +323,15 @@ objectdef obj_Guardian
 			;	*	Move ore out of cargo hold if it's there
 			;	*	Undock from station
 			case BASE
-				call Station.Undock
+				Station:Undock
 				break
 				
 			;	This means we're in space and should go defend someone!  Only one choice here - GUARD!
 			;	It is prudent to make sure we're not warping, since you can't guard much in warp...
 			case GUARDIAN
-				if ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}](exists)} && ${EVE.Bookmark[${Config.Miner.MiningSystemBookmark}].SolarSystemID} != ${Me.SolarSystemID}
+				if ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}](exists)} && ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID} != ${Me.SolarSystemID}
 				{
-					call Ship.TravelToSystem ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID}
+					Ship:TravelToSystem[${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID}]
 				}
 				if ${Me.ToEntity.Mode} != 3
 				{
