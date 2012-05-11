@@ -452,7 +452,7 @@ objectdef obj_Miner
 				echo ${Me.ToEntity.Mode}
 				if ${Me.ToEntity.Mode} != 3
 				{
-					call This.Mine
+					This:Mine
 				}
 				break
 				
@@ -467,7 +467,7 @@ objectdef obj_Miner
 				}
 				if ${Me.ToEntity.Mode} != 3
 				{
-					call This.OrcaInBelt
+					This:OrcaInBelt
 				}
 				break
 				
@@ -727,7 +727,7 @@ objectdef obj_Miner
 ;				wait function to a minimum, and make sure you can get out of loops in a timely manner!
 */		
 		
-	function Mine()
+	method Mine()
 	{
 		;	Variables used to target and track asteroids
 		variable index:entity LockedTargets
@@ -810,7 +810,7 @@ objectdef obj_Miner
 				}
 				Ship.Drones:ReturnAllToDroneBay
 			}
-			call Asteroids.MoveToField FALSE TRUE
+			Asteroids:MoveToField[FALSE, TRUE]
 			Asteroids:UpdateList
 		}
 		This:Prepare_Environment
@@ -836,7 +836,7 @@ objectdef obj_Miner
 		{
 			UI:UpdateConsole["Avoiding player: Changing Belts"]
 			Ship.Drones:ReturnAllToDroneBay
-			call Asteroids.MoveToField TRUE
+			Asteroids:MoveToField[TRUE]
 			return
 		}
 		
@@ -1084,7 +1084,7 @@ objectdef obj_Miner
 ;				Therefore, keep any use of the wait function to a minimum, and make sure you can get out of loops in a timely manner!
 */		
 		
-	function OrcaInBelt()
+	method OrcaInBelt()
 	{
 		;	Variable used to track asteroids
 		variable iterator AsteroidIterator
@@ -1341,39 +1341,6 @@ objectdef obj_Miner
 	}
 	
 
-	;	This function's sole purpose is to get your ship in warp as fast as possible from a dead stop with a MWD.  It accepts a value and will either Warp to it
-	;	if it is an entity in the current system, or uses the autopilot if it's a bookmark in another system.  It is designed to do what it needs to do and then
-	;	exit, after which the functions in obj_Ship can be used to make sure the navigation completes.
-	function FastWarp(int64 LocationID=0,string BookmarkName="")
-	{
-		if ${Me.ToEntity.Mode} != 3
-		{
-			if ${LocationID} == -1
-			{
-				echo EVE.Bookmark[${BookmarkName}]:WarpTo[0]
-				EVE.Bookmark[${BookmarkName}]:WarpTo[0]
-			}
-			if ${LocationID} != 0
-			{
-				if ${Entity[${LocationID}](exists)}
-				{
-					Entity[${LocationID}]:WarpTo[0]
-				}
-				if ${Universe[${LocationID}](exists)}
-				{
-					Universe[${LocationID}]:SetDestination
-					if !${Me.AutoPilotOn}
-					{
-						EVE:Execute[CmdToggleAutopilot]
-					}
-				}
-			}
-		}
-		wait 100 ${Me.ToEntity.Mode} == 3
-		Ship:Activate_AfterBurner
-		wait 20
-		Ship:Deactivate_AfterBurner
-	}
 
 	member:bool AtPanicBookmark()
 	{

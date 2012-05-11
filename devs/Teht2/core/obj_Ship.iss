@@ -1687,7 +1687,7 @@ objectdef obj_Ship
 	}
 
 
-	function WarpToID(int64 Id, int WarpInDistance=0, bool WarpFleet=FALSE)
+	method WarpToID(int64 Id, int WarpInDistance=0, bool WarpFleet=FALSE)
 	{
 		if (${Id} <= 0)
 		{
@@ -1700,14 +1700,13 @@ objectdef obj_Ship
 			UI:UpdateConsole["Error: obj_Ship:WarpToID: No entity matched the ID given."]
 			return
 		}
-
-		Entity[${Id}]:AlignTo
-		call This.WarpPrepare
-		while ${Entity[${Id}].Distance} >= WARP_RANGE
+		
+		if ${Me.ToEntity.Mode} == 3
 		{
-			UI:UpdateConsole["Warping to ${Entity[${Id}].Name} @ ${EVEBot.MetersToKM_Str[${WarpInDistance}]}"]
-			while !${This.WarpEntered}
-			{
+			return
+		}
+
+
 				if ${WarpFleet}
 				{
 					Entity[${Id}]:WarpFleetTo[${WarpInDistance}]
@@ -1717,14 +1716,6 @@ objectdef obj_Ship
 					Entity[${Id}]:WarpTo[${WarpInDistance}]
 				}
 				wait 10
-			}
-			call Miner.FastWarp
-			call This.WarpWait
-			if ${Return} == 2
-			{
-				return
-			}
-		}
 	}
 
 	; This takes CHARID, not Entity id

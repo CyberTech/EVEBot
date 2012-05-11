@@ -78,7 +78,7 @@ objectdef obj_Asteroids
 		}
 	}
 
-	function MoveToRandomBeltBookMark(bool FleetWarp=FALSE)
+	method MoveToRandomBeltBookMark(bool FleetWarp=FALSE)
 	{
 		EVE:GetBookmarks[BeltBookMarkList]
 
@@ -109,7 +109,7 @@ objectdef obj_Asteroids
 				continue
 			}
 
-			call Ship.WarpToBookMark ${BeltBookMarkList[${RandomBelt}].ID} ${FleetWarp}
+			Ship:New_WarpToBookmark[${BeltBookMarkList[${RandomBelt}].Label}, ${FleetWarp}]
 
 			This.BeltArrivalTime:Set[${Time.Timestamp}]
 			This.LastBookMarkIndex:Set[${RandomBelt}]
@@ -117,8 +117,11 @@ objectdef obj_Asteroids
 			return
 		}
 	}
+	
+	
+	
 
-	function MoveToField(bool ForceMove, bool IgnoreTargeting=FALSE, bool FleetWarp=FALSE)
+	method MoveToField(bool ForceMove, bool IgnoreTargeting=FALSE, bool FleetWarp=FALSE)
 	{
 		variable int curBelt
 		variable index:entity Belts
@@ -153,8 +156,7 @@ objectdef obj_Asteroids
 				{
 					/* We have a stored location, we should return to it. */
 					UI:UpdateConsole["Returning to last location (${Bookmarks.StoredLocation})"]
-					Ship:TravelToSystem[${EVE.Bookmark[${Bookmarks.StoredLocation}].SolarSystemID}]
-					call Ship.WarpToBookMarkName "${Bookmarks.StoredLocation}" ${FleetWarp}
+					Ship:New_WarpToBookmark["${Bookmarks.StoredLocation}", ${FleetWarp}]
 					This.BeltArrivalTime:Set[${Time.Timestamp}]
 					Bookmarks:RemoveStoredLocation
 					return
@@ -162,7 +164,7 @@ objectdef obj_Asteroids
 
 				if ${Config.Miner.UseFieldBookmarks}
 				{
-					call This.MoveToRandomBeltBookMark ${FleetWarp}
+					This:MoveToRandomBeltBookMark[${FleetWarp}]
 					return
 				}
 
@@ -183,7 +185,7 @@ objectdef obj_Asteroids
 						${This.IsBeltEmpty[${Belts[${curBelt}].Name}]} )
 
 				UI:UpdateConsole["EVEBot thinks we're not at a belt.  Warping to Asteroid Belt: ${Belts[${curBelt}].Name}"]
-				call Ship.WarpToID ${Belts[${curBelt}].ID} 0 ${FleetWarp}
+				Ship:WarpToID[${Belts[${curBelt}].ID}, 0, ${FleetWarp}]
 				This.BeltArrivalTime:Set[${Time.Timestamp}]
 				This.UsingBookMarks:Set[TRUE]
 				This.LastBeltIndex:Set[${curBelt}]
@@ -204,7 +206,7 @@ objectdef obj_Asteroids
 			{
 				/* We have a stored location, we should return to it. */
 				UI:UpdateConsole["Returning to last location (${Bookmarks.StoredLocation})"]
-				call Ship.WarpToBookMarkName "${Bookmarks.StoredLocation}"
+				Ship:New_WarpToBookmark["${Bookmarks.StoredLocation}", ${FleetWarp}]
 				This.BeltArrivalTime:Set[${Time.Timestamp}]
 				Bookmarks:RemoveStoredLocation
 				return
@@ -212,7 +214,7 @@ objectdef obj_Asteroids
 
 			if ${Config.Miner.UseFieldBookmarks}
 			{
-				call This.MoveToRandomBeltBookMark
+				This:MoveToRandomBeltBookMark[${FleetWarp}]
 				return
 			}
 
