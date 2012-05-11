@@ -100,6 +100,7 @@ objectdef obj_Miner
 		{
 			This:SetState[]
 			echo ${This.CurrentState}
+			This:ProcessState[]
 
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
@@ -222,7 +223,7 @@ objectdef obj_Miner
 ;				arms and legs.  Don't ask me why I feel an analogy is needed.
 */			
 	
-	function ProcessState()
+	method ProcessState()
 	{
 		;	This should be processed regardless of what mode you're in - this way the hauler can report attacks to the team.
 		if ${Me.InSpace}
@@ -790,17 +791,12 @@ objectdef obj_Miner
 		Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
 		if ${Ship.TotalActivatedMiningLasers} == 0 && ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && ${Me.ToEntity.Mode} == 3 && ${Entity[${Orca.Escape}].Mode} == 3 && ${Ship.Drones.DronesInSpace} != 0 && !${EVEBot.ReturnToStation}
 		{
-			EVE:Execute[CmdStopShip]				
-			do
+			if ${Me.ToEntity.Mode} == 3
 			{
-				if ${Me.ToEntity.Mode} == 3
-				{
-					EVE:Execute[CmdStopShip]				
-				}
-				Ship.Drones:ReturnAllToDroneBay
-				wait 20
+				EVE:Execute[CmdStopShip]				
 			}
-			while ${Ship.Drones.DronesInSpace} != 0	
+			Ship.Drones:ReturnAllToDroneBay
+			return
 		}
 		
 		if ${Asteroids.AsteroidList.Used} == 0 && !${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]}
@@ -989,9 +985,8 @@ objectdef obj_Miner
 		
 		
 		;	Time to get those lasers working!
-		if ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers}
+		if ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers} && ${Me.TargetingCount} == 0
 		{
-			wait 200 ${Me.TargetingCount} == 0
 			;	First, get our locked targets
 			LockedTargets:Clear
 			Me:GetTargets[LockedTargets]
@@ -1072,7 +1067,7 @@ objectdef obj_Miner
 			{
 				;call Cargo.TransferOreToJetCan
 				;	Need a wait here because it would try to move the same item more than once
-				wait 20
+				;wait 20
 				return
 			}
 		}
@@ -1129,12 +1124,11 @@ objectdef obj_Miner
 		Asteroids.AsteroidList:GetIterator[AsteroidIterator]
 		if !${AsteroidIterator:First(exists)}
 		{
-			do
+			if ${Ship.Drones.DronesInSpace} != 0
 			{
 				Ship.Drones:ReturnAllToDroneBay
-				wait 20
+				return
 			}
-			while ${Ship.Drones.DronesInSpace} != 0		
 			Asteroids:MoveToField[FALSE, TRUE]
 			Asteroids:UpdateList
 		}
@@ -1265,9 +1259,9 @@ objectdef obj_Miner
 			;	This checks to make sure the player in our delivery location is in range and not warping before we dump a jetcan
 			if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)} && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3 && ${Ship.CargoHalfFull}
 			{
-				call Cargo.TransferOreToJetCan
+				;call Cargo.TransferOreToJetCan
 				;	Need a wait here because it would try to move the same item more than once
-				wait 20
+				;wait 20
 				return
 			}
 		}
