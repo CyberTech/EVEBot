@@ -248,7 +248,7 @@ objectdef obj_Fleet
 	{
 		if ${Local[${value}](exists)}
 		{
-			if ${Entity[${value}(exists)}
+			if ${Entity[${value}](exists)}
 			{
 				Entity[${value}]:WarpTo[${distance}]
 			}
