@@ -34,6 +34,7 @@
 #include core/obj_Items.iss
 #include core/obj_Autopilot.iss
 #include core/obj_Fleet.iss
+#include core/obj_CommandQueue.iss
 
 /* Behavior/Mode Includes */
 #include Behaviors/obj_Courier.iss
@@ -100,6 +101,7 @@ function main()
 	declarevariable Missions obj_Missions script
 	declarevariable Market obj_Market script
 	declarevariable Autopilot obj_Autopilot script
+	declarevariable CommandQueue obj_CommandQueue script
 
 	/* Script-Defined Behavior Objects */
 	declarevariable BotModules index:string script
