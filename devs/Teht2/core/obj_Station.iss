@@ -61,6 +61,9 @@ objectdef obj_Station
 
 	variable index:item StationCargo
 	variable index:item DronesInStation
+	
+	variable int DockTimeout=0
+	variable int UnDockTimeout=0
 
 	method Initialize()
 	{
@@ -112,7 +115,12 @@ objectdef obj_Station
 	    return FALSE
 	}
 
-	function OpenHangar()
+	method StackHangar()
+	{
+		EVEWindow[hangarFloor]:StackAll	
+	}
+	
+	method OpenHangar()
 	{
 		if ${This.Docked} == FALSE
 		{
@@ -123,12 +131,6 @@ objectdef obj_Station
 		{
 			UI:UpdateConsole["Opening Cargo Hangar"]
 			EVE:Execute[OpenHangarFloor]
-			wait WAIT_CARGO_WINDOW
-			while !${This.IsHangarOpen}
-			{
-				wait 1
-			}
-			wait 10
 		}
 	}
 
@@ -152,7 +154,7 @@ objectdef obj_Station
 		}
 	}
 	
-	function CloseHangar()
+	method CloseHangar()
 	{
 		if ${This.Docked} == FALSE
 		{
@@ -163,12 +165,6 @@ objectdef obj_Station
 		{
 			UI:UpdateConsole["Closing Cargo Hangar"]
 			EVEWindow[hangarFloor]:Close
-			wait WAIT_CARGO_WINDOW
-			while ${This.IsHangarOpen}
-			{
-				wait 1
-			}
-			wait 10
 		}
 	}
 	
@@ -239,7 +235,7 @@ objectdef obj_Station
 		echo "${Config.Common.DronesInBay} > ${Ship.Drones.DronesInBay}"
 		if ${Config.Common.DronesInBay} > ${Ship.Drones.DronesInBay}
 		{
-		call Station.OpenHangar
+		Station:OpenHangar
 		call This.GetStationItems
 		wait 10
 
@@ -256,49 +252,31 @@ objectdef obj_Station
 
 	}
 
-	function DockAtStation(int64 StationID)
+	method DockAtStation(int64 StationID)
 	{
-		variable int Counter = 0
-
-		UI:UpdateConsole["Docking at ${EVE.GetLocationNameByID[${StationID}]}"]
+		if ${Me.ToEntity.Mode} == 3
+		{
+			return
+		}
+		
+		if ${Me.InStation}
+		{	
+			return
+		}
+		
+		if !${Me.InSpace}
+		{
+			return
+		}
 
 		if ${Entity[${StationID}](exists)}
 		{
-			if ${Entity[${StationID}].Distance} > WARP_RANGE
-			{
-				UI:UpdateConsole["Warping to Station"]
-				call Ship.WarpToID ${StationID}
-				do
-				{
-				   wait 30
-				}
-				while ${Entity[${StationID}].Distance} > WARP_RANGE
-			}
-
-			do
-			{
-				Entity[${StationID}]:Dock
-				UI:UpdateConsole["Approaching docking range..."]
-				wait 200 ${This.DockedAtStation[${StationID}]}
-			}
-			while (${Entity[${StationID}].Distance} > DOCKING_RANGE)
-
-			Counter:Set[0]
-			UI:UpdateConsole["In Docking Range ... Docking"]
-			;UI:UpdateConsole["DEBUG: StationExists = ${Entity[${StationID}](exists)}"]
-			do
-			{
-				Entity[${StationID}]:Dock
-		   		wait 200 ${This.DockedAtStation[${StationID}]}
-			}
-			while !${This.DockedAtStation[${StationID}]}
-			wait 75
-			UI:UpdateConsoleIRC["Finished Docking"]
+			UI:UpdateConsole["Sending dock command"]
+			Entity[${StationID}]:Dock
 		}
 		else
 		{
-			UI:UpdateConsole["Station Requested does not exist!  Trying Safespots...", LOG_CRITICAL]
-			call Safespots.WarpTo
+			UI:UpdateConsole["Station Requested does not exist!", LOG_CRITICAL]
 		}
 	}
 
@@ -316,7 +294,7 @@ objectdef obj_Station
 		if ${Entity[${StationID}](exists)}
 		{
 			UI:UpdateConsole["Docking at ${StationID}:${Entity[${StationID}].Name}"]
-			call This.DockAtStation ${StationID}
+			This:DockAtStation[${StationID}]
 		}
 		else
 		{
@@ -325,42 +303,10 @@ objectdef obj_Station
 		}
 	}
 
-	function Undock()
+	method Undock()
 	{
-		variable int Counter
-		variable int64 StationID
-		StationID:Set[${Me.StationID}]
-
-		UI:UpdateConsole["Undocking from ${Me.Station.Name}"]
-		Config.Common:SetHomeStation[${Me.Station.Name}]
-
-		EVE:Execute[CmdExitStation]
-		wait WAIT_UNDOCK
-		Counter:Set[0]
-		do
-		{
-			wait 10
-			Counter:Inc[1]
-			if ${Counter} > 20
-			{
-			   Counter:Set[0]
-			   EVE:Execute[CmdExitStation]
-			   UI:UpdateConsole["Undock: Unexpected failure, retrying...", LOG_CRITICAL]
-			   UI:UpdateConsole["Undock: Debug: EVEWindow[Local]=${EVEWindow[Local](exists)}", LOG_CRITICAL]
-			   UI:UpdateConsole["Undock: Debug: Me.InStation=${Me.InStation}", LOG_CRITICAL]
-			   UI:UpdateConsole["Undock: Debug: Me.StationID=${Me.StationID}", LOG_CRITICAL]
-			}
-		}
-		while ${This.Docked}
-		UI:UpdateConsole["Undock: Complete"]
-   		call ChatIRC.Say "Undock: Complete"
-
-		Config.Common:SetHomeStation[${Entity["CategoryID = 3"].Name}]
-
-		;Me:SetVelocity[100]
-		wait 30
-
-		Ship.RetryUpdateModuleList:Set[1]
+			UI:UpdateConsole["Sending undock command"]
+			EVE:Execute[CmdExitStation]
 	}
 
 }
