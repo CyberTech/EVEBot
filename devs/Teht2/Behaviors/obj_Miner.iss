@@ -1070,7 +1070,7 @@ objectdef obj_Miner
 			;	This checks to make sure the player in our delivery location is in range and not warping before we dump a jetcan
 			if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)} && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3 && ${Ship.CargoHalfFull}
 			{
-				call Cargo.TransferOreToJetCan
+				;call Cargo.TransferOreToJetCan
 				;	Need a wait here because it would try to move the same item more than once
 				wait 20
 				return
@@ -1135,7 +1135,7 @@ objectdef obj_Miner
 				wait 20
 			}
 			while ${Ship.Drones.DronesInSpace} != 0		
-			call Asteroids.MoveToField FALSE FALSE TRUE
+			Asteroids:MoveToField[FALSE, TRUE]
 			Asteroids:UpdateList
 		}
 		This:Prepare_Environment
@@ -1155,7 +1155,7 @@ objectdef obj_Miner
 		{
 			UI:UpdateConsole["Avoiding player: Changing Belts"]
 			Ship.Drones:ReturnAllToDroneBay
-			call Asteroids.MoveToField TRUE FALSE TRUE
+			Asteroids:MoveToField[TRUE, TRUE]
 			return
 		}
 		
@@ -1220,19 +1220,19 @@ objectdef obj_Miner
 		{
 			if !${Ship.OreHoldFull} && !${Config.Miner.DeliveryLocationTypeName.Equal["No Delivery"]} && !${Config.Miner.DeliveryLocationTypeName.Equal["Jetcan"]}
 			{
-				call Cargo.TransferCargoFromShipCorporateHangarToOreHold
+				Cargo:TransferCargoFromShipCorporateHangarToOreHold
 				Ship:StackOreHold
 				return
 			}
 			if !${Ship.CargoFull} && !${Config.Miner.DeliveryLocationTypeName.Equal["No Delivery"]}
 			{
-				call Cargo.TransferCargoFromShipCorporateHangarToCargoHold
+				Cargo:TransferCargoFromShipCorporateHangarToCargoHold
 				Ship:StackCargoHold
 				return
 			}
 			if ${Config.Miner.DeliveryLocationTypeName.Equal["No Delivery"]}
 			{
-				call Cargo.TransferCargoFromCargoHoldToShipCorporateHangar
+				Cargo:TransferCargoFromCargoHoldToShipCorporateHangar
 				relay all -event EVEBot_Orca_Cargo ${Ship.CorpHangarUsedSpace[TRUE]}
 			}
 		}

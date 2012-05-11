@@ -546,12 +546,14 @@ objectdef obj_Cargo
 		}
 	}	
 
-	function TransferCargoFromShipCorporateHangarToOreHold()
+	method TransferCargoFromShipCorporateHangarToOreHold()
 	{
 		
 		variable index:item HangarCargo
 		variable int QuantityToMove
 		variable iterator CargoIterator
+		variable float VolumeToMove=0
+		variable index:int64 ListToMove
 		Me.Ship:GetCorpHangarsCargo[HangarCargo]
 		HangarCargo:GetIterator[CargoIterator]
 
@@ -561,32 +563,21 @@ objectdef obj_Cargo
 				{
 					if ${CargoIterator.Value.CategoryID} == CATEGORYID_ORE
 					{
-						if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${Ship.CargoFreeSpace}
+
+						if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) < ${Math.Calc[${Ship.CargoFreeSpace} - ${VolumeToMove}]}
 						{
-							/* Move only what will fit, minus 1 to account for CCP rounding errors. */
-							QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${CargoIterator.Value.Volume}]}]
+							ListToMove:Insert[${CargoIterator.Value.ID}]
+							VolumeToMove:Inc[${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}]}]
 						}
 						else
 						{
-							QuantityToMove:Set[${CargoIterator.Value.Quantity}]
-						}
-
-						UI:UpdateConsole["TransferCargoFromShipCorporateHangarToOreHold: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
-						UI:UpdateConsole["TransferCargoFromShipCorporateHangarToOreHold: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
-						if ${QuantityToMove} > 0
-						{
-							CargoIterator.Value:MoveTo[${MyShip.ID}, OreHold, ${QuantityToMove}]
-							wait 15
-						}
-
-						if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
-						{
-							UI:UpdateConsole["DEBUG: TransferCargoFromShipCorporateHangarToOreHold: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
+							CargoIterator.Value:MoveTo[${MyShip.ID}, OreHold, ${Math.Calc[(${Ship.CargoFreeSpace} - ${VolumeToMove}) / ${CargoIterator.Value.Volume}]}]
 							break
 						}
 					}
 				}
 				while ${CargoIterator:Next(exists)}
+				EVE:MoveItemsTo[ListToMove, MyShip, OreHold]
 		}
 		else
 		{
@@ -609,7 +600,7 @@ objectdef obj_Cargo
 	}	
 	
 	
-	function TransferCargoFromShipCorporateHangarToCargoHold()
+	method TransferCargoFromShipCorporateHangarToCargoHold()
 	{
 		
 		variable index:item HangarCargo
@@ -622,31 +613,22 @@ objectdef obj_Cargo
 		{
 				do
 				{
-					if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${Ship.CargoFreeSpace}
+					if ${CargoIterator.Value.CategoryID} == CATEGORYID_ORE
 					{
-						/* Move only what will fit, minus 1 to account for CCP rounding errors. */
-						QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${CargoIterator.Value.Volume}]}]
-					}
-					else
-					{
-						QuantityToMove:Set[${CargoIterator.Value.Quantity}]
-					}
-
-					UI:UpdateConsole["TransferCargoFromShipCorporateHangarToCargoHold: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
-					UI:UpdateConsole["TransferCargoFromShipCorporateHangarToCargoHold: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
-					if ${QuantityToMove} > 0
-					{
-						CargoIterator.Value:MoveTo[${MyShip.ID}, CargoHold, ${QuantityToMove}]
-						wait 15
-					}
-
-					if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
-					{
-						UI:UpdateConsole["DEBUG: TransferCargoFromShipCorporateHangarToCargoHold: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
-						break
+						if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) < ${Math.Calc[${Ship.CargoFreeSpace} - ${VolumeToMove}]}
+						{
+							ListToMove:Insert[${CargoIterator.Value.ID}]
+							VolumeToMove:Inc[${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}]}]
+						}
+						else
+						{
+							CargoIterator.Value:MoveTo[${MyShip.ID}, CargoHold, ${Math.Calc[(${Ship.CargoFreeSpace} - ${VolumeToMove}) / ${CargoIterator.Value.Volume}]}]
+							break
+						}
 					}
 				}
 				while ${CargoIterator:Next(exists)}
+				EVE:MoveItemsTo[ListToMove, MyShip, CargoHold]
 		}
 		else
 		{
@@ -654,7 +636,7 @@ objectdef obj_Cargo
 		}
 	}	
 
-	function TransferCargoFromCargoHoldToShipCorporateHangar()
+	method TransferCargoFromCargoHoldToShipCorporateHangar()
 	{
 		
 		variable index:item HangarCargo
@@ -667,31 +649,19 @@ objectdef obj_Cargo
 		{
 				do
 				{
-					if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${Ship.CargoFreeSpace}
-					{
-						/* Move only what will fit, minus 1 to account for CCP rounding errors. */
-						QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${CargoIterator.Value.Volume}]}]
-					}
-					else
-					{
-						QuantityToMove:Set[${CargoIterator.Value.Quantity}]
-					}
-
-					UI:UpdateConsole["TransferCargoFromCargoHoldToShipCorporateHangar: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
-					UI:UpdateConsole["TransferCargoFromCargoHoldToShipCorporateHangar: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
-					if ${QuantityToMove} > 0
-					{
-						CargoIterator.Value:MoveTo[${MyShip.ID}, CorpHangars, ${QuantityToMove}]
-						wait 15
-					}
-
-					if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
-					{
-						UI:UpdateConsole["DEBUG: TransferCargoFromCargoHoldToShipCorporateHangar: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
-						break
-					}
+						if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) < ${Math.Calc[${Ship.CargoFreeSpace} - ${VolumeToMove}]}
+						{
+							ListToMove:Insert[${CargoIterator.Value.ID}]
+							VolumeToMove:Inc[${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}]}]
+						}
+						else
+						{
+							CargoIterator.Value:MoveTo[${MyShip.ID}, CorpHangars, ${Math.Calc[(${Ship.CargoFreeSpace} - ${VolumeToMove}) / ${CargoIterator.Value.Volume}]}]
+							break
+						}
 				}
 				while ${CargoIterator:Next(exists)}
+				EVE:MoveItemsTo[ListToMove, MyShip, CorpHangars]
 		}
 		else
 		{
