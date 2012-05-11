@@ -1547,7 +1547,7 @@ objectdef obj_Miner
 			}
 			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].IsLockedTarget} && !${Ship.IsTractoringWreckID[${Tractoring}]}
 			{
-				call Ship.ActivateFreeTractorBeam ${Entity[${Tractoring}].ID}
+				Ship:ActivateFreeTractorBeam[${Entity[${Tractoring}].ID}]
 				return
 			}
 		}

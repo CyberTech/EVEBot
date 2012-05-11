@@ -1466,7 +1466,7 @@ objectdef obj_Ship
 		while ${ModuleIter:Next(exists)}
 	}
 
-	function ActivateFreeTractorBeam(int64 id=-1)
+	method ActivateFreeTractorBeam(int64 id=-1)
 	{
 		variable string Slot
 
@@ -1498,7 +1498,6 @@ objectdef obj_Ship
 				{
 					ModuleIter.Value:Activate[${ID}]
 				}
-				wait 25 ${ModuleIter.Value.IsGoingOnline}
 				return
 			}
 		}
