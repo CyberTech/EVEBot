@@ -1258,7 +1258,7 @@ objectdef obj_Ship
 		}
 	}
 
-	function ChangeMiningLaserCrystal(string OreType, string SlotName)
+	member:bool ChangeMiningLaserCrystal(string OreType, string SlotName)
 	{
 		; We might need to change loaded crystal
 		variable string LoadedAmmo
@@ -1288,13 +1288,16 @@ objectdef obj_Ship
 				{
 					UI:UpdateConsole["Switching Crystal in ${SlotName} from ${LoadedAmmo} to ${CrystalIterator.Value.Name}"]
 					Me.Ship.Module[${SlotName}]:ChangeAmmo[${CrystalIterator.Value.ID},1]
-					; This takes 2 seconds ingame, let's give it 50% more
-					wait 30
-					return
+					return TRUE
 				}
 			}
 			while ${CrystalIterator:Next(exists)}
 			UI:UpdateConsole["Warning: No crystal found for ore type ${OreType}, efficiency reduced"]
+			return FALSE
+		}
+		else
+		{
+			return FALSE
 		}
 	}
 
