@@ -255,7 +255,7 @@ objectdef obj_Cargo
 		return ${This.CargoToTransfer.Used}
 	}
 
-	function ReplenishCrystals(int64 from=-1)
+	member:bool ReplenishCrystals(int64 from=-1)
 	{
 		variable iterator CargoIterator
 		variable iterator HangarIterator
@@ -306,7 +306,6 @@ objectdef obj_Cargo
 		
 		if ${from} == -1
 		{
-			call Station.OpenHangar
 			Me:GetHangarItems[HangarItems]
 			HangarItems:GetIterator[HangarIterator]
 
@@ -337,12 +336,12 @@ objectdef obj_Cargo
 							if ${quant} >= ${needed}
 							{
 								HangarIterator.Value:MoveTo[MyShip, CargoHold, ${needed}]
-								Crystals:Set[${Crystals.CurrentKey}, ${Math.Calc[${Crystals.CurrentValue} + ${needed}]}]
+								return TRUE
 							}
 							else
 							{
 								HangarIterator.Value:MoveTo[MyShip, CargoHold]
-								Crystals:Set[${Crystals.CurrentKey}, ${Math.Calc[${Crystals.CurrentValue} + ${quant}]}]
+								return TRUE
 							}
 						}
 					}
@@ -391,12 +390,12 @@ objectdef obj_Cargo
 							if ${quant} >= ${needed}
 							{
 								CargoIterator.Value:MoveTo[MyShip, CargoHold, ${needed}]
-								Crystals:Set[${Crystals.CurrentKey}, ${Math.Calc[${Crystals.CurrentValue} + ${needed}]}]
+								return TRUE
 							}
 							else
 							{
 								CargoIterator.Value:MoveTo[MyShip, CargoHold]
-								Crystals:Set[${Crystals.CurrentKey}, ${Math.Calc[${Crystals.CurrentValue} + ${quant}]}]
+								return TRUE
 							}
 						}
 					}
@@ -415,6 +414,7 @@ objectdef obj_Cargo
 			}
 			while ${Crystals.NextKey(exists)}		
 		}
+		return FALSE
 	}
 
 

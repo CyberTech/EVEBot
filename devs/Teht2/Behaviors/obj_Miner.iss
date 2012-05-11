@@ -393,6 +393,7 @@ objectdef obj_Miner
 					break
 				}
 				
+				
 				;	If we're in Orca mode, we need to unload all locations capable of holding ore, not just the cargo hold.
 				;	Note:  I need to replace the shuffle with 3 direct movements
 				if ${CommandQueue.Queued} == 0
@@ -409,7 +410,6 @@ objectdef obj_Miner
 						CommandQueue:QueueCommand[Cargo,TransferListStationHangar]
 						CommandQueue:QueueCommand[Cargo,FindCargo,"SHIP, CATEGORYID_ORE"]
 						CommandQueue:QueueCommand[Cargo,TransferListStationHangar]
-						CommandQueue:QueueCommand[Cargo:CloseHolds
 					}
 					else
 					{
@@ -418,7 +418,6 @@ objectdef obj_Miner
 						CommandQueue:QueueCommand[Cargo,FindCargo,"SHIP, CATEGORYID_ORE"]
 						CommandQueue:QueueCommand[Cargo,TransferListStationHangar]
 						CommandQueue:QueueCommand[Station,StackHangar]
-						CommandQueue:QueueCommand[Cargo:CloseHolds
 					}
 				}
 				
@@ -427,6 +426,11 @@ objectdef obj_Miner
 				
 				
 			case UNDOCK
+				if ${Cargo.ReplenishCrystals}
+				{
+					break
+				}
+			
 				if ${CommandQueue.Queued} == 0
 				{
 						CommandQueue:QueueCommand[Cargo,CloseHolds]
@@ -922,10 +926,15 @@ objectdef obj_Miner
 					Cargo:TransferListToHangarInSpace[${Entity[${Orca.Escape}].ID}]
 					Cargo:FindCargo[SHIP, 4]
 					Cargo:TransferListToHangarInSpace[${Entity[${Orca.Escape}].ID}]
-					call Cargo.ReplenishCrystals ${Entity[${Orca.Escape}]}
 					This:StackAll
 				}
 			}
+
+			if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && ${EVEWindow[ByName, ${Entity[${Orca.Escape}]}](exists)}
+			{
+				echo ${Cargo.ReplenishCrystals[${Entity[${Orca.Escape}]}]}
+			}
+
 		}
 
 		
