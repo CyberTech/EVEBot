@@ -1407,7 +1407,8 @@ objectdef obj_Ship
 		}
 		while ${ModuleIter:Next(exists)}
 	}
-	function ActivateFreeMiningLaser(int64 id=-1)
+	
+	method ActivateFreeMiningLaser(int64 id=-1)
 	{
 		variable string Slot
 
@@ -1449,7 +1450,10 @@ objectdef obj_Ship
 					OreType:Set[${OreType.Token[1,")"]}]
 					;OreType:Set[${OreType.Replace["(",]}]
 					;OreType:Set[${OreType.Replace[")",]}]
-					call This.ChangeMiningLaserCrystal "${OreType}" ${Slot}
+					if ${This.ChangeMiningLaserCrystal[${OreType}, ${Slot}]}
+					{
+						return
+					}
 				}
 
 				UI:UpdateConsole["Activating: ${Slot}: ${ModuleIter.Value.ToItem.Name}"]
@@ -1461,8 +1465,6 @@ objectdef obj_Ship
 				{
 					ModuleIter.Value:Activate[${id}]
 				}
-				wait 25 ${ModuleIter.Value.IsGoingOnline}
-				;TimedCommand ${Math.Rand[600]:Inc[300]} "Script[EVEBot].VariableScope.Ship:CycleMiningLaser[OFF, ${Slot}]"
 				return
 			}
 		}
