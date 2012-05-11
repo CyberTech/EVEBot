@@ -121,7 +121,7 @@ objectdef obj_Asteroids
 	
 	
 
-	method MoveToField(bool ForceMove, bool IgnoreTargeting=FALSE, bool FleetWarp=FALSE)
+	method MoveToField(bool ForceMove, bool FleetWarp=FALSE)
 	{
 		variable int curBelt
 		variable index:entity Belts
@@ -145,8 +145,7 @@ objectdef obj_Asteroids
 		{
 			if !${ForceMove}
 			{
-				call TargetNext TRUE ${IgnoreTargeting}
-				AsteroidsInRange:Set[${Return}]
+				AsteroidsInRange:Set[${This.TargetNext[TRUE]}]
 			}
 
 			if ${ForceMove} || !${AsteroidsInRange}
@@ -383,7 +382,7 @@ objectdef obj_Asteroids
 		return TRUE
 	}
 
-	function:bool TargetNextInRange(int64 DistanceToTarget=-1)
+	member:bool TargetNextInRange(int64 DistanceToTarget=-1)
 	{
 		variable iterator AsteroidIterator
 
@@ -463,7 +462,7 @@ objectdef obj_Asteroids
 		return FALSE
 	}	
 	
-	function:bool TargetNext(bool CalledFromMoveRoutine=FALSE, bool IgnoreTargeting=FALSE)
+	member:bool TargetNext(bool CalledFromMoveRoutine=FALSE)
 	{
 		variable iterator AsteroidIterator
 
@@ -497,23 +496,8 @@ objectdef obj_Asteroids
 					return TRUE
 				}
 
-				;; This member does not exist in obj_Combat!!  -- GP
-				;;while ${Combat.CombatPause}
-				;;{
-				;;	wait 30
-				;;	echo "DEBUG: Obj_Asteroids In Combat Pause Loop"
-				;;}
-
-				if !${IgnoreTargeting}
-				{
-					UI:UpdateConsole["Locking Asteroid ${AsteroidIterator.Value.Name}: ${EVEBot.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"]
-					AsteroidIterator.Value:LockTarget
-					do
-					{
-					  wait 30
-					}
-					while ${Me.TargetingCount} > 0
-				}
+				UI:UpdateConsole["Locking Asteroid ${AsteroidIterator.Value.Name}: ${EVEBot.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"]
+				AsteroidIterator.Value:LockTarget
 
 				This:UpdateList
 				return TRUE
@@ -533,7 +517,7 @@ objectdef obj_Asteroids
 						if ${AsteroidIterator.Value.Distance} < ${This.MaxDistanceToAsteroid}
 						{
 							UI:UpdateConsole["obj_Asteroids: TargetNext: No Asteroids in range & All lasers idle: Approaching nearest"]
-							call Ship.Approach ${AsteroidIterator.Value.ID} ${Ship.OptimalMiningRange}
+							Miner:Approach[${AsteroidIterator.Value.ID}, ${Ship.OptimalMiningRange}]
 						}
 						else
 						{
@@ -545,7 +529,7 @@ objectdef obj_Asteroids
 								; Don't do any movement, we're being called from inside another movement function
 								return FALSE
 							}
-							call This.MoveToField TRUE
+							This:MoveToField[TRUE]
 							return TRUE
 						}
 					}
@@ -565,7 +549,7 @@ objectdef obj_Asteroids
 				; Don't do any movement, we're being called from inside another movement function
 				return FALSE
 			}
-			call This.MoveToField TRUE
+			This:MoveToField[TRUE]
 			return TRUE
 		}
 		return FALSE

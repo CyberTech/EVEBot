@@ -955,13 +955,12 @@ objectdef obj_Miner
 					Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
 					if ${Config.Miner.DeliveryLocationTypeName.Equal[Orca]} && ${Entity[${Orca.Escape}](exists)} && !${Config.Miner.IceMining}
 					{
-						call Asteroids.TargetNextInRange ${Entity[${Orca.Escape}].ID}
+						This.ConcentrateFire:Set[${Asteroids.TargetNextInRange[${Entity[${Orca.Escape}].ID}}]
 					}
 					elseif !${Config.Miner.DeliveryLocationTypeName.Equal[Orca]} || ${Config.Miner.IceMining}
 					{
-						call Asteroids.TargetNext
+						This.ConcentrateFire:Set[${Asteroids.TargetNext}]
 					}
-					This.ConcentrateFire:Set[!${Return}]
 					AsteroidsLocked:Inc
 				}
 				while (${Asteroids.LockedAndLocking} < ${Ship.SafeMaxLockedTargets}) && ${Asteroids.LockedAndLocking} < ${AsteroidsNeeded} && !${This.ConcentrateFire}
@@ -1559,7 +1558,7 @@ objectdef obj_Miner
 		;	Find out if we need to approach this target
 		if ${Entity[${target}].Distance} > ${distance} && ${This.Approaching} == 0
 		{
-			UI:UpdateConsole["ALERT:  Approaching to within loot range."]
+			UI:UpdateConsole["ALERT:  Approaching to within ${EVEBot.MetersToKM_Str[${distance}]}."]
 			Entity[${target}]:Approach[${distance}]
 			This.Approaching:Set[${target}]
 			This.TimeStartedApproaching:Set[${Time.Timestamp}]
@@ -1576,7 +1575,7 @@ objectdef obj_Miner
 		;	If we're approaching a target, find out if we need to stop doing so 
 		if (${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= ${distance} && ${This.Approaching} != 0) || (!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
 		{
-			UI:UpdateConsole["ALERT:  Within loot range."]
+			UI:UpdateConsole["ALERT:  Within ${EVEBot.MetersToKM_Str[${distance}]}."]
 			EVE:Execute[CmdStopShip]
 			This.Approaching:Set[0]
 			This.TimeStartedApproaching:Set[0]
