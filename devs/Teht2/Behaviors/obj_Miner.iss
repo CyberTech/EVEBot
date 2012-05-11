@@ -844,7 +844,7 @@ objectdef obj_Miner
 		;	This calls the defense routine if Launch Combat Drones is turned on
 		if ${Config.Combat.LaunchCombatDrones} && !${Ship.InWarp}
 		{
-			call Defend
+			This:Defend
 		}		
 
 		;	We need to make sure we're near our orca if we're using it as a delivery location
@@ -1232,7 +1232,7 @@ objectdef obj_Miner
 		;	This calls the defense routine if Launch Combat Drones is turned on
 		if ${Config.Combat.LaunchCombatDrones} && !${Ship.InWarp}
 		{
-			call Defend
+			This:Defend
 		}
 		if ${Config.Miner.OrcaTractorLoot}
 		{
@@ -1360,24 +1360,34 @@ objectdef obj_Miner
 	;	This function's purpose is to defend against rats which are attacking our team.  Goals:
 	;	*	Keep it atomic - don't get stuck in here, killing rats quickly is NOT a concern
 	;	*	Don't use up our targets, we need those for mining - Only one target should ever be used for a rat.
-	function Defend()
+	method Defend()
 	{
-		;	This is used to keep track of what we are defending against (rats)
-		variable int64 Attacking=-1
-
-		variable iterator GetData
-
+		variable bool ActiveLockedTargets=FALSE
+		Attacking:Set[-1]
 		
 		if ${AttackingTeam.Used} > 0
 		{
+			variable iterator GetData
 			AttackingTeam:GetIterator[GetData]
 			if ${GetData:First(exists)}
 				do
 				{
-					if ${Entity[${GetData.Value}](exists)} && ${Entity[${GetData.Value}].Distance} < ${Ship.OptimalTargetingRange} && ${Entity[${GetData.Value}].Distance} < ${Me.DroneControlDistance} && !${Entity[${GetData.Value}].IsLockedTarget} && !${${GetData.Value}].BeingTargeted}
+					if ${Entity[${GetData.Value}](exists)} && ${Entity[${GetData.Value}].Distance} < ${Ship.OptimalTargetingRange} && !${Entity[${GetData.Value}].IsLockedTarget} && !${${GetData.Value}].BeingTargeted}
+					{
 						Entity[${GetData.Value}]:LockTarget
+					}
+					if ${Entity[${GetData.Value}](exists)} && ${Entity[${GetData.Value}].Distance} < ${Me.DroneControlDistance} && ${Entity[${GetData.Value}].IsLockedTarget}
+					{
+						if ${Attacking} == -1
+						{
+							Attacking:Set[${GetData.Value}]
+						}
+						ActiveLockedTargets:Set[TRUE]
+					}
 					if !${Entity[${GetData.Value}](exists)}
+					{
 						AttackingTeam:Remove[${GetData.Value}]
+					}
 				}
 				while ${GetData:Next(exists)}
 		}
@@ -1388,30 +1398,19 @@ objectdef obj_Miner
 			Ship.Drones:ReturnAllToDroneBay
 		}
 
-		if ${Ship.Drones.DronesInSpace} == 0  && ${AttackingTeam.Used} > 0
+		if ${Ship.Drones.DronesInSpace} == 0  && ${ActiveLockedTargets}
 		{
 			UI:UpdateConsole["Warning: Deploying drones to defend"]
 			Ship.Drones:LaunchAll
 		}
 
-		Attacking:Set[-1]
-		AttackingTeam:GetIterator[GetData]
-		if ${GetData:First(exists)}
-			do
-			{
-				if ${Entity[${GetData.Value}](exists)} && ${Entity[${GetData.Value}].Distance} < ${Ship.OptimalTargetingRange} && ${Entity[${GetData.Value}].Distance} < ${Me.DroneControlDistance}
-				{
-					Attacking:Set[${GetData.Key}]
-					break
-				}
-			}
-			while ${GetData:Next(exists)}
-			
-		if ${Attacking} != -1 && ${Entity[${Attacking}].IsLockedTarget} && ${Entity[${Attacking}](exists)}
+		if  ${Attacking} != -1 && !${Entity[${Attacking}].IsActiveTarget} && ${Entity[${Attacking}].IsLockedTarget} && ${Entity[${Attacking}](exists)}
 		{
 			Entity[${Attacking}]:MakeActiveTarget
-			wait 50 ${Me.ActiveTarget.ID} == ${Attacking}
-
+		}
+			
+		if ${Attacking} != -1 && ${Entity[${Attacking}].IsActiveTarget} && ${Entity[${Attacking}].IsLockedTarget} && ${Entity[${Attacking}](exists)}
+		{
 			variable index:activedrone ActiveDroneList
 			variable iterator DroneIterator
 			variable index:int64 AttackDrones
@@ -1421,9 +1420,10 @@ objectdef obj_Miner
 			if ${DroneIterator:First(exists)}
 				do
 				{
-					echo ${DroneIterator.Value.State}
 					if ${DroneIterator.Value.State} == 0
+					{
 						AttackDrones:Insert[${DroneIterator.Value.ID}]
+					}
 				}
 				while ${DroneIterator:Next(exists)}
 
