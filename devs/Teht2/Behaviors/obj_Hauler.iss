@@ -82,7 +82,7 @@ objectdef obj_Hauler
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			This:SetState[]
-			
+			echo ${This.CurrentState}
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
     		This.NextPulse:Update
@@ -203,6 +203,7 @@ objectdef obj_Hauler
 		{
 			;	This means we're somewhere safe, and SetState wants us to stay there without spamming the UI
 			case IDLE
+				CommandQueue:ProcessCommands
 				break
 
 			;	This means something serious happened, like someone targetted us, we're in a pod, or mining is failing due to something
@@ -224,8 +225,7 @@ objectdef obj_Hauler
 				{
 					if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].TypeID} != 5
 					{
-						call Miner.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
-						call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
+						Station:DockAtStation[${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}]
 					}
 					else
 					{
@@ -235,31 +235,32 @@ objectdef obj_Hauler
 				}				
 				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} != ${Me.SolarSystemID}
 				{
-					call Miner.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID}
-					call Ship.TravelToSystem ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID}
+					Ship:TravelToSystem[${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID}]
 					break
 				}
 				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
-					call Miner.FastWarp ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
-					call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
+					Station:DockAtStation[${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}]
 					break
 				}
 				if ${Entity["CategoryID = 3"](exists)}
 				{
 					UI:UpdateConsole["Docking at ${Entity["CategoryID = 3"].Name}"]
-					call Miner.FastWarp ${Entity["CategoryID = 3"].ID}
-					call Station.DockAtStation ${Entity["CategoryID = 3"].ID}
+					Station:DockAtStation[${Entity["CategoryID = 3"].ID}]
 					break
 				}
 				if ${Me.ToEntity.Mode} != 3
 				{
-					call Safespots.WarpTo
-					call Miner.FastWarp
-					wait 30
+					if !${Safespots.WarpTo}
+					{
+						UI:UpdateConsole["WARNING:  EVERYTHING has gone wrong. Miner is in HARDSTOP mode and there are no panic locations, delivery locations, stations, or safe spots to use. You're probably going to get blown up..."]
+					}
+					break
 				}
-
-				UI:UpdateConsole["WARNING:  EVERYTHING has gone wrong. Hauler is in HARDSTOP mode and there are no panic locations, delivery locations, stations, or safe spots to use. You're probably going to get blown up..."]
+				else
+				{
+					break
+				}
 				break
 			
 			;	This means there's something dangerous in the system, but once it leaves we're going to go back to mining.
@@ -277,7 +278,7 @@ objectdef obj_Hauler
 				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
 					call Miner.FastWarp ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
-					call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
+					Station:DockAtStation[${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}]
 					break
 				}
 				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} == ${Me.SolarSystemID}
@@ -285,7 +286,7 @@ objectdef obj_Hauler
 					if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].TypeID} != 5
 					{
 						call Miner.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
-						call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
+						Station:DockAtStation[${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}]
 					}
 					else
 					{
@@ -298,20 +299,23 @@ objectdef obj_Hauler
 				{
 					UI:UpdateConsole["Docking at ${Entity["CategoryID = 3"].Name}"]
 					call Miner.FastWarp ${Entity["CategoryID = 3"].ID}
-					call This.DockAtStation ${Entity["CategoryID = 3"].ID}
+					Station:DockAtStation[${Entity["CategoryID = 3"].ID}]
 					break
 				}				
 				
 				if ${Me.ToEntity.Mode} != 3
 				{
-					call Safespots.WarpTo
-					call Miner.FastWarp
-					wait 30
+					if !${Safespots.WarpTo}
+					{
+						UI:UpdateConsole["HARD STOP: Unable to flee, no stations available and no Safe spots available"]
+						EVEBot.ReturnToStation:Set[TRUE]
+					}
 					break
 				}
-				
-				UI:UpdateConsole["HARD STOP: Unable to flee, no stations available and no Safe spots available"]
-				EVEBot.ReturnToStation:Set[TRUE]
+				else
+				{
+					break
+				}
 				break
 
 			;	This means we're in a station and need to do what we need to do and leave.
@@ -321,20 +325,25 @@ objectdef obj_Hauler
 			case BASE
 				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID} != ${Me.StationID}
 				{
-					call Station.Undock
+					Station:Undock
 					break
 				}
 				echo WHY ARE WE IN BASE MODE
 				call Cargo.TransferCargoToHangar
-				call Station.Undock
+				Station:Undock
 				relay all -event EVEBot_HaulerMSG ${Ship.CargoFreeSpace}
 				break
 
 
 			case HAUL
-				if ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}](exists)} && ${EVE.Bookmark[${Config.Miner.MiningSystemBookmark}].SolarSystemID} != ${Me.SolarSystemID}
+				if ${CommandQueue.Queued} != 0
 				{
-					call Ship.TravelToSystem ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID}
+					CommandQueue:ProcessCommands
+				}
+						
+				if ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}](exists)} && ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID} != ${Me.SolarSystemID}
+				{
+					Ship:TravelToSystem[${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID}]
 				}
 
 				switch ${Config.Hauler.HaulerModeName}
@@ -571,7 +580,7 @@ objectdef obj_Hauler
 			call Ship.WarpToFleetMember ${charID}
 		}
 
-		call Ship.OpenCargo
+		Ship:OpenCargo
 
 		This:BuildJetCanList
 		
@@ -580,7 +589,7 @@ objectdef obj_Hauler
 		if ${Ent:First(exists)}
 		do
 		{
-			call Ship.OpenCargo
+			Ship:OpenCargo
 
 			Ent.Value:Approach
 
@@ -767,21 +776,38 @@ objectdef obj_Hauler
 		switch ${Config.Miner.DeliveryLocationTypeName}
 		{
 			case Station
-				call Ship.TravelToSystem ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID}
-				call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
+				Ship:TravelToSystem[${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID}]
+				Station:DockAtStation[${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}]
 				break
 			case Hangar Array
-				call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
+				Ship:New_WarpToBookmark[${Config.Miner.DeliveryLocation}]
 				call Cargo.TransferOreToCorpHangarArray
 				break
 			case Large Ship Assembly Array
-				echo Warp to LSAA
-				call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
-				echo Cargo LSAA
-				call Cargo.TransferCargoToLargeShipAssemblyArray
+				Ship:New_WarpToBookmark[${Config.Miner.DeliveryLocation}]
+				if ${LargeShipAssemblyArray.IsReady}
+				{
+					Miner:Approach[${LargeShipAssemblyArray.ActiveCan}, LOOT_RANGE]
+					if ${Entity[${LargeShipAssemblyArray.ActiveCan}](exists)} && ${Entity[${LargeShipAssemblyArray.ActiveCan}].Distance} < LOOT_RANGE
+					{
+						if ${CommandQueue.Queued} == 0
+						{
+								CommandQueue:QueueCommand[LargeShipAssemblyArray,Open,${LargeShipAssemblyArray.ActiveCan}]
+								CommandQueue:QueueCommand[Cargo,FindCargo,"SHIP"]
+								CommandQueue:QueueCommand[Cargo,TransferListToHangarInSpace,${LargeShipAssemblyArray.ActiveCan}]
+								CommandQueue:QueueCommand[LargeShipAssemblyArray,StackAllCargo]
+						}
+						CommandQueue:ProcessCommands
+					}
+				}
+				else
+				{
+					return
+				}
+
 				break
 			case XLarge Ship Assembly Array
-				call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
+				Ship:New_WarpToBookmark[${Config.Miner.DeliveryLocation}]
 				call Cargo.TransferOreToXLargeShipAssemblyArray
 				break
 			case Jetcan
@@ -821,7 +847,7 @@ objectdef obj_Hauler
 			call Ship.WarpToFleetMember ${charID}
 		}
 
-		call Ship.OpenCargo
+		Ship:OpenCargo
 
 		This:BuildJetCanList[${charID}]
 		while ${Entities.Peek(exists)}
