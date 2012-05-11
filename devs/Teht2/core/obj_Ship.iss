@@ -49,6 +49,8 @@ objectdef obj_Ship
 	variable string m_Type
 	variable int m_TypeID
 	variable uint ReloadingWeapons = 0
+	
+	variable bool FastWarp_Cooldown=FALSE
 
 
 	variable iterator ModulesIterator
@@ -76,6 +78,7 @@ objectdef obj_Ship
 			if !${Me.InStation} && ${Me.InSpace}
 			{
 				This:ValidateModuleTargets
+				This:FastWarp_Check
 
 				if ${RetryUpdateModuleList} == 10
 				{
@@ -1540,7 +1543,39 @@ objectdef obj_Ship
 		}
 		while ${ModuleIter:Next(exists)}
 	}
-	
+
+	method Activate_Salvager(int64 target=-1)
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		variable iterator ModuleIter
+
+		This.ModuleList_Salvagers:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline}
+			{
+
+				if ${target} != -1
+				{
+					UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name} on ${Entity[${target}].Name}"]
+					ModuleIter.Value:Activate[${target}]
+				}
+				else
+				{
+					UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
+					ModuleIter.Value:Activate
+				}
+				return
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+	}
+
 	function ActivateFreeSalvager()
 	{
 		variable string Slot
@@ -1633,54 +1668,21 @@ objectdef obj_Ship
 		return FALSE
 	}
 
-	function OpenCargo()
+	method OpenCargo()
 	{
 		if !${This.IsCargoOpen}
 		{
 			UI:UpdateConsole["Opening Ship Cargohold"]
 			EVE:Execute[OpenCargoHoldOfActiveShip]
-			wait WAIT_CARGO_WINDOW
-
-			; Note that this has a race condition. If the window populates fully before we check the CaptionCount
-			; OR if the cargo hold is empty, then we will sit forever.  Hence the LoopCheck test
-			; -- CyberTech
-			variable int CaptionCount
-			variable int LoopCheck
-
-			LoopCheck:Set[0]
-			CaptionCount:Set[${EVEWindow[MyShipCargo].Caption.Token[2,"["].Token[1,"]"]}]
-			;UI:UpdateConsole["obj_Ship: Waiting for cargo to load: CaptionCount: ${CaptionCount}", LOG_DEBUG]
-			variable index:item MyCargo
-			MyShip:GetCargo[MyCargo]
-			while ( ${CaptionCount} > ${MyCargo.Used} && \
-					${LoopCheck} < 10 )
-			{
-				UI:UpdateConsole["obj_Ship: Waiting for cargo to load...(${LoopCheck})", LOG_MINOR]
-				while !${This.IsCargoOpen}
-				{
-					wait 1
-				}
-				wait 10
-				LoopCheck:Inc
-				MyShip:GetCargo[MyCargo]
-			}
 		}
-		EVEWindow[ByName,${MyShip.ID}]:StackAll
-		wait 5
 	}
 
-	function CloseCargo()
+	method CloseCargo()
 	{
 		if ${This.IsCargoOpen}
 		{
 			UI:UpdateConsole["Closing Ship Cargohold"]
 			EVEWindow[MyShipCargo]:Close
-			wait WAIT_CARGO_WINDOW
-			while ${This.IsCargoOpen}
-			{
-				wait 1
-			}
-			wait 10
 		}
 	}
 
@@ -1726,7 +1728,7 @@ objectdef obj_Ship
 	}
 
 	; This takes CHARID, not Entity id
-	function WarpToFleetMember(int64 charID, int distance=0, bool WarpFleet=FALSE)
+	method WarpToFleetMember(int64 charID, int distance=0, bool WarpFleet=FALSE)
 	{
 		variable index:fleetmember FleetMembers
 		variable iterator FleetMember
@@ -1741,28 +1743,14 @@ objectdef obj_Ship
 			{
 				if ${charID.Equal[${FleetMember.Value.CharID}]} && ${Local[${FleetMember.Value.ToPilot.Name}](exists)}
 				{
-					call This.WarpPrepare
-					while !${Entity["OwnerID = ${charID} && CategoryID = 6"](exists)}
+					UI:UpdateConsole["Warping to Fleet Member: ${FleetMember.Value.ToPilot.Name}"]
+					if ${WarpFleet}
 					{
-						UI:UpdateConsole["Warping to Fleet Member: ${FleetMember.Value.ToPilot.Name}"]
-						while !${This.WarpEntered}
-						{
-							if ${WarpFleet}
-							{
-								FleetMember.Value:WarpFleetTo[${distance}]
-							}
-							else
-							{
-								FleetMember.Value:WarpTo[${distance}]
-							}
-							wait 10
-						}
-						call This.WarpWait
-						if ${Return} == 2
-						{
-							UI:UpdateConsole["ERROR: Ship.WarpToFleetMember never reached fleet member!"]
-							return
-						}
+						FleetMember.Value:WarpFleetTo[${distance}]
+					}
+					else
+					{
+						FleetMember.Value:WarpTo[${distance}]
 					}
 					return
 				}
@@ -1784,42 +1772,27 @@ objectdef obj_Ship
 	}
 
 	; TODO - Move this to obj_AutoPilot when it is ready - CyberTech
-	function ActivateAutoPilot()
+	method ActivateAutoPilot()
 	{
-		variable int Counter
-		UI:UpdateConsole["Activating autopilot and waiting until arrival..."]
+		UI:UpdateConsole["Activating autopilot"]
 		if !${Me.AutoPilotOn}
 		{
 			EVE:Execute[CmdToggleAutopilot]
 		}
-		do
-		{
-			do
-			{
-				Counter:Inc
-				wait 10
-			}
-			while !${Me.AutoPilotOn} && (${Counter} < 10)
-			wait 10
-		}
-		while ${Me.AutoPilotOn}
-		wait 30
 	}
 
-	function TravelToSystem(int64 DestinationSystemID)
+	method TravelToSystem(int64 DestinationSystemID)
 	{
-		while !${DestinationSystemID.Equal[${Me.SolarSystemID}]}
+		if ${Me.ToEntity.Mode} == 3
 		{
-			UI:UpdateConsole["DEBUG: To: ${DestinationSystemID} At: ${Me.SolarSystemID}", LOG_DEBUG]
-			UI:UpdateConsole["Setting autopilot from ${Universe[${Me.SolarSystemID}].Name} to ${Universe[${DestinationSystemID}].Name}"]
-			Universe[${DestinationSystemID}]:SetDestination
-
-			call This.ActivateAutoPilot
+			Ship:FastWarp
+			return
 		}
-		wait 20
-		while ${EVE.EntitiesCount} == 2
+		
+		if !${DestinationSystemID.Equal[${Me.SolarSystemID}]} && !${Me.AutoPilotOn}
 		{
-			wait 5
+			Universe[${DestinationSystemID}]:SetDestination
+			This:ActivateAutoPilot
 		}
 	}
 
@@ -1829,12 +1802,12 @@ objectdef obj_Ship
 
 		if ${Me.InStation}
 		{
-			call Station.Undock
+			Station:Undock
 		}
 
 		call This.WarpPrepare
 		; Note -- this does not handle WarpFleet=true (the fleet wont' change systems)
-		call This.TravelToSystem ${DestinationBookmark.SolarSystemID}
+		This:TravelToSystem[${DestinationBookmark.SolarSystemID}]
 
 #if EVEBOT_DEBUG
 		echo \${DestinationBookmark.Type} = ${DestinationBookmark.Type}
@@ -2035,7 +2008,7 @@ objectdef obj_Ship
 			switch ${CategoryID}
 			{
 				case CATEGORYID_STATION
-					call Station.DockAtStation ${EntityID}
+					Station:DockAtStation[${EntityID}]
 					break
 				Default
 					break
@@ -2136,6 +2109,27 @@ objectdef obj_Ship
 		}
 	}
 
+	member:bool AfterBurner_Active()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return FALSE
+		}
+
+		variable iterator ModuleIter
+
+		This.ModuleList_AB_MWD:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		{
+			if ${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline}
+			{
+				return TRUE
+			}
+		}
+		return FALSE
+	}
+	
+	
 	member:int Total_Armor_Reps()
 	{
 		return ${This.ModuleList_Repair_Armor.Used}
@@ -2807,15 +2801,13 @@ objectdef obj_Ship
 		return FALSE
 	}
 
-	function SetActiveCrystals()
+	method SetActiveCrystals()
 	{
 		 variable iterator ModuleIterator
 
 		This.ModuleList_MiningLaser:GetIterator[ModuleIterator]
 
 		Cargo.ActiveMiningCrystals:Clear
-
-		;echo Found ${This.ModuleList_MiningLaser.Used} lasers
 
 		if ${ModuleIterator:First(exists)}
 		do
@@ -2824,7 +2816,6 @@ objectdef obj_Ship
 				if ${ModuleIterator.Value.SpecialtyCrystalMiningAmount(exists)}
 				{
 					crystal:Set[${This.LoadedMiningLaserCrystal[${ModuleIterator.Value.ToItem.Slot},TRUE]}]
-					;echo ${crystal} found
 					if !${crystal.Equal["NOCHARGE"]}
 					{
 						 Cargo.ActiveMiningCrystals:Insert[${crystal}]
@@ -3086,4 +3077,68 @@ objectdef obj_Ship
 			}
 		}
 	}
+	
+	
+	
+	
+	method FastWarp_Check()
+	{
+		if ${Me.ToEntity.Mode} == 3 && ${FastWarp_Cooldown} && ${This.AfterBurner_Active}
+		{
+			Ship:Deactivate_AfterBurner
+			return
+		}
+		if ${Me.ToEntity.Mode} == 3 && !${FastWarp_Cooldown}
+		{
+			Ship:Activate_AfterBurner
+			FastWarp_Cooldown:Set[TRUE]
+			UI:UpdateConsole["obj_Ship: Pulsing MWD/Afterburner"]
+			return
+		}
+		if ${Me.ToEntity.Mode} != 3
+		{
+			FastWarp_Cooldown:Set[FALSE]
+			return
+		}
+	}
+	;	This method is a redesign of the old FastWarp system.  It now does not handle warping.  Rather, it checks to see if a MWD/Afterburner pulse has been completed
+	;	and pulses if not.  It only works while warping, and after it goes off once, it waits for FastWarp_Cooldown to be cleared before it pulses again.
+	method FastWarp()
+	{
+		return
+	}	
+	
+	
+	method New_WarpToBookmark(string DestinationBookmarkLabel, bool WarpFleet=FALSE)
+	{
+		if ${Me.ToEntity.Mode} == 3
+		{
+			Ship:FastWarp
+			return
+		}
+		
+		if ${EVE.Bookmark[${DestinationBookmarkLabel}](exists)}
+		{
+			if ${EVE.Bookmark[${DestinationBookmarkLabel}].Distance} > WARP_RANGE
+			{
+				if ${WarpFleet}
+				{
+					UI:UpdateConsole["Warping fleet to ${EVE.Bookmark[${DestinationBookmarkLabel}].Label}"]
+					EVE.Bookmark[${DestinationBookmarkLabel}]:WarpFleetTo
+				}
+				else
+				{
+					UI:UpdateConsole["Warping to ${EVE.Bookmark[${DestinationBookmarkLabel}].Label}"]
+					EVE.Bookmark[${DestinationBookmarkLabel}]:WarpTo
+				}
+			}
+		}
+		else
+		{
+			UI:UpdateConsole["Bookmark requested does not exist!", LOG_CRITICAL]
+		}
+	}	
+	
+	
+	
 }
