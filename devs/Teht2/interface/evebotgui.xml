@@ -106,6 +106,16 @@
 								relay all Script[EVEBot].VariableScope.EVEBot:Resume
 							</OnLeftClick>
 						</button>
+						<button	Name='LaunchOrePriority' template='EveSkin.Window.ClickButton'>
+							<text>Launch Ore Priority</text>
+							<x>r160</x>
+							<y>70</y>
+							<width>150</width>
+							<height>20</height>
+							<OnLeftClick>
+								run evebot/external/orepriority/orepriority
+							</OnLeftClick>
+						</button>
 						<Text name='script_runtime'>
 							<X>10</X>
 							<Y>10</Y>
