@@ -46,7 +46,7 @@ objectdef obj_Safespots
 		}
 	}
 
-	function WarpToNextSafeSpot()
+	member:bool WarpToNextSafeSpot()
 	{
 		if ${SafeSpots.Used} == 0
 		{
@@ -65,11 +65,13 @@ objectdef obj_Safespots
 
 		if ${SafeSpotIterator.Value(exists)}
 		{
-			EVE.Bookmark[${SafeSpotIterator.Value}]:WarpTo[0]
+			Ship:New_WarpToBookmark[${SafeSpotIterator.Value.Label}]
+			return TRUE
 		}
 		else
 		{
 			UI:UpdateConsole["ERROR: obj_Safespots.WarpToNextSafeSpot found an invalid bookmark!"]
+			return FALSE
 		}
 	}
 
@@ -107,17 +109,9 @@ objectdef obj_Safespots
 		return FALSE
 	}
 
-	function WarpTo(bool Wait=FALSE)
+	member:bool WarpTo()
 	{
-		call This.WarpToNextSafeSpot
-		if ${Wait}
-		{
-			do
-			{
-				wait 1
-			}
-			while ${Me.ToEntity.Mode} == 3
-		}
+		return This.WarpToNextSafeSpot
 	}
 }
 
