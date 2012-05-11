@@ -60,8 +60,6 @@ objectdef obj_Miner
 	
 	method Initialize()
 	{
-		BotModules:Insert["Miner"]
-
 		This.TripStartTime:Set[${Time.Timestamp}]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		LavishScript:RegisterEvent[EVEBot_Orca_InBelt]
