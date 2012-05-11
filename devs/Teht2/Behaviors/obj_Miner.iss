@@ -1236,7 +1236,7 @@ objectdef obj_Miner
 		}
 		if ${Config.Miner.OrcaTractorLoot}
 		{
-			call This.Tractor
+			This:Tractor
 		}
 		
 
@@ -1473,27 +1473,18 @@ objectdef obj_Miner
 		return FALSE
 	}
 
-	function Tractor()
+	method Tractor()
 	{
 		if ${Ship.TotalTractorBeams} > 0
 		{
 			variable index:entity Wrecks
 
-			if 	${Me.TargetingCount} != 0
-			{
-				return
-			}
-			
 			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].Distance} < LOOT_RANGE && ${Entity[${Tractoring}].IsWreckEmpty}
 			{
 				UI:UpdateConsole["Warning: Wreck empty, clearing"]
 				if ${Entity[${Tractoring}].LootWindow(exists)}
 				{
 					Entity[${Tractoring}]:CloseCargo
-				}
-				if ${Ship.IsTractoringWreckID[${Tractoring}]}
-				{
-					Ship:Deactivate_Tractor
 				}
 				if ${Entity[${Tractoring}].IsLockedTarget}
 				{
@@ -1514,14 +1505,14 @@ objectdef obj_Miner
 					{
 						if !${Wreck.Value.IsWreckEmpty} || ${Wreck.Value.Distance} > LOOT_RANGE
 						Tractoring:Set[${Wreck.Value.ID}]
-						UI:UpdateConsole["Warning: ${Wrecks.Used} wrecks found"]
+						UI:UpdateConsole["${Wrecks.Used} wrecks found"]
 					}
 					while ${Wreck:Next(exists)}
 			}
 			
 			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].Distance} <= LOOT_RANGE && !${Entity[${Tractoring}].LootWindow(exists)} && !${Entity[${Tractoring}].IsWreckEmpty}
 			{
-				UI:UpdateConsole["Warning: Opening wreck"]
+				UI:UpdateConsole["Opening wreck ${Entity[${Tractoring}].Name}"]
 				Entity[${Tractoring}]:OpenCargo
 				if ${Ship.IsTractoringWreckID[${Tractoring}]}
 				{
@@ -1532,7 +1523,7 @@ objectdef obj_Miner
 
 			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].Distance} <= LOOT_RANGE && ${Entity[${Tractoring}].LootWindow(exists)}
 			{
-				UI:UpdateConsole["Warning: Looting wreck ${Entity[${Tractoring}].Name}"]
+				UI:UpdateConsole["Looting wreck ${Entity[${Tractoring}].Name}"]
 				variable index:item ContainerCargo
 				variable iterator Cargo
 				variable index:int64 CargoList
