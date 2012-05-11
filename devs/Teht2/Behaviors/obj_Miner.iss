@@ -46,6 +46,9 @@ objectdef obj_Miner
 	;	This keeps track of the wreck we are tractoring
 	variable int64 Tractoring=-1
 	
+	;	This keeps track of the wreck we are salvaging
+	variable int64 Salvaging=-1
+	
 	;	Search string for our Orca
 	variable string Orca
 
@@ -96,6 +99,7 @@ objectdef obj_Miner
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			This:SetState[]
+			echo ${This.CurrentState}
 
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
@@ -166,12 +170,20 @@ objectdef obj_Miner
 		}
 		
 		;	If I'm in a station, I need to perform what I came there to do
-		if ${Me.InStation}
+		if ${Me.InStation} && ${This.MinerFull}
 		{
-	  		This.CurrentState:Set["BASE"]
+	  		This.CurrentState:Set["UNLOAD"]
 	  		return
 		}
 
+		;	If I'm in a station, I need to perform what I came there to do
+		if ${Me.InStation} && !${This.MinerFull}
+		{
+	  		This.CurrentState:Set["UNDOCK"]
+	  		return
+		}
+		
+		
 		if !${Me.InSpace}
 		{
 			This.CurrentState:Set["IDLE"]
@@ -193,7 +205,14 @@ objectdef obj_Miner
 		}
 				
 		;	If I'm not in a station and I have room to mine more ore, that's what I should do!
-	 	This.CurrentState:Set["MINE"]
+	 	if ${This.CurrentState.NotEqual[DROPOFF]}
+		{
+			This.CurrentState:Set["MINE"]
+			return
+		}
+
+		;	If all else fails, idle
+		This.CurrentState:Set["IDLE"]
 	}	
 	
 	
@@ -226,7 +245,7 @@ objectdef obj_Miner
 		switch ${This.CurrentState}
 		{
 		
-			;	This means we're somewhere safe, and SetState wants us to stay there without spamming the UI
+			;	This means we're somewhere safe, and SetState wants us to stay there without spamming the UI.  If we're in space, open holds.
 			case IDLE
 				break
 
@@ -245,47 +264,51 @@ objectdef obj_Miner
 				{
 					break
 				}
+				if ${CommandQueue.Queued} != 0
+				{
+						CommandQueue:Clear
+				}
+				
 				This:Cleanup_Environment
 				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
 					if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].TypeID} != 5
 					{
-						;call This.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
-						call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
+						Station:DockAtStation[${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}]
 					}
 					else
 					{
-						call Ship.WarpToBookMarkName "${Config.Miner.PanicLocation}"
+						Ship:New_WarpToBookmark[${Config.Miner.PanicLocation}]
 					}
 					break
 				}				
 				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} != ${Me.SolarSystemID}
 				{
-					call This.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID}
-					call Ship.TravelToSystem ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID}
+					Ship:TravelToSystem[${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID}]
 					break
 				}
 				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
-					;call This.FastWarp ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
-					call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
+					Station:DockAtStation[${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}]
 					break
 				}
 				if ${Entity["CategoryID = 3"](exists)}
 				{
-					UI:UpdateConsole["Docking at ${Entity["CategoryID = 3"].Name}"]
-					;call This.FastWarp ${Entity["CategoryID = 3"].ID}
-					call Station.DockAtStation ${Entity["CategoryID = 3"].ID}
+					Station:DockAtStation[${Entity["CategoryID = 3"].ID}]
 					break
 				}
 				if ${Me.ToEntity.Mode} != 3
 				{
-					call Safespots.WarpTo
-					call This.FastWarp
-					wait 30
+					if !${Safespots.WarpTo}
+					{
+						UI:UpdateConsole["WARNING:  EVERYTHING has gone wrong. Miner is in HARDSTOP mode and there are no panic locations, delivery locations, stations, or safe spots to use. You're probably going to get blown up..."]
+					}
+					break
 				}
-
-				UI:UpdateConsole["WARNING:  EVERYTHING has gone wrong. Miner is in HARDSTOP mode and there are no panic locations, delivery locations, stations, or safe spots to use. You're probably going to get blown up..."]
+				else
+				{
+					break
+				}
 				break
 				
 			;	This means there's something dangerous in the system, but once it leaves we're going to go back to mining.
@@ -309,8 +332,7 @@ objectdef obj_Miner
 						Bookmarks:StoreLocation
 					}
 
-					;call This.FastWarp ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
-					call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
+					Station:DockAtStation[${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}]
 					break
 				}
 				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} == ${Me.SolarSystemID}
@@ -322,12 +344,11 @@ objectdef obj_Miner
 
 					if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].TypeID} != 5
 					{
-						;call This.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
-						call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
+						Station:DockAtStation[${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}]
 					}
 					else
 					{
-						call This.FastWarp -1 "${Config.Miner.PanicLocation}"
+						Ship:New_WarpToBookmark[${Config.Miner.PanicLocation}]
 					}
 					break
 				}
@@ -340,69 +361,95 @@ objectdef obj_Miner
 					}
 
 					UI:UpdateConsole["Docking at ${Entity["CategoryID = 3"].Name}"]
-					;call This.FastWarp ${Entity["CategoryID = 3"].ID}
-					call Station.DockAtStation ${Entity["CategoryID = 3"].ID}
+					Station:DockAtStation[${Entity["CategoryID = 3"].ID}]
 					break
 				}				
 				
 				if ${Me.ToEntity.Mode} != 3
 				{
-					call Safespots.WarpTo
-					call This.FastWarp
-					wait 30
+					if !${Safespots.WarpTo}
+					{
+						UI:UpdateConsole["HARD STOP: Unable to flee, no stations available and no Safe spots available"]
+						EVEBot.ReturnToStation:Set[TRUE]
+					}
+					break
+				}
+				else
+				{
 					break
 				}
 				
-				UI:UpdateConsole["HARD STOP: Unable to flee, no stations available and no Safe spots available"]
-				EVEBot.ReturnToStation:Set[TRUE]
 				break
 				
 			;	This means we're in a station and need to do what we need to do and leave.
 			;	*	If this isn't where we're supposed to deliver ore, we need to leave the station so we can go to the right one.
 			;	*	Move ore out of cargo hold if it's there
 			;	*	Undock from station
-			case BASE
+			case UNLOAD
 				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID} != ${Me.StationID}
 				{
-					call Station.Undock
+					UI:UpdateConsole["This isn't our Delivery Location.  Undocking to go there."]
+					Station:Undock
 					break
 				}
 				
 				;	If we're in Orca mode, we need to unload all locations capable of holding ore, not just the cargo hold.
 				;	Note:  I need to replace the shuffle with 3 direct movements
-				if ${Config.Miner.OrcaMode}
+				if ${CommandQueue.Queued} == 0
 				{
-					call Cargo.OpenHolds
-					Ship:OpenOreHold
-					Ship:OpenCorpHangars
-					call Cargo.TransferCargoFromShipOreHoldToStation
-					call Cargo.TransferCargoFromShipCorporateHangarToStation
-					call Cargo.CloseHolds
-					call Cargo.TransferOreToHangar
-				}
-				else
-				{
-					call Cargo.TransferOreToHangar
+					if ${Config.Miner.OrcaMode}
+					{
+						CommandQueue:QueueCommand[Cargo,CloseHolds]
+						CommandQueue:QueueCommand[Cargo,OpenHolds]
+						CommandQueue:QueueCommand[Ship,OpenOreHold]
+						CommandQueue:QueueCommand[Ship,OpenCorpHangars]
+						CommandQueue:QueueCommand[Cargo,FindCargo,"SHIPCORPORATEHANGAR, CATEGORYID_ORE"]
+						CommandQueue:QueueCommand[Cargo,TransferListStationHangar]
+						CommandQueue:QueueCommand[Cargo,FindCargo,"SHIPOREHOLD, CATEGORYID_ORE"]
+						CommandQueue:QueueCommand[Cargo,TransferListStationHangar]
+						CommandQueue:QueueCommand[Cargo,FindCargo,"SHIP, CATEGORYID_ORE"]
+						CommandQueue:QueueCommand[Cargo,TransferListStationHangar]
+						CommandQueue:QueueCommand[Cargo:CloseHolds
+					}
+					else
+					{
+						CommandQueue:QueueCommand[Cargo,CloseHolds]
+						CommandQueue:QueueCommand[Cargo,OpenHolds]
+						CommandQueue:QueueCommand[Cargo,FindCargo,"SHIP, CATEGORYID_ORE"]
+						CommandQueue:QueueCommand[Cargo,TransferListStationHangar]
+						CommandQueue:QueueCommand[Station,StackHangar]
+						CommandQueue:QueueCommand[Cargo:CloseHolds
+					}
 				}
 				
-			    LastUsedCargoCapacity:Set[0]
-				call Station.Undock
-				wait 600 ${Me.InSpace}
-				if ${Config.Miner.OrcaMode}
+				break
+
+				
+				
+			case UNDOCK
+				if ${CommandQueue.Queued} == 0
 				{
-					Ship:OpenOreHold
-					Ship:OpenCorpHangars
+						CommandQueue:QueueCommand[Cargo,CloseHolds]
+						CommandQueue:QueueCommand[Station,Undock]
+						CommandQueue:QueueCommand[Ship,OpenCargo]
 				}
-				call Cargo.OpenHolds
 				break
 				
 			;	This means we're in space and should mine some more ore!  Only one choice here - MINE!
 			;	It is prudent to make sure we're not warping, since you can't mine much in warp...
 			case MINE
-				if ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}](exists)} && ${EVE.Bookmark[${Config.Miner.MiningSystemBookmark}].SolarSystemID} != ${Me.SolarSystemID}
+				if ${CommandQueue.Queued} != 0
 				{
-					call Ship.TravelToSystem ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID}
+						break
 				}
+				
+
+				if ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}](exists)} && ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID} != ${Me.SolarSystemID}
+				{
+					Ship:TravelToSystem[${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID}]
+					break
+				}
+				echo ${Me.ToEntity.Mode}
 				if ${Me.ToEntity.Mode} != 3
 				{
 					call This.Mine
@@ -413,22 +460,29 @@ objectdef obj_Miner
 			;	*	If we're warping, wait for that to finish up
 			;	*	If Orca In Belt is enabled, call OrcaInBelt
 			case ORCA
-				if ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}](exists)} && ${EVE.Bookmark[${Config.Miner.MiningSystemBookmark}].SolarSystemID} != ${Me.SolarSystemID}
+				if ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}](exists)} && ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID} != ${Me.SolarSystemID}
 				{
-					call Ship.TravelToSystem ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID}
-				}
-				if ${Me.ToEntity.Mode} == 3
-				{
+					Ship:TravelToSystem[${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID}]
 					break
 				}
-				call This.OrcaInBelt
+				if ${Me.ToEntity.Mode} != 3
+				{
+					call This.OrcaInBelt
+				}
 				break
 				
 			;	This means we need to go to our delivery location to unload.
 			case DROPOFF
+				if ${CommandQueue.Queued} != 0
+				{
+						break
+				}
+				if ${Me.ToEntity.Mode} == 3
+				{
+					return
+				}			
 				;	Clean up before we leave
 				This:Cleanup_Environment
-
 			
 				;	Before we go anywhere, make a bookmark so we can get back here
 				if ${Config.Miner.BookMarkLastPosition} && !${Bookmarks.CheckForStoredLocation}
@@ -446,18 +500,24 @@ objectdef obj_Miner
 					case Station
 					
 						;	Get info about the crystals currently loaded
-						call Ship.SetActiveCrystals
+						Ship:SetActiveCrystals
 						
 						if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} != ${Me.SolarSystemID}
 						{
-							call Ship.TravelToSystem ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID}
+							Ship:TravelToSystem[${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID}]
 							break
 						}
 						if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 						{
-							call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
+							if ${CommandQueue.Queued} == 0
+							{
+									CommandQueue:QueueCommand[Station,DockAtStation,${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}]
+									CommandQueue:QueueCommand[IGNORE]
+									CommandQueue:QueueCommand[Ship,OpenCargo]
+							}
 							break
 						}
+						
 						UI:UpdateConsole["ALERT:  Station dock failed, check your delivery location!  Switching to HARD STOP mode!"]
 						EVEBot.ReturnToStation:Set[TRUE]
 						break
@@ -469,13 +529,32 @@ objectdef obj_Miner
 					case Hangar Array
 						if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} != ${Me.SolarSystemID}
 						{
-							call Ship.TravelToSystem ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID}
+							Ship:TravelToSystem[${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID}]
 							break
 						}
 						if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 						{
-							call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
-							call Cargo.TransferOreToCorpHangarArray
+							Ship:New_WarpToBookMark[${Config.Miner.DeliveryLocation}]
+							
+							if ${CorpHangarArray.IsReady}
+							{
+								This:Approach[${CorpHangarArray.ActiveCan}, LOOT_RANGE]
+								if ${Entity[${CorpHangarArray.ActiveCan}](exists)} && ${Entity[${CorpHangarArray.ActiveCan}].Distance} < LOOT_RANGE
+								{
+									if ${CommandQueue.Queued} == 0
+									{
+											CommandQueue:QueueCommand[CorpHangarArray,Open,${CorpHangarArray.ActiveCan}]
+											CommandQueue:QueueCommand[Cargo,FindCargo,"SHIP, CATEGORYID_ORE"]
+											CommandQueue:QueueCommand[Cargo,TransferListToHangarInSpace,${CorpHangarArray.ActiveCan}]
+											CommandQueue:QueueCommand[CorpHangarArray,StackAllCargo]
+									}
+									CommandQueue:ProcessCommands
+								}
+							}
+							else
+							{
+								return
+							}
 							break
 						}
 						UI:UpdateConsole["ALERT:  Hangar Array unload failed, check your delivery location!  Switching to HARD STOP mode!"]
@@ -489,15 +568,35 @@ objectdef obj_Miner
 					case Large Ship Assembly Array
 						if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} != ${Me.SolarSystemID}
 						{
-							call Ship.TravelToSystem ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID}
+							Ship:TravelToSystem[${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID}]
 							break
 						}
 						if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 						{
-							call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
-							call Cargo.TransferCargoToLargeShipAssemblyArray
+							Ship:New_WarpToBookmark[${Config.Miner.DeliveryLocation}]
+								
+							if ${LargeShipAssemblyArray.IsReady}
+							{
+								This:Approach[${LargeShipAssemblyArray.ActiveCan}, LOOT_RANGE]
+								if ${Entity[${LargeShipAssemblyArray.ActiveCan}](exists)} && ${Entity[${LargeShipAssemblyArray.ActiveCan}].Distance} < LOOT_RANGE
+								{
+									if ${CommandQueue.Queued} == 0
+									{
+											CommandQueue:QueueCommand[LargeShipAssemblyArray,Open,${LargeShipAssemblyArray.ActiveCan}]
+											CommandQueue:QueueCommand[Cargo,FindCargo,"SHIP, CATEGORYID_ORE"]
+											CommandQueue:QueueCommand[Cargo,TransferListToHangarInSpace,${LargeShipAssemblyArray.ActiveCan}]
+											CommandQueue:QueueCommand[LargeShipAssemblyArray,StackAllCargo]
+									}
+									CommandQueue:ProcessCommands
+								}
+							}
+							else
+							{
+								return
+							}
 							break
 						}
+						
 						UI:UpdateConsole["ALERT:  Large Ship Assembly Array unload failed, check your delivery location!  Switching to HARD STOP mode!"]
 						EVEBot.ReturnToStation:Set[TRUE]
 						break
@@ -509,13 +608,31 @@ objectdef obj_Miner
 					case XLarge Ship Assembly Array
 						if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} != ${Me.SolarSystemID}
 						{
-							call Ship.TravelToSystem ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID}
+							Ship:TravelToSystem[${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID}]
 							break
 						}
 						if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 						{
-							call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
-							call Cargo.TransferOreToXLargeShipAssemblyArray
+							Ship:New_WarpToBookMark[${Config.Miner.DeliveryLocation}]
+							if ${XLargeShipAssemblyArray.IsReady}
+							{
+								This:Approach[${XLargeShipAssemblyArray.ActiveCan}, LOOT_RANGE]
+								if ${Entity[${XLargeShipAssemblyArray.ActiveCan}](exists)} && ${Entity[${XLargeShipAssemblyArray.ActiveCan}].Distance} < LOOT_RANGE
+								{
+									if ${CommandQueue.Queued} == 0
+									{
+											CommandQueue:QueueCommand[XLargeShipAssemblyArray,Open,${XLargeShipAssemblyArray.ActiveCan}]
+											CommandQueue:QueueCommand[Cargo,FindCargo,"SHIP, CATEGORYID_ORE"]
+											CommandQueue:QueueCommand[Cargo,TransferListToHangarInSpace,${XLargeShipAssemblyArray.ActiveCan}]
+											CommandQueue:QueueCommand[XLargeShipAssemblyArray,StackAllCargo]
+									}
+									CommandQueue:ProcessCommands
+								}
+							}
+							else
+							{
+								return
+							}
 							break
 						}
 						UI:UpdateConsole["ALERT:  XLarge Ship Assembly Array unload failed, check your delivery location!  Switching to HARD STOP mode!"]
@@ -537,9 +654,9 @@ objectdef obj_Miner
 							;	This checks to make sure the player in our delivery location is in range and not warping before we dump a jetcan
 							if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)} && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3 && ${Ship.CargoHalfFull}
 							{
-								call Cargo.TransferOreToJetCan
+								;call Cargo.TransferOreToJetCan
 								;	Need a wait here because it would try to move the same item more than once
-								wait 20
+								;wait 20
 								return
 							}
 						}
@@ -571,31 +688,7 @@ objectdef obj_Miner
 							break
 						}
 
-						;	Find out if we need to approach this target
-						if ${Entity[${Orca.Escape}].Distance} > LOOT_RANGE && ${This.Approaching} == 0
-						{
-							UI:UpdateConsole["ALERT:  Approaching to within loot range."]
-							Entity[${Orca.Escape}]:Approach[LOOT_RANGE]
-							This.Approaching:Set[${Entity[${Orca.Escape}]}]
-							This.TimeStartedApproaching:Set[${Time.Timestamp}]
-							break
-						}
-						
-						;	If we've been approaching for more than 2 minutes, we need to give up and try again
-						if ${Math.Calc[${TimeStartedApproaching}-${Time.Timestamp}]} < -120 && ${This.Approaching} != 0
-						{
-							This.Approaching:Set[0]
-							This.TimeStartedApproaching:Set[0]							
-						}
-						
-						;	If we're approaching a target, find out if we need to stop doing so 
-						if (${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= LOOT_RANGE && ${This.Approaching} != 0) || (!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
-						{
-							UI:UpdateConsole["ALERT:  Within loot range."]
-							EVE:Execute[CmdStopShip]
-							This.Approaching:Set[0]
-							This.TimeStartedApproaching:Set[0]
-						}
+						This:Approach[${Orca.Escape}, LOOT_RANGE]
 						
 						;	Open the Orca if it's not open yet
 						if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && !${EVEWindow[ByName, ${Entity[${Orca.Escape}]}](exists)}
@@ -606,8 +699,12 @@ objectdef obj_Miner
 						
 						if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && ${EVEWindow[ByName, ${Entity[${Orca.Escape}]}](exists)}
 						{
-							call This.Prepare_Environment
-							call Cargo.TransferOreToShipCorpHangar ${Entity[${Orca.Escape}]}
+							if ${CommandQueue.Queued} == 0
+							{
+									CommandQueue:QueueCommand[Cargo,FindCargo,"SHIP, CATEGORYID_ORE"]
+									CommandQueue:QueueCommand[Cargo,TransferListToHangarInSpace,${Entity[${Orca.Escape}].ID}]
+							}
+							CommandQueue:ProcessCommands
 						}	
 						break
 						
@@ -668,22 +765,22 @@ objectdef obj_Miner
 		;	*	If WarpToOrca and the orca is in fleet, warp there instead and clear our saved bookmark
 		;	*	Warp to a belt based on belt labels or a random belt
 		;	Note:  The UpdateList spam is necessary to make sure our actions are based on the closest asteroids
-		call Asteroids.UpdateList
+		Asteroids:UpdateList
 		
 		Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
 
 		if ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && ${WarpToOrca} && !${Entity[${Orca.Escape}](exists)}
 		{
-			call Ship.WarpToFleetMember ${Local[${Config.Miner.DeliveryLocation}]}
+			Ship:WarpToFleetMember[${Local[${Config.Miner.DeliveryLocation}]}]
 			if ${Config.Miner.BookMarkLastPosition} && ${Bookmarks.CheckForStoredLocation}
 			{
 				Bookmarks:RemoveStoredLocation
 			}
-			call Asteroids.UpdateList
+			Asteroids:UpdateList
 		}
 		if ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && ${Entity[${Orca.Escape}](exists)}
 		{
-			call Asteroids.UpdateList ${Entity[${Orca.Escape}].ID}
+			Asteroids:UpdateList ${Entity[${Orca.Escape}].ID}
 		}
 
 		Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
@@ -702,22 +799,21 @@ objectdef obj_Miner
 			while ${Ship.Drones.DronesInSpace} != 0	
 		}
 		
-		if ${Ship.TotalActivatedMiningLasers} == 0 && !${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]}
+		if ${Asteroids.AsteroidList.Used} == 0 && !${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]}
 		{	
-			do
+			UI:UpdateConsole["Belt empty: Changing belts"]
+			if ${Ship.Drones.DronesInSpace} != 0	
 			{
 				if ${Me.ToEntity.Mode} == 3
 				{
 					EVE:Execute[CmdStopShip]				
 				}
 				Ship.Drones:ReturnAllToDroneBay
-				wait 20
 			}
-			while ${Ship.Drones.DronesInSpace} != 0		
 			call Asteroids.MoveToField FALSE TRUE
-			call Asteroids.UpdateList
+			Asteroids:UpdateList
 		}
-		call This.Prepare_Environment
+		This:Prepare_Environment
 
 		;	If our ship has no mining lasers, panic so the user knows to correct their configuration and try again
 		if ${Ship.TotalMiningLasers} == 0
@@ -750,7 +846,6 @@ objectdef obj_Miner
 		{
 			call Defend
 		}		
-		
 
 		;	We need to make sure we're near our orca if we're using it as a delivery location
 		if ${Config.Miner.DeliveryLocationTypeName.Equal[Orca]}
@@ -823,9 +918,12 @@ objectdef obj_Miner
 				
 				if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && ${EVEWindow[ByName, ${Entity[${Orca.Escape}]}](exists)}
 				{
-					call This.Prepare_Environment
-					call Cargo.TransferOreToShipCorpHangar ${Entity[${Orca.Escape}]}
+					Cargo:FindCargo[SHIP, CATEGORYID_ORE]
+					Cargo:TransferListToHangarInSpace[${Entity[${Orca.Escape}].ID}]
+					Cargo:FindCargo[SHIP, 4]
+					Cargo:TransferListToHangarInSpace[${Entity[${Orca.Escape}].ID}]
 					call Cargo.ReplenishCrystals ${Entity[${Orca.Escape}]}
+					This:StackAll
 				}
 			}
 		}
@@ -971,6 +1069,10 @@ objectdef obj_Miner
 			}
 		}
 		
+		if ${Ship.TotalSalvagers} != 0
+		{
+			This:Salvage
+		}
 		
 	}	
 
@@ -1015,7 +1117,7 @@ objectdef obj_Miner
 		
 		;	Find an asteroid field, or stay at current one if we're near one.  Once we're there, prepare for mining and
 		;	make sure we know what asteroids are available
-		call Asteroids.UpdateList
+		Asteroids:UpdateList
 		Asteroids.AsteroidList:GetIterator[AsteroidIterator]
 		if !${AsteroidIterator:First(exists)}
 		{
@@ -1026,9 +1128,9 @@ objectdef obj_Miner
 			}
 			while ${Ship.Drones.DronesInSpace} != 0		
 			call Asteroids.MoveToField FALSE FALSE TRUE
-			call Asteroids.UpdateList
+			Asteroids:UpdateList
 		}
-		call This.Prepare_Environment
+		This:Prepare_Environment
 
 
 		;	If configured to launch combat drones and there's a shortage, force a DropOff so we go to our delivery location
@@ -1104,7 +1206,7 @@ objectdef obj_Miner
 		;	This section is for moving ore into the ore and cargo holds, so they will fill before the Corporate Hangar
 		Ship:OpenOreHold
 		Ship:OpenCorpHangars
-		call This.Prepare_Environment
+		This:Prepare_Environment
 		
 		if !${Ship.CorpHangarEmpty}
 		{
@@ -1174,9 +1276,9 @@ objectdef obj_Miner
 	
 	
 	;	If I don't add more than opening cargo, I will likely remove this function...
-	function Prepare_Environment()
+	method Prepare_Environment()
 	{
-		call Ship.OpenCargo
+		Ship:OpenCargo
 	}
 
 	;	If I don't add more than collecting drones, I will likely remove this function...
@@ -1415,7 +1517,7 @@ objectdef obj_Miner
 				return
 			}
 			
-			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].IsWreckEmpty}
+			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].Distance} < LOOT_RANGE && ${Entity[${Tractoring}].IsWreckEmpty}
 			{
 				UI:UpdateConsole["Warning: Wreck empty, clearing"]
 				if ${Entity[${Tractoring}].LootWindow(exists)}
@@ -1435,17 +1537,22 @@ objectdef obj_Miner
 			
 			if ${Tractoring} == -1
 			{
+				variable iterator Wreck
 				Wrecks:Clear
-				EVE:QueryEntities[Wrecks,${LavishScript.CreateQuery[GroupID = 186 && HaveLootRights && Distance < ${Ship.OptimalTractorRange} && !IsWreckEmpty && Distance < ${Ship.OptimalTargetingRange}]}]
+				EVE:QueryEntities[Wrecks,${LavishScript.CreateQuery[GroupID = 186 && HaveLootRights && Distance < ${Ship.OptimalTractorRange} && Distance < ${Ship.OptimalTargetingRange}]}]
 
-				if ${Wrecks.Used} > 0
-				{
-					Tractoring:Set[${Wrecks[1]}]
-					UI:UpdateConsole["Warning: ${Wrecks.Used} wrecks found"]
-				}
+				Wrecks:GetIterator[Wreck]
+				if ${Wreck:First(exists)}
+					do
+					{
+						if !${Wreck.Value.IsWreckEmpty} || ${Wreck.Value.Distance} > LOOT_RANGE
+						Tractoring:Set[${Wreck.Value.ID}]
+						UI:UpdateConsole["Warning: ${Wrecks.Used} wrecks found"]
+					}
+					while ${Wreck:Next(exists)}
 			}
 			
-			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].Distance} <= LOOT_RANGE && !${Entity[${Tractoring}].LootWindow(exists)}
+			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].Distance} <= LOOT_RANGE && !${Entity[${Tractoring}].LootWindow(exists)} && !${Entity[${Tractoring}].IsWreckEmpty}
 			{
 				UI:UpdateConsole["Warning: Opening wreck"]
 				Entity[${Tractoring}]:OpenCargo
@@ -1474,7 +1581,7 @@ objectdef obj_Miner
 				return
 			}
 			
-			if ${Entity[${Tractoring}](exists)} && !${Entity[${Tractoring}].IsLockedTarget}
+			if ${Entity[${Tractoring}](exists)} && !${Entity[${Tractoring}].IsLockedTarget} && ${Entity[${Tractoring}].Distance} > LOOT_RANGE
 			{
 				UI:UpdateConsole["Warning: Locking wreck ${Entity[${Tractoring}].Name}"]
 				Entity[${Tractoring}]:LockTarget
@@ -1482,9 +1589,109 @@ objectdef obj_Miner
 			}
 			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].IsLockedTarget} && !${Ship.IsTractoringWreckID[${Tractoring}]}
 			{
-				call Ship.ActivateFreeTractorBeam ${Entity[${Tractoring}].WreckID}
+				call Ship.ActivateFreeTractorBeam ${Entity[${Tractoring}].ID}
 				return
 			}
+		}
+	}
+	
+	
+	method Approach(string target, int distance)
+	{
+		;	Find out if we need to approach this target
+		if ${Entity[${target}].Distance} > ${distance} && ${This.Approaching} == 0
+		{
+			UI:UpdateConsole["ALERT:  Approaching to within loot range."]
+			Entity[${target}]:Approach[${distance}]
+			This.Approaching:Set[${target}]
+			This.TimeStartedApproaching:Set[${Time.Timestamp}]
+			return
+		}
+		
+		;	If we've been approaching for more than 2 minutes, we need to give up and try again
+		if ${Math.Calc[${TimeStartedApproaching}-${Time.Timestamp}]} < -120 && ${This.Approaching} != 0
+		{
+			This.Approaching:Set[0]
+			This.TimeStartedApproaching:Set[0]							
+		}
+		
+		;	If we're approaching a target, find out if we need to stop doing so 
+		if (${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= ${distance} && ${This.Approaching} != 0) || (!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
+		{
+			UI:UpdateConsole["ALERT:  Within loot range."]
+			EVE:Execute[CmdStopShip]
+			This.Approaching:Set[0]
+			This.TimeStartedApproaching:Set[0]
+		}
+	}
+	
+	method Salvage()
+	{
+		variable index:entity Wrecks
+
+		if 	${Me.TargetingCount} != 0
+		{
+			return
+		}
+				
+		if ${WrecksLockedAndLocking} == 0
+		{
+			Wrecks:Clear
+			EVE:QueryEntities[Wrecks,${LavishScript.CreateQuery[GroupID = 186 && HaveLootRights && Distance < ${Ship.OptimalSalvageRange} && IsWreckEmpty]}]
+
+			if ${Wrecks.Used} > 0
+			{
+				Salvaging:Set[${Wrecks[1]}]
+				UI:UpdateConsole["Warning: ${Wrecks.Used} empty wrecks found"]
+			}
+		}
+				
+		if ${Entity[${Salvaging}](exists)} && !${Entity[${Salvaging}].IsLockedTarget}
+		{
+			UI:UpdateConsole["Warning: Locking wreck ${Entity[${Salvaging}].Name}"]
+			Entity[${Salvaging}]:LockTarget
+			return
+		}
+		
+		if ${Entity[${Salvaging}](exists)} && ${Entity[${Salvaging}].IsLockedTarget} && !${Ship.IsSalvagingWreckID[${Salvaging}]}
+		{
+			Ship:Activate_Salvager[${Entity[${Salvaging}].ID}]
+			return
+		}
+	}	
+	
+	member:int WrecksLockedAndLocking()
+	{
+		variable iterator Target
+		variable int AsteroidsLocked=0
+		Targets:UpdateLockedAndLockingTargets
+		Targets.LockedOrLocking:GetIterator[Target]
+
+		if ${Target:First(exists)}
+		do
+		{
+			if ${Target.Value.CategoryID} == 186
+			{
+				AsteroidsLocked:Inc
+			}
+		}
+		while ${Target:Next(exists)}
+		return ${AsteroidsLocked}
+	}
+	
+	method StackAll()
+	{
+		variable index:evewindow Windows
+		variable iterator iWindow
+		EVE:GetEVEWindows[Windows]
+		Windows:GetIterator[iWindow]
+		if ${iWindow:First(exists)}
+		{
+			do
+			{
+				iWindow.Value:StackAll
+			}
+			while ${iWindow:Next(exists)}
 		}
 	}
 	
