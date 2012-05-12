@@ -16,7 +16,7 @@ objectdef obj_Fleet
 	
 	;	Pulse tracking information
 	variable time NextPulse
-	variable int PulseIntervalInSeconds = 10
+	variable int PulseIntervalInSeconds = 2
 	
 	
 	
