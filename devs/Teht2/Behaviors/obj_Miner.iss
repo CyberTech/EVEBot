@@ -1030,7 +1030,6 @@ objectdef obj_Miner
 					{
 						echo ${Ship.IsMiningAsteroidID[${Target.Value.ID}]} - Activating laser on ${Target.Value.ID}
 						Ship:ActivateFreeMiningLaser[${Target.Value.ID}]
-						return
 					}
 
 				}
