@@ -756,7 +756,7 @@ objectdef obj_Miner
 			return
 		}
 		
-		if ${Ship.TotalActivatedMiningLasers} != ${Ship.TotalMiningLasers}
+		if ${Ship.TotalActivatedMiningLasers} != ${Ship.TotalMiningLasers} || ${Asteroids.LockedAndLocking} != ${Ship.TotalMiningLasers}
 		{
 		
 			;	Find an asteroid field, or stay at current one if we're near one.  Choices are:
@@ -978,7 +978,7 @@ objectdef obj_Miner
 			}
 			
 		}
-		echo Lasers
+
 		;	Time to get those lasers working!
 		if ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers}
 		{
