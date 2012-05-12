@@ -68,6 +68,7 @@ function main()
 	declarevariable EVEBot obj_EVEBot script
 	declarevariable UI obj_EVEBotUI script
 	declarevariable BaseConfig obj_Configuration_BaseConfig script
+	EVEBot:Pause
 
 	declarevariable Config obj_Configuration script
 	declarevariable Whitelist obj_Config_Whitelist script

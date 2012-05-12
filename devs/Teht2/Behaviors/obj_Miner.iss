@@ -18,7 +18,7 @@ objectdef obj_Miner
 	
 	;	Pulse tracking information
 	variable time NextPulse
-	variable int PulseIntervalInSeconds = 2
+	variable int PulseIntervalInSeconds = 1
 	
 	;	State information (What we're doing)
 	variable string CurrentState = "IDLE"
@@ -36,9 +36,6 @@ objectdef obj_Miner
 	
 	;	This is used to keep track of if our orca is in a belt.
 	variable bool WarpToOrca=FALSE
-	
-	;	This is a list of IDs for rats which are attacking a team member
-	variable set AttackingTeam
 	
 	;	This is used to keep track of how much space our hauler has available
 	variable int64 HaulerAvailableCapacity=-0
@@ -66,8 +63,6 @@ objectdef obj_Miner
 		Event[EVEBot_Orca_InBelt]:AttachAtom[This:OrcaInBelt]
 		LavishScript:RegisterEvent[EVEBot_HaulerMSG]
 		Event[EVEBot_HaulerMSG]:AttachAtom[This:HaulerMSG]
-		LavishScript:RegisterEvent[EVEBot_TriggerAttack]
-		Event[EVEBot_TriggerAttack]:AttachAtom[This:UnderAttack]
 		
 
 		UI:UpdateConsole["obj_Miner: Initialized", LOG_MINOR]
@@ -78,7 +73,6 @@ objectdef obj_Miner
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 		Event[EVEBot_Orca_InBelt]:DetachAtom[This:OrcaInBelt]
 		Event[EVEBot_HaulerMSG]:DetachAtom[This:HaulerMSG]
-		Event[EVEBot_TriggerAttack]:DetachAtom[This:UnderAttack]
 	}	
 	
 	method Pulse()
@@ -452,7 +446,6 @@ objectdef obj_Miner
 					Ship:TravelToSystem[${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID}]
 					break
 				}
-				echo ${Me.ToEntity.Mode}
 				if ${Me.ToEntity.Mode} != 3
 				{
 					This:Mine
@@ -959,10 +952,12 @@ objectdef obj_Miner
 					if ${Config.Miner.DeliveryLocationTypeName.Equal[Orca]} && ${Entity[${Orca.Escape}](exists)} && !${Config.Miner.IceMining}
 					{
 						This.ConcentrateFire:Set[${Asteroids.TargetNextInRange[${Entity[${Orca.Escape}].ID}}]
+						return
 					}
 					elseif !${Config.Miner.DeliveryLocationTypeName.Equal[Orca]} || ${Config.Miner.IceMining}
 					{
 						This.ConcentrateFire:Set[${Asteroids.TargetNext}]
+						return
 					}
 					AsteroidsLocked:Inc
 				}
@@ -981,9 +976,8 @@ objectdef obj_Miner
 			
 		}
 		
-		
 		;	Time to get those lasers working!
-		if ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers} && ${Me.TargetingCount} == 0
+		if ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers}
 		{
 			;	First, get our locked targets
 			LockedTargets:Clear
@@ -1004,7 +998,8 @@ objectdef obj_Miner
 				
 				;	So this is an asteroid.  If we're not mining it or Distributed Laser Targetting is turned off, we should mine it.
 				;	Also, if we're ice mining, we don't need to mine other asteroids, and if there aren't more asteroids to target we should mine this one.
-				if ${This.ConcentrateFire} || ${Config.Miner.IceMining} || !${Config.Miner.DistributeLasers} || (!${Ship.IsMiningAsteroidID[${Target.Value.ID}]} && !${Ship.Drones.IsMiningAsteroidID[${Target.Value.ID}]})
+				echo ${This.ConcentrateFire} || ${Config.Miner.IceMining} || !${Config.Miner.DistributeLasers} && !${Ship.IsMiningAsteroidID[${Target.Value.ID}]}
+				if (${This.ConcentrateFire} || ${Config.Miner.IceMining} || !${Config.Miner.DistributeLasers}) || !${Ship.IsMiningAsteroidID[${Target.Value.ID}]}
 				{
 					
 					;	Find out if we need to approach this target - also don't approach if we're approaching another target
@@ -1017,17 +1012,12 @@ objectdef obj_Miner
 						return
 					}
 
-					;	If we're supposed to be using Mining Drones, send them - remember not to do so if we're ice mining
-					if ${Ship.Drones.DronesInSpace} > 0 && ${Config.Miner.UseMiningDrones} && !${Config.Miner.IceMining}
-					{
-						Ship.Drones:ActivateMiningDrones
-						return
-					}
-					
 					;	The target is locked, it's our active target, and we should be in range.  Get a laser on that puppy!
 					if ${Entity[${Target.Value.ID}].Distance} <= ${Ship.OptimalMiningRange[1]}
 					{
+						echo ${Ship.IsMiningAsteroidID[${Target.Value.ID}]} - Activating laser on ${Target.Value.ID}
 						Ship:ActivateFreeMiningLaser[${Target.Value.ID}]
+						return
 					}
 
 				}
@@ -1313,32 +1303,6 @@ objectdef obj_Miner
 		HaulerAvailableCapacity:Set[${value}]
 	}
 
-	;This method is triggered by an event.  If triggered, it tells a team-mate is under attack by an NPC and what it is.
-	method UnderAttack(int64 value)
-	{
-		
-		AttackingTeam:Add[${value}]
-		UI:UpdateConsole["Warning: Added ${value} to attackers list.  ${AttackingTeam.Used} attackers now in list."]
-	}
-
-	;This method is used to trigger an event.  It tells our team-mates we are under attack by an NPC and what it is.
-	method CheckAttack()
-	{
-		variable iterator CurrentAttack
-		variable index:attacker attackerslist
-		Me:GetAttackers[attackerslist]
-		attackerslist:RemoveByQuery[${LavishScript.CreateQuery[!IsNPC]}]
-		attackerslist:GetIterator[CurrentAttack]
-		if ${CurrentAttack:First(exists)}
-		{
-			do
-			{
-			UI:UpdateConsole["Warning: Ship attacked by rats, alerting team to kill ${CurrentAttack.Value.Name}"]
-			Relay all -event EVEBot_TriggerAttack ${CurrentAttack.Value.ID}
-			}
-			while ${CurrentAttack:Next(exists)}
-		}
-	}
 	
 
 
@@ -1365,10 +1329,10 @@ objectdef obj_Miner
 		variable bool ActiveLockedTargets=FALSE
 		Attacking:Set[-1]
 		
-		if ${AttackingTeam.Used} > 0
+		if ${Ship.AttackingTeam.Used} > 0
 		{
 			variable iterator GetData
-			AttackingTeam:GetIterator[GetData]
+			Ship.AttackingTeam:GetIterator[GetData]
 			if ${GetData:First(exists)}
 				do
 				{
@@ -1386,13 +1350,13 @@ objectdef obj_Miner
 					}
 					if !${Entity[${GetData.Value}](exists)}
 					{
-						AttackingTeam:Remove[${GetData.Value}]
+						Ship.AttackingTeam:Remove[${GetData.Value}]
 					}
 				}
 				while ${GetData:Next(exists)}
 		}
 
-		if ${Ship.Drones.DronesInSpace} > 0 && ${AttackingTeam.Used} == 0
+		if ${Ship.Drones.DronesInSpace} > 0 && ${Ship.AttackingTeam.Used} == 0
 		{
 			UI:UpdateConsole["Warning: Recalling Drones"]
 			Ship.Drones:ReturnAllToDroneBay

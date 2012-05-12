@@ -51,7 +51,8 @@ objectdef obj_Ship
 	variable uint ReloadingWeapons = 0
 	
 	variable bool FastWarp_Cooldown=FALSE
-
+	;	This is a list of IDs for rats which are attacking a team member
+	variable set AttackingTeam
 
 	variable iterator ModulesIterator
 
@@ -63,12 +64,15 @@ objectdef obj_Ship
 		This:UpdateModuleList[]
 
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+		LavishScript:RegisterEvent[EVEBot_TriggerAttack]
+		Event[EVEBot_TriggerAttack]:AttachAtom[This:UnderAttack]
 		UI:UpdateConsole["obj_Ship: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
 	{
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
+		Event[EVEBot_TriggerAttack]:DetachAtom[This:UnderAttack]
 	}
 
 	method Pulse()
@@ -79,6 +83,7 @@ objectdef obj_Ship
 			{
 				This:ValidateModuleTargets
 				This:FastWarp_Check
+				This:CheckAttack
 
 				if ${RetryUpdateModuleList} == 10
 				{
@@ -1456,13 +1461,14 @@ objectdef obj_Ship
 					}
 				}
 
-				UI:UpdateConsole["Activating: ${Slot}: ${ModuleIter.Value.ToItem.Name}"]
 				if ${id} == -1
 				{
+					UI:UpdateConsole["Activating: ${Slot}: ${ModuleIter.Value.ToItem.Name}"]
 					ModuleIter.Value:Activate
 				}
 				else
 				{
+					UI:UpdateConsole["Activating: ${Slot}: ${ModuleIter.Value.ToItem.Name} - ${Entity[${id}].Name}(${id})"]
 					ModuleIter.Value:Activate[${id}]
 				}
 				return
@@ -1719,7 +1725,6 @@ objectdef obj_Ship
 				{
 					Entity[${Id}]:WarpTo[${WarpInDistance}]
 				}
-				wait 10
 	}
 
 	; This takes CHARID, not Entity id
@@ -3134,6 +3139,31 @@ objectdef obj_Ship
 		}
 	}	
 	
-	
+	;This method is used to trigger an event.  It tells our team-mates we are under attack by an NPC and what it is.
+	method CheckAttack()
+	{
+		variable iterator CurrentAttack
+		variable index:attacker attackerslist
+		Me:GetAttackers[attackerslist]
+		attackerslist:RemoveByQuery[${LavishScript.CreateQuery[!IsNPC]}]
+		attackerslist:GetIterator[CurrentAttack]
+		if ${CurrentAttack:First(exists)}
+		{
+			do
+			{
+			UI:UpdateConsole["Warning: Ship attacked by rats, alerting team to kill ${CurrentAttack.Value.Name}"]
+			Relay all -event EVEBot_TriggerAttack ${CurrentAttack.Value.ID}
+			}
+			while ${CurrentAttack:Next(exists)}
+		}
+	}
+
+	;This method is triggered by an event.  If triggered, it tells a team-mate is under attack by an NPC and what it is.
+	method UnderAttack(int64 value)
+	{
+		
+		AttackingTeam:Add[${value}]
+		UI:UpdateConsole["Warning: Added ${value} to attackers list.  ${AttackingTeam.Used} attackers now in list."]
+	}	
 	
 }
