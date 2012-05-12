@@ -35,7 +35,7 @@ objectdef obj_Defense
 		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
 		This.NextPulse:Update
 		
-		UI:UpdateConsole["obj_Fleet: Initialized", LOG_MINOR]
+		UI:UpdateConsole["obj_Defense: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()

@@ -756,61 +756,64 @@ objectdef obj_Miner
 			return
 		}
 		
-		
-		;	Find an asteroid field, or stay at current one if we're near one.  Choices are:
-		;	*	If WarpToOrca and the orca is in fleet, warp there instead and clear our saved bookmark
-		;	*	Warp to a belt based on belt labels or a random belt
-		;	Note:  The UpdateList spam is necessary to make sure our actions are based on the closest asteroids
-		Asteroids:UpdateList
-		
-		Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
-
-		if ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && ${WarpToOrca} && !${Entity[${Orca.Escape}](exists)}
+		if ${Ship.TotalActivatedMiningLasers} != ${Ship.TotalMiningLasers}
 		{
-			Ship:WarpToFleetMember[${Local[${Config.Miner.DeliveryLocation}]}]
-			if ${Config.Miner.BookMarkLastPosition} && ${Bookmarks.CheckForStoredLocation}
-			{
-				Bookmarks:RemoveStoredLocation
-			}
+		
+			;	Find an asteroid field, or stay at current one if we're near one.  Choices are:
+			;	*	If WarpToOrca and the orca is in fleet, warp there instead and clear our saved bookmark
+			;	*	Warp to a belt based on belt labels or a random belt
+			;	Note:  The UpdateList spam is necessary to make sure our actions are based on the closest asteroids
 			Asteroids:UpdateList
-		}
-		if ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && ${Entity[${Orca.Escape}](exists)}
-		{
-			Asteroids:UpdateList ${Entity[${Orca.Escape}].ID}
-		}
+			
+			Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
 
-		Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
-		if ${Ship.TotalActivatedMiningLasers} == 0 && ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && ${Me.ToEntity.Mode} == 3 && ${Entity[${Orca.Escape}].Mode} == 3 && ${Ship.Drones.DronesInSpace} != 0 && !${EVEBot.ReturnToStation}
-		{
-			if ${Me.ToEntity.Mode} == 3
+			if ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && ${WarpToOrca} && !${Entity[${Orca.Escape}](exists)}
 			{
-				EVE:Execute[CmdStopShip]				
+				Ship:WarpToFleetMember[${Local[${Config.Miner.DeliveryLocation}]}]
+				if ${Config.Miner.BookMarkLastPosition} && ${Bookmarks.CheckForStoredLocation}
+				{
+					Bookmarks:RemoveStoredLocation
+				}
+				Asteroids:UpdateList
 			}
-			Ship.Drones:ReturnAllToDroneBay
-			return
-		}
-		
-		if ${Asteroids.AsteroidList.Used} == 0 && !${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]}
-		{	
-			if ${Ship.Drones.DronesInSpace} != 0	
+			if ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && ${Entity[${Orca.Escape}](exists)}
+			{
+				Asteroids:UpdateList ${Entity[${Orca.Escape}].ID}
+			}
+
+			Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
+			if ${Ship.TotalActivatedMiningLasers} == 0 && ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && ${Me.ToEntity.Mode} == 3 && ${Entity[${Orca.Escape}].Mode} == 3 && ${Ship.Drones.DronesInSpace} != 0 && !${EVEBot.ReturnToStation}
 			{
 				if ${Me.ToEntity.Mode} == 3
 				{
 					EVE:Execute[CmdStopShip]				
 				}
 				Ship.Drones:ReturnAllToDroneBay
+				return
 			}
-			CommandQueue:QueueCommand[Asteroids,MoveToField,"FALSE, FALSE"]
-			CommandQueue:QueueCommand[IGNORE]
-			CommandQueue:QueueCommand[IGNORE]
-			CommandQueue:QueueCommand[IGNORE]
-			CommandQueue:QueueCommand[IGNORE]
-			CommandQueue:QueueCommand[IGNORE]
-			CommandQueue:QueueCommand[IGNORE]
-			CommandQueue:QueueCommand[IGNORE]
-			return
+			
+			if ${Asteroids.AsteroidList.Used} == 0 && !${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]}
+			{	
+				if ${Ship.Drones.DronesInSpace} != 0	
+				{
+					if ${Me.ToEntity.Mode} == 3
+					{
+						EVE:Execute[CmdStopShip]				
+					}
+					Ship.Drones:ReturnAllToDroneBay
+				}
+				CommandQueue:QueueCommand[Asteroids,MoveToField,"FALSE, FALSE"]
+				CommandQueue:QueueCommand[IGNORE]
+				CommandQueue:QueueCommand[IGNORE]
+				CommandQueue:QueueCommand[IGNORE]
+				CommandQueue:QueueCommand[IGNORE]
+				CommandQueue:QueueCommand[IGNORE]
+				CommandQueue:QueueCommand[IGNORE]
+				CommandQueue:QueueCommand[IGNORE]
+				return
+			}
+			This:Prepare_Environment
 		}
-		This:Prepare_Environment
 
 		;	If our ship has no mining lasers, panic so the user knows to correct their configuration and try again
 		if ${Ship.TotalMiningLasers} == 0
@@ -820,13 +823,6 @@ objectdef obj_Miner
 			return
 		}
 
-		;	If configured to launch combat drones and there's a shortage, force a DropOff so we go to our delivery location
-		 ; if ${Config.Combat.LaunchCombatDrones} && ${Ship.Drones.CombatDroneShortage}
-		; {
-			; UI:UpdateConsole["Warning: Drone shortage detected.  Forcing a dropoff - make sure drones are available at your delivery location!"]
-			; ForceDropoff:Set[TRUE]
-			; return
-		; }
 
 		;	This changes belts if someone's within Min. Distance to Players
 		if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]}
