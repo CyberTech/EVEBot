@@ -288,10 +288,12 @@ objectdef obj_Asteroids
 			{
 				EVE:QueryEntities[asteroid_index, "CategoryID = ${This.AsteroidCategoryID} && Name =- \"${This.OreTypeIterator.Key}\""]
 				if ${asteroid_index.Used} > 3
-				variable int Count
-				for (Count:Set[0] ; ${Count}<=30 ; Count:Inc)
 				{
-					asteroid_index:Swap[${Math.Rand[${asteroid_index.Used}]:Inc},${Math.Rand[${asteroid_index.Used}]:Inc}]
+					variable int Count
+					for (Count:Set[0] ; ${Count}<=30 ; Count:Inc)
+					{
+						asteroid_index:Swap[${Math.Rand[${asteroid_index.Used}]:Inc},${Math.Rand[${asteroid_index.Used}]:Inc}]
+					}
 				}
 				asteroid_index:GetIterator[asteroid_iterator]
 				if ${asteroid_iterator:First(exists)}
