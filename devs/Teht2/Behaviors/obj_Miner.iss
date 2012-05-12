@@ -800,7 +800,7 @@ objectdef obj_Miner
 				}
 				Ship.Drones:ReturnAllToDroneBay
 			}
-			CommandQueue:QueueCommand[Asteroids,MoveToField,"FALSE, TRUE"]
+			CommandQueue:QueueCommand[Asteroids,MoveToField,"FALSE, FALSE"]
 			CommandQueue:QueueCommand[IGNORE]
 			CommandQueue:QueueCommand[IGNORE]
 			CommandQueue:QueueCommand[IGNORE]
