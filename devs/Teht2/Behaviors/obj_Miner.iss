@@ -958,12 +958,19 @@ objectdef obj_Miner
 					if ${Config.Miner.DeliveryLocationTypeName.Equal[Orca]} && ${Entity[${Orca.Escape}](exists)} && !${Config.Miner.IceMining}
 					{
 						This.ConcentrateFire:Set[${Asteroids.TargetNextInRange[${Entity[${Orca.Escape}].ID}}]
-						return
+						if !${This.ConcentrateFire}
+						{
+							return
+						}
 					}
 					elseif !${Config.Miner.DeliveryLocationTypeName.Equal[Orca]} || ${Config.Miner.IceMining}
 					{
 						This.ConcentrateFire:Set[${Asteroids.TargetNext}]
-						return
+						echo ${This.ConcentrateFire}
+						if !${This.ConcentrateFire}
+						{
+							return
+						}
 					}
 					AsteroidsLocked:Inc
 				}
@@ -981,7 +988,7 @@ objectdef obj_Miner
 			}
 			
 		}
-		
+		echo Lasers
 		;	Time to get those lasers working!
 		if ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers}
 		{

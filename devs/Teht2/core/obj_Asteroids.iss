@@ -493,7 +493,7 @@ objectdef obj_Asteroids
 				if ${AsteroidIterator.Value.IsLockedTarget} || \
 					${AsteroidIterator.Value.BeingTargeted}
 				{
-					return FALSE
+					return TRUE
 				}
 
 				UI:UpdateConsole["Locking Asteroid ${AsteroidIterator.Value.Name}: ${EVEBot.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"]
@@ -534,7 +534,7 @@ objectdef obj_Asteroids
 						}
 					}
 				}
-				return FALSE
+				return TRUE
 			}
 		}
 		else
