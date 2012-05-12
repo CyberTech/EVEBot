@@ -792,7 +792,6 @@ objectdef obj_Miner
 		
 		if ${Asteroids.AsteroidList.Used} == 0 && !${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]}
 		{	
-			UI:UpdateConsole["Belt empty: Changing belts"]
 			if ${Ship.Drones.DronesInSpace} != 0	
 			{
 				if ${Me.ToEntity.Mode} == 3
@@ -801,8 +800,15 @@ objectdef obj_Miner
 				}
 				Ship.Drones:ReturnAllToDroneBay
 			}
-			Asteroids:MoveToField[FALSE, TRUE]
-			Asteroids:UpdateList
+			CommandQueue:QueueCommand[Asteroids,MoveToField,"FALSE, TRUE"]
+			CommandQueue:QueueCommand[IGNORE]
+			CommandQueue:QueueCommand[IGNORE]
+			CommandQueue:QueueCommand[IGNORE]
+			CommandQueue:QueueCommand[IGNORE]
+			CommandQueue:QueueCommand[IGNORE]
+			CommandQueue:QueueCommand[IGNORE]
+			CommandQueue:QueueCommand[IGNORE]
+			return
 		}
 		This:Prepare_Environment
 
