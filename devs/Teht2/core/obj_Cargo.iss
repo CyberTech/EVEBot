@@ -220,7 +220,7 @@ objectdef obj_Cargo
 
 		if ${This.CargoToTransfer.Used} != 0
 		{
-			call ChatIRC.Say "Hauled: ${TripHauled.Round} m3    This Hour: ${HourHauled.Round} m3    Total: ${TotalHauled.Round} m3"
+			ChatIRC:QueueMessage["Hauled: ${TripHauled.Round} m3    This Hour: ${HourHauled.Round} m3    Total: ${TotalHauled.Round} m3"]
 		}
 }
 
