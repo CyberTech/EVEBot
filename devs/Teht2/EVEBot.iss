@@ -34,6 +34,7 @@
 #include core/obj_Items.iss
 #include core/obj_Autopilot.iss
 #include core/obj_Fleet.iss
+#include core/obj_Defense.iss
 #include core/obj_CommandQueue.iss
 
 /* Behavior/Mode Includes */
@@ -90,6 +91,7 @@ function main()
 	declarevariable LargeShipAssemblyArray obj_LargeShipAssemblyArray script
 	declarevariable XLargeShipAssemblyArray obj_XLargeShipAssemblyArray script
 	declarevariable Social obj_Social script
+	declarevariable Defense obj_Defense script
 	declarevariable Fleet obj_Fleet script
 	declarevariable Assets obj_Assets script
 	declarevariable ChatIRC obj_IRC script
