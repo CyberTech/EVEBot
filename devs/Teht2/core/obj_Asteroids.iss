@@ -487,7 +487,7 @@ objectdef obj_Asteroids
 		return ${AsteroidsLocked}
 	}
 	
-	method PopulateAsteroidList
+	method PopulateAsteroidList()
 	{
 		variable iterator asteroid_iterator
 		This.AsteroidList:Clear
