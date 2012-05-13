@@ -762,8 +762,6 @@ objectdef obj_Miner
 			;	Find an asteroid field, or stay at current one if we're near one.  Choices are:
 			;	*	If WarpToOrca and the orca is in fleet, warp there instead and clear our saved bookmark
 			;	*	Warp to a belt based on belt labels or a random belt
-			;	Note:  The UpdateList spam is necessary to make sure our actions are based on the closest asteroids
-			Asteroids:UpdateList
 			
 			Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
 
@@ -774,11 +772,10 @@ objectdef obj_Miner
 				{
 					Bookmarks:RemoveStoredLocation
 				}
-				Asteroids:UpdateList
 			}
 			if ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && ${Entity[${Orca.Escape}](exists)}
 			{
-				Asteroids:UpdateList ${Entity[${Orca.Escape}].ID}
+				Asteroids.DistanceTarget:Set[${Entity[${Orca.Escape}].ID}]
 			}
 
 			Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
@@ -1110,7 +1107,6 @@ objectdef obj_Miner
 		
 		;	Find an asteroid field, or stay at current one if we're near one.  Once we're there, prepare for mining and
 		;	make sure we know what asteroids are available
-		Asteroids:UpdateList
 		Asteroids.AsteroidList:GetIterator[AsteroidIterator]
 		if !${AsteroidIterator:First(exists)}
 		{
@@ -1120,7 +1116,6 @@ objectdef obj_Miner
 				return
 			}
 			Asteroids:MoveToField[FALSE, TRUE]
-			Asteroids:UpdateList
 		}
 		This:Prepare_Environment
 

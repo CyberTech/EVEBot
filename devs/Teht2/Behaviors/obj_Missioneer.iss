@@ -18,7 +18,7 @@ objectdef obj_Missioneer
 	method Initialize()
 	{
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-		BotModules:Insert["Missioneer"]
+		;BotModules:Insert["Missioneer"]
 		UI:UpdateConsole["obj_Missioneer: Initialized", LOG_MINOR]
 	}
 
