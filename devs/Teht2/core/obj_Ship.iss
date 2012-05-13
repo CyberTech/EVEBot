@@ -3153,6 +3153,9 @@ objectdef obj_Ship
 	
 	method CheckApproach()
 	{
+		variable index LockedTargets
+		variable iterator Target
+	
 		;	Return immediately if we're not approaching
 		if !${This.Approaching}
 		{
@@ -3200,8 +3203,6 @@ objectdef obj_Ship
 			;	Clear targets that are out of mining range after completing move
 			if ${This.TotalMiningLasers} != 0
 			{
-				variable index LockedTargets
-				variable iterator Target
 				Me:GetTargets[LockedTargets]
 				LockedTargets:GetIterator[Target]
 				
