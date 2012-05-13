@@ -55,6 +55,7 @@ objectdef obj_Ship
 	variable set AttackingTeam
 
 	variable bool Approaching=FALSE
+	variable bool ClearTargetsAfterApproach=FALSE
 	variable int64 ApproachingID
 	variable int ApproachingDistance
 	variable int TimeStartedApproaching = 0
@@ -3137,7 +3138,7 @@ objectdef obj_Ship
 		UI:UpdateConsole["Warning: Added ${value} to attackers list.  ${AttackingTeam.Used} attackers now in list."]
 	}	
 
-	method Approach(int64 target, int distance=0)
+	method Approach(int64 target, int distance=0, bool ClearTargets=FALSE)
 	{
 		;	If we're already approaching the target, ignore the request
 		if ${target} == ${This.ApproachingID} && ${This.Approaching}
@@ -3148,6 +3149,7 @@ objectdef obj_Ship
 		This.ApproachingID:Set[${target}]
 		This.ApproachingDistance:Set[${distance}]
 		This.TimeStartedApproaching:Set[-1]
+		This.ClearTargetsAfterApproach:Set[${ClearTargets}]
 		This.Approaching:Set[TRUE]
 	}
 	
@@ -3198,7 +3200,7 @@ objectdef obj_Ship
 			This.Approaching:Set[FALSE]
 			
 			;	Clear targets that are out of mining range after completing move
-			if ${This.TotalMiningLasers} != 0
+			if ${This.TotalMiningLasers} != 0 && ${This.ClearTargetsAfterApproach}
 			{
 				variable index:entity LockedTargets
 				variable iterator Target

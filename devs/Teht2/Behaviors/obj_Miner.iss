@@ -836,7 +836,7 @@ objectdef obj_Miner
 		{
 			Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
 
-			Ship:Approach[${Entity[${Orca.Escape}].ID}, LOOT_RANGE]
+			Ship:Approach[${Entity[${Orca.Escape}].ID}, LOOT_RANGE, TRUE]
 			
 			;	This performs Orca deliveries if we've got at least a tenth of our cargo hold full
 			if ${Ship.CargoTenthFull}
