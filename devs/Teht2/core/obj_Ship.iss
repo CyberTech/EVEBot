@@ -54,6 +54,12 @@ objectdef obj_Ship
 	;	This is a list of IDs for rats which are attacking a team member
 	variable set AttackingTeam
 
+	variable bool Approaching=FALSE
+	variable int64 ApproachingID
+	variable int ApproachingDistance
+	variable int TimeStartedApproaching = 0
+	
+
 	variable iterator ModulesIterator
 
 	variable obj_Drones Drones
@@ -84,6 +90,7 @@ objectdef obj_Ship
 				This:ValidateModuleTargets
 				This:FastWarp_Check
 				This:CheckAttack
+				This:CheckApproach
 
 				if ${RetryUpdateModuleList} == 10
 				{
@@ -1625,42 +1632,6 @@ objectdef obj_Ship
 		EVE:Execute[CmdStopShip]
 	}
 
-	; Approaches EntityID to within 5% of Distance, then stops ship.  Momentum will handle the rest.
-	function Approach(int64 EntityID, int64 Distance)
-	{
-		if ${Entity[${EntityID}](exists)}
-		{
-			variable float64 OriginalDistance = ${Entity[${EntityID}].Distance}
-			variable float64 CurrentDistance
-
-			If ${OriginalDistance} < ${Distance}
-			{
-				return
-			}
-			OriginalDistance:Inc[10]
-
-			CurrentDistance:Set[${Entity[${EntityID}].Distance}]
-			UI:UpdateConsole["Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc[(${CurrentDistance} - ${Distance}) / ${Me.Ship.MaxVelocity}].Ceil} Seconds away"]
-
-			This:Activate_AfterBurner[]
-			do
-			{
-				Entity[${EntityID}]:Approach
-				wait 50
-				CurrentDistance:Set[${Entity[${EntityID}].Distance}]
-
-				if ${Entity[${EntityID}](exists)} && \
-					${OriginalDistance} < ${CurrentDistance}
-				{
-					UI:UpdateConsole["DEBUG: obj_Ship:Approach: ${Entity[${EntityID}].Name} is getting further away!  Is it moving? Are we stuck, or colliding?", LOG_MINOR]
-				}
-			}
-			while ${CurrentDistance} > ${Math.Calc64[${Distance} * 1.05]}
-			EVE:Execute[CmdStopShip]
-			This:Deactivate_AfterBurner[]
-		}
-	}
-
 	member IsCargoOpen()
 	{
 		if ${EVEWindow[MyShipCargo](exists)}
@@ -3165,5 +3136,91 @@ objectdef obj_Ship
 		AttackingTeam:Add[${value}]
 		UI:UpdateConsole["Warning: Added ${value} to attackers list.  ${AttackingTeam.Used} attackers now in list."]
 	}	
+
+	method Approach(int64 target, int distance=0)
+	{
+		;	If we're already approaching the target, ignore the request
+		if ${target} == ${This.ApproachingID} && ${This.Approaching}
+		{
+			return
+		}
+		
+		This.ApproachingID:Set[${target}]
+		This.ApproachingDistance:Set[${distance}]
+		This.TimeStartedApproaching:Set[-1]
+		This.Approaching:Set[TRUE]
+	}
+	
+	method CheckApproach()
+	{
+		;	Return immediately if we're not approaching
+		if !${This.Approaching}
+		{
+			return
+		}
+		
+		;	Clear approach if we're in warp or the entity no longer exists
+		if ${Me.ToEntity.Mode} == 3 || !${Entity[${This.ApproachingID}](exists)}
+		{
+			This.Approaching:Set[FALSE]
+			return
+		}			
+		
+		;	Find out if we need to warp to the target
+		if ${Entity[${This.ApproachingID}].Distance} > WARP_RANGE 
+		{
+			UI:UpdateConsole["ALERT:  ${Entity[${This.ApproachingID}].Name} is a long way away.  Warping to it."]
+			Entity[${This.ApproachingID}]:WarpTo[1000]
+			return
+		}
+		
+		;	Find out if we need to approach the target
+		if ${Entity[${This.ApproachingID}].Distance} > ${This.ApproachingDistance} && ${This.TimeStartedApproaching} == -1
+		{
+			UI:UpdateConsole["ALERT:  Approaching to within ${EVEBot.MetersToKM_Str[${This.ApproachingDistance}]} of ${Entity[${This.ApproachingID}].Name}."]
+			Entity[${This.ApproachingID}]:Approach[${distance}]
+			This.TimeStartedApproaching:Set[${Time.Timestamp}]
+			return
+		}
+		
+		;	If we've been approaching for more than 1 minute, we need to give up
+		if ${Math.Calc[${This.TimeStartedApproaching}-${Time.Timestamp}]} < -60
+		{
+			This.Approaching:Set[FALSE]
+			return
+		}
+		
+		;	If we're approaching a target, find out if we need to stop doing so 
+		if ${Entity[${This.ApproachingID}].Distance} <= ${This.ApproachingDistance}
+		{
+			UI:UpdateConsole["ALERT:  Within ${EVEBot.MetersToKM_Str[${This.ApproachingDistance}]} of ${Entity[${This.ApproachingID}].Name}."]
+			EVE:Execute[CmdStopShip]
+			This.Approaching:Set[FALSE]
+			
+			;	Clear targets that are out of mining range after completing move
+			if ${This.TotalMiningLasers} != 0
+			{
+				variable index LockedTargets
+				variable iterator Target
+				Me:GetTargets[LockedTargets]
+				LockedTargets:GetIterator[Target]
+				
+				if ${Target:First(exists)}
+				do
+				{
+					if ${Entity[${Target.Value.ID}].Distance} > ${This.OptimalMiningRange}
+					{
+						UI:UpdateConsole["ALERT:  unlocking ${Target.Value.Name} as it is out of range after we moved."]
+						Target.Value:UnlockTarget
+					}
+				}
+				while ${Target:Next(exists)}		
+			}
+			
+			return
+		}
+	}
+	
+	
 	
 }

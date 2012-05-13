@@ -787,7 +787,7 @@ objectdef obj_Hauler
 				Ship:New_WarpToBookmark[${Config.Miner.DeliveryLocation}]
 				if ${LargeShipAssemblyArray.IsReady}
 				{
-					Miner:Approach[${LargeShipAssemblyArray.ActiveCan}, LOOT_RANGE]
+					Ship:Approach[${LargeShipAssemblyArray.ActiveCan}, LOOT_RANGE]
 					if ${Entity[${LargeShipAssemblyArray.ActiveCan}](exists)} && ${Entity[${LargeShipAssemblyArray.ActiveCan}].Distance} < LOOT_RANGE
 					{
 						if ${CommandQueue.Queued} == 0

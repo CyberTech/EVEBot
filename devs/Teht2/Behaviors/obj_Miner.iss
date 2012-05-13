@@ -534,7 +534,7 @@ objectdef obj_Miner
 							
 							if ${CorpHangarArray.IsReady}
 							{
-								This:Approach[${CorpHangarArray.ActiveCan}, LOOT_RANGE]
+								Ship:Approach[${CorpHangarArray.ActiveCan}, LOOT_RANGE]
 								if ${Entity[${CorpHangarArray.ActiveCan}](exists)} && ${Entity[${CorpHangarArray.ActiveCan}].Distance} < LOOT_RANGE
 								{
 									if ${CommandQueue.Queued} == 0
@@ -573,7 +573,7 @@ objectdef obj_Miner
 								
 							if ${LargeShipAssemblyArray.IsReady}
 							{
-								This:Approach[${LargeShipAssemblyArray.ActiveCan}, LOOT_RANGE]
+								Ship:Approach[${LargeShipAssemblyArray.ActiveCan}, LOOT_RANGE]
 								if ${Entity[${LargeShipAssemblyArray.ActiveCan}](exists)} && ${Entity[${LargeShipAssemblyArray.ActiveCan}].Distance} < LOOT_RANGE
 								{
 									if ${CommandQueue.Queued} == 0
@@ -612,7 +612,7 @@ objectdef obj_Miner
 							Ship:New_WarpToBookMark[${Config.Miner.DeliveryLocation}]
 							if ${XLargeShipAssemblyArray.IsReady}
 							{
-								This:Approach[${XLargeShipAssemblyArray.ActiveCan}, LOOT_RANGE]
+								Ship:Approach[${XLargeShipAssemblyArray.ActiveCan}, LOOT_RANGE]
 								if ${Entity[${XLargeShipAssemblyArray.ActiveCan}](exists)} && ${Entity[${XLargeShipAssemblyArray.ActiveCan}].Distance} < LOOT_RANGE
 								{
 									if ${CommandQueue.Queued} == 0
@@ -684,7 +684,7 @@ objectdef obj_Miner
 							break
 						}
 
-						This:Approach[${Orca.Escape}, LOOT_RANGE]
+						Ship:Approach[${Entity[${Orca.Escape}].ID}, LOOT_RANGE]
 						
 						;	Open the Orca if it's not open yet
 						if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && !${EVEWindow[ByName, ${Entity[${Orca.Escape}]}](exists)}
@@ -836,59 +836,7 @@ objectdef obj_Miner
 		{
 			Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
 
-			;	Find out if we need to approach this target.
-			if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} > LOOT_RANGE && ${This.Approaching} == 0
-			{
-				if ${Entity[${Orca.Escape}].Distance} > WARP_RANGE 
-				{
-					UI:UpdateConsole["ALERT:  ${Entity[${Orca.Escape}].Name} is a long way away.  Warping to it."]
-					Entity[${Orca.Escape}]:WarpTo[1000]
-					return
-				}
-				UI:UpdateConsole["ALERT:  Approaching to within loot range."]
-				Entity[${Orca.Escape}]:Approach[LOOT_RANGE]
-				This.Approaching:Set[${Entity[${Orca.Escape}]}]
-				This.TimeStartedApproaching:Set[${Time.Timestamp}]
-				This.ApproachingOrca:Set[TRUE]
-				return
-			}
-			
-			;	If we've been approaching for more than 2 minutes, we need to give up and try again
-			if ${Math.Calc[${TimeStartedApproaching} - ${Time.Timestamp}]} < -120 && ${This.Approaching} != 0
-			{
-				echo Approach Orca stopping because of timeout.
-				This.Approaching:Set[0]
-				This.TimeStartedApproaching:Set[0]			
-				This.ApproachingOrca:Set[FALSE]
-				return
-			}			
-			
-			;	If we're approaching a target, find out if we need to stop doing so.
-			;	After moving, we need to find out if any of our targets are out of mining range and unlock them so we can get new ones.
-			if (${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= LOOT_RANGE && ${This.Approaching} != 0) || (!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
-			{
-				UI:UpdateConsole["ALERT:  Within loot range."]
-				EVE:Execute[CmdStopShip]
-				This.Approaching:Set[0]
-				This.TimeStartedApproaching:Set[0]
-				This.ApproachingOrca:Set[FALSE]
-				
-				LockedTargets:Clear
-				Me:GetTargets[LockedTargets]
-				LockedTargets:GetIterator[Target]
-				
-				if ${Target:First(exists)}
-				do
-				{
-					if ${Entity[${Target.Value.ID}].Distance} > ${Ship.OptimalMiningRange}
-					{
-						UI:UpdateConsole["ALERT:  unlocking ${Target.Value.Name} as it is out of range after we moved."]
-						Target.Value:UnlockTarget
-					}
-				}
-				while ${Target:Next(exists)}
-				return
-			}
+			Ship:Approach[${Entity[${Orca.Escape}].ID}, LOOT_RANGE]
 			
 			;	This performs Orca deliveries if we've got at least a tenth of our cargo hold full
 			if ${Ship.CargoTenthFull}
@@ -1001,15 +949,9 @@ objectdef obj_Miner
 				echo ${This.ConcentrateFire} || ${Config.Miner.IceMining} || !${Config.Miner.DistributeLasers} && !${Ship.IsMiningAsteroidID[${Target.Value.ID}]}
 				if (${This.ConcentrateFire} || ${Config.Miner.IceMining} || !${Config.Miner.DistributeLasers}) || !${Ship.IsMiningAsteroidID[${Target.Value.ID}]}
 				{
-					
-					;	Find out if we need to approach this target - also don't approach if we're approaching another target
-					if ${Entity[${Target.Value.ID}].Distance} > ${Ship.OptimalMiningRange[1]} && ${This.Approaching} == 0
+					if !${Ship.Approaching}
 					{
-						UI:UpdateConsole["Approaching ${Target.Value.Name}"]
-						Entity[${Target.Value.ID}]:Approach[${Ship.OptimalMiningRange[1]}]
-						This.Approaching:Set[${Target.Value.ID}]
-						This.TimeStartedApproaching:Set[${Time.Timestamp}]	
-						return
+						Ship:Approach[${Target.Value.ID}, ${Ship.OptimalMiningRange[1]}]
 					}
 
 					;	The target is locked, it's our active target, and we should be in range.  Get a laser on that puppy!
@@ -1024,23 +966,7 @@ objectdef obj_Miner
 			while ${Target:Next(exists)}
 		}
 		
-		;	If we've been approaching for more than 2 minutes, we need to give up and try again
-		if ${Math.Calc[${TimeStartedApproaching} - ${Time.Timestamp}]} < -120 && ${This.Approaching} != 0
-		{
-			This.Approaching:Set[0]
-			This.TimeStartedApproaching:Set[0]			
-			This.ApproachingOrca:Set[FALSE]
-			return
-		}			
-
-		;	If we're approaching a target, find out if we need to stop doing so 
-		if (${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= ${Ship.OptimalMiningRange[1]} && ${This.Approaching} != 0 && !${This.ApproachingOrca}) || (!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
-		{
-			EVE:Execute[CmdStopShip]
-			This.Approaching:Set[0]
-			This.TimeStartedApproaching:Set[0]	
-		}		
-
+		
 		;	This checks to make sure there aren't any potential jet can flippers around before we dump a jetcan
 		if !${Social.PlayerInRange[10000]} && ${Config.Miner.DeliveryLocationTypeName.Equal["Jetcan"]}
 		{
@@ -1153,41 +1079,11 @@ objectdef obj_Miner
 		}
 		
 		;	Next we need to move in range of some ore so miners can mine near me
-		if ${Entity[${Asteroids.NearestAsteroid}](exists)} && ${This.Approaching} == 0
+		if ${Entity[${Asteroids.NearestAsteroid}](exists)}
 		{
-			if ${Entity[${Asteroids.NearestAsteroid}].Distance} > WARP_RANGE 
-			{
-				Entity[${Asteroids.NearestAsteroid}]:WarpTo[${OrcaRange}]
-				return
-			}
-		
-			;	Find out if we need to approach this asteroid
-			if ${Entity[${Asteroids.NearestAsteroid}].Distance} > ${OrcaRange} 
-			{
-				UI:UpdateConsole["Approaching: ${Entity[${Asteroids.NearestAsteroid}].Name}"]
-				Entity[${Asteroids.NearestAsteroid}]:Approach[${OrcaRange}]
-				This.Approaching:Set[${Asteroids.NearestAsteroid}]
-				This.TimeStartedApproaching:Set[${Time.Timestamp}]			
-				return
-			}
+			Ship:Approach[${Asteroids.NearestAsteroid}, ${OrcaRange}]
 		}
 
-		;	If we've been approaching for more than 2 minutes, we need to give up and try again
-		if ${Math.Calc[${TimeStartedApproaching}-${Time.Timestamp}]} < -120 && ${This.Approaching} != 0
-		{
-			This.Approaching:Set[0]
-			This.TimeStartedApproaching:Set[0]			
-			return
-		}			
-
-		;	If we're approaching a target, find out if we need to stop doing so 
-		if (${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= ${OrcaRange} && ${This.Approaching} != 0) || (!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
-		{
-			UI:UpdateConsole["In range of ${Entity[${Asteroids.NearestAsteroid}].Name} - Stopping"]
-			EVE:Execute[CmdStopShip]
-			This.Approaching:Set[0]
-			This.TimeStartedApproaching:Set[0]			
-		}
 
 		
 		;	This section is for moving ore into the ore and cargo holds, so they will fill before the Corporate Hangar
@@ -1430,35 +1326,7 @@ objectdef obj_Miner
 		}
 	}
 	
-	
-	method Approach(string target, int distance)
-	{
-		;	Find out if we need to approach this target
-		if ${Entity[${target}].Distance} > ${distance} && ${This.Approaching} == 0
-		{
-			UI:UpdateConsole["ALERT:  Approaching to within ${EVEBot.MetersToKM_Str[${distance}]}."]
-			Entity[${target}]:Approach[${distance}]
-			This.Approaching:Set[${target}]
-			This.TimeStartedApproaching:Set[${Time.Timestamp}]
-			return
-		}
-		
-		;	If we've been approaching for more than 2 minutes, we need to give up and try again
-		if ${Math.Calc[${TimeStartedApproaching}-${Time.Timestamp}]} < -120 && ${This.Approaching} != 0
-		{
-			This.Approaching:Set[0]
-			This.TimeStartedApproaching:Set[0]							
-		}
-		
-		;	If we're approaching a target, find out if we need to stop doing so 
-		if (${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= ${distance} && ${This.Approaching} != 0) || (!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
-		{
-			UI:UpdateConsole["ALERT:  Within ${EVEBot.MetersToKM_Str[${distance}]}."]
-			EVE:Execute[CmdStopShip]
-			This.Approaching:Set[0]
-			This.TimeStartedApproaching:Set[0]
-		}
-	}
+
 	
 	method Salvage()
 	{

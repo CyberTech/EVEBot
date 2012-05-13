@@ -432,12 +432,7 @@ objectdef obj_Asteroids
 					This.AsteroidList:GetIterator[AsteroidIterator]
 					if ${AsteroidIterator:First(exists)}
 					{
-						if ${AsteroidIterator.Value.Distance} < ${This.MaxDistanceToAsteroid}
-						{
-							UI:UpdateConsole["obj_Asteroids: TargetNext: No Asteroids in range & All lasers idle: Approaching nearest"]
-							Miner:Approach[${AsteroidIterator.Value.ID}, ${Ship.OptimalMiningRange}]
-						}
-						else
+						if ${AsteroidIterator.Value.Distance} >= ${This.MaxDistanceToAsteroid}
 						{
 							UI:UpdateConsole["obj_Asteroids: TargetNext: No Asteroids within ${EVEBot.MetersToKM_Str[${This.MaxDistanceToAsteroid}], changing fields."]
 							/* The nearest asteroid is farfar away.  Let's just warp out. */
