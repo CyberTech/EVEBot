@@ -115,6 +115,11 @@ objectdef obj_CommandQueue
 				{
 					${Commands.Peek.Object}:${Commands.Peek.Method}[${Commands.Peek.Args}]
 					This:InsertCommand[IGNORE]
+					This:InsertCommand[IGNORE]
+					This:InsertCommand[IGNORE]
+					This:InsertCommand[IGNORE]
+					This:InsertCommand[IGNORE]
+					This:InsertCommand[IGNORE]
 				}
 				return
 			}			

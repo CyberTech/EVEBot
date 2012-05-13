@@ -165,6 +165,8 @@ function main()
 			wait 10
 		}
 	}
+
+	call Asteroids.ProcessState
 	
 	UI:UpdateConsole["-=Paused: Press Run-="]
 	Script:Pause
@@ -172,6 +174,7 @@ function main()
 	while ${EVEBot.Paused}
 	{
 		wait 10
+		echo Updating Asteroid
 	}
 
 	while TRUE
@@ -188,6 +191,7 @@ function main()
 		}
 		while ${BotModule:Next(exists)}
 		call RandomDelay 100
+		call Asteroids.ProcessState
 
 		#if USE_ISXIM
 			;	Join IRC

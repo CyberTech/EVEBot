@@ -491,6 +491,7 @@ objectdef obj_Asteroids
 	{
 		variable iterator asteroid_iterator
 		This.AsteroidList:Clear
+		This.CompiledAsteroidList:GetIterator[asteroid_iterator]
 		
 		if ${asteroid_iterator:First(exists)}
 		{
@@ -500,6 +501,8 @@ objectdef obj_Asteroids
 			}
 			while ${asteroid_iterator:Next(exists)}
 		}
+		
+		echo ${This.AsteroidList.Used}
 	}
 	
 	function ProcessState()
@@ -508,6 +511,11 @@ objectdef obj_Asteroids
 		variable index:entity AsteroidList_outofrange
 		variable iterator asteroid_iterator
 		variable int64 TempDistanceTarget=-1
+		
+		if !${Me.InSpace}
+		{
+			return
+		}
 		
 		if ${Entity[${DistanceTarget}](exists)}
 		{
