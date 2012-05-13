@@ -380,6 +380,7 @@ objectdef obj_Asteroids
 		return FALSE
 	}	
 	
+	
 	member:bool TargetNext(bool CalledFromMoveRoutine=FALSE)
 	{
 		variable iterator AsteroidIterator
@@ -398,7 +399,7 @@ objectdef obj_Asteroids
 					!${AsteroidIterator.Value.IsLockedTarget} && \
 					!${AsteroidIterator.Value.BeingTargeted} && \
 					${AsteroidIterator.Value.Distance} < ${Me.Ship.MaxTargetRange} && \
-					( !${Me.ActiveTarget(exists)} || ${AsteroidIterator.Value.DistanceTo[${Me.ActiveTarget.ID}]} <= ${Math.Calc[${Ship.OptimalMiningRange}* 1.1]} )
+					${IsInRangeOfOthers[AsteroidIterator.Value.ID]}
 				{
 					break
 				}
@@ -466,6 +467,28 @@ objectdef obj_Asteroids
 			return TRUE
 		}
 		return FALSE
+	}
+	
+	member:bool IsInRangeOfOthers(int64 id)
+	{
+		variable iterator Target
+		variable int AsteroidsLocked=0
+		Targets:UpdateLockedAndLockingTargets
+		Targets.LockedOrLocking:GetIterator[Target]
+
+		if ${Target:First(exists)}
+		do
+		{
+			if ${Target.Value.CategoryID} == ${Asteroids.AsteroidCategoryID}
+			{
+				if ${Target.Value.DistanceTo[${id}]} > ${Ship.OptimalMiningRange}
+				{
+					return FALSE
+				}
+			}
+		}
+		while ${Target:Next(exists)}
+		return TRUE		
 	}
 	
 	member:int LockedAndLocking()
