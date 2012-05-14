@@ -721,6 +721,7 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[Run On Low Cap, FALSE]
 		This.CombatRef:AddSetting[Run On Low Tank, TRUE]
 		This.CombatRef:AddSetting[Run To Station, TRUE]
+		This.CombatRef:AddSetting[Whitelist Standings Bypass, FALSE]
 		This.CombatRef:AddSetting[Use Whitelist, FALSE]
 		This.CombatRef:AddSetting[Use Blacklist, FALSE]
 		This.CombatRef:AddSetting[Chain Spawns, TRUE]
@@ -881,6 +882,15 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[Run To Station, ${value}]
 	}
 
+	member:bool WLBypassStandings()
+	{
+		return ${This.CombatRef.FindSetting[Whitelist Standings Bypass,FALSE]}
+	}
+
+	method SetWLBypassStandings(bool value)
+	{
+		This.CombatRef:AddSetting[Whitelist Standings Bypass,${value}]
+	}
 	member:bool UseWhiteList()
 	{
 		return ${This.CombatRef.FindSetting[Use Whitelist, FALSE]}
