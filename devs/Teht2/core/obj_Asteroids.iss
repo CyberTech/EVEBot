@@ -399,7 +399,7 @@ objectdef obj_Asteroids
 					!${AsteroidIterator.Value.IsLockedTarget} && \
 					!${AsteroidIterator.Value.BeingTargeted} && \
 					${AsteroidIterator.Value.Distance} < ${Me.Ship.MaxTargetRange} && \
-					${IsInRangeOfOthers[AsteroidIterator.Value.ID]}
+					${This.IsInRangeOfOthers[${AsteroidIterator.Value.ID}]}
 				{
 					break
 				}
@@ -481,13 +481,15 @@ objectdef obj_Asteroids
 		{
 			if ${Target.Value.CategoryID} == ${Asteroids.AsteroidCategoryID}
 			{
-				if ${Target.Value.DistanceTo[${id}]} > ${Ship.OptimalMiningRange}
+				echo ${Target.Value} and ${id} - ${Entity[${Target.Value}].DistanceTo[${id}]} 
+				if ${Entity[${Target.Value}].DistanceTo[${id}]} > ${Math.Calc[${Ship.OptimalMiningRange} * 2]}
 				{
 					return FALSE
 				}
 			}
 		}
 		while ${Target:Next(exists)}
+		echo IN RANGE
 		return TRUE		
 	}
 	
