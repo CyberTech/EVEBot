@@ -481,7 +481,6 @@ objectdef obj_Asteroids
 		{
 			if ${Target.Value.CategoryID} == ${Asteroids.AsteroidCategoryID}
 			{
-				echo ${Target.Value} and ${id} - ${Entity[${Target.Value}].DistanceTo[${id}]} 
 				if ${Entity[${Target.Value}].DistanceTo[${id}]} > ${Math.Calc[${Ship.OptimalMiningRange} * 2]}
 				{
 					return FALSE
@@ -489,7 +488,6 @@ objectdef obj_Asteroids
 			}
 		}
 		while ${Target:Next(exists)}
-		echo IN RANGE
 		return TRUE		
 	}
 	
@@ -527,7 +525,6 @@ objectdef obj_Asteroids
 			while ${asteroid_iterator:Next(exists)}
 		}
 		
-		echo ${This.AsteroidList.Used}
 	}
 	
 	function ProcessState()
