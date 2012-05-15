@@ -395,12 +395,14 @@ objectdef obj_Asteroids
 		{
 			do
 			{
+				echo ${AsteroidIterator.Value.Name}
 				if ${Entity[${AsteroidIterator.Value.ID}](exists)} && \
 					!${AsteroidIterator.Value.IsLockedTarget} && \
 					!${AsteroidIterator.Value.BeingTargeted} && \
 					${AsteroidIterator.Value.Distance} < ${Me.Ship.MaxTargetRange} && \
 					${This.IsInRangeOfOthers[${AsteroidIterator.Value.ID}]}
 				{
+					
 					break
 				}
 			}
@@ -446,6 +448,10 @@ objectdef obj_Asteroids
 							This:MoveToField[TRUE]
 							return TRUE
 						}
+						else
+						{				
+							Ship:Approach[${AsteroidIterator.Value.ID},${Me.Ship.MaxTargetRange}]
+						}
 					}
 				}
 				return TRUE
@@ -464,7 +470,6 @@ objectdef obj_Asteroids
 				return FALSE
 			}
 			This:MoveToField[TRUE]
-			return TRUE
 		}
 		return FALSE
 	}
@@ -475,6 +480,11 @@ objectdef obj_Asteroids
 		variable int AsteroidsLocked=0
 		Targets:UpdateLockedAndLockingTargets
 		Targets.LockedOrLocking:GetIterator[Target]
+		
+		if ${Targets.LockedOrLocking.Used} == 0
+		{
+			return TRUE
+		}
 
 		if ${Target:First(exists)}
 		do
@@ -525,6 +535,7 @@ objectdef obj_Asteroids
 			while ${asteroid_iterator:Next(exists)}
 		}
 		
+		echo ${This.AsteroidList.Used}
 	}
 	
 	function ProcessState()

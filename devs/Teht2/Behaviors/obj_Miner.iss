@@ -253,7 +253,7 @@ objectdef obj_Miner
 			;	*	If everything above failed, check if we're warping and warp to a safe spot
 			case HARDSTOP
 				relay all -event EVEBot_HARDSTOP
-				if ${Me.InStation}
+				if ${Me.InStation} || !${Me.InSpace}
 				{
 					break
 				}
@@ -959,6 +959,7 @@ objectdef obj_Miner
 					{
 						echo ${Ship.IsMiningAsteroidID[${Target.Value.ID}]} - Activating laser on ${Target.Value.ID}
 						Ship:ActivateFreeMiningLaser[${Target.Value.ID}]
+						return
 					}
 
 				}
