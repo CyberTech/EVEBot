@@ -117,6 +117,7 @@ objectdef obj_Asteroids
 		{
 			do
 			{
+				if !${Config.Miner.StripMine}
 					if ${TempDistanceTarget} == -1
 					{
 						if ${asteroid_iterator.Value.Distance} < ${Ship.OptimalMiningRange}
