@@ -198,14 +198,8 @@ objectdef obj_Miner
 		}
 				
 		;	If I'm not in a station and I have room to mine more ore, that's what I should do!
-	 	if ${This.CurrentState.NotEqual[DROPOFF]}
-		{
-			This.CurrentState:Set["MINE"]
-			return
-		}
-
-		;	If all else fails, idle
-		This.CurrentState:Set["IDLE"]
+		Asteroids:EnableAsteroidList
+		This.CurrentState:Set["MINE"]
 	}	
 	
 	
