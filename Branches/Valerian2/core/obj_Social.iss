@@ -61,8 +61,60 @@ objectdef obj_Social
 		Event[EVEBot_HARDSTOP]:AttachAtom[This:TriggerHARDSTOP]
 		LavishScript:RegisterEvent[EVEBot_ABORTHARDSTOP]
 		Event[EVEBot_ABORTHARDSTOP]:AttachAtom[This:AbortHARDSTOP]
+		LavishScript:RegisterEvent[EVEBot_ClearWhitelist]
+		Event[EVEBot_ClearWhitelist]:AttachAtom[This:ClearWhitelist]
+		LavishScript:RegisterEvent[EVEBot_AddWhitelist]
+		Event[EVEBot_AddWhitelist]:AttachAtom[This:AddWhiteList]
+		LavishScript:RegisterEvent[EVEBot_FinalizeWhitelist]
+		Event[EVEBot_FinalizeWhitelist]:AttachAtom[This:FinalizeWhitelist]
 
 		UI:UpdateConsole["obj_Social: Initialized", LOG_MINOR]
+	}
+
+	method SyncWhitelist()
+	{
+		variable iterator iter
+		relay "all other" Event[EVEBot_ClearWhitelist]:Execute
+		Whitelist.PilotsRef:GetSettingIterator[iter]
+		if (${iter:First(exists)})
+		{
+			do
+			{
+				relay "all other" "Event[EVEBot_AddWhitelist]:Execute[Pilot,${iter.Value},${iter.Key.Escape}]"
+			}
+			while ${iter:Next(exists)}
+		}
+		Whitelist.CorporationsRef:GetSettingIterator[iter]
+		if (${iter:First(exists)})
+		{
+			do
+			{
+				relay "all other" "Event[EVEBot_AddWhitelist]:Execute[Corporation,${iter.Value},${iter.Key.Escape}]"
+			}
+			while ${iter:Next(exists)}
+		}
+		Whitelist.AlliancesRef:GetSettingIterator[iter]
+		if (${iter:First(exists)})
+		{
+			do
+			{
+				relay "all other" "Event[EVEBot_AddWhitelist]:Execute[Alliance,${iter.Value},${iter.Key.Escape}]"
+			}
+			while ${iter:Next(exists)}
+		}
+		relay "all other" "Event[EVEBot_FinalizeWhitelist]:Execute"
+	}
+
+	method FinalizeWhitelist()
+	{
+		UIElement[EVEBot].FindUsableChild[lbWLPilots,listbox]:RightClick
+		UIElement[EVEBot].FindUsableChild[lbWLCorps,listbox]:RightClick
+		UIElement[EVEBot].FindUsableChild[lbWLAlliances,listbox]:RightClick
+
+	}
+	method ClearWhitelist()
+	{
+		Whitelist:Wipe
 	}
 
 	/* list = Pilot, Corporation, Alliance. CASE SENSITIVE. */
@@ -88,6 +140,10 @@ objectdef obj_Social
 			return
 		}
 		Whitelist.${list}sRef.FindSetting[${Comment}]:Remove
+		if !${Whitelist.BaseRef.FindSet[${list}s](exists)}
+		{
+			Whitelist.BaseRef:AddSet[${list}s]
+		}
 		Whitelist:Save
 		This:ResetWhiteBlackLists
 
@@ -344,7 +400,6 @@ objectdef obj_Social
 			PilotID:Set[${PilotIterator.Value.CharID}]
 
 
-echo 		${PilotIterator.Value.Name} (!${This.IsWhitelisted[${PilotID},${CorpID},${AllianceID}]} && ${Config.Combat.WLBypassStandings})
 
 
 

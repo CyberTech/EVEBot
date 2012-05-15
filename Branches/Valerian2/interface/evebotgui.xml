@@ -1791,6 +1791,17 @@
 										<text>This will show you alliance stuff.</text>
 									</text>
 
+									<button name='btnSyncWhitelists' template='EveSkin.Window.ClickButton'>
+										<x>150</x>
+										<y>r30</y>
+										<width>r355</width>
+										<height>20</height>
+										<text>Synchronize Whitelist</text>
+										<OnLeftClick>
+											Script[EVEBot].VariableScope.Social:SyncWhitelist
+										</OnLeftClick>
+									</button>
+
 								</Tab>
 
 							</Tabs>
