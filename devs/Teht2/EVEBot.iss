@@ -166,7 +166,6 @@ function main()
 		}
 	}
 
-	call Asteroids.ProcessState
 	
 	UI:UpdateConsole["-=Paused: Press Run-="]
 	Script:Pause
@@ -191,7 +190,6 @@ function main()
 		}
 		while ${BotModule:Next(exists)}
 		call RandomDelay 100
-		call Asteroids.ProcessState
 
 		#if USE_ISXIM
 			;	Join IRC

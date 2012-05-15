@@ -25,8 +25,8 @@ objectdef obj_Asteroids
 
 	variable index:entity BestAsteroidList
 	variable index:entity AsteroidList
-	variable iterator OreTypeIterator
-	variable index:entity CompiledAsteroidList
+	variable index:entity AsteroidListBuffer
+	variable index:entity OORAsteroidListBuffer
 
 	; Should only be referenced inside NextAsteroid()
 	variable iterator NextAsteroidIterator
@@ -44,13 +44,171 @@ objectdef obj_Asteroids
 	
 	variable int64 DistanceTarget=-1
 
+	variable int NextPulse = 0
+	variable int PulseIntervalInMilliSeconds = 100	
+	variable bool UpdateAsteroidList=FALSE
+	
+	variable queue:string OreTypeQueue
+	
 	method Initialize()
 	{
-		BotModules:Insert["Asteroids"]
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 
 		UI:UpdateConsole["obj_Asteroids: Initialized", LOG_MINOR]
 	}
+	
+	method Shutdown()
+	{
+		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
+	}	
 
+	method EnableAsteroidList()
+	{
+		UpdateAsteroidList:Set[TRUE]
+	}
+	method DisableAsteroidList()
+	{
+		UpdateAsteroidList:Set[FALSE]
+	}
+	
+	method Pulse()
+	{
+
+		if ${LavishScript.RunningTime}>${NextPulse}
+		{
+			NextPulse:Set[${Math.Calc[${LavishScript.RunningTime} + ${PulseIntervalInMilliSeconds}]}]
+		}
+		else
+		{
+			return
+		}
+	
+		This:UpdateList
+	}
+	
+	method UpdateList()
+	{
+		variable index:entity asteroid_index
+		variable iterator asteroid_iterator
+		variable int64 TempDistanceTarget=-1
+
+		if !${UpdateAsteroidList} || !${Me.InSpace}
+		{
+			return
+		}
+
+		if !${OreTypeQueue.Peek(exists)}
+		{
+			This:PopulateAsteroidList
+			This:PopulateOreTypeQueue
+			return
+		}
+		
+		if ${Entity[${DistanceTarget}](exists)}
+		{
+			TempDistanceTarget:Set[${DistanceTarget}]
+		}
+		
+		This.MaxDistanceToAsteroid:Set[${Math.Calc[${Ship.OptimalMiningRange} * ${Config.Miner.MiningRangeMultipler}]}]
+
+		EVE:QueryEntities[asteroid_index, "CategoryID = ${This.AsteroidCategoryID} && Name =- \"${OreTypeQueue.Peek}\""]		
+		asteroid_index:GetIterator[asteroid_iterator]
+		if ${asteroid_iterator:First(exists)}
+		{
+			do
+			{
+					if ${TempDistanceTarget} == -1
+					{
+						if ${asteroid_iterator.Value.Distance} < ${Ship.OptimalMiningRange}
+						{
+							This.AsteroidListBuffer:Insert[${asteroid_iterator.Value.ID}]
+						}
+						else
+						{
+							This.OORAsteroidListBuffer:Insert[${asteroid_iterator.Value.ID}]
+						}
+					}
+					else
+					{
+						if ${AsteroidIterator.Value.DistanceTo[${TempDistanceTarget}]} < ${Math.Calc[${Ship.OptimalMiningRange} + 2000]}
+						{
+							This.AsteroidListBuffer:Insert[${asteroid_iterator.Value.ID}]
+						}
+						else
+						{
+							This.OORAsteroidListBuffer:Insert[${asteroid_iterator.Value.ID}]
+						}
+					}
+				}
+				else
+				{
+					This.CompiledAsteroidList:Insert[${asteroid_iterator.Value.ID}]
+				}
+			}
+			while ${asteroid_iterator:Next(exists)}
+		}
+		OreTypeQueue:Dequeue
+	}
+	
+	method PopulateOreTypeQueue()
+	{
+		variable iterator OreTypeIterator
+		if ${Config.Miner.IceMining}
+		{
+			Config.Miner.IceTypesRef:GetSettingIterator[This.OreTypeIterator]
+		}
+		else
+		{
+			Config.Miner.OreTypesRef:GetSettingIterator[This.OreTypeIterator]
+		}
+
+		if ${This.OreTypeIterator:First(exists)}
+		{		
+			do
+			{
+				OreTypeQueue:Queue[${This.OreTypeIterator.Key}]
+			}
+			while ${This.OreTypeIterator:Next(exists)}			
+		}
+		else
+		{
+			echo "WARNING: obj_Asteroids: Ore Type list is empty, please check config"
+		}
+	}
+	
+	method PopulateAsteroidList()
+	{
+		variable iterator asteroid_iterator
+		This.AsteroidList:Clear
+		This.AsteroidListBuffer:GetIterator[asteroid_iterator]
+		
+		if ${asteroid_iterator:First(exists)}
+		{
+			do
+			{
+				This.AsteroidList:Insert[${asteroid_iterator.Value.ID}]
+			}
+			while ${asteroid_iterator:Next(exists)}
+		}
+		OORAsteroidListBuffer:GetIterator[asteroid_iterator]
+		if ${asteroid_iterator:First(exists)}
+		{
+			do
+			{
+				This.AsteroidList:Insert[${asteroid_iterator.Value.ID}]
+			}
+			while ${asteroid_iterator:Next(exists)}
+		}		
+		This.AsteroidListBuffer:Clear
+		This.OORAsteroidListBuffer:Clear
+	}
+	
+
+	
+	
+	
+	
+	
 	; Checks the belt name against the empty belt list.
 	member IsBeltEmpty(string BeltName)
 	{
@@ -520,128 +678,5 @@ objectdef obj_Asteroids
 		return ${AsteroidsLocked}
 	}
 	
-	method PopulateAsteroidList()
-	{
-		variable iterator asteroid_iterator
-		This.AsteroidList:Clear
-		This.CompiledAsteroidList:GetIterator[asteroid_iterator]
-		
-		if ${asteroid_iterator:First(exists)}
-		{
-			do
-			{
-				This.AsteroidList:Insert[${asteroid_iterator.Value.ID}]
-			}
-			while ${asteroid_iterator:Next(exists)}
-		}
-		
-		echo ${This.AsteroidList.Used}
-	}
-	
-	function ProcessState()
-	{
-		variable index:entity asteroid_index
-		variable index:entity AsteroidList_outofrange
-		variable iterator asteroid_iterator
-		variable int64 TempDistanceTarget=-1
-		
-		if !${Me.InSpace}
-		{
-			return
-		}
-		
-		if ${Entity[${DistanceTarget}](exists)}
-		{
-			TempDistanceTarget:Set[${DistanceTarget}]
-		}
 
-		This.MaxDistanceToAsteroid:Set[${Math.Calc[${Ship.OptimalMiningRange} * ${Config.Miner.MiningRangeMultipler}]}]
-
-		if ${Config.Miner.IceMining}
-		{
-			Config.Miner.IceTypesRef:GetSettingIterator[This.OreTypeIterator]
-		}
-		else
-		{
-			Config.Miner.OreTypesRef:GetSettingIterator[This.OreTypeIterator]
-		}
-
-		if ${This.OreTypeIterator:First(exists)}
-		{
-			This.CompiledAsteroidList:Clear
-			do
-			{
-				EVE:QueryEntities[asteroid_index, "CategoryID = ${This.AsteroidCategoryID} && Name =- \"${This.OreTypeIterator.Key}\""]
-				if ${asteroid_index.Used} > 3
-				{
-					variable int Count
-					for (Count:Set[0] ; ${Count}<=30 ; Count:Inc)
-					{
-						asteroid_index:Swap[${Math.Rand[${asteroid_index.Used}]:Inc},${Math.Rand[${asteroid_index.Used}]:Inc}]
-					}
-				}
-				asteroid_index:GetIterator[asteroid_iterator]
-				if ${asteroid_iterator:First(exists)}
-				{
-					do
-					{
-						/* This is intended to get the best ore in the system before others do.  Its not
-							intended to empty a given radius of asteroids */
-						if ${Config.Miner.StripMine}
-						{
-							if ${TempDistanceTarget} == -1
-							{
-								if ${asteroid_iterator.Value.Distance} < ${Ship.OptimalMiningRange}
-								{
-									This.CompiledAsteroidList:Insert[${asteroid_iterator.Value.ID}]
-								}
-								else
-								{
-									AsteroidList_outofrange:Insert[${asteroid_iterator.Value.ID}]
-								}
-							}
-							else
-							{
-								if ${AsteroidIterator.Value.DistanceTo[${TempDistanceTarget}]} < ${Math.Calc[${Ship.OptimalMiningRange} + 2000]}
-								{
-									This.CompiledAsteroidList:Insert[${asteroid_iterator.Value.ID}]
-								}
-								else
-								{
-									AsteroidList_outofrange:Insert[${asteroid_iterator.Value.ID}]
-								}
-							}
-						}
-						else
-						{
-							This.CompiledAsteroidList:Insert[${asteroid_iterator.Value.ID}]
-						}
-					}
-					while ${asteroid_iterator:Next(exists)}
-				}
-			}
-			while ${This.OreTypeIterator:Next(exists)}
-
-			if ${Config.Miner.StripMine}
-			{
-				/* Append the OOR index to the good one */
-				AsteroidList_outofrange:GetIterator[asteroid_iterator]
-				if ${asteroid_iterator:First(exists)}
-				{
-					do
-					{
-						This.CompiledAsteroidList:Insert[${asteroid_iterator.Value.ID}]
-					}
-					while ${asteroid_iterator:Next(exists)}
-				}
-			}
-			
-			WaitFrame
-			This:PopulateAsteroidList
-		}
-		else
-		{
-			echo "WARNING: obj_Asteroids: Ore Type list is empty, please check config"
-		}
-	}
 }
