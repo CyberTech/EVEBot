@@ -57,14 +57,16 @@ objectdef obj_Miner
 	
 	method Initialize()
 	{
-		This.TripStartTime:Set[${Time.Timestamp}]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		LavishScript:RegisterEvent[EVEBot_Orca_InBelt]
 		Event[EVEBot_Orca_InBelt]:AttachAtom[This:OrcaInBelt]
 		LavishScript:RegisterEvent[EVEBot_HaulerMSG]
 		Event[EVEBot_HaulerMSG]:AttachAtom[This:HaulerMSG]
-		
-
+		echo ${Config.Common.BotModeName.Equal[Miner]}
+		if ${Config.Common.BotModeName.Equal[Miner]}
+		{
+			Asteroids:EnableAsteroidList
+		}
 		UI:UpdateConsole["obj_Miner: Initialized", LOG_MINOR]
 	}
 

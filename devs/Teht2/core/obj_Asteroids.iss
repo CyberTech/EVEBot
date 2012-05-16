@@ -45,7 +45,7 @@ objectdef obj_Asteroids
 	variable int64 DistanceTarget=-1
 
 	variable int NextPulse = 0
-	variable int PulseIntervalInMilliSeconds = 100	
+	variable int PulseIntervalInMilliSeconds = 50	
 	variable bool UpdateAsteroidList=FALSE
 	
 	variable queue:string OreTypeQueue
@@ -74,9 +74,9 @@ objectdef obj_Asteroids
 	method Pulse()
 	{
 
-		if ${LavishScript.RunningTime}>${NextPulse}
+		if ${LavishScript.RunningTime}>${This.NextPulse}
 		{
-			NextPulse:Set[${Math.Calc[${LavishScript.RunningTime} + ${PulseIntervalInMilliSeconds}]}]
+			NextPulse:Set[${Math.Calc[${LavishScript.RunningTime} + ${This.PulseIntervalInMilliSeconds}]}]
 		}
 		else
 		{
@@ -92,12 +92,12 @@ objectdef obj_Asteroids
 		variable iterator asteroid_iterator
 		variable int64 TempDistanceTarget=-1
 
-		if !${UpdateAsteroidList} || !${Me.InSpace}
+		if !${This.UpdateAsteroidList} || !${Me.InSpace}
 		{
 			return
 		}
 
-		if !${OreTypeQueue.Peek(exists)}
+		if ${OreTypeQueue.Used} == 0
 		{
 			This:PopulateAsteroidList
 			This:PopulateOreTypeQueue
@@ -117,7 +117,8 @@ objectdef obj_Asteroids
 		{
 			do
 			{
-				if !${Config.Miner.StripMine}
+				if ${Config.Miner.StripMine}
+				{
 					if ${TempDistanceTarget} == -1
 					{
 						if ${asteroid_iterator.Value.Distance} < ${Ship.OptimalMiningRange}
@@ -143,7 +144,7 @@ objectdef obj_Asteroids
 				}
 				else
 				{
-					This.CompiledAsteroidList:Insert[${asteroid_iterator.Value.ID}]
+					This.AsteroidListBuffer:Insert[${asteroid_iterator.Value.ID}]
 				}
 			}
 			while ${asteroid_iterator:Next(exists)}
@@ -156,20 +157,20 @@ objectdef obj_Asteroids
 		variable iterator OreTypeIterator
 		if ${Config.Miner.IceMining}
 		{
-			Config.Miner.IceTypesRef:GetSettingIterator[This.OreTypeIterator]
+			Config.Miner.IceTypesRef:GetSettingIterator[OreTypeIterator]
 		}
 		else
 		{
-			Config.Miner.OreTypesRef:GetSettingIterator[This.OreTypeIterator]
+			Config.Miner.OreTypesRef:GetSettingIterator[OreTypeIterator]
 		}
 
-		if ${This.OreTypeIterator:First(exists)}
+		if ${OreTypeIterator:First(exists)}
 		{		
 			do
 			{
-				OreTypeQueue:Queue[${This.OreTypeIterator.Key}]
+				OreTypeQueue:Queue[${OreTypeIterator.Key}]
 			}
-			while ${This.OreTypeIterator:Next(exists)}			
+			while ${OreTypeIterator:Next(exists)}			
 		}
 		else
 		{
@@ -191,7 +192,7 @@ objectdef obj_Asteroids
 			}
 			while ${asteroid_iterator:Next(exists)}
 		}
-		OORAsteroidListBuffer:GetIterator[asteroid_iterator]
+		This.OORAsteroidListBuffer:GetIterator[asteroid_iterator]
 		if ${asteroid_iterator:First(exists)}
 		{
 			do
@@ -202,6 +203,8 @@ objectdef obj_Asteroids
 		}		
 		This.AsteroidListBuffer:Clear
 		This.OORAsteroidListBuffer:Clear
+		
+		echo ${This.AsteroidList.Used} asteroids in AsteroidList.
 	}
 	
 
@@ -428,9 +431,6 @@ objectdef obj_Asteroids
 
 	}
 
-	method UpdateList(int64 DistanceTarget=-1)
-	{
-	}
 
 	member:int64 NearestAsteroid()
 	{		
