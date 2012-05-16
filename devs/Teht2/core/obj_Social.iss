@@ -404,7 +404,8 @@ objectdef obj_Social
 					${PilotIterator.Value.ToEntity(exists)} && \
 					${PilotIterator.Value.ToEntity.IsPC} && \
 					${PilotIterator.Value.ToEntity.Distance} < ${Config.Miner.AvoidPlayerRange} && \
-					!${PilotIterator.Value.ToFleetMember}
+					!${PilotIterator.Value.ToFleetMember} && \
+					${PilotIterator.Value.Corp.ID} != ${Me.Corp.ID}
 				{
 					UI:UpdateConsole["PlayerInRange: ${PilotIterator.Value.Name} - ${EVEBot.MetersToKM_Str[${PilotIterator.Value.ToEntity.Distance}]"]
 					return TRUE

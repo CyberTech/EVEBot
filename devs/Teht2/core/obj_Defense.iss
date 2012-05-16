@@ -29,7 +29,7 @@ objectdef obj_Defense
 	method Initialize()
 	{
 
-		This.TripStartTime:Set[${Time.Timestamp}]
+		This.TripStartTime:Set[${Time.Timestamp}]`
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		This.NextPulse:Set[${Time.Timestamp}]
 		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
@@ -56,7 +56,10 @@ objectdef obj_Defense
 			{
 				This:Process
 			}
-			
+			if ${Miner.CurrentState.Equal[ORCA]} && ${Config.Combat.LaunchCombatDrones} && !${Ship.InWarp}
+			{
+				This:Process
+			}			
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
     		This.NextPulse:Update

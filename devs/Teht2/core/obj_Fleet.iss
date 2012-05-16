@@ -45,10 +45,10 @@ objectdef obj_Fleet
 	
 	method Pulse()
 	{
-		if ${EVEBot.Paused}
-		{
-			return
-		}
+		; if ${EVEBot.Paused}
+		; {
+			; return
+		; }
 		
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{

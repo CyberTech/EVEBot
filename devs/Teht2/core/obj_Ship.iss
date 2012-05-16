@@ -3118,7 +3118,7 @@ objectdef obj_Ship
 		{
 			do
 			{
-			UI:UpdateConsole["Warning: Ship attacked by rats, alerting team to kill ${CurrentAttack.Value.Name}"]
+			;UI:UpdateConsole["Warning: Ship attacked by rats, alerting team to kill ${CurrentAttack.Value.Name}"]
 			Relay all -event EVEBot_TriggerAttack ${CurrentAttack.Value.ID}
 			}
 			while ${CurrentAttack:Next(exists)}
@@ -3130,7 +3130,7 @@ objectdef obj_Ship
 	{
 		
 		AttackingTeam:Add[${value}]
-		UI:UpdateConsole["Warning: Added ${value} to attackers list.  ${AttackingTeam.Used} attackers now in list."]
+		;UI:UpdateConsole["Warning: Added ${value} to attackers list.  ${AttackingTeam.Used} attackers now in list."]
 	}	
 
 	method Approach(int64 target, int distance=0, bool ClearTargets=FALSE)

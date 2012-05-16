@@ -459,7 +459,7 @@ objectdef obj_Miner
 				}
 				if ${Me.ToEntity.Mode} != 3
 				{
-					This:OrcaInBelt
+					This:Orca
 				}
 				break
 				
@@ -993,12 +993,11 @@ objectdef obj_Miner
 ;				Therefore, keep any use of the wait function to a minimum, and make sure you can get out of loops in a timely manner!
 */		
 		
-	method OrcaInBelt()
+	method Orca()
 	{
 		;	Variable used to track asteroids
 		variable iterator AsteroidIterator
 
-		
 		;	If we're in a station there's not going to be any mining going on.  This should clear itself up if it ever happens.
 		if ${Me.InStation} != FALSE
 		{
@@ -1023,7 +1022,7 @@ objectdef obj_Miner
 			EVEBot.ReturnToStation:Set[TRUE]
 			return
 		}
-		
+
 		;	Find an asteroid field, or stay at current one if we're near one.  Once we're there, prepare for mining and
 		;	make sure we know what asteroids are available
 		Asteroids.AsteroidList:GetIterator[AsteroidIterator]
