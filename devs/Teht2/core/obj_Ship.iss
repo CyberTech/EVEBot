@@ -1430,11 +1430,6 @@ objectdef obj_Ship
 			return
 		}
 
-		if ${Me.ActiveTarget.CategoryID} != ${Asteroids.AsteroidCategoryID}
-		{
-			UI:UpdateConsole["Error: Mining Lasers may only be used on Asteroids"]
-			return
-		}
 
 		variable iterator ModuleIter
 
@@ -3142,6 +3137,11 @@ objectdef obj_Ship
 	{
 		;	If we're already approaching the target, ignore the request
 		if ${target} == ${This.ApproachingID} && ${This.Approaching}
+		{
+			return
+		}
+		
+		if ${Entity[${target}].Distance} <= ${distance}
 		{
 			return
 		}

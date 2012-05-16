@@ -752,7 +752,7 @@ objectdef obj_Miner
 			return
 		}
 		
-		if ${Ship.TotalActivatedMiningLasers} != ${Ship.TotalMiningLasers} || ${Asteroids.LockedAndLocking} != ${Ship.TotalMiningLasers}
+		if ${Ship.TotalActivatedMiningLasers} != ${Ship.TotalMiningLasers}
 		{
 		
 			;	Find an asteroid field, or stay at current one if we're near one.  Choices are:
@@ -856,7 +856,7 @@ objectdef obj_Miner
 
 			if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && ${EVEWindow[ByName, ${Entity[${Orca.Escape}]}](exists)}
 			{
-				echo ${Cargo.ReplenishCrystals[${Entity[${Orca.Escape}]}]}
+				;echo ${Cargo.ReplenishCrystals[${Entity[${Orca.Escape}]}]}
 			}
 
 		}
@@ -883,40 +883,37 @@ objectdef obj_Miner
 			;	If we're using an orca and it's in the belt, use Asteroids.TargetNextInRange to only target roids nearby
 			if (${Math.Calc[${Me.TargetCount} + ${Me.TargetingCount}]} < ${Ship.SafeMaxLockedTargets}) && ${Asteroids.LockedAndLocking} < ${AsteroidsNeeded}
 			{
-				do
+				variable bool LockedNewTarget
+				Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
+				if ${Config.Miner.DeliveryLocationTypeName.Equal[Orca]} && ${Entity[${Orca.Escape}](exists)} && !${Config.Miner.IceMining}
 				{
-					Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
-					if ${Config.Miner.DeliveryLocationTypeName.Equal[Orca]} && ${Entity[${Orca.Escape}](exists)} && !${Config.Miner.IceMining}
+					LockedNewTarget:Set[${Asteroids.TargetNextInRange[${Entity[${Orca.Escape}].ID}]}]
+					if !${LockedNewTarget}
 					{
-						This.ConcentrateFire:Set[${Asteroids.TargetNextInRange[${Entity[${Orca.Escape}].ID}}]
-						if !${This.ConcentrateFire}
-						{
-							return
-						}
+						return
 					}
-					elseif !${Config.Miner.DeliveryLocationTypeName.Equal[Orca]} || ${Config.Miner.IceMining}
-					{
-						This.ConcentrateFire:Set[${Asteroids.TargetNext}]
-						echo ${This.ConcentrateFire}
-						if !${This.ConcentrateFire}
-						{
-							return
-						}
-					}
-					AsteroidsLocked:Inc
 				}
-				while (${Asteroids.LockedAndLocking} < ${Ship.SafeMaxLockedTargets}) && ${Asteroids.LockedAndLocking} < ${AsteroidsNeeded} && !${This.ConcentrateFire}
+				elseif !${Config.Miner.DeliveryLocationTypeName.Equal[Orca]} || ${Config.Miner.IceMining}
+				{
+					LockedNewTarget:Set[${Asteroids.TargetNext}]
+					if !${LockedNewTarget}
+					{
+						return
+					}
+				}
+				AsteroidsLocked:Inc
+
 			}
 			
 			;	We don't need to lock another asteroid.  Let's find out if we need to signal a concentrate fire based on limitations of our ship.
 			;	Either our target count more than we can safely lock, or we have more mining lasers than we can safely lock.
-			else
-			{
-				if ${Asteroids.LockedAndLocking} >= ${Ship.SafeMaxLockedTargets} &&  ${Ship.TotalMiningLasers} > ${Ship.SafeMaxLockedTargets}
-				{
-					This.ConcentrateFire:Set[TRUE]
-				}
-			}
+			; else
+			; {
+				; if ${Asteroids.LockedAndLocking} >= ${Ship.SafeMaxLockedTargets} &&  ${Ship.TotalMiningLasers} > ${Ship.SafeMaxLockedTargets}
+				; {
+					; This.ConcentrateFire:Set[TRUE]
+				; }
+			; }
 			
 		}
 
@@ -942,9 +939,9 @@ objectdef obj_Miner
 				
 				;	So this is an asteroid.  If we're not mining it or Distributed Laser Targetting is turned off, we should mine it.
 				;	Also, if we're ice mining, we don't need to mine other asteroids, and if there aren't more asteroids to target we should mine this one.
-				echo ${This.ConcentrateFire} || ${Config.Miner.IceMining} || !${Config.Miner.DistributeLasers} && !${Ship.IsMiningAsteroidID[${Target.Value.ID}]}
-				if (${This.ConcentrateFire} || ${Config.Miner.IceMining} || !${Config.Miner.DistributeLasers}) || !${Ship.IsMiningAsteroidID[${Target.Value.ID}]}
+				if (${Asteroids.ConcentrateFire} || ${Config.Miner.IceMining} || !${Config.Miner.DistributeLasers}) || !${Ship.IsMiningAsteroidID[${Target.Value.ID}]}
 				{
+					echo Ship approaching: ${Ship.Approaching} - ${Entity[${Ship.ApproachingID}].Name}
 					if !${Ship.Approaching}
 					{
 						Ship:Approach[${Target.Value.ID}, ${Ship.OptimalMiningRange[1]}]
@@ -953,7 +950,6 @@ objectdef obj_Miner
 					;	The target is locked, it's our active target, and we should be in range.  Get a laser on that puppy!
 					if ${Entity[${Target.Value.ID}].Distance} <= ${Ship.OptimalMiningRange[1]}
 					{
-						echo ${Ship.IsMiningAsteroidID[${Target.Value.ID}]} - Activating laser on ${Target.Value.ID}
 						Ship:ActivateFreeMiningLaser[${Target.Value.ID}]
 						return
 					}

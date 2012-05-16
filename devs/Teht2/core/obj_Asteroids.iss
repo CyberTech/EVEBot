@@ -461,12 +461,9 @@ objectdef obj_Asteroids
 
 	member:bool TargetNextInRange(int64 DistanceToTarget=-1)
 	{
+		echo TargetNextInRange called
 		variable iterator AsteroidIterator
 
-		if ${AsteroidList.Used} == 0
-		{
-			This:UpdateList
-		}
 
 		This.AsteroidList:GetIterator[AsteroidIterator]
 		if ${AsteroidIterator:First(exists)}
@@ -486,30 +483,16 @@ objectdef obj_Asteroids
 				}
 				else
 				{
+			
 					if ${Entity[${AsteroidIterator.Value.ID}](exists)} && \
 						!${AsteroidIterator.Value.IsLockedTarget} && \
 						!${AsteroidIterator.Value.BeingTargeted} && \
 						${AsteroidIterator.Value.Distance} < ${Me.Ship.MaxTargetRange} && \
-						${AsteroidIterator.Value.DistanceTo[${DistanceToTarget}]} < ${Math.Calc[${Ship.OptimalMiningRange} + 2000]}
+						${AsteroidIterator.Value.DistanceTo[${DistanceToTarget}]} < ${Math.Calc[${Ship.OptimalMiningRange} + 2000]} && \
+						${This.IsInRangeOfOthers[${AsteroidIterator.Value.ID}]}
 					{
-						variable iterator Target
-						variable bool IsWithinRangeOfOthers=TRUE
-						Targets:UpdateLockedAndLockingTargets
-						Targets.LockedOrLocking:GetIterator[Target]
-						if ${Target:First(exists)}
-							do
-							{
-								if ${AsteroidIterator.Value.CategoryID} == ${Asteroids.AsteroidCategoryID}
-								{
-									if ${AsteroidIterator.Value.DistanceTo[${Target.Value.ID}]} > ${Math.Calc[${Ship.OptimalMiningRange} * 2]}
-									{
-										IsWithinRangeOfOthers:Set[FALSE]
-									}
-								}
-							}
-							while ${Target:Next(exists)}
-						if ${IsWithinRangeOfOthers}
-							break
+						echo ${AsteroidIterator.Value.Name}						
+						break
 					}
 				}
 			}
@@ -526,13 +509,11 @@ objectdef obj_Asteroids
 				UI:UpdateConsole["Locking Asteroid ${AsteroidIterator.Value.Name}: ${EVEBot.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"]
 				AsteroidIterator.Value:LockTarget
 
-				This:UpdateList
-				return TRUE
+				return FALSE
 			}
 			else
 			{
-				This:UpdateList
-				return FALSE
+				return TRUE
 			}
 		}
 
@@ -544,10 +525,6 @@ objectdef obj_Asteroids
 	{
 		variable iterator AsteroidIterator
 
-		if ${AsteroidList.Used} == 0
-		{
-			This:UpdateList
-		}
 
 		This.AsteroidList:GetIterator[AsteroidIterator]
 		if ${AsteroidIterator:First(exists)}
@@ -579,7 +556,6 @@ objectdef obj_Asteroids
 				UI:UpdateConsole["Locking Asteroid ${AsteroidIterator.Value.Name}: ${EVEBot.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"]
 				AsteroidIterator.Value:LockTarget
 
-				This:UpdateList
 				return FALSE
 			}
 			else
@@ -678,6 +654,27 @@ objectdef obj_Asteroids
 		while ${Target:Next(exists)}
 		return ${AsteroidsLocked}
 	}
+	
+	member:bool ConcentrateFire()
+	{
+		variable iterator Target
+		Targets:UpdateLockedAndLockingTargets
+		Targets.LockedOrLocking:GetIterator[Target]
+
+		if ${Target:First(exists)}
+		do
+		{
+			if ${Target.Value.CategoryID} == ${Asteroids.AsteroidCategoryID}
+			{
+				if !${Ship.IsMiningAsteroidID[${Target.Value.ID}]}
+				{
+					return FALSE
+				}
+			}
+		}
+		while ${Target:Next(exists)}
+		return TRUE
+	}	
 	
 
 }
