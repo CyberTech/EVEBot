@@ -19,6 +19,8 @@ objectdef obj_Miner
 	;	Pulse tracking information
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 1
+	variable time NextOrcaPulse
+	variable int OrcaPulseIntervalInSeconds = 30
 	
 	;	State information (What we're doing)
 	variable string CurrentState = "IDLE"
@@ -100,6 +102,14 @@ objectdef obj_Miner
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
     		This.NextPulse:Update
 		}
+	    if ${Time.Timestamp} >= ${This.NextOrcaPulse.Timestamp} && ${Config.Miner.OrcaMode}
+		{
+			ChatIRC:QueueMessage["Corp Hangars: ${Ship.CorpHangarUsedSpace[TRUE].Round} m3"]
+
+    		This.NextOrcaPulse:Set[${Time.Timestamp}]
+    		This.NextOrcaPulse.Second:Inc[${This.OrcaPulseIntervalInSeconds}]
+    		This.NextOrcaPulse:Update
+		}		
 	}	
 	
 /*	

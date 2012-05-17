@@ -229,7 +229,7 @@ objectdef obj_Hauler
 					}
 					else
 					{
-						call Miner.FastWarp -1 "${Config.Miner.PanicLocation}"
+						Ship:New_WarpToBookmark[${Config.Miner.PanicLocation}]
 					}
 					break
 				}				
@@ -277,7 +277,6 @@ objectdef obj_Hauler
 				}
 				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
-					call Miner.FastWarp ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
 					Station:DockAtStation[${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}]
 					break
 				}
@@ -285,12 +284,11 @@ objectdef obj_Hauler
 				{
 					if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].TypeID} != 5
 					{
-						call Miner.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
 						Station:DockAtStation[${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}]
 					}
 					else
 					{
-						call Miner.FastWarp -1 "${Config.Miner.PanicLocation}"
+						Ship:New_WarpToBookmark[${Config.Miner.PanicLocation}]
 					}
 					break
 				}
@@ -298,7 +296,6 @@ objectdef obj_Hauler
 				if ${Entity["CategoryID = 3"](exists)}
 				{
 					UI:UpdateConsole["Docking at ${Entity["CategoryID = 3"].Name}"]
-					call Miner.FastWarp ${Entity["CategoryID = 3"].ID}
 					Station:DockAtStation[${Entity["CategoryID = 3"].ID}]
 					break
 				}				
@@ -328,10 +325,24 @@ objectdef obj_Hauler
 					Station:Undock
 					break
 				}
-				echo WHY ARE WE IN BASE MODE
-				call Cargo.TransferCargoToHangar
-				Station:Undock
-				relay all -event EVEBot_HaulerMSG ${Ship.CargoFreeSpace}
+
+				if ${CommandQueue.Queued} != 0
+				{
+					break
+				}
+				
+				if ${CommandQueue.Queued} == 0
+				{
+					CommandQueue:QueueCommand[Cargo,CloseHolds]
+					CommandQueue:QueueCommand[Cargo,OpenHolds]
+					CommandQueue:QueueCommand[Cargo,FindCargo,"SHIP"]
+					CommandQueue:QueueCommand[Cargo,TransferListStationHangar]
+					CommandQueue:QueueCommand[Station,StackHangar]
+					CommandQueue:QueueCommand[Cargo,CloseHolds]
+					CommandQueue:QueueCommand[Station,Undock]
+					
+				}
+
 				break
 
 
@@ -776,8 +787,16 @@ objectdef obj_Hauler
 		switch ${Config.Miner.DeliveryLocationTypeName}
 		{
 			case Station
-				Ship:TravelToSystem[${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID}]
-				Station:DockAtStation[${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}]
+				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} != ${Me.SolarSystemID}
+				{
+					Ship:TravelToSystem[${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID}]
+					break
+				}
+				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
+				{
+					Station:DockAtStation[${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}]
+					break
+				}
 				break
 			case Hangar Array
 				Ship:New_WarpToBookmark[${Config.Miner.DeliveryLocation}]
