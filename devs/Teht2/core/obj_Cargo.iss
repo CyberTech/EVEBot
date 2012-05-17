@@ -218,7 +218,7 @@ objectdef obj_Cargo
 		HourHauled:Inc[${TripHauled}]
 		TotalHauled:Inc[${TripHauled}]
 
-		if ${This.CargoToTransfer.Used} != 0
+		if ${This.CargoToTransfer.Used} != 0 && !${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]}
 		{
 			ChatIRC:QueueMessage["Hauled: ${TripHauled.Round} m3    This Hour: ${HourHauled.Round} m3    Total: ${TotalHauled.Round} m3"]
 		}
