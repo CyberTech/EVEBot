@@ -1,6 +1,6 @@
 /*
 
-	Fleet Class
+	Defense Class
 	
 	Primary defense behavior module for EVEBot
 	
@@ -28,8 +28,6 @@ objectdef obj_Defense
 	
 	method Initialize()
 	{
-
-		This.TripStartTime:Set[${Time.Timestamp}]`
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		This.NextPulse:Set[${Time.Timestamp}]
 		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]

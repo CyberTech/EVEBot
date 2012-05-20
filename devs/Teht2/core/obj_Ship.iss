@@ -1752,7 +1752,6 @@ objectdef obj_Ship
 	{
 		if ${Me.ToEntity.Mode} == 3
 		{
-			Ship:FastWarp
 			return
 		}
 		

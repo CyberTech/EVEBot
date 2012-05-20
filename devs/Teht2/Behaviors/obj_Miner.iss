@@ -385,39 +385,40 @@ objectdef obj_Miner
 			;	*	Move ore out of cargo hold if it's there
 			;	*	Undock from station
 			case UNLOAD
+				if ${CommandQueue.Queued} != 0
+				{
+					break
+				}
+			
 				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID} != ${Me.StationID}
 				{
 					UI:UpdateConsole["This isn't our Delivery Location.  Undocking to go there."]
-					Station:Undock
+					CommandQueue:QueueCommand[Station,Undock]
 					break
 				}
 				
 				
 				;	If we're in Orca mode, we need to unload all locations capable of holding ore, not just the cargo hold.
-				;	Note:  I need to replace the shuffle with 3 direct movements
-				if ${CommandQueue.Queued} == 0
+				if ${Config.Miner.OrcaMode}
 				{
-					if ${Config.Miner.OrcaMode}
-					{
-						CommandQueue:QueueCommand[Cargo,CloseHolds]
-						CommandQueue:QueueCommand[Cargo,OpenHolds]
-						CommandQueue:QueueCommand[Ship,OpenOreHold]
-						CommandQueue:QueueCommand[Ship,OpenCorpHangars]
-						CommandQueue:QueueCommand[Cargo,FindCargo,"SHIPCORPORATEHANGAR, CATEGORYID_ORE"]
-						CommandQueue:QueueCommand[Cargo,TransferListStationHangar]
-						CommandQueue:QueueCommand[Cargo,FindCargo,"SHIPOREHOLD, CATEGORYID_ORE"]
-						CommandQueue:QueueCommand[Cargo,TransferListStationHangar]
-						CommandQueue:QueueCommand[Cargo,FindCargo,"SHIP, CATEGORYID_ORE"]
-						CommandQueue:QueueCommand[Cargo,TransferListStationHangar]
-					}
-					else
-					{
-						CommandQueue:QueueCommand[Cargo,CloseHolds]
-						CommandQueue:QueueCommand[Cargo,OpenHolds]
-						CommandQueue:QueueCommand[Cargo,FindCargo,"SHIP, CATEGORYID_ORE"]
-						CommandQueue:QueueCommand[Cargo,TransferListStationHangar]
-						CommandQueue:QueueCommand[Station,StackHangar]
-					}
+					CommandQueue:QueueCommand[Cargo,CloseHolds]
+					CommandQueue:QueueCommand[Cargo,OpenHolds]
+					CommandQueue:QueueCommand[Ship,OpenOreHold]
+					CommandQueue:QueueCommand[Ship,OpenCorpHangars]
+					CommandQueue:QueueCommand[Cargo,FindCargo,"SHIPCORPORATEHANGAR, CATEGORYID_ORE"]
+					CommandQueue:QueueCommand[Cargo,TransferListStationHangar]
+					CommandQueue:QueueCommand[Cargo,FindCargo,"SHIPOREHOLD, CATEGORYID_ORE"]
+					CommandQueue:QueueCommand[Cargo,TransferListStationHangar]
+					CommandQueue:QueueCommand[Cargo,FindCargo,"SHIP, CATEGORYID_ORE"]
+					CommandQueue:QueueCommand[Cargo,TransferListStationHangar]
+				}
+				else
+				{
+					CommandQueue:QueueCommand[Cargo,CloseHolds]
+					CommandQueue:QueueCommand[Cargo,OpenHolds]
+					CommandQueue:QueueCommand[Cargo,FindCargo,"SHIP, CATEGORYID_ORE"]
+					CommandQueue:QueueCommand[Cargo,TransferListStationHangar]
+					CommandQueue:QueueCommand[Station,StackHangar]
 				}
 				
 				break

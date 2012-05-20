@@ -508,7 +508,7 @@ objectdef obj_Cargo
 
 
 
-	function TransferListFromShipCorporateHangar(int64 dest)
+	method TransferListFromShipCorporateHangar(int64 dest)
 	{
 		variable index:item HangarCargo
 		variable iterator CargoIterator
@@ -518,8 +518,6 @@ objectdef obj_Cargo
 		HangarCargo:RemoveByQuery[${LavishScript.CreateQuery[Name =- "Mining Crystal"]}]
 		
 		HangarCargo:GetIterator[CargoIterator]
-		Ship:OpenCargo
-
 		
 		if ${CargoIterator:First(exists)}
 		{

@@ -36,15 +36,11 @@ objectdef obj_Hauler
 
 	;	Pulse tracking information
 	variable time NextPulse
-	variable int PulseIntervalInSeconds = 2
+	variable int PulseIntervalInSeconds = 1
 
 	;	Used to get Fleet information
 	variable queue:fleetmember FleetMembers
 	variable index:entity     Entities
-
-	;	This is used to keep track of what we are approaching and when we started
-	variable int64 Approaching = 0
-	variable int TimeStartedApproaching = 0
 	
 	;	This is used to keep track of how much cargo our orca has ready
 	variable float OrcaCargo=-1
@@ -63,7 +59,6 @@ objectdef obj_Hauler
 		Event[EVEBot_Miner_Full]:AttachAtom[This:MinerFull]
 		LavishScript:RegisterEvent[EVEBot_Orca_Cargo]
 		Event[EVEBot_Orca_Cargo]:AttachAtom[This:OrcaCargoUpdate]
-		BotModules:Insert["Hauler"]
 	}
 
 
@@ -81,8 +76,10 @@ objectdef obj_Hauler
 
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-			This:SetState[]
+			This:SetState
 			echo ${This.CurrentState}
+			this:ProcessState
+			
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
     		This.NextPulse:Update
@@ -91,7 +88,7 @@ objectdef obj_Hauler
 
 	method Shutdown()
 	{
-		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
+		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]fs
 		Event[EVEBot_Miner_Full]:DetachAtom[This:MinerFull]
 		Event[EVEBot_Orca_Cargo]:DetachAtom[This:OrcaCargoUpdate]
 	}
@@ -147,14 +144,6 @@ objectdef obj_Hauler
 			return
 		}
 		
-		;	If I'm in a station, and servicing an orca, wait until the orca needs serviced.
-		;	Note: Due to "BASE" state causing undock after unload, this needs to be here.
-		;	TODO: Clean up "BASE" state to enter "IDLE" state depending on hauler mode.
-		if ${Config.Hauler.HaulerModeName.Equal["Service Orca"]} && (${OrcaCargo} < ${Config.Miner.CargoThreshold} && ${OrcaCargo} < 35000) && ${Me.InStation} && ${OrcaCargo} != -1
-		{
-			This.CurrentState:Set["IDLE"]
-			return
-		}
 
 		;	If I'm in a station, and servicing on demand, wait until someone needs serviced.
 		;	Note: Due to "BASE" state causing undock after unload, this needs to be here.
@@ -164,14 +153,38 @@ objectdef obj_Hauler
 			This.CurrentState:Set["IDLE"]
 			return
 		}
-
-		;	If I'm in a station, I need to perform what I came there to do
-		if ${Me.InStation} && (!${Config.Hauler.HaulerModeName.Equal["Service Orca"]} || (${OrcaCargo} > ${Config.Miner.CargoThreshold} || ${OrcaCargo} > 35000) || ${OrcaCargo} == -1)
+		
+		;	If I'm in a station, I need to unload
+		if ${Me.InStation} && ${This.HaulerFull}
 		{
-	  		This.CurrentState:Set["BASE"]
+	  		This.CurrentState:Set["UNLOAD"]
 	  		return
 		}
 
+		;	If I'm in a station and unloaded, do we need to undock?
+		if ${Me.InStation}
+		{
+			switch ${${Config.Hauler.HaulerModeName}
+			{
+				case Service Orca
+					if ${OrcaCargo} > ${Config.Miner.CargoThreshold} || ${OrcaCargo} > 35000 || ${OrcaCargo} == -1
+					{
+						This.CurrentState:Set["UNDOCK"]
+						return
+					}
+					break
+				case Service On-Demand
+					if ${FullMiners.Used} != 0
+					{
+						This.CurrentState:Set["UNDOCK"]
+					}
+					break
+				case Service Fleet Members
+					This.CurrentState:Set["UNDOCK"]
+					break
+			}
+			return
+		}
 		
 		;	If I'm not in a station and I'm full, I should head to a station to unload - Ignore dropoff if Orca Delivery is disabled.
 	    if ${This.HaulerFull} 
@@ -187,7 +200,7 @@ objectdef obj_Hauler
 			return
 		}
 		
-		This.CurrentState:Set["Unknown"]
+		This.CurrentState:Set["IDLE"]
 	}
 
 
@@ -197,7 +210,7 @@ objectdef obj_Hauler
 ;				arms and legs.  Don't ask me why I feel an analogy is needed.
 */			
 	
-	function ProcessState()
+	method ProcessState()
 	{
 		switch ${This.CurrentState}
 		{
@@ -208,7 +221,6 @@ objectdef obj_Hauler
 
 			;	This means something serious happened, like someone targetted us, we're in a pod, or mining is failing due to something
 			;	weird going on.  In this situation our goal is to get to a station and stay there.
-			;	*	Notify other team members that you're running, and they should too!
 			;	*	Stay in a station if we're there
 			;	*	If we have a panic location and it's in the same system, dock there
 			;	*	If we have a panic location and it's in another system, set autopilot and go there
@@ -216,7 +228,6 @@ objectdef obj_Hauler
 			;	*	If everything above failed and there's a station in the same system, dock there
 			;	*	If everything above failed, check if we're warping and warp to a safe spot
 			case HARDSTOP
-				relay all -event EVEBot_HARDSTOP
 				if ${Me.InStation}
 				{
 					break
@@ -315,70 +326,79 @@ objectdef obj_Hauler
 				}
 				break
 
+
 			;	This means we're in a station and need to do what we need to do and leave.
 			;	*	If this isn't where we're supposed to deliver ore, we need to leave the station so we can go to the right one.
 			;	*	Move ore out of cargo hold if it's there
-			;	*	Undock from station
-			case BASE
-				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID} != ${Me.StationID}
-				{
-					Station:Undock
-					break
-				}
-
+			case UNLOAD
 				if ${CommandQueue.Queued} != 0
 				{
 					break
 				}
-				
-				if ${CommandQueue.Queued} == 0
+			
+				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID} != ${Me.StationID}
 				{
-					CommandQueue:QueueCommand[Cargo,CloseHolds]
-					CommandQueue:QueueCommand[Cargo,OpenHolds]
-					CommandQueue:QueueCommand[Cargo,FindCargo,"SHIP"]
-					CommandQueue:QueueCommand[Cargo,TransferListStationHangar]
-					CommandQueue:QueueCommand[Station,StackHangar]
-					CommandQueue:QueueCommand[Cargo,CloseHolds]
+					UI:UpdateConsole["This isn't our Delivery Location.  Undocking to go there."]
 					CommandQueue:QueueCommand[Station,Undock]
-					
+					break
 				}
-
+				
+				CommandQueue:QueueCommand[Cargo,CloseHolds]
+				CommandQueue:QueueCommand[Cargo,OpenHolds]
+				CommandQueue:QueueCommand[Cargo,FindCargo,"SHIP"]
+				CommandQueue:QueueCommand[Cargo,TransferListStationHangar]
+				CommandQueue:QueueCommand[Station,StackHangar]
+				
 				break
 
+				
+			case UNDOCK
+				if ${CommandQueue.Queued} == 0
+				{
+						CommandQueue:QueueCommand[Cargo,CloseHolds]
+						CommandQueue:QueueCommand[Station,Undock]
+						CommandQueue:QueueCommand[Ship,OpenCargo]
+				}
+				
+				break				
 
 			case HAUL
 				if ${CommandQueue.Queued} != 0
 				{
-					CommandQueue:ProcessCommands
+					break
 				}
 						
 				if ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}](exists)} && ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID} != ${Me.SolarSystemID}
 				{
 					Ship:TravelToSystem[${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID}]
+					break
 				}
 
 				switch ${Config.Hauler.HaulerModeName}
 				{
-					case Service On-Demand
-						call This.HaulOnDemand
-						break
-					case Service Fleet Members
-						call This.HaulForFleet
-						break
+					; case Service On-Demand
+						; call This.HaulOnDemand
+						; break
+					; case Service Fleet Members
+						; call This.HaulForFleet
+						; break
 					case Service Orca
-						call This.ServiceOrca
+						This:ServiceOrca
 						break
-					case Jetcan Mode (Flip-guard)
-						call This.FlipGuard
-						break
+					; case Jetcan Mode (Flip-guard)
+						; call This.FlipGuard
+						; break
 				}
 				break
 
 			case DROPOFF
-				call This.DropOff
+				This:DropOff
 				break
 		}
 	}
+	
+	
+	
 	
 	
 /*	
@@ -386,10 +406,12 @@ objectdef obj_Hauler
 ;	*	Warp to fleet member and loot nearby cans
 ;	*	Warp to next safespot
 */			
-	function HaulOnDemand()
+	method HaulOnDemand()
 	{
-		if ${Me.ToEntity.Mode} == 3
+		if ${Me.ToEntity.Mode} == 3 || ${CommandQueue.Queued} != 0
+		{
 			return
+		}
 
 		if ${FullMiners.FirstValue(exists)}
 		{
@@ -409,38 +431,19 @@ objectdef obj_Hauler
 				return
 			}
 			
-			;	Find out if we need to approach this target
-			if ${Entity[${Local[${FullMiners.CurrentValue.FleetMemberID}].ToEntity.ID}].Distance} > LOOT_RANGE && ${This.Approaching} == 0
-			{
-				UI:UpdateConsole["ALERT:  Approaching to within loot range."]
-				Entity${Local[${FullMiners.CurrentValue.FleetMemberID}].ToEntity.ID}]:Approach
-				This.Approaching:Set[${Local[${FullMiners.CurrentValue.FleetMemberID}].ToEntity.ID}]
-				This.TimeStartedApproaching:Set[${Time.Timestamp}]
-			}
+			;	Approach the fleet member
+			Ship:Approach[${Local[${FullMiners.CurrentValue.FleetMemberID}].ToEntity.ID}, LOOT_RANGE]
 			
-			;	If we've been approaching for more than 2 minutes, we need to give up and try again
-			if ${Math.Calc[${TimeStartedApproaching}-${Time.Timestamp}]} < -120 && ${This.Approaching} != 0
-			{
-				This.Approaching:Set[0]
-				This.TimeStartedApproaching:Set[0]							
-			}
-			
-			;	If we're approaching a target, find out if we need to stop doing so 
-			if ${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= LOOT_RANGE && ${This.Approaching} != 0
-			{
-				UI:UpdateConsole["ALERT:  Within loot range."]
-				EVE:Execute[CmdStopShip]
-				This.Approaching:Set[0]
-				This.TimeStartedApproaching:Set[0]
-			}
 			
 			call This.FlipGuardLoot
 			FullMiners:Erase[${FullMiners.FirstKey}]
 		}
 		elseif !${This.HaulerFull}
 		{
-			echo hauler not full
-			call Safespots.WarpTo
+			if !${Safespots.WarpTo}
+			{
+				UI:UpdateConsole["WARNING:  Unable to find a safe spot"]
+			}
 		}
 	}	
 	
@@ -454,7 +457,6 @@ objectdef obj_Hauler
 		if ${FleetMembers.Used} == 0
 		{
 			This:BuildFleetMemberList
-			call Safespots.WarpTo
 		}
 		else
 		{
@@ -472,8 +474,13 @@ objectdef obj_Hauler
 ;	*	Approach
 ;	*	
 */	
-	function ServiceOrca()
+	method ServiceOrca()
 	{
+		if ${Me.ToEntity.Mode} == 3
+		{
+			return
+		}				
+
 		variable string Orca
 		Orca:Set[Name = "${Config.Hauler.HaulerPickupName}"]
 		if !${Local[${Config.Hauler.HaulerPickupName}](exists)}
@@ -481,16 +488,7 @@ objectdef obj_Hauler
 			UI:UpdateConsole["ALERT:  The specified orca isn't in local - it may be incorrectly configured or out of system."]
 			return
 		}
-		
-		if ${Me.ToEntity.Mode} == 3
-		{
-			return
-		}				
-		
-		if ${OrcaCargo} < ${Config.Miner.CargoThreshold} && ${OrcaCargo} < 35000  && ${OrcaCargo} != -1 && !${Entity[${Orca.Escape}](exists)}
-		{
-			return
-		}
+
 
 		if !${Entity[${Orca.Escape}](exists)} && ${Local[${Config.Hauler.HaulerPickupName}].ToFleetMember}
 		{
@@ -499,31 +497,7 @@ objectdef obj_Hauler
 			return
 		}
 
-		;	Find out if we need to approach this target
-		if ${Entity[${Orca.Escape}].Distance} > LOOT_RANGE && ${This.Approaching} == 0
-		{
-			UI:UpdateConsole["ALERT:  Approaching to within loot range."]
-			Entity[${Orca.Escape}]:Approach
-			This.Approaching:Set[${Entity[${Orca.Escape}]}]
-			This.TimeStartedApproaching:Set[${Time.Timestamp}]
-			return
-		}
-		
-		;	If we've been approaching for more than 2 minutes, we need to give up and try again
-		if ${Math.Calc[${TimeStartedApproaching}-${Time.Timestamp}]} < -120 && ${This.Approaching} != 0
-		{
-			This.Approaching:Set[0]
-			This.TimeStartedApproaching:Set[0]							
-		}
-		
-		;	If we're approaching a target, find out if we need to stop doing so 
-		if ${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= LOOT_RANGE && ${This.Approaching} != 0
-		{
-			UI:UpdateConsole["ALERT:  Within loot range."]
-			EVE:Execute[CmdStopShip]
-			This.Approaching:Set[0]
-			This.TimeStartedApproaching:Set[0]
-		}
+		Ship:Approach[${Entity[${Orca.Escape}]}, LOOT_RANGE]
 		
 		;	Open the Orca if it's not open yet
 		if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && !${EVEWindow[ByName, ${Entity[${Orca.Escape}]}](exists)}
@@ -536,7 +510,7 @@ objectdef obj_Hauler
 		if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && ${EVEWindow[ByName, ${Entity[${Orca.Escape}]}](exists)}
 		{
 			UI:UpdateConsole["ALERT:  Transferring Cargo"]
-			call Cargo.TransferListFromShipCorporateHangar ${Entity[${Orca.Escape}]}
+			Cargo:TransferListFromShipCorporateHangar[${Entity[${Orca.Escape}]}]
 		}	
 		return
 	}
@@ -776,12 +750,11 @@ objectdef obj_Hauler
 	}
 
 
-	function DropOff()
+	method DropOff()
 	{
 		if !${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)}
 		{
-			UI:UpdateConsole["ERROR: ORE Delivery location & type must be specified (on the miner tab) - docking"]
-			EVEBot.ReturnToStation:Set[TRUE]
+			UI:UpdateConsole["ERROR: ORE Delivery location & type must be specified (on the miner tab)"]
 			return
 		}
 		switch ${Config.Miner.DeliveryLocationTypeName}
@@ -800,8 +773,25 @@ objectdef obj_Hauler
 				break
 			case Hangar Array
 				Ship:New_WarpToBookmark[${Config.Miner.DeliveryLocation}]
-				call Cargo.TransferOreToCorpHangarArray
-				break
+				if ${CorpHangarArray.IsReady}
+				{
+					Ship:Approach[${CorpHangarArray.ActiveCan}, LOOT_RANGE]
+					if ${Entity[${CorpHangarArray.ActiveCan}](exists)} && ${Entity[${CorpHangarArray.ActiveCan}].Distance} < LOOT_RANGE
+					{
+						if ${CommandQueue.Queued} == 0
+						{
+								CommandQueue:QueueCommand[CorpHangarArray,Open,${CorpHangarArray.ActiveCan}]
+								CommandQueue:QueueCommand[Cargo,FindCargo,"SHIP"]
+								CommandQueue:QueueCommand[Cargo,TransferListToHangarInSpace,${CorpHangarArray.ActiveCan}]
+								CommandQueue:QueueCommand[CorpHangarArray,StackAllCargo]
+						}
+						CommandQueue:ProcessCommands
+					}
+				}
+				else
+				{
+					return
+				}				break
 			case Large Ship Assembly Array
 				Ship:New_WarpToBookmark[${Config.Miner.DeliveryLocation}]
 				if ${LargeShipAssemblyArray.IsReady}
@@ -827,7 +817,21 @@ objectdef obj_Hauler
 				break
 			case XLarge Ship Assembly Array
 				Ship:New_WarpToBookmark[${Config.Miner.DeliveryLocation}]
-				call Cargo.TransferOreToXLargeShipAssemblyArray
+				if ${XLargeShipAssemblyArray.IsReady}
+				{
+					Ship:Approach[${XLargeShipAssemblyArray.ActiveCan}, LOOT_RANGE]
+					if ${Entity[${XLargeShipAssemblyArray.ActiveCan}](exists)} && ${Entity[${XLargeShipAssemblyArray.ActiveCan}].Distance} < LOOT_RANGE
+					{
+						if ${CommandQueue.Queued} == 0
+						{
+								CommandQueue:QueueCommand[XLargeShipAssemblyArray,Open,${XLargeShipAssemblyArray.ActiveCan}]
+								CommandQueue:QueueCommand[Cargo,FindCargo,"SHIP"]
+								CommandQueue:QueueCommand[Cargo,TransferListToHangarInSpace,${XLargeShipAssemblyArray.ActiveCan}]
+								CommandQueue:QueueCommand[XLargeShipAssemblyArray,StackAllCargo]
+						}
+						CommandQueue:ProcessCommands
+					}
+				}
 				break
 			case Jetcan
 				UI:UpdateConsole["ERROR: ORE Delivery location may not be jetcan when in hauler mode - docking"]
