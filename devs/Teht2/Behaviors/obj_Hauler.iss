@@ -791,7 +791,8 @@ objectdef obj_Hauler
 				else
 				{
 					return
-				}				break
+				}
+				break
 			case Large Ship Assembly Array
 				Ship:New_WarpToBookmark[${Config.Miner.DeliveryLocation}]
 				if ${LargeShipAssemblyArray.IsReady}
@@ -831,6 +832,10 @@ objectdef obj_Hauler
 						}
 						CommandQueue:ProcessCommands
 					}
+				}
+				else
+				{
+					return
 				}
 				break
 			case Jetcan
