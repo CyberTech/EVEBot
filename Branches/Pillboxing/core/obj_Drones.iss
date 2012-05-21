@@ -381,13 +381,13 @@ objectdef obj_Drones
 		{
 			case SENTRY
 			case HEAVY
-				ListOfDrones:RemoveByQuery[${LavishScript.CreateQuery[Volume < "25"]}]
+				ListOfDrones:RemoveByQuery[${LargeDroneQuery}]
 				break
 			case MEDIUM
-				ListOfDrones:RemoveByQuery[${LavishScript.CreateQuery[Volume != "10"]}]
+				ListOfDrones:RemoveByQuery[${MediumDroneQuery}]
 				break
 			case LIGHT
-				ListOfDrones:RemoveByQuery[${LavishScript.CreateQuery[Volume > "5"]}]
+				ListOfDrones:RemoveByQuery[${LightDroneQuery}]
 				break
 		}
 		;At this point in time the ListOfDrones will only contain drones matching the volume of the type we're looking for

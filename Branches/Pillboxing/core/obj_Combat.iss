@@ -410,7 +410,7 @@ objectdef obj_Combat
 				;COMMENCE WITH THE MAGIC
 				if ${itty:First(exists)}
 				{
-					if ${GROUPID.Equal[74]}
+					if ${Config.Combat.LastWeaponGroup.Equal[74]}
 					{
 						return ${ItemIterator.Value.TypeID}
 					} 
