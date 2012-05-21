@@ -804,7 +804,7 @@ objectdef obj_Combat
 			variable iterator CargoIterator	
 			MyShip:OpenCargo
 			MyShip:GetCargo[ContainerItems]
-			if ${Config.Combat.LastWeaponGroup.Equal[85]}
+			if ${Config.Combat.LastWeaponGroup.Equal[74]}
 			{
 				UI:UpdateConsole["We're using hybrid weapons, I'm pretty sure these all do the same damage type."]
 				return TRUE
