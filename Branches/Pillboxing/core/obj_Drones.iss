@@ -192,7 +192,7 @@ objectdef obj_Drones
 				This.WaitingForDrones:Set[5]
 				return
 			}
-			if ${Me.ActiveTarget.Radius} > 100 
+			if ${Me.ActiveTarget.Radius} > 100 || ${This.NumberOfDronesInBay[LIGHT].Equal[0]}
 			{
 				This:LaunchPrimaryDrones
 			}
