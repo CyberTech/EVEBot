@@ -95,6 +95,10 @@ objectdef obj_Combat
 	variable index:int ExplosiveDamage
 	variable index:int LightDrone
 	variable uint StationQuery = ${LavishScript.CreateQuery[CategoryID != "3"]}
+	variable uint DroneQuery = ${LavishScript.CreateQuery[GroupID != "100"]}
+	variable uint HeavyDroneQuery = ${LavishScript.CreateQuery[Volume < "25"]}
+	variable uint MediumDroneQuery = ${LavishScript.CreateQuery[Volume != "10"]}
+	variable uint LightDroneQuery = ${LavishScript.CreateQuery[Volume > "5"]}
 	variable time DroneTimer
 	variable collection:int MishDB
 	variable collection:int FactionDB
@@ -126,9 +130,11 @@ objectdef obj_Combat
 		ThermalDamage:Insert[20797]
 		ThermalDamage:Insert[200]
 		ThermalDamage:Insert[238]
+		ThermalDamage:Insert[1153]
 		ThermalDamage:Insert[204]
 		ThermalDamage:Insert[24511]
 		EMDamage:Insert[21894]
+		EMDamage:Insert[1153]
 		EMDamage:Insert[20735]
 		EMDamage:Insert[20799]
 		EMDamage:Insert[201]
@@ -160,6 +166,7 @@ objectdef obj_Combat
 		ExplosiveDamage:Insert[24507]
 		ExplosiveDamage:Insert[27453]
 		ExplosiveDamage:Insert[199]
+		ExplosiveDamage:Insert[1153]
 		ExplosiveDamage:Insert[21902]
 		ExplosiveDamage:Insert[20731]
 		ExplosiveDamage:Insert[20795]
@@ -182,6 +189,7 @@ objectdef obj_Combat
 		ExplosiveDamage:Insert[205]
 		ExplosiveDamage:Insert[21640]
 		KineticDamage:Insert[238]
+		KineticDamage:Insert[1153]
 		KineticDamage:Insert[2629]
 		KineticDamage:Insert[21918]
 		KineticDamage:Insert[20733]
@@ -541,7 +549,7 @@ objectdef obj_Combat
 				break
 			case RESTOCK
 				UI:UpdateConsole["Restocking ammo."]
-				call This.RestockAmmo
+				call This.restockAmmo
 				break
 			case FIGHT
 				call This.Fight
@@ -959,6 +967,20 @@ objectdef obj_Combat
 
 	function RefillDrones()
 	{
+		variable index:item AvailableDrones
+		variable int DroneFreeSpace
+		EVE:Execute[OpenDroneBayOfActiveShip]
+		DroneFreeSpace:Set[${Math.Calc[${Ship.DronebayCapacity}-${Ship.UsedDronebayCapacity}]}]
+		echo "Refilling Drones, we have ${DroneFreeSpace}."
+		Me.Station:GetHangarItems[AvailableDrones]
+		AvailableDrones:RemoveByQuery[${DroneQuery}]
+		AvailableDrones:Collapse
+		;Now we have a list of drones in hangar, let's check that there's at least one.
+		if ${AvailableDrones.Used} == 0
+		{
+			echo "No drones found in hangar, we can't do much here, if there are definitely drones in hangar please talk to pillboxing"
+			return
+		}
 
 	}
 
