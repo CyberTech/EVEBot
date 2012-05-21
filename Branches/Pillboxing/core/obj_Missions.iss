@@ -502,7 +502,7 @@ function RunCourierMission(int agentID)
 
 	function RunCombatMission(int agentID)
 	{	
-		if !${Combat.HaveMissionAmmo}
+		if !${Combat.HaveMissionAmmo} && ${Config.Combat.RestockAmmo}
 		{
 			call Combat.RestockAmmo
 		}
