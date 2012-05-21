@@ -845,7 +845,14 @@ objectdef obj_Configuration_Combat
 	{
 		return ${This.CombatRef.FindSetting[Run On Low Ammo, FALSE]}
 	}
-
+	member:int LastWeaponGroup()
+	{
+		return ${This.CombatRef.FindSetting[LastWeaponGroup,510]}
+	}
+	method SetLastWeaponGroup(int value)
+	{
+		This.CombatRef:AddSetting[LastWeaponGroup,${value}]
+	}
 	method SetRunOnLowAmmo(bool value)
 	{
 		This.CombatRef:AddSetting[Run On Low Ammo, ${value}]
