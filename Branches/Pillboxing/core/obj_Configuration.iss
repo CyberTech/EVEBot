@@ -738,6 +738,7 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[LootMyKills, 0]
 		This.CombatRef:AddSetting[Use Anom Bookmarks, FALSE]
 		This.CombatRef:AddSetting[AnomBookmarkLabel, Anom:]
+		This.CombatRef:AddSetting[LastWeaponGroup, 0]
 	}
 
 	member:int WarpRange()
@@ -1106,6 +1107,16 @@ objectdef obj_Configuration_Combat
 	method SetLootMyKills(bool value)
 	{
 		This.CombatRef:AddSetting[LootMyKills, ${value}]
+	}
+
+	member:bool DisableHardeners()
+	{
+		return ${This.CombatRef.FindSetting[DisableHardeners, FALSE]}
+	}
+
+	method SetDisableHardeners(bool value)
+	{
+		This.CombatRef:AddSetting[DisableHardeners, ${value}]
 	}
 }
 

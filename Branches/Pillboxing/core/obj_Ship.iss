@@ -145,6 +145,13 @@ objectdef obj_Ship
 				{
 					Ship:Activate_Hardeners
 				}
+				else
+				{
+					if !${Targets.TargetNPCs} && ${Config.Combat.DisableHardeners}
+					{
+						This:Deactivate_Hardeners
+					}
+				}
 				if ${Me.ToEntity.Mode} == 1
 				{
 					This:Activate_AfterBurner
