@@ -157,6 +157,10 @@ objectdef obj_Drones
 		{
 			This:LaunchDrones[MEDIUM]
 		}
+		elseif ${MyShip.DronebayCapacity} > 125
+		{
+			This:LaunchDrones[MEDIUM]
+		}
 		elseif ${MyShip.DronebayCapacity.Equal[125]}
 		{
 			This:LaunchDrones[HEAVY]
@@ -436,7 +440,7 @@ objectdef obj_Drones
 
 		if ${MyShip.DronebayCapacity} > 50 && ${MyShip.DronebayCapacity} < 125
 		{
-			if ${Me.ActiveTarget.Radius} < 100 && ${This.DronesOut} > 5
+			if ${Me.ActiveTarget.Radius} < 100 && ${This.DronesOut} > 5 && ${MyShip.DronebayCapacity} <= 125
 			{
 				UI:UpdateConsole["We're frighting a frigate and have primary drones out, swapping to secondary."]
 				This:SetAllDronesToReturn			
@@ -449,7 +453,7 @@ objectdef obj_Drones
 		}
 		if ${MyShip.DronebayCapacity} >= 125
 		{
-			if ${Me.ActiveTarget.Radius} < 100 && ${This.DronesOut} > 5
+			if ${Me.ActiveTarget.Radius} < 100 && ${This.DronesOut} > 5 &&
 			{
 				UI:UpdateConsole["We're frighting a frigate and have primary drones out, swapping to secondary."]
 				This:SetAllDronesToReturn			
