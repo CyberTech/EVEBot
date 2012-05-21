@@ -98,6 +98,8 @@ objectdef obj_Ammospots
 
 		if !${AmmoSpotIterator:Next(exists)}
 		{
+			UI:UpdateConsole["No ammo bookmarks left, pausing"]
+			Script:Pause
 			AmmoSpotIterator:First
 		}
 

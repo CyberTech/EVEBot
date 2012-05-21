@@ -410,6 +410,10 @@ objectdef obj_Combat
 				;COMMENCE WITH THE MAGIC
 				if ${itty:First(exists)}
 				{
+					if ${GROUPID.Equal[74]}
+					{
+						return ${ItemIterator.Value.TypeID}
+					} 
 					do
 					{
 						ListOfItems:GetIterator[ItemIterator]
@@ -856,7 +860,14 @@ objectdef obj_Combat
 			}
 			else
 			{
-				call Ammospots.WarpTo
+				if ${Me.Station.ID} != ${Agent[${Agents.AgentID}].StationID}
+				{
+					call Ammospots.WarpTo
+				}
+				else
+				{
+					UI:UpdateConsole["We're at our active agents station, checking here for ammo."]
+				}
 				while ${Me.InSpace}
 				{
 					wait 10
@@ -958,7 +969,8 @@ objectdef obj_Combat
 					{
 						UI:UpdateConsole["DEBUG: obj_Cargo:TransferListToShip: Nothing found to move"]
 						;UI:UpdateConsole["Debug: Fleeing: No ammo left in can"]
-						call This.Flee
+						call Ammospots.WarpTo
+						;call This.Flee
 						return
 					}	
 			}
@@ -971,6 +983,10 @@ objectdef obj_Combat
 		variable int DroneFreeSpace
 		EVE:Execute[OpenDroneBayOfActiveShip]
 		DroneFreeSpace:Set[${Math.Calc[${Ship.DronebayCapacity}-${Ship.UsedDronebayCapacity}]}]
+		if ${DroneFreeSpace} == 0
+		{
+			echo "No need to reload drones, drone bay is already full."
+		}
 		echo "Refilling Drones, we have ${DroneFreeSpace}."
 		Me.Station:GetHangarItems[AvailableDrones]
 		AvailableDrones:RemoveByQuery[${DroneQuery}]
