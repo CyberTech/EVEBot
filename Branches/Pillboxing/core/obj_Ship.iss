@@ -87,7 +87,7 @@ objectdef obj_Ship
 			case 74
 				return 85
 			default
-				UI:UpdateConsole["obj_Ship: AmmoGroup: ${WEAPONGROUPID} weapon typeID not found"]
+				UI:UpdateConsole["obj_Ship: AmmoGroup: ${Config.Combat.LastWeaponGroup} weapon typeID not found"]
 		}
 	}
 	method ClearModules()
