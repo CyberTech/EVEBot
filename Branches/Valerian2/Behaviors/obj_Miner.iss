@@ -777,7 +777,7 @@ objectdef obj_Miner
 			;	If we've been approaching for more than 2 minutes, we need to give up and try again
 			if ${Math.Calc[${TimeStartedApproaching} - ${Time.Timestamp}]} < -120 && ${This.Approaching} != 0
 			{
-				echo Approach Orca stopping because of timeout.
+				UI:UpdateConsole["Approach Orca stopping because of timeout"]
 				This.Approaching:Set[0]
 				This.TimeStartedApproaching:Set[0]			
 				This.ApproachingOrca:Set[FALSE]
@@ -1214,9 +1214,11 @@ objectdef obj_Miner
 	;This method is triggered by an event.  If triggered, it tells a team-mate is under attack by an NPC and what it is.
 	method UnderAttack(int64 value)
 	{
-		
-		AttackingTeam:Add[${value}]
-		UI:UpdateConsole["Warning: Added ${value} to attackers list.  ${AttackingTeam.Used} attackers now in list."]
+		if !${AttackingTeam.Contains[${value}]}
+		{
+			AttackingTeam:Add[${value}]
+			UI:UpdateConsole["Warning: Added ${value} to attackers list.  ${AttackingTeam.Used} attackers now in list."]
+		}
 	}
 
 	;This method is used to trigger an event.  It tells our team-mates we are under attack by an NPC and what it is.
@@ -1231,7 +1233,7 @@ objectdef obj_Miner
 		{
 			do
 			{
-			UI:UpdateConsole["Warning: Ship attacked by rats, alerting team to kill ${CurrentAttack.Value.Name}"]
+			;UI:UpdateConsole["Warning: Ship attacked by rats, alerting team to kill ${CurrentAttack.Value.Name}"]
 			Relay all -event EVEBot_TriggerAttack ${CurrentAttack.Value.ID}
 			}
 			while ${CurrentAttack:Next(exists)}
@@ -1248,7 +1250,6 @@ objectdef obj_Miner
 		{
 			if ${LocationID} == -1
 			{
-				echo EVE.Bookmark[${BookmarkName}]:WarpTo[0]
 				EVE.Bookmark[${BookmarkName}]:WarpTo[0]
 			}
 			if ${LocationID} != 0
@@ -1352,7 +1353,6 @@ objectdef obj_Miner
 			if ${DroneIterator:First(exists)}
 				do
 				{
-					echo ${DroneIterator.Value.State}
 					if ${DroneIterator.Value.State} == 0
 						AttackDrones:Insert[${DroneIterator.Value.ID}]
 				}
