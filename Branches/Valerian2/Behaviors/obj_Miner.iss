@@ -567,7 +567,7 @@ objectdef obj_Miner
 						if !${Entity[${Orca.Escape}](exists)} && ${Local[${Config.Miner.DeliveryLocation}].ToFleetMember}
 						{
 							UI:UpdateConsole["ALERT:  The orca is not in this belt.  Warping there first to unload."]
-							Local[${Config.Miner.DeliveryLocation}].ToFleetMember:WarpTo
+							Fleet:WarpTo[${Config.Miner.DeliveryLocation]
 							break
 						}
 

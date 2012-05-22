@@ -286,6 +286,7 @@ objectdef obj_Social
 			if ${CharName.NotEqual["EVE System"]}
 			{
 				call Sound.PlayTellSound
+				Sound:Speak[${MessageText.Escape}]
 				UI:UpdateConsole["Channel Local: ${CharName.Escape}: ${MessageText.Escape}", LOG_CRITICAL]
 			}
 		}

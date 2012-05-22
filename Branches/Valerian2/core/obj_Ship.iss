@@ -46,8 +46,7 @@ objectdef obj_Ship
 	variable bool  m_WaitForCapRecharge = FALSE
 	variable int	m_CargoSanityCounter = 0
 	variable bool InteruptWarpWait = FALSE
-	variable string m_Type
-	variable int m_TypeID
+	variable bool AlertedInPod
 	variable uint ReloadingWeapons = 0
 
 
@@ -129,10 +128,9 @@ objectdef obj_Ship
 					}
 				}
 			}
-			if ${This.ReloadingWeapons}
+			if ${This.ReloadingWeapons} && ${Math.Calc[${Time.Timestamp} - ${This.ReloadingWeapons}]} > 12
 			{
-				if ${Math.Calc[${Time.Timestamp} - ${This.ReloadingWeapons}]} > 12
-					This.ReloadingWeapons:Set[0]
+				This.ReloadingWeapons:Set[0]
 			}
 			This.NextPulse:Set[${Time.Timestamp}]
 			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
@@ -2798,12 +2796,15 @@ objectdef obj_Ship
 		if ${ShipName.Right[10].Equal["'s Capsule"]} || \
 			${GroupID} == GROUP_CAPSULE
 		{
-			if ${This.m_TypeID} != ${TypeID}
+			if !${This.AlertedInPod}
 			{
-				This.RetryUpdateModuleList:Set[1]
+				Sound:Speak["Critical Information: ${Me.Name} is in a pod"]
+				UI:UpdateConsole["Critical Information: ${Me.Name} is in a pod", LOG_CRITICAL]
+				This.AlertedInPod:Set[TRUE]
 			}
 			return TRUE
 		}
+		This.AlertedInPod:Set[FALSE]
 		return FALSE
 	}
 
@@ -2973,7 +2974,7 @@ objectdef obj_Ship
 		variable bool NeedReload = FALSE
 		variable int CurrentCharges = 0
 
-		if !${Me.Ship(exists)}
+		if !${Me.Ship(exists) || ${This.ReloadingWeapons}}
 		{
 			return
 		}
@@ -3024,7 +3025,8 @@ objectdef obj_Ship
 
 		; ignore forced reload if we can only have one charge
 		; Can't use an iterator that hasn't been initialized OR has no value. Reverting this change. - Valerian
-		if ${ForceReload} || ${NeedReload}
+		; ReloadingWeapons is reset in Ship.Pulse every 12 seconds.
+		if !${This.ReloadingWeapons} && (${ForceReload} || ${NeedReload})
 		{
 			UI:UpdateConsole["Reloading Weapons..."]
 			EVE:Execute[CmdReloadAmmo]
