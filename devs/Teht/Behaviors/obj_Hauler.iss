@@ -8,6 +8,7 @@
 	(Recycled mainly from GliderPro I believe)
 */
 
+
 objectdef obj_FullMiner
 {
 	variable int64 FleetMemberID
@@ -751,8 +752,8 @@ objectdef obj_Hauler
 
 		EVEWindow[ByName,${MyShip.ID}]:StackAll
 		wait 10
-		EVEWindow[ByName,${MyShip.ID}]:Close
-		wait 10
+		;EVEWindow[ByName,${MyShip.ID}]:Close
+		;wait 10
 	}
 
 
