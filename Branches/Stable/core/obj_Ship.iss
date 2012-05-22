@@ -47,7 +47,6 @@ objectdef obj_Ship
 	variable bool InteruptWarpWait = FALSE
 	variable bool AlertedInPod
 	variable uint ReloadingWeapons = 0
-
 	variable iterator ModulesIterator
 
 	variable obj_Drones Drones
@@ -126,10 +125,9 @@ objectdef obj_Ship
 					}
 				}
 			}
-			if ${This.ReloadingWeapons}
+			if ${This.ReloadingWeapons} && ${Math.Calc[${Time.Timestamp} - ${This.ReloadingWeapons}]} > 12
 			{
-				if ${Math.Calc[${Time.Timestamp} - ${This.ReloadingWeapons}]} > 12
-					This.ReloadingWeapons:Set[0]
+				This.ReloadingWeapons:Set[0]
 			}
 			This.NextPulse:Set[${Time.Timestamp}]
 			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
@@ -2562,7 +2560,7 @@ objectdef obj_Ship
 		variable bool NeedReload = FALSE
 		variable int CurrentCharges = 0
 
-		if !${Me.Ship(exists)}
+		if !${Me.Ship(exists) || ${This.ReloadingWeapons}}
 		{
 			return
 		}
@@ -2613,7 +2611,8 @@ objectdef obj_Ship
 
 		; ignore forced reload if we can only have one charge
 		; Can't use an iterator that hasn't been initialized OR has no value. Reverting this change. - Valerian
-		if ${ForceReload} || ${NeedReload}
+		; ReloadingWeapons is reset in Ship.Pulse every 12 seconds.
+		if !${This.ReloadingWeapons} && (${ForceReload} || ${NeedReload})
 		{
 			UI:UpdateConsole["Reloading Weapons..."]
 			EVE:Execute[CmdReloadAmmo]
