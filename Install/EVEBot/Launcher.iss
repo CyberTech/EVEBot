@@ -129,8 +129,8 @@ function main(string unchar="", string StartBot=FALSE)
 					; TODO - get rid of this callback shit.
 					runscript "${Script.CurrentDirectory}/EveCallback.iss"
 
-					UI:UpdateConsole["Launcher: Starting EVEBot by CyberTech - Teht Branch"]
-					runscript EVEBot/EVEBot Teht
+					UI:UpdateConsole["Launcher: Starting EVEBot by CyberTech - Stable (Teht reintegrated)"]
+					runscript EVEBot/EVEBot Stable
 					wait 600 ${Script[EVEBot].Paused}
 					while ${Script[EVEBot].Paused}
 					{
