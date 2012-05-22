@@ -78,17 +78,13 @@ objectdef obj_Asteroids
 		}
 	}
 
-	function MoveToRandomBeltBookMark()
+	function MoveToRandomBeltBookMark(bool FleetWarp=FALSE)
 	{
-		BeltBookMarkList:Clear
 		EVE:GetBookmarks[BeltBookMarkList]
 
 		variable int RandomBelt
 		variable string Label
 		variable string prefix
-
-		variable int count
-		variable int used
 
 		if ${Config.Miner.IceMining}
 		{
@@ -98,46 +94,41 @@ objectdef obj_Asteroids
 		{
 			prefix:Set[${Config.Labels.OreBeltPrefix}]
 		}
-		used:Set[${BeltBookMarkList.Used}]
-		/* Let's eliminate all bookmarks that don't match our prefix
-		/* and system first. */
-		for ( count:Set[1] ; ${count} <= ${used} ; count:Inc )
+
+		Label:Set[${BeltBookMarkList[${count}].Label}]
+		variable float Distance
+		while ${BeltBookMarkList.Used} > 1
 		{
-			Label:Set[${BeltBookMarkList[${count}].Label}]
-			if (${BeltBookMarkList[${count}].SolarSystemID} != ${Me.SolarSystemID} || \
+			RandomBelt:Set[${Math.Rand[${BeltBookMarkList.Used(int):Dec}]:Inc[1]}]
+			Label:Set[${BeltBookMarkList[${RandomBelt}].Label}]
+
+			if (${BeltBookMarkList[${RandomBelt}].SolarSystemID} != ${Me.SolarSystemID} || \
 				${Label.Left[${prefix.Length}].NotEqual[${prefix}]})
 			{
-				BeltBookMarkList:Remove[${count}]
+				RandomBelt:Set[1]
+				BeltBookMarkList:Remove[${RandomBelt}]
+				BeltBookMarkList:Collapse
+				continue
+			}
+
+			if ${BeltBookMarkList[${RandomBelt}].X(exists)}
+				Distance:Set[${Math.Distance[${BeltBookMarkList[${RandomBelt}].X},${BeltBookMarkList[${RandomBelt}].Y},${BeltBookMarkList[${RandomBelt}].Z},${Me.ToEntity.X},${Me.ToEntity.Y},${Me.ToEntity.Z}]}]
+			else
+				Distance:Set[${Math.Distance[${BeltBookMarkList[${RandomBelt}].ToEntity.X},${BeltBookMarkList[${RandomBelt}].ToEntity.Y},${BeltBookMarkList[${RandomBelt}].ToEntity.Z},${Me.ToEntity.X},${Me.ToEntity.Y},${Me.ToEntity.Z}]}]
+
+			if ${Distance} < WARP_RANGE
+			{
+				; Must remove this belt to avoid inf loops
+				RandomBelt:Set[1]
+				BeltBookMarkList:Remove[${RandomBelt}]
+				BeltBookMarkList:Collapse
 				continue
 			}
 		}
-		BeltBookMarkList:Collapse
 
-		if ${BeltBookMarkList.Used} /* If it's 0, we don't have any matching bookmarks, don't try to set autopilot to NULL. */
+		if ${BeltBookMarkList.Used}
 		{
-			RandomBelt:Set[1]
-			if ${BeltBookMarkList.Used} > 1
-			{
-				variable float Distance
-				do
-				{
-					RandomBelt:Set[${Math.Rand[${BeltBookMarkList.Used(int):Dec}]:Inc[1]}]
-
-					Label:Set[${BeltBookMarkList[${RandomBelt}].Label}]
-					if ${BeltBookMarkList[${RandomBelt}].X(exists)}
-						Distance:Set[${Math.Distance[${BeltBookMarkList[${RandomBelt}].X},${BeltBookMarkList[${RandomBelt}].Y},${BeltBookMarkList[${RandomBelt}].Z},${Me.ToEntity.X},${Me.ToEntity.Y},${Me.ToEntity.Z}]}]
-					else
-						Distance:Set[${Math.Distance[${BeltBookMarkList[${RandomBelt}].ToEntity.X},${BeltBookMarkList[${RandomBelt}].ToEntity.Y},${BeltBookMarkList[${RandomBelt}].ToEntity.Z},${Me.ToEntity.X},${Me.ToEntity.Y},${Me.ToEntity.Z}]}]
-
-					if ${Distance} > WARP_RANGE
-					{
-						break
-					}
-				}
-				while ${BeltBookMarkList.Used} > 1
-			}
-
-			call Ship.WarpToBookMark ${BeltBookMarkList[${RandomBelt}].ID}
+			call Ship.WarpToBookMark ${BeltBookMarkList[${RandomBelt}].ID} ${FleetWarp}
 
 			This.BeltArrivalTime:Set[${Time.Timestamp}]
 			This.LastBookMarkIndex:Set[${RandomBelt}]
@@ -145,12 +136,12 @@ objectdef obj_Asteroids
 		}
 		else
 		{
-			UI:UpdateConsole["DEBUG: obj_Asteroids:MoveToRandomBeltBookMark: No belt bookmarks found!",LOG_DEBUG]
+			UI:UpdateConsole["DEBUG: obj_Asteroids:MoveToRandomBeltBookMark: No belt bookmarks found!", LOG_DEBUG]
 		}
 		return
 	}
 
-	function MoveToField(bool ForceMove)
+	function MoveToField(bool ForceMove, bool IgnoreTargeting=FALSE, bool FleetWarp=FALSE)
 	{
 		variable int curBelt
 		variable index:entity Belts
@@ -174,7 +165,7 @@ objectdef obj_Asteroids
 		{
 			if !${ForceMove}
 			{
-				call TargetNext TRUE
+				call TargetNext TRUE ${IgnoreTargeting}
 				AsteroidsInRange:Set[${Return}]
 			}
 
@@ -186,7 +177,7 @@ objectdef obj_Asteroids
 					/* We have a stored location, we should return to it. */
 					UI:UpdateConsole["Returning to last location (${Bookmarks.StoredLocation})"]
 					call Ship.TravelToSystem ${EVE.Bookmark[${Bookmarks.StoredLocation}].SolarSystemID}
-					call Ship.WarpToBookMarkName "${Bookmarks.StoredLocation}"
+					call Ship.WarpToBookMarkName "${Bookmarks.StoredLocation}" ${FleetWarp}
 					This.BeltArrivalTime:Set[${Time.Timestamp}]
 					Bookmarks:RemoveStoredLocation
 					return
@@ -194,7 +185,7 @@ objectdef obj_Asteroids
 
 				if ${Config.Miner.UseFieldBookmarks}
 				{
-					call This.MoveToRandomBeltBookMark
+					call This.MoveToRandomBeltBookMark ${FleetWarp}
 					return
 				}
 
@@ -214,15 +205,15 @@ objectdef obj_Asteroids
 				while ( !${Belts[${curBelt}].Name.Find[${beltsubstring}](exists)} || \
 						${This.IsBeltEmpty[${Belts[${curBelt}].Name}]} )
 
-				UI:UpdateConsole["Warping to Asteroid Belt: ${Belts[${curBelt}].Name}"]
-				call Ship.WarpToID ${Belts[${curBelt}].ID}
+				UI:UpdateConsole["EVEBot thinks we're not at a belt.  Warping to Asteroid Belt: ${Belts[${curBelt}].Name}"]
+				call Ship.WarpToID ${Belts[${curBelt}].ID} 0 ${FleetWarp}
 				This.BeltArrivalTime:Set[${Time.Timestamp}]
-				This.UsingMookMarks:Set[TRUE]
+				This.UsingBookMarks:Set[TRUE]
 				This.LastBeltIndex:Set[${curBelt}]
 			}
 			else
 			{
-				UI:UpdateConsole["Staying at Asteroid Belt: ${BeltIterator.Value.Name}"]
+				;UI:UpdateConsole["Staying at Asteroid Belt: ${BeltIterator.Value.Name}"]
 			}
 		}
 		else
@@ -295,7 +286,7 @@ objectdef obj_Asteroids
 
 	}
 
-	function UpdateList()
+	function UpdateList(int64 DistanceTarget=-1)
 	{
 		variable index:entity asteroid_index
 		variable index:entity AsteroidList_outofrange
@@ -318,6 +309,12 @@ objectdef obj_Asteroids
 			do
 			{
 				EVE:QueryEntities[asteroid_index, "CategoryID = ${This.AsteroidCategoryID} && Name =- \"${This.OreTypeIterator.Key}\""]
+				if ${asteroid_index.Used} > 3
+				variable int Count
+				for (Count:Set[0] ; ${Count}<=30 ; Count:Inc)
+				{
+					asteroid_index:Swap[${Math.Rand[${asteroid_index.Used}]:Inc},${Math.Rand[${asteroid_index.Used}]:Inc}]
+				}
 				asteroid_index:GetIterator[asteroid_iterator]
 				if ${asteroid_iterator:First(exists)}
 				{
@@ -327,13 +324,27 @@ objectdef obj_Asteroids
 							intended to empty a given radius of asteroids */
 						if ${Config.Miner.StripMine}
 						{
-							if ${asteroid_iterator.Value.Distance} < ${Ship.OptimalMiningRange}
+							if ${DistanceTarget} == -1
 							{
-								This.AsteroidList:Insert[${asteroid_iterator.Value.ID}]
+								if ${asteroid_iterator.Value.Distance} < ${Ship.OptimalMiningRange}
+								{
+									This.AsteroidList:Insert[${asteroid_iterator.Value.ID}]
+								}
+								else
+								{
+									AsteroidList_outofrange:Insert[${asteroid_iterator.Value.ID}]
+								}
 							}
 							else
 							{
-								AsteroidList_outofrange:Insert[${asteroid_iterator.Value.ID}]
+								if ${AsteroidIterator.Value.DistanceTo[${DistanceToTarget}]} < ${Math.Calc[${Ship.OptimalMiningRange} + 2000]}
+								{
+									This.AsteroidList:Insert[${asteroid_iterator.Value.ID}]
+								}
+								else
+								{
+									AsteroidList_outofrange:Insert[${asteroid_iterator.Value.ID}]
+								}
 							}
 						}
 						else
@@ -344,7 +355,7 @@ objectdef obj_Asteroids
 					while ${asteroid_iterator:Next(exists)}
 				}
 			}
-			while ${This.AsteroidList.Used} < ${Ship.TotalMiningLasers} && ${This.OreTypeIterator:Next(exists)}
+			while ${This.OreTypeIterator:Next(exists)}
 
 			if ${Config.Miner.StripMine}
 			{
@@ -365,6 +376,12 @@ objectdef obj_Asteroids
 			echo "WARNING: obj_Asteroids: Ore Type list is empty, please check config"
 		}
 	}
+
+	member:int64 NearestAsteroid()
+	{
+		return ${Entity["CategoryID = ${This.AsteroidCategoryID}"].ID}
+	}
+
 
 	method NextAsteroid()
 	{
@@ -387,7 +404,87 @@ objectdef obj_Asteroids
 		return TRUE
 	}
 
-	function:bool TargetNext(bool CalledFromMoveRoutine=FALSE)
+	function:bool TargetNextInRange(int64 DistanceToTarget=-1)
+	{
+		variable iterator AsteroidIterator
+
+		if ${AsteroidList.Used} == 0
+		{
+			call This.UpdateList
+		}
+
+		This.AsteroidList:GetIterator[AsteroidIterator]
+		if ${AsteroidIterator:First(exists)}
+		{
+			do
+			{
+				if ${DistanceToTarget} == -1
+				{
+					if ${Entity[${AsteroidIterator.Value.ID}](exists)} && \
+						!${AsteroidIterator.Value.IsLockedTarget} && \
+						!${AsteroidIterator.Value.BeingTargeted} && \
+						${AsteroidIterator.Value.Distance} < ${Me.Ship.MaxTargetRange} && \
+						${AsteroidIterator.Value.Distance} < ${Ship.OptimalMiningRange}
+					{
+						break
+					}
+				}
+				else
+				{
+					if ${Entity[${AsteroidIterator.Value.ID}](exists)} && \
+						!${AsteroidIterator.Value.IsLockedTarget} && \
+						!${AsteroidIterator.Value.BeingTargeted} && \
+						${AsteroidIterator.Value.Distance} < ${Me.Ship.MaxTargetRange} && \
+						${AsteroidIterator.Value.DistanceTo[${DistanceToTarget}]} < ${Math.Calc[${Ship.OptimalMiningRange} + 2000]}
+					{
+						variable iterator Target
+						variable bool IsWithinRangeOfOthers=TRUE
+						Targets:UpdateLockedAndLockingTargets
+						Targets.LockedOrLocking:GetIterator[Target]
+						if ${Target:First(exists)}
+							do
+							{
+								if ${AsteroidIterator.Value.CategoryID} == ${Asteroids.AsteroidCategoryID}
+								{
+									if ${AsteroidIterator.Value.DistanceTo[${Target.Value.ID}]} > ${Math.Calc[${Ship.OptimalMiningRange} * 2]}
+									{
+										IsWithinRangeOfOthers:Set[FALSE]
+									}
+								}
+							}
+							while ${Target:Next(exists)}
+						if ${IsWithinRangeOfOthers}
+							break
+					}
+				}
+			}
+			while ${AsteroidIterator:Next(exists)}
+
+			if ${AsteroidIterator.Value(exists)} && ${Entity[${AsteroidIterator.Value.ID}](exists)}
+			{
+				if ${AsteroidIterator.Value.IsLockedTarget} || \
+					${AsteroidIterator.Value.BeingTargeted}
+				{
+					return TRUE
+				}
+
+				UI:UpdateConsole["Locking Asteroid ${AsteroidIterator.Value.Name}: ${EVEBot.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"]
+				AsteroidIterator.Value:LockTarget
+
+				call This.UpdateList
+				return TRUE
+			}
+			else
+			{
+				call This.UpdateList
+				return FALSE
+			}
+		}
+
+		return FALSE
+	}
+
+	function:bool TargetNext(bool CalledFromMoveRoutine=FALSE, bool IgnoreTargeting=FALSE)
 	{
 		variable iterator AsteroidIterator
 
@@ -420,7 +517,6 @@ objectdef obj_Asteroids
 				{
 					return TRUE
 				}
-				UI:UpdateConsole["Locking Asteroid ${AsteroidIterator.Value.Name}: ${EVEBot.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"]
 
 				;; This member does not exist in obj_Combat!!  -- GP
 				;;while ${Combat.CombatPause}
@@ -429,12 +525,16 @@ objectdef obj_Asteroids
 				;;	echo "DEBUG: Obj_Asteroids In Combat Pause Loop"
 				;;}
 
-				AsteroidIterator.Value:LockTarget
-				do
+				if !${IgnoreTargeting}
 				{
-				  wait 30
+					UI:UpdateConsole["Locking Asteroid ${AsteroidIterator.Value.Name}: ${EVEBot.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"]
+					AsteroidIterator.Value:LockTarget
+					do
+					{
+					  wait 30
+					}
+					while ${Me.TargetingCount} > 0
 				}
-				while ${Me.TargetingCount} > 0
 
 				call This.UpdateList
 				return TRUE
@@ -490,5 +590,24 @@ objectdef obj_Asteroids
 			return TRUE
 		}
 		return FALSE
+	}
+
+	member:int LockedAndLocking()
+	{
+		variable iterator Target
+		variable int AsteroidsLocked=0
+		Targets:UpdateLockedAndLockingTargets
+		Targets.LockedOrLocking:GetIterator[Target]
+
+		if ${Target:First(exists)}
+		do
+		{
+			if ${Target.Value.CategoryID} == ${Asteroids.AsteroidCategoryID}
+			{
+				AsteroidsLocked:Inc
+			}
+		}
+		while ${Target:Next(exists)}
+		return ${AsteroidsLocked}
 	}
 }

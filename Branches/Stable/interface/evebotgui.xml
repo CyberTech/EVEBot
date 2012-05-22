@@ -7,7 +7,7 @@
 		<X>200</X>
 		<Y>300</Y>
 		<Width>550</Width>
-		<Height>326</Height>
+		<Height>320</Height>
 		<Title>EVEBot Options</Title>
 		<TitleBar template='EVESkin.Window.TitleBar'>
 			<Width>100%</Width>
@@ -18,6 +18,7 @@
 					<OnLeftClick>
 						Script[EVEBot]:Resume
 						Script[EVEBot].VariableScope.EVEBot:Resume
+						Script[EVEBot].VariableScope.EVEBot.ReturnToStation:Set[FALSE]
 						Echo EVEBot: Resumed
 					</OnLeftClick>
 				</commandbutton>
@@ -70,6 +71,41 @@
 				<Height>100%</Height>
 				<Tabs>
 					<Tab Name='Status'>
+						<button	Name='BroadcastBreak' template='EveSkin.Window.ClickButton'>
+							<text>Broadcast Break</text>
+							<x>r160</x>
+							<y>10</y>
+							<width>150</width>
+							<height>20</height>
+							<OnLeftClick>
+								relay all -event EVEBot_HARDSTOP
+								Script[EVEBot].VariableScope.UI:UpdateConsole["Forcing Break!!!", LOG_MINOR]
+							</OnLeftClick>
+						</button>
+						<button	Name='BroadcastResume' template='EveSkin.Window.ClickButton'>
+							<text>Broadcast Resume</text>
+							<x>r160</x>
+							<y>30</y>
+							<width>150</width>
+							<height>20</height>
+							<OnLeftClick>
+								Social.NextBreak:Set[0]
+								Social.OnBreak:Set[FALSE]
+								relay all -event EVEBot_ABORTHARDSTOP
+								Script[EVEBot].VariableScope.UI:UpdateConsole["Resuming from break!!!", LOG_MINOR]
+							</OnLeftClick>
+						</button>
+						<button	Name='BroadcastRun' template='EveSkin.Window.ClickButton'>
+							<text>Broadcast Run</text>
+							<x>r160</x>
+							<y>50</y>
+							<width>150</width>
+							<height>20</height>
+							<OnLeftClick>
+								relay all Script[EVEBot]:Resume
+								relay all Script[EVEBot].VariableScope.EVEBot:Resume
+							</OnLeftClick>
+						</button>
 						<Text name='script_runtime'>
 							<X>10</X>
 							<Y>10</Y>
@@ -99,89 +135,75 @@
 							<Height>20</Height>
 							<Text>${Script[EVEBot].VariableScope.Config.Common.BotModeName}</Text>
 						</Text>
-						<Text name='Trips' template='EVESkin.Font.Description'>
-							<X>10</X>
-							<Y>40</Y>
-							<Width>100</Width>
-							<Height>20</Height>
-							<Text>Runs this Session:</Text>
-						</Text>
-						<Text name='Trips_Data' template='EVESkin.Font.Value'>
-							<X>150</X>
-							<Y>40</Y>
-							<Width>100</Width>
-							<Height>20</Height>
-							<Text>${Script[EVEBot].VariableScope.Miner.TotalTrips}</Text>
-						</Text>
-						<Text name='Aborts' template='EVESkin.Font.Description'>
-							<X>10</X>
-							<Y>55</Y>
-							<Width>100</Width>
-							<Height>20</Height>
-							<Text>Aborts this Session:</Text>
-						</Text>
-						<Text name='Aborts_Data' template='EVESkin.Font.Value'>
-							<X>150</X>
-							<Y>55</Y>
-							<Width>100</Width>
-							<Height>20</Height>
-							<Text>${Script[EVEBot].VariableScope.Config.Common.OurAbortCount}</Text>
-						</Text>
-						<Text name='avg_time' template='EVESkin.Font.Description'>
-							<X>10</X>
-							<Y>70</Y>
-							<Width>175</Width>
-							<Height>20</Height>
-							<Text>Time For Current Trip:</Text>
-						</Text>
-						<Text name='avg_time_data' template='EVESkin.Font.Value'>
-							<X>150</X>
-							<Y>70</Y>
-							<Width>150</Width>
-							<Height>20</Height>
-							<Text>${ISXEVE.SecsToString[${Script[EVEBot].VariableScope.Miner.TripDuration}]}</Text>
-						</Text>
-						<Text name='Average Time/Trip' template='EVESkin.Font.Description'>
-							<X>10</X>
-							<Y>85</Y>
-							<Width>175</Width>
-							<Height>20</Height>
-							<Text>Average Time per Trip:</Text>
-						</Text>
-						<Text name='Average Time/Trip Data' template='EVESkin.Font.Value'>
-							<X>150</X>
-							<Y>85</Y>
-							<Width>150</Width>
-							<Height>20</Height>
-							<Text>${ISXEVE.SecsToString[${Script[EVEBot].VariableScope.Miner.AverageTripSeconds}]}</Text>
-						</Text>
 						<Text name='Currently Training' template='EVESkin.Font.Description'>
 							<X>10</X>
-							<Y>115</Y>
+							<Y>40</Y>
 							<Width>175</Width>
 							<Height>20</Height>
 							<Text>Currently Training:</Text>
 						</Text>
 						<Text name='CurrentlyTrainingDATA' template='EVESkin.Font.Value'>
 							<X>150</X>
-							<Y>115</Y>
+							<Y>40</Y>
 							<Width>150</Width>
 							<Height>20</Height>
 							<Text>${Script[EVEBot].VariableScope.Skills.CurrentlyTrainingSkill}</Text>
 						</Text>
 						<Text name='Next to be trained' template='EVESkin.Font.Description'>
 							<X>10</X>
-							<Y>130</Y>
+							<Y>55</Y>
 							<Width>175</Width>
 							<Height>20</Height>
 							<Text>Next Queued:</Text>
 						</Text>
 						<Text name='nexttobetrainedDATA' template='EVESkin.Font.Value'>
 							<X>150</X>
-							<Y>130</Y>
+							<Y>55</Y>
 							<Width>150</Width>
 							<Height>20</Height>
 							<Text>${Script[EVEBot].VariableScope.Skills.NextInLine}</Text>
+						</Text>
+						<Text name='Current Timestamp' template='EVESkin.Font.Description'>
+							<X>10</X>
+							<Y>80</Y>
+							<Width>175</Width>
+							<Height>20</Height>
+							<Text>Current Timestamp:</Text>
+						</Text>
+						<Text name='CurrentTimestampDATA' template='EVESkin.Font.Value'>
+							<X>150</X>
+							<Y>80</Y>
+							<Width>150</Width>
+							<Height>20</Height>
+							<Text>${Script[EVEBot].VariableScope.Social.CurrentTime}</Text>
+						</Text>
+						<Text name='Next Break' template='EVESkin.Font.Description'>
+							<X>10</X>
+							<Y>95</Y>
+							<Width>175</Width>
+							<Height>20</Height>
+							<Text>Next Break:</Text>
+						</Text>
+						<Text name='NextBreakDATA' template='EVESkin.Font.Value'>
+							<X>150</X>
+							<Y>95</Y>
+							<Width>150</Width>
+							<Height>20</Height>
+							<Text>${Script[EVEBot].VariableScope.Social.NextBreakTime}</Text>
+						</Text>
+						<Text name='Break Over' template='EVESkin.Font.Description'>
+							<X>10</X>
+							<Y>110</Y>
+							<Width>175</Width>
+							<Height>20</Height>
+							<Text>Break Over:</Text>
+						</Text>
+						<Text name='BreakOverDATA' template='EVESkin.Font.Value'>
+							<X>150</X>
+							<Y>110</Y>
+							<Width>150</Width>
+							<Height>20</Height>
+							<Text>${Script[EVEBot].VariableScope.Social.RestartTime}</Text>
 						</Text>
 						<console Name="StatusConsole" template='EVESkin.Console'>
 							<X>5</X>
@@ -212,6 +234,7 @@
 								<Item Value='3'>Freighter</Item>
 								<Item Value='4'>Ratter</Item>
 								<Item Value='5'>Missioneer</Item>
+								<Item Value='6'>Guardian</Item>
 							</Items>
 							<OnSelect>
 								Script[EVEBot].VariableScope.Config.Common:SetBotMode[${This.SelectedItem.Value}]
@@ -570,6 +593,40 @@
 								Script[EVEBot].VariableScope.Config.Miner:SetUseMiningDrones[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
+						<checkbox name='cbOrcaMode'>
+							<X>300</X>
+							<Y>130</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Orca Mode </Text>
+							<AutoTooltip>When checked this will tell Evebot to operate an Orca, including managing boost modules</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Miner.OrcaMode}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Miner:SetOrcaMode[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>						
+						<checkbox name='cbOrcaWrecks'>
+							<X>300</X>
+							<Y>150</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Loot wrecks </Text>
+							<AutoTooltip>When checked this will have your orca tractor and loot wrecks (Must have a tractor beam)</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Miner.OrcaTractorLoot}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Miner:SetOrcaTractorLoot[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>						
 						<slider name='AvoidPlayerRange'>
 							<X>10</X>
 							<Y>110</Y>
@@ -706,6 +763,8 @@
 								<Item Value='3'>Jetcan</Item>
 								<Item Value='4'>XLarge Ship Assembly Array</Item>
 								<Item Value='5'>Large Ship Assembly Array</Item>
+								<Item Value='6'>Orca</Item>
+								<Item Value='7'>No Delivery</Item>
 							</Items>
 							<OnSelect>
 								Script[EVEBot].VariableScope.Config.Miner:SetDeliveryLocationType[${This.SelectedItem.Value}]
@@ -738,6 +797,30 @@
 								}
 							</OnChange>
 						</Textentry>
+						<Text name='PanicLocationLabel'>
+							<X>10</X>
+							<Y>250</Y>
+							<Width>250</Width>
+							<Height>18</Height>
+							<Text>Panic Location</Text>
+							<AutoTooltip>Station bookmark where you want to dock if something goes terribly wrong.  Can be in a different system.</AutoTooltip>
+						</Text>
+						<Textentry name='PanicLocation'>
+							<X>135</X>
+							<Y>250</Y>
+							<Width>350</Width>
+							<Height>18</Height>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Miner.PanicLocation}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Miner:SetPanicLocation[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+						
 					</Tab>
 					<Tab name='Combat'>
 						<checkbox name='cbAlwaysShieldBoost'>
@@ -1265,6 +1348,119 @@
 								This:SetText["Minimum Cap: ${UIElement[MinCapPct@Fleeing@EvEBotOptionsTab@EVEBot].Value}"]
 							</OnLoad>
 						</Text>
+						<checkbox name='cbBreaks'>
+							<X>10</X>
+							<Y>180</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Take a break for               hours every                hours.</Text>
+							<AutoTooltip>If checked, will dock your ship at your panic location every for a break according to the information specified.  Restart after changing these values.</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Combat.TakeBreaks}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Combat:SetTakeBreaks[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<combobox name='comboBreakDuration'>
+							<X>125</X>
+							<Y>180</Y>
+							<Width>50</Width>
+							<Height>15</Height>
+							<FullHeight>200</FullHeight>
+							<ButtonWidth>20</ButtonWidth>
+							<Items>
+								<Item Value='1'>1</Item>
+								<Item Value='2'>2</Item>
+							</Items>
+							<OnSelect>
+								Script[EVEBot].VariableScope.Config.Combat:SetBreakDuration[${This.SelectedItem.Value}]
+							</OnSelect>
+							<OnLoad>
+								This:SetSelection[${This.ItemByText[${Script[EVEBot].VariableScope.Config.Combat.BreakDuration}].ID}]
+							</OnLoad>
+						</combobox>
+						<combobox name='comboTimeBetweenBreaks'>
+							<X>250</X>
+							<Y>180</Y>
+							<Width>50</Width>
+							<Height>15</Height>
+							<FullHeight>200</FullHeight>
+							<ButtonWidth>20</ButtonWidth>
+							<Items>
+								<Item Value='1'>1</Item>
+								<Item Value='2'>2</Item>
+								<Item Value='3'>3</Item>
+								<Item Value='4'>4</Item>
+								<Item Value='5'>5</Item>
+								<Item Value='6'>6</Item>
+							</Items>
+							<OnSelect>
+								Script[EVEBot].VariableScope.Config.Combat:SetTimeBetweenBreaks[${This.SelectedItem.Value}]
+							</OnSelect>
+							<OnLoad>
+								This:SetSelection[${This.ItemByText[${Script[EVEBot].VariableScope.Config.Combat.TimeBetweenBreaks}].ID}]
+							</OnLoad>
+						</combobox>
+						<checkbox name='cbBreakBroadcast'>
+							<X>20</X>
+							<Y>200</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Relay break to all sessions</Text>
+							<AutoTooltip>If checked, will broadcast break to all sessions.</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Combat.BroadcastBreaks}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Combat:SetBroadcastBreaks[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox name='cbSafeCooldown'>
+							<X>10</X>
+							<Y>150</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Wait               minutes after unsafe pilots have left system</Text>
+							<AutoTooltip>If checked, will dock your ship at your panic location every for a break according to the information specified.  Restart after changing these values.</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Combat.UseSafeCooldown}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Combat:SetUseSafeCooldown[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<combobox name='comboSafeCooldown'>
+							<X>60</X>
+							<Y>150</Y>
+							<Width>50</Width>
+							<Height>15</Height>
+							<FullHeight>200</FullHeight>
+							<ButtonWidth>20</ButtonWidth>
+							<Items>
+								<Item Value='5'>5</Item>
+								<Item Value='10'>10</Item>
+								<Item Value='20'>20</Item>
+								<Item Value='30'>30</Item>
+								<Item Value='40'>40</Item>
+								<Item Value='60'>60</Item>
+							</Items>
+							<OnSelect>
+								Script[EVEBot].VariableScope.Config.Combat:SetSafeCooldown[${This.SelectedItem.Value}]
+							</OnSelect>
+							<OnLoad>
+								This:SetSelection[${This.ItemByText[${Script[EVEBot].VariableScope.Config.Combat.SafeCooldown}].ID}]
+							</OnLoad>
+						</combobox>
 					</Tab>
 					<Tab name='Missions'>
 						<Text name='lblRunTheseTypes'>
@@ -1593,8 +1789,9 @@
 							<ButtonWidth>20</ButtonWidth>
 							<Items>
 								<Item Value='1'>Service Fleet Members</Item>
-								<Item Value='2'>Service All Belts</Item>
-								<Item Value='3'>Service On-Demand</Item>
+								<Item Value='2'>Service On-Demand</Item>
+								<Item Value='3'>Service Orca</Item>
+								<Item Value='4'>Jetcan Mode (Flip-guard)</Item>
 							</Items>
 							<OnSelect>
 								Script[EVEBot].VariableScope.Config.Hauler:SetHaulerMode[${This.SelectedItem.Value}]
@@ -1645,6 +1842,29 @@
 								if ${This.Text.Length} > 0
 								{
 									Script[EVEBot].VariableScope.Config.Hauler:SetMiningSystemBookmark[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
+						<Text name='HaulerPickupLabel'>
+							<X>10</X>
+							<Y>60</Y>
+							<Width>180</Width>
+							<Height>10</Height>
+							<Text>Pickup Location</Text>
+							<AutoTooltip>The name of the fleet member flying your orca</AutoTooltip>
+						</Text>
+						<Textentry name='HaulerPickupName'>
+							<X>200</X>
+							<Y>60</Y>
+							<Width>250</Width>
+							<Height>18</Height>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Hauler.HaulerPickupName}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Hauler:SetHaulerPickupName[${This.Text}]
 								}
 							</OnChange>
 						</Textentry>
@@ -1899,6 +2119,152 @@
 								}
 							</OnChange>
 						</Textentry>
+					</Tab>
+					<Tab name='Fleet'>
+						<checkbox name='cbUseFleet'>
+							<X>10</X>
+							<Y>12</Y>
+							<Height>20</Height>
+							<Width>50</Width>
+							<Text>Manage Fleet</Text>
+							<AutoTooltip>If checked, Evebot will manage your fleet</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Fleet.ManageFleet}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Fleet:SetManageFleet[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox name='cbIsLeader'>
+							<X>10</X>
+							<Y>42</Y>
+							<Height>20</Height>
+							<Width>50</Width>
+							<Text>I am the leader</Text>
+							<AutoTooltip>If checked, this character will invite your fleet.  Don't set more than one!</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Fleet.IsLeader}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Fleet:SetIsLeader[${This.Checked}]
+								if ${This.Checked}
+								{
+									UIElement[tbFleetLeader@Fleet@EVEBotOptionsTab@EVEBot]:SetText[]
+								}
+							</OnLeftClick>
+						</checkbox>
+						<Text name='label2'>
+							<X>230</X>
+							<Y>18</Y>
+							<Width>200</Width>
+							<Height>18</Height>
+							<Text>Accept invites from</Text>
+						</Text>
+						<TextEntry name='tbFleetLeader'>
+							<X>390</X>
+							<Y>16</Y>
+							<Width>150</Width>
+							<Height>18</Height>
+							<MaxLength>50</MaxLength>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Fleet.FleetLeader}]
+							</OnLoad>
+							<OnChange>
+								Script[EVEBot].VariableScope.Config.Fleet:SetFleetLeader[${This.Text}]
+							</OnChange>
+						</Textentry>
+						<Text name='Label1'>
+							<X>140</X>
+							<Y>46</Y>
+							<Width>200</Width>
+							<Height>10</Height>
+							<Text>Manage Fleet Member</Text>
+							<AutoTooltip>Use this to add members to your fleet.  They must be in your corporation or in your contacts list.</AutoTooltip>
+						</Text>
+						<TextEntry name='tbAddFleetMember'>
+							<X>300</X>
+							<Y>40</Y>
+							<Width>200</Width>
+							<Height>18</Height>
+							<MaxLength>50</MaxLength>
+							<OnChange>
+								if ${Script[EVEBot].VariableScope.Config.Fleet.IsWing[${This.Text}]}
+									UIElement[cbWing@Fleet@EVEBotOptionsTab@EVEBot]:SetChecked
+								else
+									UIElement[cbWing@Fleet@EVEBotOptionsTab@EVEBot]:UnsetChecked 
+								
+							</OnChange>
+						</Textentry>
+						<button	Name='AddFleetMember' template='EVEskin.Add.Texture'>
+							<X>505</X>
+							<Y>41</Y>
+							<Width>16</Width>
+							<Height>16</Height>
+							<OnLeftClick>
+								if !${Script[EVEBot].VariableScope.Config.Fleet.IsListed[${UIElement[tbAddFleetMember@Fleet@EVEBotOptionsTab@EVEBot].Text}]}
+									UIElement[FleetMembers@Fleet@EVEBotOptionsTab@EVEBot]:AddItem[${UIElement[tbAddFleetMember@Fleet@EVEBotOptionsTab@EVEBot].Text}]
+								Script[EVEBot].VariableScope.Config.Fleet:AddFleetMember[${UIElement[tbAddFleetMember@Fleet@EVEBotOptionsTab@EVEBot].Text}]
+								UIElement[tbAddFleetMember@Fleet@EVEBotOptionsTab@EVEBot]:SetText[]
+							</OnLeftClick>
+						</button>
+						<button	Name='RemoveFleetMember' template='EVEskin.Remove.Texture'>
+							<X>525</X>
+							<Y>41</Y>
+							<Width>16</Width>
+							<Height>16</Height>
+							<OnLeftClick>
+								UIElement[FleetMembers@Fleet@EVEBotOptionsTab@EVEBot].ItemByText[${UIElement[tbAddFleetMember@Fleet@EVEBotOptionsTab@EVEBot].Text}]:Remove
+								Script[EVEBot].VariableScope.Config.Fleet:RemoveFleetMember[${UIElement[tbAddFleetMember@Fleet@EVEBotOptionsTab@EVEBot].Text}]
+							</OnLeftClick>
+						</button>
+						
+						<checkbox name='cbWing'>
+							<X>450</X>
+							<Y>65</Y>
+							<Height>20</Height>
+							<Width>50</Width>
+							<Text>Wing 2</Text>
+							<AutoTooltip>If checked, this character will be moved to Wing 2.  Used for people you don't want warped with your fleet.</AutoTooltip>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Fleet:SetWingOne[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>						
+						
+						<listbox Name='FleetMembers'>
+							<X>10</X>
+							<Y>90</Y>
+							<Width>530</Width>
+							<Height>175</Height>
+							<SelectMultiple>0</SelectMultiple>
+							<Sort>Text</Sort>
+							<AutoTooltip>These characters will be added to your fleet if EVEBot can find them in your Corporation or Contacts and "I am Leader" is checked.</AutoTooltip>
+							<OnLoad>
+								Script[EVEBot].VariableScope.Config.Fleet:RefreshFleetMembers
+								variable iterator InfoFromSettings
+								Script[EVEBot].VariableScope.Config.Fleet.FleetMembers:GetIterator[InfoFromSettings]
+								if ${InfoFromSettings:First(exists)}
+								{
+									do
+									{
+										This:AddItem[${InfoFromSettings.Value.FleetMemberName}]
+									}
+									while ${InfoFromSettings:Next(exists)}
+								}						
+							</OnLoad>
+							<OnSelect>
+								UIElement[tbAddFleetMember@Fleet@EVEBotOptionsTab@EVEBot]:SetText[${This.SelectedItem.Text}]
+								if ${Script[EVEBot].VariableScope.Config.Fleet.IsWing[${UIElement[tbAddFleetMember@Fleet@EVEBotOptionsTab@EVEBot].Text}]}
+									UIElement[cbWing@Fleet@EVEBotOptionsTab@EVEBot]:SetChecked		
+								else
+									UIElement[cbWing@Fleet@EVEBotOptionsTab@EVEBot]:UnsetChecked		
+							</OnSelect>
+						</listbox>
 					</Tab>
 				</Tabs>
 			</TabControl>

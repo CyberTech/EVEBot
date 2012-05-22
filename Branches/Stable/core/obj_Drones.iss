@@ -21,6 +21,8 @@ objectdef obj_Drones
 	variable int WaitingForDrones = 0
 	variable bool DronesReady = FALSE
 	variable int ShortageCount
+	
+	variable int64 MiningDroneTarget=0
 
 	method Initialize()
 	{
@@ -153,21 +155,14 @@ objectdef obj_Drones
 	}
 
 
-	function ReturnAllToDroneBay()
+	method ReturnAllToDroneBay()
 	{
-		while ${This.DronesInSpace} > 0
+		if ${This.DronesInSpace} > 0
 		{
 			UI:UpdateConsole["Recalling ${This.ActiveDroneIDList.Used} Drones"]
 			EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
 			EVE:Execute[CmdDronesReturnToBay]
-			if (${Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
-				${Me.Ship.ShieldPct} < ${Config.Combat.MinimumShieldPct})
-			{
-				; We don't wait for drones if we're on emergency warp out
-				wait 10
-				return
-			}
-			wait 50
+			
 		}
 	}
 
@@ -181,7 +176,17 @@ objectdef obj_Drones
 		if (${This.DronesInSpace} > 0)
 		{
 			EVE:DronesMineRepeatedly[This.ActiveDroneIDList]
+			MiningDroneTarget:Set[${Me.ActiveTarget}]
 		}
+	}
+	
+	member:bool IsMiningAsteroidID(int64 EntityID)
+	{
+		if ${MiningDroneTarget} == ${EntityID}
+		{
+			return TRUE
+		}
+		return FALSE
 	}
 
 	method SendDrones()

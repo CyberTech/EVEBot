@@ -39,6 +39,15 @@ objectdef obj_Social
 	variable set PilotWhiteList
 	variable set CorpWhiteList
 	variable set AllianceWhiteList
+	
+	variable int NextBreak=0
+	variable int NextRestart=0
+	variable bool OnBreak=FALSE
+	variable time CurrentTime
+	variable time NextBreakTime
+	variable time RestartTime
+	
+	variable int IsSafeCooldown=0
 
 	method Initialize()
 	{
@@ -108,6 +117,10 @@ objectdef obj_Social
 
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		Event[EVE_OnChannelMessage]:AttachAtom[This:OnChannelMessage]
+		LavishScript:RegisterEvent[EVEBot_HARDSTOP]
+		Event[EVEBot_HARDSTOP]:AttachAtom[This:TriggerHARDSTOP]
+		LavishScript:RegisterEvent[EVEBot_ABORTHARDSTOP]
+		Event[EVEBot_ABORTHARDSTOP]:AttachAtom[This:AbortHARDSTOP]
 
 		UI:UpdateConsole["obj_Social: Initialized", LOG_MINOR]
 	}
@@ -116,6 +129,8 @@ objectdef obj_Social
 	{
 		Event[EVE_OnChannelMessage]:DetachAtom[This:OnChannelMessage]
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
+		Event[EVEBot_HARDSTOP]:DetachAtom[This:TriggerHARDSTOP]
+		Event[EVEBot_ABORTHARDSTOP]:DetachAtom[This:AbortHARDSTOP]
 	}
 
 	method Pulse()
@@ -139,6 +154,36 @@ objectdef obj_Social
 
 			SystemSafe:Set[${Math.Calc[${This.CheckLocalWhiteList} & ${This.CheckLocalBlackList} & ${This.CheckStanding}].Int(bool)}]
 
+			if ${IsSafeCooldown} == 0 && !${SystemSafe} && ${Config.Combat.UseSafeCooldown}
+			{
+				IsSafeCooldown:Set[${Math.Calc[${Time.Timestamp} + (${Config.Combat.SafeCooldown} * 60)]}]
+			}
+
+			if ${IsSafeCooldown} != 0 && ${Config.Combat.UseSafeCooldown}
+			{
+				if ${Time.Timestamp} >= ${IsSafeCooldown}
+				{
+					IsSafeCooldown:Set[0]
+				}
+				else
+				{ 
+					if !${SystemSafe}
+					{
+						IsSafeCooldown:Set[${Math.Calc[${Time.Timestamp} + (${Config.Combat.SafeCooldown} * 60)]}]
+						echo Unsafe pilot still in system - Reset timer to ${IsSafeCooldown}
+					}
+					else
+					{
+						echo No unsafe pilots in system but still on cooldown
+					}
+					SystemSafe:Set[FALSE]
+				}
+			}
+			
+			
+			
+			This:ProcessBreak
+			
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
     		This.NextPulse:Update
@@ -309,7 +354,7 @@ objectdef obj_Social
 				UI:UpdateConsole["			${CorpToAlliance} < ${Config.Combat.LowestStanding}  ", LOG_DEBUG]
 				UI:UpdateConsole["		) ", LOG_DEBUG]
 				UI:UpdateConsole["	) ", LOG_DEBUG]
-				UI:UpdateConsole["Alert: Low Standing Pilot: ${PilotIterator.Value.Name}: CharID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_CRITICAL]
+				UI:UpdateConsole["Alert: Low Standing Pilot: ${PilotIterator.Value.Name}: CharID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_DEBUG]
 				UI:UpdateConsole["Standings: ${MeToPilot} ${MeToCorp} ${MeToAlliance} ${CorpToPilot} ${CorpToCorp} ${CorpToAlliance} ${AllianceToCorp} ${AllianceToAlliance}", LOG_DEBUG]
 
 				return FALSE
@@ -575,6 +620,69 @@ objectdef obj_Social
 		}
 
 		return ${bReturn}
+	}
+	
+	method ProcessBreak()
+	{
+		if ${Config.Combat.TakeBreaks}
+		{
+			if ${NextBreak} == 0 && !${OnBreak}
+			{
+				NextBreak:Set[${Math.Calc[${Time.Timestamp} + ${Config.Combat.TimeBetweenBreaks} * 3600 - 1200 + ${Math.Rand[2400]}]}]
+			}
+			
+			if ${NextBreak} <= ${Time.Timestamp} && !${OnBreak} && !${EVEBot.ReturnToStation}
+			{
+				UI:UpdateConsole["Taking a break!", LOG_CRITICAL]
+				if ${Config.Combat.BroadcastBreaks}
+				{
+					relay all -event EVEBot_HARDSTOP
+				}
+				else
+				{
+					EVEBot.ReturnToStation:Set[TRUE]
+				}
+				OnBreak:Set[TRUE]
+				NextBreak:Set[0]
+			}
+			
+			if ${NextRestart} == 0 && ${OnBreak}
+			{
+				NextRestart:Set[${Math.Calc[${Time.Timestamp} + ${Config.Combat.BreakDuration} * 3600 - 1200 + ${Math.Rand[2400]}]}]
+			}
+			
+			if ${NextRestart} <= ${Time.Timestamp} && ${OnBreak}
+			{
+				UI:UpdateConsole["Break over, back to work!", LOG_CRITICAL]
+				if ${Config.Combat.BroadcastBreaks}
+				{
+					relay all -event EVEBot_ABORTHARDSTOP
+				}
+				else
+				{
+					EVEBot.ReturnToStation:Set[FALSE]
+				}
+				OnBreak:Set[FALSE]
+				NextRestart:Set[0]
+			}
+		}
+		
+		CurrentTime:Set[${Time.Timestamp}]
+		NextBreakTime:Set[${NextBreak}]
+		RestartTime:Set[${NextRestart}]
+		
+	}
+
+	
+	;This method is triggered by an event.  If triggered, it tells us one of our fellow miners has entered the HARDSTOP state, and we should also run
+	method TriggerHARDSTOP()
+	{
+		EVEBot.ReturnToStation:Set[TRUE]
+	}
+	;This method is triggered by an event.  If triggered, it tells us one of our fellow miners has entered the HARDSTOP state, and we should also run
+	method AbortHARDSTOP()
+	{
+		EVEBot.ReturnToStation:Set[FALSE]
 	}
 
 }

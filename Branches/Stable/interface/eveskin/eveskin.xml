@@ -6,11 +6,35 @@
 	<template name='EVESkin.Window.TitleBar.PauseButton.Texture' Filename='eveskin/MainGUI/button_pause.png' />
 	<template name='EVESkin.Window.TitleBar.RunButton.Texture' Filename='eveskin/MainGUI/button_run.png' />
 
+	<template name='EVEskin.Add.Texture'>
+		<Texture Filename='eveskin/MainGUI/button_plus.png' />
+	</template>
+	<template name='EVEskin.Remove.Texture'>
+		<Texture Filename='eveskin/MainGUI/button_minimize.png' />
+	</template
+
+	
 	<template name='EVESkin.Window.Texture' Filename='eveskin/MainGUI/tab_frametexture.png' />
 
 	<template name='EVESkin.Window.TabButtonTexture' Filename='eveskin/MainGUI/button_empty.png' />
-	<template name='EVESkin.Window.TabButtonSelectedTexture' Filename='eveskin/MainGUI/button_empty.png' />
-	<template name='EVESkin.Window.TabButtonHoverTexture' Filename='eveskin/MainGUI/button_empty.png' />
+	<template name='EVESkin.Window.TabButtonSelectedTexture' Filename='eveskin/MainGUI/button_empty_selected.png' />
+	
+	<template name='EveSkin.Window.ClickButton'>
+		<Font template='Button.Font' />
+		<Texture Filename='eveskin/MainGUI/button_empty.png' />
+		<HoverTexture Filename='eveskin/MainGUI/button_empty_highlight.png' />
+	</template>	
+	<template name='EVESkin.Window.TabButtonLeftTexture'>
+		<Texture Filename='eveskin/MainGUI/button_left_long.png' />
+		<PressedTexture Filename='eveskin/MainGUI/button_left_long.png' />
+		<HoverTexture Filename='eveskin/MainGUI/button_left_long.png' />
+	</template>
+	<template name='EVESkin.Window.TabButtonRightTexture'>
+		<Texture Filename='eveskin/MainGUI/button_right_long.png' />
+		<PressedTexture Filename='eveskin/MainGUI/button_right_long.png' />
+		<HoverTexture Filename='eveskin/MainGUI/button_right_long.png' />
+	</template>
+	
 
 	<template name='EVESkin.Font.TitleBar'>	
 		<Name>Verdana</Name>
@@ -235,16 +259,14 @@
 		<FrameBorder>0</FrameBorder>
 		<FrameBorderColor>FFD4D0C8</FrameBorderColor>
 		<FrameTexture Template="EVESkin.Window.Texture" />		
-		<LeftTexture Template="EVESkin.Window.TabButtonTexture" />
-		<LeftPressedTexture Template="EVESkin.Window.TabButtonTexture" />
-		<LeftHoverTexture Template="EVESkin.Window.TabButtonTexture" />
-		<RightTexture Template="EVESkin.Window.TabButtonTexture" />
-		<RightPressedTexture Template="EVESkin.Window.TabButtonTexture" />
-		<RightHoverTexture Template="EVESkin.Window.TabButtonTexture" />
+		<LeftButton Template="EVESkin.Window.TabButtonLeftTexture" />
+		<RightButton Template="EVESkin.Window.TabButtonRightTexture" />
 		<TabTexture Template="EVESkin.Window.TabButtonTexture" />
 		<TabSelectedTexture Template="EVESkin.Window.TabButtonSelectedTexture" />
 	</template>
-	
+
+ 
+
 	<template name='EVESkin.Console'>
 		<Border>0</Border>
 		<Font template='Console.Font' />

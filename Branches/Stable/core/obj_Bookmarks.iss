@@ -34,11 +34,17 @@ objectdef obj_Bookmarks
 		This:CreateBookMark[FALSE, "${This.StoredLocation}"]
 	}
 	
+	member:bool CheckForStoredLocation()
+	{
+		return ${StoredLocation.Length} != 0
+	}
+	
 	method RemoveStoredLocation()
 	{
 		if ${This.StoredLocationExists}
 		{
 			EVE.Bookmark["${This.StoredLocation}"]:Remove
+			StoredLocation:Set[""]
 		}
 	}
 	

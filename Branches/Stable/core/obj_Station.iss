@@ -78,6 +78,18 @@ objectdef obj_Station
 			return FALSE
 		}
 	}
+	
+	member IsCorpHangarOpen()
+	{
+		if ${EVEWindow[Corporation Hangar](exists)}
+		{
+			return TRUE
+		}
+		else
+		{
+			return FALSE
+		}
+	}
 
 	member:bool Docked()
 	{
@@ -120,6 +132,26 @@ objectdef obj_Station
 		}
 	}
 
+	function OpenCorpHangar()
+	{
+		if ${This.Docked} == FALSE
+		{
+			return
+		}
+
+		if !${This.IsCorpHangarOpen}
+		{
+			UI:UpdateConsole["Opening Corp Cargo Hangar"]
+			Me.Station:OpenCorpHangar
+			wait WAIT_CARGO_WINDOW
+			while !${This.IsCorpHangarOpen}
+			{
+				wait 1
+			}
+			wait 10
+		}
+	}
+	
 	function CloseHangar()
 	{
 		if ${This.Docked} == FALSE
@@ -133,6 +165,26 @@ objectdef obj_Station
 			EVEWindow[hangarFloor]:Close
 			wait WAIT_CARGO_WINDOW
 			while ${This.IsHangarOpen}
+			{
+				wait 1
+			}
+			wait 10
+		}
+	}
+	
+	function CloseCorpHangar()
+	{
+		if ${This.Docked} == FALSE
+		{
+			return
+		}
+
+		if ${This.IsCorpHangarOpen}
+		{
+			UI:UpdateConsole["Closing Corp Cargo Hangar"]
+			Me.Station:OpenCorpHangar
+			wait WAIT_CARGO_WINDOW
+			while ${This.IsCorpHangarOpen}
 			{
 				wait 1
 			}
@@ -227,7 +279,7 @@ objectdef obj_Station
 			{
 				Entity[${StationID}]:Dock
 				UI:UpdateConsole["Approaching docking range..."]
-				wait 30
+				wait 200 ${This.DockedAtStation[${StationID}]}
 			}
 			while (${Entity[${StationID}].Distance} > DOCKING_RANGE)
 
@@ -237,15 +289,7 @@ objectdef obj_Station
 			do
 			{
 				Entity[${StationID}]:Dock
-		   		wait 30
-		   		Counter:Inc[1]
-		   		if (${Counter} > 20)
-		   		{
-					UI:UpdateConsole["Warning: Docking incomplete after 60 seconds", LOG_CRITICAL]
-					Entity[${StationID}]:Dock
-		      		Counter:Set[0]
-		   		}
-				;UI:UpdateConsole["DEBUG: StationExists = ${Entity[${StationID}](exists)}"]
+		   		wait 200 ${This.DockedAtStation[${StationID}]}
 			}
 			while !${This.DockedAtStation[${StationID}]}
 			wait 75

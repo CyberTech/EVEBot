@@ -22,6 +22,7 @@ objectdef obj_Ship
 	variable bool CargoIsOpen
 	variable int RetryUpdateModuleList
 	variable index:module ModuleList
+	variable index:module ModuleList_ShieldTransporters
 	variable index:module ModuleList_MiningLaser
 	variable index:module ModuleList_Weapon
 	variable index:module ModuleList_ECCM
@@ -47,6 +48,7 @@ objectdef obj_Ship
 	variable bool InteruptWarpWait = FALSE
 	variable bool AlertedInPod
 	variable uint ReloadingWeapons = 0
+
 	variable iterator ModulesIterator
 
 	variable obj_Drones Drones
@@ -112,13 +114,13 @@ objectdef obj_Ship
 					/* Shield Boosters
 						We boost to a higher % in here, as it's done during warp, so cap has time to regen.
 					*/
-					if !${MyShip.ToEntity.IsCloaked} && (${Me.Ship.ShieldPct} < 95 || ${Config.Combat.AlwaysShieldBoost})
+					if (!${MyShip.ToEntity.IsCloaked} && (${Me.Ship.ShieldPct} < 95 || ${Config.Combat.AlwaysShieldBoost})) && !${Miner.AtPanicBookmark}
 					{	/* Turn on the shield booster */
-						Ship:Activate_Hardeners[]
-						This:Activate_Shield_Booster[]
+							Ship:Activate_Hardeners[]
+							This:Activate_Shield_Booster[]
 					}
 
-					if !${MyShip.ToEntity.IsCloaked} && (${Me.Ship.ShieldPct} > 99 && !${Config.Combat.AlwaysShieldBoost})
+					if !${MyShip.ToEntity.IsCloaked} && (${Me.Ship.ShieldPct} > 99 && (!${Config.Combat.AlwaysShieldBoost}) || ${Miner.AtPanicBookmark})
 					{	/* Turn off the shield booster */
 						Ship:Deactivate_Hardeners[]
 						This:Deactivate_Shield_Booster[]
@@ -165,6 +167,7 @@ objectdef obj_Ship
 
 		return TRUE
 	}
+	
 
 	member:bool IsAmmoAvailable()
 	{
@@ -261,6 +264,185 @@ objectdef obj_Ship
 		return ${Math.Calc[${Me.Ship.CargoCapacity}-${Me.Ship.UsedCargoCapacity}]}
 	}
 
+	member:float CargoUsedSpace()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return 0
+		}
+
+		if ${Me.Ship.UsedCargoCapacity} < 0
+		{
+			return ${Me.Ship.CargoCapacity}
+		}
+		return ${Me.Ship.UsedCargoCapacity}
+	}
+	
+	method StackCargoHold()
+	{
+		if ${EVEWindow[MyShipCargo](exists)}
+		{
+			EVEWindow[MyShipCargo]:StackAll
+		}
+	}
+	
+	method  StackOreHold()
+	{
+		if ${EVEWindow[ByCaption, Ore Hold](exists)}
+		{
+			EVEWindow[ByCaption, Ore Hold]:StackAll
+		}
+	}
+	
+	member:float OreHoldMinimumFreeSpace()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		return ${Math.Calc[${EVEWindow[ByCaption, Ore Hold].Capacity}*0.02]}
+	}
+	
+	member:float OreHoldFreeSpace()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return 0
+		}
+		
+		return ${Math.Calc[${EVEWindow[ByCaption, Ore Hold].Capacity}-${EVEWindow[ByCaption, Ore Hold].UsedCapacity}]}
+	}
+	
+	member:bool OreHoldFull()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return FALSE
+		}
+
+		if ${This.OreHoldFreeSpace} <= ${This.OreHoldMinimumFreeSpace}
+		{
+			return TRUE
+		}
+		return FALSE
+	}
+	
+	method OpenOreHold()
+	{
+		if !${EVEWindow[ByCaption, Ore Hold](exists)}
+		{
+			Me.Ship:OpenOreHold
+		}
+	}
+	
+	member:bool OreHoldEmpty()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return FALSE
+		}
+
+		if ${EVEWindow[ByCaption, Ore Hold].UsedCapacity} == 0
+		{
+			return TRUE
+		}
+		return FALSE
+	}
+	
+	
+	method StackCorpHangar()
+	{
+		if ${EVEWindow[ByCaption, Corp Hangar](exists)}
+		{
+			EVEWindow[ByCaption, Corp Hangar]:StackAll
+		}
+	}
+	
+	member:float CorpHangarMinimumFreeSpace()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		return ${Math.Calc[${EVEWindow[ByCaption, Corp Hangar].Capacity}*0.02]}
+	}
+	
+	member:float CorpHangarFreeSpace()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return 0
+		}
+		
+		return ${Math.Calc[${EVEWindow[ByCaption, Corp Hangar].Capacity}-${EVEWindow[ByCaption, Corp Hangar].UsedCapacity}]}
+	}
+	
+	member:float CorpHangarUsedSpace(bool IgnoreCrystals=FALSE)
+	{
+		if !${Me.Ship(exists)}
+		{
+			return 0
+		}
+		
+		variable index:item HangarCargo
+		variable iterator CargoIterator
+		variable float Volume=0
+		Me.Ship:GetCorpHangarsCargo[HangarCargo]
+		if ${IgnoreCrystals}
+			HangarCargo:RemoveByQuery[${LavishScript.CreateQuery[Name =- "Mining Crystal"]}]
+		HangarCargo:GetIterator[CargoIterator]
+		if ${CargoIterator:First(exists)}
+			do
+			{
+					Volume:Inc[${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}]}]
+			}
+			while ${CargoIterator:Next(exists)}
+		return ${Volume}
+	}
+
+		
+
+	
+	
+	member:bool CorpHangarFull()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return FALSE
+		}
+
+		if ${This.CorpHangarFreeSpace} <= ${This.CorpHangarMinimumFreeSpace}
+		{
+			return TRUE
+		}
+		return FALSE
+	}
+
+	member:bool CorpHangarEmpty()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return FALSE
+		}
+
+		if ${EVEWindow[ByCaption, Corp Hangar].UsedCapacity} == 0
+		{
+			return TRUE
+		}
+		return FALSE
+	}
+	
+
+	method OpenCorpHangars()
+	{
+		if !${EVEWindow[ByCaption, Corp Hangar](exists)}
+		{
+			Me.Ship:OpenCorpHangars
+		}
+	}
+
 	member:bool CargoFull()
 	{
 		if !${Me.Ship(exists)}
@@ -283,6 +465,42 @@ objectdef obj_Ship
 		}
 
 		if ${This.CargoFreeSpace} <= ${Math.Calc[${Me.Ship.CargoCapacity}*0.50]}
+		{
+			return TRUE
+		}
+		return FALSE
+	}
+	
+	member:float CargoNoCrystals()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return 0
+		}
+		
+		variable index:item HangarCargo
+		variable iterator CargoIterator
+		variable float Volume=0
+		Me.Ship:GetCargo[HangarCargo]
+		HangarCargo:RemoveByQuery[${LavishScript.CreateQuery[Name =- "Mining Crystal"]}]
+		HangarCargo:GetIterator[CargoIterator]
+		if ${CargoIterator:First(exists)}
+			do
+			{
+					Volume:Inc[${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}]}]
+			}
+			while ${CargoIterator:Next(exists)}
+		return ${Volume}
+	}	
+	
+	member:bool CargoTenthFull()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return FALSE
+		}
+
+		if ${This.CargoNoCrystals} >= ${Math.Calc[${Me.Ship.CargoCapacity}*0.10]}
 		{
 			return TRUE
 		}
@@ -336,6 +554,7 @@ objectdef obj_Ship
 		This.ModuleList_TargetPainter:Clear
 		This.ModuleList_TrackingComputer:Clear
 		This.ModuleList_GangLinks:Clear
+		This.ModuleList_ShieldTransporters:Clear
 
 		Me.Ship:GetModules[This.ModuleList]
 
@@ -385,6 +604,9 @@ objectdef obj_Ship
 
 			switch ${GroupID}
 			{
+				case GROUPID_SHIELD_TRANSPORTER
+					This.ModuleList_ShieldTransporters:Insert[${ModuleIter.Value.ID}]
+					break
 				case GROUPID_DAMAGE_CONTROL
 				case GROUPID_SHIELD_HARDENER
 				case GROUPID_ARMOR_HARDENERS
@@ -593,12 +815,21 @@ objectdef obj_Ship
 
 		UI:UpdateConsole["Tracking Computer Modules:", LOG_MINOR, 2]
 		This.ModuleList_TrackingComputer:GetIterator[ModuleIter]
-		if ${Module:First(exists)}
+		if ${ModuleIter:First(exists)}
 		do
 		{
 			UI:UpdateConsole["	 Slot: ${ModuleIter.Value.ToItem.Slot}  ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
+
+		UI:UpdateConsole["Shield Transporter Modules:", LOG_MINOR, 2]
+		This.ModuleList_ShieldTransporters:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			UI:UpdateConsole["	 Slot: ${ModuleIter.Value.ToItem.Slot}  ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
+		}
+		while ${ModuleIter:Next(exists)}
 	}
 
 	method UpdateBaselineUsedCargo()
@@ -695,6 +926,31 @@ objectdef obj_Ship
 
 		return ${count}
 	}
+	member:int TotalActivatedShieldTransporters()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return 0
+		}
+
+		variable int count
+		variable iterator ModuleIter
+
+		This.ModuleList_ShieldTransporters:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if (${ModuleIter.Value.IsActive} || \
+				${ModuleIter.Value.IsGoingOnline} || \
+				${ModuleIter.Value.IsDeactivating})
+			{
+				count:Inc
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+
+		return ${count}
+	}	
 	member:int TotalActivatedSalvagers()
 	{
 		if !${Me.Ship(exists)}
@@ -749,7 +1005,7 @@ objectdef obj_Ship
 
 	; Note: This doesn't return ALL the mining amounts, just one.
 	; Returns the laser mining range minus 10%
-	member:int OptimalMiningRange()
+	member:int OptimalMiningRange(float Padding=0.90)
 	{
 		if !${Me.Ship(exists)}
 		{
@@ -761,7 +1017,26 @@ objectdef obj_Ship
 		This.ModuleList_MiningLaser:GetIterator[ModuleIter]
 		if ${ModuleIter:First(exists)}
 		{
-			return ${Math.Calc[${ModuleIter.Value.OptimalRange}*0.90]}
+			return ${Math.Calc[${ModuleIter.Value.OptimalRange} * ${Padding}]}
+		}
+
+		return 0
+	}
+
+	; Returns the shield transporter range minus 10%
+	member:int OptimalShieldTransporterRange(float Padding=0.90)
+	{
+		if !${Me.Ship(exists)}
+		{
+			return 0
+		}
+
+		variable iterator ModuleIter
+
+		This.ModuleList_ShieldTransporters:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		{
+			return ${Math.Calc[${ModuleIter.Value.OptimalRange} * ${Padding}]}
 		}
 
 		return 0
@@ -837,6 +1112,58 @@ objectdef obj_Ship
 		return FALSE
 	}
 
+	; Returns TRUE if we've got a shield transporter healing this entity already
+	member:bool IsShieldTransportingID(int64 EntityID)
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		variable iterator ModuleIter
+
+		This.ModuleList_ShieldTransporters:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if	${ModuleIter.Value.TargetID} == ${EntityID} && \
+				( ${ModuleIter.Value.IsActive} || ${ModuleIter.Value.IsGoingOnline} )
+			{
+				return TRUE
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+
+		return FALSE
+	}	
+
+	; Returns how many shield transporters healing this entity already
+	member:int ShieldTransportersOnID(int64 EntityID)
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		variable iterator ModuleIter
+		variable int val=0
+
+		This.ModuleList_ShieldTransporters:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if	${ModuleIter.Value.TargetID} == ${EntityID} && \
+				( ${ModuleIter.Value.IsActive} || ${ModuleIter.Value.IsGoingOnline} )
+			{
+				val:Inc[1]
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+
+		return ${val}
+	}	
+	
+	
 	member:bool IsTractoringWreckID(int64 EntityID)
 	{
 		if !${Me.Ship(exists)}
@@ -1071,7 +1398,7 @@ objectdef obj_Ship
 		}
 		while ${ModuleIter:Next(exists)}
 	}
-	function ActivateFreeMiningLaser()
+	function ActivateFreeMiningLaser(int64 id=-1)
 	{
 		variable string Slot
 
@@ -1102,7 +1429,14 @@ objectdef obj_Ship
 				if ${ModuleIter.Value.SpecialtyCrystalMiningAmount(exists)}
 				{
 					variable string OreType
-					OreType:Set[${Me.ActiveTarget.Name.Token[2,"("]}]
+					if ${id} == -1
+					{
+						OreType:Set[${Me.ActiveTarget.Name.Token[2,"("]}]
+					}
+					else
+					{
+						OreType:Set[${Entity[${id}].Name.Token[2,"("]}]
+					}
 					OreType:Set[${OreType.Token[1,")"]}]
 					;OreType:Set[${OreType.Replace["(",]}]
 					;OreType:Set[${OreType.Replace[")",]}]
@@ -1110,17 +1444,23 @@ objectdef obj_Ship
 				}
 
 				UI:UpdateConsole["Activating: ${Slot}: ${ModuleIter.Value.ToItem.Name}"]
-				ModuleIter.Value:Click
-				wait 25
+				if ${id} == -1
+				{
+					ModuleIter.Value:Activate
+				}
+				else
+				{
+					ModuleIter.Value:Activate[${id}]
+				}
+				wait 25 ${ModuleIter.Value.IsGoingOnline}
 				;TimedCommand ${Math.Rand[600]:Inc[300]} "Script[EVEBot].VariableScope.Ship:CycleMiningLaser[OFF, ${Slot}]"
 				return
 			}
-			wait 10
 		}
 		while ${ModuleIter:Next(exists)}
 	}
 
-	function ActivateFreeTractorBeam()
+	function ActivateFreeTractorBeam(int64 id=-1)
 	{
 		variable string Slot
 
@@ -1144,14 +1484,60 @@ objectdef obj_Ship
 				Slot:Set[${ModuleIter.Value.ToItem.Slot}]
 
 				UI:UpdateConsole["Activating: ${Slot}: ${ModuleIter.Value.ToItem.Name}"]
-				ModuleIter.Value:Click
-				wait 25
+				if ${id} == -1
+				{
+					ModuleIter.Value:Activate
+				}
+				else
+				{
+					ModuleIter.Value:Activate[${ID}]
+				}
+				wait 25 ${ModuleIter.Value.IsGoingOnline}
 				return
 			}
-			}
+		}
 		while ${ModuleIter:Next(exists)}
 	}
 
+	function ActivateFreeShieldTransporter(int64 id=-1)
+	{
+		variable string Slot
+
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		variable iterator ModuleIter
+
+		This.ModuleList_ShieldTransporters:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if !${ModuleIter.Value.IsActive} && \
+				!${ModuleIter.Value.IsGoingOnline} && \
+				!${ModuleIter.Value.IsDeactivating} && \
+				!${ModuleIter.Value.IsChangingAmmo} &&\
+				!${ModuleIter.Value.IsReloadingAmmo}
+			{
+				Slot:Set[${ModuleIter.Value.ToItem.Slot}]
+
+				UI:UpdateConsole["Activating: ${Slot}: ${ModuleIter.Value.ToItem.Name}"]
+				if ${id} == -1
+				{
+					ModuleIter.Value:Activate
+				}
+				else
+				{
+					ModuleIter.Value:Activate[${id}]
+				}
+				wait 25 ${ModuleIter.Value.IsGoingOnline}
+				return
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+	}
+	
 	function ActivateFreeSalvager()
 	{
 		variable string Slot
@@ -1327,6 +1713,7 @@ objectdef obj_Ship
 				}
 				wait 10
 			}
+			call Miner.FastWarp
 			call This.WarpWait
 			if ${Return} == 2
 			{
@@ -1535,6 +1922,7 @@ objectdef obj_Ship
 					{
 						DestinationBookmark:WarpTo
 					}
+					call Miner.FastWarp
 					wait 10
 				}
 				call This.WarpWait
@@ -1591,6 +1979,7 @@ objectdef obj_Ship
 						{
 							DestinationBookmark:WarpTo
 						}
+						call Miner.FastWarp
 						wait 10
 					}
 					call This.WarpWait
@@ -1625,6 +2014,7 @@ objectdef obj_Ship
 					{
 						DestinationBookmark:WarpTo
 					}
+					call Miner.FastWarp
 					wait 10
 				}
 				call This.WarpWait
@@ -1672,7 +2062,7 @@ objectdef obj_Ship
 		}
 		This:DeactivateAllMiningLasers[]
 		This:UnlockAllTargets[]
-		call This.Drones.ReturnAllToDroneBay
+		This.Drones:ReturnAllToDroneBay
 	}
 
 	member:bool InWarp()
@@ -1791,6 +2181,28 @@ objectdef obj_Ship
 		}
 	}
 
+	function Deactivate_Shield_Transporter(int64 id)
+	{
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+
+		variable iterator ModuleIter
+
+		This.ModuleList_ShieldTransporters:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+		if ${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsDeactivating} && ${ModuleIter.Value.TargetID} == ${id}
+			{
+				UI:UpdateConsole["Deactivating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
+				ModuleIter.Value:Deactivate
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+	}	
+	
 	method Deactivate_AfterBurner()
 	{
 		if !${Me.Ship(exists)}
@@ -2438,7 +2850,8 @@ objectdef obj_Ship
 			if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline}
 			{
 				UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
-				ModuleIter.Value:Click
+
+				ModuleIter.Value:Activate
 			}
 		}
 		while ${ModuleIter:Next(exists)}

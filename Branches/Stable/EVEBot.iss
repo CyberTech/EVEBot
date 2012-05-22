@@ -20,7 +20,6 @@
 #include core/obj_Bookmarks.iss
 #include core/obj_Jetcan.iss
 #include core/obj_Social.iss
-#include core/obj_Gang.iss
 #include core/obj_Assets.iss
 #include core/obj_IRC.iss
 #include core/obj_Safespots.iss
@@ -34,6 +33,7 @@
 #include core/obj_Market.iss
 #include core/obj_Items.iss
 #include core/obj_Autopilot.iss
+#include core/obj_Fleet.iss
 
 /* Behavior/Mode Includes */
 #include Behaviors/obj_Courier.iss
@@ -44,6 +44,7 @@
 #include Behaviors/obj_Ratter.iss
 #include Behaviors/obj_Scavenger.iss
 #include Behaviors/obj_Missioneer.iss
+#include Behaviors/obj_Guardian.iss
 
 function atexit()
 {
@@ -103,10 +104,11 @@ function main()
 	/* Script-Defined Behavior Objects */
 	declarevariable BotModules index:string script
 	declarevariable Miner obj_Miner script
-	declarevariable Hauler obj_OreHauler script
+	declarevariable Hauler obj_Hauler script
 	declarevariable Freighter obj_Freighter script
 	declarevariable Ratter obj_Ratter script
 	declarevariable Missioneer obj_Missioneer script
+	declarevariable Guardian obj_Guardian script
 
 	echo "${Time} EVEBot: Loaded"
 
@@ -177,9 +179,32 @@ function main()
 				wait 10
 			}
 			call ${BotModule.Value}.ProcessState
-			wait 5
+			call RandomDelay 500
 		}
 		while ${BotModule:Next(exists)}
-		wait 1
+		call RandomDelay 100
+
+		#if USE_ISXIM
+			;	Join IRC
+			if !${ChatIRC.IsConnected}
+			{
+				call ChatIRC.Connect
+			}		
+		#endif		
 	}
+}
+
+;	This function introduces a random delay to make evebot look more organic to data tracking.
+;	The delay should be minor and un-noticeable, unless you're a machine
+;	Range = Value plus or minus 50 milliseconds
+function RandomDelay(int base)
+{
+	variable int WaitTime
+	WaitTime:Set[${Math.Calc[${base} - 50 + ${Math.Rand[100]}]}]
+	variable int FinishTime=${LavishScript.RunningTime}
+	FinishTime:Inc[${WaitTime}]
+	do
+	{
+	}
+	while ${LavishScript.RunningTime}<${FinishTime}
 }
