@@ -86,36 +86,59 @@ objectdef obj_Asteroids
 		variable string Label
 		variable string prefix
 
-		while ${BeltBookMarkList.Used} > 0
+		if ${Config.Miner.IceMining}
 		{
-			RandomBelt:Set[${Math.Rand[${BeltBookMarkList.Used}]:Inc[1]}]
+			prefix:Set[${Config.Labels.IceBeltPrefix}]
+		}
+		else
+		{
+			prefix:Set[${Config.Labels.OreBeltPrefix}]
+		}
 
-			if ${Config.Miner.IceMining}
-			{
-				prefix:Set[${Config.Labels.IceBeltPrefix}]
-			}
-			else
-			{
-				prefix:Set[${Config.Labels.OreBeltPrefix}]
-			}
-
+		Label:Set[${BeltBookMarkList[${count}].Label}]
+		variable float Distance
+		while ${BeltBookMarkList.Used} > 1
+		{
+			RandomBelt:Set[${Math.Rand[${BeltBookMarkList.Used(int):Dec}]:Inc[1]}]
 			Label:Set[${BeltBookMarkList[${RandomBelt}].Label}]
 
 			if (${BeltBookMarkList[${RandomBelt}].SolarSystemID} != ${Me.SolarSystemID} || \
 				${Label.Left[${prefix.Length}].NotEqual[${prefix}]})
 			{
+				RandomBelt:Set[1]
 				BeltBookMarkList:Remove[${RandomBelt}]
 				BeltBookMarkList:Collapse
 				continue
 			}
 
+			if ${BeltBookMarkList[${RandomBelt}].X(exists)}
+				Distance:Set[${Math.Distance[${BeltBookMarkList[${RandomBelt}].X},${BeltBookMarkList[${RandomBelt}].Y},${BeltBookMarkList[${RandomBelt}].Z},${Me.ToEntity.X},${Me.ToEntity.Y},${Me.ToEntity.Z}]}]
+			else
+				Distance:Set[${Math.Distance[${BeltBookMarkList[${RandomBelt}].ToEntity.X},${BeltBookMarkList[${RandomBelt}].ToEntity.Y},${BeltBookMarkList[${RandomBelt}].ToEntity.Z},${Me.ToEntity.X},${Me.ToEntity.Y},${Me.ToEntity.Z}]}]
+
+			if ${Distance} < WARP_RANGE
+			{
+				; Must remove this belt to avoid inf loops
+				RandomBelt:Set[1]
+				BeltBookMarkList:Remove[${RandomBelt}]
+				BeltBookMarkList:Collapse
+				continue
+			}
+		}
+
+		if ${BeltBookMarkList.Used}
+		{
 			call Ship.WarpToBookMark ${BeltBookMarkList[${RandomBelt}].ID} ${FleetWarp}
 
 			This.BeltArrivalTime:Set[${Time.Timestamp}]
 			This.LastBookMarkIndex:Set[${RandomBelt}]
 			This.UsingBookMarks:Set[TRUE]
-			return
 		}
+		else
+		{
+			UI:UpdateConsole["DEBUG: obj_Asteroids:MoveToRandomBeltBookMark: No belt bookmarks found!", LOG_DEBUG]
+		}
+		return
 	}
 
 	function MoveToField(bool ForceMove, bool IgnoreTargeting=FALSE, bool FleetWarp=FALSE)
@@ -355,11 +378,11 @@ objectdef obj_Asteroids
 	}
 
 	member:int64 NearestAsteroid()
-	{		
+	{
 		return ${Entity["CategoryID = ${This.AsteroidCategoryID}"].ID}
 	}
-	
-	
+
+
 	method NextAsteroid()
 	{
 		AsteroidList:GetSettingIterator
@@ -459,8 +482,8 @@ objectdef obj_Asteroids
 		}
 
 		return FALSE
-	}	
-	
+	}
+
 	function:bool TargetNext(bool CalledFromMoveRoutine=FALSE, bool IgnoreTargeting=FALSE)
 	{
 		variable iterator AsteroidIterator
@@ -568,7 +591,7 @@ objectdef obj_Asteroids
 		}
 		return FALSE
 	}
-	
+
 	member:int LockedAndLocking()
 	{
 		variable iterator Target
