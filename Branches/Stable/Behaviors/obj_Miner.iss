@@ -97,6 +97,7 @@ objectdef obj_Miner
 		{
 			This:SetState[]
 
+			echo ${CurrentState}
     		This.NextPulse:Set[${Time.Timestamp}]
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
     		This.NextPulse:Update
@@ -399,6 +400,7 @@ objectdef obj_Miner
 			case MINE
 				if ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}](exists)} && ${EVE.Bookmark[${Config.Miner.MiningSystemBookmark}].SolarSystemID} != ${Me.SolarSystemID}
 				{
+					UI:UpdateConsole["Traveling to mining system - ${Universe[${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID}].Name}"]
 					call Ship.TravelToSystem ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID}
 				}
 				if ${Me.ToEntity.Mode} != 3
