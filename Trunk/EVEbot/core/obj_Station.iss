@@ -53,7 +53,7 @@ objectdef obj_Station
 
 	member IsHangarOpen()
 	{
-		if ${EVEWindow[hangarFloor](exists)}
+		if ${EVEWindow[ByCaption,"item hangar"](exists)}
 		{
 			return TRUE
 		}
@@ -119,7 +119,7 @@ objectdef obj_Station
 		if ${This.IsHangarOpen}
 		{
 			Logger:Log["Closing Cargo Hangar"]
-			EVEWindow[hangarFloor]:Close
+			EVEWindow[ByCaption,"item hangar"]:Close
 			wait WAIT_CARGO_WINDOW
 			while ${This.IsHangarOpen}
 			{

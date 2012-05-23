@@ -507,14 +507,14 @@ objectdef obj_Hauler
 		}
 		
 		;	Open the Orca if it's not open yet
-		if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && !${EVEWindow[ByName, ${Entity[${Orca.Escape}]}](exists)}
+		if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && !${EVEWindow[ByItemID, ${Entity[${Orca.Escape}]}](exists)}
 		{
 			UI:UpdateConsole["ALERT:  Open Hangar."]
 			Entity[${Orca.Escape}]:OpenCorpHangars
 			return
 		}
 		
-		if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && ${EVEWindow[ByName, ${Entity[${Orca.Escape}]}](exists)}
+		if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && ${EVEWindow[ByItemID, ${Entity[${Orca.Escape}]}](exists)}
 		{
 			UI:UpdateConsole["ALERT:  Transferring Cargo"]
 			call Cargo.TransferListFromShipCorporateHangar ${Entity[${Orca.Escape}]}
@@ -750,9 +750,9 @@ objectdef obj_Hauler
 			while ${Cargo:Next(exists)}
 		}
 
-		EVEWindow[ByName,${MyShip.ID}]:StackAll
+		EVEWindow[ByItemID,${MyShip.ID}]:StackAll
 		wait 10
-		;EVEWindow[ByName,${MyShip.ID}]:Close
+		;EVEWindow[ByItemID,${MyShip.ID}]:Close
 		;wait 10
 	}
 

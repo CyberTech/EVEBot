@@ -1608,16 +1608,16 @@ objectdef obj_Ship inherits obj_BaseClass
 
 	member IsCargoOpen()
 	{
-		if ${EVEWindow[MyShipCargo](exists)}
+		if ${EVEWindow[ByCaption,"active ship"](exists)}
 		{
-			if ${EVEWindow[MyShipCargo].Caption(exists)}
+			if ${EVEWindow[ByCaption,"active ship"].Caption(exists)}
 			{
 				return TRUE
 			}
 			else
 			{
-				Logger:Log["\${EVEWindow[MyShipCargo](exists)} == ${EVEWindow[MyShipCargo](exists)}", LOG_DEBUG]
-				Logger:Log["\${EVEWindow[MyShipCargo].Caption(exists)} == ${EVEWindow[MyShipCargo].Caption(exists)}", LOG_DEBUG]
+				Logger:Log["\${EVEWindow[ByCaption,"active ship"](exists)} == ${EVEWindow[ByCaption,"active ship"](exists)}", LOG_DEBUG]
+				Logger:Log["\${EVEWindow[ByCaption,"active ship"].Caption(exists)} == ${EVEWindow[ByCaption,"active ship"].Caption(exists)}", LOG_DEBUG]
 			}
 		}
 		return FALSE
@@ -1640,7 +1640,7 @@ objectdef obj_Ship inherits obj_BaseClass
 			variable int LoopCheck
 
 			LoopCheck:Set[0]
-			CaptionCount:Set[${EVEWindow[MyShipCargo].Caption.Token[2,"["].Token[1,"]"]}]
+			CaptionCount:Set[${EVEWindow[ByCaption,"active ship"].Caption.Token[2,"["].Token[1,"]"]}]
 			;Logger:Log["obj_Ship: Waiting for cargo to load: CaptionCount: ${CaptionCount}", LOG_DEBUG]
 			variable index:item MyCargo
 			MyShip:GetCargo[MyCargo]
@@ -1657,7 +1657,7 @@ objectdef obj_Ship inherits obj_BaseClass
 				MyShip:GetCargo[MyCargo]
 			}
 		}
-		EVEWindow[ByName,${MyShip.ID}]:StackAll
+		EVEWindow[ByItemID,${MyShip.ID}]:StackAll
 		wait 5
 	}
 
@@ -1668,7 +1668,7 @@ objectdef obj_Ship inherits obj_BaseClass
 		if ${This.IsCargoOpen}
 		{
 			Logger:Log["Closing Ship Cargohold"]
-			EVEWindow[MyShipCargo]:Close
+			EVEWindow[ByCaption,"active ship"]:Close
 			wait WAIT_CARGO_WINDOW
 			while ${This.IsCargoOpen}
 			{
@@ -1709,7 +1709,7 @@ objectdef obj_Ship inherits obj_BaseClass
 
 		if ${This.IsCargoOpen}
 		{
-			EVEWindow[ByName,${MyShip.ID}]:StackAll
+			EVEWindow[ByItemID,${MyShip.ID}]:StackAll
 		}
 	}
 

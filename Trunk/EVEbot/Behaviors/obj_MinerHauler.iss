@@ -280,9 +280,9 @@ objectdef obj_MinerHauler inherits obj_Hauler
 			while ${Cargo:Next(exists)}
 		}
 
-		EVEWindow[ByName,${MyShip.ID}]:StackAll
+		EVEWindow[ByItemID,${MyShip.ID}]:StackAll
 		wait 10
-		EVEWindow[ByName,${MyShip.ID}]:Close
+		EVEWindow[ByItemID,${MyShip.ID}]:Close
 		wait 10
 	}
 

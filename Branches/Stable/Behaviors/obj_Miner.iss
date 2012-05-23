@@ -598,13 +598,13 @@ objectdef obj_Miner
 						}
 						
 						;	Open the Orca if it's not open yet
-						if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && !${EVEWindow[ByName, ${Entity[${Orca.Escape}]}](exists)}
+						if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && !${EVEWindow[ByItemID, ${Entity[${Orca.Escape}]}](exists)}
 						{
 							Entity[${Orca.Escape}]:OpenCorpHangars
 							break
 						}
 						
-						if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && ${EVEWindow[ByName, ${Entity[${Orca.Escape}]}](exists)}
+						if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && ${EVEWindow[ByItemID, ${Entity[${Orca.Escape}]}](exists)}
 						{
 							call This.Prepare_Environment
 							call Cargo.TransferOreToShipCorpHangar ${Entity[${Orca.Escape}]}
@@ -815,13 +815,13 @@ objectdef obj_Miner
 			if ${Ship.CargoTenthFull}
 			{
 				;	Open the Orca if it's not open yet
-				if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && !${EVEWindow[ByName, ${Entity[${Orca.Escape}]}](exists)}
+				if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && !${EVEWindow[ByItemID, ${Entity[${Orca.Escape}]}](exists)}
 				{
 					Entity[${Orca.Escape}]:OpenCorpHangars
 					return
 				}
 				
-				if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && ${EVEWindow[ByName, ${Entity[${Orca.Escape}]}](exists)}
+				if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && ${EVEWindow[ByItemID, ${Entity[${Orca.Escape}]}](exists)}
 				{
 					call This.Prepare_Environment
 					call Cargo.TransferOreToShipCorpHangar ${Entity[${Orca.Escape}]}

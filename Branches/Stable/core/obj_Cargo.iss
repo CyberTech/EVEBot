@@ -1294,9 +1294,7 @@ objectdef obj_Cargo
 		TotalHauled:Inc[${TripHauled}]
 
 		call ChatIRC.Say "Hauled: ${TripHauled.Round} m3    This Hour: ${HourHauled.Round} m3    Total: ${TotalHauled.Round} m3"
-		EVEWindow[ByName,${MyShip.ID}]:StackAll
-		wait 10
-		EVEWindow[ByName,${MyShip.ID}]:Close
+		EVEWindow[ByItemID,${MyShip.ID}]:StackAll
 		wait 10
 		
 	}
@@ -1339,7 +1337,7 @@ objectdef obj_Cargo
 		call This.TransferListToShipCorporateHangar ${dest}
 
 		This.CargoToTransfer:Clear[]
-		EVEWindow[ByName,${dest}]:StackAll
+		EVEWindow[ByItemID,${dest}]:StackAll
 	}	
 	
 	function TransferCargoToHangar()
@@ -1409,7 +1407,7 @@ objectdef obj_Cargo
 				call This.TransferListToShip
 
 				This.CargoToTransfer:Clear[]
-				EVEWindow[ByName,${MyShip.ID}]:StackAll
+				EVEWindow[ByItemID,${MyShip.ID}]:StackAll
 				Ship:UpdateBaselineUsedCargo[]
 				call This.CloseHolds
 
@@ -1475,7 +1473,7 @@ objectdef obj_Cargo
 				call This.TransferListToShip
 
 				This.CargoToTransfer:Clear[]
-				EVEWindow[ByName,${MyShip.ID}]:StackAll
+				EVEWindow[ByItemID,${MyShip.ID}]:StackAll
 				Ship:UpdateBaselineUsedCargo[]
 				call This.CloseHolds
 
