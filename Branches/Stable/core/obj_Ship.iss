@@ -167,7 +167,7 @@ objectdef obj_Ship
 
 		return TRUE
 	}
-	
+
 
 	member:bool IsAmmoAvailable()
 	{
@@ -277,7 +277,7 @@ objectdef obj_Ship
 		}
 		return ${Me.Ship.UsedCargoCapacity}
 	}
-	
+
 	method StackCargoHold()
 	{
 		if ${EVEWindow[ByCaption,"active ship"](exists)}
@@ -285,7 +285,7 @@ objectdef obj_Ship
 			EVEWindow[ByCaption,"active ship"]:StackAll
 		}
 	}
-	
+
 	method  StackOreHold()
 	{
 		if ${EVEWindow[ByCaption, Ore Hold](exists)}
@@ -293,7 +293,7 @@ objectdef obj_Ship
 			EVEWindow[ByCaption, Ore Hold]:StackAll
 		}
 	}
-	
+
 	member:float OreHoldMinimumFreeSpace()
 	{
 		if !${Me.Ship(exists)}
@@ -303,17 +303,17 @@ objectdef obj_Ship
 
 		return ${Math.Calc[${EVEWindow[ByCaption, Ore Hold].Capacity}*0.02]}
 	}
-	
+
 	member:float OreHoldFreeSpace()
 	{
 		if !${Me.Ship(exists)}
 		{
 			return 0
 		}
-		
+
 		return ${Math.Calc[${EVEWindow[ByCaption, Ore Hold].Capacity}-${EVEWindow[ByCaption, Ore Hold].UsedCapacity}]}
 	}
-	
+
 	member:bool OreHoldFull()
 	{
 		if !${Me.Ship(exists)}
@@ -327,7 +327,7 @@ objectdef obj_Ship
 		}
 		return FALSE
 	}
-	
+
 	method OpenOreHold()
 	{
 		if !${EVEWindow[ByCaption, Ore Hold](exists)}
@@ -335,7 +335,7 @@ objectdef obj_Ship
 			Me.Ship:Open
 		}
 	}
-	
+
 	member:bool OreHoldEmpty()
 	{
 		if !${Me.Ship(exists)}
@@ -349,8 +349,8 @@ objectdef obj_Ship
 		}
 		return FALSE
 	}
-	
-	
+
+
 	method StackCorpHangar()
 	{
 		if ${EVEWindow[ByCaption, Corp Hangar](exists)}
@@ -358,7 +358,7 @@ objectdef obj_Ship
 			EVEWindow[ByCaption, Corp Hangar]:StackAll
 		}
 	}
-	
+
 	member:float CorpHangarMinimumFreeSpace()
 	{
 		if !${Me.Ship(exists)}
@@ -368,24 +368,24 @@ objectdef obj_Ship
 
 		return ${Math.Calc[${EVEWindow[ByCaption, Corp Hangar].Capacity}*0.02]}
 	}
-	
+
 	member:float CorpHangarFreeSpace()
 	{
 		if !${Me.Ship(exists)}
 		{
 			return 0
 		}
-		
+
 		return ${Math.Calc[${EVEWindow[ByCaption, Corp Hangar].Capacity}-${EVEWindow[ByCaption, Corp Hangar].UsedCapacity}]}
 	}
-	
+
 	member:float CorpHangarUsedSpace(bool IgnoreCrystals=FALSE)
 	{
 		if !${Me.Ship(exists)}
 		{
 			return 0
 		}
-		
+
 		variable index:item HangarCargo
 		variable iterator CargoIterator
 		variable float Volume=0
@@ -402,10 +402,10 @@ objectdef obj_Ship
 		return ${Volume}
 	}
 
-		
 
-	
-	
+
+
+
 	member:bool CorpHangarFull()
 	{
 		if !${Me.Ship(exists)}
@@ -433,7 +433,7 @@ objectdef obj_Ship
 		}
 		return FALSE
 	}
-	
+
 
 	method OpenCorpHangars()
 	{
@@ -470,14 +470,14 @@ objectdef obj_Ship
 		}
 		return FALSE
 	}
-	
+
 	member:float CargoNoCrystals()
 	{
 		if !${Me.Ship(exists)}
 		{
 			return 0
 		}
-		
+
 		variable index:item HangarCargo
 		variable iterator CargoIterator
 		variable float Volume=0
@@ -491,8 +491,8 @@ objectdef obj_Ship
 			}
 			while ${CargoIterator:Next(exists)}
 		return ${Volume}
-	}	
-	
+	}
+
 	member:bool CargoTenthFull()
 	{
 		if !${Me.Ship(exists)}
@@ -950,7 +950,7 @@ objectdef obj_Ship
 		while ${ModuleIter:Next(exists)}
 
 		return ${count}
-	}	
+	}
 	member:int TotalActivatedSalvagers()
 	{
 		if !${Me.Ship(exists)}
@@ -1135,7 +1135,7 @@ objectdef obj_Ship
 		while ${ModuleIter:Next(exists)}
 
 		return FALSE
-	}	
+	}
 
 	; Returns how many shield transporters healing this entity already
 	member:int ShieldTransportersOnID(int64 EntityID)
@@ -1161,9 +1161,9 @@ objectdef obj_Ship
 		while ${ModuleIter:Next(exists)}
 
 		return ${val}
-	}	
-	
-	
+	}
+
+
 	member:bool IsTractoringWreckID(int64 EntityID)
 	{
 		if !${Me.Ship(exists)}
@@ -1537,7 +1537,7 @@ objectdef obj_Ship
 		}
 		while ${ModuleIter:Next(exists)}
 	}
-	
+
 	function ActivateFreeSalvager()
 	{
 		variable string Slot
@@ -1632,6 +1632,8 @@ objectdef obj_Ship
 
 	function OpenCargo()
 	{
+		EVE:Execute[OpenCargoHoldOfActiveShip]
+		wait 1
 		if !${This.IsCargoOpen}
 		{
 			UI:UpdateConsole["Opening Ship Cargohold"]
@@ -2201,8 +2203,8 @@ objectdef obj_Ship
 			}
 		}
 		while ${ModuleIter:Next(exists)}
-	}	
-	
+	}
+
 	method Deactivate_AfterBurner()
 	{
 		if !${Me.Ship(exists)}
