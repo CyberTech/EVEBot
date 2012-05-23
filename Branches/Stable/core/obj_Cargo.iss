@@ -1331,7 +1331,7 @@ objectdef obj_Cargo
 	function TransferOreToShipCorpHangar(int64 dest)
 	{
 		UI:UpdateConsole["Transferring Ore to Corp Hangar"]
-		call Ship.OpenCargo
+		;call Ship.OpenCargo
 		
 		This:FindShipCargo[CATEGORYID_ORE]
 		call This.TransferListToShipCorporateHangar ${dest}
