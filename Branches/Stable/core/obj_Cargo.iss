@@ -1325,14 +1325,13 @@ objectdef obj_Cargo
 			echo ${Ship.CargoFreeSpace}
 			UI:UpdateConsole["DEBUG: obj_Cargo:TransferListToShipCorporateHangar: Nothing found to move"]
 		}
-		EVE:StackItems[MyStationHangar,Hangar]
 	}	
 	
 	function TransferOreToShipCorpHangar(int64 dest)
 	{
 		UI:UpdateConsole["Transferring Ore to Corp Hangar"]
-		call This.OpenHolds
-
+		call Ship.OpenCargo
+		
 		This:FindShipCargo[CATEGORYID_ORE]
 		call This.TransferListToShipCorporateHangar ${dest}
 
