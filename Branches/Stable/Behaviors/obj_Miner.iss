@@ -817,12 +817,14 @@ objectdef obj_Miner
 				;	Open the Orca if it's not open yet
 				if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && !${EVEWindow[ByItemID, ${Entity[${Orca.Escape}]}](exists)}
 				{
+					UI:UpdateConsole["Opening ${Entity[${Orca.Escape}].Name}'s Corporate Hangars"]
 					Entity[${Orca.Escape}]:Open
 					return
 				}
 				
 				if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && ${EVEWindow[ByItemID, ${Entity[${Orca.Escape}]}](exists)}
 				{
+					UI:UpdateConsole["Emptying ore to ${Entity[${Orca.Escape}].Name}'s Corporate Hangars"]
 					call This.Prepare_Environment
 					call Cargo.TransferOreToShipCorpHangar ${Entity[${Orca.Escape}]}
 					call Cargo.ReplenishCrystals ${Entity[${Orca.Escape}]}

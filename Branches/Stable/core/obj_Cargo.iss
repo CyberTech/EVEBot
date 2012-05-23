@@ -1319,6 +1319,7 @@ objectdef obj_Cargo
 			UI:UpdateConsole["Moving ${ListToMove.Used} items to hangar."]
 			EVE:MoveItemsTo[ListToMove, ${dest}, CorpHangars]
 			wait 10
+			EVEWindow[ByItemID,${dest}]:StackAll
 		}
 		else
 		{
@@ -1336,7 +1337,6 @@ objectdef obj_Cargo
 		call This.TransferListToShipCorporateHangar ${dest}
 
 		This.CargoToTransfer:Clear[]
-		EVEWindow[ByItemID,${dest}]:StackAll
 	}	
 	
 	function TransferCargoToHangar()
