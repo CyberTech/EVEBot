@@ -398,7 +398,7 @@ objectdef obj_Miner
 			;	This means we're in space and should mine some more ore!  Only one choice here - MINE!
 			;	It is prudent to make sure we're not warping, since you can't mine much in warp...
 			case MINE
-				if ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}](exists)} && ${EVE.Bookmark[${Config.Miner.MiningSystemBookmark}].SolarSystemID} != ${Me.SolarSystemID}
+				if ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}](exists)} && ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID} != ${Me.SolarSystemID}
 				{
 					UI:UpdateConsole["Traveling to mining system - ${Universe[${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID}].Name}"]
 					call Ship.TravelToSystem ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID}
@@ -413,7 +413,7 @@ objectdef obj_Miner
 			;	*	If we're warping, wait for that to finish up
 			;	*	If Orca In Belt is enabled, call OrcaInBelt
 			case ORCA
-				if ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}](exists)} && ${EVE.Bookmark[${Config.Miner.MiningSystemBookmark}].SolarSystemID} != ${Me.SolarSystemID}
+				if ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}](exists)} && ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID} != ${Me.SolarSystemID}
 				{
 					call Ship.TravelToSystem ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID}
 				}
