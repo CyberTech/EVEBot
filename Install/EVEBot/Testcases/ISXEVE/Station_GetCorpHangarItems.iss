@@ -17,7 +17,7 @@ function main()
 	variable obj_LSTypeIterator ItemTest = "item"
 	variable string MethodStr = "Me.Station:GetCorpHangarItems"
 
-	Me.Station:OpenCorpHangar
+	EVE:Execute[OpenHangarFloor]
 	wait 15
 
 	#include "../_Testcase_MethodStr_Body.iss"
