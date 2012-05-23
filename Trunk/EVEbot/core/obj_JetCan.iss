@@ -406,7 +406,7 @@ objectdef obj_JetCan
 			${Entity[${ID}](exists)}
 		{
 			Logger:Log["Opening JetCan"]
-			Entity[${ID}]:OpenCargo
+			Entity[${ID}]:Open
 			wait WAIT_CARGO_WINDOW
 
 			variable float TimeOut = 0

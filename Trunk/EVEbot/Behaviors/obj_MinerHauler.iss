@@ -237,7 +237,7 @@ objectdef obj_MinerHauler inherits obj_Hauler
 
 		Logger:Log["obj_OreHauler.LootEntity ${Entity[${id}].Name}(${id}) - Leaving ${leave} units"]
 
-		Entities.Peek:OpenCargo
+		Entities.Peek:Open
 		wait 20
 		Entity[${id}]:GetCargo[ContainerCargo]
 		ContainerCargo:GetIterator[Cargo]

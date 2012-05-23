@@ -143,7 +143,7 @@ objectdef obj_Scavenger
 				if ${Wreck.Value(exists)} && ${Wreck.Value.IsWreckEmpty} == FALSE
 				{
 					call Ship.Approach ${Wreck.Value.ID} LOOT_RANGE
-					Wreck.Value:OpenCargo
+					Wreck.Value:Open
 					wait 10
 					call Ship.OpenCargo
 					wait 10

@@ -262,7 +262,7 @@ objectdef obj_Ratter
 						This.CurrentState:Set["FIGHT"]
 						break
 					}
-					Wreck.Value:OpenCargo
+					Wreck.Value:Open
 					wait 10
 					call Ship.OpenCargo
 					wait 10

@@ -332,7 +332,7 @@ objectdef obj_Ship
 	{
 		if !${EVEWindow[ByCaption, Ore Hold](exists)}
 		{
-			Me.Ship:OpenOreHold
+			Me.Ship:Open
 		}
 	}
 	
@@ -439,7 +439,7 @@ objectdef obj_Ship
 	{
 		if !${EVEWindow[ByCaption, Corp Hangar](exists)}
 		{
-			Me.Ship:OpenCorpHangars
+			Me.Ship:Open
 		}
 	}
 

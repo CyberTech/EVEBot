@@ -510,7 +510,7 @@ objectdef obj_Hauler
 		if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && !${EVEWindow[ByItemID, ${Entity[${Orca.Escape}]}](exists)}
 		{
 			UI:UpdateConsole["ALERT:  Open Hangar."]
-			Entity[${Orca.Escape}]:OpenCorpHangars
+			Entity[${Orca.Escape}]:Open
 			return
 		}
 		
@@ -707,7 +707,7 @@ objectdef obj_Hauler
 
 		UI:UpdateConsole["obj_OreHauler.LootEntity ${Entity[${id}].Name}(${id}) - Leaving ${leave} units"]
 
-		Entity[${id}]:OpenCargo
+		Entity[${id}]:Open
 		wait 20
 		Entity[${id}]:GetCargo[ContainerCargo]
 		ContainerCargo:GetIterator[Cargo]

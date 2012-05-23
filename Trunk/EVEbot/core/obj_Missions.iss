@@ -1153,7 +1153,7 @@ objectdef obj_Missions
 
 		Logger:Log["DEBUG: obj_Missions.LootEntity ${entityID} ${typeID}"]
 
-		Entity[${entityID}]:OpenCargo
+		Entity[${entityID}]:Open
 		wait 50
 		Entity[${entityID}]:GetCargo[ContainerCargo]
 		ContainerCargo:GetIterator[Cargo]

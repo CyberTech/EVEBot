@@ -910,7 +910,7 @@ objectdef obj_MissionCommands
 					Logger:Log["DEBUG: obj_MissionCommands - In range attempting to open cargo",LOG_DEBUG]
 					lootEntityID:Set[${entID}]
 					LootEntityState:Set["OPENCARGO"]
-					Entity[${entID}]:OpenCargo
+					Entity[${entID}]:Open
 					return 1
 				}
 				return 1

@@ -466,7 +466,7 @@ objectdef obj_Combat
 					UI:UpdateConsole["Restocking from ${Entity["TypeID = 17621"]} (${Entity["TypeID = 17621"].ID})"]
 					call Ship.Approach ${Entity["TypeID = 17621"].ID} 2000
 					call Ship.OpenCargo
-					Entity["TypeID = 17621"]:OpenCargo
+					Entity["TypeID = 17621"]:Open
 
 					; Drop off all loot/leftover ammo
 					; TODO - don't dump the ammo we're using for our own weapons. Do dump other ammo that we might have looted.
@@ -481,7 +481,7 @@ objectdef obj_Combat
 					UI:UpdateConsole["Restocking from ${Entity["GroupID =340"]} (${Entity["GroupID = 340"].ID})"]
 					call Ship.Approach ${Entity["GroupID = 340"].ID} 2000
 
-					Entity["GroupID = 340"]:OpenCargo
+					Entity["GroupID = 340"]:Open
 					wait 30
 					Entity["GroupID = 340"]:GetCargo[ContainerItems]
 				}

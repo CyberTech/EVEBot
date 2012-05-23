@@ -373,8 +373,7 @@ objectdef obj_Miner
 				if ${Config.Miner.OrcaMode}
 				{
 					call Cargo.OpenHolds
-					Ship:OpenOreHold
-					Ship:OpenCorpHangars
+					Ship:Open
 					call Cargo.TransferCargoFromShipOreHoldToStation
 					call Cargo.TransferCargoFromShipCorporateHangarToStation
 					call Cargo.CloseHolds
@@ -390,8 +389,7 @@ objectdef obj_Miner
 				wait 600 ${Me.InSpace}
 				if ${Config.Miner.OrcaMode}
 				{
-					Ship:OpenOreHold
-					Ship:OpenCorpHangars
+					Ship:Open
 				}
 				call Cargo.OpenHolds
 				break
@@ -600,7 +598,7 @@ objectdef obj_Miner
 						;	Open the Orca if it's not open yet
 						if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && !${EVEWindow[ByItemID, ${Entity[${Orca.Escape}]}](exists)}
 						{
-							Entity[${Orca.Escape}]:OpenCorpHangars
+							Entity[${Orca.Escape}]:Open
 							break
 						}
 						
@@ -817,7 +815,7 @@ objectdef obj_Miner
 				;	Open the Orca if it's not open yet
 				if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && !${EVEWindow[ByItemID, ${Entity[${Orca.Escape}]}](exists)}
 				{
-					Entity[${Orca.Escape}]:OpenCorpHangars
+					Entity[${Orca.Escape}]:Open
 					return
 				}
 				
@@ -1102,8 +1100,8 @@ objectdef obj_Miner
 
 		
 		;	This section is for moving ore into the ore and cargo holds, so they will fill before the Corporate Hangar
-		Ship:OpenOreHold
-		Ship:OpenCorpHangars
+		Ship:Open
+
 		call This.Prepare_Environment
 		
 		if !${Ship.CorpHangarEmpty}
@@ -1448,7 +1446,7 @@ objectdef obj_Miner
 			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].Distance} <= LOOT_RANGE && !${Entity[${Tractoring}].LootWindow(exists)}
 			{
 				UI:UpdateConsole["Warning: Opening wreck"]
-				Entity[${Tractoring}]:OpenCargo
+				Entity[${Tractoring}]:Open
 				if ${Ship.IsTractoringWreckID[${Tractoring}]}
 				{
 					Ship:Deactivate_Tractor

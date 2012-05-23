@@ -121,7 +121,7 @@ objectdef obj_Scavenger
 				UI:UpdateConsole["Dropping off Loot at ${Entity[TypeID = 17621]} (${Entity[TypeID = 17621].ID})"]
 				call Ship.Approach ${Entity[TypeID = 17621].ID} 1500
 				call Ship.OpenCargo
-				Entity[${Entity[TypeID = 17621].ID}]:OpenCargo
+				Entity[${Entity[TypeID = 17621].ID}]:Open
 
 				call Cargo.TransferCargoToCorpHangarArray
 				return
@@ -237,7 +237,7 @@ objectdef obj_Scavenger
 
 						;echo "Salvaging: Looting"
 						call Ship.Approach ${Target.Value.ID} LOOT_RANGE
-						Target.Value:OpenCargo
+						Target.Value:Open
 						wait 10
 						call Ship.OpenCargo
 						wait 10
