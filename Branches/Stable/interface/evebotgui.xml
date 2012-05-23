@@ -1254,8 +1254,8 @@
 							<AutoTooltip>The lowest standing pilot we tolerate in system before we flee. It goes to -11!</AutoTooltip>
 						</Text>
 						<checkbox name='cbIncludeNeutralInCalc'>
-							<X>10</X>
-							<Y>150</Y>
+							<X>250</X>
+							<Y>127</Y>
 							<Height>20</Height>
 							<Width>100</Width>
 							<Text>Include Neutral (0.0) standings in standings check</Text>
