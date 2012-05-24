@@ -80,8 +80,6 @@ objectdef obj_Asteroids
 
 	function MoveToRandomBeltBookMark(bool FleetWarp=FALSE)
 	{
-		EVE:GetBookmarks[BeltBookMarkList]
-
 		variable int RandomBelt
 		variable string Label
 		variable string prefix
@@ -97,13 +95,16 @@ objectdef obj_Asteroids
 
 		Label:Set[${BeltBookMarkList[${count}].Label}]
 		variable float Distance
+
+		EVE:GetBookmarks[BeltBookMarkList]
+		BeltBookMarkList:RemoveByQuery[${LavishScript.CreateQuery[SolarSystemID != "${Me.SolarSystemID}"]}]
+		BeltBookMarkList:Collapse
 		while ${BeltBookMarkList.Used} > 1
 		{
 			RandomBelt:Set[${Math.Rand[${BeltBookMarkList.Used(int):Dec}]:Inc[1]}]
 			Label:Set[${BeltBookMarkList[${RandomBelt}].Label}]
 
-			if (${BeltBookMarkList[${RandomBelt}].SolarSystemID} != ${Me.SolarSystemID} || \
-				${Label.Left[${prefix.Length}].NotEqual[${prefix}]})
+			if ${Label.Left[${prefix.Length}].NotEqual[${prefix}]}
 			{
 				RandomBelt:Set[1]
 				BeltBookMarkList:Remove[${RandomBelt}]
