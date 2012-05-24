@@ -94,11 +94,12 @@ objectdef obj_Asteroids
 		}
 
 		Label:Set[${BeltBookMarkList[${count}].Label}]
-		variable float Distance
 
+		variable float Distance
 		EVE:GetBookmarks[BeltBookMarkList]
 		BeltBookMarkList:RemoveByQuery[${LavishScript.CreateQuery[SolarSystemID != "${Me.SolarSystemID}"]}]
 		BeltBookMarkList:Collapse
+
 		while ${BeltBookMarkList.Used} > 1
 		{
 			RandomBelt:Set[${Math.Rand[${BeltBookMarkList.Used(int):Dec}]:Inc[1]}]
@@ -106,9 +107,9 @@ objectdef obj_Asteroids
 
 			if ${Label.Left[${prefix.Length}].NotEqual[${prefix}]}
 			{
-				RandomBelt:Set[1]
 				BeltBookMarkList:Remove[${RandomBelt}]
 				BeltBookMarkList:Collapse
+				RandomBelt:Set[1]
 				continue
 			}
 
@@ -120,9 +121,9 @@ objectdef obj_Asteroids
 			if ${Distance} < WARP_RANGE
 			{
 				; Must remove this belt to avoid inf loops
-				RandomBelt:Set[1]
 				BeltBookMarkList:Remove[${RandomBelt}]
 				BeltBookMarkList:Collapse
+				RandomBelt:Set[1]
 				continue
 			}
 		}
