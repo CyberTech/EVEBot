@@ -1675,7 +1675,7 @@ objectdef obj_Ship
 		if ${This.IsCargoOpen}
 		{
 			UI:UpdateConsole["Closing Ship Cargohold"]
-			if ${EVEWindow[ByName,"Inventory"].Caption(exists)}
+			EVEWindow[ByName,"Inventory"]:Close
 			;EVEWindow[ByCaption,"active ship"]:Close
 			wait WAIT_CARGO_WINDOW
 			while ${This.IsCargoOpen}
