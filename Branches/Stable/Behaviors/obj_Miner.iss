@@ -96,6 +96,7 @@ objectdef obj_Miner
 	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			This:SetState[]
+			echo ${CurrentState}
 
 			echo ${CurrentState}
     		This.NextPulse:Set[${Time.Timestamp}]
@@ -529,18 +530,31 @@ objectdef obj_Miner
 						;	This checks to make sure there aren't any potential jet can flippers around before we dump a jetcan
 						if !${Social.PlayerInRange[10000]} && ${Config.Miner.DeliveryLocationTypeName.Equal["Jetcan"]}
 						{
-							if !${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)}
+							if !${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)} && ${Config.Miner.SafeJetcan}
 							{
 									This:NotifyHaulers[]
 							}
 							
-							;	This checks to make sure the player in our delivery location is in range and not warping before we dump a jetcan
-							if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)} && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3 && ${Ship.CargoHalfFull}
+							if ${Config.Miner.SafeJetcan}
 							{
-								call Cargo.TransferOreToJetCan
-								;	Need a wait here because it would try to move the same item more than once
-								wait 20
-								return
+								;	This checks to make sure the player in our delivery location is in range and not warping before we dump a jetcan
+								if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)} && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3 && ${Ship.CargoHalfFull}
+								{
+									call Cargo.TransferOreToJetCan
+									;	Need a wait here because it would try to move the same item more than once
+									wait 20
+									return
+								}
+							}
+							else
+							{
+								if ${Ship.CargoHalfFull}
+								{
+									call Cargo.TransferOreToJetCan
+									;	Need a wait here because it would try to move the same item more than once
+									wait 20
+									This:NotifyHaulers[]
+								}
 							}
 						}
 						break
@@ -958,18 +972,31 @@ objectdef obj_Miner
 		;	This checks to make sure there aren't any potential jet can flippers around before we dump a jetcan
 		if !${Social.PlayerInRange[10000]} && ${Config.Miner.DeliveryLocationTypeName.Equal["Jetcan"]}
 		{
-			if !${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)}
+			if !${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)} && ${Config.Miner.SafeJetcan}
 			{
 					This:NotifyHaulers[]
 			}
 			
-			;	This checks to make sure the player in our delivery location is in range and not warping before we dump a jetcan
-			if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)} && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3 && ${Ship.CargoHalfFull}
+			if ${Config.Miner.SafeJetcan}
 			{
-				call Cargo.TransferOreToJetCan
-				;	Need a wait here because it would try to move the same item more than once
-				wait 20
-				return
+				;	This checks to make sure the player in our delivery location is in range and not warping before we dump a jetcan
+				if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)} && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3 && ${Ship.CargoHalfFull}
+				{
+					call Cargo.TransferOreToJetCan
+					;	Need a wait here because it would try to move the same item more than once
+					wait 20
+					return
+				}
+			}
+			else
+			{
+				if ${Ship.CargoHalfFull}
+				{
+					call Cargo.TransferOreToJetCan
+					;	Need a wait here because it would try to move the same item more than once
+					wait 20
+					This:NotifyHaulers[]
+				}
 			}
 		}
 		
@@ -1149,18 +1176,31 @@ objectdef obj_Miner
 		;	This checks to make sure there aren't any potential jet can flippers around before we dump a jetcan
 		if !${Social.PlayerInRange[10000]} && ${Config.Miner.DeliveryLocationTypeName.Equal["Jetcan"]}
 		{
-			if !${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)}
+			if !${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)} && ${Config.Miner.SafeJetcan}
 			{
 					This:NotifyHaulers[]
 			}
 			
-			;	This checks to make sure the player in our delivery location is in range and not warping before we dump a jetcan
-			if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)} && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3 && ${Ship.CargoHalfFull}
+			if ${Config.Miner.SafeJetcan}
 			{
-				call Cargo.TransferOreToJetCan
-				;	Need a wait here because it would try to move the same item more than once
-				wait 20
-				return
+				;	This checks to make sure the player in our delivery location is in range and not warping before we dump a jetcan
+				if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)} && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3 && ${Ship.CargoHalfFull}
+				{
+					call Cargo.TransferOreToJetCan
+					;	Need a wait here because it would try to move the same item more than once
+					wait 20
+					return
+				}
+			}
+			else
+			{
+				if ${Ship.CargoHalfFull}
+				{
+					call Cargo.TransferOreToJetCan
+					;	Need a wait here because it would try to move the same item more than once
+					wait 20
+					This:NotifyHaulers[]
+				}
 			}
 		}
 		
