@@ -1615,9 +1615,11 @@ objectdef obj_Ship
 
 	member IsCargoOpen()
 	{
-		if ${EVEWindow[ByCaption,"active ship"](exists)}
+		;if ${EVEWindow[ByCaption,"active ship"](exists)}
+		if ${EVEWindow[ByName,"Inventory"](exists)}
 		{
-			if ${EVEWindow[ByCaption,"active ship"].Caption(exists)}
+			;if ${EVEWindow[ByCaption,"active ship"].Caption(exists)}
+			if ${EVEWindow[ByName,"Inventory"].Caption(exists)}
 			{
 				return TRUE
 			}
@@ -1632,8 +1634,8 @@ objectdef obj_Ship
 
 	function OpenCargo()
 	{
-		EVE:Execute[OpenCargoHoldOfActiveShip]
-		wait 1
+		;EVE:Execute[OpenCargoHoldOfActiveShip]
+		;wait 1
 		if !${This.IsCargoOpen}
 		{
 			UI:UpdateConsole["Opening Ship Cargohold"]
@@ -1673,7 +1675,8 @@ objectdef obj_Ship
 		if ${This.IsCargoOpen}
 		{
 			UI:UpdateConsole["Closing Ship Cargohold"]
-			EVEWindow[ByCaption,"active ship"]:Close
+			if ${EVEWindow[ByName,"Inventory"].Caption(exists)}
+			;EVEWindow[ByCaption,"active ship"]:Close
 			wait WAIT_CARGO_WINDOW
 			while ${This.IsCargoOpen}
 			{
