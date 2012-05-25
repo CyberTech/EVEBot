@@ -93,8 +93,6 @@ objectdef obj_Asteroids
 			prefix:Set[${Config.Labels.OreBeltPrefix}]
 		}
 
-		Label:Set[${BeltBookMarkList[${count}].Label}]
-
 		variable float Distance
 		EVE:GetBookmarks[BeltBookMarkList]
 		BeltBookMarkList:RemoveByQuery[${LavishScript.CreateQuery[SolarSystemID != "${Me.SolarSystemID}"]}]
