@@ -1282,7 +1282,7 @@ objectdef obj_Miner
 		{
 			do
 			{
-				if !${AttackingTeam.Contains[${CurrentAttack.Value.ID}]
+				if !${AttackingTeam.Contains[${CurrentAttack.Value.ID}]}
 				{
 					if ${Config.Common.BotModeName.Equal[Miner]}
 					{
