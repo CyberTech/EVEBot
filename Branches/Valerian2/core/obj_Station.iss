@@ -69,7 +69,7 @@ objectdef obj_Station
 
 	member IsHangarOpen()
 	{
-		if ${EVEWindow[hangarFloor](exists)}
+		if ${EVEWindow[ByCaption,"item hangar"](exists)}
 		{
 			return TRUE
 		}
@@ -142,7 +142,7 @@ objectdef obj_Station
 		if !${This.IsCorpHangarOpen}
 		{
 			UI:UpdateConsole["Opening Corp Cargo Hangar"]
-			Me.Station:OpenCorpHangar
+			EVE:Execute[OpenHangarFloor]
 			wait WAIT_CARGO_WINDOW
 			while !${This.IsCorpHangarOpen}
 			{
@@ -162,7 +162,7 @@ objectdef obj_Station
 		if ${This.IsHangarOpen}
 		{
 			UI:UpdateConsole["Closing Cargo Hangar"]
-			EVEWindow[hangarFloor]:Close
+			EVEWindow[ByCaption,"item hangar"]:Close
 			wait WAIT_CARGO_WINDOW
 			while ${This.IsHangarOpen}
 			{
@@ -182,7 +182,7 @@ objectdef obj_Station
 		if ${This.IsCorpHangarOpen}
 		{
 			UI:UpdateConsole["Closing Corp Cargo Hangar"]
-			Me.Station:OpenCorpHangar
+			EVE:Execute[OpenHangarFloor]
 			wait WAIT_CARGO_WINDOW
 			while ${This.IsCorpHangarOpen}
 			{

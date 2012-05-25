@@ -517,6 +517,16 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Orca Mode, ${value}]
 	}
 
+	member:bool SafeJetcan()
+	{
+		return ${This.MinerRef.FindSetting[Safe Jetcan, FALSE]}
+	}
+
+	method SetSafeJetcan(bool value)
+	{
+		This.MinerRef:AddSetting[Safe Jetcan, ${value}]
+	}
+	
 	member:bool OrcaTractorLoot()
 	{
 		return ${This.MinerRef.FindSetting[Orca Tractor Loot, FALSE]}

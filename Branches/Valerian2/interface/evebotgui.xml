@@ -774,6 +774,24 @@
 								This:SetSelection[${Script[EVEBot].VariableScope.Config.Miner.DeliveryLocationType}]
 							</OnLoad>
 						</combobox>
+						<checkbox name='cbSafeJetcan'>
+							<X>300</X>
+							<Y>210</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Safe Jetcan </Text>
+							<AutoTooltip>When checked this will force your miners to wait until the pilot specified in Location Name is within 20km before dropping a jetcan.</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Miner.SafeJetcan}
+								{
+									This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Miner:SetSafeJetcan[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>						
+						
 						<Text name='DeliveryLocationText'>
 							<X>15</X>
 							<Y>225</Y>

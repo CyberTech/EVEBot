@@ -1294,9 +1294,7 @@ objectdef obj_Cargo
 		TotalHauled:Inc[${TripHauled}]
 
 		call ChatIRC.Say "Hauled: ${TripHauled.Round} m3    This Hour: ${HourHauled.Round} m3    Total: ${TotalHauled.Round} m3"
-		EVEWindow[ByName,${MyShip.ID}]:StackAll
-		wait 10
-		EVEWindow[ByName,${MyShip.ID}]:Close
+		EVEWindow[ByItemID,${MyShip.ID}]:StackAll
 		wait 10
 		
 	}
@@ -1321,25 +1319,24 @@ objectdef obj_Cargo
 			UI:UpdateConsole["Moving ${ListToMove.Used} items to hangar."]
 			EVE:MoveItemsTo[ListToMove, ${dest}, CorpHangars]
 			wait 10
+			EVEWindow[ByItemID,${dest}]:StackAll
 		}
 		else
 		{
 			echo ${Ship.CargoFreeSpace}
 			UI:UpdateConsole["DEBUG: obj_Cargo:TransferListToShipCorporateHangar: Nothing found to move"]
 		}
-		EVE:StackItems[MyStationHangar,Hangar]
 	}	
 	
 	function TransferOreToShipCorpHangar(int64 dest)
 	{
 		UI:UpdateConsole["Transferring Ore to Corp Hangar"]
-		call This.OpenHolds
-
+		;call Ship.OpenCargo
+		
 		This:FindShipCargo[CATEGORYID_ORE]
 		call This.TransferListToShipCorporateHangar ${dest}
 
 		This.CargoToTransfer:Clear[]
-		EVEWindow[ByName,${dest}]:StackAll
 	}	
 	
 	function TransferCargoToHangar()
@@ -1409,7 +1406,7 @@ objectdef obj_Cargo
 				call This.TransferListToShip
 
 				This.CargoToTransfer:Clear[]
-				EVEWindow[ByName,${MyShip.ID}]:StackAll
+				EVEWindow[ByItemID,${MyShip.ID}]:StackAll
 				Ship:UpdateBaselineUsedCargo[]
 				call This.CloseHolds
 
@@ -1475,7 +1472,7 @@ objectdef obj_Cargo
 				call This.TransferListToShip
 
 				This.CargoToTransfer:Clear[]
-				EVEWindow[ByName,${MyShip.ID}]:StackAll
+				EVEWindow[ByItemID,${MyShip.ID}]:StackAll
 				Ship:UpdateBaselineUsedCargo[]
 				call This.CloseHolds
 

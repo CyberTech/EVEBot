@@ -39,6 +39,7 @@ objectdef obj_Safespots
 		}
 		SafeSpots:Collapse
 		SafeSpots:GetIterator[SafeSpotIterator]
+		SafeSpotIterator:First
 
 		if !${SupressSpam}
 		{
@@ -78,6 +79,10 @@ objectdef obj_Safespots
 		if ${SafeSpots.Used} == 0
 		{
 			This:ResetSafeSpotList[${SupressSpam}]
+			if ${SafeSpots.Used} == 0
+			{
+				return FALSE
+			}
 		}
 
 		; big debug block to get to the bottom of the "safe spot problem"
@@ -91,7 +96,11 @@ objectdef obj_Safespots
 		;UI:UpdateConsole["DEBUG: obj_Safespots.IsAtSafespot: DIST = ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${SafeSpotIterator.Value.X}, ${SafeSpotIterator.Value.Y}, ${SafeSpotIterator.Value.Z}]}"]
 
 		; Are we within warp range of the bookmark?
-		if ${SafeSpotIterator.Value.ItemID} > -1
+		if !${SafeSpotIterator.Value(exists)}
+		{
+			return FALSE
+		}
+		elseif ${SafeSpotIterator.Value.ItemID} > -1
 		{
             ;UI:UpdateConsole["DEBUG: obj_Safespots.IsAtSafespot: ItemID = ${SafeSpotIterator.Value.ItemID}"]
 			if ${Me.ToEntity.DistanceTo[${SafeSpotIterator.Value.ItemID}]} < WARP_RANGE
