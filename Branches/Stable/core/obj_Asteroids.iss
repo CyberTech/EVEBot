@@ -99,6 +99,8 @@ objectdef obj_Asteroids
 		EVE:GetBookmarks[BeltBookMarkList]
 		BeltBookMarkList:RemoveByQuery[${LavishScript.CreateQuery[SolarSystemID != "${Me.SolarSystemID}"]}]
 		BeltBookMarkList:Collapse
+		; This needs to be initialized somewhere. May as well be here! -- Valerian
+		RandomBelt:Set[1]
 
 		while ${BeltBookMarkList.Used} > 1
 		{
