@@ -1262,7 +1262,10 @@ objectdef obj_Miner
 	;This method is triggered by an event.  If triggered, it tells a team-mate is under attack by an NPC and what it is.
 	method UnderAttack(int64 value)
 	{
-
+		if !${Config.Common.BotModeName.Equal[Miner]}
+		{
+			return
+		}
 		AttackingTeam:Add[${value}]
 		UI:UpdateConsole["Warning: Added ${value} to attackers list.  ${AttackingTeam.Used} attackers now in list."]
 	}
@@ -1279,8 +1282,14 @@ objectdef obj_Miner
 		{
 			do
 			{
-			UI:UpdateConsole["Warning: Ship attacked by rats, alerting team to kill ${CurrentAttack.Value.Name}"]
-			Relay all -event EVEBot_TriggerAttack ${CurrentAttack.Value.ID}
+				if !${AttackingTeam.Contains[${CurrentAttack.Value.ID}]
+				{
+					if ${Config.Common.BotModeName.Equal[Miner]}
+					{
+						UI:UpdateConsole["Warning: Ship attacked by rats, alerting team to kill ${CurrentAttack.Value.Name}"]
+					}
+					Relay all -event EVEBot_TriggerAttack ${CurrentAttack.Value.ID}
+				}
 			}
 			while ${CurrentAttack:Next(exists)}
 		}
