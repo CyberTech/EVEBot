@@ -244,7 +244,7 @@ objectdef obj_Miner
 				{
 					break
 				}
-				This:Cleanup_Environment
+				Ship.Drones:ReturnAllToDroneBay
 				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
 					if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].TypeID} != 5
@@ -300,7 +300,7 @@ objectdef obj_Miner
 				{
 					break
 				}
-				This:Cleanup_Environment
+				Ship.Drones:ReturnAllToDroneBay
 				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
 					if ${Config.Miner.BookMarkLastPosition} && !${Bookmarks.CheckForStoredLocation}
@@ -425,7 +425,7 @@ objectdef obj_Miner
 			;	This means we need to go to our delivery location to unload.
 			case DROPOFF
 				;	Clean up before we leave
-				This:Cleanup_Environment
+				Ship.Drones:ReturnAllToDroneBay
 
 
 				;	Before we go anywhere, make a bookmark so we can get back here
@@ -585,7 +585,7 @@ objectdef obj_Miner
 						;	Find out if we need to approach this target
 						if ${Entity[${Orca.Escape}].Distance} > LOOT_RANGE && ${This.Approaching} == 0
 						{
-							UI:UpdateConsole["ALERT:  Approaching to within loot range."]
+							UI:UpdateConsole["Miner.ProcessState: Approaching Orca to within loot range (currently ${Entity[${Orca.Escape}].Distance})"]
 							Entity[${Orca.Escape}]:Approach[LOOT_RANGE]
 							This.Approaching:Set[${Entity[${Orca.Escape}]}]
 							This.TimeStartedApproaching:Set[${Time.Timestamp}]
@@ -602,7 +602,7 @@ objectdef obj_Miner
 						;	If we're approaching a target, find out if we need to stop doing so
 						if (${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= LOOT_RANGE && ${This.Approaching} != 0) || (!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
 						{
-							UI:UpdateConsole["ALERT:  Within loot range."]
+							UI:UpdateConsole["Miner.ProcessState - Within loot range of ${Entity[${This.Approaching}].Name}(${Entity[${This.Approaching}].ID})"]
 							EVE:Execute[CmdStopShip]
 							This.Approaching:Set[0]
 							This.TimeStartedApproaching:Set[0]
@@ -617,7 +617,7 @@ objectdef obj_Miner
 
 						if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && ${EVEWindow[ByItemID, ${Entity[${Orca.Escape}]}](exists)}
 						{
-							call This.Prepare_Environment
+							call Ship.OpenCargo
 							call Cargo.TransferOreToShipCorpHangar ${Entity[${Orca.Escape}]}
 						}
 						break
@@ -698,7 +698,12 @@ objectdef obj_Miner
 		}
 
 		Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
-		if ${Ship.TotalActivatedMiningLasers} == 0 && ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && ${Me.ToEntity.Mode} == 3 && ${Entity[${Orca.Escape}].Mode} == 3 && ${Ship.Drones.DronesInSpace} != 0 && !${EVEBot.ReturnToStation}
+		if ${Ship.TotalActivatedMiningLasers} == 0 && \
+			${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && \
+			${Me.ToEntity.Mode} == 3 && \
+			${Entity[${Orca.Escape}].Mode} == 3 && \
+			${Ship.Drones.DronesInSpace} != 0 && \
+			!${EVEBot.ReturnToStation}
 		{
 			EVE:Execute[CmdStopShip]
 			do
@@ -728,7 +733,7 @@ objectdef obj_Miner
 			call Asteroids.MoveToField FALSE TRUE
 			call Asteroids.UpdateList
 		}
-		call This.Prepare_Environment
+		call Ship.OpenCargo
 
 		;	If our ship has no mining lasers, panic so the user knows to correct their configuration and try again
 		if ${Ship.TotalMiningLasers} == 0
@@ -777,7 +782,7 @@ objectdef obj_Miner
 					Entity[${Orca.Escape}]:WarpTo[1000]
 					return
 				}
-				UI:UpdateConsole["ALERT:  Approaching to within loot range."]
+				UI:UpdateConsole["Miner.Mine: Approaching Orca to within loot range (currently ${Entity[${Orca.Escape}].Distance})"]
 				Entity[${Orca.Escape}]:Approach[LOOT_RANGE]
 				This.Approaching:Set[${Entity[${Orca.Escape}]}]
 				This.TimeStartedApproaching:Set[${Time.Timestamp}]
@@ -797,9 +802,12 @@ objectdef obj_Miner
 
 			;	If we're approaching a target, find out if we need to stop doing so.
 			;	After moving, we need to find out if any of our targets are out of mining range and unlock them so we can get new ones.
-			if (${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= LOOT_RANGE && ${This.Approaching} != 0) || (!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
+			if (${Entity[${This.Approaching}](exists)} && \
+				${Entity[${This.Approaching}].Distance} <= LOOT_RANGE && \
+				${This.Approaching} != 0) || \
+				(!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
 			{
-				UI:UpdateConsole["ALERT:  Within loot range."]
+				UI:UpdateConsole["Miner.Mine: Within loot range of ${Entity[${This.Approaching}].Name}(${Entity[${This.Approaching}].ID})"]
 				EVE:Execute[CmdStopShip]
 				This.Approaching:Set[0]
 				This.TimeStartedApproaching:Set[0]
@@ -814,7 +822,7 @@ objectdef obj_Miner
 				{
 					if ${Entity[${Target.Value.ID}].Distance} > ${Ship.OptimalMiningRange}
 					{
-						UI:UpdateConsole["ALERT:  unlocking ${Target.Value.Name} as it is out of range after we moved."]
+						UI:UpdateConsole["Miner.Mine: Unlocking ${Target.Value.Name} as it is out of range after we moved."]
 						Target.Value:UnlockTarget
 					}
 				}
@@ -836,16 +844,12 @@ objectdef obj_Miner
 				if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && ${EVEWindow[ByItemID, ${Entity[${Orca.Escape}]}](exists)}
 				{
 					UI:UpdateConsole["Emptying ore to ${Entity[${Orca.Escape}].Name}'s Corporate Hangars"]
-					call This.Prepare_Environment
+					call Ship.OpenCargo
 					call Cargo.TransferOreToShipCorpHangar ${Entity[${Orca.Escape}]}
 					call Cargo.ReplenishCrystals ${Entity[${Orca.Escape}]}
 				}
 			}
 		}
-
-
-
-
 
 		;	Here is where we lock new asteroids.  We always want to do this if we have no asteroids locked.  If we have at least one asteroid locked, however,
 		;	we should only lock more asteroids if we're not ice mining
@@ -894,9 +898,7 @@ objectdef obj_Miner
 					This.ConcentrateFire:Set[TRUE]
 				}
 			}
-
 		}
-
 
 		;	Time to get those lasers working!
 		if ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers}
@@ -918,7 +920,6 @@ objectdef obj_Miner
 					continue
 				}
 
-
 				;	So this is an asteroid.  If we're not mining it or Distributed Laser Targetting is turned off, we should mine it.
 				;	Also, if we're ice mining, we don't need to mine other asteroids, and if there aren't more asteroids to target we should mine this one.
 				if ${This.ConcentrateFire} || \
@@ -930,7 +931,7 @@ objectdef obj_Miner
 					;	Find out if we need to approach this target - also don't approach if we're approaching another target
 					if ${Entity[${Target.Value.ID}].Distance} > ${Ship.OptimalMiningRange[1]} && ${This.Approaching} == 0
 					{
-						UI:UpdateConsole["Approaching ${Target.Value.Name}"]
+						UI:UpdateConsole["Miner.Mine: Approaching ${Target.Value.Name}"]
 						Entity[${Target.Value.ID}]:Approach[${Ship.OptimalMiningRange[1]}]
 						This.Approaching:Set[${Target.Value.ID}]
 						This.TimeStartedApproaching:Set[${Time.Timestamp}]
@@ -965,7 +966,11 @@ objectdef obj_Miner
 		}
 
 		;	If we're approaching a target, find out if we need to stop doing so
-		if (${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= ${Ship.OptimalMiningRange[1]} && ${This.Approaching} != 0 && !${This.ApproachingOrca}) || (!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
+		if (${Entity[${This.Approaching}](exists)} && \
+			${Entity[${This.Approaching}].Distance} <= ${Ship.OptimalMiningRange[1]} && \
+			${This.Approaching} != 0 && \
+			!${This.ApproachingOrca}) || \
+			(!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
 		{
 			EVE:Execute[CmdStopShip]
 			This.Approaching:Set[0]
@@ -1002,10 +1007,7 @@ objectdef obj_Miner
 				}
 			}
 		}
-
-
 	}
-
 
 /*
 ;	Step 5:		OrcaInBelt:  This is it's own function so the ProcessState function doesn't get too giant.  This is mostly because it's just a trimmed
@@ -1013,7 +1015,6 @@ objectdef obj_Miner
 ;				Until EVEBot makes it through this function, it can't get back to ProcessState to start running away from hostiles and whatnot.
 ;				Therefore, keep any use of the wait function to a minimum, and make sure you can get out of loops in a timely manner!
 */
-
 	function OrcaInBelt()
 	{
 		;	Variable used to track asteroids
@@ -1060,7 +1061,7 @@ objectdef obj_Miner
 			call Asteroids.MoveToField FALSE FALSE TRUE
 			call Asteroids.UpdateList
 		}
-		call This.Prepare_Environment
+		call Ship.OpenCargo
 
 
 		;	If configured to launch combat drones and there's a shortage, force a DropOff so we go to our delivery location
@@ -1107,7 +1108,7 @@ objectdef obj_Miner
 			;	Find out if we need to approach this asteroid
 			if ${Entity[${Asteroids.NearestAsteroid}].Distance} > ${OrcaRange}
 			{
-				UI:UpdateConsole["Approaching: ${Entity[${Asteroids.NearestAsteroid}].Name}"]
+				UI:UpdateConsole["Miner.OrcaInBelt: Approaching ${Entity[${Asteroids.NearestAsteroid}].Name}"]
 				Entity[${Asteroids.NearestAsteroid}]:Approach[${OrcaRange}]
 				This.Approaching:Set[${Asteroids.NearestAsteroid}]
 				This.TimeStartedApproaching:Set[${Time.Timestamp}]
@@ -1126,17 +1127,15 @@ objectdef obj_Miner
 		;	If we're approaching a target, find out if we need to stop doing so
 		if (${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= ${OrcaRange} && ${This.Approaching} != 0) || (!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
 		{
-			UI:UpdateConsole["In range of ${Entity[${Asteroids.NearestAsteroid}].Name} - Stopping"]
+			UI:UpdateConsole["Miner.OrcaInBelt: In range of ${Entity[${Asteroids.NearestAsteroid}].Name} - Stopping"]
 			EVE:Execute[CmdStopShip]
 			This.Approaching:Set[0]
 			This.TimeStartedApproaching:Set[0]
 		}
 
-
 		;	This section is for moving ore into the ore and cargo holds, so they will fill before the Corporate Hangar
 		Ship:Open
-
-		call This.Prepare_Environment
+		call Ship.OpenCargo
 
 		if !${Ship.CorpHangarEmpty}
 		{
@@ -1169,12 +1168,10 @@ objectdef obj_Miner
 			call This.Tractor
 		}
 
-
 		if ${This.Approaching} != 0
 		{
 			return
 		}
-
 
 		;	This checks to make sure there aren't any potential jet can flippers around before we dump a jetcan
 		if !${Social.PlayerInRange[10000]} && ${Config.Miner.DeliveryLocationTypeName.Equal["Jetcan"]}
@@ -1187,7 +1184,10 @@ objectdef obj_Miner
 			if ${Config.Miner.SafeJetcan}
 			{
 				;	This checks to make sure the player in our delivery location is in range and not warping before we dump a jetcan
-				if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)} && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3 && ${Ship.CargoHalfFull}
+				if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)} && \
+					${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && \
+					${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3 && \
+					${Ship.CargoHalfFull}
 				{
 					call Cargo.TransferOreToJetCan
 					;	Need a wait here because it would try to move the same item more than once
@@ -1206,31 +1206,8 @@ objectdef obj_Miner
 				}
 			}
 		}
-
-
-
 	}
 
-
-
-
-
-
-
-
-	;	If I don't add more than opening cargo, I will likely remove this function...
-	function Prepare_Environment()
-	{
-		call Ship.OpenCargo
-	}
-
-	;	If I don't add more than collecting drones, I will likely remove this function...
-	method Cleanup_Environment()
-	{
-		Ship.Drones:ReturnAllToDroneBay
-	}
-
-	;	Don't fix what isn't broke!
 	method NotifyHaulers()
 	{
 		/* notify hauler there is ore in space */
@@ -1249,7 +1226,6 @@ objectdef obj_Miner
 		WarpToOrca:Set[${State}]
 	}
 
-
 	;This method is triggered by an event.  If triggered, it tells us how much space our hauler has available
 	method HaulerMSG(int64 value)
 	{
@@ -1259,14 +1235,22 @@ objectdef obj_Miner
 	;This method is triggered by an event.  If triggered, it tells a team-mate is under attack by an NPC and what it is.
 	method UnderAttack(int64 value)
 	{
-		if !${Config.Common.BotModeName.Equal[Miner]}
+		if !${Config.Common.BotModeName.Equal[Miner]} && !${Config.Common.BotModeName.Equal[Guardian]}
 		{
 			return
 		}
-		if !${AttackingTeam.Contains[${value}]}
+		if ${AttackingTeam.Contains[${value}]}
 		{
-			AttackingTeam:Add[${value}]
-			UI:UpdateConsole["Warning: Added ${value} to attackers list.  ${AttackingTeam.Used} attackers now in list."]
+			return
+		}
+		AttackingTeam:Add[${value}]
+		if ${Entity[${value}](exists)}
+		{
+			UI:UpdateConsole["Miner.UnderAttack: Added ${Entity[${value}].Name}(${value}) to attackers list. Attackers: ${AttackingTeam.Used}"]
+		}
+		else
+		{
+			UI:UpdateConsole["Miner.UnderAttack: Added off-grid entity ${value} to attackers list. Attackers: ${AttackingTeam.Used}"]
 		}
 	}
 
@@ -1287,15 +1271,13 @@ objectdef obj_Miner
 				; Miner and Guardian should both use the attacker system. 
 				if ${Config.Common.BotModeName.Equal[Miner]} || ${Config.Common.BotModeName.Equal[Guardian]}
 				{
-					UI:UpdateConsole["Warning: Ship attacked by rats, alerting team to kill ${CurrentAttack.Value.Name}"]
-					Relay all -event EVEBot_TriggerAttack ${CurrentAttack.Value.ID}
+					UI:UpdateConsole["Miner.CheckAttack: Alerting team to kill ${CurrentAttack.Value.Name}(${CurrentAttack.Value.ID})"]
 				}
-
+				Relay all -event EVEBot_TriggerAttack ${CurrentAttack.Value.ID}
 			}
 			while ${CurrentAttack:Next(exists)}
 		}
 	}
-
 
 	;	This function's sole purpose is to get your ship in warp as fast as possible from a dead stop with a MWD.  It accepts a value and will either Warp to it
 	;	if it is an entity in the current system, or uses the autopilot if it's a bookmark in another system.  It is designed to do what it needs to do and then
@@ -1355,30 +1337,39 @@ objectdef obj_Miner
 
 		variable iterator GetData
 
-
 		if ${AttackingTeam.Used} > 0
 		{
 			AttackingTeam:GetIterator[GetData]
 			if ${GetData:First(exists)}
 				do
 				{
-					if ${Entity[${GetData.Value}](exists)} && ${Entity[${GetData.Value}].Distance} < ${Ship.OptimalTargetingRange} && ${Entity[${GetData.Value}].Distance} < ${Me.DroneControlDistance} && !${Entity[${GetData.Value}].IsLockedTarget} && !${${GetData.Value}].BeingTargeted}
-						Entity[${GetData.Value}]:LockTarget
-					if !${Entity[${GetData.Value}](exists)}
+					if ${Entity[${GetData.Value}](exists)}
+					{
+						if ${Entity[${GetData.Value}].Distance} < ${Ship.OptimalTargetingRange} && \
+							${Entity[${GetData.Value}].Distance} < ${Me.DroneControlDistance} && \
+							!${Entity[${GetData.Value}].IsLockedTarget} && \
+							!${${GetData.Value}].BeingTargeted}
+						{
+							Entity[${GetData.Value}]:LockTarget
+						}
+					}
+					else
+					{
 						AttackingTeam:Remove[${GetData.Value}]
+					}
 				}
 				while ${GetData:Next(exists)}
 		}
 
 		if ${Ship.Drones.DronesInSpace} > 0 && ${AttackingTeam.Used} == 0
 		{
-			UI:UpdateConsole["Warning: Recalling Drones"]
+			UI:UpdateConsole["Miner.Defend: Recalling Drones"]
 			Ship.Drones:ReturnAllToDroneBay
 		}
 
 		if ${Ship.Drones.DronesInSpace} == 0  && ${AttackingTeam.Used} > 0
 		{
-			UI:UpdateConsole["Warning: Deploying drones to defend"]
+			UI:UpdateConsole["Miner.Defend: Deploying drones"]
 			Ship.Drones:LaunchAll
 		}
 
@@ -1416,7 +1407,7 @@ objectdef obj_Miner
 
 			if ${AttackDrones.Used} > 0
 			{
-				UI:UpdateConsole["Warning: Sending ${AttackDrones.Used} Drones to attack ${Entity[${Attacking}].Name}"]
+				UI:UpdateConsole["Miner.Defend: Sending ${AttackDrones.Used} Drones to attack ${Entity[${Attacking}].Name}"]
 				EVE:DronesEngageMyTarget[AttackDrones]
 			}
 		}
@@ -1473,7 +1464,7 @@ objectdef obj_Miner
 
 			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].IsWreckEmpty}
 			{
-				UI:UpdateConsole["Warning: Wreck empty, clearing"]
+				UI:UpdateConsole["Miner.Tractor: Wreck empty, clearing"]
 				if ${Entity[${Tractoring}].LootWindow(exists)}
 				{
 					Entity[${Tractoring}]:CloseCargo
@@ -1497,13 +1488,13 @@ objectdef obj_Miner
 				if ${Wrecks.Used} > 0
 				{
 					Tractoring:Set[${Wrecks[1]}]
-					UI:UpdateConsole["Warning: ${Wrecks.Used} wrecks found"]
+					UI:UpdateConsole["Miner.Tractor: ${Wrecks.Used} wrecks found"]
 				}
 			}
 
 			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].Distance} <= LOOT_RANGE && !${Entity[${Tractoring}].LootWindow(exists)}
 			{
-				UI:UpdateConsole["Warning: Opening wreck"]
+				UI:UpdateConsole["Miner.Tractor: Opening wreck"]
 				Entity[${Tractoring}]:Open
 				if ${Ship.IsTractoringWreckID[${Tractoring}]}
 				{
@@ -1514,7 +1505,7 @@ objectdef obj_Miner
 
 			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].Distance} <= LOOT_RANGE && ${Entity[${Tractoring}].LootWindow(exists)}
 			{
-				UI:UpdateConsole["Warning: Looting wreck ${Entity[${Tractoring}].Name}"]
+				UI:UpdateConsole["Miner.Tractor: Looting wreck ${Entity[${Tractoring}].Name}"]
 				variable index:item ContainerCargo
 				variable iterator Cargo
 				variable index:int64 CargoList
@@ -1532,7 +1523,7 @@ objectdef obj_Miner
 
 			if ${Entity[${Tractoring}](exists)} && !${Entity[${Tractoring}].IsLockedTarget}
 			{
-				UI:UpdateConsole["Warning: Locking wreck ${Entity[${Tractoring}].Name}"]
+				UI:UpdateConsole["Miner.Tractor: Locking wreck ${Entity[${Tractoring}].Name}"]
 				Entity[${Tractoring}]:LockTarget
 				return
 			}
@@ -1543,5 +1534,4 @@ objectdef obj_Miner
 			}
 		}
 	}
-
 }
