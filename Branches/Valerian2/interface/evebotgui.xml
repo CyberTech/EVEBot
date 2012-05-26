@@ -1474,7 +1474,7 @@
 												<X>10</X>
 												<Y>150</Y>
 												<Height>20</Height>
-												<Width>100</Width>
+												<Width>20</Width>
 												<Text>Wait               minutes after unsafe pilots have left system</Text>
 												<AutoTooltip>If checked, will dock your ship at your panic location every for a break according to the information specified.  Restart after changing these values.</AutoTooltip>
 												<OnLoad>
