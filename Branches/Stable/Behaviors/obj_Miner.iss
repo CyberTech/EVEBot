@@ -1239,6 +1239,10 @@ objectdef obj_Miner
 		{
 			return
 		}
+		if ${AttackingTeam.Contains[${value}]}
+		{
+			return
+		}
 		AttackingTeam:Add[${value}]
 		if ${Entity[${value}](exists)}
 		{
