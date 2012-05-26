@@ -378,23 +378,23 @@ objectdef obj_Hauler
 
 			if !${Local[${FullMiners.CurrentValue.FleetMemberID}](exists)}
 			{
-				UI:UpdateConsole["ALERT:  The specified fleet member isn't in local - it may be incorrectly configured or out of system."]
+				UI:UpdateConsole["Hauler: Warning: The specified fleet member (${FullMiners.CurrentValue.FleetMemberID}) isn't in local - it may be incorrectly configured or out of system."]
 				return
 			}
 
 
-			if !${Entity[${Local[${FullMiners.CurrentValue.FleetMemberID}].ToEntity.ID}](exists)}
+			if !${Local[${FullMiners.CurrentValue.FleetMemberID}].ToEntity.ID(exists)}
 			{
-				UI:UpdateConsole["ALERT:  The fleet member is not nearby.  Warping there first to pick up."]
+				UI:UpdateConsole["Hauler: The fleet member is not on grid. Warping to ${Local[${FullMiners.CurrentValue.FleetMemberID}].Name}"]
 				Local[${FullMiners.CurrentValue.FleetMemberID}].ToFleetMember:WarpTo
 				return
 			}
 
 			;	Find out if we need to approach this target
-			if ${Entity[${Local[${FullMiners.CurrentValue.FleetMemberID}].ToEntity.ID}].Distance} > LOOT_RANGE && ${This.Approaching} == 0
+			if ${Local[${FullMiners.CurrentValue.FleetMemberID}].ToEntity.Distance} > LOOT_RANGE && ${This.Approaching} == 0
 			{
-				UI:UpdateConsole["ALERT:  Approaching to within loot range."]
-				Entity${Local[${FullMiners.CurrentValue.FleetMemberID}].ToEntity.ID}]:Approach
+				UI:UpdateConsole["Hauler: Approaching ${Local[${FullMiners.CurrentValue.FleetMemberID}].ToEntity.Name} to within loot range (currently ${Local[${FullMiners.CurrentValue.FleetMemberID}].ToEntity.Distance})"]
+				Local[${FullMiners.CurrentValue.FleetMemberID}].ToEntity:Approach
 				This.Approaching:Set[${Local[${FullMiners.CurrentValue.FleetMemberID}].ToEntity.ID}]
 				This.TimeStartedApproaching:Set[${Time.Timestamp}]
 			}
@@ -409,7 +409,7 @@ objectdef obj_Hauler
 			;	If we're approaching a target, find out if we need to stop doing so
 			if ${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= LOOT_RANGE && ${This.Approaching} != 0
 			{
-				UI:UpdateConsole["ALERT:  Within loot range."]
+				UI:UpdateConsole["Hauler: Within loot range of ${Entity[${This.Approaching}].Name}"]
 				EVE:Execute[CmdStopShip]
 				This.Approaching:Set[0]
 				This.TimeStartedApproaching:Set[0]
@@ -420,7 +420,6 @@ objectdef obj_Hauler
 		}
 		elseif !${This.HaulerFull}
 		{
-			echo hauler not full
 			call Safespots.WarpTo
 		}
 	}
@@ -663,22 +662,10 @@ objectdef obj_Hauler
 		FullMiners:Erase[${charID}]
 	}
 
-
-
-
-
-
 	method OrcaCargoUpdate(float value)
 	{
 		OrcaCargo:Set[${value}]
 	}
-
-
-
-
-
-
-
 
 	;	Jetcan full, add it to FullMiners
 	method MinerFull(string haulParams)
@@ -699,8 +686,6 @@ objectdef obj_Hauler
 		; Logging is done by obj_FullMiner initialize
 		FullMiners:Set[${charID},${charID},${systemID},${beltID}]
 	}
-
-
 
 	function LootEntity(int64 id, int leave = 0)
 	{
@@ -803,8 +788,6 @@ objectdef obj_Hauler
 				break
 		}
 	}
-
-
 
 	function WarpToFleetMemberAndLoot(int64 charID)
 	{
@@ -956,9 +939,6 @@ objectdef obj_Hauler
 		FullMiners:Erase[${charID}]
 	}
 
-
-
-
 	method BuildFleetMemberList()
 	{
 		variable index:fleetmember myfleet
@@ -983,16 +963,6 @@ objectdef obj_Hauler
 		UI:UpdateConsole["BuildFleetMemberList found ${FleetMembers.Used} other fleet members."]
 	}
 
-
-
-
-
-
-
-
-
-
-
 	method BuildJetCanList()
 	{
 		EVE:QueryEntities[Entities,"GroupID = 12"]
@@ -1002,8 +972,6 @@ objectdef obj_Hauler
 
 		UI:UpdateConsole["BuildJetCanList found ${Entities.Used} cans nearby."]
 	}
-
-
 
 	;	This member is used to determine if our hauler is full based on a number of factors:
 	;	*	Config.Miner.CargoThreshold
@@ -1026,6 +994,4 @@ objectdef obj_Hauler
 		}
 		return FALSE
 	}
-
 }
-

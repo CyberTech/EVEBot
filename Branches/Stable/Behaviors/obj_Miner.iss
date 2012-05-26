@@ -585,7 +585,7 @@ objectdef obj_Miner
 						;	Find out if we need to approach this target
 						if ${Entity[${Orca.Escape}].Distance} > LOOT_RANGE && ${This.Approaching} == 0
 						{
-							UI:UpdateConsole["ALERT:  Approaching to within loot range."]
+							UI:UpdateConsole["Miner: Approaching Orca to within loot range (currently ${Entity[${Orca.Escape}].Distance})"]
 							Entity[${Orca.Escape}]:Approach[LOOT_RANGE]
 							This.Approaching:Set[${Entity[${Orca.Escape}]}]
 							This.TimeStartedApproaching:Set[${Time.Timestamp}]
@@ -782,7 +782,7 @@ objectdef obj_Miner
 					Entity[${Orca.Escape}]:WarpTo[1000]
 					return
 				}
-				UI:UpdateConsole["ALERT:  Approaching to within loot range."]
+				UI:UpdateConsole["Miner: Approaching Orca to within loot range (currently ${Entity[${Orca.Escape}].Distance})"]
 				Entity[${Orca.Escape}]:Approach[LOOT_RANGE]
 				This.Approaching:Set[${Entity[${Orca.Escape}]}]
 				This.TimeStartedApproaching:Set[${Time.Timestamp}]
