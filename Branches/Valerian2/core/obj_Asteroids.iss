@@ -104,7 +104,6 @@ objectdef obj_Asteroids
 		{
 			RandomBelt:Set[${Math.Rand[${BeltBookMarkList.Used(int):Dec}]:Inc[1]}]
 			Label:Set[${BeltBookMarkList[${RandomBelt}].Label}]
-			echo Iterating bookmark: ${Label} (index ${RandomBelt})
 			if ${Label.Left[${prefix.Length}].NotEqual[${prefix}]}
 			{
 				BeltBookMarkList:Remove[${RandomBelt}]
