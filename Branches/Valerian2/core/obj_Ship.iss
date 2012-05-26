@@ -428,9 +428,8 @@ objectdef obj_Ship
 			return FALSE
 		}
 
-		This:OpenCorpHangars
 
-		if ${EVEWindow[ByCaption, Corp Hangar].UsedCapacity} == 0
+		if ${EVEWindow[ByCaption, Corporation Hangars].UsedCapacity} == 0
 		{
 			return TRUE
 		}
@@ -440,7 +439,7 @@ objectdef obj_Ship
 
 	method OpenCorpHangars()
 	{
-		if !${EVEWindow[ByCaption, Corp Hangar](exists)}
+		if !${EVEWindow[ByCaption, Corporation Hangars](exists)}
 		{
 			Me.ToEntity:Open
 		}
