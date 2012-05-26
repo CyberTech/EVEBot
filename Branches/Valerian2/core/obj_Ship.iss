@@ -428,6 +428,7 @@ objectdef obj_Ship
 			return FALSE
 		}
 
+		This:OpenCorpHangars
 
 		if ${EVEWindow[ByCaption, Corporation Hangars].UsedCapacity} == 0
 		{
