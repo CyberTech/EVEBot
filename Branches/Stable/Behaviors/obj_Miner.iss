@@ -1270,7 +1270,7 @@ objectdef obj_Miner
 				{
 					if ${Config.Common.BotModeName.Equal[Miner]}
 					{
-						UI:UpdateConsole["Miner.CheckAttack: Ship attacked by NPC, alerting team to kill ${CurrentAttack.Value.Name}(${CurrentAttack.Value.ID})"]
+						UI:UpdateConsole["Miner.CheckAttack: Alerting team to kill ${CurrentAttack.Value.Name}(${CurrentAttack.Value.ID})"]
 					}
 					Relay all -event EVEBot_TriggerAttack ${CurrentAttack.Value.ID}
 				}

@@ -138,9 +138,10 @@ objectdef obj_Fleet
 			if ${Me.Fleet.IsMember[${Me.CharID}]}
 			{
 				if !${Me.Fleet.IsMember[${This.ResolveCharID[${Config.Fleet.FleetLeader}]}]}
-					{
+				{
+					UI:UpdateConsole["obj_Fleet: Fleet Leader (${Config.Fleet.FleetLeader}) is not in the fleet, leaving"]
 					Me.Fleet:LeaveFleet
-					}
+				}
 			}
 		}
 		
