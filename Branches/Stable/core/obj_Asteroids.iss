@@ -104,7 +104,7 @@ objectdef obj_Asteroids
 		{
 			RandomBelt:Set[${Math.Rand[${BeltBookMarkList.Used(int):Dec}]:Inc[1]}]
 			Label:Set[${BeltBookMarkList[${RandomBelt}].Label}]
-
+			echo Iterating bookmark: ${Label} (index ${RandomBelt})
 			if ${Label.Left[${prefix.Length}].NotEqual[${prefix}]}
 			{
 				BeltBookMarkList:Remove[${RandomBelt}]
@@ -114,10 +114,13 @@ objectdef obj_Asteroids
 			}
 
 			if ${BeltBookMarkList[${RandomBelt}].X(exists)}
+			{
 				Distance:Set[${Math.Distance[${BeltBookMarkList[${RandomBelt}].X},${BeltBookMarkList[${RandomBelt}].Y},${BeltBookMarkList[${RandomBelt}].Z},${Me.ToEntity.X},${Me.ToEntity.Y},${Me.ToEntity.Z}]}]
+			}
 			else
+			{
 				Distance:Set[${Math.Distance[${BeltBookMarkList[${RandomBelt}].ToEntity.X},${BeltBookMarkList[${RandomBelt}].ToEntity.Y},${BeltBookMarkList[${RandomBelt}].ToEntity.Z},${Me.ToEntity.X},${Me.ToEntity.Y},${Me.ToEntity.Z}]}]
-
+			}
 			if ${Distance} < WARP_RANGE
 			{
 				; Must remove this belt to avoid inf loops
@@ -126,8 +129,8 @@ objectdef obj_Asteroids
 				RandomBelt:Set[1]
 				continue
 			}
+			break
 		}
-
 		if ${BeltBookMarkList.Used}
 		{
 			call Ship.WarpToBookMark ${BeltBookMarkList[${RandomBelt}].ID} ${FleetWarp}
@@ -184,7 +187,6 @@ objectdef obj_Asteroids
 					Bookmarks:RemoveStoredLocation
 					return
 				}
-
 				if ${Config.Miner.UseFieldBookmarks}
 				{
 					call This.MoveToRandomBeltBookMark ${FleetWarp}
@@ -560,7 +562,7 @@ objectdef obj_Asteroids
 						}
 						else
 						{
-							UI:UpdateConsole["obj_Asteroids: TargetNext: No Asteroids within ${EVEBot.MetersToKM_Str[${This.MaxDistanceToAsteroid}], changing fields."]
+							UI:UpdateConsole["obj_Asteroids: TargetNext: No Asteroids within ${EVEBot.MetersToKM_Str[${This.MaxDistanceToAsteroid}]}, changing fields."]
 							/* The nearest asteroid is farfar away.  Let's just warp out. */
 
 							if ${CalledFromMoveRoutine}
@@ -581,7 +583,7 @@ objectdef obj_Asteroids
 			UI:UpdateConsole["obj_Asteroids: No Asteroids within overview range"]
 			if ${Entity["GroupID = GROUP_ASTEROIDBELT"].Distance} < CONFIG_OVERVIEW_RANGE
 			{
-				This:BeltIsEmpty["${Entity[GroupID = GROUP_ASTEROIDBELT]}"]
+				This:BeltIsEmpty["${Entity[GroupID = GROUP_ASTEROIDBELT && Distance < 5000000]}"]
 			}
 			if ${CalledFromMoveRoutine}
 			{
