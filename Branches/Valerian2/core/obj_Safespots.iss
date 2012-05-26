@@ -66,7 +66,7 @@ objectdef obj_Safespots
 
 		if ${SafeSpotIterator.Value(exists)}
 		{
-			EVE.Bookmark[${SafeSpotIterator.Value}]:WarpTo[0]
+			SafeSpotIterator.Value:WarpTo[0]
 		}
 		else
 		{
