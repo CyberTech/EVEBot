@@ -731,6 +731,7 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[Run On Low Cap, FALSE]
 		This.CombatRef:AddSetting[Run On Low Tank, TRUE]
 		This.CombatRef:AddSetting[Run To Station, TRUE]
+		This.CombatRef:AddSetting[Whitelist Standings Bypass, FALSE]
 		This.CombatRef:AddSetting[Use Whitelist, FALSE]
 		This.CombatRef:AddSetting[Use Blacklist, FALSE]
 		This.CombatRef:AddSetting[Chain Spawns, TRUE]
@@ -891,6 +892,15 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[Run To Station, ${value}]
 	}
 
+	member:bool WLBypassStandings()
+	{
+		return ${This.CombatRef.FindSetting[Whitelist Standings Bypass,FALSE]}
+	}
+
+	method SetWLBypassStandings(bool value)
+	{
+		This.CombatRef:AddSetting[Whitelist Standings Bypass,${value}]
+	}
 	member:bool UseWhiteList()
 	{
 		return ${This.CombatRef.FindSetting[Use Whitelist, FALSE]}
@@ -1424,25 +1434,35 @@ objectdef obj_Config_Whitelist
 		if !${This.BaseRef.FindSet[Pilots](exists)}
 		{
 			This.BaseRef:AddSet[Pilots]
-			This.PilotsRef:AddSetting[Sample_Pilot_Comment, 0]
 			This:Save
 		}
 
 		if !${This.BaseRef.FindSet[Corporations](exists)}
 		{
 			This.BaseRef:AddSet[Corporations]
-			This.CorporationsRef:AddSetting[Sample_Corporation_Comment, 0]
 			This:Save
 		}
 
 		if !${This.BaseRef.FindSet[Alliances](exists)}
 		{
 			This.BaseRef:AddSet[Alliances]
-			This.AlliancesRef:AddSetting[Sample_Alliance_Comment, 0]
 			This:Save
 		}
 
 		UI:UpdateConsole["obj_Config_Whitelist: Initialized", LOG_MINOR]
+	}
+
+	method Wipe()
+	{
+		LavishSettings[EVEBotWhitelist]:Clear
+		LavishSettings:AddSet[EVEBotWhitelist]
+		This.BaseRef:Set[${LavishSettings[EVEBotWhitelist]}]
+
+		This.BaseRef:AddSet[Pilots]
+		This.BaseRef:AddSet[Corporations]
+		This.BaseRef:AddSet[Alliances]
+		This:Save
+
 	}
 
 	method Shutdown()
