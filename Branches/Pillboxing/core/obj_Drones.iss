@@ -153,11 +153,11 @@ objectdef obj_Drones
 
 	method LaunchPrimaryDrones()
 	{
-		if ${MyShip.DronebayCapacity} > 25 && ${MyShip.DronebayCapacity} < 125
+		if ${MyShip.DronebayCapacity} > 25 && ${MyShip.DronebayCapacity} < 125 && ${This.NumberOfDronesInBay[MEDIUM]} > 0
 		{
 			This:LaunchDrones[MEDIUM]
 		}
-		elseif ${MyShip.DronebayCapacity} > 125
+		elseif ${MyShip.DronebayCapacity} > 125 && ${This.NumberOfDronesInBay[MEDIUM]} > 0
 		{
 			This:LaunchDrones[MEDIUM]
 		}
@@ -165,7 +165,7 @@ objectdef obj_Drones
 		{
 			This:LaunchDrones[HEAVY]
 		}
-		elseif ${MyShip.DronebayCapacity} > 0 && ${MyShip.DronebayCapacity} <=25
+		elseif (${MyShip.DronebayCapacity} > 0 && ${MyShip.DronebayCapacity} <= 25) || ${This.NumberOfDronesInBay[MEDIUM].Equal[0]}
 		{
 			This:LaunchDrones[LIGHT]
 		}
@@ -180,7 +180,8 @@ objectdef obj_Drones
 	{
 		variable index:item ListOfDrones
 		;This includes a check for sentry/heavy drones, going to have to put some SERIOUS beef into this method to select *which* drones to launch
-		;BEEF IS ALMOST DONE, need to add support for just medium drones.
+		;BEEF IS ALMOST DONE, need to add support for just medium drones. 
+		;Support is almost done: it should use whatever the fuck drones you have soon, and just dynamically adjust like a boss if you have multiple types.	
 		if ${Time.Timestamp} > ${DroneTimer.Timestamp}
 		{
 			if ${This.NumberOfDronesInBay[LIGHT]} > 0 && \
@@ -424,6 +425,7 @@ objectdef obj_Drones
 		EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]	
 	}
 
+
 	method SendDrones()
 	{
 		variable iterator DroneIterator
@@ -440,14 +442,14 @@ objectdef obj_Drones
 
 		if ${MyShip.DronebayCapacity} > 50 && ${MyShip.DronebayCapacity} < 125
 		{
-			if ${Me.ActiveTarget.Radius} < 100 && ${This.DronesOut} > 5 && ${MyShip.DronebayCapacity} <= 125 && ${This.NumberOfDronesInBay[LIGHT]} > 0
+			if ${Me.ActiveTarget.Radius} < 100 && ${This.DronesOut} > 5 && ${This.NumberOfDronesInBay[LIGHT]} > 0
 			{
-				UI:UpdateConsole["We're frighting a frigate and have primary drones out, swapping to secondary."]
+				UI:UpdateConsole["We're fighting a frigate and have primary drones out, swapping to secondary."]
 				This:SetAllDronesToReturn			
 			}
-			elseif ${Me.ActiveTarget.Radius} > 100 && ${This.DronesOut} != 10
+			elseif ${Me.ActiveTarget.Radius} > 100 && ${This.DronesOut} != 10 && ${This.NumberOfDronesInBay[MEDIUM]} > 0
 			{
-				UI:UpdateConsole["We're frighting something larger than a frigate and have secondary drones out, swapping to primary."]
+				UI:UpdateConsole["We're fighting something larger than a frigate and have secondary drones out, swapping to primary."]
 				This:SetAllDronesToReturn
 			}
 		}
@@ -455,12 +457,12 @@ objectdef obj_Drones
 		{
 			if ${Me.ActiveTarget.Radius} < 100 && ${This.DronesOut} > 5 && ${This.NumberOfDronesInBay[LIGHT]} > 0
 			{
-				UI:UpdateConsole["We're frighting a frigate and have primary drones out, swapping to secondary."]
+				UI:UpdateConsole["We're fighting a frigate and have primary drones out, swapping to secondary."]
 				This:SetAllDronesToReturn			
 			}
-			elseif ${Me.ActiveTarget.Radius} > 100 && ${This.DronesOut} < 25
+			elseif ${Me.ActiveTarget.Radius} > 100 && ${This.DronesOut} < 25 && ${This.NumberOfDronesInBay[HEAVY]} > 0
 			{
-				UI:UpdateConsole["We're frighting something larger than a frigate and have secondary drones out, swapping to primary."]
+				UI:UpdateConsole["We're fighting something larger than a frigate and have secondary drones out, swapping to primary."]
 				This:SetAllDronesToReturn
 			}
 		}
