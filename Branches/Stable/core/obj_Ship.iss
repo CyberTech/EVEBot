@@ -1409,7 +1409,7 @@ objectdef obj_Ship
 			return
 		}
 
-		if ${Me.ActiveTarget.CategoryID} != ${Asteroids.AsteroidCategoryID}
+		if ${Me.ActiveTarget.CategoryID} != ${Asteroids.AsteroidCategoryID} && ${id} != -1
 		{
 			UI:UpdateConsole["Error: Mining Lasers may only be used on Asteroids"]
 			return
@@ -1454,7 +1454,7 @@ objectdef obj_Ship
 				{
 					ModuleIter.Value:Activate[${id}]
 				}
-				wait 25 ${ModuleIter.Value.IsGoingOnline}
+				wait 25 ${ModuleIter.Value.IsActive}
 				;TimedCommand ${Math.Rand[600]:Inc[300]} "Script[EVEBot].VariableScope.Ship:CycleMiningLaser[OFF, ${Slot}]"
 				return
 			}
