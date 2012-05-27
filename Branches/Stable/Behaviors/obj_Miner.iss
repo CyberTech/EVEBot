@@ -864,29 +864,27 @@ objectdef obj_Miner
 			{
 				AsteroidsNeeded:Inc
 			}
-
-			;	So we need to lock another asteroid.  First make sure that our ship can lock another, and make sure we don't already have enough asteroids locked
-			;	The Asteroids.TargetNext function will let us know if we need to concentrate fire because we're out of new asteroids to target.
-			;	If we're using an orca and it's in the belt, use Asteroids.TargetNextInRange to only target roids nearby
+			if ${Config.Miner.IceMining}
+			{
+				AsteroidsNeeded:Set[1]
+			}
+			;	So we need to lock another asteroid.  First make sure that our ship can lock another, and make sure
+			;	we don't already have enough asteroids locked. The Asteroids.TargetNext function will let us know if
+			;	we need to concentrate fire because we're out of new asteroids to target. If we're using an orca and
+			;	it's in the belt, use Asteroids.TargetNextInRange to only target roids nearby
 			if (${Math.Calc[${Me.TargetCount} + ${Me.TargetingCount}]} < ${Ship.SafeMaxLockedTargets}) && ${Asteroids.LockedAndLocking} < ${AsteroidsNeeded}
 			{
-				do
+				Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
+				if ${Config.Miner.DeliveryLocationTypeName.Equal[Orca]} && ${Entity[${Orca.Escape}](exists)}
 				{
-					Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
-					if ${Config.Miner.DeliveryLocationTypeName.Equal[Orca]} && ${Entity[${Orca.Escape}](exists)} && !${Config.Miner.IceMining}
-					{
-						call Asteroids.TargetNextInRange ${Entity[${Orca.Escape}].ID}
-						return
-					}
-					elseif !${Config.Miner.DeliveryLocationTypeName.Equal[Orca]} || ${Config.Miner.IceMining}
-					{
-						call Asteroids.TargetNext
-						return
-					}
-					This.ConcentrateFire:Set[!${Return}]
-					AsteroidsLocked:Inc
+					call Asteroids.TargetNextInRange ${Entity[${Orca.Escape}].ID}
 				}
-				while (${Asteroids.LockedAndLocking} < ${Ship.SafeMaxLockedTargets}) && ${Asteroids.LockedAndLocking} < ${AsteroidsNeeded} && !${This.ConcentrateFire}
+				else
+				{
+					call Asteroids.TargetNext
+				}
+				This.ConcentrateFire:Set[!${Return}]
+				return
 			}
 
 			;	We don't need to lock another asteroid.  Let's find out if we need to signal a concentrate fire based on limitations of our ship.
@@ -1266,9 +1264,9 @@ objectdef obj_Miner
 		{
 			do
 			{
-				if !${AttackingTeam.Contains[${CurrentAttack.Value.ID}]}
+				if ${Config.Common.BotModeName.Equal[Miner]} || ${Config.Common.BotModeName.Equal[Guardian]}
 				{
-					if ${Config.Common.BotModeName.Equal[Miner]} || ${Config.Common.BotModeName.Equal[Guardian]}
+					if !${AttackingTeam.Contains[${CurrentAttack.Value.ID}]}
 					{
 						UI:UpdateConsole["Miner.CheckAttack: Alerting team to kill ${CurrentAttack.Value.Name}(${CurrentAttack.Value.ID})"]
 					}
