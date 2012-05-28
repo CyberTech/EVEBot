@@ -296,7 +296,7 @@ objectdef obj_Drones
 		}
 		while ${CargoIterator:Next(exists)}
 		wait 10
-		EVEWindow[MyDroneBay]:Close
+		EVEWindow[ByName, "Inventory"]:Close
 		wait 10
 	}
 

@@ -1372,17 +1372,11 @@ objectdef obj_Ship
 
 	member IsCargoOpen()
 	{
-		if ${EVEWindow[MyShipCargo](exists)}
+		if ${EVEWindow[byName, "Inventory"](exists)}
 		{
-			if ${EVEWindow[ByCaption,"active ship"].Caption(exists)}
-			{
-				return TRUE
-			}
-			else
-			{
-				UI:UpdateConsole["\${EVEWindow[ByCaption,"active ship"](exists)} == ${EVEWindow[ByCaption,"active ship"](exists)}", LOG_DEBUG]
-				UI:UpdateConsole["\${EVEWindow[ByCaption,"active ship"].Caption(exists)} == ${EVEWindow[ByCaption,"active ship"].Caption(exists)}", LOG_DEBUG]
-			}
+			;; Make active, just in case (it won't do anything..or hurt anything if it's alreayd the 'active' window)
+			EVEWindow[ByName,"Inventory"]:MakeChildActive[ShipCargo]
+			return TRUE
 		}
 		return FALSE
 	}
@@ -1402,7 +1396,7 @@ objectdef obj_Ship
 			variable int LoopCheck
 
 			LoopCheck:Set[0]
-			CaptionCount:Set[${EVEWindow[MyShipCargo].Caption.Token[2,"["].Token[1,"]"]}]	
+			CaptionCount:Set[${EVEWindow[byName,"Inventory"].Caption.Token[2,"["].Token[1,"]"]}]	
 			;UI:UpdateConsole["obj_Ship: Waiting for cargo to load: CaptionCount: ${CaptionCount}", LOG_DEBUG]
 			variable index:item MyCargo
 			MyShip:GetCargo[MyCargo]
@@ -1419,7 +1413,7 @@ objectdef obj_Ship
 				MyShip:GetCargo[MyCargo]
 			}
 		}
-		EVEWindow[ByName,${MyShip.ID}]:StackAll
+		EVEWindow[ByName,"Inventory"]:StackAll
 		wait 5
 	}
 
@@ -1428,7 +1422,7 @@ objectdef obj_Ship
 		if ${This.IsCargoOpen}
 		{
 			UI:UpdateConsole["Closing Ship Cargohold"]
-			EVEWindow[MyShipCargo]:Close
+			EVEWindow[byName,"Inventory"]:Close
 			wait WAIT_CARGO_WINDOW
 			while ${This.IsCargoOpen}
 			{
@@ -2470,7 +2464,7 @@ objectdef obj_Ship
 	{
 		if ${This.IsCargoOpen}
 		{
-			EVEWindow[ByName,${MyShip.ID}]:StackAll
+			EVEWindow[ByName,"Inventory"]:StackAll
 		}
 	}
 

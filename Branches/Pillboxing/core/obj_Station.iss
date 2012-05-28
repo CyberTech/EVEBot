@@ -69,8 +69,10 @@ objectdef obj_Station
 
 	member IsHangarOpen()
 	{
-		if ${EVEWindow[hangarFloor](exists)}
+		if ${EVEWindow[byName,"Inventory"](exists)}
 		{
+			;; Make active, just in case (it won't do anything..or hurt anything if it's alreayd the 'active' window)
+			EVEWindow[ByName,"Inventory"]:MakeChildActive[StationItems]
 			return TRUE
 		}
 		else
@@ -130,7 +132,7 @@ objectdef obj_Station
 		if ${This.IsHangarOpen}
 		{
 			UI:UpdateConsole["Closing Cargo Hangar"]
-			EVEWindow[hangarFloor]:Close
+			EVEWindow[byName,"Inventory"]:Close
 			wait WAIT_CARGO_WINDOW
 			while ${This.IsHangarOpen}
 			{

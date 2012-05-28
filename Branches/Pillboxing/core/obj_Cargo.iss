@@ -817,7 +817,8 @@ objectdef obj_Cargo
 		call This.TransferListToHangar
 
 		This.CargoToTransfer:Clear[]
-		EVEWindow[ByName,hangarFloor]:StackAll
+		EVEWindow[ByName,"Inventory"]:MakeChildActive[StationItems]
+		EVEWindow[ByName,"Inventory"]:StackAll
 		Ship:UpdateBaselineUsedCargo[]
 		call This.ReplenishCrystals
 		call This.CloseHolds
@@ -862,7 +863,8 @@ objectdef obj_Cargo
 		call This.TransferListToCorpHangarArray
 
 		This.CargoToTransfer:Clear[]
-		EVEWindow[ByName,hangarFloor]:StackAll
+		EVEWindow[ByName,"Inventory"]:MakeChildActive[StationItems]
+		EVEWindow[ByName,"Inventory"]:StackAll
 		Ship:UpdateBaselineUsedCargo[]
 		call This.CloseHolds
 	}
@@ -890,7 +892,8 @@ objectdef obj_Cargo
 				call This.TransferListToShip
 
 				This.CargoToTransfer:Clear[]
-				EVEWindow[ByName,${MyShip.ID}]:StackAll
+				EVEWindow[ByName,"Inventory"]:MakeChildActive[ShipCargo]
+				EVEWindow[ByName,"Inventory"]:StackAll
 				Ship:UpdateBaselineUsedCargo[]
 				call This.CloseHolds
 
@@ -956,7 +959,8 @@ objectdef obj_Cargo
 				call This.TransferListToShip
 
 				This.CargoToTransfer:Clear[]
-				EVEWindow[ByName,${MyShip.ID}]:StackAll
+				EVEWindow[ByName,"Inventory"]:MakeChildActive[ShipCargo]
+				EVEWindow[ByName,"Inventory"]:StackAll
 				Ship:UpdateBaselineUsedCargo[]
 				call This.CloseHolds
 
@@ -1013,7 +1017,8 @@ objectdef obj_Cargo
 	  call This.TransferListToHangar
 
 	  This.CargoToTransfer:Clear[]
-	  EVEWindow[ByName,hangarFloor]:StackAll
+		EVEWindow[ByName,"Inventory"]:MakeChildActive[StationItems]
+		EVEWindow[ByName,"Inventory"]:StackAll
 	  Ship:UpdateBaselineUsedCargo[]
    }
 
