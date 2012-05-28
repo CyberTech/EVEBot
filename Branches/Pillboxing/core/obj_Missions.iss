@@ -665,7 +665,7 @@ function RunCourierMission(int agentID)
 							call Ship.Approach ${Ent.Value.ID} 1000
 						}
 						UI:UpdateConsole["Opening ${Ent.Value.Name} to loot mission item."]
-						Ent.Value:OpenCargo
+						Ent.Value:Open
 						wait 10
 						call Ship.OpenCargo
 						wait 10

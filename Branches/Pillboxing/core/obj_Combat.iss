@@ -873,14 +873,15 @@ objectdef obj_Combat
 					wait 10
 					;VERY LAZY WORKAROUND
 				}
-				UI:UpdateConsole["Restocking ammo"]
+				UI:UpdateConsole["Restocking ammo"] 
 				call Ship.OpenCargo
 				; If a corp hangar array is on grid - drop loot
 					if ${Me.InStation}
 					{
 						EVE:Execute[OpenHangarFloor]
 						wait 10
-						call Cargo.TransferCargoToHangar
+						;call Cargo.TransferCargoToHangar
+						UI:UpdateConsole["Under normal circumstances this would be dumping cargo into hangar."]
 						;Add stack code here
 						wait 20
 						ContainerItems:Clear
@@ -951,9 +952,10 @@ objectdef obj_Combat
 							UI:UpdateConsole["TransferListToShip: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
 							if ${QuantityToMove} > 0
 							{
+								
 								CargoIterator.Value:MoveTo[MyShip,CargoHold,${QuantityToMove}]
 								wait 30
-								EVEWindow[ByName,${MyShip.ID}]:StackAll
+								EVEWindow[ByCaption,"active ship"]:StackAll
 								wait 10
 							}
 

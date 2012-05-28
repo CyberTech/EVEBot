@@ -1374,14 +1374,14 @@ objectdef obj_Ship
 	{
 		if ${EVEWindow[MyShipCargo](exists)}
 		{
-			if ${EVEWindow[MyShipCargo].Caption(exists)}
+			if ${EVEWindow[ByCaption,"active ship"].Caption(exists)}
 			{
 				return TRUE
 			}
 			else
 			{
-				UI:UpdateConsole["\${EVEWindow[MyShipCargo](exists)} == ${EVEWindow[MyShipCargo](exists)}", LOG_DEBUG]
-				UI:UpdateConsole["\${EVEWindow[MyShipCargo].Caption(exists)} == ${EVEWindow[MyShipCargo].Caption(exists)}", LOG_DEBUG]
+				UI:UpdateConsole["\${EVEWindow[ByCaption,"active ship"](exists)} == ${EVEWindow[ByCaption,"active ship"](exists)}", LOG_DEBUG]
+				UI:UpdateConsole["\${EVEWindow[ByCaption,"active ship"].Caption(exists)} == ${EVEWindow[ByCaption,"active ship"].Caption(exists)}", LOG_DEBUG]
 			}
 		}
 		return FALSE
@@ -1392,7 +1392,7 @@ objectdef obj_Ship
 		if !${This.IsCargoOpen}
 		{
 			UI:UpdateConsole["Opening Ship Cargohold"]
-			EVE:Execute[OpenCargoHoldOfActiveShip]
+			MyShip:Open
 			wait WAIT_CARGO_WINDOW
 
 			; Note that this has a race condition. Iff the window populates fully before we check the CaptionCount
@@ -1402,7 +1402,7 @@ objectdef obj_Ship
 			variable int LoopCheck
 
 			LoopCheck:Set[0]
-			CaptionCount:Set[${EVEWindow[MyShipCargo].Caption.Token[2,"["].Token[1,"]"]}]
+			CaptionCount:Set[${EVEWindow[MyShipCargo].Caption.Token[2,"["].Token[1,"]"]}]	
 			;UI:UpdateConsole["obj_Ship: Waiting for cargo to load: CaptionCount: ${CaptionCount}", LOG_DEBUG]
 			variable index:item MyCargo
 			MyShip:GetCargo[MyCargo]
