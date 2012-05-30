@@ -1409,7 +1409,16 @@ objectdef obj_Ship
 			return
 		}
 
-		if ${Me.ActiveTarget.CategoryID} != ${Asteroids.AsteroidCategoryID} && ${id} != -1
+		if ${id.Equal[-1]}
+		{
+			id:Set[${Me.ActiveTarget.ID}]
+		}
+		if !${Entity[${id}](exists)}
+		{
+			UI:UpdateConsole["ActivateFreeMiningLaser: Target ${id} not found", LOG_DEBUG]
+			return
+		}
+		if ${Entity[${id}].CategoryID} != ${Asteroids.AsteroidCategoryID}
 		{
 			UI:UpdateConsole["Error: Mining Lasers may only be used on Asteroids"]
 			return
@@ -1431,14 +1440,7 @@ objectdef obj_Ship
 				if ${ModuleIter.Value.SpecialtyCrystalMiningAmount(exists)}
 				{
 					variable string OreType
-					if ${id} == -1
-					{
-						OreType:Set[${Me.ActiveTarget.Name.Token[2,"("]}]
-					}
-					else
-					{
-						OreType:Set[${Entity[${id}].Name.Token[2,"("]}]
-					}
+					OreType:Set[${Entity[${id}].Name.Token[2,"("]}]
 					OreType:Set[${OreType.Token[1,")"]}]
 					;OreType:Set[${OreType.Replace["(",]}]
 					;OreType:Set[${OreType.Replace[")",]}]
@@ -1446,15 +1448,8 @@ objectdef obj_Ship
 				}
 
 				UI:UpdateConsole["Activating: ${Slot}: ${ModuleIter.Value.ToItem.Name}"]
-				if ${id} == -1
-				{
-					ModuleIter.Value:Activate
-				}
-				else
-				{
-					ModuleIter.Value:Activate[${id}]
-				}
-				wait 25 ${ModuleIter.Value.IsActive}
+				ModuleIter.Value:Activate[${id}]
+				wait 25 ${ModuleIter.Value.IsGoingOnline}
 				;TimedCommand ${Math.Rand[600]:Inc[300]} "Script[EVEBot].VariableScope.Ship:CycleMiningLaser[OFF, ${Slot}]"
 				return
 			}
@@ -1468,6 +1463,15 @@ objectdef obj_Ship
 
 		if !${Me.Ship(exists)}
 		{
+			return
+		}
+		if ${id.Equal[-1]}
+		{
+			id:Set[${Me.ActiveTarget.ID}]
+		}
+		if !${Entity[${id}](exists)}
+		{
+			UI:UpdateConsole["ActivateFreeTractorBeam: Target ${id} not found", LOG_DEBUG]
 			return
 		}
 
@@ -1486,14 +1490,7 @@ objectdef obj_Ship
 				Slot:Set[${ModuleIter.Value.ToItem.Slot}]
 
 				UI:UpdateConsole["Activating: ${Slot}: ${ModuleIter.Value.ToItem.Name}"]
-				if ${id} == -1
-				{
-					ModuleIter.Value:Activate
-				}
-				else
-				{
-					ModuleIter.Value:Activate[${ID}]
-				}
+				ModuleIter.Value:Activate[${id}]
 				wait 25 ${ModuleIter.Value.IsGoingOnline}
 				return
 			}
@@ -1507,6 +1504,15 @@ objectdef obj_Ship
 
 		if !${Me.Ship(exists)}
 		{
+			return
+		}
+		if ${id.Equal[-1]}
+		{
+			id:Set[${Me.ActiveTarget.ID}]
+		}
+		if !${Entity[${id}](exists)}
+		{
+			UI:UpdateConsole["ActivateFreeShieldTransporter: Target ${id} not found", LOG_DEBUG]
 			return
 		}
 
@@ -1525,14 +1531,7 @@ objectdef obj_Ship
 				Slot:Set[${ModuleIter.Value.ToItem.Slot}]
 
 				UI:UpdateConsole["Activating: ${Slot}: ${ModuleIter.Value.ToItem.Name}"]
-				if ${id} == -1
-				{
-					ModuleIter.Value:Activate
-				}
-				else
-				{
-					ModuleIter.Value:Activate[${id}]
-				}
+				ModuleIter.Value:Activate[${id}]
 				wait 25 ${ModuleIter.Value.IsGoingOnline}
 				return
 			}
