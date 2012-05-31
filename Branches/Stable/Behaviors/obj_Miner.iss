@@ -1463,14 +1463,6 @@ objectdef obj_Miner
 			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].IsWreckEmpty}
 			{
 				UI:UpdateConsole["Miner.Tractor: Wreck empty, clearing"]
-				if ${Entity[${Tractoring}].LootWindow(exists)}
-				{
-					Entity[${Tractoring}]:CloseCargo
-				}
-				if ${Ship.IsTractoringWreckID[${Tractoring}]}
-				{
-					Ship:Deactivate_Tractor
-				}
 				if ${Entity[${Tractoring}].IsLockedTarget}
 				{
 					Entity[${Tractoring}]:UnlockTarget
@@ -1490,7 +1482,7 @@ objectdef obj_Miner
 				}
 			}
 
-			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].Distance} <= LOOT_RANGE && !${Entity[${Tractoring}].LootWindow(exists)}
+			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].Distance} <= LOOT_RANGE && !${EVEWindow[ByItemID, ${TargetIterator.Value}](exists)}
 			{
 				UI:UpdateConsole["Miner.Tractor: Opening wreck"]
 				Entity[${Tractoring}]:Open
@@ -1501,7 +1493,7 @@ objectdef obj_Miner
 				return
 			}
 
-			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].Distance} <= LOOT_RANGE && ${Entity[${Tractoring}].LootWindow(exists)}
+			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].Distance} <= LOOT_RANGE && ${EVEWindow[ByItemID, ${TargetIterator.Value}](exists)}
 			{
 				UI:UpdateConsole["Miner.Tractor: Looting wreck ${Entity[${Tractoring}].Name}"]
 				variable index:item ContainerCargo
