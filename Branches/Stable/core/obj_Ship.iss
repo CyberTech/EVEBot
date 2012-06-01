@@ -1635,12 +1635,12 @@ objectdef obj_Ship
 
 	function OpenCargo()
 	{
-		;EVE:Execute[OpenCargoHoldOfActiveShip]
+		;MyShip:Open
 		;wait 1
 		if !${This.IsCargoOpen}
 		{
 			UI:UpdateConsole["Opening Ship Cargohold"]
-			EVE:Execute[OpenCargoHoldOfActiveShip]
+			MyShip:Open
 			wait WAIT_CARGO_WINDOW
 
 			; Note that this has a race condition. If the window populates fully before we check the CaptionCount
