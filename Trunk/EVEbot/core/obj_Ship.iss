@@ -1630,7 +1630,7 @@ objectdef obj_Ship inherits obj_BaseClass
 		if !${This.IsCargoOpen}
 		{
 			Logger:Log["Opening Ship Cargohold"]
-			EVE:Execute[OpenCargoHoldOfActiveShip]
+			MyShip:Open
 			wait WAIT_CARGO_WINDOW
 
 			; Note that this has a race condition. If the window populates fully before we check the CaptionCount

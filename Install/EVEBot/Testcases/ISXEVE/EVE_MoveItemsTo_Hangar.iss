@@ -24,7 +24,7 @@ function main()
 
 	echo "Version: $ISXEVE.Version}"
 
-	EVE:Execute[OpenCargoHoldOfActiveShip]
+	MyShip:Open
 	EVE:Execute[OpenHangarFloor]
 	Wait 100
 
