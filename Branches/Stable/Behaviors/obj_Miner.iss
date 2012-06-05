@@ -884,7 +884,10 @@ objectdef obj_Miner
 					call Asteroids.TargetNext
 				}
 				This.ConcentrateFire:Set[!${Return}]
-				return
+				if ${Return}
+				{
+					return
+				}
 			}
 
 			;	We don't need to lock another asteroid.  Let's find out if we need to signal a concentrate fire based on limitations of our ship.
