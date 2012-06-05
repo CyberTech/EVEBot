@@ -281,7 +281,7 @@
 							<Y>130</Y>
 							<Width>32</Width>
 							<Height>18</Height>
-							<MaxLength>2</MaxLength>
+							<MaxLength>3</MaxLength>
 							<OnLoad>
 								This:SetText[${Script[EVEBot].VariableScope.Config.Common.MaxRuntime}]
 							</OnLoad>
