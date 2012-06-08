@@ -2055,6 +2055,7 @@ objectdef obj_Ship
 		{
 			This:Deactivate_Cloak[]
 		}
+		This.Drones:ReturnAllToDroneBay
 		This:Deactivate_SensorBoost
 
 		if ${This.Drones.WaitingForDrones}
@@ -2066,9 +2067,16 @@ objectdef obj_Ship
 			}
 			while ${This.Drones.WaitingForDrones}
 		}
+		variable int Counter = 0
+
+		; *2 because we're only waiting half a second.
+		while (${This.Drones.DronesInSpace} > 1 && ${Counter:Inc} < (${Config.Combat.MaxDroneReturnWaitTime}*2))
+		{
+			wait 5
+		}
+
 		This:DeactivateAllMiningLasers[]
 		This:UnlockAllTargets[]
-		This.Drones:ReturnAllToDroneBay
 	}
 
 	member:bool InWarp()

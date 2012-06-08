@@ -82,7 +82,7 @@ objectdef obj_Configuration
 	variable obj_Configuration_Agents Agents
 	variable obj_Configuration_Missioneer Missioneer
 	variable obj_Configuration_Fleet Fleet
-	
+
 	method Save()
 	{
 		BaseConfig:Save[]
@@ -526,7 +526,7 @@ objectdef obj_Configuration_Miner
 	{
 		This.MinerRef:AddSetting[Safe Jetcan, ${value}]
 	}
-	
+
 	member:bool OrcaTractorLoot()
 	{
 		return ${This.MinerRef.FindSetting[Orca Tractor Loot, FALSE]}
@@ -536,7 +536,7 @@ objectdef obj_Configuration_Miner
 	{
 		This.MinerRef:AddSetting[Orca Tractor Loot, ${value}]
 	}
-	
+
 	member:int AvoidPlayerRange()
 	{
 		return ${This.MinerRef.FindSetting[Avoid Player Range, 10000]}
@@ -626,8 +626,8 @@ objectdef obj_Configuration_Miner
 	{
 		This.MinerRef:AddSetting[Panic Location, ${value}]
 	}
-	
-	
+
+
 	member:bool UseFieldBookmarks()
 	{
 		return ${This.MinerRef.FindSetting[Use Field Bookmarks, FALSE]}
@@ -749,6 +749,7 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[LootMyKills, 0]
 		This.CombatRef:AddSetting[Use Anom Bookmarks, FALSE]
 		This.CombatRef:AddSetting[AnomBookmarkLabel, Anom:]
+		This.CombatRef:AddSetting[MaxDroneReturnWaitTime, 3]
 	}
 
 	member:int WarpRange()
@@ -991,6 +992,16 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[MinimumDronesInSpace,${value}]
 	}
 
+	member:int MaxDroneReturnWaitTime()
+	{
+		return ${This.CombatRef.FindSetting[MaxDroneReturnWaitTime, 3]}
+	}
+
+	method SetMaxDroneReturnWaitTime(int value)
+	{
+		This.CombatRef:AddSetting[MaxDroneReturnWaitTime,${value}]
+	}
+
 	member:int MinimumArmorPct()
 	{
 		return ${This.CombatRef.FindSetting[MinimumArmorPct, 35]}
@@ -1109,8 +1120,8 @@ objectdef obj_Configuration_Combat
 	{
 		This.CombatRef:AddSetting[Safe Cooldown Duration, ${value}]
 	}
-	
-	
+
+
 	member:bool LootMyKills()
 	{
 		return ${This.CombatRef.FindSetting[LootMyKills, FALSE]}
@@ -1202,7 +1213,7 @@ objectdef obj_Configuration_Hauler
 	{
 		This.HaulerRef:AddSetting[Haul for New Fleet Members, ${value}]
 	}
-	
+
 	member:string HaulerPickupName()
 	{
 		return ${This.HaulerRef.FindSetting[Hauler Pickup Name, ""]}
@@ -1927,7 +1938,7 @@ objectdef obj_Configuration_Fleet
 	{
 		WingOne:Set[${value}]
 	}
-	
+
 	member:bool IsWing(string value)
 	{
 		This:RefreshFleetMembers
@@ -1939,7 +1950,7 @@ objectdef obj_Configuration_Fleet
 				if ${InfoFromSettings.Value.FleetMemberName.Equal[${value}]} && ${InfoFromSettings.Value.Wing}
 					return TRUE
 			}
-			while ${InfoFromSettings:Next(exists)}	
+			while ${InfoFromSettings:Next(exists)}
 		return FALSE
 	}
 	member:bool IsListed(string value)
@@ -1953,10 +1964,10 @@ objectdef obj_Configuration_Fleet
 				if ${InfoFromSettings.Value.FleetMemberName.Equal[${value}]}
 					return TRUE
 			}
-			while ${InfoFromSettings:Next(exists)}	
+			while ${InfoFromSettings:Next(exists)}
 		return FALSE
-	}	
-	
+	}
+
 	method RefreshFleetMembers()
 	{
 		FleetMembers:Clear
