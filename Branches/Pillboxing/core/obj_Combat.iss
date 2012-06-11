@@ -353,7 +353,7 @@ objectdef obj_Combat
 	}
 	
 
-	member:int GetTypeIDByDamageType( int GROUPID, int DAMAGETYPE)
+	member:int GetTypeIDByDamageType(int GROUPID, int DAMAGETYPE)
 	{
 		;This member will return the typeid matching that damage in the location specified in the parameter, with the groupID specified
 		;I should probably just make the switch get the list of items from the location specified and keep every else general, but right now I only support loading from stations
@@ -431,6 +431,11 @@ objectdef obj_Combat
 						}
 					}
 					while ${itty:Next(exists)}
+				}
+				if ${ItemIterator:First(exists)}
+				{
+					UI:UpdateConsole["Could not find damage type matching the one passed, defaulting to the first available ammo."]
+					return ${ItemIterator.Value.TypeID}
 				}
 				
 			}
@@ -880,7 +885,7 @@ objectdef obj_Combat
 					{
 						EVE:Execute[OpenHangarFloor]
 						wait 10
-						;call Cargo.TransferCargoToHangar
+						call Cargo.TransferCargoToHangar
 						UI:UpdateConsole["Under normal circumstances this would be dumping cargo into hangar."]
 						;Add stack code here
 						wait 20
