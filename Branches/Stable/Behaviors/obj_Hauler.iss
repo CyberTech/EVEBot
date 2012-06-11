@@ -970,7 +970,7 @@ objectdef obj_Hauler
 		variable int idx
 
 		EVE:QueryEntities[cans,"GroupID = 12"]
-		Entities:RemoveByQuery[${LavishScript.CreateQuery[!HaveLootRights]}]
+		cans:RemoveByQuery[${LavishScript.CreateQuery[!HaveLootRights]}]
 		idx:Set[${cans.Used}]
 		Entities:Clear
 
