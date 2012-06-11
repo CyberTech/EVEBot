@@ -41,7 +41,7 @@ objectdef obj_Hauler
 
 	;	Used to get Fleet information
 	variable queue:fleetmember FleetMembers
-	variable index:entity     Entities
+	variable queue:entity     Entities
 
 	;	This is used to keep track of what we are approaching and when we started
 	variable int64 Approaching = 0
@@ -965,10 +965,20 @@ objectdef obj_Hauler
 
 	method BuildJetCanList()
 	{
-		EVE:QueryEntities[Entities,"GroupID = 12"]
+
+		variable index:entity cans
+		variable int idx
+
+		EVE:QueryEntities[cans,"GroupID = 12"]
 		Entities:RemoveByQuery[${LavishScript.CreateQuery[!HaveLootRights]}]
+		idx:Set[${cans.Used}]
+		Entities:Clear
 
-
+		while ${idx} > 0
+		{
+			Entities:Queue[${cans.Get[${idx}]}]
+			idx:Dec
+		}
 
 		UI:UpdateConsole["BuildJetCanList found ${Entities.Used} cans nearby."]
 	}
