@@ -94,6 +94,8 @@ objectdef obj_Asteroids
 		}
 
 		variable float Distance
+		EVE:RefreshBookmarks
+		wait 10
 		EVE:GetBookmarks[BeltBookMarkList]
 		BeltBookMarkList:RemoveByQuery[${LavishScript.CreateQuery[SolarSystemID != "${Me.SolarSystemID}"]}]
 		BeltBookMarkList:Collapse
