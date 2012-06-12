@@ -134,6 +134,7 @@ objectdef obj_Asteroids
 		}
 		if ${BeltBookMarkList.Used}
 		{
+			UI:UpdateConsole["Debug: WarpToBookMarkName to ${BeltBookMarkList[${RandomBelt}].Name} from MoveToRandomBeltBookMark Line _LINE_ ", LOG_DEBUG]
 			call Ship.WarpToBookMark ${BeltBookMarkList[${RandomBelt}].ID} ${FleetWarp}
 
 			This.BeltArrivalTime:Set[${Time.Timestamp}]

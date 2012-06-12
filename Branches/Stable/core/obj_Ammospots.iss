@@ -71,6 +71,7 @@ objectdef obj_Ammospots
 
 		if ${AmmoSpotIterator.Value(exists)}
 		{
+			UI:UpdateConsole["Debug: WarpToBookMarkName to ${AmmoSpotIterator.Value.Name} from Ammospots Line _LINE_ ", LOG_DEBUG]
 			call Ship.WarpToBookMark ${AmmoSpotIterator.Value.ID}
 		}
 		else
