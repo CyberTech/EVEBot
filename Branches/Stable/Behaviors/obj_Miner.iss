@@ -254,7 +254,7 @@ objectdef obj_Miner
 					}
 					else
 					{
-						UI:UpdateConsole["Debug: Warping to ${Config.Miner.PanicLocation} from Line _LINE_ ", LOG_DEBUG]
+						UI:UpdateConsole["Debug: WarpToBookMarkName ${Config.Miner.PanicLocation} from Line _LINE_ ", LOG_DEBUG]
 						call Ship.WarpToBookMarkName "${Config.Miner.PanicLocation}"
 					}
 					break
@@ -330,6 +330,7 @@ objectdef obj_Miner
 					}
 					else
 					{
+						UI:UpdateConsole["Debug: FastWarp to ${Config.Miner.PanicLocation} from Line _LINE_ ", LOG_DEBUG]
 						call This.FastWarp -1 "${Config.Miner.PanicLocation}"
 					}
 					break
@@ -478,7 +479,7 @@ objectdef obj_Miner
 						}
 						if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 						{
-							UI:UpdateConsole["Debug: Warping to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
+							UI:UpdateConsole["Debug: WarpToBookMarkName to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
 							call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
 							call Cargo.TransferOreToCorpHangarArray
 							break
@@ -499,7 +500,7 @@ objectdef obj_Miner
 						}
 						if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 						{
-							UI:UpdateConsole["Debug: Warping to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
+							UI:UpdateConsole["Debug: WarpToBookMarkName to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
 							call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
 							call Cargo.TransferCargoToLargeShipAssemblyArray
 							break
@@ -520,7 +521,7 @@ objectdef obj_Miner
 						}
 						if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 						{
-							UI:UpdateConsole["Debug: Warping to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
+							UI:UpdateConsole["Debug: WarpToBookMarkName to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
 							call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
 							call Cargo.TransferOreToXLargeShipAssemblyArray
 							break
