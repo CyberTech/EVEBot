@@ -388,6 +388,8 @@ objectdef obj_Asteroids
 					while ${AsteroidIt:Next(exists)}
 				}
 			}
+
+			UI:UpdateConsole["OBJ_Asteroids:UpdateList: ${AsteroidList.Used} asteroids found", LOG_DEBUG]
 		}
 		else
 		{
