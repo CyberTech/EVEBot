@@ -134,7 +134,7 @@ objectdef obj_Asteroids
 		}
 		if ${BeltBookMarkList.Used}
 		{
-			UI:UpdateConsole["Debug: WarpToBookMarkName to ${BeltBookMarkList[${RandomBelt}].Name} from MoveToRandomBeltBookMark Line _LINE_ ", LOG_DEBUG]
+			UI:UpdateConsole["Debug: WarpToBookMarkName to ${BeltBookMarkList[${RandomBelt}].Label} from MoveToRandomBeltBookMark Line _LINE_ ", LOG_DEBUG]
 			call Ship.WarpToBookMark ${BeltBookMarkList[${RandomBelt}].ID} ${FleetWarp}
 
 			This.BeltArrivalTime:Set[${Time.Timestamp}]
@@ -292,7 +292,7 @@ objectdef obj_Asteroids
 
 	}
 
-	function UpdateList(int64 DistanceTarget=-1)
+	function UpdateList(float64 DistanceTarget=-1)
 	{
 		variable index:entity asteroid_index
 		variable index:entity AsteroidList_outofrange
@@ -330,7 +330,7 @@ objectdef obj_Asteroids
 							intended to empty a given radius of asteroids */
 						if ${Config.Miner.StripMine}
 						{
-							if ${DistanceTarget} == -1
+							if ${DistanceTarget} < 0
 							{
 								if ${asteroid_iterator.Value.Distance} < ${Ship.OptimalMiningRange}
 								{
