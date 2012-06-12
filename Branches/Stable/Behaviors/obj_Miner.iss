@@ -745,7 +745,7 @@ objectdef obj_Miner
 				wait 20
 			}
 			while ${Ship.Drones.DronesInSpace} != 0
-			UI:UpdateConsole["Miner: No asteroids detected, changing belts"]
+			UI:UpdateConsole["Miner.Mine: No asteroids detected, changing belts"]
 			call Asteroids.MoveToField FALSE TRUE
 			call Asteroids.UpdateList
 		}
@@ -769,7 +769,7 @@ objectdef obj_Miner
 
 		if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]}
 		{
-			UI:UpdateConsole["Avoiding player: Changing Belts"]
+			UI:UpdateConsole["Miner.Mine: Avoiding player: Changing Belts"]
 			Ship.Drones:ReturnAllToDroneBay
 			call Asteroids.MoveToField TRUE
 			return
@@ -1074,7 +1074,7 @@ objectdef obj_Miner
 				wait 20
 			}
 			while ${Ship.Drones.DronesInSpace} != 0
-			UI:UpdateConsole["Miner: No asteroids detected, changing belts"]
+			UI:UpdateConsole["Miner.OrcaInBelt: No asteroids detected, changing belts"]
 			call Asteroids.MoveToField FALSE FALSE TRUE
 			call Asteroids.UpdateList
 		}
@@ -1093,7 +1093,7 @@ objectdef obj_Miner
 		;	This changes belts if someone's within Min. Distance to Players
 		if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]}
 		{
-			UI:UpdateConsole["Avoiding player: Changing Belts"]
+			UI:UpdateConsole["Miner.OrcaInBelt: Avoiding player: Changing Belts"]
 			Ship.Drones:ReturnAllToDroneBay
 			call Asteroids.MoveToField TRUE FALSE TRUE
 			return
