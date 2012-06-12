@@ -690,25 +690,26 @@ objectdef obj_Miner
 		;	*	If WarpToOrca and the orca is in fleet, warp there instead and clear our saved bookmark
 		;	*	Warp to a belt based on belt labels or a random belt
 		;	Note:  The UpdateList spam is necessary to make sure our actions are based on the closest asteroids
-		call Asteroids.UpdateList
 
 		Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
-
-		if ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && ${WarpToOrca} && !${Entity[${Orca.Escape}](exists)}
+		if ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]}
 		{
-			UI:UpdateConsole["Debug: WarpToFleetMember to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
-			call Ship.WarpToFleetMember ${Local[${Config.Miner.DeliveryLocation}]}
-			if ${Config.Miner.BookMarkLastPosition} && ${Bookmarks.CheckForStoredLocation}
+			if ${WarpToOrca} && !${Entity[${Orca.Escape}](exists)}
 			{
-				Bookmarks:RemoveStoredLocation
+				UI:UpdateConsole["Debug: WarpToFleetMember to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
+				call Ship.WarpToFleetMember ${Local[${Config.Miner.DeliveryLocation}]}
+				if ${Config.Miner.BookMarkLastPosition} && ${Bookmarks.CheckForStoredLocation}
+				{
+					Bookmarks:RemoveStoredLocation
+				}
 			}
+			call Asteroids.UpdateList ${Entity[${Orca.Escape}].Distance}
+		}
+		else
+		{
 			call Asteroids.UpdateList
 		}
-		if ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && ${Entity[${Orca.Escape}](exists)}
-		{
-			call Asteroids.UpdateList ${Entity[${Orca.Escape}].ID}
-		}
-
+		
 		Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
 		if ${Ship.TotalActivatedMiningLasers} == 0 && \
 			${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && \
@@ -730,7 +731,9 @@ objectdef obj_Miner
 			while ${Ship.Drones.DronesInSpace} != 0
 		}
 
-		if ${Ship.TotalActivatedMiningLasers} == 0 && !${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]}
+		if ${Asteroids.AsteroidList.Used} == 0 && \
+			${Ship.TotalActivatedMiningLasers} == 0 && \
+			!${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]}
 		{
 			do
 			{
@@ -742,6 +745,7 @@ objectdef obj_Miner
 				wait 20
 			}
 			while ${Ship.Drones.DronesInSpace} != 0
+			UI:UpdateConsole["Miner: No asteroids detected, changing belts"]
 			call Asteroids.MoveToField FALSE TRUE
 			call Asteroids.UpdateList
 		}
@@ -763,7 +767,6 @@ objectdef obj_Miner
 			; return
 		; }
 
-		;	This changes belts if someone's within Min. Distance to Players
 		if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]}
 		{
 			UI:UpdateConsole["Avoiding player: Changing Belts"]
@@ -918,7 +921,6 @@ objectdef obj_Miner
 		if ${Ship.TotalActivatedMiningLasers} < ${Ship.TotalMiningLasers}
 		{
 			wait 200 ${Me.TargetingCount} == 0
-			;	First, get our locked targets
 			LockedTargets:Clear
 			Me:GetTargets[LockedTargets]
 			LockedTargets:GetIterator[Target]
@@ -1072,6 +1074,7 @@ objectdef obj_Miner
 				wait 20
 			}
 			while ${Ship.Drones.DronesInSpace} != 0
+			UI:UpdateConsole["Miner: No asteroids detected, changing belts"]
 			call Asteroids.MoveToField FALSE FALSE TRUE
 			call Asteroids.UpdateList
 		}
