@@ -326,8 +326,8 @@ objectdef obj_Asteroids
 					}
 					else
 					{
-						EVE:QueryEntities[AsteroidListTmp, "CategoryID = ${This.AsteroidCategoryID} && Name =- \"${This.OreTypeIterator.Key}\" && DistanceTo[${EntityIDForDistance}]} < ${Math.Calc[${Ship.OptimalMiningRange} + 2000]}"]
-						EVE:QueryEntities[AsteroidList_OutOfRangeTmp, "CategoryID = ${This.AsteroidCategoryID} && Name =- \"${This.OreTypeIterator.Key}\" && DistanceTo[${EntityIDForDistance}]} < ${Math.Calc[${Ship.OptimalMiningRange} + 2000]}"]
+						EVE:QueryEntities[AsteroidListTmp, "CategoryID = ${This.AsteroidCategoryID} && Name =- \"${This.OreTypeIterator.Key}\" && DistanceTo[${EntityIDForDistance}] < ${Math.Calc[${Ship.OptimalMiningRange} + 2000]}"]
+						EVE:QueryEntities[AsteroidList_OutOfRangeTmp, "CategoryID = ${This.AsteroidCategoryID} && Name =- \"${This.OreTypeIterator.Key}\" && DistanceTo[${EntityIDForDistance}] >= ${Math.Calc[${Ship.OptimalMiningRange} + 2000]}"]
 					}
 				}
 				else
