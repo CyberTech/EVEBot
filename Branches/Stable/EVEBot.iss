@@ -206,6 +206,7 @@ function RandomDelay(int base)
 	FinishTime:Inc[${WaitTime}]
 	do
 	{
+		wait 1
 	}
 	while ${LavishScript.RunningTime}<${FinishTime}
 }
