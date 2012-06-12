@@ -61,7 +61,7 @@ function main()
 
 	turbo 4000
 
-	echo "${Time} EVEBot: Loading Objects..."
+	echo "${Time} EVEBot: Loading Base Objects & Config..."
 
 	/* Script-Defined Support Objects */
 	declarevariable EVEBot obj_EVEBot script
@@ -71,12 +71,13 @@ function main()
 	declarevariable Config obj_Configuration script
 	declarevariable Whitelist obj_Config_Whitelist script
 	declarevariable Blacklist obj_Config_Blacklist script
+
+	echo "${Time} EVEBot: Loading EVEDBs..."
+
 	declarevariable EVEDB_Stations obj_EVEDB_Stations script
-	declarevariable EVEDB_StationID obj_EVEDB_StationID script
-	declarevariable EVEDB_Spawns obj_EVEDB_Spawns script
 	declarevariable EVEDB_Items obj_EVEDB_Items script
 
-	/* Core Objects */
+	echo "${Time} EVEBot: Loading Core Objects..."
 	declarevariable Asteroids obj_Asteroids script
 	declarevariable Ship obj_Ship script
 	declarevariable Station obj_Station script
