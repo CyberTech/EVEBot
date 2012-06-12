@@ -319,7 +319,7 @@ objectdef obj_Asteroids
 				; intended to empty a given radius of asteroids
 				if ${Config.Miner.StripMine}
 				{
-					if ${DistanceTarget} < 0
+					if ${EntityIDForDistance} < 0
 					{
 						EVE:QueryEntities[AsteroidListTmp, "CategoryID = ${This.AsteroidCategoryID} && Name =- \"${This.OreTypeIterator.Key}\" && Distance < ${Ship.OptimalMiningRange}"]
 						EVE:QueryEntities[AsteroidList_OutOfRangeTmp, "CategoryID = ${This.AsteroidCategoryID} && Name =- \"${This.OreTypeIterator.Key}\" && Distance >= ${Ship.OptimalMiningRange}"]
