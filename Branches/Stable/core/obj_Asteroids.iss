@@ -332,7 +332,7 @@ objectdef obj_Asteroids
 				}
 				else
 				{
-					EVE:QueryEntities[AsteroidListTmp, "CategoryID = ${This.AsteroidCategoryID} && Name =- \"${This.OreTypeIterator.Key}\"]
+					EVE:QueryEntities[AsteroidListTmp, "CategoryID = ${This.AsteroidCategoryID} && Name =- \"${This.OreTypeIterator.Key}\""]
 				}
 
 				; Append the in-range asteroids of the current ore type to the final list
@@ -599,7 +599,7 @@ objectdef obj_Asteroids
 			UI:UpdateConsole["obj_Asteroids: No Asteroids within overview range"]
 			if ${Entity["GroupID = GROUP_ASTEROIDBELT"].Distance} < CONFIG_OVERVIEW_RANGE
 			{
-				This:BeltIsEmpty["${Entity[GroupID = GROUP_ASTEROIDBELT && Distance < 5000000]}"]
+				This:BeltIsEmpty["${Entity[GroupID = GROUP_ASTEROIDBELT].Name}"]
 			}
 			if ${CalledFromMoveRoutine}
 			{
