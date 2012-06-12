@@ -703,7 +703,7 @@ objectdef obj_Miner
 					Bookmarks:RemoveStoredLocation
 				}
 			}
-			call Asteroids.UpdateList ${Entity[${Orca.Escape}].Distance}
+			call Asteroids.UpdateList ${Entity[${Orca.Escape}].ID}
 		}
 		else
 		{

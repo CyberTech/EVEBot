@@ -292,11 +292,12 @@ objectdef obj_Asteroids
 
 	}
 
-	function UpdateList(float64 DistanceTarget=-1)
+	function UpdateList(int64 EntityIDForDistance=-1)
 	{
-		variable index:entity asteroid_index
-		variable index:entity AsteroidList_outofrange
-		variable iterator asteroid_iterator
+		variable index:entity AsteroidListTmp
+		variable index:entity AsteroidList_OutOfRange
+		variable index:entity AsteroidList_OutOfRangeTmp
+		variable iterator AsteroidIt
 
 		This.MaxDistanceToAsteroid:Set[${Math.Calc[${Ship.OptimalMiningRange} * ${Config.Miner.MiningRangeMultipler}]}]
 
@@ -314,68 +315,77 @@ objectdef obj_Asteroids
 			This.AsteroidList:Clear
 			do
 			{
-				EVE:QueryEntities[asteroid_index, "CategoryID = ${This.AsteroidCategoryID} && Name =- \"${This.OreTypeIterator.Key}\""]
-				if ${asteroid_index.Used} > 3
+				; This is intended to get the best ore in the system before others do.  Its not
+				; intended to empty a given radius of asteroids
+				if ${Config.Miner.StripMine}
 				{
-					variable int Count
-					for (Count:Set[0] ; ${Count}<=30 ; Count:Inc)
+					if ${DistanceTarget} < 0
 					{
-						asteroid_index:Swap[${Math.Rand[${asteroid_index.Used}]:Inc},${Math.Rand[${asteroid_index.Used}]:Inc}]
+						EVE:QueryEntities[AsteroidListTmp, "CategoryID = ${This.AsteroidCategoryID} && Name =- \"${This.OreTypeIterator.Key}\" && Distance < ${Ship.OptimalMiningRange}"]
+						EVE:QueryEntities[AsteroidList_OutOfRangeTmp, "CategoryID = ${This.AsteroidCategoryID} && Name =- \"${This.OreTypeIterator.Key}\" && Distance >= ${Ship.OptimalMiningRange}"]
+					}
+					else
+					{
+						EVE:QueryEntities[AsteroidListTmp, "CategoryID = ${This.AsteroidCategoryID} && Name =- \"${This.OreTypeIterator.Key}\" && DistanceTo[${EntityIDForDistance}]} < ${Math.Calc[${Ship.OptimalMiningRange} + 2000]}"]
+						EVE:QueryEntities[AsteroidList_OutOfRangeTmp, "CategoryID = ${This.AsteroidCategoryID} && Name =- \"${This.OreTypeIterator.Key}\" && DistanceTo[${EntityIDForDistance}]} < ${Math.Calc[${Ship.OptimalMiningRange} + 2000]}"]
 					}
 				}
-				asteroid_index:GetIterator[asteroid_iterator]
-				if ${asteroid_iterator:First(exists)}
+				else
+				{
+					EVE:QueryEntities[AsteroidListTmp, "CategoryID = ${This.AsteroidCategoryID} && Name =- \"${This.OreTypeIterator.Key}\"]
+				}
+
+				; Append the in-range asteroids of the current ore type to the final list
+				AsteroidListTmp:GetIterator[AsteroidIt]
+				if ${AsteroidIt:First(exists)}
 				{
 					do
 					{
-						/* This is intended to get the best ore in the system before others do.  Its not
-							intended to empty a given radius of asteroids */
-						if ${Config.Miner.StripMine}
-						{
-							if ${DistanceTarget} < 0
-							{
-								if ${asteroid_iterator.Value.Distance} < ${Ship.OptimalMiningRange}
-								{
-									This.AsteroidList:Insert[${asteroid_iterator.Value.ID}]
-								}
-								else
-								{
-									AsteroidList_outofrange:Insert[${asteroid_iterator.Value.ID}]
-								}
-							}
-							else
-							{
-								if ${AsteroidIterator.Value.DistanceTo[${DistanceToTarget}]} < ${Math.Calc[${Ship.OptimalMiningRange} + 2000]}
-								{
-									This.AsteroidList:Insert[${asteroid_iterator.Value.ID}]
-								}
-								else
-								{
-									AsteroidList_outofrange:Insert[${asteroid_iterator.Value.ID}]
-								}
-							}
-						}
-						else
-						{
-							This.AsteroidList:Insert[${asteroid_iterator.Value.ID}]
-						}
+						This.AsteroidList:Insert[${AsteroidIt.Value.ID}]
 					}
-					while ${asteroid_iterator:Next(exists)}
+					while ${AsteroidIt:Next(exists)}
 				}
+
+				; Append the asteroids of the current ore type to the out of range tmp list; later we'll append it to the fully populated in-range list
+				AsteroidList_OutOfRangeTmp:GetIterator[AsteroidIt]
+				if ${AsteroidIt:First(exists)}
+				{
+					do
+					{
+						This.AsteroidList_OutOfRange:Insert[${AsteroidIt.Value.ID}]
+					}
+					while ${AsteroidIt:Next(exists)}
+				}
+
 			}
 			while ${This.OreTypeIterator:Next(exists)}
 
+			; Randomize the first 15 asteroids in the list so that all the miners don't glom on the same one.
+			if ${AsteroidList.Used} > 3
+			{
+				variable int Count
+				variable int Max = ${AsteroidList.Used}
+				if ${Max} > 15
+				{
+					Max:Set[15]
+				}
+				for (Count:Set[0] ; ${Count} < ${Max} ; Count:Inc)
+				{
+					AsteroidList:Swap[${Math.Rand[${Max}]:Inc},${Math.Rand[${Max}]:Inc}]
+				}
+			}
+
 			if ${Config.Miner.StripMine}
 			{
-				/* Append the OOR index to the good one */
-				AsteroidList_outofrange:GetIterator[asteroid_iterator]
-				if ${asteroid_iterator:First(exists)}
+				; Append the out-of-range asteroid list to the in-range list; so the miner can decide to move or not as it runs thru it.
+				AsteroidList_OutOfRange:GetIterator[AsteroidIt]
+				if ${AsteroidIt:First(exists)}
 				{
 					do
 					{
-						This.AsteroidList:Insert[${asteroid_iterator.Value.ID}]
+						This.AsteroidList:Insert[${AsteroidIt.Value.ID}]
 					}
-					while ${asteroid_iterator:Next(exists)}
+					while ${AsteroidIt:Next(exists)}
 				}
 			}
 		}
