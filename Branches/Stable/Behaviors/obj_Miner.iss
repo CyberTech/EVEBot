@@ -254,12 +254,14 @@ objectdef obj_Miner
 					}
 					else
 					{
+						UI:UpdateConsole["Debug: Warping to ${Config.Miner.PanicLocation} from Line _LINE_ ", LOG_DEBUG]
 						call Ship.WarpToBookMarkName "${Config.Miner.PanicLocation}"
 					}
 					break
 				}
 				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} != ${Me.SolarSystemID}
 				{
+					UI:UpdateConsole["Debug: FastWarp to ${Config.Miner.PanicLocation} from Line _LINE_ ", LOG_DEBUG]
 					call This.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID}
 					call Ship.TravelToSystem ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID}
 					break
@@ -279,7 +281,9 @@ objectdef obj_Miner
 				}
 				if ${Me.ToEntity.Mode} != 3
 				{
+					UI:UpdateConsole["Debug: Safespots.WarpTo called from Line _LINE_ ", LOG_DEBUG]
 					call Safespots.WarpTo
+					UI:UpdateConsole["Debug: FastWarp called from Line _LINE_ ", LOG_DEBUG]
 					call This.FastWarp
 					wait 30
 				}
@@ -346,7 +350,9 @@ objectdef obj_Miner
 
 				if ${Me.ToEntity.Mode} != 3
 				{
+					UI:UpdateConsole["Debug: Safespots.WarpTo called from Line _LINE_ ", LOG_DEBUG]
 					call Safespots.WarpTo
+					UI:UpdateConsole["Debug: FastWarp called from Line _LINE_ ", LOG_DEBUG]
 					call This.FastWarp
 					wait 30
 					break
@@ -472,6 +478,7 @@ objectdef obj_Miner
 						}
 						if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 						{
+							UI:UpdateConsole["Debug: Warping to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
 							call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
 							call Cargo.TransferOreToCorpHangarArray
 							break
@@ -492,6 +499,7 @@ objectdef obj_Miner
 						}
 						if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 						{
+							UI:UpdateConsole["Debug: Warping to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
 							call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
 							call Cargo.TransferCargoToLargeShipAssemblyArray
 							break
@@ -512,6 +520,7 @@ objectdef obj_Miner
 						}
 						if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 						{
+							UI:UpdateConsole["Debug: Warping to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
 							call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
 							call Cargo.TransferOreToXLargeShipAssemblyArray
 							break
@@ -578,6 +587,7 @@ objectdef obj_Miner
 						if !${Entity[${Orca.Escape}](exists)} && ${Local[${Config.Miner.DeliveryLocation}].ToFleetMember}
 						{
 							UI:UpdateConsole["ALERT:  The orca is not in this belt.  Warping there first to unload."]
+							UI:UpdateConsole["Debug: Fleet Warping to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
 							Fleet:WarpTo[${Config.Miner.DeliveryLocation]
 							break
 						}
@@ -685,6 +695,7 @@ objectdef obj_Miner
 
 		if ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && ${WarpToOrca} && !${Entity[${Orca.Escape}](exists)}
 		{
+			UI:UpdateConsole["Debug: WarpToFleetMember to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
 			call Ship.WarpToFleetMember ${Local[${Config.Miner.DeliveryLocation}]}
 			if ${Config.Miner.BookMarkLastPosition} && ${Bookmarks.CheckForStoredLocation}
 			{
@@ -779,6 +790,7 @@ objectdef obj_Miner
 				if ${Entity[${Orca.Escape}].Distance} > WARP_RANGE
 				{
 					UI:UpdateConsole["ALERT:  ${Entity[${Orca.Escape}].Name} is a long way away.  Warping to it."]
+					UI:UpdateConsole["Debug: Entity:WarpTo to Orca from Line _LINE_ ", LOG_DEBUG]
 					Entity[${Orca.Escape}]:WarpTo[1000]
 					return
 				}
@@ -1102,6 +1114,7 @@ objectdef obj_Miner
 		{
 			if ${Entity[${Asteroids.NearestAsteroid}].Distance} > WARP_RANGE
 			{
+				UI:UpdateConsole["Debug: Entity:WarpTo to NearestAsteroid from Line _LINE_ ", LOG_DEBUG]
 				Entity[${Asteroids.NearestAsteroid}]:WarpTo[${OrcaRange}]
 				return
 			}
@@ -1289,12 +1302,14 @@ objectdef obj_Miner
 		{
 			if ${LocationID} == -1
 			{
+				UI:UpdateConsole["Debug: Bookmark:WarpTo to ${BookmarkName} from Line _LINE_ ", LOG_DEBUG]
 				EVE.Bookmark[${BookmarkName}]:WarpTo[0]
 			}
 			if ${LocationID} != 0
 			{
 				if ${Entity[${LocationID}](exists)}
 				{
+					UI:UpdateConsole["Debug: Entity:WarpTo to ${LocationID} from Line _LINE_ ", LOG_DEBUG]
 					Entity[${LocationID}]:WarpTo[0]
 				}
 				if ${Universe[${LocationID}](exists)}
