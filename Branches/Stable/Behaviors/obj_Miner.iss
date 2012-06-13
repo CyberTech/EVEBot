@@ -1356,6 +1356,38 @@ objectdef obj_Miner
 		variable int64 Attacking=-1
 
 		variable iterator GetData
+		Attacking:Set[${This.Defend_Atomize_1[${Attacking}]}]
+
+		if ${Attacking} != -1 && ${Entity[${Attacking}].IsLockedTarget} && ${Entity[${Attacking}](exists)}
+		{
+			Entity[${Attacking}]:MakeActiveTarget
+			wait 50 ${Me.ActiveTarget.ID} == ${Attacking}
+
+			variable index:activedrone ActiveDroneList
+			variable iterator DroneIterator
+			variable index:int64 AttackDrones
+
+			Me:GetActiveDrones[ActiveDroneList]
+			ActiveDroneList:GetIterator[DroneIterator]
+			if ${DroneIterator:First(exists)}
+				do
+				{
+					if ${DroneIterator.Value.State} == 0
+						AttackDrones:Insert[${DroneIterator.Value.ID}]
+				}
+				while ${DroneIterator:Next(exists)}
+
+			if ${AttackDrones.Used} > 0
+			{
+				UI:UpdateConsole["Miner.Defend: Sending ${AttackDrones.Used} Drones to attack ${Entity[${Attacking}].Name}"]
+				EVE:DronesEngageMyTarget[AttackDrones]
+			}
+		}
+
+	}
+	member:int64 Defend_Atomize_1(int64 Attacking)
+	{
+		variable iterator GetData
 
 		if ${AttackingTeam.Used} > 0
 		{
@@ -1406,34 +1438,9 @@ objectdef obj_Miner
 			}
 			while ${GetData:Next(exists)}
 
-		if ${Attacking} != -1 && ${Entity[${Attacking}].IsLockedTarget} && ${Entity[${Attacking}](exists)}
-		{
-			Entity[${Attacking}]:MakeActiveTarget
-			wait 50 ${Me.ActiveTarget.ID} == ${Attacking}
 
-			variable index:activedrone ActiveDroneList
-			variable iterator DroneIterator
-			variable index:int64 AttackDrones
-
-			Me:GetActiveDrones[ActiveDroneList]
-			ActiveDroneList:GetIterator[DroneIterator]
-			if ${DroneIterator:First(exists)}
-				do
-				{
-					if ${DroneIterator.Value.State} == 0
-						AttackDrones:Insert[${DroneIterator.Value.ID}]
-				}
-				while ${DroneIterator:Next(exists)}
-
-			if ${AttackDrones.Used} > 0
-			{
-				UI:UpdateConsole["Miner.Defend: Sending ${AttackDrones.Used} Drones to attack ${Entity[${Attacking}].Name}"]
-				EVE:DronesEngageMyTarget[AttackDrones]
-			}
-		}
-
+		return ${Attacking}
 	}
-
 
 	;	This member is used to determine if our miner is full based on a number of factors:
 	;	*	Config.Miner.CargoThreshold
