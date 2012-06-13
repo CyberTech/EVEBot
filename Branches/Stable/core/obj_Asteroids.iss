@@ -299,7 +299,14 @@ objectdef obj_Asteroids
 		variable index:entity AsteroidList_OutOfRangeTmp
 		variable iterator AsteroidIt
 
-		This.MaxDistanceToAsteroid:Set[${Math.Calc[${Ship.OptimalMiningRange} * ${Config.Miner.MiningRangeMultipler}]}]
+		if ${Ship.OptimalMiningRange} == 0 && ${Config.Miner.OrcaMode}
+		{
+			This.MaxDistanceToAsteroid:Set[${Math.Calc[20000 * ${Config.Miner.MiningRangeMultipler}]}]
+		}
+		else
+		{
+			This.MaxDistanceToAsteroid:Set[${Math.Calc[${Ship.OptimalMiningRange} * ${Config.Miner.MiningRangeMultipler}]}]
+		}
 
 		if ${Config.Miner.IceMining}
 		{
@@ -352,13 +359,14 @@ objectdef obj_Asteroids
 				{
 					do
 					{
-						This.AsteroidList_OutOfRange:Insert[${AsteroidIt.Value.ID}]
+						AsteroidList_OutOfRange:Insert[${AsteroidIt.Value.ID}]
 					}
 					while ${AsteroidIt:Next(exists)}
 				}
 
 			}
 			while ${This.OreTypeIterator:Next(exists)}
+
 
 			; Randomize the first 15 asteroids in the list so that all the miners don't glom on the same one.
 			if ${AsteroidList.Used} > 3
