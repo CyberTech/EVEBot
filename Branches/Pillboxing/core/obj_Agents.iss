@@ -992,6 +992,29 @@ objectdef obj_Agents
 
   }
 
+  	function UpdateLocatorAgent()
+  	{
+  		variable index:dialogstring dsIndex
+		variable iterator dsIterator
+		Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
+		while ${dsIndex.Used} == 0
+		{
+			UI:UpdateConsole["Waiting for responses from agent to populate."]
+			wait 10
+		}
+  		if ${dsIndex.Used.Equal[2]} && ${dsIndex[1].Text.Find["View"]} > 0 || ${dsIndex[1].Text.Find["Request"]} > 0
+	    {
+	    	UI:UpdateConsole["obj_Agents: Locator Agent detected, selecting view mission button."]
+	    	dsIndex[1]:Say[${This.AgentID}]	
+	    	while ${dsIndex.Used.Equal[2]}
+	    	{
+	    		UI:UpdateConsole["Waiting for locator agent conversation to update."]
+	    		Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
+	    		wait 20
+	    	}
+	    }
+  	}
+
 	function RequestMission()
 	{
 		variable index:dialogstring dsIndex
@@ -1015,7 +1038,7 @@ objectdef obj_Agents
 			wait 100
 		}
 		while !${EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"](exists)}
-
+		call This.UpdateLocatorAgent
 		;; The dialog caption fills in long before the details do.
 		;; Wait for dialog strings to become valid before proceeding.
 		variable int WaitCount
@@ -1205,7 +1228,7 @@ objectdef obj_Agents
             wait 10
         }
         while !${EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"](exists)}
-
+        call This.UpdateLocatorAgent
 		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
 
 	    ; display your dialog options

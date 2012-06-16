@@ -886,7 +886,6 @@ objectdef obj_Combat
 						EVE:Execute[OpenHangarFloor]
 						wait 10
 						call Cargo.TransferCargoToHangar
-						UI:UpdateConsole["Under normal circumstances this would be dumping cargo into hangar."]
 						;Add stack code here
 						wait 20
 						ContainerItems:Clear
