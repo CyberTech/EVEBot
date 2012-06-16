@@ -1341,14 +1341,7 @@ objectdef obj_Cargo
 	
 	function TransferCargoToHangar()
 	{
-		while !${Station.Docked}
-		{
-			UI:UpdateConsole["obj_Cargo: Waiting for dock..."]
-			wait 10
-		}
-
 		/* Need to cycle the the cargohold after docking to update the list. */
-		call This.CloseHolds
 
 		UI:UpdateConsole["Transferring Cargo to Station Hangar"]
 		call This.OpenHolds

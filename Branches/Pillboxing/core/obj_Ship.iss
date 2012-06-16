@@ -1434,6 +1434,7 @@ objectdef obj_Ship
 			wait WAIT_CARGO_WINDOW
 			while ${This.IsCargoOpen}
 			{
+				EVEWindow[byName,"Inventory"]:Close
 				wait 1
 			}
 			wait 10
