@@ -1372,11 +1372,19 @@ objectdef obj_Ship
 
 	member IsCargoOpen()
 	{
-		if ${EVEWindow[byName, "Inventory"](exists)}
+		;if ${EVEWindow[ByCaption,"active ship"](exists)}
+		if ${EVEWindow[ByName,"Inventory"](exists)}
 		{
-			;; Make active, just in case (it won't do anything..or hurt anything if it's alreayd the 'active' window)
-			EVEWindow[ByName,"Inventory"]:MakeChildActive[ShipCargo]
-			return TRUE
+			;if ${EVEWindow[ByCaption,"active ship"].Caption(exists)}
+			if ${EVEWindow[ByName,"Inventory"].Caption(exists)}
+			{
+				return TRUE
+			}
+			else
+			{
+				UI:UpdateConsole["\${EVEWindow[ByCaption,"active ship"](exists)} == ${EVEWindow[ByCaption,"active ship"](exists)}", LOG_DEBUG]
+				UI:UpdateConsole["\${EVEWindow[ByCaption,"active ship"].Caption(exists)} == ${EVEWindow[ByCaption,"active ship"].Caption(exists)}", LOG_DEBUG]
+			}
 		}
 		return FALSE
 	}
