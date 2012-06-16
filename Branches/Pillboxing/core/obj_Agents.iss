@@ -1217,11 +1217,16 @@ objectdef obj_Agents
 
 		if ${dsIterator:First(exists)}
 		{
-			if ${dsIterator.Value.Text.Find[Complete]}
+			if ${dsIterator.Value.Text.Find[Complete]} > 0
 			{
 				; Assume the first item is the "turn in mission" item.
 		        dsIterator.Value:Say[${This.AgentID}]
 				Config.Agents:SetLastCompletionTime[${This.AgentName},${Time.Timestamp}]
+				UI:UpdateConsole["Handing in mission to agent."]
+			}
+			else
+			{
+				UI:UpdateConsole["First button was not complete, button contained ${dsIterator.Value.Text}."]
 			}
 		}
 
