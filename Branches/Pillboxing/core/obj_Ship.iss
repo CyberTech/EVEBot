@@ -1753,6 +1753,7 @@ objectdef obj_Ship
 			if ${Label.Equal[NULL]}
 			{
 				UI:UpdateConsole["NULL bookmark found, returning."]
+				return
 			}
 			WarpCounter:Set[1]
 			while !${DestinationBookmark.ToEntity(exists)}
