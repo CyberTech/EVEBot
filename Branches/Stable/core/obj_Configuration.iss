@@ -1162,6 +1162,7 @@ objectdef obj_Configuration_Hauler
 		This.HaulerRef:AddSetting[Drop Off Bookmark, ""]
 		This.HaulerRef:AddSetting[Mining System Bookmark, ""]
 		This.HaulerRef:AddSetting[Haul for New Fleet Members, TRUE]
+		This.HaulerRef:AddSetting[Orca running EveBOT,TRUE]
 	}
 
 	member:int HaulerMode()
@@ -1223,6 +1224,17 @@ objectdef obj_Configuration_Hauler
 	{
 		This.HaulerRef:AddSetting[Hauler Pickup Name,${Bookmark}]
 	}
+
+	member:bool OrcaRunningEvebot()
+	{
+		return ${This.HaulerRef.FindSetting[Orca Running EveBOT, TRUE]}
+	}
+
+	method SetOrcaRunningEvebot(bool value)
+	{
+		This.HaulerRef:AddSetting[Orca Running EveBOT, ${value}]
+	}
+
 }
 
 /* ************************************************************************* */

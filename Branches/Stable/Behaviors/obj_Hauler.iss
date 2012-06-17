@@ -48,7 +48,7 @@ objectdef obj_Hauler
 	variable int TimeStartedApproaching = 0
 
 	;	This is used to keep track of how much cargo our orca has ready
-	variable float OrcaCargo=-1
+	variable float OrcaCargo=0
 
 
 /*
@@ -151,7 +151,7 @@ objectdef obj_Hauler
 		;	If I'm in a station, and servicing an orca, wait until the orca needs serviced.
 		;	Note: Due to "BASE" state causing undock after unload, this needs to be here.
 		;	TODO: Clean up "BASE" state to enter "IDLE" state depending on hauler mode.
-		if ${Config.Hauler.HaulerModeName.Equal["Service Orca"]} && (${OrcaCargo} < ${Config.Miner.CargoThreshold} && ${OrcaCargo} < 35000) && ${Me.InStation} && ${OrcaCargo} != -1
+		if ${Config.Hauler.HaulerModeName.Equal["Service Orca"]} && (${OrcaCargo} < ${Config.Miner.CargoThreshold} && ${OrcaCargo} < 35000) && ${Me.InStation} && ${Config.Hauler.OrcaRunningEvebot}
 		{
 			This.CurrentState:Set["IDLE"]
 			return
@@ -167,7 +167,7 @@ objectdef obj_Hauler
 		}
 
 		;	If I'm in a station, I need to perform what I came there to do
-		if ${Me.InStation} && (!${Config.Hauler.HaulerModeName.Equal["Service Orca"]} || (${OrcaCargo} > ${Config.Miner.CargoThreshold} || ${OrcaCargo} > 35000) || ${OrcaCargo} == -1)
+		if ${Me.InStation} && (!${Config.Hauler.HaulerModeName.Equal["Service Orca"]} || (${OrcaCargo} > ${Config.Miner.CargoThreshold} || ${OrcaCargo} > 35000) || !${Config.Hauler.OrcaRunningEvebot})
 		{
 	  		This.CurrentState:Set["BASE"]
 	  		return
@@ -475,7 +475,7 @@ objectdef obj_Hauler
 			OrcaID:Set[0]
 		}
 
-		if ${OrcaCargo} < ${Config.Miner.CargoThreshold} && ${OrcaCargo} < 35000  && ${OrcaCargo} != -1 && ${OrcaID} != 0
+		if ${OrcaCargo} < ${Config.Miner.CargoThreshold} && ${OrcaCargo} < 35000  && ${Config.Hauler.OrcaRunningEvebot} && ${OrcaID} != 0
 		{
 			return
 		}

@@ -2164,27 +2164,28 @@
 								This:SetSelection[${Script[EVEBot].VariableScope.Config.Hauler.HaulerMode}]
 							</OnLoad>
 						</combobox>
-						<!--
-						<checkbox Name='cbMultisystemSupport'>
+						
+						<checkbox Name='cbOrcaRunningEvebot'>
 							<X>10</X>
 							<Y>30</Y>
 							<Height>20</Height>
 							<Width>100</Width>
-							<Text>Support Multi-System Hauling</Text>
+							<Text>Orca is running EVEBot</Text>
 							<AutoTooltip>
-								When checked the hauler will drop-off ore at bookmarked station (or POS) which may be in another system.
+								When checked, the hauler will wait at dropoff location for orca to broadcast cargo used.
+								When unchecked, hauler will cycle endlessly without breaks.
 							</AutoTooltip>
 							<OnLoad>
-								if ${Script[EVEBot].VariableScope.Config.Hauler.MultiSystemSupport}
+								if ${Script[EVEBot].VariableScope.Config.Hauler.OrcaRunningEvebot}
 								{
 									This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
-									Script[EVEBot].VariableScope.Config.Hauler:SetMultiSystemSupport[${This.Checked}]
+									Script[EVEBot].VariableScope.Config.Hauler:SetOrcaRunningEvebot[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
-						-->
+						
 						<Text name='MiningSystemLabel'>
 							<X>10</X>
 							<Y>80</Y>
