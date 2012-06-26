@@ -102,7 +102,7 @@ objectdef obj_JetCan
 		if ${This.ActiveCan} > 0
 		{
 			/* The can no longer exists, since we passed above checks, so try to compensate for an Eve bug and close the loot window for it. */
-			EVEWindow[loot_${This.ActiveCan}]:Close
+			;EVEWindow[loot_${This.ActiveCan}]:Close
 		}
 
 		variable index:entity Cans
@@ -276,12 +276,8 @@ objectdef obj_JetCan
 		{
 			ID:Set[${This.ActiveCan}]
 		}
-
-		if ${Entity[${ID}].LootWindow(exists)}
-		{
-			return TRUE
-		}
-		elseif ${Entity[${ID}].StorageWindow(exists)}
+		
+		if ${EVEWindow[ByName,"Inventory"].ChildWindowExists["${ID}"]}
 		{
 			return TRUE
 		}
@@ -289,8 +285,9 @@ objectdef obj_JetCan
 		{
 			return FALSE
 		}
-	}
 
+	}
+	
 	member:float CargoCapacity(int64 ID=0)
 	{
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
@@ -302,8 +299,24 @@ objectdef obj_JetCan
 		{
 			return FALSE
 		}
-
-		return ${Entity[${ID}].CargoCapacity}
+		
+		return ${EVEWindow[ByName,"Inventory"].ChildCapacity[${ID}]}
+		
+	}
+	
+	member:float CargoUsedCapacity(int64 ID=0)
+	{
+		if (${ID} == 0 && ${This.ActiveCan} > 0)
+		{
+			ID:Set[${This.ActiveCan}]
+		}
+		
+		if !${This.IsCargoOpen[${ID}]}
+		{
+			return FALSE
+		}
+		
+		return ${EVEWindow[ByName,"Inventory"].ChildUsedCapacity[${ID}]}
 	}
 
 	member:float CargoMinimumFreeSpace(int64 ID=0)
@@ -339,11 +352,11 @@ objectdef obj_JetCan
 			return FALSE
 		}
 
-		if ${Entity[${ID}].UsedCargoCapacity} < 0
+		if ${This.CargoUsedCapacity[${ID}]} < 0
 		{
 			return ${This.CargoCapacity}
 		}
-		return ${Math.Calc[${This.CargoCapacity}-${Entity[${ID}].UsedCargoCapacity}]}
+		return ${Math.Calc[${This.CargoCapacity}-${This.CargoUsedCapacity}]}
 	}
 
 	member:bool CargoFull(int64 ID=0)
@@ -425,24 +438,28 @@ objectdef obj_JetCan
 
 	function Close(int64 ID=0)
 	{
-		if (${ID} == 0 && ${This.ActiveCan} > 0)
-		{
-			ID:Set[${This.ActiveCan}]
-		}
+		;if (${ID} == 0 && ${This.ActiveCan} > 0)
+		;{
+		;	ID:Set[${This.ActiveCan}]
+		;}
 
-		if ${This.IsCargoOpen[${ID}]}
-		{
-			UI:UpdateConsole["Closing JetCan"]
-			Entity[${ID}]:CloseCargo
-			Entity[${ID}]:CloseStorage
-			wait WAIT_CARGO_WINDOW
-			while ${This.IsCargoOpen[${ID}]}
-			{
-				wait 1
-			}
-		}
+		;if ${This.IsCargoOpen[${ID}]}
+		;{
+		;	UI:UpdateConsole["Closing JetCan"]
+		;	Entity[${ID}]:CloseCargo
+		;	Entity[${ID}]:CloseStorage
+		;	wait WAIT_CARGO_WINDOW
+		;	while ${This.IsCargoOpen[${ID}]}
+		;	{
+		;		wait 1
+		;	}
+		;}
 	}
 }
+
+
+
+
 
 objectdef obj_CorpHangarArray inherits obj_JetCan
 {
@@ -499,39 +516,6 @@ objectdef obj_CorpHangarArray inherits obj_JetCan
 		return ${This.ActiveCan}
 	}
 
-	member IsCargoOpen(int64 ID=0)
-	{
-		if (${ID} == 0 && ${This.ActiveCan} > 0)
-		{
-			ID:Set[${This.ActiveCan}]
-		}
-
-		if ${Entity[${ID}].StorageWindow(exists)}
-		{
-			return TRUE
-		}
-		else
-		{
-			return FALSE
-		}
-	}
-
-	member:float CargoCapacity(int64 ID=0)
-	{
-		if (${ID} == 0 && ${This.ActiveCan} > 0)
-		{
-			ID:Set[${This.ActiveCan}]
-		}
-
-		if !${This.IsCargoOpen[${ID}]}
-		{
-			return FALSE
-		}
-
-		return ${Entity[${ID}].CargoCapacity}
-		;return 1400000
-	}
-
 	member:bool AccessAllowed(int64 ID)
 	{
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
@@ -553,6 +537,12 @@ objectdef obj_CorpHangarArray inherits obj_JetCan
 	}
 }
 
+
+
+
+
+
+
 objectdef obj_SpawnContainer inherits obj_JetCan
 {
 	; Returns -1 for no can, or the entity ID
@@ -567,7 +557,7 @@ objectdef obj_SpawnContainer inherits obj_JetCan
 		if ${This.ActiveCan} > 0
 		{
 			/* The can no longer exists, since we passed above checks, so try to compensate for an Eve bug and close the loot window for it. */
-			EVEWindow[loot_${This.ActiveCan}]:Close
+			;EVEWindow[loot_${This.ActiveCan}]:Close
 		}
 
 		variable index:entity Cans
@@ -594,24 +584,11 @@ objectdef obj_SpawnContainer inherits obj_JetCan
 		This.ActiveCan:Set[-1]
 		return ${This.ActiveCan}
 	}
-
-	member:float CargoCapacity(int64 ID=0)
-	{
-		if (${ID} == 0 && ${This.ActiveCan} > 0)
-		{
-			ID:Set[${This.ActiveCan}]
-		}
-
-		if !${This.IsCargoOpen[${ID}]}
-		{
-			return FALSE
-		}
-
-		/* TODO: hard coded capacity b/c of isxeve cargocapcity breakage */
-		return ${Entity[${ID}].CargoCapacity}
-		;return 1400000
-	}
 }
+
+
+
+
 
 objectdef obj_LargeShipAssemblyArray inherits obj_JetCan
 {
@@ -668,23 +645,6 @@ objectdef obj_LargeShipAssemblyArray inherits obj_JetCan
 		return ${This.ActiveCan}
 	}
 
-	member:float CargoCapacity(int64 ID=0)
-	{
-		if (${ID} == 0 && ${This.ActiveCan} > 0)
-		{
-			ID:Set[${This.ActiveCan}]
-		}
-
-		if !${This.IsCargoOpen[${ID}]}
-		{
-			return FALSE
-		}
-
-		/* TODO: hard coded capacity b/c of isxeve cargocapcity breakage */
-		return ${Entity[${ID}].CargoCapacity}
-		;return 18500500
-	}
-
 	member:bool AccessAllowed(int64 ID)
 	{
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
@@ -705,6 +665,10 @@ objectdef obj_LargeShipAssemblyArray inherits obj_JetCan
 		return FALSE
 	}
 }
+
+
+
+
 
 objectdef obj_XLargeShipAssemblyArray inherits obj_JetCan
 {
@@ -759,22 +723,6 @@ objectdef obj_XLargeShipAssemblyArray inherits obj_JetCan
 
 		This.ActiveCan:Set[-1]
 		return ${This.ActiveCan}
-	}
-
-	member:float CargoCapacity(int64 ID=0)
-	{
-		if (${ID} == 0 && ${This.ActiveCan} > 0)
-		{
-			ID:Set[${This.ActiveCan}]
-		}
-
-		if !${This.IsCargoOpen[${ID}]}
-		{
-			return FALSE
-		}
-
-		return ${Entity[${ID}].CargoCapacity}
-		;return 18500500
 	}
 
 	member:bool AccessAllowed(int64 ID)
