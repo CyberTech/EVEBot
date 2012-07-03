@@ -506,7 +506,26 @@ objectdef obj_Configuration_Miner
 	{
 		This.MinerRef:AddSetting[Use Mining Drones, ${value}]
 	}
+	
+	member:bool MasterMode()
+	{
+		return ${This.MinerRef.FindSetting[Master Mode, FALSE]}
+	}
 
+	method SetMasterMode(bool value)
+	{
+		This.MinerRef:AddSetting[Master Mode, ${value}]
+	}
+
+	member:bool GroupMode()
+	{
+		return ${This.MinerRef.FindSetting[Group Mode, FALSE]}
+	}
+
+	method SetGroupMode(bool value)
+	{
+		This.MinerRef:AddSetting[Group Mode, ${value}]
+	}
 	member:bool OrcaMode()
 	{
 		return ${This.MinerRef.FindSetting[Orca Mode, FALSE]}

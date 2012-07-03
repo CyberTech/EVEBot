@@ -37,6 +37,9 @@ objectdef obj_Miner
 	;	This is used to keep track of if our orca is in a belt.
 	variable bool WarpToOrca=FALSE
 
+	;	This is used to keep track of if our master is in a belt.
+	variable bool WarpToMaster=FALSE
+
 	;	This is a list of IDs for rats which are attacking a team member
 	variable set AttackingTeam
 
@@ -49,6 +52,13 @@ objectdef obj_Miner
 	;	Search string for our Orca
 	variable string Orca
 
+	;	Search string for our Master
+	variable string Master
+
+	; My master variables
+	variable int64 MasterVote =-1
+	variable string MasterName
+	variable bool IsMaster=FALSE
 
 /*
 ;	Step 1:  	Get the module ready.  This includes init and shutdown methods, as well as the pulse method that runs each frame.
@@ -63,6 +73,10 @@ objectdef obj_Miner
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		LavishScript:RegisterEvent[EVEBot_Orca_InBelt]
 		Event[EVEBot_Orca_InBelt]:AttachAtom[This:OrcaInBelt]
+		LavishScript:RegisterEvent[EVEBot_Master_InBelt]
+		Event[EVEBot_Master_InBelt]:AttachAtom[This:MasterInBelt]
+		LavishScript:RegisterEvent[EVEBot_Master_Vote]
+		Event[EVEBot_Master_Vote]:AttachAtom[This:MasterVote]
 		LavishScript:RegisterEvent[EVEBot_HaulerMSG]
 		Event[EVEBot_HaulerMSG]:AttachAtom[This:HaulerMSG]
 		LavishScript:RegisterEvent[EVEBot_TriggerAttack]
@@ -76,6 +90,8 @@ objectdef obj_Miner
 	{
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 		Event[EVEBot_Orca_InBelt]:DetachAtom[This:OrcaInBelt]
+		Event[EVEBot_Master_InBelt]:DetachAtom[This:MasterInBelt]
+		Event[EVEBot_Master_Vote]:DetachAtom[This:MasterVote]
 		Event[EVEBot_HaulerMSG]:DetachAtom[This:HaulerMSG]
 		Event[EVEBot_TriggerAttack]:DetachAtom[This:UnderAttack]
 	}
@@ -220,6 +236,13 @@ objectdef obj_Miner
 		if ${This.CurrentState.NotEqual[ORCA]} && ${Config.Miner.OrcaMode}
 		{
 			relay all -event EVEBot_Orca_InBelt FALSE
+		}
+
+		;	Tell the miners we might not be in a belt and shouldn't be warped to.
+		if ${This.CurrentState.NotEqual[MINE]} && ${IsMaster}
+		{
+			UI:UpdateConsole["ALERT:  Master not in Belt"]
+			relay all -event EVEBot_Master_InBelt FALSE
 		}
 
 		switch ${This.CurrentState}
@@ -398,6 +421,20 @@ objectdef obj_Miner
 					Ship:Open
 				}
 				call Cargo.OpenHolds
+
+				if ${Config.Miner.MasterMode} || ${Config.Miner.GroupMode}
+				{
+					if ${MasterVote} == -1
+					{
+						call This.VoteForMaster
+
+					}
+					else
+					{
+						call This.ResetMaster
+					}
+				}
+
 				break
 
 			;	This means we're in space and should mine some more ore!  Only one choice here - MINE!
@@ -707,6 +744,19 @@ objectdef obj_Miner
 		}
 		else
 		{
+			UI:UpdateConsole["Debug: Checking Master Mode:${IsMaster} WarpToMaster:${WarpToMaster} MasterName:${MasterName}", LOG_DEBUG]
+			Master:Set[Name = "${MasterName}"]
+			
+			if ${Config.Miner.GroupMode} && ${WarpToMaster} && !${Entity[${Master.Escape}](exists)} && !${IsMaster}
+			{
+				UI:UpdateConsole["Debug: WarpToFleetMember to ${MasterName} from Line _LINE_ ", LOG_DEBUG]
+				call Ship.WarpToFleetMember ${Local[${MasterName}]}
+				if ${Config.Miner.BookMarkLastPosition} && ${Bookmarks.CheckForStoredLocation}
+				{
+					Bookmarks:RemoveStoredLocation
+				}
+
+			}
 			call Asteroids.UpdateList
 		}
 		
@@ -775,6 +825,12 @@ objectdef obj_Miner
 			return
 		}
 
+		if ${IsMaster}
+		{
+		UI:UpdateConsole["ALERT:  Master In Belt"]
+			;	Tell our miners we're in a belt and they are safe to warp to me
+			relay all -event EVEBot_Master_InBelt TRUE
+		}
 
 		;	This calls the defense routine if Launch Combat Drones is turned on
 		if ${Config.Combat.LaunchCombatDrones} && !${Ship.InWarp}
@@ -863,6 +919,22 @@ objectdef obj_Miner
 					call Ship.OpenCargo
 					call Cargo.TransferOreToShipCorpHangar ${Entity[${Orca.Escape}]}
 					call Cargo.ReplenishCrystals ${Entity[${Orca.Escape}]}
+				}
+			}
+		}
+		else
+		{
+			if ${Config.Miner.GroupMode}
+			{
+				UI:UpdateConsole["Debug: Checking Group mode ", LOG_DEBUG]
+				; if for some reason we are too far away from our master go find him
+				Master:Set[Name = "${MasterName}"]
+				if ${Entity[${Master.Escape}].Distance} > WARP_RANGE
+				{
+					UI:UpdateConsole["ALERT:  ${Entity[${Master.Escape}].Name} is a long way away.  Warping to it."]
+					UI:UpdateConsole["Debug: Entity:WarpTo to Master from Line _LINE_ ", LOG_DEBUG]
+					Entity[${Master.Escape}]:WarpTo[10000]
+					return
 				}
 			}
 		}
@@ -1242,6 +1314,109 @@ objectdef obj_Miner
 	method OrcaInBelt(bool State)
 	{
 		WarpToOrca:Set[${State}]
+	}
+
+	;This method is triggered by an event.  If triggered, it tells us our master is in a belt and can be warped to.
+	method MasterInBelt(bool State)
+	{
+		WarpToMaster:Set[${State}]
+	}
+
+	;This method is triggered by an event.  If triggered, lets Us figure out who is the master in group mode.
+	method MasterVote(string groupParams)
+	{
+		UI:UpdateConsole["obj_Miner:MasterVote event:${groupParams}, LOG_DEBUG]
+		
+		if ${Config.Miner.MasterMode} || ${Config.Miner.GroupMode}
+				{
+					if ${MasterVote} == -1
+					{
+						call This.VoteForMaster
+
+					}
+				
+
+		variable string name
+		variable int64 State = -1
+
+		name:Set[${groupParams.Token[1,","]}]
+		State:Set[${groupParams.Token[2,","]}]
+
+		if ${Me.Name.NotEqual[${name}]}
+		{
+		MasterName:Set[${name}]
+		if ${State} > ${MasterVote}
+		{
+			MasterName:Set[${name}]
+			IsMaster:Set[FALSE]
+			UI:UpdateConsole["obj_Miner: Master is:${MasterName}", LOG_DEBUG]
+		
+		}
+		elseif ${State} == ${MasterVote}
+		{
+			if ${Config.Miner.MasterMode}
+			{
+				UI:UpdateConsole["obj_Miner: There can be only one Master ERROR:${name}", LOG_DEBUG]
+				relay all -event EVEBot_HARDSTOP
+			}
+			else
+			{
+				; re-vote for master
+				UI:UpdateConsole["obj_Miner: Master Vote tie with:${name}", LOG_DEBUG]
+				This:VoteForMaster
+				
+			}
+		}
+		else
+		{
+			IsMaster:Set[TRUE]
+			MasterName:Set[${Me.Name}]
+			UI:UpdateConsole["obj_Miner: I am Master", LOG_DEBUG]
+			relay all -event EVEBot_Master_Vote "${Me.Name},${MasterVote}"
+		
+		}
+		}
+		}
+	}
+
+	function ResetMaster()
+	{
+		UI:UpdateConsole["Debug: Reset Master :${MasterVote}", LOG_DEBUG]
+
+		if ${Config.Miner.MasterMode} || ${Config.Miner.GroupMode}
+		{
+
+			if ${Config.Miner.GroupMode}
+			{
+				MasterName:Set[NULL]
+			}
+			
+			if ${Config.Miner.MasterMode}
+			{
+				MasterVote:Set[100]
+			}
+
+			relay all -event EVEBot_Master_Vote "${Me.Name},${MasterVote}"
+
+		}
+
+		
+	}
+
+	function VoteForMaster()
+	{
+		if ${Config.Miner.MasterMode}
+		{
+			MasterVote:Set[100]
+		}
+		else
+		{
+			MasterVote:Set[${Math.Rand[90]:Inc[10]}]
+		}
+		UI:UpdateConsole["Debug: Master Vote value:${MasterVote}", LOG_DEBUG]
+		
+
+		relay all -event EVEBot_Master_Vote "${Me.Name},${MasterVote}"
 	}
 
 	;This method is triggered by an event.  If triggered, it tells us how much space our hauler has available

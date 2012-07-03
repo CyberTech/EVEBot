@@ -256,7 +256,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Common:SetDronesInBay[${Int[${This.Text}]}]
+								Script[EVEBot].VariableScope.Config.Common:SetDronesInBay[${Int[${This.Text}]}]
 								}
 							</OnChange>
 						</Textentry>
@@ -288,7 +288,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Common:SetMaxRuntime[${Int[${This.Text}]}]
+								Script[EVEBot].VariableScope.Config.Common:SetMaxRuntime[${Int[${This.Text}]}]
 								}
 							</OnChange>
 						</Textentry>
@@ -312,7 +312,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Common:SetIRCServer[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Common:SetIRCServer[${This.Text}]
 								}
 							</OnChange>
 						</Textentry>
@@ -337,7 +337,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Common:SetIRCChannel[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Common:SetIRCChannel[${This.Text}]
 								}
 							</OnChange>
 						</Textentry>
@@ -361,7 +361,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Common:SetIRCUser[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Common:SetIRCUser[${This.Text}]
 								}
 							</OnChange>
 						</Textentry>
@@ -387,7 +387,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Common:SetIRCPassword[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Common:SetIRCPassword[${This.Text}]
 								}
 							</OnChange>
 						</Textentry>
@@ -401,7 +401,7 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Common.UseSound}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
@@ -418,7 +418,7 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Common.Disable3D}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
@@ -438,7 +438,7 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Miner.StripMine}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
@@ -455,7 +455,7 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Miner.BookMarkLastPosition}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
@@ -474,7 +474,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Miner:SetMiningRangeMultipler[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Miner:SetMiningRangeMultipler[${This.Text}]
 								}
 							</OnChange>
 						</Textentry>
@@ -498,7 +498,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Miner:SetCargoThreshold[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Miner:SetCargoThreshold[${This.Text}]
 								}
 							</OnChange>
 						</Textentry>
@@ -552,7 +552,7 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Miner.DistributeLasers}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
@@ -569,7 +569,7 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Miner.UseFieldBookmarks}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
@@ -586,11 +586,45 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Miner.UseMiningDrones}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
 								Script[EVEBot].VariableScope.Config.Miner:SetUseMiningDrones[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox name='cbMasterMinerMode'>
+							<X>400</X>
+							<Y>130</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Group Master </Text>
+							<AutoTooltip>When checked this will be the master in group mining, You should only have one master</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Miner.MasterMode}
+								{
+								This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Miner:SetMasterMode[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox name='cbGroupMinerMode'>
+							<X>400</X>
+							<Y>150</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Group Mode </Text>
+							<AutoTooltip>When checked will tell evebot to mine as a group</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Miner.GroupMode}
+								{
+								This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Miner:SetGroupMode[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
 						<checkbox name='cbOrcaMode'>
@@ -603,13 +637,13 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Miner.OrcaMode}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
 								Script[EVEBot].VariableScope.Config.Miner:SetOrcaMode[${This.Checked}]
 							</OnLeftClick>
-						</checkbox>						
+						</checkbox>
 						<checkbox name='cbOrcaWrecks'>
 							<X>300</X>
 							<Y>150</Y>
@@ -620,13 +654,13 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Miner.OrcaTractorLoot}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
 								Script[EVEBot].VariableScope.Config.Miner:SetOrcaTractorLoot[${This.Checked}]
 							</OnLeftClick>
-						</checkbox>						
+						</checkbox>
 						<slider name='AvoidPlayerRange'>
 							<X>10</X>
 							<Y>110</Y>
@@ -662,7 +696,7 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Miner.StandingDetection}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
@@ -704,7 +738,7 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Miner.IceMining}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
@@ -731,7 +765,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Miner:SetMinimumSecurityStatus[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Miner:SetMinimumSecurityStatus[${This.Text}]
 								}
 							</OnChange>
 						</Textentry>
@@ -784,14 +818,14 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Miner.SafeJetcan}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
 								Script[EVEBot].VariableScope.Config.Miner:SetSafeJetcan[${This.Checked}]
 							</OnLeftClick>
-						</checkbox>						
-						
+						</checkbox>
+
 						<Text name='DeliveryLocationText'>
 							<X>15</X>
 							<Y>225</Y>
@@ -811,7 +845,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Miner:SetDeliveryLocation[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Miner:SetDeliveryLocation[${This.Text}]
 								}
 							</OnChange>
 						</Textentry>
@@ -834,11 +868,11 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Miner:SetPanicLocation[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Miner:SetPanicLocation[${This.Text}]
 								}
 							</OnChange>
 						</Textentry>
-						
+
 					</Tab>
 					<Tab name='Combat'>
 						<checkbox name='cbAlwaysShieldBoost'>
@@ -851,7 +885,7 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Combat.AlwaysShieldBoost}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
@@ -868,7 +902,7 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Combat.LaunchCombatDrones}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
@@ -885,7 +919,7 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Combat.ChainSpawns}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
@@ -902,7 +936,7 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Combat.ChainSolo}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
@@ -919,7 +953,7 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Combat.AnomalyAssistMode}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
@@ -936,7 +970,7 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Combat.RestockAmmo}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
@@ -953,7 +987,7 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Combat.Orbit}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
@@ -970,7 +1004,7 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Combat.OrbitAtOptimal}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
@@ -987,7 +1021,7 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Combat.LootMyKills}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
@@ -1014,7 +1048,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Combat:SetMinimumDronesInSpace[${Int[${This.Text}]}]
+								Script[EVEBot].VariableScope.Config.Combat:SetMinimumDronesInSpace[${Int[${This.Text}]}]
 								}
 							</OnChange>
 						</Textentry>
@@ -1037,7 +1071,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Combat:SetWarpRange[${Int[${This.Text}]}]
+								Script[EVEBot].VariableScope.Config.Combat:SetWarpRange[${Int[${This.Text}]}]
 								}
 							</OnChange>
 						</Textentry>
@@ -1061,7 +1095,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Combat:SetMinChainBounty[${Int[${This.Text}]}]
+								Script[EVEBot].VariableScope.Config.Combat:SetMinChainBounty[${Int[${This.Text}]}]
 								}
 							</OnChange>
 						</Textentry>
@@ -1085,7 +1119,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Combat:SetOrbitDistance[${Int[${This.Text}]}]
+								Script[EVEBot].VariableScope.Config.Combat:SetOrbitDistance[${Int[${This.Text}]}]
 								}
 							</OnChange>
 						</Textentry>
@@ -1109,7 +1143,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Combat:SetAmmoTypeID[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Combat:SetAmmoTypeID[${This.Text}]
 								}
 							</OnChange>
 						</Textentry>
@@ -1133,7 +1167,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Combat:SetRestockAmmoFreeSpace[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Combat:SetRestockAmmoFreeSpace[${This.Text}]
 								}
 							</OnChange>
 						</Textentry>
@@ -1162,7 +1196,7 @@
 												<OnLoad>
 													if ${Script[EVEBot].VariableScope.Config.Combat.RunOnLowAmmo}
 													{
-														This:SetChecked
+													This:SetChecked
 													}
 												</OnLoad>
 												<OnLeftClick>
@@ -1179,7 +1213,7 @@
 												<OnLoad>
 													if ${Script[EVEBot].VariableScope.Config.Combat.RunOnLowCap}
 													{
-														This:SetChecked
+													This:SetChecked
 													}
 												</OnLoad>
 												<OnLeftClick>
@@ -1196,7 +1230,7 @@
 												<OnLoad>
 													if ${Script[EVEBot].VariableScope.Config.Combat.RunOnLowTank}
 													{
-														This:SetChecked
+													This:SetChecked
 													}
 												</OnLoad>
 												<OnLeftClick>
@@ -1213,7 +1247,7 @@
 												<OnLoad>
 													if ${Script[EVEBot].VariableScope.Config.Combat.RunToStation}
 													{
-														This:SetChecked
+													This:SetChecked
 													}
 												</OnLoad>
 												<OnLeftClick>
@@ -1230,7 +1264,7 @@
 												<OnLoad>
 													if ${Script[EVEBot].VariableScope.Config.Combat.UseWhiteList}
 													{
-														This:SetChecked
+													This:SetChecked
 													}
 												</OnLoad>
 												<OnLeftClick>
@@ -1247,7 +1281,7 @@
 												<OnLoad>
 													if ${Script[EVEBot].VariableScope.Config.Combat.WLBypassStandings}
 													{
-														This:SetChecked
+													This:SetChecked
 													}
 												</OnLoad>
 												<OnLeftClick>
@@ -1264,7 +1298,7 @@
 												<OnLoad>
 													if ${Script[EVEBot].VariableScope.Config.Combat.UseBlackList}
 													{
-														This:SetChecked
+													This:SetChecked
 													}
 												</OnLoad>
 												<OnLeftClick>
@@ -1311,7 +1345,7 @@
 												<OnLoad>
 													if ${Script[EVEBot].VariableScope.Config.Combat.IncludeNeutralInCalc}
 													{
-														This:SetChecked
+													This:SetChecked
 													}
 												</OnLoad>
 												<OnLeftClick>
@@ -1406,7 +1440,7 @@
 												<OnLoad>
 													if ${Script[EVEBot].VariableScope.Config.Combat.TakeBreaks}
 													{
-														This:SetChecked
+													This:SetChecked
 													}
 												</OnLoad>
 												<OnLeftClick>
@@ -1463,7 +1497,7 @@
 												<OnLoad>
 													if ${Script[EVEBot].VariableScope.Config.Combat.BroadcastBreaks}
 													{
-														This:SetChecked
+													This:SetChecked
 													}
 												</OnLoad>
 												<OnLeftClick>
@@ -1480,7 +1514,7 @@
 												<OnLoad>
 													if ${Script[EVEBot].VariableScope.Config.Combat.UseSafeCooldown}
 													{
-														This:SetChecked
+													This:SetChecked
 													}
 												</OnLoad>
 												<OnLeftClick>
@@ -1560,12 +1594,12 @@
 											UIElement[${lbname}]:ClearItems
 											if ${piter:First(exists)}
 											{
-												do
-												{
-													if !${piter.Value.CharID.Equal[${Me.CharID}]}
-														UIElement[${lbname}]:AddItem[${piter.Value.Name}]
-												}
-												while ${piter:Next(exists)}
+											do
+											{
+											if !${piter.Value.CharID.Equal[${Me.CharID}]}
+											UIElement[${lbname}]:AddItem[${piter.Value.Name}]
+											}
+											while ${piter:Next(exists)}
 											}
 											UIElement[${lbname}]:Sort
 
@@ -1603,11 +1637,11 @@
 											Script[EVEBot].VariableScope.Whitelist.PilotsRef:GetSettingIterator[i]
 											if ${i:First(exists)}
 											{
-												do
-												{
-													This:AddItem[${i.Key},${i.Value}]
-												}
-												while ${i:Next(exists)}
+											do
+											{
+											This:AddItem[${i.Key},${i.Value}]
+											}
+											while ${i:Next(exists)}
 											}
 											This:Sort
 										</OnRightClick>
@@ -1637,7 +1671,7 @@
 											variable int64 pilotid=${Local[${pilotname}].CharID}
 											if !${pilotid.Equal[0]}
 											{
-												Script[EVEBot].VariableScope.Social:AddWhiteList[Pilot,${pilotid},${pilotname}]
+											Script[EVEBot].VariableScope.Social:AddWhiteList[Pilot,${pilotid},${pilotname}]
 											}
 											UIElement[EVEBot].FindUsableChild[lbWLPilots,listbox]:RightClick
 										</OnLeftClick>
@@ -1674,11 +1708,11 @@
 											Script[EVEBot].VariableScope.Whitelist.CorporationsRef:GetSettingIterator[i]
 											if ${i:First(exists)}
 											{
-												do
-												{
-													This:AddItem[${i.Key},${i.Value}]
-												}
-												while ${i:Next(exists)}
+											do
+											{
+											This:AddItem[${i.Key},${i.Value}]
+											}
+											while ${i:Next(exists)}
 											}
 											This:Sort
 										</OnRightClick>
@@ -1708,7 +1742,7 @@
 											variable int64 corpid=${Local[${pilotname}].Corp.ID}
 											if !${pilotid.Equal[0]}
 											{
-												Script[EVEBot].VariableScope.Social:AddWhiteList[Corporation,${corpid},(${pilotname}) ${corpid}]
+											Script[EVEBot].VariableScope.Social:AddWhiteList[Corporation,${corpid},(${pilotname}) ${corpid}]
 											}
 											UIElement[EVEBot].FindUsableChild[lbWLCorps,listbox]:RightClick
 										</OnLeftClick>
@@ -1745,11 +1779,11 @@
 											Script[EVEBot].VariableScope.Whitelist.AlliancesRef:GetSettingIterator[i]
 											if ${i:First(exists)}
 											{
-												do
-												{
-													This:AddItem[${i.Key},${i.Value}]
-												}
-												while ${i:Next(exists)}
+											do
+											{
+											This:AddItem[${i.Key},${i.Value}]
+											}
+											while ${i:Next(exists)}
 											}
 											This:Sort
 										</OnRightClick>
@@ -1778,7 +1812,7 @@
 											variable int64 allianceid=${Local[${pilotname}].AllianceID}
 											if !${pilotid.Equal[0]}
 											{
-												Script[EVEBot].VariableScope.Social:AddWhiteList[Alliance,${allianceid},(${pilotname}) ${allianceid}]
+											Script[EVEBot].VariableScope.Social:AddWhiteList[Alliance,${allianceid},(${pilotname}) ${allianceid}]
 											}
 											UIElement[EVEBot].FindUsableChild[lbWLAlliances,listbox]:RightClick
 										</OnLeftClick>
@@ -1850,7 +1884,7 @@
 									<OnLoad>
 										if ${Script[EVEBot].VariableScope.Config.Missioneer.RunCourierMissions}
 										{
-											This:SetChecked
+										This:SetChecked
 										}
 									</OnLoad>
 									<OnLeftClick>
@@ -1867,7 +1901,7 @@
 									<OnLoad>
 										if ${Script[EVEBot].VariableScope.Config.Missioneer.RunTradeMissions}
 										{
-											This:SetChecked
+										This:SetChecked
 										}
 									</OnLoad>
 									<OnLeftClick>
@@ -1884,7 +1918,7 @@
 									<OnLoad>
 										if ${Script[EVEBot].VariableScope.Config.Missioneer.RunMiningMissions}
 										{
-											This:SetChecked
+										This:SetChecked
 										}
 									</OnLoad>
 									<OnLeftClick>
@@ -1901,7 +1935,7 @@
 									<OnLoad>
 										if ${Script[EVEBot].VariableScope.Config.Missioneer.RunKillMissions}
 										{
-											This:SetChecked
+										This:SetChecked
 										}
 									</OnLoad>
 									<OnLeftClick>
@@ -1944,7 +1978,7 @@
 									<OnChange>
 										if ${This.Text.Length} > 0
 										{
-											Script[EVEBot].VariableScope.Config.Missioneer:SetSmallHauler[${This.Text}]
+										Script[EVEBot].VariableScope.Config.Missioneer:SetSmallHauler[${This.Text}]
 										}
 									</OnChange>
 								</Textentry>
@@ -1968,7 +2002,7 @@
 									<OnChange>
 										if ${This.Text.Length} > 0
 										{
-											Script[EVEBot].VariableScope.Config.Missioneer:SetLargeHauler[${This.Text}]
+										Script[EVEBot].VariableScope.Config.Missioneer:SetLargeHauler[${This.Text}]
 										}
 									</OnChange>
 								</Textentry>
@@ -1992,7 +2026,7 @@
 									<OnChange>
 										if ${This.Text.Length} > 0
 										{
-											Script[EVEBot].VariableScope.Config.Missioneer:SetMiningShip[${This.Text}]
+										Script[EVEBot].VariableScope.Config.Missioneer:SetMiningShip[${This.Text}]
 										}
 									</OnChange>
 								</Textentry>
@@ -2016,7 +2050,7 @@
 									<OnChange>
 										if ${This.Text.Length} > 0
 										{
-											Script[EVEBot].VariableScope.Config.Missioneer:SetCombatShip[${This.Text}]
+										Script[EVEBot].VariableScope.Config.Missioneer:SetCombatShip[${This.Text}]
 										}
 									</OnChange>
 								</Textentry>
@@ -2077,7 +2111,7 @@
 									<OnChange>
 										if ${This.Text.Length} > 0
 										{
-											Script[EVEBot].VariableScope.Config.Missioneer:SetSalvageShip[${This.Text}]
+										Script[EVEBot].VariableScope.Config.Missioneer:SetSalvageShip[${This.Text}]
 										}
 									</OnChange>
 								</Textentry>
@@ -2100,7 +2134,7 @@
 									<OnLoad>
 										if ${Script[EVEBot].VariableScope.Config.Missioneer.AvoidLowSec}
 										{
-											This:SetChecked
+										This:SetChecked
 										}
 									</OnLoad>
 									<OnLeftClick>
@@ -2127,7 +2161,7 @@
 									<OnChange>
 										if ${This.Text.Length} > 0
 										{
-											Script[EVEBot].VariableScope.Config.Missioneer:SetSmallHaulerLimit[${Int[${This.Text}]}]
+										Script[EVEBot].VariableScope.Config.Missioneer:SetSmallHaulerLimit[${Int[${This.Text}]}]
 										}
 									</OnChange>
 								</Textentry>
@@ -2164,7 +2198,7 @@
 								This:SetSelection[${Script[EVEBot].VariableScope.Config.Hauler.HaulerMode}]
 							</OnLoad>
 						</combobox>
-						
+
 						<checkbox Name='cbOrcaRunningEvebot'>
 							<X>10</X>
 							<Y>30</Y>
@@ -2178,14 +2212,14 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Hauler.OrcaRunningEvebot}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
-									Script[EVEBot].VariableScope.Config.Hauler:SetOrcaRunningEvebot[${This.Checked}]
+								Script[EVEBot].VariableScope.Config.Hauler:SetOrcaRunningEvebot[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
-						
+
 						<Text name='MiningSystemLabel'>
 							<X>10</X>
 							<Y>80</Y>
@@ -2205,7 +2239,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Hauler:SetMiningSystemBookmark[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Hauler:SetMiningSystemBookmark[${This.Text}]
 								}
 							</OnChange>
 						</Textentry>
@@ -2228,7 +2262,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Hauler:SetHaulerPickupName[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Hauler:SetHaulerPickupName[${This.Text}]
 								}
 							</OnChange>
 						</Textentry>
@@ -2286,11 +2320,11 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Freighter:SetDestination[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Freighter:SetDestination[${This.Text}]
 								}
 								else
 								{
-									Script[EVEBot].VariableScope.Config.Freighter:SetDestination[""]
+								Script[EVEBot].VariableScope.Config.Freighter:SetDestination[""]
 								}
 							</OnChange>
 						</Textentry>
@@ -2314,11 +2348,11 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Freighter:SetSourcePrefix[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Freighter:SetSourcePrefix[${This.Text}]
 								}
 								else
 								{
-									Script[EVEBot].VariableScope.Config.Freighter:SetSourcePrefix[""]
+								Script[EVEBot].VariableScope.Config.Freighter:SetSourcePrefix[""]
 								}
 							</OnChange>
 						</Textentry>
@@ -2341,7 +2375,7 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Freighter:SetRegionName[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Freighter:SetRegionName[${This.Text}]
 								}
 							</OnChange>
 						</Textentry>
@@ -2391,11 +2425,11 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Labels:SetSafeSpotPrefix[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Labels:SetSafeSpotPrefix[${This.Text}]
 								}
 								else
 								{
-									Script[EVEBot].VariableScope.Config.Labels:SetSafeSpotPrefix[""]
+								Script[EVEBot].VariableScope.Config.Labels:SetSafeSpotPrefix[""]
 								}
 							</OnChange>
 						</Textentry>
@@ -2419,11 +2453,11 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Labels:SetOreBeltPrefix[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Labels:SetOreBeltPrefix[${This.Text}]
 								}
 								else
 								{
-									Script[EVEBot].VariableScope.Config.Labels:SetOreBeltPrefix[""]
+								Script[EVEBot].VariableScope.Config.Labels:SetOreBeltPrefix[""]
 								}
 							</OnChange>
 						</Textentry>
@@ -2447,11 +2481,11 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Labels:SetIceBeltPrefix[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Labels:SetIceBeltPrefix[${This.Text}]
 								}
 								else
 								{
-									Script[EVEBot].VariableScope.Config.Labels:SetIceBeltPrefix[""]
+								Script[EVEBot].VariableScope.Config.Labels:SetIceBeltPrefix[""]
 								}
 							</OnChange>
 						</Textentry>
@@ -2475,11 +2509,11 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-									Script[EVEBot].VariableScope.Config.Labels:SetAmmoPrefix[${This.Text}]
+								Script[EVEBot].VariableScope.Config.Labels:SetAmmoPrefix[${This.Text}]
 								}
 								else
 								{
-									Script[EVEBot].VariableScope.Config.Labels:SetAmmoPrefix[""]
+								Script[EVEBot].VariableScope.Config.Labels:SetAmmoPrefix[""]
 								}
 							</OnChange>
 						</Textentry>
@@ -2495,7 +2529,7 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Fleet.ManageFleet}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
@@ -2512,14 +2546,14 @@
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Fleet.IsLeader}
 								{
-									This:SetChecked
+								This:SetChecked
 								}
 							</OnLoad>
 							<OnLeftClick>
 								Script[EVEBot].VariableScope.Config.Fleet:SetIsLeader[${This.Checked}]
 								if ${This.Checked}
 								{
-									UIElement[tbFleetLeader@Fleet@EVEBotOptionsTab@EVEBot]:SetText[]
+								UIElement[tbFleetLeader@Fleet@EVEBotOptionsTab@EVEBot]:SetText[]
 								}
 							</OnLeftClick>
 						</checkbox>
@@ -2559,10 +2593,10 @@
 							<MaxLength>50</MaxLength>
 							<OnChange>
 								if ${Script[EVEBot].VariableScope.Config.Fleet.IsWing[${This.Text}]}
-									UIElement[cbWing@Fleet@EVEBotOptionsTab@EVEBot]:SetChecked
+								UIElement[cbWing@Fleet@EVEBotOptionsTab@EVEBot]:SetChecked
 								else
-									UIElement[cbWing@Fleet@EVEBotOptionsTab@EVEBot]:UnsetChecked 
-								
+								UIElement[cbWing@Fleet@EVEBotOptionsTab@EVEBot]:UnsetChecked
+
 							</OnChange>
 						</Textentry>
 						<button	Name='AddFleetMember' template='EVEskin.Add.Texture'>
@@ -2572,7 +2606,7 @@
 							<Height>16</Height>
 							<OnLeftClick>
 								if !${Script[EVEBot].VariableScope.Config.Fleet.IsListed[${UIElement[tbAddFleetMember@Fleet@EVEBotOptionsTab@EVEBot].Text}]}
-									UIElement[FleetMembers@Fleet@EVEBotOptionsTab@EVEBot]:AddItem[${UIElement[tbAddFleetMember@Fleet@EVEBotOptionsTab@EVEBot].Text}]
+								UIElement[FleetMembers@Fleet@EVEBotOptionsTab@EVEBot]:AddItem[${UIElement[tbAddFleetMember@Fleet@EVEBotOptionsTab@EVEBot].Text}]
 								Script[EVEBot].VariableScope.Config.Fleet:AddFleetMember[${UIElement[tbAddFleetMember@Fleet@EVEBotOptionsTab@EVEBot].Text}]
 								UIElement[tbAddFleetMember@Fleet@EVEBotOptionsTab@EVEBot]:SetText[]
 							</OnLeftClick>
@@ -2587,7 +2621,7 @@
 								Script[EVEBot].VariableScope.Config.Fleet:RemoveFleetMember[${UIElement[tbAddFleetMember@Fleet@EVEBotOptionsTab@EVEBot].Text}]
 							</OnLeftClick>
 						</button>
-						
+
 						<checkbox name='cbWing'>
 							<X>450</X>
 							<Y>65</Y>
@@ -2598,8 +2632,8 @@
 							<OnLeftClick>
 								Script[EVEBot].VariableScope.Config.Fleet:SetWingOne[${This.Checked}]
 							</OnLeftClick>
-						</checkbox>						
-						
+						</checkbox>
+
 						<listbox Name='FleetMembers'>
 							<X>10</X>
 							<Y>90</Y>
@@ -2614,19 +2648,19 @@
 								Script[EVEBot].VariableScope.Config.Fleet.FleetMembers:GetIterator[InfoFromSettings]
 								if ${InfoFromSettings:First(exists)}
 								{
-									do
-									{
-										This:AddItem[${InfoFromSettings.Value.FleetMemberName}]
-									}
-									while ${InfoFromSettings:Next(exists)}
-								}						
+								do
+								{
+								This:AddItem[${InfoFromSettings.Value.FleetMemberName}]
+								}
+								while ${InfoFromSettings:Next(exists)}
+								}
 							</OnLoad>
 							<OnSelect>
 								UIElement[tbAddFleetMember@Fleet@EVEBotOptionsTab@EVEBot]:SetText[${This.SelectedItem.Text}]
 								if ${Script[EVEBot].VariableScope.Config.Fleet.IsWing[${UIElement[tbAddFleetMember@Fleet@EVEBotOptionsTab@EVEBot].Text}]}
-									UIElement[cbWing@Fleet@EVEBotOptionsTab@EVEBot]:SetChecked		
+								UIElement[cbWing@Fleet@EVEBotOptionsTab@EVEBot]:SetChecked
 								else
-									UIElement[cbWing@Fleet@EVEBotOptionsTab@EVEBot]:UnsetChecked		
+								UIElement[cbWing@Fleet@EVEBotOptionsTab@EVEBot]:UnsetChecked
 							</OnSelect>
 						</listbox>
 					</Tab>
