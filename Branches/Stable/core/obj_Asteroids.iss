@@ -342,6 +342,21 @@ objectdef obj_Asteroids
 					EVE:QueryEntities[AsteroidListTmp, "CategoryID = ${This.AsteroidCategoryID} && Name =- \"${This.OreTypeIterator.Key}\""]
 				}
 
+				variable int Count
+				variable int Max
+				; Randomize the first 15 in-range asteroids in the list so that all the miners don't glom on the same one.
+				if ${AsteroidListTmp.Used} > 3
+				{
+					Max:Set[${AsteroidListTmp.Used}]
+					if ${Max} > 15
+					{
+						Max:Set[15]
+					}
+					for (Count:Set[0] ; ${Count} < ${Max} ; Count:Inc)
+					{
+						AsteroidListTmp:Swap[${Math.Rand[${Max}]:Inc},${Math.Rand[${Max}]:Inc}]
+					}
+				}
 				; Append the in-range asteroids of the current ore type to the final list
 				AsteroidListTmp:GetIterator[AsteroidIt]
 				if ${AsteroidIt:First(exists)}
@@ -353,6 +368,19 @@ objectdef obj_Asteroids
 					while ${AsteroidIt:Next(exists)}
 				}
 
+				; Randomize the first 10 out of range asteroids in the list so that all the miners don't glom on the same one.
+				if ${AsteroidList_OutOfRangeTmp.Used} > 3
+				{
+					Max:Set[${AsteroidList_OutOfRangeTmp.Used}]
+					if ${Max} > 10
+					{
+						Max:Set[10]
+					}
+					for (Count:Set[0] ; ${Count} < ${Max} ; Count:Inc)
+					{
+						AsteroidList_OutOfRangeTmp:Swap[${Math.Rand[${Max}]:Inc},${Math.Rand[${Max}]:Inc}]
+					}
+				}
 				; Append the asteroids of the current ore type to the out of range tmp list; later we'll append it to the fully populated in-range list
 				AsteroidList_OutOfRangeTmp:GetIterator[AsteroidIt]
 				if ${AsteroidIt:First(exists)}
@@ -366,22 +394,6 @@ objectdef obj_Asteroids
 
 			}
 			while ${This.OreTypeIterator:Next(exists)}
-
-
-			; Randomize the first 15 asteroids in the list so that all the miners don't glom on the same one.
-			if ${AsteroidList.Used} > 3
-			{
-				variable int Count
-				variable int Max = ${AsteroidList.Used}
-				if ${Max} > 15
-				{
-					Max:Set[15]
-				}
-				for (Count:Set[0] ; ${Count} < ${Max} ; Count:Inc)
-				{
-					AsteroidList:Swap[${Math.Rand[${Max}]:Inc},${Math.Rand[${Max}]:Inc}]
-				}
-			}
 
 			if ${Config.Miner.StripMine}
 			{
