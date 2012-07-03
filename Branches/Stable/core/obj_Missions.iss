@@ -265,7 +265,7 @@ objectdef obj_Missions
 			call Cargo.OpenHolds
 
 			UI:UpdateConsole["DEBUG: RunCourierMission: Checking ship's cargohold for ${QuantityRequired} units of ${itemName}."]
-			Me.Ship:GetCargo[CargoIndex]
+			MyShip:GetCargo[CargoIndex]
 			CargoIndex:GetIterator[CargoIterator]
 			if ${CargoIterator:First(exists)}
 			{
@@ -345,7 +345,7 @@ objectdef obj_Missions
 		call Cargo.OpenHolds
 
 		;;; Check the cargohold of your ship
-		Me.Ship:GetCargo[CargoIndex]
+		MyShip:GetCargo[CargoIndex]
 		CargoIndex:GetIterator[CargoIterator]
 		if ${CargoIterator:First(exists)}
 		{

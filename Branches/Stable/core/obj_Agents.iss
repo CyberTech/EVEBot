@@ -30,6 +30,10 @@ objectdef obj_AgentList
 		}
 		LavishSettings:Import[${CONFIG_FILE}]
 		LavishSettings[${This.SET_NAME1}]:GetSettingIterator[This.agentIterator]
+		if !${This.agentIterator:First(exists)}
+		{
+			UI:UpdateConsole["obj_AgentList: Found no agents"]
+		}
 		LavishSettings[${This.SET_NAME2}]:GetSettingIterator[This.researchAgentIterator]
 		UI:UpdateConsole["obj_AgentList: Initialized.", LOG_MINOR]
 	}
@@ -144,7 +148,7 @@ objectdef obj_MissionBlacklist
 				break
 		}
 
-		;;;UI:UpdateConsole["DEBUG: obj_MissionBlacklist: Searching for ${levelString} mission blacklist..."]
+		UI:UpdateConsole["DEBUG: obj_MissionBlacklist: Searching for ${levelString} mission blacklist...", LOG_DEBUG]
 
 		if ${This.levelIterator:First(exists)}
 		{
@@ -152,7 +156,7 @@ objectdef obj_MissionBlacklist
 			{
 				if ${levelString.Equal[${This.levelIterator.Key}]}
 				{
-					;;;UI:UpdateConsole["DEBUG: obj_MissionBlacklist: Searching ${levelString} mission blacklist for ${mission}..."]
+					UI:UpdateConsole["DEBUG: obj_MissionBlacklist: Searching ${levelString} mission blacklist for ${mission}...", LOG_DEBUG]
 
 					variable iterator missionIterator
 
@@ -163,7 +167,7 @@ objectdef obj_MissionBlacklist
 						{
 							if ${mission.Equal[${missionIterator.Key}]}
 							{
-								;;;UI:UpdateConsole["DEBUG: obj_MissionBlacklist: ${mission} is blacklisted!"]
+								UI:UpdateConsole["DEBUG: obj_MissionBlacklist: ${mission} is blacklisted!", LOG_DEBUG]
 								return TRUE
 							}
 						}
@@ -208,7 +212,7 @@ objectdef obj_Agents
 
 	member:int AgentIndex()
 	{
-		return ${Config.Agents.AgentIndex[${This.AgentName}]}
+		return ${Agent[${This.ActiveAgent}].Index}
 	}
 
 	member:int AgentID()
@@ -358,6 +362,7 @@ objectdef obj_Agents
 
 							if ${amIterator.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions} == TRUE
 							{
+								UI:UpdateConsole["Setting ActiveAgent to ${Agent[id,${amIterator.Value.AgentID}].Name}", LOG_DEBUG]
 								This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}].Name}]
 								return
 							}
@@ -695,7 +700,11 @@ objectdef obj_Agents
 			}
 			while ${amIterator:Next(exists)}
 		}
-
+		if ${Missions.MissionCache.Name[${This.AgentID}].Equal[${amIterator.Value.Name}]}
+		{
+			UI:UpdateConsole["MissionDetails: We already have details for this mission", LOG_DEBUG]
+			return
+		}
 		if !${amIterator.Value(exists)}
 		{
 			UI:UpdateConsole["obj_Agents: ERROR: Did not find mission!  Will retry...", LOG_CRITICAL]
@@ -717,7 +726,6 @@ objectdef obj_Agents
 		UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.ExpirationTime = ${amIterator.Value.ExpirationTime.DateAndTime}"]
 
 		amIterator.Value:GetDetails
-		wait 50
 		variable string details
 		variable int left = 0
 		variable int right = 0
@@ -850,6 +858,29 @@ objectdef obj_Agents
 
   }
 
+	function UpdateLocatorAgent()
+	{
+		variable index:dialogstring dsIndex
+		variable iterator dsIterator
+		Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
+		while ${dsIndex.Used} == 0
+		{
+			UI:UpdateConsole["Waiting for responses from agent to populate."]
+			wait 10
+		}
+		if ${dsIndex.Used.Equal[2]} && ${dsIndex[1].Text.Find["View"]} > 0 || ${dsIndex[1].Text.Find["Request"]} > 0
+		{
+			UI:UpdateConsole["obj_Agents: Locator Agent detected, selecting view mission button."]
+			dsIndex[1]:Say[${This.AgentID}]	
+			while ${dsIndex[1].Text.Find["View"]} > 0
+			{
+				UI:UpdateConsole["Waiting for locator agent conversation to update."]
+				Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
+				wait 20
+			}
+		}
+	}
+	
 	function RequestMission()
 	{
 		variable index:dialogstring dsIndex
@@ -862,21 +893,23 @@ objectdef obj_Agents
 		}
 
 		EVE:Execute[CmdCloseAllWindows]
-		wait 50
+		EVE:Execute[OpenJournal]
+		wait 20
 
 		UI:UpdateConsole["obj_Agents: Starting conversation with agent ${This.ActiveAgent}."]
 		Agent[${This.AgentIndex}]:StartConversation
 		do
 		{
 			UI:UpdateConsole["obj_Agents: Waiting for conversation window..."]
-			wait 10
+			wait 50
 		}
 		while !${EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"](exists)}
-
+		call This.UpdateLocatorAgent
 		;; The dialog caption fills in long before the details do.
 		;; Wait for dialog strings to become valid before proceeding.
+		UI:UpdateConsole["Waiting for responses from agent to populate..."]
 		variable int WaitCount
-		for( WaitCount:Set[0]; ${WaitCount} < 6; WaitCount:Inc )
+		for( WaitCount:Set[0]; ${WaitCount} < 15; WaitCount:Inc )
 		{
 			Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
 			if ${dsIndex.Used} > 0
@@ -888,60 +921,11 @@ objectdef obj_Agents
 
 		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
 
-;;;;  You now longer have to ask for work.  An agent will automatically offer work.  This may break
-;;;;  with research or locator agents!
-;;;;	    Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
-;;;;	    dsIndex:GetIterator[dsIterator]
-;;;;
-;;;;		if ${dsIterator:First(exists)}
-;;;;		{
-;;;;			; Assume the first item is the "ask for work" item.
-;;;;			; This may break if you have agents with locator services.
-;;;;			if ${Agent[${This.AgentIndex}].Division.Equal["R&D"]}
-;;;;			{
-;;;;				if ${dsIterator.Value.Text.Find["datacore"]}
-;;;;				{
-;;;;				    UI:UpdateConsole["WARNING: Research agent doesn't have a mission available"]
-;;;;					variable time lastCompletionTime
-;;;;					variable int  lastCompletionTimestamp
-;;;;					lastCompletionTimestamp:Set[${Config.Agents.LastCompletionTime[${This.AgentName}]}]
-;;;;					lastCompletionTime:Set[${lastCompletionTimestamp}]
-;;;;					UI:UpdateConsole["DEBUG: RequestMission: ${lastCompletionTime} ${lastCompletionTime.Date}"]
-;;;;					if ${lastCompletionTimestamp} == 0
-;;;;					{
-;;;;				    	;; this agent didn't have a valid LastCompletionTime
-;;;;				    	;; set LastCompletionTime to lock out this agent for 24 hours
-;;;;	    				Config.Agents:SetLastCompletionTime[${This.AgentName},${Time.Timestamp}]
-;;;;	    			}
-;;;;	    			else
-;;;;	    			{
-;;;;						lastCompletionTime.Hour:Inc[24]
-;;;;						lastCompletionTime:Update
-;;;;						if ${lastCompletionTime.Timestamp} < ${Time.Timestamp}
-;;;;						{
-;;;;					    	;; been more than 24 hours according to config data.  must be invalid.
-;;;;					    	;; set LastCompletionTime to lock out this agent for 24 hours
-;;;;		    				Config.Agents:SetLastCompletionTime[${This.AgentName},${Time.Timestamp}]
-;;;;						}
-;;;;					}
-;;;;					return
-;;;;				}
-;;;;			}
-;;;;
-;;;;        	dsIterator.Value:Say[${This.AgentID}]
-;;;;		}
-;;;;
-;;;;	    ; Now wait a couple of seconds and then get the new dialog options...and so forth.  The "Wait" needed may differ from person to person.
-;;;;	    UI:UpdateConsole["Waiting for agent dialog to update..."]
-;;;;	    wait 60
-;;;;		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
-;;;;
-	    Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
 	    dsIndex:GetIterator[dsIterator]
 
 		if ${dsIndex.Used} != 3
 		{
-			UI:UpdateConsole["obj_Agents: ERROR: Did not find expected dialog!  Will retry...", LOG_CRITICAL]
+			UI:UpdateConsole["obj_Agents: ERROR: Did not find expected dialog! Found ${dsIndex.Used} responses.  Will retry...", LOG_CRITICAL]
 			RetryCount:Inc
 			if ${RetryCount} > 4
 			{
@@ -1154,6 +1138,7 @@ objectdef obj_Agents
 			if ${lastDecline.Timestamp} >= ${Time.Timestamp}
 			{
 				UI:UpdateConsole["obj_Agents: ERROR: You declined a mission less than four hours ago!  Switching agents...", LOG_CRITICAL]
+				call ChatIRC.Say "${Me.Name}: Can't decline blacklisted mission, changing agent."
 				This:SetActiveAgent[${This.AgentList.NextAgent}]
 				return
 			}
@@ -1162,24 +1147,29 @@ objectdef obj_Agents
 				dsIndex.Get[2]:Say[${This.AgentID}]
 				Config.Agents:SetLastDecline[${This.AgentName},${Time.Timestamp}]
 				UI:UpdateConsole["obj_Agents: Declined blacklisted mission."]
+				call ChatIRC.Say "${Me.Name}: Declined blacklisted mission."
 				Config:Save[]
 			}
 		}
 		elseif ${amIterator.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions} == TRUE
 		{
-			dsIndex.Get[1]:Say[${This.AgentID}]
+			UI:UpdateConsole["RequestMission: Saying ${dsIndex[1].Text}", LOG_DEBUG]
+			dsIndex[1]:Say[${This.AgentID}]
 		}
 		elseif ${amIterator.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} == TRUE
 		{
-			dsIndex.Get[1]:Say[${This.AgentID}]
+			UI:UpdateConsole["RequestMission: Saying ${dsIndex[1].Text}", LOG_DEBUG]
+			dsIndex[1]:Say[${This.AgentID}]
 		}
 		elseif ${amIterator.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} == TRUE
 		{
-			dsIndex.Get[1]:Say[${This.AgentID}]
+			UI:UpdateConsole["RequestMission: Saying ${dsIndex[1].Text}", LOG_DEBUG]
+			dsIndex[1]:Say[${This.AgentID}]
 		}
 		elseif ${amIterator.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions} == TRUE
 		{
-			dsIndex.Get[1]:Say[${This.AgentID}]
+			UI:UpdateConsole["RequestMission: Saying ${dsIndex[1].Text}", LOG_DEBUG]
+			dsIndex[1]:Say[${This.AgentID}]
 		}
 		else
 		{
@@ -1198,8 +1188,8 @@ objectdef obj_Agents
 			}
 		}
 
-	    UI:UpdateConsole["Waiting for mission dialog to update..."]
-	    wait 60
+		UI:UpdateConsole["Waiting for mission dialog to update...", LOG_DEBUG]
+		wait 60
 		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
 
 		EVE:Execute[OpenJournal]
@@ -1217,13 +1207,13 @@ objectdef obj_Agents
 
 		UI:UpdateConsole["obj_Agents: Starting conversation with agent ${This.ActiveAgent}."]
 		Agent[${This.AgentIndex}]:StartConversation
-        do
-        {
+		do
+		{
 			UI:UpdateConsole["obj_Agents: Waiting for conversation window..."]
-            wait 10
-        }
-        while !${EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"](exists)}
-
+		wait 10
+		}
+		while !${EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"](exists)}
+		call This.UpdateLocatorAgent
 		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
 
 	    ; display your dialog options

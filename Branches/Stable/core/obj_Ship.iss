@@ -1702,7 +1702,11 @@ objectdef obj_Ship
 			return
 		}
 
-		Entity[${Id}]:AlignTo
+		if ${Drones.DronesInSpace} > 0
+		{
+			Entity[${Id}]:AlignTo
+			wait 2
+		}
 		call This.WarpPrepare
 		while ${Entity[${Id}].Distance} >= WARP_RANGE
 		{
@@ -1719,7 +1723,7 @@ objectdef obj_Ship
 				}
 				wait 10
 			}
-			call Miner.FastWarp
+
 			call This.WarpWait
 			if ${Return} == 2
 			{
@@ -1829,7 +1833,11 @@ objectdef obj_Ship
 	function WarpToBookMark(bookmark DestinationBookmark, bool WarpFleet=FALSE)
 	{
 		variable int Counter
-
+		if ${Me.Station} == ${DestinationBookmark.ItemID}
+		{
+			return
+		}
+		
 		if ${Me.InStation}
 		{
 			call Station.Undock
@@ -1918,7 +1926,7 @@ objectdef obj_Ship
 					return
 				}
 				UI:UpdateConsole["1: Warping to bookmark ${Label} (Attempt #${WarpCounter})"]
-				while !${This.WarpEntered} && ${DestinationBookmark.ToEntity.Distance} > ${MinWarpRange}
+				while !${This.WarpEntered}
 				{
 					if ${WarpFleet}
 					{
@@ -1928,7 +1936,6 @@ objectdef obj_Ship
 					{
 						DestinationBookmark:WarpTo
 					}
-					call Miner.FastWarp
 					wait 10
 				}
 				call This.WarpWait
@@ -1985,7 +1992,6 @@ objectdef obj_Ship
 						{
 							DestinationBookmark:WarpTo
 						}
-						call Miner.FastWarp
 						wait 10
 					}
 					call This.WarpWait
@@ -2020,7 +2026,6 @@ objectdef obj_Ship
 					{
 						DestinationBookmark:WarpTo
 					}
-					call Miner.FastWarp
 					wait 10
 				}
 				call This.WarpWait
@@ -2111,7 +2116,10 @@ objectdef obj_Ship
 		{
 			This:Activate_Cloak[]
 		}
-
+		while !${This.InWarp}
+		{
+			wait 1
+		}
 		while ${This.InWarp}
 		{
 			Warped:Set[TRUE]
@@ -2905,7 +2913,7 @@ objectdef obj_Ship
 		{
 			return
 		}
-		if ${Me.ToEntity.Mode} == 4
+		if ${Me.ToEntity.Mode} == 4 || ${Me.ToEntity.Mode} == 1
 		{
 			; already orbiting something
 			This:Activate_AfterBurner
@@ -2915,21 +2923,19 @@ objectdef obj_Ship
 		variable iterator ModuleIter
 		This.ModuleList_Weapon:GetIterator[ModuleIter]
 		if ${ModuleIter:First(exists)}
-		do
 		{
-			; only support laser turrets FOR NOW
-			if ${ModuleIter.Value.ToItem.GroupID} != GROUP_ENERGYWEAPON
+			OrbitDistance:Set[${Math.Calc[${ModuleIter.Value.Charge.MaxFlightTime}*${ModuleIter.Value.Charge.MaxVelocity}*.85]}]
+			if ${ModuleIter.Value.OptimalRange} > ${OrbitDistance}
 			{
-				continue
+				OrbitDistance:Set[${ModuleIter.Value.OptimalRange}]
 			}
-
-			OrbitDistance:Set[${Math.Calc[(${ModuleIter.Value.OptimalRange}*0.85)/500]}]
-			OrbitDistance:Set[${Math.Calc[${OrbitDistance}*500]}]
-			UI:UpdateConsole["OrbitDistance = ${OrbitDistance}", LOG_DEBUG]
-
+			if ${OrbitDistance} == 0
+			{
+				return
+			}
+			UI:UpdateConsole["Orbiting active target at ${Math.Calc[${OrbitDistance}/1000]} KM."]
 			Me.ActiveTarget:Orbit[${OrbitDistance}]
 		}
-		while ${ModuleIter:Next(exists)}
 	}
 
 	method Activate_Weapons()
