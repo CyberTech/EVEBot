@@ -702,6 +702,10 @@ objectdef obj_Hauler
 
 		Entity[${id}]:Open
 		wait 20
+
+		EVEWindow[ByItemID,${id}]:StackAll
+		wait 10
+
 		Entity[${id}]:GetCargo[ContainerCargo]
 		ContainerCargo:GetIterator[Cargo]
 		if ${Cargo:First(exists)}

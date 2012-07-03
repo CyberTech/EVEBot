@@ -861,6 +861,9 @@ objectdef obj_Cargo
 				{
 					call JetCan.Open ${JetCan.ActiveCan}
 
+					#if EVEBOT_DEBUG
+					echo TransferListToJetCan - Debug - if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${JetCan.CargoFreeSpace}
+					#endif
 					if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${JetCan.CargoFreeSpace}
 					{
 						/* Move only what will fit, minus 1 to account for CCP rounding errors. */

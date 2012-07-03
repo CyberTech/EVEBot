@@ -276,7 +276,7 @@ objectdef obj_JetCan
 		{
 			ID:Set[${This.ActiveCan}]
 		}
-		
+
 		if ${EVEWindow[ByName,"Inventory"].ChildWindowExists["${ID}"]}
 		{
 			return TRUE
@@ -287,7 +287,7 @@ objectdef obj_JetCan
 		}
 
 	}
-	
+
 	member:float CargoCapacity(int64 ID=0)
 	{
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
@@ -299,23 +299,23 @@ objectdef obj_JetCan
 		{
 			return FALSE
 		}
-		
+
 		return ${EVEWindow[ByName,"Inventory"].ChildCapacity[${ID}]}
-		
+
 	}
-	
+
 	member:float CargoUsedCapacity(int64 ID=0)
 	{
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
 			ID:Set[${This.ActiveCan}]
 		}
-		
+
 		if !${This.IsCargoOpen[${ID}]}
 		{
 			return FALSE
 		}
-		
+
 		return ${EVEWindow[ByName,"Inventory"].ChildUsedCapacity[${ID}]}
 	}
 
@@ -438,6 +438,10 @@ objectdef obj_JetCan
 
 	function Close(int64 ID=0)
 	{
+		; The current code didn't do anything and there is no actual way to close the JetCan right now
+		;(you can only close the main inv window), which IMO should be handled separately from the JetCan's window. So I commented it out. D
+		; -- wco12
+
 		;if (${ID} == 0 && ${This.ActiveCan} > 0)
 		;{
 		;	ID:Set[${This.ActiveCan}]
