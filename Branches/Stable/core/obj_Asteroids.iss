@@ -345,7 +345,7 @@ objectdef obj_Asteroids
 				variable int Count
 				variable int Max
 				; Randomize the first 15 in-range asteroids in the list so that all the miners don't glom on the same one.
-				if ${AsteroidListTmp.Used} > 3
+				if !${Config.Miner.IceMining} && ${AsteroidListTmp.Used} > 3
 				{
 					Max:Set[${AsteroidListTmp.Used}]
 					if ${Max} > 15
@@ -369,7 +369,7 @@ objectdef obj_Asteroids
 				}
 
 				; Randomize the first 10 out of range asteroids in the list so that all the miners don't glom on the same one.
-				if ${AsteroidList_OutOfRangeTmp.Used} > 3
+				if !${Config.Miner.IceMining} && ${AsteroidList_OutOfRangeTmp.Used} > 3
 				{
 					Max:Set[${AsteroidList_OutOfRangeTmp.Used}]
 					if ${Max} > 10
