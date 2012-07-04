@@ -744,9 +744,9 @@ objectdef obj_Miner
 		}
 		else
 		{
-			UI:UpdateConsole["Debug: Checking Master Mode:${IsMaster} WarpToMaster:${WarpToMaster} MasterName:${MasterName}", LOG_DEBUG]
+			;UI:UpdateConsole["Debug: Checking Master Mode:${IsMaster} WarpToMaster:${WarpToMaster} MasterName:${MasterName}", LOG_DEBUG]
 			Master:Set[Name = "${MasterName}"]
-			
+
 			if ${Config.Miner.GroupMode} && ${WarpToMaster} && !${Entity[${Master.Escape}](exists)} && !${IsMaster}
 			{
 				UI:UpdateConsole["Debug: WarpToFleetMember to ${MasterName} from Line _LINE_ ", LOG_DEBUG]
@@ -759,7 +759,7 @@ objectdef obj_Miner
 			}
 			call Asteroids.UpdateList
 		}
-		
+
 		Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
 		if ${Ship.TotalActivatedMiningLasers} == 0 && \
 			${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && \
@@ -1326,7 +1326,7 @@ objectdef obj_Miner
 	method MasterVote(string groupParams)
 	{
 		UI:UpdateConsole["obj_Miner:MasterVote event:${groupParams}, LOG_DEBUG]
-		
+
 		if ${Config.Miner.MasterMode} || ${Config.Miner.GroupMode}
 				{
 					if ${MasterVote} == -1
@@ -1334,7 +1334,7 @@ objectdef obj_Miner
 						call This.VoteForMaster
 
 					}
-				
+
 
 		variable string name
 		variable int64 State = -1
@@ -1350,7 +1350,7 @@ objectdef obj_Miner
 			MasterName:Set[${name}]
 			IsMaster:Set[FALSE]
 			UI:UpdateConsole["obj_Miner: Master is:${MasterName}", LOG_DEBUG]
-		
+
 		}
 		elseif ${State} == ${MasterVote}
 		{
@@ -1364,7 +1364,7 @@ objectdef obj_Miner
 				; re-vote for master
 				UI:UpdateConsole["obj_Miner: Master Vote tie with:${name}", LOG_DEBUG]
 				This:VoteForMaster
-				
+
 			}
 		}
 		else
@@ -1373,7 +1373,7 @@ objectdef obj_Miner
 			MasterName:Set[${Me.Name}]
 			UI:UpdateConsole["obj_Miner: I am Master", LOG_DEBUG]
 			relay all -event EVEBot_Master_Vote "${Me.Name},${MasterVote}"
-		
+
 		}
 		}
 		}
@@ -1390,7 +1390,7 @@ objectdef obj_Miner
 			{
 				MasterName:Set[NULL]
 			}
-			
+
 			if ${Config.Miner.MasterMode}
 			{
 				MasterVote:Set[100]
@@ -1400,7 +1400,7 @@ objectdef obj_Miner
 
 		}
 
-		
+
 	}
 
 	function VoteForMaster()
@@ -1414,7 +1414,7 @@ objectdef obj_Miner
 			MasterVote:Set[${Math.Rand[90]:Inc[10]}]
 		}
 		UI:UpdateConsole["Debug: Master Vote value:${MasterVote}", LOG_DEBUG]
-		
+
 
 		relay all -event EVEBot_Master_Vote "${Me.Name},${MasterVote}"
 	}
