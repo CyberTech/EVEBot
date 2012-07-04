@@ -867,7 +867,7 @@ objectdef obj_Cargo
 						}
 						else
 						{
-							/* Move only what will fit, minus 1 to account for CCP rounding errors. */
+							; Move only what will fit, minus 1 to account for CCP rounding errors.
 							QuantityToMove:Set[${Math.Calc[${JetCan.CargoFreeSpace} / ${CargoIterator.Value.Volume} - 1]}]
 						}
 					}
@@ -907,8 +907,16 @@ objectdef obj_Cargo
 			if ${dest(exists)} && ${dest} > 0
 			{	/* assume destination is a container */
 				if (${src.Quantity} * ${src.Volume}) > ${This.ContainerFreeSpace[${dest}]}
-				{	/* Move only what will fit, minus 1 to account for CCP rounding errors. */
-					qty:Set[${Math.Calc[${This.ContainerFreeSpace[${dest}]} / ${src.Volume} - 1]}]
+				{
+					if ${src.Volume} > 1.0
+					{
+						qty:Set[${Math.Calc[${This.ContainerFreeSpace[${dest}]} / ${src.Volume}]}]
+					}
+					else
+					{
+						; Move only what will fit, minus 1 to account for CCP rounding errors.
+						qty:Set[${Math.Calc[${This.ContainerFreeSpace[${dest}]} / ${src.Volume} - 1]}]
+					}
 				}
 				else
 				{
@@ -918,8 +926,16 @@ objectdef obj_Cargo
 			else
 			{	/* assume destination is ship's cargo hold */
 				if (${src.Quantity} * ${src.Volume}) > ${Ship.CargoFreeSpace}
-				{	/* Move only what will fit, minus 1 to account for CCP rounding errors. */
-					qty:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${src.Volume} - 1]}]
+				{
+					if ${src.Volume} > 1.0
+					{
+						qty:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${src.Volume}]}]
+					}
+					else
+					{
+						; Move only what will fit, minus 1 to account for CCP rounding errors.
+						qty:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${src.Volume} - 1]}]
+					}
 				}
 				else
 				{
@@ -988,8 +1004,16 @@ objectdef obj_Cargo
 				;;UI:UpdateConsole["DEBUG: TransferListToShipWithContainers: used space = ${usedSpace}"]
 				;;UI:UpdateConsole["DEBUG: TransferListToShipWithContainers: total space = ${totalSpace}"]
 				if (${This.CargoToTransfer.Get[${idx}].Quantity} * ${This.CargoToTransfer.Get[${idx}].Volume}) > ${Math.Calc[${totalSpace}-${usedSpace}]}
-				{	/* Move only what will fit, minus 1 to account for CCP rounding errors. */
-					qty:Set[${Math.Calc[${totalSpace}-${usedSpace} / ${This.CargoToTransfer.Get[${idx}].Volume} - 1]}]
+				{
+					if ${This.CargoToTransfer.Get[${idx}].Volume} > 1.0
+					{
+						qty:Set[${Math.Calc[${totalSpace}-${usedSpace} / ${This.CargoToTransfer.Get[${idx}].Volume}]}]
+					}
+					else
+					{
+						; Move only what will fit, minus 1 to account for CCP rounding errors.
+						qty:Set[${Math.Calc[${totalSpace}-${usedSpace} / ${This.CargoToTransfer.Get[${idx}].Volume} - 1]}]
+					}
 				}
 				else
 				{
@@ -1072,8 +1096,15 @@ objectdef obj_Cargo
 				{
 					if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${Ship.CargoFreeSpace}
 					{
-						/* Move only what will fit, minus 1 to account for CCP rounding errors. */
-						QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${CargoIterator.Value.Volume} - 1]}]
+						if ${CargoIterator.Value.Volume} > 1.0
+						{
+							QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${CargoIterator.Value.Volume}]}]
+						}
+						else
+						{
+							; Move only what will fit, minus 1 to account for CCP rounding errors.
+							QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${CargoIterator.Value.Volume} - 1]}]
+						}
 					}
 					else
 					{
