@@ -1121,6 +1121,8 @@ objectdef obj_Miner
 			return
 		}
 
+		Ship:Activate_Gang_Links
+
 		;	This checks our armor and shields to determine if we need to run like hell.  If we're being attacked by something
 		;	dangerous enough to get us this damaged, it's best to switch to HARD STOP mode.
 		if (${Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
@@ -1152,7 +1154,6 @@ objectdef obj_Miner
 		}
 		call Ship.OpenCargo
 
-
 		;	If configured to launch combat drones and there's a shortage, force a DropOff so we go to our delivery location
 		 if ${Config.Combat.LaunchCombatDrones} && ${Ship.Drones.CombatDroneShortage}
 		{
@@ -1160,7 +1161,6 @@ objectdef obj_Miner
 			ForceDropoff:Set[TRUE]
 			return
 		}
-
 
 		;	This changes belts if someone's within Min. Distance to Players
 		if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]}
@@ -1173,7 +1173,6 @@ objectdef obj_Miner
 
 		;	Tell our miners we're in a belt and they are safe to warp to me
 		relay all -event EVEBot_Orca_InBelt TRUE
-		Ship:Activate_Gang_Links
 
 		variable int OrcaRange
 		if ${Config.Miner.IceMining}
