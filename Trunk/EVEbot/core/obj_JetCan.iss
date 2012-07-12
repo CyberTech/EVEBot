@@ -102,7 +102,7 @@ objectdef obj_JetCan
 		if ${This.ActiveCan} > 0
 		{
 			/* The can no longer exists, since we passed above checks, so try to compensate for an Eve bug and close the loot window for it. */
-			EVEWindow[loot_${This.ActiveCan}]:Close
+			;EVEWindow[loot_${This.ActiveCan}]:Close
 		}
 
 		variable index:entity Cans
@@ -425,22 +425,25 @@ objectdef obj_JetCan
 
 	function Close(int64 ID=0)
 	{
-		if (${ID} == 0 && ${This.ActiveCan} > 0)
-		{
-			ID:Set[${This.ActiveCan}]
-		}
+		; The current code didn't do anything and there is no actual way to close the JetCan right now
+		;(you can only close the main inv window), which IMO should be handled separately from the JetCan's window. So I commented it out. D
+		; -- wco12		
+		
+		;if (${ID} == 0 && ${This.ActiveCan} > 0)
+		;{
+		;	ID:Set[${This.ActiveCan}]
+		;}
 
-		if ${This.IsCargoOpen[${ID}]}
-		{
-			Logger:Log["Closing JetCan"]
-			Entity[${ID}]:CloseCargo
-			Entity[${ID}]:CloseStorage
-			wait WAIT_CARGO_WINDOW
-			while ${This.IsCargoOpen[${ID}]}
-			{
-				wait 1
-			}
-		}
+		;if ${This.IsCargoOpen[${ID}]}
+		;{
+		;	Logger:Log["Closing JetCan"]
+		;	Entity[${ID}]:CloseCargo
+		;	wait WAIT_CARGO_WINDOW
+		;	while ${This.IsCargoOpen[${ID}]}
+		;	{
+		;		wait 1
+		;	}
+		;} 
 	}
 }
 
@@ -567,7 +570,7 @@ objectdef obj_SpawnContainer inherits obj_JetCan
 		if ${This.ActiveCan} > 0
 		{
 			/* The can no longer exists, since we passed above checks, so try to compensate for an Eve bug and close the loot window for it. */
-			EVEWindow[loot_${This.ActiveCan}]:Close
+			;EVEWindow[loot_${This.ActiveCan}]:Close
 		}
 
 		variable index:entity Cans

@@ -451,7 +451,6 @@ objectdef obj_JetCan
 		;{
 		;	UI:UpdateConsole["Closing JetCan"]
 		;	Entity[${ID}]:CloseCargo
-		;	Entity[${ID}]:CloseStorage
 		;	wait WAIT_CARGO_WINDOW
 		;	while ${This.IsCargoOpen[${ID}]}
 		;	{
