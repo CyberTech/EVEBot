@@ -245,6 +245,18 @@ objectdef obj_Miner
 			relay all -event EVEBot_Master_InBelt FALSE
 		}
 
+		if ${Config.Miner.MasterMode} || ${Config.Miner.GroupMode}
+		{
+			if ${MasterVote} == -1
+			{
+				call This.VoteForMaster
+			}
+			else
+			{
+				call This.ResetMaster
+			}
+		}
+
 		switch ${This.CurrentState}
 		{
 
@@ -421,20 +433,6 @@ objectdef obj_Miner
 					Ship:Open
 				}
 				call Cargo.OpenHolds
-
-				if ${Config.Miner.MasterMode} || ${Config.Miner.GroupMode}
-				{
-					if ${MasterVote} == -1
-					{
-						call This.VoteForMaster
-
-					}
-					else
-					{
-						call This.ResetMaster
-					}
-				}
-
 				break
 
 			;	This means we're in space and should mine some more ore!  Only one choice here - MINE!
