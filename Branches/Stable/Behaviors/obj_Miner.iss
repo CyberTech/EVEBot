@@ -241,7 +241,6 @@ objectdef obj_Miner
 		;	Tell the miners we might not be in a belt and shouldn't be warped to.
 		if ${This.CurrentState.NotEqual[MINE]} && ${IsMaster}
 		{
-			UI:UpdateConsole["ALERT:  Master not in Belt"]
 			relay all -event EVEBot_Master_InBelt FALSE
 		}
 
@@ -825,7 +824,6 @@ objectdef obj_Miner
 
 		if ${IsMaster}
 		{
-		UI:UpdateConsole["ALERT:  Master In Belt"]
 			;	Tell our miners we're in a belt and they are safe to warp to me
 			relay all -event EVEBot_Master_InBelt TRUE
 		}
@@ -931,7 +929,7 @@ objectdef obj_Miner
 					Master:Set[Name = "${MasterName}"]
 					if ${Entity[${Master.Escape}].Distance} > WARP_RANGE
 					{
-						UI:UpdateConsole["ALERT:  ${Entity[${Master.Escape}].Name} is a long way away.  Warping to it."]
+						UI:UpdateConsole["ALERT:  ${Entity[${Master.Escape}].Name} is off grid. Warping."]
 						UI:UpdateConsole["Debug: Entity:WarpTo to Master from Line _LINE_ ", LOG_DEBUG]
 						Entity[${Master.Escape}]:WarpTo[10000]
 						return
