@@ -148,7 +148,7 @@ objectdef obj_MissionBlacklist
 				break
 		}
 
-		UI:UpdateConsole["DEBUG: obj_MissionBlacklist: Searching for ${levelString} mission blacklist...", LOG_DEBUG]
+		;UI:UpdateConsole["DEBUG: obj_MissionBlacklist: Searching for ${levelString} mission blacklist...", LOG_DEBUG]
 
 		if ${This.levelIterator:First(exists)}
 		{
@@ -1190,7 +1190,7 @@ objectdef obj_Agents
 
 		UI:UpdateConsole["Waiting for mission dialog to update...", LOG_DEBUG]
 		wait 60
-		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
+		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} Dialog: ${Agent[${This.AgentIndex}].Dialog}"]
 
 		EVE:Execute[OpenJournal]
 		wait 50
