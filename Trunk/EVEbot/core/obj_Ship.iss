@@ -1947,9 +1947,9 @@ objectdef obj_Ship inherits obj_BaseClass
 			{
 				do
 				{
-					if ${hsIterator.Value.GivenName.Equal[${name}]}
+					if ${hsIterator.Value.Name.Equal[${name}]}
 					{
-						Logger:Log["obj_Ship: Switching to ship named ${hsIterator.Value.GivenName}."]
+						Logger:Log["obj_Ship: Switching to ship named ${hsIterator.Value.Name}."]
 						hsIterator.Value:MakeActive
 						break
 					}

@@ -120,7 +120,7 @@ objectdef obj_Cargo
 		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: SlotID:            ${anItem.SlotID}"]
 		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: Type:              ${anItem.Type}"]
 		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: Volume:            ${anItem.Volume}"]
-		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: GivenName:         ${anItem.GivenName}"]
+		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: Name:         		${anItem.Name}"]
 		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: CargoCapacity:     ${anItem.CargoCapacity}"]
 		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: UsedCargoCapacity: ${anItem.UsedCargoCapacity}"]
 		Logger:Log["========================================================"]

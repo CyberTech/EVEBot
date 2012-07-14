@@ -2830,9 +2830,9 @@ objectdef obj_Ship
 				{
 					do
 					{
-						if ${hsIterator.Value.GivenName.Equal[${name}]}
+						if ${hsIterator.Value.Name.Equal[${name}]}
 						{
-							UI:UpdateConsole["obj_Ship: Switching to ship named ${hsIterator.Value.GivenName}."]
+							UI:UpdateConsole["obj_Ship: Switching to ship named ${hsIterator.Value.Name}."]
 							hsIterator.Value:MakeActive
 							break
 						}
