@@ -249,11 +249,11 @@ objectdef obj_Miner
 		{
 			if ${MasterVote} == -1
 			{
-				call This.VoteForMaster
+				This:VoteForMaster
 			}
 			else
 			{
-				call This.ResetMaster
+				;This:ResetMaster
 			}
 		}
 
@@ -732,7 +732,7 @@ objectdef obj_Miner
 			if ${WarpToOrca} && !${Entity[${Orca.Escape}](exists)}
 			{
 				UI:UpdateConsole["Debug: WarpToFleetMember to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
-				call Ship.WarpToFleetMember ${Local[${Config.Miner.DeliveryLocation}]}
+				call Ship.WarpToFleetMember ${Local["${Config.Miner.DeliveryLocation}"]}
 				if ${Config.Miner.BookMarkLastPosition} && ${Bookmarks.CheckForStoredLocation}
 				{
 					Bookmarks:RemoveStoredLocation
@@ -748,7 +748,7 @@ objectdef obj_Miner
 			if ${Config.Miner.GroupMode} && ${WarpToMaster} && !${Entity[${Master.Escape}](exists)} && !${IsMaster}
 			{
 				UI:UpdateConsole["Debug: WarpToFleetMember to ${MasterName} from Line _LINE_ ", LOG_DEBUG]
-				call Ship.WarpToFleetMember ${Local[${MasterName}]}
+				call Ship.WarpToFleetMember ${Local["${MasterName}"]}
 				if ${Config.Miner.BookMarkLastPosition} && ${Bookmarks.CheckForStoredLocation}
 				{
 					Bookmarks:RemoveStoredLocation
@@ -926,13 +926,16 @@ objectdef obj_Miner
 			{
 				UI:UpdateConsole["Debug: Checking Group mode ", LOG_DEBUG]
 				; if for some reason we are too far away from our master go find him
-				Master:Set[Name = "${MasterName}"]
-				if ${Entity[${Master.Escape}].Distance} > WARP_RANGE
+				if ${MasterName.NotEqual[NULL]}
 				{
-					UI:UpdateConsole["ALERT:  ${Entity[${Master.Escape}].Name} is a long way away.  Warping to it."]
-					UI:UpdateConsole["Debug: Entity:WarpTo to Master from Line _LINE_ ", LOG_DEBUG]
-					Entity[${Master.Escape}]:WarpTo[10000]
-					return
+					Master:Set[Name = "${MasterName}"]
+					if ${Entity[${Master.Escape}].Distance} > WARP_RANGE
+					{
+						UI:UpdateConsole["ALERT:  ${Entity[${Master.Escape}].Name} is a long way away.  Warping to it."]
+						UI:UpdateConsole["Debug: Entity:WarpTo to Master from Line _LINE_ ", LOG_DEBUG]
+						Entity[${Master.Escape}]:WarpTo[10000]
+						return
+					}
 				}
 			}
 		}
@@ -1325,64 +1328,58 @@ objectdef obj_Miner
 		UI:UpdateConsole["obj_Miner:MasterVote event:${groupParams}, LOG_DEBUG]
 
 		if ${Config.Miner.MasterMode} || ${Config.Miner.GroupMode}
-				{
-					if ${MasterVote} == -1
-					{
-						call This.VoteForMaster
-
-					}
-
-
-		variable string name
-		variable int64 State = -1
-
-		name:Set[${groupParams.Token[1,","]}]
-		State:Set[${groupParams.Token[2,","]}]
-
-		if ${Me.Name.NotEqual[${name}]}
 		{
-		MasterName:Set[${name}]
-		if ${State} > ${MasterVote}
-		{
-			MasterName:Set[${name}]
-			IsMaster:Set[FALSE]
-			UI:UpdateConsole["obj_Miner: Master is:${MasterName}", LOG_DEBUG]
-
-		}
-		elseif ${State} == ${MasterVote}
-		{
-			if ${Config.Miner.MasterMode}
+			if ${MasterVote} == -1
 			{
-				UI:UpdateConsole["obj_Miner: There can be only one Master ERROR:${name}", LOG_DEBUG]
-				relay all -event EVEBot_HARDSTOP
-			}
-			else
-			{
-				; re-vote for master
-				UI:UpdateConsole["obj_Miner: Master Vote tie with:${name}", LOG_DEBUG]
 				This:VoteForMaster
-
 			}
-		}
-		else
-		{
-			IsMaster:Set[TRUE]
-			MasterName:Set[${Me.Name}]
-			UI:UpdateConsole["obj_Miner: I am Master", LOG_DEBUG]
-			relay all -event EVEBot_Master_Vote "${Me.Name},${MasterVote}"
 
-		}
-		}
+			variable string name
+			variable int64 State = -1
+
+			name:Set[${groupParams.Token[1,","]}]
+			State:Set[${groupParams.Token[2,","]}]
+
+			if ${Me.Name.NotEqual[${name}]}
+			{
+				MasterName:Set[${name}]
+				if ${State} > ${MasterVote}
+				{
+					MasterName:Set[${name}]
+					IsMaster:Set[FALSE]
+					UI:UpdateConsole["obj_Miner: Master is: \"${MasterName}\"", LOG_DEBUG]
+				}
+				elseif ${State} == ${MasterVote}
+				{
+					if ${Config.Miner.MasterMode}
+					{
+						UI:UpdateConsole["obj_Miner: There can be only one Master ERROR:${name}", LOG_DEBUG]
+						relay all -event EVEBot_HARDSTOP
+					}
+					else
+					{
+						; re-vote for master
+						UI:UpdateConsole["obj_Miner: Master Vote tie with:${name}", LOG_DEBUG]
+						This:VoteForMaster
+					}
+				}
+				else
+				{
+					IsMaster:Set[TRUE]
+					MasterName:Set[${Me.Name}]
+					UI:UpdateConsole["obj_Miner: I am Master", LOG_DEBUG]
+					relay all -event EVEBot_Master_Vote "${Me.Name},${MasterVote}"
+				}
+			}
 		}
 	}
 
-	function ResetMaster()
+	method ResetMaster()
 	{
 		UI:UpdateConsole["Debug: Reset Master :${MasterVote}", LOG_DEBUG]
 
 		if ${Config.Miner.MasterMode} || ${Config.Miner.GroupMode}
 		{
-
 			if ${Config.Miner.GroupMode}
 			{
 				MasterName:Set[NULL]
@@ -1394,14 +1391,12 @@ objectdef obj_Miner
 			}
 
 			relay all -event EVEBot_Master_Vote "${Me.Name},${MasterVote}"
-
 		}
-
-
 	}
 
-	function VoteForMaster()
+	method VoteForMaster()
 	{
+		IsMaster:Set[TRUE]
 		if ${Config.Miner.MasterMode}
 		{
 			MasterVote:Set[100]
@@ -1410,8 +1405,7 @@ objectdef obj_Miner
 		{
 			MasterVote:Set[${Math.Rand[90]:Inc[10]}]
 		}
-		UI:UpdateConsole["Debug: Master Vote value:${MasterVote}", LOG_DEBUG]
-
+		UI:UpdateConsole["Debug: Master Vote value: ${MasterVote}", LOG_DEBUG]
 
 		relay all -event EVEBot_Master_Vote "${Me.Name},${MasterVote}"
 	}
