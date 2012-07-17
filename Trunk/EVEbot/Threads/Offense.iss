@@ -428,8 +428,9 @@ objectdef obj_Offense inherits obj_BaseClass
 		{
 			return
 		}
-
-		if ${Ship.IsCloaked} || !${Me.InSpace}
+	
+		;; Scripts need to check *both* if it's in station AND if it's in space.
+		if ${Ship.IsCloaked} || !${Me.InSpace} || ${Me.InStation}
 		{
 			return
 		}

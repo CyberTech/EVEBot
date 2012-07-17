@@ -527,7 +527,8 @@ objectdef obj_Combat
 
 	function ProcessState()
 	{
-		if ${This.CurrentState.NotEqual["INSTATION"]}
+		;; Scripts need to check *both* if it's in station AND if it's in space.   (See "Pulse" method of the ship object)
+		if (${This.CurrentState.NotEqual["INSTATION"]} && ${Me.InSpace})	
 		{
 			if ${Me.ToEntity.IsWarpScrambled}
 			{
