@@ -497,7 +497,8 @@ objectdef obj_Miner
 							call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
 							break
 						}
-						UI:UpdateConsole["ALERT:  Station dock failed, check your delivery location!  Switching to HARD STOP mode!"]
+						UI:UpdateConsole["ALERT: Station dock failed for delivery location \"${Config.Miner.DeliveryLocation}\""]
+						UI:UpdateConsole["ALERT: Switching to HARD STOP mode!"]
 						EVEBot.ReturnToStation:Set[TRUE]
 						break
 
@@ -518,7 +519,8 @@ objectdef obj_Miner
 							call Cargo.TransferOreToCorpHangarArray
 							break
 						}
-						UI:UpdateConsole["ALERT:  Hangar Array unload failed, check your delivery location!  Switching to HARD STOP mode!"]
+						UI:UpdateConsole["ALERT: Hangar Array unload failed for delivery location \"${Config.Miner.DeliveryLocation}\""]
+						UI:UpdateConsole["ALERT: Switching to HARD STOP mode!"]
 						EVEBot.ReturnToStation:Set[TRUE]
 						break
 
@@ -539,7 +541,8 @@ objectdef obj_Miner
 							call Cargo.TransferCargoToLargeShipAssemblyArray
 							break
 						}
-						UI:UpdateConsole["ALERT:  Large Ship Assembly Array unload failed, check your delivery location!  Switching to HARD STOP mode!"]
+						UI:UpdateConsole["ALERT: Large Ship Assembly Array unload failed for delivery location \"${Config.Miner.DeliveryLocation}\""]
+						UI:UpdateConsole["ALERT: Switching to HARD STOP mode!"]
 						EVEBot.ReturnToStation:Set[TRUE]
 						break
 
@@ -560,7 +563,8 @@ objectdef obj_Miner
 							call Cargo.TransferOreToXLargeShipAssemblyArray
 							break
 						}
-						UI:UpdateConsole["ALERT:  XLarge Ship Assembly Array unload failed, check your delivery location!  Switching to HARD STOP mode!"]
+						UI:UpdateConsole["ALERT: XLarge Ship Assembly Array unload failed for delivery location \"${Config.Miner.DeliveryLocation}\""]
+						UI:UpdateConsole["ALERT: Switching to HARD STOP mode!"]
 						EVEBot.ReturnToStation:Set[TRUE]
 						break
 
