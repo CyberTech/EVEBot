@@ -419,7 +419,8 @@ objectdef obj_Asteroids
 
 	member:int64 NearestAsteroid()
 	{
-		return ${Entity["CategoryID = ${This.AsteroidCategoryID}"].ID}
+		; TODO - add a Mercoxit checkbox to ui, and pass the config val as a param to this member for whether to include merc or not.
+		return ${Entity["CategoryID = ${This.AsteroidCategoryID} && TypeID != 11396"].ID}
 	}
 
 
