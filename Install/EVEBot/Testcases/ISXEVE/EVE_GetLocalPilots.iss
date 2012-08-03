@@ -16,7 +16,7 @@
 function main()
 {
 	variable obj_LSTypeIterator ItemTest = "pilot"
-	variable string MethodStr = "EVE:GetPilots"
+	variable string MethodStr = "EVE:GetLocalPilots"
 
 	#include "../_Testcase_MethodStr_Body.iss"
 }
