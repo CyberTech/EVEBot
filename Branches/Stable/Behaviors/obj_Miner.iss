@@ -538,7 +538,7 @@ objectdef obj_Miner
 						{
 							UI:UpdateConsole["Debug: WarpToBookMarkName to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
 							call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
-							call Cargo.TransferCargoToLargeShipAssemblyArray
+							call Cargo.TransferOreToLargeShipAssemblyArray
 							break
 						}
 						UI:UpdateConsole["ALERT: Large Ship Assembly Array unload failed for delivery location \"${Config.Miner.DeliveryLocation}\""]
