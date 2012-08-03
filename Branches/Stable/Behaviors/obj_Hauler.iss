@@ -773,9 +773,7 @@ objectdef obj_Hauler
 				call Cargo.TransferOreToCorpHangarArray
 				break
 			case Large Ship Assembly Array
-				echo Warp to LSAA
 				call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
-				echo Cargo LSAA
 				call Cargo.TransferCargoToLargeShipAssemblyArray
 				break
 			case XLarge Ship Assembly Array
