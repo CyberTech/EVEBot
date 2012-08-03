@@ -720,7 +720,9 @@ objectdef obj_Cargo
 						if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) < ${Math.Calc[${LargeShipAssemblyArray.CargoFreeSpace} - ${VolumeToMove}]}
 						{
 							TripHauled:Inc[${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}]}]
-							ListToMove:Insert[${CargoIterator.Value.ID}]
+							;ListToMove:Insert[${CargoIterator.Value.ID}]
+							; test change to see if moveitemsto isn't working here.
+							CargoIterator.Value:MoveTo[${LargeShipAssemblyArray.ActiveCan}, CorpHangars, ${CargoIterator.Value.Quantity},Corporation Folder 1]
 							VolumeToMove:Inc[${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}]}]
 						}
 						else
@@ -731,7 +733,7 @@ objectdef obj_Cargo
 						}
 				}
 				while ${CargoIterator:Next(exists)}
-				EVE:MoveItemsTo[ListToMove, ${LargeShipAssemblyArray.ActiveCan}, CorpHangars,Corporation Folder 1]
+				;EVE:MoveItemsTo[ListToMove, ${LargeShipAssemblyArray.ActiveCan}, CorpHangars, Corporation Folder 1]
 		}
 		else
 		{
