@@ -820,6 +820,9 @@ objectdef obj_Cargo
 
 	function TransferListToCorpHangarArray()
 	{
+		variable float VolumeToMove=0
+		variable index:int64 ListToMove
+
 		variable iterator CargoIterator
 		This.CargoToTransfer:GetIterator[CargoIterator]
 
@@ -830,11 +833,24 @@ objectdef obj_Cargo
 				if ${CorpHangarArray.IsReady[TRUE]}
 				{
 					call CorpHangarArray.Open ${CorpHangarArray.ActiveCan}
-					UI:UpdateConsole["TransferListToCorpHangarArray: Transferring Cargo: ${CargoIterator.Value.Name}"]
-					CargoIterator.Value:MoveTo[${CorpHangarArray.ActiveCan}, CorpHangars, ${CargoIterator.Value.Quantity},Corporation Folder 1]
+					if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) < ${Math.Calc[${CorpHangarArray.CargoFreeSpace} - ${VolumeToMove}]}
+					{
+						TripHauled:Inc[${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}]}]
+						UI:UpdateConsole["TransferListToCorpHangarArray: Bulk Transferring Cargo: ${CargoIterator.Value.Name} ${CargoIterator.Value.Quantity} Free Space: ${CorpHangarArray.CargoFreeSpace}"]
+						ListToMove:Insert[${CargoIterator.Value.ID}]
+						VolumeToMove:Inc[${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}]}]
+					}
+					else
+					{
+						TripHauled:Inc[${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}]}]
+						UI:UpdateConsole["TransferListToCorpHangarArray: Transferring Cargo: ${CargoIterator.Value.Name} ${CargoIterator.Value.Quantity} Free Space: ${CorpHangarArray.CargoFreeSpace}"]
+						CargoIterator.Value:MoveTo[${CorpHangarArray.ActiveCan}, CorpHangars, ${Math.Calc[(${CorpHangarArray.CargoFreeSpace} - ${VolumeToMove}) / ${CargoIterator.Value.Volume}]},Corporation Folder 1]
+						break
+					}
 				}
 			}
 			while ${CargoIterator:Next(exists)}
+			EVE:MoveItemsTo[ListToMove, ${CorpHangarArray.ActiveCan}, CorpHangars, Corporation Folder 1]
 			CorpHangarArray:StackAllCargo
 		}
 		else
@@ -1031,7 +1047,7 @@ objectdef obj_Cargo
 				{
 					This.CargoToTransfer:Remove[${idx}]
 				}
-				do
+				do8/4/2012 12:01:32 AM
 				{
 					usedSpace:Set[${shipContainerIterator.Value.UsedCargoCapacity}]
 					wait 2
