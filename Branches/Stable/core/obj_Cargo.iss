@@ -1142,7 +1142,7 @@ objectdef obj_Cargo
 
 		if ${Ship.HasOreHold}
 		{
-			MyShip:GetOreHoldCargo[This.MyCargo]
+			MyShip:GetOreHoldCargo[This.CargoToTransfer]
 		}
 		else
 		{
@@ -1172,7 +1172,7 @@ objectdef obj_Cargo
 
 		if ${Ship.HasOreHold}
 		{
-			MyShip:GetOreHoldCargo[This.MyCargo]
+			MyShip:GetOreHoldCargo[This.CargoToTransfer]
 		}
 		else
 		{
@@ -1245,7 +1245,7 @@ objectdef obj_Cargo
 
 		if ${Ship.HasOreHold}
 		{
-			MyShip:GetOreHoldCargo[This.MyCargo]
+			MyShip:GetOreHoldCargo[This.CargoToTransfer]
 		}
 		else
 		{
@@ -1264,7 +1264,7 @@ objectdef obj_Cargo
 
 		if ${Ship.HasOreHold}
 		{
-			MyShip:GetOreHoldCargo[This.MyCargo]
+			MyShip:GetOreHoldCargo[This.CargoToTransfer]
 		}
 		else
 		{
@@ -1291,7 +1291,7 @@ objectdef obj_Cargo
 
 		if ${Ship.HasOreHold}
 		{
-			MyShip:GetOreHoldCargo[This.MyCargo]
+			MyShip:GetOreHoldCargo[This.CargoToTransfer]
 		}
 		else
 		{
@@ -1392,7 +1392,7 @@ objectdef obj_Cargo
 
 		if ${Ship.HasOreHold}
 		{
-			MyShip:GetOreHoldCargo[This.MyCargo]
+			MyShip:GetOreHoldCargo[This.CargoToTransfer]
 		}
 		else
 		{
