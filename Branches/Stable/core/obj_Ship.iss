@@ -137,6 +137,12 @@ objectdef obj_Ship
 		}
 	}
 
+	member:bool HasOreHold()
+	{
+		;return ${MyShip.HasOreHold}
+		return true
+	}
+	
 	/* The IsSafe function should check the tank, ammo availability, etc.. */
 	/* and determine if it is safe to put the ship back into harms way. */
 	/* TODO - Rename to SystemsReady (${Ship.SystemsReady}) or similar for clarity - CyberTech */
@@ -311,7 +317,27 @@ objectdef obj_Ship
 			return 0
 		}
 
-		return ${Math.Calc[${EVEWindow[ByName, Inventory].ChildCapacity[ShipOreHold]}-${EVEWindow[ByName, Inventory].ChildUsedCapacity[ShipOreHold]}]}
+		return ${Math.Calc[${This.OreHoldCapacity}-${This.OreHoldUsedCapacity}]}
+	}
+
+	member:float OreHoldCapacity()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return 0
+		}
+
+		return ${EVEWindow[ByName, Inventory].ChildCapacity[ShipOreHold]}
+	}
+
+	member:float OreHoldUsedCapacity()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return 0
+		}
+
+		return ${EVEWindow[ByName, Inventory].ChildUsedCapacity[ShipOreHold]}
 	}
 
 	member:bool OreHoldFull()
@@ -322,6 +348,20 @@ objectdef obj_Ship
 		}
 
 		if ${This.OreHoldFreeSpace} <= ${This.OreHoldMinimumFreeSpace}
+		{
+			return TRUE
+		}
+		return FALSE
+	}
+
+	member:bool OreHoldHalfFull()
+	{
+		if !${Me.Ship(exists)}
+		{
+			return FALSE
+		}
+
+		if ${This.OreHoldFreeSpace} <= ${Math.Calc[${Me.Ship.CargoCapacity}*0.50]}
 		{
 			return TRUE
 		}

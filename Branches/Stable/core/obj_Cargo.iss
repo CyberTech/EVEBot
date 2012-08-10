@@ -154,7 +154,7 @@ objectdef obj_Cargo
 		;UI:UpdateConsole["DEBUG: obj_Cargo:FindShipCargo: This.CargoToTransfer Populated: ${This.CargoToTransfer.Used}"]
 	}
 
-   method FindShipCargoByType(int TypeIDToMove)
+	method FindShipCargoByType(int TypeIDToMove)
    {
 	  Me.Ship:GetCargo[This.MyCargo]
 
@@ -507,9 +507,9 @@ objectdef obj_Cargo
 							wait 15
 						}
 
-						if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
+						if ${Ship.OreHoldFreeSpace} < ${Ship.OreHoldMinimumFreeSpace}
 						{
-							UI:UpdateConsole["DEBUG: TransferCargoFromShipCorporateHangarToOreHold: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
+							UI:UpdateConsole["DEBUG: TransferCargoFromShipCorporateHangarToOreHold: Ore Hold: ${Ship.OreHoldFreeSpace} < ${Ship.OreHoldMinimumFreeSpace}"]
 							break
 						}
 					}
@@ -552,12 +552,6 @@ objectdef obj_Cargo
 						CargoIterator.Value:MoveTo[MyStationHangar, Hangar, ${QuantityToMove}]
 						wait 15
 					}
-
-					if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
-					{
-						UI:UpdateConsole["DEBUG: TransferCargoFromShipOreHoldToStation: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
-						break
-					}
 				}
 				while ${CargoIterator:Next(exists)}
 		}
@@ -596,12 +590,6 @@ objectdef obj_Cargo
 					{
 						CargoIterator.Value:MoveTo[MyStationHangar, Hangar, ${QuantityToMove}]
 						wait 15
-					}
-
-					if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
-					{
-						UI:UpdateConsole["DEBUG: TransferCargoFromShipCorporateHangarToStation: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
-						break
 					}
 				}
 				while ${CargoIterator:Next(exists)}
@@ -1169,7 +1157,14 @@ objectdef obj_Cargo
 
 		call Ship.OpenCargo
 
-		This:FindShipCargo[CATEGORYID_ORE]
+		if ${Ship.HasOreHold}
+		{
+			MyShip:GetOreHoldCargo[This.MyCargo]
+		}
+		else
+		{
+			This:FindShipCargo[CATEGORYID_ORE]
+		}
 		call This.TransferListToCorpHangarArray
 
 		This.CargoToTransfer:Clear[]
@@ -1192,7 +1187,14 @@ objectdef obj_Cargo
 
 		call Ship.OpenCargo
 
-		This:FindShipCargo[CATEGORYID_ORE]
+		if ${Ship.HasOreHold}
+		{
+			MyShip:GetOreHoldCargo[This.MyCargo]
+		}
+		else
+		{
+			This:FindShipCargo[CATEGORYID_ORE]
+		}
 		call This.TransferListToLargeShipAssemblyArray
 
 		This.CargoToTransfer:Clear[]
@@ -1241,8 +1243,6 @@ objectdef obj_Cargo
 		call This.TransferListFromLargeShipAssemblyArray
 	}
 
-
-
 	function TransferOreToXLargeShipAssemblyArray()
 	{
 		if ${XLargeShipAssemblyArray.IsReady}
@@ -1260,7 +1260,14 @@ objectdef obj_Cargo
 
 		call Ship.OpenCargo
 
-		This:FindShipCargo[CATEGORYID_ORE]
+		if ${Ship.HasOreHold}
+		{
+			MyShip:GetOreHoldCargo[This.MyCargo]
+		}
+		else
+		{
+			This:FindShipCargo[CATEGORYID_ORE]
+		}
 		call This.TransferListToXLargeShipAssemblyArray
 
 		This.CargoToTransfer:Clear[]
@@ -1272,7 +1279,14 @@ objectdef obj_Cargo
 
 		call Ship.OpenCargo
 
-		This:FindShipCargo[CATEGORYID_ORE]
+		if ${Ship.HasOreHold}
+		{
+			MyShip:GetOreHoldCargo[This.MyCargo]
+		}
+		else
+		{
+			This:FindShipCargo[CATEGORYID_ORE]
+		}
 		call This.TransferListToJetCan
 
 		This.CargoToTransfer:Clear[]
@@ -1292,7 +1306,14 @@ objectdef obj_Cargo
 		UI:UpdateConsole["Transferring Ore to Station Hangar"]
 		call This.OpenHolds
 
-		This:FindShipCargo[CATEGORYID_ORE]
+		if ${Ship.HasOreHold}
+		{
+			MyShip:GetOreHoldCargo[This.MyCargo]
+		}
+		else
+		{
+			This:FindShipCargo[CATEGORYID_ORE]
+		}
 		call This.TransferListToHangar
 
 		This.CargoToTransfer:Clear[]
@@ -1386,7 +1407,14 @@ objectdef obj_Cargo
 		UI:UpdateConsole["Transferring Ore to Corp Hangar"]
 		;call Ship.OpenCargo
 
-		This:FindShipCargo[CATEGORYID_ORE]
+		if ${Ship.HasOreHold}
+		{
+			MyShip:GetOreHoldCargo[This.MyCargo]
+		}
+		else
+		{
+			This:FindShipCargo[CATEGORYID_ORE]
+		}
 		call This.TransferListToShipCorporateHangar ${dest}
 
 		This.CargoToTransfer:Clear[]
@@ -1565,7 +1593,7 @@ objectdef obj_Cargo
 		}
 	}
 
-   function TransferItemTypeToHangar(int typeID)
+	function TransferItemTypeToHangar(int typeID)
    {
 	  if !${Station.Docked}
 	  {

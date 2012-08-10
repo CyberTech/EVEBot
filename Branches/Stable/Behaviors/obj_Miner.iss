@@ -421,7 +421,14 @@ objectdef obj_Miner
 				}
 				else
 				{
-					call Cargo.TransferOreToHangar
+					if ${Ship.HasOreHold}
+					{
+						call Cargo.TransferCargoFromShipOreHoldToStation
+					}
+					else
+					{
+						call Cargo.TransferOreToHangar
+					}
 				}
 
 			    LastUsedCargoCapacity:Set[0]
@@ -593,7 +600,7 @@ objectdef obj_Miner
 							}
 							else
 							{
-								if ${Ship.CargoHalfFull}
+								if (${Ship.HasOreHold} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoHalfFull}
 								{
 									call Cargo.TransferOreToJetCan
 									;	Need a wait here because it would try to move the same item more than once
@@ -903,7 +910,7 @@ objectdef obj_Miner
 			}
 
 			;	This performs Orca deliveries if we've got at least a tenth of our cargo hold full
-			if ${Ship.CargoTenthFull}
+			if (${Ship.HasOreHold} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoTenthFull}
 			{
 				;	Open the Orca if it's not open yet
 				if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && !${EVEWindow[ByItemID, ${Entity[${Orca.Escape}]}](exists)}
@@ -1079,7 +1086,10 @@ objectdef obj_Miner
 			if ${Config.Miner.SafeJetcan}
 			{
 				;	This checks to make sure the player in our delivery location is in range and not warping before we dump a jetcan
-				if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)} && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && ${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3 && ${Ship.CargoHalfFull}
+				if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)} && \
+					${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && \
+					${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3 && \
+					((${Ship.HasOreHold} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoHalfFull})
 				{
 					call Cargo.TransferOreToJetCan
 					;	Need a wait here because it would try to move the same item more than once
@@ -1089,7 +1099,7 @@ objectdef obj_Miner
 			}
 			else
 			{
-				if ${Ship.CargoHalfFull}
+				if ((${Ship.HasOreHold} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoHalfFull})
 				{
 					call Cargo.TransferOreToJetCan
 					;	Need a wait here because it would try to move the same item more than once
@@ -1279,7 +1289,7 @@ objectdef obj_Miner
 				if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)} && \
 					${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && \
 					${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3 && \
-					${Ship.CargoHalfFull}
+					((${Ship.HasOreHold} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoHalfFull})
 				{
 					call Cargo.TransferOreToJetCan
 					;	Need a wait here because it would try to move the same item more than once
@@ -1289,7 +1299,7 @@ objectdef obj_Miner
 			}
 			else
 			{
-				if ${Ship.CargoHalfFull}
+				if ((${Ship.HasOreHold} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoHalfFull})
 				{
 					call Cargo.TransferOreToJetCan
 					;	Need a wait here because it would try to move the same item more than once
@@ -1627,7 +1637,11 @@ objectdef obj_Miner
 			{
 				return TRUE
 			}
-			if ${Ship.CargoFreeSpace} < 1000 || ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
+			if ${Ship.HasOreHold} && (${Ship.OreHoldFreeSpace} < 1000 || ${Me.Ship.OreHoldUsedCapacity} > ${Config.Miner.CargoThreshold})
+			{
+				return TRUE
+			}
+			elseif ${Ship.CargoFreeSpace} < 1000 || ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 			{
 				return TRUE
 			}
@@ -1638,7 +1652,11 @@ objectdef obj_Miner
 			{
 				return TRUE
 			}
-			if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
+			if ${Ship.HasOreHold} && (${Ship.OreHoldFreeSpace} < ${Ship.OreHoldMinimumFreeSpace} || ${Me.Ship.OreHoldUsedCapacity} > ${Config.Miner.CargoThreshold})
+			{
+				return TRUE
+			}
+			elseif ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 			{
 				return TRUE
 			}
