@@ -1639,7 +1639,7 @@ objectdef obj_Miner
 			}
 			if ${Ship.HasOreHold}
 			{
-				if (${Ship.OreHoldFreeSpace} < 1000 || ${Me.Ship.OreHoldUsedCapacity} > ${Config.Miner.CargoThreshold})
+				if (${Ship.OreHoldFreeSpace} < 1000 || ${Ship.OreHoldUsedCapacity} > ${Config.Miner.CargoThreshold})
 				{
 					return TRUE
 				}
@@ -1657,7 +1657,7 @@ objectdef obj_Miner
 			}
 			if ${Ship.HasOreHold}
 			{
-				if (${Ship.OreHoldFreeSpace} < ${Ship.OreHoldMinimumFreeSpace} || ${Me.Ship.OreHoldUsedCapacity} > ${Config.Miner.CargoThreshold})
+				if (${Ship.OreHoldFreeSpace} < ${Ship.OreHoldMinimumFreeSpace} || ${Ship.OreHoldUsedCapacity} > ${Config.Miner.CargoThreshold})
 				{
 					return TRUE
 				}
