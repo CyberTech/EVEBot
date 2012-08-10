@@ -140,7 +140,7 @@ objectdef obj_Ship
 	member:bool HasOreHold()
 	{
 		;return ${MyShip.HasOreHold}
-		return true
+		return TRUE
 	}
 	
 	/* The IsSafe function should check the tank, ammo availability, etc.. */
