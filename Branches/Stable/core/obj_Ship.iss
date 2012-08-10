@@ -361,7 +361,7 @@ objectdef obj_Ship
 			return FALSE
 		}
 
-		if ${This.OreHoldFreeSpace} <= ${Math.Calc[${Me.Ship.CargoCapacity}*0.50]}
+		if ${This.OreHoldFreeSpace} <= ${Math.Calc[${This.OreHoldCapacity}*0.50]}
 		{
 			return TRUE
 		}
