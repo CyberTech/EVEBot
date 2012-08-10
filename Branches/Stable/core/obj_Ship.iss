@@ -301,7 +301,7 @@ objectdef obj_Ship
 			return
 		}
 
-		return ${Math.Calc[${EVEWindow[ByCaption, Ore Hold].Capacity}*0.02]}
+		return ${Math.Calc[${EVEWindow[ByName, Inventory].ChildCapacity[ShipOreHold]}*0.02]}
 	}
 
 	member:float OreHoldFreeSpace()
@@ -311,7 +311,7 @@ objectdef obj_Ship
 			return 0
 		}
 
-		return ${Math.Calc[${EVEWindow[ByCaption, Ore Hold].Capacity}-${EVEWindow[ByCaption, Ore Hold].UsedCapacity}]}
+		return ${Math.Calc[${EVEWindow[ByName, Inventory].ChildCapacity[ShipOreHold]}-${EVEWindow[ByName, Inventory].ChildUsedCapacity[ShipOreHold]}]}
 	}
 
 	member:bool OreHoldFull()
@@ -330,7 +330,7 @@ objectdef obj_Ship
 
 	method OpenOreHold()
 	{
-		if !${EVEWindow[ByCaption, Ore Hold](exists)}
+		if !${EVEWindow[ByName, Inventory].ChildWindowExists[ShipOreHold]}
 		{
 			Me.Ship:Open
 		}
@@ -343,7 +343,7 @@ objectdef obj_Ship
 			return FALSE
 		}
 
-		if ${EVEWindow[ByCaption, Ore Hold].UsedCapacity} == 0
+		if ${EVEWindow[ByName, Inventory].ChildUsedCapacity[ShipOreHold]} == 0
 		{
 			return TRUE
 		}
