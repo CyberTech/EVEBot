@@ -31,13 +31,13 @@ objectdef obj_Drones
 	}
 	method Shutdown()
 	{
-	    if !${Me.InStation}
-	    {
-	        if (${Me.ToEntity.Mode} != 3)
-	        {
-	        	UI:UpdateConsole["Recalling Drones prior to shutdown..."]
-    		    EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
-    		}
+		if !${Me.InStation}
+		{
+			if (${Me.ToEntity.Mode} != 3)
+			{
+				UI:UpdateConsole["Recalling Drones prior to shutdown..."]
+				EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
+			}
 		}
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}

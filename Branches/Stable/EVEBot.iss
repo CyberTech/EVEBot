@@ -72,10 +72,11 @@ function main()
 	declarevariable Whitelist obj_Config_Whitelist script
 	declarevariable Blacklist obj_Config_Blacklist script
 
+	turbo 8000
 	echo "${Time} EVEBot: Loading EVEDBs..."
-
 	declarevariable EVEDB_Stations obj_EVEDB_Stations script
 	declarevariable EVEDB_Items obj_EVEDB_Items script
+	turbo 4000
 
 	echo "${Time} EVEBot: Loading Core Objects..."
 	declarevariable Asteroids obj_Asteroids script

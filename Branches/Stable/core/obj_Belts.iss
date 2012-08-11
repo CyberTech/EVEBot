@@ -18,8 +18,12 @@ objectdef obj_Belts
 		UI:UpdateConsole["obj_Belts: ResetBeltList found ${beltIndex.Used} belts in this system.", LOG_DEBUG]
 	}
 	
-    member:bool IsAtBelt()
+	member:bool IsAtBelt()
 	{
+		if !${Me.InSpace}
+		{
+			return FALSE
+		}
 		; Are we within 150km of the bookmark?
 		if ${beltIterator.Value.ItemID} > -1
 		{
@@ -42,7 +46,7 @@ objectdef obj_Belts
 		if ${beltIndex.Used} == 0 
 		{
 			This:ResetBeltList
-		}		
+		}
 
 		if !${beltIterator:Next(exists)}
 			beltIterator:First(exists)

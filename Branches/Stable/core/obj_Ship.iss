@@ -477,7 +477,7 @@ objectdef obj_Ship
 	{
 		if !${EVEWindow[ByCaption, Corporation Hangars](exists)}
 		{
-			Me.ToEntity:Open
+			MyShip:Open
 		}
 	}
 
@@ -2016,7 +2016,6 @@ objectdef obj_Ship
 				}
 				else
 				{
-
 					UI:UpdateConsole["2: Warping to bookmark ${Label} (Attempt #${WarpCounter})"]
 					while !${This.WarpEntered} && ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${DestinationBookmark.X}, ${DestinationBookmark.Y}, ${DestinationBookmark.Z}]} > WARP_RANGE
 					{
@@ -2122,7 +2121,7 @@ objectdef obj_Ship
 
 	member:bool InWarp()
 	{
-		if ${Me.ToEntity.Mode} == 3
+		if ${Me.InSpace} && ${Me.ToEntity.Mode} == 3
 		{
 			return TRUE
 		}
@@ -2764,7 +2763,7 @@ objectdef obj_Ship
 
 	member:bool IsCloaked()
 	{
-		if ${Me.ToEntity(exists)} && ${Me.ToEntity.IsCloaked}
+		if ${Me.InSpace} && ${Me.ToEntity(exists)} && ${Me.ToEntity.IsCloaked}
 		{
 			return TRUE
 		}
@@ -2828,11 +2827,11 @@ objectdef obj_Ship
 		return 0
 	}
 
-   ; Returns the targeting range minus 10%
-   member:int OptimalTargetingRange()
-   {
-      return ${Math.Calc[${Me.Ship.MaxTargetRange}*0.90]}
-   }
+	; Returns the targeting range minus 10%
+	member:int OptimalTargetingRange()
+	{
+		return ${Math.Calc[${Me.Ship.MaxTargetRange}*0.90]}
+	}
 
 	member:bool IsPod()
 	{
@@ -3099,7 +3098,7 @@ objectdef obj_Ship
 		{
 			return ${MyShip.ToItem.Type}
 		}
-		else
+		elseif ${Me.InSpace} && !${Me.InStation}
 		{
 			return ${Me.ToEntity.Type}
 		}
@@ -3111,7 +3110,7 @@ objectdef obj_Ship
 		{
 			return ${MyShip.ToItem.TypeID}
 		}
-		else
+		elseif ${Me.InSpace} && !${Me.InStation}
 		{
 			return ${Me.ToEntity.TypeID}
 		}
