@@ -2840,15 +2840,19 @@ objectdef obj_Ship
 		variable int GroupID
 		variable int TypeID
 
-		if ${Me.InSpace}
+		if ${Me.InSpace} && !${Me.InStation}
 		{
 			GroupID:Set[${MyShip.ToEntity.GroupID}]
 			TypeID:Set[${MyShip.ToEntity.TypeID}]
 		}
-		else
+		elseif !${Me.InSpace} && ${Me.InStation}
 		{
 			GroupID:Set[${MyShip.ToItem.GroupID}]
 			TypeID:Set[${MyShip.ToItem.TypeID}]
+		}
+		else
+		{
+			return FALSE
 		}
 		if ${ShipName.Right[10].Equal["'s Capsule"]} || \
 			${GroupID} == GROUP_CAPSULE
