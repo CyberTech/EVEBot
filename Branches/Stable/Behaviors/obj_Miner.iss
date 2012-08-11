@@ -20,6 +20,8 @@ objectdef obj_Miner
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 2
 
+	variable time NextHaulerNotify
+	
 	;	State information (What we're doing)
 	variable string CurrentState = "IDLE"
 
@@ -1316,10 +1318,18 @@ objectdef obj_Miner
 
 	method NotifyHaulers()
 	{
-		/* notify hauler there is ore in space */
-		variable string tempString
-		tempString:Set["${Me.CharID},${Me.SolarSystemID},${Entity[GroupID = GROUP_ASTEROIDBELT].ID}"]
-		relay all -event EVEBot_Miner_Full ${tempString}
+	    if ${Time.Timestamp} >= ${This.NextHaulerNotify.Timestamp}
+		{
+			; Don't call the hauler more than once a minute
+    		This.NextHaulerNotify:Set[${Time.Timestamp}]
+    		This.NextHaulerNotify.Second:Inc[60]
+    		This.NextHaulerNotify:Update
+    		
+			/* notify hauler there is ore in space */
+			variable string tempString
+			tempString:Set["${Me.CharID},${Me.SolarSystemID},${Entity[GroupID = GROUP_ASTEROIDBELT].ID}"]
+			relay all -event EVEBot_Miner_Full ${tempString}
+		}
 
 		/* TO MANUALLY CALL A HAULER ENTER THIS IN THE CONSOLE
 		 * relay all -event EVEBot_Miner_Full "${Me.CharID},${Me.SolarSystemID},${Entity[GroupID = 9].ID}"
