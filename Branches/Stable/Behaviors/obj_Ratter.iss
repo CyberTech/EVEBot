@@ -329,7 +329,7 @@ objectdef obj_Ratter
 	{
 		call Station.Dock
 		wait 100
-		call Cargo.TransferCargoToHangar
+		call Cargo.TransferCargoToStationHangar
 		wait 100
 		; need to restock ammo here
 		This.CurrentState:Set["IDLE"]

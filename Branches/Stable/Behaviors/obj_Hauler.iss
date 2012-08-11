@@ -326,7 +326,7 @@ objectdef obj_Hauler
 					break
 				}
 				echo WHY ARE WE IN BASE MODE
-				call Cargo.TransferCargoToHangar
+				call Cargo.TransferCargoToStationHangar
 				call Station.Undock
 				relay all -event EVEBot_HaulerMSG ${Ship.CargoFreeSpace}
 				break

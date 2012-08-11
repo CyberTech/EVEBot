@@ -84,7 +84,7 @@ objectdef obj_Scavenger
 			case DROPOFFTOSTATION
 			call Station.Dock
 			wait 100
-			call Cargo.TransferCargoToHangar
+			call Cargo.TransferCargoToStationHangar
 			wait 100
 			break
 			case DROPOFFTOCHA
