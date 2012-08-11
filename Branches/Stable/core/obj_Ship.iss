@@ -142,7 +142,7 @@ objectdef obj_Ship
 		;return ${MyShip.HasOreHold}
 		return TRUE
 	}
-	
+
 	/* The IsSafe function should check the tank, ammo availability, etc.. */
 	/* and determine if it is safe to put the ship back into harms way. */
 	/* TODO - Rename to SystemsReady (${Ship.SystemsReady}) or similar for clarity - CyberTech */
@@ -286,17 +286,19 @@ objectdef obj_Ship
 
 	method StackCargoHold()
 	{
+		EVEWindow[ByName,"Inventory"]:MakeChildActive[${Me.ShipID}, CargoHold]
 		if ${EVEWindow[ByCaption,"active ship"](exists)}
 		{
-			EVEWindow[ByCaption,"active ship"]:StackAll
+			EVEWindow[ByName, "Inventory"]:StackAll
 		}
 	}
 
-	method  StackOreHold()
+	method StackOreHold()
 	{
+		EVEWindow[ByName,"Inventory"]:MakeChildActive[${Me.ShipID}, SpecializedOreHold]
 		if ${EVEWindow[ByCaption, Ore Hold](exists)}
 		{
-			EVEWindow[ByCaption, Ore Hold]:StackAll
+			EVEWindow[ByName, "Inventory"]:StackAll
 		}
 	}
 
@@ -306,8 +308,7 @@ objectdef obj_Ship
 		{
 			return
 		}
-
-		return ${Math.Calc[${EVEWindow[ByName, Inventory].ChildCapacity[ShipOreHold]}*0.02]}
+		return ${Math.Calc[${EVEWindow[ByName,"Inventory"].ChildCapacity[${Me.ShipID}, SpecializedOreHold]} * 0.02]}
 	}
 
 	member:float OreHoldFreeSpace()
@@ -317,7 +318,7 @@ objectdef obj_Ship
 			return 0
 		}
 
-		return ${Math.Calc[${This.OreHoldCapacity}-${This.OreHoldUsedCapacity}]}
+		return ${Math.Calc[${This.OreHoldCapacity} - ${This.OreHoldUsedCapacity}]}
 	}
 
 	member:float OreHoldCapacity()
@@ -327,7 +328,7 @@ objectdef obj_Ship
 			return 0
 		}
 
-		return ${EVEWindow[ByName, Inventory].ChildCapacity[ShipOreHold]}
+		return ${EVEWindow[ByName,"Inventory"].ChildCapacity[${Me.ShipID}, SpecializedOreHold]}
 	}
 
 	member:float OreHoldUsedCapacity()
@@ -337,7 +338,7 @@ objectdef obj_Ship
 			return 0
 		}
 
-		return ${EVEWindow[ByName, Inventory].ChildUsedCapacity[ShipOreHold]}
+		return ${EVEWindow[ByName,"Inventory"].ChildUsedCapacity[${Me.ShipID}, SpecializedOreHold]}
 	}
 
 	member:bool OreHoldFull()
@@ -382,8 +383,7 @@ objectdef obj_Ship
 		{
 			return FALSE
 		}
-
-		if ${EVEWindow[ByName, Inventory].ChildUsedCapacity[ShipOreHold]} == 0
+		if ${This.OreHoldUsedCapacity.Int} == 0
 		{
 			return TRUE
 		}
@@ -393,9 +393,10 @@ objectdef obj_Ship
 
 	method StackCorpHangar()
 	{
+		EVEWindow[ByName,"Inventory"]:MakeChildActive[${Me.ShipID},Folder1]
 		if ${EVEWindow[ByCaption, Corp Hangar](exists)}
 		{
-			EVEWindow[ByCaption, Corp Hangar]:StackAll
+			EVEWindow[ByName, "Inventory"]:StackAll
 		}
 	}
 
@@ -406,7 +407,7 @@ objectdef obj_Ship
 			return
 		}
 
-		return ${Math.Calc[${EVEWindow[ByCaption, Corp Hangar].Capacity}*0.02]}
+		return ${Math.Calc[${EVEWindow[ByName,"Inventory"].ChildCapacity[${Me.ShipID}, Folder1]}*0.02]}
 	}
 
 	member:float CorpHangarFreeSpace()
@@ -416,7 +417,7 @@ objectdef obj_Ship
 			return 0
 		}
 
-		return ${Math.Calc[${EVEWindow[ByCaption, Corp Hangar].Capacity}-${EVEWindow[ByCaption, Corp Hangar].UsedCapacity}]}
+		return ${Math.Calc[${EVEWindow[ByName,"Inventory"].ChildCapacity[${Me.ShipID},Folder1]}-${EVEWindow[ByName,"Inventory"].ChildUsedCapacity[${Me.ShipID},Folder1]}]}
 	}
 
 	member:float CorpHangarUsedSpace(bool IgnoreCrystals=FALSE)
@@ -442,10 +443,6 @@ objectdef obj_Ship
 		return ${Volume}
 	}
 
-
-
-
-
 	member:bool CorpHangarFull()
 	{
 		if !${Me.Ship(exists)}
@@ -469,13 +466,12 @@ objectdef obj_Ship
 
 		This:OpenCorpHangars
 
-		if ${EVEWindow[ByCaption, Corporation Hangars].UsedCapacity} == 0
+		if ${EVEWindow[ByName, "Inventory"].ChildUsedCapacity[${Me.ShipID},Folder1]} == 0
 		{
 			return TRUE
 		}
 		return FALSE
 	}
-
 
 	method OpenCorpHangars()
 	{
@@ -1877,7 +1873,7 @@ objectdef obj_Ship
 		{
 			return
 		}
-		
+
 		if ${Me.InStation}
 		{
 			call Station.Undock
