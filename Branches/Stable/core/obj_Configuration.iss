@@ -683,7 +683,7 @@ objectdef obj_Configuration_Miner
 		threshold:Set[${This.MinerRef.FindSetting[Cargo Threshold, 0]}]
 		if (${threshold} == 0) 
 		{
-			if ${Ship.HasOreHold}
+			if ${MyShip.HasOreHold}
 			{
 				This:SetCargoThreshold[${Ship.OreHoldCapacity}]
 			}

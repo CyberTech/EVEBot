@@ -137,12 +137,6 @@ objectdef obj_Ship
 		}
 	}
 
-	member:bool HasOreHold()
-	{
-		;return ${MyShip.HasOreHold}
-		return TRUE
-	}
-
 	/* The IsSafe function should check the tank, ammo availability, etc.. */
 	/* and determine if it is safe to put the ship back into harms way. */
 	/* TODO - Rename to SystemsReady (${Ship.SystemsReady}) or similar for clarity - CyberTech */
