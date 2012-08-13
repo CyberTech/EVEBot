@@ -1073,7 +1073,8 @@ objectdef obj_Cargo
 
 		call Ship.OpenCargo
 
-		if ${MyShip.HasOreHold}
+		; TODO - remove the botmode check after myship.hasorehold is added.
+		if ${Ship.HasOreHold} && ${Config.Common.BotModeName.Equal[Miner]}
 		{
 			MyShip:GetOreHoldCargo[This.CargoToTransfer]
 		}
@@ -1103,7 +1104,8 @@ objectdef obj_Cargo
 
 		call Ship.OpenCargo
 
-		if ${MyShip.HasOreHold}
+		; TODO - remove the botmode check after myship.hasorehold is added.
+		if ${Ship.HasOreHold} && ${Config.Common.BotModeName.Equal[Miner]}
 		{
 			MyShip:GetOreHoldCargo[This.CargoToTransfer]
 		}
@@ -1176,7 +1178,8 @@ objectdef obj_Cargo
 
 		call Ship.OpenCargo
 
-		if ${MyShip.HasOreHold}
+		; TODO - remove the botmode check after myship.hasorehold is added.
+		if ${Ship.HasOreHold} && ${Config.Common.BotModeName.Equal[Miner]}
 		{
 			MyShip:GetOreHoldCargo[This.CargoToTransfer]
 		}
@@ -1195,7 +1198,8 @@ objectdef obj_Cargo
 
 		call Ship.OpenCargo
 
-		if ${MyShip.HasOreHold}
+		; TODO - remove the botmode check after myship.hasorehold is added.
+		if ${Ship.HasOreHold} && ${Config.Common.BotModeName.Equal[Miner]}
 		{
 			MyShip:GetOreHoldCargo[This.CargoToTransfer]
 		}
@@ -1222,7 +1226,8 @@ objectdef obj_Cargo
 		UI:UpdateConsole["Transferring Ore to Station Hangar"]
 		call This.OpenHolds
 
-		if ${MyShip.HasOreHold}
+		; TODO - remove the botmode check after myship.hasorehold is added.
+		if ${Ship.HasOreHold} && ${Config.Common.BotModeName.Equal[Miner]}
 		{
 			MyShip:GetOreHoldCargo[This.CargoToTransfer]
 		}
@@ -1328,7 +1333,8 @@ objectdef obj_Cargo
 		UI:UpdateConsole["Transferring Ore to Corp Hangar"]
 		;call Ship.OpenCargo
 
-		if ${MyShip.HasOreHold}
+		; TODO - remove the botmode check after myship.hasorehold is added.
+		if ${Ship.HasOreHold} && ${Config.Common.BotModeName.Equal[Miner]}
 		{
 			MyShip:GetOreHoldCargo[This.CargoToTransfer]
 		}
