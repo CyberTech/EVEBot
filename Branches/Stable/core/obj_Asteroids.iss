@@ -409,7 +409,7 @@ objectdef obj_Asteroids
 				}
 			}
 
-			UI:UpdateConsole["OBJ_Asteroids:UpdateList: ${AsteroidList.Used} asteroids found", LOG_DEBUG]
+			UI:UpdateConsole["OBJ_Asteroids:UpdateList: ${AsteroidList.Used} (In Range: ${AsteroidListTmp.Used} OOR: ${AsteroidList_OutOfRangeTmp.Used}) asteroids found", LOG_DEBUG]
 		}
 		else
 		{
