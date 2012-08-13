@@ -116,13 +116,13 @@ objectdef obj_Ship
 					*/
 					if (!${MyShip.ToEntity.IsCloaked} && (${Me.Ship.ShieldPct} < 95 || ${Config.Combat.AlwaysShieldBoost})) && !${Miner.AtPanicBookmark}
 					{	/* Turn on the shield booster */
-							Ship:Activate_Hardeners[]
+							This:Activate_Hardeners[]
 							This:Activate_Shield_Booster[]
 					}
 
 					if !${MyShip.ToEntity.IsCloaked} && (${Me.Ship.ShieldPct} > 99 && (!${Config.Combat.AlwaysShieldBoost}) || ${Miner.AtPanicBookmark})
 					{	/* Turn off the shield booster */
-						Ship:Deactivate_Hardeners[]
+						This:Deactivate_Hardeners[]
 						This:Deactivate_Shield_Booster[]
 					}
 				}
