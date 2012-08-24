@@ -21,7 +21,7 @@ objectdef obj_Drones
 	variable int WaitingForDrones = 0
 	variable bool DronesReady = FALSE
 	variable int ShortageCount
-	
+
 	variable int64 MiningDroneTarget=0
 
 	method Initialize()
@@ -36,6 +36,7 @@ objectdef obj_Drones
 			if (${Me.ToEntity.Mode} != 3)
 			{
 				UI:UpdateConsole["Recalling Drones prior to shutdown..."]
+				This.ActiveDroneIDList.RemoveByQuery[${LavishScript.CreateQuery[GroupID = GROUP_FIGHTERDRONE]}]
 				EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
 			}
 		}
@@ -90,9 +91,13 @@ objectdef obj_Drones
 		return ${DroneList.Used}
 	}
 
-	member:int DronesInSpace()
+	member:int DronesInSpace(bool IncludeFighters=TRUE)
 	{
 		Me:GetActiveDroneIDs[This.ActiveDroneIDList]
+		if !${IncludeFighters}
+		{
+			This.ActiveDroneIDList.RemoveByQuery[${LavishScript.CreateQuery[GroupID = GROUP_FIGHTERDRONE]}]
+		}
 		return ${This.ActiveDroneIDList.Used}
 	}
 
@@ -157,12 +162,13 @@ objectdef obj_Drones
 
 	method ReturnAllToDroneBay()
 	{
-		if ${This.DronesInSpace} > 0
+		if ${This.DronesInSpace[FALSE]} > 0
 		{
 			UI:UpdateConsole["Recalling ${This.ActiveDroneIDList.Used} Drones"]
+			This.ActiveDroneIDList.RemoveByQuery[${LavishScript.CreateQuery[GroupID = GROUP_FIGHTERDRONE]}]
 			EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
 			EVE:Execute[CmdDronesReturnToBay]
-			
+
 		}
 	}
 
@@ -179,7 +185,7 @@ objectdef obj_Drones
 			MiningDroneTarget:Set[${Me.ActiveTarget}]
 		}
 	}
-	
+
 	member:bool IsMiningAsteroidID(int64 EntityID)
 	{
 		if ${MiningDroneTarget} == ${EntityID}
@@ -207,11 +213,11 @@ objectdef obj_Drones
 
 			do
 			{
-				if ${DroneIterator.Value.ToEntity.ShieldPct} < 80 || \
-					${DroneIterator.Value.ToEntity.ArmorPct} < 0
+				if ${DroneIterator.Value.ToEntity.GroupID} != GROUP_FIGHTERDRONE && \
+					(${DroneIterator.Value.ToEntity.ShieldPct} < 80 || \
+					${DroneIterator.Value.ToEntity.ArmorPct} < 0)
 				{
-					UI:UpdateConsole["Recalling Damaged Drone ${DroneIterator.Value.ID}"]
-					;UI:UpdateConsole["Debug: Shield: ${DroneIterator.Value.ToEntity.ShieldPct}, Armor: ${DroneIterator.Value.ToEntity.ArmorPct}, Structure: ${DroneIterator.Value.ToEntity.StructurePct}"]
+					UI:UpdateConsole["Recalling Damaged Drone ${DroneIterator.Value.ID} Shield %: ${DroneIterator.Value.ToEntity.ShieldPct} Armor %: ${DroneIterator.Value.ToEntity.ArmorPct}"]
 					returnIndex:Insert[${DroneIterator.Value.ID}]
 
 				}
@@ -222,8 +228,14 @@ objectdef obj_Drones
 				}
 			}
 			while ${DroneIterator:Next(exists)}
-			EVE:DronesReturnToDroneBay[returnIndex]
-			EVE:DronesEngageMyTarget[engageIndex]
+			if ${returnIndex.Used} > 0
+			{
+				EVE:DronesReturnToDroneBay[returnIndex]
+			}
+			if ${engageIndex.Used} > 0
+			{
+				EVE:DronesEngageMyTarget[engageIndex]
+			}
 		}
 	}
 }

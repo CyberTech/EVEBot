@@ -267,7 +267,7 @@ objectdef obj_Combat
 		This.CurrentState:Set["FLEE"]
 		This.Fled:Set[TRUE]
 		EVE:Execute[CmdDronesReturnToBay]
-		
+
 		if ${Config.Combat.RunToStation}
 		{
 			call This.FleeToStation
@@ -385,7 +385,7 @@ objectdef obj_Combat
 		if ${This.CombatMode.NotEqual["TANK"]}
 		{
 			if !${This.Fled} && ${Config.Combat.LaunchCombatDrones} && \
-				${Ship.Drones.DronesInSpace} == 0 && !${Ship.InWarp} && \
+				${Ship.Drones.DronesInSpace[FALSE]} == 0 && !${Ship.InWarp} && \
 				${Me.TargetCount} > 0
 			{
 				if ${Config.Combat.AnomalyAssistMode}
@@ -422,7 +422,7 @@ objectdef obj_Combat
 		variable int QuantityToMove
 		variable index:item ContainerItems
 		variable iterator CargoIterator
-		
+
 		if ${Config.Combat.RunToStation}
 		{
 			if !${Station.Docked}

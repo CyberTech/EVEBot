@@ -21,7 +21,7 @@ objectdef obj_Miner
 	variable int PulseIntervalInSeconds = 2
 
 	variable time NextHaulerNotify
-	
+
 	;	State information (What we're doing)
 	variable string CurrentState = "IDLE"
 
@@ -778,11 +778,11 @@ objectdef obj_Miner
 			${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && \
 			${Me.ToEntity.Mode} == 3 && \
 			${Entity[${Orca.Escape}].Mode} == 3 && \
-			${Ship.Drones.DronesInSpace} != 0 && \
+			${Ship.Drones.DronesInSpace[FALSE]} != 0 && \
 			!${EVEBot.ReturnToStation}
 		{
 			EVE:Execute[CmdStopShip]
-			do
+			while ${Ship.Drones.DronesInSpace[FALSE]} != 0
 			{
 				if ${Me.ToEntity.Mode} == 3
 				{
@@ -791,14 +791,13 @@ objectdef obj_Miner
 				Ship.Drones:ReturnAllToDroneBay
 				wait 20
 			}
-			while ${Ship.Drones.DronesInSpace} != 0
 		}
 
 		if ${Asteroids.AsteroidList.Used} == 0 && \
 			${Ship.TotalActivatedMiningLasers} == 0 && \
 			!${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]}
 		{
-			do
+			while ${Ship.Drones.DronesInSpace[FALSE]} != 0
 			{
 				if ${Me.ToEntity.Mode} == 3
 				{
@@ -807,7 +806,6 @@ objectdef obj_Miner
 				Ship.Drones:ReturnAllToDroneBay
 				wait 20
 			}
-			while ${Ship.Drones.DronesInSpace} != 0
 			UI:UpdateConsole["Miner.Mine: No asteroids detected, changing belts"]
 			call Asteroids.MoveToField FALSE TRUE
 			call Asteroids.UpdateList
@@ -1160,12 +1158,11 @@ objectdef obj_Miner
 		Asteroids.AsteroidList:GetIterator[AsteroidIterator]
 		if !${AsteroidIterator:First(exists)}
 		{
-			do
+			while ${Ship.Drones.DronesInSpace[FALSE]} != 0
 			{
 				Ship.Drones:ReturnAllToDroneBay
 				wait 20
 			}
-			while ${Ship.Drones.DronesInSpace} != 0
 			UI:UpdateConsole["Miner.OrcaInBelt: No asteroids detected, changing belts"]
 			call Asteroids.MoveToField FALSE FALSE TRUE
 			call Asteroids.UpdateList
@@ -1324,7 +1321,7 @@ objectdef obj_Miner
     		This.NextHaulerNotify:Set[${Time.Timestamp}]
     		This.NextHaulerNotify.Second:Inc[60]
     		This.NextHaulerNotify:Update
-    		
+
 			/* notify hauler there is ore in space */
 			variable string tempString
 			tempString:Set["${Me.CharID},${Me.SolarSystemID},${Entity[GroupID = GROUP_ASTEROIDBELT].ID}"]
@@ -1605,13 +1602,13 @@ objectdef obj_Miner
 				while ${GetData:Next(exists)}
 		}
 
-		if ${Ship.Drones.DronesInSpace} > 0 && ${AttackingTeam.Used} == 0
+		if ${Ship.Drones.DronesInSpace[FALSE]} > 0 && ${AttackingTeam.Used} == 0
 		{
 			UI:UpdateConsole["Miner.Defend: Recalling Drones"]
 			Ship.Drones:ReturnAllToDroneBay
 		}
 
-		if ${Ship.Drones.DronesInSpace} == 0  && ${AttackingTeam.Used} > 0
+		if ${Ship.Drones.DronesInSpace[FALSE]} == 0  && ${AttackingTeam.Used} > 0
 		{
 			UI:UpdateConsole["Miner.Defend: Deploying drones"]
 			Ship.Drones:LaunchAll

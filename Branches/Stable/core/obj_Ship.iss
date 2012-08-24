@@ -1732,11 +1732,7 @@ objectdef obj_Ship
 			return
 		}
 
-		if ${Drones.DronesInSpace} > 0
-		{
-			Entity[${Id}]:AlignTo
-			wait 2
-		}
+		Entity[${Id}]:AlignTo
 		call This.WarpPrepare
 		while ${Entity[${Id}].Distance} >= WARP_RANGE
 		{
@@ -2104,7 +2100,7 @@ objectdef obj_Ship
 		variable int Counter = 0
 
 		; *2 because we're only waiting half a second.
-		while (${This.Drones.DronesInSpace} > 1 && ${Counter:Inc} < (${Config.Combat.MaxDroneReturnWaitTime}*2))
+		while (${This.Drones.DronesInSpace[FALSE]} > 1 && ${Counter:Inc} < (${Config.Combat.MaxDroneReturnWaitTime}*2))
 		{
 			wait 5
 		}

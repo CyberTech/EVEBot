@@ -1,12 +1,12 @@
 /*
 
 	Guardian Class
-	
+
 	Primary Guardian behavior module for EVEBot
-	
+
 	-- Tehtsuo
-	
-	
+
+
 */
 
 objectdef obj_Guardian
@@ -14,35 +14,35 @@ objectdef obj_Guardian
 	;	Versioning information
 	variable string SVN_REVISION = "$Rev: 2527 $"
 	variable int Version
-	
+
 	;	Pulse tracking information
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 2
-	
+
 	;	State information (What we're doing)
 	variable string CurrentState = "IDLE"
-	
+
 	;	This is used to keep track of what we are approaching and when we started
 	variable int64 Approaching = 0
 	variable int TimeStartedApproaching = 0
-	
+
 	;	Search string for our Orca
 	variable string Orca
 
-	
-	
-	
-	
-/*	
+
+
+
+
+/*
 ;	Step 1:  	Get the module ready.  This includes init and shutdown methods, as well as the pulse method that runs each frame.
 ;				Adjust PulseIntervalInSeconds above to determine how often the module will SetState.
-*/	
-	
+*/
+
 	method Initialize()
 	{
 		BotModules:Insert["Guardian"]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-		
+
 
 		UI:UpdateConsole["obj_Guardian: Initialized", LOG_MINOR]
 	}
@@ -50,8 +50,8 @@ objectdef obj_Guardian
 	method Shutdown()
 	{
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
-	}	
-	
+	}
+
 	method Pulse()
 	{
 		if ${EVEBot.Paused}
@@ -73,13 +73,13 @@ objectdef obj_Guardian
     		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
     		This.NextPulse:Update
 		}
-	}	
-	
-/*	
+	}
+
+/*
 ;	Step 2:  	SetState:  This is the brain of the module.  Every time it is called - See Step 1 - this method will determine
 ;				what the module should be doing based on what's going on around you.  This will be used when EVEBot calls your module to ProcessState.
-*/		
-	
+*/
+
 	method SetState()
 	{
 		;	First, we need to check to find out if I should "HARD STOP" - dock and wait for user intervention.  Reasons to do this:
@@ -114,7 +114,7 @@ objectdef obj_Guardian
 			This.CurrentState:Set["HARDSTOP"]
 			return
 		}
-		
+
 		;	Find out if we should "SOFT STOP" and flee.  Reasons to do this:
 		;	*	Pilot lower than Min Acceptable Standing on the Fleeing tab
 		;	*	Pilot is on Blacklist ("Run on Blacklisted Pilot" enabled on Fleeing tab)
@@ -136,7 +136,7 @@ objectdef obj_Guardian
 			UI:UpdateConsole["FLEE: Low Standing player or system unsafe, fleeing"]
 			return
 		}
-		
+
 		;	If I'm in a station, I need to leave cause there's no reason for me to be here.
 		if ${Me.InStation}
 		{
@@ -149,32 +149,32 @@ objectdef obj_Guardian
 			This.CurrentState:Set["IDLE"]
 			return
 		}
-		
-				
+
+
 		;	If I'm not in a station I should be defending like I'm supposed to
 	 	This.CurrentState:Set["GUARDIAN"]
-	}	
-	
-	
-/*	
+	}
+
+
+/*
 ;	Step 3:		ProcessState:  This is the nervous system of the module.  EVEBot calls this; it uses the state information from SetState
-;				to figure out what it needs to do.  Then, it performs the actions, sometimes using functions - think of the functions as 
+;				to figure out what it needs to do.  Then, it performs the actions, sometimes using functions - think of the functions as
 ;				arms and legs.  Don't ask me why I feel an analogy is needed.
-*/			
-	
+*/
+
 	function ProcessState()
 	{
-		
+
 		;	If Miner isn't the selected bot mode, this function shouldn't have been called.  However, if it was we wouldn't want it to do anything.
 		if !${Config.Common.BotModeName.Equal[Guardian]}
 		{
 			return
 		}
-		
+
 
 		switch ${This.CurrentState}
 		{
-		
+
 			;	This means we're somewhere safe, and SetState wants us to stay there without spamming the UI
 			case IDLE
 				break
@@ -198,7 +198,7 @@ objectdef obj_Guardian
 				{
 					break
 				}
-				
+
 				Ship.Drones:ReturnAllToDroneBay
 				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
@@ -212,7 +212,7 @@ objectdef obj_Guardian
 						call Miner.FastWarp -1 "${Config.Miner.PanicLocation}"
 					}
 					break
-				}				
+				}
 				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} != ${Me.SolarSystemID}
 				{
 					call Miner.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID}
@@ -238,7 +238,7 @@ objectdef obj_Guardian
 
 				UI:UpdateConsole["WARNING:  EVERYTHING has gone wrong. Miner is in HARDSTOP mode and there are no panic locations, delivery locations, stations, or safe spots to use. You're probably going to get blown up..."]
 				break
-				
+
 			;	This means there's something dangerous in the system, but once it leaves we're going to go back to mining.
 			;	*	Stay in a station if we're there
 			;	*	If our delivery location is in the same system, dock there
@@ -294,19 +294,19 @@ objectdef obj_Guardian
 					;call This.FastWarp ${Entity["CategoryID = 3"].ID}
 					call Station.DockAtStation ${Entity["CategoryID = 3"].ID}
 					break
-				}				
-				
+				}
+
 				if ${Me.ToEntity.Mode} != 3
 				{
 					call Safespots.WarpTo
 					call Miner.FastWarp
 					break
 				}
-				
+
 				UI:UpdateConsole["HARD STOP: Unable to flee, no stations available and no Safe spots available"]
 				EVEBot.ReturnToStation:Set[TRUE]
 				break
-				
+
 			;	This means we're in a station and need to do what we need to leave because it's safe and we're not a miner or a hauler
 			;	*	If this isn't where we're supposed to deliver ore, we need to leave the station so we can go to the right one.
 			;	*	Move ore out of cargo hold if it's there
@@ -314,7 +314,7 @@ objectdef obj_Guardian
 			case BASE
 				call Station.Undock
 				break
-				
+
 			;	This means we're in space and should go defend someone!  Only one choice here - GUARD!
 			;	It is prudent to make sure we're not warping, since you can't guard much in warp...
 			case GUARDIAN
@@ -329,15 +329,15 @@ objectdef obj_Guardian
 				break
 		}
 	}
-	
-	
-/*	
+
+
+/*
 ;	Step 4:		Mine:  This is it's own function so the ProcessState function doesn't get too giant.  There's a lot going on while mining.
 ;				However, it's important to remember that anything you do here keeps you in the mining state.  Until EVEBot makes it through
 ;				this function, it can't get back to ProcessState to start running away from hostiles and whatnot.  Therefore, keep any use of the
 ;				wait function to a minimum, and make sure you can get out of loops in a timely manner!
-*/		
-		
+*/
+
 	function Guard()
 	{
 		;	Variables used to target and track asteroids
@@ -345,7 +345,7 @@ objectdef obj_Guardian
 		variable iterator Target
 		variable int AsteroidsLocked=0
 
-		
+
 		;	If we're in a station there's not going to be any mining going on.  This should clear itself up if it ever happens.
 		if ${Me.InStation} != FALSE
 		{
@@ -370,26 +370,25 @@ objectdef obj_Guardian
 			EVEBot.ReturnToStation:Set[TRUE]
 			return
 		}
-		
-		
+
+
 		;	Find an asteroid field, or stay at current one if we're near one.  Choices are:
 		;	*	If WarpToOrca and the orca is in fleet, warp there instead and clear our saved bookmark
 
-		
+
 		Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
-		if ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && ${Me.ToEntity.Mode} == 3 && ${Entity[${Orca.Escape}].Mode} == 3 && ${Ship.Drones.DronesInSpace} != 0 && !${EVEBot.ReturnToStation}
+		if ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && ${Me.ToEntity.Mode} == 3 && ${Entity[${Orca.Escape}].Mode} == 3 && ${Ship.Drones.DronesInSpace[FALSE]} != 0 && !${EVEBot.ReturnToStation}
 		{
-			EVE:Execute[CmdStopShip]				
-			do
+			EVE:Execute[CmdStopShip]
+			while ${Ship.Drones.DronesInSpace[FALSE]} != 0
 			{
 				if ${Me.ToEntity.Mode} == 3
 				{
-					EVE:Execute[CmdStopShip]				
+					EVE:Execute[CmdStopShip]
 				}
 				Ship.Drones:ReturnAllToDroneBay
 				wait 20
 			}
-			while ${Ship.Drones.DronesInSpace} != 0	
 		}
 
 		if ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && ${Miner.WarpToOrca} && !${Entity[${Orca.Escape}](exists)}
@@ -410,9 +409,9 @@ objectdef obj_Guardian
 			call Asteroids.MoveToField TRUE
 			return
 		}
-		
-		
-		
+
+
+
 		variable index:fleetmember MyFleet
 		variable iterator MyFleetMember
 		Me.Fleet:GetMembers[MyFleet]
@@ -454,19 +453,19 @@ objectdef obj_Guardian
 					{
 						call Ship.ActivateFreeShieldTransporter ${MyTarget.Value.ID}
 					}
-					
+
 				}
 			}
 			while ${MyTarget:Next(exists)}
-			
-			
+
+
 
 		;	This calls the defense routine if Launch Combat Drones is turned on
 		if ${Config.Combat.LaunchCombatDrones} && !${Ship.InWarp}
 		{
 			call Miner.Defend
-		}		
-		
+		}
+
 
 		;	We need to make sure we're near our orca if we're using it as a delivery location
 
@@ -475,7 +474,7 @@ objectdef obj_Guardian
 			;	Find out if we need to approach this target.
 			if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} > LOOT_RANGE && ${This.Approaching} == 0
 			{
-				if ${Entity[${Orca.Escape}].Distance} > WARP_RANGE 
+				if ${Entity[${Orca.Escape}].Distance} > WARP_RANGE
 				{
 					UI:UpdateConsole["ALERT:  ${Entity[${Orca.Escape}].Name} is a long way away.  Warping to it."]
 					Entity[${Orca.Escape}]:WarpTo[1000]
@@ -487,15 +486,15 @@ objectdef obj_Guardian
 				This.TimeStartedApproaching:Set[${Time.Timestamp}]
 				return
 			}
-			
+
 			;	If we've been approaching for more than 2 minutes, we need to give up and try again
 			if ${Math.Calc[${TimeStartedApproaching}-${Time.Timestamp}]} < -120 && ${This.Approaching} != 0
 			{
 				This.Approaching:Set[0]
-				This.TimeStartedApproaching:Set[0]			
+				This.TimeStartedApproaching:Set[0]
 				return
-			}			
-			
+			}
+
 			;	If we're approaching a target, find out if we need to stop doing so.
 			;	After moving, we need to find out if any of our targets are out of mining range and unlock them so we can get new ones.
 			if (${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= LOOT_RANGE && ${This.Approaching} != 0) || (!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
@@ -506,9 +505,9 @@ objectdef obj_Guardian
 				This.TimeStartedApproaching:Set[0]
 				return
 			}
-			
-	}	
+
+	}
 
 
-	
+
 }
