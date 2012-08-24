@@ -36,7 +36,7 @@ objectdef obj_Drones
 			if (${Me.ToEntity.Mode} != 3)
 			{
 				UI:UpdateConsole["Recalling Drones prior to shutdown..."]
-				This.ActiveDroneIDList.RemoveByQuery[${LavishScript.CreateQuery[GroupID = GROUP_FIGHTERDRONE]}]
+				This.ActiveDroneIDList:RemoveByQuery[${LavishScript.CreateQuery[GroupID = GROUP_FIGHTERDRONE]}]
 				EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
 			}
 		}
@@ -96,7 +96,7 @@ objectdef obj_Drones
 		Me:GetActiveDroneIDs[This.ActiveDroneIDList]
 		if !${IncludeFighters}
 		{
-			This.ActiveDroneIDList.RemoveByQuery[${LavishScript.CreateQuery[GroupID = GROUP_FIGHTERDRONE]}]
+			This.ActiveDroneIDList:RemoveByQuery[${LavishScript.CreateQuery[GroupID = GROUP_FIGHTERDRONE]}]
 		}
 		return ${This.ActiveDroneIDList.Used}
 	}
@@ -165,7 +165,7 @@ objectdef obj_Drones
 		if ${This.DronesInSpace[FALSE]} > 0
 		{
 			UI:UpdateConsole["Recalling ${This.ActiveDroneIDList.Used} Drones"]
-			This.ActiveDroneIDList.RemoveByQuery[${LavishScript.CreateQuery[GroupID = GROUP_FIGHTERDRONE]}]
+			This.ActiveDroneIDList:RemoveByQuery[${LavishScript.CreateQuery[GroupID = GROUP_FIGHTERDRONE]}]
 			EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
 			EVE:Execute[CmdDronesReturnToBay]
 
