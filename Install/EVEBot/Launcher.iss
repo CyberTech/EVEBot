@@ -61,7 +61,7 @@ function main(string unchar="", string StartBot=FALSE)
 	}
 	windowtaskbar on "${unchar}"
 
-	if !${Config.Common.LoginName(exists)} || ${Config.Common.LoginName.Equal["username1"]}
+	if !${Config.Common.LoginName(exists)} || ${Config.Common.LoginName.Equal[""]} || ${Config.Common.LoginName.Equal["username1"]}
 	{
 		UI:UpdateConsole["Launcher: No character specified, or character not found in ${BaseConfig.CONFIG_FILE}"]
 		UI:UpdateConsole["  Syntax: run EVEBot/Launcher \"CharName\" <Optional Botname>"]
@@ -71,8 +71,6 @@ function main(string unchar="", string StartBot=FALSE)
 	if ${Config.Common.AutoLoginCharID} == 0
 	{
 		UI:UpdateConsole["Launcher: Profile for ${unchar} has no CharID specified in ${BaseConfig.CONFIG_FILE}"]
-		UI:UpdateConsole["  Syntax: run EVEBot/Launcher \"CharName\" <Optional Botname>"]
-		UI:UpdateConsole["    Known Botnames: EVEBOT, EVEBOT_STABLE, EVEBOT_DEV, STEALTHBOT, QUESTOR, EVESALVAGE, WRECKINGBALL2"]
 		return
 	}
 
