@@ -817,6 +817,7 @@ objectdef obj_Social
 	;This method is triggered by an event.  If triggered, it tells us one of our fellow miners has entered the HARDSTOP state, and we should also run
 	method TriggerHARDSTOP()
 	{
+		UI:UpdateConsole["TriggerHARDSTOP called by fleetmate", LOG_CRITICAL]
 		EVEBot.ReturnToStation:Set[TRUE]
 	}
 	;This method is triggered by an event.  If triggered, it tells us one of our fellow miners has entered the HARDSTOP state, and we should also run
