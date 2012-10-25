@@ -65,7 +65,7 @@ function main(string unchar="", string StartBot=FALSE)
 	{
 		UI:UpdateConsole["Launcher: No character specified, or character not found in ${BaseConfig.CONFIG_FILE}"]
 		UI:UpdateConsole["  Syntax: run EVEBot/Launcher \"CharName\" <Optional Botname>"]
-		UI:UpdateConsole["    Known Botnames: EVEBOT, EVEBOT_STABLE, EVEBOT_DEV, STEALTHBOT, QUESTOR, EVESALVAGE, WRECKINGBALL2"]
+		UI:UpdateConsole["    Known Botnames: EVEBOT, EVEBOT_STABLE, EVEBOT_DEV, STEALTHBOT, COMBOT, QUESTOR, EVESALVAGE, WRECKINGBALL2"]
 		return
 	}
 	if ${Config.Common.AutoLoginCharID} == 0
@@ -127,6 +127,11 @@ function main(string unchar="", string StartBot=FALSE)
 					wait 100
 					EVE:CloseAllMessageBoxes
 					dotnet sb${Session} stealthbot true
+					break
+				case COMBOT
+					UI:UpdateConsole["Launcher: Starting ComBot by Teht and Vendan"]
+					wait 100
+					runscript ComBot/ComBot
 					break
 				case QUESTOR
 					UI:UpdateConsole["Launcher: Starting Questor by Da_Teach"]
