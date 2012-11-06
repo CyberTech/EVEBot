@@ -534,7 +534,7 @@ function RunCourierMission(int agentID)
 		variable index:entity Ents
 		variable int64 GateToUse
 		variable bool SET
-		RoomCounter:Set[0]
+		RoomCounter:Set[1]
 		; wait up to 15 seconds for spawns to appear
 		breakTime:Set[${Time.Timestamp}]
 		;START OF LOOP THAT DOESN'T TERMINATE UNTIL THERE ARE NO GATES
@@ -597,12 +597,12 @@ function RunCourierMission(int agentID)
 				{
 					UI:UpdateConsole["Done Fleeing, returning to mission."]
 					call This.WarpToEncounter ${Agents.AgentID}
-					RoomCounter:Set[0]
+					RoomCounter:Set[1]
 				}
 				wait 30
 			}
 			while ${Targets.TargetNPCs}
-			if ${This.GatePresent} && (${RoomCounter} < 5 || ${This.HaveMissionKey})
+			if ${This.GatePresent} && (${RoomCounter} < 6 || ${This.HaveMissionKey})
 			{
 				if ${Entity["TypeID = TYPE_ACCELERATION_GATE"].Name.Equal["Gate To The Serpentis Base"]}
 				{
@@ -683,6 +683,18 @@ function RunCourierMission(int agentID)
 									breakTime:Set[${Time.Timestamp}]
 									breakTime.Second:Inc[15]
 									breakTime:Update
+									do 
+									{
+
+										UI:UpdateConsole["Waiting on spawns."]
+										wait 500
+
+									}
+									while !${Targets.TargetNPCs} && ${Time.Timestamp} < ${breakTime.Timestamp}
+									if ${Targets.TargetNPCs}
+									{
+										break
+									}
 									if ${Config.Missioneer.SalvageModeName.Equal["Relay"]}
 									{
 										if !${This.BookmarkExists}

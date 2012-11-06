@@ -502,9 +502,10 @@ objectdef obj_Targets
 				{
 					if ${Me.TargetCount} == 0 && ${MyShip.MaxLockedTargets} > 0
 					{
-						if (!${Entity[${Ship.Approaching}](exists)} || (${Entity[${GATEID}].Distance} > 10000 || ${Entity[${BEACONID}].Distance} > 10000)) && !${Entity[${query2} && Distance <= "${MyShip.MaxTargetRange}"](exists)}
+						if (!${Entity[${Ship.Approaching}](exists)} || (${Entity[${GATEID}].Distance} < 10000 || ${Entity[${BEACONID}].Distance} < 10000)) && !${Entity[${query2} && Distance <= "${MyShip.MaxTargetRange}"](exists)}
 						{
 							Ship:Approach[${Target2.Value.ID},${MyShip.MaxTargetRange}]
+							break
 							;I'm going to have to update this into a check that checks for sentry drones in space before approaching.
 						}
 					}
@@ -582,12 +583,12 @@ objectdef obj_Targets
 		Targetser:GetIterator[Targetse]
 		Targetse:First
 		variable int64 KILLID
-		if ${InRange.Used.Equal[0]}
+		if ${InRange.Used.Equal[0]} && !${Missions.GatePresent]}
 		{	
-			KILLID:Set[${Entity[Name =- "${Targetse.Value}"]}]
 			do
 			{
-				if ${KILLID} > 0 && !${Missions.GatePresent]}
+				KILLID:Set[${Entity[Name =- "${Targetse.Value}"]}]
+				if ${KILLID} > 0 
 				{
 					if ${Entity[${KILLID}].Distance} < ${MyShip.MaxTargetRange}
 					{

@@ -218,7 +218,7 @@ objectdef obj_Ship
 						if ${anItemIterator.Value.Quantity} > (${aWeaponIterator.Value.MaxCharges} * ${This.ModuleList_Weapon.Used} + 500) && !${aWeaponIterator.Value.Charge.TypeID.Equal[${anItemIterator.Value.TypeID}]}
 						{
 							UI:UpdateConsole["Changing ammo of ${aWeaponIterator.Value.ToItem.Name} to ${anItemIterator.Value.Name}."]
-							aWeaponIterator.Value:ChangeAmmo[${anItemIterator.Value.ID}]
+							aWeaponIterator.Value:ChangeAmmo[${anItemIterator.Value.ID},${aWeaponIterator.Value.MaxCharges}]
 							wait 5
 						}	
 					}
@@ -842,7 +842,7 @@ objectdef obj_Ship
 		This.ModuleList_Weapon:GetIterator[ModuleIter]
 		if ${ModuleIter:First(exists)}
 		{
-			if !${ModuleIter.Value.Target.IsActiveTarget} && ${ModuleIter.Value.Target(exists)}
+			if !${ModuleIter.Value.Target.IsActiveTarget} && ${ModuleIter.Value.Target(exists)} && ${ModuleIter.Value.Target(exists)} && !${ModuleIter.Value.Target.IsMoribund} && ${ModuleIter.Value.CurrentCharges} > 1
 			{
 				UI:UpdateConsole["Our weapon target doesn't match our active target."]
 				return TRUE
@@ -1356,6 +1356,7 @@ objectdef obj_Ship
 	}
 	method Approach(int64 EntityID, int64 Distance)
 	{
+		UI:UpdateConsole["Approaching ${Entity[${EntityID}].Name} at distance ${Entity[${EntityID}].Distance}."]
 		if ${Entity[${EntityID}](exists)}
 		{
 			if ${Distance} > 0

@@ -52,10 +52,12 @@ objectdef obj_Ammospots
 		do 
 		{
 			UI:UpdateConsole["Removing bookmarks with jumps > ${AmmoSpots[1].JumpsTo}. Current number of bookmarks is ${AmmoSpots.Used}."]
-			AmmoSpots:RemoveByQuery[${LavishScript.CreateQuery[JumpsTo > ${AmmoSpots[1].JumpsTo}]}]
+			AmmoSpots:RemoveByQuery[${LavishScript.CreateQuery[JumpsTo > "${AmmoSpots[1].JumpsTo}"]}
+			echo ${LavishScript.CreateQuery[JumpsTo > "${AmmoSpots[1].JumpsTo}"]}
 			AmmoSpots:Collapse
+			AmmoSpots:GetIterator[AmmoSpotIterator]
 		}
-		while ${AmmoSpots.Used} > 1 && !${AmmoSpots[1].JumpsTo.Equal[${AmmoSpots[2].JumpsTo}]}
+		while ${AmmoSpots.Used} > 0 && !${AmmoSpots[1].JumpsTo.Equal[${AmmoSpots[2].JumpsTo}]}
 		UI:UpdateConsole["${AmmoSpots.Used} ammo bookmarks found in closest system (ideally this should be 1)]
 		;Not sure if it can cope with multiple bms in the same system yet	
 	}
@@ -96,7 +98,7 @@ objectdef obj_Ammospots
 			This:ResetAmmoSpotList
 		}
 
-		if !${AmmoSpotIterator:Next(exists)}
+		if !${AmmoSpotIterator:Next(exists)} && ${AmmoSpotIterator.Key} > 1
 		{
 			UI:UpdateConsole["No ammo bookmarks left, pausing"]
 			Script:Pause
