@@ -48,14 +48,14 @@ objectdef obj_Ammospots
 		}
 		AmmoSpots:Collapse
 		AmmoSpots:GetIterator[AmmoSpotIterator]
-		;UI:UpdateConsole["ResetAmmoSpotList found ${AmmoSpots.Used} ammospots in total."]
+		UI:UpdateConsole["ResetAmmoSpotList found ${AmmoSpots.Used} ammospots in total."]
 		do 
 		{
 			UI:UpdateConsole["Removing bookmarks with jumps > ${AmmoSpots[1].JumpsTo}. Current number of bookmarks is ${AmmoSpots.Used}."]
 			AmmoSpots:RemoveByQuery[${LavishScript.CreateQuery[JumpsTo > "${AmmoSpots[1].JumpsTo}"]}
-			echo ${LavishScript.CreateQuery[JumpsTo > "${AmmoSpots[1].JumpsTo}"]}
 			AmmoSpots:Collapse
 			AmmoSpots:GetIterator[AmmoSpotIterator]
+			AmmoSpotIterator:First
 		}
 		while ${AmmoSpots.Used} > 0 && !${AmmoSpots[1].JumpsTo.Equal[${AmmoSpots[2].JumpsTo}]}
 		UI:UpdateConsole["${AmmoSpots.Used} ammo bookmarks found in closest system (ideally this should be 1)]
@@ -93,14 +93,10 @@ objectdef obj_Ammospots
 			This:ResetAmmoSpotList
 		}
 
-		if ${AmmoSpots.Get[1](exists)} && ${AmmoSpots.Get[1].SolarSystemID} != ${Me.SolarSystemID}
+		if (!${AmmoSpotIterator:Next(exists)} && ${AmmospotIterator.Key} > 1) || !${AmmoSpotIterator:First(exists)} 
 		{
-			This:ResetAmmoSpotList
-		}
-
-		if !${AmmoSpotIterator:Next(exists)} && ${AmmoSpotIterator.Key} > 1
-		{
-			UI:UpdateConsole["No ammo bookmarks left, pausing"]
+			echo ${AmmoSpotIterator.Key}
+			UI:UpdateConsole["No more ammo bookmarks found, pausing.	"]
 			Script:Pause
 			AmmoSpotIterator:First
 		}
