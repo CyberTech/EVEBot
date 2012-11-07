@@ -823,7 +823,7 @@ objectdef obj_Combat
 			{
 				do
 				{
-					if ${CargoIterator.Value.Quantity} > (${Ship.ModuleList_Weapon[1].MaxCharges} * ${Ship.ModuleList_Weapon.Used})
+					if ${CargoIterator.Value.Quantity} > 1000 /* So 1000 is an arbitrary number here, I might make it configurable in the UI options */
 					{
 						UI:UpdateConsole["Found ${CargoIterator.Value.Name} as acceptable ammo in cargo. ${CargoIterator.Value.Quantity} found and ${Math.Calc[${Ship.ModuleList_Weapon[1].MaxCharges} * ${Ship.ModuleList_Weapon.Used}]} needed."]
 						return TRUE

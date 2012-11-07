@@ -646,6 +646,7 @@ function RunCourierMission(int agentID)
 		}
 		while ${This.GatePresent} || ${Me.ToEntity.Mode} == 3 || ${Targets.TargetNPCs}
 		;If we need to loot something it will happen now, since this code should only do what I want it to
+		echo ${This.MissionCache.Volume[${Agents.AgentID}]} 
 		if ${This.MissionCache.Volume[${Agents.AgentID}]} > 0 && !${This.HaveMishItem}
 			; this check should be incorporated into if statement
 			{
