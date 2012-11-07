@@ -502,7 +502,7 @@ objectdef obj_Targets
 				{
 					if ${Me.TargetCount} == 0 && ${MyShip.MaxLockedTargets} > 0
 					{
-						if (!${Entity[${Ship.Approaching}](exists)} || (${Entity[${GATEID}].Distance} < 10000 || ${Entity[${BEACONID}].Distance} < 10000)) && !${Entity[${query2} && Distance <= "${MyShip.MaxTargetRange}"](exists)}
+						if ((!${Entity[${Ship.Approaching}](exists)} && !${Target2.Value.ID.Equal[${Ship.Approaching}]}) || ${Entity[${GATEID}].Distance} < 10000 || ${Entity[${BEACONID}].Distance} < 10000) && !${Entity[${query2} && Distance <= "${MyShip.MaxTargetRange}"](exists)}
 						{
 							Ship:Approach[${Target2.Value.ID},${MyShip.MaxTargetRange}]
 							break

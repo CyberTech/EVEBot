@@ -866,9 +866,9 @@ objectdef obj_Combat
 			}
 			else
 			{
-				if ${Me.Station.ID} != ${Agent[${Agents.AgentID}].StationID}
+				if ${Me.Station.ID} != ${Agent[${Agents.AgentID}].StationID} || ${Me.InSpace}
 				{
-					call Ammospots.WarpTo
+					call Ammospots.WarpTo																																																																																																																																																																																									
 				}
 				else
 				{
