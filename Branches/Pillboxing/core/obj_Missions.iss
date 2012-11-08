@@ -694,7 +694,7 @@ function RunCourierMission(int agentID)
 									while !${Targets.TargetNPCs} && ${Time.Timestamp} < ${breakTime.Timestamp}
 									if ${Targets.TargetNPCs}
 									{
-										break
+										call This.RunCombatMish
 									}
 									if ${Config.Missioneer.SalvageModeName.Equal["Relay"]}
 									{
