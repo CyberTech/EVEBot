@@ -951,7 +951,7 @@ objectdef obj_Cargo
 				{
 					This.CargoToTransfer:Remove[${idx}]
 				}
-				do8/4/2012 12:01:32 AM
+				do
 				{
 					usedSpace:Set[${shipContainerIterator.Value.UsedCargoCapacity}]
 					wait 2
