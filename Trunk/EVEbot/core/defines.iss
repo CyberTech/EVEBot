@@ -572,10 +572,6 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 #define TYPE_RIFTER   587
 #define TYPE_RAVEN    638
 
-#define DRONESTATE_IDLE 0
-#define DRONESTATE_FIGHTING 1
-#define DRONESTATE_RETURNING 4
-
 #define ENTITY_STATE_OFFLINING -7
 #define ENTITY_STATE_ANCHORING -6
 #define ENTITY_STATE_ONLINING -5
@@ -584,16 +580,20 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 #define ENTITY_STATE_UNANCHORED -2
 #define ENTITY_STATE_INCAPACITATED -1
 #define ENTITY_STATE_IDLE 0
+; Fighting
 #define ENTITY_STATE_COMBAT 1
 #define ENTITY_STATE_MINING 2
 #define ENTITY_STATE_APPROACHING 3
+; ReturningToShip
 #define ENTITY_STATE_DEPARTING 4
 #define ENTITY_STATE_DEPARTING_2 5
+; Following
 #define ENTITY_STATE_PURSUIT 6
 #define ENTITY_STATE_FLEEING 7
 #define ENTITY_STATE_REINFORCED 8
 #define ENTITY_STATE_OPERATING 9
 ; 10 = non-offensive engaged -- repair drone, etc
+; Repairing
 #define ENTITY_STATE_ENGAGE 10
 #define ENTITY_STATE_VULNERABLE 11
 #define ENTITY_STATE_SHIELD_REINFORCE 12

@@ -161,7 +161,7 @@ objectdef obj_Drones
 			do
 			{
 				;only do the checks if the drone has a valid ToEntity
-				if ${ActiveDrone.Value.ToEntity(exists)} && ${ActiveDrone.Value.State} != DRONESTATE_RETURNING
+				if ${ActiveDrone.Value.ToEntity(exists)} && ${ActiveDrone.Value.State} != ENTITY_STATE_COMBAT
 				{
 					Logger:Log["obj_Drones: Drone ${ActiveDrone.Value.ID}: Armor %: ${ActiveDrone.Value.ToEntity.ArmorPct}, Stored: ${StoredDroneArmor.Element[${ActiveDrone.Value.ID}]}, Shield %: ${ActiveDrone.Value.ToEntity.ShieldPct}, Stored: ${StoredDroneShield.Element[${ActiveDrone.Value.ID}]}",LOG_DEBUG]
 					/* Only compare hp if the stored hp isn't null and activedrone is a valid entity*/
@@ -241,7 +241,7 @@ objectdef obj_Drones
 
 	method RecallDrone(activedrone Drone, bool Relaunchable=TRUE)
 	{
-		if ${Drone.ToEntity(exists)} && ${Drone.State} != DRONESTATE_RETURNING
+		if ${Drone.ToEntity(exists)} && ${Drone.State} != ENTITY_STATE_DEPARTING && ${Drone.State} != ENTITY_STATE_DEPARTING_2
 		{
 			Logger:Log["obj_Drones: Recalling drone ${Drone.ID}, Relaunchable: ${Relaunchable}"]
 			if !${Relaunchable}
@@ -368,7 +368,7 @@ objectdef obj_Drones
 					return
 				}
 
-				if ${This.ActiveDrone.Value.State} != DRONESTATE_RETURNING
+				if ${This.ActiveDrone.Value.State} != ENTITY_STATE_DEPARTING && ${This.ActiveDrone.Value.State} != ENTITY_STATE_DEPARTING_2
 				{
 					EVE:Execute[CmdDronesReturnToBay]
 					Logger:Log["obj_Drones: Returning all drones to bay."]
@@ -386,7 +386,8 @@ objectdef obj_Drones
 			do
 			{
 				if ${This.ActiveDrone.Value.ToEntity.Distance} > 5000 &&
-					${This.ActiveDrone.Value.State} != DRONESTATE_RETURNING
+					${This.ActiveDrone.Value.State} != ENTITY_STATE_DEPARTING && 
+					${This.ActiveDrone.Value.State} != ENTITY_STATE_DEPARTING_2
 				{
 					Logger:Log["obj_Drones: Returning all drones to orbit."]
 					EVE:Execute[CmdDronesReturnAndOrbit]
@@ -463,7 +464,8 @@ objectdef obj_Drones
 						; if Drone's target isn't our active target
 						Logger:Log["obj_Drones: DroneIterator.Value.Target.ID: ${DroneIterator.Value.Target.ID}, Me.ActiveTarget.ID: ${Me.ActiveTarget.ID}",LOG_DEBUG]
 						if ${DroneIterator.Value.Target.ID} != ${Me.ActiveTarget.ID} && \
-							${DroneIterator.Value.State} != DRONESTATE_RETURNING && \
+							${DroneIterator.Value.State} != ENTITY_STATE_DEPARTING && \
+							${DroneIterator.Value.State} != ENTITY_STATE_DEPARTING_2 && \
 							(!${Config.Combat.ConserveDrones} || !${DroneIsRecalled[${DroneIterator.Value.ID}]})
 						{
 							engageIndex:Insert[${DroneIterator.Value.ID}]

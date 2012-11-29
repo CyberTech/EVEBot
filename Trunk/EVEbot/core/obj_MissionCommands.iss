@@ -1027,7 +1027,7 @@ objectdef obj_MissionCommands
 			{
 				do
 				{
-					if ${droneIterator.Value.State} != DRONESTATE_RETURNING
+					if ${droneIterator.Value.State} != ENTITY_STATE_DEPARTING && ${droneIterator.Value.State} != ENTITY_STATE_DEPARTING_2
 					{
 						Logger:Log["DEBUG: obj_MissionCommands - Attempting to recall drones!",LOG_DEBUG]
 
