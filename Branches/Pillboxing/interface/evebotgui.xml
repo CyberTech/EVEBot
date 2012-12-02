@@ -1549,7 +1549,7 @@
 							<Children>
 								<checkbox name='cbAvoidLowSec'>
 									<X>10</X>
-									<Y>10</Y>
+									<Y>30</Y>
 									<Height>20</Height>
 									<Width>50</Width>
 									<Text>Avoid Lowsec</Text>
@@ -1564,7 +1564,7 @@
 										Script[EVEBot].VariableScope.Config.Missioneer:SetAvoidLowSec[${This.Checked}]
 									</OnLeftClick>
 								</checkbox>
-								<checkbox name='cbTakeStandingsHit'
+								<checkbox name='cbTakeStandingsHit'>
 									<X>10</X>
 									<Y>10</Y>
 									<Height>20</Height>
