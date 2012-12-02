@@ -2634,7 +2634,7 @@ objectdef obj_Ship
 		{
 			return
 		}
-		if ${Me.ToEntity.Mode} == 4 || ${Me.ToEntity.Mode} == 1
+		if ${Me.ToEntity.Mode} == 4 || (${Me.ToEntity.Mode} == 1 && (${Entity[${GATEID}].Distance} > 10000 && ${Entity[${GATEID}](exists)}) && (${Entity[${BEACONID}].Distance} > 10000 && ${Entity[${BEACONID}](exists)}))
 		{
 			; already orbiting something
 			return

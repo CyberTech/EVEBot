@@ -1353,7 +1353,6 @@ objectdef obj_Cargo
 
 		This.CargoToTransfer:Clear[]
 		Ship:UpdateBaselineUsedCargo[]
-		call This.CloseHolds
 	}
 
 	function TransferCargoToCorpHangarArray()
@@ -1525,8 +1524,7 @@ objectdef obj_Cargo
 
 	  This.CargoToTransfer:Clear[]
 	  EVEWindow[ByName,hangarFloor]:StackAll
-	  Ship:UpdateBaselineUsedCargo[]
-	  call This.CloseHolds
+	  Ship:UpdateBaselineUsedCargo[]	
    }
 
 	function TransferSpawnContainerCargoToShip()

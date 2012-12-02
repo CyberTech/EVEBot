@@ -502,7 +502,7 @@ objectdef obj_Targets
 				{
 					if ${Me.TargetCount} == 0 && ${MyShip.MaxLockedTargets} > 0
 					{
-						if ((!${Entity[${Ship.Approaching}](exists)} && !${Target2.Value.ID.Equal[${Ship.Approaching}]}) || ${Entity[${GATEID}].Distance} < 10000 || ${Entity[${BEACONID}].Distance} < 10000) && !${Entity[${query2} && Distance <= "${MyShip.MaxTargetRange}"](exists)}
+						if ${Target2.Value.Distance} > ${MyShip.MaxTargetRange} && !${Ship.Approaching.Equal[${Target2.Value.ID}]} && ${Me.ToEntity.Mode} != 1
 						{
 							Ship:Approach[${Target2.Value.ID},${MyShip.MaxTargetRange}]
 							break
@@ -561,7 +561,7 @@ objectdef obj_Targets
 
 		variable index:string Targetser
 		variable iterator Targetse
-		Targetser:Insert["Kruul's Pleasure Garden"]
+		Targetser:Insert["Kruul's Pleasure Gardens"]
 		Targetser:Insert["Drone Bunker"]
 		Targetser:Insert["Roden Shipyard Factory Station"]
 		Targetser:Insert["Smuggler Stargate"]
@@ -587,8 +587,8 @@ objectdef obj_Targets
 		{	
 			do
 			{
-				KILLID:Set[${Entity[Name =- "${Targetse.Value}"]}]
-				if ${KILLID} > 0 
+				KILLID:Set[${Entity[Name =- "${Targetse.Value}"]}] 
+				if ${KILLID} > 0 && !${Missions.GatePresent}
 				{
 					if ${Entity[${KILLID}].Distance} < ${MyShip.MaxTargetRange}
 					{

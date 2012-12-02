@@ -242,6 +242,7 @@ objectdef obj_Combat
 		MishDB:Set["Smuggler Interception", 1]
 		MishDB:Set["Stop The Thief", 2]
 		MishDB:Set["Attack of the Drones", 1]
+		MishDB:Set["Soothe the Salvage Beast",1]
 		MishDB:Set["Rogue Drone Harassment", 1]	
 		MishDB:Set["The Wildcat Strike", 1]
 		MishDB:Set["Dread Pirate Scarlet", 3]
@@ -645,8 +646,8 @@ objectdef obj_Combat
 		This.CurrentState:Set["FLEE"]
 		This.Fled:Set[TRUE]
 		Ship:Deactivate_AfterBurner
-		if (${MyShip.ArmorPct} < 100 && ${Config.Combat.MinimumShieldPct} > 0) ||
-		(${MyShip.StructurePct} < 100 && ${Config.Combat.MinimumArmorPct} > 100)
+		if (${MyShip.ArmorPct} < 100 && ${Config.Combat.MinimumShieldPct} > 0) ||\
+		${MyShip.StructurePct} < 100
 		{
 			bStop:Set[TRUE]
 		}
@@ -785,7 +786,7 @@ objectdef obj_Combat
 
 		if (!${This.Fled} && ${Config.Combat.LaunchCombatDrones} && \
 		!${Ship.InWarp} && ${Me.TargetCount} > 0 || ${Me.ToEntity.IsWarpScrambled}) && \
-		${Ship.Drones.DronesInSpace} == 0 
+		${Ship.Drones.DronesInSpace} == 0 && ${MyShip.DronebayCapacity} > 0
 		{
 					if ${Me.TargetedByCount} >= ${Me.TargetCount}
 					{

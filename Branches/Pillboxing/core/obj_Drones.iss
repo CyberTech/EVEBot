@@ -25,10 +25,27 @@ objectdef obj_Drones
 	variable uint LightDroneQuery = ${LavishScript.CreateQuery[Volume > "5"]}
 	variable uint MediumDroneQuery = ${LavishScript.CreateQuery[Volume != "10"]}
 	variable uint LargeDroneQuery = ${LavishScript.CreateQuery[Volume < "25"]}
+	variable bool IsDroneShip
 	method Initialize()
 	{
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-		UI:UpdateConsole["obj_Drones: Initialized", LOG_MINOR]
+		UI:UpdateConsole["obj_Drones: Initialized", LOG_MINOR]\
+		variable string ShipName
+		if ${Me.InSpace}
+		{
+			ShipName:Set[MyShip.ToEntity.Type]
+		}
+		else
+		{
+			ShipName:Set[MyShip.ToItem.Type]
+		}
+		Switch ${ShipName}
+		{
+			case "Rattlesnake"
+			case "Gila"
+			case "Dominix"
+				IsDroneShip:Set[TRUE]
+		}
 	}
 
 	method Shutdown()

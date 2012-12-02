@@ -151,7 +151,7 @@ objectdef obj_Missions
 	variable bool bSalvaging = TRUE
 	variable bool bWait
 	variable int MissionTimer
-	variable uint LootEntityQuery = ${LavishScript.CreateQuery[GroupID = "12" || Name =- "Transport" || GroupID = "306" || Name =- "Rolette Residence"]}
+	variable uint LootEntityQuery = ${LavishScript.CreateQuery[GroupID = "12" || Name =- "Transport" || GroupID = "306" || Name = "Rolette Residence" || Name = "Science Vessel Wreck"]}
 	variable uint LootKeyQuery = ${LavishScript.CreateQuery[GroupID = "12" || Name =- "Officer"]}
 	variable collection:int Keys
 	variable collection:int MissionsToWait
@@ -532,7 +532,7 @@ function RunCourierMission(int agentID)
 		variable time breakTime = ${Time.Timestamp}
 		variable int Counter = 1
 		variable index:entity Ents
-		variable int64 GateToUse
+		variable int64 GateToUse		
 		variable bool SET
 		RoomCounter:Set[1]
 		; wait up to 15 seconds for spawns to appear
@@ -617,8 +617,15 @@ function RunCourierMission(int agentID)
 				{
 					if !${This.BookmarkExists}
 					{
-						UI:UpdateConsole["Bookmarking closest entitity now."]
-						Entity["GroupID = 186 || GroupID = 12"]:CreateBookmark["Salvage","S","Corporation Locations"]
+						if !${Entity["GroupID = 186 || GroupID = 12"](exists)}
+						{
+							UI:UpdateConsole["No salvageable entities found, not bookmarking anything."]
+						}
+						else
+						{
+							UI:UpdateConsole["Bookmarking closest entitity now."]
+							Entity["GroupID = 186 || GroupID = 12"]:CreateBookmark["Salvage","S","Corporation Locations"]
+						}	
 					}
 					else
 					{
@@ -644,7 +651,7 @@ function RunCourierMission(int agentID)
 				breakTime:Update
 			}
 		}
-		while ${This.GatePresent} || ${Me.ToEntity.Mode} == 3 || ${Targets.TargetNPCs}
+		while (${This.GatePresent} && (${RoomCounter} < 6 || ${This.HaveMissionKey}) || ${Me.ToEntity.Mode} == 3 || ${Targets.TargetNPCs})
 		;If we need to loot something it will happen now, since this code should only do what I want it to
 		echo ${This.MissionCache.Volume[${Agents.AgentID}]} 
 		if ${This.MissionCache.Volume[${Agents.AgentID}]} > 0 && !${This.HaveMishItem}
@@ -674,6 +681,11 @@ function RunCourierMission(int agentID)
 						Items:GetIterator[Item]
 						if ${Item:First(exists)}
 						{
+							if ${Targets.TargetNPCs}
+							{
+								call This.RunCombatMish
+								break
+							}
 							do
 							{
 								if ${Item.Value.TypeID} == ${This.MissionCache.TypeID[${Agents.AgentID}]}
@@ -686,16 +698,10 @@ function RunCourierMission(int agentID)
 									breakTime:Update
 									do 
 									{
-
 										UI:UpdateConsole["Waiting on spawns."]
 										wait 500
-
 									}
 									while !${Targets.TargetNPCs} && ${Time.Timestamp} < ${breakTime.Timestamp}
-									if ${Targets.TargetNPCs}
-									{
-										call This.RunCombatMish
-									}
 									if ${Config.Missioneer.SalvageModeName.Equal["Relay"]}
 									{
 										if !${This.BookmarkExists}
@@ -708,7 +714,6 @@ function RunCourierMission(int agentID)
 											UI:UpdateConsole["We already have a bookmark for this room, not doing anything."]
 										}			
 									}
-									break
 								}
 								else
 								{
@@ -920,11 +925,6 @@ function RunCourierMission(int agentID)
 										if ${mbIterator.Value.ID} > 0
 										{
 											call Ship.WarpToBookMark ${mbIterator.Value.ID}
-											if ${Targets.TargetNPCs}
-											{
-												UI:UpdateConsole["We have NPC targets in range, we're probably at mission. If we're not, tough luck."]
-												break
-											}
 										}
 									}
 									return
@@ -1102,7 +1102,10 @@ function RunCourierMission(int agentID)
 		if ${cargo.Used} > 0 || ${This.MissionCache.Volume[${Agents.AgentID}]} == 0 
 		{
 			;UI:UpdateConsole["Found mish item in cargo or no mish required for mission."]
-			return TRUE
+			if ${cargo[0].Volume} >= ${This.MissionCache.Volume[${Agents.AgentID}]}
+			{
+				return TRUE
+			}
 		}
 		return FALSE
    }
