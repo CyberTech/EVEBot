@@ -384,7 +384,7 @@ objectdef obj_Agents
 								lastDecline.Hour:Inc[4]
 								lastDecline:Update
 								;echo "${Math.Calc[${lastDecline.Timestamp} - ${Time.Timestamp}]}"
-								if ${lastDecline.Timestamp} >= ${Time.Timestamp}
+								if ${lastDecline.Timestamp} >= ${Time.Timestamp} && !${Config.Missioneer.TakeStandingsHit}
 								{
 									UI:UpdateConsole["obj_Agents: DEBUG: Skipping mission to avoid standing loss: ${amIterator.Value.Name}"]
 									skipList:Add[${amIterator.Value.AgentID}]
@@ -1136,7 +1136,7 @@ objectdef obj_Agents
 		}
 		elseif ${MissionBlacklist.IsBlacklisted[${Agent[id,${amIterator.Value.AgentID}].Level},"${amIterator.Value.Name}"]} == TRUE
 		{
-			if ${lastDecline.Timestamp} >= ${Time.Timestamp}
+			if ${lastDecline.Timestamp} >= ${Time.Timestamp} && !${Config.Missioneer.TakeStandingsHit}
 			{
 				UI:UpdateConsole["obj_Agents: ERROR: You declined a mission less than four hours ago!  Switching agents...", LOG_CRITICAL]
 				call ChatIRC.Say "${Me.Name}: Can't decline blacklisted mission, changing agent."

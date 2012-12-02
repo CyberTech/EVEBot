@@ -1799,6 +1799,16 @@ objectdef obj_Configuration_Missioneer
 		This.MissioneerRef:AddSetting[Salvage Ship,${value}]
 	}
 
+	member:bool TakeStandingsHit()
+	{
+		return ${This.MissioneerRef.FindSetting[Take Standing Hit, FALSE]}
+	}
+
+	method SetTakeStandingsHit(bool value)
+	{
+		This.MissioneerRef:AddSetting[Take Standing Hit, ${value}]
+	}
+
 	member:bool AvoidLowSec()
 	{
 		return ${This.MissioneerRef.FindSetting[Avoid Low Sec, TRUE]}

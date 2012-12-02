@@ -1543,7 +1543,7 @@
 						<Frame name='frmGeneralOptions'>
 							<X>10</X>
 							<Y>190</Y>
-							<Height>40</Height>
+							<Height>60</Height>
 							<Width>480</Width>
 							<Border>2</Border>
 							<Children>
@@ -1563,6 +1563,23 @@
 									<OnLeftClick>
 										Script[EVEBot].VariableScope.Config.Missioneer:SetAvoidLowSec[${This.Checked}]
 									</OnLeftClick>
+								</checkbox>
+								<checkbox name='cbTakeStandingsHit'
+									<X>10</X>
+									<Y>10</Y>
+									<Height>20</Height>
+									<Width>50</Width>
+									<Text>Take Standings Hit</Text>
+									<AutoTooltip>If Enabled, there will be no cooldown timer on mission declines</AutoToolTip>
+									<OnLoad>
+										if ${Script[EVEBOT].VariableScope.Config.Missioneer.TakeStandingsHit}
+										{
+										This:SetChecked
+										}
+									</OnLoad>
+									<OnLeftClick>
+											Script[EVEBot].VariableScope.Config.Missioneer:SetTakeStandingsHit[${This.Checked}]
+									</OnLeftClick
 								</checkbox>
 								<Text name='lblSmallHaulerLimit'>
 									<X>140</X>
