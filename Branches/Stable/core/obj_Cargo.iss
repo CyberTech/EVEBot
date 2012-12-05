@@ -675,7 +675,7 @@ objectdef obj_Cargo
 		variable iterator CargoIterator
 		This.CargoToTransfer:GetIterator[CargoIterator]
 		call ${LSAAObject}.Open ${${LSAAObject}.ActiveCan}
-		EVEWindow[ByName,"Inventory"]:MakeChildActive[${${LSAAObject}.ActiveCan},Folder1]
+		EVEWindow[ByCaption, "Inventory"]:MakeChildActive[${${LSAAObject}.ActiveCan},Folder1]
 		wait 1
 		
 		TripHauled:Set[0]
@@ -1233,7 +1233,7 @@ objectdef obj_Cargo
 		call This.TransferListToStationHangar
 
 		This.CargoToTransfer:Clear[]
-		EVEWindow[ByName,hangarFloor]:StackAll
+		EVEWindow[ByName, "hangarFloor"]:StackAll
 		Ship:UpdateBaselineUsedCargo[]
 		call This.ReplenishCrystals
 		call This.CloseHolds
@@ -1287,7 +1287,7 @@ objectdef obj_Cargo
 		TotalHauled:Inc[${TripHauled}]
 
 		call ChatIRC.Say "Hauled: ${TripHauled.Round} m3    This Hour: ${HourHauled.Round} m3    Total: ${TotalHauled.Round} m3"
-		EVEWindow[ByItemID,${MyShip.ID}]:StackAll
+		EVEWindow[ByItemID, ${MyShip.ID}]:StackAll
 		wait 10
 
 	}
@@ -1314,7 +1314,7 @@ objectdef obj_Cargo
 				UI:UpdateConsole["Moving ${ListToMove.Used} items to hangar."]
 				EVE:MoveItemsTo[ListToMove, ${dest}, CorpHangars]
 				wait 10
-				EVEWindow[ByItemID,${dest}]:StackAll
+				EVEWindow[ByItemID, ${dest}]:StackAll
 			}
 		}
 		else
@@ -1380,7 +1380,7 @@ objectdef obj_Cargo
 		call This.TransferListToPOSCorpHangar "CorpHangarArray"
 
 		This.CargoToTransfer:Clear[]
-		EVEWindow[ByName,hangarFloor]:StackAll
+		EVEWindow[ByName, "hangarFloor"]:StackAll
 		Ship:UpdateBaselineUsedCargo[]
 		call This.CloseHolds
 	}
@@ -1408,7 +1408,7 @@ objectdef obj_Cargo
 				call This.TransferListToShip
 
 				This.CargoToTransfer:Clear[]
-				EVEWindow[ByItemID,${MyShip.ID}]:StackAll
+				EVEWindow[ByItemID, ${MyShip.ID}]:StackAll
 				Ship:UpdateBaselineUsedCargo[]
 				call This.CloseHolds
 
@@ -1474,7 +1474,7 @@ objectdef obj_Cargo
 				call This.TransferListToShip
 
 				This.CargoToTransfer:Clear[]
-				EVEWindow[ByItemID,${MyShip.ID}]:StackAll
+				EVEWindow[ByItemID, ${MyShip.ID}]:StackAll
 				Ship:UpdateBaselineUsedCargo[]
 				call This.CloseHolds
 
@@ -1533,7 +1533,7 @@ objectdef obj_Cargo
 	  call This.TransferListToStationHangar
 
 	  This.CargoToTransfer:Clear[]
-	  EVEWindow[ByName,hangarFloor]:StackAll
+	  EVEWindow[ByName, "hangarFloor"]:StackAll
 	  Ship:UpdateBaselineUsedCargo[]
 	  call This.CloseHolds
    }

@@ -264,7 +264,7 @@ objectdef obj_Freighter
 	{
 		variable int64 nextStationID
 
-		if !${EVEWindow[ByCaption,"ASSETS"](exists)}
+		if !${EVEWindow[ByCaption, "Assets"](exists)}
 		{
 			EVE:Execute[OpenAssets]
 		}

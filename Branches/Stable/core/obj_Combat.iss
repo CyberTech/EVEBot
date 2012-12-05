@@ -443,7 +443,7 @@ objectdef obj_Combat
 				}
 				while ${CargoIterator:Next(exists)}
 			}
-			EVEWindow[ByName,hangarFloor]:StackAll
+			EVEWindow[ByName, "hangarFloor"]:StackAll
 			wait 20
 			ContainerItems:Clear
 			Me.Station:GetHangarItems[ContainerItems]
@@ -509,7 +509,7 @@ objectdef obj_Combat
 					{
 						CargoIterator.Value:MoveTo[${MyShip.ID},CargoHold,${QuantityToMove}]
 						wait 30
-						EVEWindow[ByItemID,${MyShip.ID}]:StackAll
+						EVEWindow[ByItemID, ${MyShip.ID}]:StackAll
 						wait 10
 					}
 						if ${Ship.CargoFreeSpace} <= ${Config.Combat.RestockAmmoFreeSpace}

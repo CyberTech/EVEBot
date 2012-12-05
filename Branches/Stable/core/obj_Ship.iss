@@ -280,19 +280,19 @@ objectdef obj_Ship
 
 	method StackCargoHold()
 	{
-		EVEWindow[ByName,"Inventory"]:MakeChildActive[${Me.ShipID}, CargoHold]
-		if ${EVEWindow[ByCaption,"active ship"](exists)}
+		EVEWindow[ByCaption, "Inventory"]:MakeChildActive[${Me.ShipID}, CargoHold]
+		if ${EVEWindow[ByCaption, "active ship"](exists)}
 		{
-			EVEWindow[ByName, "Inventory"]:StackAll
+			EVEWindow[ByCaption, "Inventory"]:StackAll
 		}
 	}
 
 	method StackOreHold()
 	{
-		EVEWindow[ByName,"Inventory"]:MakeChildActive[${Me.ShipID}, SpecializedOreHold]
+		EVEWindow[ByCaption, "Inventory"]:MakeChildActive[${Me.ShipID}, SpecializedOreHold]
 		if ${EVEWindow[ByCaption, Ore Hold](exists)}
 		{
-			EVEWindow[ByName, "Inventory"]:StackAll
+			EVEWindow[ByCaption, "Inventory"]:StackAll
 		}
 	}
 
@@ -302,7 +302,7 @@ objectdef obj_Ship
 		{
 			return
 		}
-		return ${Math.Calc[${EVEWindow[ByName,"Inventory"].ChildCapacity[${Me.ShipID}, SpecializedOreHold]} * 0.02]}
+		return ${Math.Calc[${EVEWindow[ByCaption, "Inventory"].ChildCapacity[${Me.ShipID}, SpecializedOreHold]} * 0.02]}
 	}
 
 	member:float OreHoldFreeSpace()
@@ -322,7 +322,7 @@ objectdef obj_Ship
 			return 0
 		}
 
-		return ${EVEWindow[ByName,"Inventory"].ChildCapacity[${Me.ShipID}, SpecializedOreHold]}
+		return ${EVEWindow[ByCaption, "Inventory"].ChildCapacity[${Me.ShipID}, SpecializedOreHold]}
 	}
 
 	member:float OreHoldUsedCapacity()
@@ -332,7 +332,7 @@ objectdef obj_Ship
 			return 0
 		}
 
-		return ${EVEWindow[ByName,"Inventory"].ChildUsedCapacity[${Me.ShipID}, SpecializedOreHold]}
+		return ${EVEWindow[ByCaption, "Inventory"].ChildUsedCapacity[${Me.ShipID}, SpecializedOreHold]}
 	}
 
 	member:bool OreHoldFull()
@@ -365,7 +365,7 @@ objectdef obj_Ship
 
 	method OpenOreHold()
 	{
-		if !${EVEWindow[ByName, Inventory].ChildWindowExists[ShipOreHold]}
+		if !${EVEWindow[ByCaption, "Inventory"].ChildWindowExists[ShipOreHold]}
 		{
 			Me.Ship:Open
 		}
@@ -387,10 +387,10 @@ objectdef obj_Ship
 
 	method StackCorpHangar()
 	{
-		EVEWindow[ByName,"Inventory"]:MakeChildActive[${Me.ShipID},Folder1]
+		EVEWindow[ByCaption, "Inventory"]:MakeChildActive[${Me.ShipID},Folder1]
 		if ${EVEWindow[ByCaption, Corp Hangar](exists)}
 		{
-			EVEWindow[ByName, "Inventory"]:StackAll
+			EVEWindow[ByCaption, "Inventory"]:StackAll
 		}
 	}
 
@@ -401,7 +401,7 @@ objectdef obj_Ship
 			return
 		}
 
-		return ${Math.Calc[${EVEWindow[ByName,"Inventory"].ChildCapacity[${Me.ShipID}, Folder1]}*0.02]}
+		return ${Math.Calc[${EVEWindow[ByCaption, "Inventory"].ChildCapacity[${Me.ShipID}, Folder1]}*0.02]}
 	}
 
 	member:float CorpHangarFreeSpace()
@@ -411,7 +411,7 @@ objectdef obj_Ship
 			return 0
 		}
 
-		return ${Math.Calc[${EVEWindow[ByName,"Inventory"].ChildCapacity[${Me.ShipID},Folder1]}-${EVEWindow[ByName,"Inventory"].ChildUsedCapacity[${Me.ShipID},Folder1]}]}
+		return ${Math.Calc[${EVEWindow[ByCaption, "Inventory"].ChildCapacity[${Me.ShipID},Folder1]}-${EVEWindow[ByCaption, "Inventory"].ChildUsedCapacity[${Me.ShipID},Folder1]}]}
 	}
 
 	member:float CorpHangarUsedSpace(bool IgnoreCrystals=FALSE)
@@ -460,7 +460,7 @@ objectdef obj_Ship
 
 		This:OpenCorpHangars
 
-		if ${EVEWindow[ByName, "Inventory"].ChildUsedCapacity[${Me.ShipID},Folder1]} == 0
+		if ${EVEWindow[ByCaption, "Inventory"].ChildUsedCapacity[${Me.ShipID},Folder1]} == 0
 		{
 			return TRUE
 		}
@@ -1646,18 +1646,18 @@ objectdef obj_Ship
 
 	member IsCargoOpen()
 	{
-		;if ${EVEWindow[ByCaption,"active ship"](exists)}
-		if ${EVEWindow[ByName,"Inventory"](exists)}
+		;if ${EVEWindow[ByCaption, "active ship"](exists)}
+		if ${EVEWindow[ByCaption, "Inventory"](exists)}
 		{
-			;if ${EVEWindow[ByCaption,"active ship"].Caption(exists)}
-			if ${EVEWindow[ByName,"Inventory"].Caption(exists)}
+			;if ${EVEWindow[ByCaption, "active ship"].Caption(exists)}
+			if ${EVEWindow[ByCaption, "Inventory"].Caption(exists)}
 			{
 				return TRUE
 			}
 			else
 			{
-				UI:UpdateConsole["\${EVEWindow[ByCaption,"active ship"](exists)} == ${EVEWindow[ByCaption,"active ship"](exists)}", LOG_DEBUG]
-				UI:UpdateConsole["\${EVEWindow[ByCaption,"active ship"].Caption(exists)} == ${EVEWindow[ByCaption,"active ship"].Caption(exists)}", LOG_DEBUG]
+				UI:UpdateConsole["\${EVEWindow[ByCaption, "active ship"](exists)} == ${EVEWindow[ByCaption, "active ship"](exists)}", LOG_DEBUG]
+				UI:UpdateConsole["\${EVEWindow[ByCaption, "active ship"].Caption(exists)} == ${EVEWindow[ByCaption, "active ship"].Caption(exists)}", LOG_DEBUG]
 			}
 		}
 		return FALSE
@@ -1680,7 +1680,7 @@ objectdef obj_Ship
 			variable int LoopCheck
 
 			LoopCheck:Set[0]
-			CaptionCount:Set[${EVEWindow[ByCaption,"active ship"].Caption.Token[2,"["].Token[1,"]"]}]
+			CaptionCount:Set[${EVEWindow[ByCaption, "active ship"].Caption.Token[2,"["].Token[1,"]"]}]
 			;UI:UpdateConsole["obj_Ship: Waiting for cargo to load: CaptionCount: ${CaptionCount}", LOG_DEBUG]
 			variable index:item MyCargo
 			MyShip:GetCargo[MyCargo]
@@ -1697,7 +1697,7 @@ objectdef obj_Ship
 				MyShip:GetCargo[MyCargo]
 			}
 		}
-		EVEWindow[ByItemID,${MyShip.ID}]:StackAll
+		EVEWindow[ByItemID, ${MyShip.ID}]:StackAll
 		wait 5
 	}
 
@@ -1706,8 +1706,8 @@ objectdef obj_Ship
 		if ${This.IsCargoOpen}
 		{
 			UI:UpdateConsole["Closing Ship Cargohold"]
-			EVEWindow[ByName,"Inventory"]:Close
-			;EVEWindow[ByCaption,"active ship"]:Close
+			EVEWindow[ByCaption, "Inventory"]:Close
+			;EVEWindow[ByCaption, "active ship"]:Close
 			wait WAIT_CARGO_WINDOW
 			while ${This.IsCargoOpen}
 			{
@@ -2775,7 +2775,7 @@ objectdef obj_Ship
 	{
 		if ${This.IsCargoOpen}
 		{
-			EVEWindow[ByItemID,${MyShip.ID}]:StackAll
+			EVEWindow[ByItemID, ${MyShip.ID}]:StackAll
 		}
 	}
 

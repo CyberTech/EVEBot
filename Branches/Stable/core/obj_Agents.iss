@@ -730,7 +730,7 @@ objectdef obj_Agents
 		variable int left = 0
 		variable int right = 0
 
-		if !${EVEWindow[ByCaption,"Mission journal - ${This.ActiveAgent}"](exists)}
+		if !${EVEWindow[ByCaption, "Mission journal - ${This.ActiveAgent}"](exists)}
 		{
 			UI:UpdateConsole["obj_Agents: ERROR: Mission details window was not found!"]
 			UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Name.Escape = ${amIterator.Value.Name.Escape}"]
@@ -903,7 +903,7 @@ objectdef obj_Agents
 			UI:UpdateConsole["obj_Agents: Waiting for conversation window..."]
 			wait 50
 		}
-		while !${EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"](exists)}
+		while !${EVEWindow[ByCaption, "Agent Conversation - ${This.ActiveAgent}"](exists)}
 		call This.UpdateLocatorAgent
 		;; The dialog caption fills in long before the details do.
 		;; Wait for dialog strings to become valid before proceeding.
@@ -1197,7 +1197,7 @@ objectdef obj_Agents
 		EVE:Execute[CmdCloseActiveWindow]
 		wait 50
 
-    	EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"]:Close
+    	EVEWindow[ByCaption, "Agent Conversation - ${This.ActiveAgent}"]:Close
 	}
 
 	function TurnInMission()
@@ -1212,7 +1212,7 @@ objectdef obj_Agents
 			UI:UpdateConsole["obj_Agents: Waiting for conversation window..."]
 		wait 10
 		}
-		while !${EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"](exists)}
+		while !${EVEWindow[ByCaption, "Agent Conversation - ${This.ActiveAgent}"](exists)}
 		call This.UpdateLocatorAgent
 		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
 
@@ -1240,7 +1240,7 @@ objectdef obj_Agents
 		EVE:Execute[CmdCloseActiveWindow]
 		wait 50
 
-    	EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"]:Close
+    	EVEWindow[ByCaption, "Agent Conversation - ${This.ActiveAgent}"]:Close
 	}
 
 	function QuitMission()
@@ -1255,7 +1255,7 @@ objectdef obj_Agents
 			UI:UpdateConsole["obj_Agents: Waiting for conversation window..."]
             wait 10
         }
-        while !${EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"](exists)}
+        while !${EVEWindow[ByCaption, "Agent Conversation - ${This.ActiveAgent}"](exists)}
 
 		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
 
@@ -1282,6 +1282,6 @@ objectdef obj_Agents
 		EVE:Execute[CmdCloseActiveWindow]
 		wait 50
 
-    	EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"]:Close
+    	EVEWindow[ByCaption, "Agent Conversation - ${This.ActiveAgent}"]:Close
 	}
 }

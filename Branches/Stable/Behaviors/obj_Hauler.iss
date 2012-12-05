@@ -703,7 +703,7 @@ objectdef obj_Hauler
 		Entity[${id}]:Open
 		wait 20
 
-		EVEWindow[ByItemID,${id}]:StackAll
+		EVEWindow[ByItemID, ${id}]:StackAll
 		wait 10
 
 		Entity[${id}]:GetCargo[ContainerCargo]
@@ -747,9 +747,9 @@ objectdef obj_Hauler
 			while ${Cargo:Next(exists)}
 		}
 
-		EVEWindow[ByItemID,${MyShip.ID}]:StackAll
+		EVEWindow[ByItemID, ${MyShip.ID}]:StackAll
 		wait 10
-		;EVEWindow[ByItemID,${MyShip.ID}]:Close
+		;EVEWindow[ByItemID, ${MyShip.ID}]:Close
 		;wait 10
 	}
 

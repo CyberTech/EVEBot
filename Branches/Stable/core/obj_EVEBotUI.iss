@@ -81,9 +81,9 @@ objectdef obj_EVEBotUI
 
 	    if ${Time.Timestamp} > ${This.NextMsgBoxPulse.Timestamp}
 		{
-			if ${EVEWindow[ByName,modal].Text.Find["The daily downtime will begin in"](exists)}
+			if ${EVEWindow[ByName, "modal"].Text.Find["The daily downtime will begin in"](exists)}
 			{
-				EVEWindow[ByName,modal]:ClickButtonOK
+				EVEWindow[ByName, "modal"]:ClickButtonOK
 			}
 			EVE:CloseAllMessageBoxes
 			EVE:CloseAllChatInvites
