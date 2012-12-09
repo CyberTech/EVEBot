@@ -675,7 +675,7 @@ objectdef obj_Cargo
 		variable iterator CargoIterator
 		This.CargoToTransfer:GetIterator[CargoIterator]
 		call ${LSAAObject}.Open ${${LSAAObject}.ActiveCan}
-		EVEWindow[ByCaption, "Inventory"]:MakeChildActive[${${LSAAObject}.ActiveCan},Folder1]
+		EVEWindow["Inventory"]:MakeChildActive[${${LSAAObject}.ActiveCan},Folder1]
 		wait 1
 		
 		TripHauled:Set[0]
