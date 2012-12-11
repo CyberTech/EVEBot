@@ -12,7 +12,7 @@ function main()
         echo "-- Caption: ${InventoryWindow.Caption}"
         
         InventoryWindow:GetChildren[InvWindowChildren]
-        InvWindowChildrenNames:GetIterator[Iter]
+        InvWindowChildren:GetIterator[Iter]
         if ${Iter:First(exists)}
         {
             echo "------- Inventory Window Children:"
