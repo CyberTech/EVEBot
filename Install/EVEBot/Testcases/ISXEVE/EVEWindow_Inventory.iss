@@ -15,7 +15,7 @@ function main()
         InvWindowChildrenNames:GetIterator[Iter]
         if ${Iter:First(exists)}
         {
-            echo "------- Inventory Window Children (By Name):"
+            echo "------- Inventory Window Children:"
             do
             {
 							echo "--| ${i}. '${Iter.Value.Name}'"
