@@ -18,7 +18,7 @@ function main()
 			echo "------- Inventory Window Children:"
 			do
 			{
-				echo "--| ${i}. '${Iter.Value.Name}'"
+				echo "--| ${i}. Name: '${Iter.Value}'"
 				echo "-----| HasCapacity: ${Iter.Value.HasCapacity}"
 				if (${Iter.Value.HasCapacity})
 				{
@@ -30,9 +30,8 @@ function main()
 					echo "-----| LocationFlag: ${Iter.Value.LocationFlag}"
 					echo "-----| LocationFlagID: ${Iter.Value.LocationFlagID}"
 				}
-				echo "-----| IsInRange: ${Iter.Value.IsInRange}"
+			  echo "-----| IsInRange: ${Iter.Value.IsInRange}"
 				echo "-----| ItemID: ${Iter.Value.ItemID}"
-				echo "-----| Name: ${Iter.Value.Name}"
 				echo "--------------------------------"
 				i:Inc
 			}
