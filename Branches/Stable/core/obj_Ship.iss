@@ -1644,12 +1644,13 @@ objectdef obj_Ship
 		}
 	}
 
-	member IsCargoOpen()
+	member:bool IsCargoOpen()
 	{
-		${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipCargo](exists)}
+		if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipCargo](exists)}
 		{
 			return TRUE
 		}
+		return FALSE
 	}
 
 	function OpenCargo()
