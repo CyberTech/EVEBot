@@ -48,9 +48,9 @@ objectdef obj_Station
 
 	member IsHangarOpen()
 	{
-		if ${EVEWindow["Inventory"].ChildWindowExists[StationItems]} 
+		if ${EVEWindow[Inventory].ChildWindow[StationItems](exists)}
 		{
-			EVEWindow["Inventory"]:MakeChildActive[StationItems]
+			EVEWindow[Inventory].ChildWindow[StationItems]:MakeActive
 			return TRUE
 		}
 		else
@@ -61,9 +61,9 @@ objectdef obj_Station
 	
 	member IsCorpHangarOpen()
 	{
-		if ${EVEWindow["Inventory"].ChildWindowExists[StationCorpHangar](exists)}
+		if ${EVEWindow[Inventory].ChildWindow[StationCorpHangars](exists)}
 		{
-			EVEWindow["Inventory"]:MakeChildActive[StationCorpHangar]
+			EVEWindow[Inventory].ChildWindow[StationCorpHangars]:MakeActive
 			return TRUE
 		}
 		else
@@ -135,7 +135,7 @@ objectdef obj_Station
 	
 	function CloseHangar()
 	{
-		return /* no need to close hangars anymore? */
+		return /* no need to close hangars anymore */
 		if ${This.Docked} == FALSE
 		{
 			return
@@ -144,7 +144,7 @@ objectdef obj_Station
 		if ${This.IsHangarOpen}
 		{
 			UI:UpdateConsole["Closing Cargo Hangar"]
-			EVEWindow[ByCaption, "item hangar"]:Close
+			;EVEWindow[Inventory].ChildWindow[StationItems]:close
 			wait WAIT_CARGO_WINDOW
 			while ${This.IsHangarOpen}
 			{

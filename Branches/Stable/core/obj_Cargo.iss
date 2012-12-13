@@ -293,7 +293,7 @@ objectdef obj_Cargo
 		else
 		{
 			variable index:item HangarCargo
-			Entity[${from}]:GetCorpHangarsCargo[HangarCargo]
+			Entity[${from}]:GetFleetHangarCargo[HangarCargo]
 			HangarCargo:GetIterator[CargoIterator]
 
 			; Cycle thru the Hangar looking for the needed Crystals and move them to the ship
@@ -439,7 +439,7 @@ objectdef obj_Cargo
 		variable iterator CargoIterator
 		variable float VolumeToMove=0
 		variable index:int64 ListToMove
-		Entity[${dest}]:GetCorpHangarsCargo[HangarCargo]
+		Entity[${dest}]:GetFleetHangarCargo[HangarCargo]
 		HangarCargo:RemoveByQuery[${LavishScript.CreateQuery[Name =- "Mining Crystal"]}]
 
 		HangarCargo:GetIterator[CargoIterator]
@@ -480,7 +480,7 @@ objectdef obj_Cargo
 		variable index:item HangarCargo
 		variable int QuantityToMove
 		variable iterator CargoIterator
-		Me.Ship:GetCorpHangarsCargo[HangarCargo]
+		Me.Ship:GetFleetHangarCargo[HangarCargo]
 		HangarCargo:GetIterator[CargoIterator]
 
 		if ${CargoIterator:First(exists)}
@@ -502,7 +502,7 @@ objectdef obj_Cargo
 						UI:UpdateConsole["TransferCargoFromShipCorporateHangarToOreHold: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
 						if ${QuantityToMove} > 0
 						{
-							CargoIterator.Value:MoveTo[${MyShip.ID}, OreHold, ${QuantityToMove}]
+							CargoIterator.Value:MoveTo[${MyShip.ID}, ShipOreHold, ${QuantityToMove}]
 							wait 15
 						}
 
@@ -559,7 +559,7 @@ objectdef obj_Cargo
 		variable index:item HangarCargo
 		variable int QuantityToMove
 		variable iterator CargoIterator
-		Me.Ship:GetCorpHangarsCargo[HangarCargo]
+		Me.Ship:GetFleetHangarCargo[HangarCargo]
 		HangarCargo:GetIterator[CargoIterator]
 
 		if ${CargoIterator:First(exists)}
@@ -590,7 +590,7 @@ objectdef obj_Cargo
 		variable index:item HangarCargo
 		variable int QuantityToMove
 		variable iterator CargoIterator
-		Me.Ship:GetCorpHangarsCargo[HangarCargo]
+		Me.Ship:GetFleetHangarCargo[HangarCargo]
 		HangarCargo:GetIterator[CargoIterator]
 
 		if ${CargoIterator:First(exists)}
@@ -654,7 +654,7 @@ objectdef obj_Cargo
 					UI:UpdateConsole["TransferCargoFromCargoHoldToShipCorporateHangar: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
 					if ${QuantityToMove} > 0
 					{
-						CargoIterator.Value:MoveTo[${MyShip.ID}, CorpHangars, ${QuantityToMove}]
+						CargoIterator.Value:MoveTo[${MyShip.ID}, FleetHangar, ${QuantityToMove}]
 						wait 15
 					}
 				}
@@ -675,7 +675,7 @@ objectdef obj_Cargo
 		variable iterator CargoIterator
 		This.CargoToTransfer:GetIterator[CargoIterator]
 		call ${LSAAObject}.Open ${${LSAAObject}.ActiveCan}
-		EVEWindow["Inventory"]:MakeChildActive[${${LSAAObject}.ActiveCan},Folder1]
+		EVEWindow["Inventory"].ChildWindow[${${LSAAObject}.ActiveCan}]:MakeActive
 		wait 1
 		
 		TripHauled:Set[0]
@@ -688,21 +688,21 @@ objectdef obj_Cargo
 					TripHauled:Inc[${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}]}]
 					UI:UpdateConsole["TransferListToPOSCorpHangar(${LSAAObject}): Bulk Transferring Cargo: ${CargoIterator.Value.Name} * ${CargoIterator.Value.Quantity} Free Space: ${${LSAAObject}.CargoFreeSpace}"]
 					ListToMove:Insert[${CargoIterator.Value.ID}]
-					CargoIterator.Value:MoveTo[${${LSAAObject}.ActiveCan}, CorpHangars, ${CargoIterator.Value.Quantity},Corporation Folder 1]
+					CargoIterator.Value:MoveTo[${${LSAAObject}.ActiveCan}, FleetHangar, ${CargoIterator.Value.Quantity}]
 					VolumeToMove:Inc[${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}]}]
 				}
 				else
 				{
 					TripHauled:Inc[${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}]}]
 					UI:UpdateConsole["TransferListToPOSCorpHangar(${LSAAObject}): Transferring Cargo: ${CargoIterator.Value.Name} * ${CargoIterator.Value.Quantity} Free Space: ${${LSAAObject}.CargoFreeSpace}"]
-					CargoIterator.Value:MoveTo[${${LSAAObject}.ActiveCan}, CorpHangars, ${Math.Calc[(${${LSAAObject}.CargoFreeSpace} - ${VolumeToMove}) / ${CargoIterator.Value.Volume}]}, Corporation Folder 1]
+					CargoIterator.Value:MoveTo[${${LSAAObject}.ActiveCan}, FleetHangar, ${Math.Calc[(${${LSAAObject}.CargoFreeSpace} - ${VolumeToMove}) / ${CargoIterator.Value.Volume}]}]
 					break
 				}
 			}
 			while ${CargoIterator:Next(exists)}
 			if ${ListToMove.Used}
 			{
-				EVE:MoveItemsTo[ListToMove, ${${LSAAObject}.ActiveCan}, CorpHangars, Corporation Folder 1]
+				EVE:MoveItemsTo[ListToMove, ${${LSAAObject}.ActiveCan}, FleetHangar]
 			}
 		}
 		else

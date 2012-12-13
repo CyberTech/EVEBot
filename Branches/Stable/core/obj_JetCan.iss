@@ -270,14 +270,14 @@ objectdef obj_JetCan
 		}
 	}
 
-	member IsCargoOpen(int64 ID=0)
+	member:bool IsCargoOpen(int64 ID=0)
 	{
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
 			ID:Set[${This.ActiveCan}]
 		}
 
-		if ${EVEWindow["Inventory"].ChildWindowExists["${ID}"]}
+		if ${EVEWindow[Inventory].ChildWindow[${ID}](exists)}
 		{
 			return TRUE
 		}
@@ -300,7 +300,7 @@ objectdef obj_JetCan
 			return FALSE
 		}
 
-		return ${EVEWindow["Inventory"].ChildCapacity[${ID}]}
+		return ${EVEWindow[Inventory].ChildWindow[${ID}].Capacity}
 
 	}
 
@@ -316,7 +316,7 @@ objectdef obj_JetCan
 			return FALSE
 		}
 
-		return ${EVEWindow["Inventory"].ChildUsedCapacity[${ID}]}
+		return ${EVEWindow[Inventory].ChildWindow[${ID}].UsedCapacity}
 	}
 
 	member:float CargoMinimumFreeSpace(int64 ID=0)
