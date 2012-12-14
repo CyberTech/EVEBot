@@ -297,7 +297,7 @@ objectdef obj_JetCan
 
 		if !${This.IsCargoOpen[${ID}]}
 		{
-			return FALSE
+			return 0.0
 		}
 
 		return ${EVEWindow[Inventory].ChildWindow[${ID}].Capacity}
@@ -313,7 +313,7 @@ objectdef obj_JetCan
 
 		if !${This.IsCargoOpen[${ID}]}
 		{
-			return FALSE
+			return 0.0
 		}
 
 		return ${EVEWindow[Inventory].ChildWindow[${ID}].UsedCapacity}
@@ -328,7 +328,7 @@ objectdef obj_JetCan
 
 		if !${This.IsCargoOpen[${ID}]}
 		{
-			return FALSE
+			return 0.0
 		}
 		if ${Config.Common.BotModeName.Equal[Miner]} && ${Config.Miner.IceMining}
 		{
@@ -349,7 +349,7 @@ objectdef obj_JetCan
 
 		if !${This.IsCargoOpen[${ID}]}
 		{
-			return FALSE
+			return 0.0
 		}
 
 		if ${This.CargoUsedCapacity[${ID}]} < 0
