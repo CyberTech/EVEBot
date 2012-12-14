@@ -279,6 +279,7 @@ objectdef obj_JetCan
 
 		if ${EVEWindow[Inventory].ChildWindow[${ID}](exists)}
 		{
+			EVEWindow[Inventory].ChildWindow[${ID}]:MakeActive
 			return TRUE
 		}
 		else
