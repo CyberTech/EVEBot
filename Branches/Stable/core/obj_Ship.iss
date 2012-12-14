@@ -921,7 +921,6 @@ objectdef obj_Ship
 		do
 		{
 			if ${ModuleIter.Value.IsActive} || \
-				${ModuleIter.Value.IsGoingOnline} || \
 				${ModuleIter.Value.IsDeactivating} || \
 				${ModuleIter.Value.IsChangingAmmo} || \
 				${ModuleIter.Value.IsReloadingAmmo}
@@ -948,7 +947,6 @@ objectdef obj_Ship
 		do
 		{
 			if (${ModuleIter.Value.IsActive} || \
-				${ModuleIter.Value.IsGoingOnline} || \
 				${ModuleIter.Value.IsDeactivating})
 			{
 				count:Inc
@@ -973,7 +971,6 @@ objectdef obj_Ship
 		do
 		{
 			if (${ModuleIter.Value.IsActive} || \
-				${ModuleIter.Value.IsGoingOnline} || \
 				${ModuleIter.Value.IsDeactivating})
 			{
 				count:Inc
@@ -998,7 +995,6 @@ objectdef obj_Ship
 		do
 		{
 			if ${ModuleIter.Value.IsActive} || \
-				${ModuleIter.Value.IsGoingOnline} || \
 				${ModuleIter.Value.IsDeactivating}
 			{
 				count:Inc
@@ -1134,7 +1130,7 @@ objectdef obj_Ship
 		{
 			if ${ModuleIter.Value.LastTarget(exists)} && \
 				${ModuleIter.Value.LastTarget.ID.Equal[${EntityID}]} && \
-				( ${ModuleIter.Value.IsActive} || ${ModuleIter.Value.IsGoingOnline} )
+				${ModuleIter.Value.IsActive}
 			{
 				return TRUE
 			}
@@ -1159,7 +1155,7 @@ objectdef obj_Ship
 		do
 		{
 			if	${ModuleIter.Value.TargetID} == ${EntityID} && \
-				( ${ModuleIter.Value.IsActive} || ${ModuleIter.Value.IsGoingOnline} )
+				${ModuleIter.Value.IsActive}
 			{
 				return TRUE
 			}
@@ -1185,7 +1181,7 @@ objectdef obj_Ship
 		do
 		{
 			if	${ModuleIter.Value.TargetID} == ${EntityID} && \
-				( ${ModuleIter.Value.IsActive} || ${ModuleIter.Value.IsGoingOnline} )
+				${ModuleIter.Value.IsActive}
 			{
 				val:Inc[1]
 			}
@@ -1211,7 +1207,7 @@ objectdef obj_Ship
 		{
 			if ${ModuleIter.Value.LastTarget(exists)} && \
 				${ModuleIter.Value.LastTarget.ID.Equal[${EntityID}]} && \
-				( ${ModuleIter.Value.IsActive} || ${ModuleIter.Value.IsGoingOnline} )
+				${ModuleIter.Value.IsActive}
 			{
 				return TRUE
 			}
@@ -1236,7 +1232,7 @@ objectdef obj_Ship
 		{
 			if ${ModuleIter.Value.LastTarget(exists)} && \
 				${ModuleIter.Value.LastTarget.ID.Equal[${EntityID}]} && \
-				( ${ModuleIter.Value.IsActive} || ${ModuleIter.Value.IsGoingOnline} )
+				${ModuleIter.Value.IsActive}
 			{
 				return TRUE
 			}
@@ -1355,7 +1351,6 @@ objectdef obj_Ship
 		;echo CycleMiningLaser: ${Slot} Activate: ${Activate}
 		if ${Activate.Equal[ON]} && \
 			( ${Me.Ship.Module[${Slot}].IsActive} || \
-			  ${Me.Ship.Module[${Slot}].IsGoingOnline} || \
 			  ${Me.Ship.Module[${Slot}].IsDeactivating} || \
 			  ${Me.Ship.Module[${Slot}].IsChangingAmmo} || \
 			  ${Me.Ship.Module[${Slot}].IsReloadingAmmo} \
@@ -1367,7 +1362,6 @@ objectdef obj_Ship
 
 		if ${Activate.Equal[OFF]} && \
 			(!${Me.Ship.Module[${Slot}].IsActive} || \
-			  ${Me.Ship.Module[${Slot}].IsGoingOnline} || \
 			  ${Me.Ship.Module[${Slot}].IsDeactivating} || \
 			  ${Me.Ship.Module[${Slot}].IsChangingAmmo} || \
 			  ${Me.Ship.Module[${Slot}].IsReloadingAmmo} \
@@ -1461,7 +1455,6 @@ objectdef obj_Ship
 		do
 		{
 			if !${ModuleIter.Value.IsActive} && \
-				!${ModuleIter.Value.IsGoingOnline} && \
 				!${ModuleIter.Value.IsDeactivating} && \
 				!${ModuleIter.Value.IsChangingAmmo} &&\
 				!${ModuleIter.Value.IsReloadingAmmo}
@@ -1479,7 +1472,6 @@ objectdef obj_Ship
 
 				UI:UpdateConsole["Activating: ${Slot}: ${ModuleIter.Value.ToItem.Name}"]
 				ModuleIter.Value:Activate[${id}]
-				wait 25 ${ModuleIter.Value.IsGoingOnline}
 				;TimedCommand ${Math.Rand[600]:Inc[300]} "Script[EVEBot].VariableScope.Ship:CycleMiningLaser[OFF, ${Slot}]"
 				return
 			}
@@ -1512,7 +1504,6 @@ objectdef obj_Ship
 		do
 		{
 			if !${ModuleIter.Value.IsActive} && \
-				!${ModuleIter.Value.IsGoingOnline} && \
 				!${ModuleIter.Value.IsDeactivating} && \
 				!${ModuleIter.Value.IsChangingAmmo} &&\
 				!${ModuleIter.Value.IsReloadingAmmo}
@@ -1521,7 +1512,6 @@ objectdef obj_Ship
 
 				UI:UpdateConsole["Activating: ${Slot}: ${ModuleIter.Value.ToItem.Name}"]
 				ModuleIter.Value:Activate[${id}]
-				wait 25 ${ModuleIter.Value.IsGoingOnline}
 				return
 			}
 		}
@@ -1553,7 +1543,6 @@ objectdef obj_Ship
 		do
 		{
 			if !${ModuleIter.Value.IsActive} && \
-				!${ModuleIter.Value.IsGoingOnline} && \
 				!${ModuleIter.Value.IsDeactivating} && \
 				!${ModuleIter.Value.IsChangingAmmo} &&\
 				!${ModuleIter.Value.IsReloadingAmmo}
@@ -1562,7 +1551,6 @@ objectdef obj_Ship
 
 				UI:UpdateConsole["Activating: ${Slot}: ${ModuleIter.Value.ToItem.Name}"]
 				ModuleIter.Value:Activate[${id}]
-				wait 25 ${ModuleIter.Value.IsGoingOnline}
 				return
 			}
 		}
@@ -1585,7 +1573,6 @@ objectdef obj_Ship
 		do
 		{
 			if !${ModuleIter.Value.IsActive} && \
-				!${ModuleIter.Value.IsGoingOnline} && \
 				!${ModuleIter.Value.IsDeactivating} && \
 				!${ModuleIter.Value.IsChangingAmmo} &&\
 				!${ModuleIter.Value.IsReloadingAmmo}
@@ -1594,7 +1581,6 @@ objectdef obj_Ship
 
 				UI:UpdateConsole["Activating: ${Slot}: ${ModuleIter.Value.ToItem.Name}"]
 				ModuleIter.Value:Click
-				wait 25
 				return
 			}
 			wait 10
@@ -2625,14 +2611,12 @@ objectdef obj_Ship
 				ModuleIter.Value:Click
 			}
 /*
-			elseif !${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsGoingOnline} && \
-				${Me.Ship.CapacitorPct} > 97
+			elseif !${ModuleIter.Value.IsOnline} && ${Me.Ship.CapacitorPct} > 97
 			{
-
 				if ${Math.Calc[${Me.Ship.CPUOutput}-${Me.Ship.CPULoad}]} <  ${ModuleIter.Value.CPUUsage} || \
 					${Math.Calc[${Me.Ship.PowerOutput}-${Me.Ship.PowerLoad}]} <  ${ModuleIter.Value.PowergridUsage}
 				{
-					if ${Salvagers:First(exists)} && ${Salvagers.Value.IsOnline} && !${Salvagers.Value.IsGoingOnline}
+					if ${Salvagers:First(exists)} && ${Salvagers.Value.IsOnline}
 					{
 						UI:UpdateConsole["Putting ${Salvagers.Value.ToItem.Name} offline."]
 						Salvagers.Value:PutOffline
