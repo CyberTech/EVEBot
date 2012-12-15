@@ -526,6 +526,17 @@ objectdef obj_Configuration_Miner
 	{
 		This.MinerRef:AddSetting[Group Mode, ${value}]
 	}
+	
+	member:bool GroupModeAtRange()
+	{
+		return ${This.MinerRef.FindSetting[Group Mode At Range, FALSE]}
+	}
+
+	method SetGroupModeAtRange(bool value)
+	{
+		This.MinerRef:AddSetting[Group Mode At Range, ${value}]
+	}
+	
 	member:bool OrcaMode()
 	{
 		return ${This.MinerRef.FindSetting[Orca Mode, FALSE]}

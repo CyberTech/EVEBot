@@ -595,7 +595,14 @@ objectdef obj_Asteroids
 						if ${AsteroidIterator.Value.Distance} < ${This.MaxDistanceToAsteroid}
 						{
 							UI:UpdateConsole["obj_Asteroids: TargetNext: No Asteroids in range & All lasers idle: Approaching nearest"]
-							call Ship.Approach ${AsteroidIterator.Value.ID} ${Ship.OptimalMiningRange}
+							if ${MyShip.MaxTargetRange} < ${Ship.OptimalMiningRange}
+							{
+								call Ship.Approach ${AsteroidIterator.Value.ID} ${Math.Calc[${MyShip.MaxTargetRange} - 5000]}
+							}
+							else
+							{
+								call Ship.Approach ${AsteroidIterator.Value.ID} ${Math.Calc[${Ship.OptimalMiningRange} - 5000]}
+							}
 						}
 						else
 						{

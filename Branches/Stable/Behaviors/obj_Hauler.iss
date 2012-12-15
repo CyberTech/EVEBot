@@ -325,8 +325,26 @@ objectdef obj_Hauler
 					call Station.Undock
 					break
 				}
-				echo WHY ARE WE IN BASE MODE
+				
+				call Cargo.OpenHolds
+				Ship:StackCargoHold
 				call Cargo.TransferCargoToStationHangar
+				if ${Ship.TypeID} == 28606 || ${Ship.TypeID} == 28352
+				{
+					call Cargo.OpenHolds
+					wait 10
+					EVEinvWindow[Inventory]:MakeChildActive[SpecializedOreHold]
+					wait 10
+					Ship:StackOreHold
+					wait 10
+					call Cargo.TransferCargoFromShipOreHoldToStation
+					wait 10
+					EVEinvWindow[Inventory]:MakeChildActive[FleetHangar]
+					wait 10
+					Ship:StackCorpHangar
+					wait 10
+					call Cargo.TransferCargoFromShipCorporateHangarToStation
+				}
 				call Station.Undock
 				relay all -event EVEBot_HaulerMSG ${Ship.CargoFreeSpace}
 				break
@@ -351,6 +369,9 @@ objectdef obj_Hauler
 						break
 					case Jetcan Mode (Flip-guard)
 						call This.FlipGuard
+						break
+					case Service Fleet Member
+						call This.HaulForFleetMember
 						break
 				}
 				break
@@ -444,6 +465,205 @@ objectdef obj_Hauler
 			}
 			FleetMembers:Dequeue
 		}
+	}
+	
+/*
+;	HaulForFleetMember
+;	*	Warp to fleet member name XXXX and loot nearby cans
+;	*	Wait until cargo hold is full
+*/
+	function HaulForFleetMember()
+	{
+		if !${Local[${Config.Hauler.HaulerPickupName}](exists)}
+		{
+			UI:UpdateConsole["ALERT:  The specified pilot isn't in local - it may be incorrectly configured."]
+			return
+		}
+		
+		; If in warp wait and dont go below here
+		if ${Me.ToEntity.Mode} == 3
+		{
+			return
+		}
+		
+		; From the name on Hauler Pick Up, find the pilot ID if on grid
+		variable int64 MasterID
+		if ${Entity[Name = "${Config.Hauler.HaulerPickupName}"](exists)}
+		{
+			MasterID:Set[${Entity[Name = "${Config.Hauler.HaulerPickupName}"]}]
+		}
+		else
+		{
+			MasterID:Set[0]
+		}
+		
+		; If MasterID returns a 0, then pilot is not on grid
+		; Warp to pilot
+		if !${MasterID} && ${Local[${Config.Hauler.HaulerPickupName}].ToFleetMember}
+		{
+			UI:UpdateConsole["ALERT: The pickup pilot is not nearby.  Warping there first to pick up."]
+			Local[${Config.Hauler.HaulerPickupName}].ToFleetMember:WarpTo
+			return
+		}
+		
+		; If we are too far away, bounce off safe spot
+		if ${Entity[Name = "${Config.Hauler.HaulerPickupName}"].Distance} > CONFIG_MAX_SLOWBOAT_RANGE
+		{
+			if ${Entity[Name = "${Config.Hauler.HaulerPickupName}"].Distance} < WARP_RANGE
+			{
+				UI:UpdateConsole["Fleet member is too far for approach; warping to a bounce point"]
+				call Safespots.WarpTo TRUE
+			}
+			Local[${Config.Hauler.HaulerPickupName}].ToFleetMember:WarpTo
+		}
+		
+		; Open cargohold. If in orca or rorq open the rest
+		MyShip:Open
+		wait 10
+		call Ship.OpenCargo
+		wait 10
+		Ship:StackOreHold
+		wait 10
+		Ship:StackCorpHangar
+		
+		;Construct the list of jet cans near by
+		This:BuildJetCanList[${charID}]
+		while ${Entities.Peek(exists)}
+		{
+			variable bool PopCan = TRUE
+			
+			; If jet can is greater than 5k away, use tractor beams
+			if ${Entities.Peek.Distance} >= 5000
+			{
+				; Does jet can still exist?
+				if !${Entities.Peek(exists)}
+				{
+					Entities:Dequeue
+					continue
+				}
+
+				; approach within tractor range and tractor entity
+				variable float ApproachRange = ${Ship.OptimalTractorRange}
+				if ${ApproachRange} > ${Ship.OptimalTargetingRange}
+				{
+					ApproachRange:Set[${Ship.OptimalTargetingRange}]
+				}
+
+				if ${Ship.OptimalTractorRange} > 0
+				{
+					variable int Counter
+					if ${Entities.Peek.Distance} > ${ApproachRange}
+					{
+						call Ship.Approach ${Entities.Peek.ID} ${ApproachRange}
+					}
+					if !${Entities.Peek(exists)}
+					{
+						Entities:Dequeue
+						continue
+					}
+
+					Entities.Peek:LockTarget
+					wait 10 ${Entities.Peek.BeingTargeted} || ${Entities.Peek.IsLockedTarget}
+					if !${Entities.Peek.BeingTargeted} && !${Entities.Peek.IsLockedTarget}
+					{
+						if !${Entities.Peek(exists)}
+						{
+							Entities:Dequeue
+							continue
+						}
+						UI:UpdateConsole["Hauler: Failed to target, retrying"]
+						Entities.Peek:LockTarget
+						wait 10 ${Entities.Peek.BeingTargeted} || ${Entities.Peek.IsLockedTarget}
+					}
+					if ${Entities.Peek.Distance} > ${Ship.OptimalTractorRange}
+					{
+						call Ship.Approach ${Entities.Peek.ID} ${Ship.OptimalTractorRange}
+					}
+					if !${Entities.Peek(exists)}
+					{
+						Entities:Dequeue
+						continue
+					}
+					Counter:Set[0]
+					while !${Entities.Peek.IsLockedTarget} && ${Counter:Inc} < 300
+					{
+						wait 1
+					}
+					Entities.Peek:MakeActiveTarget
+					Counter:Set[0]
+					while !${Me.ActiveTarget.ID.Equal[${Entities.Peek.ID}]} && ${Counter:Inc} < 300
+					{
+						wait 1
+					}
+					Ship:Activate_Tractor
+				}
+			}
+			; If jet can is between 2.5k and 5k, just slow boat there
+			elseif ${Entities.Peek.Distance} >= LOOT_RANGE
+			{
+				call Ship.Approach ${Entities.Peek.ID} LOOT_RANGE
+			}
+			
+			; Does jet can still exist?
+			if !${Entities.Peek(exists)}
+			{
+				Entities:Dequeue
+				continue
+			}
+			
+			; Wait until the jet can is close enough to loot (max wait time of 40 seconds)
+			Counter:Set[0]
+			while ${Entities.Peek.Distance} > LOOT_RANGE && ${Counter:Inc} < 400
+			{
+				wait 1
+			}
+			wait 5
+			Ship:Deactivate_Tractor
+			
+			; If im moving faster than 10 m/s stop my ship
+			if ${Me.ToEntity.Velocity} > 10
+			{
+				EVE:Execute[CmdStopShip]
+			}
+			
+			; Does jet can still exist?
+			if ${Entities.Peek.ID.Equal[0]}
+			{
+				UI:Updateconsole["Hauler: Jetcan disappeared suddently. WTF?"]
+				Entities:Dequeue
+				continue
+			}
+			
+			; To pop the can or not?
+			; If player is not on grid or player is too far away from can, pop that shit
+			; TODO: check age of can too
+			if !${Entity[${MasterID}](exists)} || ${Entity[${MasterID}].DistanceTo[${Entities.Peek.ID}]} > LOOT_RANGE || ${Entities.Used} > 3
+			{
+				UI:UpdateConsole["Checking: ID: ${Entities.Peek.ID}: ${Entity[${MasterID}].Name} is ${Entity[${MasterID}].DistanceTo[${Entities.Peek.ID}]}m away from jetcan"]
+				PopCan:Set[TRUE]
+			}
+			else
+			{
+				PopCan:Set[FALSE]
+			}
+			
+			; Now loot jet can
+			if ${PopCan}
+			{
+				call This.LootEntity ${Entities.Peek.ID} 0
+			}
+			else
+			{
+				call This.LootEntity ${Entities.Peek.ID} 1
+			}
+			
+			Entities:Dequeue
+			if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
+			{
+				break
+			}
+		}
+	
 	}
 
 /*
@@ -713,42 +933,92 @@ objectdef obj_Hauler
 			do
 			{
 				UI:UpdateConsole["Hauler: Found ${Cargo.Value.Quantity} x ${Cargo.Value.Name} - ${Math.Calc[${Cargo.Value.Quantity} * ${Cargo.Value.Volume}]}m3"]
-				if (${Cargo.Value.Quantity} * ${Cargo.Value.Volume}) > ${Ship.CargoFreeSpace}
+				if ${MyShip.ToEntity.HasOreHold}
 				{
-					/* Move only what will fit, minus 1 to account for CCP rounding errors. */
-					QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${Cargo.Value.Volume}]}]
+					if !${Ship.OreHoldFull}
+					{
+						if (${Cargo.Value.Quantity} * ${Cargo.Value.Volume}) > ${Ship.OreHoldFreeSpace}
+						{
+							QuantityToMove:Set[${Math.Calc[${Ship.OreHoldFreeSpace} / ${Cargo.Value.Volume}]}]
+						}
+						else
+						{
+							QuantityToMove:Set[${Math.Calc[${Cargo.Value.Quantity} - ${leave}]}]
+							leave:Set[0]
+						}
+						UI:UpdateConsole["Hauler: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
+						if ${QuantityToMove} > 0
+						{
+							Cargo.Value:MoveTo[MyShip,OreHold,${QuantityToMove}]
+							wait 20
+						}
+					}
+					elseif !${Ship.CorpHangarFull}
+					{
+						if (${Cargo.Value.Quantity} * ${Cargo.Value.Volume}) > ${Ship.CorpHangarFreeSpace}
+						{
+							QuantityToMove:Set[${Math.Calc[${Ship.CorpHangarFreeSpace} / ${Cargo.Value.Volume}]}]
+						}
+						else
+						{
+							QuantityToMove:Set[${Math.Calc[${Cargo.Value.Quantity} - ${leave}]}]
+							leave:Set[0]
+						}
+						UI:UpdateConsole["Hauler: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
+						if ${QuantityToMove} > 0
+						{
+							Cargo.Value:MoveTo[MyShip,FleetHangar,${QuantityToMove}]
+							wait 20
+						}
+					}
+					else
+					{
+						if (${Cargo.Value.Quantity} * ${Cargo.Value.Volume}) > ${Ship.CargoFreeSpace}
+						{
+							QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${Cargo.Value.Volume}]}]
+						}
+						else
+						{
+							QuantityToMove:Set[${Math.Calc[${Cargo.Value.Quantity} - ${leave}]}]
+							leave:Set[0]
+						}
+						UI:UpdateConsole["Hauler: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
+						if ${QuantityToMove} > 0
+						{
+							Cargo.Value:MoveTo[MyShip,CargoHold,${QuantityToMove}]
+							wait 20
+						}
+					}
 				}
 				else
 				{
-					QuantityToMove:Set[${Math.Calc[${Cargo.Value.Quantity} - ${leave}]}]
-					leave:Set[0]
-				}
-
-				UI:UpdateConsole["Hauler: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
-				if ${QuantityToMove} > 0
-				{
-					Cargo.Value:MoveTo[MyShip,CargoHold,${QuantityToMove}]
-					wait 30
-					if ${Ship.CargoFreeSpace} < 1000
+					if (${Cargo.Value.Quantity} * ${Cargo.Value.Volume}) > ${Ship.CargoFreeSpace}
 					{
-						break
+						QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${Cargo.Value.Volume}]}]
+					}
+					else
+					{
+						QuantityToMove:Set[${Math.Calc[${Cargo.Value.Quantity} - ${leave}]}]
+						leave:Set[0]
+					}
+					UI:UpdateConsole["Hauler: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
+					if ${QuantityToMove} > 0
+					{
+						Cargo.Value:MoveTo[MyShip,CargoHold,${QuantityToMove}]
+						wait 20
 					}
 				}
-
 				if ${Ship.CargoFreeSpace} < 1000
 				{
-					/* TODO - this needs to keep a queue of bookmarks, named for the can ie, "Can CORP hh:mm", of partially looted cans */
-					/* Be sure its names, and not ID.  We shouldn't store anything in a bookmark name that we shouldnt know */
-
 					UI:UpdateConsole["DEBUG: obj_Hauler.LootEntity: Ship Cargo Free Space: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
 					break
 				}
 			}
 			while ${Cargo:Next(exists)}
 		}
-
 		EVEWindow[ByItemID, ${MyShip.ID}]:StackAll
 		wait 10
+
 		;EVEWindow[ByItemID, ${MyShip.ID}]:Close
 		;wait 10
 	}

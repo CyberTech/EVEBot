@@ -181,7 +181,35 @@ objectdef obj_Miner
 			UI:UpdateConsole["FLEE: Low Standing player or system unsafe, fleeing"]
 			return
 		}
-
+		
+		; If in orca delivery mode and orca not in belt and at panic spot, wait
+		if !${Config.Miner.OrcaMode} && ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && !${WarpToOrca} && ${This.AtPanicBookmark}
+		{
+			This.CurrentState:Set["IDLE"]
+			return
+		}
+		
+		; If in orca delivery and orca not in belt, flee
+		if !${Config.Miner.OrcaMode} && ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && !${WarpToOrca}
+		{
+			This.CurrentState:Set["FLEE"]
+			return
+		}
+		
+		; If in group mode, not the master, dont warp to master, and at safe spot... wait
+		if !${Config.Miner.OrcaMode} && ${Config.Miner.GroupMode} && !${IsMaster} && !${WarpToMaster} && ${This.AtPanicBookmark}
+		{
+			This.CurrentState:Set["IDLE"]
+			return
+		}
+		
+		; If in group mode, not the master, and dont warp to the master... flee
+		if !${Config.Miner.OrcaMode} && ${Config.Miner.GroupMode} && !${IsMaster} && !${WarpToMaster}
+		{
+			This.CurrentState:Set["FLEE"]
+			return
+		}		
+		
 		;	If I'm in a station, I need to perform what I came there to do
 		if ${Me.InStation}
 		{
@@ -734,18 +762,25 @@ objectdef obj_Miner
 			EVEBot.ReturnToStation:Set[TRUE]
 			return
 		}
-
-
-		;	Find an asteroid field, or stay at current one if we're near one.  Choices are:
-		;	*	If WarpToOrca and the orca is in fleet, warp there instead and clear our saved bookmark
-		;	*	Warp to a belt based on belt labels or a random belt
-		;	Note:  The UpdateList spam is necessary to make sure our actions are based on the closest asteroids
-
+		
+		;	If our ship has no mining lasers, panic so the user knows to correct their configuration and try again
+		if ${Ship.TotalMiningLasers} == 0
+		{
+			UI:UpdateConsole["ALERT: No mining lasers detected.  Switching to HARD STOP mode!"]
+			EVEBot.ReturnToStation:Set[TRUE]
+			return
+		}
+		
 		Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
+		Master:Set[Name = "${MasterName}"]
+
+		; If delivery is set to Orca
 		if ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]}
 		{
+			; Check if orca is on grid and if not warp to them
 			if ${WarpToOrca} && !${Entity[${Orca.Escape}](exists)}
 			{
+				Ship.Drones:ReturnAllToDroneBay
 				UI:UpdateConsole["Debug: WarpToFleetMember to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
 				call Ship.WarpToFleetMember ${Local["${Config.Miner.DeliveryLocation}"]}
 				if ${Config.Miner.BookMarkLastPosition} && ${Bookmarks.CheckForStoredLocation}
@@ -757,11 +792,10 @@ objectdef obj_Miner
 		}
 		else
 		{
-			;UI:UpdateConsole["Debug: Checking Master Mode:${IsMaster} WarpToMaster:${WarpToMaster} MasterName:${MasterName}", LOG_DEBUG]
-			Master:Set[Name = "${MasterName}"]
-
+			; Check if master is on grid and if not warp to them
 			if ${Config.Miner.GroupMode} && ${WarpToMaster} && !${Entity[${Master.Escape}](exists)} && !${IsMaster}
 			{
+				Ship.Drones:ReturnAllToDroneBay
 				UI:UpdateConsole["Debug: WarpToFleetMember to ${MasterName} from Line _LINE_ ", LOG_DEBUG]
 				call Ship.WarpToFleetMember ${Local["${MasterName}"]}
 				if ${Config.Miner.BookMarkLastPosition} && ${Bookmarks.CheckForStoredLocation}
@@ -772,8 +806,8 @@ objectdef obj_Miner
 			}
 			call Asteroids.UpdateList
 		}
-
-		Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
+		
+		; For orca delivery mode use
 		if ${Ship.TotalActivatedMiningLasers} == 0 && \
 			${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && \
 			${Me.ToEntity.Mode} == 3 && \
@@ -792,10 +826,12 @@ objectdef obj_Miner
 				wait 20
 			}
 		}
-
+		
+		; Out of rocks, not in orca mode, and in group mode and is master
 		if ${Asteroids.AsteroidList.Used} == 0 && \
 			${Ship.TotalActivatedMiningLasers} == 0 && \
-			!${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]}
+			!${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && \
+			${Config.Miner.GroupMode} && ${IsMaster}
 		{
 			while ${Ship.Drones.DronesInSpace[FALSE]} != 0
 			{
@@ -810,25 +846,9 @@ objectdef obj_Miner
 			call Asteroids.MoveToField FALSE TRUE
 			call Asteroids.UpdateList
 		}
-		call Ship.OpenCargo
-
-		;	If our ship has no mining lasers, panic so the user knows to correct their configuration and try again
-		if ${Ship.TotalMiningLasers} == 0
-		{
-			UI:UpdateConsole["ALERT: No mining lasers detected.  Switching to HARD STOP mode!"]
-			EVEBot.ReturnToStation:Set[TRUE]
-			return
-		}
-
-		;	If configured to launch combat drones and there's a shortage, force a DropOff so we go to our delivery location
-		 ; if ${Config.Combat.LaunchCombatDrones} && ${Ship.Drones.CombatDroneShortage}
-		; {
-			; UI:UpdateConsole["Warning: Drone shortage detected.  Forcing a dropoff - make sure drones are available at your delivery location!"]
-			; ForceDropoff:Set[TRUE]
-			; return
-		; }
-
-		if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]}
+		
+		; If player in range and in group mode/ is master... move
+		if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]} && ${Config.Miner.GroupMode} && ${IsMaster}
 		{
 			UI:UpdateConsole["Miner.Mine: Avoiding player: Changing Belts"]
 			Ship.Drones:ReturnAllToDroneBay
@@ -848,12 +868,11 @@ objectdef obj_Miner
 			call Defend
 		}
 
+		call Ship.OpenCargo
 
 		;	We need to make sure we're near our orca if we're using it as a delivery location
 		if ${Config.Miner.DeliveryLocationTypeName.Equal[Orca]}
 		{
-			Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
-
 			;	Find out if we need to approach this target.
 			if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} > LOOT_RANGE && ${This.Approaching} == 0
 			{
@@ -940,13 +959,76 @@ objectdef obj_Miner
 				; if for some reason we are too far away from our master go find him
 				if ${MasterName.NotEqual[NULL]}
 				{
-					Master:Set[Name = "${MasterName}"]
-					if ${Entity[${Master.Escape}].Distance} > WARP_RANGE
+					; We want to stay within range of the Master, see if we need to move
+					if ${Config.Miner.GroupModeAtRange}
 					{
-						UI:UpdateConsole["ALERT:  ${Entity[${Master.Escape}].Name} is off grid. Warping."]
-						UI:UpdateConsole["Debug: Entity:WarpTo to Master from Line _LINE_ ", LOG_DEBUG]
-						Entity[${Master.Escape}]:WarpTo[10000]
-						return
+						;	Find out if we need to approach this target.
+						if ${Entity[${Master.Escape}](exists)} && ${Entity[${Master.Escape}].Distance} > LOOT_RANGE/5 && ${This.Approaching} == 0
+						{
+							if ${Entity[${Master.Escape}].Distance} > WARP_RANGE
+							{
+								UI:UpdateConsole["ALERT:  ${Entity[${Master.Escape}].Name} is a long way away.  Warping to it."]
+								UI:UpdateConsole["Debug: Entity:WarpTo to Master from Line _LINE_ ", LOG_DEBUG]
+								Entity[${Master.Escape}]:WarpTo[1000]
+								return
+							}
+							UI:UpdateConsole["Miner.Mine: Approaching Master to within loot range (currently ${Entity[${Master.Escape}].Distance})"]
+							Entity[${Master.Escape}]:Approach[LOOT_RANGE/5]
+							This.Approaching:Set[${Entity[${Master.Escape}]}]
+							This.TimeStartedApproaching:Set[${Time.Timestamp}]
+							This.ApproachingOrca:Set[TRUE]
+							return
+						}
+
+						;	If we've been approaching for more than 2 minutes, we need to give up and try again
+						if ${Math.Calc[${TimeStartedApproaching} - ${Time.Timestamp}]} < -120 && ${This.Approaching} != 0
+						{
+							UI:UpdateConsole["Approach Master stopping because of timeout"]
+							This.Approaching:Set[0]
+							This.TimeStartedApproaching:Set[0]
+							This.ApproachingOrca:Set[FALSE]
+							return
+						}
+
+						;	If we're approaching a target, find out if we need to stop doing so.
+						;	After moving, we need to find out if any of our targets are out of mining range and unlock them so we can get new ones.
+						if (${Entity[${This.Approaching}](exists)} && \
+							${Entity[${This.Approaching}].Distance} <= LOOT_RANGE/5 && \
+							${This.Approaching} != 0) || \
+							(!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
+						{
+							UI:UpdateConsole["Miner.Mine: Within loot range of ${Entity[${This.Approaching}].Name}(${Entity[${This.Approaching}].ID})"]
+							EVE:Execute[CmdStopShip]
+							This.Approaching:Set[0]
+							This.TimeStartedApproaching:Set[0]
+							This.ApproachingOrca:Set[FALSE]
+
+							LockedTargets:Clear
+							Me:GetTargets[LockedTargets]
+							LockedTargets:GetIterator[Target]
+
+							if ${Target:First(exists)}
+							do
+							{
+								if ${Entity[${Target.Value.ID}].Distance} > ${Ship.OptimalMiningRange}
+								{
+									UI:UpdateConsole["Miner.Mine: Unlocking ${Target.Value.Name} as it is out of range after we moved."]
+									Target.Value:UnlockTarget
+								}
+							}
+							while ${Target:Next(exists)}
+							return
+						}
+					}
+					else
+					{
+						if ${Entity[${Master.Escape}].Distance} > WARP_RANGE
+						{
+							UI:UpdateConsole["ALERT:  ${Entity[${Master.Escape}].Name} is off grid. Warping."]
+							UI:UpdateConsole["Debug: Entity:WarpTo to Master from Line _LINE_ ", LOG_DEBUG]
+							Entity[${Master.Escape}]:WarpTo[10000]
+							return
+						}
 					}
 				}
 			}
@@ -975,10 +1057,13 @@ objectdef obj_Miner
 			;	it's in the belt, use Asteroids.TargetNextInRange to only target roids nearby
 			if (${Math.Calc[${Me.TargetCount} + ${Me.TargetingCount}]} < ${Ship.SafeMaxLockedTargets}) && ${Asteroids.LockedAndLocking} < ${AsteroidsNeeded}
 			{
-				Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
 				if ${Config.Miner.DeliveryLocationTypeName.Equal[Orca]} && ${Entity[${Orca.Escape}](exists)}
 				{
 					call Asteroids.TargetNextInRange ${Entity[${Orca.Escape}].ID}
+				}
+				elseif ${Config.Miner.GroupMode} && ${Config.Miner.GroupModeAtRange}
+				{
+					call Asteroids.TargetNextInRange ${Entity[${Master.Escape}].ID}
 				}
 				else
 				{
@@ -1014,7 +1099,6 @@ objectdef obj_Miner
 			if ${Target:First(exists)}
 			do
 			{
-
 				;	Ignore any targets we have locked that aren't asteroids
 				if ${Target.Value.CategoryID} != ${Asteroids.AsteroidCategoryID}
 				{
@@ -1106,6 +1190,7 @@ objectdef obj_Miner
 				{
 					call Cargo.TransferOreToJetCan
 					;	Need a wait here because it would try to move the same item more than once
+					
 					wait 20
 					This:NotifyHaulers[]
 				}
@@ -1149,6 +1234,16 @@ objectdef obj_Miner
 			UI:UpdateConsole["Miner aborting due to defensive status", LOG_CRITICAL]
 
 			EVEBot.ReturnToStation:Set[TRUE]
+			return
+		}
+		
+		; This will make the orca go to the panic location and do nothing but boost the fleet
+		if ${Config.Miner.DeliveryLocation.Equal["Boost only"]}
+		{
+			if !${This.AtPanicBookmark}
+			{
+				call This.FastWarp -1 "${Config.Miner.PanicLocation}"
+			}
 			return
 		}
 

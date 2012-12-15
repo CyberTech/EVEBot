@@ -627,6 +627,23 @@
 								Script[EVEBot].VariableScope.Config.Miner:SetGroupMode[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
+						<checkbox name='cbGroupMinerModeKeepRange'>
+							<X>400</X>
+							<Y>170</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Keep Range </Text>
+							<AutoTooltip>When checked will tell evebot to stay within range of specific person listed below</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Miner.GroupModeAtRange}
+								{
+								This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Miner:SetGroupModeAtRange[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
 						<checkbox name='cbOrcaMode'>
 							<X>300</X>
 							<Y>130</Y>
@@ -2189,6 +2206,7 @@
 								<Item Value='2'>Service On-Demand</Item>
 								<Item Value='3'>Service Orca</Item>
 								<Item Value='4'>Jetcan Mode (Flip-guard)</Item>
+								<Item Value='5'>Service Fleet Member</Item>
 							</Items>
 							<OnSelect>
 								Script[EVEBot].VariableScope.Config.Hauler:SetHaulerMode[${This.SelectedItem.Value}]
