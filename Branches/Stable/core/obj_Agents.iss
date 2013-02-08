@@ -675,11 +675,11 @@ objectdef obj_Agents
 
 	function MissionDetails()
 	{
-		EVE:Execute[CmdCloseAllWindows]
-		wait 50
+		;EVE:Execute[CmdCloseAllWindows]
+		;wait 50
 
-		EVE:Execute[OpenJournal]
-		wait 50
+		;EVE:Execute[OpenJournal]
+		;wait 50
 		EVE:Execute[CmdCloseActiveWindow]
 		wait 50
 
@@ -892,8 +892,8 @@ objectdef obj_Agents
 			return
 		}
 
-		EVE:Execute[CmdCloseAllWindows]
-		EVE:Execute[OpenJournal]
+		;EVE:Execute[CmdCloseAllWindows]
+		;EVE:Execute[OpenJournal]
 		wait 20
 
 		UI:UpdateConsole["obj_Agents: Starting conversation with agent ${This.ActiveAgent}."]
@@ -903,8 +903,9 @@ objectdef obj_Agents
 			UI:UpdateConsole["obj_Agents: Waiting for conversation window..."]
 			wait 50
 		}
-		while !${EVEWindow[ByCaption, "Agent Conversation - ${This.ActiveAgent}"](exists)}
+		while !${EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"](exists)}
 		call This.UpdateLocatorAgent
+		wait 50
 		;; The dialog caption fills in long before the details do.
 		;; Wait for dialog strings to become valid before proceeding.
 		UI:UpdateConsole["Waiting for responses from agent to populate..."]
@@ -937,10 +938,10 @@ objectdef obj_Agents
 
 	    wait 10
 
-		EVE:Execute[OpenJournal]
-		wait 50
-		EVE:Execute[CmdCloseActiveWindow]
-		wait 50
+		;EVE:Execute[OpenJournal]
+		;wait 50
+		;EVE:Execute[CmdCloseActiveWindow]
+		;wait 50
 
 	    variable index:agentmission amIndex
 		variable iterator amIterator
@@ -1192,8 +1193,8 @@ objectdef obj_Agents
 		wait 60
 		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} Dialog: ${Agent[${This.AgentIndex}].Dialog}"]
 
-		EVE:Execute[OpenJournal]
-		wait 50
+		;EVE:Execute[OpenJournal]
+		;wait 50
 		EVE:Execute[CmdCloseActiveWindow]
 		wait 50
 
@@ -1202,8 +1203,19 @@ objectdef obj_Agents
 
 	function TurnInMission()
 	{
-		EVE:Execute[CmdCloseAllWindows]
-		wait 50
+		;EVE:Execute[CmdCloseAllWindows]
+		;wait 50
+		if ${EVEWindow[ByName,"Inventory"](exists)}
+		{
+			EVEWindow[byName, "Inventory"]:Close
+			wait 20
+			while ${EVEWindow[byName, "Inventory"](exists)}
+			{
+				EVEWindow[byName, "Inventory"]:Close
+				wait 50
+			}
+			wait 5
+		}
 
 		UI:UpdateConsole["obj_Agents: Starting conversation with agent ${This.ActiveAgent}."]
 		Agent[${This.AgentIndex}]:StartConversation
@@ -1235,8 +1247,24 @@ objectdef obj_Agents
 	    wait 60
 		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
 
-		EVE:Execute[OpenJournal]
-		wait 50
+		
+		; display your dialog options2
+	    variable index:dialogstring dsIndex2
+	    variable iterator dsIterator2
+
+	    Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex2]
+	    dsIndex2:GetIterator[dsIterator2]
+
+		if ${dsIterator2:First(exists)}
+		{
+			; Assume the first item is the "turn in mission" item.
+	        dsIterator2.Value:Say[${This.AgentID}]
+			Config.Agents:SetLastCompletionTime[${This.AgentName},${Time.Timestamp}]
+		}
+		
+		
+		;EVE:Execute[OpenJournal]
+		;wait 50
 		EVE:Execute[CmdCloseActiveWindow]
 		wait 50
 
@@ -1245,8 +1273,8 @@ objectdef obj_Agents
 
 	function QuitMission()
 	{
-		EVE:Execute[CmdCloseAllWindows]
-		wait 50
+		;EVE:Execute[CmdCloseAllWindows]
+		;wait 50
 
 		UI:UpdateConsole["obj_Agents: Starting conversation with agent ${This.ActiveAgent}."]
 		Agent[${This.AgentIndex}]:StartConversation
@@ -1277,8 +1305,8 @@ objectdef obj_Agents
 	    wait 60
 		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
 
-		EVE:Execute[OpenJournal]
-		wait 50
+		;EVE:Execute[OpenJournal]
+		;wait 50
 		EVE:Execute[CmdCloseActiveWindow]
 		wait 50
 
