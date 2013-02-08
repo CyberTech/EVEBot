@@ -677,7 +677,7 @@ objectdef obj_Cargo
 		call ${LSAAObject}.Open ${${LSAAObject}.ActiveCan}
 		EVEWindow["Inventory"].ChildWindow[${${LSAAObject}.ActiveCan}]:MakeActive
 		wait 1
-		
+
 		TripHauled:Set[0]
 		if ${CargoIterator:First(exists)}
 		{
@@ -688,7 +688,6 @@ objectdef obj_Cargo
 					TripHauled:Inc[${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}]}]
 					UI:UpdateConsole["TransferListToPOSCorpHangar(${LSAAObject}): Bulk Transferring Cargo: ${CargoIterator.Value.Name} * ${CargoIterator.Value.Quantity} Free Space: ${${LSAAObject}.CargoFreeSpace}"]
 					ListToMove:Insert[${CargoIterator.Value.ID}]
-					CargoIterator.Value:MoveTo[${${LSAAObject}.ActiveCan}, FleetHangar, ${CargoIterator.Value.Quantity}]
 					VolumeToMove:Inc[${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}]}]
 				}
 				else
