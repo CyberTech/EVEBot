@@ -8,7 +8,7 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 		LogPrefix:Set["${This.ObjectName}"]
 
 		ui -load interface/EVESkin.xml
-		ui -load -skin EVESkin interface/evebotgui.xml
+		ui -load -skin EVESkin interface/EVEBot.xml
 
 		This:LogSystemStats
 		This:CheckUIPosition
@@ -20,7 +20,7 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 
 	method Reload()
 	{
-		;ui -reload -skin EVESkin interface/evebotgui.xml
+		;ui -reload -skin EVESkin interface/EVEBot.xml
 		Logger:WriteQueue
 		This:PopulateBehavioralComboBox
 	}
@@ -73,7 +73,7 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 	method Shutdown()
 	{
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
-		ui -unload interface/evebotgui.xml
+		ui -unload interface/EVEBot.xml
 		ui -unload interface/EVESkin.xml
 	}
 

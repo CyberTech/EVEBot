@@ -114,14 +114,14 @@ objectdef obj_Social inherits obj_BaseClass
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		Event[EVE_OnChannelMessage]:AttachAtom[This:OnChannelMessage]
 
-		EVE:ActivateChannelMessageEvents
+		;EVE:ActivateChannelMessageEvents
 
 		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
 	{
-		EVE:ActivateChannelMessageEvents
+		;EVE:ActivateChannelMessageEvents
 		Event[EVE_OnChannelMessage]:DetachAtom[This:OnChannelMessage]
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}

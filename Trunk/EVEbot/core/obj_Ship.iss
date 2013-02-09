@@ -167,7 +167,7 @@ objectdef obj_Ship inherits obj_BaseClass
 				if ${Me.InSpace}
 				{
 					This:ValidateModuleTargets
-					
+
 					if ${RetryUpdateModuleList} == 10
 					{
 						Logger:Log["ERROR: obj_Ship:UpdateModuleList - No modules found. Pausing.", LOG_CRITICAL]
@@ -180,7 +180,7 @@ objectdef obj_Ship inherits obj_BaseClass
 					{
 						This:UpdateModuleList
 					}
-					
+
 					if !${This.LookupTableBuilt}
 					{
 						;if we have Weapon Enhance modules, slightly lower min range and raise max range
@@ -887,7 +887,7 @@ objectdef obj_Ship inherits obj_BaseClass
 
 		return ${CurrentTargetRange}
 	}
-	
+
 	method Print_ModuleList(string Title, string List)
 	{
 		variable iterator Module
@@ -933,7 +933,6 @@ objectdef obj_Ship inherits obj_BaseClass
 		This.ModuleList_TrackingComputer:Clear
 		This.ModuleList_GangLinks:Clear
 		This.ModuleList_ECCM:Clear
-		This.ModuleList_WeaponEnhance:Clear
 
 		MyShip:GetModules[This.ModuleList]
 
@@ -990,12 +989,6 @@ objectdef obj_Ship inherits obj_BaseClass
 
 			switch ${GroupID}
 			{
-				case GROUP_ECCM
-					This.ModuleList_ECCM:Insert[${Module.Value.ID}]
-					break
-				case GROUP_TRACKINGCOMPUTER
-					This.ModuleList_WeaponEnhance:Insert[${Module.Value.ID}]
-					break
 				case GROUPID_DAMAGE_CONTROL
 				case GROUPID_SHIELD_HARDENER
 				case GROUPID_ARMOR_HARDENERS
@@ -1072,7 +1065,6 @@ objectdef obj_Ship inherits obj_BaseClass
 		while ${Module:Next(exists)}
 
 		This:Print_ModuleList["Weapons:", 			"This.ModuleList_Weapon"]
-		This:Print_ModuleList["Weapon Enhance:",	"This.ModuleList_WeaponEnhance"]
 		This:Print_ModuleList["ECCM:",				"This.ModuleList_ECCM"]
 		This:Print_ModuleList["Active Resistance:",	"This.ModuleList_ActiveResists"]
 		This:Print_ModuleList["Passive:",			"This.ModuleList_Passive"]
@@ -1689,7 +1681,6 @@ objectdef obj_Ship inherits obj_BaseClass
 	Define_ModuleMethod(Activate_Tractor, Deactivate_Tractor, This.ModuleList_TractorBeams, TRUE)
 	Define_ModuleMethod(Activate_Weapons, Deactivate_Weapons, This.ModuleList_Weapon, FALSE)
 	Define_ModuleMethod(Activate_ECCM, Deactivate_ECCM, This.ModuleList_ECCM, FALSE)
-	Define_ModuleMethod(Activate_WeaponEnhance, Deactivate_WeaponEnhance, This.ModuleList_WeaponEnhance, FALSE)
 
 	member:bool IsCloaked()
 	{

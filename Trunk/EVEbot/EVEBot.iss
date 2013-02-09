@@ -50,7 +50,7 @@
 
 /* Behavior/Mode Includes */
 #includeoptional Behaviors/Testcases/_includes.iss
-#includeoptional Behaviors/_includes.iss
+;#includeoptional Behaviors/_includes.iss
 
 function atexit()
 {
@@ -91,8 +91,15 @@ function LoadThreads(string Label, string Path)
 	Files:GetFiles["${Path}"]
 	while (${Position:Inc}<=${Files.Files})
 	{
-		Log:Concat["${Files.File[${Position}]} "]
-		TimedCommand 0 runscript \"${Files.File[${Position}].FullPath}\"
+		if ${Files.File[${Position}].Size} == 0
+		{
+			Log:Concat["(${Files.File[${Position}]} Skipped, 0-byte) "]
+		}
+		else
+		{
+			Log:Concat["${Files.File[${Position}]} "]
+			TimedCommand 0 runscript \"${Files.File[${Position}].FullPath}\"
+		}
 	}
 	if ${Log.Length} > 0
 	{
@@ -237,7 +244,7 @@ function main()
 
 	; Clear the EVEBotBehaviors globalkeep now that we're done with it
 	TimedCommand 0 VariableScope:DeleteVariable["EVEBotBehaviors"]
-	
+
 	EVEBot.Loaded:Set[TRUE]
 	EVEBot:Pause["EVEBot: Loaded ${AppVersion}: Paused - Press Run"]
 
@@ -249,7 +256,7 @@ function main()
 			wait 10
 		}
 	}
-	
+
 
 	while TRUE
 	{
