@@ -142,7 +142,7 @@ objectdef obj_MissionBlacklist
 				break
 		}
 
-		Logger:Log["DEBUG: obj_MissionBlacklist: Searching for ${levelString} mission blacklist...", LOG_DEBUG]
+		;Logger:Log["DEBUG: obj_MissionBlacklist: Searching for ${levelString} mission blacklist...", LOG_DEBUG]
 
 		if ${This.levelIterator:First(exists)}
 		{
@@ -212,7 +212,7 @@ objectdef obj_Agents
 
 	member:int AgentIndex()
 	{
-		return ${Config.Agents.AgentIndex[${This.AgentName}]}
+		return ${Agent[${This.ActiveAgent}].Index}
 	}
 
 	member:int AgentID()
@@ -547,6 +547,11 @@ objectdef obj_Agents
 		if !${Station.Docked}
 		{
 			Logger:Log["obj_Agents.MoveToDropOff: ERROR!  Not Docked."]
+			call This.WarpToDropOffStation
+		}
+		if !${Station.Docked}
+		{
+			UI:UpdateConsole["obj_Agents.MoveToDropOff: ERROR!  Not Docked."]
 			call This.WarpToDropOffStation
 		}
 	}

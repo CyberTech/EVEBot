@@ -108,6 +108,12 @@ objectdef obj_JetCan
 		variable index:entity Cans
 		variable iterator Can
 		EVE:QueryEntities[Cans, "GroupID = GROUPID_CARGO_CONTAINER && Distance < LOOT_RANGE"]
+#if DEBUG_ENTITIES
+		UI:UpdateConsole["obj_JetCan:CurrentCan Entities: ${EVE.EntitiesCount}, Cans ${Cans.Used}", LOG_DEBUG]
+		EVE:PopulateEntities
+		EVE:QueryEntities[Cans, "GroupID = GROUPID_CARGO_CONTAINER && Distance < LOOT_RANGE"]
+		UI:UpdateConsole["obj_JetCan:CurrentCan Entities: ${EVE.EntitiesCount}, Cans ${Cans.Used} after refresh", LOG_DEBUG]
+#endif
 
 		Cans:GetIterator[Can]
 
@@ -115,11 +121,9 @@ objectdef obj_JetCan
 		{
 			do
 			{
-				if (${Can.Value.ID(exists)} && \
+				if ${Can.Value.ID(exists)} && \
 					${Can.Value.ID} > 0 && \
 					${This.AccessAllowed[${Can.Value.ID}]} && \
-					${Can.Value.ID} != ${This.ActiveCan} && \
-					${Can.Value.Distance} <= LOOT_RANGE) && \
 					!${This.FullCans.Contains[${Can.Value.ID}]}
 				{
 					This.ActiveCan:Set[${Can.Value.ID}]
@@ -154,13 +158,6 @@ objectdef obj_JetCan
 			ID:Set[${This.ActiveCan}]
 		}
 
-		if !${Entity[${ID}](exists)}
-		{
-			return FALSE
-		}
-
-		variable int OwnerID = ${Entity[${ID}].OwnerID}
-
 		if ${Entity[${ID}].HaveLootRights} || ${Entity[${ID}].IsAbandoned}
 		{
 			return TRUE
@@ -174,7 +171,6 @@ objectdef obj_JetCan
 		variable int Counter
 		while !${This.IsReady}
 		{
-			echo "JetCan:WaitForCan Waiting"
 			wait 20
 			Counter:Inc[2]
 			if ${Counter} > 30
@@ -274,15 +270,16 @@ objectdef obj_JetCan
 		}
 	}
 
-	member IsCargoOpen(int64 ID=0)
+	member:bool IsCargoOpen(int64 ID=0)
 	{
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
 			ID:Set[${This.ActiveCan}]
 		}
 
-		if ${Entity[${ID}].LootWindow(exists)}
+		if ${EVEWindow[Inventory].ChildWindow[${ID}](exists)}
 		{
+			EVEWindow[Inventory].ChildWindow[${ID}]:MakeActive
 			return TRUE
 		}
 		else
@@ -300,10 +297,22 @@ objectdef obj_JetCan
 
 		if !${This.IsCargoOpen[${ID}]}
 		{
-			return FALSE
+			return 0.0
 		}
 
-		return ${Entity[${ID}].CargoCapacity}
+		return ${EVEWindow[Inventory].ChildWindow[${ID}].Capacity}
+	}
+	member:float CargoUsedCapacity(int64 ID=0)
+	{
+		if (${ID} == 0 && ${This.ActiveCan} > 0)
+		{
+			ID:Set[${This.ActiveCan}]
+		}
+		if !${This.IsCargoOpen[${ID}]}
+		{
+			return 0.0
+		}
+		return ${EVEWindow[Inventory].ChildWindow[${ID}].UsedCapacity}
 	}
 
 	member:float CargoMinimumFreeSpace(int64 ID=0)
@@ -315,7 +324,7 @@ objectdef obj_JetCan
 
 		if !${This.IsCargoOpen[${ID}]}
 		{
-			return FALSE
+			return 0.0
 		}
 		if ${Config.Common.BotModeName.Equal[Miner]} && ${Config.Miner.IceMining}
 		{
@@ -336,14 +345,14 @@ objectdef obj_JetCan
 
 		if !${This.IsCargoOpen[${ID}]}
 		{
-			return FALSE
+			return 0.0
 		}
 
-		if ${Entity[${ID}].UsedCargoCapacity} < 0
+		if ${This.CargoUsedCapacity[${ID}]} < 0
 		{
 			return ${This.CargoCapacity}
 		}
-		return ${Math.Calc[${This.CargoCapacity}-${Entity[${ID}].UsedCargoCapacity}]}
+		return ${Math.Calc[${This.CargoCapacity}-${This.CargoUsedCapacity}]}
 	}
 
 	member:bool CargoFull(int64 ID=0)
@@ -427,8 +436,8 @@ objectdef obj_JetCan
 	{
 		; The current code didn't do anything and there is no actual way to close the JetCan right now
 		;(you can only close the main inv window), which IMO should be handled separately from the JetCan's window. So I commented it out. D
-		; -- wco12		
-		
+		; -- wco12
+
 		;if (${ID} == 0 && ${This.ActiveCan} > 0)
 		;{
 		;	ID:Set[${This.ActiveCan}]
@@ -443,7 +452,7 @@ objectdef obj_JetCan
 		;	{
 		;		wait 1
 		;	}
-		;} 
+		;}
 	}
 }
 
@@ -500,39 +509,6 @@ objectdef obj_CorpHangarArray inherits obj_JetCan
 
 		This.ActiveCan:Set[-1]
 		return ${This.ActiveCan}
-	}
-
-	member IsCargoOpen(int64 ID=0)
-	{
-		if (${ID} == 0 && ${This.ActiveCan} > 0)
-		{
-			ID:Set[${This.ActiveCan}]
-		}
-
-		if ${Entity[${ID}].StorageWindow(exists)}
-		{
-			return TRUE
-		}
-		else
-		{
-			return FALSE
-		}
-	}
-
-	member:float CargoCapacity(int64 ID=0)
-	{
-		if (${ID} == 0 && ${This.ActiveCan} > 0)
-		{
-			ID:Set[${This.ActiveCan}]
-		}
-
-		if !${This.IsCargoOpen[${ID}]}
-		{
-			return FALSE
-		}
-
-		return ${Entity[${ID}].CargoCapacity}
-		;return 1400000
 	}
 
 	member:bool AccessAllowed(int64 ID)
@@ -597,24 +573,6 @@ objectdef obj_SpawnContainer inherits obj_JetCan
 		This.ActiveCan:Set[-1]
 		return ${This.ActiveCan}
 	}
-
-	member:float CargoCapacity(int64 ID=0)
-	{
-		if (${ID} == 0 && ${This.ActiveCan} > 0)
-		{
-			ID:Set[${This.ActiveCan}]
-		}
-
-		if !${This.IsCargoOpen[${ID}]}
-		{
-			return FALSE
-		}
-
-		/* TODO: hard coded capacity b/c of isxeve cargocapcity breakage */
-		return ${Entity[${ID}].CargoCapacity}
-		;return 1400000
-	}
-
 }
 
 objectdef obj_LargeShipAssemblyArray inherits obj_JetCan
@@ -670,23 +628,6 @@ objectdef obj_LargeShipAssemblyArray inherits obj_JetCan
 
 		This.ActiveCan:Set[-1]
 		return ${This.ActiveCan}
-	}
-
-	member:float CargoCapacity(int64 ID=0)
-	{
-		if (${ID} == 0 && ${This.ActiveCan} > 0)
-		{
-			ID:Set[${This.ActiveCan}]
-		}
-
-		if !${This.IsCargoOpen[${ID}]}
-		{
-			return FALSE
-		}
-
-		/* TODO: hard coded capacity b/c of isxeve cargocapcity breakage */
-		return ${Entity[${ID}].CargoCapacity}
-		;return 18500500
 	}
 
 	member:bool AccessAllowed(int64 ID)
@@ -763,22 +704,6 @@ objectdef obj_XLargeShipAssemblyArray inherits obj_JetCan
 
 		This.ActiveCan:Set[-1]
 		return ${This.ActiveCan}
-	}
-
-	member:float CargoCapacity(int64 ID=0)
-	{
-		if (${ID} == 0 && ${This.ActiveCan} > 0)
-		{
-			ID:Set[${This.ActiveCan}]
-		}
-
-		if !${This.IsCargoOpen[${ID}]}
-		{
-			return FALSE
-		}
-
-		return ${Entity[${ID}].CargoCapacity}
-		;return 18500500
 	}
 
 	member:bool AccessAllowed(int64 ID)

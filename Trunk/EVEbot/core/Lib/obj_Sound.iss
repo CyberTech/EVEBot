@@ -30,7 +30,7 @@ objectdef obj_Sound inherits obj_BaseClass
 	{
 		;Event[EVENT_EVEBOT_ONFRAME]:DetachAtom
 	}
-	
+
 	method TryPlaySound(string Filename)
 	{
 		if !${Config.Sound.EnableSound}
@@ -39,6 +39,7 @@ objectdef obj_Sound inherits obj_BaseClass
 		if ${Math.Calc64[${m_LastSoundTime} + ${m_SoundDelay}]} < ${LavishScript.RunningTime}
 		{
 			PlaySound "${Filename}"
+			;System:APICall[${System.GetProcAddress[WinMM.dll,PlaySound].Hex},Filename.String,0,"Math.Dec[22001]"]
 			m_LastSoundTime:Set[${LavishScript.RunningTime}]
 		}
 	}
@@ -66,5 +67,14 @@ objectdef obj_Sound inherits obj_BaseClass
 	method PlayWarningSound()
 	{
 		This:TryPlaySound[WARNSOUND]
+	}
+	method Speak(string Phrase)
+	{
+		if !${Config.Common.UseSound}
+			return
+		if ${Speech(exists)}
+		{
+			Speech:Speak[-speed,0.7,${Phrase}]
+		}
 	}
 }

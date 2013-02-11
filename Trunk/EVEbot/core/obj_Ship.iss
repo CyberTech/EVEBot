@@ -89,6 +89,7 @@ objectdef obj_Ship inherits obj_BaseClass
 	variable bool CargoIsOpen
 	variable int RetryUpdateModuleList
 	variable index:module ModuleList
+	variable index:module ModuleList_ShieldTransporters
 	variable index:module ModuleList_MiningLaser
 	variable index:module ModuleList_Weapon
 	variable index:module ModuleList_ECCM
@@ -112,8 +113,7 @@ objectdef obj_Ship inherits obj_BaseClass
 	variable bool m_WaitForCapRecharge = FALSE
 	variable int m_CargoSanityCounter = 0
 	variable bool InteruptWarpWait = FALSE
-	variable string m_Type
-	variable int m_TypeID
+	variable bool AlertedInPod
 
 	variable collection:float HybridNameModPairs
 	variable collection:float AmmoNameModPairs
@@ -932,6 +932,7 @@ objectdef obj_Ship inherits obj_BaseClass
 		This.ModuleList_TargetPainter:Clear
 		This.ModuleList_TrackingComputer:Clear
 		This.ModuleList_GangLinks:Clear
+		This.ModuleList_ShieldTransporters:Clear
 		This.ModuleList_ECCM:Clear
 
 		MyShip:GetModules[This.ModuleList]
@@ -989,6 +990,9 @@ objectdef obj_Ship inherits obj_BaseClass
 
 			switch ${GroupID}
 			{
+				case GROUPID_SHIELD_TRANSPORTER
+					This.ModuleList_ShieldTransporters:Insert[${ModuleIter.Value.ID}]
+					break
 				case GROUPID_DAMAGE_CONTROL
 				case GROUPID_SHIELD_HARDENER
 				case GROUPID_ARMOR_HARDENERS
@@ -1024,12 +1028,6 @@ objectdef obj_Ship inherits obj_BaseClass
 					continue
 				case GROUPID_ARMOR_REPAIRERS
 					This.ModuleList_Repair_Armor:Insert[${Module.Value.ID}]
-					continue
-				case GROUPID_DATA_MINER
-					if ${TypeID} == TYPEID_SALVAGER
-					{
-						This.ModuleList_Salvagers:Insert[${Module.Value.ID}]
-					}
 					continue
 				case GROUPID_SALVAGER
 					This.ModuleList_Salvagers:Insert[${Module.Value.ID}]
@@ -1078,6 +1076,8 @@ objectdef obj_Ship inherits obj_BaseClass
 		This:Print_ModuleList["Stasis Webs:",		"This.ModuleList_StasisWeb"]
 		This:Print_ModuleList["Sensor Boost:",		"This.ModuleList_SensorBoost"]
 		This:Print_ModuleList["Target Painter:",	"This.ModuleList_TargetPainter"]
+		This:Print_ModuleList["Shield Transporters:",	"This.ModuleList_ShieldTransporters"]
+
 	}
 
 	method UpdateBaselineUsedCargo()
@@ -1491,13 +1491,29 @@ objectdef obj_Ship inherits obj_BaseClass
 		}
 		while ${Module:Next(exists)}
 	}
-	function ActivateFreeMiningLaser()
+
+	function ActivateFreeMiningLaser(int64 id=-1)
 	{
 		Validate_Ship()
 
 		variable string Slot
-		variable iterator Module
 
+		if ${id.Equal[-1]}
+		{
+			id:Set[${Me.ActiveTarget.ID}]
+		}
+		if !${Entity[${id}](exists)}
+		{
+			UI:UpdateConsole["ActivateFreeMiningLaser: Target ${id} not found", LOG_DEBUG]
+			return
+		}
+		if ${Entity[${id}].CategoryID} != ${Asteroids.AsteroidCategoryID}
+		{
+			UI:UpdateConsole["Error: Mining Lasers may only be used on Asteroids"]
+			return
+		}
+
+		variable iterator Module
 		This.ModuleList_MiningLaser:GetIterator[Module]
 		if ${Module:First(exists)}
 		do
@@ -1512,7 +1528,7 @@ objectdef obj_Ship inherits obj_BaseClass
 				if ${Module.Value.SpecialtyCrystalMiningAmount(exists)}
 				{
 					variable string OreType
-					OreType:Set[${Me.ActiveTarget.Name.Token[2,"("]}]
+					OreType:Set[${Entity[${id}].Name.Token[2,"("]}]
 					OreType:Set[${OreType.Token[1,")"]}]
 					;OreType:Set[${OreType.Replace["(",]}]
 					;OreType:Set[${OreType.Replace[")",]}]
@@ -1520,7 +1536,7 @@ objectdef obj_Ship inherits obj_BaseClass
 				}
 
 				Logger:Log["Activating: ${Slot}: ${Module.Value.ToItem.Name}"]
-				Module.Value:Activate
+				Module.Value:Activate[${id}]
 				wait 25
 				;TimedCommand ${Math.Rand[600]:Inc[300]} "Script[EVEBot].VariableScope.Ship:CycleMiningLaser[OFF, ${Slot}]"
 				return
@@ -1530,12 +1546,21 @@ objectdef obj_Ship inherits obj_BaseClass
 		while ${Module:Next(exists)}
 	}
 
-	function ActivateFreeTractorBeam()
+	function ActivateFreeTractorBeam(int64 id=-1)
 	{
 		variable string Slot
 
 		if !${Me.Ship(exists)}
 		{
+			return
+		}
+		if ${id.Equal[-1]}
+		{
+			id:Set[${Me.ActiveTarget.ID}]
+		}
+		if !${Entity[${id}](exists)}
+		{
+			UI:UpdateConsole["ActivateFreeTractorBeam: Target ${id} not found", LOG_DEBUG]
 			return
 		}
 
@@ -1554,11 +1579,50 @@ objectdef obj_Ship inherits obj_BaseClass
 				Slot:Set[${Module.Value.ToItem.Slot}]
 
 				Logger:Log["Activating: ${Slot}: ${Module.Value.ToItem.Name}"]
-				Module.Value:Activate
-				wait 25
+				Module.Value:Activate[${id}]
 				return
 			}
+		}
+		while ${Module:Next(exists)}
+	}
+
+	function ActivateFreeShieldTransporter(int64 id=-1)
+	{
+		variable string Slot
+
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+		if ${id.Equal[-1]}
+		{
+			id:Set[${Me.ActiveTarget.ID}]
+		}
+		if !${Entity[${id}](exists)}
+		{
+			UI:UpdateConsole["ActivateFreeShieldTransporter: Target ${id} not found", LOG_DEBUG]
+			return
+		}
+
+		variable iterator Module
+
+		This.ModuleList_ShieldTransporters:GetIterator[Module]
+		if ${Module:First(exists)}
+		do
+		{
+			if !${Module.Value.IsActive} && \
+				!${Module.Value.IsGoingOnline} && \
+				!${Module.Value.IsDeactivating} && \
+				!${Module.Value.IsChangingAmmo} &&\
+				!${Module.Value.IsReloadingAmmo}
+			{
+				Slot:Set[${Module.Value.ToItem.Slot}]
+
+				Logger:Log["Activating: ${Slot}: ${Module.Value.ToItem.Name}"]
+				Module.Value:Activate[${id}]
+				return
 			}
+		}
 		while ${Module:Next(exists)}
 	}
 
@@ -1587,7 +1651,6 @@ objectdef obj_Ship inherits obj_BaseClass
 
 				Logger:Log["Activating: ${Slot}: ${Module.Value.ToItem.Name}"]
 				Module.Value:Activate
-				wait 25
 				return
 			}
 			wait 10
@@ -1624,30 +1687,7 @@ objectdef obj_Ship inherits obj_BaseClass
 			Logger:Log["Opening Ship Cargohold"]
 			MyShip:Open
 			wait WAIT_CARGO_WINDOW
-
-			; Note that this has a race condition. If the window populates fully before we check the CaptionCount
-			; OR if the cargo hold is empty, then we will sit forever.  Hence the LoopCheck test
-			; -- CyberTech
-			variable int CaptionCount
-			variable int LoopCheck
-
-			LoopCheck:Set[0]
-			CaptionCount:Set[${EVEWindow[ByCaption,"active ship"].Caption.Token[2,"["].Token[1,"]"]}]
-			;Logger:Log["obj_Ship: Waiting for cargo to load: CaptionCount: ${CaptionCount}", LOG_DEBUG]
-			variable index:item MyCargo
-			MyShip:GetCargo[MyCargo]
-			while ( ${CaptionCount} > ${MyCargo.Used} && \
-					${LoopCheck} < 10 )
-			{
-				Logger:Log["obj_Ship: Waiting for cargo to load...(${LoopCheck})", LOG_MINOR]
-				while !${This.IsCargoOpen}
-				{
-					wait 1
-				}
-				wait 10
-				LoopCheck:Inc
-				MyShip:GetCargo[MyCargo]
-			}
+			EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipCargo]:MakeActive
 		}
 		EVEWindow[ByItemID,${MyShip.ID}]:StackAll
 		wait 5
@@ -1660,7 +1700,7 @@ objectdef obj_Ship inherits obj_BaseClass
 		if ${This.IsCargoOpen}
 		{
 			Logger:Log["Closing Ship Cargohold"]
-			EVEWindow[ByCaption,"active ship"]:Close
+			EVEWindow["Inventory"]:Close
 			wait WAIT_CARGO_WINDOW
 			while ${This.IsCargoOpen}
 			{
@@ -1762,25 +1802,32 @@ objectdef obj_Ship inherits obj_BaseClass
 		variable int GroupID
 		variable int TypeID
 
-		if ${Me.InSpace}
+		if ${Me.InSpace} && !${Me.InStation}
 		{
 			GroupID:Set[${MyShip.ToEntity.GroupID}]
 			TypeID:Set[${MyShip.ToEntity.TypeID}]
 		}
-		else
+		elseif !${Me.InSpace} && ${Me.InStation}
 		{
 			GroupID:Set[${MyShip.ToItem.GroupID}]
 			TypeID:Set[${MyShip.ToItem.TypeID}]
 		}
+		else
+		{
+			return FALSE
+		}
 		if ${ShipName.Right[10].Equal["'s Capsule"]} || \
 			${GroupID} == GROUP_CAPSULE
 		{
-			if ${This.m_TypeID} != ${TypeID}
+			if !${This.AlertedInPod}
 			{
-				This.RetryUpdateModuleList:Set[1]
+				Sound:Speak["Critical Information: ${Me.Name} is in a pod"]
+				UI:UpdateConsole["Critical Information: ${Me.Name} is in a pod", LOG_CRITICAL]
+				This.AlertedInPod:Set[TRUE]
 			}
 			return TRUE
 		}
+		This.AlertedInPod:Set[FALSE]
 		return FALSE
 	}
 
@@ -1901,7 +1948,7 @@ objectdef obj_Ship inherits obj_BaseClass
 		{
 			return ${MyShip.ToItem.Type}
 		}
-		else
+		elseif ${Me.InSpace} && !${Me.InStation}
 		{
 			return ${Me.ToEntity.Type}
 		}
@@ -1913,7 +1960,7 @@ objectdef obj_Ship inherits obj_BaseClass
 		{
 			return ${MyShip.ToItem.TypeID}
 		}
-		else
+		elseif ${Me.InSpace} && !${Me.InStation}
 		{
 			return ${Me.ToEntity.TypeID}
 		}

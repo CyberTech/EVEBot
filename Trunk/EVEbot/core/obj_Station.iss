@@ -53,8 +53,21 @@ objectdef obj_Station
 
 	member IsHangarOpen()
 	{
-		if ${EVEWindow[ByCaption,"item hangar"](exists)}
+		if ${EVEWindow[Inventory].ChildWindow[StationItems](exists)}
 		{
+			EVEWindow[Inventory].ChildWindow[StationItems]:MakeActive
+			return TRUE
+		}
+		else
+		{
+			return FALSE
+		}
+	}
+	member IsCorpHangarOpen()
+	{
+		if ${EVEWindow[Inventory].ChildWindow[StationCorpHangars](exists)}
+		{
+			EVEWindow[Inventory].ChildWindow[StationCorpHangars]:MakeActive
 			return TRUE
 		}
 		else
@@ -75,7 +88,7 @@ objectdef obj_Station
 		return FALSE
 	}
 
-	member:bool DockedAtStation(int StationID)
+	member:bool DockedAtStation(int64 StationID)
 	{
 		if ${EVEBot.SessionValid} && \
 			!${Me.InSpace} && \
@@ -109,25 +122,25 @@ objectdef obj_Station
 		}
 	}
 
-	function CloseHangar()
+	function OpenCorpHangar()
 	{
-		if !${This.Docked}
+		if ${This.Docked} == FALSE
 		{
 			return
 		}
-
-		if ${This.IsHangarOpen}
+		if !${This.IsCorpHangarOpen}
 		{
-			Logger:Log["Closing Cargo Hangar"]
-			EVEWindow[ByCaption,"item hangar"]:Close
+			UI:UpdateConsole["Opening Corp Cargo Hangar"]
+			EVE:Execute[OpenHangarFloor]
 			wait WAIT_CARGO_WINDOW
-			while ${This.IsHangarOpen}
+			while !${This.IsCorpHangarOpen}
 			{
 				wait 1
 			}
 			wait 10
 		}
 	}
+
 
 	function GetStationItems()
 	{
@@ -222,7 +235,7 @@ objectdef obj_Station
 			{
 				Entity[${StationID}]:Dock
 				Logger:Log["Approaching docking range..."]
-				wait 30
+				wait 200 ${This.DockedAtStation[${StationID}]}
 			}
 			while (${Entity[${StationID}].Distance} > DOCKING_RANGE)
 
@@ -256,7 +269,7 @@ objectdef obj_Station
 	function Dock()
 	{
 		variable int Counter = 0
-		variable int StationID = ${Entity[CategoryID = CATEGORYID_STATION && Name = ${Config.Common.HomeStation}].ID}
+		variable int64 StationID = ${Entity[CategoryID = CATEGORYID_STATION && Name = ${Config.Common.HomeStation}].ID}
 
 		if ${Me.InStation}
 		{
