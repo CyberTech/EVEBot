@@ -19,13 +19,15 @@ function main()
 	Me:UpdateMyOrders
 	echo "- UpdateMyOrders took ${Math.Calc[${Script.RunningTime}-${RTime}]} ms."
 
-	waitframe
+	wait 10
 
 	RTime:Set[${Script.RunningTime}]
-	Me:GetMyOrders[OrderIndex]
-	echo "- GetMyOrders took ${Math.Calc[${Script.RunningTime}-${RTime}]} ms."
+	while !${Me:GetMyOrders[OrderIndex](exists)}
+	{
+		wait 10
+	}
+	echo "- GetMyOrders took ${Math.Calc[${Script.RunningTime}-${RTime}]} ms for ${OrderIndex.Used} orders"
 
-	waitframe
 
 	variable iterator OrderIterator
 	OrderIndex:GetIterator[OrderIterator]

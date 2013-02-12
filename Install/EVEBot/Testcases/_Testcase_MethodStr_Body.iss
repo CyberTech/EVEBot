@@ -18,7 +18,6 @@
 	{
 		noop ${${MethodStr}\[TestIndex\]}
 	}
-
 	echo " * ${MethodStr} returned ${TestIndex.Used} ${ItemTest.TypeName}s in ${Math.Calc[(${Script.RunningTime}-${CallTime}) / 1000]} seconds"
 
 	if ${TestIterator:First(exists)}
@@ -28,5 +27,5 @@
 	}
 	while ${TestIterator:Next(exists)}
 
-	echo "* Testcase: ${MethodStr} completed in ${Math.Calc[(${Script.RunningTime}-${StartTime}) / 1000]} seconds"
+	echo "* Testcase: ${MethodStr} completed against ${TestIndex.Used} results in ${Math.Calc[(${Script.RunningTime}-${StartTime}) / 1000]} seconds"
 	echo " "
