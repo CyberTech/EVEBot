@@ -16,35 +16,42 @@ function main()
 {
 	variable index:int64 ActiveDroneIDList
 	variable index:activedrone ActiveDroneList
+	variable index:item DroneBayDrones
 
 	while TRUE
 	{
-		echo Drone Bay Capacity: ${Me.Ship.DronebayCapacity}
-#echo needs rewritten to use methods
-		echo Drones in Bay: ${Me.Ship.GetDrones}
+		UI:UpdateConsole["Drone Bay Capacity: ${MyShip.DronebayCapacity}"]
 
-		UI:UpdateConsole["Launching drones..."]
-		Me.Ship:LaunchAllDrones
+		MyShip:OpenCargo
 		wait 30
+		
+		MyShip:GetDrones[DroneBayDrones]
+		UI:UpdateConsole["Launching ${DroneBayDrones.Used} drones..."]
+		EVE:LaunchDrones[DroneBayDrones]
+		wait 50
+		
+		Me:GetActiveDrones[ActiveDroneList]
+		UI:UpdateConsole["Drones in Space after 5 seconds: ${ActiveDroneList.Used}"]
 
-		echo "Drones in Space: ${Me.GetActiveDrones[ActiveDroneList]}"
+		UI:UpdateConsole[" Drone 1 ID: ${ActiveDroneList.Get[1].ID}"]
+		UI:UpdateConsole[" Drone 1 Name: ${ActiveDroneList.Get[1].ToEntity.Name}"]
+		UI:UpdateConsole[" Drone 1 Type: ${ActiveDroneList.Get[1].ToEntity.Type}"]
+		UI:UpdateConsole[" Drone 1 Owner: ${ActiveDroneList.Get[1].Owner}"]
+		UI:UpdateConsole[" Drone 1 Controller: ${ActiveDroneList.Get[1].Owner}"]
 
-		echo " Drone ID: ${ActiveDroneList.Get[1].ID}"
-		echo " Drone Name: ${ActiveDroneList.Get[1].ToEntity}"
-		echo " Drone Owner: ${ActiveDroneList.Get[1].Owner}"
-		echo " Drone Controller: ${ActiveDroneList.Get[1].Owner}"
-
-		echo " Engaging Drones..."
+		;UI:UpdateConsole[" Engaging Drones..."]
 		;EVE:DronesEngageMyTarget[ActiveDroneIDList]
 
+		wait 20
 		Me:GetActiveDroneIDs[ActiveDroneIDList]
 		while ${ActiveDroneIDList.Used}
 		{
-			echo " Recalling ${ActiveDroneIDList.Used} Drones..."
+			UI:UpdateConsole[" Recalling ${ActiveDroneIDList.Used} Drones..."]
 			EVE:DronesReturnToDroneBay[ActiveDroneIDList]
 			wait 50
 			Me:GetActiveDroneIDs[ActiveDroneIDList]
 		}
 		wait 20
+		break
 	}
 }
