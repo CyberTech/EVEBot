@@ -79,6 +79,8 @@ function main()
 	turbo 4000
 
 	echo "${Time} EVEBot: Loading Core Objects..."
+	declarevariable Sound obj_Sound script
+	declarevariable ChatIRC obj_IRC script
 	declarevariable Asteroids obj_Asteroids script
 	declarevariable Ship obj_Ship script
 	declarevariable Station obj_Station script
@@ -92,12 +94,10 @@ function main()
 	declarevariable Social obj_Social script
 	declarevariable Fleet obj_Fleet script
 	declarevariable Assets obj_Assets script
-	declarevariable ChatIRC obj_IRC script
 	declarevariable Safespots obj_Safespots script
 	declarevariable Ammospots obj_Ammospots script
 	declarevariable Belts obj_Belts script
 	declarevariable Targets obj_Targets script
-	declarevariable Sound obj_Sound script
 	declarevariable Agents obj_Agents script
 	declarevariable Missions obj_Missions script
 	declarevariable Market obj_Market script
@@ -162,7 +162,7 @@ function main()
 			wait 10
 		}
 	}
-	
+
 	UI:UpdateConsole["-=Paused: Press Run-="]
 	Script:Pause
 
@@ -191,8 +191,8 @@ function main()
 			if !${ChatIRC.IsConnected}
 			{
 				call ChatIRC.Connect
-			}		
-		#endif		
+			}
+		#endif
 	}
 }
 
