@@ -177,8 +177,8 @@ objectdef obj_EVEBotUI
 	{
 		while ${This.ConsoleBuffer.Peek(exists)}
 		{
-			UIElement[StatusConsole@Status@EvEBotOptionsTab@EVEBot]:Echo[${This.ConsoleBuffer.Peek}]
-			redirect -append "${This.LogFile}" Echo "${This.ConsoleBuffer.Peek}"
+			UIElement[StatusConsole@Status@EvEBotOptionsTab@EVEBot]:Echo[${This.ConsoleBuffer.Peek.Escape}]
+			redirect -append "${This.LogFile}" Echo "${This.ConsoleBuffer.Peek.Escape}"
 			This.ConsoleBuffer:Dequeue
 		}
 	}
