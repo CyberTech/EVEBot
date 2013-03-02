@@ -664,7 +664,10 @@ objectdef obj_Ship
 				case GROUP_ECCM
 					This.ModuleList_ECCM:Insert[${ModuleIter.Value.ID}]
 					break
+				case GROUP_MININGLASER
+				case GROUP_STRIPMINER
 				case GROUPID_FREQUENCY_MINING_LASER
+					This.ModuleList_MiningLaser:Insert[${ModuleIter.Value.ID}]
 					break
 				case GROUPID_SHIELD_BOOSTER
 					This.ModuleList_Regen_Shield:Insert[${ModuleIter.Value.ID}]
