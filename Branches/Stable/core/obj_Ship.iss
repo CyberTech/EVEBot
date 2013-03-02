@@ -622,11 +622,11 @@ objectdef obj_Ship
 
 			UI:UpdateConsole["DEBUG: ID: ${ModuleIter.Value.ID} Activatable: ${ModuleIter.Value.IsActivatable} Name: ${ModuleIter.Value.ToItem.Name} Slot: ${ModuleIter.Value.ToItem.Slot} Group: ${ModuleIter.Value.ToItem.Group} ${GroupID} Type: ${ModuleIter.Value.ToItem.Type} ${TypeID}", LOG_DEBUG]
 
-			if !${ModuleIter.Value.IsActivatable}
-			{
-				This.ModuleList_Passive:Insert[${ModuleIter.Value.ID}]
-				continue
-			}
+			;if !${ModuleIter.Value.IsActivatable}
+			;{
+			;	This.ModuleList_Passive:Insert[${ModuleIter.Value.ID}]
+			;	continue
+			;}
 
 			if ${ModuleIter.Value.MiningAmount(exists)}
 			{
