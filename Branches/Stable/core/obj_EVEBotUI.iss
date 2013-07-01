@@ -135,13 +135,13 @@ objectdef obj_EVEBotUI
 
 		if ${StatusMessage(exists)}
 		{
-			if ${StatusMessage.Equal["${This.PreviousMsg}"]}
+			if ${StatusMessage.Escape.Equal["${This.PreviousMsg.Escape}"]}
 			{
 				Filter:Set[TRUE]
 			}
 			else
 			{
-				This.PreviousMsg:Set["${StatusMessage}"]
+				This.PreviousMsg:Set["${StatusMessage.Escape}"]
 			}
 
 			msg:Set["${Time.Time24}: "]
@@ -150,7 +150,7 @@ objectdef obj_EVEBotUI
 			{
   				msg:Concat[" "]
   			}
-  			msg:Concat["${StatusMessage}"]
+  			msg:Concat["${StatusMessage.Escape}"]
 
 			if ${This.Reloaded}
 			{
