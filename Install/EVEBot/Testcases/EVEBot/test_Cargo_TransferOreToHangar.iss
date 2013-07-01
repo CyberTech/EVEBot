@@ -1,7 +1,7 @@
 #define TESTCASE 1
 
 /*
-	Test EVEBot obj_Cargo.TransfeOreToHangar
+	Test EVEBot obj_Cargo.TransferCargoToStationHangar
 
 	Revision $Id$
 
@@ -11,11 +11,11 @@
 */
 
 #include Scripts/EVEBot/Support/TestAPI.iss
-#include ../core/obj_EVEBot.iss
-#include ../core/obj_Drones.iss
-#include ../core/obj_Ship.iss
-#include ../core/obj_Station.iss
-#include ../core/obj_Cargo.iss
+#include ../../Branches/Stable_Patches/core/obj_EVEBot.iss
+#include ../../Branches/Stable_Patches/core/obj_Drones.iss
+#include ../../Branches/Stable_Patches/core/obj_Ship.iss
+#include ../../Branches/Stable_Patches/core/obj_Station.iss
+#include ../../Branches/Stable_Patches/core/obj_Cargo.iss
 
 
 function main()
@@ -27,5 +27,5 @@ function main()
 	declarevariable Station obj_Station global
 	declarevariable Cargo obj_Cargo global
 
-	call Cargo.TransferOreToHangar
+	call Cargo.TransferCargoToStationHangar
 }
