@@ -588,11 +588,10 @@ objectdef obj_Ship
 		This.ModuleList_GangLinks:Clear
 		This.ModuleList_ShieldTransporters:Clear
 
-		Me.Ship:GetModules[This.ModuleList]
 
-		if !${This.ModuleList.Used} && ${Me.Ship.HighSlots} > 0
+		if !${Me.Ship:GetModules[This.ModuleList]}
 		{
-			UI:UpdateConsole["ERROR: obj_Ship:UpdateModuleList - No modules found. Retrying in a few seconds - If this ship has slots, you must have at least one module equipped, of any type.", LOG_CRITICAL]
+			UI:UpdateConsole["ERROR: obj_Ship:UpdateModuleList - GetModules failed. Retrying in a few seconds.", LOG_CRITICAL]
 			RetryUpdateModuleList:Inc
 			return
 		}
