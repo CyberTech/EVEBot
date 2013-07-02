@@ -14,7 +14,6 @@
  *		Me.Fleet.WingName
  *		Me.Fleet.Size
  *		FleetMember - All Members
- *		FleetMember:SetScout
  *		FleetMember:SetBooster
  *
  *	Requirements:
@@ -110,17 +109,6 @@ function main(string Invitee)
 
 				echo " "
 				echo " Testing Methods"
-				echo "  Setting Scout Status ON"
-					FleetMember.Value:SetScout[1]
-					wait 20
-					echo "  " FleetMember.Job ${FleetMember.Value.Job}
-					echo "  " FleetMember.JobID ${FleetMember.Value.JobID}
-
-				echo "  Setting Scout Status OFF"
-					FleetMember.Value:SetScout[0]
-					wait 20
-					echo "  " FleetMember.Job ${FleetMember.Value.Job}
-					echo "  " FleetMember.JobID ${FleetMember.Value.JobID}
 
 				echo "  Setting Booster Status FLEET"
 					FleetMember.Value:SetBooster[1]
