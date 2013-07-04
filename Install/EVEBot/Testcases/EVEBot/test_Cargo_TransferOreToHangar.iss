@@ -20,12 +20,12 @@
 
 function main()
 {
-	echo "obj_Cargo.TransfeOreToHangar: Test Case:"
+	echo "obj_Cargo.TransferOreToStationHangar: Test Case:"
 
 	declarevariable EVEBot obj_EVEBot global
 	declarevariable Ship obj_Ship global
 	declarevariable Station obj_Station global
 	declarevariable Cargo obj_Cargo global
 
-	call Cargo.TransferCargoToStationHangar
+	call Cargo.TransferOreToStationHangar
 }
