@@ -1,20 +1,20 @@
 /*
 	The stealth hauler object
-	
-	The obj_StealthHauler object is a bot mode designed to be used with 
+
+	The obj_StealthHauler object is a bot mode designed to be used with
 	obj_Freighter bot module in EVEBOT.  It will move cargo from point A
 	to point B in a covert ops or force recon ship.  It will stay cloaked
 	the entire time and it will attempt to avoid bubbles and 'dictors.
-	
-	-- GliderPro	
+
+	-- GliderPro
 */
 
 /* obj_StealthHauler is a "bot-mode" which is similar to a bot-module.
- * obj_StealthHauler runs within the obj_Freighter bot-module.  It would 
- * be very straightforward to turn obj_StealthHauler into a independent 
+ * obj_StealthHauler runs within the obj_Freighter bot-module.  It would
+ * be very straightforward to turn obj_StealthHauler into a independent
  * bot-module in the future if it outgrows its place in obj_Freighter.
  */
- 
+
 objectdef obj_StealthHauler
 {
 	variable string SVN_REVISION = "$Rev$"
@@ -23,7 +23,7 @@ objectdef obj_StealthHauler
 	variable index:int apRoute
 	variable index:int apWaypoints
 	variable iterator  apIterator
-	
+
 	method Initialize()
 	{
 		Logger:Log["obj_StealthHauler: Initialized", LOG_MINOR]
@@ -32,10 +32,10 @@ objectdef obj_StealthHauler
 	method Shutdown()
 	{
 	}
-	
+
 	method SetState()
 	{
-		
+
 	}
 
 	function ProcessState()
@@ -48,11 +48,11 @@ objectdef obj_StealthHauler
 		{
 			if ${apRoute.Used} == 0
 			{
-				EVE:GetToDestinationPath[apRoute]	
+				EVE:GetToDestinationPath[apRoute]
 				EVE:GetWaypoints[apWaypoints]
 				apRoute:GetIterator[apIterator]
 				apIterator:First
-				
+
 				if ${apRoute.Used} == 0
 				{	/* must be at the destination */
 					Me:SetVelocity[${Math.Calc[90 + ${Math.Rand[9]} + ${Math.Calc[0.10 * ${Math.Rand[9]}]}]}]
@@ -68,7 +68,7 @@ objectdef obj_StealthHauler
 				{
 					variable index:entity sgIndex
 					variable iterator     sgIterator
-					EVE:GetEntities[sgIndex,GroupID, GROUP_STARGATE]
+					EVE:QueryEntities[sgIndex, "GroupID = GROUP_STARGATE"]
 					sgIndex:GetIterator[sgIterator]
 					if ${sgIterator:First(exists)}
 					{
@@ -83,7 +83,7 @@ objectdef obj_StealthHauler
 							}
 						}
 						while ${sgIterator:Next(exists)}
-						
+
 						if ${sgIterator.Value(exists)}
 						{
 							Logger:Log["Setting speed to full throttle"]
@@ -124,7 +124,7 @@ objectdef obj_StealthHauler
 						{
 							Logger:Log["obj_StealthHauler: Could not find stargate to ${Universe[${apIterator.Value}].Name}!!", LOG_CRITICAL]
 						}
-					}	
+					}
 				}
 				else
 				{	/* must be at the destination */
@@ -134,7 +134,7 @@ objectdef obj_StealthHauler
 					wait 5
 					Ship:Activate_Cloak
 				}
-				
+
 			}
 		}
 		else

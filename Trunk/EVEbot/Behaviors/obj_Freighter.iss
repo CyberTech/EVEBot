@@ -216,7 +216,7 @@ objectdef obj_Freighter
 			}
 			else
 			{	/* move from ship to hangar */
-				call Cargo.TransferCargoToHangar
+				call Cargo.TransferCargoToStationHangar
 			}
 		}
 		else
@@ -261,7 +261,7 @@ objectdef obj_Freighter
 	{
 		variable int64 nextStationID
 
-		if !${EVEWindow[ByCaption,"ASSETS"](exists)}
+		if !${EVEWindow[ByCaption, "Assets"](exists)}
 		{
 			EVE:Execute[OpenAssets]
 		}
@@ -352,7 +352,7 @@ objectdef obj_Freighter
 
 			if ${Me.StationID} == ${EVE.Bookmark[${Config.Freighter.Destination}].ItemID}
 			{	/* this is the destination station, drop off stuff */
-				call Cargo.TransferCargoToHangar
+				call Cargo.TransferCargoToStationHangar
 			}
 			else
 			{	/* this must be a source station, pickup stuff */
