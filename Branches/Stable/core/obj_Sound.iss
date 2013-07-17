@@ -19,7 +19,8 @@ objectdef obj_Sound
 	{
 		m_LastSoundTime:Set[${LavishScript.RunningTime}]
 		m_SoundDelay:Set[15000]	/* milliseconds */
-
+		uplink Speech:Initialize
+		
 		UI:UpdateConsole["obj_Sound: Initialized", LOG_MINOR]
 	}
 
@@ -61,14 +62,12 @@ objectdef obj_Sound
 		call This.PlaySound WARNSOUND
 	}
 	
-	method Speak(string Phrase)
+	method Speak(string Phrase, float speed=0.7)
 	{
 		if !${Config.Common.UseSound}
 			return
 
-		if ${Speech(exists)}
-		{
-			Speech:Speak[-speed,0.7,${Phrase}]
-		}
+		; Spelling below is to help the speech engine prononce it right since we don't have PromptBuilder support for the speech SDK in IS
+		uplink Speech:Speak[-speed,${Speed},"EEVEBautt: ${Phrase}"]
 	}
 }
