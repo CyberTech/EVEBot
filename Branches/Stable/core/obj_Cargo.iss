@@ -42,6 +42,7 @@ objectdef obj_Cargo
 	{
 		call Ship.OpenCargo
 		call Station.OpenHangar
+		wait 20
 	}
 
 	function CloseHolds()
@@ -534,7 +535,6 @@ objectdef obj_Cargo
 		{
 				do
 				{
-
 					QuantityToMove:Set[${CargoIterator.Value.Quantity}]
 					UI:UpdateConsole["TransferCargoFromShipOreHoldToStation: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
 					UI:UpdateConsole["TransferCargoFromShipOreHoldToStation: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
@@ -552,10 +552,8 @@ objectdef obj_Cargo
 		}
 	}
 
-
 	function TransferCargoFromShipCorporateHangarToStation()
 	{
-
 		variable index:item HangarCargo
 		variable int QuantityToMove
 		variable iterator CargoIterator
@@ -582,7 +580,6 @@ objectdef obj_Cargo
 			UI:UpdateConsole["DEBUG: obj_Cargo:TransferCargoFromShipCorporateHangarToStation: Nothing found to move"]
 		}
 	}
-
 
 	function TransferCargoFromShipCorporateHangarToCargoHold()
 	{
@@ -630,7 +627,6 @@ objectdef obj_Cargo
 
 	function TransferCargoFromCargoHoldToShipCorporateHangar()
 	{
-
 		variable index:item HangarCargo
 		variable int QuantityToMove
 		variable iterator CargoIterator

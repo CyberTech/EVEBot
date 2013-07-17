@@ -181,35 +181,35 @@ objectdef obj_Miner
 			UI:UpdateConsole["FLEE: Low Standing player or system unsafe, fleeing"]
 			return
 		}
-		
+
 		; If in orca delivery mode and orca not in belt and at panic spot, wait
 		if !${Config.Miner.OrcaMode} && ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && !${WarpToOrca} && ${This.AtPanicBookmark}
 		{
 			This.CurrentState:Set["IDLE"]
 			return
 		}
-		
+
 		; If in orca delivery and orca not in belt, flee
 		if !${Config.Miner.OrcaMode} && ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && !${WarpToOrca}
 		{
 			This.CurrentState:Set["FLEE"]
 			return
 		}
-		
+
 		; If in group mode, not the master, dont warp to master, and at safe spot... wait
 		if !${Config.Miner.OrcaMode} && ${Config.Miner.GroupMode} && !${IsMaster} && !${WarpToMaster} && ${This.AtPanicBookmark}
 		{
 			This.CurrentState:Set["IDLE"]
 			return
 		}
-		
+
 		; If in group mode, not the master, and dont warp to the master... flee
 		if !${Config.Miner.OrcaMode} && ${Config.Miner.GroupMode} && !${IsMaster} && !${WarpToMaster}
 		{
 			This.CurrentState:Set["FLEE"]
 			return
-		}		
-		
+		}
+
 		;	If I'm in a station, I need to perform what I came there to do
 		if ${Me.InStation}
 		{
@@ -443,10 +443,8 @@ objectdef obj_Miner
 				if ${Config.Miner.OrcaMode}
 				{
 					call Cargo.OpenHolds
-					Ship:Open
 					call Cargo.TransferCargoFromShipOreHoldToStation
 					call Cargo.TransferCargoFromShipCorporateHangarToStation
-					call Cargo.CloseHolds
 					call Cargo.TransferOreToStationHangar
 				}
 				else
@@ -762,7 +760,7 @@ objectdef obj_Miner
 			EVEBot.ReturnToStation:Set[TRUE]
 			return
 		}
-		
+
 		;	If our ship has no mining lasers, panic so the user knows to correct their configuration and try again
 		if ${Ship.TotalMiningLasers} == 0
 		{
@@ -770,7 +768,7 @@ objectdef obj_Miner
 			EVEBot.ReturnToStation:Set[TRUE]
 			return
 		}
-		
+
 		Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
 		Master:Set[Name = "${MasterName}"]
 
@@ -806,7 +804,7 @@ objectdef obj_Miner
 			}
 			call Asteroids.UpdateList
 		}
-		
+
 		; For orca delivery mode use
 		if ${Ship.TotalActivatedMiningLasers} == 0 && \
 			${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && \
@@ -826,7 +824,7 @@ objectdef obj_Miner
 				wait 20
 			}
 		}
-		
+
 		; Out of rocks, not in orca mode, and in group mode and is master
 		if ${Asteroids.AsteroidList.Used} == 0 && \
 			${Ship.TotalActivatedMiningLasers} == 0 && \
@@ -846,7 +844,7 @@ objectdef obj_Miner
 			call Asteroids.MoveToField FALSE TRUE
 			call Asteroids.UpdateList
 		}
-		
+
 		; If player in range and in group mode/ is master... move
 		if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]} && ${Config.Miner.GroupMode} && ${IsMaster}
 		{
@@ -1190,7 +1188,7 @@ objectdef obj_Miner
 				{
 					call Cargo.TransferOreToJetCan
 					;	Need a wait here because it would try to move the same item more than once
-					
+
 					wait 20
 					This:NotifyHaulers[]
 				}
@@ -1236,7 +1234,7 @@ objectdef obj_Miner
 			EVEBot.ReturnToStation:Set[TRUE]
 			return
 		}
-		
+
 		; This will make the orca go to the panic location and do nothing but boost the fleet
 		if ${Config.Miner.DeliveryLocation.Equal["Boost only"]}
 		{

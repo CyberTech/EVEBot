@@ -1642,8 +1642,6 @@ objectdef obj_Ship
 
 	function OpenCargo()
 	{
-		;MyShip:Open
-		;wait 1
 		if !${This.IsCargoOpen}
 		{
 			UI:UpdateConsole["Opening Ship Cargohold"]
