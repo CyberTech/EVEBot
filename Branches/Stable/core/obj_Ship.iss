@@ -1083,14 +1083,13 @@ objectdef obj_Ship
 		if ${Me.Ship.Module[${SlotName}].Charge(exists)}
 		{
 			if ${fullName}
-								{
-										return ${Me.Ship.Module[${SlotName}].Charge.Name}
-								}
-								else
-								{
-										return ${Me.Ship.Module[${SlotName}].Charge.Name.Token[1, " "]}
-
-								}
+			{
+				return ${Me.Ship.Module[${SlotName}].Charge.Type}
+			}
+			else
+			{
+				return ${Me.Ship.Module[${SlotName}].Charge.Type.Token[1, " "]}
+			}
 		}
 		return "NOCHARGE"
 
@@ -1107,8 +1106,8 @@ objectdef obj_Ship
 			if ${ModuleIter.Value.ToItem.Slot.Equal[${SlotName}]} && \
 				${ModuleIter.Value.Charge(exists)}
 			{
-				;UI:UpdateConsole["DEBUG: obj_Ship:LoadedMiningLaserCrystal Returning ${ModuleIter.Value.Charge.Name.Token[1, " "]}]
-				return ${ModuleIter.Value.Charge.Name.Token[1, " "]}
+				;UI:UpdateConsole["DEBUG: obj_Ship:LoadedMiningLaserCrystal Returning ${ModuleIter.Value.Charge.Type.Token[1, " "]}]
+				return ${ModuleIter.Value.Charge.Type.Token[1, " "]}
 			}
 		}
 		while ${ModuleIter:Next(exists)}
