@@ -2800,6 +2800,7 @@ objectdef obj_Ship
 			if !${This.AlertedInPod}
 			{
 				Sound:Speak["Critical Information: ${Me.Name} is in a pod"]
+				Sound:Speak["How we deal with death is at least as important as how we deal with life\\, wouldn't you say??", 1.1]
 				UI:UpdateConsole["Critical Information: ${Me.Name} is in a pod", LOG_CRITICAL]
 				This.AlertedInPod:Set[TRUE]
 			}
