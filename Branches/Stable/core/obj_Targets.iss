@@ -64,11 +64,13 @@ objectdef obj_Targets
 
 	variable bool CheckChain
 	variable bool Chaining
-    variable int  TotalSpawnValue
+	variable int  TotalSpawnValue
 
 	variable bool m_SpecialTargetPresent
+	variable bool m_SpecialTargettoLootPresent
 	variable string m_SpecialTargetName
-    variable set DoNotKillList
+	variable string m_SpecialTargetToLootName
+	variable set DoNotKillList
 	variable bool CheckedSpawnValues = FALSE
 	
 	;	Used to track entities that are locked or being locked
@@ -78,6 +80,7 @@ objectdef obj_Targets
 	method Initialize()
 	{
 		m_SpecialTargetPresent:Set[FALSE]
+		m_SpecialTargetToLootPresent:Set[FALSE]
 
 		; TODO - load this all from XML files
 
@@ -420,6 +423,11 @@ objectdef obj_Targets
 		return ${m_SpecialTargetPresent}
 	}
 
+	member:bool SpecialTargetToLootPresent()
+	{
+		return ${m_SpecialTargetToLootPresent}
+	}
+
 	member:bool IsPriorityTarget(string name)
 	{
 		; Loop through the priority targets
@@ -527,6 +535,7 @@ objectdef obj_Targets
 		variable bool HasMultipleTypes = FALSE
 
 		m_SpecialTargetPresent:Set[FALSE]
+		m_SpecialTargetToLootPresent:Set[FALSE]
 
       ; Determine the total spawn value
       if ${Target:First(exists)} && !${This.CheckedSpawnValues}
@@ -623,6 +632,11 @@ objectdef obj_Targets
 					HasSpecialTarget:Set[TRUE]
 					m_SpecialTargetPresent:Set[TRUE]
 					m_SpecialTargetName:Set[${Target.Value.Name}]
+					if ${This.IsSpecialTargetToLoot[${Target.Value.Name}]}
+					{
+						m_SpecialTargetToLootPresent:Set[TRUE]
+						m_SpecialTargetToLootName:Set[${Target.Value.Name}]
+					}
 				}
 
 				; Loop through the priority targets
