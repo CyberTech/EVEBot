@@ -265,6 +265,10 @@ objectdef obj_Combat
 	function Flee()
 	{
 		This.CurrentState:Set["FLEE"]
+		if !${This.Fled}
+		{
+			Sound:Speak["Fleeting to safespot! Aura, I need warp speed in three minutes or we're all dead!", 1.1]
+		}
 		This.Fled:Set[TRUE]
 		EVE:Execute[CmdDronesReturnToBay]
 
@@ -276,6 +280,8 @@ objectdef obj_Combat
 		{
 			call This.FleeToSafespot
 		}
+		; This is not a safe wait, but some folks like it.
+		;wait ${Math.Rand[3600]:Inc[3000]}
 	}
 
 	function FleeToStation()
@@ -294,6 +300,9 @@ objectdef obj_Combat
 			{
 				Ship:Activate_Cloak[]
 			}
+			; This is not a safe wait, but some folks like it.
+			;wait ${Math.Rand[3600]:Inc[3000]}
+
 		}
 		else
 		{
@@ -316,13 +325,13 @@ objectdef obj_Combat
 				(${Me.Ship.ShieldPct} < 80 && ${Config.Combat.MinimumShieldPct} > 0) || \
 				${Me.Ship.CapacitorPct} < 60 )
 			{
-					This.CurrentState:Set["FLEE"]
-					UI:UpdateConsole["Debug: Staying in Flee State: Armor: ${Me.Ship.ArmorPct} Shield: ${Me.Ship.ShieldPct} Cap: ${Me.Ship.CapacitorPct}", LOG_DEBUG]
+				This.CurrentState:Set["FLEE"]
+				UI:UpdateConsole["Debug: Staying in Flee State: Armor: ${Me.Ship.ArmorPct} Shield: ${Me.Ship.ShieldPct} Cap: ${Me.Ship.CapacitorPct}", LOG_DEBUG]
 			}
 			else
 			{
-					This.Fled:Set[FALSE]
-					This.CurrentState:Set["IDLE"]
+				This.Fled:Set[FALSE]
+				This.CurrentState:Set["IDLE"]
 			}
 		}
 		elseif (${Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct}  || \
@@ -438,7 +447,7 @@ objectdef obj_Combat
 			{
 				do
 				{
-					CargoIterator.Value:MoveTo[${Me.Station.ID}, Hangar]
+					CargoIterator.Value:MoveTo[MyStationHangar, Hangar]
 					wait 2
 				}
 				while ${CargoIterator:Next(exists)}
