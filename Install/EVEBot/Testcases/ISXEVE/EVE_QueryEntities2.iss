@@ -37,7 +37,7 @@ function main()
 	UI:UpdateConsole["EVE:QueryEntities: ${Entities.Used} entities in ${CallTime} seconds - Count should be ${EVE.EntitiesCount}"]
 
 	Entities:GetIterator[EntityIterator]
-*
+
 	variable uint QueryID
 	;variable string Filter = "Distance < 1000000"
 	variable string Filter = "Distance > 200000"
