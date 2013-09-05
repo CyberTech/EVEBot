@@ -34,6 +34,9 @@ function main()
 				echo "-----| ItemID: ${Iter.Value.ItemID}"
 				echo "--------------------------------"
 				i:Inc
+				echo Making Active:
+				Iter.Value:MakeActive
+				wait 10
 			}
 			while ${Iter:Next(exists)}
 		}
