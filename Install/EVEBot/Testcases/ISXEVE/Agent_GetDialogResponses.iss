@@ -36,7 +36,7 @@ Known Dialogstrings
 */
 	echo Agent[${EVEAgentIndex}].Name ${Agent[${EVEAgentIndex}].Name}
 	echo Agent[${EVEAgentIndex}].ID ${Agent[${EVEAgentIndex}].ID}
-	echo Agent[${EVEAgentIndex}].TypeID ${Agent[${EVEAgentIndex}].TypeID}
+	echo Agent[${EVEAgentIndex}].AgentTypeID ${Agent[${EVEAgentIndex}].AgentTypeID}
 	echo Agent[${EVEAgentIndex}].Division ${Agent[${EVEAgentIndex}].Division}
 	echo Agent[${EVEAgentIndex}].DivisionID ${Agent[${EVEAgentIndex}].DivisionID}
 	echo Agent[${EVEAgentIndex}].Level ${Agent[${EVEAgentIndex}].Level}
