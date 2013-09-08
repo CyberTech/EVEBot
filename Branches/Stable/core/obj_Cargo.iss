@@ -446,6 +446,7 @@ objectdef obj_Cargo
 		HangarCargo:GetIterator[CargoIterator]
 		call Ship.OpenCargo
 
+		UI:UpdateConsole["DEBUG: TransferListFromShipCorporateHangar", LOG_DEBUG]
 
 		if ${CargoIterator:First(exists)}
 		{
@@ -484,6 +485,8 @@ objectdef obj_Cargo
 		Me.Ship:GetFleetHangarCargo[HangarCargo]
 		HangarCargo:GetIterator[CargoIterator]
 
+		UI:UpdateConsole["DEBUG: TransferCargoFromShipCorporateHangarToOreHold", LOG_DEBUG]
+
 		if ${CargoIterator:First(exists)}
 		{
 				do
@@ -503,7 +506,7 @@ objectdef obj_Cargo
 						UI:UpdateConsole["TransferCargoFromShipCorporateHangarToOreHold: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
 						if ${QuantityToMove} > 0
 						{
-							CargoIterator.Value:MoveTo[${MyShip.ID}, ShipOreHold, ${QuantityToMove}]
+							CargoIterator.Value:MoveTo[${MyShip.ID}, OreHold, ${QuantityToMove}]
 							wait 15
 						}
 
@@ -1301,16 +1304,17 @@ objectdef obj_Cargo
 				UI:UpdateConsole["TransferListToShipCorporateHangar: Unloading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}", LOG_DEBUG]
 
 				ListToMove:Insert[${CargoIterator.Value.ID}]
-
+				if ${ListToMove.Used}
+				{
+					UI:UpdateConsole["Moving ${ListToMove.Used} items to hangar."]
+					CargoIterator.Value:MoveTo[${dest}, FleetHangar, ${CargoIterator.Value.Quantity}]
+					;EVE:MoveItemsTo[ListToMove, ${dest}, CorpHangars]
+					wait 10
+					;EVEWindow[ByItemID, ${dest}]:StackAll
+				}
 			}
 			while ${CargoIterator:Next(exists)}
-			if ${ListToMove.Used}
-			{
-				UI:UpdateConsole["Moving ${ListToMove.Used} items to hangar."]
-				EVE:MoveItemsTo[ListToMove, ${dest}, CorpHangars]
-				wait 10
-				EVEWindow[ByItemID, ${dest}]:StackAll
-			}
+
 		}
 		else
 		{
