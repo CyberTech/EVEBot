@@ -294,7 +294,9 @@ objectdef obj_Cargo
 		else
 		{
 			variable index:item HangarCargo
-			Entity[${from}]:GetFleetHangarCargo[HangarCargo]
+			Entity[${from}]:Open
+			wait 30
+			Entity[${from}]:GetCorpHangarsCargo[HangarCargo]
 			HangarCargo:GetIterator[CargoIterator]
 
 			; Cycle thru the Hangar looking for the needed Crystals and move them to the ship
