@@ -51,7 +51,7 @@ objectdef obj_MissionCache
 
 	member:int FactionID(int agentID)
 	{
-		return ${This.MissionRef[${agentID}].FindSetting[FactionID,0]}
+		return ${This.MissionRef[${agentID}].FindSetting[FactionID,-1]}
 	}
 
 	method SetFactionID(int agentID, int factionID)
@@ -66,7 +66,7 @@ objectdef obj_MissionCache
 
 	member:int TypeID(int agentID)
 	{
-		return ${This.MissionRef[${agentID}].FindSetting[TypeID,0]}
+		return ${This.MissionRef[${agentID}].FindSetting[TypeID,-1]}
 	}
 
 	method SetTypeID(int agentID, int typeID)
@@ -231,11 +231,17 @@ objectdef obj_Missions
 			call Ship.ActivateShip "${Config.Missioneer.SmallHauler}"
 		}
 
-		itemName:Set[${EVEDB_Items.Name[${This.MissionCache.TypeID[${agentID}]}]}]
-		itemVolume:Set[${EVEDB_Items.Volume[${This.MissionCache.TypeID[${agentID}]}]}]
+		TypeID:Set[${This.MissionCache.TypeID[${agentID}]}]
+		if ${TypeID} == -1
+		{
+			UI:UpdateConsole["ERROR: RunCourierMission: Unable to retrieve item type from mission cache for ${agentID}. Stopping."]
+			Script:Pause
+		}
+		itemName:Set[${EVEDB_Items.Name[${TypeID}]}]
+		itemVolume:Set[${EVEDB_Items.Volume[${TypeID}]}]
 		if ${itemVolume} > 0
 		{
-			UI:UpdateConsole["DEBUG: RunCourierMission: ${This.MissionCache.TypeID[${agentID}]}:${itemName} has volume ${itemVolume}."]
+			UI:UpdateConsole[DEBUG: RunCourierMission: ${TypeID}:${itemName} has volume ${itemVolume}.]
 			QuantityRequired:Set[${Math.Calc[${This.MissionCache.Volume[${agentID}]}/${itemVolume}]}]
 		}
 		else
