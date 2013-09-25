@@ -837,11 +837,15 @@ objectdef obj_Missions
 			   elseif ${This.SpecialStructure[${agentID},${Target.Value.Name}]} && \
 				 !${Target.Value.IsLockedTarget} && !${Target.Value.BeingTargeted}
 			   {
-				  variable int OrbitDistance
-				  OrbitDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.40/1000].Round}]
-				  OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
-				  Target.Value:Orbit[${OrbitDistance}]
-
+				  ;variable int OrbitDistance
+				  ;OrbitDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.40/1000].Round}]
+				  ;OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
+				  ;Target.Value:Orbit[${OrbitDistance}]
+				  variable int KeepAtRangeDistance
+				  KeepAtRangeDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.40/1000].Round}]
+				  KeepAtRangeDistance:Set[${Math.Calc[${KeepAtRangeDistance}*1000]}]
+				  Target.Value:KeepAtRange[${KeepAtRangeDistance}]
+				  
 				   if ${Me.TargetCount} < ${Ship.MaxLockedTargets}
 				   {
 					   UI:UpdateConsole["Locking ${Target.Value.Name}"]
@@ -909,6 +913,14 @@ objectdef obj_Missions
 			OrbitDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.40/1000].Round}]
 			OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
 			Me.ActiveTarget:Orbit[${OrbitDistance}]
+		}
+		
+		if ${HasTargets} && ${Me.ActiveTarget(exists)}
+		{
+			variable int KeepAtRangeDistance
+			KeepAtRangeDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.40/1000].Round}]
+			KeepAtRangeDistance:Set[${Math.Calc[${KeepAtRangeDistance}*1000]}]
+			Me.ActiveTarget:KeepAtRange[${KeepAtRangeDistance}]
 		}
 
 		return ${HasTargets}

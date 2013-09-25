@@ -762,6 +762,9 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[OrbitDistance, 30000]
 		This.CombatRef:AddSetting[Orbit, FALSE]
 		This.CombatRef:AddSetting[OrbitAtOptimal, FALSE]
+		This.CombatRef:AddSetting[KeepAtRangeDistance, 30000]
+		This.CombatRef:AddSetting[KeepAtRange, FALSE]
+		This.CombatRef:AddSetting[KeepAtRangeAtOptimal, FALSE]
 		This.CombatRef:AddSetting[WarpRange, 0]
 		This.CombatRef:AddSetting[Lowest Standing, 0]
 		This.CombatRef:AddSetting[IncludeNeutralInCalc, 1]
@@ -860,6 +863,36 @@ objectdef obj_Configuration_Combat
 	member:int OrbitDistance()
 	{
 		return ${This.CombatRef.FindSetting[OrbitDistance, 30000]}
+	}
+	
+		method SetKeepAtRange(bool value)
+	{
+		This.CombatRef:AddSetting[KeepAtRange,${value}]
+	}
+
+	member:bool KeepAtRange()
+	{
+		return ${This.CombatRef.FindSetting[KeepAtRange, FALSE]}
+	}
+
+	method SetKeepAtRangeAtOptimal(bool value)
+	{
+		This.CombatRef:AddSetting[KeepAtRangeAtOptimal,${value}]
+	}
+
+	member:bool KeepAtRangeAtOptimal()
+	{
+		return ${This.CombatRef.FindSetting[KeepAtRangeAtOptimal, FALSE]}
+	}
+
+	method SetKeepAtRangeDistance(int value)
+	{
+		This.CombatRef:AddSetting[KeepAtRangeDistance,${value}]
+	}
+
+	member:int KeepAtRangeDistance()
+	{
+		return ${This.CombatRef.FindSetting[KeepAtRangeDistance, 30000]}
 	}
 
 	method SetAnomalyAssistMode(bool value)

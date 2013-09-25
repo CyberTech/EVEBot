@@ -247,6 +247,19 @@ objectdef obj_Combat
 				Me.ActiveTarget:Orbit[${Config.Combat.OrbitDistance}]
 			}
 		}
+		if ${Config.Combat.KeepAtRange}
+		{
+			Ship:Activate_AfterBurner
+
+			if ${Config.Combat.KeepAtRangeAtOptimal}
+			{
+				Ship:KeepAtRangeAtOptimal
+			}
+			else
+			{
+				Me.ActiveTarget:KeepAtRange[${Config.Combat.KeepAtRangeDistance}]
+			}
+		}
 		; Activate the weapons, the modules class checks if there's a target (no it doesn't - ct)
 		Ship:Activate_TargetPainters
 		Ship:Activate_StasisWebs

@@ -800,6 +800,14 @@ objectdef obj_Targets
 		;	OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
 		;	Me.ActiveTarget:Orbit[${OrbitDistance}]
 		;}
+		
+		;if ${HasTargets} && ${Me.ActiveTarget(exists)}
+		;{
+		;	variable int KeepAtRangeDistance
+		;	KeepAtRangeDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.40/1000].Round}]
+		;	KeepAtRangeDistance:Set[${Math.Calc[${KeepAtRangeDistance}*1000]}]
+		;	Me.ActiveTarget:KeepAtRange[${KeepAtRangeDistance}]
+		;}
 
 		return ${HasTargets}
 	}

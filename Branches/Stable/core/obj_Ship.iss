@@ -2916,6 +2916,43 @@ objectdef obj_Ship
 			Me.ActiveTarget:Orbit[${OrbitDistance}]
 		}
 	}
+	
+	method KeepAtRangeAtOptimal()
+	{
+		variable int KeepAtRangeDistance = 5000
+
+		if !${Me.Ship(exists)}
+		{
+			return
+		}
+		if ${This.ReloadingWeapons}
+		{
+			return
+		}
+		if ${Me.ToEntity.Mode} == 4 || ${Me.ToEntity.Mode} == 1
+		{
+			; already Keeping something AtRange
+			This:Activate_AfterBurner
+			return
+		}
+
+		variable iterator ModuleIter
+		This.ModuleList_Weapon:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		{
+			KeepAtRangeDistance:Set[${Math.Calc[${ModuleIter.Value.Charge.MaxFlightTime}*${ModuleIter.Value.Charge.MaxVelocity}*.85]}]
+			if ${ModuleIter.Value.OptimalRange} > ${KeepAtRangeDistance}
+			{
+				KeepAtRangeDistance:Set[${ModuleIter.Value.OptimalRange}]
+			}
+			if ${KeepAtRangeDistance} == 0
+			{
+				return
+			}
+			UI:UpdateConsole["KeepingAtRange active target at ${Math.Calc[${KeepAtRangeDistance}/1000]} KM."]
+			Me.ActiveTarget:KeepAtRange[${KeepAtRangeDistance}]
+		}
+	}
 
 	method Activate_Weapons()
 	{
