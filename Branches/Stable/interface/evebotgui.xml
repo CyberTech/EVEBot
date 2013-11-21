@@ -2668,7 +2668,7 @@
 							<Height>18</Height>
 							<MaxLength>50</MaxLength>
 							<OnChange>
-								if ${Script[EVEBot].VariableScope.Config.Fleet.IsWing[${This.Text}]}
+								if ${Script[EVEBot].VariableScope.Config.Fleet.IsWing["${This.Text.Escape}"]}
 								UIElement[cbWing@Fleet@EVEBotOptionsTab@EVEBot]:SetChecked
 								else
 								UIElement[cbWing@Fleet@EVEBotOptionsTab@EVEBot]:UnsetChecked
