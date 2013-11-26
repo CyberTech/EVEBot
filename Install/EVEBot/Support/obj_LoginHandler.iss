@@ -25,7 +25,7 @@ objectdef obj_LoginHandler inherits obj_BaseClass
 
 	; Added these in so no magic numbers are used
 	variable float loginWaitTime = 2.0
-	variable float connectWaitTime = 5.0
+	variable float connectWaitTime = 7.0
 	variable float inspaceWaitTime = 15.0
 	variable float CharSelectWaitTime = 15.0
 	variable float ServerUpWaitTime = 600.0
