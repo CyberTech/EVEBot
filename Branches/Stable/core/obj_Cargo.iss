@@ -42,11 +42,11 @@ objectdef obj_Cargo
 	{
 		call Ship.OpenCargo
 		call Station.OpenHangar
-		wait 20
 	}
 
 	function CloseHolds()
 	{
+		return
 		call Ship.CloseCargo
 		call Station.CloseHangar
 	}
