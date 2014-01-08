@@ -329,7 +329,7 @@ objectdef obj_Hauler
 				call Cargo.OpenHolds
 				Ship:StackCargoHold
 				call Cargo.TransferCargoToStationHangar
-				if ${Ship.TypeID} == 28606 || ${Ship.TypeID} == 28352
+				if ${MyShip.HasOreHold}
 				{
 					call Cargo.OpenHolds
 					wait 10
