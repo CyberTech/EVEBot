@@ -817,7 +817,7 @@ objectdef obj_Missions
 
 	  UI:UpdateConsole["DEBUG: TargetStructures"]
 
-		if ${Me.Ship.MaxLockedTargets} == 0
+		if ${MyShip.MaxLockedTargets} == 0
 		{
 			UI:UpdateConsole["Jammed, cant target..."]
 			return TRUE
@@ -838,11 +838,11 @@ objectdef obj_Missions
 				 !${Target.Value.IsLockedTarget} && !${Target.Value.BeingTargeted}
 			   {
 				  ;variable int OrbitDistance
-				  ;OrbitDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.40/1000].Round}]
+				  ;OrbitDistance:Set[${Math.Calc[${MyShip.MaxTargetRange}*0.40/1000].Round}]
 				  ;OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
 				  ;Target.Value:Orbit[${OrbitDistance}]
 				  variable int KeepAtRangeDistance
-				  KeepAtRangeDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.40/1000].Round}]
+				  KeepAtRangeDistance:Set[${Math.Calc[${MyShip.MaxTargetRange}*0.40/1000].Round}]
 				  KeepAtRangeDistance:Set[${Math.Calc[${KeepAtRangeDistance}*1000]}]
 				  Target.Value:KeepAtRange[${KeepAtRangeDistance}]
 				  
@@ -868,7 +868,7 @@ objectdef obj_Missions
 		variable iterator Target
 		variable bool HasTargets = FALSE
 
-		if ${Me.Ship.MaxLockedTargets} == 0
+		if ${MyShip.MaxLockedTargets} == 0
 		{
 			UI:UpdateConsole["Jammed, cant target..."]
 			return TRUE
@@ -910,7 +910,7 @@ objectdef obj_Missions
 		if ${HasTargets} && ${Me.ActiveTarget(exists)}
 		{
 			variable int OrbitDistance
-			OrbitDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.40/1000].Round}]
+			OrbitDistance:Set[${Math.Calc[${MyShip.MaxTargetRange}*0.40/1000].Round}]
 			OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
 			Me.ActiveTarget:Orbit[${OrbitDistance}]
 		}
@@ -918,7 +918,7 @@ objectdef obj_Missions
 		if ${HasTargets} && ${Me.ActiveTarget(exists)}
 		{
 			variable int KeepAtRangeDistance
-			KeepAtRangeDistance:Set[${Math.Calc[${Me.Ship.MaxTargetRange}*0.40/1000].Round}]
+			KeepAtRangeDistance:Set[${Math.Calc[${MyShip.MaxTargetRange}*0.40/1000].Round}]
 			KeepAtRangeDistance:Set[${Math.Calc[${KeepAtRangeDistance}*1000]}]
 			Me.ActiveTarget:KeepAtRange[${KeepAtRangeDistance}]
 		}

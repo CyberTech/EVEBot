@@ -464,7 +464,7 @@ objectdef obj_Asteroids
 					if ${Entity[${AsteroidIterator.Value.ID}](exists)} && \
 						!${AsteroidIterator.Value.IsLockedTarget} && \
 						!${AsteroidIterator.Value.BeingTargeted} && \
-						${AsteroidIterator.Value.Distance} < ${Me.Ship.MaxTargetRange} && \
+						${AsteroidIterator.Value.Distance} < ${MyShip.MaxTargetRange} && \
 						${AsteroidIterator.Value.Distance} < ${Ship.OptimalMiningRange}
 					{
 						break
@@ -475,7 +475,7 @@ objectdef obj_Asteroids
 					if ${Entity[${AsteroidIterator.Value.ID}](exists)} && \
 						!${AsteroidIterator.Value.IsLockedTarget} && \
 						!${AsteroidIterator.Value.BeingTargeted} && \
-						${AsteroidIterator.Value.Distance} < ${Me.Ship.MaxTargetRange} && \
+						${AsteroidIterator.Value.Distance} < ${MyShip.MaxTargetRange} && \
 						${AsteroidIterator.Value.DistanceTo[${DistanceToTarget}]} < ${Math.Calc[${Ship.OptimalMiningRange} + 2000]}
 					{
 						variable iterator Target
@@ -542,7 +542,7 @@ objectdef obj_Asteroids
 				if ${Entity[${AsteroidIterator.Value.ID}](exists)} && \
 					!${AsteroidIterator.Value.IsLockedTarget} && \
 					!${AsteroidIterator.Value.BeingTargeted} && \
-					${AsteroidIterator.Value.Distance} < ${Me.Ship.MaxTargetRange} && \
+					${AsteroidIterator.Value.Distance} < ${MyShip.MaxTargetRange} && \
 					( !${Me.ActiveTarget(exists)} || ${AsteroidIterator.Value.DistanceTo[${Me.ActiveTarget.ID}]} <= ${Math.Calc[${Ship.OptimalMiningRange}* 1.1]} )
 				{
 					break

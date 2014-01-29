@@ -750,11 +750,11 @@ objectdef obj_Miner
 
 		;	This checks our armor and shields to determine if we need to run like hell.  If we're being attacked by something
 		;	dangerous enough to get us this damaged, it's best to switch to HARD STOP mode.
-		if (${Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
-			${Me.Ship.ShieldPct} < ${Config.Combat.MinimumShieldPct})
+		if (${MyShip.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
+			${MyShip.ShieldPct} < ${Config.Combat.MinimumShieldPct})
 		{
-			UI:UpdateConsole["Armor is at ${Me.Ship.ArmorPct}: ${Me.Ship.Armor}/${Me.Ship.MaxArmor}", LOG_CRITICAL]
-			UI:UpdateConsole["Shield is at ${Me.Ship.ShieldPct}: ${Me.Ship.Shield}/${Me.Ship.MaxShield}", LOG_CRITICAL]
+			UI:UpdateConsole["Armor is at ${MyShip.ArmorPct}: ${MyShip.Armor}/${MyShip.MaxArmor}", LOG_CRITICAL]
+			UI:UpdateConsole["Shield is at ${MyShip.ShieldPct}: ${MyShip.Shield}/${MyShip.MaxShield}", LOG_CRITICAL]
 			UI:UpdateConsole["Miner aborting due to defensive status", LOG_CRITICAL]
 
 			EVEBot.ReturnToStation:Set[TRUE]
@@ -1224,11 +1224,11 @@ objectdef obj_Miner
 
 		;	This checks our armor and shields to determine if we need to run like hell.  If we're being attacked by something
 		;	dangerous enough to get us this damaged, it's best to switch to HARD STOP mode.
-		if (${Me.Ship.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
-			${Me.Ship.ShieldPct} < ${Config.Combat.MinimumShieldPct})
+		if (${MyShip.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
+			${MyShip.ShieldPct} < ${Config.Combat.MinimumShieldPct})
 		{
-			UI:UpdateConsole["Armor is at ${Me.Ship.ArmorPct}: ${Me.Ship.Armor}/${Me.Ship.MaxArmor}", LOG_CRITICAL]
-			UI:UpdateConsole["Shield is at ${Me.Ship.ShieldPct}: ${Me.Ship.Shield}/${Me.Ship.MaxShield}", LOG_CRITICAL]
+			UI:UpdateConsole["Armor is at ${MyShip.ArmorPct}: ${MyShip.Armor}/${MyShip.MaxArmor}", LOG_CRITICAL]
+			UI:UpdateConsole["Shield is at ${MyShip.ShieldPct}: ${MyShip.Shield}/${MyShip.MaxShield}", LOG_CRITICAL]
 			UI:UpdateConsole["Miner aborting due to defensive status", LOG_CRITICAL]
 
 			EVEBot.ReturnToStation:Set[TRUE]
@@ -1748,7 +1748,7 @@ objectdef obj_Miner
 					return TRUE
 				}
 			}
-			elseif ${Ship.CargoFreeSpace} < 1000 || ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
+			elseif ${Ship.CargoFreeSpace} < 1000 || ${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 			{
 				return TRUE
 			}
@@ -1766,7 +1766,7 @@ objectdef obj_Miner
 					return TRUE
 				}
 			}
-			elseif ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${Me.Ship.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
+			elseif ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 			{
 				return TRUE
 			}

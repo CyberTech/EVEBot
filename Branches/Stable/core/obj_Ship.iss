@@ -96,14 +96,14 @@ objectdef obj_Ship
 					*/
 					if ${This.Total_Armor_Reps} > 0
 					{
-						if ${Me.Ship.ArmorPct} < 100
+						if ${MyShip.ArmorPct} < 100
 						{
 							This:Activate_Armor_Reps
 						}
 
 						if ${This.Repairing_Armor}
 						{
-							if ${Me.Ship.ArmorPct} >= 98
+							if ${MyShip.ArmorPct} >= 98
 							{
 								This:Deactivate_Armor_Reps
 								This.Repairing_Armor:Set[FALSE]
@@ -114,13 +114,13 @@ objectdef obj_Ship
 					/* Shield Boosters
 						We boost to a higher % in here, as it's done during warp, so cap has time to regen.
 					*/
-					if (!${MyShip.ToEntity.IsCloaked} && (${Me.Ship.ShieldPct} < 95 || ${Config.Combat.AlwaysShieldBoost})) && !${Miner.AtPanicBookmark}
+					if (!${MyShip.ToEntity.IsCloaked} && (${MyShip.ShieldPct} < 95 || ${Config.Combat.AlwaysShieldBoost})) && !${Miner.AtPanicBookmark}
 					{	/* Turn on the shield booster */
 							This:Activate_Hardeners[]
 							This:Activate_Shield_Booster[]
 					}
 
-					if !${MyShip.ToEntity.IsCloaked} && (${Me.Ship.ShieldPct} > 99 && (!${Config.Combat.AlwaysShieldBoost}) || ${Miner.AtPanicBookmark})
+					if !${MyShip.ToEntity.IsCloaked} && (${MyShip.ShieldPct} > 99 && (!${Config.Combat.AlwaysShieldBoost}) || ${Miner.AtPanicBookmark})
 					{	/* Turn off the shield booster */
 						This:Deactivate_Hardeners[]
 						This:Deactivate_Shield_Booster[]
@@ -142,7 +142,7 @@ objectdef obj_Ship
 	/* TODO - Rename to SystemsReady (${Ship.SystemsReady}) or similar for clarity - CyberTech */
 	member:bool IsSafe()
 	{
-		if ${m_WaitForCapRecharge} && ${Me.Ship.CapacitorPct} < 90
+		if ${m_WaitForCapRecharge} && ${MyShip.CapacitorPct} < 90
 		{
 			return FALSE
 		}
@@ -152,14 +152,14 @@ objectdef obj_Ship
 		}
 
 		/* TODO - These functions are not reliable. Redo per Looped armor/shield test in obj_Miner.Mine() (then consolidate code) -- CyberTech */
-		if ${Me.Ship.CapacitorPct} < 10
+		if ${MyShip.CapacitorPct} < 10
 		{
 			UI:UpdateConsole["Capacitor low!  Run for cover!", LOG_CRITICAL]
 			m_WaitForCapRecharge:Set[TRUE]
 			return FALSE
 		}
 
-		if ${Me.Ship.ArmorPct} < 25
+		if ${MyShip.ArmorPct} < 25
 		{
 			UI:UpdateConsole["Armor low!  Run for cover!", LOG_CRITICAL]
 			return FALSE
@@ -242,40 +242,40 @@ objectdef obj_Ship
 
 	member:float CargoMinimumFreeSpace()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
 
-		return ${Math.Calc[${Me.Ship.CargoCapacity}*0.02]}
+		return ${Math.Calc[${MyShip.CargoCapacity}*0.02]}
 	}
 
 	member:float CargoFreeSpace()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return 0
 		}
 
-		if ${Me.Ship.UsedCargoCapacity} < 0
+		if ${MyShip.UsedCargoCapacity} < 0
 		{
-			return ${Me.Ship.CargoCapacity}
+			return ${MyShip.CargoCapacity}
 		}
-		return ${Math.Calc[${Me.Ship.CargoCapacity}-${Me.Ship.UsedCargoCapacity}]}
+		return ${Math.Calc[${MyShip.CargoCapacity}-${MyShip.UsedCargoCapacity}]}
 	}
 
 	member:float CargoUsedSpace()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return 0
 		}
 
-		if ${Me.Ship.UsedCargoCapacity} < 0
+		if ${MyShip.UsedCargoCapacity} < 0
 		{
-			return ${Me.Ship.CargoCapacity}
+			return ${MyShip.CargoCapacity}
 		}
-		return ${Me.Ship.UsedCargoCapacity}
+		return ${MyShip.UsedCargoCapacity}
 	}
 
 	method StackCargoHold()
@@ -298,7 +298,7 @@ objectdef obj_Ship
 
 	member:float OreHoldMinimumFreeSpace()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -307,7 +307,7 @@ objectdef obj_Ship
 
 	member:float OreHoldFreeSpace()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return 0
 		}
@@ -317,7 +317,7 @@ objectdef obj_Ship
 
 	member:float OreHoldCapacity()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return 0
 		}
@@ -327,7 +327,7 @@ objectdef obj_Ship
 
 	member:float OreHoldUsedCapacity()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return 0
 		}
@@ -337,7 +337,7 @@ objectdef obj_Ship
 
 	member:bool OreHoldFull()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return FALSE
 		}
@@ -351,7 +351,7 @@ objectdef obj_Ship
 
 	member:bool OreHoldHalfFull()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return FALSE
 		}
@@ -373,7 +373,7 @@ objectdef obj_Ship
 
 	member:bool OreHoldEmpty()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return FALSE
 		}
@@ -396,7 +396,7 @@ objectdef obj_Ship
 
 	member:float CorpHangarMinimumFreeSpace()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -406,7 +406,7 @@ objectdef obj_Ship
 
 	member:float CorpHangarFreeSpace()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return 0
 		}
@@ -416,7 +416,7 @@ objectdef obj_Ship
 
 	member:float CorpHangarUsedSpace(bool IgnoreCrystals=FALSE)
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return 0
 		}
@@ -439,7 +439,7 @@ objectdef obj_Ship
 
 	member:bool CorpHangarFull()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return FALSE
 		}
@@ -453,7 +453,7 @@ objectdef obj_Ship
 
 	member:bool CorpHangarEmpty()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return FALSE
 		}
@@ -477,7 +477,7 @@ objectdef obj_Ship
 
 	member:bool CargoFull()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return FALSE
 		}
@@ -491,12 +491,12 @@ objectdef obj_Ship
 
 	member:bool CargoHalfFull()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return FALSE
 		}
 
-		if ${This.CargoFreeSpace} <= ${Math.Calc[${Me.Ship.CargoCapacity}*0.50]}
+		if ${This.CargoFreeSpace} <= ${Math.Calc[${MyShip.CargoCapacity}*0.50]}
 		{
 			return TRUE
 		}
@@ -505,7 +505,7 @@ objectdef obj_Ship
 
 	member:float CargoNoCrystals()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return 0
 		}
@@ -527,12 +527,12 @@ objectdef obj_Ship
 
 	member:bool CargoTenthFull()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return FALSE
 		}
 
-		if ${This.CargoNoCrystals} >= ${Math.Calc[${Me.Ship.CargoCapacity}*0.10]}
+		if ${This.CargoNoCrystals} >= ${Math.Calc[${MyShip.CargoCapacity}*0.10]}
 		{
 			return TRUE
 		}
@@ -589,7 +589,7 @@ objectdef obj_Ship
 		This.ModuleList_ShieldTransporters:Clear
 
 
-		if !${Me.Ship:GetModules[This.ModuleList]}
+		if !${MyShip:GetModules[This.ModuleList]}
 		{
 			UI:UpdateConsole["ERROR: obj_Ship:UpdateModuleList - GetModules failed. Retrying in a few seconds.", LOG_CRITICAL]
 			RetryUpdateModuleList:Inc
@@ -598,7 +598,7 @@ objectdef obj_Ship
 		RetryUpdateModuleList:Set[0]
 
 		/* save ship values that may change in combat */
-		This.m_MaxTargetRange:Set[${Me.Ship.MaxTargetRange}]
+		This.m_MaxTargetRange:Set[${MyShip.MaxTargetRange}]
 
 		variable iterator ModuleIter
 
@@ -869,7 +869,7 @@ objectdef obj_Ship
 	method UpdateBaselineUsedCargo()
 	{
 		; Store the used cargo space as the cargo hold exists NOW, with whatever is leftover in it.
-		This.BaselineUsedCargo:Set[${Me.Ship.UsedCargoCapacity.Ceil}]
+		This.BaselineUsedCargo:Set[${MyShip.UsedCargoCapacity.Ceil}]
 	}
 
 	member:int MaxLockedTargets()
@@ -910,7 +910,7 @@ objectdef obj_Ship
 
 	member:int TotalActivatedMiningLasers()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return 0
 		}
@@ -936,7 +936,7 @@ objectdef obj_Ship
 	}
 	member:int TotalActivatedTractorBeams()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return 0
 		}
@@ -960,7 +960,7 @@ objectdef obj_Ship
 	}
 	member:int TotalActivatedShieldTransporters()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return 0
 		}
@@ -984,7 +984,7 @@ objectdef obj_Ship
 	}
 	member:int TotalActivatedSalvagers()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return 0
 		}
@@ -1011,7 +1011,7 @@ objectdef obj_Ship
 	; It should perhaps be changed to return the largest, or the smallest, or an average.
 	member:float MiningAmountPerLaser()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return 0
 		}
@@ -1037,7 +1037,7 @@ objectdef obj_Ship
 	; Returns the laser mining range minus 10%
 	member:int OptimalMiningRange(float Padding=0.90)
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return 0
 		}
@@ -1056,7 +1056,7 @@ objectdef obj_Ship
 	; Returns the shield transporter range minus 10%
 	member:int OptimalShieldTransporterRange(float Padding=0.90)
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return 0
 		}
@@ -1075,20 +1075,20 @@ objectdef obj_Ship
 	; Returns the loaded crystal in a mining laser, given the slot name ("HiSlot0"...)
 	member:string LoadedMiningLaserCrystal(string SlotName, bool fullName = FALSE)
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return "NOCHARGE"
 		}
 
-		if ${Me.Ship.Module[${SlotName}].Charge(exists)}
+		if ${MyShip.Module[${SlotName}].Charge(exists)}
 		{
 			if ${fullName}
 			{
-				return ${Me.Ship.Module[${SlotName}].Charge.Type}
+				return ${MyShip.Module[${SlotName}].Charge.Type}
 			}
 			else
 			{
-				return ${Me.Ship.Module[${SlotName}].Charge.Type.Token[1, " "]}
+				return ${MyShip.Module[${SlotName}].Charge.Type.Token[1, " "]}
 			}
 		}
 		return "NOCHARGE"
@@ -1118,7 +1118,7 @@ objectdef obj_Ship
 	; Returns TRUE if we've got a laser mining this entity already
 	member:bool IsMiningAsteroidID(int64 EntityID)
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -1144,7 +1144,7 @@ objectdef obj_Ship
 	; Returns TRUE if we've got a shield transporter healing this entity already
 	member:bool IsShieldTransportingID(int64 EntityID)
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -1169,7 +1169,7 @@ objectdef obj_Ship
 	; Returns how many shield transporters healing this entity already
 	member:int ShieldTransportersOnID(int64 EntityID)
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -1195,7 +1195,7 @@ objectdef obj_Ship
 
 	member:bool IsTractoringWreckID(int64 EntityID)
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -1220,7 +1220,7 @@ objectdef obj_Ship
 
 	member:bool IsSalvagingWreckID(int64 EntityID)
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -1266,18 +1266,18 @@ objectdef obj_Ship
 
 	method CalculateMaxLockedTargets()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
 
-		if ${Me.MaxLockedTargets} < ${Me.Ship.MaxLockedTargets}
+		if ${Me.MaxLockedTargets} < ${MyShip.MaxLockedTargets}
 		{
 			Calculated_MaxLockedTargets:Set[${Me.MaxLockedTargets}]
 		}
 		else
 		{
-			Calculated_MaxLockedTargets:Set[${Me.Ship.MaxLockedTargets}]
+			Calculated_MaxLockedTargets:Set[${MyShip.MaxLockedTargets}]
 		}
 	}
 
@@ -1325,7 +1325,7 @@ objectdef obj_Ship
 	; TODO - Add mid and low targetable modules, and high hostile modules, as well as just mining.
 	method ValidateModuleTargets()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -1351,10 +1351,10 @@ objectdef obj_Ship
 	{
 		;echo CycleMiningLaser: ${Slot} Activate: ${Activate}
 		if ${Activate.Equal[ON]} && \
-			( ${Me.Ship.Module[${Slot}].IsActive} || \
-			  ${Me.Ship.Module[${Slot}].IsDeactivating} || \
-			  ${Me.Ship.Module[${Slot}].IsChangingAmmo} || \
-			  ${Me.Ship.Module[${Slot}].IsReloadingAmmo} \
+			( ${MyShip.Module[${Slot}].IsActive} || \
+			  ${MyShip.Module[${Slot}].IsDeactivating} || \
+			  ${MyShip.Module[${Slot}].IsChangingAmmo} || \
+			  ${MyShip.Module[${Slot}].IsReloadingAmmo} \
 			)
 		{
 			echo "obj_Ship:CycleMiningLaser: Tried to Activate the module, but it's already active or changing state."
@@ -1362,10 +1362,10 @@ objectdef obj_Ship
 		}
 
 		if ${Activate.Equal[OFF]} && \
-			(!${Me.Ship.Module[${Slot}].IsActive} || \
-			  ${Me.Ship.Module[${Slot}].IsDeactivating} || \
-			  ${Me.Ship.Module[${Slot}].IsChangingAmmo} || \
-			  ${Me.Ship.Module[${Slot}].IsReloadingAmmo} \
+			(!${MyShip.Module[${Slot}].IsActive} || \
+			  ${MyShip.Module[${Slot}].IsDeactivating} || \
+			  ${MyShip.Module[${Slot}].IsChangingAmmo} || \
+			  ${MyShip.Module[${Slot}].IsReloadingAmmo} \
 			)
 		{
 			echo "obj_Ship:CycleMiningLaser: Tried to Deactivate the module, but it's already active or changing state."
@@ -1373,8 +1373,8 @@ objectdef obj_Ship
 		}
 
 		if ${Activate.Equal[ON]} && \
-			(	!${Me.Ship.Module[${Slot}].LastTarget(exists)} || \
-				!${Entity[${Me.Ship.Module[${Slot}].LastTarget.ID}](exists)} \
+			(	!${MyShip.Module[${Slot}].LastTarget(exists)} || \
+				!${Entity[${MyShip.Module[${Slot}].LastTarget.ID}](exists)} \
 			)
 		{
 			echo "obj_Ship:CycleMiningLaser: Target doesn't exist"
@@ -1399,7 +1399,7 @@ objectdef obj_Ship
 
 	method DeactivateAllMiningLasers()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -1429,7 +1429,7 @@ objectdef obj_Ship
 	{
 		variable string Slot
 
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -1484,7 +1484,7 @@ objectdef obj_Ship
 	{
 		variable string Slot
 
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -1523,7 +1523,7 @@ objectdef obj_Ship
 	{
 		variable string Slot
 
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -1562,7 +1562,7 @@ objectdef obj_Ship
 	{
 		variable string Slot
 
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -1610,7 +1610,7 @@ objectdef obj_Ship
 			OriginalDistance:Inc[10]
 
 			CurrentDistance:Set[${Entity[${EntityID}].Distance}]
-			UI:UpdateConsole["Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc[(${CurrentDistance} - ${Distance}) / ${Me.Ship.MaxVelocity}].Ceil} Seconds away"]
+			UI:UpdateConsole["Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc[(${CurrentDistance} - ${Distance}) / ${MyShip.MaxVelocity}].Ceil} Seconds away"]
 
 			This:Activate_AfterBurner[]
 			do
@@ -2113,7 +2113,7 @@ objectdef obj_Ship
 
 	method Activate_AfterBurner()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -2138,7 +2138,7 @@ objectdef obj_Ship
 
 	method Activate_Armor_Reps()
 	{
-		if !${Me.Ship(exists) || }
+		if !${MyShip(exists) || }
 		{
 			return
 		}
@@ -2161,7 +2161,7 @@ objectdef obj_Ship
 
 	method Deactivate_Armor_Reps()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -2181,7 +2181,7 @@ objectdef obj_Ship
 
 	function Deactivate_Shield_Transporter(int64 id)
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -2203,7 +2203,7 @@ objectdef obj_Ship
 
 	method Deactivate_AfterBurner()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -2223,7 +2223,7 @@ objectdef obj_Ship
 
 	method Activate_Shield_Booster()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -2245,7 +2245,7 @@ objectdef obj_Ship
 
 	method Deactivate_Shield_Booster()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -2267,7 +2267,7 @@ objectdef obj_Ship
 
 	method Activate_Gang_Links()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -2289,7 +2289,7 @@ objectdef obj_Ship
 
 	method Deactivate_Gang_Links()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -2311,7 +2311,7 @@ objectdef obj_Ship
 
 	method Activate_ECCM()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -2333,7 +2333,7 @@ objectdef obj_Ship
 
 	method Deactivate_ECCM()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -2355,7 +2355,7 @@ objectdef obj_Ship
 
 	method Activate_Tracking_Computer()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -2377,7 +2377,7 @@ objectdef obj_Ship
 
 	method Deactivate_Tracking_Computer()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -2399,7 +2399,7 @@ objectdef obj_Ship
 
 	method Activate_Hardeners()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -2421,7 +2421,7 @@ objectdef obj_Ship
 
 	method Deactivate_Hardeners()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -2443,7 +2443,7 @@ objectdef obj_Ship
 
 	method Activate_SensorBoost()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -2466,7 +2466,7 @@ objectdef obj_Ship
 
 	method Deactivate_SensorBoost()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -2488,7 +2488,7 @@ objectdef obj_Ship
 
 	method Activate_StasisWebs()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -2514,7 +2514,7 @@ objectdef obj_Ship
 
 	method Deactivate_StasisWebs()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -2536,7 +2536,7 @@ objectdef obj_Ship
 
 	method Activate_TargetPainters()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -2569,7 +2569,7 @@ objectdef obj_Ship
 
 	method Deactivate_TargetPainters()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -2591,7 +2591,7 @@ objectdef obj_Ship
 
 	method Activate_Cloak()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -2610,10 +2610,10 @@ objectdef obj_Ship
 				ModuleIter.Value:Click
 			}
 /*
-			elseif !${ModuleIter.Value.IsOnline} && ${Me.Ship.CapacitorPct} > 97
+			elseif !${ModuleIter.Value.IsOnline} && ${MyShip.CapacitorPct} > 97
 			{
-				if ${Math.Calc[${Me.Ship.CPUOutput}-${Me.Ship.CPULoad}]} <  ${ModuleIter.Value.CPUUsage} || \
-					${Math.Calc[${Me.Ship.PowerOutput}-${Me.Ship.PowerLoad}]} <  ${ModuleIter.Value.PowergridUsage}
+				if ${Math.Calc[${MyShip.CPUOutput}-${MyShip.CPULoad}]} <  ${ModuleIter.Value.CPUUsage} || \
+					${Math.Calc[${MyShip.PowerOutput}-${MyShip.PowerLoad}]} <  ${ModuleIter.Value.PowergridUsage}
 				{
 					if ${Salvagers:First(exists)} && ${Salvagers.Value.IsOnline}
 					{
@@ -2634,7 +2634,7 @@ objectdef obj_Ship
 
 	method Deactivate_Cloak()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -2658,7 +2658,7 @@ objectdef obj_Ship
 	{
 		;TODO
 		return
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -2680,7 +2680,7 @@ objectdef obj_Ship
 
 	method Online_Salvager()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -2731,7 +2731,7 @@ objectdef obj_Ship
 	; Returns the salvager range minus 10%
 	member:int OptimalSalvageRange()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return 0
 		}
@@ -2750,7 +2750,7 @@ objectdef obj_Ship
 	; Returns the tractor range minus 10%
 	member:int OptimalTractorRange()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return 0
 		}
@@ -2769,7 +2769,7 @@ objectdef obj_Ship
 	; Returns the targeting range minus 10%
 	member:int OptimalTargetingRange()
 	{
-		return ${Math.Calc[${Me.Ship.MaxTargetRange}*0.90]}
+		return ${Math.Calc[${MyShip.MaxTargetRange}*0.90]}
 	}
 
 	member:bool IsPod()
@@ -2837,7 +2837,7 @@ objectdef obj_Ship
 
 	method Activate_Tractor()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -2860,7 +2860,7 @@ objectdef obj_Ship
 
 	method Deactivate_Tractor()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -2884,7 +2884,7 @@ objectdef obj_Ship
 	{
 		variable int OrbitDistance = 5000
 
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -2921,7 +2921,7 @@ objectdef obj_Ship
 	{
 		variable int KeepAtRangeDistance = 5000
 
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -2956,7 +2956,7 @@ objectdef obj_Ship
 
 	method Activate_Weapons()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -2984,7 +2984,7 @@ objectdef obj_Ship
 
 	method Deactivate_Weapons()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -3009,7 +3009,7 @@ objectdef obj_Ship
 		variable bool NeedReload = FALSE
 		variable int CurrentCharges = 0
 
-		if !${Me.Ship(exists) || ${This.ReloadingWeapons}}
+		if !${MyShip(exists) || ${This.ReloadingWeapons}}
 		{
 			return
 		}
@@ -3104,7 +3104,7 @@ objectdef obj_Ship
 			Me:GetHangarShips[hsIndex]
 			hsIndex:GetIterator[hsIterator]
 
-			shipName:Set[${Me.Ship}]
+			shipName:Set[${MyShip}]
 			if ${shipName.NotEqual[${name}]}
 			{
 				if ${hsIterator:First(exists)}

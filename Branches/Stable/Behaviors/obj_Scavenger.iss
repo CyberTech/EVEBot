@@ -45,12 +45,12 @@ objectdef obj_Scavenger
 		{
 			This.CurrentState:Set["IDLE"]
 		}
-		elseif ${Me.Ship.UsedCargoCapacity} <= ${Math.Calc[${Me.Ship.CargoCapacity}*.95]}
+		elseif ${MyShip.UsedCargoCapacity} <= ${Math.Calc[${MyShip.CargoCapacity}*.95]}
 		{
 			This.CurrentState:Set["SCAVENGE"]
 			return
 		}
-		elseif ${Me.Ship.UsedCargoCapacity} > ${Math.Calc[${Me.Ship.CargoCapacity}*.95]}
+		elseif ${MyShip.UsedCargoCapacity} > ${Math.Calc[${MyShip.CargoCapacity}*.95]}
 		{
 			This.CurrentState:Set["DROPOFFTOCHA"]
 			return
@@ -306,7 +306,7 @@ objectdef obj_Scavenger
 				if ${Entity[${Wreck.Value.ID}](exists)} && \
 					!${Wreck.Value.IsLockedTarget} && \
 					!${Wreck.Value.BeingTargeted} && \
-					${Wreck.Value.Distance} < ${Me.Ship.MaxTargetRange} && \
+					${Wreck.Value.Distance} < ${MyShip.MaxTargetRange} && \
 					( !${Me.ActiveTarget(exists)} || ${Wreck.Value.DistanceTo[${Me.ActiveTarget.ID}]} <= ${Ship.OptimalTractorRange} )
 				{
 					break

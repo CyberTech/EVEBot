@@ -108,7 +108,7 @@ objectdef obj_Drones
 			return
 		}
 
-		if (${Me.Ship.DronebayCapacity} > 0 && \
+		if (${MyShip.DronebayCapacity} > 0 && \
    			${This.DronesInBay} == 0 && \
    			${This.DronesInSpace} < ${Config.Combat.MinimumDronesInSpace})
    		{
@@ -135,7 +135,7 @@ objectdef obj_Drones
 	{
 		variable int DroneQuantitiyToMove = ${Math.Calc[${Config.Common.DronesInBay} - ${This.DronesInBay}]}
 		if ${This.DronesInStation} == 0 || \
-			!${Me.Ship(exists)}
+			!${MyShip(exists)}
 		{
 			return
 		}

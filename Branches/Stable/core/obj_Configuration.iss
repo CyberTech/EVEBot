@@ -700,7 +700,7 @@ objectdef obj_Configuration_Miner
 			}
 			else
 			{
-				This:SetCargoThreshold[${Me.Ship.CargoCapacity}]
+				This:SetCargoThreshold[${MyShip.CargoCapacity}]
 			}
 		}
 		return ${threshold}
