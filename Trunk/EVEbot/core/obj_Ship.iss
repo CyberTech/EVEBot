@@ -1136,7 +1136,7 @@ objectdef obj_Ship inherits obj_BaseClass
 	}
 	member:int TotalActivatedTractorBeams()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return 0
 		}
@@ -1161,7 +1161,7 @@ objectdef obj_Ship inherits obj_BaseClass
 	}
 	member:int TotalActivatedSalvagers()
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return 0
 		}
@@ -1228,7 +1228,7 @@ objectdef obj_Ship inherits obj_BaseClass
 	; Returns the loaded crystal in a mining laser, given the slot name ("HiSlot0"...)
 	member:string LoadedMiningLaserCrystal(string SlotName, bool fullName = FALSE)
 	{
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return "NOCHARGE"
 		}
@@ -1550,7 +1550,7 @@ objectdef obj_Ship inherits obj_BaseClass
 	{
 		variable string Slot
 
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -1590,7 +1590,7 @@ objectdef obj_Ship inherits obj_BaseClass
 	{
 		variable string Slot
 
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}
@@ -1630,7 +1630,7 @@ objectdef obj_Ship inherits obj_BaseClass
 	{
 		variable string Slot
 
-		if !${Me.Ship(exists)}
+		if !${MyShip(exists)}
 		{
 			return
 		}

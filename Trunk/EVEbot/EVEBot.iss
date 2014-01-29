@@ -266,6 +266,30 @@ function main()
 		{
 			call ${Config.Common.Behavior}.ProcessState
 		}
-		wait 5
+
+		call RandomDelay 100
+		#if USE_ISXIM
+			;	Join IRC
+			if !${ChatIRC.IsConnected}
+			{
+				call ChatIRC.Connect
+			}
+		#endif
 	}
+}
+
+;	This function introduces a random delay to make evebot look more organic to data tracking.
+;	The delay should be minor and un-noticeable, unless you're a machine
+;	Range = Value plus or minus 50 milliseconds
+function RandomDelay(int base)
+{
+	variable int WaitTime
+	WaitTime:Set[${Math.Calc[${base} - 50 + ${Math.Rand[100]}]}]
+	variable int FinishTime=${LavishScript.RunningTime}
+	FinishTime:Inc[${WaitTime}]
+	do
+	{
+		wait 1
+	}
+	while ${LavishScript.RunningTime}<${FinishTime}
 }

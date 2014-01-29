@@ -948,7 +948,7 @@ objectdef obj_MissionCommands
 							{
 								LootEntityState:Set["APPROACHING"]
 								Cargo.Value:MoveTo[${MyShip.ID}, CargoHold, ${QuantityToMove}]
-								Me.Ship:StackAllCargo
+								MyShip:StackAllCargo
 								return 3
 							}
 						}

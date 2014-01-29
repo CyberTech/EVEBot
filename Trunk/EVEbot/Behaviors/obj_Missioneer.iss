@@ -26,7 +26,6 @@ objectdef obj_Missioneer inherits obj_BaseClass
 
 	method Pulse()
 	{
-	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		if ${This.PulseTimer.Ready}
 		{
 			This:SetState
