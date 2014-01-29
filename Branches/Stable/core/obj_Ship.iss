@@ -367,7 +367,7 @@ objectdef obj_Ship
 	{
 		if !${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipOreHold](exists)}
 		{
-			Me.Ship:Open
+			MyShip:Open
 		}
 	}
 
@@ -424,7 +424,7 @@ objectdef obj_Ship
 		variable index:item HangarCargo
 		variable iterator CargoIterator
 		variable float Volume=0
-		Me.Ship:GetCorpHangarsCargo[HangarCargo]
+		MyShip:GetCorpHangarsCargo[HangarCargo]
 		if ${IgnoreCrystals}
 			HangarCargo:RemoveByQuery[${LavishScript.CreateQuery[Name =- "Mining Crystal"]}]
 		HangarCargo:GetIterator[CargoIterator]
@@ -513,7 +513,7 @@ objectdef obj_Ship
 		variable index:item HangarCargo
 		variable iterator CargoIterator
 		variable float Volume=0
-		Me.Ship:GetCargo[HangarCargo]
+		MyShip:GetCargo[HangarCargo]
 		HangarCargo:RemoveByQuery[${LavishScript.CreateQuery[Name =- "Mining Crystal"]}]
 		HangarCargo:GetIterator[CargoIterator]
 		if ${CargoIterator:First(exists)}

@@ -56,7 +56,7 @@ objectdef obj_Cargo
 		variable index:item anItemIndex
 		variable iterator   anIterator
 
-		Me.Ship:GetCargo[anItemIndex]
+		MyShip:GetCargo[anItemIndex]
 		anItemIndex:GetIterator[anIterator]
 		if ${anIterator:First(exists)}
 		do
@@ -111,7 +111,7 @@ objectdef obj_Cargo
 
 	method FindAllShipCargo()
 	{
-		Me.Ship:GetCargo[This.MyCargo]
+		MyShip:GetCargo[This.MyCargo]
 
 		variable iterator CargoIterator
 
@@ -132,7 +132,7 @@ objectdef obj_Cargo
 
 	method FindShipCargo(int CategoryIDToMove)
 	{
-		Me.Ship:GetCargo[This.MyCargo]
+		MyShip:GetCargo[This.MyCargo]
 
 		variable iterator CargoIterator
 
@@ -157,7 +157,7 @@ objectdef obj_Cargo
 
 	method FindShipCargoByType(int TypeIDToMove)
    {
-	  Me.Ship:GetCargo[This.MyCargo]
+	  MyShip:GetCargo[This.MyCargo]
 
 	  variable iterator CargoIterator
 
@@ -484,7 +484,7 @@ objectdef obj_Cargo
 		variable index:item HangarCargo
 		variable int QuantityToMove
 		variable iterator CargoIterator
-		Me.Ship:GetFleetHangarCargo[HangarCargo]
+		MyShip:GetFleetHangarCargo[HangarCargo]
 		HangarCargo:GetIterator[CargoIterator]
 
 		UI:UpdateConsole["DEBUG: TransferCargoFromShipCorporateHangarToOreHold", LOG_DEBUG]
@@ -533,7 +533,7 @@ objectdef obj_Cargo
 		variable index:item HangarCargo
 		variable int QuantityToMove
 		variable iterator CargoIterator
-		Me.Ship:GetOreHoldCargo[HangarCargo]
+		MyShip:GetOreHoldCargo[HangarCargo]
 		HangarCargo:GetIterator[CargoIterator]
 
 		if ${CargoIterator:First(exists)}
@@ -562,7 +562,7 @@ objectdef obj_Cargo
 		variable index:item HangarCargo
 		variable int QuantityToMove
 		variable iterator CargoIterator
-		Me.Ship:GetFleetHangarCargo[HangarCargo]
+		MyShip:GetFleetHangarCargo[HangarCargo]
 		HangarCargo:GetIterator[CargoIterator]
 
 		if ${CargoIterator:First(exists)}
@@ -592,7 +592,7 @@ objectdef obj_Cargo
 		variable index:item HangarCargo
 		variable int QuantityToMove
 		variable iterator CargoIterator
-		Me.Ship:GetFleetHangarCargo[HangarCargo]
+		MyShip:GetFleetHangarCargo[HangarCargo]
 		HangarCargo:GetIterator[CargoIterator]
 
 		if ${CargoIterator:First(exists)}
@@ -635,7 +635,7 @@ objectdef obj_Cargo
 		variable index:item HangarCargo
 		variable int QuantityToMove
 		variable iterator CargoIterator
-		Me.Ship:GetCargo[HangarCargo]
+		MyShip:GetCargo[HangarCargo]
 		HangarCargo:GetIterator[CargoIterator]
 
 		if ${CargoIterator:First(exists)}
@@ -889,7 +889,7 @@ objectdef obj_Cargo
 		call Ship.OpenCargo
 
 		/* build the container list */
-		Me.Ship:GetCargo[shipItemIndex]
+		MyShip:GetCargo[shipItemIndex]
 		shipItemIndex:GetIterator[shipItemIterator]
 		shipContainerIndex:Clear
 		if ${shipItemIterator:First(exists)}

@@ -79,7 +79,7 @@ objectdef obj_Drones
 		if ${This.DronesInBay} > 0
 		{
 			UI:UpdateConsole["Launching drones..."]
-			Me.Ship:LaunchAllDrones
+			MyShip:LaunchAllDrones
 			This.WaitingForDrones:Set[5]
 		}
 	}
