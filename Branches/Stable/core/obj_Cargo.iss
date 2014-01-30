@@ -695,14 +695,14 @@ objectdef obj_Cargo
 				{
 					TripHauled:Inc[${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}]}]
 					UI:UpdateConsole["TransferListToPOSCorpHangar(${LSAAObject}): Transferring Cargo: ${CargoIterator.Value.Name} * ${CargoIterator.Value.Quantity} Free Space: ${${LSAAObject}.CargoFreeSpace}"]
-					CargoIterator.Value:MoveTo[${${LSAAObject}.ActiveCan}, FleetHangar, ${Math.Calc[(${${LSAAObject}.CargoFreeSpace} - ${VolumeToMove}) / ${CargoIterator.Value.Volume}]}]
+					CargoIterator.Value:MoveTo[${${LSAAObject}.ActiveCan}, CorpHangars, ${Math.Calc[(${${LSAAObject}.CargoFreeSpace} - ${VolumeToMove}) / ${CargoIterator.Value.Volume}]}, "Corporation Folder 1"]
 					break
 				}
 			}
 			while ${CargoIterator:Next(exists)}
 			if ${ListToMove.Used}
 			{
-				EVE:MoveItemsTo[ListToMove, ${${LSAAObject}.ActiveCan}, FleetHangar]
+				EVE:MoveItemsTo[ListToMove, ${${LSAAObject}.ActiveCan}, CorpHangars, "Corporation Folder 1"]
 			}
 		}
 		else
