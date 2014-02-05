@@ -323,7 +323,7 @@ objectdef obj_Agents
 		amIndex:GetIterator[amIterator]
 		skipList:Clear
 
-		UI:UpdateConsole["obj_Agents: DEBUG: amIndex.Used = ${amIndex.Used}"]
+		UI:UpdateConsole["obj_Agents: DEBUG: amIndex.Used = ${amIndex.Used}", LOG_DEBUG]
 		if ${amIterator:First(exists)}
 		{
 			do
@@ -415,7 +415,7 @@ objectdef obj_Agents
 		}
 
 		/* we should never get here */
-		UI:UpdateConsole["obj_Agents.PickAgent: DEBUG: Script paused."]
+		UI:UpdateConsole["obj_Agents.PickAgent: ERROR: Script paused. No Agents defined, or none available"]
 		Script:Pause
 	}
 
@@ -871,7 +871,7 @@ objectdef obj_Agents
 		if ${dsIndex.Used.Equal[2]} && ${dsIndex[1].Text.Find["View"]} > 0 || ${dsIndex[1].Text.Find["Request"]} > 0
 		{
 			UI:UpdateConsole["obj_Agents: Locator Agent detected, selecting view mission button."]
-			dsIndex[1]:Say[${This.AgentID}]	
+			dsIndex[1]:Say[${This.AgentID}]
 			while ${dsIndex[1].Text.Find["View"]} > 0
 			{
 				UI:UpdateConsole["Waiting for locator agent conversation to update."]
@@ -880,7 +880,7 @@ objectdef obj_Agents
 			}
 		}
 	}
-	
+
 	function RequestMission()
 	{
 		variable index:dialogstring dsIndex
@@ -1247,7 +1247,7 @@ objectdef obj_Agents
 	    wait 60
 		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
 
-		
+
 		; display your dialog options2
 	    variable index:dialogstring dsIndex2
 	    variable iterator dsIterator2
@@ -1261,8 +1261,8 @@ objectdef obj_Agents
 	        dsIterator2.Value:Say[${This.AgentID}]
 			Config.Agents:SetLastCompletionTime[${This.AgentName},${Time.Timestamp}]
 		}
-		
-		
+
+
 		;EVE:Execute[OpenJournal]
 		;wait 50
 		EVE:Execute[CmdCloseActiveWindow]

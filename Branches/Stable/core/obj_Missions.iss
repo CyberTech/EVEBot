@@ -163,7 +163,7 @@ objectdef obj_Missions
 		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
-		UI:UpdateConsole["obj_Missions: DEBUG: amIndex.Used = ${amIndex.Used}"]
+		UI:UpdateConsole["obj_Missions: DEBUG: amIndex.Used = ${amIndex.Used}", LOG_DEBUG]
 		if ${amIterator:First(exists)}
 		{
 			do
@@ -845,7 +845,7 @@ objectdef obj_Missions
 				  KeepAtRangeDistance:Set[${Math.Calc[${MyShip.MaxTargetRange}*0.40/1000].Round}]
 				  KeepAtRangeDistance:Set[${Math.Calc[${KeepAtRangeDistance}*1000]}]
 				  Target.Value:KeepAtRange[${KeepAtRangeDistance}]
-				  
+
 				   if ${Me.TargetCount} < ${Ship.MaxLockedTargets}
 				   {
 					   UI:UpdateConsole["Locking ${Target.Value.Name}"]
@@ -914,7 +914,7 @@ objectdef obj_Missions
 			OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
 			Me.ActiveTarget:Orbit[${OrbitDistance}]
 		}
-		
+
 		if ${HasTargets} && ${Me.ActiveTarget(exists)}
 		{
 			variable int KeepAtRangeDistance
