@@ -323,7 +323,7 @@ objectdef obj_Agents
 		amIndex:GetIterator[amIterator]
 		skipList:Clear
 
-		UI:UpdateConsole["obj_Agents: DEBUG: amIndex.Used = ${amIndex.Used}", LOG_DEBUG]
+		UI:UpdateConsole["obj_Agents: DEBUG: Active/Offered Missions:  ${amIndex.Used}", LOG_DEBUG]
 		if ${amIterator:First(exists)}
 		{
 			do
@@ -397,6 +397,10 @@ objectdef obj_Agents
 				This:SetActiveAgent[${agentName}]
 				return
 			}
+			else
+			{
+				UI:UpdateConsole["obj_Agents: DEBUG: Skipping research agent ${agentName}, in skiplist", LOG_DEBUG]
+			}
 			agentName:Set[${This.AgentList.NextAvailableResearchAgent}]
 		}
 
@@ -406,12 +410,24 @@ objectdef obj_Agents
 			{
 				if ${skipList.Contains[${Config.Agents.AgentID[${This.AgentList.agentIterator.Key}]}]} == FALSE
 				{
-					UI:UpdateConsole["obj_Agents: DEBUG: Setting agent to ${This.AgentList.agentIterator.Key}"]
+					UI:UpdateConsole["obj_Agents: Choosing agent ${This.AgentList.agentIterator.Key}"]
 					This:SetActiveAgent[${This.AgentList.agentIterator.Key}]
 					return
 				}
+				else
+				{
+					UI:UpdateConsole["obj_Agents: DEBUG: Skipping agent ${This.AgentList.agentIterator.Key}, in skiplist", LOG_DEBUG]
+				}
 			}
 			while ${This.AgentList.agentIterator:Next(exists)}
+			; If we fall thru to here, everything was in the skiplist.
+			UI:UpdateConsole["obj_Agents.PickAgent: ERROR: Script paused. All defined agents are in skiplist."]
+			Script:Pause
+		}
+		else
+		{
+			UI:UpdateConsole["obj_Agents.PickAgent: ERROR: Script paused. No non-research agents defined."]
+			Script:Pause
 		}
 
 		/* we should never get here */
