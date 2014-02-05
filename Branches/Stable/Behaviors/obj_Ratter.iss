@@ -308,7 +308,6 @@ objectdef obj_Ratter
 						while ${Item:Next(exists)}
 					}
 				}
-				call Ship.CloseCargo
 				if ${Ship.CargoFull}
 				{
 					UI:UpdateConsole["DEBUG: obj_Ratter: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}", LOG_DEBUG]
