@@ -1305,7 +1305,10 @@ objectdef obj_Ship
 			{
 				variable string CrystalType
 				CrystalType:Set[${CrystalIterator.Value.Name.Token[1, " "]}]
-
+				if ${CystalType.Equal["Ochre"]}
+				{
+					CrystalType:Set["Dark Ochre"]
+				}
 				;echo "DEBUG: ChangeMiningLaserCrystal Testing ${OreType} contains ${CrystalType}"
 				if ${OreType.Find[${CrystalType}](exists)}
 				{
