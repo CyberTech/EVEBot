@@ -5,7 +5,7 @@
 
 	Note: IF you edit this, be sure to note the embedded \n inside the
 	emebedded lavishscript inside the XML. It's required.
-	
+
 	Initialize accepts the root path to the UIElement we're managing, for callees to access as LSGUI.Root
 
 	Currently implemented LavishGUI objects:
@@ -23,6 +23,7 @@ objectdef obj_LSGUI inherits obj_BaseClass
 	variable string SVN_PATH = "$HeadURL$"
 	variable string SVN_AUTHOR = "$Author$"
 	variable string Root = ""
+	variable string SkinName = "eveskin"
 
 	method Initialize(string _Base)
 	{
@@ -44,7 +45,7 @@ objectdef obj_LSGUI inherits obj_BaseClass
 		UIElement[${_Location}]:AddChild["children", ${_Name}, " \
 			<children Name='${_Name}'> \
 			</children> \
-		", "eveskin"]
+		", "${SkinName}"]
 	}
 
 	method CreateText(string _Location, string _Name, int _X, int _Y, int _Height, int _Width, string _Text)
@@ -57,7 +58,7 @@ objectdef obj_LSGUI inherits obj_BaseClass
 				<Width>${_Width}</Width> \
 				<Text>${_Text}</Text> \
 			</Text> \
-		", "eveskin"]
+		", "${SkinName}"]
 	}
 
 	method CreateCheckBox(string _Location, string _Name, int _X, int _Y, int _Height, int _Width, string _ObjectName, string _VarName, string _Text, string _Tooltip="")
@@ -80,7 +81,7 @@ objectdef obj_LSGUI inherits obj_BaseClass
 					${_ObjectName}\:${_VarName}[\${This.Checked}] \n\
 				</OnLeftClick> \
 			</checkbox> \
-		", "eveskin"]
+		", "${SkinName}"]
 	}
 
 	method CreateListBox(string _Location, string _Name, int _X, int _Y, int _Height, int _Width, int _SelectMultiple, string _Sort)
@@ -97,7 +98,7 @@ objectdef obj_LSGUI inherits obj_BaseClass
 				<Items> \
 				</Items> \
 			</listbox> \
-		", "eveskin"]
+		", "${SkinName}"]
 	}
 
 	method CreateButton(string _Location, string _Name, int _X, int _Y, int _Height, int _Width, string _Text, string _OnLeftClick)
@@ -113,6 +114,6 @@ objectdef obj_LSGUI inherits obj_BaseClass
 					${_OnLeftClick.Escape} \
 				</OnLeftClick> \
 			</button> \
-		", "eveskin"]
+		", "${SkinName}"]
 	}
 }
