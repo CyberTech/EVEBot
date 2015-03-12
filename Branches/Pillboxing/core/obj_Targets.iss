@@ -417,10 +417,11 @@ objectdef obj_Targets
 			{
 				if ${ToTarget.Used} > 0 
 				{
-
+					echo "Found Rats to priority target"
 					if !${Entity[${ToTarget[1]}].IsActiveTarget} && \
 					${Entity[${ToTarget[1]}].IsLockedTarget}
 					{	
+						echo "We have a priority targets"
 						;Adding some drone checks here
 						;The checks need to be as follows: PSEUDOCODE POWER
 						/* 
@@ -504,7 +505,8 @@ objectdef obj_Targets
 					{
 						if ${Target2.Value.Distance} > ${MyShip.MaxTargetRange} && !${Ship.Approaching.Equal[${Target2.Value.ID}]} && ${Me.ToEntity.Mode} != 1
 						{
-							Ship:Approach[${Target2.Value.ID},${MyShip.MaxTargetRange}]
+						echo "Approaching ${Target2.Value.Name}"
+							Target2.Value:Approach[${Target2.Value.ID},${MyShip.MaxTargetRange}]
 							break
 							;I'm going to have to update this into a check that checks for sentry drones in space before approaching.
 						}
@@ -580,6 +582,8 @@ objectdef obj_Targets
 		Targetser:Insert["Patient Zero"]
 		Targetser:Insert["Amarr Shipyard Control Tower"]
 		Targetser:Insert["Blood Raider Cathedral"]
+		Targetser:Insert["Guristas Outpost"]
+		Targetser:Insert["Repair Outpost"]
 		Targetser:GetIterator[Targetse]
 		Targetse:First
 		variable int64 KILLID
@@ -664,10 +668,12 @@ objectdef obj_Targets
 		Me:GetTargets[ListOfTargets]
 		if ${ListOfTargets.Used} > 0
 		{
+		echo 'found our targets'
 			ListOfTargets:GetIterator[itty]
 			itty:First
 			do
 			{
+			echo "check"
 				if ${itty.Value.ID.Equal[${Me.ActiveTarget}]}
 				{
 					itty:Next

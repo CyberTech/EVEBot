@@ -599,16 +599,17 @@ objectdef obj_Combat
 			}
 		}
 		Ship.Drones:SendDrones
-		; Activate the weapons, the modules class checks if there's a target (no it doesn't - ct)
+		; Activate the weapons, tVe modules class checks if there's a target (no it doesn't - ct)
 		if ${Ship.TotalActivatedWeapons} > 0 && ${Ship.ChangedTarget}
 		{
+			echo "turn off weapons"
 			Ship:Deactivate_TargetPainters
 			Ship:Deactivate_StasisWebs
 			Ship:Deactivate_Weapons
 		}
 		else
 		{
-			;UI:UpdateConsole["Feuer frei!"]
+			UI:UpdateConsole["Feuer frei!"]
 			if ${Me.ActiveTarget.Radius} > 100 || !${Config.Combat.DontKillFrigs}
 			{
 				Ship:Activate_TargetPainters

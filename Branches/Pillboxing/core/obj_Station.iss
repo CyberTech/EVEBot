@@ -33,27 +33,6 @@ objectdef obj_EVEDB_Stations
 	}
 }
 
-objectdef obj_EVEDB_StationID
-{
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
-	variable string CONFIG_FILE = "${BaseConfig.CONFIG_PATH}/EVEDB_StationID.xml"
-	variable string SET_NAME = "EVEDB_StationID"
-
-	method Initialize()
-	{
-		LavishSettings:Import[${CONFIG_FILE}]
-
-		UI:UpdateConsole["obj_EVEDB_StationID: Initialized", LOG_MINOR]
-	}
-
-	member:int StationID(string stationName)
-	{
-		return ${LavishSettings[${This.SET_NAME}].FindSet[${stationName}].FindSetting[stationName, NOTSET]}
-	}
-}
-
 objectdef obj_Station
 {
 	variable string SVN_REVISION = "$Rev$"
@@ -69,9 +48,9 @@ objectdef obj_Station
 
 	member IsHangarOpen()
 	{
-		if ${EVEWindow[ByName,Inventory].ChildWindowExists[StationItems]} 
+		if ${EVEWindow[Inventory].ChildWindow[StationItems](exists)}
 		{
-			EVEWindow[ByName,Inventory]:MakeChildActive[StationItems]
+			EVEWindow[Inventory].ChildWindow[StationItems]:MakeActive
 			return TRUE
 		}
 		else
@@ -82,9 +61,9 @@ objectdef obj_Station
 	
 	member IsCorpHangarOpen()
 	{
-		if ${EVEWindow[ByName,Inventory].ChildWindowExists[StationCorpHangar](exists)}
+		if ${EVEWindow[Inventory].ChildWindow[StationCorpHangars](exists)}
 		{
-			EVEWindow[ByName,Inventory]:MakeChildActive[StationCorpHangar]
+			EVEWindow[Inventory].ChildWindow[StationCorpHangars]:MakeActive
 			return TRUE
 		}
 		else
@@ -156,7 +135,7 @@ objectdef obj_Station
 	
 	function CloseHangar()
 	{
-		return /* no need to close hangars anymore? */
+		return /* no need to close hangars anymore */
 		if ${This.Docked} == FALSE
 		{
 			return
@@ -165,7 +144,7 @@ objectdef obj_Station
 		if ${This.IsHangarOpen}
 		{
 			UI:UpdateConsole["Closing Cargo Hangar"]
-			EVEWindow[ByCaption,"item hangar"]:Close
+			;EVEWindow[Inventory].ChildWindow[StationItems]:close
 			wait WAIT_CARGO_WINDOW
 			while ${This.IsHangarOpen}
 			{
@@ -268,31 +247,22 @@ objectdef obj_Station
 
 		if ${Entity[${StationID}](exists)}
 		{
-			;TODO, rewrite this whole nasty approach business
+			if ${Entity[${StationID}].Distance} > WARP_RANGE
+			{
+				UI:UpdateConsole["Warping to Station"]
+				call Ship.WarpToID ${StationID}
+				do
+				{
+				   wait 30
+				}
+				while ${Entity[${StationID}].Distance} > WARP_RANGE
+			}
+
 			do
-			{	
-				if ${Entity[${StationID}].Distance} > 150000
-				{
-					UI:UpdateConsole["Warping to Station"]
-					call Ship.WarpToID ${StationID}
-					do
-					{
-					   wait 30
-					}
-					while ${Entity[${StationID}].Distance} > WARP_RANGE
-				}
-				else
-				{
-					if ${Entity[${StationID}].Distance} > DOCKING_RANGE
-					{
-						Entity[${StationID}]:Approach
-						UI:UpdateConsole["Approaching docking range...Is at range - ${Entity[${StationID}].Distance}"]
-						while (${Entity[${StationID}].Distance} > DOCKING_RANGE)
-						{
-							wait 10
-						}
-					}
-				}
+			{
+				Entity[${StationID}]:Dock
+				UI:UpdateConsole["Approaching docking range..."]
+				wait 200 ${This.DockedAtStation[${StationID}]}
 			}
 			while (${Entity[${StationID}].Distance} > DOCKING_RANGE)
 
@@ -302,15 +272,7 @@ objectdef obj_Station
 			do
 			{
 				Entity[${StationID}]:Dock
-		   		wait 30
-		   		Counter:Inc[1]
-		   		if (${Counter} > 20)
-		   		{
-					UI:UpdateConsole["Warning: Docking incomplete after 60 seconds", LOG_CRITICAL]
-					Entity[${StationID}]:Dock
-		      		Counter:Set[0]
-		   		}
-				;UI:UpdateConsole["DEBUG: StationExists = ${Entity[${StationID}](exists)}"]
+		   		wait 200 ${This.DockedAtStation[${StationID}]}
 			}
 			while !${This.DockedAtStation[${StationID}]}
 			wait 75

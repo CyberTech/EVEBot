@@ -1,4 +1,4 @@
-	/*
+/*
 	Ship class
 
 	Main object for interacting with the ship and its functions
@@ -16,12 +16,13 @@ objectdef obj_Ship
 
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 2
-	variable int64 Approaching
+
 	variable int Calculated_MaxLockedTargets
 	variable float BaselineUsedCargo
 	variable bool CargoIsOpen
 	variable int RetryUpdateModuleList
 	variable index:module ModuleList
+	variable index:module ModuleList_ShieldTransporters
 	variable index:module ModuleList_MiningLaser
 	variable index:module ModuleList_Weapon
 	variable index:module ModuleList_ECCM
@@ -45,10 +46,10 @@ objectdef obj_Ship
 	variable bool  m_WaitForCapRecharge = FALSE
 	variable int	m_CargoSanityCounter = 0
 	variable bool InteruptWarpWait = FALSE
+	variable bool AlertedInPod
 	variable string m_Type
 	variable int m_TypeID
 	variable uint ReloadingWeapons = 0
-
 
 	variable iterator ModulesIterator
 
@@ -58,6 +59,7 @@ objectdef obj_Ship
 	{
 		This:StopShip[]
 		LavishScript:RegisterEvent[WINNING]
+		This:UpdateModuleList[]
 		Event[WINNING]:AttachAtom[This:UpdateModuleList]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		UI:UpdateConsole["obj_Ship: Initialized", LOG_MINOR]
@@ -90,27 +92,6 @@ objectdef obj_Ship
 				UI:UpdateConsole["obj_Ship: AmmoGroup: ${Config.Combat.LastWeaponGroup} weapon typeID not found"]
 		}
 	}
-	method ClearModules()
-	{
-		This.ModuleList:Clear
-		This.ModuleList_MiningLaser:Clear
-		This.ModuleList_ECCM:Clear
-		This.ModuleList_Weapon:Clear
-		This.ModuleList_ActiveResists:Clear
-		This.ModuleList_Regen_Shield:Clear
-		This.ModuleList_Repair_Armor:Clear
-		This.ModuleList_AB_MWD:Clear
-		This.ModuleList_Passive:Clear
-		This.ModuleList_Repair_Armor:Clear
-		This.ModuleList_Repair_Hull:Clear
-		This.ModuleList_Salvagers:Clear
-		This.ModuleList_TractorBeams:Clear
-		This.ModuleList_Cloaks:Clear
-		This.ModuleList_StasisWeb:Clear
-		This.ModuleList_SensorBoost:Clear
-		This.ModuleList_TargetPainter:Clear
-		This.ModuleList_TrackingComputer:Clear
-	}
 	method Pulse()
 	{
 		variable iterator itty
@@ -127,44 +108,57 @@ objectdef obj_Ship
 					RetryUpdateModuleList:Set[0]
 					EVEBot:Pause
 				}
+
 				if ${RetryUpdateModuleList} > 0
 				{
 					This:UpdateModuleList
 				}
 
-				/* Ship Armor Repair
-					We rep to a fairly high level here because it's done while we're in warp.
-				*/
-				if ${Me.TargetCount} > 0
-				{
-					This:Activate_Tracking_Computer
-				}
-				; Activate shield (or armor) hardeners
-				; If you don't have hardeners this code does nothing.
-				if ${Me.TargetedByCount} > 0
-				{
-					Ship:Activate_Hardeners
-				}
-				else
-				{
-					if !${Targets.TargetNPCs} && ${Config.Combat.DisableHardeners}
+				if (${Me.ToEntity.Mode} == 3 || !${Config.Common.BotModeName.Equal[Ratter]})
+				{	/* ratter was converted to use obj_Combat already */
+
+					/* Ship Armor Repair
+						We rep to a fairly high level here because it's done while we're in warp.
+					*/
+					if ${This.Total_Armor_Reps} > 0
 					{
-						This:Deactivate_Hardeners
+						if ${MyShip.ArmorPct} < 100
+						{
+							This:Activate_Armor_Reps
+						}
+
+						if ${This.Repairing_Armor}
+						{
+							if ${MyShip.ArmorPct} >= 98
+							{
+								This:Deactivate_Armor_Reps
+								This.Repairing_Armor:Set[FALSE]
+							}
+						}
+					}
+
+					/* Shield Boosters
+						We boost to a higher % in here, as it's done during warp, so cap has time to regen.
+					*/
+					if (!${MyShip.ToEntity.IsCloaked} && (${MyShip.ShieldPct} < 95 || ${Config.Combat.AlwaysShieldBoost})) && !${Miner.AtPanicBookmark}
+					{	/* Turn on the shield booster */
+							This:Activate_Hardeners[]
+							This:Activate_Shield_Booster[]
+					}
+
+					if !${MyShip.ToEntity.IsCloaked} && (${MyShip.ShieldPct} > 99 && (!${Config.Combat.AlwaysShieldBoost}) || ${Miner.AtPanicBookmark})
+					{	/* Turn off the shield booster */
+						This:Deactivate_Shield_Booster[]
 					}
 				}
-				if ${Me.ToEntity.Mode} == 1
-				{
-					This:Activate_AfterBurner
-				}
-				if ${This.ReloadingWeapons}
-				{
-					if ${Math.Calc[${Time.Timestamp} - ${This.ReloadingWeapons}]} > 12
-						This.ReloadingWeapons:Set[0]
-				}
-				This.NextPulse:Set[${Time.Timestamp}]
-				This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-				This.NextPulse:Update
 			}
+			if ${This.ReloadingWeapons} && ${Math.Calc[${Time.Timestamp} - ${This.ReloadingWeapons}]} > 12
+			{
+				This.ReloadingWeapons:Set[0]
+			}
+			This.NextPulse:Set[${Time.Timestamp}]
+			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+			This.NextPulse:Update
 		}
 	}
 
@@ -237,7 +231,7 @@ objectdef obj_Ship
 		}
 	}
 
-	member:bool IsAmmoAvailable()
+		member:bool IsAmmoAvailable()
 	{
 		variable iterator aWeaponIterator
 		variable index:item anItemIndex
@@ -301,10 +295,6 @@ objectdef obj_Ship
 		return ${bAmmoAvailable}
 	}
 
-	function RandomWait(int TIME)
-	{
-		wait ${Math.Rand[${TIME}]:Inc}
-	}
 	member:bool HasCovOpsCloak()
 	{
 		variable bool rVal = FALSE
@@ -349,6 +339,217 @@ objectdef obj_Ship
 		return ${Math.Calc[${MyShip.CargoCapacity}-${MyShip.UsedCargoCapacity}]}
 	}
 
+	member:float CargoUsedSpace()
+	{
+		if !${MyShip(exists)}
+		{
+			return 0
+		}
+
+		if ${MyShip.UsedCargoCapacity} < 0
+		{
+			return ${MyShip.CargoCapacity}
+		}
+		return ${MyShip.UsedCargoCapacity}
+	}
+
+	method StackCargoHold()
+	{
+		if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipCargo](exists)}
+		{
+			EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipCargo]:MakeActive
+			EVEWindow["Inventory"]:StackAll
+		}
+	}
+
+	method StackOreHold()
+	{
+		if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipOreHold](exists)}
+		{
+			EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipOreHold]:MakeActive
+			EVEWindow["Inventory"]:StackAll
+		}
+	}
+
+	member:float OreHoldMinimumFreeSpace()
+	{
+		if !${MyShip(exists)}
+		{
+			return
+		}
+		return ${Math.Calc[${This.OreHoldCapacity} * 0.02]}
+	}
+
+	member:float OreHoldFreeSpace()
+	{
+		if !${MyShip(exists)}
+		{
+			return 0
+		}
+
+		return ${Math.Calc[${This.OreHoldCapacity} - ${This.OreHoldUsedCapacity}]}
+	}
+
+	member:float OreHoldCapacity()
+	{
+		if !${MyShip(exists)}
+		{
+			return 0
+		}
+
+		return ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipOreHold].Capacity}
+	}
+
+	member:float OreHoldUsedCapacity()
+	{
+		if !${MyShip(exists)}
+		{
+			return 0
+		}
+
+		return ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipOreHold].UsedCapacity}
+	}
+
+	member:bool OreHoldFull()
+	{
+		if !${MyShip(exists)}
+		{
+			return FALSE
+		}
+
+		if ${This.OreHoldFreeSpace} <= ${This.OreHoldMinimumFreeSpace}
+		{
+			return TRUE
+		}
+		return FALSE
+	}
+
+	member:bool OreHoldHalfFull()
+	{
+		if !${MyShip(exists)}
+		{
+			return FALSE
+		}
+
+		if ${This.OreHoldFreeSpace} <= ${Math.Calc[${This.OreHoldCapacity}*0.50]}
+		{
+			return TRUE
+		}
+		return FALSE
+	}
+
+	method OpenOreHold()
+	{
+		if !${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipOreHold](exists)}
+		{
+			MyShip:Open
+		}
+	}
+
+	member:bool OreHoldEmpty()
+	{
+		if !${MyShip(exists)}
+		{
+			return FALSE
+		}
+		if ${This.OreHoldUsedCapacity.Int} == 0
+		{
+			return TRUE
+		}
+		return FALSE
+	}
+
+
+	method StackCorpHangar()
+	{
+		if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipFleetHangar](exists)}
+		{
+			EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipFleetHangar]:MakeActive
+			EVEWindow["Inventory"]:StackAll
+		}
+	}
+
+	member:float CorpHangarMinimumFreeSpace()
+	{
+		if !${MyShip(exists)}
+		{
+			return
+		}
+
+		return ${Math.Calc[${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipFleetHangar].Capacity} * 0.02]}
+	}
+
+	member:float CorpHangarFreeSpace()
+	{
+		if !${MyShip(exists)}
+		{
+			return 0
+		}
+
+		return ${Math.Calc[${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipFleetHangar].Capacity} - ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipFleetHangar].UsedCapacity}]}
+	}
+
+	member:float CorpHangarUsedSpace(bool IgnoreCrystals=FALSE)
+	{
+		if !${MyShip(exists)}
+		{
+			return 0
+		}
+
+		variable index:item HangarCargo
+		variable iterator CargoIterator
+		variable float Volume=0
+		MyShip:GetCorpHangarsCargo[HangarCargo]
+		if ${IgnoreCrystals}
+			HangarCargo:RemoveByQuery[${LavishScript.CreateQuery[Name =- "Mining Crystal"]}]
+		HangarCargo:GetIterator[CargoIterator]
+		if ${CargoIterator:First(exists)}
+			do
+			{
+					Volume:Inc[${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}]}]
+			}
+			while ${CargoIterator:Next(exists)}
+		return ${Volume}
+	}
+
+	member:bool CorpHangarFull()
+	{
+		if !${MyShip(exists)}
+		{
+			return FALSE
+		}
+
+		if ${This.CorpHangarFreeSpace} <= ${This.CorpHangarMinimumFreeSpace}
+		{
+			return TRUE
+		}
+		return FALSE
+	}
+
+	member:bool CorpHangarEmpty()
+	{
+		if !${MyShip(exists)}
+		{
+			return FALSE
+		}
+
+		This:OpenCorpHangars
+
+		if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipFleetHangar].UsedCapacity} == 0
+		{
+			return TRUE
+		}
+		return FALSE
+	}
+
+	method OpenCorpHangars()
+	{
+		if !${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipFleetHangar](exists)}
+		{
+			MyShip:Open
+		}
+	}
+
 	member:bool CargoFull()
 	{
 		if !${MyShip(exists)}
@@ -371,6 +572,42 @@ objectdef obj_Ship
 		}
 
 		if ${This.CargoFreeSpace} <= ${Math.Calc[${MyShip.CargoCapacity}*0.50]}
+		{
+			return TRUE
+		}
+		return FALSE
+	}
+
+	member:float CargoNoCrystals()
+	{
+		if !${MyShip(exists)}
+		{
+			return 0
+		}
+
+		variable index:item HangarCargo
+		variable iterator CargoIterator
+		variable float Volume=0
+		MyShip:GetCargo[HangarCargo]
+		HangarCargo:RemoveByQuery[${LavishScript.CreateQuery[Name =- "Mining Crystal"]}]
+		HangarCargo:GetIterator[CargoIterator]
+		if ${CargoIterator:First(exists)}
+			do
+			{
+					Volume:Inc[${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}]}]
+			}
+			while ${CargoIterator:Next(exists)}
+		return ${Volume}
+	}
+
+	member:bool CargoTenthFull()
+	{
+		if !${MyShip(exists)}
+		{
+			return FALSE
+		}
+
+		if ${This.CargoNoCrystals} >= ${Math.Calc[${MyShip.CargoCapacity}*0.10]}
 		{
 			return TRUE
 		}
@@ -403,6 +640,7 @@ objectdef obj_Ship
 			RetryUpdateModuleList:Set[1]
 			return
 		}
+
 		/* build module lists */
 		This.ModuleList:Clear
 		This.ModuleList_MiningLaser:Clear
@@ -423,12 +661,12 @@ objectdef obj_Ship
 		This.ModuleList_TargetPainter:Clear
 		This.ModuleList_TrackingComputer:Clear
 		This.ModuleList_GangLinks:Clear
+		This.ModuleList_ShieldTransporters:Clear
 
-		MyShip:GetModules[This.ModuleList]
 
-		if !${This.ModuleList.Used} && ${MyShip.HighSlots} > 0
+		if !${MyShip:GetModules[This.ModuleList]}
 		{
-			UI:UpdateConsole["ERROR: obj_Ship:UpdateModuleList - No modules found. Retrying in a few seconds - If this ship has slots, you must have at least one module equipped, of any type.", LOG_CRITICAL]
+			UI:UpdateConsole["ERROR: obj_Ship:UpdateModuleList - GetModules failed. Retrying in a few seconds.", LOG_CRITICAL]
 			RetryUpdateModuleList:Inc
 			return
 		}
@@ -456,13 +694,13 @@ objectdef obj_Ship
 				return
 			}
 
-			UI:UpdateConsole["DEBUG: ID: ${ModuleIter.Value.ID} Activatable: ${ModuleIter.Value.IsActivatable} Name: ${ModuleIter.Value.ToItem.Name} Slot: ${ModuleIter.Value.ToItem.Slot} Group: ${ModuleIter.Value.ToItem.Group} ${GroupID} Type: ${ModuleIter.Value.ToItem.Type} Value: ${ModuleIter.Value} ${TypeID}", LOG_DEBUG]
+			UI:UpdateConsole["DEBUG: ID: ${ModuleIter.Value.ID} Activatable: ${ModuleIter.Value.IsActivatable} Name: ${ModuleIter.Value.ToItem.Name} Slot: ${ModuleIter.Value.ToItem.Slot} Group: ${ModuleIter.Value.ToItem.Group} ${GroupID} Type: ${ModuleIter.Value.ToItem.Type} ${TypeID}", LOG_DEBUG]
 
-			if !${ModuleIter.Value.IsActivatable}
-			{
-				This.ModuleList_Passive:Insert[${ModuleIter.Value.ID}]
-				continue
-			}
+			;if !${ModuleIter.Value.IsActivatable}
+			;{
+			;	This.ModuleList_Passive:Insert[${ModuleIter.Value.ID}]
+			;	continue
+			;}
 
 			if ${ModuleIter.Value.MiningAmount(exists)}
 			{
@@ -472,6 +710,9 @@ objectdef obj_Ship
 
 			switch ${GroupID}
 			{
+				case GROUPID_SHIELD_TRANSPORTER
+					This.ModuleList_ShieldTransporters:Insert[${ModuleIter.Value.ID}]
+					break
 				case GROUPID_DAMAGE_CONTROL
 				case GROUPID_SHIELD_HARDENER
 				case GROUPID_ARMOR_HARDENERS
@@ -497,7 +738,10 @@ objectdef obj_Ship
 				case GROUP_ECCM
 					This.ModuleList_ECCM:Insert[${ModuleIter.Value.ID}]
 					break
+				case GROUP_MININGLASER
+				case GROUP_STRIPMINER
 				case GROUPID_FREQUENCY_MINING_LASER
+					This.ModuleList_MiningLaser:Insert[${ModuleIter.Value.ID}]
 					break
 				case GROUPID_SHIELD_BOOSTER
 					This.ModuleList_Regen_Shield:Insert[${ModuleIter.Value.ID}]
@@ -597,7 +841,7 @@ objectdef obj_Ship
 		This.ModuleList_Repair_Armor:GetIterator[ModuleIter]
 		if ${ModuleIter:First(exists)}
 		do
-		{	
+		{
 			UI:UpdateConsole["	 Slot: ${ModuleIter.Value.ToItem.Slot}  ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
 		while ${ModuleIter:Next(exists)}
@@ -681,12 +925,21 @@ objectdef obj_Ship
 
 		UI:UpdateConsole["Tracking Computer Modules:", LOG_MINOR, 2]
 		This.ModuleList_TrackingComputer:GetIterator[ModuleIter]
-		if ${Module:First(exists)}
+		if ${ModuleIter:First(exists)}
 		do
 		{
 			UI:UpdateConsole["	 Slot: ${ModuleIter.Value.ToItem.Slot}  ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
-		while ${Module:Next(exists)}
+		while ${ModuleIter:Next(exists)}
+
+		UI:UpdateConsole["Shield Transporter Modules:", LOG_MINOR, 2]
+		This.ModuleList_ShieldTransporters:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			UI:UpdateConsole["	 Slot: ${ModuleIter.Value.ToItem.Slot}  ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
+		}
+		while ${ModuleIter:Next(exists)}
 	}
 
 	method UpdateBaselineUsedCargo()
@@ -746,7 +999,6 @@ objectdef obj_Ship
 		do
 		{
 			if ${ModuleIter.Value.IsActive} || \
-				${ModuleIter.Value.IsGoingOnline} || \
 				${ModuleIter.Value.IsDeactivating} || \
 				${ModuleIter.Value.IsChangingAmmo} || \
 				${ModuleIter.Value.IsReloadingAmmo}
@@ -773,7 +1025,30 @@ objectdef obj_Ship
 		do
 		{
 			if (${ModuleIter.Value.IsActive} || \
-				${ModuleIter.Value.IsGoingOnline} || \
+				${ModuleIter.Value.IsDeactivating})
+			{
+				count:Inc
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+
+		return ${count}
+	}
+	member:int TotalActivatedShieldTransporters()
+	{
+		if !${MyShip(exists)}
+		{
+			return 0
+		}
+
+		variable int count
+		variable iterator ModuleIter
+
+		This.ModuleList_ShieldTransporters:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if (${ModuleIter.Value.IsActive} || \
 				${ModuleIter.Value.IsDeactivating})
 			{
 				count:Inc
@@ -798,32 +1073,6 @@ objectdef obj_Ship
 		do
 		{
 			if ${ModuleIter.Value.IsActive} || \
-				${ModuleIter.Value.IsGoingOnline} || \
-				${ModuleIter.Value.IsDeactivating}
-			{
-				count:Inc
-			}
-		}
-		while ${ModuleIter:Next(exists)}
-
-		return ${count}
-	}
-
-	member:int TotalActivatedWeapons()
-	{
-		if !${MyShip(exists)}
-		{
-			return 0
-		}
-
-		variable int count
-		variable iterator ModuleIter
-		This.ModuleList_Weapon:GetIterator[ModuleIter]
-		if ${ModuleIter:First(exists)}
-		do
-		{
-			if ${ModuleIter.Value.IsActive} || \
-				${ModuleIter.Value.IsGoingOnline} || \
 				${ModuleIter.Value.IsDeactivating}
 			{
 				count:Inc
@@ -881,7 +1130,7 @@ objectdef obj_Ship
 
 	; Note: This doesn't return ALL the mining amounts, just one.
 	; Returns the laser mining range minus 10%
-	member:int OptimalMiningRange()
+	member:int OptimalMiningRange(float Padding=0.90)
 	{
 		if !${MyShip(exists)}
 		{
@@ -893,7 +1142,26 @@ objectdef obj_Ship
 		This.ModuleList_MiningLaser:GetIterator[ModuleIter]
 		if ${ModuleIter:First(exists)}
 		{
-			return ${Math.Calc[${ModuleIter.Value.OptimalRange}*0.90]}
+			return ${Math.Calc[${ModuleIter.Value.OptimalRange} * ${Padding}]}
+		}
+
+		return 0
+	}
+
+	; Returns the shield transporter range minus 10%
+	member:int OptimalShieldTransporterRange(float Padding=0.90)
+	{
+		if !${MyShip(exists)}
+		{
+			return 0
+		}
+
+		variable iterator ModuleIter
+
+		This.ModuleList_ShieldTransporters:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		{
+			return ${Math.Calc[${ModuleIter.Value.OptimalRange} * ${Padding}]}
 		}
 
 		return 0
@@ -910,14 +1178,13 @@ objectdef obj_Ship
 		if ${MyShip.Module[${SlotName}].Charge(exists)}
 		{
 			if ${fullName}
-								{
-										return ${MyShip.Module[${SlotName}].Charge.Name}
-								}
-								else
-								{
-										return ${MyShip.Module[${SlotName}].Charge.Name.Token[1, " "]}
-
-								}
+			{
+				return ${MyShip.Module[${SlotName}].Charge.Type}
+			}
+			else
+			{
+				return ${MyShip.Module[${SlotName}].Charge.Type.Token[1, " "]}
+			}
 		}
 		return "NOCHARGE"
 
@@ -934,8 +1201,8 @@ objectdef obj_Ship
 			if ${ModuleIter.Value.ToItem.Slot.Equal[${SlotName}]} && \
 				${ModuleIter.Value.Charge(exists)}
 			{
-				;UI:UpdateConsole["DEBUG: obj_Ship:LoadedMiningLaserCrystal Returning ${ModuleIter.Value.Charge.Name.Token[1, " "]}]
-				return ${ModuleIter.Value.Charge.Name.Token[1, " "]}
+				;UI:UpdateConsole["DEBUG: obj_Ship:LoadedMiningLaserCrystal Returning ${ModuleIter.Value.Charge.Type.Token[1, " "]}]
+				return ${ModuleIter.Value.Charge.Type.Token[1, " "]}
 			}
 		}
 		while ${ModuleIter:Next(exists)}
@@ -959,7 +1226,7 @@ objectdef obj_Ship
 		{
 			if ${ModuleIter.Value.LastTarget(exists)} && \
 				${ModuleIter.Value.LastTarget.ID.Equal[${EntityID}]} && \
-				( ${ModuleIter.Value.IsActive} || ${ModuleIter.Value.IsGoingOnline} )
+				${ModuleIter.Value.IsActive}
 			{
 				return TRUE
 			}
@@ -968,6 +1235,58 @@ objectdef obj_Ship
 
 		return FALSE
 	}
+
+	; Returns TRUE if we've got a shield transporter healing this entity already
+	member:bool IsShieldTransportingID(int64 EntityID)
+	{
+		if !${MyShip(exists)}
+		{
+			return
+		}
+
+		variable iterator ModuleIter
+
+		This.ModuleList_ShieldTransporters:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if	${ModuleIter.Value.TargetID} == ${EntityID} && \
+				${ModuleIter.Value.IsActive}
+			{
+				return TRUE
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+
+		return FALSE
+	}
+
+	; Returns how many shield transporters healing this entity already
+	member:int ShieldTransportersOnID(int64 EntityID)
+	{
+		if !${MyShip(exists)}
+		{
+			return
+		}
+
+		variable iterator ModuleIter
+		variable int val=0
+
+		This.ModuleList_ShieldTransporters:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if	${ModuleIter.Value.TargetID} == ${EntityID} && \
+				${ModuleIter.Value.IsActive}
+			{
+				val:Inc[1]
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+
+		return ${val}
+	}
+
 
 	member:bool IsTractoringWreckID(int64 EntityID)
 	{
@@ -984,7 +1303,7 @@ objectdef obj_Ship
 		{
 			if ${ModuleIter.Value.LastTarget(exists)} && \
 				${ModuleIter.Value.LastTarget.ID.Equal[${EntityID}]} && \
-				( ${ModuleIter.Value.IsActive} || ${ModuleIter.Value.IsGoingOnline} )
+				${ModuleIter.Value.IsActive}
 			{
 				return TRUE
 			}
@@ -1009,7 +1328,7 @@ objectdef obj_Ship
 		{
 			if ${ModuleIter.Value.LastTarget(exists)} && \
 				${ModuleIter.Value.LastTarget.ID.Equal[${EntityID}]} && \
-				( ${ModuleIter.Value.IsActive} || ${ModuleIter.Value.IsGoingOnline} )
+				${ModuleIter.Value.IsActive}
 			{
 				return TRUE
 			}
@@ -1069,7 +1388,7 @@ objectdef obj_Ship
 			variable index:item CrystalList
 			variable iterator CrystalIterator
 
-			MyShip.Module[${SlotName}]:GetAvailableAmmo[CrystalList]
+			Me.Ship.Module[${SlotName}]:GetAvailableAmmo[CrystalList]
 
 			if ${CrystalList.Used} == 0
 			{
@@ -1081,12 +1400,15 @@ objectdef obj_Ship
 			{
 				variable string CrystalType
 				CrystalType:Set[${CrystalIterator.Value.Name.Token[1, " "]}]
-
+				if ${CystalType.Equal["Ochre"]}
+				{
+					CrystalType:Set["Dark Ochre"]
+				}
 				;echo "DEBUG: ChangeMiningLaserCrystal Testing ${OreType} contains ${CrystalType}"
 				if ${OreType.Find[${CrystalType}](exists)}
 				{
 					UI:UpdateConsole["Switching Crystal in ${SlotName} from ${LoadedAmmo} to ${CrystalIterator.Value.Name}"]
-					MyShip.Module[${SlotName}]:ChangeAmmo[${CrystalIterator.Value.ID},1]
+					Me.Ship.Module[${SlotName}]:ChangeAmmo[${CrystalIterator.Value.ID},1]
 					; This takes 2 seconds ingame, let's give it 50% more
 					wait 30
 					return
@@ -1128,7 +1450,6 @@ objectdef obj_Ship
 		;echo CycleMiningLaser: ${Slot} Activate: ${Activate}
 		if ${Activate.Equal[ON]} && \
 			( ${MyShip.Module[${Slot}].IsActive} || \
-			  ${MyShip.Module[${Slot}].IsGoingOnline} || \
 			  ${MyShip.Module[${Slot}].IsDeactivating} || \
 			  ${MyShip.Module[${Slot}].IsChangingAmmo} || \
 			  ${MyShip.Module[${Slot}].IsReloadingAmmo} \
@@ -1140,7 +1461,6 @@ objectdef obj_Ship
 
 		if ${Activate.Equal[OFF]} && \
 			(!${MyShip.Module[${Slot}].IsActive} || \
-			  ${MyShip.Module[${Slot}].IsGoingOnline} || \
 			  ${MyShip.Module[${Slot}].IsDeactivating} || \
 			  ${MyShip.Module[${Slot}].IsChangingAmmo} || \
 			  ${MyShip.Module[${Slot}].IsReloadingAmmo} \
@@ -1159,8 +1479,8 @@ objectdef obj_Ship
 			return
 		}
 
-		MyShip.Module[${Slot}].LastTarget:MakeActiveTarget
-		MyShip.Module[${Slot}]:Click
+		Me.Ship.Module[${Slot}].LastTarget:MakeActiveTarget
+		Me.Ship.Module[${Slot}]:Click
 		if ${Activate.Equal[ON]}
 		{
 			; Delay from 30 to 60 seconds before deactivating
@@ -1203,7 +1523,7 @@ objectdef obj_Ship
 		}
 		while ${ModuleIter:Next(exists)}
 	}
-	function ActivateFreeMiningLaser()
+	function ActivateFreeMiningLaser(int64 id=-1)
 	{
 		variable string Slot
 
@@ -1212,7 +1532,16 @@ objectdef obj_Ship
 			return
 		}
 
-		if ${Me.ActiveTarget.CategoryID} != ${Asteroids.AsteroidCategoryID}
+		if ${id.Equal[-1]}
+		{
+			id:Set[${Me.ActiveTarget.ID}]
+		}
+		if !${Entity[${id}](exists)}
+		{
+			UI:UpdateConsole["ActivateFreeMiningLaser: Target ${id} not found", LOG_DEBUG]
+			return
+		}
+		if ${Entity[${id}].CategoryID} != ${Asteroids.AsteroidCategoryID}
 		{
 			UI:UpdateConsole["Error: Mining Lasers may only be used on Asteroids"]
 			return
@@ -1225,7 +1554,6 @@ objectdef obj_Ship
 		do
 		{
 			if !${ModuleIter.Value.IsActive} && \
-				!${ModuleIter.Value.IsGoingOnline} && \
 				!${ModuleIter.Value.IsDeactivating} && \
 				!${ModuleIter.Value.IsChangingAmmo} &&\
 				!${ModuleIter.Value.IsReloadingAmmo}
@@ -1234,7 +1562,7 @@ objectdef obj_Ship
 				if ${ModuleIter.Value.SpecialtyCrystalMiningAmount(exists)}
 				{
 					variable string OreType
-					OreType:Set[${Me.ActiveTarget.Name.Token[2,"("]}]
+					OreType:Set[${Entity[${id}].Name.Token[2,"("]}]
 					OreType:Set[${OreType.Token[1,")"]}]
 					;OreType:Set[${OreType.Replace["(",]}]
 					;OreType:Set[${OreType.Replace[")",]}]
@@ -1242,22 +1570,29 @@ objectdef obj_Ship
 				}
 
 				UI:UpdateConsole["Activating: ${Slot}: ${ModuleIter.Value.ToItem.Name}"]
-				ModuleIter.Value:Click
-				wait 25
+				ModuleIter.Value:Activate[${id}]
 				;TimedCommand ${Math.Rand[600]:Inc[300]} "Script[EVEBot].VariableScope.Ship:CycleMiningLaser[OFF, ${Slot}]"
 				return
 			}
-			wait 10
 		}
 		while ${ModuleIter:Next(exists)}
 	}
 
-	function ActivateFreeTractorBeam()
+	function ActivateFreeTractorBeam(int64 id=-1)
 	{
 		variable string Slot
-		variable iterator ModuleIter
+
 		if !${MyShip(exists)}
 		{
+			return
+		}
+		if ${id.Equal[-1]}
+		{
+			id:Set[${Me.ActiveTarget.ID}]
+		}
+		if !${Entity[${id}](exists)}
+		{
+			UI:UpdateConsole["ActivateFreeTractorBeam: Target ${id} not found", LOG_DEBUG]
 			return
 		}
 
@@ -1268,7 +1603,6 @@ objectdef obj_Ship
 		do
 		{
 			if !${ModuleIter.Value.IsActive} && \
-				!${ModuleIter.Value.IsGoingOnline} && \
 				!${ModuleIter.Value.IsDeactivating} && \
 				!${ModuleIter.Value.IsChangingAmmo} &&\
 				!${ModuleIter.Value.IsReloadingAmmo}
@@ -1276,8 +1610,46 @@ objectdef obj_Ship
 				Slot:Set[${ModuleIter.Value.ToItem.Slot}]
 
 				UI:UpdateConsole["Activating: ${Slot}: ${ModuleIter.Value.ToItem.Name}"]
-				ModuleIter.Value:Click
-				wait 25
+				ModuleIter.Value:Activate[${id}]
+				return
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+	}
+
+	function ActivateFreeShieldTransporter(int64 id=-1)
+	{
+		variable string Slot
+
+		if !${MyShip(exists)}
+		{
+			return
+		}
+		if ${id.Equal[-1]}
+		{
+			id:Set[${Me.ActiveTarget.ID}]
+		}
+		if !${Entity[${id}](exists)}
+		{
+			UI:UpdateConsole["ActivateFreeShieldTransporter: Target ${id} not found", LOG_DEBUG]
+			return
+		}
+
+		variable iterator ModuleIter
+
+		This.ModuleList_ShieldTransporters:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if !${ModuleIter.Value.IsActive} && \
+				!${ModuleIter.Value.IsDeactivating} && \
+				!${ModuleIter.Value.IsChangingAmmo} &&\
+				!${ModuleIter.Value.IsReloadingAmmo}
+			{
+				Slot:Set[${ModuleIter.Value.ToItem.Slot}]
+
+				UI:UpdateConsole["Activating: ${Slot}: ${ModuleIter.Value.ToItem.Name}"]
+				ModuleIter.Value:Activate[${id}]
 				return
 			}
 		}
@@ -1300,7 +1672,6 @@ objectdef obj_Ship
 		do
 		{
 			if !${ModuleIter.Value.IsActive} && \
-				!${ModuleIter.Value.IsGoingOnline} && \
 				!${ModuleIter.Value.IsDeactivating} && \
 				!${ModuleIter.Value.IsChangingAmmo} &&\
 				!${ModuleIter.Value.IsReloadingAmmo}
@@ -1309,9 +1680,9 @@ objectdef obj_Ship
 
 				UI:UpdateConsole["Activating: ${Slot}: ${ModuleIter.Value.ToItem.Name}"]
 				ModuleIter.Value:Click
-				wait 10
 				return
 			}
+			wait 10
 		}
 		while ${ModuleIter:Next(exists)}
 	}
@@ -1322,7 +1693,7 @@ objectdef obj_Ship
 		EVE:Execute[CmdStopShip]
 	}
 
-	; Approaches EntityID to within 5% of Distance, then stops ship.  Momentum will handle the rest. - NO IT JUST APPROACHES, fuck momentum
+	; Approaches EntityID to within 5% of Distance, then stops ship.  Momentum will handle the rest.
 	function Approach(int64 EntityID, int64 Distance)
 	{
 		if ${Entity[${EntityID}](exists)}
@@ -1337,8 +1708,9 @@ objectdef obj_Ship
 			OriginalDistance:Inc[10]
 
 			CurrentDistance:Set[${Entity[${EntityID}].Distance}]
-			UI:UpdateConsole["Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc[(${CurrentDistance} - ${Distance}) / (${MyShip.MaxVelocity}*${This.ModuleList_AB_MWD[1].VelocityBonus}).Ceil} Seconds away"]
+			UI:UpdateConsole["Approaching: ${Entity[${EntityID}].Name} - ${Math.Calc[(${CurrentDistance} - ${Distance}) / ${MyShip.MaxVelocity}].Ceil} Seconds away"]
 
+			This:Activate_AfterBurner[]
 			do
 			{
 				Entity[${EntityID}]:Approach
@@ -1351,41 +1723,17 @@ objectdef obj_Ship
 					UI:UpdateConsole["DEBUG: obj_Ship:Approach: ${Entity[${EntityID}].Name} is getting further away!  Is it moving? Are we stuck, or colliding?", LOG_MINOR]
 				}
 			}
-			while ${CurrentDistance} > ${Distance}
-		}
-	}
-	method Approach(int64 EntityID, int64 Distance)
-	{
-		UI:UpdateConsole["Approaching ${Entity[${EntityID}].Name} at distance ${Entity[${EntityID}].Distance}."]
-		if ${Entity[${EntityID}](exists)}
-		{
-			if ${Distance} > 0
-			{
-				Entity[${EntityID}]:Approach[${Distance}]
-			}
-			else
-			{
-				Entity[${EntityID}]:Approach
-			}
-			Approaching:Set[${EntityID}]
+			while ${CurrentDistance} > ${Math.Calc64[${Distance} * 1.05]}
+			EVE:Execute[CmdStopShip]
+			This:Deactivate_AfterBurner[]
 		}
 	}
 
-	member IsCargoOpen()
+	member:bool IsCargoOpen()
 	{
-		;if ${EVEWindow[ByCaption,"active ship"](exists)}
-		if ${EVEWindow[ByName,"Inventory"](exists)}
+		if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipCargo](exists)}
 		{
-			;if ${EVEWindow[ByCaption,"active ship"].Caption(exists)}
-			if ${EVEWindow[ByName,"Inventory"].Caption(exists)}
-			{
-				return TRUE
-			}
-			else
-			{
-				UI:UpdateConsole["\${EVEWindow[ByCaption,"active ship"](exists)} == ${EVEWindow[ByCaption,"active ship"](exists)}", LOG_DEBUG]
-				UI:UpdateConsole["\${EVEWindow[ByCaption,"active ship"].Caption(exists)} == ${EVEWindow[ByCaption,"active ship"].Caption(exists)}", LOG_DEBUG]
-			}
+			return TRUE
 		}
 		return FALSE
 	}
@@ -1397,32 +1745,9 @@ objectdef obj_Ship
 			UI:UpdateConsole["Opening Ship Cargohold"]
 			MyShip:Open
 			wait WAIT_CARGO_WINDOW
-
-			; Note that this has a race condition. Iff the window populates fully before we check the CaptionCount
-			; OR if the cargo hold is empty, then we will sit forever.  Hence the LoopCheck test
-			; -- CyberTech
-			variable int CaptionCount
-			variable int LoopCheck
-
-			LoopCheck:Set[0]
-			CaptionCount:Set[${EVEWindow[byName,"Inventory"].Caption.Token[2,"["].Token[1,"]"]}]	
-			;UI:UpdateConsole["obj_Ship: Waiting for cargo to load: CaptionCount: ${CaptionCount}", LOG_DEBUG]
-			variable index:item MyCargo
-			MyShip:GetCargo[MyCargo]
-			while ( ${CaptionCount} > ${MyCargo.Used} && \
-					${LoopCheck} < 10 )
-			{
-				UI:UpdateConsole["obj_Ship: Waiting for cargo to load...(${LoopCheck})", LOG_MINOR]
-				while !${This.IsCargoOpen}
-				{
-					wait 1
-				}
-				wait 10
-				LoopCheck:Inc
-				MyShip:GetCargo[MyCargo]
-			}
+			EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipCargo]:MakeActive
 		}
-		EVEWindow[ByName,"Inventory"]:StackAll
+		EVEWindow[ByItemID, ${MyShip.ID}]:StackAll
 		wait 5
 	}
 
@@ -1431,11 +1756,10 @@ objectdef obj_Ship
 		if ${This.IsCargoOpen}
 		{
 			UI:UpdateConsole["Closing Ship Cargohold"]
-			EVEWindow[byName,"Inventory"]:Close
+			EVEWindow["Inventory"]:Close
 			wait WAIT_CARGO_WINDOW
 			while ${This.IsCargoOpen}
 			{
-				EVEWindow[byName,"Inventory"]:Close
 				wait 1
 			}
 			wait 10
@@ -1457,12 +1781,7 @@ objectdef obj_Ship
 			return
 		}
 
-		if ${Drones.DronesInSpace} > 0
-		{
-			Entity[${Id}]:AlignTo
-			UI:UpdateConsole["Aligning prior to warp"]
-			wait 2
-		}
+		Entity[${Id}]:AlignTo
 		call This.WarpPrepare
 		while ${Entity[${Id}].Distance} >= WARP_RANGE
 		{
@@ -1479,6 +1798,7 @@ objectdef obj_Ship
 				}
 				wait 10
 			}
+
 			call This.WarpWait
 			if ${Return} == 2
 			{
@@ -1536,7 +1856,7 @@ objectdef obj_Ship
 
 	function WarpToBookMarkName(string DestinationBookmarkLabel, bool WarpFleet=FALSE)
 	{
-		if (!${EVE.Bookmark[${DestinationBookmarkLabel}](exists)}) || ${EVE.Bookmark[${DestinationBookmarkLabel}].ID} <= 0
+		if (!${EVE.Bookmark[${DestinationBookmarkLabel}](exists)})
 		{
 			UI:UpdateConsole["ERROR: Bookmark: '${DestinationBookmarkLabel}' does not exist!", LOG_CRITICAL]
 			return
@@ -1575,14 +1895,8 @@ objectdef obj_Ship
 			UI:UpdateConsole["DEBUG: To: ${DestinationSystemID} At: ${Me.SolarSystemID}", LOG_DEBUG]
 			UI:UpdateConsole["Setting autopilot from ${Universe[${Me.SolarSystemID}].Name} to ${Universe[${DestinationSystemID}].Name}"]
 			Universe[${DestinationSystemID}]:SetDestination
-			while !${Me.SolarSystemID.Equal[${DestinationSystemID}]}			
-			{
-				if !${Me.AutoPilotOn}
-				{
-					EVE:Execute[CmdToggleAutopilot]
-				}
-				wait 100
-			}
+
+			call This.ActivateAutoPilot
 		}
 		wait 20
 		while ${EVE.EntitiesCount} == 2
@@ -1598,6 +1912,7 @@ objectdef obj_Ship
 		{
 			return
 		}
+
 		if ${Me.InStation}
 		{
 			call Station.Undock
@@ -1605,18 +1920,6 @@ objectdef obj_Ship
 
 		call This.WarpPrepare
 		; Note -- this does not handle WarpFleet=true (the fleet wont' change systems)
-		if ${EVE.Station[DestinationBookmark.ItemID]}
-		{
-			UI:UpdateConsole["New WarpToBookMark code is working!"]
-			DestinationBookmark:SetDestination
-			while ${EVE.JumpsToStation[DestinationBookmark.ItemID]} > 0
-			{
-				if !${Me.AutoPilotOn}
-				{
-					EVE:Execute[CmdToggleAutopilot]
-				}
-			}
-		}
 		call This.TravelToSystem ${DestinationBookmark.SolarSystemID}
 
 #if EVEBOT_DEBUG
@@ -1722,9 +2025,39 @@ objectdef obj_Ship
 				(${DestinationBookmark.AgentID(exists)} && ${DestinationBookmark.LocationID(exists)})
 		{
 			/* This is an in-space bookmark, or a dungeon bookmark, just warp to it. */
-						;Gonna put a workaround in here for Bookmark.ToEntity not working, since this is firing wrong on a lot of stuff
-						;Aka, this shouldn't be firing at all for stations
-						wait 100
+
+			WarpCounter:Set[1]
+			while ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${DestinationBookmark.X}, ${DestinationBookmark.Y}, ${DestinationBookmark.Z}]} > WARP_RANGE
+			{
+				;echo Bookmark Distance: ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${DestinationBookmark.X}, ${DestinationBookmark.Y}, ${DestinationBookmark.Z}]} > WARP_RANGE
+				if ${WarpCounter} > 10
+				{
+					UI:UpdateConsole["obj_Ship:WarpToBookMark - Failed to arrive at bookmark after ${WarpCounter} warps", LOG_CRITICAL]
+					return
+				}
+
+				if ${DestinationBookmark.AgentID(exists)} && ${DestinationBookmark.LocationID(exists)} && \
+					${Entity["TypeID = TYPE_ACCELERATION_GATE"](exists)}
+				{
+					call This.Approach ${Entity["TypeID = TYPE_ACCELERATION_GATE"].ID} DOCKING_RANGE
+					wait 10
+					UI:UpdateConsole["Activating Acceleration Gate..."]
+					while !${This.WarpEntered}
+					{
+						Entity["TypeID = TYPE_ACCELERATION_GATE"]:Activate
+						wait 10
+					}
+					call This.WarpWait
+					if ${Return} == 2
+					{
+						return
+					}
+				}
+				else
+				{
+					UI:UpdateConsole["2: Warping to bookmark ${Label} (Attempt #${WarpCounter})"]
+					while !${This.WarpEntered} && ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${DestinationBookmark.X}, ${DestinationBookmark.Y}, ${DestinationBookmark.Z}]} > WARP_RANGE
+					{
 						if ${WarpFleet}
 						{
 							DestinationBookmark:WarpFleetTo
@@ -1733,30 +2066,21 @@ objectdef obj_Ship
 						{
 							DestinationBookmark:WarpTo
 						}
-						UI:UpdateConsole["Attempting to warp to mission now."]
-						wait 20
-						variable int intCount = 0
-						while ${Me.ToEntity.Mode} != 3
-						{
-							wait 50
-							intCount:Inc	
-							if ${intCount} >= 3
-							{
-								UI:UpdateConsole["Something is very wrong, calling return to hopefully update bookmark reference"]
-								return
-							}			
-						}
-
+						wait 10
+					}
 					call This.WarpWait
+					if ${Return} == 2
+					{
+						return
+					}
+					WarpCounter:Inc
+				}
+			}
 		}
 		else
 		{
 			/* This is an entity bookmark, but that entity is not on the overhead yet. */
-			if ${Label.Equal[NULL]}
-			{
-				UI:UpdateConsole["NULL bookmark found, returning."]
-				return
-			}
+
 			WarpCounter:Set[1]
 			while !${DestinationBookmark.ToEntity(exists)}
 			{
@@ -1810,8 +2134,9 @@ objectdef obj_Ship
 		{
 			This:Deactivate_Cloak[]
 		}
-		;This:Deactivate_SensorBoost
-		This:Deactivate_AfterBurner
+		This.Drones:ReturnAllToDroneBay
+		This:Deactivate_SensorBoost
+
 		if ${This.Drones.WaitingForDrones}
 		{
 			UI:UpdateConsole["Drone deployment already in process, delaying warp (${This.Drones.WaitingForDrones})", LOG_CRITICAL]
@@ -1821,6 +2146,14 @@ objectdef obj_Ship
 			}
 			while ${This.Drones.WaitingForDrones}
 		}
+		variable int Counter = 0
+
+		; *2 because we're only waiting half a second.
+		while (${This.Drones.DronesInSpace[FALSE]} > 1 && ${Counter:Inc} < (${Config.Combat.MaxDroneReturnWaitTime}*2))
+		{
+			wait 5
+		}
+
 		This:DeactivateAllMiningLasers[]
 		;This:UnlockAllTargets[]
 		call This.Drones.ReturnAllToDroneBay
@@ -1828,7 +2161,7 @@ objectdef obj_Ship
 
 	member:bool InWarp()
 	{
-		if ${Me.ToEntity.Mode} == 3
+		if ${Me.InSpace} && ${Me.ToEntity.Mode} == 3
 		{
 			return TRUE
 		}
@@ -1889,7 +2222,7 @@ objectdef obj_Ship
 		This.ModuleList_AB_MWD:GetIterator[ModuleIter]
 		if ${ModuleIter:First(exists)}
 		{
-			if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline} && ${MyShip.CapacitorPct} > 30
+			if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline}
 			{
 				UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
 				ModuleIter.Value:Click
@@ -1945,9 +2278,31 @@ objectdef obj_Ship
 			if ${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsDeactivating}
 			{
 				UI:UpdateConsole["Deactivating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
-				ModuleIter.Value:Activate
+				ModuleIter.Value:Click
 			}
 		}
+	}
+
+	function Deactivate_Shield_Transporter(int64 id)
+	{
+		if !${MyShip(exists)}
+		{
+			return
+		}
+
+		variable iterator ModuleIter
+
+		This.ModuleList_ShieldTransporters:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+		if ${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsDeactivating} && ${ModuleIter.Value.TargetID} == ${id}
+			{
+				UI:UpdateConsole["Deactivating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
+				ModuleIter.Value:Deactivate
+			}
+		}
+		while ${ModuleIter:Next(exists)}
 	}
 
 	method Deactivate_AfterBurner()
@@ -1986,7 +2341,7 @@ objectdef obj_Ship
 			if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline}
 			{
 				UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
-				ModuleIter.Value:Activate
+				ModuleIter.Value:Click
 			}
 		}
 		while ${ModuleIter:Next(exists)}
@@ -2359,14 +2714,12 @@ objectdef obj_Ship
 				ModuleIter.Value:Click
 			}
 /*
-			elseif !${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsGoingOnline} && \
-				${MyShip.CapacitorPct} > 97
+			elseif !${ModuleIter.Value.IsOnline} && ${MyShip.CapacitorPct} > 97
 			{
-
 				if ${Math.Calc[${MyShip.CPUOutput}-${MyShip.CPULoad}]} <  ${ModuleIter.Value.CPUUsage} || \
 					${Math.Calc[${MyShip.PowerOutput}-${MyShip.PowerLoad}]} <  ${ModuleIter.Value.PowergridUsage}
 				{
-					if ${Salvagers:First(exists)} && ${Salvagers.Value.IsOnline} && !${Salvagers.Value.IsGoingOnline}
+					if ${Salvagers:First(exists)} && ${Salvagers.Value.IsOnline}
 					{
 						UI:UpdateConsole["Putting ${Salvagers.Value.ToItem.Name} offline."]
 						Salvagers.Value:PutOffline
@@ -2453,7 +2806,7 @@ objectdef obj_Ship
 
 	member:bool IsCloaked()
 	{
-		if ${Me.ToEntity(exists)} && ${Me.ToEntity.IsCloaked}
+		if ${Me.InSpace} && ${Me.ToEntity(exists)} && ${Me.ToEntity.IsCloaked}
 		{
 			return TRUE
 		}
@@ -2475,7 +2828,7 @@ objectdef obj_Ship
 	{
 		if ${This.IsCargoOpen}
 		{
-			EVEWindow[ByName,"Inventory"]:StackAll
+			EVEWindow[ByItemID, ${MyShip.ID}]:StackAll
 		}
 	}
 
@@ -2517,37 +2870,45 @@ objectdef obj_Ship
 		return 0
 	}
 
-   ; Returns the targeting range minus 10%
-   member:int OptimalTargetingRange()
-   {
-      return ${Math.Calc[${MyShip.MaxTargetRange}*0.90]}
-   }
+	; Returns the targeting range minus 10%
+	member:int OptimalTargetingRange()
+	{
+		return ${Math.Calc[${MyShip.MaxTargetRange}*0.90]}
+	}
 
 	member:bool IsPod()
 	{
 		variable string ShipName = ${MyShip}
 		variable int GroupID
 		variable int TypeID
-		
-		if ${Me.InSpace}
+
+		if ${Me.InSpace} && !${Me.InStation}
 		{
 			GroupID:Set[${MyShip.ToEntity.GroupID}]
 			TypeID:Set[${MyShip.ToEntity.TypeID}]
 		}
-		else
+		elseif !${Me.InSpace} && ${Me.InStation}
 		{
 			GroupID:Set[${MyShip.ToItem.GroupID}]
 			TypeID:Set[${MyShip.ToItem.TypeID}]
 		}
+		else
+		{
+			return FALSE
+		}
 		if ${ShipName.Right[10].Equal["'s Capsule"]} || \
 			${GroupID} == GROUP_CAPSULE
 		{
-			if ${This.m_TypeID} != ${TypeID}
+			if !${This.AlertedInPod}
 			{
-				This.RetryUpdateModuleList:Set[1]
+				Sound:Speak["Critical Information: ${Me.Name} is in a pod"]
+				Sound:Speak["How we deal with death is at least as important as how we deal with life\\, wouldn't you say??", 1.1]
+				UI:UpdateConsole["Critical Information: ${Me.Name} is in a pod", LOG_CRITICAL]
+				This.AlertedInPod:Set[TRUE]
 			}
 			return TRUE
 		}
+		This.AlertedInPod:Set[FALSE]
 		return FALSE
 	}
 
@@ -2594,7 +2955,8 @@ objectdef obj_Ship
 			if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline}
 			{
 				UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
-				ModuleIter.Value:Click
+
+				ModuleIter.Value:Activate
 			}
 		}
 		while ${ModuleIter:Next(exists)}
@@ -2624,7 +2986,7 @@ objectdef obj_Ship
 
 	method OrbitAtOptimal()
 	{
-		variable int OrbitDistance = 0
+		variable int OrbitDistance = 5000
 
 		if !${MyShip(exists)}
 		{
@@ -2634,16 +2996,16 @@ objectdef obj_Ship
 		{
 			return
 		}
-		if ${Me.ToEntity.Mode} == 4 || (${Me.ToEntity.Mode} == 1 && (${Entity[${GATEID}].Distance} > 10000 && ${Entity[${GATEID}](exists)}) && (${Entity[${BEACONID}].Distance} > 10000 && ${Entity[${BEACONID}](exists)}))
+		if ${Me.ToEntity.Mode} == 4 || ${Me.ToEntity.Mode} == 1
 		{
 			; already orbiting something
+			This:Activate_AfterBurner
 			return
 		}
 
 		variable iterator ModuleIter
 		This.ModuleList_Weapon:GetIterator[ModuleIter]
 		if ${ModuleIter:First(exists)}
-		do
 		{
 			OrbitDistance:Set[${Math.Calc[${ModuleIter.Value.Charge.MaxFlightTime}*${ModuleIter.Value.Charge.MaxVelocity}*.85]}]
 			if ${ModuleIter.Value.OptimalRange} > ${OrbitDistance}
@@ -2656,10 +3018,44 @@ objectdef obj_Ship
 			}
 			UI:UpdateConsole["Orbiting active target at ${Math.Calc[${OrbitDistance}/1000]} KM."]
 			Me.ActiveTarget:Orbit[${OrbitDistance}]
+		}
+	}
+	
+	method KeepAtRangeAtOptimal()
+	{
+		variable int KeepAtRangeDistance = 5000
+
+		if !${MyShip(exists)}
+		{
 			return
 		}
-		while ${ModuleIter:Next(exists)}
-		Me.ActiveTarget:Orbit[${OrbitDistance}]
+		if ${This.ReloadingWeapons}
+		{
+			return
+		}
+		if ${Me.ToEntity.Mode} == 4 || ${Me.ToEntity.Mode} == 1
+		{
+			; already Keeping something AtRange
+			This:Activate_AfterBurner
+			return
+		}
+
+		variable iterator ModuleIter
+		This.ModuleList_Weapon:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		{
+			KeepAtRangeDistance:Set[${Math.Calc[${ModuleIter.Value.Charge.MaxFlightTime}*${ModuleIter.Value.Charge.MaxVelocity}*.85]}]
+			if ${ModuleIter.Value.OptimalRange} > ${KeepAtRangeDistance}
+			{
+				KeepAtRangeDistance:Set[${ModuleIter.Value.OptimalRange}]
+			}
+			if ${KeepAtRangeDistance} == 0
+			{
+				return
+			}
+			UI:UpdateConsole["KeepingAtRange active target at ${Math.Calc[${KeepAtRangeDistance}/1000]} KM."]
+			Me.ActiveTarget:KeepAtRange[${KeepAtRangeDistance}]
+		}
 	}
 
 	method Activate_Weapons()
@@ -2681,23 +3077,10 @@ objectdef obj_Ship
 			;UI:UpdateConsole["ModuleIter.Value.IsChangingAmmo = ${ModuleIter.Value.IsChangingAmmo}"]
 			;UI:UpdateConsole["ModuleIter.Value.IsReloadingAmmo = ${ModuleIter.Value.IsReloadingAmmo}"]
 			;UI:UpdateConsole["ModuleIter.Value.IsOnline = ${ModuleIter.Value.IsOnline}"]
-			if !${ModuleIter.Value.IsActive} && !${ModuleIter.Value.IsChangingAmmo} &&\ 
-			!${ModuleIter.Value.IsReloadingAmmo} && ${ModuleIter.Value.IsOnline} &&\
-			 (${Me.ActiveTarget.Distance} < ${Math.Calc[${ModuleIter.Value.Charge.MaxFlightTime}*${ModuleIter.Value.Charge.MaxVelocity}*.90]} || ${Me.ActiveTarget.Distance} < (${ModuleIter.Value.AccuracyFalloff}+${ModuleIter.Value.OptimalRange}))
-			{	
-				;;UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
-				ModuleIter.Value:Activate
-			}
-			else
+			if !${ModuleIter.Value.IsActive} && !${ModuleIter.Value.IsChangingAmmo} && !${ModuleIter.Value.IsReloadingAmmo} && ${ModuleIter.Value.IsOnline}
 			{
-				if ${Me.ActiveTarget.Distance} < ${Math.Calc[${ModuleIter.Value.Charge.MaxFlightTime}*${ModuleIter.Value.Charge.MaxVelocity}*.90]} || ${Me.ActiveTarget.Distance} < ${ModuleIter.Value.AccuracyFalloff}+${ModuleIter.Value.OptimalRange}
-				{
-					variable int64 EntityToChangeTo = ${Targets.LockedTargetInWeaponRange[${Math.Calc[${ModuleIter.Value.AccuracyFalloff}+${ModuleIter.Value.OptimalRange}]}]}
-					if ${EntityToChangeTo} > 0
-					{
-						Entity[${EntityToChangeTo}]:MakeActiveTarget
-					}
-				}
+				;;UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
+				ModuleIter.Value:Click
 			}
 		}
 		while ${ModuleIter:Next(exists)}
@@ -2719,7 +3102,7 @@ objectdef obj_Ship
 			if (${ModuleIter.Value.IsActive} || ${ModuleIter.Value.IsWaitingForActiveTarget}) && ${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsDeactivating}
 			{
 				;;UI:UpdateConsole["Deactivating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
-				ModuleIter.Value:Deactivate
+				ModuleIter.Value:Click
 			}
 		}
 		while ${ModuleIter:Next(exists)}
@@ -2730,7 +3113,7 @@ objectdef obj_Ship
 		variable bool NeedReload = FALSE
 		variable int CurrentCharges = 0
 
-		if !${MyShip(exists)}
+		if !${MyShip(exists) || ${This.ReloadingWeapons}}
 		{
 			return
 		}
@@ -2781,7 +3164,8 @@ objectdef obj_Ship
 
 		; ignore forced reload if we can only have one charge
 		; Can't use an iterator that hasn't been initialized OR has no value. Reverting this change. - Valerian
-		if ${ForceReload} || ${NeedReload}
+		; ReloadingWeapons is reset in Ship.Pulse every 12 seconds.
+		if !${This.ReloadingWeapons} && (${ForceReload} || ${NeedReload})
 		{
 			UI:UpdateConsole["Reloading Weapons..."]
 			EVE:Execute[CmdReloadAmmo]
@@ -2795,7 +3179,7 @@ objectdef obj_Ship
 		{
 			return ${MyShip.ToItem.Type}
 		}
-		else
+		elseif ${Me.InSpace} && !${Me.InStation}
 		{
 			return ${Me.ToEntity.Type}
 		}
@@ -2807,7 +3191,7 @@ objectdef obj_Ship
 		{
 			return ${MyShip.ToItem.TypeID}
 		}
-		else
+		elseif ${Me.InSpace} && !${Me.InStation}
 		{
 			return ${Me.ToEntity.TypeID}
 		}
