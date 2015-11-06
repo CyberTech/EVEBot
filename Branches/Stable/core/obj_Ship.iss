@@ -25,6 +25,7 @@ objectdef obj_Ship
 	variable index:module ModuleList_ShieldTransporters
 	variable index:module ModuleList_MiningLaser
 	variable index:module ModuleList_Weapon
+	variable index:module ModuleList_ECM_Burst
 	variable index:module ModuleList_ECCM
 	variable index:module ModuleList_ActiveResists
 	variable index:module ModuleList_Regen_Shield
@@ -569,6 +570,7 @@ objectdef obj_Ship
 		/* build module lists */
 		This.ModuleList:Clear
 		This.ModuleList_MiningLaser:Clear
+		This.ModuleList_ModuleList_ECM_Burst:Clear
 		This.ModuleList_ECCM:Clear
 		This.ModuleList_Weapon:Clear
 		This.ModuleList_ActiveResists:Clear
@@ -660,6 +662,9 @@ objectdef obj_Ship
 				case GROUP_MISSILELAUNCHERSTANDARD
 					This.ModuleList_Weapon:Insert[${ModuleIter.Value.ID}]
 					break
+				case GROUP_ECM_BURST
+					This.ModuleList_ECM_Burst:Insert[${ModuleIter.Value.ID}]
+					break
 				case GROUP_ECCM
 					This.ModuleList_ECCM:Insert[${ModuleIter.Value.ID}]
 					break
@@ -722,6 +727,15 @@ objectdef obj_Ship
 		do
 		{
 			UI:UpdateConsole["Slot: ${ModuleIter.Value.ToItem.Slot} ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
+		}
+		while ${ModuleIter:Next(exists)}
+
+		UI:UpdateConsole["ECM Burst Modules:", LOG_MINOR, 2]
+		This.ModuleList_ECM_Burst:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			UI:UpdateConsole["	 Slot: ${ModuleIter.Value.ToItem.Slot}  ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
 		while ${ModuleIter:Next(exists)}
 
@@ -2312,6 +2326,50 @@ objectdef obj_Ship
 		while ${ModuleIter:Next(exists)}
 	}
 
+	method Activate_ECM_Burst()
+	{
+		if !${MyShip(exists)}
+		{
+			return
+		}
+
+		variable iterator ModuleIter
+
+		This.ModuleList_ECM_Burst:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline}
+			{
+				UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
+				ModuleIter.Value:Click
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+	}
+
+	method Deactivate_ECM_Burst()
+	{
+		if !${MyShip(exists)}
+		{
+			return
+		}
+
+		variable iterator ModuleIter
+
+		This.ModuleList_ECM_Burst:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+		if ${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsDeactivating}
+			{
+				UI:UpdateConsole["Deactivating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
+				ModuleIter.Value:Click
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+	}
+
 	method Activate_ECCM()
 	{
 		if !${MyShip(exists)}
@@ -2919,7 +2977,7 @@ objectdef obj_Ship
 			Me.ActiveTarget:Orbit[${OrbitDistance}]
 		}
 	}
-	
+
 	method KeepAtRangeAtOptimal()
 	{
 		variable int KeepAtRangeDistance = 5000

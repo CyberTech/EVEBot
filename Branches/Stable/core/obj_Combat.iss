@@ -398,10 +398,12 @@ objectdef obj_Combat
 		if ${MyShip.CapacitorPct} < 20
 		{   /* Turn on the cap booster, if present */
 			Ship:Activate_Cap_Booster[]
+			Ship:Deactivate_ECM_Burst
 		}
 		elseif ${MyShip.CapacitorPct} > 80
 		{
 			Ship:Deactivate_Cap_Booster[]
+			Ship:Activate_ECM_Burst
 		}
 
 		if ${This.CombatMode.NotEqual["TANK"]}
