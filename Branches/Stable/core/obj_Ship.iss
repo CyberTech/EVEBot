@@ -640,7 +640,6 @@ objectdef obj_Ship
 				case GROUPID_SHIELD_TRANSPORTER
 					This.ModuleList_ShieldTransporters:Insert[${ModuleIter.Value.ID}]
 					break
-				case GROUPID_DAMAGE_CONTROL
 				case GROUPID_SHIELD_HARDENER
 				case GROUPID_ARMOR_HARDENERS
 					This.ModuleList_ActiveResists:Insert[${ModuleIter.Value.ID}]
