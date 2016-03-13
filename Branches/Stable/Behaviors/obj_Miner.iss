@@ -131,10 +131,18 @@ objectdef obj_Miner
 		;	*	If someone targets us
 		;	*	They're lower than acceptable Min Security Status on the Miner tab
 		;	*	I'm in a pod.  Oh no!
-		if (${Social.PossibleHostiles} || ${Ship.IsPod}) && !${EVEBot.ReturnToStation}
+		if (${Social.PossibleHostiles} && !${EVEBot.ReturnToStation})
 		{
 			This.CurrentState:Set["HARDSTOP"]
-			UI:UpdateConsole["HARD STOP: Possible hostiles, cargo hold not changing, or ship in a pod!"]
+			UI:UpdateConsole["HARD STOP: Possible hostiles"]
+			EVEBot.ReturnToStation:Set[TRUE]
+			return
+		}
+
+		if (${Ship.IsPod} && !${EVEBot.ReturnToStation})
+		{
+			This.CurrentState:Set["HARDSTOP"]
+			UI:UpdateConsole["HARD STOP: Ship in a pod"]
 			EVEBot.ReturnToStation:Set[TRUE]
 			return
 		}
@@ -156,6 +164,7 @@ objectdef obj_Miner
 		;	If we're in space and HARD STOP has been called for, try to get to a station
 		if ${EVEBot.ReturnToStation} && !${Me.InStation}
 		{
+			UI:UpdateConsole["HARD STOP: Return to station was set"]
 			This.CurrentState:Set["HARDSTOP"]
 			return
 		}
@@ -303,6 +312,7 @@ objectdef obj_Miner
 			;	*	If everything above failed and there's a station in the same system, dock there
 			;	*	If everything above failed, check if we're warping and warp to a safe spot
 			case HARDSTOP
+				UI:UpdateConsole["Sending HARD STOP to fleet"]
 				relay all -event EVEBot_HARDSTOP
 				if ${Me.InStation}
 				{
@@ -612,7 +622,7 @@ objectdef obj_Miner
 						{
 							if ${Config.Miner.SafeJetcan}
 							{
-								if ((${MyShip.HasOreHold} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoHalfFull})
+								if ${This.MinerFull}
 								{
 									if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)} && \
 										${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && \
@@ -631,7 +641,7 @@ objectdef obj_Miner
 							}
 							else
 							{
-								if (${MyShip.HasOreHold} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoHalfFull}
+								if ${This.MinerFull}
 								{
 									call Cargo.TransferOreToJetCan
 									;	Need a wait here because it would try to move the same item more than once
@@ -764,7 +774,7 @@ objectdef obj_Miner
 		;	If our ship has no mining lasers, panic so the user knows to correct their configuration and try again
 		if ${Ship.TotalMiningLasers} == 0
 		{
-			UI:UpdateConsole["ALERT: No mining lasers detected.  Switching to HARD STOP mode!"]
+			UI:UpdateConsole["ALERT: No mining lasers detected.  Returning to station."]
 			EVEBot.ReturnToStation:Set[TRUE]
 			return
 		}
