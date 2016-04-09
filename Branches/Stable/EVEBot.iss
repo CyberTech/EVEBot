@@ -91,6 +91,7 @@ function main()
 	declarevariable CorpHangarArray obj_CorpHangarArray script
 	declarevariable LargeShipAssemblyArray obj_LargeShipAssemblyArray script
 	declarevariable XLargeShipAssemblyArray obj_XLargeShipAssemblyArray script
+	declarevariable CompressionArray obj_CompressionArray script
 	declarevariable Social obj_Social script
 	declarevariable Fleet obj_Fleet script
 	declarevariable Assets obj_Assets script

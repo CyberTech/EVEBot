@@ -386,6 +386,9 @@ objectdef obj_Freighter
 					case TYPEID_XLARGE_ASSEMBLY_ARRAY
 						call Cargo.TransferOreToXLargeShipAssemblyArray
 						break
+					case TYPEID_COMPRESSION_ARRAY
+						call Cargo.TransferOreToCompressionArray
+						break
 				}
 				switch ${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity.GroupID}
 				{

@@ -816,6 +816,7 @@
 								<Item Value='5'>Large Ship Assembly Array</Item>
 								<Item Value='6'>Orca</Item>
 								<Item Value='7'>No Delivery</Item>
+								<Item Value='8'>Compression Array</Item>
 							</Items>
 							<OnSelect>
 								Script[EVEBot].VariableScope.Config.Miner:SetDeliveryLocationType[${This.SelectedItem.Value}]

@@ -591,6 +591,28 @@ objectdef obj_Miner
 						EVEBot.ReturnToStation:Set[TRUE]
 						break
 
+					;	This means we're delivering to a Large Ship Assembly Array.
+					;	*	If our delivery location is in another system, set autopilot and go there
+					;	*	If our delivery location is in the same system, warp there and unload
+					;	*	If the above didn't work, panic so the user knows to correct their configuration and try again.
+					case Compression Array
+						if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} != ${Me.SolarSystemID}
+						{
+							call Ship.TravelToSystem ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID}
+							break
+						}
+						if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
+						{
+							UI:UpdateConsole["Debug: WarpToBookMarkName to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
+							call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
+							call Cargo.TransferOreToCompressionArray
+							break
+						}
+						UI:UpdateConsole["ALERT: Compression Array unload failed for delivery location \"${Config.Miner.DeliveryLocation}\""]
+						UI:UpdateConsole["ALERT: Switching to HARD STOP mode!"]
+						EVEBot.ReturnToStation:Set[TRUE]
+						break
+
 					;	This means we're delivering to a XLarge Ship Assembly Array.
 					;	*	If our delivery location is in another system, set autopilot and go there
 					;	*	If our delivery location is in the same system, warp there and unload

@@ -71,6 +71,7 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 #define TYPEID_MOON	14
 #define TYPEID_LARGE_ASSEMBLY_ARRAY 29613
 #define TYPEID_XLARGE_ASSEMBLY_ARRAY 24656
+#define TYPEID_COMPRESSION_ARRAY 12239
 
 /* Same group and type for secure cargo containers as well */
 #define GROUPID_CORPORATE_HANGAR_ARRAY 471

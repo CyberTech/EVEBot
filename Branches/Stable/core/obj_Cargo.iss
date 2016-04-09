@@ -669,6 +669,7 @@ objectdef obj_Cargo
 	; Call TransferListToPOSCorpHangar "LargeShipAssemblyArray"
 	; Call TransferListToPOSCorpHangar "XLargeShipAssemblyArray" etc
 	; Call TransferListToPOSCorpHangar "CorpHangarArray"
+	; CompressionArray
 	function TransferListToPOSCorpHangar(string LSAAObject)
 	{
 		variable float VolumeToMove=0
@@ -1112,6 +1113,36 @@ objectdef obj_Cargo
 			This:FindShipCargo[CATEGORYID_ORE]
 		}
 		call This.TransferListToPOSCorpHangar "LargeShipAssemblyArray"
+
+		This.CargoToTransfer:Clear[]
+	}
+
+	function TransferOreToCompressionArray()
+	{
+		if ${CompressionArray.IsReady}
+		{
+			if ${Entity[${CompressionArray.ActiveCan}].Distance} > CORP_HANGAR_LOOT_RANGE
+			{
+				call Ship.Approach ${CompressionArray.ActiveCan} CORP_HANGAR_LOOT_RANGE
+			}
+		}
+		else
+		{
+			UI:ConsoleUpdate["No Compression Array found - nothing moved"]
+			return
+		}
+
+		call Ship.OpenCargo
+
+		if ${MyShip.HasOreHold}
+		{
+			MyShip:GetOreHoldCargo[This.CargoToTransfer]
+		}
+		else
+		{
+			This:FindShipCargo[CATEGORYID_ORE]
+		}
+		call This.TransferListToPOSCorpHangar "CompressionArray"
 
 		This.CargoToTransfer:Clear[]
 	}
