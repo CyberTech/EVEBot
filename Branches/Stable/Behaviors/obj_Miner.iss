@@ -127,96 +127,128 @@ objectdef obj_Miner
 
 	method SetState()
 	{
-		;	First, we need to check to find out if I should "HARD STOP" - dock and wait for user intervention.  Reasons to do this:
-		;	*	If someone targets us
-		;	*	They're lower than acceptable Min Security Status on the Miner tab
-		;	*	I'm in a pod.  Oh no!
-		if (${Social.PossibleHostiles} && !${EVEBot.ReturnToStation})
+		if !${EVEBot.ReturnToStation}
 		{
-			This.CurrentState:Set["HARDSTOP"]
-			UI:UpdateConsole["HARD STOP: Possible hostiles"]
-			EVEBot.ReturnToStation:Set[TRUE]
-			return
+			;	First, we need to check to find out if I should "HARD STOP" - dock and wait for user intervention.  Reasons to do this:
+			;	*	If someone targets us
+			;	*	They're lower than acceptable Min Security Status on the Miner tab
+			;	*	I'm in a pod.  Oh no!
+			if ${Social.PossibleHostiles}
+			{
+				This.CurrentState:Set["HARDSTOP"]
+				UI:UpdateConsole["HARD STOP: Possible hostiles"]
+				EVEBot.ReturnToStation:Set[TRUE]
+				return
+			}
+
+			if ${Ship.IsPod}
+			{
+				This.CurrentState:Set["HARDSTOP"]
+				UI:UpdateConsole["HARD STOP: Ship in a pod"]
+				EVEBot.ReturnToStation:Set[TRUE]
+				return
+			}
 		}
 
-		if (${Ship.IsPod} && !${EVEBot.ReturnToStation})
+		if ${EVEBot.ReturnToStation}
 		{
-			This.CurrentState:Set["HARDSTOP"]
-			UI:UpdateConsole["HARD STOP: Ship in a pod"]
-			EVEBot.ReturnToStation:Set[TRUE]
-			return
+			;	If we're in a station HARD STOP has been called for, just idle until user intervention
+			if ${Me.InStation}
+			{
+				This.CurrentState:Set["IDLE"]
+				return
+			}
+			else
+			{
+				;	If we're at our panic location bookmark and HARD STOP has been called for, just idle until user intervention
+				if ${This.AtPanicBookmark}
+				{	
+					This.CurrentState:Set["IDLE"]
+					return
+				}
+
+				UI:UpdateConsole["HARD STOP: Return to station was set"]
+				This.CurrentState:Set["HARDSTOP"]
+				return
+			}
 		}
 
-		;	If we're in a station HARD STOP has been called for, just idle until user intervention
-		if ${EVEBot.ReturnToStation} && ${Me.InStation}
+		if !${EVEBot.ReturnToStation}
 		{
-			This.CurrentState:Set["IDLE"]
-			return
+			;	Find out if we should "SOFT STOP" and flee.  Reasons to do this:
+			;	*	Pilot lower than Min Acceptable Standing on the Fleeing tab
+			;	*	Pilot is on Blacklist ("Run on Blacklisted Pilot" enabled on Fleeing tab)
+			;	*	Pilot is not on Whitelist ("Run on Non-Whitelisted Pilot" enabled on Fleeing tab)
+			;	This checks for both In Station and out, preventing spam if you're in a station.
+			if !${Social.IsSafe}
+			{
+				if ${Me.InStation}
+				{
+					This.CurrentState:Set["IDLE"]
+					return
+				}
+			
+				if ${This.AtPanicBookmark}
+				{
+					This.CurrentState:Set["IDLE"]
+					return
+				}
+				
+				This.CurrentState:Set["FLEE"]
+				UI:UpdateConsole["FLEE: Low Standing player or system unsafe, fleeing"]
+				return
+			}
+
+			if !${Me.InStation}
+			{
+				if ${Entity["GroupID = 485 && CategoryID = CATEGORYID_ENTITY"](exists)}
+				{
+					This.CurrentState:Set["FLEE"]
+					UI:UpdateConsole["FLEE: NPC Dreadnaught detected: ${Entity[\"GroupID = 485\" && CategoryID = CATEGORYID_ENTITY].Name}"]
+					return
+				}
+
+				if ${Entity["GroupID = 30 && CategoryID = CATEGORYID_ENTITY"](exists)}
+				{
+					This.CurrentState:Set["FLEE"]
+					UI:UpdateConsole["FLEE: NPC Titan detected: ${Entity[\"GroupID = 485\" && CategoryID = CATEGORYID_ENTITY].Name}"]
+					return
+				}
+			}
 		}
 
-		;	If we're at our panic location bookmark and HARD STOP has been called for, just idle until user intervention
-		if ${EVEBot.ReturnToStation} && ${This.AtPanicBookmark}
+		if !${Config.Miner.OrcaMode}
 		{
-			This.CurrentState:Set["IDLE"]
-			return
-		}
+			if ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]}
+			{
+				if !${WarpToOrca} 
+				{
+					if ${This.AtPanicBookmark}
+					{
+						; If in orca delivery mode and orca not in belt and at panic spot, wait
+						This.CurrentState:Set["IDLE"]
+						return
+					}
 
-		;	If we're in space and HARD STOP has been called for, try to get to a station
-		if ${EVEBot.ReturnToStation} && !${Me.InStation}
-		{
-			UI:UpdateConsole["HARD STOP: Return to station was set"]
-			This.CurrentState:Set["HARDSTOP"]
-			return
-		}
+					; If in orca delivery and orca not in belt, flee
+					This.CurrentState:Set["FLEE"]
+					return
+				}
+			}
 
-		;	Find out if we should "SOFT STOP" and flee.  Reasons to do this:
-		;	*	Pilot lower than Min Acceptable Standing on the Fleeing tab
-		;	*	Pilot is on Blacklist ("Run on Blacklisted Pilot" enabled on Fleeing tab)
-		;	*	Pilot is not on Whitelist ("Run on Non-Whitelisted Pilot" enabled on Fleeing tab)
-		;	This checks for both In Station and out, preventing spam if you're in a station.
-		if !${Social.IsSafe}  && !${EVEBot.ReturnToStation} && ${Me.InStation}
-		{
-			This.CurrentState:Set["IDLE"]
-			return
-		}
-		if !${Social.IsSafe}  && !${EVEBot.ReturnToStation} && ${This.AtPanicBookmark}
-		{
-			This.CurrentState:Set["IDLE"]
-			return
-		}
-		if !${Social.IsSafe}  && !${EVEBot.ReturnToStation} && !${Me.InStation}
-		{
-			This.CurrentState:Set["FLEE"]
-			UI:UpdateConsole["FLEE: Low Standing player or system unsafe, fleeing"]
-			return
-		}
+			; If in group mode, not the master, dont warp to master, and at safe spot... wait
+			if ${Config.Miner.GroupMode} && !${IsMaster} && !${WarpToMaster} && ${This.AtPanicBookmark}
+			{
+				This.CurrentState:Set["IDLE"]
+				return
+			}
 
-		; If in orca delivery mode and orca not in belt and at panic spot, wait
-		if !${Config.Miner.OrcaMode} && ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && !${WarpToOrca} && ${This.AtPanicBookmark}
-		{
-			This.CurrentState:Set["IDLE"]
-			return
-		}
-
-		; If in orca delivery and orca not in belt, flee
-		if !${Config.Miner.OrcaMode} && ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && !${WarpToOrca}
-		{
-			This.CurrentState:Set["FLEE"]
-			return
-		}
-
-		; If in group mode, not the master, dont warp to master, and at safe spot... wait
-		if !${Config.Miner.OrcaMode} && ${Config.Miner.GroupMode} && !${IsMaster} && !${WarpToMaster} && ${This.AtPanicBookmark}
-		{
-			This.CurrentState:Set["IDLE"]
-			return
-		}
-
-		; If in group mode, not the master, and dont warp to the master... flee
-		if !${Config.Miner.OrcaMode} && ${Config.Miner.GroupMode} && !${IsMaster} && !${WarpToMaster}
-		{
-			This.CurrentState:Set["FLEE"]
-			return
+			; If in group mode, not the master, and dont warp to the master... flee
+			if ${Config.Miner.GroupMode} && !${IsMaster} && !${WarpToMaster}
+			{
+				This.CurrentState:Set["FLEE"]
+				return
+			}
 		}
 
 		;	If I'm in a station, I need to perform what I came there to do
