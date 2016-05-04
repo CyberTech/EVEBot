@@ -33,7 +33,7 @@ objectdef obj_Fleet
 		{
 			do
 			{
-				echo DEBUG: Fleet member ${i} - ${FleetMembers.Get[${i}].ToPilot.Name}
+				echo DEBUG: Fleet member ${i} - ${FleetMembers.Get[${i}].Name}
 			}
 			while ${i:Inc} <= ${FleetMemberCount}
 		}

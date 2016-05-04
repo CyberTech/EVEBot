@@ -1739,12 +1739,12 @@ objectdef obj_Ship
 		{
 			do
 			{
-				if ${charID.Equal[${FleetMember.Value.CharID}]} && ${Local[${FleetMember.Value.ToPilot.Name}](exists)}
+				if ${charID.Equal[${FleetMember.Value.CharID}]} && ${Local[${FleetMember.Value.Name}](exists)}
 				{
 					call This.WarpPrepare
 					while !${Entity["OwnerID = ${charID} && CategoryID = 6"](exists)}
 					{
-						UI:UpdateConsole["Warping to Fleet Member: ${FleetMember.Value.ToPilot.Name}"]
+						UI:UpdateConsole["Warping to Fleet Member: ${FleetMember.Value.Name}"]
 						while !${This.WarpEntered}
 						{
 							if ${WarpFleet}
