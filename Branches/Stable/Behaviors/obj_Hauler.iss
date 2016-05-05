@@ -527,7 +527,7 @@ objectdef obj_Hauler
 		Ship:StackCorpHangar
 		
 		;Construct the list of jet cans near by
-		This:BuildJetCanList[${charID}]
+		This:BuildJetCanList[${MasterID}]
 		while ${Entities.Peek(exists)}
 		{
 			variable bool PopCan = TRUE
@@ -801,7 +801,7 @@ objectdef obj_Hauler
 
 		call Ship.OpenCargo
 
-		This:BuildJetCanList
+		This:BuildJetCanList[${charID}]
 
 		variable iterator Ent
 		Entities:GetIterator[Ent]
@@ -1235,12 +1235,18 @@ objectdef obj_Hauler
 		UI:UpdateConsole["BuildFleetMemberList found ${FleetMembers.Used} other fleet members."]
 	}
 
-	method BuildJetCanList()
+	method BuildJetCanList(int64 charID)
 	{
 
 		variable index:entity cans
 		variable int idx
 
+		; One option is to use the passed charid to limit which char we're looking for cans for
+		; This has limitations; we won't find can's for fleetmates that didn't explicitly call us,
+		; we won't find cans for miners who are mining next to each other and sharing cans, etc
+		;EVE:QueryEntities[cans,"GroupID = 12 && OwnerID = ${charID}"]
+		
+		; Prefer the generic search, then filter on Fleet.IsMember later
 		EVE:QueryEntities[cans,"GroupID = 12"]
 		cans:RemoveByQuery[${LavishScript.CreateQuery[!HaveLootRights]}]
 		idx:Set[${cans.Used}]
@@ -1248,11 +1254,14 @@ objectdef obj_Hauler
 
 		while ${idx} > 0
 		{
-			Entities:Queue[${cans.Get[${idx}]}]
-			idx:Dec
+			if ${Me.Fleet.IsMember[${cans.Get[${idx}].OwnerID}]}
+			{
+				Entities:Queue[${cans.Get[${idx}]}]
+				idx:Dec
+			}
 		}
 
-		UI:UpdateConsole["BuildJetCanList found ${Entities.Used} cans nearby."]
+		UI:UpdateConsole["BuildJetCanList Loot Rights to ${cans.Used} cans; Fleet owns ${Entities.Used} cans."]
 	}
 
 	;	This member is used to determine if our hauler is full based on a number of factors:
