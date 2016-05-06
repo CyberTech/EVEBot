@@ -1257,8 +1257,8 @@ objectdef obj_Hauler
 			if ${Me.Fleet.IsMember[${cans.Get[${idx}].OwnerID}]}
 			{
 				Entities:Queue[${cans.Get[${idx}]}]
-				idx:Dec
 			}
+			idx:Dec
 		}
 
 		UI:UpdateConsole["BuildJetCanList Loot Rights to ${cans.Used} cans; Fleet owns ${Entities.Used} cans."]
