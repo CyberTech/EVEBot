@@ -356,6 +356,7 @@ objectdef obj_Miner
 					if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].TypeID} != 5
 					{
 						;call This.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
+						UI:UpdateConsole["Debug: Station.DockAtStation called from Line _LINE_ ", LOG_DEBUG]
 						call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
 					}
 					else
@@ -375,6 +376,7 @@ objectdef obj_Miner
 				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
 					;call This.FastWarp ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
+					UI:UpdateConsole["Debug: Station.DockAtStation called from Line _LINE_ ", LOG_DEBUG]
 					call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
 					break
 				}
@@ -382,6 +384,7 @@ objectdef obj_Miner
 				{
 					UI:UpdateConsole["Docking at ${Entity["CategoryID = 3"].Name}"]
 					;call This.FastWarp ${Entity["CategoryID = 3"].ID}
+					UI:UpdateConsole["Debug: Station.DockAtStation called from Line _LINE_ ", LOG_DEBUG]
 					call Station.DockAtStation ${Entity["CategoryID = 3"].ID}
 					break
 				}
@@ -419,6 +422,7 @@ objectdef obj_Miner
 					}
 
 					;call This.FastWarp ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
+					UI:UpdateConsole["Debug: Station.DockAtStation called from Line _LINE_ ", LOG_DEBUG]
 					call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
 					break
 				}
@@ -432,6 +436,7 @@ objectdef obj_Miner
 					if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].TypeID} != 5
 					{
 						;call This.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
+						UI:UpdateConsole["Debug: Station.DockAtStation called from Line _LINE_ ", LOG_DEBUG]
 						call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
 					}
 					else
@@ -451,6 +456,7 @@ objectdef obj_Miner
 
 					UI:UpdateConsole["Docking at ${Entity["CategoryID = 3"].Name}"]
 					;call This.FastWarp ${Entity["CategoryID = 3"].ID}
+					UI:UpdateConsole["Debug: Station.DockAtStation called from Line _LINE_ ", LOG_DEBUG]
 					call Station.DockAtStation ${Entity["CategoryID = 3"].ID}
 					break
 				}
@@ -571,6 +577,7 @@ objectdef obj_Miner
 						}
 						if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 						{
+							UI:UpdateConsole["Debug: Station.DockAtStation called from Line _LINE_ ", LOG_DEBUG]
 							call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
 							break
 						}
