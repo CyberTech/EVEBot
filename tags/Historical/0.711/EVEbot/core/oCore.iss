@@ -1,1 +1,0 @@
-variable string Version = 0.711
