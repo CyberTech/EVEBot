@@ -18,9 +18,19 @@ objectdef obj_EVEBotUI
 
 	method Initialize()
 	{
-		This.LogFile:Set["./config/logs/${Me.Name}.log"]
-		This.CriticalLogFile:Set["./config/logs/${Me.Name}_Critical.log"]
-		This.StatsLogFile:Set["./config/logs/${Me.Name}_Stats.log"]
+		declare FP filepath "${Script.CurrentDirectory}"
+		if !${FP.FileExists["Config"]}
+		{
+			FP:MakeSubdirectory["Config"]
+		}
+		FP:Set["${Script.CurrentDirectory}/Config"]
+		if !${FP.FileExists["Logs"]}
+		{
+			FP:MakeSubdirectory["Logs"]
+		}
+		This.LogFile:Set["./Config/Logs/${Me.Name}.log"]
+		This.CriticalLogFile:Set["./Config/Logs/${Me.Name}_Critical.log"]
+		This.StatsLogFile:Set["./Config/Logs/${Me.Name}_Stats.log"]
 
 		ui -load interface/eveskin/eveskin.xml
 		ui -load interface/evebotgui.xml
