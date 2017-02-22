@@ -1669,7 +1669,7 @@ objectdef obj_Miner
 					UI:UpdateConsole["Debug: Entity:WarpTo to ${LocationID} from Line _LINE_ ", LOG_DEBUG]
 					Entity[${LocationID}]:WarpTo[0]
 				}
-				if ${Universe[${LocationID}](exists)}
+				if ${Universe[${LocationID}](exists)} && ${Universe[${LocationID}].Name} != NULL
 				{
 					Universe[${LocationID}]:SetDestination
 					if !${Me.AutoPilotOn}
