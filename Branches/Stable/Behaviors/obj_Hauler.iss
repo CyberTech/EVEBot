@@ -459,7 +459,8 @@ objectdef obj_Hauler
 		}
 		else
 		{
-			if ${FleetMembers.Peek(exists)} && ${Local[${FleetMembers.Peek.Name}](exists)} && !${Character["CharID = ${FleetMembers.Peek.CharID}"].InStation}
+			; TODO: find a way to check if FleetMembers.Peek is in station or not
+			if ${FleetMembers.Peek(exists)} && ${Local[${FleetMembers.Peek.Name}](exists)}
 			{
 				call This.WarpToFleetMemberAndLoot ${FleetMembers.Peek.CharID}
 			}
