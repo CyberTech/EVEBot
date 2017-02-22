@@ -1020,11 +1020,6 @@ objectdef obj_Hauler
 						wait 20
 					}
 				}
-				if ${Ship.CargoFreeSpace} < 1000
-				{
-					UI:UpdateConsole["DEBUG: obj_Hauler.LootEntity: Ship Cargo Free Space: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
-					break
-				}
 			}
 			while ${Cargo:Next(exists)}
 		}
