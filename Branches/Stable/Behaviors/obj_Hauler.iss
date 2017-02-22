@@ -465,6 +465,17 @@ objectdef obj_Hauler
 			}
 			FleetMembers:Dequeue
 		}
+		
+		if !${FleetMembers.Peek(exists)}
+		{
+			call Safespots.WarpTo
+			wait 20
+			do
+			{
+				wait 5
+			}
+			while ${Me.ToEntity.Mode} != 2
+		}
 	}
 	
 /*
