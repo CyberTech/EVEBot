@@ -1269,6 +1269,12 @@ objectdef obj_Hauler
 	;	*	Are our miners ice mining
 	member:bool HaulerFull()
 	{
+		if ${MyShip.HasOreHold} && ${Ship.OreHoldFull}
+		{
+			UI:UpdateConsole["Ore Hold Full. Dropping off cargo."]
+			return TRUE
+		}
+		
 		if ${Config.Miner.IceMining}
 		{
 			if ${Ship.CargoFreeSpace} < 1000 || ${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
