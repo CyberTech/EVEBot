@@ -325,7 +325,7 @@ objectdef obj_Hauler
 					call Station.Undock
 					break
 				}
-				
+
 				call Cargo.OpenHolds
 				Ship:StackCargoHold
 				call Cargo.TransferCargoToStationHangar
@@ -466,7 +466,7 @@ objectdef obj_Hauler
 			}
 			FleetMembers:Dequeue
 		}
-		
+
 		if !${FleetMembers.Peek(exists)}
 		{
 			call Safespots.WarpTo
@@ -475,10 +475,10 @@ objectdef obj_Hauler
 			{
 				wait 5
 			}
-			while ${Me.ToEntity.Mode} != 2
+			while ${Me.ToEntity.Mode} == 3
 		}
 	}
-	
+
 /*
 ;	HaulForFleetMember
 ;	*	Warp to fleet member name XXXX and loot nearby cans
@@ -491,13 +491,13 @@ objectdef obj_Hauler
 			UI:UpdateConsole["ALERT:  The specified pilot isn't in local - it may be incorrectly configured."]
 			return
 		}
-		
+
 		; If in warp wait and dont go below here
 		if ${Me.ToEntity.Mode} == 3
 		{
 			return
 		}
-		
+
 		; From the name on Hauler Pick Up, find the pilot ID if on grid
 		variable int64 MasterID
 		if ${Entity[Name = "${Config.Hauler.HaulerPickupName}"](exists)}
@@ -508,7 +508,7 @@ objectdef obj_Hauler
 		{
 			MasterID:Set[0]
 		}
-		
+
 		; If MasterID returns a 0, then pilot is not on grid
 		; Warp to pilot
 		if !${MasterID} && ${Local[${Config.Hauler.HaulerPickupName}].ToFleetMember}
@@ -517,7 +517,7 @@ objectdef obj_Hauler
 			Local[${Config.Hauler.HaulerPickupName}].ToFleetMember:WarpTo
 			return
 		}
-		
+
 		; If we are too far away, bounce off safe spot
 		if ${Entity[Name = "${Config.Hauler.HaulerPickupName}"].Distance} > CONFIG_MAX_SLOWBOAT_RANGE
 		{
@@ -528,7 +528,7 @@ objectdef obj_Hauler
 			}
 			Local[${Config.Hauler.HaulerPickupName}].ToFleetMember:WarpTo
 		}
-		
+
 		; Open cargohold. If in orca or rorq open the rest
 		MyShip:Open
 		wait 10
@@ -537,13 +537,13 @@ objectdef obj_Hauler
 		Ship:StackOreHold
 		wait 10
 		Ship:StackCorpHangar
-		
+
 		;Construct the list of jet cans near by
 		This:BuildJetCanList[${MasterID}]
 		while ${Entities.Peek(exists)}
 		{
 			variable bool PopCan = TRUE
-			
+
 			; If jet can is greater than 5k away, use tractor beams
 			if ${Entities.Peek.Distance} >= 5000
 			{
@@ -615,14 +615,14 @@ objectdef obj_Hauler
 			{
 				call Ship.Approach ${Entities.Peek.ID} LOOT_RANGE
 			}
-			
+
 			; Does jet can still exist?
 			if !${Entities.Peek(exists)}
 			{
 				Entities:Dequeue
 				continue
 			}
-			
+
 			; Wait until the jet can is close enough to loot (max wait time of 40 seconds)
 			Counter:Set[0]
 			while ${Entities.Peek.Distance} > LOOT_RANGE && ${Counter:Inc} < 400
@@ -631,13 +631,13 @@ objectdef obj_Hauler
 			}
 			wait 5
 			Ship:Deactivate_Tractor
-			
+
 			; If im moving faster than 10 m/s stop my ship
 			if ${Me.ToEntity.Velocity} > 10
 			{
 				EVE:Execute[CmdStopShip]
 			}
-			
+
 			; Does jet can still exist?
 			if ${Entities.Peek.ID.Equal[0]}
 			{
@@ -645,7 +645,7 @@ objectdef obj_Hauler
 				Entities:Dequeue
 				continue
 			}
-			
+
 			; To pop the can or not?
 			; If player is not on grid or player is too far away from can, pop that shit
 			; TODO: check age of can too
@@ -658,7 +658,7 @@ objectdef obj_Hauler
 			{
 				PopCan:Set[FALSE]
 			}
-			
+
 			; Now loot jet can
 			if ${PopCan}
 			{
@@ -668,14 +668,14 @@ objectdef obj_Hauler
 			{
 				call This.LootEntity ${Entities.Peek.ID} 1
 			}
-			
+
 			Entities:Dequeue
 			if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
 			{
 				break
 			}
 		}
-	
+
 	}
 
 /*
@@ -1252,7 +1252,7 @@ objectdef obj_Hauler
 		; This has limitations; we won't find can's for fleetmates that didn't explicitly call us,
 		; we won't find cans for miners who are mining next to each other and sharing cans, etc
 		;EVE:QueryEntities[cans,"GroupID = 12 && OwnerID = ${charID}"]
-		
+
 		; Prefer the generic search, then filter on Fleet.IsMember later
 		EVE:QueryEntities[cans,"GroupID = 12"]
 		cans:RemoveByQuery[${LavishScript.CreateQuery[!HaveLootRights]}]
@@ -1281,7 +1281,7 @@ objectdef obj_Hauler
 			UI:UpdateConsole["Ore Hold Full. Dropping off cargo."]
 			return TRUE
 		}
-		
+
 		if ${Config.Miner.IceMining}
 		{
 			if ${Ship.CargoFreeSpace} < 1000 || ${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
