@@ -226,13 +226,17 @@ objectdef obj_JetCan
 			case 9
 				NewName:Set[${Me.Name}]
 				break
+			case 10
+				break
 			default
 				NewName:Set[${Me.Name}]
 				break
 		}
-
-		UI:UpdateConsole["JetCan:Rename: Renaming can to ${NewName}"]
-		Entity[${ID}]:SetName[${NewName}]
+		if (${Config.Miner.JetCanNaming} != 10)
+		{
+			UI:UpdateConsole["JetCan:Rename: Renaming can to ${NewName}"]
+			Entity[${ID}]:SetName[${NewName}]
+		}
 	}
 
 	method StackAllCargo(int64 ID=0)

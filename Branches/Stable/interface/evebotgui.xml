@@ -534,6 +534,7 @@
 								<Item Value='7'>FirstName Time</Item>
 								<Item Value='8'>FirstName</Item>
 								<Item Value='9'>CharName</Item>
+								<Item Value='10'>Do Not Rename</Item>
 							</Items>
 							<OnSelect>
 								Script[EVEBot].VariableScope.Config.Miner:SetJetCanNaming[${This.SelectedItem.Value}]
