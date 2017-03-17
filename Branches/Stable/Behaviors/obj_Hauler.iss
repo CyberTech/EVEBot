@@ -246,11 +246,11 @@ objectdef obj_Hauler
 					call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
 					break
 				}
-				if ${Entity["CategoryID = 3"](exists)}
+				if ${Entity["(GroupID = 15 || GroupID = 1657)"](exists)}
 				{
-					UI:UpdateConsole["Docking at ${Entity["CategoryID = 3"].Name}"]
-					call Miner.FastWarp ${Entity["CategoryID = 3"].ID}
-					call Station.DockAtStation ${Entity["CategoryID = 3"].ID}
+					UI:UpdateConsole["Docking at ${Entity["(GroupID = 15 || GroupID = 1657)"].Name}"]
+					call Miner.FastWarp ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
+					call Station.DockAtStation ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
 					break
 				}
 				if ${Me.ToEntity.Mode} != 3
@@ -295,11 +295,11 @@ objectdef obj_Hauler
 					break
 				}
 
-				if ${Entity["CategoryID = 3"](exists)}
+				if ${Entity["(GroupID = 15 || GroupID = 1657)"](exists)}
 				{
-					UI:UpdateConsole["Docking at ${Entity["CategoryID = 3"].Name}"]
-					call Miner.FastWarp ${Entity["CategoryID = 3"].ID}
-					call This.DockAtStation ${Entity["CategoryID = 3"].ID}
+					UI:UpdateConsole["Docking at ${Entity["(GroupID = 15 || GroupID = 1657)"].Name}"]
+					call Miner.FastWarp ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
+					call This.DockAtStation ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
 					break
 				}
 

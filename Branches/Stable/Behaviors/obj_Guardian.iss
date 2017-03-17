@@ -225,11 +225,11 @@ objectdef obj_Guardian
 					call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
 					break
 				}
-				if ${Entity["CategoryID = 3"](exists)}
+				if ${Entity["(GroupID = 15 || GroupID = 1657)"](exists)}
 				{
-					UI:UpdateConsole["Docking at ${Entity["CategoryID = 3"].Name}"]
-					;call This.FastWarp ${Entity["CategoryID = 3"].ID}
-					call Station.DockAtStation ${Entity["CategoryID = 3"].ID}
+					UI:UpdateConsole["Docking at ${Entity["(GroupID = 15 || GroupID = 1657)"].Name}"]
+					;call This.FastWarp ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
+					call Station.DockAtStation ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
 					break
 				}
 
@@ -283,16 +283,16 @@ objectdef obj_Guardian
 					break
 				}
 
-				if ${Entity["CategoryID = 3"](exists)}
+				if ${Entity["(GroupID = 15 || GroupID = 1657)"](exists)}
 				{
 					if ${Config.Miner.BookMarkLastPosition} && !${Bookmarks.CheckForStoredLocation}
 					{
 						Bookmarks:StoreLocation
 					}
 
-					UI:UpdateConsole["Docking at ${Entity["CategoryID = 3"].Name}"]
-					;call This.FastWarp ${Entity["CategoryID = 3"].ID}
-					call Station.DockAtStation ${Entity["CategoryID = 3"].ID}
+					UI:UpdateConsole["Docking at ${Entity["(GroupID = 15 || GroupID = 1657)"].Name}"]
+					;call This.FastWarp ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
+					call Station.DockAtStation ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
 					break
 				}
 

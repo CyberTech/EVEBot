@@ -287,13 +287,13 @@ objectdef obj_Station
 
 	function Dock()
 	{
-		variable int64 StationID = ${Entity["CategoryID = 3 && Name = ${Config.Common.HomeStation}"].ID}
+		variable int64 StationID = ${Entity["(GroupID = 15 || GroupID = 1657) && Name = ${Config.Common.HomeStation}"].ID}
 
 		UI:UpdateConsole["Docking - Trying Home station..."]
 		if ${StationID} <= 0 || !${Entity[${StationID}](exists)}
 		{
 			UI:UpdateConsole["Warning: Home station not found, finding nearest station"]
-			StationID:Set[${Entity["CategoryID = 3"].ID}]
+			StationID:Set[${Entity["(GroupID = 15 || GroupID = 1657)"].ID}]
 		}
 
 		if ${Entity[${StationID}](exists)}
@@ -338,7 +338,7 @@ objectdef obj_Station
 		UI:UpdateConsole["Undock: Complete"]
    		call ChatIRC.Say "Undock: Complete"
 
-		Config.Common:SetHomeStation[${Entity["CategoryID = 3"].Name}]
+		Config.Common:SetHomeStation[${Entity["(GroupID = 15 || GroupID = 1657)"].Name}]
 
 		;Me:SetVelocity[100]
 		wait 30
