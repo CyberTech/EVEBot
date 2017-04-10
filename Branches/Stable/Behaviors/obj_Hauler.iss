@@ -459,7 +459,7 @@ objectdef obj_Hauler
 		}
 		else
 		{
-			if ${FleetMembers.Peek(exists)} && ${Local[${FleetMembers.Peek.Name}](exists)}
+			if ${FleetMembers.Peek(exists)} && ${Local[${FleetMembers.Peek.Name}](exists)} && !${Character["CharID = ${FleetMembers.Peek.CharID}"].InStation}
 			{
 				call This.WarpToFleetMemberAndLoot ${FleetMembers.Peek.CharID}
 			}
