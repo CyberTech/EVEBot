@@ -1065,7 +1065,7 @@ objectdef obj_Hauler
 	{
 		variable int64 id = 0
 
-		if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
+		if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${Ship.OreHoldFull}
 		{	/* if we are already full ignore this request */
 			return
 		}
