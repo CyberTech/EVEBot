@@ -663,8 +663,7 @@ objectdef obj_Ship
 			if ${ModuleIter.Value.IsActive} || \
 				${ModuleIter.Value.IsGoingOnline} || \
 				${ModuleIter.Value.IsDeactivating} || \
-				${ModuleIter.Value.IsChangingAmmo} || \
-				${ModuleIter.Value.IsReloadingAmmo}
+				${ModuleIter.Value.IsReloading}
 			{
 				count:Inc
 			}
@@ -1001,8 +1000,7 @@ objectdef obj_Ship
 			( ${Me.Ship.Module[${Slot}].IsActive} || \
 			  ${Me.Ship.Module[${Slot}].IsGoingOnline} || \
 			  ${Me.Ship.Module[${Slot}].IsDeactivating} || \
-			  ${Me.Ship.Module[${Slot}].IsChangingAmmo} || \
-			  ${Me.Ship.Module[${Slot}].IsReloadingAmmo} \
+			  ${Me.Ship.Module[${Slot}].IsReloading} \
 			)
 		{
 			echo "obj_Ship:CycleMiningLaser: Tried to Activate the module, but it's already active or changing state."
@@ -1013,8 +1011,7 @@ objectdef obj_Ship
 			(!${Me.Ship.Module[${Slot}].IsActive} || \
 			  ${Me.Ship.Module[${Slot}].IsGoingOnline} || \
 			  ${Me.Ship.Module[${Slot}].IsDeactivating} || \
-			  ${Me.Ship.Module[${Slot}].IsChangingAmmo} || \
-			  ${Me.Ship.Module[${Slot}].IsReloadingAmmo} \
+			  ${Me.Ship.Module[${Slot}].IsReloading} \
 			)
 		{
 			echo "obj_Ship:CycleMiningLaser: Tried to Deactivate the module, but it's already active or changing state."
@@ -1098,8 +1095,7 @@ objectdef obj_Ship
 			if !${ModuleIter.Value.IsActive} && \
 				!${ModuleIter.Value.IsGoingOnline} && \
 				!${ModuleIter.Value.IsDeactivating} && \
-				!${ModuleIter.Value.IsChangingAmmo} &&\
-				!${ModuleIter.Value.IsReloadingAmmo}
+				!${ModuleIter.Value.IsReloading}
 			{
 				Slot:Set[${ModuleIter.Value.ToItem.Slot}]
 				if ${ModuleIter.Value.SpecialtyCrystalMiningAmount(exists)}
@@ -1141,8 +1137,7 @@ objectdef obj_Ship
 			if !${ModuleIter.Value.IsActive} && \
 				!${ModuleIter.Value.IsGoingOnline} && \
 				!${ModuleIter.Value.IsDeactivating} && \
-				!${ModuleIter.Value.IsChangingAmmo} &&\
-				!${ModuleIter.Value.IsReloadingAmmo}
+				!${ModuleIter.Value.IsReloading}
 			{
 				Slot:Set[${ModuleIter.Value.ToItem.Slot}]
 
@@ -1173,8 +1168,7 @@ objectdef obj_Ship
 			if !${ModuleIter.Value.IsActive} && \
 				!${ModuleIter.Value.IsGoingOnline} && \
 				!${ModuleIter.Value.IsDeactivating} && \
-				!${ModuleIter.Value.IsChangingAmmo} &&\
-				!${ModuleIter.Value.IsReloadingAmmo}
+				!${ModuleIter.Value.IsReloading}
 			{
 				Slot:Set[${ModuleIter.Value.ToItem.Slot}]
 
@@ -2521,10 +2515,9 @@ objectdef obj_Ship
 		do
 		{
 			;UI:UpdateConsole["ModuleIter.Value.IsActive = ${ModuleIter.Value.IsActive}"]
-			;UI:UpdateConsole["ModuleIter.Value.IsChangingAmmo = ${ModuleIter.Value.IsChangingAmmo}"]
-			;UI:UpdateConsole["ModuleIter.Value.IsReloadingAmmo = ${ModuleIter.Value.IsReloadingAmmo}"]
+			;UI:UpdateConsole["ModuleIter.Value.IsReloading = ${ModuleIter.Value.IsReloading}"]
 			;UI:UpdateConsole["ModuleIter.Value.IsOnline = ${ModuleIter.Value.IsOnline}"]
-			if !${ModuleIter.Value.IsActive} && !${ModuleIter.Value.IsChangingAmmo} && !${ModuleIter.Value.IsReloadingAmmo} && ${ModuleIter.Value.IsOnline}
+			if !${ModuleIter.Value.IsActive} && !${ModuleIter.Value.IsReloading} && ${ModuleIter.Value.IsOnline}
 			{
 				;;UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}"]
 				ModuleIter.Value:Click
@@ -2572,7 +2565,7 @@ objectdef obj_Ship
 			if ${ModuleIter:First(exists)}
 			do
 			{
-				if !${ModuleIter.Value.IsActive} && !${ModuleIter.Value.IsChangingAmmo} && !${ModuleIter.Value.IsReloadingAmmo}
+				if !${ModuleIter.Value.IsActive} && !${ModuleIter.Value.IsReloading}
 				{
 					; Sometimes this value can be NULL
 					if !${ModuleIter.Value.MaxCharges(exists)}

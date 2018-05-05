@@ -156,7 +156,7 @@ objectdef obj_Offense inherits obj_BaseClass
 						{
 							do
 							{
-								if !${Launcher.Value.IsActive} && !${Launcher.Value.IsReloadingAmmo} && !${Launcher.Value.IsChangingAmmo}
+								if !${Launcher.Value.IsActive} && !${Launcher.Value.IsReloading}
 								{
 									Launcher.Value:Activate
 									break
@@ -243,7 +243,7 @@ objectdef obj_Offense inherits obj_BaseClass
 							ChargeExists:Set[TRUE]
 						}
 						;If a module's reloading, or changing ammo, continue on.
-						if ${MyShip.Module[${slot}].IsChangingAmmo} || ${MyShip.Module[${slot}].IsReloadingAmmo} || !${ChargeExists}
+						if ${MyShip.Module[${slot}].IsReloading} || !${ChargeExists}
 						{
 							This.TurretNeedsAmmo:Set[${idx},FALSE]
 							continue

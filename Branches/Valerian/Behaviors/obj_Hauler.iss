@@ -642,7 +642,7 @@ objectdef obj_OreHauler inherits obj_Hauler
 			{
 				if ${MyShip.Module[HiSlot${Slot}].ToItem.GroupID} == GROUP_GANGCOORDINATOR
 				{
-					if !${MyShip.Module[HiSlot${Slot}].IsActive} && !${MyShip.Module[HiSlot${Slot}].IsChangingAmmo} && !${MyShip.Module[HiSlot${Slot}].IsReloadingAmmo} /* && !${MyShip.Module[HiSlot${Slot}].IsActivating} <--- BROKEN? */ && !${MyShip.Module[HiSlot${Slot}].IsDeactivating} && ${MyShip.Module[HiSlot${Slot}].IsOnline}
+					if !${MyShip.Module[HiSlot${Slot}].IsActive} && !${MyShip.Module[HiSlot${Slot}].IsReloading} /* && !${MyShip.Module[HiSlot${Slot}].IsActivating} <--- BROKEN? */ && !${MyShip.Module[HiSlot${Slot}].IsDeactivating} && ${MyShip.Module[HiSlot${Slot}].IsOnline}
 					{
 						MyShip.Module[HiSlot${Slot}]:Activate
 					}

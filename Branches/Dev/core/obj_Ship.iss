@@ -38,7 +38,7 @@
 			*/
 			if !${Module.Value.IsActive} && ${Module.Value.IsOnline} && \
 				(!${Module.Value.OptimalRange(exists)} || ${Me.ActiveTarget.Distance} < ${Module.Value.OptimalRange}) && \
-				(!${Module.Value.Charge(exists)} || (!${Module.Value.IsChangingAmmo} && !${Module.Value.IsReloadingAmmo}))
+				(!${Module.Value.Charge(exists)} || (!${Module.Value.IsReloading}))
 			{
 				if ${LOG}
 				{
@@ -642,7 +642,7 @@ objectdef obj_Ship inherits obj_BaseClass
 				}
 				;If we didn't have a match... fallthrough to default
 			default
-				Logger:Log["obj_Ship.BestAmmoTypeByRange: Unrecognized group for the weapon's charge, something is very broken. Group: ${MyShip.Module[${slot}].Charge.Group} ${MyShip.Module[${slot}].Charge.GroupID} ${MyShip.Module[${slot}].IsReloadingAmmo} ${MyShip.Module[${slot}].IsChangingAmmo}",LOG_CRITICAL]
+				Logger:Log["obj_Ship.BestAmmoTypeByRange: Unrecognized group for the weapon's charge, something is very broken. Group: ${MyShip.Module[${slot}].Charge.Group} ${MyShip.Module[${slot}].Charge.GroupID} ${MyShip.Module[${slot}].IsReloading}",LOG_CRITICAL]
 				return ${WeaponIterator.Value.Charge}
 		}
 	}
@@ -1124,8 +1124,7 @@ objectdef obj_Ship inherits obj_BaseClass
 			if ${Module.Value.IsActive} || \
 				${Module.Value.IsGoingOnline} || \
 				${Module.Value.IsDeactivating} || \
-				${Module.Value.IsChangingAmmo} || \
-				${Module.Value.IsReloadingAmmo}
+				${Module.Value.IsReloading}
 			{
 				count:Inc
 			}
@@ -1420,8 +1419,7 @@ objectdef obj_Ship inherits obj_BaseClass
 			( ${MyShip.Module[${Slot}].IsActive} || \
 			  ${MyShip.Module[${Slot}].IsGoingOnline} || \
 			  ${MyShip.Module[${Slot}].IsDeactivating} || \
-			  ${MyShip.Module[${Slot}].IsChangingAmmo} || \
-			  ${MyShip.Module[${Slot}].IsReloadingAmmo} \
+			  ${MyShip.Module[${Slot}].IsReloading} \
 			)
 		{
 			echo "obj_Ship:CycleMiningLaser: Tried to Activate the module, but it's already active or changing state."
@@ -1432,8 +1430,7 @@ objectdef obj_Ship inherits obj_BaseClass
 			(!${MyShip.Module[${Slot}].IsActive} || \
 			  ${MyShip.Module[${Slot}].IsGoingOnline} || \
 			  ${MyShip.Module[${Slot}].IsDeactivating} || \
-			  ${MyShip.Module[${Slot}].IsChangingAmmo} || \
-			  ${MyShip.Module[${Slot}].IsReloadingAmmo} \
+			  ${MyShip.Module[${Slot}].IsReloading} \
 			)
 		{
 			echo "obj_Ship:CycleMiningLaser: Tried to Deactivate the module, but it's already active or changing state."
@@ -1521,8 +1518,7 @@ objectdef obj_Ship inherits obj_BaseClass
 			if !${Module.Value.IsActive} && \
 				!${Module.Value.IsGoingOnline} && \
 				!${Module.Value.IsDeactivating} && \
-				!${Module.Value.IsChangingAmmo} &&\
-				!${Module.Value.IsReloadingAmmo}
+				!${Module.Value.IsReloading}
 			{
 				Slot:Set[${Module.Value.ToItem.Slot}]
 				if ${Module.Value.SpecialtyCrystalMiningAmount(exists)}
@@ -1573,8 +1569,7 @@ objectdef obj_Ship inherits obj_BaseClass
 			if !${Module.Value.IsActive} && \
 				!${Module.Value.IsGoingOnline} && \
 				!${Module.Value.IsDeactivating} && \
-				!${Module.Value.IsChangingAmmo} &&\
-				!${Module.Value.IsReloadingAmmo}
+				!${Module.Value.IsReloading}
 			{
 				Slot:Set[${Module.Value.ToItem.Slot}]
 
@@ -1613,8 +1608,7 @@ objectdef obj_Ship inherits obj_BaseClass
 			if !${Module.Value.IsActive} && \
 				!${Module.Value.IsGoingOnline} && \
 				!${Module.Value.IsDeactivating} && \
-				!${Module.Value.IsChangingAmmo} &&\
-				!${Module.Value.IsReloadingAmmo}
+				!${Module.Value.IsReloading}
 			{
 				Slot:Set[${Module.Value.ToItem.Slot}]
 
@@ -1644,8 +1638,7 @@ objectdef obj_Ship inherits obj_BaseClass
 			if !${Module.Value.IsActive} && \
 				!${Module.Value.IsGoingOnline} && \
 				!${Module.Value.IsDeactivating} && \
-				!${Module.Value.IsChangingAmmo} &&\
-				!${Module.Value.IsReloadingAmmo}
+				!${Module.Value.IsReloading}
 			{
 				Slot:Set[${Module.Value.ToItem.Slot}]
 
@@ -1897,7 +1890,7 @@ objectdef obj_Ship inherits obj_BaseClass
 			if ${Module:First(exists)}
 			do
 			{
-				if !${Module.Value.IsActive} && !${Module.Value.IsChangingAmmo} && !${Module.Value.IsReloadingAmmo}
+				if !${Module.Value.IsActive} && !${Module.Value.IsReloading}
 				{
 					; Sometimes this value can be NULL
 					if !${Module.Value.MaxCharges(exists)}

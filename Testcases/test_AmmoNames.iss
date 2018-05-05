@@ -28,7 +28,7 @@ function main()
 				MyShip.Module[HiSlot1]:ChangeAmmo[${itrAmmo.Value.ID}]
 				MyShip.Module[HiSlot2]:ChangeAmmo[${itrAmmo.Value.ID}]
 				MyShip.Module[HiSlot3]:ChangeAmmo[${itrAmmo.Value.ID}]
-				echo "IsReloadingAmmo? ${MyShip.Module[HiSlot0].IsReloadingAmmo} IsChangingAmmo? ${MyShip.Module[HiSlot0].IsChangingAmmo}"
+				echo "IsReloading? ${MyShip.Module[HiSlot0].IsReloading}"
 				break
 			}
 		}
