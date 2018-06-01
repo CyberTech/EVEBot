@@ -123,6 +123,7 @@ objectdef obj_JetCan
 			{
 				if ${Can.Value.ID(exists)} && \
 					${Can.Value.ID} > 0 && \
+					${Can.Value.OwnerID} == ${Me.ID} && \
 					${This.AccessAllowed[${Can.Value.ID}]} && \
 					!${This.FullCans.Contains[${Can.Value.ID}]}
 				{
@@ -136,7 +137,7 @@ objectdef obj_JetCan
 		{
 			This.FullCans:Clear
 		}
-
+		echo ${This.ActiveCan}
 		This.ActiveCan:Set[-1]
 		return ${This.ActiveCan}
 	}
