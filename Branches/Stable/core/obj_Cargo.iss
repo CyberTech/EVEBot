@@ -810,7 +810,7 @@ objectdef obj_Cargo
 				}
 			}
 			while ${CargoIterator:Next(exists)}
-			JetCan:StackAllCargo
+			;JetCan:StackAllCargo
 		}
 		else
 		{
