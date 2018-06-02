@@ -137,7 +137,7 @@ objectdef obj_JetCan
 		{
 			This.FullCans:Clear
 		}
-		echo ${This.ActiveCan}
+		
 		This.ActiveCan:Set[-1]
 		return ${This.ActiveCan}
 	}
