@@ -176,12 +176,15 @@ objectdef obj_Drones
 	{
 		if !${This.DronesReady}
 		{
+			;UI:UpdateConsole["Broken?"]
 			return
 		}
 
-		if (${This.DronesInSpace} > 0)
+		if (${This.DronesInSpace} > 0) && ${MiningDroneTarget} != ${Me.ActiveTarget}
 		{
 			EVE:DronesMineRepeatedly[This.ActiveDroneIDList]
+			
+			;UI:UpdateConsole["PISSSSSSSSSSSSSSS"]
 			MiningDroneTarget:Set[${Me.ActiveTarget}]
 		}
 	}

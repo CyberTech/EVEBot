@@ -299,7 +299,7 @@ objectdef obj_Asteroids
 		variable index:entity AsteroidList_OutOfRangeTmp
 		variable iterator AsteroidIt
 
-		if ${Ship.OptimalMiningRange} == 0 && ${Config.Miner.OrcaMode}
+		if ${Ship.OptimalMiningRange} == 0 && ${Config.Miner.OrcaMode} || ${Config.Miner.UseMiningDrones} && ${Ship.TotalMiningLasers} == 0
 		{
 			This.MaxDistanceToAsteroid:Set[${Math.Calc[20000 * ${Config.Miner.MiningRangeMultipler}]}]
 		}
@@ -444,8 +444,8 @@ objectdef obj_Asteroids
 		}
 		return TRUE
 	}
-
-	function:bool TargetNextInRange(int64 DistanceToTarget=-1)
+	;	If you are a drone exclusive miner, you probably want your targets to be close to each other
+	function:bool TargetInClusters(int64 DistanceToTarget=-1)
 	{
 		variable iterator AsteroidIterator
 
@@ -461,6 +461,7 @@ objectdef obj_Asteroids
 			{
 				if ${DistanceToTarget} == -1
 				{
+					
 					if ${Entity[${AsteroidIterator.Value.ID}](exists)} && \
 						!${AsteroidIterator.Value.IsLockedTarget} && \
 						!${AsteroidIterator.Value.BeingTargeted} && \
@@ -476,7 +477,7 @@ objectdef obj_Asteroids
 						!${AsteroidIterator.Value.IsLockedTarget} && \
 						!${AsteroidIterator.Value.BeingTargeted} && \
 						${AsteroidIterator.Value.Distance} < ${MyShip.MaxTargetRange} && \
-						${AsteroidIterator.Value.DistanceTo[${DistanceToTarget}]} < ${Math.Calc[${Ship.OptimalMiningRange} + 2000]}
+						${AsteroidIterator.Value.DistanceTo[${DistanceToTarget}]} < 10000
 					{
 						variable iterator Target
 						variable bool IsWithinRangeOfOthers=TRUE
@@ -487,10 +488,11 @@ objectdef obj_Asteroids
 							{
 								if ${AsteroidIterator.Value.CategoryID} == ${Asteroids.AsteroidCategoryID}
 								{
-									if ${AsteroidIterator.Value.DistanceTo[${Target.Value.ID}]} > ${Math.Calc[${Ship.OptimalMiningRange} * 2]}
-									{
-										IsWithinRangeOfOthers:Set[FALSE]
-									}
+									
+										if ${AsteroidIterator.Value.DistanceTo[${Target.Value.ID}]} > 30000
+										{
+											IsWithinRangeOfOthers:Set[FALSE]
+										}
 								}
 							}
 							while ${Target:Next(exists)}
@@ -521,7 +523,88 @@ objectdef obj_Asteroids
 				return FALSE
 			}
 		}
+		call This.MoveToField TRUE
+		return FALSE
+	}
+	
+	function:bool TargetNextInRange(int64 DistanceToTarget=-1)
+	{
+		variable iterator AsteroidIterator
 
+		if ${AsteroidList.Used} == 0
+		{
+			call This.UpdateList
+		}
+
+		This.AsteroidList:GetIterator[AsteroidIterator]
+		if ${AsteroidIterator:First(exists)}
+		{
+			do
+			{
+				if ${DistanceToTarget} == -1
+				{
+					
+					if ${Entity[${AsteroidIterator.Value.ID}](exists)} && \
+						!${AsteroidIterator.Value.IsLockedTarget} && \
+						!${AsteroidIterator.Value.BeingTargeted} && \
+						${AsteroidIterator.Value.Distance} < ${MyShip.MaxTargetRange} && \
+						${AsteroidIterator.Value.Distance} < ${Ship.OptimalMiningRange}
+					{
+						break
+					}
+				}
+				else
+				{
+					if ${Entity[${AsteroidIterator.Value.ID}](exists)} && \
+						!${AsteroidIterator.Value.IsLockedTarget} && \
+						!${AsteroidIterator.Value.BeingTargeted} && \
+						${AsteroidIterator.Value.Distance} < ${MyShip.MaxTargetRange} && \
+						${AsteroidIterator.Value.DistanceTo[${DistanceToTarget}]} < ${Math.Calc[${Ship.OptimalMiningRange} + 2000]}
+					{
+						variable iterator Target
+						variable bool IsWithinRangeOfOthers=TRUE
+						Targets:UpdateLockedAndLockingTargets
+						Targets.LockedOrLocking:GetIterator[Target]
+						if ${Target:First(exists)}
+							do
+							{
+								if ${AsteroidIterator.Value.CategoryID} == ${Asteroids.AsteroidCategoryID}
+								{
+									
+										if ${AsteroidIterator.Value.DistanceTo[${Target.Value.ID}]} > 30000
+										{
+											IsWithinRangeOfOthers:Set[FALSE]
+										}
+								}
+							}
+							while ${Target:Next(exists)}
+						if ${IsWithinRangeOfOthers}
+							break
+					}
+				}
+			}
+			while ${AsteroidIterator:Next(exists)}
+
+			if ${AsteroidIterator.Value(exists)} && ${Entity[${AsteroidIterator.Value.ID}](exists)}
+			{
+				if ${AsteroidIterator.Value.IsLockedTarget} || \
+					${AsteroidIterator.Value.BeingTargeted}
+				{
+					return TRUE
+				}
+
+				UI:UpdateConsole["Locking Asteroid ${AsteroidIterator.Value.Name}: ${EVEBot.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"]
+				AsteroidIterator.Value:LockTarget
+
+				call This.UpdateList
+				return TRUE
+			}
+			else
+			{
+				call This.UpdateList
+				return FALSE
+			}
+		}
 		return FALSE
 	}
 
@@ -543,7 +626,7 @@ objectdef obj_Asteroids
 					!${AsteroidIterator.Value.IsLockedTarget} && \
 					!${AsteroidIterator.Value.BeingTargeted} && \
 					${AsteroidIterator.Value.Distance} < ${MyShip.MaxTargetRange} && \
-					( !${Me.ActiveTarget(exists)} || ${AsteroidIterator.Value.DistanceTo[${Me.ActiveTarget.ID}]} <= ${Math.Calc[${Ship.OptimalMiningRange}* 1.1]} )
+					( !${Me.ActiveTarget(exists)} || ${AsteroidIterator.Value.DistanceTo[${Me.ActiveTarget.ID}]} <= 25000 )
 				{
 					break
 				}
@@ -595,9 +678,9 @@ objectdef obj_Asteroids
 						if ${AsteroidIterator.Value.Distance} < ${This.MaxDistanceToAsteroid}
 						{
 							UI:UpdateConsole["obj_Asteroids: TargetNext: No Asteroids in range & All lasers idle: Approaching nearest"]
-							if ${MyShip.MaxTargetRange} < ${Ship.OptimalMiningRange}
+							if ${MyShip.MaxTargetRange} < ${Ship.OptimalMiningRange} || ${Config.Miner.UseMiningDrones} && ${Ship.TotalMiningLasers} == 0
 							{
-								call Ship.Approach ${AsteroidIterator.Value.ID} ${Math.Calc[${MyShip.MaxTargetRange} - 5000]}
+								call Ship.Approach ${AsteroidIterator.Value.ID} 1000
 							}
 							else
 							{

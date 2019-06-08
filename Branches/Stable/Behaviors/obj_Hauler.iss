@@ -786,6 +786,9 @@ objectdef obj_Hauler
 
 		if ${This.HaulerFull}
 		{
+			Ship:StackOreHold
+			wait 100
+			Ship:StackOreHold
 			return
 		}
 
@@ -798,7 +801,7 @@ objectdef obj_Hauler
 			}
 			call Ship.WarpToFleetMember ${charID}
 		}
-
+		Ship:Activate_Gang_Links
 		call Ship.OpenCargo
 
 		This:BuildJetCanList[${charID}]
@@ -1008,7 +1011,7 @@ objectdef obj_Hauler
 						wait 20
 					}
 				}
-				if ${Ship.CargoFreeSpace} < 1000
+				if ${Ship.CargoFreeSpace} < 100
 				{
 					UI:UpdateConsole["DEBUG: obj_Hauler.LootEntity: Ship Cargo Free Space: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
 					break
@@ -1035,6 +1038,7 @@ objectdef obj_Hauler
 		switch ${Config.Miner.DeliveryLocationTypeName}
 		{
 			case Station
+				Ship:Deactivate_Gang_Links
 				call Ship.TravelToSystem ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID}
 				call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
 				break
@@ -1272,6 +1276,7 @@ objectdef obj_Hauler
 		if ${MyShip.HasOreHold} && ${Ship.OreHoldFull}
 		{
 			UI:UpdateConsole["Ore Hold Full. Dropping off cargo."]
+			Ship:Deactivate_Gang_Links
 			return TRUE
 		}
 		

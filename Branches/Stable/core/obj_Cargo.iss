@@ -535,7 +535,9 @@ objectdef obj_Cargo
 		variable iterator CargoIterator
 		MyShip:GetOreHoldCargo[HangarCargo]
 		HangarCargo:GetIterator[CargoIterator]
-
+		call This.CloseHolds
+		
+		Call This.OpenHolds
 		if ${CargoIterator:First(exists)}
 		{
 				do
@@ -553,6 +555,7 @@ objectdef obj_Cargo
 		}
 		else
 		{
+			call This.CloseHolds
 			UI:UpdateConsole["DEBUG: obj_Cargo:TransferCargoFromShipOreHoldToStation: Nothing found to move"]
 		}
 	}
@@ -1254,9 +1257,21 @@ objectdef obj_Cargo
 		call This.OpenHolds
 
 		if ${MyShip.HasOreHold}
-		{
-			MyShip:GetOreHoldCargo[This.CargoToTransfer]
-		}
+			{
+			call Cargo.OpenHolds
+			wait 10
+			EVEinvWindow[Inventory]:MakeChildActive[SpecializedOreHold]
+			wait 10
+			Ship:StackOreHold
+			wait 10
+			call Cargo.TransferCargoFromShipOreHoldToStation
+			wait 10
+			EVEinvWindow[Inventory]:MakeChildActive[FleetHangar]
+			wait 10
+			Ship:StackCorpHangar
+			wait 10
+			call Cargo.TransferCargoFromShipCorporateHangarToStation
+			}
 		else
 		{
 			This:FindShipCargo[CATEGORYID_ORE]

@@ -126,7 +126,7 @@ objectdef obj_Configuration_Common
 		This.CommonRef:AddSetting[AutoLoginCharID, 0]
 		This.CommonRef:AddSetting[Maximum Runtime, 0]
 		This.CommonRef:AddSetting[Use Sound, FALSE]
-		This.CommonRef:AddSetting[Disable 3D, FALSE]
+		This.CommonRef:AddSetting[Disable 3D, TRUE]
 		This.CommonRef:AddSetting[TrainFastest, FALSE]
 	}
 
@@ -359,31 +359,47 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSet[ORE_Volumes]
 		This.MinerRef:AddSetting[Restrict To Belt, NO]
 		This.MinerRef:AddSetting[Restrict To Ore Type, NONE]
-		This.MinerRef:AddSetting[JetCan Naming, 1]
-		This.MinerRef:AddSetting[Bookmark Last Position, TRUE]
+		This.MinerRef:AddSetting[JetCan Naming, 10]
+		This.MinerRef:AddSetting[Bookmark Last Position, FALSE]
 		This.MinerRef:AddSetting[Distribute Lasers, TRUE]
 		This.MinerRef:AddSetting[Use Mining Drones, FALSE]
 		This.MinerRef:AddSetting[Avoid Player Range, 10000]
 		This.MinerRef:AddSetting[Standing Detection, FALSE]
-		This.MinerRef:AddSetting[Lowest Standing, 0]
+		This.MinerRef:AddSetting[Lowest Standing, -11]
 		This.MinerRef:AddSetting[Minimum Security Status, -10.00]
 		This.MinerRef:AddSetting[Ice Mining, 0]
-		This.MinerRef:AddSetting[Delivery Location Type, 1]
-		This.MinerRef:AddSetting[Delivery Location Type Name, Station]
+		This.MinerRef:AddSetting[Delivery Location Type, 3]
+		This.MinerRef:AddSetting[Delivery Location Type Name, Jetcan]
 		This.MinerRef:AddSetting[Use Field Bookmarks, FALSE]
 		This.MinerRef:AddSetting[Strip Mine, FALSE]
-		This.MinerRef:AddSetting[Cargo Threshold, 0]
+		This.MinerRef:AddSetting[Cargo Threshold, 7000]
 
 
+		This.OreTypesRef:AddSetting[Bitumens, 1]
+		This.OreTypesRef:AddSetting[Crnotite, 1]
+		This.OreTypesRef:AddSetting[Chromite, 1]
+		This.OreTypesRef:AddSetting[Cinnabar, 1]
+		This.OreTypesRef:AddSetting[Cobaltite, 1]
+		This.OreTypesRef:AddSetting[Coesite, 1]
+		This.OreTypesRef:AddSetting[Euxenite, 1]
+		This.OreTypesRef:AddSetting[Loparite, 1]
+		This.OreTypesRef:AddSetting[Monazite, 1]
+		This.OreTypesRef:AddSetting[Otavite, 1]
+		This.OreTypesRef:AddSetting[Pollucite, 1]
+		This.OreTypesRef:AddSetting[Sylvite, 1]
+		This.OreTypesRef:AddSetting[Zeolites, 1]		
 		This.OreTypesRef:AddSetting[Vitreous Mercoxit, 1]
 		This.OreTypesRef:AddSetting[Magma Mercoxit, 1]
 		This.OreTypesRef:AddSetting[Mercoxit, 1]
+		This.OreTypesRef:AddSetting[Flawless Arkonor, 1]
 		This.OreTypesRef:AddSetting[Prime Arkonor, 1]
 		This.OreTypesRef:AddSetting[Crimson Arkonor, 1]
 		This.OreTypesRef:AddSetting[Arkonor, 1]
+		This.OreTypesRef:AddSetting[Cubic Bistot, 1]
 		This.OreTypesRef:AddSetting[Monoclinic Bistot, 1]
 		This.OreTypesRef:AddSetting[Triclinic Bistot, 1]
 		This.OreTypesRef:AddSetting[Bistot, 1]
+		This.OreTypesRef:AddSetting[Pellucid Crokite, 1]
 		This.OreTypesRef:AddSetting[Crystalline Crokite, 1]
 		This.OreTypesRef:AddSetting[Sharp Crokite, 1]
 		This.OreTypesRef:AddSetting[Crokite, 1]
@@ -549,7 +565,7 @@ objectdef obj_Configuration_Miner
 
 	member:bool SafeJetcan()
 	{
-		return ${This.MinerRef.FindSetting[Safe Jetcan, FALSE]}
+		return ${This.MinerRef.FindSetting[Safe Jetcan, True]}
 	}
 
 	method SetSafeJetcan(bool value)
@@ -696,7 +712,7 @@ objectdef obj_Configuration_Miner
 		{
 			if ${MyShip.HasOreHold}
 			{
-				This:SetCargoThreshold[${Ship.OreHoldCapacity}]
+				This:SetCargoThreshold[${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipOreHold].Capacity}]
 			}
 			else
 			{

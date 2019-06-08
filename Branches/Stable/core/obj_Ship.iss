@@ -711,7 +711,7 @@ objectdef obj_Ship
 				case GROUP_TRACKINGCOMPUTER
 					This.ModuleList_TrackingComputer:Insert[${ModuleIter.Value.ID}]
 					break
-				case GROUP_GANGLINK
+				case GROUP_COMMAND_BURST
 					This.ModuleList_GangLinks:Insert[${ModuleIter.Value.ID}]
 					break
 				default
@@ -1394,8 +1394,8 @@ objectdef obj_Ship
 			return
 		}
 
-		Me.Ship.Module[${Slot}].LastTarget:MakeActiveTarget
-		Me.Ship.Module[${Slot}]:Click
+		MyShip.Module[${Slot}].LastTarget:MakeActiveTarget
+		MyShip.Module[${Slot}]:Click
 		if ${Activate.Equal[ON]}
 		{
 			; Delay from 30 to 60 seconds before deactivating
@@ -1485,7 +1485,7 @@ objectdef obj_Ship
 
 				UI:UpdateConsole["Activating: ${Slot}: ${ModuleIter.Value.ToItem.Name}"]
 				ModuleIter.Value:Activate[${id}]
-				;TimedCommand ${Math.Rand[600]:Inc[300]} "Script[EVEBot].VariableScope.Ship:CycleMiningLaser[OFF, ${Slot}]"
+				TimedCommand ${Math.Rand[165]:Inc[115]} "Script[EVEBot].VariableScope.Ship:CycleMiningLaser[OFF, ${Slot}]"
 				return
 			}
 		}

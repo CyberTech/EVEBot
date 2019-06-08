@@ -489,9 +489,9 @@
 						<Textentry name='tbCargoThreshold'>
 							<X>200</X>
 							<Y>50</Y>
-							<Width>45</Width>
+							<Width>54</Width>
 							<Height>18</Height>
-							<MaxLength>6</MaxLength>
+							<MaxLength>7</MaxLength>
 							<OnLoad>
 								This:SetText[${Script[EVEBot].VariableScope.Config.Miner.CargoThreshold}]
 							</OnLoad>
