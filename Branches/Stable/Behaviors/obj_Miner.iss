@@ -201,19 +201,27 @@ objectdef obj_Miner
 
 			if !${Me.InStation}
 			{
-				if ${Entity["GroupID = 485 && CategoryID = CATEGORYID_ENTITY"](exists)}
+				if ${Entity["GroupID = GROUP_DREADNOUGHT && CategoryID = CATEGORYID_ENTITY"](exists)}
 				{
 					This.CurrentState:Set["FLEE"]
-					UI:UpdateConsole["FLEE: NPC Dreadnaught detected: ${Entity[\"GroupID = 485\" && CategoryID = CATEGORYID_ENTITY].Name}"]
+					UI:UpdateConsole["FLEE: NPC Dreadnaught detected: ${Entity[\"GroupID = GROUP_DREADNOUGHT\" && CategoryID = CATEGORYID_ENTITY].Name}"]
 					return
 				}
 
-				if ${Entity["GroupID = 30 && CategoryID = CATEGORYID_ENTITY"](exists)}
+				if ${Entity["GroupID = GROUP_TITAN && CategoryID = CATEGORYID_ENTITY"](exists)}
 				{
 					This.CurrentState:Set["FLEE"]
-					UI:UpdateConsole["FLEE: NPC Titan detected: ${Entity[\"GroupID = 485\" && CategoryID = CATEGORYID_ENTITY].Name}"]
+					UI:UpdateConsole["FLEE: NPC Titan detected: ${Entity[\"GroupID = GROUP_TITAN\" && CategoryID = CATEGORYID_ENTITY].Name}"]
 					return
 				}
+
+				if ${Entity["GroupID = GROUP_INVASIONNPS && CategoryID = CATEGORYID_ENTITY"](exists)}
+				{
+					This.CurrentState:Set["FLEE"]
+					UI:UpdateConsole["FLEE: NPC Invasion Precursor (Damavik?) detected: ${Entity[\"GroupID = GROUP_INVASIONNPS\" && CategoryID = CATEGORYID_ENTITY].Name}"]
+					return
+				}
+
 			}
 		}
 
