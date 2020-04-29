@@ -2,12 +2,11 @@
 
 #include ../../Support/TestAPI.iss
 /*
- *	Test MyShip:GetCarg
+ *	Test MyShip:GetOreHoldCargo
  *
- *	Revision $Id: Station_GetHangarItems.iss 2131 2012-01-09 21:21:12Z CyberTech $
  *
  *	Requirements:
- *		Have items in ship cargo
+ *		Have items in ship ore hold
  *
  */
 
@@ -15,8 +14,13 @@
 function main()
 {
 	variable obj_LSTypeIterator ItemTest = "item"
-	variable string MethodStr = "MyShip:GetCargo"
+	variable string MethodStr = "MyShip:GetOreHoldCargo"
 
+  if !${MyShip.HasOreHold}
+  {
+    echo "Test skipped - MyShip.HasOreHold == false"
+    return
+  }
 	MyShip:Open
 	wait 15
 

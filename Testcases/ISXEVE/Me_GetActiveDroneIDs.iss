@@ -1,6 +1,6 @@
 #define TESTCASE 1
 
-#include Scripts/EVEBotDev/Support/TestAPI.iss
+#include ../../Support/TestAPI.iss
 
 /*
  *	Test GetActiveDroneIDs [Shiva]

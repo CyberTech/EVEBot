@@ -11,7 +11,7 @@
 #include ../Branches/Dev/core/defines.iss
 ;#include ${LavishScript.HomeDirectory}/Scripts/isxGamesCommon/CyberTech/obj_PulseTimer.iss
 ;#include ../Branches/Dev/core/Lib/obj_BaseClass.iss
-#include ../Branches/Dev/External/isxGamesCommon/CyberTech/obj_LSTypeIterator.iss
+#include ${LavishScript.HomeDirectory}/Scripts/isxGamesCommon/CyberTech/obj_LSTypeIterator.iss
 
 objectdef obj_UI
 {

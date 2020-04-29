@@ -1,9 +1,9 @@
 #define TESTCASE 1
 
-#include Scripts/EVEBotDev/Support/TestAPI.iss
+#include ../../Support/TestAPI.iss
 
 /*
- *	Test GetActiveDroneIDs [Shiva]
+ *	Test GetActiveDrones
  *	Requires:	Must be in space.
  *	Note: Detects ALL drones in space that are in your window.
  */
