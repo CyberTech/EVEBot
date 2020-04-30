@@ -712,6 +712,7 @@ objectdef obj_Ship
 					This.ModuleList_TrackingComputer:Insert[${ModuleIter.Value.ID}]
 					break
 				case GROUP_GANGLINK
+				case GROUP_COMMAND_BURST
 					This.ModuleList_GangLinks:Insert[${ModuleIter.Value.ID}]
 					break
 				default

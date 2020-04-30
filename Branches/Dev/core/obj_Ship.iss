@@ -1053,6 +1053,7 @@ objectdef obj_Ship inherits obj_BaseClass
 					This.ModuleList_TrackingComputer:Insert[${Module.Value.ID}]
 					continue
 				case GROUP_GANGLINK
+				case GROUP_COMMAND_BURST
 					This.ModuleList_GangLinks:Insert[${Module.Value.ID}]
 					continue
 				default
