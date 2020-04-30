@@ -240,6 +240,7 @@ objectdef obj_Miner
 
 					; If in orca delivery and orca not in belt, flee
 					This.CurrentState:Set["FLEE"]
+					UI:UpdateConsole["FLEE: Orca not in belt (temporary)"]
 					return
 				}
 			}
@@ -255,6 +256,7 @@ objectdef obj_Miner
 			if ${Config.Miner.GroupMode} && !${IsMaster} && !${WarpToMaster}
 			{
 				This.CurrentState:Set["FLEE"]
+				UI:UpdateConsole["FLEE: Master not in belt (temporary)"]
 				return
 			}
 		}
