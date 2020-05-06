@@ -1,0 +1,6 @@
+/Branches/Dev/External/isxGamesCommon/
+**/Behaviors/_includes.iss
+**/Behaviors/_variables.iss
+_ActiveModules.iss
+*.log
+/Testcases/**/lstypes*.txt

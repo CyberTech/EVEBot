@@ -1,0 +1,29 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "Testcases"
+		},
+		{
+			"path": "External"
+		},
+		{
+			"path": "Branches\\Stable"
+		},
+		{
+			"path": "Branches\\Dev"
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			// ...
+			// Exclude the main folders (included as workspace folders)
+			"Testcases": true,
+			"External": true,
+			"Branches\\Stable": true,
+			"Branches\\Dev": true,
+		}
+	}
+}
