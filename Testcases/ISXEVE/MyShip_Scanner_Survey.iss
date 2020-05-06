@@ -1,17 +1,15 @@
 #define TESTCASE 1
 
-#include Scripts/EVEBot/Support/TestAPI.iss
+#include ../../Support/TestAPI.iss
 
 /*
-	Test retrieval of survey scanner module results
-
-	Revision $Id$
+	Test survey module activation and retrieval of survey scanner module results via Entity results
 
 	Requirements:
 		1) In Space
 		2) Inside a ship
 		3) Have Survey Scanner module fitted
-		4) Have target to scan
+		4) Be within your survey module range of 1 or more asteroids
 */
 
 function main()
@@ -19,8 +17,9 @@ function main()
 	EVEWindow[ByCaption, "Survey Scan Results"]:Close
 
 	echo "Starting survey scan..."
-	MyShip.Scanners.Survey[${MyShip.Module[MedSlot2].ID}]:StartScan
-	MyShip.Module[MedSlot2]:Activate
+	MyShip.Scanners.Survey[${MyShip.Module[MedSlot1].ID}]:StartScan
+	; should not be necessary, the above should have activated it
+	;MyShip.Module[MedSlot1]:Activate 
 
 	echo "Waiting for module cycle..."
 	wait 50 ${EVEWindow[ByCaption, "Survey Scan Results"](exists)}
