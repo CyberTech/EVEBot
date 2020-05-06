@@ -776,7 +776,7 @@ objectdef obj_Social
 				UI:UpdateConsole["Taking a break!", LOG_CRITICAL]
 				if ${Config.Combat.BroadcastBreaks}
 				{
-					relay all -event EVEBot_HARDSTOP
+					relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.BotModeName}"
 				}
 				else
 				{
@@ -815,12 +815,12 @@ objectdef obj_Social
 
 	
 	;This method is triggered by an event.  If triggered, it tells us one of our fellow miners has entered the HARDSTOP state, and we should also run
-	method TriggerHARDSTOP()
+	method TriggerHARDSTOP(string SourceInfo)
 	{
-		UI:UpdateConsole["TriggerHARDSTOP called by fleetmate", LOG_CRITICAL]
+		UI:UpdateConsole["TriggerHARDSTOP called by ${SourceInfo}", LOG_CRITICAL]
 		EVEBot.ReturnToStation:Set[TRUE]
 	}
-	;This method is triggered by an event.  If triggered, it tells us one of our fellow miners has entered the HARDSTOP state, and we should also run
+	;This method is triggered by an event.  If triggered, it tells us one of our fellow miners has aborted the hardstop state
 	method AbortHARDSTOP()
 	{
 		EVEBot.ReturnToStation:Set[FALSE]

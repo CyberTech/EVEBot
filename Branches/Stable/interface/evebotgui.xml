@@ -78,7 +78,7 @@
 							<width>150</width>
 							<height>20</height>
 							<OnLeftClick>
-								relay all -event EVEBot_HARDSTOP
+								relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.BotModeName}"
 								Script[EVEBot].VariableScope.UI:UpdateConsole["Forcing Break!!!", LOG_MINOR]
 							</OnLeftClick>
 						</button>

@@ -355,7 +355,7 @@ objectdef obj_Miner
 			;	*	If everything above failed, check if we're warping and warp to a safe spot
 			case HARDSTOP
 				UI:UpdateConsole["Sending HARD STOP to fleet"]
-				relay all -event EVEBot_HARDSTOP
+				relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.BotModeName}"
 				if ${Me.InStation}
 				{
 					break
@@ -1551,7 +1551,7 @@ objectdef obj_Miner
 					if ${Config.Miner.MasterMode}
 					{
 						UI:UpdateConsole["obj_Miner: There can be only one Master ERROR:${name}", LOG_DEBUG]
-						relay all -event EVEBot_HARDSTOP
+						relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.BotModeName}"
 					}
 					else
 					{

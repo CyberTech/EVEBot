@@ -216,7 +216,7 @@ objectdef obj_Hauler
 			;	*	If everything above failed and there's a station in the same system, dock there
 			;	*	If everything above failed, check if we're warping and warp to a safe spot
 			case HARDSTOP
-				relay all -event EVEBot_HARDSTOP
+				relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.BotModeName}"
 				if ${Me.InStation}
 				{
 					break
