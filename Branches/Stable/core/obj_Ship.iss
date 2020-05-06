@@ -2149,6 +2149,13 @@ objectdef obj_Ship
 		return ${Warped}
 	}
 
+	member:bool HasSurveyScanner()
+	{
+		variable iterator aModuleIterator
+		This.ModuleList_SurveyScanners:GetIterator[aModuleIterator]
+		return ${aModuleIterator:First(exists)}
+	}
+
 	method Activate_SurveyScanner()
 	{
 		if !${MyShip(exists)}
