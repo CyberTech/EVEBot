@@ -41,6 +41,7 @@ objectdef obj_Ship
 	variable index:module ModuleList_TargetPainter
 	variable index:module ModuleList_TrackingComputer
 	variable index:module ModuleList_GangLinks
+	variable index:module ModuleList_SurveyScanners
 	variable bool Repairing_Armor = FALSE
 	variable bool Repairing_Hull = FALSE
 	variable float m_MaxTargetRange
@@ -589,7 +590,7 @@ objectdef obj_Ship
 		This.ModuleList_TrackingComputer:Clear
 		This.ModuleList_GangLinks:Clear
 		This.ModuleList_ShieldTransporters:Clear
-
+		This.ModuleList_SurveyScanners:Clear
 
 		if !${MyShip:GetModules[This.ModuleList]}
 		{
@@ -637,9 +638,6 @@ objectdef obj_Ship
 
 			switch ${GroupID}
 			{
-				case GROUPID_SHIELD_TRANSPORTER
-					This.ModuleList_ShieldTransporters:Insert[${ModuleIter.Value.ID}]
-					break
 				case GROUPID_SHIELD_HARDENER
 				case GROUPID_ARMOR_HARDENERS
 					This.ModuleList_ActiveResists:Insert[${ModuleIter.Value.ID}]
@@ -715,6 +713,11 @@ objectdef obj_Ship
 				case GROUP_COMMAND_BURST
 					This.ModuleList_GangLinks:Insert[${ModuleIter.Value.ID}]
 					break
+				case GROUPID_SHIELD_TRANSPORTER
+					This.ModuleList_ShieldTransporters:Insert[${ModuleIter.Value.ID}]
+					break
+				case GROUP_SURVEYSCANNER
+					This.ModuleList_SurveyScanners:Insert[${ModuleIter.Value.ID}]
 				default
 					break
 			}
@@ -870,6 +873,15 @@ objectdef obj_Ship
 		}
 		while ${ModuleIter:Next(exists)}
 
+		UI:UpdateConsole["Gang Link Modules:", LOG_MINOR, 2]
+		This.ModuleList_GangLinks:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			UI:UpdateConsole["	 Slot: ${ModuleIter.Value.ToItem.Slot}  ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
+		}
+		while ${ModuleIter:Next(exists)}
+
 		UI:UpdateConsole["Shield Transporter Modules:", LOG_MINOR, 2]
 		This.ModuleList_ShieldTransporters:GetIterator[ModuleIter]
 		if ${ModuleIter:First(exists)}
@@ -878,6 +890,21 @@ objectdef obj_Ship
 			UI:UpdateConsole["	 Slot: ${ModuleIter.Value.ToItem.Slot}  ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
 		}
 		while ${ModuleIter:Next(exists)}
+
+		UI:UpdateConsole["Survey Scanners:", LOG_MINOR, 2]
+		This.ModuleList_SurveyScanners:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			UI:UpdateConsole["	 Slot: ${ModuleIter.Value.ToItem.Slot}  ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
+		}
+		while ${ModuleIter:Next(exists)}
+
+		if ${This.ModuleList_SurveyScanners.Used} > 1
+		{
+			UI:UpdateConsole["Warning: More than 1 survey scanners detected, I will only use the first one.", LOG_MINOR, 4]
+		}
+
 	}
 
 	method UpdateBaselineUsedCargo()
@@ -1439,6 +1466,7 @@ objectdef obj_Ship
 		}
 		while ${ModuleIter:Next(exists)}
 	}
+
 	function ActivateFreeMiningLaser(int64 id=-1)
 	{
 		variable string Slot
@@ -2119,6 +2147,26 @@ objectdef obj_Ship
 		}
 		UI:UpdateConsole["Dropped out of warp"]
 		return ${Warped}
+	}
+
+	method Activate_SurveyScanner()
+	{
+		if !${MyShip(exists)}
+		{
+			return
+		}
+
+		variable iterator ModuleIter
+
+		This.ModuleList_SurveyScanners:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		{
+			if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline}
+			{
+				UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
+				MyShip.Scanners.Survey[${ModuleIter.Value:ID}]:StartScan
+			}
+		}
 	}
 
 	method Activate_AfterBurner()

@@ -138,6 +138,7 @@ variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
 #define WARNSOUND	"${Script.CurrentDirectory}/sounds/warning.wav"
 
 
+#define GROUP_SURVEYSCANNER 49
 #define GROUP_GANGLINK 316
 #define GROUP_COMMAND_BURST 1770
 #define GROUP_ACCELERATIONGATEKEYS 474
