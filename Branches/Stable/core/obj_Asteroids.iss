@@ -346,7 +346,7 @@ objectdef obj_Asteroids
 				}
 			}
 
-			UI:UpdateConsole["OBJ_Asteroids:UpdateList: ${AsteroidList.Used} (In Range: ${AsteroidListTmp.Used} OOR: ${AsteroidList_OutOfRangeTmp.Used}) asteroids found", LOG_DEBUG]
+			UI:UpdateConsole["obj_Asteroids:UpdateList: ${AsteroidList.Used} (In Range: ${AsteroidListTmp.Used} OOR: ${AsteroidList_OutOfRangeTmp.Used}) asteroids found", LOG_DEBUG]
 		}
 		else
 		{
@@ -358,12 +358,6 @@ objectdef obj_Asteroids
 	{
 		; TODO - add a Mercoxit checkbox to ui, and pass the config val as a param to this member for whether to include merc or not.
 		return ${Entity["CategoryID = ${This.AsteroidCategoryID} && TypeID != 11396"].ID}
-	}
-
-
-	method NextAsteroid()
-	{
-		AsteroidList:GetSettingIterator
 	}
 
 	member:bool FieldEmpty()
@@ -481,6 +475,7 @@ objectdef obj_Asteroids
 			return TRUE
 		}
 
+		This.AsteroidList:GetIterator[AsteroidIterator]
 		; If we're here, AsteroidList is not empty
 		; Iterate thru the asteroid list, and find the first one that isn't excluded for obvious reasons.
 		do
