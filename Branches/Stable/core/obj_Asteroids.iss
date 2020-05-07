@@ -78,6 +78,7 @@ objectdef obj_Asteroids
 				{
 					AsteroidList_Claimed:Remove[${ClaimedRoids.Value}]
 				}
+			}
 			while ${ClaimedRoids:Next(exists)}
 			
 
@@ -134,7 +135,7 @@ objectdef obj_Asteroids
 		}
 	}
 
-	; TODO - emove this from here -- move to obj_Belts - CT
+	; TODO - remove this from here -- move to obj_Belts - CT
 	function MoveToRandomBeltBookMark(bool FleetWarp=FALSE)
 	{
 		variable int RandomBelt
