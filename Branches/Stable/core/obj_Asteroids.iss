@@ -14,6 +14,10 @@ objectdef obj_Asteroids
 	variable string SVN_REVISION = "$Rev$"
 	variable int Version
 
+	;	Pulse tracking information
+	variable time NextPulse
+	variable int PulseIntervalInSeconds = 30
+
 	variable int AsteroidCategoryID = 25
 
 	variable index:entity AsteroidList_Surveyed
@@ -33,10 +37,12 @@ objectdef obj_Asteroids
 	variable float MaxDistanceToAsteroid
 
 	variable int LastSurveyScanResultCount = 0
-	variable time LastSurveyScanTime
+	variable time LastSurveyScanResultTime
 
 	method Initialize()
 	{
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+
 		Event[EVE_OnSurveyScanData]:AttachAtom[This:OnSurveyScanData]
 		LavishScript:RegisterEvent[EVEBot_ClaimAsteroid]
 
@@ -47,13 +53,43 @@ objectdef obj_Asteroids
 
 	method Shutdown()
 	{
+		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 		Event[EVE_OnSurveyScanData]:DetachAtom[This:OnSurveyScanData]
 		Event[EVEBot_ClaimAsteroid]:DetachAtom[This:OnEVEBot_ClaimAsteroid]
 	}
 
+	method Pulse()
+	{
+		if ${EVEBot.Paused}
+		{
+			return
+		}
+
+		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+		{
+			variable iterator ClaimedRoids
+			AsteroidList_Claimed:GetIterator[claimed]
+
+			; Prune asteroids from the list that have poofed
+			if ${ClaimedRoids:First(exists)}
+			do
+			{
+				if !${Entity[${ClaimedRoids.Value}](exists)}
+				{
+					AsteroidList_Claimed:Remove[${ClaimedRoids.Value}]
+				}
+			while ${ClaimedRoids:Next(exists)}
+			
+
+			This.NextPulse:Set[${Time.Timestamp}]
+			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+			This.NextPulse:Update
+		}
+	}
+
 	method OnSurveyScanData(int ResultCount)
 	{
-		LastSurveyScanTime:Set[${Time}]
+		LastSurveyScanResultTime:Set[${Time.Timestamp}]
 		LastSurveyScanResultCount:Set[${ResultCount}]
 		UI:UpdateConsole["obj_Asteroids: Survey Scan data received for ${LastSurveyScanResultCount} asteroids", LOG_DEBUG]
 	}

@@ -42,6 +42,8 @@ objectdef obj_Ship
 	variable index:module ModuleList_TrackingComputer
 	variable index:module ModuleList_GangLinks
 	variable index:module ModuleList_SurveyScanners
+	
+	variable time SurveyScanWaitTime
 	variable bool Repairing_Armor = FALSE
 	variable bool Repairing_Hull = FALSE
 	variable float m_MaxTargetRange
@@ -2163,6 +2165,11 @@ objectdef obj_Ship
 			return
 		}
 
+		if ${Time.Timestamp} < ${SurveyScanWaitTime.Timestamp}
+		{
+			return
+		}
+
 		variable iterator ModuleIter
 
 		This.ModuleList_SurveyScanners:GetIterator[ModuleIter]
@@ -2170,6 +2177,10 @@ objectdef obj_Ship
 		{
 			if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline}
 			{
+				; Only allow scans at most every 30 seconds
+				SurveyScanWaitTime:Set[${Time.Timestamp}]
+				SurveyScanWaitTime.Second:Inc[30]
+				SurveyScanWaitTime:Update
 				UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
 				MyShip.Scanners.Survey[${ModuleIter.Value.ID}]:StartScan
 			}
