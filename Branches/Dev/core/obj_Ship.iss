@@ -8,7 +8,7 @@
 */
 
 #macro Validate_Ship()
-		if !${EVEBot.SessionValid}
+		if !${MyShip(exists)} || !${EVEBot.SessionValid}
 		{
 			return
 		}
@@ -1792,26 +1792,27 @@ objectdef obj_Ship inherits obj_BaseClass
 	{
 		Validate_Ship()
 
-		variable string ShipName = ${MyShip}
-		variable int GroupID
-		variable int TypeID
+		variable int GroupID = 0
+
+		if (!${MyShip(exists)})
+		{
+			return FALSE
+		}
 
 		if ${Me.InSpace} && !${Me.InStation}
 		{
 			GroupID:Set[${MyShip.ToEntity.GroupID}]
-			TypeID:Set[${MyShip.ToEntity.TypeID}]
 		}
 		elseif !${Me.InSpace} && ${Me.InStation}
 		{
 			GroupID:Set[${MyShip.ToItem.GroupID}]
-			TypeID:Set[${MyShip.ToItem.TypeID}]
 		}
 		else
 		{
 			return FALSE
 		}
-		if ${ShipName.Right[10].Equal["'s Capsule"]} || \
-			${GroupID} == GROUP_CAPSULE
+
+		if ${GroupID} == GROUP_CAPSULE || ${MyShip.Name.Right[10].Equal["'s Capsule"]}
 		{
 			if !${This.AlertedInPod}
 			{

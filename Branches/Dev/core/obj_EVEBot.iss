@@ -168,7 +168,7 @@ objectdef obj_EVEBot inherits obj_BaseClass
 			return ${This.LastSessionResult}
 		}
 
-		if ${Me.InSpace} || ${Me.InStation}
+		if ${ISXEVE.IsSafe} && (${Me.InSpace} || ${Me.InStation})
 		{
 			This.LastSessionFrame:Set[${Script.RunningTime}]
 			This.LastSessionResult:Set[TRUE]
