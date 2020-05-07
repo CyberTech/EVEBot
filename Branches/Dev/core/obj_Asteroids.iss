@@ -23,8 +23,6 @@ objectdef obj_Asteroids
 	variable int Asteroid_CacheID
 	variable iterator Asteroid_CacheIterator
 
-	variable iterator OreTypeIterator
-
 	variable index:string EmptyBeltList
 	variable iterator EmptyBelt
 
@@ -46,9 +44,9 @@ objectdef obj_Asteroids
 	}
 
 	; Checks the belt name against the empty belt list.
-	member IsBeltEmpty(string BeltName)
+	member IsBeltMarkedEmpty(string BeltName)
 	{
-		echo "obj_Asteroids.IsBeltEmpty is deprecated"
+		echo "obj_Asteroids.IsBeltMarkedEmpty is deprecated"
 		if !${BeltName(exists)}
 		{
 			return FALSE
@@ -60,7 +58,7 @@ objectdef obj_Asteroids
 		{
 			if ${EmptyBelt.Value.Equal[${BeltName}]}
 			{
-				echo "DEBUG: obj_Asteroid:IsBeltEmpty - ${BeltName} - TRUE"
+				echo "DEBUG: obj_Asteroid:IsBeltMarkedEmpty - ${BeltName} - TRUE"
 				return TRUE
 			}
 		}
@@ -148,7 +146,7 @@ objectdef obj_Asteroids
 					}
 				}
 				while ( !${Belts[${curBelt}].Name.Find[${beltsubstring}](exists)} || \
-						${This.IsBeltEmpty[${Belts[${curBelt}].Name}]} )
+						${This.IsBeltMarkedEmpty[${Belts[${curBelt}].Name}]} )
 
 				Logger:Log["Warping to Asteroid Belt: ${Belts[${curBelt}].Name}"]
 				call Ship.WarpToID ${Belts[${curBelt}]}
@@ -192,51 +190,52 @@ objectdef obj_Asteroids
 
 	method Populate_AsteroidFilter()
 	{
+		variable iterator OreTypeIterator
 		variable string Filter = "CategoryID = CATEGORYID_ORE"
 		variable string TypeFilter
 
 		switch ${Config.Miner.MinerType}
 		{
 			case Ice
-				Config.Miner.IceTypesRef:GetSettingIterator[This.OreTypeIterator]
+				Config.Miner.IceTypesRef:GetSettingIterator[OreTypeIterator]
 				break
 			case Ore
-				Config.Miner.OreTypesRef:GetSettingIterator[This.OreTypeIterator]
+				Config.Miner.OreTypesRef:GetSettingIterator[OreTypeIterator]
 				break
 			case Ore - Mercoxit
-				Config.Miner.MercoxitTypesRef:GetSettingIterator[This.OreTypeIterator]
+				Config.Miner.MercoxitTypesRef:GetSettingIterator[OreTypeIterator]
 				break
 			Default
 				Logger:Log["ERROR: OBJ_Asteroids:Populate_AsteroidFilter: Config.Miner.MinerType is unknown: ${Config.Miner.MinerType}", LOG_CRITICAL]
-				Config.Miner.OreTypesRef:GetSettingIterator[This.OreTypeIterator]
+				Config.Miner.OreTypesRef:GetSettingIterator[OreTypeIterator]
 				break
 		}
 
-		if ${This.OreTypeIterator:First(exists)}
+		if ${OreTypeIterator:First(exists)}
 		{
 			TypeFilter:Set["("]
 			do
 			{
-				if ${This.OreTypeIterator.Value.FindAttribute[Enabled, 1]} == 1
+				if ${OreTypeIterator.Value.FindAttribute[Enabled, 1]} == 1
 				{
-					Logger:Log["DEBUG: obj_Asteroids:Populate_AsteroidFilter: Adding ore type ${This.OreTypeIterator.Value} to query", LOG_DEBUG]
+					Logger:Log["DEBUG: obj_Asteroids:Populate_AsteroidFilter: Adding ore type ${OreTypeIterator.Value} to query", LOG_DEBUG]
 					if ${TypeFilter.Length} > 1
 					{
 						TypeFilter:Concat[" || "]
 					}
 
-					TypeFilter:Concat["TypeID = ${This.OreTypeIterator.Key}"]
-					;echo TypeID: ${This.OreTypeIterator.Key}
-					;echo Ore Name: ${This.OreTypeIterator.Value}
-					;echo Enabled: ${This.OreTypeIterator.Value.FindAttribute[Enabled]}
-					;echo Priority: ${This.OreTypeIterator.Value.FindAttribute[Priority]}
+					TypeFilter:Concat["TypeID = ${OreTypeIterator.Key}"]
+					;echo TypeID: ${OreTypeIterator.Key}
+					;echo Ore Name: ${OreTypeIterator.Value}
+					;echo Enabled: ${OreTypeIterator.Value.FindAttribute[Enabled]}
+					;echo Priority: ${OreTypeIterator.Value.FindAttribute[Priority]}
 				}
 				else
 				{
-					Logger:Log["DEBUG: obj_Asteroids:Populate_AsteroidFilter: Skipping disabled ore: ${This.OreTypeIterator.Key}", LOG_DEBUG]
+					Logger:Log["DEBUG: obj_Asteroids:Populate_AsteroidFilter: Skipping disabled ore: ${OreTypeIterator.Key}", LOG_DEBUG]
 				}
 			}
-			while ${This.OreTypeIterator:Next(exists)}
+			while ${OreTypeIterator:Next(exists)}
 
 			if ${TypeFilter.Length} > 1
 			{
