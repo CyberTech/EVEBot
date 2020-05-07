@@ -1292,7 +1292,7 @@ objectdef obj_Miner
 		;	If we're in a station there's not going to be any mining going on.  This should clear itself up if it ever happens.
 		if ${Me.InStation} != FALSE
 		{
-			UI:UpdateConsole["DEBUG: obj_Miner.Mine called while zoning or while in station!"]
+			UI:UpdateConsole["DEBUG: obj_Miner.OrcaInBelt called while zoning or while in station!"]
 			return
 		}
 
@@ -1328,9 +1328,7 @@ objectdef obj_Miner
 
 		;	Find an asteroid field, or stay at current one if we're near one.  Once we're there, prepare for mining and
 		;	make sure we know what asteroids are available
-		call Asteroids.UpdateList
-		Asteroids.AsteroidList:GetIterator[AsteroidIterator]
-		if !${AsteroidIterator:First(exists)}
+		if ${Asteroids.FieldEmpty}
 		{
 			while ${Ship.Drones.DronesInSpace[FALSE]} != 0
 			{
@@ -1338,9 +1336,10 @@ objectdef obj_Miner
 				wait 20
 			}
 			UI:UpdateConsole["Miner.OrcaInBelt: No asteroids detected, changing belts"]
-			call Asteroids.MoveToField FALSE FALSE TRUE
-			call Asteroids.UpdateList
+			call Asteroids.MoveToField TRUE TRUE TRUE
+			return
 		}
+
 		call Ship.OpenCargo
 
 		;	If configured to launch combat drones and there's a shortage, force a DropOff so we go to our delivery location
@@ -1356,7 +1355,7 @@ objectdef obj_Miner
 		{
 			UI:UpdateConsole["Miner.OrcaInBelt: Avoiding player: Changing Belts"]
 			Ship.Drones:ReturnAllToDroneBay
-			call Asteroids.MoveToField TRUE FALSE TRUE
+			call Asteroids.MoveToField TRUE TRUE TRUE
 			return
 		}
 
