@@ -2171,7 +2171,7 @@ objectdef obj_Ship
 			if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline}
 			{
 				UI:UpdateConsole["Activating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
-				MyShip.Scanners.Survey[${ModuleIter.Value:ID}]:StartScan
+				MyShip.Scanners.Survey[${ModuleIter.Value.ID}]:StartScan
 			}
 		}
 	}
