@@ -296,10 +296,6 @@ objectdef obj_Asteroids
 	function UpdateList(int64 EntityIDForDistance=-1)
 	{
 		variable iterator OreTypeIterator
-		variable index:entity AsteroidListTmp
-		variable index:entity AsteroidList_OutOfRange
-		variable index:entity AsteroidList_OutOfRangeTmp
-		variable iterator AsteroidIt
 
 		if ${Ship.OptimalMiningRange} == 0 && ${Config.Miner.OrcaMode}
 		{
@@ -321,7 +317,15 @@ objectdef obj_Asteroids
 
 		if ${OreTypeIterator:First(exists)}
 		{
+			variable index:entity AsteroidListTmp
+			variable index:entity AsteroidList_OutOfRange
+			variable index:entity AsteroidList_OutOfRangeTmp
+			variable iterator AsteroidIt
+			variable int Count_InRange
+			variable int Count_OOR
+
 			This.AsteroidList:Clear
+
 			do
 			{
 				; This is intended to get the desired ore in the system before others do.  Its not
@@ -343,6 +347,8 @@ objectdef obj_Asteroids
 				{
 					EVE:QueryEntities[AsteroidListTmp, "CategoryID = ${This.AsteroidCategoryID} && Name =- \"${OreTypeIterator.Key}\""]
 				}
+				Count_InRange:Inc[${AsteroidListTmp.Used}]
+				Count_OOR:Inc[${AsteroidList_OutOfRangeTmp.Used}]
 
 				; Append the in-range asteroids of the current ore type to the final list
 				AsteroidListTmp:GetIterator[AsteroidIt]
@@ -383,7 +389,7 @@ objectdef obj_Asteroids
 				}
 			}
 
-			UI:UpdateConsole["obj_Asteroids:UpdateList: ${AsteroidList.Used} (In Range: ${AsteroidListTmp.Used} OOR: ${AsteroidList_OutOfRangeTmp.Used}) asteroids found", LOG_DEBUG]
+			UI:UpdateConsole["obj_Asteroids:UpdateList: ${AsteroidList.Used} (In Range: ${Count_InRange} OOR: ${Count_OOR}) asteroids found", LOG_DEBUG]
 		}
 		else
 		{
