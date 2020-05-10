@@ -1532,9 +1532,11 @@ objectdef obj_Ship
 					if (${OreAvailable} < ${OrePerCycle})
 					{
 						echo "ActivateFreeMiningLaser: FREAKING DEBUG: ${OrePerSec}  vs  ${ModuleIter.Value.MiningAmountPerSecond}"
-						variable float test = ${Math.Calc[(${OreAvailable} / ${OrePerSec}]}
+						variable float test
+						test:Set[${Math.Calc[${OreAvailable} / ${OrePerSec}]}]
 						echo test = ${test}
-						variable int TenthsSecondsToRun = ${Math.Calc[((${OreAvailable} / ${OrePerSec}) + 1) * 10]}
+						variable int TenthsSecondsToRun
+						TenthsSecondsToRun:Set[${Math.Calc[((${OreAvailable} / ${OrePerSec}) + 1) * 10]}]
 						UI:UpdateConsole["ActivateFreeMiningLaser: OreAvailable ${OreAvailable} < OrePerCycle ${OrePerCycle}, shortening runtime from ${ModuleIter.Value.Duration} to ${TenthsSecondsToRun}", LOG_DEBUG]
 						TimedCommand ${TenthsSecondsToRun} "MyShip.Module[${ModuleIter.Value.Slot}]:Deactivate"
 					}
