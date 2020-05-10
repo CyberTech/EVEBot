@@ -1420,20 +1420,20 @@ objectdef obj_Ship
 				!${Entity[${MyShip.Module[${Slot}].LastTarget.ID}](exists)} \
 			)
 		{
-			echo "obj_Ship:CycleMiningLaser: Target doesn't exist"
+			echo "obj_Ship:CycleMiningLaser: Last Target doesn't exist"
 			return
 		}
 
-		Me.Ship.Module[${Slot}].LastTarget:MakeActiveTarget
-		Me.Ship.Module[${Slot}]:Click
 		if ${Activate.Equal[ON]}
 		{
+			Me.Ship.Module[${Slot}]:Activate[${MyShip.Module[${Slot}].LastTarget.ID}]
 			; Delay from 30 to 60 seconds before deactivating
 			TimedCommand ${Math.Rand[600]:Inc[300]} "Script[EVEBot].VariableScope.Ship:CycleMiningLaser[OFF, ${Slot}]"
 			return
 		}
 		else
 		{
+			Me.Ship.Module[${Slot}]:Deactivate
 			; Delay for the time it takes the laser to deactivate and be ready for reactivation
 			TimedCommand 20 "Script[EVEBot].VariableScope.Ship:CycleMiningLaser[ON, ${Slot}]"
 			return
@@ -1463,7 +1463,7 @@ objectdef obj_Ship
 			if ${ModuleIter.Value.IsActive} && \
 				!${ModuleIter.Value.IsDeactivating}
 			{
-				ModuleIter.Value:Click
+				ModuleIter.Value:Deactivate
 			}
 		}
 		while ${ModuleIter:Next(exists)}
@@ -1516,6 +1516,19 @@ objectdef obj_Ship
 
 				UI:UpdateConsole["Activating: ${Slot}: ${ModuleIter.Value.ToItem.Name}"]
 				ModuleIter.Value:Activate[${id}]
+
+				variable int OreAvailable = ${Entity[${id}].SurveyScannerOreQuantity}
+				if (${OreAvailable} > 0 && ${Module.Value.MiningAmountPerSecond(exists)})
+				{
+					variable float OrePerSec = ${Module.Value.MiningAmountPerSecond}
+					variable float OrePerCycle = ${Math.Calc[${OrePerSec} * ${Module.Value.Duration}]}
+					if (${OreAvailable} < ${OrePerCycle})
+					{
+						variable int SecondsToRun = ${Math.Calc[(${OreAvailable} / ${OrePerSec}) + 1]}
+						UI:UpdateConsole["ActivateFreeMiningLaser: OreAvailable ${OreAvailable} < OrePerCycle ${OrePerCycle}, shortening runtime from ${Module.Value.Duration} to ${SecondsToRun}", LOG_DEBUG]
+						TimedCommand ${SecondsToRun} "MyShip.Module[${ModuleIter.Value.Slot}]:Deactivate"
+					}
+				}
 				;TimedCommand ${Math.Rand[600]:Inc[300]} "Script[EVEBot].VariableScope.Ship:CycleMiningLaser[OFF, ${Slot}]"
 				return
 			}
