@@ -1518,14 +1518,14 @@ objectdef obj_Ship
 				ModuleIter.Value:Activate[${id}]
 
 				variable int OreAvailable = ${Entity[${id}].SurveyScannerOreQuantity}
-				if (${OreAvailable} > 0 && ${Module.Value.MiningAmountPerSecond(exists)})
+				if (${OreAvailable} > 0 && ${ModuleIter.Value.MiningAmountPerSecond(exists)})
 				{
-					variable float OrePerSec = ${Module.Value.MiningAmountPerSecond}
-					variable float OrePerCycle = ${Math.Calc[${OrePerSec} * ${Module.Value.Duration}]}
+					variable float OrePerSec = ${ModuleIter.Value.MiningAmountPerSecond}
+					variable float OrePerCycle = ${Math.Calc[${OrePerSec} * ${ModuleIter.Value.Duration}]}
 					if (${OreAvailable} < ${OrePerCycle})
 					{
 						variable int SecondsToRun = ${Math.Calc[(${OreAvailable} / ${OrePerSec}) + 1]}
-						UI:UpdateConsole["ActivateFreeMiningLaser: OreAvailable ${OreAvailable} < OrePerCycle ${OrePerCycle}, shortening runtime from ${Module.Value.Duration} to ${SecondsToRun}", LOG_DEBUG]
+						UI:UpdateConsole["ActivateFreeMiningLaser: OreAvailable ${OreAvailable} < OrePerCycle ${OrePerCycle}, shortening runtime from ${ModuleIter.Value.Duration} to ${SecondsToRun}", LOG_DEBUG]
 						TimedCommand ${SecondsToRun} "MyShip.Module[${ModuleIter.Value.Slot}]:Deactivate"
 					}
 				}
