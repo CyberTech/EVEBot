@@ -1524,7 +1524,7 @@ objectdef obj_Ship
 					OrePerSec:Set[${ModuleIter.Value.MiningAmountPerSecond}]
 					UI:UpdateConsole["ActivateFreeMiningLaser: FREAKING DEBUG: ${OrePerSec}  vs  ${ModuleIter.Value.MiningAmountPerSecond}", LOG_DEBUG]
 
-					if (${OrePerSec < 0.5})
+					if (${OrePerSec} < 0.5)
 					{
 						UI:UpdateConsole["ActivateFreeMiningLaser: MiningAmountPerSecond for ${ModuleIter.Value.Slot} is invalid", LOG_DEBUG]
 						return
