@@ -1520,7 +1520,10 @@ objectdef obj_Ship
 				variable int OreAvailable = ${Entity[${id}].SurveyScannerOreQuantity}
 				if (${OreAvailable} > 0 && ${ModuleIter.Value.MiningAmountPerSecond(exists)})
 				{
-					variable float64 OrePerSec = ${ModuleIter.Value.MiningAmountPerSecond}
+					variable float64 OrePerSec
+					OrePerSec:Set[${ModuleIter.Value.MiningAmountPerSecond}]
+					UI:UpdateConsole["ActivateFreeMiningLaser: FREAKING DEBUG: ${OrePerSec}  vs  ${ModuleIter.Value.MiningAmountPerSecond}", LOG_DEBUG]
+
 					if (${OrePerSec < 0.5})
 					{
 						UI:UpdateConsole["ActivateFreeMiningLaser: MiningAmountPerSecond for ${ModuleIter.Value.Slot} is invalid", LOG_DEBUG]
