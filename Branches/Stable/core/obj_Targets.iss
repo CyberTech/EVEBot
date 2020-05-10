@@ -481,7 +481,7 @@ objectdef obj_Targets
 		variable index:entity Targets
 		variable iterator Target
 
-		/* Me.Ship.MaxTargetRange contains the (possibly) damped value */
+		/* MyShip.MaxTargetRange contains the (possibly) damped value */
 		if ${Ship.TypeID} == TYPE_RIFTER
 		{
 			EVE:QueryEntities[Targets, "CategoryID = CATEGORYID_ENTITY && Distance <= 100000"]

@@ -1447,7 +1447,7 @@ objectdef obj_Ship inherits obj_BaseClass
 			return
 		}
 
-		Me.Ship.Module[${Slot}].LastTarget:MakeActiveTarget
+		MyShip.Module[${Slot}].LastTarget:MakeActiveTarget
 		if ${Activate.Equal[ON]}
 		{
 			MyShip.Module[${Slot}]:Activate

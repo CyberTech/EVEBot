@@ -1335,7 +1335,7 @@ objectdef obj_Ship
 			variable index:item CrystalList
 			variable iterator CrystalIterator
 
-			Me.Ship.Module[${SlotName}]:GetAvailableAmmo[CrystalList]
+			MyShip.Module[${SlotName}]:GetAvailableAmmo[CrystalList]
 
 			if ${CrystalList.Used} == 0
 			{
@@ -1355,7 +1355,7 @@ objectdef obj_Ship
 				if ${OreType.Find[${CrystalType}](exists)}
 				{
 					UI:UpdateConsole["Switching Crystal in ${SlotName} from ${LoadedAmmo} to ${CrystalIterator.Value.Name}"]
-					Me.Ship.Module[${SlotName}]:ChangeAmmo[${CrystalIterator.Value.ID},1]
+					MyShip.Module[${SlotName}]:ChangeAmmo[${CrystalIterator.Value.ID},1]
 					; This takes 2 seconds ingame, let's give it 50% more
 					wait 30
 					return
@@ -1426,14 +1426,14 @@ objectdef obj_Ship
 
 		if ${Activate.Equal[ON]}
 		{
-			Me.Ship.Module[${Slot}]:Activate[${MyShip.Module[${Slot}].LastTarget.ID}]
+			MyShip.Module[${Slot}]:Activate[${MyShip.Module[${Slot}].LastTarget.ID}]
 			; Delay from 30 to 60 seconds before deactivating
 			TimedCommand ${Math.Rand[600]:Inc[300]} "Script[EVEBot].VariableScope.Ship:CycleMiningLaser[OFF, ${Slot}]"
 			return
 		}
 		else
 		{
-			Me.Ship.Module[${Slot}]:Deactivate
+			MyShip.Module[${Slot}]:Deactivate
 			; Delay for the time it takes the laser to deactivate and be ready for reactivation
 			TimedCommand 20 "Script[EVEBot].VariableScope.Ship:CycleMiningLaser[ON, ${Slot}]"
 			return
