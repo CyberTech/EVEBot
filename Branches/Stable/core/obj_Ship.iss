@@ -1522,7 +1522,6 @@ objectdef obj_Ship
 				{
 					variable float64 OrePerSec
 					OrePerSec:Set[${ModuleIter.Value.MiningAmountPerSecond}]
-					UI:UpdateConsole["ActivateFreeMiningLaser: FREAKING DEBUG: ${OrePerSec}  vs  ${ModuleIter.Value.MiningAmountPerSecond}", LOG_DEBUG]
 
 					if (${OrePerSec} < 0.5)
 					{
@@ -1532,9 +1531,12 @@ objectdef obj_Ship
 					variable float64 OrePerCycle = ${Math.Calc[${OrePerSec} * ${ModuleIter.Value.Duration}]}
 					if (${OreAvailable} < ${OrePerCycle})
 					{
-						variable int SecondsToRun = ${Math.Calc[(${OreAvailable} / ${OrePerSec}) + 1]}
-						UI:UpdateConsole["ActivateFreeMiningLaser: OreAvailable ${OreAvailable} < OrePerCycle ${OrePerCycle}, shortening runtime from ${ModuleIter.Value.Duration} to ${SecondsToRun}", LOG_DEBUG]
-						TimedCommand ${SecondsToRun} "MyShip.Module[${ModuleIter.Value.Slot}]:Deactivate"
+						echo "ActivateFreeMiningLaser: FREAKING DEBUG: ${OrePerSec}  vs  ${ModuleIter.Value.MiningAmountPerSecond}"
+						variable float test = ${Math.Calc[(${OreAvailable} / ${OrePerSec}]}
+						echo test = ${test}
+						variable int TenthsSecondsToRun = ${Math.Calc[((${OreAvailable} / ${OrePerSec}) + 1) * 10]}
+						UI:UpdateConsole["ActivateFreeMiningLaser: OreAvailable ${OreAvailable} < OrePerCycle ${OrePerCycle}, shortening runtime from ${ModuleIter.Value.Duration} to ${TenthsSecondsToRun}", LOG_DEBUG]
+						TimedCommand ${TenthsSecondsToRun} "MyShip.Module[${ModuleIter.Value.Slot}]:Deactivate"
 					}
 				}
 				;TimedCommand ${Math.Rand[600]:Inc[300]} "Script[EVEBot].VariableScope.Ship:CycleMiningLaser[OFF, ${Slot}]"
