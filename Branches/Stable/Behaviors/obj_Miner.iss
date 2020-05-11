@@ -866,8 +866,8 @@ objectdef obj_Miner
 				{
 					Bookmarks:RemoveStoredLocation
 				}
+				call Asteroids.UpdateList ${Entity[${Orca.Escape}].ID}
 			}
-			call Asteroids.UpdateList ${Entity[${Orca.Escape}].ID}
 		}
 		else
 		{
@@ -881,9 +881,8 @@ objectdef obj_Miner
 				{
 					Bookmarks:RemoveStoredLocation
 				}
-
+				call Asteroids.UpdateList
 			}
-			call Asteroids.UpdateList
 		}
 
 		; For orca delivery mode use
@@ -1747,6 +1746,7 @@ objectdef obj_Miner
 		}
 
 	}
+	
 	member:int64 Defend_Atomize_1(int64 Attacking)
 	{
 		variable iterator GetData
