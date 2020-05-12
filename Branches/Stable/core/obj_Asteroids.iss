@@ -221,10 +221,14 @@ objectdef obj_Asteroids
 		{
 			; ForceMove wasn't specified, so first check to see if there are asteroids right here
 			; Really this shouldn't be necessary unless someone is mis-calling MovetoField
-			;UI:UpdateConsole["Staying at Asteroid Belt: ${BeltIterator.Value.Name}", LOGD_DEBUG]
+			
 			call TargetNext TRUE TRUE
 			AsteroidsInRange:Set[${Return}]
-			return
+			if ${AsteroidsInRange}
+			{
+				UI:UpdateConsole["ERROR: OBJ_Asteroids:MoveToField: Belt is not empty and ForceMove not set, staying at Asteroid Belt: ${BeltIterator.Value.Name}", LOG_CRITICAL]
+				return
+			}
 		}
 
 		; Using Last Position Bookmarks? Warp to and return
@@ -614,7 +618,6 @@ objectdef obj_Asteroids
 				}
 			}
 		}
-
 
 		return FALSE
 	}
