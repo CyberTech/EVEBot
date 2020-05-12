@@ -1622,14 +1622,14 @@ objectdef obj_Miner
 		{
 			return
 		}
-		AttackingTeam:Add[${value}]
 		if ${Entity[${value}](exists)}
 		{
+			AttackingTeam:Add[${value}]
 			UI:UpdateConsole["Miner.UnderAttack: Added ${Entity[${value}].Name}(${value}) to attackers list. Attackers: ${AttackingTeam.Used}"]
 		}
 		else
 		{
-			UI:UpdateConsole["Miner.UnderAttack: Added off-grid entity ${value} to attackers list. Attackers: ${AttackingTeam.Used}"]
+			UI:UpdateConsole["Miner.UnderAttack: Ignoring off-grid notification of entity ${value}. Attackers: ${AttackingTeam.Used}"]
 		}
 	}
 
@@ -1650,8 +1650,8 @@ objectdef obj_Miner
 					if !${AttackingTeam.Contains[${CurrentAttack.Value.ID}]}
 					{
 						UI:UpdateConsole["Miner.CheckAttack: Alerting team to kill ${CurrentAttack.Value.Name}(${CurrentAttack.Value.ID})"]
+						Relay all -event EVEBot_TriggerAttack ${CurrentAttack.Value.ID}
 					}
-					Relay all -event EVEBot_TriggerAttack ${CurrentAttack.Value.ID}
 				}
 			}
 			while ${CurrentAttack:Next(exists)}
