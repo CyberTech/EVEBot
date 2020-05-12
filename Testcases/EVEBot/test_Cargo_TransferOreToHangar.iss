@@ -10,12 +10,12 @@
 
 */
 
-#include Scripts/EVEBot/Support/TestAPI.iss
-#include ../../Branches/Stable_Patches/core/obj_EVEBot.iss
-#include ../../Branches/Stable_Patches/core/obj_Drones.iss
-#include ../../Branches/Stable_Patches/core/obj_Ship.iss
-#include ../../Branches/Stable_Patches/core/obj_Station.iss
-#include ../../Branches/Stable_Patches/core/obj_Cargo.iss
+#include ../../Support/TestAPI.iss
+#include ../../Branches/Stable/core/obj_EVEBot.iss
+#include ../../Branches/Stable/core/obj_Drones.iss
+#include ../../Branches/Stable/core/obj_Ship.iss
+#include ../../Branches/Stable/core/obj_Station.iss
+#include ../../Branches/Stable/core/obj_Cargo.iss
 
 
 function main()
