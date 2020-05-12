@@ -2914,7 +2914,7 @@ objectdef obj_Ship
 	; Returns the targeting range minus 10%
 	member:int OptimalTargetingRange()
 	{
-		return ${Math.Calc[${MyShip.MaxTargetRange}*0.90]}
+		return ${Math.Calc[${MyShip.MaxTargetRange}*0.95]}
 	}
 
 	member:bool IsPod()
