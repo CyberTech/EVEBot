@@ -916,35 +916,38 @@ objectdef obj_Miner
 			}
 		}
 
-		; Out of rocks, not in orca mode, and in group mode and is master
-		if ${Asteroids.AsteroidList.Used} == 0 && \
-			${Ship.TotalActivatedMiningLasers} == 0 && \
-			!${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && \
-			${Config.Miner.GroupMode} && ${IsMaster}
+		if (!${Config.Miner.GroupMode} || ${IsMaster})
 		{
-			while ${Ship.Drones.DronesInSpace[FALSE]} != 0
+			; We're not in group mode, or we're the master. So we're free to make our own decisions about movement.
+			; Out of rocks, not delivering to Orca
+			if ${Asteroids.FieldEmpty} && \
+				!${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]}
 			{
-				if ${Me.ToEntity.Mode} == 3
+				while ${Ship.Drones.DronesInSpace[FALSE]} != 0
 				{
-					EVE:Execute[CmdStopShip]
+					if ${Me.ToEntity.Mode} == 3
+					{
+						EVE:Execute[CmdStopShip]
+					}
+					Ship.Drones:ReturnAllToDroneBay
+					wait 20
 				}
-				Ship.Drones:ReturnAllToDroneBay
-				wait 20
+				UI:UpdateConsole["Miner.Mine: No asteroids detected, changing belts"]
+				call Asteroids.MoveToField TRUE TRUE
+				call Asteroids.UpdateList
 			}
-			UI:UpdateConsole["Miner.Mine: No asteroids detected, changing belts"]
-			call Asteroids.MoveToField FALSE TRUE
-			call Asteroids.UpdateList
+
+			; If player in range and in group mode/ is master... move
+			if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]}
+			{
+				UI:UpdateConsole["Miner.Mine: Avoiding player: Forcing belt change"]
+				Ship.Drones:ReturnAllToDroneBay
+				call Asteroids.MoveToField TRUE
+				call Asteroids.UpdateList
+			}
 		}
 
-		; If player in range and in group mode/ is master... move
-		if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]} && ${Config.Miner.GroupMode} && ${IsMaster}
-		{
-			UI:UpdateConsole["Miner.Mine: Avoiding player: Changing Belts"]
-			Ship.Drones:ReturnAllToDroneBay
-			call Asteroids.MoveToField TRUE
-			return
-		}
-
+		; Past this point, we're in a belt. Presumably.
 		if ${IsMaster}
 		{
 			;	Tell our miners we're in a belt and they are safe to warp to me
@@ -1336,20 +1339,6 @@ objectdef obj_Miner
 			return
 		}
 
-		;	Find an asteroid field, or stay at current one if we're near one.  Once we're there, prepare for mining and
-		;	make sure we know what asteroids are available
-		if ${Asteroids.FieldEmpty}
-		{
-			while ${Ship.Drones.DronesInSpace[FALSE]} != 0
-			{
-				Ship.Drones:ReturnAllToDroneBay
-				wait 20
-			}
-			UI:UpdateConsole["Miner.OrcaInBelt: No asteroids detected, changing belts"]
-			call Asteroids.MoveToField TRUE TRUE TRUE
-			return
-		}
-
 		call Ship.OpenCargo
 
 		;	If configured to launch combat drones and there's a shortage, force a DropOff so we go to our delivery location
@@ -1360,13 +1349,27 @@ objectdef obj_Miner
 			return
 		}
 
+		;	Find an asteroid field, or stay at current one if we're near one.  Once we're there, prepare for mining and
+		;	make sure we know what asteroids are available
+		if ${Asteroids.FieldEmpty}
+		{
+			while ${Ship.Drones.DronesInSpace[FALSE]} != 0
+			{
+				Ship.Drones:ReturnAllToDroneBay
+				wait 20
+			}
+			UI:UpdateConsole["Miner.OrcaInBelt: No asteroids detected, forcing belt change"]
+			call Asteroids.MoveToField TRUE TRUE TRUE
+			call Asteroids.UpdateList
+		}
+
 		;	This changes belts if someone's within Min. Distance to Players
 		if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]}
 		{
-			UI:UpdateConsole["Miner.OrcaInBelt: Avoiding player: Changing Belts"]
+			UI:UpdateConsole["Miner.OrcaInBelt: Avoiding player: Forcing belt change"]
 			Ship.Drones:ReturnAllToDroneBay
 			call Asteroids.MoveToField TRUE TRUE TRUE
-			return
+			call Asteroids.UpdateList
 		}
 
 		;	Tell our miners we're in a belt and they are safe to warp to me
@@ -1377,15 +1380,7 @@ objectdef obj_Miner
 			relay all -event EVEBot_Master_InBelt TRUE
 		}
 
-		variable int OrcaRange
-		if ${Config.Miner.IceMining}
-		{
-			OrcaRange:Set[10000]
-		}
-		else
-		{
-			OrcaRange:Set[5000]
-		}
+		variable int OrcaRange = 30000
 
 		;	Next we need to move in range of some ore so miners can mine near me
 		if ${Entity[${Asteroids.NearestAsteroid}](exists)} && ${This.Approaching} == 0
