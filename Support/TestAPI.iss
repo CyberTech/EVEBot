@@ -9,6 +9,7 @@
 #define TESTAPI_DEBUG 0
 
 #include ../Branches/Stable/core/defines.iss
+#include ../Branches/Stable/core/obj_IRC.iss
 ;#include ${LavishScript.HomeDirectory}/Scripts/isxScripts/Utilities/CyberTech/obj_PulseTimer.iss
 ;#include ../Branches/Dev/core/Lib/obj_BaseClass.iss
 #include ${LavishScript.HomeDirectory}/Scripts/isxScripts/Utilities/CyberTech/obj_LSTypeIterator.iss
@@ -64,3 +65,4 @@ objectdef obj_UI
 }
 
 variable obj_UI UI
+variable obj_IRC ChatIRC
