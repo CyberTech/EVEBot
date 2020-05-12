@@ -590,7 +590,7 @@ objectdef obj_Asteroids
 			{
 				if ${AsteroidIterator.Value.Distance} < ${This.MaxDistanceToAsteroid}
 				{
-					UI:UpdateConsole["obj_Asteroids: TargetNext: No Asteroids in range & All lasers idle: Approaching nearest"]
+					UI:UpdateConsole["obj_Asteroids: TargetNext: No Asteroids in range & All lasers idle: Approaching nearest: ${AsteroidIterator.Value.ID} - ${EVEBot.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"]
 					if ${MyShip.MaxTargetRange} < ${Ship.OptimalMiningRange}
 					{
 						call Ship.Approach ${AsteroidIterator.Value.ID} ${Math.Calc[${MyShip.MaxTargetRange} - 5000]}
