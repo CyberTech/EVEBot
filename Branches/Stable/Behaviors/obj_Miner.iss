@@ -275,7 +275,7 @@ objectdef obj_Miner
 		}
 
 		;	If I'm not in a station and I'm full, I should head to a station to unload unless "No Delivery" is our Delivery Location Type
-	    if ${This.MinerFull} && !${Config.Miner.DeliveryLocationTypeName.Equal["No Delivery"]}
+		if ${This.MinerFull} && !${Config.Miner.DeliveryLocationTypeName.Equal["No Delivery"]}
 		{
 			This.CurrentState:Set["DROPOFF"]
 			return
@@ -285,11 +285,12 @@ objectdef obj_Miner
 		if ${Config.Miner.OrcaMode}
 		{
 			This.CurrentState:Set["ORCA"]
-			return
 		}
-
-		;	If I'm not in a station and I have room to mine more ore, that's what I should do!
-	 	This.CurrentState:Set["MINE"]
+		else
+		{
+			;	If I'm not in a station and I have room to mine more ore, that's what I should do!
+			This.CurrentState:Set["MINE"]
+		}
 	}
 
 
@@ -301,28 +302,38 @@ objectdef obj_Miner
 
 	function ProcessState()
 	{
-		;	This should be processed regardless of what mode you're in - this way the hauler can report attacks to the team.
-		if ${Me.InSpace}
-		{
-			This:CheckAttack
-		}
-
 		;	If Miner isn't the selected bot mode, this function shouldn't have been called.  However, if it was we wouldn't want it to do anything.
 		if !${Config.Common.BotModeName.Equal[Miner]}
 		{
 			return
 		}
 
-		;	Tell the miners we might not be in a belt and shouldn't be warped to.
-		if ${This.CurrentState.NotEqual[ORCA]} && ${Config.Miner.OrcaMode}
+		;	This should be processed regardless of what mode you're in - this way the miner can report attacks to the team.
+		if ${Me.InSpace}
 		{
-			relay all -event EVEBot_Orca_InBelt FALSE
+			This:CheckAttack
 		}
 
 		;	Tell the miners we might not be in a belt and shouldn't be warped to.
-		if ${This.CurrentState.NotEqual[MINE]} && ${IsMaster}
+		if ${Config.Miner.OrcaMode}
 		{
-			relay all -event EVEBot_Master_InBelt FALSE
+			if ${This.CurrentState.NotEqual[ORCA]}
+			{
+				relay all -event EVEBot_Orca_InBelt FALSE
+				if ${IsMaster}
+				{
+					; Tell the miners we might not be in a belt and shouldn't be warped to.
+					relay all -event EVEBot_Master_InBelt FALSE
+				}
+			}
+		}
+		else
+		{
+			if ${IsMaster} && ${This.CurrentState.NotEqual[MINE]}
+			{
+				; Tell the miners we might not be in a belt and shouldn't be warped to.
+				relay all -event EVEBot_Master_InBelt FALSE
+			}
 		}
 
 		if ${Config.Miner.MasterMode} || ${Config.Miner.GroupMode}
@@ -1360,6 +1371,11 @@ objectdef obj_Miner
 
 		;	Tell our miners we're in a belt and they are safe to warp to me
 		relay all -event EVEBot_Orca_InBelt TRUE
+		if ${IsMaster}
+		{
+			;	Tell our miners we're in a belt and they are safe to warp to me
+			relay all -event EVEBot_Master_InBelt TRUE
+		}
 
 		variable int OrcaRange
 		if ${Config.Miner.IceMining}
