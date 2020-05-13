@@ -555,7 +555,7 @@ objectdef obj_Ship
 		if ${This.m_MaxTargetRange.Centi} < ${CurrentTargetRange.Centi}
 		{
 			This.m_MaxTargetRange:Set[${CurrentTargetRange}]
-	}
+		}
 
 		return ${CurrentTargetRange}
 	}
@@ -1517,7 +1517,8 @@ objectdef obj_Ship
 				UI:UpdateConsole["Activating: ${Slot}: ${ModuleIter.Value.ToItem.Name}"]
 				ModuleIter.Value:Activate[${id}]
 
-				variable int OreAvailable = ${Entity[${id}].SurveyScannerOreQuantity}
+				variable int OreAvailable
+				OreAvailable:Set[${Entity[${id}].SurveyScannerOreQuantity}]
 				if (${OreAvailable} > 0 && ${ModuleIter.Value.MiningAmountPerSecond(exists)})
 				{
 					variable float64 OrePerSec
@@ -1529,15 +1530,13 @@ objectdef obj_Ship
 						UI:UpdateConsole["ActivateFreeMiningLaser: MiningAmountPerSecond for ${ModuleIter.Value.Slot} is invalid", LOG_DEBUG]
 						return
 					}
-					variable float64 OrePerCycle = ${Math.Calc[${OrePerSec} * ${ModuleIter.Value.Duration}]}
-					UI:UpdateConsole["ActivateFreeMiningLaser: DEBUG: OreAvailable ${OreAvailable} OrePerCycle ${OrePerCycle}", LOG_DEBUG]
+					variable float64 OrePerCycle
+					OrePerCycle:Set[${Math.Calc[${OrePerSec} * ${ModuleIter.Value.Duration}]}]
+					UI:UpdateConsole["ActivateFreeMiningLaser: DEBUG2: OreAvailable ${OreAvailable} OrePerCycle ${OrePerCycle}", LOG_DEBUG]
 
 					if (${OreAvailable} < ${OrePerCycle})
 					{
-						echo "ActivateFreeMiningLaser: FREAKING DEBUG: ${OrePerSec}  vs  ${ModuleIter.Value.MiningAmountPerSecond}"
-						variable float test
-						test:Set[${Math.Calc[${OreAvailable} / ${OrePerSec}]}]
-						echo test = ${test}
+						UI:UpdateConsole["ActivateFreeMiningLaser: DEBUG3: OrePerSec ${OrePerSec}  vs  ${ModuleIter.Value.MiningAmountPerSecond}", LOG_DEBUG]
 						variable int TenthsSecondsToRun
 						TenthsSecondsToRun:Set[${Math.Calc[((${OreAvailable} / ${OrePerSec}) + 1) * 10]}]
 
