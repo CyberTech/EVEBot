@@ -8,7 +8,6 @@ objectdef obj_EVEBotUI
 
 	variable string LogFile
 	variable string StatsLogFile
-	variable string CriticalLogFile
 	variable bool Reloaded = FALSE
 	variable queue:string ConsoleBuffer
 	variable string PreviousMsg
@@ -26,7 +25,6 @@ objectdef obj_EVEBotUI
 			FP:MakeSubdirectory["Logs"]
 		}
 		This.LogFile:Set["./Config/Logs/${Me.Name}.log"]
-		This.CriticalLogFile:Set["./Config/Logs/${Me.Name}_Critical.log"]
 		This.StatsLogFile:Set["./Config/Logs/${Me.Name}_Stats.log"]
 
 		ui -load interface/eveskin/eveskin.xml
@@ -142,6 +140,19 @@ objectdef obj_EVEBotUI
 
 		if ${StatusMessage(exists)}
 		{
+			if ${Level} == LOG_DEBUG
+			{
+				if EVEBOT_DEBUG == 0
+				{
+					return
+				}
+
+				if ${String["All"].NotEqual[DEBUG_TARGET]} && !${StatusMessage.Token[1, " "].Find[DEBUG_TARGET](exists)}
+				{
+					return
+				}
+			}
+
 			if ${StatusMessage.Escape.Equal["${This.PreviousMsg.Escape}"]}
 			{
 				Filter:Set[TRUE]
@@ -156,8 +167,8 @@ objectdef obj_EVEBotUI
 			for (Count:Set[1]; ${Count}<=${Indent}; Count:Inc)
 			{
   				msg:Concat[" "]
-  			}
-  			msg:Concat["${StatusMessage.Escape}"]
+ 			}
+ 			msg:Concat["${StatusMessage.Escape}"]
 
 			if ${This.Reloaded}
 			{
@@ -169,7 +180,6 @@ objectdef obj_EVEBotUI
 				if ${Level} == LOG_CRITICAL
 				{
 					ChatIRC:QueueMessage["${msg}"]
-					redirect -append "${This.CriticalLogFile}" Echo "${msg}"
 				}
 			}
 			else
@@ -200,9 +210,6 @@ objectdef obj_EVEBotUI
 
 		redirect -append "${This.LogFile}" echo "--------------------------------------------------------------------------------------"
 		redirect -append "${This.LogFile}" echo "** ${AppVersion} starting on ${Time.Date} at ${Time.Time24}"
-
-		redirect -append "${This.CriticalLogFile}" echo "--------------------------------------------------------------------------------------"
-		redirect -append "${This.CriticalLogFile}" echo "** ${AppVersion} starting on ${Time.Date} at ${Time.Time24}"
 
 		This:UpdateConsole["Starting ${AppVersion}"]
 

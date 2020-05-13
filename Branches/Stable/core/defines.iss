@@ -18,6 +18,11 @@ variable int VersionNum = 0
 #define EVEBOT_DEBUG 0
 #define DEBUG_ENTITIES 0
 
+; If you want to debug specific modules or classes, place the class name here.
+; Provided the class is using the proper ${LogPrefix} standard, it will be filtered appropriately -- CyberTech
+; Default is "All" for everything
+#define DEBUG_TARGET All
+
 ; Do not set this to 1 unless you have downloaded and installed the ISXIM
 ; extension from http://www.isxgames.com/forums/showthread.php?t=3829
 #define USE_ISXIM 0
