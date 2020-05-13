@@ -1515,14 +1515,15 @@ objectdef obj_Ship
 				UI:UpdateConsole["Activating: ${Slot}: ${ModuleIter.Value.ToItem.Name}"]
 				ModuleIter.Value:Activate[${id}]
 
-				variable int OreAvailable
+				variable float64 OreAvailable
 				OreAvailable:Set[${Entity[${id}].SurveyScannerOreQuantity}]
-				if (${OreAvailable} > 0 && ${ModuleIter.Value.MiningAmountPerSecond(exists)})
+
+				if ${OreAvailable} > 0
 				{
 					variable float64 OrePerSec
-					OrePerSec:Set[${ModuleIter.Value.MiningAmountPerSecond}]
-					UI:UpdateConsole["ActivateFreeMiningLaser: DEBUG: OrePerSec ${OrePerSec}  vs  ${ModuleIter.Value.MiningAmountPerSecond}", LOG_DEBUG]
+					OreAvailable:Set[${Math.Calc[${OreAvailable} * ${EVE.ItemInfo[${Entity[${id}].TypeID}].Volume} ]}]
 
+					OrePerSec:Set[${ModuleIter.Value.MiningAmountPerSecond}]
 					if (${OrePerSec} < 0.5)
 					{
 						UI:UpdateConsole["ActivateFreeMiningLaser: MiningAmountPerSecond for ${ModuleIter.Value.Slot} is invalid", LOG_DEBUG]
@@ -1530,15 +1531,16 @@ objectdef obj_Ship
 					}
 					variable float64 OrePerCycle
 					OrePerCycle:Set[${Math.Calc[${OrePerSec} * ${ModuleIter.Value.Duration}]}]
-					UI:UpdateConsole["ActivateFreeMiningLaser: DEBUG2: OreAvailable ${OreAvailable} OrePerCycle ${OrePerCycle}", LOG_DEBUG]
+					UI:UpdateConsole["ActivateFreeMiningLaser: OreAvailable ${OreAvailable}m3, OrePerSec ${OrePerSec}m3, OrePerCycle ${OrePerCycle}m3 (${Entity[${id}].Type})", LOG_DEBUG]
 
 					if (${OreAvailable} < ${OrePerCycle})
 					{
-						UI:UpdateConsole["ActivateFreeMiningLaser: DEBUG3: OrePerSec ${OrePerSec}  vs  ${ModuleIter.Value.MiningAmountPerSecond}", LOG_DEBUG]
-						variable int TenthsSecondsToRun
-						TenthsSecondsToRun:Set[${Math.Calc[((${OreAvailable} / ${OrePerSec}) + 1) * 10]}]
+						variable float SecondsToRun
+						variable float TenthsSecondsToRun
+						SecondsToRun:Set[${Math.Calc[(${OreAvailable} / ${OrePerSec}) + 1]}]
+						TenthsSecondsToRun:Set[${Math.Calc[ ${SecondsToRun} * 10]}]
 
-						UI:UpdateConsole["ActivateFreeMiningLaser: OreAvailable ${OreAvailable} < OrePerCycle ${OrePerCycle}, shortening runtime from ${ModuleIter.Value.Duration} to ${TenthsSecondsToRun}", LOG_DEBUG]
+						UI:UpdateConsole["ActivateFreeMiningLaser: OreAvailable ${OreAvailable} < OrePerCycle ${OrePerCycle}, shortening runtime from ${ModuleIter.Value.Duration}s to ${SecondsToRun}s", LOG_DEBUG]
 						TimedCommand ${TenthsSecondsToRun} "MyShip.Module[${ModuleIter.Value.Slot}]:Deactivate"
 					}
 				}
