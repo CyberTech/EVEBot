@@ -1515,6 +1515,8 @@ objectdef obj_Ship
 				UI:UpdateConsole["Activating: ${Slot}: ${ModuleIter.Value.ToItem.Name}"]
 				ModuleIter.Value:Activate[${id}]
 
+				; Now that we've activated, check and see if we have survey results.
+				; If so, calculate if the the roid has sufficient ore for a full cycle - if not, schedule an early deactivation of this module
 				variable float64 OreAvailable
 				OreAvailable:Set[${Entity[${id}].SurveyScannerOreQuantity}]
 
