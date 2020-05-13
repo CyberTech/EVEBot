@@ -1893,24 +1893,24 @@ objectdef obj_Ship
 		; Note -- this does not handle WarpFleet=true (the fleet wont' change systems)
 		call This.TravelToSystem ${DestinationBookmark.SolarSystemID}
 
-#if EVEBOT_DEBUG_THIS
-		echo \${DestinationBookmark.Type} = ${DestinationBookmark.Type}
-		echo \${DestinationBookmark.TypeID} = ${DestinationBookmark.TypeID}
-		echo \${DestinationBookmark.ToEntity(exists)} = ${DestinationBookmark.ToEntity(exists)}
-		echo \${DestinationBookmark.ToEntity.Category} = ${DestinationBookmark.ToEntity.Category}
-		echo \${DestinationBookmark.ToEntity.CategoryID} = ${DestinationBookmark.ToEntity.CategoryID}
-		echo \${DestinationBookmark.ToEntity.Distance} = ${DestinationBookmark.ToEntity.Distance}
-		echo \${DestinationBookmark.AgentID} = ${DestinationBookmark.AgentID}
-		echo \${DestinationBookmark.ItemID} = ${DestinationBookmark.ItemID}
-		echo \${DestinationBookmark.LocationType} = ${DestinationBookmark.LocationType}
-		echo \${DestinationBookmark.LocationID} = ${DestinationBookmark.LocationID}
-		echo DestinationBookmark Location: ${DestinationBookmark.X}, ${DestinationBookmark.Y}, ${DestinationBookmark.Z}
-		echo \${Entity["CategoryID = 6"].X} = ${Entity["CategoryID = 6"].X}
-		echo \${Entity["CategoryID = 6"].Y} = ${Entity["CategoryID = 6"].Y}
-		echo \${Entity["CategoryID = 6"].Z} = ${Entity["CategoryID = 6"].Z}
-		echo \${Me.ToEntity.X} = ${Me.ToEntity.X}
-		echo \${Me.ToEntity.Y} = ${Me.ToEntity.Y}
-		echo \${Me.ToEntity.Z} = ${Me.ToEntity.Z}
+#if EVEBOT_DEBUG
+		;echo \${DestinationBookmark.Type} = ${DestinationBookmark.Type}
+		;echo \${DestinationBookmark.TypeID} = ${DestinationBookmark.TypeID}
+		;echo \${DestinationBookmark.ToEntity(exists)} = ${DestinationBookmark.ToEntity(exists)}
+		;echo \${DestinationBookmark.ToEntity.Category} = ${DestinationBookmark.ToEntity.Category}
+		;echo \${DestinationBookmark.ToEntity.CategoryID} = ${DestinationBookmark.ToEntity.CategoryID}
+		;echo \${DestinationBookmark.ToEntity.Distance} = ${DestinationBookmark.ToEntity.Distance}
+		;echo \${DestinationBookmark.AgentID} = ${DestinationBookmark.AgentID}
+		;echo \${DestinationBookmark.ItemID} = ${DestinationBookmark.ItemID}
+		;echo \${DestinationBookmark.LocationType} = ${DestinationBookmark.LocationType}
+		;echo \${DestinationBookmark.LocationID} = ${DestinationBookmark.LocationID}
+		;echo DestinationBookmark Location: ${DestinationBookmark.X}, ${DestinationBookmark.Y}, ${DestinationBookmark.Z}
+		;echo \${Entity["CategoryID = 6"].X} = ${Entity["CategoryID = 6"].X}
+		;echo \${Entity["CategoryID = 6"].Y} = ${Entity["CategoryID = 6"].Y}
+		;echo \${Entity["CategoryID = 6"].Z} = ${Entity["CategoryID = 6"].Z}
+		;echo \${Me.ToEntity.X} = ${Me.ToEntity.X}
+		;echo \${Me.ToEntity.Y} = ${Me.ToEntity.Y}
+		;echo \${Me.ToEntity.Z} = ${Me.ToEntity.Z}
 #endif
 
 
