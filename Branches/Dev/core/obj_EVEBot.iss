@@ -215,15 +215,15 @@ objectdef obj_EVEBot inherits obj_BaseClass
 		{
 			tmpstr:Set[" - Debugging (Objects: DEBUG_TARGET)"]
 		}
-
-		if ${APP_HEADURL.Find["EVEBot/branches/stable"]}
-		{
-			AppVersion:Set["${APP_NAME} Stable Revision ${VersionNum}${tmpstr}"]
-		}
-		else
-		{
-			AppVersion:Set["${APP_NAME} Dev Revision ${VersionNum}${tmpstr}"]
-		}
+		AppVersion:Set["${APP_NAME} Dev Revision${tmpstr}"]
+		;if ${APP_HEADURL.Find["EVEBot/branches/stable"]}
+		;{
+		;	AppVersion:Set["${APP_NAME} Stable Revision ${VersionNum}${tmpstr}"]
+		;}
+		;else
+		;{
+		;	AppVersion:Set["${APP_NAME} Dev Revision ${VersionNum}${tmpstr}"]
+		;}
 	}
 
 	member:int GameHour()
