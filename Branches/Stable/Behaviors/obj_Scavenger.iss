@@ -340,7 +340,7 @@ objectdef obj_Scavenger
 				This.Wrecks:GetIterator[Wreck]
 				if !${Wreck:First(exists)}
 				{
-					UI:UpdateConsole["obj_Scavenger: TargetNext: No Wrecks within ${EVEBot.MetersToKM_Str[${This.MaxDistanceToAsteroid}], Going Home"]
+					UI:UpdateConsole["obj_Scavenger: TargetNext: No Wrecks on-grid, Going Home"]
 					call This.Flee
 				}
 			}
