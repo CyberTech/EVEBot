@@ -133,7 +133,6 @@ objectdef obj_Drones
 
 	function StationToBay()
 	{
-		variable int DroneQuantitiyToMove = ${Math.Calc[${Config.Common.DronesInBay} - ${This.DronesInBay}]}
 		if ${This.DronesInStation} == 0 || \
 			!${MyShip(exists)}
 		{

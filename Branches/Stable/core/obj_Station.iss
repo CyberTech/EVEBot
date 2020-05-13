@@ -292,7 +292,8 @@ objectdef obj_Station
 
 	function Dock()
 	{
-		variable int64 StationID = ${Entity["(GroupID = 15 || GroupID = 1657) && Name = ${Config.Common.HomeStation}"].ID}
+		variable int64 StationID
+		StationID:Set[${Entity["(GroupID = 15 || GroupID = 1657) && Name = ${Config.Common.HomeStation}"].ID}]
 
 		UI:UpdateConsole["Docking - Trying Home station..."]
 		if ${StationID} <= 0 || !${Entity[${StationID}](exists)}

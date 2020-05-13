@@ -550,7 +550,8 @@ objectdef obj_Ship
 
 	member:float MaxTargetRange()
 	{
-		variable float CurrentTargetRange = ${MyShip.MaxTargetRange}
+		variable float CurrentTargetRange
+		CurentTargetRange:Set[${MyShip.MaxTargetRange}]
 
 		if ${This.m_MaxTargetRange.Centi} < ${CurrentTargetRange.Centi}
 		{
