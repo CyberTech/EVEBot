@@ -1077,7 +1077,7 @@ objectdef obj_Ship
 
 	; Note: This doesn't return ALL the mining amounts, just one.
 	; Returns the laser mining range minus 10%
-	member:int OptimalMiningRange(float Padding=0.90)
+	member:int OptimalMiningRange(float Padding=0.95)
 	{
 		if !${MyShip(exists)}
 		{
@@ -1096,7 +1096,7 @@ objectdef obj_Ship
 	}
 
 	; Returns the shield transporter range minus 10%
-	member:int OptimalShieldTransporterRange(float Padding=0.90)
+	member:int OptimalShieldTransporterRange(float Padding=0.95)
 	{
 		if !${MyShip(exists)}
 		{
