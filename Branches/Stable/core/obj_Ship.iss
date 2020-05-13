@@ -1522,6 +1522,7 @@ objectdef obj_Ship
 				{
 					variable float64 OrePerSec
 					OrePerSec:Set[${ModuleIter.Value.MiningAmountPerSecond}]
+					UI:UpdateConsole["ActivateFreeMiningLaser: DEBUG: OrePerSec ${OrePerSec}  vs  ${ModuleIter.Value.MiningAmountPerSecond}", LOG_DEBUG]
 
 					if (${OrePerSec} < 0.5)
 					{
@@ -1529,6 +1530,8 @@ objectdef obj_Ship
 						return
 					}
 					variable float64 OrePerCycle = ${Math.Calc[${OrePerSec} * ${ModuleIter.Value.Duration}]}
+					UI:UpdateConsole["ActivateFreeMiningLaser: DEBUG: OreAvailable ${OreAvailable} OrePerCycle ${OrePerCycle}", LOG_DEBUG]
+
 					if (${OreAvailable} < ${OrePerCycle})
 					{
 						echo "ActivateFreeMiningLaser: FREAKING DEBUG: ${OrePerSec}  vs  ${ModuleIter.Value.MiningAmountPerSecond}"
@@ -1537,6 +1540,7 @@ objectdef obj_Ship
 						echo test = ${test}
 						variable int TenthsSecondsToRun
 						TenthsSecondsToRun:Set[${Math.Calc[((${OreAvailable} / ${OrePerSec}) + 1) * 10]}]
+
 						UI:UpdateConsole["ActivateFreeMiningLaser: OreAvailable ${OreAvailable} < OrePerCycle ${OrePerCycle}, shortening runtime from ${ModuleIter.Value.Duration} to ${TenthsSecondsToRun}", LOG_DEBUG]
 						TimedCommand ${TenthsSecondsToRun} "MyShip.Module[${ModuleIter.Value.Slot}]:Deactivate"
 					}
@@ -1889,7 +1893,7 @@ objectdef obj_Ship
 		; Note -- this does not handle WarpFleet=true (the fleet wont' change systems)
 		call This.TravelToSystem ${DestinationBookmark.SolarSystemID}
 
-#if EVEBOT_DEBUG
+#if EVEBOT_DEBUG_THIS
 		echo \${DestinationBookmark.Type} = ${DestinationBookmark.Type}
 		echo \${DestinationBookmark.TypeID} = ${DestinationBookmark.TypeID}
 		echo \${DestinationBookmark.ToEntity(exists)} = ${DestinationBookmark.ToEntity(exists)}
