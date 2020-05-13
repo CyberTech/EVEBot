@@ -9,8 +9,6 @@
 
 objectdef obj_Sound inherits obj_BaseClass
 {
-	variable string SVN_REVISION = "$Rev$"
-
 	variable int m_LastSoundTime
 	variable int m_SoundDelay
 

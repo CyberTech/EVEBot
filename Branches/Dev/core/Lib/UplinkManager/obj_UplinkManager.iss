@@ -99,8 +99,6 @@ objectdef obj_RegisteredSession
 
 objectdef obj_UplinkManager inherits obj_BaseClass
 {
-	variable string SVN_REVISION = "$Rev$"
-
 	variable int MaxHeartBeat = 35	/* Max time, in seconds, since we last heard from a session */
 	variable index:obj_RegisteredSession RegisteredSessions
 	variable bool Initialized = FALSE

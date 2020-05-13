@@ -127,25 +127,25 @@ function main()
 		for display on the UI.
 	*/
 	;echo "Listing EVEBot Class Versions:"
-	if ${VariableIterator:First(exists)}
-	do
-	{
-		if ${VariableIterator.Value(exists)} && \
-		${VariableIterator.Value(type).Name.Left[4].Equal["obj_"]} && \
-		${VariableIterator.Value.SVN_REVISION(exists)} && \
-		${VariableIterator.Value.Version(exists)}
-		{
-			VariableIterator.Value.Version:Set[${VariableIterator.Value.SVN_REVISION.Token[2, " "]}]
-			;echo " ${VariableIterator.Value.ObjectName} Revision ${VariableIterator.Value.Version}"
-			if ${VersionNum} < ${VariableIterator.Value.Version}
-			{
-				VersionNum:Set[${VariableIterator.Value.Version}]
-			}
-		}
-	}
-	while ${VariableIterator:Next(exists)}
+	;if ${VariableIterator:First(exists)}
+	;do
+	;{
+	;	if ${VariableIterator.Value(exists)} && \
+;		${VariableIterator.Value(type).Name.Left[4].Equal["obj_"]} && \
+;;		${VariableIterator.Value.SVN_REVISION(exists)} && \
+;		${VariableIterator.Value.Version(exists)}
+;		{
+;			VariableIterator.Value.Version:Set[${VariableIterator.Value.SVN_REVISION.Token[2, " "]}]
+;			;echo " ${VariableIterator.Value.ObjectName} Revision ${VariableIterator.Value.Version}"
+;			if ${VersionNum} < ${VariableIterator.Value.Version}
+;			{
+;				VersionNum:Set[${VariableIterator.Value.Version}]
+;			}
+;		}
+;	}
+;	while ${VariableIterator:Next(exists)}
 
-	EVEBot:SetVersion[${VersionNum}]
+;	EVEBot:SetVersion[${VersionNum}]
 
 	UI:Reload
 

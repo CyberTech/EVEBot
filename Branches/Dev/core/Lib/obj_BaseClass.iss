@@ -74,7 +74,6 @@ Example Usage:
 
 objectdef obj_BaseClass
 {
-	variable int Version
 	variable string LogPrefix
 	variable obj_PulseTimer PulseTimer
 

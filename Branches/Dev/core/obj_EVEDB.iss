@@ -9,7 +9,6 @@
 
 objectdef obj_EVEDB_Spawns inherits obj_BaseClass
 {
-	variable string SVN_REVISION = "$Rev$"
 	variable string SET_NAME = "EVEDB_Spawns"
 
 #ifdef TESTCASE
@@ -42,7 +41,6 @@ objectdef obj_EVEDB_Spawns inherits obj_BaseClass
 
 objectdef obj_EVEDB_Stations inherits obj_BaseClass
 {
-	variable string SVN_REVISION = "$Rev$"
 	variable string SET_NAME = "EVEDB_Stations"
 
 #ifdef TESTCASE
@@ -80,7 +78,6 @@ objectdef obj_EVEDB_Stations inherits obj_BaseClass
 
 objectdef obj_EVEDB_Items inherits obj_BaseClass
 {
-	variable string SVN_REVISION = "$Rev$"
 	variable string SET_NAME = "EVEDB_Items"
 
 #ifdef TESTCASE

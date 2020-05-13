@@ -12,8 +12,6 @@
 
 objectdef obj_Defense inherits obj_BaseClass
 {
-	variable string SVN_REVISION = "$Rev$"
-
 	variable bool Enabled = TRUE
 
 

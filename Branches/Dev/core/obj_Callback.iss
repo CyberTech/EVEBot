@@ -1,7 +1,5 @@
 objectdef obj_Callback inherits obj_BaseClass
 {
-	variable string SVN_REVISION = "$Rev$"
-
 	method Initialize()
 	{
 		LogPrefix:Set["${This.ObjectName}"]

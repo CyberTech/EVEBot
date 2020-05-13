@@ -1,8 +1,5 @@
 objectdef obj_MissionCommands
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
 	variable int NPC_CacheID
 	variable iterator NPC_CacheIterator
 

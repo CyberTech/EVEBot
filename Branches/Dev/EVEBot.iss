@@ -214,24 +214,24 @@ function main()
 		for display on the UI. -- CyberTech
 	*/
 	;Logger:Log["DEBUG: Dumping EVEBot Class Versions:". LOG_ECHOTOO]
-	if ${GlobalVariableIterator:First(exists)}
-	do
-	{
-		if ${GlobalVariableIterator.Value(exists)} && \
-			${GlobalVariableIterator.Value(type).Name.Left[4].Equal["obj_"]} && \
-			${GlobalVariableIterator.Value.SVN_REVISION(exists)} && \
-			${GlobalVariableIterator.Value.Version(exists)}
-		{
-			GlobalVariableIterator.Value.Version:Set[${GlobalVariableIterator.Value.SVN_REVISION.Token[2, " "]}]
-			;Logger:Log["DEBUG: ${GlobalVariableIterator.Value.ObjectName} Revision ${GlobalVariableIterator.Value.Version}", LOG_ECHOTOO]
-			if ${VersionNum} < ${GlobalVariableIterator.Value.Version}
-			{
-				VersionNum:Set[${GlobalVariableIterator.Value.Version}]
-			}
-		}
-	}
-	while ${GlobalVariableIterator:Next(exists)}
-	EVEBot:SetVersion[${VersionNum}]
+	;if ${GlobalVariableIterator:First(exists)}
+	;do
+	;{
+	;	if ${GlobalVariableIterator.Value(exists)} && \
+	;		${GlobalVariableIterator.Value(type).Name.Left[4].Equal["obj_"]} && \
+	;		${GlobalVariableIterator.Value.SVN_REVISION(exists)} && \
+	;		${GlobalVariableIterator.Value.Version(exists)}
+	;	{
+	;		GlobalVariableIterator.Value.Version:Set[${GlobalVariableIterator.Value.SVN_REVISION.Token[2, " "]}]
+	;		;Logger:Log["DEBUG: ${GlobalVariableIterator.Value.ObjectName} Revision ${GlobalVariableIterator.Value.Version}", LOG_ECHOTOO]
+	;		if ${VersionNum} < ${GlobalVariableIterator.Value.Version}
+	;		{
+	;			VersionNum:Set[${GlobalVariableIterator.Value.Version}]
+	;		}
+	;	}
+	;}
+	;while ${GlobalVariableIterator:Next(exists)}
+	;EVEBot:SetVersion[${VersionNum}]
 
 	Logger:Log["EVEBot: Completing startup...", LOG_ECHOTOO]
 	UI:Reload

@@ -48,8 +48,6 @@ Tairei Namazoth
 
 objectdef obj_Targets inherits obj_BaseClass
 {
-	variable string SVN_REVISION = "$Rev$"
-
 	variable index:int64 TargetQueue
 	variable index:int64 TargetQueueOverride
 

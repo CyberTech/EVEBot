@@ -1,8 +1,5 @@
 objectdef obj_Safespots
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
 	variable index:bookmark SafeSpots
 	variable iterator SafeSpotIterator
 

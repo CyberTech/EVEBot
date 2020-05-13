@@ -9,9 +9,6 @@
 
 objectdef obj_MissionCache
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
 	variable string CONFIG_FILE = "${Script.CurrentDirectory}/Config/${Me.Name} Mission Cache.xml"
 	variable string SET_NAME = "Missions"
 
@@ -116,9 +113,6 @@ objectdef obj_MissionCache
 
 objectdef obj_MissionDatabase
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
 	variable string CONFIG_FILE = "${BaseConfig.DATA_PATH}/Mission Database.xml"
 	variable string SET_NAME = "Mission Database"
 
@@ -181,9 +175,6 @@ objectdef obj_MissionDatabase
 
 objectdef obj_Missions
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
 	variable obj_MissionCache MissionCache
 	variable obj_MissionDatabase MissionDatabase
 	variable obj_MissionCombat missionCombat

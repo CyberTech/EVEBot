@@ -9,9 +9,6 @@
 */
 objectdef obj_Ammospots
 {
-	variable string SVN_REVISION = "$Rev: 2045 $"
-	variable int Version
-
 	variable index:bookmark AmmoSpots
 	variable iterator AmmoSpotIterator
 

@@ -36,8 +36,6 @@
 /* ************************************************************************* */
 objectdef obj_Configuration_BaseConfig
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
 	variable float ConfigVersion = 2.0
 	
 	variable filepath CONFIG_PATH = "${Script.CurrentDirectory}/Config"

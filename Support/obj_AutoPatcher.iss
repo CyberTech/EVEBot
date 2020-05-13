@@ -8,9 +8,6 @@
 
 objectdef obj_AutoPatcher
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
 	variable bool UpdatePerformed = FALSE
 	variable bool UpdaterFinished = FALSE
 	

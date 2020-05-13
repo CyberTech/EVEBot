@@ -44,8 +44,6 @@ objectdef obj_EntityFilter
 
 objectdef obj_EntityCache inherits obj_BaseClass
 {
-	variable string SVN_REVISION = "$Rev$"
-
 	variable bool Initialized = false
 	variable index:entity CachedEntities
 	variable index:obj_EntityFilter EntityFilters

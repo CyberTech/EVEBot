@@ -9,9 +9,6 @@
 
 objectdef obj_EVEDB_Stations
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
 	variable string CONFIG_FILE = "${BaseConfig.CONFIG_PATH}/EVEDB_Stations.xml"
 	variable string SET_NAME = "EVEDB_Stations"
 
@@ -35,9 +32,6 @@ objectdef obj_EVEDB_Stations
 
 objectdef obj_Station
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
 	variable index:item StationCargo
 	variable index:item DronesInStation
 

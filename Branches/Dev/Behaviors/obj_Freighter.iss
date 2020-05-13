@@ -11,9 +11,6 @@
 
 objectdef obj_Freighter
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
 	variable time NextPulse
 	variable float PulseIntervalInSeconds = 2.0
 

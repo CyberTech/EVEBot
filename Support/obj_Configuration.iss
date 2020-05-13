@@ -11,9 +11,6 @@
 
 objectdef obj_Configuration_BaseConfig
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
 	variable string CONFIG_FILE = "./config/Launcher.xml"
 	variable string unchar = ""
 	variable settingsetref BaseRef

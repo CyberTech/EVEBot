@@ -1,9 +1,6 @@
 
 objectdef obj_EVEBotUI
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
 	variable time NextPulse
 	variable time NextMsgBoxPulse
 	variable int PulseIntervalInSeconds = 60

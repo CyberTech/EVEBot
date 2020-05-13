@@ -9,8 +9,6 @@
 
 objectdef obj_EVEBot inherits obj_BaseClass
 {
-	variable string SVN_REVISION = "$Rev$"
-
 	variable bool ReturnToStation = FALSE
 	variable bool _Paused = FALSE
 	variable bool Disabled = FALSE			/* If true, ALL functionality should be disabled  - everything. no pulses, no nothing */

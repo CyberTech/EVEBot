@@ -1,8 +1,5 @@
 objectdef obj_Logger
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
 	variable string LogFile
 	variable string StatsLogFile
 	variable string CriticalLogFile

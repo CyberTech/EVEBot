@@ -19,9 +19,6 @@
 */
 objectdef obj_LSGUI inherits obj_BaseClass
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable string SVN_PATH = "$HeadURL$"
-	variable string SVN_AUTHOR = "$Author$"
 	variable string Root = ""
 	variable string SkinName = "eveskin"
 

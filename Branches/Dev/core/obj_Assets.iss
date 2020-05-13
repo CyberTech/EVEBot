@@ -9,9 +9,6 @@
 
 objectdef obj_Assets
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
 	variable queue:int64 StationsWithAssets
 	variable index:int64 IgnoreTheseStations
 

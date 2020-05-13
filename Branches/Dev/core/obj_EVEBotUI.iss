@@ -1,8 +1,6 @@
 
 objectdef obj_EVEBotUI inherits obj_BaseClass
 {
-	variable string SVN_REVISION = "$Rev$"
-
 	method Initialize()
 	{
 		LogPrefix:Set["${This.ObjectName}"]

@@ -9,8 +9,6 @@
 
 objectdef obj_Safespots inherits obj_Bookmarks
 {
-	variable string SVN_REVISION = "$Rev$"
-
 	method Initialize()
 	{
 		LogPrefix:Set["${This.ObjectName}"]

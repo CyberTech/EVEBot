@@ -81,8 +81,6 @@
 
 objectdef obj_Ship inherits obj_BaseClass
 {
-	variable string SVN_REVISION = "$Rev$"
-
 	variable int MODE_WARPING = 3
 
 	variable float BaselineUsedCargo

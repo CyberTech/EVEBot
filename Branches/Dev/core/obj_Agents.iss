@@ -15,9 +15,6 @@
 
 objectdef obj_AgentList
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
 	variable string CONFIG_FILE = "${BaseConfig.CONFIG_PATH}/${Me.Name} Agents.xml"
 	variable string SET_NAME1 = "${Me.Name} Agents"
 	variable string SET_NAME2 = "${Me.Name} Research Agents"
@@ -96,9 +93,6 @@ objectdef obj_AgentList
 
 objectdef obj_MissionBlacklist
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
 	variable string CONFIG_FILE = "${BaseConfig.CONFIG_PATH}/${Me.Name} Mission Blacklist.xml"
 	variable string SET_NAME = "${Me.Name} Mission Blacklist"
 	variable iterator levelIterator
@@ -182,9 +176,6 @@ objectdef obj_Agents
 	variable string BUTTON_VIEW_MISSION = "View Mission"
 	variable string BUTTON_BUY_DATACORES = "Buy Datacores"
 	variable string BUTTON_COMPLETE_MISSION = "Complete Mission"
-
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
 
 	variable string AgentName
 	variable string MissionDetails

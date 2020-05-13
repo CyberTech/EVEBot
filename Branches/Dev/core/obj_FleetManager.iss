@@ -9,8 +9,6 @@
 
 objectdef obj_FleetManager
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
 	variable string LogPrefix
 
 	method Initialize()

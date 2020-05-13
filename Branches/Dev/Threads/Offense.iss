@@ -9,8 +9,6 @@
 */
 objectdef obj_Offense inherits obj_BaseClass
 {
-	variable string SVN_REVISION = "$Rev$"
-
 	variable bool Enabled = TRUE
 
 	variable time NextAmmoCheck

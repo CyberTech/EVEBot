@@ -16,8 +16,6 @@
 
 objectdef obj_LoginHandler inherits obj_BaseClass
 {
-	variable string SVN_REVISION = "$Rev$"
-
 	variable int LoginTimer = 0
 	variable string CurrentState
 

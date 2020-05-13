@@ -1,7 +1,5 @@
 objectdef obj_Belts
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
 	variable string LogPrefix
 
 	variable iterator Belt_CacheIterator

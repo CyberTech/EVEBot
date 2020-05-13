@@ -7,8 +7,6 @@
 
 objectdef obj_MissionParser
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
 	variable string LogPrefix
 
 	variable string MissionDetails

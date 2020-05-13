@@ -10,10 +10,6 @@
 
 objectdef obj_Fleet
 {
-	;	Versioning information
-	variable string SVN_REVISION = "$Rev: 2248 $"
-	variable int Version
-	
 	;	Pulse tracking information
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 10

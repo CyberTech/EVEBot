@@ -1,8 +1,5 @@
 objectdef obj_EVEDB_Items
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
 	variable string CONFIG_FILE = "${BaseConfig.CONFIG_PATH}/EVEDB_Items.xml"
 	variable string SET_NAME = "EVEDB_Items"
 

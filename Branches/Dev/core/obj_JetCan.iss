@@ -7,19 +7,19 @@
 
 	-- CyberTech
 
-		Jane (speaking): It is a game isn’t it Mary Poppins?
+		Jane (speaking): It is a game isnâ€™t it Mary Poppins?
 
-		Mary Poppins (speaking) : Well, it depends on your point of view. You see…
+		Mary Poppins (speaking) : Well, it depends on your point of view. You seeâ€¦
 
 		(kinda, sing-speaking)In every job that must be done
 		There is an element of fun
 		You find the fun and snap!
-		The job’s a game
+		The jobâ€™s a game
 
 		(now singing)
 		And every task you undertake
 		Becomes a piece of cake
-		A lark! A spree! It’s very clear to see that…
+		A lark! A spree! Itâ€™s very clear to see thatâ€¦
 
 		A Spoonful of sugar helps the medicine go down
 		The medicine go down
@@ -51,16 +51,16 @@
 		Never tire of ever buzzing to and fro
 		Because they take a little nip
 		From every flower that they sip
-		And hence (Mary’s reflection echoes: And hence),
-		They find (Mary’s reflection echoes: They find)
+		And hence (Maryâ€™s reflection echoes: And hence),
+		They find (Maryâ€™s reflection echoes: They find)
 		(together) Their task is not a grind.
 
 		(the reflection alone) Aaaaaaaaaaaaaaaaaaaaaaaaaaah!
-		(Mary spoken to the mirror) Cheeky! (now to the children) Don’t be all day about it please
+		(Mary spoken to the mirror) Cheeky! (now to the children) Donâ€™t be all day about it please
 
 		Michael (yelling from inside the closet): Let me out! Let me out!
 
-		Mary (spoken to the toys): Well, that was very… Thank you now… Will you quite finish! Thank you.
+		Mary (spoken to the toys): Well, that was veryâ€¦ Thank you nowâ€¦ Will you quite finish! Thank you.
 
 BUGS:
 
@@ -68,9 +68,6 @@ BUGS:
 
 objectdef obj_JetCan
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
 	variable int64 ActiveCan = -1
 	variable set FullCans
 

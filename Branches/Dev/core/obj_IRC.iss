@@ -1,7 +1,5 @@
 objectdef obj_IRC inherits obj_BaseClass
 {
-	variable string SVN_REVISION = "$Rev$"
-
 	variable bool IsConnected = FALSE
 	variable queue:string Buffer
 

@@ -15,8 +15,6 @@
  */
 objectdef obj_Courier inherits obj_BaseClass
 {
-	variable string SVN_REVISION = "$Rev$"
-
 	/* the bot logic is currently based on a state machine */
 	variable string CurrentState
 	variable bool bHaveCargo = FALSE

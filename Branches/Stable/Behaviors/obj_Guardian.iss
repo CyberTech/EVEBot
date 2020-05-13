@@ -11,10 +11,6 @@
 
 objectdef obj_Guardian
 {
-	;	Versioning information
-	variable string SVN_REVISION = "$Rev: 2527 $"
-	variable int Version
-
 	;	Pulse tracking information
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 2

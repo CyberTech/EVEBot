@@ -14,8 +14,6 @@ objectdef obj_SkillData
 
 objectdef obj_Skills inherits obj_BaseClass
 {
-	variable string SVN_REVISION = "$Rev$"
-
 	variable file SkillFile = "${BaseConfig.CONFIG_PATH}/${Me.Name} Training.txt"
 	variable int PrevSkillFileSize = -1
 

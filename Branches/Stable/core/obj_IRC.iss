@@ -1,8 +1,5 @@
 objectdef obj_IRC
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 1
 

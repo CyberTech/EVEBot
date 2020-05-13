@@ -10,9 +10,6 @@
 
 objectdef obj_Fleet
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
 	variable int FleetMemberIndex = 1
 	variable set AllowedFleetMembers
 	variable index:fleetmember FleetMembers

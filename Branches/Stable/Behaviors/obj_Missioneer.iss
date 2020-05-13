@@ -9,8 +9,6 @@
 
 objectdef obj_Missioneer
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
 	variable string CurrentState
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 2

@@ -11,8 +11,6 @@
 
 objectdef obj_Bookmarks inherits obj_BaseClass
 {
-	variable string SVN_REVISION = "$Rev$"
-
 	variable index:bookmark Bookmarks
 	variable iterator BookmarkIterator
 	variable string BookmarkPrefix

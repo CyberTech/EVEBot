@@ -16,8 +16,6 @@
 
 objectdef obj_UI
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
 	variable string LogFile
 
 	method Initialize()

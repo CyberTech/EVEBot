@@ -9,7 +9,6 @@
 
 objectdef obj_BeltBookmarks inherits obj_Bookmarks
 {
-	variable string SVN_REVISION = "$Rev$"
 	variable set EmptyBelts
 
 	method Initialize()

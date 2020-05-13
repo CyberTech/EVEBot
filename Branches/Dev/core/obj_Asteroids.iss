@@ -14,8 +14,6 @@ BUGS:
 
 objectdef obj_Asteroids
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
 	variable string LogPrefix
 
 	variable index:entity AsteroidList

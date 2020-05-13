@@ -26,10 +26,6 @@ objectdef obj_FullMiner
 
 objectdef obj_Hauler
 {
-	;	Versioning information
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
 	variable collection:obj_FullMiner FullMiners
 
 	;	State information (What we're doing)

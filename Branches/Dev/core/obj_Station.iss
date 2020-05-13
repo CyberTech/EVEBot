@@ -9,9 +9,6 @@
 
 objectdef obj_EVEDB_StationID
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
 #ifdef TESTCASE
 	variable string CONFIG_FILE = "${Script.CurrentDirectory}/../Data/EVEDB_StationID.xml"
 #else
@@ -40,9 +37,6 @@ objectdef obj_EVEDB_StationID
 
 objectdef obj_Station
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
 	variable index:item StationCargo
 	variable index:item DronesInStation
 

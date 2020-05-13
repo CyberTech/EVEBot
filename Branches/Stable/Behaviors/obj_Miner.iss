@@ -12,10 +12,6 @@
 
 objectdef obj_Miner
 {
-	;	Versioning information
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
 	;	Pulse tracking information
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 2

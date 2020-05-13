@@ -47,9 +47,6 @@ Tairei Namazoth
 
 objectdef obj_Targets
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
 	variable index:string PriorityTargets
 	variable iterator PriorityTarget
 

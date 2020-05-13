@@ -9,7 +9,6 @@
 
 objectdef obj_Missioneer inherits obj_BaseClass
 {
-	variable string SVN_REVISION = "$Rev$"
 	variable string CurrentState
 
 	method Initialize()

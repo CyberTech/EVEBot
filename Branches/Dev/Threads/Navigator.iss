@@ -7,9 +7,6 @@ This handles movement
 
 objectdef obj_Navigator
 {
-	variable string SVN_REVISION = "$Rev: 1345 $"
-	variable int Version
-
 	variable bool Running = TRUE
 
 	variable time NextPulse

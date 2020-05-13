@@ -9,9 +9,6 @@
 
 objectdef obj_Autopilot
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-	
 	variable int       Destination
 	variable int       IsLowSecRoute
 	variable index:int Path

@@ -9,14 +9,11 @@
 
 variable string APP_NAME = "EVEBot"
 variable string APP_PATH = "EVEBot/EVEBot.iss"
-variable string SVN_REVISION = "$Rev$"
-variable string APP_HEADURL = "$HeadURL$"
+variable string APP_HEADURL = ""
 
-variable string APP_MANIFEST = "https://www.isxgames.com/EVEBot/Trunk/EVEbot/manifest.xml"
-variable string APP_MANIFEST_TRUNK = "https://www.isxgames.com/EVEBot/Trunk/EVEbot/manifest-trunk.xml"
-
-variable string AppVersion = "${APP_NAME} Version ${SVN_REVISION.Token[2, " "]}"
-variable int VersionNum = ${SVN_REVISION.Token[2, " "]}
+; Shown on UI
+variable string AppVersion = "0"
+variable int VersionNum = 0
 
 #define EVEBOT_DEBUG 0
 #define DEBUG_ENTITIES 0

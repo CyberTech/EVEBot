@@ -26,9 +26,6 @@ objectdef obj_FullMiner
 
 objectdef obj_Hauler
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
 	/* The name of the player we are hauling for (null if using m_corpName) */
 	variable string m_playerName
 
@@ -80,9 +77,6 @@ objectdef obj_Hauler
 
 objectdef obj_MinerHauler inherits obj_Hauler
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
 	variable collection:obj_FullMiner FullMiners
 
 	/* the bot logic is currently based on a state machine */

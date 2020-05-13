@@ -9,9 +9,6 @@
 
 objectdef obj_Market inherits obj_BaseClass
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
 	variable index:marketorder  sellOrders
 	variable index:marketorder  buyOrders
 	variable index:myorder      mySellOrders
