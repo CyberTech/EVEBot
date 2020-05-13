@@ -581,7 +581,7 @@ objectdef obj_Asteroids
 			UI:UpdateConsole["Locking Asteroid ${Entity[${TargetAsteroid}].Name}: ${EVEBot.MetersToKM_Str[${Entity[${TargetAsteroid}].Distance}]}"]
 			relay all "Event[EVEBot_ClaimAsteroid]:Execute[${Me.ID}, ${Entity[${TargetAsteroid}].ID}]"
 			Ship:Activate_SurveyScanner
-			AsteroidIterator.Value:LockTarget
+			${Entity[${TargetAsteroid}]:LockTarget
 			do
 			{
 			  wait 30
@@ -601,17 +601,14 @@ objectdef obj_Asteroids
 		TargetAsteroid:Set[${This.NearestAsteroid[${This.MaxTravelDistanceToAsteroid}]}]
 		if ${TargetAsteroid} != -1
 		{
-			if ${AsteroidIterator.Value.Distance} < ${This.MaxTravelDistanceToAsteroid}
+			UI:UpdateConsole["obj_Asteroids: TargetNext: No Asteroids in range & All lasers idle: Approaching nearest: ${Entity[${TargetAsteroid}].ID} - ${EVEBot.MetersToKM_Str[${Entity[${TargetAsteroid}].Distance}]}"]
+			if ${MyShip.MaxTargetRange} < ${Ship.OptimalMiningRange}
 			{
-				UI:UpdateConsole["obj_Asteroids: TargetNext: No Asteroids in range & All lasers idle: Approaching nearest: ${Entity[${TargetAsteroid}].ID} - ${EVEBot.MetersToKM_Str[${Entity[${TargetAsteroid}].Distance}]}"]
-				if ${MyShip.MaxTargetRange} < ${Ship.OptimalMiningRange}
-				{
-					call Ship.Approach ${Entity[${TargetAsteroid}].ID} ${Math.Calc[${MyShip.MaxTargetRange} - 5000]}
-				}
-				else
-				{
-					call Ship.Approach ${Entity[${TargetAsteroid}].ID} ${Math.Calc[${Ship.OptimalMiningRange}]}
-				}
+				call Ship.Approach ${Entity[${TargetAsteroid}].ID} ${Math.Calc[${MyShip.MaxTargetRange} - 5000]}
+			}
+			else
+			{
+				call Ship.Approach ${Entity[${TargetAsteroid}].ID} ${Math.Calc[${Ship.OptimalMiningRange}]}
 			}
 			return FALSE
 		}
