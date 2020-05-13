@@ -409,7 +409,7 @@ objectdef obj_Asteroids
 
 	member:bool FieldEmpty()
 	{
-		if ${AsteroidList.Used} == 0
+		if ${AsteroidList.Used} == 0 || !${Entity[${AsteroidList.Get[1].ID}](exists)}
 		{
 			call This.UpdateList
 		}
@@ -601,7 +601,7 @@ objectdef obj_Asteroids
 					}
 					else
 					{
-						call Ship.Approach ${AsteroidIterator.Value.ID} ${Math.Calc[${Ship.OptimalMiningRange} - 5000]}
+						call Ship.Approach ${AsteroidIterator.Value.ID} ${Math.Calc[${Ship.OptimalMiningRange}]}
 					}
 				}
 				else
