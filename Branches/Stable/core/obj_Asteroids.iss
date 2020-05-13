@@ -581,7 +581,7 @@ objectdef obj_Asteroids
 			UI:UpdateConsole["Locking Asteroid ${Entity[${TargetAsteroid}].Name}: ${EVEBot.MetersToKM_Str[${Entity[${TargetAsteroid}].Distance}]}"]
 			relay all "Event[EVEBot_ClaimAsteroid]:Execute[${Me.ID}, ${Entity[${TargetAsteroid}].ID}]"
 			Ship:Activate_SurveyScanner
-			${Entity[${TargetAsteroid}]:LockTarget
+			Entity[${TargetAsteroid}]:LockTarget
 			do
 			{
 			  wait 30
