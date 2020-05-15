@@ -31,8 +31,7 @@ objectdef obj_Asteroids
 	variable int LastBeltIndex
 	variable bool UsingBookMarks = FALSE
 	variable time BeltArrivalTime
-	variable float MaxTravelDistanceToAsteroid
-
+	
 	variable int LastSurveyScanResultCount = 0
 	variable time LastSurveyScanResultTime
 
