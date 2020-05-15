@@ -388,25 +388,28 @@ objectdef obj_Asteroids
 
 			do
 			{
+				variable string QueryStrPrefix
+				QueryStrPrefix:Set["CategoryID = ${This.AsteroidCategoryID} && Name =- \"${OreTypeIterator.Key}\""]
 				; This is intended to get the desired ore in the system before others do.  Its not
 				; intended to empty a given radius of asteroids
 				if ${Config.Miner.StripMine}
 				{
 					if ${EntityIDForDistance} < 0
 					{
-						EVE:QueryEntities[AsteroidListTmp, "CategoryID = ${This.AsteroidCategoryID} && Name =- \"${OreTypeIterator.Key}\" && Distance < ${Ship.OptimalMiningRange}"]
-						EVE:QueryEntities[AsteroidList_OutOfRangeTmp, "CategoryID = ${This.AsteroidCategoryID} && Name =- \"${OreTypeIterator.Key}\" && Distance >= ${Ship.OptimalMiningRange}"]
+						EVE:QueryEntities[AsteroidListTmp, "${QueryStrPrefix} && Distance < ${Ship.OptimalMiningRange}"]
+						EVE:QueryEntities[AsteroidList_OutOfRangeTmp, "${QueryStrPrefix} && Distance >= ${Ship.OptimalMiningRange} && Distance < ${This.MaxTravelDistanceToAsteroid}"]
 					}
 					else
 					{
-						EVE:QueryEntities[AsteroidListTmp, "CategoryID = ${This.AsteroidCategoryID} && Name =- \"${OreTypeIterator.Key}\" && DistanceTo[${EntityIDForDistance}] < ${Math.Calc[${Ship.OptimalMiningRange} + 2000]}"]
-						EVE:QueryEntities[AsteroidList_OutOfRangeTmp, "CategoryID = ${This.AsteroidCategoryID} && Name =- \"${OreTypeIterator.Key}\" && DistanceTo[${EntityIDForDistance}] >= ${Math.Calc[${Ship.OptimalMiningRange} + 2000]}"]
+						EVE:QueryEntities[AsteroidListTmp, "${QueryStrPrefix} && DistanceTo[${EntityIDForDistance}] < ${Math.Calc[${Ship.OptimalMiningRange} + 2000]}"]
+						EVE:QueryEntities[AsteroidList_OutOfRangeTmp, "${QueryStrPrefix} && DistanceTo[${EntityIDForDistance}] >= ${Math.Calc[${Ship.OptimalMiningRange} + 2000]} && DistanceTo[${EntityIDForDistance}] < ${This.MaxTravelDistanceToAsteroid}"]
 					}
 				}
 				else
 				{
-					EVE:QueryEntities[AsteroidListTmp, "CategoryID = ${This.AsteroidCategoryID} && Name =- \"${OreTypeIterator.Key}\""]
+					EVE:QueryEntities[AsteroidListTmp, ${QueryStrPrefix}]
 				}
+
 				Count_InRange:Inc[${AsteroidListTmp.Used}]
 				Count_OOR:Inc[${AsteroidList_OutOfRangeTmp.Used}]
 
