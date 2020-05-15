@@ -274,7 +274,24 @@ objectdef obj_Station
 		   		wait 200 ${This.DockedAtStation[${StationID}]}
 			}
 			while !${This.DockedAtStation[${StationID}]}
-			wait 75
+			;wait 75
+			
+			;----------------------------------
+			;	Workaround `Ore Hold "Bug"` where the bot undocks without clearing the Ore Hold.
+			;
+			; While docked:
+			; - Open an Inventory Window and drag out an Item Hangar Window. Let the Inventory Window
+			; 	open in the middle of the screen and place the Item Hanger somewhere aside.
+			; - Start the bot
+			;
+			; Known issue:
+			; - Resolution is hardcoded and only works with 1920x1080. Dynamic resolution will be
+			; 	updated tomorrow.
+			wait 45
+			call Station.UnloadHelper
+			wait 30
+			;----------------------------------
+
 			UI:UpdateConsoleIRC["Finished Docking"]
 		}
 		else
@@ -346,4 +363,18 @@ objectdef obj_Station
 		Ship.RetryUpdateModuleList:Set[1]
 	}
 
+	function UnloadHelper()
+	{
+		; Hardcoded, the middle of the Screen.
+		variable int x = 960
+		variable int y = 540
+
+		MouseTo ${x}, ${y} 
+		UI:UpdateConsole["Mouse moved to ${x}, ${y}", LOG_DEBUG]	
+		
+		mouseclick -hold left
+		waitframe
+		mouseclick -release left
+		UI:UpdateConsole["Mouse clicked at ${x}, ${y}", LOG_DEBUG]	
+	}
 }
