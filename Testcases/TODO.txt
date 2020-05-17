@@ -11,7 +11,7 @@
 .GetAssets[<index:asset>]                                       [Retrieves all items that are in your assets window]
 .GetAvailableAmmo[<index:item>]
 .GetBookmarks[<index:bookmark>]
-.GetBuddies[<index:being>]
+.GetContacts[<index:being>]
 .GetCorpHangarItems[<index:item>]
 .GetDrones[<index:item>]
 .GetEntities[<index:entity>]

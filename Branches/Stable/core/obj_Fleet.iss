@@ -162,7 +162,7 @@ objectdef obj_Fleet
 		variable index:being Buddies
 		variable iterator Buddy
 
-		EVE:GetBuddies[Buddies]
+		EVE:GetContacts[Buddies]
 		Buddies:GetIterator[Buddy]
 		if ${Buddy:First(exists)}
 			do
@@ -210,7 +210,7 @@ objectdef obj_Fleet
 		variable index:being Buddies
 		variable iterator Buddy
 
-		EVE:GetBuddies[Buddies]
+		EVE:GetContacts[Buddies]
 		Buddies:GetIterator[Buddy]
 		if ${Buddy:First(exists)}
 			do

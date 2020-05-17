@@ -1,6 +1,6 @@
 #define TESTCASE 1
 
-#include Scripts/EVEBot/Support/TestAPI.iss
+#include ../../Support/TestAPI.iss
 
 /*
 	Test Buddy (Being) Member Iteration
@@ -16,7 +16,7 @@
 function main()
 {
 	variable obj_LSTypeIterator ItemTest = "being"
-	variable string MethodStr = "EVE:GetBuddies"
+	variable string MethodStr = "EVE:GetContacts"
 
 	#include "../_Testcase_MethodStr_Body.iss"
 }
