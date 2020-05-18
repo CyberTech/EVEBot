@@ -369,7 +369,7 @@ objectdef obj_Station
 		variable int x = 960
 		variable int y = 540
 
-		MouseTo ${x}, ${y} 
+		MouseTo ${x},${y} 
 		UI:UpdateConsole["Mouse moved to ${x}, ${y}", LOG_DEBUG]	
 		
 		mouseclick -hold left
