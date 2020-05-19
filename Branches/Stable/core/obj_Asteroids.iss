@@ -606,18 +606,18 @@ objectdef obj_Asteroids
 			return TRUE
 		}
 
-		; If we're here
-		;  1) There were no unlocked asteroids inside stationary range, so we need to slowboat or warp
-		;  2) We may have locked asteroids that we're already mining; we don't want to move out of range
-		if ${Ship.TotalActivatedMiningLasers} > 0
-		{
-			; Either we're still mining something
-			return FALSE
-		}
-
 		if ${Miner.Approaching} != 0
 		{
 			UI:UpdateConsole["obj_Asteroids: TargetNext: No unlocked asteroids in range, but Miner is approaching something.", LOG_DEBUG]
+			return TRUE
+		}
+
+		; If we're here
+		;  1) There were no unlocked asteroids inside stationary range, so we need to slowboat or warp
+		;  2) We may have locked asteroids that we're already mining; we don't want to move out of range
+		; Return FALSE so that Miner concentrates fire on remaining targets
+		if ${Ship.TotalActivatedMiningLasers} > 0
+		{
 			return FALSE
 		}
 
@@ -635,7 +635,17 @@ objectdef obj_Asteroids
 			{
 				call Ship.Approach ${TargetAsteroid} ${Ship.OptimalMiningRange}
 			}
-			return FALSE
+
+			UI:UpdateConsole["Locking Asteroid ${Entity[${TargetAsteroid}].ID}:${Entity[${TargetAsteroid}].Name}: ${EVEBot.MetersToKM_Str[${Entity[${TargetAsteroid}].Distance}]}"]
+			relay all "Event[EVEBot_ClaimAsteroid]:Execute[${Me.ID}, ${Entity[${TargetAsteroid}].ID}]"
+			Ship:Activate_SurveyScanner
+			Entity[${TargetAsteroid}]:LockTarget
+			do
+			{
+			  wait 30
+			}
+			while ${Me.TargetingCount} > 0
+			return TRUE
 		}
 
 		UI:UpdateConsole["obj_Asteroids: TargetNext: No Asteroids within ${EVEBot.MetersToKM_Str[${This.MaxTravelDistanceToAsteroid}]}"]
