@@ -1183,6 +1183,12 @@ objectdef obj_Miner
 			Me:GetTargets[LockedTargets]
 			LockedTargets:GetIterator[Target]
 
+			if ${Config.Miner.IceMining}
+			{
+				; We always concentrate fire on ice roids, so simplify the checks below
+				This.ConcentrateFire:Set[TRUE]
+			}
+
 			;	If we have at least one locked target, get to work on them
 			if ${Target:First(exists)}
 			do
@@ -1195,33 +1201,46 @@ objectdef obj_Miner
 
 				;	So this is an asteroid.  If we're not mining it or Distributed Laser Targetting is turned off, we should mine it.
 				;	Also, if we're ice mining, we don't need to mine other asteroids, and if there aren't more asteroids to target we should mine this one.
+				variable bool isBeingMined
+				variable bool isBeingDroneMined
+				isBeingMined:Set[${Ship.IsMiningAsteroidID[${Target.Value.ID}]}]
+				isBeingDroneMined:Set[${Ship.Drones.IsMiningAsteroidID[${Target.Value.ID}]}]
+
 				if ${This.ConcentrateFire} || \
-					${Config.Miner.IceMining} || \
 					!${Config.Miner.DistributeLasers} || \
-					(!${Ship.IsMiningAsteroidID[${Target.Value.ID}]} && !${Ship.Drones.IsMiningAsteroidID[${Target.Value.ID}]})
+					(!${isBeingMined} || !${isBeingDroneMined})
 				{
-
-					;	Find out if we need to approach this target - also don't approach if we're approaching another target
-					if ${Entity[${Target.Value.ID}].Distance} > ${Ship.OptimalMiningRange[1]} && ${This.Approaching} == 0
-					{
-						UI:UpdateConsole["Miner.Mine: Approaching ${Target.Value.Name}"]
-						Entity[${Target.Value.ID}]:Approach[${Ship.OptimalMiningRange[1]}]
-						This.Approaching:Set[${Target.Value.ID}]
-						This.TimeStartedApproaching:Set[${Time.Timestamp}]
-						return
-					}
-
-					;	If we're supposed to be using Mining Drones, send them - remember not to do so if we're ice mining
-					if ${Ship.Drones.DronesInSpace} > 0 && ${Config.Miner.UseMiningDrones} && !${Config.Miner.IceMining}
-					{
-						Ship.Drones:ActivateMiningDrones
-						return
-					}
-
 					;	The target is locked, it's our active target, and we should be in range.  Get a laser on that puppy!
 					if ${Entity[${Target.Value.ID}].Distance} <= ${Ship.OptimalMiningRange[1]}
 					{
-						call Ship.ActivateFreeMiningLaser ${Target.Value.ID}
+						; If either it's not being mined OR we're not distributing lasers
+						; OR, we're concentrating fire
+						; Then activate a laser
+						if (!${isBeingMined} || !${Config.Miner.DistributeLasers}) || ${This.ConcentrateFire}
+						{
+							call Ship.ActivateFreeMiningLaser ${Target.Value.ID}
+						}
+/*
+BUG - This is broken. It relies on the activatarget, there's no checking if they're already mining something, etc
+						;	If we're supposed to be using Mining Drones, send them - remember not to do so if we're ice mining
+						if !${isBeingMined} && ${Ship.Drones.DronesInSpace} > 0 && ${Config.Miner.UseMiningDrones} && !${Config.Miner.IceMining}
+						{
+							Ship.Drones:ActivateMiningDrones
+							continue
+						}
+*/
+					}
+					else
+					{
+						;	We need to approach this target - also don't approach if we're approaching another target
+						if ${This.Approaching} == 0
+						{
+							UI:UpdateConsole["Miner.Mine: Approaching ${Target.Value.ID}:${Target.Value.Name} @ ${EVEBot.MetersToKM_Str[${Ship.OptimalMiningRange}]}"]
+							Entity[${Target.Value.ID}]:Approach[${Ship.OptimalMiningRange}]
+							This.Approaching:Set[${Target.Value.ID}]
+							This.TimeStartedApproaching:Set[${Time.Timestamp}]
+							continue
+						}
 					}
 
 				}
@@ -1230,7 +1249,7 @@ objectdef obj_Miner
 		}
 
 		;	If we've been approaching for more than 2 minutes, we need to give up and try again
-		if ${Math.Calc[${TimeStartedApproaching} - ${Time.Timestamp}]} < -120 && ${This.Approaching} != 0
+		if ${This.Approaching} != 0 && ${Math.Calc[${TimeStartedApproaching} - ${Time.Timestamp}]} < -120
 		{
 			This.Approaching:Set[0]
 			This.TimeStartedApproaching:Set[0]
@@ -1238,11 +1257,12 @@ objectdef obj_Miner
 			return
 		}
 
-		;	If we're approaching a target, find out if we need to stop doing so
-		if (${Entity[${This.Approaching}](exists)} && \
-			${Entity[${This.Approaching}].Distance} <= ${Ship.OptimalMiningRange[1]} && \
-			${This.Approaching} != 0 && \
-			!${This.ApproachingOrca}) || \
+		;	If we're officially approaching a target, stop if we're close enough
+		; If we're approaching a target that doesn't exist, stop
+		if (${This.Approaching} != 0 && \
+				${Entity[${This.Approaching}](exists)} && \
+				${Entity[${This.Approaching}].Distance} <= ${Ship.OptimalMiningRange[1]} && \
+				!${This.ApproachingOrca}) || \
 			(!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
 		{
 			EVE:Execute[CmdStopShip]
