@@ -667,6 +667,8 @@ objectdef obj_Asteroids
 		}
 
 		UI:UpdateConsole["obj_Asteroids: TargetNext: No Asteroids within ${EVEBot.MetersToKM_Str[${This.MaxTravelDistanceToAsteroid}]}"]
+		; Clear the asteroid list. We've been thru it entirely and picked nothing. Force an update.
+		This.AsteroidList:Clear
 		return FALSE
 	}
 
