@@ -396,6 +396,7 @@ objectdef obj_Asteroids
 		if ${OreTypeIterator:First(exists)}
 		{
 			variable index:entity AsteroidListTmp
+			variable index:entity AsteroidList_TotalIRTmp
 			variable index:entity AsteroidList_OutOfRange
 			variable index:entity AsteroidList_OutOfRangeTmp
 			variable iterator AsteroidIt
@@ -456,6 +457,23 @@ objectdef obj_Asteroids
 			}
 			while ${OreTypeIterator:Next(exists)}
 
+			; Get the unfiltered asteroid counts in range
+			if ${Config.Miner.StripMine}
+			{
+				if ${EntityIDForDistance} < 0
+				{
+					EVE:QueryEntities[AsteroidList_TotalIRTmp, "CategoryID = ${This.AsteroidCategoryID} && Distance < ${Ship.OptimalMiningRange}"]
+				}
+				else
+				{
+					EVE:QueryEntities[AsteroidList_TotalIRTmp, "CategoryID = ${This.AsteroidCategoryID} && DistanceTo[${EntityIDForDistance}] < ${Math.Calc[${Ship.OptimalMiningRange} + 2000]}"]
+				}
+			}
+			else
+			{
+				EVE:QueryEntities[AsteroidList_TotalIRTmp, "CategoryID = ${This.AsteroidCategoryID}"]
+			}
+
 			if ${Config.Miner.StripMine}
 			{
 				; Append the out-of-range asteroid list to the in-range list; so the miner can decide to move or not as it runs thru it.
@@ -470,7 +488,7 @@ objectdef obj_Asteroids
 				}
 			}
 
-			UI:UpdateConsole["obj_Asteroids:UpdateList: ${AsteroidList.Used} (In Range: ${Count_InRange} OOR: ${Count_OOR}) asteroids found", LOG_DEBUG]
+			UI:UpdateConsole["obj_Asteroids:UpdateList: ${AsteroidList.Used} In Range: ${Count_InRange} OOR: ${Count_OOR} Unfiltered In Range: ${AsteroidList_TotalIRTmp.Used} asteroids found", LOG_DEBUG]
 		}
 		else
 		{
