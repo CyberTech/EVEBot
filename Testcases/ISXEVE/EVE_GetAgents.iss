@@ -3,7 +3,7 @@
 #include Scripts/EVEBot/Support/TestAPI.iss
 
 /*
-	Test Agent lists
+	Test GetAgents
 
 	Revision $Id$
 
