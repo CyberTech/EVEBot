@@ -254,7 +254,7 @@ objectdef obj_Asteroids
 						{
 							; We have a locked asteroid that's too far from this one;  No, this is not perfect because we don't know our position
 							AbortLoop:Set[TRUE]
-							continue
+							break
 						}
 					}
 					while ${MyTarget:Next(exists)}
@@ -478,7 +478,7 @@ objectdef obj_Asteroids
 		}
 	}
 
-	; FieldEmpty returning FALSE should trigger a belt change.
+	; FieldEmpty returning TRUE should trigger a belt change.
 	member:bool FieldEmpty()
 	{
 		if ${AsteroidList.Used} == 0 || !${Entity[${AsteroidList.Get[1].ID}](exists)}
@@ -594,7 +594,7 @@ objectdef obj_Asteroids
 		TargetAsteroid:Set[${This.NearestAsteroid[]}]
 		if ${TargetAsteroid} != -1
 		{
-			UI:UpdateConsole["Locking Asteroid ${Entity[${TargetAsteroid}].ID}:${Entity[${TargetAsteroid}].Name}: ${EVEBot.MetersToKM_Str[${Entity[${TargetAsteroid}].Distance}]}"]
+			UI:UpdateConsole["Locking Asteroid ${TargetAsteroid}:${Entity[${TargetAsteroid}].Name}: ${EVEBot.MetersToKM_Str[${Entity[${TargetAsteroid}].Distance}]}"]
 			relay all "Event[EVEBot_ClaimAsteroid]:Execute[${Me.ID}, ${Entity[${TargetAsteroid}].ID}]"
 			Ship:Activate_SurveyScanner
 			Entity[${TargetAsteroid}]:LockTarget
@@ -626,7 +626,7 @@ objectdef obj_Asteroids
 		TargetAsteroid:Set[${This.NearestAsteroid[${This.MaxTravelDistanceToAsteroid}]}]
 		if ${TargetAsteroid} != -1
 		{
-			UI:UpdateConsole["obj_Asteroids: TargetNext: No unlocked asteroids in range & All lasers idle: Approaching ${TargetAsteroid} - ${EVEBot.MetersToKM_Str[${Entity[${TargetAsteroid}].Distance}]}"]
+			UI:UpdateConsole["obj_Asteroids: TargetNext: No unlocked asteroids in range & All lasers idle: Approaching ${TargetAsteroid}:${Entity[${TargetAsteroid}].Name}: ${EVEBot.MetersToKM_Str[${Entity[${TargetAsteroid}].Distance}]}"]
 			if ${MyShip.MaxTargetRange} < ${Ship.OptimalMiningRange}
 			{
 				call Ship.Approach ${TargetAsteroid} ${Math.Calc[${MyShip.MaxTargetRange} - 5000]}
@@ -636,7 +636,7 @@ objectdef obj_Asteroids
 				call Ship.Approach ${TargetAsteroid} ${Ship.OptimalMiningRange}
 			}
 
-			UI:UpdateConsole["Locking Asteroid ${Entity[${TargetAsteroid}].ID}:${Entity[${TargetAsteroid}].Name}: ${EVEBot.MetersToKM_Str[${Entity[${TargetAsteroid}].Distance}]}"]
+			UI:UpdateConsole["Locking Asteroid ${TargetAsteroid}:${Entity[${TargetAsteroid}].Name}: ${EVEBot.MetersToKM_Str[${Entity[${TargetAsteroid}].Distance}]}"]
 			relay all "Event[EVEBot_ClaimAsteroid]:Execute[${Me.ID}, ${Entity[${TargetAsteroid}].ID}]"
 			Ship:Activate_SurveyScanner
 			Entity[${TargetAsteroid}]:LockTarget
