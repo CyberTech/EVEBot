@@ -1467,6 +1467,28 @@ objectdef obj_Ship
 		while ${ModuleIter:Next(exists)}
 	}
 
+	method Deactivate_Mining_Laser(int64 id)
+	{
+		if !${MyShip(exists)}
+		{
+			return
+		}
+
+		variable iterator ModuleIter
+
+		This.ModuleList_MiningLaser:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if ${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsDeactivating} && ${ModuleIter.Value.ID} == ${id}
+			{
+				UI:UpdateConsole["Deactivating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
+				ModuleIter.Value:Deactivate
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+	}
+
 	function ActivateFreeMiningLaser(int64 id=-1)
 	{
 		variable string Slot
@@ -1537,13 +1559,13 @@ objectdef obj_Ship
 
 					if (${OreAvailable} < ${OrePerCycle})
 					{
-						variable float SecondsToRun
-						variable float TenthsSecondsToRun
+						variable int SecondsToRun
+						variable int TenthsSecondsToRun
 						SecondsToRun:Set[${Math.Calc[(${OreAvailable} / ${OrePerSec}) + 1]}]
 						TenthsSecondsToRun:Set[${Math.Calc[ ${SecondsToRun} * 10]}]
 
-						UI:UpdateConsole["ActivateFreeMiningLaser: OreAvailable ${OreAvailable} < OrePerCycle ${OrePerCycle}, shortening runtime from ${ModuleIter.Value.Duration}s to ${SecondsToRun}s", LOG_DEBUG]
-						TimedCommand ${TenthsSecondsToRun} "MyShip.Module[${ModuleIter.Value.Slot}]:Deactivate"
+						UI:UpdateConsole["ActivateFreeMiningLaser: OreAvailable ${OreAvailable} < OrePerCycle ${OrePerCycle}, shortening runtime from ${ModuleIter.Value.Duration}s to ${SecondsToRun}s (${TenthsSecondsToRun}ds)", LOG_DEBUG]
+						TimedCommand ${TenthsSecondsToRun} "Script[EVEBot].VariableScope.Ship:Deactivate_Mining_Laser[${ModuleIter.Value.ID}]"
 					}
 				}
 				;TimedCommand ${Math.Rand[600]:Inc[300]} "Script[EVEBot].VariableScope.Ship:CycleMiningLaser[OFF, ${Slot}]"
