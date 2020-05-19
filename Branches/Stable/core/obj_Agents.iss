@@ -869,7 +869,7 @@ objectdef obj_Agents
 	{
 		variable index:dialogstring dsIndex
 		variable iterator dsIterator
-		Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
+		EVE.Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
 		while ${dsIndex.Used} == 0
 		{
 			UI:UpdateConsole["Waiting for responses from agent to populate."]
@@ -882,7 +882,7 @@ objectdef obj_Agents
 			while ${dsIndex[1].Text.Find["View"]} > 0
 			{
 				UI:UpdateConsole["Waiting for locator agent conversation to update."]
-				Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
+				EVE.Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
 				wait 20
 			}
 		}
@@ -904,7 +904,7 @@ objectdef obj_Agents
 		wait 20
 
 		UI:UpdateConsole["obj_Agents: Starting conversation with agent ${This.ActiveAgent}."]
-		Agent[${This.AgentIndex}]:StartConversation
+		EVE.Agent[${This.AgentIndex}]:StartConversation
 		do
 		{
 			UI:UpdateConsole["obj_Agents: Waiting for conversation window..."]
@@ -919,7 +919,7 @@ objectdef obj_Agents
 		variable int WaitCount
 		for( WaitCount:Set[0]; ${WaitCount} < 15; WaitCount:Inc )
 		{
-			Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
+			EVE.Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
 			if ${dsIndex.Used} > 0
 			{
 				break
@@ -1225,7 +1225,7 @@ objectdef obj_Agents
 		}
 
 		UI:UpdateConsole["obj_Agents: Starting conversation with agent ${This.ActiveAgent}."]
-		Agent[${This.AgentIndex}]:StartConversation
+		EVE.Agent[${This.AgentIndex}]:StartConversation
 		do
 		{
 			UI:UpdateConsole["obj_Agents: Waiting for conversation window..."]
@@ -1284,13 +1284,13 @@ objectdef obj_Agents
 		;wait 50
 
 		UI:UpdateConsole["obj_Agents: Starting conversation with agent ${This.ActiveAgent}."]
-		Agent[${This.AgentIndex}]:StartConversation
-        do
-        {
-			UI:UpdateConsole["obj_Agents: Waiting for conversation window..."]
-            wait 10
-        }
-        while !${EVEWindow[ByCaption, "Agent Conversation - ${This.ActiveAgent}"](exists)}
+		EVE.Agent[${This.AgentIndex}]:StartConversation
+		do
+		{
+		UI:UpdateConsole["obj_Agents: Waiting for conversation window..."]
+			wait 10
+		}
+		while !${EVEWindow[ByCaption, "Agent Conversation - ${This.ActiveAgent}"](exists)}
 
 		UI:UpdateConsole["${EVE.Agent[${This.AgentIndex}].Name} :: ${EVE.Agent[${This.AgentIndex}].Dialog}"]
 

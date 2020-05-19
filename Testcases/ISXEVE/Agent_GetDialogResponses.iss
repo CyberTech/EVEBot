@@ -49,7 +49,7 @@ Known Dialogstrings
 	echo EVE.Agent[${EVEAgentIndex}].StationID ${EVE.Agent[${EVEAgentIndex}].StationID}
 	echo EVE.Agent[${EVEAgentIndex}].Index ${EVE.Agent[${EVEAgentIndex}].Index}
 
-	Agent[${EVEAgentIndex}]:GetDialogResponses[dsIndex]
+	EVE.Agent[${EVEAgentIndex}]:GetDialogResponses[dsIndex]
 
 	dsIndex:GetIterator[dsIterator]
 
