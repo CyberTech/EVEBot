@@ -31,7 +31,7 @@ objectdef obj_Asteroids
 	variable int LastBeltIndex
 	variable bool UsingBookMarks = FALSE
 	variable time BeltArrivalTime
-	
+
 	variable int LastSurveyScanResultCount = 0
 	variable time LastSurveyScanResultTime
 
@@ -76,7 +76,7 @@ objectdef obj_Asteroids
 				}
 			}
 			while ${ClaimedRoids:Next(exists)}
-			
+
 
 			This.NextPulse:Set[${Time.Timestamp}]
 			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
@@ -94,7 +94,7 @@ objectdef obj_Asteroids
 	method OnEVEBot_ClaimAsteroid(int64 ClaimerID, int64 AsteroidID)
 	{
 		if ${ClaimerID} != ${Me.ID}
-		{	
+		{
 			AsteroidList_Claimed:Add[${AsteroidID}]
 		}
 	}
@@ -236,14 +236,32 @@ objectdef obj_Asteroids
 			}
 			if ${MaxDistance} == 0
 			{
-				if ${AsteroidIterator.Value.Distance} >= ${MyShip.MaxTargetRange}
+				if ${AsteroidIterator.Value.Distance} >= ${Ship.OptimalMiningRange}
 				{
 					continue
 				}
-				if ( ${Me.ActiveTarget(exists)} && ${AsteroidIterator.Value.DistanceTo[${Me.ActiveTarget.ID}]} > ${Math.Calc[${Ship.OptimalMiningRange}* 1.1]} )
+				variable index:entity MyTargets
+				variable iterator MyTarget
+				Me:GetTargets[MyTargets]
+				MyTargets:GetIterator[MyTarget]
+				variable bool AbortLoop = FALSE
+
+				if ${MyTarget:First(exists)}
 				{
-					; TODO - This check needs to iterate over ALL targets and check the highest distance, not just the activetarget distance - CyberTech
-					continue
+					do
+					{
+						if ${AsteroidIterator.Value.DistanceTo[${MyTarget.Value.ID}]} > ${Ship.OptimalMiningRange}
+						{
+							; We have a locked asteroid that's too far from this one;  No, this is not perfect because we don't know our position
+							AbortLoop:Set[TRUE]
+							continue
+						}
+					}
+					while ${MyTarget:Next(exists)}
+					if ${AbortLoop}
+					{
+						continue
+					}
 				}
 			}
 			else
@@ -277,7 +295,7 @@ objectdef obj_Asteroids
 			return ${Math.Calc[${Ship.OptimalMiningRange} * ${Config.Miner.MiningRangeMultipler}]}
 		}
 	}
-	
+
 	function MoveToField(bool ForceMove, bool DoNotLockTarget=FALSE, bool FleetWarp=FALSE)
 	{
 		variable int curBelt
@@ -576,8 +594,7 @@ objectdef obj_Asteroids
 		TargetAsteroid:Set[${This.NearestAsteroid[]}]
 		if ${TargetAsteroid} != -1
 		{
-			; DoNotLockTarget = TRUE means we're just calling this function to check IF we can TargetNext
-			UI:UpdateConsole["Locking Asteroid ${Entity[${TargetAsteroid}].Name}: ${EVEBot.MetersToKM_Str[${Entity[${TargetAsteroid}].Distance}]}"]
+			UI:UpdateConsole["Locking Asteroid ${Entity[${TargetAsteroid}].ID}:${Entity[${TargetAsteroid}].Name}: ${EVEBot.MetersToKM_Str[${Entity[${TargetAsteroid}].Distance}]}"]
 			relay all "Event[EVEBot_ClaimAsteroid]:Execute[${Me.ID}, ${Entity[${TargetAsteroid}].ID}]"
 			Ship:Activate_SurveyScanner
 			Entity[${TargetAsteroid}]:LockTarget
@@ -589,25 +606,34 @@ objectdef obj_Asteroids
 			return TRUE
 		}
 
-		; If we're here, there were no asteroids inside stationary range, so we need to slowboat or warp
-		if ${Ship.TotalActivatedMiningLasers} > 0 || ${Ship.CargoFull}
+		; If we're here
+		;  1) There were no unlocked asteroids inside stationary range, so we need to slowboat or warp
+		;  2) We may have locked asteroids that we're already mining; we don't want to move out of range
+		if ${Ship.TotalActivatedMiningLasers} > 0
 		{
-			; Either we're still mining something, or the cargo is full. Either way, we're not moving to a new field yet
+			; Either we're still mining something
 			return FALSE
 		}
 
+		if ${Miner.Approaching} != 0
+		{
+			UI:UpdateConsole["obj_Asteroids: TargetNext: No unlocked asteroids in range, but Miner is approaching something.", LOG_DEBUG]
+			return FALSE
+		}
+
+		; Ok, there was nothing in range, we've got no lasers going.
 		; Check for asteroids within sloatboat range range
 		TargetAsteroid:Set[${This.NearestAsteroid[${This.MaxTravelDistanceToAsteroid}]}]
 		if ${TargetAsteroid} != -1
 		{
-			UI:UpdateConsole["obj_Asteroids: TargetNext: No Asteroids in range & All lasers idle: Approaching nearest: ${Entity[${TargetAsteroid}].ID} - ${EVEBot.MetersToKM_Str[${Entity[${TargetAsteroid}].Distance}]}"]
+			UI:UpdateConsole["obj_Asteroids: TargetNext: No unlocked asteroids in range & All lasers idle: Approaching ${TargetAsteroid} - ${EVEBot.MetersToKM_Str[${Entity[${TargetAsteroid}].Distance}]}"]
 			if ${MyShip.MaxTargetRange} < ${Ship.OptimalMiningRange}
 			{
-				call Ship.Approach ${Entity[${TargetAsteroid}].ID} ${Math.Calc[${MyShip.MaxTargetRange} - 5000]}
+				call Ship.Approach ${TargetAsteroid} ${Math.Calc[${MyShip.MaxTargetRange} - 5000]}
 			}
 			else
 			{
-				call Ship.Approach ${Entity[${TargetAsteroid}].ID} ${Math.Calc[${Ship.OptimalMiningRange}]}
+				call Ship.Approach ${TargetAsteroid} ${Ship.OptimalMiningRange}
 			}
 			return FALSE
 		}
