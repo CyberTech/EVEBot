@@ -249,7 +249,7 @@ objectdef obj_Missions
 		call Cargo.CloseHolds
 		call Cargo.OpenHolds
 
-	    Agents:SetActiveAgent[${Agent[id, ${agentID}].Name}]
+	    Agents:SetActiveAgent[${EVE.Agent[id, ${agentID}].Name}]
 
 		if ${This.MissionCache.Volume[${agentID}]} == 0
 		{
@@ -371,7 +371,7 @@ objectdef obj_Missions
 		variable int        TypeID
 		variable int        ItemQuantity
 
-		Agents:SetActiveAgent[${Agent[id,${agentID}].Name}]
+		Agents:SetActiveAgent[${EVE.Agent[id,${agentID}].Name}]
 
 		itemName:Set[${EVEDB_Items.Name[${This.MissionCache.TypeID[${agentID}]}]}]
 		itemVolume:Set[${EVEDB_Items.Volume[${This.MissionCache.TypeID[${agentID}]}]}]
@@ -495,7 +495,7 @@ objectdef obj_Missions
 ;
 ;		Logger:Log["obj_Missions: DEBUG: Shiptype ${Ship.Type} (${Ship.TypeID}) Mission agent (${MissionCache.Name[${agentID}]}) (${Agents.AgentName})"]
 ;
-;		variable string missLevel = ${Agent[id,${agentID}].Level}
+;		variable string missLevel = ${EVE.Agent[id,${agentID}].Level}
 ;		variable string missionName = ${MissionCache.Name[${agentID}]}
 ;
 ;
@@ -1201,7 +1201,7 @@ objectdef obj_Missions
 		variable int        TypeID
 		variable int        ItemQuantity
 
-		;;Agents:SetActiveAgent[${Agent[id,${agentID}].Name}]
+		;;Agents:SetActiveAgent[${EVE.Agent[id,${agentID}].Name}]
 
 		itemName:Set[${EVEDB_Items.Name[${This.MissionCache.TypeID[${agentID}]}]}]
 		itemVolume:Set[${EVEDB_Items.Volume[${This.MissionCache.TypeID[${agentID}]}]}]

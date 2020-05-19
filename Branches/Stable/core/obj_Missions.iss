@@ -9,9 +9,6 @@
 
 objectdef obj_MissionCache
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
 	variable string CONFIG_FILE = "${Script.CurrentDirectory}/Config/${Me.Name} Mission Cache.xml"
 	variable string SET_NAME = "Missions"
 
@@ -112,9 +109,6 @@ objectdef obj_MissionCache
 
 ;objectdef obj_MissionDatabase
 ;{
-;	variable string SVN_REVISION = "$Rev$"
-;	variable int Version
-;
 ;	variable string CONFIG_FILE = "${BaseConfig.CONFIG_PATH}/Mission Database.xml"
 ;	variable string SET_NAME = "Mission Database"
 ;
@@ -139,9 +133,6 @@ objectdef obj_MissionCache
 
 objectdef obj_Missions
 {
-	variable string SVN_REVISION = "$Rev$"
-	variable int Version
-
 	variable obj_MissionCache MissionCache
 ;   variable obj_MissionDatabase MissionDatabase
 	variable obj_Combat Combat
@@ -215,7 +206,7 @@ objectdef obj_Missions
 		call Cargo.CloseHolds
 		call Cargo.OpenHolds
 
-	    Agents:SetActiveAgent[${Agent[id, ${agentID}].Name}]
+	    Agents:SetActiveAgent[${EVE.Agent[id, ${agentID}].Name}]
 
 		if ${This.MissionCache.Volume[${agentID}]} == 0
 		{
@@ -342,7 +333,7 @@ objectdef obj_Missions
 		variable int        TypeID
 		variable int        ItemQuantity
 
-		Agents:SetActiveAgent[${Agent[id,${agentID}]}]
+		Agents:SetActiveAgent[${EVE.Agent[id,${agentID}]}]
 
 		itemName:Set[${EVEDB_Items.Name[${This.MissionCache.TypeID[${agentID}]}]}]
 		QuantityRequired:Set[${Math.Calc[${This.MissionCache.Volume[${agentID}]}/${EVEDB_Items.Volume[${This.MissionCache.TypeID[${agentID}]}]}]}]}]

@@ -203,7 +203,7 @@ objectdef obj_Agents
 
 	member:int AgentIndex()
 	{
-		return ${Agent[${This.ActiveAgent}].Index}
+		return ${EVE.Agent[${This.ActiveAgent}].Index}
 	}
 
 	member:int AgentID()
@@ -223,7 +223,7 @@ objectdef obj_Agents
 		else
 		{
 			variable int agentIndex = 0
-			agentIndex:Set[${Agent[${name}].Index}]
+			agentIndex:Set[${EVE.Agent[${name}].Index}]
 		    if (${agentIndex} <= 0)
 		    {
 		        UI:UpdateConsole["obj_Agents: ERROR!  Cannot get Index for Agent ${name}.", LOG_CRITICAL]
@@ -234,7 +234,7 @@ objectdef obj_Agents
 				This.AgentName:Set[${name}]
 				UI:UpdateConsole["obj_Agents: Updating agent data for ${name} ${agentIndex}."]
 				Config.Agents:SetAgentIndex[${name},${agentIndex}]
-				Config.Agents:SetAgentID[${name},${Agent[${agentIndex}].ID}]
+				Config.Agents:SetAgentID[${name},${EVE.Agent[${agentIndex}].ID}]
 				Config.Agents:SetLastDecline[${name},0]
 			}
 		}
@@ -247,7 +247,7 @@ objectdef obj_Agents
 
 	member:bool InAgentStation()
 	{
-		return ${Station.DockedAtStation[${Agent[${This.AgentIndex}].StationID}]}
+		return ${Station.DockedAtStation[${EVE.Agent[${This.AgentIndex}].StationID}]}
 	}
 
 	member:string PickupStation()
@@ -325,7 +325,7 @@ objectdef obj_Agents
 				UI:UpdateConsole["obj_Agents: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}"]
 				if ${amIterator.Value.State} == 1
 				{
-					if ${MissionBlacklist.IsBlacklisted[${Agent[id,${amIterator.Value.AgentID}].Level},"${amIterator.Value.Name}"]} == FALSE
+					if ${MissionBlacklist.IsBlacklisted[${EVE.Agent[id,${amIterator.Value.AgentID}].Level},"${amIterator.Value.Name}"]} == FALSE
 					{
 						variable bool isLowSec
 						variable bool avoidLowSec
@@ -335,33 +335,33 @@ objectdef obj_Agents
 						{
 							if ${amIterator.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions} == TRUE
 							{
-								This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}].Name}]
+								This:SetActiveAgent[${EVE.Agent[id,${amIterator.Value.AgentID}].Name}]
 								return
 							}
 
 							if ${amIterator.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} == TRUE
 							{
-								This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}].Name}]
+								This:SetActiveAgent[${EVE.Agent[id,${amIterator.Value.AgentID}].Name}]
 								return
 							}
 
 							if ${amIterator.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} == TRUE
 							{
-								This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}].Name}]
+								This:SetActiveAgent[${EVE.Agent[id,${amIterator.Value.AgentID}].Name}]
 								return
 							}
 
 							if ${amIterator.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions} == TRUE
 							{
-								UI:UpdateConsole["Setting ActiveAgent to ${Agent[id,${amIterator.Value.AgentID}].Name}", LOG_DEBUG]
-								This:SetActiveAgent[${Agent[id,${amIterator.Value.AgentID}].Name}]
+								UI:UpdateConsole["Setting ActiveAgent to ${EVE.Agent[id,${amIterator.Value.AgentID}].Name}", LOG_DEBUG]
+								This:SetActiveAgent[${EVE.Agent[id,${amIterator.Value.AgentID}].Name}]
 								return
 							}
 						}
 
 						/* if we get here the mission is not acceptable */
 						variable time lastDecline
-						lastDecline:Set[${Config.Agents.LastDecline[${Agent[id,${amIterator.Value.AgentID}].Name}]}]
+						lastDecline:Set[${Config.Agents.LastDecline[${EVE.Agent[id,${amIterator.Value.AgentID}].Name}]}]
 						UI:UpdateConsole["obj_Agents: DEBUG: lastDecline = ${lastDecline}"]
 						lastDecline.Hour:Inc[4]
 						lastDecline:Update
@@ -491,7 +491,7 @@ objectdef obj_Agents
 			{
 				if ${amIterator.Value.State} > 1
 				{
-					if ${MissionBlacklist.IsBlacklisted[${Agent[id,${amIterator.Value.AgentID}].Level},"${amIterator.Value.Name}"]} == FALSE
+					if ${MissionBlacklist.IsBlacklisted[${EVE.Agent[id,${amIterator.Value.AgentID}].Level},"${amIterator.Value.Name}"]} == FALSE
 					{
 						variable bool isLowSec
 						variable bool avoidLowSec
@@ -669,14 +669,14 @@ objectdef obj_Agents
 			{
 				call Station.Undock
 			}
-			;UI:UpdateConsole["obj_Agents: DEBUG: Agent Name -> Index = ${This.AgentIndex} = ${Agent[${This.AgentName}].Index}"]
-			;UI:UpdateConsole["obj_Agents: DEBUG: Agent Index->Name = ${Agent[${This.AgentIndex}].Name}"]
-			;UI:UpdateConsole["obj_Agents: DEBUG: Agent Name->System  = ${Universe[${Agent[${This.AgentName}].Solarsystem}].ID}"]
-			;UI:UpdateConsole["obj_Agents: DEBUG: agent Index->System = ${Universe[${Agent[${This.AgentIndex}].Solarsystem}].ID}"]
-			;UI:UpdateConsole["obj_Agents: DEBUG: agentStation = ${Agent[${This.AgentIndex}].StationID}"]
-			call Ship.TravelToSystem ${Universe[${Agent[${This.AgentIndex}].Solarsystem}].ID}
+			;UI:UpdateConsole["obj_Agents: DEBUG: Agent Name -> Index = ${This.AgentIndex} = ${EVE.Agent[${This.AgentName}].Index}"]
+			;UI:UpdateConsole["obj_Agents: DEBUG: Agent Index->Name = ${EVE.Agent[${This.AgentIndex}].Name}"]
+			;UI:UpdateConsole["obj_Agents: DEBUG: Agent Name->System  = ${Universe[${EVE.Agent[${This.AgentName}].Solarsystem}].ID}"]
+			;UI:UpdateConsole["obj_Agents: DEBUG: agent Index->System = ${Universe[${EVE.Agent[${This.AgentIndex}].Solarsystem}].ID}"]
+			;UI:UpdateConsole["obj_Agents: DEBUG: agentStation = ${EVE.Agent[${This.AgentIndex}].StationID}"]
+			call Ship.TravelToSystem ${Universe[${EVE.Agent[${This.AgentIndex}].Solarsystem}].ID}
 			wait 50
-			call Station.DockAtStation ${Agent[${This.AgentIndex}].StationID}
+			call Station.DockAtStation ${EVE.Agent[${This.AgentIndex}].StationID}
 		}
 	}
 
@@ -893,9 +893,9 @@ objectdef obj_Agents
 		variable index:dialogstring dsIndex
 		variable iterator dsIterator
 
-		if ${Agent[${This.AgentIndex}].Division.Equal["R&D"]}
+		if ${EVE.Agent[${This.AgentIndex}].Division.Equal["R&D"]}
 		{
-			UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: R&D agents not supported after patch."]
+			UI:UpdateConsole["${EVE.Agent[${This.AgentIndex}].Name} :: R&D agents not supported after patch."]
 			return
 		}
 
@@ -927,7 +927,7 @@ objectdef obj_Agents
 			wait 10
 		}
 
-		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
+		UI:UpdateConsole["${EVE.Agent[${This.AgentIndex}].Name} :: ${EVE.Agent[${This.AgentIndex}].Dialog}"]
 
 	    dsIndex:GetIterator[dsIterator]
 
@@ -1141,7 +1141,7 @@ objectdef obj_Agents
 				Config:Save[]
 			}
 		}
-		elseif ${MissionBlacklist.IsBlacklisted[${Agent[id,${amIterator.Value.AgentID}].Level},"${amIterator.Value.Name}"]} == TRUE
+		elseif ${MissionBlacklist.IsBlacklisted[${EVE.Agent[id,${amIterator.Value.AgentID}].Level},"${amIterator.Value.Name}"]} == TRUE
 		{
 			if ${lastDecline.Timestamp} >= ${Time.Timestamp}
 			{
@@ -1198,7 +1198,7 @@ objectdef obj_Agents
 
 		UI:UpdateConsole["Waiting for mission dialog to update...", LOG_DEBUG]
 		wait 60
-		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} Dialog: ${Agent[${This.AgentIndex}].Dialog}"]
+		UI:UpdateConsole["${EVE.Agent[${This.AgentIndex}].Name} Dialog: ${EVE.Agent[${This.AgentIndex}].Dialog}"]
 
 		;EVE:Execute[OpenJournal]
 		;wait 50
@@ -1233,39 +1233,39 @@ objectdef obj_Agents
 		}
 		while !${EVEWindow[ByCaption, "Agent Conversation - ${This.ActiveAgent}"](exists)}
 		call This.UpdateLocatorAgent
-		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
+		UI:UpdateConsole["${EVE.Agent[${This.AgentIndex}].Name} :: ${EVE.Agent[${This.AgentIndex}].Dialog}"]
 
-	    ; display your dialog options
-	    variable index:dialogstring dsIndex
-	    variable iterator dsIterator
+		; display your dialog options
+		variable index:dialogstring dsIndex
+		variable iterator dsIterator
 
-	    Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
-	    dsIndex:GetIterator[dsIterator]
+		EVE.Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
+		dsIndex:GetIterator[dsIterator]
 
 		if ${dsIterator:First(exists)}
 		{
 			; Assume the first item is the "turn in mission" item.
-	        dsIterator.Value:Say[${This.AgentID}]
+			dsIterator.Value:Say[${This.AgentID}]
 			Config.Agents:SetLastCompletionTime[${This.AgentName},${Time.Timestamp}]
 		}
 
-	    ; Now wait a couple of seconds and then get the new dialog options...and so forth.  The "Wait" needed may differ from person to person.
-	    UI:UpdateConsole["Waiting for agent dialog to update..."]
-	    wait 60
-		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
+		; Now wait a couple of seconds and then get the new dialog options...and so forth.  The "Wait" needed may differ from person to person.
+		UI:UpdateConsole["Waiting for agent dialog to update..."]
+		wait 60
+		UI:UpdateConsole["${EVE.Agent[${This.AgentIndex}].Name} :: ${EVE.Agent[${This.AgentIndex}].Dialog}"]
 
 
 		; display your dialog options2
-	    variable index:dialogstring dsIndex2
-	    variable iterator dsIterator2
+		variable index:dialogstring dsIndex2
+		variable iterator dsIterator2
 
-	    Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex2]
-	    dsIndex2:GetIterator[dsIterator2]
+		EVE.Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex2]
+		dsIndex2:GetIterator[dsIterator2]
 
 		if ${dsIterator2:First(exists)}
 		{
 			; Assume the first item is the "turn in mission" item.
-	        dsIterator2.Value:Say[${This.AgentID}]
+			dsIterator2.Value:Say[${This.AgentID}]
 			Config.Agents:SetLastCompletionTime[${This.AgentName},${Time.Timestamp}]
 		}
 
@@ -1292,14 +1292,14 @@ objectdef obj_Agents
         }
         while !${EVEWindow[ByCaption, "Agent Conversation - ${This.ActiveAgent}"](exists)}
 
-		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
+		UI:UpdateConsole["${EVE.Agent[${This.AgentIndex}].Name} :: ${EVE.Agent[${This.AgentIndex}].Dialog}"]
 
 	    ; display your dialog options
 	    variable index:dialogstring dsIndex
 	    variable iterator dsIterator
 
-	    Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
-	    dsIndex:GetIterator[dsIterator]
+			EVE.Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
+			dsIndex:GetIterator[dsIterator]
 
 		if ${dsIndex.Used} == 2
 		{
@@ -1310,7 +1310,7 @@ objectdef obj_Agents
 	    ; Now wait a couple of seconds and then get the new dialog options...and so forth.  The "Wait" needed may differ from person to person.
 	    UI:UpdateConsole["Waiting for agent dialog to update..."]
 	    wait 60
-		UI:UpdateConsole["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
+		UI:UpdateConsole["${EVE.Agent[${This.AgentIndex}].Name} :: ${EVE.Agent[${This.AgentIndex}].Dialog}"]
 
 		;EVE:Execute[OpenJournal]
 		;wait 50

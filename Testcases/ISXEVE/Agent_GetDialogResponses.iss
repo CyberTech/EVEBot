@@ -34,20 +34,20 @@ Known Dialogstrings
  UI/Common/Buttons/Yes
  UI/Common/Buttons/No
 */
-	echo Agent[${EVEAgentIndex}].Name ${Agent[${EVEAgentIndex}].Name}
-	echo Agent[${EVEAgentIndex}].ID ${Agent[${EVEAgentIndex}].ID}
-	echo Agent[${EVEAgentIndex}].AgentTypeID ${Agent[${EVEAgentIndex}].AgentTypeID}
-	echo Agent[${EVEAgentIndex}].Division ${Agent[${EVEAgentIndex}].Division}
-	echo Agent[${EVEAgentIndex}].DivisionID ${Agent[${EVEAgentIndex}].DivisionID}
-	echo Agent[${EVEAgentIndex}].Level ${Agent[${EVEAgentIndex}].Level}
-	echo Agent[${EVEAgentIndex}].Quality ${Agent[${EVEAgentIndex}].Quality}
-	echo Agent[${EVEAgentIndex}].CorporationID ${Agent[${EVEAgentIndex}].CorporationID}
-	echo Agent[${EVEAgentIndex}].FactionID ${Agent[${EVEAgentIndex}].FactionID}
-	echo Agent[${EVEAgentIndex}].StandingTo ${Agent[${EVEAgentIndex}].StandingTo}
-	echo Agent[${EVEAgentIndex}].Solarsystem ${Agent[${EVEAgentIndex}].Solarsystem}
-	echo Agent[${EVEAgentIndex}].Station ${Agent[${EVEAgentIndex}].Station}
-	echo Agent[${EVEAgentIndex}].StationID ${Agent[${EVEAgentIndex}].StationID}
-	echo Agent[${EVEAgentIndex}].Index ${Agent[${EVEAgentIndex}].Index}
+	echo EVE.Agent[${EVEAgentIndex}].Name ${EVE.Agent[${EVEAgentIndex}].Name}
+	echo EVE.Agent[${EVEAgentIndex}].ID ${EVE.Agent[${EVEAgentIndex}].ID}
+	echo EVE.Agent[${EVEAgentIndex}].AgentTypeID ${EVE.Agent[${EVEAgentIndex}].AgentTypeID}
+	echo EVE.Agent[${EVEAgentIndex}].Division ${EVE.Agent[${EVEAgentIndex}].Division}
+	echo EVE.Agent[${EVEAgentIndex}].DivisionID ${EVE.Agent[${EVEAgentIndex}].DivisionID}
+	echo EVE.Agent[${EVEAgentIndex}].Level ${EVE.Agent[${EVEAgentIndex}].Level}
+	echo EVE.Agent[${EVEAgentIndex}].Quality ${EVE.Agent[${EVEAgentIndex}].Quality}
+	echo EVE.Agent[${EVEAgentIndex}].CorporationID ${EVE.Agent[${EVEAgentIndex}].CorporationID}
+	echo EVE.Agent[${EVEAgentIndex}].FactionID ${EVE.Agent[${EVEAgentIndex}].FactionID}
+	echo EVE.Agent[${EVEAgentIndex}].StandingTo ${EVE.Agent[${EVEAgentIndex}].StandingTo}
+	echo EVE.Agent[${EVEAgentIndex}].Solarsystem ${EVE.Agent[${EVEAgentIndex}].Solarsystem}
+	echo EVE.Agent[${EVEAgentIndex}].Station ${EVE.Agent[${EVEAgentIndex}].Station}
+	echo EVE.Agent[${EVEAgentIndex}].StationID ${EVE.Agent[${EVEAgentIndex}].StationID}
+	echo EVE.Agent[${EVEAgentIndex}].Index ${EVE.Agent[${EVEAgentIndex}].Index}
 
 	Agent[${EVEAgentIndex}]:GetDialogResponses[dsIndex]
 

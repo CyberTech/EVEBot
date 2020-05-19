@@ -137,7 +137,7 @@ objectdef obj_MissionCombat
 					;todo - check it actually succeded
 
 					;lets find the name of the mission we are running and see if we can match it to a set of commands in the database
-					variable string missLevel = ${Agent[id,${This.MissionID}].Level}
+					variable string missLevel = ${EVE.Agent[id,${This.MissionID}].Level}
 					variable string missionName = ${Missions.MissionCache.Name[${This.MissionID}]}
 
 					Logger:Log["DEBUG: obj_MissionCombat - Checking for mission in database - Mission Name : ${missionName} , Mission Level : ${missLevel}",LOG_DEBUG]
