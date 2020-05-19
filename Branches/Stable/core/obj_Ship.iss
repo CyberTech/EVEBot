@@ -1687,14 +1687,14 @@ objectdef obj_Ship
 		EVE:Execute[CmdStopShip]
 	}
 
-	; Approaches EntityID to within 5% of Distance, then stops ship.  Momentum will handle the rest.
+	; Approaches EntityID to within 1% of Distance, then stops ship.  Momentum will handle the rest.
 	function Approach(int64 EntityID, int64 Distance)
 	{
 		if ${Entity[${EntityID}](exists)}
 		{
 			variable float64 OriginalDistance = ${Entity[${EntityID}].Distance}
 			variable float64 CurrentDistance
-
+			variable float64 TargetDistance = ${Math.Calc64[${Distance} * 1.00]}
 			If ${OriginalDistance} < ${Distance}
 			{
 				return
@@ -1717,7 +1717,7 @@ objectdef obj_Ship
 					UI:UpdateConsole["DEBUG: obj_Ship:Approach: ${Entity[${EntityID}].Name} is getting further away!  Is it moving? Are we stuck, or colliding?", LOG_MINOR]
 				}
 			}
-			while ${CurrentDistance} > ${Math.Calc64[${Distance} * 1.05]}
+			while ${CurrentDistance} > ${TargetDistance}
 			EVE:Execute[CmdStopShip]
 			This:Deactivate_AfterBurner[]
 		}
