@@ -720,7 +720,7 @@ objectdef obj_Agents
 		variable iterator dsIterator
 
 		Logger:Log["obj_Agents:RequestMission: Starting conversation with agent ${This.ActiveAgent}."]
-		Agent[${This.AgentIndex}]:StartConversation
+		EVE.Agent[${This.AgentIndex}]:StartConversation
 		do
 		{
 			Logger:Log["obj_Agents:RequestMission: Waiting for conversation window..."]
@@ -739,7 +739,7 @@ objectdef obj_Agents
 			{
 				break
 			}
-			Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
+			EVE.Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
 		}
 		dsIndex:GetIterator[dsIterator]
 
@@ -767,7 +767,7 @@ objectdef obj_Agents
 					;Logger:Log["obj_Agents: Waiting for dialog to update..."]
 					wait 100
 					Logger:Log["obj_Agents: Refreshing Dialog Responses"]
-					Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
+					EVE.Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
 					dsIndex:GetIterator[dsIterator]
 					break
 				}
@@ -947,7 +947,7 @@ objectdef obj_Agents
 	function TurnInMission()
 	{
 		Logger:Log["obj_Agents:TurnInMission: Starting conversation with agent ${This.ActiveAgent}."]
-		Agent[${This.AgentIndex}]:StartConversation
+		EVE.Agent[${This.AgentIndex}]:StartConversation
 
 		do
 		{
@@ -961,7 +961,7 @@ objectdef obj_Agents
 		; display your dialog options
 		variable index:dialogstring dsIndex
 		variable iterator dsIterator
-		Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
+		EVE.Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
 		dsIndex:GetIterator[dsIterator]
 
 		if ${dsIterator:First(exists)}
@@ -982,7 +982,7 @@ objectdef obj_Agents
 		; Now wait a couple of seconds and then get the new dialog options...and so forth.  The "Wait" needed may differ from person to person.
 		Logger:Log["obj_Agents:TurnInMission: Waiting for agent dialog to update..."]
 		wait 60
-		Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
+		EVE.Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
 		dsIndex:GetIterator[dsIterator]
 		Logger:Log["Completing Mission..."]
 		dsIndex.Get[AGENTRESPONSEINDEX_COMPLETE_MISSION]:Say[${This.AgentID}]
@@ -1013,7 +1013,7 @@ objectdef obj_Agents
 		return
 
 		Logger:Log["obj_Agents:QuitMission: Starting conversation with agent ${This.ActiveAgent}."]
-		Agent[${This.AgentIndex}]:StartConversation
+		EVE.Agent[${This.AgentIndex}]:StartConversation
 		do
 		{
 			Logger:Log["obj_Agents:QuitMission: Waiting for conversation window..."]
@@ -1027,7 +1027,7 @@ objectdef obj_Agents
 		variable index:dialogstring dsIndex
 		variable iterator dsIterator
 
-		Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
+		EVE.Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
 		dsIndex:GetIterator[dsIterator]
 
 		if ${dsIndex.Used} == 2
