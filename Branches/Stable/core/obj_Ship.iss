@@ -1562,6 +1562,10 @@ objectdef obj_Ship
 						variable int SecondsToRun
 						variable int TenthsSecondsToRun
 						SecondsToRun:Set[${Math.Calc[(${OreAvailable} / ${OrePerSec}) + 1]}]
+						if ${SecondsToRun} < 5
+						{
+							SecondsToRun:Set[5]
+						}
 						TenthsSecondsToRun:Set[${Math.Calc[ ${SecondsToRun} * 10]}]
 
 						UI:UpdateConsole["ActivateFreeMiningLaser: OreAvailable ${OreAvailable} < OrePerCycle ${OrePerCycle}, shortening runtime from ${ModuleIter.Value.Duration}s to ${SecondsToRun}s (${TenthsSecondsToRun}ds)", LOG_DEBUG]
