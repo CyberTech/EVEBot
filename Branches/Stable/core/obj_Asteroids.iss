@@ -229,19 +229,23 @@ objectdef obj_Asteroids
 		{
 			if !${Entity[${AsteroidIterator.Value.ID}](exists)}
 			{
+				UI:UpdateConsole["DEBUG: obj_Asteroids:NearestAsteroid: Skipping ${AsteroidIterator.Value.ID} (Entity)", LOG_DEBUG]
 				continue
 			}
 			if ${AsteroidList_Claimed.Contains[${AsteroidIterator.Value.ID}]}
 			{
 				; Someone else claimed it first. Oh, the vogonity!
+				UI:UpdateConsole["DEBUG: obj_Asteroids:NearestAsteroid: Skipping ${AsteroidIterator.Value.ID} (Claimed)", LOG_DEBUG]
 				continue
 			}
 			if ${AsteroidIterator.Value.IsLockedTarget} || ${AsteroidIterator.Value.BeingTargeted}
 			{
+				UI:UpdateConsole["DEBUG: obj_Asteroids:NearestAsteroid: Skipping ${AsteroidIterator.Value.ID} (locked/beinglocked)", LOG_DEBUG]
 				continue
 			}
 			if ${AsteroidIterator.Value.Distance} >= ${MaxDistance}
 			{
+				UI:UpdateConsole["DEBUG: obj_Asteroids:NearestAsteroid: Skipping ${AsteroidIterator.Value.ID} (Distance > ${MaxDistance})", LOG_DEBUG]
 				continue
 			}
 			; Otherwise, we've reached a potential asteroid we can use.
