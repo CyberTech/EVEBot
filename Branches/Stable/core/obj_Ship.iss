@@ -1381,10 +1381,10 @@ objectdef obj_Ship
 		{
 			if ${ModuleIter.Value.IsActive} && \
 				!${ModuleIter.Value.IsDeactivating} && \
-				!${ModuleIter.Value.LastTarget(exists)}
+				!${Entity[${ModuleIter.Value.LastTarget.ID}](exists)}
 			{
-				UI:UpdateConsole["${ModuleIter.Value.ToItem.Slot}:${ModuleIter.Value.ToItem.Name} has no target: Deactivating"]
-				ModuleIter.Value:Click
+				UI:UpdateConsole["${ModuleIter.Value.ToItem.Slot}:${ModuleIter.Value.ToItem.Name} has an invalid target: Deactivating"]
+				ModuleIter.Value:Deactivate
 			}
 		}
 		while ${ModuleIter:Next(exists)}
