@@ -214,11 +214,17 @@ objectdef obj_Asteroids
 		AsteroidList:GetIterator[AsteroidIterator]
 		if !${AsteroidIterator:First(exists)}
 		{
+			UI:UpdateConsole["DEBUG: obj_Asteroids:NearestAsteroid: Asteroid List empty", LOG_DEBUG]
 			return -1
 		}
 
+		if ${MaxDistance} == 0
+		{
+			MaxDistance:Set[${Ship.OptimalMiningRange}]
+		}
+
 		; Iterate thru the asteroid list, and find the first one that isn't excluded for obvious reasons.
-			; Yes, this could be one giant if statement. It was harder to follow, with the bool inversions etc.
+		; Yes, this could be one giant if statement. It was harder to follow, with the bool inversions etc.
 		do
 		{
 			if !${Entity[${AsteroidIterator.Value.ID}](exists)}
@@ -234,42 +240,9 @@ objectdef obj_Asteroids
 			{
 				continue
 			}
-			if ${MaxDistance} == 0
+			if ${AsteroidIterator.Value.Distance} >= ${MaxDistance}
 			{
-				if ${AsteroidIterator.Value.Distance} >= ${Ship.OptimalMiningRange}
-				{
-					continue
-				}
-				variable index:entity MyTargets
-				variable iterator MyTarget
-				Me:GetTargets[MyTargets]
-				MyTargets:GetIterator[MyTarget]
-				variable bool AbortLoop = FALSE
-
-				if ${MyTarget:First(exists)}
-				{
-					do
-					{
-						if ${AsteroidIterator.Value.DistanceTo[${MyTarget.Value.ID}]} > ${Ship.OptimalMiningRange}
-						{
-							; We have a locked asteroid that's too far from this one;  No, this is not perfect because we don't know our position
-							AbortLoop:Set[TRUE]
-							break
-						}
-					}
-					while ${MyTarget:Next(exists)}
-					if ${AbortLoop}
-					{
-						continue
-					}
-				}
-			}
-			else
-			{
-				if ${AsteroidIterator.Value.Distance} >= ${MaxDistance}
-				{
-					continue
-				}
+				continue
 			}
 			; Otherwise, we've reached a potential asteroid we can use.
 			break
