@@ -42,7 +42,6 @@ objectdef obj_Navigator
 		{
 			Script:End
 		}
-		
 
 		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{

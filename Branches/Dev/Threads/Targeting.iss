@@ -62,7 +62,7 @@ objectdef obj_EVEBOT_Targeting inherits obj_BaseClass
 
 		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
-			if !${EVEBot.Paused}
+			if !${EVEBot.Paused} && ${Me.InSpace}
 			{
 				This:PruneQueue[]
 				if ${This.Running}

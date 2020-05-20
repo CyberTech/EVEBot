@@ -18,6 +18,7 @@ variable int VersionNum = 0
 #define EVEBOT_DEBUG 1
 #define EVEBOT_DEBUG_TIMING 0
 #define EVEBOT_PROFILING 0
+#define DEBUG_ENTITIES 0
 
 ; If you want to debug specific modules or classes, place the class name here.
 ; Provided the class is using the proper ${LogPrefix} standard, it will be filtered appropriately -- CyberTech

@@ -35,8 +35,6 @@ objectdef obj_BeltRunner inherits obj_BaseClass
 		if ${This.PulseTimer.Ready}
 		{
 			This:SetState
-			echo Targets.PC: ${Targets.PC}
-
 			This.PulseTimer:Update
 		}
 	}

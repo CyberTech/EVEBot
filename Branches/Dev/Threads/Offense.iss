@@ -108,6 +108,10 @@ objectdef obj_Offense inherits obj_BaseClass
 
 	method TakeOffensiveAction()
 	{
+		if !${Me.InSpace}
+		{
+			return
+		}
 		if ${Me.ActiveTarget(exists)} && !${Me.ActiveTarget.IsPC}
 		{
 			if !${This.IsConcordTarget[${Me.ActiveTarget.GroupID}]}

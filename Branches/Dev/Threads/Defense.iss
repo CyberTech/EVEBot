@@ -61,6 +61,10 @@ objectdef obj_Defense inherits obj_BaseClass
 					This:CheckWarpScramble
 					This:TakeDefensiveAction
 					This:CheckTankMinimums
+					if ${EVEBot.ReturnToStation}
+					{
+						This:RunAway["ReturnToStation is true - legacy code somewhere!"]
+					}
 				}
 
 				This:CheckLocal
@@ -72,11 +76,6 @@ objectdef obj_Defense inherits obj_BaseClass
 				elseif ${This.Hide} && ${This.HideReason.Equal["Unable to evade sensor jamming"]} && !${Targeting.IsTargetJammed}
 				{
 					This:ReturnToDuty
-				}
-
-				if ${EVEBot.ReturnToStation}
-				{
-					This:RunAway["ReturnToStation is true - legacy code somewhere!"]
 				}
 
 				if !${This.Hide} && ${This.Hiding} && ${This.TankReady} && ${Social.IsSafe}

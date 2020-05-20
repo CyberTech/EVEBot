@@ -422,7 +422,7 @@ objectdef obj_Social inherits obj_BaseClass
 					LogMsg:Concat[" Below Standing Threshold: ${PilotIterator.Value.Name} CorpID: ${PilotIterator.Value.Corp.ID} AllianceID: ${PilotIterator.Value.AllianceID}"]
 					Logger:Log[${LogMsg}, LOG_CRITICAL]
 					HostilesPresent:Inc
-					{This.ReportedPilotsSinceLastSafe:Add[${PilotIterator.Value}]
+					This.ReportedPilotsSinceLastSafe:Add[${PilotIterator.Value}]
 				}
 				else
 				{
