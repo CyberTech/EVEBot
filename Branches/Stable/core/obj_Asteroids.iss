@@ -403,7 +403,7 @@ objectdef obj_Asteroids
 				}
 				else
 				{
-					EVE:QueryEntities[AsteroidListTmp, ${QueryStrPrefix}]
+					EVE:QueryEntities[AsteroidListTmp, "${QueryStrPrefix} && Distance < ${This.MaxTravelDistanceToAsteroid}"]
 				}
 
 				Count_InRange:Inc[${AsteroidListTmp.Used}]
@@ -448,7 +448,7 @@ objectdef obj_Asteroids
 			}
 			else
 			{
-				EVE:QueryEntities[AsteroidList_TotalIRTmp, "CategoryID = ${This.AsteroidCategoryID}"]
+				EVE:QueryEntities[AsteroidList_TotalIRTmp, "CategoryID = ${This.AsteroidCategoryID} && Distance < ${This.MaxTravelDistanceToAsteroid}"]
 			}
 
 			if ${Config.Miner.StripMine}
