@@ -1482,8 +1482,9 @@ objectdef obj_Ship
 		{
 			if ${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsDeactivating} && ${ModuleIter.Value.ID} == ${id}
 			{
-				UI:UpdateConsole["Deactivating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
+				UI:UpdateConsole["Deactivating ${ModuleIter.Value.ToItem.Slot}:${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
 				ModuleIter.Value:Deactivate
+				return
 			}
 		}
 		while ${ModuleIter:Next(exists)}
