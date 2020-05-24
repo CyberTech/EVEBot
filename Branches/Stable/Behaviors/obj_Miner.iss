@@ -1330,8 +1330,6 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 			return
 		}
 
-		Ship:Activate_Gang_Links
-
 		;	This checks our armor and shields to determine if we need to run like hell.  If we're being attacked by something
 		;	dangerous enough to get us this damaged, it's best to switch to HARD STOP mode.
 		if (${MyShip.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
@@ -1342,16 +1340,6 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 			UI:UpdateConsole["Miner aborting due to defensive status", LOG_CRITICAL]
 
 			EVEBot.ReturnToStation:Set[TRUE]
-			return
-		}
-
-		; This will make the orca go to the panic location and do nothing but boost the fleet
-		if ${Config.Miner.DeliveryLocation.Equal["Boost only"]}
-		{
-			if !${This.AtPanicBookmark}
-			{
-				call This.FastWarp -1 "${Config.Miner.PanicLocation}"
-			}
 			return
 		}
 
@@ -1395,6 +1383,8 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 			;	Tell our miners we're in a belt and they are safe to warp to me
 			relay all -event EVEBot_Master_InBelt TRUE
 		}
+
+		Ship:Activate_Gang_Links
 
 		variable int OrcaRange = 30000
 
