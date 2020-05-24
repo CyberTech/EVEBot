@@ -1482,7 +1482,7 @@ objectdef obj_Ship
 		{
 			if ${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsDeactivating} && ${ModuleIter.Value.ID} == ${id}
 			{
-				UI:UpdateConsole["Deactivating ${ModuleIter.Value.ToItem.Slot}:${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
+				UI:UpdateConsole["Deactivating ${ModuleIter.Value.ToItem.Slot}:${ModuleIter.Value.ToItem.Name} from ${ModuleIter.Value.LastTarget.ID}", LOG_MINOR]
 				ModuleIter.Value:Deactivate
 				return
 			}
@@ -1535,7 +1535,7 @@ objectdef obj_Ship
 					call This.ChangeMiningLaserCrystal "${OreType}" ${Slot}
 				}
 
-				UI:UpdateConsole["Activating: ${Slot}: ${ModuleIter.Value.ToItem.Name}"]
+				UI:UpdateConsole["Activating: ${Slot}: ${ModuleIter.Value.ToItem.Name} on ${id}"]
 				ModuleIter.Value:Activate[${id}]
 
 				; Now that we've activated, check and see if we have survey results.
