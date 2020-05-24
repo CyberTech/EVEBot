@@ -243,11 +243,43 @@ objectdef obj_Asteroids
 				UI:UpdateConsole["DEBUG: obj_Asteroids:NearestAsteroid: Skipping ${AsteroidIterator.Value.ID} (locked/beinglocked)", LOG_DEBUG]
 				continue
 			}
+			; Now check regular distance
 			if ${AsteroidIterator.Value.Distance} >= ${MaxDistance}
 			{
 				UI:UpdateConsole["DEBUG: obj_Asteroids:NearestAsteroid: Skipping ${AsteroidIterator.Value.ID} (Distance > ${MaxDistance})", LOG_DEBUG]
 				continue
 			}
+
+			; Check to see if we need to exclude this based on distance to ALL currently locked asteroids
+			; If the candidate roid isn't within 75% of our mining range to all locked roids, skip it
+			; A 14.5km Me 14.5km B
+			; A <> B 29km
+			variable index:entity MyTargets
+			variable iterator MyTarget
+			Me:GetTargets[MyTargets]
+			MyTargets:GetIterator[MyTarget]
+			variable bool AbortLoop = FALSE
+			variable float MaxDistFromTarget
+			MaxDistFromTarget:Set[${Math.Calc[${Ship.OptimalMiningRange} * 0.75]}]
+			if ${MyTarget:First(exists)}
+			{
+				do
+				{
+					if ${AsteroidIterator.Value.DistanceTo[${MyTarget.Value.ID}]} > ${MaxDistFromTarget}
+					{
+						; We have a locked asteroid that's too far from this one;  No, this is not perfect because we don't know our position
+						UI:UpdateConsole["DEBUG: obj_Asteroids:NearestAsteroid: Skipping ${AsteroidIterator.Value.ID} (Distance from target ${MyTarget.Value.ID} > ${MaxDistFromTarget})", LOG_DEBUG]
+						AbortLoop:Set[TRUE]
+						break
+					}
+				}
+				while ${MyTarget:Next(exists)}
+				if ${AbortLoop}
+				{
+					continue
+				}
+			}
+
 			; Otherwise, we've reached a potential asteroid we can use.
 			break
 		}
