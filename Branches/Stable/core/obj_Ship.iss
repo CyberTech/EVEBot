@@ -1737,6 +1737,7 @@ objectdef obj_Ship
 		return FALSE
 	}
 
+	; TODO - Delete this
 	function OpenCargo()
 	{
 		if !${This.IsCargoOpen}
@@ -1787,7 +1788,7 @@ objectdef obj_Ship
 			UI:UpdateConsole["Warping to ${Entity[${Id}].Name} @ ${EVEBot.MetersToKM_Str[${WarpInDistance}]}"]
 			while !${This.WarpEntered}
 			{
-				if ${WarpFleet}
+				if ${WarpFleet} && ${Fleet.CanWarpFleet}
 				{
 					Entity[${Id}]:WarpFleetTo[${WarpInDistance}]
 				}
@@ -1828,7 +1829,7 @@ objectdef obj_Ship
 						UI:UpdateConsole["Warping to Fleet Member: ${FleetMember.Value.Name}"]
 						while !${This.WarpEntered}
 						{
-							if ${WarpFleet}
+							if ${WarpFleet} && ${Fleet.CanWarpFleet}
 							{
 								FleetMember.Value:WarpFleetTo[${distance}]
 							}
@@ -1841,7 +1842,7 @@ objectdef obj_Ship
 						call This.WarpWait
 						if ${Return} == 2
 						{
-							UI:UpdateConsole["ERROR: Ship.WarpToFleetMember never reached fleet member!"]
+							UI:UpdateConsole["ERROR: Ship.WarpToFleetMember never reached fleet member!", LOG_CRITICAL]
 							return
 						}
 					}
@@ -2002,7 +2003,7 @@ objectdef obj_Ship
 				UI:UpdateConsole["1: Warping to bookmark ${Label} (Attempt #${WarpCounter})"]
 				while !${This.WarpEntered}
 				{
-					if ${WarpFleet}
+					if ${WarpFleet} && ${Fleet.CanWarpFleet}
 					{
 						DestinationBookmark:WarpFleetTo
 					}
@@ -2057,7 +2058,7 @@ objectdef obj_Ship
 					UI:UpdateConsole["2: Warping to bookmark ${Label} (Attempt #${WarpCounter})"]
 					while !${This.WarpEntered} && ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${DestinationBookmark.X}, ${DestinationBookmark.Y}, ${DestinationBookmark.Z}]} > WARP_RANGE
 					{
-						if ${WarpFleet}
+						if ${WarpFleet} && ${Fleet.CanWarpFleet}
 						{
 							DestinationBookmark:WarpFleetTo
 						}
@@ -2091,7 +2092,7 @@ objectdef obj_Ship
 				UI:UpdateConsole["3: Warping to bookmark ${Label} (Attempt #${WarpCounter})"]
 				while !${This.WarpEntered}
 				{
-					if ${WarpFleet}
+					if ${WarpFleet} && ${Fleet.CanWarpFleet}
 					{
 						DestinationBookmark:WarpFleetTo
 					}
