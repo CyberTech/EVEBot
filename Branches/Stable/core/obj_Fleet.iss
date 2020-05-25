@@ -46,16 +46,16 @@ objectdef obj_Fleet
 			return
 		}
 		
-	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
 		{
 			if ${Config.Fleet.ManageFleet}
 			{
 				This:Process
 			}
 			
-    		This.NextPulse:Set[${Time.Timestamp}]
-    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-    		This.NextPulse:Update
+			This.NextPulse:Set[${Time.Timestamp}]
+			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+			This.NextPulse:Update
 		}
 	}	
 	
@@ -140,8 +140,18 @@ objectdef obj_Fleet
 				}
 			}
 		}
-		
-				
+	}
+	
+	member:bool CanWarpFleet()
+	{
+		if ${Me.Fleet.IsMember[${Me.CharID}]}
+		{
+			if (${Me.ToFleetMember.IsFleetCommander} || ${Me.ToFleetMember.IsWingCommander} || ${Me.ToFleetMember.IsSquadCommander})
+			{
+				return TRUE
+			}
+		}
+		return FALSE
 	}
 	
 	member:int64 ResolveCharID(string value)
