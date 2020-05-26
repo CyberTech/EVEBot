@@ -808,6 +808,27 @@ objectdef obj_Miner
 		}
 	}
 
+	method StartApproaching(int64 ID)
+	{
+		if !${Entity[${ID}](exists)}
+		{
+			return
+		}
+		variable int64 Distance
+		if ${MyShip.MaxTargetRange} < ${Ship.OptimalMiningRange}
+		{
+				Distance:Set[${Math.Calc[${MyShip.MaxTargetRange} - 5000]}]
+		}
+		else
+		{
+				Distance:Set[${Ship.OptimalMiningRange}]
+		}
+
+		UI:UpdateConsole["Miner: Approaching ${ID}:${Entity[${ID}].Name} @ ${EVEBot.MetersToKM_Str[${Distance}]}"]
+		Entity[${ID}]:Approach[${Distance}]
+		This.Approaching:Set[${ID}]
+		This.TimeStartedApproaching:Set[${Time.Timestamp}]
+	}
 
 /*
 ;	Step 4:		Mine:  This is it's own function so the ProcessState function doesn't get too giant.  There's a lot going on while mining.
@@ -1235,10 +1256,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 						;	We need to approach this target - also don't approach if we're approaching another target
 						if ${This.Approaching} == 0
 						{
-							UI:UpdateConsole["Miner.Mine: Approaching ${Target.Value.ID}:${Target.Value.Name} @ ${EVEBot.MetersToKM_Str[${Ship.OptimalMiningRange}]}"]
-							Entity[${Target.Value.ID}]:Approach[${Ship.OptimalMiningRange}]
-							This.Approaching:Set[${Target.Value.ID}]
-							This.TimeStartedApproaching:Set[${Time.Timestamp}]
+							This:StartApproaching[${Target.Value.ID}]
 							continue
 						}
 					}

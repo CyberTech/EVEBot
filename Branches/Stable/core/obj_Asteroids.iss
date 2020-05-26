@@ -660,24 +660,7 @@ objectdef obj_Asteroids
 		if ${TargetAsteroid} != -1
 		{
 			UI:UpdateConsole["obj_Asteroids: TargetNext: No unlocked asteroids in range & All lasers idle: Approaching ${TargetAsteroid}:${Entity[${TargetAsteroid}].Name}: ${EVEBot.MetersToKM_Str[${Entity[${TargetAsteroid}].Distance}]}"]
-			if ${MyShip.MaxTargetRange} < ${Ship.OptimalMiningRange}
-			{
-				call Ship.Approach ${TargetAsteroid} ${Math.Calc[${MyShip.MaxTargetRange} - 5000]}
-			}
-			else
-			{
-				call Ship.Approach ${TargetAsteroid} ${Ship.OptimalMiningRange}
-			}
-
-			UI:UpdateConsole["Locking Asteroid ${TargetAsteroid}:${Entity[${TargetAsteroid}].Name}: ${EVEBot.MetersToKM_Str[${Entity[${TargetAsteroid}].Distance}]}"]
-			relay all "Event[EVEBot_ClaimAsteroid]:Execute[${Me.ID}, ${Entity[${TargetAsteroid}].ID}]"
-			Ship:Activate_SurveyScanner
-			Entity[${TargetAsteroid}]:LockTarget
-			do
-			{
-			  wait 30
-			}
-			while ${Me.TargetingCount} > 0
+			Miner:StartApproaching[${TargetAsteroid}]
 			return TRUE
 		}
 
