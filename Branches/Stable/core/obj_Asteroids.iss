@@ -207,7 +207,7 @@ objectdef obj_Asteroids
 	; Pick the nearest appropriate asteroid from AsteroidList; checking claimed list and ranges.
 	; If MaxDistance is 0, use natural targetng/laser range and check distance to existing roids
 	; If MaxDistance is > 0, use only MaxDistance, and not the above -- intended to pick a roid to which to slowboat
-	member:int64 NearestAsteroid(int64 MaxDistance=0)
+	member:int64 NearestAsteroid(int64 MaxDistance=0, bool IgnoreClaimedStatus=FALSE)
 	{
 		variable iterator AsteroidIterator
 
@@ -232,7 +232,7 @@ objectdef obj_Asteroids
 				UI:UpdateConsole["DEBUG: obj_Asteroids:NearestAsteroid: Skipping ${AsteroidIterator.Value.ID} (Entity)", LOG_DEBUG]
 				continue
 			}
-			if ${AsteroidList_Claimed.Contains[${AsteroidIterator.Value.ID}]}
+			if !${IgnoreClaimedStatus} && ${AsteroidList_Claimed.Contains[${AsteroidIterator.Value.ID}]}
 			{
 				; Someone else claimed it first. Oh, the vogonity!
 				UI:UpdateConsole["DEBUG: obj_Asteroids:NearestAsteroid: Skipping ${AsteroidIterator.Value.ID} (Claimed)", LOG_DEBUG]
@@ -413,7 +413,7 @@ objectdef obj_Asteroids
 			variable int Count_OOR
 
 			This.AsteroidList:Clear
-
+; This is adding duplicates because the oretypes are treated as substrings
 			do
 			{
 				variable string QueryStrPrefix
@@ -619,6 +619,12 @@ objectdef obj_Asteroids
 		}
 
 		TargetAsteroid:Set[${This.NearestAsteroid[]}]
+		if ${TargetAsteroid} == -1 && ${AsteroidList_Claimed.Used} > 0
+		{
+			; Call again, ignoring claimed status. We'll all double up and get out of here faster
+			TargetAsteroid:Set[${This.NearestAsteroid[0, TRUE]}]
+		}
+		
 		if ${TargetAsteroid} != -1
 		{
 			UI:UpdateConsole["Locking Asteroid ${TargetAsteroid}:${Entity[${TargetAsteroid}].Name}: ${EVEBot.MetersToKM_Str[${Entity[${TargetAsteroid}].Distance}]}"]
