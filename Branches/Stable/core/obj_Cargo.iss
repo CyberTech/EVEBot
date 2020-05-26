@@ -1252,9 +1252,13 @@ objectdef obj_Cargo
 
 		UI:UpdateConsole["Transferring Ore to Station Hangar"]
 		call This.OpenHolds
+		EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipCargo]:MakeActive
+		wait 5
 
 		if ${MyShip.HasOreHold}
 		{
+			EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipOreHold]:MakeActive
+			wait 5
 			MyShip:GetOreHoldCargo[This.CargoToTransfer]
 		}
 		else
