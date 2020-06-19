@@ -640,7 +640,7 @@ objectdef obj_Asteroids
 
 		if ${Miner.Approaching} != 0
 		{
-			UI:UpdateConsole["obj_Asteroids: TargetNext: No unlocked asteroids in range, but Miner is approaching something.", LOG_DEBUG]
+			UI:UpdateConsole["obj_Asteroids: TargetNext: No unlocked asteroids in range right now, but Miner is approaching ${Miner.Approaching}:${Entity[${Miner.Approaching}].Name}.", LOG_DEBUG]
 			return TRUE
 		}
 
