@@ -47,6 +47,7 @@ objectdef obj_Defense inherits obj_BaseClass
 			Script:End
 		}
 
+		Logger:Log["Thread: ${This.LogPrefix}: Initialized", LOG_MINOR]
 		if !${EVEBot.Loaded} || ${EVEBot.Disabled}
 		{
 			return
@@ -56,26 +57,26 @@ objectdef obj_Defense inherits obj_BaseClass
 		{
 			if ${EVEBot.SessionValid}
 			{
-				if ${Me.InSpace} && !${Me.InStation}
+				if ${Me.InSpace}
 				{
 					This:CheckWarpScramble
 					This:TakeDefensiveAction
 					This:CheckTankMinimums
+					This:CheckLocal
+
 					if ${EVEBot.ReturnToStation}
 					{
 						This:RunAway["ReturnToStation is true - legacy code somewhere!"]
 					}
-				}
 
-				This:CheckLocal
-
-				if ${Config.Combat.RunIfTargetJammed} && ${Targeting.IsTargetingJammed}
-				{
-					This:RunAway["Unable to evade sensor jamming"]
-				}
-				elseif ${This.Hide} && ${This.HideReason.Equal["Unable to evade sensor jamming"]} && !${Targeting.IsTargetJammed}
-				{
-					This:ReturnToDuty
+					if ${Config.Combat.RunIfTargetJammed} && ${Targeting.IsTargetingJammed}
+					{
+						This:RunAway["Unable to evade sensor jamming"]
+					}
+					elseif ${This.Hide} && ${This.HideReason.Equal["Unable to evade sensor jamming"]} && !${Targeting.IsTargetJammed}
+					{
+						This:ReturnToDuty
+					}
 				}
 
 				if !${This.Hide} && ${This.Hiding} && ${This.TankReady} && ${Social.IsSafe}
@@ -222,6 +223,7 @@ objectdef obj_Defense inherits obj_BaseClass
 			return
 		}
 
+		; TODO -- This should be checked in station as well, we're just checking Local. How else will we know if we can undock?
 		if ${Ship.IsCloaked} || !${Me.InSpace}
 		{
 			return
