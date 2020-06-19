@@ -171,35 +171,6 @@ objectdef obj_Station
 			while ${CargoIterator:Next(exists)}
 	}
 
-	function CheckList()
-	{
-		;BotType Checks
-
-		;General Checks
-		;ToDo Needs to be moved, into correct classes.
-
-		;Awaiting ISXEVE Drone Bay Support
-		/*
-		echo "${Config.Common.MinimumDronesInBay} > ${Ship.Drones.DronesInBay}"
-		if ${Config.Common.MinimumDronesInBay} > ${Ship.Drones.DronesInBay}
-		{
-		call Station.OpenHangar
-		call This.GetStationItems
-		wait 10
-
-			echo "${Ship.Drones.DronesInStation}"
-			if ${Ship.Drones.DronesInStation} > 0
-			{
-			echo "${Ship.Drones.DronesInStation}"
-			call Ship.Drones.StationToBay
-			}
-
-		call Cargo.CloseHolds
-		}
-		*/
-
-	}
-
 	function DockAtStation(int64 StationID)
 	{
 		variable int Counter = 0
