@@ -18,25 +18,22 @@ function main()
 			echo "------- Inventory Window Children:"
 			do
 			{
-				echo "--| ${i}. Name: '${Iter.Value}'"
-				echo "-----| HasCapacity: ${Iter.Value.HasCapacity}"
+				echo "Making Active: ${i}. Name: '${Iter.Value.Name}'"
+				Iter.Value:MakeActive
+				wait 8
+				echo "-----| ActiveChild:    ${InventoryWindow.ActiveChild.Name} ${InventoryWindow.ActiveChild.ItemID} ${InventoryWindow.ActiveChild.LocationFlag} ${InventoryWindow.ActiveChild.LocationFlagID}"
+				echo "-----| HasCapacity:    ${Iter.Value.HasCapacity}"
 				if (${Iter.Value.HasCapacity})
 				{
-					echo "-----| Capacity: ${Iter.Value.Capacity.Precision[2]}"        
-					echo "-----| UsedCapacity: ${Iter.Value.UsedCapacity.Precision[2]}"
+					echo "------| Capacity:      ${Iter.Value.Capacity.Precision[2]}"        
+					echo "------| UsedCapacity:  ${Iter.Value.UsedCapacity.Precision[2]}"
 				}
-				if (${Iter.Value.LocationFlagID} > 0)
-				{
-					echo "-----| LocationFlag: ${Iter.Value.LocationFlag}"
-					echo "-----| LocationFlagID: ${Iter.Value.LocationFlagID}"
-				}
-			  echo "-----| IsInRange: ${Iter.Value.IsInRange}"
-				echo "-----| ItemID: ${Iter.Value.ItemID}"
+				echo "-----| LocationFlag:   ${Iter.Value.LocationFlag}"
+				echo "-----| LocationFlagID: ${Iter.Value.LocationFlagID}"
+			  echo "-----| IsInRange:      ${Iter.Value.IsInRange}"
+				echo "-----| ItemID:         ${Iter.Value.ItemID}"
 				echo "--------------------------------"
 				i:Inc
-				echo Making Active:
-				Iter.Value:MakeActive
-				wait 10
 			}
 			while ${Iter:Next(exists)}
 		}
