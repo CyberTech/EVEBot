@@ -14,14 +14,6 @@ objectdef obj_Fleet
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 10
 	
-	
-	
-	
-/*	
-;	Step 1:  	Get the module ready.  This includes init and shutdown methods, as well as the pulse method that runs each frame.
-;				Adjust PulseIntervalInSeconds above to determine how often the module will Process.
-*/	
-	
 	method Initialize()
 	{
 
@@ -58,13 +50,6 @@ objectdef obj_Fleet
 			This.NextPulse:Update
 		}
 	}	
-	
-
-/*	
-;	Step 1:  	Method used by the Pulse event.
-;				
-*/	
-	
 	
 	method Process()
 	{
@@ -153,7 +138,7 @@ objectdef obj_Fleet
 		}
 		return FALSE
 	}
-	
+
 	member:int64 ResolveCharID(string value)
 	{
 		variable index:pilot CorpMembers
