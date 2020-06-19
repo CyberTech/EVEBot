@@ -84,7 +84,6 @@ objectdef obj_Miner
 			variablecase ${STATE_DOCKED}
 			echo "docked state"
 				call Cargo.TransferOreToHangar
-				;call Station.CheckList
 				call Station.Undock
 				break
 			variablecase ${STATE_CHANGE_BELT}
