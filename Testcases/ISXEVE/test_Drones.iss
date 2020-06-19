@@ -1,6 +1,6 @@
 #define TESTCASE 1
 
-#include Scripts/EVEBot/Support/TestAPI.iss
+#include ../../Support/TestAPI.iss
 
 /*
 	Test Drone Launch, Recall, ID collection, activedrone member, engage
@@ -24,12 +24,12 @@ function main()
 
 		MyShip:OpenCargo
 		wait 30
-		
+
 		MyShip:GetDrones[DroneBayDrones]
 		UI:UpdateConsole["Launching ${DroneBayDrones.Used} drones..."]
 		EVE:LaunchDrones[DroneBayDrones]
 		wait 50
-		
+
 		Me:GetActiveDrones[ActiveDroneList]
 		UI:UpdateConsole["Drones in Space after 5 seconds: ${ActiveDroneList.Used}"]
 
