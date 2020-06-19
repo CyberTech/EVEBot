@@ -443,22 +443,6 @@ objectdef obj_JetCan
 		; The current code didn't do anything and there is no actual way to close the JetCan right now
 		;(you can only close the main inv window), which IMO should be handled separately from the JetCan's window. So I commented it out. D
 		; -- wco12
-
-		;if (${ID} == 0 && ${This.ActiveCan} > 0)
-		;{
-		;	ID:Set[${This.ActiveCan}]
-		;}
-
-		;if ${This.IsCargoOpen[${ID}]}
-		;{
-		;	UI:UpdateConsole["Closing JetCan"]
-		;	Entity[${ID}]:CloseCargo
-		;	wait WAIT_CARGO_WINDOW
-		;	while ${This.IsCargoOpen[${ID}]}
-		;	{
-		;		wait 1
-		;	}
-		;}
 	}
 }
 
