@@ -1,9 +1,9 @@
 #define TESTCASE 1
 
-#include Scripts/EVEBot/Support/TestAPI.iss
+#include ../../Support/TestAPI.iss
 
 /*
- * 	Test moving all items from station hangar to ship cargo
+ * 	Test moving all items from ship cargo to station item hangar
  *
  *	Revision $Id$
  *
@@ -15,7 +15,7 @@
  *		You: In station
  *		Cargo: In station hangar
  */
- 
+
  function main()
 {
 	variable index:item MyCargo
@@ -27,22 +27,29 @@
 		echo "Must be docked"
 		return
 	}
-	
+
 	echo "Version: ${ISXEVE.Version}"
 
-	MyShip:Open
-	EVE:Execute[OpenHangarFloor]
-	Wait 100
+	if !${EVEWindow[Inventory](exists)}
+	{
+		echo "Opening Inventory..."
+		EVE:Execute[OpenInventory]
+		wait 2
+	}
+
+	EVEWindow[Inventory].ChildWindow[${Me.StationID}, StationItems]:MakeActive
+	Wait 10
 
 	MyShip:GetCargo[MyCargo]
 	echo "Ship Cargo contains ${MyCargo.Used} Items"
 
 	MyCargo:GetIterator[CargoIterator]
 	if ${CargoIterator:First(exists)}
-	do
+	;do
 	{
 		echo "Moving ID: ${CargoIterator.Value} ${CargoIterator.Value.ID} Count: ${CargoIterator.Value.Quantity}"
 		CargoIterator.Value:MoveTo[Hangar, ${CargoIterator.Value.Quantity}]
 	}
-	while ${CargoIterator:Next(exists)}
+	;while ${CargoIterator:Next(exists)}
+
 }

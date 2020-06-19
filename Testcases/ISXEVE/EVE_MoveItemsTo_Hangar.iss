@@ -15,7 +15,7 @@
  *		You: In station
  *		Cargo: In ship cargo
  */
- 
+
 function main()
 {
 	variable index:item MyCargo
@@ -24,9 +24,15 @@ function main()
 
 	echo "Version: $ISXEVE.Version}"
 
-	MyShip:Open
-	EVE:Execute[OpenHangarFloor]
-	Wait 100
+	if !${EVEWindow[Inventory](exists)}
+	{
+		echo "Opening Inventory..."
+		EVE:Execute[OpenInventory]
+		wait 2
+	}
+
+	VEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipCargo]:MakeActive
+	Wait 10
 
 	MyShip:GetCargo[MyCargo]
 	echo "Ship Cargo contains ${MyCargo.Used} Items"
