@@ -1,6 +1,15 @@
 /Branches/Dev/External/isxGamesCommon/
-**/Behaviors/_includes.iss
-**/Behaviors/_variables.iss
+/Branches/*/Behaviors/**/_includes.iss
+/Branches/*/Behaviors/**/_variables.iss
 _ActiveModules.iss
 *.log
 /Testcases/**/lstypes*.txt
+/Branches/Stable/config/*Blacklist.xml
+/Branches/Stable/config/*Config.xml
+/Branches/Stable/config/*Mission Cache.xml
+/Branches/Stable/config/*Training.txt
+/Branches/Stable/config/*Whitelist.xml
+/Branches/Dev/config/*
+!/Branches/Dev/config/Examples
+!/Branches/Dev/config/Examples/*
+
