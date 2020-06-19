@@ -328,7 +328,6 @@ objectdef obj_Asteroids
 		{
 			/* We have a stored location, we should return to it. */
 			UI:UpdateConsole["Returning to last location (${Bookmarks.StoredLocation})"]
-			call Ship.TravelToSystem ${EVE.Bookmark[${Bookmarks.StoredLocation}].SolarSystemID}
 			call Ship.WarpToBookMarkName "${Bookmarks.StoredLocation}" ${FleetWarp}
 			Ship:Activate_SurveyScanner
 
