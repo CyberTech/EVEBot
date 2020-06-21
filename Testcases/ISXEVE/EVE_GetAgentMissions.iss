@@ -1,5 +1,5 @@
 #define TESTCASE 1
-#include Scripts/EVEBot/Support/TestAPI.iss
+#include ../../Support/TestAPI.iss
 
 /*
 	Test Agent Mission lists 

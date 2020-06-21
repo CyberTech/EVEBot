@@ -1,6 +1,6 @@
 #define TESTCASE 1
 
-#include Scripts/EVEBot/Support/TestAPI.iss
+#include ../../Support/TestAPI.iss
 
 /*
  * 	Test moving all items from ship cargo to station hangar

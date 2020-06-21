@@ -10,7 +10,7 @@
 
 */
 
-#include Scripts/EVEBot/Support/TestAPI.iss
+#include ../../Support/TestAPI.iss
 #include ../Branches/Dev/core/obj_Station.iss
 
 
