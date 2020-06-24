@@ -448,9 +448,10 @@ objectdef obj_Combat
 				call Station.Dock
 			}
 
-			EVE:Execute[OpenHangarFloor]
-			wait 10
-			MyShip:GetCargo[ContainerItems]
+			; Not sure why we're unloading everything in our hold before loading ammo. Check later - CT
+			call Inventory.ShipCargo.Activate
+			Inventory.Current:GetItems[ContainerItems]
+
 			ContainerItems:GetIterator[CargoIterator]
 			if ${CargoIterator:First(exists)}
 			{
@@ -461,10 +462,10 @@ objectdef obj_Combat
 				}
 				while ${CargoIterator:Next(exists)}
 			}
-			EVEWindow[ByName, "hangarFloor"]:StackAll
-			wait 20
-			ContainerItems:Clear
-			Me.Station:GetHangarItems[ContainerItems]
+			Inventory.Current:StackAll
+
+			call Inventory.StationHangar.Activate ${Me.Station.ID}
+			Inventory.Current:GetItems[ContainerItems]
 		}
 		else
 		{
@@ -478,19 +479,17 @@ objectdef obj_Combat
 			{
 				call Ammospots.WarpTo
 				UI:UpdateConsole["Restocking ammo"]
-				call Ship.OpenCargo
 				; If a corp hangar array is on grid - drop loot
 				if ${Entity["TypeID = 17621"].ID} != NULL
 				{
 					UI:UpdateConsole["Restocking from ${Entity["TypeID = 17621"]} (${Entity["TypeID = 17621"].ID})"]
-					call Ship.Approach ${Entity["TypeID = 17621"].ID} 2000
-					call Ship.OpenCargo
-					Entity["TypeID = 17621"]:Open
 
 					; Drop off all loot/leftover ammo
 					; TODO - don't dump the ammo we're using for our own weapons. Do dump other ammo that we might have looted.
 					call Cargo.TransferCargoToCorpHangarArray
 
+					call Ship.Approach ${Entity["TypeID = 17621"].ID} 2000
+					Entity["TypeID = 17621"]:Open
 					Entity["TypeID = 17621"]:GetCargo[ContainerItems]
 				}
 
@@ -506,6 +505,8 @@ objectdef obj_Combat
 				}
 			}
 		}
+
+
 		ContainerItems:GetIterator[CargoIterator]
 		if ${CargoIterator:First(exists)}
 		{

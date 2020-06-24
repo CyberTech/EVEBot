@@ -265,20 +265,6 @@ objectdef obj_Ship
 		return ${Math.Calc[${MyShip.CargoCapacity}-${MyShip.UsedCargoCapacity}]}
 	}
 
-	member:float CargoUsedSpace()
-	{
-		if !${MyShip(exists)}
-		{
-			return 0
-		}
-
-		if ${MyShip.UsedCargoCapacity} < 0
-		{
-			return ${MyShip.CargoCapacity}
-		}
-		return ${MyShip.UsedCargoCapacity}
-	}
-
 	method StackCargoHold()
 	{
 		if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipCargo](exists)}
@@ -362,37 +348,6 @@ objectdef obj_Ship
 			return TRUE
 		}
 		return FALSE
-	}
-
-	method OpenOreHold()
-	{
-		if !${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipOreHold](exists)}
-		{
-			MyShip:Open
-		}
-	}
-
-	member:bool OreHoldEmpty()
-	{
-		if !${MyShip(exists)}
-		{
-			return FALSE
-		}
-		if ${This.OreHoldUsedCapacity.Int} == 0
-		{
-			return TRUE
-		}
-		return FALSE
-	}
-
-
-	method StackCorpHangar()
-	{
-		if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipFleetHangar](exists)}
-		{
-			EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipFleetHangar]:MakeActive
-			EVEWindow["Inventory"]:StackAll
-		}
 	}
 
 	member:float CorpHangarMinimumFreeSpace()
@@ -1728,45 +1683,6 @@ objectdef obj_Ship
 		}
 	}
 
-	member:bool IsCargoOpen()
-	{
-		if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipCargo](exists)}
-		{
-			return TRUE
-		}
-		return FALSE
-	}
-
-	; TODO - Delete this
-	function OpenCargo()
-	{
-		if !${This.IsCargoOpen}
-		{
-			UI:UpdateConsole["Opening Ship Cargohold"]
-			MyShip:Open
-			wait WAIT_CARGO_WINDOW
-			EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipCargo]:MakeActive
-		}
-		EVEWindow[ByItemID, ${MyShip.ID}]:StackAll
-		wait 5
-	}
-
-	function CloseCargo()
-	{
-		if ${This.IsCargoOpen}
-		{
-			UI:UpdateConsole["Closing Ship Cargohold"]
-			EVEWindow["Inventory"]:Close
-			wait WAIT_CARGO_WINDOW
-			while ${This.IsCargoOpen}
-			{
-				wait 1
-			}
-			wait 10
-		}
-	}
-
-
 	function WarpToID(int64 Id, int WarpInDistance=0, bool WarpFleet=FALSE)
 	{
 		if (${Id} <= 0)
@@ -2896,14 +2812,6 @@ objectdef obj_Ship
 			UI:UpdateConsole["Locking ${Entity[${TargetID}].Name}: ${EVEBot.MetersToKM_Str[${Entity[${TargetID}].Distance}]}"]
 			Entity[${TargetID}]:LockTarget
 			wait 1
-		}
-	}
-
-	function StackAll()
-	{
-		if ${This.IsCargoOpen}
-		{
-			EVEWindow[ByItemID, ${MyShip.ID}]:StackAll
 		}
 	}
 

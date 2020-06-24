@@ -76,15 +76,13 @@ objectdef obj_Courier
 			case PICKUP
 				UI:UpdateConsole["obj_Courier: MoveToPickup"]
 				call Agents.MoveToPickup
-				UI:UpdateConsole["obj_Courier: TransferCargoToShip"]
-				wait 100
-				call Cargo.TransferCargoToShip
+				call Cargo.TransferHangarItemToShip
 				bHaveCargo:Set[TRUE]
 				break
 			case DROPOFF
 				UI:UpdateConsole["obj_Courier: MoveToDropOff"]
 				call Agents.MoveToDropOff
-				wait 100
+
 				UI:UpdateConsole["obj_Courier: TurnInMission"]
 				call Agents.TurnInMission
 				bHaveCargo:Set[FALSE]

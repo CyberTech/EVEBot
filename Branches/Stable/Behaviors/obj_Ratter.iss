@@ -259,9 +259,8 @@ objectdef obj_Ratter
 						This.CurrentState:Set["FIGHT"]
 						break
 					}
+					call Inventory.ShipCargo.Activate
 					Wreck.Value:Open
-					wait 10
-					call Ship.OpenCargo
 					wait 10
 					Wreck.Value:GetCargo[Items]
 					UI:UpdateConsole["obj_Ratter: DEBUG:  Wreck contains ${Items.Used} items.", LOG_DEBUG]

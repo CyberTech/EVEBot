@@ -322,25 +322,10 @@ objectdef obj_Hauler
 					break
 				}
 				
-				call Cargo.OpenHolds
-				Ship:StackCargoHold
 				call Cargo.TransferCargoToStationHangar
-				if ${MyShip.HasOreHold}
-				{
-					call Cargo.OpenHolds
-					wait 10
-					EVEinvWindow[Inventory]:MakeChildActive[SpecializedOreHold]
-					wait 10
-					Ship:StackOreHold
-					wait 10
-					call Cargo.TransferCargoFromShipOreHoldToStation
-					wait 10
-					EVEinvWindow[Inventory]:MakeChildActive[FleetHangar]
-					wait 10
-					Ship:StackCorpHangar
-					wait 10
-					call Cargo.TransferCargoFromShipCorporateHangarToStation
-				}
+				call Cargo.TransferCargoFromShipOreHoldToStation
+				call Cargo.TransferCargoFromShipCorporateHangarToStation
+
 				call Station.Undock
 				relay all -event EVEBot_HaulerMSG ${Ship.CargoFreeSpace}
 				break
@@ -514,13 +499,8 @@ objectdef obj_Hauler
 		}
 		
 		; Open cargohold. If in orca or rorq open the rest
-		MyShip:Open
-		wait 10
-		call Ship.OpenCargo
-		wait 10
-		Ship:StackOreHold
-		wait 10
-		Ship:StackCorpHangar
+		call Inventory.ShipOreHold.Activate
+		call Inventory.ShipFleetHangar.Activate
 		
 		;Construct the list of jet cans near by
 		This:BuildJetCanList[${MasterID}]
@@ -795,8 +775,6 @@ objectdef obj_Hauler
 			call Ship.WarpToFleetMember ${charID}
 		}
 
-		call Ship.OpenCargo
-
 		This:BuildJetCanList[${charID}]
 
 		variable iterator Ent
@@ -804,8 +782,6 @@ objectdef obj_Hauler
 		if ${Ent:First(exists)}
 		do
 		{
-			call Ship.OpenCargo
-
 			Ent.Value:Approach
 
 			; approach within tractor range and tractor entity
@@ -1080,8 +1056,6 @@ objectdef obj_Hauler
 			}
 			call Ship.WarpToFleetMember ${charID}
 		}
-
-		call Ship.OpenCargo
 
 		This:BuildJetCanList[${charID}]
 		while ${Entities.Peek(exists)}

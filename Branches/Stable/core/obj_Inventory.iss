@@ -47,7 +47,7 @@ objectdef obj_EVEWindow_Proxy
 
 		if ${This.InvName.NotNULLOrEmpty}
 		{
-			if !${EVEWindowParams.NotNULLOrEmpty}
+			if ${EVEWindowParams.NotNULLOrEmpty}
 			{
 				EVEWindowParams:Concat["\,"]
 			}
@@ -56,7 +56,7 @@ objectdef obj_EVEWindow_Proxy
 
 		if ${This.InvLocation.NotNULLOrEmpty}
 		{
-			if !${EVEWindowParams.NotNULLOrEmpty}
+			if ${EVEWindowParams.NotNULLOrEmpty}
 			{
 				EVEWindowParams:Concat["\,"]
 			}
@@ -66,6 +66,7 @@ objectdef obj_EVEWindow_Proxy
 
 	member:string GetFallthroughObject()
 	{
+		echo "EVEWindow[Inventory].ChildWindow[${EVEWindowParams}]"
 		return "EVEWindow[Inventory].ChildWindow[${EVEWindowParams}]"
 	}	
 
@@ -75,12 +76,15 @@ objectdef obj_EVEWindow_Proxy
   ~ ChildWindow["NAME","LOCATION"]       :: the child with the given "NAME" at the given "LOCATION"
   ~ ChildWindow[ID#,"NAME"]              :: the child with the given ID# and the given "NAME"
   ~ ChildWindow[ID#,"NAME","LOCATION"]   :: the child with the given ID# and "NAME", at the given "LOCATION"
+
+	If ID is not specified, but Name is, MyShip.ID is assumed
+	Note that some window types REQUIRE an ID. These will cause an error message to be printed instead of defaulting to MyShip.ID
 */
 	method SetLocation(string _Name, int64 _ID=-1, string _Location="")
 	{
-		InvID:Set[${_ID}]
-		InvName:Set[${_Name}]
-		InvLocation:Set[${_Location}]
+		This.InvID:Set[${_ID}]
+		This.InvName:Set[${_Name}]
+		This.InvLocation:Set[${_Location}]
 		This:SetFallThroughParams[]
 	}
 
@@ -93,11 +97,17 @@ objectdef obj_EVEWindow_Proxy
 
 		if ${_ID} == -1 && ${This.InvID} == -1
 		{
-			if ${Inventory.IDRequired.Contains[${This.InvName}]} || !${This.InvLocation.NotNULLOrEmpty}
+			if ${Inventory.IDRequired.Contains[${This.InvName}]} 
 			{
 				UI:UpdateConsole["Inventory.${This.ObjectName}: Station or Entity ID Required for this container type", LOG_CRITICAL]
 				return FALSE
 			}
+			if ${This.InvName.Length} == 0
+			{
+				UI:UpdateConsole["Inventory.${This.ObjectName}: Neither Name nor ID were specified", LOG_CRITICAL]
+				return FALSE
+			}
+
 			This.InvID:Set[${MyShip.ID}]
 		}
 		elseif ${_ID} != -1 
@@ -122,6 +132,7 @@ objectdef obj_EVEWindow_Proxy
 
 		if (!${${This.GetFallthroughObject}(exists)})
 		{
+			;UI:UpdateConsole["Inventory.${This.ObjectName}: Error: ${This.GetFallthroughObject} doesn't exist", LOG_CRITICAL]
 			return FALSE
 		}
 

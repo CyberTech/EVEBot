@@ -111,13 +111,11 @@ objectdef obj_Scavenger
 		{
 			call Ship.WarpToBookMarkName ${Config.Combat.AmmoBookmark}
 			UI:UpdateConsole["Dropping off Loot"]
-			call Ship.OpenCargo
 			; If a corp hangar array is on grid - drop loot
 			if ${Entity[TypeID = 17621].ID} != NULL
 			{
 				UI:UpdateConsole["Dropping off Loot at ${Entity[TypeID = 17621]} (${Entity[TypeID = 17621].ID})"]
 				call Ship.Approach ${Entity[TypeID = 17621].ID} 1500
-				call Ship.OpenCargo
 				Entity[${Entity[TypeID = 17621].ID}]:Open
 
 				call Cargo.TransferCargoToCorpHangarArray
@@ -234,9 +232,8 @@ objectdef obj_Scavenger
 
 						;echo "Salvaging: Looting"
 						call Ship.Approach ${Target.Value.ID} LOOT_RANGE
+						call Inventory.ShipCargo.Activate
 						Target.Value:Open
-						wait 10
-						call Ship.OpenCargo
 						wait 10
 						Target.Value:GetCargo[Items]
 						UI:UpdateConsole["obj_Scavenger: DEBUG:  Wreck contains ${Items.Used} items."]

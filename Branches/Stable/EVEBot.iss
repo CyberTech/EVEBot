@@ -15,6 +15,7 @@
 #include core/obj_Drones.iss
 #include core/obj_Ship.iss
 #include core/obj_Station.iss
+#include core/obj_Inventory.iss
 #include core/obj_Cargo.iss
 #include core/obj_EVEBotUI.iss
 #include core/obj_Bookmarks.iss
@@ -84,6 +85,7 @@ function main()
 	declarevariable Asteroids obj_Asteroids script
 	declarevariable Ship obj_Ship script
 	declarevariable Station obj_Station script
+	declarevariable Inventory obj_Inventory script
 	declarevariable Cargo obj_Cargo script
 	declarevariable Skills obj_Skills script
 	declarevariable Bookmarks obj_Bookmarks script

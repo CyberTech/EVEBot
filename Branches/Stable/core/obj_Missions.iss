@@ -203,10 +203,8 @@ objectdef obj_Missions
 		variable int        TypeID
 		variable int        ItemQuantity
 
-		call Cargo.CloseHolds
-		call Cargo.OpenHolds
 
-	    Agents:SetActiveAgent[${EVE.Agent[id, ${agentID}].Name}]
+		Agents:SetActiveAgent[${EVE.Agent[id, ${agentID}].Name}]
 
 		if ${This.MissionCache.Volume[${agentID}]} == 0
 		{
@@ -248,7 +246,6 @@ objectdef obj_Missions
 			{
 				UI:UpdateConsole["obj_Missions: MoveToPickup"]
 				call Agents.MoveToPickup
-				UI:UpdateConsole["obj_Missions: TransferCargoToShip"]
 				wait 50
 				call Cargo.TransferHangarItemToShip ${This.MissionCache.TypeID[${agentID}]}
 				allDone:Set[${Cargo.LastTransferComplete}]
@@ -257,9 +254,6 @@ objectdef obj_Missions
 			UI:UpdateConsole["obj_Missions: MoveToDropOff"]
 			call Agents.MoveToDropOff
 			wait 50
-
-			call Cargo.CloseHolds
-			call Cargo.OpenHolds
 
 			UI:UpdateConsole["DEBUG: RunCourierMission: Checking ship's cargohold for ${QuantityRequired} units of ${itemName}."]
 			MyShip:GetCargo[CargoIndex]
@@ -338,16 +332,13 @@ objectdef obj_Missions
 		itemName:Set[${EVEDB_Items.Name[${This.MissionCache.TypeID[${agentID}]}]}]
 		QuantityRequired:Set[${Math.Calc[${This.MissionCache.Volume[${agentID}]}/${EVEDB_Items.Volume[${This.MissionCache.TypeID[${agentID}]}]}]}]}]
 
-		call Cargo.CloseHolds
-		call Cargo.OpenHolds
-
-		;;; Check the cargohold of your ship
+		; Check the cargohold of your ship
 		MyShip:GetCargo[CargoIndex]
 		CargoIndex:GetIterator[CargoIterator]
 		if ${CargoIterator:First(exists)}
 		{
 			do
-			{
+			{ 
 				TypeID:Set[${CargoIterator.Value.TypeID}]
 				ItemQuantity:Set[${CargoIterator.Value.Quantity}]
 				UI:UpdateConsole["DEBUG: RunTradeMission: Ship's Cargo: ${ItemQuantity} units of ${CargoIterator.Value.Name}(${TypeID})."]

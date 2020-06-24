@@ -207,7 +207,7 @@ objectdef obj_Miner
 			{
 				;	If we're at our panic location bookmark and HARD STOP has been called for, just idle until user intervention
 				if ${This.AtPanicBookmark}
-				{	
+				{
 					This.CurrentState:Set["IDLE"]
 					return
 				}
@@ -232,13 +232,13 @@ objectdef obj_Miner
 					This.CurrentState:Set["IDLE"]
 					return
 				}
-			
+
 				if ${This.AtPanicBookmark}
 				{
 					This.CurrentState:Set["IDLE"]
 					return
 				}
-				
+
 				This.CurrentState:Set["FLEE"]
 				UI:UpdateConsole["FLEE: Low Standing player or system unsafe, fleeing"]
 				return
@@ -274,7 +274,7 @@ objectdef obj_Miner
 		{
 			if ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]}
 			{
-				if !${WarpToOrca} 
+				if !${WarpToOrca}
 				{
 					if ${This.AtPanicBookmark}
 					{
@@ -556,7 +556,6 @@ objectdef obj_Miner
 				;	Note:  I need to replace the shuffle with 3 direct movements
 				if ${Config.Miner.OrcaMode}
 				{
-					call Cargo.OpenHolds
 					call Cargo.TransferCargoFromShipOreHoldToStation
 					call Cargo.TransferCargoFromShipCorporateHangarToStation
 					call Cargo.TransferOreToStationHangar
@@ -576,11 +575,6 @@ objectdef obj_Miner
 			    LastUsedCargoCapacity:Set[0]
 				call Station.Undock
 				wait 600 ${Me.InSpace}
-				if ${Config.Miner.OrcaMode}
-				{
-					Ship:Open
-				}
-				call Cargo.OpenHolds
 				break
 
 			;	This means we're in space and should mine some more ore!  Only one choice here - MINE!
@@ -802,7 +796,7 @@ objectdef obj_Miner
 						{
 							UI:UpdateConsole["ALERT:  The orca is not in this belt.  Warping there first to unload."]
 							UI:UpdateConsole["Debug: Fleet Warping to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
-							Fleet:WarpTo[${Config.Miner.DeliveryLocation]
+							Fleet:WarpTo[${Config.Miner.DeliveryLocation}]
 							break
 						}
 
@@ -836,23 +830,11 @@ objectdef obj_Miner
 							}
 						}
 
-						;	Open the Orca if it's not open yet
-						if ${Entity[${Orca.Escape}](exists)}
+						if ${Entity[${Orca.Escape}](exists)} && \
+							${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && \
+							${EVEWindow[ByItemID, ${Entity[${Orca.Escape}]}](exists)}
 						{
-							if ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE
-							{
-								if !${EVEWindow[ByItemID, ${Entity[${Orca.Escape}]}](exists)}
-								{
-									Entity[${Orca.Escape}]:Open
-									wait 20
-								}
-
-								if ${EVEWindow[ByItemID, ${Entity[${Orca.Escape}]}](exists)}
-								{
-									call Ship.OpenCargo
-									call Cargo.TransferOreToShipCorpHangar ${Entity[${Orca.Escape}]}
-								}
-							}
+							call Cargo.TransferOreToShipCorpHangar ${Entity[${Orca.Escape}]}
 						}
 
 						break
@@ -1015,8 +997,6 @@ objectdef obj_Miner
 			call Defend
 		}
 
-		call Ship.OpenCargo
-
 		;	We need to make sure we're near our orca if we're using it as a delivery location
 		if ${Config.Miner.DeliveryLocationTypeName.Equal[Orca]}
 		{
@@ -1077,6 +1057,8 @@ objectdef obj_Miner
 			}
 
 
+			call Inventory.ShipOreHold.Activate
+			call Inventory.ShipCargo.Activate
 			;	This performs Orca deliveries if we've got at least a tenth of our cargo hold full
 			if (${MyShip.HasOreHold} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoTenthFull}
 			{
@@ -1091,7 +1073,6 @@ objectdef obj_Miner
 				if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && ${EVEWindow[ByItemID, ${Entity[${Orca.Escape}]}](exists)}
 				{
 					UI:UpdateConsole["Emptying ore to ${Entity[${Orca.Escape}].Name}'s Corporate Hangars"]
-					call Ship.OpenCargo
 					call Cargo.TransferOreToShipCorpHangar ${Entity[${Orca.Escape}]}
 					call Cargo.ReplenishCrystals ${Entity[${Orca.Escape}]}
 				}
@@ -1394,8 +1375,6 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 			return
 		}
 
-		call Ship.OpenCargo
-
 		;	If configured to launch combat drones and there's a shortage, force a DropOff so we go to our delivery location
 		 if ${Config.Combat.LaunchCombatDrones} && ${Ship.Drones.CombatDroneShortage}
 		{
@@ -1414,7 +1393,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 				wait 20
 			}
 			UI:UpdateConsole["Miner.OrcaInBelt: No asteroids detected, forcing belt change"]
-			call Asteroids.MoveToField TRUE TRUE TRUE
+			call Asteroids.MoveToField TRUE TRUE
 			call Asteroids.UpdateList
 		}
 
@@ -1481,28 +1460,32 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 			}
 		}
 
-		;	This section is for moving ore into the ore and cargo holds, so they will fill before the Corporate Hangar
-		Ship:Open
-		call Ship.OpenCargo
+		;	This section is for moving ore into the Orca ore and cargo holds, so they will fill before the Corporate Hangar, to which the miner is depositing
+		call Inventory.ShipOreHold.Activate
+		call Inventory.ShipFleetHangar.Activate
 
 		if !${Ship.CorpHangarEmpty}
 		{
-			if !${Ship.OreHoldFull} && !${Config.Miner.DeliveryLocationTypeName.Equal["No Delivery"]} && !${Config.Miner.DeliveryLocationTypeName.Equal["Jetcan"]}
-			{
-				call Cargo.TransferCargoFromShipCorporateHangarToOreHold
-				Ship:StackOreHold
-				return
-			}
-			if !${Ship.CargoFull} && !${Config.Miner.DeliveryLocationTypeName.Equal["No Delivery"]}
-			{
-				call Cargo.TransferCargoFromShipCorporateHangarToCargoHold
-				Ship:StackCargoHold
-				return
-			}
 			if ${Config.Miner.DeliveryLocationTypeName.Equal["No Delivery"]}
 			{
+				; A hauler will be picking up from the fleet hold. Balance between keeping the fleet hold populated, but not full
 				call Cargo.TransferCargoFromCargoHoldToShipCorporateHangar
 				relay all -event EVEBot_Orca_Cargo ${Ship.CorpHangarUsedSpace[TRUE]}
+			}
+			else
+			{
+				if !${Ship.OreHoldFull} && !${Config.Miner.DeliveryLocationTypeName.Equal["Jetcan"]}
+				{
+					call Cargo.TransferCargoFromShipCorporateHangarToOreHold
+					Ship:StackOreHold
+					return
+				}
+				if !${Ship.CargoFull}
+				{
+					call Cargo.TransferCargoFromShipCorporateHangarToCargoHold
+					Ship:StackCargoHold
+					return
+				}
 			}
 		}
 
@@ -1813,7 +1796,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 		}
 
 	}
-	
+
 	member:int64 Defend_Atomize_1(int64 Attacking)
 	{
 		variable iterator GetData

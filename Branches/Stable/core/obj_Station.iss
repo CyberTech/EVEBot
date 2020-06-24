@@ -32,43 +32,11 @@ objectdef obj_EVEDB_Stations
 
 objectdef obj_Station
 {
-	variable index:item StationCargo
 	variable index:item DronesInStation
 
 	method Initialize()
 	{
 		UI:UpdateConsole["obj_Station: Initialized", LOG_MINOR]
-	}
-
-	member IsHangarOpen()
-	{
-		if ${EVEWindow[Inventory].ChildWindow[StationItems](exists)}
-		{
-			EVEWindow[Inventory].ChildWindow[StationItems]:MakeActive
-			return TRUE
-		}
-		elseif ${EVEWindow[Inventory].ChildWindow[StructureItemHangar](exists)}
-		{
-			EVEWindow[Inventory].ChildWindow[StructureItemHangar]:MakeActive
-			return TRUE
-		}
-		else
-		{
-			return FALSE
-		}
-	}
-
-	member IsCorpHangarOpen()
-	{
-		if ${EVEWindow[Inventory].ChildWindow[StationCorpHangars](exists)}
-		{
-			EVEWindow[Inventory].ChildWindow[StationCorpHangars]:MakeActive
-			return TRUE
-		}
-		else
-		{
-			return FALSE
-		}
 	}
 
 	member:bool Docked()
@@ -92,88 +60,6 @@ objectdef obj_Station
 	    return FALSE
 	}
 
-	function OpenHangar()
-	{
-		if ${This.Docked} == FALSE
-		{
-			return
-		}
-
-		if !${This.IsHangarOpen}
-		{
-			UI:UpdateConsole["Opening Cargo Hangar"]
-			EVE:Execute[OpenHangarFloor]
-			wait WAIT_CARGO_WINDOW
-			while !${This.IsHangarOpen}
-			{
-				wait 1
-			}
-			wait 10
-		}
-	}
-
-	function OpenCorpHangar()
-	{
-		if ${This.Docked} == FALSE
-		{
-			return
-		}
-
-		if !${This.IsCorpHangarOpen}
-		{
-			UI:UpdateConsole["Opening Corp Cargo Hangar"]
-			EVE:Execute[OpenHangarFloor]
-			wait WAIT_CARGO_WINDOW
-			while !${This.IsCorpHangarOpen}
-			{
-				wait 1
-			}
-			wait 10
-		}
-	}
-
-	function CloseHangar()
-	{
-		return /* no need to close hangars anymore */
-		if ${This.Docked} == FALSE
-		{
-			return
-		}
-
-		if ${This.IsHangarOpen}
-		{
-			UI:UpdateConsole["Closing Cargo Hangar"]
-			EVEWindow[Inventory].ChildWindow[StationItems]:close
-			wait WAIT_CARGO_WINDOW
-			while ${This.IsHangarOpen}
-			{
-				wait 1
-			}
-			wait 10
-		}
-	}
-
-	function CloseCorpHangar()
-	{
-		return /* no need to close hangars anymore? */
-		if ${This.Docked} == FALSE
-		{
-			return
-		}
-
-		if ${This.IsCorpHangarOpen}
-		{
-			UI:UpdateConsole["Closing Corp Cargo Hangar"]
-			EVE:Execute[OpenHangarFloor]
-			wait WAIT_CARGO_WINDOW
-			while ${This.IsCorpHangarOpen}
-			{
-				wait 1
-			}
-			wait 10
-		}
-	}
-
 	function GetStationItems()
 	{
 		while !${Me.InStation}
@@ -182,60 +68,8 @@ objectdef obj_Station
 			wait 10
 		}
 
-		Me:GetHangarItems[This.StationCargo]
-
-		variable iterator CargoIterator
-		This.StationCargo:GetIterator[CargoIterator]
-
-			if ${CargoIterator:First(exists)}
-			do
-			{
-				variable int CategoryID
-				variable string Name
-
-				CategoryID:Set[${CargoIterator.Value.CategoryID}]
-				;echo "${CargoIterator.Value.Name}: ${CargoIterator.Value.CategoryID}"
-				Name:Set[${CargoIterator.Value.Name}]
-
-				;echo "DEBUG: obj_Cargo:TransferToHangar: CategoryID: ${CategoryID} ${Name} - ${ThisCargo.Value.Quantity}"
-				switch ${CategoryID}
-				{
-					default
-						break
-					case 18
-						This.DronesInStation:Insert[${CargoIterator.Value.ID}]
-				}
-			}
-			while ${CargoIterator:Next(exists)}
-	}
-
-	function CheckList()
-	{
-		;BotType Checks
-
-		;General Checks
-		;ToDo Needs to be moved, into correct classes.
-
-		;Awaiting ISXEVE Drone Bay Support
-		/*
-		echo "${Config.Common.DronesInBay} > ${Ship.Drones.DronesInBay}"
-		if ${Config.Common.DronesInBay} > ${Ship.Drones.DronesInBay}
-		{
-		call Station.OpenHangar
-		call This.GetStationItems
-		wait 10
-
-			echo "${Ship.Drones.DronesInStation}"
-			if ${Ship.Drones.DronesInStation} > 0
-			{
-			echo "${Ship.Drones.DronesInStation}"
-			call Ship.Drones.StationToBay
-			}
-
-		call Cargo.CloseHolds
-		}
-		*/
-
+		call Inventory.StationHangar.Activate ${Me.Station.ID}
+		Inventory.StationHangar:GetItems[This.DronesInStation, "CategoryID == 18"]
 	}
 
 	function DockAtStation(int64 StationID)
@@ -336,7 +170,7 @@ objectdef obj_Station
 		}
 		while ${This.Docked}
 		UI:UpdateConsole["Undock: Complete"]
-   		call ChatIRC.Say "Undock: Complete"
+		call ChatIRC.Say "Undock: Complete"
 
 		Config.Common:SetHomeStation[${Entity["(GroupID = 15 || GroupID = 1657)"].Name}]
 

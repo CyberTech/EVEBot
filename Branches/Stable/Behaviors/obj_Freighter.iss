@@ -195,15 +195,12 @@ objectdef obj_Freighter
 			default
 				call This.PickupOrDropoff
 				call Station.Undock
-				call Ship.OpenCargo
 				break
 		}
 	}
 
 	function ContainerTest()
 	{
-		call Cargo.OpenHolds
-
 		if ${Cargo.ShipHasContainers}
 		{
 			variable index:items HangarItems
@@ -212,7 +209,7 @@ objectdef obj_Freighter
 			UI:UpdateConsole["obj_Freighter: Station contains ${HangarItems.Used} items."]
 			if ${HangarItems.Used} > 0
 			{	/* move from hangar to ship */
-				call Cargo.TransferCargoToShip
+				call Cargo.TransferHangarItemToShip
 			}
 			else
 			{	/* move from ship to hangar */
@@ -356,7 +353,7 @@ objectdef obj_Freighter
 			}
 			else
 			{	/* this must be a source station, pickup stuff */
-				call Cargo.TransferCargoToShip
+				call Cargo.TransferHangarItemToShip
 				if ${Cargo.LastTransferComplete}
 				{
 					if ${SourceLocations.Peek(exists)}
