@@ -31,7 +31,7 @@ function main()
 		wait 2
 	}
 
-	VEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipCargo]:MakeActive
+	EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipCargo]:MakeActive
 	Wait 10
 
 	MyShip:GetCargo[MyCargo]
