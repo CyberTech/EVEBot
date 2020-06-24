@@ -411,8 +411,7 @@ objectdef obj_Social
 					${Config.Combat.WLBypassStandings} && !${This.IsWhitelisted[${PilotID},${CorpID},${AllianceID}]} \
 				) )
 			{
-				if ( \
-						(${MeToPilot} == 0 && \
+				if ((${MeToPilot} == 0 && \
 						(${MeToCorp} == 0 && \
 						(${MeToAlliance} == 0 && \
 						(${CorpToPilot} == 0 && \
@@ -437,16 +436,15 @@ objectdef obj_Social
 					UI:UpdateConsole["Standings: ${MeToPilot} ${MeToCorp} ${MeToAlliance} ${CorpToPilot} ${CorpToCorp} ${CorpToAlliance} ${AllianceToCorp} ${AllianceToAlliance}", LOG_DEBUG]
 					return FALSE
 				}
-				elseif ( \
-						(${AllianceToAlliance} != 0 && ${AllianceToAlliance} < ${Config.Combat.LowestStanding}) || \
-						(${AllianceToCorp} != 0 && ${AllianceToCorp} < ${Config.Combat.LowestStanding}) || \
-						(${MeToPilot} != 0 && ${MeToPilot} < ${Config.Combat.LowestStanding}) || \
-						(${MeToCorp} != 0 && ${MeToCorp} < ${Config.Combat.LowestStanding}) || \
-						(${MeToAlliance} != 0 && ${MeToAlliance} < ${Config.Combat.LowestStanding}) || \
-						(${CorpToPilot} != 0 && ${CorpToPilot} < ${Config.Combat.LowestStanding}) || \
-						(${CorpToCorp} != 0 && ${CorpToCorp} < ${Config.Combat.LowestStanding}) || \
-						(${CorpToAlliance} != 0 && ${CorpToAlliance} < ${Config.Combat.LowestStanding}) \
-					)
+				elseif ((${AllianceToAlliance} != 0 && ${AllianceToAlliance} < ${Config.Combat.LowestStanding}) || \
+								(${AllianceToCorp} != 0 && ${AllianceToCorp} < ${Config.Combat.LowestStanding}) || \
+								(${MeToPilot} != 0 && ${MeToPilot} < ${Config.Combat.LowestStanding}) || \
+								(${MeToCorp} != 0 && ${MeToCorp} < ${Config.Combat.LowestStanding}) || \
+								(${MeToAlliance} != 0 && ${MeToAlliance} < ${Config.Combat.LowestStanding}) || \
+								(${CorpToPilot} != 0 && ${CorpToPilot} < ${Config.Combat.LowestStanding}) || \
+								(${CorpToCorp} != 0 && ${CorpToCorp} < ${Config.Combat.LowestStanding}) || \
+								(${CorpToAlliance} != 0 && ${CorpToAlliance} < ${Config.Combat.LowestStanding}) \
+							)
 				{
 					UI:UpdateConsole["elseif ((${AllianceToAlliance} != 0 && ${AllianceToAlliance} < ${Config.Combat.LowestStanding}) || ", LOG_DEBUG]
 					UI:UpdateConsole["   (${AllianceToCorp} != 0 && ${AllianceToCorp} < ${Config.Combat.LowestStanding}) || ", LOG_DEBUG]
