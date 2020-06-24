@@ -1874,6 +1874,7 @@ objectdef obj_Ship
 			switch ${CategoryID}
 			{
 				case CATEGORYID_STATION
+				case CATEGORYID_STRUCTURE
 					MinWarpRange:Set[WARP_RANGE]
 					break
 				case CATEGORYID_CELESTIAL
@@ -2032,6 +2033,7 @@ objectdef obj_Ship
 		{
 			switch ${CategoryID}
 			{
+				case CATEGORYID_STRUCTURE
 				case CATEGORYID_STATION
 					call Station.DockAtStation ${EntityID}
 					break

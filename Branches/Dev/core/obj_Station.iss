@@ -234,7 +234,7 @@ objectdef obj_Station
 	function Dock()
 	{
 		variable int Counter = 0
-		variable int64 StationID = ${Entity[CategoryID = CATEGORYID_STATION && Name = ${Config.Common.HomeStation}].ID}
+		variable int64 StationID = ${Entity[(CategoryID = CATEGORYID_STATION || CategoryID = CATEGORYID_STRUCTURE) && Name = ${Config.Common.HomeStation}].ID}
 
 		if ${Me.InStation}
 		{
@@ -242,12 +242,10 @@ objectdef obj_Station
 			return
 		}
 
-		Logger:Log["Docking at ${StationID}:${Config.Common.HomeStation}"]
-
 		if ${StationID} <= 0 || !${Entity[${StationID}](exists)}
 		{
-			Logger:Log["Warning: Home station not found, going to nearest base", LOG_CRITICAL]
-			StationID:Set[${Entity[CategoryID = CATEGORYID_STATION].ID}]
+			Logger:Log["Warning: Home station '${Config.Common.HomeStation}' not found, going to nearest base", LOG_CRITICAL]
+			StationID:Set[${Entity[(CategoryID = CATEGORYID_STATION || CategoryID = CATEGORYID_STRUCTURE)].ID}]
 		}
 
 		if ${Entity[${StationID}](exists)}
@@ -288,15 +286,15 @@ objectdef obj_Station
 			   Counter:Set[0]
 			   EVE:Execute[CmdExitStation]
 			   Logger:Log["Undock: Unexpected failure, retrying...", LOG_CRITICAL]
-			   Logger:Log["Undock: Debug: EVEWindow[Local]=${EVEWindow[Local](exists)}", LOG_CRITICAL]
-			   Logger:Log["Undock: Debug: Me.InStation=${Me.InStation}", LOG_CRITICAL]
-			   Logger:Log["Undock: Debug: Me.StationID=${Me.StationID}", LOG_CRITICAL]
+			   Logger:Log["Undock:  Debug: EVEWindow[Local]=${EVEWindow[Local](exists)}", LOG_CRITICAL]
+			   Logger:Log["Undock:  Debug: Me.InStation=${Me.InStation}", LOG_CRITICAL]
+			   Logger:Log["Undock:  Debug: Me.StationID=${Me.StationID}", LOG_CRITICAL]
 			}
 		}
 		while ${This.Docked}
 
 		wait 30
-		Config.Common:HomeStation[${Entity[CategoryID = CATEGORYID_STATION].Name}]
+		Config.Common:HomeStation[${Entity[(CategoryID = CATEGORYID_STATION || CategoryID = CATEGORYID_STRUCTURE)].Name}]
 		Logger:Log["Undock: Complete - Home Station set to ${Config.Common.HomeStation}"]
 
 		Ship.RetryUpdateModuleList:Set[1]
