@@ -120,14 +120,15 @@ variable int VersionNum = 0
 ;${Entity[Acceleration Gate].Group} = Warp Gate
 ;${Entity[Acceleration Gate].GroupID} = 366
 
-#define CATEGORYID_CELESTIAL	2
-#define CATEGORYID_STATION 		3
-#define CATEGORYID_MINERAL 		4
-#define CATEGORYID_SHIP    		6
-#define CATEGORYID_CHARGE  		8
-#define CATEGORYID_ENTITY		11
-#define CATEGORYID_ORE     		25
+#define CATEGORYID_CELESTIAL     2
+#define CATEGORYID_STATION       3
+#define CATEGORYID_MINERAL       4
+#define CATEGORYID_SHIP          6
+#define CATEGORYID_CHARGE        8
+#define CATEGORYID_ENTITY       11
+#define CATEGORYID_ORE          25
 #define CATEGORYID_GLACIAL_MASS 25
+#define CATEGORYID_STRUCTURE    65
 
 #define CATEGORYID_STARBASE		23
 #define GROUPID_CONTROL_TOWER   365
