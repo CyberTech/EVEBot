@@ -23,7 +23,7 @@ function main()
 	variable iterator CargoIterator
 	variable index:int64 IDList
 
-	echo "Version: $ISXEVE.Version}"
+	echo "Version: ${ISXEVE.Version}"
 
 	if !${EVEWindow[Inventory](exists)}
 	{
@@ -49,6 +49,10 @@ function main()
 	}
 	while ${CargoIterator:Next(exists)}
 
+	echo " Moving ${IDList.Used} Items to station hangar"
+	EVE:MoveItemsTo[IDList, MyStationHangar, Hangar]
+	IDList:Clear
+
 	EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipOreHold]:MakeActive
 	Wait 10
 
@@ -66,8 +70,9 @@ function main()
 	}
 	while ${CargoIterator:Next(exists)}
 
-	echo "Have ${IDList.Used} Items to move to station hangar"
+	echo " Moving ${IDList.Used} Items to station hangar"
+	EVE:MoveItemsTo[IDList, MyStationHangar, Hangar]
+	IDList:Clear
 
-	EVE:MoveItemsTo[IDList, MyStationHangar]
 	EVEWindow[Inventory].ChildWindow[${Me.Station.ID}, StationItems]:MakeActive
 }
