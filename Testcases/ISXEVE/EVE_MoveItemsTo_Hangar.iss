@@ -50,5 +50,5 @@ function main()
 	;IDList:Insert[${MyCargo[1].ID}]
 	echo "Have ${IDList.Used} Items to move to station hangar"
 
-	EVE:MoveItemsTo[IDList, Hangar]
+	EVE:MoveItemsTo[IDList, ${Me.Station.ID}, Hangar]
 }
