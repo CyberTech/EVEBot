@@ -15,7 +15,7 @@
  *		You: In station
  *		Cargo: In station hangar
  */
- 
+
  function main()
 {
 	variable index:item MyCargo
@@ -24,12 +24,20 @@
 
 	echo "Version: ${ISXEVE.Version}"
 
-	MyShip:Open
-	EVE:Execute[OpenHangarFloor]
-	Wait 100
+	if !${EVEWindow[Inventory](exists)}
+	{
+		echo "Opening Inventory..."
+		EVE:Execute[OpenInventory]
+		wait 2
+	}
+
+	EVEWindow[Inventory].ChildWindow[${Me.Station.ID}, StationItems]:MakeActive
+	Wait 10
 
 	Me.Station:GetHangarItems[MyCargo]
-	echo "Station Hangar contains ${MyCargo.Used} Items"
+	;MyCargo:RemoveByQuery[${LavishScript.CreateQuery["CategoryID == CATEGORYID_CHARGE"]}, FALSE]
+	;MyCargo:Collapse
+	echo "Station Hangar contains ${MyCargo.Used} matching items"
 
 	MyCargo:GetIterator[CargoIterator]
 	if ${CargoIterator:First(exists)}
@@ -40,9 +48,8 @@
 	}
 	while ${CargoIterator:Next(exists)}
 
-	;IDList:Clear
-	;IDList:Insert[${MyCargo[1].ID}]
 	echo "Have ${IDList.Used} Items to move to ship cargo"
 
-	EVE:MoveItemsTo[IDList, MyShip]
+	EVE:MoveItemsTo[IDList, MyShip, CargoHold]
+	EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipCargo]:MakeActive
 }
