@@ -48,7 +48,7 @@
 	;do
 	{
 		echo "Moving ID: ${CargoIterator.Value} ${CargoIterator.Value.ID} Count: ${CargoIterator.Value.Quantity}"
-		CargoIterator.Value:MoveTo[Hangar, ${CargoIterator.Value.Quantity}]
+		CargoIterator.Value:MoveTo[MyStationHangar, CargoHold, ${CargoIterator.Value.Quantity}]
 	}
 	;while ${CargoIterator:Next(exists)}
 

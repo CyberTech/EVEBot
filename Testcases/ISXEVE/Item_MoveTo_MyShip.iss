@@ -30,9 +30,15 @@
 	
 	echo "Version: ${ISXEVE.Version}"
 
-	MyShip:Open
-	EVE:Execute[OpenHangarFloor]
-	Wait 100
+	if !${EVEWindow[Inventory](exists)}
+	{
+		echo "Opening Inventory..."
+		EVE:Execute[OpenInventory]
+		wait 2
+	}
+
+	EVEWindow[Inventory].ChildWindow[${Me.Station.ID}, StationItems]:MakeActive
+	Wait 10
 
 	Me.Station:GetHangarItems[MyCargo]
 	echo "Station Hangar contains ${MyCargo.Used} Items"
@@ -42,7 +48,10 @@
 	do
 	{
 		echo "Moving ID: ${CargoIterator.Value} ${CargoIterator.Value.ID} Count: ${CargoIterator.Value.Quantity}"
-		CargoIterator.Value:MoveTo[MyShip, ${CargoIterator.Value.Quantity}]
+		CargoIterator.Value:MoveTo[MyShip, CargoHold, ${CargoIterator.Value.Quantity}]
+		;CargoIterator.Value:MoveTo[MyShip]
 	}
 	while ${CargoIterator:Next(exists)}
+
+	EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipCargo]:MakeActive
 }
