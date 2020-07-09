@@ -256,30 +256,33 @@ objectdef obj_Asteroids
 			; A <> B 29km
 			variable index:entity MyTargets
 			variable iterator MyTarget
-			Me:GetTargets[MyTargets]
-			MyTargets:GetIterator[MyTarget]
 			variable bool AbortLoop = FALSE
 			variable float MaxDistFromTarget
 			MaxDistFromTarget:Set[${Math.Calc[${Ship.OptimalMiningRange} * 0.75]}]
-			if ${MyTarget:First(exists)}
+			Me:GetTargets[MyTargets]
+			MyTargets:GetIterator[MyTarget]
+			if ${AsteroidIterator.Value.Distance} > ${Ship.OptimalMiningRange}
 			{
-				do
+				; Only run this if the potential asteroid is going to require movement.
+				if ${MyTarget:First(exists)}
 				{
-					if ${AsteroidIterator.Value.DistanceTo[${MyTarget.Value.ID}]} > ${MaxDistFromTarget}
+					do
 					{
-						; We have a locked asteroid that's too far from this one;  No, this is not perfect because we don't know our position
-						UI:UpdateConsole["DEBUG: obj_Asteroids:NearestAsteroid: Skipping ${AsteroidIterator.Value.ID} (Distance from target ${MyTarget.Value.ID} > ${MaxDistFromTarget})", LOG_DEBUG]
-						AbortLoop:Set[TRUE]
-						break
+						if ${AsteroidIterator.Value.DistanceTo[${MyTarget.Value.ID}]} > ${MaxDistFromTarget}
+						{
+							; We have a locked asteroid that's too far from this one;  No, this is not perfect because we don't know our position
+							UI:UpdateConsole["DEBUG: obj_Asteroids:NearestAsteroid: Skipping ${AsteroidIterator.Value.ID} (Distance from target ${MyTarget.Value.ID} > ${MaxDistFromTarget})", LOG_DEBUG]
+							AbortLoop:Set[TRUE]
+							break
+						}
+					}
+					while ${MyTarget:Next(exists)}
+					if ${AbortLoop}
+					{
+						continue
 					}
 				}
-				while ${MyTarget:Next(exists)}
-				if ${AbortLoop}
-				{
-					continue
-				}
 			}
-
 			; Otherwise, we've reached a potential asteroid we can use.
 			break
 		}
