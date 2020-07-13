@@ -1301,13 +1301,13 @@ objectdef obj_Cargo
 		}
 		else
 		{
-			if ${typeID == -1}
+			if ${typeID} == -1
 			{
-				UI:UpdateConsole["Transferring all items from Station Hangar"]
+				UI:UpdateConsole["Transferring all items from Station Hangar to ship"]
 			}
 			else
 			{
-				UI:UpdateConsole["Transferring Item (${typeID}) from Station Hangar"]
+				UI:UpdateConsole["Transferring Item (${typeID}) from Station Hangar to ship"]
 				querystr:Set["TypeID == ${typeID}"]
 			}
 
