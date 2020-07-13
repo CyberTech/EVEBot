@@ -425,6 +425,10 @@ objectdef obj_Cargo
 	{
 		variable int QuantityToMove
 		variable iterator CargoIterator
+		if !${MyShip.HasOreHold}
+		{
+			return
+		}
 
 		call Inventory.ShipOreHold.Activate
 		if !${Inventory.ShipOreHold.IsCurrent}
@@ -1218,9 +1222,7 @@ objectdef obj_Cargo
 				{
 					UI:UpdateConsole["Moving ${ListToMove.Used} items to hangar."]
 					CargoIterator.Value:MoveTo[${dest}, FleetHangar, ${CargoIterator.Value.Quantity}]
-					;EVE:MoveItemsTo[ListToMove, ${dest}, CorpHangars]
 					wait 10
-					;EVEWindow[ByItemID, ${dest}]:StackAll
 				}
 			}
 			while ${CargoIterator:Next(exists)}

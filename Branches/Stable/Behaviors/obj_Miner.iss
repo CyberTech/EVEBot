@@ -562,14 +562,8 @@ objectdef obj_Miner
 				}
 				else
 				{
-					if ${MyShip.HasOreHold}
-					{
-						call Cargo.TransferCargoFromShipOreHoldToStation
-					}
-					else
-					{
 						call Cargo.TransferOreToStationHangar
-					}
+						call Cargo.TransferCargoFromShipOreHoldToStation
 				}
 
 			    LastUsedCargoCapacity:Set[0]
