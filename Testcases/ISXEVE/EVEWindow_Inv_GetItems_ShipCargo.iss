@@ -20,7 +20,7 @@ function main()
 	}
 
 	EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipCargo]:MakeActive
-	Wait 10
+  wait 50
 
   variable index:item itemlist
   EVEWindow[Inventory].ActiveChild:GetItems[itemlist]
