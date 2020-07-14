@@ -360,6 +360,7 @@ objectdef obj_Freighter
 					{
 						SourceLocations:Dequeue
 					}
+					This.ExcessCargoAtSource:Set[FALSE]
 				}
 				else
 				{
