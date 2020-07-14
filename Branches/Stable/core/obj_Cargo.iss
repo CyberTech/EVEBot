@@ -1315,28 +1315,27 @@ objectdef obj_Cargo
 			if ${Inventory.StationHangar.IsCurrent}
 			{
 				Inventory.Current:GetItems[This.CargoToTransfer, ${querystr}]
+				if ${This.CargoToTransfer.Used} == 0
+				{	
+					UI:UpdateConsole["Couldn't find any cargo in the station hangar"]
+					m_LastTransferComplete:Set[TRUE]
+				}
+
+				call This.TransferListToShip
+				EVEWindow[ByItemID, ${MyShip.ID}]:StackAll
+				Ship:UpdateBaselineUsedCargo[]
+
+				; Re-check the cargo.
+				Inventory.Current:GetItems[This.CargoToTransfer, ${querystr}]
 				if ${This.CargoToTransfer.Used} > 0
 				{
-					call This.TransferListToShip
-					EVEWindow[ByItemID, ${MyShip.ID}]:StackAll
-					Ship:UpdateBaselineUsedCargo[]
-
-					Inventory.Current:GetItems[This.CargoToTransfer, ${querystr}]
-					if ${This.CargoToTransfer.Used} > 0
-					{
-						UI:UpdateConsole["Could not carry all the cargo from the station hangar"]
-						m_LastTransferComplete:Set[FALSE]
-					}
-					else
-					{
-						UI:UpdateConsole["Transfered all cargo from the station hangar"]
-						m_LastTransferComplete:Set[TRUE]
-					}
+					UI:UpdateConsole["Could not carry all the cargo from the station hangar"]
+					m_LastTransferComplete:Set[FALSE]
 				}
 				else
-				{	/* Only set m_LastTransferComplete if we actually transfered something */
-					UI:UpdateConsole["Couldn't find any cargo in the station hangar"]
-					m_LastTransferComplete:Set[FALSE]
+				{
+					UI:UpdateConsole["Transfered all cargo from the station hangar"]
+					m_LastTransferComplete:Set[TRUE]
 				}
 			}
 		}
