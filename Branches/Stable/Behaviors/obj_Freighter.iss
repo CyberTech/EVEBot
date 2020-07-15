@@ -201,7 +201,8 @@ objectdef obj_Freighter
 
 	function ContainerTest()
 	{
-		if ${Cargo.ShipHasContainers}
+		call Cargo.ShipHasContainers
+		if ${Return}
 		{
 			variable index:items HangarItems
 			Me:GetHangarItems[HangarItems]
@@ -220,8 +221,6 @@ objectdef obj_Freighter
 		{
 			UI:UpdateConsole["obj_Freighter: Ship doesn't have containers."]
 		}
-
-		wait 50
 	}
 
 	function Transport()

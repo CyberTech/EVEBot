@@ -27,7 +27,7 @@ objectdef obj_Cargo
 		return ${m_LastTransferComplete}
 	}
 
-	member:bool ShipHasContainers()
+	function ShipHasContainers()
 	{
 		variable index:item anItemIndex
 
@@ -865,7 +865,8 @@ objectdef obj_Cargo
 
 		if ${CargoIterator:First(exists)}
 		{
-			if ${This.ShipHasContainers}
+			call Cargo.ShipHasContainers
+			if ${Return}
 			{
 				call This.TransferListToShipWithContainers
 			}
