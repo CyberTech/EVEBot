@@ -1463,7 +1463,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 			if ${Config.Miner.DeliveryLocationTypeName.Equal["No Delivery"]}
 			{
 				; A hauler will be picking up from the fleet hold. Balance between keeping the fleet hold populated, but not full
-				call Cargo.TransferCargoFromCargoHoldToShipCorporateHangar
+				call Cargo.TransferOreToShipCorpHangar ${MyShip.ID}
 				relay all -event EVEBot_Orca_Cargo ${Ship.CorpHangarUsedSpace[TRUE]}
 			}
 			else

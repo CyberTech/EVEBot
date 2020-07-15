@@ -541,47 +541,6 @@ objectdef obj_Cargo
 		}
 	}
 
-	function TransferCargoFromCargoHoldToShipCorporateHangar()
-	{
-		variable int QuantityToMove
-		variable iterator CargoIterator
-
-		call Inventory.ShipCargo.Activate
-		if !${Inventory.ShipCargo.IsCurrent}
-		{
-			return
-		}
-		Inventory.Current:GetItems[]
-		Inventory.Current.Items:GetIterator[CargoIterator]
-
-		if ${CargoIterator:First(exists)}
-		{
-				do
-				{
-					if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${Ship.CorpHangarFreeSpace}
-					{
-						QuantityToMove:Set[${Math.Calc[${Ship.CorpHangarFreeSpace} / ${CargoIterator.Value.Volume}]}]
-					}
-					else
-					{
-						QuantityToMove:Set[${CargoIterator.Value.Quantity}]
-					}
-
-					UI:UpdateConsole["TransferCargoFromCargoHoldToShipCorporateHangar: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name} (Free Space: ${Ship.CorpHangarFreeSpace}m3"]
-					UI:UpdateConsole["TransferCargoFromCargoHoldToShipCorporateHangar: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
-					if ${QuantityToMove} > 0
-					{
-						CargoIterator.Value:MoveTo[${MyShip.ID}, FleetHangar, ${QuantityToMove}]
-						wait 15
-					}
-				}
-				while ${CargoIterator:Next(exists)}
-		}
-		else
-		{
-			;UI:UpdateConsole["DEBUG: obj_Cargo:TransferCargoFromCargoHoldToShipCorporateHangar: Nothing found to move"]
-		}
-	}
 	; Call TransferListToPOSCorpHangar "LargeShipAssemblyArray"
 	; Call TransferListToPOSCorpHangar "XLargeShipAssemblyArray" etc
 	; Call TransferListToPOSCorpHangar "CorpHangarArray"
