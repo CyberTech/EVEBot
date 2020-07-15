@@ -823,7 +823,7 @@ objectdef obj_Targets
 			; todo - make ignoring whitelisted chars in your belt an optional action.
 			if ${tgtIterator.Value.Owner.CharID} != ${Me.CharID} && !${Social.PilotWhiteList.Contains[${tgtIterator.Value.Owner.CharID}]}
 			{	/* A player is already present here ! */
-				UI:UpdateConsole["Player found ${tgtIterator.Value.Owner} ${tgtIterator.Value.Owner.CharID} ${tgtIterator.Value.ID}"]
+				UI:UpdateConsole["Player found on grid: ${tgtIterator.Value.Owner} ${tgtIterator.Value.Owner.CharID} ${tgtIterator.Value.ID}"]
 				return TRUE
 			}
 		}
@@ -839,7 +839,6 @@ objectdef obj_Targets
 		variable iterator tgtIterator
 
 		EVE:QueryEntities[tgtIndex, "CategoryID = CATEGORYID_ENTITY"]
-		UI:UpdateConsole["DEBUG: Found ${tgtIndex.Used} entities."]
 
 		tgtIndex:GetIterator[tgtIterator]
 		if ${tgtIterator:First(exists)}
