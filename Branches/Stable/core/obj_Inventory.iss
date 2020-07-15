@@ -66,7 +66,6 @@ objectdef obj_EVEWindow_Proxy
 
 	member:string GetFallthroughObject()
 	{
-		echo "EVEWindow[Inventory].ChildWindow[${EVEWindowParams}]"
 		return "EVEWindow[Inventory].ChildWindow[${EVEWindowParams}]"
 	}	
 
