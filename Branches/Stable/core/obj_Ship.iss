@@ -1252,7 +1252,7 @@ objectdef obj_Ship
 
 		if ${Target:First(exists)}
 		{
-			UI:ConsoleUpdate["Unlocking all targets", LOG_MINOR]
+			Logger:Log["Unlocking all targets", LOG_MINOR]
 			do
 			{
 				Target.Value:UnlockTarget

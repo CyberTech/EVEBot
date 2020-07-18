@@ -881,7 +881,7 @@ objectdef obj_Cargo
 		}
 		else
 		{
-			UI:ConsoleUpdate["No Hangar Array found - nothing moved"]
+			Logger:Log["No Hangar Array found - nothing moved"]
 			return
 		}
 
@@ -913,7 +913,7 @@ objectdef obj_Cargo
 		}
 		else
 		{
-			UI:ConsoleUpdate["No Large Ship Assembly Array found - nothing moved"]
+			Logger:Log["No Large Ship Assembly Array found - nothing moved"]
 			return
 		}
 
@@ -945,7 +945,7 @@ objectdef obj_Cargo
 		}
 		else
 		{
-			UI:ConsoleUpdate["No Compression Array found - nothing moved"]
+			Logger:Log["No Compression Array found - nothing moved"]
 			return
 		}
 
@@ -977,7 +977,7 @@ objectdef obj_Cargo
 		}
 		else
 		{
-			UI:ConsoleUpdate["No Large Ship Assembly Array found - nothing moved"]
+			Logger:Log["No Large Ship Assembly Array found - nothing moved"]
 			return
 		}
 
@@ -1002,7 +1002,7 @@ objectdef obj_Cargo
 		}
 		else
 		{
-			UI:ConsoleUpdate["No Large Ship Assembly Array found - nothing moved"]
+			Logger:Log["No Large Ship Assembly Array found - nothing moved"]
 			return
 		}
 
@@ -1056,7 +1056,7 @@ objectdef obj_Cargo
 		}
 		else
 		{
-			UI:ConsoleUpdate["No Extra Large Ship Assembly Array found - nothing moved"]
+			Logger:Log["No Extra Large Ship Assembly Array found - nothing moved"]
 			return
 		}
 
