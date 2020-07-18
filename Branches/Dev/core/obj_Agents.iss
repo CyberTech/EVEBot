@@ -315,7 +315,7 @@ objectdef obj_Agents
 		amIndex:GetIterator[MissionInfo]
 		skipList:Clear
 
-		Logger:Log["obj_Agents: DEBUG: amIndex.Used = ${amIndex.Used}"]
+		Logger:Log["obj_Agents: DEBUG: Active/Offered Missions:  ${MissionInfo.Used}", LOG_DEBUG]
 		if ${MissionInfo:First(exists)}
 		{
 			do
@@ -371,6 +371,10 @@ objectdef obj_Agents
 				This:SetActiveAgent[${agentName}]
 				return
 			}
+			else
+			{
+				Logger:Log["obj_Agents: DEBUG: Skipping research agent ${agentName}, in skiplist", LOG_DEBUG]
+			}
 			agentName:Set[${This.AgentList.NextAvailableResearchAgent}]
 		}
 
@@ -380,16 +384,20 @@ objectdef obj_Agents
 			{
 				if ${skipList.Contains[${Config.Agents.AgentID[${This.AgentList.agentIterator.Key}]}]} == FALSE
 				{
-					Logger:Log["obj_Agents: DEBUG: Setting agent to ${This.AgentList.agentIterator.Key}"]
+					Logger:Log["obj_Agents: Choosing agent ${This.AgentList.agentIterator.Key}"]
 					This:SetActiveAgent[${This.AgentList.agentIterator.Key}]
 					return
+				}
+				else
+				{
+					Logger:Log["obj_Agents: DEBUG: Skipping agent ${This.AgentList.agentIterator.Key}, in skiplist", LOG_DEBUG]
 				}
 			}
 			while ${This.AgentList.agentIterator:Next(exists)}
 		}
 
 		/* we should never get here */
-		Logger:Log["obj_Agents.PickAgent: DEBUG: Script paused."]
+		Logger:Log["obj_Agents.PickAgent: ERROR: Script paused. No Agents defined, or none available"]
 		Script:Pause
 	}
 
@@ -954,13 +962,14 @@ objectdef obj_Agents
 			Logger:Log["obj_Agents:TurnInMission: Waiting for conversation window..."]
 			wait 10
 		}
-		while !${EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"](exists)}
+		while !${EVEWindow[ByCaption, "Agent Conversation - ${This.ActiveAgent}"](exists)}
 
 		Logger:Log["${EVE.Agent[${This.AgentIndex}].Name} :: ${EVE.Agent[${This.AgentIndex}].Dialog}"]
 
 		; display your dialog options
 		variable index:dialogstring dsIndex
 		variable iterator dsIterator
+
 		EVE.Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
 		dsIndex:GetIterator[dsIterator]
 
