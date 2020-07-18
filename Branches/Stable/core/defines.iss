@@ -16,6 +16,8 @@ variable string AppVersion = "0"
 variable int VersionNum = 0
 
 #define EVEBOT_DEBUG 0
+#define EVEBOT_DEBUG_TIMING 0
+#define EVEBOT_PROFILING 0
 #define DEBUG_ENTITIES 0
 
 ; If you want to debug specific modules or classes, place the class name here.
@@ -23,17 +25,29 @@ variable int VersionNum = 0
 ; Default is "All" for everything
 #define DEBUG_TARGET All
 
-; Do not set this to 1 unless you have downloaded and installed the ISXIM
+; Do not set this to 1 unless you have downloaded and installed ISXIM
 ; extension from http://www.isxgames.com/forums/showthread.php?t=3829
 #define USE_ISXIM 0
 
-#define LOG_MINOR 1
-#define LOG_STANDARD 2
-#define LOG_CRITICAL 3
-#define LOG_DEBUG 4
-
 ;#define EVENT_ONFRAME OnFrame
 #define EVENT_ONFRAME ISXEVE_onFrame
+#define EVENT_EVEBOT_ONFRAME EVEBOT_OnFrame
+
+/* Core Library (Non-EVE Related code) */
+#include ../../../External/isxScripts/obj_PulseTimer.iss
+#include ../../../External/isxScripts/obj_LSQuery.iss
+#include ../Lib/obj_BaseClass.iss
+#include ../Lib/obj_Vector.iss
+;#include ../Lib/obj_Mutex.iss
+;#include ../Lib/obj_Sound.iss TODO - Port Dev version, remove core version
+#include ../Lib/UplinkManager/obj_UplinkManager.iss
+#include ../Lib/obj_LSGUI.iss
+
+#define LOG_MINOR 1
+#define LOG_STANDARD 2
+#define LOG_ECHOTOO 3
+#define LOG_CRITICAL 4
+#define LOG_DEBUG 5
 
 #define WAIT_CARGO_WINDOW 15
 #define WAIT_UNDOCK 130
@@ -46,6 +60,7 @@ variable int VersionNum = 0
  */
 #define MINER_SANITY_CHECK_INTERVAL 240
 
+/* End EVEBot Defines, Begin EVE Defines */
 /*
  * DEBUG: Slot: MedSlot3  Ballistic Deflection Field II
  *  DEBUG: Group: Shield Hardener  77

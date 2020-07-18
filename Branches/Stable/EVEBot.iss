@@ -6,8 +6,9 @@
 #include core/defines.iss
 
 /* Base Requirements */
-#include core/obj_EVEBot.iss
+#include core/obj_Logger.iss
 #include core/obj_Configuration.iss
+#include core/obj_EVEBot.iss
 
 /* Support File Includes */
 #include core/obj_Skills.iss
@@ -52,17 +53,36 @@ function atexit()
 	;Redirect EVEBot_Profiling.txt Script[EVEBot]:DumpProfiling
 }
 
+function CreateVariable(string VarName, string VarType, string Scope, string DefaultValue)
+{
+	variable time StartTime
+	variable time EndTime
+
+	StartTime:Set[${Time.Timestamp}]
+	declarevariable ${VarName} ${VarType} ${Scope} ${DefaultValue}
+	EndTime:Set[${Time.Timestamp}]
+
+#if EVEBOT_DEBUG_TIMING
+	Logger:Log["DEBUG: Declared ${VarName} in ${Math.Calc[${EndTime.Timestamp} - ${StartTime.Timestamp}]}", LOG_ECHOTOO]
+#endif
+}
+
 function main()
 {
-	echo "${Time} EVEBot: Starting"
-	;Script:Unsquelch
-	;Script[EVEBot]:EnableDebugLogging[EVEBot_Debug.txt]
-	;Script[EVEBot]:EnableProfiling
-	;;Redirect EVEBot_Profiling.txt Script[EVEBot]:DumpProfiling
+	; Set turbo to 4000 per frame for startup.
+	Turbo 4000
+	echo "${Time}: EVEBot: Starting"
 
-	turbo 4000
+#if EVEBOT_PROFILING
+	Script:Unsquelch
+	Script[EVEBot]:EnableProfiling
+	Script:EnableDebugLogging[evebot_profile.txt]
+#endif
 
-	echo "${Time} EVEBot: Loading Base Objects & Config..."
+	echo "${Time}: EVEBot: Loading Base & Config..."
+
+	/* NON-EVE Related Objects */
+	call CreateVariable LSQueryCache obj_LSQueryCache global
 
 	/* Script-Defined Support Objects */
 	declarevariable EVEBot obj_EVEBot script
@@ -155,7 +175,7 @@ function main()
 #if USE_ISXIM
 	call ChatIRC.Connect
 #endif
-	turbo 100
+	Turbo 125
 
 	if ${Ship.InWarp}
 	{
