@@ -18,7 +18,7 @@ objectdef obj_Market
 
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_Market: Initialized", LOG_MINOR]
+		Logger:Log["obj_Market: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -27,7 +27,7 @@ objectdef obj_Market
 
    	function GetMarketOrders(int typeID)
    	{
-		UI:UpdateConsole["obj_Market: Obtaining market data for ${EVEDB_Items.Name[${typeID}]} (${typeID})"]
+		Logger:Log["obj_Market: Obtaining market data for ${EVEDB_Items.Name[${typeID}]} (${typeID})"]
 
 		This.sellOrders:Clear
 		This.buyOrders:Clear
@@ -41,8 +41,8 @@ objectdef obj_Market
 		EVE:GetMarketOrders[This.buyOrders,${typeID}, "Buy"]
 		wait 10
 
-		UI:UpdateConsole["obj_Market: Found ${This.sellOrders.Used} sell orders."]
-		UI:UpdateConsole["obj_Market: Found ${This.buyOrders.Used} buy orders."]
+		Logger:Log["obj_Market: Found ${This.sellOrders.Used} sell orders."]
+		Logger:Log["obj_Market: Found ${This.buyOrders.Used} buy orders."]
 
 		;This:DumpSellOrders
 		call This.QuicksortSellOrders 1 ${This.sellOrders.Used}
@@ -69,13 +69,13 @@ objectdef obj_Market
 	{
 		variable iterator orderIterator
 
-		UI:UpdateConsole["obj_Market.BestSellOrderSystem(${avoidLowSec},${quantity})"]
+		Logger:Log["obj_Market.BestSellOrderSystem(${avoidLowSec},${quantity})"]
 
 		This.sellOrders:GetIterator[orderIterator]
 
 		if ${Station.Docked}
 		{
-			UI:UpdateConsole["obj_Market.BestSellOrderSystem: WARNING:  Called while docked."]
+			Logger:Log["obj_Market.BestSellOrderSystem: WARNING:  Called while docked."]
 		}
 
 		if ${orderIterator:First(exists)}
@@ -107,7 +107,7 @@ objectdef obj_Market
 		}
 
 		; If this happens just pause the script to avoid errors
-		UI:UpdateConsole["obj_Market.BestSellOrderSystem: ERROR:  Could not find a system to purchase the item.  Pausing script!"]
+		Logger:Log["obj_Market.BestSellOrderSystem: ERROR:  Could not find a system to purchase the item.  Pausing script!"]
 		Script:Pause
 	}
 
@@ -123,11 +123,11 @@ objectdef obj_Market
 		variable int     bestIdx
 		variable float64 bestWeight
 
-		UI:UpdateConsole["obj_Market.BestSellOrderSystem(${avoidLowSec},${quantity})"]
+		Logger:Log["obj_Market.BestSellOrderSystem(${avoidLowSec},${quantity})"]
 
 		if ${Station.Docked}
 		{
-			UI:UpdateConsole["obj_Market.BestSellOrderSystem: WARNING:  Called while docked."]
+			Logger:Log["obj_Market.BestSellOrderSystem: WARNING:  Called while docked."]
 		}
 
 		; if avoiding low-sec, remove all orders that go through low-sec
@@ -144,7 +144,7 @@ objectdef obj_Market
 				}
 			}
 			This.sellOrders:Collapse
-			UI:UpdateConsole["DEBUG: obj_Market.FindBestWeightedSellOrder: ${This.sellOrders.Used} remain after purging low-sec routes."]
+			Logger:Log["DEBUG: obj_Market.FindBestWeightedSellOrder: ${This.sellOrders.Used} remain after purging low-sec routes."]
 		}
 
 		count:Set[${This.sellOrders.Used}]
@@ -162,7 +162,7 @@ objectdef obj_Market
 
 			weight:Set[${Math.Calc[${This.sellOrders.Get[${idx}].Price}*${This.Weight[${This.sellOrders.Get[${idx}].Jumps}]}]}]
 
-			;;UI:UpdateConsole["DEBUG: obj_Market.FindBestWeightedSellOrder ${This.sellOrders.Get[${idx}].Price} ${This.sellOrders.Get[${idx}].Jumps} ${weight}"]
+			;;Logger:Log["DEBUG: obj_Market.FindBestWeightedSellOrder ${This.sellOrders.Get[${idx}].Price} ${This.sellOrders.Get[${idx}].Jumps} ${weight}"]
 
 			if ${weight} < ${bestWeight}
 			{
@@ -179,7 +179,7 @@ objectdef obj_Market
 		}
 
 		; If this happens just pause the script to avoid errors
-		UI:UpdateConsole["obj_Market.FindBestWeightedSellOrder: ERROR:  Could not find a system to purchase the item.  Pausing script!"]
+		Logger:Log["obj_Market.FindBestWeightedSellOrder: ERROR:  Could not find a system to purchase the item.  Pausing script!"]
 		Script:Pause
 	}
 
@@ -203,7 +203,7 @@ objectdef obj_Market
 
 		if ${Station.Docked} == FALSE
 		{
-			UI:UpdateConsole["obj_Market.PurchaseItem: WARNING:  Called while undocked."]
+			Logger:Log["obj_Market.PurchaseItem: WARNING:  Called while undocked."]
 		}
 
 		if ${orderIterator:First(exists)}
@@ -220,7 +220,7 @@ objectdef obj_Market
 					else
 					{
 						; If this happens just pause the script to avoid errors
-						UI:UpdateConsole["obj_Market.PurchaseItem: ERROR:  Could not find a valid sell order.  Pausing script!"]
+						Logger:Log["obj_Market.PurchaseItem: ERROR:  Could not find a valid sell order.  Pausing script!"]
 						Script:Pause
 					}
 				}
@@ -277,9 +277,9 @@ objectdef obj_Market
 
 		pivotValue:Set[${This.buyOrders.Get[${pivotIndex}].Price}]
 
-		;UI:UpdateConsole["DEBUG: ${left} ${right} ${pivotIndex} ${pivotValue}"]
+		;Logger:Log["DEBUG: ${left} ${right} ${pivotIndex} ${pivotValue}"]
 
-		;UI:UpdateConsole["DEBUG: SWAP ${pivotIndex} ${right}"]
+		;Logger:Log["DEBUG: SWAP ${pivotIndex} ${right}"]
 		This.buyOrders:Swap[${pivotIndex},${right}]
 
 		storeIndex:Set[${left}]
@@ -288,16 +288,16 @@ objectdef obj_Market
 		{
 			if ${This.buyOrders.Get[${idx}].Price} <= ${pivotValue}
 			{
-				;UI:UpdateConsole["DEBUG: SWAP ${storeIndex} ${idx} ${This.buyOrders.Get[${idx}].Price} <= ${pivotValue}"]
+				;Logger:Log["DEBUG: SWAP ${storeIndex} ${idx} ${This.buyOrders.Get[${idx}].Price} <= ${pivotValue}"]
 				This.buyOrders:Swap[${storeIndex},${idx}]
 				storeIndex:Inc
 			}
 		}
 
-		;UI:UpdateConsole["DEBUG: SWAP ${storeIndex} ${right}"]
+		;Logger:Log["DEBUG: SWAP ${storeIndex} ${right}"]
 		This.buyOrders:Swap[${storeIndex},${right}]
 
-		;UI:UpdateConsole["DEBUG: RTN ${storeIndex}"]
+		;Logger:Log["DEBUG: RTN ${storeIndex}"]
 
 		return ${storeIndex}
 	}
@@ -323,14 +323,14 @@ objectdef obj_Market
 		variable int idx
 		variable int count
 
-		UI:UpdateConsole["obj_Market: Filtering all orders more than ${jumps} jumps away from your present location."]
+		Logger:Log["obj_Market: Filtering all orders more than ${jumps} jumps away from your present location."]
 
 		count:Set[${This.sellOrders.Used}]
 		for ( idx:Set[1]; ${idx} <= ${count}; idx:Inc )
 		{
 			if ${This.sellOrders.Get[${idx}].Jumps} > ${jumps}
 			{
-				;UI:UpdateConsole["obj_Market: Removing order ${This.sellOrders.Get[${idx}].ID}."]
+				;Logger:Log["obj_Market: Removing order ${This.sellOrders.Get[${idx}].ID}."]
 				This.sellOrders:Remove[${idx}]
 			}
 		}
@@ -342,7 +342,7 @@ objectdef obj_Market
 		{
 			if ${This.buyOrders.Get[${idx}].Jumps} > ${jumps}
 			{
-				;UI:UpdateConsole["obj_Market: Removing order ${This.sellOrders.Get[${idx}].ID}."]
+				;Logger:Log["obj_Market: Removing order ${This.sellOrders.Get[${idx}].ID}."]
 				This.buyOrders:Remove[${idx}]
 			}
 		}
@@ -362,7 +362,7 @@ objectdef obj_Market
 
 	function GetMyOrders(int typeID)
 	{
-		UI:UpdateConsole["obj_Market: Obtaining my orders for ${EVEDB_Items.Name[${typeID}]}"]
+		Logger:Log["obj_Market: Obtaining my orders for ${EVEDB_Items.Name[${typeID}]}"]
 		Me:UpdateMyOrders
 		wait 40
 		Me:GetMyOrders[This.myBuyOrders,"Buy",${typeID}]
@@ -370,8 +370,8 @@ objectdef obj_Market
 		Me:GetMyOrders[This.mySellOrders,"Sell",${typeID}]
 		wait 10
 
-		UI:UpdateConsole["obj_Market: Found ${This.mySellOrders.Used} active sell orders for ${EVEDB_Items.Name[${typeID}]}."]
-		UI:UpdateConsole["obj_Market: Found ${This.myBuyOrders.Used} active buy orders for ${EVEDB_Items.Name[${typeID}]}."]
+		Logger:Log["obj_Market: Found ${This.mySellOrders.Used} active sell orders for ${EVEDB_Items.Name[${typeID}]}."]
+		Logger:Log["obj_Market: Found ${This.myBuyOrders.Used} active buy orders for ${EVEDB_Items.Name[${typeID}]}."]
 	}
 
 	member:int MySellOrderCount()
@@ -388,7 +388,7 @@ objectdef obj_Market
 	{
 		variable iterator orderIterator
 
-		UI:UpdateConsole["obj_Market.DumpSellOrders: dumping..."]
+		Logger:Log["obj_Market.DumpSellOrders: dumping..."]
 
 		This.sellOrders:GetIterator[orderIterator]
 
@@ -396,7 +396,7 @@ objectdef obj_Market
 		{
 			do
 			{
-				UI:UpdateConsole["obj_Market.DumpSellOrders: ${orderIterator.Value.ID} ${orderIterator.Value.Jumps} ${orderIterator.Value.Price} ${orderIterator.Value.QuantityRemaining.Int}/${orderIterator.Value.InitialQuantity}."]
+				Logger:Log["obj_Market.DumpSellOrders: ${orderIterator.Value.ID} ${orderIterator.Value.Jumps} ${orderIterator.Value.Price} ${orderIterator.Value.QuantityRemaining.Int}/${orderIterator.Value.InitialQuantity}."]
 			}
 			while ${orderIterator:Next(exists)}
 		}
@@ -406,7 +406,7 @@ objectdef obj_Market
 	{
 		variable iterator orderIterator
 
-		UI:UpdateConsole["obj_Market.DumpBuyOrders: dumping..."]
+		Logger:Log["obj_Market.DumpBuyOrders: dumping..."]
 
 		This.buyOrders:GetIterator[orderIterator]
 
@@ -414,7 +414,7 @@ objectdef obj_Market
 		{
 			do
 			{
-				UI:UpdateConsole["obj_Market.DumpBuyOrders: ${orderIterator.Value.ID} ${orderIterator.Value.Jumps} ${orderIterator.Value.Price} ${orderIterator.Value.QuantityRemaining.Int}/${orderIterator.Value.InitialQuantity}."]
+				Logger:Log["obj_Market.DumpBuyOrders: ${orderIterator.Value.ID} ${orderIterator.Value.Jumps} ${orderIterator.Value.Price} ${orderIterator.Value.QuantityRemaining.Int}/${orderIterator.Value.InitialQuantity}."]
 			}
 			while ${orderIterator:Next(exists)}
 		}

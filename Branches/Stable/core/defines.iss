@@ -25,8 +25,8 @@ variable int VersionNum = 0
 ; Default is "All" for everything
 #define DEBUG_TARGET All
 
-; Do not set this to 1 unless you have downloaded and installed ISXIM
-; extension from http://www.isxgames.com/forums/showthread.php?t=3829
+; Do not set this to 1 unless you have downloaded and installed ISXIM extension from http://www.isxgames.com/forums/showthread.php?t=3829
+; Allows logging to IRC and Jabber, etc
 #define USE_ISXIM 0
 
 ;#define EVENT_ONFRAME OnFrame

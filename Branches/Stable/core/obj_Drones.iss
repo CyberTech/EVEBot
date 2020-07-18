@@ -24,7 +24,7 @@ objectdef obj_Drones
 	method Initialize()
 	{
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-		UI:UpdateConsole["obj_Drones: Initialized", LOG_MINOR]
+		Logger:Log["obj_Drones: Initialized", LOG_MINOR]
 	}
 	method Shutdown()
 	{
@@ -32,7 +32,7 @@ objectdef obj_Drones
 		{
 			if (${Me.ToEntity.Mode} != 3)
 			{
-				UI:UpdateConsole["Recalling Drones prior to shutdown..."]
+				Logger:Log["Recalling Drones prior to shutdown..."]
 				This.ActiveDroneIDList:RemoveByQuery[${LavishScript.CreateQuery[GroupID = GROUP_FIGHTERDRONE]}]
 				EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
 			}
@@ -60,7 +60,7 @@ objectdef obj_Drones
     					This.WaitingForDrones:Set[0]
     					This.DronesReady:Set[TRUE]
 
-    					UI:UpdateConsole["${This.LaunchedDrones} drones deployed"]
+    					Logger:Log["${This.LaunchedDrones} drones deployed"]
     				}
                 }
 
@@ -75,7 +75,7 @@ objectdef obj_Drones
 	{
 		if ${This.DronesInBay} > 0
 		{
-			UI:UpdateConsole["Launching drones..."]
+			Logger:Log["Launching drones..."]
 			MyShip:LaunchAllDrones
 			This.WaitingForDrones:Set[5]
 		}
@@ -145,7 +145,7 @@ objectdef obj_Drones
 		if ${CargoIterator:First(exists)}
 		do
 		{
-			;UI:UpdateConsole["obj_Drones:TransferToDroneBay: ${CargoIterator.Value.Name}"]
+			;Logger:Log["obj_Drones:TransferToDroneBay: ${CargoIterator.Value.Name}"]
 			CargoIterator.Value:MoveTo[${MyShip.ID}, DroneBay,1]
 			wait 30
 		}
@@ -160,7 +160,7 @@ objectdef obj_Drones
 	{
 		if ${This.DronesInSpace[FALSE]} > 0
 		{
-			UI:UpdateConsole["Recalling ${This.ActiveDroneIDList.Used} Drones"]
+			Logger:Log["Recalling ${This.ActiveDroneIDList.Used} Drones"]
 			This.ActiveDroneIDList:RemoveByQuery[${LavishScript.CreateQuery[GroupID = GROUP_FIGHTERDRONE]}]
 			EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
 			EVE:Execute[CmdDronesReturnToBay]
@@ -213,13 +213,13 @@ objectdef obj_Drones
 					(${DroneIterator.Value.ToEntity.ShieldPct} < 80 || \
 					${DroneIterator.Value.ToEntity.ArmorPct} < 0)
 				{
-					UI:UpdateConsole["Recalling Damaged Drone ${DroneIterator.Value.ID} Shield %: ${DroneIterator.Value.ToEntity.ShieldPct} Armor %: ${DroneIterator.Value.ToEntity.ArmorPct}"]
+					Logger:Log["Recalling Damaged Drone ${DroneIterator.Value.ID} Shield %: ${DroneIterator.Value.ToEntity.ShieldPct} Armor %: ${DroneIterator.Value.ToEntity.ArmorPct}"]
 					returnIndex:Insert[${DroneIterator.Value.ID}]
 
 				}
 				else
 				{
-					;UI:UpdateConsole["Debug: Engage Target ${DroneIterator.Value.ID}"]
+					;Logger:Log["Debug: Engage Target ${DroneIterator.Value.ID}"]
 					engageIndex:Insert[${DroneIterator.Value.ID}]
 				}
 			}

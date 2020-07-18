@@ -10,7 +10,7 @@ objectdef obj_Skills
 	
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_Skills: Initialized", LOG_MINOR]
+		Logger:Log["obj_Skills: Initialized", LOG_MINOR]
 		
 		if ${This.SkillFile:Open[readonly](exists)} || ${Config.Common.TrainFastest}
 		{
@@ -20,7 +20,7 @@ objectdef obj_Skills
 
 			if ${Config.Common.TrainFastest}
 			{
-				UI:UpdateConsole["obj_Skills: Training skills in duration order, fastest first"]
+				Logger:Log["obj_Skills: Training skills in duration order, fastest first"]
 			}
 		}
 		else
@@ -71,14 +71,14 @@ objectdef obj_Skills
 		}
 		if !${This.Training} 
 		{
-			UI:UpdateConsole["Training ${SkillName}"]
+			Logger:Log["Training ${SkillName}"]
 			Me.Skill[${SkillName}]:StartTraining
 			CurrentlyTrainingSkill:Set[${SkillName}]
 		}
 		
 		if ${SkillName.NotEqual[${Me.SkillCurrentlyTraining.Name}]}
 		{
-			UI:UpdateConsole["Changing skill to ${SkillName} from ${This.CurrentlyTraining}"]
+			Logger:Log["Changing skill to ${SkillName} from ${This.CurrentlyTraining}"]
 			Me.Skill[${SkillName}]:StartTraining
 			CurrentlyTrainingSkill:Set[${SkillName}]
 		}
@@ -191,7 +191,7 @@ objectdef obj_Skills
 				temp:Set[${SkillFile.Read}]
 			}
         	
-			UI:UpdateConsole["Error: None of the skills specified were found (or all were already to requested level)", LOG_CRITICAL]
+			Logger:Log["Error: None of the skills specified were found (or all were already to requested level)", LOG_CRITICAL]
 			SkillFile:Close
 			return "None"
 		}

@@ -9,8 +9,18 @@ objectdef obj_Logger
 
 	method Initialize()
 	{
-		This.LogFile:Set["./config/logs/${Me.Name}.log"]
-		This.StatsLogFile:Set["./config/logs/${Me.Name}_Stats.log"]
+		declare FP filepath "${Script.CurrentDirectory}"
+		if !${FP.FileExists["Config"]}
+		{
+			FP:MakeSubdirectory["Config"]
+		}
+		FP:Set["${Script.CurrentDirectory}/Config"]
+		if !${FP.FileExists["Logs"]}
+		{
+			FP:MakeSubdirectory["Logs"]
+		}
+		This.LogFile:Set["./Config/Logs/${Me.Name}.log"]
+		This.StatsLogFile:Set["./Config/Logs/${Me.Name}_Stats.log"]
 
 		This:InitializeLogs
 	}
@@ -18,7 +28,9 @@ objectdef obj_Logger
 	method LogIRC(string StatusMessage, int Level=LOG_STANDARD, int Indent=0)
 	{
 		This:Log["${StatusMessage}", ${Level}, ${Indent}]
+#if USE_ISXIM
 		ChatIRC:QueueMessage["${StatusMessage}"]
+#endif
 	}
 
 	method LogChat(string StatusMessage, int Level=LOG_STANDARD, int Indent=0)
@@ -75,14 +87,14 @@ objectdef obj_Logger
 			for (Count:Set[1]; ${Count}<=${Indent}; Count:Inc)
 			{
   				msg:Concat[" "]
-  			}
+  		}
  			msg:Concat["${StatusMessage.Escape}"]
 
 			if ${This.Reloaded}
 			{
 				if ${Level} > LOG_MINOR && !${Filter}
 				{
-					UIElement[StatusConsole@Status@EvEBotOptionsTab@EVEBot]:Echo["${msg}"]
+					UIElement[StatusConsole@Status@EVEBotOptionsTab@EVEBot]:Echo["${msg}"]
 				}
 
 				if ${Level} == LOG_ECHOTOO
@@ -115,7 +127,7 @@ objectdef obj_Logger
 	{
 		while ${This.ConsoleBuffer.Peek(exists)}
 		{
-			UIElement[StatusConsole@Status@EvEBotOptionsTab@EVEBot]:Echo[${This.ConsoleBuffer.Peek.Escape}]
+			UIElement[StatusConsole@Status@EVEBotOptionsTab@EVEBot]:Echo[${This.ConsoleBuffer.Peek.Escape}]
 			redirect -append "${This.LogFile}" Echo "${This.ConsoleBuffer.Peek.Escape}"
 			This.ConsoleBuffer:Dequeue
 		}

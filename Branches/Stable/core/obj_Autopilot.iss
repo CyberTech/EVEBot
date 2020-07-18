@@ -18,7 +18,7 @@ objectdef obj_Autopilot
 	method Initialize()
 	{
 		This.IsLowSecRoute:Set[-999]
-		UI:UpdateConsole["obj_Autopilot: Initialized", LOG_MINOR]
+		Logger:Log["obj_Autopilot: Initialized", LOG_MINOR]
 	}
 
 	/* 	
@@ -40,7 +40,7 @@ objectdef obj_Autopilot
 			return
 		}
 		
-		UI:UpdateConsole["obj_Autopilot: Setting destination to ${Universe[${id}]}"]
+		Logger:Log["obj_Autopilot: Setting destination to ${Universe[${id}]}"]
 		This.Destination:Set[${id}]
 		Universe[${id}]:SetDestination
 		This.IsLowSecRoute:Set[-999]
@@ -57,15 +57,15 @@ objectdef obj_Autopilot
 	    	EVE:GetToDestinationPath[This.Path]
 	    	This.Path:GetIterator[This.PathIterator]
 	    	
-			;;UI:UpdateConsole["obj_Autopilot: DEBUG: ${Universe[${This.Destination}]} is ${This.Path.Used} jumps away."]
+			;;Logger:Log["obj_Autopilot: DEBUG: ${Universe[${This.Destination}]} is ${This.Path.Used} jumps away."]
 			if ${This.PathIterator:First(exists)}
 			{
 				do
 				{
-					;;UI:UpdateConsole["obj_Autopilot: DEBUG: ${This.PathIterator.Value} ${Universe[${This.PathIterator.Value}]} (${Universe[${This.PathIterator.Value}].Security})"]
+					;;Logger:Log["obj_Autopilot: DEBUG: ${This.PathIterator.Value} ${Universe[${This.PathIterator.Value}]} (${Universe[${This.PathIterator.Value}].Security})"]
 			        if ${This.PathIterator.Value} > 0 && ${Universe[${This.PathIterator.Value}].Security} <= 0.45
 			        {
-						UI:UpdateConsole["obj_Autopilot: Low-Sec system found"]
+						Logger:Log["obj_Autopilot: Low-Sec system found"]
 						This.IsLowSecRoute:Set[TRUE]
 						break
 			        }

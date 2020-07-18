@@ -40,7 +40,7 @@ objectdef obj_Guardian
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 
 
-		UI:UpdateConsole["obj_Guardian: Initialized", LOG_MINOR]
+		Logger:Log["obj_Guardian: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -85,7 +85,7 @@ objectdef obj_Guardian
 		if (${Social.PossibleHostiles} || ${Ship.IsPod}) && !${EVEBot.ReturnToStation}
 		{
 			This.CurrentState:Set["HARDSTOP"]
-			UI:UpdateConsole["HARD STOP: Possible hostiles, cargo hold not changing, or ship in a pod!"]
+			Logger:Log["HARD STOP: Possible hostiles, cargo hold not changing, or ship in a pod!"]
 			EVEBot.ReturnToStation:Set[TRUE]
 			return
 		}
@@ -129,7 +129,7 @@ objectdef obj_Guardian
 		if !${Social.IsSafe}  && !${EVEBot.ReturnToStation} && !${Me.InStation}
 		{
 			This.CurrentState:Set["FLEE"]
-			UI:UpdateConsole["FLEE: Low Standing player or system unsafe, fleeing"]
+			Logger:Log["FLEE: Low Standing player or system unsafe, fleeing"]
 			return
 		}
 
@@ -223,7 +223,7 @@ objectdef obj_Guardian
 				}
 				if ${Entity["(GroupID = 15 || GroupID = 1657)"](exists)}
 				{
-					UI:UpdateConsole["Docking at ${Entity["(GroupID = 15 || GroupID = 1657)"].Name}"]
+					Logger:Log["Docking at ${Entity["(GroupID = 15 || GroupID = 1657)"].Name}"]
 					;call This.FastWarp ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
 					call Station.DockAtStation ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
 					break
@@ -232,7 +232,7 @@ objectdef obj_Guardian
 					call Safespots.WarpTo
 					call Miner.FastWarp
 
-				UI:UpdateConsole["WARNING:  EVERYTHING has gone wrong. Miner is in HARDSTOP mode and there are no panic locations, delivery locations, stations, or safe spots to use. You're probably going to get blown up..."]
+				Logger:Log["WARNING:  EVERYTHING has gone wrong. Miner is in HARDSTOP mode and there are no panic locations, delivery locations, stations, or safe spots to use. You're probably going to get blown up..."]
 				break
 
 			;	This means there's something dangerous in the system, but once it leaves we're going to go back to mining.
@@ -286,7 +286,7 @@ objectdef obj_Guardian
 						Bookmarks:StoreLocation
 					}
 
-					UI:UpdateConsole["Docking at ${Entity["(GroupID = 15 || GroupID = 1657)"].Name}"]
+					Logger:Log["Docking at ${Entity["(GroupID = 15 || GroupID = 1657)"].Name}"]
 					;call This.FastWarp ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
 					call Station.DockAtStation ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
 					break
@@ -299,7 +299,7 @@ objectdef obj_Guardian
 					break
 				}
 
-				UI:UpdateConsole["HARD STOP: Unable to flee, no stations available and no Safe spots available"]
+				Logger:Log["HARD STOP: Unable to flee, no stations available and no Safe spots available"]
 				EVEBot.ReturnToStation:Set[TRUE]
 				break
 
@@ -345,7 +345,7 @@ objectdef obj_Guardian
 		;	If we're in a station there's not going to be any mining going on.  This should clear itself up if it ever happens.
 		if ${Me.InStation} != FALSE
 		{
-			UI:UpdateConsole["DEBUG: obj_Miner.Mine called while zoning or while in station!"]
+			Logger:Log["DEBUG: obj_Miner.Mine called while zoning or while in station!"]
 			return
 		}
 
@@ -359,9 +359,9 @@ objectdef obj_Guardian
 		if (${MyShip.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
 			${MyShip.ShieldPct} < ${Config.Combat.MinimumShieldPct})
 		{
-			UI:UpdateConsole["Armor is at ${MyShip.ArmorPct}: ${MyShip.Armor}/${MyShip.MaxArmor}", LOG_CRITICAL]
-			UI:UpdateConsole["Shield is at ${MyShip.ShieldPct}: ${MyShip.Shield}/${MyShip.MaxShield}", LOG_CRITICAL]
-			UI:UpdateConsole["Miner aborting due to defensive status", LOG_CRITICAL]
+			Logger:Log["Armor is at ${MyShip.ArmorPct}: ${MyShip.Armor}/${MyShip.MaxArmor}", LOG_CRITICAL]
+			Logger:Log["Shield is at ${MyShip.ShieldPct}: ${MyShip.Shield}/${MyShip.MaxShield}", LOG_CRITICAL]
+			Logger:Log["Miner aborting due to defensive status", LOG_CRITICAL]
 
 			EVEBot.ReturnToStation:Set[TRUE]
 			return
@@ -400,7 +400,7 @@ objectdef obj_Guardian
 		;	This changes belts if someone's within Min. Distance to Players
 		if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]}
 		{
-			UI:UpdateConsole["Avoiding player: Changing Belts"]
+			Logger:Log["Avoiding player: Changing Belts"]
 			Miner:Cleanup_Environment
 			call Asteroids.MoveToField TRUE
 			return
@@ -472,11 +472,11 @@ objectdef obj_Guardian
 			{
 				if ${Entity[${Orca.Escape}].Distance} > WARP_RANGE
 				{
-					UI:UpdateConsole["ALERT:  ${Entity[${Orca.Escape}].Name} is a long way away.  Warping to it."]
+					Logger:Log["ALERT:  ${Entity[${Orca.Escape}].Name} is a long way away.  Warping to it."]
 					Entity[${Orca.Escape}]:WarpTo[1000]
 					return
 				}
-				UI:UpdateConsole["ALERT:  Approaching to within loot range."]
+				Logger:Log["ALERT:  Approaching to within loot range."]
 				Entity[${Orca.Escape}]:Approach[LOOT_RANGE]
 				This.Approaching:Set[${Entity[${Orca.Escape}]}]
 				This.TimeStartedApproaching:Set[${Time.Timestamp}]
@@ -495,7 +495,7 @@ objectdef obj_Guardian
 			;	After moving, we need to find out if any of our targets are out of mining range and unlock them so we can get new ones.
 			if (${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= LOOT_RANGE && ${This.Approaching} != 0) || (!${Entity[${This.Approaching}](exists)} && ${This.Approaching} != 0)
 			{
-				UI:UpdateConsole["ALERT:  Within loot range."]
+				Logger:Log["ALERT:  Within loot range."]
 				EVE:Execute[CmdStopShip]
 				This.Approaching:Set[0]
 				This.TimeStartedApproaching:Set[0]

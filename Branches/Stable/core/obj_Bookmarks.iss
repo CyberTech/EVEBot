@@ -14,7 +14,7 @@ objectdef obj_Bookmarks
 		
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_Bookmarks: Initialized", LOG_MINOR]
+		Logger:Log["obj_Bookmarks: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -23,7 +23,7 @@ objectdef obj_Bookmarks
 	
 	method StoreLocation()
 	{
-		UI:UpdateConsole["Storing current location"]
+		Logger:Log["Storing current location"]
 		;This.StoredLocation:Set["${Me.Name} ${Math.Rand[500000]:Inc[100000]}"]
 		This.StoredLocation:Set["${Math.Rand[5000]:Inc[1000]}"]
 		
@@ -58,7 +58,7 @@ objectdef obj_Bookmarks
 	{
 		if !${Entity[${ID}](exists)}
 		{
-			UI:UpdateConsole["Debug: CreateBookMark: Invalid ID"]
+			Logger:Log["Debug: CreateBookMark: Invalid ID"]
 			return
 		}
 		
@@ -69,7 +69,7 @@ objectdef obj_Bookmarks
 			Label:Set[${EntityName}]
 			
 		}
-		;UI:UpdateConsole["CreateBookMark: Label - ${Label}"]
+		;Logger:Log["CreateBookMark: Label - ${Label}"]
 		
 		EVE:CreateBookmark["${Label}"]
 		
@@ -86,12 +86,12 @@ objectdef obj_Bookmarks
 		EVE:CreateBookmark["${Label}"]
 		if ${Temporary}
 		{
-			;UI:UpdateConsole["CreateBookMark: Label - ${Label} (Temporary)"]
+			;Logger:Log["CreateBookMark: Label - ${Label} (Temporary)"]
 			TemporaryBookMarks:Insert[${Label}]
 		}
 		else
 		{
-			;UI:UpdateConsole["CreateBookMark: Label - ${Label}"]
+			;Logger:Log["CreateBookMark: Label - ${Label}"]
 		}
 		
 	}

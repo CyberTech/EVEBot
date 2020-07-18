@@ -498,25 +498,25 @@ objectdef obj_Targets
 
 				if !${Target:First(exists)}
 				{
-					UI:UpdateConsole["No targets found..."]
+					Logger:Log["No targets found..."]
 					return FALSE
 				}
 				else
 				{
-					UI:UpdateConsole["Damped, cant target..."]
+					Logger:Log["Damped, cant target..."]
 					return TRUE
 				}
 			}
 			else
 			{
-				UI:UpdateConsole["No targets found..."]
+				Logger:Log["No targets found..."]
 				return FALSE
 			}
 		}
 
 		if ${MyShip.MaxLockedTargets} == 0
 		{
-			UI:UpdateConsole["Jammed, cant target..."]
+			Logger:Log["Jammed, cant target..."]
 			return TRUE
 		}
 
@@ -554,10 +554,10 @@ objectdef obj_Targets
         		NPCShipType:Set[${NPCGroup.Token[${pos}, " "]}]
         		pos:Inc
         	}
-            UI:UpdateConsole["NPC: ${NPCName}(${NPCShipType}) ${EVEBot.ISK_To_Str[${Target.Value.Bounty}]}"]
+            Logger:Log["NPC: ${NPCName}(${NPCShipType}) ${EVEBot.ISK_To_Str[${Target.Value.Bounty}]}"]
 
-            ;UI:UpdateConsole["DEBUG: Type: ${Target.Value.Type}(${Target.Value.TypeID})"]
-            ;UI:UpdateConsole["DEBUG: Category: ${Target.Value.Category}(${Target.Value.CategoryID})"]
+            ;Logger:Log["DEBUG: Type: ${Target.Value.Type}(${Target.Value.TypeID})"]
+            ;Logger:Log["DEBUG: Category: ${Target.Value.Category}(${Target.Value.CategoryID})"]
 
             switch ${Target.Value.GroupID}
             {
@@ -583,12 +583,12 @@ objectdef obj_Targets
             }
          }
          while ${Target:Next(exists)}
-         UI:UpdateConsole["NPC: Battleship Value is ${EVEBot.ISK_To_Str[${This.TotalSpawnValue}]}"]
+         Logger:Log["NPC: Battleship Value is ${EVEBot.ISK_To_Str[${This.TotalSpawnValue}]}"]
       }
 
       if ${This.TotalSpawnValue} >= ${Config.Combat.MinChainBounty}
       {
-         ;UI:UpdateConsole["NPC: Spawn value exceeds minimum.  Should chain this spawn."]
+         ;Logger:Log["NPC: Spawn value exceeds minimum.  Should chain this spawn."]
          HasChainableTarget:Set[TRUE]
       }
 
@@ -643,7 +643,7 @@ objectdef obj_Targets
 					if !${Target.Value.IsLockedTarget} && !${Target.Value.BeingTargeted}
 					{
 						; No, report it and lock it.
-						UI:UpdateConsole["Locking priority target ${Target.Value.Name}"]
+						Logger:Log["Locking priority target ${Target.Value.Name}"]
 						Target.Value:LockTarget
 					}
 
@@ -669,33 +669,33 @@ objectdef obj_Targets
 			; Is there a chainable target? Is there a special or priority target?
 			if ${HasChainableTarget} && !${HasSpecialTarget} && !${HasPriorityTarget}
 			{
-	        	UI:UpdateConsole["NPC: Chaining Spawn"]
+	        	Logger:Log["NPC: Chaining Spawn"]
 				Chaining:Set[TRUE]
 			}
 
 			; Special exception, if there is only 1 type its most likely a chain in progress
 			if !${HasMultipleTypes} && !${HasPriorityTarget}
 			{
-	        	UI:UpdateConsole["NPC: Chaining Spawn"]
+	        	Logger:Log["NPC: Chaining Spawn"]
 				Chaining:Set[TRUE]
 			}
 
 			if ${HasSpecialTarget}
 			{
-				UI:UpdateConsole["NPC: Not Chaining: Special targets present"]
+				Logger:Log["NPC: Not Chaining: Special targets present"]
 				Chaining:Set[FALSE]
 			}
 
 			if ${HasPriorityTarget}
 			{
-				UI:UpdateConsole["NPC: Not Chaining: EWar Rats present"]
+				Logger:Log["NPC: Not Chaining: EWar Rats present"]
 				Chaining:Set[FALSE]
 			}
 
 			;skip chaining if chain solo == false and we are alone
 			if !${Config.Combat.ChainSolo} && ${EVE.LocalsCount} == 1
 			{
-				UI:UpdateConsole["NPC: Not Chaining: ChainSolo disabled"]
+				Logger:Log["NPC: Not Chaining: ChainSolo disabled"]
 				Chaining:Set[FALSE]
 			}
 
@@ -765,7 +765,7 @@ objectdef obj_Targets
 						}
 						else
 						{
-							UI:UpdateConsole["Locking ${Target.Value.Name}"]
+							Logger:Log["Locking ${Target.Value.Name}"]
 							Target.Value:LockTarget
 						}
 					}
@@ -778,7 +778,7 @@ objectdef obj_Targets
 			{
 				if !${DoNotKillList.Contains[${Target.Value.ID}]}
 				{
-					UI:UpdateConsole["NPC: Adding ${Target.Value.Name} (${Target.Value.Group})(${Target.Value.ID}) to the \"do not kill list\"!"]
+					Logger:Log["NPC: Adding ${Target.Value.Name} (${Target.Value.Group})(${Target.Value.ID}) to the \"do not kill list\"!"]
 					DoNotKillList:Add[${Target.Value.ID}]
 				}
 				; Make sure (due to auto-targeting) that its not targeted
@@ -823,7 +823,7 @@ objectdef obj_Targets
 			; todo - make ignoring whitelisted chars in your belt an optional action.
 			if ${tgtIterator.Value.Owner.CharID} != ${Me.CharID} && !${Social.PilotWhiteList.Contains[${tgtIterator.Value.Owner.CharID}]}
 			{	/* A player is already present here ! */
-				UI:UpdateConsole["Player found on grid: ${tgtIterator.Value.Owner} ${tgtIterator.Value.Owner.CharID} ${tgtIterator.Value.ID}"]
+				Logger:Log["Player found on grid: ${tgtIterator.Value.Owner} ${tgtIterator.Value.Owner.CharID} ${tgtIterator.Value.ID}"]
 				return TRUE
 			}
 		}
@@ -852,11 +852,11 @@ objectdef obj_Targets
 				case GROUP_LARGECOLLIDABLEOBJECT
 				case GROUP_LARGECOLLIDABLESHIP
 				case GROUP_LARGECOLLIDABLESTRUCTURE
-					;UI:UpdateConsole["DEBUG: Ignoring entity ${tgtIterator.Value.Group} (${tgtIterator.Value.GroupID})"]
+					;Logger:Log["DEBUG: Ignoring entity ${tgtIterator.Value.Group} (${tgtIterator.Value.GroupID})"]
 					continue
 					break
 				default
-					UI:UpdateConsole["DEBUG: NPC found: ${tgtIterator.Value.Group} (${tgtIterator.Value.GroupID})"]
+					Logger:Log["DEBUG: NPC found: ${tgtIterator.Value.Group} (${tgtIterator.Value.GroupID})"]
 					return TRUE
 					break
 			}
@@ -886,11 +886,11 @@ objectdef obj_Targets
 				case GROUP_LARGECOLLIDABLEOBJECT
 				case GROUP_LARGECOLLIDABLESHIP
 				case GROUP_LARGECOLLIDABLESTRUCTURE
-					;UI:UpdateConsole["DEBUG: Ignoring entity ${tgtIterator.Value.Group} (${tgtIterator.Value.GroupID})"]
+					;Logger:Log["DEBUG: Ignoring entity ${tgtIterator.Value.Group} (${tgtIterator.Value.GroupID})"]
 					continue
 					break
 				default
-					UI:UpdateConsole["ALERT: Targeting: ${tgtIterator.Value.Group}"]
+					Logger:Log["ALERT: Targeting: ${tgtIterator.Value.Group}"]
 					return ${tgtIterator.Value.ID}
 					break
 			}

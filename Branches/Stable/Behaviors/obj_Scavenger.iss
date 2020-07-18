@@ -24,7 +24,7 @@ objectdef obj_Scavenger
 
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_Scavenger: Initialized", LOG_MINOR]
+		Logger:Log["obj_Scavenger: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -54,7 +54,7 @@ objectdef obj_Scavenger
 		}
 		else
 		{
-			UI:UpdateConsole["obj_Scavenger: ERROR!  Unknown State."]
+			Logger:Log["obj_Scavenger: ERROR!  Unknown State."]
 			This.CurrentState:Set["Unknown"]
 		}
 	}
@@ -103,18 +103,18 @@ objectdef obj_Scavenger
 		; TODO - This will find the first bookmark matching this name, even if it's out of the system. This would be bad. Need to iterate and find the right one.
 		if !${EVE.Bookmark[${Config.Combat.AmmoBookmark}](exists)}
 		{
-			UI:UpdateConsole["DroppingOffLoot: Fleeing: No ammo bookmark"]
+			Logger:Log["DroppingOffLoot: Fleeing: No ammo bookmark"]
 			call This.Flee
 			return
 		}
 		else
 		{
 			call Ship.WarpToBookMarkName ${Config.Combat.AmmoBookmark}
-			UI:UpdateConsole["Dropping off Loot"]
+			Logger:Log["Dropping off Loot"]
 			; If a corp hangar array is on grid - drop loot
 			if ${Entity[TypeID = 17621].ID} != NULL
 			{
-				UI:UpdateConsole["Dropping off Loot at ${Entity[TypeID = 17621]} (${Entity[TypeID = 17621].ID})"]
+				Logger:Log["Dropping off Loot at ${Entity[TypeID = 17621]} (${Entity[TypeID = 17621].ID})"]
 				call Ship.Approach ${Entity[TypeID = 17621].ID} 1500
 				Entity[${Entity[TypeID = 17621].ID}]:Open
 
@@ -137,7 +137,7 @@ objectdef obj_Scavenger
 		variable float        ItemVolume = 0
 		variable int QuantityToMove
 
-		UI:UpdateConsole["Salvaging Site"]
+		Logger:Log["Salvaging Site"]
 		while (${Ship.CargoFreeSpace} >= 100)
 		{
 
@@ -155,7 +155,7 @@ objectdef obj_Scavenger
 			}
 
 			EVE:QueryEntities[Wrecks, "GroupID = GROUPID_WRECK"]
-			UI:UpdateConsole["obj_Scavenger: DEBUG: Found ${Wrecks.Used} wrecks."]
+			Logger:Log["obj_Scavenger: DEBUG: Found ${Wrecks.Used} wrecks."]
 			if ${Ship.TotalActivatedTractorBeams} < ${Ship.TotalTractorBeams}
 			{
 				if ${Me.TargetingCount} < ${Ship.SafeMaxLockedTargets}
@@ -236,21 +236,21 @@ objectdef obj_Scavenger
 						Target.Value:Open
 						wait 10
 						Target.Value:GetCargo[Items]
-						UI:UpdateConsole["obj_Scavenger: DEBUG:  Wreck contains ${Items.Used} items."]
+						Logger:Log["obj_Scavenger: DEBUG:  Wreck contains ${Items.Used} items."]
 
 						Items:GetIterator[Item]
 						if ${Item:First(exists)}
 						{
 							do
 							{
-								;UI:UpdateConsole["obj_Ratter: Found ${Item.Value.Quantity} x ${Item.Value.Name} - ${Math.Calc[${Item.Value.Quantity} * ${Item.Value.Volume}]}m3"]
+								;Logger:Log["obj_Ratter: Found ${Item.Value.Quantity} x ${Item.Value.Name} - ${Math.Calc[${Item.Value.Quantity} * ${Item.Value.Volume}]}m3"]
 								if (${Math.Calc[${Item.Value.Quantity}*${Item.Value.Volume}]}) > ${Ship.CargoFreeSpace}
 								{
 									/* Move only what will fit, minus 1 to account for CCP rounding errors. */
 									QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${Item.Value.Volume} - 1]}]
 									if ${QuantityToMove} <= 0
 									{
-										UI:UpdateConsole["ERROR: obj_Ratter: QuantityToMove = ${QuantityToMove}!"]
+										Logger:Log["ERROR: obj_Ratter: QuantityToMove = ${QuantityToMove}!"]
 										break
 									}
 								}
@@ -259,7 +259,7 @@ objectdef obj_Scavenger
 									QuantityToMove:Set[${Item.Value.Quantity}]
 								}
 
-								UI:UpdateConsole["obj_Ratter: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Item.Value.Volume}]}m3"]
+								Logger:Log["obj_Ratter: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Item.Value.Volume}]}m3"]
 								if ${QuantityToMove} > 0
 								{
 									Item.Value:MoveTo[${MyShip.ID}, CargoHold, ${QuantityToMove}]
@@ -268,7 +268,7 @@ objectdef obj_Scavenger
 
 								if ${Ship.CargoFull}
 								{
-									UI:UpdateConsole["DEBUG: obj_Ratter: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}", LOG_DEBUG]
+									Logger:Log["DEBUG: obj_Ratter: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}", LOG_DEBUG]
 									break
 								}
 							}
@@ -316,7 +316,7 @@ objectdef obj_Scavenger
 				{
 					return TRUE
 				}
-				UI:UpdateConsole["Locking Wreck ${Wreck.Value.Name}: ${EVEBot.MetersToKM_Str[${Wreck.Value.Distance}]}"]
+				Logger:Log["Locking Wreck ${Wreck.Value.Name}: ${EVEBot.MetersToKM_Str[${Wreck.Value.Distance}]}"]
 
 				Wreck.Value:LockTarget
 				do
@@ -334,7 +334,7 @@ objectdef obj_Scavenger
 				This.Wrecks:GetIterator[Wreck]
 				if !${Wreck:First(exists)}
 				{
-					UI:UpdateConsole["obj_Scavenger: TargetNext: No Wrecks on-grid, Going Home"]
+					Logger:Log["obj_Scavenger: TargetNext: No Wrecks on-grid, Going Home"]
 					call This.Flee
 				}
 			}

@@ -20,7 +20,7 @@ objectdef obj_FullMiner
 		FleetMemberID:Set[${arg_FleetMemberID}]
 		SystemID:Set[${arg_SystemID}]
 		BeltID:Set[${arg_BeltID}]
-		UI:UpdateConsole[ "DEBUG: obj_OreHauler:FullMiner: FleetMember: ${FleetMemberID} System: ${SystemID} Belt: ${Entity[${BeltID}].Name}", LOG_DEBUG]
+		Logger:Log[ "DEBUG: obj_OreHauler:FullMiner: FleetMember: ${FleetMemberID} System: ${SystemID} Belt: ${Entity[${BeltID}].Name}", LOG_DEBUG]
 	}
 }
 
@@ -54,7 +54,7 @@ objectdef obj_Hauler
 
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_OreHauler: Initialized", LOG_MINOR]
+		Logger:Log["obj_OreHauler: Initialized", LOG_MINOR]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		LavishScript:RegisterEvent[EVEBot_Miner_Full]
 		Event[EVEBot_Miner_Full]:AttachAtom[This:MinerFull]
@@ -108,7 +108,7 @@ objectdef obj_Hauler
 		if (${Social.PossibleHostiles} || ${Ship.IsPod}) && !${EVEBot.ReturnToStation}
 		{
 			This.CurrentState:Set["HARDSTOP"]
-			UI:UpdateConsole["HARD STOP: Possible hostiles, cargo hold not changing, or ship in a pod!"]
+			Logger:Log["HARD STOP: Possible hostiles, cargo hold not changing, or ship in a pod!"]
 			EVEBot.ReturnToStation:Set[TRUE]
 			return
 		}
@@ -135,7 +135,7 @@ objectdef obj_Hauler
 		if !${Social.IsSafe}  && !${EVEBot.ReturnToStation} && !${Me.InStation}
 		{
 			This.CurrentState:Set["FLEE"]
-			UI:UpdateConsole["FLEE: Low Standing player or system unsafe, fleeing"]
+			Logger:Log["FLEE: Low Standing player or system unsafe, fleeing"]
 			return
 		}
 		if !${Social.IsSafe}  && !${EVEBot.ReturnToStation} && ${Me.InStation}
@@ -244,7 +244,7 @@ objectdef obj_Hauler
 				}
 				if ${Entity["(GroupID = 15 || GroupID = 1657)"](exists)}
 				{
-					UI:UpdateConsole["Docking at ${Entity["(GroupID = 15 || GroupID = 1657)"].Name}"]
+					Logger:Log["Docking at ${Entity["(GroupID = 15 || GroupID = 1657)"].Name}"]
 					call Miner.FastWarp ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
 					call Station.DockAtStation ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
 					break
@@ -256,7 +256,7 @@ objectdef obj_Hauler
 					wait 30
 				}
 
-				UI:UpdateConsole["WARNING:  EVERYTHING has gone wrong. Hauler is in HARDSTOP mode and there are no panic locations, delivery locations, stations, or safe spots to use. You're probably going to get blown up..."]
+				Logger:Log["WARNING:  EVERYTHING has gone wrong. Hauler is in HARDSTOP mode and there are no panic locations, delivery locations, stations, or safe spots to use. You're probably going to get blown up..."]
 				break
 
 			;	This means there's something dangerous in the system, but once it leaves we're going to go back to mining.
@@ -293,7 +293,7 @@ objectdef obj_Hauler
 
 				if ${Entity["(GroupID = 15 || GroupID = 1657)"](exists)}
 				{
-					UI:UpdateConsole["Docking at ${Entity["(GroupID = 15 || GroupID = 1657)"].Name}"]
+					Logger:Log["Docking at ${Entity["(GroupID = 15 || GroupID = 1657)"].Name}"]
 					call Miner.FastWarp ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
 					call This.DockAtStation ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
 					break
@@ -307,7 +307,7 @@ objectdef obj_Hauler
 					break
 				}
 
-				UI:UpdateConsole["HARD STOP: Unable to flee, no stations available and no Safe spots available"]
+				Logger:Log["HARD STOP: Unable to flee, no stations available and no Safe spots available"]
 				EVEBot.ReturnToStation:Set[TRUE]
 				break
 
@@ -376,18 +376,18 @@ objectdef obj_Hauler
 
 		if ${FullMiners.FirstValue(exists)}
 		{
-			UI:UpdateConsole["${FullMiners.Used} cans to get! Picking up can at ${FullMiners.FirstKey}", LOG_DEBUG]
+			Logger:Log["${FullMiners.Used} cans to get! Picking up can at ${FullMiners.FirstKey}", LOG_DEBUG]
 
 			if !${Local[${FullMiners.CurrentValue.FleetMemberID}](exists)}
 			{
-				UI:UpdateConsole["Hauler: Warning: The specified fleet member (${FullMiners.CurrentValue.FleetMemberID}) isn't in local - it may be incorrectly configured or out of system."]
+				Logger:Log["Hauler: Warning: The specified fleet member (${FullMiners.CurrentValue.FleetMemberID}) isn't in local - it may be incorrectly configured or out of system."]
 				return
 			}
 
 
 			if !${Local[${FullMiners.CurrentValue.FleetMemberID}].ToEntity.ID(exists)}
 			{
-				UI:UpdateConsole["Hauler: The fleet member is not on grid. Warping to ${Local[${FullMiners.CurrentValue.FleetMemberID}].Name}"]
+				Logger:Log["Hauler: The fleet member is not on grid. Warping to ${Local[${FullMiners.CurrentValue.FleetMemberID}].Name}"]
 				Local[${FullMiners.CurrentValue.FleetMemberID}].ToFleetMember:WarpTo
 				return
 			}
@@ -395,7 +395,7 @@ objectdef obj_Hauler
 			;	Find out if we need to approach this target
 			if ${Local[${FullMiners.CurrentValue.FleetMemberID}].ToEntity.Distance} > LOOT_RANGE && ${This.Approaching} == 0
 			{
-				UI:UpdateConsole["Hauler: Approaching ${Local[${FullMiners.CurrentValue.FleetMemberID}].ToEntity.Name} to within loot range (currently ${Local[${FullMiners.CurrentValue.FleetMemberID}].ToEntity.Distance})"]
+				Logger:Log["Hauler: Approaching ${Local[${FullMiners.CurrentValue.FleetMemberID}].ToEntity.Name} to within loot range (currently ${Local[${FullMiners.CurrentValue.FleetMemberID}].ToEntity.Distance})"]
 				Local[${FullMiners.CurrentValue.FleetMemberID}].ToEntity:Approach
 				This.Approaching:Set[${Local[${FullMiners.CurrentValue.FleetMemberID}].ToEntity.ID}]
 				This.TimeStartedApproaching:Set[${Time.Timestamp}]
@@ -411,7 +411,7 @@ objectdef obj_Hauler
 			;	If we're approaching a target, find out if we need to stop doing so
 			if ${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= LOOT_RANGE && ${This.Approaching} != 0
 			{
-				UI:UpdateConsole["Hauler: Within loot range of ${Entity[${This.Approaching}].Name}"]
+				Logger:Log["Hauler: Within loot range of ${Entity[${This.Approaching}].Name}"]
 				EVE:Execute[CmdStopShip]
 				This.Approaching:Set[0]
 				This.TimeStartedApproaching:Set[0]
@@ -457,7 +457,7 @@ objectdef obj_Hauler
 	{
 		if !${Local[${Config.Hauler.HaulerPickupName}](exists)}
 		{
-			UI:UpdateConsole["ALERT:  The specified pilot isn't in local - it may be incorrectly configured."]
+			Logger:Log["ALERT:  The specified pilot isn't in local - it may be incorrectly configured."]
 			return
 		}
 		
@@ -482,7 +482,7 @@ objectdef obj_Hauler
 		; Warp to pilot
 		if !${MasterID} && ${Local[${Config.Hauler.HaulerPickupName}].ToFleetMember}
 		{
-			UI:UpdateConsole["ALERT: The pickup pilot is not nearby.  Warping there first to pick up."]
+			Logger:Log["ALERT: The pickup pilot is not nearby.  Warping there first to pick up."]
 			Local[${Config.Hauler.HaulerPickupName}].ToFleetMember:WarpTo
 			return
 		}
@@ -492,7 +492,7 @@ objectdef obj_Hauler
 		{
 			if ${Entity[Name = "${Config.Hauler.HaulerPickupName}"].Distance} < WARP_RANGE
 			{
-				UI:UpdateConsole["Fleet member is too far for approach; warping to a bounce point"]
+				Logger:Log["Fleet member is too far for approach; warping to a bounce point"]
 				call Safespots.WarpTo TRUE
 			}
 			Local[${Config.Hauler.HaulerPickupName}].ToFleetMember:WarpTo
@@ -547,7 +547,7 @@ objectdef obj_Hauler
 							Entities:Dequeue
 							continue
 						}
-						UI:UpdateConsole["Hauler: Failed to target, retrying"]
+						Logger:Log["Hauler: Failed to target, retrying"]
 						Entities.Peek:LockTarget
 						wait 10 ${Entities.Peek.BeingTargeted} || ${Entities.Peek.IsLockedTarget}
 					}
@@ -605,7 +605,7 @@ objectdef obj_Hauler
 			; Does jet can still exist?
 			if ${Entities.Peek.ID.Equal[0]}
 			{
-				UI:Updateconsole["Hauler: Jetcan disappeared suddently. WTF?"]
+				Logger:Log["Hauler: Jetcan disappeared suddently. WTF?"]
 				Entities:Dequeue
 				continue
 			}
@@ -615,7 +615,7 @@ objectdef obj_Hauler
 			; TODO: check age of can too
 			if !${Entity[${MasterID}](exists)} || ${Entity[${MasterID}].DistanceTo[${Entities.Peek.ID}]} > LOOT_RANGE || ${Entities.Used} > 3
 			{
-				UI:UpdateConsole["Checking: ID: ${Entities.Peek.ID}: ${Entity[${MasterID}].Name} is ${Entity[${MasterID}].DistanceTo[${Entities.Peek.ID}]}m away from jetcan"]
+				Logger:Log["Checking: ID: ${Entities.Peek.ID}: ${Entity[${MasterID}].Name} is ${Entity[${MasterID}].DistanceTo[${Entities.Peek.ID}]}m away from jetcan"]
 				PopCan:Set[TRUE]
 			}
 			else
@@ -652,7 +652,7 @@ objectdef obj_Hauler
 	{
 		if !${Local[${Config.Hauler.HaulerPickupName}](exists)}
 		{
-			UI:UpdateConsole["ALERT:  The specified orca isn't in local - it may be incorrectly configured or out of system."]
+			Logger:Log["ALERT:  The specified orca isn't in local - it may be incorrectly configured or out of system."]
 			return
 		}
 
@@ -678,7 +678,7 @@ objectdef obj_Hauler
 
 		if !${OrcaID} && ${Local[${Config.Hauler.HaulerPickupName}].ToFleetMember}
 		{
-			UI:UpdateConsole["ALERT: The orca is not nearby.  Warping there first to pick up."]
+			Logger:Log["ALERT: The orca is not nearby.  Warping there first to pick up."]
 			Local[${Config.Hauler.HaulerPickupName}].ToFleetMember:WarpTo
 			return
 		}
@@ -686,7 +686,7 @@ objectdef obj_Hauler
 		;	Find out if we need to approach this target
 		if ${Entity[${OrcaID}].Distance} > LOOT_RANGE && ${This.Approaching} == 0
 		{
-			UI:UpdateConsole["ALERT: Approaching to within loot range."]
+			Logger:Log["ALERT: Approaching to within loot range."]
 			Entity[${OrcaID}]:Approach
 			This.Approaching:Set[${OrcaID}]
 			This.TimeStartedApproaching:Set[${Time.Timestamp}]
@@ -703,7 +703,7 @@ objectdef obj_Hauler
 		;	If we're approaching a target, find out if we need to stop doing so
 		if ${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= LOOT_RANGE && ${This.Approaching} != 0
 		{
-			UI:UpdateConsole["ALERT: Within loot range."]
+			Logger:Log["ALERT: Within loot range."]
 			EVE:Execute[CmdStopShip]
 			This.Approaching:Set[0]
 			This.TimeStartedApproaching:Set[0]
@@ -714,11 +714,11 @@ objectdef obj_Hauler
 		{
 			if !${EVEWindow[ByItemID, ${OrcaID}](exists)}
 			{
-				UI:UpdateConsole["ALERT: Open Hangar."]
+				Logger:Log["ALERT: Open Hangar."]
 				Entity[${OrcaID}]:Open
 				return
 			}
-			UI:UpdateConsole["ALERT: Transferring Cargo"]
+			Logger:Log["ALERT: Transferring Cargo"]
 			call Cargo.TransferListFromShipCorporateHangar ${OrcaID}
 		}
 
@@ -736,7 +736,7 @@ objectdef obj_Hauler
 		Orca:Set[Name = "${Config.Hauler.HaulerPickupName}"]
 		if !${Local[${Config.Hauler.HaulerPickupName}](exists)}
 		{
-			UI:UpdateConsole["ALERT:  The specified player isn't in local - it may be incorrectly configured or out of system."]
+			Logger:Log["ALERT:  The specified player isn't in local - it may be incorrectly configured or out of system."]
 			return
 		}
 
@@ -747,7 +747,7 @@ objectdef obj_Hauler
 
 		if !${Entity[${Orca.Escape}](exists)} && ${Local[${Config.Hauler.HaulerPickupName}].ToFleetMember}
 		{
-			UI:UpdateConsole["ALERT:  The player is not nearby.  Warping there first to unload."]
+			Logger:Log["ALERT:  The player is not nearby.  Warping there first to unload."]
 			Local[${Config.Hauler.HaulerPickupName}].ToFleetMember:WarpTo
 			return
 		}
@@ -769,7 +769,7 @@ objectdef obj_Hauler
 		{
 			if ${Entity["OwnerID = ${charID} && CategoryID = 6"].Distance} < WARP_RANGE
 			{
-				UI:UpdateConsole["Fleet member is too far for approach; warping to a bounce point"]
+				Logger:Log["Fleet member is too far for approach; warping to a bounce point"]
 				call Safespots.WarpTo TRUE
 			}
 			call Ship.WarpToFleetMember ${charID}
@@ -805,7 +805,7 @@ objectdef obj_Hauler
 				wait 10 ${Ent.Value.BeingTargeted} || ${Ent.Value.IsLockedTarget}
 				if !${Ent.Value.BeingTargeted} && !${Ent.Value.IsLockedTarget}
 				{
-					UI:UpdateConsole["Hauler: Failed to target, retrying"]
+					Logger:Log["Hauler: Failed to target, retrying"]
 					Ent.Value:LockTarget
 					wait 10 ${Ent.Value.BeingTargeted} || ${Ent.Value.IsLockedTarget}
 				}
@@ -836,7 +836,7 @@ objectdef obj_Hauler
 
 			if ${Ent.Value.ID.Equal[0]}
 			{
-				UI:Updateconsole["Hauler: Jetcan disappeared suddently. WTF?"]
+				Logger:Log["Hauler: Jetcan disappeared suddently. WTF?"]
 				continue
 			}
 
@@ -890,7 +890,7 @@ objectdef obj_Hauler
 			return
 		}
 
-		UI:UpdateConsole["obj_OreHauler.LootEntity ${Entity[${id}].Name}(${id}) - Leaving ${leave} units"]
+		Logger:Log["obj_OreHauler.LootEntity ${Entity[${id}].Name}(${id}) - Leaving ${leave} units"]
 
 		Entity[${id}]:Open
 		wait 20
@@ -904,7 +904,7 @@ objectdef obj_Hauler
 		{
 			do
 			{
-				UI:UpdateConsole["Hauler: Found ${Cargo.Value.Quantity} x ${Cargo.Value.Name} - ${Math.Calc[${Cargo.Value.Quantity} * ${Cargo.Value.Volume}]}m3"]
+				Logger:Log["Hauler: Found ${Cargo.Value.Quantity} x ${Cargo.Value.Name} - ${Math.Calc[${Cargo.Value.Quantity} * ${Cargo.Value.Volume}]}m3"]
 				if ${MyShip.ToEntity.HasOreHold}
 				{
 					if !${Ship.OreHoldFull}
@@ -918,7 +918,7 @@ objectdef obj_Hauler
 							QuantityToMove:Set[${Math.Calc[${Cargo.Value.Quantity} - ${leave}]}]
 							leave:Set[0]
 						}
-						UI:UpdateConsole["Hauler: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
+						Logger:Log["Hauler: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
 						if ${QuantityToMove} > 0
 						{
 							Cargo.Value:MoveTo[MyShip,OreHold,${QuantityToMove}]
@@ -936,7 +936,7 @@ objectdef obj_Hauler
 							QuantityToMove:Set[${Math.Calc[${Cargo.Value.Quantity} - ${leave}]}]
 							leave:Set[0]
 						}
-						UI:UpdateConsole["Hauler: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
+						Logger:Log["Hauler: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
 						if ${QuantityToMove} > 0
 						{
 							Cargo.Value:MoveTo[MyShip,FleetHangar,${QuantityToMove}]
@@ -954,7 +954,7 @@ objectdef obj_Hauler
 							QuantityToMove:Set[${Math.Calc[${Cargo.Value.Quantity} - ${leave}]}]
 							leave:Set[0]
 						}
-						UI:UpdateConsole["Hauler: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
+						Logger:Log["Hauler: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
 						if ${QuantityToMove} > 0
 						{
 							Cargo.Value:MoveTo[MyShip,CargoHold,${QuantityToMove}]
@@ -973,7 +973,7 @@ objectdef obj_Hauler
 						QuantityToMove:Set[${Math.Calc[${Cargo.Value.Quantity} - ${leave}]}]
 						leave:Set[0]
 					}
-					UI:UpdateConsole["Hauler: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
+					Logger:Log["Hauler: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
 					if ${QuantityToMove} > 0
 					{
 						Cargo.Value:MoveTo[MyShip,CargoHold,${QuantityToMove}]
@@ -982,7 +982,7 @@ objectdef obj_Hauler
 				}
 				if ${Ship.CargoFreeSpace} < 1000
 				{
-					UI:UpdateConsole["DEBUG: obj_Hauler.LootEntity: Ship Cargo Free Space: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
+					Logger:Log["DEBUG: obj_Hauler.LootEntity: Ship Cargo Free Space: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}"]
 					break
 				}
 			}
@@ -1000,7 +1000,7 @@ objectdef obj_Hauler
 	{
 		if !${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)}
 		{
-			UI:UpdateConsole["ERROR: ORE Delivery location & type must be specified (on the miner tab) - docking"]
+			Logger:Log["ERROR: ORE Delivery location & type must be specified (on the miner tab) - docking"]
 			EVEBot.ReturnToStation:Set[TRUE]
 			return
 		}
@@ -1023,11 +1023,11 @@ objectdef obj_Hauler
 				call Cargo.TransferOreToXLargeShipAssemblyArray
 				break
 			case Jetcan
-				UI:UpdateConsole["ERROR: ORE Delivery location may not be jetcan when in hauler mode - docking"]
+				Logger:Log["ERROR: ORE Delivery location may not be jetcan when in hauler mode - docking"]
 				EVEBot.ReturnToStation:Set[TRUE]
 				break
 			Default
-				UI:UpdateConsole["ERROR: Delivery Location Type ${Config.Miner.DeliveryLocationTypeName} unknown"]
+				Logger:Log["ERROR: Delivery Location Type ${Config.Miner.DeliveryLocationTypeName} unknown"]
 				EVEBot.ReturnToStation:Set[TRUE]
 				break
 		}
@@ -1051,7 +1051,7 @@ objectdef obj_Hauler
 		{
 			if ${Entity["OwnerID = ${charID} && CategoryID = 6"].Distance} < WARP_RANGE
 			{
-				UI:UpdateConsole["Fleet member is too far for approach; warping to a bounce point"]
+				Logger:Log["Fleet member is too far for approach; warping to a bounce point"]
 				call Safespots.WarpTo TRUE
 			}
 			call Ship.WarpToFleetMember ${charID}
@@ -1074,7 +1074,7 @@ objectdef obj_Hauler
 			if ${Entities.Peek.Distance} >= ${LOOT_RANGE} && \
 				(!${Entity[${PlayerID}](exists)} || ${Entity[${PlayerID}].DistanceTo[${Entities.Peek.ID}]} > LOOT_RANGE)
 			{
-				UI:UpdateConsole["Checking: ID: ${Entities.Peek.ID}: ${Entity[${PlayerID}].Name} is ${Entity[${PlayerID}].DistanceTo[${Entities.Peek.ID}]}m away from jetcan"]
+				Logger:Log["Checking: ID: ${Entities.Peek.ID}: ${Entity[${PlayerID}].Name} is ${Entity[${PlayerID}].DistanceTo[${Entities.Peek.ID}]}m away from jetcan"]
 				PopCan:Set[TRUE]
 
 				if !${Entities.Peek(exists)}
@@ -1113,7 +1113,7 @@ objectdef obj_Hauler
 							Entities:Dequeue
 							continue
 						}
-						UI:UpdateConsole["Hauler: Failed to target, retrying"]
+						Logger:Log["Hauler: Failed to target, retrying"]
 						Entities.Peek:LockTarget
 						wait 10 ${Entities.Peek.BeingTargeted} || ${Entities.Peek.IsLockedTarget}
 					}
@@ -1155,7 +1155,7 @@ objectdef obj_Hauler
 
 			if ${Entities.Peek.ID.Equal[0]}
 			{
-				UI:Updateconsole["Hauler: Jetcan disappeared suddently. WTF?"]
+				Logger:Log["Hauler: Jetcan disappeared suddently. WTF?"]
 				Entities:Dequeue
 				continue
 			}
@@ -1202,7 +1202,7 @@ objectdef obj_Hauler
 			idx:Dec
 		}
 
-		UI:UpdateConsole["BuildFleetMemberList found ${FleetMembers.Used} other fleet members."]
+		Logger:Log["BuildFleetMemberList found ${FleetMembers.Used} other fleet members."]
 	}
 
 	method BuildJetCanList(int64 charID)
@@ -1231,7 +1231,7 @@ objectdef obj_Hauler
 			idx:Dec
 		}
 
-		UI:UpdateConsole["BuildJetCanList Loot Rights to ${cans.Used} cans; Fleet owns ${Entities.Used} cans."]
+		Logger:Log["BuildJetCanList Loot Rights to ${cans.Used} cans; Fleet owns ${Entities.Used} cans."]
 	}
 
 	;	This member is used to determine if our hauler is full based on a number of factors:
@@ -1241,7 +1241,7 @@ objectdef obj_Hauler
 	{
 		if ${MyShip.HasOreHold} && ${Ship.OreHoldFull}
 		{
-			UI:UpdateConsole["Ore Hold Full. Dropping off cargo."]
+			Logger:Log["Ore Hold Full. Dropping off cargo."]
 			return TRUE
 		}
 		

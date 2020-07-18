@@ -44,7 +44,7 @@ objectdef obj_Asteroids
 
 		Event[EVEBot_ClaimAsteroid]:AttachAtom[This:OnEVEBot_ClaimAsteroid]
 
-		UI:UpdateConsole["obj_Asteroids: Initialized", LOG_MINOR]
+		Logger:Log["obj_Asteroids: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -88,7 +88,7 @@ objectdef obj_Asteroids
 	{
 		LastSurveyScanResultTime:Set[${Time.Timestamp}]
 		LastSurveyScanResultCount:Set[${ResultCount}]
-		UI:UpdateConsole["obj_Asteroids: Survey Scan data received for ${LastSurveyScanResultCount} asteroids", LOG_DEBUG]
+		Logger:Log["obj_Asteroids: Survey Scan data received for ${LastSurveyScanResultCount} asteroids", LOG_DEBUG]
 	}
 
 	method OnEVEBot_ClaimAsteroid(int64 ClaimerID, int64 AsteroidID)
@@ -127,7 +127,7 @@ objectdef obj_Asteroids
 		if ${BeltName(exists)}
 		{
 			EmptyBeltList:Insert[${BeltName}]
-			UI:UpdateConsole["Excluding empty belt ${BeltName}"]
+			Logger:Log["Excluding empty belt ${BeltName}"]
 		}
 	}
 
@@ -189,7 +189,7 @@ objectdef obj_Asteroids
 
 		if ${BeltBookMarkList.Used}
 		{
-			UI:UpdateConsole["Debug: WarpToBookMarkName to ${BeltBookMarkList[${RandomBelt}].Label} from MoveToRandomBeltBookMark Line _LINE_ ", LOG_DEBUG]
+			Logger:Log["Debug: WarpToBookMarkName to ${BeltBookMarkList[${RandomBelt}].Label} from MoveToRandomBeltBookMark Line _LINE_ ", LOG_DEBUG]
 			call Ship.WarpToBookMark ${BeltBookMarkList[${RandomBelt}].ID} ${FleetWarp}
 			Ship:Activate_SurveyScanner
 
@@ -199,7 +199,7 @@ objectdef obj_Asteroids
 		}
 		else
 		{
-			UI:UpdateConsole["DEBUG: obj_Asteroids:MoveToRandomBeltBookMark: No belt bookmarks found!", LOG_DEBUG]
+			Logger:Log["DEBUG: obj_Asteroids:MoveToRandomBeltBookMark: No belt bookmarks found!", LOG_DEBUG]
 		}
 		return
 	}
@@ -214,7 +214,7 @@ objectdef obj_Asteroids
 		AsteroidList:GetIterator[AsteroidIterator]
 		if !${AsteroidIterator:First(exists)}
 		{
-			UI:UpdateConsole["DEBUG: obj_Asteroids:NearestAsteroid: Asteroid List empty", LOG_DEBUG]
+			Logger:Log["DEBUG: obj_Asteroids:NearestAsteroid: Asteroid List empty", LOG_DEBUG]
 			return -1
 		}
 
@@ -229,24 +229,24 @@ objectdef obj_Asteroids
 		{
 			if !${Entity[${AsteroidIterator.Value.ID}](exists)}
 			{
-				UI:UpdateConsole["DEBUG: obj_Asteroids:NearestAsteroid: Skipping ${AsteroidIterator.Value.ID} (Entity)", LOG_DEBUG]
+				Logger:Log["DEBUG: obj_Asteroids:NearestAsteroid: Skipping ${AsteroidIterator.Value.ID} (Entity)", LOG_DEBUG]
 				continue
 			}
 			if !${IgnoreClaimedStatus} && ${AsteroidList_Claimed.Contains[${AsteroidIterator.Value.ID}]}
 			{
 				; Someone else claimed it first. Oh, the vogonity!
-				UI:UpdateConsole["DEBUG: obj_Asteroids:NearestAsteroid: Skipping ${AsteroidIterator.Value.ID} (Claimed)", LOG_DEBUG]
+				Logger:Log["DEBUG: obj_Asteroids:NearestAsteroid: Skipping ${AsteroidIterator.Value.ID} (Claimed)", LOG_DEBUG]
 				continue
 			}
 			if ${AsteroidIterator.Value.IsLockedTarget} || ${AsteroidIterator.Value.BeingTargeted}
 			{
-				UI:UpdateConsole["DEBUG: obj_Asteroids:NearestAsteroid: Skipping ${AsteroidIterator.Value.ID} (locked/beinglocked)", LOG_DEBUG]
+				Logger:Log["DEBUG: obj_Asteroids:NearestAsteroid: Skipping ${AsteroidIterator.Value.ID} (locked/beinglocked)", LOG_DEBUG]
 				continue
 			}
 			; Now check regular distance
 			if ${AsteroidIterator.Value.Distance} >= ${MaxDistance}
 			{
-				UI:UpdateConsole["DEBUG: obj_Asteroids:NearestAsteroid: Skipping ${AsteroidIterator.Value.ID} (Distance > ${MaxDistance})", LOG_DEBUG]
+				Logger:Log["DEBUG: obj_Asteroids:NearestAsteroid: Skipping ${AsteroidIterator.Value.ID} (Distance > ${MaxDistance})", LOG_DEBUG]
 				continue
 			}
 
@@ -271,7 +271,7 @@ objectdef obj_Asteroids
 						if ${AsteroidIterator.Value.DistanceTo[${MyTarget.Value.ID}]} > ${MaxDistFromTarget}
 						{
 							; We have a locked asteroid that's too far from this one;  No, this is not perfect because we don't know our position
-							UI:UpdateConsole["DEBUG: obj_Asteroids:NearestAsteroid: Skipping ${AsteroidIterator.Value.ID} (Distance from target ${MyTarget.Value.ID} > ${MaxDistFromTarget})", LOG_DEBUG]
+							Logger:Log["DEBUG: obj_Asteroids:NearestAsteroid: Skipping ${AsteroidIterator.Value.ID} (Distance from target ${MyTarget.Value.ID} > ${MaxDistFromTarget})", LOG_DEBUG]
 							AbortLoop:Set[TRUE]
 							break
 						}
@@ -321,7 +321,7 @@ objectdef obj_Asteroids
 		{
 			if ${This.NearestAsteroid[${This.MaxTravelDistanceToAsteroid}]} == -1
 			{
-				UI:UpdateConsole["ERROR: OBJ_Asteroids:MoveToField: Belt is not empty and ForceMove not set, staying at Asteroid Belt: ${BeltIterator.Value.Name}", LOG_CRITICAL]
+				Logger:Log["ERROR: OBJ_Asteroids:MoveToField: Belt is not empty and ForceMove not set, staying at Asteroid Belt: ${BeltIterator.Value.Name}", LOG_CRITICAL]
 				return
 			}
 		}
@@ -330,7 +330,7 @@ objectdef obj_Asteroids
 		if (${Config.Miner.BookMarkLastPosition} && ${Bookmarks.StoredLocationExists})
 		{
 			/* We have a stored location, we should return to it. */
-			UI:UpdateConsole["Returning to last location (${Bookmarks.StoredLocation})"]
+			Logger:Log["Returning to last location (${Bookmarks.StoredLocation})"]
 			call Ship.WarpToBookMarkName "${Bookmarks.StoredLocation}" ${FleetWarp}
 			Ship:Activate_SurveyScanner
 
@@ -357,10 +357,10 @@ objectdef obj_Asteroids
 		Belts:GetIterator[BeltIterator]
 		if !${BeltIterator:First(exists)}
 		{
-			UI:UpdateConsole["ERROR: OBJ_Asteroids:MoveToField: No asteroid belts or belt bookmarks found...", LOG_CRITICAL]
+			Logger:Log["ERROR: OBJ_Asteroids:MoveToField: No asteroid belts or belt bookmarks found...", LOG_CRITICAL]
 			#if EVEBOT_DEBUG
-			UI:UpdateConsole["OBJ_Asteroids:MoveToField: Total Entities: ${EVE.EntitiesCount}", LOG_DEBUG]
-			UI:UpdateConsole["OBJ_Asteroids:MoveToField: Size of Belts List ${Belts.Used}", LOG_DEBUG]
+			Logger:Log["OBJ_Asteroids:MoveToField: Total Entities: ${EVE.EntitiesCount}", LOG_DEBUG]
+			Logger:Log["OBJ_Asteroids:MoveToField: Size of Belts List ${Belts.Used}", LOG_DEBUG]
 			#endif
 			EVEBot.ReturnToStation:Set[TRUE]
 			return
@@ -373,7 +373,7 @@ objectdef obj_Asteroids
 			TryCount:Inc
 			if ${TryCount} > ${Math.Calc[${Belts.Used} * 10]}
 			{
-				UI:UpdateConsole["All belts marked empty, returning to station"]
+				Logger:Log["All belts marked empty, returning to station"]
 				call ChatIRC.Say "All belts marked empty!"
 				EVEBot.ReturnToStation:Set[TRUE]
 				return
@@ -381,7 +381,7 @@ objectdef obj_Asteroids
 		}
 		while ( ${This.IsBeltMarkedEmpty[${Belts[${curBelt}].Name}]} )
 
-		UI:UpdateConsole["Warping to Asteroid Belt: ${Belts[${curBelt}].Name}"]
+		Logger:Log["Warping to Asteroid Belt: ${Belts[${curBelt}].Name}"]
 		call Ship.WarpToID ${Belts[${curBelt}].ID} 0 ${FleetWarp}
 		Ship:Activate_SurveyScanner
 
@@ -499,7 +499,7 @@ objectdef obj_Asteroids
 				}
 			}
 
-			UI:UpdateConsole["obj_Asteroids:UpdateList: ${AsteroidList.Used} In Range: ${Count_InRange} OOR: ${Count_OOR} Unfiltered In Range: ${AsteroidList_TotalIRTmp.Used} asteroids found", LOG_DEBUG]
+			Logger:Log["obj_Asteroids:UpdateList: ${AsteroidList.Used} In Range: ${Count_InRange} OOR: ${Count_OOR} Unfiltered In Range: ${AsteroidList_TotalIRTmp.Used} asteroids found", LOG_DEBUG]
 		}
 		else
 		{
@@ -592,7 +592,7 @@ objectdef obj_Asteroids
 				}
 
 				relay all "Event[EVEBot_ClaimAsteroid]:Execute[${Me.ID}, ${AsteroidIterator.Value.ID}]"
-				UI:UpdateConsole["Locking Asteroid ${AsteroidIterator.Value.Name}: ${EVEBot.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"]
+				Logger:Log["Locking Asteroid ${AsteroidIterator.Value.Name}: ${EVEBot.MetersToKM_Str[${AsteroidIterator.Value.Distance}]}"]
 				AsteroidIterator.Value:LockTarget
 				Ship:Activate_SurveyScanner
 
@@ -612,7 +612,7 @@ objectdef obj_Asteroids
 
 		if ${This.FieldEmpty}
 		{
-			UI:UpdateConsole["obj_Asteroids: No Asteroids within overview range"]
+			Logger:Log["obj_Asteroids: No Asteroids within overview range"]
 			if ${Entity["GroupID = GROUP_ASTEROIDBELT"].Distance} < CONFIG_OVERVIEW_RANGE
 			{
 				This:MarkBeltAsEmpty["${Entity[GroupID = GROUP_ASTEROIDBELT].Name}"]
@@ -629,7 +629,7 @@ objectdef obj_Asteroids
 		
 		if ${TargetAsteroid} != -1
 		{
-			UI:UpdateConsole["Locking Asteroid ${TargetAsteroid}:${Entity[${TargetAsteroid}].Name}: ${EVEBot.MetersToKM_Str[${Entity[${TargetAsteroid}].Distance}]}"]
+			Logger:Log["Locking Asteroid ${TargetAsteroid}:${Entity[${TargetAsteroid}].Name}: ${EVEBot.MetersToKM_Str[${Entity[${TargetAsteroid}].Distance}]}"]
 			relay all "Event[EVEBot_ClaimAsteroid]:Execute[${Me.ID}, ${Entity[${TargetAsteroid}].ID}]"
 			Ship:Activate_SurveyScanner
 			Entity[${TargetAsteroid}]:LockTarget
@@ -643,7 +643,7 @@ objectdef obj_Asteroids
 
 		if ${Miner.Approaching} != 0
 		{
-			UI:UpdateConsole["obj_Asteroids: TargetNext: No unlocked asteroids in range right now, but Miner is approaching ${Miner.Approaching}:${Entity[${Miner.Approaching}].Name}.", LOG_DEBUG]
+			Logger:Log["obj_Asteroids: TargetNext: No unlocked asteroids in range right now, but Miner is approaching ${Miner.Approaching}:${Entity[${Miner.Approaching}].Name}.", LOG_DEBUG]
 			return TRUE
 		}
 
@@ -661,12 +661,12 @@ objectdef obj_Asteroids
 		TargetAsteroid:Set[${This.NearestAsteroid[${This.MaxTravelDistanceToAsteroid}]}]
 		if ${TargetAsteroid} != -1
 		{
-			UI:UpdateConsole["obj_Asteroids: TargetNext: No unlocked asteroids in range & All lasers idle: Approaching ${TargetAsteroid}:${Entity[${TargetAsteroid}].Name}: ${EVEBot.MetersToKM_Str[${Entity[${TargetAsteroid}].Distance}]}"]
+			Logger:Log["obj_Asteroids: TargetNext: No unlocked asteroids in range & All lasers idle: Approaching ${TargetAsteroid}:${Entity[${TargetAsteroid}].Name}: ${EVEBot.MetersToKM_Str[${Entity[${TargetAsteroid}].Distance}]}"]
 			Miner:StartApproaching[${TargetAsteroid}]
 			return TRUE
 		}
 
-		UI:UpdateConsole["obj_Asteroids: TargetNext: No Asteroids within ${EVEBot.MetersToKM_Str[${This.MaxTravelDistanceToAsteroid}]}"]
+		Logger:Log["obj_Asteroids: TargetNext: No Asteroids within ${EVEBot.MetersToKM_Str[${This.MaxTravelDistanceToAsteroid}]}"]
 		; Clear the asteroid list. We've been thru it entirely and picked nothing. Force an update.
 		This.AsteroidList:Clear
 		return FALSE

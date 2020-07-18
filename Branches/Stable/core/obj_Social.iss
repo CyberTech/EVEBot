@@ -65,7 +65,7 @@ objectdef obj_Social
 		LavishScript:RegisterEvent[EVEBot_FinalizeWhitelist]
 		Event[EVEBot_FinalizeWhitelist]:AttachAtom[This:FinalizeWhitelist]
 
-		UI:UpdateConsole["obj_Social: Initialized", LOG_MINOR]
+		Logger:Log["obj_Social: Initialized", LOG_MINOR]
 	}
 
 	method SyncWhitelist()
@@ -156,7 +156,7 @@ objectdef obj_Social
 		Blacklist.CorporationsRef:GetSettingIterator[This.BlackListCorpIterator]
 		Blacklist.AlliancesRef:GetSettingIterator[This.BlackListAllianceIterator]
 
-		UI:UpdateConsole["obj_Social: Initializing whitelist...", LOG_MINOR]
+		Logger:Log["obj_Social: Initializing whitelist...", LOG_MINOR]
 		PilotWhiteList:Add[${Me.CharID}]
 		if ${Me.Corp.ID} > 0
 		{
@@ -188,7 +188,7 @@ objectdef obj_Social
 		}
 		while ${This.WhiteListAllianceIterator:Next(exists)}
 
-		UI:UpdateConsole["obj_Social: Initializing blacklist...", LOG_MINOR]
+		Logger:Log["obj_Social: Initializing blacklist...", LOG_MINOR]
 		if ${This.BlackListPilotIterator:First(exists)}
 		do
 		{
@@ -284,7 +284,7 @@ objectdef obj_Social
 			{
 				call Sound.PlayTellSound
 				Sound:Speak[${MessageText.Escape}]
-				UI:UpdateConsole["Channel Local: ${CharName.Escape}: ${MessageText.Escape}", LOG_CRITICAL]
+				Logger:Log["Channel Local: ${CharName.Escape}: ${MessageText.Escape}", LOG_CRITICAL]
 			}
 		}
 	}
@@ -326,7 +326,7 @@ objectdef obj_Social
 				!${This.PilotWhiteList.Contains[${PilotID}]} && \
 				!${Me.Fleet.IsMember[${PilotID}]}
 			{
-				UI:UpdateConsole["Alert: Non-Whitelisted Pilot: ${PilotName}: CharID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_CRITICAL]
+				Logger:Log["Alert: Non-Whitelisted Pilot: ${PilotName}: CharID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_CRITICAL]
 				return FALSE
 			}
 		}
@@ -421,19 +421,19 @@ objectdef obj_Social
 						(${AllianceToAlliance} == 0 \
 					)  && 0 < ${Config.Combat.LowestStanding} 
 				{
-					UI:UpdateConsole["	if  ", LOG_DEBUG]
-					UI:UpdateConsole["	(  ", LOG_DEBUG]
-					UI:UpdateConsole["		(${MeToPilot} == 0 &&  ", LOG_DEBUG]
-					UI:UpdateConsole["		(${MeToCorp} == 0 &&  ", LOG_DEBUG]
-					UI:UpdateConsole["		(${MeToAlliance} == 0 &&  ", LOG_DEBUG]
-					UI:UpdateConsole["		(${CorpToPilot} == 0 &&  ", LOG_DEBUG]
-					UI:UpdateConsole["		(${CorpToCorp} == 0 &&  ", LOG_DEBUG]
-					UI:UpdateConsole["		(${CorpToAlliance} == 0 &&  ", LOG_DEBUG]
-					UI:UpdateConsole["		(${AllianceToCorp} == 0 &&  ", LOG_DEBUG]
-					UI:UpdateConsole["		(${AllianceToAlliance} == 0 &&  ", LOG_DEBUG]
-					UI:UpdateConsole["	)  && 0 < ${Config.Combat.LowestStanding}  ", LOG_DEBUG]
-					UI:UpdateConsole["Alert: Low Standing Pilot: ${PilotIterator.Value.Name}: CharID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_DEBUG]
-					UI:UpdateConsole["Standings: ${MeToPilot} ${MeToCorp} ${MeToAlliance} ${CorpToPilot} ${CorpToCorp} ${CorpToAlliance} ${AllianceToCorp} ${AllianceToAlliance}", LOG_DEBUG]
+					Logger:Log["	if  ", LOG_DEBUG]
+					Logger:Log["	(  ", LOG_DEBUG]
+					Logger:Log["		(${MeToPilot} == 0 &&  ", LOG_DEBUG]
+					Logger:Log["		(${MeToCorp} == 0 &&  ", LOG_DEBUG]
+					Logger:Log["		(${MeToAlliance} == 0 &&  ", LOG_DEBUG]
+					Logger:Log["		(${CorpToPilot} == 0 &&  ", LOG_DEBUG]
+					Logger:Log["		(${CorpToCorp} == 0 &&  ", LOG_DEBUG]
+					Logger:Log["		(${CorpToAlliance} == 0 &&  ", LOG_DEBUG]
+					Logger:Log["		(${AllianceToCorp} == 0 &&  ", LOG_DEBUG]
+					Logger:Log["		(${AllianceToAlliance} == 0 &&  ", LOG_DEBUG]
+					Logger:Log["	)  && 0 < ${Config.Combat.LowestStanding}  ", LOG_DEBUG]
+					Logger:Log["Alert: Low Standing Pilot: ${PilotIterator.Value.Name}: CharID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_DEBUG]
+					Logger:Log["Standings: ${MeToPilot} ${MeToCorp} ${MeToAlliance} ${CorpToPilot} ${CorpToCorp} ${CorpToAlliance} ${AllianceToCorp} ${AllianceToAlliance}", LOG_DEBUG]
 					return FALSE
 				}
 				elseif ((${AllianceToAlliance} != 0 && ${AllianceToAlliance} < ${Config.Combat.LowestStanding}) || \
@@ -446,17 +446,17 @@ objectdef obj_Social
 								(${CorpToAlliance} != 0 && ${CorpToAlliance} < ${Config.Combat.LowestStanding}) \
 							)
 				{
-					UI:UpdateConsole["elseif ((${AllianceToAlliance} != 0 && ${AllianceToAlliance} < ${Config.Combat.LowestStanding}) || ", LOG_DEBUG]
-					UI:UpdateConsole["   (${AllianceToCorp} != 0 && ${AllianceToCorp} < ${Config.Combat.LowestStanding}) || ", LOG_DEBUG]
-					UI:UpdateConsole["   (${MeToPilot} != 0 && ${MeToPilot} < ${Config.Combat.LowestStanding}) || ", LOG_DEBUG]
-					UI:UpdateConsole["   (${MeToCorp} != 0 && ${MeToCorp} < ${Config.Combat.LowestStanding}) || ", LOG_DEBUG]
-					UI:UpdateConsole["   (${MeToAlliance} != 0 && ${MeToAlliance} < ${Config.Combat.LowestStanding}) || ", LOG_DEBUG]
-					UI:UpdateConsole["   (${CorpToPilot} != 0 && ${CorpToPilot} < ${Config.Combat.LowestStanding}) || ", LOG_DEBUG]
-					UI:UpdateConsole["   (${CorpToCorp} != 0 && ${CorpToCorp} < ${Config.Combat.LowestStanding}) || ", LOG_DEBUG]
-					UI:UpdateConsole["   (${CorpToAlliance} != 0 && ${CorpToAlliance} < ${Config.Combat.LowestStanding}) ", LOG_DEBUG]
-					UI:UpdateConsole[") ", LOG_DEBUG]
-					UI:UpdateConsole["Alert: Low Standing Pilot: ${PilotIterator.Value.Name}: CharID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_DEBUG]
-					UI:UpdateConsole["Standings: ${MeToPilot} ${MeToCorp} ${MeToAlliance} ${CorpToPilot} ${CorpToCorp} ${CorpToAlliance} ${AllianceToCorp} ${AllianceToAlliance}", LOG_DEBUG]
+					Logger:Log["elseif ((${AllianceToAlliance} != 0 && ${AllianceToAlliance} < ${Config.Combat.LowestStanding}) || ", LOG_DEBUG]
+					Logger:Log["   (${AllianceToCorp} != 0 && ${AllianceToCorp} < ${Config.Combat.LowestStanding}) || ", LOG_DEBUG]
+					Logger:Log["   (${MeToPilot} != 0 && ${MeToPilot} < ${Config.Combat.LowestStanding}) || ", LOG_DEBUG]
+					Logger:Log["   (${MeToCorp} != 0 && ${MeToCorp} < ${Config.Combat.LowestStanding}) || ", LOG_DEBUG]
+					Logger:Log["   (${MeToAlliance} != 0 && ${MeToAlliance} < ${Config.Combat.LowestStanding}) || ", LOG_DEBUG]
+					Logger:Log["   (${CorpToPilot} != 0 && ${CorpToPilot} < ${Config.Combat.LowestStanding}) || ", LOG_DEBUG]
+					Logger:Log["   (${CorpToCorp} != 0 && ${CorpToCorp} < ${Config.Combat.LowestStanding}) || ", LOG_DEBUG]
+					Logger:Log["   (${CorpToAlliance} != 0 && ${CorpToAlliance} < ${Config.Combat.LowestStanding}) ", LOG_DEBUG]
+					Logger:Log[") ", LOG_DEBUG]
+					Logger:Log["Alert: Low Standing Pilot: ${PilotIterator.Value.Name}: CharID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_DEBUG]
+					Logger:Log["Standings: ${MeToPilot} ${MeToCorp} ${MeToAlliance} ${CorpToPilot} ${CorpToCorp} ${CorpToAlliance} ${AllianceToCorp} ${AllianceToAlliance}", LOG_DEBUG]
 					return FALSE
 				}
 
@@ -472,25 +472,25 @@ objectdef obj_Social
 						${CorpToAlliance} < ${Config.Combat.LowestStanding} \
 					)
 				{
-					UI:UpdateConsole["if !${PilotID.Equal[-1]} && ", LOG_DEBUG]
-					UI:UpdateConsole["	!${PilotID.Equal[${Me.CharID}]} &&  ", LOG_DEBUG]
-					UI:UpdateConsole["	(!${Me.Fleet(exists)} || !${Me.Fleet.IsMember[${PilotID}]}) &&  ", LOG_DEBUG]
-					UI:UpdateConsole["	!${MyAllianceID.Equal[${AllianceID}]} &&  ", LOG_DEBUG]
-					UI:UpdateConsole["	(  ", LOG_DEBUG]
-					UI:UpdateConsole["		${Config.Combat.IncludeNeutralInCalc} && ", LOG_DEBUG]
-					UI:UpdateConsole["		( ", LOG_DEBUG]
-					UI:UpdateConsole["			${AllianceToAlliance} < ${Config.Combat.LowestStanding} || ", LOG_DEBUG]
-					UI:UpdateConsole["			${AllianceToCorp} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
-					UI:UpdateConsole["			${MeToPilot} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
-					UI:UpdateConsole["			${MeToCorp} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
-					UI:UpdateConsole["			${MeToAlliance} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
-					UI:UpdateConsole["			${CorpToPilot} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
-					UI:UpdateConsole["			${CorpToCorp} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
-					UI:UpdateConsole["			${CorpToAlliance} < ${Config.Combat.LowestStanding}  ", LOG_DEBUG]
-					UI:UpdateConsole["		) ", LOG_DEBUG]
-					UI:UpdateConsole["	) ", LOG_DEBUG]
-					UI:UpdateConsole["Alert: Low Standing Pilot: ${PilotIterator.Value.Name}: CharID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_DEBUG]
-					UI:UpdateConsole["Standings: ${MeToPilot} ${MeToCorp} ${MeToAlliance} ${CorpToPilot} ${CorpToCorp} ${CorpToAlliance} ${AllianceToCorp} ${AllianceToAlliance}", LOG_DEBUG]
+					Logger:Log["if !${PilotID.Equal[-1]} && ", LOG_DEBUG]
+					Logger:Log["	!${PilotID.Equal[${Me.CharID}]} &&  ", LOG_DEBUG]
+					Logger:Log["	(!${Me.Fleet(exists)} || !${Me.Fleet.IsMember[${PilotID}]}) &&  ", LOG_DEBUG]
+					Logger:Log["	!${MyAllianceID.Equal[${AllianceID}]} &&  ", LOG_DEBUG]
+					Logger:Log["	(  ", LOG_DEBUG]
+					Logger:Log["		${Config.Combat.IncludeNeutralInCalc} && ", LOG_DEBUG]
+					Logger:Log["		( ", LOG_DEBUG]
+					Logger:Log["			${AllianceToAlliance} < ${Config.Combat.LowestStanding} || ", LOG_DEBUG]
+					Logger:Log["			${AllianceToCorp} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
+					Logger:Log["			${MeToPilot} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
+					Logger:Log["			${MeToCorp} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
+					Logger:Log["			${MeToAlliance} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
+					Logger:Log["			${CorpToPilot} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
+					Logger:Log["			${CorpToCorp} < ${Config.Combat.LowestStanding} ||  ", LOG_DEBUG]
+					Logger:Log["			${CorpToAlliance} < ${Config.Combat.LowestStanding}  ", LOG_DEBUG]
+					Logger:Log["		) ", LOG_DEBUG]
+					Logger:Log["	) ", LOG_DEBUG]
+					Logger:Log["Alert: Low Standing Pilot: ${PilotIterator.Value.Name}: CharID: ${PilotID} CorpID: ${CorpID} AllianceID: ${AllianceID}", LOG_DEBUG]
+					Logger:Log["Standings: ${MeToPilot} ${MeToCorp} ${MeToAlliance} ${CorpToPilot} ${CorpToCorp} ${CorpToAlliance} ${AllianceToCorp} ${AllianceToAlliance}", LOG_DEBUG]
 
 					return FALSE
 				}
@@ -525,7 +525,7 @@ objectdef obj_Social
 					${This.CorpBlackList.Contains[${PilotIterator.Value.Corp.ID}]} \
 				)
 			{
-				UI:UpdateConsole["Alert: Blacklisted Pilot: ${PilotIterator.Value.Name}!", LOG_CRITICAL]
+				Logger:Log["Alert: Blacklisted Pilot: ${PilotIterator.Value.Name}!", LOG_CRITICAL]
 				return FALSE
 			}
 		}
@@ -558,7 +558,7 @@ objectdef obj_Social
 					${PilotIterator.Value.ToEntity.Distance} < ${Config.Miner.AvoidPlayerRange} && \
 					!${PilotIterator.Value.ToFleetMember}
 				{
-					UI:UpdateConsole["PlayerInRange: ${PilotIterator.Value.Name} - ${EVEBot.MetersToKM_Str[${PilotIterator.Value.ToEntity.Distance}]}"]
+					Logger:Log["PlayerInRange: ${PilotIterator.Value.Name} - ${EVEBot.MetersToKM_Str[${PilotIterator.Value.ToEntity.Distance}]}"]
 					return TRUE
 				}
 			}
@@ -670,7 +670,7 @@ objectdef obj_Social
 					${EVE.Standing[${PilotIterator.Value.AllianceID},${Me.AllianceID}]} < ${Standing}
 				{
 					/* Yep, I'm laughing right now as well -- CyberTech */
-					UI:UpdateConsole["obj_Social: StandingDetection in local: ${PilotIterator.Value.Name} - ${PilotIterator.Value.Standing}!", LOG_CRITICAL]
+					Logger:Log["obj_Social: StandingDetection in local: ${PilotIterator.Value.Name} - ${PilotIterator.Value.Standing}!", LOG_CRITICAL]
 					return TRUE
 				}
 			}
@@ -738,7 +738,7 @@ objectdef obj_Social
 
 				if ${PilotIterator.Value.ToEntity.IsTargetingMe}
 				{
-					UI:UpdateConsole["obj_Social: Hostile on grid: ${PilotIterator.Value.Name} is targeting me", LOG_CRITICAL]
+					Logger:Log["obj_Social: Hostile on grid: ${PilotIterator.Value.Name} is targeting me", LOG_CRITICAL]
 					bReturn:Set[TRUE]
 				}
 
@@ -747,7 +747,7 @@ objectdef obj_Social
 				if ${PilotSecurityStatus} > -11.0 && \
 					${PilotSecurityStatus} < ${Config.Miner.MinimumSecurityStatus}
 				{
-					UI:UpdateConsole["obj_Social: Possible hostile: ${PilotIterator.Value.Name} Sec Status: ${PilotSecurityStatus.Centi}", LOG_CRITICAL]
+					Logger:Log["obj_Social: Possible hostile: ${PilotIterator.Value.Name} Sec Status: ${PilotSecurityStatus.Centi}", LOG_CRITICAL]
 					bReturn:Set[TRUE]
 				}
 			}
@@ -768,7 +768,7 @@ objectdef obj_Social
 			
 			if ${NextBreak} <= ${Time.Timestamp} && !${OnBreak} && !${EVEBot.ReturnToStation}
 			{
-				UI:UpdateConsole["Taking a break!", LOG_CRITICAL]
+				Logger:Log["Taking a break!", LOG_CRITICAL]
 				if ${Config.Combat.BroadcastBreaks}
 				{
 					relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.BotModeName}"
@@ -788,7 +788,7 @@ objectdef obj_Social
 			
 			if ${NextRestart} <= ${Time.Timestamp} && ${OnBreak}
 			{
-				UI:UpdateConsole["Break over, back to work!", LOG_CRITICAL]
+				Logger:Log["Break over, back to work!", LOG_CRITICAL]
 				if ${Config.Combat.BroadcastBreaks}
 				{
 					relay all -event EVEBot_ABORTHARDSTOP
@@ -812,7 +812,7 @@ objectdef obj_Social
 	;This method is triggered by an event.  If triggered, it tells us one of our fellow miners has entered the HARDSTOP state, and we should also run
 	method TriggerHARDSTOP(string SourceInfo)
 	{
-		UI:UpdateConsole["TriggerHARDSTOP called by ${SourceInfo}", LOG_CRITICAL]
+		Logger:Log["TriggerHARDSTOP called by ${SourceInfo}", LOG_CRITICAL]
 		EVEBot.ReturnToStation:Set[TRUE]
 	}
 	;This method is triggered by an event.  If triggered, it tells us one of our fellow miners has aborted the hardstop state

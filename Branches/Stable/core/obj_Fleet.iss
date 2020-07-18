@@ -23,7 +23,7 @@ objectdef obj_Fleet
 		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
 		This.NextPulse:Update
 		
-		UI:UpdateConsole["obj_Fleet: Initialized", LOG_MINOR]
+		Logger:Log["obj_Fleet: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -120,7 +120,7 @@ objectdef obj_Fleet
 			{
 				if !${Me.Fleet.IsMember[${This.ResolveCharID[${Config.Fleet.FleetLeader}]}]}
 				{
-					UI:UpdateConsole["obj_Fleet: Fleet Leader (${Config.Fleet.FleetLeader}) is not in the fleet, leaving"]
+					Logger:Log["obj_Fleet: Fleet Leader (${Config.Fleet.FleetLeader}) is not in the fleet, leaving"]
 					Me.Fleet:LeaveFleet
 				}
 			}

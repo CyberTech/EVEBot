@@ -22,7 +22,7 @@ objectdef obj_Fleet
 		Me.Fleet:GetMembers[FleetMembers]
 		FleetMemberCount:Set[${FleetMembers.Used}]
 		;echo DEBUG: Populating fleet member list:: ${FleetMemberCount} members total
-		UI:UpdateConsole["obj_Fleet: Initialized", LOG_MINOR]
+		Logger:Log["obj_Fleet: Initialized", LOG_MINOR]
 
 		/* BEGIN TEST CODE
 		variable int i = 1

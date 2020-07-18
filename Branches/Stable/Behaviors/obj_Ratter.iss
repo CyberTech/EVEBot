@@ -30,7 +30,7 @@ objectdef obj_Ratter
 		;; set the combat "mode"
 		This.Combat:SetMode["AGGRESSIVE"]
 
-		UI:UpdateConsole["obj_Ratter: Initialized", LOG_MINOR]
+		Logger:Log["obj_Ratter: Initialized", LOG_MINOR]
 	}
 
 
@@ -90,7 +90,7 @@ objectdef obj_Ratter
 		; call the combat object state processing
 		call This.Combat.ProcessState
 
-		;UI:UpdateConsole["Debug: Ratter: This.Combat.Fled = ${This.Combat.Fled} This.CurrentState = ${This.CurrentState} Social.IsSafe = ${Social.IsSafe}"]
+		;Logger:Log["Debug: Ratter: This.Combat.Fled = ${This.Combat.Fled} This.CurrentState = ${This.CurrentState} Social.IsSafe = ${Social.IsSafe}"]
 
 		; see if combat object wants to
 		; override bot module state.
@@ -188,12 +188,12 @@ objectdef obj_Ratter
 		if ((${Config.Combat.AnomalyAssistMode} && ${Targets.NPC}) || \
 			(!${Config.Combat.AnomalyAssistMode} && (!${Targets.PC} && ${Targets.NPC})))
 		{
-			UI:UpdateConsole["PlayerCheck - Fight"]
+			Logger:Log["PlayerCheck - Fight"]
 			This.CurrentState:Set["FIGHT"]
 		}
 		else
 		{
-			UI:UpdateConsole["PlayerCheck - Move"]
+			Logger:Log["PlayerCheck - Move"]
 			This.CurrentState:Set["MOVE"]
 		}
 	}
@@ -211,7 +211,7 @@ objectdef obj_Ratter
 		{
 			if ${Targets.SpecialTargetPresent}
 			{
-				UI:UpdateConsole["Special spawn Detected - ${Targets.m_SpecialTargetName}!", LOG_CRITICAL]
+				Logger:Log["Special spawn Detected - ${Targets.m_SpecialTargetName}!", LOG_CRITICAL]
 				call Sound.PlayDetectSound
 				; Wait 5 seconds
 				wait 50
@@ -263,21 +263,21 @@ objectdef obj_Ratter
 					Wreck.Value:Open
 					wait 10
 					Wreck.Value:GetCargo[Items]
-					UI:UpdateConsole["obj_Ratter: DEBUG:  Wreck contains ${Items.Used} items.", LOG_DEBUG]
+					Logger:Log["obj_Ratter: DEBUG:  Wreck contains ${Items.Used} items.", LOG_DEBUG]
 
 					Items:GetIterator[Item]
 					if ${Item:First(exists)}
 					{
 						do
 						{
-							UI:UpdateConsole["obj_Ratter: Found ${Item.Value.Quantity} x ${Item.Value.Name} - ${Math.Calc[${Item.Value.Quantity} * ${Item.Value.Volume}]}m3"]
+							Logger:Log["obj_Ratter: Found ${Item.Value.Quantity} x ${Item.Value.Name} - ${Math.Calc[${Item.Value.Quantity} * ${Item.Value.Volume}]}m3"]
 							if (${Item.Value.Quantity} * ${Item.Value.Volume}) > ${Ship.CargoFreeSpace}
 							{
 								/* Move only what will fit, minus 1 to account for CCP rounding errors. */
 									QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${Item.Value.Volume} - 1]}]
 								if ${QuantityToMove} <= 0
 								{
-								UI:UpdateConsole["ERROR: obj_Ratter: QuantityToMove = ${QuantityToMove}!"]
+								Logger:Log["ERROR: obj_Ratter: QuantityToMove = ${QuantityToMove}!"]
 								This.CurrentState:Set["DROP"]
 								break
 								}
@@ -287,7 +287,7 @@ objectdef obj_Ratter
 								QuantityToMove:Set[${Item.Value.Quantity}]
 							}
 
-							UI:UpdateConsole["obj_Ratter: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Item.Value.Volume}]}m3"]
+							Logger:Log["obj_Ratter: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Item.Value.Volume}]}m3"]
 							if ${QuantityToMove} > 0
 							{
 								Item.Value:MoveTo[${MyShip.ID},CargoHold,${QuantityToMove}]
@@ -296,7 +296,7 @@ objectdef obj_Ratter
 
 							if ${Ship.CargoFull}
 							{
-								UI:UpdateConsole["DEBUG: obj_Ratter: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}", LOG_DEBUG]
+								Logger:Log["DEBUG: obj_Ratter: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}", LOG_DEBUG]
 								This.CurrentState:Set["DROP"]
 								break
 							}
@@ -306,7 +306,7 @@ objectdef obj_Ratter
 				}
 				if ${Ship.CargoFull}
 				{
-					UI:UpdateConsole["DEBUG: obj_Ratter: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}", LOG_DEBUG]
+					Logger:Log["DEBUG: obj_Ratter: Ship Cargo: ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}", LOG_DEBUG]
 					This.CurrentState:Set["DROP"]
 					break
 				}

@@ -5,14 +5,14 @@ objectdef obj_Belts
 
 	method Initialize()
 	{		
-		UI:UpdateConsole["obj_Belts: Initialized", LOG_MINOR]
+		Logger:Log["obj_Belts: Initialized", LOG_MINOR]
 	}
 	
 	method ResetBeltList()
 	{
 		EVE:QueryEntities[beltIndex, "GroupID = GROUP_ASTEROIDBELT"]
 		beltIndex:GetIterator[beltIterator]	
-		UI:UpdateConsole["obj_Belts: ResetBeltList found ${beltIndex.Used} belts in this system.", LOG_DEBUG]
+		Logger:Log["obj_Belts: ResetBeltList found ${beltIndex.Used} belts in this system.", LOG_DEBUG]
 	}
 	
 	member:bool IsAtBelt()
@@ -99,19 +99,19 @@ objectdef obj_Belts
 					; TODO - This needs to do a count of belts within range of the gate and make a decision if it's safe enough.
 					; I really, really hate this solution, it relies on the % chance the hostile will pick the wrong belt
 					; when they see you on scanner. -- CyberTech
-					UI:UpdateConsole["obj_Belts: Skipping belt ${beltIterator.Value.Name} - too close to gate (${Entity[${NearestGate}].Name} - ${DistanceToGate}"]
+					Logger:Log["obj_Belts: Skipping belt ${beltIterator.Value.Name} - too close to gate (${Entity[${NearestGate}].Name} - ${DistanceToGate}"]
 					call This.WarpToNextBelt ${WarpInDistance}
 					return
 				}
 			}
 */
 			;call Ship.WarpToBookMark ${SafeSpotIterator.Value.ID}
-			;;UI:UpdateConsole["obj_Belts: DEBUG: Warping to ${beltIterator.Value.Name}"]
+			;;Logger:Log["obj_Belts: DEBUG: Warping to ${beltIterator.Value.Name}"]
 			call Ship.WarpToID ${beltIterator.Value.ID} ${WarpInDistance}
 		}
 		else
 		{
-			UI:UpdateConsole["obj_Belts:WarpToNextBelt ERROR: beltIterator does not exist"]
+			Logger:Log["obj_Belts:WarpToNextBelt ERROR: beltIterator does not exist"]
 		}
 	}
 }

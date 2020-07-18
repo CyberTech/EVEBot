@@ -5,7 +5,7 @@ objectdef obj_Safespots
 
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_Safespots: Initialized", LOG_MINOR]
+		Logger:Log["obj_Safespots: Initialized", LOG_MINOR]
 	}
 
 	method ResetSafeSpotList(bool SupressSpam=FALSE)
@@ -40,7 +40,7 @@ objectdef obj_Safespots
 
 		if !${SupressSpam}
 		{
-			UI:UpdateConsole["ResetSafeSpotList found ${SafeSpots.Used} safespots in this system."]
+			Logger:Log["ResetSafeSpotList found ${SafeSpots.Used} safespots in this system."]
 		}
 	}
 
@@ -67,7 +67,7 @@ objectdef obj_Safespots
 		}
 		else
 		{
-			UI:UpdateConsole["ERROR: obj_Safespots.WarpToNextSafeSpot found an invalid bookmark!"]
+			Logger:Log["ERROR: obj_Safespots.WarpToNextSafeSpot found an invalid bookmark!"]
 		}
 	}
 
@@ -83,14 +83,14 @@ objectdef obj_Safespots
 		}
 
 		; big debug block to get to the bottom of the "safe spot problem"
-		;UI:UpdateConsole["DEBUG: obj_Safespots.IsAtSafespot: ItemID = ${SafeSpotIterator.Value.ItemID}"]
-		;UI:UpdateConsole["DEBUG: obj_Safespots.IsAtSafespot: SS_X = ${SafeSpotIterator.Value.X}"]
-		;UI:UpdateConsole["DEBUG: obj_Safespots.IsAtSafespot: SS_Y = ${SafeSpotIterator.Value.Y}"]
-		;UI:UpdateConsole["DEBUG: obj_Safespots.IsAtSafespot: SS_Z = ${SafeSpotIterator.Value.Z}"]
-		;UI:UpdateConsole["DEBUG: obj_Safespots.IsAtSafespot: ME_X = ${Me.ToEntity.X}"]
-		;UI:UpdateConsole["DEBUG: obj_Safespots.IsAtSafespot: ME_Y = ${Me.ToEntity.Y}"]
-		;UI:UpdateConsole["DEBUG: obj_Safespots.IsAtSafespot: ME_Z = ${Me.ToEntity.Z}"]
-		;UI:UpdateConsole["DEBUG: obj_Safespots.IsAtSafespot: DIST = ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${SafeSpotIterator.Value.X}, ${SafeSpotIterator.Value.Y}, ${SafeSpotIterator.Value.Z}]}"]
+		;Logger:Log["DEBUG: obj_Safespots.IsAtSafespot: ItemID = ${SafeSpotIterator.Value.ItemID}"]
+		;Logger:Log["DEBUG: obj_Safespots.IsAtSafespot: SS_X = ${SafeSpotIterator.Value.X}"]
+		;Logger:Log["DEBUG: obj_Safespots.IsAtSafespot: SS_Y = ${SafeSpotIterator.Value.Y}"]
+		;Logger:Log["DEBUG: obj_Safespots.IsAtSafespot: SS_Z = ${SafeSpotIterator.Value.Z}"]
+		;Logger:Log["DEBUG: obj_Safespots.IsAtSafespot: ME_X = ${Me.ToEntity.X}"]
+		;Logger:Log["DEBUG: obj_Safespots.IsAtSafespot: ME_Y = ${Me.ToEntity.Y}"]
+		;Logger:Log["DEBUG: obj_Safespots.IsAtSafespot: ME_Z = ${Me.ToEntity.Z}"]
+		;Logger:Log["DEBUG: obj_Safespots.IsAtSafespot: DIST = ${Math.Distance[${Me.ToEntity.X}, ${Me.ToEntity.Y}, ${Me.ToEntity.Z}, ${SafeSpotIterator.Value.X}, ${SafeSpotIterator.Value.Y}, ${SafeSpotIterator.Value.Z}]}"]
 
 		; Are we within warp range of the bookmark?
 		if !${SafeSpotIterator.Value(exists)}
@@ -99,7 +99,7 @@ objectdef obj_Safespots
 		}
 		elseif ${SafeSpotIterator.Value.ItemID} > -1
 		{
-            ;UI:UpdateConsole["DEBUG: obj_Safespots.IsAtSafespot: ItemID = ${SafeSpotIterator.Value.ItemID}"]
+            ;Logger:Log["DEBUG: obj_Safespots.IsAtSafespot: ItemID = ${SafeSpotIterator.Value.ItemID}"]
 			if ${Me.ToEntity.DistanceTo[${SafeSpotIterator.Value.ItemID}]} < WARP_RANGE
 			{
 				return TRUE

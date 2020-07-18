@@ -8,7 +8,7 @@ objectdef obj_EVEDB_Items
 		LavishSettings[${This.SET_NAME}]:Remove
 		LavishSettings:Import[${This.CONFIG_FILE}]
 
-		UI:UpdateConsole["obj_EVEDB_Items: Initialized", LOG_MINOR]
+		Logger:Log["obj_EVEDB_Items: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()

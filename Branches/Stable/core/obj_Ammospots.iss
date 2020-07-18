@@ -14,7 +14,7 @@ objectdef obj_Ammospots
 
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_Ammospots: Initialized", LOG_MINOR]
+		Logger:Log["obj_Ammospots: Initialized", LOG_MINOR]
 	}
 
 	method ResetAmmoSpotList()
@@ -46,7 +46,7 @@ objectdef obj_Ammospots
 		AmmoSpots:Collapse
 		AmmoSpots:GetIterator[AmmoSpotIterator]
 
-		UI:UpdateConsole["ResetAmmoSpotList found ${AmmoSpots.Used} ammospots in this system."]
+		Logger:Log["ResetAmmoSpotList found ${AmmoSpots.Used} ammospots in this system."]
 	}
 
 	function WarpToNextAmmoSpot()
@@ -68,12 +68,12 @@ objectdef obj_Ammospots
 
 		if ${AmmoSpotIterator.Value(exists)}
 		{
-			UI:UpdateConsole["Debug: WarpToBookMarkName to ${AmmoSpotIterator.Value.Name} from Ammospots Line _LINE_ ", LOG_DEBUG]
+			Logger:Log["Debug: WarpToBookMarkName to ${AmmoSpotIterator.Value.Name} from Ammospots Line _LINE_ ", LOG_DEBUG]
 			call Ship.WarpToBookMark ${AmmoSpotIterator.Value.ID}
 		}
 		else
 		{
-			UI:UpdateConsole["ERROR: obj_Ammospots.WarpToNextAmmoSpot found an invalid bookmark!"]
+			Logger:Log["ERROR: obj_Ammospots.WarpToNextAmmoSpot found an invalid bookmark!"]
 		}
 	}
 

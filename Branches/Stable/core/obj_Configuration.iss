@@ -39,19 +39,19 @@ objectdef obj_Configuration_BaseConfig
 
 		if !${CONFIG_PATH.FileExists[${NEW_CONFIG_FILE}]}
 		{
-			UI:UpdateConsole["${CONFIG_FILE} not found - looking for ${ORG_CONFIG_FILE}"]
-			UI:UpdateConsole["Configuration will be copied from ${ORG_CONFIG_FILE} to ${NEW_CONFIG_FILE}"]
+			Logger:Log["${CONFIG_FILE} not found - looking for ${ORG_CONFIG_FILE}"]
+			Logger:Log["Configuration will be copied from ${ORG_CONFIG_FILE} to ${NEW_CONFIG_FILE}"]
 
 			LavishSettings[EVEBotSettings]:Import[${CONFIG_PATH}/${ORG_CONFIG_FILE}]
 		}
 		else
 		{
-			UI:UpdateConsole["Configuration file is ${CONFIG_FILE}"]
+			Logger:Log["Configuration file is ${CONFIG_FILE}"]
 			LavishSettings[EVEBotSettings]:Import[${CONFIG_FILE}]
 		}
 
 		BaseRef:Set[${LavishSettings[EVEBotSettings].FindSet[${Me.Name}]}]
-		UI:UpdateConsole["obj_Configuration_BaseConfig: Initialized", LOG_MINOR]
+		Logger:Log["obj_Configuration_BaseConfig: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -96,10 +96,10 @@ objectdef obj_Configuration_Common
 	{
 		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
 		{
-			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
+			Logger:Log["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
 		}
-		UI:UpdateConsole["obj_Configuration_Common: Initialized", LOG_MINOR]
+		Logger:Log["obj_Configuration_Common: Initialized", LOG_MINOR]
 	}
 
 	member:settingsetref CommonRef()
@@ -318,12 +318,12 @@ objectdef obj_Configuration_Miner
 	{
 		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
 		{
-			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
+			Logger:Log["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
 		}
 		if !${BaseConfig.BaseRef.FindSet[${This.SetName}].FindSet[Ice_Types](exists)}
 		{
-			UI:UpdateConsole["obj_Configuration_Miner: Initialized ICE Types"]
+			Logger:Log["obj_Configuration_Miner: Initialized ICE Types"]
 			This:Set_Default_Values_Ice[]
 		}
 	}
@@ -719,10 +719,10 @@ objectdef obj_Configuration_Combat
 	{
 		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
 		{
-			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
+			Logger:Log["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
 		}
-		UI:UpdateConsole["obj_Configuration_Combat: Initialized", LOG_MINOR]
+		Logger:Log["obj_Configuration_Combat: Initialized", LOG_MINOR]
 	}
 
 	member:settingsetref CombatRef()
@@ -1191,10 +1191,10 @@ objectdef obj_Configuration_Hauler
 	{
 		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
 		{
-			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
+			Logger:Log["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
 		}
-		UI:UpdateConsole["obj_Configuration_Hauler: Initialized", LOG_MINOR]
+		Logger:Log["obj_Configuration_Hauler: Initialized", LOG_MINOR]
 	}
 
 	member:settingsetref HaulerRef()
@@ -1296,10 +1296,10 @@ objectdef obj_Configuration_Salvager
 		return
 		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
 		{
-			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
+			Logger:Log["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
 		}
-		UI:UpdateConsole["obj_Configuration_Salvager: Initialized", LOG_MINOR]
+		Logger:Log["obj_Configuration_Salvager: Initialized", LOG_MINOR]
 	}
 
 	member:settingsetref SalvagerRef()
@@ -1324,10 +1324,10 @@ objectdef obj_Configuration_Labels
 	{
 		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
 		{
-			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
+			Logger:Log["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
 		}
-		UI:UpdateConsole["obj_Configuration_Labels: Initialized", LOG_MINOR]
+		Logger:Log["obj_Configuration_Labels: Initialized", LOG_MINOR]
 	}
 
 	member:settingsetref LabelsRef()
@@ -1394,10 +1394,10 @@ objectdef obj_Configuration_Freighter
 	{
 		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
 		{
-			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
+			Logger:Log["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
 		}
-		UI:UpdateConsole["obj_Configuration_Freighter: Initialized", LOG_MINOR]
+		Logger:Log["obj_Configuration_Freighter: Initialized", LOG_MINOR]
 	}
 
 	member:settingsetref FreighterRef()
@@ -1500,7 +1500,7 @@ objectdef obj_Config_Whitelist
 		LavishSettings[EVEBotWhitelist]:Clear
 		LavishSettings:AddSet[EVEBotWhitelist]
 		This.BaseRef:Set[${LavishSettings[EVEBotWhitelist]}]
-		UI:UpdateConsole["obj_Config_Whitelist: Loading ${DATA_FILE}"]
+		Logger:Log["obj_Config_Whitelist: Loading ${DATA_FILE}"]
 		This.BaseRef:Import[${This.DATA_FILE}]
 
 		if !${This.BaseRef.FindSet[Pilots](exists)}
@@ -1521,7 +1521,7 @@ objectdef obj_Config_Whitelist
 			This:Save
 		}
 
-		UI:UpdateConsole["obj_Config_Whitelist: Initialized", LOG_MINOR]
+		Logger:Log["obj_Config_Whitelist: Initialized", LOG_MINOR]
 	}
 
 	method Wipe()
@@ -1576,7 +1576,7 @@ objectdef obj_Config_Blacklist
 		LavishSettings[EVEBotBlacklist]:Clear
 		LavishSettings:AddSet[EVEBotBlacklist]
 		This.BaseRef:Set[${LavishSettings[EVEBotBlacklist]}]
-		UI:UpdateConsole["obj_Config_Blacklist: Loading ${DATA_FILE}"]
+		Logger:Log["obj_Config_Blacklist: Loading ${DATA_FILE}"]
 		This.BaseRef:Import[${This.DATA_FILE}]
 
 		if !${This.BaseRef.FindSet[Pilots](exists)}
@@ -1600,7 +1600,7 @@ objectdef obj_Config_Blacklist
 			This:Save
 		}
 
-		UI:UpdateConsole["obj_Config_Blacklist: Initialized", LOG_MINOR]
+		Logger:Log["obj_Config_Blacklist: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -1640,10 +1640,10 @@ objectdef obj_Configuration_Agents
 	{
 		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
 		{
-			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
+			Logger:Log["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
 		}
-		UI:UpdateConsole["obj_Configuration_Agents: Initialized", LOG_MINOR]
+		Logger:Log["obj_Configuration_Agents: Initialized", LOG_MINOR]
 	}
 
 	member:settingsetref AgentsRef()
@@ -1667,13 +1667,13 @@ objectdef obj_Configuration_Agents
 
 	member:int AgentIndex(string name)
 	{
-		;UI:UpdateConsole["obj_Configuration_Agents: AgentIndex ${name}"]
+		;Logger:Log["obj_Configuration_Agents: AgentIndex ${name}"]
 		return ${This.AgentRef[${name}].FindSetting[AgentIndex,9591]}
 	}
 
 	method SetAgentIndex(string name, int value)
 	{
-		;UI:UpdateConsole["obj_Configuration_Agents: SetAgentIndex ${name} ${value}"]
+		;Logger:Log["obj_Configuration_Agents: SetAgentIndex ${name} ${value}"]
 		if !${This.AgentsRef.FindSet[${name}](exists)}
 		{
 			This.AgentsRef:AddSet[${name}]
@@ -1684,13 +1684,13 @@ objectdef obj_Configuration_Agents
 
 	member:int AgentID(string name)
 	{
-		;UI:UpdateConsole["obj_Configuration_Agents: AgentID ${name}"]
+		;Logger:Log["obj_Configuration_Agents: AgentID ${name}"]
 		return ${This.AgentRef[${name}].FindSetting[AgentID,3018920]}
 	}
 
 	method SetAgentID(string name, int value)
 	{
-		;UI:UpdateConsole["obj_Configuration_Agents: SetAgentID ${name} ${value}"]
+		;Logger:Log["obj_Configuration_Agents: SetAgentID ${name} ${value}"]
 		if !${This.AgentsRef.FindSet[${name}](exists)}
 		{
 			This.AgentsRef:AddSet[${name}]
@@ -1701,13 +1701,13 @@ objectdef obj_Configuration_Agents
 
 	member:int LastDecline(string name)
 	{
-		;UI:UpdateConsole["obj_Configuration_Agents: LastDecline ${name}"]
+		;Logger:Log["obj_Configuration_Agents: LastDecline ${name}"]
 		return ${This.AgentRef[${name}].FindSetting[LastDecline,${Time.Timestamp}]}
 	}
 
 	method SetLastDecline(string name, int value)
 	{
-		;UI:UpdateConsole["obj_Configuration_Agents: SetLastDecline ${name} ${value}"]
+		;Logger:Log["obj_Configuration_Agents: SetLastDecline ${name} ${value}"]
 		if !${This.AgentsRef.FindSet[${name}](exists)}
 		{
 			This.AgentsRef:AddSet[${name}]
@@ -1718,13 +1718,13 @@ objectdef obj_Configuration_Agents
 
 	member:int LastCompletionTime(string name)
 	{
-		;;;UI:UpdateConsole["obj_Configuration_Agents: LastCompletionTime ${name}"]
+		;;;Logger:Log["obj_Configuration_Agents: LastCompletionTime ${name}"]
 		return ${This.AgentRef[${name}].FindSetting[LastCompletionTime,0]}
 	}
 
 	method SetLastCompletionTime(string name, int value)
 	{
-		;;;UI:UpdateConsole["obj_Configuration_Agents: SetLastCompletionTime ${name} ${value}"]
+		;;;Logger:Log["obj_Configuration_Agents: SetLastCompletionTime ${name} ${value}"]
 		if !${This.AgentsRef.FindSet[${name}](exists)}
 		{
 			This.AgentsRef:AddSet[${name}]
@@ -1743,10 +1743,10 @@ objectdef obj_Configuration_Missioneer
 	{
 		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)}
 		{
-			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
+			Logger:Log["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
 		}
-		UI:UpdateConsole["obj_Configuration_Missioneer: Initialized", LOG_MINOR]
+		Logger:Log["obj_Configuration_Missioneer: Initialized", LOG_MINOR]
 	}
 
 	member:settingsetref MissioneerRef()
@@ -1929,11 +1929,11 @@ objectdef obj_Configuration_Fleet
 	{
 		if !${BaseConfig.BaseRef.FindSet[${This.SetName}](exists)} || !${BaseConfig.BaseRef.FindSet[${This.SetName}].FindSet[FleetMembers](exists)}
 		{
-			UI:UpdateConsole["Warning: ${This.SetName} settings missing - initializing"]
+			Logger:Log["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
 		}
 
-		UI:UpdateConsole["obj_Configuration_Fleet: Initialized", LOG_MINOR]
+		Logger:Log["obj_Configuration_Fleet: Initialized", LOG_MINOR]
 	}
 
 	member:settingsetref FleetRef()

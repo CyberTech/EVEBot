@@ -81,7 +81,7 @@ objectdef obj_Miner
 		Event[EVEBot_TriggerAttack]:AttachAtom[This:UnderAttack]
 
 
-		UI:UpdateConsole["obj_Miner: Initialized", LOG_MINOR]
+		Logger:Log["obj_Miner: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -125,7 +125,7 @@ objectdef obj_Miner
 	{
 		if ${This.Approaching} != 0
 		{
-			UI:UpdateConsole["Miner: StartApproaching(${ID}) - Already approaching ${This.Approaching}. Lucy, the kids are fighting!"]
+			Logger:Log["Miner: StartApproaching(${ID}) - Already approaching ${This.Approaching}. Lucy, the kids are fighting!"]
 			return
 		}
 
@@ -146,7 +146,7 @@ objectdef obj_Miner
 			}
 		}
 
-		UI:UpdateConsole["Miner: Approaching ${ID}:${Entity[${ID}].Name} @ ${EVEBot.MetersToKM_Str[${Distance}]}"]
+		Logger:Log["Miner: Approaching ${ID}:${Entity[${ID}].Name} @ ${EVEBot.MetersToKM_Str[${Distance}]}"]
 		Entity[${ID}]:Approach[${Distance}]
 		This.Approaching:Set[${ID}]
 		This.TimeStartedApproaching:Set[${Time.Timestamp}]
@@ -154,7 +154,7 @@ objectdef obj_Miner
 
 	method StopApproaching(string Msg)
 	{
-		UI:UpdateConsole[${Msg}]
+		Logger:Log[${Msg}]
 		EVE:Execute[CmdStopShip]
 		This.Approaching:Set[0]
 		This.TimeStartedApproaching:Set[0]
@@ -181,7 +181,7 @@ objectdef obj_Miner
 			if ${Social.PossibleHostiles}
 			{
 				This.CurrentState:Set["HARDSTOP"]
-				UI:UpdateConsole["HARD STOP: Possible hostiles"]
+				Logger:Log["HARD STOP: Possible hostiles"]
 				EVEBot.ReturnToStation:Set[TRUE]
 				return
 			}
@@ -189,7 +189,7 @@ objectdef obj_Miner
 			if ${Ship.IsPod}
 			{
 				This.CurrentState:Set["HARDSTOP"]
-				UI:UpdateConsole["HARD STOP: Ship in a pod"]
+				Logger:Log["HARD STOP: Ship in a pod"]
 				EVEBot.ReturnToStation:Set[TRUE]
 				return
 			}
@@ -212,7 +212,7 @@ objectdef obj_Miner
 					return
 				}
 
-				UI:UpdateConsole["HARD STOP: Return to station was set"]
+				Logger:Log["HARD STOP: Return to station was set"]
 				This.CurrentState:Set["HARDSTOP"]
 				return
 			}
@@ -240,7 +240,7 @@ objectdef obj_Miner
 				}
 
 				This.CurrentState:Set["FLEE"]
-				UI:UpdateConsole["FLEE: Low Standing player or system unsafe, fleeing"]
+				Logger:Log["FLEE: Low Standing player or system unsafe, fleeing"]
 				return
 			}
 
@@ -249,21 +249,21 @@ objectdef obj_Miner
 				if ${Entity["GroupID = GROUP_DREADNOUGHT && CategoryID = CATEGORYID_ENTITY"](exists)}
 				{
 					This.CurrentState:Set["FLEE"]
-					UI:UpdateConsole["FLEE: NPC Dreadnaught detected: ${Entity[\"GroupID = GROUP_DREADNOUGHT\" && CategoryID = CATEGORYID_ENTITY].Name}"]
+					Logger:Log["FLEE: NPC Dreadnaught detected: ${Entity[\"GroupID = GROUP_DREADNOUGHT\" && CategoryID = CATEGORYID_ENTITY].Name}"]
 					return
 				}
 
 				if ${Entity["GroupID = GROUP_TITAN && CategoryID = CATEGORYID_ENTITY"](exists)}
 				{
 					This.CurrentState:Set["FLEE"]
-					UI:UpdateConsole["FLEE: NPC Titan detected: ${Entity[\"GroupID = GROUP_TITAN\" && CategoryID = CATEGORYID_ENTITY].Name}"]
+					Logger:Log["FLEE: NPC Titan detected: ${Entity[\"GroupID = GROUP_TITAN\" && CategoryID = CATEGORYID_ENTITY].Name}"]
 					return
 				}
 
 				if ${Entity["GroupID = GROUP_INVASIONNPS && CategoryID = CATEGORYID_ENTITY"](exists)}
 				{
 					This.CurrentState:Set["FLEE"]
-					UI:UpdateConsole["FLEE: NPC Invasion Precursor (Damavik?) detected: ${Entity[\"GroupID = GROUP_INVASIONNPS\" && CategoryID = CATEGORYID_ENTITY].Name}"]
+					Logger:Log["FLEE: NPC Invasion Precursor (Damavik?) detected: ${Entity[\"GroupID = GROUP_INVASIONNPS\" && CategoryID = CATEGORYID_ENTITY].Name}"]
 					return
 				}
 
@@ -285,7 +285,7 @@ objectdef obj_Miner
 
 					; If in orca delivery and orca not in belt, flee
 					This.CurrentState:Set["FLEE"]
-					UI:UpdateConsole["FLEE: Orca not in belt (temporary)"]
+					Logger:Log["FLEE: Orca not in belt (temporary)"]
 					return
 				}
 			}
@@ -301,7 +301,7 @@ objectdef obj_Miner
 			if ${Config.Miner.GroupMode} && !${IsMaster} && !${WarpToMaster}
 			{
 				This.CurrentState:Set["FLEE"]
-				UI:UpdateConsole["FLEE: Master not in belt (temporary)"]
+				Logger:Log["FLEE: Master not in belt (temporary)"]
 				return
 			}
 		}
@@ -410,7 +410,7 @@ objectdef obj_Miner
 			;	*	If everything above failed and there's a station in the same system, dock there
 			;	*	If everything above failed, check if we're warping and warp to a safe spot
 			case HARDSTOP
-				UI:UpdateConsole["Sending HARD STOP to fleet"]
+				Logger:Log["Sending HARD STOP to fleet"]
 				relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.BotModeName}"
 				if ${Me.InStation}
 				{
@@ -422,19 +422,19 @@ objectdef obj_Miner
 					if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].TypeID} != 5
 					{
 						;call This.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
-						UI:UpdateConsole["Debug: Station.DockAtStation called from Line _LINE_ ", LOG_DEBUG]
+						Logger:Log["Debug: Station.DockAtStation called from Line _LINE_ ", LOG_DEBUG]
 						call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
 					}
 					else
 					{
-						UI:UpdateConsole["Debug: WarpToBookMarkName ${Config.Miner.PanicLocation} from Line _LINE_ ", LOG_DEBUG]
+						Logger:Log["Debug: WarpToBookMarkName ${Config.Miner.PanicLocation} from Line _LINE_ ", LOG_DEBUG]
 						call Ship.WarpToBookMarkName "${Config.Miner.PanicLocation}"
 					}
 					break
 				}
 				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} != ${Me.SolarSystemID}
 				{
-					UI:UpdateConsole["Debug: FastWarp to ${Config.Miner.PanicLocation} from Line _LINE_ ", LOG_DEBUG]
+					Logger:Log["Debug: FastWarp to ${Config.Miner.PanicLocation} from Line _LINE_ ", LOG_DEBUG]
 					call This.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID}
 					call Ship.TravelToSystem ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID}
 					break
@@ -442,28 +442,28 @@ objectdef obj_Miner
 				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
 					;call This.FastWarp ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
-					UI:UpdateConsole["Debug: Station.DockAtStation called from Line _LINE_ ", LOG_DEBUG]
+					Logger:Log["Debug: Station.DockAtStation called from Line _LINE_ ", LOG_DEBUG]
 					call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
 					break
 				}
 				if ${Entity["(GroupID = 15 || GroupID = 1657)"](exists)}
 				{
-					UI:UpdateConsole["Docking at ${Entity["(GroupID = 15 || GroupID = 1657)"].Name}"]
+					Logger:Log["Docking at ${Entity["(GroupID = 15 || GroupID = 1657)"].Name}"]
 					;call This.FastWarp ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
-					UI:UpdateConsole["Debug: Station.DockAtStation called from Line _LINE_ ", LOG_DEBUG]
+					Logger:Log["Debug: Station.DockAtStation called from Line _LINE_ ", LOG_DEBUG]
 					call Station.DockAtStation ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
 					break
 				}
 				if ${Me.ToEntity.Mode} != 3
 				{
-					UI:UpdateConsole["Debug: Safespots.WarpTo called from Line _LINE_ ", LOG_DEBUG]
+					Logger:Log["Debug: Safespots.WarpTo called from Line _LINE_ ", LOG_DEBUG]
 					call Safespots.WarpTo
-					UI:UpdateConsole["Debug: FastWarp called from Line _LINE_ ", LOG_DEBUG]
+					Logger:Log["Debug: FastWarp called from Line _LINE_ ", LOG_DEBUG]
 					call This.FastWarp
 					wait 30
 				}
 
-				UI:UpdateConsole["WARNING:  EVERYTHING has gone wrong. Miner is in HARDSTOP mode and there are no panic locations, delivery locations, stations, or safe spots to use. You're probably going to get blown up..."]
+				Logger:Log["WARNING:  EVERYTHING has gone wrong. Miner is in HARDSTOP mode and there are no panic locations, delivery locations, stations, or safe spots to use. You're probably going to get blown up..."]
 				break
 
 			;	This means there's something dangerous in the system, but once it leaves we're going to go back to mining.
@@ -488,7 +488,7 @@ objectdef obj_Miner
 					}
 
 					;call This.FastWarp ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
-					UI:UpdateConsole["Debug: Station.DockAtStation called from Line _LINE_ ", LOG_DEBUG]
+					Logger:Log["Debug: Station.DockAtStation called from Line _LINE_ ", LOG_DEBUG]
 					call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
 					break
 				}
@@ -502,12 +502,12 @@ objectdef obj_Miner
 					if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].TypeID} != 5
 					{
 						;call This.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
-						UI:UpdateConsole["Debug: Station.DockAtStation called from Line _LINE_ ", LOG_DEBUG]
+						Logger:Log["Debug: Station.DockAtStation called from Line _LINE_ ", LOG_DEBUG]
 						call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
 					}
 					else
 					{
-						UI:UpdateConsole["Debug: FastWarp to ${Config.Miner.PanicLocation} from Line _LINE_ ", LOG_DEBUG]
+						Logger:Log["Debug: FastWarp to ${Config.Miner.PanicLocation} from Line _LINE_ ", LOG_DEBUG]
 						call This.FastWarp -1 "${Config.Miner.PanicLocation}"
 					}
 					break
@@ -520,24 +520,24 @@ objectdef obj_Miner
 						Bookmarks:StoreLocation
 					}
 
-					UI:UpdateConsole["Docking at ${Entity["(GroupID = 15 || GroupID = 1657)"].Name}"]
+					Logger:Log["Docking at ${Entity["(GroupID = 15 || GroupID = 1657)"].Name}"]
 					;call This.FastWarp ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
-					UI:UpdateConsole["Debug: Station.DockAtStation called from Line _LINE_ ", LOG_DEBUG]
+					Logger:Log["Debug: Station.DockAtStation called from Line _LINE_ ", LOG_DEBUG]
 					call Station.DockAtStation ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
 					break
 				}
 
 				if ${Me.ToEntity.Mode} != 3
 				{
-					UI:UpdateConsole["Debug: Safespots.WarpTo called from Line _LINE_ ", LOG_DEBUG]
+					Logger:Log["Debug: Safespots.WarpTo called from Line _LINE_ ", LOG_DEBUG]
 					call Safespots.WarpTo
-					UI:UpdateConsole["Debug: FastWarp called from Line _LINE_ ", LOG_DEBUG]
+					Logger:Log["Debug: FastWarp called from Line _LINE_ ", LOG_DEBUG]
 					call This.FastWarp
 					wait 30
 					break
 				}
 
-				UI:UpdateConsole["HARD STOP: Unable to flee, no stations available and no Safe spots available"]
+				Logger:Log["HARD STOP: Unable to flee, no stations available and no Safe spots available"]
 				EVEBot.ReturnToStation:Set[TRUE]
 				break
 
@@ -576,7 +576,7 @@ objectdef obj_Miner
 			case MINE
 				if ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}](exists)} && ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID} != ${Me.SolarSystemID}
 				{
-					UI:UpdateConsole["Traveling to mining system - ${Universe[${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID}].Name}"]
+					Logger:Log["Traveling to mining system - ${Universe[${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID}].Name}"]
 					call Ship.TravelToSystem ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID}
 				}
 				if ${Me.ToEntity.Mode} != 3
@@ -631,12 +631,12 @@ objectdef obj_Miner
 						}
 						if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 						{
-							UI:UpdateConsole["Debug: Station.DockAtStation called from Line _LINE_ ", LOG_DEBUG]
+							Logger:Log["Debug: Station.DockAtStation called from Line _LINE_ ", LOG_DEBUG]
 							call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
 							break
 						}
-						UI:UpdateConsole["ALERT: Station dock failed for delivery location \"${Config.Miner.DeliveryLocation}\""]
-						UI:UpdateConsole["ALERT: Switching to HARD STOP mode!"]
+						Logger:Log["ALERT: Station dock failed for delivery location \"${Config.Miner.DeliveryLocation}\""]
+						Logger:Log["ALERT: Switching to HARD STOP mode!"]
 						EVEBot.ReturnToStation:Set[TRUE]
 						break
 
@@ -652,13 +652,13 @@ objectdef obj_Miner
 						}
 						if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 						{
-							UI:UpdateConsole["Debug: WarpToBookMarkName to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
+							Logger:Log["Debug: WarpToBookMarkName to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
 							call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
 							call Cargo.TransferOreToCorpHangarArray
 							break
 						}
-						UI:UpdateConsole["ALERT: Hangar Array unload failed for delivery location \"${Config.Miner.DeliveryLocation}\""]
-						UI:UpdateConsole["ALERT: Switching to HARD STOP mode!"]
+						Logger:Log["ALERT: Hangar Array unload failed for delivery location \"${Config.Miner.DeliveryLocation}\""]
+						Logger:Log["ALERT: Switching to HARD STOP mode!"]
 						EVEBot.ReturnToStation:Set[TRUE]
 						break
 
@@ -674,13 +674,13 @@ objectdef obj_Miner
 						}
 						if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 						{
-							UI:UpdateConsole["Debug: WarpToBookMarkName to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
+							Logger:Log["Debug: WarpToBookMarkName to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
 							call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
 							call Cargo.TransferOreToLargeShipAssemblyArray
 							break
 						}
-						UI:UpdateConsole["ALERT: Large Ship Assembly Array unload failed for delivery location \"${Config.Miner.DeliveryLocation}\""]
-						UI:UpdateConsole["ALERT: Switching to HARD STOP mode!"]
+						Logger:Log["ALERT: Large Ship Assembly Array unload failed for delivery location \"${Config.Miner.DeliveryLocation}\""]
+						Logger:Log["ALERT: Switching to HARD STOP mode!"]
 						EVEBot.ReturnToStation:Set[TRUE]
 						break
 
@@ -696,13 +696,13 @@ objectdef obj_Miner
 						}
 						if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 						{
-							UI:UpdateConsole["Debug: WarpToBookMarkName to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
+							Logger:Log["Debug: WarpToBookMarkName to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
 							call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
 							call Cargo.TransferOreToCompressionArray
 							break
 						}
-						UI:UpdateConsole["ALERT: Compression Array unload failed for delivery location \"${Config.Miner.DeliveryLocation}\""]
-						UI:UpdateConsole["ALERT: Switching to HARD STOP mode!"]
+						Logger:Log["ALERT: Compression Array unload failed for delivery location \"${Config.Miner.DeliveryLocation}\""]
+						Logger:Log["ALERT: Switching to HARD STOP mode!"]
 						EVEBot.ReturnToStation:Set[TRUE]
 						break
 
@@ -718,19 +718,19 @@ objectdef obj_Miner
 						}
 						if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 						{
-							UI:UpdateConsole["Debug: WarpToBookMarkName to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
+							Logger:Log["Debug: WarpToBookMarkName to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
 							call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
 							call Cargo.TransferOreToXLargeShipAssemblyArray
 							break
 						}
-						UI:UpdateConsole["ALERT: XLarge Ship Assembly Array unload failed for delivery location \"${Config.Miner.DeliveryLocation}\""]
-						UI:UpdateConsole["ALERT: Switching to HARD STOP mode!"]
+						Logger:Log["ALERT: XLarge Ship Assembly Array unload failed for delivery location \"${Config.Miner.DeliveryLocation}\""]
+						Logger:Log["ALERT: Switching to HARD STOP mode!"]
 						EVEBot.ReturnToStation:Set[TRUE]
 						break
 
 					;	This means we're delivering to a jetcan.  This shouldn't get much action because they should be jettisoned continously during mining.
 					case Jetcan
-						UI:UpdateConsole["Warning: Cargo filled during jetcan mining, delays may occur"]
+						Logger:Log["Warning: Cargo filled during jetcan mining, delays may occur"]
 
 						;	This checks to make sure there aren't any potential jet can flippers around before we dump a jetcan
 						if !${Social.PlayerInRange[10000]} && ${Config.Miner.DeliveryLocationTypeName.Equal["Jetcan"]}
@@ -777,7 +777,7 @@ objectdef obj_Miner
 						Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
 						if !${Local[${Config.Miner.DeliveryLocation}](exists)}
 						{
-							UI:UpdateConsole["ALERT:  The specified orca isn't in local - it may be incorrectly configured or out of system doing a dropoff."]
+							Logger:Log["ALERT:  The specified orca isn't in local - it may be incorrectly configured or out of system doing a dropoff."]
 							break
 						}
 
@@ -788,8 +788,8 @@ objectdef obj_Miner
 
 						if !${Entity[${Orca.Escape}](exists)} && ${Local[${Config.Miner.DeliveryLocation}].ToFleetMember}
 						{
-							UI:UpdateConsole["ALERT:  The orca is not in this belt.  Warping there first to unload."]
-							UI:UpdateConsole["Debug: Fleet Warping to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
+							Logger:Log["ALERT:  The orca is not in this belt.  Warping there first to unload."]
+							Logger:Log["Debug: Fleet Warping to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
 							Fleet:WarpTo[${Config.Miner.DeliveryLocation}]
 							break
 						}
@@ -797,7 +797,7 @@ objectdef obj_Miner
 						;	Find out if we need to approach this target
 						if ${Entity[${Orca.Escape}].Distance} > LOOT_RANGE && ${This.Approaching} == 0
 						{
-							UI:UpdateConsole["Miner.ProcessState: Approaching Orca to within loot range (currently ${Entity[${Orca.Escape}].Distance})"]
+							Logger:Log["Miner.ProcessState: Approaching Orca to within loot range (currently ${Entity[${Orca.Escape}].Distance})"]
 							This:StartApproaching[${Entity[${Orca.Escape}].ID}, LOOT_RANGE]
 							break
 						}
@@ -835,7 +835,7 @@ objectdef obj_Miner
 
 					;	This means the DeliveryLocation type is invalid.  This should only happen if someone monkeys with the UI.
 					Default
-						UI:UpdateConsole["ALERT: Delivery Location Type ${Config.Miner.DeliveryLocationTypeName} unknown.  Switching to HARD STOP mode!"]
+						Logger:Log["ALERT: Delivery Location Type ${Config.Miner.DeliveryLocationTypeName} unknown.  Switching to HARD STOP mode!"]
 						EVEBot.ReturnToStation:Set[TRUE]
 						break
 				}
@@ -862,7 +862,7 @@ objectdef obj_Miner
 		;	If we're in a station there's not going to be any mining going on.  This should clear itself up if it ever happens.
 		if ${Me.InStation} != FALSE
 		{
-			UI:UpdateConsole["DEBUG: obj_Miner.Mine called while zoning or while in station!"]
+			Logger:Log["DEBUG: obj_Miner.Mine called while zoning or while in station!"]
 			return
 		}
 
@@ -876,9 +876,9 @@ objectdef obj_Miner
 		if (${MyShip.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
 			${MyShip.ShieldPct} < ${Config.Combat.MinimumShieldPct})
 		{
-			UI:UpdateConsole["Armor is at ${MyShip.ArmorPct}: ${MyShip.Armor}/${MyShip.MaxArmor}", LOG_CRITICAL]
-			UI:UpdateConsole["Shield is at ${MyShip.ShieldPct}: ${MyShip.Shield}/${MyShip.MaxShield}", LOG_CRITICAL]
-			UI:UpdateConsole["Miner aborting due to defensive status", LOG_CRITICAL]
+			Logger:Log["Armor is at ${MyShip.ArmorPct}: ${MyShip.Armor}/${MyShip.MaxArmor}", LOG_CRITICAL]
+			Logger:Log["Shield is at ${MyShip.ShieldPct}: ${MyShip.Shield}/${MyShip.MaxShield}", LOG_CRITICAL]
+			Logger:Log["Miner aborting due to defensive status", LOG_CRITICAL]
 
 			EVEBot.ReturnToStation:Set[TRUE]
 			return
@@ -887,7 +887,7 @@ objectdef obj_Miner
 		;	If our ship has no mining lasers, panic so the user knows to correct their configuration and try again
 		if ${Ship.TotalMiningLasers} == 0
 		{
-			UI:UpdateConsole["ALERT: No mining lasers detected.  Returning to station."]
+			Logger:Log["ALERT: No mining lasers detected.  Returning to station."]
 			EVEBot.ReturnToStation:Set[TRUE]
 			return
 		}
@@ -902,7 +902,7 @@ objectdef obj_Miner
 			if ${WarpToOrca} && !${Entity[${Orca.Escape}](exists)}
 			{
 				Ship.Drones:ReturnAllToDroneBay
-				UI:UpdateConsole["Debug: WarpToFleetMember to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
+				Logger:Log["Debug: WarpToFleetMember to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
 				call Ship.WarpToFleetMember ${Local["${Config.Miner.DeliveryLocation}"]}
 				if ${Config.Miner.BookMarkLastPosition} && ${Bookmarks.CheckForStoredLocation}
 				{
@@ -917,7 +917,7 @@ objectdef obj_Miner
 			if ${Config.Miner.GroupMode} && ${WarpToMaster} && !${Entity[${Master.Escape}](exists)} && !${IsMaster}
 			{
 				Ship.Drones:ReturnAllToDroneBay
-				UI:UpdateConsole["Debug: WarpToFleetMember to ${MasterName} from Line _LINE_ ", LOG_DEBUG]
+				Logger:Log["Debug: WarpToFleetMember to ${MasterName} from Line _LINE_ ", LOG_DEBUG]
 				call Ship.WarpToFleetMember ${Local["${MasterName}"]}
 				if ${Config.Miner.BookMarkLastPosition} && ${Bookmarks.CheckForStoredLocation}
 				{
@@ -963,7 +963,7 @@ objectdef obj_Miner
 					Ship.Drones:ReturnAllToDroneBay
 					wait 20
 				}
-				UI:UpdateConsole["Miner.Mine: No asteroids detected, changing belts"]
+				Logger:Log["Miner.Mine: No asteroids detected, changing belts"]
 				call Asteroids.MoveToField TRUE TRUE
 				call Asteroids.UpdateList
 			}
@@ -971,7 +971,7 @@ objectdef obj_Miner
 			; If player in range and in group mode/ is master... move
 			if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]}
 			{
-				UI:UpdateConsole["Miner.Mine: Avoiding player: Forcing belt change"]
+				Logger:Log["Miner.Mine: Avoiding player: Forcing belt change"]
 				Ship.Drones:ReturnAllToDroneBay
 				call Asteroids.MoveToField TRUE
 				call Asteroids.UpdateList
@@ -999,12 +999,12 @@ objectdef obj_Miner
 			{
 				if ${Entity[${Orca.Escape}].Distance} > WARP_RANGE
 				{
-					UI:UpdateConsole["ALERT:  ${Entity[${Orca.Escape}].Name} is a long way away.  Warping to it."]
-					UI:UpdateConsole["Debug: Entity:WarpTo to Orca from Line _LINE_ ", LOG_DEBUG]
+					Logger:Log["ALERT:  ${Entity[${Orca.Escape}].Name} is a long way away.  Warping to it."]
+					Logger:Log["Debug: Entity:WarpTo to Orca from Line _LINE_ ", LOG_DEBUG]
 					Entity[${Orca.Escape}]:WarpTo[1000]
 					return
 				}
-				UI:UpdateConsole["Miner.Mine: Approaching Orca to within loot range (currently ${Entity[${Orca.Escape}].Distance})"]
+				Logger:Log["Miner.Mine: Approaching Orca to within loot range (currently ${Entity[${Orca.Escape}].Distance})"]
 				This:StartApproaching[${Entity[${Orca.Escape}].ID}, LOOT_RANGE]
 				This.ApproachingOrca:Set[TRUE]
 				return
@@ -1041,7 +1041,7 @@ objectdef obj_Miner
 					{
 						if ${Entity[${Target.Value.ID}].Distance} > ${Ship.OptimalMiningRange}
 						{
-							UI:UpdateConsole["Miner.Mine: Unlocking ${Target.Value.Name} as it is out of range after we moved."]
+							Logger:Log["Miner.Mine: Unlocking ${Target.Value.Name} as it is out of range after we moved."]
 							Target.Value:UnlockTarget
 						}
 					}
@@ -1059,14 +1059,14 @@ objectdef obj_Miner
 				;	Open the Orca if it's not open yet
 				if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && !${EVEWindow[ByItemID, ${Entity[${Orca.Escape}]}](exists)}
 				{
-					UI:UpdateConsole["Opening ${Entity[${Orca.Escape}].Name}'s Corporate Hangars"]
+					Logger:Log["Opening ${Entity[${Orca.Escape}].Name}'s Corporate Hangars"]
 					Entity[${Orca.Escape}]:Open
 					return
 				}
 
 				if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && ${EVEWindow[ByItemID, ${Entity[${Orca.Escape}]}](exists)}
 				{
-					UI:UpdateConsole["Emptying ore to ${Entity[${Orca.Escape}].Name}'s Corporate Hangars"]
+					Logger:Log["Emptying ore to ${Entity[${Orca.Escape}].Name}'s Corporate Hangars"]
 					call Cargo.TransferOreToShipCorpHangar ${Entity[${Orca.Escape}]}
 					call Cargo.ReplenishCrystals ${Entity[${Orca.Escape}]}
 				}
@@ -1076,7 +1076,7 @@ objectdef obj_Miner
 		{
 			if ${Config.Miner.GroupMode}
 			{
-				UI:UpdateConsole["Debug: Checking Group mode ", LOG_DEBUG]
+				Logger:Log["Debug: Checking Group mode ", LOG_DEBUG]
 				; if for some reason we are too far away from our master go find him
 				if ${MasterName.NotEqual[NULL]}
 				{
@@ -1088,12 +1088,12 @@ objectdef obj_Miner
 						{
 							if ${Entity[${Master.Escape}].Distance} > WARP_RANGE
 							{
-								UI:UpdateConsole["ALERT:  ${Entity[${Master.Escape}].Name} is a long way away.  Warping to it."]
-								UI:UpdateConsole["Debug: Entity:WarpTo to Master from Line _LINE_ ", LOG_DEBUG]
+								Logger:Log["ALERT:  ${Entity[${Master.Escape}].Name} is a long way away.  Warping to it."]
+								Logger:Log["Debug: Entity:WarpTo to Master from Line _LINE_ ", LOG_DEBUG]
 								Entity[${Master.Escape}]:WarpTo[1000]
 								return
 							}
-							UI:UpdateConsole["Miner.Mine: Approaching Master to within loot range (currently ${Entity[${Master.Escape}].Distance})"]
+							Logger:Log["Miner.Mine: Approaching Master to within loot range (currently ${Entity[${Master.Escape}].Distance})"]
 							This:StartApproaching[${Entity[${Orca.Escape}].ID}, ${Math.Calc[LOOT_RANGE/5]}]
 							This.ApproachingOrca:Set[TRUE]
 							return
@@ -1131,7 +1131,7 @@ objectdef obj_Miner
 								{
 									if ${Entity[${Target.Value.ID}].Distance} > ${Ship.OptimalMiningRange}
 									{
-										UI:UpdateConsole["Miner.Mine: Unlocking ${Target.Value.Name} as it is out of range after we moved."]
+										Logger:Log["Miner.Mine: Unlocking ${Target.Value.Name} as it is out of range after we moved."]
 										Target.Value:UnlockTarget
 									}
 								}
@@ -1144,8 +1144,8 @@ objectdef obj_Miner
 					{
 						if ${Entity[${Master.Escape}].Distance} > WARP_RANGE
 						{
-							UI:UpdateConsole["ALERT:  ${Entity[${Master.Escape}].Name} is off grid. Warping."]
-							UI:UpdateConsole["Debug: Entity:WarpTo to Master from Line _LINE_ ", LOG_DEBUG]
+							Logger:Log["ALERT:  ${Entity[${Master.Escape}].Name} is off grid. Warping."]
+							Logger:Log["Debug: Entity:WarpTo to Master from Line _LINE_ ", LOG_DEBUG]
 							Entity[${Master.Escape}]:WarpTo[10000]
 							return
 						}
@@ -1347,7 +1347,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 		;	If we're in a station there's not going to be any mining going on.  This should clear itself up if it ever happens.
 		if ${Me.InStation} != FALSE
 		{
-			UI:UpdateConsole["DEBUG: obj_Miner.OrcaInBelt called while zoning or while in station!"]
+			Logger:Log["DEBUG: obj_Miner.OrcaInBelt called while zoning or while in station!"]
 			return
 		}
 
@@ -1361,9 +1361,9 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 		if (${MyShip.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
 			${MyShip.ShieldPct} < ${Config.Combat.MinimumShieldPct})
 		{
-			UI:UpdateConsole["Armor is at ${MyShip.ArmorPct}: ${MyShip.Armor}/${MyShip.MaxArmor}", LOG_CRITICAL]
-			UI:UpdateConsole["Shield is at ${MyShip.ShieldPct}: ${MyShip.Shield}/${MyShip.MaxShield}", LOG_CRITICAL]
-			UI:UpdateConsole["Miner aborting due to defensive status", LOG_CRITICAL]
+			Logger:Log["Armor is at ${MyShip.ArmorPct}: ${MyShip.Armor}/${MyShip.MaxArmor}", LOG_CRITICAL]
+			Logger:Log["Shield is at ${MyShip.ShieldPct}: ${MyShip.Shield}/${MyShip.MaxShield}", LOG_CRITICAL]
+			Logger:Log["Miner aborting due to defensive status", LOG_CRITICAL]
 
 			EVEBot.ReturnToStation:Set[TRUE]
 			return
@@ -1372,7 +1372,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 		;	If configured to launch combat drones and there's a shortage, force a DropOff so we go to our delivery location
 		 if ${Config.Combat.LaunchCombatDrones} && ${Ship.Drones.CombatDroneShortage}
 		{
-			UI:UpdateConsole["Warning: Drone shortage detected.  Forcing a dropoff - make sure drones are available at your delivery location!"]
+			Logger:Log["Warning: Drone shortage detected.  Forcing a dropoff - make sure drones are available at your delivery location!"]
 			ForceDropoff:Set[TRUE]
 			return
 		}
@@ -1386,7 +1386,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 				Ship.Drones:ReturnAllToDroneBay
 				wait 20
 			}
-			UI:UpdateConsole["Miner.OrcaInBelt: No asteroids detected, forcing belt change"]
+			Logger:Log["Miner.OrcaInBelt: No asteroids detected, forcing belt change"]
 			call Asteroids.MoveToField TRUE TRUE
 			call Asteroids.UpdateList
 		}
@@ -1394,7 +1394,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 		;	This changes belts if someone's within Min. Distance to Players
 		if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]}
 		{
-			UI:UpdateConsole["Miner.OrcaInBelt: Avoiding player: Forcing belt change"]
+			Logger:Log["Miner.OrcaInBelt: Avoiding player: Forcing belt change"]
 			Ship.Drones:ReturnAllToDroneBay
 			call Asteroids.MoveToField TRUE TRUE TRUE
 			call Asteroids.UpdateList
@@ -1417,7 +1417,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 		{
 			if ${Entity[${Asteroids.NearestAsteroid}].Distance} > WARP_RANGE
 			{
-				UI:UpdateConsole["Debug: Entity:WarpTo to NearestAsteroid from Line _LINE_ ", LOG_DEBUG]
+				Logger:Log["Debug: Entity:WarpTo to NearestAsteroid from Line _LINE_ ", LOG_DEBUG]
 				Entity[${Asteroids.NearestAsteroid}]:WarpTo[${OrcaRange}]
 				return
 			}
@@ -1425,7 +1425,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 			;	Find out if we need to approach this asteroid
 			if ${Entity[${Asteroids.NearestAsteroid}].Distance} > ${OrcaRange}
 			{
-				UI:UpdateConsole["Miner.OrcaInBelt: Approaching ${Entity[${Asteroids.NearestAsteroid}].Name}"]
+				Logger:Log["Miner.OrcaInBelt: Approaching ${Entity[${Asteroids.NearestAsteroid}].Name}"]
 				This:StartApproaching[${Entity[${Orca.Escape}].ID}, ${OrcaRange}]
 				return
 			}
@@ -1564,7 +1564,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 	;This method is triggered by an event.  If triggered, lets Us figure out who is the master in group mode.
 	method MasterVote(string groupParams)
 	{
-		UI:UpdateConsole["obj_Miner:MasterVote event:${groupParams}, LOG_DEBUG]
+		Logger:Log["obj_Miner:MasterVote event:${groupParams}, LOG_DEBUG]
 
 		if ${Config.Miner.MasterMode} || ${Config.Miner.GroupMode}
 		{
@@ -1586,19 +1586,19 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 				{
 					MasterName:Set[${name}]
 					IsMaster:Set[FALSE]
-					UI:UpdateConsole["obj_Miner: Master is: \"${MasterName}\"", LOG_DEBUG]
+					Logger:Log["obj_Miner: Master is: \"${MasterName}\"", LOG_DEBUG]
 				}
 				elseif ${State} == ${MasterVote}
 				{
 					if ${Config.Miner.MasterMode}
 					{
-						UI:UpdateConsole["obj_Miner: There can be only one Master ERROR:${name}", LOG_DEBUG]
+						Logger:Log["obj_Miner: There can be only one Master ERROR:${name}", LOG_DEBUG]
 						relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.BotModeName}"
 					}
 					else
 					{
 						; re-vote for master
-						UI:UpdateConsole["obj_Miner: Master Vote tie with:${name}", LOG_DEBUG]
+						Logger:Log["obj_Miner: Master Vote tie with:${name}", LOG_DEBUG]
 						This:VoteForMaster
 					}
 				}
@@ -1606,7 +1606,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 				{
 					IsMaster:Set[TRUE]
 					MasterName:Set[${Me.Name}]
-					UI:UpdateConsole["obj_Miner: I am Master", LOG_DEBUG]
+					Logger:Log["obj_Miner: I am Master", LOG_DEBUG]
 					relay all -event EVEBot_Master_Vote "${Me.Name},${MasterVote}"
 				}
 			}
@@ -1615,7 +1615,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 
 	method ResetMaster()
 	{
-		UI:UpdateConsole["Debug: Reset Master :${MasterVote}", LOG_DEBUG]
+		Logger:Log["Debug: Reset Master :${MasterVote}", LOG_DEBUG]
 
 		if ${Config.Miner.MasterMode} || ${Config.Miner.GroupMode}
 		{
@@ -1644,7 +1644,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 		{
 			MasterVote:Set[${Math.Rand[90]:Inc[10]}]
 		}
-		UI:UpdateConsole["Debug: Master Vote value: ${MasterVote}", LOG_DEBUG]
+		Logger:Log["Debug: Master Vote value: ${MasterVote}", LOG_DEBUG]
 
 		relay all -event EVEBot_Master_Vote "${Me.Name},${MasterVote}"
 	}
@@ -1669,11 +1669,11 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 		if ${Entity[${value}](exists)}
 		{
 			AttackingTeam:Add[${value}]
-			UI:UpdateConsole["Miner.UnderAttack: Added ${Entity[${value}].Name}(${value}) to attackers list. Attackers: ${AttackingTeam.Used}"]
+			Logger:Log["Miner.UnderAttack: Added ${Entity[${value}].Name}(${value}) to attackers list. Attackers: ${AttackingTeam.Used}"]
 		}
 		else
 		{
-			UI:UpdateConsole["Miner.UnderAttack: Ignoring off-grid notification of entity ${value}. Attackers: ${AttackingTeam.Used}"]
+			Logger:Log["Miner.UnderAttack: Ignoring off-grid notification of entity ${value}. Attackers: ${AttackingTeam.Used}"]
 		}
 	}
 
@@ -1693,7 +1693,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 				{
 					if !${AttackingTeam.Contains[${CurrentAttack.Value.ID}]}
 					{
-						UI:UpdateConsole["Miner.CheckAttack: Alerting team to kill ${CurrentAttack.Value.Name}(${CurrentAttack.Value.ID})"]
+						Logger:Log["Miner.CheckAttack: Alerting team to kill ${CurrentAttack.Value.Name}(${CurrentAttack.Value.ID})"]
 						Relay all -event EVEBot_TriggerAttack ${CurrentAttack.Value.ID}
 					}
 				}
@@ -1711,14 +1711,14 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 		{
 			if ${LocationID} == -1
 			{
-				UI:UpdateConsole["Debug: Bookmark:WarpTo to ${BookmarkName} from Line _LINE_ ", LOG_DEBUG]
+				Logger:Log["Debug: Bookmark:WarpTo to ${BookmarkName} from Line _LINE_ ", LOG_DEBUG]
 				EVE.Bookmark[${BookmarkName}]:WarpTo[0]
 			}
 			if ${LocationID} != 0
 			{
 				if ${Entity[${LocationID}](exists)}
 				{
-					UI:UpdateConsole["Debug: Entity:WarpTo to ${LocationID} from Line _LINE_ ", LOG_DEBUG]
+					Logger:Log["Debug: Entity:WarpTo to ${LocationID} from Line _LINE_ ", LOG_DEBUG]
 					Entity[${LocationID}]:WarpTo[0]
 				}
 				if ${Universe[${LocationID}](exists)} && ${Universe[${LocationID}].Name} != NULL
@@ -1784,7 +1784,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 
 			if ${AttackDrones.Used} > 0
 			{
-				UI:UpdateConsole["Miner.Defend: Sending ${AttackDrones.Used} Drones to attack ${Entity[${Attacking}].Name}"]
+				Logger:Log["Miner.Defend: Sending ${AttackDrones.Used} Drones to attack ${Entity[${Attacking}].Name}"]
 				EVE:DronesEngageMyTarget[AttackDrones]
 			}
 		}
@@ -1821,13 +1821,13 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 
 		if ${Ship.Drones.DronesInSpace[FALSE]} > 0 && ${AttackingTeam.Used} == 0
 		{
-			UI:UpdateConsole["Miner.Defend: Recalling Drones"]
+			Logger:Log["Miner.Defend: Recalling Drones"]
 			Ship.Drones:ReturnAllToDroneBay
 		}
 
 		if ${Ship.Drones.DronesInSpace[FALSE]} == 0  && ${AttackingTeam.Used} > 0
 		{
-			UI:UpdateConsole["Miner.Defend: Deploying drones"]
+			Logger:Log["Miner.Defend: Deploying drones"]
 			Ship.Drones:LaunchAll
 		}
 
@@ -1911,7 +1911,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 
 			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].IsWreckEmpty}
 			{
-				UI:UpdateConsole["Miner.Tractor: Wreck empty, clearing"]
+				Logger:Log["Miner.Tractor: Wreck empty, clearing"]
 				if ${Entity[${Tractoring}].IsLockedTarget}
 				{
 					Entity[${Tractoring}]:UnlockTarget
@@ -1927,13 +1927,13 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 				if ${Wrecks.Used} > 0
 				{
 					Tractoring:Set[${Wrecks[1]}]
-					UI:UpdateConsole["Miner.Tractor: ${Wrecks.Used} wrecks found"]
+					Logger:Log["Miner.Tractor: ${Wrecks.Used} wrecks found"]
 				}
 			}
 
 			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].Distance} <= LOOT_RANGE && !${EVEWindow[ByItemID, ${TargetIterator.Value}](exists)}
 			{
-				UI:UpdateConsole["Miner.Tractor: Opening wreck"]
+				Logger:Log["Miner.Tractor: Opening wreck"]
 				Entity[${Tractoring}]:Open
 				if ${Ship.IsTractoringWreckID[${Tractoring}]}
 				{
@@ -1944,7 +1944,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 
 			if ${Entity[${Tractoring}](exists)} && ${Entity[${Tractoring}].Distance} <= LOOT_RANGE && ${EVEWindow[ByItemID, ${TargetIterator.Value}](exists)}
 			{
-				UI:UpdateConsole["Miner.Tractor: Looting wreck ${Entity[${Tractoring}].Name}"]
+				Logger:Log["Miner.Tractor: Looting wreck ${Entity[${Tractoring}].Name}"]
 				variable index:item ContainerCargo
 				variable iterator Cargo
 				variable index:int64 CargoList
@@ -1962,7 +1962,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 
 			if ${Entity[${Tractoring}](exists)} && !${Entity[${Tractoring}].IsLockedTarget}
 			{
-				UI:UpdateConsole["Miner.Tractor: Locking wreck ${Entity[${Tractoring}].Name}"]
+				Logger:Log["Miner.Tractor: Locking wreck ${Entity[${Tractoring}].Name}"]
 				Entity[${Tractoring}]:LockTarget
 				return
 			}

@@ -10,7 +10,9 @@
 objectdef obj_EVEBot
 {
 	variable bool ReturnToStation = FALSE
-	variable bool Paused = FALSE
+	variable bool _Paused = FALSE
+	variable bool Disabled = FALSE			/* If true, ALL functionality should be disabled  - everything. no pulses, no nothing */
+	variable bool Loaded					/* Set true once the bot is fully loaded */
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 4
 
@@ -24,7 +26,7 @@ objectdef obj_EVEBot
 
 		This:SetVersion
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-		UI:UpdateConsole["obj_EVEBot: Initialized", LOG_MINOR]
+		Logger:Log["obj_EVEBot: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -56,13 +58,13 @@ objectdef obj_EVEBot
 				if ${Me.InSpace} && ${EVE.Is3DDisplayOn}
 				{
 					EVE:Toggle3DDisplay
-					UI:UpdateConsole["Disabling 3D Rendering"]
+					Logger:Log["Disabling 3D Rendering"]
 				}
 			}
 			elseif ${Me.InSpace} && !${EVE.Is3DDisplayOn}
 			{
 				EVE:Toggle3DDisplay
-				UI:UpdateConsole["Enabling 3D Rendering"]
+				Logger:Log["Enabling 3D Rendering"]
 			}
 
 			/*
@@ -76,23 +78,23 @@ objectdef obj_EVEBot
 				if ( ${This.GameHour} == 10 && \
 					( ${This.GameMinute} >= 50 && ${This.GameMinute} <= 57) )
 				{
-					UI:UpdateConsole["EVE downtime approaching, pausing operations", LOG_CRITICAL]
+					Logger:Log["EVE downtime approaching, pausing operations", LOG_CRITICAL]
 					This.ReturnToStation:Set[TRUE]
 				}
 				elseif (${This.GameHour} == 10 && \
 					${This.GameMinute} >= 58)
 				{
-					UI:UpdateConsole["EVE downtime approaching - Quitting Eve", LOG_CRITICAL]
+					Logger:Log["EVE downtime approaching - Quitting Eve", LOG_CRITICAL]
 					EVE:Execute[CmdQuitGame]
 				}
 				else
 				{
 					variable int Hours = ${Math.Calc[(${Script.RunningTime}/1000/60/60)%60].Int}
 
-					;;; UI:UpdateConsole["DEBUG: ${Config.Common.MaxRuntime} ${Hours}"]
+					;;; Logger:Log["DEBUG: ${Config.Common.MaxRuntime} ${Hours}"]
 					if ${Config.Common.MaxRuntime} > 0 && ${Config.Common.MaxRuntime} <= ${Hours}
 					{
-						UI:UpdateConsole["Maximum runtime exceeded, pausing operations", LOG_CRITICAL]
+						Logger:Log["Maximum runtime exceeded, pausing operations", LOG_CRITICAL]
 						This.ReturnToStation:Set[TRUE]
 					}
 				}
@@ -104,16 +106,34 @@ objectdef obj_EVEBot
 		}
 	}
 
-	method Pause()
+	member:bool Paused()
 	{
-		UI:UpdateConsole["Paused", LOG_CRITICAL]
-		This.Paused:Set[TRUE]
+		if ${This._Paused} || \
+			${Script.Paused}
+		{
+			return TRUE
+		}
+
+		;if !${This.SessionValid}
+		;{
+		;	return TRUE
+		;}
+
+		return FALSE
 	}
 
-	method Resume()
+	method Pause(string Reason)
 	{
-		UI:UpdateConsole["Resumed", LOG_CRITICAL]
-		This.Paused:Set[FALSE]
+		Logger:Log["Paused: ${Reason}", LOG_ECHOTOO]
+		This._Paused:Set[TRUE]
+		;Script:Pause
+	}
+
+	method Resume(string Reason)
+	{
+		Logger:Log["Resumed: ${Reason}", LOG_ECHOTOO]
+		This._Paused:Set[FALSE]
+		;Script:Resume
 	}
 
 	method SetVersion(int Version=${VersionNum})
@@ -193,5 +213,17 @@ objectdef obj_EVEBot
 		}
 
 		return "0 isk"
+	}
+
+	member Runtime()
+	{
+		/* TODO - this is expensive (4-5fps for me), replace with something better -- CyberTech */
+		DeclareVariable RunTime float ${Math.Calc[${Script.RunningTime}/1000/60]}
+
+		DeclareVariable Hours string ${Math.Calc[(${RunTime}/60)%60].Int.LeadingZeroes[2]}
+		DeclareVariable Minutes string ${Math.Calc[${RunTime}%60].Int.LeadingZeroes[2]}
+		DeclareVariable Seconds string ${Math.Calc[(${RunTime}*60)%60].Int.LeadingZeroes[2]}
+
+		return "${Hours}:${Minutes}:${Seconds}"
 	}
 }

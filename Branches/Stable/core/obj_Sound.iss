@@ -18,7 +18,7 @@ objectdef obj_Sound
 		m_SoundDelay:Set[15000]	/* milliseconds */
 		uplink Speech:Initialize
 		
-		UI:UpdateConsole["obj_Sound: Initialized", LOG_MINOR]
+		Logger:Log["obj_Sound: Initialized", LOG_MINOR]
 	}
 
 	function PlaySound(string Filename)

@@ -79,7 +79,7 @@
 							<height>20</height>
 							<OnLeftClick>
 								relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.BotModeName}"
-								Script[EVEBot].VariableScope.UI:UpdateConsole["Forcing Break!!!", LOG_MINOR]
+								Script[EVEBot].VariableScope.Logger:Log["Forcing Break!!!", LOG_MINOR]
 							</OnLeftClick>
 						</button>
 						<button	Name='BroadcastResume' template='EveSkin.Window.ClickButton'>
@@ -92,7 +92,7 @@
 								Social.NextBreak:Set[0]
 								Social.OnBreak:Set[FALSE]
 								relay all -event EVEBot_ABORTHARDSTOP
-								Script[EVEBot].VariableScope.UI:UpdateConsole["Resuming from break!!!", LOG_MINOR]
+								Script[EVEBot].VariableScope.Logger:Log["Resuming from break!!!", LOG_MINOR]
 							</OnLeftClick>
 						</button>
 						<button	Name='BroadcastRun' template='EveSkin.Window.ClickButton'>
@@ -118,7 +118,7 @@
 							<Y>10</Y>
 							<Width>100</Width>
 							<Height>20</Height>
-							<Text>${Script[EVEBot].VariableScope.UI.Runtime}</Text>
+							<Text>${Script[EVEBot].VariableScope.Runtime}</Text>
 						</Text>
 
 						<Text name='state' template='EVESkin.Font.Description'>
@@ -690,7 +690,7 @@
 							</OnLoad>
 							<OnChange>
 								Script[EVEBot].VariableScope.Config.Miner:SetAvoidPlayerRange[${Int[${This.Value}]}]
-								UIElement[AvoidPlayerRangeLabel@Miner@EvEBotOptionsTab@EVEBot]:SetText["Min. Distance to Players: ${Script[EVEBot].VariableScope.EVEBot.MetersToKM_Str[${This.Value}]}"]
+								UIElement[AvoidPlayerRangeLabel@Miner@EVEBotOptionsTab@EVEBot]:SetText["Min. Distance to Players: ${Script[EVEBot].VariableScope.EVEBot.MetersToKM_Str[${This.Value}]}"]
 							</OnChange>
 						</slider>
 						<Text name='AvoidPlayerRangeLabel'>
@@ -701,7 +701,7 @@
 							<Text>Min. Distance to Players: 0km</Text>
 							<AutoTooltip>Minimum distance we will keep other players at</AutoTooltip>
 							<OnLoad>
-								This:SetText["Min. Distance to Players: ${Script[EVEBot].VariableScope.EVEBot.MetersToKM_Str[${UIElement[AvoidPlayerRange@Miner@EvEBotOptionsTab@EVEBot].Value}]}"]
+								This:SetText["Min. Distance to Players: ${Script[EVEBot].VariableScope.EVEBot.MetersToKM_Str[${UIElement[AvoidPlayerRange@Miner@EVEBotOptionsTab@EVEBot].Value}]}"]
 							</OnLoad>
 						</Text>
 						<checkbox name='cbStandingDetection'>

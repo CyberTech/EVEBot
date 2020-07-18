@@ -87,6 +87,7 @@ function main()
 	/* Script-Defined Support Objects */
 	declarevariable EVEBot obj_EVEBot script
 	declarevariable UI obj_EVEBotUI script
+	call CreateVariable Logger obj_Logger global
 	declarevariable BaseConfig obj_Configuration_BaseConfig script
 
 	declarevariable Config obj_Configuration script
@@ -94,12 +95,12 @@ function main()
 	declarevariable Blacklist obj_Config_Blacklist script
 
 	turbo 8000
-	echo "${Time} EVEBot: Loading EVEDBs..."
+	echo "${Time}: EVEBot: Loading EVEDBs..."
 	declarevariable EVEDB_Stations obj_EVEDB_Stations script
 	declarevariable EVEDB_Items obj_EVEDB_Items script
 	turbo 4000
 
-	echo "${Time} EVEBot: Loading Core Objects..."
+	echo "${Time}: EVEBot: Loading Core Objects..."
 	declarevariable Sound obj_Sound script
 	declarevariable ChatIRC obj_IRC script
 	declarevariable Asteroids obj_Asteroids script
@@ -135,7 +136,7 @@ function main()
 	declarevariable Missioneer obj_Missioneer script
 	declarevariable Guardian obj_Guardian script
 
-	echo "${Time} EVEBot: Loaded"
+	echo "${Time}: EVEBot: Loaded"
 
 	variable iterator BotModule
 	BotModules:GetIterator[BotModule]
@@ -179,14 +180,14 @@ function main()
 
 	if ${Ship.InWarp}
 	{
-		UI:UpdateConsole["Waiting for warp to complete"]
+		Logger:Log["Waiting for warp to complete"]
 		while ${Ship.InWarp}
 		{
 			wait 10
 		}
 	}
 
-	UI:UpdateConsole["-=Paused: Press Run-="]
+	Logger:Log["-=Paused: Press Run-="]
 	Script:Pause
 
 	while ${EVEBot.Paused}

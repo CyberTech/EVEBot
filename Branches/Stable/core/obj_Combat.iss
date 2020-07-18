@@ -86,7 +86,7 @@ objectdef obj_Combat
 	method Initialize()
 	{
 		This.CombatMode:Set["AGGRESSIVE"]
-		UI:UpdateConsole["obj_Combat: Initialized", LOG_MINOR]
+		Logger:Log["obj_Combat: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -121,7 +121,7 @@ objectdef obj_Combat
 
 		if ${Ship.IsPod}
 		{
-			UI:UpdateConsole["Warning: We're in a pod, running"]
+			Logger:Log["Warning: We're in a pod, running"]
 			This.CurrentState:Set["FLEE"]
 			return
 		}
@@ -160,11 +160,11 @@ objectdef obj_Combat
 			if ${Me.ToEntity.IsWarpScrambled}
 			{
 				; TODO - we need to quit if a red warps in while we're scrambled -- cybertech
-				UI:UpdateConsole["Warp Scrambled: Ignoring System Status"]
+				Logger:Log["Warp Scrambled: Ignoring System Status"]
 			}
 			elseif !${Social.IsSafe} || ${Social.PossibleHostiles}
 			{
-				UI:UpdateConsole["Debug: Fleeing: Local isn't safe"]
+				Logger:Log["Debug: Fleeing: Local isn't safe"]
 				call This.Flee
 				return
 			}
@@ -172,13 +172,13 @@ objectdef obj_Combat
 			{
 				if ${Config.Combat.RestockAmmo}
 				{
-					UI:UpdateConsole["Restocking Ammo: Low ammo"]
+					Logger:Log["Restocking Ammo: Low ammo"]
 					call This.RestockAmmo
 					return
 				}
 				elseif ${Config.Combat.RunOnLowAmmo}
 				{
-					UI:UpdateConsole["Fleeing: Low due to ammo"]
+					Logger:Log["Fleeing: Low due to ammo"]
 					; TODO - what to do about being warp scrambled in this case?
 					call This.Flee
 					return
@@ -187,7 +187,7 @@ objectdef obj_Combat
 			call This.ManageTank
 		}
 
-		UI:UpdateConsole["Debug: Combat: This.Fled = ${This.Fled} This.CurrentState = ${This.CurrentState} Social.IsSafe = ${Social.IsSafe}", LOG_DEBUG]
+		Logger:Log["Debug: Combat: This.Fled = ${This.Fled} This.CurrentState = ${This.CurrentState} Social.IsSafe = ${Social.IsSafe}", LOG_DEBUG]
 
 		switch ${This.CurrentState}
 		{
@@ -220,7 +220,7 @@ objectdef obj_Combat
 		}
 		if ${Ship.IsCloaked}
 		{
-			UI:UpdateConsole["Error: Ship.IsCloaked still true after 5 seconds", LOG_CRITICAL]
+			Logger:Log["Error: Ship.IsCloaked still true after 5 seconds", LOG_CRITICAL]
 		}
 		;Ship:Offline_Cloak
 		;Ship:Online_Salvager
@@ -333,7 +333,7 @@ objectdef obj_Combat
 				${MyShip.CapacitorPct} < 60 )
 			{
 				This.CurrentState:Set["FLEE"]
-				UI:UpdateConsole["Debug: Staying in Flee State: Armor: ${MyShip.ArmorPct} Shield: ${MyShip.ShieldPct} Cap: ${MyShip.CapacitorPct}", LOG_DEBUG]
+				Logger:Log["Debug: Staying in Flee State: Armor: ${MyShip.ArmorPct} Shield: ${MyShip.ShieldPct} Cap: ${MyShip.CapacitorPct}", LOG_DEBUG]
 			}
 			else
 			{
@@ -345,21 +345,21 @@ objectdef obj_Combat
 				${MyShip.ShieldPct} < ${Config.Combat.MinimumShieldPct} || \
 				${MyShip.CapacitorPct} < ${Config.Combat.MinimumCapPct})
 		{
-			UI:UpdateConsole["Armor is at ${MyShip.ArmorPct.Int}%%: ${MyShip.Armor.Int}/${MyShip.MaxArmor.Int}", LOG_CRITICAL]
-			UI:UpdateConsole["Shield is at ${MyShip.ShieldPct.Int}%%: ${MyShip.Shield.Int}/${MyShip.MaxShield.Int}", LOG_CRITICAL]
-			UI:UpdateConsole["Cap is at ${MyShip.CapacitorPct.Int}%%: ${MyShip.Capacitor.Int}/${MyShip.MaxCapacitor.Int}", LOG_CRITICAL]
+			Logger:Log["Armor is at ${MyShip.ArmorPct.Int}%%: ${MyShip.Armor.Int}/${MyShip.MaxArmor.Int}", LOG_CRITICAL]
+			Logger:Log["Shield is at ${MyShip.ShieldPct.Int}%%: ${MyShip.Shield.Int}/${MyShip.MaxShield.Int}", LOG_CRITICAL]
+			Logger:Log["Cap is at ${MyShip.CapacitorPct.Int}%%: ${MyShip.Capacitor.Int}/${MyShip.MaxCapacitor.Int}", LOG_CRITICAL]
 
 			if !${Config.Combat.RunOnLowTank}
 			{
-				UI:UpdateConsole["Run On Low Tank Disabled: Fighting", LOG_CRITICAL]
+				Logger:Log["Run On Low Tank Disabled: Fighting", LOG_CRITICAL]
 			}
 			elseif ${Me.ToEntity.IsWarpScrambled}
 			{
-				UI:UpdateConsole["Warp Scrambled: Unable To Flee", LOG_CRITICAL]
+				Logger:Log["Warp Scrambled: Unable To Flee", LOG_CRITICAL]
 			}
 			else
 			{
-				UI:UpdateConsole["Fleeing due to defensive status", LOG_CRITICAL]
+				Logger:Log["Fleeing due to defensive status", LOG_CRITICAL]
 				This.CurrentState:Set["FLEE"]
 			}
 		}
@@ -471,18 +471,18 @@ objectdef obj_Combat
 		{
 			if ${Ammospots:IsThereAmmospotBookmark}
 			{
-				UI:UpdateConsole["RestockAmmo: Fleeing: No ammo bookmark"]
+				Logger:Log["RestockAmmo: Fleeing: No ammo bookmark"]
 				call This.Flee
 				return
 			}
 			else
 			{
 				call Ammospots.WarpTo
-				UI:UpdateConsole["Restocking ammo"]
+				Logger:Log["Restocking ammo"]
 				; If a corp hangar array is on grid - drop loot
 				if ${Entity["TypeID = 17621"].ID} != NULL
 				{
-					UI:UpdateConsole["Restocking from ${Entity["TypeID = 17621"]} (${Entity["TypeID = 17621"].ID})"]
+					Logger:Log["Restocking from ${Entity["TypeID = 17621"]} (${Entity["TypeID = 17621"].ID})"]
 
 					; Drop off all loot/leftover ammo
 					; TODO - don't dump the ammo we're using for our own weapons. Do dump other ammo that we might have looted.
@@ -496,7 +496,7 @@ objectdef obj_Combat
 				; If there is no CHA, but there is a GSC, Take Ammo, do not drop off items
 				else
 				{
-					UI:UpdateConsole["Restocking from ${Entity["GroupID =340"]} (${Entity["GroupID = 340"].ID})"]
+					Logger:Log["Restocking from ${Entity["GroupID =340"]} (${Entity["GroupID = 340"].ID})"]
 					call Ship.Approach ${Entity["GroupID = 340"].ID} 2000
 
 					Entity["GroupID = 340"]:Open
@@ -522,8 +522,8 @@ objectdef obj_Combat
 					{
 						QuantityToMove:Set[${CargoIterator.Value.Quantity}]
 					}
-					UI:UpdateConsole["TransferListToShip: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
-					UI:UpdateConsole["TransferListToShip: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
+					Logger:Log["TransferListToShip: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
+					Logger:Log["TransferListToShip: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
 					if ${QuantityToMove} > 0
 					{
 						CargoIterator.Value:MoveTo[${MyShip.ID},CargoHold,${QuantityToMove}]
@@ -533,7 +533,7 @@ objectdef obj_Combat
 					}
 						if ${Ship.CargoFreeSpace} <= ${Config.Combat.RestockAmmoFreeSpace}
 					{
-						UI:UpdateConsole["DEBUG: RestockAmmo Done: Ship Cargo: ${Ship.CargoFreeSpace} < ${Config.Combat.RestockAmmoFreeSpace}", LOG_DEBUG]
+						Logger:Log["DEBUG: RestockAmmo Done: Ship Cargo: ${Ship.CargoFreeSpace} < ${Config.Combat.RestockAmmoFreeSpace}", LOG_DEBUG]
 						break
 					}
 				}
@@ -542,8 +542,8 @@ objectdef obj_Combat
 		}
 		else
 		{
-			UI:UpdateConsole["DEBUG: obj_Cargo:TransferListToShip: Nothing found to move"]
-			UI:UpdateConsole["Debug: Fleeing: No ammo left in can"]
+			Logger:Log["DEBUG: obj_Cargo:TransferListToShip: Nothing found to move"]
+			Logger:Log["Debug: Fleeing: No ammo left in can"]
 			call This.Flee
 			return
 		}

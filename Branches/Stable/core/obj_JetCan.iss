@@ -73,7 +73,7 @@ objectdef obj_JetCan
 
 	method Initialize()
 	{
-		UI:UpdateConsole["obj_JetCan: Initialized", LOG_MINOR]
+		Logger:Log["obj_JetCan: Initialized", LOG_MINOR]
 	}
 
 	; Returns -1 for no can, or the entity ID
@@ -106,10 +106,10 @@ objectdef obj_JetCan
 		variable iterator Can
 		EVE:QueryEntities[Cans, "GroupID = GROUPID_CARGO_CONTAINER && Distance < LOOT_RANGE"]
 #if DEBUG_ENTITIES
-		UI:UpdateConsole["obj_JetCan:CurrentCan Entities: ${EVE.EntitiesCount}, Cans ${Cans.Used}", LOG_DEBUG]
+		Logger:Log["obj_JetCan:CurrentCan Entities: ${EVE.EntitiesCount}, Cans ${Cans.Used}", LOG_DEBUG]
 		EVE:PopulateEntities
 		EVE:QueryEntities[Cans, "GroupID = GROUPID_CARGO_CONTAINER && Distance < LOOT_RANGE"]
-		UI:UpdateConsole["obj_JetCan:CurrentCan Entities: ${EVE.EntitiesCount}, Cans ${Cans.Used} after refresh", LOG_DEBUG]
+		Logger:Log["obj_JetCan:CurrentCan Entities: ${EVE.EntitiesCount}, Cans ${Cans.Used} after refresh", LOG_DEBUG]
 #endif
 
 		Cans:GetIterator[Can]
@@ -172,7 +172,7 @@ objectdef obj_JetCan
 			Counter:Inc[2]
 			if ${Counter} > 30
 			{
-				UI:UpdateConsole["JetCan:WaitForCan timed out waiting for a can to appear (30 seconds)", LOG_CRITICAL]
+				Logger:Log["JetCan:WaitForCan timed out waiting for a can to appear (30 seconds)", LOG_CRITICAL]
 				return
 			}
 		}
@@ -188,7 +188,7 @@ objectdef obj_JetCan
 
 		if !${This.AccessAllowed[${ID}]}
 		{
-			UI:UpdateConsole["JetCan:Rename: Access to ${ID} is not allowed", LOG_CRITICAL]
+			Logger:Log["JetCan:Rename: Access to ${ID} is not allowed", LOG_CRITICAL]
 			return
 		}
 
@@ -231,7 +231,7 @@ objectdef obj_JetCan
 		}
 		if (${Config.Miner.JetCanNaming} != 10)
 		{
-			UI:UpdateConsole["JetCan:Rename: Renaming can to ${NewName}"]
+			Logger:Log["JetCan:Rename: Renaming can to ${NewName}"]
 			Entity[${ID}]:SetName[${NewName}]
 		}
 	}
@@ -250,7 +250,7 @@ objectdef obj_JetCan
 
 		if !${This.AccessAllowed[${ID}]}
 		{
-			UI:UpdateConsole["JetCan:StackAllCargo: Access to ${ID} is not allowed", LOG_CRITICAL]
+			Logger:Log["JetCan:StackAllCargo: Access to ${ID} is not allowed", LOG_CRITICAL]
 			return
 		}
 
@@ -413,14 +413,14 @@ objectdef obj_JetCan
 
 		if !${This.AccessAllowed[${ID}]}
 		{
-			UI:UpdateConsole["JetCan:Open: Access to ${ID} is not allowed", LOG_CRITICAL]
+			Logger:Log["JetCan:Open: Access to ${ID} is not allowed", LOG_CRITICAL]
 			return
 		}
 
 		if !${This.IsCargoOpen} && \
 			${Entity[${ID}](exists)}
 		{
-			UI:UpdateConsole["Opening JetCan"]
+			Logger:Log["Opening JetCan"]
 			Entity[${ID}]:Open
 			wait WAIT_CARGO_WINDOW
 
@@ -430,7 +430,7 @@ objectdef obj_JetCan
 				TimeOut:Inc[0.1]
 				if ${TimeOut} > 20
 				{
-					UI:UpdateConsole["JetCan.Open timed out (20 seconds)", LOG_CRITICAL]
+					Logger:Log["JetCan.Open timed out (20 seconds)", LOG_CRITICAL]
 					break
 				}
 				wait 1
@@ -460,7 +460,7 @@ objectdef obj_CorpHangarArray inherits obj_JetCan
 		{
 			if ${CheckFreeSpace} && ${This.CargoFull[${This.ActiveCan}]}
 			{
-				;UI:UpdateConsole["oops... Corporate Hangar Array is full. I have no solution for this!", LOG_CRITICAL]
+				;Logger:Log["oops... Corporate Hangar Array is full. I have no solution for this!", LOG_CRITICAL]
 
 				/* TODO - when we can properly check the cargo full state of pos hangers, remove this */
 				return ${This.ActiveCan}
@@ -589,7 +589,7 @@ objectdef obj_LargeShipAssemblyArray inherits obj_JetCan
 		{
 			if ${CheckFreeSpace} && ${This.CargoFull[${This.ActiveCan}]}
 			{
-				;UI:UpdateConsole["oops... Corporate Hangar Array is full. I have no solution for this!", LOG_CRITICAL]
+				;Logger:Log["oops... Corporate Hangar Array is full. I have no solution for this!", LOG_CRITICAL]
 
 				/* TODO - when we can properly check the cargo full state of pos hangers, remove this */
 				return ${This.ActiveCan}
@@ -665,7 +665,7 @@ objectdef obj_XLargeShipAssemblyArray inherits obj_JetCan
 		{
 			if ${CheckFreeSpace} && ${This.CargoFull[${This.ActiveCan}]}
 			{
-				;UI:UpdateConsole["oops... Corporate Hangar Array is full. I have no solution for this!", LOG_CRITICAL]
+				;Logger:Log["oops... Corporate Hangar Array is full. I have no solution for this!", LOG_CRITICAL]
 
 				/* TODO - when we can properly check the cargo full state of pos hangers, remove this */
 				return ${This.ActiveCan}
@@ -741,7 +741,7 @@ objectdef obj_CompressionArray inherits obj_JetCan
 		{
 			if ${CheckFreeSpace} && ${This.CargoFull[${This.ActiveCan}]}
 			{
-				;UI:UpdateConsole["oops... Corporate Hangar Array is full. I have no solution for this!", LOG_CRITICAL]
+				;Logger:Log["oops... Corporate Hangar Array is full. I have no solution for this!", LOG_CRITICAL]
 
 				/* TODO - when we can properly check the cargo full state of pos hangers, remove this */
 				return ${This.ActiveCan}
