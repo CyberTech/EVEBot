@@ -34,16 +34,14 @@ variable int VersionNum = 0
 #define EVENT_EVEBOT_ONFRAME EVEBOT_OnFrame
 
 /* Core Library (Non-EVE Related code) */
-#include ../External/isxGamesCommon/CyberTech/obj_PulseTimer.iss
-#include ../External/isxGamesCommon/CyberTech/obj_LSQuery.iss
+#include ../../../External/isxGamesCommon/CyberTech/obj_PulseTimer.iss
+#include ../../../External/isxGamesCommon/CyberTech/obj_LSQuery.iss
 #include Lib/obj_BaseClass.iss
 #include Lib/obj_Vector.iss
 ;#include Lib/obj_Mutex.iss
 #include Lib/obj_Sound.iss
 #include Lib/UplinkManager/obj_UplinkManager.iss
 #include Lib/obj_LSGUI.iss
-
-/* End EVEBot Defines, Begin EVE Defines */
 
 #define LOG_MINOR 1
 #define LOG_STANDARD 2
@@ -54,6 +52,7 @@ variable int VersionNum = 0
 #define WAIT_CARGO_WINDOW 15
 #define WAIT_UNDOCK 130
 
+/* End EVEBot Defines, Begin EVE Defines */
 /*
  * DEBUG: Slot: MedSlot3  Ballistic Deflection Field II
  *  DEBUG: Group: Shield Hardener  77
@@ -119,17 +118,18 @@ variable int VersionNum = 0
 ;Implant (ID: 20)        Deployable (ID: 22)     Structure (ID: 23)          Reaction (ID: 24)
 ;Asteroid (ID: 25)
 
-#define CATEGORYID_CELESTIAL	2
-#define CATEGORYID_STATION 		3
-#define CATEGORYID_MINERAL 		4
-#define CATEGORYID_SHIP    		6
-#define CATEGORYID_CHARGE  		8
-#define CATEGORYID_ENTITY		11
-#define CATEGORYID_ORE			25
+#define CATEGORYID_CELESTIAL     2
+#define CATEGORYID_STATION       3
+#define CATEGORYID_MINERAL       4
+#define CATEGORYID_SHIP          6
+#define CATEGORYID_CHARGE        8
+#define CATEGORYID_ENTITY       11
+#define CATEGORYID_ORE          25
 #define CATEGORYID_GLACIAL_MASS 25
+#define CATEGORYID_STRUCTURE    65
 
-#define CATEGORYID_STRUCTURE	23
-#define GROUPID_CONTROL_TOWER	365
+#define CATEGORYID_STARBASE		23
+#define GROUPID_CONTROL_TOWER   365
 
 /* for obj_Sound.iss */
 #define ALARMSOUND	"${Script.CurrentDirectory}/sounds/alarm.wav"

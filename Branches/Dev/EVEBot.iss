@@ -180,7 +180,7 @@ function main()
 	call CreateVariable Autopilot obj_Autopilot global
 	call CreateVariable Callback obj_Callback global
 
-	call CreateVariable  GlobalVariableIterator iterator global
+	call CreateVariable GlobalVariableIterator iterator global
 
 	wait 0.5
 	; Threads need to load after globals but before behaviors.
