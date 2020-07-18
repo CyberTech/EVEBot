@@ -20,7 +20,7 @@ objectdef obj_FullMiner
 		FleetMemberID:Set[${arg_FleetMemberID}]
 		SystemID:Set[${arg_SystemID}]
 		BeltID:Set[${arg_BeltID}]
-		UI:UpdateConsole[ "DEBUG: obj_OreHauler:FullMiner: FleetMember: ${FleetMemberID} System: ${SystemID} Belt: ${Entity[${BeltID}].Name}", LOG_DEBUG]
+		Logger:Log[ "DEBUG: obj_OreHauler:FullMiner: FleetMember: ${FleetMemberID} System: ${SystemID} Belt: ${Entity[${BeltID}].Name}", LOG_DEBUG]
 	}
 }
 
@@ -343,7 +343,7 @@ objectdef obj_MinerHauler inherits obj_Hauler
 	{
 		while ${CurrentState.Equal[HAUL]} && ${FullMiners.FirstValue(exists)}
 		{
-			UI:UpdateConsole["${FullMiners.Used} cans to get! Picking up can at ${FullMiners.FirstKey}", LOG_DEBUG]
+			Logger:Log["${FullMiners.Used} cans to get! Picking up can at ${FullMiners.FirstKey}", LOG_DEBUG]
 			if ${FullMiners.CurrentValue.SystemID} == ${Me.SolarSystemID}
 			{
 				call This.WarpToFleetMemberAndLoot ${FullMiners.CurrentValue.FleetMemberID}

@@ -124,7 +124,7 @@ objectdef obj_Station
 		}
 		if !${This.IsCorpHangarOpen}
 		{
-			UI:UpdateConsole["Opening Corp Cargo Hangar"]
+			Logger:Log["Opening Corp Cargo Hangar"]
 			EVE:Execute[OpenHangarFloor]
 			wait WAIT_CARGO_WINDOW
 			while !${This.IsCorpHangarOpen}

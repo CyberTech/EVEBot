@@ -1500,12 +1500,12 @@ objectdef obj_Ship inherits obj_BaseClass
 		}
 		if !${Entity[${id}](exists)}
 		{
-			UI:UpdateConsole["ActivateFreeMiningLaser: Target ${id} not found", LOG_DEBUG]
+			Logger:Log["ActivateFreeMiningLaser: Target ${id} not found", LOG_DEBUG]
 			return
 		}
 		if ${Entity[${id}].CategoryID} != ${Asteroids.AsteroidCategoryID}
 		{
-			UI:UpdateConsole["Error: Mining Lasers may only be used on Asteroids"]
+			Logger:Log["Error: Mining Lasers may only be used on Asteroids"]
 			return
 		}
 
@@ -1555,7 +1555,7 @@ objectdef obj_Ship inherits obj_BaseClass
 		}
 		if !${Entity[${id}](exists)}
 		{
-			UI:UpdateConsole["ActivateFreeTractorBeam: Target ${id} not found", LOG_DEBUG]
+			Logger:Log["ActivateFreeTractorBeam: Target ${id} not found", LOG_DEBUG]
 			return
 		}
 
@@ -1594,7 +1594,7 @@ objectdef obj_Ship inherits obj_BaseClass
 		}
 		if !${Entity[${id}](exists)}
 		{
-			UI:UpdateConsole["ActivateFreeShieldTransporter: Target ${id} not found", LOG_DEBUG]
+			Logger:Log["ActivateFreeShieldTransporter: Target ${id} not found", LOG_DEBUG]
 			return
 		}
 
@@ -1815,7 +1815,7 @@ objectdef obj_Ship inherits obj_BaseClass
 			if !${This.AlertedInPod}
 			{
 				Sound:Speak["Critical Information: ${Me.Name} is in a pod"]
-				UI:UpdateConsole["Critical Information: ${Me.Name} is in a pod", LOG_CRITICAL]
+				Logger:Log["Critical Information: ${Me.Name} is in a pod", LOG_CRITICAL]
 				This.AlertedInPod:Set[TRUE]
 			}
 			return TRUE
@@ -1912,9 +1912,9 @@ objectdef obj_Ship inherits obj_BaseClass
 
 					if ${CurrentCharges} != ${Module.Value.MaxCharges}
 					{
-						;UI:UpdateConsole["Module.Value.CurrentCharges = ${Module.Value.CurrentCharges}"]
-						;UI:UpdateConsole["Module.Value.MaxCharges = ${Module.Value.MaxCharges}"]
-						;UI:UpdateConsole["Module.Value.Charge.Quantity = ${Module.Value.Charge.Quantity}"]
+						;Logger:Log["Module.Value.CurrentCharges = ${Module.Value.CurrentCharges}"]
+						;Logger:Log["Module.Value.MaxCharges = ${Module.Value.MaxCharges}"]
+						;Logger:Log["Module.Value.Charge.Quantity = ${Module.Value.Charge.Quantity}"]
 						; Is there still more then 30% ammo available?
 						if ${Math.Calc[${Module.Value.CurrentCharges}/${Module.Value.MaxCharges}]} < 0.3
 						{

@@ -542,7 +542,7 @@ objectdef obj_Agents
 		}
 		if !${Station.Docked}
 		{
-			UI:UpdateConsole["obj_Agents.MoveToDropOff: ERROR!  Not Docked."]
+			Logger:Log["obj_Agents.MoveToDropOff: ERROR!  Not Docked."]
 			call This.WarpToDropOffStation
 		}
 	}

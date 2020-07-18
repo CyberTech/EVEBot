@@ -106,10 +106,10 @@ objectdef obj_JetCan
 		variable iterator Can
 		EVE:QueryEntities[Cans, "GroupID = GROUPID_CARGO_CONTAINER && Distance < LOOT_RANGE"]
 #if DEBUG_ENTITIES
-		UI:UpdateConsole["obj_JetCan:CurrentCan Entities: ${EVE.EntitiesCount}, Cans ${Cans.Used}", LOG_DEBUG]
+		Logger:Log["obj_JetCan:CurrentCan Entities: ${EVE.EntitiesCount}, Cans ${Cans.Used}", LOG_DEBUG]
 		EVE:PopulateEntities
 		EVE:QueryEntities[Cans, "GroupID = GROUPID_CARGO_CONTAINER && Distance < LOOT_RANGE"]
-		UI:UpdateConsole["obj_JetCan:CurrentCan Entities: ${EVE.EntitiesCount}, Cans ${Cans.Used} after refresh", LOG_DEBUG]
+		Logger:Log["obj_JetCan:CurrentCan Entities: ${EVE.EntitiesCount}, Cans ${Cans.Used} after refresh", LOG_DEBUG]
 #endif
 
 		Cans:GetIterator[Can]
