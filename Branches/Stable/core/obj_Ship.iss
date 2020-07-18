@@ -56,8 +56,11 @@ objectdef obj_Ship
 
 	method Initialize()
 	{
-		This:StopShip[]
-
+		if !${Me.InStation} && ${Me.InSpace}
+		{
+			This:StopShip[]
+			This:UpdateModuleList
+		}
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		Logger:Log["obj_Ship: Initialized", LOG_MINOR]
 	}
