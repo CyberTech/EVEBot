@@ -17,14 +17,9 @@ objectdef obj_AgentList
 
 	method Initialize()
 	{
-		if ${LavishSettings[${This.SET_NAME1}](exists)}
-		{
-			LavishSettings[${This.SET_NAME1}]:Clear
-		}
-		if ${LavishSettings[${This.SET_NAME2}](exists)}
-		{
-			LavishSettings[${This.SET_NAME2}]:Clear
-		}
+		LavishSettings[${This.SET_NAME1}]:Remove
+		LavishSettings[${This.SET_NAME2}]:Remove
+
 		LavishSettings:Import[${CONFIG_FILE}]
 		LavishSettings[${This.SET_NAME1}]:GetSettingIterator[This.agentIterator]
 		if !${This.agentIterator:First(exists)}
@@ -37,8 +32,8 @@ objectdef obj_AgentList
 
 	method Shutdown()
 	{
-		LavishSettings[${This.SET_NAME1}]:Clear
-		LavishSettings[${This.SET_NAME2}]:Clear
+		LavishSettings[${This.SET_NAME1}]:Remove
+		LavishSettings[${This.SET_NAME2}]:Remove
 	}
 
 	member:string FirstAgent()
@@ -102,10 +97,7 @@ objectdef obj_MissionBlacklist
 
 	method Initialize()
 	{
-		if ${LavishSettings[${This.SET_NAME}](exists)}
-		{
-			LavishSettings[${This.SET_NAME}]:Clear
-		}
+		LavishSettings[${This.SET_NAME}]:Remove
 		LavishSettings:Import[${CONFIG_FILE}]
 		LavishSettings[${This.SET_NAME}]:GetSetIterator[This.levelIterator]
 		Logger:Log["obj_MissionBlacklist: Initialized.", LOG_MINOR]
@@ -113,7 +105,7 @@ objectdef obj_MissionBlacklist
 
 	method Shutdown()
 	{
-		LavishSettings[${This.SET_NAME}]:Clear
+		LavishSettings[${This.SET_NAME}]:Remove
 	}
 
 	member:bool IsBlacklisted(int level, string mission)
@@ -224,15 +216,15 @@ objectdef obj_Agents
 		{
 			variable int agentIndex = 0
 			agentIndex:Set[${EVE.Agent[${name}].Index}]
-		    if (${agentIndex} <= 0)
-		    {
-		        Logger:Log["obj_Agents: ERROR!  Cannot get Index for Agent ${name}.", LOG_CRITICAL]
+			if (${agentIndex} <= 0)
+			{
+				Logger:Log["obj_Agents: ERROR!  Cannot get Index for Agent ${name}.", LOG_CRITICAL]
 				This.AgentName:Set[""]
-		    }
+			}
 			else
 			{
 				This.AgentName:Set[${name}]
-				Logger:Log["obj_Agents: Updating agent data for ${name} ${agentIndex}."]
+				Logger:Log["obj_Agents: Updating agent data for ${name} ${agentIndex}"]
 				Config.Agents:SetAgentIndex[${name},${agentIndex}]
 				Config.Agents:SetAgentID[${name},${EVE.Agent[${agentIndex}].ID}]
 				Config.Agents:SetLastDecline[${name},0]
@@ -254,12 +246,12 @@ objectdef obj_Agents
 	{
 		variable string rVal = ""
 
-	    variable index:agentmission amIndex
-	    variable index:bookmark mbIndex
+		variable index:agentmission amIndex
+		variable index:bookmark mbIndex
 		variable iterator amIterator
 		variable iterator mbIterator
 
-	    EVE:GetAgentMissions[amIndex]
+		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		if ${amIterator:First(exists)}
@@ -301,12 +293,13 @@ objectdef obj_Agents
 		return ${rVal}
 	}
 
-	/*  1) Check for offered (but unaccepted) missions
-	 *  2) Check the agent list for the first valid agent
-	 */
+	/*
+		1) Check for offered (but unaccepted) missions
+		2) Check the agent list for the first valid agent
+	*/
 	method PickAgent()
 	{
-	    variable index:agentmission amIndex
+		variable index:agentmission amIndex
 		variable iterator amIterator
 		variable set skipList
 
@@ -430,12 +423,12 @@ objectdef obj_Agents
 	{
 		variable string rVal = ""
 
-	    variable index:agentmission amIndex
-	    variable index:bookmark mbIndex
+		variable index:agentmission amIndex
+		variable index:bookmark mbIndex
 		variable iterator amIterator
 		variable iterator mbIterator
 
-	    EVE:GetAgentMissions[amIndex]
+		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		if ${amIterator:First(exists)}
@@ -479,7 +472,7 @@ objectdef obj_Agents
 
 	member:bool HaveMission()
 	{
-	    variable index:agentmission amIndex
+		variable index:agentmission amIndex
 		variable iterator amIterator
 
 		EVE:GetAgentMissions[amIndex]
@@ -552,7 +545,6 @@ objectdef obj_Agents
 			Logger:Log["obj_Agents.MoveToPickup: ERROR!  Not Docked."]
 			call This.WarpToPickupStation
 		}
-		wait 100
 	}
 
 	function MoveToDropOff()
@@ -584,17 +576,16 @@ objectdef obj_Agents
 			Logger:Log["obj_Agents.MoveToDropOff: ERROR!  Not Docked."]
 			call This.WarpToDropOffStation
 		}
-		wait 100
 	}
 
 	function WarpToPickupStation()
 	{
-	    variable index:agentmission amIndex
-	    variable index:bookmark mbIndex
+		variable index:agentmission amIndex
+		variable index:bookmark mbIndex
 		variable iterator amIterator
 		variable iterator mbIterator
 
-	    EVE:GetAgentMissions[amIndex]
+		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		if ${amIterator:First(exists)}
@@ -627,12 +618,12 @@ objectdef obj_Agents
 
 	function WarpToDropOffStation()
 	{
-	    variable index:agentmission amIndex
-	    variable index:bookmark mbIndex
+		variable index:agentmission amIndex
+		variable index:bookmark mbIndex
 		variable iterator amIterator
 		variable iterator mbIterator
 
-	    EVE:GetAgentMissions[amIndex]
+		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[amIterator]
 
 		if ${amIterator:First(exists)}
@@ -984,12 +975,13 @@ objectdef obj_Agents
 
 		RetryCount:Set[0]
 
-		Logger:Log["obj_Agents: DEBUG: amIterator.Value.AgentID = ${amIterator.Value.AgentID}"]
-		Logger:Log["obj_Agents: DEBUG: amIterator.Value.State = ${amIterator.Value.State}"]
-		Logger:Log["obj_Agents: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}"]
-		Logger:Log["obj_Agents: DEBUG: amIterator.Value.Name = ${amIterator.Value.Name}"]
-		Logger:Log["obj_Agents: DEBUG: amIterator.Value.ExpirationTime = ${amIterator.Value.ExpirationTime.DateAndTime}"]
+		Logger:Log["obj_Agents: DEBUG: amIterator.Value.AgentID = ${amIterator.Value.AgentID}", LOG_DEBUG]
+		Logger:Log["obj_Agents: DEBUG: amIterator.Value.State = ${amIterator.Value.State}", LOG_DEBUG]
+		Logger:Log["obj_Agents: DEBUG: amIterator.Value.Type = ${amIterator.Value.Type}", LOG_DEBUG]
+		Logger:Log["obj_Agents: DEBUG: amIterator.Value.Name = ${amIterator.Value.Name}", LOG_DEBUG]
+		Logger:Log["obj_Agents: DEBUG: amIterator.Value.ExpirationTime = ${amIterator.Value.ExpirationTime.DateAndTime}", LOG_DEBUG]
 
+		; Opens the details window for the mission
 		amIterator.Value:GetDetails
 		wait 50
 		variable string details
@@ -1226,12 +1218,13 @@ objectdef obj_Agents
 			wait 5
 		}
 
-		Logger:Log["obj_Agents: Starting conversation with agent ${This.ActiveAgent}."]
+		Logger:Log["obj_Agents:TurnInMission: Starting conversation with agent ${This.ActiveAgent}."]
 		EVE.Agent[${This.AgentIndex}]:StartConversation
+
 		do
 		{
-			Logger:Log["obj_Agents: Waiting for conversation window..."]
-		wait 10
+			Logger:Log["obj_Agents:TurnInMission: Waiting for conversation window..."]
+			wait 10
 		}
 		while !${EVEWindow[ByCaption, "Agent Conversation - ${This.ActiveAgent}"](exists)}
 		call This.UpdateLocatorAgent
