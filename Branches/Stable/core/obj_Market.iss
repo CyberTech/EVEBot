@@ -7,7 +7,7 @@
 
 */
 
-objectdef obj_Market
+objectdef obj_Market inherits obj_BaseClass
 {
 	variable index:marketorder  sellOrders
 	variable index:marketorder  buyOrders
@@ -18,15 +18,20 @@ objectdef obj_Market
 
 	method Initialize()
 	{
-		Logger:Log["obj_Market: Initialized", LOG_MINOR]
+		LogPrefix:Set["${This.ObjectName}"]
+
+		;PulseTimer:SetIntervals[0.5,1.0]
+		;Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+
+		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
 	{
 	}
 
-   	function GetMarketOrders(int typeID)
-   	{
+ 	function GetMarketOrders(int typeID)
+ 	{
 		Logger:Log["obj_Market: Obtaining market data for ${EVEDB_Items.Name[${typeID}]} (${typeID})"]
 
 		This.sellOrders:Clear
@@ -36,9 +41,9 @@ objectdef obj_Market
 		wait 40
 		EVE:UpdateMarketOrders_B[${typeID}]
 		wait 10
-		EVE:GetMarketOrders[This.sellOrders,${typeID}, "Sell"]
+		EVE:GetMarketOrders[This.sellOrders, ${typeID}, "Sell"]
 		wait 10
-		EVE:GetMarketOrders[This.buyOrders,${typeID}, "Buy"]
+		EVE:GetMarketOrders[This.buyOrders, ${typeID}, "Buy"]
 		wait 10
 
 		Logger:Log["obj_Market: Found ${This.sellOrders.Used} sell orders."]
@@ -51,7 +56,7 @@ objectdef obj_Market
 		;This:DumpBuyOrders
 		call This.QuicksortBuyOrders 1 ${This.buyOrders.Used}
 		;This:DumpBuyOrders
-   	}
+	}
 
 
 	member:int BestSellOrderSystem()
@@ -302,8 +307,8 @@ objectdef obj_Market
 		return ${storeIndex}
 	}
 
-   	function QuicksortBuyOrders(int left, int right)
-   	{
+	function QuicksortBuyOrders(int left, int right)
+	{
  		variable int pivotIndex
  		variable int pivotNewIndex
 
@@ -316,10 +321,10 @@ objectdef obj_Market
 			call This.QuicksortBuyOrders ${left} ${Math.Calc[${pivotNewIndex} - 1]}
 			call This.QuicksortBuyOrders ${Math.Calc[${pivotNewIndex} + 1]} ${right}
 		}
-   	}
+	}
 
-   	function FilterOrdersByRange(int jumps)
-   	{
+	function FilterOrdersByRange(int jumps)
+	{
 		variable int idx
 		variable int count
 
@@ -330,7 +335,7 @@ objectdef obj_Market
 		{
 			if ${This.sellOrders.Get[${idx}].Jumps} > ${jumps}
 			{
-				;Logger:Log["obj_Market: Removing order ${This.sellOrders.Get[${idx}].ID}."]
+				Logger:Log["obj_Market: Filtering order ${This.sellOrders.Get[${idx}].ID} (range)", LOG_DEBUG]
 				This.sellOrders:Remove[${idx}]
 			}
 		}
@@ -342,13 +347,13 @@ objectdef obj_Market
 		{
 			if ${This.buyOrders.Get[${idx}].Jumps} > ${jumps}
 			{
-				;Logger:Log["obj_Market: Removing order ${This.sellOrders.Get[${idx}].ID}."]
+				Logger:Log["obj_Market: Removing order ${This.sellOrders.Get[${idx}].ID} (range)", LOG_DEBUG]
 				This.buyOrders:Remove[${idx}]
 			}
 		}
 		This.buyOrders:Collapse
 		;This:DumpBuyOrders
-   	}
+	}
 
 	member:float64 LowestSellOrder()
 	{
