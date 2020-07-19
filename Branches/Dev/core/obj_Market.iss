@@ -29,6 +29,7 @@ objectdef obj_Market inherits obj_BaseClass
 	method Shutdown()
 	{
 	}
+
  	function GetMarketOrders(int typeID)
  	{
 		Logger:Log["obj_Market: Obtaining market data for ${EVEDB_Items.Name[${typeID}]} (${typeID})"]
@@ -40,9 +41,9 @@ objectdef obj_Market inherits obj_BaseClass
 		wait 40
 		EVE:UpdateMarketOrders_B[${typeID}]
 		wait 10
-		EVE:GetMarketOrders[This.sellOrders,"Sell",${typeID}]
+		EVE:GetMarketOrders[This.sellOrders, ${typeID}, "Sell"]
 		wait 10
-		EVE:GetMarketOrders[This.buyOrders,"Buy",${typeID}]
+		EVE:GetMarketOrders[This.buyOrders, ${typeID}, "Buy"]
 		wait 10
 
 		Logger:Log["obj_Market: Found ${This.sellOrders.Used} sell orders."]
@@ -85,7 +86,7 @@ objectdef obj_Market inherits obj_BaseClass
 		Logger:Log["${This.ObjectName}: GetMarketBuyOrders: Item ${typeID}:${EVEDB_Items.Name[${typeID}]} Orders - Buy: ${This.buyOrders.Used}"]
 
 		call This.QuicksortBuyOrders 1 ${This.buyOrders.Used}
-  }
+	}
 
 	member:int BestSellOrderSystem()
 	{
@@ -336,7 +337,7 @@ objectdef obj_Market inherits obj_BaseClass
 	}
 
 	function QuicksortBuyOrders(int left, int right)
-   	{
+	{
  		variable int pivotIndex
  		variable int pivotNewIndex
 
@@ -349,10 +350,10 @@ objectdef obj_Market inherits obj_BaseClass
 			call This.QuicksortBuyOrders ${left} ${Math.Calc[${pivotNewIndex} - 1]}
 			call This.QuicksortBuyOrders ${Math.Calc[${pivotNewIndex} + 1]} ${right}
 		}
-   	}
+	}
 
- 	function FilterOrdersByRange(int jumps)
- 	{
+	function FilterOrdersByRange(int jumps)
+	{
 		variable int idx
 		variable int count
 
@@ -363,6 +364,7 @@ objectdef obj_Market inherits obj_BaseClass
 		{
 			if ${This.sellOrders.Get[${idx}].Jumps} > ${jumps}
 			{
+				Logger:Log["obj_Market: Filtering order ${This.sellOrders.Get[${idx}].ID} (range)", LOG_DEBUG]
 				This.sellOrders:Remove[${idx}]
 			}
 		}
@@ -394,13 +396,13 @@ objectdef obj_Market inherits obj_BaseClass
 		{
 			if ${This.buyOrders.Get[${idx}].Jumps} > ${jumps}
 			{
-				Logger:Log["${This.ObjectName}: Removing order ${This.buyOrders.Get[${idx}].ID}."]
+				Logger:Log["obj_Market: Removing order ${This.sellOrders.Get[${idx}].ID} (range)", LOG_DEBUG]
 				This.buyOrders:Remove[${idx}]
 			}
 		}
 		This.buyOrders:Collapse
 		;This:DumpBuyOrders
- 	}
+	}
 
 	member:float64 LowestSellOrder()
 	{

@@ -223,13 +223,17 @@ objectdef obj_JetCan
 			case 9
 				NewName:Set[${Me.Name}]
 				break
+			case 10
+				break
 			default
 				NewName:Set[${Me.Name}]
 				break
 		}
-
-		Logger:Log["JetCan:Rename: Renaming can to ${NewName}"]
-		Entity[${ID}]:SetName[${NewName}]
+		if (${Config.Miner.JetCanNaming} != 10)
+		{
+			Logger:Log["JetCan:Rename: Renaming can to ${NewName}"]
+			Entity[${ID}]:SetName[${NewName}]
+		}
 	}
 
 	method StackAllCargo(int64 ID=0)
@@ -299,16 +303,19 @@ objectdef obj_JetCan
 
 		return ${EVEWindow[Inventory].ChildWindow[${ID}].Capacity}
 	}
+
 	member:float CargoUsedCapacity(int64 ID=0)
 	{
 		if (${ID} == 0 && ${This.ActiveCan} > 0)
 		{
 			ID:Set[${This.ActiveCan}]
 		}
+
 		if !${This.IsCargoOpen[${ID}]}
 		{
 			return 0.0
 		}
+
 		return ${EVEWindow[Inventory].ChildWindow[${ID}].UsedCapacity}
 	}
 
@@ -435,21 +442,7 @@ objectdef obj_JetCan
 		;(you can only close the main inv window), which IMO should be handled separately from the JetCan's window. So I commented it out. D
 		; -- wco12
 
-		;if (${ID} == 0 && ${This.ActiveCan} > 0)
-		;{
-		;	ID:Set[${This.ActiveCan}]
-		;}
-
-		;if ${This.IsCargoOpen[${ID}]}
-		;{
-		;	Logger:Log["Closing JetCan"]
-		;	Entity[${ID}]:CloseCargo
-		;	wait WAIT_CARGO_WINDOW
-		;	while ${This.IsCargoOpen[${ID}]}
-		;	{
-		;		wait 1
-		;	}
-		;}
+		; TODO - should be able to close via envinvchildwindow:close now - CT
 	}
 }
 
@@ -680,6 +673,82 @@ objectdef obj_XLargeShipAssemblyArray inherits obj_JetCan
 		variable index:entity Cans
 		variable iterator Can
 		EVE:QueryEntities[Cans, "TypeID = TYPEID_XLARGE_ASSEMBLY_ARRAY"]
+
+		Cans:GetIterator[Can]
+
+		if ${Can:First(exists)}
+		{
+			do
+			{
+				if (${Can.Value.ID(exists)} && \
+					${Can.Value.ID} > 0 && \
+					${This.AccessAllowed[${Can.Value.ID}]} && \
+					${Can.Value.ID} != ${This.ActiveCan})
+				{
+					This.ActiveCan:Set[${Can.Value.ID}]
+					return ${This.ActiveCan}
+				}
+			}
+			while ${Can:Next(exists)}
+		}
+
+		This.ActiveCan:Set[-1]
+		return ${This.ActiveCan}
+	}
+
+	member:bool AccessAllowed(int64 ID)
+	{
+		if (${ID} == 0 && ${This.ActiveCan} > 0)
+		{
+			ID:Set[${This.ActiveCan}]
+		}
+
+		if !${Entity[${ID}](exists)}
+		{
+			return FALSE
+		}
+
+		if ${Entity[${ID}].Corp.ID} == ${Me.Corp.ID}
+		{
+			return TRUE
+		}
+
+		return FALSE
+	}
+}
+
+objectdef obj_CompressionArray inherits obj_JetCan
+{
+	; Returns -1 for no can, or the entity ID
+	member:int64 CurrentCan(bool CheckFreeSpace = FALSE)
+	{
+		if (${This.ActiveCan} > 0 && \
+			${Entity[${This.ActiveCan}](exists)})
+		{
+			if ${CheckFreeSpace} && ${This.CargoFull[${This.ActiveCan}]}
+			{
+				;Logger:Log["oops... Corporate Hangar Array is full. I have no solution for this!", LOG_CRITICAL]
+
+				/* TODO - when we can properly check the cargo full state of pos hangers, remove this */
+				return ${This.ActiveCan}
+			}
+			else
+			{
+				return ${This.ActiveCan}
+			}
+		}
+
+		if ${This.ActiveCan} > 0
+		{
+			/* The can no longer exists, since we passed above checks, so try to compensate for an Eve bug and close the loot window for it. */
+			/* We don't worry about it for corp hangar arrays, it'll close when we warp away */
+			/* TODO - get name in case we do want to ever close it */
+			;EVEWindow[loot_${This.ActiveCan}]:Close
+		}
+
+		variable index:entity Cans
+		variable iterator Can
+		EVE:QueryEntities[Cans, "TypeID = TYPEID_COMPRESSION_ARRAY"]
 
 		Cans:GetIterator[Can]
 

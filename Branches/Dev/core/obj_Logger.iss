@@ -9,16 +9,28 @@ objectdef obj_Logger
 
 	method Initialize()
 	{
-		This.LogFile:Set["./config/logs/${Me.Name}.log"]
-		This.StatsLogFile:Set["./config/logs/${Me.Name}_Stats.log"]
+		declare FP filepath "${Script.CurrentDirectory}"
+		if !${FP.FileExists["Config"]}
+		{
+			FP:MakeSubdirectory["Config"]
+		}
+		FP:Set["${Script.CurrentDirectory}/Config"]
+		if !${FP.FileExists["Logs"]}
+		{
+			FP:MakeSubdirectory["Logs"]
+		}
+		This.LogFile:Set["./Config/Logs/${Me.Name}.log"]
+		This.StatsLogFile:Set["./Config/Logs/${Me.Name}_Stats.log"]
 
 		This:InitializeLogs
 	}
-	
+
 	method LogIRC(string StatusMessage, int Level=LOG_STANDARD, int Indent=0)
 	{
 		This:Log["${StatusMessage}", ${Level}, ${Indent}]
+#if USE_ISXIM
 		ChatIRC:QueueMessage["${StatusMessage}"]
+#endif
 	}
 
 	method LogChat(string StatusMessage, int Level=LOG_STANDARD, int Indent=0)
@@ -26,13 +38,13 @@ objectdef obj_Logger
 		; TODO - make this log to its own file
 		This:Log["${StatusMessage}", ${Level}, ${Indent}]
 	}
-	
+
 	method LogPilot(string StatusMessage, int Level=LOG_STANDARD, int Indent=0)
 	{
 		; TODO - make this log to its own file
 		This:Log["${StatusMessage}", ${Level}, ${Indent}]
 	}
-	
+
 	method Log(string StatusMessage, int Level=LOG_STANDARD, int Indent=0)
 	{
 		/*
@@ -61,13 +73,13 @@ objectdef obj_Logger
 				}
 			}
 
-			if ${StatusMessage.Equal["${This.PreviousMsg}"]}
+			if ${StatusMessage.Escape.Equal["${This.PreviousMsg.Escape}"]}
 			{
 				Filter:Set[TRUE]
 			}
 			else
 			{
-				This.PreviousMsg:Set["${StatusMessage}"]
+				This.PreviousMsg:Set["${StatusMessage.Escape}"]
 			}
 
 			msg:Set["${Time.Time24}: "]
@@ -76,7 +88,7 @@ objectdef obj_Logger
 			{
   				msg:Concat[" "]
   			}
-  			msg:Concat["${StatusMessage}"]
+ 			msg:Concat["${StatusMessage.Escape}"]
 
 			if ${This.Reloaded}
 			{
@@ -115,8 +127,8 @@ objectdef obj_Logger
 	{
 		while ${This.ConsoleBuffer.Peek(exists)}
 		{
-			UIElement[StatusConsole@Status@Tabs@EVEBot]:Echo["${This.ConsoleBuffer.Peek}"]
-			redirect -append "${This.LogFile}" Echo "${This.ConsoleBuffer.Peek}"
+			UIElement[StatusConsole@Status@Tabs@EVEBot]:Echo["${This.ConsoleBuffer.Peek.Escape}"]
+			redirect -append "${This.LogFile}" Echo "${This.ConsoleBuffer.Peek.Escape}"
 			This.ConsoleBuffer:Dequeue
 		}
 		This.Reloaded:Set[TRUE]

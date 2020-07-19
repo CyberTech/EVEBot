@@ -20,7 +20,8 @@ objectdef obj_EVEDB_StationID
 	{
 		LavishSettings[${This.SET_NAME}]:Remove
 		Logger:Log["${This.ObjectName}: Loading database from ${This.CONFIG_FILE}", LOG_MINOR]
-		LavishSettings:Import[${This.CONFIG_FILE}]
+		LavishSettings:Import[${CONFIG_FILE}]
+
 		Logger:Log["obj_EVEDB_StationID: Initialized", LOG_MINOR]
 	}
 
@@ -144,31 +145,8 @@ objectdef obj_Station
 			wait 10
 		}
 
-		Me:GetHangarItems[This.StationCargo]
-
-		variable iterator CargoIterator
-		This.StationCargo:GetIterator[CargoIterator]
-
-			if ${CargoIterator:First(exists)}
-			do
-			{
-				variable int CategoryID
-				variable string Name
-
-				CategoryID:Set[${CargoIterator.Value.CategoryID}]
-				;echo "${CargoIterator.Value.Name}: ${CargoIterator.Value.CategoryID}"
-				Name:Set[${CargoIterator.Value.Name}]
-
-				;echo "DEBUG: obj_Cargo:TransferToHangar: CategoryID: ${CategoryID} ${Name} - ${ThisCargo.Value.Quantity}"
-				switch ${CategoryID}
-				{
-					default
-						break
-					case 18
-						This.DronesInStation:Insert[${CargoIterator.Value.ID}]
-				}
-			}
-			while ${CargoIterator:Next(exists)}
+		call Inventory.StationHangar.Activate ${Me.Station.ID}
+		Inventory.StationHangar:GetItems[This.DronesInStation, "CategoryID == 18"]
 	}
 
 	function DockAtStation(int64 StationID)
@@ -210,15 +188,13 @@ objectdef obj_Station
 			do
 			{
 				Entity[${StationID}]:Dock
-		   		wait 30
-		   		Counter:Inc[1]
-		   		if (${Counter} > 20)
-		   		{
+				wait 30
+				Counter:Inc[1]
+				if (${Counter} > 20)
+				{
 					Logger:Log["Warning: Docking incomplete after 60 seconds", LOG_CRITICAL]
-					Entity[${StationID}]:Dock
-		      		Counter:Set[0]
-		   		}
-				;Logger:Log["DEBUG: StationExists = ${Entity[${StationID}](exists)}"]
+					Counter:Set[0]
+				}
 			}
 			while !${This.DockedAtStation[${StationID}]}
 			wait 75
@@ -272,7 +248,9 @@ objectdef obj_Station
 			return
 		}
 
-		Logger:Log["Undocking"]
+		Logger:Log["Undocking from ${Me.Station.Name}"]
+		Config.Common:SetHomeStation[${Me.Station.Name}]
+		Logger:Log["Undock: Home Station set to ${Config.Common.HomeStation}"]
 
 		EVE:Execute[CmdExitStation]
 		wait WAIT_UNDOCK
@@ -286,16 +264,15 @@ objectdef obj_Station
 			   Counter:Set[0]
 			   EVE:Execute[CmdExitStation]
 			   Logger:Log["Undock: Unexpected failure, retrying...", LOG_CRITICAL]
-			   Logger:Log["Undock:  Debug: EVEWindow[Local]=${EVEWindow[Local](exists)}", LOG_CRITICAL]
-			   Logger:Log["Undock:  Debug: Me.InStation=${Me.InStation}", LOG_CRITICAL]
-			   Logger:Log["Undock:  Debug: Me.StationID=${Me.StationID}", LOG_CRITICAL]
+			   Logger:Log["Undock: Debug: EVEWindow[Local]=${EVEWindow[Local](exists)}", LOG_CRITICAL]
+			   Logger:Log["Undock: Debug: Me.InStation=${Me.InStation}", LOG_CRITICAL]
+			   Logger:Log["Undock: Debug: Me.StationID=${Me.StationID}", LOG_CRITICAL]
 			}
 		}
 		while ${This.Docked}
+		Logger:Log["Undock: Complete"]
 
-		wait 30
-		Config.Common:HomeStation[${Entity[(CategoryID = CATEGORYID_STATION || CategoryID = CATEGORYID_STRUCTURE)].Name}]
-		Logger:Log["Undock: Complete - Home Station set to ${Config.Common.HomeStation}"]
+		Config.Common:SetHomeStation[${Entity["(GroupID = 15 || GroupID = 1657)"].Name}]
 
 		Ship.RetryUpdateModuleList:Set[1]
 	}

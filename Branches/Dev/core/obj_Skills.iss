@@ -21,8 +21,8 @@ objectdef obj_Skills inherits obj_BaseClass
 	variable index:obj_SkillData SkillQueue
 	variable index:obj_SkillData SkillFileQueue
 
-	variable string CurrentlyTrainingSkill
-	variable string NextInLine
+	variable string CurrentlyTrainingSkill = "-"
+	variable string NextInLine = "None"
 
 	method Initialize()
 	{
@@ -48,11 +48,7 @@ objectdef obj_Skills inherits obj_BaseClass
 
 	method Pulse()
 	{
-		if !${EVEBot.Loaded} || ${EVEBot.Disabled}
-		{
-			return
-		}
-
+		; Run even when paused
 		if ${This.PulseTimer.Ready}
 		{
 			if ${EVEBot.SessionValid}
@@ -75,27 +71,27 @@ objectdef obj_Skills inherits obj_BaseClass
 					{
 						; We're not training a skill, so update the character skill list
 						This:UpdateSkills
-						if !${This.NextSkill.Equal[None]} && \
-							!${Me.Skill[${This.NextInLine}].IsTraining}
+						if !${This.NextSkill.Equal[None]}
 						{
 							This:Train[${This.NextInLine}]
 						}
 
 						/* If we've already got a skill training on this account, turn off training */
-						if ${EVEWindow[ByName,MessageBox](exists)} && \
-							${EVEWindow[ByCaption,Information](exists)}
-						{
-							Logger:Log["obj_Skill: Already training on another character on this account, detaching pulse and turning off TrainSkills"]
-							Press Esc
-							This:Shutdown[]
-							Config.Common:TrainSkills[FALSE]
-						}
+						; 2020 - I don't think this window is modal anymore.
+						;if ${EVEWindow[ByName,MessageBox](exists)} && \
+						;	${EVEWindow[ByCaption,Information](exists)}
+						;{
+						;	Logger:Log["obj_Skill: Already training on another character on this account, detaching pulse and turning off TrainSkills"]
+						;	Press Esc
+						;	This:Shutdown[]
+						;	Config.Common:TrainSkills[FALSE]
+						;}
 					}
 				}
 
 				if ${Me(exists)}
 				{
-					CurrentlyTrainingSkill:Set[${This.CurrentlyTraining}]
+					CurrentlyTrainingSkill:Set[${Me.SkillCurrentlyTraining}]
 				}
 			}
 
@@ -114,13 +110,11 @@ objectdef obj_Skills inherits obj_BaseClass
 		{
 			Logger:Log["Training ${SkillName}"]
 			Me.Skill[${SkillName}]:StartTraining
-			CurrentlyTrainingSkill:Set[${SkillName}]
 		}
 		elseif ${SkillName.NotEqual[${Me.SkillCurrentlyTraining.Name}]}
 		{
 			Logger:Log["Changing skill to ${SkillName} from ${This.CurrentlyTraining}"]
 			Me.Skill[${SkillName}]:StartTraining
-			CurrentlyTrainingSkill:Set[${SkillName}]
 		}
 	}
 
@@ -199,7 +193,6 @@ objectdef obj_Skills inherits obj_BaseClass
 	{
 		if ${SkillName.Length} > 0
 		{
-			/* TODO - this randomly fails for a skill that's being trained.  Amadeus informed */
 			if ${Me.Skill[${SkillName}](exists)} && ${Me.Skill[${SkillName}].IsTraining}
 			{
 				return TRUE
@@ -214,8 +207,8 @@ objectdef obj_Skills inherits obj_BaseClass
 			if ${Me.SkillCurrentlyTraining(exists)}
 			{
 						return TRUE
-					}
-				}
+			}
+		}
 		return FALSE
 	}
 

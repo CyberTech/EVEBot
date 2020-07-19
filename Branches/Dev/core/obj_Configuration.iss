@@ -37,7 +37,7 @@
 objectdef obj_Configuration_BaseConfig
 {
 	variable float ConfigVersion = 2.0
-	
+
 	variable filepath CONFIG_PATH = "${Script.CurrentDirectory}/Config"
 	variable filepath DATA_PATH = "${Script.CurrentDirectory}/Data"
 
@@ -255,7 +255,7 @@ objectdef obj_Configuration_Miner
 		This.OreTypesRef.FindSetting[${TypeID}, ${OreName}]:AddAttribute[Enabled, ${Enabled}]
 		This.OreTypesRef.FindSetting[${TypeID}, ${OreName}]:AddAttribute[Priority, ${Priority}]
 	}
-	
+
 	method Set_Default_Values_Ore()
 	{
 		This.Ref:AddSet[ORE_Types]
@@ -309,8 +309,8 @@ objectdef obj_Configuration_Miner
 
 	method Set_Default_Values_Mercoxit_Template(string OreName, int TypeID, int Enabled, int Priority)
 	{
-		This.MercoxitTypesRef.FindSetting[${TypeID}, ${OreName}]:AddAttribute[Enabled, ${Enabled}] 
-		This.MercoxitTypesRef.FindSetting[${TypeID}, ${OreName}]:AddAttribute[Priority, ${Priority}] 
+		This.MercoxitTypesRef.FindSetting[${TypeID}, ${OreName}]:AddAttribute[Enabled, ${Enabled}]
+		This.MercoxitTypesRef.FindSetting[${TypeID}, ${OreName}]:AddAttribute[Priority, ${Priority}]
 	}
 
 	method Set_Default_Values_Mercoxit()
@@ -324,8 +324,8 @@ objectdef obj_Configuration_Miner
 
 	method Set_Default_Values_Ice_Template(string OreName, int TypeID, int Enabled, int Priority)
 	{
-		This.IceTypesRef.FindSetting[${TypeID}, ${OreName}]:AddAttribute[Enabled, ${Enabled}] 
-		This.IceTypesRef.FindSetting[${TypeID}, ${OreName}]:AddAttribute[Priority, ${Priority}] 
+		This.IceTypesRef.FindSetting[${TypeID}, ${OreName}]:AddAttribute[Enabled, ${Enabled}]
+		This.IceTypesRef.FindSetting[${TypeID}, ${OreName}]:AddAttribute[Priority, ${Priority}]
 	}
 
 	method Set_Default_Values_Ice()

@@ -1,9 +1,9 @@
 /*
 	Autopilot Class
-	
+
 	This class will contain funtions for navigating space.  It is intended
 	to support a bot class that has traveling functions.
-	
+
 	-- GliderPro
 */
 
@@ -21,7 +21,7 @@ objectdef obj_Autopilot
 		Logger:Log["obj_Autopilot: Initialized", LOG_MINOR]
 	}
 
-	/* 	
+	/*
 		Given an entity (or character) ID determine if that item
 		is in the current system.
 	*/
@@ -29,7 +29,7 @@ objectdef obj_Autopilot
 	{
 		return FALSE
 	}
-	
+
 	/*
 		Given a system ID set the autopilot destination to that system.
 	*/
@@ -39,13 +39,13 @@ objectdef obj_Autopilot
 		{
 			return
 		}
-		
+
 		Logger:Log["obj_Autopilot: Setting destination to ${Universe[${id}]}"]
 		This.Destination:Set[${id}]
 		Universe[${id}]:SetDestination
 		This.IsLowSecRoute:Set[-999]
 	}
-	
+
 	/*
 		Return TRUE if there are low-sec systems in our route.
 	*/
@@ -53,10 +53,10 @@ objectdef obj_Autopilot
 	{
 		if ${This.IsLowSecRoute} == -999
 		{
-	
+
 			EVE:GetToDestinationPath[This.Path]
 			This.Path:GetIterator[This.PathIterator]
-			
+
 			;;Logger:Log["obj_Autopilot: DEBUG: ${Universe[${This.Destination}]} is ${This.Path.Used} jumps away."]
 			if ${This.PathIterator:First(exists)}
 			{
@@ -71,9 +71,9 @@ objectdef obj_Autopilot
 					}
 				}
 				while ${This.PathIterator:Next(exists)}
-			}		
+			}
 		}
-			
+
 		return ${This.IsLowSecRoute}
 	}
 

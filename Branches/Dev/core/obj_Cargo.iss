@@ -71,35 +71,35 @@ objectdef obj_Cargo
 
 	method DumpItem(item anItem)
 	{
-		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: BasePrice:         ${anItem.BasePrice}"]
-		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: Capacity:          ${anItem.Capacity}"]
-		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: Category:          ${anItem.Category}"]
-		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: CategoryID:        ${anItem.CategoryID}"]
-		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: Description:       ${anItem.Description}"]
-		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: GraphicID:         ${anItem.GraphicID}"]
-		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: Group:             ${anItem.Group}"]
-		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: GroupID:           ${anItem.GroupID}"]
-		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: ID:                ${anItem.ID}"]
-		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: IsContraband:      ${anItem.IsContraband}"]
-		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: IsRepackable:      ${anItem.IsRepackable}"]
-		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: Location:          ${anItem.Location}"]
-		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: LocationID:        ${anItem.LocationID}"]
-		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: MacroLocation:     ${anItem.MacroLocation}"]
-		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: MacroLocationID:   ${anItem.MacroLocationID}"]
-		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: MarketGroupID:     ${anItem.MarketGroupID}"]
-		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: Name:              ${anItem.Name}"]
-		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: OwnerID:           ${anItem.OwnerID}"]
-		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: PortionSize:       ${anItem.PortionSize}"]
-		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: Quantity:          ${anItem.Quantity}"]
-		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: RaceID:            ${anItem.RaceID}"]
-		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: Radius:            ${anItem.Radius}"]
-		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: Slot:              ${anItem.Slot}"]
-		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: SlotID:            ${anItem.SlotID}"]
-		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: Type:              ${anItem.Type}"]
-		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: Volume:            ${anItem.Volume}"]
-		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: CargoCapacity:     ${anItem.CargoCapacity}"]
-		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: UsedCargoCapacity: ${anItem.UsedCargoCapacity}"]
-		Logger:Log["DEBUG: obj_Cargo: ShipHasContainers: GetCargo:          ${anItem.GetCargo}"]
+		Logger:Log["DEBUG: obj_Cargo: DumpItem: BasePrice:         ${anItem.BasePrice}"]
+		Logger:Log["DEBUG: obj_Cargo: DumpItem: Capacity:          ${anItem.Capacity}"]
+		Logger:Log["DEBUG: obj_Cargo: DumpItem: Category:          ${anItem.Category}"]
+		Logger:Log["DEBUG: obj_Cargo: DumpItem: CategoryID:        ${anItem.CategoryID}"]
+		Logger:Log["DEBUG: obj_Cargo: DumpItem: Description:       ${anItem.Description}"]
+		Logger:Log["DEBUG: obj_Cargo: DumpItem: GraphicID:         ${anItem.GraphicID}"]
+		Logger:Log["DEBUG: obj_Cargo: DumpItem: Group:             ${anItem.Group}"]
+		Logger:Log["DEBUG: obj_Cargo: DumpItem: GroupID:           ${anItem.GroupID}"]
+		Logger:Log["DEBUG: obj_Cargo: DumpItem: ID:                ${anItem.ID}"]
+		Logger:Log["DEBUG: obj_Cargo: DumpItem: IsContraband:      ${anItem.IsContraband}"]
+		Logger:Log["DEBUG: obj_Cargo: DumpItem: IsRepackable:      ${anItem.IsRepackable}"]
+		Logger:Log["DEBUG: obj_Cargo: DumpItem: Location:          ${anItem.Location}"]
+		Logger:Log["DEBUG: obj_Cargo: DumpItem: LocationID:        ${anItem.LocationID}"]
+		Logger:Log["DEBUG: obj_Cargo: DumpItem: MacroLocation:     ${anItem.MacroLocation}"]
+		Logger:Log["DEBUG: obj_Cargo: DumpItem: MacroLocationID:   ${anItem.MacroLocationID}"]
+		Logger:Log["DEBUG: obj_Cargo: DumpItem: MarketGroupID:     ${anItem.MarketGroupID}"]
+		Logger:Log["DEBUG: obj_Cargo: DumpItem: Name:              ${anItem.Name}"]
+		Logger:Log["DEBUG: obj_Cargo: DumpItem: OwnerID:           ${anItem.OwnerID}"]
+		Logger:Log["DEBUG: obj_Cargo: DumpItem: PortionSize:       ${anItem.PortionSize}"]
+		Logger:Log["DEBUG: obj_Cargo: DumpItem: Quantity:          ${anItem.Quantity}"]
+		Logger:Log["DEBUG: obj_Cargo: DumpItem: RaceID:            ${anItem.RaceID}"]
+		Logger:Log["DEBUG: obj_Cargo: DumpItem: Radius:            ${anItem.Radius}"]
+		Logger:Log["DEBUG: obj_Cargo: DumpItem: Slot:              ${anItem.Slot}"]
+		Logger:Log["DEBUG: obj_Cargo: DumpItem: SlotID:            ${anItem.SlotID}"]
+		Logger:Log["DEBUG: obj_Cargo: DumpItem: Type:              ${anItem.Type}"]
+		Logger:Log["DEBUG: obj_Cargo: DumpItem: Volume:            ${anItem.Volume}"]
+		Logger:Log["DEBUG: obj_Cargo: DumpItem: CargoCapacity:     ${anItem.CargoCapacity}"]
+		Logger:Log["DEBUG: obj_Cargo: DumpItem: UsedCargoCapacity: ${anItem.UsedCargoCapacity}"]
+		Logger:Log["DEBUG: obj_Cargo: DumpItem: GetCargo:          ${anItem.GetCargo}"]
 		Logger:Log["========================================================"]
 
 	}
@@ -222,12 +222,11 @@ objectdef obj_Cargo
 
 		This.CargoToTransfer:Clear
 
-		; No crystals found, just return
+		; No crystals types found to replenish, just return
 		if !${Crystals.FirstKey(exists)}
 		{
 			return
 		}
-
 
 		if ${from} == -1
 		{

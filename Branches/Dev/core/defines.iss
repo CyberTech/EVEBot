@@ -4,7 +4,7 @@
 	Hardcoded defines for EVEBot
 
 	- CyberTech
--
+
 */
 
 variable string APP_NAME = "EVEBot"
@@ -25,8 +25,8 @@ variable int VersionNum = 0
 ; Default is "All" for everything
 #define DEBUG_TARGET All
 
-; Do not set this to 1 unless you have downloaded and installed ISXIM
-; extension from http://www.isxgames.com/forums/showthread.php?t=3829
+; Do not set this to 1 unless you have downloaded and installed ISXIM extension from http://www.isxgames.com/forums/showthread.php?t=3829
+; Allows logging to IRC and Jabber, etc
 #define USE_ISXIM 0
 
 ;#define EVENT_ONFRAME OnFrame
@@ -34,8 +34,8 @@ variable int VersionNum = 0
 #define EVENT_EVEBOT_ONFRAME EVEBOT_OnFrame
 
 /* Core Library (Non-EVE Related code) */
-#include ../../../External/isxGamesCommon/CyberTech/obj_PulseTimer.iss
-#include ../../../External/isxGamesCommon/CyberTech/obj_LSQuery.iss
+#include ../../../External/isxScripts/obj_PulseTimer.iss
+#include ../../../External/isxScripts/obj_LSQuery.iss
 #include Lib/obj_BaseClass.iss
 #include Lib/obj_Vector.iss
 ;#include Lib/obj_Mutex.iss
@@ -80,6 +80,7 @@ variable int VersionNum = 0
 #define TYPEID_MOON	14
 #define TYPEID_LARGE_ASSEMBLY_ARRAY 29613
 #define TYPEID_XLARGE_ASSEMBLY_ARRAY 24656
+#define TYPEID_COMPRESSION_ARRAY 12239
 
 /* Same group and type for secure cargo containers as well */
 #define GROUPID_CORPORATE_HANGAR_ARRAY 471
