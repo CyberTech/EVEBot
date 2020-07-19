@@ -287,7 +287,6 @@ objectdef obj_JetCan
 		{
 			return FALSE
 		}
-
 	}
 
 	member:float CargoCapacity(int64 ID=0)
@@ -303,7 +302,6 @@ objectdef obj_JetCan
 		}
 
 		return ${EVEWindow[Inventory].ChildWindow[${ID}].Capacity}
-
 	}
 
 	member:float CargoUsedCapacity(int64 ID=0)
@@ -443,12 +441,10 @@ objectdef obj_JetCan
 		; The current code didn't do anything and there is no actual way to close the JetCan right now
 		;(you can only close the main inv window), which IMO should be handled separately from the JetCan's window. So I commented it out. D
 		; -- wco12
+
+		; TODO - should be able to close via envinvchildwindow:close now - CT
 	}
 }
-
-
-
-
 
 objectdef obj_CorpHangarArray inherits obj_JetCan
 {
@@ -526,12 +522,6 @@ objectdef obj_CorpHangarArray inherits obj_JetCan
 	}
 }
 
-
-
-
-
-
-
 objectdef obj_SpawnContainer inherits obj_JetCan
 {
 	; Returns -1 for no can, or the entity ID
@@ -574,10 +564,6 @@ objectdef obj_SpawnContainer inherits obj_JetCan
 		return ${This.ActiveCan}
 	}
 }
-
-
-
-
 
 objectdef obj_LargeShipAssemblyArray inherits obj_JetCan
 {
