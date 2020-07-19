@@ -14,9 +14,16 @@ objectdef obj_EVEDB_Stations
 
 	method Initialize()
 	{
+		LavishSettings[${This.SET_NAME}]:Remove
+		Logger:Log["${This.ObjectName}: Loading database from ${This.CONFIG_FILE}", LOG_MINOR]
 		LavishSettings:Import[${CONFIG_FILE}]
 
 		Logger:Log["obj_EVEDB_Stations: Initialized", LOG_MINOR]
+	}
+
+	method Shutdown()
+	{
+		LavishSettings[${This.SET_NAME}]:Remove
 	}
 
 	member:string StationName(int64 stationID)
@@ -41,23 +48,28 @@ objectdef obj_Station
 
 	member:bool Docked()
 	{
-		if ${Me.InStation} && \
+		if ${EVEBot.SessionValid} && \
+			!${Me.InSpace} && \
+			${Me.InStation} && \
 			${Me.StationID} > 0
 		{
 			return TRUE
 		}
-	    return FALSE
+		return FALSE
 	}
 
 	member:bool DockedAtStation(int64 StationID)
 	{
-		if ${Me.InStation} && \
+		if ${EVEBot.SessionValid} && \
+			!${Me.InSpace} && \
+			${Me.InStation} && \
 			${Me.StationID} == ${StationID}
+
 		{
 			return TRUE
 		}
 
-	    return FALSE
+		return FALSE
 	}
 
 	function GetStationItems()
@@ -75,6 +87,12 @@ objectdef obj_Station
 	function DockAtStation(int64 StationID)
 	{
 		variable int Counter = 0
+
+		if ${Me.InStation}
+		{
+			Logger:Log["DockAtStation called, but we're already in station!"]
+			return
+		}
 
 		Logger:Log["Docking at ${EVE.GetLocationNameByID[${StationID}]}"]
 
@@ -105,7 +123,13 @@ objectdef obj_Station
 			do
 			{
 				Entity[${StationID}]:Dock
-				wait 200 ${This.DockedAtStation[${StationID}]}
+				wait 30
+				Counter:Inc[1]
+				if (${Counter} > 20)
+				{
+					Logger:Log["Warning: Docking incomplete after 60 seconds", LOG_CRITICAL]
+					Counter:Set[0]
+				}
 			}
 			while !${This.DockedAtStation[${StationID}]}
 		}
@@ -119,13 +143,18 @@ objectdef obj_Station
 	function Dock()
 	{
 		variable int64 StationID
-		StationID:Set[${Entity["(GroupID = 15 || GroupID = 1657) && Name = ${Config.Common.HomeStation}"].ID}]
+		StationID:Set[${Entity["(CategoryID = CATEGORYID_STATION || CategoryID = CATEGORYID_STRUCTURE) && Name = ${Config.Common.HomeStation}"].ID}]
 
-		Logger:Log["Docking - Trying Home station..."]
+		if ${Me.InStation}
+		{
+			Logger:Log["Dock called, but we're already instation!"]
+			return
+		}
+
 		if ${StationID} <= 0 || !${Entity[${StationID}](exists)}
 		{
-			Logger:Log["Warning: Home station not found, finding nearest station"]
-			StationID:Set[${Entity["(GroupID = 15 || GroupID = 1657)"].ID}]
+			Logger:Log["Warning: Home station '${Config.Common.HomeStation}' not found, going to nearest base", LOG_CRITICAL]
+			StationID:Set[${Entity["(CategoryID = CATEGORYID_STATION || CategoryID = CATEGORYID_STRUCTURE)"].ID}]
 		}
 
 		if ${Entity[${StationID}](exists)}
@@ -148,6 +177,7 @@ objectdef obj_Station
 
 		Logger:Log["Undocking from ${Me.Station.Name}"]
 		Config.Common:SetHomeStation[${Me.Station.Name}]
+		Logger:Log["Undock: Home Station set to ${Config.Common.HomeStation}"]
 
 		EVE:Execute[CmdExitStation]
 		wait WAIT_UNDOCK
@@ -170,9 +200,6 @@ objectdef obj_Station
 		Logger:Log["Undock: Complete"]
 
 		Config.Common:SetHomeStation[${Entity["(GroupID = 15 || GroupID = 1657)"].Name}]
-
-		;Me:SetVelocity[100]
-		wait 30
 
 		Ship.RetryUpdateModuleList:Set[1]
 	}
