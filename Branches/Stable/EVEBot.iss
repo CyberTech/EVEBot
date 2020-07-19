@@ -187,6 +187,7 @@ function main()
 		}
 	}
 
+	EVEBot.Loaded:Set[TRUE]
 	Logger:Log["-=Paused: Press Run-="]
 	Script:Pause
 

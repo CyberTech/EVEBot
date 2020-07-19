@@ -7,26 +7,27 @@
 
 */
 
-objectdef obj_EVEBot
+objectdef obj_EVEBot inherits obj_BaseClass
 {
 	variable bool ReturnToStation = FALSE
 	variable bool _Paused = FALSE
 	variable bool Disabled = FALSE			/* If true, ALL functionality should be disabled  - everything. no pulses, no nothing */
 	variable bool Loaded					/* Set true once the bot is fully loaded */
-	variable time NextPulse
-	variable int PulseIntervalInSeconds = 4
+	variable int LastSessionFrame
+	variable bool LastSessionResult
 
 	method Initialize()
 	{
-		if !${ISXEVE(exists)}
-		{
-			echo "ISXEVE must be loaded to use ${APP_NAME}."
-			Script:End
-		}
+		LogPrefix:Set["${This.ObjectName}"]
 
+		PulseTimer:SetIntervals[4.0,5.0]
 		This:SetVersion
+
+		LavishScript:RegisterEvent[EVENT_EVEBOT_ONFRAME]
+		LavishScript:RegisterEvent[EVENT_EVEBOT_ONFRAME_INSPACE]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-		Logger:Log["obj_EVEBot: Initialized", LOG_MINOR]
+
+		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -36,74 +37,116 @@ objectdef obj_EVEBot
 
 	method Pulse()
 	{
-		if !${ISXEVE(exists)}
+		if !${This.Loaded} || ${This.Disabled}
 		{
-			echo "EVEBot: Out of game"
-			;run EVEBot/Launcher.iss charid or charname
-			;Script:End
+			return
 		}
 
-	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+		if ${This.PulseTimer.Ready}
 		{
-    		if ${Login(exists)} || \
-    			${CharSelect(exists)}
-    		{
-    			echo "EVEBot: Out of game"
-    			;run EVEBot/Launcher.iss charid or charname
-    			;Script:End
-    		}
-
-			if ${Config.Common.Disable3D}
+			ISXEVE:Debug_LogMsg["${This.LogPrefix}", "============================================= Pulse Start"]
+			if !${This.SessionValid}
 			{
-				if ${Me.InSpace} && ${EVE.Is3DDisplayOn}
+				This.PulseTimer:Update
+				ISXEVE:Debug_LogMsg["${This.LogPrefix}", "============================================= Pulse End"]
+				return
+			}
+
+			if (${Config.Common.DisableUI} || (${Config.Common.DisableScreenWhenBackgrounded} && !${Display.Foreground})) && \
+				${EVE.IsUIDisplayOn}
+			{
+				EVE:ToggleUIDisplay
+				Logger:Log["Disabling UI Rendering"]
+			}
+			elseif !${Config.Common.DisableUI} && !${EVE.IsUIDisplayOn}
+			{
+				EVE:ToggleUIDisplay
+				Logger:Log["Enabling UI Rendering"]
+			}
+
+			; TODO - ISXEVE Bug - 3D disable only works in space 2011/07/17
+			if ${Me.InSpace}
+			{
+				if (${Config.Common.Disable3D} || (${Config.Common.DisableScreenWhenBackgrounded} && !${Display.Foreground})) && \
+					${EVE.Is3DDisplayOn}
 				{
 					EVE:Toggle3DDisplay
 					Logger:Log["Disabling 3D Rendering"]
 				}
-			}
-			elseif ${Me.InSpace} && !${EVE.Is3DDisplayOn}
-			{
-				EVE:Toggle3DDisplay
-				Logger:Log["Enabling 3D Rendering"]
+				elseif !${Config.Common.Disable3D} && !${EVE.Is3DDisplayOn}
+				{
+					EVE:Toggle3DDisplay
+					Logger:Log["Enabling 3D Rendering"]
+				}
 			}
 
-			/*
-				TODO
-					[15:52] <CyberTechWork> the downtime check could be massively optimized
-					[15:52] <CyberTechWork> by calcing how long till downtime and setting a timed event to call back
-					[15:52] <CyberTechWork> don't know why we didn't think of that in the first place
-			*/
-			if !${This.ReturnToStation} && ${Me(exists)}
+			if !${This._Paused}
 			{
-				if ( ${This.GameHour} == 10 && \
-					( ${This.GameMinute} >= 50 && ${This.GameMinute} <= 57) )
+				if ${EVEWindow[ByName,modal].Text.Find["The daily downtime will begin in"](exists)}
 				{
-					Logger:Log["EVE downtime approaching, pausing operations", LOG_CRITICAL]
-					This.ReturnToStation:Set[TRUE]
+					EVEWindow[ByName,modal]:ClickButtonOK
 				}
-				elseif (${This.GameHour} == 10 && \
-					${This.GameMinute} >= 58)
-				{
-					Logger:Log["EVE downtime approaching - Quitting Eve", LOG_CRITICAL]
-					EVE:Execute[CmdQuitGame]
-				}
-				else
-				{
-					variable int Hours = ${Math.Calc[(${Script.RunningTime}/1000/60/60)%60].Int}
+				EVE:CloseAllMessageBoxes
+				EVE:CloseAllChatInvites
 
-					;;; Logger:Log["DEBUG: ${Config.Common.MaxRuntime} ${Hours}"]
-					if ${Config.Common.MaxRuntime} > 0 && ${Config.Common.MaxRuntime} <= ${Hours}
+				/*
+					TODO
+						[15:52] <CyberTechWork> the downtime check could be massively optimized
+						[15:52] <CyberTechWork> by calcing how long till downtime and setting a timed event to call back
+						[15:52] <CyberTechWork> don't know why we didn't think of that in the first place
+				*/
+				if !${This.ReturnToStation} && ${Me(exists)}
+				{
+					if ( ${This.GameHour} == 10 && \
+						( ${This.GameMinute} >= 50 && ${This.GameMinute} <= 57) )
 					{
-						Logger:Log["Maximum runtime exceeded, pausing operations", LOG_CRITICAL]
+						Logger:Log["EVE downtime approaching, pausing operations", LOG_CRITICAL]
 						This.ReturnToStation:Set[TRUE]
 					}
+					else
+					{
+						variable int Hours = ${Math.Calc[(${Script.RunningTime}/1000/60/60)%60].Int}
+
+						;;; Logger:Log["DEBUG: ${Config.Common.MaxRuntime} ${Hours}"]
+						if ${Config.Common.MaxRuntime} > 0 && ${Config.Common.MaxRuntime} <= ${Hours}
+						{
+							Logger:Log["Maximum runtime exceeded, pausing operations", LOG_CRITICAL]
+							This.ReturnToStation:Set[TRUE]
+						}
+					}
 				}
+
+				if ${Me.InSpace} && !${Station.Docked}
+				{
+					Event[EVENT_EVEBOT_ONFRAME_INSPACE]:Execute
+				}
+
+				Event[EVENT_EVEBOT_ONFRAME]:Execute
+
 			}
 
-    		This.NextPulse:Set[${Time.Timestamp}]
-    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-    		This.NextPulse:Update
+			This.PulseTimer:Update
+			ISXEVE:Debug_LogMsg["${This.LogPrefix}", "============================================= Pulse End"]
 		}
+	}
+
+	member:bool SessionValid()
+	{
+		if ${This.LastSessionFrame} == ${Script.RunningTime}
+		{
+			return ${This.LastSessionResult}
+		}
+
+		if ${ISXEVE.IsSafe} && (${Me.InSpace} || ${Me.InStation})
+		{
+			This.LastSessionFrame:Set[${Script.RunningTime}]
+			This.LastSessionResult:Set[TRUE]
+			return TRUE
+		}
+
+		This.LastSessionFrame:Set[${Script.RunningTime}]
+		This.LastSessionResult:Set[FALSE]
+		return FALSE
 	}
 
 	member:bool Paused()
@@ -114,10 +157,10 @@ objectdef obj_EVEBot
 			return TRUE
 		}
 
-		;if !${This.SessionValid}
-		;{
-		;	return TRUE
-		;}
+		if !${This.SessionValid}
+		{
+			return TRUE
+		}
 
 		return FALSE
 	}
@@ -144,9 +187,10 @@ objectdef obj_EVEBot
 			tmpstr:Set[" - Debugging (Objects: DEBUG_TARGET)"]
 		}
 		AppVersion:Set["${APP_NAME} Stable Revision${tmpstr}"]
+		; TODO - pull branch out of Script.CurrentDirectory path
 		;if ${APP_HEADURL.Find["EVEBot/branches/stable"]}
 		;{
-	  ;	AppVersion:Set["${APP_NAME} Stable Revision ${VersionNum}"]
+		;	AppVersion:Set["${APP_NAME} Stable Revision ${VersionNum}"]
 		;}
 		;else
 		;{
