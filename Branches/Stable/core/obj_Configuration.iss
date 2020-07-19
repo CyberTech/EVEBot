@@ -18,10 +18,28 @@
 		of the existing classes below.
 */
 
+#macro Define_ConfigItem(_Type, _Key, _DefaultValue)
+	member:_Type _Key()
+	{
+		;echo Returning \${This.Ref.FindSetting[_Key, _DefaultValue]} = ${This.Ref.FindSetting[_Key, _DefaultValue]}
+		return ${This.Ref.FindSetting[_Key, _DefaultValue]}
+	}
+
+	method _Key(_Type Value)
+	{
+		;echo "This.Ref:AddSetting[_Key, ${Value}]"
+		This.Ref:AddSetting[_Key, ${Value}]
+	}
+#endmac
+
+
 /* ************************************************************************* */
 objectdef obj_Configuration_BaseConfig
 {
+	variable float ConfigVersion = 1.0
+
 	variable filepath CONFIG_PATH = "${Script.CurrentDirectory}/Config"
+	variable filepath DATA_PATH = "${Script.CurrentDirectory}/Data"
 	variable string ORG_CONFIG_FILE = "evebot.xml"
 	variable string NEW_CONFIG_FILE = "${Me.Name} Config.xml"
 	variable string CONFIG_FILE = "${Me.Name} Config.xml"
@@ -29,7 +47,7 @@ objectdef obj_Configuration_BaseConfig
 
 	method Initialize()
 	{
-		LavishSettings[EVEBotSettings]:Clear
+		LavishSettings[EVEBotSettings]:Remove
 		LavishSettings:AddSet[EVEBotSettings]
 		LavishSettings[EVEBotSettings]:AddSet[${Me.Name}]
 
@@ -57,7 +75,7 @@ objectdef obj_Configuration_BaseConfig
 	method Shutdown()
 	{
 		This:Save[]
-		LavishSettings[EVEBotSettings]:Clear
+		LavishSettings[EVEBotSettings]:Remove
 	}
 
 	method Save()
@@ -70,7 +88,10 @@ objectdef obj_Configuration_BaseConfig
 objectdef obj_Configuration
 {
 	variable obj_Configuration_Common Common
+	;variable obj_Configuration_Sound Sound
+	;variable obj_Configuration_Logging Logging
 	variable obj_Configuration_Combat Combat
+	;variable obj_Configuration_Defense Defense
 	variable obj_Configuration_Miner Miner
 	variable obj_Configuration_Hauler Hauler
 	variable obj_Configuration_Salvager Salvager
@@ -503,7 +524,7 @@ objectdef obj_Configuration_Miner
 	{
 		This.MinerRef:AddSetting[Use Mining Drones, ${value}]
 	}
-	
+
 	member:bool MasterMode()
 	{
 		return ${This.MinerRef.FindSetting[Master Mode, FALSE]}
@@ -523,7 +544,7 @@ objectdef obj_Configuration_Miner
 	{
 		This.MinerRef:AddSetting[Group Mode, ${value}]
 	}
-	
+
 	member:bool GroupModeAtRange()
 	{
 		return ${This.MinerRef.FindSetting[Group Mode At Range, FALSE]}
@@ -533,7 +554,7 @@ objectdef obj_Configuration_Miner
 	{
 		This.MinerRef:AddSetting[Group Mode At Range, ${value}]
 	}
-	
+
 	member:bool OrcaMode()
 	{
 		return ${This.MinerRef.FindSetting[Orca Mode, FALSE]}
@@ -689,7 +710,7 @@ objectdef obj_Configuration_Miner
 	{
 		variable float threshold
 		threshold:Set[${This.MinerRef.FindSetting[Cargo Threshold, 0]}]
-		if (${threshold} == 0) 
+		if (${threshold} == 0)
 		{
 			if ${MyShip.HasOreHold}
 			{
@@ -861,7 +882,7 @@ objectdef obj_Configuration_Combat
 	{
 		return ${This.CombatRef.FindSetting[OrbitDistance, 30000]}
 	}
-	
+
 		method SetKeepAtRange(bool value)
 	{
 		This.CombatRef:AddSetting[KeepAtRange,${value}]
