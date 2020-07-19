@@ -12,15 +12,13 @@ This contains all stuff dealing with other players around us. - Hessinger
 		- (bool) PossibleHostiles(): Returns True if there are ships targeting us.
 */
 
-objectdef obj_Social
+objectdef obj_Social inherits obj_BaseClass
 {
 	variable index:pilot PilotIndex
 	variable index:entity EntityIndex
 	variable collection:time WhiteListPilotLog
 	variable collection:time BlackListPilotLog
 
-	variable time NextPulse
-	variable int PulseIntervalInSeconds = 1
 
 	variable iterator WhiteListPilotIterator
 	variable iterator WhiteListCorpIterator
@@ -36,36 +34,50 @@ objectdef obj_Social
 	variable set PilotWhiteList
 	variable set CorpWhiteList
 	variable set AllianceWhiteList
-	
+
 	variable int NextBreak=0
 	variable int NextRestart=0
 	variable bool OnBreak=FALSE
 	variable time CurrentTime
 	variable time NextBreakTime
 	variable time RestartTime
-	
+
 	variable int IsSafeCooldown=0
 
 	method Initialize()
 	{
+		LogPrefix:Set["${This.ObjectName}"]
+
+		EVE:RefreshStandings
+
 		This:ResetWhiteBlackLists
 
 		SystemSafe:Set[TRUE]
 
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		Event[EVE_OnChannelMessage]:AttachAtom[This:OnChannelMessage]
+
 		LavishScript:RegisterEvent[EVEBot_HARDSTOP]
 		Event[EVEBot_HARDSTOP]:AttachAtom[This:TriggerHARDSTOP]
+
 		LavishScript:RegisterEvent[EVEBot_ABORTHARDSTOP]
 		Event[EVEBot_ABORTHARDSTOP]:AttachAtom[This:AbortHARDSTOP]
+
 		LavishScript:RegisterEvent[EVEBot_ClearWhitelist]
 		Event[EVEBot_ClearWhitelist]:AttachAtom[This:ClearWhitelist]
+
 		LavishScript:RegisterEvent[EVEBot_AddWhitelist]
 		Event[EVEBot_AddWhitelist]:AttachAtom[This:AddWhiteList]
+
 		LavishScript:RegisterEvent[EVEBot_FinalizeWhitelist]
 		Event[EVEBot_FinalizeWhitelist]:AttachAtom[This:FinalizeWhitelist]
 
-		Logger:Log["obj_Social: Initialized", LOG_MINOR]
+		PulseTimer:SetIntervals[2.0,2.5]
+		PulseTimer:Increase[2.0]
+
+		;EVE:ActivateChannelMessageEvents
+
+		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
 	method SyncWhitelist()
@@ -156,7 +168,7 @@ objectdef obj_Social
 		Blacklist.CorporationsRef:GetSettingIterator[This.BlackListCorpIterator]
 		Blacklist.AlliancesRef:GetSettingIterator[This.BlackListAllianceIterator]
 
-		Logger:Log["obj_Social: Initializing whitelist...", LOG_MINOR]
+		Logger:Log["${LogPrefix}: Initializing whitelist...", LOG_MINOR]
 		PilotWhiteList:Add[${Me.CharID}]
 		if ${Me.Corp.ID} > 0
 		{
@@ -188,7 +200,7 @@ objectdef obj_Social
 		}
 		while ${This.WhiteListAllianceIterator:Next(exists)}
 
-		Logger:Log["obj_Social: Initializing blacklist...", LOG_MINOR]
+		Logger:Log["${LogPrefix}: Initializing blacklist...", LOG_MINOR]
 		if ${This.BlackListPilotIterator:First(exists)}
 		do
 		{
@@ -221,7 +233,12 @@ objectdef obj_Social
 
 	method Pulse()
 	{
-		if ${Time.Timestamp} > ${This.NextPulse.Timestamp}
+		if !${EVEBot.Loaded} || ${EVEBot.Disabled}
+		{
+			return
+		}
+
+		if ${This.PulseTimer.Ready}
 		{
 			EVE:GetLocalPilots[This.PilotIndex]
 			if ${This.PilotIndex.Used} == 1
@@ -252,7 +269,7 @@ objectdef obj_Social
 					IsSafeCooldown:Set[0]
 				}
 				else
-				{ 
+				{
 					if !${SystemSafe}
 					{
 						IsSafeCooldown:Set[${Math.Calc[${Time.Timestamp} + (${Config.Combat.SafeCooldown} * 60)]}]
@@ -265,14 +282,10 @@ objectdef obj_Social
 					SystemSafe:Set[FALSE]
 				}
 			}
-			
-			
-			
+
 			This:ProcessBreak
-			
-    		This.NextPulse:Set[${Time.Timestamp}]
-    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-    		This.NextPulse:Update
+
+			This.PulseTimer:Update
 		}
 	}
 
@@ -419,7 +432,7 @@ objectdef obj_Social
 						(${CorpToAlliance} == 0 && \
 						(${AllianceToCorp} == 0 && \
 						(${AllianceToAlliance} == 0 \
-					)  && 0 < ${Config.Combat.LowestStanding} 
+					)  && 0 < ${Config.Combat.LowestStanding}
 				{
 					Logger:Log["	if  ", LOG_DEBUG]
 					Logger:Log["	(  ", LOG_DEBUG]
@@ -756,7 +769,7 @@ objectdef obj_Social
 
 		return ${bReturn}
 	}
-	
+
 	method ProcessBreak()
 	{
 		if ${Config.Combat.TakeBreaks}
@@ -765,7 +778,7 @@ objectdef obj_Social
 			{
 				NextBreak:Set[${Math.Calc[${Time.Timestamp} + ${Config.Combat.TimeBetweenBreaks} * 3600 - 1200 + ${Math.Rand[2400]}]}]
 			}
-			
+
 			if ${NextBreak} <= ${Time.Timestamp} && !${OnBreak} && !${EVEBot.ReturnToStation}
 			{
 				Logger:Log["Taking a break!", LOG_CRITICAL]
@@ -780,12 +793,12 @@ objectdef obj_Social
 				OnBreak:Set[TRUE]
 				NextBreak:Set[0]
 			}
-			
+
 			if ${NextRestart} == 0 && ${OnBreak}
 			{
 				NextRestart:Set[${Math.Calc[${Time.Timestamp} + ${Config.Combat.BreakDuration} * 3600 - 1200 + ${Math.Rand[2400]}]}]
 			}
-			
+
 			if ${NextRestart} <= ${Time.Timestamp} && ${OnBreak}
 			{
 				Logger:Log["Break over, back to work!", LOG_CRITICAL]
@@ -801,14 +814,14 @@ objectdef obj_Social
 				NextRestart:Set[0]
 			}
 		}
-		
+
 		CurrentTime:Set[${Time.Timestamp}]
 		NextBreakTime:Set[${NextBreak}]
 		RestartTime:Set[${NextRestart}]
-		
+
 	}
 
-	
+
 	;This method is triggered by an event.  If triggered, it tells us one of our fellow miners has entered the HARDSTOP state, and we should also run
 	method TriggerHARDSTOP(string SourceInfo)
 	{

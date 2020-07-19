@@ -45,7 +45,7 @@ Raysere Giant
 Tairei Namazoth
 */
 
-objectdef obj_Targets
+objectdef obj_Targets inherits obj_BaseClass
 {
 	variable index:string PriorityTargets
 	variable iterator PriorityTarget
@@ -69,13 +69,15 @@ objectdef obj_Targets
 	variable string m_SpecialTargetToLootName
 	variable set DoNotKillList
 	variable bool CheckedSpawnValues = FALSE
-	
+
 	;	Used to track entities that are locked or being locked
 	variable index:entity LockedOrLocking
 
 
 	method Initialize()
 	{
+		LogPrefix:Set["${This.ObjectName}"]
+
 		m_SpecialTargetPresent:Set[FALSE]
 		m_SpecialTargetToLootPresent:Set[FALSE]
 
@@ -117,23 +119,23 @@ objectdef obj_Targets
 		PriorityTargets:Insert["Arch Angel Thug"]
 		PriorityTargets:Insert["Sansha's Loyal"]
 
-		PriorityTargets:Insert["Guardian Agent"]		    /* web/scram */
-		PriorityTargets:Insert["Guardian Initiate"]		    /* web/scram */
-		PriorityTargets:Insert["Guardian Scout"]		    /* web/scram */
-		PriorityTargets:Insert["Guardian Spy"]			    /* web/scram */
-		PriorityTargets:Insert["Crook Watchman"]		    /* damp */
-		PriorityTargets:Insert["Guardian Watchman"]		    /* damp */
-		PriorityTargets:Insert["Serpentis Watchman"]	    /* damp */
-		PriorityTargets:Insert["Crook Patroller"]		    /* damp */
-		PriorityTargets:Insert["Guardian Patroller"]	    /* damp */
-		PriorityTargets:Insert["Serpentis Patroller"]	    /* damp */
+		PriorityTargets:Insert["Guardian Agent"]			/* web/scram */
+		PriorityTargets:Insert["Guardian Initiate"]			/* web/scram */
+		PriorityTargets:Insert["Guardian Scout"]			/* web/scram */
+		PriorityTargets:Insert["Guardian Spy"]				/* web/scram */
+		PriorityTargets:Insert["Crook Watchman"]			/* damp */
+		PriorityTargets:Insert["Guardian Watchman"]			/* damp */
+		PriorityTargets:Insert["Serpentis Watchman"]		/* damp */
+		PriorityTargets:Insert["Crook Patroller"]			/* damp */
+		PriorityTargets:Insert["Guardian Patroller"]		/* damp */
+		PriorityTargets:Insert["Serpentis Patroller"]		/* damp */
 
-		PriorityTargets:Insert["Elder Blood Upholder"]	    /* web/scram */
-		PriorityTargets:Insert["Elder Blood Worshipper"]    /* web/scram */
-		PriorityTargets:Insert["Elder Blood Follower"]	    /* web/scram */
-		PriorityTargets:Insert["Elder Blood Herald"]	    /* web/scram */
-		PriorityTargets:Insert["Blood Wraith"]	            /* web/scram */
-		PriorityTargets:Insert["Blood Disciple"]	        /* web/scram */
+		PriorityTargets:Insert["Elder Blood Upholder"]		/* web/scram */
+		PriorityTargets:Insert["Elder Blood Worshipper"]	/* web/scram */
+		PriorityTargets:Insert["Elder Blood Follower"]		/* web/scram */
+		PriorityTargets:Insert["Elder Blood Herald"]		/* web/scram */
+		PriorityTargets:Insert["Blood Wraith"]				/* web/scram */
+		PriorityTargets:Insert["Blood Disciple"]			/* web/scram */
 
 		PriorityTargets:Insert["Strain Decimator Drone"]    /* web/scram */
 		PriorityTargets:Insert["Strain Infester Drone"]     /* web/scram */
@@ -154,7 +156,7 @@ objectdef obj_Targets
 		ChainTargets:Insert["Angel Malakim"]
 		ChainTargets:Insert["Angel Nephilim"]
 		;ChainTargets:Insert["Serpentis Commodore"]	/* 650k */
-		;ChainTargets:Insert["Serpentis Port Admiral"]	/* 800k */
+		ChainTargets:Insert["Serpentis Port Admiral"]	/* 800k */
 		ChainTargets:Insert["Serpentis Rear Admiral"]	/* 950k */
 		ChainTargets:Insert["Serpentis Flotilla Admiral"]
 		ChainTargets:Insert["Serpentis Vice Admiral"]
@@ -404,7 +406,12 @@ objectdef obj_Targets
 		SpecialTargets:GetIterator[SpecialTarget]
 		SpecialTargetsToLoot:GetIterator[SpecialTargetToLoot]
 
-        DoNotKillList:Clear
+		DoNotKillList:Clear
+
+		;PulseTimer:SetIntervals[0.5,1.0]
+		;Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+
+		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
 	method ResetTargets()
@@ -797,7 +804,7 @@ objectdef obj_Targets
 		;	OrbitDistance:Set[${Math.Calc[${OrbitDistance}*1000]}]
 		;	Me.ActiveTarget:Orbit[${OrbitDistance}]
 		;}
-		
+
 		;if ${HasTargets} && ${Me.ActiveTarget(exists)}
 		;{
 		;	variable int KeepAtRangeDistance
@@ -900,7 +907,7 @@ objectdef obj_Targets
 		; No NPCs around
 		return -1
 	}
-	
+
 	method UpdateLockedAndLockingTargets()
 	{
 		variable index:entity Targets
