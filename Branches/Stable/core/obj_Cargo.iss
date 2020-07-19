@@ -68,7 +68,6 @@ objectdef obj_Cargo
 		Logger:Log["DEBUG: obj_Cargo: DumpItem: SlotID:            ${anItem.SlotID}"]
 		Logger:Log["DEBUG: obj_Cargo: DumpItem: Type:              ${anItem.Type}"]
 		Logger:Log["DEBUG: obj_Cargo: DumpItem: Volume:            ${anItem.Volume}"]
-		Logger:Log["DEBUG: obj_Cargo: DumpItem: GivenName:         ${anItem.Name}"]
 		Logger:Log["DEBUG: obj_Cargo: DumpItem: CargoCapacity:     ${anItem.CargoCapacity}"]
 		Logger:Log["DEBUG: obj_Cargo: DumpItem: UsedCargoCapacity: ${anItem.UsedCargoCapacity}"]
 		Logger:Log["DEBUG: obj_Cargo: DumpItem: GetCargo:          ${anItem.GetCargo}"]
@@ -1223,7 +1222,7 @@ objectdef obj_Cargo
 		}
 
 		Logger:Log["Transferring Cargo to Station Hangar"]
-		
+
 		call Inventory.ShipCargo.Activate
 		if ${Inventory.ShipCargo.IsCurrent}
 		{
@@ -1276,7 +1275,7 @@ objectdef obj_Cargo
 			{
 				Inventory.Current:GetItems[This.CargoToTransfer, ${querystr}]
 				if ${This.CargoToTransfer.Used} == 0
-				{	
+				{
 					Logger:Log["Couldn't find any cargo in the station hangar"]
 					m_LastTransferComplete:Set[TRUE]
 				}
