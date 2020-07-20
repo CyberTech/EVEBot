@@ -273,8 +273,8 @@
 							<Y>130</Y>
 							<Width>130</Width>
 							<Height>18</Height>
-							<Text>Maximum Runtime</Text>
-							<AutoTooltip>The maximum time in hours to run the script before it aborts.</AutoTooltip>
+							<Text>Max Run Hours</Text>
+							<AutoTooltip>The maximum hours to run the script before it aborts.</AutoTooltip>
 						</Text>
 						<Textentry name='tbMaxRuntime'>
 							<X>140</X>
