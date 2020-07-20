@@ -53,6 +53,31 @@ function atexit()
 	;Redirect EVEBot_Profiling.txt Script[EVEBot]:DumpProfiling
 }
 
+function LoadThreads(string Label, string Path)
+{
+	variable int Position = 0
+	variable filelist Files
+	variable string Log
+
+	Files:GetFiles["${Path}"]
+	while (${Position:Inc}<=${Files.Files})
+	{
+		if ${Files.File[${Position}].Size} == 0
+		{
+			Log:Concat["(${Files.File[${Position}]} Skipped, 0-byte) "]
+		}
+		else
+		{
+			Log:Concat["${Files.File[${Position}]} "]
+			TimedCommand 0 runscript \"${Files.File[${Position}].FullPath}\"
+		}
+	}
+	if ${Log.Length} > 0
+	{
+		Logger:Log["EVEBot:   ${Log}", LOG_ECHOTOO]
+	}
+}
+
 function CreateVariable(string VarName, string VarType, string Scope, string DefaultValue)
 {
 	variable time StartTime
@@ -85,12 +110,12 @@ function main()
 	call CreateVariable LSQueryCache obj_LSQueryCache global
 
 	/* Script-Defined Support Objects */
-	declarevariable EVEBot obj_EVEBot script
-	declarevariable UI obj_EVEBotUI script
 	call CreateVariable Logger obj_Logger global
 	declarevariable BaseConfig obj_Configuration_BaseConfig script
 
 	declarevariable Config obj_Configuration script
+	call CreateVariable EVEBot obj_EVEBot global
+	declarevariable UI obj_EVEBotUI script
 	declarevariable Whitelist obj_Config_Whitelist script
 	declarevariable Blacklist obj_Config_Blacklist script
 
@@ -127,7 +152,12 @@ function main()
 	declarevariable Market obj_Market script
 	declarevariable Autopilot obj_Autopilot script
 
-	/* Script-Defined Behavior Objects */
+	wait 0.5
+	; Threads need to load after globals but before behaviors.
+	Logger:Log["EVEBot: Starting EVEBot Threads...", LOG_ECHOTOO]
+	call LoadThreads "Thread" "${Script.CurrentDirectory}/\Threads/\*.iss"
+
+	; Script-Defined Behavior Objects
 	declarevariable BotModules index:string script
 	declarevariable Miner obj_Miner script
 	declarevariable Hauler obj_Hauler script
@@ -170,6 +200,7 @@ function main()
 
 ;	EVEBot:SetVersion[${VersionNum}]
 
+	Logger:Log["EVEBot: Completing startup...", LOG_ECHOTOO]
 	UI:Reload
 
 
