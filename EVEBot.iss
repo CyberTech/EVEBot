@@ -130,7 +130,7 @@ function main(string Branch = "Stable", string Param1 = "")
 		{
 			; Clear the testcase _includes and _variables, and only include regular behaviors
 			call MakeIncludeFiles "${Script.CurrentDirectory}/Branches/${Branch}/" "Behaviors" TRUE FALSE Stock
-			call MakeIncludeFiles "${Script.CurrentDirectory}/Branches/${Branch}/" "Behaviors/Testcases" FALSE TRUE Testcase
+			call MakeIncludeFiles "${Script.CurrentDirectory}/Branches/${Branch}/" "Behaviors/Testcases" TRUE TRUE Testcase
 		}
 
 		Disabled_File:Write["}\n"]
