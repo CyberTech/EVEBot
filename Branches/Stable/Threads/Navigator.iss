@@ -215,5 +215,5 @@ function main()
 			}
 		wait 30
 	}
-	echo "EVEBot exited, unloading ${Script.Filename}"
+	echo "${APP_NAME} exited, unloading ${Script.Filename}"
 }
