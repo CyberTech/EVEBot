@@ -37,20 +37,46 @@
 #include core/obj_Autopilot.iss
 #include core/obj_Fleet.iss
 
+objectdef obj_Behaviors
+{
+		variable index:string Loaded
+}
+variable(global) obj_Behaviors Behaviors
+
 /* Behavior/Mode Includes */
-#include Behaviors/obj_Courier.iss
-#include Behaviors/obj_StealthHauler.iss
-#include Behaviors/obj_Hauler.iss
-#include Behaviors/obj_Miner.iss
-#include Behaviors/obj_Freighter.iss
-#include Behaviors/obj_Ratter.iss
-#include Behaviors/obj_Scavenger.iss
-#include Behaviors/obj_Missioneer.iss
-#include Behaviors/obj_Guardian.iss
+#includeoptional Behaviors/Testcases/_includes.iss
+#includeoptional Behaviors/_includes.iss
 
 function atexit()
 {
 	;Redirect EVEBot_Profiling.txt Script[EVEBot]:DumpProfiling
+}
+
+function LoadBehaviors(string Label, string Path)
+{
+	variable int Position = 0
+	variable filelist Files
+	variable string NewObjectName
+	variable string NewVarName
+	variable string Log
+
+	Files:GetFiles["${Path}"]
+	while (${Position:Inc}<=${Files.Files})
+	{
+		if ${Files.File[${Position}].Filename.NotEqual["_includes.iss"]} && \
+			${Files.File[${Position}].Filename.NotEqual["_variables.iss"]}
+		{
+			NewObjectName:Set[${Files.File[${Position}].Filename.Left[-4]}]
+			NewVarName:Set[${NewObjectName.Right[-4]}]
+			Logger:Log["   ${NewVarName}", LOG_ECHOTOO]
+			call CreateVariable ${NewVarName} ${NewObjectName} script
+			Behaviors.Loaded:Insert[${NewVarName}]
+		}
+	}
+	if ${Log.Length} > 0
+	{
+		Logger:Log["   ${Log}", LOG_ECHOTOO]
+	}
 }
 
 function LoadThreads(string Label, string Path)
@@ -62,19 +88,20 @@ function LoadThreads(string Label, string Path)
 	Files:GetFiles["${Path}"]
 	while (${Position:Inc}<=${Files.Files})
 	{
-		if ${Files.File[${Position}].Size} == 0
+		if ${Files.File[${Position}].Size} > 0
 		{
-			Log:Concat["(${Files.File[${Position}]} Skipped, 0-byte) "]
-		}
-		else
-		{
-			Log:Concat["${Files.File[${Position}]} "]
+			if ${Log.NotNULLOrEmpty}
+			{
+				Log:Concat[", "]
+			}
+
+			Log:Concat["${Files.File[${Position}].Filename.Left[-4]} "]
 			TimedCommand 0 runscript \"${Files.File[${Position}].FullPath}\"
 		}
 	}
 	if ${Log.Length} > 0
 	{
-		Logger:Log["EVEBot:   ${Log}", LOG_ECHOTOO]
+		Logger:Log["   ${Log}", LOG_ECHOTOO]
 	}
 }
 
@@ -96,7 +123,7 @@ function main()
 {
 	; Set turbo to 4000 per frame for startup.
 	Turbo 4000
-	echo "${Time}: EVEBot: Starting"
+	echo "${Time}: ${APP_NAME} \atstarting\ax"
 
 #if EVEBOT_PROFILING
 	Script:Unsquelch
@@ -104,13 +131,14 @@ function main()
 	Script:EnableDebugLogging[evebot_profile.txt]
 #endif
 
-	echo "${Time}: EVEBot: Loading Base & Config..."
+	call CreateVariable Logger obj_Logger global
+
+	Logger:Log[" Loading Base & Config...", LOG_ECHOTOO]
 
 	/* NON-EVE Related Objects */
 	call CreateVariable LSQueryCache obj_LSQueryCache global
 
 	/* Script-Defined Support Objects */
-	call CreateVariable Logger obj_Logger global
 	declarevariable BaseConfig obj_Configuration_BaseConfig script
 
 	declarevariable Config obj_Configuration script
@@ -120,12 +148,12 @@ function main()
 	declarevariable Blacklist obj_Config_Blacklist script
 
 	turbo 8000
-	echo "${Time}: EVEBot: Loading EVEDBs..."
+	Logger:Log[" Loading EVEDBs...", LOG_ECHOTOO]
 	declarevariable EVEDB_Stations obj_EVEDB_Stations script
 	declarevariable EVEDB_Items obj_EVEDB_Items script
 	turbo 4000
 
-	echo "${Time}: EVEBot: Loading Core Objects..."
+	Logger:Log[" Loading Core Objects...", LOG_ECHOTOO]
 	declarevariable Sound obj_Sound script
 	declarevariable ChatIRC obj_IRC script
 	declarevariable Asteroids obj_Asteroids script
@@ -154,64 +182,42 @@ function main()
 
 	wait 0.5
 	; Threads need to load after globals but before behaviors.
-	Logger:Log["EVEBot: Starting EVEBot Threads...", LOG_ECHOTOO]
+	Logger:Log[" Starting threads...", LOG_ECHOTOO]
 	call LoadThreads "Thread" "${Script.CurrentDirectory}/\Threads/\*.iss"
 
+	Logger:Log[" Loading behaviors...", LOG_ECHOTOO]
+	#includeoptional Behaviors/_variables.iss
+	#includeoptional Behaviors/Testcases/_variables.iss
+
 	; Script-Defined Behavior Objects
-	declarevariable BotModules index:string script
-	declarevariable Miner obj_Miner script
-	declarevariable Hauler obj_Hauler script
-	declarevariable Freighter obj_Freighter script
-	declarevariable Ratter obj_Ratter script
-	declarevariable Missioneer obj_Missioneer script
-	declarevariable Guardian obj_Guardian script
+	;Logger:Log[" Loading stock behaviors...", LOG_ECHOTOO]
+	;call LoadBehaviors "Stock" "${Script.CurrentDirectory}/\Behaviors/\*.iss"
+	;Logger:Log[" Loading testcase behaviors...", LOG_ECHOTOO]
+	;call LoadBehaviors "Testcases" "${Script.CurrentDirectory}/\Behaviors/\Testcases/\*.iss"
 
-	echo "${Time}: EVEBot: Loaded"
+	; Custom Behavior Objects (External directory is assumed to be from an external repository, it's not part of EVEBot)
+	;Logger:Log[" Loading 3rd Party behaviors...", LOG_ECHOTOO]
+	;call LoadBehaviors "External" "${Script.CurrentDirectory}/\Behaviors/\External/\*.iss"
 
-	variable iterator BotModule
-	BotModules:GetIterator[BotModule]
+	if ${Behaviors.Loaded.Used} == 0
+	{
+		Logger:Log["WARNING: No Behavioral modules loaded, background tasks only", LOG_ECHOTOO]
+	}
 
-	variable iterator VariableIterator
-	Script[EVEBot].VariableScope:GetIterator[VariableIterator]
-
-	/* 	This code iterates thru the variables list, looking for classes that have been
-		defined with an SVN_REVISION variable.  It then converts that to a numeric
-		Version(int), which is then used to calculate the highest version (VersionNum),
-		for display on the UI.
-	*/
-	;echo "Listing EVEBot Class Versions:"
-	;if ${VariableIterator:First(exists)}
-	;do
-	;{
-	;	if ${VariableIterator.Value(exists)} && \
-;		${VariableIterator.Value(type).Name.Left[4].Equal["obj_"]} && \
-;;		${VariableIterator.Value.SVN_REVISION(exists)} && \
-;		${VariableIterator.Value.Version(exists)}
-;		{
-;			VariableIterator.Value.Version:Set[${VariableIterator.Value.SVN_REVISION.Token[2, " "]}]
-;			;echo " ${VariableIterator.Value.ObjectName} Revision ${VariableIterator.Value.Version}"
-;			if ${VersionNum} < ${VariableIterator.Value.Version}
-;			{
-;				VersionNum:Set[${VariableIterator.Value.Version}]
-;			}
-;		}
-;	}
-;	while ${VariableIterator:Next(exists)}
-
-;	EVEBot:SetVersion[${VersionNum}]
-
-	Logger:Log["EVEBot: Completing startup...", LOG_ECHOTOO]
+	Logger:Log[" Reloading UI...", LOG_ECHOTOO]
 	UI:Reload
-
 
 #if USE_ISXIM
 	call ChatIRC.Connect
 #endif
 	Turbo 125
 
+	; Clear the EVEBotBehaviors globalkeep now that we're done with it
+	TimedCommand 0 VariableScope:DeleteVariable["EVEBotBehaviors"]
+
 	if ${Ship.InWarp}
 	{
-		Logger:Log["Waiting for warp to complete"]
+		Logger:Log[" Waiting for warp to complete"]
 		while ${Ship.InWarp}
 		{
 			wait 10
@@ -219,27 +225,18 @@ function main()
 	}
 
 	EVEBot.Loaded:Set[TRUE]
-	Logger:Log["-=Paused: Press Run-="]
-	Script:Pause
-
-	while ${EVEBot.Paused}
-	{
-		wait 10
-	}
+	Logger:Log["${APP_NAME} loaded", LOG_ECHOTOO]
+	EVEBot:Pause["Press Run to start"]
 
 	while TRUE
 	{
-		if ${BotModule:First(exists)}
-		do
+		if !${EVEBot.Paused} && \
+			!${EVEBot.Disabled} && \
+			${${Config.Common.CurrentBehavior}(exists)}
 		{
-			while ${EVEBot.Paused}
-			{
-				wait 10
-			}
-			call ${BotModule.Value}.ProcessState
-			call RandomDelay 500
+			call ${Config.Common.CurrentBehavior}.ProcessState
 		}
-		while ${BotModule:Next(exists)}
+
 		call RandomDelay 100
 
 		#if USE_ISXIM

@@ -116,6 +116,7 @@ objectdef obj_Configuration_Common
 {
 	variable string SetName = "Common"
 	variable int AboutCount = 0
+	variable weakref Ref
 
 	method Initialize()
 	{
@@ -124,53 +125,49 @@ objectdef obj_Configuration_Common
 			Logger:Log["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
 		}
+		else
+		{
+			Ref:SetReference["BaseConfig.BaseRef.FindSet[${This.SetName}]"]
+			if ${This.Ref.FindSetting[Bot Mode Name](exists)}
+			{
+				; The previous key was present, migrate it to the new one and delete it
+				This.Ref:AddSetting[Behavior, ${This.Ref.FindSetting[Bot Mode Name]}]
+				This.Ref.FindSetting[Bot Mode Name]:Remove
+				Logger:Log["Configuration: Migrating Config: Bot Mode Name -> Behavior", LOG_ECHOTOO]
+			}
+		}
+
 		Logger:Log["obj_Configuration_Common: Initialized", LOG_MINOR]
 	}
 
 	member:settingsetref CommonRef()
 	{
-		return ${BaseConfig.BaseRef.FindSet[${This.SetName}]}
+		return ${This.Ref}
 	}
 
 	method Set_Default_Values()
 	{
 		BaseConfig.BaseRef:AddSet[${This.SetName}]
+		Ref:SetReference["BaseConfig.BaseRef.FindSet[${This.SetName}]"]
 
 		; We use both so we have an ID to use to set the default selection in the UI.
-		This.CommonRef:AddSetting[Bot Mode,1]
-		This.CommonRef:AddSetting[Bot Mode Name,MINER]
-		This.CommonRef:AddSetting[Home Station,1]
-		This.CommonRef:AddSetting[Use Development Build,FALSE]
-		This.CommonRef:AddSetting[Drones In Bay,0]
-		This.CommonRef:AddSetting[Login Name, ""]
-		This.CommonRef:AddSetting[Login Password, ""]
-		This.CommonRef:AddSetting[AutoLogin, TRUE]
-		This.CommonRef:AddSetting[AutoLoginCharID, 0]
-		This.CommonRef:AddSetting[Maximum Runtime, 0]
-		This.CommonRef:AddSetting[Use Sound, FALSE]
-		This.CommonRef:AddSetting[Disable 3D, FALSE]
-		This.CommonRef:AddSetting[TrainFastest, FALSE]
+		This.Ref:AddSetting[Bot Mode,1]
+		This.Ref:AddSetting[Bot Mode Name,MINER]
+		This.Ref:AddSetting[Home Station,1]
+		This.Ref:AddSetting[Use Development Build,FALSE]
+		This.Ref:AddSetting[Drones In Bay,0]
+		This.Ref:AddSetting[Login Name, ""]
+		This.Ref:AddSetting[Login Password, ""]
+		This.Ref:AddSetting[AutoLogin, TRUE]
+		This.Ref:AddSetting[AutoLoginCharID, 0]
+		This.Ref:AddSetting[Maximum Runtime, 0]
+		This.Ref:AddSetting[Use Sound, FALSE]
+		This.Ref:AddSetting[Disable 3D, FALSE]
+		This.Ref:AddSetting[TrainFastest, FALSE]
 	}
 
-	member:int BotMode()
-	{
-		return ${This.CommonRef.FindSetting[Bot Mode, 1]}
-	}
+	Define_ConfigItem(string, CurrentBehavior, "Idle")
 
-	method SetBotMode(int value)
-	{
-		This.CommonRef:AddSetting[Bot Mode, ${value}]
-	}
-
-	member:string BotModeName()
-	{
-		return ${This.CommonRef.FindSetting[Bot Mode Name, MINER]}
-	}
-
-	method SetBotModeName(string value)
-	{
-		This.CommonRef:AddSetting[Bot Mode Name,${value}]
-	}
 
 	member:int DronesInBay()
 	{

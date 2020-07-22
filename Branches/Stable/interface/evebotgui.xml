@@ -78,7 +78,7 @@
 							<width>150</width>
 							<height>20</height>
 							<OnLeftClick>
-								relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.BotModeName}"
+								relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.CurrentBehavior}"
 								Script[EVEBot].VariableScope.Logger:Log["Forcing Break!!!", LOG_MINOR]
 							</OnLeftClick>
 						</button>
@@ -132,7 +132,7 @@
 							<Y>25</Y>
 							<Width>100</Width>
 							<Height>20</Height>
-							<Text>${Script[EVEBot].VariableScope.Config.Common.BotModeName}</Text>
+							<Text>${Script[EVEBot].VariableScope.Config.Common.CurrentBehavior}</Text>
 						</Text>
 						<Text name='Currently Training' template='EVESkin.Font.Description'>
 							<X>10</X>
@@ -213,14 +213,14 @@
 					</Tab>
 
 					<Tab Name='Main'>
-						<Text name='EVEBotModeLabel'>
+						<Text name='CurrentBehaviorLabel'>
 							<X>10</X>
 							<Y>10</Y>
 							<Width>70</Width>
 							<Height>10</Height>
-							<Text>Bot Mode</Text>
+							<Text>Behavior</Text>
 						</Text>
-						<combobox name='EVEBotMode'>
+						<combobox name='CurrentBehavior'>
 							<X>80</X>
 							<Y>10</Y>
 							<Width>250</Width>
@@ -228,20 +228,11 @@
 							<FullHeight>200</FullHeight>
 							<ButtonWidth>20</ButtonWidth>
 							<Items>
-								<Item Value='1'>Miner</Item>
-								<Item Value='2'>Hauler</Item>
-								<Item Value='3'>Freighter</Item>
-								<Item Value='4'>Ratter</Item>
-								<Item Value='5'>Missioneer</Item>
-								<Item Value='6'>Guardian</Item>
+								<Item Value='1'>Idle</Item>
 							</Items>
 							<OnSelect>
-								Script[EVEBot].VariableScope.Config.Common:SetBotMode[${This.SelectedItem.Value}]
-								Script[EVEBot].VariableScope.Config.Common:SetBotModeName[${This.SelectedItem.Text}]
+								Config.Common:CurrentBehavior[${This.SelectedItem.Text}]
 							</OnSelect>
-							<OnLoad>
-								This:SetSelection[${Script[EVEBot].VariableScope.Config.Common.BotMode}]
-							</OnLoad>
 						</combobox>
 						<Textentry name='MinimumDronesInBay'>
 							<X>10</X>

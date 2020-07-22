@@ -20,7 +20,26 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 	{
 		ui -reload interface/evebotgui.xml
 		Logger:WriteQueue
+		This:PopulateBehavioralComboBox
 		This.Reloaded:Set[TRUE]
+	}
+
+	method PopulateBehavioralComboBox()
+	{
+		variable iterator Behavior
+		Behaviors.Loaded:GetIterator[Behavior]
+
+		if ${Behavior:First(exists)}
+		{
+			UIElement[EVEBot].FindUsableChild["CurrentBehavior","combobox"]:ClearItems
+			UIElement[EVEBot].FindUsableChild["CurrentBehavior","combobox"]:AddItem["Idle"]
+			do
+			{
+				UIElement[EVEBot].FindUsableChild["CurrentBehavior","combobox"]:AddItem["${Behavior.Value}"]
+			}
+			while ${Behavior:Next(exists)}
+			UIElement[EVEBot].FindUsableChild["CurrentBehavior","combobox"].ItemByText[${Config.Common.CurrentBehavior}]:Select
+		}
 	}
 
 	method CheckUIPosition()

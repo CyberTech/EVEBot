@@ -7,7 +7,7 @@
 
 */
 
-variable string APP_NAME = "EVEBot"
+variable string APP_NAME = "\aoEVEBot\ax"
 variable string APP_PATH = "EVEBot/EVEBot.iss"
 variable string APP_HEADURL = ""
 

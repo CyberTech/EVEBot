@@ -38,7 +38,7 @@ objectdef obj_EVEBot inherits obj_BaseClass
 
 	method EndBot()
 	{
-		Logger:Log["EVEBot shutting down...", LOG_ECHOTOO]
+		Logger:Log["\aoEVEBot\ax shutting down...", LOG_ECHOTOO]
 
 		variable int i
 		for (i:Set[1]; ${i} <= ${Threads.Used}; i:Inc)
@@ -49,7 +49,7 @@ objectdef obj_EVEBot inherits obj_BaseClass
 				endscript ${Threads.Get[${i}]}
 			}
 		}
-		Logger:Log["EVEBot shutdown complete", LOG_ECHOTOO]
+		Logger:Log[" Shutdown complete", LOG_ECHOTOO]
 		Script:End
 	}
 
@@ -185,7 +185,7 @@ objectdef obj_EVEBot inherits obj_BaseClass
 
 	method Pause(string Reason)
 	{
-		Logger:Log["Paused: ${Reason}", LOG_ECHOTOO]
+		Logger:Log["\agPaused\ax: ${Reason}", LOG_ECHOTOO]
 		This._Paused:Set[TRUE]
 		Script:Pause
 	}
