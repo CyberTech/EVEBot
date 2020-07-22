@@ -44,6 +44,21 @@ objectdef obj_Social inherits obj_BaseClass
 
 		EVE:RefreshStandings
 
+		This:ResetWhiteBlackLists
+
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+		Event[EVE_OnChannelMessage]:AttachAtom[This:OnChannelMessage]
+
+		PulseTimer:SetIntervals[2.0,2.5]
+		PulseTimer:Increase[2.0]
+
+		;EVE:ActivateChannelMessageEvents
+
+		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
+	}
+
+	method ResetWhiteBlackLists()
+	{
 		Whitelist.PilotsRef:GetSettingIterator[This.WhiteListPilotIterator]
 		Whitelist.CorporationsRef:GetSettingIterator[This.WhiteListCorpIterator]
 		Whitelist.AlliancesRef:GetSettingIterator[This.WhiteListAllianceIterator]
@@ -105,16 +120,6 @@ objectdef obj_Social inherits obj_BaseClass
 			This.AllianceBlackList:Add[${This.BlackListAllianceIterator.Value}]
 		}
 		while ${This.BlackListAllianceIterator:Next(exists)}
-
-		PulseTimer:SetIntervals[2.0,2.5]
-		PulseTimer:Increase[2.0]
-
-		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-		Event[EVE_OnChannelMessage]:AttachAtom[This:OnChannelMessage]
-
-		;EVE:ActivateChannelMessageEvents
-
-		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()

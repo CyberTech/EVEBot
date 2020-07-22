@@ -2,6 +2,7 @@ objectdef obj_IRC inherits obj_BaseClass
 {
 	variable bool IsConnected = FALSE
 	variable queue:string Buffer
+	variable bool Throttle = FALSE
 
 
 	method Initialize()
@@ -62,6 +63,10 @@ objectdef obj_IRC inherits obj_BaseClass
 				}
 			}
 
+			if ${Throttle}
+			{
+				IsConnected:Set[FALSE]
+			}
 			This.PulseTimer:Update
 		}
 	}
@@ -243,6 +248,10 @@ objectdef obj_IRC inherits obj_BaseClass
 		if (${Command.Equal[ERROR]})
 		{
 			echo "CRITICAL IRC ERROR: ${Rest.Escape}"
+			if ${Rest.Find[Throttled: Reconnecting too fast]}
+			{
+				Throttle:Set[TRUE]
+			}
 		}
 	}
 
@@ -264,15 +273,28 @@ objectdef obj_IRC inherits obj_BaseClass
 		return
 	#endif
 
+		if ${Throttle}
+		{
+			IRCUser[${Config.Common.IRCUser}]:Disconnect
+		}
+		Throttle:Set[FALSE]
+
 		IRC:Connect[${Config.Common.IRCServer},${Config.Common.IRCUser}]
 
-		wait 10
+		do
+		{
+			wait 5
+		}
+		while (${IRCUser[${Config.Common.IRCUser}](exists)} && ${IRCUser[${Config.Common.IRCUser}].IsConnecting})
 
 		if (${IRCUser[${Config.Common.IRCUser}](exists)} && ${IRCUser[${Config.Common.IRCUser}].IsConnected})
 		{
 			IRCUser[${Config.Common.IRCUser}]:Join[${Config.Common.IRCChannel}]
+
 			wait 5
 			This.IsConnected:Set[TRUE]
+			wait 5
+
 			Call This.Say "${AppVersion} Connected"
 		}
 	}

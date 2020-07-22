@@ -18,7 +18,6 @@ objectdef obj_Missioneer inherits obj_BaseClass
 
 		This.PulseTimer:SetIntervals[2.0,4.0]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-		BotModules:Insert["Missioneer"]
 
 		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
@@ -28,13 +27,13 @@ objectdef obj_Missioneer inherits obj_BaseClass
 		if ${This.PulseTimer.Ready}
 		{
 			This:SetState
-    		This.NextPulse:Set[${Time.Timestamp}]
 			This.PulseTimer:Update
 		}
 	}
 
 	method Shutdown()
 	{
+		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}
 
 	/* NOTE: The order of these if statements is important!! */

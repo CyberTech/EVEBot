@@ -65,22 +65,10 @@ objectdef obj_StealthHauler
 				{
 					variable index:entity sgIndex
 					variable iterator     sgIterator
-					EVE:QueryEntities[sgIndex, "GroupID = GROUP_STARGATE"]
+					EVE:QueryEntities[sgIndex, "GroupID = GROUP_STARGATE && Name = ${Universe[${apIterator.Value}].Name}"]
 					sgIndex:GetIterator[sgIterator]
 					if ${sgIterator:First(exists)}
 					{
-						do
-						{
-							variable string tmpString
-							tmpString:Set[${sgIterator.Value.Name.Token[2,"("]}]
-							tmpString:Set[${tmpString.Token[1,")"]}]
-							if ${tmpString.Equal[${Universe[${apIterator.Value}].Name}]}
-							{
-								break
-							}
-						}
-						while ${sgIterator:Next(exists)}
-
 						if ${sgIterator.Value(exists)}
 						{
 							Logger:Log["Setting speed to full throttle"]
@@ -131,7 +119,6 @@ objectdef obj_StealthHauler
 					wait 5
 					Ship:Activate_Cloak
 				}
-
 			}
 		}
 		else

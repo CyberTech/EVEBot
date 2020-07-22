@@ -64,14 +64,15 @@ objectdef obj_Freighter
 					break
 			}
 
-   			This.NextPulse:Set[${Time.Timestamp}]
-   			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+			This.NextPulse:Set[${Time.Timestamp}]
+			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
 			This.NextPulse:Update
 		}
 	}
 
 	method Shutdown()
 	{
+		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}
 
 	/* SetupEvents will attach atoms to all of the events used by the bot */
@@ -80,6 +81,7 @@ objectdef obj_Freighter
 		This[parent]:SetupEvents[]
 
 		/* override any events setup by the base class */
+		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 	}
 
 	/* this function is called repeatedly by the main loop in EVEBot.iss */
@@ -163,7 +165,7 @@ objectdef obj_Freighter
 		}
 		elseif ${Me.InStation}
 		{
-	  		This.CurrentState:Set["BASE"]
+			This.CurrentState:Set["BASE"]
 		}
 		elseif ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
 		{
@@ -192,16 +194,14 @@ objectdef obj_Freighter
 			default
 				call This.PickupOrDropoff
 				call Station.Undock
-				call Ship.OpenCargo
 				break
 		}
 	}
 
 	function ContainerTest()
 	{
-		call Cargo.OpenHolds
-
-		if ${Cargo.ShipHasContainers}
+		call Cargo.ShipHasContainers
+		if ${Return}
 		{
 			variable index:items HangarItems
 			Me:GetHangarItems[HangarItems]
@@ -209,7 +209,7 @@ objectdef obj_Freighter
 			Logger:Log["obj_Freighter: Station contains ${HangarItems.Used} items."]
 			if ${HangarItems.Used} > 0
 			{	/* move from hangar to ship */
-				call Cargo.TransferCargoToShip
+				call Cargo.TransferHangarItemToShip
 			}
 			else
 			{	/* move from ship to hangar */
@@ -220,8 +220,6 @@ objectdef obj_Freighter
 		{
 			Logger:Log["obj_Freighter: Ship doesn't have containers."]
 		}
-
-		wait 50
 	}
 
 	function Transport()
@@ -353,13 +351,14 @@ objectdef obj_Freighter
 			}
 			else
 			{	/* this must be a source station, pickup stuff */
-				call Cargo.TransferCargoToShip
+				call Cargo.TransferHangarItemToShip
 				if ${Cargo.LastTransferComplete}
 				{
 					if ${SourceLocations.Peek(exists)}
 					{
 						SourceLocations:Dequeue
 					}
+					This.ExcessCargoAtSource:Set[FALSE]
 				}
 				else
 				{
@@ -379,6 +378,9 @@ objectdef obj_Freighter
 						break
 					case TYPEID_XLARGE_ASSEMBLY_ARRAY
 						call Cargo.TransferOreToXLargeShipAssemblyArray
+						break
+					case TYPEID_COMPRESSION_ARRAY
+						call Cargo.TransferOreToCompressionArray
 						break
 				}
 				switch ${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity.GroupID}

@@ -38,37 +38,11 @@ objectdef obj_EVEDB_StationID
 
 objectdef obj_Station
 {
-	variable index:item StationCargo
 	variable index:item DronesInStation
 
 	method Initialize()
 	{
 		Logger:Log["obj_Station: Initialized", LOG_MINOR]
-	}
-
-	member IsHangarOpen()
-	{
-		if ${EVEWindow[Inventory].ChildWindow[StationItems](exists)}
-		{
-			EVEWindow[Inventory].ChildWindow[StationItems]:MakeActive
-			return TRUE
-		}
-		else
-		{
-			return FALSE
-		}
-	}
-	member IsCorpHangarOpen()
-	{
-		if ${EVEWindow[Inventory].ChildWindow[StationCorpHangars](exists)}
-		{
-			EVEWindow[Inventory].ChildWindow[StationCorpHangars]:MakeActive
-			return TRUE
-		}
-		else
-		{
-			return FALSE
-		}
 	}
 
 	member:bool Docked()
@@ -97,49 +71,9 @@ objectdef obj_Station
 		return FALSE
 	}
 
-	function OpenHangar()
-	{
-		if !${This.Docked}
-		{
-			return
-		}
-
-		if !${This.IsHangarOpen}
-		{
-			Logger:Log["Opening Cargo Hangar"]
-			EVE:Execute[OpenHangarFloor]
-			wait WAIT_CARGO_WINDOW
-			while !${This.IsHangarOpen}
-			{
-				wait 1
-			}
-			wait 10
-		}
-	}
-
-	function OpenCorpHangar()
-	{
-		if ${This.Docked} == FALSE
-		{
-			return
-		}
-		if !${This.IsCorpHangarOpen}
-		{
-			Logger:Log["Opening Corp Cargo Hangar"]
-			EVE:Execute[OpenHangarFloor]
-			wait WAIT_CARGO_WINDOW
-			while !${This.IsCorpHangarOpen}
-			{
-				wait 1
-			}
-			wait 10
-		}
-	}
-
-
 	function GetStationItems()
 	{
-		while (${Me.InSpace} || !${Me.InStation})
+		while !${Me.InStation}
 		{
 			Logger:Log["obj_Cargo: Waiting for InStation..."]
 			wait 10
@@ -197,8 +131,6 @@ objectdef obj_Station
 				}
 			}
 			while !${This.DockedAtStation[${StationID}]}
-			wait 75
-			Logger:LogIRC["Finished Docking"]
 		}
 		else
 		{
@@ -209,8 +141,8 @@ objectdef obj_Station
 
 	function Dock()
 	{
-		variable int Counter = 0
-		variable int64 StationID = ${Entity[(CategoryID = CATEGORYID_STATION || CategoryID = CATEGORYID_STRUCTURE) && Name = ${Config.Common.HomeStation}].ID}
+		variable int64 StationID
+		StationID:Set[${Entity["(CategoryID = CATEGORYID_STATION || CategoryID = CATEGORYID_STRUCTURE) && Name = ${Config.Common.HomeStation}"].ID}]
 
 		if ${Me.InStation}
 		{
@@ -221,7 +153,7 @@ objectdef obj_Station
 		if ${StationID} <= 0 || !${Entity[${StationID}](exists)}
 		{
 			Logger:Log["Warning: Home station '${Config.Common.HomeStation}' not found, going to nearest base", LOG_CRITICAL]
-			StationID:Set[${Entity[(CategoryID = CATEGORYID_STATION || CategoryID = CATEGORYID_STRUCTURE)].ID}]
+			StationID:Set[${Entity["(CategoryID = CATEGORYID_STATION || CategoryID = CATEGORYID_STRUCTURE)"].ID}]
 		}
 
 		if ${Entity[${StationID}](exists)}
@@ -244,7 +176,7 @@ objectdef obj_Station
 
 		if !${Me.InStation}
 		{
-			Logger:Log["Undock called, but we're already undocking!"]
+			Logger:Log["WARNING: Undock called, but we're already undocking!", LOG_ECHOTOO]
 			return
 		}
 

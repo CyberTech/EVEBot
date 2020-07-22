@@ -82,15 +82,13 @@ objectdef obj_Courier inherits obj_BaseClass
 			case PICKUP
 				Logger:Log["obj_Courier: MoveToPickup"]
 				call Agents.MoveToPickup
-				Logger:Log["obj_Courier: TransferCargoToShip"]
-				wait 100
 				call Cargo.TransferCargoToShip
 				bHaveCargo:Set[TRUE]
 				break
 			case DROPOFF
 				Logger:Log["obj_Courier: MoveToDropOff"]
 				call Agents.MoveToDropOff
-				wait 100
+
 				Logger:Log["obj_Courier: TurnInMission"]
 				call Agents.TurnInMission
 				bHaveCargo:Set[FALSE]

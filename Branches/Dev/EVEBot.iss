@@ -26,6 +26,7 @@
 #include core/obj_Drones.iss
 #include core/obj_Ship.iss
 #include core/obj_Station.iss
+#include core/obj_Inventory.iss
 #include core/obj_Cargo.iss
 #include core/obj_EVEBotUI.iss
 #include core/obj_TempBookmarks.iss
@@ -158,6 +159,7 @@ function main()
 	call CreateVariable Asteroids obj_Asteroids global
 	call CreateVariable Ship obj_Ship global
 	call CreateVariable Station obj_Station global
+	call CreateVariable Inventory obj_Inventory global
 	call CreateVariable Cargo obj_Cargo global
 	;call CreateVariable Skills obj_Skills global
 	call CreateVariable TempBookmarks obj_TempBookmarks global
@@ -198,40 +200,8 @@ function main()
 
 	if !${EVEBot.BehaviorList.Used}
 	{
-		Logger:Log["ERROR: No Behavioral modules loaded, exiting", LOG_ECHOTOO]
-		EVEBot:EndBot[]
+		Logger:Log["WARNING: No Behavioral modules loaded, background tasks only", LOG_ECHOTOO]
 	}
-
-	Logger:Log["EVEBot: Parsing object versions...", LOG_ECHOTOO]
-
-	; This is a TimedCommand so that it executes in global scope, so we can get the list of global vars.
-	TimedCommand 0 VariableScope:GetIterator[GlobalVariableIterator]
-	wait 10 ${GlobalVariableIterator:First(exists)}
-
-	/* 	This code iterates thru the variables list, looking for classes that have been
-		defined with an SVN_REVISION variable.  It then converts that to a numeric
-		Version(int), which is then used to calculate the highest version (VersionNum),
-		for display on the UI. -- CyberTech
-	*/
-	;Logger:Log["DEBUG: Dumping EVEBot Class Versions:". LOG_ECHOTOO]
-	;if ${GlobalVariableIterator:First(exists)}
-	;do
-	;{
-	;	if ${GlobalVariableIterator.Value(exists)} && \
-	;		${GlobalVariableIterator.Value(type).Name.Left[4].Equal["obj_"]} && \
-	;		${GlobalVariableIterator.Value.SVN_REVISION(exists)} && \
-	;		${GlobalVariableIterator.Value.Version(exists)}
-	;	{
-	;		GlobalVariableIterator.Value.Version:Set[${GlobalVariableIterator.Value.SVN_REVISION.Token[2, " "]}]
-	;		;Logger:Log["DEBUG: ${GlobalVariableIterator.Value.ObjectName} Revision ${GlobalVariableIterator.Value.Version}", LOG_ECHOTOO]
-	;		if ${VersionNum} < ${GlobalVariableIterator.Value.Version}
-	;		{
-	;			VersionNum:Set[${GlobalVariableIterator.Value.Version}]
-	;		}
-	;	}
-	;}
-	;while ${GlobalVariableIterator:Next(exists)}
-	;EVEBot:SetVersion[${VersionNum}]
 
 	Logger:Log["EVEBot: Completing startup...", LOG_ECHOTOO]
 	UI:Reload
@@ -245,9 +215,6 @@ function main()
 	; Clear the EVEBotBehaviors globalkeep now that we're done with it
 	TimedCommand 0 VariableScope:DeleteVariable["EVEBotBehaviors"]
 
-	EVEBot.Loaded:Set[TRUE]
-	EVEBot:Pause["EVEBot: Loaded ${AppVersion}: Paused - Press Run"]
-
 	if ${Ship.InWarp}
 	{
 		Logger:Log["Waiting for warp to complete"]
@@ -256,6 +223,9 @@ function main()
 			wait 10
 		}
 	}
+
+	EVEBot.Loaded:Set[TRUE]
+	EVEBot:Pause["-=Paused: Press Run-="]
 
 
 	while TRUE
@@ -268,6 +238,7 @@ function main()
 		}
 
 		call RandomDelay 100
+
 		#if USE_ISXIM
 			;	Join IRC
 			if !${ChatIRC.IsConnected}

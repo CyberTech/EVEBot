@@ -42,19 +42,19 @@ objectdef obj_EVEBot inherits obj_BaseClass
 
 	method EndBot()
 	{
-		variable int i
-		Logger:Log["EVEBot shutting down..."]
+		Logger:Log["EVEBot shutting down...", LOG_ECHOTOO]
 
+		variable int i
 		for (i:Set[1]; ${i} <= ${Threads.Used}; i:Inc)
 		{
-			Logger:Log[" Stopping ${Threads.Get[${i}]} thread..."]
+			Logger:Log[" Stopping ${Threads.Get[${i}]} thread...",LOG_ECHOTOO]
 			if ${Script[${Threads.Get[${i}]}](exists)}
 			{
 				endscript ${Threads.Get[${i}]}
 			}
 		}
-		Logger:Log["Finished"]
-		endscript ${Script.Filename}
+		Logger:Log["EVEBot shutdown complete", LOG_ECHOTOO]
+		Script:End
 	}
 
 	method Pulse()
@@ -146,7 +146,7 @@ objectdef obj_EVEBot inherits obj_BaseClass
 				{
 					Event[EVENT_EVEBOT_ONFRAME_INSPACE]:Execute
 				}
-				
+
 				if !${Defense.Hiding}
 				{
 					${Config.Common.Behavior}:Pulse
