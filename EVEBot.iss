@@ -3,7 +3,7 @@
 	#error This script requires ISXEVE to be loaded before running
 #endif
 
-function MakeIncludeFiles(string RootDir, string SubDir, bool Define_Globals = TRUE, bool ClearFiles = FALSE)
+function MakeIncludeFiles(string RootDir, string SubDir, bool Define_Globals = TRUE, bool ClearFiles = FALSE, string BehaviorType)
 {
 	variable file Includes_File = "${RootDir}${SubDir}/_includes.iss"
 	variable file Variables_File = "${RootDir}${SubDir}/_variables.iss"
@@ -47,6 +47,10 @@ function MakeIncludeFiles(string RootDir, string SubDir, bool Define_Globals = T
 	variable string CurrentFile
 	variable string obj_name
 	variable string var_name
+	variable string logmsg
+
+	; This log message gets printed at startup and needs to fit in with the "Loading behaviors" section
+	logmsg:Set["  ${BehaviorType}: "]
 	for (Pos:Set[1] ; ${Pos}<=${Script_List.Files} ; Pos:Inc)
 	{
 		CurrentFile:Set[${Script_List.File[${Pos}].Filename}]
@@ -75,7 +79,13 @@ function MakeIncludeFiles(string RootDir, string SubDir, bool Define_Globals = T
 					Variables_File:Write["#if \${EVEBotBehaviors.Element[${obj_name}]}\n"]
 					Variables_File:Write["\tLogger:Log[\"Creating global ${obj_name} as ${var_name}\", LOG_DEBUG]\n"]
 					Variables_File:Write["\tcall CreateVariable ${var_name} ${obj_name} global\n"]
+					Variables_File:Write["\tBehaviors.Loaded:Insert[${var_name}]\n"]
 					Variables_File:Write["#endif\n\n"]
+					if ${logmsg.Right[2].Compare[": "]} != 0
+					{
+						logmsg:Concat[", "]
+					}
+					logmsg:Concat[${var_name}]
 				}
 			}
 		}
@@ -84,6 +94,7 @@ function MakeIncludeFiles(string RootDir, string SubDir, bool Define_Globals = T
 	Includes_File:Close[]
 	if ${Define_Globals}
 	{
+		Variables_File:Write["Logger:Log[\"${logmsg}\", LOG_ECHOTOO]"]
 		Variables_File:Close[]
 	}
 }
@@ -111,15 +122,15 @@ function main(string Branch = "Stable", string Param1 = "")
 
 		if ${Param1.Find[-testcases](exists)}
 		{
-			; Clear the regular _includes and _variables, and only include testcases
-			call MakeIncludeFiles "${Script.CurrentDirectory}/Branches/${Branch}/" "Behaviors" FALSE TRUE
-			call MakeIncludeFiles "${Script.CurrentDirectory}/Branches/${Branch}/" "Behaviors/Testcases" TRUE FALSE
+			; Include both regular modes and testcases
+			call MakeIncludeFiles "${Script.CurrentDirectory}/Branches/${Branch}/" "Behaviors" TRUE FALSE Stock
+			call MakeIncludeFiles "${Script.CurrentDirectory}/Branches/${Branch}/" "Behaviors/Testcases" TRUE FALSE Testcase
 		}
 		else
 		{
 			; Clear the testcase _includes and _variables, and only include regular behaviors
-			call MakeIncludeFiles "${Script.CurrentDirectory}/Branches/${Branch}/" "Behaviors" TRUE FALSE
-			call MakeIncludeFiles "${Script.CurrentDirectory}/Branches/${Branch}/" "Behaviors/Testcases" FALSE TRUE
+			call MakeIncludeFiles "${Script.CurrentDirectory}/Branches/${Branch}/" "Behaviors" TRUE FALSE Stock
+			call MakeIncludeFiles "${Script.CurrentDirectory}/Branches/${Branch}/" "Behaviors/Testcases" FALSE TRUE Testcase
 		}
 
 		Disabled_File:Write["}\n"]
