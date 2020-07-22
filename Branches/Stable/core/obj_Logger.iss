@@ -25,6 +25,10 @@ objectdef obj_Logger
 		This:InitializeLogs
 	}
 
+	method Shutdown()
+	{
+	}
+
 	method LogIRC(string StatusMessage, int Level=LOG_STANDARD, int Indent=0)
 	{
 		This:Log["${StatusMessage}", ${Level}, ${Indent}]
