@@ -34,7 +34,7 @@
 		RelayMySkills - EVE-Specific
 		Me.CharID - Possibly requires update
 		Me.Name - Possibly requires update
-		Config.Common.Behavior - Possibly requires update
+		Config.Common.CurrentBehavior - Possibly requires update
 
 		The Skill list is designed to be used for a module which assigns group
 		(or fleet, for EVE Online) roles for proper bonuses. There is no reason
@@ -197,7 +197,7 @@ objectdef obj_UplinkManager inherits obj_BaseClass
 	; Register this session with other peers
 	method RelayRegistration(string Destination, bool Update=FALSE)
 	{
-		relay "${Destination}" -noredirect "UplinkManager:UpdatePeerSession[${Session},${Me.CharID},${Me.Name},${Config.Common.Behavior}]"
+		relay "${Destination}" -noredirect "UplinkManager:UpdatePeerSession[${Session},${Me.CharID},${Me.Name},${Config.Common.CurrentBehavior}]"
 	}
 
 	; Called by the script to send misc info to all peers
