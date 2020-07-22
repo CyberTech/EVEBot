@@ -39,7 +39,7 @@
 
 objectdef obj_Behaviors
 {
-		variable index:string Loaded
+		variable set Loaded
 }
 variable(global) obj_Behaviors Behaviors
 
@@ -70,7 +70,7 @@ function LoadBehaviors(string Label, string Path)
 			NewVarName:Set[${NewObjectName.Right[-4]}]
 			Logger:Log["   ${NewVarName}", LOG_ECHOTOO]
 			call CreateVariable ${NewVarName} ${NewObjectName} script
-			Behaviors.Loaded:Insert[${NewVarName}]
+			Behaviors.Loaded:Add[${NewVarName}]
 		}
 	}
 	if ${Log.Length} > 0

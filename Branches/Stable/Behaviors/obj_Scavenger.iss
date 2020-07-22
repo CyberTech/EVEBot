@@ -24,6 +24,8 @@ objectdef obj_Scavenger
 
 	method Initialize()
 	{
+		; Not a top level behavior
+		Behaviors.Loaded:Remove[${This.ObjectName}]
 		Logger:Log["obj_Scavenger: Initialized", LOG_MINOR]
 	}
 

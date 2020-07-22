@@ -21,6 +21,9 @@ objectdef obj_Courier inherits obj_BaseClass
 
 	method Initialize()
 	{
+		; Not a top level behavior
+		Behaviors.Loaded:Remove[${This.ObjectName}]
+
 		LogPrefix:Set["${This.ObjectName}"]
 
 		;PulseTimer:SetIntervals[0.5,1.0]

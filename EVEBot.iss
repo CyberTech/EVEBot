@@ -78,8 +78,8 @@ function MakeIncludeFiles(string RootDir, string SubDir, bool Define_Globals = T
 				{
 					Variables_File:Write["#if \${EVEBotBehaviors.Element[${obj_name}]}\n"]
 					Variables_File:Write["\tLogger:Log[\"Creating global ${obj_name} as ${var_name}\", LOG_DEBUG]\n"]
+					Variables_File:Write["\tBehaviors.Loaded:Add[${var_name}]\n"]
 					Variables_File:Write["\tcall CreateVariable ${var_name} ${obj_name} global\n"]
-					Variables_File:Write["\tBehaviors.Loaded:Insert[${var_name}]\n"]
 					Variables_File:Write["#endif\n\n"]
 					if ${logmsg.Right[2].Compare[": "]} != 0
 					{

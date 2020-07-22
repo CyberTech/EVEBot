@@ -23,6 +23,9 @@ objectdef obj_StealthHauler
 
 	method Initialize()
 	{
+		; Not a top level behavior
+		Behaviors.Loaded:Remove[${This.ObjectName}]
+
 		Logger:Log["obj_StealthHauler: Initialized", LOG_MINOR]
 	}
 
