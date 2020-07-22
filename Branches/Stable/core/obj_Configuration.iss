@@ -101,6 +101,10 @@ objectdef obj_Configuration
 	variable obj_Configuration_Missioneer Missioneer
 	variable obj_Configuration_Fleet Fleet
 
+	method Shutdown()
+	{
+	}
+
 	method Save()
 	{
 		BaseConfig:Save[]
