@@ -284,6 +284,24 @@ objectdef obj_Inventory
 	method Shutdown()
 	{
 	}
+
+	function Open()
+	{
+		if !${EVEWindow[Inventory](exists)}
+		{
+			Logger:Log["Opening Inventory..."]
+			EVE:Execute[OpenInventory]
+			wait 2
+		}		
+	}
+
+	method Close()
+	{
+		if ${EVEWindow[Inventory](exists)}
+		{	
+			EVEWindow[Inventory]:Close
+		}
+	}
 }
 
 /*
