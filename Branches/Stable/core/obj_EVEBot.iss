@@ -15,6 +15,7 @@ objectdef obj_EVEBot inherits obj_BaseClass
 	variable bool Loaded					/* Set true once the bot is fully loaded */
 	variable int LastSessionFrame
 	variable bool LastSessionResult
+	variable index:string Threads
 
 	method Initialize()
 	{
@@ -33,6 +34,23 @@ objectdef obj_EVEBot inherits obj_BaseClass
 	method Shutdown()
 	{
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
+	}
+
+	method EndBot()
+	{
+		Logger:Log["EVEBot shutting down...", LOG_ECHOTOO]
+
+		variable int i
+		for (i:Set[1]; ${i} <= ${Threads.Used}; i:Inc)
+		{
+			Logger:Log[" Stopping ${Threads.Get[${i}]} thread...",LOG_ECHOTOO]
+			if ${Script[${Threads.Get[${i}]}](exists)}
+			{
+				endscript ${Threads.Get[${i}]}
+			}
+		}
+		Logger:Log["EVEBot shutdown complete", LOG_ECHOTOO]
+		Script:End
 	}
 
 	method Pulse()
@@ -169,14 +187,14 @@ objectdef obj_EVEBot inherits obj_BaseClass
 	{
 		Logger:Log["Paused: ${Reason}", LOG_ECHOTOO]
 		This._Paused:Set[TRUE]
-		;Script:Pause
+		Script:Pause
 	}
 
 	method Resume(string Reason)
 	{
 		Logger:Log["Resumed: ${Reason}", LOG_ECHOTOO]
 		This._Paused:Set[FALSE]
-		;Script:Resume
+		Script:Resume
 	}
 
 	method SetVersion(int Version=${VersionNum})

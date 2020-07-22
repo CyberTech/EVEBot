@@ -58,7 +58,7 @@
 				</button>
 				<button	Name='Close' template='EVESkin.Window.TitleBar.Close'>
 					<OnLeftClick>
-						endscript EVEBot
+						EVEBot:EndBot[]
 					</OnLeftClick>
 				</button>
 			</Children>
@@ -102,8 +102,7 @@
 							<width>150</width>
 							<height>20</height>
 							<OnLeftClick>
-								relay all Script[EVEBot]:Resume
-								relay all Script[EVEBot].VariableScope.EVEBot:Resume
+								relay all EVEBot:Resume["Resume via UI BroadcastRun"]
 							</OnLeftClick>
 						</button>
 						<Text name='script_runtime'>
@@ -118,7 +117,7 @@
 							<Y>10</Y>
 							<Width>100</Width>
 							<Height>20</Height>
-							<Text>${Script[EVEBot].VariableScope.Runtime}</Text>
+							<Text>${EVEBot.Runtime}</Text>
 						</Text>
 
 						<Text name='state' template='EVESkin.Font.Description'>
