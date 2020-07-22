@@ -91,7 +91,7 @@ objectdef obj_Ship
 					This:UpdateModuleList
 				}
 
-				if (${Me.ToEntity.Mode} == 3 || !${Config.Common.BotModeName.Equal[Ratter]})
+				if (${Me.ToEntity.Mode} == 3 || !${Config.Common.CurrentBehavior.Equal[Ratter]})
 				{	/* ratter was converted to use obj_Combat already */
 
 					/* Ship Armor Repair

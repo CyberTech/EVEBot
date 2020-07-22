@@ -26,7 +26,7 @@ objectdef obj_Social inherits obj_BaseClass
 	variable iterator BlackListPilotIterator
 	variable iterator BlackListCorpIterator
 	variable iterator BlackListAllianceIterator
-	variable bool SystemSafe
+	variable bool SystemSafe = TRUE
 
 	variable set PilotBlackList
 	variable set CorpBlackList
@@ -52,8 +52,6 @@ objectdef obj_Social inherits obj_BaseClass
 
 		This:ResetWhiteBlackLists
 
-		SystemSafe:Set[TRUE]
-
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		Event[EVE_OnChannelMessage]:AttachAtom[This:OnChannelMessage]
 
@@ -71,6 +69,7 @@ objectdef obj_Social inherits obj_BaseClass
 
 		LavishScript:RegisterEvent[EVEBot_FinalizeWhitelist]
 		Event[EVEBot_FinalizeWhitelist]:AttachAtom[This:FinalizeWhitelist]
+
 
 		PulseTimer:SetIntervals[2.0,2.5]
 		PulseTimer:Increase[2.0]
@@ -784,7 +783,7 @@ objectdef obj_Social inherits obj_BaseClass
 				Logger:Log["Taking a break!", LOG_CRITICAL]
 				if ${Config.Combat.BroadcastBreaks}
 				{
-					relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.BotModeName}"
+					relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.CurrentBehavior}"
 				}
 				else
 				{

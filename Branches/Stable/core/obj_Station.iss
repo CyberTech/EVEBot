@@ -175,6 +175,12 @@ objectdef obj_Station
 		variable int64 StationID
 		StationID:Set[${Me.StationID}]
 
+		if !${Me.InStation}
+		{
+			Logger:Log["WARNING: Undock called, but we're already undocking!", LOG_ECHOTOO]
+			return
+		}
+
 		Logger:Log["Undocking from ${Me.Station.Name}"]
 		Config.Common:SetHomeStation[${Me.Station.Name}]
 		Logger:Log["Undock: Home Station set to ${Config.Common.HomeStation}"]

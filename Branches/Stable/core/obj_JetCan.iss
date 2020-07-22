@@ -330,7 +330,7 @@ objectdef obj_JetCan
 		{
 			return 0.0
 		}
-		if ${Config.Common.BotModeName.Equal[Miner]} && ${Config.Miner.IceMining}
+		if ${Config.Common.CurrentBehavior.Equal[Miner]} && ${Config.Miner.IceMining}
 		{
 			return 1000.00
 		}

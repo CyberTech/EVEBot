@@ -30,7 +30,7 @@
 				{
 						if ${EVEBot.Paused}
 								return
-						if !${Config.Common.BotModeName.Equal[Miner]}
+						if !${Config.Common.CurrentBehavior.Equal[Miner]}
 								return
 						;; bot module frame action code
 						;; ...
@@ -41,7 +41,7 @@
 
 				function ProcessState()
 				{
-						if !${Config.Common.BotModeName.Equal[Miner]}
+						if !${Config.Common.CurrentBehavior.Equal[Miner]}
 								return
 
 						; call the combat object state processing

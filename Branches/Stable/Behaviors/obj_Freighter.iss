@@ -11,11 +11,10 @@
 
 objectdef obj_Freighter
 {
-	/* the bot logic is currently based on a state machine */
-	variable string CurrentState
-
 	variable time NextPulse
-	variable int PulseIntervalInSeconds = 2
+	variable float PulseIntervalInSeconds = 2.0
+
+	variable string CurrentState
 
 	variable queue:bookmark SourceLocations
 	variable int64 m_DestinationID
@@ -28,7 +27,6 @@ objectdef obj_Freighter
 	method Initialize()
 	{
 		This:SetupEvents[]
-		BotModules:Insert["Freighter"]
 
 		m_DestinationID:Set[0]
 
@@ -49,7 +47,7 @@ objectdef obj_Freighter
 			return
 		}
 
-		if !${Config.Common.BotModeName.Equal[Freighter]}
+		if !${Config.Common.CurrentBehavior.Equal[Freighter]}
 		{
 			return
 		}
@@ -75,9 +73,9 @@ objectdef obj_Freighter
 					break
 			}
 
-    		This.NextPulse:Set[${Time.Timestamp}]
-    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-    		This.NextPulse:Update
+			This.NextPulse:Set[${Time.Timestamp}]
+			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
+			This.NextPulse:Update
 		}
 	}
 
@@ -95,11 +93,17 @@ objectdef obj_Freighter
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 	}
 
-	/* this function is called repeatedly by the main loop in EveBot.iss */
+	/* this function is called repeatedly by the main loop in EVEBot.iss */
 	function ProcessState()
 	{
+		if !${Config.Common.CurrentBehavior.Equal[Freighter]}
+		{
+			return
+		}
+
 		switch ${Config.Freighter.FreighterModeName}
 		{
+			;echo "Freighter: ProcessState: ${This.CurrentState}"
 			case Move Minerals to Buyer
 				/* not implemented yet */
 				break
@@ -114,7 +118,6 @@ objectdef obj_Freighter
 				break
 
 			default
-				;echo "Freighter: ProcessState: ${This.CurrentState}"
 				switch ${This.CurrentState}
 				{
 					case IDLE
@@ -149,6 +152,11 @@ objectdef obj_Freighter
 	/* NOTE: The order of these if statements is important!! */
 	method SetState()
 	{
+		if !${Config.Common.CurrentBehavior.Equal[Freighter]}
+		{
+			return
+		}
+
 		if ${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity(exists)} && ${m_DestinationID} == 0
 		{
 			m_DestinationID:Set[${EVE.Bookmark[${Config.Freighter.Destination}].ToEntity.ID}]
@@ -166,7 +174,7 @@ objectdef obj_Freighter
 		}
 		elseif ${Me.InStation}
 		{
-  			This.CurrentState:Set["BASE"]
+			This.CurrentState:Set["BASE"]
 		}
 		elseif ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace}
 		{
@@ -243,7 +251,7 @@ objectdef obj_Freighter
 	function MoveToSourceStation()
 	{
 		if ${SourceLocations.Used} == 0
-		{	/* sources emptied, abort */
+		{
 			Logger:Log["DEBUG: No more source locations!"]
 			EVEBot.ReturnToStation:Set[TRUE]
 		}

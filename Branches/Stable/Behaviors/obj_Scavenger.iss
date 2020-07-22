@@ -34,6 +34,11 @@ objectdef obj_Scavenger
 	/* NOTE: The order of these if statements is important!! */
 	method SetState()
 	{
+		if ${Config.Common.CurrentBehavior.NotEqual[Scavenger]}
+		{
+			return
+		}
+
 		if ${EVEBot.ReturnToStation} && !${Me.InStation}
 		{
 			This.CurrentState:Set["ABORT"]
@@ -61,7 +66,7 @@ objectdef obj_Scavenger
 
 	function ProcessState()
 	{
-		if !${Config.Common.BotModeName.Equal[Freighter]}
+		if !${Config.Common.CurrentBehavior.Equal[Freighter]}
 		return
 
 		switch ${This.CurrentState}

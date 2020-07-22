@@ -1,17 +1,14 @@
-objectdef obj_IRC
+objectdef obj_IRC inherits obj_BaseClass
 {
-	variable time NextPulse
-	variable int PulseIntervalInSeconds = 1
-
 	variable bool IsConnected = FALSE
 	variable queue:string Buffer
-	
 	variable bool Throttle = FALSE
 
 
 	method Initialize()
 	{
 #if USE_ISXIM
+		LogPrefix:Set["${This.ObjectName}"]
 		ext -require ISXIM
 
 		Event[IRC_ReceivedNotice]:AttachAtom[This:IRC_ReceivedNotice]
@@ -22,8 +19,9 @@ objectdef obj_IRC
 		Event[IRC_JOINErrorResponse]:AttachAtom[This:IRC_JOINErrorResponse]
 		Event[IRC_UnhandledEvent]:AttachAtom[This:IRC_UnhandledEvent]
 
-		Logger:Log["obj_IRC: Initialized", LOG_MINOR]
+		PulseTimer:SetIntervals[1.0,1.0]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 #endif
 	}
 
@@ -49,7 +47,12 @@ objectdef obj_IRC
 
 	method Pulse()
 	{
-		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+		if !${EVEBot.Loaded} || ${EVEBot.Disabled}
+		{
+			return
+		}
+
+		if ${This.PulseTimer.Ready}
 		{
 			if ${This.IsConnected}
 			{
@@ -64,10 +67,7 @@ objectdef obj_IRC
 			{
 				IsConnected:Set[FALSE]
 			}
-				
-			This.NextPulse:Set[${Time.Timestamp}]
-			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-			This.NextPulse:Update
+			This.PulseTimer:Update
 		}
 	}
 
@@ -267,12 +267,18 @@ objectdef obj_IRC
 
 	function Connect()
 	{
+	#if USE_ISXIM
+		Logger:Log["${This.LogPrefix}: Connecting to IRC", LOG_ECHOTOO]
+	#else
+		return
+	#endif
+
 		if ${Throttle}
 		{
 			IRCUser[${Config.Common.IRCUser}]:Disconnect
 		}
 		Throttle:Set[FALSE]
-		
+
 		IRC:Connect[${Config.Common.IRCServer},${Config.Common.IRCUser}]
 
 		do
@@ -284,11 +290,11 @@ objectdef obj_IRC
 		if (${IRCUser[${Config.Common.IRCUser}](exists)} && ${IRCUser[${Config.Common.IRCUser}].IsConnected})
 		{
 			IRCUser[${Config.Common.IRCUser}]:Join[${Config.Common.IRCChannel}]
-	
+
 			wait 5
 			This.IsConnected:Set[TRUE]
 			wait 5
-	
+
 			Call This.Say "${AppVersion} Connected"
 		}
 	}
@@ -313,6 +319,7 @@ objectdef obj_IRC
 #endif
 	}
 
+	; This should not be called by users of this object.
 	method SendMessage(string msg)
 	{
 		if ${This.IsConnected}
@@ -323,11 +330,8 @@ objectdef obj_IRC
 
 	function Say(string msg)
 	{
-		if ${This.IsConnected}
-		{
-			IRCUser[${Config.Common.IRCUser}].Channel[${Config.Common.IRCChannel}]:Say["${msg}"]
-		}
-		else
+		This:QueueMessage["${msg}"]
+		if !${This.IsConnected}
 		{
 			call This.Connect
 		}

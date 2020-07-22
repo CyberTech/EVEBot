@@ -60,7 +60,6 @@ objectdef obj_Hauler
 		Event[EVEBot_Miner_Full]:AttachAtom[This:MinerFull]
 		LavishScript:RegisterEvent[EVEBot_Orca_Cargo]
 		Event[EVEBot_Orca_Cargo]:AttachAtom[This:OrcaCargoUpdate]
-		BotModules:Insert["Hauler"]
 	}
 
 
@@ -71,7 +70,7 @@ objectdef obj_Hauler
 			return
 		}
 
-		if !${Config.Common.BotModeName.Equal[Hauler]}
+		if !${Config.Common.CurrentBehavior.Equal[Hauler]}
 		{
 			return
 		}
@@ -212,7 +211,7 @@ objectdef obj_Hauler
 			;	*	If everything above failed and there's a station in the same system, dock there
 			;	*	If everything above failed, check if we're warping and warp to a safe spot
 			case HARDSTOP
-				relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.BotModeName}"
+				relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.CurrentBehavior}"
 				if ${Me.InStation}
 				{
 					break
@@ -866,7 +865,7 @@ objectdef obj_Hauler
 		variable int64 systemID = -1
 		variable int64 beltID = -1
 
-		if !${Config.Common.BotModeName.Equal[Hauler]}
+		if !${Config.Common.CurrentBehavior.Equal[Hauler]}
 		{
 			return
 		}

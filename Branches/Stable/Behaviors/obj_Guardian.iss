@@ -36,9 +36,7 @@ objectdef obj_Guardian
 
 	method Initialize()
 	{
-		BotModules:Insert["Guardian"]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-
 
 		Logger:Log["obj_Guardian: Initialized", LOG_MINOR]
 	}
@@ -55,7 +53,7 @@ objectdef obj_Guardian
 			return
 		}
 
-		if !${Config.Common.BotModeName.Equal[Guardian]}
+		if !${Config.Common.CurrentBehavior.Equal[Guardian]}
 		{
 			; There's no reason at all for the miner to check state if it's not a miner
 			return
@@ -162,7 +160,7 @@ objectdef obj_Guardian
 	{
 
 		;	If Miner isn't the selected bot mode, this function shouldn't have been called.  However, if it was we wouldn't want it to do anything.
-		if !${Config.Common.BotModeName.Equal[Guardian]}
+		if !${Config.Common.CurrentBehavior.Equal[Guardian]}
 		{
 			return
 		}
@@ -185,7 +183,7 @@ objectdef obj_Guardian
 			;	*	If everything above failed and there's a station in the same system, dock there
 			;	*	If everything above failed, check if we're warping and warp to a safe spot
 			case HARDSTOP
-				relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.BotModeName}"
+				relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.CurrentBehavior}"
 				if ${Me.InStation}
 				{
 					break

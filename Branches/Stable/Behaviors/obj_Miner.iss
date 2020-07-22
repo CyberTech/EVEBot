@@ -65,8 +65,6 @@ objectdef obj_Miner
 
 	method Initialize()
 	{
-		BotModules:Insert["Miner"]
-
 		This.TripStartTime:Set[${Time.Timestamp}]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 		LavishScript:RegisterEvent[EVEBot_Orca_InBelt]
@@ -101,7 +99,7 @@ objectdef obj_Miner
 			return
 		}
 
-		if !${Config.Common.BotModeName.Equal[Miner]}
+		if !${Config.Common.CurrentBehavior.Equal[Miner]}
 		{
 			; There's no reason at all for the miner to check state if it's not a miner
 			return
@@ -348,7 +346,7 @@ objectdef obj_Miner
 	function ProcessState()
 	{
 		;	If Miner isn't the selected bot mode, this function shouldn't have been called.  However, if it was we wouldn't want it to do anything.
-		if !${Config.Common.BotModeName.Equal[Miner]}
+		if !${Config.Common.CurrentBehavior.Equal[Miner]}
 		{
 			return
 		}
@@ -411,7 +409,7 @@ objectdef obj_Miner
 			;	*	If everything above failed, check if we're warping and warp to a safe spot
 			case HARDSTOP
 				Logger:Log["Sending HARD STOP to fleet"]
-				relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.BotModeName}"
+				relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.CurrentBehavior}"
 				if ${Me.InStation}
 				{
 					break
@@ -1593,7 +1591,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 					if ${Config.Miner.MasterMode}
 					{
 						Logger:Log["obj_Miner: There can be only one Master ERROR:${name}", LOG_DEBUG]
-						relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.BotModeName}"
+						relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.CurrentBehavior}"
 					}
 					else
 					{
@@ -1658,7 +1656,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 	;This method is triggered by an event.  If triggered, it tells a team-mate is under attack by an NPC and what it is.
 	method UnderAttack(int64 value)
 	{
-		if !${Config.Common.BotModeName.Equal[Miner]} && !${Config.Common.BotModeName.Equal[Guardian]}
+		if !${Config.Common.CurrentBehavior.Equal[Miner]} && !${Config.Common.CurrentBehavior.Equal[Guardian]}
 		{
 			return
 		}
@@ -1689,7 +1687,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 		{
 			do
 			{
-				if ${Config.Common.BotModeName.Equal[Miner]} || ${Config.Common.BotModeName.Equal[Guardian]}
+				if ${Config.Common.CurrentBehavior.Equal[Miner]} || ${Config.Common.CurrentBehavior.Equal[Guardian]}
 				{
 					if !${AttackingTeam.Contains[${CurrentAttack.Value.ID}]}
 					{

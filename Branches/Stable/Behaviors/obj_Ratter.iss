@@ -41,7 +41,7 @@ objectdef obj_Ratter
 			return
 		}
 
-		if !${Config.Common.BotModeName.Equal[Ratter]}
+		if !${Config.Common.CurrentBehavior.Equal[Ratter]}
 		{
 			return
 		}
@@ -84,7 +84,7 @@ objectdef obj_Ratter
 	function ProcessState()
 	{
 	    /* don't do anything if we aren't in Ratter bot mode! */
-		if !${Config.Common.BotModeName.Equal[Ratter]}
+		if !${Config.Common.CurrentBehavior.Equal[Ratter]}
 			return
 
 		; call the combat object state processing
