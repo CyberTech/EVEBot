@@ -1314,7 +1314,7 @@ objectdef obj_Cargo
 	  Logger:Log["Transferring Cargo to Station Hangar"]
 
 		call Inventory.ShipCargo.Activate
-		if !${Inventory.ShipCargo.IsCurrent}
+		if ${Inventory.ShipCargo.IsCurrent}
 		{
 			Inventory.Current:GetItems[This.CargoToTransfer, "TypeID == ${typeID}"]
 		  call This.TransferListToStationHangar
