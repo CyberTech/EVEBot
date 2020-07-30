@@ -41,6 +41,7 @@ objectdef obj_Behaviors
 {
 		variable set Loaded
 }
+; Holds the loaded behaviors
 variable(global) obj_Behaviors Behaviors
 
 /* Behavior/Mode Includes */
