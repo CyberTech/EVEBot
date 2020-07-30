@@ -131,9 +131,10 @@ objectdef obj_Configuration_Common
 			if ${This.Ref.FindSetting[Bot Mode Name](exists)}
 			{
 				; The previous key was present, migrate it to the new one and delete it
-				This.Ref:AddSetting[Behavior, ${This.Ref.FindSetting[Bot Mode Name]}]
+				This.Ref:AddSetting[CurrentBehavior, ${This.Ref.FindSetting[Bot Mode Name]}]
+				This.Ref.FindSetting[Bot Mode]:Remove
 				This.Ref.FindSetting[Bot Mode Name]:Remove
-				Logger:Log["Configuration: Migrating Config: Bot Mode Name -> Behavior", LOG_ECHOTOO]
+				Logger:Log["Configuration: Migrating config value: Bot Mode Name -> Behavior (${This.Ref.FindSetting[CurrentBehavior]})", LOG_ECHOTOO]
 			}
 		}
 
