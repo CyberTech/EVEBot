@@ -183,8 +183,8 @@ function main()
 
 	wait 0.5
 	; Threads need to load after globals but before behaviors.
-	Logger:Log[" Starting threads...", LOG_ECHOTOO]
-	call LoadThreads "Thread" "${Script.CurrentDirectory}/\Threads/\*.iss"
+	;Logger:Log[" Starting threads...", LOG_ECHOTOO]
+	;call LoadThreads "Thread" "${Script.CurrentDirectory}/\Threads/\*.iss"
 
 	Logger:Log[" Loading behaviors...", LOG_ECHOTOO]
 	#includeoptional Behaviors/_variables.iss
