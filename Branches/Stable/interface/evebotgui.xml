@@ -16,18 +16,12 @@
 			<Children>
 				<commandbutton name='Run EVEBot' template='EVESkin.Window.TitleBar.RunButton'>
 					<OnLeftClick>
-						Script[EVEBot]:Resume
-						Script[EVEBot].VariableScope.EVEBot:Resume
-						Script[EVEBot].VariableScope.EVEBot.ReturnToStation:Set[FALSE]
-						Echo EVEBot: Resumed
+						EVEBot:Resume["Clicked Run"]
 					</OnLeftClick>
 				</commandbutton>
 				<commandbutton name='Pause EVEBot' template='EVESkin.Window.TitleBar.PauseButton'>
 					<OnLeftClick>
-						EVE:Execute[CmdStopShip]
-						Script[EVEBot]:Pause
-						Script[EVEBot].VariableScope.EVEBot:Pause
-						Echo EVEBot: Paused
+						EVEBot:Pause["Clicked Pause"]
 					</OnLeftClick>
 				</commandbutton>
 				<Text name='EVEBot_TitleBar_Title' template='EVESkin.Font.TitleBar'>
@@ -680,7 +674,7 @@
 							</OnLoad>
 							<OnChange>
 								Script[EVEBot].VariableScope.Config.Miner:SetAvoidPlayerRange[${Int[${This.Value}]}]
-								UIElement[AvoidPlayerRangeLabel@Miner@EVEBotOptionsTab@EVEBot]:SetText["Min. Distance to Players: ${Script[EVEBot].VariableScope.EVEBot.MetersToKM_Str[${This.Value}]}"]
+								UIElement[AvoidPlayerRangeLabel@Miner@EVEBotOptionsTab@EVEBot]:SetText["Min. Distance to Players: ${EVEBot.MetersToKM_Str[${This.Value}]}"]
 							</OnChange>
 						</slider>
 						<Text name='AvoidPlayerRangeLabel'>
@@ -691,7 +685,7 @@
 							<Text>Min. Distance to Players: 0km</Text>
 							<AutoTooltip>Minimum distance we will keep other players at</AutoTooltip>
 							<OnLoad>
-								This:SetText["Min. Distance to Players: ${Script[EVEBot].VariableScope.EVEBot.MetersToKM_Str[${UIElement[AvoidPlayerRange@Miner@EVEBotOptionsTab@EVEBot].Value}]}"]
+								This:SetText["Min. Distance to Players: ${EVEBot.MetersToKM_Str[${UIElement[AvoidPlayerRange@Miner@EVEBotOptionsTab@EVEBot].Value}]}"]
 							</OnLoad>
 						</Text>
 						<checkbox name='cbStandingDetection'>

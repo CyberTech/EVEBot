@@ -186,15 +186,18 @@ objectdef obj_EVEBot inherits obj_BaseClass
 	method Pause(string Reason)
 	{
 		Logger:Log["\agPaused\ax: ${Reason}", LOG_ECHOTOO]
+		EVE:Execute[CmdStopShip]
 		This._Paused:Set[TRUE]
 		Script:Pause
 	}
 
 	method Resume(string Reason)
 	{
-		Logger:Log["Resumed: ${Reason}", LOG_ECHOTOO]
-		This._Paused:Set[FALSE]
+		This.ReturnToStation:Set[FALSE]
 		Script:Resume
+		This._Paused:Set[FALSE]
+
+		Logger:Log["Resumed: ${Reason}", LOG_ECHOTOO]
 	}
 
 	method SetVersion(int Version=${VersionNum})
