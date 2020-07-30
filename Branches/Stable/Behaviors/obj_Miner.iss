@@ -1562,7 +1562,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 	;This method is triggered by an event.  If triggered, lets Us figure out who is the master in group mode.
 	method MasterVote(string groupParams)
 	{
-		Logger:Log["obj_Miner:MasterVote event:${groupParams}, LOG_DEBUG]
+		Logger:Log["obj_Miner:MasterVote event:${groupParams}", LOG_DEBUG]
 
 		if ${Config.Miner.MasterMode} || ${Config.Miner.GroupMode}
 		{
