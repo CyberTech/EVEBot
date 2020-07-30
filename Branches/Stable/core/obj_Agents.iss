@@ -405,18 +405,15 @@ objectdef obj_Agents
 			}
 			while ${This.AgentList.agentIterator:Next(exists)}
 			; If we fall thru to here, everything was in the skiplist.
-			Logger:Log["obj_Agents.PickAgent: ERROR: Script paused. All defined agents are in skiplist."]
-			Script:Pause
+			EVEBot:Pause["obj_Agents.PickAgent: ERROR: Script paused. All defined agents are in skiplist."]
 		}
 		else
 		{
-			Logger:Log["obj_Agents.PickAgent: ERROR: Script paused. No non-research agents defined."]
-			Script:Pause
+			EVEBot:Pause["obj_Agents.PickAgent: ERROR: Script paused. No non-research agents defined."]
 		}
 
 		/* we should never get here */
-		Logger:Log["obj_Agents.PickAgent: ERROR: Script paused. No Agents defined, or none available"]
-		Script:Pause
+		EVEBot:Pause["obj_Agents.PickAgent: ERROR: Script paused. No Agents defined, or none available"]
 	}
 
 	member:string DropOffStation()
