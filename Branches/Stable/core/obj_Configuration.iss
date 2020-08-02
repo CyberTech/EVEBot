@@ -27,7 +27,7 @@
 
 	method _Key(_Type Value)
 	{
-		;echo "This.Ref:AddSetting[_Key, ${Value}]"
+		;echo "Setting This.Ref:AddSetting[_Key, ${Value}]"
 		This.Ref:AddSetting[_Key, ${Value}]
 	}
 #endmac
