@@ -193,6 +193,7 @@ objectdef obj_Skills inherits obj_BaseClass
 	{
 		if ${SkillName.Length} > 0
 		{
+			/* TODO - this randomly fails for a skill that's being trained.  Amadeus informed */
 			if ${Me.Skill[${SkillName}](exists)} && ${Me.Skill[${SkillName}].IsTraining}
 			{
 				return TRUE
