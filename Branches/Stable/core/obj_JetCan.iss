@@ -66,14 +66,16 @@ BUGS:
 
 */
 
-objectdef obj_JetCan
+objectdef obj_JetCan inherits obj_BaseClass
 {
 	variable int64 ActiveCan = -1
 	variable set FullCans
 
 	method Initialize()
 	{
-		Logger:Log["obj_JetCan: Initialized", LOG_MINOR]
+		LogPrefix:Set["${This.ObjectName}"]
+
+		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
 	; Returns -1 for no can, or the entity ID
