@@ -225,7 +225,7 @@
 								<Item Value='1'>Idle</Item>
 							</Items>
 							<OnSelect>
-								Config.Common:CurrentBehavior[${This.SelectedItem.Text}]
+								${Script[EVEBot].VariableScope.Config.Common:CurrentBehavior[${This.SelectedItem.Text}]
 							</OnSelect>
 						</combobox>
 						<Textentry name='MinimumDronesInBay'>
