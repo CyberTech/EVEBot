@@ -27,7 +27,7 @@ objectdef obj_Asteroids
 
 	variable index:bookmark BeltBookMarkList
 	variable iterator BeltBookMarkIterator
-	variable int LastBookMarkIndex
+	variable int64 LastBookMarkID
 	variable int LastBeltIndex
 	variable bool UsingBookMarks = FALSE
 	variable time BeltArrivalTime
@@ -134,7 +134,7 @@ objectdef obj_Asteroids
 	; TODO - remove this from here -- move to obj_Belts - CT
 	function MoveToRandomBeltBookMark(bool FleetWarp=FALSE)
 	{
-		variable int RandomBelt
+		variable int RandomBelt = 0
 		variable string Label
 		variable string prefix
 
@@ -146,62 +146,60 @@ objectdef obj_Asteroids
 		{
 			prefix:Set[${Config.Labels.OreBeltPrefix}]
 		}
+		
+		if !${prefix.NotNULLOrEmpty}
+		{
+			Logger:Log["MoveToRandomBeltBookMark: Bookmark prefix is empty, ignoring call", LOG_ERROR]	
+			return FALSE
+		}
 
-		variable float Distance
 		EVE:RefreshBookmarks
 		wait 10
 		EVE:GetBookmarks[BeltBookMarkList]
-		BeltBookMarkList:RemoveByQuery[${LavishScript.CreateQuery[SolarSystemID != "${Me.SolarSystemID}"]}]
-		BeltBookMarkList:Collapse
-		; This needs to be initialized somewhere. May as well be here! -- Valerian
-		RandomBelt:Set[1]
+		Logger:Log["MoveToRandomBeltBookMark: Found ${BeltBookMarkList.Used} total bookmarks", LOG_DEBUG]
 
-		while ${BeltBookMarkList.Used} > 1
+		Logger:Log["MoveToRandomBeltBookMark: Removing bookmarks not in system, too close, and last used", LOG_DEBUG]
+		BeltBookMarkList:RemoveByQuery[${LavishScript.CreateQuery[SolarSystemID != "${Me.SolarSystemID}"]}]
+		BeltBookMarkList:RemoveByQuery[${LavishScript.CreateQuery[Distance <= WARP_RANGE]}]
+		BeltBookMarkList:RemoveByQuery[${LavishScript.CreateQuery[ID = ${This.LastBookMarkID}]}]
+		BeltBookMarkList:Collapse
+
+		Logger:Log["MoveToRandomBeltBookMark: Found ${BeltBookMarkList.Used} possible bookmarks, filtering by prefix ${prefix}", LOG_DEBUG]
+
+		while ${BeltBookMarkList.Used} > 0
 		{
 			RandomBelt:Set[${Math.Rand[${BeltBookMarkList.Used(int):Dec}]:Inc[1]}]
 			Label:Set[${BeltBookMarkList[${RandomBelt}].Label}]
+
+			; TODO - move this to RemoveByQuery when string.StartsWith is pushed to InnerSpace live
 			if ${Label.Left[${prefix.Length}].NotEqual[${prefix}]}
 			{
-				BeltBookMarkList:Remove[${RandomBelt}]
-				BeltBookMarkList:Collapse
-				RandomBelt:Set[1]
-				continue
-			}
+				Logger:Log["MoveToRandomBeltBookMark: Removing ${Label} - missing prefix ${prefix}", LOG_DEBUG]
 
-			if ${BeltBookMarkList[${RandomBelt}].X(exists)}
-			{
-				Distance:Set[${Math.Distance[${BeltBookMarkList[${RandomBelt}].X},${BeltBookMarkList[${RandomBelt}].Y},${BeltBookMarkList[${RandomBelt}].Z},${Me.ToEntity.X},${Me.ToEntity.Y},${Me.ToEntity.Z}]}]
-			}
-			else
-			{
-				Distance:Set[${Math.Distance[${BeltBookMarkList[${RandomBelt}].ToEntity.X},${BeltBookMarkList[${RandomBelt}].ToEntity.Y},${BeltBookMarkList[${RandomBelt}].ToEntity.Z},${Me.ToEntity.X},${Me.ToEntity.Y},${Me.ToEntity.Z}]}]
-			}
-			if ${Distance} < WARP_RANGE
-			{
-				; Must remove this belt to avoid inf loops
 				BeltBookMarkList:Remove[${RandomBelt}]
 				BeltBookMarkList:Collapse
-				RandomBelt:Set[1]
+				RandomBelt:Set[0]
 				continue
 			}
 			break
 		}
 
-		if ${BeltBookMarkList.Used}
+		if ${BeltBookMarkList.Used} >= ${RandomBelt}
 		{
-			Logger:Log["Debug: WarpToBookMarkName to ${BeltBookMarkList[${RandomBelt}].Label} from MoveToRandomBeltBookMark Line _LINE_ ", LOG_DEBUG]
+			Logger:Log["MoveToRandomBeltBookMark: Calling WarpToBookMarkName ${BeltBookMarkList[${RandomBelt}].Label}", LOG_DEBUG]
 			call Ship.WarpToBookMark ${BeltBookMarkList[${RandomBelt}].ID} ${FleetWarp}
 			Ship:Activate_SurveyScanner
 
 			This.BeltArrivalTime:Set[${Time.Timestamp}]
-			This.LastBookMarkIndex:Set[${RandomBelt}]
+			This.LastBookMarkID:Set[${BeltBookMarkList[${RandomBelt}].ID}]
 			This.UsingBookMarks:Set[TRUE]
+			return TRUE
 		}
 		else
 		{
 			Logger:Log["DEBUG: obj_Asteroids:MoveToRandomBeltBookMark: No belt bookmarks found!", LOG_DEBUG]
 		}
-		return
+		return FALSE
 	}
 
 	; Pick the nearest appropriate asteroid from AsteroidList; checking claimed list and ranges.

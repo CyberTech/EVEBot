@@ -31,7 +31,11 @@ variable int VersionNum = 0
 
 ;#define EVENT_ONFRAME OnFrame
 #define EVENT_ONFRAME ISXEVE_onFrame
+#ifdef EVEBOT_TESTCASE
+#define EVENT_EVEBOT_ONFRAME ISXEVE_onFrame
+#else
 #define EVENT_EVEBOT_ONFRAME EVEBOT_OnFrame
+#endif
 
 /* Core Library (Non-EVE Related code) */
 #include ../../../External/isxScripts/obj_PulseTimer.iss
@@ -47,7 +51,8 @@ variable int VersionNum = 0
 #define LOG_STANDARD 2
 #define LOG_ECHOTOO 3
 #define LOG_CRITICAL 4
-#define LOG_DEBUG 5
+#define LOG_ERROR 5
+#define LOG_DEBUG 6
 
 #define WAIT_CARGO_WINDOW 15
 #define WAIT_UNDOCK 130
