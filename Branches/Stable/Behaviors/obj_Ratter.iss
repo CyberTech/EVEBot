@@ -8,19 +8,20 @@
 	-- GliderPro
 */
 
-objectdef obj_Ratter
+objectdef obj_Ratter inherits obj_BaseClass
 {
-	/* the bot logic is currently based on a state machine */
 	variable string CurrentState
-	variable time NextPulse
-	variable int PulseIntervalInSeconds = 2
 	variable obj_Combat Combat
 
 	method Initialize()
 	{
-		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+		LogPrefix:Set["${This.ObjectName}"]
 
-		BotModules:Insert["Ratter"]
+		This.PulseTimer:SetIntervals[2.0,4.0]
+		Event[EVENT_EVEBOT_ONFRAME]:AttachAtom[This:Pulse]
+
+;		This.Rat_CacheID:Set[${EntityCache.AddFilter[${This.ObjectName}, CategoryID = CATEGORYID_ENTITY && IsNPC = 1 && IsMoribund = 0, 2.0]}]
+;		EntityCache.EntityFilters.Get[${This.Rat_CacheID}].Entities:GetIterator[Rat_CacheIterator]
 
 		; Startup in fight mode, so that it checks current belt for rats, if we happen to be in one.
 		This.CurrentState:Set["FIGHT"]
@@ -30,13 +31,13 @@ objectdef obj_Ratter
 		;; set the combat "mode"
 		This.Combat:SetMode["AGGRESSIVE"]
 
-		Logger:Log["obj_Ratter: Initialized", LOG_MINOR]
+		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
 
 	method Pulse()
 	{
-		if ${EVEBot.Paused}
+		if ${EVEBot.Disabled} || ${EVEBot.Paused}
 		{
 			return
 		}
@@ -46,13 +47,11 @@ objectdef obj_Ratter
 			return
 		}
 
-	    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+		if ${This.PulseTimer.Ready}
 		{
-			This:SetState[]
+			This:SetState
 
-    		This.NextPulse:Set[${Time.Timestamp}]
-    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-    		This.NextPulse:Update
+			This.PulseTimer:Update
 		}
 
 		;; call the combat frame action code
@@ -61,7 +60,7 @@ objectdef obj_Ratter
 
 	method Shutdown()
 	{
-		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
+		Event[EVENT_EVEBOT_ONFRAME]:DetachAtom
 	}
 
 	/* NOTE: The order of these if statements is important!! */
@@ -69,6 +68,10 @@ objectdef obj_Ratter
 	;; STATE MACHINE:  * -> IDLE -> MOVE -> PCCHECK -> FIGHT -> LOOT -> DROP -> *
 	method SetState()
 	{
+		if ${Config.Common.CurrentBehavior.NotEqual[Ratter]}
+		{
+			return
+		}
 		/* Combat module handles all fleeing states now */
 		switch ${This.CurrentState}
 		{
@@ -83,9 +86,10 @@ objectdef obj_Ratter
 	/* this function is called repeatedly by the main loop in EveBot.iss */
 	function ProcessState()
 	{
-	    /* don't do anything if we aren't in Ratter bot mode! */
-		if !${Config.Common.CurrentBehavior.Equal[Ratter]}
+		if ${Config.Common.CurrentBehavior.NotEqual[Ratter]}
+		{
 			return
+		}
 
 		; call the combat object state processing
 		call This.Combat.ProcessState
