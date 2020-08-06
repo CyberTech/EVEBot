@@ -1,20 +1,26 @@
-objectdef obj_Belts
+objectdef obj_Belts inherits obj_BaseClass
 {
 	variable index:entity beltIndex
 	variable iterator beltIterator
 
 	method Initialize()
-	{		
-		Logger:Log["obj_Belts: Initialized", LOG_MINOR]
+	{
+		LogPrefix:Set["${This.ObjectName}"]
+
+		This[parent]:Initialize
+		;PulseTimer:SetIntervals[0.5,1.0]
+		;Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+
+		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
-	
+
 	method ResetBeltList()
 	{
 		EVE:QueryEntities[beltIndex, "GroupID = GROUP_ASTEROIDBELT"]
-		beltIndex:GetIterator[beltIterator]	
+		beltIndex:GetIterator[beltIterator]
 		Logger:Log["obj_Belts: ResetBeltList found ${beltIndex.Used} belts in this system.", LOG_DEBUG]
 	}
-	
+
 	member:bool IsAtBelt()
 	{
 		if !${Me.InSpace}
@@ -33,14 +39,14 @@ objectdef obj_Belts
 		{
 			return TRUE
 		}
-		
+
 		return FALSE
 	}
-	
+
 	; TODO - logic is duplicated inside WarpToNextBelt -- CyberTech
 	method NextBelt()
 	{
-		if ${beltIndex.Used} == 0 
+		if ${beltIndex.Used} == 0
 		{
 			This:ResetBeltList
 		}
@@ -50,25 +56,25 @@ objectdef obj_Belts
 
 		return
 	}
-	
+
 	function WarpTo(int WarpInDistance=0)
 	{
 		call This.WarpToNextBelt ${WarpInDistance}
 	}
-	
+
 	function WarpToNextBelt(int WarpInDistance=0, bool ReverseOrder=FALSE)
 	{
-		if ${beltIndex.Used} == 0 
+		if ${beltIndex.Used} == 0
 		{
 			This:ResetBeltList
-		}		
-		
+		}
+
 		; This is for belt bookmarks only
 		;if ${beltIndex.Get[1](exists)} && ${beltIndex.Get[1].SolarSystemID} != ${Me.SolarSystemID}
 		;{
 		;	This:ResetBeltList
 		;}
-		
+
 		if ${ReverseOrder}
 		{
 			if !${beltIterator:Previous(exists)}
@@ -83,7 +89,7 @@ objectdef obj_Belts
 				beltIterator:First
 			}
 		}
-		
+
 		if ${beltIterator.Value(exists)}
 		{
 /*
@@ -106,8 +112,11 @@ objectdef obj_Belts
 			}
 */
 			;call Ship.WarpToBookMark ${SafeSpotIterator.Value.ID}
-			;;Logger:Log["obj_Belts: DEBUG: Warping to ${beltIterator.Value.Name}"]
-			call Ship.WarpToID ${beltIterator.Value.ID} ${WarpInDistance}
+			Navigator:FlyToEntityID["${Belt_CacheIterator.Value.ID}", ${WarpInDistance}]
+			while ${Navigator.Busy}
+			{
+				wait 10
+			}
 		}
 		else
 		{
