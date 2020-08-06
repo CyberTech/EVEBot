@@ -101,14 +101,13 @@ objectdef obj_Station
 			if ${Entity[${StationID}].Distance} > WARP_RANGE
 			{
 				Logger:Log["Warping to Station"]
-				call Ship.WarpToID ${StationID}
-				do
+				Navigator:FlyToEntityID["${StationID}", DOCKING_RANGE]
+				while ${Navigator.Busy}
 				{
-				   wait 30
+					wait 10
 				}
-				while ${Entity[${StationID}].Distance} > WARP_RANGE
 			}
-
+		; TODO - CyberTech - do I want to move docking responsibilities into navigator?
 			do
 			{
 				Entity[${StationID}]:Dock
