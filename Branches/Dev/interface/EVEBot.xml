@@ -18,15 +18,11 @@
 					<OnLeftClick>
 						Script[EVEBot]:Resume
 						EVEBot:Resume
-						Echo EVEBot: Resumed
 					</OnLeftClick>
 				</commandbutton>
 				<commandbutton name='Pause EVEBot' template='EVESkin.Window.TitleBar.PauseButton'>
 					<OnLeftClick>
-						EVE:Execute[CmdStopShip]
 						Script[EVEBot]:Pause
-						EVEBot:Pause
-						Echo EVEBot: Paused
 					</OnLeftClick>
 				</commandbutton>
 				<text name='EVEBot_TitleBar_Title' template='EVESkin.Font.TitleBar'>
