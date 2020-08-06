@@ -7,10 +7,8 @@
 
 */
 
-objectdef obj_Drones
+objectdef obj_Drones inherits obj_BaseClass
 {
-	variable time NextPulse
-	variable int PulseIntervalInSeconds = 2
 
 	variable index:int64 ActiveDroneIDList
 	variable int CategoryID_Drones = 18
@@ -23,12 +21,17 @@ objectdef obj_Drones
 
 	method Initialize()
 	{
-		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-		Logger:Log["obj_Drones: Initialized", LOG_MINOR]
+		LogPrefix:Set["${This.ObjectName}"]
+
+		PulseTimer:SetIntervals[2.0,4.0]
+		Event[EVENT_EVEBOT_ONFRAME]:AttachAtom[This:Pulse]
+		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
+
 	method Shutdown()
 	{
-		if !${Me.InStation}
+		Event[EVENT_EVEBOT_ONFRAME]:DetachAtom[This:Pulse]
+		if ${Me.InSpace}
 		{
 			if (${Me.ToEntity.Mode} != 3)
 			{
@@ -37,36 +40,36 @@ objectdef obj_Drones
 				EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
 			}
 		}
-		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 	}
 
 	method Pulse()
 	{
-		if ${EVEBot.Paused}
+		if !${EVEBot.Loaded} || ${EVEBot.Disabled}
 		{
 			return
 		}
 
 		if ${This.WaitingForDrones}
 		{
-		    if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+			if ${This.PulseTimer.Ready}
 			{
-				This.WaitingForDrones:Dec
-    			if !${Me.InStation}
-    			{
-    				This.LaunchedDrones:Set[${This.DronesInSpace}]
-    				if  ${This.LaunchedDrones} > 0
-    				{
-    					This.WaitingForDrones:Set[0]
-    					This.DronesReady:Set[TRUE]
+				if !${EVEBot.Paused}
+				{
+					if ${Me.InSpace}
+					{
+						This.WaitingForDrones:Dec
+						This.LaunchedDrones:Set[${This.DronesInSpace}]
+						if  ${This.LaunchedDrones} > 0
+						{
+							This.WaitingForDrones:Set[0]
+							This.DronesReady:Set[TRUE]
+							Logger:Log["${This.LaunchedDrones} drones deployed"]
+						}
 
-    					Logger:Log["${This.LaunchedDrones} drones deployed"]
-    				}
-                }
+					}
+				}
 
-	    		This.NextPulse:Set[${Time.Timestamp}]
-	    		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-	    		This.NextPulse:Update
+				This.PulseTimer:Update
 			}
 		}
 	}
