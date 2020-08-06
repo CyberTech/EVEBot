@@ -120,8 +120,13 @@ function CreateVariable(string VarName, string VarType, string Scope, string Def
 #endif
 }
 
+#ifdef EVEBOT_TESTCASE
+function evebot_main()
+{
+#else
 function main()
 {
+#endif
 	; Set turbo to 4000 per frame for startup.
 	Turbo 4000
 	echo "${Time}: ${APP_NAME} \atstarting\ax"
@@ -183,8 +188,8 @@ function main()
 
 	wait 0.5
 	; Threads need to load after globals but before behaviors.
-	;Logger:Log[" Starting threads...", LOG_ECHOTOO]
-	;call LoadThreads "Thread" "${Script.CurrentDirectory}/\Threads/\*.iss"
+	Logger:Log[" Starting threads...", LOG_ECHOTOO]
+	call LoadThreads "Thread" "${Script.CurrentDirectory}/\Threads/\*.iss"
 
 	Logger:Log[" Loading behaviors...", LOG_ECHOTOO]
 	#includeoptional Behaviors/_variables.iss
@@ -227,6 +232,7 @@ function main()
 
 	EVEBot.Loaded:Set[TRUE]
 	Logger:Log["${APP_NAME} loaded", LOG_ECHOTOO]
+#ifndef EVEBOT_TESTCASE
 	EVEBot:Pause["Press Run to start"]
 
 	while TRUE
@@ -239,15 +245,8 @@ function main()
 		}
 
 		call RandomDelay 100
-
-		#if USE_ISXIM
-			;	Join IRC
-			if !${ChatIRC.IsConnected}
-			{
-				call ChatIRC.Connect
-			}
-		#endif
 	}
+#endif
 }
 
 ;	This function introduces a random delay to make evebot look more organic to data tracking.
