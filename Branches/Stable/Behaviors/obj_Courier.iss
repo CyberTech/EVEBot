@@ -45,6 +45,10 @@ objectdef obj_Courier inherits obj_BaseClass
 		;	Agents:SetActiveAgent[${Config.Freighter.AgentName}]
 		;}
 
+;		if ${Defense.Hiding} && ${Me.InSpace}
+;		{
+;			This.CurrentState:Set["ABORT"]
+;		}
 		if ${EVEBot.ReturnToStation} && !${Me.InStation}
 		{
 			This.CurrentState:Set["ABORT"]
