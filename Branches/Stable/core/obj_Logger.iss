@@ -90,8 +90,8 @@ objectdef obj_Logger
 
 			for (Count:Set[1]; ${Count}<=${Indent}; Count:Inc)
 			{
-  				msg:Concat[" "]
-  		}
+				msg:Concat[" "]
+			}
  			msg:Concat["${StatusMessage.Escape}"]
 
 			if ${This.Reloaded}
