@@ -1,56 +1,50 @@
 /*
 
 	Fleet Class
-	
+
 	Primary Fleet behavior module for EVEBot
-	
+
 	-- Tehtsuo
-	
+
 */
 
-objectdef obj_Fleet
+objectdef obj_Fleet inherits obj_BaseClass
 {
-	;	Pulse tracking information
-	variable time NextPulse
-	variable int PulseIntervalInSeconds = 10
-	
+
 	method Initialize()
 	{
+		LogPrefix:Set["${This.ObjectName}"]
 
-		This.TripStartTime:Set[${Time.Timestamp}]
-		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-		This.NextPulse:Set[${Time.Timestamp}]
-		This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-		This.NextPulse:Update
-		
 		Logger:Log["obj_Fleet: Initialized", LOG_MINOR]
+		PulseTimer:SetIntervals[0.5,1.0]
+		Event[EVENT_EVEBOT_ONFRAME]:AttachAtom[This:Pulse]
+
+		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
 	{
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
-	}	
-	
+	}
+
 	method Pulse()
 	{
 		if ${EVEBot.Paused}
 		{
 			return
 		}
-		
-		if ${Time.Timestamp} >= ${This.NextPulse.Timestamp}
+
+		if ${This.PulseTimer.Ready}
 		{
 			if ${Config.Fleet.ManageFleet}
 			{
 				This:Process
 			}
-			
-			This.NextPulse:Set[${Time.Timestamp}]
-			This.NextPulse.Second:Inc[${This.PulseIntervalInSeconds}]
-			This.NextPulse:Update
+
+			This.PulseTimer:Update
 		}
-	}	
-	
+	}
+
 	method Process()
 	{
 		;	Step 1 - Accept fleet invites from my leader
@@ -68,7 +62,7 @@ objectdef obj_Fleet
 			Config.Fleet:RefreshFleetMembers
 			variable iterator InfoFromSettings
 			Config.Fleet.FleetMembers:GetIterator[InfoFromSettings]
-			
+
 			if ${InfoFromSettings:First(exists)}
 				do
 				{
@@ -104,7 +98,7 @@ objectdef obj_Fleet
 									}
 								}
 								while ${Wing:Next(exists)}
-							
+
 							if ${Me.Fleet.Member[${Me.CharID}].WingID} == ${Me.Fleet.Member[${This.ResolveCharID[${InfoFromSettings.Value.FleetMemberName}]}].WingID}
 							{
 								Me.Fleet.Member[${This.ResolveCharID[${InfoFromSettings.Value.FleetMemberName}]}]:Move[${OtherWing}, ${OtherSquad}]
@@ -126,7 +120,7 @@ objectdef obj_Fleet
 			}
 		}
 	}
-	
+
 	member:bool CanWarpFleet()
 	{
 		if ${Me.Fleet.IsMember[${Me.CharID}]}
@@ -179,11 +173,11 @@ objectdef obj_Fleet
 					return ${LocalPilot.Value.CharID}
 			}
 			while ${LocalPilot:Next(exists)}
-			
+
 
 		return 0
 	}
-	
+
 	method InviteToFleet(int64 value)
 	{
 		variable index:pilot CorpMembers
@@ -233,9 +227,9 @@ objectdef obj_Fleet
 				}
 			}
 			while ${LocalPilot:Next(exists)}
-		
+
 	}
-	
+
 	method WarpTo(string value, int distance=0)
 	{
 		if ${Local[${value}](exists)}
