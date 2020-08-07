@@ -71,9 +71,70 @@ Time to warp (including align time):
 Orbital Speed/Radius:
 	http://www.eveonline.com/ingameboard.asp?a=topic&threadID=498317&page=1#27
 	post 27 describes the max orbital speed at radius, or the min radius at orbital speed
+
+	Another parameter can "cap" the acceleration, and make it less than it should be. It's the (current orbit speed) / (max ship speed) ratio.
+
+	---
+		I made some tests orbiting things and calculated the effective acceleration.
+
+		Effective acceleration : Aeff = 2 Veff sin(Vrot/2)
+
+		With Vrot = angular rotation speed in rad/s while orbiting, and Veff = current ship orbiting speed.
+
+		Vrot = 2Pi/T with T = period.
+		T = 2 Pi R/Veff with R = radius = orbiting distance.
+
+		So Aeff = 2 Veff sin(Veff/(2R))
+
+		Now put on a graph X = Veff/Vmax = speed ratio, and Y = Aeff/Amax = accel ratio.
+
+		With Amax = Vmax / I and I = inertia = A M / 10^6
+		and Vmax = max straight line ship speed
+
+		Graph obtained from some Crow tests
+
+		Looks like a circle, eh ? Laughing
+
+		And indeed it is. When orbiting, Aeff is limited by the following relationship :
+		(Aeff/Amax)² + (Veff/Vmax)² = 1.
+
+		So, for a given orbiting speed Veff, corresponding orbit distance R can be calculated with this formula :
+
+		R = V / (2 Arcsin(Aeff / (2Veff)))
+
+		With Aeff = SQRT((Vmax²-Veff²)/I²)
+		and I = inertia = A M / 10^6
+
+		It actually works.
+
+		If you're interested, all of this is applied in a small spreadsheet I made. Enter your ship & skills characteristics, your (real) orbit distance and it'll tell you your orbit speed. Et vice-versa. Quite handy. :)
+
+		Maybe not really user-friendly, it was originally made only for a few friends, and is not even finished. But oh well...
+	---
+
+Hit chance:
+
+	hit chance = (1/2 ^ (tracking factor + range factor))
+
+	tracking factor = ((transversal / (range * turret tracking)) * (turret sig res / sig rad)) ^ 2
+
+	range factor = ( max(range - optimal range, 0) / falloff) ^ 2
+
+	 C = 0.5^((R-O)/F)^2). from http://eve.grismar.net/wikka.php?wakka=Falloff
+
+or
+
+	Chance to Hit = 0.5^((((Vt/(Td*Wt))*(Wsr/Tsr))^2)+((MAX(0,Td-Wor))/Wfr)^2)
+		* Vt: Traversal velocity (in m/s)
+		* Td: Target distance (in meters)
+		* Tsr: Target signature radius (in meters)
+		* Wt: Weapon tracking (in rads/s)
+		* Wsr: Weapon signature resolution (in meters)
+		* Wor: Weapon optimal range (in meters)
+		* Wfr: Weapon falloff range (in meters)
 */
 
-objectdef obj_Vector
+objectdef obj_Vector2D
 {
  	method CalcHeadingToPoint()
  	{
@@ -124,4 +185,57 @@ objectdef obj_Vector
  	{
      	return ${Math.Abs[${This.Signed_Angle_2D}]}
   }
+}
+
+
+objectdef obj_Vector
+{
+ 	member:float DotProduct(int64 X1, int64 Y1, int64 Z1, int64 X2, int64 Y2, int64 Z2)
+ 	{
+ 		return ${Math.Calc[int64 X1, int64 Y1, int64 Z1, int64 X2, int64 Y2, int64 Z2}
+ 	}
+
+	member:float Length(int64 X1, int64 Y1, int64 Z1, int64 X2, int64 Y2, int64 Z2)
+	{
+		variable int X
+		variable int Y
+		variable int Z
+		variable float Result
+
+		X:Set[${Math.Calc[${X2} - ${X1}]}]
+		Y:Set[${Math.Calc[${Y2} - ${Y1}]}]
+		Z:Set[${Math.Calc[${Z2} - ${Z1}]}]
+
+		Result:Set[${Math.Sqrt[${X} * ${X} + ${Y} * ${Y} + ${Z} * ${Z}]}]
+
+		return ${Result}
+	}
+
+	;Minimum Distance from Point [PointX,PointY,PointZ] to a point on the Line from [X1,Y1,Z1] to [X2,Y2,Z2]
+	member:int DistancePointLine(int64 X1, int64 Y1, int64 Z1, int64 X2, int64 Y2, int64 Z2, int64 PointX, int64 PointY, int64 PointZ)
+	{
+		variable float Length
+		Length:Set[${This.Length[${X2}, ${Y2}, ${Z2}, ${X1}, ${Y1}, ${Z1}]
+
+		variable float tmp
+
+		tmp:Set[${Math.Calc[((( ${PointX} - ${X1} ) * ( ${X2} - ${X1} )) + (( ${PointY} - ${Y1} ) * ( ${Y2} - ${Y1} )) + (( ${PointZ} - ${Z1} ) * ( ${Z2} - ${Z1} ))) / ( ${Length} * ${Length} )]}]
+
+		variable point3f Intersection
+
+		Intersection.X:Set[${Math.Calc[${X1} + ${tmp} * (${X2} - ${X1})]}]
+		Intersection.Y:Set[${Math.Calc[${Y1} + ${tmp} * (${Y2} - ${Y1})]}]
+		Intersection.Z:Set[${Math.Calc[${Z1} + ${tmp} * (${Z2} - ${Z1})]}]
+
+		if ${tmp} < 0.0 || ${tmp} > 1.0
+		{
+			; No intersection possible, the closest point does not fall within the line segment.
+			return 0
+		}
+		variable float Distance
+
+		Distance:Set[${This.Length[${PointX}, ${PointY}, ${PointZ}, ${Intersection.XYZ}]}]
+
+		return ${Distance}
+	}
 }
