@@ -11,7 +11,7 @@
 	</template>
 	<template name='EVEskin.Remove.Texture'>
 		<Texture Filename='eveskin/MainGUI/button_minimize.png' />
-	</template
+	</template>
 
 	
 	<template name='EVESkin.Window.Texture' Filename='eveskin/MainGUI/tab_frametexture.png' />
