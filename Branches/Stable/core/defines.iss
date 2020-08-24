@@ -49,10 +49,11 @@ variable int VersionNum = 0
 
 #define LOG_MINOR 1
 #define LOG_STANDARD 2
-#define LOG_ECHOTOO 3
-#define LOG_CRITICAL 4
-#define LOG_ERROR 5
-#define LOG_DEBUG 6
+#define LOG_WARNING 3
+#define LOG_ECHOTOO 4
+#define LOG_CRITICAL 5
+#define LOG_ERROR 6
+#define LOG_DEBUG 7
 
 #define WAIT_CARGO_WINDOW 15
 #define WAIT_UNDOCK 130
