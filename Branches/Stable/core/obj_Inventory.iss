@@ -1,4 +1,4 @@
-/* 
+/*
   Provides proxy representation of EVEWindow[Inventory]... child windows via fallthru to the ISXEVE object
   -- CyberTech
 
@@ -67,7 +67,7 @@ objectdef obj_EVEWindow_Proxy
 	member:string GetFallthroughObject()
 	{
 		return "EVEWindow[Inventory].ChildWindow[${EVEWindowParams}]"
-	}	
+	}
 
 /*
   ~ ChildWindow[ID#]                     :: the first child with the given ID#
@@ -94,9 +94,9 @@ objectdef obj_EVEWindow_Proxy
 			This.InvLocation:Set[${_Location}]
 		}
 
-		if ${_ID} == -1 && ${This.InvID} == -1
+		if ${_ID} <= 0 && ${This.InvID} <= 0
 		{
-			if ${Inventory.IDRequired.Contains[${This.InvName}]} 
+			if ${Inventory.IDRequired.Contains[${This.InvName}]}
 			{
 				Logger:Log["Inventory.${This.ObjectName}: Station or Entity ID Required for this container type", LOG_CRITICAL]
 				return FALSE
@@ -109,7 +109,7 @@ objectdef obj_EVEWindow_Proxy
 
 			This.InvID:Set[${MyShip.ID}]
 		}
-		elseif ${_ID} != -1 
+		elseif ${_ID} != -1
 		{
 			This.InvID:Set[${_ID}]
 		}
@@ -249,7 +249,7 @@ objectdef obj_EVEWindow_Proxy
 		Inventory.Current.Capacity
 	}
 */
-objectdef obj_Inventory
+objectdef obj_Inventory inherits obj_BaseClass
 {
 	variable weakref Current
 	variable obj_EVEWindow_Proxy ShipCargo
@@ -260,13 +260,17 @@ objectdef obj_Inventory
 	variable obj_EVEWindow_Proxy StationHangar
 	variable obj_EVEWindow_Proxy StationCorpHangars
 	variable obj_EVEWindow_Proxy CorporationDeliveries
-	
-	variable obj_EVEWindow_Proxy EntityContainer
+
+	variable obj_EVEWindow_Proxy EntityFleetHangar
+
+	;variable obj_EVEWindow_Proxy EntityContainer
 
 	variable set IDRequired
 
 	method Initialize()
 	{
+		LogPrefix:Set["${This.ObjectName}"]
+
 		ShipCargo:SetLocation[ShipCargo]
 		ShipFleetHangar:SetLocation[ShipFleetHangar]
 		ShipOreHold:SetLocation[ShipOreHold]
@@ -274,11 +278,15 @@ objectdef obj_Inventory
 		StationHangar:SetLocation[StationItems]
 		StationCorpHangars:SetLocation[StationCorpHangars]
 		CorporationDeliveries:SetLocation[StationCorpDeliveries]
+		EntityFleetHangar:SetLocation[ShipFleetHangar]
 		;EntityContainer - Only uses ID
 
 		IDRequired:Add["StationItems"]
 		IDRequired:Add["StationCorpHangars"]
 		IDRequired:Add["StationCorpDeliveries"]
+		IDRequired:Add["EntityFleetHangar"]
+
+		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
@@ -292,21 +300,47 @@ objectdef obj_Inventory
 			Logger:Log["Opening Inventory..."]
 			EVE:Execute[OpenInventory]
 			wait 2
-		}		
+		}
 	}
 
 	method Close()
 	{
 		if ${EVEWindow[Inventory](exists)}
-		{	
+		{
 			EVEWindow[Inventory]:Close
 		}
+	}
+
+	; Returns FALSE/0, or the ID of the opened entity
+	function OpenEntityFleetHangar(int64 ID)
+	{
+		call This.Open
+
+		variable entity EntityToOpen
+		EntityToOpen:Set[${ID}]
+		if !${EntityToOpen(exists)} || ${EntityToOpen.ID} <= 0
+		{
+			Logger:Log["${LogPrefix}.OpenEntityIDFleetHangar: ${ID} doesn't exist", LOG_WARNING]
+			return FALSE
+		}
+
+		if ${EntityToOpen.Distance} > 2500
+		{
+			Logger:Log["${LogPrefix}.OpenEntityIDFleetHangar: ${EntityToOpen.ID} (${EntityToOpen.Name}) is too far away (${EntityToOpen.Distance})", LOG_WARNING]
+			return FALSE
+		}
+		; TODO - Add Entity.HasFleetHangar?
+
+		Logger:Log["${LogPrefix}.OpenEntityIDFleetHangar: Opening fleet hangar of ${EntityToOpen.ID} (${EntityToOpen.Name})", LOG_MINOR]
+		EntityToOpen:Open
+		wait 10
+		return ${EntityToOpen.ID}
 	}
 }
 
 /*
 
-Notes: 
+Notes:
 Corporation Hangars and Member Hangars are twisties only, not containers
 
 Under Corp Member Hangar, each member

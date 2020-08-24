@@ -180,12 +180,10 @@ objectdef obj_Cargo
 		}
 		else
 		{
-			; TODO - Convert to Inventory object after Entity testing is done
-			variable index:item HangarCargo
-			Entity[${from}]:Open
-			wait 30
-			Entity[${from}]:GetCorpHangarsCargo[HangarCargo]
-			HangarCargo:GetIterator[CargoIterator]
+			call Inventory.OpenEntityFleetHangar ${from}
+			call Inventory.EntityFleetHangar.Activate ${Return}
+			Inventory.Current:GetItems[]
+			Inventory.Current.Items:GetIterator[CargoIterator]
 
 			; Cycle thru the Hangar looking for the needed Crystals and move them to the ship
 			if ${CargoIterator:First(exists)}
@@ -326,18 +324,17 @@ objectdef obj_Cargo
 
 	function TransferListFromShipCorporateHangar(int64 dest)
 	{
-		variable index:item HangarCargo
 		variable iterator CargoIterator
 		variable float VolumeToMove=0
 		variable index:int64 ListToMove
 
-; TODO - Convert to Inventory object once entity access tested
-		Entity[${dest}]:GetFleetHangarCargo[HangarCargo]
-		HangarCargo:RemoveByQuery[${LavishScript.CreateQuery[Name =- "Mining Crystal"]}]
-
-		HangarCargo:GetIterator[CargoIterator]
-
 		Logger:Log["DEBUG: TransferListFromShipCorporateHangar", LOG_DEBUG]
+
+		call Inventory.OpenEntityFleetHangar ${dest}
+		call Inventory.EntityFleetHangar.Activate ${Return}
+		Inventory.Current:GetItems[]
+		Inventory.Current.Items:RemoveByQuery[${LavishScript.CreateQuery[Name =- "Mining Crystal"]}]
+		Inventory.Current.Items:GetIterator[CargoIterator]
 
 		if ${CargoIterator:First(exists)}
 		{
