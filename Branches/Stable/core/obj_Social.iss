@@ -787,6 +787,7 @@ objectdef obj_Social inherits obj_BaseClass
 				}
 				else
 				{
+					Logger:Log["ProcessBreak - ReturnToStation", LOG_CRITICAL]
 					EVEBot.ReturnToStation:Set[TRUE]
 				}
 				OnBreak:Set[TRUE]
