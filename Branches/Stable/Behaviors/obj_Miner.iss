@@ -1459,15 +1459,16 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 			}
 			else
 			{
+				; Orca Base cargo space: Cargo: 30k, Ore: 150k, Fleet: 40k
 				if !${Ship.OreHoldFull} && !${Config.Miner.DeliveryLocationTypeName.Equal["Jetcan"]}
 				{
-					call Cargo.TransferCargoFromShipCorporateHangarToOreHold
+					call Cargo.TransferOreFromShipFleetHangarToOreHold
 					Ship:StackOreHold
 					return
 				}
 				if !${Ship.CargoFull}
 				{
-					call Cargo.TransferCargoFromShipCorporateHangarToCargoHold
+					call Cargo.TransferOreFromShipFleetHangarToCargoHold
 					Ship:StackCargoHold
 					return
 				}

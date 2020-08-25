@@ -711,7 +711,11 @@ objectdef obj_Hauler
 		;	Open the Orca if it's not open yet
 		if ${OrcaID} && ${Entity[${OrcaID}].Distance} <= LOOT_RANGE
 		{
-			call Cargo.TransferListFromShipCorporateHangar ${OrcaID}
+			if ${MyShip.HasOreHold}
+			{
+				call Cargo.TransferOreFromEntityFleetHangarToOreHold ${OrcaID}
+			}
+			call Cargo.TransferOreFromEntityFleetHangarToCargoHold ${OrcaID}
 		}
 
 		return
