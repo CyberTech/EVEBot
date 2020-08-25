@@ -325,6 +325,13 @@ objectdef obj_Cargo
 	function TransferListToCargoHold(weakref ListToMove)
 	{
 		variable iterator ListIterator
+		variable int QuantityToMove
+
+		if ${ListToMove.Used} == 0
+		{
+			Logger:Log["TransferListToCargoHold: Nothing found to move", LOG_WARNING]
+			return FALSE
+		}
 
 		ListToMove:GetIterator[ListIterator]
 		if ${ListIterator:First(exists)}
@@ -347,16 +354,19 @@ objectdef obj_Cargo
 				while ${ListIterator:Next(exists)}
 				return TRUE
 		}
-		else
-		{
-			Logger:Log["TransferListToCargoHold: Nothing found to move", LOG_WARNING]
-		}
 		return FALSE
 	}
 
 	function TransferListToOreHold(weakref ListToMove)
 	{
 		variable iterator ListIterator
+		variable int QuantityToMove
+
+		if ${ListToMove.Used} == 0
+		{
+			Logger:Log["TransferListToOreHold: Nothing found to move", LOG_WARNING]
+			return FALSE
+		}
 
 		ListToMove:GetIterator[ListIterator]
 		if ${ListIterator:First(exists)}
@@ -379,23 +389,18 @@ objectdef obj_Cargo
 				while ${ListIterator:Next(exists)}
 				return TRUE
 		}
-		else
-		{
-			Logger:Log["TransferListToOreHold: Nothing found to move", LOG_WARNING]
-		}
 		return FALSE
 	}
 
 	function TransferOreFromEntityFleetHangarToCargoHold(int64 SourceID)
 	{
-		Logger:Log["Moving ore from Entity ${SourceID} to Ship Cargo Hold", LOG_DEBUG]
+		Logger:Log["Moving ore from Entity ${SourceID} to Ship Cargo Hold"]
 
 		call Inventory.OpenEntityFleetHangar ${SourceID}
 		call Inventory.EntityFleetHangar.Activate ${SourceID}
 		if ${Inventory.EntityFleetHangar.IsCurrent}
 		{
-			Inventory.Current:GetItems[]
-			Inventory.Current.Items:RemoveByQuery[${LavishScript.CreateQuery[CategorityID != ${CategorityID}]}]
+			Inventory.Current:GetItems[NULL, "CategoryID == CATEGORYID_ORE"]
 			call TransferListToCargoHold Inventory.Current.Items
 		}
 	}
@@ -408,14 +413,13 @@ objectdef obj_Cargo
 			return
 		}
 
-		Logger:Log["Moving ore from Entity ${SourceID} to Ship Ore Hold", LOG_DEBUG]
+		Logger:Log["Moving ore from Entity ${SourceID} to Ship Ore Hold"]
 
 		call Inventory.OpenEntityFleetHangar ${SourceID}
 		call Inventory.EntityFleetHangar.Activate ${SourceID}
 		if ${Inventory.EntityFleetHangar.IsCurrent}
 		{
-			Inventory.Current:GetItems[]
-			Inventory.Current.Items:RemoveByQuery[${LavishScript.CreateQuery[CategorityID != ${CategorityID}]}]
+			Inventory.Current:GetItems[NULL, "CategoryID == CATEGORYID_ORE"]
 			call TransferListToOreHold Inventory.Current.Items
 		}
 	}
@@ -429,13 +433,12 @@ objectdef obj_Cargo
 			return
 		}
 
-		Logger:Log["Moving ore from Ship Fleet Hangar to Ship Ore Hold", LOG_DEBUG]
+		Logger:Log["Moving ore from Ship Fleet Hangar to Ship Ore Hold"]
 
 		call Inventory.ShipFleetHangar.Activate
 		if ${Inventory.ShipFleetHangar.IsCurrent}
 		{
-			Inventory.Current:GetItems[]
-			Inventory.Current.Items:RemoveByQuery[${LavishScript.CreateQuery[CategorityID != CATEGORYID_ORE]}]
+			Inventory.Current:GetItems[NULL, "CategoryID == CATEGORYID_ORE"]
 			call TransferListToOreHold Inventory.Current.Items
 		}
 	}
@@ -448,6 +451,8 @@ objectdef obj_Cargo
 		{
 			return
 		}
+
+		Logger:Log["Moving ore from Ship Ore Hold to Station Hangar"]
 
 		call Inventory.ShipOreHold.Activate
 		if !${Inventory.ShipOreHold.IsCurrent}
@@ -522,9 +527,8 @@ objectdef obj_Cargo
 		{
 			return
 		}
-		Inventory.Current:GetItems[]
+		Inventory.Current:GetItems[NULL, "CategoryID == CATEGORYID_ORE"]
 		Inventory.Current.Items:GetIterator[CargoIterator]
-		Inventory.Current.Items:RemoveByQuery[${LavishScript.CreateQuery[CategorityID != CATEGORYID_ORE]}]
 
 		if ${CargoIterator:First(exists)}
 		{
