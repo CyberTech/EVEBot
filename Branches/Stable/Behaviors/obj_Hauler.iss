@@ -1232,7 +1232,7 @@ objectdef obj_Hauler
 	{
 		if ${MyShip.HasOreHold} && ${Ship.OreHoldFull}
 		{
-			Logger:Log["Ore Hold Full. Dropping off cargo."]
+			Logger:Log["Ore Hold Full (${Ship.OreHoldUsedCapacity}/${Ship.OreHoldCapacity}) - Dropping off cargo."]
 			return TRUE
 		}
 		
