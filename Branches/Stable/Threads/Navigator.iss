@@ -1152,8 +1152,9 @@ TODO - integrate in most of the flyto*
 			return FALSE
 		}
 
-		Ship:Deactivate_SensorBoost
-		This:DeactivateAllMiningLasers[]
+		Ship:Deactivate_SensorBoost[]
+		Ship:Deactivate_Gang_Links[]
+		Ship:DeactivateAllMiningLasers[]
 		Ship:UnlockAllTargets[]
 		return TRUE
 	}
