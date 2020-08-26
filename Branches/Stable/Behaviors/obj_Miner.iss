@@ -1811,16 +1811,13 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 				while ${GetData:Next(exists)}
 		}
 
-		if ${Ship.Drones.DronesInSpace[FALSE]} > 0 && ${AttackingTeam.Used} == 0
+		if ${AttackingTeam.Used} == 0
 		{
-			Logger:Log["Miner.Defend: Recalling Drones"]
-			Ship.Drones:ReturnAllToDroneBay
+			Ship.Drones:ReturnAllToDroneBay["Miner.Defend"]
 		}
-
-		if ${Ship.Drones.DronesInSpace[FALSE]} == 0  && ${AttackingTeam.Used} > 0
+		elseif ${Ship.Drones.DronesInSpace[FALSE]} == 0
 		{
-			Logger:Log["Miner.Defend: Deploying drones"]
-			Ship.Drones:LaunchAll
+			Ship.Drones:LaunchAll["Miner.Defend"]
 		}
 
 		Attacking:Set[-1]

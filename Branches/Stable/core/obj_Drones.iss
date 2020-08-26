@@ -38,6 +38,7 @@ objectdef obj_Drones inherits obj_BaseClass
 				Logger:Log["Recalling Drones prior to shutdown..."]
 				This.ActiveDroneIDList:RemoveByQuery[${LavishScript.CreateQuery[GroupID = GROUP_FIGHTERDRONE]}]
 				EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
+				EVE:Execute[CmdDronesReturnToBay]
 			}
 		}
 	}
@@ -74,11 +75,16 @@ objectdef obj_Drones inherits obj_BaseClass
 		}
 	}
 
-	method LaunchAll()
+	method LaunchAll(string Caller)
 	{
+		if ${This.WaitingForDrones}
+		{
+			return
+		}
+
 		if ${This.DronesInBay} > 0
 		{
-			Logger:Log["Launching drones..."]
+			Logger:Log["${Caller}: Launching drones..."]
 			MyShip:LaunchAllDrones
 			This.WaitingForDrones:Set[5]
 		}
@@ -159,15 +165,14 @@ objectdef obj_Drones inherits obj_BaseClass
 	}
 
 
-	method ReturnAllToDroneBay()
+	method ReturnAllToDroneBay(string Caller)
 	{
 		if ${This.DronesInSpace[FALSE]} > 0
 		{
-			Logger:Log["Recalling ${This.ActiveDroneIDList.Used} Drones"]
+			Logger:Log["${Caller}: Recalling ${This.ActiveDroneIDList.Used} Drones"]
 			This.ActiveDroneIDList:RemoveByQuery[${LavishScript.CreateQuery[GroupID = GROUP_FIGHTERDRONE]}]
 			EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
 			EVE:Execute[CmdDronesReturnToBay]
-
 		}
 	}
 
