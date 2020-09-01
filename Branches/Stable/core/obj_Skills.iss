@@ -51,7 +51,7 @@ objectdef obj_Skills inherits obj_BaseClass
 		; Run even when paused
 		if ${This.PulseTimer.Ready}
 		{
-			if ${EVEBot.SessionValid}
+			if ${ISXEVE.IsSafe}
 			{
 				if ${Config.Common.TrainSkills} && ${Me(exists)}
 				{

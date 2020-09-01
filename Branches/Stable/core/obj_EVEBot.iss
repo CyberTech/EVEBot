@@ -63,7 +63,7 @@ objectdef obj_EVEBot inherits obj_BaseClass
 		if ${This.PulseTimer.Ready}
 		{
 			ISXEVE:Debug_LogMsg["${This.LogPrefix}", "============================================= Pulse Start"]
-			if !${This.SessionValid}
+			if !${ISXEVE.IsSafe}
 			{
 				This.PulseTimer:Update
 				ISXEVE:Debug_LogMsg["${This.LogPrefix}", "============================================= Pulse End"]
@@ -150,25 +150,6 @@ objectdef obj_EVEBot inherits obj_BaseClass
 		}
 	}
 
-	member:bool SessionValid()
-	{
-		if ${This.LastSessionFrame} == ${Script.RunningTime}
-		{
-			return ${This.LastSessionResult}
-		}
-
-		if ${Me.InSpace} || ${Me.InStation}
-		{
-			This.LastSessionFrame:Set[${Script.RunningTime}]
-			This.LastSessionResult:Set[TRUE]
-			return TRUE
-		}
-
-		This.LastSessionFrame:Set[${Script.RunningTime}]
-		This.LastSessionResult:Set[FALSE]
-		return FALSE
-	}
-
 	member:bool Paused()
 	{
 		if ${This._Paused} || \
@@ -177,7 +158,7 @@ objectdef obj_EVEBot inherits obj_BaseClass
 			return TRUE
 		}
 
-		if !${This.SessionValid}
+		if !${ISXEVE.IsSafe}
 		{
 			return TRUE
 		}

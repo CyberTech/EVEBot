@@ -48,10 +48,10 @@ objectdef obj_Station
 
 	member:bool Docked()
 	{
-		if ${EVEBot.SessionValid} && \
-			!${Me.InSpace} && \
-			${Me.InStation} && \
-			${Me.StationID} > 0
+		if ${ISXEVE.IsSafe} && \
+				!${Me.InSpace} && \
+				${Me.InStation} && \
+				${Me.StationID} > 0
 		{
 			return TRUE
 		}
@@ -60,11 +60,7 @@ objectdef obj_Station
 
 	member:bool DockedAtStation(int64 StationID)
 	{
-		if ${EVEBot.SessionValid} && \
-			!${Me.InSpace} && \
-			${Me.InStation} && \
-			${Me.StationID} == ${StationID}
-
+		if ${This.Docked} && ${Me.StationID} == ${StationID}
 		{
 			return TRUE
 		}
