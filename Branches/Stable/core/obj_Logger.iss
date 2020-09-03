@@ -101,12 +101,14 @@ objectdef obj_Logger
 					UIElement[StatusConsole@Status@EVEBotOptionsTab@EVEBot]:Echo["${msg}"]
 				}
 #ifdef EVEBOT_TESTCASE
-					echo "${msg}"
-#endif
+				; Always echo all logging to console during testcases, but don't log the ECHOTOO or we get twice.
+				echo "${msg}"
+#else
 				if ${Level} == LOG_ECHOTOO
 				{
 					echo "${msg}"
 				}
+#endif
 
 				redirect -append "${This.LogFile}" Echo "${msg}"
 
