@@ -1,4 +1,4 @@
-#include ..\core\defines.iss
+#include ../core/defines.iss
 /*
 	Movement Thread
 
@@ -20,6 +20,7 @@ objectdef obj_Destination
 	variable bookmark Bookmark
 	variable bool InProgress
 	variable bool InteractWithDest
+
 
 	method Initialize(_Type = 0, int64 _Distance = 0, int64 _EntityID = 0, int64 _SystemID = 0, int64 _FleetMemberID = 0, bookmark _Bookmark = 0, bool _InteractWithDest = FALSE)
 	{
@@ -109,12 +110,13 @@ objectdef obj_Navigator inherits obj_BaseClass
 	variable bool Enabled = TRUE
 	variable int CurrentState = 0
 
+	variable weakref Ship
 	variable queue:obj_Destination Destinations
 	variable iterator Destination
 
 	variable time StateChanged
 
-	; Any new actions need to be copied to obj_Destination:Initialize and obj_Destination:ToString
+	; Any new destination actions need to be copied to obj_Destination:Initialize and obj_Destination:ToString
 	variable int DEST_ENTITY = 1
 	variable int DEST_SYSTEM = 2
 	variable int DEST_BOOKMARK = 3
@@ -124,9 +126,8 @@ objectdef obj_Navigator inherits obj_BaseClass
 	variable int DEST_ACTION_KEEPATRANGE = 7
 	variable int DEST_ACTION_DOCK = 8
 	variable int DEST_ACTION_JUMP = 9
-	variable int DEST_ACTION_ACIVATE = 10
-	variable int DEST_ACTION_ALIGNTO = 10
-
+	variable int DEST_ACTION_ACTIVATE = 10
+	variable int DEST_ACTION_ALIGNTO = 11
 
 	variable int STATE_IDLE = 0
 	variable int STATE_WARP_INITIATED = 1
@@ -138,8 +139,9 @@ objectdef obj_Navigator inherits obj_BaseClass
 	variable int STATE_KEEPATRANGE = 7
 	variable int STATE_ORBIT = 8
 	variable int STATE_DOCKING = 9
-	variable int STATE_ALIGNING = 10
-	variable int STATE_UNDOCKING = 11
+	variable int STATE_DOCKED = 10
+	variable int STATE_ALIGNING = 11
+	variable int STATE_UNDOCKING = 12
 
 	method Initialize()
 	{
@@ -148,6 +150,7 @@ objectdef obj_Navigator inherits obj_BaseClass
 		This.PulseTimer:SetIntervals[0.1,0.5]
 		Event[ISXEVE_onFrame]:AttachAtom[This:Pulse]
 		Logger:Log["Thread: ${LogPrefix}: Initialized", LOG_MINOR]
+		Ship:SetReference["Script[EVEBot].VariableScope.Ship"]
 	}
 
 	method Shutdown()
@@ -195,14 +198,6 @@ objectdef obj_Navigator inherits obj_BaseClass
 
 		MoreDestinations:Set[${This.Destinations.Peek(exists)}]
 		return ${MoreDestinations}
-	}
-
-	function WaitWhileBusy()
-	{
-		while ${This.Busy[]}
-		{
-			wait 1
-		}
 	}
 
 	member AtCurrentDestination()
@@ -323,7 +318,7 @@ objectdef obj_Navigator inherits obj_BaseClass
 	; This can't be called until the entity is on-grid
 	method Dock(int64 EntityID)
 	{
-		if (${EntityID} <= 0)
+		if ${EntityID} <= 0
 		{
 			Logger:Log["${LogPrefix} - Dock: ERROR: ID is <= 0 (${EntityID})"]
 			return
@@ -342,7 +337,7 @@ objectdef obj_Navigator inherits obj_BaseClass
 
 	method JumpThruEntity(int64 EntityID)
 	{
-		if (${EntityID} <= 0)
+		if ${EntityID} <= 0
 		{
 			Logger:Log["${LogPrefix} - JumpThruEntity: ERROR: ID is <= 0 (${EntityID})"]
 			return
@@ -475,9 +470,9 @@ TODO - integrate in most of the flyto*
 					{
 						This:SetState[${STATE_WARPING}]
 					}
-					elseif ${LastStateChange} > 5
+					elseif ${LastStateChange} > 10
 					{
-						Logger:Log["${LogPrefix} - Navigate: Warning: thought we were warping, but we aren't", LOG_DEBUG]
+						Logger:Log["${LogPrefix} - Navigate: Warning: thought we were warping, but we aren't, after 10 seconds", LOG_DEBUG]
 						This:SetState[0]
 					}
 				}
@@ -487,22 +482,24 @@ TODO - integrate in most of the flyto*
 				{
 					This:SetState[${STATE_WARPING}]
 				}
-				elseif ${LastStateChange} > 5
+				elseif ${LastStateChange} > 30
 				{
-					Logger:Log["${LogPrefix} - Navigate: Warning: Resetting Autopilot/Warp Timer", LOG_DEBUG]
+					Logger:Log["${LogPrefix} - Navigate: Warning: Resetting Autopilot/Warp initiated Timer after 30 seconds", LOG_DEBUG]
 					This:SetState[0]
 				}
 				break
 			variablecase ${STATE_APPROACHING}
-				if ${LastStateChange} > 10
+				if ${LastStateChange} > 30
 				{
+					Logger:Log["${LogPrefix} - Navigate: Warning: Resetting Approach Timer after 30 seconds", LOG_DEBUG]
 					This:SetState[0]
 				}
 				break
 			variablecase ${STATE_JUMPGATE_ACTIVATED}
 			variablecase ${STATE_JUMPDRIVE_ACTIVATED}
-				if ${LastStateChange} > 10
+				if ${LastStateChange} > 20
 				{
+					Logger:Log["${LogPrefix} - Navigate: Warning: Resetting Jump Activation Timer after 20 seconds", LOG_DEBUG]
 					This:SetState[0]
 				}
 				break
@@ -537,7 +534,7 @@ TODO - integrate in most of the flyto*
 			variablecase ${Navigator.DEST_ACTION_JUMP}
 				This:Navigate_Jump[]
 				break
-			variablecase ${Navigator.DEST_ACTION_ACIVATE}
+			variablecase ${Navigator.DEST_ACTION_ACTIVATE}
 				This:Navigate_Activate[]
 				break
 			variablecase ${Navigator.DEST_ACTION_ALIGNTO}
@@ -878,14 +875,14 @@ TODO - integrate in most of the flyto*
 			return
 		}
 
-		if ${This.CurrentState} != ${STATE_APPROACHING}
+		if ${This.CurrentState} != ${STATE_APPROACHING} || ${MyShip.ToEntity.Approaching} != ${This.Destinations.Peek.EntityID} 
 		{
 			Logger:Log["${LogPrefix} - Navigate_Approach: Approaching ${Entity[${This.Destinations.Peek.EntityID}].Name} @${EVEBot.MetersToKM_Str[${This.Destinations.Peek.Distance}]} - ${Math.Calc[${Entity[${This.Destinations.Peek.EntityID}].Distance} / ${MyShip.MaxVelocity}].Ceil} Seconds away"]
-			This:SetState[${STATE_ALIGNING}]
+			This:SetState[${STATE_APPROACHING}]
 			Ship:Activate_AfterBurner[]
+			Entity[${This.Destinations.Peek.EntityID}]:Approach
 		}
 
-		Entity[${This.Destinations.Peek.EntityID}]:Approach
 	}
 
 	method Navigate_AlignTo()
@@ -919,9 +916,11 @@ TODO - integrate in most of the flyto*
 		{
 			Logger:Log["${LogPrefix} - Navigate_AlignTo: Aligning to ${Entity[${This.Destinations.Peek.EntityID}].Name}"]
 			This:SetState[${STATE_ALIGNING}]
+			Entity[${This.Destinations.Peek.EntityID}]:AlignTo
 		}
+		; todo - Add ALIGN_DISTANCE_ALIGNED check to isxeve then dequeue, and optionally stop ship once aligned.
+		; until then, this causes a block in the queue because it won't dequeue until it arrives.
 
-		Entity[${This.Destinations.Peek.EntityID}]:AlignTo
 	}
 
 	method Navigate_Orbit()
@@ -986,6 +985,18 @@ TODO - integrate in most of the flyto*
 
 	method Navigate_Dock()
 	{
+		if ${Me.InStation}
+		{
+			if ${This.Destinations.Peek.EntityID} != ${Me.StationID}
+			{
+				Logger:Log["${LogPrefix} - Navigate_Dock: We're in station ${Me.StationID}, but expected ${This.Destinations.Peek.EntityID}", LOG_WARNING]
+			}
+			This:SetState[${STATE_DOCKED}]
+			This.Destinations:Dequeue
+			return
+		}
+	
+		; We haven't initiated the dock yet
 		if ${This.CurrentState} != ${STATE_DOCKING}
 		{
 			if !${Entity[${This.Destinations.Peek.EntityID}](exists)}
@@ -1000,38 +1011,28 @@ TODO - integrate in most of the flyto*
 				; This is fallback code that shouldn't get called.
 				if ${This.CurrentState} != ${STATE_DOCKING}
 				{
+					Logger:Log["${LogPrefix} - Navigate_Dock: Warning: Outside docking range for Entity ${Entity[${This.Destinations.Peek.EntityID}].Name} @ ${EVEBot.MetersToKM_Str[${Entity[${This.Destinations.Peek.EntityID}].Distance}]}, approaching", LOG_WARNING]
 					Ship:Activate_AfterBurner[]
 					Entity[${This.Destinations.Peek.EntityID}]:Approach
 					Entity[${This.Destinations.Peek.EntityID}]:Dock
 					This:SetState[${STATE_DOCKING}]
 				}
-				;Logger:Log["${LogPrefix} - Navigate_Dock: Warning: Removing Entity ${Entity[${This.Destinations.Peek.EntityID}].Name} @ ${EVEBot.MetersToKM_Str[${Entity[${This.Destinations.Peek.EntityID}].Distance}]}, outside docking range", LOG_DEBUG]
 				;This.Destinations:Dequeue
 				return
 			}
 
-			if ${Me.InStation}
-			{
-				Logger:Log["${LogPrefix} - Navigate_Dock: We're already in a station"]
-				This.Destinations:Dequeue
-				return
-			}
+			Logger:Log["${LogPrefix} - Navigate_Dock: Docking @${EVE.GetLocationNameByID[${This.Destinations.Peek.EntityID}]}"]
+			This:SetState[${STATE_DOCKING}]
+			Entity[${This.Destinations.Peek.EntityID}]:Dock
 		}
 
 		if ${Station.DockedAtStation[${This.Destinations.Peek.EntityID}]}
 		{
 			Logger:Log["${LogPrefix} - Navigate_Dock: Completed docking @${EVE.GetLocationNameByID[${This.Destinations.Peek.EntityID}]}", LOG_DEBUG]
+			This:SetState[${STATE_DOCKED}]
 			This.Destinations:Dequeue
 			return
 		}
-
-		if ${This.CurrentState} != ${STATE_DOCKING}
-		{
-			Logger:Log["${LogPrefix} - Navigate_Dock: Docking @${EVE.GetLocationNameByID[${This.Destinations.Peek.EntityID}]}"]
-			This:SetState[${STATE_DOCKING}]
-		}
-
-		Entity[${This.Destinations.Peek.EntityID}]:Dock
 	}
 
 	method Navigate_Undock()
@@ -1064,9 +1065,8 @@ TODO - integrate in most of the flyto*
 
 			Logger:Log["${LogPrefix} - Navigate_Undock: Undocking from ${Me.Station}"]
 			This:SetState[${STATE_UNDOCKING}]
+			EVE:Execute[CmdExitStation]
 		}
-
-		EVE:Execute[CmdExitStation]
 
 		/*
 			Logger:Log["Undock: Unexpected failure, retrying...", LOG_CRITICAL]
@@ -1102,9 +1102,9 @@ TODO - integrate in most of the flyto*
 		{
 			Logger:Log["Jumping thru ${Entity[${This.Destinations.Peek.EntityID}].Name}"]
 			This:SetState[${STATE_JUMPING}]
+			Entity[${This.Destinations.Peek.EntityID}]:Jump
 		}
 
-		Entity[${This.Destinations.Peek.EntityID}]:Jump
 	}
 
 	method Navigate_Activate()
@@ -1133,9 +1133,9 @@ TODO - integrate in most of the flyto*
 		{
 			Logger:Log["Jumping thru ${Entity[${This.Destinations.Peek.EntityID}].Name}"]
 			This:SetState[${STATE_JUMPING}]
+			Entity[${This.Destinations.Peek.EntityID}]:Activate
 		}
 
-		Entity[${This.Destinations.Peek.EntityID}]:Activate
 	}
 
 	member:bool ReadyToWarp()
