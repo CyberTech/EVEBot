@@ -273,4 +273,22 @@ objectdef obj_EVEBot inherits obj_BaseClass
 
 		return "${Hours}:${Minutes}:${Seconds}"
 	}
+
+	function WaitForNavigator()
+	{
+		variable int Counter = 0
+
+		while ${Navigator.Busy}
+		{
+			Logger:Log["EVEBot: Waiting for Navigator ${Navigator.Destinations.Peek.ToString} ${Counter}"]
+			Counter:Inc[1]
+			if (${Counter} > 40)
+			{
+				Logger:Log["Warning: Still waiting after ${Counter} iterations", LOG_CRITICAL]
+				Counter:Set[0]
+			}
+			wait 5
+		}
+	}
+
 }
