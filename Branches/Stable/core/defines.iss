@@ -58,6 +58,13 @@ variable int VersionNum = 0
 #define WAIT_CARGO_WINDOW 15
 #define WAIT_UNDOCK 130
 
+; DSTBALL_ values from client
+#define ENTITY_MODE_GOTO = 0
+#define ENTITY_MODE_FOLLOW = 1
+#define ENTITY_MODE_STOP = 2
+#define ENTITY_MODE_WARP = 3
+#define ENTITY_MODE_ORBIT = 4
+
 /* If the miner's cargo hold doesn't increase during
  * this period, return to base.  Interval depends on the
  * PulseIntervalInSeconds value used in obj_Miner.Pulse
