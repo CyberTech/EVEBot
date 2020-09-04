@@ -274,7 +274,7 @@ objectdef obj_Combat
 		}
 		This.Fled:Set[TRUE]
 		Logger:Log["Recalling all drones"]
-		EVE:Execute[CmdDronesReturnToBay]
+		Ship.Drones:ReturnAllToDroneBay["Combat.Flee"]
 
 		if ${Config.Combat.RunToStation}
 		{

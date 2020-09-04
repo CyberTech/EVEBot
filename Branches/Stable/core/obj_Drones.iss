@@ -36,8 +36,6 @@ objectdef obj_Drones inherits obj_BaseClass
 			if (${Me.ToEntity.Mode} != 3)
 			{
 				Logger:Log["Recalling Drones prior to shutdown..."]
-				This.ActiveDroneIDList:RemoveByQuery[${LavishScript.CreateQuery[GroupID = GROUP_FIGHTERDRONE]}]
-				EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
 				EVE:Execute[CmdDronesReturnToBay]
 			}
 		}
@@ -172,7 +170,6 @@ objectdef obj_Drones inherits obj_BaseClass
 			Logger:Log["${Caller}: Recalling ${This.ActiveDroneIDList.Used} Drones"]
 			This.ActiveDroneIDList:RemoveByQuery[${LavishScript.CreateQuery[GroupID = GROUP_FIGHTERDRONE]}]
 			EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
-			EVE:Execute[CmdDronesReturnToBay]
 		}
 	}
 

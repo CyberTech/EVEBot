@@ -414,7 +414,7 @@ objectdef obj_Miner
 				{
 					break
 				}
-				Ship.Drones:ReturnAllToDroneBay
+				Ship.Drones:ReturnAllToDroneBay["Miner.Hardstop"]
 				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
 					if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].TypeID} != 5
@@ -477,7 +477,7 @@ objectdef obj_Miner
 				{
 					break
 				}
-				Ship.Drones:ReturnAllToDroneBay
+				Ship.Drones:ReturnAllToDroneBay["Miner.Flee"]
 				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
 					if ${Config.Miner.BookMarkLastPosition} && !${Bookmarks.CheckForStoredLocation}
@@ -600,10 +600,6 @@ objectdef obj_Miner
 
 			;	This means we need to go to our delivery location to unload.
 			case DROPOFF
-				;	Clean up before we leave
-				Ship.Drones:ReturnAllToDroneBay
-
-
 				;	Before we go anywhere, make a bookmark so we can get back here
 				if ${Config.Miner.BookMarkLastPosition} && !${Bookmarks.CheckForStoredLocation}
 				{
@@ -900,7 +896,6 @@ objectdef obj_Miner
 			; Check if orca is on grid and if not warp to them
 			if ${WarpToOrca} && !${Entity[${Orca.Escape}](exists)}
 			{
-				Ship.Drones:ReturnAllToDroneBay
 				Logger:Log["Debug: WarpToFleetMember to ${Config.Miner.DeliveryLocation} from Line _LINE_ ", LOG_DEBUG]
 				call Ship.WarpToFleetMember ${Local["${Config.Miner.DeliveryLocation}"]}
 				if ${Config.Miner.BookMarkLastPosition} && ${Bookmarks.CheckForStoredLocation}
@@ -915,7 +910,6 @@ objectdef obj_Miner
 			; Check if master is on grid and if not warp to them
 			if ${Config.Miner.GroupMode} && ${WarpToMaster} && !${Entity[${Master.Escape}](exists)} && !${IsMaster}
 			{
-				Ship.Drones:ReturnAllToDroneBay
 				Logger:Log["Debug: WarpToFleetMember to ${MasterName} from Line _LINE_ ", LOG_DEBUG]
 				call Ship.WarpToFleetMember ${Local["${MasterName}"]}
 				if ${Config.Miner.BookMarkLastPosition} && ${Bookmarks.CheckForStoredLocation}
@@ -926,26 +920,6 @@ objectdef obj_Miner
 			}
 		}
 
-		; For orca delivery mode use
-		if ${Ship.TotalActivatedMiningLasers} == 0 && \
-			${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && \
-			${Me.ToEntity.Mode} == 3 && \
-			${Entity[${Orca.Escape}].Mode} == 3 && \
-			${Ship.Drones.DronesInSpace[FALSE]} != 0 && \
-			!${EVEBot.ReturnToStation}
-		{
-			EVE:Execute[CmdStopShip]
-			while ${Ship.Drones.DronesInSpace[FALSE]} != 0
-			{
-				if ${Me.ToEntity.Mode} == 3
-				{
-					EVE:Execute[CmdStopShip]
-				}
-				Ship.Drones:ReturnAllToDroneBay
-				wait 20
-			}
-		}
-
 		if (!${Config.Miner.GroupMode} || ${IsMaster})
 		{
 			; We're not in group mode, or we're the master. So we're free to make our own decisions about movement.
@@ -953,15 +927,6 @@ objectdef obj_Miner
 			if ${Asteroids.FieldEmpty} && \
 				!${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]}
 			{
-				while ${Ship.Drones.DronesInSpace[FALSE]} != 0
-				{
-					if ${Me.ToEntity.Mode} == 3
-					{
-						EVE:Execute[CmdStopShip]
-					}
-					Ship.Drones:ReturnAllToDroneBay
-					wait 20
-				}
 				Logger:Log["Miner.Mine: No asteroids detected, changing belts"]
 				call Asteroids.MoveToField TRUE TRUE
 				call Asteroids.UpdateList
@@ -971,7 +936,6 @@ objectdef obj_Miner
 			if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]}
 			{
 				Logger:Log["Miner.Mine: Avoiding player: Forcing belt change"]
-				Ship.Drones:ReturnAllToDroneBay
 				call Asteroids.MoveToField TRUE
 				call Asteroids.UpdateList
 			}
@@ -1372,11 +1336,6 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 		;	make sure we know what asteroids are available
 		if ${Asteroids.FieldEmpty}
 		{
-			while ${Ship.Drones.DronesInSpace[FALSE]} != 0
-			{
-				Ship.Drones:ReturnAllToDroneBay
-				wait 20
-			}
 			Logger:Log["Miner.OrcaInBelt: No asteroids detected, forcing belt change"]
 			call Asteroids.MoveToField TRUE TRUE
 			call Asteroids.UpdateList
@@ -1386,7 +1345,6 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 		if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]}
 		{
 			Logger:Log["Miner.OrcaInBelt: Avoiding player: Forcing belt change"]
-			Ship.Drones:ReturnAllToDroneBay
 			call Asteroids.MoveToField TRUE TRUE TRUE
 			call Asteroids.UpdateList
 		}

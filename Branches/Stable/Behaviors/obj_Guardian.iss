@@ -193,7 +193,6 @@ objectdef obj_Guardian
 					break
 				}
 
-				Ship.Drones:ReturnAllToDroneBay
 				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
 					if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].TypeID} != 5
@@ -371,20 +370,6 @@ objectdef obj_Guardian
 
 
 		Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
-		if ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && ${Me.ToEntity.Mode} == 3 && ${Entity[${Orca.Escape}].Mode} == 3 && ${Ship.Drones.DronesInSpace[FALSE]} != 0 && !${EVEBot.ReturnToStation}
-		{
-			EVE:Execute[CmdStopShip]
-			while ${Ship.Drones.DronesInSpace[FALSE]} != 0
-			{
-				if ${Me.ToEntity.Mode} == 3
-				{
-					EVE:Execute[CmdStopShip]
-				}
-				Ship.Drones:ReturnAllToDroneBay
-				wait 20
-			}
-		}
-
 		if ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && ${Miner.WarpToOrca} && !${Entity[${Orca.Escape}](exists)}
 		{
 			call Ship.WarpToFleetMember ${Local[${Config.Miner.DeliveryLocation}]}

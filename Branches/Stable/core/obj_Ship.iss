@@ -9,8 +9,6 @@
 
 objectdef obj_Ship
 {
-	variable int MODE_WARPING = 3
-
 	variable time NextPulse
 	variable int PulseIntervalInSeconds = 2
 
@@ -2057,7 +2055,7 @@ objectdef obj_Ship
 		{
 			This:Deactivate_Cloak[]
 		}
-		This.Drones:ReturnAllToDroneBay
+		This.Drones:ReturnAllToDroneBay["Ship.WarpPrepare"]
 		This:Deactivate_SensorBoost
 		This:Deactivate_Gang_Links
 		
