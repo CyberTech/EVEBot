@@ -72,8 +72,8 @@
 							<width>150</width>
 							<height>20</height>
 							<OnLeftClick>
-								relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.CurrentBehavior}"
-								Script[EVEBot].VariableScope.Logger:Log["Forcing Break!!!", LOG_MINOR]
+								relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Script[EVEBot].VariableScope.Config.Common.CurrentBehavior} - Broadcast Break Button"
+								Script[EVEBot].VariableScope.Logger:Log["Broadcast Break button forcing break!!!", LOG_MINOR]
 							</OnLeftClick>
 						</button>
 						<button	Name='BroadcastResume' template='EveSkin.Window.ClickButton'>
@@ -86,7 +86,7 @@
 								Social.NextBreak:Set[0]
 								Social.OnBreak:Set[FALSE]
 								relay all -event EVEBot_ABORTHARDSTOP
-								Script[EVEBot].VariableScope.Logger:Log["Resuming from break!!!", LOG_MINOR]
+								Script[EVEBot].VariableScope.Logger:Log["Broadcast resume button resuming from break!!!", LOG_MINOR]
 							</OnLeftClick>
 						</button>
 						<button	Name='BroadcastRun' template='EveSkin.Window.ClickButton'>
