@@ -18,6 +18,7 @@ objectdef obj_Drones inherits obj_BaseClass
 	variable int ShortageCount
 
 	variable int64 MiningDroneTarget=0
+	variable obj_PulseTimer DroneReturnTimer
 
 	method Initialize()
 	{
@@ -25,6 +26,8 @@ objectdef obj_Drones inherits obj_BaseClass
 
 		PulseTimer:SetIntervals[2.0,4.0]
 		Event[EVENT_EVEBOT_ONFRAME]:AttachAtom[This:Pulse]
+
+		DroneReturnTimer:SetIntervals[3.0,4.0]
 		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
@@ -165,11 +168,12 @@ objectdef obj_Drones inherits obj_BaseClass
 
 	method ReturnAllToDroneBay(string Caller)
 	{
-		if ${This.DronesInSpace[FALSE]} > 0
+		if ${DroneReturnTimer.Ready} && ${This.DronesInSpace[FALSE]} > 0
 		{
 			Logger:Log["${Caller}: Recalling ${This.ActiveDroneIDList.Used} Drones"]
 			This.ActiveDroneIDList:RemoveByQuery[${LavishScript.CreateQuery[GroupID = GROUP_FIGHTERDRONE]}]
 			EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
+			DroneReturnTimer:Update
 		}
 	}
 
@@ -219,8 +223,11 @@ objectdef obj_Drones inherits obj_BaseClass
 					(${DroneIterator.Value.ToEntity.ShieldPct} < 80 || \
 					${DroneIterator.Value.ToEntity.ArmorPct} < 0)
 				{
-					Logger:Log["Recalling Damaged Drone ${DroneIterator.Value.ID} Shield %: ${DroneIterator.Value.ToEntity.ShieldPct} Armor %: ${DroneIterator.Value.ToEntity.ArmorPct}"]
-					returnIndex:Insert[${DroneIterator.Value.ID}]
+					if ${DroneReturnTimer.Ready}
+					{
+						Logger:Log["Recalling Damaged Drone ${DroneIterator.Value.ID} Shield %: ${DroneIterator.Value.ToEntity.ShieldPct} Armor %: ${DroneIterator.Value.ToEntity.ArmorPct}"]
+						returnIndex:Insert[${DroneIterator.Value.ID}]
+					}
 				}
 				else
 				{
@@ -232,6 +239,7 @@ objectdef obj_Drones inherits obj_BaseClass
 			if ${returnIndex.Used} > 0
 			{
 				EVE:DronesReturnToDroneBay[returnIndex]
+				DroneReturnTimer:Update
 			}
 			if ${engageIndex.Used} > 0
 			{
