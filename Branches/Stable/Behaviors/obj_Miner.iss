@@ -1225,6 +1225,7 @@ objectdef obj_Miner
 						if (!${isBeingMined} || !${Config.Miner.DistributeLasers}) || ${This.ConcentrateFire}
 						{
 							call Ship.ActivateFreeMiningLaser ${Target.Value.ID}
+							wait 5
 						}
 /*
 BUG - This is broken. It relies on the activatarget, there's no checking if they're already mining something, etc
