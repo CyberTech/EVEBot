@@ -182,6 +182,7 @@ objectdef obj_Drones inherits obj_BaseClass
 
 		if (${This.DronesInSpace} > 0)
 		{
+			Logger:Log["Debug: Drones ordered to mine ${Me.ActiveTarget.ID}", LOG_DEBUG]
 			EVE:DronesMineRepeatedly[This.ActiveDroneIDList]
 			MiningDroneTarget:Set[${Me.ActiveTarget}]
 		}
@@ -220,11 +221,10 @@ objectdef obj_Drones inherits obj_BaseClass
 				{
 					Logger:Log["Recalling Damaged Drone ${DroneIterator.Value.ID} Shield %: ${DroneIterator.Value.ToEntity.ShieldPct} Armor %: ${DroneIterator.Value.ToEntity.ArmorPct}"]
 					returnIndex:Insert[${DroneIterator.Value.ID}]
-
 				}
 				else
 				{
-					;Logger:Log["Debug: Engage Target ${DroneIterator.Value.ID}"]
+					Logger:Log["Debug: Drone ${DroneIterator.Value.ID} engaging current target", LOG_DEBUG]
 					engageIndex:Insert[${DroneIterator.Value.ID}]
 				}
 			}
