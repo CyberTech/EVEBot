@@ -780,10 +780,10 @@ objectdef obj_Social inherits obj_BaseClass
 
 			if ${NextBreak} <= ${Time.Timestamp} && !${OnBreak} && !${EVEBot.ReturnToStation}
 			{
-				Logger:Log["Taking a break!", LOG_CRITICAL]
+				Logger:Log["Break time, notifying fleet", LOG_CRITICAL]
 				if ${Config.Combat.BroadcastBreaks}
 				{
-					relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.CurrentBehavior}"
+					relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.CurrentBehavior} Breaktime"
 				}
 				else
 				{

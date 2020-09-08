@@ -84,6 +84,7 @@ objectdef obj_Guardian
 		{
 			This.CurrentState:Set["HARDSTOP"]
 			Logger:Log["HARD STOP: Possible hostiles, cargo hold not changing, or ship in a pod!"]
+			relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.CurrentBehavior}"
 			EVEBot.ReturnToStation:Set[TRUE]
 			return
 		}
@@ -183,7 +184,6 @@ objectdef obj_Guardian
 			;	*	If everything above failed and there's a station in the same system, dock there
 			;	*	If everything above failed, check if we're warping and warp to a safe spot
 			case HARDSTOP
-				relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.CurrentBehavior}"
 				if ${Me.InStation}
 				{
 					break

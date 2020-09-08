@@ -179,7 +179,8 @@ objectdef obj_Miner
 			if ${Social.PossibleHostiles}
 			{
 				This.CurrentState:Set["HARDSTOP"]
-				Logger:Log["HARD STOP: Possible hostiles"]
+				Logger:Log["HARD STOP: Possible hostiles, notifying fleet"]
+				relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.CurrentBehavior} (Hostiles)"
 				EVEBot.ReturnToStation:Set[TRUE]
 				return
 			}
@@ -187,7 +188,8 @@ objectdef obj_Miner
 			if ${Ship.IsPod}
 			{
 				This.CurrentState:Set["HARDSTOP"]
-				Logger:Log["HARD STOP: Ship in a pod"]
+				Logger:Log["HARD STOP: Ship in a pod, notifying fleet that I failed them"]
+				relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.CurrentBehavior} (InPod)"
 				EVEBot.ReturnToStation:Set[TRUE]
 				return
 			}
@@ -210,7 +212,6 @@ objectdef obj_Miner
 					return
 				}
 
-				Logger:Log["HARD STOP: Return to station was set"]
 				This.CurrentState:Set["HARDSTOP"]
 				return
 			}
@@ -408,8 +409,6 @@ objectdef obj_Miner
 			;	*	If everything above failed and there's a station in the same system, dock there
 			;	*	If everything above failed, check if we're warping and warp to a safe spot
 			case HARDSTOP
-				Logger:Log["Sending HARD STOP to fleet"]
-				relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.CurrentBehavior}"
 				if ${Me.InStation}
 				{
 					break
@@ -1405,6 +1404,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 		}
 
 		;	This section is for moving ore into the Orca ore and cargo holds, so they will fill before the Corporate Hangar, to which the miner is depositing
+		; TODO - reduce this cycle spam
 		call Inventory.ShipOreHold.Activate
 		call Inventory.ShipFleetHangar.Activate
 
@@ -1543,8 +1543,9 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 				{
 					if ${Config.Miner.MasterMode}
 					{
-						Logger:Log["obj_Miner: There can be only one Master ERROR:${name}", LOG_DEBUG]
-						relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.CurrentBehavior}"
+						Logger:Log["obj_Miner: Hard Stop - There can be only one Master ERROR:${name}", LOG_DEBUG]
+						This.CurrentState:Set["HARDSTOP"]
+						relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.CurrentBehavior} (MasterConfigError)"
 					}
 					else
 					{
