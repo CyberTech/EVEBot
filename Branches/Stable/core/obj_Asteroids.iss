@@ -168,7 +168,7 @@ objectdef obj_Asteroids
 
 		while ${BeltBookMarkList.Used} > 0
 		{
-			RandomBelt:Set[${Math.Rand[${BeltBookMarkList.Used(int):Dec}]:Inc[1]}]
+			RandomBelt:Set[${Math.Rand[${BeltBookMarkList.Used}]:Inc[1]}]
 			Label:Set[${BeltBookMarkList[${RandomBelt}].Label}]
 
 			; TODO - move this to RemoveByQuery when string.StartsWith is pushed to InnerSpace live
