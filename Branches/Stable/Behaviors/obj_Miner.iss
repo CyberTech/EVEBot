@@ -1362,20 +1362,22 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 		variable int OrcaRange = 30000
 
 		;	Next we need to move in range of some ore so miners can mine near me
-		if ${Entity[${Asteroids.NearestAsteroid}](exists)} && ${This.Approaching} == 0
+		variable int64 NearestAsteroidID = ${Asteroids.NearestAsteroid[100000, TRUE]}
+		; Logger:Log["NearestAsteroidId: ${NearestAsteroidID}    ${Entity[${NearestAsteroidID}](exists)} && ${This.Approaching} == 0"]
+		if ${Entity[${NearestAsteroidID}](exists)} && ${This.Approaching} == 0
 		{
-			if ${Entity[${Asteroids.NearestAsteroid}].Distance} > WARP_RANGE
+			if ${Entity[${NearestAsteroidID}].Distance} > WARP_RANGE
 			{
 				Logger:Log["Debug: Entity:WarpTo to NearestAsteroid from Line _LINE_ ", LOG_DEBUG]
-				Entity[${Asteroids.NearestAsteroid}]:WarpTo[${OrcaRange}]
+				Entity[${NearestAsteroidID}]:WarpTo[${OrcaRange}]
 				return
 			}
 
 			;	Find out if we need to approach this asteroid
-			if ${Entity[${Asteroids.NearestAsteroid}].Distance} > ${OrcaRange}
+			if ${Entity[${NearestAsteroidID}].Distance} > ${OrcaRange}
 			{
 				Logger:Log["Miner.OrcaInBelt: Approaching ${Entity[${Asteroids.NearestAsteroid}].Name}"]
-				This:StartApproaching[${Entity[${Orca.Escape}].ID}, ${OrcaRange}]
+				This:StartApproaching[${NearestAsteroidID}}, ${OrcaRange}]
 				return
 			}
 		}
