@@ -194,10 +194,7 @@ objectdef obj_Navigator inherits obj_BaseClass
 
 	member:bool Busy()
 	{
-		variable bool MoreDestinations
-
-		MoreDestinations:Set[${This.Destinations.Peek(exists)}]
-		return ${MoreDestinations}
+		return ${This.Destinations.Peek(exists)}
 	}
 
 	member AtCurrentDestination()
@@ -261,6 +258,7 @@ objectdef obj_Navigator inherits obj_BaseClass
 			return
 		}
 
+		Logger:Log["${LogPrefix}: Queuing Align to ${EntityID}:${Entity[${EntityID}].Name}"]
 		Destinations:Queue[${DEST_ACTION_ALIGNTO}, ${Range}, ${EntityID}]
 	}
 
@@ -278,6 +276,7 @@ objectdef obj_Navigator inherits obj_BaseClass
 			return
 		}
 
+		Logger:Log["${LogPrefix}: Queuing Approach(${Range}) to ${EntityID}:${Entity[${EntityID}].Name}"]
 		Destinations:Queue[${DEST_ACTION_APPROACH}, ${Range}, ${EntityID}, 0, 0, 0, ${InteractWithDest}]
 	}
 
@@ -295,6 +294,7 @@ objectdef obj_Navigator inherits obj_BaseClass
 			return
 		}
 
+		Logger:Log["${LogPrefix}: Queuing Orbit(${Range}) of ${EntityID}:${Entity[${EntityID}].Name}"]
 		Destinations:Queue[${DEST_ACTION_ORBIT}, ${Range}, ${EntityID}]
 	}
 
@@ -312,6 +312,7 @@ objectdef obj_Navigator inherits obj_BaseClass
 			return
 		}
 
+		Logger:Log["${LogPrefix}: Queuing KeepAtRange(${Range}) of ${EntityID}:${Entity[${EntityID}].Name}"]
 		Destinations:Queue[${DEST_ACTION_KEEPATRANGE}, ${Range}, ${EntityID}]
 	}
 
@@ -330,9 +331,9 @@ objectdef obj_Navigator inherits obj_BaseClass
 			return
 		}
 
+		Logger:Log["${LogPrefix}: Queuing dock at ${EntityID}:${Entity[${EntityID}].Name}"]
 		; We need to make sure we're approaching to within 200 to dock.
 		Destinations:Queue[${DEST_ACTION_APPROACH}, 200, ${EntityID}, 0, 0, 0, TRUE]
-		;Destinations:Queue[${DEST_ACTION_DOCK}, 200, ${EntityID}] ; Approach will handle the docking since interact is true
 	}
 
 	method JumpThruEntity(int64 EntityID)
@@ -349,6 +350,7 @@ objectdef obj_Navigator inherits obj_BaseClass
 			return
 		}
 
+		Logger:Log["${LogPrefix}: Queuing jump thru ${Entity[${EntityID}].Name}"]
 		Destinations:Queue[${DEST_ACTION_JUMP}, 0, ${EntityID}]
 	}
 
@@ -366,6 +368,7 @@ objectdef obj_Navigator inherits obj_BaseClass
 			return
 		}
 
+		Logger:Log["${LogPrefix}: Queuing activation of ${Entity[${EntityID}].Name}"]
 		Destinations:Queue[${DEST_ACTION_ACTIVATE}, 0, ${EntityID}]
 	}
 
@@ -386,9 +389,11 @@ TODO - integrate in most of the flyto*
 	{
 		if ${SystemID} == ${Me.SystemID}
 		{
-			Logger:Log["${LogPrefix} - FlyToSystem: ERROR: Already in system ${SystemID}", LOG_DEBUG]
+			Logger:Log["${LogPrefix} - FlyToSystem: ERROR: Already in system ${SystemID}:${Universe[${SystemID}].Name}", LOG_DEBUG]
 			return
 		}
+
+		Logger:Log["${LogPrefix}: Queuing nav to solar system ${SystemID}:${Universe[${SystemID}].Name}"]
 		Destinations:Queue[${DEST_SYSTEM}, 0, 0, ${SystemID}]
 	}
 
@@ -406,11 +411,13 @@ TODO - integrate in most of the flyto*
 			return
 		}
 
+		Logger:Log["${LogPrefix}: Queuing nav to entity ${EntityID}"]
 		Destinations:Queue[${DEST_ENTITY}, ${Range}, ${EntityID}, 0, 0, 0, ${InteractWithDest}]
 	}
 
 	method FlyToFleetMember(int64 FleetMemberCharID, int64 Range = 0, bool InteractWithDest = FALSE)
 	{
+		Logger:Log["${LogPrefix}: Queuing nav to fleet member ${FleetMemberCharID}:${Me.Fleet.Member[${FleetMemberCharID}].ToPilot.Name}"]
 		Destinations:Queue[${DEST_FLEETMEMBER}, ${Range}, 0, 0, ${FleetMemberCharID}, 0, ${InteractWithDest}]
 	}
 
@@ -438,7 +445,7 @@ TODO - integrate in most of the flyto*
 			return
 		}
 
-		Logger:Log["${LogPrefix} - FlyToBookmarkID: Flying to ${DestinationBookmark.Label}", LOG_DEBUG]
+		Logger:Log["${LogPrefix}: Queueing nav to bookmark ${DestinationBookmark.Label}"]
 
 		if ${DestinationBookmark.ToEntity(exists)}
 		{
@@ -452,6 +459,7 @@ TODO - integrate in most of the flyto*
 			This:FlyToSystem[${DestinationBookmark.SolarSystemID}]
 		}
 
+		; Already logged the queue above, even tho it may occur after the FlyToSystem
 		Destinations:Queue[${DEST_BOOKMARK}, ${Range}, 0, 0, 0, ${DestinationBookmark.ID}, ${InteractWithDest}]
 	}
 
@@ -600,12 +608,18 @@ TODO - integrate in most of the flyto*
 
 		if !${Ship.InWarp} && ${This.CurrentState} != ${STATE_WARP_INITIATED}
 		{
-			Logger:Log["${LogPrefix} - NavigateTo_Entity: Warping to ${Entity[${This.Destinations.Peek.EntityID}].Name} @${EVEBot.MetersToKM_Str[${This.Destinations.Peek.Distance}]}", LOG_DEBUG]
 			Entity[${This.Destinations.Peek.EntityID}]:AlignTo
 			if ${This.ReadyToWarp}
 			{
+				Logger:Log["${LogPrefix} - NavigateTo_Entity: Warping to ${Entity[${This.Destinations.Peek.EntityID}].Name} @${EVEBot.MetersToKM_Str[${This.Destinations.Peek.Distance}]}"]
 				Entity[${This.Destinations.Peek.EntityID}]:WarpTo[${This.Destinations.Peek.Distance}]
 				This:SetState[${STATE_WARP_INITIATED}]
+				return
+			}
+			else
+			{
+				Logger:Log["${LogPrefix} - NavigateTo_Entity: Delaying warp to ${Entity[${This.Destinations.Peek.EntityID}].Name} @${EVEBot.MetersToKM_Str[${This.Destinations.Peek.Distance}]}", LOG_DEBUG]
+				return
 			}
 		}
 	}
@@ -614,7 +628,7 @@ TODO - integrate in most of the flyto*
 	{
 		if ${This.Destinations.Peek.SystemID} == ${Me.SystemID}
 		{
-			Logger:Log["${LogPrefix} - NavigateTo_System: Arrived at ${This.Destinations.Peek.SystemID}"]
+			Logger:Log["${LogPrefix} - NavigateTo_System: Arrived at ${This.Destinations.Peek.SystemID}:${Universe[${This.Destinations.Peek.SystemID}].Name}"]
 			This.Destinations:Dequeue
 			return
 		}
@@ -632,9 +646,8 @@ TODO - integrate in most of the flyto*
 		if ${apRoute.Used} == 0 || ${apRoute:Get[${apRoute.Used}]} != ${This.Destinations.Peek.SystemID}
 		{
 			EVE:ClearAllWaypoints
-			Logger:Log["${LogPrefix} - NavigateTo_System: Setting autopilot from ${Me.SolarSystemID} to ${DestinationSystemID}", LOG_DEBUG]
-			Logger:Log["${LogPrefix} - NavigateTo_System: Setting autopilot from ${Universe[${Me.SolarSystemID}].Name} to ${Universe[${DestinationSystemID}].Name}"]
-			Universe[${DestinationSystemID}]:SetDestination
+			Logger:Log["${LogPrefix} - NavigateTo_System: Setting autopilot from ${Me.SolarSystemID}:${Universe[${Me.SolarSystemID}].Name} to ${This.Destinations.Peek.SystemID}:${Universe[${This.Destinations.Peek.SystemID}].Name}"]
+			Universe[${This.Destinations.Peek.SystemID}]:SetDestination
 		}
 
 		if ${This.CurrentState} == ${STATE_AUTOPILOT_INITIATED} || \
@@ -654,6 +667,9 @@ TODO - integrate in most of the flyto*
 			This:Navigate_Undock
 			return
 		}
+
+		Logger:Log["${LogPrefix} - NavigateTo_FleetMember: Not Implemented", LOG_ERROR]
+		This.Destinations:Dequeue
 	}
 
 	method NavigateTo_Bookmark()
@@ -666,38 +682,16 @@ TODO - integrate in most of the flyto*
 			return
 		}
 
-		/*
-			Sun:		ToEntity = false		ItemID = valid		TypeID = Valid		Type = Valid	LocationID = valid		X = invalid
-			Station:	ToEntity = true								TypeID = valid		Type = valid	LocationID = valid		X = invalid
-			Planet:		ToEntity = true			ItemID = valid		TypeID = valid		Type = valid	LocationID = valid		X = invalid
-			Safe Spot:	ToEntity = null			ItemID = invalid	TypeID = valid		Type = valid	LocationID = valid		X = valid
-			POS:		ToEntity = false		itemid = invalid	typeid = valid		type = valid	Locationid = valid		X = valid
-
-21:29:41: DestinationBookmark.ID = ##########
-21:29:41: DestinationBookmark.Label = xxxxxxxxxxxxx
-21:29:41: DestinationBookmark.Type = Station (Caldari 1)
-21:29:41: DestinationBookmark.TypeID = 1529
-21:29:41: DestinationBookmark.ToEntity(exists) = NULL
-21:29:41: DestinationBookmark.ToEntity.Category = NULL
-21:29:41: DestinationBookmark.ToEntity.CategoryID = NULL
-21:29:41: DestinationBookmark.ToEntity.Distance = NULL
-21:29:41: DestinationBookmark.AgentID = -1
-21:29:41: DestinationBookmark.ItemID = #######
-21:29:41: DestinationBookmark.LocationType = NULL
-21:29:41: DestinationBookmark.LocationID = ##########
-21:29:41: DestinationBookmark Location: NULL, NULL, NULL
-21:29:41: Entity[CategoryID,6].X = NULL
-21:29:41: Entity[CategoryID,6].Y = NULL
-21:29:41: Entity[CategoryID,6].Z = NULL
-21:29:41: Me.ToEntity.X = NULL
-21:29:41: Me.ToEntity.Y = NULL
-21:29:41: Me.ToEntity.Z = NULL
-
-		*/
-
 		declarevariable DestinationBookmark bookmark ${This.Destinations.Peek.Bookmark.ID}
 
 #if EVEBOT_DEBUG
+		/*
+			Sun:			ToEntity = false		ItemID = valid		TypeID = Valid		Type = Valid	LocationID = valid		X = invalid
+			Station:	ToEntity = true			ItemID = valid		TypeID = valid		Type = valid	LocationID = valid		X = invalid
+			Planet:		ToEntity = true			ItemID = valid		TypeID = valid		Type = valid	LocationID = valid		X = invalid
+			Safe Spot:ToEntity = null			ItemID = invalid	TypeID = valid		Type = valid	LocationID = valid		X = valid
+			POS:			ToEntity = false		itemid = invalid	typeid = valid		type = valid	Locationid = valid		X = valid
+		*/
 		if ${This.CurrentState} != ${STATE_WARP_INITIATED} && ${This.CurrentState} != ${STATE_WARPING}
 		{
 			Logger:Log["DestinationBookmark.ID = ${DestinationBookmark.ID}", LOG_DEBUG]
@@ -742,12 +736,17 @@ TODO - integrate in most of the flyto*
 			{
 				if ${DestinationBookmark.ToEntity.Distance} > WARP_RANGE
 				{
-					Logger:Log["${LogPrefix} - NavigateTo_Bookmark: Warping to ${Entity[${This.Destinations.Peek.EntityID}].Name} @${EVEBot.MetersToKM_Str[${This.Destinations.Peek.Distance}]}"]
 					Entity[${This.Destinations.Peek.EntityID}]:AlignTo
 					if ${This.ReadyToWarp}
 					{
+						Logger:Log["${LogPrefix} - NavigateTo_Bookmark: Warping to ${Entity[${This.Destinations.Peek.EntityID}].Name} @${EVEBot.MetersToKM_Str[${This.Destinations.Peek.Distance}]}"]
 						Entity[${This.Destinations.Peek.EntityID}]:WarpTo[${This.Destinations.Peek.Distance}]
 						This:SetState[${STATE_WARP_INITIATED}]
+						return
+					}
+					else
+					{
+						Logger:Log["${LogPrefix} - NavigateTo_Entity: Delaying warp to ${Entity[${This.Destinations.Peek.EntityID}].Name} @${EVEBot.MetersToKM_Str[${This.Destinations.Peek.Distance}]}", LOG_DEBUG]
 						return
 					}
 				}
@@ -783,13 +782,17 @@ TODO - integrate in most of the flyto*
 			{
 				if !${Ship.InWarp} && ${This.CurrentState} != ${STATE_WARP_INITIATED}
 				{
-					Logger:Log["${LogPrefix} - NavigateTo_Bookmark: Warping to ${Label} @${EVEBot.MetersToKM_Str[${This.Destinations.Peek.Distance}]}"]
 					DestinationBookmark:Approach
 					if ${This.ReadyToWarp}
 					{
-						Logger:Log["${LogPrefix} - NavigateTo_Bookmark: Warping to ${Label} (Attempt #${WarpCounter})", LOG_DEBUG]
+						Logger:Log["${LogPrefix} - NavigateTo_Bookmark: Warping to ${Label} @${EVEBot.MetersToKM_Str[${This.Destinations.Peek.Distance}]}"]
 						DestinationBookmark:WarpTo[${This.Destinations.Peek.Distance}]
 						This:SetState[${STATE_WARP_INITIATED}]
+					}
+					else
+					{
+						Logger:Log["${LogPrefix} - NavigateTo_Entity: Delaying warp to ${Entity[${This.Destinations.Peek.EntityID}].Name} @${EVEBot.MetersToKM_Str[${This.Destinations.Peek.Distance}]}", LOG_DEBUG]
+						return
 					}
 				}
 				else
@@ -1014,7 +1017,6 @@ TODO - integrate in most of the flyto*
 					Logger:Log["${LogPrefix} - Navigate_Dock: Warning: Outside docking range for Entity ${Entity[${This.Destinations.Peek.EntityID}].Name} @ ${EVEBot.MetersToKM_Str[${Entity[${This.Destinations.Peek.EntityID}].Distance}]}, approaching", LOG_WARNING]
 					Ship:Activate_AfterBurner[]
 					Entity[${This.Destinations.Peek.EntityID}]:Approach
-					Entity[${This.Destinations.Peek.EntityID}]:Dock
 					This:SetState[${STATE_DOCKING}]
 				}
 				;This.Destinations:Dequeue
@@ -1118,7 +1120,7 @@ TODO - integrate in most of the flyto*
 
 		if ${Entity[${This.Destinations.Peek.EntityID}].Distance} >= JUMP_RANGE
 		{
-			Logger:Log["${LogPrefix} - Navigate_Activate: Warning: Removing Entity ${Entity[${This.Destinations.Peek.EntityID}].Name} @ ${EVEBot.MetersToKM_Str[${Entity[${This.Destinations.Peek.EntityID}].Distance}]}, outside gate activation range", LOG_DEBUG]
+			Logger:Log["${LogPrefix} - Navigate_Activate: Warning: Removing Activate action for ${Entity[${This.Destinations.Peek.EntityID}].Name} @ ${EVEBot.MetersToKM_Str[${Entity[${This.Destinations.Peek.EntityID}].Distance}]}, outside gate activation range", LOG_DEBUG]
 			This.Destinations:Dequeue
 			return
 		}
@@ -1144,10 +1146,10 @@ TODO - integrate in most of the flyto*
 		{
 			Ship:Deactivate_Cloak[]
 		}
-		;TODO call Ship.Drones.ReturnAllToDroneBay
 
 		if ${Ship.Drones.DeployedDroneCount} > 0
 		{
+			Ship.Drones:ReturnAllToDroneBay["Navigator.ReadyToWarp"]
 			; it's up to the caller to determine if they want to ignore this or not.
 			return FALSE
 		}
