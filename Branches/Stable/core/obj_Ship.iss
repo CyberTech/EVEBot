@@ -893,6 +893,11 @@ objectdef obj_Ship
 		return ${result}
 	}
 
+	member:int TotalTargeting()
+	{
+		return ${Math.Calc[${Me.TargetCount} + ${Me.TargetingCount}]}
+	}
+
 	member:int TotalMiningLasers()
 	{
 		return ${This.ModuleList_MiningLaser.Used}
