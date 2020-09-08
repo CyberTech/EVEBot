@@ -405,11 +405,11 @@ objectdef obj_Combat
 			{
 				if ${Config.Combat.AnomalyAssistMode}
 				{
-					Ship.Drones:LaunchAll[]
+					Ship.Drones:LaunchAll["Combat.MinerTank"]
 				}
 				elseif ${Me.TargetCount} >= 1 && ${Me.TargetedByCount} >= ${Me.TargetCount}
 				{
-					Ship.Drones:LaunchAll[]
+					Ship.Drones:LaunchAll["Combat.MinerTank"]
 				}
 			}
 		}
