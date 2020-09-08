@@ -541,63 +541,63 @@ objectdef obj_Targets inherits obj_BaseClass
 		m_SpecialTargetPresent:Set[FALSE]
 		m_SpecialTargetToLootPresent:Set[FALSE]
 
-      ; Determine the total spawn value
-      if ${Target:First(exists)} && !${This.CheckedSpawnValues}
-      {
-		This.CheckedSpawnValues:Set[TRUE]
-         do
-         {
-         	variable int pos
-         	variable string NPCName
-         	variable string NPCGroup
-         	variable string NPCShipType
+		; Determine the total spawn value
+		if ${Target:First(exists)} && !${This.CheckedSpawnValues}
+		{
+			This.CheckedSpawnValues:Set[TRUE]
+			 do
+			 {
+					variable int pos
+					variable string NPCName
+					variable string NPCGroup
+					variable string NPCShipType
 
-         	NPCName:Set[${Target.Value.Name}]
-			NPCGroup:Set[${Target.Value.Group}]
-			pos:Set[1]
-        	while ${NPCGroup.Token[${pos}, " "](exists)}
-        	{
-				;echo ${NPCGroup.Token[${pos}, " "]}
-        		NPCShipType:Set[${NPCGroup.Token[${pos}, " "]}]
-        		pos:Inc
-        	}
-            Logger:Log["NPC: ${NPCName}(${NPCShipType}) ${EVEBot.ISK_To_Str[${Target.Value.Bounty}]}"]
+				 	NPCName:Set[${Target.Value.Name}]
+					NPCGroup:Set[${Target.Value.Group}]
+					pos:Set[1]
+					while ${NPCGroup.Token[${pos}, " "](exists)}
+					{
+						;echo ${NPCGroup.Token[${pos}, " "]}
+						NPCShipType:Set[${NPCGroup.Token[${pos}, " "]}]
+						pos:Inc
+					}
+						Logger:Log["NPC: ${NPCName}(${NPCShipType}) ${EVEBot.ISK_To_Str[${Target.Value.Bounty}]}"]
 
-            ;Logger:Log["DEBUG: Type: ${Target.Value.Type}(${Target.Value.TypeID})"]
-            ;Logger:Log["DEBUG: Category: ${Target.Value.Category}(${Target.Value.CategoryID})"]
+						;Logger:Log["DEBUG: Type: ${Target.Value.Type}(${Target.Value.TypeID})"]
+						;Logger:Log["DEBUG: Category: ${Target.Value.Category}(${Target.Value.CategoryID})"]
 
-            switch ${Target.Value.GroupID}
-            {
-               case GROUP_LARGECOLLIDABLEOBJECT
-               case GROUP_LARGECOLLIDABLESHIP
-               case GROUP_LARGECOLLIDABLESTRUCTURE
-               case GROUP_SENTRYGUN
-               case GROUP_CONCORDDRONE
-               case GROUP_CUSTOMSOFFICIAL
-               case GROUP_POLICEDRONE
-               case GROUP_CONVOYDRONE
-               case GROUP_CONVOY
-			   case GROUP_FACTIONDRONE
-			   case GROUP_BILLBOARD
-                  continue
+						switch ${Target.Value.GroupID}
+						{
+							 case GROUP_LARGECOLLIDABLEOBJECT
+							 case GROUP_LARGECOLLIDABLESHIP
+							 case GROUP_LARGECOLLIDABLESTRUCTURE
+							 case GROUP_SENTRYGUN
+							 case GROUP_CONCORDDRONE
+							 case GROUP_CUSTOMSOFFICIAL
+							 case GROUP_POLICEDRONE
+							 case GROUP_CONVOYDRONE
+							 case GROUP_CONVOY
+				 case GROUP_FACTIONDRONE
+				 case GROUP_BILLBOARD
+									continue
 
-               default
-                  break
-            }
+							 default
+									break
+						}
 			if ${NPCGroup.Find["Battleship"](exists)}
 			{
-            	This.TotalSpawnValue:Inc[${Target.Value.Bounty}]
-            }
-         }
-         while ${Target:Next(exists)}
-         Logger:Log["NPC: Battleship Value is ${EVEBot.ISK_To_Str[${This.TotalSpawnValue}]}"]
-      }
+							This.TotalSpawnValue:Inc[${Target.Value.Bounty}]
+						}
+				 }
+				 while ${Target:Next(exists)}
+				 Logger:Log["NPC: Battleship Value is ${EVEBot.ISK_To_Str[${This.TotalSpawnValue}]}"]
+			}
 
-      if ${This.TotalSpawnValue} >= ${Config.Combat.MinChainBounty}
-      {
-         ;Logger:Log["NPC: Spawn value exceeds minimum.  Should chain this spawn."]
-         HasChainableTarget:Set[TRUE]
-      }
+			if ${This.TotalSpawnValue} >= ${Config.Combat.MinChainBounty}
+			{
+				 ;Logger:Log["NPC: Spawn value exceeds minimum.  Should chain this spawn."]
+				 HasChainableTarget:Set[TRUE]
+			}
 
 		if ${Target:First(exists)}
 		{
@@ -605,24 +605,24 @@ objectdef obj_Targets inherits obj_BaseClass
 			TypeID:Set[${Target.Value.TypeID}]
 			do
 			{
-	            switch ${Target.Value.GroupID}
-	            {
-	               case GROUP_LARGECOLLIDABLEOBJECT
-	               case GROUP_LARGECOLLIDABLESHIP
-	               case GROUP_LARGECOLLIDABLESTRUCTURE
-	               case GROUP_SENTRYGUN
-		           case GROUP_CONCORDDRONE
-	               case GROUP_CUSTOMSOFFICIAL
-	               case GROUP_POLICEDRONE
-                   case GROUP_CONVOYDRONE
-                 case GROUP_CONVOY
-				   case GROUP_FACTIONDRONE
-    			   case GROUP_BILLBOARD
-	                  continue
+							switch ${Target.Value.GroupID}
+							{
+								 case GROUP_LARGECOLLIDABLEOBJECT
+								 case GROUP_LARGECOLLIDABLESHIP
+								 case GROUP_LARGECOLLIDABLESTRUCTURE
+								 case GROUP_SENTRYGUN
+							 case GROUP_CONCORDDRONE
+								 case GROUP_CUSTOMSOFFICIAL
+								 case GROUP_POLICEDRONE
+									 case GROUP_CONVOYDRONE
+								 case GROUP_CONVOY
+					 case GROUP_FACTIONDRONE
+						 case GROUP_BILLBOARD
+										continue
 
-	               default
-	                  break
-	            }
+								 default
+										break
+							}
 
 				; If the Type ID is different then there's more then 1 type in the belt
 				if ${TypeID} != ${Target.Value.TypeID}
@@ -676,14 +676,14 @@ objectdef obj_Targets inherits obj_BaseClass
 			; Is there a chainable target? Is there a special or priority target?
 			if ${HasChainableTarget} && !${HasSpecialTarget} && !${HasPriorityTarget}
 			{
-	        	Logger:Log["NPC: Chaining Spawn"]
+				Logger:Log["NPC: Chaining Spawn"]
 				Chaining:Set[TRUE]
 			}
 
 			; Special exception, if there is only 1 type its most likely a chain in progress
 			if !${HasMultipleTypes} && !${HasPriorityTarget}
 			{
-	        	Logger:Log["NPC: Chaining Spawn"]
+				Logger:Log["NPC: Chaining Spawn"]
 				Chaining:Set[TRUE]
 			}
 
@@ -725,7 +725,7 @@ objectdef obj_Targets inherits obj_BaseClass
 				case GROUP_CONVOYDRONE
 				case GROUP_CONVOY
 				case GROUP_FACTIONDRONE
-			    case GROUP_BILLBOARD
+					case GROUP_BILLBOARD
 					continue
 
 				default
@@ -736,10 +736,10 @@ objectdef obj_Targets inherits obj_BaseClass
 			if ${Chaining}
 			{
 				; We're chaining, only kill chainable spawns'
-                if ${Target.Value.Group.Find["Battleship"](exists)}
-                {
-                   DoTarget:Set[TRUE]
-                }
+				if ${Target.Value.Group.Find["Battleship"](exists)}
+				{
+					DoTarget:Set[TRUE]
+				}
 			}
 			else
 			{
@@ -747,18 +747,18 @@ objectdef obj_Targets inherits obj_BaseClass
 				DoTarget:Set[TRUE]
 			}
 
-            ; override DoTarget to protect partially spawned chains
-            if ${DoNotKillList.Contains[${Target.Value.ID}]}
-            {
+			; override DoTarget to protect partially spawned chains
+			if ${DoNotKillList.Contains[${Target.Value.ID}]}
+			{
 				DoTarget:Set[FALSE]
-            }
+			}
 
 			; Do we have to target this target?
 			if ${DoTarget}
 			{
 				if !${Target.Value.IsLockedTarget} && !${Target.Value.BeingTargeted}
 				{
-					if ${Me.TargetCount} < ${Ship.MaxLockedTargets}
+					if ${Ship.TotalTargeting} < ${Ship.MaxLockedTargets}
 					{
 						if ${Ship.TypeID} == TYPE_RIFTER
 						{

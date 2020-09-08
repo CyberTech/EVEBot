@@ -558,7 +558,7 @@ objectdef obj_Missions
 
 			while ${This.HostileCount} > 0
 			{
-			   if ${Me.TargetedByCount} > 0 || ${Math.Calc[${Me.TargetingCount}+${Me.TargetCount}]} > 0
+			   if ${Me.TargetedByCount} > 0 || ${Ship.TotalTargeting} > 0
 			   {
 				  call This.TargetAgressors
 			   }
@@ -611,7 +611,7 @@ objectdef obj_Missions
 	  EVE:QueryEntities[targetIndex, "CategoryID = CATEGORYID_ENTITY"]
 	  targetIndex:GetIterator[targetIterator]
 
-	  Logger:Log["TargetingCount = ${Me.TargetingCount}, TargetCount = ${Me.TargetCount}"]
+	  Logger:Log["TargetingCount = ${Me.TargetingCount}, TargetCount = ${Me.TargetCount}", LOG_DEBUG]
 	  if ${targetIterator:First(exists)}
 	  {
 		 do
@@ -619,7 +619,7 @@ objectdef obj_Missions
 			if ${targetIterator.Value.IsTargetingMe} && \
 			   !${targetIterator.Value.BeingTargeted} && \
 			   !${targetIterator.Value.IsLockedTarget} && \
-			   ${Ship.SafeMaxLockedTargets} > ${Math.Calc[${Me.TargetingCount}+${Me.TargetCount}]}
+			   ${Ship.SafeMaxLockedTargets} > ${Ship.TotalTargeting}
 			{
 			   if ${targetIterator.Value.Distance} > ${Ship.OptimalTargetingRange}
 			   {
@@ -835,7 +835,7 @@ objectdef obj_Missions
 				  KeepAtRangeDistance:Set[${Math.Calc[${KeepAtRangeDistance}*1000]}]
 				  Target.Value:KeepAtRange[${KeepAtRangeDistance}]
 
-				   if ${Me.TargetCount} < ${Ship.MaxLockedTargets}
+				   if ${Ship.TotalTargeting} < ${Ship.MaxLockedTargets}
 				   {
 					   Logger:Log["Locking ${Target.Value.Name}"]
 					   Target.Value:LockTarget
@@ -868,33 +868,33 @@ objectdef obj_Missions
 
 		if ${Target:First(exists)}
 		{
-		   do
-		   {
-			switch ${Target.Value.GroupID}
+			do
 			{
-			   case GROUP_LARGECOLLIDABLEOBJECT
-			   case GROUP_LARGECOLLIDABLESHIP
-			   case GROUP_LARGECOLLIDABLESTRUCTURE
-				  continue
+				switch ${Target.Value.GroupID}
+				{
+					case GROUP_LARGECOLLIDABLEOBJECT
+					case GROUP_LARGECOLLIDABLESHIP
+					case GROUP_LARGECOLLIDABLESTRUCTURE
+						continue
 
-			   default
-				  break
+					default
+						break
+				}
+
+				if !${Target.Value.IsLockedTarget} && !${Target.Value.BeingTargeted}
+				{
+					if ${Ship.TotalTargeting} < ${Ship.MaxLockedTargets}
+					{
+						Logger:Log["CombatMission: Locking ${Target.Value.Name}"]
+						Target.Value:LockTarget
+					}
+				}
+
+				; Set the return value so we know we have targets
+				HasTargets:Set[TRUE]
 			}
-
-			   if !${Target.Value.IsLockedTarget} && !${Target.Value.BeingTargeted}
-			   {
-				   if ${Me.TargetCount} < ${Ship.MaxLockedTargets}
-				   {
-					   Logger:Log["Locking ${Target.Value.Name}"]
-					   Target.Value:LockTarget
-				   }
-			   }
-
-			   ; Set the return value so we know we have targets
-			   HasTargets:Set[TRUE]
-		   }
-		   while ${Target:Next(exists)}
-	  }
+			while ${Target:Next(exists)}
+		}
 
 		if ${HasTargets} && ${Me.ActiveTarget(exists)}
 		{
