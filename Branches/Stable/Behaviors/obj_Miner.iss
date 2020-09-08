@@ -1149,7 +1149,7 @@ objectdef obj_Miner
 			;	we don't already have enough asteroids locked. The Asteroids.TargetNext function will let us know if
 			;	we need to concentrate fire because we're out of new asteroids to target. If we're using an orca and
 			;	it's in the belt, use Asteroids.TargetNextInRange to only target roids nearby
-			if (${Math.Calc[${Me.TargetCount} + ${Me.TargetingCount}]} < ${Ship.SafeMaxLockedTargets}) && ${Asteroids.LockedAndLocking} < ${AsteroidsNeeded}
+			if (${Ship.TotalTargeting} < ${Ship.SafeMaxLockedTargets}) && ${Asteroids.LockedAndLocking} < ${AsteroidsNeeded}
 			{
 				if ${Config.Miner.DeliveryLocationTypeName.Equal[Orca]} && ${Entity[${Orca.Escape}](exists)}
 				{

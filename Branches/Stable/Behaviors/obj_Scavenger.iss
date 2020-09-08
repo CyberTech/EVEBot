@@ -164,7 +164,7 @@ objectdef obj_Scavenger inherits obj_BaseClass
 				return
 			}
 
-			if ${Math.Calc[${Me.TargetCount} + ${Me.TargetingCount}]} < ${Ship.SafeMaxLockedTargets}
+			if ${Ship.TotalTargeting} < ${Ship.SafeMaxLockedTargets}
 			{
 				call This.TargetNext
 			}
