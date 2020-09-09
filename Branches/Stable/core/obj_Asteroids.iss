@@ -146,10 +146,10 @@ objectdef obj_Asteroids
 		{
 			prefix:Set[${Config.Labels.OreBeltPrefix}]
 		}
-		
+
 		if !${prefix.NotNULLOrEmpty}
 		{
-			Logger:Log["MoveToRandomBeltBookMark: Bookmark prefix is empty, ignoring call", LOG_ERROR]	
+			Logger:Log["MoveToRandomBeltBookMark: Bookmark prefix is empty, ignoring call", LOG_ERROR]
 			return FALSE
 		}
 
@@ -186,7 +186,7 @@ objectdef obj_Asteroids
 
 		if ${BeltBookMarkList.Used} >= ${RandomBelt}
 		{
-			Logger:Log["MoveToRandomBeltBookMark: Calling WarpToBookMarkName ${BeltBookMarkList[${RandomBelt}].Label}", LOG_DEBUG]
+			Logger:Log["MoveToRandomBeltBookMark: Calling WarpToBookMarkName ${BeltBookMarkList[${RandomBelt}].Label} ${FleetWarp}", LOG_DEBUG]
 			call Ship.WarpToBookMark ${BeltBookMarkList[${RandomBelt}].ID} ${FleetWarp}
 			Ship:Activate_SurveyScanner
 
@@ -624,7 +624,7 @@ objectdef obj_Asteroids
 			; Call again, ignoring claimed status. We'll all double up and get out of here faster
 			TargetAsteroid:Set[${This.NearestAsteroid[0, TRUE]}]
 		}
-		
+
 		if ${TargetAsteroid} != -1
 		{
 			Logger:Log["Locking Asteroid ${TargetAsteroid}:${Entity[${TargetAsteroid}].Name}: ${EVEBot.MetersToKM_Str[${Entity[${TargetAsteroid}].Distance}]}"]
