@@ -1407,31 +1407,34 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 
 		;	This section is for moving ore into the Orca ore and cargo holds, so they will fill before the Corporate Hangar, to which the miner is depositing
 		; TODO - reduce this cycle spam
-		call Inventory.ShipOreHold.Activate
 		call Inventory.ShipFleetHangar.Activate
 
-		if !${Ship.CorpHangarEmpty}
+		if ${Config.Miner.DeliveryLocationTypeName.Equal["No Delivery"]}
 		{
-			if ${Config.Miner.DeliveryLocationTypeName.Equal["No Delivery"]}
+			; We're in no-delivery mode (we don't deliver, it's picked up)
+			; A hauler will be picking up from the fleet hold. Balance between keeping the fleet hold populated, but not full
+			if ${Ship.CorpHangarFull}
 			{
-				; A hauler will be picking up from the fleet hold. Balance between keeping the fleet hold populated, but not full
+				; The fleet hangar filled up, because we're filling it faster than the hauler can get, or the hauler is busted. Move to Ore hold for safekeeping and to make room for more.
 				call Cargo.TransferOreToShipCorpHangar ${MyShip.ID}
-				relay all -event EVEBot_Orca_Cargo ${Ship.CorpHangarUsedSpace[TRUE]}
 			}
-			else
+			relay all -event EVEBot_Orca_Cargo ${Ship.CorpHangarUsedSpace[TRUE]}
+		}
+		else
+		{
+			if ${Ship.CorpHangarHalfFull}
 			{
+				call Inventory.ShipOreHold.Activate
 				; Orca Base cargo space: Cargo: 30k, Ore: 150k, Fleet: 40k
 				if !${Ship.OreHoldFull} && !${Config.Miner.DeliveryLocationTypeName.Equal["Jetcan"]}
 				{
 					call Cargo.TransferOreFromShipFleetHangarToOreHold
 					Ship:StackOreHold
-					return
 				}
 				if !${Ship.CargoFull}
 				{
 					call Cargo.TransferOreFromShipFleetHangarToCargoHold
 					Ship:StackCargoHold
-					return
 				}
 			}
 		}

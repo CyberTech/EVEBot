@@ -407,6 +407,20 @@ objectdef obj_Ship
 		return FALSE
 	}
 
+	member:bool CorpHangarHalfFull()
+	{
+		if !${MyShip(exists)}
+		{
+			return FALSE
+		}
+
+		if ${This.CorpHangarFreeSpace} <= ${Math.Calc[${This.CorpHangarMinimumFreeSpace}*0.50]}
+		{
+			return TRUE
+		}
+		return FALSE
+	}
+
 	member:bool CorpHangarEmpty()
 	{
 		if !${MyShip(exists)}
