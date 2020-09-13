@@ -112,7 +112,8 @@ objectdef obj_Belts inherits obj_BaseClass
 			}
 */
 			;call Ship.WarpToBookMark ${SafeSpotIterator.Value.ID}
-			Navigator:FlyToEntityID["${Belt_CacheIterator.Value.ID}", ${WarpInDistance}]
+			Navigator:FlyToEntityID["${beltIterator.Value.ID}", ${WarpInDistance}]
+			wait 5
 			while ${Navigator.Busy}
 			{
 				wait 10
