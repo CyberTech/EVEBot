@@ -1147,7 +1147,7 @@ TODO - integrate in most of the flyto*
 			Ship:Deactivate_Cloak[]
 		}
 
-		if ${Ship.Drones.DeployedDroneCount} > 0
+		if ${Ship.Drones.DronesInSpace} > 0
 		{
 			Ship.Drones:ReturnAllToDroneBay["Navigator.ReadyToWarp"]
 			; it's up to the caller to determine if they want to ignore this or not.
