@@ -287,13 +287,6 @@ objectdef obj_Drones
 		return ${This.ActiveDroneIDList.Used}
 	}
 
-	member:int DeployedDroneCount()
-	{
-;; TODO - this is dupe of DronesInSpace
-		Me:GetActiveDroneIDs[This.ActiveDroneIDList]
-		return ${This.ActiveDroneIDList.Used}
-	}
-
 	member:bool CombatDroneShortage()
 	{
 		if !${This.DronesReady}

@@ -326,7 +326,7 @@ objectdef obj_Offense inherits obj_BaseClass
 					{
 						if ${ShouldLaunchCombatDrones}
 						{
-							if ${Ship.Drones.DeployedDroneCount} < 5 && ${Ship.Drones.DeployedDroneCount} < ${Ship.Drones.DronesInBay}
+							if ${Ship.Drones.DronesInSpace} < 5 && ${Ship.Drones.DronesInSpace} < ${Ship.Drones.DronesInBay}
 							{
 								Ship.Drones:LaunchAll
 							}
@@ -344,7 +344,7 @@ objectdef obj_Offense inherits obj_BaseClass
 							}
 						}
 					}
-					elseif ${Ship.Drones.DeployedDroneCount} > 0
+					elseif ${Ship.Drones.DronesInSpace} > 0
 					{
 						Logger:Log["Offense: Active target is out of range but we have drones out; recalling to orbit if they aren't already here.",LOG_DEBUG]
 						Ship.Drones:QuickReturnAllToOrbit
