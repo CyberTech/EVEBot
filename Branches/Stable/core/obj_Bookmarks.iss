@@ -1,17 +1,17 @@
 /*
 	Bookmark class
-	
+
 	Manages dynamic bookmarks for EVEBot
-	
+
 	-- CyberTech
-	
+
 */
 
 objectdef obj_Bookmarks
 {
 	variable index:string TemporaryBookMarks
 	variable string StoredLocation = ""
-		
+
 	method Initialize()
 	{
 		Logger:Log["obj_Bookmarks: Initialized", LOG_MINOR]
@@ -20,22 +20,22 @@ objectdef obj_Bookmarks
 	method Shutdown()
 	{
 	}
-	
+
 	method StoreLocation()
 	{
 		Logger:Log["Storing current location"]
 		;This.StoredLocation:Set["${Me.Name} ${Math.Rand[500000]:Inc[100000]}"]
 		This.StoredLocation:Set["${Math.Rand[5000]:Inc[1000]}"]
-		
+
 		/* Create the bookmark, but don't mark it as temporary, we'll handle it's cleanup thru RemoveStoredLocation */
 		This:CreateBookMark[FALSE, "${This.StoredLocation}"]
 	}
-	
+
 	member:bool CheckForStoredLocation()
 	{
 		return ${StoredLocation.Length} != 0
 	}
-	
+
 	method RemoveStoredLocation()
 	{
 		if ${This.StoredLocationExists}
@@ -44,7 +44,7 @@ objectdef obj_Bookmarks
 			StoredLocation:Set[""]
 		}
 	}
-	
+
 	member StoredLocationExists()
 	{
 		if ${This.StoredLocation.Length} > 0
@@ -53,36 +53,15 @@ objectdef obj_Bookmarks
 		}
 		return FALSE
 	}
-	
-	method CreateEntityBookMark(int32 ID, bool Temporary=FALSE, string Label="Default")
-	{
-		if !${Entity[${ID}](exists)}
-		{
-			Logger:Log["Debug: CreateBookMark: Invalid ID"]
-			return
-		}
-		
-		EntityName:Set[${Entity[${ID}].Name}
-		
-		if ${Label.Equal["Default"]}
-		{
-			Label:Set[${EntityName}]
-			
-		}
-		;Logger:Log["CreateBookMark: Label - ${Label}"]
-		
-		EVE:CreateBookmark["${Label}"]
-		
-	}
 
 	; Create a bookmark for the current location in space (or in station)
 	method CreateBookMark(bool Temporary=FALSE, string Label="Default")
 	{
 		if ${Label.Equal["Default"]}
 		{
-			Label:Set["${Me.Name} ${Math.Rand[500000]:Inc[100000]}]
+			Label:Set["${Me.Name} ${Math.Rand[500000]:Inc[100000]}"]
 		}
-		
+
 		EVE:CreateBookmark["${Label}"]
 		if ${Temporary}
 		{
@@ -93,7 +72,7 @@ objectdef obj_Bookmarks
 		{
 			;Logger:Log["CreateBookMark: Label - ${Label}"]
 		}
-		
+
 	}
 
 }
