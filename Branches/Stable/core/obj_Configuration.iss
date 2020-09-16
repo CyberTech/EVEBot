@@ -349,6 +349,8 @@ objectdef obj_Configuration_Miner
 			Logger:Log["obj_Configuration_Miner: Initialized ICE Types"]
 			This:Set_Default_Values_Ice[]
 		}
+		; Remove legacy ore volumes set 2020-09
+		This.MinerRef.FindSet[ORE_Volumes]:Remove
 	}
 
 	member:settingsetref MinerRef()
@@ -366,17 +368,11 @@ objectdef obj_Configuration_Miner
 		return ${BaseConfig.BaseRef.FindSet[${This.SetName}].FindSet[Ice_Types]}
 	}
 
-	member:settingsetref OreVolumesRef()
-	{
-		return ${BaseConfig.BaseRef.FindSet[${This.SetName}].FindSet[Ore_Volumes]}
-	}
-
 	method Set_Default_Values()
 	{
 		BaseConfig.BaseRef:AddSet[${This.SetName}]
 
 		This.MinerRef:AddSet[ORE_Types]
-		This.MinerRef:AddSet[ORE_Volumes]
 		This.MinerRef:AddSetting[Restrict To Belt, NO]
 		This.MinerRef:AddSetting[Restrict To Ore Type, NONE]
 		This.MinerRef:AddSetting[JetCan Naming, 1]
@@ -507,25 +503,8 @@ objectdef obj_Configuration_Miner
 		This.OreTypesRef:AddSetting[Shining Monazite, 1]
 		This.OreTypesRef:AddSetting[Shining Xenotime, 1]
 		This.OreTypesRef:AddSetting[Shining Ytterbite, 1]
-		
-		This:Set_Default_Values_Ice[]
 
-		This.OreVolumesRef:AddSetting[Mercoxit,40]
-		This.OreVolumesRef:AddSetting[Arkonor,16]
-		This.OreVolumesRef:AddSetting[Bistot,16]
-		This.OreVolumesRef:AddSetting[Crokite,16]
-		This.OreVolumesRef:AddSetting[Spodumain,16]
-		This.OreVolumesRef:AddSetting[Dark Ochre,8]
-		This.OreVolumesRef:AddSetting[Gneiss,5]
-		This.OreVolumesRef:AddSetting[Hedbergite,3]
-		This.OreVolumesRef:AddSetting[Hemorphite,3]
-		This.OreVolumesRef:AddSetting[Jaspet,2]
-		This.OreVolumesRef:AddSetting[Kernite,1.2]
-		This.OreVolumesRef:AddSetting[Omber,0.6]
-		This.OreVolumesRef:AddSetting[Plagioclase,0.35]
-		This.OreVolumesRef:AddSetting[Pyroxeres,0.3]
-		This.OreVolumesRef:AddSetting[Scordite,0.15]
-		This.OreVolumesRef:AddSetting[Veldspar,0.1]
+		This:Set_Default_Values_Ice[]
 	}
 
 	method Set_Default_Values_Ice()
@@ -1417,6 +1396,11 @@ objectdef obj_Configuration_Labels
 		Logger:Log["obj_Configuration_Labels: Initialized", LOG_MINOR]
 	}
 
+	member:settingsetref Ref()
+	{
+		return ${BaseConfig.BaseRef.FindSet[${This.SetName}]}
+	}
+
 	member:settingsetref LabelsRef()
 	{
 		return ${BaseConfig.BaseRef.FindSet[${This.SetName}]}
@@ -1430,6 +1414,9 @@ objectdef obj_Configuration_Labels
 		This.LabelsRef:AddSetting[Ice Belt Prefix,"Ice Belt:"]
 		This.LabelsRef:AddSetting[Ammo Prefix,"Ammo:"]
 	}
+
+	Define_ConfigItem(string, InstaUndockTag, "Undock")
+	Define_ConfigItem(string, InstaDockTag, "Dock")
 
 	member:string SafeSpotPrefix()
 	{
