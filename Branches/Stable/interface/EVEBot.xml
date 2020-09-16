@@ -2582,6 +2582,62 @@
 								}
 							</OnChange>
 						</Textentry>
+						<Text name='UndockInstaTagLabel'>
+							<X>25</X>
+							<Y>85</Y>
+							<Width>200</Width>
+							<Height>10</Height>
+							<Text>Tag for Undock Instas</Text>
+							<AutoTooltip>The string that undock insta bookmarks will contain. 1 space will be prepended and appended.</AutoTooltip>
+						</Text>
+						<Textentry name='UndockInstaTag'>
+							<X>230</X>
+							<Y>85</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<MaxLength>10</MaxLength>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Labels.InstaUndockTag}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Labels:InstaUndockTag[${This.Text}]
+								}
+								else
+								{
+									Script[EVEBot].VariableScope.Config.Labels:InstaUndockTag[""]
+								}
+							</OnChange>
+						</Textentry>
+						<Text name='DockInstaTagLabel'>
+							<X>25</X>
+							<Y>100</Y>
+							<Width>200</Width>
+							<Height>10</Height>
+							<Text>Tag for Dock Instas</Text>
+							<AutoTooltip>The string that dock insta bookmarks will contain. 1 space will be prepended and appended.</AutoTooltip>
+						</Text>
+						<Textentry name='DockInstaTag'>
+							<X>230</X>
+							<Y>100</Y>
+							<Width>100</Width>
+							<Height>18</Height>
+							<MaxLength>10</MaxLength>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Labels.InstaDockTag}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+									Script[EVEBot].VariableScope.Config.Labels:InstaDockTag[${This.Text}]
+								}
+								else
+								{
+									Script[EVEBot].VariableScope.Config.Labels:InstaDockTag[""]
+								}
+							</OnChange>
+						</Textentry>
 					</Tab>
 					<Tab name='Fleet'>
 						<checkbox name='cbUseFleet'>
