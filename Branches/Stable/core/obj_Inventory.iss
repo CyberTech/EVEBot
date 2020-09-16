@@ -364,8 +364,8 @@ ShipDroneBay itemid flagDroneBay 87
 
 * The "container" entry within the eveinventorywindow with the label "Corporation hangars" is now accessible and must be
   made active before the individual corporation folders are available.  For example:
-	if !${EVEWindow[Inventory].ChildWindowExists[StationCorpHangar]}
-		EVEWindow[Inventory]:MakeChildActive[Corporation hangars]
+	if !${EVEWindow[Inventory].ChildWindow[StationCorpHangar, "Folder1"](exists)}
+		EVEWindow[Inventory].ChildWindow[StationCorpHangars]:MakeActive
 
 TODO
  Find all :Open and :GetCargo or .*Cargo[..] calls for Entity-based work.
