@@ -168,7 +168,12 @@ objectdef obj_Drones inherits obj_BaseClass
 
 	method ReturnAllToDroneBay(string Caller)
 	{
-		if ${DroneReturnTimer.Ready} && ${This.DronesInSpace[FALSE]} > 0
+		if !${DroneReturnTimer.Ready}
+		{
+			Logger:Log["${LogPrefix} ReturnAllToDroneBay called too soon by ${Caller}", LOG_DEBUG]
+			return
+		}
+		if ${This.DronesInSpace[FALSE]} > 0
 		{
 			Logger:Log["${Caller}: Recalling ${This.ActiveDroneIDList.Used} Drones"]
 			This.ActiveDroneIDList:RemoveByQuery[${LavishScript.CreateQuery[GroupID = GROUP_FIGHTERDRONE]}]

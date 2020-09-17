@@ -183,13 +183,6 @@ objectdef obj_Navigator inherits obj_BaseClass
 			}
 			else
 			{
-				if ${This.AtDestination}
-				{
-					Destinations:Dequeue
-					; return now, without resetting timer. We'll handle the new dest on the next pulse.
-					return
-				}
-
 				This:Navigate
 			}
 
@@ -1215,7 +1208,12 @@ TODO - integrate in most of the flyto*
 			Ship:Deactivate_Cloak[]
 		}
 
-		if ${Ship.Drones.DronesInSpace} > 0
+		if !${Ship.Drones(exists)}
+		{
+			Logger:Log["${LogPrefix} Error - Missing drones object", LOG_CRITICAL]
+		}
+
+		if ${Ship.Drones.DronesInSpace[FALSE]} > 0
 		{
 			Ship.Drones:ReturnAllToDroneBay["Navigator.ReadyToWarp"]
 			; it's up to the caller to determine if they want to ignore this or not.
