@@ -131,8 +131,12 @@ objectdef obj_EVEWindow_Proxy
 
 		if (!${${This.GetFallthroughObject}(exists)})
 		{
-			;Logger:Log["Inventory.${This.ObjectName}: Error: ${This.GetFallthroughObject} doesn't exist", LOG_CRITICAL]
-			return FALSE
+			wait 20
+			if (!${${This.GetFallthroughObject}(exists)})
+			{
+				Logger:Log["Inventory.${This.ObjectName}: Error: ${This.GetFallthroughObject} doesn't exist", LOG_CRITICAL]
+				return FALSE
+			}
 		}
 
 		Logger:Log["\arInventory.${This.ObjectName}: Attempting ${This.GetFallthroughObject}", LOG_CRITICAL]
