@@ -339,9 +339,9 @@ objectdef obj_Cargo
 				do
 				{
 						QuantityToMove:Set[${ListIterator.Value.Quantity}]
-						if (${QuantityToMove} * ${ListIterator.Value.Volume}) >= ${Ship.OreHoldFreeSpace}
+						if (${QuantityToMove} * ${ListIterator.Value.Volume}) >= ${Ship.CargoFreeSpace}
 						{
-							QuantityToMove:Set[${Math.Calc[${Ship.OreHoldFreeSpace} / ${ListIterator.Value.Volume}]}]
+							QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${ListIterator.Value.Volume}]}]
 						}
 
 						Logger:Log["TransferListToCargoHold: Loading Ore: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${ListIterator.Value.Volume}]}m3) of ${ListIterator.Value.Name}"]
