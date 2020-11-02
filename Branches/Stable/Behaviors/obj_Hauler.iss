@@ -1242,21 +1242,10 @@ objectdef obj_Hauler
 			}
 		}
 
-		if ${Config.Miner.IceMining}
+		if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 		{
-			if ${Ship.CargoFreeSpace} < 1000 || ${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
-			{
-				Logger:Log["Cargo Hold Full (${Ship.UsedCargoCapacity}/${Ship.CargoThreshold}) - Dropping off cargo."]
-				return TRUE
-			}
-		}
-		else
-		{
-			if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
-			{
-				Logger:Log["Cargo Hold Full (${Ship.UsedCargoCapacity}/${Ship.CargoMinimumFreeSpace}) - Dropping off cargo."]
-				return TRUE
-			}
+			Logger:Log["Cargo Hold Full (${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}) - Dropping off cargo."]
+			return TRUE
 		}
 		return FALSE
 	}
