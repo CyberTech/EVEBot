@@ -956,22 +956,6 @@ objectdef obj_Miner
 		;	We need to make sure we're near our orca if we're using it as a delivery location
 		if ${Config.Miner.DeliveryLocationTypeName.Equal[Orca]}
 		{
-			;	Find out if we need to approach this target.
-			if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} > LOOT_RANGE && ${This.Approaching} == 0
-			{
-				if ${Entity[${Orca.Escape}].Distance} > WARP_RANGE
-				{
-					Logger:Log["ALERT:  ${Entity[${Orca.Escape}].Name} is a long way away.  Warping to it."]
-					Logger:Log["Debug: Entity:WarpTo to Orca from Line _LINE_ ", LOG_DEBUG]
-					Entity[${Orca.Escape}]:WarpTo[1000]
-					return
-				}
-				Logger:Log["Miner.Mine: Approaching Orca to within loot range (currently ${Entity[${Orca.Escape}].Distance})"]
-				This:StartApproaching[${Entity[${Orca.Escape}].ID}, LOOT_RANGE]
-				This.ApproachingOrca:Set[TRUE]
-				return
-			}
-
 			if ${This.Approaching} != 0
 			{
 				if !${Entity[${This.Approaching}](exists)}
@@ -1008,23 +992,41 @@ objectdef obj_Miner
 						}
 					}
 					while ${Target:Next(exists)}
-					return
 				}
 			}
+			elseif ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} > LOOT_RANGE
+			{
+				;	Find out if we need to approach the Orca
+				if ${Entity[${Orca.Escape}].Distance} > WARP_RANGE
+				{
+					Logger:Log["ALERT:  ${Entity[${Orca.Escape}].Name} is a long way away.  Warping to it."]
+					Logger:Log["Debug: Entity:WarpTo to Orca from Line _LINE_ ", LOG_DEBUG]
+					Entity[${Orca.Escape}]:WarpTo[1000]
+					return
+				}
+				Logger:Log["Miner.Mine: Approaching Orca to within loot range (currently ${Entity[${Orca.Escape}].Distance})"]
+				This:StartApproaching[${Entity[${Orca.Escape}].ID}, LOOT_RANGE]
+				This.ApproachingOrca:Set[TRUE]
+				return
+			}
 
+			; This performs Orca deliveries if we've got at least a tenth of our cargo hold full
+			if ${MyShip.HasOreHold}
+			{
+				call Inventory.ShipOreHold.Activate
+			}
+			else
+			{
+				call Inventory.ShipCargo.Activate
+			}
 
-			call Inventory.ShipOreHold.Activate
-			call Inventory.ShipCargo.Activate
-			;	This performs Orca deliveries if we've got at least a tenth of our cargo hold full
 			if (${MyShip.HasOreHold} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoTenthFull}
 			{
-				if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE
-				{
 					Logger:Log["Emptying ore to ${Entity[${Orca.Escape}].Name}'s Corporate Hangars"]
 					call Cargo.TransferOreToShipCorpHangar ${Entity[${Orca.Escape}].ID}
 					call Cargo.ReplenishCrystals ${Entity[${Orca.Escape}].ID}
-				}
 			}
+
 		}
 		else
 		{
