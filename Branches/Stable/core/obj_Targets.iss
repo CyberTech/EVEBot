@@ -486,21 +486,14 @@ objectdef obj_Targets inherits obj_BaseClass
 		variable iterator Target
 
 		/* MyShip.MaxTargetRange contains the (possibly) damped value */
-		if ${Ship.TypeID} == TYPE_RIFTER
-		{
-			EVE:QueryEntities[Targets, "CategoryID = CATEGORYID_ENTITY && Distance <= 100000"]
-		}
-		else
-		{
-			EVE:QueryEntities[Targets, "CategoryID = CATEGORYID_ENTITY && Distance <= ${MyShip.MaxTargetRange}"]
-		}
+		EVE:QueryEntities[Targets, "CategoryID = CATEGORYID_ENTITY && Distance <= ${MyShip.MaxTargetRange} && GroupID < GROUP_NPC_MINING_FRIGATE && GroupID > GROUP_NPC_MINING_HAULER"]
 		Targets:GetIterator[Target]
 
 		if !${Target:First(exists)}
 		{
 			if ${Ship.IsDamped}
 			{	/* Ship.MaxTargetRange contains the maximum undamped value */
-				EVE:QueryEntities[Targets, "CategoryID = CATEGORYID_ENTITY && Distance <= ${Ship.MaxTargetRange}"]
+				EVE:QueryEntities[Targets, "CategoryID = CATEGORYID_ENTITY && Distance <= ${Ship.MaxTargetRange} && GroupID < GROUP_NPC_MINING_FRIGATE && GroupID > GROUP_NPC_MINING_HAULER"]
 				Targets:GetIterator[Target]
 
 				if !${Target:First(exists)}
@@ -552,7 +545,7 @@ objectdef obj_Targets inherits obj_BaseClass
 					variable string NPCGroup
 					variable string NPCShipType
 
-				 	NPCName:Set[${Target.Value.Name}]
+					NPCName:Set[${Target.Value.Name}]
 					NPCGroup:Set[${Target.Value.Group}]
 					pos:Set[1]
 					while ${NPCGroup.Token[${pos}, " "](exists)}
@@ -561,43 +554,43 @@ objectdef obj_Targets inherits obj_BaseClass
 						NPCShipType:Set[${NPCGroup.Token[${pos}, " "]}]
 						pos:Inc
 					}
-						Logger:Log["NPC: ${NPCName}(${NPCShipType}) ${EVEBot.ISK_To_Str[${Target.Value.Bounty}]}"]
+					Logger:Log["NPC: ${NPCName}(${NPCShipType}) ${EVEBot.ISK_To_Str[${Target.Value.Bounty}]}"]
 
-						;Logger:Log["DEBUG: Type: ${Target.Value.Type}(${Target.Value.TypeID})"]
-						;Logger:Log["DEBUG: Category: ${Target.Value.Category}(${Target.Value.CategoryID})"]
+					;Logger:Log["DEBUG: Type: ${Target.Value.Type}(${Target.Value.TypeID})"]
+					;Logger:Log["DEBUG: Category: ${Target.Value.Category}(${Target.Value.CategoryID})"]
 
-						switch ${Target.Value.GroupID}
-						{
-							 case GROUP_LARGECOLLIDABLEOBJECT
-							 case GROUP_LARGECOLLIDABLESHIP
-							 case GROUP_LARGECOLLIDABLESTRUCTURE
-							 case GROUP_SENTRYGUN
-							 case GROUP_CONCORDDRONE
-							 case GROUP_CUSTOMSOFFICIAL
-							 case GROUP_POLICEDRONE
-							 case GROUP_CONVOYDRONE
-							 case GROUP_CONVOY
-				 case GROUP_FACTIONDRONE
-				 case GROUP_BILLBOARD
-									continue
+					switch ${Target.Value.GroupID}
+					{
+						case GROUP_LARGECOLLIDABLEOBJECT
+						case GROUP_LARGECOLLIDABLESHIP
+						case GROUP_LARGECOLLIDABLESTRUCTURE
+						case GROUP_SENTRYGUN
+						case GROUP_CONCORDDRONE
+						case GROUP_CUSTOMSOFFICIAL
+						case GROUP_POLICEDRONE
+						case GROUP_CONVOYDRONE
+						case GROUP_CONVOY
+						case GROUP_FACTIONDRONE
+						case GROUP_BILLBOARD
+							continue
 
-							 default
-									break
-						}
-			if ${NPCGroup.Find["Battleship"](exists)}
-			{
+						default
+							break
+					}
+					if ${NPCGroup.Find["Battleship"](exists)}
+					{
 							This.TotalSpawnValue:Inc[${Target.Value.Bounty}]
-						}
-				 }
-				 while ${Target:Next(exists)}
-				 Logger:Log["NPC: Battleship Value is ${EVEBot.ISK_To_Str[${This.TotalSpawnValue}]}"]
-			}
+					}
+				}
+				while ${Target:Next(exists)}
+				Logger:Log["NPC: Battleship Value is ${EVEBot.ISK_To_Str[${This.TotalSpawnValue}]}"]
+		}
 
-			if ${This.TotalSpawnValue} >= ${Config.Combat.MinChainBounty}
-			{
-				 ;Logger:Log["NPC: Spawn value exceeds minimum.  Should chain this spawn."]
-				 HasChainableTarget:Set[TRUE]
-			}
+		if ${This.TotalSpawnValue} >= ${Config.Combat.MinChainBounty}
+		{
+			 ;Logger:Log["NPC: Spawn value exceeds minimum.  Should chain this spawn."]
+			 HasChainableTarget:Set[TRUE]
+		}
 
 		if ${Target:First(exists)}
 		{
@@ -605,24 +598,23 @@ objectdef obj_Targets inherits obj_BaseClass
 			TypeID:Set[${Target.Value.TypeID}]
 			do
 			{
-							switch ${Target.Value.GroupID}
-							{
-								 case GROUP_LARGECOLLIDABLEOBJECT
-								 case GROUP_LARGECOLLIDABLESHIP
-								 case GROUP_LARGECOLLIDABLESTRUCTURE
-								 case GROUP_SENTRYGUN
-							 case GROUP_CONCORDDRONE
-								 case GROUP_CUSTOMSOFFICIAL
-								 case GROUP_POLICEDRONE
-									 case GROUP_CONVOYDRONE
-								 case GROUP_CONVOY
-					 case GROUP_FACTIONDRONE
-						 case GROUP_BILLBOARD
-										continue
-
-								 default
-										break
-							}
+				switch ${Target.Value.GroupID}
+				{
+					case GROUP_LARGECOLLIDABLEOBJECT
+					case GROUP_LARGECOLLIDABLESHIP
+					case GROUP_LARGECOLLIDABLESTRUCTURE
+					case GROUP_SENTRYGUN
+					case GROUP_CONCORDDRONE
+					case GROUP_CUSTOMSOFFICIAL
+					case GROUP_POLICEDRONE
+					case GROUP_CONVOYDRONE
+					case GROUP_CONVOY
+					case GROUP_FACTIONDRONE
+					case GROUP_BILLBOARD
+						continue
+					default
+						break
+				}
 
 				; If the Type ID is different then there's more then 1 type in the belt
 				if ${TypeID} != ${Target.Value.TypeID}
