@@ -168,6 +168,10 @@ objectdef obj_Hauler
 	  		return
 		}
 
+		if ${MyShip.HasOreHold}
+		{
+			call Inventory.ShipOreHold.Activate
+		}
 
 		;	If I'm not in a station and I'm full, I should head to a station to unload - Ignore dropoff if Orca Delivery is disabled.
 		if ${This.HaulerFull}
@@ -206,7 +210,6 @@ objectdef obj_Hauler
 			;	*	If everything above failed and there's a station in the same system, dock there
 			;	*	If everything above failed, check if we're warping and warp to a safe spot
 			case HARDSTOP
-				relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.CurrentBehavior}"
 				if ${Me.InStation}
 				{
 					break
@@ -321,9 +324,9 @@ objectdef obj_Hauler
 				call Cargo.TransferCargoFromShipCorporateHangarToStation
 
 				call Station.Undock
+				wait 20 ${Me.InSpace}
 				relay all -event EVEBot_HaulerMSG ${Ship.CargoFreeSpace}
 				break
-
 
 			case HAUL
 				if ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}](exists)} && ${EVE.Bookmark[${Config.Miner.MiningSystemBookmark}].SolarSystemID} != ${Me.SolarSystemID}
@@ -1227,7 +1230,6 @@ objectdef obj_Hauler
 	{
 		if ${MyShip.HasOreHold}
 		{
-			call Inventory.ShipOreHold.Activate
 			if ${Ship.OreHoldFull}
 			{
 				Logger:Log["Ore Hold Full (${Ship.OreHoldUsedCapacity}/${Ship.OreHoldCapacity}) - Dropping off cargo."]
