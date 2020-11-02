@@ -168,7 +168,7 @@ objectdef obj_Hauler
 	  		return
 		}
 
-		if ${MyShip.HasOreHold}
+		if ${MyShip.HasOreHold} && ${Inventory.ShipOreHold.UsedCapacity} < 0
 		{
 			call Inventory.ShipOreHold.Activate
 		}
@@ -1241,6 +1241,7 @@ objectdef obj_Hauler
 		{
 			if ${Ship.CargoFreeSpace} < 1000 || ${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 			{
+				Logger:Log["Cargo Hold Full (${Ship.UsedCargoCapacity}/${Ship.CargoThreshold}) - Dropping off cargo."]
 				return TRUE
 			}
 		}
@@ -1248,6 +1249,7 @@ objectdef obj_Hauler
 		{
 			if ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 			{
+				Logger:Log["Cargo Hold Full (${Ship.UsedCargoCapacity}/${Ship.CargoMinimumFreeSpace}) - Dropping off cargo."]
 				return TRUE
 			}
 		}
