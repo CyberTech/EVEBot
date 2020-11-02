@@ -168,6 +168,11 @@ objectdef obj_Hauler
 	  		return
 		}
 
+		if ${Inventory.ShipCargo.UsedCapacity} < 0
+		{
+			call Inventory.ShipCargo.Activate
+		}
+
 		if ${MyShip.HasOreHold} && ${Inventory.ShipOreHold.UsedCapacity} < 0
 		{
 			call Inventory.ShipOreHold.Activate
