@@ -486,14 +486,14 @@ objectdef obj_Targets inherits obj_BaseClass
 		variable iterator Target
 
 		/* MyShip.MaxTargetRange contains the (possibly) damped value */
-		EVE:QueryEntities[Targets, "CategoryID = CATEGORYID_ENTITY && Distance <= ${MyShip.MaxTargetRange} && GroupID < GROUP_NPC_MINING_FRIGATE && GroupID > GROUP_NPC_MINING_HAULER"]
+		EVE:QueryEntities[Targets, "CategoryID = CATEGORYID_ENTITY && Distance <= ${MyShip.MaxTargetRange} && (GroupID < GROUP_NPC_MINING_FRIGATE || GroupID > GROUP_NPC_MINING_HAULER)"]
 		Targets:GetIterator[Target]
 
 		if !${Target:First(exists)}
 		{
 			if ${Ship.IsDamped}
 			{	/* Ship.MaxTargetRange contains the maximum undamped value */
-				EVE:QueryEntities[Targets, "CategoryID = CATEGORYID_ENTITY && Distance <= ${Ship.MaxTargetRange} && GroupID < GROUP_NPC_MINING_FRIGATE && GroupID > GROUP_NPC_MINING_HAULER"]
+				EVE:QueryEntities[Targets, "CategoryID = CATEGORYID_ENTITY && Distance <= ${Ship.MaxTargetRange} && (GroupID < GROUP_NPC_MINING_FRIGATE || GroupID > GROUP_NPC_MINING_HAULER)"]
 				Targets:GetIterator[Target]
 
 				if !${Target:First(exists)}
