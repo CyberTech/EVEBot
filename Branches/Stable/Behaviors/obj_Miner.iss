@@ -817,9 +817,7 @@ objectdef obj_Miner
 							}
 						}
 
-						if ${Entity[${Orca.Escape}](exists)} && \
-							${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE && \
-							${EVEWindow[ByItemID, ${Entity[${Orca.Escape}]}](exists)}
+						if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE
 						{
 							call Cargo.TransferOreToShipCorpHangar ${Entity[${Orca.Escape}]}
 						}
@@ -1424,11 +1422,11 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 		}
 		else
 		{
-			if ${Ship.CorpHangarHalfFull}
+			if !${Config.Miner.DeliveryLocationTypeName.Equal["Jetcan"]} && ${Ship.CorpHangarHalfFull}
 			{
 				call Inventory.ShipOreHold.Activate
 				; Orca Base cargo space: Cargo: 30k, Ore: 150k, Fleet: 40k
-				if !${Ship.OreHoldFull} && !${Config.Miner.DeliveryLocationTypeName.Equal["Jetcan"]}
+				if !${Ship.OreHoldFull}
 				{
 					call Cargo.TransferOreFromShipFleetHangarToOreHold
 					Ship:StackOreHold
