@@ -813,11 +813,6 @@ objectdef obj_Orca
 			}
 		}
 
-		;	This calls the defense routine if Launch Combat Drones is turned on
-		if ${Config.Combat.LaunchCombatDrones} && !${Ship.InWarp}
-		{
-			call Defend
-		}
 		if ${Config.Miner.OrcaTractorLoot}
 		{
 			call This.Tractor
