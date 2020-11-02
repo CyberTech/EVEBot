@@ -98,12 +98,12 @@ objectdef obj_EVEWindow_Proxy
 		{
 			if ${Inventory.IDRequired.Contains[${This.InvName}]}
 			{
-				Logger:Log["Inventory.${This.ObjectName}: Station or Entity ID Required for this container type", LOG_CRITICAL]
+				Logger:Log["Inventory.${This.ObjectName}: Station or Entity ID Required for this container type", LOG_ERROR]
 				return FALSE
 			}
 			if ${This.InvName.Length} == 0
 			{
-				Logger:Log["Inventory.${This.ObjectName}: Neither Name nor ID were specified", LOG_CRITICAL]
+				Logger:Log["Inventory.${This.ObjectName}: Neither Name nor ID were specified", LOG_ERROR]
 				return FALSE
 			}
 
@@ -116,7 +116,7 @@ objectdef obj_EVEWindow_Proxy
 
 		if ${This.InvID} == -1
 		{
-			Logger:Log["Inventory.${This.ObjectName}: Error: InvID still -1", LOG_CRITICAL]
+			Logger:Log["Inventory.${This.ObjectName}: Error: InvID still -1", LOG_ERROR]
 			return FALSE
 		}
 
@@ -134,12 +134,12 @@ objectdef obj_EVEWindow_Proxy
 			wait 20
 			if (!${${This.GetFallthroughObject}(exists)})
 			{
-				Logger:Log["Inventory.${This.ObjectName}: Error: ${This.GetFallthroughObject} doesn't exist", LOG_CRITICAL]
+				Logger:Log["Inventory.${This.ObjectName}: Error: ${This.GetFallthroughObject} doesn't exist", LOG_ERROR]
 				return FALSE
 			}
 		}
 
-		Logger:Log["\arInventory.${This.ObjectName}: Attempting ${This.GetFallthroughObject}", LOG_CRITICAL]
+		Logger:Log["\arInventory.${This.ObjectName}: Attempting ${This.GetFallthroughObject}", LOG_STANDARD]
 
 		Inventory.${This.ObjectName}:MakeActive
 		variable int Count = 0
@@ -150,7 +150,7 @@ objectdef obj_EVEWindow_Proxy
 			wait 1
 			if ${This.IsCurrent}
 			{
-				Logger:Log["\ayInventory.${This.ObjectName}: MakeActive true after ${Count} waits", LOG_CRITICAL]
+				;Logger:Log["\t\ayInventory.${This.ObjectName}: MakeActive true after ${Count} waits", LOG_STANDARD]
 				Inventory.Current:SetReference[This]
 				wait 5
 				return TRUE
@@ -160,7 +160,7 @@ objectdef obj_EVEWindow_Proxy
 		}
 		while (${Count} < 50)
 
-		Logger:Log["\arInventory.${This.ObjectName}: MakeActive timed out: ${This.GetFallthroughObject}", LOG_CRITICAL]
+		Logger:Log["\t\arInventory.${This.ObjectName}: MakeActive timed out: ${This.GetFallthroughObject}", LOG_CRITICAL]
 		return FALSE
 	}
 
@@ -182,7 +182,7 @@ objectdef obj_EVEWindow_Proxy
 
 	method StackAll()
 	{
-		Logger:Log["\arInventory.${This.ObjectName}: StackAll not implemented", LOG_CRITICAL]
+		Logger:Log["\arInventory.${This.ObjectName}: StackAll not implemented", LOG_ERROR]
 	}
 
 	/* Can be called with no params, 1, or 2.
