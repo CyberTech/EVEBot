@@ -146,15 +146,16 @@ objectdef obj_EVEWindow_Proxy
 		wait 8
 		do
 		{
+			; Wait 5 seconds, a tenth at a time
+			wait 1
 			if ${This.IsCurrent}
 			{
 				Logger:Log["\ayInventory.${This.ObjectName}: MakeActive true after ${Count} waits", LOG_CRITICAL]
 				Inventory.Current:SetReference[This]
+				wait 5
 				return TRUE
 			}
 
-			; Wait 5 seconds, a tenth at a time
-			wait 1
 			Count:Inc
 		}
 		while (${Count} < 50)
