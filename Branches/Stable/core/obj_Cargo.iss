@@ -1181,6 +1181,14 @@ objectdef obj_Cargo
 
 		if ${CargoIterator:First(exists)}
 		{
+			call Inventory.OpenEntityFleetHangar ${dest}
+			call Inventory.EntityFleetHangar.Activate ${dest}
+			if !${Inventory.EntityFleetHangar.IsCurrent}
+			{
+				Logger:Log["DEBUG: obj_Cargo:TransferListToShipCorporateHangar: Unable to open target fleet hangar"]
+				return false
+			}
+
 			do
 			{
 				Logger:Log["TransferListToShipCorporateHangar: Unloading Cargo: ${CargoIterator.Value.Name} x ${CargoIterator.Value.Quantity}"]
