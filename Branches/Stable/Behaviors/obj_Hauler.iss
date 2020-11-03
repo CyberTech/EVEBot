@@ -100,30 +100,44 @@ objectdef obj_Hauler
 
 	method SetState()
 	{
+		if ${Me.InStation}
+		{
+			if ${EVEBot.ReturnToStation}
+			{
 				;	If we're in a station HARD STOP has been called for, just idle until user intervention
+				This.CurrentState:Set["IDLE"]
+				return
+			}
+		}
+		else
+		{
 			; Not in station
-		;	*	They're lower than acceptable Min Security Status on the Miner tab
-		;	*	I'm in a pod.  Oh no!
-		if (${Social.PossibleHostiles} || ${Ship.IsPod}) && !${EVEBot.ReturnToStation}
+			if ${EVEBot.ReturnToStation}
 			{
+				;	If we're in space and HARD STOP has been called for, try to get to a station
 				This.CurrentState:Set["HARDSTOP"]
-			Logger:Log["HARD STOP: Possible hostiles, cargo hold not changing, or ship in a pod!"]
-			EVEBot.ReturnToStation:Set[TRUE]
 				return
 			}
-
 			;	We need to check to find out if I should "HARD STOP" - dock and wait for user intervention.  Reasons to do this:
-		if ${EVEBot.ReturnToStation} && ${Me.InStation}
+			;	*	If someone targets us
+			;	*	They're lower than acceptable Min Security Status on the Miner tab
+			if ${Social.PossibleHostiles}
 			{
-			This.CurrentState:Set["IDLE"]
+				This.CurrentState:Set["HARDSTOP"]
+				Logger:Log["HARD STOP: Possible hostiles, notifying fleet"]
+				relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.CurrentBehavior} (Hostiles)"
+				EVEBot.ReturnToStation:Set[TRUE]
+				return
+			}
+			if ${Ship.IsPod}
+			{
+				This.CurrentState:Set["HARDSTOP"]
+				Logger:Log["HARD STOP: I'm in a Pod, notifying fleet of my failure"]
+				relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.CurrentBehavior} (InPod)"
+				EVEBot.ReturnToStation:Set[TRUE]
 				return
 			}
 
-		;	If we're in space and HARD STOP has been called for, try to get to a station
-		if ${EVEBot.ReturnToStation} && !${Me.InStation}
-			{
-				This.CurrentState:Set["HARDSTOP"]
-				return
 		}
 
 		;	Find out if we should "SOFT STOP" and flee.  Reasons to do this:
@@ -131,15 +145,17 @@ objectdef obj_Hauler
 		;	*	Pilot is on Blacklist ("Run on Blacklisted Pilot" enabled on Fleeing tab)
 		;	*	Pilot is not on Whitelist ("Run on Non-Whitelisted Pilot" enabled on Fleeing tab)
 		;	This checks for both In Station and out, preventing spam if you're in a station.
-		if !${Social.IsSafe}  && !${EVEBot.ReturnToStation} && !${Me.InStation}
+		if !${Social.IsSafe} && !${EVEBot.ReturnToStation}
 		{
+			if !${Me.InStation}
+			{
 				This.CurrentState:Set["FLEE"]
 				Logger:Log["FLEE: Low Standing player or system unsafe, fleeing"]
-			return
 			}
-		if !${Social.IsSafe}  && !${EVEBot.ReturnToStation} && ${Me.InStation}
+			else
 			{
 				This.CurrentState:Set["IDLE"]
+			}
 			return
 		}
 
