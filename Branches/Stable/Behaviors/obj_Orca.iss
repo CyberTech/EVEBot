@@ -1010,7 +1010,7 @@ objectdef obj_Orca
 					Logger:Log["Debug: Entity:WarpTo to ${LocationID} from Line _LINE_ ", LOG_DEBUG]
 					Entity[${LocationID}]:WarpTo[0]
 				}
-				if ${Universe[${LocationID}](exists)} && ${Universe[${LocationID}].Name} != NULL
+				if ${Universe[${LocationID}](exists)}
 				{
 					Universe[${LocationID}]:SetDestination
 					if !${Me.AutoPilotOn}
