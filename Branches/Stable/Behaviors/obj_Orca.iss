@@ -787,12 +787,12 @@ objectdef obj_Orca
 		{
 			; We're in no-delivery mode (we don't deliver, it's picked up)
 			; A hauler will be picking up from the fleet hold. Balance between keeping the fleet hold populated, but not full
+			relay all -event EVEBot_Orca_Cargo ${Ship.CorpHangarUsedSpace[TRUE]}
 			if ${Ship.CorpHangarFull}
 			{
 				; The fleet hangar filled up, because we're filling it faster than the hauler can get, or the hauler is busted. Move to Ore hold for safekeeping and to make room for more.
-				call Cargo.TransferOreToShipCorpHangar ${MyShip.ID}
+				call Cargo.TransferOreFromShipFleetHangarToOreHold
 			}
-			relay all -event EVEBot_Orca_Cargo ${Ship.CorpHangarUsedSpace[TRUE]}
 		}
 		else
 		{
