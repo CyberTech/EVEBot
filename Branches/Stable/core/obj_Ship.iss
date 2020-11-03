@@ -37,7 +37,7 @@ objectdef obj_Ship
 	variable index:module ModuleList_TrackingComputer
 	variable index:module ModuleList_GangLinks
 	variable index:module ModuleList_SurveyScanners
-	
+
 	variable time SurveyScanWaitTime
 	variable bool Repairing_Armor = FALSE
 	variable bool Repairing_Hull = FALSE
@@ -370,6 +370,7 @@ objectdef obj_Ship
 		return ${Math.Calc[${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipFleetHangar].Capacity} - ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipFleetHangar].UsedCapacity}]}
 	}
 
+; TODO - Reported broken - 2020-11-02
 	member:float CorpHangarUsedSpace(bool IgnoreCrystals=FALSE)
 	{
 		if !${MyShip(exists)}
@@ -2077,7 +2078,7 @@ objectdef obj_Ship
 		This.Drones:ReturnAllToDroneBay["Ship.WarpPrepare"]
 		This:Deactivate_SensorBoost
 		This:Deactivate_Gang_Links
-		
+
 		if ${This.Drones.WaitingForDrones}
 		{
 			Logger:Log["Drone deployment already in process, delaying warp (${This.Drones.WaitingForDrones})", LOG_CRITICAL]
