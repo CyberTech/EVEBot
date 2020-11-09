@@ -63,6 +63,9 @@ objectdef obj_Destination
 			variablecase ${Navigator.DEST_ACTION_ALIGNTO}
 				EntityID:Set[${_EntityID}]
 				break
+			default
+				Logger:Log["${LogPrefix} - obj_Destination: ERROR: Unknown Destination Type ${DestinationType}"]
+				break
 		}
 		Logger:Log["Navigator: Queued ${This.ToString}", LOG_DEBUG]
 	}
@@ -84,7 +87,7 @@ objectdef obj_Destination
 			variablecase ${Navigator.DEST_FLEETMEMBER}
 				return "Fleet Member ID ${FleetMemberID}"
 			variablecase ${Navigator.DEST_BOOKMARK}
-				return "Bookmark ${Bookmark}"
+				return "Bookmark ${BookmarkID}"
 			variablecase ${Navigator.DEST_ACTION_APPROACH}
 				return "EntityID ${EntityID} (${Entity[${EntityID}].Name}) (Approach)"
 			variablecase ${Navigator.DEST_ACTION_ORBIT}
@@ -101,6 +104,8 @@ objectdef obj_Destination
 				return "EntityID ${EntityID} (${Entity[${EntityID}].Name}) (Activate)"
 			variablecase ${Navigator.DEST_ACTION_ALIGNTO}
 				return "EntityID ${EntityID} (${Entity[${EntityID}].Name}) (AlignTo)"
+			default
+				return "obj_Destination:ToString ERROR: Unknown Destination Type ${DestinationType}"
 		}
 
 		return "Unknown Destination Type"
@@ -604,7 +609,7 @@ TODO - integrate in most of the flyto*
 				This:Navigate_AlignTo[]
 				break
 			default
-				Logger:Log["${LogPrefix} - Navigate: ERROR: Unknown Destination Type"]
+				Logger:Log["${LogPrefix} - Navigate: ERROR: Unknown Destination Type ${This.Destinations[1].DestinationType}"]
 				break
 		}
 	}
@@ -933,7 +938,7 @@ TODO - integrate in most of the flyto*
 			return
 		}
 
-		if ${This.CurrentState} != ${STATE_APPROACHING} || ${MyShip.ToEntity.Approaching} != ${This.Destinations[1].EntityID} 
+		if ${This.CurrentState} != ${STATE_APPROACHING} || ${MyShip.ToEntity.Approaching} != ${This.Destinations[1].EntityID}
 		{
 			Logger:Log["${LogPrefix} - Navigate_Approach: Approaching ${Entity[${This.Destinations[1].EntityID}].Name} @${EVEBot.MetersToKM_Str[${This.Destinations[1].Distance}]} - ${Math.Calc[${Entity[${This.Destinations[1].EntityID}].Distance} / ${MyShip.MaxVelocity}].Ceil} Seconds away"]
 			This:SetState[${STATE_APPROACHING}]
@@ -1053,7 +1058,7 @@ TODO - integrate in most of the flyto*
 			This:CompleteCurrent
 			return
 		}
-	
+
 		; We haven't initiated the dock yet
 		if ${This.CurrentState} != ${STATE_DOCKING}
 		{
