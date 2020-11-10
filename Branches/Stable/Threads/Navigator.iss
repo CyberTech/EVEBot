@@ -15,14 +15,15 @@ objectdef obj_Destination
 	variable int64 Distance
 
 	variable int64 EntityID
-	variable int64 SystemID
+	variable int64 SolarSystemID
 	variable int64 FleetMemberID
 	variable int64 BookmarkID
 	variable bool InProgress
 	variable bool InteractWithDest
 
+	variable string Name
 
-	method Initialize(_Type = 0, int64 _Distance = 0, int64 _EntityID = 0, int64 _SystemID = 0, int64 _FleetMemberID = 0, int64 _Bookmark = 0, bool _InteractWithDest = FALSE)
+	method Initialize(_Type = 0, int64 _Distance = 0, int64 _EntityID = 0, int64 _SolarSystemID = 0, int64 _FleetMemberID = 0, int64 _Bookmark = 0, bool _InteractWithDest = FALSE)
 	{
 		DestinationType:Set[${_Type}]
 		Distance:Set[${_Distance}]
@@ -34,7 +35,7 @@ objectdef obj_Destination
 				EntityID:Set[${_EntityID}]
 				break
 			variablecase ${Navigator.DEST_SYSTEM}
-				SystemID:Set[${_SystemID}]
+				SolarSystemID:Set[${_SolarSystemID}]
 				break
 			variablecase ${Navigator.DEST_FLEETMEMBER}
 				FleetMemberID:Set[${MemberID}]
@@ -54,6 +55,9 @@ objectdef obj_Destination
 			variablecase ${Navigator.DEST_ACTION_DOCK}
 				EntityID:Set[${_EntityID}]
 				break
+			variablecase ${Navigator.DEST_ACTION_UNDOCK}
+				; No value
+				break
 			variablecase ${Navigator.DEST_ACTION_JUMP}
 				EntityID:Set[${_EntityID}]
 				break
@@ -64,15 +68,15 @@ objectdef obj_Destination
 				EntityID:Set[${_EntityID}]
 				break
 			default
-				Logger:Log["${LogPrefix} - obj_Destination: ERROR: Unknown Destination Type ${DestinationType}"]
+				Logger:Log["obj_Destination: ERROR: Unknown Destination Type ${DestinationType}", LOG_ERROR]
 				break
 		}
-		Logger:Log["Navigator: Queued ${This.ToString}", LOG_DEBUG]
+		Logger:Log["obj_Destination: Queued ${This.ToString}", LOG_DEBUG]
 	}
 
 	method Shutdown()
 	{
-		Logger:Log["Navigator: Dequeued ${This.ToString}", LOG_DEBUG]
+		Logger:Log["obj_Destination: Dequeued ${This.ToString}", LOG_DEBUG]
 		Navigator.CurrentState:Set[0]
 	}
 
@@ -83,7 +87,7 @@ objectdef obj_Destination
 			variablecase ${Navigator.DEST_ENTITY}
 				return "EntityID ${EntityID} (${Entity[${EntityID}].Name})"
 			variablecase ${Navigator.DEST_SYSTEM}
-				return "SystemID ${SystemID} (${Universe[${SystemID}].Name})"
+				return "SolarSystemID ${SolarSystemID} (${Universe[${SolarSystemID}].Name})"
 			variablecase ${Navigator.DEST_FLEETMEMBER}
 				return "Fleet Member ID ${FleetMemberID}"
 			variablecase ${Navigator.DEST_BOOKMARK}
@@ -105,10 +109,10 @@ objectdef obj_Destination
 			variablecase ${Navigator.DEST_ACTION_ALIGNTO}
 				return "EntityID ${EntityID} (${Entity[${EntityID}].Name}) (AlignTo)"
 			default
-				return "obj_Destination:ToString ERROR: Unknown Destination Type ${DestinationType}"
+				return 
 		}
 
-		return "Unknown Destination Type"
+		return "obj_Destination:ToString ERROR: Unknown Destination Type ${DestinationType}"
 	}
 }
 
@@ -195,6 +199,11 @@ objectdef obj_Navigator inherits obj_BaseClass
 		}
 	}
 
+	member:weakref CurrentDest()
+	{
+		return "This.Destinations[1]"
+	}
+
 	; Remove the current destination (index 1)
 	method CompleteCurrent()
 	{
@@ -256,9 +265,12 @@ objectdef obj_Navigator inherits obj_BaseClass
 
 	method SetState(int State)
 	{
-		;Logger:Log["${LogPrefix} - SetState[${State}]", LOG_DEBUG]
-		This.CurrentState:Set[${State}]
-		This.StateChanged:Set[${Time.Timestamp}]
+		if ${This.CurrentState} != ${State}
+		{
+			Logger:Log["${LogPrefix} - SetState[${State}]", LOG_DEBUG]
+			This.CurrentState:Set[${State}]
+			This.StateChanged:Set[${Time.Timestamp}]
+		}
 	}
 
 	; This will stop the ship as soon as we're on the right vector. If you want
@@ -426,16 +438,16 @@ TODO - integrate in most of the flyto*
 			call Ship.WarpToFleetMember ${charID}
 		}
 */
-	method FlyToSystem(int64 SystemID)
+	method FlyToSystem(int64 SolarSystemID)
 	{
-		if ${SystemID} == ${Me.SystemID}
+		if ${SolarSystemID} == ${Me.SolarSystemID}
 		{
-			Logger:Log["${LogPrefix} - FlyToSystem: ERROR: Already in system ${SystemID}:${Universe[${SystemID}].Name}", LOG_DEBUG]
+			Logger:Log["${LogPrefix} - FlyToSystem: ERROR: Already in system ${SolarSystemID}:${Universe[${SolarSystemID}].Name}", LOG_DEBUG]
 			return
 		}
 
-		Logger:Log["${LogPrefix}: Queuing nav to solar system ${SystemID}:${Universe[${SystemID}].Name}"]
-		Destinations:Insert[${DEST_SYSTEM}, 0, 0, ${SystemID}]
+		Logger:Log["${LogPrefix}: Queuing nav to solar system ${SolarSystemID}:${Universe[${SolarSystemID}].Name}"]
+		Destinations:Insert[${DEST_SYSTEM}, 0, 0, ${SolarSystemID}]
 	}
 
 	method FlyToEntityID(int64 EntityID, int64 Range = 0, bool InteractWithDest = FALSE)
@@ -452,7 +464,7 @@ TODO - integrate in most of the flyto*
 			return
 		}
 
-		Logger:Log["${LogPrefix}: Queuing nav to entity ${EntityID}"]
+		Logger:Log["${LogPrefix}: Queueing nav to entity ${EntityID}"]
 		Destinations:Insert[${DEST_ENTITY}, ${Range}, ${EntityID}, 0, 0, 0, ${InteractWithDest}]
 	}
 
@@ -495,6 +507,12 @@ TODO - integrate in most of the flyto*
 			return
 		}
 
+		if ${DestinationBookmark.ItemID} > 0 && ${DestinationBookmark.ItemID} == ${Me.StationID}
+		{
+			Logger:Log["${LogPrefix} - FlyToBookmarkID: Already in station ${Me.Station.ID}:${Me.Station.Name}"]
+			return
+		}
+
 		if ${DestinationBookmark.SolarSystemID} != ${Me.SolarSystemID}
 		{
 			This:FlyToSystem[${DestinationBookmark.SolarSystemID}]
@@ -516,6 +534,17 @@ TODO - integrate in most of the flyto*
 	{
 		variable int LastStateChange = ${Math.Calc[${Time.Timestamp} - ${This.StateChanged.Timestamp}]}
 
+		if !${Me.InSpace} && !${Me.InStation}
+		{
+			; Must be jumping/docking/undocking
+			return
+		}
+
+		if ${Me.AutoPilotOn}
+		{
+			return
+		}
+
 		;Logger:Log["${LogPrefix} - Navigate() - CurrentState: ${This.CurrentState} DestType: ${This.Destinations[1].DestinationType}"]
 		; If the time since state change for an evolving state
 		; is over the thresold for that state,
@@ -524,14 +553,18 @@ TODO - integrate in most of the flyto*
 		{
 			variablecase ${STATE_WARPING}
 				{
-					if ${Ship.InWarp}
+					if !${Ship.InWarp}
 					{
-						This:SetState[${STATE_WARPING}]
-					}
-					elseif ${LastStateChange} > 10
-					{
-						Logger:Log["${LogPrefix} - Navigate: Warning: thought we were warping, but we aren't, after 10 seconds", LOG_DEBUG]
 						This:SetState[0]
+					}
+					else
+					{
+						if ${LastStateChange} > 70
+						{
+							Logger:Log["${LogPrefix} - Navigate: Warning: Still warping after ${LastStateChange} seconds?", LOG_DEBUG]
+							This:SetState[0]
+						}
+						return
 					}
 				}
 			variablecase ${STATE_AUTOPILOT_INITIATED}
@@ -539,24 +572,25 @@ TODO - integrate in most of the flyto*
 				if ${Ship.InWarp}
 				{
 					This:SetState[${STATE_WARPING}]
+					return
 				}
-				elseif ${LastStateChange} > 30
+				elseif ${LastStateChange} > 120
 				{
-					Logger:Log["${LogPrefix} - Navigate: Warning: Resetting Autopilot/Warp initiated Timer after 30 seconds", LOG_DEBUG]
+					Logger:Log["${LogPrefix} - Navigate: Warning: Resetting Autopilot/Warp initiated Timer after ${LastStateChange} seconds", LOG_DEBUG]
 					This:SetState[0]
 				}
 				break
 			variablecase ${STATE_APPROACHING}
 				if ${LastStateChange} > 30
 				{
-					Logger:Log["${LogPrefix} - Navigate: Warning: Resetting Approach Timer after 30 seconds", LOG_DEBUG]
+					Logger:Log["${LogPrefix} - Navigate: Warning: Resetting Approach Timer after ${LastStateChange} seconds", LOG_DEBUG]
 					This:SetState[0]
 				}
 				break
 			variablecase ${STATE_UNDOCKING}
 				if ${LastStateChange} > 30
 				{
-					Logger:Log["${LogPrefix} - Navigate: Warning: Resetting Undock Timer after 30 seconds", LOG_DEBUG]
+					Logger:Log["${LogPrefix} - Navigate: Warning: Resetting Undock Timer after ${LastStateChange} seconds", LOG_DEBUG]
 					This:SetState[0]
 				}
 				break
@@ -564,59 +598,59 @@ TODO - integrate in most of the flyto*
 			variablecase ${STATE_JUMPDRIVE_ACTIVATED}
 				if ${LastStateChange} > 20
 				{
-					Logger:Log["${LogPrefix} - Navigate: Warning: Resetting Jump Activation Timer after 20 seconds", LOG_DEBUG]
+					Logger:Log["${LogPrefix} - Navigate: Warning: Resetting Jump Activation Timer after ${LastStateChange} seconds", LOG_DEBUG]
 					This:SetState[0]
 				}
 				break
 		}
 
-		switch ${This.Destinations[1].DestinationType}
+		switch ${This.CurrentDest.DestinationType}
 		{
-			variablecase ${Navigator.DEST_ENTITY}
+			variablecase ${DEST_ENTITY}
 				This:NavigateTo_Entity[]
 				break
-			variablecase ${Navigator.DEST_SYSTEM}
+			variablecase ${DEST_SYSTEM}
 				This:NavigateTo_System[]
 				break
-			variablecase ${Navigator.DEST_FLEETMEMBER}
+			variablecase ${DEST_FLEETMEMBER}
 				This:NavigateTo_FleetMember[]
 				break
-			variablecase ${Navigator.DEST_BOOKMARK}
+			variablecase ${DEST_BOOKMARK}
 				This:NavigateTo_Bookmark[]
 				break
-			variablecase ${Navigator.DEST_ACTION_APPROACH}
+			variablecase ${DEST_ACTION_APPROACH}
 				This:Navigate_Approach[]
 				break
-			variablecase ${Navigator.DEST_ACTION_ORBIT}
+			variablecase ${DEST_ACTION_ORBIT}
 				This:Navigate_Orbit[]
 				break
-			variablecase ${Navigator.DEST_ACTION_KEEPATRANGE}
+			variablecase ${DEST_ACTION_KEEPATRANGE}
 				This:Navigate_KeepAtRange[]
 				break
-			variablecase ${Navigator.DEST_ACTION_DOCK}
+			variablecase ${DEST_ACTION_DOCK}
 				This:Navigate_Dock[]
 				break
-			variablecase ${Navigator.DEST_ACTION_UNDOCK}
+			variablecase ${DEST_ACTION_UNDOCK}
 				This:Navigate_Undock[]
 				break
-			variablecase ${Navigator.DEST_ACTION_JUMP}
+			variablecase ${DEST_ACTION_JUMP}
 				This:Navigate_Jump[]
 				break
-			variablecase ${Navigator.DEST_ACTION_ACTIVATE}
+			variablecase ${DEST_ACTION_ACTIVATE}
 				This:Navigate_Activate[]
 				break
-			variablecase ${Navigator.DEST_ACTION_ALIGNTO}
+			variablecase ${DEST_ACTION_ALIGNTO}
 				This:Navigate_AlignTo[]
 				break
 			default
-				Logger:Log["${LogPrefix} - Navigate: ERROR: Unknown Destination Type ${This.Destinations[1].DestinationType}"]
+				Logger:Log["${LogPrefix} - Navigate: ERROR: Unknown Destination Type ${This.CurrentDest.DestinationType}"]
 				break
 		}
 	}
 
 	method NavigateTo_Entity()
 	{
-		if !${Me.InSpace}
+		if ${Me.InStation}
 		{
 			This:Undock[TRUE]
 			return
@@ -653,7 +687,7 @@ TODO - integrate in most of the flyto*
 
 			if ${Entity[${This.Destinations[1].EntityID}].Distance} <= ${distance}
 			{
-				Logger:Log["${LogPrefix} - NavigateTo_Entity: Arrived at ${Entity[${This.Destinations[1].EntityID}].Name} @${EVEBot.MetersToKM_Str[${Entity[${This.Destinations[1].EntityID}].Distance}]}", LOG_DEBUG]
+				Logger:Log["${LogPrefix} - NavigateTo_Entity: Arrived at ${Entity[${This.Destinations[1].EntityID}].Name} @ ${EVEBot.MetersToKM_Str[${Entity[${This.Destinations[1].EntityID}].Distance}]}", LOG_DEBUG]
 
 				if ${This.ShouldInteractWithDest}
 				{
@@ -671,14 +705,14 @@ TODO - integrate in most of the flyto*
 			Entity[${This.Destinations[1].EntityID}]:AlignTo
 			if ${This.ReadyToWarp}
 			{
-				Logger:Log["${LogPrefix} - NavigateTo_Entity: Warping to ${Entity[${This.Destinations[1].EntityID}].Name} @${EVEBot.MetersToKM_Str[${This.Destinations[1].Distance}]}"]
+				Logger:Log["${LogPrefix} - NavigateTo_Entity: Warping to ${Entity[${This.Destinations[1].EntityID}].Name} @ ${EVEBot.MetersToKM_Str[${This.Destinations[1].Distance}]}"]
 				Entity[${This.Destinations[1].EntityID}]:WarpTo[${This.Destinations[1].Distance}]
 				This:SetState[${STATE_WARP_INITIATED}]
 				return
 			}
 			else
 			{
-				Logger:Log["${LogPrefix} - NavigateTo_Entity: Delaying warp to ${Entity[${This.Destinations[1].EntityID}].Name} @${EVEBot.MetersToKM_Str[${This.Destinations[1].Distance}]}", LOG_DEBUG]
+				Logger:Log["${LogPrefix} - NavigateTo_Entity: Delaying warp to ${Entity[${This.Destinations[1].EntityID}].Name} @ ${EVEBot.MetersToKM_Str[${This.Destinations[1].Distance}]}", LOG_DEBUG]
 				return
 			}
 		}
@@ -686,9 +720,9 @@ TODO - integrate in most of the flyto*
 
 	method NavigateTo_System()
 	{
-		if ${This.Destinations[1].SystemID} == ${Me.SystemID}
+		if ${This.Destinations[1].SolarSystemID} == ${Me.SolarSystemID}
 		{
-			Logger:Log["${LogPrefix} - NavigateTo_System: Arrived at ${This.Destinations[1].SystemID}:${Universe[${This.Destinations[1].SystemID}].Name}"]
+			Logger:Log["${LogPrefix} - NavigateTo_System: Arrived at ${This.Destinations[1].SolarSystemID}:${Universe[${This.Destinations[1].SolarSystemID}].Name}"]
 			This:CompleteCurrent
 			return
 		}
@@ -703,21 +737,15 @@ TODO - integrate in most of the flyto*
 
 		; TODO - change this back to using pre-expanded queue after I work out what was sucking FPS - CyberTech
 		EVE:GetToDestinationPath[apRoute]
-		if ${apRoute.Used} == 0 || ${apRoute:Get[${apRoute.Used}]} != ${This.Destinations[1].SystemID}
+		if ${apRoute.Used} == 0 || ${apRoute:Get[${apRoute.Used}]} != ${This.Destinations[1].SolarSystemID}
 		{
 			EVE:ClearAllWaypoints
-			Logger:Log["${LogPrefix} - NavigateTo_System: Setting autopilot from ${Me.SolarSystemID}:${Universe[${Me.SolarSystemID}].Name} to ${This.Destinations[1].SystemID}:${Universe[${This.Destinations[1].SystemID}].Name}"]
-			Universe[${This.Destinations[1].SystemID}]:SetDestination
+			Logger:Log["${LogPrefix} - NavigateTo_System: Setting autopilot from ${Me.SolarSystemID}:${Universe[${Me.SolarSystemID}].Name} to ${This.Destinations[1].SolarSystemID}:${Universe[${This.Destinations[1].SolarSystemID}].Name}"]
+			Universe[${This.Destinations[1].SolarSystemID}]:SetDestination
 		}
 
-		if ${This.CurrentState} == ${STATE_AUTOPILOT_INITIATED} || \
-			${This.CurrentState} == ${STATE_WARPING} || \
-			${Me.AutoPilotOn}
-		{
-			return
-		}
 		EVE:Execute[CmdToggleAutopilot]
-		This.SetState[${STATE_AUTOPILOT_INITIATED}]
+		This:SetState[${STATE_AUTOPILOT_INITIATED}]
 	}
 
 	method NavigateTo_FleetMember()
@@ -799,14 +827,14 @@ TODO - integrate in most of the flyto*
 					Entity[${This.Destinations[1].EntityID}]:AlignTo
 					if ${This.ReadyToWarp}
 					{
-						Logger:Log["${LogPrefix} - NavigateTo_Bookmark: Warping to ${Entity[${This.Destinations[1].EntityID}].Name} @${EVEBot.MetersToKM_Str[${This.Destinations[1].Distance}]}"]
+						Logger:Log["${LogPrefix} - NavigateTo_Bookmark: Warping to entity ${Entity[${This.Destinations[1].EntityID}].Name} @ ${EVEBot.MetersToKM_Str[${This.Destinations[1].Distance}]}"]
 						Entity[${This.Destinations[1].EntityID}]:WarpTo[${This.Destinations[1].Distance}]
 						This:SetState[${STATE_WARP_INITIATED}]
 						return
 					}
 					else
 					{
-						Logger:Log["${LogPrefix} - NavigateTo_Bookmark: Delaying warp to ${Entity[${This.Destinations[1].EntityID}].Name} @${EVEBot.MetersToKM_Str[${This.Destinations[1].Distance}]}", LOG_DEBUG]
+						Logger:Log["${LogPrefix} - NavigateTo_Bookmark: Delaying warp to entity ${Entity[${This.Destinations[1].EntityID}].Name} @ ${EVEBot.MetersToKM_Str[${This.Destinations[1].Distance}]}", LOG_DEBUG]
 						return
 					}
 				}
@@ -818,7 +846,7 @@ TODO - integrate in most of the flyto*
 						return
 					}
 
-					Logger:Log["${LogPrefix} - NavigateTo_Bookmark: Arrived at ${Entity[${This.Destinations[1].EntityID}].Name} @${EVEBot.MetersToKM_Str[${This.Destinations[1].Distance}]}"]
+					Logger:Log["${LogPrefix} - NavigateTo_Bookmark: Arrived at entity ${Entity[${This.Destinations[1].EntityID}].Name} @ ${EVEBot.MetersToKM_Str[${This.Destinations[1].Distance}]}"]
 
 					if ${This.ShouldInteractWithDest}
 					{
@@ -845,13 +873,13 @@ TODO - integrate in most of the flyto*
 					DestinationBookmark:Approach
 					if ${This.ReadyToWarp}
 					{
-						Logger:Log["${LogPrefix} - NavigateTo_Bookmark: Warping to ${Label} @${EVEBot.MetersToKM_Str[${This.Destinations[1].Distance}]}"]
+						Logger:Log["${LogPrefix} - NavigateTo_Bookmark: Warping to ${Label} @ ${EVEBot.MetersToKM_Str[${This.Destinations[1].Distance}]}"]
 						DestinationBookmark:WarpTo[${This.Destinations[1].Distance}]
 						This:SetState[${STATE_WARP_INITIATED}]
 					}
 					else
 					{
-						Logger:Log["${LogPrefix} - NavigateTo_Bookmark: Delaying warp to ${Entity[${This.Destinations[1].EntityID}].Name} @${EVEBot.MetersToKM_Str[${This.Destinations[1].Distance}]}", LOG_DEBUG]
+						Logger:Log["${LogPrefix} - NavigateTo_Bookmark: Delaying warp to ${Entity[${This.Destinations[1].EntityID}].Name} @ ${EVEBot.MetersToKM_Str[${This.Destinations[1].Distance}]}", LOG_DEBUG]
 						return
 					}
 				}
@@ -924,7 +952,7 @@ TODO - integrate in most of the flyto*
 		;TODO/CT - Check for distance from warprange -- decide if it's quicker to use a warp bounce.
 		if ${Entity[${This.Destinations[1].EntityID}].Distance} <= ${This.Destinations[1].Distance}
 		{
-			Logger:Log["${LogPrefix} - Navigate_Approach: Arrived at ${Entity[${This.Destinations[1].EntityID}].Name} @${EVEBot.MetersToKM_Str[${Entity[${This.Destinations[1].EntityID}].Distance}]}"]
+			Logger:Log["${LogPrefix} - Navigate_Approach: Arrived at ${Entity[${This.Destinations[1].EntityID}].Name} @ ${EVEBot.MetersToKM_Str[${Entity[${This.Destinations[1].EntityID}].Distance}]}"]
 
 			if ${This.ShouldInteractWithDest}
 			{
@@ -940,7 +968,7 @@ TODO - integrate in most of the flyto*
 
 		if ${This.CurrentState} != ${STATE_APPROACHING} || ${MyShip.ToEntity.Approaching} != ${This.Destinations[1].EntityID}
 		{
-			Logger:Log["${LogPrefix} - Navigate_Approach: Approaching ${Entity[${This.Destinations[1].EntityID}].Name} @${EVEBot.MetersToKM_Str[${This.Destinations[1].Distance}]} - ${Math.Calc[${Entity[${This.Destinations[1].EntityID}].Distance} / ${MyShip.MaxVelocity}].Ceil} Seconds away"]
+			Logger:Log["${LogPrefix} - Navigate_Approach: Approaching ${Entity[${This.Destinations[1].EntityID}].Name} @ ${EVEBot.MetersToKM_Str[${This.Destinations[1].Distance}]} - ${Math.Calc[${Entity[${This.Destinations[1].EntityID}].Distance} / ${MyShip.MaxVelocity}].Ceil} Seconds away"]
 			This:SetState[${STATE_APPROACHING}]
 			Ship:Activate_AfterBurner[]
 			Entity[${This.Destinations[1].EntityID}]:Approach
@@ -1083,14 +1111,14 @@ TODO - integrate in most of the flyto*
 				return
 			}
 
-			Logger:Log["${LogPrefix} - Navigate_Dock: Docking @${EVE.GetLocationNameByID[${This.Destinations[1].EntityID}]}"]
+			Logger:Log["${LogPrefix} - Navigate_Dock: Docking @ ${EVE.GetLocationNameByID[${This.Destinations[1].EntityID}]}"]
 			This:SetState[${STATE_DOCKING}]
 			Entity[${This.Destinations[1].EntityID}]:Dock
 		}
 
 		if ${Station.DockedAtStation[${This.Destinations[1].EntityID}]}
 		{
-			Logger:Log["${LogPrefix} - Navigate_Dock: Completed docking @${EVE.GetLocationNameByID[${This.Destinations[1].EntityID}]}", LOG_DEBUG]
+			Logger:Log["${LogPrefix} - Navigate_Dock: Completed docking @ ${EVE.GetLocationNameByID[${This.Destinations[1].EntityID}]}", LOG_DEBUG]
 			This:SetState[${STATE_DOCKED}]
 			This:CompleteCurrent
 			return
@@ -1138,7 +1166,7 @@ TODO - integrate in most of the flyto*
 				Logger:Log["${LogPrefix} - Navigate_Undock: Home Station set to ${Config.Common.HomeStation}"]
 			}
 
-			Logger:Log["${LogPrefix} - Navigate_Undock: Undocking from ${Me.Station}"]
+			Logger:Log["${LogPrefix} - Navigate_Undock: Undocking from ${Me.StationID}:${Me.Station.Name}"]
 			This:SetState[${STATE_UNDOCKING}]
 			EVE:Execute[CmdExitStation]
 		}
