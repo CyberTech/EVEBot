@@ -708,52 +708,46 @@ objectdef obj_Orca
 
 		;	Find an asteroid field, or stay at current one if we're near one.  Once we're there, prepare for mining and
 		;	make sure we know what asteroids are available
+		variable bool TimeToMove = FALSE
 		if ${Asteroids.FieldEmpty}
 		{
 			Logger:Log["Orca.OrcaInBelt: No asteroids detected, forcing belt change"]
-			relay all -event EVEBot_Orca_InBelt FALSE
-			if ${IsMaster}
-			{
-				; Tell the miners we might not be in a belt and shouldn't be warped to.
-				relay all -event EVEBot_Master_InBelt FALSE
-			}
-			while !${EVEBot.ReturnToStation} && ${Social.PlayerInRange[500000]}
-			{
-				; Find a belt with nobody in it to start
-				call Asteroids.MoveToField TRUE TRUE
-			}
-			call Asteroids.UpdateList
+			TimeToMove:Set[TRUE]
 		}
 
 		;	This changes belts if someone's within Min. Distance to Players
 		if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]}
 		{
 			Logger:Log["Orca.OrcaInBelt: Avoiding player: Forcing belt change"]
+			TimeToMove:Set[TRUE]
+		}
+
+		if ${TimeToMove}
+		{
+			TimeToMove:Set[FALSE]
 			relay all -event EVEBot_Orca_InBelt FALSE
 			if ${IsMaster}
 			{
 				; Tell the miners we might not be in a belt and shouldn't be warped to.
 				relay all -event EVEBot_Master_InBelt FALSE
 			}
-			while !${EVEBot.ReturnToStation} && ${Social.PlayerInRange[500000]}
+			call Asteroids.MoveToField TRUE TRUE
+			while TRUE
 			{
+				; Eventually, MoveToField will set ReturnToStation because there aren't any fields left.
+				if ${EVEBot.ReturnToStation}
+				{
+					return
+				}
+				call Asteroids.UpdateList
+				if !${Social.PlayerInRange[500000]} && !${Asteroids.FieldEmpty}
+				{
+					; We're here!
+					break
+				}
 				; Find a belt with nobody in it to start
-				call Asteroids.MoveToField TRUE TRUE TRUE
+				call Asteroids.MoveToField TRUE TRUE
 			}
-			call Asteroids.UpdateList
-		}
-
-		if ${Asteroids.FieldEmpty}
-		{
-			return
-		}
-
-		;	Tell our miners we're in a belt and they are safe to warp to me
-		relay all -event EVEBot_Orca_InBelt TRUE
-		if ${IsMaster}
-		{
-			;	Tell our miners we're in a belt and they are safe to warp to me
-			relay all -event EVEBot_Master_InBelt TRUE
 		}
 
 		Ship:Activate_Gang_Links
@@ -779,6 +773,15 @@ objectdef obj_Orca
 				This:StartApproaching[${NearestAsteroidID}}, ${OrcaRange}]
 				return
 			}
+		}
+
+		; Either we've warped to an asteroid itself, or we're approaching it
+		;	Tell our miners we're in a belt and they are safe to warp to me
+		relay all -event EVEBot_Orca_InBelt TRUE
+		if ${IsMaster}
+		{
+			;	Tell our miners we're in a belt and they are safe to warp to me
+			relay all -event EVEBot_Master_InBelt TRUE
 		}
 
 		if ${This.Approaching} != 0
