@@ -711,7 +711,17 @@ objectdef obj_Orca
 		if ${Asteroids.FieldEmpty}
 		{
 			Logger:Log["Orca.OrcaInBelt: No asteroids detected, forcing belt change"]
-			call Asteroids.MoveToField TRUE TRUE
+			relay all -event EVEBot_Orca_InBelt FALSE
+			if ${IsMaster}
+			{
+				; Tell the miners we might not be in a belt and shouldn't be warped to.
+				relay all -event EVEBot_Master_InBelt FALSE
+			}
+			while !${EVEBot.ReturnToStation} && ${Social.PlayerInRange[500000]}
+			{
+				; Find a belt with nobody in it to start
+				call Asteroids.MoveToField TRUE TRUE
+			}
 			call Asteroids.UpdateList
 		}
 
@@ -719,8 +729,23 @@ objectdef obj_Orca
 		if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]}
 		{
 			Logger:Log["Orca.OrcaInBelt: Avoiding player: Forcing belt change"]
-			call Asteroids.MoveToField TRUE TRUE TRUE
+			relay all -event EVEBot_Orca_InBelt FALSE
+			if ${IsMaster}
+			{
+				; Tell the miners we might not be in a belt and shouldn't be warped to.
+				relay all -event EVEBot_Master_InBelt FALSE
+			}
+			while !${EVEBot.ReturnToStation} && ${Social.PlayerInRange[500000]}
+			{
+				; Find a belt with nobody in it to start
+				call Asteroids.MoveToField TRUE TRUE TRUE
+			}
 			call Asteroids.UpdateList
+		}
+
+		if ${Asteroids.FieldEmpty}
+		{
+			return
 		}
 
 		;	Tell our miners we're in a belt and they are safe to warp to me
