@@ -12,15 +12,15 @@
 objectdef obj_FullMiner
 {
 	variable int64 FleetMemberID
-	variable int64 SystemID
+	variable int64 SolarSystemID
 	variable int64 BeltID
 
-	method Initialize(int64 arg_FleetMemberID, int64 arg_SystemID, int64 arg_BeltID)
+	method Initialize(int64 arg_FleetMemberID, int64 arg_SolarSystemID, int64 arg_BeltID)
 	{
 		FleetMemberID:Set[${arg_FleetMemberID}]
-		SystemID:Set[${arg_SystemID}]
+		SolarSystemID:Set[${arg_SolarSystemID}]
 		BeltID:Set[${arg_BeltID}]
-		Logger:Log[ "DEBUG: obj_OreHauler:FullMiner: FleetMember: ${FleetMemberID} System: ${SystemID} Belt: ${Entity[${BeltID}].Name}", LOG_DEBUG]
+		Logger:Log[ "DEBUG: obj_OreHauler:FullMiner: FleetMember: ${FleetMemberID} System: ${SolarSystemID} Belt: ${Entity[${BeltID}].Name}", LOG_DEBUG]
 	}
 }
 
