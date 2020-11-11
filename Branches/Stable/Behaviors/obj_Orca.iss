@@ -740,7 +740,7 @@ objectdef obj_Orca
 					return
 				}
 				call Asteroids.UpdateList
-				if !${Social.PlayerInRange[500000]} && !${Asteroids.FieldEmpty}
+				if !${Social.NonFleetPlayerOnGrid} && !${Asteroids.FieldEmpty}
 				{
 					; We're here!
 					break

@@ -545,6 +545,18 @@ objectdef obj_Social inherits obj_BaseClass
 		return TRUE
 	}
 
+	member:bool NonFleetPlayerOnGrid()
+	{
+		variable index:entity EntityPlayers
+		; Check for IsPC && !ToFleetMember(exists)
+		EVE:QueryEntities[EntityPlayers, "IsPC = 1 && ToFleetMember = NULL && Distance > 0"]
+		if ${EntityPlayers.Used} > 0
+		{
+			return TRUE
+		}
+		return FALSE
+	}
+
 	member:bool PlayerInRange(float Range=0)
 	{
 		if ${Range} == 0
@@ -552,10 +564,10 @@ objectdef obj_Social inherits obj_BaseClass
 			return FALSE
 		}
 
-   		if ${This.PilotIndex.Used} < 2
-   		{
-   			return FALSE
-   		}
+		if ${This.PilotIndex.Used} < 2
+		{
+			return FALSE
+		}
 
 		variable iterator PilotIterator
 		This.PilotIndex:GetIterator[PilotIterator]
@@ -564,11 +576,10 @@ objectdef obj_Social inherits obj_BaseClass
 		{
 			do
 			{
-				if 	${Me.CharID} != ${PilotIterator.Value.CharID} && \
-					${PilotIterator.Value.ToEntity(exists)} && \
-					${PilotIterator.Value.ToEntity.IsPC} && \
-					${PilotIterator.Value.ToEntity.Distance} < ${Config.Miner.AvoidPlayerRange} && \
-					!${PilotIterator.Value.ToFleetMember}
+				if	${Me.CharID} != ${PilotIterator.Value.CharID} && \
+						${PilotIterator.Value.ToEntity(exists)} && \
+						${PilotIterator.Value.ToEntity.Distance} < ${Range} && \
+						!${PilotIterator.Value.ToFleetMember}
 				{
 					Logger:Log["PlayerInRange: ${PilotIterator.Value.Name} - ${EVEBot.MetersToKM_Str[${PilotIterator.Value.ToEntity.Distance}]}"]
 					return TRUE
