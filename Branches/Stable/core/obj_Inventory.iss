@@ -122,12 +122,7 @@ objectdef obj_EVEWindow_Proxy
 
 		This:SetFallThroughParams[]
 
-		if !${EVEWindow[Inventory](exists)}
-		{
-			Logger:Log["Opening Inventory..."]
-			EVE:Execute[OpenInventory]
-			wait 2
-		}
+		call Inventory.Open
 
 		if (!${${This.GetFallthroughObject}(exists)})
 		{
@@ -139,6 +134,11 @@ objectdef obj_EVEWindow_Proxy
 			}
 		}
 
+		if ${Inventory.${This.ObjectName}.IsActve}
+		{
+			Logger:Log["\arInventory.${This.ObjectName}: Already active", LOG_DEBUG]
+			return TRUE
+		}
 		Logger:Log["\arInventory.${This.ObjectName}: Attempting ${This.GetFallthroughObject}", LOG_STANDARD]
 
 		Inventory.${This.ObjectName}:MakeActive
@@ -164,6 +164,27 @@ objectdef obj_EVEWindow_Proxy
 		return FALSE
 	}
 
+	; Check that the ID/Name/Location match the current ActiveChild of the Inventory window
+	member:bool IsActive()
+	{
+		if ${This.InvID} != ${EVEWindow[Inventory].ActiveChild.ItemID}
+		{
+			;Logger:Log["\arInventory.${This.ObjectName}.IsActive: ID: ${This.InvID} != ${EVEWindow[Inventory].ActiveChild.ItemID}", LOG_DEBUG]
+			return FALSE
+		}
+
+		if ${This.InvName.NotNULLOrEmpty} && ${This.InvName.NotEqual[${EVEWindow[Inventory].ActiveChild.Name}]}
+		{
+			;Logger:Log["\arInventory.${This.ObjectName}.IsActive: Name: ${This.InvName} ${EVEWindow[Inventory].ActiveChild.Name}", LOG_DEBUG]
+			return FALSE
+		}
+
+		; TODO -- also check location when we're using it
+		;if ${This.InvLocation.NotNULLOrEmpty} && 
+
+		return TRUE
+	}
+
 	member:bool IsCurrent()
 	{
 		variable weakref MyThis = This
@@ -173,6 +194,7 @@ objectdef obj_EVEWindow_Proxy
 			return FALSE
 		}
 
+		; Check that the fallthruobject ItemId/Name match what we're expectivng
 		if ${MyThis.ItemID} == ${This.InvID} && ${MyThis.Name.Equal[${This.InvName}]}
 		{
 			return TRUE
@@ -222,6 +244,7 @@ objectdef obj_EVEWindow_Proxy
 		variable weakref MyThis = This
 
 		echo "Object: Inventory.${This.ObjectName}"
+		echo " IsActive      : ${Inventory.${This.ObjectName}.IsActive}"
 		echo " MyID          : ${InvID}   MyName         : ${InvName}   Location: ${InvLocation}"
 		echo " ItemID        : ${MyThis.ItemID}   Name          : ${MyThis.Name}"
 		echo " IsInRange     : ${MyThis.IsInRange}"
@@ -305,15 +328,22 @@ objectdef obj_Inventory inherits obj_BaseClass
 			Logger:Log["Opening Inventory..."]
 			EVE:Execute[OpenInventory]
 			wait 2
+			if !${EVEWindow[Inventory](exists)}
+			{
+				Logger:Log["Opening Inventory (taking longer than usual)..."]
+				wait 10
+				if !${EVEWindow[Inventory](exists)}
+				{
+					Logger:Log["Opening Inventory (taking longerer than usual)..."]
+					wait 10
+				}
+			}
 		}
 	}
 
 	method Close()
 	{
-		if ${EVEWindow[Inventory](exists)}
-		{
-			EVEWindow[Inventory]:Close
-		}
+		EVEWindow[Inventory]:Close
 	}
 
 	; Returns FALSE/0, or the ID of the opened entity
