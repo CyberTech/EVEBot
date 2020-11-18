@@ -6,7 +6,7 @@
 	-- CyberTech
 */
 
-#define TESTAPI_DEBUG 0
+#define TESTAPI_DEBUG 1
 
 #include ../Branches/Stable/core/defines.iss
 #include ../Branches/Stable/core/obj_IRC.iss
@@ -24,6 +24,11 @@ objectdef obj_UI
 
 		redirect -append "${This.LogFile}" echo "--------------------------------------------------------------------------------------"
 		redirect -append "${This.LogFile}" echo "** ${Script.Filename} starting on ${Time.Date} at ${Time.Time24}"
+	}
+
+	method Log(string StatusMessage, int Level=LOG_STANDARD, int Indent=0)
+	{
+		This:UpdateConsole["${StatusMessage}",${Level},${Indent}]
 	}
 
 	method UpdateConsole(string StatusMessage, int Level=LOG_STANDARD, int Indent=0)
@@ -48,13 +53,10 @@ objectdef obj_UI
 			for (Count:Set[1]; ${Count}<=${Indent}; Count:Inc)
 			{
   				msg:Concat[" "]
-  			}
-  			msg:Concat["${StatusMessage}"]
+  		}
+  		msg:Concat["${StatusMessage}"]
 
-			if ${Level} > LOG_MINOR
-			{
-				echo ${msg}
-			}
+			echo ${msg}
 
 			redirect -append "${This.LogFile}" Echo "${msg}"
 		}
@@ -63,4 +65,5 @@ objectdef obj_UI
 }
 
 variable obj_UI UI
+variable obj_UI Logger
 variable obj_IRC ChatIRC

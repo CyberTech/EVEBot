@@ -36,6 +36,7 @@
 #include core/obj_Market.iss
 #include core/obj_Items.iss
 #include core/obj_Autopilot.iss
+#include core/obj_MissionParser.iss
 ;#include core/obj_Callback.iss
 
 objectdef obj_Behaviors
