@@ -72,7 +72,43 @@ objectdef obj_Bookmarks
 		{
 			;Logger:Log["CreateBookMark: Label - ${Label}"]
 		}
+	}
 
+	member:int64 FindRandomBounceBookmark()
+	{
+		variable index:bookmark bm_index
+		EVE:GetBookmarks[bm_index]
+
+		variable string InstaQuery
+		InstaQuery:Concat["SolarSystemID = ${Me.SolarSystemID}"]
+		InstaQuery:Concat[" && Distance > WARP_RANGE"]
+		InstaQuery:Concat[" && Distance > 500000"]
+		InstaQuery:Concat[" && IsWarpAligned = 1"]
+		bm_index:RemoveByQuery[${LSQueryCache[${InstaQuery}]}, FALSE]
+		bm_index:Collapse
+
+		if ${bm_index.Used} == 0
+		{
+			; No aligned bookmark found, so check for unaligned
+			EVE:GetBookmarks[bm_index]
+
+			InstaQuery:Set["SolarSystemID = ${Me.SolarSystemID}"]
+			InstaQuery:Concat[" && Distance > WARP_RANGE"]
+			InstaQuery:Concat[" && Distance > 500000"]
+			bm_index:RemoveByQuery[${LSQueryCache[${InstaQuery}]}, FALSE]
+			bm_index:Collapse
+
+			if ${bm_index.Used} == 0
+			{
+				Logger:Log["FindRandomInstaUndock returning -1", LOG_DEBUG]
+				return -1
+			}
+		}
+
+		variable int RandomBM
+		RandomBM:Set[${Math.Rand[${bm_index.Used}]:Inc[1]}]
+		Logger:Log["FindRandomBounceBookmark returning ${bm_index[${RandomBM}].ID} ${bm_index[${RandomBM}].Label} ${bm_index[${RandomBM}].Distance}",LOG_DEBUG]
+		return ${bm_index[${RandomBM}].ID}
 	}
 
 }
