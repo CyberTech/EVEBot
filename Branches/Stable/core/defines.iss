@@ -66,6 +66,7 @@ variable int VersionNum = 0
 #define ENTITY_MODE_WARP = 3
 #define ENTITY_MODE_ORBIT = 4
 
+#define INVALID_DISTANCE 9223372036854775807
 /* If the miner's cargo hold doesn't increase during
  * this period, return to base.  Interval depends on the
  * PulseIntervalInSeconds value used in obj_Miner.Pulse
