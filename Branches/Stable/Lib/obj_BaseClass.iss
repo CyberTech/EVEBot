@@ -143,18 +143,35 @@ objectdef obj_BaseClass
 	method Gnomesort(string IndexName, string MemberName)
 	{
 		variable int i = 1
+		variable bool strcmp = FALSE
+		strcmp:Set[${${IndexName}[1].${MemberName}(type).Name.Equals["string"]}]
 
 		while ${i} <= ${${IndexName}.Used}
 		{
-			if ( ${i} == 1 ) || ${${IndexName}[${Math.Calc[${i}-1]}].${MemberName}} <= ${${IndexName}[${i}].${MemberName}}
+			if ( ${i} == 1 )
 			{
 				i:Inc
+				continue
+			}
+			if ${strcmp}
+			{
+				if ${${IndexName}[${Math.Calc[${i}-1]}].${MemberName}.CompareCS[${${IndexName}[${i}].${MemberName}}]} <= 0
+				{
+					i:Inc
+					continue
+				}
 			}
 			else
 			{
-				${IndexName}:Swap[${i}, ${Math.Calc[${i}-1]}]
-				i:Dec
+				; Numeric comparison
+				if ${${IndexName}[${Math.Calc[${i}-1]}].${MemberName}} <= ${${IndexName}[${i}].${MemberName}}
+				{
+					i:Inc
+					continue
+				}
 			}
+			${IndexName}:Swap[${i}, ${Math.Calc[${i}-1]}]
+			i:Dec
 		}
 	}
 
