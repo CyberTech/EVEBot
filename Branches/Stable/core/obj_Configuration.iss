@@ -168,6 +168,7 @@ objectdef obj_Configuration_Common
 	}
 
 	Define_ConfigItem(string, CurrentBehavior, "Idle")
+	Define_ConfigItem(bool, SortBeltsRandom, FALSE)
 
 
 	member:int DronesInBay()

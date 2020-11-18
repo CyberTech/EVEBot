@@ -412,6 +412,23 @@
 								Script[EVEBot].VariableScope.Config.Common:SetDisable3D[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
+						<checkbox Name='cvSortBeltsRandom'>
+							<X>250</X>
+							<Y>240</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Sort Asteroid Belts Randomly</Text>
+							<AutoTooltip>Sort asteroid belt lists randomly, instead of alphabetically</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Common.SortBeltsRandom}
+								{
+								This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Common:SortBeltsRandom[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
 					</Tab>
 
 					<Tab name='Miner'>
