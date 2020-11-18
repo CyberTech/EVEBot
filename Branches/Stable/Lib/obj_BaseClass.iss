@@ -77,6 +77,21 @@ objectdef obj_BaseClass
 	variable string LogPrefix
 	variable obj_PulseTimer PulseTimer
 
+	; Quite and dirty randomization of an index
+	method Randomize(string IndexName)
+	{
+		variable int Pos
+		variable int Length
+
+		Length:Set[${${IndexName}.Used}]
+
+		Pos:Set[0]
+		for (Pos:Set[0] ; ${Pos} < ${Length} ; Pos:Inc)
+		{
+			${IndexName}:Swap[${Math.Rand[${Length}]:Inc},${Math.Rand[${Length}]:Inc}]
+		}
+	}
+
 	method Sort(string IndexName, string MemberName)
 	{
 		variable string vartype = ${${IndexName}(type).Name}
