@@ -31,11 +31,12 @@ variable int VersionNum = 0
 
 ;#define EVENT_ONFRAME OnFrame
 #define EVENT_ONFRAME ISXEVE_onFrame
-#ifdef EVEBOT_TESTCASE
+;#ifdef EVEBOT_TESTCASE
+;#define EVENT_EVEBOT_ONFRAME ISXEVE_onFrame
+;#else
 #define EVENT_EVEBOT_ONFRAME ISXEVE_onFrame
-#else
-#define EVENT_EVEBOT_ONFRAME EVEBOT_OnFrame
-#endif
+;#define EVENT_EVEBOT_ONFRAME EVEBOT_OnFrame
+;#endif
 
 /* Core Library (Non-EVE Related code) */
 #include ../../../External/isxScripts/obj_PulseTimer.iss

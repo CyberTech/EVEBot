@@ -134,14 +134,14 @@ objectdef obj_EVEBot inherits obj_BaseClass
 					}
 				}
 
-				if ${Me.InSpace} && !${Station.Docked}
-				{
-					Event[EVENT_EVEBOT_ONFRAME_INSPACE]:Execute
-				}
+				;if ${Me.InSpace} && !${Station.Docked}
+				;{
+				;	Event[EVENT_EVEBOT_ONFRAME_INSPACE]:Execute
+				;}
 
 				; Call Pulse here, to avoid each Behavior triggering on pulse
 				;${Config.Common.Behavior}:Pulse
-				Event[EVENT_EVEBOT_ONFRAME]:Execute
+				;Event[EVENT_EVEBOT_ONFRAME]:Execute
 
 			}
 
