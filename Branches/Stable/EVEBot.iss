@@ -98,7 +98,7 @@ function LoadThreads(string Label, string Path)
 			}
 
 			Log:Concat["${Files.File[${Position}].Filename.Left[-4]} "]
-			TimedCommand 0 runscript \"${Files.File[${Position}].FullPath}\"
+			TimedCommand 0 runscript \"${Files.File[${Position}].FullPath}\" ${Script.Filename}
 		}
 	}
 	if ${Log.Length} > 0

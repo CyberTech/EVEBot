@@ -163,8 +163,12 @@ objectdef obj_Navigator inherits obj_BaseClass
 		This.PulseTimer:SetIntervals[0.1,0.5]
 		Event[ISXEVE_onFrame]:AttachAtom[This:Pulse]
 		Logger:Log["Thread: ${LogPrefix}: Initialized", LOG_MINOR]
-		Ship:SetReference["Script[EVEBot].VariableScope.Ship"]
-		EVEBotScript:SetReference["Script[EVEBot].VariableScope"]
+	}
+
+	method SetOwnerScript(string Owner)
+	{
+		Ship:SetReference["Script[${Owner}].VariableScope.Ship"]
+		EVEBotScript:SetReference["Script[${Owner}].VariableScope"]
 	}
 
 	method Shutdown()
@@ -174,12 +178,7 @@ objectdef obj_Navigator inherits obj_BaseClass
 
 	method Pulse()
 	{
-		if !${Script[EVEBot](exists)}
-		{
-			Script:End
-		}
-
-		if !${EVEBot.Loaded} || ${EVEBot.Disabled}
+		if !${EVEBot(exists)} || !${EVEBot.Loaded} || ${EVEBot.Disabled}
 		{
 			return
 		}
@@ -1331,16 +1330,17 @@ TODO - integrate in most of the flyto*
 
 variable(global) obj_Navigator Navigator
 
-function main()
+function main(string OwnerScript)
 {
+	Navigator:SetOwnerScript[${OwnerScript}]
 	EVEBot.Threads:Insert[${Script.Filename}]
-	while ${Script[EVEBot](exists)} && !${EVEBot.Loaded}
+	while ${EVEBot(exists)} && !${EVEBot.Loaded}
 	{
-		waitframe
+		wait 1
 	}
-	while ${Script[EVEBot](exists)}
+	while ${EVEBot(exists)}
 	{
-		waitframe
+		wait 1
 	}
 	echo "${APP_NAME} exited, unloading ${Script.Filename}"
 }
