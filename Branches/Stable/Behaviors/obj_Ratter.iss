@@ -127,7 +127,7 @@ objectdef obj_Ratter inherits obj_BaseClass
 			Ship:Deactivate_ECCM
 			if !${Config.Combat.AnomalyAssistMode}
 			{
-				call Belts.WarpToNextBelt ${Config.Combat.WarpRange}
+				call Belts.WarpToNext ${Config.Combat.WarpRange}
 				if !${Social.IsSafe}
 				{
 					return
