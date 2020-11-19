@@ -22,14 +22,9 @@ objectdef obj_Asteroids
 	; List of asteroids claimed by other bots
 	variable set AsteroidList_Claimed
 
-	variable index:string EmptyBeltList
-	variable iterator EmptyBelt
-
 	variable index:bookmark BeltBookMarkList
 	variable iterator BeltBookMarkIterator
 	variable int64 LastBookMarkID
-	variable int LastBeltIndex
-	variable bool UsingBookMarks = FALSE
 	variable time BeltArrivalTime
 
 	variable int LastSurveyScanResultCount = 0
@@ -99,38 +94,6 @@ objectdef obj_Asteroids
 		}
 	}
 
-	; Checks the belt name against the empty belt list.
-	member IsBeltMarkedEmpty(string BeltName)
-	{
-		if !${BeltName(exists)}
-		{
-			return FALSE
-		}
-
-		EmptyBeltList:GetIterator[EmptyBelt]
-		if ${EmptyBelt:First(exists)}
-		do
-		{
-			if ${EmptyBelt.Value.Equal[${BeltName}]}
-			{
-				echo "DEBUG: obj_Asteroid:IsBeltMarkedEmpty - ${BeltName} - TRUE"
-				return TRUE
-			}
-		}
-		while ${EmptyBelt:Next(exists)}
-		return FALSE
-	}
-
-	; Adds the named belt to the empty belt list
-	method MarkBeltAsEmpty(string BeltName)
-	{
-		if ${BeltName(exists)}
-		{
-			EmptyBeltList:Insert[${BeltName}]
-			Logger:Log["Excluding empty belt ${BeltName}"]
-		}
-	}
-
 	; TODO - remove this from here -- move to obj_Belts - CT
 	function MoveToRandomBeltBookMark(bool FleetWarp=FALSE)
 	{
@@ -192,7 +155,6 @@ objectdef obj_Asteroids
 
 			This.BeltArrivalTime:Set[${Time.Timestamp}]
 			This.LastBookMarkID:Set[${BeltBookMarkList[${RandomBelt}].ID}]
-			This.UsingBookMarks:Set[TRUE]
 			return TRUE
 		}
 		else
@@ -308,23 +270,16 @@ objectdef obj_Asteroids
 
 	function MoveToField(bool ForceMove, bool DoNotLockTarget=FALSE, bool FleetWarp=FALSE)
 	{
-		variable int curBelt
-		variable index:entity Belts
-		variable iterator BeltIterator
-		variable int TryCount
-		variable string beltsubstring
-		variable bool AsteroidsInRange = FALSE
-
 		if !${ForceMove}
 		{
 			if ${This.NearestAsteroid[${This.MaxTravelDistanceToAsteroid}]} == -1
 			{
-				Logger:Log["ERROR: OBJ_Asteroids:MoveToField: Belt is not empty and ForceMove not set, staying at Asteroid Belt: ${BeltIterator.Value.Name}", LOG_CRITICAL]
+				Logger:Log["ERROR: OBJ_Asteroids:MoveToField: Belt is not empty and ForceMove not set, staying here", LOG_CRITICAL]
 				return
 			}
 		}
 
-		; Using Last Position Bookmarks? Warp to and return
+		; Using Last Position Bookmarks? If we have one, return to it
 		if (${Config.Miner.BookMarkLastPosition} && ${Bookmarks.StoredLocationExists})
 		{
 			/* We have a stored location, we should return to it. */
@@ -344,49 +299,22 @@ objectdef obj_Asteroids
 			return
 		}
 
-		; Bookmarks aren't being used; check for belts in entity list
-		beltsubstring:Set["ASTEROID BELT"]
-		if ${Config.Miner.IceMining}
+		Belts:Next
+		if !${Belts.Valid}
 		{
-			beltsubstring:Set["ICE FIELD"]
-		}
-
-		EVE:QueryEntities[Belts, "GroupID = GROUP_ASTEROIDBELT && Name =- \"${beltsubstring}\""]
-		Belts:GetIterator[BeltIterator]
-		if !${BeltIterator:First(exists)}
-		{
-			Logger:Log["ERROR: OBJ_Asteroids:MoveToField: No asteroid belts or belt bookmarks found...", LOG_CRITICAL]
-			#if EVEBOT_DEBUG
-			Logger:Log["OBJ_Asteroids:MoveToField: Total Entities: ${EVE.EntitiesCount}", LOG_DEBUG]
-			Logger:Log["OBJ_Asteroids:MoveToField: Size of Belts List ${Belts.Used}", LOG_DEBUG]
-			#endif
-			EVEBot.ReturnToStation:Set[TRUE]
 			return
 		}
 
-		; Belt list is populated, let's pick a belt
-		do
+		Belts:WarpTo
+		if ${Belts.AtBelt}
 		{
-			curBelt:Set[${Math.Rand[${Belts.Used}]:Inc[1]}]
-			TryCount:Inc
-			if ${TryCount} > ${Math.Calc[${Belts.Used} * 10]}
-			{
-				Logger:Log["All belts marked empty, returning to station"]
-				call ChatIRC.Say "All belts marked empty!"
-				EVEBot.ReturnToStation:Set[TRUE]
-				return
-			}
+			Ship:Activate_SurveyScanner
+			This.BeltArrivalTime:Set[${Time.Timestamp}]
 		}
-		while ( ${This.IsBeltMarkedEmpty[${Belts[${curBelt}].Name}]} )
-
-		Logger:Log["Warping to Asteroid Belt: ${Belts[${curBelt}].Name}"]
-		call Ship.WarpToID ${Belts[${curBelt}].ID} 0 ${FleetWarp}
-		Ship:Activate_SurveyScanner
-
-		This.BeltArrivalTime:Set[${Time.Timestamp}]
-		This.UsingBookMarks:Set[TRUE]
-		This.LastBeltIndex:Set[${curBelt}]
-
+		else
+		{
+			Logger:Log["obj_Asteroids:MoveToField: Expected to be at ${Belts.Name}, but AtBelt is ${Belts.AtBelt}", LOG_WARNING]
+		}
 	}
 
 	function UpdateList(int64 EntityIDForDistance=-1)
