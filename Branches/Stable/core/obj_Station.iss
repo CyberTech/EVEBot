@@ -86,39 +86,23 @@ objectdef obj_Station
 
 		if ${Me.InStation}
 		{
-			Logger:Log["DockAtStation called, but we're already in station!"]
+			Logger:Log["DockAtStation(${StationID}) called, but we're already in station ${Me.StationID}!"]
 			return
 		}
 
-		Logger:Log["Docking at ${EVE.GetLocationNameByID[${StationID}]}"]
+		Logger:Log["Docking at ${StationID}:${Entity[${StationID}].Name}"]
 
 		if ${Entity[${StationID}](exists)}
 		{
-			if ${Entity[${StationID}].Distance} > WARP_RANGE
+			Navigator:FlyToEntityID["${StationID}", DOCKING_RANGE, TRUE]
+			while ${Navigator.Busy}
 			{
-				Logger:Log["Warping to Station"]
-				Navigator:FlyToEntityID["${StationID}", DOCKING_RANGE]
-				while ${Navigator.Busy}
-				{
-					wait 10
-				}
+				wait 1
 			}
-		; TODO - CyberTech - do I want to move docking responsibilities into navigator?
-			do
-			{
-				Entity[${StationID}]:Dock
-				Logger:Log["Approaching docking range..."]
-				wait 200 ${This.DockedAtStation[${StationID}]}
-			}
-			while (${Entity[${StationID}].Distance} > DOCKING_RANGE)
 
 			Counter:Set[0]
-			Logger:Log["In Docking Range ... Docking"]
-			;Logger:Log["DEBUG: StationExists = ${Entity[${StationID}](exists)}"]
 			do
 			{
-				Entity[${StationID}]:Dock
-				wait 30
 				Counter:Inc[1]
 				if (${Counter} > 20)
 				{
@@ -154,7 +138,6 @@ objectdef obj_Station
 
 		if ${Entity[${StationID}](exists)}
 		{
-			Logger:Log["Docking at ${StationID}:${Entity[${StationID}].Name}"]
 			call This.DockAtStation ${StationID}
 		}
 		else
