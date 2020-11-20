@@ -82,11 +82,6 @@ objectdef obj_StealthHauler inherits obj_BaseClass
 						{
 							Logger:Log["Setting speed to full throttle"]
 							Me:SetVelocity[${Math.Calc[90 + ${Math.Rand[9]} + ${Math.Calc[0.10 * ${Math.Rand[9]}]}]}]
-							do
-							{
-								wait 5
-							}
-							while ${Me.ToEntity.IsCloaked}
 							Ship:Activate_AfterBurner
 							wait 5
 							do
@@ -97,19 +92,18 @@ objectdef obj_StealthHauler inherits obj_BaseClass
 							while !${Me.ToEntity.IsCloaked}
 							do
 							{
-								wait 5
+								wait 1
 							}
 							while ${Me.ToEntity.IsWarpScrambled}
-							wait 5
-							Navigator:FlyToEntityID["${sgIterator.Value.ID}", JUMP_RANGE]
+							Navigator:FlyToEntityID[${sgIterator.Value.ID}, 0]
 							while ${Navigator.Busy}
 							{
-								wait 10
+								wait 1
 							}
 							Ship:Deactivate_Cloak
 							do
 							{
-								wait 5
+								wait 1
 							}
 							while ${Me.ToEntity.IsCloaked}
 							wait 5
