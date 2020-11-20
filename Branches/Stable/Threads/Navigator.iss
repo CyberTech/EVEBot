@@ -1100,13 +1100,17 @@ TODO - integrate in most of the flyto*
 
 			if ${Entity[${This.Destinations[1].EntityID}].Distance} >= DOCKING_RANGE
 			{
+				if ${This.CurrentState} == ${STATE_APPROACHING}
+				{
+					return
+				}
 				; This is fallback code that shouldn't get called.
 				if ${This.CurrentState} != ${STATE_DOCKING}
 				{
 					Logger:Log["${LogPrefix} - Navigate_Dock: Warning: Outside docking range for Entity ${Entity[${This.Destinations[1].EntityID}].Name} @ ${EVEBot.MetersToKM_Str[${Entity[${This.Destinations[1].EntityID}].Distance}]}, approaching", LOG_WARNING]
 					Ship:Activate_AfterBurner[]
 					Entity[${This.Destinations[1].EntityID}]:Approach
-					This:SetState[${STATE_DOCKING}]
+					This:SetState[${STATE_APPROACHING}]
 				}
 				;This:CompleteCurrent
 				return
