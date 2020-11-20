@@ -109,7 +109,7 @@ objectdef obj_Destination
 			variablecase ${Navigator.DEST_ACTION_ALIGNTO}
 				return "EntityID ${EntityID} (${Entity[${EntityID}].Name}) (AlignTo)"
 			default
-				return 
+				return
 		}
 
 		return "obj_Destination:ToString ERROR: Unknown Destination Type ${DestinationType}"
@@ -240,11 +240,13 @@ objectdef obj_Navigator inherits obj_BaseClass
 		{
 			switch ${TempEntity.GroupID}
 			{
+				case GROUP_STRUCTURECITADEL
 				case GROUP_STATION
 					This.Destinations[1].DestinationType:Set[${This.DEST_ACTION_DOCK}]
 					return TRUE
 					break
 				default
+					Logger:Log["${LogPrefix}: Warning - Interact true, but I don't know how! ${TempEntity.GroupID}=${TempEntity.Group}/${TempEntity.CategoryID}=${TempEntity.Category}/${TempEntity.TypeID}=${TempEntity.Type}", LOG_WARNING]
 					break
 			}
 		}
