@@ -739,14 +739,21 @@ objectdef obj_Orca
 				{
 					return
 				}
-				call Asteroids.UpdateList
-				if !${Social.NonFleetPlayerOnGrid} && !${Asteroids.FieldEmpty}
-				{
-					; We're here!
-					break
-				}
+
 				; Find a belt with nobody in it to start
-				call Asteroids.MoveToField TRUE TRUE
+				if ${Asteroids.FieldEmpty}
+				{
+					Belts:MarkEmpty[]
+					call Asteroids.MoveToField TRUE TRUE
+					continue
+				}
+				if ${Social.NonFleetPlayerOnGrid}
+				{
+					Belts:MarkUnsafe[]
+					call Asteroids.MoveToField TRUE TRUE
+					continue
+				}
+				break
 			}
 		}
 
