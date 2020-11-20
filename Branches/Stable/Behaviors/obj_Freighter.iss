@@ -121,7 +121,7 @@ objectdef obj_Freighter inherits obj_BaseClass
 						Logger:Log["Aborting operation: Returning to base"]
 						if ${EVE.Bookmark[${Config.Freighter.Destination}](exists)}
 						{
-							Navigator:FlyToBookmark["${Config.Freighter.Destination}"]
+							Navigator:FlyToBookmark["${Config.Freighter.Destination}", 0, TRUE]
 							while ${Navigator.Busy}
 							{
 								wait 10
@@ -140,7 +140,7 @@ objectdef obj_Freighter inherits obj_BaseClass
 					case CARGOFULL
 						if ${EVE.Bookmark[${Config.Freighter.Destination}](exists)}
 						{
-							Navigator:FlyToBookmark["${Config.Freighter.Destination}"]
+							Navigator:FlyToBookmark["${Config.Freighter.Destination}", 0, TRUE]
 							while ${Navigator.Busy}
 							{
 								wait 10
@@ -260,7 +260,7 @@ objectdef obj_Freighter inherits obj_BaseClass
 		}
 		elseif ${SourceLocations.Peek(exists)}
 		{
-			Navigator:FlyToBookmarkID["${SourceLocations.Peek.ID}"]
+			Navigator:FlyToBookmarkID["${SourceLocations.Peek.ID}", 0, TRUE]
 			while ${Navigator.Busy}
 			{
 				wait 1
