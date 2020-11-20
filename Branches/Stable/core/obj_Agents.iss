@@ -594,7 +594,7 @@ objectdef obj_Agents
 							Logger:Log["obj_Agents: DEBUG: mbIterator.Value.LocationType = ${mbIterator.Value.LocationType}"]
 							if ${mbIterator.Value.LocationType.Equal["objective.source"]}
 							{
-								Navigator:FlyToBookmark["${mbIterator.Value.ID}"]
+								Navigator:FlyToBookmark["${mbIterator.Value.ID}", 0, TRUE]
 								while ${Navigator.Busy}
 								{
 									wait 10
@@ -636,7 +636,7 @@ objectdef obj_Agents
 							Logger:Log["obj_Agents: DEBUG: mbIterator.Value.LocationType = ${mbIterator.Value.LocationType}"]
 							if ${mbIterator.Value.LocationType.Equal["objective.destination"]}
 							{
-								Navigator:FlyToBookmark["${mbIterator.Value.ID}"]
+								Navigator:FlyToBookmark["${mbIterator.Value.ID}", 0, TRUE]
 								while ${Navigator.Busy}
 								{
 									wait 10
