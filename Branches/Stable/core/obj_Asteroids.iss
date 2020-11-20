@@ -258,7 +258,8 @@ objectdef obj_Asteroids
 
 	member:int64 MaxTravelDistanceToAsteroid()
 	{
-		if ${Ship.OptimalMiningRange} == 0 && ${Config.Miner.OrcaMode}
+		; TODO - change this to a ui config option to use in absense of lasers instead of using the mining range mult
+		if ${Ship.OptimalMiningRange} == 0
 		{
 			return ${Math.Calc[20000 * ${Config.Miner.MiningRangeMultipler}]}
 		}
