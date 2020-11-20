@@ -260,10 +260,10 @@ objectdef obj_Freighter inherits obj_BaseClass
 		}
 		elseif ${SourceLocations.Peek(exists)}
 		{
-			Navigator:FlyToBookmark["${SourceLocations.Peek.ID}"]
+			Navigator:FlyToBookmarkID["${SourceLocations.Peek.ID}"]
 			while ${Navigator.Busy}
 			{
-				wait 10
+				wait 1
 			}
 		}
 	}
