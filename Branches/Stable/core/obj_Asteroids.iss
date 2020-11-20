@@ -305,7 +305,7 @@ objectdef obj_Asteroids
 			return
 		}
 
-		Belts:WarpTo
+		call Belts.WarpTo 0
 		if ${Belts.AtBelt}
 		{
 			Ship:Activate_SurveyScanner
