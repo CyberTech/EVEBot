@@ -168,18 +168,40 @@ objectdef obj_EVEBot inherits obj_BaseClass
 
 	method Pause(string Reason)
 	{
-		Logger:Log["\agPaused\ax: ${Reason}", LOG_ECHOTOO]
 		This._Paused:Set[TRUE]
+		This:PauseThreads
+		Logger:Log["\agPaused\ax: ${Reason}", LOG_ECHOTOO]
 		Script:Pause
+	}
+
+	method PauseThreads()
+	{
+		variable int i
+		for (i:Set[1]; ${i} <= ${Threads.Used}; i:Inc)
+		{
+			Logger:Log[" Pausing ${Threads.Get[${i}]} thread..."]
+			Script[${Threads.Get[${i}]}]:Pause
+		}
 	}
 
 	method Resume(string Reason)
 	{
 		This.ReturnToStation:Set[FALSE]
 		Script:Resume
+		This:ResumeThreads
 		This._Paused:Set[FALSE]
 
 		Logger:Log["Resumed: ${Reason}", LOG_ECHOTOO]
+	}
+
+	method ResumeThreads()
+	{
+		variable int i
+		for (i:Set[1]; ${i} <= ${Threads.Used}; i:Inc)
+		{
+			Logger:Log[" Resuming ${Threads.Get[${i}]} thread..."]
+			Script[${Threads.Get[${i}]}]:Resume
+		}
 	}
 
 	method SetVersion(int Version=${VersionNum})
