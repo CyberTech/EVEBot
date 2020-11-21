@@ -240,6 +240,7 @@ objectdef obj_Navigator inherits obj_BaseClass
 		{
 			switch ${TempEntity.GroupID}
 			{
+				case GROUP_STRUCTURE_INDUSTRIAL_ARRAY
 				case GROUP_STRUCTURE_DRILLING_PLATFORM	/* Refinery */
 				case GROUP_STRUCTURECITADEL							/* Citadel */
 				case GROUP_STATION
