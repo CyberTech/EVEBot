@@ -913,6 +913,11 @@ objectdef obj_Ship
 		return ${Math.Calc[${Me.TargetCount} + ${Me.TargetingCount}]}
 	}
 
+	member:int AvailableTargets()
+	{
+		return ${Math.Calc[${This.MaxLockedTargets} - ${This.TotalTargeting}]}
+	}
+
 	member:int TotalMiningLasers()
 	{
 		return ${This.ModuleList_MiningLaser.Used}
