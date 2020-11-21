@@ -240,7 +240,8 @@ objectdef obj_Navigator inherits obj_BaseClass
 		{
 			switch ${TempEntity.GroupID}
 			{
-				case GROUP_STRUCTURECITADEL
+				case GROUP_STRUCTURE_DRILLING_PLATFORM	/* Refinery */
+				case GROUP_STRUCTURECITADEL							/* Citadel */
 				case GROUP_STATION
 					This.Destinations[1].DestinationType:Set[${This.DEST_ACTION_DOCK}]
 					return TRUE
