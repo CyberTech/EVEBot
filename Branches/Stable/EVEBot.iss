@@ -132,6 +132,7 @@ function main()
 #endif
 	; Set turbo to 4000 per frame for startup.
 	Turbo 4000
+	ISXEVE:Debug_SetEntityCacheDisabled[TRUE]
 	echo "${Time}: ${APP_NAME} \atstarting\ax"
 
 #if EVEBOT_PROFILING
