@@ -56,7 +56,6 @@ objectdef obj_Ship
 	{
 		if !${Me.InStation} && ${Me.InSpace}
 		{
-			This:StopShip[]
 			This:UpdateModuleList
 		}
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
