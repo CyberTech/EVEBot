@@ -469,9 +469,9 @@
 						<Textentry name='MiningRangeMultipler'>
 							<X>200</X>
 							<Y>30</Y>
-							<Width>35</Width>
+							<Width>45</Width>
 							<Height>18</Height>
-							<MaxLength>4</MaxLength>
+							<MaxLength>6</MaxLength>
 							<OnLoad>
 								This:SetText[${Script[EVEBot].VariableScope.Config.Miner.MiningRangeMultipler}]
 							</OnLoad>
@@ -483,7 +483,7 @@
 							</OnChange>
 						</Textentry>
 						<Text name='MiningRangeMultiplerText'>
-							<X>250</X>
+							<X>275</X>
 							<Y>30</Y>
 							<Width>200</Width>
 							<Height>18</Height>
@@ -1083,6 +1083,25 @@
 							</OnLoad>
 							<OnLeftClick>
 								Script[EVEBot].VariableScope.Config.Combat:SetLootMyKills[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox name='cbEnableDroneDefense'>
+							<X>10</X>
+							<Y>230</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Enable Drone Defense against NPCs</Text>
+							<AutoTooltip>Enable Drone Defense module</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Combat.EnableDroneDefense}
+								{
+									This:SetChecked
+								}
+								Defense_Drone:Enable[${This.Checked}, "UI", "Checkbox"]
+							</OnLoad>
+							<OnLeftClick>
+								Defense_Drone:Enable[${This.Checked}, "UI", "Checkbox"]
+								Script[EVEBot].VariableScope.Config.Combat:EnableDroneDefense[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
 						<Text name='MinimumDronesInSpaceText'>
