@@ -26,7 +26,7 @@ objectdef obj_Defense_Drone inherits obj_BaseClass
 	{
 		LogPrefix:Set["${This.ObjectName}"]
 
-		This.PulseTimer:SetIntervals[0.1,1.5]
+		This.PulseTimer:SetIntervals[0.5,1.5]
 		DroneCommandTimer:SetIntervals[1.0,2.5]
 		Event[ISXEVE_onFrame]:AttachAtom[This:Pulse]
 		Logger:Log["Thread: ${LogPrefix}: Initialized", LOG_MINOR]
@@ -55,15 +55,8 @@ objectdef obj_Defense_Drone inherits obj_BaseClass
 		{
 			return
 		}
-		if ${Entity[${value}](exists)}
-		{
-			HostileTargets:Add[${value}]
-			Logger:Log["${LogPrefix}: Added ${Entity[${value}].Name}(${value}) to attackers list. Attackers: ${HostileTargets.Used}"]
-		}
-		else
-		{
-			Logger:Log["${LogPrefix}: Ignoring off-grid notification of entity ${value}. Attackers: ${HostileTargets.Used}"]
-		}
+		HostileTargets:Add[${value}]
+		Logger:Log["${LogPrefix}: Added ${Entity[${value}].Name}(${value}) to attackers list. Attackers: ${HostileTargets.Used}"]
 	}
 
 	method Pulse()
@@ -73,7 +66,12 @@ objectdef obj_Defense_Drone inherits obj_BaseClass
 			return
 		}
 
-		if ${This.Enabled} && ${This.PulseTimer.Ready}
+		if !${EVEBotScript.Config.Combat.EnableDroneDefense}
+		{
+			return
+		}
+
+		if ${This.PulseTimer.Ready}
 		{
 			if ${Me.InSpace}
 			{
@@ -86,7 +84,7 @@ objectdef obj_Defense_Drone inherits obj_BaseClass
 
 	function ProcessState()
 	{
-		if !${This.Enabled} || ${EVEBot.Disabled}
+		if !${EVEBotScript.Config.Combat.EnableDroneDefense} || ${EVEBot.Disabled}
 		{
 			return
 		}
@@ -104,25 +102,22 @@ objectdef obj_Defense_Drone inherits obj_BaseClass
 		if !${Ship.InWarp}
 		{
 			; TODO - Defense config
-			if !${EVEBotScript.Config.Combat.LaunchCombatDrones} && ${Ship.Drones.DronesInSpace[FALSE]} > 0
+			if (${HostileTargets.Used} == 0 || !${EVEBotScript.Config.Combat.LaunchCombatDrones}) && ${Ship.Drones.DronesInSpace[FALSE]} > 0
 			{
 				; In case the user disables it during operation
 				Ship.Drones:ReturnAllToDroneBay["Defense_Drones"]
 				return
 			}
 
-			This:ChooseTarget
-			; Will launch drones, or if we've lost some, launch more to get to max drone capability
-			Ship.Drones:LaunchAll["Defense_Drones"]
+			if ${EVEBotScript.Config.Combat.LaunchCombatDrones}
+			{
+				This:ChooseTarget
+				; Will launch drones, or if we've lost some, launch more to get to max drone capability
+				Ship.Drones:LaunchAll["Defense_Drones"]
+			}
 
 			call Defend
 		}
-	}
-
-	method Enable(bool Enable, string Source, string Reason)
-	{
-		This.Enabled:Set[${Enable}]
-		Logger:Log["${LogPrefix}: Enabled:${Enable} by ${Source} - ${Reason}"]
 	}
 
 	;This method is used to trigger an event.  It tells our team-mates we are under attack by an NPC and what it is.
