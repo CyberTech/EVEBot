@@ -781,6 +781,7 @@ objectdef obj_Configuration_Miner
 objectdef obj_Configuration_Combat
 {
 	variable string SetName = "Combat"
+	variable weakref Ref
 
 	method Initialize()
 	{
@@ -800,6 +801,7 @@ objectdef obj_Configuration_Combat
 	method Set_Default_Values()
 	{
 		BaseConfig.BaseRef:AddSet[${This.SetName}]
+		Ref:SetReference["BaseConfig.BaseRef.FindSet[${This.SetName}]"]
 
 		This.CombatRef:AddSetting[AnomalyAssistMode, FALSE]
 		This.CombatRef:AddSetting[RestockAmmo, FALSE]
@@ -837,6 +839,8 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[AnomBookmarkLabel, Anom:]
 		This.CombatRef:AddSetting[MaxDroneReturnWaitTime, 3]
 	}
+
+	Define_ConfigItem(bool, EnableDroneDefense, TRUE)
 
 	member:int WarpRange()
 	{
