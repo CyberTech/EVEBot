@@ -38,8 +38,6 @@ objectdef obj_Miner
 	;	This is used to keep track of if our master is in a belt.
 	variable bool WarpToMaster=FALSE
 
-	;	This is a list of IDs for rats which are attacking a team member
-	variable set AttackingTeam
 
 	;	This is used to keep track of how much space our hauler has available
 	variable int64 HaulerAvailableCapacity=-0
@@ -75,8 +73,6 @@ objectdef obj_Miner
 		Event[EVEBot_Master_Vote]:AttachAtom[This:MasterVote]
 		LavishScript:RegisterEvent[EVEBot_HaulerMSG]
 		Event[EVEBot_HaulerMSG]:AttachAtom[This:HaulerMSG]
-		LavishScript:RegisterEvent[EVEBot_TriggerAttack]
-		Event[EVEBot_TriggerAttack]:AttachAtom[This:UnderAttack]
 
 
 		Logger:Log["obj_Miner: Initialized", LOG_MINOR]
@@ -89,7 +85,6 @@ objectdef obj_Miner
 		Event[EVEBot_Master_InBelt]:DetachAtom[This:MasterInBelt]
 		Event[EVEBot_Master_Vote]:DetachAtom[This:MasterVote]
 		Event[EVEBot_HaulerMSG]:DetachAtom[This:HaulerMSG]
-		Event[EVEBot_TriggerAttack]:DetachAtom[This:UnderAttack]
 	}
 
 	method Pulse()
@@ -350,12 +345,6 @@ objectdef obj_Miner
 		if !${Config.Common.CurrentBehavior.Equal[Miner]}
 		{
 			return
-		}
-
-		;	This should be processed regardless of what mode you're in - this way the miner can report attacks to the team.
-		if ${Me.InSpace}
-		{
-			This:CheckAttack
 		}
 
 		;	Tell the miners we might not be in a belt and shouldn't be warped to.
@@ -862,7 +851,7 @@ objectdef obj_Miner
 			return
 		}
 
-		;	This checks our armor and shields to determine if we need to run like hell.  If we're being attacked by something
+		;	This checks our armor and shields to determine if we need to run like hell.  If we're being aggro'd by something
 		;	dangerous enough to get us this damaged, it's best to switch to HARD STOP mode.
 		if (${MyShip.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
 			${MyShip.ShieldPct} < ${Config.Combat.MinimumShieldPct})
@@ -943,12 +932,6 @@ objectdef obj_Miner
 		{
 			;	Tell our miners we're in a belt and they are safe to warp to me
 			relay all -event EVEBot_Master_InBelt TRUE
-		}
-
-		;	This calls the defense routine if Launch Combat Drones is turned on
-		if ${Config.Combat.LaunchCombatDrones} && !${Ship.InWarp}
-		{
-			call Defend
 		}
 
 		;	We need to make sure we're near our orca if we're using it as a delivery location
@@ -1311,7 +1294,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 			return
 		}
 
-		;	This checks our armor and shields to determine if we need to run like hell.  If we're being attacked by something
+		;	This checks our armor and shields to determine if we need to run like hell.  If we're being aggro'd by something
 		;	dangerous enough to get us this damaged, it's best to switch to HARD STOP mode.
 		if (${MyShip.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
 			${MyShip.ShieldPct} < ${Config.Combat.MinimumShieldPct})
@@ -1439,11 +1422,6 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 			}
 		}
 
-		;	This calls the defense routine if Launch Combat Drones is turned on
-		if ${Config.Combat.LaunchCombatDrones} && !${Ship.InWarp}
-		{
-			call Defend
-		}
 		if ${Config.Miner.OrcaTractorLoot}
 		{
 			call This.Tractor
@@ -1612,53 +1590,6 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 		HaulerAvailableCapacity:Set[${value}]
 	}
 
-	;This method is triggered by an event.  If triggered, it tells a team-mate is under attack by an NPC and what it is.
-	method UnderAttack(int64 value)
-	{
-		if !${Config.Common.CurrentBehavior.Equal[Miner]} && !${Config.Common.CurrentBehavior.Equal[Guardian]}
-		{
-			return
-		}
-		if ${AttackingTeam.Contains[${value}]}
-		{
-			return
-		}
-		if ${Entity[${value}](exists)}
-		{
-			AttackingTeam:Add[${value}]
-			Logger:Log["Miner.UnderAttack: Added ${Entity[${value}].Name}(${value}) to attackers list. Attackers: ${AttackingTeam.Used}"]
-		}
-		else
-		{
-			Logger:Log["Miner.UnderAttack: Ignoring off-grid notification of entity ${value}. Attackers: ${AttackingTeam.Used}"]
-		}
-	}
-
-	;This method is used to trigger an event.  It tells our team-mates we are under attack by an NPC and what it is.
-	method CheckAttack()
-	{
-		variable iterator CurrentAttack
-		variable index:attacker attackerslist
-		Me:GetAttackers[attackerslist]
-		attackerslist:RemoveByQuery[${LavishScript.CreateQuery[!IsNPC]}]
-		attackerslist:GetIterator[CurrentAttack]
-		if ${CurrentAttack:First(exists)}
-		{
-			do
-			{
-				if ${Config.Common.CurrentBehavior.Equal[Miner]} || ${Config.Common.CurrentBehavior.Equal[Guardian]}
-				{
-					if !${AttackingTeam.Contains[${CurrentAttack.Value.ID}]}
-					{
-						Logger:Log["Miner.CheckAttack: Alerting team to kill ${CurrentAttack.Value.Name}(${CurrentAttack.Value.ID})"]
-						Relay all -event EVEBot_TriggerAttack ${CurrentAttack.Value.ID}
-					}
-				}
-			}
-			while ${CurrentAttack:Next(exists)}
-		}
-	}
-
 	;	This function's sole purpose is to get your ship in warp as fast as possible from a dead stop with a MWD.  It accepts a value and will either Warp to it
 	;	if it is an entity in the current system, or uses the autopilot if it's a bookmark in another system.  It is designed to do what it needs to do and then
 	;	exit, after which the functions in obj_Ship can be used to make sure the navigation completes.
@@ -1707,99 +1638,6 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 			}
 		}
 		return FALSE
-	}
-
-	;	This function's purpose is to defend against rats which are attacking our team.  Goals:
-	;	*	Keep it atomic - don't get stuck in here, killing rats quickly is NOT a concern
-	;	*	Don't use up our targets, we need those for mining - Only one target should ever be used for a rat.
-	function Defend()
-	{
-		;	This is used to keep track of what we are defending against (rats)
-		variable int64 Attacking=-1
-
-		variable iterator GetData
-		Attacking:Set[${This.Defend_Atomize_1[${Attacking}]}]
-
-		if ${Attacking} != -1 && ${Entity[${Attacking}].IsLockedTarget} && ${Entity[${Attacking}](exists)}
-		{
-			Entity[${Attacking}]:MakeActiveTarget
-			wait 50 ${Me.ActiveTarget.ID} == ${Attacking}
-
-			variable index:activedrone ActiveDroneList
-			variable iterator DroneIterator
-			variable index:int64 AttackDrones
-
-			Me:GetActiveDrones[ActiveDroneList]
-			ActiveDroneList:GetIterator[DroneIterator]
-			if ${DroneIterator:First(exists)}
-				do
-				{
-					if ${DroneIterator.Value.State} == 0
-						AttackDrones:Insert[${DroneIterator.Value.ID}]
-				}
-				while ${DroneIterator:Next(exists)}
-
-			if ${AttackDrones.Used} > 0
-			{
-				Logger:Log["Miner.Defend: Sending ${AttackDrones.Used} Drones to attack ${Entity[${Attacking}].Name}"]
-				EVE:DronesEngageMyTarget[AttackDrones]
-			}
-		}
-
-	}
-
-	member:int64 Defend_Atomize_1(int64 Attacking)
-	{
-		variable iterator GetData
-
-		if ${AttackingTeam.Used} > 0
-		{
-			AttackingTeam:GetIterator[GetData]
-			if ${GetData:First(exists)}
-				do
-				{
-					if ${Entity[${GetData.Value}](exists)}
-					{
-						if ${Entity[${GetData.Value}].Distance} < ${Ship.OptimalTargetingRange} && \
-							${Entity[${GetData.Value}].Distance} < ${Me.DroneControlDistance} && \
-							!${Entity[${GetData.Value}].IsLockedTarget} && \
-							!${${GetData.Value}].BeingTargeted}
-						{
-							Entity[${GetData.Value}]:LockTarget
-						}
-					}
-					else
-					{
-						AttackingTeam:Remove[${GetData.Value}]
-					}
-				}
-				while ${GetData:Next(exists)}
-		}
-
-		if ${AttackingTeam.Used} == 0
-		{
-			Ship.Drones:ReturnAllToDroneBay["Miner.Defend"]
-		}
-		elseif ${Ship.Drones.DronesInSpace[FALSE]} == 0
-		{
-			Ship.Drones:LaunchAll["Miner.Defend"]
-		}
-
-		Attacking:Set[-1]
-		AttackingTeam:GetIterator[GetData]
-		if ${GetData:First(exists)}
-			do
-			{
-				if ${Entity[${GetData.Value}](exists)} && ${Entity[${GetData.Value}].Distance} < ${Ship.OptimalTargetingRange} && ${Entity[${GetData.Value}].Distance} < ${Me.DroneControlDistance}
-				{
-					Attacking:Set[${GetData.Key}]
-					break
-				}
-			}
-			while ${GetData:Next(exists)}
-
-
-		return ${Attacking}
 	}
 
 	;	This member is used to determine if our miner is full based on a number of factors:

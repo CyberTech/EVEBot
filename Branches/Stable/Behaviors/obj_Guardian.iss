@@ -437,15 +437,6 @@ objectdef obj_Guardian
 			}
 			while ${MyTarget:Next(exists)}
 
-
-
-		;	This calls the defense routine if Launch Combat Drones is turned on
-		if ${Config.Combat.LaunchCombatDrones} && !${Ship.InWarp}
-		{
-			call Miner.Defend
-		}
-
-
 		;	We need to make sure we're near our orca if we're using it as a delivery location
 
 			Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
