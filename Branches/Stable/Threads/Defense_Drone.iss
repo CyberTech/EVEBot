@@ -94,11 +94,6 @@ objectdef obj_Defense_Drone inherits obj_BaseClass
 			return
 		}
 
-		if ${HostileTargets.Used} == 0
-		{
-			return
-		}
-
 		if !${Ship.InWarp}
 		{
 			; TODO - Defense config
@@ -106,6 +101,11 @@ objectdef obj_Defense_Drone inherits obj_BaseClass
 			{
 				; In case the user disables it during operation
 				Ship.Drones:ReturnAllToDroneBay["Defense_Drones"]
+				return
+			}
+
+			if ${HostileTargets.Used} == 0
+			{
 				return
 			}
 
