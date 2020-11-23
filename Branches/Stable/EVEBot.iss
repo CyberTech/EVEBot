@@ -152,6 +152,12 @@ function main()
 	declarevariable BaseConfig obj_Configuration_BaseConfig script
 
 	declarevariable Config obj_Configuration script
+	if ${Config.Common.CurrentBehavior.Equal[Miner]} && ${Config.Miner.OrcaMode}
+	{
+		Config.Common:CurrentBehavior["Orca"]
+		Logger:Log["Configuration: Migrating config value: Miner + Orca Mode -> Behavior Orca", LOG_ECHOTOO]
+	}
+
 	call CreateVariable EVEBot obj_EVEBot global
 	declarevariable UI obj_EVEBotUI script
 	declarevariable Whitelist obj_Config_Whitelist script

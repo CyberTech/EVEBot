@@ -65,7 +65,6 @@ objectdef obj_Miner
 	{
 		This.TripStartTime:Set[${Time.Timestamp}]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
-		LavishScript:RegisterEvent[EVEBot_Orca_InBelt]
 		Event[EVEBot_Orca_InBelt]:AttachAtom[This:OrcaInBelt]
 		LavishScript:RegisterEvent[EVEBot_Master_InBelt]
 		Event[EVEBot_Master_InBelt]:AttachAtom[This:MasterInBelt]
@@ -264,40 +263,33 @@ objectdef obj_Miner
 			}
 		}
 
-		if !${Config.Miner.OrcaMode}
+		if ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && !${WarpToOrca}
 		{
-			if ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]}
+			if ${This.AtPanicBookmark}
 			{
-				if !${WarpToOrca}
-				{
-					if ${This.AtPanicBookmark}
-					{
-						; If in orca delivery mode and orca not in belt and at panic spot, wait
-						This.CurrentState:Set["IDLE"]
-						return
-					}
-
-					; If in orca delivery and orca not in belt, flee
-					This.CurrentState:Set["FLEE"]
-					Logger:Log["FLEE: Orca not in belt (temporary)"]
-					return
-				}
-			}
-
-			; If in group mode, not the master, dont warp to master, and at safe spot... wait
-			if ${Config.Miner.GroupMode} && !${IsMaster} && !${WarpToMaster} && ${This.AtPanicBookmark}
-			{
+				; If in orca delivery mode and orca not in belt and at panic spot, wait
 				This.CurrentState:Set["IDLE"]
 				return
 			}
+			; If in orca delivery and orca not in belt, flee
+			This.CurrentState:Set["FLEE"]
+			Logger:Log["FLEE: Orca not in belt (temporary)"]
+			return
+		}
 
-			; If in group mode, not the master, and dont warp to the master... flee
-			if ${Config.Miner.GroupMode} && !${IsMaster} && !${WarpToMaster}
-			{
-				This.CurrentState:Set["FLEE"]
-				Logger:Log["FLEE: Master not in belt (temporary)"]
-				return
-			}
+		; If in group mode, not the master, dont warp to master, and at safe spot... wait
+		if ${Config.Miner.GroupMode} && !${IsMaster} && !${WarpToMaster} && ${This.AtPanicBookmark}
+		{
+			This.CurrentState:Set["IDLE"]
+			return
+		}
+
+		; If in group mode, not the master, and dont warp to the master... flee
+		if ${Config.Miner.GroupMode} && !${IsMaster} && !${WarpToMaster}
+		{
+			This.CurrentState:Set["FLEE"]
+			Logger:Log["FLEE: Master not in belt (temporary)"]
+			return
 		}
 
 		;	If I'm in a station, I need to perform what I came there to do
@@ -320,16 +312,8 @@ objectdef obj_Miner
 			return
 		}
 
-		;	If Orca Mode is on, I'm going to behave like an Orca
-		if ${Config.Miner.OrcaMode}
-		{
-			This.CurrentState:Set["ORCA"]
-		}
-		else
-		{
-			;	If I'm not in a station and I have room to mine more ore, that's what I should do!
-			This.CurrentState:Set["MINE"]
-		}
+		; If I'm not in a station and I have room to mine more ore, that's what I should do!
+		This.CurrentState:Set["MINE"]
 	}
 
 
@@ -347,26 +331,10 @@ objectdef obj_Miner
 			return
 		}
 
-		;	Tell the miners we might not be in a belt and shouldn't be warped to.
-		if ${Config.Miner.OrcaMode}
+		if ${IsMaster} && ${This.CurrentState.NotEqual[MINE]}
 		{
-			if ${This.CurrentState.NotEqual[ORCA]}
-			{
-				relay all -event EVEBot_Orca_InBelt FALSE
-				if ${IsMaster}
-				{
-					; Tell the miners we might not be in a belt and shouldn't be warped to.
-					relay all -event EVEBot_Master_InBelt FALSE
-				}
-			}
-		}
-		else
-		{
-			if ${IsMaster} && ${This.CurrentState.NotEqual[MINE]}
-			{
-				; Tell the miners we might not be in a belt and shouldn't be warped to.
-				relay all -event EVEBot_Master_InBelt FALSE
-			}
+			; Tell the miners we might not be in a belt and shouldn't be warped to.
+			relay all -event EVEBot_Master_InBelt FALSE
 		}
 
 		if ${Config.Miner.MasterMode} || ${Config.Miner.GroupMode}
@@ -538,21 +506,10 @@ objectdef obj_Miner
 					break
 				}
 
-				;	If we're in Orca mode, we need to unload all locations capable of holding ore, not just the cargo hold.
-				;	Note:  I need to replace the shuffle with 3 direct movements
-				if ${Config.Miner.OrcaMode}
-				{
-					call Cargo.TransferCargoFromShipOreHoldToStation
-					call Cargo.TransferCargoFromShipCorporateHangarToStation
-					call Cargo.TransferOreToStationHangar
-				}
-				else
-				{
-						call Cargo.TransferOreToStationHangar
-						call Cargo.TransferCargoFromShipOreHoldToStation
-				}
+				call Cargo.TransferOreToStationHangar
+				call Cargo.TransferCargoFromShipOreHoldToStation
 
-			    LastUsedCargoCapacity:Set[0]
+				LastUsedCargoCapacity:Set[0]
 				call Station.Undock
 				wait 600 ${Me.InSpace}
 				break
@@ -569,21 +526,6 @@ objectdef obj_Miner
 				{
 					call This.Mine
 				}
-				break
-
-			;	This means we're in space and we should act like an orca.
-			;	*	If we're warping, wait for that to finish up
-			;	*	If Orca In Belt is enabled, call OrcaInBelt
-			case ORCA
-				if ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}](exists)} && ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID} != ${Me.SolarSystemID}
-				{
-					call Ship.TravelToSystem ${EVE.Bookmark[${Config.Hauler.MiningSystemBookmark}].SolarSystemID}
-				}
-				if ${Me.ToEntity.Mode} == 3
-				{
-					break
-				}
-				call This.OrcaInBelt
 				break
 
 			;	This means we need to go to our delivery location to unload.
@@ -1270,199 +1212,6 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 		}
 	}
 
-/*
-;	Step 5:		OrcaInBelt:  This is it's own function so the ProcessState function doesn't get too giant.  This is mostly because it's just a trimmed
-;				down version of This.Mine.  However, as with the miner, it's important to remember that anything you do here keeps you in the Orca state.
-;				Until EVEBot makes it through this function, it can't get back to ProcessState to start running away from hostiles and whatnot.
-;				Therefore, keep any use of the wait function to a minimum, and make sure you can get out of loops in a timely manner!
-*/
-	function OrcaInBelt()
-	{
-		;	Variable used to track asteroids
-		variable iterator AsteroidIterator
-
-
-		;	If we're in a station there's not going to be any mining going on.  This should clear itself up if it ever happens.
-		if ${Me.InStation} != FALSE
-		{
-			Logger:Log["DEBUG: obj_Miner.OrcaInBelt called while zoning or while in station!"]
-			return
-		}
-
-		if !${Me.InSpace}
-		{
-			return
-		}
-
-		;	This checks our armor and shields to determine if we need to run like hell.  If we're being aggro'd by something
-		;	dangerous enough to get us this damaged, it's best to switch to HARD STOP mode.
-		if (${MyShip.ArmorPct} < ${Config.Combat.MinimumArmorPct} || \
-			${MyShip.ShieldPct} < ${Config.Combat.MinimumShieldPct})
-		{
-			Logger:Log["Armor is at ${MyShip.ArmorPct}: ${MyShip.Armor}/${MyShip.MaxArmor}", LOG_CRITICAL]
-			Logger:Log["Shield is at ${MyShip.ShieldPct}: ${MyShip.Shield}/${MyShip.MaxShield}", LOG_CRITICAL]
-			Logger:Log["Miner aborting due to defensive status", LOG_CRITICAL]
-
-			EVEBot.ReturnToStation:Set[TRUE]
-			return
-		}
-
-		;	If configured to launch combat drones and there's a shortage, force a DropOff so we go to our delivery location
-		 if ${Config.Combat.LaunchCombatDrones} && ${Ship.Drones.CombatDroneShortage}
-		{
-			Logger:Log["Warning: Drone shortage detected.  Forcing a dropoff - make sure drones are available at your delivery location!"]
-			ForceDropoff:Set[TRUE]
-			return
-		}
-
-		;	Find an asteroid field, or stay at current one if we're near one.  Once we're there, prepare for mining and
-		;	make sure we know what asteroids are available
-		if ${Asteroids.FieldEmpty}
-		{
-			Logger:Log["Miner.OrcaInBelt: No asteroids detected, forcing belt change"]
-			call Asteroids.MoveToField TRUE TRUE
-			call Asteroids.UpdateList
-		}
-
-		;	This changes belts if someone's within Min. Distance to Players
-		if ${Social.PlayerInRange[${Config.Miner.AvoidPlayerRange}]}
-		{
-			Logger:Log["Miner.OrcaInBelt: Avoiding player: Forcing belt change"]
-			call Asteroids.MoveToField TRUE TRUE TRUE
-			call Asteroids.UpdateList
-		}
-
-		;	Tell our miners we're in a belt and they are safe to warp to me
-		relay all -event EVEBot_Orca_InBelt TRUE
-		if ${IsMaster}
-		{
-			;	Tell our miners we're in a belt and they are safe to warp to me
-			relay all -event EVEBot_Master_InBelt TRUE
-		}
-
-		Ship:Activate_Gang_Links
-
-		variable int OrcaRange = 30000
-
-		;	Next we need to move in range of some ore so miners can mine near me
-		variable int64 NearestAsteroidID = ${Asteroids.NearestAsteroid[100000, TRUE]}
-		; Logger:Log["NearestAsteroidId: ${NearestAsteroidID}    ${Entity[${NearestAsteroidID}](exists)} && ${This.Approaching} == 0"]
-		if ${Entity[${NearestAsteroidID}](exists)} && ${This.Approaching} == 0
-		{
-			if ${Entity[${NearestAsteroidID}].Distance} > WARP_RANGE
-			{
-				Logger:Log["Debug: Entity:WarpTo to NearestAsteroid from Line _LINE_ ", LOG_DEBUG]
-				Entity[${NearestAsteroidID}]:WarpTo[${OrcaRange}]
-				return
-			}
-
-			;	Find out if we need to approach this asteroid
-			if ${Entity[${NearestAsteroidID}].Distance} > ${OrcaRange}
-			{
-				Logger:Log["Miner.OrcaInBelt: Approaching ${Entity[${Asteroids.NearestAsteroid}].Name}"]
-				This:StartApproaching[${NearestAsteroidID}}, ${OrcaRange}]
-				return
-			}
-		}
-
-		if ${This.Approaching} != 0
-		{
-			if !${Entity[${This.Approaching}](exists)}
-			{
-				This:StopApproaching["Miner.OrcaInBelt -Target ${This.Approaching} disappeared while I was approaching."]
-				This.ApproachingOrca:Set[FALSE]
-				return
-			}
-
-			if ${This.TimeSpentApproaching} >= 45
-			{
-				This:StopApproaching["Miner.OrcaInBelt - Approaching target ${This.Approaching} for > 45 seconds? Cancelling"]
-				This.ApproachingOrca:Set[FALSE]
-				return
-			}
-
-			;	If we're approaching a target, find out if we need to stop doing so
-			if ${Entity[${This.Approaching}].Distance} <= ${OrcaRange}
-			{
-				This:StopApproaching["Miner.OrcaInBelt: In range of ${Entity[${Asteroids.NearestAsteroid}].Name} - Stopping"]
-			}
-		}
-
-		;	This section is for moving ore into the Orca ore and cargo holds, so they will fill before the Corporate Hangar, to which the miner is depositing
-		; TODO - reduce this cycle spam
-		call Inventory.ShipFleetHangar.Activate
-
-		if ${Config.Miner.DeliveryLocationTypeName.Equal["No Delivery"]}
-		{
-			; We're in no-delivery mode (we don't deliver, it's picked up)
-			; A hauler will be picking up from the fleet hold. Balance between keeping the fleet hold populated, but not full
-			relay all -event EVEBot_Orca_Cargo ${Ship.CorpHangarUsedSpace[TRUE]}
-			if ${Ship.CorpHangarFull}
-			{
-				; The fleet hangar filled up, because we're filling it faster than the hauler can get, or the hauler is busted. Move to Ore hold for safekeeping and to make room for more.
-				call Cargo.TransferOreFromShipFleetHangarToOreHold
-			}
-		}
-		else
-		{
-			if !${Config.Miner.DeliveryLocationTypeName.Equal["Jetcan"]} && ${Ship.CorpHangarHalfFull}
-			{
-				call Inventory.ShipOreHold.Activate
-				; Orca Base cargo space: Cargo: 30k, Ore: 150k, Fleet: 40k
-				if !${Ship.OreHoldFull}
-				{
-					call Cargo.TransferOreFromShipFleetHangarToOreHold
-					Ship:StackOreHold
-				}
-				if !${Ship.CargoFull}
-				{
-					call Cargo.TransferOreFromShipFleetHangarToCargoHold
-					Ship:StackCargoHold
-				}
-			}
-		}
-
-		if ${Config.Miner.OrcaTractorLoot}
-		{
-			call This.Tractor
-		}
-
-		;	This checks to make sure there aren't any potential jet can flippers around before we dump a jetcan
-		if !${Social.PlayerInRange[10000]} && ${Config.Miner.DeliveryLocationTypeName.Equal["Jetcan"]}
-		{
-			if ${Config.Miner.SafeJetcan}
-			{
-				;	This checks to make sure the player in our delivery location is in range and not warping before we dump a jetcan
-				if ((${MyShip.HasOreHold} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoHalfFull})
-				{
-					if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)} && \
-						${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && \
-						${Entity[Name = "${Config.Miner.DeliveryLocation}"].Mode} != 3
-					{
-						call Cargo.TransferOreToJetCan
-						;	Need a wait here because it would try to move the same item more than once
-						wait 20
-						return
-					}
-					else
-					{
-						This:NotifyHaulers[]
-					}
-				}
-			}
-			else
-			{
-				if ((${MyShip.HasOreHold} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoHalfFull})
-				{
-					call Cargo.TransferOreToJetCan
-					;	Need a wait here because it would try to move the same item more than once
-					wait 20
-					This:NotifyHaulers[]
-				}
-			}
-		}
-	}
-
 	method NotifyHaulers()
 	{
 	    if ${Time.Timestamp} >= ${This.NextHaulerNotify.Timestamp}
@@ -1653,10 +1402,6 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 		}
 		if ${Config.Miner.IceMining}
 		{
-			if ${Config.Miner.OrcaMode} && ${Ship.CorpHangarFreeSpace} < 1000
-			{
-				return TRUE
-			}
 			if ${MyShip.HasOreHold}
 			{
 				if ${Ship.OreHoldFreeSpace} < 1000
@@ -1671,10 +1416,6 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 		}
 		else
 		{
-			if ${Config.Miner.OrcaMode} && ${Ship.CorpHangarFreeSpace} <= ${Ship.CorpHangarMinimumFreeSpace}
-			{
-				return TRUE
-			}
 			if ${MyShip.HasOreHold}
 			{
 				if ${Ship.OreHoldFreeSpace} < ${Ship.OreHoldMinimumFreeSpace}
