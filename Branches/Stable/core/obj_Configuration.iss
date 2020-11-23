@@ -152,8 +152,6 @@ objectdef obj_Configuration_Common
 		Ref:SetReference["BaseConfig.BaseRef.FindSet[${This.SetName}]"]
 
 		; We use both so we have an ID to use to set the default selection in the UI.
-		This.Ref:AddSetting[Bot Mode,1]
-		This.Ref:AddSetting[Bot Mode Name,MINER]
 		This.Ref:AddSetting[Home Station,1]
 		This.Ref:AddSetting[Use Development Build,FALSE]
 		This.Ref:AddSetting[Drones In Bay,0]
@@ -601,11 +599,13 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Group Mode At Range, ${value}]
 	}
 
+	; Deprecated 2020-11-222
 	member:bool OrcaMode()
 	{
 		return ${This.MinerRef.FindSetting[Orca Mode, FALSE]}
 	}
 
+	; Deprecated 2020-11-222
 	method SetOrcaMode(bool value)
 	{
 		This.MinerRef:AddSetting[Orca Mode, ${value}]
@@ -790,6 +790,7 @@ objectdef obj_Configuration_Combat
 			Logger:Log["Warning: ${This.SetName} settings missing - initializing"]
 			This:Set_Default_Values[]
 		}
+		Ref:SetReference["BaseConfig.BaseRef.FindSet[${This.SetName}]"]
 		Logger:Log["obj_Configuration_Combat: Initialized", LOG_MINOR]
 	}
 
