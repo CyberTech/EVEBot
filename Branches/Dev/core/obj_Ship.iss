@@ -136,7 +136,6 @@ objectdef obj_Ship inherits obj_BaseClass
 	{
 		LogPrefix:Set["${This.ObjectName}"]
 
-		This:StopShip[]
 		This:UpdateModuleList[]
 		This:PopulateNameModPairs[]
 
