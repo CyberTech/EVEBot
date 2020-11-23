@@ -83,12 +83,22 @@ objectdef obj_Drones inherits obj_BaseClass
 			return
 		}
 
-		if ${This.DronesInBay} > 0
+		if ${This.DronesInBay} > 0 && !${This.AreMaxDronesActive}
 		{
 			Logger:Log["${Caller}: Launching drones..."]
 			MyShip:LaunchAllDrones
 			This.WaitingForDrones:Set[5]
 		}
+	}
+
+	member:bool AreMaxDronesActive()
+	{
+		if ${This.DronesInSpace} < ${Me.MaxActiveDrones}
+		{
+			return FALSE
+		}
+
+		return TRUE
 	}
 
 	member:int DronesInBay()
