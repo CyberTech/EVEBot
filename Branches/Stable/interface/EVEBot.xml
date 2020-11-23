@@ -649,23 +649,6 @@
 								Script[EVEBot].VariableScope.Config.Miner:SetGroupModeAtRange[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
-						<checkbox name='cbOrcaMode'>
-							<X>300</X>
-							<Y>130</Y>
-							<Height>20</Height>
-							<Width>100</Width>
-							<Text>Orca Mode </Text>
-							<AutoTooltip>When checked this will tell Evebot to operate an Orca, including managing boost modules</AutoTooltip>
-							<OnLoad>
-								if ${Script[EVEBot].VariableScope.Config.Miner.OrcaMode}
-								{
-								This:SetChecked
-								}
-							</OnLoad>
-							<OnLeftClick>
-								Script[EVEBot].VariableScope.Config.Miner:SetOrcaMode[${This.Checked}]
-							</OnLeftClick>
-						</checkbox>
 						<checkbox name='cbOrcaWrecks'>
 							<X>300</X>
 							<Y>150</Y>
@@ -1090,17 +1073,15 @@
 							<Y>230</Y>
 							<Height>20</Height>
 							<Width>100</Width>
-							<Text>Enable Drone Defense against NPCs</Text>
-							<AutoTooltip>Enable Drone Defense module</AutoTooltip>
+							<Text>Request Drone Defense against NPCs</Text>
+							<AutoTooltip>Request Drone Defense from fleet - to respond, also enable launch combat drones, otherwise it's request only</AutoTooltip>
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Combat.EnableDroneDefense}
 								{
 									This:SetChecked
 								}
-								Defense_Drone:Enable[${This.Checked}, "UI", "Checkbox"]
 							</OnLoad>
 							<OnLeftClick>
-								Defense_Drone:Enable[${This.Checked}, "UI", "Checkbox"]
 								Script[EVEBot].VariableScope.Config.Combat:EnableDroneDefense[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
