@@ -1109,7 +1109,7 @@ TODO - integrate in most of the flyto*
 				; This is fallback code that shouldn't get called.
 				if ${This.CurrentState} != ${STATE_DOCKING}
 				{
-					Logger:Log["${LogPrefix} - Navigate_Dock: Warning: Outside docking range for Entity ${Entity[${This.Destinations[1].EntityID}].Name} @ ${EVEBot.MetersToKM_Str[${Entity[${This.Destinations[1].EntityID}].Distance}]}, approaching", LOG_WARNING]
+					Logger:Log["${LogPrefix} - Navigate_Dock: Outside docking range for Entity ${Entity[${This.Destinations[1].EntityID}].Name} @ ${EVEBot.MetersToKM_Str[${Entity[${This.Destinations[1].EntityID}].Distance}]}, approaching", LOG_MINOR]
 					Ship:Activate_AfterBurner[]
 					Entity[${This.Destinations[1].EntityID}]:Approach
 					This:SetState[${STATE_APPROACHING}]
@@ -1166,11 +1166,11 @@ TODO - integrate in most of the flyto*
 
 		if ${This.CurrentState} != ${STATE_UNDOCKING}
 		{
-			Config.Common:LastStationID[${Me.StationID}]
-			if ${Config.Common.HomeStation.Equal["NOTSET"]}
+			EVEBotScript.Config.Common:LastStationID[${Me.StationID}]
+			if ${EVEBotScript.Config.Common.HomeStation.Equal["NOTSET"]}
 			{
-				Config.Common:HomeStation["${Me.Station}"]
-				Logger:Log["${LogPrefix} - Navigate_Undock: Home Station set to ${Config.Common.HomeStation}"]
+				EVEBotScript.Config.Common:HomeStation["${Me.Station}"]
+				Logger:Log["${LogPrefix} - Navigate_Undock: Home Station set to ${EVEBotScript.Config.Common.HomeStation}"]
 			}
 
 			Logger:Log["${LogPrefix} - Navigate_Undock: Undocking from ${Me.StationID}:${Me.Station.Name}"]
