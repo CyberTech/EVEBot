@@ -184,17 +184,6 @@ objectdef obj_Hauler
 	  		return
 		}
 
-		if ${Inventory.ShipCargo.UsedCapacity} < 0
-		{
-			call Inventory.ShipCargo.Activate
-		}
-
-		if ${MyShip.HasOreHold} && ${Inventory.ShipOreHold.UsedCapacity} < 0
-		{
-			call Inventory.ShipOreHold.Activate
-		}
-
-		;	If I'm not in a station and I'm full, I should head to a station to unload - Ignore dropoff if Orca Delivery is disabled.
 		if ${This.HaulerFull}
 		{
 			This.CurrentState:Set["DROPOFF"]
@@ -215,6 +204,16 @@ objectdef obj_Hauler
 
 	function ProcessState()
 	{
+		if ${Inventory.ShipCargo.UsedCapacity} < 0
+		{
+			call Inventory.ShipCargo.Activate
+		}
+
+		if ${MyShip.HasOreHold} && ${Inventory.ShipOreHold.UsedCapacity} < 0
+		{
+			call Inventory.ShipOreHold.Activate
+		}
+
 		switch ${This.CurrentState}
 		{
 			;	This means we're somewhere safe, and SetState wants us to stay there without spamming the UI
@@ -336,6 +335,7 @@ objectdef obj_Hauler
 			case BASE
 				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID} != ${Me.StationID}
 				{
+					; I'm at the wrong station for delivery, so don't do it here.
 					call Station.Undock
 					break
 				}
@@ -343,6 +343,12 @@ objectdef obj_Hauler
 				call Cargo.TransferCargoToStationHangar
 				call Cargo.TransferCargoFromShipOreHoldToStation
 				call Cargo.TransferCargoFromShipCorporateHangarToStation
+				if ${This.HaulerFull}
+				{
+					Logger:Log["STOP: Cargo still full after delivery; failure?", LOG_CRITICAL]
+					EVEBot.ReturnToStation:Set[TRUE]
+					return
+				}
 
 				call Station.Undock
 				wait 20 ${Me.InSpace}
@@ -1008,6 +1014,27 @@ objectdef obj_Hauler
 
 	function DropOff()
 	{
+
+		if ${Inventory.ShipCargo.UsedCapacity} < 0
+		{
+			call Inventory.ShipCargo.Activate
+		}
+
+		if ${MyShip.HasOreHold} && ${Inventory.ShipOreHold.UsedCapacity} < 0
+		{
+			call Inventory.ShipOreHold.Activate
+		}
+
+		if ${MyShip.HasOreHold}
+		{
+			Logger:Log["Hauler: Delivering Cargo: Ore Hold Used ${Ship.OreHoldUsedCapacity} / ${Ship.OreHoldCapacity} available"]
+			return TRUE
+		}
+		else
+		{
+			Logger:Log["Hauler: Delivering Cargo: Cargo Hold Free Space ${Ship.CargoFreeSpace}, Used ${MyShip.UsedCargoCapacity} of ${Config.Miner.CargoThreshold} threshold"]
+		}
+
 		if !${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)}
 		{
 			Logger:Log["ERROR: ORE Delivery location & type must be specified (on the miner tab) - docking"]
@@ -1017,19 +1044,34 @@ objectdef obj_Hauler
 		switch ${Config.Miner.DeliveryLocationTypeName}
 		{
 			case Station
-				call Ship.TravelToSystem ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID}
-				call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
+				Navigator:FlyToBookmark["${Config.Miner.DeliveryLocation}", 0, TRUE]
+				while ${Navigator.Busy}
+				{
+					wait 10
+				}
 				break
 			case Hangar Array
-				call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
+				Navigator:FlyToBookmark["${Config.Miner.DeliveryLocation}", 0, TRUE]
+				while ${Navigator.Busy}
+				{
+					wait 10
+				}
 				call Cargo.TransferOreToCorpHangarArray
 				break
 			case Large Ship Assembly Array
-				call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
+				Navigator:FlyToBookmark["${Config.Miner.DeliveryLocation}", 0, TRUE]
+				while ${Navigator.Busy}
+				{
+					wait 10
+				}
 				call Cargo.TransferCargoToLargeShipAssemblyArray
 				break
 			case XLarge Ship Assembly Array
-				call Ship.WarpToBookMarkName "${Config.Miner.DeliveryLocation}"
+				Navigator:FlyToBookmark["${Config.Miner.DeliveryLocation}", 0, TRUE]
+				while ${Navigator.Busy}
+				{
+					wait 10
+				}
 				call Cargo.TransferOreToXLargeShipAssemblyArray
 				break
 			case Jetcan
@@ -1253,13 +1295,11 @@ objectdef obj_Hauler
 		{
 			if ${Ship.OreHoldFull}
 			{
-				Logger:Log["Ore Hold Full (${Ship.OreHoldUsedCapacity}/${Ship.OreHoldCapacity}) - Dropping off cargo."]
 				return TRUE
 			}
 		}
 		elseif ${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}
 		{
-			Logger:Log["Cargo Hold Full (${Ship.CargoFreeSpace} < ${Ship.CargoMinimumFreeSpace} || ${MyShip.UsedCargoCapacity} > ${Config.Miner.CargoThreshold}) - Dropping off cargo."]
 			return TRUE
 		}
 		return FALSE
