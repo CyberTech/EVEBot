@@ -282,10 +282,6 @@ objectdef obj_Hauler
 				{
 					break
 				}
-				if ${Me.InStation}
-				{
-					break
-				}
 				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)}
 				{
 					Navigator:FlyToBookmark["${Config.Miner.PanicLocation}", 0, TRUE]
@@ -340,8 +336,8 @@ objectdef obj_Hauler
 				call Cargo.TransferCargoFromShipCorporateHangarToStation
 				if ${This.HaulerFull}
 				{
-					Logger:Log["STOP: Cargo still full after delivery; failure?", LOG_CRITICAL]
-					EVEBot.ReturnToStation:Set[TRUE]
+					Logger:Log["STOP: Cargo still full after delivery; failure?  Retrying in 20 seconds", LOG_CRITICAL]
+					wait 200
 					return
 				}
 
