@@ -680,57 +680,42 @@ objectdef obj_Hauler
 			return
 		}
 
+		if ${Config.Hauler.OrcaRunningEvebot} && ${OrcaCargo} < ${Config.Miner.CargoThreshold} && ${OrcaCargo} < 35000
+		{
+			return
+		}
+
 		variable int64 OrcaID
 		if ${Entity[Name = "${Config.Hauler.HaulerPickupName}"](exists)}
 		{
 			OrcaID:Set[${Entity[Name = "${Config.Hauler.HaulerPickupName}"]}]
 		}
-		else
+		elseif ${Local[${Config.Hauler.HaulerPickupName}].ToFleetMember(exists)}
 		{
-			OrcaID:Set[0]
-		}
-
-		if ${OrcaCargo} < ${Config.Miner.CargoThreshold} && ${OrcaCargo} < 35000  && ${Config.Hauler.OrcaRunningEvebot} && ${OrcaID} != 0
-		{
+			Logger:Log["ALERT: Fleet member ${Config.Hauler.HaulerPickupName} is not nearby.  Warping."]
+			Local[${Config.Hauler.HaulerPickupName}].ToFleetMember:WarpTo
 			return
 		}
-
-		if !${OrcaID} && ${Local[${Config.Hauler.HaulerPickupName}].ToFleetMember}
+		else
 		{
-			Logger:Log["ALERT: The orca is not nearby.  Warping there first to pick up."]
-			Local[${Config.Hauler.HaulerPickupName}].ToFleetMember:WarpTo
+			Logger:Log["ServiceOrca: Fleet member ${Config.Hauler.HaulerPickupName} is not nearby, and is not in fleet, can't get there from here."]
 			return
 		}
 
 		;	Find out if we need to approach this target
-		if ${Entity[${OrcaID}].Distance} > LOOT_RANGE && ${This.Approaching} == 0
+		if ${Entity[${OrcaID}].Distance} > LOOT_RANGE
 		{
-			Logger:Log["ALERT: Approaching to within loot range."]
-			Entity[${OrcaID}]:Approach
-			This.Approaching:Set[${OrcaID}]
-			This.TimeStartedApproaching:Set[${Time.Timestamp}]
+			if ${Navigator.Busy}
+			{
+				return
+			}
+			; This will warp if required
+			Navigator:Approach[${OrcaID}, 500, FALSE]
 			return
 		}
-
-		;	If we've been approaching for more than 2 minutes, we need to give up and try again
-		if ${Math.Calc[${TimeStartedApproaching}-${Time.Timestamp}]} < -120 && ${This.Approaching} != 0
+		else
 		{
-			This.Approaching:Set[0]
-			This.TimeStartedApproaching:Set[0]
-		}
-
-		;	If we're approaching a target, find out if we need to stop doing so
-		if ${Entity[${This.Approaching}](exists)} && ${Entity[${This.Approaching}].Distance} <= LOOT_RANGE && ${This.Approaching} != 0
-		{
-			Logger:Log["ALERT: Within loot range."]
-			EVE:Execute[CmdStopShip]
-			This.Approaching:Set[0]
-			This.TimeStartedApproaching:Set[0]
-		}
-
-		;	Open the Orca if it's not open yet
-		if ${OrcaID} && ${Entity[${OrcaID}].Distance} <= LOOT_RANGE
-		{
+			; Transfer from the Orca
 			if ${MyShip.HasOreHold}
 			{
 				call Cargo.TransferOreFromEntityFleetHangarToOreHold ${OrcaID}
