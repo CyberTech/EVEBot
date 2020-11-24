@@ -234,39 +234,33 @@ objectdef obj_Hauler
 				{
 					break
 				}
-				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} == ${Me.SolarSystemID}
+				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)}
 				{
-					if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].TypeID} != 5
+					Navigator:FlyToBookmark["${Config.Miner.PanicLocation}", 0, TRUE]
+					while ${Navigator.Busy}
 					{
-						call Miner.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
-						call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
-					}
-					else
-					{
-						call Miner.FastWarp -1 "${Config.Miner.PanicLocation}"
+						wait 10
 					}
 					break
 				}
-				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} != ${Me.SolarSystemID}
+				elseif ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)}
 				{
-					call Miner.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID}
-					call Ship.TravelToSystem ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID}
+					Navigator:FlyToBookmark["${Config.Miner.DeliveryLocation}", 0, TRUE]
+					while ${Navigator.Busy}
+					{
+						wait 10
+					}
 					break
 				}
-				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
+				elseif ${Entity["(GroupID = 15 || GroupID = 1657)"](exists)}
 				{
-					call Miner.FastWarp ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
-					call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
-					break
-				}
-				if ${Entity["(GroupID = 15 || GroupID = 1657)"](exists)}
-				{
+					; No bookmark, any stations?
 					Logger:Log["Docking at ${Entity["(GroupID = 15 || GroupID = 1657)"].Name}"]
 					call Miner.FastWarp ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
 					call Station.DockAtStation ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
 					break
 				}
-				if ${Me.ToEntity.Mode} != 3
+				else
 				{
 					call Safespots.WarpTo
 					call Miner.FastWarp
@@ -288,40 +282,41 @@ objectdef obj_Hauler
 				{
 					break
 				}
-				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
+				if ${Me.InStation}
 				{
-					call Miner.FastWarp ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
-					call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
 					break
 				}
-				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} == ${Me.SolarSystemID}
+				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)}
 				{
-					if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].TypeID} != 5
+					Navigator:FlyToBookmark["${Config.Miner.PanicLocation}", 0, TRUE]
+					while ${Navigator.Busy}
 					{
-						call Miner.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
-						call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
-					}
-					else
-					{
-						call Miner.FastWarp -1 "${Config.Miner.PanicLocation}"
+						wait 10
 					}
 					break
 				}
-
-				if ${Entity["(GroupID = 15 || GroupID = 1657)"](exists)}
+				elseif ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)}
 				{
+					Navigator:FlyToBookmark["${Config.Miner.DeliveryLocation}", 0, TRUE]
+					while ${Navigator.Busy}
+					{
+						wait 10
+					}
+					break
+				}
+				elseif ${Entity["(GroupID = 15 || GroupID = 1657)"](exists)}
+				{
+					; No bookmark, any stations?
 					Logger:Log["Docking at ${Entity["(GroupID = 15 || GroupID = 1657)"].Name}"]
 					call Miner.FastWarp ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
 					call Station.DockAtStation ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
 					break
 				}
-
-				if ${Me.ToEntity.Mode} != 3
+				else
 				{
 					call Safespots.WarpTo
 					call Miner.FastWarp
 					wait 30
-					break
 				}
 
 				Logger:Log["HARD STOP: Unable to flee, no stations available and no Safe spots available"]
