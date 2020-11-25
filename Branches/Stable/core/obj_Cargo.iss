@@ -105,6 +105,7 @@ objectdef obj_Cargo
 			Logger:Log["ReplenishCrystals: Failed to activate ${Inventory.ShipCargo.EVEWindowParams}"]
 			return
 		}
+		Inventory.Current:StackAll
 		Inventory.Current:GetItems[NULL, "CategoryID == CATEGORYID_CHARGE"]
 		Inventory.Current.Items:GetIterator[CargoIterator]
 
@@ -138,6 +139,7 @@ objectdef obj_Cargo
 				Logger:Log["ReplenishCrystals: Failed to activate ${Inventory.StationHangar.EVEWindowParams}"]
 				return
 			}
+			Inventory.Current:StackAll
 			Inventory.Current:GetItems[NULL, "CategoryID == CATEGORYID_CHARGE"]
 			Inventory.Current.Items:GetIterator[HangarIterator]
 
@@ -182,6 +184,7 @@ objectdef obj_Cargo
 		{
 			call Inventory.OpenEntityFleetHangar ${from}
 			call Inventory.EntityFleetHangar.Activate ${Return}
+			Inventory.Current:StackAll
 			Inventory.Current:GetItems[]
 			Inventory.Current.Items:GetIterator[CargoIterator]
 
@@ -341,14 +344,14 @@ objectdef obj_Cargo
 						QuantityToMove:Set[${ListIterator.Value.Quantity}]
 						if (${QuantityToMove} * ${ListIterator.Value.Volume}) >= ${Ship.CargoFreeSpace}
 						{
-							QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${ListIterator.Value.Volume}]}]
+							QuantityToMove:Set[${Math.Calc[(${Ship.CargoFreeSpace}-1) / ${ListIterator.Value.Volume}]}]
 						}
 
 						Logger:Log["TransferListToCargoHold: Loading Ore: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${ListIterator.Value.Volume}]}m3) of ${ListIterator.Value.Name}"]
 						if ${QuantityToMove} > 0
 						{
 							ListIterator.Value:MoveTo[${MyShip.ID}, CargoHold, ${QuantityToMove}]
-							wait 15
+							wait 20
 						}
 				}
 				while ${ListIterator:Next(exists)}
@@ -376,14 +379,14 @@ objectdef obj_Cargo
 						QuantityToMove:Set[${ListIterator.Value.Quantity}]
 						if (${QuantityToMove} * ${ListIterator.Value.Volume}) >= ${Ship.OreHoldFreeSpace}
 						{
-							QuantityToMove:Set[${Math.Calc[${Ship.OreHoldFreeSpace} / ${ListIterator.Value.Volume}]}]
+							QuantityToMove:Set[${Math.Calc[(${Ship.OreHoldFreeSpace}-1) / ${ListIterator.Value.Volume}]}]
 						}
 
 						Logger:Log["TransferListToOreHold: Loading Ore: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${ListIterator.Value.Volume}]}m3) of ${ListIterator.Value.Name}"]
 						if ${QuantityToMove} > 0
 						{
 							ListIterator.Value:MoveTo[${MyShip.ID}, OreHold, ${QuantityToMove}]
-							wait 15
+							wait 20
 						}
 				}
 				while ${ListIterator:Next(exists)}
@@ -400,6 +403,7 @@ objectdef obj_Cargo
 		call Inventory.EntityFleetHangar.Activate ${SourceID}
 		if ${Inventory.EntityFleetHangar.IsCurrent}
 		{
+			Inventory.Current:StackAll
 			Inventory.Current:GetItems[NULL, "CategoryID == CATEGORYID_ORE"]
 			call TransferListToCargoHold Inventory.Current.Items
 		}
@@ -419,6 +423,7 @@ objectdef obj_Cargo
 		call Inventory.EntityFleetHangar.Activate ${SourceID}
 		if ${Inventory.EntityFleetHangar.IsCurrent}
 		{
+			Inventory.Current:StackAll
 			Inventory.Current:GetItems[NULL, "CategoryID == CATEGORYID_ORE"]
 			call TransferListToOreHold Inventory.Current.Items
 		}
@@ -438,6 +443,7 @@ objectdef obj_Cargo
 		call Inventory.ShipFleetHangar.Activate
 		if ${Inventory.ShipFleetHangar.IsCurrent}
 		{
+			Inventory.Current:StackAll
 			Inventory.Current:GetItems[NULL, "CategoryID == CATEGORYID_ORE"]
 			call TransferListToOreHold Inventory.Current.Items
 		}
@@ -459,6 +465,7 @@ objectdef obj_Cargo
 		{
 			return
 		}
+		Inventory.Current:StackAll
 		Inventory.Current:GetItems[]
 		Inventory.Current.Items:GetIterator[CargoIterator]
 
@@ -527,6 +534,7 @@ objectdef obj_Cargo
 		{
 			return
 		}
+		Inventory.Current:StackAll
 		Inventory.Current:GetItems[NULL, "CategoryID == CATEGORYID_ORE"]
 		Inventory.Current.Items:GetIterator[CargoIterator]
 
@@ -726,6 +734,7 @@ objectdef obj_Cargo
 			Logger:Log["TransferListToShipWithContainers: Failed to activate ${Inventory.ShipCargo.EVEWindowParams}"]
 			return
 		}
+		Inventory.Current:StackAll
 		Inventory.Current:GetItems[shipContainerIndex, "CategoryID == GROUPID_SECURE_CONTAINER"]
 
 		/* move the list to containers */
@@ -897,6 +906,7 @@ objectdef obj_Cargo
 		call Inventory.ShipCargo.Activate
 		if ${Inventory.ShipCargo.IsCurrent}
 		{
+			Inventory.Current:StackAll
 			Inventory.Current:GetItems[This.CargoToTransfer, "CategoryID == CATEGORYID_ORE"]
 			call This.TransferListToPOSCorpHangar "CorpHangarArray"
 		}
@@ -904,6 +914,7 @@ objectdef obj_Cargo
 		call Inventory.ShipOreHold.Activate
 		if ${Inventory.ShipOreHold.IsCurrent}
 		{
+			Inventory.Current:StackAll
 			Inventory.Current:GetItems[This.CargoToTransfer, "CategoryID == CATEGORYID_ORE"]
 			call This.TransferListToPOSCorpHangar "CorpHangarArray"
 		}
@@ -929,6 +940,7 @@ objectdef obj_Cargo
 		call Inventory.ShipCargo.Activate
 		if ${Inventory.ShipCargo.IsCurrent}
 		{
+			Inventory.Current:StackAll
 			Inventory.Current:GetItems[This.CargoToTransfer, "CategoryID == CATEGORYID_ORE"]
 			call This.TransferListToPOSCorpHangar "LargeShipAssemblyArray"
 		}
@@ -936,6 +948,7 @@ objectdef obj_Cargo
 		call Inventory.ShipOreHold.Activate
 		if ${Inventory.ShipOreHold.IsCurrent}
 		{
+			Inventory.Current:StackAll
 			Inventory.Current:GetItems[This.CargoToTransfer, "CategoryID == CATEGORYID_ORE"]
 			call This.TransferListToPOSCorpHangar "LargeShipAssemblyArray"
 		}
@@ -961,6 +974,7 @@ objectdef obj_Cargo
 		call Inventory.ShipCargo.Activate
 		if ${Inventory.ShipCargo.IsCurrent}
 		{
+			Inventory.Current:StackAll
 			Inventory.Current:GetItems[This.CargoToTransfer, "CategoryID == CATEGORYID_ORE"]
 			call This.TransferListToPOSCorpHangar "CompressionArray"
 		}
@@ -968,6 +982,7 @@ objectdef obj_Cargo
 		call Inventory.ShipOreHold.Activate
 		if ${Inventory.ShipOreHold.IsCurrent}
 		{
+			Inventory.Current:StackAll
 			Inventory.Current:GetItems[This.CargoToTransfer, "CategoryID == CATEGORYID_ORE"]
 			call This.TransferListToPOSCorpHangar "CompressionArray"
 		}
@@ -993,6 +1008,7 @@ objectdef obj_Cargo
 		call Inventory.ShipCargo.Activate
 		if ${Inventory.ShipCargo.IsCurrent}
 		{
+			Inventory.Current:StackAll
 			Inventory.Current:GetItems[This.CargoToTransfer]
 			call This.TransferListToPOSCorpHangar "LargeShipAssemblyArray"
 		}
@@ -1072,6 +1088,7 @@ objectdef obj_Cargo
 		call Inventory.ShipCargo.Activate
 		if ${Inventory.ShipCargo.IsCurrent}
 		{
+			Inventory.Current:StackAll
 			Inventory.Current:GetItems[This.CargoToTransfer, "CategoryID == CATEGORYID_ORE"]
 			call This.TransferListToPOSCorpHangar "XLargeShipAssemblyArray"
 		}
@@ -1079,6 +1096,7 @@ objectdef obj_Cargo
 		call Inventory.ShipOreHold.Activate
 		if ${Inventory.ShipOreHold.IsCurrent}
 		{
+			Inventory.Current:StackAll
 			Inventory.Current:GetItems[This.CargoToTransfer, "CategoryID == CATEGORYID_ORE"]
 			call This.TransferListToPOSCorpHangar "XLargeShipAssemblyArray"
 		}
@@ -1093,6 +1111,7 @@ objectdef obj_Cargo
 		call Inventory.ShipCargo.Activate
 		if ${Inventory.ShipCargo.IsCurrent}
 		{
+			Inventory.Current:StackAll
 			Inventory.Current:GetItems[This.CargoToTransfer, "CategoryID == CATEGORYID_ORE"]
 			call This.TransferListToJetCan
 		}
@@ -1100,6 +1119,7 @@ objectdef obj_Cargo
 		call Inventory.ShipOreHold.Activate
 		if ${Inventory.ShipOreHold.IsCurrent}
 		{
+			Inventory.Current:StackAll
 			Inventory.Current:GetItems[This.CargoToTransfer, "CategoryID == CATEGORYID_ORE"]
 			call This.TransferListToJetCan
 		}
@@ -1118,6 +1138,7 @@ objectdef obj_Cargo
 		call Inventory.ShipCargo.Activate
 		if ${Inventory.ShipCargo.IsCurrent}
 		{
+			Inventory.Current:StackAll
 			Inventory.Current:GetItems[This.CargoToTransfer, "CategoryID == CATEGORYID_ORE"]
 			call This.TransferListToStationHangar
 		}
@@ -1125,6 +1146,7 @@ objectdef obj_Cargo
 		call Inventory.ShipOreHold.Activate
 		if ${Inventory.ShipOreHold.IsCurrent}
 		{
+			Inventory.Current:StackAll
 			Inventory.Current:GetItems[This.CargoToTransfer, "CategoryID == CATEGORYID_ORE"]
 			call This.TransferListToStationHangar
 		}
@@ -1217,6 +1239,7 @@ objectdef obj_Cargo
 		call Inventory.ShipCargo.Activate
 		if ${Inventory.ShipCargo.IsCurrent}
 		{
+			Inventory.Current:StackAll
 			Inventory.Current:GetItems[This.CargoToTransfer, "CategoryID == CATEGORYID_ORE"]
 			call This.TransferListToShipCorporateHangar ${dest}
 		}
@@ -1224,6 +1247,7 @@ objectdef obj_Cargo
 		call Inventory.ShipOreHold.Activate
 		if ${Inventory.ShipOreHold.IsCurrent}
 		{
+			Inventory.Current:StackAll
 			Inventory.Current:GetItems[This.CargoToTransfer, "CategoryID == CATEGORYID_ORE"]
 			call This.TransferListToShipCorporateHangar ${dest}
 		}
@@ -1244,6 +1268,7 @@ objectdef obj_Cargo
 		call Inventory.ShipCargo.Activate
 		if ${Inventory.ShipCargo.IsCurrent}
 		{
+			Inventory.Current:StackAll
 			Inventory.Current:GetItems[This.CargoToTransfer]
 			call This.TransferListToStationHangar
 		}
@@ -1266,6 +1291,7 @@ objectdef obj_Cargo
 		call Inventory.ShipCargo.Activate
 		if ${Inventory.ShipCargo.IsCurrent}
 		{
+			Inventory.Current:StackAll
 			Inventory.Current:GetItems[This.CargoToTransfer]
 			call This.TransferListToPOSCorpHangar "CorpHangarArray"
 		}
@@ -1302,6 +1328,7 @@ objectdef obj_Cargo
 				return FALSE
 			}
 
+			Inventory.Current:StackAll
 			Inventory.Current:GetItems[This.CargoToTransfer, ${querystr}]
 			if ${This.CargoToTransfer.Used} == 0
 			{
@@ -1316,6 +1343,7 @@ objectdef obj_Cargo
 			call Inventory.StationHangar.Activate ${Me.Station.ID}
 
 			; Re-check the cargo.
+			Inventory.Current:StackAll
 			Inventory.Current:GetItems[This.CargoToTransfer, ${querystr}]
 			if ${This.CargoToTransfer.Used} > 0
 			{
@@ -1344,6 +1372,7 @@ objectdef obj_Cargo
 		call Inventory.ShipCargo.Activate
 		if ${Inventory.ShipCargo.IsCurrent}
 		{
+			Inventory.Current:StackAll
 			Inventory.Current:GetItems[This.CargoToTransfer, "TypeID == ${typeID}"]
 		  call This.TransferListToStationHangar
 		}
