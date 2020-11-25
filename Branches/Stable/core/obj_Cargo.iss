@@ -1247,9 +1247,16 @@ objectdef obj_Cargo
 			Inventory.Current:GetItems[This.CargoToTransfer]
 			call This.TransferListToStationHangar
 		}
+		else
+		{
+			Logger:Log["TransferOreToStationHangar: Failed to activate station hangar", LOG_ERROR]
+			return FALSE
+		}
+
 
 		This.CargoToTransfer:Clear[]
 		Ship:UpdateBaselineUsedCargo[]
+		return TRUE
 	}
 
 	function TransferCargoToCorpHangarArray()
@@ -1289,35 +1296,39 @@ objectdef obj_Cargo
 			}
 
 			call Inventory.StationHangar.Activate ${Me.Station.ID}
-			if ${Inventory.StationHangar.IsCurrent}
+			if !${Inventory.StationHangar.IsCurrent}
 			{
-				Inventory.Current:GetItems[This.CargoToTransfer, ${querystr}]
-				if ${This.CargoToTransfer.Used} == 0
-				{
-					Logger:Log["Couldn't find any cargo in the station hangar"]
-					m_LastTransferComplete:Set[TRUE]
-				}
+				Logger:Log["TransferHangarItemToShip: Failed to activate station hangar", LOG_ERROR]
+				return FALSE
+			}
 
-				call This.TransferListToShip
-				EVEWindow[ByItemID, ${MyShip.ID}]:StackAll
-				Ship:UpdateBaselineUsedCargo[]
+			Inventory.Current:GetItems[This.CargoToTransfer, ${querystr}]
+			if ${This.CargoToTransfer.Used} == 0
+			{
+				Logger:Log["Couldn't find any cargo in the station hangar"]
+				m_LastTransferComplete:Set[TRUE]
+			}
 
-				call Inventory.StationHangar.Activate ${Me.Station.ID}
+			call This.TransferListToShip
+			EVEWindow[ByItemID, ${MyShip.ID}]:StackAll
+			Ship:UpdateBaselineUsedCargo[]
 
-				; Re-check the cargo.
-				Inventory.Current:GetItems[This.CargoToTransfer, ${querystr}]
-				if ${This.CargoToTransfer.Used} > 0
-				{
-					Logger:Log["Could not carry all the cargo from the station hangar"]
-					m_LastTransferComplete:Set[FALSE]
-				}
-				else
-				{
-					Logger:Log["Transfered all cargo from the station hangar"]
-					m_LastTransferComplete:Set[TRUE]
-				}
+			call Inventory.StationHangar.Activate ${Me.Station.ID}
+
+			; Re-check the cargo.
+			Inventory.Current:GetItems[This.CargoToTransfer, ${querystr}]
+			if ${This.CargoToTransfer.Used} > 0
+			{
+				Logger:Log["Could not carry all the cargo from the station hangar"]
+				m_LastTransferComplete:Set[FALSE]
+			}
+			else
+			{
+				Logger:Log["Transfered all cargo from the station hangar"]
+				m_LastTransferComplete:Set[TRUE]
 			}
 		}
+		return TRUE
 	}
 
 	function TransferItemTypeToHangar(int typeID)

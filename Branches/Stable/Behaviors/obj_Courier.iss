@@ -90,6 +90,10 @@ objectdef obj_Courier inherits obj_BaseClass
 				Logger:Log["obj_Courier: MoveToPickup"]
 				call Agents.MoveToPickup
 				call Cargo.TransferHangarItemToShip
+				if !${Return}
+				{
+					EVEBot:Pause["${LogPrefix}: Failed to pickup items from station"]
+				}
 				bHaveCargo:Set[TRUE]
 				break
 			case DROPOFF

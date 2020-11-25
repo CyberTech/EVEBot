@@ -255,6 +255,10 @@ objectdef obj_Missions
 				call Agents.MoveToPickup
 				wait 50
 				call Cargo.TransferHangarItemToShip ${This.MissionCache.TypeID[${agentID}]}
+				if !${Return}
+				{
+					EVEBot:Pause["${LogPrefix}: Failed to pickup items from station"]
+				}
 				allDone:Set[${Cargo.LastTransferComplete}]
 			}
 
@@ -390,6 +394,10 @@ objectdef obj_Missions
 						if ${Agents.InAgentStation} == FALSE
 						{
 							call Cargo.TransferHangarItemToShip ${This.MissionCache.TypeID[${agentID}]}
+							if !${Return}
+							{
+								EVEBot:Pause["${LogPrefix}: Failed to pickup items from station"]
+							}
 						}
 						haveCargo:Set[TRUE]
 					}
@@ -413,6 +421,10 @@ objectdef obj_Missions
 			call Market.PurchaseItem ${This.MissionCache.TypeID[${agentID}]} ${quantity}
 
 			call Cargo.TransferHangarItemToShip ${This.MissionCache.TypeID[${agentID}]}
+			if !${Return}
+			{
+				EVEBot:Pause["${LogPrefix}: Failed to pickup items from station"]
+			}
 
 			if ${Cargo.LastTransferComplete} == FALSE
 			{

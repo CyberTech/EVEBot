@@ -222,6 +222,10 @@ objectdef obj_Freighter inherits obj_BaseClass
 			if ${HangarItems.Used} > 0
 			{	/* move from hangar to ship */
 				call Cargo.TransferHangarItemToShip
+				if !${Return}
+				{
+					EVEBot:Pause["${LogPrefix}: Failed to pickup items from station"]
+				}
 			}
 			else
 			{	/* move from ship to hangar */
@@ -357,17 +361,21 @@ objectdef obj_Freighter inherits obj_BaseClass
 	{
 		if ${Me.InStation}
 		{	/* don't call this function if you are not in station */
-			Logger:Log["DEBUG: \${EVE.Bookmark[${Config.Freighter.Destination}](exists)} = ${EVE.Bookmark[${Config.Freighter.Destination}](exists)}"]
-			Logger:Log["DEBUG: \${m_DestinationID} = ${m_DestinationID}"]
-			Logger:Log["DEBUG: \${Me.StationID} = ${Me.StationID}"]
-
 			if ${Me.StationID} == ${EVE.Bookmark[${Config.Freighter.Destination}].ItemID}
 			{	/* this is the destination station, drop off stuff */
 				call Cargo.TransferCargoToStationHangar
+				if !${Return}
+				{
+					EVEBot:Pause["${LogPrefix}: Failed to transfer items to station"]
+				}
 			}
 			else
 			{	/* this must be a source station, pickup stuff */
 				call Cargo.TransferHangarItemToShip
+				if !${Return}
+				{
+					EVEBot:Pause["${LogPrefix}: Failed to pickup items from station"]
+				}
 				if ${Cargo.LastTransferComplete}
 				{
 					if ${SourceLocations.Peek(exists)}
