@@ -1004,7 +1004,6 @@ objectdef obj_Hauler
 		if ${MyShip.HasOreHold}
 		{
 			Logger:Log["Hauler: Delivering Cargo: Ore Hold Used ${Ship.OreHoldUsedCapacity} / ${Ship.OreHoldCapacity} available"]
-			return TRUE
 		}
 		else
 		{
