@@ -120,6 +120,41 @@ objectdef obj_EVEWindow_Proxy
 			return FALSE
 		}
 
+		if ${This.InvName.Equal[StationItems]}
+		{
+			if ${Me.InStructure}
+			{
+				Logger:Log["Inventory.${This.ObjectName}: Structure detected, switching InvName", LOG_DEBUG]
+				This.InvName:Set[StructureItemHangar]
+			}
+		}
+		elseif ${This.InvName.Equal[StructureItemHangar]}
+		{
+			; Check for if we visited a structure and are now at a station, so we have to use original
+			if !${Me.InStructure}
+			{
+				Logger:Log["Inventory.${This.ObjectName}: Station detected, switching InvName", LOG_DEBUG]
+				This.InvName:Set[StationItems]
+			}
+		}
+		elseif ${This.InvName.Equal[StationShips]}
+		{
+			if ${Me.InStructure}
+			{
+				Logger:Log["Inventory.${This.ObjectName}: Structure detected, switching InvName", LOG_DEBUG]
+				This.InvName:Set[StructureShipHangar]
+			}
+		}
+		elseif ${This.InvName.Equal[StructureShipHangar]}
+		{
+			; Check for if we visited a structure and are now at a station, so we have to use original
+			if !${Me.InStructure}
+			{
+				Logger:Log["Inventory.${This.ObjectName}: Station detected, switching InvName", LOG_DEBUG]
+				This.InvName:Set[StationShips]
+			}
+		}
+
 		This:SetFallThroughParams[]
 
 		call Inventory.Open
@@ -389,7 +424,8 @@ Under Ship Hangar, each shiup
 	ShipCargo shipid flagCargo 5
 
 StationCorpDeliveries stationid flagCorpMarket 62
-
+StructureItemHangar
+StructureShipHangar
 
 Note - each of the below also applies to the ships in the ship hangar, given the right id
 ShipCargo itemid flagCargo 5
