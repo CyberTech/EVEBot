@@ -124,14 +124,16 @@ objectdef obj_EVEWindow_Proxy
 
 		call Inventory.Open
 
+		variable int tries
+		while !${${This.GetFallthroughObject}(exists)} && ${tries} < 5
+		{
+			tries:Inc
+			wait 20
+		}
 		if (!${${This.GetFallthroughObject}(exists)})
 		{
-			wait 20
-			if (!${${This.GetFallthroughObject}(exists)})
-			{
-				Logger:Log["Inventory.${This.ObjectName}: Error: ${This.GetFallthroughObject} doesn't exist", LOG_ERROR]
-				return FALSE
-			}
+			Logger:Log["Inventory.${This.ObjectName}: Error: ${This.GetFallthroughObject} doesn't exist", LOG_ERROR]
+			return FALSE
 		}
 
 		if ${Inventory.${This.ObjectName}.IsActve}
@@ -180,7 +182,7 @@ objectdef obj_EVEWindow_Proxy
 		}
 
 		; TODO -- also check location when we're using it
-		;if ${This.InvLocation.NotNULLOrEmpty} && 
+		;if ${This.InvLocation.NotNULLOrEmpty} &&
 
 		return TRUE
 	}
