@@ -80,6 +80,7 @@ objectdef obj_Configuration_BaseConfig
 
 	method Save()
 	{
+		Logger:Log["obj_Configuration_BaseConfig: Saved"]
 		LavishSettings[EVEBotSettings]:Export[${CONFIG_FILE}]
 	}
 }
@@ -1626,6 +1627,7 @@ objectdef obj_Config_Whitelist
 
 	method Save()
 	{
+		Logger:Log["obj_Config_Whitelist: Saved"]
 		LavishSettings[EVEBotWhitelist]:Export[${This.DATA_FILE}]
 	}
 
@@ -1692,6 +1694,7 @@ objectdef obj_Config_Blacklist
 
 	method Save()
 	{
+		Logger:Log["obj_Config_Blacklist: Saved"]
 		LavishSettings[EVEBotBlacklist]:Export[${This.DATA_FILE}]
 	}
 

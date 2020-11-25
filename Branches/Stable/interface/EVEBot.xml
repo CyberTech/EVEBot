@@ -65,6 +65,16 @@
 				<Height>100%</Height>
 				<Tabs>
 					<Tab Name='Status'>
+						<button	Name='SaveConfig' template='EveSkin.Window.ClickButton'>
+							<text>Save Config</text>
+							<x>r320</x>
+							<y>10</y>
+							<width>150</width>
+							<height>20</height>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config:Save
+							</OnLeftClick>
+						</button>
 						<button	Name='BroadcastBreak' template='EveSkin.Window.ClickButton'>
 							<text>Broadcast Break</text>
 							<x>r160</x>
