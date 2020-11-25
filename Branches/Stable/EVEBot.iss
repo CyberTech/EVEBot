@@ -241,7 +241,9 @@ function main()
 	}
 
 	EVEBot.Loaded:Set[TRUE]
+	Logger:Log["${APP_NAME} behavior set to ${Config.Common.CurrentBehavior}", LOG_ECHOTOO]
 	Logger:Log["${APP_NAME} loaded", LOG_ECHOTOO]
+
 #ifndef EVEBOT_TESTCASE
 	EVEBot:Pause["Press Run to start"]
 

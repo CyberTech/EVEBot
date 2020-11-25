@@ -237,6 +237,7 @@
 							<OnSelect>
 								if ${This.SelectedItem.Text.NotNULLOrEmpty}
 								{
+									Logger:Log["Current behavior switched to ${This.SelectedItem.Text}"]
 									Script[EVEBot].VariableScope.Config.Common:CurrentBehavior[${This.SelectedItem.Text}]
 								}
 							</OnSelect>
