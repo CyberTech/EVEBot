@@ -300,7 +300,7 @@ objectdef obj_Cargo
 					QuantityToMove:Set[${Cargo.Value.Quantity}]
 				}
 
-				Logger:Log["MoveGSC: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}]}m3"]
+				Logger:Log["MoveGSC: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}].Precision[2]}m3"]
 				if ${QuantityToMove} > 0
 				{
 					Cargo.Value:MoveTo[${dest},CargoHold,${QuantityToMove}]
@@ -347,7 +347,7 @@ objectdef obj_Cargo
 							QuantityToMove:Set[${Math.Calc[(${Ship.CargoFreeSpace}-1) / ${ListIterator.Value.Volume}]}]
 						}
 
-						Logger:Log["TransferListToCargoHold: Loading Ore: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${ListIterator.Value.Volume}]}m3) of ${ListIterator.Value.Name}"]
+						Logger:Log["TransferListToCargoHold: Loading Ore: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${ListIterator.Value.Volume}].Precision[2]}m3) of ${ListIterator.Value.Name}"]
 						if ${QuantityToMove} > 0
 						{
 							ListIterator.Value:MoveTo[${MyShip.ID}, CargoHold, ${QuantityToMove}]
@@ -382,7 +382,7 @@ objectdef obj_Cargo
 							QuantityToMove:Set[${Math.Calc[(${Ship.OreHoldFreeSpace}-1) / ${ListIterator.Value.Volume}]}]
 						}
 
-						Logger:Log["TransferListToOreHold: Loading Ore: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${ListIterator.Value.Volume}]}m3) of ${ListIterator.Value.Name}"]
+						Logger:Log["TransferListToOreHold: Loading Ore: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${ListIterator.Value.Volume}].Precision[2]}m3) of ${ListIterator.Value.Name}"]
 						if ${QuantityToMove} > 0
 						{
 							ListIterator.Value:MoveTo[${MyShip.ID}, OreHold, ${QuantityToMove}]
@@ -474,7 +474,7 @@ objectdef obj_Cargo
 				do
 				{
 					QuantityToMove:Set[${CargoIterator.Value.Quantity}]
-					Logger:Log["TransferCargoFromShipOreHoldToStation: Unloading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
+					Logger:Log["TransferCargoFromShipOreHoldToStation: Unloading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name}"]
 					Logger:Log["TransferCargoFromShipOreHoldToStation: Unloading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
 					if ${QuantityToMove} > 0
 					{
@@ -508,7 +508,7 @@ objectdef obj_Cargo
 				do
 				{
 					QuantityToMove:Set[${CargoIterator.Value.Quantity}]
-					Logger:Log["TransferCargoFromShipCorporateHangarToStation: Unloading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
+					Logger:Log["TransferCargoFromShipCorporateHangarToStation: Unloading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name}"]
 					Logger:Log["TransferCargoFromShipCorporateHangarToStation: Unloading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
 					if ${QuantityToMove} > 0
 					{
@@ -548,7 +548,7 @@ objectdef obj_Cargo
 						QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${CargoIterator.Value.Volume}]}]
 					}
 
-					Logger:Log["TransferOreFromShipFleetHangarToCargoHold: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
+					Logger:Log["TransferOreFromShipFleetHangarToCargoHold: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name}"]
 					if ${QuantityToMove} > 0
 					{
 						CargoIterator.Value:MoveTo[${MyShip.ID}, CargoHold, ${QuantityToMove}]
@@ -641,7 +641,7 @@ objectdef obj_Cargo
 						QuantityToMove:Set[${CargoIterator.Value.Quantity}]
 					}
 
-					Logger:Log["TransferListToJetCan: Transferring Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name} - Jetcan Free Space: ${JetCan.CargoFreeSpace}"]
+					Logger:Log["TransferListToJetCan: Transferring Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name} - Jetcan Free Space: ${JetCan.CargoFreeSpace}"]
 					CargoIterator.Value:MoveTo[${JetCan.ActiveCan}, CargoHold, ${QuantityToMove}]
 				}
 				else
@@ -778,7 +778,7 @@ objectdef obj_Cargo
 				;;Logger:Log["DEBUG: TransferListToShipWithContainers: quantity = ${qty}"]
 				if ${qty} > 0
 				{
-					Logger:Log["TransferListToShipWithContainers: Loading Cargo: ${qty} units (${Math.Calc[${qty} * ${This.CargoToTransfer.Get[${idx}].Volume}]}m3) of ${This.CargoToTransfer.Get[${idx}].Name}"]
+					Logger:Log["TransferListToShipWithContainers: Loading Cargo: ${qty} units (${Math.Calc[${qty} * ${This.CargoToTransfer.Get[${idx}].Volume}].Precision[2]}m3) of ${This.CargoToTransfer.Get[${idx}].Name}"]
 					This.CargoToTransfer.Get[${idx}]:MoveTo[${shipContainerIterator.Value.ID}, CargoHold, ${qty}]
 					wait 15
 				}
@@ -816,7 +816,7 @@ objectdef obj_Cargo
 			qty:Set[${This.QuantityToMove[${This.CargoToTransfer.Get[${idx}]},0]}]
 			if ${qty} > 0
 			{
-				Logger:Log["TransferListToShipWithContainers: Loading Cargo: ${qty} units (${Math.Calc[${qty} * ${This.CargoToTransfer.Get[${idx}].Volume}]}m3) of ${This.CargoToTransfer.Get[${idx}].Name}"]
+				Logger:Log["TransferListToShipWithContainers: Loading Cargo: ${qty} units (${Math.Calc[${qty} * ${This.CargoToTransfer.Get[${idx}].Volume}].Precision[2]}m3) of ${This.CargoToTransfer.Get[${idx}].Name}"]
 				This.CargoToTransfer.Get[${idx}]:MoveTo[MyShip, CargoHold, ${qty}]
 				wait 15
 			}
@@ -873,7 +873,7 @@ objectdef obj_Cargo
 						QuantityToMove:Set[${CargoIterator.Value.Quantity}]
 					}
 
-					Logger:Log["TransferListToShip: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
+					Logger:Log["TransferListToShip: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name}"]
 					Logger:Log["TransferListToShip: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
 					if ${QuantityToMove} > 0
 					{

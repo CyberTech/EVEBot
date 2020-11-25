@@ -274,7 +274,7 @@ objectdef obj_Ratter inherits obj_BaseClass
 					{
 						do
 						{
-							Logger:Log["obj_Ratter: Found ${Item.Value.Quantity} x ${Item.Value.Name} - ${Math.Calc[${Item.Value.Quantity} * ${Item.Value.Volume}]}m3"]
+							Logger:Log["obj_Ratter: Found ${Item.Value.Quantity} x ${Item.Value.Name} - ${Math.Calc[${Item.Value.Quantity} * ${Item.Value.Volume}].Precision[2]}m3"]
 							if (${Item.Value.Quantity} * ${Item.Value.Volume}) > ${Ship.CargoFreeSpace}
 							{
 								/* Move only what will fit, minus 1 to account for CCP rounding errors. */
@@ -291,7 +291,7 @@ objectdef obj_Ratter inherits obj_BaseClass
 								QuantityToMove:Set[${Item.Value.Quantity}]
 							}
 
-							Logger:Log["obj_Ratter: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Item.Value.Volume}]}m3"]
+							Logger:Log["obj_Ratter: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Item.Value.Volume}].Precision[2]}m3"]
 							if ${QuantityToMove} > 0
 							{
 								Item.Value:MoveTo[${MyShip.ID},CargoHold,${QuantityToMove}]

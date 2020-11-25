@@ -1563,7 +1563,7 @@ objectdef obj_Ship
 					}
 					variable float64 OrePerCycle
 					OrePerCycle:Set[${Math.Calc[${OrePerSec} * ${ModuleIter.Value.Duration}]}]
-					Logger:Log["ActivateFreeMiningLaser: OreAvailable ${OreAvailable}m3, OrePerSec ${OrePerSec}m3, OrePerCycle ${OrePerCycle}m3 (${Entity[${id}].Type})", LOG_DEBUG]
+					Logger:Log["ActivateFreeMiningLaser: OreAvailable ${OreAvailable.Precision[2]}m3, OrePerSec ${OrePerSec.Precision[2]}m3, OrePerCycle ${OrePerCycle.Precision[2]}m3 (${Entity[${id}].Type})", LOG_DEBUG]
 
 					if (${OreAvailable} < ${OrePerCycle})
 					{
@@ -1576,7 +1576,7 @@ objectdef obj_Ship
 						}
 						TenthsSecondsToRun:Set[${Math.Calc[ ${SecondsToRun} * 10]}]
 
-						Logger:Log["ActivateFreeMiningLaser: OreAvailable ${OreAvailable} < OrePerCycle ${OrePerCycle}, shortening runtime from ${ModuleIter.Value.Duration}s to ${SecondsToRun}s (${TenthsSecondsToRun}ds)", LOG_DEBUG]
+						Logger:Log["ActivateFreeMiningLaser: OreAvailable ${OreAvailable.Precision[2]} < OrePerCycle ${OrePerCycle.Precision[2]}, shortening runtime from ${ModuleIter.Value.Duration}s to ${SecondsToRun}s (${TenthsSecondsToRun}ds)", LOG_DEBUG]
 						TimedCommand ${TenthsSecondsToRun} "Script[EVEBot].VariableScope.Ship:Deactivate_Mining_Laser[${ModuleIter.Value.ID}]"
 					}
 				}

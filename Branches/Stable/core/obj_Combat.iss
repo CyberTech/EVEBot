@@ -519,7 +519,7 @@ objectdef obj_Combat
 					{
 						QuantityToMove:Set[${CargoIterator.Value.Quantity}]
 					}
-					Logger:Log["TransferListToShip: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
+					Logger:Log["TransferListToShip: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name}"]
 					Logger:Log["TransferListToShip: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
 					if ${QuantityToMove} > 0
 					{
