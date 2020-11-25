@@ -8,6 +8,11 @@ objectdef obj_Safespots
 		Logger:Log["obj_Safespots: Initialized", LOG_MINOR]
 	}
 
+	member Count()
+	{
+		return ${Safespots.Used}
+	}
+
 	method ResetSafeSpotList(bool SupressSpam=FALSE)
 	{
 		SafeSpots:Clear
@@ -44,7 +49,8 @@ objectdef obj_Safespots
 		}
 	}
 
-	function WarpToNextSafeSpot()
+	; Returns bookmark id
+	member:int64 NextSafeSpot()
 	{
 		if ${SafeSpots.Used} == 0
 		{
@@ -63,7 +69,20 @@ objectdef obj_Safespots
 
 		if ${SafeSpotIterator.Value(exists)}
 		{
-			SafeSpotIterator.Value:WarpTo[0]
+			return ${SafeSpotIterator.Value.ID}
+		}
+
+		Logger:Log["ERROR: obj_Safespots.NextSafeSpot found an invalid bookmark!"]
+		return -1
+	}
+
+	function WarpToNextSafeSpot()
+	{
+		variable int64 bmid
+		bmid:Set[${This.NextSafeSpot}]
+		if ${bmid} > 0
+		{
+			Navigator:FlyToBookmarkID[${bmid}, 0, FALSE]
 		}
 		else
 		{
@@ -118,11 +137,10 @@ objectdef obj_Safespots
 		call This.WarpToNextSafeSpot
 		if ${Wait}
 		{
-			do
+			while ${Navigator.Busy}
 			{
-				wait 1
+				wait 10
 			}
-			while ${Me.ToEntity.Mode} == 3
 		}
 	}
 }
