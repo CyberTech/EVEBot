@@ -328,6 +328,11 @@ objectdef obj_Ship
 			return FALSE
 		}
 
+		if ${Inventory.ShipOreHold.UsedCapacity} < 0
+		{
+			return FALSE
+		}
+
 		if ${This.OreHoldFreeSpace} <= ${This.OreHoldMinimumFreeSpace}
 		{
 			return TRUE
@@ -338,6 +343,11 @@ objectdef obj_Ship
 	member:bool OreHoldHalfFull()
 	{
 		if !${MyShip(exists)}
+		{
+			return FALSE
+		}
+
+		if ${Inventory.ShipOreHold.UsedCapacity} < 0
 		{
 			return FALSE
 		}
@@ -452,6 +462,11 @@ objectdef obj_Ship
 			return FALSE
 		}
 
+		if ${Inventory.ShipCargo.UsedCapacity} < 0
+		{
+			return FALSE
+		}
+
 		if ${This.CargoFreeSpace} <= ${This.CargoMinimumFreeSpace}
 		{
 			return TRUE
@@ -462,6 +477,11 @@ objectdef obj_Ship
 	member:bool CargoHalfFull()
 	{
 		if !${MyShip(exists)}
+		{
+			return FALSE
+		}
+
+		if ${Inventory.ShipCargo.UsedCapacity} < 0
 		{
 			return FALSE
 		}
@@ -498,6 +518,11 @@ objectdef obj_Ship
 	member:bool CargoTenthFull()
 	{
 		if !${MyShip(exists)}
+		{
+			return FALSE
+		}
+
+		if ${Inventory.ShipCargo.UsedCapacity} < 0
 		{
 			return FALSE
 		}
