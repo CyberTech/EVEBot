@@ -183,7 +183,7 @@ objectdef obj_Station
 		while ${This.Docked}
 		Logger:Log["Undock: Complete"]
 
-		Config.Common:SetHomeStation[${Entity["(GroupID = 15 || GroupID = 1657)"].Name}]
+		Config.Common:SetHomeStation[${Entity["(GroupID = GROUP_STATION || GroupID = GROUP_STRUCTURECITADEL)"].Name}]
 
 		Ship.RetryUpdateModuleList:Set[1]
 	}

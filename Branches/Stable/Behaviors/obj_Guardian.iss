@@ -218,11 +218,11 @@ objectdef obj_Guardian
 					call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
 					break
 				}
-				if ${Entity["(GroupID = 15 || GroupID = 1657)"](exists)}
+				if ${Entity["(GroupID = GROUP_STATION || GroupID = GROUP_STRUCTURECITADEL)"](exists)}
 				{
-					Logger:Log["Docking at ${Entity["(GroupID = 15 || GroupID = 1657)"].Name}"]
-					;call This.FastWarp ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
-					call Station.DockAtStation ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
+					Logger:Log["Docking at ${Entity["(GroupID = GROUP_STATION || GroupID = GROUP_STRUCTURECITADEL)"].Name}"]
+					;call This.FastWarp ${Entity["(GroupID = GROUP_STATION || GroupID = GROUP_STRUCTURECITADEL)"].ID}
+					call Station.DockAtStation ${Entity["(GroupID = GROUP_STATION || GroupID = GROUP_STRUCTURECITADEL)"].ID}
 					break
 				}
 
@@ -266,7 +266,6 @@ objectdef obj_Guardian
 
 					if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].TypeID} != 5
 					{
-						;call This.FastWarp ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
 						call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.PanicLocation}].ItemID}
 					}
 					else
@@ -276,16 +275,16 @@ objectdef obj_Guardian
 					break
 				}
 
-				if ${Entity["(GroupID = 15 || GroupID = 1657)"](exists)}
+				if ${Entity["(GroupID = GROUP_STATION || GroupID = GROUP_STRUCTURECITADEL)"](exists)}
 				{
 					if ${Config.Miner.BookMarkLastPosition} && !${Bookmarks.CheckForStoredLocation}
 					{
 						Bookmarks:StoreLocation
 					}
 
-					Logger:Log["Docking at ${Entity["(GroupID = 15 || GroupID = 1657)"].Name}"]
-					;call This.FastWarp ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
-					call Station.DockAtStation ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
+					Logger:Log["Docking at ${Entity["(GroupID = GROUP_STATION || GroupID = GROUP_STRUCTURECITADEL)"].Name}"]
+					;call This.FastWarp ${Entity["(GroupID = GROUP_STATION || GroupID = GROUP_STRUCTURECITADEL)"].ID}
+					call Station.DockAtStation ${Entity["(GroupID = GROUP_STATION || GroupID = GROUP_STRUCTURECITADEL)"].ID}
 					break
 				}
 

@@ -361,12 +361,12 @@ objectdef obj_Orca
 					call Station.DockAtStation ${EVE.Bookmark[${This.DeliveryLocation}].ItemID}
 					break
 				}
-				if ${Entity["(GroupID = 15 || GroupID = 1657)"](exists)}
+				if ${Entity["(GroupID = GROUP_STATION || GroupID = GROUP_STRUCTURECITADEL)"](exists)}
 				{
-					Logger:Log["Docking at ${Entity["(GroupID = 15 || GroupID = 1657)"].Name}"]
-					;call This.FastWarp ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
+					Logger:Log["Docking at ${Entity["(GroupID = GROUP_STATION || GroupID = GROUP_STRUCTURECITADEL)"].Name}"]
+					;call This.FastWarp ${Entity["(GroupID = GROUP_STATION || GroupID = GROUP_STRUCTURECITADEL)"].ID}
 					Logger:Log["Debug: Station.DockAtStation called from Line _LINE_ ", LOG_DEBUG]
-					call Station.DockAtStation ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
+					call Station.DockAtStation ${Entity["(GroupID = GROUP_STATION || GroupID = GROUP_STRUCTURECITADEL)"].ID}
 					break
 				}
 				if ${Me.ToEntity.Mode} != 3
@@ -426,7 +426,7 @@ objectdef obj_Orca
 					break
 				}
 
-				if ${Entity["(GroupID = 15 || GroupID = 1657)"](exists)}
+				if ${Entity["(GroupID = GROUP_STATION || GroupID = GROUP_STRUCTURECITADEL)"](exists)}
 				{
 					if ${Config.Miner.BookMarkLastPosition} && !${Bookmarks.CheckForStoredLocation}
 					{
@@ -434,7 +434,7 @@ objectdef obj_Orca
 					}
 
 					Logger:Log["Debug: Station.DockAtStation called from Line _LINE_ ", LOG_DEBUG]
-					call Station.DockAtStation ${Entity["(GroupID = 15 || GroupID = 1657)"].ID}
+					call Station.DockAtStation ${Entity["(GroupID = GROUP_STATION || GroupID = GROUP_STRUCTURECITADEL)"].ID}
 					break
 				}
 
