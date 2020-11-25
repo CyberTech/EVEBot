@@ -1109,10 +1109,10 @@ objectdef obj_Cargo
 
 	function TransferOreToStationHangar()
 	{
-		while !${Station.Docked}
+		if !${Me.InStation}
 		{
-			Logger:Log["obj_Cargo: Waiting for dock..."]
-			wait 10
+			Logger:Log["obj_Cargo: TransferOreToStationHangar called when not in station"]
+			return
 		}
 
 		call Inventory.ShipCargo.Activate
@@ -1233,10 +1233,10 @@ objectdef obj_Cargo
 
 	function TransferCargoToStationHangar()
 	{
-		while !${Station.Docked}
+		if !${Me.InStation}
 		{
-			Logger:Log["obj_Cargo: Waiting for dock..."]
-			wait 10
+			Logger:Log["obj_Cargo: TransferOreToStationHangar called when not in station"]
+			return
 		}
 
 		Logger:Log["Transferring Cargo to Station Hangar"]
