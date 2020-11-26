@@ -239,11 +239,6 @@ objectdef obj_EVEWindow_Proxy
 		return FALSE
 	}
 
-	method StackAll()
-	{
-		Logger:Log["\arInventory.${This.ObjectName}: StackAll not implemented", LOG_ERROR]
-	}
-
 	/* Can be called with no params, 1, or 2.
 		GetItems[]                  - This.Items will be populated
 		GetItems[NULL]              - This.Items will be populated
@@ -401,7 +396,12 @@ objectdef obj_Inventory inherits obj_BaseClass
 			Logger:Log["${LogPrefix}.OpenEntityIDFleetHangar: ${EntityToOpen.ID} (${EntityToOpen.Name}) is too far away (${EntityToOpen.Distance})", LOG_WARNING]
 			return FALSE
 		}
-		; TODO - Add Entity.HasFleetHangar?
+
+		if !${MyShip.HasFleetHangars}
+		{
+			Logger:Log["${LogPrefix}.OpenEntityIDFleetHangar: ${EntityToOpen.ID} (${EntityToOpen.Name}) doesn't have fleet hangars", LOG_WARNING]
+			return
+		}
 
 		Logger:Log["${LogPrefix}.OpenEntityIDFleetHangar: Opening fleet hangar of ${EntityToOpen.ID} (${EntityToOpen.Name})", LOG_MINOR]
 		EntityToOpen:Open
