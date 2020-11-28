@@ -397,11 +397,11 @@ objectdef obj_Inventory inherits obj_BaseClass
 			return FALSE
 		}
 
-		if !${EntityToOpen.HasFleetHangars}
-		{
-			Logger:Log["${LogPrefix}.OpenEntityIDFleetHangar: ${EntityToOpen.ID} (${EntityToOpen.Name}) doesn't have fleet hangars", LOG_WARNING]
-			return
-		}
+		;if !${EntityToOpen.HasFleetHangars}
+		;{
+		;	Logger:Log["${LogPrefix}.OpenEntityIDFleetHangar: ${EntityToOpen.ID} (${EntityToOpen.Name}) doesn't have fleet hangars", LOG_WARNING]
+		;	return
+		;}
 
 		Logger:Log["${LogPrefix}.OpenEntityIDFleetHangar: Opening fleet hangar of ${EntityToOpen.ID} (${EntityToOpen.Name})", LOG_MINOR]
 		EntityToOpen:Open
