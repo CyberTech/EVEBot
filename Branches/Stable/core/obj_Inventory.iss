@@ -397,7 +397,7 @@ objectdef obj_Inventory inherits obj_BaseClass
 			return FALSE
 		}
 
-		if !${MyShip.HasFleetHangars}
+		if !${EntityToOpen.HasFleetHangars}
 		{
 			Logger:Log["${LogPrefix}.OpenEntityIDFleetHangar: ${EntityToOpen.ID} (${EntityToOpen.Name}) doesn't have fleet hangars", LOG_WARNING]
 			return
