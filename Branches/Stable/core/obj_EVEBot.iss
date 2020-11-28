@@ -62,16 +62,15 @@ objectdef obj_EVEBot inherits obj_BaseClass
 
 		if ${This.PulseTimer.Ready}
 		{
-			ISXEVE:Debug_LogMsg["${This.LogPrefix}", "============================================= Pulse Start"]
-			if !${ISXEVE.IsSafe}
-			{
-				This.PulseTimer:Update
-				ISXEVE:Debug_LogMsg["${This.LogPrefix}", "============================================= Pulse End"]
-				return
-			}
+			;ISXEVE:Debug_LogMsg["${This.LogPrefix}", "============================================= Pulse Start"]
+			;if !${ISXEVE.IsSafe}
+			;{
+			;	This.PulseTimer:Update
+			;	ISXEVE:Debug_LogMsg["${This.LogPrefix}", "============================================= Pulse End"]
+			;	return
+			;}
 
-			if (${Config.Common.DisableUI} || (${Config.Common.DisableScreenWhenBackgrounded} && !${Display.Foreground})) && \
-				${EVE.IsUIDisplayOn}
+			if (${Config.Common.DisableUI} || (${Config.Common.DisableScreenWhenBackgrounded} && !${Display.Foreground})) && ${EVE.IsUIDisplayOn}
 			{
 				EVE:ToggleUIDisplay
 				Logger:Log["Disabling UI Rendering"]
@@ -85,8 +84,7 @@ objectdef obj_EVEBot inherits obj_BaseClass
 			; TODO - ISXEVE Bug - 3D disable only works in space 2011/07/17
 			if ${Me.InSpace}
 			{
-				if (${Config.Common.Disable3D} || (${Config.Common.DisableScreenWhenBackgrounded} && !${Display.Foreground})) && \
-					${EVE.Is3DDisplayOn}
+				if (${Config.Common.Disable3D} || (${Config.Common.DisableScreenWhenBackgrounded} && !${Display.Foreground})) && ${EVE.Is3DDisplayOn}
 				{
 					EVE:Toggle3DDisplay
 					Logger:Log["Disabling 3D Rendering"]
@@ -146,7 +144,7 @@ objectdef obj_EVEBot inherits obj_BaseClass
 			}
 
 			This.PulseTimer:Update
-			ISXEVE:Debug_LogMsg["${This.LogPrefix}", "============================================= Pulse End"]
+			;ISXEVE:Debug_LogMsg["${This.LogPrefix}", "============================================= Pulse End"]
 		}
 	}
 
