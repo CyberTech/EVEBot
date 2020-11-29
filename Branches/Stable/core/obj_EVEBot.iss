@@ -351,14 +351,14 @@ objectdef obj_EVEBot inherits obj_BaseClass
 		{
 			IsMaster:Set[TRUE]
 			MasterName:Set[${Me.Name}]
-			Logger:Log["${LogPrefix}: I am Master", LOG_DEBUG]
+			Logger:Log["${LogPrefix}: I am Master"]
 		}
 		else
 		{
 			MasterName:Set[${MasterClaimer}]
 			if ${Config.Miner.MasterMode}
 			{
-				Logger:Log["${LogPrefix}: Hard Stop - There can be only one Master ERROR:${MasterClaimer} claims my role!", LOG_DEBUG]
+				Logger:Log["${LogPrefix}: Hard Stop - There can be only one Master ERROR:${MasterClaimer} claims my role!", LOG_ERROR]
 				This.CurrentState:Set["HARDSTOP"]
 				relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.CurrentBehavior} (MasterConfigError)"
 			}
@@ -368,11 +368,11 @@ objectdef obj_EVEBot inherits obj_BaseClass
 				IsMaster:Set[FALSE]
 				if ${MasterClaimer.Length} == 0
 				{
-					Logger:Log["${LogPrefix}: Fleet master unset", LOG_DEBUG]
+					Logger:Log["${LogPrefix}: Fleet master unset"]
 				}
 				else
 				{
-					Logger:Log["${LogPrefix}: Fleet master set to \"${MasterName}\"", LOG_DEBUG]
+					Logger:Log["${LogPrefix}: Fleet master set to \"${MasterName}\""]
 				}
 			}
 		}
