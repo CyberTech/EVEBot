@@ -45,7 +45,6 @@ objectdef obj_Orca
 	{
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 		Event[EVEBot_HaulerMSG]:DetachAtom[This:HaulerMSG]
-		Event[EVEBot_TriggerAttack]:DetachAtom[This:UnderAttack]
 	}
 
 	method Pulse()
@@ -262,11 +261,6 @@ objectdef obj_Orca
 		if !${Config.Common.CurrentBehavior.Equal[Orca]}
 		{
 			return
-		}
-
-		if ${Me.InSpace}
-		{
-			This:CheckAttack
 		}
 
 		if ${This.CurrentState.NotEqual[ORCA]}
@@ -876,28 +870,6 @@ objectdef obj_Orca
 		/* TO MANUALLY CALL A HAULER ENTER THIS IN THE CONSOLE
 		 * relay all -event EVEBot_Miner_Full "${Me.CharID},${Me.SolarSystemID},${Entity[GroupID = 9].ID}"
 		 */
-	}
-
-	;This method is used to trigger an event.  It tells our team-mates we are under attack by an NPC and what it is.
-	method CheckAttack()
-	{
-		variable iterator CurrentAttack
-		variable index:attacker attackerslist
-		Me:GetAttackers[attackerslist]
-		attackerslist:RemoveByQuery[${LavishScript.CreateQuery[!IsNPC]}]
-		attackerslist:GetIterator[CurrentAttack]
-		if ${CurrentAttack:First(exists)}
-		{
-			do
-			{
-				if !${AttackingTeam.Contains[${CurrentAttack.Value.ID}]}
-				{
-					Logger:Log["Orca.CheckAttack: Alerting team to kill ${CurrentAttack.Value.Name}(${CurrentAttack.Value.ID})"]
-					Relay all -event EVEBot_TriggerAttack ${CurrentAttack.Value.ID}
-				}
-			}
-			while ${CurrentAttack:Next(exists)}
-		}
 	}
 
 	;	This function's sole purpose is to get your ship in warp as fast as possible from a dead stop with a MWD.  It accepts a value and will either Warp to it
