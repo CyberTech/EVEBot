@@ -71,6 +71,11 @@ objectdef obj_Defense_Drone inherits obj_BaseClass
 			return
 		}
 
+		if ${Navigator.Busy}
+		{
+			return
+		}
+
 		if ${This.PulseTimer.Ready}
 		{
 			if ${Me.InSpace}
@@ -90,6 +95,11 @@ objectdef obj_Defense_Drone inherits obj_BaseClass
 		}
 
 		if !${Me.InSpace}
+		{
+			return
+		}
+
+		if ${Navigator.Busy}
 		{
 			return
 		}
@@ -162,6 +172,11 @@ objectdef obj_Defense_Drone inherits obj_BaseClass
 		}
 
 		if !${DroneCommandTimer.Ready}
+		{
+			return
+		}
+
+		if ${Navigator.Busy}
 		{
 			return
 		}
