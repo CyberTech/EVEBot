@@ -112,8 +112,11 @@ objectdef obj_Defense_Drone inherits obj_BaseClass
 			if ${EVEBotScript.Config.Combat.LaunchCombatDrones}
 			{
 				This:ChooseTarget
-				; Will launch drones, or if we've lost some, launch more to get to max drone capability
-				Ship.Drones:LaunchAll["Defense_Drones"]
+				if ${This.CurrentTarget(exists)}
+				{
+					; Will launch drones, or if we've lost some, launch more to get to max drone capability
+					Ship.Drones:LaunchAll["Defense_Drones"]
+				}
 			}
 
 			call Defend
@@ -214,8 +217,8 @@ objectdef obj_Defense_Drone inherits obj_BaseClass
 		{
 			if !${Entity[${CurrentHostile.Value}](exists)}
 			{
-				HostileTargets:Remove[${CurrentHostile.Value}]
-				CurrentHostile:First
+				;HostileTargets:Remove[${CurrentHostile.Value}]
+				;CurrentHostile:First
 				continue
 			}
 			if ${Entity[${CurrentHostile.Value}].Distance} < ${Ship.OptimalTargetingRange} && \
