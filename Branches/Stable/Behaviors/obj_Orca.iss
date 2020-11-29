@@ -22,22 +22,9 @@ objectdef obj_Orca
 	variable int64 Approaching = 0
 	variable int TimeStartedApproaching = 0
 
-	;	This is used to keep track of if our master is in a belt.
-	variable bool WarpToMaster=FALSE
-
 	;	This keeps track of the wreck we are tractoring
 	variable int64 Tractoring=-1
 
-	;	Search string for our Orca
-	variable string Orca
-
-	;	Search string for our Master
-	variable string Master
-
-	; My master variables
-	variable int64 MasterVote =-1
-	variable string MasterName
-	variable bool IsMaster=FALSE
 	variable string DeliveryLocation
 
 	method Initialize()
@@ -46,11 +33,7 @@ objectdef obj_Orca
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 
 		LavishScript:RegisterEvent[EVEBot_Orca_InBelt]
-
 		LavishScript:RegisterEvent[EVEBot_Master_InBelt]
-		Event[EVEBot_Master_InBelt]:AttachAtom[This:MasterInBelt]
-		LavishScript:RegisterEvent[EVEBot_Master_Vote]
-		Event[EVEBot_Master_Vote]:AttachAtom[This:MasterVote]
 
 		LavishScript:RegisterEvent[EVEBot_HaulerMSG]
 		Event[EVEBot_HaulerMSG]:AttachAtom[This:HaulerMSG]
@@ -61,8 +44,6 @@ objectdef obj_Orca
 	method Shutdown()
 	{
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
-		Event[EVEBot_Master_InBelt]:DetachAtom[This:MasterInBelt]
-		Event[EVEBot_Master_Vote]:DetachAtom[This:MasterVote]
 		Event[EVEBot_HaulerMSG]:DetachAtom[This:HaulerMSG]
 		Event[EVEBot_TriggerAttack]:DetachAtom[This:UnderAttack]
 	}
@@ -291,22 +272,10 @@ objectdef obj_Orca
 		if ${This.CurrentState.NotEqual[ORCA]}
 		{
 			relay all -event EVEBot_Orca_InBelt FALSE
-			if ${IsMaster}
+			if ${EVEBot.IsMaster}
 			{
 				; Tell the miners we might not be in a belt and shouldn't be warped to.
 				relay all -event EVEBot_Master_InBelt FALSE
-			}
-		}
-
-		if ${Config.Miner.MasterMode} || ${Config.Miner.GroupMode}
-		{
-			if ${MasterVote} == -1
-			{
-				This:VoteForMaster
-			}
-			else
-			{
-				;This:ResetMaster
 			}
 		}
 
@@ -726,7 +695,7 @@ objectdef obj_Orca
 		{
 			TimeToMove:Set[FALSE]
 			relay all -event EVEBot_Orca_InBelt FALSE
-			if ${IsMaster}
+			if ${EVEBot.IsMaster}
 			{
 				; Tell the miners we might not be in a belt and shouldn't be warped to.
 				relay all -event EVEBot_Master_InBelt FALSE
@@ -785,7 +754,7 @@ objectdef obj_Orca
 		; Either we've warped to an asteroid itself, or we're approaching it
 		;	Tell our miners we're in a belt and they are safe to warp to me
 		relay all -event EVEBot_Orca_InBelt TRUE
-		if ${IsMaster}
+		if ${EVEBot.IsMaster}
 		{
 			;	Tell our miners we're in a belt and they are safe to warp to me
 			relay all -event EVEBot_Master_InBelt TRUE
@@ -907,101 +876,6 @@ objectdef obj_Orca
 		/* TO MANUALLY CALL A HAULER ENTER THIS IN THE CONSOLE
 		 * relay all -event EVEBot_Miner_Full "${Me.CharID},${Me.SolarSystemID},${Entity[GroupID = 9].ID}"
 		 */
-	}
-
-	;This method is triggered by an event.  If triggered, it tells us our master is in a belt and can be warped to.
-	method MasterInBelt(bool State)
-	{
-		WarpToMaster:Set[${State}]
-	}
-
-	;This method is triggered by an event.  If triggered, lets Us figure out who is the master in group mode.
-	method MasterVote(string groupParams)
-	{
-		Logger:Log["obj_Orca:MasterVote event:${groupParams}", LOG_DEBUG]
-
-		if ${Config.Miner.MasterMode} || ${Config.Miner.GroupMode}
-		{
-			if ${MasterVote} == -1
-			{
-				This:VoteForMaster
-			}
-
-			variable string name
-			variable int64 State = -1
-
-			name:Set[${groupParams.Token[1,","]}]
-			State:Set[${groupParams.Token[2,","]}]
-
-			if ${Me.Name.NotEqual[${name}]}
-			{
-				MasterName:Set[${name}]
-				if ${State} > ${MasterVote}
-				{
-					MasterName:Set[${name}]
-					IsMaster:Set[FALSE]
-					Logger:Log["obj_Orca: Master is: \"${MasterName}\"", LOG_DEBUG]
-				}
-				elseif ${State} == ${MasterVote}
-				{
-					if ${Config.Miner.MasterMode}
-					{
-						Logger:Log["obj_Orca: Hard Stop - There can be only one Master ERROR:${name}", LOG_DEBUG]
-						This.CurrentState:Set["HARDSTOP"]
-						relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.CurrentBehavior} (MasterConfigError)"
-					}
-					else
-					{
-						; re-vote for master
-						Logger:Log["obj_Orca: Master Vote tie with:${name}", LOG_DEBUG]
-						This:VoteForMaster
-					}
-				}
-				else
-				{
-					IsMaster:Set[TRUE]
-					MasterName:Set[${Me.Name}]
-					Logger:Log["obj_Orca: I am Master", LOG_DEBUG]
-					relay all -event EVEBot_Master_Vote "${Me.Name},${MasterVote}"
-				}
-			}
-		}
-	}
-
-	method ResetMaster()
-	{
-		Logger:Log["Debug: Reset Master :${MasterVote}", LOG_DEBUG]
-
-		if ${Config.Miner.MasterMode} || ${Config.Miner.GroupMode}
-		{
-			if ${Config.Miner.GroupMode}
-			{
-				MasterName:Set[NULL]
-			}
-
-			if ${Config.Miner.MasterMode}
-			{
-				MasterVote:Set[100]
-			}
-
-			relay all -event EVEBot_Master_Vote "${Me.Name},${MasterVote}"
-		}
-	}
-
-	method VoteForMaster()
-	{
-		IsMaster:Set[TRUE]
-		if ${Config.Miner.MasterMode}
-		{
-			MasterVote:Set[100]
-		}
-		else
-		{
-			MasterVote:Set[${Math.Rand[90]:Inc[10]}]
-		}
-		Logger:Log["Debug: Master Vote value: ${MasterVote}", LOG_DEBUG]
-
-		relay all -event EVEBot_Master_Vote "${Me.Name},${MasterVote}"
 	}
 
 	;This method is used to trigger an event.  It tells our team-mates we are under attack by an NPC and what it is.

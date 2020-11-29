@@ -51,11 +51,6 @@ objectdef obj_Miner
 	;	Search string for our Master
 	variable string Master
 
-	; My master variables
-	variable int64 MasterVote =-1
-	variable string MasterName
-	variable bool IsMaster=FALSE
-
 /*
 ;	Step 1:  	Get the module ready.  This includes init and shutdown methods, as well as the pulse method that runs each frame.
 ;				Adjust PulseIntervalInSeconds above to determine how often the module will SetState.
@@ -65,14 +60,14 @@ objectdef obj_Miner
 	{
 		This.TripStartTime:Set[${Time.Timestamp}]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
+
 		Event[EVEBot_Orca_InBelt]:AttachAtom[This:OrcaInBelt]
+
 		LavishScript:RegisterEvent[EVEBot_Master_InBelt]
 		Event[EVEBot_Master_InBelt]:AttachAtom[This:MasterInBelt]
-		LavishScript:RegisterEvent[EVEBot_Master_Vote]
-		Event[EVEBot_Master_Vote]:AttachAtom[This:MasterVote]
+
 		LavishScript:RegisterEvent[EVEBot_HaulerMSG]
 		Event[EVEBot_HaulerMSG]:AttachAtom[This:HaulerMSG]
-
 
 		Logger:Log["obj_Miner: Initialized", LOG_MINOR]
 	}
@@ -82,7 +77,6 @@ objectdef obj_Miner
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 		Event[EVEBot_Orca_InBelt]:DetachAtom[This:OrcaInBelt]
 		Event[EVEBot_Master_InBelt]:DetachAtom[This:MasterInBelt]
-		Event[EVEBot_Master_Vote]:DetachAtom[This:MasterVote]
 		Event[EVEBot_HaulerMSG]:DetachAtom[This:HaulerMSG]
 	}
 
@@ -242,7 +236,7 @@ objectdef obj_Miner
 				if ${Entity["GroupID = GROUP_DREADNOUGHT && CategoryID = CATEGORYID_ENTITY"](exists)}
 				{
 					This.CurrentState:Set["FLEE"]
-					Logger:Log["FLEE: NPC Dreadnaught detected: ${Entity[\"GroupID = GROUP_DREADNOUGHT\" && CategoryID = CATEGORYID_ENTITY].Name}"]
+					Logger:Log["FLEE: NPC Dreadnaught detected: ${Entity[GroupID = GROUP_DREADNOUGHT && CategoryID = CATEGORYID_ENTITY].Name}"]
 					return
 				}
 
@@ -259,7 +253,6 @@ objectdef obj_Miner
 					Logger:Log["FLEE: NPC Invasion Precursor (Damavik?) detected: ${Entity[\"GroupID = GROUP_INVASIONNPS\" && CategoryID = CATEGORYID_ENTITY].Name}"]
 					return
 				}
-
 			}
 		}
 
@@ -277,16 +270,15 @@ objectdef obj_Miner
 			return
 		}
 
-		; If in group mode, not the master, dont warp to master, and at safe spot... wait
-		if ${Config.Miner.GroupMode} && !${IsMaster} && !${WarpToMaster} && ${This.AtPanicBookmark}
+		; If in group mode, not the master, dont warp to master, and at safe spot... wait.  This also covers when no master is set.
+		if ${Config.Miner.GroupMode} && !${EVEBot.IsMaster} && !${WarpToMaster}
 		{
-			This.CurrentState:Set["IDLE"]
-			return
-		}
-
-		; If in group mode, not the master, and dont warp to the master... flee
-		if ${Config.Miner.GroupMode} && !${IsMaster} && !${WarpToMaster}
-		{
+			if ${This.AtPanicBookmark}
+			{
+				This.CurrentState:Set["IDLE"]
+				return
+			}
+			; If in group mode, not the master, and dont warp to the master... flee. This also covers when no master is set.
 			This.CurrentState:Set["FLEE"]
 			Logger:Log["FLEE: Master not in belt (temporary)"]
 			return
@@ -331,22 +323,10 @@ objectdef obj_Miner
 			return
 		}
 
-		if ${IsMaster} && ${This.CurrentState.NotEqual[MINE]}
+		if ${EVEBot.IsMaster} && ${This.CurrentState.NotEqual[MINE]}
 		{
 			; Tell the miners we might not be in a belt and shouldn't be warped to.
 			relay all -event EVEBot_Master_InBelt FALSE
-		}
-
-		if ${Config.Miner.MasterMode} || ${Config.Miner.GroupMode}
-		{
-			if ${MasterVote} == -1
-			{
-				This:VoteForMaster
-			}
-			else
-			{
-				;This:ResetMaster
-			}
 		}
 
 		switch ${This.CurrentState}
@@ -815,7 +795,7 @@ objectdef obj_Miner
 		;}
 
 		Orca:Set[Name = "${Config.Miner.DeliveryLocation}"]
-		Master:Set[Name = "${MasterName}"]
+		Master:Set[Name = "${EVEBot.MasterName}"]
 
 		; If delivery is set to Orca
 		if ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]}
@@ -835,10 +815,10 @@ objectdef obj_Miner
 		else
 		{
 			; Check if master is on grid and if not warp to them
-			if ${Config.Miner.GroupMode} && ${WarpToMaster} && !${Entity[${Master.Escape}](exists)} && !${IsMaster}
+			if ${Config.Miner.GroupMode} && ${WarpToMaster} && !${Entity[${Master.Escape}](exists)} && !${EVEBot.IsMaster}
 			{
-				Logger:Log["Debug: WarpToFleetMember to ${MasterName} from Line _LINE_ ", LOG_DEBUG]
-				call Ship.WarpToFleetMember ${Local["${MasterName}"]}
+				Logger:Log["Debug: WarpToFleetMember to ${EVEBot.MasterName} from Line _LINE_ ", LOG_DEBUG]
+				call Ship.WarpToFleetMember ${Local["${EVEBot.MasterName}"]}
 				if ${Config.Miner.BookMarkLastPosition} && ${Bookmarks.CheckForStoredLocation}
 				{
 					Bookmarks:RemoveStoredLocation
@@ -847,7 +827,7 @@ objectdef obj_Miner
 			}
 		}
 
-		if (!${Config.Miner.GroupMode} || ${IsMaster})
+		if (!${Config.Miner.GroupMode} || ${EVEBot.IsMaster})
 		{
 			; We're not in group mode, or we're the master. So we're free to make our own decisions about movement.
 			; Out of rocks, not delivering to Orca
@@ -869,7 +849,7 @@ objectdef obj_Miner
 		}
 
 		; Past this point, we're in a belt. Presumably.
-		if ${IsMaster}
+		if ${EVEBot.IsMaster}
 		{
 			;	Tell our miners we're in a belt and they are safe to warp to me
 			relay all -event EVEBot_Master_InBelt TRUE
@@ -956,7 +936,7 @@ objectdef obj_Miner
 			{
 				Logger:Log["Debug: Checking Group mode ", LOG_DEBUG]
 				; if for some reason we are too far away from our master go find him
-				if ${MasterName.NotEqual[NULL]}
+				if ${EVEBot.MasterName.NotEqual[NULL]}
 				{
 					; We want to stay within range of the Master, see if we need to move
 					if ${Config.Miner.GroupModeAtRange}
@@ -1241,95 +1221,6 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 	method MasterInBelt(bool State)
 	{
 		WarpToMaster:Set[${State}]
-	}
-
-	;This method is triggered by an event.  If triggered, lets Us figure out who is the master in group mode.
-	method MasterVote(string groupParams)
-	{
-		Logger:Log["obj_Miner:MasterVote event:${groupParams}", LOG_DEBUG]
-
-		if ${Config.Miner.MasterMode} || ${Config.Miner.GroupMode}
-		{
-			if ${MasterVote} == -1
-			{
-				This:VoteForMaster
-			}
-
-			variable string name
-			variable int64 State = -1
-
-			name:Set[${groupParams.Token[1,","]}]
-			State:Set[${groupParams.Token[2,","]}]
-
-			if ${Me.Name.NotEqual[${name}]}
-			{
-				MasterName:Set[${name}]
-				if ${State} > ${MasterVote}
-				{
-					MasterName:Set[${name}]
-					IsMaster:Set[FALSE]
-					Logger:Log["obj_Miner: Master is: \"${MasterName}\"", LOG_DEBUG]
-				}
-				elseif ${State} == ${MasterVote}
-				{
-					if ${Config.Miner.MasterMode}
-					{
-						Logger:Log["obj_Miner: Hard Stop - There can be only one Master ERROR:${name}", LOG_DEBUG]
-						This.CurrentState:Set["HARDSTOP"]
-						relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.CurrentBehavior} (MasterConfigError)"
-					}
-					else
-					{
-						; re-vote for master
-						Logger:Log["obj_Miner: Master Vote tie with:${name}", LOG_DEBUG]
-						This:VoteForMaster
-					}
-				}
-				else
-				{
-					IsMaster:Set[TRUE]
-					MasterName:Set[${Me.Name}]
-					Logger:Log["obj_Miner: I am Master", LOG_DEBUG]
-					relay all -event EVEBot_Master_Vote "${Me.Name},${MasterVote}"
-				}
-			}
-		}
-	}
-
-	method ResetMaster()
-	{
-		Logger:Log["Debug: Reset Master :${MasterVote}", LOG_DEBUG]
-
-		if ${Config.Miner.MasterMode} || ${Config.Miner.GroupMode}
-		{
-			if ${Config.Miner.GroupMode}
-			{
-				MasterName:Set[NULL]
-			}
-
-			if ${Config.Miner.MasterMode}
-			{
-				MasterVote:Set[100]
-			}
-
-			relay all -event EVEBot_Master_Vote "${Me.Name},${MasterVote}"
-		}
-	}
-
-	method VoteForMaster()
-	{
-		IsMaster:Set[TRUE]
-		if ${Config.Miner.MasterMode}
-		{
-			MasterVote:Set[100]
-		}
-		else
-		{
-			MasterVote:Set[${Math.Rand[90]:Inc[10]}]
-		}
-		Logger:Log["Debug: Master Vote value: ${MasterVote}", LOG_DEBUG]
-
-		relay all -event EVEBot_Master_Vote "${Me.Name},${MasterVote}"
 	}
 
 	;This method is triggered by an event.  If triggered, it tells us how much space our hauler has available
