@@ -17,6 +17,11 @@ objectdef obj_EVEBot inherits obj_BaseClass
 	variable bool LastSessionResult
 	variable index:string Threads
 
+	; My master variables
+	variable obj_PulseTimer LastMasterQuery
+	variable string MasterName
+	variable bool IsMaster=FALSE
+
 	method Initialize()
 	{
 		LogPrefix:Set["${This.ObjectName}"]
@@ -28,12 +33,25 @@ objectdef obj_EVEBot inherits obj_BaseClass
 		LavishScript:RegisterEvent[EVENT_EVEBOT_ONFRAME_INSPACE]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 
+		LavishScript:RegisterEvent[EVEBot_Master_Query]
+		Event[EVEBot_Master_Query]:AttachAtom[This:Event_Master_Query]
+
+		LavishScript:RegisterEvent[EVEBot_Master_Notify]
+		Event[EVEBot_Master_Notify]:AttachAtom[This:Event_Master_Notify]
+
 		Logger:Log["${LogPrefix}: Initialized", LOG_MINOR]
 	}
 
 	method Shutdown()
 	{
+		if ${Config.Miner.MasterMode}
+		{
+			relay all -event EVEBot_Master_Notify ""
+		}
+
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
+		Event[EVEBot_Master_Query]:AttachAtom[This:Event_Master_Query]
+		Event[EVEBot_Master_Notify]:DetachAtom[This:Event_Master_Notify]
 	}
 
 	method EndBot()
@@ -69,6 +87,16 @@ objectdef obj_EVEBot inherits obj_BaseClass
 			;	ISXEVE:Debug_LogMsg["${This.LogPrefix}", "============================================= Pulse End"]
 			;	return
 			;}
+
+			if ${Config.Miner.GroupMode}
+			{
+				if ${This.MasterName.Length} == 0 && ${This.LastMasterQuery.Ready}
+				{
+					This.LastMasterQuery:SetIntervals[5.0,5.0]
+					This.LastMasterQuery:Update
+					relay all -event EVEBot_Master_Query
+				}
+			}
 
 			if (${Config.Common.DisableUI} || (${Config.Common.DisableScreenWhenBackgrounded} && !${Display.Foreground})) && ${EVE.IsUIDisplayOn}
 			{
@@ -308,6 +336,54 @@ objectdef obj_EVEBot inherits obj_BaseClass
 				Counter:Set[0]
 			}
 			wait 5
+		}
+	}
+
+	;This method is triggered by an event.  If triggered, lets Us figure out who is the master in group mode.
+	method Event_Master_Notify(string MasterClaimer)
+	{
+		/*
+			If I sent the message, process it.
+			If it came from someone else, see if it conflicts with my UI settings. Only one mater is allowed
+			Otherwise, accept the master designation
+		 */
+		if ${Me.Name.Equal[${MasterClaimer}]}
+		{
+			IsMaster:Set[TRUE]
+			MasterName:Set[${Me.Name}]
+			Logger:Log["${LogPrefix}: I am Master", LOG_DEBUG]
+		}
+		else
+		{
+			MasterName:Set[${MasterClaimer}]
+			if ${Config.Miner.MasterMode}
+			{
+				Logger:Log["${LogPrefix}: Hard Stop - There can be only one Master ERROR:${MasterClaimer} claims my role!", LOG_DEBUG]
+				This.CurrentState:Set["HARDSTOP"]
+				relay all -event EVEBot_HARDSTOP "${Me.Name} - ${Config.Common.CurrentBehavior} (MasterConfigError)"
+			}
+			else
+			{
+				MasterName:Set[${MasterClaimer}]
+				IsMaster:Set[FALSE]
+				if ${MasterClaimer.Length} == 0
+				{
+					Logger:Log["${LogPrefix}: Fleet master unset", LOG_DEBUG]
+				}
+				else
+				{
+					Logger:Log["${LogPrefix}: Fleet master set to \"${MasterName}\"", LOG_DEBUG]
+				}
+			}
+		}
+	}
+
+	; Someone is asking who the master is
+	method Event_Master_Query()
+	{
+		if ${Config.Miner.MasterMode}
+		{
+			relay all -event EVEBot_Master_Notify "${Me.Name}"
 		}
 	}
 

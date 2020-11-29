@@ -624,6 +624,10 @@
 							</OnLoad>
 							<OnLeftClick>
 								Script[EVEBot].VariableScope.Config.Miner:SetMasterMode[${This.Checked}]
+								if !${This.Checked}
+								{
+									relay all -event EVEBot_Master_Notify ""
+								}
 							</OnLeftClick>
 						</checkbox>
 						<checkbox name='cbGroupMinerMode'>
