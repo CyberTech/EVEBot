@@ -112,10 +112,14 @@ objectdef obj_Station
 			}
 			while !${This.DockedAtStation[${StationID}]}
 		}
-		else
+		elseif ${Safespots.Count} > 0
 		{
 			Logger:Log["Station Requested does not exist!  Trying Safespots...", LOG_CRITICAL]
 			call Safespots.WarpTo
+		}
+		else
+		{
+			Logger:Log["Station Requested does not exist!", LOG_CRITICAL]
 		}
 	}
 
@@ -140,10 +144,14 @@ objectdef obj_Station
 		{
 			call This.DockAtStation ${StationID}
 		}
-		else
+		elseif ${Safespots.Count} > 0
 		{
 			Logger:Log["No stations in this system!  Trying Safespots...", LOG_CRITICAL]
 			call Safespots.WarpTo
+		}
+		else
+		{
+			Logger:Log["No stations in this system!", LOG_CRITICAL]
 		}
 	}
 
