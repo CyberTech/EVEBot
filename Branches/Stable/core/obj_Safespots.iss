@@ -55,6 +55,10 @@ objectdef obj_Safespots
 		if ${SafeSpots.Used} == 0
 		{
 			This:ResetSafeSpotList
+			if ${SafeSpots.Used} == 0
+			{
+				return -1
+			}
 		}
 
 		if ${SafeSpots.Get[1](exists)} && ${SafeSpots.Get[1].SolarSystemID} != ${Me.SolarSystemID}
@@ -83,10 +87,6 @@ objectdef obj_Safespots
 		if ${bmid} > 0
 		{
 			Navigator:FlyToBookmarkID[${bmid}, 0, FALSE]
-		}
-		else
-		{
-			Logger:Log["ERROR: obj_Safespots.WarpToNextSafeSpot found an invalid bookmark!"]
 		}
 	}
 
