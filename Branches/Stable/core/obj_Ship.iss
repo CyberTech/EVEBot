@@ -2104,7 +2104,7 @@ objectdef obj_Ship
 		{
 			This:Deactivate_Cloak[]
 		}
-		This.Drones:ReturnAllToDroneBay["Ship.WarpPrepare"]
+		This.Drones:ReturnAllToDroneBay["Ship", "WarpPrepare"]
 		This:Deactivate_SensorBoost
 		This:Deactivate_Gang_Links
 
@@ -3096,7 +3096,7 @@ objectdef obj_Ship
 		}
 	}
 
-	method Activate_Weapons()
+	method Activate_Weapons(int64 TargetID)
 	{
 		if !${MyShip(exists)}
 		{
@@ -3105,6 +3105,10 @@ objectdef obj_Ship
 		if ${This.ReloadingWeapons}
 			return
 
+		if ${TargetID} == 0
+		{
+			return
+		}
 		variable iterator ModuleIter
 
 		This.ModuleList_Weapon:GetIterator[ModuleIter]
@@ -3117,7 +3121,8 @@ objectdef obj_Ship
 			if !${ModuleIter.Value.IsActive} && !${ModuleIter.Value.IsReloading} && ${ModuleIter.Value.IsOnline}
 			{
 				;;Logger:Log["Activating ${ModuleIter.Value.ToItem.Name}"]
-				ModuleIter.Value:Click
+				;ModuleIter.Value:Click
+				ModuleIter.Value:Activate[${TargetID}]
 			}
 		}
 		while ${ModuleIter:Next(exists)}
@@ -3139,7 +3144,8 @@ objectdef obj_Ship
 			if (${ModuleIter.Value.IsActive} || ${ModuleIter.Value.IsWaitingForActiveTarget}) && ${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsDeactivating}
 			{
 				;;Logger:Log["Deactivating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
-				ModuleIter.Value:Click
+				;ModuleIter.Value:Click
+				ModuleIter.Value:Deactivate
 			}
 		}
 		while ${ModuleIter:Next(exists)}
