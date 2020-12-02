@@ -23,6 +23,11 @@ objectdef obj_Missioneer inherits obj_BaseClass
 
 	method Pulse()
 	{
+		if ${EVEBot.Paused}
+		{
+			return
+		}
+
 		if ${This.PulseTimer.Ready}
 		{
 			This:SetState
