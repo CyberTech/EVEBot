@@ -61,10 +61,10 @@ objectdef obj_Miner
 		This.TripStartTime:Set[${Time.Timestamp}]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 
-		Event[EVEBot_Orca_InBelt]:AttachAtom[This:OrcaInBelt]
+		Event[EVEBot_Orca_InBelt]:AttachAtom[This:Event_OrcaIsInBelt]
 
 		LavishScript:RegisterEvent[EVEBot_Master_InBelt]
-		Event[EVEBot_Master_InBelt]:AttachAtom[This:MasterInBelt]
+		Event[EVEBot_Master_InBelt]:AttachAtom[This:Event_MasterIsInBelt]
 
 		LavishScript:RegisterEvent[EVEBot_HaulerMSG]
 		Event[EVEBot_HaulerMSG]:AttachAtom[This:HaulerMSG]
@@ -75,8 +75,8 @@ objectdef obj_Miner
 	method Shutdown()
 	{
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
-		Event[EVEBot_Orca_InBelt]:DetachAtom[This:OrcaInBelt]
-		Event[EVEBot_Master_InBelt]:DetachAtom[This:MasterInBelt]
+		Event[EVEBot_Orca_InBelt]:DetachAtom[This:Event_OrcaIsInBelt]
+		Event[EVEBot_Master_InBelt]:DetachAtom[This:Event_MasterIsInBelt]
 		Event[EVEBot_HaulerMSG]:DetachAtom[This:HaulerMSG]
 	}
 
@@ -1212,13 +1212,13 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 	}
 
 	;This method is triggered by an event.  If triggered, it tells us our orca is in a belt and can be warped to.
-	method OrcaInBelt(bool State)
+	method Event_OrcaIsInBelt(bool State)
 	{
 		WarpToOrca:Set[${State}]
 	}
 
 	;This method is triggered by an event.  If triggered, it tells us our master is in a belt and can be warped to.
-	method MasterInBelt(bool State)
+	method Event_MasterIsInBelt(bool State)
 	{
 		WarpToMaster:Set[${State}]
 	}
