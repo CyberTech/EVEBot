@@ -5,6 +5,20 @@
 	-- CyberTech
 */
 
+objectdef obj_Hostile
+{
+	variable int64 ReporterID
+	variable int64 HostileID
+	variable time TimeAdded
+
+	method Initialize(int64 _ReporterID = 0, int64 _HostileID = 0)
+	{
+		ReporterID:Set[${_ReporterID}]
+		HostileID:Set[${_HostileID}]
+		TimeAdded:Set[${Time.Timestamp}]
+	}
+}
+
 objectdef obj_Defense_Drone inherits obj_BaseClass
 {
 	variable bool Enabled = TRUE
@@ -17,7 +31,7 @@ objectdef obj_Defense_Drone inherits obj_BaseClass
 	variable obj_PulseTimer DroneCommandTimer
 
 	;	This is a list of IDs for rats which are attacking a team member
-	variable set HostileTargets
+	variable index:obj_Hostile HostileTargets
 
 	; The currently targeted/ing entity. We're only guaranteed one target slot, so we need to track this
 	variable entity CurrentTarget
@@ -26,14 +40,23 @@ objectdef obj_Defense_Drone inherits obj_BaseClass
 	{
 		LogPrefix:Set["${This.ObjectName}"]
 
-		This.PulseTimer:SetIntervals[0.5,1.5]
-		DroneCommandTimer:SetIntervals[1.0,2.5]
+		This.PulseTimer:SetIntervals[1.5,2.5]
+		DroneCommandTimer:SetIntervals[2.0,4.5]
 		Event[ISXEVE_onFrame]:AttachAtom[This:Pulse]
 		Logger:Log["Thread: ${LogPrefix}: Initialized", LOG_MINOR]
 
 		LavishScript:RegisterEvent[EVEBot_AttackerReport]
 		Event[EVEBot_AttackerReport]:AttachAtom[This:Event_AttackerReport]
 
+		LavishScript:RegisterEvent[EVEBot_AttackerDeceased]
+		Event[EVEBot_AttackerDeceased]:AttachAtom[This:Event_AttackerDeceased]
+	}
+
+	method Shutdown()
+	{
+		Event[ISXEVE_onFrame]:DetachAtom[This:Pulse]
+		Event[EVEBot_AttackerReport]:DetachAtom[This:Event_AttackerReport]
+		Event[EVEBot_AttackerDeceased]:DetachAtom[This:Event_AttackerDeceased]
 	}
 
 	method SetOwnerScript(string Owner)
@@ -42,26 +65,27 @@ objectdef obj_Defense_Drone inherits obj_BaseClass
 		EVEBotScript:SetReference["Script[${Owner}].VariableScope"]
 	}
 
-	method Shutdown()
+	;This method is triggered by an event.  If triggered, it means a team-mate is under attack by an NPC and what it is.
+	method Event_AttackerReport(int64 ReporterID, int64 AttackerID)
 	{
-		Event[ISXEVE_onFrame]:DetachAtom[This:Pulse]
-		Event[EVEBot_AttackerReport]:DetachAtom[This:Event_AttackerReport]
+		if ${This.isKnownHostile[${AttackerID}]}
+		{
+			Logger:Log["${LogPrefix}:Event_AttackerReport Ignored ${AttackerID} from ${ReporterID}, already known", LOG_DEBUG]
+			return
+		}
+		HostileTargets:Insert[${ReporterID}, ${AttackerID}]
+		Logger:Log["${LogPrefix}: Added ${Entity[${AttackerID}].Name}(${AttackerID}) to attackers list, reported by ${ReporterID} Attackers: ${HostileTargets.Used}"]
 	}
 
 	;This method is triggered by an event.  If triggered, it means a team-mate is under attack by an NPC and what it is.
-	method Event_AttackerReport(int64 value)
+	method Event_AttackerDeceased(int64 ReporterID, int64 AttackerID)
 	{
-		if ${HostileTargets.Contains[${value}]}
-		{
-			return
-		}
-		HostileTargets:Add[${value}]
-		Logger:Log["${LogPrefix}: Added ${Entity[${value}].Name}(${value}) to attackers list. Attackers: ${HostileTargets.Used}"]
+		Logger:Log["${LogPrefix}: Removed deceased ${Entity[${AttackerID}].Name}(${AttackerID}) from attackers list, reported by ${ReporterID} Attackers: ${HostileTargets.Used}"]
 	}
 
 	method Pulse()
 	{
-		if !${EVEBot(exists)} || !${EVEBot.Loaded} || ${EVEBot.Disabled}
+		if !${EVEBot(exists)} || !${EVEBot.Loaded} || ${EVEBot.Disabled} || ${Script.Paused}
 		{
 			return
 		}
@@ -107,11 +131,26 @@ objectdef obj_Defense_Drone inherits obj_BaseClass
 		if !${Ship.InWarp}
 		{
 			; TODO - Defense config
-			if (${HostileTargets.Used} == 0 || !${EVEBotScript.Config.Combat.LaunchCombatDrones}) && ${Ship.Drones.DronesInSpace[FALSE]} > 0
+			if ${Ship.Drones.DronesInSpace[FALSE]} > 0
 			{
-				; In case the user disables it during operation
-				Ship.Drones:ReturnAllToDroneBay["Defense_Drones"]
-				return
+				if !${EVEBotScript.Config.Combat.LaunchCombatDrones}
+				{
+					if ${DroneCommandTimer.Ready}
+					{
+						Ship.Drones:ReturnAllToDroneBay["Defense_Drones", "Launch Combat Drones Disabled"]
+						DroneCommandTimer:Update
+						return
+					}
+				}
+				elseif !${This.isAnyAttackerPresent} && !${Entity[IsTargetingMe = TRUE](exists)}
+				{
+					if ${DroneCommandTimer.Ready}
+					{
+						Ship.Drones:ReturnAllToDroneBay["Defense_Drones", "0/${HostileTargets.Used} attackers in range"]
+						DroneCommandTimer:Update
+						return
+					}
+				}
 			}
 
 			if ${HostileTargets.Used} == 0
@@ -122,15 +161,94 @@ objectdef obj_Defense_Drone inherits obj_BaseClass
 			if ${EVEBotScript.Config.Combat.LaunchCombatDrones}
 			{
 				This:ChooseTarget
-				if ${This.CurrentTarget(exists)}
+				if ${This.CurrentTarget.ID(exists)} && ${This.CurrentTarget.WreckID} == -1
 				{
 					; Will launch drones, or if we've lost some, launch more to get to max drone capability
-					Ship.Drones:LaunchAll["Defense_Drones"]
+					;if ${DroneCommandTimer.Ready}
+					{
+						Ship.Drones:LaunchAll["Defense_Drones"]
+						;DroneCommandTimer:Update
+					}
 				}
 			}
 
 			call Defend
 		}
+	}
+
+	member:bool isKnownHostile(int64 HostileID)
+	{
+		variable iterator hostiletarget
+		HostileTargets:GetIterator[hostiletarget]
+		if ${hostiletarget:First(exists)}
+		{
+			do
+			{
+				if ${Math.Calc64[${hostiletarget.Value.HostileID} == ${HostileID}]}
+				{
+					;Logger:Log["${LogPrefix}:isKnownHostile Found ${hostiletarget.Value.HostileID}=${HostileID}", LOG_DEBUG]
+					return TRUE
+				}
+			}
+			while ${hostiletarget:Next(exists)}
+		}
+		;Logger:Log["${LogPrefix}:isKnownHostile ${HostileID} unknown", LOG_DEBUG]
+		return FALSE
+	}
+
+	member:bool isReporterPresent(int64 ReporterID)
+	{
+		variable iterator hostiletarget
+		HostileTargets:GetIterator[hostiletarget]
+		if ${hostiletarget:First(exists)}
+		{
+			do
+			{
+				if ${Math.Calc64[${hostiletarget.Value.ReporterID} == ${ReporterID}]}
+				{
+					return TRUE
+				}
+			}
+			while ${hostiletarget:Next(exists)}
+		}
+		return FALSE
+	}
+
+	member:int64 isAnyReporterPresent()
+	{
+		variable iterator hostiletarget
+		HostileTargets:GetIterator[hostiletarget]
+		if ${hostiletarget:First(exists)}
+		{
+			do
+			{
+				if ${Entity[${hostiletarget.Value.ReporterID}](exists)} && ${Entity[${hostiletarget.Value.ReporterID}].WreckID} == -1
+				{
+					return ${hostiletarget.Value.ReporterID}
+				}
+			}
+			while ${hostiletarget:Next(exists)}
+		}
+		return 0
+	}
+
+	member:int64 isAnyAttackerPresent()
+	{
+		variable iterator hostiletarget
+		HostileTargets:GetIterator[hostiletarget]
+		if ${hostiletarget:First(exists)}
+		{
+			do
+			{
+				;Logger:Log["${LogPrefix}:isAnyAttackerPresent checking for ${hostiletarget.Value.HostileID}", LOG_DEBUG]
+				if ${Entity[${hostiletarget.Value.HostileID}](exists)} && ${Entity[${hostiletarget.Value.HostileID}].WreckID} == -1
+				{
+					return ${hostiletarget.Value.HostileID}
+				}
+			}
+			while ${hostiletarget:Next(exists)}
+		}
+		return 0
 	}
 
 	;This method is used to trigger an event.  It tells our team-mates we are under attack by an NPC and what it is.
@@ -147,10 +265,10 @@ objectdef obj_Defense_Drone inherits obj_BaseClass
 		{
 			do
 			{
-				if !${HostileTargets.Contains[${CurrentAttacker.Value.ID}]}
+				if !${This.isKnownHostile[${CurrentAttacker.Value.ID}]}
 				{
 					Logger:Log["${LogPrefix}: Alerting team to kill ${CurrentAttacker.Value.Name}(${CurrentAttacker.Value.ID})"]
-					Relay all -event EVEBot_AttackerReport ${CurrentAttacker.Value.ID}
+					relay all "Event[EVEBot_AttackerReport]:Execute[${MyShip.ID}, ${CurrentAttacker.Value.ID}]"
 				}
 			}
 			while ${CurrentAttacker:Next(exists)}
@@ -161,7 +279,7 @@ objectdef obj_Defense_Drone inherits obj_BaseClass
 	;	*	Don't use up our targets, we need those for mining - Only one target should ever be used for a rat.
 	function Defend()
 	{
-		if !${This.CurrentTarget(exists)}
+		if !${This.CurrentTarget.ID(exists)}
 		{
 			return
 		}
@@ -170,13 +288,11 @@ objectdef obj_Defense_Drone inherits obj_BaseClass
 			; Wait longer
 			return
 		}
-
-		if !${DroneCommandTimer.Ready}
+		if ${Navigator.Busy}
 		{
 			return
 		}
-
-		if ${Navigator.Busy}
+		if !${DroneCommandTimer.Ready}
 		{
 			return
 		}
@@ -184,7 +300,8 @@ objectdef obj_Defense_Drone inherits obj_BaseClass
 		variable index:activedrone ActiveDroneList
 
 		Me:GetActiveDrones[ActiveDroneList]
-		ActiveDroneList:RemoveByQuery[${LSQueryCache[State != 0]}]
+		;ActiveDroneList:ForEach["Logger:Log[Drone: \${ForEach.Value.ID} \${ForEach.Value.State} \${ForEach.Value.Target}]"]
+		ActiveDroneList:RemoveByQuery[${LSQueryCache[State != ENTITY_STATE_IDLE]}]
 		;Logger:Log["${LogPrefix}: Found ${ActiveDroneList.Used} drones in state 0", LOG_DEBUG]
 		ActiveDroneList:Collapse
 
@@ -192,22 +309,23 @@ objectdef obj_Defense_Drone inherits obj_BaseClass
 		{
 			; TODO - we need to control access to the active target so we don't fight over it
 			This.CurrentTarget:MakeActiveTarget
-			wait 50 ${Me.ActiveTarget.ID} == ${This.CurrentTarget.ID}
+			wait 50 ${Math.Calc64[${Me.ActiveTarget.ID} == ${This.CurrentTarget.ID}]}
 
-			Logger:Log["${LogPrefix}: Sending ${ActiveDroneList.Used} drones to attack ${This.CurrentTarget.Name}"]
+			Logger:Log["${LogPrefix}: Sending ${ActiveDroneList.Used} idle drones to attack ${This.CurrentTarget.Name}(${This.CurrentTarget.ID})"]
 			EVE:DronesEngageMyTarget[ActiveDroneList]
+			Ship:Activate_Weapons[${This.CurrentTarget.ID}]
 			DroneCommandTimer:Update
 		}
 	}
 
 	method ChooseTarget()
 	{
-		if ${HostileTargets.Used} == 0
+		if !${This.isAnyAttackerPresent}
 		{
 			return
 		}
-
-		if ${This.CurrentTarget(exists)}
+; TODO - why would ${This.CurrentTarget(exists)} return true, but ${This.CurrentTarget} return null
+		if ${This.CurrentTarget.ID(exists)}
 		{
 			if ${This.CurrentTarget.IsLockedTarget} || ${This.CurrentTarget.BeingTargeted}
 			{
@@ -230,17 +348,26 @@ objectdef obj_Defense_Drone inherits obj_BaseClass
 		if ${CurrentHostile:First(exists)}
 		do
 		{
-			if !${Entity[${CurrentHostile.Value}](exists)}
+			if !${Entity[${CurrentHostile.Value.HostileID}](exists)}
 			{
-				;HostileTargets:Remove[${CurrentHostile.Value}]
+				;HostileTargets:Remove[${CurrentHostile.Value.HostileID}]
 				;CurrentHostile:First
 				continue
 			}
-			if ${Entity[${CurrentHostile.Value}].Distance} < ${Ship.OptimalTargetingRange} && \
-				${Entity[${CurrentHostile.Value}].Distance} < ${Me.DroneControlDistance}
+
+			if ${Entity[${CurrentHostile.Value.HostileID}].GroupID} == GROUPID_WRECK
+			{
+				Logger:Log["${LogPrefix}: Removing deceased attacker ${CurrentHostile.Value.HostileID}:${Entity[${CurrentHostile.Value.HostileID}].Name}"]
+				HostileTargets:Remove[${CurrentHostile.Value.HostileID}]
+				CurrentHostile:First
+				relay all "Event[EVEBot_AttackerDeceased]:Execute[${MyShip.ID}, ${CurrentHostile.Value.HostileID}]"
+				continue
+			}
+			if ${Entity[${CurrentHostile.Value.HostileID}].Distance} < ${Ship.OptimalTargetingRange} && \
+				${Entity[${CurrentHostile.Value.HostileID}].Distance} < ${Me.DroneControlDistance}
 				{
-					Entity[${CurrentHostile.Value}]:LockTarget
-					This.CurrentTarget:Set[${CurrentHostile.Value}]
+					Entity[${CurrentHostile.Value.HostileID}]:LockTarget
+					This.CurrentTarget:Set[${CurrentHostile.Value.HostileID}]
 					Logger:Log["${LogPrefix}: Targeting ${This.CurrentTarget.ID}:${This.CurrentTarget.Name}"]
 					break
 				}
