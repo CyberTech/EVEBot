@@ -23,7 +23,7 @@ objectdef obj_Destination
 
 	variable string Name
 
-	method Initialize(_Type = 0, int64 _Distance = 0, int64 _EntityID = 0, int64 _SolarSystemID = 0, int64 _FleetMemberID = 0, int64 _Bookmark = 0, bool _InteractWithDest = FALSE)
+	method Initialize(int _Type = 0, int64 _Distance = 0, int64 _EntityID = 0, int64 _SolarSystemID = 0, int64 _FleetMemberID = 0, int64 _Bookmark = 0, bool _InteractWithDest = FALSE)
 	{
 		DestinationType:Set[${_Type}]
 		Distance:Set[${_Distance}]
@@ -178,7 +178,7 @@ objectdef obj_Navigator inherits obj_BaseClass
 
 	method Pulse()
 	{
-		if !${EVEBot(exists)} || !${EVEBot.Loaded} || ${EVEBot.Disabled}
+		if !${EVEBot(exists)} || !${EVEBot.Loaded} || ${EVEBot.Disabled} || ${Script.Paused}
 		{
 			return
 		}
