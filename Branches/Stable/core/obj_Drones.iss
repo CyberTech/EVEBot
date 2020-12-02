@@ -65,7 +65,7 @@ objectdef obj_Drones inherits obj_BaseClass
 						{
 							This.WaitingForDrones:Set[0]
 							This.DronesReady:Set[TRUE]
-							Logger:Log["${This.LaunchedDrones} drones deployed"]
+							Logger:Log["${LogPrefix}: Deployed ${This.LaunchedDrones} drones"]
 						}
 
 					}
@@ -78,14 +78,14 @@ objectdef obj_Drones inherits obj_BaseClass
 
 	method LaunchAll(string Caller)
 	{
-		if ${This.WaitingForDrones}
+		if ${This.WaitingForDrones} || !${This.DroneReturnTimer.Ready}
 		{
 			return
 		}
 
 		if ${This.DronesInBay} > 0 && !${This.AreMaxDronesActive}
 		{
-			Logger:Log["${Caller}: Launching drones..."]
+			Logger:Log["${Caller}: Launching drones - Bay: ${This.DronesInBay}, Active: ${This.DronesInSpace}, Possible: ${Me.MaxActiveDrones}"]
 			MyShip:LaunchAllDrones
 			This.WaitingForDrones:Set[5]
 		}
@@ -103,9 +103,11 @@ objectdef obj_Drones inherits obj_BaseClass
 
 	member:int DronesInBay()
 	{
+		variable int count
 		variable index:item DroneList
 		MyShip:GetDrones[DroneList]
-		return ${DroneList.Used}
+		DroneList:ForEach["count:Inc[\${ForEach.Value.Quantity}]"]
+		return ${count}
 	}
 
 	member:int DronesInSpace(bool IncludeFighters=TRUE)
