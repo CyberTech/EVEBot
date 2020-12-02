@@ -60,11 +60,46 @@ variable int VersionNum = 0
 #define WAIT_UNDOCK 130
 
 ; DSTBALL_ values from client
-#define ENTITY_MODE_GOTO = 0
-#define ENTITY_MODE_FOLLOW = 1
-#define ENTITY_MODE_STOP = 2
-#define ENTITY_MODE_WARP = 3
-#define ENTITY_MODE_ORBIT = 4
+#define ENTITY_MODE_GOTO				0			/* Also used for AlignTo */
+#define ENTITY_MODE_FOLLOW			1
+#define ENTITY_MODE_STOP				2
+#define ENTITY_MODE_WARP				3
+#define ENTITY_MODE_ORBIT				4
+#define ENTITY_MODE_MISSILE			5
+#define ENTITY_MODE_MUSHROOM 		6			/* Expanding gravity wall */
+#define ENTITY_MODE_BOID				7			/* Swarm like behavior */
+#define ENTITY_MODE_TROLL				8			/* used for ejected cans. Free ball that will become fixed after a while. */
+#define ENTITY_MODE_MINIBALL		9
+#define ENTITY_MODE_FIELD				10		/* Force field ball */
+#define ENTITY_MODE_RIGID				11		/* A ball that will never move, stations, etc.. Wrecks seem to also fall here. */
+#define ENTITY_MODE_FORMATION		12
+
+#define ENTITY_STATE_OFFLINING						-7
+#define ENTITY_STATE_ANCHORING						-6
+#define ENTITY_STATE_ONLINING							-5
+#define ENTITY_STATE_ANCHORED							-4
+#define ENTITY_STATE_UNANCHORING					-3
+#define ENTITY_STATE_UNANCHORED						-2
+#define ENTITY_STATE_INCAPACITATED				-1
+#define ENTITY_STATE_IDLE									0
+#define ENTITY_STATE_COMBAT								1
+#define ENTITY_STATE_MINING								2
+#define ENTITY_STATE_APPROACHING					3
+#define ENTITY_STATE_DEPARTING						4
+#define ENTITY_STATE_DEPARTING2						5
+#define ENTITY_STATE_PURSUIT							6
+#define ENTITY_STATE_FLEEING							7
+#define ENTITY_STATE_REINFORCED						8
+#define ENTITY_STATE_OPERATING						9
+#define ENTITY_STATE_ENGAGE								10		/* For Drones, this means Repairing */
+#define ENTITY_STATE_VULNERABLE						11
+#define ENTITY_STATE_SHIELD_REINFORCE			12
+#define ENTITY_STATE_ARMOR_REINFORCE			13
+#define ENTITY_STATE_INVULNERABLE					14
+#define ENTITY_STATE_WARPAWAYANDDIE				15
+#define ENTITY_STATE_WARPAWAYANDCOMEBACK	16
+#define ENTITY_STATE_WARPTOPOSITION				17
+#define ENTITY_STATE_SALVAGING						18
 
 #define INVALID_DISTANCE 9223372036854775807
 /* If the miner's cargo hold doesn't increase during
