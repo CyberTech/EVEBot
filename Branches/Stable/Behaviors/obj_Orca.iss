@@ -294,7 +294,7 @@ objectdef obj_Orca
 				{
 					break
 				}
-				Ship.Drones:ReturnAllToDroneBay["Orca.Hardstop"]
+				Ship.Drones:ReturnAllToDroneBay["Orca", "Hardstop"]
 				if ${EVE.Bookmark[${This.PanicLocation}](exists)} && ${EVE.Bookmark[${This.PanicLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
 					if ${EVE.Bookmark[${This.PanicLocation}](exists)} && ${EVE.Bookmark[${This.PanicLocation}].TypeID} != 5
@@ -357,7 +357,7 @@ objectdef obj_Orca
 				{
 					break
 				}
-				Ship.Drones:ReturnAllToDroneBay["Orca.Flee"]
+				Ship.Drones:ReturnAllToDroneBay["Orca", "Flee"]
 				if ${EVE.Bookmark[${This.DeliveryLocation}](exists)} && ${EVE.Bookmark[${This.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
 					if ${Config.Miner.BookMarkLastPosition} && !${Bookmarks.CheckForStoredLocation}

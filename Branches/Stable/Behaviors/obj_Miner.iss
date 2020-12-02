@@ -350,7 +350,7 @@ objectdef obj_Miner
 				{
 					break
 				}
-				Ship.Drones:ReturnAllToDroneBay["Miner.Hardstop"]
+				Ship.Drones:ReturnAllToDroneBay["Miner", "HardStop"]
 				if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
 					if ${EVE.Bookmark[${Config.Miner.PanicLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.PanicLocation}].TypeID} != 5
@@ -412,7 +412,7 @@ objectdef obj_Miner
 				{
 					break
 				}
-				Ship.Drones:ReturnAllToDroneBay["Miner.Flee"]
+				Ship.Drones:ReturnAllToDroneBay["Miner", "Flee"]
 				if ${EVE.Bookmark[${Config.Miner.DeliveryLocation}](exists)} && ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].SolarSystemID} == ${Me.SolarSystemID}
 				{
 					if ${Config.Miner.BookMarkLastPosition} && !${Bookmarks.CheckForStoredLocation}

@@ -257,7 +257,7 @@ objectdef obj_Combat
 		; Activate the weapons, the modules class checks if there's a target (no it doesn't - ct)
 		Ship:Activate_TargetPainters
 		Ship:Activate_StasisWebs
-		Ship:Activate_Weapons
+		Ship:Activate_Weapons[${Me.ActiveTarget.ID}]
 		if ${Me.TargetCount} > 0
 		{
 			Ship.Drones:SendDrones
@@ -274,7 +274,7 @@ objectdef obj_Combat
 		}
 		This.Fled:Set[TRUE]
 		Logger:Log["Recalling all drones"]
-		Ship.Drones:ReturnAllToDroneBay["Combat.Flee"]
+		Ship.Drones:ReturnAllToDroneBay["Combat", "Flee"]
 
 		if ${Config.Combat.RunToStation}
 		{

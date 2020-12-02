@@ -176,16 +176,16 @@ objectdef obj_Drones inherits obj_BaseClass
 	}
 
 
-	method ReturnAllToDroneBay(string Caller)
+	method ReturnAllToDroneBay(string Caller, string Reason)
 	{
 		if !${DroneReturnTimer.Ready}
 		{
-			Logger:Log["${LogPrefix} ReturnAllToDroneBay called too soon by ${Caller}", LOG_DEBUG]
+			;Logger:Log["${LogPrefix} ReturnAllToDroneBay called too often: ${Caller} - ${Reason}", LOG_DEBUG]
 			return
 		}
 		if ${This.DronesInSpace[FALSE]} > 0
 		{
-			Logger:Log["${Caller}: Recalling ${This.ActiveDroneIDList.Used} Drones"]
+			Logger:Log["${Caller}: Recalling ${This.ActiveDroneIDList.Used} Drones - ${Reason}"]
 			This.ActiveDroneIDList:RemoveByQuery[${LavishScript.CreateQuery[GroupID = GROUP_FIGHTERDRONE]}]
 			EVE:DronesReturnToDroneBay[This.ActiveDroneIDList]
 			DroneReturnTimer:Update
