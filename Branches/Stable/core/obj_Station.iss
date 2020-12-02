@@ -167,6 +167,7 @@ objectdef obj_Station
 			return
 		}
 
+		Inventory:Close
 		Logger:Log["Undocking from ${Me.Station.Name}"]
 		Config.Common:SetHomeStation[${Me.Station.Name}]
 		Logger:Log["Undock: Home Station set to ${Config.Common.HomeStation}"]
