@@ -242,21 +242,11 @@ objectdef obj_Ship
 
 	member:float CargoMinimumFreeSpace()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		return ${Math.Calc[${MyShip.CargoCapacity}*0.02]}
 	}
 
 	member:float CargoFreeSpace()
 	{
-		if !${MyShip(exists)}
-		{
-			return 0
-		}
-
 		if ${MyShip.UsedCargoCapacity} < 0
 		{
 			return ${MyShip.CargoCapacity}
@@ -284,50 +274,26 @@ objectdef obj_Ship
 
 	member:float OreHoldMinimumFreeSpace()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
 		return ${Math.Calc[${This.OreHoldCapacity} * 0.02]}
 	}
 
 	member:float OreHoldFreeSpace()
 	{
-		if !${MyShip(exists)}
-		{
-			return 0
-		}
-
 		return ${Math.Calc[${This.OreHoldCapacity} - ${This.OreHoldUsedCapacity}]}
 	}
 
 	member:float OreHoldCapacity()
 	{
-		if !${MyShip(exists)}
-		{
-			return 0
-		}
-
 		return ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipOreHold].Capacity}
 	}
 
 	member:float OreHoldUsedCapacity()
 	{
-		if !${MyShip(exists)}
-		{
-			return 0
-		}
-
 		return ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipOreHold].UsedCapacity}
 	}
 
 	member:bool OreHoldFull()
 	{
-		if !${MyShip(exists)}
-		{
-			return FALSE
-		}
-
 		if ${Inventory.ShipOreHold.UsedCapacity} < 0
 		{
 			return FALSE
@@ -342,11 +308,6 @@ objectdef obj_Ship
 
 	member:bool OreHoldHalfFull()
 	{
-		if !${MyShip(exists)}
-		{
-			return FALSE
-		}
-
 		if ${Inventory.ShipOreHold.UsedCapacity} < 0
 		{
 			return FALSE
@@ -361,32 +322,17 @@ objectdef obj_Ship
 
 	member:float CorpHangarMinimumFreeSpace()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		return ${Math.Calc[${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipFleetHangar].Capacity} * 0.02]}
 	}
 
 	member:float CorpHangarFreeSpace()
 	{
-		if !${MyShip(exists)}
-		{
-			return 0
-		}
-
 		return ${Math.Calc[${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipFleetHangar].Capacity} - ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipFleetHangar].UsedCapacity}]}
 	}
 
 ; TODO - Reported broken - 2020-11-02
 	member:float CorpHangarUsedSpace(bool IgnoreCrystals=FALSE)
 	{
-		if !${MyShip(exists)}
-		{
-			return 0
-		}
-
 		variable index:item HangarCargo
 		variable iterator CargoIterator
 		variable float Volume=0
@@ -405,11 +351,6 @@ objectdef obj_Ship
 
 	member:bool CorpHangarFull()
 	{
-		if !${MyShip(exists)}
-		{
-			return FALSE
-		}
-
 		if ${This.CorpHangarFreeSpace} <= ${This.CorpHangarMinimumFreeSpace}
 		{
 			return TRUE
@@ -419,11 +360,6 @@ objectdef obj_Ship
 
 	member:bool CorpHangarHalfFull()
 	{
-		if !${MyShip(exists)}
-		{
-			return FALSE
-		}
-
 		if ${This.CorpHangarFreeSpace} <= ${Math.Calc[${This.CorpHangarMinimumFreeSpace}*0.50]}
 		{
 			return TRUE
@@ -433,11 +369,6 @@ objectdef obj_Ship
 
 	member:bool CorpHangarEmpty()
 	{
-		if !${MyShip(exists)}
-		{
-			return FALSE
-		}
-
 		This:OpenCorpHangars
 
 		if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipFleetHangar].UsedCapacity} == 0
@@ -457,11 +388,6 @@ objectdef obj_Ship
 
 	member:bool CargoFull()
 	{
-		if !${MyShip(exists)}
-		{
-			return FALSE
-		}
-
 		if ${Inventory.ShipCargo.UsedCapacity} < 0
 		{
 			return FALSE
@@ -476,11 +402,6 @@ objectdef obj_Ship
 
 	member:bool CargoHalfFull()
 	{
-		if !${MyShip(exists)}
-		{
-			return FALSE
-		}
-
 		if ${Inventory.ShipCargo.UsedCapacity} < 0
 		{
 			return FALSE
@@ -495,11 +416,6 @@ objectdef obj_Ship
 
 	member:float CargoNoCrystals()
 	{
-		if !${MyShip(exists)}
-		{
-			return 0
-		}
-
 		variable index:item HangarCargo
 		variable iterator CargoIterator
 		variable float Volume=0
@@ -517,11 +433,6 @@ objectdef obj_Ship
 
 	member:bool CargoTenthFull()
 	{
-		if !${MyShip(exists)}
-		{
-			return FALSE
-		}
-
 		if ${Inventory.ShipCargo.UsedCapacity} < 0
 		{
 			return FALSE
@@ -958,11 +869,6 @@ objectdef obj_Ship
 
 	member:int TotalActivatedMiningLasers()
 	{
-		if !${MyShip(exists)}
-		{
-			return 0
-		}
-
 		variable int count
 		variable iterator ModuleIter
 
@@ -983,11 +889,6 @@ objectdef obj_Ship
 	}
 	member:int TotalActivatedTractorBeams()
 	{
-		if !${MyShip(exists)}
-		{
-			return 0
-		}
-
 		variable int count
 		variable iterator ModuleIter
 
@@ -1007,11 +908,6 @@ objectdef obj_Ship
 	}
 	member:int TotalActivatedShieldTransporters()
 	{
-		if !${MyShip(exists)}
-		{
-			return 0
-		}
-
 		variable int count
 		variable iterator ModuleIter
 
@@ -1031,11 +927,6 @@ objectdef obj_Ship
 	}
 	member:int TotalActivatedSalvagers()
 	{
-		if !${MyShip(exists)}
-		{
-			return 0
-		}
-
 		variable int count
 		variable iterator ModuleIter
 
@@ -1058,11 +949,6 @@ objectdef obj_Ship
 	; It should perhaps be changed to return the largest, or the smallest, or an average.
 	member:float MiningAmountPerLaser()
 	{
-		if !${MyShip(exists)}
-		{
-			return 0
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_MiningLaser:GetIterator[ModuleIter]
@@ -1084,11 +970,6 @@ objectdef obj_Ship
 	; Returns the laser mining range minus 10%
 	member:int OptimalMiningRange(float Padding=0.95)
 	{
-		if !${MyShip(exists)}
-		{
-			return 0
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_MiningLaser:GetIterator[ModuleIter]
@@ -1103,11 +984,6 @@ objectdef obj_Ship
 	; Returns the shield transporter range minus 10%
 	member:int OptimalShieldTransporterRange(float Padding=0.95)
 	{
-		if !${MyShip(exists)}
-		{
-			return 0
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_ShieldTransporters:GetIterator[ModuleIter]
@@ -1122,11 +998,6 @@ objectdef obj_Ship
 	; Returns the loaded crystal in a mining laser, given the slot name ("HiSlot0"...)
 	member:string LoadedMiningLaserCrystal(string SlotName, bool fullName = FALSE)
 	{
-		if !${MyShip(exists)}
-		{
-			return "NOCHARGE"
-		}
-
 		if ${MyShip.Module[${SlotName}].Charge(exists)}
 		{
 			if ${fullName}
@@ -1165,11 +1036,6 @@ objectdef obj_Ship
 	; Returns TRUE if we've got a laser mining this entity already
 	member:bool IsMiningAsteroidID(int64 EntityID)
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_MiningLaser:GetIterator[ModuleIter]
@@ -1191,11 +1057,6 @@ objectdef obj_Ship
 	; Returns TRUE if we've got a shield transporter healing this entity already
 	member:bool IsShieldTransportingID(int64 EntityID)
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_ShieldTransporters:GetIterator[ModuleIter]
@@ -1216,11 +1077,6 @@ objectdef obj_Ship
 	; Returns how many shield transporters healing this entity already
 	member:int ShieldTransportersOnID(int64 EntityID)
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 		variable int val=0
 
@@ -1242,11 +1098,6 @@ objectdef obj_Ship
 
 	member:bool IsTractoringWreckID(int64 EntityID)
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_TractorBeams:GetIterator[ModuleIter]
@@ -1267,11 +1118,6 @@ objectdef obj_Ship
 
 	member:bool IsSalvagingWreckID(int64 EntityID)
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_Salvagers:GetIterator[ModuleIter]
@@ -1313,11 +1159,6 @@ objectdef obj_Ship
 
 	method CalculateMaxLockedTargets()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		if ${Me.MaxLockedTargets} < ${MyShip.MaxLockedTargets}
 		{
 			Calculated_MaxLockedTargets:Set[${Me.MaxLockedTargets}]
@@ -1375,11 +1216,6 @@ objectdef obj_Ship
 	; TODO - Add mid and low targetable modules, and high hostile modules, as well as just mining.
 	method ValidateModuleTargets()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_MiningLaser:GetIterator[ModuleIter]
@@ -1447,11 +1283,6 @@ objectdef obj_Ship
 
 	method DeactivateAllMiningLasers()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_MiningLaser:GetIterator[ModuleIter]
@@ -1476,11 +1307,6 @@ objectdef obj_Ship
 
 	method Deactivate_Mining_Laser(int64 id)
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_MiningLaser:GetIterator[ModuleIter]
@@ -1500,11 +1326,6 @@ objectdef obj_Ship
 	function ActivateFreeMiningLaser(int64 id=-1)
 	{
 		variable string Slot
-
-		if !${MyShip(exists)}
-		{
-			return
-		}
 
 		if ${id.Equal[-1]}
 		{
@@ -1591,10 +1412,6 @@ objectdef obj_Ship
 	{
 		variable string Slot
 
-		if !${MyShip(exists)}
-		{
-			return
-		}
 		if ${id.Equal[-1]}
 		{
 			id:Set[${Me.ActiveTarget.ID}]
@@ -1629,10 +1446,6 @@ objectdef obj_Ship
 	{
 		variable string Slot
 
-		if !${MyShip(exists)}
-		{
-			return
-		}
 		if ${id.Equal[-1]}
 		{
 			id:Set[${Me.ActiveTarget.ID}]
@@ -1666,12 +1479,6 @@ objectdef obj_Ship
 	function ActivateFreeSalvager()
 	{
 		variable string Slot
-
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_Salvagers:GetIterator[ModuleIter]
@@ -2189,11 +1996,6 @@ objectdef obj_Ship
 
 	method Activate_SurveyScanner()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		if ${Time.Timestamp} < ${SurveyScanWaitTime.Timestamp}
 		{
 			return
@@ -2218,11 +2020,6 @@ objectdef obj_Ship
 
 	method Activate_AfterBurner()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_AB_MWD:GetIterator[ModuleIter]
@@ -2243,11 +2040,6 @@ objectdef obj_Ship
 
 	method Activate_Armor_Reps()
 	{
-		if !${MyShip(exists) || }
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_Repair_Armor:GetIterator[ModuleIter]
@@ -2266,11 +2058,6 @@ objectdef obj_Ship
 
 	method Deactivate_Armor_Reps()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_Repair_Armor:GetIterator[ModuleIter]
@@ -2286,11 +2073,6 @@ objectdef obj_Ship
 
 	function Deactivate_Shield_Transporter(int64 id)
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_ShieldTransporters:GetIterator[ModuleIter]
@@ -2308,11 +2090,6 @@ objectdef obj_Ship
 
 	method Deactivate_AfterBurner()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_AB_MWD:GetIterator[ModuleIter]
@@ -2328,11 +2105,6 @@ objectdef obj_Ship
 
 	method Activate_Shield_Booster()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_Regen_Shield:GetIterator[ModuleIter]
@@ -2350,11 +2122,6 @@ objectdef obj_Ship
 
 	method Deactivate_Shield_Booster()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_Regen_Shield:GetIterator[ModuleIter]
@@ -2372,11 +2139,6 @@ objectdef obj_Ship
 
 	method Activate_Gang_Links()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_GangLinks:GetIterator[ModuleIter]
@@ -2394,11 +2156,6 @@ objectdef obj_Ship
 
 	method Deactivate_Gang_Links()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_GangLinks:GetIterator[ModuleIter]
@@ -2416,11 +2173,6 @@ objectdef obj_Ship
 
 	method Activate_ECM_Burst()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_ECM_Burst:GetIterator[ModuleIter]
@@ -2438,11 +2190,6 @@ objectdef obj_Ship
 
 	method Deactivate_ECM_Burst()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_ECM_Burst:GetIterator[ModuleIter]
@@ -2460,11 +2207,6 @@ objectdef obj_Ship
 
 	method Activate_ECCM()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_ECCM:GetIterator[ModuleIter]
@@ -2482,11 +2224,6 @@ objectdef obj_Ship
 
 	method Deactivate_ECCM()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_ECCM:GetIterator[ModuleIter]
@@ -2504,11 +2241,6 @@ objectdef obj_Ship
 
 	method Activate_Tracking_Computer()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_TrackingComputer:GetIterator[ModuleIter]
@@ -2526,11 +2258,6 @@ objectdef obj_Ship
 
 	method Deactivate_Tracking_Computer()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_Tracking_Computer:GetIterator[ModuleIter]
@@ -2548,11 +2275,6 @@ objectdef obj_Ship
 
 	method Activate_Hardeners()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_ActiveResists:GetIterator[ModuleIter]
@@ -2570,11 +2292,6 @@ objectdef obj_Ship
 
 	method Deactivate_Hardeners()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_ActiveResists:GetIterator[ModuleIter]
@@ -2592,12 +2309,6 @@ objectdef obj_Ship
 
 	method Activate_SensorBoost()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
-
 		variable iterator ModuleIter
 
 		This.ModuleList_SensorBoost:GetIterator[ModuleIter]
@@ -2615,11 +2326,6 @@ objectdef obj_Ship
 
 	method Deactivate_SensorBoost()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_SensorBoost:GetIterator[ModuleIter]
@@ -2637,12 +2343,6 @@ objectdef obj_Ship
 
 	method Activate_StasisWebs()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
-
 		variable iterator ModuleIter
 
 		This.ModuleList_StasisWeb:GetIterator[ModuleIter]
@@ -2663,11 +2363,6 @@ objectdef obj_Ship
 
 	method Deactivate_StasisWebs()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_StasisWeb:GetIterator[ModuleIter]
@@ -2685,12 +2380,6 @@ objectdef obj_Ship
 
 	method Activate_TargetPainters()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
-
 		variable iterator ModuleIter
 
 		This.ModuleList_TargetPainter:GetIterator[ModuleIter]
@@ -2718,11 +2407,6 @@ objectdef obj_Ship
 
 	method Deactivate_TargetPainters()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_TargetPainter:GetIterator[ModuleIter]
@@ -2740,11 +2424,6 @@ objectdef obj_Ship
 
 	method Activate_Cloak()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 		variable iterator Salvagers
 
@@ -2783,11 +2462,6 @@ objectdef obj_Ship
 
 	method Deactivate_Cloak()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_Cloaks:GetIterator[ModuleIter]
@@ -2807,11 +2481,6 @@ objectdef obj_Ship
 	{
 		;TODO
 		return
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_Cloaks:GetIterator[ModuleIter]
@@ -2829,11 +2498,6 @@ objectdef obj_Ship
 
 	method Online_Salvager()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_Salvagers:GetIterator[ModuleIter]
@@ -2872,11 +2536,6 @@ objectdef obj_Ship
 	; Returns the salvager range minus 10%
 	member:int OptimalSalvageRange()
 	{
-		if !${MyShip(exists)}
-		{
-			return 0
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_Salvagers:GetIterator[ModuleIter]
@@ -2891,11 +2550,6 @@ objectdef obj_Ship
 	; Returns the tractor range minus 10%
 	member:int OptimalTractorRange()
 	{
-		if !${MyShip(exists)}
-		{
-			return 0
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_TractorBeams:GetIterator[ModuleIter]
@@ -2916,11 +2570,6 @@ objectdef obj_Ship
 	member:bool IsPod()
 	{
 		variable int GroupID = 0
-
-		if (!${MyShip(exists)})
-		{
-			return FALSE
-		}
 
 		if ${Me.InSpace} && !${Me.InStation}
 		{
@@ -2979,11 +2628,6 @@ objectdef obj_Ship
 
 	method Activate_Tractor()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_TractorBeams:GetIterator[ModuleIter]
@@ -3002,11 +2646,6 @@ objectdef obj_Ship
 
 	method Deactivate_Tractor()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_TractorBeams:GetIterator[ModuleIter]
@@ -3026,10 +2665,6 @@ objectdef obj_Ship
 	{
 		variable int OrbitDistance = 5000
 
-		if !${MyShip(exists)}
-		{
-			return
-		}
 		if ${This.ReloadingWeapons}
 		{
 			return
@@ -3063,10 +2698,6 @@ objectdef obj_Ship
 	{
 		variable int KeepAtRangeDistance = 5000
 
-		if !${MyShip(exists)}
-		{
-			return
-		}
 		if ${This.ReloadingWeapons}
 		{
 			return
@@ -3098,10 +2729,6 @@ objectdef obj_Ship
 
 	method Activate_Weapons(int64 TargetID)
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
 		if ${This.ReloadingWeapons}
 			return
 
@@ -3130,11 +2757,6 @@ objectdef obj_Ship
 
 	method Deactivate_Weapons()
 	{
-		if !${MyShip(exists)}
-		{
-			return
-		}
-
 		variable iterator ModuleIter
 
 		This.ModuleList_Weapon:GetIterator[ModuleIter]
@@ -3156,7 +2778,7 @@ objectdef obj_Ship
 		variable bool NeedReload = FALSE
 		variable int CurrentCharges = 0
 
-		if !${MyShip(exists) || ${This.ReloadingWeapons}}
+		if ${This.ReloadingWeapons}}
 		{
 			return
 		}
