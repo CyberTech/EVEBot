@@ -127,6 +127,7 @@ objectdef obj_Navigator inherits obj_BaseClass
 	variable index:obj_Destination Destinations
 
 	variable time StateChanged
+	variable obj_PulseTimer DelayTimer
 
 	; Any new destination actions need to be copied to obj_Destination:Initialize and obj_Destination:ToString
 	variable int DEST_ENTITY = 1
@@ -163,6 +164,7 @@ objectdef obj_Navigator inherits obj_BaseClass
 		LogPrefix:Set["${This.ObjectName}"]
 
 		This.PulseTimer:SetIntervals[0.1,0.5]
+		This.DelayTimer:SetIntervals[2.0,4.0]
 		Event[ISXEVE_onFrame]:AttachAtom[This:Pulse]
 		Logger:Log["Thread: ${LogPrefix}: Initialized", LOG_MINOR]
 	}
@@ -1185,18 +1187,36 @@ TODO - integrate in most of the flyto*
 	{
 		if ${Me.InStation}
 		{
-					Logger:Log["Docking: ${Station.DockedAtStation[${This.Destinations[1].EntityID}]} ${This.CurrentState} == ${STATE_WAITING} && ${This.DelayTimer.Ready}"]
+			Logger:Log["Docking: ${Station.DockedAtStation[${This.Destinations[1].EntityID}]} ${This.CurrentState} == ${STATE_WAITING} && ${This.DelayTimer.Ready}"]
 			if ${This.Destinations[1].EntityID} != ${Me.StationID}
 			{
 				Logger:Log["${LogPrefix} - Navigate_Dock: We're in station ${Me.StationID}, but expected ${This.Destinations[1].EntityID}", LOG_WARNING]
+				This:SetState[_LINE_, 0]
+				This:CompleteCurrent
+				return
 			}
-			This:SetState[${STATE_DOCKED}]
-			This:CompleteCurrent
+			elseif ${Station.DockedAtStation[${This.Destinations[1].EntityID}]}
+			{
+				if ${This.CurrentState} == ${STATE_DOCKING}
+				{
+					This.DelayTimer:Update[]
+					This:SetState[_LINE_, ${STATE_WAITING}]
+					Logger:Log["${LogPrefix} - Navigate_Dock: Docked, delaying for session change", LOG_DEBUG]
+					return
+				}
+				elseif ${This.CurrentState} == ${STATE_WAITING} && ${This.DelayTimer.Ready}
+				{
+					Logger:Log["${LogPrefix} - Navigate_Dock: Completed docking @ ${EVE.GetLocationNameByID[${This.Destinations[1].EntityID}]}", LOG_DEBUG]
+					This:SetState[_LINE_, ${STATE_DOCKED}]
+					This:CompleteCurrent
+					return
+				}
+			}
 			return
 		}
 
 		; We haven't initiated the dock yet
-		if ${This.CurrentState} != ${STATE_DOCKING}
+		if ${This.CurrentState} != ${STATE_DOCKING} && ${This.CurrentState} != ${STATE_DOCKED}
 		{
 			if !${Entity[${This.Destinations[1].EntityID}](exists)}
 			{
@@ -1225,17 +1245,9 @@ TODO - integrate in most of the flyto*
 
 			EVEBotScript.Inventory:Close
 			Logger:Log["${LogPrefix} - Navigate_Dock: Docking @ ${EVE.GetLocationNameByID[${This.Destinations[1].EntityID}]}"]
-			This:SetState[${STATE_DOCKING}]
 			Entity[${This.Destinations[1].EntityID}]:Dock
 		}
-
-		if ${Station.DockedAtStation[${This.Destinations[1].EntityID}]}
-		{
-			Logger:Log["${LogPrefix} - Navigate_Dock: Completed docking @ ${EVE.GetLocationNameByID[${This.Destinations[1].EntityID}]}", LOG_DEBUG]
-			This:SetState[${STATE_DOCKED}]
-			This:CompleteCurrent
-			return
-		}
+		This:SetState[_LINE_, ${STATE_DOCKING}]
 	}
 
 	method Navigate_Undock()
