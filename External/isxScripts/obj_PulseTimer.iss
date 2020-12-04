@@ -22,6 +22,10 @@
 				This.PulseTimer:Update[FALSE]
 			}
 
+	Variables:
+		bool Restarted
+			True if the timer has been restarted since it was last Ready()
+				Set TRUE by Update(..) and FALSE by Ready(), if Read() is true
 	Members:
 		bool Ready()
 			Returns true if the timer is expired/ready
@@ -47,6 +51,7 @@ objectdef obj_PulseTimer
 	variable int Version
 	variable string LogPrefix
 	variable int ExpireTime
+	variable bool Restarted
 
 	variable int MinPulseInterval = 2000
 	variable int MaxPulseInterval = 8000
@@ -78,11 +83,12 @@ objectdef obj_PulseTimer
 		This:Extend[${DelaySeconds}]
 	}
 
-	; Increase the timer period one time
+	; Set a custom explicit timer period one time
 	method Extend(float DelaySeconds=0.0)
 	{
 		This.ExpireTime:Set[${Script.RunningTime}]
 		This.ExpireTime:Inc[${Math.Calc[${DelaySeconds} * 1000]}]
+		This.Restarted:Set[TRUE]
 	}
 
 	; Update (restart) the timer using its current interval settings
@@ -102,6 +108,7 @@ objectdef obj_PulseTimer
 		{
 			This.ExpireTime:Inc[${This.MinPulseInterval}]
 		}
+		This.Restarted:Set[TRUE]
 	}
 
 	; Expire the timer
@@ -116,6 +123,7 @@ objectdef obj_PulseTimer
 	{
 		if ${Script.RunningTime} >= ${This.ExpireTime}
 		{
+			This.Restarted:Set[FALSE]
 			return TRUE
 		}
 
