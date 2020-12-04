@@ -123,6 +123,7 @@ objectdef obj_Navigator inherits obj_BaseClass
 
 	variable weakref EVEBotScript
 	variable weakref Ship
+	variable weakref Station
 	variable index:obj_Destination Destinations
 
 	variable time StateChanged
@@ -155,6 +156,7 @@ objectdef obj_Navigator inherits obj_BaseClass
 	variable int STATE_ALIGNING = 11
 	variable int STATE_UNDOCKING = 12
 	variable int STATE_UNDOCKED = 13
+	variable int STATE_WAITING = 14
 
 	method Initialize()
 	{
@@ -168,6 +170,7 @@ objectdef obj_Navigator inherits obj_BaseClass
 	method SetOwnerScript(string Owner)
 	{
 		Ship:SetReference["Script[${Owner}].VariableScope.Ship"]
+		Station:SetReference["Script[${Owner}].VariableScope.Station"]
 		EVEBotScript:SetReference["Script[${Owner}].VariableScope"]
 	}
 
@@ -554,17 +557,28 @@ TODO - integrate in most of the flyto*
 		; reset the state so we retry it.
 		switch ${This.CurrentState}
 		{
+			variablecase ${STATE_WAITING}
+				{
+					if ${LastStateChange} > 70
+					{
+						Logger:Log["${LogPrefix} - Navigate: Warning: Still waiting after ${LastStateChange}s. Resetting.", LOG_DEBUG]
+						This:SetState[_LINE_, 0]
+						return
+					}
+					break
+				}
 			variablecase ${STATE_WARPING}
 				{
 					if !${Ship.InWarp}
 					{
+						Logger:Log["${LogPrefix} - Navigate: Warning: Not InWarp during STATE_WARPING", LOG_DEBUG]
 						This:SetState[_LINE_, 0]
 					}
 					else
 					{
 						if ${LastStateChange} > 70
 						{
-							Logger:Log["${LogPrefix} - Navigate: Warning: Still warping after ${LastStateChange} seconds?", LOG_DEBUG]
+							Logger:Log["${LogPrefix} - Navigate: Warning: Still warping after ${LastStateChange}s?", LOG_DEBUG]
 							This:SetState[_LINE_, 0]
 						}
 						return
