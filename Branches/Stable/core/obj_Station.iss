@@ -94,7 +94,7 @@ objectdef obj_Station
 
 		if ${Entity[${StationID}](exists)}
 		{
-			Navigator:FlyToEntityID["${StationID}", DOCKING_RANGE, TRUE]
+			Navigator:FlyToEntityID[${StationID}, 0, TRUE]
 			while ${Navigator.Busy}
 			{
 				wait 1
