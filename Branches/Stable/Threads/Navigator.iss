@@ -431,6 +431,95 @@ objectdef obj_Navigator inherits obj_BaseClass
 		Destinations:Insert[${DEST_ACTION_ACTIVATE}, 0, ${EntityID}]
 	}
 
+	; Fly to presumable stop location
+	; Differs from Flee in that we prefer the delivery location, then the panic location, then the safespots, because we want a place we can log off if needed.
+	method FlyToHardStopLocation(string ConfigLocation)
+	{
+		if ${EVE.Bookmark[${Config.${ConfigLocation}.DeliveryLocation}](exists)}
+		{
+			Navigator:FlyToBookmark["${Config.${ConfigLocation}.DeliveryLocation}", 0, TRUE]
+			return
+		}
+		elseif ${EVE.Bookmark[${Config.${ConfigLocation}.PanicLocation}](exists)}
+		{
+			Navigator:FlyToBookmark["${Config.${ConfigLocation}.PanicLocation}", 0, TRUE]
+			return
+		}
+		elseif ${Safespots.Count} > 0
+		{
+			Navigator:FlyToBookmarkID[${Safespots.NextSafeSpot}, 0, TRUE]
+		}
+		elseif ${Entity["GroupID = GROUP_STATION"](exists)}
+		{
+			; No bookmark, anything stations to dock at?
+			Navigator:FlyToEntityID[${Entity["GroupID = GROUP_STATION"].ID}, 0, TRUE]
+			return
+		}
+		elseif ${Entity["(GroupID = GROUP_STRUCTURECITADEL || GROUP_STRUCTURE_INDUSTRIAL_ARRAY || GROUP_STRUCTURE_DRILLING_PLATFORM)"](exists)}
+		{
+			; No bookmarks or stations, what about citadels/etc
+			Navigator:FlyToEntityID[${Entity["(GroupID = GROUP_STRUCTURECITADEL || GROUP_STRUCTURE_INDUSTRIAL_ARRAY || GROUP_STRUCTURE_DRILLING_PLATFORM)"].ID}, 0, TRUE]
+			return
+		}
+		elseif ${Entity["(GroupID = GROUP_PLANET || GROUP_MOON)"](exists)}
+		{
+			; TODO - need something to generate a randomized list of warpable system objects (other than stations)
+			Navigator:FlyToEntityID[${Entity["(GroupID = GROUP_PLANET || GROUP_MOON)"].ID}]
+			return
+		}
+		elseif ${Entity["GroupID = GROUP_SUN"](exists)}
+		{
+			; TODO - need something to generate a randomized list of warpable system objects (other than stations)
+			Navigator:FlyToEntityID[${Entity["GroupID = GROUP_SUN"].ID}]
+			return
+		}
+	}
+
+	; Fly to Flee location
+	; Differs from Hard stop in that we prefer the Panic location, then the safespots, then the delivery location, because we want a place we can get to fast and resume from fast
+	method FlyToFleeLocation(string ConfigLocation)
+	{
+		if ${EVE.Bookmark[${Config.${ConfigLocation}.PanicLocation}](exists)}
+		{
+			Navigator:FlyToBookmark["${Config.${ConfigLocation}.PanicLocation}", 0, TRUE]
+			return
+		}
+		elseif ${Safespots.Count} > 0
+		{
+			Navigator:FlyToBookmarkID[${Safespots.NextSafeSpot}, 0, TRUE]
+		}
+		elseif ${EVE.Bookmark[${Config.${ConfigLocation}.DeliveryLocation}](exists)}
+		{
+			Navigator:FlyToBookmark["${Config.${ConfigLocation}.DeliveryLocation}", 0, TRUE]
+			return
+		}
+		elseif ${Entity["GroupID = GROUP_STATION"](exists)}
+		{
+			; No bookmark, anything stations to dock at?
+			Navigator:FlyToEntityID[${Entity["GroupID = GROUP_STATION"].ID}, 0, TRUE]
+			return
+		}
+		elseif ${Entity["(GroupID = GROUP_STRUCTURECITADEL || GROUP_STRUCTURE_INDUSTRIAL_ARRAY || GROUP_STRUCTURE_DRILLING_PLATFORM)"](exists)}
+		{
+			; No bookmarks or stations, what about citadels/etc
+			Navigator:FlyToEntityID[${Entity["(GroupID = GROUP_STRUCTURECITADEL || GROUP_STRUCTURE_INDUSTRIAL_ARRAY || GROUP_STRUCTURE_DRILLING_PLATFORM)"].ID}, 0, TRUE]
+			return
+		}
+		elseif ${Entity["(GroupID = GROUP_PLANET || GROUP_MOON)"](exists)}
+		{
+			; TODO - need something to generate a randomized list of warpable system objects (other than stations)
+			; TODO - can we orbit at massive distances?
+			Navigator:FlyToEntityID[${Entity["(GroupID = GROUP_PLANET || GROUP_MOON)"].ID}]
+			return
+		}
+		elseif ${Entity["GroupID = GROUP_SUN"](exists)}
+		{
+			; TODO - need something to generate a randomized list of warpable system objects (other than stations)
+			Navigator:FlyToEntityID[${Entity["GroupID = GROUP_SUN"].ID}]
+			return
+		}
+	}
+
 /*
 TODO - integrate in most of the flyto*
 
