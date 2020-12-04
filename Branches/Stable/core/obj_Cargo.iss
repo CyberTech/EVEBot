@@ -839,15 +839,17 @@ objectdef obj_Cargo
 		variable int QuantityToMove
 
 		; Move only what will fit, minus 0.1 to account for CCP rounding errors.
+		;echo if (${Quantity} * ${Volume}) > (${FreeSpace}-0.1)
 		if (${Quantity} * ${Volume}) > (${FreeSpace}-0.1)
 		{
+			;echo Math.Calc[(${FreeSpace} - 0.1) / ${Volume}]
 			QuantityToMove:Set[${Math.Calc[(${FreeSpace} - 0.1) / ${Volume}]}]
+			if ${QuantityToMove} < ${Quantity}
+			{
+				return ${QuantityToMove}
+			}
 		}
-		else
-		{
-			QuantityToMove:Set[${Quantity}]
-		}
-		return ${QuantityToMove}
+		return ${Quantity}
 	}
 
 	function TransferListToShip()
