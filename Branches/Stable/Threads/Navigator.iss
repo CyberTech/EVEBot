@@ -569,6 +569,7 @@ TODO - integrate in most of the flyto*
 						}
 						return
 					}
+					break
 				}
 			variablecase ${STATE_AUTOPILOT_INITIATED}
 			variablecase ${STATE_WARP_INITIATED}
