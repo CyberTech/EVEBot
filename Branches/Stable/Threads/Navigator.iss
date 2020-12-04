@@ -266,11 +266,11 @@ objectdef obj_Navigator inherits obj_BaseClass
 		This.Enabled:Set[FALSE]
 	}
 
-	method SetState(int State)
+	method SetState(int CalledLine, int State)
 	{
 		if ${This.CurrentState} != ${State}
 		{
-			Logger:Log["${LogPrefix} - SetState[${State}]", LOG_DEBUG]
+			Logger:Log["${LogPrefix} - SetState[${CalledLine}, ${State}]", LOG_DEBUG]
 			This.CurrentState:Set[${State}]
 			This.StateChanged:Set[${Time.Timestamp}]
 		}
@@ -558,14 +558,14 @@ TODO - integrate in most of the flyto*
 				{
 					if !${Ship.InWarp}
 					{
-						This:SetState[0]
+						This:SetState[_LINE_, 0]
 					}
 					else
 					{
 						if ${LastStateChange} > 70
 						{
 							Logger:Log["${LogPrefix} - Navigate: Warning: Still warping after ${LastStateChange} seconds?", LOG_DEBUG]
-							This:SetState[0]
+							This:SetState[_LINE_, 0]
 						}
 						return
 					}
@@ -574,27 +574,27 @@ TODO - integrate in most of the flyto*
 			variablecase ${STATE_WARP_INITIATED}
 				if ${Ship.InWarp}
 				{
-					This:SetState[${STATE_WARPING}]
+					This:SetState[_LINE_, ${STATE_WARPING}]
 					return
 				}
 				elseif ${LastStateChange} > 120
 				{
 					Logger:Log["${LogPrefix} - Navigate: Warning: Resetting Autopilot/Warp initiated Timer after ${LastStateChange} seconds", LOG_DEBUG]
-					This:SetState[0]
+					This:SetState[_LINE_, 0]
 				}
 				break
 			variablecase ${STATE_APPROACHING}
 				if ${LastStateChange} > 30
 				{
 					Logger:Log["${LogPrefix} - Navigate: Warning: Resetting Approach Timer after ${LastStateChange} seconds", LOG_DEBUG]
-					This:SetState[0]
+					This:SetState[_LINE_, 0]
 				}
 				break
 			variablecase ${STATE_UNDOCKING}
 				if ${LastStateChange} > 30
 				{
 					Logger:Log["${LogPrefix} - Navigate: Warning: Resetting Undock Timer after ${LastStateChange} seconds", LOG_DEBUG]
-					This:SetState[0]
+					This:SetState[_LINE_, 0]
 				}
 				break
 			variablecase ${STATE_JUMPGATE_ACTIVATED}
@@ -602,7 +602,7 @@ TODO - integrate in most of the flyto*
 				if ${LastStateChange} > 20
 				{
 					Logger:Log["${LogPrefix} - Navigate: Warning: Resetting Jump Activation Timer after ${LastStateChange} seconds", LOG_DEBUG]
-					This:SetState[0]
+					This:SetState[_LINE_, 0]
 				}
 				break
 		}
@@ -710,7 +710,7 @@ TODO - integrate in most of the flyto*
 			{
 				Logger:Log["${LogPrefix} - NavigateTo_Entity: Warping to ${Entity[${This.Destinations[1].EntityID}].Name} @ ${EVEBot.MetersToKM_Str[${This.Destinations[1].Distance}]}"]
 				Entity[${This.Destinations[1].EntityID}]:WarpTo[${This.Destinations[1].Distance}]
-				This:SetState[${STATE_WARP_INITIATED}]
+				This:SetState[_LINE_, ${STATE_WARP_INITIATED}]
 				return
 			}
 			else
@@ -748,7 +748,7 @@ TODO - integrate in most of the flyto*
 		}
 
 		EVE:Execute[CmdToggleAutopilot]
-		This:SetState[${STATE_AUTOPILOT_INITIATED}]
+		This:SetState[_LINE_, ${STATE_AUTOPILOT_INITIATED}]
 	}
 
 	method NavigateTo_FleetMember()
@@ -832,7 +832,7 @@ TODO - integrate in most of the flyto*
 					{
 						Logger:Log["${LogPrefix} - NavigateTo_Bookmark: Warping to entity ${Entity[${This.Destinations[1].EntityID}].Name} @ ${EVEBot.MetersToKM_Str[${This.Destinations[1].Distance}]}"]
 						Entity[${This.Destinations[1].EntityID}]:WarpTo[${This.Destinations[1].Distance}]
-						This:SetState[${STATE_WARP_INITIATED}]
+						This:SetState[_LINE_, ${STATE_WARP_INITIATED}]
 						return
 					}
 					else
@@ -878,7 +878,7 @@ TODO - integrate in most of the flyto*
 					{
 						Logger:Log["${LogPrefix} - NavigateTo_Bookmark: Warping to ${Label} @ ${EVEBot.MetersToKM_Str[${This.Destinations[1].Distance}]}"]
 						DestinationBookmark:WarpTo[${This.Destinations[1].Distance}]
-						This:SetState[${STATE_WARP_INITIATED}]
+						This:SetState[_LINE_, ${STATE_WARP_INITIATED}]
 					}
 					else
 					{
@@ -972,7 +972,7 @@ TODO - integrate in most of the flyto*
 		if ${This.CurrentState} != ${STATE_APPROACHING} || ${MyShip.ToEntity.Approaching} != ${This.Destinations[1].EntityID}
 		{
 			Logger:Log["${LogPrefix} - Navigate_Approach: Approaching ${Entity[${This.Destinations[1].EntityID}].Name} @ ${EVEBot.MetersToKM_Str[${This.Destinations[1].Distance}]} - ${Math.Calc[${Entity[${This.Destinations[1].EntityID}].Distance} / ${MyShip.MaxVelocity}].Ceil} Seconds away"]
-			This:SetState[${STATE_APPROACHING}]
+			This:SetState[_LINE_, ${STATE_APPROACHING}]
 			Ship:Activate_AfterBurner[]
 			Entity[${This.Destinations[1].EntityID}]:Approach
 		}
@@ -1009,7 +1009,7 @@ TODO - integrate in most of the flyto*
 		if ${This.CurrentState} != ${STATE_ALIGNING}
 		{
 			Logger:Log["${LogPrefix} - Navigate_AlignTo: Aligning to ${Entity[${This.Destinations[1].EntityID}].Name}"]
-			This:SetState[${STATE_ALIGNING}]
+			This:SetState[_LINE_, ${STATE_ALIGNING}]
 			Entity[${This.Destinations[1].EntityID}]:AlignTo
 		}
 		; todo - Add ALIGN_DISTANCE_ALIGNED check to isxeve then dequeue, and optionally stop ship once aligned.
@@ -1029,7 +1029,7 @@ TODO - integrate in most of the flyto*
 		if ${This.CurrentState} != ${STATE_ORBIT}
 		{
 			Entity[${This.Destinations[1].EntityID}]:Orbit[${This.Destinations[1].Distance}]
-			This:SetState[${STATE_ORBIT}]
+			This:SetState[_LINE_, ${STATE_ORBIT}]
 		}
 		else
 		{
@@ -1064,7 +1064,7 @@ TODO - integrate in most of the flyto*
 		if ${This.CurrentState} != ${STATE_KEEPATRANGE}
 		{
 			Entity[${This.Destinations[1].EntityID}]:KeepAtRange[${This.Destinations[1].Distance}]
-			This:SetState[${STATE_KEEPATRANGE}]
+			This:SetState[_LINE_, ${STATE_KEEPATRANGE}]
 		}
 		else
 		{
@@ -1081,6 +1081,7 @@ TODO - integrate in most of the flyto*
 	{
 		if ${Me.InStation}
 		{
+					Logger:Log["Docking: ${Station.DockedAtStation[${This.Destinations[1].EntityID}]} ${This.CurrentState} == ${STATE_WAITING} && ${This.DelayTimer.Ready}"]
 			if ${This.Destinations[1].EntityID} != ${Me.StationID}
 			{
 				Logger:Log["${LogPrefix} - Navigate_Dock: We're in station ${Me.StationID}, but expected ${This.Destinations[1].EntityID}", LOG_WARNING]
@@ -1112,7 +1113,7 @@ TODO - integrate in most of the flyto*
 					Logger:Log["${LogPrefix} - Navigate_Dock: Outside docking range for Entity ${Entity[${This.Destinations[1].EntityID}].Name} @ ${EVEBot.MetersToKM_Str[${Entity[${This.Destinations[1].EntityID}].Distance}]}, approaching", LOG_MINOR]
 					Ship:Activate_AfterBurner[]
 					Entity[${This.Destinations[1].EntityID}]:Approach
-					This:SetState[${STATE_APPROACHING}]
+					This:SetState[_LINE_, ${STATE_APPROACHING}]
 				}
 				;This:CompleteCurrent
 				return
@@ -1142,7 +1143,7 @@ TODO - integrate in most of the flyto*
 		{
 			if ${This.CurrentState} == ${STATE_UNDOCKING}
 			{
-				This:SetState[${STATE_UNDOCKED}]
+				This:SetState[_LINE_, ${STATE_UNDOCKED}]
 
 				;TODO/CT - get rid of these here, they shouldn't rely on undocking
 				Ship:UpdateModuleList[]
@@ -1154,7 +1155,7 @@ TODO - integrate in most of the flyto*
 				if ${InstaID} > 0
 				{
 					; Clear current Destination and insert a new one to the insta bookmark, after which we'll continue on the rest of the destinations
-					This:SetState[${STATE_UNDOCKED}]
+					This:SetState[_LINE_, ${STATE_UNDOCKED}]
 					This:CompleteCurrent
 					Logger:Log["${LogPrefix} - Navigate_Undock: InstaUndock found", LOG_DEBUG]
 					This:FlyToBookmarkID[${InstaID}, ${Math.Rand[32767]}, FALSE, TRUE]
@@ -1175,7 +1176,7 @@ TODO - integrate in most of the flyto*
 			}
 
 			Logger:Log["${LogPrefix} - Navigate_Undock: Undocking from ${Me.StationID}:${Me.Station.Name}"]
-			This:SetState[${STATE_UNDOCKING}]
+			This:SetState[_LINE_, ${STATE_UNDOCKING}]
 			EVE:Execute[CmdExitStation]
 		}
 	}
@@ -1205,7 +1206,7 @@ TODO - integrate in most of the flyto*
 		if ${This.CurrentState} != ${STATE_JUMPING}
 		{
 			Logger:Log["Jumping thru ${Entity[${This.Destinations[1].EntityID}].Name}"]
-			This:SetState[${STATE_JUMPING}]
+			This:SetState[_LINE_, ${STATE_JUMPING}]
 			Entity[${This.Destinations[1].EntityID}]:Jump
 		}
 
@@ -1236,7 +1237,7 @@ TODO - integrate in most of the flyto*
 		if ${This.CurrentState} != ${STATE_JUMPING}
 		{
 			Logger:Log["Jumping thru ${Entity[${This.Destinations[1].EntityID}].Name}"]
-			This:SetState[${STATE_JUMPING}]
+			This:SetState[_LINE_, ${STATE_JUMPING}]
 			Entity[${This.Destinations[1].EntityID}]:Activate
 		}
 
