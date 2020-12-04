@@ -511,24 +511,23 @@ objectdef obj_Combat
 			{
 				if ${CargoIterator.Value.TypeID} == ${Config.Combat.AmmoTypeID}
 				{
-					if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${Ship.CargoFreeSpace}
+					QuantityToMove:Set[${Cargo.CalcAmountToMove[${Math.Calc[${Ship.CargoFreeSpace} - ${Config.Combat.RestockAmmoFreeSpace}]}, ${CargoIterator.Value.Quantity}, ${CargoIterator.Value.Volume}]}]
+
+					if ${QuantityToMove} == 0
 					{
-						QuantityToMove:Set[${Math.Calc[(${Ship.CargoFreeSpace} - ${Config.Combat.RestockAmmoFreeSpace}) / ${CargoIterator.Value.Volume} - 1]}]
+						Logger:Log["RestockAmmo: Skipping - no space: ${CargoIterator.Value.Quantity} units (${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name} (TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID})"]
+						continue
 					}
 					else
 					{
-						QuantityToMove:Set[${CargoIterator.Value.Quantity}]
+						Logger:Log["RestockAmmo: Moving ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name} (TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID})"]
 					}
-					Logger:Log["TransferListToShip: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name}"]
-					Logger:Log["TransferListToShip: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
-					if ${QuantityToMove} > 0
-					{
-						CargoIterator.Value:MoveTo[${MyShip.ID},CargoHold,${QuantityToMove}]
-						wait 30
-						EVEWindow[ByItemID, ${MyShip.ID}]:StackAll
-						wait 10
-					}
-						if ${Ship.CargoFreeSpace} <= ${Config.Combat.RestockAmmoFreeSpace}
+					CargoIterator.Value:MoveTo[${MyShip.ID},CargoHold,${QuantityToMove}]
+					wait 30
+					EVEWindow[ByItemID, ${MyShip.ID}]:StackAll
+					wait 10
+
+					if ${Ship.CargoFreeSpace} <= ${Config.Combat.RestockAmmoFreeSpace}
 					{
 						Logger:Log["DEBUG: RestockAmmo Done: Ship Cargo: ${Ship.CargoFreeSpace} < ${Config.Combat.RestockAmmoFreeSpace}", LOG_DEBUG]
 						break

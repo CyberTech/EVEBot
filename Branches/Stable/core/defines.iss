@@ -101,6 +101,7 @@ variable int VersionNum = 0
 #define ENTITY_STATE_WARPTOPOSITION				17
 #define ENTITY_STATE_SALVAGING						18
 
+#define MAX_CARGO_SPACE 2147483647	/* Used for station hangars etc */
 #define INVALID_DISTANCE 9223372036854775807
 /* If the miner's cargo hold doesn't increase during
  * this period, return to base.  Interval depends on the
