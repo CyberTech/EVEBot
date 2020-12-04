@@ -189,9 +189,11 @@ objectdef obj_Station
 			   Logger:Log["Undock: Debug: Me.StationID=${Me.StationID}", LOG_CRITICAL]
 			}
 		}
-		while ${This.Docked}
+		while (!${Me.InSpace} || ${Me.InStation})
+		wait 10
 		Logger:Log["Undock: Complete"]
 
+		call Inventory.ShipCargo.Activate
 		Config.Common:SetHomeStation[${Entity["(GroupID = GROUP_STATION || GroupID = GROUP_STRUCTURECITADEL)"].Name}]
 
 		Ship.RetryUpdateModuleList:Set[1]
