@@ -249,7 +249,7 @@ objectdef obj_Ship
 	{
 		if ${MyShip.UsedCargoCapacity} < 0
 		{
-			return ${MyShip.CargoCapacity}
+			return ${MyShip.UsedCargoCapacity}
 		}
 		return ${Math.Calc[${MyShip.CargoCapacity}-${MyShip.UsedCargoCapacity}]}
 	}

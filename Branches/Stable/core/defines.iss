@@ -15,7 +15,7 @@ variable string APP_HEADURL = ""
 variable string AppVersion = "0"
 variable int VersionNum = 0
 
-#define EVEBOT_DEBUG 0
+#define EVEBOT_DEBUG 1
 #define EVEBOT_DEBUG_TIMING 0
 #define EVEBOT_PROFILING 0
 #define DEBUG_ENTITIES 0
