@@ -29,6 +29,7 @@ objectdef obj_Defense_Drone inherits obj_BaseClass
 
 	; Limits how often we send commands
 	variable obj_PulseTimer DroneCommandTimer
+	variable obj_PulseTimer DroneLaunchDelay		/* Delay for initial launch of drones */
 
 	;	This is a list of IDs for rats which are attacking a team member
 	variable index:obj_Hostile HostileTargets
@@ -42,6 +43,7 @@ objectdef obj_Defense_Drone inherits obj_BaseClass
 
 		This.PulseTimer:SetIntervals[1.5,2.5]
 		DroneCommandTimer:SetIntervals[2.0,4.5]
+		DroneLaunchDelay:SetIntervals[5.0,25.0]
 		Event[ISXEVE_onFrame]:AttachAtom[This:Pulse]
 		Logger:Log["Thread: ${LogPrefix}: Initialized", LOG_MINOR]
 
@@ -163,11 +165,14 @@ objectdef obj_Defense_Drone inherits obj_BaseClass
 				This:ChooseTarget
 				if ${This.CurrentTarget.ID(exists)} && ${This.CurrentTarget.WreckID} == -1
 				{
-					; Will launch drones, or if we've lost some, launch more to get to max drone capability
-					;if ${DroneCommandTimer.Ready}
+					if ${Ship.Drones.DronesInSpace[FALSE]} == 0 && !${This.DroneLaunchDelay.Restarted}
 					{
+						This.DroneLaunchDelay:Update
+					}
+					elseif ${DroneLaunchDelay.Ready}
+					{
+						; Will launch drones, or if we've lost some, launch more to get to max drone capability
 						Ship.Drones:LaunchAll["Defense_Drones"]
-						;DroneCommandTimer:Update
 					}
 				}
 			}
