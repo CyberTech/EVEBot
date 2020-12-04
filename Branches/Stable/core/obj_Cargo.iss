@@ -290,35 +290,20 @@ objectdef obj_Cargo
 		{
 			do
 			{
-				Logger:Log["MoveGSC: Found ${Cargo.Value.Quantity} x ${Cargo.Value.Name} - ${Entity[${dest}].CargoCapacity} - ${Entity[${dest}].UsedCargoCapacity}"]
-				if (${Cargo.Value.Quantity} * ${Cargo.Value.Volume}) > (${Entity[${dest}].CargoCapacity} - ${Entity[${dest}].UsedCargoCapacity})
+				QuantityToMove:Set[${This.CalcAmountToMove[${Math.Calc[${Entity[${dest}].CargoCapacity} - ${Entity[${dest}].UsedCargoCapacity}]}, ${Cargo.Value.Quantity}, ${Cargo.Value.Volume}]}]
+
+				if ${QuantityToMove} == 0
 				{
-					QuantityToMove:Set[${Math.Calc[(${Entity[${dest}].CargoCapacity} - ${Entity[${dest}].UsedCargoCapacity}) / ${Cargo.Value.Volume}]}]
+					Logger:Log["TransferListToGSC: Skipping - no space: ${CargoIterator.Value.Quantity} units (${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name} (TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID})"]
+					continue
 				}
 				else
 				{
-					QuantityToMove:Set[${Cargo.Value.Quantity}]
+					Logger:Log["TransferListToGSC: Moving ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name} (TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID})"]
 				}
 
-				Logger:Log["MoveGSC: Moving ${QuantityToMove} units: ${Math.Calc[${QuantityToMove} * ${Cargo.Value.Volume}].Precision[2]}m3"]
-				if ${QuantityToMove} > 0
-				{
-					Cargo.Value:MoveTo[${dest},CargoHold,${QuantityToMove}]
-					wait 30
-					if (${Entity[${dest}].CargoCapacity} - ${Entity[${dest}].UsedCargoCapacity}) < 1000
-					{
-						break
-					}
-				}
-
-				if (${Entity[${dest}].CargoCapacity} - ${Entity[${dest}].UsedCargoCapacity}) < 1000
-				{
-					/* TODO - this needs to keep a queue of bookmarks, named for the can ie, "Can CORP hh:mm", of partially looted cans */
-					/* Be sure its names, and not ID.  We shouldn't store anything in a bookmark name that we shouldnt know */
-
-					Logger:Log["MoveGSC: ${Entity[${dest}].CargoCapacity} - ${Entity[${dest}].UsedCargoCapacity} < 1000"]
-					break
-				}
+				Cargo.Value:MoveTo[${dest},CargoHold,${QuantityToMove}]
+				wait 30
 			}
 			while ${Cargo:Next(exists)}
 		}
@@ -339,23 +324,25 @@ objectdef obj_Cargo
 		ListToMove:GetIterator[ListIterator]
 		if ${ListIterator:First(exists)}
 		{
-				do
-				{
-						QuantityToMove:Set[${ListIterator.Value.Quantity}]
-						if (${QuantityToMove} * ${ListIterator.Value.Volume}) >= ${Ship.CargoFreeSpace}
-						{
-							QuantityToMove:Set[${Math.Calc[(${Ship.CargoFreeSpace}-1) / ${ListIterator.Value.Volume}]}]
-						}
+			do
+			{
+				QuantityToMove:Set[${This.CalcAmountToMove[${Ship.CargoFreeSpace}, ${ListIterator.Value.Quantity}, ${ListIterator.Value.Volume}]}]
 
-						Logger:Log["TransferListToCargoHold: Loading Ore: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${ListIterator.Value.Volume}].Precision[2]}m3) of ${ListIterator.Value.Name}"]
-						if ${QuantityToMove} > 0
-						{
-							ListIterator.Value:MoveTo[${MyShip.ID}, CargoHold, ${QuantityToMove}]
-							wait 20
-						}
+				if ${QuantityToMove} == 0
+				{
+					Logger:Log["TransferListToCargoHold: Skipping - no space: ${CargoIterator.Value.Quantity} units (${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name} (TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID})"]
+					continue
 				}
-				while ${ListIterator:Next(exists)}
-				return TRUE
+				else
+				{
+					Logger:Log["TransferListToCargoHold: Moving ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name} (TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID})"]
+				}
+
+				ListIterator.Value:MoveTo[${MyShip.ID}, CargoHold, ${QuantityToMove}]
+				wait 15
+			}
+			while ${ListIterator:Next(exists)}
+			return TRUE
 		}
 		return FALSE
 	}
@@ -374,23 +361,25 @@ objectdef obj_Cargo
 		ListToMove:GetIterator[ListIterator]
 		if ${ListIterator:First(exists)}
 		{
-				do
-				{
-						QuantityToMove:Set[${ListIterator.Value.Quantity}]
-						if (${QuantityToMove} * ${ListIterator.Value.Volume}) >= ${Ship.OreHoldFreeSpace}
-						{
-							QuantityToMove:Set[${Math.Calc[(${Ship.OreHoldFreeSpace}-1) / ${ListIterator.Value.Volume}]}]
-						}
+			do
+			{
+				QuantityToMove:Set[${This.CalcAmountToMove[${Ship.OreHoldFreeSpace}, ${ListIterator.Value.Quantity}, ${ListIterator.Value.Volume}]}]
 
-						Logger:Log["TransferListToOreHold: Loading Ore: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${ListIterator.Value.Volume}].Precision[2]}m3) of ${ListIterator.Value.Name}"]
-						if ${QuantityToMove} > 0
-						{
-							ListIterator.Value:MoveTo[${MyShip.ID}, OreHold, ${QuantityToMove}]
-							wait 20
-						}
+				if ${QuantityToMove} == 0
+				{
+					Logger:Log["TransferListToOreHold: Skipping - no space: ${CargoIterator.Value.Quantity} units (${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name} (TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID})"]
+					continue
 				}
-				while ${ListIterator:Next(exists)}
-				return TRUE
+				else
+				{
+					Logger:Log["TransferListToOreHold: Moving ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name} (TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID})"]
+				}
+
+				ListIterator.Value:MoveTo[${MyShip.ID}, OreHold, ${QuantityToMove}]
+				wait 15
+			}
+			while ${ListIterator:Next(exists)}
+			return TRUE
 		}
 		return FALSE
 	}
@@ -471,22 +460,28 @@ objectdef obj_Cargo
 
 		if ${CargoIterator:First(exists)}
 		{
-				do
+			do
+			{
+				QuantityToMove:Set[${This.CalcAmountToMove[MAX_CARGO_SPACE, ${CargoIterator.Value.Quantity}, ${CargoIterator.Value.Volume}]}]
+
+				if ${QuantityToMove} == 0
 				{
-					QuantityToMove:Set[${CargoIterator.Value.Quantity}]
-					Logger:Log["TransferCargoFromShipOreHoldToStation: Unloading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name}"]
-					Logger:Log["TransferCargoFromShipOreHoldToStation: Unloading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
-					if ${QuantityToMove} > 0
-					{
-						CargoIterator.Value:MoveTo[MyStationHangar, Hangar, ${QuantityToMove}]
-						wait 15
-					}
+					Logger:Log["TransferCargoFromShipOreHoldToStation: Skipping - no space: ${CargoIterator.Value.Quantity} units (${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name} (TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID})"]
+					continue
 				}
-				while ${CargoIterator:Next(exists)}
+				else
+				{
+					Logger:Log["TransferCargoFromShipOreHoldToStation: Moving ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name} (TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID})"]
+				}
+
+				CargoIterator.Value:MoveTo[MyStationHangar, Hangar, ${QuantityToMove}]
+				wait 15
+			}
+			while ${CargoIterator:Next(exists)}
 		}
 		else
 		{
-			Logger:Log["DEBUG: obj_Cargo:TransferCargoFromShipOreHoldToStation: Nothing found to move"]
+			Logger:Log["DEBUG: obj_Cargo:TransferCargoFromShipOreHoldToStation: Nothing found to move", LOG_DEBUG]
 		}
 	}
 
@@ -494,6 +489,10 @@ objectdef obj_Cargo
 	{
 		variable int QuantityToMove
 		variable iterator CargoIterator
+		if !${MyShip.HasFleetHangars}
+		{
+			return
+		}
 
 		call Inventory.ShipFleetHangar.Activate
 		if !${Inventory.ShipFleetHangar.IsCurrent}
@@ -505,18 +504,24 @@ objectdef obj_Cargo
 
 		if ${CargoIterator:First(exists)}
 		{
-				do
+			do
+			{
+				QuantityToMove:Set[${This.CalcAmountToMove[MAX_CARGO_SPACE, ${CargoIterator.Value.Quantity}, ${CargoIterator.Value.Volume}]}]
+
+				if ${QuantityToMove} == 0
 				{
-					QuantityToMove:Set[${CargoIterator.Value.Quantity}]
-					Logger:Log["TransferCargoFromShipCorporateHangarToStation: Unloading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name}"]
-					Logger:Log["TransferCargoFromShipCorporateHangarToStation: Unloading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
-					if ${QuantityToMove} > 0
-					{
-						CargoIterator.Value:MoveTo[MyStationHangar, Hangar, ${QuantityToMove}]
-						wait 15
-					}
+					Logger:Log["TransferCargoFromShipCorporateHangarToStation: Skipping - no space: ${CargoIterator.Value.Quantity} units (${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name} (TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID})"]
+					continue
 				}
-				while ${CargoIterator:Next(exists)}
+				else
+				{
+					Logger:Log["TransferCargoFromShipCorporateHangarToStation: Moving ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name} (TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID})"]
+				}
+
+				CargoIterator.Value:MoveTo[MyStationHangar, Hangar, ${QuantityToMove}]
+				wait 15
+			}
+			while ${CargoIterator:Next(exists)}
 		}
 		else
 		{
@@ -540,22 +545,24 @@ objectdef obj_Cargo
 
 		if ${CargoIterator:First(exists)}
 		{
-				do
-				{
-					QuantityToMove:Set[${CargoIterator.Value.Quantity}]
-					if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${Ship.CargoFreeSpace}
-					{
-						QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${CargoIterator.Value.Volume}]}]
-					}
+			do
+			{
+				QuantityToMove:Set[${This.CalcAmountToMove[${Ship.CargoFreeSpace}, ${CargoIterator.Value.Quantity}, ${CargoIterator.Value.Volume}]}]
 
-					Logger:Log["TransferOreFromShipFleetHangarToCargoHold: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name}"]
-					if ${QuantityToMove} > 0
-					{
-						CargoIterator.Value:MoveTo[${MyShip.ID}, CargoHold, ${QuantityToMove}]
-						wait 15
-					}
+				if ${QuantityToMove} == 0
+				{
+					Logger:Log["TransferCargoFromShipCorporateHangarToStation: Skipping - no space: ${CargoIterator.Value.Quantity} units (${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name} (TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID})"]
+					continue
 				}
-				while ${CargoIterator:Next(exists)}
+				else
+				{
+					Logger:Log["TransferCargoFromShipCorporateHangarToStation: Moving ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name} (TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID})"]
+				}
+
+				CargoIterator.Value:MoveTo[${MyShip.ID}, CargoHold, ${QuantityToMove}]
+				wait 15
+			}
+			while ${CargoIterator:Next(exists)}
 		}
 		else
 		{
@@ -624,24 +631,18 @@ objectdef obj_Cargo
 				{
 					call JetCan.Open ${JetCan.ActiveCan}
 
-					if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${JetCan.CargoFreeSpace}
+					QuantityToMove:Set[${This.CalcAmountToMove[${JetCan.CargoFreeSpace}, ${CargoIterator.Value.Quantity}, ${CargoIterator.Value.Volume}]}]
+
+					if ${QuantityToMove} == 0
 					{
-						if ${CargoIterator.Value.Volume} > 1.0
-						{
-							QuantityToMove:Set[${Math.Calc[${JetCan.CargoFreeSpace} / ${CargoIterator.Value.Volume}]}]
-						}
-						else
-						{
-							; Move only what will fit, minus 1 to account for CCP rounding errors.
-							QuantityToMove:Set[${Math.Calc[${JetCan.CargoFreeSpace} / ${CargoIterator.Value.Volume} - 1]}]
-						}
+						Logger:Log["TransferListToJetCan: Skipping - no space: ${CargoIterator.Value.Quantity} units (${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name} (TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID})"]
+						continue
 					}
 					else
 					{
-						QuantityToMove:Set[${CargoIterator.Value.Quantity}]
+						Logger:Log["TransferListToJetCan: Moving ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name} (TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID})"]
 					}
 
-					Logger:Log["TransferListToJetCan: Transferring Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name} - Jetcan Free Space: ${JetCan.CargoFreeSpace}"]
 					CargoIterator.Value:MoveTo[${JetCan.ActiveCan}, CargoHold, ${QuantityToMove}]
 				}
 				else
@@ -833,6 +834,22 @@ objectdef obj_Cargo
 		This.CargoToTransfer:Collapse
 	}
 
+	member:int CalcAmountToMove(float FreeSpace, int Quantity, float Volume)
+	{
+		variable int QuantityToMove
+
+		; Move only what will fit, minus 0.1 to account for CCP rounding errors.
+		if (${Quantity} * ${Volume}) > (${FreeSpace}-0.1)
+		{
+			QuantityToMove:Set[${Math.Calc[(${FreeSpace} - 0.1) / ${Volume}]}]
+		}
+		else
+		{
+			QuantityToMove:Set[${Quantity}]
+		}
+		return ${QuantityToMove}
+	}
+
 	function TransferListToShip()
 	{
 		variable int QuantityToMove
@@ -856,30 +873,19 @@ objectdef obj_Cargo
 			{
 				do
 				{
-					if (${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}) > ${Ship.CargoFreeSpace}
+					QuantityToMove:Set[${This.CalcAmountToMove[${Ship.CargoFreeSpace}, ${CargoIterator.Value.Quantity}, ${CargoIterator.Value.Volume}]}]
+					if ${QuantityToMove} == 0
 					{
-						if ${CargoIterator.Value.Volume} > 1.0
-						{
-							QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${CargoIterator.Value.Volume}]}]
-						}
-						else
-						{
-							; Move only what will fit, minus 1 to account for CCP rounding errors.
-							QuantityToMove:Set[${Math.Calc[${Ship.CargoFreeSpace} / ${CargoIterator.Value.Volume} - 1]}]
-						}
+						Logger:Log["TransferListToShip: Skipping - no space: ${CargoIterator.Value.Quantity} units (${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name} (TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID})"]
+						continue
 					}
 					else
 					{
-						QuantityToMove:Set[${CargoIterator.Value.Quantity}]
+						Logger:Log["TransferListToShip: Moving ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name} (TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID})"]
 					}
 
-					Logger:Log["TransferListToShip: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name}"]
-					Logger:Log["TransferListToShip: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
-					if ${QuantityToMove} > 0
-					{
-						CargoIterator.Value:MoveTo[MyShip, CargoHold, ${QuantityToMove}]
-						wait 15
-					}
+					CargoIterator.Value:MoveTo[MyShip, CargoHold, ${QuantityToMove}]
+					wait 15
 				}
 				while ${CargoIterator:Next(exists)}
 			}
@@ -1167,8 +1173,7 @@ objectdef obj_Cargo
 		{
 			do
 			{
-				Logger:Log["TransferListToStationHangar: Unloading Cargo: ${CargoIterator.Value.Name} x ${CargoIterator.Value.Quantity}"]
-				Logger:Log["TransferListToStationHangar: Unloading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}", LOG_DEBUG]
+				Logger:Log["TransferListToStationHangar: Unloading Cargo: ${CargoIterator.Value.Name} x ${CargoIterator.Value.Quantity} (TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID})"]
 				if ${CargoIterator.Value.GroupID} == GROUPID_SECURE_CONTAINER
 				{
 					call This.TransferContainerToHangar ${CargoIterator.Value.ID}
@@ -1183,7 +1188,7 @@ objectdef obj_Cargo
 			{
 				Logger:Log["Moving ${ListToMove.Used} items to hangar."]
 				EVE:MoveItemsTo[ListToMove, MyStationHangar, Hangar]
-				wait 10
+				wait 15
 			}
 		}
 		else
@@ -1213,15 +1218,14 @@ objectdef obj_Cargo
 
 			do
 			{
-				Logger:Log["TransferListToShipCorporateHangar: Unloading Cargo: ${CargoIterator.Value.Name} x ${CargoIterator.Value.Quantity}"]
-				Logger:Log["TransferListToShipCorporateHangar: Unloading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}", LOG_DEBUG]
+				Logger:Log["TransferListToShipCorporateHangar: Unloading Cargo: ${CargoIterator.Value.Name} x ${CargoIterator.Value.Quantity} (TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID})"]
 
 				ListToMove:Insert[${CargoIterator.Value.ID}]
 				if ${ListToMove.Used}
 				{
 					Logger:Log["Moving ${ListToMove.Used} items to hangar."]
 					CargoIterator.Value:MoveTo[${dest}, FleetHangar, ${CargoIterator.Value.Quantity}]
-					wait 10
+					wait 15
 				}
 			}
 			while ${CargoIterator:Next(exists)}
@@ -1337,7 +1341,6 @@ objectdef obj_Cargo
 			}
 
 			call This.TransferListToShip
-			EVEWindow[ByItemID, ${MyShip.ID}]:StackAll
 			Ship:UpdateBaselineUsedCargo[]
 
 			call Inventory.StationHangar.Activate ${Me.Station.ID}
