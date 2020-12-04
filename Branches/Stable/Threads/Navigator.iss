@@ -1118,6 +1118,7 @@ TODO - integrate in most of the flyto*
 				return
 			}
 
+			EVEBotScript.Inventory:Close
 			Logger:Log["${LogPrefix} - Navigate_Dock: Docking @ ${EVE.GetLocationNameByID[${This.Destinations[1].EntityID}]}"]
 			This:SetState[${STATE_DOCKING}]
 			Entity[${This.Destinations[1].EntityID}]:Dock
