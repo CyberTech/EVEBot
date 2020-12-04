@@ -71,7 +71,7 @@ objectdef obj_Destination
 				Logger:Log["obj_Destination: ERROR: Unknown Destination Type ${DestinationType}", LOG_ERROR]
 				break
 		}
-		Logger:Log["obj_Destination: Queued ${This.ToString}", LOG_DEBUG]
+		Logger:Log["obj_Destination: Queued ${This.ToString}, Distance ${This.Distance}, Interact ${This.InteractWithDest}", LOG_DEBUG]
 	}
 
 	method Shutdown()
