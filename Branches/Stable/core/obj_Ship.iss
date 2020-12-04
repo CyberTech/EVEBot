@@ -2778,7 +2778,7 @@ objectdef obj_Ship
 		variable bool NeedReload = FALSE
 		variable int CurrentCharges = 0
 
-		if ${This.ReloadingWeapons}}
+		if ${This.ReloadingWeapons}
 		{
 			return
 		}
