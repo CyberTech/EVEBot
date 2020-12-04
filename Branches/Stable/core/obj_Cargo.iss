@@ -879,9 +879,13 @@ objectdef obj_Cargo
 						Logger:Log["TransferListToShip: Skipping - no space: ${CargoIterator.Value.Quantity} units (${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name} (TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID})"]
 						continue
 					}
-					else
+					elseif ${QuantityToMove} == ${CargoIterator.Value.Quantity}
 					{
 						Logger:Log["TransferListToShip: Moving ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name} (TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID})"]
+					}
+					else
+					{
+						Logger:Log["TransferListToShip: Moving ${QuantityToMove}/${CargoIterator.Value.Quantity} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name} (TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID})"]
 					}
 
 					CargoIterator.Value:MoveTo[MyShip, CargoHold, ${QuantityToMove}]
