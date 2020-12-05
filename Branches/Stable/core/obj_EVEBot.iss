@@ -372,7 +372,7 @@ objectdef obj_EVEBot inherits obj_BaseClass
 				}
 				else
 				{
-					Logger:Log["${LogPrefix}: Fleet master set to \"${MasterName}\""]
+					Logger:Log["${LogPrefix}: Fleet master set to '${MasterName}'"]
 				}
 			}
 		}
