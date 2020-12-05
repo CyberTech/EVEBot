@@ -256,7 +256,8 @@ objectdef obj_Miner
 			}
 		}
 
-		if ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && !${WarpToOrca}
+		; TODO - make waiting for master to be a state; what if the master drops offline or takes longer to log in? we can't just loop here.
+		if ${Config.Miner.DeliveryLocationTypeName.Equal["Orca"]} && ${EVEBot.MasterName.Length} > 0 && !${WarpToOrca}
 		{
 			if ${This.AtPanicBookmark}
 			{
@@ -271,7 +272,7 @@ objectdef obj_Miner
 		}
 
 		; If in group mode, not the master, dont warp to master, and at safe spot... wait.  This also covers when no master is set.
-		if ${Config.Miner.GroupMode} && !${EVEBot.IsMaster} && !${WarpToMaster}
+		if ${Config.Miner.GroupMode} && !${EVEBot.IsMaster} && ${EVEBot.MasterName.Length} > 0 && !${WarpToMaster}
 		{
 			if ${This.AtPanicBookmark}
 			{
