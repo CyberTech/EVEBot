@@ -10,9 +10,9 @@
 objectdef obj_EVEBot inherits obj_BaseClass
 {
 	variable bool ReturnToStation = FALSE
-	variable bool _Paused = FALSE
-	variable bool Disabled = FALSE			/* If true, ALL functionality should be disabled  - everything. no pulses, no nothing */
-	variable bool Loaded					/* Set true once the bot is fully loaded */
+	variable bool _Paused = TRUE						/* Initialize to true so that other modules see the bot as paused before we actually pause the script */
+	variable bool Disabled = FALSE					/* If true, ALL functionality should be disabled  - everything. no pulses, no nothing */
+	variable bool Loaded = FALSE						/* Set true once the bot is fully loaded */
 	variable int LastSessionFrame
 	variable bool LastSessionResult
 	variable index:string Threads
