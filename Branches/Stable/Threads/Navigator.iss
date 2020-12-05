@@ -788,7 +788,7 @@ TODO - integrate in most of the flyto*
 					break
 			}
 
-			if ${Me.ToEntity.Velocity} > ${MyShip.MaxVelocity}
+			if ${Me.ToEntity.Velocity} > (${MyShip.MaxVelocity}*2)
 			{
 				; We're still slowing down from warp
 				return
@@ -949,7 +949,7 @@ TODO - integrate in most of the flyto*
 				}
 				else
 				{
-					if ${Me.ToEntity.Velocity} > ${MyShip.MaxVelocity}
+					if ${Me.ToEntity.Velocity} > (${MyShip.MaxVelocity}*2)
 					{
 						; We're still slowing down from warp
 						return
@@ -1007,7 +1007,7 @@ TODO - integrate in most of the flyto*
 			}
 			else
 			{
-				if ${Me.ToEntity.Velocity} > ${MyShip.MaxVelocity}
+				if ${Me.ToEntity.Velocity} > (${MyShip.MaxVelocity}*2)
 				{
 					; We're still slowing down from warp
 					return
@@ -1045,7 +1045,7 @@ TODO - integrate in most of the flyto*
 			return
 		}
 
-		if ${Me.ToEntity.Velocity} > ${MyShip.MaxVelocity}
+		if ${Me.ToEntity.Velocity} > (${MyShip.MaxVelocity}*2)
 		{
 			; We're still slowing down from warp
 			return
@@ -1099,7 +1099,7 @@ TODO - integrate in most of the flyto*
 			return
 		}
 
-		if ${Me.ToEntity.Velocity} > ${MyShip.MaxVelocity}
+		if ${Me.ToEntity.Velocity} > (${MyShip.MaxVelocity}*2)
 		{
 			; We're still slowing down from warp
 			return
