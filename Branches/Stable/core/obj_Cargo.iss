@@ -248,18 +248,18 @@ objectdef obj_Cargo
 
 			variable index:item anItemIndex
 			variable index:int64  anIntIndex
-			variable iterator   anIterator
+			variable iterator CargoIterator
 
 			anItem:GetCargo[anItemIndex]
-			anItemIndex:GetIterator[anIterator]
+			anItemIndex:GetIterator[CargoIterator]
 			anIntIndex:Clear
 
-			if ${anIterator:First(exists)}
+			if ${CargoIterator:First(exists)}
 			do
 			{
-				anIntIndex:Insert[${anIterator.Value.ID}]
+				anIntIndex:Insert[${CargoIterator.Value.ID}]
 			}
-			while ${anIterator:Next(exists)}
+			while ${CargoIterator:Next(exists)}
 
 			if ${anIntIndex.Used} > 0
 			{
@@ -278,19 +278,19 @@ objectdef obj_Cargo
 	function TransferListToGSC(int64 dest)
 	{
 		variable index:item ShipCargo
-		variable iterator Cargo
+		variable iterator CargoIterator
 		variable int QuantityToMove
 
 		Logger:Log["DEBUG: Offloading to GSC"]
 
 		MyShip:GetCargo[ShipCargo]
-		ShipCargo:GetIterator[Cargo]
+		ShipCargo:GetIterator[CargoIterator]
 
-		if ${Cargo:First(exists)}
+		if ${CargoIterator:First(exists)}
 		{
 			do
 			{
-				QuantityToMove:Set[${This.CalcAmountToMove[${Math.Calc[${Entity[${dest}].CargoCapacity} - ${Entity[${dest}].UsedCargoCapacity}]}, ${Cargo.Value.Quantity}, ${Cargo.Value.Volume}]}]
+				QuantityToMove:Set[${This.CalcAmountToMove[${Math.Calc[${Entity[${dest}].CargoCapacity} - ${Entity[${dest}].UsedCargoCapacity}]}, ${CargoIterator.Value.Quantity}, ${CargoIterator.Value.Volume}]}]
 
 				if ${QuantityToMove} == 0
 				{
@@ -302,17 +302,17 @@ objectdef obj_Cargo
 					Logger:Log["TransferListToGSC: Moving ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name} (TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID})"]
 				}
 
-				Cargo.Value:MoveTo[${dest},CargoHold,${QuantityToMove}]
+				CargoIterator.Value:MoveTo[${dest},CargoHold,${QuantityToMove}]
 				wait 30
 			}
-			while ${Cargo:Next(exists)}
+			while ${CargoIterator:Next(exists)}
 		}
 
 	}
 
 	function TransferListToCargoHold(weakref ListToMove)
 	{
-		variable iterator ListIterator
+		variable iterator CargoIterator
 		variable int QuantityToMove
 
 		if ${ListToMove.Used} == 0
@@ -321,12 +321,12 @@ objectdef obj_Cargo
 			return FALSE
 		}
 
-		ListToMove:GetIterator[ListIterator]
-		if ${ListIterator:First(exists)}
+		ListToMove:GetIterator[CargoIterator]
+		if ${CargoIterator:First(exists)}
 		{
 			do
 			{
-				QuantityToMove:Set[${This.CalcAmountToMove[${Ship.CargoFreeSpace}, ${ListIterator.Value.Quantity}, ${ListIterator.Value.Volume}]}]
+				QuantityToMove:Set[${This.CalcAmountToMove[${Ship.CargoFreeSpace}, ${CargoIterator.Value.Quantity}, ${CargoIterator.Value.Volume}]}]
 
 				if ${QuantityToMove} == 0
 				{
@@ -338,10 +338,10 @@ objectdef obj_Cargo
 					Logger:Log["TransferListToCargoHold: Moving ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name} (TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID})"]
 				}
 
-				ListIterator.Value:MoveTo[${MyShip.ID}, CargoHold, ${QuantityToMove}]
+				CargoIterator.Value:MoveTo[${MyShip.ID}, CargoHold, ${QuantityToMove}]
 				wait 15
 			}
-			while ${ListIterator:Next(exists)}
+			while ${CargoIterator:Next(exists)}
 			return TRUE
 		}
 		return FALSE
@@ -349,7 +349,7 @@ objectdef obj_Cargo
 
 	function TransferListToOreHold(weakref ListToMove)
 	{
-		variable iterator ListIterator
+		variable iterator CargoIterator
 		variable int QuantityToMove
 
 		if ${ListToMove.Used} == 0
@@ -358,12 +358,12 @@ objectdef obj_Cargo
 			return FALSE
 		}
 
-		ListToMove:GetIterator[ListIterator]
-		if ${ListIterator:First(exists)}
+		ListToMove:GetIterator[CargoIterator]
+		if ${CargoIterator:First(exists)}
 		{
 			do
 			{
-				QuantityToMove:Set[${This.CalcAmountToMove[${Ship.OreHoldFreeSpace}, ${ListIterator.Value.Quantity}, ${ListIterator.Value.Volume}]}]
+				QuantityToMove:Set[${This.CalcAmountToMove[${Ship.OreHoldFreeSpace}, ${CargoIterator.Value.Quantity}, ${CargoIterator.Value.Volume}]}]
 
 				if ${QuantityToMove} == 0
 				{
@@ -375,10 +375,10 @@ objectdef obj_Cargo
 					Logger:Log["TransferListToOreHold: Moving ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name} (TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID})"]
 				}
 
-				ListIterator.Value:MoveTo[${MyShip.ID}, OreHold, ${QuantityToMove}]
+				CargoIterator.Value:MoveTo[${MyShip.ID}, OreHold, ${QuantityToMove}]
 				wait 15
 			}
-			while ${ListIterator:Next(exists)}
+			while ${CargoIterator:Next(exists)}
 			return TRUE
 		}
 		return FALSE
