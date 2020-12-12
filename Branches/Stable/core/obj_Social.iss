@@ -759,11 +759,11 @@ objectdef obj_Social inherits obj_BaseClass
 					continue
 				}
 
-				if ${PilotIterator.Value.ToEntity.IsTargetingMe}
-				{
-					Logger:Log["obj_Social: Hostile on grid: ${PilotIterator.Value.Name} is targeting me", LOG_CRITICAL]
-					bReturn:Set[TRUE]
-				}
+				;if ${PilotIterator.Value.ToEntity.IsTargetingMe}
+				;{
+				;	Logger:Log["obj_Social: Hostile on grid: ${PilotIterator.Value.Name} is targeting me", LOG_CRITICAL]
+				;	bReturn:Set[TRUE]
+				;}
 
 				; Entity.Security returns -9999.00 if it fails, so we need to check for that
 				PilotSecurityStatus:Set[${PilotIterator.Value.ToEntity.Security}]
