@@ -271,6 +271,12 @@ objectdef obj_EVEWindow_Proxy
 		}
 	}
 
+	function Stack()
+	{
+		Inventory.${This.ObjectName}:StackAll
+		wait 20
+	}
+
 	method DebugPrintInvData()
 	{
 		variable weakref MyThis = This

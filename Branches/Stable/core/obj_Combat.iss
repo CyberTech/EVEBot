@@ -459,8 +459,7 @@ objectdef obj_Combat
 				}
 				while ${CargoIterator:Next(exists)}
 			}
-			Inventory.Current:StackAll
-
+			call Inventory.Current.Stack
 			call Inventory.StationHangar.Activate ${Me.Station.ID}
 			Inventory.Current:GetItems[ContainerItems]
 		}
