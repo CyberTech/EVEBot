@@ -996,7 +996,7 @@ objectdef obj_Orca
 						CargoList:Insert[${Cargo.Value.ID}]
 					}
 					while ${Cargo:Next(exists)}
-				EVE:MoveItemsTo[CargoList, MyShip, CorpHangars]
+				EVE:MoveItemsTo[CargoList, MyShip, FleetHangar]
 				return
 			}
 
