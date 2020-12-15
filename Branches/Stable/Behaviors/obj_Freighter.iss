@@ -27,10 +27,6 @@ objectdef obj_Freighter inherits obj_BaseClass
 
 		m_DestinationID:Set[0]
 
-		/* I didn't want this here but it was the only way to get this to work properly.  When Bookmark:Remove
-		 * works this can be moved into the state machine and PickupOrDropoff can delete the station bookmarks.
-		 */
-		This:BuildSourceList
 		This:SetupEvents
 
 		PulseTimer:SetIntervals[2.0, 4.0]
@@ -428,6 +424,7 @@ objectdef obj_Freighter inherits obj_BaseClass
 		variable iterator bm_iterator
 		bm_index:GetIterator[bm_iterator]
 
+		UIElement[PickupBookmarks@Freighter@EVEBotOptionsTab@EVEBot]:ClearItems
 		variable collection:bookmark bm_collection
 		if ${bm_iterator:First(exists)}
 		{
@@ -448,6 +445,7 @@ objectdef obj_Freighter inherits obj_BaseClass
 					{
 						bm_collection:Set[${bm_iterator.Value.Label},${bm_iterator.Value.ID}]
 					}
+					UIElement[PickupBookmarks@Freighter@EVEBotOptionsTab@EVEBot]:AddItem[${bm_iterator.Value.Label},${bm_iterator.Value.ID}]
 				}
 			}
 			while ${bm_iterator:Next(exists)}

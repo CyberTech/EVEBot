@@ -2405,26 +2405,47 @@
 							<Text>Destination</Text>
 							<AutoTooltip>The destination bookmark or station name.</AutoTooltip>
 						</Text>
-						<Textentry name='teDestination'>
-							<X>200</X>
+						<combobox name='teDestination'>
+							<X>150</X>
 							<Y>35</Y>
-							<Width>280</Width>
+							<Width>375</Width>
 							<Height>18</Height>
-							<MaxLength>150</MaxLength>
+							<MaxLength>375</MaxLength>
+							<FullHeight>350</FullHeight>
+							<ButtonWidth>20</ButtonWidth>
+							<Sort>Text</Sort>
+							<Items>
+								<Item Value='1'>None</Item>
+							</Items>
 							<OnLoad>
-								This:SetText[${Script[EVEBot].VariableScope.Config.Freighter.Destination}]
+									This:SetSortType[Text]
+									This:SetAutoSort[TRUE]
+
+									variable index:bookmark bm_index
+									EVE:GetBookmarks[bm_index]
+
+									variable iterator bm_iterator
+									bm_index:GetIterator[bm_iterator]
+									This:ClearItems
+									if ${bm_iterator:First(exists)}
+									{
+										do
+										{
+												This:AddItem[${bm_iterator.Value.Label},${bm_iterator.Value.ID}]
+										}
+										while ${bm_iterator:Next(exists)}
+									}
+									This:SelectItem[${This.ItemByText[${Script[EVEBot].VariableScope.Config.Freighter.Destination}].ID}]
+									This:Sort
 							</OnLoad>
-							<OnChange>
-								if ${This.Text.Length} > 0
+							<OnSelect>
+								if ${This.SelectedItem.Text.NotNULLOrEmpty}
 								{
-								Script[EVEBot].VariableScope.Config.Freighter:SetDestination[${This.Text}]
+									Logger:Log["Freighter destination set to ${This.SelectedItem.Text}"]
+									Script[EVEBot].VariableScope.Config.Freighter:SetDestination[${This.SelectedItem.Text}]
 								}
-								else
-								{
-								Script[EVEBot].VariableScope.Config.Freighter:SetDestination[""]
-								}
-							</OnChange>
-						</Textentry>
+							</OnSelect>
+						</combobox>
 						<Text name='lblSourcePrefix'>
 							<X>10</X>
 							<Y>62</Y>
@@ -2434,7 +2455,7 @@
 							<AutoTooltip>The prefix for source bookmark names.</AutoTooltip>
 						</Text>
 						<Textentry name='teSourcePrefix'>
-							<X>200</X>
+							<X>150</X>
 							<Y>60</Y>
 							<Width>100</Width>
 							<Height>18</Height>
@@ -2445,14 +2466,24 @@
 							<OnChange>
 								if ${This.Text.Length} > 0
 								{
-								Script[EVEBot].VariableScope.Config.Freighter:SetSourcePrefix[${This.Text}]
+									Script[EVEBot].VariableScope.Config.Freighter:SetSourcePrefix[${This.Text}]
 								}
 								else
 								{
-								Script[EVEBot].VariableScope.Config.Freighter:SetSourcePrefix[""]
+									Script[EVEBot].VariableScope.Config.Freighter:SetSourcePrefix[""]
 								}
 							</OnChange>
 						</Textentry>
+						<button	Name='Refresh Bookmarks' template='EveSkin.Window.ClickButton'>
+							<X>350</X>
+							<Y>60</Y>
+							<Width>150</Width>
+							<Height>18</Height>
+							<text>Show Matching</text>
+							<OnLeftClick>
+								Freighter:BuildSourceList
+							</OnLeftClick>
+						</button>
 						<Text name='lblRegionName'>
 							<X>10</X>
 							<Y>87</Y>
@@ -2462,7 +2493,7 @@
 							<AutoTooltip>Leave blank to service all regions.</AutoTooltip>
 						</Text>
 						<Textentry name='teRegionName'>
-							<X>200</X>
+							<X>150</X>
 							<Y>85</Y>
 							<Width>200</Width>
 							<Height>18</Height>
@@ -2476,6 +2507,20 @@
 								}
 							</OnChange>
 						</Textentry>
+						<listbox Name='PickupBookmarks'>
+							<X>2%</X>
+							<Y>50%</Y>
+							<Height>47%</Height>
+							<Width>96%</Width>
+							<SelectMultiple>0</SelectMultiple>
+							<Sort>Text</Sort>
+							<AutoTooltip>Bookmarks which will be visited to pickup items</AutoTooltip>
+							<OnLoad>
+							</OnLoad>
+							<OnSelect>
+							</OnSelect>
+						</listbox>
+<!--
 						<Frame name='frmNote'>
 							<X>2%</X>
 							<Y>50%</Y>
@@ -2492,7 +2537,7 @@
 									<Text>NOTE: Only "Source and Destination" mode works at the moment.  "Source and Destination" mode moves everything from stations who's bookmark begins with the source prefix to the destination station.  "Asset Gather" mode moves all assets shown in the asset window to the destination station.  You can optionally limit the freighter to a single system in this mode.  "Move Minerals to Buyer" mode picks up minerals and moves them to the highest bidder's station.  It does not sell the goods for you.</Text>
 								</Text>
 							</Children>
-						</Frame>
+						</Frame>-->
 					</Tab>
 					<Tab name='Labels'>
 						<Text name='Label1'>
