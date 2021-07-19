@@ -26,7 +26,6 @@
 .GetTargeting[<index:entity>]
 .GetTargets[<index:entity>]
 GetCargo[<index:item>]
-GetDialogResponses[<index:dialogstring>]
 GetMarketOrders[<index:marketorder>,"Buy",#]            {retrieves all buy orders currently cached by your client for the given TypeID#}
 GetMarketOrders[<index:marketorder>,"Buy"]              {retrieves all buy orders currently cached by your client}
 GetMarketOrders[<index:marketorder>,"Sell",#]           {retrieves all sell orders currently cached by your client for the given TypeID#}
