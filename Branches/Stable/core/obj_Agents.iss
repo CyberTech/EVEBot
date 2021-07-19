@@ -781,8 +781,6 @@ objectdef obj_Agents
 			EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].Button[${This.BUTTON_VIEW_MISSION}]:Press
 		}
 
-		; Logger:Log["${EVE.Agent[${This.AgentIndex}].Name} :: ${EVE.Agent[${This.AgentIndex}].Dialog}"]
-
 		if ${EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].NumButtons} != 3
 		{
 			Logger:Log["obj_Agents: ERROR: Did not find expected dialog! Found ${EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].NumButtons} responses.  Will retry...", LOG_CRITICAL]
@@ -957,7 +955,6 @@ objectdef obj_Agents
 
 		Logger:Log["obj_Agents:TurnInMission: Starting conversation with agent ${This.ActiveAgent}."]
 		EVE.Agent[${This.AgentIndex}]:StartConversation
-		
 		do
 		{
 			Logger:Log["obj_Agents:TurnInMission: Waiting for conversation window..."]
@@ -1004,7 +1001,7 @@ objectdef obj_Agents
 		EVE.Agent[${This.AgentIndex}]:StartConversation
 		do
 		{
-			Logger:Log["obj_Agents:TurnInMission: Waiting for conversation window..."]
+			Logger:Log["obj_Agents:QuitMission: Waiting for conversation window..."]
 			wait 10
 		}
 		while !${EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].NumButtons} > 0
