@@ -759,6 +759,51 @@ objectdef obj_Agents
 
 	}
 
+	function:bool CheckButtonExists(string buttontext)
+	{
+		Logger:Log["obj_Agents: Looking for button \"${buttontext}\""]
+		variable int Count
+		for (Count:Set[1] ; ${Count}<=${EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].NumButtons} ; Count:Inc)
+		{
+			if ${EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].Button[${Count}].Text.Equal[${buttontext}]}
+			{
+				return TRUE
+			}
+		}
+		return FALSE
+	}
+
+	function PressButton(string buttontext)
+	{
+		Logger:Log["obj_Agents: Pressing button \"${buttontext}\""]
+		do
+		{
+			EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].Button[${buttontext}]:Press
+			wait 50
+			call This.CheckButtonExists "${buttontext}"
+		}
+		while ${Return}
+	}
+
+	function UpdateLocatorAgent()
+	{
+		call This.CheckButtonExists "${This.BUTTON_REQUEST_MISSION}"
+		if ${Return}
+		{
+			Logger:Log["obj_Agents: May be a research agent or locator agent, attempting to view mission..."]
+			call PressButton "${This.BUTTON_REQUEST_MISSION}"
+		}
+		else
+		{
+			call This.CheckButtonExists "${This.BUTTON_VIEW_MISSION}"
+			if ${Return}
+			{
+				Logger:Log["obj_Agents: May be a research agent or locator agent, attempting to view mission..."]
+				call PressButton "${This.BUTTON_VIEW_MISSION}"
+			}
+		}
+	}
+
 	function RequestMission()
 	{
 		Logger:Log["obj_Agents:RequestMission: Starting conversation with agent ${This.ActiveAgent}."]
@@ -769,19 +814,11 @@ objectdef obj_Agents
 			wait 50
 		}
 		while !${EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].NumButtons} > 0
-		
-		if ${EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].Button[${This.BUTTON_REQUEST_MISSION}](exists)]}
-		{
-			Logger:Log["obj_Agents: May be a research agent or locator agent, attempting to view mission..."]
-			EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].Button[${This.BUTTON_REQUEST_MISSION}]:Press
-		}
-		elseif ${EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].Button[${This.BUTTON_VIEW_MISSION}](exists)]}
-		{
-			Logger:Log["obj_Agents: May be a research agent or locator agent, attempting to view mission..."]
-			EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].Button[${This.BUTTON_VIEW_MISSION}]:Press
-		}
 
-		if ${EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].NumButtons} != 3
+		call This.UpdateLocatorAgent
+
+		call This.CheckButtonExists "${This.BUTTON_ACCEPT_MISSION}"
+		if !${Return}
 		{
 			Logger:Log["obj_Agents: ERROR: Did not find expected dialog! Found ${EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].NumButtons} responses.  Will retry...", LOG_CRITICAL]
 			RetryCount:Inc
@@ -881,7 +918,7 @@ objectdef obj_Agents
 			}
 			else
 			{
-				EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].Button[${This.BUTTON_DECLINE_MISSION}]:Press
+				call This.PressButton "${This.BUTTON_DECLINE_MISSION}"
 				Config.Agents:SetLastDecline[${This.AgentName},${Time.Timestamp}]
 				Logger:Log["obj_Agents: Declined low-sec mission."]
 				Config:Save[]
@@ -898,7 +935,7 @@ objectdef obj_Agents
 			}
 			else
 			{
-				EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].Button[${This.BUTTON_DECLINE_MISSION}]:Press
+				call This.PressButton "${This.BUTTON_DECLINE_MISSION}"
 				Config.Agents:SetLastDecline[${This.AgentName},${Time.Timestamp}]
 				Logger:Log["obj_Agents: Declined blacklisted mission."]
 				call ChatIRC.Say "${Me.Name}: Declined blacklisted mission."
@@ -908,22 +945,22 @@ objectdef obj_Agents
 		elseif ${amIterator.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions} == TRUE
 		{
 			Logger:Log["obj_Agents: Accepting Courier mission from agent ${This.AgentID}", LOG_DEBUG]
-			EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].Button[${This.BUTTON_ACCEPT_MISSION}]:Press
+			call This.PressButton "${This.BUTTON_ACCEPT_MISSION}"
 		}
 		elseif ${amIterator.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} == TRUE
 		{
 			Logger:Log["obj_Agents: Accepting Trade mission from agent ${This.AgentID}", LOG_DEBUG]
-			EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].Button[${This.BUTTON_ACCEPT_MISSION}]:Press
+			call This.PressButton "${This.BUTTON_ACCEPT_MISSION}"
 		}
 		elseif ${amIterator.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} == TRUE
 		{
 			Logger:Log["obj_Agents: Accepting Mining mission from agent ${This.AgentID}", LOG_DEBUG]
-			EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].Button[${This.BUTTON_ACCEPT_MISSION}]:Press
+			call This.PressButton "${This.BUTTON_ACCEPT_MISSION}"
 		}
 		elseif ${amIterator.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions} == TRUE
 		{
 			Logger:Log["obj_Agents: Accepting Kill mission from agent ${This.AgentID}", LOG_DEBUG]
-			EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].Button[${This.BUTTON_ACCEPT_MISSION}]:Press
+			call This.PressButton "${This.BUTTON_ACCEPT_MISSION}"
 		}
 		else
 		{
@@ -935,7 +972,7 @@ objectdef obj_Agents
 			}
 			else
 			{
-				EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].Button[${This.BUTTON_DECLINE_MISSION}]:Press
+				call This.PressButton "${This.BUTTON_DECLINE_MISSION}"
 				Config.Agents:SetLastDecline[${This.AgentName},${Time.Timestamp}]
 				Logger:Log["obj_Agents: Declined mission."]
 				Config:Save[]
@@ -962,19 +999,10 @@ objectdef obj_Agents
 		}
 		while !${EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].NumButtons} > 0
 
-		if ${EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].Button[${This.BUTTON_REQUEST_MISSION}](exists)]}
-		{
-			Logger:Log["obj_Agents: May be a research agent or locator agent, attempting to view mission..."]
-			EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].Button[${This.BUTTON_REQUEST_MISSION}]:Press
-		}
-		elseif ${EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].Button[${This.BUTTON_VIEW_MISSION}](exists)]}
-		{
-			Logger:Log["obj_Agents: May be a research agent or locator agent, attempting to view mission..."]
-			EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].Button[${This.BUTTON_VIEW_MISSION}]:Press
-		}
+		call This.UpdateLocatorAgent
 
 		Logger:Log["Completing Mission..."]
-		EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].Button[${This.BUTTON_COMPLETE_MISSION}]:Press
+		call This.PressButton "${This.BUTTON_COMPLETE_MISSION}"
 
 		Logger:Log["Waiting for mission dialog to update..."]
 		wait 60
@@ -1006,7 +1034,7 @@ objectdef obj_Agents
 		}
 		while !${EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].NumButtons} > 0
 
-		EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].Button[${This.BUTTON_QUIT_MISSION}]:Press
+		call This.PressButton "${This.BUTTON_QUIT_MISSION}"
 
 		; Now wait a couple of seconds and then get the new dialog options...and so forth.  The "Wait" needed may differ from person to person.
 		Logger:Log["Waiting for agent dialog to update..."]
