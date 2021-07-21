@@ -180,9 +180,11 @@ objectdef obj_Agents
 	variable int RetryCount = 0
 	variable obj_AgentList AgentList
 	variable obj_MissionBlacklist MissionBlacklist
+	variable set skipList
 
     method Initialize()
     {
+		This.skipList:Clear
     	if ${This.AgentList.agentIterator:First(exists)}
     	{
     		;This:SetActiveAgent[${This.AgentList.FirstAgent}]
@@ -307,11 +309,9 @@ objectdef obj_Agents
 	{
 		variable index:agentmission amIndex
 		variable iterator MissionInfo
-		variable set skipList
 
 		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[MissionInfo]
-		skipList:Clear
 
 		Logger:Log["obj_Agents: DEBUG: Active/Offered Missions:  ${MissionInfo.Used}", LOG_DEBUG]
 		if ${MissionInfo:First(exists)}
@@ -781,14 +781,9 @@ objectdef obj_Agents
 		call This.CheckButtonExists "${This.BUTTON_ACCEPT_MISSION}"
 		if !${Return}
 		{
-			Logger:Log["obj_Agents: ERROR: Did not find expected dialog! Found ${EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].NumButtons} responses.  Will retry...", LOG_CRITICAL]
-			RetryCount:Inc
-			if ${RetryCount} > 4
-			{
-				Logger:Log["obj_Agents: ERROR: Retry count exceeded!  Aborting...", LOG_CRITICAL]
-				EVEBot.ReturnToStation:Set[TRUE]
-			}
+			Logger:Log["obj_Agents: ERROR: No mission from agent! Maybe finished the daily mission from researcher agent. Switching agents...", LOG_CRITICAL]
 			EVEWindow[ByCaption, "Agent Conversation - ${This.ActiveAgent}"]:Close
+			This.skipList:Add[${EVE.Agent[${This.AgentIndex}].ID}]
 			return
 		}
 
