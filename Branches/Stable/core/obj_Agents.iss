@@ -351,7 +351,7 @@ objectdef obj_Agents
 
 					/* if we get here the mission is not acceptable */
 					variable time lastDecline
-					lastDecline:Set[${Config.Agents.LastDecline[${EVE.Agent[id,${MissionInfo.Value.AgentID}]}]}]
+					lastDecline:Set[${Config.Agents.LastDecline[${EVE.Agent[id,${MissionInfo.Value.AgentID}].Name}]}]
 					Logger:Log["obj_Agents: DEBUG: lastDecline = ${lastDecline}"]
 					lastDecline.Hour:Inc[4]
 					lastDecline:Update
