@@ -6,12 +6,6 @@
     -- GliderPro
 
 */
-#define AGENTRESPONSEINDEX_ACCEPT 1
-#define AGENTRESPONSEINDEX_DECLINE 2
-#define AGENTRESPONSEINDEX_DELAY 3
-#define AGENTRESPONSEINDEX_COMPLETE_MISSION 1
-#define AGENTRESPONSEINDEX_QUIT_MISSION 2
-#define AGENTRESPONSEINDEX_CLOSE 3
 
 objectdef obj_AgentList
 {
@@ -183,16 +177,22 @@ objectdef obj_Agents
 	variable string BUTTON_REQUEST_MISSION = "Request Mission"
 	variable string BUTTON_VIEW_MISSION = "View Mission"
 	variable string BUTTON_BUY_DATACORES = "Buy Datacores"
+	variable string BUTTON_ACCEPT_MISSION = "Accept"
+	variable string BUTTON_DECLINE_MISSION = "Decline"
 	variable string BUTTON_COMPLETE_MISSION = "Complete Mission"
+	variable string BUTTON_QUIT_MISSION = "Quit Mission"
+	variable string BUTTON_CLOSE_MISSION = "Close"
 
 	variable string AgentName
 	variable string MissionDetails
 	variable int RetryCount = 0
 	variable obj_AgentList AgentList
 	variable obj_MissionBlacklist MissionBlacklist
+	variable set skipList
 
     method Initialize()
     {
+		This.skipList:Clear
     	if ${This.AgentList.agentIterator:First(exists)}
     	{
     		;This:SetActiveAgent[${This.AgentList.FirstAgent}]
@@ -317,11 +317,9 @@ objectdef obj_Agents
 	{
 		variable index:agentmission amIndex
 		variable iterator MissionInfo
-		variable set skipList
 
 		EVE:GetAgentMissions[amIndex]
 		amIndex:GetIterator[MissionInfo]
-		skipList:Clear
 
 		Logger:Log["obj_Agents: DEBUG: Active/Offered Missions:  ${amIndex.Used}", LOG_DEBUG]
 		if ${MissionInfo:First(exists)}
@@ -339,21 +337,21 @@ objectdef obj_Agents
 
 					if (!${Config.Missioneer.AvoidLowSec} || \
 						(${Config.Missioneer.AvoidLowSec} && !${isLowSec})) && \
-						!${MissionBlacklist.IsBlacklisted[${Agent[id,${MissionInfo.Value.AgentID}].Level},"${MissionInfo.Value.Name}"]}
+						!${MissionBlacklist.IsBlacklisted[${EVE.Agent[id,${MissionInfo.Value.AgentID}].Level},"${MissionInfo.Value.Name}"]}
 					{
 						if (${MissionInfo.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions}) || \
 							(${MissionInfo.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} || \
 							(${MissionInfo.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} || \
 							(${MissionInfo.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions})
 						{
-							This:SetActiveAgent[${Agent[id,${MissionInfo.Value.AgentID}].Name}]
+							This:SetActiveAgent[${EVE.Agent[id,${MissionInfo.Value.AgentID}].Name}]
 							return
 						}
 					}
 
 					/* if we get here the mission is not acceptable */
 					variable time lastDecline
-					lastDecline:Set[${Config.Agents.LastDecline[${Agent[id,${MissionInfo.Value.AgentID}]}]}]
+					lastDecline:Set[${Config.Agents.LastDecline[${EVE.Agent[id,${MissionInfo.Value.AgentID}]}]}]
 					Logger:Log["obj_Agents: DEBUG: lastDecline = ${lastDecline}"]
 					lastDecline.Hour:Inc[4]
 					lastDecline:Update
@@ -484,7 +482,7 @@ objectdef obj_Agents
 
 					if (!${Config.Missioneer.AvoidLowSec} || \
 						(${Config.Missioneer.AvoidLowSec} && !${isLowSec})) && \
-						!${MissionBlacklist.IsBlacklisted[${Agent[id,${MissionInfo.Value.AgentID}].Level},"${MissionInfo.Value.Name}"]}
+						!${MissionBlacklist.IsBlacklisted[${EVE.Agent[id,${MissionInfo.Value.AgentID}].Level},"${MissionInfo.Value.Name}"]}
 					{
 						if (${amIterator.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions}) || \
 							(${amIterator.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} || \
@@ -594,11 +592,18 @@ objectdef obj_Agents
 							Logger:Log["obj_Agents: DEBUG: mbIterator.Value.LocationType = ${mbIterator.Value.LocationType}"]
 							if ${mbIterator.Value.LocationType.Equal["objective.source"]}
 							{
-								Navigator:FlyToBookmark["${mbIterator.Value.ID}", 0, TRUE]
-								while ${Navigator.Busy}
+								if ${Station.Docked}
 								{
-									wait 10
+									if ${mbIterator.Value.ID} > 0 && ${mbIterator.Value.ID} == ${Me.StationID}
+									{
+										Logger:Log["${LogPrefix} - FlyToBookmarkID: Already in station ${Me.Station.ID}:${Me.Station.Name}"]
+										return
+									}
+									call Station.Undock
 								}
+								call Ship.TravelToSystem ${mbIterator.Value.SolarSystemID}
+								wait 50
+								call Station.DockAtStation ${mbIterator.Value.ID}
 								return
 							}
 						}
@@ -636,11 +641,18 @@ objectdef obj_Agents
 							Logger:Log["obj_Agents: DEBUG: mbIterator.Value.LocationType = ${mbIterator.Value.LocationType}"]
 							if ${mbIterator.Value.LocationType.Equal["objective.destination"]}
 							{
-								Navigator:FlyToBookmark["${mbIterator.Value.ID}", 0, TRUE]
-								while ${Navigator.Busy}
+								if ${Station.Docked}
 								{
-									wait 10
+									if ${mbIterator.Value.ID} > 0 && ${mbIterator.Value.ID} == ${Me.StationID}
+									{
+										Logger:Log["${LogPrefix} - FlyToBookmarkID: Already in station ${Me.Station.ID}:${Me.Station.Name}"]
+										return
+									}
+									call Station.Undock
 								}
+								call Ship.TravelToSystem ${mbIterator.Value.SolarSystemID}
+								wait 50
+								call Station.DockAtStation ${mbIterator.Value.ID}
 								return
 							}
 						}
@@ -747,34 +759,53 @@ objectdef obj_Agents
 
 	}
 
+	function:bool CheckButtonExists(string buttontext)
+	{
+		; Logger:Log["obj_Agents: Looking for button '${buttontext}'"]
+		variable int Count
+		for (Count:Set[1] ; ${Count}<=${EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].NumButtons} ; Count:Inc)
+		{
+			if ${EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].Button[${Count}].Text.Equal[${buttontext}]}
+			{
+				return TRUE
+			}
+		}
+		return FALSE
+	}
+
+	function PressButton(string buttontext)
+	{
+		Logger:Log["obj_Agents: Pressing button '${buttontext}'"]
+		do
+		{
+			EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].Button[${buttontext}]:Press
+			wait 50
+			call This.CheckButtonExists "${buttontext}"
+		}
+		while ${Return}
+	}
+
 	function UpdateLocatorAgent()
 	{
-		variable index:dialogstring dsIndex
-		variable iterator dsIterator
-		EVE.Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
-		while ${dsIndex.Used} == 0
+		call This.CheckButtonExists "${This.BUTTON_REQUEST_MISSION}"
+		if ${Return}
 		{
-			Logger:Log["Waiting for responses from agent to populate."]
-			wait 10
+			Logger:Log["obj_Agents: May be a research agent or locator agent, attempting to view mission..."]
+			call PressButton "${This.BUTTON_REQUEST_MISSION}"
 		}
-		if ${dsIndex.Used.Equal[2]} && ${dsIndex[1].Text.Find["View"]} > 0 || ${dsIndex[1].Text.Find["Request"]} > 0
+		else
 		{
-			Logger:Log["obj_Agents: Locator Agent detected, selecting view mission button."]
-			dsIndex[1]:Say[${This.AgentID}]
-			while ${dsIndex[1].Text.Find["View"]} > 0
+			call This.CheckButtonExists "${This.BUTTON_VIEW_MISSION}"
+			if ${Return}
 			{
-				Logger:Log["Waiting for locator agent conversation to update."]
-				EVE.Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
-				wait 20
+				Logger:Log["obj_Agents: May be a research agent or locator agent, attempting to view mission..."]
+				call PressButton "${This.BUTTON_VIEW_MISSION}"
 			}
 		}
 	}
 
 	function RequestMission()
 	{
-		variable index:dialogstring dsIndex
-		variable iterator dsIterator
-
 		Logger:Log["obj_Agents:RequestMission: Starting conversation with agent ${This.ActiveAgent}."]
 		EVE.Agent[${This.AgentIndex}]:StartConversation
 		do
@@ -782,65 +813,16 @@ objectdef obj_Agents
 			Logger:Log["obj_Agents:RequestMission: Waiting for conversation window..."]
 			wait 50
 		}
-		while !${EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"](exists)}
+		while !${EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].NumButtons} > 0
 
-		Logger:Log["obj_Agents: Retrieving Dialog Responses"]
-		;; The dialog caption fills in long before the details do.
-		;; Wait for dialog strings to become valid before proceeding.
-		variable int WaitCount
-		for( WaitCount:Set[0]; ${WaitCount} < 6; WaitCount:Inc )
+		call This.UpdateLocatorAgent
+
+		call This.CheckButtonExists "${This.BUTTON_ACCEPT_MISSION}"
+		if !${Return}
 		{
-			wait 20
-			if ${dsIndex.Used} > 0
-			{
-				break
-			}
-			EVE.Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
-		}
-		dsIndex:GetIterator[dsIterator]
-
-		Logger:Log["${EVE.Agent[${This.AgentIndex}].Name} :: ${EVE.Agent[${This.AgentIndex}].Dialog}"]
-
-		; Check for locator agents that also have missions
-		if (${dsIterator:First(exists)})
-		{
-			Logger:Log["obj_Agents: Checking agent responses...", LOG_DEBUG]
-			do
-			{
-				Logger:Log["obj_Agents: dsIterator.Value.Text: ${dsIterator.Value.Text}"]
-
-				if ${dsIterator.Value.Text.Find["${This.BUTTON_BUY_DATACORES}"]}
-				{
-					Logger:Log["obj_Agents: Agent has no mission available, trying next agent"]
-					This:SetActiveAgent[${This.AgentList.NextAgent}]
-					return
-				}
-
-				if (${dsIterator.Value.Text.Find["${This.BUTTON_VIEW_MISSION}"]} || ${dsIterator.Value.Text.Find["${This.BUTTON_REQUEST_MISSION}"]})
-				{
-					Logger:Log["obj_Agents: May be a locator agent, attempting to view mission..."]
-					dsIterator.Value:Say[${This.AgentID}]
-					;Logger:Log["obj_Agents: Waiting for dialog to update..."]
-					wait 100
-					Logger:Log["obj_Agents: Refreshing Dialog Responses"]
-					Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
-					dsIndex:GetIterator[dsIterator]
-					break
-				}
-			}
-			while (${dsIterator:Next(exists)})
-		}
-
-		if ${dsIndex.Used} != 3
-		{
-			Logger:Log["obj_Agents: ERROR: Did not find expected dialog! Found ${dsIndex.Used} responses.  Will retry...", LOG_CRITICAL]
-			RetryCount:Inc
-			if ${RetryCount} > 4
-			{
-				Logger:Log["obj_Agents: ERROR: Retry count exceeded!  Aborting...", LOG_CRITICAL]
-				EVEBot.ReturnToStation:Set[TRUE]
-			}
+			Logger:Log["obj_Agents: ERROR: No mission from agent! Maybe finished the daily mission from researcher agent. Switching agents...", LOG_CRITICAL]
 			EVEWindow[ByCaption, "Agent Conversation - ${This.ActiveAgent}"]:Close
+			This.skipList:Add[${EVE.Agent[${This.AgentIndex}].ID}]
 			return
 		}
 
@@ -931,7 +913,7 @@ objectdef obj_Agents
 			}
 			else
 			{
-				dsIndex.Get[AGENTRESPONSEINDEX_DECLINE]:Say[${This.AgentID}]
+				call This.PressButton "${This.BUTTON_DECLINE_MISSION}"
 				Config.Agents:SetLastDecline[${This.AgentName},${Time.Timestamp}]
 				Logger:Log["obj_Agents: Declined low-sec mission."]
 				Config:Save[]
@@ -948,7 +930,7 @@ objectdef obj_Agents
 			}
 			else
 			{
-				dsIndex.Get[AGENTRESPONSEINDEX_DECLINE]:Say[${This.AgentID}]
+				call This.PressButton "${This.BUTTON_DECLINE_MISSION}"
 				Config.Agents:SetLastDecline[${This.AgentName},${Time.Timestamp}]
 				Logger:Log["obj_Agents: Declined blacklisted mission."]
 				call ChatIRC.Say "${Me.Name}: Declined blacklisted mission."
@@ -958,22 +940,22 @@ objectdef obj_Agents
 		elseif ${amIterator.Value.Type.Find[Courier](exists)} && ${Config.Missioneer.RunCourierMissions} == TRUE
 		{
 			Logger:Log["obj_Agents: Accepting Courier mission from agent ${This.AgentID}", LOG_DEBUG]
-			dsIndex.Get[AGENTRESPONSEINDEX_ACCEPT]:Say[${This.AgentID}]
+			call This.PressButton "${This.BUTTON_ACCEPT_MISSION}"
 		}
 		elseif ${amIterator.Value.Type.Find[Trade](exists)} && ${Config.Missioneer.RunTradeMissions} == TRUE
 		{
 			Logger:Log["obj_Agents: Accepting Trade mission from agent ${This.AgentID}", LOG_DEBUG]
-			dsIndex.Get[AGENTRESPONSEINDEX_ACCEPT]:Say[${This.AgentID}]
+			call This.PressButton "${This.BUTTON_ACCEPT_MISSION}"
 		}
 		elseif ${amIterator.Value.Type.Find[Mining](exists)} && ${Config.Missioneer.RunMiningMissions} == TRUE
 		{
 			Logger:Log["obj_Agents: Accepting Mining mission from agent ${This.AgentID}", LOG_DEBUG]
-			dsIndex.Get[AGENTRESPONSEINDEX_ACCEPT]:Say[${This.AgentID}]
+			call This.PressButton "${This.BUTTON_ACCEPT_MISSION}"
 		}
 		elseif ${amIterator.Value.Type.Find[Encounter](exists)} && ${Config.Missioneer.RunKillMissions} == TRUE
 		{
 			Logger:Log["obj_Agents: Accepting Kill mission from agent ${This.AgentID}", LOG_DEBUG]
-			dsIndex.Get[AGENTRESPONSEINDEX_ACCEPT]:Say[${This.AgentID}]
+			call This.PressButton "${This.BUTTON_ACCEPT_MISSION}"
 		}
 		else
 		{
@@ -985,7 +967,7 @@ objectdef obj_Agents
 			}
 			else
 			{
-				dsIndex.Get[AGENTRESPONSEINDEX_DECLINE]:Say[${This.AgentID}]
+				call This.PressButton "${This.BUTTON_DECLINE_MISSION}"
 				Config.Agents:SetLastDecline[${This.AgentName},${Time.Timestamp}]
 				Logger:Log["obj_Agents: Declined mission."]
 				Config:Save[]
@@ -994,7 +976,6 @@ objectdef obj_Agents
 
 		Logger:Log["Waiting for mission dialog to update...", LOG_DEBUG]
 		wait 60
-		Logger:Log["${EVE.Agent[${This.AgentIndex}].Name} Dialog: ${EVE.Agent[${This.AgentIndex}].Dialog}"]
 
 		EVEWindow[ByCaption, "Journal"]:Close
 		EVEWindow[ByCaption, "Agent Conversation - ${This.ActiveAgent}"]:Close
@@ -1006,49 +987,20 @@ objectdef obj_Agents
 
 		Logger:Log["obj_Agents:TurnInMission: Starting conversation with agent ${This.ActiveAgent}."]
 		EVE.Agent[${This.AgentIndex}]:StartConversation
-
 		do
 		{
 			Logger:Log["obj_Agents:TurnInMission: Waiting for conversation window..."]
 			wait 10
 		}
-		while !${EVEWindow[ByCaption, "Agent Conversation - ${This.ActiveAgent}"](exists)}
+		while !${EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].NumButtons} > 0
+
 		call This.UpdateLocatorAgent
-		Logger:Log["${EVE.Agent[${This.AgentIndex}].Name} :: ${EVE.Agent[${This.AgentIndex}].Dialog}"]
 
-		; display your dialog options
-		variable index:dialogstring dsIndex
-		variable iterator dsIterator
-
-		EVE.Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
-		dsIndex:GetIterator[dsIterator]
-
-		if ${dsIterator:First(exists)}
-		{
-			do
-			{
-				Logger:Log["obj_Agents:TurnInMission dsIterator.Value.Text: ${dsIterator.Value.Text}"]
-				if (${dsIterator.Value.Text.Find["View Mission"]})
-				{
-					dsIterator.Value:Say[${This.AgentID}]
-					Config.Agents:SetLastCompletionTime[${This.AgentName},${Time.Timestamp}]
-					break
-				}
-			}
-			while (${dsIterator:Next(exists)})
-		}
-
-		; Now wait a couple of seconds and then get the new dialog options...and so forth.  The "Wait" needed may differ from person to person.
-		Logger:Log["obj_Agents:TurnInMission: Waiting for agent dialog to update..."]
-		wait 60
-		Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
-		dsIndex:GetIterator[dsIterator]
 		Logger:Log["Completing Mission..."]
-		dsIndex.Get[AGENTRESPONSEINDEX_COMPLETE_MISSION]:Say[${This.AgentID}]
+		call This.PressButton "${This.BUTTON_COMPLETE_MISSION}"
 
 		Logger:Log["Waiting for mission dialog to update..."]
 		wait 60
-		Logger:Log["${Agent[${This.AgentIndex}].Name} :: ${Agent[${This.AgentIndex}].Dialog}"]
 
 		EVEWindow[ByCaption, "Journal"]:Close
 		EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"]:Close
@@ -1075,27 +1027,13 @@ objectdef obj_Agents
 			Logger:Log["obj_Agents:QuitMission: Waiting for conversation window..."]
 			wait 10
 		}
-		while !${EVEWindow[ByCaption, "Agent Conversation - ${This.ActiveAgent}"](exists)}
+		while !${EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].NumButtons} > 0
 
-		Logger:Log["${EVE.Agent[${This.AgentIndex}].Name} :: ${EVE.Agent[${This.AgentIndex}].Dialog}"]
-
-		; display your dialog options
-		variable index:dialogstring dsIndex
-		variable iterator dsIterator
-
-		EVE.Agent[${This.AgentIndex}]:GetDialogResponses[dsIndex]
-		dsIndex:GetIterator[dsIterator]
-
-		if ${dsIndex.Used} == 2
-		{
-			; Assume the second item is the "quit mission" item.
-			dsIndex.Get[AGENTRESPONSEINDEX_QUIT_MISSION]:Say[${This.AgentID}]
-		}
+		call This.PressButton "${This.BUTTON_QUIT_MISSION}"
 
 		; Now wait a couple of seconds and then get the new dialog options...and so forth.  The "Wait" needed may differ from person to person.
 		Logger:Log["Waiting for agent dialog to update..."]
 		wait 60
-		Logger:Log["${EVE.Agent[${This.AgentIndex}].Name} :: ${EVE.Agent[${This.AgentIndex}].Dialog}"]
 
 		EVEWindow[ByCaption, "Journal"]:Close
 		EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"]:Close

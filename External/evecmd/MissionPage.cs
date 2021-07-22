@@ -50,7 +50,7 @@ namespace evecmd
         {
             get
             {
-                int end = doc.IndexOf("msup3") - 1;
+                int end = doc.IndexOf("m³") - 1;
                 int start = doc.LastIndexOf("(", end) + 1;
 
                 return double.Parse(doc.Substring(start, end - start));
