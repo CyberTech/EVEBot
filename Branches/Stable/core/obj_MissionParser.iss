@@ -92,11 +92,12 @@ objectdef obj_MissionParser
 	member:float Volume()
 	{
 		variable int retval = 0
-
-		right:Set[${This.MissionDetails.Escape.Find["msup3"]}]
+		variable string CubicMetreUtf8 = "m³"
+		
+		right:Set[${This.MissionDetails.Escape.Find[${CubicMetreUtf8}]}]
 		if ${right} > 0
 		{
-			;Logger:Log["${LogPrefix}: DEBUG: Found \"msup3\" at ${right}.", LOG_DEBUG]
+			; Logger:Log["${LogPrefix}: DEBUG: Found \"${CubicMetreUtf8}\" at ${right}.", LOG_DEBUG]
 			right:Dec
 			left:Set[${This.MissionDetails.Escape.Mid[${Math.Calc[${right}-16]},16].Find[" ("]}]
 			if ${left} > 0
@@ -111,12 +112,12 @@ objectdef obj_MissionParser
 			}
 			else
 			{
-				Logger:Log["${LogPrefix}: ERROR: Did not find number before \"msup3\"!", LOG_CRITICAL]
+				Logger:Log["${LogPrefix}: ERROR: Did not find number before \"${CubicMetreUtf8}\"!", LOG_CRITICAL]
 			}
 		}
 		else
 		{
-			Logger:Log["${LogPrefix}: WARNING: Did not find \"msup3\".  No cargo???"]
+			Logger:Log["${LogPrefix}: WARNING: Did not find \"${CubicMetreUtf8}\".  No cargo???"]
 		}
 
 		return ${retval}
