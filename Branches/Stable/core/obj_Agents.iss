@@ -761,7 +761,7 @@ objectdef obj_Agents
 
 	function:bool CheckButtonExists(string buttontext)
 	{
-		Logger:Log["obj_Agents: Looking for button \"${buttontext}\""]
+		; Logger:Log["obj_Agents: Looking for button '${buttontext}'"]
 		variable int Count
 		for (Count:Set[1] ; ${Count}<=${EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].NumButtons} ; Count:Inc)
 		{
@@ -775,7 +775,7 @@ objectdef obj_Agents
 
 	function PressButton(string buttontext)
 	{
-		Logger:Log["obj_Agents: Pressing button \"${buttontext}\""]
+		Logger:Log["obj_Agents: Pressing button '${buttontext}'"]
 		do
 		{
 			EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].Button[${buttontext}]:Press
