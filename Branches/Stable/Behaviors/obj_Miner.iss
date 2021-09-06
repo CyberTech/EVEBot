@@ -1309,6 +1309,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 		{
 			if ${MyShip.HasOreHold}
 			{
+				call Inventory.ShipOreHold.Activate
 				if ${Ship.OreHoldFreeSpace} < ${Ship.OreHoldMinimumFreeSpace}
 				{
 					return TRUE
