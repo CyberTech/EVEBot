@@ -763,9 +763,9 @@ objectdef obj_Agents
 	{
 		; Logger:Log["obj_Agents: Looking for button '${buttontext}'"]
 		variable int Count
-		for (Count:Set[1] ; ${Count}<=${EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].NumButtons} ; Count:Inc)
+		for (Count:Set[1] ; ${Count}<=${EVEWindow[ByCaption, Agent Conversation - ${EVE.Agent[${currentAgentIndex}].Name}].NumButtons} ; Count:Inc)
 		{
-			if ${EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].Button[${Count}].Text.Equal[${buttontext}]}
+			if ${EVEWindow[ByCaption, Agent Conversation - ${EVE.Agent[${currentAgentIndex}].Name}].Button[${Count}].Text.Equal[${buttontext}]}
 			{
 				return TRUE
 			}
@@ -778,7 +778,7 @@ objectdef obj_Agents
 		Logger:Log["obj_Agents: Pressing button '${buttontext}'"]
 		do
 		{
-			EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].Button[${buttontext}]:Press
+			EVEWindow[ByCaption, Agent Conversation - ${EVE.Agent[${currentAgentIndex}].Name}].Button[${buttontext}]:Press
 			wait 50
 			call This.CheckButtonExists "${buttontext}"
 		}
@@ -813,7 +813,7 @@ objectdef obj_Agents
 			Logger:Log["obj_Agents:RequestMission: Waiting for conversation window..."]
 			wait 50
 		}
-		while !${EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].NumButtons} > 0
+		while !${EVEWindow[ByCaption, Agent Conversation - ${EVE.Agent[${currentAgentIndex}].Name}].NumButtons} > 0
 
 		call This.UpdateLocatorAgent
 
@@ -992,7 +992,7 @@ objectdef obj_Agents
 			Logger:Log["obj_Agents:TurnInMission: Waiting for conversation window..."]
 			wait 10
 		}
-		while !${EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].NumButtons} > 0
+		while !${EVEWindow[ByCaption, Agent Conversation - ${EVE.Agent[${currentAgentIndex}].Name}].NumButtons} > 0
 
 		call This.UpdateLocatorAgent
 
@@ -1027,7 +1027,7 @@ objectdef obj_Agents
 			Logger:Log["obj_Agents:QuitMission: Waiting for conversation window..."]
 			wait 10
 		}
-		while !${EVEWindow[agentinteraction_${EVE.Agent[${This.AgentIndex}].ID}].NumButtons} > 0
+		while !${EVEWindow[ByCaption, Agent Conversation - ${EVE.Agent[${currentAgentIndex}].Name}].NumButtons} > 0
 
 		call This.PressButton "${This.BUTTON_QUIT_MISSION}"
 
