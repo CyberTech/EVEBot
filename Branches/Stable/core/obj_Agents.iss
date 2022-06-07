@@ -763,9 +763,9 @@ objectdef obj_Agents
 	{
 		; Logger:Log["obj_Agents: Looking for button '${buttontext}'"]
 		variable int Count
-		for (Count:Set[1] ; ${Count}<=${EVEWindow[ByCaption, Agent Conversation - ${EVE.Agent[${currentAgentIndex}].Name}].NumButtons} ; Count:Inc)
+		for (Count:Set[1] ; ${Count}<=${EVEWindow[byCaption, Agent Conversation].NumButtons} ; Count:Inc)
 		{
-			if ${EVEWindow[ByCaption, Agent Conversation - ${EVE.Agent[${currentAgentIndex}].Name}].Button[${Count}].Text.Equal[${buttontext}]}
+			if ${EVEWindow[byCaption, Agent Conversation].Button[${Count}].Text.Equal[${buttontext}]}
 			{
 				return TRUE
 			}
@@ -778,7 +778,7 @@ objectdef obj_Agents
 		Logger:Log["obj_Agents: Pressing button '${buttontext}'"]
 		do
 		{
-			EVEWindow[ByCaption, Agent Conversation - ${EVE.Agent[${currentAgentIndex}].Name}].Button[${buttontext}]:Press
+			EVEWindow[byCaption, Agent Conversation].Button[${buttontext}]:Press
 			wait 50
 			call This.CheckButtonExists "${buttontext}"
 		}
@@ -813,7 +813,7 @@ objectdef obj_Agents
 			Logger:Log["obj_Agents:RequestMission: Waiting for conversation window..."]
 			wait 50
 		}
-		while !${EVEWindow[ByCaption, Agent Conversation - ${EVE.Agent[${currentAgentIndex}].Name}].NumButtons} > 0
+		while !${EVEWindow[byCaption, Agent Conversation](exists)}
 
 		call This.UpdateLocatorAgent
 
@@ -992,7 +992,7 @@ objectdef obj_Agents
 			Logger:Log["obj_Agents:TurnInMission: Waiting for conversation window..."]
 			wait 10
 		}
-		while !${EVEWindow[ByCaption, Agent Conversation - ${EVE.Agent[${currentAgentIndex}].Name}].NumButtons} > 0
+		while !${EVEWindow[byCaption, Agent Conversation].NumButtons} > 0
 
 		call This.UpdateLocatorAgent
 
@@ -1005,13 +1005,13 @@ objectdef obj_Agents
 		EVEWindow[ByCaption, "Journal"]:Close
 		EVEWindow[ByCaption,"Agent Conversation - ${This.ActiveAgent}"]:Close
 
-		variable int Waiting = 1200
-		if ${Math.Rand[2]} == 0 && ${Config.Common.Randomize}
-		{
-			Waiting:Set[${Math.Rand[18000]:Inc[2400]}]
-		}
-		Logger:Log["Delaying ${Math.Calc[${Waiting}/10/60]} minutes before next mission request"]
-		wait ${Waiting} ${EVEBot.Paused}
+		;variable int Waiting = 1200
+		;if ${Math.Rand[2]} == 0 && ${Config.Common.Randomize}
+		;{
+		;	Waiting:Set[${Math.Rand[18000]:Inc[2400]}]
+		;}
+		;Logger:Log["Delaying ${Math.Calc[${Waiting}/10/60]} minutes before next mission request"]
+		;wait ${Waiting} ${EVEBot.Paused}
 	}
 
 	function QuitMission()
@@ -1027,7 +1027,7 @@ objectdef obj_Agents
 			Logger:Log["obj_Agents:QuitMission: Waiting for conversation window..."]
 			wait 10
 		}
-		while !${EVEWindow[ByCaption, Agent Conversation - ${EVE.Agent[${currentAgentIndex}].Name}].NumButtons} > 0
+		while !${EVEWindow[byCaption, Agent Conversation].NumButtons} > 0
 
 		call This.PressButton "${This.BUTTON_QUIT_MISSION}"
 
