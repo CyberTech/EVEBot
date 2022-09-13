@@ -19,15 +19,16 @@ function main()
 
 	declarevariable Inventory obj_Inventory script
 
-	call Inventory.ShipOreHold.Activate
+	call Inventory.ShipGeneralMiningHold.Activate
 	if ${Return}
   {
-		echo "Failed - Does this ship have an ore hold?  MyShip.HasOreHold=${MyShip.HasOreHold}. Pick a ship without."
+		echo "Failed - Does this ship have an ore hold?  MyShip.HasOreHold=${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)}. Pick a ship without."
+    echo "Used Cap = ${Inventory.ShipGeneralMiningHold.UsedCapacity}"
   }
   else
   {
     echo "Activate returned false, confirming with IsCurrent"
-    if ${Inventory.ShipOreHold.IsCurrent}
+    if ${Inventory.ShipGeneralMiningHold.IsCurrent
     {
       echo "Failed: IsCurrent should be false"
     }

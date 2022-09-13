@@ -265,9 +265,9 @@ objectdef obj_Ship
 
 	method StackOreHold()
 	{
-		if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipOreHold](exists)}
+		if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)}
 		{
-			EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipOreHold]:MakeActive
+			EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold]:MakeActive
 			EVEWindow["Inventory"]:StackAll
 		}
 	}
@@ -284,17 +284,17 @@ objectdef obj_Ship
 
 	member:float OreHoldCapacity()
 	{
-		return ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipOreHold].Capacity}
+		return ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold].Capacity}
 	}
 
 	member:float OreHoldUsedCapacity()
 	{
-		return ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipOreHold].UsedCapacity}
+		return ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold].UsedCapacity}
 	}
 
 	member:bool OreHoldFull()
 	{
-		if ${Inventory.ShipOreHold.UsedCapacity} < 0
+		if ${Inventory.ShipGeneralMiningHold.UsedCapacity} < 0
 		{
 			return FALSE
 		}
@@ -308,7 +308,7 @@ objectdef obj_Ship
 
 	member:bool OreHoldHalfFull()
 	{
-		if ${Inventory.ShipOreHold.UsedCapacity} < 0
+		if ${Inventory.ShipGeneralMiningHold.UsedCapacity} < 0
 		{
 			return FALSE
 		}

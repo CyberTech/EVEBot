@@ -428,7 +428,7 @@ objectdef obj_Orca
 
 				;	If we're in Orca mode, we need to unload all locations capable of holding ore, not just the cargo hold.
 				;	Note:  I need to replace the shuffle with 3 direct movements
-				call Cargo.TransferCargoFromShipOreHoldToStation
+				call Cargo.TransferCargoFromShipGeneralMiningHoldToStation
 				call Cargo.TransferCargoFromShipCorporateHangarToStation
 				call Cargo.TransferOreToStationHangar
 
@@ -796,7 +796,7 @@ objectdef obj_Orca
 		{
 			if !${Config.Miner.DeliveryLocationTypeName.Equal["Jetcan"]} && ${Ship.CorpHangarHalfFull}
 			{
-				call Inventory.ShipOreHold.Activate
+				call Inventory.ShipGeneralMiningHold.Activate
 				; Orca Base cargo space: Cargo: 30k, Ore: 150k, Fleet: 40k
 				if !${Ship.OreHoldFull}
 				{
@@ -822,7 +822,7 @@ objectdef obj_Orca
 			if ${Config.Miner.SafeJetcan}
 			{
 				;	This checks to make sure the player in our delivery location is in range and not warping before we dump a jetcan
-				if ((${MyShip.HasOreHold} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoHalfFull})
+				if ((${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoHalfFull})
 				{
 					if ${Entity[Name = "${This.DeliveryLocation}"](exists)} && \
 						${Entity[Name = "${This.DeliveryLocation}"].Distance} < 20000 && \
@@ -841,7 +841,7 @@ objectdef obj_Orca
 			}
 			else
 			{
-				if ((${MyShip.HasOreHold} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoHalfFull})
+				if ((${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoHalfFull})
 				{
 					call Cargo.TransferOreToJetCan
 					;	Need a wait here because it would try to move the same item more than once

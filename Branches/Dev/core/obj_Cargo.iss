@@ -497,7 +497,7 @@ objectdef obj_Cargo
 						Logger:Log["TransferCargoFromShipCorporateHangarToOreHold: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
 						if ${QuantityToMove} > 0
 						{
-							CargoIterator.Value:MoveTo[${MyShip.ID}, ShipOreHold, ${QuantityToMove}]
+							CargoIterator.Value:MoveTo[${MyShip.ID}, ShipGeneralMiningHold, ${QuantityToMove}]
 							wait 15
 						}
 
@@ -516,7 +516,7 @@ objectdef obj_Cargo
 		}
 	}
 
-	function TransferCargoFromShipOreHoldToStation()
+	function TransferCargoFromShipGeneralMiningHoldToStation()
 	{
 
 		variable index:item HangarCargo
@@ -531,8 +531,8 @@ objectdef obj_Cargo
 				{
 
 					QuantityToMove:Set[${CargoIterator.Value.Quantity}]
-					Logger:Log["TransferCargoFromShipOreHoldToStation: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
-					Logger:Log["TransferCargoFromShipOreHoldToStation: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
+					Logger:Log["TransferCargoFromShipGeneralMiningHoldToStation: Loading Cargo: ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}]}m3) of ${CargoIterator.Value.Name}"]
+					Logger:Log["TransferCargoFromShipGeneralMiningHoldToStation: Loading Cargo: DEBUG: TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID}"]
 					if ${QuantityToMove} > 0
 					{
 						CargoIterator.Value:MoveTo[MyStationHangar, Hangar, ${QuantityToMove}]
@@ -543,7 +543,7 @@ objectdef obj_Cargo
 		}
 		else
 		{
-			Logger:Log["DEBUG: obj_Cargo:TransferCargoFromShipOreHoldToStation: Nothing found to move"]
+			Logger:Log["DEBUG: obj_Cargo:TransferCargoFromShipGeneralMiningHoldToStation: Nothing found to move"]
 		}
 	}
 
@@ -1068,7 +1068,7 @@ objectdef obj_Cargo
 
 		call Ship.OpenCargo
 
-		if ${MyShip.HasOreHold}
+		if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)}
 		{
 			MyShip:GetOreHoldCargo[This.CargoToTransfer]
 		}
@@ -1098,7 +1098,7 @@ objectdef obj_Cargo
 
 		call Ship.OpenCargo
 
-		if ${MyShip.HasOreHold}
+		if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)}
 		{
 			MyShip:GetOreHoldCargo[This.CargoToTransfer]
 		}
@@ -1171,7 +1171,7 @@ objectdef obj_Cargo
 
 		call Ship.OpenCargo
 
-		if ${MyShip.HasOreHold}
+		if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)}
 		{
 			MyShip:GetOreHoldCargo[This.CargoToTransfer]
 		}
@@ -1190,7 +1190,7 @@ objectdef obj_Cargo
 
 		call Ship.OpenCargo
 
-		if ${MyShip.HasOreHold}
+		if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)}
 		{
 			MyShip:GetOreHoldCargo[This.CargoToTransfer]
 		}
@@ -1217,7 +1217,7 @@ objectdef obj_Cargo
 		Logger:Log["Transferring Ore to Station Hangar"]
 		call This.OpenHolds
 
-		if ${MyShip.HasOreHold}
+		if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)}
 		{
 			MyShip:GetOreHoldCargo[This.CargoToTransfer]
 		}
@@ -1323,7 +1323,7 @@ objectdef obj_Cargo
 		Logger:Log["Transferring Ore to Corp Hangar"]
 		;call Ship.OpenCargo
 
-		if ${MyShip.HasOreHold}
+		if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)}
 		{
 			MyShip:GetOreHoldCargo[This.CargoToTransfer]
 		}

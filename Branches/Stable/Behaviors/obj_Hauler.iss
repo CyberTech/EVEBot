@@ -209,9 +209,9 @@ objectdef obj_Hauler
 			call Inventory.ShipCargo.Activate
 		}
 
-		if ${MyShip.HasOreHold} && ${Inventory.ShipOreHold.UsedCapacity} < 0
+		if ${Inventory.ShipGeneralMiningHold.UsedCapacity} < 0
 		{
-			call Inventory.ShipOreHold.Activate
+			call Inventory.ShipGeneralMiningHold.Activate
 		}
 
 		switch ${This.CurrentState}
@@ -332,7 +332,7 @@ objectdef obj_Hauler
 				}
 
 				call Cargo.TransferCargoToStationHangar
-				call Cargo.TransferCargoFromShipOreHoldToStation
+				call Cargo.TransferCargoFromShipGeneralMiningHoldToStation
 				call Cargo.TransferCargoFromShipCorporateHangarToStation
 				if ${This.HaulerFull}
 				{
@@ -514,7 +514,7 @@ objectdef obj_Hauler
 		}
 
 		; Open cargohold. If in orca or rorq open the rest
-		call Inventory.ShipOreHold.Activate
+		call Inventory.ShipGeneralMiningHold.Activate
 		call Inventory.ShipFleetHangar.Activate
 
 		;Construct the list of jet cans near by
@@ -712,7 +712,7 @@ objectdef obj_Hauler
 		else
 		{
 			; Transfer from the Orca
-			if ${MyShip.HasOreHold}
+			if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)}
 			{
 				call Cargo.TransferOreFromEntityFleetHangarToOreHold ${OrcaID}
 			}
@@ -996,12 +996,12 @@ objectdef obj_Hauler
 			call Inventory.ShipCargo.Activate
 		}
 
-		if ${MyShip.HasOreHold} && ${Inventory.ShipOreHold.UsedCapacity} < 0
+		if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)} && ${Inventory.ShipGeneralMiningHold.UsedCapacity} < 0
 		{
-			call Inventory.ShipOreHold.Activate
+			call Inventory.ShipGeneralMiningHold.Activate
 		}
 
-		if ${MyShip.HasOreHold}
+		if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)}
 		{
 			Logger:Log["Hauler: Delivering Cargo: Ore Hold Used ${Ship.OreHoldUsedCapacity} / ${Ship.OreHoldCapacity} available"]
 		}
@@ -1266,7 +1266,7 @@ objectdef obj_Hauler
 	;	*	Are our miners ice mining
 	member:bool HaulerFull()
 	{
-		if ${MyShip.HasOreHold}
+		if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)}
 		{
 			if ${Ship.OreHoldFull}
 			{

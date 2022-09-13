@@ -487,7 +487,7 @@ objectdef obj_Miner
 				}
 
 				call Cargo.TransferOreToStationHangar
-				call Cargo.TransferCargoFromShipOreHoldToStation
+				call Cargo.TransferCargoFromShipGeneralMiningHoldToStation
 
 				LastUsedCargoCapacity:Set[0]
 				call Station.Undock
@@ -914,16 +914,16 @@ objectdef obj_Miner
 			}
 
 			; This performs Orca deliveries if we've got at least a tenth of our cargo hold full
-			if ${MyShip.HasOreHold}
+			if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)}
 			{
-				call Inventory.ShipOreHold.Activate
+				call Inventory.ShipGeneralMiningHold.Activate
 			}
 			else
 			{
 				call Inventory.ShipCargo.Activate
 			}
 
-			if (${MyShip.HasOreHold} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoTenthFull}
+			if (${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoTenthFull}
 			{
 					Logger:Log["Emptying ore to ${Entity[${Orca.Escape}].Name}'s Corporate Hangars"]
 					call Cargo.TransferOreToShipCorpHangar ${Entity[${Orca.Escape}].ID}
@@ -1161,7 +1161,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 		{
 			if ${Config.Miner.SafeJetcan}
 			{
-				if ((${MyShip.HasOreHold} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoHalfFull})
+				if ((${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoHalfFull})
 				{
 					if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)} && \
 						${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && \
@@ -1180,7 +1180,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 			}
 			else
 			{
-				if ((${MyShip.HasOreHold} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoHalfFull})
+				if ((${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoHalfFull})
 				{
 					call Cargo.TransferOreToJetCan
 					;	Need a wait here because it would try to move the same item more than once
@@ -1293,7 +1293,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 		}
 		if ${Config.Miner.IceMining}
 		{
-			if ${MyShip.HasOreHold}
+			if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)}
 			{
 				if ${Ship.OreHoldFreeSpace} < 1000
 				{
@@ -1307,7 +1307,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 		}
 		else
 		{
-			if ${MyShip.HasOreHold}
+			if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)}
 			{
 				if ${Ship.OreHoldFreeSpace} < ${Ship.OreHoldMinimumFreeSpace}
 				{

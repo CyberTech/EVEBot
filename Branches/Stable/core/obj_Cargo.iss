@@ -400,7 +400,7 @@ objectdef obj_Cargo
 
 	function TransferOreFromEntityFleetHangarToOreHold(int64 SourceID)
 	{
-		if !${MyShip.HasOreHold}
+		if !${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)}
 		{
 			Logger:Log["TransferOreFromEntityFleetHangarToOreHold - No Ore Hold Detected!", LOG_DEBUG]
 			return
@@ -421,7 +421,7 @@ objectdef obj_Cargo
 	; Transfer cargo from my ships fleet hangar to my ships ore hold
 	function TransferOreFromShipFleetHangarToOreHold()
 	{
-		if !${MyShip.HasOreHold}
+		if !${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)}
 		{
 			Logger:Log["TransferOreFromShipFleetHangarToOreHold - No Ore Hold Detected!", LOG_DEBUG]
 			return
@@ -438,19 +438,19 @@ objectdef obj_Cargo
 		}
 	}
 
-	function TransferCargoFromShipOreHoldToStation()
+	function TransferCargoFromShipGeneralMiningHoldToStation()
 	{
 		variable int QuantityToMove
 		variable iterator CargoIterator
-		if !${MyShip.HasOreHold}
+		if !${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)}
 		{
 			return
 		}
 
 		Logger:Log["Moving ore from Ship Ore Hold to Station Hangar"]
 
-		call Inventory.ShipOreHold.Activate
-		if !${Inventory.ShipOreHold.IsCurrent}
+		call Inventory.ShipGeneralMiningHold.Activate
+		if !${Inventory.ShipGeneralMiningHold.IsCurrent}
 		{
 			return
 		}
@@ -466,12 +466,12 @@ objectdef obj_Cargo
 
 				if ${QuantityToMove} == 0
 				{
-					Logger:Log["TransferCargoFromShipOreHoldToStation: Skipping - no space: ${CargoIterator.Value.Quantity} units (${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name} (TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID})"]
+					Logger:Log["TransferCargoFromShipGeneralMiningHoldToStation: Skipping - no space: ${CargoIterator.Value.Quantity} units (${Math.Calc[${CargoIterator.Value.Quantity} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name} (TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID})"]
 					continue
 				}
 				else
 				{
-					Logger:Log["TransferCargoFromShipOreHoldToStation: Moving ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name} (TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID})"]
+					Logger:Log["TransferCargoFromShipGeneralMiningHoldToStation: Moving ${QuantityToMove} units (${Math.Calc[${QuantityToMove} * ${CargoIterator.Value.Volume}].Precision[2]}m3) of ${CargoIterator.Value.Name} (TypeID = ${CargoIterator.Value.TypeID}, GroupID = ${CargoIterator.Value.GroupID})"]
 				}
 
 				CargoIterator.Value:MoveTo[MyStationHangar, Hangar, ${QuantityToMove}]
@@ -481,7 +481,7 @@ objectdef obj_Cargo
 		}
 		else
 		{
-			Logger:Log["DEBUG: obj_Cargo:TransferCargoFromShipOreHoldToStation: Nothing found to move", LOG_DEBUG]
+			Logger:Log["DEBUG: obj_Cargo:TransferCargoFromShipGeneralMiningHoldToStation: Nothing found to move", LOG_DEBUG]
 		}
 	}
 
@@ -916,14 +916,14 @@ objectdef obj_Cargo
 		}
 
 		call Inventory.ShipCargo.Activate
-		if ${Inventory.ShipCargo.IsCurrent}
+		if ${Inventory.ShipGeneralMiningHold.IsCurrent}
 		{
 			call Inventory.Current.Stack
 			Inventory.Current:GetItems[This.CargoToTransfer, "CategoryID == CATEGORYID_ORE"]
 			call This.TransferListToPOSCorpHangar "CorpHangarArray"
 		}
 
-		call Inventory.ShipOreHold.Activate
+		call Inventory.ShipGeneralMiningHold.Activate
 		if ${Inventory.ShipOreHold.IsCurrent}
 		{
 			call Inventory.Current.Stack
@@ -957,8 +957,8 @@ objectdef obj_Cargo
 			call This.TransferListToPOSCorpHangar "LargeShipAssemblyArray"
 		}
 
-		call Inventory.ShipOreHold.Activate
-		if ${Inventory.ShipOreHold.IsCurrent}
+		call Inventory.ShipGeneralMiningHold.Activate
+		if ${Inventory.ShipGeneralMiningHold.IsCurrent}
 		{
 			call Inventory.Current.Stack
 			Inventory.Current:GetItems[This.CargoToTransfer, "CategoryID == CATEGORYID_ORE"]
@@ -991,8 +991,8 @@ objectdef obj_Cargo
 			call This.TransferListToPOSCorpHangar "CompressionArray"
 		}
 
-		call Inventory.ShipOreHold.Activate
-		if ${Inventory.ShipOreHold.IsCurrent}
+		call Inventory.ShipGeneralMiningHold.Activate
+		if ${Inventory.ShipGeneralMiningHold.IsCurrent}
 		{
 			call Inventory.Current.Stack
 			Inventory.Current:GetItems[This.CargoToTransfer, "CategoryID == CATEGORYID_ORE"]
@@ -1105,8 +1105,8 @@ objectdef obj_Cargo
 			call This.TransferListToPOSCorpHangar "XLargeShipAssemblyArray"
 		}
 
-		call Inventory.ShipOreHold.Activate
-		if ${Inventory.ShipOreHold.IsCurrent}
+		call Inventory.ShipGeneralMiningHold.Activate
+		if ${Inventory.ShipGeneralMiningHold.IsCurrent}
 		{
 			call Inventory.Current.Stack
 			Inventory.Current:GetItems[This.CargoToTransfer, "CategoryID == CATEGORYID_ORE"]
@@ -1128,8 +1128,8 @@ objectdef obj_Cargo
 			call This.TransferListToJetCan
 		}
 
-		call Inventory.ShipOreHold.Activate
-		if ${Inventory.ShipOreHold.IsCurrent}
+		call Inventory.ShipGeneralMiningHold.Activate
+		if ${Inventory.ShipGeneralMiningHold.IsCurrent}
 		{
 			call Inventory.Current.Stack
 			Inventory.Current:GetItems[This.CargoToTransfer, "CategoryID == CATEGORYID_ORE"]
@@ -1155,8 +1155,8 @@ objectdef obj_Cargo
 			call This.TransferListToStationHangar
 		}
 
-		call Inventory.ShipOreHold.Activate
-		if ${Inventory.ShipOreHold.IsCurrent}
+		call Inventory.ShipGeneralMiningHold.Activate
+		if ${Inventory.ShipGeneralMiningHold.IsCurrent}
 		{
 			call Inventory.Current.Stack
 			Inventory.Current:GetItems[This.CargoToTransfer, "CategoryID == CATEGORYID_ORE"]
@@ -1254,8 +1254,8 @@ objectdef obj_Cargo
 			call This.TransferListToShipCorporateHangar ${dest}
 		}
 
-		call Inventory.ShipOreHold.Activate
-		if ${Inventory.ShipOreHold.IsCurrent}
+		call Inventory.ShipGeneralMiningHold.Activate
+		if ${Inventory.ShipGeneralMiningHold.IsCurrent}
 		{
 			call Inventory.Current.Stack
 			Inventory.Current:GetItems[This.CargoToTransfer, "CategoryID == CATEGORYID_ORE"]

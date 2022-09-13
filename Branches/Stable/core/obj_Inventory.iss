@@ -320,7 +320,7 @@ objectdef obj_Inventory inherits obj_BaseClass
 	variable weakref Current
 	variable obj_EVEWindow_Proxy ShipCargo
 	variable obj_EVEWindow_Proxy ShipFleetHangar
-	variable obj_EVEWindow_Proxy ShipOreHold
+	variable obj_EVEWindow_Proxy ShipGeneralMiningHold
 	variable obj_EVEWindow_Proxy ShipDroneBay
 
 	variable obj_EVEWindow_Proxy StationHangar
@@ -339,7 +339,7 @@ objectdef obj_Inventory inherits obj_BaseClass
 
 		ShipCargo:SetLocation[ShipCargo]
 		ShipFleetHangar:SetLocation[ShipFleetHangar]
-		ShipOreHold:SetLocation[ShipOreHold]
+		ShipGeneralMiningHold:SetLocation[ShipGeneralMiningHold]
 		ShipDroneBay:SetLocation[ShipDroneBay]
 		StationHangar:SetLocation[StationItems]
 		StationCorpHangars:SetLocation[StationCorpHangars]
@@ -435,7 +435,7 @@ StructureShipHangar
 
 Note - each of the below also applies to the ships in the ship hangar, given the right id
 ShipCargo itemid flagCargo 5
-ShipOreHold itemid flagSpecializedOreHold 134
+ShipGeneralMiningHold itemid flagSpecializedOreHold 134
 ShipFleetHangar itemid flagFleetHangar 155
 ShipMaintenanceBay itemid flagShipHangar 90
 ShipDroneBay itemid flagDroneBay 87
