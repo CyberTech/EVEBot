@@ -195,18 +195,18 @@ objectdef obj_Asteroids
 			if !${IgnoreClaimedStatus} && ${AsteroidList_Claimed.Contains[${AsteroidIterator.Value.ID}]}
 			{
 				; Someone else claimed it first. Oh, the vogonity!
-				Logger:Log["DEBUG: obj_Asteroids:NearestAsteroid: Skipping ${AsteroidIterator.Value.ID} (Claimed)", LOG_DEBUG]
+				;Logger:Log["DEBUG: obj_Asteroids:NearestAsteroid: Skipping ${AsteroidIterator.Value.ID} (Claimed)", LOG_DEBUG]
 				continue
 			}
 			if ${AsteroidIterator.Value.IsLockedTarget} || ${AsteroidIterator.Value.BeingTargeted}
 			{
-				Logger:Log["DEBUG: obj_Asteroids:NearestAsteroid: Skipping ${AsteroidIterator.Value.ID} (locked/beinglocked)", LOG_DEBUG]
+				;Logger:Log["DEBUG: obj_Asteroids:NearestAsteroid: Skipping ${AsteroidIterator.Value.ID} (locked/beinglocked)", LOG_DEBUG]
 				continue
 			}
 			; Now check regular distance
 			if ${AsteroidIterator.Value.Distance} >= ${MaxDistance}
 			{
-				Logger:Log["DEBUG: obj_Asteroids:NearestAsteroid: Skipping ${AsteroidIterator.Value.ID} (Distance > ${MaxDistance})", LOG_DEBUG]
+				;Logger:Log["DEBUG: obj_Asteroids:NearestAsteroid: Skipping ${AsteroidIterator.Value.ID} (Distance > ${MaxDistance})", LOG_DEBUG]
 				continue
 			}
 
@@ -231,7 +231,7 @@ objectdef obj_Asteroids
 						if ${AsteroidIterator.Value.DistanceTo[${MyTarget.Value.ID}]} > ${MaxDistFromTarget}
 						{
 							; We have a locked asteroid that's too far from this one;  No, this is not perfect because we don't know our position
-							Logger:Log["DEBUG: obj_Asteroids:NearestAsteroid: Skipping ${AsteroidIterator.Value.ID} (Distance from target ${MyTarget.Value.ID} > ${MaxDistFromTarget})", LOG_DEBUG]
+							;Logger:Log["DEBUG: obj_Asteroids:NearestAsteroid: Skipping ${AsteroidIterator.Value.ID} (Distance from target ${MyTarget.Value.ID} > ${MaxDistFromTarget})", LOG_DEBUG]
 							AbortLoop:Set[TRUE]
 							break
 						}

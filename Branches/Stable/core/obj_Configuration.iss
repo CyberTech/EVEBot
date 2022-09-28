@@ -600,6 +600,16 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Group Mode At Range, ${value}]
 	}
 
+	member:bool GroupModeAtBoostRange()
+	{
+		return ${This.MinerRef.FindSetting[Group Mode At Boost Range, FALSE]}
+	}
+
+	method SetGroupModeAtBoostRange(bool value)
+	{
+		This.MinerRef:AddSetting[Group Mode At Boost Range, ${value}]
+	}
+
 	; Deprecated 2020-11-222
 	member:bool OrcaMode()
 	{

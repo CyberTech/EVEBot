@@ -61,6 +61,7 @@ objectdef obj_Miner
 		This.TripStartTime:Set[${Time.Timestamp}]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 
+		LavishScript:RegisterEvent[EVEBOT_Orca_InBelt]
 		Event[EVEBot_Orca_InBelt]:AttachAtom[This:Event_OrcaIsInBelt]
 
 		LavishScript:RegisterEvent[EVEBot_Master_InBelt]
@@ -939,8 +940,8 @@ objectdef obj_Miner
 				; if for some reason we are too far away from our master go find him
 				if ${EVEBot.MasterName.NotEqual[NULL]}
 				{
-					; We want to stay within range of the Master, see if we need to move
-					if ${Config.Miner.GroupModeAtRange}
+					; We want to stay within loot range of the Master, see if we need to move
+					if (${Config.Miner.GroupModeAtRange} || !${Config.Miner.GroupModeAtBoostRange})
 					{
 						;	Find out if we need to approach this target.
 						if ${Entity[${Master.Escape}](exists)} && ${Entity[${Master.Escape}].Distance} > LOOT_RANGE/5 && ${This.Approaching} == 0
@@ -998,6 +999,66 @@ objectdef obj_Miner
 								return
 							}
 						}
+					}
+					; We want to stay within range of the Master for boosts, see if we need to move
+					elseif (${Config.Miner.GroupModeAtBoostRange} || !${Config.Miner.GroupModeAtRange})
+					{
+						;	Find out if we need to approach this target.
+						if ${Entity[${Master.Escape}](exists)} && ${Entity[${Master.Escape}].Distance} > 30000 && ${This.Approaching} == 0
+						{
+							if ${Entity[${Master.Escape}].Distance} > WARP_RANGE
+							{
+								Logger:Log["ALERT:  ${Entity[${Master.Escape}].Name} is a long way away.  Warping to it."]
+								Logger:Log["Debug: Entity:WarpTo to Master from Line _LINE_ ", LOG_DEBUG]
+								Entity[${Master.Escape}]:WarpTo[1000]
+								return
+							}
+							Logger:Log["Miner.Mine: Approaching Master to within boost range (currently ${Entity[${Master.Escape}].Distance})"]
+							This:StartApproaching[${Entity[${Master.Escape}].ID}, ${Math.Calc[1*30000]}]
+							This.ApproachingOrca:Set[TRUE]
+							return
+						}
+
+						if ${This.Approaching} != 0
+						{
+							if !${Entity[${This.Approaching}](exists)}
+							{
+								This:StopApproaching["Miner.Mine - Group master disappeared while I was approaching. Freaking bermuda triangle around here..."]
+								This.ApproachingOrca:Set[FALSE]
+								return
+							}
+
+							if ${This.TimeSpentApproaching} >= 45
+							{
+								This:StopApproaching["Miner.Mine - Approaching group master for > 45 seconds? Cancelling"]
+								This.ApproachingOrca:Set[FALSE]
+								return
+							}
+
+							;	If we're approaching a target, find out if we need to stop doing so.
+							;	After moving, we need to find out if any of our targets are out of mining range and unlock them so we can get new ones.
+							if ${Entity[${This.Approaching}].Distance} <= LOOT_RANGE*12
+							{
+								This:StopApproaching["Miner.Mine: Within boost range of ${Entity[${This.Approaching}].Name}(${Entity[${This.Approaching}].ID})"]
+								This.ApproachingOrca:Set[FALSE]
+
+								LockedTargets:Clear
+								Me:GetTargets[LockedTargets]
+								LockedTargets:GetIterator[Target]
+
+								if ${Target:First(exists)}
+								do
+								{
+									if ${Entity[${Target.Value.ID}].Distance} > ${Ship.OptimalMiningRange}
+									{
+										Logger:Log["Miner.Mine: Unlocking ${Target.Value.Name} as it is out of range after we moved."]
+										Target.Value:UnlockTarget
+									}
+								}
+								while ${Target:Next(exists)}
+								return
+						}
+							}
 					}
 					else
 					{

@@ -664,6 +664,23 @@
 								Script[EVEBot].VariableScope.Config.Miner:SetGroupModeAtRange[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
+						<checkbox name='cbGroupMinerModeKeepBoostRange'>
+							<X>400</X>
+							<Y>190</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Keep Boost Range </Text>
+							<AutoTooltip>When checked will tell evebot to stay within range of specific person listed below</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Miner.GroupModeAtBoostRange}
+								{
+								This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Miner:SetGroupModeAtBoostRange[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
 						<checkbox name='cbOrcaWrecks'>
 							<X>300</X>
 							<Y>150</Y>
