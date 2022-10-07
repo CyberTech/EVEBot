@@ -320,6 +320,20 @@ objectdef obj_Ship
 		return FALSE
 	}
 
+	member:bool OreHoldThreeQuartersFull()
+	{
+		if ${Inventory.ShipGeneralMiningHold.UsedCapacity} < 0
+		{
+			return FALSE
+		}
+
+		if ${This.OreHoldFreeSpace} <= ${Math.Calc[${This.OreHoldCapacity}*0.75]}
+		{
+			return TRUE
+		}
+		return FALSE
+	}
+
 	member:float CorpHangarMinimumFreeSpace()
 	{
 		return ${Math.Calc[${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipFleetHangar].Capacity} * 0.02]}

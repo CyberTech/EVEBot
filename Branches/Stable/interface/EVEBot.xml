@@ -670,7 +670,7 @@
 							<Height>20</Height>
 							<Width>100</Width>
 							<Text>Keep Boost Range </Text>
-							<AutoTooltip>When checked will tell evebot to stay within range of specific person listed below</AutoTooltip>
+							<AutoTooltip>When checked will tell evebot to stay within boost range of the master</AutoTooltip>
 							<OnLoad>
 								if ${Script[EVEBot].VariableScope.Config.Miner.GroupModeAtBoostRange}
 								{
@@ -696,6 +696,23 @@
 							</OnLoad>
 							<OnLeftClick>
 								Script[EVEBot].VariableScope.Config.Miner:SetOrcaTractorLoot[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
+						<checkbox name='cbCompressOreMode'>
+							<X>300</X>
+							<Y>170</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Compress Ore</Text>
+							<AutoTooltip>When this is checked miners will attempt to compress ore</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Miner.CompressOreMode}
+								{
+								This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Miner:SetCompressOreMode[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
 						<slider name='AvoidPlayerRange'>

@@ -11,6 +11,7 @@
 #include core/obj_EVEBot.iss
 
 /* Support File Includes */
+#include core/obj_Compress.iss
 #include core/obj_Skills.iss
 #include core/obj_Asteroids.iss
 #include core/obj_Drones.iss
@@ -180,6 +181,7 @@ function main()
 	declarevariable Skills obj_Skills script
 	declarevariable Bookmarks obj_Bookmarks script
 	declarevariable JetCan obj_JetCan script
+	declarevariable Compress obj_Compress script
 	declarevariable CorpHangarArray obj_CorpHangarArray script
 	declarevariable LargeShipAssemblyArray obj_LargeShipAssemblyArray script
 	declarevariable XLargeShipAssemblyArray obj_XLargeShipAssemblyArray script

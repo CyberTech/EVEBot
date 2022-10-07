@@ -761,6 +761,13 @@ objectdef obj_Miner
 		variable iterator Target
 		variable int AsteroidsLocked=0
 
+		; lets compress
+		if (${Config.Miner.CompressOreMode} && ${Ship.OreHoldThreeQuartersFull})
+		{
+			Logger:Log["Debug: We are not deliverying so we need to compress, lets check if we can"]
+			call Compress.CheckForCompression
+		}
+
 
 		;	If we're in a station there's not going to be any mining going on.  This should clear itself up if it ever happens.
 		if ${Me.InStation} != FALSE

@@ -610,6 +610,16 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Group Mode At Boost Range, ${value}]
 	}
 
+	member:bool CompressOreMode()
+	{
+		return ${This.MinerRef.FindSetting[Compress Ore Mode, FALSE]}
+	}
+
+	method SetCompressOreMode(bool value)
+	{
+		This.MinerRef:AddSetting[Compress Ore Mode, ${value}]
+	}
+
 	; Deprecated 2020-11-222
 	member:bool OrcaMode()
 	{
