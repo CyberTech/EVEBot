@@ -23,6 +23,9 @@ objectdef obj_Miner
 
 	;	Used to force a dropoff when the cargo hold isn't full
 	variable bool ForceDropoff = FALSE
+	; Used to force compression when compression is active
+	variable bool ForceCompress = FALSE
+	variable bool StopCompressing = FALSE
 
 	;	Are we running out of asteroids to target?
 	variable bool ConcentrateFire = FALSE
@@ -70,6 +73,14 @@ objectdef obj_Miner
 		LavishScript:RegisterEvent[EVEBot_HaulerMSG]
 		Event[EVEBot_HaulerMSG]:AttachAtom[This:HaulerMSG]
 
+		LavishScript:RegisterEvent[EVEBOT_Compression_Needed]
+
+		LavishScript:RegisterEvent[EVEBOT_Compression_On]
+        Event[EVEBOT_Compression_On]:AttachAtom[This:Event_Compression]
+
+		LavishScript:RegisterEvent[EVEBOT_Compression_Off]
+        Event[EVEBOT_Compression_Off]:AttachAtom[This:Event_NoCompression]
+
 		Logger:Log["obj_Miner: Initialized", LOG_MINOR]
 	}
 
@@ -79,6 +90,8 @@ objectdef obj_Miner
 		Event[EVEBot_Orca_InBelt]:DetachAtom[This:Event_OrcaIsInBelt]
 		Event[EVEBot_Master_InBelt]:DetachAtom[This:Event_MasterIsInBelt]
 		Event[EVEBot_HaulerMSG]:DetachAtom[This:HaulerMSG]
+		Event[EVEBot_Compression_On]:DetachAtom[This:Event_Compression]
+		Event[EVEBot_Compression_off]:DetachAtom[This:Event_NoCompression]
 	}
 
 	method Pulse()
@@ -761,13 +774,25 @@ objectdef obj_Miner
 		variable iterator Target
 		variable int AsteroidsLocked=0
 
-		; lets compress
-		if (${Config.Miner.CompressOreMode} && ${Ship.OreHoldThreeQuartersFull})
+		; lets call for compression
+		if (${Config.Miner.CompressOreMode} && ${Ship.OreHoldThreeQuartersFull} && !${ForceCompress} && !${EVEBOT_Compression_Needed})
 		{
-			Logger:Log["Debug: We are not deliverying so we need to compress, lets check if we can"]
+			Logger:Log["Debug: Lets tell the orca we need to compress"]
+			relay all -event EVEBOT_Compression_Needed TRUE
+		}
+		; lets compress
+		if (${ForceCompress} && ${Ship.OreHoldQuarterFull} && ${Config.Miner.CompressOreMode})
+		{
 			call Compress.CheckForCompression
 		}
-
+		; lets stack our ore
+		if (${StopCompressing} && ${Ship.OreHoldTenthFull} && ${Config.Miner.CompressOreMode})
+		{
+			EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold]:MakeActive
+			EVEWindow["Inventory"]:StackAll
+			relay all -event EVEBOT_Compression_Off FALSE
+			StopCompressing:Set[FALSE]
+		}
 
 		;	If we're in a station there's not going to be any mining going on.  This should clear itself up if it ever happens.
 		if ${Me.InStation} != FALSE
@@ -1259,7 +1284,25 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 			}
 		}
 	}
-
+	;This method is triggered by an event. If triggered, it tells us that our miners are almost full and they need to compress.
+	method Event_Compression(bool Compression_On)
+	{
+		if (${Compression_On} && !${Config.Common.CurrentBehavior.Equal[Orca]})
+		{
+			Logger:Log["Debug: Lets Compress since the orca says we should be able to. "]
+			ForceCompress:Set[TRUE]
+		}
+	}
+	;This method is triggered by an event. If triggered, it tells us that the compression array is off.
+	method Event_NoCompression(bool Compression_Off)
+	{
+		if (${Compression_Off} && !${Config.Common.CurrentBehavior.Equal[Orca]})
+		{
+			Logger:Log["Debug: Stop trying to compress orca says compression array is off."]
+			ForceCompress:Set[FALSE]
+			StopCompressing:Set[TRUE]
+		}
+	}
 	method NotifyHaulers()
 	{
 	    if ${Time.Timestamp} >= ${This.NextHaulerNotify.Timestamp}

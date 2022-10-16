@@ -18,6 +18,9 @@ objectdef obj_Orca
 	;	Used to force a dropoff when the cargo hold isn't full
 	variable bool ForceDropoff = FALSE
 
+	variable bool ForceIndyCore = FALSE
+	variable bool CompressorActive =FALSE
+
 	;	This is used to keep track of what we are approaching and when we started
 	variable int64 Approaching = 0
 	variable int TimeStartedApproaching = 0
@@ -38,6 +41,12 @@ objectdef obj_Orca
 		LavishScript:RegisterEvent[EVEBot_HaulerMSG]
 		Event[EVEBot_HaulerMSG]:AttachAtom[This:HaulerMSG]
 
+		LavishScript:RegisterEvent[EVEBOT_Compression_Needed]
+		Event[EVEBOT_Compression_Needed]:AttachAtom[This:Event_Compression_On]
+
+		LavishScript:RegisterEvent[EVEBOT_Compression_On]
+        
+
 		Logger:Log["obj_Orca: Initialized", LOG_MINOR]
 	}
 
@@ -45,6 +54,7 @@ objectdef obj_Orca
 	{
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
 		Event[EVEBot_HaulerMSG]:DetachAtom[This:HaulerMSG]
+		Event[EVEBot_Compression_Needed]:DetachAtom[This:Event_Compression_On]
 	}
 
 	method Pulse()
@@ -72,6 +82,17 @@ objectdef obj_Orca
 ;	Step 2:  	SetState:  This is the brain of the module.  Every time it is called - See Step 1 - this method will determine
 ;				what the module should be doing based on what's going on around you.  This will be used when EVEBot calls your module to ProcessState.
 */
+
+	;This is triggered by an event. If triggered we need to turn on compression
+	method Event_Compression_On(bool Compression_TurnedOn)
+	{
+		if (${Compression_TurnedOn} && !${EVEBOT_Compression_On} && ${Config.Common.CurrentBehavior.Equal[Orca]})
+		{
+			;Here we are going to set the bool for if we can compress or not
+			Logger:Log["Debug: Miners said they need to compress, lets get ready to turn on indy core"]
+			ForceIndyCore:Set[TRUE]
+		}
+	}
 
 	method StartApproaching(int64 ID, int64 Distance=0)
 	{
@@ -271,6 +292,34 @@ objectdef obj_Orca
 				; Tell the miners we might not be in a belt and shouldn't be warped to.
 				relay all -event EVEBot_Master_InBelt FALSE
 			}
+		}
+
+		if ${ForceIndyCore}
+		{
+			;here we are activating the industrial core and then the compression array once the compression array is on we will turn off the industrial core 
+			;after turning those on relay to the fleet that they can compress
+			Logger:Log["Debug: Trying to turn on industrial core"]
+			call Ship.ActivateIndustrialCore
+			wait 10
+			Logger:log["Debug: Industrial core should be on, lets activate compression"]
+			call Ship.ActivateCompressionArray
+			wait 10
+			Logger:log["Debug: Deactivate the industrial core so it cycles off"]
+			call Ship.DeactivateIndustrialCore
+			wait 1
+			relay all -event EVEBOT_Compression_On TRUE
+			wait 1
+			relay all -event EVEBOT_Compression_Needed FALSE
+			wait 1
+			ForceIndyCore:Set[FALSE]
+			CompressorActive:Set[TRUE]
+		}
+
+		if (${CompressorActive} && ${Ship.NotActivecompressor} == 1)
+		{
+			CompressorActive:Set[FALSE]
+			relay all -event EVEBOT_Compression_On FALSE
+			relay all -event EVEBOT_Compression_Off TRUE
 		}
 
 		switch ${This.CurrentState}
