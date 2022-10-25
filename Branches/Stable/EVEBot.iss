@@ -151,6 +151,7 @@ function main()
 
 	/* Script-Defined Support Objects */
 	declarevariable BaseConfig obj_Configuration_BaseConfig script
+	declarevariable AnomSites set globalkeep
 
 	declarevariable Config obj_Configuration script
 	if ${Config.Common.CurrentBehavior.Equal[Miner]} && ${Config.Miner.OrcaMode}

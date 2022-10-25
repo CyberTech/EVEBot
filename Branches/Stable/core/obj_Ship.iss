@@ -39,6 +39,7 @@ objectdef obj_Ship
 	variable index:module ModuleList_SurveyScanners
 	variable index:module ModuleList_IndustryCore
 	variable index:module ModuleList_CompressionArray
+	variable index:module ModuleList_DroneTracking
 
 	variable time SurveyScanWaitTime
 	variable bool Repairing_Armor = FALSE
@@ -528,6 +529,7 @@ objectdef obj_Ship
 		This.ModuleList_SurveyScanners:Clear
 		This.ModuleList_IndustryCore:Clear
 		This.ModuleList_CompressionArray:Clear
+		This.ModuleList_DroneTracking:Clear
 
 
 		if !${MyShip:GetModules[This.ModuleList]}
@@ -666,6 +668,9 @@ objectdef obj_Ship
 				case GROUP_SURVEYSCANNER
 					This.ModuleList_SurveyScanners:Insert[${ModuleIter.Value.ID}]
 				default
+					break
+				case GROUP_DRONE_TRACKING
+					This.ModuleList_DroneTracking:Insert[${ModuleIter.Value.ID}]
 					break
 			}
 		}
@@ -853,6 +858,15 @@ objectdef obj_Ship
 		}
 		while ${ModuleIter:Next(exists)}
 
+		Logger:Log["Drone Tracking:", LOG_MINOR, 2]
+		This.ModuleList_DroneTracking:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			Logger:Log["	Slot: ${ModuleIter.Value.ToItem.Slot}	${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
+		}
+		while ${ModuleIter:Next(exists)}
+
 		Logger:log["Compression Array:", LOG_MINOR, 2]
 		This.ModuleList_CompressionArray:GetIterator[ModuleIter]
 		if ${ModuleIter:First(exists)}
@@ -949,6 +963,44 @@ objectdef obj_Ship
 		variable iterator ModuleIter
 
 		This.ModuleList_CompressionArray:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if !${ModuleIter.Value.IsActive}
+			{
+				count:Inc
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+
+		return ${count}
+	}
+
+	member:int NotActiveArmorReps()
+	{
+		variable int count
+		variable iterator ModuleIter
+
+		This.ModuleList_Repair_Armor:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if !${ModuleIter.Value.IsActive}
+			{
+				count:Inc
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+
+		return ${count}
+	}
+
+	member:int NotActiveABMWD()
+	{
+		variable int count
+		variable iterator ModuleIter
+
+		This.ModuleList_AB_MWD:GetIterator[ModuleIter]
 		if ${ModuleIter:First(exists)}
 		do
 		{
@@ -1553,6 +1605,20 @@ objectdef obj_Ship
 				wait 10
 				ModuleIter.Value:Click
 			}
+		}
+		while ${ModuleIter:Next(exists)}
+	}
+
+	function ActivateDroneTracking()
+	{
+		variable iterator ModuleIter
+
+		This.ModuleList_DroneTracking:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			Logger:Log["Activating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
+			ModuleIter.Value:Click
 		}
 		while ${ModuleIter:Next(exists)}
 	}

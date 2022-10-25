@@ -248,8 +248,11 @@ objectdef obj_Drones inherits obj_BaseClass
 				}
 				else
 				{
+					if (${DroneIterator.Value.State} == 0)
+					{
 					Logger:Log["Debug: Drone ${DroneIterator.Value.ID} engaging current target", LOG_DEBUG]
 					engageIndex:Insert[${DroneIterator.Value.ID}]
+					}
 				}
 			}
 			while ${DroneIterator:Next(exists)}

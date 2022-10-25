@@ -1301,6 +1301,50 @@
 								}
 							</OnChange>
 						</Textentry>
+						<Text name='lblAnomType'>
+							<X>200</X>
+							<Y>150</Y>
+							<Width>120</Width>
+							<Height>18</Height>
+							<Text>Select Anom Type</Text>
+							<AutoTooltip>This will be the Anom type we rat over and over again.</AutoTooltip>
+						</Text>
+						<combobox name='CurrentAnom'>
+							<X>350</X>
+							<Y>150</Y>
+							<Width>150</Width>
+							<Height>18</Height>
+							<FullHeight>200</FullHeight>
+							<ButtonWidth>20</ButtonWidth>
+							<Items>
+								<Item Value='1'>None</Item>
+								<Item Value='2'>Guristas Haven</Item>
+								<Item Value='3'>Guristas Sanctum</Item>
+							</Items>
+							<OnSelect>
+								if ${This.SelectedItem.Text.NotNULLOrEmpty}
+								{
+									Logger:Log["Current anomaly switched to ${This.SelectedItem.Text}"]
+									Script[EVEBot].VariableScope.Config.Common:CurrentAnom[${This.SelectedItem.Text}]
+								}
+							</OnSelect>
+						</combobox>
+						<Textentry name='tbRestockFreeSpace'>
+							<X>350</X>
+							<Y>150</Y>
+							<Width>150</Width>
+							<Height>18</Height>
+							<MaxLength>10</MaxLength>
+							<OnLoad>
+								This:SetText[${Script[EVEBot].VariableScope.Config.Combat.RestockAmmoFreeSpace}]
+							</OnLoad>
+							<OnChange>
+								if ${This.Text.Length} > 0
+								{
+								Script[EVEBot].VariableScope.Config.Combat:SetRestockAmmoFreeSpace[${This.Text}]
+								}
+							</OnChange>
+						</Textentry>
 					</Tab>
 					<Tab name='Fleeing'>
 						<TabControl Name='FleeingTabcontrol' template='EVESkin.TabControl'>

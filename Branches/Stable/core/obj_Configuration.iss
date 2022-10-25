@@ -1733,7 +1733,6 @@ objectdef obj_Config_Blacklist
 		return ${This.BaseRef.FindSet[Alliances]}
 	}
 }
-
 /* ************************************************************************* */
 objectdef obj_Configuration_Agents
 {
