@@ -89,6 +89,9 @@ objectdef obj_Targets inherits obj_BaseClass
 		; You can specify the entire rat name, for example
 		; leave rats that dont scramble which would help
 		; later when chaining gets added
+		PriorityTargets:Insert["Dire Pithi Destructor"]
+		PriorityTargets:Insert["Dire Pithi Wrecker"]
+		PriorityTargets:Insert["Dire Pithi Plunderer"]
 		PriorityTargets:Insert["Factory Defense Battery"] 		/* web/scram */
 		PriorityTargets:Insert["Dire Pithi Arrogator"] 		/* web/scram */
 		PriorityTargets:Insert["Dire Pithi Despoiler"] 		/* Jamming */

@@ -37,6 +37,9 @@ objectdef obj_Ship
 	variable index:module ModuleList_TrackingComputer
 	variable index:module ModuleList_GangLinks
 	variable index:module ModuleList_SurveyScanners
+	variable index:module ModuleList_IndustryCore
+	variable index:module ModuleList_CompressionArray
+	variable index:module ModuleList_DroneTracking
 
 	variable time SurveyScanWaitTime
 	variable bool Repairing_Armor = FALSE
@@ -265,9 +268,9 @@ objectdef obj_Ship
 
 	method StackOreHold()
 	{
-		if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipOreHold](exists)}
+		if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)}
 		{
-			EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipOreHold]:MakeActive
+			EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold]:MakeActive
 			EVEWindow["Inventory"]:StackAll
 		}
 	}
@@ -284,17 +287,17 @@ objectdef obj_Ship
 
 	member:float OreHoldCapacity()
 	{
-		return ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipOreHold].Capacity}
+		return ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold].Capacity}
 	}
 
 	member:float OreHoldUsedCapacity()
 	{
-		return ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipOreHold].UsedCapacity}
+		return ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold].UsedCapacity}
 	}
 
 	member:bool OreHoldFull()
 	{
-		if ${Inventory.ShipOreHold.UsedCapacity} < 0
+		if ${Inventory.ShipGeneralMiningHold.UsedCapacity} < 0
 		{
 			return FALSE
 		}
@@ -308,12 +311,40 @@ objectdef obj_Ship
 
 	member:bool OreHoldHalfFull()
 	{
-		if ${Inventory.ShipOreHold.UsedCapacity} < 0
+		if ${Inventory.ShipGeneralMiningHold.UsedCapacity} < 0
 		{
 			return FALSE
 		}
 
 		if ${This.OreHoldFreeSpace} <= ${Math.Calc[${This.OreHoldCapacity}*0.50]}
+		{
+			return TRUE
+		}
+		return FALSE
+	}
+
+	member:bool OreHoldQuarterFull()
+	{
+		if ${Inventory.ShipGeneralMiningHold.UsedCapacity} < 0
+		{
+			return FALSE
+		}
+
+		if ${This.OreHoldFreeSpace} <= ${Math.Calc[${This.OreHoldCapacity}*0.75]}
+		{
+			return TRUE
+		}
+		return FALSE
+	}
+
+	member:bool OreHoldThreeQuartersFull()
+	{
+		if ${Inventory.ShipGeneralMiningHold.UsedCapacity} < 0
+		{
+			return FALSE
+		}
+
+		if ${This.OreHoldFreeSpace} <= ${Math.Calc[${This.OreHoldCapacity}*0.25]}
 		{
 			return TRUE
 		}
@@ -496,6 +527,10 @@ objectdef obj_Ship
 		This.ModuleList_GangLinks:Clear
 		This.ModuleList_ShieldTransporters:Clear
 		This.ModuleList_SurveyScanners:Clear
+		This.ModuleList_IndustryCore:Clear
+		This.ModuleList_CompressionArray:Clear
+		This.ModuleList_DroneTracking:Clear
+
 
 		if !${MyShip:GetModules[This.ModuleList]}
 		{
@@ -546,6 +581,12 @@ objectdef obj_Ship
 				case GROUPID_SHIELD_HARDENER
 				case GROUPID_ARMOR_HARDENERS
 					This.ModuleList_ActiveResists:Insert[${ModuleIter.Value.ID}]
+					break
+				case GROUP_SIEGEMODULE
+					This.ModuleList_IndustryCore:Insert[${ModuleIter.Value.ID}]
+					break
+				case GROUP_COMPRESSOR
+					This.ModuleList_CompressionArray:Insert[${ModuleIter.Value.ID}]
 					break
 				case GROUP_ENERGYWEAPON
 				case GROUP_PROJECTILEWEAPON
@@ -627,6 +668,9 @@ objectdef obj_Ship
 				case GROUP_SURVEYSCANNER
 					This.ModuleList_SurveyScanners:Insert[${ModuleIter.Value.ID}]
 				default
+					break
+				case GROUP_DRONE_TRACKING
+					This.ModuleList_DroneTracking:Insert[${ModuleIter.Value.ID}]
 					break
 			}
 		}
@@ -812,7 +856,34 @@ objectdef obj_Ship
 		{
 			Logger:Log["Warning: More than 1 survey scanners detected, I will only use the first one.", LOG_MINOR, 4]
 		}
+		while ${ModuleIter:Next(exists)}
 
+		Logger:Log["Drone Tracking:", LOG_MINOR, 2]
+		This.ModuleList_DroneTracking:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			Logger:Log["	Slot: ${ModuleIter.Value.ToItem.Slot}	${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
+		}
+		while ${ModuleIter:Next(exists)}
+
+		Logger:log["Compression Array:", LOG_MINOR, 2]
+		This.ModuleList_CompressionArray:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			Logger:Log["	Slot: ${ModuleIter.Value.ToItem.Slot}   ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
+		}
+		while ${ModuleIter:Next(exists)}
+		
+		Logger:log["Industrial Core:", LOG_MINOR, 2]
+		This.ModuleList_IndustryCore:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			Logger:Log["	Slot: ${ModuleIter.Value.ToItem.Slot}   ${ModuleIter.Value.ToItem.Name}", LOG_MINOR, 4]
+		}
+		while ${ModuleIter:Next(exists)}
 	}
 
 	method UpdateBaselineUsedCargo()
@@ -865,6 +936,82 @@ objectdef obj_Ship
 	member:int TotalSalvagers()
 	{
 		return ${This.ModuleList_Salvagers.Used}
+	}
+
+	member:int NotActiveIndyCore()
+	{
+		variable int count
+		variable iterator ModuleIter
+
+		This.ModuleList_IndustryCore:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if !${ModuleIter.Value.IsActive}
+			{
+				count:Inc
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+
+		return ${count}
+	}
+
+	member:int NotActivecompressor()
+	{
+		variable int count
+		variable iterator ModuleIter
+
+		This.ModuleList_CompressionArray:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if !${ModuleIter.Value.IsActive}
+			{
+				count:Inc
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+
+		return ${count}
+	}
+
+	member:int NotActiveArmorReps()
+	{
+		variable int count
+		variable iterator ModuleIter
+
+		This.ModuleList_Repair_Armor:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if !${ModuleIter.Value.IsActive}
+			{
+				count:Inc
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+
+		return ${count}
+	}
+
+	member:int NotActiveABMWD()
+	{
+		variable int count
+		variable iterator ModuleIter
+
+		This.ModuleList_AB_MWD:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if !${ModuleIter.Value.IsActive}
+			{
+				count:Inc
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+
+		return ${count}
 	}
 
 	member:int TotalActivatedMiningLasers()
@@ -1403,6 +1550,97 @@ objectdef obj_Ship
 				}
 				;TimedCommand ${Math.Rand[600]:Inc[300]} "Script[EVEBot].VariableScope.Ship:CycleMiningLaser[OFF, ${Slot}]"
 				return
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+	}
+
+	function ActivateIndustrialCore()
+	{
+		variable iterator ModuleIter
+
+		This.ModuleList_IndustryCore:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline}
+			{
+				Logger:Log["Activating ${ModuleIter.Value.ToItem.Name}"]
+				wait 10
+				ModuleIter.Value:Click
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+	}
+
+	function ActivateCompressionArray()
+	{
+		variable iterator ModuleIter
+
+		This.ModuleList_CompressionArray:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline}
+			{
+				Logger:Log["Activating ${ModuleIter.Value.ToItem.Name}"]
+				wait 10
+				ModuleIter.Value:Click
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+	}
+
+	function DeactivateIndustrialCore()
+	{
+		variable iterator ModuleIter
+
+		This.ModuleList_IndustryCore:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if ${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsDeactivating}
+			{
+				Logger:Log["Deactivating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
+				wait 10
+				ModuleIter.Value:Click
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+	}
+
+	function ActivateDroneTracking()
+	{
+		variable iterator ModuleIter
+
+		This.ModuleList_DroneTracking:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			Logger:Log["Activating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
+			ModuleIter.Value:Click
+		}
+		while ${ModuleIter:Next(exists)}
+	}
+
+	function CompressYourOre()
+	{
+		call Compress.CheckForCompression
+	}
+
+	function DeactivateCompressionArray()
+	{
+		variable iterator ModuleIter
+
+		This.ModuleList_CompressionArray:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if ${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsDeactivating}
+			{
+				Logger:Log["Deactivating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
+				wait 10
+				ModuleIter.Value:Click
 			}
 		}
 		while ${ModuleIter:Next(exists)}
@@ -2101,6 +2339,74 @@ objectdef obj_Ship
 				ModuleIter.Value:Click
 			}
 		}
+	}
+
+	method Activate_Industrial_Core()
+	{
+		variable iterator ModuleIter
+
+		This.ModuleList_IndustryCore:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline}
+			{
+				Logger:Log["Activating ${ModuleIter.Value.ToItem.Name}"]
+				ModuleIter.Value:Click
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+	}
+
+	method Deactivate_Industrial_Core()
+	{
+		variable iterator ModuleIter
+
+		This.ModuleList_IndustryCore:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if ${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsDeactivating}
+			{
+				Logger:Log["Deactivating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
+				ModuleIter.Value:Click
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+	}
+
+	method Activate_Compression_Array()
+	{
+		variable iterator ModuleIter
+
+		This.ModuleList_CompressionArray:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if !${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline}
+			{
+				Logger:Log["Activating ${ModuleIter.Value.ToItem.Name}"]
+				ModuleIter.Value:Click
+			}
+		}
+		while ${ModuleIter:Next(exists)}
+	}
+
+	method Deactivate_Compression_Array()
+	{
+		variable iterator ModuleIter
+
+		This.ModuleList_CompressionArray:GetIterator[ModuleIter]
+		if ${ModuleIter:First(exists)}
+		do
+		{
+			if ${ModuleIter.Value.IsActive} && ${ModuleIter.Value.IsOnline} && !${ModuleIter.Value.IsDeactivating}
+			{
+				Logger:Log["Deactivating ${ModuleIter.Value.ToItem.Name}", LOG_MINOR]
+				ModuleIter.Value:Click
+			}
+		}
+		while ${ModuleIter:Next(exists)}
 	}
 
 	method Activate_Shield_Booster()

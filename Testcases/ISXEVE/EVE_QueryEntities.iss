@@ -54,7 +54,7 @@ function main()
 
 	StartTime:Set[${Script.RunningTime}]
 	EVE:QueryEntities[Entities]
-	;EVE:QueryEntities[Entities, Distance < 100000 && Name =- "Guristas"]
+	EVE:QueryEntities[Entities, Distance < 100000]
 	;EVE:QueryEntities[Entities, "CategoryID = 25"]
 
 	CallTime:Set[${Math.Calc[(${Script.RunningTime}-${StartTime}) / 1000]}]

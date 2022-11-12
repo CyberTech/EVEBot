@@ -88,7 +88,7 @@ variable int VersionNum = 0
 #define ENTITY_STATE_DEPARTING						4
 #define ENTITY_STATE_DEPARTING2						5
 #define ENTITY_STATE_PURSUIT							6
-#define ENTITY_STATE_FLEEING							7
+#define ENTITY_STATE_FLEEING							7``
 #define ENTITY_STATE_REINFORCED						8
 #define ENTITY_STATE_OPERATING						9
 #define ENTITY_STATE_ENGAGE								10		/* For Drones, this means Repairing */
@@ -634,6 +634,8 @@ variable int VersionNum = 0
 #define GROUP_NPC_MINING_EXHUMER 1766
 #define GROUP_NPC_MINING_FRIGATE 1764
 #define GROUP_NPC_MINING_HAULER 1767
+#define GROUP_COMPRESSOR 4174
+#define GROUP_DRONE_TRACKING 646
 
 #define TYPE_ACCELERATION_GATE 17831
 

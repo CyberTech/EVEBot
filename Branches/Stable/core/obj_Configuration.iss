@@ -600,6 +600,26 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Group Mode At Range, ${value}]
 	}
 
+	member:bool GroupModeAtBoostRange()
+	{
+		return ${This.MinerRef.FindSetting[Group Mode At Boost Range, FALSE]}
+	}
+
+	method SetGroupModeAtBoostRange(bool value)
+	{
+		This.MinerRef:AddSetting[Group Mode At Boost Range, ${value}]
+	}
+
+	member:bool CompressOreMode()
+	{
+		return ${This.MinerRef.FindSetting[Compress Ore Mode, FALSE]}
+	}
+
+	method SetCompressOreMode(bool value)
+	{
+		This.MinerRef:AddSetting[Compress Ore Mode, ${value}]
+	}
+
 	; Deprecated 2020-11-222
 	member:bool OrcaMode()
 	{
@@ -759,7 +779,7 @@ objectdef obj_Configuration_Miner
 		threshold:Set[${This.MinerRef.FindSetting[Cargo Threshold, 0]}]
 		if (${threshold} == 0)
 		{
-			if ${MyShip.HasOreHold}
+			if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)}
 			{
 				This:SetCargoThreshold[${Ship.OreHoldCapacity}]
 			}
@@ -1713,7 +1733,6 @@ objectdef obj_Config_Blacklist
 		return ${This.BaseRef.FindSet[Alliances]}
 	}
 }
-
 /* ************************************************************************* */
 objectdef obj_Configuration_Agents
 {

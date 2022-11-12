@@ -26,7 +26,7 @@ function main()
 	if ${Return}
 		Inventory.Current:DebugPrintInvData
 
-	call Inventory.ShipOreHold.Activate
+	call Inventory.ShipGeneralMiningHold.Activate
 	if ${Return}
 		Inventory.Current:DebugPrintInvData
 

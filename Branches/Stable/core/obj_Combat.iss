@@ -292,7 +292,8 @@ objectdef obj_Combat
 	{
 		if !${Station.Docked}
 		{
-			call Station.Dock
+			Bookmarks:StoreLocation
+			call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
 		}
 	}
 
@@ -313,6 +314,7 @@ objectdef obj_Combat
 			; Are we at the safespot and not warping?
 			if ${Me.ToEntity.Mode} != 3
 			{
+				Bookmarks:StoreLocation
 				call Safespots.WarpTo
 				wait 30
 			}

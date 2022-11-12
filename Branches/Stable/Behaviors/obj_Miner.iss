@@ -23,6 +23,9 @@ objectdef obj_Miner
 
 	;	Used to force a dropoff when the cargo hold isn't full
 	variable bool ForceDropoff = FALSE
+	; Used to force compression when compression is active
+	variable bool ForceCompress = FALSE
+	variable bool StopCompressing = FALSE
 
 	;	Are we running out of asteroids to target?
 	variable bool ConcentrateFire = FALSE
@@ -61,6 +64,7 @@ objectdef obj_Miner
 		This.TripStartTime:Set[${Time.Timestamp}]
 		Event[EVENT_ONFRAME]:AttachAtom[This:Pulse]
 
+		LavishScript:RegisterEvent[EVEBOT_Orca_InBelt]
 		Event[EVEBot_Orca_InBelt]:AttachAtom[This:Event_OrcaIsInBelt]
 
 		LavishScript:RegisterEvent[EVEBot_Master_InBelt]
@@ -68,6 +72,14 @@ objectdef obj_Miner
 
 		LavishScript:RegisterEvent[EVEBot_HaulerMSG]
 		Event[EVEBot_HaulerMSG]:AttachAtom[This:HaulerMSG]
+
+		LavishScript:RegisterEvent[EVEBOT_Compression_Needed]
+
+		LavishScript:RegisterEvent[EVEBOT_Compression_On]
+        Event[EVEBOT_Compression_On]:AttachAtom[This:Event_Compression]
+
+		LavishScript:RegisterEvent[EVEBOT_Compression_Off]
+        Event[EVEBOT_Compression_Off]:AttachAtom[This:Event_NoCompression]
 
 		Logger:Log["obj_Miner: Initialized", LOG_MINOR]
 	}
@@ -78,6 +90,8 @@ objectdef obj_Miner
 		Event[EVEBot_Orca_InBelt]:DetachAtom[This:Event_OrcaIsInBelt]
 		Event[EVEBot_Master_InBelt]:DetachAtom[This:Event_MasterIsInBelt]
 		Event[EVEBot_HaulerMSG]:DetachAtom[This:HaulerMSG]
+		Event[EVEBot_Compression_On]:DetachAtom[This:Event_Compression]
+		Event[EVEBot_Compression_off]:DetachAtom[This:Event_NoCompression]
 	}
 
 	method Pulse()
@@ -487,7 +501,7 @@ objectdef obj_Miner
 				}
 
 				call Cargo.TransferOreToStationHangar
-				call Cargo.TransferCargoFromShipOreHoldToStation
+				call Cargo.TransferCargoFromShipGeneralMiningHoldToStation
 
 				LastUsedCargoCapacity:Set[0]
 				call Station.Undock
@@ -760,6 +774,25 @@ objectdef obj_Miner
 		variable iterator Target
 		variable int AsteroidsLocked=0
 
+		; lets call for compression
+		if (${Config.Miner.CompressOreMode} && ${Ship.OreHoldThreeQuartersFull} && !${ForceCompress} && !${EVEBOT_Compression_Needed})
+		{
+			Logger:Log["Debug: Lets tell the orca we need to compress"]
+			relay all -event EVEBOT_Compression_Needed TRUE
+		}
+		; lets compress
+		if (${ForceCompress} && ${Ship.OreHoldQuarterFull} && ${Config.Miner.CompressOreMode})
+		{
+			call Compress.CheckForCompression
+		}
+		; lets stack our ore
+		if (${StopCompressing} && ${Ship.OreHoldTenthFull} && ${Config.Miner.CompressOreMode})
+		{
+			EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold]:MakeActive
+			EVEWindow["Inventory"]:StackAll
+			relay all -event EVEBOT_Compression_Off FALSE
+			StopCompressing:Set[FALSE]
+		}
 
 		;	If we're in a station there's not going to be any mining going on.  This should clear itself up if it ever happens.
 		if ${Me.InStation} != FALSE
@@ -914,16 +947,16 @@ objectdef obj_Miner
 			}
 
 			; This performs Orca deliveries if we've got at least a tenth of our cargo hold full
-			if ${MyShip.HasOreHold}
+			if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)}
 			{
-				call Inventory.ShipOreHold.Activate
+				call Inventory.ShipGeneralMiningHold.Activate
 			}
 			else
 			{
 				call Inventory.ShipCargo.Activate
 			}
 
-			if (${MyShip.HasOreHold} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoTenthFull}
+			if (${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoTenthFull}
 			{
 					Logger:Log["Emptying ore to ${Entity[${Orca.Escape}].Name}'s Corporate Hangars"]
 					call Cargo.TransferOreToShipCorpHangar ${Entity[${Orca.Escape}].ID}
@@ -939,8 +972,8 @@ objectdef obj_Miner
 				; if for some reason we are too far away from our master go find him
 				if ${EVEBot.MasterName.NotEqual[NULL]}
 				{
-					; We want to stay within range of the Master, see if we need to move
-					if ${Config.Miner.GroupModeAtRange}
+					; We want to stay within loot range of the Master, see if we need to move
+					if (${Config.Miner.GroupModeAtRange} || !${Config.Miner.GroupModeAtBoostRange})
 					{
 						;	Find out if we need to approach this target.
 						if ${Entity[${Master.Escape}](exists)} && ${Entity[${Master.Escape}].Distance} > LOOT_RANGE/5 && ${This.Approaching} == 0
@@ -998,6 +1031,66 @@ objectdef obj_Miner
 								return
 							}
 						}
+					}
+					; We want to stay within range of the Master for boosts, see if we need to move
+					elseif (${Config.Miner.GroupModeAtBoostRange} || !${Config.Miner.GroupModeAtRange})
+					{
+						;	Find out if we need to approach this target.
+						if ${Entity[${Master.Escape}](exists)} && ${Entity[${Master.Escape}].Distance} > 30000 && ${This.Approaching} == 0
+						{
+							if ${Entity[${Master.Escape}].Distance} > WARP_RANGE
+							{
+								Logger:Log["ALERT:  ${Entity[${Master.Escape}].Name} is a long way away.  Warping to it."]
+								Logger:Log["Debug: Entity:WarpTo to Master from Line _LINE_ ", LOG_DEBUG]
+								Entity[${Master.Escape}]:WarpTo[1000]
+								return
+							}
+							Logger:Log["Miner.Mine: Approaching Master to within boost range (currently ${Entity[${Master.Escape}].Distance})"]
+							This:StartApproaching[${Entity[${Master.Escape}].ID}, ${Math.Calc[1*30000]}]
+							This.ApproachingOrca:Set[TRUE]
+							return
+						}
+
+						if ${This.Approaching} != 0
+						{
+							if !${Entity[${This.Approaching}](exists)}
+							{
+								This:StopApproaching["Miner.Mine - Group master disappeared while I was approaching. Freaking bermuda triangle around here..."]
+								This.ApproachingOrca:Set[FALSE]
+								return
+							}
+
+							if ${This.TimeSpentApproaching} >= 45
+							{
+								This:StopApproaching["Miner.Mine - Approaching group master for > 45 seconds? Cancelling"]
+								This.ApproachingOrca:Set[FALSE]
+								return
+							}
+
+							;	If we're approaching a target, find out if we need to stop doing so.
+							;	After moving, we need to find out if any of our targets are out of mining range and unlock them so we can get new ones.
+							if ${Entity[${This.Approaching}].Distance} <= LOOT_RANGE*12
+							{
+								This:StopApproaching["Miner.Mine: Within boost range of ${Entity[${This.Approaching}].Name}(${Entity[${This.Approaching}].ID})"]
+								This.ApproachingOrca:Set[FALSE]
+
+								LockedTargets:Clear
+								Me:GetTargets[LockedTargets]
+								LockedTargets:GetIterator[Target]
+
+								if ${Target:First(exists)}
+								do
+								{
+									if ${Entity[${Target.Value.ID}].Distance} > ${Ship.OptimalMiningRange}
+									{
+										Logger:Log["Miner.Mine: Unlocking ${Target.Value.Name} as it is out of range after we moved."]
+										Target.Value:UnlockTarget
+									}
+								}
+								while ${Target:Next(exists)}
+								return
+						}
+							}
 					}
 					else
 					{
@@ -1161,7 +1254,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 		{
 			if ${Config.Miner.SafeJetcan}
 			{
-				if ((${MyShip.HasOreHold} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoHalfFull})
+				if ((${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoHalfFull})
 				{
 					if ${Entity[Name = "${Config.Miner.DeliveryLocation}"](exists)} && \
 						${Entity[Name = "${Config.Miner.DeliveryLocation}"].Distance} < 20000 && \
@@ -1180,7 +1273,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 			}
 			else
 			{
-				if ((${MyShip.HasOreHold} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoHalfFull})
+				if ((${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoHalfFull})
 				{
 					call Cargo.TransferOreToJetCan
 					;	Need a wait here because it would try to move the same item more than once
@@ -1191,7 +1284,25 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 			}
 		}
 	}
-
+	;This method is triggered by an event. If triggered, it tells us that our miners are almost full and they need to compress.
+	method Event_Compression(bool Compression_On)
+	{
+		if (${Compression_On} && !${Config.Common.CurrentBehavior.Equal[Orca]})
+		{
+			Logger:Log["Debug: Lets Compress since the orca says we should be able to. "]
+			ForceCompress:Set[TRUE]
+		}
+	}
+	;This method is triggered by an event. If triggered, it tells us that the compression array is off.
+	method Event_NoCompression(bool Compression_Off)
+	{
+		if (${Compression_Off} && !${Config.Common.CurrentBehavior.Equal[Orca]})
+		{
+			Logger:Log["Debug: Stop trying to compress orca says compression array is off."]
+			ForceCompress:Set[FALSE]
+			StopCompressing:Set[TRUE]
+		}
+	}
 	method NotifyHaulers()
 	{
 	    if ${Time.Timestamp} >= ${This.NextHaulerNotify.Timestamp}
@@ -1293,7 +1404,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 		}
 		if ${Config.Miner.IceMining}
 		{
-			if ${MyShip.HasOreHold}
+			if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)}
 			{
 				if ${Ship.OreHoldFreeSpace} < 1000
 				{
@@ -1307,7 +1418,7 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 		}
 		else
 		{
-			if ${MyShip.HasOreHold}
+			if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)}
 			{
 				if ${Ship.OreHoldFreeSpace} < ${Ship.OreHoldMinimumFreeSpace}
 				{
