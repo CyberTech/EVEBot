@@ -9,9 +9,11 @@ objectdef obj_AnomRatter inherits obj_BaseClass
 {
 	variable string CurrentState
 	variable obj_Combat Combat
-	variable bool MTUDeployed = FALSE
-	variable int OrbitDistance = 1000
-	variable bool WeAreRunningSite = FALSE
+	variable int OrbitDistance = 30000
+	variable bool WeFled = FALSE
+	variable string MyCurrentSite
+	variable int64 Approaching = 0
+	variable int TimeStartedApproaching = 0
 
 	method Initialize()
 	{
@@ -24,6 +26,7 @@ objectdef obj_AnomRatter inherits obj_BaseClass
 ;		EntityCache.EntityFilters.Get[${This.Rat_CacheID}].Entities:GetIterator[Rat_CacheIterator]
 
 		This.CurrentState:Set["LOOT"]
+		This.MyCurrentSite:Set["Clear"]
 		Targets:ResetTargets
 		;; call the combat object's init routine
 		This.Combat:Initialize
@@ -55,6 +58,55 @@ objectdef obj_AnomRatter inherits obj_BaseClass
 
 		;; call the combat frame action code
 		This.Combat:Pulse
+	}
+
+	method StartApproaching(int64 ID, int64 Distance=0)
+	{
+		if ${This.Approaching} != 0
+		{
+			Logger:Log["Anomly Ratter: StartApproaching(${ID}) - Already approaching ${This.Approaching}."]
+			return
+		}
+
+		if !${Entity[${ID}](exists)}
+		{
+			return
+		}
+
+		if ${Distance} == 0
+		{
+			if ${MyShip.MaxTargetRange} < ${Ship.OptimalMiningRange}
+			{
+					Distance:Set[${Math.Calc[${MyShip.MaxTargetRange} - 5000]}]
+			}
+			else
+			{
+					Distance:Set[${Ship.OptimalMiningRange}]
+			}
+		}
+
+		Logger:Log["Anom Ratter: Approaching ${ID}:${Entity[${ID}].Name} @ ${EVEBot.MetersToKM_Str[${Distance}]}"]
+		Entity[${ID}]:Approach[${Distance}]
+		This.Approaching:Set[${ID}]
+		This.TimeStartedApproaching:Set[${Time.Timestamp}]
+	}
+
+	method StopApproaching(string Msg)
+	{
+		Logger:Log[${Msg}]
+		EVE:Execute[CmdStopShip]
+		This.Approaching:Set[0]
+		This.TimeStartedApproaching:Set[0]
+	}
+
+	member:int TimeSpentApproaching()
+	{
+		;	Return the time spent approaching the current target
+		if ${This.Approaching} == 0
+		{
+			return 0
+		}
+		return ${Math.Calc[${Time.Timestamp} - ${This.TimeStartedApproaching}]}
 	}
 
 	method Shutdown()
@@ -133,30 +185,187 @@ objectdef obj_AnomRatter inherits obj_BaseClass
     		MyShip.Scanners.System:GetAnomalies[MyAnomalies]
     		MyAnomalies:GetIterator[MyAnomalies_Iterator]
 			Logger:Log["Debug: Anoms found, looking for one we can warp to"]
-			if (${MyAnomalies_Iterator:First(exists)} && !${WeAreRunningSite} && !${Bookmarks.StoredLocationExists})
-			
-				do
-        		{    
-					;this is a guristas haven
-					Logger:Log["Debug: Checking each anom till we find one we want to run"]
-            		if (${MyAnomalies_Iterator.Value.DungeonID} == 110980 && !${AnomSites.Contains[${MyAnomalies_Iterator.Value.Name}]} && !${WeAreRunningSite})
-            		{
-						Logger:Log["Debug: Anom Found and it isn't the one we are currently at so lets warp to it"]
-						relay all AnomSites:Add[${MyAnomalies_Iterator.Value.Name}]
-						wait 20
-            			MyAnomalies_Iterator.Value:WarpTo[30000, FALSE]
-                        WeAreRunningSite:Set[TRUE]
-           		 		break
-            		}    
-        		}
-       			 while ${MyAnomalies_Iterator:Next(exists)}
+				if (${MyAnomalies_Iterator:First(exists)})
+					do
+					{
+						if (${MyAnomalies_Iterator.Value.Name.Equal[${MyCurrentSite}]})
+						{
+							MyAnomalies_Iterator.Value:WarpTo[30000, FALSE]
+							break
+						}
+						elseif (${Config.Combat.CurrentAnomTypeName.Equal["Guristas Haven (Both)"]} && !${MyAnomalies_Iterator.Value.Name.Equal[${MyCurrentSite}]})
+						{
+							Logger:Log["Debug: Checking each anom till we find one we want to run"]
+							if ((${MyAnomalies_Iterator.Value.DungeonID} == 110980) && !${AnomSites.Contains[${MyAnomalies_Iterator.Value.Name}]})
+							{
+								Logger:Log["Debug: Anom Found and it isn't the one we are currently at so lets warp to it"]
+								relay all AnomSites:Add[${MyAnomalies_Iterator.Value.Name}]
+								MyCurrentSite:Set[${MyAnomalies_Iterator.Value.Name}]
+								wait 20
+								MyAnomalies_Iterator.Value:WarpTo[30000, FALSE]
+								break
+							}    
+							elseif ((${MyAnomalies_Iterator.Value.DungeonID} == 110972) && !${AnomSites.Contains[${MyAnomalies_Iterator.Value.Name}]})
+							{
+								Logger:Log["Debug: Anom Found and it isn't the one we are currently at so lets warp to it"]
+								relay all AnomSites:Add[${MyAnomalies_Iterator.Value.Name}]
+								MyCurrentSite:Set[${MyAnomalies_Iterator.Value.Name}]
+								wait 20
+								MyAnomalies_Iterator.Value:WarpTo[30000, FALSE]
+								break
+							}    
+						}
+						elseif (${Config.Combat.CurrentAnomTypeName.Equal["Guristas Haven (Gas)"]} && !${MyAnomalies_Iterator.Value.Name.Equal[${MyCurrentSite}]})
+						{
+							Logger:Log["Debug: Checking each anom till we find one we want to run"]
+							if ((${MyAnomalies_Iterator.Value.DungeonID} == 110972) && !${AnomSites.Contains[${MyAnomalies_Iterator.Value.Name}]})
+							{
+								Logger:Log["Debug: Anom Found and it isn't the one we are currently at so lets warp to it"]
+								relay all AnomSites:Add[${MyAnomalies_Iterator.Value.Name}]
+								MyCurrentSite:Set[${MyAnomalies_Iterator.Value.Name}]
+								wait 20
+								MyAnomalies_Iterator.Value:WarpTo[30000, FALSE]
+								break
+							}    
+						}
+						elseif (${Config.Combat.CurrentAnomTypeName.Equal["Guristas Haven (Rock)"]} && !${MyAnomalies_Iterator.Value.Name.Equal[${MyCurrentSite}]})
+						{
+							Logger:Log["Debug: Checking each anom till we find one we want to run"]
+							if ((${MyAnomalies_Iterator.Value.DungeonID} == 110980) && !${AnomSites.Contains[${MyAnomalies_Iterator.Value.Name}]})
+							{
+								Logger:Log["Debug: Anom Found and it isn't the one we are currently at so lets warp to it"]
+								relay all AnomSites:Add[${MyAnomalies_Iterator.Value.Name}]
+								MyCurrentSite:Set[${MyAnomalies_Iterator.Value.Name}]
+								wait 20
+								MyAnomalies_Iterator.Value:WarpTo[30000, FALSE]
+								break
+							}    
+						}
+						elseif (${Config.Combat.CurrentAnomTypeName.Equal["Guristas Forlorn Hub"]} && !${MyAnomalies_Iterator.Value.Name.Equal[${MyCurrentSite}]})
+						{
+							Logger:Log["Debug: Checking each anom till we find one we want to run"]
+							if ((${MyAnomalies_Iterator.Value.DungeonID} == 111343) && !${AnomSites.Contains[${MyAnomalies_Iterator.Value.Name}]})
+							{
+								Logger:Log["Debug: Anom Found and it isn't the one we are currently at so lets warp to it"]
+								relay all AnomSites:Add[${MyAnomalies_Iterator.Value.Name}]
+								MyCurrentSite:Set[${MyAnomalies_Iterator.Value.Name}]
+								wait 20
+								MyAnomalies_Iterator.Value:WarpTo[30000, FALSE]
+								break
+							}    
+						}
+						elseif (${Config.Combat.CurrentAnomTypeName.Equal["Guristas Forsaken Hub"]} && !${MyAnomalies_Iterator.Value.Name.Equal[${MyCurrentSite}]})
+						{
+							Logger:Log["Debug: Checking each anom till we find one we want to run"]
+							if ((${MyAnomalies_Iterator.Value.DungeonID} == 111348) && !${AnomSites.Contains[${MyAnomalies_Iterator.Value.Name}]})
+							{
+								Logger:Log["Debug: Anom Found and it isn't the one we are currently at so lets warp to it"]
+								relay all AnomSites:Add[${MyAnomalies_Iterator.Value.Name}]
+								MyCurrentSite:Set[${MyAnomalies_Iterator.Value.Name}]
+								wait 20
+								MyAnomalies_Iterator.Value:WarpTo[0, FALSE]
+								break
+							}  
+						}
+						elseif (${Config.Combat.CurrentAnomTypeName.Equal["Guristas Hidden Hub"]} && !${MyAnomalies_Iterator.Value.Name.Equal[${MyCurrentSite}]})
+						{
+							Logger:Log["Debug: Checking each anom till we find one we want to run"]
+							if ((${MyAnomalies_Iterator.Value.DungeonID} == 113148) && !${AnomSites.Contains[${MyAnomalies_Iterator.Value.Name}]})
+							{
+								Logger:Log["Debug: Anom Found and it isn't the one we are currently at so lets warp to it"]
+								relay all AnomSites:Add[${MyAnomalies_Iterator.Value.Name}]
+								MyCurrentSite:Set[${MyAnomalies_Iterator.Value.Name}]
+								wait 20
+								MyAnomalies_Iterator.Value:WarpTo[30000, FALSE]
+								break
+							}  
+						}
+						elseif (${Config.Combat.CurrentAnomTypeName.Equal["Guristas Hub"]} && !${MyAnomalies_Iterator.Value.Name.Equal[${MyCurrentSite}]})
+						{
+							Logger:Log["Debug: Checking each anom till we find one we want to run"]
+							if ((${MyAnomalies_Iterator.Value.DungeonID} == 110917) && !${AnomSites.Contains[${MyAnomalies_Iterator.Value.Name}]})
+							{
+								Logger:Log["Debug: Anom Found and it isn't the one we are currently at so lets warp to it"]
+								relay all AnomSites:Add[${MyAnomalies_Iterator.Value.Name}]
+								MyCurrentSite:Set[${MyAnomalies_Iterator.Value.Name}]
+								wait 20
+								MyAnomalies_Iterator.Value:WarpTo[30000, FALSE]
+								break
+							}  
+							if ((${MyAnomalies_Iterator.Value.DungeonID} == 110937) && !${AnomSites.Contains[${MyAnomalies_Iterator.Value.Name}]})
+							{
+								Logger:Log["Debug: Anom Found and it isn't the one we are currently at so lets warp to it"]
+								relay all AnomSites:Add[${MyAnomalies_Iterator.Value.Name}]
+								MyCurrentSite:Set[${MyAnomalies_Iterator.Value.Name}]
+								wait 20
+								MyAnomalies_Iterator.Value:WarpTo[30000, FALSE]
+								break
+							} 
+						}
+						elseif (${Config.Combat.CurrentAnomTypeName.Equal["Guristas Forsaken Rally Point"]} && !${MyAnomalies_Iterator.Value.Name.Equal[${MyCurrentSite}]})
+						{
+							Logger:Log["Debug: Checking each anom till we find one we want to run"]
+							if ((${MyAnomalies_Iterator.Value.DungeonID} == 111334) && !${AnomSites.Contains[${MyAnomalies_Iterator.Value.Name}]})
+							{
+								Logger:Log["Debug: Anom Found and it isn't the one we are currently at so lets warp to it"]
+								relay all AnomSites:Add[${MyAnomalies_Iterator.Value.Name}]
+								MyCurrentSite:Set[${MyAnomalies_Iterator.Value.Name}]
+								wait 20
+								MyAnomalies_Iterator.Value:WarpTo[0, FALSE]
+								break
+							}  
+						}
+						elseif (${Config.Combat.CurrentAnomTypeName.Equal["Sansha Haven (Both)"]} && !${MyAnomalies_Iterator.Value.Name.Equal[${MyCurrentSite}]})
+						{
+							Logger:Log["Debug: Checking each anom till we find one we want to run"]
+							if ((${MyAnomalies_Iterator.Value.DungeonID} == 110983) && !${AnomSites.Contains[${MyAnomalies_Iterator.Value.Name}]})
+							{
+								Logger:Log["Debug: Anom Found and it isn't the one we are currently at so lets warp to it"]
+								relay all AnomSites:Add[${MyAnomalies_Iterator.Value.Name}]
+								MyCurrentSite:Set[${MyAnomalies_Iterator.Value.Name}]
+								wait 20
+								MyAnomalies_Iterator.Value:WarpTo[30000, FALSE]
+								break
+							}    
+							elseif ((${MyAnomalies_Iterator.Value.DungeonID} == 110974) && !${AnomSites.Contains[${MyAnomalies_Iterator.Value.Name}]})
+							{
+								Logger:Log["Debug: Anom Found and it isn't the one we are currently at so lets warp to it"]
+								relay all AnomSites:Add[${MyAnomalies_Iterator.Value.Name}]
+								MyCurrentSite:Set[${MyAnomalies_Iterator.Value.Name}]
+								wait 20
+								MyAnomalies_Iterator.Value:WarpTo[30000, FALSE]
+								break
+							}    
+						}
+						elseif (${Config.Combat.CurrentAnomTypeName.Equal["Sansha Haven (Gas)"]} && !${MyAnomalies_Iterator.Value.Name.Equal[${MyCurrentSite}]})
+						{
+							Logger:Log["Debug: Checking each anom till we find one we want to run"]
+							if ((${MyAnomalies_Iterator.Value.DungeonID} == 110974) && !${AnomSites.Contains[${MyAnomalies_Iterator.Value.Name}]})
+							{
+								Logger:Log["Debug: Anom Found and it isn't the one we are currently at so lets warp to it"]
+								relay all AnomSites:Add[${MyAnomalies_Iterator.Value.Name}]
+								MyCurrentSite:Set[${MyAnomalies_Iterator.Value.Name}]
+								wait 20
+								MyAnomalies_Iterator.Value:WarpTo[30000, FALSE]
+								break
+							}    
+						}
+						elseif (${Config.Combat.CurrentAnomTypeName.Equal["Sansha Haven (Rock)"]} && !${MyAnomalies_Iterator.Value.Name.Equal[${MyCurrentSite}]})
+						{
+							Logger:Log["Debug: Checking each anom till we find one we want to run"]
+							if ((${MyAnomalies_Iterator.Value.DungeonID} == 110983) && !${AnomSites.Contains[${MyAnomalies_Iterator.Value.Name}]})
+							{
+								Logger:Log["Debug: Anom Found and it isn't the one we are currently at so lets warp to it"]
+								relay all AnomSites:Add[${MyAnomalies_Iterator.Value.Name}]
+								MyCurrentSite:Set[${MyAnomalies_Iterator.Value.Name}]
+								wait 20
+								MyAnomalies_Iterator.Value:WarpTo[30000, FALSE]
+								break
+							}    
+						}
+					}
+					while ${MyAnomalies_Iterator:Next(exists)}
 			}
-            if (${Bookmarks.CheckForStoredLocation} && ${WeAreRunningSite})
-            {
-                Bookmarks.StoredLocation:WarpTo[0, FALSE]
-                wait 30
-                Bookmarks.RemoveStoredLocation
-            }
 
 		; Wait for the rats to warp into the Anom. Reports are between 10 and 20 seconds.
 		variable int Count
@@ -228,27 +437,24 @@ objectdef obj_AnomRatter inherits obj_BaseClass
 		Ship:Activate_SensorBoost
 		Ship:Activate_Tracking_Computer
 		Ship:Activate_ECCM
-		if (!${Entity[Name == "Mobile Tractor Unit"]} && (${Me.ToEntity.Mode} != 3))
+		if ((${Me.ToEntity.Mode} != 3) && ${Targets.TargetNPCs} && ${Me.ToEntity.Mode} != 4)
 		{
 			Logger:Log["Debug: Close ship computer pop up"]
 			EVEWindow[ByCaption, Information].Button[ok_dialog_button]:Press
 			wait 10
-			Logger:Log["Debug: Lets check if the inventory window is open"]
-			if !${EVEWindow[Inventory](exists)}
+			if (${Entity[Name == "Pirate Gate"]} && ${Me.ToEntity.Mode} != 4)
 			{
-				echo "Opening Inventory..."
-		        EVE:Execute[OpenInventory]
-		        wait 10
+				Entity[Name == "Pirate Gate"]:Orbit[${OrbitDistance}]
 			}
-			EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipCargo]:MakeActive
-			wait 50
-			MyShip.Cargo[Mobile Tractor Unit]:LaunchForSelf
-			wait 30
-			Logger:Log["Debug: Now orbit the MTU"]
-			Entity[Name == "Mobile Tractor Unit"]:Orbit[${OrbitDistance}]
+			elseif (${Entity[Name == "Small Rock"]} && ${Me.ToEntity.Mode} != 4)
+			{
+				Entity[Name == "Small Rock"]:Orbit[${OrbitDistance}]
+			}
+			elseif (${Entity[Name == "Broken Orange Crystal Asteroid"]} && ${Me.ToEntity.Mode} != 4)
+			{
+				Entity[Name == "Broken Orange Crystal Asteroid"]:Orbit[${OrbitDistance}]
+			}
             Ship:Activate_AfterBurner
-			Bookmarks:CreateBookMark[FALSE, "Ratting Site"]
-			MTUDeployed:Set[TRUE]
 		}
 
 
@@ -266,26 +472,85 @@ objectdef obj_AnomRatter inherits obj_BaseClass
 		{
 			if ${Config.Combat.LootMyKills}
 			{
-                Entity[Name == "Mobile Tractor Unit"]:ScoopToCargoHold
-				Ship:WarpPrepare
-                Ship.Drones:ReturnAllToDroneBay["Combat", "Moving"]
-                WeAreRunningSite:Set[FALSE]
-				wait 50
-                if (${Drones.DronesInSpace[FALSE]} == 0)
-                {
-				This.CurrentState:Set["LOOT"]
-                }
+				if (${Entity[Name == "Mobile Tractor Unit"](exists)} && ${Social.IsSafe})
+				{
+					Ship.Drones:ReturnAllToDroneBay["Combat", "Moving"]
+					if (${Entity[Name == "Mobile Tractor Unit"].Distance} > 2001 && ${This.Approaching} == 0)
+					{
+					Logger:Log["Approach MTU to scoop it"]
+					This:StartApproaching[${Entity[Name == "Mobile Tractor Unit"].ID}, 2000]
+					}
+					if (${This.Approaching} != 0)
+					{
+						if !${Entity[${This.Approaching}](exists)}
+						{
+							This:StopApproaching["MTU disappeared while I was approaching. Going to check if its on grid or we looted it."]
+						}
+
+						;	If we're approaching a target, find out if we need to stop doing so
+						if ${Entity[${This.Approaching}].Distance} <= 2000
+						{
+							This:StopApproaching["Within loot range of ${Entity[${This.Approaching}].Name}(${Entity[${This.Approaching}].ID})"]
+							; Don't break here
+						}
+					}
+					if (${Entity[Name == "Mobile Tractor Unit"](exists)} && ${Entity[Name == "Mobile Tractor Unit"].Distance} <= 2000)
+					{
+						Entity[Name == "Mobile Tractor Unit"]:ScoopToCargoHold
+						if (!${Entity[Name == "Mobile Tractor Unit"](exists)})
+						{
+						;EVE:CreateBookmark["Done Site ${Math.Rand[5000]:Inc[1000]}","","mining"]
+						return
+						}
+					}
+				}
+				else
+				{
+					Ship.Drones:ReturnAllToDroneBay["Combat", "Moving"]
+					Ship:WarpPrepare
+					wait 50
+					This.CurrentState:Set["LOOT"]
+				}
                 return
 			}
 			else
 			{
-				Entity[Name == "Mobile Tractor Unit"]:ScoopToCargoHold
-				Ship:WarpPrepare
-                Ship.Drones:ReturnAllToDroneBay["Combat", "Moving"]
-                WeAreRunningSite:Set[FALSE]
-				wait 50
-                if (${Drones.DronesInSpace[FALSE]} == 0)
+				if (${Entity[Name == "Mobile Tractor Unit"](exists)} && ${Social.IsSafe})
+				{
+					Ship.Drones:ReturnAllToDroneBay["Combat", "Moving"]
+					if (${Entity[Name == "Mobile Tractor Unit"].Distance} > 2001 && ${This.Approaching} == 0)
+					{
+					Logger:Log["Approach MTU to scoop it"]
+					This:StartApproaching[${Entity[Name == "Mobile Tractor Unit"].ID}, 2000]
+					}
+					if ${This.Approaching} != 0
+					{
+						if !${Entity[${This.Approaching}](exists)}
+						{
+							This:StopApproaching["MTU disappeared while I was approaching. Going to check if its on grid or we looted it."]
+						}
+
+						;	If we're approaching a target, find out if we need to stop doing so
+						if ${Entity[${This.Approaching}].Distance} <= 2000
+						{
+							This:StopApproaching["Within loot range of ${Entity[${This.Approaching}].Name}(${Entity[${This.Approaching}].ID})"]
+							; Don't break here
+						}
+					}
+					if (${Entity[Name == "Mobile Tractor Unit"](exists)} && ${Entity[Name == "Mobile Tractor Unit"].Distance} <= 2000)
+					{
+						Entity[Name == "Mobile Tractor Unit"]:ScoopToCargoHold
+						if (!${Entity[Name == "Mobile Tractor Unit"](exists)})
+						{
+						;EVE:CreateBookmark["Done Site ${Math.Rand[5000]:Inc[1000]}","","mining"]
+						}
+					}
+				}
+				else
                 {
+				Ship.Drones:ReturnAllToDroneBay["Combat", "Moving"]
+				Ship:WarpPrepare
+				wait 50
 				This.CurrentState:Set["IDLE"]
                 }
                 return
