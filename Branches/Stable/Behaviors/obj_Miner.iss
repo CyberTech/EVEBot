@@ -1420,7 +1420,6 @@ BUG - This is broken. It relies on the activatarget, there's no checking if they
 		{
 			if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)}
 			{
-				call Inventory.ShipOreHold.Activate
 				if ${Ship.OreHoldFreeSpace} < ${Ship.OreHoldMinimumFreeSpace}
 				{
 					return TRUE
