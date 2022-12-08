@@ -620,6 +620,16 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Compress Ore Mode, ${value}]
 	}
 
+	member:bool SoloCompressOreMode()
+	{
+		return ${This.MinerRef.FindSetting[Solo Compress Ore Mode, FALSE]}
+	}
+
+	method SetSoloCompressOreMode(bool value)
+	{
+		This.MinerRef:AddSetting[Solo Compress Ore Mode, ${value}]
+	}
+
 	; Deprecated 2020-11-222
 	member:bool OrcaMode()
 	{

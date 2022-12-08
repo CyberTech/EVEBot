@@ -794,6 +794,13 @@ objectdef obj_Miner
 			StopCompressing:Set[FALSE]
 		}
 
+		; lets try to compress since solo compression is active
+		if (${Config.Miner.SoloCompressOreMode} && ${Ship.OreHoldHalfFull})
+		{
+			Logger:Log["Debug: Try To Compress"]
+			call Compress.CheckForCompression
+		}
+
 		;	If we're in a station there's not going to be any mining going on.  This should clear itself up if it ever happens.
 		if ${Me.InStation} != FALSE
 		{
