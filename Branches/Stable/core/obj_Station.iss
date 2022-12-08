@@ -110,7 +110,7 @@ objectdef obj_Station
 					Counter:Set[0]
 				}
 			}
-			while !${This.DockedAtStation[${StationID}]}
+			while !${This.DockedAtStation[${StationID}]} && ${Navigator.Busy}
 		}
 		elseif ${Safespots.Count} > 0
 		{
