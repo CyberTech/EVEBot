@@ -715,6 +715,23 @@
 								Script[EVEBot].VariableScope.Config.Miner:SetCompressOreMode[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
+						<checkbox name='cbSoloCompressOreMode'>
+							<X>300</X>
+							<Y>190</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Solo Compress Ore</Text>
+							<AutoTooltip>When this is checked, someone not running evebot is running compression</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Miner.SoloCompressOreMode}
+								{
+								This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Miner:SetSoloCompressOreMode[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
 						<slider name='AvoidPlayerRange'>
 							<X>10</X>
 							<Y>110</Y>
