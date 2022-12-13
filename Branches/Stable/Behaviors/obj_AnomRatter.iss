@@ -454,6 +454,10 @@ objectdef obj_AnomRatter inherits obj_BaseClass
 			{
 				Entity[Name == "Broken Orange Crystal Asteroid"]:Orbit[${OrbitDistance}]
 			}
+			elseif (${Entity[Name == "Sharded Rock"]} && ${Me.ToEntity.Mode} != 4)
+			{
+				Entity[Name == "Sharded Rock"]:Orbit[${OrbitDistance}]
+			}
             Ship:Activate_AfterBurner
 		}
 
