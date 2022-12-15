@@ -110,7 +110,7 @@ objectdef obj_Station
 					Counter:Set[0]
 				}
 			}
-			while !${This.DockedAtStation[${StationID}]}
+			while !${This.DockedAtStation[${StationID}]} && ${Navigator.Busy}
 		}
 		elseif ${Safespots.Count} > 0
 		{
@@ -171,7 +171,7 @@ objectdef obj_Station
 		Logger:Log["Undocking from ${Me.Station.Name}"]
 		Config.Common:SetHomeStation[${Me.Station.Name}]
 		Logger:Log["Undock: Home Station set to ${Config.Common.HomeStation}"]
-		wait 20
+
 		EVE:Execute[CmdExitStation]
 		wait WAIT_UNDOCK
 		Counter:Set[0]

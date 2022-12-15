@@ -715,6 +715,23 @@
 								Script[EVEBot].VariableScope.Config.Miner:SetCompressOreMode[${This.Checked}]
 							</OnLeftClick>
 						</checkbox>
+						<checkbox name='cbSoloCompressOreMode'>
+							<X>300</X>
+							<Y>190</Y>
+							<Height>20</Height>
+							<Width>100</Width>
+							<Text>Solo Compress Ore</Text>
+							<AutoTooltip>When this is checked, someone not running evebot is running compression</AutoTooltip>
+							<OnLoad>
+								if ${Script[EVEBot].VariableScope.Config.Miner.SoloCompressOreMode}
+								{
+								This:SetChecked
+								}
+							</OnLoad>
+							<OnLeftClick>
+								Script[EVEBot].VariableScope.Config.Miner:SetSoloCompressOreMode[${This.Checked}]
+							</OnLeftClick>
+						</checkbox>
 						<slider name='AvoidPlayerRange'>
 							<X>10</X>
 							<Y>110</Y>
@@ -1309,42 +1326,52 @@
 							<Text>Select Anom Type</Text>
 							<AutoTooltip>This will be the Anom type we rat over and over again.</AutoTooltip>
 						</Text>
-						<combobox name='CurrentAnom'>
+						<combobox name='CurrentAnomType'>
 							<X>350</X>
-							<Y>150</Y>
-							<Width>150</Width>
+							<Y>130</Y>
+							<Width>200</Width>
 							<Height>18</Height>
 							<FullHeight>200</FullHeight>
 							<ButtonWidth>20</ButtonWidth>
 							<Items>
-								<Item Value='1'>None</Item>
-								<Item Value='2'>Guristas Haven</Item>
-								<Item Value='3'>Guristas Sanctum</Item>
+								<Item Value='0'>None</Item>
+								<Item Value='1'>Guristas Sanctum</Item>
+								<Item Value='2'>Guristas Haven (Rock)</Item>
+								<Item Value='2.1'>Guristas Haven (Gas)</Item>
+								<Item Value='2.3'>Guristas Haven (Both)</Item>
+								<Item Value='3'>Guristas Forlorn Hub</Item>
+								<Item Value='4'>Guristas Forsaken Hub</Item>
+								<Item Value='5'>Guristas Hidden Hub</Item>
+								<Item Value='110917'>Guristas Hub</Item>
+								<Item Value='110932'>Guristas Port</Item>
+								<Item Value='111338'>Guristas Forlorn Rally Point</Item>
+								<Item Value='9'>Guristas Forsaken Rally Point</Item>
+								<Item Value='111375'>Guristas Hidden Rally Point</Item>
+								<Item Value='110902'>Guristas Rally Point</Item>
+								<Item Value='31'>Guristas Yard</Item>
+								<Item Value='111325'>Guristas Forlorn Den</Item>
+								<Item Value='111329'>Guristas Forsaken Den</Item>
+								<Item Value='113140'>Guristas Hidden Den</Item>
+								<Item Value='32'>Guristas Den</Item>
+								<Item Value='33'>Guristas Refuge</Item>
+								<Item Value='34'>Guristas Burrow</Item>
+								<Item Value='35'>Guristas Forlorn Hideaway</Item>
+								<Item Value='36'>Guristas Forsaken Hideaway</Item>
+								<Item Value='37'>Guristas Hidden Hideaway</Item>
+								<Item Value='38'>Guristas Hideaway</Item>
+								<Item Value='39'>Sansha Forsaken Hub</Item>
+								<Item Value='40'>Sansha Haven (Rock)</Item>
+								<Item Value='40.1'>Sansha Haven (Gas)</Item>
+								<Item Value='40.3'>Sansha Haven (Both)</Item>
 							</Items>
 							<OnSelect>
-								if ${This.SelectedItem.Text.NotNULLOrEmpty}
-								{
-									Logger:Log["Current anomaly switched to ${This.SelectedItem.Text}"]
-									Script[EVEBot].VariableScope.Config.Common:CurrentAnom[${This.SelectedItem.Text}]
-								}
+								Script[EVEBot].VariableScope.Config.Combat:SetCurrentAnomType[${This.SelectedItem.Value}]
+								Script[EVEBot].VariableScope.Config.Combat:SetCurrentAnomTypeName[${This.SelectedItem.Text}]
 							</OnSelect>
-						</combobox>
-						<Textentry name='tbRestockFreeSpace'>
-							<X>350</X>
-							<Y>150</Y>
-							<Width>150</Width>
-							<Height>18</Height>
-							<MaxLength>10</MaxLength>
 							<OnLoad>
-								This:SetText[${Script[EVEBot].VariableScope.Config.Combat.RestockAmmoFreeSpace}]
+								This:SetSelection[${Script[EVEBot].VariableScope.Config.Combat.CurrentAnomType}]
 							</OnLoad>
-							<OnChange>
-								if ${This.Text.Length} > 0
-								{
-								Script[EVEBot].VariableScope.Config.Combat:SetRestockAmmoFreeSpace[${This.Text}]
-								}
-							</OnChange>
-						</Textentry>
+						</combobox>
 					</Tab>
 					<Tab name='Fleeing'>
 						<TabControl Name='FleeingTabcontrol' template='EVESkin.TabControl'>
