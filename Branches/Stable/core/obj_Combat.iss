@@ -292,7 +292,6 @@ objectdef obj_Combat
 	{
 		if !${Station.Docked}
 		{
-			Bookmarks:StoreLocation
 			call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
 		}
 	}
