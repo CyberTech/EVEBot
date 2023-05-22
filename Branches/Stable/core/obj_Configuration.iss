@@ -870,9 +870,40 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[Use Anom Bookmarks, FALSE]
 		This.CombatRef:AddSetting[AnomBookmarkLabel, Anom:]
 		This.CombatRef:AddSetting[MaxDroneReturnWaitTime, 3]
+		This.CombatRef:AddSetting[CurrentAnomType, 0]
 	}
 
 	Define_ConfigItem(bool, EnableDroneDefense, TRUE)
+
+	member:int CurrentAnomType()
+	{
+		return ${This.CombatRef.FindSetting[CurrentAnomType, 0]}
+	}
+
+	method SetCurrentAnomType(int value)
+	{
+		This.CombatRef:AddSetting[CurrentAnomType, ${value}]
+	}
+
+	member:string CurrentAnomTypeName()
+	{
+		return ${This.CombatRef.FindSetting[CurrentAnomTypeName, None]}
+	}
+
+	method SetCurrentAnomTypeName(string value)
+	{
+		This.CombatRef:AddSetting[CurrentAnomTypeName, ${value}]
+	}
+
+	member:string CurrentAnom()
+	{
+		return ${This.CombatRef.FindSetting[CurrentAnom]}
+	}
+
+	method SetCurrentAnom(string value)
+	{
+		This.CombatRef:AddSetting[CurrentAnom, ${value}]
+	}
 
 	member:int WarpRange()
 	{

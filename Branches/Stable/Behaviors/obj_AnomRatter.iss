@@ -363,6 +363,19 @@ objectdef obj_AnomRatter inherits obj_BaseClass
 								break
 							}    
 						}
+						elseif (${Config.Combat.CurrentAnomTypeName.Equal["Sansha Forsaken Hub"]} && !${MyAnomalies_Iterator.Value.Name.Equal[${MyCurrentSite}]})
+						{
+							Logger:Log["Debug: Checking each anom till we find one we want to run"]
+							if ((${MyAnomalies_Iterator.Value.DungeonID} == 111349) && !${AnomSites.Contains[${MyAnomalies_Iterator.Value.Name}]})
+							{
+								Logger:Log["Debug: Anom Found and it isn't the one we are currently at so lets warp to it"]
+								relay all AnomSites:Add[${MyAnomalies_Iterator.Value.Name}]
+								MyCurrentSite:Set[${MyAnomalies_Iterator.Value.Name}]
+								wait 20
+								MyAnomalies_Iterator.Value:WarpTo[30000, FALSE]
+								break
+							}    
+						}
 					}
 					while ${MyAnomalies_Iterator:Next(exists)}
 			}
@@ -453,6 +466,10 @@ objectdef obj_AnomRatter inherits obj_BaseClass
 			elseif (${Entity[Name == "Broken Orange Crystal Asteroid"]} && ${Me.ToEntity.Mode} != 4)
 			{
 				Entity[Name == "Broken Orange Crystal Asteroid"]:Orbit[${OrbitDistance}]
+			}
+			elseif (${Entity[Name == "Sharded Rock"]} && ${Me.ToEntity.Mode} != 4)
+			{
+				Entity[Name == "Sharded Rock"]:Orbit[${OrbitDistance}]
 			}
             Ship:Activate_AfterBurner
 		}

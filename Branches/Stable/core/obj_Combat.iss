@@ -184,6 +184,22 @@ objectdef obj_Combat
 					return
 				}
 			}
+			elseif ${Entity[Name == "Dread Guristas Dreadnought"]}
+			{
+				Logger:Log["Debug: Fleeing: Dread Guristas Dreadnought, site isn't safe"]
+				if ${Config.Common.CurrentBehavior.Equal[AnomRatter]}
+				{
+					EVE:CreateBookmark["Dread Spawn ${Math.Rand[5000]:Inc[1000]}","","mining"]
+					AnomRatter.MyCurrentSite:Set["Clear"]
+					call This.Flee
+					return
+				}
+				else
+				{
+					call This.Flee
+					return
+				}
+			}
 			call This.ManageTank
 		}
 
@@ -268,6 +284,7 @@ objectdef obj_Combat
 	function Flee()
 	{
 		This.CurrentState:Set["FLEE"]
+		AnomRatter.WeFled:Set[TRUE]
 		if !${This.Fled}
 		{
 			Sound:Speak["Fleeing to safespot! Aura, I need warp speed in three minutes or we're all dead!", 1.1]
@@ -292,7 +309,6 @@ objectdef obj_Combat
 	{
 		if !${Station.Docked}
 		{
-			Bookmarks:StoreLocation
 			call Station.DockAtStation ${EVE.Bookmark[${Config.Miner.DeliveryLocation}].ItemID}
 		}
 	}
@@ -314,7 +330,6 @@ objectdef obj_Combat
 			; Are we at the safespot and not warping?
 			if ${Me.ToEntity.Mode} != 3
 			{
-				Bookmarks:StoreLocation
 				call Safespots.WarpTo
 				wait 30
 			}
