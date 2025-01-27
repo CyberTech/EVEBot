@@ -88,7 +88,7 @@ variable int VersionNum = 0
 #define ENTITY_STATE_DEPARTING						4
 #define ENTITY_STATE_DEPARTING2						5
 #define ENTITY_STATE_PURSUIT							6
-#define ENTITY_STATE_FLEEING							7``
+#define ENTITY_STATE_FLEEING							7
 #define ENTITY_STATE_REINFORCED						8
 #define ENTITY_STATE_OPERATING						9
 #define ENTITY_STATE_ENGAGE								10		/* For Drones, this means Repairing */
