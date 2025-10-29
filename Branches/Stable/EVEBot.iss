@@ -243,11 +243,15 @@ function main()
 		}
 	}
 
+	; Set the combobox after UI loads (needs to wait for itemsBinding to populate)
+	; Called here because wait commands work in this part of main()
+	UI:SetBehavioralComboBoxWhenReady[${Config.Common.CurrentBehavior}]
+
 	EVEBot.Loaded:Set[TRUE]
 	Logger:Log["${APP_NAME} behavior set to ${Config.Common.CurrentBehavior}", LOG_ECHOTOO]
 	Logger:Log["${APP_NAME} loaded", LOG_ECHOTOO]
 
-#ifndef EVEBOT_TESTCASE
+	#ifndef EVEBOT_TESTCASE
 	EVEBot:Pause["Press Run to start"]
 
 	while TRUE

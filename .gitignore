@@ -13,3 +13,7 @@ _ActiveModules.iss
 !/Branches/Dev/config/Examples
 !/Branches/Dev/config/Examples/*
 
+/External/EVEBots_dotNET/C# stuff/EveBots/obj/Debug/*.cache
+/External/EVEBots_dotNET/C# stuff/EveBots/obj/Release/*.cache
+/External/evecmd/obj/Debug/*.cache
+/External/evecmd/obj/Release/*.cache

@@ -1,3 +1,4 @@
+#include ${LavishScript.HomeDirectory}/Scripts/LGUI2Scaling.iss
 
 objectdef obj_EVEBotUI inherits obj_BaseClass
 {
@@ -5,19 +6,14 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 	;variable string SkinFile = "EVESkin.xml"
 	variable string SkinFile = "eveskin/EVESkin.xml"
 
+	variable bool NeedToSetComboBox = FALSE
+	variable string ComboBoxValueToSet = ""
+
 	method Initialize()
 	{
 		LogPrefix:Set["${This.ObjectName}"]
 
-		ui -load interface/${This.SkinFile}
-		;ui -load "${LavishScript.HomeDirectory}/Interface/DefaultSkin.xml"
-		;ui -load "${LavishScript.HomeDirectory}/Interface/Skins/EQ2/EQ2.xml"
-		;ui -load "${LavishScript.HomeDirectory}/Interface/Skins/VGSkin/VGSkin.xml"
-		;ui -load "${LavishScript.HomeDirectory}/Scripts/EQ2/UI/EQ2Skin.xml"
-
-		ui -load interface/EVEBot.xml
-		;ui -load -skin ${This.Skin} interface/EVEBot.xml
-
+		LGUI2:LoadPackageFile[interface/EVEBot.json]
 		This:LogSystemStats
 		This:CheckUIPosition
 
@@ -29,66 +25,82 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 	method Shutdown()
 	{
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
-		ui -unload interface/EVEBot.xml
-		ui -unload interface/${This.SkinFile}
+		LGUI2:UnloadPackageFile[interface/EVEBot.json]
 	}
 
 	method Reload()
 	{
-		ui -reload interface/EVEBot.xml
-		;ui -reload -skin ${This.Skin} interface/EVEBot.xml
+		; LGUI2 doesn't have ReloadPackageFile - unload and reload instead
+		LGUI2:UnloadPackageFile[interface/EVEBot.json]
+		LGUI2:LoadPackageFile[interface/EVEBot.json]
+
 		Logger:WriteQueue
-		This:PopulateBehavioralComboBox
+		; Don't call SetBehavioralComboBox here - let onLoad handle it
+		; This:SetBehavioralComboBox[${Config.Common.CurrentBehavior}]
 		This.Reloaded:Set[TRUE]
 	}
 
-	method PopulateBehavioralComboBox()
+	method SetBehavioralComboBoxWhenReady(string searchFor)
 	{
-		variable iterator Behavior
-		Behaviors.Loaded:GetIterator[Behavior]
+		; Set flags for Pulse to handle (Pulse runs on frames, no wait needed)
+		This.NeedToSetComboBox:Set[TRUE]
+		This.ComboBoxValueToSet:Set["${searchFor}"]
+	}
 
-		if ${Behavior:First(exists)}
+	method SetBehavioralComboBox(string searchFor)
+	{
+		variable jsonvalue ja="${This.GetBehaviors}"
+		variable int i
+
+		for (i:Set[1]; ${i} <= ${ja.Size}; i:Inc)
 		{
-			UIElement[EVEBot].FindUsableChild["CurrentBehavior","combobox"]:ClearItems
-			UIElement[EVEBot].FindUsableChild["CurrentBehavior","combobox"]:AddItem["Idle"]
-			do
+			if ${ja[${i}].Get[text].Equal[${searchFor}]}
 			{
-				UIElement[EVEBot].FindUsableChild["CurrentBehavior","combobox"]:AddItem["${Behavior.Value}"]
+				LGUI2.Element[CurrentBehaviorList]:SetItemSelected[${i},TRUE]
+				return
 			}
-			while ${Behavior:Next(exists)}
-			UIElement[EVEBot].FindUsableChild["CurrentBehavior","combobox"].ItemByText[${Config.Common.CurrentBehavior}]:Select
 		}
 	}
 
 	method CheckUIPosition()
 	{
-		if ${UIElement[EVEBot].X} <= -${Math.Calc[${UIElement[EVEBot].Width} * 0.66].Int} || \
-			${UIElement[EVEBot].X} >= ${Math.Calc[${Display.Width} - ${UIElement[EVEBot].Width}]}
+		if ${LGUI2.Element[EVEBot].X} <= -${Math.Calc[${LGUI2.Element[EVEBot].Width} * 0.66].Int} || \
+			${LGUI2.Element[EVEBot].X} >= ${Math.Calc[${Display.Width} - ${LGUI2.Element[EVEBot].Width}]}
 		{
-			echo ${UIElement[EVEBot].X} <= -${Math.Calc[${UIElement[EVEBot].Width} * 0.66].Int}
-			echo ${UIElement[EVEBot].X} >= ${Math.Calc[${Display.Width} - ${UIElement[EVEBot].Width}]}
+			echo ${LGUI2.Element[EVEBot].X} <= -${Math.Calc[${LGUI2.Element[EVEBot].Width} * 0.66].Int}
+			echo ${LGUI2.Element[EVEBot].X} >= ${Math.Calc[${Display.Width} - ${LGUI2.Element[EVEBot].Width}]}
 
 			echo "----"
-			echo "    Warning: EVEBot window is outside window area: ${UIElement[EVEBot].X} > ${Display.Width}"
-			echo "    You may fix this with 'UIElement[EVEBot]:Reset"
+			echo "    Warning: EVEBot window is outside window area: ${LGUI2.Element[EVEBot].X} > ${Display.Width}"
+			echo "    You may fix this with 'LGUI2.Element[EVEBot]:SetPosition[200,300]"
 			echo "----"
 		}
 
-		if ${UIElement[EVEBot].Y} <= 1 || \
-			${UIElement[EVEBot].Y} >= ${Math.Calc[${Display.Height} - ${UIElement[EVEBot].Height}]}
+		if ${LGUI2.Element[EVEBot].Y} <= 1 || \
+			${LGUI2.Element[EVEBot].Y} >= ${Math.Calc[${Display.Height} - ${LGUI2.Element[EVEBot].Height}]}
 		{
-			echo ${UIElement[EVEBot].Y} <= 1
-			echo ${UIElement[EVEBot].Y} >= ${Math.Calc[${Display.Height} - ${UIElement[EVEBot].Height}]}
+			echo ${LGUI2.Element[EVEBot].Y} <= 1
+			echo ${LGUI2.Element[EVEBot].Y} >= ${Math.Calc[${Display.Height} - ${LGUI2.Element[EVEBot].Height}]}
 
 			echo "----"
-			echo "    Warning: EVEBot window is outside window area: ${UIElement[EVEBot].Y} > ${Display.Height}"
-			echo "    You may fix this with 'UIElement[EVEBot]:Reset"
+			echo "    Warning: EVEBot window is outside window area: ${LGUI2.Element[EVEBot].Y} > ${Display.Height}"
+			echo "    You may fix this with 'LGUI2.Element[EVEBot]:SetPosition[200,300]"
 			echo "----"
 		}
 	}
 
 	method Pulse()
 	{
+		; Check if we need to set the combobox (runs every frame until successful)
+		if ${This.NeedToSetComboBox}
+		{
+			if ${LGUI2.Element[CurrentBehaviorList](exists)} && ${LGUI2.Element[CurrentBehaviorList].ItemCount} > 0
+			{
+				This:SetBehavioralComboBox["${This.ComboBoxValueToSet}"]
+				This.NeedToSetComboBox:Set[FALSE]
+			}
+		}
+
 		if !${EVEBot.Loaded} || ${EVEBot.Disabled}
 		{
 			return
@@ -103,6 +115,35 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 
 	method LogSystemStats()
 	{
-		;Logger:Log["Memory: ${System.OS} Process: ${Math.Calc[${System.MemoryUsage}/1024].Int}kb Free: ${System.MemFree}mb Texture Mem Free: ${Display.TextureMem}mb FPS: ${Display.FPS.Int} Windowed: ${Display.Windowed}(${Display.AppWindowed}) Foreground: ${Display.Foreground}", LOG_MINOR]
+		;Logger:Log["Memory: ${System.OS} Process: ${Math.Calc[${System.MemoryUsage}/1024}.Int}kb Free: ${System.MemFree}mb Texture Mem Free: ${Display.TextureMem}mb FPS: ${Display.FPS.Int} Windowed: ${Display.Windowed}(${Display.AppWindowed}) Foreground: ${Display.Foreground}", LOG_MINOR]
+	}
+
+	; LGUI2 data binding member function for CurrentBehavior combobox
+	member:string GetBehaviors()
+	{
+		variable string jsonOutput = "["
+		variable iterator Behavior
+		variable bool FirstItem = TRUE
+
+		; Always add "Idle" first
+		jsonOutput:Concat["{\"type\":\"textblock\",\"text\":\"Idle\"}"]
+		FirstItem:Set[FALSE]
+
+		; Add loaded behaviors
+		Behaviors.Loaded:GetIterator[Behavior]
+		if ${Behavior:First(exists)}
+		{
+			do
+			{
+				if !${FirstItem}
+					jsonOutput:Concat[","]
+				jsonOutput:Concat["{\"type\":\"textblock\",\"text\":\"${Behavior.Value.Escape}\"}"]
+				FirstItem:Set[FALSE]
+			}
+			while ${Behavior:Next(exists)}
+		}
+
+		jsonOutput:Concat["]"]
+		return "${jsonOutput.Escape}"
 	}
 }
