@@ -196,7 +196,7 @@ objectdef obj_EVEBot inherits obj_BaseClass
 	{
 		This._Paused:Set[TRUE]
 		This:PauseThreads
-		Logger:Log["\agPaused\ax: ${Reason}", LOG_ECHOTOO]
+		Logger:Log["Paused: ${Reason}", LOG_ECHOTOO]
 		Script:Pause
 	}
 

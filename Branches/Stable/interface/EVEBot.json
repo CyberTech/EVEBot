@@ -4,10 +4,10 @@
     {
       "type": "window",
       "name": "EVEBot",
-      "x": 200,
-      "y": 300,
-      "width": 1650,
-      "height": 960,
+      "x": 1045,
+      "y": 775,
+      "width": 1640,
+      "height": 950,
       "eventHandlers": {
         "onCloseButtonClick": {
           "type": "code",
@@ -21,14 +21,24 @@
             "type": "button",
             "name": "Run EVEBot",
             "borderThickness": 2,
-            "content": ">",
+            "content": "RUN",
+            "width": 100,
             "font": {
               "face": "Segoe UI",
               "height": 48
             },
+            "color": "#00FF00",
             "padding": 4,
             "_dock": "left",
-            "tooltip": "Run EVEBot",
+            "tooltip": {
+              "type": "textblock",
+              "text": "Run EVEBot",
+              "font": {
+                "face": "Segoe UI Italic",
+                "height": 36
+              },
+              "color": "#FFE4B5"
+            },
             "eventHandlers": {
               "onPress": {
                 "type": "code",
@@ -40,14 +50,30 @@
             "type": "button",
             "name": "Pause EVEBot",
             "borderThickness": 2,
-            "content": "||",
+            "content": "PAUSE",
+            "width": 140,
             "font": {
               "face": "Segoe UI",
               "height": 48
             },
+            "color": "#FFFF00",
             "padding": 4,
+            "margin": [
+              15,
+              0,
+              0,
+              0
+            ],
             "_dock": "left",
-            "tooltip": "Pause EVEBot",
+            "tooltip": {
+              "type": "textblock",
+              "text": "Pause EVEBot",
+              "font": {
+                "face": "Segoe UI Italic",
+                "height": 36
+              },
+              "color": "#FFE4B5"
+            },
             "eventHandlers": {
               "onPress": {
                 "type": "code",
@@ -61,17 +87,17 @@
             "text": "${Script[EVEBot].VariableScope.AppVersion}",
             "verticalAlignment": "center",
             "margin": [
-              10,
+              20,
               0,
               0,
               0
             ],
             "font": {
               "face": "Segoe UI",
-              "height": 42,
+              "height": 60,
               "bold": true
             },
-            "color": "#FFFFFF",
+            "color": "#00FFFF",
             "_dock": "left",
             "eventHandlers": {
               "onLoad": {
@@ -82,25 +108,21 @@
           },
           {
             "type": "button",
-            "name": "Minimize",
+            "name": "Close",
             "borderThickness": 2,
-            "content": "_",
+            "content": "X",
+            "width": 60,
             "font": {
               "face": "Segoe UI",
               "height": 48
             },
             "padding": 4,
-            "margin": [
-              0,
-              0,
-              8,
-              0
-            ],
             "_dock": "right",
             "eventHandlers": {
-              "onPress": {
-                "type": "code",
-                "code": "LGUI2.Element[TitleBotStatus]:Show;LGUI2.Element[TitleBotStatusCap]:Show;LGUI2.Element[TitleBotXPStatus]:Show;LGUI2.Element[TitleBotXPCap]:Show"
+              "onMouseButtonMove": {
+                "type": "forward",
+                "elementType": "window",
+                "event": "onCloseButtonClick"
               }
             }
           },
@@ -109,6 +131,7 @@
             "name": "Maximize",
             "borderThickness": 2,
             "content": "^",
+            "width": 60,
             "font": {
               "face": "Segoe UI",
               "height": 48
@@ -130,20 +153,26 @@
           },
           {
             "type": "button",
-            "name": "Close",
+            "name": "Minimize",
             "borderThickness": 2,
-            "content": "X",
+            "content": "-",
+            "width": 60,
             "font": {
               "face": "Segoe UI",
               "height": 48
             },
             "padding": 4,
+            "margin": [
+              0,
+              0,
+              8,
+              0
+            ],
             "_dock": "right",
             "eventHandlers": {
-              "onMouseButtonMove": {
-                "type": "forward",
-                "elementType": "window",
-                "event": "onCloseButtonClick"
+              "onPress": {
+                "type": "code",
+                "code": "LGUI2.Element[TitleBotStatus]:Show;LGUI2.Element[TitleBotStatusCap]:Show;LGUI2.Element[TitleBotXPStatus]:Show;LGUI2.Element[TitleBotXPCap]:Show"
               }
             }
           }
@@ -183,9 +212,9 @@
                 {
                   "type": "button",
                   "name": "SaveConfig",
-                  "x": 690,
+                  "x": 1120,
                   "y": 30,
-                  "width": 382,
+                  "width": 200,
                   "height": 60,
                   "content": "Save Config",
                   "eventHandlers": {
@@ -201,9 +230,9 @@
                 {
                   "type": "button",
                   "name": "BroadcastBreak",
-                  "x": 1170,
+                  "x": 1350,
                   "y": 30,
-                  "width": 382,
+                  "width": 250,
                   "height": 60,
                   "content": "Broadcast Break",
                   "eventHandlers": {
@@ -219,9 +248,9 @@
                 {
                   "type": "button",
                   "name": "BroadcastResume",
-                  "x": 1170,
-                  "y": 90,
-                  "width": 382,
+                  "x": 1350,
+                  "y": 100,
+                  "width": 250,
                   "height": 60,
                   "content": "Broadcast Resume",
                   "eventHandlers": {
@@ -237,9 +266,9 @@
                 {
                   "type": "button",
                   "name": "BroadcastRun",
-                  "x": 1170,
-                  "y": 150,
-                  "width": 382,
+                  "x": 1350,
+                  "y": 170,
+                  "width": 250,
                   "height": 60,
                   "content": "Broadcast Run",
                   "eventHandlers": {
@@ -423,7 +452,7 @@
                 {
                   "type": "textbox",
                   "name": "StatusConsole",
-                  "text": "Running...",
+                  "text": "Loading...",
                   "x": 15,
                   "y": 400,
                   "margin": [ 5, 2, 5, 2 ],
@@ -560,7 +589,15 @@
                   "width": 600,
                   "height": 30,
                   "text": "Minimum Drones in Bay",
-                  "tooltip": "This will set the amount of drones you want in your drone bay.",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "This will set the amount of drones you want in your drone bay.",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -573,7 +610,15 @@
                   "width": 390,
                   "height": 54,
                   "text": "Max Run Hours",
-                  "tooltip": "The maximum hours to run the script before it aborts.",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "The maximum hours to run the script before it aborts.",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -608,7 +653,15 @@
                   "width": 300,
                   "height": 54,
                   "text": "IRC Server",
-                  "tooltip": "Enter an server address if you want to use IRC",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Enter an server address if you want to use IRC",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -643,7 +696,15 @@
                   "width": 300,
                   "height": 54,
                   "text": "IRC Channel",
-                  "tooltip": "Enter an channel name if you want to use IRC",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Enter an channel name if you want to use IRC",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -678,7 +739,15 @@
                   "width": 300,
                   "height": 54,
                   "text": "IRC Username",
-                  "tooltip": "Enter an username if you want to use IRC",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Enter an username if you want to use IRC",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -713,7 +782,15 @@
                   "width": 300,
                   "height": 54,
                   "text": "IRC Password",
-                  "tooltip": "Enter a password if you need one to use IRC",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Enter a password if you need one to use IRC",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -749,7 +826,15 @@
                   "height": 60,
                   "width": 300,
                   "content": "Enable sound",
-                  "tooltip": "Enable audio events",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Enable audio events",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -769,7 +854,15 @@
                   "height": 60,
                   "width": 300,
                   "content": "Disable 3D Rendering",
-                  "tooltip": "Disable EVE 3D Rendering",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Disable EVE 3D Rendering",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -789,7 +882,15 @@
                   "height": 60,
                   "width": 300,
                   "content": "Sort Asteroid Belts Randomly",
-                  "tooltip": "Sort asteroid belt lists randomly, instead of alphabetically",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Sort asteroid belt lists randomly, instead of alphabetically",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -821,7 +922,15 @@
                   "height": 60,
                   "width": 300,
                   "content": "Strip Mine Area",
-                  "tooltip": "Strip Mine the immediate area to nothing before moving",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Strip Mine the immediate area to nothing before moving",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -841,7 +950,15 @@
                   "height": 60,
                   "width": 300,
                   "content": "Bookmark Last Position",
-                  "tooltip": "Will bookmark the last mining location when the hold fills, and return to that spot after emptying the hold.",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Will bookmark the last mining location when the hold fills, and return to that spot after emptying the hold.",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -883,7 +1000,15 @@
                   "width": 600,
                   "height": 54,
                   "text": "Mining Range Multipler",
-                  "tooltip": "Maximum slowboat distance is mining range * this",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Maximum slowboat distance is mining range * this",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -918,7 +1043,15 @@
                   "width": 600,
                   "height": 54,
                   "text": "Cargo Full Threshold",
-                  "tooltip": "Cargo hold >= this value means cargo hold full",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Cargo hold >= this value means cargo hold full",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -942,86 +1075,130 @@
                   "y": 210,
                   "width": 450,
                   "height": 45,
-                  "items": [
-                    {
-                      "type": "textblock",
-                      "text": "CorpTicker Time",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "CorpTicker:Time",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "CorpTicker_Time",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "CorpTicker.Time",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "CorpTicker",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "Time",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "FirstName Time",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "FirstName",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "CharName",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "Do Not Rename",
-                      "font": {
-                        "height": 36
-                      }
-                    }
-                  ],
+                  "font": {
+                      "height": 36
+                  },
                   "eventHandlers": {
                     "onSelectionChanged": {
                       "type": "code",
-                      "code": "Script[EVEBot].VariableScope.Config.Miner:SetJetCanNaming[${This.SelectedItem.Data.Get[text]}]"
+                      "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetJetCanNaming[${This.SelectedItem.Data.Get[text]}]\n}"
+                    }
+                  },
+                  "popup": {
+                    "type": "popup",
+                    "minSize": [ 0, 200 ],
+                    "content": {
+                      "type": "listbox",
+                      "name": "cbJetCanNameList",
+                      "width": 450,
+                      "height": 60,
+                      "font": {
+                        "height": 36
+                      },
+                      "minSize": [ 0, 200 ],
+                      "items": [
+                        {
+                          "type": "textblock",
+                          "text": "CorpTicker Time",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "CorpTicker:Time",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "CorpTicker_Time",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "CorpTicker.Time",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "CorpTicker",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "Time",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "FirstName Time",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "FirstName",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "CharName",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "Do Not Rename",
+                          "font": {
+                            "height": 36
+                          }
+                        }
+                      ],
+                      "eventHandlers": {
+                          "onItemSelected": {
+                              "type": "forward",
+                              "elementType": "combobox",
+                              "event": "onListBoxItemSelected"
+                          },
+                          "onItemDeselected": {
+                              "type": "forward",
+                              "elementType": "combobox",
+                              "event": "onListBoxItemDeselected"
+                          },
+                          "onSelectionChanged": {
+                              "type": "forward",
+                              "elementType": "combobox",
+                              "event": "onListBoxSelectionChanged"
+                          }
+                      }
                     },
-                    "onLoad": {
-                      "type": "code",
-                      "code": "variable int i\nfor (i:Set[1]; ${i}<=${This.ItemCount}; i:Inc)\n{\n\tif ${This.Item[${i}].Data.Get[text].Equal[${Script[EVEBot].VariableScope.Config.Miner.JetCanNaming}]}\n\t{\n\t\tThis:SetItemSelected[${i},TRUE]\n\t\tbreak\n\t}\n}"
+                    "contentContainer":{
+                        "jsonTemplate":"popup.panel",
+                        "width": 450,
+                        "height": 60,
+                        "minSize": [ 0, 200 ],
+                        "type":"anchor",
+                        "anchorToElement":{
+                            "elementType":"combobox",
+                            "elementTree":"logical",
+                            "flags":"ancestor"
+                        },
+                        "clipToParent":false,
+                        "anchorLocationFactor":[0.0,1.0]
                     }
                   }
                 },
@@ -1033,7 +1210,15 @@
                   "height": 60,
                   "width": 300,
                   "content": "Distributed Laser Targeting",
-                  "tooltip": "When checked only one laser will be activated per locked asteroid.  Uncheck to focus all lasers on a single asteroid.  In general, this should be checked.",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "When checked only one laser will be activated per locked asteroid.  Uncheck to focus all lasers on a single asteroid.  In general, this should be checked.",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -1053,7 +1238,15 @@
                   "height": 60,
                   "width": 300,
                   "content": "Use Belt Bookmarks",
-                  "tooltip": "When checked the miner will warp to asteroid belt bookmarks instead of the belts themselves.  See the labels Tab for bookmark prefix requirements.",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "When checked the miner will warp to asteroid belt bookmarks instead of the belts themselves.  See the labels Tab for bookmark prefix requirements.",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -1073,7 +1266,15 @@
                   "height": 60,
                   "width": 300,
                   "content": "Use Mining Drones ",
-                  "tooltip": "When checked mining drones will be used instead of combat drones",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "When checked mining drones will be used instead of combat drones",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -1113,7 +1314,15 @@
                   "width": 900,
                   "height": 30,
                   "text": "Min. Distance to Players: 0km",
-                  "tooltip": "Minimum distance we will keep other players at",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Minimum distance we will keep other players at",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -1132,7 +1341,15 @@
                   "height": 60,
                   "width": 300,
                   "content": "Mine Alone: Standing Detection",
-                  "tooltip": "When checked you will move to another field when and if a player enters yours and is below the standing you set. (Doesn't Include Gang Members)",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "When checked you will move to another field when and if a player enters yours and is below the standing you set. (Doesn't Include Gang Members)",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -1151,58 +1368,102 @@
                   "y": 390,
                   "width": 150,
                   "height": 45,
-                  "items": [
-                    {
-                      "type": "textblock",
-                      "text": "-11",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "-10",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "-5",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "0",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "5",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "10",
-                      "font": {
-                        "height": 36
-                      }
-                    }
-                  ],
+                  "font": {
+                      "height": 36
+                  },
                   "eventHandlers": {
                     "onSelectionChanged": {
                       "type": "code",
-                      "code": "Script[EVEBot].VariableScope.Config.Miner:SetLowestStanding[${This.SelectedItem.Data.Get[text]}]"
+                      "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetLowestStanding[${This.SelectedItem.Data.Get[text]}]\n}"
+                    }
+                  },
+                  "popup": {
+                    "type": "popup",
+                    "minSize": [ 0, 200 ],
+                    "content": {
+                      "type": "listbox",
+                      "name": "cbLowestStandingList",
+                      "width": 150,
+                      "height": 60,
+                      "font": {
+                        "height": 36
+                      },
+                      "minSize": [ 0, 200 ],
+                      "items": [
+                        {
+                          "type": "textblock",
+                          "text": "-11",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "-10",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "-5",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "0",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "5",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "10",
+                          "font": {
+                            "height": 36
+                          }
+                        }
+                      ],
+                      "eventHandlers": {
+                          "onItemSelected": {
+                              "type": "forward",
+                              "elementType": "combobox",
+                              "event": "onListBoxItemSelected"
+                          },
+                          "onItemDeselected": {
+                              "type": "forward",
+                              "elementType": "combobox",
+                              "event": "onListBoxItemDeselected"
+                          },
+                          "onSelectionChanged": {
+                              "type": "forward",
+                              "elementType": "combobox",
+                              "event": "onListBoxSelectionChanged"
+                          }
+                      }
                     },
-                    "onLoad": {
-                      "type": "code",
-                      "code": "variable int i\nfor (i:Set[1]; ${i}<=${This.ItemCount}; i:Inc)\n{\n\tif ${This.Item[${i}].Data.Get[text].Equal[${Script[EVEBot].VariableScope.Config.Miner.LowestStanding}]}\n\t{\n\t\tThis:SetItemSelected[${i},TRUE]\n\t\tbreak\n\t}\n}"
+                    "contentContainer":{
+                        "jsonTemplate":"popup.panel",
+                        "width": 150,
+                        "height": 60,
+                        "minSize": [ 0, 200 ],
+                        "type":"anchor",
+                        "anchorToElement":{
+                            "elementType":"combobox",
+                            "elementTree":"logical",
+                            "flags":"ancestor"
+                        },
+                        "clipToParent":false,
+                        "anchorLocationFactor":[0.0,1.0]
                     }
                   }
                 },
@@ -1214,7 +1475,15 @@
                   "height": 60,
                   "width": 300,
                   "content": "Group Master ",
-                  "tooltip": "When checked this will be the master in group mining, You should only have one master",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "When checked this will be the master in group mining, You should only have one master",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -1234,7 +1503,15 @@
                   "height": 60,
                   "width": 300,
                   "content": "Ice Mining",
-                  "tooltip": "Check to mine ICE Fields instead of Asteroid Fields.",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Check to mine ICE Fields instead of Asteroid Fields.",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -1254,7 +1531,15 @@
                   "height": 60,
                   "width": 300,
                   "content": "Group Mode ",
-                  "tooltip": "When checked will tell evebot to mine as a group",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "When checked will tell evebot to mine as a group",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -1274,7 +1559,15 @@
                   "height": 60,
                   "width": 300,
                   "content": "Loot wrecks ",
-                  "tooltip": "When checked this will have your orca tractor and loot wrecks (Must have a tractor beam)",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "When checked this will have your orca tractor and loot wrecks (Must have a tractor beam)",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -1294,7 +1587,15 @@
                   "height": 60,
                   "width": 300,
                   "content": "Keep Range ",
-                  "tooltip": "When checked will tell evebot to stay within range of specific person listed below",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "When checked will tell evebot to stay within range of specific person listed below",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -1326,7 +1627,15 @@
                   "width": 135,
                   "height": 54,
                   "maxLength": 6,
-                  "tooltip": "Move to another field when a player enters yours and is below the security status you set",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Move to another field when a player enters yours and is below the security status you set",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -1349,7 +1658,15 @@
                   "height": 60,
                   "width": 300,
                   "content": "Compress Ore",
-                  "tooltip": "When this is checked miners will attempt to compress ore",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "When this is checked miners will attempt to compress ore",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -1369,7 +1686,15 @@
                   "height": 60,
                   "width": 300,
                   "content": "Keep Boost Range ",
-                  "tooltip": "When checked will tell evebot to stay within boost range of the master",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "When checked will tell evebot to stay within boost range of the master",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -1401,7 +1726,15 @@
                   "height": 60,
                   "width": 300,
                   "content": "Solo Compress Ore",
-                  "tooltip": "When this is checked, someone not running evebot is running compression",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "When this is checked, someone not running evebot is running compression",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -1421,7 +1754,15 @@
                   "width": 330,
                   "height": 54,
                   "text": "Location Type",
-                  "tooltip": "Type of the destination to delivery to, such as POS, Station, Outpost, etc",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Type of the destination to delivery to, such as POS, Station, Outpost, etc",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -1433,72 +1774,116 @@
                   "y": 630,
                   "width": 450,
                   "height": 45,
-                  "items": [
-                    {
-                      "type": "textblock",
-                      "text": "Station",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "Hangar Array",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "Jetcan",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "XLarge Ship Assembly Array",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "Large Ship Assembly Array",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "Orca",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "No Delivery",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "Compression Array",
-                      "font": {
-                        "height": 36
-                      }
-                    }
-                  ],
+                  "font": {
+                      "height": 36
+                  },
                   "eventHandlers": {
                     "onSelectionChanged": {
                       "type": "code",
-                      "code": "Script[EVEBot].VariableScope.Config.Miner:SetDeliveryLocationType[${This.SelectedItem.Data.Get[text]}];Script[EVEBot].VariableScope.Config.Miner:SetDeliveryLocationTypeName[${This.SelectedItem.Data.Get[text]}]"
+                      "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetDeliveryLocationType[${This.SelectedItem.Data.Get[text]}]\n\tScript[EVEBot].VariableScope.Config.Miner:SetDeliveryLocationTypeName[${This.SelectedItem.Data.Get[text]}]\n}"
+                    }
+                  },
+                  "popup": {
+                    "type": "popup",
+                    "minSize": [ 0, 200 ],
+                    "content": {
+                      "type": "listbox",
+                      "name": "DeliveryLocationTypeList",
+                      "width": 450,
+                      "height": 60,
+                      "font": {
+                        "height": 36
+                      },
+                      "minSize": [ 0, 200 ],
+                      "items": [
+                        {
+                          "type": "textblock",
+                          "text": "Station",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "Hangar Array",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "Jetcan",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "XLarge Ship Assembly Array",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "Large Ship Assembly Array",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "Orca",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "No Delivery",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "Compression Array",
+                          "font": {
+                            "height": 36
+                          }
+                        }
+                      ],
+                      "eventHandlers": {
+                          "onItemSelected": {
+                              "type": "forward",
+                              "elementType": "combobox",
+                              "event": "onListBoxItemSelected"
+                          },
+                          "onItemDeselected": {
+                              "type": "forward",
+                              "elementType": "combobox",
+                              "event": "onListBoxItemDeselected"
+                          },
+                          "onSelectionChanged": {
+                              "type": "forward",
+                              "elementType": "combobox",
+                              "event": "onListBoxSelectionChanged"
+                          }
+                      }
                     },
-                    "onLoad": {
-                      "type": "code",
-                      "code": "variable int savedVal = ${Script[EVEBot].VariableScope.Config.Miner.DeliveryLocationType}\nif ${savedVal} > 0 && ${savedVal} <= ${This.ItemCount}\n{\n\tThis:SetItemSelected[${savedVal},TRUE]\n}"
+                    "contentContainer":{
+                        "jsonTemplate":"popup.panel",
+                        "width": 450,
+                        "height": 60,
+                        "minSize": [ 0, 200 ],
+                        "type":"anchor",
+                        "anchorToElement":{
+                            "elementType":"combobox",
+                            "elementTree":"logical",
+                            "flags":"ancestor"
+                        },
+                        "clipToParent":false,
+                        "anchorLocationFactor":[0.0,1.0]
                     }
                   }
                 },
@@ -1510,7 +1895,15 @@
                   "height": 60,
                   "width": 300,
                   "content": "Safe Jetcan ",
-                  "tooltip": "When checked this will force your miners to wait until the pilot specified in Location Name is within 20km before dropping a jetcan.",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "When checked this will force your miners to wait until the pilot specified in Location Name is within 20km before dropping a jetcan.",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -1530,7 +1923,15 @@
                   "width": 330,
                   "height": 54,
                   "text": "Location Name",
-                  "tooltip": "Either enter the delivery location here, or it will default to the last station we undock at",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Either enter the delivery location here, or it will default to the last station we undock at",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -1564,7 +1965,15 @@
                   "width": 750,
                   "height": 54,
                   "text": "Panic Location",
-                  "tooltip": "Station bookmark where you want to dock if something goes terribly wrong.  Can be in a different system.",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Station bookmark where you want to dock if something goes terribly wrong.  Can be in a different system.",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -1610,7 +2019,15 @@
                   "height": 60,
                   "width": 300,
                   "content": "Always Shield Boost",
-                  "tooltip": "Turn Shield Booster on full-time, instead of on-demand.",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Turn Shield Booster on full-time, instead of on-demand.",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -1630,7 +2047,15 @@
                   "height": 60,
                   "width": 390,
                   "content": "Launch Combat Drones",
-                  "tooltip": "Launch and Use Combat Drones",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Launch and Use Combat Drones",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -1650,7 +2075,15 @@
                   "height": 60,
                   "width": 300,
                   "content": "Chain Spawns",
-                  "tooltip": "Will chain high value spawns if checked",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Will chain high value spawns if checked",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -1670,7 +2103,15 @@
                   "height": 60,
                   "width": 300,
                   "content": "Also Chain While Alone",
-                  "tooltip": "If not checked chaining will be suspended if you are alone in a system.",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "If not checked chaining will be suspended if you are alone in a system.",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -1690,7 +2131,15 @@
                   "height": 60,
                   "width": 300,
                   "content": "Use AnomalyAssistMode",
-                  "tooltip": "Keeps the ratter stationary, ignores belts and players",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Keeps the ratter stationary, ignores belts and players",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -1710,7 +2159,15 @@
                   "height": 60,
                   "width": 300,
                   "content": "Restock Ammo From GSC",
-                  "tooltip": "Warp to Ammo Bookmark to restock ammunition?",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Warp to Ammo Bookmark to restock ammunition?",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -1730,7 +2187,15 @@
                   "height": 60,
                   "width": 300,
                   "content": "Orbit NPC Targets",
-                  "tooltip": "Orbit the current NPC target?",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Orbit the current NPC target?",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -1750,7 +2215,15 @@
                   "height": 60,
                   "width": 300,
                   "content": "Calculate Optimal (lasers only)",
-                  "tooltip": "Attempt to calculate optimal?",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Attempt to calculate optimal?",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -1770,7 +2243,15 @@
                   "height": 60,
                   "width": 300,
                   "content": "KeepAtRange NPC Targets",
-                  "tooltip": "KeepAtRange the current NPC target?",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "KeepAtRange the current NPC target?",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -1790,7 +2271,15 @@
                   "height": 60,
                   "width": 300,
                   "content": "Calculate Optimal (lasers only)",
-                  "tooltip": "Attempt to calculate optimal?",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Attempt to calculate optimal?",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -1810,7 +2299,15 @@
                   "height": 60,
                   "width": 300,
                   "content": "Loot My Kills",
-                  "tooltip": "Loot the rats you kill",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Loot the rats you kill",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -1830,7 +2327,15 @@
                   "height": 60,
                   "width": 300,
                   "content": "Request Drone Defense against NPCs",
-                  "tooltip": "Request Drone Defense from fleet - to respond, also enable launch combat drones, otherwise it's request only",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Request Drone Defense from fleet - to respond, also enable launch combat drones, otherwise it's request only",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -1850,7 +2355,15 @@
                   "width": 600,
                   "height": 30,
                   "text": "Min. Available Drones",
-                  "tooltip": "We will return to base when available drones falls below this number",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "We will return to base when available drones falls below this number",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -1885,7 +2398,15 @@
                   "width": 600,
                   "height": 30,
                   "text": "Belt Warp Range (m)",
-                  "tooltip": "What range to warp to belts at. Default is 0",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "What range to warp to belts at. Default is 0",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -1919,7 +2440,15 @@
                   "width": 600,
                   "height": 54,
                   "text": "Min Chain Bounty",
-                  "tooltip": "NPC ships with a bounty above this value will be chained (if enabled).",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "NPC ships with a bounty above this value will be chained (if enabled).",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -1954,7 +2483,15 @@
                   "width": 600,
                   "height": 54,
                   "text": "Orbit Distance (m)",
-                  "tooltip": "Distance you want to orbit the current target",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Distance you want to orbit the current target",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -1989,7 +2526,15 @@
                   "width": 600,
                   "height": 54,
                   "text": "KeepAtRange Distance (m)",
-                  "tooltip": "Distance you want to Keep the current target At Range",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Distance you want to Keep the current target At Range",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -2024,7 +2569,15 @@
                   "width": 330,
                   "height": 54,
                   "text": "Ammo TypeID",
-                  "tooltip": "Name of bookmark where the ammo can is located.",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Name of bookmark where the ammo can is located.",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -2058,7 +2611,28 @@
                   "y": 390,
                   "width": 600,
                   "height": 54,
-                  "items": [
+                  "font": {
+                      "height": 36
+                  },
+                  "eventHandlers": {
+                    "onSelectionChanged": {
+                      "type": "code",
+                      "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetCurrentAnomType[${This.SelectedItem.Data.Get[text]}]\n\tScript[EVEBot].VariableScope.Config.Combat:SetCurrentAnomTypeName[${This.SelectedItem.Data.Get[text]}]\n}"
+                    }
+                  },
+                  "popup": {
+                    "type": "popup",
+                    "minSize": [ 0, 200 ],
+                    "content": {
+                      "type": "listbox",
+                      "name": "CurrentAnomTypeList",
+                      "width": 600,
+                      "height": 60,
+                      "font": {
+                        "height": 36
+                      },
+                      "minSize": [ 0, 200 ],
+                      "items": [
                     {
                       "type": "textblock",
                       "text": "None",
@@ -2264,16 +2838,39 @@
                     }
                   ],
                   "eventHandlers": {
-                    "onSelectionChanged": {
-                      "type": "code",
-                      "code": "Script[EVEBot].VariableScope.Config.Combat:SetCurrentAnomType[${This.SelectedItem.Data.Get[text]}];Script[EVEBot].VariableScope.Config.Combat:SetCurrentAnomTypeName[${This.SelectedItem.Data.Get[text]}]"
-                    },
-                    "onLoad": {
-                      "type": "code",
-                      "code": "variable int savedVal = ${Script[EVEBot].VariableScope.Config.Combat.CurrentAnomType}\nif ${savedVal} > 0 && ${savedVal} <= ${This.ItemCount}\n{\n\tThis:SetItemSelected[${savedVal},TRUE]\n}"
-                    }
+                      "onItemSelected": {
+                          "type": "forward",
+                          "elementType": "combobox",
+                          "event": "onListBoxItemSelected"
+                      },
+                      "onItemDeselected": {
+                          "type": "forward",
+                          "elementType": "combobox",
+                          "event": "onListBoxItemDeselected"
+                      },
+                      "onSelectionChanged": {
+                          "type": "forward",
+                          "elementType": "combobox",
+                          "event": "onListBoxSelectionChanged"
+                      }
                   }
                 },
+                "contentContainer":{
+                    "jsonTemplate":"popup.panel",
+                    "width": 600,
+                    "height": 60,
+                    "minSize": [ 0, 200 ],
+                    "type":"anchor",
+                    "anchorToElement":{
+                        "elementType":"combobox",
+                        "elementTree":"logical",
+                        "flags":"ancestor"
+                    },
+                    "clipToParent":false,
+                    "anchorLocationFactor":[0.0,1.0]
+                }
+              }
+            },
                 {
                   "type": "textblock",
                   "name": "lblRestockFreeSpace",
@@ -2282,7 +2879,15 @@
                   "width": 360,
                   "height": 54,
                   "text": "Ammo Free Cargo",
-                  "tooltip": "How much free space to leave in cargo after restocking ammo",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "How much free space to leave in cargo after restocking ammo",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -2317,7 +2922,15 @@
                   "width": 360,
                   "height": 54,
                   "text": "Select Anom Type",
-                  "tooltip": "This will be the Anom type we rat over and over again.",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "This will be the Anom type we rat over and over again.",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -2353,51 +2966,95 @@
                   "y": 30,
                   "width": 750,
                   "height": 45,
-                  "items": [
-                    {
-                      "type": "textblock",
-                      "text": "Service Fleet Members",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "Service On-Demand",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "Service Orca",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "Jetcan Mode (Flip-guard)",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "Service Fleet Member",
-                      "font": {
-                        "height": 36
-                      }
-                    }
-                  ],
+                  "font": {
+                      "height": 36
+                  },
                   "eventHandlers": {
                     "onSelectionChanged": {
                       "type": "code",
-                      "code": "Script[EVEBot].VariableScope.Config.Hauler:SetHaulerMode[${This.SelectedItem.Data.Get[text]}];Script[EVEBot].VariableScope.Config.Hauler:SetHaulerModeName[${This.SelectedItem.Data.Get[text]}]"
+                      "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tScript[EVEBot].VariableScope.Config.Hauler:SetHaulerMode[${This.SelectedItem.Data.Get[text]}]\n\tScript[EVEBot].VariableScope.Config.Hauler:SetHaulerModeName[${This.SelectedItem.Data.Get[text]}]\n}"
+                    }
+                  },
+                  "popup": {
+                    "type": "popup",
+                    "minSize": [ 0, 200 ],
+                    "content": {
+                      "type": "listbox",
+                      "name": "HaulerModeList",
+                      "width": 750,
+                      "height": 60,
+                      "font": {
+                        "height": 36
+                      },
+                      "minSize": [ 0, 200 ],
+                      "items": [
+                        {
+                          "type": "textblock",
+                          "text": "Service Fleet Members",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "Service On-Demand",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "Service Orca",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "Jetcan Mode (Flip-guard)",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "Service Fleet Member",
+                          "font": {
+                            "height": 36
+                          }
+                        }
+                      ],
+                      "eventHandlers": {
+                          "onItemSelected": {
+                              "type": "forward",
+                              "elementType": "combobox",
+                              "event": "onListBoxItemSelected"
+                          },
+                          "onItemDeselected": {
+                              "type": "forward",
+                              "elementType": "combobox",
+                              "event": "onListBoxItemDeselected"
+                          },
+                          "onSelectionChanged": {
+                              "type": "forward",
+                              "elementType": "combobox",
+                              "event": "onListBoxSelectionChanged"
+                          }
+                      }
                     },
-                    "onLoad": {
-                      "type": "code",
-                      "code": "variable int savedVal = ${Script[EVEBot].VariableScope.Config.Hauler.HaulerMode}\nif ${savedVal} > 0 && ${savedVal} <= ${This.ItemCount}\n{\n\tThis:SetItemSelected[${savedVal},TRUE]\n}"
+                    "contentContainer":{
+                        "jsonTemplate":"popup.panel",
+                        "width": 750,
+                        "height": 60,
+                        "minSize": [ 0, 200 ],
+                        "type":"anchor",
+                        "anchorToElement":{
+                            "elementType":"combobox",
+                            "elementTree":"logical",
+                            "flags":"ancestor"
+                        },
+                        "clipToParent":false,
+                        "anchorLocationFactor":[0.0,1.0]
                     }
                   }
                 },
@@ -2409,7 +3066,15 @@
                   "height": 60,
                   "width": 300,
                   "content": "Orca is running EVEBot",
-                  "tooltip": "When checked, the hauler will wait at dropoff location for orca to broadcast cargo used. When unchecked, hauler will cycle endlessly without breaks.",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "When checked, the hauler will wait at dropoff location for orca to broadcast cargo used. When unchecked, hauler will cycle endlessly without breaks.",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -2429,7 +3094,15 @@
                   "width": 540,
                   "height": 30,
                   "text": "Pickup Location",
-                  "tooltip": "The name of the fleet member flying your orca",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "The name of the fleet member flying your orca",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -2463,7 +3136,15 @@
                   "width": 540,
                   "height": 30,
                   "text": "Mining System Bookmark",
-                  "tooltip": "The bookmark name for the mining system location.",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "The bookmark name for the mining system location.",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -2521,7 +3202,15 @@
                   "width": 600,
                   "height": 30,
                   "text": "Safe Spots",
-                  "tooltip": "The prefix for safe spot bookmark names.",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "The prefix for safe spot bookmark names.",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -2556,7 +3245,15 @@
                   "width": 600,
                   "height": 30,
                   "text": "Ore Belts",
-                  "tooltip": "The prefix for ore belt bookmark names.",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "The prefix for ore belt bookmark names.",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -2591,7 +3288,15 @@
                   "width": 600,
                   "height": 30,
                   "text": "Ice Belts",
-                  "tooltip": "The prefix for ice belt bookmark names.",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "The prefix for ice belt bookmark names.",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -2626,7 +3331,15 @@
                   "width": 600,
                   "height": 30,
                   "text": "Ammo Supplies",
-                  "tooltip": "The prefix for Ammo bookmark names.",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "The prefix for Ammo bookmark names.",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -2661,7 +3374,15 @@
                   "width": 600,
                   "height": 30,
                   "text": "Tag for Undock Instas",
-                  "tooltip": "The string that undock insta bookmarks will contain. 1 space will be prepended and appended.",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "The string that undock insta bookmarks will contain. 1 space will be prepended and appended.",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -2696,7 +3417,15 @@
                   "width": 600,
                   "height": 30,
                   "text": "Tag for Dock Instas",
-                  "tooltip": "The string that dock insta bookmarks will contain. 1 space will be prepended and appended.",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "The string that dock insta bookmarks will contain. 1 space will be prepended and appended.",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -2754,65 +3483,109 @@
                   "y": 30,
                   "width": 675,
                   "height": 45,
-                  "items": [
-                    {
-                      "type": "textblock",
-                      "text": "Source and Destination",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "Asset Gather",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "Move Minerals to Buyer",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "Container Test",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "Mission Runner",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "Stealth Hauler",
-                      "font": {
-                        "height": 36
-                      }
-                    },
-                    {
-                      "type": "textblock",
-                      "text": "Scavenger",
-                      "font": {
-                        "height": 36
-                      }
-                    }
-                  ],
+                  "font": {
+                      "height": 36
+                  },
                   "eventHandlers": {
-                    "onLoad": {
-                      "type": "code",
-                      "code": "variable int savedVal = ${Script[EVEBot].VariableScope.Config.Freighter.FreighterMode}\nif ${savedVal} > 0 && ${savedVal} <= ${This.ItemCount}\n{\n\tThis:SetItemSelected[${savedVal},TRUE]\n}"
-                    },
                     "onSelectionChanged": {
                       "type": "code",
-                      "code": "Script[EVEBot].VariableScope.Config.Freighter:SetFreighterMode[${This.SelectedItem.Data.Get[text]}]\nScript[EVEBot].VariableScope.Config.Freighter:SetFreighterModeName[${This.SelectedItem.Data.Get[text]}]"
+                      "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tScript[EVEBot].VariableScope.Config.Freighter:SetFreighterMode[${This.SelectedItem.Data.Get[text]}]\n\tScript[EVEBot].VariableScope.Config.Freighter:SetFreighterModeName[${This.SelectedItem.Data.Get[text]}]\n}"
+                    }
+                  },
+                  "popup": {
+                    "type": "popup",
+                    "minSize": [ 0, 200 ],
+                    "content": {
+                      "type": "listbox",
+                      "name": "cbFreighterModeList",
+                      "width": 675,
+                      "height": 60,
+                      "font": {
+                        "height": 36
+                      },
+                      "minSize": [ 0, 200 ],
+                      "items": [
+                        {
+                          "type": "textblock",
+                          "text": "Source and Destination",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "Asset Gather",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "Move Minerals to Buyer",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "Container Test",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "Mission Runner",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "Stealth Hauler",
+                          "font": {
+                            "height": 36
+                          }
+                        },
+                        {
+                          "type": "textblock",
+                          "text": "Scavenger",
+                          "font": {
+                            "height": 36
+                          }
+                        }
+                      ],
+                      "eventHandlers": {
+                          "onItemSelected": {
+                              "type": "forward",
+                              "elementType": "combobox",
+                              "event": "onListBoxItemSelected"
+                          },
+                          "onItemDeselected": {
+                              "type": "forward",
+                              "elementType": "combobox",
+                              "event": "onListBoxItemDeselected"
+                          },
+                          "onSelectionChanged": {
+                              "type": "forward",
+                              "elementType": "combobox",
+                              "event": "onListBoxSelectionChanged"
+                          }
+                      }
+                    },
+                    "contentContainer":{
+                        "jsonTemplate":"popup.panel",
+                        "width": 675,
+                        "height": 60,
+                        "minSize": [ 0, 200 ],
+                        "type":"anchor",
+                        "anchorToElement":{
+                            "elementType":"combobox",
+                            "elementTree":"logical",
+                            "flags":"ancestor"
+                        },
+                        "clipToParent":false,
+                        "anchorLocationFactor":[0.0,1.0]
                     }
                   }
                 },
@@ -2824,7 +3597,15 @@
                   "width": 600,
                   "height": 30,
                   "text": "Destination",
-                  "tooltip": "The destination bookmark or station name.",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "The destination bookmark or station name.",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -2836,14 +3617,63 @@
                   "y": 105,
                   "width": 1125,
                   "height": 54,
+                  "font": {
+                      "height": 36
+                  },
                   "eventHandlers": {
-                    "onLoad": {
-                      "type": "code",
-                      "code": "variable index:bookmark bm_index\nEVE:GetBookmarks[bm_index]\n\nvariable iterator bm_iterator\nbm_index:GetIterator[bm_iterator]\nThis:ClearItems\nif ${bm_iterator:First(exists)}\n{\n\tdo\n\t{\n\t\tThis:InsertItem[\"{\\\"type\\\":\\\"textblock\\\",\\\"text\\\":\\\"${bm_iterator.Value.Label.Escape}\\\"}\"]\n\t}\n\twhile ${bm_iterator:Next(exists)}\n}\nvariable int i\nfor (i:Set[1]; ${i}<=${This.ItemCount}; i:Inc)\n{\n\tif ${This.Item[${i}].Data.Get[text].Equal[${Script[EVEBot].VariableScope.Config.Freighter.Destination}]}\n\t{\n\t\tThis:SetItemSelected[${i},TRUE]\n\t\tbreak\n\t}\n}"
-                    },
                     "onSelectionChanged": {
                       "type": "code",
                       "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tLogger:Log[\"Freighter destination set to ${This.SelectedItem.Data.Get[text]}\"]\n\tScript[EVEBot].VariableScope.Config.Freighter:SetDestination[${This.SelectedItem.Data.Get[text]}]\n}"
+                    }
+                  },
+                  "popup": {
+                    "type": "popup",
+                    "minSize": [ 0, 200 ],
+                    "content": {
+                      "type": "listbox",
+                      "name": "teDestinationList",
+                      "width": 1125,
+                      "height": 60,
+                      "font": {
+                        "height": 36
+                      },
+                      "minSize": [ 0, 200 ],
+                      "items": [],
+                      "eventHandlers": {
+                          "onLoad": {
+                              "type": "code",
+                              "code": "variable index:bookmark bm_index\nEVE:GetBookmarks[bm_index]\n\nvariable iterator bm_iterator\nbm_index:GetIterator[bm_iterator]\nThis:ClearItems\nif ${bm_iterator:First(exists)}\n{\n\tdo\n\t{\n\t\tThis:InsertItem[\"{\\\"type\\\":\\\"textblock\\\",\\\"text\\\":\\\"${bm_iterator.Value.Label.Escape}\\\"}\"]\n\t}\n\twhile ${bm_iterator:Next(exists)}\n}"
+                          },
+                          "onItemSelected": {
+                              "type": "forward",
+                              "elementType": "combobox",
+                              "event": "onListBoxItemSelected"
+                          },
+                          "onItemDeselected": {
+                              "type": "forward",
+                              "elementType": "combobox",
+                              "event": "onListBoxItemDeselected"
+                          },
+                          "onSelectionChanged": {
+                              "type": "forward",
+                              "elementType": "combobox",
+                              "event": "onListBoxSelectionChanged"
+                          }
+                      }
+                    },
+                    "contentContainer":{
+                        "jsonTemplate":"popup.panel",
+                        "width": 1125,
+                        "height": 60,
+                        "minSize": [ 0, 200 ],
+                        "type":"anchor",
+                        "anchorToElement":{
+                            "elementType":"combobox",
+                            "elementTree":"logical",
+                            "flags":"ancestor"
+                        },
+                        "clipToParent":false,
+                        "anchorLocationFactor":[0.0,1.0]
                     }
                   }
                 },
@@ -2855,7 +3685,15 @@
                   "width": 600,
                   "height": 30,
                   "text": "Source Bookmark Prefix",
-                  "tooltip": "The prefix for source bookmark names.",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "The prefix for source bookmark names.",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -2908,7 +3746,15 @@
                   "width": 840,
                   "height": 30,
                   "text": "Limit To Region",
-                  "tooltip": "Leave blank to service all regions.",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Leave blank to service all regions.",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -2941,7 +3787,15 @@
                   "y": 480,
                   "width": 1584,
                   "height": 450,
-                  "tooltip": "Bookmarks which will be visited to pickup items"
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Bookmarks which will be visited to pickup items",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  }
                 }
               ]
             },
@@ -2963,7 +3817,15 @@
                   "width": 450,
                   "height": 60,
                   "content": "Manage Fleet",
-                  "tooltip": "If checked, Evebot will manage your fleet",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "If checked, Evebot will manage your fleet",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -2983,7 +3845,15 @@
                   "width": 450,
                   "height": 60,
                   "content": "I am the leader",
-                  "tooltip": "If checked, this character will invite your fleet.  Don't set more than one!",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "If checked, this character will invite your fleet.  Don't set more than one!",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -3037,7 +3907,15 @@
                   "width": 600,
                   "height": 30,
                   "text": "Manage Fleet Member",
-                  "tooltip": "Use this to add members to your fleet.  They must be in your corporation or in your contacts list.",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "Use this to add members to your fleet.  They must be in your corporation or in your contacts list.",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "font": {
                     "height": 36
                   }
@@ -3104,7 +3982,15 @@
                   "width": 270,
                   "height": 60,
                   "content": "Wing 2",
-                  "tooltip": "If checked, this character will be moved to Wing 2.  Used for people you don't want warped with your fleet.",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "If checked, this character will be moved to Wing 2.  Used for people you don't want warped with your fleet.",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onPress": {
                       "type": "code",
@@ -3119,7 +4005,15 @@
                   "y": 270,
                   "width": 1590,
                   "height": 525,
-                  "tooltip": "These characters will be added to your fleet if EVEBot can find them in your Corporation or Contacts and \"I am Leader\" is checked.",
+                  "tooltip": {
+                    "type": "textblock",
+                    "text": "These characters will be added to your fleet if EVEBot can find them in your Corporation or Contacts and \"I am Leader\" is checked.",
+                    "font": {
+                      "face": "Segoe UI Italic",
+                      "height": 36
+                    },
+                    "color": "#FFE4B5"
+                  },
                   "eventHandlers": {
                     "onLoad": {
                       "type": "code",
@@ -3174,7 +4068,15 @@
                       "width": 330,
                       "height": 60,
                       "content": "Courier Missions",
-                      "tooltip": "If checked, accept and complete courier missions.",
+                      "tooltip": {
+                        "type": "textblock",
+                        "text": "If checked, accept and complete courier missions.",
+                        "font": {
+                          "face": "Segoe UI Italic",
+                          "height": 36
+                        },
+                        "color": "#FFE4B5"
+                      },
                       "eventHandlers": {
                         "onLoad": {
                           "type": "code",
@@ -3194,7 +4096,15 @@
                       "width": 330,
                       "height": 60,
                       "content": "Trade Missions",
-                      "tooltip": "If checked, accept and complete trade missions.",
+                      "tooltip": {
+                        "type": "textblock",
+                        "text": "If checked, accept and complete trade missions.",
+                        "font": {
+                          "face": "Segoe UI Italic",
+                          "height": 36
+                        },
+                        "color": "#FFE4B5"
+                      },
                       "eventHandlers": {
                         "onLoad": {
                           "type": "code",
@@ -3214,7 +4124,15 @@
                       "width": 330,
                       "height": 60,
                       "content": "Mining Missions",
-                      "tooltip": "If checked, accept and complete mining missions.",
+                      "tooltip": {
+                        "type": "textblock",
+                        "text": "If checked, accept and complete mining missions.",
+                        "font": {
+                          "face": "Segoe UI Italic",
+                          "height": 36
+                        },
+                        "color": "#FFE4B5"
+                      },
                       "eventHandlers": {
                         "onLoad": {
                           "type": "code",
@@ -3234,7 +4152,15 @@
                       "width": 330,
                       "height": 60,
                       "content": "Kill Missions",
-                      "tooltip": "If checked, accept and complete kill missions.",
+                      "tooltip": {
+                        "type": "textblock",
+                        "text": "If checked, accept and complete kill missions.",
+                        "font": {
+                          "face": "Segoe UI Italic",
+                          "height": 36
+                        },
+                        "color": "#FFE4B5"
+                      },
                       "eventHandlers": {
                         "onLoad": {
                           "type": "code",
@@ -3279,7 +4205,15 @@
                       "width": 300,
                       "height": 54,
                       "text": "Small Hauler",
-                      "tooltip": "Small Hauler (6000 m^3 or less).",
+                      "tooltip": {
+                        "type": "textblock",
+                        "text": "Small Hauler (6000 m^3 or less).",
+                        "font": {
+                          "face": "Segoe UI Italic",
+                          "height": 36
+                        },
+                        "color": "#FFE4B5"
+                      },
                       "font": {
                         "height": 36
                       }
@@ -3314,7 +4248,15 @@
                       "width": 300,
                       "height": 54,
                       "text": "Large Hauler",
-                      "tooltip": "Large Hauler (more than 6000 m^3).",
+                      "tooltip": {
+                        "type": "textblock",
+                        "text": "Large Hauler (more than 6000 m^3).",
+                        "font": {
+                          "face": "Segoe UI Italic",
+                          "height": 36
+                        },
+                        "color": "#FFE4B5"
+                      },
                       "font": {
                         "height": 36
                       }
@@ -3349,7 +4291,15 @@
                       "width": 300,
                       "height": 54,
                       "text": "Mining Ship",
-                      "tooltip": "Mining Ship.",
+                      "tooltip": {
+                        "type": "textblock",
+                        "text": "Mining Ship.",
+                        "font": {
+                          "face": "Segoe UI Italic",
+                          "height": 36
+                        },
+                        "color": "#FFE4B5"
+                      },
                       "font": {
                         "height": 36
                       }
@@ -3384,7 +4334,15 @@
                       "width": 300,
                       "height": 54,
                       "text": "Combat Ship",
-                      "tooltip": "Combat Ship.",
+                      "tooltip": {
+                        "type": "textblock",
+                        "text": "Combat Ship.",
+                        "font": {
+                          "face": "Segoe UI Italic",
+                          "height": 36
+                        },
+                        "color": "#FFE4B5"
+                      },
                       "font": {
                         "height": 36
                       }
@@ -3432,7 +4390,15 @@
                       "width": 330,
                       "height": 54,
                       "text": "Salvage Mode",
-                      "tooltip": "Solo = switch to salvage ship.  Relay = relay to salvage bot.",
+                      "tooltip": {
+                        "type": "textblock",
+                        "text": "Solo = switch to salvage ship.  Relay = relay to salvage bot.",
+                        "font": {
+                          "face": "Segoe UI Italic",
+                          "height": 36
+                        },
+                        "color": "#FFE4B5"
+                      },
                       "font": {
                         "height": 36
                       }
@@ -3444,37 +4410,81 @@
                       "y": 30,
                       "width": 225,
                       "height": 54,
-                      "items": [
-                        {
-                          "type": "textblock",
-                          "text": "None",
-                          "font": {
-                            "height": 36
-                          }
-                        },
-                        {
-                          "type": "textblock",
-                          "text": "Solo",
-                          "font": {
-                            "height": 36
-                          }
-                        },
-                        {
-                          "type": "textblock",
-                          "text": "Relay",
-                          "font": {
-                            "height": 36
-                          }
-                        }
-                      ],
+                      "font": {
+                          "height": 36
+                      },
                       "eventHandlers": {
-                        "onLoad": {
-                          "type": "code",
-                          "code": "variable int savedVal = ${Script[EVEBot].VariableScope.Config.Missioneer.SalvageMode}\nif ${savedVal} > 0 && ${savedVal} <= ${This.ItemCount}\n{\n\tThis:SetItemSelected[${savedVal},TRUE]\n}"
-                        },
                         "onSelectionChanged": {
                           "type": "code",
-                          "code": "Script[EVEBot].VariableScope.Config.Missioneer:SetSalvageMode[${This.SelectedItem.Data.Get[text]}]\nScript[EVEBot].VariableScope.Config.Missioneer:SetSalvageModeName[${This.SelectedItem.Data.Get[text]}]"
+                          "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetSalvageMode[${This.SelectedItem.Data.Get[text]}]\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetSalvageModeName[${This.SelectedItem.Data.Get[text]}]\n}"
+                        }
+                      },
+                      "popup": {
+                        "type": "popup",
+                        "minSize": [ 0, 200 ],
+                        "content": {
+                          "type": "listbox",
+                          "name": "comboSalvageModeList",
+                          "width": 225,
+                          "height": 60,
+                          "font": {
+                            "height": 36
+                          },
+                          "minSize": [ 0, 200 ],
+                          "items": [
+                            {
+                              "type": "textblock",
+                              "text": "None",
+                              "font": {
+                                "height": 36
+                              }
+                            },
+                            {
+                              "type": "textblock",
+                              "text": "Solo",
+                              "font": {
+                                "height": 36
+                              }
+                            },
+                            {
+                              "type": "textblock",
+                              "text": "Relay",
+                              "font": {
+                                "height": 36
+                              }
+                            }
+                          ],
+                          "eventHandlers": {
+                              "onItemSelected": {
+                                  "type": "forward",
+                                  "elementType": "combobox",
+                                  "event": "onListBoxItemSelected"
+                              },
+                              "onItemDeselected": {
+                                  "type": "forward",
+                                  "elementType": "combobox",
+                                  "event": "onListBoxItemDeselected"
+                              },
+                              "onSelectionChanged": {
+                                  "type": "forward",
+                                  "elementType": "combobox",
+                                  "event": "onListBoxSelectionChanged"
+                              }
+                          }
+                        },
+                        "contentContainer":{
+                            "jsonTemplate":"popup.panel",
+                            "width": 225,
+                            "height": 60,
+                            "minSize": [ 0, 200 ],
+                            "type":"anchor",
+                            "anchorToElement":{
+                                "elementType":"combobox",
+                                "elementTree":"logical",
+                                "flags":"ancestor"
+                            },
+                            "clipToParent":false,
+                            "anchorLocationFactor":[0.0,1.0]
                         }
                       }
                     },
@@ -3486,7 +4496,15 @@
                       "width": 300,
                       "height": 54,
                       "text": "Salvage Ship",
-                      "tooltip": "Ship to use for solo salvaging.",
+                      "tooltip": {
+                        "type": "textblock",
+                        "text": "Ship to use for solo salvaging.",
+                        "font": {
+                          "face": "Segoe UI Italic",
+                          "height": 36
+                        },
+                        "color": "#FFE4B5"
+                      },
                       "font": {
                         "height": 36
                       }
@@ -3534,7 +4552,15 @@
                       "width": 360,
                       "height": 60,
                       "content": "Avoid Lowsec",
-                      "tooltip": "If checked, avoid missions that go into low-sec.",
+                      "tooltip": {
+                        "type": "textblock",
+                        "text": "If checked, avoid missions that go into low-sec.",
+                        "font": {
+                          "face": "Segoe UI Italic",
+                          "height": 36
+                        },
+                        "color": "#FFE4B5"
+                      },
                       "eventHandlers": {
                         "onLoad": {
                           "type": "code",
@@ -3554,7 +4580,15 @@
                       "width": 480,
                       "height": 54,
                       "text": "Small Hauler Limit",
-                      "tooltip": "Will use the large hauler for missions above this limit.",
+                      "tooltip": {
+                        "type": "textblock",
+                        "text": "Will use the large hauler for missions above this limit.",
+                        "font": {
+                          "face": "Segoe UI Italic",
+                          "height": 36
+                        },
+                        "color": "#FFE4B5"
+                      },
                       "font": {
                         "height": 36
                       }
@@ -3619,7 +4653,15 @@
                         "width": 450,
                         "height": 60,
                         "content": "Run On Low Ammo",
-                        "tooltip": "If checked, run to safe spot when low on ammo.",
+                        "tooltip": {
+                          "type": "textblock",
+                          "text": "If checked, run to safe spot when low on ammo.",
+                          "font": {
+                            "face": "Segoe UI Italic",
+                            "height": 36
+                          },
+                          "color": "#FFE4B5"
+                        },
                         "eventHandlers": {
                           "onLoad": {
                             "type": "code",
@@ -3639,7 +4681,15 @@
                         "width": 450,
                         "height": 60,
                         "content": "Run On Low Cap",
-                        "tooltip": "If checked, run to safe spot when capacitor is empty.",
+                        "tooltip": {
+                          "type": "textblock",
+                          "text": "If checked, run to safe spot when capacitor is empty.",
+                          "font": {
+                            "face": "Segoe UI Italic",
+                            "height": 36
+                          },
+                          "color": "#FFE4B5"
+                        },
                         "eventHandlers": {
                           "onLoad": {
                             "type": "code",
@@ -3659,7 +4709,15 @@
                         "width": 450,
                         "height": 60,
                         "content": "Run On Low Tank",
-                        "tooltip": "If checked, run to safe spot when tank (shield or armor) has failed.",
+                        "tooltip": {
+                          "type": "textblock",
+                          "text": "If checked, run to safe spot when tank (shield or armor) has failed.",
+                          "font": {
+                            "face": "Segoe UI Italic",
+                            "height": 36
+                          },
+                          "color": "#FFE4B5"
+                        },
                         "eventHandlers": {
                           "onLoad": {
                             "type": "code",
@@ -3679,7 +4737,15 @@
                         "width": 450,
                         "height": 60,
                         "content": "Run To Station",
-                        "tooltip": "If checked, run to a station instead of a safe-spot.",
+                        "tooltip": {
+                          "type": "textblock",
+                          "text": "If checked, run to a station instead of a safe-spot.",
+                          "font": {
+                            "face": "Segoe UI Italic",
+                            "height": 36
+                          },
+                          "color": "#FFE4B5"
+                        },
                         "eventHandlers": {
                           "onLoad": {
                             "type": "code",
@@ -3699,7 +4765,15 @@
                         "width": 750,
                         "height": 60,
                         "content": "Run On Non-Whitelisted Pilot",
-                        "tooltip": "If checked, run to safe spot when any non-whitelisted pilot enters system.",
+                        "tooltip": {
+                          "type": "textblock",
+                          "text": "If checked, run to safe spot when any non-whitelisted pilot enters system.",
+                          "font": {
+                            "face": "Segoe UI Italic",
+                            "height": 36
+                          },
+                          "color": "#FFE4B5"
+                        },
                         "eventHandlers": {
                           "onLoad": {
                             "type": "code",
@@ -3719,7 +4793,15 @@
                         "width": 780,
                         "height": 60,
                         "content": "Whitelist bypasses standings",
-                        "tooltip": "If checked, \"bad\" standings will be checked for whitelisting before fleeing.",
+                        "tooltip": {
+                          "type": "textblock",
+                          "text": "If checked, \"bad\" standings will be checked for whitelisting before fleeing.",
+                          "font": {
+                            "face": "Segoe UI Italic",
+                            "height": 36
+                          },
+                          "color": "#FFE4B5"
+                        },
                         "eventHandlers": {
                           "onLoad": {
                             "type": "code",
@@ -3739,7 +4821,15 @@
                         "width": 750,
                         "height": 60,
                         "content": "Run On Blacklisted Pilot",
-                        "tooltip": "If checked, run to safe spot when any blacklisted pilot enters system.",
+                        "tooltip": {
+                          "type": "textblock",
+                          "text": "If checked, run to safe spot when any blacklisted pilot enters system.",
+                          "font": {
+                            "face": "Segoe UI Italic",
+                            "height": 36
+                          },
+                          "color": "#FFE4B5"
+                        },
                         "eventHandlers": {
                           "onLoad": {
                             "type": "code",
@@ -3758,58 +4848,102 @@
                         "y": 390,
                         "width": 150,
                         "height": 45,
-                        "items": [
-                          {
-                            "type": "textblock",
-                            "text": "-11",
-                            "font": {
-                              "height": 36
-                            }
-                          },
-                          {
-                            "type": "textblock",
-                            "text": "-10",
-                            "font": {
-                              "height": 36
-                            }
-                          },
-                          {
-                            "type": "textblock",
-                            "text": "-5",
-                            "font": {
-                              "height": 36
-                            }
-                          },
-                          {
-                            "type": "textblock",
-                            "text": "0",
-                            "font": {
-                              "height": 36
-                            }
-                          },
-                          {
-                            "type": "textblock",
-                            "text": "5",
-                            "font": {
-                              "height": 36
-                            }
-                          },
-                          {
-                            "type": "textblock",
-                            "text": "10",
-                            "font": {
-                              "height": 36
-                            }
-                          }
-                        ],
+                        "font": {
+                            "height": 36
+                        },
                         "eventHandlers": {
-                          "onLoad": {
-                            "type": "code",
-                            "code": "variable int i\nfor (i:Set[1]; ${i}<=${This.ItemCount}; i:Inc)\n{\n\tif ${This.Item[${i}].Data.Get[text].Equal[${Script[EVEBot].VariableScope.Config.Combat.LowestStanding}]}\n\t{\n\t\tThis:SetItemSelected[${i},TRUE]\n\t\tbreak\n\t}\n}"
-                          },
                           "onSelectionChanged": {
                             "type": "code",
-                            "code": "Script[EVEBot].VariableScope.Config.Combat:SetLowestStanding[${This.SelectedItem.Data.Get[text]}]"
+                            "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetLowestStanding[${This.SelectedItem.Data.Get[text]}]\n}"
+                          }
+                        },
+                        "popup": {
+                          "type": "popup",
+                          "minSize": [ 0, 200 ],
+                          "content": {
+                            "type": "listbox",
+                            "name": "cbLowestStandingCombatList",
+                            "width": 150,
+                            "height": 60,
+                            "font": {
+                              "height": 36
+                            },
+                            "minSize": [ 0, 200 ],
+                            "items": [
+                              {
+                                "type": "textblock",
+                                "text": "-11",
+                                "font": {
+                                  "height": 36
+                                }
+                              },
+                              {
+                                "type": "textblock",
+                                "text": "-10",
+                                "font": {
+                                  "height": 36
+                                }
+                              },
+                              {
+                                "type": "textblock",
+                                "text": "-5",
+                                "font": {
+                                  "height": 36
+                                }
+                              },
+                              {
+                                "type": "textblock",
+                                "text": "0",
+                                "font": {
+                                  "height": 36
+                                }
+                              },
+                              {
+                                "type": "textblock",
+                                "text": "5",
+                                "font": {
+                                  "height": 36
+                                }
+                              },
+                              {
+                                "type": "textblock",
+                                "text": "10",
+                                "font": {
+                                  "height": 36
+                                }
+                              }
+                            ],
+                            "eventHandlers": {
+                                "onItemSelected": {
+                                    "type": "forward",
+                                    "elementType": "combobox",
+                                    "event": "onListBoxItemSelected"
+                                },
+                                "onItemDeselected": {
+                                    "type": "forward",
+                                    "elementType": "combobox",
+                                    "event": "onListBoxItemDeselected"
+                                },
+                                "onSelectionChanged": {
+                                    "type": "forward",
+                                    "elementType": "combobox",
+                                    "event": "onListBoxSelectionChanged"
+                                }
+                            }
+                          },
+                          "contentContainer":{
+                              "jsonTemplate":"popup.panel",
+                              "width": 150,
+                              "height": 60,
+                              "minSize": [ 0, 200 ],
+                              "type":"anchor",
+                              "anchorToElement":{
+                                  "elementType":"combobox",
+                                  "elementTree":"logical",
+                                  "flags":"ancestor"
+                              },
+                              "clipToParent":false,
+                              "anchorLocationFactor":[0.0,1.0]
                           }
                         }
                       },
@@ -3821,7 +4955,15 @@
                         "width": 600,
                         "height": 54,
                         "text": "Min Acceptable Standing",
-                        "tooltip": "The lowest standing pilot we tolerate in system before we flee. It goes to -11!",
+                        "tooltip": {
+                          "type": "textblock",
+                          "text": "The lowest standing pilot we tolerate in system before we flee. It goes to -11!",
+                          "font": {
+                            "face": "Segoe UI Italic",
+                            "height": 36
+                          },
+                          "color": "#FFE4B5"
+                        },
                         "font": {
                           "height": 36
                         }
@@ -3834,7 +4976,15 @@
                         "width": 840,
                         "height": 60,
                         "content": "Include Neutral (0.0) standings in standings check",
-                        "tooltip": "If checked, include all 0.0 standings (includes corp, alliance, and personal)",
+                        "tooltip": {
+                          "type": "textblock",
+                          "text": "If checked, include all 0.0 standings (includes corp, alliance, and personal)",
+                          "font": {
+                            "face": "Segoe UI Italic",
+                            "height": 36
+                          },
+                          "color": "#FFE4B5"
+                        },
                         "eventHandlers": {
                           "onLoad": {
                             "type": "code",
@@ -3874,7 +5024,15 @@
                         "width": 450,
                         "height": 30,
                         "text": "Minimum Armor: 0",
-                        "tooltip": "Lowest armor percent allowed before fleeing",
+                        "tooltip": {
+                          "type": "textblock",
+                          "text": "Lowest armor percent allowed before fleeing",
+                          "font": {
+                            "face": "Segoe UI Italic",
+                            "height": 36
+                          },
+                          "color": "#FFE4B5"
+                        },
                         "font": {
                           "height": 36
                         }
@@ -3907,7 +5065,15 @@
                         "width": 450,
                         "height": 30,
                         "text": "Minimum Shield: 0",
-                        "tooltip": "Lowest Shield Pct Allowed before Running",
+                        "tooltip": {
+                          "type": "textblock",
+                          "text": "Lowest Shield Pct Allowed before Running",
+                          "font": {
+                            "face": "Segoe UI Italic",
+                            "height": 36
+                          },
+                          "color": "#FFE4B5"
+                        },
                         "font": {
                           "height": 36
                         }
@@ -3940,7 +5106,15 @@
                         "width": 450,
                         "height": 30,
                         "text": "Minimum Cap: 0",
-                        "tooltip": "Lowest capacitor percent allowed before fleeing",
+                        "tooltip": {
+                          "type": "textblock",
+                          "text": "Lowest capacitor percent allowed before fleeing",
+                          "font": {
+                            "face": "Segoe UI Italic",
+                            "height": 36
+                          },
+                          "color": "#FFE4B5"
+                        },
                         "font": {
                           "height": 36
                         }
@@ -3953,7 +5127,15 @@
                         "width": 1050,
                         "height": 60,
                         "content": "Wait               minutes after unsafe pilots have left system",
-                        "tooltip": "If checked, will dock your ship at your panic location every for a break according to the information specified.  Restart after changing these values.",
+                        "tooltip": {
+                          "type": "textblock",
+                          "text": "If checked, will dock your ship at your panic location every for a break according to the information specified.  Restart after changing these values.",
+                          "font": {
+                            "face": "Segoe UI Italic",
+                            "height": 36
+                          },
+                          "color": "#FFE4B5"
+                        },
                         "eventHandlers": {
                           "onLoad": {
                             "type": "code",
@@ -3972,58 +5154,102 @@
                         "y": 450,
                         "width": 150,
                         "height": 45,
-                        "items": [
-                          {
-                            "type": "textblock",
-                            "text": "5",
-                            "font": {
-                              "height": 36
-                            }
-                          },
-                          {
-                            "type": "textblock",
-                            "text": "10",
-                            "font": {
-                              "height": 36
-                            }
-                          },
-                          {
-                            "type": "textblock",
-                            "text": "20",
-                            "font": {
-                              "height": 36
-                            }
-                          },
-                          {
-                            "type": "textblock",
-                            "text": "30",
-                            "font": {
-                              "height": 36
-                            }
-                          },
-                          {
-                            "type": "textblock",
-                            "text": "40",
-                            "font": {
-                              "height": 36
-                            }
-                          },
-                          {
-                            "type": "textblock",
-                            "text": "60",
-                            "font": {
-                              "height": 36
-                            }
-                          }
-                        ],
+                        "font": {
+                            "height": 36
+                        },
                         "eventHandlers": {
-                          "onLoad": {
-                            "type": "code",
-                            "code": "variable int i\nfor (i:Set[1]; ${i}<=${This.ItemCount}; i:Inc)\n{\n\tif ${This.Item[${i}].Data.Get[text].Equal[${Script[EVEBot].VariableScope.Config.Combat.SafeCooldown}]}\n\t{\n\t\tThis:SetItemSelected[${i},TRUE]\n\t\tbreak\n\t}\n}"
-                          },
                           "onSelectionChanged": {
                             "type": "code",
-                            "code": "Script[EVEBot].VariableScope.Config.Combat:SetSafeCooldown[${This.SelectedItem.Data.Get[text]}]"
+                            "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetSafeCooldown[${This.SelectedItem.Data.Get[text]}]\n}"
+                          }
+                        },
+                        "popup": {
+                          "type": "popup",
+                          "minSize": [ 0, 200 ],
+                          "content": {
+                            "type": "listbox",
+                            "name": "comboSafeCooldownList",
+                            "width": 150,
+                            "height": 60,
+                            "font": {
+                              "height": 36
+                            },
+                            "minSize": [ 0, 200 ],
+                            "items": [
+                              {
+                                "type": "textblock",
+                                "text": "5",
+                                "font": {
+                                  "height": 36
+                                }
+                              },
+                              {
+                                "type": "textblock",
+                                "text": "10",
+                                "font": {
+                                  "height": 36
+                                }
+                              },
+                              {
+                                "type": "textblock",
+                                "text": "20",
+                                "font": {
+                                  "height": 36
+                                }
+                              },
+                              {
+                                "type": "textblock",
+                                "text": "30",
+                                "font": {
+                                  "height": 36
+                                }
+                              },
+                              {
+                                "type": "textblock",
+                                "text": "40",
+                                "font": {
+                                  "height": 36
+                                }
+                              },
+                              {
+                                "type": "textblock",
+                                "text": "60",
+                                "font": {
+                                  "height": 36
+                                }
+                              }
+                            ],
+                            "eventHandlers": {
+                                "onItemSelected": {
+                                    "type": "forward",
+                                    "elementType": "combobox",
+                                    "event": "onListBoxItemSelected"
+                                },
+                                "onItemDeselected": {
+                                    "type": "forward",
+                                    "elementType": "combobox",
+                                    "event": "onListBoxItemDeselected"
+                                },
+                                "onSelectionChanged": {
+                                    "type": "forward",
+                                    "elementType": "combobox",
+                                    "event": "onListBoxSelectionChanged"
+                                }
+                            }
+                          },
+                          "contentContainer":{
+                              "jsonTemplate":"popup.panel",
+                              "width": 150,
+                              "height": 60,
+                              "minSize": [ 0, 200 ],
+                              "type":"anchor",
+                              "anchorToElement":{
+                                  "elementType":"combobox",
+                                  "elementTree":"logical",
+                                  "flags":"ancestor"
+                              },
+                              "clipToParent":false,
+                              "anchorLocationFactor":[0.0,1.0]
                           }
                         }
                       },
@@ -4035,7 +5261,15 @@
                         "width": 960,
                         "height": 60,
                         "content": "Take a break for               hours every                hours.",
-                        "tooltip": "If checked, will dock your ship at your panic location every for a break according to the information specified.  Restart after changing these values.",
+                        "tooltip": {
+                          "type": "textblock",
+                          "text": "If checked, will dock your ship at your panic location every for a break according to the information specified.  Restart after changing these values.",
+                          "font": {
+                            "face": "Segoe UI Italic",
+                            "height": 36
+                          },
+                          "color": "#FFE4B5"
+                        },
                         "eventHandlers": {
                           "onLoad": {
                             "type": "code",
@@ -4054,30 +5288,74 @@
                         "y": 540,
                         "width": 150,
                         "height": 45,
-                        "items": [
-                          {
-                            "type": "textblock",
-                            "text": "1",
-                            "font": {
-                              "height": 36
-                            }
-                          },
-                          {
-                            "type": "textblock",
-                            "text": "2",
-                            "font": {
-                              "height": 36
-                            }
-                          }
-                        ],
+                        "font": {
+                            "height": 36
+                        },
                         "eventHandlers": {
-                          "onLoad": {
-                            "type": "code",
-                            "code": "variable int i\nfor (i:Set[1]; ${i}<=${This.ItemCount}; i:Inc)\n{\n\tif ${This.Item[${i}].Data.Get[text].Equal[${Script[EVEBot].VariableScope.Config.Combat.BreakDuration}]}\n\t{\n\t\tThis:SetItemSelected[${i},TRUE]\n\t\tbreak\n\t}\n}"
-                          },
                           "onSelectionChanged": {
                             "type": "code",
-                            "code": "Script[EVEBot].VariableScope.Config.Combat:SetBreakDuration[${This.SelectedItem.Data.Get[text]}]"
+                            "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetBreakDuration[${This.SelectedItem.Data.Get[text]}]\n}"
+                          }
+                        },
+                        "popup": {
+                          "type": "popup",
+                          "minSize": [ 0, 200 ],
+                          "content": {
+                            "type": "listbox",
+                            "name": "comboBreakDurationList",
+                            "width": 150,
+                            "height": 60,
+                            "font": {
+                              "height": 36
+                            },
+                            "minSize": [ 0, 200 ],
+                            "items": [
+                              {
+                                "type": "textblock",
+                                "text": "1",
+                                "font": {
+                                  "height": 36
+                                }
+                              },
+                              {
+                                "type": "textblock",
+                                "text": "2",
+                                "font": {
+                                  "height": 36
+                                }
+                              }
+                            ],
+                            "eventHandlers": {
+                                "onItemSelected": {
+                                    "type": "forward",
+                                    "elementType": "combobox",
+                                    "event": "onListBoxItemSelected"
+                                },
+                                "onItemDeselected": {
+                                    "type": "forward",
+                                    "elementType": "combobox",
+                                    "event": "onListBoxItemDeselected"
+                                },
+                                "onSelectionChanged": {
+                                    "type": "forward",
+                                    "elementType": "combobox",
+                                    "event": "onListBoxSelectionChanged"
+                                }
+                            }
+                          },
+                          "contentContainer":{
+                              "jsonTemplate":"popup.panel",
+                              "width": 150,
+                              "height": 60,
+                              "minSize": [ 0, 200 ],
+                              "type":"anchor",
+                              "anchorToElement":{
+                                  "elementType":"combobox",
+                                  "elementTree":"logical",
+                                  "flags":"ancestor"
+                              },
+                              "clipToParent":false,
+                              "anchorLocationFactor":[0.0,1.0]
                           }
                         }
                       },
@@ -4088,58 +5366,102 @@
                         "y": 540,
                         "width": 150,
                         "height": 45,
-                        "items": [
-                          {
-                            "type": "textblock",
-                            "text": "1",
-                            "font": {
-                              "height": 36
-                            }
-                          },
-                          {
-                            "type": "textblock",
-                            "text": "2",
-                            "font": {
-                              "height": 36
-                            }
-                          },
-                          {
-                            "type": "textblock",
-                            "text": "3",
-                            "font": {
-                              "height": 36
-                            }
-                          },
-                          {
-                            "type": "textblock",
-                            "text": "4",
-                            "font": {
-                              "height": 36
-                            }
-                          },
-                          {
-                            "type": "textblock",
-                            "text": "5",
-                            "font": {
-                              "height": 36
-                            }
-                          },
-                          {
-                            "type": "textblock",
-                            "text": "6",
-                            "font": {
-                              "height": 36
-                            }
-                          }
-                        ],
+                        "font": {
+                            "height": 36
+                        },
                         "eventHandlers": {
-                          "onLoad": {
-                            "type": "code",
-                            "code": "variable int i\nfor (i:Set[1]; ${i}<=${This.ItemCount}; i:Inc)\n{\n\tif ${This.Item[${i}].Data.Get[text].Equal[${Script[EVEBot].VariableScope.Config.Combat.TimeBetweenBreaks}]}\n\t{\n\t\tThis:SetItemSelected[${i},TRUE]\n\t\tbreak\n\t}\n}"
-                          },
                           "onSelectionChanged": {
                             "type": "code",
-                            "code": "Script[EVEBot].VariableScope.Config.Combat:SetTimeBetweenBreaks[${This.SelectedItem.Data.Get[text]}]"
+                            "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetTimeBetweenBreaks[${This.SelectedItem.Data.Get[text]}]\n}"
+                          }
+                        },
+                        "popup": {
+                          "type": "popup",
+                          "minSize": [ 0, 200 ],
+                          "content": {
+                            "type": "listbox",
+                            "name": "comboTimeBetweenBreaksList",
+                            "width": 150,
+                            "height": 60,
+                            "font": {
+                              "height": 36
+                            },
+                            "minSize": [ 0, 200 ],
+                            "items": [
+                              {
+                                "type": "textblock",
+                                "text": "1",
+                                "font": {
+                                  "height": 36
+                                }
+                              },
+                              {
+                                "type": "textblock",
+                                "text": "2",
+                                "font": {
+                                  "height": 36
+                                }
+                              },
+                              {
+                                "type": "textblock",
+                                "text": "3",
+                                "font": {
+                                  "height": 36
+                                }
+                              },
+                              {
+                                "type": "textblock",
+                                "text": "4",
+                                "font": {
+                                  "height": 36
+                                }
+                              },
+                              {
+                                "type": "textblock",
+                                "text": "5",
+                                "font": {
+                                  "height": 36
+                                }
+                              },
+                              {
+                                "type": "textblock",
+                                "text": "6",
+                                "font": {
+                                  "height": 36
+                                }
+                              }
+                            ],
+                            "eventHandlers": {
+                                "onItemSelected": {
+                                    "type": "forward",
+                                    "elementType": "combobox",
+                                    "event": "onListBoxItemSelected"
+                                },
+                                "onItemDeselected": {
+                                    "type": "forward",
+                                    "elementType": "combobox",
+                                    "event": "onListBoxItemDeselected"
+                                },
+                                "onSelectionChanged": {
+                                    "type": "forward",
+                                    "elementType": "combobox",
+                                    "event": "onListBoxSelectionChanged"
+                                }
+                            }
+                          },
+                          "contentContainer":{
+                              "jsonTemplate":"popup.panel",
+                              "width": 150,
+                              "height": 60,
+                              "minSize": [ 0, 200 ],
+                              "type":"anchor",
+                              "anchorToElement":{
+                                  "elementType":"combobox",
+                                  "elementTree":"logical",
+                                  "flags":"ancestor"
+                              },
+                              "clipToParent":false,
+                              "anchorLocationFactor":[0.0,1.0]
                           }
                         }
                       },
@@ -4151,7 +5473,15 @@
                         "width": 750,
                         "height": 60,
                         "content": "Relay break to all sessions",
-                        "tooltip": "If checked, will broadcast break to all sessions.",
+                        "tooltip": {
+                          "type": "textblock",
+                          "text": "If checked, will broadcast break to all sessions.",
+                          "font": {
+                            "face": "Segoe UI Italic",
+                            "height": 36
+                          },
+                          "color": "#FFE4B5"
+                        },
                         "eventHandlers": {
                           "onLoad": {
                             "type": "code",
