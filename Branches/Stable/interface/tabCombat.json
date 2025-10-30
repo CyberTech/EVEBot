@@ -1,0 +1,810 @@
+{
+  "$schema": "http://www.lavishsoft.com/schema/lgui2Package.json",
+  "templates": {
+    "tabCombat.content": {
+      "type": "panel",
+      "children": [
+        {
+          "type": "checkbox",
+          "name": "cbAlwaysShieldBoost",
+          "x": 30,
+          "y": 30,
+          "height": 60,
+          "width": 300,
+          "content": "Always Shield Boost",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Turn Shield Booster on full-time, instead of on-demand."
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.AlwaysShieldBoost}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetAlwaysShieldBoost[", "]"]
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbLaunchCombatDrones",
+          "x": 30,
+          "y": 90,
+          "height": 60,
+          "width": 390,
+          "content": "Launch Combat Drones",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Launch and Use Combat Drones"
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.LaunchCombatDrones}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetLaunchCombatDrones[", "]"]
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbChainSpawns",
+          "x": 30,
+          "y": 150,
+          "height": 60,
+          "width": 300,
+          "content": "Chain Spawns",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Will chain high value spawns if checked"
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.ChainSpawns}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetChainSpawns[", "]"]
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbChainSolo",
+          "x": 30,
+          "y": 210,
+          "height": 60,
+          "width": 300,
+          "content": "Also Chain While Alone",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "If not checked chaining will be suspended if you are alone in a system."
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.ChainSolo}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetChainSolo[", "]"]
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbAnomalyAssistMode",
+          "x": 30,
+          "y": 270,
+          "height": 60,
+          "width": 300,
+          "content": "Use AnomalyAssistMode",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Keeps the ratter stationary, ignores belts and players"
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.AnomalyAssistMode}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetAnomalyAssistMode[", "]"]
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbReloadFromCan",
+          "x": 30,
+          "y": 330,
+          "height": 60,
+          "width": 300,
+          "content": "Restock Ammo From GSC",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Warp to Ammo Bookmark to restock ammunition?"
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.RestockAmmo}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetRestockAmmo[", "]"]
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbOrbit",
+          "x": 30,
+          "y": 390,
+          "height": 60,
+          "width": 300,
+          "content": "Orbit NPC Targets",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Orbit the current NPC target?"
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.Orbit}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetOrbit[", "]"]
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbOrbitAtOptimal",
+          "x": 30,
+          "y": 450,
+          "height": 60,
+          "width": 300,
+          "content": "Calculate Optimal (lasers only)",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Attempt to calculate optimal?"
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.OrbitAtOptimal}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetOrbitAtOptimal[", "]"]
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbKeepAtRange",
+          "x": 30,
+          "y": 510,
+          "height": 60,
+          "width": 300,
+          "content": "KeepAtRange NPC Targets",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "KeepAtRange the current NPC target?"
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.KeepAtRange}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetKeepAtRange[", "]"]
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbKeepAtRangeAtOptimal",
+          "x": 30,
+          "y": 570,
+          "height": 60,
+          "width": 300,
+          "content": "Calculate Optimal (lasers only)",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Attempt to calculate optimal?"
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.KeepAtRangeAtOptimal}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetKeepAtRangeAtOptimal[", "]"]
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbLootMyKills",
+          "x": 30,
+          "y": 630,
+          "height": 60,
+          "width": 300,
+          "content": "Loot My Kills",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Loot the rats you kill"
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.LootMyKills}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetLootMyKills[", "]"]
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbEnableDroneDefense",
+          "x": 30,
+          "y": 690,
+          "height": 60,
+          "width": 300,
+          "content": "Request Drone Defense against NPCs",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Request Drone Defense from fleet - to respond, also enable launch combat drones, otherwise it's request only"
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat:EnableDroneDefense}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:EnableDroneDefense[", "]"]
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "MinimumDronesInSpaceText",
+          "x": 600,
+          "y": 30,
+          "width": 600,
+          "height": 30,
+          "text": "Min. Available Drones",
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "We will return to base when available drones falls below this number"
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textbox",
+          "name": "MinimumDronesInSpace",
+          "x": 1125,
+          "y": 30,
+          "width": 96,
+          "height": 48,
+          "maxLength": 2,
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Combat.MinimumDronesInSpace}]"
+            },
+            "onTextChanged": {
+              "type": "code",
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetMinimumDronesInSpace[${Int[${This.Text}]}]\n}"
+            }
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "WarpRangeText",
+          "x": 600,
+          "y": 90,
+          "width": 600,
+          "height": 30,
+          "text": "Belt Warp Range (m)",
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "What range to warp to belts at. Default is 0"
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textbox",
+          "name": "WarpRange",
+          "x": 1050,
+          "y": 90,
+          "width": 300,
+          "height": 48,
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Combat.WarpRange}]"
+            },
+            "onTextChanged": {
+              "type": "code",
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetWarpRange[${Int[${This.Text}]}]\n}"
+            }
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "lblMinChainBounty",
+          "x": 600,
+          "y": 150,
+          "width": 600,
+          "height": 54,
+          "text": "Min Chain Bounty",
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "NPC ships with a bounty above this value will be chained (if enabled)."
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textbox",
+          "name": "tbMinChainBounty",
+          "x": 1050,
+          "y": 150,
+          "width": 300,
+          "height": 48,
+          "maxLength": 10,
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Combat.MinChainBounty}]"
+            },
+            "onTextChanged": {
+              "type": "code",
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetMinChainBounty[${Int[${This.Text}]}]\n}"
+            }
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "lblOrbitDistance",
+          "x": 600,
+          "y": 210,
+          "width": 600,
+          "height": 54,
+          "text": "Orbit Distance (m)",
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Distance you want to orbit the current target"
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textbox",
+          "name": "tbOrbitDistance",
+          "x": 1050,
+          "y": 210,
+          "width": 300,
+          "height": 48,
+          "maxLength": 10,
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Combat.OrbitDistance}]"
+            },
+            "onTextChanged": {
+              "type": "code",
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetOrbitDistance[${Int[${This.Text}]}]\n}"
+            }
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "lblKeepAtRangeDistance",
+          "x": 600,
+          "y": 270,
+          "width": 600,
+          "height": 54,
+          "text": "KeepAtRange Distance (m)",
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Distance you want to Keep the current target At Range"
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textbox",
+          "name": "tbKeepAtRangeDistance",
+          "x": 1050,
+          "y": 270,
+          "width": 300,
+          "height": 48,
+          "maxLength": 10,
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Combat.KeepAtRangeDistance}]"
+            },
+            "onTextChanged": {
+              "type": "code",
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetKeepAtRangeDistance[${Int[${This.Text}]}]\n}"
+            }
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "lblAmmoTypeID",
+          "x": 600,
+          "y": 330,
+          "width": 330,
+          "height": 54,
+          "text": "Ammo TypeID",
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Name of bookmark where the ammo can is located."
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textbox",
+          "name": "tbAmmoTypeID",
+          "x": 1050,
+          "y": 330,
+          "width": 450,
+          "height": 48,
+          "maxLength": 10,
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Combat.AmmoTypeID}]"
+            },
+            "onTextChanged": {
+              "type": "code",
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetAmmoTypeID[${This.Text}]\n}"
+            }
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "combobox",
+          "name": "CurrentAnomType",
+          "x": 1050,
+          "y": 390,
+          "width": 600,
+          "height": 54,
+          "font": {
+            "height": 36
+          },
+          "eventHandlers": {
+            "onSelectionChanged": {
+              "type": "code",
+              "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetCurrentAnomType[${This.SelectedItem.Data.Get[text]}]\n\tScript[EVEBot].VariableScope.Config.Combat:SetCurrentAnomTypeName[${This.SelectedItem.Data.Get[text]}]\n}"
+            }
+          },
+          "popup": {
+            "type": "popup",
+            "minSize": [
+              0,
+              200
+            ],
+            "content": {
+              "type": "listbox",
+              "name": "CurrentAnomTypeList",
+              "width": 600,
+              "height": 60,
+              "font": {
+                "height": 36
+              },
+              "minSize": [
+                0,
+                200
+              ],
+              "items": [
+                {
+                  "type": "textblock",
+                  "text": "None",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Guristas Sanctum",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Guristas Haven (Rock)",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Guristas Haven (Gas)",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Guristas Haven (Both)",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Guristas Forlorn Hub",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Guristas Forsaken Hub",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Guristas Hidden Hub",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Guristas Hub",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Guristas Port",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Guristas Forlorn Rally Point",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Guristas Forsaken Rally Point",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Guristas Hidden Rally Point",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Guristas Rally Point",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Guristas Yard",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Guristas Forlorn Den",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Guristas Forsaken Den",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Guristas Hidden Den",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Guristas Den",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Guristas Refuge",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Guristas Burrow",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Guristas Forlorn Hideaway",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Guristas Forsaken Hideaway",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Guristas Hidden Hideaway",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Guristas Hideaway",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Sansha Forsaken Hub",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Sansha Haven (Rock)",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Sansha Haven (Gas)",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Sansha Haven (Both)",
+                  "font": {
+                    "height": 36
+                  }
+                }
+              ],
+              "eventHandlers": {
+                "onItemSelected": {
+                  "type": "forward",
+                  "elementType": "combobox",
+                  "event": "onListBoxItemSelected"
+                },
+                "onItemDeselected": {
+                  "type": "forward",
+                  "elementType": "combobox",
+                  "event": "onListBoxItemDeselected"
+                },
+                "onSelectionChanged": {
+                  "type": "forward",
+                  "elementType": "combobox",
+                  "event": "onListBoxSelectionChanged"
+                }
+              }
+            },
+            "contentContainer": {
+              "jsonTemplate": "popup.panel",
+              "width": 600,
+              "height": 60,
+              "minSize": [
+                0,
+                200
+              ],
+              "type": "anchor",
+              "anchorToElement": {
+                "elementType": "combobox",
+                "elementTree": "logical",
+                "flags": "ancestor"
+              },
+              "clipToParent": false,
+              "anchorLocationFactor": [
+                0.0,
+                1.0
+              ]
+            }
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "lblRestockFreeSpace",
+          "x": 600,
+          "y": 390,
+          "width": 360,
+          "height": 54,
+          "text": "Ammo Free Cargo",
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "How much free space to leave in cargo after restocking ammo"
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textbox",
+          "name": "tbRestockFreeSpace",
+          "x": 1050,
+          "y": 390,
+          "width": 450,
+          "height": 48,
+          "maxLength": 10,
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Combat.RestockAmmoFreeSpace}]"
+            },
+            "onTextChanged": {
+              "type": "code",
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetRestockAmmoFreeSpace[${This.Text}]\n}"
+            }
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "lblAnomType",
+          "x": 600,
+          "y": 450,
+          "width": 360,
+          "height": 54,
+          "text": "Select Anom Type",
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "This will be the Anom type we rat over and over again."
+          },
+          "font": {
+            "height": 36
+          }
+        }
+      ]
+    }
+  }
+}

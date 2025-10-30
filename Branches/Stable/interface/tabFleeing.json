@@ -1,0 +1,1187 @@
+{
+  "$schema": "http://www.lavishsoft.com/schema/lgui2Package.json",
+  "templates": {
+    "tabFleeing.content": {
+      "type": "panel",
+      "children": [
+        {
+          "type": "tabcontrol",
+          "name": "FleeingTabcontrol",
+          "x": 0,
+          "y": 0,
+          "width": 1650,
+          "height": 960,
+          "tabs": [
+            {
+              "type": "tab",
+              "header": "Options",
+              "content": {
+                "type": "panel",
+                "name": "FleeingFrame",
+                "x": 0,
+                "y": 0,
+                "width": 1650,
+                "height": 960,
+                "children": [
+                  {
+                    "type": "checkbox",
+                    "name": "cbRunOnLowAmmo",
+                    "x": 30,
+                    "y": 30,
+                    "width": 450,
+                    "height": 60,
+                    "content": "Run On Low Ammo",
+                    "contentContainer": {
+                      "jsonTemplate": "evebotCheckboxContainer"
+                    },
+                    "tooltip": {
+                      "jsonTemplate": "evebotTooltip",
+                      "text": "If checked, run to safe spot when low on ammo."
+                    },
+                    "checkedBinding": {
+                      "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.RunOnLowAmmo}",
+                      "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetRunOnLowAmmo[", "]"]
+                    }
+                  },
+                  {
+                    "type": "checkbox",
+                    "name": "cbRunOnLowCap",
+                    "x": 30,
+                    "y": 90,
+                    "width": 450,
+                    "height": 60,
+                    "content": "Run On Low Cap",
+                    "contentContainer": {
+                      "jsonTemplate": "evebotCheckboxContainer"
+                    },
+                    "tooltip": {
+                      "jsonTemplate": "evebotTooltip",
+                      "text": "If checked, run to safe spot when capacitor is empty."
+                    },
+                    "checkedBinding": {
+                      "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.RunOnLowCap}",
+                      "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetRunOnLowCap[", "]"]
+                    }
+                  },
+                  {
+                    "type": "checkbox",
+                    "name": "cbRunOnLowTank",
+                    "x": 30,
+                    "y": 150,
+                    "width": 450,
+                    "height": 60,
+                    "content": "Run On Low Tank",
+                    "contentContainer": {
+                      "jsonTemplate": "evebotCheckboxContainer"
+                    },
+                    "tooltip": {
+                      "jsonTemplate": "evebotTooltip",
+                      "text": "If checked, run to safe spot when tank (shield or armor) has failed."
+                    },
+                    "checkedBinding": {
+                      "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.RunOnLowTank}",
+                      "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetRunOnLowTank[", "]"]
+                    }
+                  },
+                  {
+                    "type": "checkbox",
+                    "name": "cbRunToStation",
+                    "x": 30,
+                    "y": 210,
+                    "width": 450,
+                    "height": 60,
+                    "content": "Run To Station",
+                    "contentContainer": {
+                      "jsonTemplate": "evebotCheckboxContainer"
+                    },
+                    "tooltip": {
+                      "jsonTemplate": "evebotTooltip",
+                      "text": "If checked, run to a station instead of a safe-spot."
+                    },
+                    "checkedBinding": {
+                      "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.RunToStation}",
+                      "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetRunToStation[", "]"]
+                    }
+                  },
+                  {
+                    "type": "checkbox",
+                    "name": "cbUseWhiteList",
+                    "x": 30,
+                    "y": 270,
+                    "width": 750,
+                    "height": 60,
+                    "content": "Run On Non-Whitelisted Pilot",
+                    "contentContainer": {
+                      "jsonTemplate": "evebotCheckboxContainer"
+                    },
+                    "tooltip": {
+                      "jsonTemplate": "evebotTooltip",
+                      "text": "If checked, run to safe spot when any non-whitelisted pilot enters system."
+                    },
+                    "checkedBinding": {
+                      "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.UseWhiteList}",
+                      "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetUseWhiteList[", "]"]
+                    }
+                  },
+                  {
+                    "type": "checkbox",
+                    "name": "cbWLBypassStandings",
+                    "x": 825,
+                    "y": 270,
+                    "width": 780,
+                    "height": 60,
+                    "content": "Whitelist bypasses standings",
+                    "contentContainer": {
+                      "jsonTemplate": "evebotCheckboxContainer"
+                    },
+                    "tooltip": {
+                      "jsonTemplate": "evebotTooltip",
+                      "text": "If checked, \"bad\" standings will be checked for whitelisting before fleeing."
+                    },
+                    "checkedBinding": {
+                      "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.WLBypassStandings}",
+                      "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetWLBypassStandings[", "]"]
+                    }
+                  },
+                  {
+                    "type": "checkbox",
+                    "name": "cbUseBlackList",
+                    "x": 30,
+                    "y": 330,
+                    "width": 750,
+                    "height": 60,
+                    "content": "Run On Blacklisted Pilot",
+                    "contentContainer": {
+                      "jsonTemplate": "evebotCheckboxContainer"
+                    },
+                    "tooltip": {
+                      "jsonTemplate": "evebotTooltip",
+                      "text": "If checked, run to safe spot when any blacklisted pilot enters system."
+                    },
+                    "checkedBinding": {
+                      "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.UseBlackList}",
+                      "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetUseBlackList[", "]"]
+                    }
+                  },
+                  {
+                    "type": "combobox",
+                    "name": "cbLowestStandingCombat",
+                    "x": 30,
+                    "y": 390,
+                    "width": 150,
+                    "height": 45,
+                    "font": {
+                      "height": 36
+                    },
+                    "eventHandlers": {
+                      "onSelectionChanged": {
+                        "type": "code",
+                        "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetLowestStanding[${This.SelectedItem.Data.Get[text]}]\n}"
+                      }
+                    },
+                    "popup": {
+                      "type": "popup",
+                      "minSize": [
+                        0,
+                        200
+                      ],
+                      "content": {
+                        "type": "listbox",
+                        "name": "cbLowestStandingCombatList",
+                        "width": 150,
+                        "height": 60,
+                        "font": {
+                          "height": 36
+                        },
+                        "minSize": [
+                          0,
+                          200
+                        ],
+                        "items": [
+                          {
+                            "type": "textblock",
+                            "text": "-11",
+                            "font": {
+                              "height": 36
+                            }
+                          },
+                          {
+                            "type": "textblock",
+                            "text": "-10",
+                            "font": {
+                              "height": 36
+                            }
+                          },
+                          {
+                            "type": "textblock",
+                            "text": "-5",
+                            "font": {
+                              "height": 36
+                            }
+                          },
+                          {
+                            "type": "textblock",
+                            "text": "0",
+                            "font": {
+                              "height": 36
+                            }
+                          },
+                          {
+                            "type": "textblock",
+                            "text": "5",
+                            "font": {
+                              "height": 36
+                            }
+                          },
+                          {
+                            "type": "textblock",
+                            "text": "10",
+                            "font": {
+                              "height": 36
+                            }
+                          }
+                        ],
+                        "eventHandlers": {
+                          "onItemSelected": {
+                            "type": "forward",
+                            "elementType": "combobox",
+                            "event": "onListBoxItemSelected"
+                          },
+                          "onItemDeselected": {
+                            "type": "forward",
+                            "elementType": "combobox",
+                            "event": "onListBoxItemDeselected"
+                          },
+                          "onSelectionChanged": {
+                            "type": "forward",
+                            "elementType": "combobox",
+                            "event": "onListBoxSelectionChanged"
+                          }
+                        }
+                      },
+                      "contentContainer": {
+                        "jsonTemplate": "popup.panel",
+                        "width": 150,
+                        "height": 60,
+                        "minSize": [
+                          0,
+                          200
+                        ],
+                        "type": "anchor",
+                        "anchorToElement": {
+                          "elementType": "combobox",
+                          "elementTree": "logical",
+                          "flags": "ancestor"
+                        },
+                        "clipToParent": false,
+                        "anchorLocationFactor": [
+                          0.0,
+                          1.0
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "textblock",
+                    "name": "lblLowestStandingCombat",
+                    "x": 195,
+                    "y": 390,
+                    "width": 600,
+                    "height": 54,
+                    "text": "Min Acceptable Standing",
+                    "tooltip": {
+                      "jsonTemplate": "evebotTooltip",
+                      "text": "The lowest standing pilot we tolerate in system before we flee. It goes to -11!"
+                    },
+                    "font": {
+                      "height": 36
+                    }
+                  },
+                  {
+                    "type": "checkbox",
+                    "name": "cbIncludeNeutralInCalc",
+                    "x": 750,
+                    "y": 381,
+                    "width": 840,
+                    "height": 60,
+                    "content": "Include Neutral (0.0) standings in standings check",
+                    "contentContainer": {
+                      "jsonTemplate": "evebotCheckboxContainer"
+                    },
+                    "tooltip": {
+                      "jsonTemplate": "evebotTooltip",
+                      "text": "If checked, include all 0.0 standings (includes corp, alliance, and personal)"
+                    },
+                    "checkedBinding": {
+                      "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.IncludeNeutralInCalc}",
+                      "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetIncludeNeutralInCalc[", "]"]
+                    }
+                  },
+                  {
+                    "type": "slider",
+                    "name": "MinArmorPct",
+                    "x": 630,
+                    "y": 30,
+                    "width": 120,
+                    "height": 54,
+                    "minimum": 0,
+                    "maximum": 100,
+                    "eventHandlers": {
+                      "onLoad": {
+                        "type": "code",
+                        "code": "This:SetValue[${Script[EVEBot].VariableScope.Config.Combat.MinimumArmorPct}]\nLGUI2.Element[MinArmorPctLabel]:SetText[\"Minimum Armor: ${This.Value}\"]"
+                      },
+                      "onValueChanged": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.Config.Combat:SetMinimumArmorPct[${Int[${This.Value}]}]\nLGUI2.Element[MinArmorPctLabel]:SetText[\"Minimum Armor: ${This.Value}\"]"
+                      }
+                    }
+                  },
+                  {
+                    "type": "textblock",
+                    "name": "MinArmorPctLabel",
+                    "x": 765,
+                    "y": 30,
+                    "width": 450,
+                    "height": 30,
+                    "text": "Minimum Armor: 0",
+                    "tooltip": {
+                      "jsonTemplate": "evebotTooltip",
+                      "text": "Lowest armor percent allowed before fleeing"
+                    },
+                    "font": {
+                      "height": 36
+                    }
+                  },
+                  {
+                    "type": "slider",
+                    "name": "MinShieldPct",
+                    "x": 630,
+                    "y": 90,
+                    "width": 120,
+                    "height": 54,
+                    "minimum": 0,
+                    "maximum": 100,
+                    "eventHandlers": {
+                      "onLoad": {
+                        "type": "code",
+                        "code": "This:SetValue[${Script[EVEBot].VariableScope.Config.Combat.MinimumShieldPct}]\nLGUI2.Element[MinShieldPctLabel]:SetText[\"Minimum Shield: ${This.Value}\"]"
+                      },
+                      "onValueChanged": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.Config.Combat:SetMinimumShieldPct[${Int[${This.Value}]}]\nLGUI2.Element[MinShieldPctLabel]:SetText[\"Minimum Shield: ${This.Value}\"]"
+                      }
+                    }
+                  },
+                  {
+                    "type": "textblock",
+                    "name": "MinShieldPctLabel",
+                    "x": 765,
+                    "y": 90,
+                    "width": 450,
+                    "height": 30,
+                    "text": "Minimum Shield: 0",
+                    "tooltip": {
+                      "jsonTemplate": "evebotTooltip",
+                      "text": "Lowest Shield Pct Allowed before Running"
+                    },
+                    "font": {
+                      "height": 36
+                    }
+                  },
+                  {
+                    "type": "slider",
+                    "name": "MinCapPct",
+                    "x": 630,
+                    "y": 150,
+                    "width": 120,
+                    "height": 54,
+                    "minimum": 0,
+                    "maximum": 100,
+                    "eventHandlers": {
+                      "onLoad": {
+                        "type": "code",
+                        "code": "This:SetValue[${Script[EVEBot].VariableScope.Config.Combat.MinimumCapPct}]\nLGUI2.Element[MinCapPctLabel]:SetText[\"Minimum Cap: ${This.Value}\"]"
+                      },
+                      "onValueChanged": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.Config.Combat:SetMinimumCapPct[${Int[${This.Value}]}]\nLGUI2.Element[MinCapPctLabel]:SetText[\"Minimum Cap: ${This.Value}\"]"
+                      }
+                    }
+                  },
+                  {
+                    "type": "textblock",
+                    "name": "MinCapPctLabel",
+                    "x": 765,
+                    "y": 150,
+                    "width": 450,
+                    "height": 30,
+                    "text": "Minimum Cap: 0",
+                    "tooltip": {
+                      "jsonTemplate": "evebotTooltip",
+                      "text": "Lowest capacitor percent allowed before fleeing"
+                    },
+                    "font": {
+                      "height": 36
+                    }
+                  },
+                  {
+                    "type": "checkbox",
+                    "name": "cbSafeCooldown",
+                    "x": 30,
+                    "y": 450,
+                    "width": 1050,
+                    "height": 60,
+                    "content": "Wait               minutes after unsafe pilots have left system",
+                    "contentContainer": {
+                      "jsonTemplate": "evebotCheckboxContainer"
+                    },
+                    "tooltip": {
+                      "jsonTemplate": "evebotTooltip",
+                      "text": "If checked, will dock your ship at your panic location every for a break according to the information specified.  Restart after changing these values."
+                    },
+                    "checkedBinding": {
+                      "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.UseSafeCooldown}",
+                      "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetUseSafeCooldown[", "]"]
+                    }
+                  },
+                  {
+                    "type": "combobox",
+                    "name": "comboSafeCooldown",
+                    "x": 180,
+                    "y": 450,
+                    "width": 150,
+                    "height": 45,
+                    "font": {
+                      "height": 36
+                    },
+                    "eventHandlers": {
+                      "onSelectionChanged": {
+                        "type": "code",
+                        "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetSafeCooldown[${This.SelectedItem.Data.Get[text]}]\n}"
+                      }
+                    },
+                    "popup": {
+                      "type": "popup",
+                      "minSize": [
+                        0,
+                        200
+                      ],
+                      "content": {
+                        "type": "listbox",
+                        "name": "comboSafeCooldownList",
+                        "width": 150,
+                        "height": 60,
+                        "font": {
+                          "height": 36
+                        },
+                        "minSize": [
+                          0,
+                          200
+                        ],
+                        "items": [
+                          {
+                            "type": "textblock",
+                            "text": "5",
+                            "font": {
+                              "height": 36
+                            }
+                          },
+                          {
+                            "type": "textblock",
+                            "text": "10",
+                            "font": {
+                              "height": 36
+                            }
+                          },
+                          {
+                            "type": "textblock",
+                            "text": "20",
+                            "font": {
+                              "height": 36
+                            }
+                          },
+                          {
+                            "type": "textblock",
+                            "text": "30",
+                            "font": {
+                              "height": 36
+                            }
+                          },
+                          {
+                            "type": "textblock",
+                            "text": "40",
+                            "font": {
+                              "height": 36
+                            }
+                          },
+                          {
+                            "type": "textblock",
+                            "text": "60",
+                            "font": {
+                              "height": 36
+                            }
+                          }
+                        ],
+                        "eventHandlers": {
+                          "onItemSelected": {
+                            "type": "forward",
+                            "elementType": "combobox",
+                            "event": "onListBoxItemSelected"
+                          },
+                          "onItemDeselected": {
+                            "type": "forward",
+                            "elementType": "combobox",
+                            "event": "onListBoxItemDeselected"
+                          },
+                          "onSelectionChanged": {
+                            "type": "forward",
+                            "elementType": "combobox",
+                            "event": "onListBoxSelectionChanged"
+                          }
+                        }
+                      },
+                      "contentContainer": {
+                        "jsonTemplate": "popup.panel",
+                        "width": 150,
+                        "height": 60,
+                        "minSize": [
+                          0,
+                          200
+                        ],
+                        "type": "anchor",
+                        "anchorToElement": {
+                          "elementType": "combobox",
+                          "elementTree": "logical",
+                          "flags": "ancestor"
+                        },
+                        "clipToParent": false,
+                        "anchorLocationFactor": [
+                          0.0,
+                          1.0
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "checkbox",
+                    "name": "cbBreaks",
+                    "x": 30,
+                    "y": 540,
+                    "width": 960,
+                    "height": 60,
+                    "content": "Take a break for               hours every                hours.",
+                    "contentContainer": {
+                      "jsonTemplate": "evebotCheckboxContainer"
+                    },
+                    "tooltip": {
+                      "jsonTemplate": "evebotTooltip",
+                      "text": "If checked, will dock your ship at your panic location every for a break according to the information specified.  Restart after changing these values."
+                    },
+                    "checkedBinding": {
+                      "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.TakeBreaks}",
+                      "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetTakeBreaks[", "]"]
+                    }
+                  },
+                  {
+                    "type": "combobox",
+                    "name": "comboBreakDuration",
+                    "x": 375,
+                    "y": 540,
+                    "width": 150,
+                    "height": 45,
+                    "font": {
+                      "height": 36
+                    },
+                    "eventHandlers": {
+                      "onSelectionChanged": {
+                        "type": "code",
+                        "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetBreakDuration[${This.SelectedItem.Data.Get[text]}]\n}"
+                      }
+                    },
+                    "popup": {
+                      "type": "popup",
+                      "minSize": [
+                        0,
+                        200
+                      ],
+                      "content": {
+                        "type": "listbox",
+                        "name": "comboBreakDurationList",
+                        "width": 150,
+                        "height": 60,
+                        "font": {
+                          "height": 36
+                        },
+                        "minSize": [
+                          0,
+                          200
+                        ],
+                        "items": [
+                          {
+                            "type": "textblock",
+                            "text": "1",
+                            "font": {
+                              "height": 36
+                            }
+                          },
+                          {
+                            "type": "textblock",
+                            "text": "2",
+                            "font": {
+                              "height": 36
+                            }
+                          }
+                        ],
+                        "eventHandlers": {
+                          "onItemSelected": {
+                            "type": "forward",
+                            "elementType": "combobox",
+                            "event": "onListBoxItemSelected"
+                          },
+                          "onItemDeselected": {
+                            "type": "forward",
+                            "elementType": "combobox",
+                            "event": "onListBoxItemDeselected"
+                          },
+                          "onSelectionChanged": {
+                            "type": "forward",
+                            "elementType": "combobox",
+                            "event": "onListBoxSelectionChanged"
+                          }
+                        }
+                      },
+                      "contentContainer": {
+                        "jsonTemplate": "popup.panel",
+                        "width": 150,
+                        "height": 60,
+                        "minSize": [
+                          0,
+                          200
+                        ],
+                        "type": "anchor",
+                        "anchorToElement": {
+                          "elementType": "combobox",
+                          "elementTree": "logical",
+                          "flags": "ancestor"
+                        },
+                        "clipToParent": false,
+                        "anchorLocationFactor": [
+                          0.0,
+                          1.0
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "combobox",
+                    "name": "comboTimeBetweenBreaks",
+                    "x": 750,
+                    "y": 540,
+                    "width": 150,
+                    "height": 45,
+                    "font": {
+                      "height": 36
+                    },
+                    "eventHandlers": {
+                      "onSelectionChanged": {
+                        "type": "code",
+                        "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetTimeBetweenBreaks[${This.SelectedItem.Data.Get[text]}]\n}"
+                      }
+                    },
+                    "popup": {
+                      "type": "popup",
+                      "minSize": [
+                        0,
+                        200
+                      ],
+                      "content": {
+                        "type": "listbox",
+                        "name": "comboTimeBetweenBreaksList",
+                        "width": 150,
+                        "height": 60,
+                        "font": {
+                          "height": 36
+                        },
+                        "minSize": [
+                          0,
+                          200
+                        ],
+                        "items": [
+                          {
+                            "type": "textblock",
+                            "text": "1",
+                            "font": {
+                              "height": 36
+                            }
+                          },
+                          {
+                            "type": "textblock",
+                            "text": "2",
+                            "font": {
+                              "height": 36
+                            }
+                          },
+                          {
+                            "type": "textblock",
+                            "text": "3",
+                            "font": {
+                              "height": 36
+                            }
+                          },
+                          {
+                            "type": "textblock",
+                            "text": "4",
+                            "font": {
+                              "height": 36
+                            }
+                          },
+                          {
+                            "type": "textblock",
+                            "text": "5",
+                            "font": {
+                              "height": 36
+                            }
+                          },
+                          {
+                            "type": "textblock",
+                            "text": "6",
+                            "font": {
+                              "height": 36
+                            }
+                          }
+                        ],
+                        "eventHandlers": {
+                          "onItemSelected": {
+                            "type": "forward",
+                            "elementType": "combobox",
+                            "event": "onListBoxItemSelected"
+                          },
+                          "onItemDeselected": {
+                            "type": "forward",
+                            "elementType": "combobox",
+                            "event": "onListBoxItemDeselected"
+                          },
+                          "onSelectionChanged": {
+                            "type": "forward",
+                            "elementType": "combobox",
+                            "event": "onListBoxSelectionChanged"
+                          }
+                        }
+                      },
+                      "contentContainer": {
+                        "jsonTemplate": "popup.panel",
+                        "width": 150,
+                        "height": 60,
+                        "minSize": [
+                          0,
+                          200
+                        ],
+                        "type": "anchor",
+                        "anchorToElement": {
+                          "elementType": "combobox",
+                          "elementTree": "logical",
+                          "flags": "ancestor"
+                        },
+                        "clipToParent": false,
+                        "anchorLocationFactor": [
+                          0.0,
+                          1.0
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "checkbox",
+                    "name": "cbBreakBroadcast",
+                    "x": 60,
+                    "y": 600,
+                    "width": 750,
+                    "height": 60,
+                    "content": "Relay break to all sessions",
+                    "contentContainer": {
+                      "jsonTemplate": "evebotCheckboxContainer"
+                    },
+                    "tooltip": {
+                      "jsonTemplate": "evebotTooltip",
+                      "text": "If checked, will broadcast break to all sessions."
+                    },
+                    "checkedBinding": {
+                      "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.BroadcastBreaks}",
+                      "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetBroadcastBreaks[", "]"]
+                    }
+                  }
+                ]
+              },
+              "font": {
+                "height": 36
+              }
+            },
+            {
+              "type": "tab",
+              "header": "Whitelist",
+              "content": {
+                "type": "panel",
+                "children": [
+                  {
+                    "type": "textblock",
+                    "name": "lblWLLocal",
+                    "x": 30,
+                    "y": 30,
+                    "width": 450,
+                    "height": 30,
+                    "text": "Local",
+                    "font": {
+                      "height": 36
+                    }
+                  },
+                  {
+                    "type": "listbox",
+                    "name": "lbWLLocal",
+                    "x": 30,
+                    "y": 75,
+                    "width": 390,
+                    "height": 600,
+                    "eventHandlers": {
+                      "onChecked": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.Config.Combat:SetBroadcastBreaks[TRUE]"
+                      },
+                      "onUnchecked": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.Config.Combat:SetBroadcastBreaks[FALSE]"
+                      }
+                    }
+                  },
+                  {
+                    "type": "button",
+                    "name": "btnWLRefresh",
+                    "x": 60,
+                    "y": 705,
+                    "width": 280,
+                    "height": 66,
+                    "content": "Refresh",
+                    "eventHandlers": {
+                      "onChecked": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.Config.Combat:SetBroadcastBreaks[TRUE]"
+                      },
+                      "onUnchecked": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.Config.Combat:SetBroadcastBreaks[FALSE]"
+                      }
+                    },
+                    "font": {
+                      "height": 36
+                    }
+                  },
+                  {
+                    "type": "textblock",
+                    "name": "lblWLPilots",
+                    "x": 1230,
+                    "y": 30,
+                    "width": 390,
+                    "height": 30,
+                    "text": "Pilot",
+                    "font": {
+                      "height": 36
+                    }
+                  },
+                  {
+                    "type": "listbox",
+                    "name": "lbWLPilots",
+                    "x": 1230,
+                    "y": 75,
+                    "width": 390,
+                    "height": 180,
+                    "eventHandlers": {
+                      "onLoad": {
+                        "type": "code",
+                        "code": "This:ClearItems\nvariable iterator i\nScript[EVEBot].VariableScope.Whitelist.PilotsRef:GetSettingIterator[i]\nif ${i:First(exists)}\n{\n\tdo\n\t{\n\t\tThis:AddItem[${i.Key},${i.Value}]\n\t}\n\twhile ${i:Next(exists)}\n}\nThis:Sort"
+                      },
+                      "onChecked": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.Config.Combat:SetBroadcastBreaks[TRUE]"
+                      },
+                      "onUnchecked": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.Config.Combat:SetBroadcastBreaks[FALSE]"
+                      }
+                    }
+                  },
+                  {
+                    "type": "button",
+                    "name": "btnWLDelPilot",
+                    "x": 1140,
+                    "y": 105,
+                    "width": 76,
+                    "height": 120,
+                    "content": "Del",
+                    "eventHandlers": {
+                      "onChecked": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.Config.Combat:SetBroadcastBreaks[TRUE]"
+                      },
+                      "onUnchecked": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.Config.Combat:SetBroadcastBreaks[FALSE]"
+                      }
+                    },
+                    "font": {
+                      "height": 36
+                    }
+                  },
+                  {
+                    "type": "button",
+                    "name": "btnWLAddPilot",
+                    "x": 1050,
+                    "y": 105,
+                    "width": 76,
+                    "height": 120,
+                    "content": "Add",
+                    "eventHandlers": {
+                      "onChecked": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.Config.Combat:SetBroadcastBreaks[TRUE]"
+                      },
+                      "onUnchecked": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.Config.Combat:SetBroadcastBreaks[FALSE]"
+                      }
+                    },
+                    "font": {
+                      "height": 36
+                    }
+                  },
+                  {
+                    "type": "textblock",
+                    "name": "lblWLCorps",
+                    "x": 1230,
+                    "y": 270,
+                    "width": 390,
+                    "height": 30,
+                    "text": "Corp",
+                    "font": {
+                      "height": 36
+                    }
+                  },
+                  {
+                    "type": "listbox",
+                    "name": "lbWLCorps",
+                    "x": 1230,
+                    "y": 315,
+                    "width": 390,
+                    "height": 180,
+                    "eventHandlers": {
+                      "onLoad": {
+                        "type": "code",
+                        "code": "This:ClearItems\nvariable iterator i\nScript[EVEBot].VariableScope.Whitelist.CorporationsRef:GetSettingIterator[i]\nif ${i:First(exists)}\n{\n\tdo\n\t{\n\t\tThis:AddItem[${i.Key},${i.Value}]\n\t}\n\twhile ${i:Next(exists)}\n}\nThis:Sort"
+                      },
+                      "onChecked": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.Config.Combat:SetBroadcastBreaks[TRUE]"
+                      },
+                      "onUnchecked": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.Config.Combat:SetBroadcastBreaks[FALSE]"
+                      }
+                    }
+                  },
+                  {
+                    "type": "button",
+                    "name": "btnWLDelCorp",
+                    "x": 1140,
+                    "y": 345,
+                    "width": 76,
+                    "height": 120,
+                    "content": "Del",
+                    "eventHandlers": {
+                      "onChecked": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.Config.Combat:SetBroadcastBreaks[TRUE]"
+                      },
+                      "onUnchecked": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.Config.Combat:SetBroadcastBreaks[FALSE]"
+                      }
+                    },
+                    "font": {
+                      "height": 36
+                    }
+                  },
+                  {
+                    "type": "button",
+                    "name": "btnWLAddCorp",
+                    "x": 1050,
+                    "y": 345,
+                    "width": 76,
+                    "height": 120,
+                    "content": "Add",
+                    "eventHandlers": {
+                      "onChecked": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.Config.Combat:SetBroadcastBreaks[TRUE]"
+                      },
+                      "onUnchecked": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.Config.Combat:SetBroadcastBreaks[FALSE]"
+                      }
+                    },
+                    "font": {
+                      "height": 36
+                    }
+                  },
+                  {
+                    "type": "textblock",
+                    "name": "lblWLAlliances",
+                    "x": 1230,
+                    "y": 510,
+                    "width": 390,
+                    "height": 30,
+                    "text": "Alliance",
+                    "font": {
+                      "height": 36
+                    }
+                  },
+                  {
+                    "type": "listbox",
+                    "name": "lbWLAlliances",
+                    "x": 1230,
+                    "y": 555,
+                    "width": 390,
+                    "height": 180,
+                    "eventHandlers": {
+                      "onLoad": {
+                        "type": "code",
+                        "code": "This:ClearItems\nvariable iterator i\nScript[EVEBot].VariableScope.Whitelist.AlliancesRef:GetSettingIterator[i]\nif ${i:First(exists)}\n{\n\tdo\n\t{\n\t\tThis:AddItem[${i.Key},${i.Value}]\n\t}\n\twhile ${i:Next(exists)}\n}\nThis:Sort"
+                      },
+                      "onChecked": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.Config.Combat:SetBroadcastBreaks[TRUE]"
+                      },
+                      "onUnchecked": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.Config.Combat:SetBroadcastBreaks[FALSE]"
+                      }
+                    }
+                  },
+                  {
+                    "type": "button",
+                    "name": "btnWLDelAlliance",
+                    "x": 1140,
+                    "y": 585,
+                    "width": 76,
+                    "height": 120,
+                    "content": "Del",
+                    "eventHandlers": {
+                      "onChecked": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.Config.Combat:SetBroadcastBreaks[TRUE]"
+                      },
+                      "onUnchecked": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.Config.Combat:SetBroadcastBreaks[FALSE]"
+                      }
+                    },
+                    "font": {
+                      "height": 36
+                    }
+                  },
+                  {
+                    "type": "button",
+                    "name": "btnWLAddAlliance",
+                    "x": 1050,
+                    "y": 585,
+                    "width": 76,
+                    "height": 120,
+                    "content": "Add",
+                    "eventHandlers": {
+                      "onChecked": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.Config.Combat:SetBroadcastBreaks[TRUE]"
+                      },
+                      "onUnchecked": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.Config.Combat:SetBroadcastBreaks[FALSE]"
+                      }
+                    },
+                    "font": {
+                      "height": 36
+                    }
+                  },
+                  {
+                    "type": "textblock",
+                    "name": "txtPilotInfo",
+                    "x": 450,
+                    "y": 75,
+                    "width": 585,
+                    "height": 180,
+                    "text": "Select a pilot from the list at left.",
+                    "wrap": true,
+                    "font": {
+                      "height": 36
+                    }
+                  },
+                  {
+                    "type": "textblock",
+                    "name": "txtCorpInfo",
+                    "x": 450,
+                    "y": 315,
+                    "width": 585,
+                    "height": 180,
+                    "text": "This will populate with stuff based on your selection.",
+                    "wrap": true,
+                    "font": {
+                      "height": 36
+                    }
+                  },
+                  {
+                    "type": "textblock",
+                    "name": "txtAllianceInfo",
+                    "x": 450,
+                    "y": 555,
+                    "width": 585,
+                    "height": 180,
+                    "text": "This will show you alliance stuff.",
+                    "wrap": true,
+                    "font": {
+                      "height": 36
+                    }
+                  },
+                  {
+                    "type": "button",
+                    "name": "btnSyncWhitelists",
+                    "x": 450,
+                    "y": 870,
+                    "width": 497,
+                    "height": 60,
+                    "content": "Synchronize Whitelist",
+                    "eventHandlers": {
+                      "onChecked": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.Config.Combat:SetBroadcastBreaks[TRUE]"
+                      },
+                      "onUnchecked": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.Config.Combat:SetBroadcastBreaks[FALSE]"
+                      }
+                    },
+                    "font": {
+                      "height": 36
+                    }
+                  }
+                ]
+              },
+              "font": {
+                "height": 36
+              }
+            }
+          ],
+          "font": {
+            "height": 36
+          }
+        }
+      ]
+    }
+  }
+}

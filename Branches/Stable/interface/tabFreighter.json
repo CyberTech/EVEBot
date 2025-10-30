@@ -1,0 +1,323 @@
+{
+  "$schema": "http://www.lavishsoft.com/schema/lgui2Package.json",
+  "templates": {
+    "tabFreighter.content": {
+      "type": "panel",
+      "children": [
+        {
+          "type": "textblock",
+          "name": "lblFreighterMode",
+          "x": 30,
+          "y": 36,
+          "width": 210,
+          "height": 30,
+          "text": "Mode: ",
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "combobox",
+          "name": "cbFreighterMode",
+          "x": 240,
+          "y": 30,
+          "width": 675,
+          "height": 45,
+          "font": {
+              "height": 36
+          },
+          "eventHandlers": {
+            "onSelectionChanged": {
+              "type": "code",
+              "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tScript[EVEBot].VariableScope.Config.Freighter:SetFreighterMode[${This.SelectedItem.Data.Get[text]}]\n\tScript[EVEBot].VariableScope.Config.Freighter:SetFreighterModeName[${This.SelectedItem.Data.Get[text]}]\n}"
+            }
+          },
+          "popup": {
+            "type": "popup",
+            "minSize": [ 0, 200 ],
+            "content": {
+              "type": "listbox",
+              "name": "cbFreighterModeList",
+              "width": 675,
+              "height": 60,
+              "font": {
+                "height": 36
+              },
+              "minSize": [ 0, 200 ],
+              "items": [
+                {
+                  "type": "textblock",
+                  "text": "Source and Destination",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Asset Gather",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Move Minerals to Buyer",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Container Test",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Mission Runner",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Stealth Hauler",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Scavenger",
+                  "font": {
+                    "height": 36
+                  }
+                }
+              ],
+              "eventHandlers": {
+                  "onItemSelected": {
+                      "type": "forward",
+                      "elementType": "combobox",
+                      "event": "onListBoxItemSelected"
+                  },
+                  "onItemDeselected": {
+                      "type": "forward",
+                      "elementType": "combobox",
+                      "event": "onListBoxItemDeselected"
+                  },
+                  "onSelectionChanged": {
+                      "type": "forward",
+                      "elementType": "combobox",
+                      "event": "onListBoxSelectionChanged"
+                  }
+              }
+            },
+            "contentContainer":{
+                "jsonTemplate":"popup.panel",
+                "width": 675,
+                "height": 60,
+                "minSize": [ 0, 200 ],
+                "type":"anchor",
+                "anchorToElement":{
+                    "elementType":"combobox",
+                    "elementTree":"logical",
+                    "flags":"ancestor"
+                },
+                "clipToParent":false,
+                "anchorLocationFactor":[0.0,1.0]
+            }
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "lblDestination",
+          "x": 30,
+          "y": 111,
+          "width": 600,
+          "height": 30,
+          "text": "Destination",
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "The destination bookmark or station name."
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "combobox",
+          "name": "teDestination",
+          "x": 450,
+          "y": 105,
+          "width": 1125,
+          "height": 54,
+          "font": {
+              "height": 36
+          },
+          "eventHandlers": {
+            "onSelectionChanged": {
+              "type": "code",
+              "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tLogger:Log[\"Freighter destination set to ${This.SelectedItem.Data.Get[text]}\"]\n\tScript[EVEBot].VariableScope.Config.Freighter:SetDestination[${This.SelectedItem.Data.Get[text]}]\n}"
+            }
+          },
+          "popup": {
+            "type": "popup",
+            "minSize": [ 0, 200 ],
+            "content": {
+              "type": "listbox",
+              "name": "teDestinationList",
+              "width": 1125,
+              "height": 60,
+              "font": {
+                "height": 36
+              },
+              "minSize": [ 0, 200 ],
+              "items": [],
+              "eventHandlers": {
+                  "onLoad": {
+                      "type": "code",
+                      "code": "variable index:bookmark bm_index\nEVE:GetBookmarks[bm_index]\n\nvariable iterator bm_iterator\nbm_index:GetIterator[bm_iterator]\nThis:ClearItems\nif ${bm_iterator:First(exists)}\n{\n\tdo\n\t{\n\t\tThis:InsertItem[\"{\\\"type\\\":\\\"textblock\\\",\\\"text\\\":\\\"${bm_iterator.Value.Label.Escape}\\\"}\"]\n\t}\n\twhile ${bm_iterator:Next(exists)}\n}"
+                  },
+                  "onItemSelected": {
+                      "type": "forward",
+                      "elementType": "combobox",
+                      "event": "onListBoxItemSelected"
+                  },
+                  "onItemDeselected": {
+                      "type": "forward",
+                      "elementType": "combobox",
+                      "event": "onListBoxItemDeselected"
+                  },
+                  "onSelectionChanged": {
+                      "type": "forward",
+                      "elementType": "combobox",
+                      "event": "onListBoxSelectionChanged"
+                  }
+              }
+            },
+            "contentContainer":{
+                "jsonTemplate":"popup.panel",
+                "width": 1125,
+                "height": 60,
+                "minSize": [ 0, 200 ],
+                "type":"anchor",
+                "anchorToElement":{
+                    "elementType":"combobox",
+                    "elementTree":"logical",
+                    "flags":"ancestor"
+                },
+                "clipToParent":false,
+                "anchorLocationFactor":[0.0,1.0]
+            }
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "lblSourcePrefix",
+          "x": 30,
+          "y": 186,
+          "width": 600,
+          "height": 30,
+          "text": "Source Bookmark Prefix",
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "The prefix for source bookmark names."
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textbox",
+          "name": "teSourcePrefix",
+          "x": 450,
+          "y": 180,
+          "width": 300,
+          "height": 48,
+          "maxLength": 10,
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Freighter.SourcePrefix}]"
+            },
+            "onTextChanged": {
+              "type": "code",
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Freighter:SetSourcePrefix[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Freighter:SetSourcePrefix[\"\"]\n}"
+            }
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "button",
+          "name": "Refresh Bookmarks",
+          "x": 1050,
+          "y": 180,
+          "width": 382,
+          "height": 54,
+          "content": "Show Matching",
+          "eventHandlers": {
+            "onPress": {
+              "type": "code",
+              "code": "Freighter:BuildSourceList"
+            }
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "lblRegionName",
+          "x": 30,
+          "y": 261,
+          "width": 840,
+          "height": 30,
+          "text": "Limit To Region",
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Leave blank to service all regions."
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textbox",
+          "name": "teRegionName",
+          "x": 450,
+          "y": 255,
+          "width": 600,
+          "height": 48,
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Freighter.RegionName}]"
+            },
+            "onTextChanged": {
+              "type": "code",
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Freighter:SetRegionName[${This.Text}]\n}"
+            }
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "listbox",
+          "name": "PickupBookmarks",
+          "x": 33,
+          "y": 480,
+          "width": 1584,
+          "height": 450,
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Bookmarks which will be visited to pickup items"
+          }
+        }
+      ]
+    }
+  }
+}

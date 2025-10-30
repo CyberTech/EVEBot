@@ -1,0 +1,390 @@
+{
+  "$schema": "http://www.lavishsoft.com/schema/lgui2Package.json",
+  "templates": {
+    "tabMain.content": {
+      "type": "panel",
+      "children": [
+        {
+          "type": "textblock",
+          "name": "CurrentBehaviorLabel",
+          "x": 30,
+          "y": 30,
+          "width": 210,
+          "height": 30,
+          "text": "Behavior:",
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "combobox",
+          "name": "CurrentBehavior",
+          "x": 150,
+          "y": 28,
+          "width": 250,
+          "height": 44,
+          "font": {
+            "height": 36,
+            "bold": true
+          },
+          "eventHandlers": {
+            "onSelectionChanged": {
+              "type": "code",
+              "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tLogger:Log[\"Current behavior switched to ${This.SelectedItem.Data.Get[text]}\"]\n\tScript[EVEBot].VariableScope.Config.Common:CurrentBehavior[${This.SelectedItem.Data.Get[text]}]\n}"
+            }
+          },
+          "popup": {
+            "type": "popup",
+            "minSize": [
+              0,
+              200
+            ],
+            "content": {
+              "type": "listbox",
+              "name": "CurrentBehaviorList",
+              "width": 250,
+              "height": 60,
+              "font": {
+                "height": 36
+              },
+              "minSize": [
+                0,
+                200
+              ],
+              "itemsBinding": {
+                "pullFormat": "${Script[EVEBot].VariableScope.UI.GetBehaviors}"
+              },
+              "eventHandlers": {
+                "onItemSelected": {
+                  "type": "forward",
+                  "elementType": "combobox",
+                  "event": "onListBoxItemSelected"
+                },
+                "onItemDeselected": {
+                  "type": "forward",
+                  "elementType": "combobox",
+                  "event": "onListBoxItemDeselected"
+                },
+                "onSelectionChanged": {
+                  "type": "forward",
+                  "elementType": "combobox",
+                  "event": "onListBoxSelectionChanged"
+                }
+              }
+            },
+            "contentContainer": {
+              "jsonTemplate": "popup.panel",
+              "width": 250,
+              "height": 60,
+              "minSize": [
+                0,
+                200
+              ],
+              "type": "anchor",
+              "anchorToElement": {
+                "elementType": "combobox",
+                "elementTree": "logical",
+                "flags": "ancestor"
+              },
+              "clipToParent": false,
+              "anchorLocationFactor": [
+                0.0,
+                1.0
+              ]
+            }
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "MinimumDronesInBayText",
+          "x": 10,
+          "y": 120,
+          "width": 600,
+          "height": 30,
+          "text": "Minimum Drones in Bay:",
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textbox",
+          "name": "MinimumDronesInBay",
+          "x": 320,
+          "y": 120,
+          "width": 66,
+          "height": 48,
+          "multiline": false,
+          "maxLength": 2,
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Common.DronesInBay}]"
+            },
+            "onTextChanged": {
+              "type": "code",
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Common:SetDronesInBay[${Int[${This.Text}]}]\n}"
+            }
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "This will set the amount of drones you want in your drone bay."
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "lblMaxRuntime",
+          "x": 10,
+          "y": 180,
+          "width": 390,
+          "height": 54,
+          "text": "Max Run Hours:",
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textbox",
+          "name": "tbMaxRuntime",
+          "x": 320,
+          "y": 180,
+          "width": 66,
+          "height": 48,
+          "maxLength": 3,
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Common.MaxRuntime}]"
+            },
+            "onTextChanged": {
+              "type": "code",
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Common:SetMaxRuntime[${Int[${This.Text}]}]\n}"
+            }
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "The maximum hours to run the script before it aborts."
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "lblIRCServer",
+          "x": 10,
+          "y": 300,
+          "width": 300,
+          "height": 54,
+          "text": "IRC Server:",
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textbox",
+          "name": "tbIRCServer",
+          "x": 320,
+          "y": 300,
+          "width": 600,
+          "height": 48,
+          "maxLength": 50,
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Common.IRCServer}]"
+            },
+            "onTextChanged": {
+              "type": "code",
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Common:SetIRCServer[${This.Text}]\n}"
+            }
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Enter an server address if you want to use IRC"
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "lblIRCChannel",
+          "x": 10,
+          "y": 360,
+          "width": 300,
+          "height": 54,
+          "text": "IRC Channel:",
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textbox",
+          "name": "tbIRCChannel",
+          "x": 320,
+          "y": 360,
+          "width": 300,
+          "height": 48,
+          "maxLength": 25,
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Common.IRCChannel}]"
+            },
+            "onTextChanged": {
+              "type": "code",
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Common:SetIRCChannel[${This.Text}]\n}"
+            }
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Enter an channel name if you want to use IRC"
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "lblIRCUser",
+          "x": 10,
+          "y": 420,
+          "width": 300,
+          "height": 54,
+          "text": "IRC Username:",
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textbox",
+          "name": "tbIRCUser",
+          "x": 320,
+          "y": 420,
+          "width": 300,
+          "height": 48,
+          "maxLength": 25,
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Common.IRCUser}]"
+            },
+            "onTextChanged": {
+              "type": "code",
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Common:SetIRCUser[${This.Text}]\n}"
+            }
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Enter an username if you want to use IRC"
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "lblIRCPassword",
+          "x": 10,
+          "y": 480,
+          "width": 300,
+          "height": 54,
+          "text": "IRC Password:",
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textbox",
+          "name": "tbIRCPassword",
+          "x": 320,
+          "y": 480,
+          "width": 300,
+          "height": 48,
+          "maxLength": 25,
+          "password": true,
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Common.IRCPassword}]"
+            },
+            "onTextChanged": {
+              "type": "code",
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Common:SetIRCPassword[${This.Text}]\n}"
+            }
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Enter a password if you need one to use IRC"
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbUseSound",
+          "x": 10,
+          "y": 580,
+          "height": 60,
+          "width": 250,
+          "content": "Enable sound",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Enable audio events"
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Common.UseSound}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Common:SetUseSound[", "]"]
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbDisable3D",
+          "x": 320,
+          "y": 580,
+          "height": 60,
+          "width": 300,
+          "content": "Disable 3D Rendering",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Disable EVE 3D Rendering"
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Common.Disable3D}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Common:SetDisable3D[", "]"]
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cvSortBeltsRandom",
+          "x": 10,
+          "y": 640,
+          "height": 60,
+          "width": 400,
+          "content": "Sort Asteroid Belts Randomly",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Sort asteroid belt lists randomly, instead of alphabetically"
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Common.SortBeltsRandom}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Common:SortBeltsRandom[", "]"]
+          }
+        }
+      ]
+    }
+  }
+}

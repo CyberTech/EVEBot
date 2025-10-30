@@ -1,0 +1,527 @@
+{
+  "$schema": "http://www.lavishsoft.com/schema/lgui2Package.json",
+  "templates": {
+    "tabMissions.content": {
+      "type": "panel",
+      "children": [
+        {
+          "type": "textblock",
+          "name": "lblRunTheseTypes",
+          "x": 30,
+          "y": 30,
+          "width": 390,
+          "height": 54,
+          "text": "Run These Types",
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "panel",
+          "name": "frmMissionTypes",
+          "x": 30,
+          "y": 90,
+          "width": 390,
+          "height": 300,
+          "style": {
+            "borderThickness": 2
+          },
+          "children": [
+            {
+              "type": "checkbox",
+              "name": "cbRunCourierMissions",
+              "x": 30,
+              "y": 30,
+              "width": 330,
+              "height": 60,
+              "content": "Courier Missions",
+              "contentContainer": {
+                "jsonTemplate": "evebotCheckboxContainer"
+              },
+              "tooltip": {
+                "jsonTemplate": "evebotTooltip",
+                "text": "If checked, accept and complete courier missions."
+              },
+              "checkedBinding": {
+                "pullFormat": "${Script[EVEBot].VariableScope.Config.Missioneer.RunCourierMissions}",
+                "pushFormat": ["Script[EVEBot].VariableScope.Config.Missioneer:SetRunCourierMissions[", "]"]
+              }
+            },
+            {
+              "type": "checkbox",
+              "name": "cbRunTradeMissions",
+              "x": 30,
+              "y": 90,
+              "width": 330,
+              "height": 60,
+              "content": "Trade Missions",
+              "contentContainer": {
+                "jsonTemplate": "evebotCheckboxContainer"
+              },
+              "tooltip": {
+                "jsonTemplate": "evebotTooltip",
+                "text": "If checked, accept and complete trade missions."
+              },
+              "checkedBinding": {
+                "pullFormat": "${Script[EVEBot].VariableScope.Config.Missioneer.RunTradeMissions}",
+                "pushFormat": ["Script[EVEBot].VariableScope.Config.Missioneer:SetRunTradeMissions[", "]"]
+              }
+            },
+            {
+              "type": "checkbox",
+              "name": "cbRunMiningMissions",
+              "x": 30,
+              "y": 150,
+              "width": 330,
+              "height": 60,
+              "content": "Mining Missions",
+              "contentContainer": {
+                "jsonTemplate": "evebotCheckboxContainer"
+              },
+              "tooltip": {
+                "jsonTemplate": "evebotTooltip",
+                "text": "If checked, accept and complete mining missions."
+              },
+              "checkedBinding": {
+                "pullFormat": "${Script[EVEBot].VariableScope.Config.Missioneer.RunMiningMissions}",
+                "pushFormat": ["Script[EVEBot].VariableScope.Config.Missioneer:SetRunMiningMissions[", "]"]
+              }
+            },
+            {
+              "type": "checkbox",
+              "name": "cbRunKillMissions",
+              "x": 30,
+              "y": 210,
+              "width": 330,
+              "height": 60,
+              "content": "Kill Missions",
+              "contentContainer": {
+                "jsonTemplate": "evebotCheckboxContainer"
+              },
+              "tooltip": {
+                "jsonTemplate": "evebotTooltip",
+                "text": "If checked, accept and complete kill missions."
+              },
+              "checkedBinding": {
+                "pullFormat": "${Script[EVEBot].VariableScope.Config.Missioneer.RunKillMissions}",
+                "pushFormat": ["Script[EVEBot].VariableScope.Config.Missioneer:SetRunKillMissions[", "]"]
+              }
+            }
+          ]
+        },
+        {
+          "type": "textblock",
+          "name": "lblShipNames",
+          "x": 450,
+          "y": 30,
+          "width": 390,
+          "height": 54,
+          "text": "Ship Names",
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "panel",
+          "name": "frmShipNames",
+          "x": 450,
+          "y": 90,
+          "width": 1020,
+          "height": 300,
+          "style": {
+            "borderThickness": 2
+          },
+          "children": [
+            {
+              "type": "textblock",
+              "name": "lblSmallHauler",
+              "x": 30,
+              "y": 30,
+              "width": 300,
+              "height": 54,
+              "text": "Small Hauler",
+              "tooltip": {
+                "jsonTemplate": "evebotTooltip",
+                "text": "Small Hauler (6000 m^3 or less)."
+              },
+              "font": {
+                "height": 36
+              }
+            },
+            {
+              "type": "textbox",
+              "name": "tbSmallHauler",
+              "x": 360,
+              "y": 30,
+              "width": 630,
+              "height": 48,
+              "maxLength": 64,
+              "eventHandlers": {
+                "onLoad": {
+                  "type": "code",
+                  "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Missioneer.SmallHauler}]"
+                },
+                "onTextChanged": {
+                  "type": "code",
+                  "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetSmallHauler[${This.Text}]\n}"
+                }
+              },
+              "font": {
+                "height": 36
+              }
+            },
+            {
+              "type": "textblock",
+              "name": "lblLargeHauler",
+              "x": 30,
+              "y": 90,
+              "width": 300,
+              "height": 54,
+              "text": "Large Hauler",
+              "tooltip": {
+                "jsonTemplate": "evebotTooltip",
+                "text": "Large Hauler (more than 6000 m^3)."
+              },
+              "font": {
+                "height": 36
+              }
+            },
+            {
+              "type": "textbox",
+              "name": "tbLargeHauler",
+              "x": 360,
+              "y": 90,
+              "width": 630,
+              "height": 48,
+              "maxLength": 64,
+              "eventHandlers": {
+                "onLoad": {
+                  "type": "code",
+                  "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Missioneer.LargeHauler}]"
+                },
+                "onTextChanged": {
+                  "type": "code",
+                  "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetLargeHauler[${This.Text}]\n}"
+                }
+              },
+              "font": {
+                "height": 36
+              }
+            },
+            {
+              "type": "textblock",
+              "name": "lblMiningShip",
+              "x": 30,
+              "y": 150,
+              "width": 300,
+              "height": 54,
+              "text": "Mining Ship",
+              "tooltip": {
+                "jsonTemplate": "evebotTooltip",
+                "text": "Mining Ship."
+              },
+              "font": {
+                "height": 36
+              }
+            },
+            {
+              "type": "textbox",
+              "name": "tbMiningShip",
+              "x": 360,
+              "y": 150,
+              "width": 630,
+              "height": 48,
+              "maxLength": 64,
+              "eventHandlers": {
+                "onLoad": {
+                  "type": "code",
+                  "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Missioneer.MiningShip}]"
+                },
+                "onTextChanged": {
+                  "type": "code",
+                  "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetMiningShip[${This.Text}]\n}"
+                }
+              },
+              "font": {
+                "height": 36
+              }
+            },
+            {
+              "type": "textblock",
+              "name": "lblCombatShip",
+              "x": 30,
+              "y": 210,
+              "width": 300,
+              "height": 54,
+              "text": "Combat Ship",
+              "tooltip": {
+                "jsonTemplate": "evebotTooltip",
+                "text": "Combat Ship."
+              },
+              "font": {
+                "height": 36
+              }
+            },
+            {
+              "type": "textbox",
+              "name": "tbCombatShip",
+              "x": 360,
+              "y": 210,
+              "width": 630,
+              "height": 48,
+              "maxLength": 64,
+              "eventHandlers": {
+                "onLoad": {
+                  "type": "code",
+                  "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Missioneer.CombatShip}]"
+                },
+                "onTextChanged": {
+                  "type": "code",
+                  "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetCombatShip[${This.Text}]\n}"
+                }
+              },
+              "font": {
+                "height": 36
+              }
+            }
+          ]
+        },
+        {
+          "type": "panel",
+          "name": "frmSalvageOptions",
+          "x": 30,
+          "y": 420,
+          "width": 1440,
+          "height": 120,
+          "style": {
+            "borderThickness": 2
+          },
+          "children": [
+            {
+              "type": "textblock",
+              "name": "lblSalvageMode",
+              "x": 30,
+              "y": 36,
+              "width": 330,
+              "height": 54,
+              "text": "Salvage Mode",
+              "tooltip": {
+                "jsonTemplate": "evebotTooltip",
+                "text": "Solo = switch to salvage ship.  Relay = relay to salvage bot."
+              },
+              "font": {
+                "height": 36
+              }
+            },
+            {
+              "type": "combobox",
+              "name": "comboSalvageMode",
+              "x": 345,
+              "y": 30,
+              "width": 225,
+              "height": 54,
+              "font": {
+                "height": 36
+              },
+              "eventHandlers": {
+                "onSelectionChanged": {
+                  "type": "code",
+                  "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetSalvageMode[${This.SelectedItem.Data.Get[text]}]\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetSalvageModeName[${This.SelectedItem.Data.Get[text]}]\n}"
+                }
+              },
+              "popup": {
+                "type": "popup",
+                "minSize": [
+                  0,
+                  200
+                ],
+                "content": {
+                  "type": "listbox",
+                  "name": "comboSalvageModeList",
+                  "width": 225,
+                  "height": 60,
+                  "font": {
+                    "height": 36
+                  },
+                  "minSize": [
+                    0,
+                    200
+                  ],
+                  "items": [
+                    {
+                      "type": "textblock",
+                      "text": "None",
+                      "font": {
+                        "height": 36
+                      }
+                    },
+                    {
+                      "type": "textblock",
+                      "text": "Solo",
+                      "font": {
+                        "height": 36
+                      }
+                    },
+                    {
+                      "type": "textblock",
+                      "text": "Relay",
+                      "font": {
+                        "height": 36
+                      }
+                    }
+                  ],
+                  "eventHandlers": {
+                    "onItemSelected": {
+                      "type": "forward",
+                      "elementType": "combobox",
+                      "event": "onListBoxItemSelected"
+                    },
+                    "onItemDeselected": {
+                      "type": "forward",
+                      "elementType": "combobox",
+                      "event": "onListBoxItemDeselected"
+                    },
+                    "onSelectionChanged": {
+                      "type": "forward",
+                      "elementType": "combobox",
+                      "event": "onListBoxSelectionChanged"
+                    }
+                  }
+                },
+                "contentContainer": {
+                  "jsonTemplate": "popup.panel",
+                  "width": 225,
+                  "height": 60,
+                  "minSize": [
+                    0,
+                    200
+                  ],
+                  "type": "anchor",
+                  "anchorToElement": {
+                    "elementType": "combobox",
+                    "elementTree": "logical",
+                    "flags": "ancestor"
+                  },
+                  "clipToParent": false,
+                  "anchorLocationFactor": [
+                    0.0,
+                    1.0
+                  ]
+                }
+              }
+            },
+            {
+              "type": "textblock",
+              "name": "lblSalvageShip",
+              "x": 600,
+              "y": 36,
+              "width": 300,
+              "height": 54,
+              "text": "Salvage Ship",
+              "tooltip": {
+                "jsonTemplate": "evebotTooltip",
+                "text": "Ship to use for solo salvaging."
+              },
+              "font": {
+                "height": 36
+              }
+            },
+            {
+              "type": "textbox",
+              "name": "tbSalvageShip",
+              "x": 900,
+              "y": 30,
+              "width": 510,
+              "height": 48,
+              "maxLength": 64,
+              "eventHandlers": {
+                "onLoad": {
+                  "type": "code",
+                  "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Missioneer.SalvageShip}]"
+                },
+                "onTextChanged": {
+                  "type": "code",
+                  "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetSalvageShip[${This.Text}]\n}"
+                }
+              },
+              "font": {
+                "height": 36
+              }
+            }
+          ]
+        },
+        {
+          "type": "panel",
+          "name": "frmGeneralOptions",
+          "x": 30,
+          "y": 570,
+          "width": 1440,
+          "height": 120,
+          "style": {
+            "borderThickness": 2
+          },
+          "children": [
+            {
+              "type": "checkbox",
+              "name": "cbAvoidLowSec",
+              "x": 30,
+              "y": 30,
+              "width": 360,
+              "height": 60,
+              "content": "Avoid Lowsec",
+              "contentContainer": {
+                "jsonTemplate": "evebotCheckboxContainer"
+              },
+              "tooltip": {
+                "jsonTemplate": "evebotTooltip",
+                "text": "If checked, avoid missions that go into low-sec."
+              },
+              "checkedBinding": {
+                "pullFormat": "${Script[EVEBot].VariableScope.Config.Missioneer.AvoidLowSec}",
+                "pushFormat": ["Script[EVEBot].VariableScope.Config.Missioneer:SetAvoidLowSec[", "]"]
+              }
+            },
+            {
+              "type": "textblock",
+              "name": "lblSmallHaulerLimit",
+              "x": 420,
+              "y": 39,
+              "width": 480,
+              "height": 54,
+              "text": "Small Hauler Limit",
+              "tooltip": {
+                "jsonTemplate": "evebotTooltip",
+                "text": "Will use the large hauler for missions above this limit."
+              },
+              "font": {
+                "height": 36
+              }
+            },
+            {
+              "type": "textbox",
+              "name": "tbSmallHaulerLimit",
+              "x": 900,
+              "y": 30,
+              "width": 150,
+              "height": 48,
+              "maxLength": 5,
+              "eventHandlers": {
+                "onLoad": {
+                  "type": "code",
+                  "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Missioneer.SmallHaulerLimit}]"
+                },
+                "onTextChanged": {
+                  "type": "code",
+                  "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetSmallHaulerLimit[${Int[${This.Text}]}]\n}"
+                }
+              },
+              "font": {
+                "height": 36
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

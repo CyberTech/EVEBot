@@ -2,18 +2,41 @@
 
 objectdef obj_EVEBotUI inherits obj_BaseClass
 {
-	variable string Skin = "EVESkin"
-	;variable string SkinFile = "EVESkin.xml"
-	variable string SkinFile = "eveskin/EVESkin.xml"
-
 	variable bool NeedToSetComboBox = FALSE
 	variable string ComboBoxValueToSet = ""
+	variable index:string UIFiles
 
 	method Initialize()
 	{
+		variable iterator UIFile
+
 		LogPrefix:Set["${This.ObjectName}"]
 
-		LGUI2:LoadPackageFile[interface/EVEBot.json]
+		;; Populate the index (list) of UIFiles.  The order does matter; typically, any new files should go right before "EVEBot.json"
+		UIFiles:Insert[interface/common.json]
+		UIFiles:Insert[interface/tabStatus.json]
+		UIFiles:Insert[interface/tabMain.json]
+		UIFiles:Insert[interface/tabMiner.json]
+		UIFiles:Insert[interface/tabCombat.json]
+		UIFiles:Insert[interface/tabHauler.json]
+		UIFiles:Insert[interface/tabLabels.json]
+		UIFiles:Insert[interface/tabFreighter.json]
+		UIFiles:Insert[interface/tabFleet.json]
+		UIFiles:Insert[interface/tabMissions.json]
+		UIFiles:Insert[interface/tabFleeing.json]
+		UIFiles:Insert[interface/EVEBot.json]
+
+		;; Load UI package files
+		UIFiles:GetIterator[UIFile]
+		do
+		{
+			LGUI2:LoadPackageFile[${UIFile.Value}]
+		}
+		while ${UIFile:Next(exists)}
+
+		; temp: Set to tab 2 (Main)
+		LGUI2.Element[EVEBotOptionsTab]:SelectTab[2]
+
 		This:LogSystemStats
 		This:CheckUIPosition
 
@@ -24,19 +47,42 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 
 	method Shutdown()
 	{
+		variable iterator UIFile
+
 		Event[EVENT_ONFRAME]:DetachAtom[This:Pulse]
-		LGUI2:UnloadPackageFile[interface/EVEBot.json]
+
+		;; Unload UI package files
+		UIFiles:GetIterator[UIFile]
+		do
+		{
+			LGUI2:UnloadPackageFile[${UIFile.Value}]
+		}
+		while ${UIFile:Next(exists)}
 	}
 
 	method Reload()
 	{
-		; LGUI2 doesn't have ReloadPackageFile - unload and reload instead
-		LGUI2:UnloadPackageFile[interface/EVEBot.json]
-		LGUI2:LoadPackageFile[interface/EVEBot.json]
+		variable iterator UIFile
+
+		;; LGUI2 does not have a "reload" function.  So, each package file must be unloaded and then loaded again.
+		UIFiles:GetIterator[UIFile]
+		do
+		{
+			LGUI2:UnloadPackageFile[${UIFile.Value}]
+		}
+		while ${UIFile:Next(exists)}
+
+		UIFiles:GetIterator[UIFile]
+		do
+		{
+			LGUI2:LoadPackageFile[${UIFile.Value}]
+		}
+		while ${UIFile:Next(exists)}
+
+		; temp:  Set to tab 2
+		LGUI2.Element[EVEBotOptionsTab]:SelectTab[2]
 
 		Logger:WriteQueue
-		; Don't call SetBehavioralComboBox here - let onLoad handle it
-		; This:SetBehavioralComboBox[${Config.Common.CurrentBehavior}]
 		This.Reloaded:Set[TRUE]
 	}
 

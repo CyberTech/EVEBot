@@ -1,0 +1,250 @@
+{
+  "$schema": "http://www.lavishsoft.com/schema/lgui2Package.json",
+  "templates": {
+    "tabLabels.content": {
+      "type": "panel",
+      "children": [
+        {
+          "type": "textblock",
+          "name": "Label1",
+          "x": 30,
+          "y": 30,
+          "width": 600,
+          "height": 30,
+          "text": "Bookmark Prefixes",
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "SafeSpotsLabel",
+          "x": 75,
+          "y": 75,
+          "width": 600,
+          "height": 30,
+          "text": "Safe Spots",
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "The prefix for safe spot bookmark names."
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textbox",
+          "name": "SafeSpotPrefix",
+          "x": 690,
+          "y": 75,
+          "width": 300,
+          "height": 48,
+          "maxLength": 10,
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Labels.SafeSpotPrefix}]"
+            },
+            "onTextChanged": {
+              "type": "code",
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Labels:SetSafeSpotPrefix[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Labels:SetSafeSpotPrefix[\"\"]\n}"
+            }
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "BeltBookMarkLabel",
+          "x": 75,
+          "y": 120,
+          "width": 600,
+          "height": 30,
+          "text": "Ore Belts",
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "The prefix for ore belt bookmark names."
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textbox",
+          "name": "BeltBookMarkPrefix",
+          "x": 690,
+          "y": 120,
+          "width": 300,
+          "height": 48,
+          "maxLength": 10,
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Labels.OreBeltPrefix}]"
+            },
+            "onTextChanged": {
+              "type": "code",
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Labels:SetOreBeltPrefix[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Labels:SetOreBeltPrefix[\"\"]\n}"
+            }
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "IceBeltBookMarkLabel",
+          "x": 75,
+          "y": 165,
+          "width": 600,
+          "height": 30,
+          "text": "Ice Belts",
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "The prefix for ice belt bookmark names."
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textbox",
+          "name": "IceBeltBookMarkPrefix",
+          "x": 690,
+          "y": 165,
+          "width": 300,
+          "height": 48,
+          "maxLength": 10,
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Labels.IceBeltPrefix}]"
+            },
+            "onTextChanged": {
+              "type": "code",
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Labels:SetIceBeltPrefix[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Labels:SetIceBeltPrefix[\"\"]\n}"
+            }
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "AmmoBookMarkLabel",
+          "x": 75,
+          "y": 210,
+          "width": 600,
+          "height": 30,
+          "text": "Ammo Supplies",
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "The prefix for Ammo bookmark names."
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textbox",
+          "name": "AmmoBookMarkPrefix",
+          "x": 690,
+          "y": 210,
+          "width": 300,
+          "height": 48,
+          "maxLength": 10,
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Labels.AmmoPrefix}]"
+            },
+            "onTextChanged": {
+              "type": "code",
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Labels:SetAmmoPrefix[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Labels:SetAmmoPrefix[\"\"]\n}"
+            }
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "UndockInstaTagLabel",
+          "x": 75,
+          "y": 255,
+          "width": 600,
+          "height": 30,
+          "text": "Tag for Undock Instas",
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "The string that undock insta bookmarks will contain. 1 space will be prepended and appended."
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textbox",
+          "name": "UndockInstaTag",
+          "x": 690,
+          "y": 255,
+          "width": 300,
+          "height": 48,
+          "maxLength": 10,
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Labels.InstaUndockTag}]"
+            },
+            "onTextChanged": {
+              "type": "code",
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Labels:InstaUndockTag[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Labels:InstaUndockTag[\"\"]\n}"
+            }
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "DockInstaTagLabel",
+          "x": 75,
+          "y": 300,
+          "width": 600,
+          "height": 30,
+          "text": "Tag for Dock Instas",
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "The string that dock insta bookmarks will contain. 1 space will be prepended and appended."
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textbox",
+          "name": "DockInstaTag",
+          "x": 690,
+          "y": 300,
+          "width": 300,
+          "height": 48,
+          "maxLength": 10,
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Labels.InstaDockTag}]"
+            },
+            "onTextChanged": {
+              "type": "code",
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Labels:InstaDockTag[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Labels:InstaDockTag[\"\"]\n}"
+            }
+          },
+          "font": {
+            "height": 36
+          }
+        }
+      ]
+    }
+  }
+}

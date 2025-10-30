@@ -1,0 +1,976 @@
+{
+  "$schema": "http://www.lavishsoft.com/schema/lgui2Package.json",
+  "templates": {
+    "tabMiner.content": {
+      "type": "panel",
+      "children": [
+        {
+          "type": "checkbox",
+          "name": "cbStripMine",
+          "x": 600,
+          "y": 30,
+          "height": 60,
+          "width": 300,
+          "content": "Strip Mine Area",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Strip Mine the immediate area to nothing before moving"
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.StripMine}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetStripMine[", "]"]
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbBookMarkLastPosition",
+          "x": 30,
+          "y": 90,
+          "height": 60,
+          "width": 300,
+          "content": "Bookmark Last Position",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Will bookmark the last mining location when the hold fills, and return to that spot after emptying the hold."
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.BookMarkLastPosition}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetBookMarkLastPosition[", "]"]
+          }
+        },
+        {
+          "type": "textbox",
+          "name": "MiningRangeMultipler",
+          "x": 600,
+          "y": 90,
+          "width": 135,
+          "height": 48,
+          "maxLength": 6,
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Miner.MiningRangeMultipler}]"
+            },
+            "onTextChanged": {
+              "type": "code",
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetMiningRangeMultipler[${This.Text}]\n}"
+            }
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "MiningRangeMultiplerText",
+          "x": 825,
+          "y": 90,
+          "width": 600,
+          "height": 54,
+          "text": "Mining Range Multipler",
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Maximum slowboat distance is mining range * this"
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textbox",
+          "name": "tbCargoThreshold",
+          "x": 600,
+          "y": 150,
+          "width": 195,
+          "height": 48,
+          "maxLength": 8,
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Miner.CargoThreshold}]"
+            },
+            "onTextChanged": {
+              "type": "code",
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetCargoThreshold[${This.Text}]\n}"
+            }
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "lbCargoThreshold",
+          "x": 825,
+          "y": 150,
+          "width": 600,
+          "height": 54,
+          "text": "Cargo Full Threshold",
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Cargo hold >= this value means cargo hold full"
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "cbJetCanNameText",
+          "x": 600,
+          "y": 210,
+          "width": 300,
+          "height": 54,
+          "text": "JetCan Name: ",
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "combobox",
+          "name": "cbJetCanName",
+          "x": 900,
+          "y": 210,
+          "width": 450,
+          "height": 45,
+          "font": {
+            "height": 36
+          },
+          "eventHandlers": {
+            "onSelectionChanged": {
+              "type": "code",
+              "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetJetCanNaming[${This.SelectedItem.Data.Get[text]}]\n}"
+            }
+          },
+          "popup": {
+            "type": "popup",
+            "minSize": [
+              0,
+              200
+            ],
+            "content": {
+              "type": "listbox",
+              "name": "cbJetCanNameList",
+              "width": 450,
+              "height": 60,
+              "font": {
+                "height": 36
+              },
+              "minSize": [
+                0,
+                200
+              ],
+              "items": [
+                {
+                  "type": "textblock",
+                  "text": "CorpTicker Time",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "CorpTicker:Time",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "CorpTicker_Time",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "CorpTicker.Time",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "CorpTicker",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Time",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "FirstName Time",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "FirstName",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "CharName",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Do Not Rename",
+                  "font": {
+                    "height": 36
+                  }
+                }
+              ],
+              "eventHandlers": {
+                "onItemSelected": {
+                  "type": "forward",
+                  "elementType": "combobox",
+                  "event": "onListBoxItemSelected"
+                },
+                "onItemDeselected": {
+                  "type": "forward",
+                  "elementType": "combobox",
+                  "event": "onListBoxItemDeselected"
+                },
+                "onSelectionChanged": {
+                  "type": "forward",
+                  "elementType": "combobox",
+                  "event": "onListBoxSelectionChanged"
+                }
+              }
+            },
+            "contentContainer": {
+              "jsonTemplate": "popup.panel",
+              "width": 450,
+              "height": 60,
+              "minSize": [
+                0,
+                200
+              ],
+              "type": "anchor",
+              "anchorToElement": {
+                "elementType": "combobox",
+                "elementTree": "logical",
+                "flags": "ancestor"
+              },
+              "clipToParent": false,
+              "anchorLocationFactor": [
+                0.0,
+                1.0
+              ]
+            }
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbDistributeLasers",
+          "x": 30,
+          "y": 150,
+          "height": 60,
+          "width": 300,
+          "content": "Distributed Laser Targeting",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "When checked only one laser will be activated per locked asteroid.  Uncheck to focus all lasers on a single asteroid.  In general, this should be checked."
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.DistributeLasers}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetDistributeLasers[", "]"]
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbUseFieldBookmarks",
+          "x": 30,
+          "y": 210,
+          "height": 60,
+          "width": 300,
+          "content": "Use Belt Bookmarks",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "When checked the miner will warp to asteroid belt bookmarks instead of the belts themselves.  See the labels Tab for bookmark prefix requirements."
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.UseFieldBookmarks}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetUseFieldBookmarks[", "]"]
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbMiningDrones",
+          "x": 30,
+          "y": 270,
+          "height": 60,
+          "width": 300,
+          "content": "Use Mining Drones ",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "When checked mining drones will be used instead of combat drones"
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.UseMiningDrones}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetUseMiningDrones[", "]"]
+          }
+        },
+        {
+          "type": "slider",
+          "name": "AvoidPlayerRange",
+          "x": 30,
+          "y": 330,
+          "width": 120,
+          "height": 54,
+          "minimum": 0,
+          "maximum": 100000,
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetValue[${Script[EVEBot].VariableScope.Config.Miner.AvoidPlayerRange}]"
+            },
+            "onValueChanged": {
+              "type": "code",
+              "code": "Script[EVEBot].VariableScope.Config.Miner:SetAvoidPlayerRange[${Int[${This.Value}]}];LGUI2.Element[AvoidPlayerRangeLabel]:SetText[\"Min. Distance to Players: ${EVEBot.MetersToKM_Str[${This.Value}]}\"]"
+            }
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "AvoidPlayerRangeLabel",
+          "x": 165,
+          "y": 330,
+          "width": 900,
+          "height": 30,
+          "text": "Min. Distance to Players: 0km",
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Minimum distance we will keep other players at"
+          },
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetText[\"Min. Distance to Players: ${EVEBot.MetersToKM_Str[${LGUI2.Element[AvoidPlayerRange].Value}]}\"]"
+            }
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbStandingDetection",
+          "x": 30,
+          "y": 390,
+          "height": 60,
+          "width": 300,
+          "content": "Mine Alone: Standing Detection",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "When checked you will move to another field when and if a player enters yours and is below the standing you set. (Doesn't Include Gang Members)"
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.StandingDetection}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetStandingDetection[", "]"]
+          }
+        },
+        {
+          "type": "combobox",
+          "name": "cbLowestStanding",
+          "x": 630,
+          "y": 390,
+          "width": 150,
+          "height": 45,
+          "font": {
+            "height": 36
+          },
+          "eventHandlers": {
+            "onSelectionChanged": {
+              "type": "code",
+              "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetLowestStanding[${This.SelectedItem.Data.Get[text]}]\n}"
+            }
+          },
+          "popup": {
+            "type": "popup",
+            "minSize": [
+              0,
+              200
+            ],
+            "content": {
+              "type": "listbox",
+              "name": "cbLowestStandingList",
+              "width": 150,
+              "height": 60,
+              "font": {
+                "height": 36
+              },
+              "minSize": [
+                0,
+                200
+              ],
+              "items": [
+                {
+                  "type": "textblock",
+                  "text": "-11",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "-10",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "-5",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "0",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "5",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "10",
+                  "font": {
+                    "height": 36
+                  }
+                }
+              ],
+              "eventHandlers": {
+                "onItemSelected": {
+                  "type": "forward",
+                  "elementType": "combobox",
+                  "event": "onListBoxItemSelected"
+                },
+                "onItemDeselected": {
+                  "type": "forward",
+                  "elementType": "combobox",
+                  "event": "onListBoxItemDeselected"
+                },
+                "onSelectionChanged": {
+                  "type": "forward",
+                  "elementType": "combobox",
+                  "event": "onListBoxSelectionChanged"
+                }
+              }
+            },
+            "contentContainer": {
+              "jsonTemplate": "popup.panel",
+              "width": 150,
+              "height": 60,
+              "minSize": [
+                0,
+                200
+              ],
+              "type": "anchor",
+              "anchorToElement": {
+                "elementType": "combobox",
+                "elementTree": "logical",
+                "flags": "ancestor"
+              },
+              "clipToParent": false,
+              "anchorLocationFactor": [
+                0.0,
+                1.0
+              ]
+            }
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbMasterMinerMode",
+          "x": 1200,
+          "y": 390,
+          "height": 60,
+          "width": 300,
+          "content": "Group Master ",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "When checked this will be the master in group mining, You should only have one master"
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.MasterMode}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetMasterMode[", "]"]
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbIceMining",
+          "x": 30,
+          "y": 450,
+          "height": 60,
+          "width": 300,
+          "content": "Ice Mining",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Check to mine ICE Fields instead of Asteroid Fields."
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.IceMining}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetIceMining[", "]"]
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbGroupMinerMode",
+          "x": 1200,
+          "y": 450,
+          "height": 60,
+          "width": 300,
+          "content": "Group Mode ",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "When checked will tell evebot to mine as a group"
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.GroupMode}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetGroupMode[", "]"]
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbOrcaWrecks",
+          "x": 900,
+          "y": 450,
+          "height": 60,
+          "width": 300,
+          "content": "Loot wrecks ",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "When checked this will have your orca tractor and loot wrecks (Must have a tractor beam)"
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.OrcaTractorLoot}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetOrcaTractorLoot[", "]"]
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbGroupMinerModeKeepRange",
+          "x": 1200,
+          "y": 510,
+          "height": 60,
+          "width": 300,
+          "content": "Keep Range ",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "When checked will tell evebot to stay within range of specific person listed below"
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.GroupModeAtRange}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetGroupModeAtRange[", "]"]
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "MinimumSecurityStatusLabel",
+          "x": 30,
+          "y": 510,
+          "width": 750,
+          "height": 54,
+          "text": "Min. Security Status",
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textbox",
+          "name": "MinimumSecurityStatus",
+          "x": 525,
+          "y": 504,
+          "width": 135,
+          "height": 48,
+          "maxLength": 6,
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Move to another field when a player enters yours and is below the security status you set"
+          },
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Miner.MinimumSecurityStatus}]"
+            },
+            "onTextChanged": {
+              "type": "code",
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetMinimumSecurityStatus[${This.Text}]\n}"
+            }
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbCompressOreMode",
+          "x": 900,
+          "y": 510,
+          "height": 60,
+          "width": 300,
+          "content": "Compress Ore",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "When this is checked miners will attempt to compress ore"
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.CompressOreMode}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetCompressOreMode[", "]"]
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbGroupMinerModeKeepBoostRange",
+          "x": 1200,
+          "y": 570,
+          "height": 60,
+          "width": 300,
+          "content": "Keep Boost Range ",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "When checked will tell evebot to stay within boost range of the master"
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.GroupModeAtBoostRange}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetGroupModeAtBoostRange[", "]"]
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "DeliveryLocationTypeLabel",
+          "x": 30,
+          "y": 570,
+          "width": 750,
+          "height": 54,
+          "text": "ORE Delivery Configuration",
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbSoloCompressOreMode",
+          "x": 900,
+          "y": 570,
+          "height": 60,
+          "width": 300,
+          "content": "Solo Compress Ore",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "When this is checked, someone not running evebot is running compression"
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.SoloCompressOreMode}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetSoloCompressOreMode[", "]"]
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "DeliveryLocationTypeText",
+          "x": 45,
+          "y": 630,
+          "width": 330,
+          "height": 54,
+          "text": "Location Type",
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Type of the destination to delivery to, such as POS, Station, Outpost, etc"
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "combobox",
+          "name": "DeliveryLocationType",
+          "x": 405,
+          "y": 630,
+          "width": 450,
+          "height": 45,
+          "font": {
+            "height": 36
+          },
+          "eventHandlers": {
+            "onSelectionChanged": {
+              "type": "code",
+              "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetDeliveryLocationType[${This.SelectedItem.Data.Get[text]}]\n\tScript[EVEBot].VariableScope.Config.Miner:SetDeliveryLocationTypeName[${This.SelectedItem.Data.Get[text]}]\n}"
+            }
+          },
+          "popup": {
+            "type": "popup",
+            "minSize": [
+              0,
+              200
+            ],
+            "content": {
+              "type": "listbox",
+              "name": "DeliveryLocationTypeList",
+              "width": 450,
+              "height": 60,
+              "font": {
+                "height": 36
+              },
+              "minSize": [
+                0,
+                200
+              ],
+              "items": [
+                {
+                  "type": "textblock",
+                  "text": "Station",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Hangar Array",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Jetcan",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "XLarge Ship Assembly Array",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Large Ship Assembly Array",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Orca",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "No Delivery",
+                  "font": {
+                    "height": 36
+                  }
+                },
+                {
+                  "type": "textblock",
+                  "text": "Compression Array",
+                  "font": {
+                    "height": 36
+                  }
+                }
+              ],
+              "eventHandlers": {
+                "onItemSelected": {
+                  "type": "forward",
+                  "elementType": "combobox",
+                  "event": "onListBoxItemSelected"
+                },
+                "onItemDeselected": {
+                  "type": "forward",
+                  "elementType": "combobox",
+                  "event": "onListBoxItemDeselected"
+                },
+                "onSelectionChanged": {
+                  "type": "forward",
+                  "elementType": "combobox",
+                  "event": "onListBoxSelectionChanged"
+                }
+              }
+            },
+            "contentContainer": {
+              "jsonTemplate": "popup.panel",
+              "width": 450,
+              "height": 60,
+              "minSize": [
+                0,
+                200
+              ],
+              "type": "anchor",
+              "anchorToElement": {
+                "elementType": "combobox",
+                "elementTree": "logical",
+                "flags": "ancestor"
+              },
+              "clipToParent": false,
+              "anchorLocationFactor": [
+                0.0,
+                1.0
+              ]
+            }
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbSafeJetcan",
+          "x": 900,
+          "y": 630,
+          "height": 60,
+          "width": 300,
+          "content": "Safe Jetcan ",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "When checked this will force your miners to wait until the pilot specified in Location Name is within 20km before dropping a jetcan."
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.SafeJetcan}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetSafeJetcan[", "]"]
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "DeliveryLocationText",
+          "x": 45,
+          "y": 675,
+          "width": 330,
+          "height": 54,
+          "text": "Location Name",
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Either enter the delivery location here, or it will default to the last station we undock at"
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textbox",
+          "name": "DeliveryLocation",
+          "x": 405,
+          "y": 675,
+          "width": 1050,
+          "height": 48,
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Miner.DeliveryLocation}]"
+            },
+            "onTextChanged": {
+              "type": "code",
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetDeliveryLocation[${This.Text}]\n}"
+            }
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "PanicLocationLabel",
+          "x": 30,
+          "y": 750,
+          "width": 750,
+          "height": 54,
+          "text": "Panic Location",
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Station bookmark where you want to dock if something goes terribly wrong.  Can be in a different system."
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textbox",
+          "name": "PanicLocation",
+          "x": 405,
+          "y": 750,
+          "width": 1050,
+          "height": 48,
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Miner.PanicLocation}]"
+            },
+            "onTextChanged": {
+              "type": "code",
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetPanicLocation[${This.Text}]\n}"
+            }
+          },
+          "font": {
+            "height": 36
+          }
+        }
+      ]
+    }
+  }
+}

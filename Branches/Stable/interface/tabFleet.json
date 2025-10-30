@@ -1,0 +1,204 @@
+{
+  "$schema": "http://www.lavishsoft.com/schema/lgui2Package.json",
+  "templates": {
+    "tabFleet.content": {
+      "type": "panel",
+      "children": [
+        {
+          "type": "checkbox",
+          "name": "cbUseFleet",
+          "x": 30,
+          "y": 36,
+          "width": 450,
+          "height": 60,
+          "content": "Manage Fleet",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "If checked, Evebot will manage your fleet"
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Fleet.ManageFleet}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Fleet:SetManageFleet[", "]"]
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbIsLeader",
+          "x": 30,
+          "y": 126,
+          "width": 450,
+          "height": 60,
+          "content": "I am the leader",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "If checked, this character will invite your fleet.  Don't set more than one!"
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Fleet.IsLeader}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Fleet:SetIsLeader[", "]"]
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "label2",
+          "x": 690,
+          "y": 54,
+          "width": 600,
+          "height": 54,
+          "text": "Accept invites from",
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textbox",
+          "name": "tbFleetLeader",
+          "x": 1170,
+          "y": 48,
+          "width": 450,
+          "height": 48,
+          "maxLength": 50,
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Fleet.FleetLeader}]"
+            },
+            "onTextChanged": {
+              "type": "code",
+              "code": "Script[EVEBot].VariableScope.Config.Fleet:SetFleetLeader[${This.Text}]"
+            }
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "Label1",
+          "x": 420,
+          "y": 138,
+          "width": 600,
+          "height": 30,
+          "text": "Manage Fleet Member",
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Use this to add members to your fleet.  They must be in your corporation or in your contacts list."
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textbox",
+          "name": "tbAddFleetMember",
+          "x": 900,
+          "y": 120,
+          "width": 600,
+          "height": 48,
+          "maxLength": 50,
+          "eventHandlers": {
+            "onTextChanged": {
+              "type": "code",
+              "code": "if ${Script[EVEBot].VariableScope.Config.Fleet.IsWing[\"${This.Text.Escape}\"]}\n\tLGUI2.Element[cbWing]:SetChecked\nelse\n\tLGUI2.Element[cbWing]:UnsetChecked"
+            }
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "button",
+          "name": "AddFleetMember",
+          "x": 1515,
+          "y": 123,
+          "width": 40,
+          "height": 48,
+          "content": "+",
+          "eventHandlers": {
+            "onChecked": {
+              "type": "code",
+              "code": "Script[EVEBot].VariableScope.Config.Fleet:SetIsLeader[TRUE]\nif TRUE\n{\n\tLGUI2.Element[tbFleetLeader]:SetText[]\n}"
+            },
+            "onUnchecked": {
+              "type": "code",
+              "code": "Script[EVEBot].VariableScope.Config.Fleet:SetIsLeader[FALSE]\nif FALSE\n{\n\tLGUI2.Element[tbFleetLeader]:SetText[]\n}"
+            }
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "button",
+          "name": "RemoveFleetMember",
+          "x": 1575,
+          "y": 123,
+          "width": 40,
+          "height": 48,
+          "content": "-",
+          "eventHandlers": {
+            "onChecked": {
+              "type": "code",
+              "code": "Script[EVEBot].VariableScope.Config.Fleet:SetIsLeader[TRUE]\nif TRUE\n{\n\tLGUI2.Element[tbFleetLeader]:SetText[]\n}"
+            },
+            "onUnchecked": {
+              "type": "code",
+              "code": "Script[EVEBot].VariableScope.Config.Fleet:SetIsLeader[FALSE]\nif FALSE\n{\n\tLGUI2.Element[tbFleetLeader]:SetText[]\n}"
+            }
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbWing",
+          "x": 1350,
+          "y": 195,
+          "width": 270,
+          "height": 60,
+          "content": "Wing 2",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "If checked, this character will be moved to Wing 2.  Used for people you don't want warped with your fleet."
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Fleet.WingOne}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Fleet:SetWingOne[", "]"]
+          }
+        },
+        {
+          "type": "listbox",
+          "name": "FleetMembers",
+          "x": 30,
+          "y": 270,
+          "width": 1590,
+          "height": 525,
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "These characters will be added to your fleet if EVEBot can find them in your Corporation or Contacts and \"I am Leader\" is checked."
+          },
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "Script[EVEBot].VariableScope.Config.Fleet:RefreshFleetMembers\nvariable iterator InfoFromSettings\nScript[EVEBot].VariableScope.Config.Fleet.FleetMembers:GetIterator[InfoFromSettings]\nif ${InfoFromSettings:First(exists)}\n{\n\tdo\n\t{\n\t\tThis:AddItem[${InfoFromSettings.Value.FleetMemberName}]\n\t}\n\twhile ${InfoFromSettings:Next(exists)}\n}"
+            },
+            "onSelectionChanged": {
+              "type": "code",
+              "code": "LGUI2.Element[tbAddFleetMember]:SetText[${This.SelectedItem.Data.Get[text]}]\nif ${Script[EVEBot].VariableScope.Config.Fleet.IsWing[${LGUI2.Element[tbAddFleetMember].Text}]}\n\tLGUI2.Element[cbWing]:SetChecked\nelse\n\tLGUI2.Element[cbWing]:UnsetChecked"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

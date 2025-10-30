@@ -1,0 +1,270 @@
+{
+  "$schema": "http://www.lavishsoft.com/schema/lgui2Package.json",
+  "templates": {
+    "tabStatus.content": {
+      "type": "panel",
+        "children": [
+          {
+            "type": "button",
+            "name": "SaveConfig",
+            "x": 1120,
+            "y": 30,
+            "width": 200,
+            "height": 60,
+            "content": "Save Config",
+            "eventHandlers": {
+              "onPress": {
+                "type": "code",
+                "code": "Script[EVEBot].VariableScope.Config:Save"
+              }
+            },
+            "font": {
+              "height": 36
+            }
+          },
+          {
+            "type": "button",
+            "name": "BroadcastBreak",
+            "x": 1350,
+            "y": 30,
+            "width": 250,
+            "height": 60,
+            "content": "Broadcast Break",
+            "eventHandlers": {
+              "onPress": {
+                "type": "code",
+                "code": "relay all -event EVEBot_HARDSTOP \"${Me.Name} - ${Script[EVEBot].VariableScope.Config.Common.CurrentBehavior} - Broadcast Break Button\";Script[EVEBot].VariableScope.Logger:Log[\"Broadcast Break button forcing break!!!\", LOG_MINOR]"
+              }
+            },
+            "font": {
+              "height": 36
+            }
+          },
+          {
+            "type": "button",
+            "name": "BroadcastResume",
+            "x": 1350,
+            "y": 100,
+            "width": 250,
+            "height": 60,
+            "content": "Broadcast Resume",
+            "eventHandlers": {
+              "onPress": {
+                "type": "code",
+                "code": "Social.NextBreak:Set[0];Social.OnBreak:Set[FALSE];relay all -event EVEBot_ABORTHARDSTOP;Script[EVEBot].VariableScope.Logger:Log[\"Broadcast resume button resuming from break!!!\", LOG_MINOR]"
+              }
+            },
+            "font": {
+              "height": 36
+            }
+          },
+          {
+            "type": "button",
+            "name": "BroadcastRun",
+            "x": 1350,
+            "y": 170,
+            "width": 250,
+            "height": 60,
+            "content": "Broadcast Run",
+            "eventHandlers": {
+              "onPress": {
+                "type": "code",
+                "code": "relay all EVEBot:Resume[\"Resume via UI BroadcastRun\"]"
+              }
+            },
+            "font": {
+              "height": 36
+            }
+          },
+          {
+            "type": "textblock",
+            "name": "script_runtime",
+            "x": 30,
+            "y": 30,
+            "width": 345,
+            "height": 60,
+            "text": "Script Runtime:",
+            "font": {
+              "height": 36
+            }
+          },
+          {
+            "type": "textblock",
+            "name": "script_runtime_data",
+            "x": 450,
+            "y": 30,
+            "width": 300,
+            "height": 60,
+            "text": "${EVEBot.Runtime}",
+            "font": {
+              "height": 36
+            }
+          },
+          {
+            "type": "textblock",
+            "name": "state",
+            "x": 30,
+            "y": 75,
+            "width": 300,
+            "height": 60,
+            "text": "Action:",
+            "font": {
+              "height": 36
+            }
+          },
+          {
+            "type": "textblock",
+            "name": "state_data",
+            "x": 450,
+            "y": 75,
+            "width": 300,
+            "height": 60,
+            "text": "${Script[EVEBot].VariableScope.Config.Common.CurrentBehavior}",
+            "font": {
+              "height": 36
+            }
+          },
+          {
+            "type": "textblock",
+            "name": "Currently Training",
+            "x": 30,
+            "y": 120,
+            "width": 525,
+            "height": 60,
+            "text": "Currently Training:",
+            "font": {
+              "height": 36
+            }
+          },
+          {
+            "type": "textblock",
+            "name": "CurrentlyTrainingDATA",
+            "x": 450,
+            "y": 120,
+            "width": 450,
+            "height": 60,
+            "text": "${Script[EVEBot].VariableScope.Skills.CurrentlyTrainingSkill}",
+            "font": {
+              "height": 36
+            }
+          },
+          {
+            "type": "textblock",
+            "name": "Next to be trained",
+            "x": 30,
+            "y": 165,
+            "width": 525,
+            "height": 60,
+            "text": "Next Queued:",
+            "font": {
+              "height": 36
+            }
+          },
+          {
+            "type": "textblock",
+            "name": "nexttobetrainedDATA",
+            "x": 450,
+            "y": 165,
+            "width": 450,
+            "height": 60,
+            "text": "${Script[EVEBot].VariableScope.Skills.NextInLine}",
+            "font": {
+              "height": 36
+            }
+          },
+          {
+            "type": "textblock",
+            "name": "Current Timestamp",
+            "x": 30,
+            "y": 240,
+            "width": 525,
+            "height": 60,
+            "text": "Current Timestamp:",
+            "font": {
+              "height": 36
+            }
+          },
+          {
+            "type": "textblock",
+            "name": "CurrentTimestampDATA",
+            "x": 450,
+            "y": 240,
+            "width": 450,
+            "height": 60,
+            "text": "${Script[EVEBot].VariableScope.Social.CurrentTime}",
+            "font": {
+              "height": 36
+            }
+          },
+          {
+            "type": "textblock",
+            "name": "Next Break",
+            "x": 30,
+            "y": 285,
+            "width": 525,
+            "height": 60,
+            "text": "Next Break:",
+            "font": {
+              "height": 36
+            }
+          },
+          {
+            "type": "textblock",
+            "name": "NextBreakDATA",
+            "x": 450,
+            "y": 285,
+            "width": 450,
+            "height": 60,
+            "text": "${Script[EVEBot].VariableScope.Social.NextBreakTime}",
+            "font": {
+              "height": 36
+            }
+          },
+          {
+            "type": "textblock",
+            "name": "Break Over",
+            "x": 30,
+            "y": 330,
+            "width": 525,
+            "height": 60,
+            "text": "Break Over:",
+            "font": {
+              "height": 36
+            }
+          },
+          {
+            "type": "textblock",
+            "name": "BreakOverDATA",
+            "x": 450,
+            "y": 330,
+            "width": 450,
+            "height": 60,
+            "text": "${Script[EVEBot].VariableScope.Social.RestartTime}",
+            "font": {
+              "height": 36
+            }
+          },
+          {
+            "type": "textbox",
+            "name": "StatusConsole",
+            "text": "Loading...",
+            "x": 15,
+            "y": 400,
+            "margin": [ 5, 2, 5, 2 ],
+            "width": 1600,
+            "height": 345,
+            "multiline": true,
+            "readOnly": true,
+            "horizontalAlignment": "stretch",
+            "style": {
+              "backgroundColor": "#000000",
+              "color": "#FFFFFF"
+            },
+            "font": {
+              "height": 36
+            }
+          }
+        ]
+    }
+  }
+}

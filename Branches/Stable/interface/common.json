@@ -1,0 +1,245 @@
+{
+  "$schema": "http://www.lavishsoft.com/schema/lgui2Package.json",
+  "templates": {
+    "evebotTooltip": {
+        "type": "textblock",
+        "font": {
+          "face": "Segoe UI Italic",
+          "height": 36
+        },
+        "color": "#FFE4B5"
+    },
+    "evebotCheckboxContainer": {
+      "type": "stackpanel",
+      "orientation": "horizontal",
+      "children": [
+        {
+          "type": "border",
+          "borderThickness": 1,
+          "borderBrush": "white",
+          "maintainAspectRatio": 1.0,
+          "font": {
+            "bold": true,
+            "height": 28
+          },
+          "child": {
+            "type": "textblock",
+            "horizontalAlignment": "center",
+            "verticalAlignment": "center",
+            "text": " "
+          },
+          "verticalAlignment": "center",
+          "margin": [0, 0, 5, 0],
+          "hooks": {
+            "onUnchecked": {
+              "elementType": "checkbox",
+              "event": "onUnchecked",
+              "eventHandler": {
+                "type": "style",
+                "styleName": "onUnchecked"
+              }
+            },
+            "onChecked": {
+              "elementType": "checkbox",
+              "event": "onChecked",
+              "eventHandler": {
+                "type": "style",
+                "styleName": "onChecked"
+              }
+            }
+          },
+          "styles": {
+            "onUnchecked": {
+              "child": {
+                "type": "textblock",
+                "horizontalAlignment": "center",
+                "verticalAlignment": "center",
+                "text": " "
+              }
+            },
+            "onChecked": {
+              "child": {
+                "type": "textblock",
+                "horizontalAlignment": "center",
+                "verticalAlignment": "center",
+                "text": "🗸",
+                "color": "#00ff00"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "evebotTitleBar": {
+      "type": "dockpanel",
+      "children": [
+        {
+          "type": "button",
+          "name": "Run EVEBot",
+          "borderThickness": 2,
+          "content": "RUN",
+          "width": 100,
+          "font": {
+            "face": "Segoe UI",
+            "height": 48
+          },
+          "color": "#00FF00",
+          "padding": 4,
+          "_dock": "left",
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Run EVEBot"
+          },
+          "eventHandlers": {
+            "onPress": {
+              "type": "code",
+              "code": "EVEBot:Resume[\"Clicked Run\"]"
+            }
+          }
+        },
+        {
+          "type": "button",
+          "name": "Pause EVEBot",
+          "borderThickness": 2,
+          "content": "PAUSE",
+          "width": 140,
+          "font": {
+            "face": "Segoe UI",
+            "height": 48
+          },
+          "color": "#FFFF00",
+          "padding": 4,
+          "margin": [
+            15,
+            0,
+            0,
+            0
+          ],
+          "_dock": "left",
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Pause EVEBot"
+          },
+          "eventHandlers": {
+            "onPress": {
+              "type": "code",
+              "code": "EVEBot:Pause[\"Clicked Pause\"]"
+            }
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "EVEBot_TitleBar_Title",
+          "text": "${Script[EVEBot].VariableScope.AppVersion}",
+          "verticalAlignment": "center",
+          "margin": [
+            20,
+            0,
+            0,
+            0
+          ],
+          "font": {
+            "face": "Segoe UI",
+            "height": 60,
+            "bold": true
+          },
+          "color": "#00FFFF",
+          "_dock": "left",
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetText[${Script[EVEBot].VariableScope.AppVersion}]"
+            }
+          }
+        },
+        {
+          "type": "button",
+          "name": "Close",
+          "borderThickness": 2,
+          "content": "X",
+          "width": 60,
+          "font": {
+            "face": "Segoe UI",
+            "height": 48
+          },
+          "padding": 4,
+          "_dock": "right",
+          "eventHandlers": {
+            "onMouseButtonMove": {
+              "type": "forward",
+              "elementType": "window",
+              "event": "onCloseButtonClick"
+            }
+          }
+        },
+        {
+          "type": "button",
+          "name": "Maximize",
+          "borderThickness": 2,
+          "content": "^",
+          "width": 60,
+          "font": {
+            "face": "Segoe UI",
+            "height": 48
+          },
+          "padding": 4,
+          "margin": [
+            0,
+            0,
+            8,
+            0
+          ],
+          "_dock": "right",
+          "eventHandlers": {
+            "onPress": {
+              "type": "code",
+              "code": "LGUI2.Element[TitleBotStatus]:Hide;LGUI2.Element[TitleBotXPStatus]:Hide;LGUI2.Element[TitleBotXPCap]:Hide;LGUI2.Element[TitleBotStatusCap]:Hide"
+            }
+          }
+        },
+        {
+          "type": "button",
+          "name": "Minimize",
+          "borderThickness": 2,
+          "content": "-",
+          "width": 60,
+          "font": {
+            "face": "Segoe UI",
+            "height": 48
+          },
+          "padding": 4,
+          "margin": [
+            0,
+            0,
+            8,
+            0
+          ],
+          "_dock": "right",
+          "eventHandlers": {
+            "onPress": {
+              "type": "code",
+              "code": "LGUI2.Element[TitleBotStatus]:Show;LGUI2.Element[TitleBotStatusCap]:Show;LGUI2.Element[TitleBotXPStatus]:Show;LGUI2.Element[TitleBotXPCap]:Show"
+            }
+          }
+        }
+      ],
+      "eventHandlers": {
+        "onMouseMove": {
+          "type": "forward",
+          "elementType": "window",
+          "event": "onHeaderMouseMove"
+        },
+        "lostMouseFocus": {
+          "type": "forward",
+          "elementType": "window",
+          "event": "onHeaderLostMouseFocus"
+        },
+        "onMouseButtonMove": {
+          "type": "forward",
+          "elementType": "window",
+          "event": "onHeaderMouseButtonMove"
+        }
+      }
+    }
+  }
+}
