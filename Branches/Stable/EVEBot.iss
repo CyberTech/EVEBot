@@ -243,9 +243,20 @@ function main()
 		}
 	}
 
-	; Set the combobox after UI loads (needs to wait for itemsBinding to populate)
+	; Set the comboboxes after UI loads (needs to wait for itemsBinding to populate)
 	; Called here because wait commands work in this part of main()
 	UI:SetBehavioralComboBoxWhenReady[${Config.Common.CurrentBehavior}]
+	UI:SetJetCanComboBoxWhenReady[${Config.Miner.JetCanNaming}]
+	UI:SetCurrentAnomTypeComboBoxWhenReady[${Config.Combat.CurrentAnomType}]
+	UI:SetLowestStandingCombatComboBoxWhenReady[${Config.Combat.LowestStanding}]
+	UI:SetSafeCooldownComboBoxWhenReady[${Config.Combat.SafeCooldown}]
+	UI:SetBreakDurationComboBoxWhenReady[${Config.Combat.BreakDuration}]
+	UI:SetTimeBetweenBreaksComboBoxWhenReady[${Config.Combat.TimeBetweenBreaks}]
+	UI:SetFreighterModeComboBoxWhenReady[${Config.Freighter.FreighterMode}]
+	UI:SetHaulerModeComboBoxWhenReady[${Config.Hauler.HaulerMode}]
+	UI:SetLowestStandingMinerComboBoxWhenReady[${Config.Miner.LowestStanding}]
+	UI:SetDeliveryLocationTypeComboBoxWhenReady[${Config.Miner.DeliveryLocationType}]
+	UI:SetSalvageModeComboBoxWhenReady[${Config.Missioneer.SalvageMode}]
 
 	EVEBot.Loaded:Set[TRUE]
 	Logger:Log["${APP_NAME} behavior set to ${Config.Common.CurrentBehavior}", LOG_ECHOTOO]

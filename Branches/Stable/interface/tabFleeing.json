@@ -197,7 +197,7 @@
                     "eventHandlers": {
                       "onSelectionChanged": {
                         "type": "code",
-                        "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetLowestStanding[${This.SelectedItem.Data.Get[text]}]\n}"
+                        "code": "Script[EVEBot].VariableScope.UI:OnLowestStandingCombatComboBoxChanged[]"
                       }
                     },
                     "popup": {
@@ -477,7 +477,7 @@
                     "eventHandlers": {
                       "onSelectionChanged": {
                         "type": "code",
-                        "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetSafeCooldown[${This.SelectedItem.Data.Get[text]}]\n}"
+                        "code": "Script[EVEBot].VariableScope.UI:OnSafeCooldownComboBoxChanged[]"
                       }
                     },
                     "popup": {
@@ -618,7 +618,7 @@
                     "eventHandlers": {
                       "onSelectionChanged": {
                         "type": "code",
-                        "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetBreakDuration[${This.SelectedItem.Data.Get[text]}]\n}"
+                        "code": "Script[EVEBot].VariableScope.UI:OnBreakDurationComboBoxChanged[]"
                       }
                     },
                     "popup": {
@@ -708,7 +708,7 @@
                     "eventHandlers": {
                       "onSelectionChanged": {
                         "type": "code",
-                        "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetTimeBetweenBreaks[${This.SelectedItem.Data.Get[text]}]\n}"
+                        "code": "Script[EVEBot].VariableScope.UI:OnTimeBetweenBreaksComboBoxChanged[]"
                       }
                     },
                     "popup": {

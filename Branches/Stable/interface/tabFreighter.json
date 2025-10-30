@@ -29,7 +29,7 @@
           "eventHandlers": {
             "onSelectionChanged": {
               "type": "code",
-              "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tScript[EVEBot].VariableScope.Config.Freighter:SetFreighterMode[${This.SelectedItem.Data.Get[text]}]\n\tScript[EVEBot].VariableScope.Config.Freighter:SetFreighterModeName[${This.SelectedItem.Data.Get[text]}]\n}"
+              "code": "Script[EVEBot].VariableScope.UI:OnFreighterModeComboBoxChanged[]"
             }
           },
           "popup": {

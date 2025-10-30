@@ -205,7 +205,7 @@
           "eventHandlers": {
             "onSelectionChanged": {
               "type": "code",
-              "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetJetCanNaming[${This.SelectedItem.Data.Get[text]}]\n}"
+              "code": "Script[EVEBot].VariableScope.UI:OnJetCanComboBoxChanged[]"
             }
           },
           "popup": {
@@ -427,7 +427,7 @@
           "eventHandlers": {
             "onSelectionChanged": {
               "type": "code",
-              "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetLowestStanding[${This.SelectedItem.Data.Get[text]}]\n}"
+              "code": "Script[EVEBot].VariableScope.UI:OnLowestStandingMinerComboBoxChanged[]"
             }
           },
           "popup": {
@@ -771,7 +771,7 @@
           "eventHandlers": {
             "onSelectionChanged": {
               "type": "code",
-              "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetDeliveryLocationType[${This.SelectedItem.Data.Get[text]}]\n\tScript[EVEBot].VariableScope.Config.Miner:SetDeliveryLocationTypeName[${This.SelectedItem.Data.Get[text]}]\n}"
+              "code": "Script[EVEBot].VariableScope.UI:OnDeliveryLocationTypeComboBoxChanged[]"
             }
           },
           "popup": {

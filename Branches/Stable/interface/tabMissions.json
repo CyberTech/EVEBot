@@ -326,7 +326,7 @@
               "eventHandlers": {
                 "onSelectionChanged": {
                   "type": "code",
-                  "code": "if ${This.SelectedItem.Data.Get[text].NotNULLOrEmpty}\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetSalvageMode[${This.SelectedItem.Data.Get[text]}]\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetSalvageModeName[${This.SelectedItem.Data.Get[text]}]\n}"
+                  "code": "Script[EVEBot].VariableScope.UI:OnSalvageModeComboBoxChanged[]"
                 }
               },
               "popup": {
