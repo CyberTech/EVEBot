@@ -26,6 +26,26 @@
         },
         {
           "type": "checkbox",
+          "name": "cbIceMining",
+          "x": 600,
+          "y": 10,
+          "height": 60,
+          "width": 300,
+          "content": "Ice Mining",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Check to mine ICE Fields instead of Asteroid Fields."
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.IceMining}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetIceMining[", "]"]
+          }
+        },
+        {
+          "type": "checkbox",
           "name": "cbBookMarkLastPosition",
           "x": 10,
           "y": 80,
@@ -514,69 +534,9 @@
         },
         {
           "type": "checkbox",
-          "name": "cbMasterMinerMode",
-          "x": 1200,
-          "y": 390,
-          "height": 60,
-          "width": 300,
-          "content": "Group Master ",
-          "contentContainer": {
-            "jsonTemplate": "evebotCheckboxContainer"
-          },
-          "tooltip": {
-            "jsonTemplate": "evebotTooltip",
-            "text": "When checked this will be the master in group mining, You should only have one master"
-          },
-          "checkedBinding": {
-            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.MasterMode}",
-            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetMasterMode[", "]"]
-          }
-        },
-        {
-          "type": "checkbox",
-          "name": "cbIceMining",
-          "x": 30,
-          "y": 450,
-          "height": 60,
-          "width": 300,
-          "content": "Ice Mining",
-          "contentContainer": {
-            "jsonTemplate": "evebotCheckboxContainer"
-          },
-          "tooltip": {
-            "jsonTemplate": "evebotTooltip",
-            "text": "Check to mine ICE Fields instead of Asteroid Fields."
-          },
-          "checkedBinding": {
-            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.IceMining}",
-            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetIceMining[", "]"]
-          }
-        },
-        {
-          "type": "checkbox",
-          "name": "cbGroupMinerMode",
-          "x": 1200,
-          "y": 450,
-          "height": 60,
-          "width": 300,
-          "content": "Group Mode ",
-          "contentContainer": {
-            "jsonTemplate": "evebotCheckboxContainer"
-          },
-          "tooltip": {
-            "jsonTemplate": "evebotTooltip",
-            "text": "When checked will tell evebot to mine as a group"
-          },
-          "checkedBinding": {
-            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.GroupMode}",
-            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetGroupMode[", "]"]
-          }
-        },
-        {
-          "type": "checkbox",
           "name": "cbOrcaWrecks",
           "x": 900,
-          "y": 450,
+          "y": 390,
           "height": 60,
           "width": 300,
           "content": "Loot wrecks ",
@@ -594,32 +554,32 @@
         },
         {
           "type": "checkbox",
-          "name": "cbGroupMinerModeKeepRange",
+          "name": "cbMasterMinerMode",
           "x": 1200,
-          "y": 510,
+          "y": 390,
           "height": 60,
           "width": 300,
-          "content": "Keep Range ",
+          "content": "Group Master",
           "contentContainer": {
             "jsonTemplate": "evebotCheckboxContainer"
           },
           "tooltip": {
             "jsonTemplate": "evebotTooltip",
-            "text": "When checked will tell evebot to stay within range of specific person listed below"
+            "text": "When checked this will be the master in group mining, You should only have one master"
           },
           "checkedBinding": {
-            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.GroupModeAtRange}",
-            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetGroupModeAtRange[", "]"]
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.MasterMode}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetMasterMode[", "]"]
           }
         },
         {
           "type": "textblock",
           "name": "MinimumSecurityStatusLabel",
-          "x": 30,
-          "y": 510,
-          "width": 750,
+          "x": 10,
+          "y": 450,
+          "width": 300,
           "height": 54,
-          "text": "Min. Security Status",
+          "text": "Minimum Security Status:",
           "font": {
             "height": 36
           }
@@ -627,9 +587,9 @@
         {
           "type": "textbox",
           "name": "MinimumSecurityStatus",
-          "x": 525,
-          "y": 504,
-          "width": 135,
+          "x": 320,
+          "y": 450,
+          "width": 80,
           "height": 48,
           "maxLength": 6,
           "tooltip": {
@@ -654,7 +614,7 @@
           "type": "checkbox",
           "name": "cbCompressOreMode",
           "x": 900,
-          "y": 510,
+          "y": 450,
           "height": 60,
           "width": 300,
           "content": "Compress Ore",
@@ -668,6 +628,98 @@
           "checkedBinding": {
             "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.CompressOreMode}",
             "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetCompressOreMode[", "]"]
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbGroupMinerMode",
+          "x": 1200,
+          "y": 450,
+          "height": 60,
+          "width": 300,
+          "content": "Group Mode",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "When checked will tell evebot to mine as a group"
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.GroupMode}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetGroupMode[", "]"]
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbSoloCompressOreMode",
+          "x": 900,
+          "y": 510,
+          "height": 60,
+          "width": 300,
+          "content": "Solo Compress Ore",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "When this is checked, someone not running evebot is running compression"
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.SoloCompressOreMode}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetSoloCompressOreMode[", "]"]
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbGroupMinerModeKeepRange",
+          "x": 1200,
+          "y": 510,
+          "height": 60,
+          "width": 300,
+          "content": "Keep Range ",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "When checked will tell evebot to stay within range of specific person listed below"
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.GroupModeAtRange}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetGroupModeAtRange[", "]"]
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "DeliveryLocationTypeLabel",
+          "x": 10,
+          "y": 570,
+          "width": 750,
+          "height": 54,
+          "text": "ORE Delivery Configuration:",
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "cbSafeJetcan",
+          "x": 900,
+          "y": 570,
+          "height": 60,
+          "width": 300,
+          "content": "Safe Jetcan ",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "When checked this will force your miners to wait until the pilot specified in Location Name is within 20km before dropping a jetcan."
+          },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.SafeJetcan}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetSafeJetcan[", "]"]
           }
         },
         {
@@ -692,48 +744,12 @@
         },
         {
           "type": "textblock",
-          "name": "DeliveryLocationTypeLabel",
-          "x": 30,
-          "y": 570,
-          "width": 750,
-          "height": 54,
-          "text": "ORE Delivery Configuration",
-          "font": {
-            "height": 36
-          }
-        },
-        {
-          "type": "checkbox",
-          "name": "cbSoloCompressOreMode",
-          "x": 900,
-          "y": 570,
-          "height": 60,
-          "width": 300,
-          "content": "Solo Compress Ore",
-          "contentContainer": {
-            "jsonTemplate": "evebotCheckboxContainer"
-          },
-          "tooltip": {
-            "jsonTemplate": "evebotTooltip",
-            "text": "When this is checked, someone not running evebot is running compression"
-          },
-          "checkedBinding": {
-            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.SoloCompressOreMode}",
-            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetSoloCompressOreMode[", "]"]
-          }
-        },
-        {
-          "type": "textblock",
           "name": "DeliveryLocationTypeText",
-          "x": 45,
+          "x": 30,
           "y": 630,
           "width": 330,
           "height": 54,
-          "text": "Location Type",
-          "tooltip": {
-            "jsonTemplate": "evebotTooltip",
-            "text": "Type of the destination to delivery to, such as POS, Station, Outpost, etc"
-          },
+          "text": "Location Type:",
           "font": {
             "height": 36
           }
@@ -741,12 +757,16 @@
         {
           "type": "combobox",
           "name": "DeliveryLocationType",
-          "x": 405,
+          "x": 220,
           "y": 630,
           "width": 450,
           "height": 45,
           "font": {
             "height": 36
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Type of the destination to delivery to, such as POS, Station, Outpost, etc"
           },
           "eventHandlers": {
             "onSelectionChanged": {
@@ -871,37 +891,13 @@
           }
         },
         {
-          "type": "checkbox",
-          "name": "cbSafeJetcan",
-          "x": 900,
-          "y": 630,
-          "height": 60,
-          "width": 300,
-          "content": "Safe Jetcan ",
-          "contentContainer": {
-            "jsonTemplate": "evebotCheckboxContainer"
-          },
-          "tooltip": {
-            "jsonTemplate": "evebotTooltip",
-            "text": "When checked this will force your miners to wait until the pilot specified in Location Name is within 20km before dropping a jetcan."
-          },
-          "checkedBinding": {
-            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.SafeJetcan}",
-            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetSafeJetcan[", "]"]
-          }
-        },
-        {
           "type": "textblock",
           "name": "DeliveryLocationText",
-          "x": 45,
-          "y": 675,
+          "x": 30,
+          "y": 690,
           "width": 330,
           "height": 54,
-          "text": "Location Name",
-          "tooltip": {
-            "jsonTemplate": "evebotTooltip",
-            "text": "Either enter the delivery location here, or it will default to the last station we undock at"
-          },
+          "text": "Location Name:",
           "font": {
             "height": 36
           }
@@ -909,10 +905,14 @@
         {
           "type": "textbox",
           "name": "DeliveryLocation",
-          "x": 405,
-          "y": 675,
+          "x": 220,
+          "y": 690,
           "width": 1050,
           "height": 48,
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Either enter the delivery location here, or it will default to the last station we undock at"
+          },
           "eventHandlers": {
             "onLoad": {
               "type": "code",
@@ -934,11 +934,7 @@
           "y": 750,
           "width": 750,
           "height": 54,
-          "text": "Panic Location",
-          "tooltip": {
-            "jsonTemplate": "evebotTooltip",
-            "text": "Station bookmark where you want to dock if something goes terribly wrong.  Can be in a different system."
-          },
+          "text": "Panic Location:",
           "font": {
             "height": 36
           }
@@ -946,10 +942,14 @@
         {
           "type": "textbox",
           "name": "PanicLocation",
-          "x": 405,
+          "x": 220,
           "y": 750,
           "width": 1050,
           "height": 48,
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Station bookmark where you want to dock if something goes terribly wrong.  Can be in a different system."
+          },
           "eventHandlers": {
             "onLoad": {
               "type": "code",
