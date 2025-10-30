@@ -70,6 +70,16 @@
         }
       ]
     },
+    "evebotSlider": {
+      "type": "slider",
+      "borderThickness": 1,
+      "borderBrush": "slider.borderBrush",
+      "handle": {
+        "jsonTemplate": "slider.handle",
+        "width": 24,
+        "height": 28
+      }
+    },
     "evebotTitleBar": {
       "type": "dockpanel",
       "children": [

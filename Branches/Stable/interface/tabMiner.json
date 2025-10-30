@@ -7,8 +7,8 @@
         {
           "type": "checkbox",
           "name": "cbStripMine",
-          "x": 600,
-          "y": 30,
+          "x": 10,
+          "y": 10,
           "height": 60,
           "width": 300,
           "content": "Strip Mine Area",
@@ -27,8 +27,8 @@
         {
           "type": "checkbox",
           "name": "cbBookMarkLastPosition",
-          "x": 30,
-          "y": 90,
+          "x": 10,
+          "y": 80,
           "height": 60,
           "width": 300,
           "content": "Bookmark Last Position",
@@ -45,17 +45,33 @@
           }
         },
         {
+          "type": "textblock",
+          "name": "MiningRangeMultiplerText",
+          "x": 600,
+          "y": 80,
+          "width": 300,
+          "height": 54,
+          "text": "Mining Range Multipler:",
+          "font": {
+            "height": 36
+          }
+        },
+        {
           "type": "textbox",
           "name": "MiningRangeMultipler",
-          "x": 600,
-          "y": 90,
-          "width": 135,
+          "x": 900,
+          "y": 80,
+          "width": 80,
           "height": 48,
-          "maxLength": 6,
+          "maxLength": 3,
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Maximum slowboat distance is mining range * this"
+          },
           "eventHandlers": {
             "onLoad": {
               "type": "code",
-              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Miner.MiningRangeMultipler}]"
+              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Miner.MiningRangeMultipler.Precision[2]}]"
             },
             "onTextChanged": {
               "type": "code",
@@ -67,17 +83,33 @@
           }
         },
         {
-          "type": "textblock",
-          "name": "MiningRangeMultiplerText",
-          "x": 825,
-          "y": 90,
-          "width": 600,
-          "height": 54,
-          "text": "Mining Range Multipler",
+          "type": "checkbox",
+          "name": "cbDistributeLasers",
+          "x": 10,
+          "y": 140,
+          "height": 60,
+          "width": 400,
+          "content": "Distributed Laser Targeting",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
           "tooltip": {
             "jsonTemplate": "evebotTooltip",
-            "text": "Maximum slowboat distance is mining range * this"
+            "text": "When checked only one laser will be activated per locked asteroid.  Uncheck to focus all lasers on a single asteroid.  In general, this should be checked."
           },
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.DistributeLasers}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetDistributeLasers[", "]"]
+          }
+        },
+        {
+          "type": "textblock",
+          "name": "lbCargoThreshold",
+          "x": 600,
+          "y": 140,
+          "width": 600,
+          "height": 54,
+          "text": "Cargo Full Threshold",
           "font": {
             "height": 36
           }
@@ -85,11 +117,15 @@
         {
           "type": "textbox",
           "name": "tbCargoThreshold",
-          "x": 600,
-          "y": 150,
-          "width": 195,
+          "x": 900,
+          "y": 140,
+          "width": 145,
           "height": 48,
           "maxLength": 8,
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Cargo hold >= this value means cargo hold full"
+          },
           "eventHandlers": {
             "onLoad": {
               "type": "code",
@@ -105,26 +141,30 @@
           }
         },
         {
-          "type": "textblock",
-          "name": "lbCargoThreshold",
-          "x": 825,
-          "y": 150,
-          "width": 600,
-          "height": 54,
-          "text": "Cargo Full Threshold",
+          "type": "checkbox",
+          "name": "cbUseFieldBookmarks",
+          "x": 10,
+          "y": 200,
+          "height": 60,
+          "width": 300,
+          "content": "Use Belt Bookmarks",
+          "contentContainer": {
+            "jsonTemplate": "evebotCheckboxContainer"
+          },
           "tooltip": {
             "jsonTemplate": "evebotTooltip",
-            "text": "Cargo hold >= this value means cargo hold full"
+            "text": "When checked the miner will warp to asteroid belt bookmarks instead of the belts themselves.  See the labels Tab for bookmark prefix requirements."
           },
-          "font": {
-            "height": 36
+          "checkedBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.UseFieldBookmarks}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetUseFieldBookmarks[", "]"]
           }
         },
         {
           "type": "textblock",
           "name": "cbJetCanNameText",
           "x": 600,
-          "y": 210,
+          "y": 200,
           "width": 300,
           "height": 54,
           "text": "JetCan Name: ",
@@ -136,8 +176,8 @@
           "type": "combobox",
           "name": "cbJetCanName",
           "x": 900,
-          "y": 210,
-          "width": 450,
+          "y": 200,
+          "width": 300,
           "height": 45,
           "font": {
             "height": 36
@@ -157,7 +197,7 @@
             "content": {
               "type": "listbox",
               "name": "cbJetCanNameList",
-              "width": 450,
+              "width": 300,
               "height": 60,
               "font": {
                 "height": 36
@@ -258,7 +298,7 @@
             },
             "contentContainer": {
               "jsonTemplate": "popup.panel",
-              "width": 450,
+              "width": 300,
               "height": 60,
               "minSize": [
                 0,
@@ -280,52 +320,12 @@
         },
         {
           "type": "checkbox",
-          "name": "cbDistributeLasers",
-          "x": 30,
-          "y": 150,
-          "height": 60,
-          "width": 300,
-          "content": "Distributed Laser Targeting",
-          "contentContainer": {
-            "jsonTemplate": "evebotCheckboxContainer"
-          },
-          "tooltip": {
-            "jsonTemplate": "evebotTooltip",
-            "text": "When checked only one laser will be activated per locked asteroid.  Uncheck to focus all lasers on a single asteroid.  In general, this should be checked."
-          },
-          "checkedBinding": {
-            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.DistributeLasers}",
-            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetDistributeLasers[", "]"]
-          }
-        },
-        {
-          "type": "checkbox",
-          "name": "cbUseFieldBookmarks",
-          "x": 30,
-          "y": 210,
-          "height": 60,
-          "width": 300,
-          "content": "Use Belt Bookmarks",
-          "contentContainer": {
-            "jsonTemplate": "evebotCheckboxContainer"
-          },
-          "tooltip": {
-            "jsonTemplate": "evebotTooltip",
-            "text": "When checked the miner will warp to asteroid belt bookmarks instead of the belts themselves.  See the labels Tab for bookmark prefix requirements."
-          },
-          "checkedBinding": {
-            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.UseFieldBookmarks}",
-            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetUseFieldBookmarks[", "]"]
-          }
-        },
-        {
-          "type": "checkbox",
           "name": "cbMiningDrones",
-          "x": 30,
-          "y": 270,
+          "x": 10,
+          "y": 260,
           "height": 60,
           "width": 300,
-          "content": "Use Mining Drones ",
+          "content": "Use Mining Drones",
           "contentContainer": {
             "jsonTemplate": "evebotCheckboxContainer"
           },
@@ -339,42 +339,32 @@
           }
         },
         {
-          "type": "slider",
+          "jsonTemplate": "evebotSlider",
           "name": "AvoidPlayerRange",
-          "x": 30,
+          "x": 10,
           "y": 330,
           "width": 120,
-          "height": 54,
+          "height": 28,
           "minimum": 0,
           "maximum": 100000,
-          "eventHandlers": {
-            "onLoad": {
-              "type": "code",
-              "code": "This:SetValue[${Script[EVEBot].VariableScope.Config.Miner.AvoidPlayerRange}]"
-            },
-            "onValueChanged": {
-              "type": "code",
-              "code": "Script[EVEBot].VariableScope.Config.Miner:SetAvoidPlayerRange[${Int[${This.Value}]}];LGUI2.Element[AvoidPlayerRangeLabel]:SetText[\"Min. Distance to Players: ${EVEBot.MetersToKM_Str[${This.Value}]}\"]"
-            }
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Minimum distance we will keep other players at"
+          },
+          "valueBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.AvoidPlayerRange}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Miner:SetAvoidPlayerRange[", "]"]
           }
         },
         {
           "type": "textblock",
           "name": "AvoidPlayerRangeLabel",
-          "x": 165,
-          "y": 330,
+          "x": 155,
+          "y": 325,
           "width": 900,
           "height": 30,
-          "text": "Min. Distance to Players: 0km",
-          "tooltip": {
-            "jsonTemplate": "evebotTooltip",
-            "text": "Minimum distance we will keep other players at"
-          },
-          "eventHandlers": {
-            "onLoad": {
-              "type": "code",
-              "code": "This:SetText[\"Min. Distance to Players: ${EVEBot.MetersToKM_Str[${LGUI2.Element[AvoidPlayerRange].Value}]}\"]"
-            }
+          "textBinding": {
+            "pullFormat": "Min. Distance to Players:  ${EVEBot.MetersToKM_Str[${Script[EVEBot].VariableScope.Config.Miner.AvoidPlayerRange}]}"
           },
           "font": {
             "height": 36
@@ -383,17 +373,17 @@
         {
           "type": "checkbox",
           "name": "cbStandingDetection",
-          "x": 30,
-          "y": 390,
+          "x": 10,
+          "y": 380,
           "height": 60,
-          "width": 300,
-          "content": "Mine Alone: Standing Detection",
+          "width": 420,
+          "content": "Mine Alone (Standing Detection):",
           "contentContainer": {
             "jsonTemplate": "evebotCheckboxContainer"
           },
           "tooltip": {
             "jsonTemplate": "evebotTooltip",
-            "text": "When checked you will move to another field when and if a player enters yours and is below the standing you set. (Doesn't Include Gang Members)"
+            "text": "When checked you will move to another field\nwhen/if a player enters your field and is below the\nstanding set to the right. (Doesn't Include Gang Members)"
           },
           "checkedBinding": {
             "pullFormat": "${Script[EVEBot].VariableScope.Config.Miner.StandingDetection}",
@@ -403,12 +393,16 @@
         {
           "type": "combobox",
           "name": "cbLowestStanding",
-          "x": 630,
+          "x": 450,
           "y": 390,
           "width": 150,
           "height": 45,
           "font": {
             "height": 36
+          },
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "When box to the right is checked, you will move to another\nfield when/if a player enters your field and is below\nthe standing you set. (Doesn't Include Gang Members)"
           },
           "eventHandlers": {
             "onSelectionChanged": {

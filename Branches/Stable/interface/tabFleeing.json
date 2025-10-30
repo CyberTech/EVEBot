@@ -40,7 +40,10 @@
                     },
                     "checkedBinding": {
                       "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.RunOnLowAmmo}",
-                      "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetRunOnLowAmmo[", "]"]
+                      "pushFormat": [
+                        "Script[EVEBot].VariableScope.Config.Combat:SetRunOnLowAmmo[",
+                        "]"
+                      ]
                     }
                   },
                   {
@@ -60,7 +63,10 @@
                     },
                     "checkedBinding": {
                       "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.RunOnLowCap}",
-                      "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetRunOnLowCap[", "]"]
+                      "pushFormat": [
+                        "Script[EVEBot].VariableScope.Config.Combat:SetRunOnLowCap[",
+                        "]"
+                      ]
                     }
                   },
                   {
@@ -80,7 +86,10 @@
                     },
                     "checkedBinding": {
                       "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.RunOnLowTank}",
-                      "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetRunOnLowTank[", "]"]
+                      "pushFormat": [
+                        "Script[EVEBot].VariableScope.Config.Combat:SetRunOnLowTank[",
+                        "]"
+                      ]
                     }
                   },
                   {
@@ -100,7 +109,10 @@
                     },
                     "checkedBinding": {
                       "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.RunToStation}",
-                      "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetRunToStation[", "]"]
+                      "pushFormat": [
+                        "Script[EVEBot].VariableScope.Config.Combat:SetRunToStation[",
+                        "]"
+                      ]
                     }
                   },
                   {
@@ -120,7 +132,10 @@
                     },
                     "checkedBinding": {
                       "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.UseWhiteList}",
-                      "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetUseWhiteList[", "]"]
+                      "pushFormat": [
+                        "Script[EVEBot].VariableScope.Config.Combat:SetUseWhiteList[",
+                        "]"
+                      ]
                     }
                   },
                   {
@@ -140,7 +155,10 @@
                     },
                     "checkedBinding": {
                       "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.WLBypassStandings}",
-                      "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetWLBypassStandings[", "]"]
+                      "pushFormat": [
+                        "Script[EVEBot].VariableScope.Config.Combat:SetWLBypassStandings[",
+                        "]"
+                      ]
                     }
                   },
                   {
@@ -160,7 +178,10 @@
                     },
                     "checkedBinding": {
                       "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.UseBlackList}",
-                      "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetUseBlackList[", "]"]
+                      "pushFormat": [
+                        "Script[EVEBot].VariableScope.Config.Combat:SetUseBlackList[",
+                        "]"
+                      ]
                     }
                   },
                   {
@@ -314,27 +335,28 @@
                     },
                     "checkedBinding": {
                       "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.IncludeNeutralInCalc}",
-                      "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetIncludeNeutralInCalc[", "]"]
+                      "pushFormat": [
+                        "Script[EVEBot].VariableScope.Config.Combat:SetIncludeNeutralInCalc[",
+                        "]"
+                      ]
                     }
                   },
                   {
-                    "type": "slider",
+                    "jsonTemplate": "evebotSlider",
                     "name": "MinArmorPct",
                     "x": 630,
                     "y": 30,
                     "width": 120,
-                    "height": 54,
+                    "height": 28,
                     "minimum": 0,
                     "maximum": 100,
-                    "eventHandlers": {
-                      "onLoad": {
-                        "type": "code",
-                        "code": "This:SetValue[${Script[EVEBot].VariableScope.Config.Combat.MinimumArmorPct}]\nLGUI2.Element[MinArmorPctLabel]:SetText[\"Minimum Armor: ${This.Value}\"]"
-                      },
-                      "onValueChanged": {
-                        "type": "code",
-                        "code": "Script[EVEBot].VariableScope.Config.Combat:SetMinimumArmorPct[${Int[${This.Value}]}]\nLGUI2.Element[MinArmorPctLabel]:SetText[\"Minimum Armor: ${This.Value}\"]"
-                      }
+                    "tooltip": {
+                      "jsonTemplate": "evebotTooltip",
+                      "text": "Lowest armor percent allowed before fleeing"
+                    },
+                    "valueBinding": {
+                      "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.MinimumArmorPct}",
+                      "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetMinimumArmorPct[", "]"]
                     }
                   },
                   {
@@ -344,33 +366,29 @@
                     "y": 30,
                     "width": 450,
                     "height": 30,
-                    "text": "Minimum Armor: 0",
-                    "tooltip": {
-                      "jsonTemplate": "evebotTooltip",
-                      "text": "Lowest armor percent allowed before fleeing"
+                    "textBinding": {
+                      "pullFormat": "Minimum Armor:  ${Script[EVEBot].VariableScope.Config.Combat.MinimumArmorPct}"
                     },
                     "font": {
                       "height": 36
                     }
                   },
                   {
-                    "type": "slider",
+                    "jsonTemplate": "evebotSlider",
                     "name": "MinShieldPct",
                     "x": 630,
                     "y": 90,
                     "width": 120,
-                    "height": 54,
+                    "height": 28,
                     "minimum": 0,
                     "maximum": 100,
-                    "eventHandlers": {
-                      "onLoad": {
-                        "type": "code",
-                        "code": "This:SetValue[${Script[EVEBot].VariableScope.Config.Combat.MinimumShieldPct}]\nLGUI2.Element[MinShieldPctLabel]:SetText[\"Minimum Shield: ${This.Value}\"]"
-                      },
-                      "onValueChanged": {
-                        "type": "code",
-                        "code": "Script[EVEBot].VariableScope.Config.Combat:SetMinimumShieldPct[${Int[${This.Value}]}]\nLGUI2.Element[MinShieldPctLabel]:SetText[\"Minimum Shield: ${This.Value}\"]"
-                      }
+                    "tooltip": {
+                      "jsonTemplate": "evebotTooltip",
+                      "text": "Lowest Shield Pct Allowed before Running"
+                    },
+                    "valueBinding": {
+                      "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.MinimumShieldPct}",
+                      "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetMinimumShieldPct[", "]"]
                     }
                   },
                   {
@@ -380,7 +398,9 @@
                     "y": 90,
                     "width": 450,
                     "height": 30,
-                    "text": "Minimum Shield: 0",
+                    "textBinding": {
+                      "pullFormat": "Minimum Shield:  ${Script[EVEBot].VariableScope.Config.Combat.MinimumShieldPct}"
+                    },
                     "tooltip": {
                       "jsonTemplate": "evebotTooltip",
                       "text": "Lowest Shield Pct Allowed before Running"
@@ -390,23 +410,21 @@
                     }
                   },
                   {
-                    "type": "slider",
+                    "jsonTemplate": "evebotSlider",
                     "name": "MinCapPct",
                     "x": 630,
                     "y": 150,
                     "width": 120,
-                    "height": 54,
+                    "height": 28,
                     "minimum": 0,
                     "maximum": 100,
-                    "eventHandlers": {
-                      "onLoad": {
-                        "type": "code",
-                        "code": "This:SetValue[${Script[EVEBot].VariableScope.Config.Combat.MinimumCapPct}]\nLGUI2.Element[MinCapPctLabel]:SetText[\"Minimum Cap: ${This.Value}\"]"
-                      },
-                      "onValueChanged": {
-                        "type": "code",
-                        "code": "Script[EVEBot].VariableScope.Config.Combat:SetMinimumCapPct[${Int[${This.Value}]}]\nLGUI2.Element[MinCapPctLabel]:SetText[\"Minimum Cap: ${This.Value}\"]"
-                      }
+                    "tooltip": {
+                      "jsonTemplate": "evebotTooltip",
+                      "text": "Lowest capacitor percent allowed before fleeing"
+                    },
+                    "valueBinding": {
+                      "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.MinimumCapPct}",
+                      "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetMinimumCapPct[", "]"]
                     }
                   },
                   {
@@ -416,10 +434,8 @@
                     "y": 150,
                     "width": 450,
                     "height": 30,
-                    "text": "Minimum Cap: 0",
-                    "tooltip": {
-                      "jsonTemplate": "evebotTooltip",
-                      "text": "Lowest capacitor percent allowed before fleeing"
+                    "textBinding": {
+                      "pullFormat": "Minimum Cap:  ${Script[EVEBot].VariableScope.Config.Combat.MinimumCapPct}"
                     },
                     "font": {
                       "height": 36
@@ -442,7 +458,10 @@
                     },
                     "checkedBinding": {
                       "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.UseSafeCooldown}",
-                      "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetUseSafeCooldown[", "]"]
+                      "pushFormat": [
+                        "Script[EVEBot].VariableScope.Config.Combat:SetUseSafeCooldown[",
+                        "]"
+                      ]
                     }
                   },
                   {
@@ -580,7 +599,10 @@
                     },
                     "checkedBinding": {
                       "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.TakeBreaks}",
-                      "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetTakeBreaks[", "]"]
+                      "pushFormat": [
+                        "Script[EVEBot].VariableScope.Config.Combat:SetTakeBreaks[",
+                        "]"
+                      ]
                     }
                   },
                   {
@@ -808,7 +830,10 @@
                     },
                     "checkedBinding": {
                       "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.BroadcastBreaks}",
-                      "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetBroadcastBreaks[", "]"]
+                      "pushFormat": [
+                        "Script[EVEBot].VariableScope.Config.Combat:SetBroadcastBreaks[",
+                        "]"
+                      ]
                     }
                   }
                 ]
