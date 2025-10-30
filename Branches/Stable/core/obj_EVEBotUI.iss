@@ -1,5 +1,3 @@
-#include ${LavishScript.HomeDirectory}/Scripts/LGUI2Scaling.iss
-
 objectdef obj_EVEBotUI inherits obj_BaseClass
 {
 	variable bool NeedToSetComboBox = FALSE
@@ -12,7 +10,7 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 
 		LogPrefix:Set["${This.ObjectName}"]
 
-		;; Populate the index (list) of UIFiles.  The order does matter; typically, any new files should go right before "EVEBot.json"
+		;; Populate the index of UIFiles.  The order matters; typically, any new files should go right before "EVEBot.json"
 		UIFiles:Insert[interface/common.json]
 		UIFiles:Insert[interface/tabStatus.json]
 		UIFiles:Insert[interface/tabMain.json]
@@ -34,8 +32,8 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 		}
 		while ${UIFile:Next(exists)}
 
-		; temp: Set to tab 2 (Main)
-		LGUI2.Element[EVEBotOptionsTab]:SelectTab[2]
+		; temp: Set to tab 3
+		LGUI2.Element[EVEBotOptionsTab]:SelectTab[3]
 
 		This:LogSystemStats
 		This:CheckUIPosition
@@ -79,8 +77,8 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 		}
 		while ${UIFile:Next(exists)}
 
-		; temp:  Set to tab 2
-		LGUI2.Element[EVEBotOptionsTab]:SelectTab[2]
+		; temp:  Set to tab 3
+		LGUI2.Element[EVEBotOptionsTab]:SelectTab[3]
 
 		Logger:WriteQueue
 		This.Reloaded:Set[TRUE]
