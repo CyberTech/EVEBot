@@ -415,7 +415,7 @@
           "x": 10,
           "y": 430,
           "height": 60,
-          "width": 300,
+          "width": 400,
           "content": "Use AnomalyAssistMode",
           "contentContainer": {
             "jsonTemplate": "evebotCheckboxContainer"
