@@ -790,7 +790,7 @@
           "x": 10,
           "y": 670,
           "height": 60,
-          "width": 400,
+          "width": 500,
           "content": "Request Drone Defense against NPCs",
           "contentContainer": {
             "jsonTemplate": "evebotCheckboxContainer"
