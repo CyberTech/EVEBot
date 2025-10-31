@@ -71,7 +71,7 @@ objectdef obj_Logger
 					return
 				}
 
-				if ${String["All"].NotEqual[DEBUG_TARGET]} && !${StatusMessage.Token[1, " "].Find[DEBUG_TARGET](exists)}
+				if ${String["all"].NotEqual[DEBUG_TARGET]} && !${StatusMessage.Token[1, " "].Find[DEBUG_TARGET](exists)}
 				{
 					return
 				}

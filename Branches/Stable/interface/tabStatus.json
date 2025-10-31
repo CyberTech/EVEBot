@@ -246,6 +246,9 @@
           },
           {
             "type": "textbox",
+            "textScanner": {
+              "type":"lguiconsole"
+            }, 
             "name": "StatusConsole",
             "text": "Loading...",
             "x": 15,

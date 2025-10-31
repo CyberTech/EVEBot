@@ -196,7 +196,7 @@ objectdef obj_EVEBot inherits obj_BaseClass
 	{
 		This._Paused:Set[TRUE]
 		This:PauseThreads
-		Logger:Log["Paused: ${Reason}", LOG_ECHOTOO]
+		Logger:Log["\agPaused\ax: ${Reason}", LOG_ECHOTOO]
 		Script:Pause
 	}
 
@@ -232,20 +232,27 @@ objectdef obj_EVEBot inherits obj_BaseClass
 
 	method SetVersion(int Version=${VersionNum})
 	{
+		;; TODO - this needs to be reworked.  It will display in the titlebar of the UI window
+		;; once it's changed to show the version.  For now, it will only show if EVEBOT_DEBUG
+		;; is set to 1.
+
 		declarevariable tmpstr string
 		if EVEBOT_DEBUG == 1
 		{
-			tmpstr:Set[" - Debugging (Objects: DEBUG_TARGET)"]
+			tmpstr:Set[" - debugging (objects: DEBUG_TARGET)"]
+			AppVersion:Set["(stable${tmpstr})"]
 		}
-		AppVersion:Set["${APP_NAME} Stable Revision${tmpstr}"]
+
+		; AppVersion:Set["stable${tmpstr}"]
+		
 		; TODO - pull branch out of Script.CurrentDirectory path
 		;if ${APP_HEADURL.Find["EVEBot/branches/stable"]}
 		;{
-		;	AppVersion:Set["${APP_NAME} Stable Revision ${VersionNum}"]
+		;	AppVersion:Set["EVEBot Stable Revision ${VersionNum}"]
 		;}
 		;else
 		;{
-		;	AppVersion:Set["${APP_NAME} Dev Revision ${VersionNum}"]
+		;	AppVersion:Set["EVEBot Dev Revision ${VersionNum}"]
 		;}
 	}
 

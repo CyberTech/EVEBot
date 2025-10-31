@@ -146,8 +146,11 @@
         },
         {
           "type": "textblock",
-          "name": "EVEBot_TitleBar_Title",
-          "text": "${Script[EVEBot].VariableScope.AppVersion}",
+          "textScanner": {
+            "type":"lguiconsole"
+          }, 
+          "name": "EVEBot_TitleBar_AppName",
+          "text": "EVEBot",
           "verticalAlignment": "center",
           "margin": [
             20,
@@ -161,6 +164,27 @@
             "bold": true
           },
           "color": "#00FFFF",
+          "_dock": "left"
+        },
+        {
+          "type": "textblock",
+          "textScanner": {
+            "type":"lguiconsole"
+          }, 
+          "name": "EVEBot_TitleBar_Title",
+          "text": "${Script[EVEBot].VariableScope.AppVersion}",
+          "verticalAlignment": "bottom",
+          "margin": [
+            14,
+            0,
+            0,
+            7
+          ],
+          "font": {
+            "face": "Segoe UI Italic",
+            "height": 36
+          },
+          "color": "#C0C0C0",
           "_dock": "left",
           "eventHandlers": {
             "onLoad": {

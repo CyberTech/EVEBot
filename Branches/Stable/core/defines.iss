@@ -7,23 +7,23 @@
 
 */
 
-variable string APP_NAME = "EVEBot"
+variable string APP_NAME = "\aoEVEBot\ax"
 variable string APP_PATH = "EVEBot/EVEBot.iss"
 variable string APP_HEADURL = ""
 
 ; Shown on UI
-variable string AppVersion = "0"
+variable string AppVersion = ""
 variable int VersionNum = 0
 
-#define EVEBOT_DEBUG 1
+#define EVEBOT_DEBUG 0
 #define EVEBOT_DEBUG_TIMING 0
 #define EVEBOT_PROFILING 0
 #define DEBUG_ENTITIES 0
 
 ; If you want to debug specific modules or classes, place the class name here.
 ; Provided the class is using the proper ${LogPrefix} standard, it will be filtered appropriately -- CyberTech
-; Default is "All" for everything
-#define DEBUG_TARGET All
+; Default is "all" for everything
+#define DEBUG_TARGET all
 
 ; Do not set this to 1 unless you have downloaded and installed ISXIM extension from http://www.isxgames.com/forums/showthread.php?t=3829
 ; Allows logging to IRC and Jabber, etc
