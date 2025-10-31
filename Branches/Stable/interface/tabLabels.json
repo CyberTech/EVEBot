@@ -7,27 +7,24 @@
         {
           "type": "textblock",
           "name": "Label1",
-          "x": 30,
+          "x": 10,
           "y": 30,
           "width": 600,
-          "height": 30,
+          "height": 40,
           "text": "Bookmark Prefixes",
           "font": {
-            "height": 36
+            "height": 36,
+            "bold": true
           }
         },
         {
           "type": "textblock",
           "name": "SafeSpotsLabel",
-          "x": 75,
-          "y": 75,
-          "width": 600,
+          "x": 30,
+          "y": 90,
+          "width": 300,
           "height": 30,
-          "text": "Safe Spots",
-          "tooltip": {
-            "jsonTemplate": "evebotTooltip",
-            "text": "The prefix for safe spot bookmark names."
-          },
+          "text": "Safe Spots:",
           "font": {
             "height": 36
           }
@@ -35,11 +32,14 @@
         {
           "type": "textbox",
           "name": "SafeSpotPrefix",
-          "x": 690,
-          "y": 75,
-          "width": 300,
+          "x": 350,
+          "y": 90,
+          "width": 250,
           "height": 48,
-          "maxLength": 10,
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "The prefix for safe spot bookmark names."
+          },
           "eventHandlers": {
             "onLoad": {
               "type": "code",
@@ -57,15 +57,11 @@
         {
           "type": "textblock",
           "name": "BeltBookMarkLabel",
-          "x": 75,
-          "y": 120,
-          "width": 600,
-          "height": 30,
-          "text": "Ore Belts",
-          "tooltip": {
-            "jsonTemplate": "evebotTooltip",
-            "text": "The prefix for ore belt bookmark names."
-          },
+          "x": 30,
+          "y": 150,
+          "width": 300,
+          "height": 40,
+          "text": "Ore Belts:",
           "font": {
             "height": 36
           }
@@ -73,11 +69,14 @@
         {
           "type": "textbox",
           "name": "BeltBookMarkPrefix",
-          "x": 690,
-          "y": 120,
-          "width": 300,
+          "x": 350,
+          "y": 150,
+          "width": 250,
           "height": 48,
-          "maxLength": 10,
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "The prefix for ore belt bookmark names."
+          },
           "eventHandlers": {
             "onLoad": {
               "type": "code",
@@ -95,15 +94,11 @@
         {
           "type": "textblock",
           "name": "IceBeltBookMarkLabel",
-          "x": 75,
-          "y": 165,
-          "width": 600,
-          "height": 30,
-          "text": "Ice Belts",
-          "tooltip": {
-            "jsonTemplate": "evebotTooltip",
-            "text": "The prefix for ice belt bookmark names."
-          },
+          "x": 30,
+          "y": 210,
+          "width": 300,
+          "height": 40,
+          "text": "Ice Belts:",
           "font": {
             "height": 36
           }
@@ -111,11 +106,14 @@
         {
           "type": "textbox",
           "name": "IceBeltBookMarkPrefix",
-          "x": 690,
-          "y": 165,
-          "width": 300,
+          "x": 350,
+          "y": 210,
+          "width": 250,
           "height": 48,
-          "maxLength": 10,
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "The prefix for ice belt bookmark names."
+          },
           "eventHandlers": {
             "onLoad": {
               "type": "code",
@@ -133,15 +131,11 @@
         {
           "type": "textblock",
           "name": "AmmoBookMarkLabel",
-          "x": 75,
-          "y": 210,
-          "width": 600,
-          "height": 30,
-          "text": "Ammo Supplies",
-          "tooltip": {
-            "jsonTemplate": "evebotTooltip",
-            "text": "The prefix for Ammo bookmark names."
-          },
+          "x": 30,
+          "y": 270,
+          "width": 300,
+          "height": 40,
+          "text": "Ammo Supplies:",
           "font": {
             "height": 36
           }
@@ -149,11 +143,14 @@
         {
           "type": "textbox",
           "name": "AmmoBookMarkPrefix",
-          "x": 690,
-          "y": 210,
-          "width": 300,
+          "x": 350,
+          "y": 270,
+          "width": 250,
           "height": 48,
-          "maxLength": 10,
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "The prefix for Ammo bookmark names."
+          },
           "eventHandlers": {
             "onLoad": {
               "type": "code",
@@ -171,15 +168,11 @@
         {
           "type": "textblock",
           "name": "UndockInstaTagLabel",
-          "x": 75,
-          "y": 255,
-          "width": 600,
-          "height": 30,
-          "text": "Tag for Undock Instas",
-          "tooltip": {
-            "jsonTemplate": "evebotTooltip",
-            "text": "The string that undock insta bookmarks will contain. 1 space will be prepended and appended."
-          },
+          "x": 30,
+          "y": 330,
+          "width": 300,
+          "height": 40,
+          "text": "Tag for Undock Instas:",
           "font": {
             "height": 36
           }
@@ -187,11 +180,14 @@
         {
           "type": "textbox",
           "name": "UndockInstaTag",
-          "x": 690,
-          "y": 255,
-          "width": 300,
+          "x": 350,
+          "y": 330,
+          "width": 250,
           "height": 48,
-          "maxLength": 10,
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "The string that undock insta bookmarks will contain. 1 space will be prepended and appended."
+          },
           "eventHandlers": {
             "onLoad": {
               "type": "code",
@@ -209,15 +205,11 @@
         {
           "type": "textblock",
           "name": "DockInstaTagLabel",
-          "x": 75,
-          "y": 300,
-          "width": 600,
-          "height": 30,
-          "text": "Tag for Dock Instas",
-          "tooltip": {
-            "jsonTemplate": "evebotTooltip",
-            "text": "The string that dock insta bookmarks will contain. 1 space will be prepended and appended."
-          },
+          "x": 30,
+          "y": 390,
+          "width": 400,
+          "height": 40,
+          "text": "Tag for Dock Instas:",
           "font": {
             "height": 36
           }
@@ -225,11 +217,14 @@
         {
           "type": "textbox",
           "name": "DockInstaTag",
-          "x": 690,
-          "y": 300,
-          "width": 300,
+          "x": 350,
+          "y": 390,
+          "width": 250,
           "height": 48,
-          "maxLength": 10,
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "The string that dock insta bookmarks will contain. 1 space will be prepended and appended."
+          },
           "eventHandlers": {
             "onLoad": {
               "type": "code",
