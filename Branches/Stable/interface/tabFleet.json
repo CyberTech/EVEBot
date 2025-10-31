@@ -7,9 +7,9 @@
         {
           "type": "checkbox",
           "name": "cbUseFleet",
-          "x": 30,
-          "y": 36,
-          "width": 450,
+          "x": 10,
+          "y": 30,
+          "width": 300,
           "height": 60,
           "content": "Manage Fleet",
           "contentContainer": {
@@ -17,7 +17,7 @@
           },
           "tooltip": {
             "jsonTemplate": "evebotTooltip",
-            "text": "If checked, Evebot will manage your fleet"
+            "text": "If checked, EVEBot will manage your fleet"
           },
           "checkedBinding": {
             "pullFormat": "${Script[EVEBot].VariableScope.Config.Fleet.ManageFleet}",
@@ -25,11 +25,44 @@
           }
         },
         {
+          "type": "textblock",
+          "name": "label2",
+          "x": 400,
+          "y": 40,
+          "width": 600,
+          "height": 54,
+          "text": "Accept invites from:",
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "textbox",
+          "name": "tbFleetLeader",
+          "x": 700,
+          "y": 40,
+          "width": 450,
+          "height": 48,
+          "eventHandlers": {
+            "onLoad": {
+              "type": "code",
+              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Fleet.FleetLeader}]"
+            },
+            "onTextChanged": {
+              "type": "code",
+              "code": "Script[EVEBot].VariableScope.Config.Fleet:SetFleetLeader[${This.Text}]"
+            }
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
           "type": "checkbox",
           "name": "cbIsLeader",
-          "x": 30,
-          "y": 126,
-          "width": 450,
+          "x": 10,
+          "y": 120,
+          "width": 300,
           "height": 60,
           "content": "I am the leader",
           "contentContainer": {
@@ -46,50 +79,12 @@
         },
         {
           "type": "textblock",
-          "name": "label2",
-          "x": 690,
-          "y": 54,
-          "width": 600,
-          "height": 54,
-          "text": "Accept invites from",
-          "font": {
-            "height": 36
-          }
-        },
-        {
-          "type": "textbox",
-          "name": "tbFleetLeader",
-          "x": 1170,
-          "y": 48,
-          "width": 450,
-          "height": 48,
-          "maxLength": 50,
-          "eventHandlers": {
-            "onLoad": {
-              "type": "code",
-              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Fleet.FleetLeader}]"
-            },
-            "onTextChanged": {
-              "type": "code",
-              "code": "Script[EVEBot].VariableScope.Config.Fleet:SetFleetLeader[${This.Text}]"
-            }
-          },
-          "font": {
-            "height": 36
-          }
-        },
-        {
-          "type": "textblock",
           "name": "Label1",
-          "x": 420,
-          "y": 138,
+          "x": 400,
+          "y": 130,
           "width": 600,
-          "height": 30,
-          "text": "Manage Fleet Member",
-          "tooltip": {
-            "jsonTemplate": "evebotTooltip",
-            "text": "Use this to add members to your fleet.  They must be in your corporation or in your contacts list."
-          },
+          "height": 40,
+          "text": "Manage Fleet Member:",
           "font": {
             "height": 36
           }
@@ -97,11 +92,14 @@
         {
           "type": "textbox",
           "name": "tbAddFleetMember",
-          "x": 900,
-          "y": 120,
-          "width": 600,
+          "x": 700,
+          "y": 130,
+          "width": 450,
           "height": 48,
-          "maxLength": 50,
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Use this to add members to your fleet.  They must be in your corporation or in your contacts list."
+          },
           "eventHandlers": {
             "onTextChanged": {
               "type": "code",
@@ -115,8 +113,8 @@
         {
           "type": "button",
           "name": "AddFleetMember",
-          "x": 1515,
-          "y": 123,
+          "x": 1175,
+          "y": 130,
           "width": 40,
           "height": 48,
           "content": "+",
@@ -137,8 +135,8 @@
         {
           "type": "button",
           "name": "RemoveFleetMember",
-          "x": 1575,
-          "y": 123,
+          "x": 1230,
+          "y": 130,
           "width": 40,
           "height": 48,
           "content": "-",
@@ -159,8 +157,8 @@
         {
           "type": "checkbox",
           "name": "cbWing",
-          "x": 1350,
-          "y": 195,
+          "x": 1300,
+          "y": 130,
           "width": 270,
           "height": 60,
           "content": "Wing 2",
@@ -169,7 +167,7 @@
           },
           "tooltip": {
             "jsonTemplate": "evebotTooltip",
-            "text": "If checked, this character will be moved to Wing 2.  Used for people you don't want warped with your fleet."
+            "text": "If checked, this character will be moved to Wing 2.\nUsed for characters you don't want warped with your fleet."
           },
           "checkedBinding": {
             "pullFormat": "${Script[EVEBot].VariableScope.Config.Fleet.WingOne}",
@@ -179,10 +177,10 @@
         {
           "type": "listbox",
           "name": "FleetMembers",
-          "x": 30,
-          "y": 270,
+          "x": 10,
+          "y": 250,
           "width": 1590,
-          "height": 525,
+          "height": 450,
           "tooltip": {
             "jsonTemplate": "evebotTooltip",
             "text": "These characters will be added to your fleet if EVEBot can find them in your Corporation or Contacts and \"I am Leader\" is checked."
