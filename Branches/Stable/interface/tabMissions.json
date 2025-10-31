@@ -7,25 +7,23 @@
         {
           "type": "textblock",
           "name": "lblRunTheseTypes",
-          "x": 30,
-          "y": 30,
-          "width": 390,
+          "x": 10,
+          "y": 20,
+          "width": 300,
           "height": 54,
-          "text": "Run These Types",
+          "text": "Run These Types:",
           "font": {
-            "height": 36
+            "height": 36,
+            "bold": true
           }
         },
         {
-          "type": "panel",
+          "jsonTemplate": "evebotBorderedPanel",
           "name": "frmMissionTypes",
-          "x": 30,
-          "y": 90,
+          "x": 10,
+          "y": 60,
           "width": 390,
           "height": 300,
-          "style": {
-            "borderThickness": 2
-          },
           "children": [
             {
               "type": "checkbox",
@@ -113,37 +111,31 @@
           "type": "textblock",
           "name": "lblShipNames",
           "x": 450,
-          "y": 30,
+          "y": 20,
           "width": 390,
           "height": 54,
-          "text": "Ship Names",
+          "text": "Ship Names:",
           "font": {
-            "height": 36
+            "height": 36,
+            "bold": true
           }
         },
         {
-          "type": "panel",
+          "jsonTemplate": "evebotBorderedPanel",
           "name": "frmShipNames",
           "x": 450,
-          "y": 90,
-          "width": 1020,
+          "y": 60,
+          "width": 800,
           "height": 300,
-          "style": {
-            "borderThickness": 2
-          },
           "children": [
             {
               "type": "textblock",
               "name": "lblSmallHauler",
               "x": 30,
-              "y": 30,
+              "y": 40,
               "width": 300,
               "height": 54,
-              "text": "Small Hauler",
-              "tooltip": {
-                "jsonTemplate": "evebotTooltip",
-                "text": "Small Hauler (6000 m^3 or less)."
-              },
+              "text": "Small Hauler:",
               "font": {
                 "height": 36
               }
@@ -151,11 +143,14 @@
             {
               "type": "textbox",
               "name": "tbSmallHauler",
-              "x": 360,
-              "y": 30,
-              "width": 630,
+              "x": 270,
+              "y": 40,
+              "width": 400,
               "height": 48,
-              "maxLength": 64,
+              "tooltip": {
+                "jsonTemplate": "evebotTooltip",
+                "text": "Small Hauler (6000 m^3 or less)."
+              },
               "eventHandlers": {
                 "onLoad": {
                   "type": "code",
@@ -174,14 +169,10 @@
               "type": "textblock",
               "name": "lblLargeHauler",
               "x": 30,
-              "y": 90,
+              "y": 100,
               "width": 300,
               "height": 54,
-              "text": "Large Hauler",
-              "tooltip": {
-                "jsonTemplate": "evebotTooltip",
-                "text": "Large Hauler (more than 6000 m^3)."
-              },
+              "text": "Large Hauler:",
               "font": {
                 "height": 36
               }
@@ -189,11 +180,14 @@
             {
               "type": "textbox",
               "name": "tbLargeHauler",
-              "x": 360,
-              "y": 90,
-              "width": 630,
+              "x": 270,
+              "y": 100,
+              "width": 400,
               "height": 48,
-              "maxLength": 64,
+              "tooltip": {
+                "jsonTemplate": "evebotTooltip",
+                "text": "Large Hauler (more than 6000 m^3)."
+              },
               "eventHandlers": {
                 "onLoad": {
                   "type": "code",
@@ -212,14 +206,10 @@
               "type": "textblock",
               "name": "lblMiningShip",
               "x": 30,
-              "y": 150,
+              "y": 160,
               "width": 300,
               "height": 54,
-              "text": "Mining Ship",
-              "tooltip": {
-                "jsonTemplate": "evebotTooltip",
-                "text": "Mining Ship."
-              },
+              "text": "Mining Ship:",
               "font": {
                 "height": 36
               }
@@ -227,11 +217,14 @@
             {
               "type": "textbox",
               "name": "tbMiningShip",
-              "x": 360,
-              "y": 150,
-              "width": 630,
+              "x": 270,
+              "y": 160,
+              "width": 400,
               "height": 48,
-              "maxLength": 64,
+              "tooltip": {
+                "jsonTemplate": "evebotTooltip",
+                "text": "Mining Ship."
+              },
               "eventHandlers": {
                 "onLoad": {
                   "type": "code",
@@ -250,14 +243,10 @@
               "type": "textblock",
               "name": "lblCombatShip",
               "x": 30,
-              "y": 210,
+              "y": 220,
               "width": 300,
               "height": 54,
-              "text": "Combat Ship",
-              "tooltip": {
-                "jsonTemplate": "evebotTooltip",
-                "text": "Combat Ship."
-              },
+              "text": "Combat Ship:",
               "font": {
                 "height": 36
               }
@@ -265,11 +254,14 @@
             {
               "type": "textbox",
               "name": "tbCombatShip",
-              "x": 360,
-              "y": 210,
-              "width": 630,
+              "x": 270,
+              "y": 220,
+              "width": 400,
               "height": 48,
-              "maxLength": 64,
+              "tooltip": {
+                "jsonTemplate": "evebotTooltip",
+                "text": "Combat Ship."
+              },
               "eventHandlers": {
                 "onLoad": {
                   "type": "code",
@@ -287,15 +279,12 @@
           ]
         },
         {
-          "type": "panel",
+          "jsonTemplate": "evebotBorderedPanel",
           "name": "frmSalvageOptions",
-          "x": 30,
-          "y": 420,
-          "width": 1440,
+          "x": 10,
+          "y": 380,
+          "width": 1240,
           "height": 120,
-          "style": {
-            "borderThickness": 2
-          },
           "children": [
             {
               "type": "textblock",
@@ -304,11 +293,7 @@
               "y": 36,
               "width": 330,
               "height": 54,
-              "text": "Salvage Mode",
-              "tooltip": {
-                "jsonTemplate": "evebotTooltip",
-                "text": "Solo = switch to salvage ship.  Relay = relay to salvage bot."
-              },
+              "text": "Salvage Mode:",
               "font": {
                 "height": 36
               }
@@ -316,10 +301,14 @@
             {
               "type": "combobox",
               "name": "comboSalvageMode",
-              "x": 345,
+              "x": 220,
               "y": 30,
-              "width": 225,
+              "width": 165,
               "height": 54,
+              "tooltip": {
+                "jsonTemplate": "evebotTooltip",
+                "text": "Solo = switch to salvage ship.  Relay = relay to salvage bot."
+              },
               "font": {
                 "height": 36
               },
@@ -338,7 +327,7 @@
                 "content": {
                   "type": "listbox",
                   "name": "comboSalvageModeList",
-                  "width": 225,
+                  "width": 165,
                   "height": 60,
                   "font": {
                     "height": 36
@@ -390,7 +379,7 @@
                 },
                 "contentContainer": {
                   "jsonTemplate": "popup.panel",
-                  "width": 225,
+                  "width": 165,
                   "height": 60,
                   "minSize": [
                     0,
@@ -413,15 +402,11 @@
             {
               "type": "textblock",
               "name": "lblSalvageShip",
-              "x": 600,
-              "y": 36,
+              "x": 470,
+              "y": 30,
               "width": 300,
               "height": 54,
-              "text": "Salvage Ship",
-              "tooltip": {
-                "jsonTemplate": "evebotTooltip",
-                "text": "Ship to use for solo salvaging."
-              },
+              "text": "Salvage Ship:",
               "font": {
                 "height": 36
               }
@@ -429,11 +414,14 @@
             {
               "type": "textbox",
               "name": "tbSalvageShip",
-              "x": 900,
+              "x": 710,
               "y": 30,
-              "width": 510,
+              "width": 400,
               "height": 48,
-              "maxLength": 64,
+              "tooltip": {
+                "jsonTemplate": "evebotTooltip",
+                "text": "Ship to use for solo salvaging."
+              },
               "eventHandlers": {
                 "onLoad": {
                   "type": "code",
@@ -451,15 +439,12 @@
           ]
         },
         {
-          "type": "panel",
+          "jsonTemplate": "evebotBorderedPanel",
           "name": "frmGeneralOptions",
-          "x": 30,
-          "y": 570,
-          "width": 1440,
+          "x": 10,
+          "y": 520,
+          "width": 1240,
           "height": 120,
-          "style": {
-            "borderThickness": 2
-          },
           "children": [
             {
               "type": "checkbox",
@@ -484,15 +469,11 @@
             {
               "type": "textblock",
               "name": "lblSmallHaulerLimit",
-              "x": 420,
+              "x": 470,
               "y": 39,
               "width": 480,
               "height": 54,
-              "text": "Small Hauler Limit",
-              "tooltip": {
-                "jsonTemplate": "evebotTooltip",
-                "text": "Will use the large hauler for missions above this limit."
-              },
+              "text": "Small Hauler Limit:",
               "font": {
                 "height": 36
               }
@@ -500,11 +481,14 @@
             {
               "type": "textbox",
               "name": "tbSmallHaulerLimit",
-              "x": 900,
+              "x": 710,
               "y": 30,
               "width": 150,
               "height": 48,
-              "maxLength": 5,
+              "tooltip": {
+                "jsonTemplate": "evebotTooltip",
+                "text": "Will use the large hauler for missions above this limit."
+              },
               "eventHandlers": {
                 "onLoad": {
                   "type": "code",
