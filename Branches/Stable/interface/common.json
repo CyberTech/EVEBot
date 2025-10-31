@@ -80,6 +80,13 @@
         "height": 28
       }
     },
+    "evebotBorderedPanel": {
+      "type": "panel",
+      "borderThickness": 1,
+      "borderBrush": {
+        "color": "#808080"
+      }
+    },
     "evebotTitleBar": {
       "type": "dockpanel",
       "children": [
