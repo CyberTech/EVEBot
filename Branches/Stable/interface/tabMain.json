@@ -7,7 +7,7 @@
         {
           "type": "textblock",
           "name": "CurrentBehaviorLabel",
-          "x": 30,
+          "x": 10,
           "y": 30,
           "width": 210,
           "height": 30,
@@ -21,7 +21,7 @@
           "name": "CurrentBehavior",
           "x": 150,
           "y": 28,
-          "width": 250,
+          "width": 300,
           "height": 44,
           "font": {
             "height": 36,
@@ -42,7 +42,7 @@
             "content": {
               "type": "listbox",
               "name": "CurrentBehaviorList",
-              "width": 250,
+              "width": 300,
               "height": 60,
               "font": {
                 "height": 36
@@ -74,7 +74,7 @@
             },
             "contentContainer": {
               "jsonTemplate": "popup.panel",
-              "width": 250,
+              "width": 300,
               "height": 60,
               "minSize": [
                 0,

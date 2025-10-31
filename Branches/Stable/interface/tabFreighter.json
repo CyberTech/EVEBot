@@ -7,8 +7,8 @@
         {
           "type": "textblock",
           "name": "lblFreighterMode",
-          "x": 30,
-          "y": 36,
+          "x": 10,
+          "y": 30,
           "width": 210,
           "height": 30,
           "text": "Mode: ",
@@ -19,7 +19,7 @@
         {
           "type": "combobox",
           "name": "cbFreighterMode",
-          "x": 240,
+          "x": 300,
           "y": 30,
           "width": 675,
           "height": 45,
@@ -132,15 +132,11 @@
         {
           "type": "textblock",
           "name": "lblDestination",
-          "x": 30,
-          "y": 111,
-          "width": 600,
-          "height": 30,
-          "text": "Destination",
-          "tooltip": {
-            "jsonTemplate": "evebotTooltip",
-            "text": "The destination bookmark or station name."
-          },
+          "x": 10,
+          "y": 150,
+          "width": 300,
+          "height": 40,
+          "text": "Destination:",
           "font": {
             "height": 36
           }
@@ -148,10 +144,14 @@
         {
           "type": "combobox",
           "name": "teDestination",
-          "x": 450,
-          "y": 105,
-          "width": 1125,
-          "height": 54,
+          "x": 300,
+          "y": 150,
+          "width": 675,
+          "height": 45,
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "The destination bookmark."
+          },
           "font": {
               "height": 36
           },
@@ -167,18 +167,16 @@
             "content": {
               "type": "listbox",
               "name": "teDestinationList",
-              "width": 1125,
+              "width": 675,
               "height": 60,
               "font": {
                 "height": 36
               },
               "minSize": [ 0, 200 ],
-              "items": [],
+              "itemsBinding": {
+                "pullFormat": "${Script[EVEBot].VariableScope.UI.GetFreighterDestinations}"
+              },
               "eventHandlers": {
-                  "onLoad": {
-                      "type": "code",
-                      "code": "variable index:bookmark bm_index\nEVE:GetBookmarks[bm_index]\n\nvariable iterator bm_iterator\nbm_index:GetIterator[bm_iterator]\nThis:ClearItems\nif ${bm_iterator:First(exists)}\n{\n\tdo\n\t{\n\t\tThis:InsertItem[\"{\\\"type\\\":\\\"textblock\\\",\\\"text\\\":\\\"${bm_iterator.Value.Label.Escape}\\\"}\"]\n\t}\n\twhile ${bm_iterator:Next(exists)}\n}"
-                  },
                   "onItemSelected": {
                       "type": "forward",
                       "elementType": "combobox",
@@ -198,7 +196,7 @@
             },
             "contentContainer":{
                 "jsonTemplate":"popup.panel",
-                "width": 1125,
+                "width": 675,
                 "height": 60,
                 "minSize": [ 0, 200 ],
                 "type":"anchor",
@@ -214,16 +212,25 @@
         },
         {
           "type": "textblock",
+          "name": "lblFilters",
+          "x": 10,
+          "y": 220,
+          "width": 300,
+          "height": 40,
+          "text": "Filters:",
+          "font": {
+            "height": 36,
+            "bold": true
+          }
+        },
+        {
+          "type": "textblock",
           "name": "lblSourcePrefix",
           "x": 30,
-          "y": 186,
-          "width": 600,
-          "height": 30,
-          "text": "Source Bookmark Prefix",
-          "tooltip": {
-            "jsonTemplate": "evebotTooltip",
-            "text": "The prefix for source bookmark names."
-          },
+          "y": 250,
+          "width": 350,
+          "height": 40,
+          "text": "Source Bookmark Prefix:",
           "font": {
             "height": 36
           }
@@ -231,11 +238,14 @@
         {
           "type": "textbox",
           "name": "teSourcePrefix",
-          "x": 450,
-          "y": 180,
+          "x": 350,
+          "y": 250,
           "width": 300,
           "height": 48,
-          "maxLength": 10,
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "The prefix for source bookmark names."
+          },
           "eventHandlers": {
             "onLoad": {
               "type": "code",
@@ -253,11 +263,15 @@
         {
           "type": "button",
           "name": "Refresh Bookmarks",
-          "x": 1050,
-          "y": 180,
-          "width": 382,
-          "height": 54,
-          "content": "Show Matching",
+          "x": 690,
+          "y": 260,
+          "width": 230,
+          "height": 90,
+          "content": "Refresh Bookmarks\n     (Apply Filters)",
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Refresh list of bookmarks utilizing the prefix and limitations set below"
+          },
           "eventHandlers": {
             "onPress": {
               "type": "code",
@@ -272,14 +286,10 @@
           "type": "textblock",
           "name": "lblRegionName",
           "x": 30,
-          "y": 261,
-          "width": 840,
-          "height": 30,
-          "text": "Limit To Region",
-          "tooltip": {
-            "jsonTemplate": "evebotTooltip",
-            "text": "Leave blank to service all regions."
-          },
+          "y": 310,
+          "width": 300,
+          "height": 40,
+          "text": "Limit To Region:",
           "font": {
             "height": 36
           }
@@ -287,10 +297,14 @@
         {
           "type": "textbox",
           "name": "teRegionName",
-          "x": 450,
-          "y": 255,
-          "width": 600,
+          "x": 350,
+          "y": 310,
+          "width": 300,
           "height": 48,
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Leave blank to service all regions."
+          },
           "eventHandlers": {
             "onLoad": {
               "type": "code",
@@ -298,7 +312,7 @@
             },
             "onTextChanged": {
               "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Freighter:SetRegionName[${This.Text}]\n}"
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Freighter:SetRegionName[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Freighter:SetRegionName[\"\"]\n}"
             }
           },
           "font": {
@@ -308,10 +322,10 @@
         {
           "type": "listbox",
           "name": "PickupBookmarks",
-          "x": 33,
-          "y": 480,
-          "width": 1584,
-          "height": 450,
+          "x": 10,
+          "y": 400,
+          "width": 1200,
+          "height": 400,
           "tooltip": {
             "jsonTemplate": "evebotTooltip",
             "text": "Bookmarks which will be visited to pickup items"

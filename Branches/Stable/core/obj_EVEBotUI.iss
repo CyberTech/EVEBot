@@ -59,8 +59,8 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 		}
 		while ${UIFile:Next(exists)}
 
-		; temp: Set to tab 4
-		LGUI2.Element[EVEBotOptionsTab]:SelectTab[4]
+		; temp: Set to tab 7
+		LGUI2.Element[EVEBotOptionsTab]:SelectTab[7]
 
 		This:LogSystemStats
 		This:CheckUIPosition
@@ -104,8 +104,8 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 		}
 		while ${UIFile:Next(exists)}
 
-		; temp:  Set to tab 4
-		LGUI2.Element[EVEBotOptionsTab]:SelectTab[4]
+		; temp:  Set to tab 7
+		LGUI2.Element[EVEBotOptionsTab]:SelectTab[7]
 
 		Logger:WriteQueue
 		This.Reloaded:Set[TRUE]
@@ -267,6 +267,32 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 				FirstItem:Set[FALSE]
 			}
 			while ${Behavior:Next(exists)}
+		}
+
+		jsonOutput:Concat["]"]
+		return "${jsonOutput.Escape}"
+	}
+
+	member:string GetFreighterDestinations()
+	{
+		variable string jsonOutput = "["
+		variable index:bookmark bm_index
+		variable iterator bm_iterator
+		variable bool FirstItem = TRUE
+
+		EVE:GetBookmarks[bm_index]
+		bm_index:GetIterator[bm_iterator]
+
+		if ${bm_iterator:First(exists)}
+		{
+			do
+			{
+				if !${FirstItem}
+					jsonOutput:Concat[","]
+				jsonOutput:Concat["{\"type\":\"textblock\",\"text\":\"${bm_iterator.Value.Label.Escape},${bm_iterator.Value.Label.ID}\"}"]
+				FirstItem:Set[FALSE]
+			}
+			while ${bm_iterator:Next(exists)}
 		}
 
 		jsonOutput:Concat["]"]
