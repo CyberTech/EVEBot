@@ -59,8 +59,8 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 		}
 		while ${UIFile:Next(exists)}
 
-		; temp: Set to tab 8
-		LGUI2.Element[EVEBotOptionsTab]:SelectTab[8]
+		; temp: Set to tab 9
+		LGUI2.Element[EVEBotOptionsTab]:SelectTab[9]
 
 		This:LogSystemStats
 		This:CheckUIPosition
@@ -104,8 +104,8 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 		}
 		while ${UIFile:Next(exists)}
 
-		; temp:  Set to tab 8
-		LGUI2.Element[EVEBotOptionsTab]:SelectTab[8]
+		; temp:  Set to tab 9
+		LGUI2.Element[EVEBotOptionsTab]:SelectTab[9]
 
 		Logger:WriteQueue
 		This.Reloaded:Set[TRUE]
