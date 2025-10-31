@@ -9,19 +9,18 @@
           "name": "FleeingTabcontrol",
           "x": 0,
           "y": 0,
-          "width": 1650,
-          "height": 960,
+          "width": "100%",
+          "height": "100%",
           "tabs": [
             {
               "type": "tab",
               "header": "Options",
               "content": {
                 "type": "panel",
-                "name": "FleeingFrame",
                 "x": 0,
                 "y": 0,
-                "width": 1650,
-                "height": 960,
+                "width": "100%",
+                "height": "100%",
                 "children": [
                   {
                     "type": "checkbox",
@@ -847,6 +846,10 @@
               "header": "Whitelist",
               "content": {
                 "type": "panel",
+                "x": 0,
+                "y": 0,
+                "width": "100%",
+                "height": "100%",
                 "children": [
                   {
                     "type": "textblock",
