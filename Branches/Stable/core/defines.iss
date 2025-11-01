@@ -46,7 +46,6 @@ variable int VersionNum = 0
 ;#include ../Lib/obj_Mutex.iss
 ;#include ../Lib/obj_Sound.iss TODO - Port Dev version, remove core version
 #include ../Lib/UplinkManager/obj_UplinkManager.iss
-#include ../Lib/obj_LSGUI.iss
 
 #define LOG_MINOR 1
 #define LOG_STANDARD 2
