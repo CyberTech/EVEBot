@@ -50,6 +50,10 @@
             "onTextChanged": {
               "type": "code",
               "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Labels:SetSafeSpotPrefix[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Labels:SetSafeSpotPrefix[\"\"]\n}"
+            },
+            "onTabPress": {
+              "type": "code",
+              "code": "LGUI2.Element[BeltBookMarkPrefix]:KeyboardFocus"
             }
           },
           "font": {
@@ -87,6 +91,10 @@
             "onTextChanged": {
               "type": "code",
               "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Labels:SetOreBeltPrefix[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Labels:SetOreBeltPrefix[\"\"]\n}"
+            },
+            "onTabPress": {
+              "type": "code",
+              "code": "LGUI2.Element[IceBeltBookMarkPrefix]:KeyboardFocus"
             }
           },
           "font": {
@@ -124,6 +132,10 @@
             "onTextChanged": {
               "type": "code",
               "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Labels:SetIceBeltPrefix[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Labels:SetIceBeltPrefix[\"\"]\n}"
+            },
+            "onTabPress": {
+              "type": "code",
+              "code": "LGUI2.Element[AmmoBookMarkPrefix]:KeyboardFocus"
             }
           },
           "font": {
@@ -161,6 +173,10 @@
             "onTextChanged": {
               "type": "code",
               "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Labels:SetAmmoPrefix[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Labels:SetAmmoPrefix[\"\"]\n}"
+            },
+            "onTabPress": {
+              "type": "code",
+              "code": "LGUI2.Element[UndockInstaTag]:KeyboardFocus"
             }
           },
           "font": {
@@ -198,6 +214,10 @@
             "onTextChanged": {
               "type": "code",
               "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Labels:InstaUndockTag[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Labels:InstaUndockTag[\"\"]\n}"
+            },
+            "onTabPress": {
+              "type": "code",
+              "code": "LGUI2.Element[DockInstaTag]:KeyboardFocus"
             }
           },
           "font": {
@@ -235,6 +255,10 @@
             "onTextChanged": {
               "type": "code",
               "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Labels:InstaDockTag[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Labels:InstaDockTag[\"\"]\n}"
+            },
+            "onTabPress": {
+              "type": "code",
+              "code": "LGUI2.Element[SafeSpotPrefix]:KeyboardFocus"
             }
           },
           "font": {

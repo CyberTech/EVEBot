@@ -58,6 +58,10 @@
             "onTextChanged": {
               "type": "code",
               "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetMinimumDronesInSpace[${Int[${This.Text}]}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetMinimumDronesInSpace[0]\n}"
+            },
+            "onTabPress": {
+              "type": "code",
+              "code": "LGUI2.Element[WarpRange]:KeyboardFocus"
             }
           },
           "font": {
@@ -90,7 +94,7 @@
           "x": 600,
           "y": 80,
           "width": 600,
-          "height": 30,
+          "height": 40,
           "text": "Belt Warp Range (m):",
           "font": {
             "height": 36
@@ -115,6 +119,10 @@
             "onTextChanged": {
               "type": "code",
               "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetWarpRange[${Int[${This.Text}]}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetWarpRange[0]\n}"
+            },
+            "onTabPress": {
+              "type": "code",
+              "code": "LGUI2.Element[tbMinChainBounty]:KeyboardFocus"
             }
           },
           "font": {
@@ -173,6 +181,10 @@
             "onTextChanged": {
               "type": "code",
               "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetMinChainBounty[${Int[${This.Text}]}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetMinChainBounty[0]\n}"
+            },
+            "onTabPress": {
+              "type": "code",
+              "code": "LGUI2.Element[tbOrbitDistance]:KeyboardFocus"
             }
           },
           "font": {
@@ -231,6 +243,10 @@
             "onTextChanged": {
               "type": "code",
               "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetOrbitDistance[${Int[${This.Text}]}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetOrbitDistance[0]\n}"
+            },
+            "onTabPress": {
+              "type": "code",
+              "code": "LGUI2.Element[tbKeepAtRangeDistance]:KeyboardFocus"
             }
           },
           "font": {
@@ -289,6 +305,10 @@
             "onTextChanged": {
               "type": "code",
               "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetKeepAtRangeDistance[${Int[${This.Text}]}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetKeepAtRangeDistance[0]\n}"
+            },
+            "onTabPress": {
+              "type": "code",
+              "code": "LGUI2.Element[tbAmmoTypeID]:KeyboardFocus"
             }
           },
           "font": {
@@ -347,6 +367,10 @@
             "onTextChanged": {
               "type": "code",
               "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetAmmoTypeID[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetAmmoTypeID[0]\n}"
+            },
+            "onTabPress": {
+              "type": "code",
+              "code": "LGUI2.Element[tbRestockFreeSpace]:KeyboardFocus"
             }
           },
           "font": {
@@ -405,6 +429,10 @@
             "onTextChanged": {
               "type": "code",
               "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetRestockAmmoFreeSpace[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetRestockAmmoFreeSpace[0]\n}"
+            },
+            "onTabPress": {
+              "type": "code",
+              "code": "LGUI2.Element[MinimumDronesInSpace]:KeyboardFocus"
             }
           },
           "font": {

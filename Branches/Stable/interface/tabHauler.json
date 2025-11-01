@@ -155,7 +155,7 @@
           "x": 10,
           "y": 200,
           "width": 300,
-          "height": 30,
+          "height": 40,
           "text": "Pickup Location:",
           "font": {
             "height": 36
@@ -180,6 +180,10 @@
             "onTextChanged": {
               "type": "code",
               "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Hauler:SetHaulerPickupName[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Hauler:SetHaulerPickupName[\"\"]\n}"
+            },
+            "onTabPress": {
+              "type": "code",
+              "code": "LGUI2.Element[MiningSystemBookmark]:KeyboardFocus"
             }
           },
           "font": {
@@ -192,7 +196,7 @@
           "x": 10,
           "y": 260,
           "width": 300,
-          "height": 30,
+          "height": 40,
           "text": "Mining System Bookmark:",
           "font": {
             "height": 36
@@ -217,6 +221,10 @@
             "onTextChanged": {
               "type": "code",
               "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Hauler:SetMiningSystemBookmark[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Hauler:SetMiningSystemBookmark[\"\"]\n}"
+            },
+            "onTabPress": {
+              "type": "code",
+              "code": "LGUI2.Element[HaulerPickupName]:KeyboardFocus"
             }
           },
           "font": {

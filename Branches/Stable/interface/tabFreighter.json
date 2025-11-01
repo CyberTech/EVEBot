@@ -256,6 +256,10 @@
             "onTextChanged": {
               "type": "code",
               "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Freighter:SetSourcePrefix[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Freighter:SetSourcePrefix[\"\"]\n}"
+            },
+            "onTabPress": {
+              "type": "code",
+              "code": "LGUI2.Element[teRegionName]:KeyboardFocus"
             }
           },
           "font": {
@@ -315,6 +319,10 @@
             "onTextChanged": {
               "type": "code",
               "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Freighter:SetRegionName[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Freighter:SetRegionName[\"\"]\n}"
+            },
+            "onTabPress": {
+              "type": "code",
+              "code": "LGUI2.Element[teSourcePrefix]:KeyboardFocus"
             }
           },
           "font": {

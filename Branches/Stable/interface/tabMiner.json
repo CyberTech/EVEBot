@@ -98,6 +98,10 @@
             "onTextChanged": {
               "type": "code",
               "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetMiningRangeMultipler[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetMiningRangeMultipler[0]\n}"
+            },
+            "onTabPress": {
+              "type": "code",
+              "code": "LGUI2.Element[tbCargoThreshold]:KeyboardFocus"
             }
           },
           "font": {
@@ -156,6 +160,10 @@
             "onTextChanged": {
               "type": "code",
               "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetCargoThreshold[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetCargoThreshold[0]\n}"
+            },
+            "onTabPress": {
+              "type": "code",
+              "code": "LGUI2.Element[MinimumSecurityStatus]:KeyboardFocus"
             }
           },
           "font": {
@@ -606,6 +614,10 @@
             "onTextChanged": {
               "type": "code",
               "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetMinimumSecurityStatus[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetMinimumSecurityStatus[0]\n}"
+            },
+            "onTabPress": {
+              "type": "code",
+              "code": "LGUI2.Element[DeliveryLocation]:KeyboardFocus"
             }
           },
           "font": {
@@ -923,6 +935,10 @@
             "onTextChanged": {
               "type": "code",
               "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetDeliveryLocation[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetDeliveryLocation[\"\"]\n}"
+            },
+            "onTabPress": {
+              "type": "code",
+              "code": "LGUI2.Element[PanicLocation]:KeyboardFocus"
             }
           },
           "font": {
@@ -960,6 +976,10 @@
             "onTextChanged": {
               "type": "code",
               "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetPanicLocation[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetPanicLocation[\"\"]\n}"
+            },
+            "onTabPress": {
+              "type": "code",
+              "code": "LGUI2.Element[MiningRangeMultipler]:KeyboardFocus"
             }
           },
           "font": {

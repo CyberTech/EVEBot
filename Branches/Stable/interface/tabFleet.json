@@ -53,6 +53,10 @@
             "onTextChanged": {
               "type": "code",
               "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Fleet:SetFleetLeader[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Fleet:SetFleetLeader[\"\"]\n}"
+            },
+            "onTabPress": {
+              "type": "code",
+              "code": "LGUI2.Element[tbAddFleetMember]:KeyboardFocus"
             }
           },
           "font": {
@@ -106,6 +110,10 @@
             "onTextChanged": {
               "type": "code",
               "code": "if ${Script[EVEBot].VariableScope.Config.Fleet.IsWing[\"${This.Text.Escape}\"]}\n\tLGUI2.Element[cbWing]:SetChecked\nelse\n\tLGUI2.Element[cbWing]:UnsetChecked"
+            },
+            "onTabPress": {
+              "type": "code",
+              "code": "LGUI2.Element[tbFleetLeader]:KeyboardFocus"
             }
           },
           "font": {

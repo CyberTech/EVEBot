@@ -161,6 +161,10 @@
                 "onTextChanged": {
                   "type": "code",
                   "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetSmallHauler[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetSmallHauler[\"\"]\n}"
+                },
+                "onTabPress": {
+                  "type": "code",
+                  "code": "LGUI2.Element[tbLargeHauler]:KeyboardFocus"
                 }
               },
               "font": {
@@ -198,6 +202,10 @@
                 "onTextChanged": {
                   "type": "code",
                   "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetLargeHauler[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetLargeHauler[\"\"]\n}"
+                },
+                "onTabPress": {
+                  "type": "code",
+                  "code": "LGUI2.Element[tbMiningShip]:KeyboardFocus"
                 }
               },
               "font": {
@@ -235,6 +243,10 @@
                 "onTextChanged": {
                   "type": "code",
                   "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetMiningShip[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetMiningShip[\"\"]\n}"
+                },
+                "onTabPress": {
+                  "type": "code",
+                  "code": "LGUI2.Element[tbCombatShip]:KeyboardFocus"
                 }
               },
               "font": {
@@ -272,6 +284,10 @@
                 "onTextChanged": {
                   "type": "code",
                   "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetCombatShip[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetCombatShip[\"\"]\n}"
+                },
+                "onTabPress": {
+                  "type": "code",
+                  "code": "LGUI2.Element[tbSalvageShip]:KeyboardFocus"
                 }
               },
               "font": {
@@ -432,6 +448,10 @@
                 "onTextChanged": {
                   "type": "code",
                   "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetSalvageShip[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetSalvageShip[\"\"]\n}"
+                },
+                "onTabPress": {
+                  "type": "code",
+                  "code": "LGUI2.Element[tbSmallHaulerLimit]:KeyboardFocus"
                 }
               },
               "font": {
@@ -499,6 +519,10 @@
                 "onTextChanged": {
                   "type": "code",
                   "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetSmallHaulerLimit[${Int[${This.Text}]}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetSmallHaulerLimit[0]\n}"
+                },
+                "onTabPress": {
+                  "type": "code",
+                  "code": "LGUI2.Element[tbSmallHauler]:KeyboardFocus"
                 }
               },
               "font": {

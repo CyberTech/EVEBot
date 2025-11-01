@@ -125,6 +125,10 @@
             "onTextChanged": {
               "type": "code",
               "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Common:SetDronesInBay[${Int[${This.Text}]}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Common:SetDronesInBay[0]\n}"
+            },
+            "onTabPress": {
+              "type": "code",
+              "code": "LGUI2.Element[tbMaxRuntime]:KeyboardFocus"
             }
           },
           "tooltip": {
@@ -163,6 +167,10 @@
             "onTextChanged": {
               "type": "code",
               "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Common:SetMaxRuntime[${Int[${This.Text}]}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Common:SetMaxRuntime[0]\n}"
+            },
+            "onTabPress": {
+              "type": "code",
+              "code": "LGUI2.Element[tbIRCServer]:KeyboardFocus"
             }
           },
           "tooltip": {
@@ -201,6 +209,10 @@
             "onTextChanged": {
               "type": "code",
               "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Common:SetIRCServer[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Common:SetIRCServer[\"\"]\n}"
+            },
+            "onTabPress": {
+              "type": "code",
+              "code": "LGUI2.Element[tbIRCChannel]:KeyboardFocus"
             }
           },
           "tooltip": {
@@ -239,6 +251,10 @@
             "onTextChanged": {
               "type": "code",
               "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Common:SetIRCChannel[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Common:SetIRCChannel[\"\"]\n}"
+            },
+            "onTabPress": {
+              "type": "code",
+              "code": "LGUI2.Element[tbIRCUser]:KeyboardFocus"
             }
           },
           "tooltip": {
@@ -277,6 +293,10 @@
             "onTextChanged": {
               "type": "code",
               "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Common:SetIRCUser[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Common:SetIRCUser[\"\"]\n}"
+            },
+            "onTabPress": {
+              "type": "code",
+              "code": "LGUI2.Element[tbIRCPassword]:KeyboardFocus"
             }
           },
           "tooltip": {
@@ -316,6 +336,10 @@
             "onTextChanged": {
               "type": "code",
               "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Common:SetIRCPassword[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Common:SetIRCPassword[\"\"]\n}"
+            },
+            "onTabPress": {
+              "type": "code",
+              "code": "LGUI2.Element[MinimumDronesInBay]:KeyboardFocus"
             }
           },
           "tooltip": {
