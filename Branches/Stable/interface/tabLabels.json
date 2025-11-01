@@ -32,7 +32,7 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "name": "SafeSpotPrefix",
           "x": 350,
           "y": 90,
@@ -55,9 +55,6 @@
               "type": "code",
               "code": "LGUI2.Element[BeltBookMarkPrefix]:KeyboardFocus"
             }
-          },
-          "font": {
-            "height": 36
           }
         },
         {
@@ -73,7 +70,7 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "name": "BeltBookMarkPrefix",
           "x": 350,
           "y": 150,
@@ -96,9 +93,6 @@
               "type": "code",
               "code": "LGUI2.Element[IceBeltBookMarkPrefix]:KeyboardFocus"
             }
-          },
-          "font": {
-            "height": 36
           }
         },
         {
@@ -114,7 +108,7 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "name": "IceBeltBookMarkPrefix",
           "x": 350,
           "y": 210,
@@ -137,9 +131,6 @@
               "type": "code",
               "code": "LGUI2.Element[AmmoBookMarkPrefix]:KeyboardFocus"
             }
-          },
-          "font": {
-            "height": 36
           }
         },
         {
@@ -155,7 +146,7 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "name": "AmmoBookMarkPrefix",
           "x": 350,
           "y": 270,
@@ -178,9 +169,6 @@
               "type": "code",
               "code": "LGUI2.Element[UndockInstaTag]:KeyboardFocus"
             }
-          },
-          "font": {
-            "height": 36
           }
         },
         {
@@ -196,7 +184,7 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "name": "UndockInstaTag",
           "x": 350,
           "y": 330,
@@ -219,9 +207,6 @@
               "type": "code",
               "code": "LGUI2.Element[DockInstaTag]:KeyboardFocus"
             }
-          },
-          "font": {
-            "height": 36
           }
         },
         {
@@ -237,7 +222,7 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "name": "DockInstaTag",
           "x": 350,
           "y": 390,
@@ -260,9 +245,6 @@
               "type": "code",
               "code": "LGUI2.Element[SafeSpotPrefix]:KeyboardFocus"
             }
-          },
-          "font": {
-            "height": 36
           }
         }
       ]

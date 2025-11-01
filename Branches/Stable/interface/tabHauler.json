@@ -162,7 +162,7 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "name": "HaulerPickupName",
           "x": 350,
           "y": 200,
@@ -185,9 +185,6 @@
               "type": "code",
               "code": "LGUI2.Element[MiningSystemBookmark]:KeyboardFocus"
             }
-          },
-          "font": {
-            "height": 36
           }
         },
         {
@@ -203,7 +200,7 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "name": "MiningSystemBookmark",
           "x": 350,
           "y": 260,
@@ -226,9 +223,6 @@
               "type": "code",
               "code": "LGUI2.Element[HaulerPickupName]:KeyboardFocus"
             }
-          },
-          "font": {
-            "height": 36
           }
         }
       ]

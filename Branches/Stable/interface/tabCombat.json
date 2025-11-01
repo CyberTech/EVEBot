@@ -39,7 +39,7 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "name": "MinimumDronesInSpace",
           "x": 1000,
           "y": 20,
@@ -63,9 +63,6 @@
               "type": "code",
               "code": "LGUI2.Element[WarpRange]:KeyboardFocus"
             }
-          },
-          "font": {
-            "height": 36
           }
         },
         {
@@ -101,7 +98,7 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "name": "WarpRange",
           "x": 1000,
           "y": 80,
@@ -124,9 +121,6 @@
               "type": "code",
               "code": "LGUI2.Element[tbMinChainBounty]:KeyboardFocus"
             }
-          },
-          "font": {
-            "height": 36
           }
         },
         {
@@ -162,7 +156,7 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "name": "tbMinChainBounty",
           "x": 1000,
           "y": 140,
@@ -186,9 +180,6 @@
               "type": "code",
               "code": "LGUI2.Element[tbOrbitDistance]:KeyboardFocus"
             }
-          },
-          "font": {
-            "height": 36
           }
         },
         {
@@ -224,7 +215,7 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "name": "tbOrbitDistance",
           "x": 1000,
           "y": 200,
@@ -248,9 +239,6 @@
               "type": "code",
               "code": "LGUI2.Element[tbKeepAtRangeDistance]:KeyboardFocus"
             }
-          },
-          "font": {
-            "height": 36
           }
         },
         {
@@ -286,7 +274,7 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "name": "tbKeepAtRangeDistance",
           "x": 1000,
           "y": 260,
@@ -310,9 +298,6 @@
               "type": "code",
               "code": "LGUI2.Element[tbAmmoTypeID]:KeyboardFocus"
             }
-          },
-          "font": {
-            "height": 36
           }
         },
         {
@@ -352,7 +337,7 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "name": "tbAmmoTypeID",
           "x": 1000,
           "y": 320,
@@ -372,9 +357,6 @@
               "type": "code",
               "code": "LGUI2.Element[tbRestockFreeSpace]:KeyboardFocus"
             }
-          },
-          "font": {
-            "height": 36
           }
         },
         {
@@ -410,7 +392,7 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "name": "tbRestockFreeSpace",
           "x": 1000,
           "y": 380,
@@ -434,9 +416,6 @@
               "type": "code",
               "code": "LGUI2.Element[MinimumDronesInSpace]:KeyboardFocus"
             }
-          },
-          "font": {
-            "height": 36
           }
         },
         {

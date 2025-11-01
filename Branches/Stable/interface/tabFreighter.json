@@ -238,7 +238,7 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "name": "teSourcePrefix",
           "x": 350,
           "y": 250,
@@ -261,9 +261,6 @@
               "type": "code",
               "code": "LGUI2.Element[teRegionName]:KeyboardFocus"
             }
-          },
-          "font": {
-            "height": 36
           }
         },
         {
@@ -301,7 +298,7 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "name": "teRegionName",
           "x": 350,
           "y": 310,
@@ -324,9 +321,6 @@
               "type": "code",
               "code": "LGUI2.Element[teSourcePrefix]:KeyboardFocus"
             }
-          },
-          "font": {
-            "height": 36
           }
         },
         {

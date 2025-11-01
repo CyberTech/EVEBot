@@ -39,7 +39,7 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "name": "tbFleetLeader",
           "x": 700,
           "y": 40,
@@ -58,9 +58,6 @@
               "type": "code",
               "code": "LGUI2.Element[tbAddFleetMember]:KeyboardFocus"
             }
-          },
-          "font": {
-            "height": 36
           }
         },
         {
@@ -96,7 +93,7 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "name": "tbAddFleetMember",
           "x": 700,
           "y": 130,
@@ -115,9 +112,6 @@
               "type": "code",
               "code": "LGUI2.Element[tbFleetLeader]:KeyboardFocus"
             }
-          },
-          "font": {
-            "height": 36
           }
         },
         {

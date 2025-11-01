@@ -247,10 +247,10 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "textScanner": {
             "type":"lguiconsole"
-          }, 
+          },
           "name": "StatusConsole",
           "text": "Loading...",
           "x": 0,
@@ -263,9 +263,6 @@
           "style": {
             "backgroundColor": "#000000",
             "color": "#FFFFFF"
-          },
-          "font": {
-            "height": 36
           }
         }
       ]

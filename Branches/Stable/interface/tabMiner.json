@@ -79,7 +79,7 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "name": "MiningRangeMultipler",
           "x": 900,
           "y": 80,
@@ -103,9 +103,6 @@
               "type": "code",
               "code": "LGUI2.Element[tbCargoThreshold]:KeyboardFocus"
             }
-          },
-          "font": {
-            "height": 36
           }
         },
         {
@@ -141,7 +138,7 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "name": "tbCargoThreshold",
           "x": 900,
           "y": 140,
@@ -165,9 +162,6 @@
               "type": "code",
               "code": "LGUI2.Element[MinimumSecurityStatus]:KeyboardFocus"
             }
-          },
-          "font": {
-            "height": 36
           }
         },
         {
@@ -595,7 +589,7 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "name": "MinimumSecurityStatus",
           "x": 320,
           "y": 450,
@@ -619,9 +613,6 @@
               "type": "code",
               "code": "LGUI2.Element[DeliveryLocation]:KeyboardFocus"
             }
-          },
-          "font": {
-            "height": 36
           }
         },
         {
@@ -917,7 +908,7 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "name": "DeliveryLocation",
           "x": 220,
           "y": 690,
@@ -940,9 +931,6 @@
               "type": "code",
               "code": "LGUI2.Element[PanicLocation]:KeyboardFocus"
             }
-          },
-          "font": {
-            "height": 36
           }
         },
         {
@@ -958,7 +946,7 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "name": "PanicLocation",
           "x": 220,
           "y": 750,
@@ -981,9 +969,6 @@
               "type": "code",
               "code": "LGUI2.Element[MiningRangeMultipler]:KeyboardFocus"
             }
-          },
-          "font": {
-            "height": 36
           }
         }
       ]

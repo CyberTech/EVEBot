@@ -143,7 +143,7 @@
               }
             },
             {
-              "type": "textbox",
+              "jsonTemplate": "evebotTextBox",
               "name": "tbSmallHauler",
               "x": 270,
               "y": 40,
@@ -166,9 +166,6 @@
                   "type": "code",
                   "code": "LGUI2.Element[tbLargeHauler]:KeyboardFocus"
                 }
-              },
-              "font": {
-                "height": 36
               }
             },
             {
@@ -184,7 +181,7 @@
               }
             },
             {
-              "type": "textbox",
+              "jsonTemplate": "evebotTextBox",
               "name": "tbLargeHauler",
               "x": 270,
               "y": 100,
@@ -207,9 +204,6 @@
                   "type": "code",
                   "code": "LGUI2.Element[tbMiningShip]:KeyboardFocus"
                 }
-              },
-              "font": {
-                "height": 36
               }
             },
             {
@@ -225,7 +219,7 @@
               }
             },
             {
-              "type": "textbox",
+              "jsonTemplate": "evebotTextBox",
               "name": "tbMiningShip",
               "x": 270,
               "y": 160,
@@ -248,9 +242,6 @@
                   "type": "code",
                   "code": "LGUI2.Element[tbCombatShip]:KeyboardFocus"
                 }
-              },
-              "font": {
-                "height": 36
               }
             },
             {
@@ -266,7 +257,7 @@
               }
             },
             {
-              "type": "textbox",
+              "jsonTemplate": "evebotTextBox",
               "name": "tbCombatShip",
               "x": 270,
               "y": 220,
@@ -289,9 +280,6 @@
                   "type": "code",
                   "code": "LGUI2.Element[tbSalvageShip]:KeyboardFocus"
                 }
-              },
-              "font": {
-                "height": 36
               }
             }
           ]
@@ -430,7 +418,7 @@
               }
             },
             {
-              "type": "textbox",
+              "jsonTemplate": "evebotTextBox",
               "name": "tbSalvageShip",
               "x": 710,
               "y": 30,
@@ -453,9 +441,6 @@
                   "type": "code",
                   "code": "LGUI2.Element[tbSmallHaulerLimit]:KeyboardFocus"
                 }
-              },
-              "font": {
-                "height": 36
               }
             }
           ]
@@ -501,7 +486,7 @@
               }
             },
             {
-              "type": "textbox",
+              "jsonTemplate": "evebotTextBox",
               "name": "tbSmallHaulerLimit",
               "x": 710,
               "y": 30,
@@ -524,9 +509,6 @@
                   "type": "code",
                   "code": "LGUI2.Element[tbSmallHauler]:KeyboardFocus"
                 }
-              },
-              "font": {
-                "height": 36
               }
             }
           ]

@@ -109,7 +109,7 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "name": "MinimumDronesInBay",
           "x": 320,
           "y": 120,
@@ -134,9 +134,6 @@
           "tooltip": {
             "jsonTemplate": "evebotTooltip",
             "text": "This will set the amount of drones you want in your drone bay."
-          },
-          "font": {
-            "height": 36
           }
         },
         {
@@ -152,7 +149,7 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "name": "tbMaxRuntime",
           "x": 320,
           "y": 180,
@@ -176,9 +173,6 @@
           "tooltip": {
             "jsonTemplate": "evebotTooltip",
             "text": "The maximum hours to run the script before it aborts."
-          },
-          "font": {
-            "height": 36
           }
         },
         {
@@ -194,7 +188,7 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "name": "tbIRCServer",
           "x": 320,
           "y": 300,
@@ -218,9 +212,6 @@
           "tooltip": {
             "jsonTemplate": "evebotTooltip",
             "text": "Enter an server address if you want to use IRC"
-          },
-          "font": {
-            "height": 36
           }
         },
         {
@@ -236,7 +227,7 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "name": "tbIRCChannel",
           "x": 320,
           "y": 360,
@@ -260,9 +251,6 @@
           "tooltip": {
             "jsonTemplate": "evebotTooltip",
             "text": "Enter an channel name if you want to use IRC"
-          },
-          "font": {
-            "height": 36
           }
         },
         {
@@ -278,7 +266,7 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "name": "tbIRCUser",
           "x": 320,
           "y": 420,
@@ -302,9 +290,6 @@
           "tooltip": {
             "jsonTemplate": "evebotTooltip",
             "text": "Enter an username if you want to use IRC"
-          },
-          "font": {
-            "height": 36
           }
         },
         {
@@ -320,7 +305,7 @@
           }
         },
         {
-          "type": "textbox",
+          "jsonTemplate": "evebotTextBox",
           "name": "tbIRCPassword",
           "x": 320,
           "y": 480,
@@ -345,9 +330,6 @@
           "tooltip": {
             "jsonTemplate": "evebotTooltip",
             "text": "Enter a password if you need one to use IRC"
-          },
-          "font": {
-            "height": 36
           }
         },
         {
