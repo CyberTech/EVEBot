@@ -324,10 +324,10 @@
         {
           "type": "listbox",
           "name": "PickupBookmarks",
-          "x": 10,
+          "x": 0,
           "y": 400,
-          "width": 1450,
-          "height": 460,
+          "height": 470,
+          "horizontalAlignment": "stretch",
           "tooltip": {
             "jsonTemplate": "evebotTooltip",
             "text": "Bookmarks which will be visited to pickup items"

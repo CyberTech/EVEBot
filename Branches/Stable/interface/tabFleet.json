@@ -179,10 +179,10 @@
         {
           "type": "listbox",
           "name": "FleetMembers",
-          "x": 10,
+          "x": 0,
           "y": 250,
-          "width": 1450,
-          "height": 600,
+          "height": 620,
+          "horizontalAlignment": "stretch",
           "tooltip": {
             "jsonTemplate": "evebotTooltip",
             "text": "These characters will be added to your fleet if EVEBot can find them in your Corporation or Contacts and \"I am Leader\" is checked."
