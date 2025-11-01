@@ -1342,11 +1342,11 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 
 	method CheckUIPosition()
 	{
-		if ${LGUI2.Element[EVEBot].X} <= -${Math.Calc[${LGUI2.Element[EVEBot].Width} * 0.66].Int} || \
-			${LGUI2.Element[EVEBot].X} >= ${Math.Calc[${Display.Width} - ${LGUI2.Element[EVEBot].Width}]}
+		if ${LGUI2.Element[EVEBot].X} <= -${Math.Calc[${LGUI2.Element[EVEBot].ActualWidth} * 0.66].Int} || \
+			${LGUI2.Element[EVEBot].X} >= ${Math.Calc[${Display.Width} - ${LGUI2.Element[EVEBot].ActualWidth}]}
 		{
-			echo ${LGUI2.Element[EVEBot].X} <= -${Math.Calc[${LGUI2.Element[EVEBot].Width} * 0.66].Int}
-			echo ${LGUI2.Element[EVEBot].X} >= ${Math.Calc[${Display.Width} - ${LGUI2.Element[EVEBot].Width}]}
+			echo ${LGUI2.Element[EVEBot].X} <= -${Math.Calc[${LGUI2.Element[EVEBot].ActualWidth} * 0.66].Int}
+			echo ${LGUI2.Element[EVEBot].X} >= ${Math.Calc[${Display.Width} - ${LGUI2.Element[EVEBot].ActualWidth}]}
 
 			echo "----"
 			echo "    Warning: EVEBot window is outside window area: ${LGUI2.Element[EVEBot].X} > ${Display.Width}"
@@ -1355,10 +1355,10 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 		}
 
 		if ${LGUI2.Element[EVEBot].Y} <= 1 || \
-			${LGUI2.Element[EVEBot].Y} >= ${Math.Calc[${Display.Height} - ${LGUI2.Element[EVEBot].Height}]}
+			${LGUI2.Element[EVEBot].Y} >= ${Math.Calc[${Display.Height} - ${LGUI2.Element[EVEBot].ActualHeight}]}
 		{
 			echo ${LGUI2.Element[EVEBot].Y} <= 1
-			echo ${LGUI2.Element[EVEBot].Y} >= ${Math.Calc[${Display.Height} - ${LGUI2.Element[EVEBot].Height}]}
+			echo ${LGUI2.Element[EVEBot].Y} >= ${Math.Calc[${Display.Height} - ${LGUI2.Element[EVEBot].ActualHeight}]}
 
 			echo "----"
 			echo "    Warning: EVEBot window is outside window area: ${LGUI2.Element[EVEBot].Y} > ${Display.Height}"
@@ -1381,15 +1381,15 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 	method MinimizeWindow()
 	{
 		; Save current window size before minimizing
-		This.SavedWindowWidth:Set[${LGUI2.Element[EVEBot].Width}]
-		This.SavedWindowHeight:Set[${LGUI2.Element[EVEBot].Height}]
+		This.SavedWindowWidth:Set[${LGUI2.Element[EVEBot].ActualWidth}]
+		This.SavedWindowHeight:Set[${LGUI2.Element[EVEBot].ActualHeight}]
 
 		; Hide the tab control
 		LGUI2.Element[EVEBotOptionsTab]:SetVisibility[Collapsed]
 
 		; Resize window to just the title bar height (read from the titleBar element)
 		variable int titleBarHeight = ${LGUI2.Element[EVEBotTitleBar].Height}
-		LGUI2.Element[EVEBot]:SetSize[${LGUI2.Element[EVEBot].Width}, ${titleBarHeight}]
+		LGUI2.Element[EVEBot]:SetSize[${LGUI2.Element[EVEBot].ActualWidth}, ${titleBarHeight}]
 	}
 
 	method MaximizeWindow()
