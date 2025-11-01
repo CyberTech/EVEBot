@@ -52,7 +52,7 @@
             },
             "onTextChanged": {
               "type": "code",
-              "code": "Script[EVEBot].VariableScope.Config.Fleet:SetFleetLeader[${This.Text}]"
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Fleet:SetFleetLeader[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Fleet:SetFleetLeader[\"\"]\n}"
             }
           },
           "font": {

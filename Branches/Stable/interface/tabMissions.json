@@ -160,7 +160,7 @@
                 },
                 "onTextChanged": {
                   "type": "code",
-                  "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetSmallHauler[${This.Text}]\n}"
+                  "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetSmallHauler[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetSmallHauler[\"\"]\n}"
                 }
               },
               "font": {
@@ -197,7 +197,7 @@
                 },
                 "onTextChanged": {
                   "type": "code",
-                  "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetLargeHauler[${This.Text}]\n}"
+                  "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetLargeHauler[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetLargeHauler[\"\"]\n}"
                 }
               },
               "font": {
@@ -234,7 +234,7 @@
                 },
                 "onTextChanged": {
                   "type": "code",
-                  "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetMiningShip[${This.Text}]\n}"
+                  "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetMiningShip[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetMiningShip[\"\"]\n}"
                 }
               },
               "font": {
@@ -271,7 +271,7 @@
                 },
                 "onTextChanged": {
                   "type": "code",
-                  "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetCombatShip[${This.Text}]\n}"
+                  "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetCombatShip[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetCombatShip[\"\"]\n}"
                 }
               },
               "font": {
@@ -431,7 +431,7 @@
                 },
                 "onTextChanged": {
                   "type": "code",
-                  "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetSalvageShip[${This.Text}]\n}"
+                  "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetSalvageShip[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetSalvageShip[\"\"]\n}"
                 }
               },
               "font": {
@@ -498,7 +498,7 @@
                 },
                 "onTextChanged": {
                   "type": "code",
-                  "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetSmallHaulerLimit[${Int[${This.Text}]}]\n}"
+                  "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetSmallHaulerLimit[${Int[${This.Text}]}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetSmallHaulerLimit[0]\n}"
                 }
               },
               "font": {

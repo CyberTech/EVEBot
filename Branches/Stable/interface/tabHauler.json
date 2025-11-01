@@ -179,7 +179,7 @@
             },
             "onTextChanged": {
               "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Hauler:SetHaulerPickupName[${This.Text}]\n}"
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Hauler:SetHaulerPickupName[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Hauler:SetHaulerPickupName[\"\"]\n}"
             }
           },
           "font": {
@@ -216,7 +216,7 @@
             },
             "onTextChanged": {
               "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Hauler:SetMiningSystemBookmark[${This.Text}]\n}"
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Hauler:SetMiningSystemBookmark[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Hauler:SetMiningSystemBookmark[\"\"]\n}"
             }
           },
           "font": {

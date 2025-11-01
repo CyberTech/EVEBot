@@ -97,7 +97,7 @@
             },
             "onTextChanged": {
               "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetMiningRangeMultipler[${This.Text}]\n}"
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetMiningRangeMultipler[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetMiningRangeMultipler[0]\n}"
             }
           },
           "font": {
@@ -155,7 +155,7 @@
             },
             "onTextChanged": {
               "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetCargoThreshold[${This.Text}]\n}"
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetCargoThreshold[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetCargoThreshold[0]\n}"
             }
           },
           "font": {
@@ -605,7 +605,7 @@
             },
             "onTextChanged": {
               "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetMinimumSecurityStatus[${This.Text}]\n}"
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetMinimumSecurityStatus[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetMinimumSecurityStatus[0]\n}"
             }
           },
           "font": {
@@ -922,7 +922,7 @@
             },
             "onTextChanged": {
               "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetDeliveryLocation[${This.Text}]\n}"
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetDeliveryLocation[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetDeliveryLocation[\"\"]\n}"
             }
           },
           "font": {
@@ -959,7 +959,7 @@
             },
             "onTextChanged": {
               "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetPanicLocation[${This.Text}]\n}"
+              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetPanicLocation[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Miner:SetPanicLocation[\"\"]\n}"
             }
           },
           "font": {
