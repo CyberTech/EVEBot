@@ -11,7 +11,7 @@
       "eventHandlers": {
         "onCloseButtonClick": {
           "type": "code",
-          "code": "EVEBot:EndBot[]"
+          "code": "Script[EVEBot].VariableScope.EVEBot:EndBot[]"
         }
       },
       "titleBar": {
