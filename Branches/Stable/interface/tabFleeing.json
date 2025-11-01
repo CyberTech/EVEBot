@@ -880,9 +880,14 @@
                     "name": "lbWLLocal",
                     "x": 10,
                     "y": 50,
-                    "_TODO": "DUPLICATE FUNCTIONALITY FROM LGUI1",
                     "width": 390,
-                    "height": 600
+                    "height": 600,
+                    "eventHandlers": {
+                      "onItemSelected": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.UI:OnWLLocalListBoxClick[]"
+                      }
+                    }
                   },
                   {
                     "type": "button",
@@ -892,9 +897,14 @@
                     "width": 130,
                     "height": 60,
                     "content": "Refresh",
-                    "_TODO": "DUPLICATE FUNCTIONALITY FROM LGUI1",
                     "font": {
                       "height": 36
+                    },
+                    "eventHandlers": {
+                      "onMouseClick": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.UI:OnWLRefreshButtonClick[]"
+                      }
                     }
                   },
                   {
@@ -918,9 +928,14 @@
                     "width": 76,
                     "height": 60,
                     "content": "Add",
-                    "_TODO": "DUPLICATE FUNCTIONALITY FROM LGUI1",
                     "font": {
                       "height": 36
+                    },
+                    "eventHandlers": {
+                      "onMouseClick": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.UI:OnWLAddPilotButtonClick[]"
+                      }
                     }
                   },
                   {
@@ -931,9 +946,14 @@
                     "width": 76,
                     "height": 60,
                     "content": "Del",
-                    "_TODO": "DUPLICATE FUNCTIONALITY FROM LGUI1",
                     "font": {
                       "height": 36
+                    },
+                    "eventHandlers": {
+                      "onMouseClick": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.UI:OnWLDelPilotButtonClick[]"
+                      }
                     }
                   },
                   {
@@ -943,11 +963,14 @@
                     "y": 55,
                     "width": 390,
                     "height": 180,
-                    "_TODO": "DUPLICATE FUNCTIONALITY FROM LGUI1",
                     "eventHandlers": {
                       "onLoad": {
                         "type": "code",
-                        "code": "This:ClearItems\nvariable iterator i\nScript[EVEBot].VariableScope.Whitelist.PilotsRef:GetSettingIterator[i]\nif ${i:First(exists)}\n{\n\tdo\n\t{\n\t\tThis:AddItem[${i.Key},${i.Value}]\n\t}\n\twhile ${i:Next(exists)}\n}\nThis:Sort"
+                        "code": "Script[EVEBot].VariableScope.UI:RefreshWLPilotsList[]"
+                      },
+                      "onItemSelected": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.UI:OnWLPilotsListBoxClick[]"
                       }
                     }
                   },
@@ -972,9 +995,14 @@
                     "width": 76,
                     "height": 60,
                     "content": "Add",
-                    "_TODO": "DUPLICATE FUNCTIONALITY FROM LGUI1",
                     "font": {
                       "height": 36
+                    },
+                    "eventHandlers": {
+                      "onMouseClick": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.UI:OnWLAddCorpButtonClick[]"
+                      }
                     }
                   },
                   {
@@ -985,9 +1013,14 @@
                     "width": 76,
                     "height": 60,
                     "content": "Del",
-                    "_TODO": "DUPLICATE FUNCTIONALITY FROM LGUI1",
                     "font": {
                       "height": 36
+                    },
+                    "eventHandlers": {
+                      "onMouseClick": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.UI:OnWLDelCorpButtonClick[]"
+                      }
                     }
                   },
                   {
@@ -997,11 +1030,14 @@
                     "y": 295,
                     "width": 390,
                     "height": 180,
-                    "_TODO": "DUPLICATE FUNCTIONALITY FROM LGUI1",
                     "eventHandlers": {
                       "onLoad": {
                         "type": "code",
-                        "code": "This:ClearItems\nvariable iterator i\nScript[EVEBot].VariableScope.Whitelist.CorporationsRef:GetSettingIterator[i]\nif ${i:First(exists)}\n{\n\tdo\n\t{\n\t\tThis:AddItem[${i.Key},${i.Value}]\n\t}\n\twhile ${i:Next(exists)}\n}\nThis:Sort"
+                        "code": "Script[EVEBot].VariableScope.UI:RefreshWLCorpsList[]"
+                      },
+                      "onItemSelected": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.UI:OnWLCorpsListBoxClick[]"
                       }
                     }
                   },
@@ -1026,9 +1062,14 @@
                     "width": 76,
                     "height": 60,
                     "content": "Add",
-                    "_TODO": "DUPLICATE FUNCTIONALITY FROM LGUI1",
                     "font": {
                       "height": 36
+                    },
+                    "eventHandlers": {
+                      "onMouseClick": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.UI:OnWLAddAllianceButtonClick[]"
+                      }
                     }
                   },
                   {
@@ -1039,9 +1080,14 @@
                     "width": 76,
                     "height": 60,
                     "content": "Del",
-                    "_TODO": "DUPLICATE FUNCTIONALITY FROM LGUI1",
                     "font": {
                       "height": 36
+                    },
+                    "eventHandlers": {
+                      "onMouseClick": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.UI:OnWLDelAllianceButtonClick[]"
+                      }
                     }
                   },
                   {
@@ -1051,11 +1097,14 @@
                     "y": 530,
                     "width": 390,
                     "height": 180,
-                    "_TODO": "DUPLICATE FUNCTIONALITY FROM LGUI1",
                     "eventHandlers": {
                       "onLoad": {
                         "type": "code",
-                        "code": "This:ClearItems\nvariable iterator i\nScript[EVEBot].VariableScope.Whitelist.AlliancesRef:GetSettingIterator[i]\nif ${i:First(exists)}\n{\n\tdo\n\t{\n\t\tThis:AddItem[${i.Key},${i.Value}]\n\t}\n\twhile ${i:Next(exists)}\n}\nThis:Sort"
+                        "code": "Script[EVEBot].VariableScope.UI:RefreshWLAlliancesList[]"
+                      },
+                      "onItemSelected": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.UI:OnWLAlliancesListBoxClick[]"
                       }
                     }
                   },
@@ -1067,9 +1116,14 @@
                     "width": 270,
                     "height": 60,
                     "content": "Synchronize Whitelist",
-                    "_TODO": "DUPLICATE FUNCTIONALITY FROM LGUI1",
                     "font": {
                       "height": 36
+                    },
+                    "eventHandlers": {
+                      "onMouseClick": {
+                        "type": "code",
+                        "code": "Script[EVEBot].VariableScope.UI:OnSyncWhitelistsButtonClick[]"
+                      }
                     }
                   }
                 ]

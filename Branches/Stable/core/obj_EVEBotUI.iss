@@ -60,7 +60,7 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 		while ${UIFile:Next(exists)}
 
 		; temp: Set to tab 10
-		LGUI2.Element[EVEBotOptionsTab]:SelectTab[10]
+		LGUI2.Element[EVEBotOptionsTab]:SelectTab[1]
 		LGUI2.Element[FleeingTabcontrol]:SelectTab[2]
 
 		This:LogSystemStats
@@ -106,7 +106,7 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 		while ${UIFile:Next(exists)}
 
 		; temp:  Set to tab 10
-		LGUI2.Element[EVEBotOptionsTab]:SelectTab[10]
+		LGUI2.Element[EVEBotOptionsTab]:SelectTab[1]
 		LGUI2.Element[FleeingTabcontrol]:SelectTab[2]
 
 		Logger:WriteQueue
@@ -1370,6 +1370,278 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 	method LogSystemStats()
 	{
 		;Logger:Log["Memory: ${System.OS} Process: ${Math.Calc[${System.MemoryUsage}/1024}.Int}kb Free: ${System.MemFree}mb Texture Mem Free: ${Display.TextureMem}mb FPS: ${Display.FPS.Int} Windowed: ${Display.Windowed}(${Display.AppWindowed}) Foreground: ${Display.Foreground}", LOG_MINOR]
+	}
+
+	; ============================================================
+	; "Fleeing" tab methods
+	; ============================================================
+	method OnWLLocalListBoxClick()
+	{
+		; When a pilot is selected in the Local list, display their info
+		if (!${LGUI2.Element[lbWLLocal].SelectedItem.Data.Get[text](exists)})
+			return
+
+		variable string pilotname = "${LGUI2.Element[lbWLLocal].SelectedItem.Data.Get[text]}"
+		variable pilot p = ${Local[${pilotname}]}
+
+		; Clear the whitelist selections
+		LGUI2.Element[lbWLPilots]:ClearSelection
+		LGUI2.Element[lbWLCorps]:ClearSelection
+		LGUI2.Element[lbWLAlliances]:ClearSelection
+
+		; Update info textblocks (these are defined in LGUI1 but not in LGUI2 yet - they may need to be added)
+		if ${LGUI2.Element[txtPilotInfo](exists)}
+			LGUI2.Element[txtPilotInfo]:SetText["Pilot: ${p.Name} (${p.CharID})"]
+		if ${LGUI2.Element[txtCorpInfo](exists)}
+			LGUI2.Element[txtCorpInfo]:SetText["Corp ID: ${p.Corp.ID}"]
+		if ${LGUI2.Element[txtAllianceInfo](exists)}
+			LGUI2.Element[txtAllianceInfo]:SetText["Alliance: ${p.Alliance} (${p.AllianceID})"]
+	}
+
+	method OnWLRefreshButtonClick()
+	{
+		; Refresh the local pilots list
+		variable index:pilot pilots
+		variable iterator piter
+		EVE:GetLocalPilots[pilots]
+		pilots:GetIterator[piter]
+
+		; Clear info displays
+		if ${LGUI2.Element[txtPilotInfo](exists)}
+			LGUI2.Element[txtPilotInfo]:SetText[""]
+		if ${LGUI2.Element[txtCorpInfo](exists)}
+			LGUI2.Element[txtCorpInfo]:SetText[""]
+		if ${LGUI2.Element[txtAllianceInfo](exists)}
+			LGUI2.Element[txtAllianceInfo]:SetText[""]
+
+		; Clear and repopulate the local pilots listbox
+		LGUI2.Element[lbWLLocal]:ClearItems
+		if ${piter:First(exists)}
+		{
+			do
+			{
+				if !${piter.Value.CharID.Equal[${Me.CharID}]}
+					LGUI2.Element[lbWLLocal]:AddItem["${piter.Value.Name}"]
+			}
+			while ${piter:Next(exists)}
+		}
+		LGUI2.Element[lbWLLocal]:Sort
+	}
+
+	method OnWLPilotsListBoxClick()
+	{
+		; When a pilot is selected in the whitelist, display their info
+		if (!${LGUI2.Element[lbWLPilots].SelectedItem.Data.Get[text](exists)})
+			return
+
+		; Clear the local list selection
+		LGUI2.Element[lbWLLocal]:ClearSelection
+
+		variable string pilotname = "${LGUI2.Element[lbWLPilots].SelectedItem.Data.Get[text]}"
+		variable string pilotid = "${LGUI2.Element[lbWLPilots].SelectedItem.Data.Get[value]}"
+
+		if ${LGUI2.Element[txtPilotInfo](exists)}
+			LGUI2.Element[txtPilotInfo]:SetText["Pilot: ${pilotname} ${pilotid}"]
+		if ${LGUI2.Element[txtCorpInfo](exists)}
+			LGUI2.Element[txtCorpInfo]:SetText[""]
+		if ${LGUI2.Element[txtAllianceInfo](exists)}
+			LGUI2.Element[txtAllianceInfo]:SetText[""]
+	}
+
+	method OnWLAddPilotButtonClick()
+	{
+		; Add selected local pilot to whitelist
+		if (!${LGUI2.Element[lbWLLocal].SelectedItem.Data.Get[text](exists)})
+			return
+
+		variable string pilotname = "${LGUI2.Element[lbWLLocal].SelectedItem.Data.Get[text]}"
+		variable int64 pilotid = ${Local[${pilotname}].CharID}
+
+		if !${pilotid.Equal[0]}
+		{
+			Script[EVEBot].VariableScope.Social:AddWhiteList[Pilot,${pilotid},${pilotname}]
+		}
+
+		; Refresh the whitelist display
+		This:RefreshWLPilotsList
+	}
+
+	method OnWLDelPilotButtonClick()
+	{
+		; Delete selected pilot from whitelist
+		if (!${LGUI2.Element[lbWLPilots].SelectedItem.Data.Get[text](exists)})
+			return
+
+		variable string pilotname = "${LGUI2.Element[lbWLPilots].SelectedItem.Data.Get[text]}"
+		variable string pilotid = "${LGUI2.Element[lbWLPilots].SelectedItem.Data.Get[value]}"
+
+		Script[EVEBot].VariableScope.Social:DelWhiteList[Pilot,${pilotid},${pilotname}]
+
+		; Refresh the whitelist display
+		This:RefreshWLPilotsList
+	}
+
+	method RefreshWLPilotsList()
+	{
+		; Refresh the pilots whitelist
+		LGUI2.Element[lbWLPilots]:ClearItems
+		variable iterator i
+		Script[EVEBot].VariableScope.Whitelist.PilotsRef:GetSettingIterator[i]
+		if ${i:First(exists)}
+		{
+			do
+			{
+				LGUI2.Element[lbWLPilots]:AddItem["${i.Key}","${i.Value}"]
+			}
+			while ${i:Next(exists)}
+		}
+		LGUI2.Element[lbWLPilots]:Sort
+	}
+
+	method OnWLCorpsListBoxClick()
+	{
+		; When a corp is selected in the whitelist, display its info
+		if (!${LGUI2.Element[lbWLCorps].SelectedItem.Data.Get[text](exists)})
+			return
+
+		; Clear the local list selection
+		LGUI2.Element[lbWLLocal]:ClearSelection
+
+		variable string corpname = "${LGUI2.Element[lbWLCorps].SelectedItem.Data.Get[text]}"
+		variable string corpid = "${LGUI2.Element[lbWLCorps].SelectedItem.Data.Get[value]}"
+
+		if ${LGUI2.Element[txtPilotInfo](exists)}
+			LGUI2.Element[txtPilotInfo]:SetText[""]
+		if ${LGUI2.Element[txtCorpInfo](exists)}
+			LGUI2.Element[txtCorpInfo]:SetText["Corp: ${corpname} ${corpid}"]
+		if ${LGUI2.Element[txtAllianceInfo](exists)}
+			LGUI2.Element[txtAllianceInfo]:SetText[""]
+	}
+
+	method OnWLAddCorpButtonClick()
+	{
+		; Add selected local pilot's corp to whitelist
+		if (!${LGUI2.Element[lbWLLocal].SelectedItem.Data.Get[text](exists)})
+			return
+
+		variable string pilotname = "${LGUI2.Element[lbWLLocal].SelectedItem.Data.Get[text]}"
+		variable int64 corpid = ${Local[${pilotname}].Corp.ID}
+
+		if !${corpid.Equal[0]}
+		{
+			Script[EVEBot].VariableScope.Social:AddWhiteList[Corporation,${corpid},(${pilotname}) ${corpid}]
+		}
+
+		; Refresh the whitelist display
+		This:RefreshWLCorpsList
+	}
+
+	method OnWLDelCorpButtonClick()
+	{
+		; Delete selected corp from whitelist
+		if (!${LGUI2.Element[lbWLCorps].SelectedItem.Data.Get[text](exists)})
+			return
+
+		variable string corpname = "${LGUI2.Element[lbWLCorps].SelectedItem.Data.Get[text]}"
+		variable string corpid = "${LGUI2.Element[lbWLCorps].SelectedItem.Data.Get[value]}"
+
+		Script[EVEBot].VariableScope.Social:DelWhiteList[Corporation,${corpid},${corpname}]
+
+		; Refresh the whitelist display
+		This:RefreshWLCorpsList
+	}
+
+	method RefreshWLCorpsList()
+	{
+		; Refresh the corps whitelist
+		LGUI2.Element[lbWLCorps]:ClearItems
+		variable iterator i
+		Script[EVEBot].VariableScope.Whitelist.CorporationsRef:GetSettingIterator[i]
+		if ${i:First(exists)}
+		{
+			do
+			{
+				LGUI2.Element[lbWLCorps]:AddItem["${i.Key}","${i.Value}"]
+			}
+			while ${i:Next(exists)}
+		}
+		LGUI2.Element[lbWLCorps]:Sort
+	}
+
+	method OnWLAlliancesListBoxClick()
+	{
+		; When an alliance is selected in the whitelist, display its info
+		if (!${LGUI2.Element[lbWLAlliances].SelectedItem.Data.Get[text](exists)})
+			return
+
+		; Clear the local list selection
+		LGUI2.Element[lbWLLocal]:ClearSelection
+
+		variable string alliancename = "${LGUI2.Element[lbWLAlliances].SelectedItem.Data.Get[text]}"
+		variable string allianceid = "${LGUI2.Element[lbWLAlliances].SelectedItem.Data.Get[value]}"
+
+		if ${LGUI2.Element[txtPilotInfo](exists)}
+			LGUI2.Element[txtPilotInfo]:SetText[""]
+		if ${LGUI2.Element[txtCorpInfo](exists)}
+			LGUI2.Element[txtCorpInfo]:SetText[""]
+		if ${LGUI2.Element[txtAllianceInfo](exists)}
+			LGUI2.Element[txtAllianceInfo]:SetText["Alliance: ${alliancename} ${allianceid}"]
+	}
+
+	method OnWLAddAllianceButtonClick()
+	{
+		; Add selected local pilot's alliance to whitelist
+		if (!${LGUI2.Element[lbWLLocal].SelectedItem.Data.Get[text](exists)})
+			return
+
+		variable string pilotname = "${LGUI2.Element[lbWLLocal].SelectedItem.Data.Get[text]}"
+		variable int64 allianceid = ${Local[${pilotname}].AllianceID}
+
+		if !${allianceid.Equal[0]}
+		{
+			Script[EVEBot].VariableScope.Social:AddWhiteList[Alliance,${allianceid},(${pilotname}) ${allianceid}]
+		}
+
+		; Refresh the whitelist display
+		This:RefreshWLAlliancesList
+	}
+
+	method OnWLDelAllianceButtonClick()
+	{
+		; Delete selected alliance from whitelist
+		if (!${LGUI2.Element[lbWLAlliances].SelectedItem.Data.Get[text](exists)})
+			return
+
+		variable string alliancename = "${LGUI2.Element[lbWLAlliances].SelectedItem.Data.Get[text]}"
+		variable string allianceid = "${LGUI2.Element[lbWLAlliances].SelectedItem.Data.Get[value]}"
+
+		Script[EVEBot].VariableScope.Social:DelWhiteList[Alliance,${allianceid},${alliancename}]
+
+		; Refresh the whitelist display
+		This:RefreshWLAlliancesList
+	}
+
+	method RefreshWLAlliancesList()
+	{
+		; Refresh the alliances whitelist
+		LGUI2.Element[lbWLAlliances]:ClearItems
+		variable iterator i
+		Script[EVEBot].VariableScope.Whitelist.AlliancesRef:GetSettingIterator[i]
+		if ${i:First(exists)}
+		{
+			do
+			{
+				LGUI2.Element[lbWLAlliances]:AddItem["${i.Key}","${i.Value}"]
+			}
+			while ${i:Next(exists)}
+		}
+		LGUI2.Element[lbWLAlliances]:Sort
+	}
+
+	method OnSyncWhitelistsButtonClick()
+	{
+		; Synchronize whitelist across all sessions
+		Script[EVEBot].VariableScope.Social:SyncWhitelist
 	}
 
 }
