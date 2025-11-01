@@ -3,6 +3,8 @@
   "templates": {
     "tabLabels.content": {
       "type": "panel",
+      "horizontalAlignment": "stretch",
+      "verticalAlignment": "stretch",
       "children": [
         {
           "type": "textblock",

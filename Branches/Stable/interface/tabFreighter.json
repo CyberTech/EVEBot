@@ -3,6 +3,8 @@
   "templates": {
     "tabFreighter.content": {
       "type": "panel",
+      "horizontalAlignment": "stretch",
+      "verticalAlignment": "stretch",
       "children": [
         {
           "type": "textblock",
@@ -324,8 +326,8 @@
           "name": "PickupBookmarks",
           "x": 10,
           "y": 400,
-          "width": 1200,
-          "height": 400,
+          "width": 1450,
+          "height": 460,
           "tooltip": {
             "jsonTemplate": "evebotTooltip",
             "text": "Bookmarks which will be visited to pickup items"

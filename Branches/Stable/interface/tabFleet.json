@@ -3,6 +3,8 @@
   "templates": {
     "tabFleet.content": {
       "type": "panel",
+      "horizontalAlignment": "stretch",
+      "verticalAlignment": "stretch",
       "children": [
         {
           "type": "checkbox",
@@ -179,8 +181,8 @@
           "name": "FleetMembers",
           "x": 10,
           "y": 250,
-          "width": 1590,
-          "height": 450,
+          "width": 1450,
+          "height": 600,
           "tooltip": {
             "jsonTemplate": "evebotTooltip",
             "text": "These characters will be added to your fleet if EVEBot can find them in your Corporation or Contacts and \"I am Leader\" is checked."

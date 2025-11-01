@@ -61,6 +61,7 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 
 		; temp: Set to tab 10
 		LGUI2.Element[EVEBotOptionsTab]:SelectTab[10]
+		LGUI2.Element[FleeingTabcontrol]:SelectTab[2]
 
 		This:LogSystemStats
 		This:CheckUIPosition
@@ -106,6 +107,7 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 
 		; temp:  Set to tab 10
 		LGUI2.Element[EVEBotOptionsTab]:SelectTab[10]
+		LGUI2.Element[FleeingTabcontrol]:SelectTab[2]
 
 		Logger:WriteQueue
 		This.Reloaded:Set[TRUE]

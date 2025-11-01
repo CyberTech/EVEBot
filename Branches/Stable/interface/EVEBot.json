@@ -6,8 +6,8 @@
       "name": "EVEBot",
       "x": 1045,
       "y": 775,
-      "width": 1640,
-      "height": 1150,
+      "width": 1490,
+      "height": 1005,
       "eventHandlers": {
         "onCloseButtonClick": {
           "type": "code",
