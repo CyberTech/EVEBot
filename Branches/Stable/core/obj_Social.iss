@@ -115,9 +115,9 @@ objectdef obj_Social inherits obj_BaseClass
 
 	method FinalizeWhitelist()
 	{
-		UIElement[EVEBot].FindUsableChild[lbWLPilots,listbox]:RightClick
-		UIElement[EVEBot].FindUsableChild[lbWLCorps,listbox]:RightClick
-		UIElement[EVEBot].FindUsableChild[lbWLAlliances,listbox]:RightClick
+		LGUI2.Element[lbWLPilots]:FireEventHandler[onRightPress]
+		LGUI2.Element[lbWLCorps]:FireEventHandler[onRightPress]
+		LGUI2.Element[lbWLAlliances]:FireEventHandler[onRightPress]
 
 	}
 	method ClearWhitelist()

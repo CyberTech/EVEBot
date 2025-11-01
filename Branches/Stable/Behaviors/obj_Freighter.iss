@@ -424,7 +424,7 @@ objectdef obj_Freighter inherits obj_BaseClass
 		variable iterator bm_iterator
 		bm_index:GetIterator[bm_iterator]
 
-		UIElement[PickupBookmarks@Freighter@EVEBotOptionsTab@EVEBot]:ClearItems
+		LGUI2.Element[PickupBookmarks]:ClearItems
 		variable collection:bookmark bm_collection
 		if ${bm_iterator:First(exists)}
 		{
@@ -445,7 +445,7 @@ objectdef obj_Freighter inherits obj_BaseClass
 					{
 						bm_collection:Set[${bm_iterator.Value.Label},${bm_iterator.Value.ID}]
 					}
-					UIElement[PickupBookmarks@Freighter@EVEBotOptionsTab@EVEBot]:AddItem[${bm_iterator.Value.Label},${bm_iterator.Value.ID}]
+					LGUI2.Element[PickupBookmarks]:InsertItem["{\"type\":\"textblock\",\"text\":\"${bm_iterator.Value.Label.Escape}\",\"data\":{\"bookmarkID\":${bm_iterator.Value.ID}}}"]
 				}
 			}
 			while ${bm_iterator:Next(exists)}

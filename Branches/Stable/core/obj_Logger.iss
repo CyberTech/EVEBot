@@ -98,8 +98,6 @@ objectdef obj_Logger
 			{
 				if ${Level} > LOG_MINOR && !${Filter}
 				{
-					;LGUI2.Element[StatusConsole]:SetText["\n${LGUI2.Element[StatusConsole].Text}\n${msg}"]
-
 					variable string currentText = "${LGUI2.Element[StatusConsole].Text}"
 					variable int lineCount = ${currentText.Count["\n"]}
 					if ${lineCount} > 100
@@ -109,8 +107,6 @@ objectdef obj_Logger
 						currentText:Set["${currentText.Right[-${Math.Calc[${firstNewline}+1]}]}"]
 					}
 					LGUI2.Element[StatusConsole]:SetText["${currentText}\n${msg}"]
-
-					;UIElement[StatusConsole@Status@EVEBotOptionsTab@EVEBot]:Echo["${msg}"]
 				}
 				#ifdef EVEBOT_TESTCASE
 				; Always echo all logging to console during testcases, but don't log the ECHOTOO or we get twice.
@@ -147,7 +143,15 @@ objectdef obj_Logger
 	{
 		while ${This.ConsoleBuffer.Peek(exists)}
 		{
-			UIElement[StatusConsole@Status@EVEBotOptionsTab@EVEBot]:Echo[${This.ConsoleBuffer.Peek.Escape}]
+			variable string currentText = "${LGUI2.Element[StatusConsole].Text}"
+			variable int lineCount = ${currentText.Count["\n"]}
+			if ${lineCount} > 100
+			{
+				; Remove first line
+				variable int firstNewline = ${currentText.Find["\n"]}
+				currentText:Set["${currentText.Right[-${Math.Calc[${firstNewline}+1]}]}"]
+			}
+			LGUI2.Element[StatusConsole]:SetText["${currentText}\n${This.ConsoleBuffer.Peek.Escape}"]
 			redirect -append "${This.LogFile}" Echo "${This.ConsoleBuffer.Peek.Escape}"
 			This.ConsoleBuffer:Dequeue
 		}
