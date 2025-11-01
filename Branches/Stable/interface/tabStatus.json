@@ -7,78 +7,6 @@
       "verticalAlignment": "stretch",
       "children": [
         {
-          "type": "button",
-          "name": "SaveConfig",
-          "x": 1120,
-          "y": 30,
-          "width": 200,
-          "height": 60,
-          "content": "Save Config",
-          "eventHandlers": {
-            "onPress": {
-              "type": "code",
-              "code": "Script[EVEBot].VariableScope.Config:Save"
-            }
-          },
-          "font": {
-            "height": 36
-          }
-        },
-        {
-          "type": "button",
-          "name": "BroadcastBreak",
-          "x": 1350,
-          "y": 30,
-          "width": 250,
-          "height": 60,
-          "content": "Broadcast Break",
-          "eventHandlers": {
-            "onPress": {
-              "type": "code",
-              "code": "relay all -event EVEBot_HARDSTOP \"${Me.Name} - ${Script[EVEBot].VariableScope.Config.Common.CurrentBehavior} - Broadcast Break Button\";Script[EVEBot].VariableScope.Logger:Log[\"Broadcast Break button forcing break!!!\", LOG_MINOR]"
-            }
-          },
-          "font": {
-            "height": 36
-          }
-        },
-        {
-          "type": "button",
-          "name": "BroadcastResume",
-          "x": 1350,
-          "y": 100,
-          "width": 250,
-          "height": 60,
-          "content": "Broadcast Resume",
-          "eventHandlers": {
-            "onPress": {
-              "type": "code",
-              "code": "Social.NextBreak:Set[0];Social.OnBreak:Set[FALSE];relay all -event EVEBot_ABORTHARDSTOP;Script[EVEBot].VariableScope.Logger:Log[\"Broadcast resume button resuming from break!!!\", LOG_MINOR]"
-            }
-          },
-          "font": {
-            "height": 36
-          }
-        },
-        {
-          "type": "button",
-          "name": "BroadcastRun",
-          "x": 1350,
-          "y": 170,
-          "width": 250,
-          "height": 60,
-          "content": "Broadcast Run",
-          "eventHandlers": {
-            "onPress": {
-              "type": "code",
-              "code": "relay all EVEBot:Resume[\"Resume via UI BroadcastRun\"]"
-            }
-          },
-          "font": {
-            "height": 36
-          }
-        },
-        {
           "type": "textblock",
           "name": "script_runtime",
           "x": 30,
@@ -98,6 +26,42 @@
           "width": 300,
           "height": 60,
           "text": "${EVEBot.Runtime}",
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "button",
+          "name": "SaveConfig",
+          "x": 900,
+          "y": 30,
+          "width": 200,
+          "height": 60,
+          "content": "Save Config",
+          "eventHandlers": {
+            "onPress": {
+              "type": "code",
+              "code": "Script[EVEBot].VariableScope.Config:Save"
+            }
+          },
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "button",
+          "name": "BroadcastBreak",
+          "x": 1150,
+          "y": 30,
+          "width": 250,
+          "height": 60,
+          "content": "Broadcast Break",
+          "eventHandlers": {
+            "onPress": {
+              "type": "code",
+              "code": "relay all -event EVEBot_HARDSTOP \"${Me.Name} - ${Script[EVEBot].VariableScope.Config.Common.CurrentBehavior} - Broadcast Break Button\";Script[EVEBot].VariableScope.Logger:Log[\"Broadcast Break button forcing break!!!\", LOG_MINOR]"
+            }
+          },
           "font": {
             "height": 36
           }
@@ -127,6 +91,24 @@
           }
         },
         {
+          "type": "button",
+          "name": "BroadcastResume",
+          "x": 1150,
+          "y": 100,
+          "width": 250,
+          "height": 60,
+          "content": "Broadcast Resume",
+          "eventHandlers": {
+            "onPress": {
+              "type": "code",
+              "code": "Social.NextBreak:Set[0];Social.OnBreak:Set[FALSE];relay all -event EVEBot_ABORTHARDSTOP;Script[EVEBot].VariableScope.Logger:Log[\"Broadcast resume button resuming from break!!!\", LOG_MINOR]"
+            }
+          },
+          "font": {
+            "height": 36
+          }
+        },
+       {
           "type": "textblock",
           "name": "Currently Training",
           "x": 30,
@@ -170,6 +152,24 @@
           "width": 450,
           "height": 60,
           "text": "${Script[EVEBot].VariableScope.Skills.NextInLine}",
+          "font": {
+            "height": 36
+          }
+        },
+        {
+          "type": "button",
+          "name": "BroadcastRun",
+          "x": 1150,
+          "y": 170,
+          "width": 250,
+          "height": 60,
+          "content": "Broadcast Run",
+          "eventHandlers": {
+            "onPress": {
+              "type": "code",
+              "code": "relay all EVEBot:Resume[\"Resume via UI BroadcastRun\"]"
+            }
+          },
           "font": {
             "height": 36
           }
