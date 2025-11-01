@@ -70,6 +70,51 @@
         }
       ]
     },
+    "evebotTextBox": {
+      "type": "textbox",
+      "multiline": false,
+      "borderThickness": 1,
+      "borderBrush": {
+        "color": [1.0, 1.0, 1.0]
+      },
+      "backgroundBrush": {
+        "color": [0, 0, 0]
+      },
+      "cursor": {
+        "backgroundBrush": {
+          "color": [0.8, 0.8, 0.8]
+        }
+      },
+      "selectionBrush": {
+        "color": [0.5, 0.2, 0.2, 0.8]
+      },
+      "font": {
+        "height": 36
+      },
+      "contentContainer": {
+        "type": "scrollviewer",
+        "acceptsMouseFocus": false
+      },
+      "content": {
+        "type": "textblock",
+        "padding": 4
+      },
+      "hooks":{
+        "onButtonMove": {
+          "event": "onButtonMove",
+          "flags":"self",
+          "eventHandler": {
+            "type":"code",
+            "code":[
+                "if ${Context.Args[controlName].Equals[ESC]} && !${Context.Args[position]}",
+                    "This:SetText[\"\"]",
+                "if ${Context.Args[controlName].Equals[ENTER]} && !${Context.Args[position]}",
+                    "LGUI2.Element[screen]:KeyboardFocus"
+            ]
+          }
+        }
+      }
+    },
     "evebotSlider": {
       "type": "slider",
       "borderThickness": 1,
