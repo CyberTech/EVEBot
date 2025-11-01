@@ -89,6 +89,8 @@
     },
     "evebotTitleBar": {
       "type": "dockpanel",
+      "name": "EVEBotTitleBar",
+      "height": 68,
       "children": [
         {
           "type": "button",
@@ -156,7 +158,7 @@
             20,
             0,
             0,
-            0
+            20
           ],
           "font": {
             "face": "Segoe UI",
@@ -231,10 +233,14 @@
             0
           ],
           "_dock": "right",
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Restore full window"
+          },
           "eventHandlers": {
             "onPress": {
               "type": "code",
-              "code": "LGUI2.Element[TitleBotStatus]:Hide;LGUI2.Element[TitleBotXPStatus]:Hide;LGUI2.Element[TitleBotXPCap]:Hide;LGUI2.Element[TitleBotStatusCap]:Hide"
+              "code": "Script[EVEBot].VariableScope.UI:MaximizeWindow[]"
             }
           }
         },
@@ -256,10 +262,14 @@
             0
           ],
           "_dock": "right",
+          "tooltip": {
+            "jsonTemplate": "evebotTooltip",
+            "text": "Minimize to title bar only"
+          },
           "eventHandlers": {
             "onPress": {
               "type": "code",
-              "code": "LGUI2.Element[TitleBotStatus]:Show;LGUI2.Element[TitleBotStatusCap]:Show;LGUI2.Element[TitleBotXPStatus]:Show;LGUI2.Element[TitleBotXPCap]:Show"
+              "code": "Script[EVEBot].VariableScope.UI:MinimizeWindow[]"
             }
           }
         }

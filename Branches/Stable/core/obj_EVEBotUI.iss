@@ -1373,6 +1373,35 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 	}
 
 	; ============================================================
+	; Window Minimize/Maximize Methods
+	; ============================================================
+	variable int SavedWindowWidth = 1490
+	variable int SavedWindowHeight = 1005
+
+	method MinimizeWindow()
+	{
+		; Save current window size before minimizing
+		This.SavedWindowWidth:Set[${LGUI2.Element[EVEBot].Width}]
+		This.SavedWindowHeight:Set[${LGUI2.Element[EVEBot].Height}]
+
+		; Hide the tab control
+		LGUI2.Element[EVEBotOptionsTab]:SetVisibility[Collapsed]
+
+		; Resize window to just the title bar height (read from the titleBar element)
+		variable int titleBarHeight = ${LGUI2.Element[EVEBotTitleBar].Height}
+		LGUI2.Element[EVEBot]:SetSize[${LGUI2.Element[EVEBot].Width}, ${titleBarHeight}]
+	}
+
+	method MaximizeWindow()
+	{
+		; Show the tab control
+		LGUI2.Element[EVEBotOptionsTab]:SetVisibility[Visible]
+
+		; Restore the window to its previous size
+		LGUI2.Element[EVEBot]:SetSize[${This.SavedWindowWidth}, ${This.SavedWindowHeight}]
+	}
+
+	; ============================================================
 	; "Fleeing" tab methods
 	; ============================================================
 	method OnWLLocalListBoxClick()
