@@ -248,15 +248,11 @@
             "jsonTemplate": "evebotTooltip",
             "text": "The prefix for source bookmark names."
           },
+          "textBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Freighter.SourcePrefix}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Freighter:SetSourcePrefix[", "]"]
+          },
           "eventHandlers": {
-            "onLoad": {
-              "type": "code",
-              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Freighter.SourcePrefix}]"
-            },
-            "onTextChanged": {
-              "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Freighter:SetSourcePrefix[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Freighter:SetSourcePrefix[\"\"]\n}"
-            },
             "onTabPress": {
               "type": "code",
               "code": "LGUI2.Element[teRegionName]:KeyboardFocus"
@@ -308,15 +304,11 @@
             "jsonTemplate": "evebotTooltip",
             "text": "Leave blank to service all regions."
           },
+          "textBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Freighter.RegionName}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Freighter:SetRegionName[", "]"]
+          },
           "eventHandlers": {
-            "onLoad": {
-              "type": "code",
-              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Freighter.RegionName}]"
-            },
-            "onTextChanged": {
-              "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Freighter:SetRegionName[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Freighter:SetRegionName[\"\"]\n}"
-            },
             "onTabPress": {
               "type": "code",
               "code": "LGUI2.Element[teSourcePrefix]:KeyboardFocus"

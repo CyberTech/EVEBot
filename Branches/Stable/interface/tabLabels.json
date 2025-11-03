@@ -42,15 +42,11 @@
             "jsonTemplate": "evebotTooltip",
             "text": "The prefix for safe spot bookmark names."
           },
+          "textBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Labels.SafeSpotPrefix}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Labels:SetSafeSpotPrefix[", "]"]
+          },
           "eventHandlers": {
-            "onLoad": {
-              "type": "code",
-              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Labels.SafeSpotPrefix}]"
-            },
-            "onTextChanged": {
-              "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Labels:SetSafeSpotPrefix[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Labels:SetSafeSpotPrefix[\"\"]\n}"
-            },
             "onTabPress": {
               "type": "code",
               "code": "LGUI2.Element[BeltBookMarkPrefix]:KeyboardFocus"
@@ -80,15 +76,11 @@
             "jsonTemplate": "evebotTooltip",
             "text": "The prefix for ore belt bookmark names."
           },
+          "textBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Labels.OreBeltPrefix}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Labels:SetOreBeltPrefix[", "]"]
+          },
           "eventHandlers": {
-            "onLoad": {
-              "type": "code",
-              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Labels.OreBeltPrefix}]"
-            },
-            "onTextChanged": {
-              "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Labels:SetOreBeltPrefix[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Labels:SetOreBeltPrefix[\"\"]\n}"
-            },
             "onTabPress": {
               "type": "code",
               "code": "LGUI2.Element[IceBeltBookMarkPrefix]:KeyboardFocus"
@@ -118,15 +110,11 @@
             "jsonTemplate": "evebotTooltip",
             "text": "The prefix for ice belt bookmark names."
           },
+          "textBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Labels.IceBeltPrefix}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Labels:SetIceBeltPrefix[", "]"]
+          },
           "eventHandlers": {
-            "onLoad": {
-              "type": "code",
-              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Labels.IceBeltPrefix}]"
-            },
-            "onTextChanged": {
-              "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Labels:SetIceBeltPrefix[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Labels:SetIceBeltPrefix[\"\"]\n}"
-            },
             "onTabPress": {
               "type": "code",
               "code": "LGUI2.Element[AmmoBookMarkPrefix]:KeyboardFocus"
@@ -156,15 +144,11 @@
             "jsonTemplate": "evebotTooltip",
             "text": "The prefix for Ammo bookmark names."
           },
+          "textBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Labels.AmmoPrefix}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Labels:SetAmmoPrefix[", "]"]
+          },
           "eventHandlers": {
-            "onLoad": {
-              "type": "code",
-              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Labels.AmmoPrefix}]"
-            },
-            "onTextChanged": {
-              "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Labels:SetAmmoPrefix[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Labels:SetAmmoPrefix[\"\"]\n}"
-            },
             "onTabPress": {
               "type": "code",
               "code": "LGUI2.Element[UndockInstaTag]:KeyboardFocus"
@@ -194,15 +178,11 @@
             "jsonTemplate": "evebotTooltip",
             "text": "The string that undock insta bookmarks will contain. 1 space will be prepended and appended."
           },
+          "textBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Labels.InstaUndockTag}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Labels:InstaUndockTag[", "]"]
+          },
           "eventHandlers": {
-            "onLoad": {
-              "type": "code",
-              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Labels.InstaUndockTag}]"
-            },
-            "onTextChanged": {
-              "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Labels:InstaUndockTag[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Labels:InstaUndockTag[\"\"]\n}"
-            },
             "onTabPress": {
               "type": "code",
               "code": "LGUI2.Element[DockInstaTag]:KeyboardFocus"
@@ -232,15 +212,11 @@
             "jsonTemplate": "evebotTooltip",
             "text": "The string that dock insta bookmarks will contain. 1 space will be prepended and appended."
           },
+          "textBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Labels.InstaDockTag}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Labels:InstaDockTag[", "]"]
+          },
           "eventHandlers": {
-            "onLoad": {
-              "type": "code",
-              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Labels.InstaDockTag}]"
-            },
-            "onTextChanged": {
-              "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Labels:InstaDockTag[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Labels:InstaDockTag[\"\"]\n}"
-            },
             "onTabPress": {
               "type": "code",
               "code": "LGUI2.Element[SafeSpotPrefix]:KeyboardFocus"

@@ -153,15 +153,11 @@
                 "jsonTemplate": "evebotTooltip",
                 "text": "Small Hauler (6000 m^3 or less)."
               },
+              "textBinding": {
+                "pullFormat": "${Script[EVEBot].VariableScope.Config.Missioneer.SmallHauler}",
+                "pushFormat": ["Script[EVEBot].VariableScope.Config.Missioneer:SetSmallHauler[", "]"]
+              },
               "eventHandlers": {
-                "onLoad": {
-                  "type": "code",
-                  "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Missioneer.SmallHauler}]"
-                },
-                "onTextChanged": {
-                  "type": "code",
-                  "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetSmallHauler[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetSmallHauler[\"\"]\n}"
-                },
                 "onTabPress": {
                   "type": "code",
                   "code": "LGUI2.Element[tbLargeHauler]:KeyboardFocus"
@@ -191,15 +187,11 @@
                 "jsonTemplate": "evebotTooltip",
                 "text": "Large Hauler (more than 6000 m^3)."
               },
+              "textBinding": {
+                "pullFormat": "${Script[EVEBot].VariableScope.Config.Missioneer.LargeHauler}",
+                "pushFormat": ["Script[EVEBot].VariableScope.Config.Missioneer:SetLargeHauler[", "]"]
+              },
               "eventHandlers": {
-                "onLoad": {
-                  "type": "code",
-                  "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Missioneer.LargeHauler}]"
-                },
-                "onTextChanged": {
-                  "type": "code",
-                  "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetLargeHauler[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetLargeHauler[\"\"]\n}"
-                },
                 "onTabPress": {
                   "type": "code",
                   "code": "LGUI2.Element[tbMiningShip]:KeyboardFocus"
@@ -229,15 +221,11 @@
                 "jsonTemplate": "evebotTooltip",
                 "text": "Mining Ship."
               },
+              "textBinding": {
+                "pullFormat": "${Script[EVEBot].VariableScope.Config.Missioneer.MiningShip}",
+                "pushFormat": ["Script[EVEBot].VariableScope.Config.Missioneer:SetMiningShip[", "]"]
+              },
               "eventHandlers": {
-                "onLoad": {
-                  "type": "code",
-                  "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Missioneer.MiningShip}]"
-                },
-                "onTextChanged": {
-                  "type": "code",
-                  "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetMiningShip[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetMiningShip[\"\"]\n}"
-                },
                 "onTabPress": {
                   "type": "code",
                   "code": "LGUI2.Element[tbCombatShip]:KeyboardFocus"
@@ -267,15 +255,11 @@
                 "jsonTemplate": "evebotTooltip",
                 "text": "Combat Ship."
               },
+              "textBinding": {
+                "pullFormat": "${Script[EVEBot].VariableScope.Config.Missioneer.CombatShip}",
+                "pushFormat": ["Script[EVEBot].VariableScope.Config.Missioneer:SetCombatShip[", "]"]
+              },
               "eventHandlers": {
-                "onLoad": {
-                  "type": "code",
-                  "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Missioneer.CombatShip}]"
-                },
-                "onTextChanged": {
-                  "type": "code",
-                  "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetCombatShip[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetCombatShip[\"\"]\n}"
-                },
                 "onTabPress": {
                   "type": "code",
                   "code": "LGUI2.Element[tbSalvageShip]:KeyboardFocus"
@@ -428,15 +412,11 @@
                 "jsonTemplate": "evebotTooltip",
                 "text": "Ship to use for solo salvaging."
               },
+              "textBinding": {
+                "pullFormat": "${Script[EVEBot].VariableScope.Config.Missioneer.SalvageShip}",
+                "pushFormat": ["Script[EVEBot].VariableScope.Config.Missioneer:SetSalvageShip[", "]"]
+              },
               "eventHandlers": {
-                "onLoad": {
-                  "type": "code",
-                  "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Missioneer.SalvageShip}]"
-                },
-                "onTextChanged": {
-                  "type": "code",
-                  "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetSalvageShip[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetSalvageShip[\"\"]\n}"
-                },
                 "onTabPress": {
                   "type": "code",
                   "code": "LGUI2.Element[tbSmallHaulerLimit]:KeyboardFocus"
@@ -496,15 +476,11 @@
                 "jsonTemplate": "evebotTooltip",
                 "text": "Will use the large hauler for missions above this limit."
               },
+              "textBinding": {
+                "pullFormat": "${Script[EVEBot].VariableScope.Config.Missioneer.SmallHaulerLimit}",
+                "pushFormat": ["Script[EVEBot].VariableScope.Config.Missioneer:SetSmallHaulerLimit[", "]"]
+              },
               "eventHandlers": {
-                "onLoad": {
-                  "type": "code",
-                  "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Missioneer.SmallHaulerLimit}]"
-                },
-                "onTextChanged": {
-                  "type": "code",
-                  "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetSmallHaulerLimit[${Int[${This.Text}]}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Missioneer:SetSmallHaulerLimit[0]\n}"
-                },
                 "onTabPress": {
                   "type": "code",
                   "code": "LGUI2.Element[tbSmallHauler]:KeyboardFocus"

@@ -50,15 +50,11 @@
             "jsonTemplate": "evebotTooltip",
             "text": "Bot will return to base when available drones falls below this number"
           },
+          "textBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.MinimumDronesInSpace}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetMinimumDronesInSpace[", "]"]
+          },
           "eventHandlers": {
-            "onLoad": {
-              "type": "code",
-              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Combat.MinimumDronesInSpace}]"
-            },
-            "onTextChanged": {
-              "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetMinimumDronesInSpace[${Int[${This.Text}]}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetMinimumDronesInSpace[0]\n}"
-            },
             "onTabPress": {
               "type": "code",
               "code": "LGUI2.Element[WarpRange]:KeyboardFocus"
@@ -108,15 +104,11 @@
             "jsonTemplate": "evebotTooltip",
             "text": "What range to warp to belts at. Default is 0"
           },
+          "textBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.WarpRange}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetWarpRange[", "]"]
+          },
           "eventHandlers": {
-            "onLoad": {
-              "type": "code",
-              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Combat.WarpRange}]"
-            },
-            "onTextChanged": {
-              "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetWarpRange[${Int[${This.Text}]}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetWarpRange[0]\n}"
-            },
             "onTabPress": {
               "type": "code",
               "code": "LGUI2.Element[tbMinChainBounty]:KeyboardFocus"
@@ -167,15 +159,11 @@
             "jsonTemplate": "evebotTooltip",
             "text": "NPC ships with a bounty above this value will be chained (if enabled)."
           },
+          "textBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.MinChainBounty}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetMinChainBounty[", "]"]
+          },
           "eventHandlers": {
-            "onLoad": {
-              "type": "code",
-              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Combat.MinChainBounty}]"
-            },
-            "onTextChanged": {
-              "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetMinChainBounty[${Int[${This.Text}]}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetMinChainBounty[0]\n}"
-            },
             "onTabPress": {
               "type": "code",
               "code": "LGUI2.Element[tbOrbitDistance]:KeyboardFocus"
@@ -226,15 +214,11 @@
             "jsonTemplate": "evebotTooltip",
             "text": "Distance you want to orbit the current target"
           },
+          "textBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.OrbitDistance}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetOrbitDistance[", "]"]
+          },
           "eventHandlers": {
-            "onLoad": {
-              "type": "code",
-              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Combat.OrbitDistance}]"
-            },
-            "onTextChanged": {
-              "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetOrbitDistance[${Int[${This.Text}]}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetOrbitDistance[0]\n}"
-            },
             "onTabPress": {
               "type": "code",
               "code": "LGUI2.Element[tbKeepAtRangeDistance]:KeyboardFocus"
@@ -285,15 +269,11 @@
             "jsonTemplate": "evebotTooltip",
             "text": "Distance you want to Keep the current target At Range"
           },
+          "textBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.KeepAtRangeDistance}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetKeepAtRangeDistance[", "]"]
+          },
           "eventHandlers": {
-            "onLoad": {
-              "type": "code",
-              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Combat.KeepAtRangeDistance}]"
-            },
-            "onTextChanged": {
-              "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetKeepAtRangeDistance[${Int[${This.Text}]}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetKeepAtRangeDistance[0]\n}"
-            },
             "onTabPress": {
               "type": "code",
               "code": "LGUI2.Element[tbAmmoTypeID]:KeyboardFocus"
@@ -344,15 +324,11 @@
           "width": 200,
           "height": 48,
           "maxLength": 10,
+          "textBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.AmmoTypeID}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetAmmoTypeID[", "]"]
+          },
           "eventHandlers": {
-            "onLoad": {
-              "type": "code",
-              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Combat.AmmoTypeID}]"
-            },
-            "onTextChanged": {
-              "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetAmmoTypeID[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetAmmoTypeID[0]\n}"
-            },
             "onTabPress": {
               "type": "code",
               "code": "LGUI2.Element[tbRestockFreeSpace]:KeyboardFocus"
@@ -403,15 +379,11 @@
             "jsonTemplate": "evebotTooltip",
             "text": "How much free space to leave in cargo after restocking ammo"
           },
+          "textBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Combat.RestockAmmoFreeSpace}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Combat:SetRestockAmmoFreeSpace[", "]"]
+          },
           "eventHandlers": {
-            "onLoad": {
-              "type": "code",
-              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Combat.RestockAmmoFreeSpace}]"
-            },
-            "onTextChanged": {
-              "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetRestockAmmoFreeSpace[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Combat:SetRestockAmmoFreeSpace[0]\n}"
-            },
             "onTabPress": {
               "type": "code",
               "code": "LGUI2.Element[MinimumDronesInSpace]:KeyboardFocus"

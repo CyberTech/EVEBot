@@ -30,6 +30,8 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 
 	; All other obj_EVEBotUI variables
 	variable index:string UIFiles
+	variable int DefaultTab = 1
+	variable int DefaultFleeingSubtab = 1
 
 	method Initialize()
 	{
@@ -59,9 +61,8 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 		}
 		while ${UIFile:Next(exists)}
 
-		; temp: Set to tab 10
-		LGUI2.Element[EVEBotOptionsTab]:SelectTab[1]
-		;LGUI2.Element[FleeingTabcontrol]:SelectTab[2]
+		LGUI2.Element[EVEBotOptionsTab]:SelectTab[${DefaultTab}]
+		LGUI2.Element[FleeingTabcontrol]:SelectTab[${DefaultFleeingSubtab}]
 
 		This:LogSystemStats
 		This:CheckUIPosition
@@ -105,9 +106,8 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 		}
 		while ${UIFile:Next(exists)}
 
-		; temp:  Set to tab 10
-		LGUI2.Element[EVEBotOptionsTab]:SelectTab[1]
-		;LGUI2.Element[FleeingTabcontrol]:SelectTab[2]
+		LGUI2.Element[EVEBotOptionsTab]:SelectTab[${DefaultTab}]
+		LGUI2.Element[FleeingTabcontrol]:SelectTab[${DefaultFleeingSubtab}]
 
 		Logger:WriteQueue
 		This.Reloaded:Set[TRUE]
@@ -291,7 +291,7 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 			{
 				if !${FirstItem}
 					jsonOutput:Concat[","]
-				jsonOutput:Concat["{\"type\":\"textblock\",\"text\":\"${bm_iterator.Value.Label.Escape},${bm_iterator.Value.Label.ID}\"}"]
+				jsonOutput:Concat["{\"type\":\"textblock\",\"text\":\"${bm_iterator.Value.Label.Escape}\",\"data\":{\"bookmarkID\":${bm_iterator.Value.ID}}}"]
 				FirstItem:Set[FALSE]
 			}
 			while ${bm_iterator:Next(exists)}
@@ -1429,6 +1429,7 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 
 	method OnWLRefreshButtonClick()
 	{
+		echo "TEST!"
 		; Refresh the local pilots list
 		variable index:pilot pilots
 		variable iterator piter
@@ -1450,11 +1451,11 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 			do
 			{
 				if !${piter.Value.CharID.Equal[${Me.CharID}]}
-					LGUI2.Element[lbWLLocal]:AddItem["${piter.Value.Name}"]
+					LGUI2.Element[lbWLLocal]:InsertItem["{\"type\":\"textblock\",\"text\":\"${piter.Value.Name.Escape}\"}"]
 			}
 			while ${piter:Next(exists)}
 		}
-		LGUI2.Element[lbWLLocal]:Sort
+		; Note: LGUI2 has no Sort method - items must be pre-sorted before insertion if needed
 	}
 
 	method OnWLPilotsListBoxClick()
@@ -1520,11 +1521,11 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 		{
 			do
 			{
-				LGUI2.Element[lbWLPilots]:AddItem["${i.Key}","${i.Value}"]
+				LGUI2.Element[lbWLPilots]:InsertItem["{\"type\":\"textblock\",\"text\":\"${i.Key.Escape}\",\"data\":{\"pilotID\":${i.Value}}}"]
 			}
 			while ${i:Next(exists)}
 		}
-		LGUI2.Element[lbWLPilots]:Sort
+		; Note: LGUI2 has no Sort method - items must be pre-sorted before insertion if needed
 	}
 
 	method OnWLCorpsListBoxClick()
@@ -1590,11 +1591,11 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 		{
 			do
 			{
-				LGUI2.Element[lbWLCorps]:AddItem["${i.Key}","${i.Value}"]
+				LGUI2.Element[lbWLCorps]:InsertItem["{\"type\":\"textblock\",\"text\":\"${i.Key.Escape}\",\"data\":{\"corpID\":${i.Value}}}"]
 			}
 			while ${i:Next(exists)}
 		}
-		LGUI2.Element[lbWLCorps]:Sort
+		; Note: LGUI2 has no Sort method - items must be pre-sorted before insertion if needed
 	}
 
 	method OnWLAlliancesListBoxClick()
@@ -1660,11 +1661,11 @@ objectdef obj_EVEBotUI inherits obj_BaseClass
 		{
 			do
 			{
-				LGUI2.Element[lbWLAlliances]:AddItem["${i.Key}","${i.Value}"]
+				LGUI2.Element[lbWLAlliances]:InsertItem["{\"type\":\"textblock\",\"text\":\"${i.Key.Escape}\",\"data\":{\"allianceID\":${i.Value}}}"]
 			}
 			while ${i:Next(exists)}
 		}
-		LGUI2.Element[lbWLAlliances]:Sort
+		; Note: LGUI2 has no Sort method - items must be pre-sorted before insertion if needed
 	}
 
 	method OnSyncWhitelistsButtonClick()

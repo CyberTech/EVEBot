@@ -172,15 +172,11 @@
             "jsonTemplate": "evebotTooltip",
             "text": "The name of the fleet member flying your orca"
           },
+          "textBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Hauler.HaulerPickupName}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Hauler:SetHaulerPickupName[", "]"]
+          },
           "eventHandlers": {
-            "onLoad": {
-              "type": "code",
-              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Hauler.HaulerPickupName}]"
-            },
-            "onTextChanged": {
-              "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Hauler:SetHaulerPickupName[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Hauler:SetHaulerPickupName[\"\"]\n}"
-            },
             "onTabPress": {
               "type": "code",
               "code": "LGUI2.Element[MiningSystemBookmark]:KeyboardFocus"
@@ -210,15 +206,11 @@
             "jsonTemplate": "evebotTooltip",
             "text": "The bookmark name for the mining system location."
           },
+          "textBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Hauler.MiningSystemBookmark}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Hauler:SetMiningSystemBookmark[", "]"]
+          },
           "eventHandlers": {
-            "onLoad": {
-              "type": "code",
-              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Hauler.MiningSystemBookmark}]"
-            },
-            "onTextChanged": {
-              "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Hauler:SetMiningSystemBookmark[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Hauler:SetMiningSystemBookmark[\"\"]\n}"
-            },
             "onTabPress": {
               "type": "code",
               "code": "LGUI2.Element[HaulerPickupName]:KeyboardFocus"

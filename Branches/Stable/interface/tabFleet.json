@@ -45,15 +45,11 @@
           "y": 40,
           "width": 450,
           "height": 48,
+          "textBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Fleet.FleetLeader}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Fleet:SetFleetLeader[", "]"]
+          },
           "eventHandlers": {
-            "onLoad": {
-              "type": "code",
-              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Fleet.FleetLeader}]"
-            },
-            "onTextChanged": {
-              "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Fleet:SetFleetLeader[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Fleet:SetFleetLeader[\"\"]\n}"
-            },
             "onTabPress": {
               "type": "code",
               "code": "LGUI2.Element[tbAddFleetMember]:KeyboardFocus"

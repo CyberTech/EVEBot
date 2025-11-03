@@ -901,7 +901,7 @@
                       "height": 36
                     },
                     "eventHandlers": {
-                      "onMouseClick": {
+                      "onPress": {
                         "type": "code",
                         "code": "Script[EVEBot].VariableScope.UI:OnWLRefreshButtonClick[]"
                       }
@@ -932,7 +932,7 @@
                       "height": 36
                     },
                     "eventHandlers": {
-                      "onMouseClick": {
+                      "onPress": {
                         "type": "code",
                         "code": "Script[EVEBot].VariableScope.UI:OnWLAddPilotButtonClick[]"
                       }
@@ -950,7 +950,7 @@
                       "height": 36
                     },
                     "eventHandlers": {
-                      "onMouseClick": {
+                      "onPress": {
                         "type": "code",
                         "code": "Script[EVEBot].VariableScope.UI:OnWLDelPilotButtonClick[]"
                       }
@@ -999,7 +999,7 @@
                       "height": 36
                     },
                     "eventHandlers": {
-                      "onMouseClick": {
+                      "onPress": {
                         "type": "code",
                         "code": "Script[EVEBot].VariableScope.UI:OnWLAddCorpButtonClick[]"
                       }
@@ -1017,7 +1017,7 @@
                       "height": 36
                     },
                     "eventHandlers": {
-                      "onMouseClick": {
+                      "onPress": {
                         "type": "code",
                         "code": "Script[EVEBot].VariableScope.UI:OnWLDelCorpButtonClick[]"
                       }
@@ -1066,7 +1066,7 @@
                       "height": 36
                     },
                     "eventHandlers": {
-                      "onMouseClick": {
+                      "onPress": {
                         "type": "code",
                         "code": "Script[EVEBot].VariableScope.UI:OnWLAddAllianceButtonClick[]"
                       }
@@ -1084,7 +1084,7 @@
                       "height": 36
                     },
                     "eventHandlers": {
-                      "onMouseClick": {
+                      "onPress": {
                         "type": "code",
                         "code": "Script[EVEBot].VariableScope.UI:OnWLDelAllianceButtonClick[]"
                       }
@@ -1120,7 +1120,7 @@
                       "height": 36
                     },
                     "eventHandlers": {
-                      "onMouseClick": {
+                      "onPress": {
                         "type": "code",
                         "code": "Script[EVEBot].VariableScope.UI:OnSyncWhitelistsButtonClick[]"
                       }

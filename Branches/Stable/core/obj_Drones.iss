@@ -129,7 +129,8 @@ objectdef obj_Drones inherits obj_BaseClass
 
 		if (${MyShip.DronebayCapacity} > 0 && \
    			${This.DronesInBay} == 0 && \
-   			${This.DronesInSpace} < ${Config.Combat.MinimumDronesInSpace})
+   			${Config.Combat.MinimumDronesInSpace.Length} > 0 && \
+   			${This.DronesInSpace} < ${Int[${Config.Combat.MinimumDronesInSpace}]})
    		{
 			ShortageCount:Inc
    			if ${ShortageCount} > 10

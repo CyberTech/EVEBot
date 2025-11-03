@@ -117,15 +117,11 @@
           "height": 48,
           "multiline": false,
           "maxLength": 2,
+          "textBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Common.DronesInBay}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Common:SetDronesInBay[", "]"]
+          },
           "eventHandlers": {
-            "onLoad": {
-              "type": "code",
-              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Common.DronesInBay}]"
-            },
-            "onTextChanged": {
-              "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Common:SetDronesInBay[${Int[${This.Text}]}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Common:SetDronesInBay[0]\n}"
-            },
             "onTabPress": {
               "type": "code",
               "code": "LGUI2.Element[tbMaxRuntime]:KeyboardFocus"
@@ -156,15 +152,11 @@
           "width": 66,
           "height": 48,
           "maxLength": 3,
+          "textBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Common.MaxRuntime}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Common:SetMaxRuntime[", "]"]
+          },
           "eventHandlers": {
-            "onLoad": {
-              "type": "code",
-              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Common.MaxRuntime}]"
-            },
-            "onTextChanged": {
-              "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Common:SetMaxRuntime[${Int[${This.Text}]}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Common:SetMaxRuntime[0]\n}"
-            },
             "onTabPress": {
               "type": "code",
               "code": "LGUI2.Element[tbIRCServer]:KeyboardFocus"
@@ -195,15 +187,11 @@
           "width": 600,
           "height": 48,
           "maxLength": 50,
+          "textBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Common.IRCServer}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Common:SetIRCServer[", "]"]
+          },
           "eventHandlers": {
-            "onLoad": {
-              "type": "code",
-              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Common.IRCServer}]"
-            },
-            "onTextChanged": {
-              "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Common:SetIRCServer[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Common:SetIRCServer[\"\"]\n}"
-            },
             "onTabPress": {
               "type": "code",
               "code": "LGUI2.Element[tbIRCChannel]:KeyboardFocus"
@@ -234,15 +222,11 @@
           "width": 300,
           "height": 48,
           "maxLength": 25,
+          "textBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Common.IRCChannel}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Common:SetIRCChannel[", "]"]
+          },
           "eventHandlers": {
-            "onLoad": {
-              "type": "code",
-              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Common.IRCChannel}]"
-            },
-            "onTextChanged": {
-              "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Common:SetIRCChannel[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Common:SetIRCChannel[\"\"]\n}"
-            },
             "onTabPress": {
               "type": "code",
               "code": "LGUI2.Element[tbIRCUser]:KeyboardFocus"
@@ -273,15 +257,11 @@
           "width": 300,
           "height": 48,
           "maxLength": 25,
+          "textBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Common.IRCUser}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Common:SetIRCUser[", "]"]
+          },
           "eventHandlers": {
-            "onLoad": {
-              "type": "code",
-              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Common.IRCUser}]"
-            },
-            "onTextChanged": {
-              "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Common:SetIRCUser[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Common:SetIRCUser[\"\"]\n}"
-            },
             "onTabPress": {
               "type": "code",
               "code": "LGUI2.Element[tbIRCPassword]:KeyboardFocus"
@@ -313,15 +293,11 @@
           "height": 48,
           "maxLength": 25,
           "password": true,
+          "textBinding": {
+            "pullFormat": "${Script[EVEBot].VariableScope.Config.Common.IRCPassword}",
+            "pushFormat": ["Script[EVEBot].VariableScope.Config.Common:SetIRCPassword[", "]"]
+          },
           "eventHandlers": {
-            "onLoad": {
-              "type": "code",
-              "code": "This:SetText[${Script[EVEBot].VariableScope.Config.Common.IRCPassword}]"
-            },
-            "onTextChanged": {
-              "type": "code",
-              "code": "if ${This.Text.Length} > 0\n{\n\tScript[EVEBot].VariableScope.Config.Common:SetIRCPassword[${This.Text}]\n}\nelse\n{\n\tScript[EVEBot].VariableScope.Config.Common:SetIRCPassword[\"\"]\n}"
-            },
             "onTabPress": {
               "type": "code",
               "code": "LGUI2.Element[MinimumDronesInBay]:KeyboardFocus"

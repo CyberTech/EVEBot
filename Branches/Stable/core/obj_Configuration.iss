@@ -155,12 +155,12 @@ objectdef obj_Configuration_Common
 		; We use both so we have an ID to use to set the default selection in the UI.
 		This.Ref:AddSetting[Home Station,1]
 		This.Ref:AddSetting[Use Development Build,FALSE]
-		This.Ref:AddSetting[Drones In Bay,0]
+		This.Ref:AddSetting[Drones In Bay,"0"]
 		This.Ref:AddSetting[Login Name, ""]
 		This.Ref:AddSetting[Login Password, ""]
 		This.Ref:AddSetting[AutoLogin, TRUE]
-		This.Ref:AddSetting[AutoLoginCharID, 0]
-		This.Ref:AddSetting[Maximum Runtime, 0]
+		This.Ref:AddSetting[AutoLoginCharID, "0"]
+		This.Ref:AddSetting[Maximum Runtime, "0"]
 		This.Ref:AddSetting[Use Sound, FALSE]
 		This.Ref:AddSetting[Disable 3D, FALSE]
 		This.Ref:AddSetting[TrainFastest, FALSE]
@@ -169,15 +169,14 @@ objectdef obj_Configuration_Common
 	Define_ConfigItem(string, CurrentBehavior, "Idle")
 	Define_ConfigItem(bool, SortBeltsRandom, FALSE)
 
-
-	member:int DronesInBay()
+	member:string DronesInBay()
 	{
-		return ${This.CommonRef.FindSetting[Drones In Bay, NOTSET]}
+		return ${This.CommonRef.FindSetting[Drones In Bay, "0"]}
 	}
 
-	method SetDronesInBay(int value)
+	method SetDronesInBay(string value)
 	{
-		This.CommonRef:AddSetting[Drones In Bay,${value}]
+		This.CommonRef:AddSetting[Drones In Bay,${This.ValidateIntString[${value}]}]
 	}
 
 	member:string HomeStation()
@@ -251,14 +250,14 @@ objectdef obj_Configuration_Common
 		This.AbortCount:Inc
 	}
 
-	member:int MaxRuntime()
+	member:string MaxRuntime()
 	{
-		return ${This.CommonRef.FindSetting[Maximum Runtime, NOTSET]}
+		return ${This.CommonRef.FindSetting[Maximum Runtime,"1"]}
 	}
 
-	method SetMaxRuntime(int value)
+	method SetMaxRuntime(string value)
 	{
-		This.CommonRef:AddSetting[Maximum Runtime,${value}]
+		This.CommonRef:AddSetting[Maximum Runtime,${This.ValidateIntString[${value}]}]
 	}
 
 	member:string IRCServer()
@@ -329,6 +328,82 @@ objectdef obj_Configuration_Common
 	method SetTrainFastest(bool value)
 	{
 		This.CommonRef:AddSetting[TrainFastest,${value}]
+	}
+
+	member:string ValidateIntString(string value)
+	{
+		; Allow empty string (blank textbox)
+		if ${value.Length} == 0
+		{
+			return ""
+		}
+
+		if !${ISXEVE.IsNumeric[${value}]}
+		{
+			; Invalid input (non-numeric)
+			return ""
+		}
+
+		;; Allow "-" sign as first character, for negative numbers
+		if (!${value.Left[1].Equal[-]})
+		{
+			; Convert to int - this will handle any trailing non-numeric chars
+			variable int intValue = ${Int[${value}]}
+
+			; If conversion resulted in 0 and the input wasn't "0", it was invalid
+			if (${intValue} == 0 && !${value.Equal[0]})
+			{
+				; Invalid input
+				return ""
+			}
+			else
+			{
+				; Valid number - save it
+				return ${intValue}
+			}
+		}
+		else
+		{
+			return ${value}
+		}
+	}
+
+	member:string ValidateFloatString(string value, int precision = 2)
+	{
+		; Allow empty string (blank textbox)
+		if ${value.Length} == 0
+		{
+			return ""
+		}
+
+		if !${ISXEVE.IsNumeric[${value}]}
+		{
+			; Invalid input (non-numeric)
+			return ""
+		}
+
+		;; Allow "-" sign as first character, for negative numbers.  Also, allow "." as first character in case leading with decimal point.
+		if (!${value.Left[1].Equal[-]} && !${value.Left[1].Equal[.]})
+		{
+			; Convert to float - this will handle any trailing non-numeric chars
+			variable float FloatValue = ${Float[${value}]}
+
+			; If conversion resulted in 0 and the input wasn't "0", it was invalid
+			if (${FloatValue} == 0 && !${value.Equal[0]})
+			{
+				; Invalid input
+				return ""
+			}
+			else
+			{
+				; Valid number - save it
+				return ${FloatValue.Precision[${precision}]}
+			}
+		}
+		else
+		{
+			return ${value}
+		}
 	}
 }
 
@@ -736,14 +811,14 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Lowest Standing, ${value}]
 	}
 
-	member:int MinimumSecurityStatus()
+	member:string MinimumSecurityStatus()
 	{
-		return ${This.MinerRef.FindSetting[Minimum Security Status, -10.00]}
+		return ${This.MinerRef.FindSetting[Minimum Security Status, "-10.0"]}
 	}
 
-	method SetMinimumSecurityStatus(float Value)
+	method SetMinimumSecurityStatus(string value)
 	{
-		This.MinerRef:AddSetting[Minimum Security Status, ${Value}]
+		This.MinerRef:AddSetting[Minimum Security Status,${Config.Common.ValidateFloatString[${value},1]}]
 	}
 
 	member:bool IceMining()
@@ -817,20 +892,20 @@ objectdef obj_Configuration_Miner
 		This.MinerRef:AddSetting[Strip Mine, ${value}]
 	}
 
-	member:float MiningRangeMultipler()
+	member:string MiningRangeMultipler()
 	{
-		return ${This.MinerRef.FindSetting[Mining Range Multipler, 2.2]}
+		return ${This.MinerRef.FindSetting[Mining Range Multipler, "2.2"]}
 	}
 
-	method SetMiningRangeMultipler(float value)
+	method SetMiningRangeMultipler(string value)
 	{
-		This.MinerRef:AddSetting[Mining Range Multipler, ${value}]
+		This.MinerRef:AddSetting[Mining Range Multipler,${Config.Common.ValidateFloatString[${value}]}]
 	}
 
-	member:int CargoThreshold()
+	member:string CargoThreshold()
 	{
 		variable float threshold
-		threshold:Set[${This.MinerRef.FindSetting[Cargo Threshold, 0]}]
+		threshold:Set[${This.MinerRef.FindSetting[Cargo Threshold, "0"]}]
 		if (${threshold} == 0)
 		{
 			if ${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)}
@@ -842,12 +917,12 @@ objectdef obj_Configuration_Miner
 				This:SetCargoThreshold[${MyShip.CargoCapacity}]
 			}
 		}
-		return ${threshold}
+		return ${threshold.Precision[0]}
 	}
 
-	method SetCargoThreshold(int value)
+	method SetCargoThreshold(string value)
 	{
-		This.MinerRef:AddSetting[Cargo Threshold, ${value}]
+		This.MinerRef:AddSetting[Cargo Threshold,${Config.Common.ValidateIntString[${value}]}]
 	}
 }
 
@@ -949,14 +1024,14 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[CurrentAnom, ${value}]
 	}
 
-	member:int WarpRange()
+	member:string WarpRange()
 	{
-		return ${This.CombatRef.FindSetting[WarpRange, 0]}
+		return ${This.CombatRef.FindSetting[WarpRange, "0"]}
 	}
 
-	method SetWarpRange(int value)
+	method SetWarpRange(string value)
 	{
-		This.CombatRef:AddSetting[WarpRange,${value}]
+		This.CombatRef:AddSetting[WarpRange,${Config.Common.ValidateIntString[${value}]}]
 	}
 
 	member:bool UseAnomBookmarks()
@@ -979,15 +1054,14 @@ objectdef obj_Configuration_Combat
 		return ${This.CombatRef.FindSetting[AnomBookmarkLabel, AMMO]}
 	}
 
-
-	member:int AmmoTypeID()
+	member:string AmmoTypeID()
 	{
-		return ${This.CombatRef.FindSetting[AmmoTypeID, 2629]}
+		return ${This.CombatRef.FindSetting[AmmoTypeID, "2629"]}
 	}
 
-	method SetAmmoTypeID(int value)
+	method SetAmmoTypeID(string value)
 	{
-		This.CombatRef:AddSetting[AmmoTypeID,${value}]
+		This.CombatRef:AddSetting[AmmoTypeID,${Config.Common.ValidateIntString[${value}]}]
 	}
 
 	member:bool RestockAmmo()
@@ -1000,14 +1074,14 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[RestockAmmo,${value}]
 	}
 
-	member:int RestockAmmoFreeSpace()
+	member:string RestockAmmoFreeSpace()
 	{
-		return ${This.CombatRef.FindSetting[RestockAmmoFreeSpace, 150]}
+		return ${This.CombatRef.FindSetting[RestockAmmoFreeSpace, "150"]}
 	}
 
-	method SetRestockAmmoFreeSpace(int value)
+	method SetRestockAmmoFreeSpace(string value)
 	{
-		This.CombatRef:AddSetting[RestockAmmoFreeSpace,${value}]
+		This.CombatRef:AddSetting[RestockAmmoFreeSpace,${Config.Common.ValidateIntString[${value}]}]
 	}
 
 	method SetOrbit(bool value)
@@ -1030,17 +1104,17 @@ objectdef obj_Configuration_Combat
 		return ${This.CombatRef.FindSetting[OrbitAtOptimal, FALSE]}
 	}
 
-	method SetOrbitDistance(int value)
+	method SetOrbitDistance(string value)
 	{
-		This.CombatRef:AddSetting[OrbitDistance,${value}]
+		This.CombatRef:AddSetting[OrbitDistance,${Config.Common.ValidateIntString[${value}]}]
 	}
 
-	member:int OrbitDistance()
+	member:string OrbitDistance()
 	{
-		return ${This.CombatRef.FindSetting[OrbitDistance, 30000]}
+		return ${This.CombatRef.FindSetting[OrbitDistance, "30000"]}
 	}
 
-		method SetKeepAtRange(bool value)
+	method SetKeepAtRange(bool value)
 	{
 		This.CombatRef:AddSetting[KeepAtRange,${value}]
 	}
@@ -1060,14 +1134,14 @@ objectdef obj_Configuration_Combat
 		return ${This.CombatRef.FindSetting[KeepAtRangeAtOptimal, FALSE]}
 	}
 
-	method SetKeepAtRangeDistance(int value)
+	method SetKeepAtRangeDistance(string value)
 	{
-		This.CombatRef:AddSetting[KeepAtRangeDistance,${value}]
+		This.CombatRef:AddSetting[KeepAtRangeDistance,${Config.Common.ValidateIntString[${value}]}]
 	}
 
-	member:int KeepAtRangeDistance()
+	member:string KeepAtRangeDistance()
 	{
-		return ${This.CombatRef.FindSetting[KeepAtRangeDistance, 30000]}
+		return ${This.CombatRef.FindSetting[KeepAtRangeDistance, "30000"]}
 	}
 
 	method SetAnomalyAssistMode(bool value)
@@ -1189,14 +1263,14 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[Reverse Belt Order, ${value}]
 	}
 
-	member:int MinChainBounty()
+	member:string MinChainBounty()
 	{
-		return ${This.CombatRef.FindSetting[Min Chain Bounty, 1500000]}
+		return ${This.CombatRef.FindSetting[Min Chain Bounty, "1500000"]}
 	}
 
-	method SetMinChainBounty(int value)
+	method SetMinChainBounty(string value)
 	{
-		This.CombatRef:AddSetting[Min Chain Bounty,${value}]
+		This.CombatRef:AddSetting[Min Chain Bounty,${Config.Common.ValidateIntString[${value}]}]
 	}
 
 	member:bool LaunchCombatDrones()
@@ -1209,14 +1283,14 @@ objectdef obj_Configuration_Combat
 		This.CombatRef:AddSetting[Launch Combat Drones, ${value}]
 	}
 
-	member:int MinimumDronesInSpace()
+	member:string MinimumDronesInSpace()
 	{
-		return ${This.CombatRef.FindSetting[MinimumDronesInSpace, 3]}
+		return ${This.CombatRef.FindSetting[MinimumDronesInSpace, "3"]}
 	}
 
-	method SetMinimumDronesInSpace(int value)
+	method SetMinimumDronesInSpace(string value)
 	{
-		This.CombatRef:AddSetting[MinimumDronesInSpace,${value}]
+		This.CombatRef:AddSetting[MinimumDronesInSpace,${Config.Common.ValidateIntString[${value}]}]
 	}
 
 	member:int MaxDroneReturnWaitTime()
@@ -2080,14 +2154,14 @@ objectdef obj_Configuration_Missioneer
 		This.MissioneerRef:AddSetting[Avoid Low Sec, ${value}]
 	}
 
-	member:int SmallHaulerLimit()
+	member:string SmallHaulerLimit()
 	{
-		return ${This.MissioneerRef.FindSetting[Small Hauler Limit, 600]}
+		return ${This.MissioneerRef.FindSetting[Small Hauler Limit, "600"]}
 	}
 
-	method SetSmallHaulerLimit(int value)
+	method SetSmallHaulerLimit(string value)
 	{
-		This.MissioneerRef:AddSetting[Small Hauler Limit,${value}]
+		This.MissioneerRef:AddSetting[Small Hauler Limit,${Config.Common.ValidateIntString[${value}]}]
 	}
 
 }
